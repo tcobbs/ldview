@@ -42,7 +42,7 @@ char *strcasestr(const char *s1, const char *s2)
 
 	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
 	{
-		if (strcasecmp(spot, s2) == 0)
+		if (strncasecmp(spot, s2, len2) == 0)
 		{
 			return spot;
 		}
@@ -56,7 +56,7 @@ char *strncasestr(const char *s1, const char *s2, size_t n, int skipZero)
 	int len2 = strlen(s2);
 
 	for (spot = (char*)s1; (*spot != 0 || skipZero) &&
-	     (unsigned)(spot-s1) < n; spot++)
+	     (unsigned)(spot - s1) < n; spot++)
 	{
 		if (strncasecmp(spot, s2, len2) == 0)
 		{
