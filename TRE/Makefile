@@ -16,6 +16,7 @@ CCSRCS = \
 	TREMainModel.cpp \
 	TREModel.cpp \
 	TREShapeGroup.cpp \
+	TRESmoother.cpp \
 	TRESubModel.cpp \
 	TRETransShapeGroup.cpp \
 	TREVertexArray.cpp \
