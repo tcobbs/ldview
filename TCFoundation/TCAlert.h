@@ -3,6 +3,8 @@
 
 #include <TCFoundation/TCObject.h>
 
+#define USER_ALERTS 0x1000
+
 class TCStringArray;
 
 class TCAlert : public TCObject

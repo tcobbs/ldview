@@ -17,6 +17,7 @@ public:
 	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
 	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
+	virtual LDLPalette *getPalette(void) { return m_mainPalette; }
 
 	// Flags
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }

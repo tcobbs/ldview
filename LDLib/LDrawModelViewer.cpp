@@ -7,6 +7,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLError.h>
 #include "LDModelParser.h"
@@ -124,6 +125,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.forceZoomToFit = false;
 	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 		(TCAlertCallback)ldlErrorCallback);
+	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+		(TCAlertCallback)progressAlertCallback);
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)
@@ -389,7 +392,7 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 {
 	flags.needsViewReset = false;
 	flags.autoCenter = true;
-	if (!lDrawModel)
+	if (!mainTREModel)
 	{
 		return;
 	}
@@ -659,6 +662,15 @@ void LDrawModelViewer::ldlErrorCallback(LDLError *error)
 	}
 }
 
+void LDrawModelViewer::progressAlertCallback(TCProgressAlert *alert)
+{
+	if (alert)
+	{
+		printf("Progress message from %s:\n%s (%f)\n", alert->getSource(),
+			alert->getMessage(), alert->getProgress());
+	}
+}
+
 int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
 	if (filename)
@@ -672,15 +684,12 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
 		if (mainModel->load(filename))
 		{
-//			mainModel->release();
-//			return 0;
 			LDModelParser *modelParser = new LDModelParser;
 
-			modelParser->setSeamWidth(LDrawModel::getSeamWidth());
+			modelParser->setSeamWidth(seamWidth);
 			modelParser->setPrimitiveSubstitutionFlag(
 				flags.allowPrimitiveSubstitution);
 			modelParser->setCurveQuality(curveQuality);
-			modelParser->setEdgeLinesFlag(flags.showsHighlightLines);
 			modelParser->setLightingFlag(flags.useLighting);
 			modelParser->setTwoSidedLightingFlag(flags.oneLight ||
 				flags.usesSpecular);
@@ -688,8 +697,25 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setSortTransparentFlag(flags.sortTransparent);
 			modelParser->setStippleFlag(flags.useStipple);
 			modelParser->setWireframeFlag(flags.drawWireframe);
-			modelParser->setConditionalLinesFlag(
-				flags.drawConditionalHighlights);
+			if (flags.showsHighlightLines)
+			{
+				// Note that the default for all of these is false.
+				modelParser->setEdgeLinesFlag(true);
+				modelParser->setConditionalLinesFlag(
+					flags.drawConditionalHighlights);
+				modelParser->setShowAllConditionalFlag(
+					flags.showAllConditionalLines);
+				modelParser->setConditionalControlPointsFlag(
+					flags.showConditionalControlPoints);
+				modelParser->setEdgesOnlyFlag(flags.edgesOnly);
+			}
+			modelParser->setFileIsPartFlag(flags.fileIsPart);
+			modelParser->setDefaultRGB(defaultR, defaultG, defaultB);
+			modelParser->setPolygonOffsetFlag(flags.usePolygonOffset);
+			if (defaultColorNumber != -1)
+			{
+				modelParser->setDefaultColorNumber(defaultColorNumber);
+			}
 			if (modelParser->parseMainModel(mainModel))
 			{
 				mainTREModel = modelParser->getMainTREModel();
@@ -699,7 +725,6 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				size = mainTREModel->getMaxRadius(center) * 2.0f;
 			}
 			modelParser->release();
-//			mainModel->print();
 		}
 		mainModel->release();
 
@@ -819,7 +844,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 //			delete rotationMatrix;
 //			rotationMatrix = NULL;
 		}
-		if (lDrawModel)
+		if (mainTREModel)
 		{
 			flags.needsResize = true;
 			return 1;
@@ -917,9 +942,9 @@ void LDrawModelViewer::uncompile(void)
 		glDeleteLists(fontListBase, 128);
 		fontListBase = 0;
 	}
-	if (lDrawModel)
+	if (mainTREModel)
 	{
-		lDrawModel->uncompile();
+		mainTREModel->uncompile();
 	}
 }
 
@@ -1261,9 +1286,9 @@ void LDrawModelViewer::orthoView(void)
 
 void LDrawModelViewer::setSeamWidth(float value)
 {
-	if (!fEq(value, LDrawModel::getSeamWidth()))
+	if (!fEq(value, seamWidth))
 	{
-		LDrawModel::setSeamWidth(value);
+		seamWidth = value;
 		flags.needsReload = true;
 	}
 }
@@ -1304,7 +1329,7 @@ void LDrawModelViewer::drawString(GLfloat xPos, GLfloat yPos, char* string)
 
 void LDrawModelViewer::drawFPS(float fps)
 {
-	if (lDrawModel)
+	if (mainTREModel)
 	{
 		char fpsString[1024];
 		int lightingEnabled = glIsEnabled(GL_LIGHTING);
@@ -1391,7 +1416,7 @@ void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b)
 		defaultR = r;
 		defaultG = g;
 		defaultB = b;
-		if (lDrawModel && defaultColorNumber == -1)
+		if (mainTREModel && defaultColorNumber == -1)
 		{
 			flags.needsReload = true;
 		}
@@ -1451,13 +1476,12 @@ void LDrawModelViewer::setEdgesOnly(bool value)
 	{
 		flags.edgesOnly = value;
 	}
-	if (lDrawModel)
+	if (mainTREModel)
 	{
 		bool realValue = flags.edgesOnly && flags.showsHighlightLines;
 
-		if (realValue != lDrawModel->getEdgesOnly())
+		if (realValue != mainTREModel->getEdgesOnlyFlag())
 		{
-			lDrawModel->setEdgesOnly(realValue);
 			flags.needsReload = true;
 		}
 	}
@@ -1477,8 +1501,10 @@ void LDrawModelViewer::setUsePolygonOffset(bool value)
 	if (value != flags.usePolygonOffset)
 	{
 		flags.usePolygonOffset = value;
-		LDrawModel::setUsePolygonOffset(flags.usePolygonOffset);
-		flags.needsRecompile = true;
+		if (mainTREModel)
+		{
+			mainTREModel->setPolygonOffsetFlag(flags.usePolygonOffset);
+		}
 	}
 }
 
@@ -1628,7 +1654,6 @@ void LDrawModelViewer::setUseLighting(bool value)
 	if (value != flags.useLighting)
 	{
 		flags.useLighting = value;
-		LDrawModel::setUseLighting(flags.useLighting);
 		if (mainTREModel)
 		{
 			mainTREModel->setLightingFlag(value);
@@ -1643,10 +1668,6 @@ void LDrawModelViewer::setUseStipple(bool value)
 	if (value != flags.useStipple)
 	{
 		flags.useStipple = value;
-		if (lDrawModel)
-		{
-			lDrawModel->setUseStipple(value);
-		}
 		if (mainTREModel)
 		{
 			mainTREModel->setStippleFlag(value);
@@ -1667,10 +1688,6 @@ void LDrawModelViewer::setSortTransparent(bool value)
 	if (value != flags.sortTransparent)
 	{
 		flags.sortTransparent = value;
-		if (lDrawModel)
-		{
-			lDrawModel->setSortTransparent(value);
-		}
 		flags.needsReload = true;
 	}
 }
@@ -1870,7 +1887,7 @@ void LDrawModelViewer::drawSetup(GLfloat eyeXOffset)
 	}
 	drawLights();
 	glLoadIdentity();
-	if (lDrawModel)
+	if (mainTREModel)
 	{
 		applyZoom();
 //		camera.move(cameraMotion * size / 100.0f);
@@ -1915,7 +1932,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
 	{
 		glTranslatef(-center[0], -center[1], -center[2]);
 	}
-	lDrawModel->draw();
+	mainTREModel->draw();
 	glDisable(GL_LIGHTING);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1969,7 +1986,7 @@ void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 	}
 	glTranslatef(-center[0], -center[1], -center[2]);
 	glColor3ub(192, 192, 192);
-	lDrawModel->draw();
+	mainTREModel->draw();
 
 	glClearDepth(1.0);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -1990,7 +2007,7 @@ void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 		glMultMatrixf(rotationMatrix);
 	}
 	glTranslatef(-center[0], -center[1], -center[2]);
-	lDrawModel->draw();
+	mainTREModel->draw();
 	perspectiveView();
 	glAccum(GL_ACCUM, weight);
 	glAccum(GL_RETURN, 1.0f);
@@ -2064,7 +2081,7 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(GLfloat eyeXOffset)
 	{
 		glTranslatef(-center[0], -center[1], -center[2]);
 	}
-	lDrawModel->draw();
+	mainTREModel->draw();
 	perspectiveView();
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
@@ -2312,13 +2329,14 @@ void LDrawModelViewer::update(void)
 		setupRotationMatrix();
 	}
 	clearBackground();
-	if (!lDrawModel)
+	if (!mainTREModel)
 	{
 		return;
 	}
-	if (false && !lDrawModel->getCompiled())
+	if (!mainTREModel->getCompiled() && (mainTREModel->getCompileAllFlag() ||
+		mainTREModel->getCompilePartsFlag()))
 	{
-		if (!lDrawModel->getCompiling())
+		if (!mainTREModel->getCompiling())
 		{
 			drawString(2.0f, height - 16.0f, "Model Compile Canceled");
 		}
@@ -2392,8 +2410,8 @@ void LDrawModelViewer::removeHiddenLines(GLfloat eyeXOffset)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	lDrawModel->setUseLighting(false);
-	lDrawModel->setRemovingHiddenLines(true);
+	mainTREModel->setLightingFlag(false);
+	mainTREModel->setRemovingHiddenLines(true);
 	if (flags.usePolygonOffset)
 	{
 		glEnable(GL_POLYGON_OFFSET_FILL);
@@ -2407,8 +2425,8 @@ void LDrawModelViewer::removeHiddenLines(GLfloat eyeXOffset)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(0.0f, 0.0f);
 	}
-	lDrawModel->setRemovingHiddenLines(false);
-	lDrawModel->setUseLighting(flags.useLighting);
+	mainTREModel->setRemovingHiddenLines(false);
+	mainTREModel->setLightingFlag(flags.useLighting);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
@@ -2453,6 +2471,10 @@ void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
 	if (mainTREModel)
 	{
 		mainTREModel->draw();
+		if (clipAmount > 0.01)
+		{
+			drawToClipPlane(eyeXOffset);
+		}
 	}
 /*
 	else if (lDrawModel)

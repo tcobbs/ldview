@@ -20,9 +20,9 @@ typedef enum
 {
 	TRESLine			= 0x0001,
 	TRESFirst			= TRESLine,
-	TRESTriangle		= 0x0002,
-	TRESQuad			= 0x0004,
-	TRESConditionalLine	= 0x0008,
+	TRESConditionalLine	= 0x0002,
+	TRESTriangle		= 0x0004,
+	TRESQuad			= 0x0008,
 	TRESTriangleStrip	= 0x0010,
 	TRESFirstStrip		= TRESTriangleStrip,
 	TRESQuadStrip		= 0x0020,

@@ -23,42 +23,11 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 	m_indices(NULL),
 	m_controlPointIndices((TCULongArray *)TCObject::copy(
 		other.m_controlPointIndices)),
-//	m_stripCounts(NULL),
 	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
 	m_multiDrawIndices(NULL),
 	m_shapesPresent(other.m_shapesPresent)
 {
 	m_vertexStore->retain();
-/*
-	if (other.m_stripCounts)
-	{
-		int shapeTypeCount = other.m_stripCounts->getCount();
-		int i, j;
-
-		m_stripCounts = new TCULongArrayArray(shapeTypeCount);
-		for (i = 0; i < shapeTypeCount; i++)
-		{
-			TCULongArray *thoseStripCounts = (*other.m_stripCounts)[i];
-
-			if (thoseStripCounts)
-			{
-				int numStrips = thoseStripCounts->getCount();
-				TCULongArray *theseStripCounts = new TCULongArray(numStrips);
-
-				for (j = 0; j < numStrips; j++)
-				{
-					theseStripCounts->addValue((*thoseStripCounts)[j]);
-				}
-				m_stripCounts->addObject(theseStripCounts);
-				theseStripCounts->release();
-			}
-			else
-			{
-				m_stripCounts->addObject(NULL);
-			}
-		}
-	}
-*/
 	if (other.m_shapesPresent)
 	{
 		int i, j;
@@ -138,7 +107,6 @@ void TREShapeGroup::addShapeType(TREShapeType shapeType, int index)
 	{
 		TCULongArray *newCountArray = new TCULongArray;
 
-//		newCountArray->addValue(0);
 		m_stripCounts->insertObject(newCountArray, index);
 		newCountArray->release();
 	}
@@ -207,14 +175,6 @@ TCULong TREShapeGroup::getShapeTypeIndex(TREShapeType shapeType)
 	}
 	return index;
 }
-
-/*
-void TREShapeGroup::addConditionalLine(int index1, int index2, int index3,
-									   int index4)
-{
-	addShape(TRESConditionalLine, index1, index2, index3, index4);
-}
-*/
 
 void TREShapeGroup::addIndices(TCULongArray *indices, int firstIndex, int count)
 {
@@ -424,7 +384,6 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 					{
 						initMultiDrawIndices();
 					}
-//					printf("TREShapeGroup::drawStripShapeType:multi\n");
 					glMultiDrawElementsEXT(glMode,
 						(GLsizei *)countArray->getValues(), GL_UNSIGNED_INT,
 						(const void **)m_multiDrawIndices[shapeTypeIndex],
@@ -435,24 +394,7 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 					TCULong *indices = indexArray->getValues();
 					int indexOffset = 0;
 					int i;
-/*
-					int count = indexArray->getCount();
 
-					printf("TREShapeGroup::drawStripShapeType:nonmulti\n");
-					if (!_CrtIsValidPointer(indices, count * 4, TRUE))
-					{
-						printf("Bad Pointer!\n");
-					}
-					for (i = 0; i < count; i++)
-					{
-						TCULong index = indices[i];
-						TREVertex vertex = (*m_vertexStore->getVertices())[index];
-						TREVertex normal = (*m_vertexStore->getNormals())[index];
-
-						printf("%10f %10f %10f      ", vertex.v[0], vertex.v[1], vertex.v[2]);
-						printf("%10f %10f %10f\n", normal.v[0], normal.v[1], normal.v[2]);
-					}
-*/
 					for (i = 0; i < numStrips; i++)
 					{
 						int stripCount = (*countArray)[i];
@@ -533,7 +475,7 @@ bool TREShapeGroup::shouldDrawConditional(TCULong index1, TCULong index2,
 	float s3x, s3y;
 	float s4x, s4y;
 	TREVertexArray *vertices = m_vertexStore->getVertices();
-	TREVertexArray *controlPoints = m_vertexStore->getControlPoints();
+	TREVertexArray *controlPoints = vertices; //m_vertexStore->getControlPoints();
 	const TREVertex &v1 = (*vertices)[index1];
 	const TREVertex &v2 = (*vertices)[index2];
 	const TREVertex &v3 = (*controlPoints)[cpIndex1];
@@ -608,35 +550,54 @@ void TREShapeGroup::drawConditionalLines(void)
 
 		if (indices)
 		{
-			int i;
-			int count = indices->getCount();
-			TCULongArray *activeIndices = new TCULongArray;
-			float modelViewMatrix[16];
-			float projectionMatrix[16];
-			float matrix[16];
+			bool showAllConditional =
+				m_vertexStore->getShowAllConditionalFlag();
+			bool showConditionalControlPoints =
+				m_vertexStore->getConditionalControlPointsFlag();
+			TCULongArray *activeIndices;
 
-			glGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
-			glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
-			TCVector::multMatrix(projectionMatrix, modelViewMatrix, matrix);
-			for (i = 0; i < count; i += 2)
+			if (showAllConditional && !showConditionalControlPoints)
 			{
-				TCULong index1 = (*indices)[i];
-				TCULong index2 = (*indices)[i + 1];
-				TCULong cpIndex1 = (*m_controlPointIndices)[i];
-				TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+				activeIndices = indices;
+				indices->retain();
+			}
+			else
+			{
+				int i;
+				int count = indices->getCount();
+				float modelViewMatrix[16];
+				float projectionMatrix[16];
+				float matrix[16];
 
-				if (shouldDrawConditional(index1, index2, cpIndex1, cpIndex2,
-					matrix))
+				activeIndices = new TCULongArray;
+				glGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
+				glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
+				TCVector::multMatrix(projectionMatrix, modelViewMatrix, matrix);
+				for (i = 0; i < count; i += 2)
 				{
-					activeIndices->addValue(index1);
-					activeIndices->addValue(index2);
+					TCULong index1 = (*indices)[i];
+					TCULong index2 = (*indices)[i + 1];
+					TCULong cpIndex1 = (*m_controlPointIndices)[i];
+					TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+
+					if (showAllConditional ||
+						shouldDrawConditional(index1, index2, cpIndex1,
+						cpIndex2, matrix))
+					{
+						activeIndices->addValue(index1);
+						activeIndices->addValue(index2);
+						if (showConditionalControlPoints)
+						{
+							activeIndices->addValue(index1);
+							activeIndices->addValue(cpIndex1);
+							activeIndices->addValue(index1);
+							activeIndices->addValue(cpIndex2);
+						}
+					}
 				}
 			}
 			if (activeIndices->getCount())
 			{
-//				printULongArray(activeIndices);
-//				printVertices(m_vertexStore->getVertices(), activeIndices);
-//				printf("\n\n");
 				glDrawElements(GL_LINES, activeIndices->getCount(),
 					GL_UNSIGNED_INT, activeIndices->getValues());
 			}
@@ -674,12 +635,12 @@ int TREShapeGroup::addConditionalLine(TCVector *vertices,
 {
 	int index;
 
-	m_vertexStore->setupConditional();
+	m_vertexStore->setup();
 	if (!m_controlPointIndices)
 	{
 		m_controlPointIndices = new TCULongArray;
 	}
-	index = m_vertexStore->addControlPoints(controlPoints, 2);
+	index = m_vertexStore->addVertices(controlPoints, 2);
 	addIndices(m_controlPointIndices, index, 2);
 	index = m_vertexStore->addVertices(vertices, 2);
 	addShapeIndices(TRESConditionalLine, index, 2);
@@ -821,7 +782,7 @@ void TREShapeGroup::unshrinkNormals(float *matrix, float *unshrinkMatrix)
 {
 	int bit;
 
-	// Skip the lines, whose normals don't matter
+	// Skip lines and conditional lines, whose normals don't matter
 	for (bit = TRESTriangle; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
 	{
 		unshrinkNormals(getIndices((TREShapeType)bit), matrix, unshrinkMatrix);
@@ -879,21 +840,12 @@ void TREShapeGroup::unshrinkNormal(TCULong index, float *matrix,
 	TCVector newNormal = TCVector(normal.v[0], normal.v[1], normal.v[2]);
 	float adjust = newNormal.length();
 
-	if (!fEq(adjust, 1.0f))
-	{
-		printf("Huh?\n");
-	}
 	newNormal = newNormal.transformNormal(matrix);
 	newNormal = newNormal.transformNormal(unshrinkMatrix, false);
 	adjust = 1.0f / newNormal.length();
-	if (adjust > 1.0f)
-	{
-		printf("adjust: %f\n", adjust);
-	}
 	normal.v[0] *= adjust;
 	normal.v[1] *= adjust;
 	normal.v[2] *= adjust;
-//	normals->replaceVertex(normal, index);
 }
 
 static void invertULongArray(TCULongArray *array, int start = 0, int end = -1)
@@ -983,8 +935,29 @@ void TREShapeGroup::invert(void)
 				if ((m_shapesPresent & TRESTriangleStrip) &&
 					i == triangleStripIndex)
 				{
-					// WRONG!
-					//invertShapes(theseIndices, newIndices);
+					int numStrips = theseStripCounts->getCount();
+					int indexOffset = 0;
+
+					for (j = 0; j < numStrips; j++)
+					{
+						int stripCount = (*theseStripCounts)[j];
+
+						if (stripCount % 2)
+						{
+							invertULongArray(theseIndices, indexOffset + 1,
+								indexOffset + stripCount);
+						}
+						else
+						{
+							printf("Cannot invert tri strip with even number "
+								"of points.\n");
+						}
+						indexOffset += stripCount;
+					}
+					for (j = 0; j < indexCount; j++)
+					{
+						newIndices->addValue(flipNormal((*theseIndices)[j]));
+					}
 				}
 				else if ((m_shapesPresent & TRESQuadStrip) &&
 					i == quadStripIndex)
@@ -1056,14 +1029,24 @@ void TREShapeGroup::unMirror(void)
 				if ((m_shapesPresent & TRESTriangleStrip) &&
 					i == triangleStripIndex)
 				{
-					if ((*theseStripCounts)[i] % 2)
+					int numStrips = theseStripCounts->getCount();
+					int indexOffset = 0;
+
+					for (j = 0; j < numStrips; j++)
 					{
-						invertULongArray(theseStripCounts);
-					}
-					else
-					{
-						printf("Cannot invert tri strip with even number of "
-							"points.\n");
+						int stripCount = (*theseStripCounts)[j];
+
+						if (stripCount % 2)
+						{
+							invertULongArray(theseIndices, indexOffset + 1,
+								indexOffset + stripCount);
+						}
+						else
+						{
+							printf("Cannot un-mirror tri strip with even "
+								"number of points.\n");
+						}
+						indexOffset += stripCount;
 					}
 				}
 				else if ((m_shapesPresent & TRESQuadStrip) &&

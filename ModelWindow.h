@@ -166,7 +166,7 @@ class ModelWindow: public CUIOGLWindow
 			void* userData);
 		static bool staticImageProgressCallback(char* message, float progress,
 			void* userData);
-		virtual BOOL showProgress(void);
+//		virtual BOOL showProgress(void);
 		virtual void hideProgress(void);
 		virtual void createProgress(void);
 		virtual void setupProgress(void);

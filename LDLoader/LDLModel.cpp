@@ -6,6 +6,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
 
 #ifdef WIN32
 #include <direct.h>
@@ -15,6 +16,8 @@
 #endif // WIN32
 
 #define LDL_LOWRES_PREFIX "LDL-LOWRES:"
+#define LOAD_MESSAGE "Loading..."
+#define MAIN_READ_FRACTION 0.1f
 
 char *LDLModel::sm_systemLDrawDir = NULL;
 int LDLModel::sm_modelCount = 0;
@@ -373,13 +376,35 @@ bool LDLModel::read(FILE *file)
 	return retValue && !getLoadCanceled();
 }
 
+void LDLModel::reportProgress(const char *message, float progress,
+							  bool mainOnly)
+{
+	if (!mainOnly || this == m_mainModel)
+	{
+		bool loadCanceled;
+
+		TCProgressAlert::send("LDLModel", message, progress, &loadCanceled);
+		if (loadCanceled)
+		{
+			cancelLoad();
+		}
+	}
+}
+
 bool LDLModel::load(FILE *file)
 {
+	bool retValue;
+
+	reportProgress(LOAD_MESSAGE, 0.0f);
 	if (!read(file))
 	{
+		reportProgress(LOAD_MESSAGE, 1.0f);
 		return false;
 	}
-	return parse();
+	reportProgress(LOAD_MESSAGE, MAIN_READ_FRACTION);
+	retValue = parse();
+	reportProgress(LOAD_MESSAGE, 1.0f);
+	return retValue;
 }
 
 int LDLModel::parseMPDMeta(int index, const char *filename)
@@ -708,6 +733,8 @@ bool LDLModel::parse(void)
 					"1.\nIgnoring BFC INVERTNEXT command.");
 				m_flags.bfcInvertNext = false;
 			}
+			reportProgress(LOAD_MESSAGE, (float)i / (float)m_activeLineCount *
+				(1.0f - MAIN_READ_FRACTION) + MAIN_READ_FRACTION);
 		}
 		return !getLoadCanceled();
 	}

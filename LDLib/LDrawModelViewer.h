@@ -36,6 +36,7 @@ typedef enum
 
 class TCImage;
 class LDLError;
+class TCProgressAlert;
 class TREMainModel;
 
 class LDrawModelViewer: public TCObject
@@ -305,6 +306,7 @@ class LDrawModelViewer: public TCObject
 		virtual void setupTopViewAngle(void);
 		virtual void setupBottomViewAngle(void);
 		void ldlErrorCallback(LDLError *error);
+		void progressAlertCallback(TCProgressAlert *error);
 		virtual void setupIsoViewAngle(void);
 		virtual void preCalcCamera(void);
 		virtual float calcDefaultDistance(void);
@@ -381,6 +383,7 @@ class LDrawModelViewer: public TCObject
 		float fov;
 		float defaultDistance;
 		TCStringArray *extraSearchDirs;
+		float seamWidth;
 		struct
 		{
 			bool qualityLighting:1;

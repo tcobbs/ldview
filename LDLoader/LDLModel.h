@@ -98,6 +98,8 @@ protected:
 		const char* format, ...);
 	virtual void reportError(LDLErrorType type, const char* format, ...);
 	virtual void reportWarning(LDLErrorType type, const char* format, ...);
+	virtual void reportProgress(const char *message, float progress,
+		bool mainOnly = true);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 
 	static bool verifyLDrawDir(const char *value);
