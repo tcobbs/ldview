@@ -26,6 +26,22 @@
 #define DEFAULT_WIN_WIDTH 640
 #define DEFAULT_WIN_HEIGHT 480
 
+static char monthShortNames[12][4] =
+{
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec"
+};
+
 TCStringArray* LDViewWindow::recentFiles = NULL;
 TCStringArray* LDViewWindow::extraSearchDirs = NULL;
 
@@ -744,13 +760,31 @@ void LDViewWindow::readVersionInfo(void)
 	}
 }
 
+#include <time.h>
+
 void LDViewWindow::createAboutBox(void)
 {
 	char fullVersionFormat[1024];
 	char fullVersionString[1024];
 	char versionString[128];
 	char copyrightString[128];
+	char buildDateString[128] = __DATE__;
+	int dateCount;
+	char **dateComponents = componentsSeparatedByString(buildDateString, " ",
+		dateCount);
 
+	sprintf(buildDateString, "!UnknownDate!");
+	if (dateCount == 3)
+	{
+		const char *buildMonth = TCLocalStrings::get(dateComponents[0]);
+
+		if (buildMonth)
+		{
+			sprintf(buildDateString, "%s %s, %s", dateComponents[1], buildMonth,
+				dateComponents[2]);
+		}
+	}
+	deleteStringArray(dateComponents, dateCount);
 	strcpy(versionString, TCLocalStrings::get("!UnknownVersion!"));
 	strcpy(copyrightString, TCLocalStrings::get("Copyright"));
 	hAboutWindow = createDialog(IDD_ABOUT_BOX);
@@ -766,7 +800,7 @@ void LDViewWindow::createAboutBox(void)
 		strcpy(copyrightString, legalCopyright);
 	}
 	sprintf(fullVersionString, fullVersionFormat, versionString,
-		copyrightString);
+		buildDateString, copyrightString);
 	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_SETTEXT,
 		sizeof(fullVersionString), (LPARAM)fullVersionString);
 }

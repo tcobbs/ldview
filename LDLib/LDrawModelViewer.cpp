@@ -69,8 +69,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 aspectRatio(1.0f),
 			 currentFov(45.0f),
 			 fov(45.0f),
-			 memoryUsage(2),
 			 extraSearchDirs(NULL),
+			 memoryUsage(2),
 			 cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
