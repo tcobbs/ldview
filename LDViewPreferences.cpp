@@ -211,15 +211,12 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 	memoryUsage = 2;
 	for (i = 0; i < 16; i++)
 	{
-		customColors[i] = GetSysColor(i + 32);
-/*
 		int r, g, b, a;
 
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		// Windows XP doesn't like the upper bits to be set, so mask those out.
 		customColors[i] = htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
 			0xFFFFFF;
-*/
 	}
 }
 

@@ -282,10 +282,22 @@ visible menu.
 		<TD COLSPAN=2>Open a new model file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot (Ctrl+S):</TD>
+		<TD COLSPAN=2>Save a PNG or BMP snapshot of the current model with the
+		current view.  See <A HREF="#SaveSnapshotOptions">here</A> for
+		information about the extra settings in the save dialog.</TD>
+	</TR>
+	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Reload (F5):</TD>
 		<TD COLSPAN=2>Reload the current model file.  (Use this if you are
 		viewing a model you are in the process of making changes to in some
 		other program, but don't want to use the polling feature below.)</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Cancel Load (Esc):</TD>
+		<TD COLSPAN=2>During a load, you can select this menu item to cancel
+		the load.  It is likely that you will generally just use the keyboard
+		accelerator, though, and hit the Escape key.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Polling:</TD>
@@ -328,12 +340,6 @@ visible menu.
 		can have a significant impact on your computer's CPU availability.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot (Ctrl+S):</TD>
-		<TD COLSPAN=2>Save a PNG or BMP snapshot of the current model with the
-		current view.  See <A HREF="#SaveSnapshotOptions">here</A> for
-		information about the extra settings in the save dialog.</TD>
-	</TR>
-	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>LDraw Dir:</TD>
 		<TD COLSPAN=2>Allows you to specify a new location for the LDraw
 		directory.  This shouldn't normally be needed, since LDView detects if
@@ -356,12 +362,11 @@ visible menu.
 		you can move directories in the box up and down to get them in the order
 		you want them to be in.</TD>
 	</TR>
-	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Cancel Load (Esc):</TD>
-		<TD COLSPAN=2>During a load, you can select this menu item to cancel
-		the load.  It is likely that you will generally just use the keyboard
-		accelerator, though, and hit the Escape key.</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Check for Library Updates:</TD>
+		<TD COLSPAN=2>Checks to see if there are any library updates on
+		ldraw.org that aren't yet installed, and downloads and installs them if
+		any are found.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Page Setup:</TD>
@@ -402,6 +407,13 @@ visible menu.
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Use Visual Style (requires restart):</TD>
+		<TD COLSPAN=2>This menu is not visible when running LDView in operating
+		systems prior to Windows XP.  When present, it enables or disables the
+		use of Windows XP Visual Styles.  You must restart LDView for changes in
+		this option to be visible.</TD>
+	</TR>
+	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Switch to Fullscreen (Ctrl+Enter):</TD>
 		<TD COLSPAN=2>Switches to the currently selected
 		<A HREF="#Fullscreen">fullscreen</A> video mode.
@@ -411,6 +423,11 @@ visible menu.
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Errors (Ctrl+Shift+E):</TD>
 		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Error Window</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Toolbar (Ctrl+Shift+T):</TD>
+		<TD COLSPAN=2>Toggles the toolbar on and off.  Note that the toolbar is
+		never visible in full-screen mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Status Bar (Ctrl+Shift+S):</TD>
@@ -433,6 +450,10 @@ visible menu.
 		immediately after the initial load.  Any viewing angle can be saved as
 		the default viewing angle using <A HREF="#SaveDefaultView">this</A>
 		menu item.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Zoom to Fit (Ctrl+F):</TD>
+		<TD COLSPAN=2>Zooms the model in to fill the current window.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Viewing Angles:</TD>
