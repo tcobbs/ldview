@@ -395,6 +395,34 @@ void TRESubModel::shrink(float amount)
 	TCVector boundingMin;
 	TCVector boundingMax;
 	TCVector center;
+//	TCVector newCenter;
+	TCVector delta;
+	float scaleMatrix[16];
+	float tempMatrix[16];
+//	float translateMatrix[16];
+	int i;
+
+	TCVector::initIdentityMatrix(scaleMatrix);
+	m_model->getBoundingBox(boundingMin, boundingMax);
+	delta = boundingMax - boundingMin;
+	center = boundingMin + boundingMax / 2.0f;
+	for (i = 0; i < 3; i++)
+	{
+		if (delta[i] > amount)
+		{
+			scaleMatrix[i * 4 + i] = 1.0f - amount / delta[i];
+			if (center[i])
+			{
+				scaleMatrix[12 + i] = amount / delta[i] * center[i] / 2.0f;
+			}
+		}
+	}
+	TCVector::multMatrix(m_matrix, scaleMatrix, tempMatrix);
+	memcpy(m_matrix, tempMatrix, sizeof(m_matrix));
+/*
+	TCVector boundingMin;
+	TCVector boundingMax;
+	TCVector center;
 	TCVector newCenter;
 	TCVector delta;
 	float scaleMatrix[16];
@@ -426,6 +454,7 @@ void TRESubModel::shrink(float amount)
 	translateMatrix[14] = delta[2];
 	TCVector::multMatrix(translateMatrix, m_matrix, tempMatrix);
 	TCVector::multMatrix(tempMatrix, scaleMatrix, m_matrix);
+*/
 /*
 	memcpy(tempMatrix, m_matrix, sizeof(tempMatrix));
 	TCVector::multMatrix(tempMatrix, scaleMatrix, m_matrix);

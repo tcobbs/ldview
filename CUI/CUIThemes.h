@@ -54,8 +54,6 @@ public:
 		RECT *pContentRect);
 	static HRESULT setWindowTheme(HWND hWnd, LPCWSTR pwszSubAppName,
 		LPCWSTR pwszSubIdList);
-	static HRESULT setWindowTheme(HWND hWnd, LPCSTR pszSubAppName,
-		LPCSTR pszSubIdList);
 	static HTHEME getWindowTheme(HWND hWnd);
 	static HRESULT getThemeColor(HTHEME hTheme, int iPartId, int iStateId,
 		int iPropId, COLORREF *pColor);

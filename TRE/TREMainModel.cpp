@@ -845,14 +845,38 @@ void TREMainModel::transferTransparent(void)
 // instead of all being thrown into the main model.
 void TREMainModel::addTransparentTriangle(TCULong color,
 										  const TCVector vertices[],
-										  const TCVector normals[])
+										  const TCVector normals[],
+										  const TCVector *textureCoords)
 {
 	if (!m_coloredShapes[TREMTransparent])
 	{
 		m_coloredShapes[TREMTransparent] = new TRETransShapeGroup;
 		m_coloredShapes[TREMTransparent]->setVertexStore(m_transVertexStore);
 	}
-	m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
+	if (getStudLogoFlag() && getStudTextures())
+	{
+		if (textureCoords)
+		{
+			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
+				normals, textureCoords);
+		}
+		else
+		{
+			static TCVector zeroTextureCoords[3] =
+			{
+				TCVector(0.5, 0.5, 0.0), 
+				TCVector(0.5, 0.5, 0.0),
+				TCVector(0.5, 0.5, 0.0)
+			};
+
+			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
+				normals, zeroTextureCoords);
+		}
+	}
+	else
+	{
+		m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
+	}
 }
 
 void TREMainModel::drawTransparent(void)
@@ -863,6 +887,12 @@ void TREMainModel::drawTransparent(void)
 		float oldSpecular[4];
 		float oldShininess;
 
+		if (getStudLogoFlag())
+		{
+			glEnable(GL_TEXTURE_2D);
+			bindStudTexture();
+			configureStudTexture();
+		}
 		glGetMaterialfv(GL_FRONT, GL_SHININESS, &oldShininess);
 		glGetMaterialfv(GL_FRONT, GL_SPECULAR, oldSpecular);
 		m_transVertexStore->activate(!m_mainFlags.sortTransparent);
@@ -902,6 +932,10 @@ void TREMainModel::drawTransparent(void)
 		{
 			((TRETransShapeGroup *)m_coloredShapes[TREMTransparent])->
 				draw(getSortTransparentFlag() && !getCutawayDrawFlag());
+		}
+		if (getStudLogoFlag())
+		{
+			glDisable(GL_TEXTURE_2D);
 		}
 		glDisable(GL_POLYGON_OFFSET_FILL);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, oldSpecular);

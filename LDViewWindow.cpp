@@ -2328,7 +2328,7 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 						// be done ever time the tooltip is about to pop up.
 						// Not sure why that is either, but it is.
 						CUIThemes::setWindowTheme(notification->hwndFrom, NULL,
-							"");
+							L"");
 					}
 					strcpy(dispInfo->szText, buttonInfo->getTooltipText());
 					break;
@@ -2399,7 +2399,7 @@ BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
 							// about to pop up. Not sure why that is either, but
 							// it is.
 							CUIThemes::setWindowTheme(notification->hwndFrom,
-								NULL, "");
+								NULL, L"");
 						}
 						dispInfo->hinst = NULL;
 					}

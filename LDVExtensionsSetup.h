@@ -113,16 +113,17 @@ public:
 		return glGetBufferPointervARB;
 	}
 
-	static bool checkForWGLExtension(char* extension);
-	static bool checkForExtension(char* extension);
-	static bool checkForExtension(char* extensionsString, char* extension);
-	static bool haveMultisampleExtension(void);
-	static bool havePixelBufferExtension(void);
-	static bool haveNvMultisampleFilterHintExtension(void);
-	static bool havePixelFormatExtension(void);
-	static bool haveVARExtension(void);
-	static bool haveMultiDrawArraysExtension(void);
-	static bool haveVBOExtension(void);
+	static bool checkForWGLExtension(char* extension, bool force = false);
+	static bool checkForExtension(char* extension, bool force = false);
+	static bool checkForExtension(char* extensionsString, char* extension,
+		bool force = false);
+	static bool haveMultisampleExtension(bool force = false);
+	static bool havePixelBufferExtension(bool force = false);
+	static bool haveNvMultisampleFilterHintExtension(bool force = false);
+	static bool havePixelFormatExtension(bool force = false);
+	static bool haveVARExtension(bool force = false);
+	static bool haveMultiDrawArraysExtension(bool force = false);
+	static bool haveVBOExtension(bool force = false);
 	static char *getWglExtensions(void) { return wglExtensions; }
 	static bool haveStencil(void) { return stencilPresent; }
 	static bool haveAlpha(void) { return alphaPresent; }

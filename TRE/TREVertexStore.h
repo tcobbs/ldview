@@ -25,6 +25,8 @@ public:
 	virtual int addVertices(TCULong color, const TCVector *points, int count);
 	virtual int addVertices(TCULong color, const TCVector *points,
 		const TCVector *normals, int count);
+	virtual int addVertices(TCULong color, const TCVector *points,
+		const TCVector *normals, const TCVector *textureCoords, int count);
 	virtual void setup(void);
 	virtual void setupColored(void);
 	virtual void setupTextured(void);
