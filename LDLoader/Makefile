@@ -8,7 +8,8 @@ OBJDIR = .obj
 
 VPATH = $(OBJDIR)
 
-CSRCS = 
+CSRCS = \
+	LDrawIni.c
 CCSRCS = \
 	LDLActionLine.cpp \
 	LDLCommentLine.cpp \
