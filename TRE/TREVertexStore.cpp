@@ -1,6 +1,7 @@
 #include "TREVertexStore.h"
 #include "TREVertexArray.h"
 #include <TCFoundation/TCVector.h>
+#include <TCFoundation/TCMacros.h>
 #include <string.h>
 
 TREVertexStore *TREVertexStore::sm_activeVertexStore = NULL;

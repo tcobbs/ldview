@@ -686,8 +686,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			{
 				mainTREModel = modelParser->getMainTREModel();
 				mainTREModel->retain();
-				mainTREModel->getMinMax(min, max);
-				center = (min + max) / 2.0f;
+				mainTREModel->getBoundingBox(boundingMin, boundingMax);
+				center = (boundingMin + boundingMax) / 2.0f;
 				size = mainTREModel->getMaxRadius(center) * 2.0f;
 			}
 			modelParser->release();
@@ -764,7 +764,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			fclose(modelFile);
 			if (readResult == 0)
 			{
-//				lDrawModel->getMinMax(min, max);
+//				lDrawModel->getMinMax(boundingMin, boundingMax);
 //				lDrawModel->setCullBackFaces(cullBackFaces);
 //				lDrawModel->writeToFile();
 //				lDrawModel->flatten();
@@ -775,7 +775,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						progressCallback("", 2.0, progressUserData);
 					}
 					flags.needsRecompile = false;
-//					size = (max - min).length();
+//					size = (boundingMax - boundingMin).length();
 					if (resetViewpoint)
 					{
 						resetView();
@@ -787,7 +787,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						yPan = 0.0f;
 */
 					}
-//					center = (min + max) / 2.0f;
+//					center = (boundingMin + boundingMax) / 2.0f;
 				}
 				else
 				{
@@ -953,8 +953,8 @@ void LDrawModelViewer::setupMaterial(void)
 //	float mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	float mSpecular[] = {0.5f, 0.5f, 0.5f, 1.0f};
 //	float mSpecular[] = {0.0f, 0.0f, 0.0f, 1.0f};
-	float mEmission[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
+	// Note: default emission is <0,0,0,1>, which is what we want.
 	if (!flags.usesSpecular)
 	{
 		mSpecular[0] = mSpecular[1] = mSpecular[2] = 0.0f;
@@ -962,7 +962,6 @@ void LDrawModelViewer::setupMaterial(void)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mAmbient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mSpecular);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 64.0f);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mEmission);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	glEnable(GL_COLOR_MATERIAL);
 	flags.needsMaterialSetup = false;
@@ -1201,24 +1200,24 @@ void LDrawModelViewer::drawBoundingBox(void)
 	}
 	glColor3ub(255, 255, 255);
 	glBegin(GL_LINE_STRIP);
-		glVertex3fv(min);
-		glVertex3f(max[0], min[1], min[2]);
-		glVertex3f(max[0], max[1], min[2]);
-		glVertex3f(min[0], max[1], min[2]);
-		glVertex3fv(min);
-		glVertex3f(min[0], min[1], max[2]);
-		glVertex3f(max[0], min[1], max[2]);
-		glVertex3fv(max);
-		glVertex3f(min[0], max[1], max[2]);
-		glVertex3f(min[0], min[1], max[2]);
+		glVertex3fv(boundingMin);
+		glVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
+		glVertex3f(boundingMax[0], boundingMax[1], boundingMin[2]);
+		glVertex3f(boundingMin[0], boundingMax[1], boundingMin[2]);
+		glVertex3fv(boundingMin);
+		glVertex3f(boundingMin[0], boundingMin[1], boundingMax[2]);
+		glVertex3f(boundingMax[0], boundingMin[1], boundingMax[2]);
+		glVertex3fv(boundingMax);
+		glVertex3f(boundingMin[0], boundingMax[1], boundingMax[2]);
+		glVertex3f(boundingMin[0], boundingMin[1], boundingMax[2]);
 	glEnd();
 	glBegin(GL_LINES);
-		glVertex3f(min[0], max[1], min[2]);
-		glVertex3f(min[0], max[1], max[2]);
-		glVertex3f(max[0], max[1], min[2]);
-		glVertex3f(max[0], max[1], max[2]);
-		glVertex3f(max[0], min[1], min[2]);
-		glVertex3f(max[0], min[1], max[2]);
+		glVertex3f(boundingMin[0], boundingMax[1], boundingMin[2]);
+		glVertex3f(boundingMin[0], boundingMax[1], boundingMax[2]);
+		glVertex3f(boundingMax[0], boundingMax[1], boundingMin[2]);
+		glVertex3f(boundingMax[0], boundingMax[1], boundingMax[2]);
+		glVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
+		glVertex3f(boundingMax[0], boundingMin[1], boundingMax[2]);
 	glEnd();
 	if (lightingEnabled)
 	{
@@ -2565,6 +2564,8 @@ char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	return message;
 }
 
+//static int _numPoints = 0;
+
 // This is conversion of Lars Hassing's auto camera code from L3P.  It computes
 // the correct distance and pan amount for the camera so that the viewing
 // pyramid will be positioned in the closest possible position, such that the
@@ -2595,8 +2596,10 @@ void LDrawModelViewer::zoomToFit(void)
 		tmpMatrix[14] = center[2];
 		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
 		preCalcCamera();
+//		_numPoints = 0;
 		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
 			transformationMatrix);
+//		printf("num points: %d\n", _numPoints);
 		d = (float)width / (float)height;
 		dh = (cameraData->horMax - cameraData->horMin) / d;
 		dv = cameraData->verMax - cameraData->verMin;
@@ -2679,6 +2682,8 @@ void LDrawModelViewer::zoomToFit(void)
 		}
 		location[2] *= distanceMultiplier;
 		camera.setPosition(location - center);
+		xPan = 0.0f;
+		yPan = 0.0f;
 		flags.autoCenter = false;
 	}
 }
@@ -2715,6 +2720,7 @@ void LDrawModelViewer::scanCameraPoint(const TCVector &point)
 	{
 		cameraData->verMax = d;
 	}
+//	_numPoints++;
 }
 
 // More of Lars' L3P auto camera positioning code.

@@ -65,6 +65,14 @@ public:
 	virtual void flatten(void);
 	virtual void addCylinder(const TCVector &center, float radius, float height,
 		int numSegments, int usedSegments = -1);
+	virtual void addSlopedCylinder(const TCVector &center, float radius,
+		float height, int numSegments, int usedSegments = -1);
+	virtual void addSlopedCylinder2(const TCVector &center, float radius,
+		float height, int numSegments, int usedSegments = -1);
+	virtual void addDisc(const TCVector &center, float radius, int numSegments,
+		int usedSegments = -1);
+	virtual void addNotDisc(const TCVector &center, float radius,
+		int numSegments, int usedSegments = -1);
 	virtual void addCone(const TCVector &center, float radius, float height,
 		int numSegments, int usedSegments = -1);
 	virtual void addOpenCone(const TCVector &center, float radius1, float radius2,
@@ -73,18 +81,16 @@ public:
 		int usedSegments = -1);
 	virtual void addCircularEdge(const TCVector &center, float radius,
 		int numSegments, int usedSegments = -1);
-	virtual void calculateBoundingBox(void);
-	virtual void getMinMax(TCVector& min, TCVector& max);
-	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
-	virtual void getMaxRadiusSquared(const TCVector &center,
-		float &rSquared, float *matrix);
+	virtual void getBoundingBox(TCVector& min, TCVector& max);
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
+	virtual void unshrinkNormals(float *scaleMatrix);
+	void unshrinkNormals(float *matrix, float *unshrinkMatrix);
 
-	static void multMatrix(float* left, float* right, float* result);
+//	static void multMatrix(float* left, float* right, float* result);
 	static void transformVertex(TREVertex &vertex, float *matrix);
 	static void transformNormal(TREVertex &normal, float *matrix);
-	static float invertMatrix(float* matrix, float* inverseMatrix);
+//	static float invertMatrix(float* matrix, float* inverseMatrix);
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
@@ -111,6 +117,8 @@ protected:
 		TCULong color, bool colorSet);
 	void setCirclePoint(float angle, float radius, const TCVector& center,
 		TCVector& point);
+	void scanBoundingBoxPoint(const TCVector &point);
+	virtual void calculateBoundingBox(void);
 
 	static void setGlNormalize(bool value);
 
@@ -133,6 +141,7 @@ protected:
 	{
 		bool part:1;
 		bool boundingBox:1;
+		bool unshrunkNormals:1;
 	} m_flags;
 
 	static bool sm_normalizeOn;

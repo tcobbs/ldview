@@ -55,6 +55,11 @@ protected:
 	virtual bool substituteStu23(TREModel *treModel, bool isA = false);
 	virtual bool substituteStu24(TREModel *treModel, bool isA = false);
 	virtual bool substituteCylinder(TREModel *treModel, float fraction);
+	virtual bool substituteSlopedCylinder(TREModel *treModel, float fraction);
+	virtual bool substituteSlopedCylinder2(TREModel *treModel, float fraction);
+	virtual bool substituteDisc(TREModel *treModel, float fraction);
+	virtual bool substituteNotDisc(TREModel *treModel, float fraction);
+	virtual bool substituteCircularEdge(TREModel *treModel, float fraction);
 	virtual bool substituteCone(TREModel *treModel, float fraction, int size);
 //	virtual int parseShapeVertices(LDLShapeLine *shapeLine,
 //		TREModel *treModel);
@@ -63,6 +68,11 @@ protected:
 	virtual bool startsWithFraction2(const char *filename);
 	virtual bool isPrimitive(const char *filename, const char *suffix);
 	virtual bool isCyli(const char *filename);
+	virtual bool isCyls(const char *filename);
+	virtual bool isCyls2(const char *filename);
+	virtual bool isDisc(const char *filename);
+	virtual bool isNdis(const char *filename);
+	virtual bool isEdge(const char *filename);
 	virtual bool is1DigitCon(const char *filename);
 	virtual bool is2DigitCon(const char *filename);
 	virtual bool isCon(const char *filename);

@@ -172,13 +172,6 @@ float TREMainModel::getMaxRadiusSquared(const TCVector &center)
 			identityMatrix);
 	}
 	return m_maxRadiusSquared;
-/*
-	float rSquared = 0.0f;
-
-	TCVector::initIdentityMatrix(identityMatrix);
-	TREModel::getMaxRadiusSquared(center, rSquared, identityMatrix);
-	return rSquared;
-*/
 }
 
 void TREMainModel::scanMaxRadiusSquaredPoint(const TCVector &point)

@@ -29,11 +29,9 @@ public:
 	virtual void drawColoredLines(void);
 	virtual void drawEdgeLines(void);
 	virtual void drawColoredEdgeLines(void);
-	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
-	virtual void getMaxRadiusSquared(const TCVector &center, float &rSquared,
-		float *matrix);
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
+	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
 	virtual void shrink(float amount);
 protected:
 	virtual ~TRESubModel(void);

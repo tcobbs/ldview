@@ -66,15 +66,17 @@ public:
 	TCVector mult2(float* matrix) const;
 	void transformPoint(const float *matrix, TCVector &newPoint);
 	TCVector transformPoint(const float *matrix);
-	void transformNormal(const float *matrix, TCVector& newNormal);
-	TCVector transformNormal(const float *matrix);
+	void transformNormal(const float *matrix, TCVector& newNormal,
+		bool shouldNormalize = true);
+	TCVector transformNormal(const float *matrix,
+		bool shouldNormalize = true);
 
 	static float determinant(const float *matrix);
 	static void multMatrix(const float *left, const float *right,
 		float *result);
 	static void multMatrixd(const double *left, const double *right,
 		double *result);
-	static void invertMatrix(const float *matrix, float *inverseMatrix);
+	static float invertMatrix(const float *matrix, float *inverseMatrix);
 	static void initIdentityMatrix(float*);
 protected:
 #ifdef _LEAK_DEBUG
