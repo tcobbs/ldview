@@ -718,6 +718,7 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doEraseBackground(RECT* updateRect)
 {
+	return 1;
 	CUIOGLWindow::doEraseBackground(updateRect);
 	return 1;
 }
@@ -2375,6 +2376,7 @@ void ModelWindow::doPaint(void)
 	bool needsPostRedraw = (modelViewer->getNeedsReload() ||
 		modelViewer->getNeedsRecompile()) && modelViewer->getMainTREModel();
 
+//	debugPrintf("ModelWindow::doPaint\n");
 	if (offscreenActive || loading)
 	{
 		static bool looping = false;
