@@ -262,6 +262,37 @@
                                     		<string>Transparent</string>
                                 		</property>
 									</widget>
+									<widget class="QLabel" row="3" column="0">
+										<property name="name">
+											<cstring>memoryUsageLabel</cstring>
+										</property>
+										<property name="text">
+											<string>Memory usage</string>
+										</property>
+										<property name="alignment">
+											<set>AlignVCenter|AlignRight</set>
+										</property>
+									</widget>
+									<widget class="QComboBox" row="3" column="1">
+										<property name="name">
+											<cstring>memoryUsageBox</cstring>
+										</property>
+										<item>
+											<property name="text">
+												<string>Low</string>
+											</property>
+										</item>
+										<item>
+											<property name="text">
+												<string>Medium</string>
+											</property>
+										</item>
+										<item>
+											<property name="text">
+												<string>High</string>
+											</property>
+										</item>
+									</widget>
                                 </grid>
                             </widget>
                         </vbox>
@@ -708,6 +739,14 @@
                                                         <property name="text">
                                                             <string>Red back faces</string>
                                                         </property>
+                                                    </widget>
+						    <widget class="QCheckBox">
+                                                        <property name="name">
+                                                            <cstring>bfcGreenFrontFaceButton</cstring>
+							</property>
+                                                        <property name="text">
+                                                            <string>Green front faces</string>
+							 </property>
                                                     </widget>
 												</vbox>
 											</widget>
@@ -2619,7 +2658,13 @@
 		<signal>valueChanged(int)</signal>
 		<receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
-    </connection> 
+    </connection>
+	<connection>
+		<sender>memoryUsageBox</sender>
+		<signal>activated(int)</signal>
+		<receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
 	<connection>
 		<sender>transparentButton</sender>
 		<signal>stateChanged(int)</signal>
@@ -2867,20 +2912,26 @@
         <receiver>PreferencesPanel</receiver>
         <slot>doWireframe(bool)</slot>
     </connection>
-	<connection>
-		<sender>enableBFCButton</sender>
-		<signal>toggled(bool)</signal>
-		<receiver>PreferencesPanel</receiver>
-		<slot>doBFC(bool)</slot>
-	</connection>
-	<connection>
-		<sender>enableBFCButton</sender>
+    <connection>
+        <sender>enableBFCButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doBFC(bool)</slot>
+   </connection>
+   <connection>
+        <sender>enableBFCButton</sender>
         <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
-	</connection>
-	<connection>
+   </connection>
+   <connection>
         <sender>bfcRedBackFaceButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+   <connection>
+        <sender>bfcGreenFrontFaceButton</sender>
         <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
@@ -2969,11 +3020,12 @@
     <tabstop>aaLinesButton</tabstop>
     <tabstop>frameRateButton</tabstop>
     <tabstop>showErrorsButton</tabstop>
-	<tabstop>processLdconfigLdrButton</tabstop>
+    <tabstop>processLdconfigLdrButton</tabstop>
     <tabstop>backgroundColorButton</tabstop>
-	<tabstop>transparentButton</tabstop>
+    <tabstop>transparentButton</tabstop>
     <tabstop>defaultColorButton</tabstop>
-	<tabstop>fieldOfViewSpin</tabstop>
+    <tabstop>fieldOfViewSpin</tabstop>
+	<tabstop>memoryUsageBox</tabstop>
     <tabstop>generalResetButton</tabstop>
     <tabstop>seamWidthButton</tabstop>
     <tabstop>seamWidthSpin</tabstop>
@@ -2981,11 +3033,14 @@
     <tabstop>wireframeFogButton</tabstop>
     <tabstop>wireframeRemoveHiddenLineButton</tabstop>
     <tabstop>wireframeThicknessSlider</tabstop>
+    <tabstop>enableBFCButton</tabstop>
+    <tabstop>bfcRedBackFaceButton</tabstop>
+    <tabstop>bfcGreenFrontFaceButton</tabstop>
     <tabstop>edgeLinesButton</tabstop>
     <tabstop>edgesOnlyButton</tabstop>
     <tabstop>conditionalLinesButton</tabstop>
-	<tabstop>conditionalShowAllButton</tabstop>
-	<tabstop>conditionalShowControlPtsButton</tabstop>
+    <tabstop>conditionalShowAllButton</tabstop>
+    <tabstop>conditionalShowControlPtsButton</tabstop>
     <tabstop>highQualityLinesButton</tabstop>
     <tabstop>alwaysBlackLinesButton</tabstop>
     <tabstop>edgeThicknessSlider</tabstop>
@@ -3047,9 +3102,9 @@
     <slot>doLighting( bool value )</slot>
     <slot>doStereo( bool value )</slot>
     <slot>doWireframe( bool value )</slot>
-	<slot>doBFC( bool value )</slot>
+    <slot>doBFC( bool value )</slot>
     <slot>doEdgeLines( bool value )</slot>
-	<slot>doConditionalShow( bool value )</slot>
+    <slot>doConditionalShow( bool value )</slot>
     <slot>doPrimitiveSubstitution( bool value )</slot>
     <slot>doTextureStuds( bool value )</slot>
 </slots>

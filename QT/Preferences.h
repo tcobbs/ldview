@@ -143,6 +143,7 @@ protected:
 	int defaultColorNumber;	// No UI for this.
 	bool transDefaultColor;
 	int fieldOfView;
+	int memoryUsage;
 
 	// Geometry Settings
 	bool seams;
@@ -153,6 +154,7 @@ protected:
 	int wireframeThickness;
 	bool bfc;
 	bool bfcRedBackFace;
+        bool bfcGreenFrontFace;
 	bool edgeLines;
 	bool edgesOnly;
 	bool conditionalLines;
