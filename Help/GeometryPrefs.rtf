@@ -6,7 +6,7 @@
 \red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 \snext0 
 Normal;}{\*\cs10 \additive Default Paragraph Font;}{\s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 \sbasedon0 \snext15 footnote text;}{\*\cs16 \additive \super \sbasedon10 
 footnote reference;}{\*\cs17 \additive \ul\cf2 \sbasedon10 Hyperlink;}{\*\cs18 \additive \ul\cf12 \sbasedon10 FollowedHyperlink;}}{\info{\title HIDC_FSAA}{\author Travis Cobbs}{\operator Travis Cobbs}{\creatim\yr2001\mo12\dy15\hr21\min25}
-{\revtim\yr2004\mo9\dy26\hr16\min31}{\version90}{\edmins253}{\nofpages26}{\nofwords757}{\nofchars4315}{\*\company  }{\nofcharsws5299}{\vern8269}}\paperh5760 
+{\revtim\yr2004\mo9\dy26\hr22\min54}{\version94}{\edmins257}{\nofpages26}{\nofwords757}{\nofchars4315}{\*\company  }{\nofcharsws0}{\vern8269}}\paperh5760 
 \widowctrl\ftnbj\aenddoc\noxlattoyen\expshrtn\noultrlspc\dntblnsbdb\nospaceforul\hyphcaps0\formshade\horzdoc\dghspace120\dgvspace120\dghorigin1701\dgvorigin1984\dghshow0\dgvshow3\jcompress\viewkind1\viewscale100\pgbrdrhead\pgbrdrfoot\nolnhtadjtbl \fet0
 \sectd \psz1\linex0\endnhere\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4
 \pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}
@@ -72,12 +72,16 @@ This option only has an effect while edge lines are enabled.  It adjusts the thi
 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\cs16\f1\super #}{\f1  HIDC_BFC_BOX}}}{\b\f1\fs22 BFC}{\b\f1\fs24 
 \par }{\f1 BFC-related settings.\page }{\cs16\f1\super\cgrid0 #{\footnote \pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\cs16\f1\super #}{\f1  HIDC_BFC}}}{\b\f1\fs22\cgrid0 
 BFC}{\b\f1\fs22  }{\f1 (Default: }{\i\f1 Off}{\f1 )}{\b\f1\fs22\cgrid0 
-\par }{\f1 Enabling this option turns on back-face culling (BFC).  BFC is a technique that can improve rendering performance by not drawing the back faces of polygons.  Note that only BFC-certified parts have their back faces removed.}{\f1\cgrid0 \page }{
-\cs16\f1\super\cgrid0 #{\footnote \pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\cs16\f1\super #}{\f1  HIDC_RED_BACK_FACES}}}{\b\f1\fs22\cgrid0 Red back faces}{
-\b\f1\fs22  }{\f1 (Default: }{\i\f1 Off}{\f1 )}{\f1\cgrid0 
-\par }{\f1 This option is only available while BFC is enabled.  Enabling it causes the back faces of polygons to be drawn in red.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face
- in order to BFC certify their part files.\page }{\cs16\f1\super\cgrid0 #{\footnote \pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\cs16\f1\super #}{\f1  HIDC_GREEN_FRONT
-_FACES}}}{\b\f1\fs22\cgrid0 Green front faces}{\b\f1\fs22  }{\f1 (Default: }{\i\f1 Off}{\f1 )}{\f1\cgrid0 
-\par }\pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\f1 This option is only available while BFC is enabled.  Enabling it causes the front faces of polygons to be drawn in 
-green.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files.\page 
+\par }{\f1 Enabling this option turns on back-face culling (BFC).  BFC is a technique that can improve rendering performance by not drawing the back faces of polygons.  (Only BFC-certified parts have their back faces removed.)
+\par 
+\par }{\f1 Note that while this can improve rendering perfo}{\f1 rmance, it can also slow things }{\f1 down, so don't assume that enabling this}{\f1  will always result in the best }{\f1 performance.}{\f1\cgrid0 \page }{\cs16\f1\super\cgrid0 #{\footnote 
+\pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\cs16\f1\super #}{\f1  HIDC_RED_BACK_FACES}}}{\b\f1\fs22\cgrid0 Red back faces}{\b\f1\fs22  }{\f1 (Default: }{\i\f1 Off}{
+\f1 )}{\f1\cgrid0 
+\par }{\f1 This option is only available while BFC is enabled.  Enabling i
+t causes the back faces of polygons to be drawn in red.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order to BFC certify their part files.\page }{\cs16\f1\super\cgrid0 #{\footnote 
+\pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\cs16\f1\super #}{\f1  HIDC_GREEN_FRONT_FACES}}}{\b\f1\fs22\cgrid0 Green front faces}{\b\f1\fs22  }{\f1 (Default: }{\i\f1 
+Off}{\f1 )}{\f1\cgrid0 
+\par }\pard\plain \s15\ql \li0\ri0\widctlpar\faauto\adjustright\rin0\lin0\itap0 \fs20\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\f1 
+This option is only available while BFC is enabled.  Enabling it causes the front faces of polygons to be drawn in green.  This is mainly useful for part authors to allow them to correctly specify which direction faces should face in order t
+o BFC certify their part files.\page 
 \par }}
