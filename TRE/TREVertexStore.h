@@ -26,6 +26,11 @@ public:
 	TREVertexArray *getVertices(void) { return m_vertices; }
 	TREVertexArray *getNormals(void) { return m_normals; }
 	TCULongArray *getColors(void) { return m_colors; }
+	void setTwoSidedLightingFlag(bool value)
+	{
+		m_flags.twoSidedLighting = value;
+	}
+	bool getTwoSidedLightingFlag(void) { return m_flags.twoSidedLighting; }
 
 	static void initVertex(TREVertex &vertex, TCVector &point);
 	static TCVector calcNormal(TCVector *points, bool normalize = true);
@@ -54,8 +59,12 @@ protected:
 	TCULong m_varVerticesOffset;
 	TCULong m_varNormalsOffset;
 	TCULong m_varColorsOffset;
-	bool m_varTried;
-	bool m_varFailed;
+	struct
+	{
+		bool varTried:1;
+		bool varFailed:1;
+		bool twoSidedLighting:1;
+	} m_flags;
 
 	static TREVertexStore *sm_activeVertexStore;
 	static PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;

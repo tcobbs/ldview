@@ -669,6 +669,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			flags.allowPrimitiveSubstitution);
 		modelParser->setCurveQuality(curveQuality);
 		modelParser->setEdgeLinesFlag(flags.showsHighlightLines);
+		modelParser->setTwoSidedLightingFlag(flags.oneLight ||
+			flags.usesSpecular);
 		TCAlertManager::registerHandler(LDLError::alertClass(), this,
 			(TCAlertCallback)ldlErrorCallback);
 		TCAlertManager::sendAlert(alert);

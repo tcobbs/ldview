@@ -31,12 +31,13 @@ public:
 	virtual TREShapeGroup *getShapes(void) { return m_shapes; }
 //	virtual TREVertexArray *getVertices(void) { return m_vertices; }
 	virtual TRESubModel *addSubModel(float *matrix, TREModel *model);
-	virtual TRESubModel *addSubModel(TCULong color, TCULong highlightColor,
+	virtual TRESubModel *addSubModel(TCULong color, TCULong edgeColor,
 		float *matrix, TREModel *model);
 	virtual void addLine(TCVector *vertices);
-	virtual void addHighlightLine(TCVector *vertices);
+	virtual void addEdgeLine(TCVector *vertices);
 	virtual void addLine(TCULong color, TCVector *vertices);
 	virtual void addTriangle(TCVector *vertices);
+	virtual void addTriangle(TCVector *vertices, TCVector *normals);
 	virtual void addTriangle(TCULong color, TCVector *vertices);
 	virtual void addQuad(TCVector *vertices);
 	virtual void addQuad(TCULong color, TCVector *vertices);
@@ -49,12 +50,17 @@ public:
 	virtual void draw(void);
 	virtual void compileDefaultColor(void);
 	virtual void compileColored(void);
+	virtual void compileDefaultColorLines(void);
+	virtual void compileColoredLines(void);
+	virtual void compileEdgeLines(void);
+	virtual void compileColoredEdgeLines(void);
 	virtual void drawDefaultColor(void);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColored(void);
 	virtual void drawColoredLines(void);
-	virtual void drawHighlightLines(void);
-	virtual void setPart(bool part) { m_flags.part = part; }
+	virtual void drawEdgeLines(void);
+	virtual void drawColoredEdgeLines(void);
+	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part; }
 	virtual void flatten(void);
 	virtual void addCylinder(const TCVector &center, float radius, float height,
@@ -65,6 +71,8 @@ public:
 		float height, int numSegments, int usedSegments = -1);
 	virtual void addDisk(const TCVector &center, float radius, int numSegments,
 		int usedSegments = -1);
+	virtual void addCircularEdge(const TCVector &center, float radius,
+		int numSegments, int usedSegments = -1);
 	virtual void calculateBoundingBox(void);
 	virtual void getMinMax(TCVector& min, TCVector& max);
 	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
@@ -78,9 +86,11 @@ protected:
 	virtual void dealloc(void);
 	virtual void setup(void);
 	virtual void setupColored(void);
-	virtual void setupHighlight(void);
+	virtual void setupEdges(void);
+	virtual void setupColoredEdges(void);
 	virtual void flatten(TREModel *model, float *matrix, TCULong color,
-		bool colorSet, bool includeShapes);
+		bool colorSet, TCULong edgeColor, bool edgeColorSet,
+		bool includeShapes);
 	virtual void flattenShapes(TREShapeGroup *dstShapes,
 		TREShapeGroup *srcShapes, float *matrix, TCULong color, bool colorSet);
 	virtual void flattenShapes(TREShapeType shapeType,
@@ -105,12 +115,14 @@ protected:
 	TRESubModelArray *m_subModels;
 	TREShapeGroup *m_shapes;
 	TREColoredShapeGroup *m_coloredShapes;
-	TREShapeGroup *m_highlightShapes;
+	TREShapeGroup *m_edgeShapes;
+	TREColoredShapeGroup *m_coloredEdgeShapes;
 	int m_defaultColorListID;
 	int m_coloredListID;
 	int m_defaultColorLinesListID;
 	int m_coloredLinesListID;
-	int m_highlightLinesListID;
+	int m_edgeLinesListID;
+	int m_coloredEdgeLinesListID;
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
 	struct

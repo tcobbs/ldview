@@ -16,10 +16,11 @@ TREVertexStore::TREVertexStore(void)
 	m_colors(NULL),
 	m_varVerticesOffset(0),
 	m_varNormalsOffset(0),
-	m_varColorsOffset(0),
-	m_varTried(false),
-	m_varFailed(false)
+	m_varColorsOffset(0)
 {
+	m_flags.varTried = false;
+	m_flags.varFailed = false;
+	m_flags.twoSidedLighting = false;
 }
 
 TREVertexStore::TREVertexStore(const TREVertexStore &other)
@@ -30,9 +31,10 @@ TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	m_varVerticesOffset(0),
 	m_varNormalsOffset(0),
 	m_varColorsOffset(0),
-	m_varTried(false),
-	m_varFailed(false)
+	m_flags(other.m_flags)
 {
+	m_flags.varTried = false;
+	m_flags.varFailed = false;
 }
 
 TREVertexStore::~TREVertexStore(void)
@@ -160,7 +162,7 @@ void TREVertexStore::setupVAR(void)
 		int colorsSize = 0;
 		int colorsAllocatedSize = 0;
 
-		m_varTried = true;
+		m_flags.varTried = true;
 		sm_varSize += count * sizeof(TREVertex);
 		if (m_normals)
 		{
@@ -210,7 +212,7 @@ void TREVertexStore::setupVAR(void)
 		else
 		{
 			sm_varSize = 0;
-			m_varFailed = true;
+			m_flags.varFailed = true;
 		}
 		if (oldBuffer)
 		{
@@ -219,7 +221,7 @@ void TREVertexStore::setupVAR(void)
 	}
 	else
 	{
-		m_varFailed = true;
+		m_flags.varFailed = true;
 	}
 }
 
@@ -235,7 +237,7 @@ bool TREVertexStore::activate(void)
 		if (m_vertices)
 		{
 			glEnableClientState(GL_VERTEX_ARRAY);
-			if (!m_varTried && !m_varFailed)
+			if (!m_flags.varTried && !m_flags.varFailed)
 			{
 				setupVAR();
 			}

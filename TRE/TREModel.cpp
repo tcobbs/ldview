@@ -18,12 +18,14 @@ TREModel::TREModel(void)
 	m_subModels(NULL),
 	m_shapes(NULL),
 	m_coloredShapes(NULL),
-	m_highlightShapes(NULL),
+	m_edgeShapes(NULL),
+	m_coloredEdgeShapes(NULL),
 	m_defaultColorListID(0),
 	m_coloredListID(0),
 	m_defaultColorLinesListID(0),
 	m_coloredLinesListID(0),
-	m_highlightLinesListID(0)
+	m_edgeLinesListID(0),
+	m_coloredEdgeLinesListID(0)
 {
 	m_flags.part = false;
 	m_flags.boundingBox = false;
@@ -37,11 +39,14 @@ TREModel::TREModel(const TREModel &other)
 	m_shapes((TREShapeGroup *)TCObject::copy(other.m_shapes)),
 	m_coloredShapes((TREColoredShapeGroup *)TCObject::copy(
 		other.m_coloredShapes)),
+	m_coloredEdgeShapes((TREColoredShapeGroup *)TCObject::copy(
+		other.m_coloredEdgeShapes)),
 	m_defaultColorListID(0),
 	m_coloredListID(0),
 	m_defaultColorLinesListID(0),
 	m_coloredLinesListID(0),
-	m_highlightLinesListID(0),
+	m_edgeLinesListID(0),
+	m_coloredEdgeLinesListID(0),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
 	m_flags(other.m_flags)
@@ -59,6 +64,8 @@ void TREModel::dealloc(void)
 	TCObject::release(m_subModels);
 	TCObject::release(m_shapes);
 	TCObject::release(m_coloredShapes);
+	TCObject::release(m_edgeShapes);
+	TCObject::release(m_coloredEdgeShapes);
 	if (m_defaultColorListID)
 	{
 		glDeleteLists(m_defaultColorListID, 1);
@@ -75,9 +82,13 @@ void TREModel::dealloc(void)
 	{
 		glDeleteLists(m_coloredLinesListID, 1);
 	}
-	if (m_highlightLinesListID)
+	if (m_edgeLinesListID)
 	{
-		glDeleteLists(m_highlightLinesListID, 1);
+		glDeleteLists(m_edgeLinesListID, 1);
+	}
+	if (m_coloredEdgeLinesListID)
+	{
+		glDeleteLists(m_coloredEdgeLinesListID, 1);
 	}
 	TCObject::dealloc();
 }
@@ -139,8 +150,8 @@ void TREModel::compileDefaultColor(void)
 				(*m_subModels)[i]->getModel()->compileDefaultColor();
 			}
 		}
-		if (m_mainModel->getCompileAll() ||
-			(m_flags.part && m_mainModel->getCompileParts()))
+		if (m_mainModel->getCompileAllFlag() ||
+			(m_flags.part && m_mainModel->getCompilePartsFlag()))
 		{
 			int listID = glGenLists(1);
 
@@ -148,6 +159,60 @@ void TREModel::compileDefaultColor(void)
 			drawDefaultColor();
 			glEndList();
 			m_defaultColorListID = listID;
+		}
+	}
+}
+
+void TREModel::compileDefaultColorLines(void)
+{
+	if (!m_defaultColorLinesListID)
+	{
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getModel()->compileDefaultColorLines();
+			}
+		}
+		if (m_mainModel->getCompileAllFlag() ||
+			(m_flags.part && m_mainModel->getCompilePartsFlag()))
+		{
+			int listID = glGenLists(1);
+
+			glNewList(listID, GL_COMPILE);
+			drawDefaultColorLines();
+			glEndList();
+			m_defaultColorLinesListID = listID;
+		}
+	}
+}
+
+void TREModel::compileEdgeLines(void)
+{
+	if (!m_edgeLinesListID)
+	{
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getModel()->compileEdgeLines();
+			}
+		}
+		if (m_mainModel->getCompileAllFlag() ||
+			(m_flags.part && m_mainModel->getCompilePartsFlag()))
+		{
+			int listID = glGenLists(1);
+
+			glNewList(listID, GL_COMPILE);
+			drawEdgeLines();
+			glEndList();
+			m_edgeLinesListID = listID;
 		}
 	}
 }
@@ -172,6 +237,52 @@ void TREModel::compileColored(void)
 		drawColored();
 		glEndList();
 		m_coloredListID = listID;
+	}
+}
+
+void TREModel::compileColoredLines(void)
+{
+	if (!m_coloredLinesListID)
+	{
+		int listID = glGenLists(1);
+
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getModel()->compileColoredLines();
+			}
+		}
+		glNewList(listID, GL_COMPILE);
+		drawColoredLines();
+		glEndList();
+		m_coloredLinesListID = listID;
+	}
+}
+
+void TREModel::compileColoredEdgeLines(void)
+{
+	if (!m_coloredEdgeLinesListID)
+	{
+		int listID = glGenLists(1);
+
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getModel()->compileColoredEdgeLines();
+			}
+		}
+		glNewList(listID, GL_COMPILE);
+		drawColoredEdgeLines();
+		glEndList();
+		m_coloredEdgeLinesListID = listID;
 	}
 }
 
@@ -291,17 +402,17 @@ void TREModel::drawColoredLines(void)
 	}
 }
 
-void TREModel::drawHighlightLines(void)
+void TREModel::drawEdgeLines(void)
 {
-	if (m_highlightLinesListID)
+	if (m_edgeLinesListID)
 	{
-		glCallList(m_highlightLinesListID);
+		glCallList(m_edgeLinesListID);
 	}
 	else
 	{
-		if (m_highlightShapes)
+		if (m_edgeShapes)
 		{
-			m_highlightShapes->drawLines();
+			m_edgeShapes->drawLines();
 		}
 		if (m_subModels)
 		{
@@ -310,7 +421,32 @@ void TREModel::drawHighlightLines(void)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->drawHighlightLines();
+				(*m_subModels)[i]->drawEdgeLines();
+			}
+		}
+	}
+}
+
+void TREModel::drawColoredEdgeLines(void)
+{
+	if (m_coloredEdgeLinesListID)
+	{
+		glCallList(m_coloredEdgeLinesListID);
+	}
+	else
+	{
+		if (m_coloredEdgeShapes)
+		{
+			m_coloredEdgeShapes->drawLines();
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->drawColoredEdgeLines();
 			}
 		}
 	}
@@ -325,12 +461,12 @@ void TREModel::setup(void)
 	}
 }
 
-void TREModel::setupHighlight(void)
+void TREModel::setupEdges(void)
 {
-	if (!m_highlightShapes)
+	if (!m_edgeShapes)
 	{
-		m_highlightShapes = new TREShapeGroup;
-		m_highlightShapes->setVertexStore(m_mainModel->getVertexStore());
+		m_edgeShapes = new TREShapeGroup;
+		m_edgeShapes->setVertexStore(m_mainModel->getVertexStore());
 	}
 }
 
@@ -340,6 +476,16 @@ void TREModel::setupColored(void)
 	{
 		m_coloredShapes = new TREColoredShapeGroup;
 		m_coloredShapes->setVertexStore(m_mainModel->getColoredVertexStore());
+	}
+}
+
+void TREModel::setupColoredEdges(void)
+{
+	if (!m_coloredEdgeShapes)
+	{
+		m_coloredEdgeShapes = new TREColoredShapeGroup;
+		m_coloredEdgeShapes->setVertexStore(
+			m_mainModel->getColoredVertexStore());
 	}
 }
 
@@ -355,10 +501,10 @@ void TREModel::addLine(TCVector *vertices)
 	m_shapes->addLine(vertices);
 }
 
-void TREModel::addHighlightLine(TCVector *vertices)
+void TREModel::addEdgeLine(TCVector *vertices)
 {
-	setupHighlight();
-	m_highlightShapes->addLine(vertices);
+	setupEdges();
+	m_edgeShapes->addLine(vertices);
 }
 
 void TREModel::addTriangle(TCULong color, TCVector *vertices)
@@ -371,6 +517,12 @@ void TREModel::addTriangle(TCVector *vertices)
 {
 	setup();
 	m_shapes->addTriangle(vertices);
+}
+
+void TREModel::addTriangle(TCVector *vertices, TCVector *normals)
+{
+	setup();
+	m_shapes->addTriangle(vertices, normals);
 }
 
 void TREModel::addQuad(TCULong color, TCVector *vertices)
@@ -391,8 +543,8 @@ void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
 	m_shapes->addQuadStrip(vertices, normals, count);
 }
 
-void TREModel::addQuadStrip(TCULong color, TCVector *vertices, TCVector *normals,
-							int count)
+void TREModel::addQuadStrip(TCULong color, TCVector *vertices,
+							TCVector *normals, int count)
 {
 	setupColored();
 	m_coloredShapes->addQuadStrip(color, vertices, normals, count);
@@ -404,8 +556,8 @@ void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count)
 	m_shapes->addTriangleFan(vertices, normals, count);
 }
 
-void TREModel::addTriangleFan(TCULong color, TCVector *vertices, TCVector *normals,
-							  int count)
+void TREModel::addTriangleFan(TCULong color, TCVector *vertices,
+							  TCVector *normals, int count)
 {
 	setupColored();
 	m_coloredShapes->addTriangleFan(color, vertices, normals, count);
@@ -426,12 +578,12 @@ TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model)
 	return subModel;
 }
 
-TRESubModel *TREModel::addSubModel(TCULong color, TCULong highlightColor,
+TRESubModel *TREModel::addSubModel(TCULong color, TCULong edgeColor,
 								   float *matrix, TREModel *model)
 {
 	TRESubModel *subModel = addSubModel(matrix, model);
 
-	subModel->setColor(color, highlightColor);
+	subModel->setColor(color, edgeColor);
 	return subModel;
 }
 
@@ -442,7 +594,7 @@ void TREModel::flatten(void)
 								0.0f, 0.0f, 1.0f, 0.0f,
 								0.0f, 0.0f, 0.0f, 1.0f};
 
-	flatten(this, identityMatrix, 0, false, false);
+	flatten(this, identityMatrix, 0, false, 0, false, false);
 	if (m_subModels)
 	{
 		m_subModels->removeAll();
@@ -450,7 +602,8 @@ void TREModel::flatten(void)
 }
 
 void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
-					   bool colorSet, bool includeShapes)
+					   bool colorSet, TCULong edgeColor, bool edgeColorSet,
+					   bool includeShapes)
 {
 	TRESubModelArray *subModels = model->m_subModels;
 
@@ -468,7 +621,23 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 			else
 			{
 				setup();
-				flattenShapes(m_shapes, model->m_shapes, matrix, color, false);
+				flattenShapes(m_shapes, model->m_shapes, matrix, 0, false);
+			}
+		}
+		if (model->m_edgeShapes)
+		{
+			if (edgeColorSet)
+			{
+				setupColoredEdges();
+				m_coloredEdgeShapes->getVertexStore()->setupColored();
+				flattenShapes(m_coloredEdgeShapes, model->m_edgeShapes, matrix,
+					edgeColor, true);
+			}
+			else
+			{
+				setupEdges();
+				flattenShapes(m_edgeShapes, model->m_edgeShapes, matrix,
+					edgeColor, false);
 			}
 		}
 		if (model->m_coloredShapes)
@@ -476,6 +645,12 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 			setupColored();
 			flattenShapes(m_coloredShapes, model->m_coloredShapes, matrix,
 				0, false);
+		}
+		if (model->m_coloredEdgeShapes)
+		{
+			setupColoredEdges();
+			flattenShapes(m_coloredEdgeShapes, model->m_coloredEdgeShapes,
+				matrix, 0, false);
 		}
 	}
 	if (subModels)
@@ -492,11 +667,13 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 			if (subModel->isColorSet())
 			{
 				flatten(subModel->getModel(), newMatrix,
-					htonl(subModel->getColor()), true, true);
+					htonl(subModel->getColor()), true,
+					htonl(subModel->getEdgeColor()), true, true);
 			}
 			else
 			{
-				flatten(subModel->getModel(), newMatrix, color, colorSet, true);
+				flatten(subModel->getModel(), newMatrix, color, colorSet,
+					edgeColor, edgeColorSet, true);
 			}
 		}
 	}
@@ -842,6 +1019,49 @@ void TREModel::setCirclePoint(float angle, float radius, const TCVector& center,
 void TREModel::addCone(const TCVector &center, float radius, float height,
 					   int numSegments, int usedSegments)
 {
+	int i;
+	TCVector top = center;
+	TCVector p1, p2, p3;
+
+	if (usedSegments == -1)
+	{
+		usedSegments = numSegments;
+	}
+	top[1] += height;
+	for (i = 0; i < usedSegments; i++)
+	{
+		TCVector *points = new TCVector[3];
+		TCVector *normals = new TCVector[3];
+		float angle0, angle1, angle2, angle3;
+
+		angle0 = 2.0f * (float)M_PI / numSegments * (i - 1);
+		angle1 = 2.0f * (float)M_PI / numSegments * i;
+		angle2 = 2.0f * (float)M_PI / numSegments * (i + 1);
+		angle3 = 2.0f * (float)M_PI / numSegments * (i + 2);
+		setCirclePoint(angle1, radius, center, p1);
+		setCirclePoint(angle2, radius, center, p2);
+		points[0] = p2;
+		points[1] = p1;
+		points[2] = top;
+		setCirclePoint(angle0, radius, center, p3);
+/*
+		if (i == 0)
+		{
+			newConditionalLine(24, p1, top, p3, p2);
+		}
+*/
+		normals[0] = ((p1 - top) * (p1 - p2)) + ((p3 - top) * (p3 - p1));
+		normals[0].normalize();
+		setCirclePoint(angle3, radius, center, p3);
+//		newConditionalLine(24, p2, top, p1, p3);
+		normals[1] = ((p2 - top) * (p2 - p3)) + ((p1 - top) * (p1 - p2));
+		normals[1].normalize();
+		normals[2] = (p1 - top) * (p1 - p2);
+		normals[2].normalize();
+		addTriangle(points, normals);
+		delete[] points;
+		delete[] normals;
+	}
 }
 
 void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
@@ -908,6 +1128,41 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 		}
 */
 	}
+}
+
+void TREModel::addCircularEdge(const TCVector& center, float radius,
+							   int numSegments, int usedSegments)
+{
+	int i;
+	TCVector p1;
+	TCVector *allPoints;
+	TCVector points[2];
+
+	if (usedSegments == -1)
+	{
+		usedSegments = numSegments;
+	}
+	allPoints = new TCVector[usedSegments + 1];
+	for (i = 0; i <= usedSegments; i++)
+	{
+		float x, z;
+		float angle;
+
+		angle = 2.0f * (float)M_PI / numSegments * i;
+		x = radius * (float)cos(angle);
+		z = radius * (float)sin(angle);
+		p1[0] = center.get(0) + x;
+		p1[2] = center.get(2) + z;
+		p1[1] = center.get(1);
+		allPoints[i] = p1;
+	}
+	for (i = 0; i < usedSegments; i++)
+	{
+		points[0] = allPoints[i];
+		points[1] = allPoints[i + 1];
+		addEdgeLine(points);
+	}
+	delete[] allPoints;
 }
 
 void TREModel::addDisk(const TCVector& center, float radius, int numSegments,
