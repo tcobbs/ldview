@@ -3524,8 +3524,12 @@ float LDViewPreferences::getMaxFov(void)
 
 void LDViewPreferences::setupDefaultRotationMatrix(void)
 {
-	char *value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
+	char *value = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL, false);
 
+	if (!value)
+	{
+		value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
+	}
 	if (value)
 	{
 		float latitude;

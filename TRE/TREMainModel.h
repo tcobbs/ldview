@@ -69,6 +69,8 @@ public:
 	{
 		return m_mainFlags.greenFrontFaces != false;
 	}
+	void setDrawNormals(bool value) { m_mainFlags.drawNormals = value; }
+	bool getDrawNormalsFlag(void) { return m_mainFlags.drawNormals != false; }
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
 	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
 	bool getActiveLineJoinsFlag(void)
@@ -230,6 +232,7 @@ protected:
 		bool redBackFaces:1;
 		bool greenFrontFaces:1;
 		bool lineJoins:1;
+		bool drawNormals:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

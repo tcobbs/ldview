@@ -105,6 +105,7 @@ protected:
 */
 	virtual void addShapeType(TREShapeType shapeType, int index);
 	virtual void drawShapeType(TREShapeType shapeType);
+	virtual void drawNormals(TCULongArray *indexArray);
 	virtual void drawStripShapeType(TREShapeType shapeType);
 	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
 		TCVector *normals, int count);

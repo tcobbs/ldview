@@ -15,7 +15,8 @@ TREShapeGroup::TREShapeGroup(void)
 	m_controlPointIndices(NULL),
 	m_stripCounts(NULL),
 	m_multiDrawIndices(NULL),
-	m_shapesPresent(0)
+	m_shapesPresent(0),
+	m_mainModel(NULL)
 {
 }
 
@@ -272,6 +273,34 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 			glDrawElements(GL_POINTS, indexArray->getCount(), GL_UNSIGNED_INT,
 				indexArray->getValues());
 		}
+		if (m_mainModel->getDrawNormalsFlag())
+		{
+			drawNormals(indexArray);
+		}
+	}
+}
+
+void TREShapeGroup::drawNormals(TCULongArray *indexArray)
+{
+	TREVertexArray *vertices = m_vertexStore->getVertices();
+	TREVertexArray *normals = m_vertexStore->getNormals();
+
+	if (vertices && normals)
+	{
+		int i;
+		int count = indexArray->getCount();
+
+		glBegin(GL_LINES);
+		for (i = 0; i < count; i++)
+		{
+			int index = (*indexArray)[i];
+			TCVector vertex = (*vertices)[index].v;
+			TCVector normal = (*normals)[index].v;
+
+			glVertex3fv(vertex);
+			glVertex3fv(vertex + normal);
+		}
+		glEnd();
 	}
 }
 

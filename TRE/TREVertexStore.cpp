@@ -32,6 +32,7 @@ TREVertexStore::TREVertexStore(void)
 	m_flags.varFailed = false;
 	m_flags.vboTried = false;
 	m_flags.vboFailed = false;
+	m_flags.lighting = false;
 	m_flags.twoSidedLighting = false;
 	m_flags.showAllConditional = false;
 	m_flags.conditionalControlPoints = false;

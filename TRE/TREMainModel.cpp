@@ -73,6 +73,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.redBackFaces = false;
 	m_mainFlags.greenFrontFaces = false;
 	m_mainFlags.lineJoins = false;	// Doesn't work right
+	m_mainFlags.drawNormals = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -396,6 +397,30 @@ void TREMainModel::recompile(void)
 	compile();
 }
 
+void checkNormals(TREVertexStore *vertexStore)
+{
+	if (vertexStore)
+	{
+		TREVertexArray *normals = vertexStore->getNormals();
+
+		if (normals)
+		{
+			int i;
+			int count = normals->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				TCVector normal = (*normals)[i].v;
+
+				if (!fEq(normal.lengthSquared(), 1.0))
+				{
+					MessageBox(NULL, "Bad Normal", "LDView", MB_OK);
+				}
+			}
+		}
+	}
+}
+
 void TREMainModel::draw(void)
 {
 	float normalSpecular[4];
@@ -439,6 +464,8 @@ void TREMainModel::draw(void)
 	{
 		drawTransparent();
 	}
+//	checkNormals(m_vertexStore);
+//	checkNormals(m_coloredVertexStore);
 }
 
 void TREMainModel::enableLineSmooth(void)
@@ -468,6 +495,7 @@ void TREMainModel::drawSolid(void)
 	// default color inherited from above.  Note that the actual drawing color
 	// will generally be changed before each part, since you don't usually use
 	// color number 16 when you use a part in your model.
+
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
 	TREModel::draw(TREMStandard, false, subModelsOnly);
@@ -479,28 +507,41 @@ void TREMainModel::drawSolid(void)
 		m_studVertexStore->activate(m_mainFlags.compileAll ||
 			m_mainFlags.compileParts);
 		TREModel::draw(TREMStud, false, subModelsOnly);
+		glDisable(GL_TEXTURE_2D);
 	}
 	if (getBFCFlag())
 	{
 		activateBFC();
+		m_vertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
+		TREModel::draw(TREMBFC, false, subModelsOnly);
 		if (getStudLogoFlag())
 		{
+			glEnable(GL_TEXTURE_2D);
+			m_studVertexStore->activate(m_mainFlags.compileAll ||
+				m_mainFlags.compileParts);
 			TREModel::draw(TREMStudBFC, false, subModelsOnly);
 			glDisable(GL_TEXTURE_2D);
-			m_vertexStore->activate(m_mainFlags.compileAll ||
-				m_mainFlags.compileParts);
 		}
-		TREModel::draw(TREMBFC, false, subModelsOnly);
-	}
-	else if (getStudLogoFlag())
-	{
-		glDisable(GL_TEXTURE_2D);
+		deactivateBFC();
 	}
 	// Next draw all opaque triangles and quads that were specified with a color
 	// number other than 16.  Note that the colored vertex store includes color
 	// information for every vertex.
+	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
+		m_mainFlags.compileParts);
+	drawColored(TREMStandard);
+	if (getStudLogoFlag())
+	{
+		glEnable(GL_TEXTURE_2D);
+		m_coloredStudVertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
+		drawColored(TREMStud);
+		glDisable(GL_TEXTURE_2D);
+	}
 	if (getBFCFlag())
 	{
+		activateBFC();
 		m_coloredVertexStore->activate(m_mainFlags.compileAll ||
 			m_mainFlags.compileParts);
 		drawColored(TREMBFC);
@@ -513,17 +554,6 @@ void TREMainModel::drawSolid(void)
 			glDisable(GL_TEXTURE_2D);
 		}
 		deactivateBFC();
-	}
-	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
-		m_mainFlags.compileParts);
-	drawColored(TREMStandard);
-	if (getStudLogoFlag())
-	{
-		glEnable(GL_TEXTURE_2D);
-		m_coloredStudVertexStore->activate(m_mainFlags.compileAll ||
-			m_mainFlags.compileParts);
-		drawColored(TREMStud);
-		glDisable(GL_TEXTURE_2D);
 	}
 }
 

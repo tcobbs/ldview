@@ -6,6 +6,7 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLError.h>
 #include "LDModelParser.h"
@@ -244,26 +245,45 @@ void LDrawModelViewer::updateCurrentFov(void)
 {
 	int actualWidth = width / (int)getStereoWidthModifier();
 
-	currentFov = fov;
-	if (actualWidth * numXTiles < height * numYTiles)
+	currentFov = TCUserDefaults::floatForKey("HFOV", -1, false);
+	if (currentFov == -1)
 	{
-		// When the window is taller than it is wide, we want our current FOV to
-		// be the horizontal FOV, so we need to calculate the vertical FOV.
-		//
-		// From Lars Hassing:
-		// Vertical FOV = 2*atan(tan(hfov/2)/(width/height))
-		currentFov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-			(double)height * numYTiles / (actualWidth * numXTiles))));
-
-		if (currentFov > 179.0f)
+		currentFov = fov;
+		if (actualWidth * numXTiles < height * numYTiles)
 		{
-			currentFov = 179.0f;
+			// When the window is taller than it is wide, we want our current
+			// FOV to be the horizontal FOV, so we need to calculate the
+			// vertical FOV.
+			//
+			// From Lars Hassing:
+			// Vertical FOV = 2*atan(tan(hfov/2)/(width/height))
+			currentFov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+				(double)height * numYTiles / (actualWidth * numXTiles))));
+
+			if (currentFov > 179.0f)
+			{
+				currentFov = 179.0f;
+			}
+			aspectRatio = (float)height / actualWidth;
 		}
-		aspectRatio = (float)height / actualWidth;
+		else
+		{
+			aspectRatio = (float)actualWidth / height;
+		}
 	}
 	else
 	{
-		aspectRatio = (float)actualWidth / height;
+		fov = (float)(2.0 * rad2deg(atan(tan(deg2rad(currentFov / 2.0)) *
+			(double)height * numYTiles / (actualWidth * numXTiles))));
+		if (actualWidth * numXTiles > height * numYTiles)
+		{
+			currentFov = fov;
+			aspectRatio = (float)actualWidth / height;
+		}
+		else
+		{
+			aspectRatio = (float)height / actualWidth;
+		}
 	}
 }
 
@@ -300,7 +320,6 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 		zoomToFit();
 	}
 	distance = camera.getPosition().length();
-	currentFov = fov;
 	updateCurrentFov();
 	if (resetViewport)
 	{
@@ -1568,6 +1587,7 @@ void LDrawModelViewer::setBfc(bool value)
 		if (flags.redBackFaces || flags.greenFrontFaces)
 		{
 			flags.needsMaterialSetup = true;
+			flags.needsLightingSetup = true;
 		}
 	}
 }
@@ -2823,6 +2843,9 @@ void LDrawModelViewer::zoomToFit(void)
 		float tmpMatrix[16];
 		float transformationMatrix[16];
 		float margin;
+		char *cameraGlobe = TCUserDefaults::stringForKey("CameraGlobe", NULL,
+			false);
+		float globeRadius;
 
 		TCVector::initIdentityMatrix(tmpMatrix);
 		tmpMatrix[12] = center[0];
@@ -2922,7 +2945,22 @@ void LDrawModelViewer::zoomToFit(void)
 			location[1] = b[4];
 			location[2] = b[5] * (zoomToFitWidth + margin) / zoomToFitWidth;
 		}
-		location[2] *= distanceMultiplier;
+		if (cameraGlobe && sscanf(cameraGlobe, "%*f,%*f,%f", &globeRadius) == 1)
+		{
+			if (globeRadius >= 0)
+			{
+				location.normalize();
+				location *= globeRadius;
+			}
+			else
+			{
+				location[2] *= 1.0f - globeRadius / 100.0f;
+			}
+		}
+		else
+		{
+			location[2] *= distanceMultiplier;
+		}
 		camera.setPosition(location - center);
 		xPan = 0.0f;
 		yPan = 0.0f;
