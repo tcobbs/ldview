@@ -303,7 +303,14 @@ void TCUserDefaults::defRemoveSession(const char *value)
 		}
 	}
 	RegCloseKey(hSessionsKey);
-#endif // WIN32
+#else // WIN32
+#ifdef _QT
+	char sessionKey[1024];
+
+	sprintf(sessionKey, "/%s/Sessions/%s", appName, value);
+	deleteSubkeys(sessionKey);
+#endif // _QT
+#endif // !WIN32
 }
 
 void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
@@ -314,7 +321,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 		sessionSpecific);
 #else // WIN32
 #ifdef _QT
-	qSettings->writeEntry(qKeyForKey(key), value);
+	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
 #endif // _QT
 #endif // !WIN32
 }
@@ -402,7 +409,8 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	}
 #else // WIN32
 #ifdef _QT
-	QString string = qSettings->readEntry(qKeyForKey(key), defaultValue);
+	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
+		defaultValue);
 
 	if (string == QString::null)
 	{
@@ -429,7 +437,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 		sessionSpecific);
 #else // WIN32
 #ifdef _QT
-	qSettings->writeEntry(qKeyForKey(key), (int)value);
+	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
 #endif // _QT
 #endif // !WIN32
 }
@@ -451,7 +459,8 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		delete commandLineValue;
 	}
 #ifdef _QT
-	return qSettings->readNumEntry(qKeyForKey(key), defaultValue);
+	return qSettings->readNumEntry(qKeyForKey(key, sessionSpecific),
+		defaultValue);
 #endif // _QT
 #ifdef WIN32
 	DWORD size;
@@ -527,7 +536,11 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 
 #ifdef WIN32
 	defGetAllKeysUnderKey(hSessionKey, "", allKeys);
-#endif
+#else // WIN32
+#ifdef _QT
+	defGetAllKeysUnderKey(qKeyForKey("", true), allKeys);
+#endif // _QT
+#endif // !WIN32
 	return allKeys;
 }
 
@@ -561,7 +574,22 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 		}
 		RegCloseKey(hSessionsKey);
 	}
-#endif
+#else // WIN32
+#ifdef _QT
+	char key[1024];
+	QStringList subkeyList;
+	int i;
+	int count;
+	
+	sprintf(key, "/%s/Sessions/", appName);
+	subkeyList = qSettings->subkeyList(key);
+	count = subkeyList.count();
+	for (i = 0; i < count; i++)
+	{
+		allSessionNames->addString(subkeyList[i]);
+	}
+#endif // _QT
+#endif // !WIN32
 	return allSessionNames;
 }
 
@@ -640,8 +668,8 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 				for (i = 0; i < count; i++)
 				{
 					char *key = allKeys->stringAtIndex(i);
-					char *newKey = new char[strlen(sessionPrefix) + strlen(key) +
-						4];
+					char *newKey = new char[strlen(sessionPrefix) + strlen(key)
+						+ 4];
 
 					sprintf(newKey, "%s%s", sessionPrefix, key);
 					if (defIsLongKey(key, true))
@@ -676,7 +704,20 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 		{
 			RegCloseKey(hOldSessionKey);
 		}
-#endif // WIN32
+#else // WIN32
+#ifdef _QT
+	char key[1024];
+	QStringList subkeyList;
+	
+	sprintf(key, "/%s/Sessions/", appName);
+	subkeyList = qSettings->subkeyList(key);
+	if (subkeyList.findIndex(value) == -1)
+	{
+		// We need to copy all the data from our current session into the new
+		// one.
+	}
+#endif // _QT
+#endif // !WIN32
 	}
 	if (saveKey)
 	{
@@ -955,10 +996,60 @@ void TCUserDefaults::deleteSubKeys(HKEY hKey)
 
 #ifdef _QT
 
-char *TCUserDefaults::qKeyForKey(const char *key)
+char *TCUserDefaults::qKeyForKey(const char *key, bool sessionSpecific)
 {
-	sprintf(qKey, "/%s/%s", appName, key);
+	if (sessionSpecific && sessionName)
+	{
+		sprintf(qKey, "/%s/Sessions/%s/%s", appName, sessionName, key);
+	}
+	else
+	{
+		sprintf(qKey, "/%s/%s", appName, key);
+	}
 	return qKey;
+}
+
+void TCUserDefaults::deleteSubkeys(const char *key)
+{
+	QStringList subkeyList = qSettings->subkeyList(key);
+	QStringList entryList = qSettings->entryList(key);
+	int i;
+	int count = subkeyList.count();
+
+	for (i = 0; i < count; i++)
+	{
+		char subkey[1024];
+
+		sprintf(subkey, "%s/%s", key, (const char *)subkeyList[i]);
+		deleteSubkeys(subkey);
+	}
+	count = entryList.count();
+	for (i = 0; i < count; i++)
+	{
+		qSettings->removeEntry(entryList[i]);
+	}
+}
+
+void TCUserDefaults::defGetAllKeysUnderKey(const char *key,
+										   TCStringArray *allKeys)
+{
+	QStringList subkeyList = qSettings->subkeyList(key);
+	QStringList entryList = qSettings->entryList(key);
+	int i;
+	int count = subkeyList.count();
+
+	for (i = 0; i < count; i++)
+	{
+		char subkey[1024];
+
+		sprintf(subkey, "%s/%s", key, (const char *)subkeyList[i]);
+		defGetAllKeysUnderKey(subkey, allKeys);
+	}
+	count = entryList.count();
+	for (i = 0; i < count; i++)
+	{
+		allKeys->addString(subkeyList[i]);
+	}
 }
 
 #endif // _QT
