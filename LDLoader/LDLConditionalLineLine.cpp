@@ -47,6 +47,7 @@ bool LDLConditionalLineLine::parse(void)
 	}
 	else
 	{
+		m_valid = false;
 		setError(LDLEParse, "Error parsing conditional line line.");
 		return false;
 	}

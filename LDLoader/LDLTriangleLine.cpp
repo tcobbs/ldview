@@ -29,6 +29,7 @@ bool LDLTriangleLine::parse(void)
 	}
 	else
 	{
+		m_valid = false;
 		setError(LDLEParse, "Error parsing triangle line.");
 		return false;
 	}

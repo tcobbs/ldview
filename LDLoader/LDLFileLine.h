@@ -30,6 +30,8 @@ public:
 	virtual LDLLineType getLineType(void) const = 0;
 	virtual bool isActionLine(void) { return false; }
 	virtual LDLModel *getParentModel(void) { return m_parentModel; }
+	virtual bool isValid(void) { return m_valid; }
+	virtual void forgetLine(void) { delete m_line; m_line = NULL; }
 
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
 		int lineNumber);
@@ -47,6 +49,7 @@ protected:
 	char *m_line;
 	int m_lineNumber;
 	LDLError *m_error;
+	bool m_valid;
 };
 
 #endif // __LDLFILELINE_H__

@@ -107,6 +107,10 @@ SOURCE=.\TRESubModel.cpp
 
 SOURCE=.\TREVertexArray.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\TREVertexStore.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -114,6 +118,10 @@ SOURCE=.\TREVertexArray.cpp
 # Begin Source File
 
 SOURCE=.\TREColoredShapeGroup.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TREGL.h
 # End Source File
 # Begin Source File
 
@@ -134,6 +142,10 @@ SOURCE=.\TRESubModel.h
 # Begin Source File
 
 SOURCE=.\TREVertexArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TREVertexStore.h
 # End Source File
 # End Group
 # End Target

@@ -1,27 +1,26 @@
 #include "TREMainModel.h"
+#include "TREVertexStore.h"
+#include "TREGL.h"
 
 #include <TCFoundation/TCDictionary.h>
 
-#ifdef WIN32
-#include <windows.h>
-#include <winsock.h>
-#else
-#include <netinet/in.h>
-#endif
-
-#include <GL/gl.h>
-
-
 TREMainModel::TREMainModel(void)
-	:m_loadedModels(NULL)
+	:m_loadedModels(NULL),
+	m_vertexStore(new TREVertexStore),
+	m_coloredVertexStore(new TREVertexStore)
 {
+	m_mainModel = this;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
 	:TREModel(other),
 	m_loadedModels((TCDictionary *)TCObject::copy(other.m_loadedModels)),
+	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
+	m_coloredVertexStore((TREVertexStore *)TCObject::copy(
+		other.m_coloredVertexStore)),
 	m_mainFlags(other.m_mainFlags)
 {
+	m_mainModel = this;
 }
 
 TREMainModel::~TREMainModel(void)
@@ -31,6 +30,8 @@ TREMainModel::~TREMainModel(void)
 void TREMainModel::dealloc(void)
 {
 	TCObject::release(m_loadedModels);
+	TCObject::release(m_vertexStore);
+	TCObject::release(m_coloredVertexStore);
 	TREModel::dealloc();
 }
 
@@ -52,9 +53,16 @@ void TREMainModel::draw(void)
 {
 	TCULong color = htonl(0xBBBBBBFF);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnable(GL_NORMALIZE);
 	glColor4ubv((GLubyte*)&color);
-	TREModel::draw(NULL);
+	TREModel::draw();
+}
+
+TREModel *TREMainModel::modelNamed(const char *name)
+{
+	return (TREMainModel *)getLoadedModels()->objectForKey(name);
+}
+
+void TREMainModel::registerModel(TREModel *model)
+{
+	getLoadedModels()->setObjectForKey(model, model->getName());
 }

@@ -26,8 +26,7 @@ LDLModelLine::LDLModelLine(const LDLModelLine &other)
 	{
 		m_lowResModel = (LDLModel *)other.m_lowResModel->copy();
 	}
-	memcpy(m_transformationMatrix, other.m_transformationMatrix,
-		sizeof(m_transformationMatrix));
+	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
 }
 
 LDLModelLine::~LDLModelLine(void)
@@ -72,6 +71,7 @@ bool LDLModelLine::parse(void)
 		}
 		else
 		{
+			m_valid = false;
 			setError(LDLEFileNotFound, "Error loading submodel %s",
 				subModelName);
 			return false;
@@ -82,38 +82,61 @@ bool LDLModelLine::parse(void)
 			m_lowResModel->retain();
 		}
 		m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
-		setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
 		m_color = LDLModel::colorForRGBA(red, green, blue, alpha);
-		return true;
+		return setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
 	}
 	else
 	{
+		m_valid = false;
 		setError(LDLEParse, "Error parsing model line.");
 		return false;
 	}
 }
 
-void LDLModelLine::setTransformation(float x, float y, float z,
+bool LDLModelLine::setTransformation(float x, float y, float z,
 									 float a, float b, float c,
 									 float d, float e, float f,
 									 float g, float h, float i)
 {
-	m_transformationMatrix[3] = 0.0f;
-	m_transformationMatrix[7] = 0.0f;
-	m_transformationMatrix[11] = 0.0f;
-	m_transformationMatrix[15] = 1.0f;
-	m_transformationMatrix[0] = a;
-	m_transformationMatrix[4] = b;
-	m_transformationMatrix[8] = c;
-	m_transformationMatrix[1] = d;
-	m_transformationMatrix[5] = e;
-	m_transformationMatrix[9] = f;
-	m_transformationMatrix[2] = g;
-	m_transformationMatrix[6] = h;
-	m_transformationMatrix[10] = i;
-	m_transformationMatrix[12] = x;
-	m_transformationMatrix[13] = y;
-	m_transformationMatrix[14] = z;
+	bool retValue = true;
+
+	m_matrix[3] = 0.0f;
+	m_matrix[7] = 0.0f;
+	m_matrix[11] = 0.0f;
+	m_matrix[15] = 1.0f;
+	m_matrix[0] = a;
+	m_matrix[4] = b;
+	m_matrix[8] = c;
+	m_matrix[1] = d;
+	m_matrix[5] = e;
+	m_matrix[9] = f;
+	m_matrix[2] = g;
+	m_matrix[6] = h;
+	m_matrix[10] = i;
+	m_matrix[12] = x;
+	m_matrix[13] = y;
+	m_matrix[14] = z;
+/*
+	if (m_matrix[0] == 0.0f && m_matrix[1] == 0.0f && m_matrix[2] == 0.0f)
+	{
+		setError(LDLEMatrix, "Degenerate matrix column 0.");
+		m_matrix[0] = 1.0f;
+		retValue = false;
+	}
+	if (m_matrix[4] == 0.0f && m_matrix[5] == 0.0f && m_matrix[6] == 0.0f)
+	{
+//		setError(LDLEMatrix, "Degenerate matrix column 1.");
+		m_matrix[5] = 1.0f;
+//		retValue = false;
+	}
+	if (m_matrix[8] == 0.0f && m_matrix[9] == 0.0f && m_matrix[10] == 0.0f)
+	{
+		setError(LDLEMatrix, "Degenerate matrix column 2.");
+		m_matrix[10] = 1.0f;
+		retValue = false;
+	}
+*/
+	return retValue;
 }
 
 void LDLModelLine::print(int indent) const

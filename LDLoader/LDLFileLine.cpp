@@ -19,7 +19,8 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line, int lineNumber
 	:m_parentModel(parentModel),
 	m_line(copyString(line)),
 	m_lineNumber(lineNumber),
-	m_error(NULL)
+	m_error(NULL),
+	m_valid(true)
 {
 }
 
@@ -27,12 +28,9 @@ LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	:m_parentModel(other.m_parentModel),
 	m_line(copyString(other.m_line)),
 	m_lineNumber(other.m_lineNumber),
-	m_error(NULL)
+	m_error((LDLError *)TCObject::retain(other.m_error)),
+	m_valid(other.m_valid)
 {
-	if (other.m_error)
-	{
-		m_error = (LDLError*)other.m_error->retain();
-	}
 }
 
 LDLFileLine::~LDLFileLine(void)
@@ -58,7 +56,7 @@ void LDLFileLine::setError(LDLErrorType type, const char* format, ...)
 	{
 		m_error->release();
 	}
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	m_error = m_parentModel->newError(type, *this, format, argPtr);
 	va_end(argPtr);
 }

@@ -1,16 +1,8 @@
 #include "TRESubModel.h"
 #include "TREModel.h"
+#include "TREGL.h"
 
 #include <string.h>
-
-#ifdef WIN32
-#include <windows.h>
-#include <winsock.h>
-#else
-#include <netinet/in.h>
-#endif
-
-#include <GL/gl.h>
 
 TRESubModel::TRESubModel(void)
 	:m_model(NULL),
@@ -70,10 +62,15 @@ void TRESubModel::draw(void)
 {
 	if (m_colorSet)
 	{
+		glPushAttrib(GL_CURRENT_BIT);
 		glColor4ubv((GLubyte*)&m_color);
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	m_model->draw(NULL);
+	m_model->draw();
 	glPopMatrix();
+	if (m_colorSet)
+	{
+		glPopAttrib();
+	}
 }

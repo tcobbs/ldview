@@ -27,6 +27,7 @@ bool LDLLineLine::parse(void)
 	}
 	else
 	{
+		m_valid = false;
 		setError(LDLEParse, "Error parsing line line.");
 		return false;
 	}

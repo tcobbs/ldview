@@ -51,6 +51,7 @@ public:
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
 		const char *format, ...);
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
+	virtual int getActiveLineCount(void) { return m_activeLineCount; }
 
 	// Flags
 	bool isPart(void) { return m_flags.part; }
@@ -79,6 +80,7 @@ protected:
 	char *m_name;
 	LDLFileLineArray *m_fileLines;
 	LDLMainModel *m_mainModel;
+	int m_activeLineCount;
 	struct
 	{
 		// Private flags
