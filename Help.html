@@ -608,13 +608,19 @@ window.
 <I>Width</I><BR>
 This is only available with the <I>Save image with specific size</I> check box
 checked.  It then sets the width (in pixels) of the image file being
-created.</I>
+created.  Note that if this is bigger than a certain threshold (which differs
+from one video card to another), a number of tiles will be rendered and stitched
+together automatically to form the full image.  This may cause the actual image
+width to be slightly less than the requested width due to rounding.</I>
 </P>
 <P>
 <I>Height</I><BR>
 This is only available with the <I>Save image with specific size</I> check box
 checked.  It then sets the height (in pixels) of the image file being
-created.</I>
+created.  Note that if this is bigger than a certain threshold (which differs
+from one video card to another), a number of tiles will be rendered and stitched
+together automatically to form the full image.  This may cause the actual image
+height to be slightly less than the requested height due to rounding.</I>
 </P>
 <P>
 <I>Zoom to Fit</I><BR>
@@ -776,6 +782,10 @@ Note that edge lines on default-colored objects will be black unless you choose
 the exact RGB value used by one of the standard LDraw colors.  The default
 custom colors in the color panel correspond to the first 16 standard LDraw
 colors.  Resetting the General preferences also resets these colors.
+</P>
+<P>
+<I>Trans</I> (Default: <I>Off</I>):<BR>
+Enabling this option causes default-colored items to be transparent.
 </P>
 
 <P>
@@ -1998,6 +2008,20 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			PreferenceSet
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Activates the specified preference set.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			PrintBackground
 		</TD>
 		<TD VALIGN="TOP">
@@ -2599,6 +2623,21 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Always on Top</I> menu item in the <I>View</I>
 			menu.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			TransDefaultColor
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Trans</I> check box in the
+			<I>General-&gt;Colors</I> box.
 		</TD>
 	</TR>
 	<TR>

@@ -18,7 +18,7 @@ protected:
 	virtual LRESULT doDestroy(void);
 
 	HBITMAP hBitmap;
-	HBRUSH hBrush;
+	HDC hBmpDc;
 };
 
 #endif __SSPREVIEW_H__

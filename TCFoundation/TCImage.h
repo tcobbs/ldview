@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <stdio.h>
 
 class TCImageFormat;
 

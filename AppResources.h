@@ -59,6 +59,7 @@
 #define IDB_NON_FLAT_QUAD_MASK          163
 #define IDR_TOOLBAR_MENU                163
 #define IDB_COLINEAR                    164
+#define IDR_SS_PREVIEW                  164
 #define IDB_COLINEAR_MASK               165
 #define IDB_TOOLBAR                     166
 #define IDB_VERTEX_ORDER                167
@@ -278,7 +279,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        164
+#define _APS_NEXT_RESOURCE_VALUE        165
 #define _APS_NEXT_COMMAND_VALUE         40075
 #define _APS_NEXT_CONTROL_VALUE         1190
 #define _APS_NEXT_SYMED_VALUE           101

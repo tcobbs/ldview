@@ -1,10 +1,11 @@
 #include "SSPreview.h"
 #include "AppResources.h"
+#include <TCFoundation/TCImage.h>
 
 SSPreview::SSPreview(HWND hParentWindow, HINSTANCE hInstance)
 		  :CUIWindow(hParentWindow, hInstance, 0, 0, 0, 0),
 		   hBitmap(NULL),
-		   hBrush(NULL)
+		   hBmpDc(NULL)
 {
 	setTitle("LDView SS Preview");
 }
@@ -15,8 +16,14 @@ SSPreview::~SSPreview(void)
 
 void SSPreview::dealloc(void)
 {
-	DeleteObject(hBitmap);
-	DeleteObject(hBrush);
+	if (hBitmap)
+	{
+		DeleteObject(hBitmap);
+	}
+	if (hBmpDc)
+	{
+		DeleteDC(hBmpDc);
+	}
 }
 
 BOOL SSPreview::run(void)
@@ -99,18 +106,77 @@ HBRUSH SSPreview::getBackgroundBrush(void)
 
 void SSPreview::doPaint(void)
 {
-	RECT rect = {x, y, width, height};
-
 	if (!hBitmap)
 	{
-//		hBitmap = LoadBitmap(getLanguageModule(),
-//			MAKEINTRESOURCE(IDB_SS_PREVIEW));
-		hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
-			MAKEINTRESOURCE(IDB_SS_PREVIEW), IMAGE_BITMAP, width, height,
-			LR_DEFAULTCOLOR);
-		hBrush = CreatePatternBrush(hBitmap);
+		HRSRC hPngResource = FindResource(getLanguageModule(),
+			MAKEINTRESOURCE(IDR_SS_PREVIEW), "PNG");
+
+		if (hPngResource)
+		{
+			HGLOBAL hPng = LoadResource(getLanguageModule(), hPngResource);
+
+			if (hPng)
+			{
+				TCByte *data = (TCByte *)LockResource(hPng);
+
+				if (data)
+				{
+					DWORD length = SizeofResource(getLanguageModule(),
+						hPngResource);
+
+					if (length)
+					{
+						TCImage *image = new TCImage;
+						BITMAPINFO bmInfo;
+						TCByte *bmData;
+						TCByte *imageData;
+						int imageWidth;
+						int imageHeight;
+						int rowSize;
+						int row;
+						int col;
+
+						image->setFlipped(true);
+						image->setLineAlignment(4);
+						image->loadData(data, length);
+						SetLastError(0);
+						bmInfo.bmiHeader.biSize = sizeof(bmInfo.bmiHeader);
+						bmInfo.bmiHeader.biWidth = image->getWidth();
+						bmInfo.bmiHeader.biHeight = image->getHeight();
+						bmInfo.bmiHeader.biPlanes = 1;
+						bmInfo.bmiHeader.biBitCount = 24;
+						bmInfo.bmiHeader.biCompression = BI_RGB;
+						bmInfo.bmiHeader.biSizeImage = 0;
+						bmInfo.bmiHeader.biXPelsPerMeter = 1;
+						bmInfo.bmiHeader.biYPelsPerMeter = 1;
+						bmInfo.bmiHeader.biClrUsed = 0;
+						bmInfo.bmiHeader.biClrImportant = 0;
+						hBitmap = CreateDIBSection(hdc, &bmInfo, DIB_RGB_COLORS,
+							(void**)&bmData, NULL, 0);
+						imageData = image->getImageData();
+						imageWidth = image->getWidth();
+						imageHeight = image->getHeight();
+						rowSize = image->getRowSize();
+						for (row = 0; row < imageHeight; row++)
+						{
+							for (col = 0; col < imageWidth; col++)
+							{
+								int offset = row * rowSize + col * 3;
+
+								bmData[offset] = imageData[offset + 2];
+								bmData[offset + 1] = imageData[offset + 1];
+								bmData[offset + 2] = imageData[offset];
+							}
+						}
+						image->release();
+						hBmpDc = CreateCompatibleDC(hdc);
+						SelectObject(hBmpDc, hBitmap);
+					}
+				}
+			}
+		}
 	}
-	FillRect(hdc, &rect, hBrush);
+	BitBlt(hdc, 0, 0, width, height, hBmpDc, 0, 0, SRCCOPY);
 }
 
 LRESULT SSPreview::doDestroy(void)

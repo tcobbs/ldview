@@ -400,6 +400,10 @@ SOURCE=.\Textures\SansSerif.fnt
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\screen_saver_preview.png
+# End Source File
+# Begin Source File
+
 SOURCE=.\Textures\StudLogo.png
 # End Source File
 # End Target
