@@ -49,6 +49,11 @@ public:
 	bool getBFCFlag(void) { return m_flags.bfc != false; }
 	void setRedBackFacesFlag(bool value) { m_flags.redBackFaces = value; }
 	bool getRedBackFacesFlag(void) { return m_flags.redBackFaces != false; }
+	void setGreenFrontFacesFlag(bool value) { m_flags.greenFrontFaces = value; }
+	bool getGreenFrontFacesFlag(void)
+	{
+		return m_flags.greenFrontFaces != false;
+	}
 	void setAALinesFlag(bool value) { m_flags.aaLines = value; }
 	bool getAALinesFlag(void) { return m_flags.aaLines != false; }
 	void setSortTransparentFlag(bool value) { m_flags.sortTransparent = value; }
@@ -232,6 +237,7 @@ protected:
 		bool studLogo:1;
 		bool defaultTrans:1;
 		bool redBackFaces:1;
+		bool greenFrontFaces:1;
 	} m_flags;
 };
 

@@ -71,6 +71,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.conditionalControlPoints = false;
 	m_mainFlags.studLogo = true;
 	m_mainFlags.redBackFaces = false;
+	m_mainFlags.greenFrontFaces = false;
 	m_mainFlags.lineJoins = false;	// Doesn't work right
 }
 
@@ -145,13 +146,37 @@ TCDictionary *TREMainModel::getLoadedModels(bool bfc)
 
 void TREMainModel::activateBFC(void)
 {
-	if (getRedBackFacesFlag())
+	if (getRedBackFacesFlag() || getGreenFrontFacesFlag())
 	{
-		float mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+		bool needColorMaterial = true;
 
-		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-//		glMaterialfv(GL_BACK, GL_AMBIENT, mRed);
-		glMaterialfv(GL_BACK, GL_DIFFUSE, mRed);
+		if (getRedBackFacesFlag() && getGreenFrontFacesFlag())
+		{
+			needColorMaterial = false;
+			glDisable(GL_COLOR_MATERIAL);
+		}
+		if (getRedBackFacesFlag())
+		{
+			float mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+
+			if (needColorMaterial)
+			{
+				glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+			}
+			glMaterialfv(GL_BACK, GL_AMBIENT, mRed);
+			glMaterialfv(GL_BACK, GL_DIFFUSE, mRed);
+		}
+		if (getGreenFrontFacesFlag())
+		{
+			float mGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
+
+			if (needColorMaterial)
+			{
+				glColorMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE);
+			}
+			glMaterialfv(GL_FRONT, GL_AMBIENT, mGreen);
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, mGreen);
+		}
 	}
 	else
 	{
@@ -167,7 +192,11 @@ void TREMainModel::activateBFC(void)
 
 void TREMainModel::deactivateBFC(void)
 {
-	if (getRedBackFacesFlag())
+	if (getRedBackFacesFlag() && getGreenFrontFacesFlag())
+	{
+		glEnable(GL_COLOR_MATERIAL);
+	}
+	else if (getRedBackFacesFlag() || getGreenFrontFacesFlag())
 	{
 		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	}

@@ -195,7 +195,7 @@ END
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,198,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -226,6 +226,12 @@ BEGIN
     GROUPBOX        "    ",IDC_BFC_BOX,7,106,97,40,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,15,106,29,10,WS_EX_TRANSPARENT,HIDC_BFC
+    CONTROL         "Red back faces",IDC_RED_BACK_FACES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,118,81,10,0,
+                    HIDC_RED_BACK_FACES
+    CONTROL         "Green front faces",IDC_GREEN_FRONT_FACES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,129,81,10,0,
+                    HIDC_GREEN_FRONT_FACES
     GROUPBOX        "      ",IDC_EDGES_BOX,108,42,97,104,WS_GROUP,0,
                     HIDC_EDGES_BOX
     CONTROL         "&Edge Lines",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
@@ -255,9 +261,6 @@ BEGIN
                     WS_EX_CLIENTEDGE,HIDC_EDGE_THICKNESS
     PUSHBUTTON      "&Reset",IDC_GEOMETRY_RESET,155,156,50,14,WS_GROUP,0,
                     HIDC_GEOMETRY_RESET
-    CONTROL         "Red back faces",IDC_RED_BACK_FACES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,118,81,10,0,
-                    HIDC_RED_BACK_FACES
 END
 
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 212, 177
@@ -337,7 +340,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,97,49,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -361,7 +364,7 @@ BEGIN
     CONTROL         "Trans",IDC_TRANS_DEFAULT_COLOR,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,171,39,30,10,0,
                     HIDC_TRANS_DEFAULT_COLOR
-    GROUPBOX        "&Misc",IDC_GENERAL_MISC_BOX,7,57,198,80,WS_GROUP,
+    GROUPBOX        "&Misc",IDC_GENERAL_MISC_BOX,7,57,198,96,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
     CONTROL         "Process ldconfig.ldr",IDC_PROCESS_LDCONFIG,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
@@ -379,12 +382,16 @@ BEGIN
                     HIDC_FS_RATE
     CTEXT           "Field of view:",IDC_FOV_LABEL,70,120,43,8,0,0,
                     HIDC_FOV_LABEL
-    EDITTEXT        IDC_FOV,118,117,24,14,ES_AUTOHSCROLL | WS_GROUP,0,
+    EDITTEXT        IDC_FOV,117,117,24,14,ES_AUTOHSCROLL | WS_GROUP,0,
                     HIDC_FOV
     PUSHBUTTON      "&Reset",IDC_GENERAL_RESET,155,156,50,14,WS_GROUP,0,
                     HIDC_GENERAL_RESET
     LTEXT           "(0.1 - 90.0)",IDC_FOV_RANGE_LABEL,146,120,35,8,0,0,
                     HIDC_FOV_RANGE_LABEL
+    COMBOBOX        IDC_MEMORY_COMBO,117,135,48,73,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP,0,HIDC_MEMORY_COMBO
+    RTEXT           "Memory usage:",IDC_MEMORY_LABEL,40,138,72,8,0,0,
+                    HIDC_MEMORY_LABEL
 END
 
 PAGESETUPDLGORD DIALOG DISCARDABLE  32, 32, 240, 240
@@ -469,33 +476,38 @@ IDD_SAVE_OPTIONS DIALOGEX 0, 0, 289, 64
 STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "     ",IDC_STATIC,4,0,132,27
+    GROUPBOX        "     ",IDC_SAVE_SERIES_BOX,4,0,132,27,0,0,
+                    HIDC_SAVE_SERIES_BOX
     CONTROL         "Save snapshot series",IDC_SAVE_SERIES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,12,0,83,10,
-                    WS_EX_TRANSPARENT
-    RTEXT           "Number of Digits:",IDC_SAVE_DIGITS_LABEL,26,13,55,8
+                    WS_EX_TRANSPARENT,HIDC_SAVE_SERIES
+    RTEXT           "Number of Digits:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,0,
+                    HIDC_SAVE_DIGITS_LABEL
     EDITTEXT        IDC_SAVE_DIGITS,86,11,22,12,ES_AUTOHSCROLL | ES_READONLY | 
-                    ES_NUMBER
+                    ES_NUMBER,0,HIDC_SAVE_DIGITS
     CONTROL         "Spin1",IDC_SAVE_DIGITS_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,102,11,9,12
-    GROUPBOX        "     ",IDC_STATIC,140,0,132,57
+                    UDS_ARROWKEYS,102,11,9,12,0,HIDC_SAVE_DIGITS_SPIN
+    GROUPBOX        "Misc",IDC_MISC_BOX,4,29,132,28,0,0,HIDC_MISC_BOX
+    CONTROL         "Don't use Pixel Buffer",IDC_IGNORE_PBUFFER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,12,41,83,10,0,
+                    HIDC_IGNORE_PBUFFER
+    GROUPBOX        "     ",IDC_SAVE_ACTUAL_SIZE_BOX,140,0,132,57,0,0,
+                    HIDC_SAVE_ACTUAL_SIZE_BOX
     CONTROL         "Save image with specific size",IDC_SAVE_ACTUAL_SIZE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,0,108,10,
-                    WS_EX_TRANSPARENT
+                    WS_EX_TRANSPARENT,HIDC_SAVE_ACTUAL_SIZE
     LTEXT           "Width:",IDC_SAVE_WIDTH_LABEL,168,14,24,8,WS_DISABLED,
-                    WS_EX_RIGHT
+                    WS_EX_RIGHT,HIDC_SAVE_WIDTH_LABEL
     EDITTEXT        IDC_SAVE_WIDTH,196,12,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
-                    WS_DISABLED
+                    WS_DISABLED,0,HIDC_SAVE_WIDTH
     LTEXT           "Height:",IDC_SAVE_HEIGHT_LABEL,168,30,24,8,WS_DISABLED,
-                    WS_EX_RIGHT
+                    WS_EX_RIGHT,HIDC_SAVE_HEIGHT_LABEL
     EDITTEXT        IDC_SAVE_HEIGHT,196,28,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
-                    WS_DISABLED
+                    WS_DISABLED,0,HIDC_SAVE_HEIGHT
     CONTROL         "Zoom to Fit",IDC_SAVE_ZOOMTOFIT,"Button",
-                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,51,10
-    GROUPBOX        "Misc",IDC_STATIC,4,29,132,28
-    CONTROL         "Don't use Pixel Buffer",IDC_IGNORE_PBUFFER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,12,41,83,10
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,51,10,
+                    0,HIDC_SAVE_ZOOMTOFIT
 END
 
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 212, 177

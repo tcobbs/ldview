@@ -174,6 +174,7 @@ class ModelWindow: public CUIOGLWindow
 //		virtual BOOL doDialogVScroll(HWND, int, int, HWND);
 		virtual BOOL doDialogNotify(HWND hDlg, int controlId,
 			LPNMHDR notification);
+		virtual BOOL doDialogHelp(HWND hDlg, LPHELPINFO helpInfo);
 		virtual BOOL doDialogCommand(HWND, int, int, HWND);
 		virtual BOOL doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 			int newHeight);
@@ -363,6 +364,7 @@ class ModelWindow: public CUIOGLWindow
 		int saveHeight;
 		bool saveZoomToFit;
 		bool saveSeries;
+		bool ignorePBuffer;
 		int saveDigits;
 		HWND hSaveDialog;
 		HWND hSaveWidthLabel;

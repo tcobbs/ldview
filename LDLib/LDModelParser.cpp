@@ -121,6 +121,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	m_mainTREModel->setBFCFlag(getBFCFlag());
 	m_mainTREModel->setRedBackFacesFlag(getRedBackFacesFlag());
+	m_mainTREModel->setGreenFrontFacesFlag(getGreenFrontFacesFlag());
 	m_mainTREModel->setCompilePartsFlag(getCompilePartsFlag());
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
@@ -152,6 +153,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
+			m_mainTREModel->setPartFlag(true);
 			finishPart(m_mainTREModel);
 		}
 		TCProgressAlert::send("LDModelParser",

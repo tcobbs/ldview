@@ -115,6 +115,7 @@ void LDViewPreferences::applyGeneralSettings(void)
 			transDefaultColor);
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
 		modelViewer->setLineSmoothing(lineSmoothing);
+		modelViewer->setMemoryUsage(memoryUsage);
 	}
 }
 
@@ -136,6 +137,7 @@ void LDViewPreferences::applyGeometrySettings(void)
 		modelViewer->setWireframeLineWidth((GLfloat)wireframeThickness);
 		modelViewer->setBfc(bfc);
 		modelViewer->setRedBackFaces(redBackFaces);
+		modelViewer->setGreenFrontFaces(greenFrontFaces);
 		modelViewer->setShowsHighlightLines(showsHighlightLines);
 		modelViewer->setEdgesOnly(edgesOnly);
 		modelViewer->setDrawConditionalHighlights(drawConditionalHighlights);
@@ -208,6 +210,7 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 	showErrors = true;
 	fullScreenRefresh = 0;
 	fov = 45.0f;
+	memoryUsage = 2;
 	for (i = 0; i < 16; i++)
 	{
 		customColors[i] = GetSysColor(i + 32);
@@ -232,6 +235,7 @@ void LDViewPreferences::loadDefaultGeometrySettings(void)
 	wireframeThickness = 1;
 	bfc = true;
 	redBackFaces = false;
+	greenFrontFaces = false;
 	showsHighlightLines = false;
 	edgesOnly = false;
 	drawConditionalHighlights = false;
@@ -307,6 +311,13 @@ void LDViewPreferences::loadGeneralSettings(void)
 	fullScreenRefresh = TCUserDefaults::longForKey(FULLSCREEN_REFRESH_KEY,
 		fullScreenRefresh);
 	fov = TCUserDefaults::floatForKey(FOV_KEY, fov);
+	memoryUsage = TCUserDefaults::longForKey(MEMORY_USAGE_KEY,
+		(long)memoryUsage);
+	if (memoryUsage < 0 || memoryUsage > 2)
+	{
+		memoryUsage = 2;
+		TCUserDefaults::setLongForKey(2, MEMORY_USAGE_KEY);
+	}
 	for (i = 0; i < 16; i++)
 	{
 		char key[128];
@@ -345,6 +356,8 @@ void LDViewPreferences::loadGeometrySettings(void)
 	bfc = TCUserDefaults::longForKey(BFC_KEY, (long)bfc) != 0;
 	redBackFaces = TCUserDefaults::longForKey(RED_BACK_FACES_KEY,
 		(long)redBackFaces) != 0;
+	greenFrontFaces = TCUserDefaults::longForKey(GREEN_FRONT_FACES_KEY,
+		(long)greenFrontFaces) != 0;
 	showsHighlightLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
 		(long)showsHighlightLines) != 0;
 	edgesOnly = TCUserDefaults::longForKey(EDGES_ONLY_KEY, (long)edgesOnly)
@@ -708,6 +721,10 @@ BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 				return FALSE;
 			}
 		}
+	}
+	else if (notification->code == CBN_SELCHANGE)
+	{
+		debugPrintf("combo sel\n");
 	}
 	return CUIPropertySheet::doDialogNotify(hDlg, controlId, notification);
 }
@@ -1465,6 +1482,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 		{
 			setupFov(true);
 		}
+		memoryUsage = SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO,
+			CB_GETCURSEL, 0, 0);
+		TCUserDefaults::setLongForKey(memoryUsage, MEMORY_USAGE_KEY);
 		applyGeneralSettings();
 	}
 }
@@ -1506,6 +1526,9 @@ void LDViewPreferences::applyGeometryChanges(void)
 		redBackFaces = SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES,
 			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(redBackFaces, RED_BACK_FACES_KEY);
+		greenFrontFaces = SendDlgItemMessage(hGeometryPage,
+			IDC_GREEN_FRONT_FACES, BM_GETCHECK, 0, 0) != 0;
+		TCUserDefaults::setLongForKey(greenFrontFaces, GREEN_FRONT_FACES_KEY);
 		showsHighlightLines = getCheck(hGeometryPage, IDC_HIGHLIGHTS);
 //		showsHighlightLines = SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS,
 //			BM_GETCHECK, 0, 0) != 0;
@@ -2132,6 +2155,10 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 		}
 		enableApply(hPage);
 	}
+	else if (controlId == IDC_MEMORY_COMBO)
+	{
+		enableApply(hPage);
+	}
 	return 0;
 }
 
@@ -2459,6 +2486,24 @@ void LDViewPreferences::setupFov(bool warn)
 	}
 }
 
+void LDViewPreferences::setupMemoryUsage(void)
+{
+	while (SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_GETCOUNT, 0,
+		0))
+	{
+		SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_DELETESTRING, 0,
+		0);
+	}
+	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)"Low");
+	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)"Medium");
+	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)"High");
+	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
+		(WPARAM)memoryUsage, 0);
+}
+
 void LDViewPreferences::setupGeneralPage(void)
 {
 	hGeneralPage = hwndArray->pointerAtIndex(generalPageNumber);
@@ -2475,6 +2520,7 @@ void LDViewPreferences::setupGeneralPage(void)
 	setupDefaultColorButton();
 	SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR, BM_SETCHECK,
 		transDefaultColor ? 1 : 0, 0);
+	setupMemoryUsage();
 }
 
 void LDViewPreferences::setupModelGeometry(void)
@@ -2517,11 +2563,13 @@ void LDViewPreferences::disableWireframe(void)
 void LDViewPreferences::enableBfc(void)
 {
 	EnableWindow(hRedBackFacesButton, TRUE);
+	EnableWindow(hGreenFrontFacesButton, TRUE);
 }
 
 void LDViewPreferences::disableBfc(void)
 {
 	EnableWindow(hRedBackFacesButton, FALSE);
+	EnableWindow(hGreenFrontFacesButton, FALSE);
 }
 
 void LDViewPreferences::initThemes(HWND hButton)
@@ -2608,9 +2656,12 @@ void LDViewPreferences::setupBfc(void)
 {
 	setupGroupCheckButton(hGeometryPage, IDC_BFC, bfc);
 	hRedBackFacesButton = GetDlgItem(hGeometryPage, IDC_RED_BACK_FACES);
+	hGreenFrontFacesButton = GetDlgItem(hGeometryPage, IDC_GREEN_FRONT_FACES);
 //	SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_SETCHECK, bfc, 0);
 	SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
 		redBackFaces, 0);
+	SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES, BM_SETCHECK,
+		greenFrontFaces, 0);
 	if (bfc)
 	{
 		enableBfc();

@@ -69,6 +69,8 @@ class LDrawModelViewer: public TCObject
 		{
 			return flags.lineSmoothing;
 		}
+		virtual void setMemoryUsage(int value);
+		int getMemoryUsage(void) { return memoryUsage; }
 		virtual void setQualityStuds(bool value);
 /*
 		{
@@ -149,6 +151,8 @@ class LDrawModelViewer: public TCObject
 		bool getBfc(void) { return flags.bfc != false; }
 		virtual void setRedBackFaces(bool value);
 		bool getRedBackFaces(void) { return flags.redBackFaces != false; }
+		virtual void setGreenFrontFaces(bool value);
+		bool getGreenFrontFaces(void) { return flags.greenFrontFaces != false; }
 		virtual void setUseWireframeFog(bool);
 		bool getUseWireframeFog(void) { return flags.useWireframeFog; }
 		virtual void setRemoveHiddenLines(bool value);
@@ -377,6 +381,7 @@ class LDrawModelViewer: public TCObject
 		float seamWidth;
 		float zoomToFitWidth;
 		float zoomToFitHeight;
+		int memoryUsage;
 		struct
 		{
 			bool qualityLighting:1;
@@ -422,6 +427,7 @@ class LDrawModelViewer: public TCObject
 			bool defaultTrans:1;
 			bool bfc:1;
 			bool redBackFaces:1;
+			bool greenFrontFaces:1;
 		} flags;
 		struct CameraData
 		{
