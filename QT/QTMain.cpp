@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 				"file to /usr/local/etc directory.\n");
 			exit(0);
 		}
+		delete path;
 	}
 	TCUserDefaults::setCommandLine(argv);
 	TCUserDefaults::setAppName("LDView");
