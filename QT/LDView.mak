@@ -17,6 +17,7 @@ clean:
 	for DIR in $(DIRECTORIES); do		\
 		cd $$DIR; $(MAKE) clean; cd ../QT;	\
 	done;
+	make clean
 
 dotDirs: .ui .moc .obj .test
 	if [ "$?" != "" ]; then			\
