@@ -2121,7 +2121,7 @@ LRESULT LDViewWindow::doTimer(UINT timerID)
 }
 */
 
-void LDViewWindow::doLibraryUpdateFinished(void)
+void LDViewWindow::doLibraryUpdateFinished(int finishType)
 {
 	if (libraryUpdater)
 	{
@@ -2165,7 +2165,18 @@ void LDViewWindow::doLibraryUpdateFinished(void)
 		libraryUpdater->release();
 		libraryUpdater = NULL;
 		SendMessage(modelWindow->getProgressBar(), PBM_SETPOS, 0, 0);
-		MessageBox(hWindow, "Library update complete!", "LDView", MB_OK);
+		switch (finishType)
+		{
+		case LIBRARY_UPDATE_FINISHED:
+			MessageBox(hWindow, "Library update complete!", "LDView", MB_OK);
+			break;
+		case LIBRARY_UPDATE_CANCELED:
+			MessageBox(hWindow, "Library update canceled.", "LDView", MB_OK);
+			break;
+		case LIBRARY_UPDATE_NONE:
+			MessageBox(hWindow, "No update necessary.", "LDView", MB_OK);
+			break;
+		}
 	}
 }
 
@@ -2379,7 +2390,15 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			switch (notifyCode)
 			{
 			case LIBRARY_UPDATE_FINISHED:
-				doLibraryUpdateFinished();
+				doLibraryUpdateFinished(LIBRARY_UPDATE_FINISHED);
+				return 0;
+				break;
+			case LIBRARY_UPDATE_CANCELED:
+				doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
+				return 0;
+				break;
+			case LIBRARY_UPDATE_NONE:
+				doLibraryUpdateFinished(LIBRARY_UPDATE_NONE);
 				return 0;
 				break;
 			}

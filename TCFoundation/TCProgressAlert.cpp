@@ -23,9 +23,17 @@ void TCProgressAlert::dealloc(void)
 }
 
 void TCProgressAlert::send(const char *source, const char *message,
-						   float progress, bool *aborted)
+						   float progress, TCStringArray *extraInfo)
 {
-	TCProgressAlert *alert = new TCProgressAlert(source, message, progress);
+	send(source, message, progress, NULL, extraInfo);
+}
+
+void TCProgressAlert::send(const char *source, const char *message,
+						   float progress, bool *aborted,
+						   TCStringArray *extraInfo)
+{
+	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
+		extraInfo);
 
 	TCAlertManager::sendAlert(alert);
 	if (aborted)

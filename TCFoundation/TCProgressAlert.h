@@ -15,7 +15,9 @@ public:
 
 	static TCULong alertClass(void) { return 1; }
 	static void send(const char *source, const char *message, float progress,
-		bool *aborted = NULL);
+		bool *aborted = NULL, TCStringArray *extraInfo = NULL);
+	static void send(const char *source, const char *message, float progress,
+		TCStringArray *extraInfo);
 protected:
 	virtual ~TCProgressAlert(void);
 	virtual void dealloc(void);

@@ -13,6 +13,7 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLModel.h>
+#include <LDLib/LDLibraryUpdater.h>
 #include "AppResources.h"
 #include <Commctrl.h>
 #include "UserDefaultsKeys.h"
@@ -241,14 +242,30 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 {
 	if (alert)
 	{
-		if (strcmp(alert->getSource(), "LDLibraryUpdater") == 0)
+		if (strcmp(alert->getSource(), LD_LIBRARY_UPDATER) == 0)
 		{
 			debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
 				alert->getProgress());
 			if (alert->getProgress() == 1.0f)
 			{
-				PostMessage(hParentWindow, WM_COMMAND,
-					MAKELONG(BN_CLICKED, LIBRARY_UPDATE_FINISHED), 0);
+				if (alert->getExtraInfo())
+				{
+					if (strcmp((*(alert->getExtraInfo()))[0], "None") == 0)
+					{
+						PostMessage(hParentWindow, WM_COMMAND,
+							MAKELONG(BN_CLICKED, LIBRARY_UPDATE_NONE), 0);
+					}
+					else
+					{
+						PostMessage(hParentWindow, WM_COMMAND,
+							MAKELONG(BN_CLICKED, LIBRARY_UPDATE_FINISHED), 0);
+					}
+				}
+				else
+				{
+					PostMessage(hParentWindow, WM_COMMAND,
+						MAKELONG(BN_CLICKED, LIBRARY_UPDATE_CANCELED), 0);
+				}
 			}
 			else
 			{
