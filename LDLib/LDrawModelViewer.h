@@ -294,8 +294,8 @@ class LDrawModelViewer: public TCObject
 		virtual void setupRightViewAngle(void);
 		virtual void setupTopViewAngle(void);
 		virtual void setupBottomViewAngle(void);
-		void ldlErrorCallback(LDLError *error);
-		void progressAlertCallback(TCProgressAlert *error);
+//		void ldlErrorCallback(LDLError *error);
+//		void progressAlertCallback(TCProgressAlert *error);
 		virtual void setupIsoViewAngle(void);
 		virtual void preCalcCamera(void);
 		virtual float calcDefaultDistance(void);

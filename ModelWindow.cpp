@@ -11,6 +11,7 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLModel.h>
 #include <LDLib/LDLibraryUpdater.h>
@@ -398,15 +399,15 @@ void ModelWindow::checkFileForUpdates(void)
 				{
 					char message[1024];
 
-					sprintf(message, "The model has been modified.\n"
-						"Do you want to reload?");
+					sprintf(message, TCLocalStrings::get("PollReloadCheck"));
 					while (captureCount)
 					{
 						releaseMouse();
 					}
 					lButtonDown = NO;
 					rButtonDown = NO;
-					if (MessageBox(hWindow, message, "File updated",
+					if (MessageBox(hWindow, message,
+						TCLocalStrings::get("PollFileUpdate"),
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
 						IDOK)
 					{
@@ -993,10 +994,15 @@ BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 			selectedItem.cchTextMax = 1024;
 			if (TreeView_GetItem(hErrorTree, &selectedItem))
 			{
-				if (stringHasPrefix(buf, "File: "))
+				if (stringHasPrefix(buf,
+					TCLocalStrings::get("ErrorTreeFilePrefix")))
 				{
-					ShellExecute(hWindow, NULL, "notepad.exe", buf + 6, ".",
+					char *editor = TCUserDefaults::stringForKey(EDITOR_KEY,
+						"notepad.exe", false);
+
+					ShellExecute(hWindow, NULL, editor, buf + 6, ".",
 						SW_SHOWNORMAL);
+					delete editor;
 				}
 			}
 		}
@@ -1351,11 +1357,12 @@ bool ModelWindow::addError(LDLError* error)
    		string = error->getFilename();
 		if (string)
 		{
-			sprintf(buf, "File: %s", string);
+			sprintf(buf, "%s%s", TCLocalStrings::get("ErrorTreeFilePrefix"),
+				string);
 		}
 		else
 		{
-			sprintf(buf, "Unknown filename");
+			sprintf(buf, TCLocalStrings::get("ErrorTreeUnknownFile"));
 		}
 		addErrorLine(parent, buf, error);
 		string = error->getFileLine();
@@ -1365,18 +1372,18 @@ bool ModelWindow::addError(LDLError* error)
 
 			if (lineNumber > 0)
 			{
-				sprintf(buf, "Line #%d", lineNumber);
+				sprintf(buf, TCLocalStrings::get("ErrorTreeLine#"), lineNumber);
 			}
 			else
 			{
-				sprintf(buf, "Unknown Line #");
+				sprintf(buf, TCLocalStrings::get("ErrorTreeUnknownLine#"));
 			}
 			addErrorLine(parent, buf, error);
-			sprintf(buf, "Line: %s", string);
+			sprintf(buf, TCLocalStrings::get("ErrorTreeLine"), string);
 		}
 		else
 		{
-			sprintf(buf, "Unknown Line");
+			sprintf(buf, TCLocalStrings::get("ErrorTreeUnknownLine"));
 		}
 		addErrorLine(parent, buf, error);
 		if ((extraInfo = error->getExtraInfo()) != NULL)
@@ -1780,7 +1787,14 @@ int ModelWindow::populateErrorTree(void)
 //		RDW_FRAME | RDW_ALLCHILDREN);
 	if (errorCount > 0)
 	{
-		sprintf(buf, "%d Error%s", errorCount, errorCount == 1 ? "" : "s");
+		if (errorCount == 1)
+		{
+			sprintf(buf, TCLocalStrings::get("ErrorTreeOneError"));
+		}
+		else
+		{
+			sprintf(buf, TCLocalStrings::get("ErrorTreeNErrors"), errorCount);
+		}
 		if (warningCount > 0)
 		{
 			strcat(buf, ", ");
@@ -1788,8 +1802,15 @@ int ModelWindow::populateErrorTree(void)
 	}
 	if (warningCount > 0)
 	{
-		sprintf(buf + strlen(buf), "%d Warning%s", warningCount,
-			warningCount == 1 ? "" : "s");
+		if (warningCount == 1)
+		{
+			strcat(buf, TCLocalStrings::get("ErrorTreeOneWarning"));
+		}
+		else
+		{
+			sprintf(buf + strlen(buf),
+				TCLocalStrings::get("ErrorTreeNWarnings"), warningCount);
+		}
 	}
 	SendMessage(hErrorStatusWindow, SB_SETTEXT, 0, (LPARAM)buf);
 	return errorCount;
@@ -1956,7 +1977,7 @@ LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
 
-int ModelWindow::progressCallback(char* message, float progress,
+int ModelWindow::progressCallback(const char* message, float progress,
 								  bool showErrors)
 {
 	DWORD thisProgressUpdate = GetTickCount();
@@ -2202,11 +2223,11 @@ void ModelWindow::drawFPS(void)
 			{
 				if (fps > 0.0f)
 				{
-					sprintf(fpsString, "FPS: %4.4f", fps);
+					sprintf(fpsString, TCLocalStrings::get("FPSFormat"), fps);
 				}
 				else
 				{
-					strcpy(fpsString, "Spin Model for FPS");
+					strcpy(fpsString, TCLocalStrings::get("FPSSpinPrompt"));
 				}
 			}
 			setStatusText(hStatusBar, 1, fpsString);
@@ -2846,7 +2867,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		{
 			modelViewer->setXTile(xTile);
 			renderOffscreenImage();
-			if (progressCallback("Rendering snapshot.",
+			if (progressCallback(TCLocalStrings::get("RenderingSnapshot"),
 				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles)))
 			{
 				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
@@ -3262,7 +3283,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 				{
 					modelViewer->setYTile(yTile);
 				}
-				progressCallback("Printing Model.", 0.0f);
+				progressCallback(TCLocalStrings::get("PrintingModel"), 0.0f);
 				for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
 				{
 					int x, y;
@@ -3451,8 +3472,9 @@ bool ModelWindow::pageSetup(void)
 		printBottomMargin = psd.rtMargin.bottom / 1000.0f;
 		if (!parseDevMode(psd.hDevMode))
 		{
-			MessageBox(hParentWindow, "Custom paper sizes are not supported.  "
-				"Using previous setting instead.", "Paper Size",
+			MessageBox(hParentWindow,
+				TCLocalStrings::get("PrintCustomPaperError"),
+				TCLocalStrings::get("PrintPaperSize"),
 				MB_OK | MB_ICONEXCLAMATION);
 		}
 		TCUserDefaults::setLongForKey(psd.rtMargin.left, LEFT_MARGIN_KEY,
@@ -3967,9 +3989,10 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 			saveImageType = 1;
 		}
 		memset(fileTypes, 0, 2);
-		LDViewWindow::addFileType(fileTypes, "PNG: Portable Network Graphics",
+		LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("PngFileType"),
 			"*.png");
-		LDViewWindow::addFileType(fileTypes, "BMP: Windows Bitmap", "*.bmp");
+		LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("BmpFileType"),
+			"*.bmp");
 		memset(&openStruct, 0, sizeof(OPENFILENAME));
 		openStruct.lStructSize = sizeof(OPENFILENAME);
 		openStruct.hwndOwner = hWindow;
@@ -3978,7 +4001,7 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		openStruct.lpstrFile = saveFilename;
 		openStruct.nMaxFile = len;
 		openStruct.lpstrInitialDir = initialDir;
-		openStruct.lpstrTitle = "Save Snapshot";
+		openStruct.lpstrTitle = TCLocalStrings::get("SaveSnapshot");
 		openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_ENABLETEMPLATE
 			| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT;
 		openStruct.lpstrDefExt = NULL;
@@ -4033,7 +4056,7 @@ bool ModelWindow::shouldOverwriteFile(char* filename)
 {
 	char buf[256];
 
-	sprintf(buf, "%s\nThis file already exists.\nReplace existing file?",
+	sprintf(buf, TCLocalStrings::get("OverwritePrompt"),
 		filename);
 	if (MessageBox(hWindow, buf, "LDView", MB_YESNO | MB_ICONQUESTION) ==
 		IDYES)
@@ -4385,8 +4408,8 @@ bool ModelWindow::performHotKey(int hotKeyIndex)
 
 void ModelWindow::initFail(char * /*reason*/)
 {
-	MessageBox(hWindow, "LDView was unable to initialize OpenGL.\n"
-		"Hit OK to exit.", "Fatal Error", MB_OK | MB_ICONERROR);
+	MessageBox(hWindow, TCLocalStrings::get("OpenGlInitFailed"),
+		TCLocalStrings::get("FatalError"), MB_OK | MB_ICONERROR);
 	PostQuitMessage(-1);
 }
 

@@ -2,7 +2,6 @@
 #include <TCFoundation/mystring.h>
 #include <TRE/TREVertexStore.h>
 #include <TRE/TREShapeGroup.h>
-#include <stdio.h>
 
 // WGL_EXT_pixel_format
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
@@ -528,7 +527,7 @@ int LDVExtensionsSetup::choosePixelFormat(HDC hdc, GLint customValues[])
 			// wglChoosePixelFormatARB to stop working, so use my own matching
 			// code if the standard matching code fails.
 			retValue = matchPixelFormat(intValues);
-			printf("matchPixelFormat returned: %d\n", retValue);
+			debugPrintf("matchPixelFormat returned: %d\n", retValue);
 		}
 	}
 	delete intValues;

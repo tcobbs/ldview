@@ -183,7 +183,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doTimer(UINT);
 		virtual BOOL getFileTime(FILETIME*);
 		virtual void checkForPart(void);
-		virtual int progressCallback(char* message, float progress,
+		virtual int progressCallback(const char* message, float progress,
 			bool showErrors = false);
 		static int staticProgressCallback(char* message, float progress,
 			void* userData);

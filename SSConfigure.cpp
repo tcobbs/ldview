@@ -7,6 +7,7 @@
 #include "AppResources.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/myString.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <commctrl.h>
 #include "UserDefaultsKeys.h"
 
@@ -183,7 +184,7 @@ bool SSConfigure::doBrowseDirectory(void)
 	browseInfo.hwndOwner = hPropSheet; //hWindow;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
-	browseInfo.lpszTitle = "Please select a directory containing LDraw models.";
+	browseInfo.lpszTitle = TCLocalStrings::get("SSModelDirPrompt");
 	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
 	browseInfo.lpfn = pathBrowserCallback;
 	browseInfo.lParam = (LPARAM)ssDirectory;
@@ -214,13 +215,14 @@ bool SSConfigure::doBrowseFilename(void)
 	if (initialDir)
 	{
 		memset(fileTypes, 0, 2);
-		LDViewWindow::addFileType(fileTypes, "LDraw Files (*.ldr,*.dat,*.mpd)",
-			"*.ldr;*.dat;*.mpd");
-		LDViewWindow::addFileType(fileTypes, "LDraw Model Files (*.ldr,*.dat)",
-			"*.ldr;*.dat");
-		LDViewWindow::addFileType(fileTypes, "LDraw Multi-Part Files (*.mpd)",
-			"*.mpd");
-		LDViewWindow::addFileType(fileTypes, "All Files (*.*)", "*.*");
+		LDViewWindow::addFileType(fileTypes,
+			TCLocalStrings::get("LDrawFileTypes"), "*.ldr;*.dat;*.mpd");
+		LDViewWindow::addFileType(fileTypes,
+			TCLocalStrings::get("LDrawModelFileTypes"), "*.ldr;*.dat");
+		LDViewWindow::addFileType(fileTypes,
+			TCLocalStrings::get("LDrawMpdFileTypes"), "*.mpd");
+		LDViewWindow::addFileType(fileTypes,
+			TCLocalStrings::get("AllFilesTypes"), "*.*");
 		memset(&openStruct, 0, sizeof(OPENFILENAME));
 		openStruct.lStructSize = sizeof(OPENFILENAME);
 		openStruct.hwndOwner = hWindow;
@@ -229,10 +231,10 @@ bool SSConfigure::doBrowseFilename(void)
 		openStruct.lpstrFile = openFilename;
 		openStruct.nMaxFile = 1024;
 		openStruct.lpstrInitialDir = initialDir;
-		openStruct.lpstrTitle = "Select a Model file";
+		openStruct.lpstrTitle = TCLocalStrings::get("SelectModelFile");
 		openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
 			OFN_HIDEREADONLY;
-		openStruct.lpstrDefExt = "tri";
+		openStruct.lpstrDefExt = "ldr";
 		if (GetOpenFileName(&openStruct))
 		{
 			LDViewWindow::setLastOpenFile(openStruct.lpstrFile,

@@ -1966,6 +1966,79 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 {
 	if (!hOpenGLInfoWindow)
 	{
+//		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+		int numOpenGlExtensions;
+		char *openGlMessage = modelWindow->getModelViewer()->
+			getOpenGLDriverInfo(numOpenGlExtensions);
+		const char *wglExtensionsString =
+			LDVExtensionsSetup::getWglExtensions();
+		char *wglExtensionsList;
+		int len;
+		char *message;
+		int parts[2] = {100, -1};
+		char buf[128];
+		int count;
+
+		if (!wglExtensionsString)
+		{
+			wglExtensionsString = TCLocalStrings::get("*None*");
+		}
+		wglExtensionsList = stringByReplacingSubstring(wglExtensionsString,
+			" ", "\r\n");
+		stripCRLF(wglExtensionsList);
+		len = strlen(openGlMessage) + strlen(wglExtensionsList) + 128;
+		message = new char[len];
+		sprintf(message, TCLocalStrings::get("OpenGl+WglInfo"), openGlMessage,
+			wglExtensionsList);
+		hOpenGLInfoWindow = createDialog(IDD_OPENGL_INFO);
+		SendDlgItemMessage(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT, 0,
+			(LPARAM)message);
+		hOpenGLStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE |
+			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, ID_TOOLBAR);
+		SendMessage(hOpenGLStatusBar, SB_SETPARTS, 2, (LPARAM)parts);
+		if (numOpenGlExtensions == 1)
+		{
+			strcpy(buf, TCLocalStrings::get("OpenGl1Extension"));
+		}
+		else
+		{
+			sprintf(buf, TCLocalStrings::get("OpenGlnExtensions"),
+				numOpenGlExtensions);
+		}
+		SendMessage(hOpenGLStatusBar, SB_SETTEXT, 0, (LPARAM)buf);
+		count = countStringLines(wglExtensionsList);
+		if (count == 1)
+		{
+			strcpy(buf, TCLocalStrings::get("OpenGl1WglExtension"));
+		}
+		else
+		{
+			sprintf(buf, TCLocalStrings::get("OpenGlnWglExtensions"), count);
+		}
+		SendMessage(hOpenGLStatusBar, SB_SETTEXT, 1, (LPARAM)buf);
+		calcSystemSizes();
+		if (openGLInfoWindoResizer)
+		{
+			openGLInfoWindoResizer->release();
+		}
+		openGLInfoWindoResizer = new CUIWindowResizer;
+		openGLInfoWindoResizer->setHWindow(hOpenGLInfoWindow);
+		openGLInfoWindoResizer->addSubWindow(IDC_OPENGL_INFO,
+			CUISizeHorizontal | CUISizeVertical);
+		openGLInfoWindoResizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
+		delete message;
+		delete wglExtensionsList;
+		delete openGlMessage;
+	}
+	ShowWindow(hOpenGLInfoWindow, SW_SHOW);
+	return 0;
+}
+
+/*
+LRESULT LDViewWindow::showOpenGLDriverInfo(void)
+{
+	if (!hOpenGLInfoWindow)
+	{
 		const char *vendorString = (const char*)glGetString(GL_VENDOR);
 		const char *rendererString = (const char*)glGetString(GL_RENDERER);
 		const char *versionString = (const char*)glGetString(GL_VERSION);
@@ -2000,18 +2073,6 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		{
 			wglExtensionsString = TCLocalStrings::get("*None*");
 		}
-/*
-		len = strlen(extensionsString);
-		if (len && (extensionsString[len - 1] == ' '))
-		{
-			extensionsString[len - 1] = 0;
-		}
-		len = strlen(wglExtensionsString);
-		if (len && (wglExtensionsString[len - 1] == ' '))
-		{
-			wglExtensionsString[len - 1] = 0;
-		}
-*/
 		extensionsList = stringByReplacingSubstring(extensionsString, " ",
 			"\r\n");
 		wglExtensionsList = stringByReplacingSubstring(wglExtensionsString,
@@ -2068,6 +2129,9 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 	ShowWindow(hOpenGLInfoWindow, SW_SHOW);
 	return 0;
 }
+*/
+
+
 /*
 {
 	int pollSetting = TCUserDefaults::longForKey(POLL_KEY, 0, false);

@@ -5,6 +5,7 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLError.h>
 #include "LDModelParser.h"
@@ -654,6 +655,7 @@ void LDrawModelViewer::setupBottomViewAngle(void)
 	rotationMatrix[15] = 1.0f;
 }
 
+/*
 void LDrawModelViewer::ldlErrorCallback(LDLError *error)
 {
 //	static int errorCount = 0;
@@ -662,10 +664,13 @@ void LDrawModelViewer::ldlErrorCallback(LDLError *error)
 	{
 		TCStringArray *extraInfo = error->getExtraInfo();
 
-		printf("Error on line %d in: %s\n", error->getLineNumber(),
-			error->getFilename());
-		indentPrintf(4, "%s\n", error->getMessage());
-		indentPrintf(4, "%s\n", error->getFileLine());
+		if (getDebugLevel() > 0)
+		{
+			printf("Error on line %d in: %s\n", error->getLineNumber(),
+				error->getFilename());
+			indentPrintf(4, "%s\n", error->getMessage());
+			indentPrintf(4, "%s\n", error->getFileLine());
+		}
 		if (extraInfo)
 		{
 			int i;
@@ -687,6 +692,7 @@ void LDrawModelViewer::progressAlertCallback(TCProgressAlert *alert)
 			alert->getMessage(), alert->getProgress());
 	}
 }
+*/
 
 int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
@@ -755,20 +761,22 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 
 				mainTREModel = modelParser->getMainTREModel();
 				mainTREModel->retain();
-				TCProgressAlert::send("LDrawModelViewer", "Calculating Size...",
-					0.0f, &abort);
+				TCProgressAlert::send("LDrawModelViewer",
+					TCLocalStrings::get("CalculatingSizeStatus"), 0.0f, &abort);
 				if (!abort)
 				{
 					mainTREModel->getBoundingBox(boundingMin, boundingMax);
 					TCProgressAlert::send("LDrawModelViewer",
-						"Calculating Size...", 0.5f, &abort);
+						TCLocalStrings::get("CalculatingSizeStatus"), 0.5f,
+						&abort);
 				}
 				if (!abort)
 				{
 					center = (boundingMin + boundingMax) / 2.0f;
 					size = mainTREModel->getMaxRadius(center) * 2.0f;
 					TCProgressAlert::send("LDrawModelViewer",
-						"Calculating Size...", 1.0f, &abort);
+						TCLocalStrings::get("CalculatingSizeStatus"), 1.0f,
+						&abort);
 				}
 				if (!abort)
 				{
@@ -779,7 +787,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->release();
 		}
 		mainModel->release();
-		TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
+		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
+			2.0f);
 		if (resetViewpoint)
 		{
 			resetView();
@@ -983,7 +992,8 @@ bool LDrawModelViewer::recompile(void)
 	{
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
-		TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
+		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
+			2.0f);
 	}
 	return true;
 }
@@ -1389,7 +1399,7 @@ void LDrawModelViewer::drawFPS(float fps)
 		}
 		else
 		{
-			strcpy(fpsString, "Spin Model for FPS");
+			strcpy(fpsString, TCLocalStrings::get("FPSSpinPrompt"));
 /*
 			for (int i = 0; i < 128; i++)
 			{
@@ -2646,50 +2656,41 @@ bool LDrawModelViewer::getCompiled(void)
 
 char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 {
-	char *vendorString = (char*)glGetString(GL_VENDOR);
-	char *rendererString = (char*)glGetString(GL_RENDERER);
-	char *versionString = (char*)glGetString(GL_VERSION);
-	char *extensionsString = (char*)glGetString(GL_EXTENSIONS);
+	const char *vendorString = (const char*)glGetString(GL_VENDOR);
+	const char *rendererString = (const char*)glGetString(GL_RENDERER);
+	const char *versionString = (const char*)glGetString(GL_VERSION);
+	const char *extensionsString = (const char*)glGetString(GL_EXTENSIONS);
+	char *extensionsList;
 	int len;
 	char *message;
 
 	numExtensions = 1;
 	if (!vendorString)
 	{
-		vendorString = "*Unknown*";
+		vendorString = TCLocalStrings::get("*Unknown*");
 	}
 	if (!rendererString)
 	{
-		rendererString = "*Unknown*";
+		rendererString = TCLocalStrings::get("*Unknown*");
 	}
 	if (!versionString)
 	{
-		versionString = "*Unknown*";
+		versionString = TCLocalStrings::get("*Unknown*");
 	}
 	if (!extensionsString)
 	{
-		extensionsString = "*None*";
-		numExtensions = 0;
+		extensionsString = TCLocalStrings::get("*None*");
 	}
-	len = strlen(extensionsString);
-	if (len && (extensionsString[len - 1] == ' '))
-	{
-		extensionsString[len - 1] = 0;
-	}
-	extensionsString = stringByReplacingSubstring(extensionsString, " ",
+	extensionsList = stringByReplacingSubstring(extensionsString, " ",
 		"\r\n");
+	stripCRLF(extensionsList);
 	len = strlen(vendorString) + strlen(rendererString) +
-		strlen(versionString) + strlen(extensionsString) + 128;
+		strlen(versionString) + strlen(extensionsList) + 128;
 	message = new char[len];
-	sprintf(message, "Vendor: %s\n"
-		"Renderer: %s\n"
-		"Version: %s\n\n"
-		"Extenstions:\n%s",
-		vendorString, rendererString, versionString, extensionsString);
-	if (numExtensions)
-	{
-		numExtensions = countStringLines(extensionsString);
-	}
+	sprintf(message, TCLocalStrings::get("OpenGlInfo"), vendorString,
+		rendererString, versionString, extensionsList);
+	numExtensions = countStringLines(extensionsList);
+	delete extensionsList;
 	return message;
 }
 
@@ -2751,9 +2752,9 @@ void LDrawModelViewer::zoomToFit(void)
 		mainTREModel->scanPoints(this,
 			(TREScanPointCallback)&LDrawModelViewer::scanCameraPoint,
 			transformationMatrix);
-		printf("num points: %d\n", _numPoints);
-		char message[1024];
-		sprintf(message, "num points: %d", _numPoints);
+		debugPrintf("num points: %d\n", _numPoints);
+//		char message[1024];
+//		sprintf(message, "num points: %d", _numPoints);
 //		MessageBox(NULL, message, "Points", MB_OK);
 		d = zoomToFitWidth / zoomToFitHeight;
 //		dh = (cameraData->horMax - cameraData->horMin) / d;

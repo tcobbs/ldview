@@ -98,6 +98,7 @@
 #define RED_BACK_FACES_KEY "RedBackFaces"
 #define VERIFY_LDRAW_DIR_KEY "VerifyLDrawDir"
 #define TOOLBAR_KEY "Toolbar"
+#define EDITOR_KEY "Editor"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"
