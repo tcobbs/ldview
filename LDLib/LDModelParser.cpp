@@ -114,6 +114,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setLightingFlag(getLightingFlag());
 	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	m_mainTREModel->setBFCFlag(getBFCFlag());
+	m_mainTREModel->setRedBackFacesFlag(getRedBackFacesFlag());
 	m_mainTREModel->setCompilePartsFlag(getCompilePartsFlag());
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());

@@ -3232,7 +3232,9 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 	char* lDrawDir = getLDrawDir();
 	BOOL found = FALSE;
 
-	if (!forceChoose && verifyLDrawDir(lDrawDir))
+	if (!forceChoose && 
+		(!TCUserDefaults::longForKey(VERIFY_LDRAW_DIR_KEY, 1, false) ||
+		verifyLDrawDir(lDrawDir)))
 	{
 		delete lDrawDir;
 		found = TRUE;

@@ -93,7 +93,9 @@
 #define IDC_SEAM_SCROLL                 1040
 #define IDC_CONDITIONAL_CONTROLS        1040
 #define IDC_REMOVE_HIDDEN_LINES         1041
+#define IDC_BFC                         1042
 #define IDC_CANCEL                      1043
+#define IDC_RED_BACK_FACES              1043
 #define IDC_APPLY                       1044
 #define IDC_ABANDON                     1045
 #define IDC_FS_REFRESH                  1046
@@ -206,6 +208,7 @@
 #define IDC_ERROR_LIST                  1180
 #define IDC_ERROR_SHOW_ALL              1181
 #define IDC_ERROR_SHOW_NONE             1182
+#define IDC_BFC_BOX                     1184
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -268,7 +271,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        161
 #define _APS_NEXT_COMMAND_VALUE         40069
-#define _APS_NEXT_CONTROL_VALUE         1184
+#define _APS_NEXT_CONTROL_VALUE         1185
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
