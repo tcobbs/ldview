@@ -12,6 +12,7 @@ LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
 	m_highResModel(NULL),
 	m_lowResModel(NULL)
 {
+	m_flags.nonUniform = true;
 }
 
 LDLModelLine::LDLModelLine(const LDLModelLine &other)
@@ -19,7 +20,8 @@ LDLModelLine::LDLModelLine(const LDLModelLine &other)
 	m_highResModel(NULL),
 	m_lowResModel(NULL),
 	m_color(other.m_color),
-	m_colorNumber(other.m_colorNumber)
+	m_colorNumber(other.m_colorNumber),
+	m_flags(other.m_flags)
 {
 	if (other.m_highResModel)
 	{
@@ -126,6 +128,7 @@ bool LDLModelLine::parse(void)
 				//  loose with this "equality" check (within 0.05).
 				setWarning(LDLEPartDeterminant,
 					TCLocalStrings::get("LDLModelLineNonUniformPart"));
+				m_flags.nonUniform = true;
 			}
 		}
 		return true;

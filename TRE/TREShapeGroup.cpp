@@ -314,7 +314,7 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 			TCVector normal = (*normals)[index].v;
 
 			glVertex3fv(vertex);
-			glVertex3fv(vertex + (normal * 10.0f));
+			glVertex3fv(vertex + (normal * 0.1f));
 		}
 		glEnd();
 	}
@@ -462,6 +462,10 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 						indexOffset += stripCount;
 					}
 				}
+			}
+			if (m_mainModel->getDrawNormalsFlag())
+			{
+				drawNormals(indexArray);
 			}
 		}
 	}
@@ -1320,8 +1324,16 @@ void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
 
 	for (i = offset; i < offset + stripCount - 2; i++)
 	{
-		transferTriangle(color, (*indices)[i], (*indices)[i + 1],
-			(*indices)[i + 2], matrix);
+		if ((i - offset) % 2)
+		{
+			transferTriangle(color, (*indices)[i], (*indices)[i + 2],
+				(*indices)[i + 1], matrix);
+		}
+		else
+		{
+			transferTriangle(color, (*indices)[i], (*indices)[i + 1],
+				(*indices)[i + 2], matrix);
+		}
 /*
 		if ((i - offset) % 2)
 		{

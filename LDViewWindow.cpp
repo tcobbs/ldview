@@ -4141,6 +4141,12 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 			addFileType(fileTypes, TCLocalStrings::get("AllFilesTypes"), "*.*");
 			memset(&openStruct, 0, sizeof(OPENFILENAME));
 			openStruct.lStructSize = sizeof(OPENFILENAME);
+			if (openStruct.lStructSize > 76)
+			{
+				// Win98 doesn't like the new struct size.  Not sure why; it
+				// should just ignore the extra data.
+				openStruct.lStructSize = 76;
+			}
 			openStruct.hwndOwner = hWindow;
 			openStruct.lpstrFilter = fileTypes;
 			openStruct.nFilterIndex = 1;

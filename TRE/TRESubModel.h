@@ -20,6 +20,7 @@ public:
 	virtual TREModel *getEffectiveModel(void) const;
 	virtual void setMatrix(float *matrix);
 	virtual float *getMatrix(void) { return m_matrix; }
+	virtual float *getOriginalMatrix(void) { return m_originalMatrix; }
 	virtual void setColor(TCULong color, TCULong edgeColor);
 	virtual TCULong getColor(void);
 	virtual TCULong getEdgeColor(void);
@@ -28,7 +29,9 @@ public:
 	virtual void setBFCInvertFlag(bool value) { m_flags.bfcInvert = value; }
 	virtual bool getBFCInvertFlag(void) { return m_flags.bfcInvert != false; }
 	virtual void draw(TREMSection section, bool colored,
-		bool subModelsOnly = false);
+		bool subModelsOnly = false, bool nonUniform = false);
+	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
+	void setNonUniformFlag(bool value) { m_flags.nonUniform = value; }
 /*
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
@@ -61,6 +64,7 @@ protected:
 	TRESubModel *m_unMirroredSubModel;
 	TRESubModel *m_invertedSubModel;
 	float m_matrix[16];
+	float m_originalMatrix[16];
 	TCULong m_color;
 	TCULong m_edgeColor;
 	struct {
@@ -69,6 +73,7 @@ protected:
 		bool mirrorMatrix:1;
 		bool bfcInvert:1;
 		bool inverted:1;
+		bool nonUniform:1;
 	} m_flags;
 };
 

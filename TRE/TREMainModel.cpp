@@ -940,7 +940,9 @@ void TREMainModel::drawTransparent(void)
 		{
 			glEnable(GL_TEXTURE_2D);
 			bindStudTexture();
-			configureStudTexture();
+			// Don't allow mip-mapping for transparent textures; it might cause
+			// artifacts.
+			configureStudTexture(false);
 		}
 		glGetMaterialfv(GL_FRONT, GL_SHININESS, &oldShininess);
 		glGetMaterialfv(GL_FRONT, GL_SPECULAR, oldSpecular);
@@ -1035,7 +1037,7 @@ void TREMainModel::bindStudTexture(void)
 	}
 }
 
-void TREMainModel::configureStudTexture(void)
+void TREMainModel::configureStudTexture(bool allowMipMap)
 {
 	if (sm_studTextureID)
 	{
@@ -1052,8 +1054,24 @@ void TREMainModel::configureStudTexture(void)
 		{
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-			m_studTextureFilter);
+		if (allowMipMap)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+				m_studTextureFilter);
+		}
+		else
+		{
+			if (m_studTextureFilter == GL_NEAREST)
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					GL_NEAREST);
+			}
+			else
+			{
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					GL_LINEAR);
+			}
+		}
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	}
 }
@@ -1156,4 +1174,12 @@ void TREMainModel::openGlWillEnd(void)
 		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
 		sm_studTextureID = 0;
 	}
+}
+
+void TREMainModel::finish(void)
+{
+	float matrix[16];
+
+	TCVector::initIdentityMatrix(matrix);
+	flattenNonUniform(this, matrix, matrix, 0, false, 0, false);
 }

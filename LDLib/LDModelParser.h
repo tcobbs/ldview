@@ -196,6 +196,7 @@ protected:
 	virtual bool isTorusI(const char *filename, bool *is48 = NULL);
 	virtual bool isTorusQ(const char *filename, bool *is48 = NULL);
 	virtual int getNumCircleSegments(float fraction = 0.0f, bool is48 = false);
+	virtual int getUsedCircleSegments(int numSegments, float fraction);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 

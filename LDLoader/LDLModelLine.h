@@ -12,6 +12,7 @@ public:
 	float *getMatrix(void) { return m_matrix; }
 	TCULong getColor(void) { return m_color; }
 	int getColorNumber(void) { return m_colorNumber; }
+	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeModel; }
 	virtual bool isXZPlanar(void) const;
@@ -33,6 +34,11 @@ protected:
 	float m_matrix[16];
 	TCULong m_color;
 	int m_colorNumber;
+	struct
+	{
+		// Private flags
+		bool nonUniform:1;
+	} m_flags;
 
 	friend class LDLFileLine; // Needed because constructors are protected.
 };
