@@ -1,6 +1,7 @@
 #include "TRESubModel.h"
 #include "TREModel.h"
 #include "TREGL.h"
+#include "TREMainModel.h"
 
 #include <string.h>
 
@@ -209,16 +210,6 @@ TCULong TRESubModel::getEdgeColor(void)
 	return htonl(m_edgeColor);
 }
 
-void TRESubModel::compileDefaultColor(void)
-{
-	getEffectiveModel()->compileDefaultColor();
-}
-
-void TRESubModel::compileColored(void)
-{
-	getEffectiveModel()->compileColored();
-}
-
 void TRESubModel::draw(TREMSection section, bool colored)
 {
 	if (!colored)
@@ -228,21 +219,23 @@ void TRESubModel::draw(TREMSection section, bool colored)
 		// OpenGL color to be set.
 		if (m_flags.colorSet)
 		{
-			glPushAttrib(GL_CURRENT_BIT);
-			if (section == TREMEdgeLines)
+			if (section == TREMEdgeLines || section == TREMConditionalLines)
 			{
+				glPushAttrib(GL_CURRENT_BIT);
 				glColor4ubv((GLubyte*)&m_edgeColor);
 			}
 			else
 			{
 				if (section != TREMLines)
 				{
-					if (TREShapeGroup::isTransparent(m_color, true))
+					if (TREShapeGroup::isTransparent(m_color, true) &&
+						!m_model->getMainModel()->getWireframeFlag())
 					{
 						// Don't draw transparent shapes here.
 						return;
 					}
 				}
+				glPushAttrib(GL_CURRENT_BIT);
 				glColor4ubv((GLubyte*)&m_color);
 			}
 		}
@@ -258,6 +251,17 @@ void TRESubModel::draw(TREMSection section, bool colored)
 			glPopAttrib();
 		}
 	}
+}
+
+/*
+void TRESubModel::compileDefaultColor(void)
+{
+	getEffectiveModel()->compileDefaultColor();
+}
+
+void TRESubModel::compileColored(void)
+{
+	getEffectiveModel()->compileColored();
 }
 
 void TRESubModel::drawDefaultColor(void)
@@ -359,6 +363,7 @@ void TRESubModel::drawColoredEdgeLines(void)
 	m_model->drawColoredEdgeLines();
 	glPopMatrix();
 }
+*/
 
 void TRESubModel::scanPoints(TCObject *scanner,
 							 TREScanPointCallback scanPointCallback,

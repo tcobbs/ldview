@@ -11,6 +11,7 @@ PFNGLMULTIDRAWELEMENTSEXTPROC TREShapeGroup::glMultiDrawElementsEXT = NULL;
 TREShapeGroup::TREShapeGroup(void)
 	:m_vertexStore(NULL),
 	m_indices(NULL),
+	m_controlPointIndices(NULL),
 	m_stripCounts(NULL),
 	m_multiDrawIndices(NULL),
 	m_shapesPresent(0)
@@ -20,6 +21,8 @@ TREShapeGroup::TREShapeGroup(void)
 TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 	:m_vertexStore(other.m_vertexStore),
 	m_indices(NULL),
+	m_controlPointIndices((TCULongArray *)TCObject::copy(
+		other.m_controlPointIndices)),
 //	m_stripCounts(NULL),
 	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
 	m_multiDrawIndices(NULL),
@@ -111,6 +114,7 @@ void TREShapeGroup::dealloc(void)
 	// ************************************************************************
 	TCObject::release(m_vertexStore);
 	TCObject::release(m_indices);
+	TCObject::release(m_controlPointIndices);
 	TCObject::release(m_stripCounts);
 	TCObject::dealloc();
 }
@@ -142,6 +146,15 @@ void TREShapeGroup::addShapeType(TREShapeType shapeType, int index)
 	{
 		m_stripCounts->insertObject(NULL);
 	}
+}
+
+TCULongArray *TREShapeGroup::getControlPointIndices(bool create)
+{
+	if (create && !m_controlPointIndices)
+	{
+		m_controlPointIndices = new TCULongArray;
+	}
+	return m_controlPointIndices;
 }
 
 TCULongArray *TREShapeGroup::getIndices(TREShapeType shapeType, bool create)
@@ -203,16 +216,22 @@ void TREShapeGroup::addConditionalLine(int index1, int index2, int index3,
 }
 */
 
-void TREShapeGroup::addShapeIndices(TREShapeType shapeType, int firstIndex,
-									int count)
+void TREShapeGroup::addIndices(TCULongArray *indices, int firstIndex, int count)
 {
-	TCULongArray *indices = getIndices(shapeType, true);
 	int i;
 
 	for (i = 0; i < count; i++)
 	{
 		indices->addValue(firstIndex + i);
 	}
+}
+
+void TREShapeGroup::addShapeIndices(TREShapeType shapeType, int firstIndex,
+									int count)
+{
+	TCULongArray *indices = getIndices(shapeType, true);
+
+	addIndices(indices, firstIndex, count);
 }
 
 void TREShapeGroup::addShapeStripCount(TREShapeType shapeType, int count)
@@ -268,7 +287,7 @@ int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 		return 4;
 		break;
 	case TRESConditionalLine:
-		return 4;
+		return 2;
 		break;
 	default:
 		// Strips are variable size
@@ -277,53 +296,12 @@ int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 	}
 }
 
-/*
-static void printULongArray(char *label, TCULongArray *array)
-{
-	printf("%s", label);
-	if (array)
-	{
-		int i;
-		int count = array->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			printf("%d ", (*array)[i]);
-		}
-	}
-	printf("\n");
-}
-*/
-
 void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 {
 	TCULongArray *indexArray = getIndices(shapeType);
 
 	if (indexArray)
 	{
-/*
-		if (shapeType != TRESLine)
-		{
-			int count = indexArray->getCount();
-			TCULong *values = indexArray->getValues();
-			int i;
-			float matrix[16];
-
-			glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
-			for (i = 0; i < count; i++)
-			{
-				TCULong index = values[i];
-				TREVertex nv = (*m_vertexStore->getNormals())[index];
-				TCVector normal = TCVector(nv.v[0], nv.v[1], nv.v[2]);
-
-				normal = normal.transformNormal(matrix, false);
-				if (!fEq2(normal.lengthSquared(), 1.0f, 1e-4))
-				{
-					printf("Bad normal: %f\n", normal.length());
-				}
-			}
-		}
-*/
 		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
 			GL_UNSIGNED_INT, indexArray->getValues());
 	}
@@ -509,6 +487,167 @@ void TREShapeGroup::drawLines(void)
 	}
 }
 
+//***********************************************************************
+// Return 1 if the v2 bends left of v1, -1 if right, 0 if straight ahead.
+int TREShapeGroup::turnVector(float vx1, float vy1, float vx2, float vy2)
+{
+	// Pos for left bend, 0 = linear
+	float vecProduct = (vx1 * vy2) - (vy1 * vx2);
+
+	if (vecProduct > 0.0)
+	{
+		return 1;
+	}
+	if (vecProduct < 0.0)
+	{
+		return -1;
+	}
+	return 0;
+}
+
+// Note that this doesn't make any attempt at all to come up with the actual
+// correct point.  However, multiple points run through this with the same
+// matrix will be in consistent positions relative to each other.  The scale
+// present in the matrix is ignored.  Since all we want for conditional lines
+// is relative locations, this doesn't matter.
+void TREShapeGroup::transformPoint(const TCVector &point, const float *matrix,
+								   float *tx, float *ty)
+{
+	float x = point.get(0);
+	float y = point.get(1);
+	float z = point.get(2);
+
+//	x' = a*x + b*y + c*z + X
+//	y' = d*x + e*y + f*z + Y
+//	z' = g*x + h*y + i*z + Z
+	*tx = matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12];
+	*ty = matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13];
+}
+
+bool TREShapeGroup::shouldDrawConditional(TCULong index1, TCULong index2,
+										  TCULong cpIndex1, TCULong cpIndex2,
+										  const float *matrix)
+{
+	// Use matrix--which contains a combination of the projection and the
+	// model-view matrix--to calculate coords in the plane of the screen, so
+	// we can test optional lines.
+	float s1x, s1y;
+	float s2x, s2y;
+	float s3x, s3y;
+	float s4x, s4y;
+	TREVertexArray *vertices = m_vertexStore->getVertices();
+	TREVertexArray *controlPoints = m_vertexStore->getControlPoints();
+	const TREVertex &v1 = (*vertices)[index1];
+	const TREVertex &v2 = (*vertices)[index2];
+	const TREVertex &v3 = (*controlPoints)[cpIndex1];
+	const TREVertex &v4 = (*controlPoints)[cpIndex2];
+	TCVector p1 = TCVector(v1.v[0], v1.v[1], v1.v[2]);
+	TCVector p2 = TCVector(v2.v[0], v2.v[1], v2.v[2]);
+	TCVector p3 = TCVector(v3.v[0], v3.v[1], v3.v[2]);
+	TCVector p4 = TCVector(v4.v[0], v4.v[1], v4.v[2]);
+
+	// Only draw optional line p1-p2 if p3 and p4 are on the same side of p1-p2.
+	// Note that we don't actually adjust for the window size, because it
+	// doesn't effect the calculation.  Also, we don't care what the z value is,
+	// so we don't bother to compute it.
+	transformPoint(p1, matrix, &s1x, &s1y);
+	transformPoint(p2, matrix, &s2x, &s2y);
+	transformPoint(p3, matrix, &s3x, &s3y);
+	transformPoint(p4, matrix, &s4x, &s4y);
+
+	// If we do not turn the same direction \_/ for both test points
+	// then they're on opposite sides of segment p1-p2 and we should
+	// skip drawing this conditional line.
+	if (turnVector(s2x-s1x, s2y-s1y, s3x-s2x, s3y-s2y) == 
+		turnVector(s2x-s1x, s2y-s1y, s4x-s2x, s4y-s2y))
+	{
+		return true;	// Draw it
+	}
+	else
+	{
+		return false;	// Skip it.
+	}
+}
+
+/*
+static void printULongArray(TCULongArray *array)
+{
+	if (array)
+	{
+		int i;
+		int count = array->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			printf("%d\n", (*array)[i]);
+		}
+	}
+}
+
+static void printVertices(TREVertexArray *vertices, TCULongArray *indices)
+{
+	if (vertices && indices)
+	{
+		int i;
+		int count = indices->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			int index = (*indices)[i];
+			const TREVertex &vertex = (*vertices)[index];
+
+			printf("%14.10f %14.10f %14.10f\n", vertex.v[0], vertex.v[1],
+				vertex.v[2]);
+		}
+	}
+}
+*/
+
+void TREShapeGroup::drawConditionalLines(void)
+{
+	if (m_vertexStore)
+	{
+		TCULongArray *indices = getIndices(TRESConditionalLine);
+
+		if (indices)
+		{
+			int i;
+			int count = indices->getCount();
+			TCULongArray *activeIndices = new TCULongArray;
+			float modelViewMatrix[16];
+			float projectionMatrix[16];
+			float matrix[16];
+
+			glGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
+			glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
+			TCVector::multMatrix(projectionMatrix, modelViewMatrix, matrix);
+			for (i = 0; i < count; i += 2)
+			{
+				TCULong index1 = (*indices)[i];
+				TCULong index2 = (*indices)[i + 1];
+				TCULong cpIndex1 = (*m_controlPointIndices)[i];
+				TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+
+				if (shouldDrawConditional(index1, index2, cpIndex1, cpIndex2,
+					matrix))
+				{
+					activeIndices->addValue(index1);
+					activeIndices->addValue(index2);
+				}
+			}
+			if (activeIndices->getCount())
+			{
+//				printULongArray(activeIndices);
+//				printVertices(m_vertexStore->getVertices(), activeIndices);
+//				printf("\n\n");
+				glDrawElements(GL_LINES, activeIndices->getCount(),
+					GL_UNSIGNED_INT, activeIndices->getValues());
+			}
+			activeIndices->release();
+		}
+	}
+}
+
 int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
 							int count)
 {
@@ -530,6 +669,23 @@ int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
 		index = m_vertexStore->addVertices(vertices, count);
 	}
 	addShapeIndices(shapeType, index, count);
+	return index;
+}
+
+int TREShapeGroup::addConditionalLine(TCVector *vertices,
+									  TCVector *controlPoints)
+{
+	int index;
+
+	m_vertexStore->setupConditional();
+	if (!m_controlPointIndices)
+	{
+		m_controlPointIndices = new TCULongArray;
+	}
+	index = m_vertexStore->addControlPoints(controlPoints, 2);
+	addIndices(m_controlPointIndices, index, 2);
+	index = m_vertexStore->addVertices(vertices, 2);
+	addShapeIndices(TRESConditionalLine, index, 2);
 	return index;
 }
 
@@ -806,9 +962,15 @@ void TREShapeGroup::invert(void)
 		int triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
 		int quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
 		int triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
+		int conditionalLineIndex = getShapeTypeIndex(TRESConditionalLine);
 
 		for (i = 0; i < shapeTypeCount; i++)
 		{
+			if ((m_shapesPresent & TRESConditionalLine) &&
+				i == conditionalLineIndex)
+			{
+				continue;
+			}
 			TCULongArray *theseIndices = (*m_indices)[i];
 			TCULongArray *newIndices =
 				new TCULongArray(theseIndices->getCount());
@@ -818,8 +980,6 @@ void TREShapeGroup::invert(void)
 			if (i < firstStripIndex)
 			{
 				invertShapes(theseIndices, newIndices);
-//				printULongArray("in: ", theseIndices);
-//				printULongArray("in: ", theseIndices);
 			}
 			else
 			{
@@ -832,7 +992,6 @@ void TREShapeGroup::invert(void)
 				else if ((m_shapesPresent & TRESQuadStrip) &&
 					i == quadStripIndex)
 				{
-//					printULongArray("qs: ", theseIndices);
 					for (j = 0; j < indexCount; j += 2)
 					{
 						TCULong index1 = (*theseIndices)[j];
@@ -841,7 +1000,6 @@ void TREShapeGroup::invert(void)
 						newIndices->addValue(flipNormal(index2));
 						newIndices->addValue(flipNormal(index1));
 					}
-//					printULongArray("qs: ", theseIndices);
 				}
 				else if ((m_shapesPresent & TRESTriangleFan) &&
 					i == triangleFanIndex)
@@ -849,7 +1007,6 @@ void TREShapeGroup::invert(void)
 					int numStrips = theseStripCounts->getCount();
 					int indexOffset = 0;
 
-//					printULongArray("tf: ", theseIndices);
 					for (j = 0; j < numStrips; j++)
 					{
 						int stripCount = (*theseStripCounts)[j];
@@ -862,7 +1019,6 @@ void TREShapeGroup::invert(void)
 					{
 						newIndices->addValue(flipNormal((*theseIndices)[j]));
 					}
-//					printULongArray("tf: ", theseIndices);
 				}
 			}
 			m_indices->replaceObject(newIndices, i);
@@ -881,18 +1037,22 @@ void TREShapeGroup::unMirror(void)
 		int triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
 		int quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
 		int triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
+		int conditionalLineIndex = getShapeTypeIndex(TRESConditionalLine);
 
 		for (i = 0; i < shapeTypeCount; i++)
 		{
+			if ((m_shapesPresent & TRESConditionalLine) &&
+				i == conditionalLineIndex)
+			{
+				continue;
+			}
 			TCULongArray *theseIndices = (*m_indices)[i];
 			TCULongArray *theseStripCounts = (*m_stripCounts)[i];
 			int indexCount = theseIndices->getCount();
 
 			if (i < firstStripIndex)
 			{
-//				printULongArray("in: ", theseIndices);
 				invertULongArray(theseIndices);
-//				printULongArray("in: ", theseIndices);
 			}
 			else
 			{
@@ -901,9 +1061,7 @@ void TREShapeGroup::unMirror(void)
 				{
 					if ((*theseStripCounts)[i] % 2)
 					{
-//						printULongArray("sc: ", theseStripCounts);
 						invertULongArray(theseStripCounts);
-//						printULongArray("sc: ", theseStripCounts);
 					}
 					else
 					{
@@ -914,7 +1072,6 @@ void TREShapeGroup::unMirror(void)
 				else if ((m_shapesPresent & TRESQuadStrip) &&
 					i == quadStripIndex)
 				{
-//					printULongArray("qs: ", theseIndices);
 					for (j = 0; j < indexCount; j += 2)
 					{
 						TCULong temp1 = (*theseIndices)[j];
@@ -923,7 +1080,6 @@ void TREShapeGroup::unMirror(void)
 						theseIndices->replaceValue(temp2, j);
 						theseIndices->replaceValue(temp1, j + 1);
 					}
-//					printULongArray("qs: ", theseIndices);
 				}
 				else if ((m_shapesPresent & TRESTriangleFan) &&
 					i == triangleFanIndex)
@@ -931,7 +1087,6 @@ void TREShapeGroup::unMirror(void)
 					int numStrips = theseStripCounts->getCount();
 					int indexOffset = 0;
 
-//					printULongArray("tf: ", theseIndices);
 					for (j = 0; j < numStrips; j++)
 					{
 						int stripCount = (*theseStripCounts)[j];
@@ -940,7 +1095,6 @@ void TREShapeGroup::unMirror(void)
 							indexOffset + stripCount);
 						indexOffset += stripCount;
 					}
-//					printULongArray("tf: ", theseIndices);
 				}
 			}
 		}

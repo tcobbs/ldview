@@ -36,6 +36,7 @@ typedef enum
 
 class TCImage;
 class LDLError;
+class TREMainModel;
 
 class LDrawModelViewer: public TCObject
 {
@@ -315,6 +316,7 @@ class LDrawModelViewer: public TCObject
 		void scanCameraPoint(const TCVector &point);
 
 		LDrawModel* lDrawModel;
+		TREMainModel *mainTREModel;
 		char* filename;
 		char* programPath;
 		int width;

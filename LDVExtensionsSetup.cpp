@@ -365,6 +365,7 @@ bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
 
 bool LDVExtensionsSetup::haveVBOExtension(void)
 {
+//	return false;
 	return checkForExtension("GL_ARB_vertex_buffer_object");
 }
 

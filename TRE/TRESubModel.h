@@ -29,8 +29,9 @@ public:
 	virtual bool hasMirrorMatrix(void) { return m_flags.mirrorMatrix != false; }
 	virtual void setBFCInvertFlag(bool value) { m_flags.bfcInvert = value; }
 	virtual bool getBFCInvertFlag(void) { return m_flags.bfcInvert != false; }
-	virtual void drawColored(void);
 	virtual void draw(TREMSection section, bool colored);
+/*
+	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
 	virtual void drawBFC(void);
 	virtual void drawColoredBFC(void);
@@ -40,6 +41,7 @@ public:
 	virtual void drawColoredEdgeLines(void);
 	virtual void compileDefaultColor(void);
 	virtual void compileColored(void);
+*/
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);

@@ -51,6 +51,18 @@ public:
 	{
 		return m_mainFlags.sortTransparent != false;
 	}
+	void setStippleFlag(bool value) { m_mainFlags.stipple = value; }
+	bool getStippleFlag(void) { return m_mainFlags.stipple != false; }
+	void setWireframeFlag(bool value) { m_mainFlags.wireframe = value; }
+	bool getWireframeFlag(void) { return m_mainFlags.wireframe != false; }
+	void setConditionalLinesFlag(bool value)
+	{
+		m_mainFlags.conditionalLines = value;
+	}
+	bool getConditionalLinesFlag(void)
+	{
+		return m_mainFlags.conditionalLines != false;
+	}
 	virtual float getMaxRadiusSquared(const TCVector &center);
 	virtual float getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
@@ -78,19 +90,17 @@ protected:
 	void transferTransparent(void);
 	virtual void drawTransparent(void);
 	virtual void drawLines(void);
-	virtual void compileTransparent(void);
+	virtual void enableLineSmooth(void);
 
 	TCDictionary *m_loadedModels;
 	TCDictionary *m_loadedBFCModels;
 	TREVertexStore *m_vertexStore;
 	TREVertexStore *m_coloredVertexStore;
 	TREVertexStore *m_transVertexStore;
-	TRETransShapeGroup *m_transShapes;
 	TCULong m_color;
 	TCULong m_edgeColor;
 	float m_maxRadiusSquared;
 	TCVector m_center;
-	int m_transListID;
 	struct
 	{
 		bool compileParts:1;
@@ -104,6 +114,9 @@ protected:
 		bool bfc:1;
 		bool aaLines:1;
 		bool sortTransparent:1;
+		bool stipple:1;
+		bool wireframe:1;
+		bool conditionalLines:1;
 	} m_mainFlags;
 };
 

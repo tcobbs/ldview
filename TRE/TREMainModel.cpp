@@ -15,11 +15,9 @@ TREMainModel::TREMainModel(void)
 	m_vertexStore(new TREVertexStore),
 	m_coloredVertexStore(new TREVertexStore),
 	m_transVertexStore(NULL),
-	m_transShapes(NULL),
 	m_color(htonl(0x999999FF)),
 	m_edgeColor(htonl(0x666658FF)),
-	m_maxRadiusSquared(0.0f),
-	m_transListID(0)
+	m_maxRadiusSquared(0.0f)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -36,6 +34,9 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.bfc = false;
 	m_mainFlags.aaLines = false;
 	m_mainFlags.sortTransparent = false;
+	m_mainFlags.stipple = false;
+	m_mainFlags.wireframe = false;
+	m_mainFlags.conditionalLines = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -48,10 +49,8 @@ TREMainModel::TREMainModel(const TREMainModel &other)
 	m_transVertexStore((TREVertexStore *)TCObject::copy(
 		other.m_transVertexStore)),
 	m_mainFlags(other.m_mainFlags),
-	m_transShapes((TRETransShapeGroup *)TCObject::copy(other.m_transShapes)),
 	m_color(other.m_color),
-	m_edgeColor(other.m_edgeColor),
-	m_transListID(0)
+	m_edgeColor(other.m_edgeColor)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -70,11 +69,6 @@ void TREMainModel::dealloc(void)
 	TCObject::release(m_vertexStore);
 	TCObject::release(m_coloredVertexStore);
 	TCObject::release(m_transVertexStore);
-	TCObject::release(m_transShapes);
-	if (m_transListID)
-	{
-		glDeleteLists(m_transListID, 1);
-	}
 	TREModel::dealloc();
 }
 
@@ -123,18 +117,22 @@ void TREMainModel::deactivateBFC(void)
 	glDisable(GL_CULL_FACE);
 }
 
+/*
 void TREMainModel::compileTransparent(void)
 {
-	if (!m_transListID && m_transShapes)
+	if (!m_coloredListIDs[TREMTransparent] &&
+		m_coloredShapes[TREMTransparent])
 	{
 		int listID = glGenLists(1);
 
 		glNewList(listID, GL_COMPILE);
-		m_transShapes->draw(false);
+		((TRETransShapeGroup *)m_coloredShapes[TREMTransparent])->
+			draw(false);
 		glEndList();
-		m_transListID = listID;
+		m_coloredListIDs[TREMTransparent] = listID;
 	}
 }
+*/
 
 void TREMainModel::compile(void)
 {
@@ -156,7 +154,10 @@ void TREMainModel::compile(void)
 		}
 		compileColoredLines();
 		compileColoredEdgeLines();
-		m_transVertexStore->activate(true);
+		if (m_transVertexStore)
+		{
+			m_transVertexStore->activate(true);
+		}
 		if (!getSortTransparentFlag())
 		{
 			compileTransparent();
@@ -177,18 +178,21 @@ void TREMainModel::recompile(void)
 
 void TREMainModel::draw(void)
 {
+	float normalSpecular[4];
+
+	glGetLightfv(GL_LIGHT0, GL_SPECULAR, normalSpecular);
 	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
 	{
 		compile();
 	}
-	if (getEdgeLinesFlag())
+	if (getEdgeLinesFlag() && !getWireframeFlag())
 	{
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
 	}
-	else
+	if (getWireframeFlag())
 	{
-		glDisable(GL_POLYGON_OFFSET_FILL);
+		enableLineSmooth();
 	}
 	// I admit, this is a mess.  But I'm not sure how to make it less of a mess.
 	// The various things do need to be drawn separately, and they have to get
@@ -221,7 +225,23 @@ void TREMainModel::draw(void)
 	// which probably don't exist, since color number 16 doesn't often get used
 	// for lines.
 	drawLines();
+	if (getAALinesFlag() && getWireframeFlag())
+	{
+		// We use glPushAttrib() when we enable line smoothing.
+		glPopAttrib();
+	}
 	drawTransparent();
+}
+
+void TREMainModel::enableLineSmooth(void)
+{
+	if (getAALinesFlag())
+	{
+		glPushAttrib(GL_ENABLE_BIT);
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
 }
 
 void TREMainModel::drawLines(void)
@@ -230,12 +250,10 @@ void TREMainModel::drawLines(void)
 	{
 		glDisable(GL_LIGHTING);
 	}
-	if (getAALinesFlag())
+	if (getAALinesFlag() && !getWireframeFlag())
 	{
-		glPushAttrib(GL_ENABLE_BIT);
-		glEnable(GL_LINE_SMOOTH);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// Note that if we're in wireframe mode, smoothing is already enabled.
+		enableLineSmooth();
 		// Smooth lines produce odd effects on the edge of transparent surfaces
 		// when depth writing is enabled, so disable.
 		glDepthMask(FALSE);
@@ -249,6 +267,9 @@ void TREMainModel::drawLines(void)
 	// different color, which can lead to non-default colored edge lines.
 	glColor4ubv((GLubyte*)&m_edgeColor);
 	drawEdgeLines();
+	m_vertexStore->deactivate();
+	m_vertexStore->activate(false);
+	drawConditionalLines();
 	// Next, draw the specific colored lines.  As with the specific colored
 	// triangles and quads, every point in the vertex store specifies a color.
 	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
@@ -258,9 +279,15 @@ void TREMainModel::drawLines(void)
 	// the fact that edge lines can be turned off, these could simply be added
 	// to the colored lines list.
 	drawColoredEdgeLines();
-	if (getAALinesFlag())
+	m_coloredVertexStore->deactivate();
+	m_coloredVertexStore->activate(false);
+	drawColoredConditionalLines();
+	if (getAALinesFlag() && !getWireframeFlag())
 	{
+		// Note that if we're in wireframe mode, smoothing was enabled
+		// elsewhere, and will therefore be disabled eleswhere.
 		glDepthMask(TRUE);
+		// We use glPushAttrib() when we enable line smoothing.
 		glPopAttrib();
 	}
 	if (getLightingFlag())
@@ -351,15 +378,20 @@ float TREMainModel::getMaxRadius(const TCVector &center)
 
 void TREMainModel::postProcess(void)
 {
-	transferTransparent();
+	if (!getWireframeFlag())
+	{
+		transferTransparent();
+	}
 	checkDefaultColorPresent();
 	checkBFCPresent();
 	checkDefaultColorLinesPresent();
 	checkEdgeLinesPresent();
+	checkConditionalLinesPresent();
 	checkColoredPresent();
 	checkColoredBFCPresent();
 	checkColoredLinesPresent();
 	checkColoredEdgeLinesPresent();
+	checkColoredConditionalLinesPresent();
 	if (getCompilePartsFlag() || getCompileAllFlag())
 	{
 		compile();
@@ -395,6 +427,9 @@ void TREMainModel::transferTransparent(void)
 	}
 }
 
+// This should really be modified to work in the sub-models, so that if sorting
+// isn't enabled, transparent bits get drawn as just another standard pass,
+// instead of all being thrown into the main model.
 void TREMainModel::addTransparentTriangle(TCULong color,
 										  const TCVector vertices[],
 										  const TCVector normals[])
@@ -405,22 +440,26 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 		m_transVertexStore->setLightingFlag(getLightingFlag());
 		m_transVertexStore->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	}
-	if (!m_transShapes)
+	if (!m_coloredShapes[TREMTransparent])
 	{
-		m_transShapes = new TRETransShapeGroup;
-		m_transShapes->setVertexStore(m_transVertexStore);
+		m_coloredShapes[TREMTransparent] = new TRETransShapeGroup;
+		m_coloredShapes[TREMTransparent]->setVertexStore(m_transVertexStore);
 	}
-	m_transShapes->addTriangle(color, vertices, normals);
+	m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
 }
 
 void TREMainModel::drawTransparent(void)
 {
-	if (m_transShapes)
+	if (m_coloredShapes[TREMTransparent])
 	{
-//		float specular[] = {0.75f, 0.75f, 0.75f, 1.0f};
+		float specular[] = {0.75f, 0.75f, 0.75f, 1.0f};
+		float oldSpecular[4];
+		float oldShininess;
 
+		glGetMaterialfv(GL_FRONT, GL_SHININESS, &oldShininess);
+		glGetMaterialfv(GL_FRONT, GL_SPECULAR, oldSpecular);
 		m_transVertexStore->activate(!m_mainFlags.sortTransparent);
-		if (false /*stipple*/)
+		if (getStippleFlag())
 		{
 			glEnable(GL_POLYGON_STIPPLE);
 		}
@@ -428,15 +467,15 @@ void TREMainModel::drawTransparent(void)
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			if (true /*!drawWireframe*/)
+			if (!getWireframeFlag())
 			{
 				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 			}
 			glDepthMask(FALSE);
 		}
-//		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
-//		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-		if (true /*!wireframe*/)
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+		if (!getWireframeFlag())
 		{
 			if (getEdgeLinesFlag())
 			{
@@ -448,19 +487,19 @@ void TREMainModel::drawTransparent(void)
 				glPolygonOffset(-POLYGON_OFFSET_FACTOR, -POLYGON_OFFSET_UNITS);
 			}
 		}
-		if (m_transListID)
+		if (m_coloredListIDs[TREMTransparent])
 		{
-			glCallList(m_transListID);
+			glCallList(m_coloredListIDs[TREMTransparent]);
 		}
 		else
 		{
-			m_transShapes->draw(m_mainFlags.sortTransparent);
+			((TRETransShapeGroup *)m_coloredShapes[TREMTransparent])->
+				draw(m_mainFlags.sortTransparent);
 		}
 		glDisable(GL_POLYGON_OFFSET_FILL);
-//		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, TGLShape::getNormalSpecular());
-//		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS,
-//			TGLShape::getNormalShininess());
-		if (false /*stipple*/)
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, oldSpecular);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, oldShininess);
+		if (getStippleFlag())
 		{
 			glDisable(GL_POLYGON_STIPPLE);
 		}
