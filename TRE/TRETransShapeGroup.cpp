@@ -32,7 +32,8 @@ void TRETransShapeGroup::draw(bool sort)
 	{
 		sortShapes();
 	}
-	TREColoredShapeGroup::draw();
+	drawShapeType(TRESTriangle);
+//	TREColoredShapeGroup::draw();
 }
 
 static int triangleCompareFunc(const void *left, const void *right)

@@ -397,6 +397,7 @@ void TREMainModel::recompile(void)
 	compile();
 }
 
+/*
 void checkNormals(TREVertexStore *vertexStore)
 {
 	if (vertexStore)
@@ -420,6 +421,7 @@ void checkNormals(TREVertexStore *vertexStore)
 		}
 	}
 }
+*/
 
 void TREMainModel::draw(void)
 {
@@ -881,6 +883,7 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 	if (!m_coloredShapes[TREMTransparent])
 	{
 		m_coloredShapes[TREMTransparent] = new TRETransShapeGroup;
+		m_coloredShapes[TREMTransparent]->setMainModel(this);
 		m_coloredShapes[TREMTransparent]->setVertexStore(m_transVertexStore);
 	}
 	if (getStudLogoFlag() && getStudTextures())
@@ -894,9 +897,9 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 		{
 			static TCVector zeroTextureCoords[3] =
 			{
-				TCVector(0.5, 0.5, 0.0), 
-				TCVector(0.5, 0.5, 0.0),
-				TCVector(0.5, 0.5, 0.0)
+				TCVector(0.0, 0.0, 0.0),
+				TCVector(0.0, 0.0, 0.0),
+				TCVector(0.0, 0.0, 0.0)
 			};
 
 			m_coloredShapes[TREMTransparent]->addTriangle(color, vertices,
