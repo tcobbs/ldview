@@ -92,7 +92,7 @@ public:
 	static void setPollMode(LDVPollMode value);
 	static LDVViewMode getViewMode(void);
 	static void setViewMode(LDVViewMode value);
-
+	void performHotKey(int);
     void setupPrefSetsList(void);
 
 protected:

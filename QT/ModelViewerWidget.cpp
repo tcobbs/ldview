@@ -2162,6 +2162,13 @@ void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
 void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 {
 	lock();
+	if((event->state() & Qt::AltButton) &&
+		(event->key() >= Qt::Key_0) &&
+		(event->key() <= Qt::Key_9) && preferences)
+	{
+		int i = event->key()-Qt::Key_0;
+		preferences->performHotKey(i);
+	}
 	if (viewMode == LDVViewFlythrough)
 	{
 		processKey(event, true);
