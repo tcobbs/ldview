@@ -9,6 +9,8 @@ struct TREVertex;
 class TREVertexArray;
 class TCVector;
 
+typedef TCTypedValueArray<GLboolean> GLbooleanArray;
+
 class TREVertexStore : public TCObject
 {
 public:
@@ -17,7 +19,8 @@ public:
 	virtual TCObject *copy(void);
 	virtual bool activate(bool displayLists);
 	virtual void deactivate(void);
-	virtual int addVertices(const TCVector *points, int count);
+	virtual int addVertices(const TCVector *points, int count,
+		GLboolean edgeFlag = GL_TRUE);
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
 		int count);
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
@@ -34,6 +37,7 @@ public:
 	TREVertexArray *getNormals(void) { return m_normals; }
 	TREVertexArray *getTextureCoords(void) { return m_textureCoords; }
 	TCULongArray *getColors(void) { return m_colors; }
+	GLbooleanArray *getEdgeFlags(void) { return m_edgeFlags; }
 	void setLightingFlag(bool value);
 	bool getLightingFlag(void) { return m_flags.lighting != false; }
 	void setTwoSidedLightingFlag(bool value)
@@ -60,6 +64,8 @@ public:
 	{
 		return m_flags.conditionalControlPoints != false;
 	}
+	void setConditionalsFlag(bool value) { m_flags.conditionals = value; }
+	bool getConditionalsFlag(void) { return m_flags.conditionals != false; }
 	virtual void openGlWillEnd(void);
 
 	static void initVertex(TREVertex &vertex, const TCVector &point);
@@ -104,10 +110,12 @@ protected:
 	TREVertexArray *m_normals;
 	TREVertexArray *m_textureCoords;
 	TCULongArray *m_colors;
+	GLbooleanArray *m_edgeFlags;
 	TCULong m_verticesOffset;
 	TCULong m_normalsOffset;
 	TCULong m_textureCoordsOffset;
 	TCULong m_colorsOffset;
+	TCULong m_edgeFlagsOffset;
 	GLuint m_vbo;
 	struct
 	{
@@ -119,6 +127,7 @@ protected:
 		bool twoSidedLighting:1;
 		bool showAllConditional:1;
 		bool conditionalControlPoints:1;
+		bool conditionals:1;
 	} m_flags;
 
 	static TREVertexStore *sm_activeVertexStore;

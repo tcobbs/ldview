@@ -625,35 +625,117 @@ void TREShapeGroup::drawConditionalLines(void)
 			}
 			else
 			{
-				int i;
-				int count = indices->getCount();
-				float modelViewMatrix[16];
-				float projectionMatrix[16];
-				float matrix[16];
-
-				activeIndices = new TCULongArray;
-				glGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
-				glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
-				TCVector::multMatrix(projectionMatrix, modelViewMatrix, matrix);
-				for (i = 0; i < count; i += 2)
+				if (m_mainModel->getStencilConditionalsFlag())
 				{
-					TCULong index1 = (*indices)[i];
-					TCULong index2 = (*indices)[i + 1];
-					TCULong cpIndex1 = (*m_controlPointIndices)[i];
-					TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+					int i;
+					int count = indices->getCount();
+					TREVertexArray *vertices = m_vertexStore->getVertices();
 
-					if (showAllConditional ||
-						shouldDrawConditional(index1, index2, cpIndex1,
-						cpIndex2, matrix))
+					activeIndices = new TCULongArray;
+					glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT |
+						GL_STENCIL_BUFFER_BIT);
+					glEnable(GL_STENCIL_TEST);
+					glEnable(GL_CULL_FACE);
+					glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+					glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+					glDepthMask(GL_FALSE);
+					glStencilMask(0xFFFFFFFF);
+					glStencilFunc(GL_ALWAYS, 0x7FFFFFFF, 0xFFFFFFFF);
+					glStencilOp(GL_INVERT, GL_KEEP, GL_INVERT);
+					glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+					if (!m_mainModel->getVertexArrayEdgeFlagsFlag())
 					{
-						activeIndices->addValue(index1);
-						activeIndices->addValue(index2);
-						if (showConditionalControlPoints)
+						glBegin(GL_TRIANGLES);
+					}
+					for (i = 0; i < count; i += 2)
+					{
+						TCULong index1 = (*indices)[i];
+						TCULong index2 = (*indices)[i + 1];
+						TCULong cpIndex1 = (*m_controlPointIndices)[i];
+						TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+
+						if (m_mainModel->getVertexArrayEdgeFlagsFlag())
 						{
 							activeIndices->addValue(index1);
+							// Adding 1 to the index gives me the vertex with
+							// the edge flag set to GL_FALSE
+							activeIndices->addValue(index2 + 1);
 							activeIndices->addValue(cpIndex1);
-							activeIndices->addValue(index1);
+
+							activeIndices->addValue(index2);
+							// Adding 1 to the index gives me the vertex with
+							// the edge flag set to GL_FALSE
+							activeIndices->addValue(index1 + 1);
 							activeIndices->addValue(cpIndex2);
+						}
+						else
+						{
+							glVertex3fv((*vertices)[index1].v);
+							glEdgeFlag(GL_FALSE);
+							glVertex3fv((*vertices)[index2].v);
+							glVertex3fv((*m_vertexStore->
+								getVertices())[cpIndex1].v);
+
+							glVertex3fv((*vertices)[index1].v);
+							glVertex3fv((*m_vertexStore->
+								getVertices())[cpIndex2].v);
+							glEdgeFlag(GL_TRUE);
+							glVertex3fv((*vertices)[index2].v);
+						}
+					}
+					if (m_mainModel->getVertexArrayEdgeFlagsFlag())
+					{
+						if (activeIndices->getCount())
+						{
+							glDrawElements(GL_TRIANGLES,
+								activeIndices->getCount(), GL_UNSIGNED_INT,
+								activeIndices->getValues());
+						}
+						activeIndices->release();
+					}
+					else
+					{
+						glEnd();
+					}
+					activeIndices = indices;
+					activeIndices->retain();
+					glPopAttrib(); // GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
+					glStencilFunc(GL_NOTEQUAL, 0, 0xFFFFFFFF);
+					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+				}
+				else
+				{
+					int i;
+					int count = indices->getCount();
+					float modelViewMatrix[16];
+					float projectionMatrix[16];
+					float matrix[16];
+
+					activeIndices = new TCULongArray;
+					glGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
+					glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
+					TCVector::multMatrix(projectionMatrix, modelViewMatrix,
+						matrix);
+					for (i = 0; i < count; i += 2)
+					{
+						TCULong index1 = (*indices)[i];
+						TCULong index2 = (*indices)[i + 1];
+						TCULong cpIndex1 = (*m_controlPointIndices)[i];
+						TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+
+						if (showAllConditional ||
+							shouldDrawConditional(index1, index2, cpIndex1,
+							cpIndex2, matrix))
+						{
+							activeIndices->addValue(index1);
+							activeIndices->addValue(index2);
+							if (showConditionalControlPoints)
+							{
+								activeIndices->addValue(index1);
+								activeIndices->addValue(cpIndex1);
+								activeIndices->addValue(index1);
+								activeIndices->addValue(cpIndex2);
+							}
 						}
 					}
 				}
@@ -669,6 +751,10 @@ void TREShapeGroup::drawConditionalLines(void)
 				}
 			}
 			activeIndices->release();
+			if (m_mainModel->getStencilConditionalsFlag())
+			{
+				glPopAttrib();
+			}
 		}
 	}
 }
@@ -729,10 +815,31 @@ int TREShapeGroup::addConditionalLine(TCVector *vertices,
 	{
 		m_controlPointIndices = new TCULongArray;
 	}
-	index = m_vertexStore->addVertices(controlPoints, 2);
+	if (m_mainModel->getStencilConditionalsFlag() &&
+		m_mainModel->getVertexArrayEdgeFlagsFlag())
+	{
+		m_vertexStore->setConditionalsFlag(true);
+	}
+	// The edge flag for control point vertices will always be GL_FALSE.
+	index = m_vertexStore->addVertices(controlPoints, 2, GL_FALSE);
 	addIndices(m_controlPointIndices, index, 2);
-	index = m_vertexStore->addVertices(vertices, 2);
-	addShapeIndices(TRESConditionalLine, index, 2);
+	if (m_mainModel->getStencilConditionalsFlag() &&
+		m_mainModel->getVertexArrayEdgeFlagsFlag())
+	{
+		index = m_vertexStore->addVertices(vertices, 1);
+		addShapeIndices(TRESConditionalLine, index, 1);
+		// We need a second copy, and this one needs to have the edge flag set
+		// to GL_FALSE.  Note that these will always be accessed as index + 1.
+		index = m_vertexStore->addVertices(vertices, 1, GL_FALSE);
+		index = m_vertexStore->addVertices(&vertices[1], 1);
+		addShapeIndices(TRESConditionalLine, index, 1);
+		index = m_vertexStore->addVertices(&vertices[1], 1, GL_FALSE);
+	}
+	else
+	{
+		index = m_vertexStore->addVertices(vertices, 2);
+		addShapeIndices(TRESConditionalLine, index, 2);
+	}
 	return index;
 }
 
@@ -1478,6 +1585,7 @@ void TREShapeGroup::flatten(TREShapeGroup *srcShapes, float *matrix,
 				TREVertexArray *srcTextureCoords =
 					srcVertexStore->getTextureCoords();
 				TCULongArray *srcColors = srcVertexStore->getColors();
+				GLbooleanArray *srcEdgeFlags = srcVertexStore->getEdgeFlags();
 				TCULongArray *dstIndices = getIndices((TREShapeType)bit, true);
 				TCULongArray *srcCPIndices = NULL;
 				TCULongArray *dstCPIndices = NULL;
@@ -1494,14 +1602,17 @@ void TREShapeGroup::flatten(TREShapeGroup *srcShapes, float *matrix,
 					TREVertexArray *dstTextureCoords =
 						m_vertexStore->getTextureCoords();
 					TCULongArray *dstColors = m_vertexStore->getColors();
+					GLbooleanArray *dstEdgeFlags =
+						m_vertexStore->getEdgeFlags();
 					TREShapeType shapeType = (TREShapeType)bit;
 
 					if (shapeType < TRESFirstStrip)
 					{
 						flattenShapes(dstVertices, dstNormals, dstTextureCoords,
-							dstColors, dstIndices, dstCPIndices, srcVertices,
-							srcNormals, srcTextureCoords, srcColors, srcIndices,
-							srcCPIndices, matrix, color, colorSet);
+							dstColors, dstIndices, dstCPIndices, dstEdgeFlags,
+							srcVertices, srcNormals, srcTextureCoords,
+							srcColors, srcIndices, srcCPIndices, srcEdgeFlags,
+							matrix, color, colorSet);
 					}
 					else
 					{
@@ -1527,12 +1638,14 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 								  TCULongArray *dstColors,
 								  TCULongArray *dstIndices,
 								  TCULongArray *dstCPIndices,
+								  GLbooleanArray *dstEdgeFlags,
 								  TREVertexArray *srcVertices,
 								  TREVertexArray *srcNormals,
 								  TREVertexArray *srcTextureCoords,
 								  TCULongArray *srcColors,
 								  TCULongArray *srcIndices,
 								  TCULongArray *srcCPIndices,
+								  GLbooleanArray *srcEdgeFlags,
 								  float *matrix,
 								  TCULong color,
 								  bool colorSet)
@@ -1569,6 +1682,55 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 		}
 		if (srcCPIndices && dstCPIndices)
 		{
+			if (srcEdgeFlags)
+			{
+				if (dstEdgeFlags)
+				{
+//					GLboolean value = (*srcEdgeFlags)[index];
+					int j;
+
+					for (j = dstEdgeFlags->getCount(); j <
+						dstVertices->getCount() - 1; j++)
+					{
+						dstEdgeFlags->addValue(GL_TRUE);
+					}
+					dstEdgeFlags->addValue(GL_TRUE);
+				}
+				index++;
+				// If we have control point indices, that means this is a
+				// conditional, and therefore we need to copy the extra edge
+				// flag.
+				dstVertices->addVertex(vertex);
+				if (srcNormals)
+				{
+					// This is a line; it doesn't have a normal.
+					TREVertex normal;
+
+					dstNormals->addVertex(normal);
+				}
+				if (srcTextureCoords)
+				{
+					dstTextureCoords->addVertex((*srcTextureCoords)[index]);
+				}
+				if (colorSet)
+				{
+					dstColors->addValue(color);
+				}
+				else if (srcColors)
+				{
+					dstColors->addValue((*srcColors)[index]);
+				}
+				if (dstEdgeFlags)
+				{
+//					GLboolean value = (*srcEdgeFlags)[index];
+
+					dstEdgeFlags->addValue(GL_FALSE);
+				}
+				else
+				{
+					debugPrintf("No dstEdgeFlags\n");
+				}
+			}
 			index = (*srcCPIndices)[i];
 			vertex = (*srcVertices)[index];
 			dstCPIndices->addValue(dstVertices->getCount());
@@ -1585,6 +1747,12 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 			else if (srcColors)
 			{
 				dstColors->addValue((*srcColors)[index]);
+			}
+			if (dstEdgeFlags)
+			{
+//				GLboolean value = (*srcEdgeFlags)[index];
+
+				dstEdgeFlags->addValue(GL_FALSE);
 			}
 		}
 	}

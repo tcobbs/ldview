@@ -75,6 +75,8 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.greenFrontFaces = false;
 	m_mainFlags.lineJoins = false;	// Doesn't work right
 	m_mainFlags.drawNormals = false;
+	m_mainFlags.stencilConditionals = false;
+	m_mainFlags.vertexArrayEdgeFlags = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -231,7 +233,14 @@ void TREMainModel::compileTransparent(void)
 
 bool TREMainModel::shouldCompileSection(TREMSection section)
 {
-	return section != TREMConditionalLines && section != TREMTransparent;
+	if (getStencilConditionalsFlag())
+	{
+		return section != TREMTransparent;
+	}
+	else
+	{
+		return section != TREMConditionalLines && section != TREMTransparent;
+	}
 }
 
 void TREMainModel::compile(void)
@@ -594,8 +603,11 @@ void TREMainModel::drawLines(void)
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	}
 	TREModel::draw(TREMEdgeLines);
-	m_vertexStore->deactivate();
-	m_vertexStore->activate(false);
+	if (!getStencilConditionalsFlag())
+	{
+		m_vertexStore->deactivate();
+		m_vertexStore->activate(false);
+	}
 	if (getConditionalLinesFlag())
 	{
 		TREModel::draw(TREMConditionalLines);
@@ -614,8 +626,11 @@ void TREMainModel::drawLines(void)
 	// the fact that edge lines can be turned off, these could simply be added
 	// to the colored lines list.
 	drawColored(TREMEdgeLines);
-	m_coloredVertexStore->deactivate();
-	m_coloredVertexStore->activate(false);
+	if (!getStencilConditionalsFlag())
+	{
+		m_coloredVertexStore->deactivate();
+		m_coloredVertexStore->activate(false);
+	}
 	if (getConditionalLinesFlag())
 	{
 		drawColored(TREMConditionalLines);
