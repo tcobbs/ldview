@@ -1,5 +1,6 @@
 #include "TCObjectTree.h"
 #include "TCStringArray.h"
+#include <string.h>
 
 TCObjectTreeNode::TCObjectTreeNode(const void *key, TCObject *value,
 											   TCTreeCopyKeyFunc copyKey)

@@ -27,6 +27,7 @@ LDModelParser::LDModelParser(void)
 	m_flags.primitiveSubstitution = false;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
+	m_flags.bfc = true;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -65,9 +66,10 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
 	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
+	m_mainTREModel->setBFCFlag(getBFCFlag());
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
-	if (parseModel(m_mainLDLModel, m_mainTREModel))
+	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag(), false))
 	{
 		if (m_mainTREModel->isPart())
 		{
@@ -83,7 +85,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 
 bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 								TREModel *treParentModel,
-								TREModel *treModel)
+								TREModel *treModel, bool invert)
 {
 	TCULong colorNumber = modelLine->getColorNumber();
 	TRESubModel *treSubModel = NULL;
@@ -91,7 +93,7 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 	if (colorNumber == 16)
 	{
 		treSubModel = treParentModel->addSubModel(modelLine->getMatrix(),
-			treModel);
+			treModel, invert);
 	}
 	else
 	{
@@ -101,25 +103,30 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 		treSubModel = treParentModel->addSubModel(
 			parentModel->getPackedRGBA(colorNumber),
 			parentModel->getPackedRGBA(edgeColorNumber),
-			modelLine->getMatrix(), treModel);
-		if (TCVector::determinant(treSubModel->getMatrix()) < 0.0f)
-		{
-			// Generate an inverted version of the child model, because this
-			// reference to it involves a mirror.
-			treModel->getInvertedModel();
-		}
+			modelLine->getMatrix(), treModel, invert);
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
 	{
 		finishPart(treModel, treSubModel);
 	}
+	if (TCVector::determinant(treSubModel->getMatrix()) < 0.0f)
+	{
+		// Generate an inverted version of the child model, because this
+		// reference to it involves a mirror.
+		treModel->getUnMirroredModel();
+	}
 	return true;
 }
 
-bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel)
+bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
+							   bool bfc, bool invert)
 {
 	LDLModel *ldlModel = modelLine->getModel();
 
+	if (modelLine->getBFCInvert())
+	{
+		invert = !invert;
+	}
 	if (ldlModel)
 	{
 		const char *name = ldlModel->getName();
@@ -127,7 +134,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel)
 
 		if (model)
 		{
-			return addSubModel(modelLine, treModel, model);
+			return addSubModel(modelLine, treModel, model, bfc && invert);
 		}
 		else
 		{
@@ -135,11 +142,11 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel)
 			model->setMainModel(treModel->getMainModel());
 			model->setName(name);
 			model->setPartFlag(ldlModel->isPart());
-			if (parseModel(ldlModel, model))
+			if (parseModel(ldlModel, model, bfc, invert))
 			{
 				m_mainTREModel->registerModel(model);
 				model->release();
-				return addSubModel(modelLine, treModel, model);
+				return addSubModel(modelLine, treModel, model, bfc && invert);
 			}
 			else
 			{
@@ -306,8 +313,10 @@ bool LDModelParser::isTorusI(const char *filename)
 
 bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
 {
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
+		numSegments, m_flags.bfc);
+	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
+		numSegments, m_flags.bfc);
 	if (m_flags.edgeLines)
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
@@ -608,8 +617,13 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 	return false;
 }
 
-bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel)
+bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
+							   bool invert)
 {
+	BFCState newState = ldlModel->getBFCState();
+
+	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)
+		&& getBFCFlag();
 	if (ldlModel && !performPrimitiveSubstitution(ldlModel, treModel))
 	{
 		LDLFileLineArray *fileLines = ldlModel->getFileLines();
@@ -629,16 +643,19 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel)
 					switch (fileLine->getLineType())
 					{
 					case LDLLineTypeModel:
-						parseModel((LDLModelLine *)fileLine, treModel);
+						parseModel((LDLModelLine *)fileLine, treModel, bfc,
+							invert);
 						break;
 					case LDLLineTypeLine:
 						parseLine((LDLShapeLine *)fileLine, treModel);
 						break;
 					case LDLLineTypeTriangle:
-						parseTriangle((LDLShapeLine *)fileLine, treModel);
+						parseTriangle((LDLShapeLine *)fileLine, treModel,
+							bfc, false);
 						break;
 					case LDLLineTypeQuad:
-						parseQuad((LDLShapeLine *)fileLine, treModel);
+						parseQuad((LDLShapeLine *)fileLine, treModel, bfc,
+							false);
 						break;
 					case LDLLineTypeConditionalLine:
 						break;
@@ -672,33 +689,128 @@ void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
 	}
 }
 
-void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel)
+bool LDModelParser::shouldFlipWinding(bool invert, bool windingCCW)
+{
+	return (invert && windingCCW) || (!invert && !windingCCW);
+}
+
+void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
+								  bool bfc, bool invert)
 {
 	TCULong colorNumber = shapeLine->getColorNumber();
 
 	if (colorNumber == 16)
 	{
-		treModel->addTriangle(shapeLine->getPoints());
+		if (bfc && shapeLine->getBFCOn())
+		{
+			if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
+			{
+				TCVector points[3];
+
+				points[0] = shapeLine->getPoints()[2];
+				points[1] = shapeLine->getPoints()[1];
+				points[2] = shapeLine->getPoints()[0];
+				treModel->addBFCTriangle(points);
+			}
+			else
+			{
+				treModel->addBFCTriangle(shapeLine->getPoints());
+			}
+		}
+		else
+		{
+			treModel->addTriangle(shapeLine->getPoints());
+		}
 	}
 	else
 	{
-		treModel->addTriangle(shapeLine->getParentModel()->
-			getPackedRGBA(colorNumber), shapeLine->getPoints());
+		if (bfc)
+		{
+			if (bfc && shapeLine->getBFCOn())
+			{
+				if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
+				{
+					TCVector points[3];
+
+					points[0] = shapeLine->getPoints()[2];
+					points[1] = shapeLine->getPoints()[1];
+					points[2] = shapeLine->getPoints()[0];
+					treModel->addBFCTriangle(shapeLine->getParentModel()->
+						getPackedRGBA(colorNumber), points);
+				}
+				else
+				{
+					treModel->addBFCTriangle(shapeLine->getParentModel()->
+						getPackedRGBA(colorNumber), shapeLine->getPoints());
+				}
+			}
+		}
+		else
+		{
+			treModel->addTriangle(shapeLine->getParentModel()->
+				getPackedRGBA(colorNumber), shapeLine->getPoints());
+		}
 	}
 }
 
-void LDModelParser::parseQuad(LDLShapeLine *shapeLine, TREModel *treModel)
+void LDModelParser::parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
+							  bool bfc, bool invert)
 {
 	TCULong colorNumber = shapeLine->getColorNumber();
 
 	if (colorNumber == 16)
 	{
-		treModel->addQuad(shapeLine->getPoints());
+		if (bfc && shapeLine->getBFCOn())
+		{
+			if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
+			{
+				TCVector points[4];
+
+				points[0] = shapeLine->getPoints()[3];
+				points[1] = shapeLine->getPoints()[2];
+				points[2] = shapeLine->getPoints()[1];
+				points[3] = shapeLine->getPoints()[0];
+				treModel->addBFCQuad(points);
+			}
+			else
+			{
+				treModel->addBFCQuad(shapeLine->getPoints());
+			}
+		}
+		else
+		{
+			treModel->addQuad(shapeLine->getPoints());
+		}
 	}
 	else
 	{
-		treModel->addQuad(shapeLine->getParentModel()->
-			getPackedRGBA(colorNumber), shapeLine->getPoints());
+		if (bfc)
+		{
+			if (bfc && shapeLine->getBFCOn())
+			{
+				if (shouldFlipWinding(invert, shapeLine->getBFCWindingCCW()))
+				{
+					TCVector points[4];
+
+					points[0] = shapeLine->getPoints()[3];
+					points[1] = shapeLine->getPoints()[2];
+					points[2] = shapeLine->getPoints()[1];
+					points[3] = shapeLine->getPoints()[0];
+					treModel->addBFCQuad(shapeLine->getParentModel()->
+						getPackedRGBA(colorNumber), points);
+				}
+				else
+				{
+					treModel->addBFCQuad(shapeLine->getParentModel()->
+						getPackedRGBA(colorNumber), shapeLine->getPoints());
+				}
+			}
+		}
+		else
+		{
+			treModel->addQuad(shapeLine->getParentModel()->
+				getPackedRGBA(colorNumber), shapeLine->getPoints());
+		}
 	}
 }
 

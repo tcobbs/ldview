@@ -32,6 +32,8 @@ public:
 		m_flags.twoSidedLighting = value;
 	}
 	bool getTwoSidedLightingFlag(void) { return m_flags.twoSidedLighting; }
+	void setBFCFlag(bool value) { m_flags.bfc = value; }
+	bool getBFCFlag(void) { return m_flags.bfc != false; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	virtual void setSeamWidth(float seamWidth);
@@ -39,13 +41,17 @@ public:
 protected:
 	virtual ~LDModelParser(void);
 	virtual void dealloc(void);
-	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel);
-	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel);
+	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
+		bool invert);
+	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
+		bool bfc, bool invert);
 	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel);
-	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel);
-	virtual void parseQuad(LDLShapeLine *shapeLine, TREModel *treModel);
+	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
+		bool bfc, bool invert);
+	virtual void parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
+		bool bfc, bool invert);
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
-		TREModel *treModel);
+		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel);
 	virtual bool substituteStud(TREModel *treModel, int numSegments);
@@ -83,6 +89,7 @@ protected:
 	virtual bool isTorusI(const char *filename);
 	virtual int getNumCircleSegments(float fraction = 0.0f);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
+	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 
 	LDLMainModel *m_mainLDLModel;
 	TREMainModel *m_mainTREModel;
@@ -95,6 +102,7 @@ protected:
 		bool seams:1;
 		bool edgeLines:1;
 		bool twoSidedLighting:1;
+		bool bfc:1;
 	} m_flags;
 };
 

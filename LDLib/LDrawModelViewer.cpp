@@ -83,7 +83,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 extraSearchDirs(NULL)
 {
 #ifdef _LEAK_DEBUG
-	strcpy(className, "LDrawModelViewer");
+//	strcpy(className, "LDrawModelViewer");
 #endif
 	flags.qualityLighting = 0;
 	flags.showsHighlightLines = 0;
@@ -2604,7 +2604,7 @@ void LDrawModelViewer::zoomToFit(void)
 		printf("num points: %d\n", _numPoints);
 		char message[1024];
 		sprintf(message, "num points: %d", _numPoints);
-		MessageBox(NULL, message, "Points", MB_OK);
+//		MessageBox(NULL, message, "Points", MB_OK);
 		d = (float)width / (float)height;
 		dh = (cameraData->horMax - cameraData->horMin) / d;
 		dv = cameraData->verMax - cameraData->verMin;

@@ -571,7 +571,7 @@ void TCVector::transformNormal(const float *matrix, TCVector& newNormal,
 	}
 	if (det < 0)
 	{
-		newNormal *= -1.0f;
+//		newNormal *= -1.0f;
 	}
 }
 

@@ -32,35 +32,61 @@ public:
 	virtual const char *getName(void) const { return m_name; }
 	virtual TREShapeGroup *getShapes(void) { return m_shapes; }
 //	virtual TREVertexArray *getVertices(void) { return m_vertices; }
-	virtual TRESubModel *addSubModel(float *matrix, TREModel *model);
+	virtual TRESubModel *addSubModel(float *matrix, TREModel *model,
+		bool invert);
 	virtual TRESubModel *addSubModel(TCULong color, TCULong edgeColor,
-		float *matrix, TREModel *model);
+		float *matrix, TREModel *model, bool invert);
 	virtual void addLine(TCVector *vertices);
 	virtual void addEdgeLine(TCVector *vertices);
 	virtual void addLine(TCULong color, TCVector *vertices);
 	virtual void addTriangle(TCVector *vertices);
 	virtual void addTriangle(TCVector *vertices, TCVector *normals);
 	virtual void addTriangle(TCULong color, TCVector *vertices);
+	virtual void addBFCTriangle(TCVector *vertices);
+	virtual void addBFCTriangle(TCVector *vertices, TCVector *normals);
+	virtual void addBFCTriangle(TCULong color, TCVector *vertices);
 	virtual void addQuad(TCVector *vertices);
 	virtual void addQuad(TCULong color, TCVector *vertices);
+	virtual void addBFCQuad(TCVector *vertices);
+	virtual void addBFCQuad(TCULong color, TCVector *vertices);
 	virtual void addQuadStrip(TCVector *vertices, TCVector *normals, int count,
 		bool flat = false);
+	virtual void addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
+		TCVector *normals, int count, bool flat);
+	virtual void addBFCQuadStrip(TCVector *vertices, TCVector *normals,
+		int count, bool flat = false);
 	virtual void addQuadStrip(TCULong color, TCVector *vertices,
+		TCVector *normals, int count, bool flat = false);
+	virtual void addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
+		TCVector *vertices, TCVector *normals, int count, bool flat = false);
+	virtual void addBFCQuadStrip(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
 	virtual void addTriangleFan(TCVector *vertices, TCVector *normals,
 		int count, bool flat = false);
+	virtual void addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
+		TCVector *normals, int count, bool flat = false);
+	virtual void addBFCTriangleFan(TCVector *vertices, TCVector *normals,
+		int count, bool flat = false);
 	virtual void addTriangleFan(TCULong color, TCVector *vertices,
+		TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
+		TCVector *vertices, TCVector *normals, int count, bool flat = false);
+	virtual void addBFCTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
 //	virtual void draw(void);
 	virtual void compileDefaultColor(void);
+	virtual void compileBFC(void);
 	virtual void compileColored(void);
+	virtual void compileColoredBFC(void);
 	virtual void compileDefaultColorLines(void);
 	virtual void compileColoredLines(void);
 	virtual void compileEdgeLines(void);
 	virtual void compileColoredEdgeLines(void);
 	virtual void drawDefaultColor(void);
+	virtual void drawBFC(void);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColored(void);
+	virtual void drawColoredBFC(void);
 	virtual void drawColoredLines(void);
 	virtual void drawEdgeLines(void);
 	virtual void drawColoredEdgeLines(void);
@@ -68,19 +94,20 @@ public:
 	virtual bool isPart(void) { return m_flags.part; }
 	virtual void flatten(void);
 	virtual void addCylinder(const TCVector &center, float radius, float height,
-		int numSegments, int usedSegments = -1);
+		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addSlopedCylinder(const TCVector &center, float radius,
 		float height, int numSegments, int usedSegments = -1);
 	virtual void addSlopedCylinder2(const TCVector &center, float radius,
 		float height, int numSegments, int usedSegments = -1);
 	virtual void addDisc(const TCVector &center, float radius, int numSegments,
-		int usedSegments = -1);
+		int usedSegments = -1, bool bfc = false);
 	virtual void addNotDisc(const TCVector &center, float radius,
 		int numSegments, int usedSegments = -1);
 	virtual void addCone(const TCVector &center, float radius, float height,
-		int numSegments, int usedSegments = -1);
+		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addOpenCone(const TCVector &center, float radius1,
-		float radius2, float height, int numSegments, int usedSegments = -1);
+		float radius2, float height, int numSegments, int usedSegments = -1,
+		bool bfc = false);
 	virtual void addCircularEdge(const TCVector &center, float radius,
 		int numSegments, int usedSegments = -1);
 	virtual void addRing(const TCVector &center, float radius1, float radius2,
@@ -90,6 +117,7 @@ public:
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *scaleMatrix);
 	void unshrinkNormals(float *matrix, float *unshrinkMatrix);
+	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
 
 //	static void multMatrix(float* left, float* right, float* result);
@@ -100,7 +128,9 @@ protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
 	virtual void setup(void);
+	virtual void setupBFC(void);
 	virtual void setupColored(void);
+	virtual void setupColoredBFC(void);
 	virtual void setupEdges(void);
 	virtual void setupColoredEdges(void);
 	virtual void flatten(TREModel *model, float *matrix, TCULong color,
@@ -130,6 +160,7 @@ protected:
 	virtual void triangleFanToTriangle(int index, TCVector *stripVertices,
 		TCVector *stripNormals, TCVector *triangleVertices,
 		TCVector *triangleNormals);
+	virtual void unMirror(TREModel *originalModel);
 	virtual void invert(TREModel *originalModel);
 
 	static void setGlNormalize(bool value);
@@ -141,6 +172,9 @@ protected:
 	TREColoredShapeGroup *m_coloredShapes;
 	TREShapeGroup *m_edgeShapes;
 	TREColoredShapeGroup *m_coloredEdgeShapes;
+	TREShapeGroup *m_bfcShapes;
+	TREColoredShapeGroup *m_coloredBFCShapes;
+	TREModel *m_unMirroredModel;
 	TREModel *m_invertedModel;
 	int m_defaultColorListID;
 	int m_coloredListID;
@@ -148,6 +182,8 @@ protected:
 	int m_coloredLinesListID;
 	int m_edgeLinesListID;
 	int m_coloredEdgeLinesListID;
+	int m_bfcListID;
+	int m_coloredBFCListID;
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
 	struct
@@ -155,6 +191,7 @@ protected:
 		bool part:1;
 		bool boundingBox:1;
 		bool unshrunkNormals:1;
+		bool unMirrored:1;
 		bool inverted:1;
 	} m_flags;
 

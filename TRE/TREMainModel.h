@@ -31,6 +31,8 @@ public:
 	{
 		return m_mainFlags.useFlatStrips != false;
 	}
+	void setBFCFlag(bool value) { m_mainFlags.bfc = value; }
+	bool getBFCFlag(void) { return m_mainFlags.bfc != false; }
 	virtual float getMaxRadiusSquared(const TCVector &center);
 	virtual float getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
@@ -44,6 +46,8 @@ protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
 	void scanMaxRadiusSquaredPoint(const TCVector &point);
+	virtual void activateBFC(void);
+	virtual void deactivateBFC(void);
 
 	TCDictionary *m_loadedModels;
 	TREVertexStore *m_vertexStore;
@@ -60,6 +64,7 @@ protected:
 		bool edgeLines:1;
 		bool twoSidedLighting:1;
 		bool useFlatStrips:1;
+		bool bfc:1;
 	} m_mainFlags;
 };
 
