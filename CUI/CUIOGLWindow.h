@@ -8,7 +8,7 @@ class CUIExport CUIOGLWindow : public CUIWindow
 {
 	public:
 		CUIOGLWindow(void);
-		CUIOGLWindow(char*, HINSTANCE, int, int, int, int);
+		CUIOGLWindow(const char*, HINSTANCE, int, int, int, int);
 		CUIOGLWindow(CUIWindow*, int, int, int, int);
 
 		virtual void perspectiveView(void);

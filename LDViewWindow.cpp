@@ -80,7 +80,7 @@ LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 	LDViewWindow::extraSearchDirs = NULL;
 }
 
-LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
+LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 						   int y, int width, int height)
 			  :CUIWindow(windowTitle, hInstance, x, y, width, height),
 			   modelWindow(NULL),
@@ -618,8 +618,6 @@ void LDViewWindow::createModelWindow(void)
 {
 	int width;
 	int height;
-	int xOffset = 0;
-	int yOffset = 0;
 	bool maximized;
 
 	TCObject::release(modelWindow);
@@ -628,21 +626,16 @@ void LDViewWindow::createModelWindow(void)
 	height = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, DEFAULT_WIN_HEIGHT,
 		false);
 	maximized = TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false) != 0;
-	if (showToolbar)
-	{
-		RECT rect;
-
-		GetWindowRect(hToolbar, &rect);
-		yOffset = rect.bottom - rect.top;
-		height -= yOffset;
-	}
 	if (screenSaver)
 	{
 		modelWindow = new SSModelWindow(this, 0, 0, width, height);
 	}
 	else
 	{
-		modelWindow = new ModelWindow(this, xOffset, yOffset, width, height);
+		// Note that while the toolbar and status bar might be turned on, they
+		// haven't been shown yet.  They'll resize the model window when they
+		// get shown.
+		modelWindow = new ModelWindow(this, 0, 0, width, height);
 	}
 	prefs = modelWindow->getPrefs();
 	prefs->retain();
