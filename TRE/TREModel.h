@@ -6,7 +6,7 @@
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TRE/TREShapeGroup.h>
 #include <TRE/TREColoredShapeGroup.h>
-#include <TRE/TREVectorKey.h>
+#include <TRE/TREVertexKey.h>
 #include <TRE/TRESmoother.h>
 #include <TCFoundation/TCVector.h>
 
@@ -50,7 +50,7 @@ typedef TCTypedObjectArray<TRESubModel> TRESubModelArray;
 typedef TCTypedObjectArray<TREShapeGroup> TREShapeGroupArray;
 typedef TCTypedObjectArray<TREColoredShapeGroup> TREColoredShapeGroupArray;
 typedef TCTypedObjectArray<TRENormalInfo> TRENormalInfoArray;
-typedef std::map<TREVectorKey, TRESmoother> TREConditionalMap;
+typedef std::map<TREVertexKey, TRESmoother> TREConditionalMap;
 
 typedef enum
 {
