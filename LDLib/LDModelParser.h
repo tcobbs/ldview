@@ -155,6 +155,8 @@ protected:
 		bool bfc, bool is48 = false);
 	virtual bool substituteSlopedCylinder2(TREModel *treModel, float fraction,
 		bool bfc, bool is48 = false);
+	virtual bool substituteChrd(TREModel *treModel, float fraction, bool bfc,
+		bool is48 = false);
 	virtual bool substituteDisc(TREModel *treModel, float fraction, bool bfc,
 		bool is48 = false);
 	virtual bool substituteNotDisc(TREModel *treModel, float fraction,
@@ -173,6 +175,7 @@ protected:
 	virtual bool isCyli(const char *filename, bool *is48 = NULL);
 	virtual bool isCyls(const char *filename, bool *is48 = NULL);
 	virtual bool isCyls2(const char *filename, bool *is48 = NULL);
+	virtual bool isChrd(const char *filename, bool *is48 = NULL);
 	virtual bool isDisc(const char *filename, bool *is48 = NULL);
 	virtual bool isNdis(const char *filename, bool *is48 = NULL);
 	virtual bool isEdge(const char *filename, bool *is48 = NULL);

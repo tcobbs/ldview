@@ -308,6 +308,11 @@ bool LDModelParser::isCyls2(const char *filename, bool *is48)
 	return isPrimitive(filename, "cyls2.dat", is48);
 }
 
+bool LDModelParser::isChrd(const char *filename, bool *is48)
+{
+	return isPrimitive(filename, "chrd.dat", is48);
+}
+
 bool LDModelParser::isDisc(const char *filename, bool *is48)
 {
 	return isPrimitive(filename, "disc.dat", is48);
@@ -757,6 +762,16 @@ bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
 	return true;
 }
 
+bool LDModelParser::substituteChrd(TREModel *treModel, float fraction, bool bfc,
+								   bool is48)
+{
+	int numSegments = getNumCircleSegments(fraction, is48);
+
+	treModel->addChrd(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		(int)(numSegments * fraction), bfc);
+	return true;
+}
+
 bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc,
 								   bool is48)
 {
@@ -899,6 +914,11 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		{
 			return substituteSlopedCylinder2(treModel,
 				startingFraction(modelName), bfc, is48);
+		}
+		else if (isChrd(modelName, &is48))
+		{
+			return substituteChrd(treModel, startingFraction(modelName), bfc,
+				is48);
 		}
 		else if (isDisc(modelName, &is48))
 		{

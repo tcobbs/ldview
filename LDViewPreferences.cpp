@@ -1650,8 +1650,8 @@ void LDViewPreferences::doDeletePrefSet(void)
 				IDYES)
 */
 			if (MessageBox(hWindow,
-				TCLocalStrings::getLocalString(PREF_SET_ABANDON_CONFIRM_KEY),
-				TCLocalStrings::getLocalString(ABANDON_CHANGES_KEY),
+				TCLocalStrings::get(PREF_SET_ABANDON_CONFIRM_KEY),
+				TCLocalStrings::get(ABANDON_CHANGES_KEY),
 				MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				abandonChanges();

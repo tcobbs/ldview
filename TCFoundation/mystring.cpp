@@ -561,3 +561,79 @@ long long longLongFromString(char* string)
 }
 
 #endif // WIN32
+
+void processEscapedString(char *string)
+{
+	int i;
+	int len = strlen(string);
+	int tmpLen = 0;
+	char *tmpString = new char[len + 1];
+	int lastSpot = 0;
+
+	// Note we skip the last character, because even if it's a backslash, we
+	// can't do anything with it.
+	for (i = 0; i < len - 1; i++)
+	{
+		if (string[i] == '\\')
+		{
+			int replacement = 1000;
+
+			switch (string[i + 1])
+			{
+			case 'a':
+				replacement = '\a';
+				break;
+			case 'b':
+				replacement = '\b';
+				break;
+			case 'f':
+				replacement = '\f';
+				break;
+			case 'n':
+				replacement = '\n';
+				break;
+			case 'r':
+				replacement = '\r';
+				break;
+			case 't':
+				replacement = '\t';
+				break;
+			case 'v':
+				replacement = '\v';
+				break;
+			case '?':
+				replacement = '\?';
+				break;
+			case '\'':
+				replacement = '\'';
+				break;
+			case '"':
+				replacement = '"';
+				break;
+			case '\\':
+				replacement = '\\';
+				break;
+			case '0':
+				replacement = '\0';
+				break;
+			}
+			if (replacement != 1000)
+			{
+				if (i > lastSpot)
+				{
+					int count = i - lastSpot;
+
+					strncpy(&tmpString[tmpLen], &string[lastSpot], count);
+					tmpLen += count;
+					lastSpot += count;
+				}
+				lastSpot += 2;
+				tmpString[tmpLen++] = (char)replacement;
+				i++;
+			}
+		}
+	}
+	strcpy(&tmpString[tmpLen], &string[lastSpot]);
+	strcpy(string, tmpString);
+	delete tmpString;
+}

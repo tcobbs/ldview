@@ -11,7 +11,7 @@ class TCExport TCLocalStrings: public TCObject
 		static bool setStringTable(const char *stringTable,
 			bool replace = true);
 		static bool loadStringTable(const char *filaname, bool replace = true);
-		static const char *getLocalString(const char *key);
+		static const char *get(const char *key);
 	protected:
 		TCLocalStrings(void);
 		virtual ~TCLocalStrings(void);

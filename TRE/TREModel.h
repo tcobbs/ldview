@@ -122,6 +122,8 @@ public:
 		float height, int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addStudDisc(const TCVector &center, float radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addChrd(const TCVector &center, float radius, int numSegments,
+		int usedSegments = -1, bool bfc = false);
 	virtual void addDisc(const TCVector &center, float radius, int numSegments,
 		int usedSegments = -1, bool bfc = false, bool stud = false);
 	virtual void addNotDisc(const TCVector &center, float radius,

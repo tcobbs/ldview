@@ -13,6 +13,7 @@
 #include <TCFoundation/TCSortedStringArray.h>
 #include <TCFoundation/TCThreadManager.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
 #include <afxres.h>
@@ -335,7 +336,18 @@ void LDViewWindow::forceShowStatusBar(bool value)
 	if (value != showStatusBarOverride)
 	{
 		showStatusBarOverride = value;
-		if (!showStatusBar)
+		if (fullScreenActive)
+		{
+			if (!hStatusBar && showStatusBarOverride)
+			{
+				addStatusBar();
+			}
+			else if (hStatusBar && !showStatusBarOverride)
+			{
+				removeStatusBar();
+			}
+		}
+		else if (!showStatusBar)
 		{
 			if (showStatusBarOverride)
 			{
@@ -354,12 +366,12 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 	if ((showStatusBar || showStatusBarOverride) && hStatusBar)
 	{
 		HICON hModeIcon = hExamineIcon;
-		char *tipText = "Examine Mode";
+		const char *tipText = TCLocalStrings::get("ExamineMode");
 
 		if (!examineMode)
 		{
 			hModeIcon = hFlythroughIcon;
-			tipText = "Fly-through Mode";
+			tipText = TCLocalStrings::get("FlyThroughMode");
 		}
 		SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)hModeIcon);
 		SendMessage(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)tipText);
@@ -408,22 +420,29 @@ void LDViewWindow::populateTbButtonInfos(void)
 	if (!tbButtonInfos)
 	{
 		tbButtonInfos = new TbButtonInfoArray;
-		addTbButtonInfo("Open File", ID_FILE_OPEN, STD_FILEOPEN, -1);
-		addTbButtonInfo("Save Snapshot", ID_FILE_SAVE, -1, 5);
-		addTbButtonInfo("Reload", ID_FILE_RELOAD, -1, 0);
+		addTbButtonInfo(TCLocalStrings::get("OpenFile"), ID_FILE_OPEN,
+			STD_FILEOPEN, -1);
+		addTbButtonInfo(TCLocalStrings::get("SaveSnapshot"), ID_FILE_SAVE, -1,
+			5);
+		addTbButtonInfo(TCLocalStrings::get("Reload"), ID_FILE_RELOAD, -1, 0);
 		addTbSeparatorInfo();
 		drawWireframe = prefs->getDrawWireframe();
 		seams = prefs->getUseSeams() != 0;
 		edges = prefs->getShowsHighlightLines();
 		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
 		lighting = prefs->getUseLighting();
-		addTbCheckButtonInfo("Wireframe", IDC_WIREFRAME, -1, 1, drawWireframe);
-		addTbCheckButtonInfo("Seams", IDC_SEAMS, -1, 2, seams);
-		addTbCheckButtonInfo("Edge Lines", IDC_HIGHLIGHTS, -1, 3, edges);
-		addTbCheckButtonInfo("Primitive Substitution",
+		addTbCheckButtonInfo(TCLocalStrings::get("Wireframe"), IDC_WIREFRAME,
+			-1, 1, drawWireframe);
+		addTbCheckButtonInfo(TCLocalStrings::get("Seams"), IDC_SEAMS, -1, 2,
+			seams);
+		addTbCheckButtonInfo(TCLocalStrings::get("EdgeLines"), IDC_HIGHLIGHTS,
+			-1, 3, edges);
+		addTbCheckButtonInfo(TCLocalStrings::get("PrimitiveSubstitution"),
 			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution);
-		addTbCheckButtonInfo("Lighting", IDC_LIGHTING, -1, 7, lighting);
-		addTbButtonInfo("Viewing angle", ID_VIEWANGLE, -1, 6, TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(TCLocalStrings::get("Lighting"), IDC_LIGHTING, -1,
+			7, lighting);
+		addTbButtonInfo(TCLocalStrings::get("ResetSelectView"), ID_VIEWANGLE,
+			-1, 6, TBSTYLE_DROPDOWN);
 	}
 }
 
@@ -702,9 +721,11 @@ void LDViewWindow::createAboutBox(void)
 {
 	char fullVersionFormat[1024];
 	char fullVersionString[1024];
-	char versionString[128] = "!Unknown Version!";
-	char copyrightString[128] = "Copyright (c) 2000-2004 Travis Cobbs";
+	char versionString[128];
+	char copyrightString[128];
 
+	strcpy(versionString, TCLocalStrings::get("!UnknownVersion!"));
+	strcpy(copyrightString, TCLocalStrings::get("Copyright"));
 	hAboutWindow = createDialog(IDD_ABOUT_BOX);
 	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_GETTEXT,
 		sizeof(fullVersionFormat), (LPARAM)fullVersionFormat);
@@ -954,7 +975,7 @@ void LDViewWindow::activateFullScreenMode(void)
 		setFullScreenDisplayMode();
 		if (initWindow())
 		{
-			if (modelWindow->initWindow())
+//			if (modelWindow->initWindow())
 			{
 //				modelWindow->showWindow(SW_SHOW);
 //				modelWindowShown = true;
@@ -1036,6 +1057,7 @@ LRESULT LDViewWindow::doActivateApp(BOOL activateFlag, DWORD /*threadId*/)
 	}
 }
 
+/*
 BOOL LDViewWindow::doLDrawDirBrowse(HWND hDlg)
 {
 	OPENFILENAME openStruct;
@@ -1046,7 +1068,7 @@ BOOL LDViewWindow::doLDrawDirBrowse(HWND hDlg)
 	SendDlgItemMessage(hDlg, IDC_LDRAWDIR, WM_GETTEXT, (WPARAM)(1024),
 		(LPARAM)initialDir);
 	memset(fileTypes, 0, 2);
-	addFileType(fileTypes, "All Files (*.*)", "*.*");
+	addFileType(fileTypes, TCLocalStrings::get("AllFileTypes"), "*.*");
 	memset(&openStruct, 0, sizeof(OPENFILENAME));
 	openStruct.lStructSize = sizeof(OPENFILENAME);
 	openStruct.lpstrFilter = fileTypes;
@@ -1066,6 +1088,7 @@ BOOL LDViewWindow::doLDrawDirBrowse(HWND hDlg)
 	}
 	return TRUE;
 }
+*/
 
 BOOL LDViewWindow::doRemoveExtraDir(void)
 {
@@ -1104,8 +1127,7 @@ BOOL LDViewWindow::doAddExtraDir(void)
 	browseInfo.hwndOwner = NULL; //hWindow;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
-	browseInfo.lpszTitle = "Please select the directory you want added to the "
-		"search list.";
+	browseInfo.lpszTitle = TCLocalStrings::get("AddExtraDirPrompt");
 	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
 	browseInfo.lpfn = pathBrowserCallback;
 	browseInfo.lParam = (LPARAM)currentSelection;
@@ -1256,8 +1278,8 @@ BOOL LDViewWindow::doLDrawDirCommand(int controlId, int notifyCode,
 BOOL LDViewWindow::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 								   HWND hControlWnd)
 {
-	debugPrintf("LDViewWindow::doDialogCommand: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
-		controlId, notifyCode);
+//	debugPrintf("LDViewWindow::doDialogCommand: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
+//		controlId, notifyCode);
 	if (hDlg)
 	{
 		if (hDlg == hExtraDirsWindow)
@@ -1410,7 +1432,7 @@ void LDViewWindow::switchModes(void)
 	}
 	if (initWindow())
 	{
-		if (modelWindow->initWindow())
+//		if (modelWindow->initWindow())
 		{
 			SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 0, 0,
 				width, height, 0);
@@ -1422,6 +1444,7 @@ void LDViewWindow::switchModes(void)
 			modelWindow->setNeedsRecompile();
 			skipMinimize = NO;
 		}
+/*
 		else
 		{
 			skipMinimize = NO;
@@ -1435,6 +1458,21 @@ void LDViewWindow::switchModes(void)
 					MB_OK);
 				shutdown();
 			}
+		}
+*/
+	}
+	else
+	{
+		skipMinimize = NO;
+		if (fullScreen)
+		{
+			switchModes();
+		}
+		else
+		{
+			MessageBox(hWindow, TCLocalStrings::get("SwitchBackError"),
+				TCLocalStrings::get("Error"), MB_OK);
+			shutdown();
 		}
 	}
 	modelWindow->forceRedraw();
@@ -1617,31 +1655,32 @@ void LDViewWindow::showHelp(void)
 	setArrowCursor();
 	if ((int)executeHandle <= 32)
 	{
-		char* errorString;
+		const char* errorString;
 
 		switch ((int)executeHandle)
 		{
 			case 0:
 			case SE_ERR_OOM:
-				errorString = "Not enough memory.";
+				errorString = TCLocalStrings::get("HelpHtmlOom");
 				break;
 			case ERROR_FILE_NOT_FOUND:
-				errorString = "Help.html not found.";
+				errorString = TCLocalStrings::get("HelpHtmlFileNotFound");
 				break;
 			case ERROR_PATH_NOT_FOUND:
-				errorString = "Couldn't determine path to Help.html.";
+				errorString = TCLocalStrings::get("HelpHtmlPathNotFound");
 				break;
 			case SE_ERR_ACCESSDENIED:
-				errorString = "Access denied opening Help.html.";
+				errorString = TCLocalStrings::get("HelpHtmlAccess");
 				break;
 			case SE_ERR_SHARE:
-				errorString = "Sharing violation opening Help.html.";
+				errorString = TCLocalStrings::get("HelpHtmlShare");
 				break;
 			default:
-				errorString = "Error opening Help.html";
+				errorString = TCLocalStrings::get("HelpHtmlError");
 				break;
 		}
-		MessageBox(hWindow, errorString, "Error", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox(hWindow, errorString, TCLocalStrings::get("Error"),
+			MB_OK | MB_ICONEXCLAMATION);
 	}
 }
 
@@ -1753,6 +1792,7 @@ void cleanupMatrix(float *matrix)
 	}
 }
 
+/*
 void LDViewWindow::showDefaultMatrix(const char *matrixString,
 									 const char *title)
 {
@@ -1801,6 +1841,7 @@ void LDViewWindow::showTransformationMatrix(void)
 		}
 	}
 }
+*/
 
 void LDViewWindow::showViewInfo(void)
 {
@@ -1841,12 +1882,10 @@ void LDViewWindow::showViewInfo(void)
 				sprintf(zoomString, "%.6g", defaultDistance /
 					distanceMultiplier / cameraDistance);
 			}
-			sprintf(message, "The following is the current rotation matrix:\n\n"
-				"%s\n\nThe following is the current zoom level:\n\n"
-				"%s\n\nHit OK to copy the above information to the clipboard "
-				"in a format suitable for the LDView command line.",
+			sprintf(message, TCLocalStrings::get("ViewInfoMessage"),
 				matrixString, zoomString);
-			if (MessageBox(hWindow, message, "View info", MB_OKCANCEL) == IDOK)
+			if (MessageBox(hWindow, message,
+				TCLocalStrings::get("ViewInfoTitle"), MB_OKCANCEL) == IDOK)
 			{
 				char commandLine[1024];
 
@@ -1858,6 +1897,7 @@ void LDViewWindow::showViewInfo(void)
 	}
 }
 
+/*
 void LDViewWindow::showRotationMatrix(void)
 {
 	if (modelWindow)
@@ -1883,6 +1923,7 @@ void LDViewWindow::showRotationMatrix(void)
 		}
 	}
 }
+*/
 
 void LDViewWindow::showLDrawCommandLine(void)
 {
@@ -1899,7 +1940,8 @@ void LDViewWindow::showLDrawCommandLine(void)
 //			GetShortPathName(modelViewer->getFilename(), shortFilename, 1024);
 //			modelViewer->getLDrawCommandLine(shortFilename, buf, 1024);
 			modelViewer->getLDGLiteCommandLine(buf, 1024);
-			MessageBox(hWindow, buf, "LDraw Command Line", MB_OK);
+			MessageBox(hWindow, buf, TCLocalStrings::get("LDrawCommandLine"),
+				MB_OK);
 //			debugPrintf("%s\n", buf);
 			GlobalUnlock(hBuf);
 			if (OpenClipboard(hWindow))
@@ -1931,11 +1973,14 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 {
 	if (!hOpenGLInfoWindow)
 	{
-		char *vendorString = (char*)glGetString(GL_VENDOR);
-		char *rendererString = (char*)glGetString(GL_RENDERER);
-		char *versionString = (char*)glGetString(GL_VERSION);
-		char *extensionsString = (char*)glGetString(GL_EXTENSIONS);
-		char *wglExtensionsString = LDVExtensionsSetup::getWglExtensions();
+		const char *vendorString = (const char*)glGetString(GL_VENDOR);
+		const char *rendererString = (const char*)glGetString(GL_RENDERER);
+		const char *versionString = (const char*)glGetString(GL_VERSION);
+		const char *extensionsString = (const char*)glGetString(GL_EXTENSIONS);
+		const char *wglExtensionsString =
+			LDVExtensionsSetup::getWglExtensions();
+		char *extensionsList;
+		char *wglExtensionsList;
 		int len;
 		char *message;
 		int parts[2] = {100, -1};
@@ -1944,24 +1989,25 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 
 		if (!vendorString)
 		{
-			vendorString = "*Unknown*";
+			vendorString = TCLocalStrings::get("*Unknown*");
 		}
 		if (!rendererString)
 		{
-			rendererString = "*Unknown*";
+			rendererString = TCLocalStrings::get("*Unknown*");
 		}
 		if (!versionString)
 		{
-			versionString = "*Unknown*";
+			versionString = TCLocalStrings::get("*Unknown*");
 		}
 		if (!extensionsString)
 		{
-			extensionsString = "*None*";
+			extensionsString = TCLocalStrings::get("*None*");
 		}
 		if (!wglExtensionsString)
 		{
-			wglExtensionsString = "*None*";
+			wglExtensionsString = TCLocalStrings::get("*None*");
 		}
+/*
 		len = strlen(extensionsString);
 		if (len && (extensionsString[len - 1] == ' '))
 		{
@@ -1972,45 +2018,44 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		{
 			wglExtensionsString[len - 1] = 0;
 		}
-		extensionsString = stringByReplacingSubstring(extensionsString, " ",
+*/
+		extensionsList = stringByReplacingSubstring(extensionsString, " ",
 			"\r\n");
-		wglExtensionsString = stringByReplacingSubstring(wglExtensionsString,
+		wglExtensionsList = stringByReplacingSubstring(wglExtensionsString,
 			" ", "\r\n");
+		stripCRLF(extensionsList);
+		stripCRLF(wglExtensionsList);
 		len = strlen(vendorString) + strlen(rendererString) +
-			strlen(versionString) + strlen(extensionsString) +
-			strlen(wglExtensionsString) + 128;
+			strlen(versionString) + strlen(extensionsList) +
+			strlen(wglExtensionsList) + 128;
 		message = new char[len];
-		sprintf(message, "Vendor: %s\r\n"
-			"Renderer: %s\r\n"
-			"Version: %s\r\n\r\n"
-			"Extenstions:\r\n%s\r\n\r\n"
-			"WGL Extensions:\r\n%s",
-			vendorString, rendererString, versionString, extensionsString,
-			wglExtensionsString);
+		sprintf(message, TCLocalStrings::get("OpenGlInfo"),
+			vendorString, rendererString, versionString, extensionsList,
+			wglExtensionsList);
 		hOpenGLInfoWindow = createDialog(IDD_OPENGL_INFO);
 		SendDlgItemMessage(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT, 0,
 			(LPARAM)message);
 		hOpenGLStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE |
 			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, ID_TOOLBAR);
 		SendMessage(hOpenGLStatusBar, SB_SETPARTS, 2, (LPARAM)parts);
-		count = countStringLines(extensionsString);
+		count = countStringLines(extensionsList);
 		if (count == 1)
 		{
-			strcpy(buf, "1 Extension");
+			strcpy(buf, TCLocalStrings::get("OpenGl1Extension"));
 		}
 		else
 		{
-			sprintf(buf, "%d Extensions", count);
+			sprintf(buf, TCLocalStrings::get("OpenGlnExtensions"), count);
 		}
 		SendMessage(hOpenGLStatusBar, SB_SETTEXT, 0, (LPARAM)buf);
-		count = countStringLines(wglExtensionsString);
+		count = countStringLines(wglExtensionsList);
 		if (count == 1)
 		{
-			strcpy(buf, "1 WGL Extension");
+			strcpy(buf, TCLocalStrings::get("OpenGl1WglExtension"));
 		}
 		else
 		{
-			sprintf(buf, "%d WGL Extensions", count);
+			sprintf(buf, TCLocalStrings::get("OpenGlnWglExtensions"), count);
 		}
 		SendMessage(hOpenGLStatusBar, SB_SETTEXT, 1, (LPARAM)buf);
 		calcSystemSizes();
@@ -2024,8 +2069,8 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 			CUISizeHorizontal | CUISizeVertical);
 		openGLInfoWindoResizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
 		delete message;
-		delete extensionsString;
-		delete wglExtensionsString;
+		delete extensionsList;
+		delete wglExtensionsList;
 	}
 	ShowWindow(hOpenGLInfoWindow, SW_SHOW);
 	return 0;
@@ -2196,17 +2241,19 @@ BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
 						{
 						case 42:
 							strcpy(dispInfo->szText,
-								"Add directory to search list");
+								TCLocalStrings::get("AddExtraDirTooltip"));
 							break;
 						case 43:
 							strcpy(dispInfo->szText,
-								"Remove directory from search list");
+								TCLocalStrings::get("RemoveExtraDirTooltip"));
 							break;
 						case 44:
-							strcpy(dispInfo->szText, "Move directory up");
+							strcpy(dispInfo->szText,
+								TCLocalStrings::get("MoveExtraDirUpTooltip"));
 							break;
 						case 45:
-							strcpy(dispInfo->szText, "Move directory down");
+							strcpy(dispInfo->szText,
+								TCLocalStrings::get("MoveExtraDirDownTooltip"));
 							break;
 						}
 						dispInfo->hinst = NULL;
@@ -2565,14 +2612,15 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 		}
 		if (!gotFinish)
 		{
-			MessageBox(hWindow, "No finished thread!!!\n", "LDView", MB_OK);
+			debugPrintf("No finished thread!!!\n");
 		}
 		if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
 		{
 			char error[1024];
 
 			strcpy(error, libraryUpdater->getError());
-			MessageBox(hWindow, error, "Library update error", MB_OK);
+			MessageBox(hWindow, error,
+				TCLocalStrings::get("LibraryUpdateError"), MB_OK);
 		}
 		libraryUpdater->release();
 		libraryUpdater = NULL;
@@ -2580,13 +2628,16 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 		switch (finishType)
 		{
 		case LIBRARY_UPDATE_FINISHED:
-			MessageBox(hWindow, "Library update complete!", "LDView", MB_OK);
+			MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateComplete"),
+				"LDView", MB_OK);
 			break;
 		case LIBRARY_UPDATE_CANCELED:
-			MessageBox(hWindow, "Library update canceled.", "LDView", MB_OK);
+			MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateCanceled"),
+				"LDView", MB_OK);
 			break;
 		case LIBRARY_UPDATE_NONE:
-			MessageBox(hWindow, "No update necessary.", "LDView", MB_OK);
+			MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateUnnecessary"),
+				"LDView", MB_OK);
 			break;
 		}
 	}
@@ -2604,7 +2655,8 @@ void LDViewWindow::checkForLibraryUpdates(void)
 {
 	if (libraryUpdater)
 	{
-		MessageBox(hWindow, "Already checking for updates.", "Error", MB_OK);
+		MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateAlready"),
+			TCLocalStrings::get("Error"), MB_OK);
 	}
 	else
 	{
@@ -2620,7 +2672,7 @@ void LDViewWindow::checkForLibraryUpdates(void)
 
 LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 {
-	char* message = NULL;
+//	char* message = NULL;
 
 	if (modelWindow && controlHWnd == modelWindow->getHPrefsWindow())
 	{
@@ -2782,6 +2834,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_HELP_OPENGL_INFO:
 			return showOpenGLDriverInfo();
 			break;
+/*
 		case ID_HELP_OPENGLINFO_VENDOR:
 			message = (char*)glGetString(GL_VENDOR);
 			break;
@@ -2801,6 +2854,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 				message = "None";
 			}
 			break;
+*/
 		case BN_CLICKED:
 			switch (notifyCode)
 			{
@@ -2857,6 +2911,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 	{
 		selectPollingMenuItem(itemId);
 	}
+/*
 	if (message)
 	{
 		float rotationSpeed = modelWindow->getRotationSpeed();
@@ -2870,6 +2925,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		modelWindow->setZoomSpeed(zoomSpeed);
 		return 0;
 	}
+*/
 	return CUIWindow::doCommand(itemId, notifyCode, controlHWnd);
 }
 
@@ -3309,7 +3365,7 @@ void LDViewWindow::populateDisplayModeMenuItems(void)
 		if (!bitDepthMenu)
 		{
 			memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-			sprintf(title, "%d-Bit Modes", videoMode.depth);
+			sprintf(title, TCLocalStrings::get("NBitModes"), videoMode.depth);
 			bitDepthMenu = CreatePopupMenu();
 			itemInfo.cbSize = sizeof(MENUITEMINFO);
 			itemInfo.fMask = MIIM_TYPE | MIIM_SUBMENU | MIIM_DATA;
@@ -3575,12 +3631,13 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		if (initialDir)
 		{
 			memset(fileTypes, 0, 2);
-			addFileType(fileTypes, "LDraw Files (*.ldr,*.dat,*.mpd)",
+			addFileType(fileTypes, TCLocalStrings::get("LDrawFileTypes"),
 				"*.ldr;*.dat;*.mpd");
-			addFileType(fileTypes, "LDraw Model Files (*.ldr,*.dat)",
+			addFileType(fileTypes, TCLocalStrings::get("LDrawModelFileTypes"),
 				"*.ldr;*.dat");
-			addFileType(fileTypes, "LDraw Multi-Part Files (*.mpd)", "*.mpd");
-			addFileType(fileTypes, "All Files (*.*)", "*.*");
+			addFileType(fileTypes, TCLocalStrings::get("LDrawMpdFileTypes"),
+				"*.mpd");
+			addFileType(fileTypes, TCLocalStrings::get("AllFilesTypes"), "*.*");
 			memset(&openStruct, 0, sizeof(OPENFILENAME));
 			openStruct.lStructSize = sizeof(OPENFILENAME);
 			openStruct.hwndOwner = hWindow;
@@ -3589,7 +3646,7 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 			openStruct.lpstrFile = openFilename;
 			openStruct.nMaxFile = 1024;
 			openStruct.lpstrInitialDir = initialDir;
-			openStruct.lpstrTitle = "Select a Model file";
+			openStruct.lpstrTitle = TCLocalStrings::get("SelectModelFile");
 			openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
 				OFN_HIDEREADONLY;
 			openStruct.lpstrDefExt = "ldr";
@@ -3613,7 +3670,8 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 	}
 }
 
-void LDViewWindow::addFileType(char* fileTypes, char* description, char* filter)
+void LDViewWindow::addFileType(char* fileTypes, const char* description,
+							   char* filter)
 {
 	char* spot = fileTypes;
 
@@ -3693,8 +3751,7 @@ BOOL LDViewWindow::promptForLDrawDir(void)
 	browseInfo.hwndOwner = NULL; //hWindow;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
-	browseInfo.lpszTitle = "Please select the directory in which you installed"
-		" LDraw.";
+	browseInfo.lpszTitle = TCLocalStrings::get("LDrawDirPrompt");
 	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
 	browseInfo.lpfn = pathBrowserCallback;
 	browseInfo.lParam = (LPARAM)oldLDrawDir;
@@ -3711,8 +3768,8 @@ BOOL LDViewWindow::promptForLDrawDir(void)
 			LDLModel::setLDrawDir(path);
 			return TRUE;
 		}
-		MessageBox(NULL/*hWindow*/, "Invalid directory selected.", "Error",
-			MB_OK);
+		MessageBox(NULL/*hWindow*/, TCLocalStrings::get("InvalidDirSelected"),
+			TCLocalStrings::get("Error"), MB_OK);
 	}
 	delete oldLDrawDir;
 	return FALSE;
@@ -3798,8 +3855,8 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 				}
 				else
 				{
-					MessageBox(NULL, "The directory you selected does not "
-						"contain LDraw.", "Invalid directory",
+					MessageBox(NULL, TCLocalStrings::get("LDrawNotInDir"),
+						TCLocalStrings::get("InvalidDir"),
 						MB_OK | MB_ICONWARNING | MB_TASKMODAL);
 				}
 				delete lDrawDir;

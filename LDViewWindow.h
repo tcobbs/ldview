@@ -84,7 +84,7 @@ class LDViewWindow: public CUIWindow
 
 		static char* getLDrawDir(void);
 		static char* lastOpenPath(char* pathKey = NULL);
-		static void addFileType(char*, char*, char*);
+		static void addFileType(char*, const char*, char*);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 	protected:
 		virtual ~LDViewWindow(void);
@@ -126,7 +126,7 @@ class LDViewWindow: public CUIWindow
 			HWND controlHWnd);
 		virtual void createLDrawDirWindow(void);
 		virtual BOOL doLDrawDirOK(HWND);
-		virtual BOOL doLDrawDirBrowse(HWND);
+//		virtual BOOL doLDrawDirBrowse(HWND);
 		virtual LRESULT doInitMenuPopup(HMENU hPopupMenu, UINT uPos,
 			BOOL fSystemMenu);
 		virtual BOOL tryVideoMode(VideoModeT*, int);
@@ -166,11 +166,11 @@ class LDViewWindow: public CUIWindow
 		virtual void printModel(void);
 		virtual void saveSnapshot(void);
 		virtual void pageSetup(void);
-		virtual void showDefaultMatrix(const char *matrixString,
-			const char *title);
+//		virtual void showDefaultMatrix(const char *matrixString,
+//			const char *title);
 		virtual void showViewInfo(void);
-		virtual void showRotationMatrix(void);
-		virtual void showTransformationMatrix(void);
+//		virtual void showRotationMatrix(void);
+//		virtual void showTransformationMatrix(void);
 		virtual void showLDrawCommandLine(void);
 		virtual bool modelWindowIsShown(void);
 		virtual LRESULT switchToExamineMode(void);
