@@ -227,7 +227,7 @@ void TREModel::compileDefaultColor(void)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->getModel()->compileDefaultColor();
+				(*m_subModels)[i]->compileDefaultColor();
 			}
 		}
 		if (m_mainModel->getCompileAllFlag() ||
@@ -370,14 +370,6 @@ void TREModel::compileColoredEdgeLines(void)
 
 void TREModel::drawDefaultColor(void)
 {
-	float identityMatrix[16];
-
-	TCVector::initIdentityMatrix(identityMatrix);
-	drawDefaultColor(identityMatrix);
-}
-
-void TREModel::drawDefaultColor(const float *matrix)
-{
 	if (m_defaultColorListID)
 	{
 		glCallList(m_defaultColorListID);
@@ -403,7 +395,7 @@ void TREModel::drawDefaultColor(const float *matrix)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->drawDefaultColor(matrix);
+				(*m_subModels)[i]->drawDefaultColor();
 			}
 		}
 	}

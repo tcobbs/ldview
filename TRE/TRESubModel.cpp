@@ -12,6 +12,7 @@ TRESubModel::TRESubModel(void)
 {
 	m_flags.colorSet = false;
 	m_flags.inverted = false;
+	m_flags.mirrorMatrix = false;
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
@@ -87,6 +88,14 @@ void TRESubModel::setModel(TREModel *model)
 void TRESubModel::setMatrix(float *matrix)
 {
 	memcpy(m_matrix, matrix, sizeof(m_matrix));
+	if (TCVector::determinant(m_matrix) < 0.0f)
+	{
+		m_flags.mirrorMatrix = true;
+	}
+	else
+	{
+		m_flags.mirrorMatrix = false;
+	}
 }
 
 void TRESubModel::setColor(TCULong color, TCULong edgeColor)
@@ -125,10 +134,20 @@ void TRESubModel::draw(void)
 }
 */
 
-void TRESubModel::drawDefaultColor(const float *matrix)
+void TRESubModel::compileDefaultColor(void)
 {
-	float newMatrix[16];
+	if (m_flags.mirrorMatrix)
+	{
+		m_model->getInvertedModel()->compileDefaultColor();
+	}
+	else
+	{
+		m_model->compileDefaultColor();
+	}
+}
 
+void TRESubModel::drawDefaultColor(void)
+{
 	if (m_flags.colorSet)
 	{
 		glPushAttrib(GL_CURRENT_BIT);
@@ -136,14 +155,15 @@ void TRESubModel::drawDefaultColor(const float *matrix)
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	TCVector::multMatrix(matrix, m_matrix, newMatrix);
-	if (TCVector::determinant(newMatrix) < 0.0f)
+//	TCVector::multMatrix(matrix, m_matrix, newMatrix);
+//	if (TCVector::determinant(newMatrix) < 0.0f)
+	if (m_flags.mirrorMatrix)
 	{
-		m_model->getInvertedModel()->drawDefaultColor(newMatrix);
+		m_model->getInvertedModel()->drawDefaultColor();
 	}
 	else
 	{
-		m_model->drawDefaultColor(newMatrix);
+		m_model->drawDefaultColor();
 	}
 	glPopMatrix();
 	if (m_flags.colorSet)

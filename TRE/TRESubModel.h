@@ -26,11 +26,12 @@ public:
 	virtual bool isColorSet(void) { return m_flags.colorSet != false; }
 //	virtual void draw(void);
 	virtual void drawColored(void);
-	virtual void drawDefaultColor(const float *matrix);
+	virtual void drawDefaultColor(void);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColoredLines(void);
 	virtual void drawEdgeLines(void);
 	virtual void drawColoredEdgeLines(void);
+	virtual void compileDefaultColor(void);
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
@@ -49,6 +50,7 @@ protected:
 	struct {
 		bool colorSet:1;
 		bool inverted:1;
+		bool mirrorMatrix:1;
 	} m_flags;
 };
 

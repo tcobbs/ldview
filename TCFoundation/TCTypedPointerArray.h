@@ -12,7 +12,13 @@ template <class Type> class TCTypedPointerArray : public TCArray
 	public:
 		explicit TCTypedPointerArray(unsigned int count = 0)
 			:TCArray(count) {}
+		TCTypedPointerArray(const TCTypedPointerArray<Type> &other)
+			:TCArray(other) {}
 
+		virtual TCObject *copy(void)
+		{
+			return new TCTypedPointerArray<Type>(*this);
+		}
 		void addPointer(Type pointer)
 			{ TCArray::addItem(pointer); }
 		void insertPointer(Type pointer, unsigned int index = 0)

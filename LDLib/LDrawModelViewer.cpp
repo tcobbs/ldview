@@ -2602,6 +2602,9 @@ void LDrawModelViewer::zoomToFit(void)
 		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
 			transformationMatrix);
 		printf("num points: %d\n", _numPoints);
+		char message[1024];
+		sprintf(message, "num points: %d", _numPoints);
+		MessageBox(NULL, message, "Points", MB_OK);
 		d = (float)width / (float)height;
 		dh = (cameraData->horMax - cameraData->horMin) / d;
 		dv = cameraData->verMax - cameraData->verMin;

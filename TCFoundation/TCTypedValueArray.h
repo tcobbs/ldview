@@ -12,7 +12,13 @@ template <class Type> class TCTypedValueArray : public TCArray
 	public:
 		explicit TCTypedValueArray(unsigned int count = 0)
 			:TCArray(count) {}
+		TCTypedValueArray(const TCTypedValueArray<Type> &other)
+			:TCArray(other) {}
 
+		virtual TCObject *copy(void)
+		{
+			return new TCTypedValueArray<Type>(*this);
+		}
 		void addValue(Type value)
 			{ TCArray::addItem((void *)value); }
 		void insertValue(Type value, unsigned int index = 0)
