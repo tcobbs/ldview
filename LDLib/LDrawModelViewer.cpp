@@ -2047,7 +2047,8 @@ void LDrawModelViewer::clearBackground(void)
 	else
 	{
 		glClearColor(backgroundR, backgroundG, backgroundB, backgroundA);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+			GL_STENCIL_BUFFER_BIT);
 	}
 	if (flags.drawWireframe)
 	{
@@ -2317,9 +2318,10 @@ void LDrawModelViewer::drawToClipPlane(GLfloat eyeXOffset)
 
 void LDrawModelViewer::clear(void)
 {
+	glClearStencil(0);
 	glClearDepth(1.0);
 	glClearColor(backgroundR, backgroundG, backgroundB, backgroundA);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 bool LDrawModelViewer::getLDrawCommandLineMatrix(char *matrixString,

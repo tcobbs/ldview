@@ -10,6 +10,7 @@
 typedef void (TCObject::*TREScanPointCallback)(const TCVector &point);
 
 typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
+typedef TCTypedValueArray<GLboolean> GLbooleanArray;
 
 struct TREVertex;
 class TREVertexStore;
@@ -144,12 +145,14 @@ protected:
 		TCULongArray *dstColors,
 		TCULongArray *dstIndices,
 		TCULongArray *dstCPIndices,
+		GLbooleanArray *dstEdgeFlags,
 		TREVertexArray *srcVertices,
 		TREVertexArray *srcNormals,
 		TREVertexArray *srcTextureCoords,
 		TCULongArray *srcColors,
 		TCULongArray *srcIndices,
 		TCULongArray *srcCPIndices,
+		GLbooleanArray *srcEdgeFlags,
 		float *matrix,
 		TCULong color,
 		bool colorSet);

@@ -22,10 +22,12 @@ TREVertexStore::TREVertexStore(void)
 	m_normals(NULL),
 	m_textureCoords(NULL),
 	m_colors(NULL),
+	m_edgeFlags(NULL),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
 	m_textureCoordsOffset(0),
 	m_colorsOffset(0),
+	m_edgeFlagsOffset(0),
 	m_vbo(0)
 {
 	m_flags.varTried = false;
@@ -36,6 +38,7 @@ TREVertexStore::TREVertexStore(void)
 	m_flags.twoSidedLighting = false;
 	m_flags.showAllConditional = false;
 	m_flags.conditionalControlPoints = false;
+	m_flags.conditionals = false;
 }
 
 TREVertexStore::TREVertexStore(const TREVertexStore &other)
@@ -43,10 +46,12 @@ TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
 	m_textureCoords((TREVertexArray *)TCObject::copy(other.m_textureCoords)),
 	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
+	m_edgeFlags((GLbooleanArray *)TCObject::copy(other.m_edgeFlags)),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
 	m_textureCoordsOffset(0),
 	m_colorsOffset(0),
+	m_edgeFlagsOffset(0),
 	m_vbo(0),
 	m_flags(other.m_flags)
 {
@@ -70,6 +75,7 @@ void TREVertexStore::dealloc(void)
 	TCObject::release(m_normals);
 	TCObject::release(m_textureCoords);
 	TCObject::release(m_colors);
+	TCObject::release(m_edgeFlags);
 	if (sm_varBuffer && wglFreeMemoryNV)
 	{
 		wglFreeMemoryNV(sm_varBuffer);
@@ -102,7 +108,8 @@ TCObject *TREVertexStore::copy(void)
 	return new TREVertexStore(*this);
 }
 
-int TREVertexStore::addVertices(const TCVector *points, int count)
+int TREVertexStore::addVertices(const TCVector *points, int count,
+								GLboolean edgeFlag)
 {
 	TCVector normal;
 	TREVertex normalVertex;
@@ -116,6 +123,21 @@ int TREVertexStore::addVertices(const TCVector *points, int count)
 	for (i = 0; i < count; i++)
 	{
 		m_normals->addVertex(normalVertex);
+	}
+	if (getConditionalsFlag())
+	{
+		if (!m_edgeFlags)
+		{
+			m_edgeFlags = new GLbooleanArray;
+		}
+		for (i = m_edgeFlags->getCount(); i < m_vertices->getCount(); i++)
+		{
+			m_edgeFlags->addValue(GL_TRUE);
+		}
+		for (i = 0; i < count; i++)
+		{
+			m_edgeFlags->addValue(edgeFlag);
+		}
 	}
 	return addVertices(m_vertices, points, count);
 }
@@ -208,6 +230,8 @@ void TREVertexStore::setupVAR(void)
 		int textureCoordsAllocatedSize = 0;
 		int colorsSize = 0;
 		int colorsAllocatedSize = 0;
+		int edgeFlagsSize = 0;
+		int edgeFlagsAllocatedSize = 0;
 
 		m_flags.varTried = true;
 		sm_varSize += count * sizeof(TREVertex);
@@ -228,6 +252,12 @@ void TREVertexStore::setupVAR(void)
 			colorsSize = count * sizeof(TCULong);
 			colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
 			sm_varSize += colorsAllocatedSize;
+		}
+		if (m_edgeFlags)
+		{
+			edgeFlagsSize = m_edgeFlags->getCount() * 4;
+			edgeFlagsAllocatedSize = (edgeFlagsSize + 31) / 32 * 32;
+			sm_varSize += edgeFlagsAllocatedSize;
 		}
 		if (offset)
 		{
@@ -266,6 +296,14 @@ void TREVertexStore::setupVAR(void)
 				memcpy(sm_varBuffer + m_colorsOffset, m_colors->getItems(),
 					colorsSize);
 			}
+			if (m_edgeFlags)
+			{
+				m_edgeFlagsOffset = offset + verticesAllocatedSize +
+					normalsAllocatedSize + textureCoordsAllocatedSize +
+					colorsAllocatedSize;
+				memcpy(sm_varBuffer + m_edgeFlagsOffset,
+					m_edgeFlags->getItems(), edgeFlagsSize);
+			}
 			glVertexArrayRangeNV(sm_varSize, sm_varBuffer);
 			glEnableClientState(GL_VERTEX_ARRAY_RANGE_NV);
 		}
@@ -303,6 +341,8 @@ void TREVertexStore::setupVBO(void)
 			int textureCoordsAllocatedSize = 0;
 			int colorsSize = 0;
 			int colorsAllocatedSize = 0;
+			int edgeFlagsSize = 0;
+			int edgeFlagsAllocatedSize = 0;
 			TCByte *vboBuffer;
 			GLsizeiptrARB vboSize;
 
@@ -324,6 +364,12 @@ void TREVertexStore::setupVBO(void)
 				colorsSize = count * sizeof(TCULong);
 				colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
 				vboSize += colorsAllocatedSize;
+			}
+			if (m_edgeFlags)
+			{
+				edgeFlagsSize = m_edgeFlags->getCount() * 4;
+				edgeFlagsAllocatedSize = (edgeFlagsSize + 31) / 32 * 32;
+				vboSize += edgeFlagsAllocatedSize;
 			}
 			vboBuffer = new TCByte[vboSize];
 			if (vboBuffer)
@@ -348,6 +394,14 @@ void TREVertexStore::setupVBO(void)
 						normalsAllocatedSize + textureCoordsAllocatedSize;
 					memcpy(vboBuffer + m_colorsOffset,
 						m_colors->getItems(), colorsSize);
+				}
+				if (m_edgeFlags)
+				{
+					m_edgeFlagsOffset = verticesAllocatedSize +
+						normalsAllocatedSize + textureCoordsAllocatedSize +
+						colorsAllocatedSize;
+					memcpy(vboBuffer + m_edgeFlagsOffset,
+						m_edgeFlags->getItems(), edgeFlagsSize);
 				}
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
 				glBufferDataARB(GL_ARRAY_BUFFER_ARB, vboSize, vboBuffer,
@@ -507,6 +561,26 @@ bool TREVertexStore::activate(bool displayLists)
 		else
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
+		}
+		if (m_edgeFlags)
+		{
+			glEnableClientState(GL_EDGE_FLAG_ARRAY);
+			if (!displayLists && m_vbo)
+			{
+				glEdgeFlagPointer(4, BUFFER_OFFSET(m_edgeFlagsOffset));
+			}
+			else if (sm_varBuffer)
+			{
+				glEdgeFlagPointer(4, sm_varBuffer + m_edgeFlagsOffset);
+			}
+			else
+			{
+				glEdgeFlagPointer(4, m_edgeFlags->getValues());
+			}
+		}
+		else
+		{
+			glDisableClientState(GL_EDGE_FLAG_ARRAY);
 		}
 		sm_activeVertexStore = this;
 		return true;
