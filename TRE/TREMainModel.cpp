@@ -23,9 +23,11 @@ TREMainModel::TREMainModel(void)
 	strcpy(className, "TREMainModel");
 #endif // _LEAK_DEBUG
 	m_mainModel = this;
+	m_mainFlags.compiled = false;
+	m_mainFlags.compiling = false;
+	m_mainFlags.removingHiddenLines = false;
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
-	m_mainFlags.compiled = false;
 	m_mainFlags.edgeLines = false;
 	m_mainFlags.twoSidedLighting = false;
 	m_mainFlags.lighting = false;
@@ -38,6 +40,8 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.wireframe = false;
 	m_mainFlags.conditionalLines = false;
 	m_mainFlags.smoothCurves = false;
+	m_mainFlags.showAllConditional = false;
+	m_mainFlags.conditionalControlPoints = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -139,6 +143,7 @@ void TREMainModel::compile(void)
 {
 	if (!m_mainFlags.compiled)
 	{
+		m_mainFlags.compiling = true;
 		m_vertexStore->activate(true);
 		compileDefaultColor();
 		if (getBFCFlag())
@@ -164,6 +169,7 @@ void TREMainModel::compile(void)
 			compileTransparent();
 		}
 		m_mainFlags.compiled = true;
+		m_mainFlags.compiling = false;
 	}
 }
 
@@ -186,7 +192,7 @@ void TREMainModel::draw(void)
 	{
 		compile();
 	}
-	if (getEdgeLinesFlag() && !getWireframeFlag())
+	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 	{
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
@@ -195,6 +201,46 @@ void TREMainModel::draw(void)
 	{
 		enableLineSmooth();
 	}
+	if (getEdgesOnlyFlag())
+	{
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	}
+	if (!getEdgesOnlyFlag() || !getWireframeFlag())
+	{
+		drawSolid();
+	}
+	if (getEdgesOnlyFlag())
+	{
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	}
+	// Next, disable lighting and draw lines.  First draw default colored lines,
+	// which probably don't exist, since color number 16 doesn't often get used
+	// for lines.
+	drawLines();
+	if (getAALinesFlag() && getWireframeFlag())
+	{
+		// We use glPushAttrib() when we enable line smoothing.
+		glPopAttrib();
+	}
+	if (!getEdgesOnlyFlag() && !getRemovingHiddenLines())
+	{
+		drawTransparent();
+	}
+}
+
+void TREMainModel::enableLineSmooth(void)
+{
+	if (getAALinesFlag())
+	{
+		glPushAttrib(GL_ENABLE_BIT);
+		glEnable(GL_LINE_SMOOTH);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+}
+
+void TREMainModel::drawSolid(void)
+{
 	// I admit, this is a mess.  But I'm not sure how to make it less of a mess.
 	// The various things do need to be drawn separately, and they have to get
 	// drawn in a specific order.
@@ -222,27 +268,6 @@ void TREMainModel::draw(void)
 		deactivateBFC();
 	}
 	drawColored();
-	// Next, disable lighting and draw lines.  First draw default colored lines,
-	// which probably don't exist, since color number 16 doesn't often get used
-	// for lines.
-	drawLines();
-	if (getAALinesFlag() && getWireframeFlag())
-	{
-		// We use glPushAttrib() when we enable line smoothing.
-		glPopAttrib();
-	}
-	drawTransparent();
-}
-
-void TREMainModel::enableLineSmooth(void)
-{
-	if (getAALinesFlag())
-	{
-		glPushAttrib(GL_ENABLE_BIT);
-		glEnable(GL_LINE_SMOOTH);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
 }
 
 void TREMainModel::drawLines(void)
@@ -345,6 +370,28 @@ void TREMainModel::setTwoSidedLightingFlag(bool value)
 	}
 }
 
+void TREMainModel::setShowAllConditionalFlag(bool value)
+{
+	m_mainFlags.showAllConditional = value;
+	m_vertexStore->setShowAllConditionalFlag(value);
+	m_coloredVertexStore->setShowAllConditionalFlag(value);
+	if (m_transVertexStore)
+	{
+		m_transVertexStore->setShowAllConditionalFlag(value);
+	}
+}
+
+void TREMainModel::setConditionalControlPointsFlag(bool value)
+{
+	m_mainFlags.conditionalControlPoints = value;
+	m_vertexStore->setConditionalControlPointsFlag(value);
+	m_coloredVertexStore->setConditionalControlPointsFlag(value);
+	if (m_transVertexStore)
+	{
+		m_transVertexStore->setConditionalControlPointsFlag(value);
+	}
+}
+
 float TREMainModel::getMaxRadiusSquared(const TCVector &center)
 {
 	if (!m_maxRadiusSquared)
@@ -440,6 +487,10 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 		m_transVertexStore = new TREVertexStore;
 		m_transVertexStore->setLightingFlag(getLightingFlag());
 		m_transVertexStore->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
+		m_transVertexStore->setShowAllConditionalFlag(
+			getShowAllConditionalFlag());
+		m_transVertexStore->setConditionalControlPointsFlag(
+			getConditionalControlPointsFlag());
 	}
 	if (!m_coloredShapes[TREMTransparent])
 	{
@@ -476,7 +527,7 @@ void TREMainModel::drawTransparent(void)
 		}
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-		if (!getWireframeFlag())
+		if (!getWireframeFlag() && getPolygonOffsetFlag())
 		{
 			if (getEdgeLinesFlag())
 			{

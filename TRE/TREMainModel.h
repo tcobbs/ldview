@@ -25,6 +25,8 @@ public:
 	bool getCompileAllFlag(void) { return m_mainFlags.compileAll != false; }
 	void setEdgeLinesFlag(bool value) { m_mainFlags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines != false; }
+	void setEdgesOnlyFlag(bool value) { m_mainFlags.edgesOnly = value; }
+	bool getEdgesOnlyFlag(void) { return m_mainFlags.edgesOnly != false; }
 	void setTwoSidedLightingFlag(bool value);
 	bool getTwoSidedLightingFlag(void)
 	{
@@ -63,6 +65,34 @@ public:
 	{
 		return m_mainFlags.conditionalLines != false;
 	}
+	void setShowAllConditionalFlag(bool value);
+	bool getShowAllConditionalFlag(void)
+	{
+		return m_mainFlags.showAllConditional != false;
+	}
+	void setConditionalControlPointsFlag(bool value);
+	bool getConditionalControlPointsFlag(void)
+	{
+		return m_mainFlags.conditionalControlPoints != false;
+	}
+	void setPolygonOffsetFlag(bool value)
+	{
+		m_mainFlags.polygonOffset = value;
+	}
+	bool getPolygonOffsetFlag(void)
+	{
+		return m_mainFlags.polygonOffset != false;
+	}
+	void setRemovingHiddenLines(bool value)
+	{
+		m_mainFlags.removingHiddenLines = value;
+	}
+	bool getRemovingHiddenLines(void)
+	{
+		return m_mainFlags.removingHiddenLines != false;
+	}
+	virtual bool getCompiled(void) { return m_mainFlags.compiled != false; }
+	virtual bool getCompiling(void) { return m_mainFlags.compiling != false; }
 	virtual float getMaxRadiusSquared(const TCVector &center);
 	virtual float getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
@@ -91,6 +121,7 @@ protected:
 	void transferTransparent(void);
 	virtual void drawTransparent(void);
 	virtual void drawLines(void);
+	virtual void drawSolid(void);
 	virtual void enableLineSmooth(void);
 
 	TCDictionary *m_loadedModels;
@@ -104,10 +135,15 @@ protected:
 	TCVector m_center;
 	struct
 	{
+		// The following are temporal
+		bool compiling:1;
+		bool compiled:1;
+		bool removingHiddenLines:1;	// This one is changed externally
+		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;
-		bool compiled:1;
 		bool edgeLines:1;
+		bool edgesOnly:1;
 		bool twoSidedLighting:1;
 		bool lighting:1;
 		bool useStrips:1;
@@ -119,6 +155,9 @@ protected:
 		bool wireframe:1;
 		bool conditionalLines:1;
 		bool smoothCurves:1;
+		bool showAllConditional:1;
+		bool conditionalControlPoints:1;
+		bool polygonOffset:1;
 	} m_mainFlags;
 };
 

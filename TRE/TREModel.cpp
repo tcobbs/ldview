@@ -910,14 +910,12 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 					setupColored((TREMSection)i);
 					coloredShapeGroup = m_coloredShapes[i];
 					coloredShapeGroup->getVertexStore()->setupColored();
-					coloredShapeGroup->getVertexStore()->setupConditional();
 					flattenShapes(coloredShapeGroup, otherShapeGroup,
 						matrix, actualColor, true);
 				}
 				else
 				{
 					setup((TREMSection)i);
-					m_shapes[i]->getVertexStore()->setupConditional();
 					flattenShapes(m_shapes[i], otherShapeGroup, matrix, 0,
 						false);
 				}
@@ -958,13 +956,11 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 
 void TREModel::flattenShapes(TREVertexArray *dstVertices,
 							 TREVertexArray *dstNormals,
-							 TREVertexArray *dstControlPoints,
 							 TCULongArray *dstColors,
 							 TCULongArray *dstIndices,
 							 TCULongArray *dstCPIndices,
 							 TREVertexArray *srcVertices,
 							 TREVertexArray *srcNormals,
-							 TREVertexArray *srcControlPoints,
 							 TCULongArray *srcColors,
 							 TCULongArray *srcIndices,
 							 TCULongArray *srcCPIndices,
@@ -1001,10 +997,24 @@ void TREModel::flattenShapes(TREVertexArray *dstVertices,
 		if (srcCPIndices && dstCPIndices)
 		{
 			index = (*srcCPIndices)[i];
-			vertex = (*srcControlPoints)[index];
-			dstCPIndices->addValue(dstControlPoints->getCount());
+			vertex = (*srcVertices)[index];
+			dstCPIndices->addValue(dstVertices->getCount());
 			transformVertex(vertex, matrix);
-			dstControlPoints->addVertex(vertex);
+			dstVertices->addVertex(vertex);
+			if (srcNormals)
+			{
+				TREVertex normal = (*srcNormals)[index];
+
+				dstNormals->addVertex(normal);
+			}
+			if (colorSet)
+			{
+				dstColors->addValue(color);
+			}
+			else if (srcColors)
+			{
+				dstColors->addValue((*srcColors)[index]);
+			}
 		}
 	}
 }
@@ -1077,8 +1087,6 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 			{
 				TREVertexArray *srcVertices = srcVertexStore->getVertices();
 				TREVertexArray *srcNormals = srcVertexStore->getNormals();
-				TREVertexArray *srcControlPoints =
-					srcVertexStore->getControlPoints();
 				TCULongArray *srcColors = srcVertexStore->getColors();
 				TCULongArray *dstIndices =
 					dstShapes->getIndices((TREShapeType)bit, true);
@@ -1094,18 +1102,15 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 				{
 					TREVertexArray *dstVertices = dstVertexStore->getVertices();
 					TREVertexArray *dstNormals = dstVertexStore->getNormals();
-					TREVertexArray *dstControlPoints =
-						dstVertexStore->getControlPoints();
 					TCULongArray *dstColors = dstVertexStore->getColors();
 					TREShapeType shapeType = (TREShapeType)bit;
 
 					if (shapeType < TRESFirstStrip)
 					{
-						flattenShapes(dstVertices, dstNormals,
-							dstControlPoints, dstColors, dstIndices,
-							dstCPIndices, srcVertices, srcNormals,
-							srcControlPoints, srcColors, srcIndices,
-							srcCPIndices, matrix, color, colorSet);
+						flattenShapes(dstVertices, dstNormals, dstColors,
+							dstIndices, dstCPIndices, srcVertices, srcNormals,
+							srcColors, srcIndices, srcCPIndices, matrix, color,
+							colorSet);
 					}
 					else
 					{

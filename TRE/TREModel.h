@@ -159,10 +159,8 @@ public:
 	virtual void transferTransparent(TCULong color, TREMSection section,
 		const float *matrix);
 
-//	static void multMatrix(float* left, float* right, float* result);
 	static void transformVertex(TREVertex &vertex, float *matrix);
 	static void transformNormal(TREVertex &normal, float *matrix);
-//	static float invertMatrix(float* matrix, float* inverseMatrix);
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
@@ -184,12 +182,17 @@ protected:
 	virtual void flattenShapes(TREShapeGroup *dstShapes,
 		TREShapeGroup *srcShapes, float *matrix, TCULong color, bool colorSet);
 	virtual void flattenShapes(TREVertexArray *dstVertices,
-		TREVertexArray *dstNormals, TREVertexArray *dstControlPoints,
-		TCULongArray *dstColors, TCULongArray *dstIndices,
-		TCULongArray *dstCPIndices, TREVertexArray *srcVertices,
-		TREVertexArray *srcNormals, TREVertexArray *srcControlPoints,
-		TCULongArray *srcColors, TCULongArray *srcIndices,
-		TCULongArray *srcCPIndices, float *matrix, TCULong color,
+		TREVertexArray *dstNormals,
+		TCULongArray *dstColors,
+		TCULongArray *dstIndices,
+		TCULongArray *dstCPIndices,
+		TREVertexArray *srcVertices,
+		TREVertexArray *srcNormals,
+		TCULongArray *srcColors,
+		TCULongArray *srcIndices,
+		TCULongArray *srcCPIndices,
+		float *matrix,
+		TCULong color,
 		bool colorSet);
 	virtual void flattenStrips(TREVertexArray *dstVertices,
 		TREVertexArray *dstNormals, TCULongArray *dstColors,

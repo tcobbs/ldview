@@ -227,7 +227,7 @@ void LDLPalette::initOtherColors(void)
 
 int LDLPalette::getEdgeColorNumber(int colorNumber)
 {
-	if (colorNumber < 512)
+	if (colorNumber < 512 && colorNumber >= 0)
 	{
 		return m_colors[colorNumber].edgeColorNumber;
 	}
@@ -297,7 +297,7 @@ void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 	g = 128;
 	b = 0;
 	a = 255;
-	if (colorNumber < 512)
+	if (colorNumber < 512 && colorNumber >= 0)
 	{
 		LDLColorInfo &colorInfo = m_colors[colorNumber];
 
@@ -387,7 +387,7 @@ void LDLPalette::parseLDLiteColorComment(const char *comment)
 		ditherColor.g = (TCByte)dg;
 		ditherColor.b = (TCByte)db;
 		ditherColor.a = (TCByte)da;
-		if (colorNumber < 512)
+		if (colorNumber < 512 && colorNumber >= 0)
 		{
 			colorInfo = m_colors + colorNumber;
 		}
@@ -409,3 +409,41 @@ void LDLPalette::parseLDLiteColorComment(const char *comment)
 		initSpecularAndShininess(*colorInfo);
 	}
 }
+
+int LDLPalette::getColorNumberForRGB(TCByte r, TCByte g, TCByte b)
+{
+	if (r != 255 || g != 128 || b != 0)
+	{
+		int i;
+
+		for (i = 0; i <= 27; i++)
+		{
+			if (isColorNumberRGB(i, r, g, b))
+			{
+				return i;
+			}
+		}
+	}
+	return 0x2000000 | ((unsigned long)r << 16) | ((unsigned long)g << 8) |
+		(unsigned long)b;
+}
+
+bool LDLPalette::isColorNumberRGB(int colorNumber, TCByte r, TCByte g, TCByte b)
+{
+	int pr, pg, pb, pa;
+
+	if (colorNumber == 16 || colorNumber == 24)
+	{
+		return false;
+	}
+	getRGBA(colorNumber, pr, pg, pb, pa);
+	if (pr == r && pg == g && pb == b)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+

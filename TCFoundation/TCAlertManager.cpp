@@ -92,7 +92,7 @@ void TCAlertManager::defRegisterHandler(TCULong alertClass, TCObject *handler,
 		objectPointerArray->release();
 		m_callbacks->addObject(alertCallbackArray);
 		alertCallbackArray->release();
-		index = 0;
+		index = m_alertClasses->getCount() - 1;
 	}
 	// Nobody told me I'd have to use malloc!  For some reason, delete blows
 	// chunk when I tried new here and delete later.

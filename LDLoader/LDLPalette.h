@@ -29,6 +29,7 @@ public:
 	bool isColorComment(const char *comment);
 	void parseColorComment(const char *comment);
 	LDLColorInfo &getColorInfo(int index) { return m_colors[index]; }
+	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b);
 protected:
 	virtual ~LDLPalette(void);
 	virtual void dealloc(void);
@@ -46,6 +47,8 @@ protected:
 	bool getCustomColorRGBA(int colorNumber, int &r, int &g, int &b, int &a);
 	int getBlendedColorComponent(TCULong c1, TCULong c2, TCULong a1,
 		TCULong a2);
+	virtual bool isColorNumberRGB(int colorNumber, TCByte r, TCByte g,
+		TCByte b);
 
 	class CustomColor : public TCObject
 	{

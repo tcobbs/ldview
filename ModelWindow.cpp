@@ -1060,6 +1060,7 @@ void ModelWindow::showErrors(void)
 	showErrorsIfNeeded(FALSE);
 }
 
+/*
 BOOL ModelWindow::showProgress(void)
 {
 	if (!loading)
@@ -1092,6 +1093,7 @@ BOOL ModelWindow::showProgress(void)
 	}
 	return FALSE;
 }
+*/
 
 void ModelWindow::hideProgress(void)
 {
@@ -1099,8 +1101,8 @@ void ModelWindow::hideProgress(void)
 	{
 		SendMessage(hProgressBar, PBM_SETPOS, 0, 0);
 		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)"");
-		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
-			enableNonModalWindow, (LPARAM)hParentWindow);
+//		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
+//			enableNonModalWindow, (LPARAM)hParentWindow);
 		((LDViewWindow*)parentWindow)->setLoading(false);
 //		doDialogClose(hProgressWindow);
 		loading = false;

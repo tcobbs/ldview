@@ -20,7 +20,6 @@ int TREVertexStore::sm_varSize = 0;
 TREVertexStore::TREVertexStore(void)
 	:m_vertices(NULL),
 	m_normals(NULL),
-	m_controlPoints(NULL),
 	m_colors(NULL),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
@@ -32,12 +31,13 @@ TREVertexStore::TREVertexStore(void)
 	m_flags.vboTried = false;
 	m_flags.vboFailed = false;
 	m_flags.twoSidedLighting = false;
+	m_flags.showAllConditional = false;
+	m_flags.conditionalControlPoints = false;
 }
 
 TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	:m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
-	m_controlPoints((TREVertexArray *)TCObject::copy(other.m_controlPoints)),
 	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
@@ -63,7 +63,6 @@ void TREVertexStore::dealloc(void)
 	}
 	TCObject::release(m_vertices);
 	TCObject::release(m_normals);
-	TCObject::release(m_controlPoints);
 	TCObject::release(m_colors);
 	if (sm_varBuffer && wglFreeMemoryNV)
 	{
@@ -95,11 +94,6 @@ void TREVertexStore::dealloc(void)
 TCObject *TREVertexStore::copy(void)
 {
 	return new TREVertexStore(*this);
-}
-
-int TREVertexStore::addControlPoints(const TCVector *points, int count)
-{
-	return addVertices(m_controlPoints, points, count);
 }
 
 int TREVertexStore::addVertices(const TCVector *points, int count)
@@ -436,15 +430,6 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		sm_activeVertexStore = this;
 		return true;
-	}
-}
-
-void TREVertexStore::setupConditional(void)
-{
-	setup();
-	if (!m_controlPoints)
-	{
-		m_controlPoints = new TREVertexArray;
 	}
 }
 

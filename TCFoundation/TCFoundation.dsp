@@ -147,6 +147,10 @@ SOURCE=.\TCPngImageFormat.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCProgressAlert.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCSortedStringArray.cpp
 # End Source File
 # Begin Source File
@@ -236,6 +240,10 @@ SOURCE=.\TCObjectTree.h
 # Begin Source File
 
 SOURCE=.\TCPngImageFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCProgressAlert.h
 # End Source File
 # Begin Source File
 

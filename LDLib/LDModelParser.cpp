@@ -6,6 +6,7 @@
 #include <LDLoader/LDLShapeLine.h>
 #include <LDLoader/LDLModelLine.h>
 #include <LDLoader/LDLConditionalLineLine.h>
+#include <LDLoader/LDLPalette.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TRESubModel.h>
 #include <TRE/TREVertexArray.h>
@@ -28,7 +29,7 @@ LDModelParser::LDModelParser(void)
 	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
-	m_flags.bfc = true;
+	m_flags.bfc = false;
 	m_flags.compileParts = true;
 	m_flags.compileAll = true;
 	m_flags.lighting = false;
@@ -38,6 +39,10 @@ LDModelParser::LDModelParser(void)
 	m_flags.stipple = false;
 	m_flags.wireframe = false;
 	m_flags.conditionalLines = false;
+	m_flags.showAllConditional = false;
+	m_flags.conditionalControlPoints = false;
+	m_flags.defaultColorSet = false;
+	m_flags.defaultColorNumberSet = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -66,20 +71,47 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	}
 }
 
+void LDModelParser::setDefaultRGB(TCByte r, TCByte g, TCByte b)
+{
+	defaultR = r;
+	defaultG = g;
+	defaultB = b;
+	m_flags.defaultColorSet = true;
+}
+
+void LDModelParser::setDefaultColorNumber(int colorNumber)
+{
+	defaultColorNumber = colorNumber;
+	m_flags.defaultColorNumberSet = true;
+}
+
 bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 {
 	TCULong colorNumber = 7;
-	TCULong edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
+	TCULong edgeColorNumber;
+	LDLPalette *palette = mainLDLModel->getPalette();
 
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
+	m_mainTREModel->setEdgesOnlyFlag(getEdgesOnlyFlag());
 	m_mainTREModel->setLightingFlag(getLightingFlag());
 	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	m_mainTREModel->setBFCFlag(getBFCFlag());
 	m_mainTREModel->setCompilePartsFlag(getCompilePartsFlag());
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
+	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
+	if (m_flags.defaultColorNumberSet)
+	{
+		colorNumber = defaultColorNumber;
+	}
+	else if (m_flags.defaultColorSet)
+	{
+		colorNumber = palette->getColorNumberForRGB(defaultR, defaultG,
+			defaultB);
+	}
+	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	m_mainTREModel->setAALinesFlag(getAALinesFlag());
@@ -87,9 +119,12 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setStippleFlag(getStippleFlag());
 	m_mainTREModel->setWireframeFlag(getWireframeFlag());
 	m_mainTREModel->setConditionalLinesFlag(getConditionalLinesFlag());
+	m_mainTREModel->setShowAllConditionalFlag(getShowAllConditionalFlag());
+	m_mainTREModel->setConditionalControlPointsFlag(
+		getConditionalControlPointsFlag());
 	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag()))
 	{
-		if (m_mainTREModel->isPart())
+		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
 			finishPart(m_mainTREModel);
 		}
@@ -705,16 +740,19 @@ void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
 
 	if (colorNumber == 16)
 	{
-		treModel->addLine(shapeLine->getPoints());
+		if (!getEdgesOnlyFlag())
+		{
+			treModel->addLine(shapeLine->getPoints());
+		}
 	}
 	else if (colorNumber == 24)
 	{
-		if (m_flags.edgeLines)
+		if (getEdgeLinesFlag())
 		{
 			treModel->addEdgeLine(shapeLine->getPoints());
 		}
 	}
-	else
+	else if (!getEdgesOnlyFlag())
 	{
 		treModel->addLine(shapeLine->getParentModel()->
 			getPackedRGBA(colorNumber), shapeLine->getPoints());
@@ -725,7 +763,7 @@ void LDModelParser::parseConditionalLine(LDLConditionalLineLine
 										 *conditionalLine,
 										 TREModel *treModel)
 {
-	if (m_flags.conditionalLines)
+	if (getConditionalLinesFlag())
 	{
 		treModel->addConditionalLine(conditionalLine->getPoints(),
 			conditionalLine->getControlPoints());

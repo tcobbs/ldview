@@ -18,6 +18,8 @@ public:
 	LDModelParser(void);
 	virtual bool parseMainModel(LDLMainModel *mainLDLModel);
 	TREMainModel *getMainTREModel(void) { return m_mainTREModel; }
+	void setFileIsPartFlag(bool value) { m_flags.fileIsPart = value; }
+	bool getFileIsPartFlag(void) { return m_flags.fileIsPart != false; }
 	void setPrimitiveSubstitutionFlag(bool value)
 	{
 		m_flags.primitiveSubstitution = value;
@@ -28,6 +30,8 @@ public:
 	}
 	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_flags.edgeLines != false; }
+	void setEdgesOnlyFlag(bool value) { m_flags.edgesOnly = value; }
+	bool getEdgesOnlyFlag(void) { return m_flags.edgesOnly != false; }
 	void setLightingFlag(bool value) { m_flags.lighting = value; }
 	bool getLightingFlag(void) { return m_flags.lighting != false; }
 	void setTwoSidedLightingFlag(bool value)
@@ -59,14 +63,34 @@ public:
 	{
 		return m_flags.conditionalLines != false;
 	}
+	void setShowAllConditionalFlag(bool value)
+	{
+		m_flags.showAllConditional = value;
+	}
+	bool getShowAllConditionalFlag(void)
+	{
+		return m_flags.showAllConditional != false;
+	}
+	void setConditionalControlPointsFlag(bool value)
+	{
+		m_flags.conditionalControlPoints = value;
+	}
+	bool getConditionalControlPointsFlag(void)
+	{
+		return m_flags.conditionalControlPoints != false;
+	}
 	void setCompilePartsFlag(bool value) { m_flags.compileParts = value; }
 	bool getCompilePartsFlag(void) { return m_flags.compileParts != false; }
 	void setCompileAllFlag(bool value) { m_flags.compileAll = value; }
 	bool getCompileAllFlag(void) { return m_flags.compileAll != false; }
+	void setPolygonOffsetFlag(bool value) { m_flags.polygonOffset = value; }
+	bool getPolygonOffsetFlag(void) { return m_flags.polygonOffset != false; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	virtual void setSeamWidth(float seamWidth);
 	virtual float getSeamWidth(void);
+	virtual void setDefaultRGB(TCByte r, TCByte g, TCByte b);
+	virtual void setDefaultColorNumber(int colorNumber);
 protected:
 	virtual ~LDModelParser(void);
 	virtual void dealloc(void);
@@ -131,12 +155,18 @@ protected:
 	TREMainModel *m_mainTREModel;
 	int m_curveQuality;
 	float m_seamWidth;
+	TCByte defaultR;
+	TCByte defaultG;
+	TCByte defaultB;
+	int defaultColorNumber;
 	struct
 	{
+		bool fileIsPart:1;
 		bool flattenParts:1;
 		bool primitiveSubstitution:1;
 		bool seams:1;
 		bool edgeLines:1;
+		bool edgesOnly:1;
 		bool twoSidedLighting:1;
 		bool bfc:1;
 		bool compileParts:1;
@@ -147,6 +177,11 @@ protected:
 		bool stipple:1;
 		bool wireframe:1;
 		bool conditionalLines:1;
+		bool showAllConditional:1;
+		bool conditionalControlPoints:1;
+		bool defaultColorSet:1;
+		bool defaultColorNumberSet:1;
+		bool polygonOffset:1;
 	} m_flags;
 };
 
