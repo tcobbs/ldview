@@ -120,7 +120,6 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 			   lastViewAngle(LDVAngleDefault)
 //			   modelWindowShown(false)
 {
-//	DWORD backgroundColor = TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
 	loadSettings();
 	standardWindowStyle = windowStyle;
 	if (!recentFiles)
@@ -250,7 +249,7 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 		GetUpdateRect(hWindow, updateRect, FALSE);
 		noRect = TRUE;
 	}
-	DWORD backgroundColor = TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
+	DWORD backgroundColor = LDViewPreferences::getColor(BACKGROUND_COLOR_KEY);
  	HBRUSH hBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
 		(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));
 
@@ -303,6 +302,7 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 			updateRect->right, updateRect->bottom);
 		RECT rect;
 		POINT points[2];
+		static int num = 0;
 
 		GetClientRect(hToolbar, &rect);
 		points[0].x = rect.left;
@@ -314,7 +314,8 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 		rect.top = points[0].y;
 		rect.right = points[1].x;
 		rect.bottom = points[1].y;
-		if (RectInRegion(region, &rect))
+		if (RectInRegion(region, &rect) || updateRect->top ==
+			getToolbarHeight() + 2)
 		{
 			// For some reason, the toolbar won't redraw itself until there's an
 			// idle moment.  So it won't redraw while the model is spinning, for
@@ -431,16 +432,18 @@ void LDViewWindow::populateTbButtonInfos(void)
 		edges = prefs->getShowsHighlightLines();
 		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
 		lighting = prefs->getUseLighting();
+		bfc = prefs->getBfc();
 		addTbCheckButtonInfo(TCLocalStrings::get("Wireframe"), IDC_WIREFRAME,
 			-1, 1, drawWireframe);
 		addTbCheckButtonInfo(TCLocalStrings::get("Seams"), IDC_SEAMS, -1, 2,
 			seams);
 		addTbCheckButtonInfo(TCLocalStrings::get("EdgeLines"), IDC_HIGHLIGHTS,
-			-1, 3, edges);
+			-1, 3, edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(TCLocalStrings::get("PrimitiveSubstitution"),
 			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution);
 		addTbCheckButtonInfo(TCLocalStrings::get("Lighting"), IDC_LIGHTING, -1,
 			7, lighting);
+		addTbCheckButtonInfo(TCLocalStrings::get("BFC"), IDC_BFC, -1, 9, bfc);
 		addTbButtonInfo(TCLocalStrings::get("ResetSelectView"), ID_VIEWANGLE,
 			-1, 6, TBSTYLE_DROPDOWN);
 		addTbButtonInfo(TCLocalStrings::get("Preferences"), ID_EDIT_PREFERENCES,
@@ -604,6 +607,9 @@ BOOL LDViewWindow::initWindow(void)
 		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
 		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
+		hToolbarMenu = LoadMenu(getLanguageModule(),
+			MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
+		hEdgesMenu = GetSubMenu(hToolbarMenu, 0);
 		reflectViewMode();
 		populateRecentFileMenuItems();
 		updateModelMenuItems();
@@ -2227,10 +2233,22 @@ LRESULT LDViewWindow::switchToFlythroughMode(void)
 	return 0;
 }
 
-void LDViewWindow::doViewAngleDropDown(LPNMTOOLBAR toolbarNot)
+void LDViewWindow::updateEdgesMenu(void)
+{
+	setMenuCheck(hEdgesMenu, ID_EDGES_SHOWEDGESONLY, prefs->getEdgesOnly());
+	setMenuCheck(hEdgesMenu, ID_EDGES_CONDITIONALLINES,
+		prefs->getDrawConditionalHighlights());
+	setMenuCheck(hEdgesMenu, ID_EDGES_HIGHQUALITY,
+		prefs->getUsePolygonOffset());
+	setMenuCheck(hEdgesMenu, ID_EDGES_ALWAYSBLACK, prefs->getBlackHighlights());
+	setMenuItemsEnabled(hEdgesMenu, edges);
+}
+
+void LDViewWindow::doToolbarDropDown(LPNMTOOLBAR toolbarNot)
 {
 	RECT rect;
 	TPMPARAMS tpm;
+	HMENU hMenu = NULL;
 
     SendMessage(toolbarNot->hdr.hwndFrom, TB_GETRECT, (WPARAM)toolbarNot->iItem,
 		(LPARAM)&rect);
@@ -2240,8 +2258,20 @@ void LDViewWindow::doViewAngleDropDown(LPNMTOOLBAR toolbarNot)
 	tpm.rcExclude.left   = rect.left;
 	tpm.rcExclude.bottom = rect.bottom;
 	tpm.rcExclude.right  = rect.right;
-	TrackPopupMenuEx(hViewAngleMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON |
-		TPM_VERTICAL, rect.left, rect.bottom, hWindow, &tpm);
+	switch (toolbarNot->iItem)
+	{
+	case IDC_HIGHLIGHTS:
+		hMenu = hEdgesMenu;
+		break;
+	case ID_VIEWANGLE:
+		hMenu = hViewAngleMenu;
+		break;
+	}
+	if (hMenu)
+	{
+		TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON |
+			TPM_VERTICAL, rect.left, rect.bottom, hWindow, &tpm);
+	}
 }
 
 LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
@@ -2272,7 +2302,7 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 	case TBN_DROPDOWN:
 		if (notification->idFrom == ID_TOOLBAR)
 		{
-			doViewAngleDropDown((LPNMTOOLBAR)notification);
+			doToolbarDropDown((LPNMTOOLBAR)notification);
 		}
 		break;
 	}
@@ -2948,8 +2978,23 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case IDC_LIGHTING:
 			doLighting();
 			break;
+		case IDC_BFC:
+			doBfc();
+			break;
 		case ID_VIEWANGLE:
 			doViewAngle();
+			break;
+		case ID_EDGES_SHOWEDGESONLY:
+			doShowEdgesOnly();
+			break;
+		case ID_EDGES_CONDITIONALLINES:
+			doConditionalLines();
+			break;
+		case ID_EDGES_HIGHQUALITY:
+			doHighQualityEdges();
+			break;
+		case ID_EDGES_ALWAYSBLACK:
+			doAlwaysBlack();
 			break;
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
@@ -3032,6 +3077,41 @@ void LDViewWindow::doLighting(void)
 	if (doToolbarCheck(lighting, IDC_LIGHTING))
 	{
 		prefs->setUseLighting(lighting);
+		modelWindow->forceRedraw();
+	}
+}
+
+void LDViewWindow::doShowEdgesOnly(void)
+{
+	prefs->setEdgesOnly(!prefs->getEdgesOnly());
+	setMenuCheck(hEdgesMenu, ID_EDGES_SHOWEDGESONLY, prefs->getEdgesOnly());
+}
+
+void LDViewWindow::doConditionalLines(void)
+{
+	prefs->setDrawConditionalHighlights(!prefs->getDrawConditionalHighlights());
+	setMenuCheck(hEdgesMenu, ID_EDGES_CONDITIONALLINES,
+		prefs->getDrawConditionalHighlights());
+}
+
+void LDViewWindow::doHighQualityEdges(void)
+{
+	prefs->setUsePolygonOffset(!prefs->getUsePolygonOffset());
+	setMenuCheck(hEdgesMenu, ID_EDGES_HIGHQUALITY,
+		prefs->getUsePolygonOffset());
+}
+
+void LDViewWindow::doAlwaysBlack(void)
+{
+	prefs->setBlackHighlights(!prefs->getBlackHighlights());
+	setMenuCheck(hEdgesMenu, ID_EDGES_ALWAYSBLACK, prefs->getBlackHighlights());
+}
+
+void LDViewWindow::doBfc(void)
+{
+	if (doToolbarCheck(bfc, IDC_BFC))
+	{
+		prefs->setBfc(bfc);
 		modelWindow->forceRedraw();
 	}
 }
@@ -3634,7 +3714,9 @@ void LDViewWindow::saveSnapshot(void)
 {
 	if (modelIsLoaded())
 	{
+		modelWindow->getModelViewer()->pause();
 		modelWindow->saveSnapshot();
+		modelWindow->getModelViewer()->unpause();
 	}
 }
 
@@ -4060,7 +4142,7 @@ LRESULT LDViewWindow::doDrawItem(HWND /*hControlWnd*/,
 		if (drawItemStruct->itemID == 0)
 		{
 			DWORD backgroundColor =
-				TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
+				LDViewPreferences::getColor(BACKGROUND_COLOR_KEY);
  			HBRUSH hBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
 				(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));
 
@@ -4093,26 +4175,38 @@ void LDViewWindow::setLoading(bool value)
 	}
 }
 
-LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
-									  BOOL /*fSystemMenu*/)
+void LDViewWindow::setMenuItemsEnabled(HMENU hMenu, bool enabled)
 {
 	int i;
-	int count = GetMenuItemCount(hPopupMenu);
+	int count = GetMenuItemCount(hMenu);
 
 	for (i = 0; i < count; i++)
 	{
-		setMenuEnabled(hPopupMenu, i, !loading, TRUE);
+		setMenuEnabled(hMenu, i, enabled, TRUE);
 	}
-	if (hPopupMenu == hFileMenu)
+}
+
+LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
+									  BOOL /*fSystemMenu*/)
+{
+	if (hPopupMenu == hEdgesMenu)
 	{
-		if (loading)
+		updateEdgesMenu();
+	}
+	else
+	{
+		setMenuItemsEnabled(hPopupMenu, !loading);
+		if (hPopupMenu == hFileMenu)
 		{
-			setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, true);
-		}
-		else
-		{
-			setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, false);
-			updateModelMenuItems();
+			if (loading)
+			{
+				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, true);
+			}
+			else
+			{
+				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, false);
+				updateModelMenuItems();
+			}
 		}
 	}
 	return 1;
@@ -4215,6 +4309,7 @@ void LDViewWindow::toolbarChecksReflect(void)
 	toolbarCheckReflect(primitiveSubstitution,
 		prefs->getAllowPrimitiveSubstitution(), IDC_PRIMITIVE_SUBSTITUTION);
 	toolbarCheckReflect(lighting, prefs->getUseLighting(), IDC_LIGHTING);
+	toolbarCheckReflect(bfc, prefs->getBfc(), IDC_BFC);
 }
 
 void LDViewWindow::applyPrefs(void)

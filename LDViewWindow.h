@@ -159,6 +159,7 @@ class LDViewWindow: public CUIWindow
 		virtual void populateRecentFileMenuItems(void);
 		virtual void populateRecentFiles(void);
 		virtual void openRecentFile(int index);
+		virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
 			bool enabled, BOOL byPosition = FALSE);
 		virtual bool modelIsLoaded(void);
@@ -236,9 +237,15 @@ class LDViewWindow: public CUIWindow
 		virtual void doEdges(void);
 		virtual void doPrimitiveSubstitution(void);
 		virtual void doLighting(void);
-		virtual void doViewAngleDropDown(LPNMTOOLBAR toolbarNot);
+		virtual void doBfc(void);
+		virtual void doToolbarDropDown(LPNMTOOLBAR toolbarNot);
 		virtual void doViewAngle(void);
+		virtual void doShowEdgesOnly(void);
+		virtual void doConditionalLines(void);
+		virtual void doHighQualityEdges(void);
+		virtual void doAlwaysBlack(void);
 		virtual bool doToolbarCheck(bool &value, LPARAM commandId);
+		virtual void updateEdgesMenu(void);
 
 		void loadSettings(void);
 
@@ -279,6 +286,8 @@ class LDViewWindow: public CUIWindow
 		HMENU hFileMenu;
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
+		HMENU hToolbarMenu;
+		HMENU hEdgesMenu;
 		bool loading;
 //		bool modelWindowShown;
 		CUIWindowResizer *openGLInfoWindoResizer;
@@ -297,6 +306,7 @@ class LDViewWindow: public CUIWindow
 		bool edges;
 		bool primitiveSubstitution;
 		bool lighting;
+		bool bfc;
 		LDVAngle lastViewAngle;
 
 		static TCStringArray* recentFiles;

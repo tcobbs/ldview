@@ -118,11 +118,11 @@ protected:
 	virtual void transferTriangle(TCULong color, TCULong index0, TCULong index1,
 		TCULong index2, const float *matrix);
 	virtual void transferQuadStrip(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const float *matrix, bool remove);
+		int offset, int stripCount, const float *matrix);
 	virtual void transferTriangleStrip(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const float *matrix, bool remove);
+		int offset, int stripCount, const float *matrix);
 	virtual void transferTriangleFan(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const float *matrix, bool remove);
+		int offset, int stripCount, const float *matrix);
 	virtual void transferTransparent(TCULong color, TREShapeType shapeType,
 		TCULongArray *indices, const float *matrix);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,

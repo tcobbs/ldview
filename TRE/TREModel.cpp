@@ -1064,20 +1064,33 @@ void TREModel::applyShapeNormals(TRENormalInfoArray *normalInfos)
 {
 	int i;
 	int infoCount = normalInfos->getCount();
+	TCVector normal;
+	TCVector vertexNormal;
 
 	for (i = 0; i < infoCount; i++)
 	{
 		TRENormalInfo *normalInfo = (*normalInfos)[i];
 		TREVertexArray *normals = normalInfo->m_normals;
 		TRESmoother *smoother = normalInfo->m_smoother;
-		TCVector normal = smoother->getNormal(normalInfo->m_smootherIndex);
 		TREVertex &vertex = normals->vertexAtIndex(normalInfo->m_normalIndex);
-
+		
+		vertexNormal = TCVector(vertex.v);
+		normal = smoother->getNormal(normalInfo->m_smootherIndex);
 		if (TRESmoother::shouldFlipNormal(normal, TCVector(vertex.v)))
 		{
 			normal *= -1.0f;
 		}
-		memcpy(vertex.v, (const float *)normal, 3 * sizeof(float));
+		// The following number is the cos of 25 degrees.  I don't want to
+		// calculate it on the fly.  We only want to apply this normal if the
+		// difference between it an the original normal is less than 25 degrees.
+		// If the normal only applies to two faces, then the faces have to be
+		// more than 50 degrees apart for this to happen.  Note that low-res
+		// studs have 45-degree angles between the faces, so 50 gives a little
+		// leeway.
+		if (normal.dot(vertexNormal) > 0.906307787f)
+		{
+			memcpy(vertex.v, (const float *)normal, 3 * sizeof(float));
+		}
 	}
 }
 
@@ -3158,6 +3171,26 @@ void TREModel::uncompile(void)
 		for (i = 0; i < count; i++)
 		{
 			(*m_subModels)[i]->getEffectiveModel()->uncompile();
+		}
+	}
+}
+
+void TREModel::cleanupTransparent(TREMSection section)
+{
+	TREColoredShapeGroup *shapeGroup = m_coloredShapes[section];
+
+	if (shapeGroup)
+	{
+		shapeGroup->cleanupTransparent();
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->getModel()->cleanupTransparent(section);
 		}
 	}
 }

@@ -1509,6 +1509,7 @@ void LDrawModelViewer::setRedBackFaces(bool value)
 		if (flags.bfc)
 		{
 			flags.needsReload = true;
+			flags.needsLightingSetup = true;
 		}
 	}
 }
@@ -1583,6 +1584,10 @@ void LDrawModelViewer::setUsePolygonOffset(bool value)
 		if (mainTREModel)
 		{
 			mainTREModel->setPolygonOffsetFlag(flags.usePolygonOffset);
+			if (!flags.usePolygonOffset)
+			{
+				glDisable(GL_POLYGON_OFFSET_FILL);
+			}
 		}
 	}
 }

@@ -216,7 +216,8 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		// Windows XP doesn't like the upper bits to be set, so mask those out.
-		customColors[i] = LDLPalette::colorForRGBA(r, g, b, a) & 0xFFFFFF;
+		customColors[i] = htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
+			0xFFFFFF;
 	}
 }
 
@@ -268,6 +269,17 @@ void LDViewPreferences::loadDefaultPrimitivesSettings(void)
 	hiResPrimitives = false;
 }
 
+COLORREF LDViewPreferences::getColor(const char *key, COLORREF defaultColor)
+{
+	return (COLORREF)htonl(TCUserDefaults::longForKey(key,
+		(long)(htonl(defaultColor) >> 8)) << 8);
+}
+
+void LDViewPreferences::setColor(const char *key, COLORREF color)
+{
+	TCUserDefaults::setLongForKey((long)(htonl(color) >> 8), key);
+}
+
 void LDViewPreferences::loadGeneralSettings(void)
 {
 	int i;
@@ -276,11 +288,12 @@ void LDViewPreferences::loadGeneralSettings(void)
 	fsaaMode = TCUserDefaults::longForKey(FSAA_MODE_KEY, (long)fsaaMode);
 	lineSmoothing = TCUserDefaults::longForKey(LINE_SMOOTHING_KEY,
 		lineSmoothing) != 0;
-	backgroundColor =
-		(COLORREF)TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY,
-		(long)backgroundColor);
-	defaultColor = (COLORREF)TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
-		(long)defaultColor);
+	backgroundColor = getColor(BACKGROUND_COLOR_KEY, backgroundColor);
+//		(COLORREF)htonl(TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY,
+//		(long)(htonl(backgroundColor) >> 8)) << 8);
+	defaultColor = getColor(DEFAULT_COLOR_KEY, defaultColor);
+//		(COLORREF)htonl(TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
+//		(long)(htonl(defaultColor) >> 8)) << 8);
 	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
 		transDefaultColor) != 0;
 	defaultColorNumber = TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
@@ -453,6 +466,67 @@ void LDViewPreferences::setDrawWireframe(bool value)
 	}
 }
 
+void LDViewPreferences::setEdgesOnly(bool value)
+{
+	if (value != edgesOnly)
+	{
+		edgesOnly = value;
+		modelViewer->setEdgesOnly(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, EDGES_ONLY_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setDrawConditionalHighlights(bool value)
+{
+	if (value != drawConditionalHighlights)
+	{
+		drawConditionalHighlights = value;
+		modelViewer->setDrawConditionalHighlights(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0,
+			CONDITIONAL_HIGHLIGHTS_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setUsePolygonOffset(bool value)
+{
+	if (value != usePolygonOffset)
+	{
+		usePolygonOffset = value;
+		modelViewer->setUsePolygonOffset(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, POLYGON_OFFSET_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_QUALITY_LINES, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setBlackHighlights(bool value)
+{
+	if (value != blackHighlights)
+	{
+		blackHighlights = value;
+		modelViewer->setBlackHighlights(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, BLACK_HIGHLIGHTS_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_ALWAYS_BLACK, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
 void LDViewPreferences::setShowsHighlightLines(bool value)
 {
 	if (value != showsHighlightLines)
@@ -496,6 +570,28 @@ void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 			else
 			{
 				disablePrimitives();
+			}
+		}
+	}
+}
+
+void LDViewPreferences::setBfc(bool value)
+{
+	if (value != bfc)
+	{
+		bfc = value;
+		modelViewer->setBfc(bfc);
+		TCUserDefaults::setLongForKey(bfc ? 1 : 0, BFC_KEY);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_BFC, BM_SETCHECK, bfc, 0);
+			if (bfc)
+			{
+				enableBfc();
+			}
+			else
+			{
+				disableBfc();
 			}
 		}
 	}
@@ -1248,10 +1344,8 @@ void LDViewPreferences::applyGeneralChanges(void)
 		lineSmoothing = SendDlgItemMessage(hGeneralPage, IDC_LINE_AA,
 			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(lineSmoothing, LINE_SMOOTHING_KEY);
-		TCUserDefaults::setLongForKey((long)backgroundColor,
-			BACKGROUND_COLOR_KEY);
-		TCUserDefaults::setLongForKey((long)defaultColor,
-			DEFAULT_COLOR_KEY);
+		setColor(BACKGROUND_COLOR_KEY, backgroundColor);
+		setColor(DEFAULT_COLOR_KEY, defaultColor);
 		transDefaultColor = SendDlgItemMessage(hGeneralPage,
 			IDC_TRANS_DEFAULT_COLOR, BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(transDefaultColor,

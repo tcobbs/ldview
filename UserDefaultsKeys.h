@@ -3,7 +3,7 @@
 
 #define PRIMITIVE_SUBSTITUTION_KEY "AllowPrimitiveSubstitution"
 #define FSAA_MODE_KEY "Antialias"
-#define BACKGROUND_COLOR_KEY "BackgroundColor"
+#define BACKGROUND_COLOR_KEY "BackgroundColor3"
 #define BLACK_HIGHLIGHTS_KEY "BlackHighlights"
 #define BOTTOM_MARGIN_KEY "BottomMargin"
 #define CONDITIONAL_HIGHLIGHTS_KEY "ConditionalHighlights"
@@ -12,7 +12,7 @@
 #define CUTAWAY_ALPHA_KEY "CutawayAlpha"
 #define CUTAWAY_MODE_KEY "CutawayMode"
 #define CUTAWAY_THICKNESS_KEY "CutawayThickness"
-#define DEFAULT_COLOR_KEY "DefaultColor"
+#define DEFAULT_COLOR_KEY "DefaultColor3"
 #define DEFAULT_LAT_LONG_KEY "DefaultLatLong"
 #define DEFAULT_MATRIX_KEY "DefaultMatrix"
 #define DEFAULT_ZOOM_KEY "DefaultZoom"							// NO UI
@@ -99,6 +99,14 @@
 #define VERIFY_LDRAW_DIR_KEY "VerifyLDrawDir"
 #define TOOLBAR_KEY "Toolbar"
 #define EDITOR_KEY "Editor"
+#define IGNORE_PBUFFER_KEY "IgnorePBuffer"
+#define IGNORE_VBO_KEY "IgnoreVBO"
+#define IGNORE_VAR_KEY "IgnoreVAR"
+#define IGNORE_PIXEL_FORMAT_KEY "IgnorePixelFormat"
+#define IGNORE_MULTISAMPLE_KEY "IgnoreMultisample"
+#define IGNORE_MS_FILTER_HINT_KEY "IgnoreMultisampleFilterHint"
+#define IGNORE_MULTI_DRAW_ARRAYS_KEY "IgnoreMultiDrawArrays"
+#define IGNORE_ALL_OGL_EXTENSIONS "IgnoreAllOGLExtensions"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"
