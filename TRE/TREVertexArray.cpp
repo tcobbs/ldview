@@ -149,7 +149,7 @@ bool TREVertexArray::removeVertex(int index)
 	}
 }
 
-const TREVertex &TREVertexArray::vertexAtIndex(unsigned int index) const
+TREVertex &TREVertexArray::vertexAtIndex(unsigned int index) const
 {
 	return m_vertices[index];
 }

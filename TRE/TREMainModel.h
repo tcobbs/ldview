@@ -17,7 +17,9 @@ public:
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual TREModel *modelNamed(const char *name);
 	virtual void registerModel(TREModel *model);
+	void setCompilePartsFlag(bool value) { m_mainFlags.compileParts = value; }
 	bool getCompilePartsFlag(void) { return m_mainFlags.compileParts != false; }
+	void setCompileAllFlag(bool value) { m_mainFlags.compileAll = value; }
 	bool getCompileAllFlag(void) { return m_mainFlags.compileAll != false; }
 	void setEdgeLinesFlag(bool value) { m_mainFlags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines != false; }
@@ -26,6 +28,10 @@ public:
 	{
 		return m_mainFlags.twoSidedLighting != false;
 	}
+	void setLightingFlag(bool value);
+	bool getLightingFlag(void) { return m_mainFlags.lighting != false; }
+	void setUseStripsFlag(bool value) { m_mainFlags.useStrips = value; }
+	bool getUseStripsFlag(void) { return m_mainFlags.useStrips != false; }
 	void setUseFlatStripsFlag(bool value) { m_mainFlags.useFlatStrips = value; }
 	bool getUseFlatStripsFlag(void)
 	{
@@ -42,6 +48,9 @@ public:
 	void setColor(TCULong color, TCULong edgeColor);
 	TCULong getColor(void);
 	TCULong getEdgeColor(void);
+	void postProcess(void);
+	void compile(void);
+	void recompile(void);
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
@@ -63,6 +72,8 @@ protected:
 		bool compiled:1;
 		bool edgeLines:1;
 		bool twoSidedLighting:1;
+		bool lighting:1;
+		bool useStrips:1;
 		bool useFlatStrips:1;
 		bool bfc:1;
 	} m_mainFlags;

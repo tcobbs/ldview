@@ -20,9 +20,13 @@ TREMainModel::TREMainModel(void)
 	strcpy(className, "TREMainModel");
 #endif // _LEAK_DEBUG
 	m_mainModel = this;
-	m_mainFlags.compileParts = true;
-	m_mainFlags.compileAll = true;
+	m_mainFlags.compileParts = false;
+	m_mainFlags.compileAll = false;
 	m_mainFlags.compiled = false;
+	m_mainFlags.edgeLines = false;
+	m_mainFlags.twoSidedLighting = false;
+	m_mainFlags.lighting = false;
+	m_mainFlags.useStrips = true;
 	m_mainFlags.useFlatStrips = false;
 	m_mainFlags.bfc = false;
 }
@@ -74,7 +78,7 @@ void TREMainModel::activateBFC(void)
 	// Note that GL_BACK is the default face to cull, and GL_CCW is the
 	// default polygon winding.
 	glEnable(GL_CULL_FACE);
-	if (getTwoSidedLightingFlag())
+	if (getTwoSidedLightingFlag() && getLightingFlag())
 	{
 		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 	}
@@ -82,37 +86,54 @@ void TREMainModel::activateBFC(void)
 
 void TREMainModel::deactivateBFC(void)
 {
-	if (getTwoSidedLightingFlag())
+	if (getTwoSidedLightingFlag() && getLightingFlag())
 	{
 		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 	}
 	glDisable(GL_CULL_FACE);
 }
 
+void TREMainModel::compile(void)
+{
+	if (!m_mainFlags.compiled)
+	{
+		m_vertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
+		compileDefaultColor();
+		if (getBFCFlag())
+		{
+			compileBFC();
+		}
+		compileDefaultColorLines();
+		compileEdgeLines();
+		m_coloredVertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
+		compileColored();
+		if (getBFCFlag())
+		{
+			compileColoredBFC();
+		}
+		compileColoredLines();
+		compileColoredEdgeLines();
+		m_mainFlags.compiled = true;
+	}
+}
+
+void TREMainModel::recompile(void)
+{
+	if (m_mainFlags.compiled)
+	{
+		uncompile();
+		m_mainFlags.compiled = false;
+	}
+	compile();
+}
+
 void TREMainModel::draw(void)
 {
 	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
 	{
-		if (!m_mainFlags.compiled)
-		{
-			m_vertexStore->activate();
-			compileDefaultColor();
-			if (getBFCFlag())
-			{
-				compileBFC();
-			}
-			compileDefaultColorLines();
-			compileEdgeLines();
-			m_coloredVertexStore->activate();
-			compileColored();
-			if (getBFCFlag())
-			{
-				compileColoredBFC();
-			}
-			compileColoredLines();
-			compileColoredEdgeLines();
-			m_mainFlags.compiled = true;
-		}
+		compile();
 	}
 	if (getEdgeLinesFlag())
 	{
@@ -132,7 +153,7 @@ void TREMainModel::draw(void)
 	// will generally be changed before each part, since you don't usually use
 	// color number 16 when you use a part in your model.
 	glColor4ubv((GLubyte*)&m_color);
-	m_vertexStore->activate();
+	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
 	drawDefaultColor();
 	if (getBFCFlag())
 	{
@@ -142,7 +163,8 @@ void TREMainModel::draw(void)
 	// Next draw all opaque triangles and quads that were specified with a color
 	// number other than 16.  Note that the colored vertex store includes color
 	// information for every vertex.
-	m_coloredVertexStore->activate();
+	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
+		m_mainFlags.compileParts);
 	if (getBFCFlag())
 	{
 		drawColoredBFC();
@@ -152,9 +174,12 @@ void TREMainModel::draw(void)
 	// Next, disable lighting and draw lines.  First draw default colored lines,
 	// which probably don't exist, since color number 16 doesn't often get used
 	// for lines.
-	glDisable(GL_LIGHTING);
+	if (getLightingFlag())
+	{
+		glDisable(GL_LIGHTING);
+	}
 	glColor4ubv((GLubyte*)&m_color);
-	m_vertexStore->activate();
+	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
 	drawDefaultColorLines();
 	// Next, switch to the default edge color, and draw the edge lines.  By
 	// definition, edge lines in the original files use the default edge color.
@@ -164,13 +189,17 @@ void TREMainModel::draw(void)
 	drawEdgeLines();
 	// Next, draw the specific colored lines.  As with the specific colored
 	// triangles and quads, every point in the vertex store specifies a color.
-	m_coloredVertexStore->activate();
+	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
+		m_mainFlags.compileParts);
 	drawColoredLines();
 	// Next draw the specific colored edge lines.  Note that if it weren't for
 	// the fact that edge lines can be turned off, these could simply be added
 	// to the colored lines list.
 	drawColoredEdgeLines();
-	glEnable(GL_LIGHTING);
+	if (getLightingFlag())
+	{
+		glEnable(GL_LIGHTING);
+	}
 }
 
 TREModel *TREMainModel::modelNamed(const char *name)
@@ -197,6 +226,13 @@ TCULong TREMainModel::getColor(void)
 TCULong TREMainModel::getEdgeColor(void)
 {
 	return htonl(m_edgeColor);
+}
+
+void TREMainModel::setLightingFlag(bool value)
+{
+	m_mainFlags.lighting = value;
+	m_vertexStore->setLightingFlag(value);
+	m_coloredVertexStore->setLightingFlag(value);
 }
 
 void TREMainModel::setTwoSidedLightingFlag(bool value)
@@ -236,4 +272,20 @@ void TREMainModel::scanMaxRadiusSquaredPoint(const TCVector &point)
 float TREMainModel::getMaxRadius(const TCVector &center)
 {
 	return (float)sqrt(getMaxRadiusSquared(center));
+}
+
+void TREMainModel::postProcess(void)
+{
+	checkDefaultColorPresent();
+	checkBFCPresent();
+	checkDefaultColorLinesPresent();
+	checkEdgeLinesPresent();
+	checkColoredPresent();
+	checkColoredBFCPresent();
+	checkColoredLinesPresent();
+	checkColoredEdgeLinesPresent();
+	if (getCompilePartsFlag() || getCompileAllFlag())
+	{
+		compile();
+	}
 }

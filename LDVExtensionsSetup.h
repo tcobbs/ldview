@@ -68,6 +68,50 @@ public:
 	{
 		return glMultiDrawElementsEXT;
 	}
+	static PFNGLBINDBUFFERARBPROC getGlBindBufferARB(void)
+	{
+		return glBindBufferARB;
+	}
+	static PFNGLDELETEBUFFERSARBPROC getGlDeleteBuffersARB(void)
+	{
+		return glDeleteBuffersARB;
+	}
+	static PFNGLGENBUFFERSARBPROC getGlGenBuffersARB(void)
+	{
+		return glGenBuffersARB;
+	}
+	static PFNGLISBUFFERARBPROC getGlIsBufferARB(void)
+	{
+		return glIsBufferARB;
+	}
+	static PFNGLBUFFERDATAARBPROC getGlBufferDataARB(void)
+	{
+		return glBufferDataARB;
+	}
+	static PFNGLBUFFERSUBDATAARBPROC getGlBufferSubDataARB(void)
+	{
+		return glBufferSubDataARB;
+	}
+	static PFNGLGETBUFFERSUBDATAARBPROC getGlGetBufferSubDataARB(void)
+	{
+		return glGetBufferSubDataARB;
+	}
+	static PFNGLMAPBUFFERARBPROC getGlMapBufferARB(void)
+	{
+		return glMapBufferARB;
+	}
+	static PFNGLUNMAPBUFFERARBPROC getGlUnmapBufferARB(void)
+	{
+		return glUnmapBufferARB;
+	}
+	static PFNGLGETBUFFERPARAMETERIVARBPROC getGlGetBufferParameterivARB(void)
+	{
+		return glGetBufferParameterivARB;
+	}
+	static PFNGLGETBUFFERPOINTERVARBPROC getGlGetBufferPointervARB(void)
+	{
+		return glGetBufferPointervARB;
+	}
 
 	static bool checkForWGLExtension(char* extension);
 	static bool checkForExtension(char* extension);
@@ -78,6 +122,7 @@ public:
 	static bool havePixelFormatExtension(void);
 	static bool haveVARExtension(void);
 	static bool haveMultiDrawArraysExtension(void);
+	static bool haveVBOExtension(void);
 	static char *getWglExtensions(void) { return wglExtensions; }
 	static bool haveStencil(void) { return stencilPresent; }
 	static bool haveAlpha(void) { return alphaPresent; }
@@ -95,19 +140,37 @@ protected:
 	static int matchPixelFormat(int *intValues);
 	static int pixelFormatMatches(int index, int *intValues);
 
+	// WGL_EXT_pixel_format
 	static PFNWGLGETPIXELFORMATATTRIBIVEXTPROC wglGetPixelFormatAttribivARB;
 	static PFNWGLGETPIXELFORMATATTRIBFVEXTPROC wglGetPixelFormatAttribfvARB;
 	static PFNWGLCHOOSEPIXELFORMATEXTPROC wglChoosePixelFormatARB;
+	// WGL_ARB_extensions_string
 	static PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB;
+	// WGL_ARB_pbuffer
 	static PFNWGLCREATEPBUFFERARBPROC wglCreatePbufferARB;
 	static PFNWGLGETPBUFFERDCARBPROC wglGetPbufferDCARB;
 	static PFNWGLRELEASEPBUFFERDCARBPROC wglReleasePbufferDCARB;
 	static PFNWGLDESTROYPBUFFERARBPROC wglDestroyPbufferARB;
 	static PFNWGLQUERYPBUFFERARBPROC wglQueryPbufferARB;
+	// WGL_NV_allocate_memory
 	static PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;
 	static PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV;
+	// GL_NV_vertex_array_range
 	static PFNGLVERTEXARRAYRANGENVPROC glVertexArrayRangeNV;
+	// GL_EXT_multi_draw_arrays
 	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
+	// GL_ARB_vertex_buffer_object
+	static PFNGLBINDBUFFERARBPROC glBindBufferARB;
+	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
+	static PFNGLGENBUFFERSARBPROC glGenBuffersARB;
+	static PFNGLISBUFFERARBPROC glIsBufferARB;
+	static PFNGLBUFFERDATAARBPROC glBufferDataARB;
+	static PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB;
+	static PFNGLGETBUFFERSUBDATAARBPROC glGetBufferSubDataARB;
+	static PFNGLMAPBUFFERARBPROC glMapBufferARB;
+	static PFNGLUNMAPBUFFERARBPROC glUnmapBufferARB;
+	static PFNGLGETBUFFERPARAMETERIVARBPROC glGetBufferParameterivARB;
+	static PFNGLGETBUFFERPOINTERVARBPROC glGetBufferPointervARB;
 
 	static char *wglExtensions;
 	static char *glExtensions;

@@ -28,7 +28,6 @@ public:
 	virtual bool hasMirrorMatrix(void) { return m_flags.mirrorMatrix != false; }
 	virtual void setBFCInvertFlag(bool value) { m_flags.bfcInvert = value; }
 	virtual bool getBFCInvertFlag(void) { return m_flags.bfcInvert != false; }
-//	virtual void draw(void);
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
 	virtual void drawBFC(void);

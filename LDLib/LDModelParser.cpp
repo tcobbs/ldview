@@ -24,10 +24,14 @@ LDModelParser::LDModelParser(void)
 {
 	m_flags.flattenParts = true;	// Supporting false here could take a lot
 									// of work.
-	m_flags.primitiveSubstitution = false;
+	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
-	m_flags.bfc = true;
+	m_flags.bfc = false;
+	m_flags.compileParts = false;
+	m_flags.compileAll = true;
+	m_flags.lighting = false;
+	m_flags.twoSidedLighting = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -65,8 +69,11 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel = new TREMainModel;
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
+	m_mainTREModel->setLightingFlag(getLightingFlag());
 	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	m_mainTREModel->setBFCFlag(getBFCFlag());
+	m_mainTREModel->setCompilePartsFlag(getCompilePartsFlag());
+	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag(), false))
@@ -75,6 +82,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 		{
 			finishPart(m_mainTREModel);
 		}
+		m_mainTREModel->postProcess();
 		return true;
 	}
 	else
@@ -123,10 +131,13 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 {
 	LDLModel *ldlModel = modelLine->getModel();
 
+	invert = modelLine->getBFCInvert();
+/*
 	if (modelLine->getBFCInvert())
 	{
 		invert = !invert;
 	}
+*/
 	if (ldlModel)
 	{
 		const char *name = ldlModel->getName();

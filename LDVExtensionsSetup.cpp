@@ -4,26 +4,42 @@
 #include <TRE/TREShapeGroup.h>
 #include <stdio.h>
 
+// WGL_EXT_pixel_format
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
 	LDVExtensionsSetup::wglGetPixelFormatAttribivARB = NULL;
 PFNWGLGETPIXELFORMATATTRIBFVEXTPROC
 	LDVExtensionsSetup::wglGetPixelFormatAttribfvARB = NULL;
 PFNWGLCHOOSEPIXELFORMATEXTPROC
 	LDVExtensionsSetup::wglChoosePixelFormatARB = NULL;
+// WGL_ARB_extensions_string
 PFNWGLGETEXTENSIONSSTRINGARBPROC
 	LDVExtensionsSetup::wglGetExtensionsStringARB = NULL;
-
+// WGL_ARB_pbuffer
 PFNWGLCREATEPBUFFERARBPROC LDVExtensionsSetup::wglCreatePbufferARB = NULL;
 PFNWGLGETPBUFFERDCARBPROC LDVExtensionsSetup::wglGetPbufferDCARB = NULL;
 PFNWGLRELEASEPBUFFERDCARBPROC LDVExtensionsSetup::wglReleasePbufferDCARB = NULL;
 PFNWGLDESTROYPBUFFERARBPROC LDVExtensionsSetup::wglDestroyPbufferARB = NULL;
 PFNWGLQUERYPBUFFERARBPROC LDVExtensionsSetup::wglQueryPbufferARB = NULL;
-
+// WGL_NV_allocate_memory
 PFNWGLALLOCATEMEMORYNVPROC LDVExtensionsSetup::wglAllocateMemoryNV = NULL;
 PFNWGLFREEMEMORYNVPROC LDVExtensionsSetup::wglFreeMemoryNV = NULL;
+// GL_NV_vertex_array_range
 PFNGLVERTEXARRAYRANGENVPROC LDVExtensionsSetup::glVertexArrayRangeNV = NULL;
-
+// GL_EXT_multi_draw_arrays
 PFNGLMULTIDRAWELEMENTSEXTPROC LDVExtensionsSetup::glMultiDrawElementsEXT = NULL;
+// GL_ARB_vertex_buffer_object
+PFNGLBINDBUFFERARBPROC LDVExtensionsSetup::glBindBufferARB = NULL;
+PFNGLDELETEBUFFERSARBPROC LDVExtensionsSetup::glDeleteBuffersARB = NULL;
+PFNGLGENBUFFERSARBPROC LDVExtensionsSetup::glGenBuffersARB = NULL;
+PFNGLISBUFFERARBPROC LDVExtensionsSetup::glIsBufferARB = NULL;
+PFNGLBUFFERDATAARBPROC LDVExtensionsSetup::glBufferDataARB = NULL;
+PFNGLBUFFERSUBDATAARBPROC LDVExtensionsSetup::glBufferSubDataARB = NULL;
+PFNGLGETBUFFERSUBDATAARBPROC LDVExtensionsSetup::glGetBufferSubDataARB = NULL;
+PFNGLMAPBUFFERARBPROC LDVExtensionsSetup::glMapBufferARB = NULL;
+PFNGLUNMAPBUFFERARBPROC LDVExtensionsSetup::glUnmapBufferARB = NULL;
+PFNGLGETBUFFERPARAMETERIVARBPROC LDVExtensionsSetup::glGetBufferParameterivARB =
+	NULL;
+PFNGLGETBUFFERPOINTERVARBPROC LDVExtensionsSetup::glGetBufferPointervARB = NULL;
 
 char *LDVExtensionsSetup::wglExtensions = NULL;
 char *LDVExtensionsSetup::glExtensions = NULL;
@@ -177,6 +193,35 @@ BOOL LDVExtensionsSetup::initWindow(void)
 				wglGetProcAddress("glMultiDrawElementsEXT");
 			TREShapeGroup::setGlMultiDrawElementsEXT(glMultiDrawElementsEXT);
 		}
+		if (haveVBOExtension())
+		{
+			glBindBufferARB = (PFNGLBINDBUFFERARBPROC)
+				wglGetProcAddress("glBindBufferARB");
+			glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)
+				wglGetProcAddress("glDeleteBuffersARB");
+			glGenBuffersARB = (PFNGLGENBUFFERSARBPROC)
+				wglGetProcAddress("glGenBuffersARB");
+			glIsBufferARB = (PFNGLISBUFFERARBPROC)
+				wglGetProcAddress("glIsBufferARB");
+			glBufferDataARB = (PFNGLBUFFERDATAARBPROC)
+				wglGetProcAddress("glBufferDataARB");
+			glBufferSubDataARB = (PFNGLBUFFERSUBDATAARBPROC)
+				wglGetProcAddress("glBufferSubDataARB");
+			glGetBufferSubDataARB = (PFNGLGETBUFFERSUBDATAARBPROC)
+				wglGetProcAddress("glGetBufferSubDataARB");
+			glMapBufferARB = (PFNGLMAPBUFFERARBPROC)
+				wglGetProcAddress("glMapBufferARB");
+			glUnmapBufferARB = (PFNGLUNMAPBUFFERARBPROC)
+				wglGetProcAddress("glUnmapBufferARB");
+			glGetBufferParameterivARB = (PFNGLGETBUFFERPARAMETERIVARBPROC)
+				wglGetProcAddress("glGetBufferParameterivARB");
+			glGetBufferPointervARB = (PFNGLGETBUFFERPOINTERVARBPROC)
+				wglGetProcAddress("glGetBufferPointervARB");
+			TREVertexStore::setGlBindBufferARB(glBindBufferARB);
+			TREVertexStore::setGlDeleteBuffersARB(glDeleteBuffersARB);
+			TREVertexStore::setGlGenBuffersARB(glGenBuffersARB);
+			TREVertexStore::setGlBufferDataARB(glBufferDataARB);
+		}
 		glGetIntegerv(GL_STENCIL_BITS, &intValue);
 		if (intValue)
 		{
@@ -309,12 +354,18 @@ bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(void)
 
 bool LDVExtensionsSetup::haveVARExtension(void)
 {
-	return checkForExtension("GL_NV_vertex_array_range");
+	return checkForExtension("GL_NV_vertex_array_range") &&
+		checkForWGLExtension("WGL_NV_allocate_memory");
 }
 
 bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
 {
 	return checkForExtension("GL_EXT_multi_draw_arrays");
+}
+
+bool LDVExtensionsSetup::haveVBOExtension(void)
+{
+	return checkForExtension("GL_ARB_vertex_buffer_object");
 }
 
 bool LDVExtensionsSetup::havePixelFormatExtension(void)

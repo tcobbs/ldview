@@ -21,7 +21,7 @@ public:
 	virtual bool replaceVertex(const TREVertex &vertex, unsigned int index);
 	virtual bool removeVertex(int index);
 	virtual void removeAll(void);
-	virtual const TREVertex &vertexAtIndex(unsigned int index) const;
+	virtual TREVertex &vertexAtIndex(unsigned int index) const;
 	virtual const TREVertex &operator[](unsigned int index) const;
 	int getCount(void) const { return m_count; }
 	virtual bool setCapacity(unsigned newCapacity);

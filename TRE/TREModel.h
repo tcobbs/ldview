@@ -73,7 +73,6 @@ public:
 		TCVector *vertices, TCVector *normals, int count, bool flat = false);
 	virtual void addBFCTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
-//	virtual void draw(void);
 	virtual void compileDefaultColor(void);
 	virtual void compileBFC(void);
 	virtual void compileColored(void);
@@ -91,7 +90,8 @@ public:
 	virtual void drawEdgeLines(void);
 	virtual void drawColoredEdgeLines(void);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
-	virtual bool isPart(void) { return m_flags.part; }
+	virtual bool isPart(void) { return m_flags.part != false; }
+	virtual bool isFlattened(void) { return m_flags.flattened != false; }
 	virtual void flatten(void);
 	virtual void addCylinder(const TCVector &center, float radius, float height,
 		int numSegments, int usedSegments = -1, bool bfc = false);
@@ -119,6 +119,7 @@ public:
 	void unshrinkNormals(float *matrix, float *unshrinkMatrix);
 	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
+	virtual void uncompile(void);
 
 //	static void multMatrix(float* left, float* right, float* result);
 	static void transformVertex(TREVertex &vertex, float *matrix);
@@ -162,6 +163,14 @@ protected:
 		TCVector *triangleNormals);
 	virtual void unMirror(TREModel *originalModel);
 	virtual void invert(TREModel *originalModel);
+	virtual bool checkDefaultColorPresent(void);
+	virtual bool checkBFCPresent(void);
+	virtual bool checkDefaultColorLinesPresent(void);
+	virtual bool checkEdgeLinesPresent(void);
+	virtual bool checkColoredPresent(void);
+	virtual bool checkColoredBFCPresent(void);
+	virtual bool checkColoredLinesPresent(void);
+	virtual bool checkColoredEdgeLinesPresent(void);
 
 	static void setGlNormalize(bool value);
 
@@ -193,6 +202,15 @@ protected:
 		bool unshrunkNormals:1;
 		bool unMirrored:1;
 		bool inverted:1;
+		bool defaultColorPresent:1;
+		bool bfcPresent:1;
+		bool defaultColorLinesPresent:1;
+		bool edgeLinesPresent:1;
+		bool coloredPresent:1;
+		bool coloredBFCPresent:1;
+		bool coloredLinesPresent:1;
+		bool coloredEdgeLinesPresent:1;
+		bool flattened:1;
 	} m_flags;
 
 	static bool sm_normalizeOn;

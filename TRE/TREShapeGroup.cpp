@@ -237,12 +237,6 @@ GLenum TREShapeGroup::modeForShapeType(TREShapeType shapeType)
 	case TRESConditionalLine:
 		return GL_LINES;
 		break;
-	case TRESBFCTriangle:
-		return GL_TRIANGLES;
-		break;
-	case TRESBFCQuad:
-		return GL_QUADS;
-		break;
 	case TRESTriangleStrip:
 		return GL_TRIANGLE_STRIP;
 		break;
@@ -273,12 +267,6 @@ int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 		return 4;
 		break;
 	case TRESConditionalLine:
-		return 4;
-		break;
-	case TRESBFCTriangle:
-		return 3;
-		break;
-	case TRESBFCQuad:
 		return 4;
 		break;
 	default:
@@ -312,32 +300,28 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 
 	if (indexArray)
 	{
-//		int count = indexArray->getCount();
-//		TCULong *values = indexArray->getValues();
-//		int i;
-
 /*
-		printf("TREShapeGroup::drawShapeType\n");
-		for (i = 0; i < count; i++)
+		if (shapeType != TRESLine)
 		{
-			TCULong index = values[i];
-			TREVertex vertex = (*m_vertexStore->getVertices())[index];
-			TREVertex normal = (*m_vertexStore->getNormals())[index];
+			int count = indexArray->getCount();
+			TCULong *values = indexArray->getValues();
+			int i;
+			float matrix[16];
 
-			printf("%10f %10f %10f      ", vertex.v[0], vertex.v[1], vertex.v[2]);
-			printf("%10f %10f %10f\n", normal.v[0], normal.v[1], normal.v[2]);
+			glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+			for (i = 0; i < count; i++)
+			{
+				TCULong index = values[i];
+				TREVertex nv = (*m_vertexStore->getNormals())[index];
+				TCVector normal = TCVector(nv.v[0], nv.v[1], nv.v[2]);
+
+				normal = normal.transformNormal(matrix, false);
+				if (!fEq2(normal.lengthSquared(), 1.0f, 1e-4))
+				{
+					printf("Bad normal: %f\n", normal.length());
+				}
+			}
 		}
-		if (!_CrtIsValidPointer(values, count * 4, TRUE))
-		{
-			printf("Bad Pointer!\n");
-		}
-*/
-/*
-		printf(" count: %d\n", count);
-		printf("values: 0x%08X\n", values);
-		printf("retain: %d\n", indexArray->getRetainCount());
-		printf("    vc: %d\n", m_vertexStore->getVertices()->getCount());
-		printULongArray("", indexArray);
 */
 		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
 			GL_UNSIGNED_INT, indexArray->getValues());
@@ -506,33 +490,6 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 
 void TREShapeGroup::draw(void)
 {
-	drawNonBFC();
-//	drawBFC();
-}
-
-void TREShapeGroup::drawBFC(void)
-{
-	if (m_vertexStore && (m_shapesPresent & (TRESBFCTriangle | TRESBFCQuad)))
-	{
-		// Note that GL_BACK is the default face to cull, and GL_CCW is the
-		// default polygon winding.
-		glEnable(GL_CULL_FACE);
-		if (m_vertexStore->getTwoSidedLightingFlag())
-		{
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
-		}
-		drawShapeType(TRESBFCTriangle);
-		drawShapeType(TRESBFCQuad);
-		if (m_vertexStore->getTwoSidedLightingFlag())
-		{
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-		}
-		glDisable(GL_CULL_FACE);
-	}
-}
-
-void TREShapeGroup::drawNonBFC(void)
-{
 	if (m_vertexStore)
 	{
 		drawShapeType(TRESTriangle);
@@ -598,26 +555,6 @@ int TREShapeGroup::addQuad(TCVector *vertices)
 int TREShapeGroup::addQuad(TCVector *vertices, TCVector *normals)
 {
 	return addShape(TRESQuad, vertices, normals, 4);
-}
-
-int TREShapeGroup::addBFCTriangle(TCVector *vertices)
-{
-	return addShape(TRESBFCTriangle, vertices, 3);
-}
-
-int TREShapeGroup::addBFCTriangle(TCVector *vertices, TCVector *normals)
-{
-	return addShape(TRESBFCTriangle, vertices, normals, 3);
-}
-
-int TREShapeGroup::addBFCQuad(TCVector *vertices)
-{
-	return addShape(TRESBFCQuad, vertices, 4);
-}
-
-int TREShapeGroup::addBFCQuad(TCVector *vertices, TCVector *normals)
-{
-	return addShape(TRESBFCQuad, vertices, normals, 4);
 }
 
 int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
@@ -730,7 +667,8 @@ void TREShapeGroup::unshrinkNormals(float *matrix, float *unshrinkMatrix)
 {
 	int bit;
 
-	for (bit = 1; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
+	// Skip the lines, whose normals don't matter
+	for (bit = TRESTriangle; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
 	{
 		unshrinkNormals(getIndices((TREShapeType)bit), matrix, unshrinkMatrix);
 	}
@@ -783,11 +721,11 @@ void TREShapeGroup::unshrinkNormal(TCULong index, float *matrix,
 								   float *unshrinkMatrix)
 {
 	TREVertexArray *normals = m_vertexStore->getNormals();
-	TREVertex normal = (*normals)[index];
+	TREVertex &normal = normals->vertexAtIndex(index);
 	TCVector newNormal = TCVector(normal.v[0], normal.v[1], normal.v[2]);
-	float adjust;
+	float adjust = newNormal.length();
 
-	if (!fEq(newNormal.length(), 1.0f))
+	if (!fEq(adjust, 1.0f))
 	{
 		printf("Huh?\n");
 	}
@@ -801,7 +739,7 @@ void TREShapeGroup::unshrinkNormal(TCULong index, float *matrix,
 	normal.v[0] *= adjust;
 	normal.v[1] *= adjust;
 	normal.v[2] *= adjust;
-	normals->replaceVertex(normal, index);
+//	normals->replaceVertex(normal, index);
 }
 
 static void invertULongArray(TCULongArray *array, int start = 0, int end = -1)
