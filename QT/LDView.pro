@@ -5,7 +5,7 @@ unix {
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 }
-FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui AboutPanel.ui ErrorPanel.ui ImageHolder.ui 
+FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui AboutPanel.ui ErrorPanel.ui ImageHolder.ui ExtraDirPanel.ui HelpPanel.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png 
 TEMPLATE	=app
 CONFIG	+= qt opengl warn_on release
