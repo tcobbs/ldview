@@ -152,6 +152,7 @@ public:
 	{
 		return section == TREMStud || section == TREMStudBFC;
 	}
+	virtual void openGlWillEnd(void);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);

@@ -2618,8 +2618,18 @@ void LDrawModelViewer::panXY(int xValue, int yValue)
 	}
 //	xPan += xValue / (float)pow(distance, 0.001);
 //	yPan -= yValue / (float)pow(distance, 0.001);
-	xPan += xValue / adjustment / (float)pow(2.0 / distance, 1.1);
-	yPan -= yValue / adjustment / (float)pow(2.0 / distance, 1.1);
+	xPan += xValue / adjustment / (float)pow(2.0 / distance, 1.1) *
+		(float)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
+	yPan -= yValue / adjustment / (float)pow(2.0 / distance, 1.1) *
+		(float)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
+}
+
+void LDrawModelViewer::openGlWillEnd(void)
+{
+	if (mainTREModel)
+	{
+		mainTREModel->openGlWillEnd();
+	}
 }
 
 bool LDrawModelViewer::getCompiled(void)

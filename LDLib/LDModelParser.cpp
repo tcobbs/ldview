@@ -245,6 +245,11 @@ float LDModelParser::startingFraction(const char *filename)
 	int top;
 	int bottom;
 
+	if (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\"))
+	{
+		filename += 3;
+	}
 	sscanf(filename, "%d", &top);
 	sscanf(filename + 2, "%d", &bottom);
 	return (float)top / (float)bottom;
@@ -262,79 +267,126 @@ bool LDModelParser::startsWithFraction2(const char *filename)
 		isdigit(filename[3]) && !isdigit(filename[4]);
 }
 
-bool LDModelParser::isPrimitive(const char *filename, const char *suffix)
+bool LDModelParser::isPrimitive(const char *filename, const char *suffix,
+								bool *is48)
 {
 	int fileLen = strlen(filename);
 	int suffixLen = strlen(suffix);
 
-	return ((fileLen == suffixLen + 3 && startsWithFraction(filename)) ||
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
+	if (((fileLen == suffixLen + 3 && startsWithFraction(filename)) ||
 		(suffixLen <= 8 && fileLen == suffixLen + 4 &&
 		startsWithFraction2(filename))) &&
-		stringHasCaseInsensitiveSuffix(filename, suffix);
+		stringHasCaseInsensitiveSuffix(filename, suffix))
+	{
+		return true;
+	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return isPrimitive(filename + 3, suffix, NULL);
+	}
+	return false;
 }
 
-bool LDModelParser::isCyli(const char *filename)
+bool LDModelParser::isCyli(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "cyli.dat");
+	return isPrimitive(filename, "cyli.dat", is48);
 }
 
-bool LDModelParser::isCyls(const char *filename)
+bool LDModelParser::isCyls(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "cyls.dat");
+	return isPrimitive(filename, "cyls.dat", is48);
 }
 
-bool LDModelParser::isCyls2(const char *filename)
+bool LDModelParser::isCyls2(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "cyls2.dat");
+	return isPrimitive(filename, "cyls2.dat", is48);
 }
 
-bool LDModelParser::isDisc(const char *filename)
+bool LDModelParser::isDisc(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "disc.dat");
+	return isPrimitive(filename, "disc.dat", is48);
 }
 
-bool LDModelParser::isNdis(const char *filename)
+bool LDModelParser::isNdis(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "ndis.dat");
+	return isPrimitive(filename, "ndis.dat", is48);
 }
 
-bool LDModelParser::isEdge(const char *filename)
+bool LDModelParser::isEdge(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "edge.dat");
+	return isPrimitive(filename, "edge.dat", is48);
 }
 
 /*
-bool LDModelParser::isCcyli(const char *filename)
+bool LDModelParser::isCcyli(const char *filename, bool *is48)
 {
-	return isPrimitive(filename, "ccyli.dat");
+	return isPrimitive(filename, "ccyli.dat", is48);
 }
 */
 
-bool LDModelParser::is1DigitCon(const char *filename)
+bool LDModelParser::is1DigitCon(const char *filename, bool *is48)
 {
-	return strlen(filename) == 11 && startsWithFraction(filename) &&
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
+	if (strlen(filename) == 11 && startsWithFraction(filename) &&
 		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
 		isdigit(filename[6]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
+		stringHasCaseInsensitiveSuffix(filename, ".dat"))
+	{
+		return true;
+	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return is1DigitCon(filename + 3, NULL);
+	}
+	return false;
 }
 
-bool LDModelParser::is2DigitCon(const char *filename)
+bool LDModelParser::is2DigitCon(const char *filename, bool *is48)
 {
-	return strlen(filename) == 12 && startsWithFraction(filename) &&
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
+	if (strlen(filename) == 12 && startsWithFraction(filename) &&
 		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
 		isdigit(filename[6]) && isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
+		stringHasCaseInsensitiveSuffix(filename, ".dat"))
+	{
+		return true;
+	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return is1DigitCon(filename + 3, NULL);
+	}
+	return false;
 }
 
-bool LDModelParser::isCon(const char *filename)
+bool LDModelParser::isCon(const char *filename, bool *is48)
 {
-	return is1DigitCon(filename) || is2DigitCon(filename);
+	return is1DigitCon(filename, is48) || is2DigitCon(filename, is48);
 }
 
-bool LDModelParser::isOldRing(const char *filename)
+bool LDModelParser::isOldRing(const char *filename, bool *is48)
 {
 	int len = strlen(filename);
 
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
 	if (len >= 9 && len <= 12 &&
 		stringHasCaseInsensitivePrefix(filename, "ring") &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat"))
@@ -350,74 +402,149 @@ bool LDModelParser::isOldRing(const char *filename)
 		}
 		return true;
 	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return isOldRing(filename + 3, NULL);
+	}
 	else
 	{
 		return false;
 	}
 }
 
-bool LDModelParser::isRing(const char *filename)
+bool LDModelParser::isRing(const char *filename, bool *is48)
 {
-	return strlen(filename) == 12 && startsWithFraction(filename) &&
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
+	if (strlen(filename) == 12 && startsWithFraction(filename) &&
 		stringHasCaseInsensitivePrefix(filename + 3, "ring") &&
 		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
+		stringHasCaseInsensitiveSuffix(filename, ".dat"))
+	{
+		return true;
+	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return isRing(filename + 3, NULL);
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool LDModelParser::isRin(const char *filename)
+bool LDModelParser::isRin(const char *filename, bool *is48)
 {
-	return strlen(filename) == 12 && startsWithFraction(filename) &&
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
+	if (strlen(filename) == 12 && startsWithFraction(filename) &&
 		stringHasCaseInsensitivePrefix(filename + 3, "rin") &&
 		isdigit(filename[6]) && isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
+		stringHasCaseInsensitiveSuffix(filename, ".dat"))
+	{
+		return true;
+	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return isRin(filename + 3, NULL);
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool LDModelParser::isTorus(const char *filename)
+bool LDModelParser::isTorus(const char *filename, bool *is48)
 {
-	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
+	if (is48 != NULL)
+	{
+		*is48 = false;
+	}
+	if (strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
 		isdigit(filename[1]) && isdigit(filename[2]) &&
 		isdigit(filename[4]) && isdigit(filename[7]) && isdigit(filename[6]) &&
 		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
+		stringHasCaseInsensitiveSuffix(filename, ".dat"))
+	{
+		return true;
+	}
+	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
+		stringHasCaseInsensitivePrefix(filename, "48\\")))
+	{
+		*is48 = true;
+		return isTorus(filename + 3, NULL);
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool LDModelParser::isTorusO(const char *filename)
+bool LDModelParser::isTorusO(const char *filename, bool *is48)
 {
-	return isTorus(filename) && toupper(filename[3]) == 'O';
-/*
-	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
-		isdigit(filename[1]) && isdigit(filename[2]) &&
-		toupper(filename[3]) == 'O' && isdigit(filename[4]) &&
-		isdigit(filename[7]) && isdigit(filename[6]) &&
-		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
-*/
+	if (isTorus(filename, is48))
+	{
+		if (is48 != NULL && *is48)
+		{
+			return toupper(filename[6]) == 'O';
+		}
+		else
+		{
+			return toupper(filename[3]) == 'O';
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool LDModelParser::isTorusI(const char *filename)
+bool LDModelParser::isTorusI(const char *filename, bool *is48)
 {
-	return isTorus(filename) && toupper(filename[3]) == 'I';
-/*
-	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
-		isdigit(filename[1]) && isdigit(filename[2]) &&
-		toupper(filename[3]) == 'I' && isdigit(filename[4]) &&
-		isdigit(filename[7]) && isdigit(filename[6]) &&
-		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
-*/
+	if (isTorus(filename, is48))
+	{
+		if (is48 != NULL && *is48)
+		{
+			return toupper(filename[6]) == 'I';
+		}
+		else
+		{
+			return toupper(filename[3]) == 'I';
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 
-bool LDModelParser::isTorusQ(const char *filename)
+bool LDModelParser::isTorusQ(const char *filename, bool *is48)
 {
-	return isTorus(filename) && toupper(filename[3]) == 'Q';
-/*
-	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
-		isdigit(filename[1]) && isdigit(filename[2]) &&
-		toupper(filename[3]) == 'Q' && isdigit(filename[4]) &&
-		isdigit(filename[7]) && isdigit(filename[6]) &&
-		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat");
-*/
+	if (isTorus(filename, is48))
+	{
+		if (is48 != NULL && *is48)
+		{
+			return toupper(filename[6]) == 'Q';
+		}
+		else
+		{
+			return toupper(filename[3]) == 'Q';
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
@@ -535,17 +662,22 @@ float LDModelParser::getTorusFraction(int size)
 	return (float)size / 10000.0f;
 }
 
-bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc)
+bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
 {
 	int numSegments;
 	int size;
 	const char *modelName = treModel->getName();
 	float fraction;
+	int offset = 0;
 
-	sscanf(modelName + 1, "%d", &numSegments);
-	sscanf(modelName + 4, "%d", &size);
+	if (is48)
+	{
+		offset = 3;
+	}
+	sscanf(modelName + 1 + offset, "%d", &numSegments);
+	sscanf(modelName + 4 + offset, "%d", &size);
 	fraction = (float)numSegments / 16.0f;
-	numSegments = getNumCircleSegments(fraction);
+	numSegments = getNumCircleSegments(fraction, is48);
 	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
 		bfc);
@@ -561,26 +693,33 @@ bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc)
 	return true;
 }
 
-bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc)
+bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
+									  bool is48)
 {
 	int numSegments;
 	int size;
 	const char *modelName = treModel->getName();
 	float fraction;
+	int offset = 0;
 
-	sscanf(modelName + 1, "%d", &numSegments);
-	sscanf(modelName + 4, "%d", &size);
+	if (is48)
+	{
+		offset = 3;
+	}
+	sscanf(modelName + 1 + offset, "%d", &numSegments);
+	sscanf(modelName + 4 + offset, "%d", &size);
 	fraction = (float)numSegments / 16.0f;
-	numSegments = getNumCircleSegments(fraction);
+	numSegments = getNumCircleSegments(fraction, is48);
 	treModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
 		bfc);
 	return true;
 }
 
-bool LDModelParser::substituteEighthSphere(TREModel *treModel, bool bfc)
+bool LDModelParser::substituteEighthSphere(TREModel *treModel, bool bfc,
+										   bool is48)
 {
-	int numSegments = getNumCircleSegments(1.0);
+	int numSegments = getNumCircleSegments(1.0, is48);
 
 	treModel->addEighthSphere(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		bfc);
@@ -588,9 +727,9 @@ bool LDModelParser::substituteEighthSphere(TREModel *treModel, bool bfc)
 }
 
 bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
-									   bool bfc)
+									   bool bfc, bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
 		(int)(numSegments * fraction), bfc);
@@ -598,9 +737,9 @@ bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
 }
 
 bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction,
-											 bool bfc)
+											 bool bfc, bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
 		numSegments, (int)(numSegments * fraction), bfc);
@@ -608,18 +747,20 @@ bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction,
 }
 
 bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
-											  float fraction, bool bfc)
+											  float fraction, bool bfc,
+											  bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
 		numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc)
+bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc,
+								   bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		(int)(numSegments * fraction), bfc);
@@ -627,20 +768,21 @@ bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc)
 }
 
 bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction,
-									  bool bfc)
+									  bool bfc, bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		(int)(numSegments * fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction)
+bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction,
+										   bool is48)
 {
 	if (getEdgeLinesFlag())
 	{
-		int numSegments = getNumCircleSegments(fraction);
+		int numSegments = getNumCircleSegments(fraction, is48);
 
 		treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 			(int)(numSegments * fraction));
@@ -649,9 +791,9 @@ bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction)
 }
 
 bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size,
-								   bool bfc)
+								   bool bfc, bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
 		(float)size, 1.0f, numSegments, (int)(numSegments * fraction),
@@ -660,19 +802,23 @@ bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size,
 }
 
 bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size,
-								   bool bfc)
+								   bool bfc, bool is48)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size,
 		(float)size + 1.0f, numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
-int LDModelParser::getNumCircleSegments(float fraction)
+int LDModelParser::getNumCircleSegments(float fraction, bool is48)
 {
 	int retValue = m_curveQuality * LO_NUM_SEGMENTS;
 
+	if (is48 && retValue < 48)
+	{
+		retValue = 48;
+	}
 	if (fraction != 0.0f)
 	{
 		int i;
@@ -692,6 +838,7 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 	if (getPrimitiveSubstitutionFlag())
 	{
 		const char *modelName = ldlModel->getName();
+		bool is48;
 
 		if (!modelName)
 		{
@@ -733,84 +880,110 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		{
 			return substituteEighthSphere(treModel, bfc);
 		}
-		else if (isCyli(modelName))
+		else if (strcasecmp(modelName, "48/1-8sphe.dat") == 0 ||
+			strcasecmp(modelName, "48\\1-8sphe.dat") == 0)
+		{
+			return substituteEighthSphere(treModel, bfc, true);
+		}
+		else if (isCyli(modelName, &is48))
 		{
 			return substituteCylinder(treModel, startingFraction(modelName),
-				bfc);
+				bfc, is48);
 		}
-		else if (isCyls(modelName))
+		else if (isCyls(modelName, &is48))
 		{
 			return substituteSlopedCylinder(treModel,
-				startingFraction(modelName), bfc);
+				startingFraction(modelName), bfc, is48);
 		}
-		else if (isCyls2(modelName))
+		else if (isCyls2(modelName, &is48))
 		{
 			return substituteSlopedCylinder2(treModel,
-				startingFraction(modelName), bfc);
+				startingFraction(modelName), bfc, is48);
 		}
-		else if (isDisc(modelName))
+		else if (isDisc(modelName, &is48))
 		{
-			return substituteDisc(treModel, startingFraction(modelName), bfc);
+			return substituteDisc(treModel, startingFraction(modelName), bfc,
+				is48);
 		}
-		else if (isNdis(modelName))
+		else if (isNdis(modelName, &is48))
 		{
 			return substituteNotDisc(treModel, startingFraction(modelName),
-				bfc);
+				bfc, is48);
 		}
-		else if (isEdge(modelName))
+		else if (isEdge(modelName, &is48))
 		{
 			return substituteCircularEdge(treModel,
-				startingFraction(modelName));
+				startingFraction(modelName), is48);
 		}
 /*
-		else if (isCcyli(modelName))
+		else if (isCcyli(modelName, &is48))
 		{
 			// The file now simply refers to a new torus.
 			// Need to do old-style torus substitution
 		}
 */
-		else if (isCon(modelName))
+		else if (isCon(modelName, &is48))
 		{
 			int size;
+			int offset = 0;
 
-			sscanf(modelName + 6, "%d", &size);
+			if (is48)
+			{
+				offset = 3;
+			}
+			sscanf(modelName + 6 + offset, "%d", &size);
 			return substituteCone(treModel, startingFraction(modelName), size,
-				bfc);
+				bfc, is48);
 		}
-		else if (isOldRing(modelName))
+		else if (isOldRing(modelName, &is48))
 		{
 			int size;
+			int offset = 0;
 
-			sscanf(modelName + 4, "%d", &size);
-			return substituteRing(treModel, 1.0f, size, bfc);
+			if (is48)
+			{
+				offset = 3;
+			}
+			sscanf(modelName + 4 + offset, "%d", &size);
+			return substituteRing(treModel, 1.0f, size, bfc, is48);
 		}
-		else if (isRing(modelName))
+		else if (isRing(modelName, &is48))
 		{
 			int size;
+			int offset = 0;
 
-			sscanf(modelName + 7, "%d", &size);
+			if (is48)
+			{
+				offset = 3;
+			}
+			sscanf(modelName + 7 + offset, "%d", &size);
 			return substituteRing(treModel, startingFraction(modelName), size,
-				bfc);
+				bfc, is48);
 		}
-		else if (isRin(modelName))
+		else if (isRin(modelName, &is48))
 		{
 			int size;
+			int offset = 0;
 
-			sscanf(modelName + 6, "%d", &size);
+			if (is48)
+			{
+				offset = 3;
+			}
+			sscanf(modelName + 6 + offset, "%d", &size);
 			return substituteRing(treModel, startingFraction(modelName), size,
-				bfc);
+				bfc, is48);
 		}
-		else if (isTorusO(modelName))
+		else if (isTorusO(modelName, &is48))
 		{
-			return substituteTorusIO(treModel, false, bfc);
+			return substituteTorusIO(treModel, false, bfc, is48);
 		}
-		else if (isTorusI(modelName))
+		else if (isTorusI(modelName, &is48))
 		{
-			return substituteTorusIO(treModel, true, bfc);
+			return substituteTorusIO(treModel, true, bfc, is48);
 		}
-		else if (isTorusQ(modelName))
+		else if (isTorusQ(modelName, &is48))
 		{
-			return substituteTorusQ(treModel, bfc);
+			return substituteTorusQ(treModel, bfc, is48);
 		}
 	}
 	return false;

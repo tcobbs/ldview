@@ -107,6 +107,7 @@ TREMainModel::~TREMainModel(void)
 
 void TREMainModel::dealloc(void)
 {
+	uncompile();
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
 	TCObject::release(m_vertexStore);
@@ -1024,4 +1025,14 @@ void TREMainModel::setRawStudTextureData(TCByte *data, long length)
 		}
 		mainImage->release();
 	}
+}
+
+void TREMainModel::openGlWillEnd(void)
+{
+	uncompile();
+	m_vertexStore->openGlWillEnd();
+	m_studVertexStore->openGlWillEnd();
+	m_coloredVertexStore->openGlWillEnd();
+	m_coloredStudVertexStore->openGlWillEnd();
+	m_transVertexStore->openGlWillEnd();
 }

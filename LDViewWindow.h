@@ -199,10 +199,9 @@ class LDViewWindow: public CUIWindow
 		virtual void reflectToolbar(void);
 		virtual void reflectPolling(void);
 		virtual void reflectVideoMode(void);
-		virtual void reflectWireframe(void);
-		virtual void reflectSeams(void);
-		virtual void reflectEdges(void);
-		virtual void reflectPrimitiveSubstitution(void);
+		virtual void toolbarCheckReflect(bool &value, bool prefsValue,
+			LPARAM commandID);
+		virtual void toolbarChecksReflect(void);
 		virtual int getStatusBarHeight(void);
 		virtual int getDockedHeight(void);
 		virtual int getToolbarHeight(void);
@@ -236,8 +235,10 @@ class LDViewWindow: public CUIWindow
 		virtual void doSeams(void);
 		virtual void doEdges(void);
 		virtual void doPrimitiveSubstitution(void);
+		virtual void doLighting(void);
 		virtual void doViewAngleDropDown(LPNMTOOLBAR toolbarNot);
 		virtual void doViewAngle(void);
+		virtual bool doToolbarCheck(bool &value, LPARAM commandId);
 
 		void loadSettings(void);
 
@@ -295,6 +296,7 @@ class LDViewWindow: public CUIWindow
 		bool seams;
 		bool edges;
 		bool primitiveSubstitution;
+		bool lighting;
 		LDVAngle lastViewAngle;
 
 		static TCStringArray* recentFiles;

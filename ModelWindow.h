@@ -76,6 +76,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual void forceRedraw(int = 0);
 		virtual void recompile(void);
 		virtual void uncompile(void);
+		virtual void openGlWillEnd(void);
 		virtual void zoom(float);
 		virtual void setClipZoom(bool);
 		virtual bool getClipZoom(void);

@@ -259,6 +259,7 @@ class LDrawModelViewer: public TCObject
 		bool skipCameraPositioning(void);
 		virtual TRECamera &getCamera(void) { return camera; }
 		virtual void zoomToFit(void);
+		virtual void openGlWillEnd(void);
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
 	protected:
