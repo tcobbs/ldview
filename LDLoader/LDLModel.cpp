@@ -1170,4 +1170,3 @@ LDLError *LDLModel::newError(LDLErrorType type, const char* format, ...)
 	return newError(type, format, argPtr);
 	va_end(argPtr);
 }
-

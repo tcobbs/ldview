@@ -149,3 +149,18 @@ LDLFileLineArray *LDLFileLine::getReplacementLines(void)
 {
 	return NULL;
 }
+
+bool LDLFileLine::isXZPlanar(void) const
+{
+	// This returns true if the all the points in this file line have Y == 0.
+	// It is implemented in sub-classes that care.
+	return true;
+}
+
+bool LDLFileLine::isXZPlanar(const float * /*matrix*/) const
+{
+	// This returns true if the all the points in this file line have Y == 0,
+	// after being transformed by matrix.
+	// It is implemented in sub-classes that care.
+	return true;
+}

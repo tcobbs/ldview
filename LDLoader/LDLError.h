@@ -12,6 +12,7 @@ typedef enum
 	LDLEParse,
 	LDLEFileNotFound,
 	LDLEMatrix,
+	LDLEMatrixFailed,
 	LDLEPartDeterminant,
 	LDLENonFlatQuad,
 	LDLEConcaveQuad,

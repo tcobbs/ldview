@@ -39,7 +39,9 @@ const char *LDLError::getTypeName(void)
 	case LDLEFileNotFound:
 		return "File not found error";
 	case LDLEMatrix:
-		return "Degenerate matrix error";
+		return "Singular matrix warning";
+	case LDLEMatrixFailed:
+		return "Singular matrix error";
 	case LDLEPartDeterminant:
 		return "Part transformed non-uniformly error";
 	case LDLENonFlatQuad:
