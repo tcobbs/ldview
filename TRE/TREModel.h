@@ -130,6 +130,8 @@ public:
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addEighthSphere(const TCVector& center, float radius,
 		int numSegments, bool bfc);
+	virtual void addTorusIO(bool inner, const TCVector& center, float yRadius,
+		float xzRadius, int numSegments, int usedSegments, bool bfc);
 	virtual void addOpenCone(const TCVector &center, float radius1,
 		float radius2, float height, int numSegments, int usedSegments = -1,
 		bool bfc = false);
@@ -141,6 +143,9 @@ public:
 		int usedSegments);
 	virtual void addSlopedCylinder2Conditionals(TCVector *points,
 		int numSegments, int usedSegments);
+	virtual void addTorusIOConditionals(bool innder, TCVector *points,
+		int numSegments, int usedSegments, const TCVector& center, float radius,
+		float height);
 	virtual void addEighthSphereConditionals(TCVector *points, int numSegments);
 	TCVector calcIntersection(int i, int j, int num, TCVector* zeroXPoints,
 		TCVector* zeroYPoints, TCVector* zeroZPoints);

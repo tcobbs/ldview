@@ -264,36 +264,10 @@ void LDrawModelViewer::updateCurrentFov(void)
 	}
 }
 
-void LDrawModelViewer::perspectiveView(bool resetViewport)
+float LDrawModelViewer::getClipRadius(void)
 {
-	float nClip;
-	float fClip;
 	float clipRadius;
-	int actualWidth = width / (int)getStereoWidthModifier();
-	float distance;
-	float aspectAdjust = (float)tan(1.0f);
-	TCVector vector;
 
-	if (flags.forceZoomToFit)
-	{
-		zoomToFit();
-	}
-	if (rotationMatrix)
-	{
-		vector = vector.transformPoint(rotationMatrix);
-	}
-	distance = (camera.getPosition() - vector).length();
-	currentFov = fov;
-	updateCurrentFov();
-	if (resetViewport)
-	{
-		glViewport(0, 0, actualWidth, height);
-		flags.needsResize = false;
-	}
-//	printf("aspectRatio1: %f ", aspectRatio);
-	aspectRatio = (float)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
-	aspectRatio = 1.0f;
-//	printf("aspectRatio2: %f\n", aspectRatio);
 	if (flags.autoCenter)
 	{
 		clipRadius = size / 2.0f;
@@ -306,6 +280,34 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 		// camera, we clamp it to be in front.
 		clipRadius = size;
 	}
+	return clipRadius;
+}
+
+void LDrawModelViewer::perspectiveView(bool resetViewport)
+{
+	float nClip;
+	float fClip;
+	float clipRadius = getClipRadius();
+	int actualWidth = width / (int)getStereoWidthModifier();
+	float distance;
+	float aspectAdjust = (float)tan(1.0f);
+
+	if (flags.forceZoomToFit)
+	{
+		zoomToFit();
+	}
+	distance = camera.getPosition().length();
+	currentFov = fov;
+	updateCurrentFov();
+	if (resetViewport)
+	{
+		glViewport(0, 0, actualWidth, height);
+		flags.needsResize = false;
+	}
+//	printf("aspectRatio1: %f ", aspectRatio);
+	aspectRatio = (float)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
+	aspectRatio = 1.0f;
+//	printf("aspectRatio2: %f\n", aspectRatio);
 	nClip = distance - clipRadius * aspectRatio + clipAmount * aspectRatio *
 		clipRadius;
 	if (nClip < size / 1000.0f)
@@ -325,11 +327,14 @@ void LDrawModelViewer::perspectiveViewToClipPlane(void)
 	float nClip;
 	float fClip;
 	float distance = (camera.getPosition()).length();
+	float clipRadius = getClipRadius();
 //	float distance = (camera.getPosition() - center).length();
 
 	nClip = distance - size / 2.0f;
-	fClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
-		size;
+//	fClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
+//		size;
+	fClip = distance - clipRadius * aspectRatio + clipAmount * aspectRatio *
+		clipRadius;
 	if (fClip < size / 1000.0f)
 	{
 		fClip = size / 1000.0f;
@@ -369,9 +374,25 @@ bool LDrawModelViewer::skipCameraPositioning(void)
 
 float LDrawModelViewer::calcDefaultDistance(void)
 {
-	updateCurrentFov();
-	return (float)(size / 2.0 / sin(deg2rad(currentFov / 2.0))) *
-		distanceMultiplier;
+	float margin = getWideLineMargin();
+	float marginAdjust = 1.0f;
+
+	if (margin != 0.0f)
+	{
+		int actualWidth = width / (int)getStereoWidthModifier() * numXTiles;
+		int actualHeight = height * numYTiles;
+
+		if (actualWidth < actualHeight)
+		{
+			marginAdjust = (actualHeight + margin) / actualHeight;
+		}
+		else
+		{
+			marginAdjust = (actualWidth + margin) / actualWidth;
+		}
+	}
+	return (float)(size / 2.0 / sin(deg2rad(fov / 2.0))) * distanceMultiplier *
+		marginAdjust;
 /*
 	double angle1 = deg2rad(90.0f - (currentFov / 2.0));
 	double angle2 = deg2rad(currentFov / 4.0);
@@ -1054,10 +1075,11 @@ void LDrawModelViewer::setupLight(GLenum light)
 	lAmbient[3] = 1.0f;
 	lDiffuse[3] = 1.0f;
 	lSpecular[3] = 1.0f;
-	if (light == GL_LIGHT0)
+	if (light != GL_LIGHT0)
 	{
-		glLightfv(light, GL_AMBIENT, lAmbient);
+		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.0f;
 	}
+	glLightfv(light, GL_AMBIENT, lAmbient);
 	glLightfv(light, GL_SPECULAR, lSpecular);
 	glLightfv(light, GL_DIFFUSE, lDiffuse);
 	glEnable(light);
@@ -1078,7 +1100,6 @@ void LDrawModelViewer::setupLighting(void)
 		else
 		{
 			setupLight(GL_LIGHT1);
-//			glDisable(GL_LIGHT1);
 			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 		}
 		flags.needsLightingSetup = false;
@@ -1159,26 +1180,10 @@ void LDrawModelViewer::loadVGAFont(char *fontFilename)
 	}
 }
 
-void LDrawModelViewer::setupFont(char * /*fontFilename*/)
+void LDrawModelViewer::setupFont(char *fontFilename)
 {
 //	printf("LDrawModelViewer::setupFont\n");
-	return;
-#if 0
 	loadVGAFont(fontFilename);
-/*
-	if (!fontImage)
-	{
-		fontImage = new TCImage;
-
-		fontImage->setFlipped(true);
-		fontImage->setLineAlignment(4);
-		if (!fontImage->loadFile(fontFilename))
-		{
-			fontImage->release();
-			fontImage = NULL;
-		}
-	}
-*/
 	if (fontImage)
 	{
 		int i;
@@ -1226,7 +1231,6 @@ void LDrawModelViewer::setupFont(char * /*fontFilename*/)
 			glEndList();
 		}
 	}
-#endif // 0
 }
 
 void LDrawModelViewer::setupTextures(void)
@@ -1725,7 +1729,7 @@ void LDrawModelViewer::setUseLighting(bool value)
 		{
 			mainTREModel->setLightingFlag(value);
 		}
-//		flags.needsRecompile = true;
+		flags.needsRecompile = true;
 		flags.needsLightingSetup = true;
 	}
 }
@@ -2031,6 +2035,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
+	glEnable(GL_LIGHTING);
 }
 
 /*
@@ -2676,6 +2681,24 @@ char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	return message;
 }
 
+float LDrawModelViewer::getWideLineMargin(void)
+{
+	float margin = 0.0f;
+
+	if (flags.showsHighlightLines && highlightLineWidth > 1.0f)
+	{
+		margin = highlightLineWidth / 2.0f;
+	}
+	if (flags.drawWireframe && wireframeLineWidth > 1.0)
+	{
+		if (wireframeLineWidth / 2.0f > margin)
+		{
+			margin = wireframeLineWidth / 2.0f;
+		}
+	}
+	return margin;
+}
+
 static int _numPoints = 0;
 
 // This is conversion of Lars Hassing's auto camera code from L3P.  It computes
@@ -2693,8 +2716,8 @@ void LDrawModelViewer::zoomToFit(void)
 	if (mainTREModel)
 	{
 		float d;
-		float dh;
-		float dv;
+//		float dh;
+//		float dv;
 		float a[6][6];
 		float b[6];
 		int index[6];
@@ -2707,6 +2730,9 @@ void LDrawModelViewer::zoomToFit(void)
 		tmpMatrix[13] = center[1];
 		tmpMatrix[14] = center[2];
 		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
+		zoomToFitWidth = width * numXTiles / getStereoWidthModifier();
+		zoomToFitHeight = (float)(height * numYTiles);
+		zoomToFitMargin = getWideLineMargin() * 2.0f;
 		preCalcCamera();
 		_numPoints = 0;
 		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
@@ -2715,10 +2741,9 @@ void LDrawModelViewer::zoomToFit(void)
 		char message[1024];
 		sprintf(message, "num points: %d", _numPoints);
 //		MessageBox(NULL, message, "Points", MB_OK);
-		d = (float)(width * numXTiles / getStereoWidthModifier()) /
-			(float)(height * numYTiles);
-		dh = (cameraData->horMax - cameraData->horMin) / d;
-		dv = cameraData->verMax - cameraData->verMin;
+		d = zoomToFitWidth / zoomToFitHeight;
+//		dh = (cameraData->horMax - cameraData->horMin) / d;
+//		dv = cameraData->verMax - cameraData->verMin;
 		memset(a, 0, sizeof(a));
 		memset(b, 0, sizeof(b));
 		a[0][0] = cameraData->normal[0][0];
@@ -2764,7 +2789,8 @@ void LDrawModelViewer::zoomToFit(void)
 			a[4][2] = cameraData->direction[0];
 			a[4][3] = cameraData->direction[2];
 			a[4][5] = -cameraData->direction[0];
-			if (cameraData->direction[1] == 0.0 && cameraData->direction[2] != 0.0)
+			if (cameraData->direction[1] == 0.0 && cameraData->direction[2]
+				!= 0.0)
 			{
 				a[5][1] = -cameraData->direction[2];
 				a[5][2] = cameraData->direction[1];
@@ -2788,13 +2814,15 @@ void LDrawModelViewer::zoomToFit(void)
 		{
 			location[0] = b[0];
 			location[1] = b[1];
-			location[2] = b[2];
+			location[2] = b[2] * (zoomToFitHeight + zoomToFitMargin) /
+				zoomToFitHeight;
 		}
 		else
 		{
 			location[0] = b[3];
 			location[1] = b[4];
-			location[2] = b[5];
+			location[2] = b[5] * (zoomToFitWidth + zoomToFitMargin) /
+				zoomToFitWidth;
 		}
 		location[2] *= distanceMultiplier;
 		camera.setPosition(location - center);
@@ -2818,24 +2846,26 @@ void LDrawModelViewer::scanCameraPoint(const TCVector &point)
 			cameraData->dMin[i] = d;
 		}
 	}
+/*
 	d = cameraData->horizontal.dot(point);
-	if (d < cameraData->horMin)
+	if (d - zoomToFitMargin < cameraData->horMin)
 	{
-		cameraData->horMin = d;
+		cameraData->horMin = d - zoomToFitMargin;
 	}
-	if (d > cameraData->horMax)
+	if (d + zoomToFitMargin > cameraData->horMax)
 	{
-		cameraData->horMax = d;
+		cameraData->horMax = d + zoomToFitMargin;
 	}
 	d = cameraData->vertical.dot(point);
-	if (d < cameraData->verMin)
+	if (d - zoomToFitMargin < cameraData->verMin)
 	{
-		cameraData->verMin = d;
+		cameraData->verMin = d - zoomToFitMargin;
 	}
-	if (d > cameraData->verMax)
+	if (d + zoomToFitMargin > cameraData->verMax)
 	{
-		cameraData->verMax = d;
+		cameraData->verMax = d + zoomToFitMargin;
 	}
+*/
 	_numPoints++;
 }
 
@@ -2847,11 +2877,10 @@ void LDrawModelViewer::preCalcCamera(void)
 
 	delete cameraData;
 	cameraData = new CameraData;
-	if ((width * numXTiles / getStereoWidthModifier()) > (height * numYTiles))
+	if (zoomToFitWidth > zoomToFitHeight)
 	{
 		cameraData->fov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-			(double)(width * numXTiles / getStereoWidthModifier()) /
-			(double)(height * numYTiles))));
+			(double)zoomToFitWidth / (double)zoomToFitHeight)));
 	}
 	else
 	{
@@ -2862,8 +2891,7 @@ void LDrawModelViewer::preCalcCamera(void)
 		(cameraData->horizontal * d);
 	cameraData->normal[3] = cameraData->direction +
 		(cameraData->horizontal * d);
-	d *= (float)(width * numXTiles / getStereoWidthModifier()) /
-		(float)(height * numYTiles);
+	d *= zoomToFitWidth / zoomToFitHeight;
 	cameraData->normal[0] = cameraData->direction -
 		(cameraData->vertical * d);
 	cameraData->normal[1] = cameraData->direction +

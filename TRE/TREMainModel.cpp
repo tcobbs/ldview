@@ -457,6 +457,8 @@ void TREMainModel::drawSolid(void)
 	// information for every vertex.
 	if (getBFCFlag())
 	{
+		m_coloredVertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
 		drawColored(TREMBFC);
 		if (getStudLogoFlag())
 		{
@@ -464,8 +466,7 @@ void TREMainModel::drawSolid(void)
 			m_coloredStudVertexStore->activate(m_mainFlags.compileAll ||
 				m_mainFlags.compileParts);
 			drawColored(TREMStudBFC);
-			// Don't bother to disable GL_TEXTURE_2D; it will be disabled just
-			// below.
+			glDisable(GL_TEXTURE_2D);
 		}
 		deactivateBFC();
 	}

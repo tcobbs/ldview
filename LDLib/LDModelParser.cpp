@@ -171,7 +171,7 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 	TCULong colorNumber = modelLine->getColorNumber();
 	TRESubModel *treSubModel = NULL;
 
-	if (colorNumber == 16)
+	if (colorNumber == 16 || colorNumber == 24)
 	{
 		treSubModel = treParentModel->addSubModel(modelLine->getMatrix(),
 			treModel, invert);
@@ -302,10 +302,12 @@ bool LDModelParser::isEdge(const char *filename)
 	return isPrimitive(filename, "edge.dat");
 }
 
+/*
 bool LDModelParser::isCcyli(const char *filename)
 {
 	return isPrimitive(filename, "ccyli.dat");
 }
+*/
 
 bool LDModelParser::is1DigitCon(const char *filename)
 {
@@ -369,24 +371,52 @@ bool LDModelParser::isRin(const char *filename)
 		stringHasCaseInsensitiveSuffix(filename, ".dat");
 }
 
+bool LDModelParser::isTorus(const char *filename)
+{
+	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
+		isdigit(filename[1]) && isdigit(filename[2]) &&
+		isdigit(filename[4]) && isdigit(filename[7]) && isdigit(filename[6]) &&
+		isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
 bool LDModelParser::isTorusO(const char *filename)
 {
+	return isTorus(filename) && toupper(filename[3]) == 'O';
+/*
 	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
 		isdigit(filename[1]) && isdigit(filename[2]) &&
 		toupper(filename[3]) == 'O' && isdigit(filename[4]) &&
 		isdigit(filename[7]) && isdigit(filename[6]) &&
 		isdigit(filename[7]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat");
+*/
 }
 
 bool LDModelParser::isTorusI(const char *filename)
 {
+	return isTorus(filename) && toupper(filename[3]) == 'I';
+/*
 	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
 		isdigit(filename[1]) && isdigit(filename[2]) &&
 		toupper(filename[3]) == 'I' && isdigit(filename[4]) &&
 		isdigit(filename[7]) && isdigit(filename[6]) &&
 		isdigit(filename[7]) &&
 		stringHasCaseInsensitiveSuffix(filename, ".dat");
+*/
+}
+
+bool LDModelParser::isTorusQ(const char *filename)
+{
+	return isTorus(filename) && toupper(filename[3]) == 'Q';
+/*
+	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
+		isdigit(filename[1]) && isdigit(filename[2]) &&
+		toupper(filename[3]) == 'Q' && isdigit(filename[4]) &&
+		isdigit(filename[7]) && isdigit(filename[6]) &&
+		isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+*/
 }
 
 bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
@@ -487,6 +517,63 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
 				numSegments);
 		}
 	}
+	return true;
+}
+
+float LDModelParser::getTorusFraction(int size)
+{
+	int i;
+
+	for (i = 0; i < 10; i++)
+	{
+		if (size == i + i * 10 + i * 100 + i * 1000)
+		{
+			return (float)i / 9.0f;
+		}
+	}
+	return (float)size / 10000.0f;
+}
+
+bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc)
+{
+	int numSegments;
+	int size;
+	const char *modelName = treModel->getName();
+	float fraction;
+
+	sscanf(modelName + 1, "%d", &numSegments);
+	sscanf(modelName + 4, "%d", &size);
+	fraction = (float)numSegments / 16.0f;
+	numSegments = getNumCircleSegments(fraction);
+	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
+		bfc);
+	treModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
+		bfc);
+	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+		-getTorusFraction(size), numSegments, (int)(numSegments * fraction),
+		bfc);
+	treModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+		-getTorusFraction(size), numSegments, (int)(numSegments * fraction),
+		bfc);
+	return true;
+}
+
+bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc)
+{
+	int numSegments;
+	int size;
+	const char *modelName = treModel->getName();
+	float fraction;
+
+	sscanf(modelName + 1, "%d", &numSegments);
+	sscanf(modelName + 4, "%d", &size);
+	fraction = (float)numSegments / 16.0f;
+	numSegments = getNumCircleSegments(fraction);
+	treModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
+		bfc);
 	return true;
 }
 
@@ -644,7 +731,6 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
 		{
 			return substituteEighthSphere(treModel, bfc);
-			// Need to do eighth sphere substitution
 		}
 		else if (isCyli(modelName))
 		{
@@ -675,10 +761,13 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 			return substituteCircularEdge(treModel,
 				startingFraction(modelName));
 		}
+/*
 		else if (isCcyli(modelName))
 		{
+			// The file now simply refers to a new torus.
 			// Need to do old-style torus substitution
 		}
+*/
 		else if (isCon(modelName))
 		{
 			int size;
@@ -712,11 +801,15 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		}
 		else if (isTorusO(modelName))
 		{
-			// Need to do outer torus substitution
+			return substituteTorusIO(treModel, false, bfc);
 		}
 		else if (isTorusI(modelName))
 		{
-			// Need to do inner torus substitution
+			return substituteTorusIO(treModel, true, bfc);
+		}
+		else if (isTorusQ(modelName))
+		{
+			return substituteTorusQ(treModel, bfc);
 		}
 	}
 	return false;
