@@ -187,3 +187,12 @@ void* TCObjectArray::itemAtIndex(unsigned int index)
 	return TCArray::itemAtIndex(index);
 }
 
+void TCObjectArray::sort(void)
+{
+	sortUsingFunction(sortFunction);
+}
+
+int TCObjectArray::sortFunction(const void *left, const void *right)
+{
+	return (*(const TCObject **)left)->compare(*(const TCObject **)right);
+}

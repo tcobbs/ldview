@@ -21,6 +21,7 @@ class TCExport TCObjectArray : public TCArray
 		/*virtual*/ TCObject* objectAtIndex(unsigned int);
 		/*virtual*/ TCObject* operator[](unsigned int);
 		virtual TCObject *copy(void);
+		virtual void sort(void);
 	protected:
 		virtual ~TCObjectArray(void);
 		virtual void dealloc(void);
@@ -31,6 +32,7 @@ class TCExport TCObjectArray : public TCArray
 		virtual int removeItem(void*);
 		virtual int removeItem(int);
 		virtual void* itemAtIndex(unsigned int);
+		static int sortFunction(const void *left, const void *right);
 };
 
 

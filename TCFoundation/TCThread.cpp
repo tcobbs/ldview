@@ -12,8 +12,8 @@ TCThread::TCThread(TCThreadStartFunction startFunction)
 			 startMemberFunction(NULL),
 			 finishMemberFunction(NULL),
 			 threadManager(TCThreadManager::threadManager()),
-			 started(0),
-			 finished(0),
+			 started(false),
+			 finished(false),
 			 userData(NULL),
 			 returnValue(NULL)
 {
@@ -21,15 +21,16 @@ TCThread::TCThread(TCThreadStartFunction startFunction)
 
 // Don't retain owner because it owns us.
 TCThread::TCThread(TCObject* owner,
-						 TCThreadStartMemberFunction startMemberFunction)
+				   TCThreadStartMemberFunction startMemberFunction)
 			:owner(owner),
 			 startFunction(NULL),
 			 startMemberFunction(startMemberFunction),
 			 finishMemberFunction(NULL),
 			 threadManager(TCThreadManager::threadManager()),
-			 started(0),
-			 finished(0),
-			 userData(NULL)
+			 started(false),
+			 finished(false),
+			 userData(NULL),
+			 returnValue(NULL)
 {
 }
 
@@ -39,6 +40,10 @@ TCThread::~TCThread(void)
 
 void TCThread::dealloc(void)
 {
+	if (started && !finished)
+	{
+		terminate(NULL);
+	}
 	// Don't release owner because it owns us.
 	TCObject::dealloc();
 }
@@ -51,14 +56,14 @@ void TCThread::setUserData(void* value)
 void TCThread::setStarted(void)
 {
 	threadManager->lockExitMutex();
-	started = YES;
+	started = true;
 	threadManager->registerThreadStart(this);
 	threadManager->unlockExitMutex();
 }
 
-int TCThread::getStarted(void)
+bool TCThread::getStarted(void)
 {
-	int value;
+	bool value;
 
 	threadManager->lockExitMutex();
 	value = started;
@@ -75,9 +80,9 @@ void TCThread::setFinished(void)
 	threadManager->unlockExitMutex();
 }
 
-int TCThread::getFinished(void)
+bool TCThread::getFinished(void)
 {
-	int value;
+	bool value;
 
 	threadManager->lockExitMutex();
 	value = finished;
@@ -133,6 +138,8 @@ int TCThread::run(void)
 	}
 	else
 	{
+		pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS);
+		pthread_cleanup_push(cancelCleanupFunction, this);
 		return 1;
 	}
 #endif // _QT
@@ -156,3 +163,33 @@ void TCThread::performFinish(void)
 		((*owner).*finishMemberFunction)(this);
 	}
 }
+
+void TCThread::terminate(THREAD_RET_TYPE exitValue)
+{
+#ifdef WIN32
+	if (started && !finished)
+	{
+		TerminateThread(thread, exitValue);
+		setFinished();
+	}
+#else // WIN32
+#ifdef _QT
+	if (started && !finished)
+	{
+		cancelExitValue = exitValue;
+		pthread_cancel(thread);
+	}
+#endif // _QT
+#endif // WIN32
+}
+
+#ifdef _QT
+void *TCThread::cancelCleanupFunction(void *arg)
+{
+	TCThread *thread = (TCThread *)arg;
+	void *retValue = thread->cancelExitValue;
+
+	tcThread->setFinished();
+	return retValue;
+}
+#endif // _QT

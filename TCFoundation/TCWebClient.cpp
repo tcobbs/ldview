@@ -828,7 +828,7 @@ int TCWebClient::fetchURL(void)
 	return 0;
 }
 
-void* TCWebClient::backgroundFetchURLFunction(TCThread* /*thread*/)
+THREAD_RET_TYPE TCWebClient::backgroundFetchURLFunction(TCThread* /*thread*/)
 {
 	if (fetchURL())
 	{
@@ -838,16 +838,16 @@ void* TCWebClient::backgroundFetchURLFunction(TCThread* /*thread*/)
 	{
 		if (errorString)
 		{
-			return errorString;
+			return (THREAD_RET_TYPE)errorString;
 		}
 		else
 		{
-			return "Unknown Error";
+			return (THREAD_RET_TYPE)"Unknown Error";
 		}
 	}
 }
 
-void* TCWebClient::backgroundFetchHeaderFunction(TCThread* /*thread*/)
+THREAD_RET_TYPE TCWebClient::backgroundFetchHeaderFunction(TCThread* /*thread*/)
 {
 	if (retryCount > 0)
 	{
@@ -862,11 +862,11 @@ void* TCWebClient::backgroundFetchHeaderFunction(TCThread* /*thread*/)
 	{
 		if (errorString)
 		{
-			return errorString;
+			return (THREAD_RET_TYPE)errorString;
 		}
 		else
 		{
-			return "Unknown Error";
+			return (THREAD_RET_TYPE)"Unknown Error";
 		}
 	}
 }

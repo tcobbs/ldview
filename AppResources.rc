@@ -759,7 +759,10 @@ BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
+        MENUITEM "&Save Snapshot...\tCtrl+S",   ID_FILE_SAVE
         MENUITEM "&Reload\tF5",                 ID_FILE_RELOAD
+        MENUITEM "&Cancel Load\tEsc",           ID_FILE_CANCELLOAD
+        MENUITEM SEPARATOR
         POPUP "Po&lling"
         BEGIN
             MENUITEM "&Disabled",                   ID_FILE_POLLING_DISABLED
@@ -768,16 +771,14 @@ BEGIN
             MENUITEM "Auto-&update immediately",    ID_FILE_POLLING_BACKGROUND
 
         END
-        MENUITEM "Save Snapshot...\tCtrl+S",    ID_FILE_SAVE
-        MENUITEM "LDraw Dir...",                ID_FILE_LDRAWDIR
+        MENUITEM "L&Draw Dir...",               ID_FILE_LDRAWDIR
         MENUITEM "&Extra Dirs...",              ID_FILE_EXTRADIRS
-        MENUITEM "Cancel Load\tEsc",            ID_FILE_CANCELLOAD
+        MENUITEM "Check for Library &Updates",  ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
-        MENUITEM "Page Setup...",               ID_FILE_PAGESETUP
+        MENUITEM "P&age Setup...",              ID_FILE_PAGESETUP
         MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",               ID_FILE_EXIT
-        MENUITEM "Download Test",               ID_FILE_DOWNLOADTEST
     END
     POPUP "&Edit"
     BEGIN

@@ -104,3 +104,19 @@ TCObject *TCObject::copy(TCObject *object)
 		return NULL;
 	}
 }
+
+int TCObject::compare(const TCObject *other) const
+{
+	if (this < other)
+	{
+		return -1;
+	}
+	else if (this > other)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}

@@ -20,7 +20,7 @@ class TCExport TCArray : public TCObject
 		virtual int removeItems(int index, int numItems);
 		virtual void removeAll(void);
 		virtual void* itemAtIndex(unsigned int);
-		int getCount(void) { return count; }
+		int getCount(void) const { return count; }
 		virtual int setCapacity(unsigned);
 		virtual void sortUsingFunction(TCArraySortFunction function);
 		void **getItems(void) { return items; }

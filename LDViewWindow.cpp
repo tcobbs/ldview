@@ -11,9 +11,10 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCStringArray.h>
-#include <TCFoundation/TCWebClient.h>
+#include <TCFoundation/TCSortedStringArray.h>
 #include <TCFoundation/TCThreadManager.h>
 #include <CUI/CUIWindowResizer.h>
+#include <LDLib/LDLibraryUpdater.h>
 #include <afxres.h>
 
 #include "ModelWindow.h"
@@ -66,7 +67,8 @@ LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
 			   openGLInfoWindoResizer(NULL),
 			   hOpenGLStatusBar(NULL),
 			   hExamineIcon(NULL),
-			   hFlythroughIcon(NULL)
+			   hFlythroughIcon(NULL),
+			   libraryUpdater(NULL)
 //			   modelWindowShown(false)
 {
 //	DWORD backgroundColor = TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
@@ -2073,63 +2075,28 @@ LRESULT LDViewWindow::doTimer(UINT timerID)
 	return 0;
 }
 
+/*
 void LDViewWindow::fetchHeaderFinish(TCWebClient* webClient)
 {
 	debugPrintf("fetchHeaderFinish: 0x%08X\n", GetCurrentThreadId());
 	webClient->fetchURLInBackground();
 }
-
-void LDViewWindow::fetchURLFinish(TCWebClient* webClient)
-{
-	int dataLength = webClient->getPageLength();
-
-	debugPrintf("fetchURLFinish: 0x%08X\n", GetCurrentThreadId());
-	if (dataLength)
-	{
-		BYTE *data = webClient->getPageData();
-		char *string = new char[dataLength + 1];
-
-		memcpy(string, data, dataLength);
-		string[dataLength] = 0;
-		debugPrintf("Got Page Data!\n");
-		debugPrintf(3, "%s\n", string);
-		delete string;
-	}
-	else
-	{
-		debugPrintf("No Page Data!\n");
-	}
-	webClient->release();
-	setDebugLevel(0);
-}
-
-void LDViewWindow::downloadTest(void)
-{
-	TCWebClient *webClient;
-//	TCThreadManager *threadManager = TCThreadManager::threadManager();
-
-	setDebugLevel(3);
-	debugPrintf("downloadTest: 0x%08X\n", GetCurrentThreadId());
-//	webClient = new TCWebClient("http://www.google.com/");
-	webClient = new TCWebClient("http://www.ldraw.org/cgi-bin/ptreleases.cgi");
-	webClient->setOwner(this);
-	webClient->setFinishHeaderMemberFunction((WebClientFinishMemberFunction)
-		&LDViewWindow::fetchHeaderFinish);
-	webClient->setFinishURLMemberFunction((WebClientFinishMemberFunction)
-		&LDViewWindow::fetchURLFinish);
-/*
-	if (webClient->fetchURL())
-	{
-		fetchURLFinish(webClient);
-	}
-	else
-	{
-		webClient->release();
-		setDebugLevel(0);
-	}
 */
-	webClient->fetchHeaderInBackground();
-	setTimer(DOWNLOAD_TIMER, 250);
+
+void LDViewWindow::checkForLibraryUpdates(void)
+{
+	if (libraryUpdater)
+	{
+		MessageBox(hWindow, "Already checking for updates.", "Error", MB_OK);
+	}
+	else
+	{
+		libraryUpdater = new LDLibraryUpdater;
+		
+		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+		libraryUpdater->setLdrawDir(getLDrawDir());
+		libraryUpdater->checkForUpdates();
+	}
 }
 
 LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
@@ -2185,8 +2152,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			shutdown();
 			return 0;
 			break;
-		case ID_FILE_DOWNLOADTEST:
-			downloadTest();
+		case ID_FILE_CHECKFORLIBUPDATES:
+			checkForLibraryUpdates();
 			return 0;
 			break;
 		case ID_VIEW_FULLSCREEN:
