@@ -184,6 +184,7 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
 	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
 	{
+		m_flags.loadingPrimitive = true;
 		return subModelFile;
 	}
 	sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
@@ -226,6 +227,10 @@ bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
 	{
 		subModel->m_flags.part = true;
 //		subModel->m_flags.bfcCertify = BFCForcedOnState;
+	}
+	if (m_flags.loadingPrimitive)
+	{
+		subModel->m_flags.primitive = true;
 	}
 	if (subModelFile && !subModel->load(subModelFile))
 	{
@@ -337,14 +342,17 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 	}
 	else if (commentLine->isPartMeta())
 	{
+		// No matter what the comment says, remember that a primitive cannot
+		// be a part, so if we found the file in the P directory, then by
+		// definition it isn't a part.
 		if (m_flags.mainModelLoaded)
 		{
-			if (m_activeMPDModel)
+			if (m_activeMPDModel && !m_activeMPDModel->isPrimitive())
 			{
 				m_activeMPDModel->m_flags.part = true;
 			}
 		}
-		else
+		else if (!isPrimitive())
 		{
 			m_flags.part = true;
 			// This is now a part, so if we've already hit a BFC CERTIFY line
