@@ -137,6 +137,8 @@ void LDViewPreferences::applyGeometrySettings(void)
 		modelViewer->setUseWireframeFog(useWireframeFog);
 		modelViewer->setRemoveHiddenLines(removeHiddenLines);
 		modelViewer->setWireframeLineWidth((GLfloat)wireframeThickness);
+		modelViewer->setBfc(bfc);
+		modelViewer->setRedBackFaces(redBackFaces);
 		modelViewer->setShowsHighlightLines(showsHighlightLines);
 		modelViewer->setEdgesOnly(edgesOnly);
 		modelViewer->setDrawConditionalHighlights(drawConditionalHighlights);
@@ -227,6 +229,8 @@ void LDViewPreferences::loadDefaultGeometrySettings(void)
 	useWireframeFog = false;
 	removeHiddenLines = false;
 	wireframeThickness = 1;
+	bfc = true;
+	redBackFaces = false;
 	showsHighlightLines = false;
 	edgesOnly = false;
 	drawConditionalHighlights = false;
@@ -325,6 +329,9 @@ void LDViewPreferences::loadGeometrySettings(void)
 		(long)removeHiddenLines) != 0;
 	wireframeThickness = TCUserDefaults::longForKey(WIREFRAME_THICKNESS_KEY,
 		wireframeThickness);
+	bfc = TCUserDefaults::longForKey(BFC_KEY, (long)bfc) != 0;
+	redBackFaces = TCUserDefaults::longForKey(RED_BACK_FACES_KEY,
+		(long)redBackFaces) != 0;
 	showsHighlightLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
 		(long)showsHighlightLines) != 0;
 	edgesOnly = TCUserDefaults::longForKey(EDGES_ONLY_KEY, (long)edgesOnly)
@@ -1218,6 +1225,12 @@ void LDViewPreferences::applyGeometryChanges(void)
 			IDC_WIREFRAME_THICKNESS, TBM_GETPOS, 0, 0);
 		TCUserDefaults::setLongForKey(wireframeThickness, 
 			WIREFRAME_THICKNESS_KEY);
+		bfc = SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0) !=
+			0;
+		TCUserDefaults::setLongForKey(bfc, BFC_KEY);
+		redBackFaces = SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES,
+			BM_GETCHECK, 0, 0) != 0;
+		TCUserDefaults::setLongForKey(redBackFaces, RED_BACK_FACES_KEY);
 		showsHighlightLines = SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS,
 			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(showsHighlightLines,
@@ -1449,6 +1462,9 @@ void LDViewPreferences::doGeometryClick(int controlId, HWND /*controlHWnd*/)
 			break;
 		case IDC_WIREFRAME:
 			doWireframe();
+			break;
+		case IDC_BFC:
+			doBfc();
 			break;
 		case IDC_SEAMS:
 			doSeams();
@@ -1975,6 +1991,18 @@ void LDViewPreferences::doWireframe(void)
 	}
 }
 
+void LDViewPreferences::doBfc(void)
+{
+	if (SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0))
+	{
+		enableBfc();
+	}
+	else
+	{
+		disableBfc();
+	}
+}
+
 void LDViewPreferences::doLighting(void)
 {
 	if (SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_GETCHECK, 0, 0))
@@ -2199,6 +2227,16 @@ void LDViewPreferences::disableWireframe(void)
 	EnableWindow(hWireframeThicknessSlider, FALSE);
 }
 
+void LDViewPreferences::enableBfc(void)
+{
+	EnableWindow(hRedBackFacesButton, TRUE);
+}
+
+void LDViewPreferences::disableBfc(void)
+{
+	EnableWindow(hRedBackFacesButton, FALSE);
+}
+
 void LDViewPreferences::setupWireframe(void)
 {
 	hWireframeFogButton = GetDlgItem(hGeometryPage, IDC_WIREFRAME_FOG);
@@ -2223,6 +2261,22 @@ void LDViewPreferences::setupWireframe(void)
 	else
 	{
 		disableWireframe();
+	}
+}
+
+void LDViewPreferences::setupBfc(void)
+{
+	hRedBackFacesButton = GetDlgItem(hGeometryPage, IDC_RED_BACK_FACES);
+	SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_SETCHECK, bfc, 0);
+	SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
+		redBackFaces, 0);
+	if (bfc)
+	{
+		enableBfc();
+	}
+	else
+	{
+		disableBfc();
 	}
 }
 
@@ -2318,6 +2372,7 @@ void LDViewPreferences::setupGeometryPage(void)
 	hGeometryPage = hwndArray->pointerAtIndex(geometryPageNumber);
 	setupModelGeometry();
 	setupWireframe();
+	setupBfc();
 	setupEdgeLines();
 }
 

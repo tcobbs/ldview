@@ -113,6 +113,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.autoCenter = true;
 	flags.forceZoomToFit = false;
 	flags.defaultTrans = false;
+	flags.bfc = true;
+	flags.redBackFaces = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -698,6 +700,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setSortTransparentFlag(flags.sortTransparent);
 			modelParser->setStippleFlag(flags.useStipple);
 			modelParser->setWireframeFlag(flags.drawWireframe);
+			modelParser->setBFCFlag(flags.bfc);
+			modelParser->setRedBackFacesFlag(flags.redBackFaces);
 			if (flags.showsHighlightLines)
 			{
 				// Note that the default for all of these is false.
@@ -1478,6 +1482,31 @@ void LDrawModelViewer::setBackgroundRGBA(int r, int g, int b, int a)
 	backgroundG = (GLclampf)g / 255.0f;
 	backgroundB = (GLclampf)b / 255.0f;
 	backgroundA = (GLclampf)a / 255.0f;
+}
+
+void LDrawModelViewer::setRedBackFaces(bool value)
+{
+	if (value != flags.redBackFaces)
+	{
+		flags.redBackFaces = value;
+		if (flags.bfc)
+		{
+			flags.needsReload = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setBfc(bool value)
+{
+	if (value != flags.bfc)
+	{
+		flags.bfc = value;
+		flags.needsReload = true;
+		if (flags.redBackFaces)
+		{
+			flags.needsMaterialSetup = true;
+		}
+	}
 }
 
 void LDrawModelViewer::setDrawWireframe(bool value)

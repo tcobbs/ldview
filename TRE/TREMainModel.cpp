@@ -68,6 +68,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.showAllConditional = false;
 	m_mainFlags.conditionalControlPoints = false;
 	m_mainFlags.studLogo = true;
+	m_mainFlags.redBackFaces = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -140,22 +141,39 @@ TCDictionary *TREMainModel::getLoadedModels(bool bfc)
 
 void TREMainModel::activateBFC(void)
 {
-	// Note that GL_BACK is the default face to cull, and GL_CCW is the
-	// default polygon winding.
-	glEnable(GL_CULL_FACE);
-	if (getTwoSidedLightingFlag() && getLightingFlag())
+	if (getRedBackFacesFlag())
 	{
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+		float mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+
+		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+		glMaterialfv(GL_BACK, GL_DIFFUSE, mRed);
+	}
+	else
+	{
+		// Note that GL_BACK is the default face to cull, and GL_CCW is the
+		// default polygon winding.
+		glEnable(GL_CULL_FACE);
+		if (getTwoSidedLightingFlag() && getLightingFlag())
+		{
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+		}
 	}
 }
 
 void TREMainModel::deactivateBFC(void)
 {
-	if (getTwoSidedLightingFlag() && getLightingFlag())
+	if (getRedBackFacesFlag())
 	{
-		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 	}
-	glDisable(GL_CULL_FACE);
+	else
+	{
+		if (getTwoSidedLightingFlag() && getLightingFlag())
+		{
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		}
+		glDisable(GL_CULL_FACE);
+	}
 }
 
 /*

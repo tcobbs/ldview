@@ -59,6 +59,8 @@ public:
 	}
 	void setBFCFlag(bool value) { m_mainFlags.bfc = value; }
 	bool getBFCFlag(void) { return m_mainFlags.bfc != false; }
+	void setRedBackFacesFlag(bool value) { m_mainFlags.redBackFaces = value; }
+	bool getRedBackFacesFlag(void) { return m_mainFlags.redBackFaces != false; }
 	void setAALinesFlag(bool value) { m_mainFlags.aaLines = value; }
 	bool getAALinesFlag(void) { return m_mainFlags.aaLines != false; }
 	void setSortTransparentFlag(bool value)
@@ -208,6 +210,7 @@ protected:
 		bool conditionalControlPoints:1;
 		bool polygonOffset:1;
 		bool studLogo:1;
+		bool redBackFaces:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

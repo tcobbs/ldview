@@ -145,6 +145,10 @@ class LDrawModelViewer: public TCObject
 		float getSeamWidth(void) { return seamWidth; }
 		virtual void setDrawWireframe(bool);
 		bool getDrawWireframe(void) { return flags.drawWireframe; }
+		virtual void setBfc(bool value);
+		bool getBfc(void) { return flags.bfc != false; }
+		virtual void setRedBackFaces(bool value);
+		bool getRedBackFaces(void) { return flags.redBackFaces != false; }
 		virtual void setUseWireframeFog(bool);
 		bool getUseWireframeFog(void) { return flags.useWireframeFog; }
 		virtual void setRemoveHiddenLines(bool value);
@@ -411,6 +415,8 @@ class LDrawModelViewer: public TCObject
 			bool autoCenter:1;
 			bool forceZoomToFit:1;
 			bool defaultTrans:1;
+			bool bfc:1;
+			bool redBackFaces:1;
 		} flags;
 		struct CameraData
 		{

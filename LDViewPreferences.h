@@ -45,6 +45,8 @@ public:
 	int getUseSeams(void) { return useSeams; }
 	int getSeamWidth(void) { return seamWidth; }
 	bool getDrawWireframe(void) { return drawWireframe; }
+	bool getBfc(void) { return bfc; }
+	bool getRedBackFaces(void) { return redBackFaces; }
 	bool getUseWireframeFog(void) { return useWireframeFog; }
 	bool getRemoveHiddenLines(void) { return removeHiddenLines; }
 	bool getUsePolygonOffset(void) { return usePolygonOffset; }
@@ -103,6 +105,7 @@ protected:
 	virtual void doHighlights(void);
 	virtual void doConditionals(void);
 	virtual void doWireframe(void);
+	virtual void doBfc(void);
 	virtual void doLighting(void);
 	virtual void doStereo(void);
 	virtual void doCutaway(void);
@@ -142,10 +145,13 @@ protected:
 	virtual void setupAntialiasing(void);
 	virtual void setupModelGeometry(void);
 	virtual void setupWireframe(void);
+	virtual void setupBfc(void);
 	virtual void setupSubstitution(void);
 	virtual void setupPrefSetsList(void);
 	virtual void enableWireframe(void);
 	virtual void disableWireframe(void);
+	virtual void enableBfc(void);
+	virtual void disableBfc(void);
 	virtual void setupEdgeLines(void);
 	virtual void enableEdges(void);
 	virtual void disableEdges(void);
@@ -238,6 +244,8 @@ protected:
 	bool useWireframeFog;
 	bool removeHiddenLines;
 	long wireframeThickness;
+	bool bfc;
+	bool redBackFaces;
 	bool showsHighlightLines;
 	bool drawConditionalHighlights;
 	bool showAllConditionalLines;
@@ -299,6 +307,7 @@ protected:
 	HWND hRemoveHiddenLinesButton;
 	HWND hWireframeThicknessLabel;
 	HWND hWireframeThicknessSlider;
+	HWND hRedBackFacesButton;
 	HWND hEdgesOnlyButton;
 	HWND hConditionalHighlightsButton;
 	HWND hShowAllConditionalButton;
