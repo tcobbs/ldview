@@ -18,6 +18,7 @@
 #include "UserDefaultsKeys.h"
 #include <CUI/CUIWindowResizer.h>
 #include <TRE/TREMainModel.h>
+#include <windowsx.h>
 
 #define DISTANCE_MULT 1.325f
 
@@ -32,11 +33,44 @@
 #define MAX_SNAPSHOT_WIDTH 10000
 #define MAX_SNAPSHOT_HEIGHT 10000
 
+#ifndef ListView_SetCheckState
+   #define ListView_SetCheckState(hwndLV, i, fCheck) \
+      ListView_SetItemState(hwndLV, i, \
+      INDEXTOSTATEIMAGEMASK((fCheck)+1), LVIS_STATEIMAGEMASK)
+#endif
+
 ControlInfo::ControlInfo(void)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "ControlInfo");
 #endif
+}
+
+ErrorInfo::ErrorInfo(void)
+	:m_typeName(NULL)
+{
+#ifdef _LEAK_DEBUG
+	strcpy(className, "ErrorInfo");
+#endif
+}
+
+ErrorInfo::~ErrorInfo(void)
+{
+}
+
+void ErrorInfo::dealloc(void)
+{
+	delete m_typeName;
+	TCObject::dealloc();
+}
+
+void ErrorInfo::setTypeName(const char *typeName)
+{
+	if (typeName != m_typeName)
+	{
+		delete m_typeName;
+		m_typeName = copyString(typeName);
+	}
 }
 
 ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
@@ -58,7 +92,7 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 hErrorWindow(NULL),
 			 errors(new LDLErrorArray),
 			 errorTreePopulated(false),
-			 topRightErrorControls(NULL),
+			 errorInfos(NULL),
 			 prefs(new LDViewPreferences(parentWindow->getHInstance(),
 				modelViewer)),
 			 applyingPrefs(false),
@@ -73,7 +107,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 hCurrentDC(NULL),
 			 hCurrentGLRC(NULL),
 			 errorWindowResizer(NULL),
-			 savingFromCommandLine(false)
+			 savingFromCommandLine(false),
+			 skipErrorUpdates(false)
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
@@ -145,10 +180,8 @@ void ModelWindow::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
-	if (topRightErrorControls)
-	{
-		topRightErrorControls->release();
-	}
+	TCObject::release(errorInfos);
+	errorInfos = NULL;
 	if (prefs)
 	{
 		prefs->release();
@@ -885,6 +918,31 @@ BOOL ModelWindow::doErrorTreeKeyDown(LPNMTVKEYDOWN notification)
 	return FALSE;
 }
 
+BOOL ModelWindow::doErrorWindowNotify(LPNMHDR notification)
+{
+//	debugPrintf("ModelWindow::doErrorWindowNotify: %d\n", notification->code);
+	switch (notification->code)
+	{
+	case LVN_ITEMCHANGED:
+		LPNMLISTVIEW info = (LPNMLISTVIEW)notification;
+		if (info->uNewState != info->uOldState)
+		{
+			BOOL value = ListView_GetCheckState(hErrorList, info->iItem);
+			ErrorInfo *errorInfo = (*errorInfos)[info->iItem];
+
+			TCUserDefaults::setLongForKey(value,
+				getErrorKey(errorInfo->getType()), false);
+			if (!skipErrorUpdates)
+			{
+				clearErrorTree();
+				populateErrorTree();
+			}
+		}
+		break;
+	}
+	return FALSE;
+}
+
 BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 {
 //	debugPrintf("ModelWindow::doErrorTreeNotify: %d\n", notification->code);
@@ -931,9 +989,16 @@ BOOL ModelWindow::doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification)
 {
 //	debugPrintf("ModelWindow::doDialogNotify: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
 //		controlId, notification->code);
-	if (hDlg == hErrorWindow && controlId == IDC_ERROR_TREE)
+	if (hDlg == hErrorWindow)
 	{
-		return doErrorTreeNotify(notification);
+		if (controlId == IDC_ERROR_TREE)
+		{
+			return doErrorTreeNotify(notification);
+		}
+		else
+		{
+			return doErrorWindowNotify(notification);
+		}
 	}
 	else if (hDlg == hSaveDialog)
 	{
@@ -950,24 +1015,6 @@ BOOL ModelWindow::doErrorSize(WPARAM sizeType, int newWidth, int newHeight)
 		MAKELPARAM(newWidth, newHeight));
 	GetClientRect(hErrorWindow, &sizeRect);
 	errorWindowResizer->resize(newWidth, newHeight);
-/*
-	MoveWindow(hErrorTree, errorTreeX, errorTreeY,
-		newWidth - errorTreeRight - errorTreeX,
-		newHeight - errorTreeBottom - errorTreeY, TRUE);
-	MoveWindow(hErrorOk, newWidth - errorOkX, newHeight - errorOkY,
-		errorOkWidth, errorOkHeight, TRUE);
-*/
-/*
-	for (int i = topRightErrorControls->getCount() - 1; i >= 0; i--)
-	{
-		ControlInfo *controlInfo = (*topRightErrorControls)[i];
-		RECT rect = controlInfo->originalRect;
-
-		MoveWindow(controlInfo->handle, newWidth - errorWindowWidth +
-			rect.left, rect.top, rect.right - rect.left,
-			rect.bottom - rect.top, TRUE);
-	}
-*/
 	return FALSE;
 }
 
@@ -990,7 +1037,7 @@ BOOL ModelWindow::doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo)
 		calcSystemSizes();
 		minMaxInfo->ptMaxSize.x = systemMaxWidth;
 		minMaxInfo->ptMaxSize.y = systemMaxHeight;
-		minMaxInfo->ptMinTrackSize.x = 300;
+		minMaxInfo->ptMinTrackSize.x = 475;
 		minMaxInfo->ptMinTrackSize.y = 260;
 		minMaxInfo->ptMaxTrackSize.x = systemMaxTrackWidth;
 		minMaxInfo->ptMaxTrackSize.y = systemMaxTrackHeight;
@@ -1018,29 +1065,50 @@ char* ModelWindow::getErrorKey(LDLErrorType errorType)
 
 BOOL ModelWindow::doErrorClick(int controlId, HWND /*controlHWnd*/)
 {
-	if (controlId == IDCANCEL/* || controlId == IDOK*/)
+	switch (controlId)
 	{
+	case IDCANCEL:
 		return doErrorOK();
-	}
-	else if (controlId >= IDC_PARSE_ERROR && controlId <= IDC_COLINEAR_POINTS)
-	{
-		ControlInfo *controlInfo = (*topRightErrorControls)[controlId -
-			IDC_PARSE_ERROR + 1];
-		int value = SendDlgItemMessage(hErrorWindow, controlId, BM_GETCHECK, 0,
-			0);
-
-		TCUserDefaults::setLongForKey(value,
-			getErrorKey(controlInfo->errorType), false);
-		clearErrorTree();
-		populateErrorTree();
-	}
-	else if (controlId == IDC_COPY_ERROR)
-	{
+		break;
+	case IDC_COPY_ERROR:
 		if (!doErrorTreeCopy())
 		{
 			MessageBeep(MB_OK);
 		}
+		break;
+	case IDC_SHOW_WARNINGS:
+		int value;
+
+		value = SendDlgItemMessage(hErrorWindow, controlId, BM_GETCHECK,
+			0, 0);
+		TCUserDefaults::setLongForKey(value, SHOW_WARNINGS_KEY, false);
+		clearErrorTree();
+		populateErrorTree();
+		break;
+	case IDC_ERROR_SHOW_ALL:
+		return setAllErrorsSelected(true);
+		break;
+	case IDC_ERROR_SHOW_NONE:
+		return setAllErrorsSelected(false);
+		break;
 	}
+	return TRUE;
+}
+
+BOOL ModelWindow::setAllErrorsSelected(bool selected)
+{
+	int i;
+	int count = errorInfos->getCount();
+	BOOL state = selected ? TRUE : FALSE;
+
+	skipErrorUpdates = true;
+	for (i = 0; i < count; i++)
+	{
+		ListView_SetCheckState(hErrorList, i, state);
+	}
+	skipErrorUpdates = false;
+	clearErrorTree();
+	populateErrorTree();
 	return TRUE;
 }
 
@@ -1201,6 +1269,7 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 	TVITEMEX item;
 
 	stripCRLF(line);
+	memset(&item, 0, sizeof(item));
 	item.mask = TVIF_TEXT | TVIF_PARAM;
 	item.pszText = line;
 	item.lParam = (LPARAM)error;
@@ -1293,8 +1362,15 @@ bool ModelWindow::showsError(LDLError *error)
 
 	if (error->getLevel() == LDLAWarning)
 	{
-		return TCUserDefaults::longForKey(getErrorKey(errorType), 0, false) !=
-			0;
+		if (TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0, false))
+		{
+			return TCUserDefaults::longForKey(getErrorKey(errorType), 0, false)
+				!= 0;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{
@@ -1308,16 +1384,35 @@ BOOL ModelWindow::showsErrorType(LDLErrorType errorType)
 	return TCUserDefaults::longForKey(getErrorKey(errorType), 1, false);
 }
 
+void ModelWindow::populateErrorInfos(void)
+{
+	if (!errorInfos)
+	{
+		int i;
+
+		errorInfos = new ErrorInfoArray;
+		for (i = LDLEGeneral; i <= LDLEMPDError; i++)
+		{
+			ErrorInfo *errorInfo = new ErrorInfo;
+			LDLErrorType type = (LDLErrorType)i;
+
+			errorInfo->setType(type);
+			errorInfo->setTypeName(LDLError::getTypeName(type));
+			errorInfos->addObject(errorInfo);
+			errorInfo->release();
+		}
+	}
+}
+
 void ModelWindow::setupErrorWindow(void)
 {
 	HIMAGELIST himl;  // handle to image list
 	HBITMAP hbmp;     // handle to bitmap
 	HBITMAP hMask;
-	RECT treeRect;
-//	RECT okRect;
-	RECT windowRect;
-	POINT clientPoint;
+	long showWarnings = TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0, false);
 
+	populateErrorInfos();
+	populateErrorList();
 	memset(errorImageIndices, 0, sizeof(errorImageIndices));
 	if (errorWindowResizer)
 	{
@@ -1327,7 +1422,20 @@ void ModelWindow::setupErrorWindow(void)
 	errorWindowResizer->setHWindow(hErrorWindow);
 	errorWindowResizer->addSubWindow(IDC_ERROR_TREE,
 		CUISizeHorizontal | CUISizeVertical);
+	errorWindowResizer->addSubWindow(IDC_COPY_ERROR,
+		CUIFloatLeft | CUIFloatTop);
+	errorWindowResizer->addSubWindow(IDC_ERROR_SHOW_ALL,
+		CUIFloatLeft | CUIFloatTop);
+	errorWindowResizer->addSubWindow(IDC_ERROR_SHOW_NONE,
+		CUIFloatLeft | CUIFloatTop);
+	errorWindowResizer->addSubWindow(IDC_SHOW_WARNINGS, CUIFloatTop);
+	errorWindowResizer->addSubWindow(IDC_SHOW_ERRORS,
+		CUIFloatLeft | CUISizeVertical);
+	errorWindowResizer->addSubWindow(IDC_ERROR_LIST,
+		CUIFloatLeft | CUISizeVertical);
 
+	SendDlgItemMessage(hErrorWindow, IDC_SHOW_WARNINGS, BM_SETCHECK,
+		showWarnings, 0);
 	// Create the image list.
 	if ((himl = ImageList_Create(16, 16, ILC_COLOR | ILC_MASK, 8, 0)) == NULL)
 		return;
@@ -1342,12 +1450,19 @@ void ModelWindow::setupErrorWindow(void)
 	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE));
 	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE_MASK));
 	errorImageIndices[LDLEParse] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEGeneral] = errorImageIndices[LDLEParse];
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_FNF));
 	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_FNF_MASK));
 	errorImageIndices[LDLEFileNotFound] = ImageList_Add(himl, hbmp, hMask);
+	DeleteObject(hbmp);
+	DeleteObject(hMask);
+
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_MATRIX));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_MATRIX_MASK));
+	errorImageIndices[LDLEMatrix] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
@@ -1358,6 +1473,13 @@ void ModelWindow::setupErrorWindow(void)
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_NON_FLAT_QUAD));
+	hMask = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_NON_FLAT_QUAD_MASK));
+	errorImageIndices[LDLENonFlatQuad] = ImageList_Add(himl, hbmp, hMask);
+	DeleteObject(hbmp);
+	DeleteObject(hMask);
+
 	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
 	hMask = LoadBitmap(getLanguageModule(),
 		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_MASK));
@@ -1365,6 +1487,8 @@ void ModelWindow::setupErrorWindow(void)
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
+	// Not sure this error is possible.  I can't figure out how to make it
+	// happen.
 	hbmp = LoadBitmap(getLanguageModule(),
 		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT));
 	hMask = LoadBitmap(getLanguageModule(),
@@ -1373,11 +1497,13 @@ void ModelWindow::setupErrorWindow(void)
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
+/*
 	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_OPENGL));
 	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_OPENGL_MASK));
 	errorImageIndices[LDLEOpenGL] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
+*/
 
 /*
 	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLOR));
@@ -1390,65 +1516,6 @@ void ModelWindow::setupErrorWindow(void)
 	// Associate the image list with the tree view control.
 	TreeView_SetImageList(hErrorTree, himl, TVSIL_NORMAL);
 //	TreeView_SetItemHeight(hErrorTree, 18);
-
-	GetClientRect(hErrorWindow, &windowRect);
-	clientPoint.x = windowRect.left;
-	clientPoint.y = windowRect.top;
-	ClientToScreen(hErrorWindow, &clientPoint);
-
-	GetWindowRect(hErrorTree, &treeRect);
-	errorTreeX = treeRect.left - clientPoint.x;
-	errorTreeY = treeRect.top - clientPoint.y;
-	errorTreeRight = windowRect.right - (treeRect.right - treeRect.left) -
-		errorTreeX;
-	errorTreeBottom = windowRect.bottom - (treeRect.bottom - treeRect.top) -
-		errorTreeY;
-
-/*
-	GetWindowRect(hErrorOk, &okRect);
-	errorOkX = windowRect.right - (okRect.left - treeRect.left) - errorTreeX;
-	errorOkY = windowRect.bottom - (okRect.top - treeRect.top ) - errorTreeY;
-	errorOkWidth = okRect.right - okRect.left;
-	errorOkHeight = okRect.bottom - okRect.top;
-*/
-
-	if (topRightErrorControls)
-	{
-		topRightErrorControls->release();
-	}
-	topRightErrorControls = new ControlInfoArray;
-	errorWindowWidth = windowRect.right - windowRect.left;
-	for (int i = IDC_SHOW_ERRORS; i <= IDC_COPY_ERROR; i++)
-	{
-		ControlInfo* controlInfo = new ControlInfo;
-//		RECT rect;
-
-		errorWindowResizer->addSubWindow(i, CUIFloatLeft);
-/*
-		controlInfo->controlId = i;
-		controlInfo->handle = GetDlgItem(hErrorWindow, i);
-		GetWindowRect(controlInfo->handle, &rect);
-		controlInfo->originalRect.left = rect.left - clientPoint.x;
-		controlInfo->originalRect.top = rect.top - clientPoint.y;
-		controlInfo->originalRect.right = rect.right - clientPoint.x;
-		controlInfo->originalRect.bottom = rect.bottom - clientPoint.y;
-*/
-		if (i > IDC_SHOW_ERRORS)
-		{
-			controlInfo->errorType =
-				(LDLErrorType)(i - IDC_PARSE_ERROR + LDLEGeneral);
-			if (showsErrorType(controlInfo->errorType))
-			{
-				SendDlgItemMessage(hErrorWindow, i, BM_SETCHECK, 1, 0);
-			}
-		}
-		else
-		{
-			controlInfo->errorType = (LDLErrorType)-1;
-		}
-		topRightErrorControls->addObject(controlInfo);
-		controlInfo->release();
-	}
 }
 
 void ModelWindow::setupProgress(void)
@@ -1506,6 +1573,7 @@ void ModelWindow::createErrorWindow(void)
 		SetWindowLong(hErrorWindow, GWL_USERDATA, (long)this);
 		SetWindowLong(hErrorWindow, DWL_DLGPROC, (long)staticErrorDlgProc);
 		hErrorTree = GetDlgItem(hErrorWindow, IDC_ERROR_TREE);
+		hErrorList = GetDlgItem(hErrorWindow, IDC_ERROR_LIST);
 //		hErrorOk = GetDlgItem(hErrorWindow, IDOK);
 		setupErrorWindow();
 		SetActiveWindow(hActiveWindow);
@@ -1523,10 +1591,13 @@ void ModelWindow::createProgress(void)
 
 void ModelWindow::clearErrorTree(void)
 {
+	SetWindowRedraw(hErrorTree, FALSE);
 	if (hErrorWindow)
 	{
 		TreeView_DeleteAllItems(hErrorTree);
 	}
+	SetWindowRedraw(hErrorTree, TRUE);
+	RedrawWindow(hErrorTree, NULL, NULL, 0);
 	errorTreePopulated = false;
 }
 
@@ -1542,11 +1613,48 @@ void ModelWindow::clearErrors(void)
 	clearErrorTree();
 }
 
+void ModelWindow::populateErrorList(void)
+{
+	int i;
+	int count = errorInfos->getCount();
+	LVCOLUMN column;
+	DWORD exStyle = ListView_GetExtendedListViewStyle(hErrorList);
+
+	skipErrorUpdates = true;
+	exStyle |= LVS_EX_CHECKBOXES;
+	ListView_SetExtendedListViewStyle(hErrorList, exStyle);
+	memset(&column, 0, sizeof(LVCOLUMN));
+	column.mask = LVCF_FMT | LVCF_WIDTH;
+	column.fmt = LVCFMT_LEFT;
+	column.cx = 300;
+	ListView_InsertColumn(hErrorList, 0, &column);
+	for (i = 0; i < count; i++)
+	{
+		ErrorInfo *errorInfo = (*errorInfos)[i];
+		LVITEM item;
+		int state;
+
+		memset(&item, 0, sizeof(item));
+		item.mask = TVIF_TEXT | TVIF_PARAM;
+		item.pszText = errorInfo->getTypeName();
+		item.lParam = errorInfo->getType();
+		item.iItem = i;
+		item.iSubItem = 0;
+		state = TCUserDefaults::longForKey(getErrorKey(errorInfo->getType()),
+			1, false);
+		ListView_InsertItem(hErrorList, &item);
+		ListView_SetCheckState(hErrorList, i, state);
+	}
+	skipErrorUpdates = false;
+	ListView_SetColumnWidth(hErrorList, 0, LVSCW_AUTOSIZE);
+}
+
 int ModelWindow::populateErrorTree(void)
 {
 	int errorCount = 0;
 	char buf[128];
 
+	SetWindowRedraw(hErrorTree, FALSE);
 	if (!windowShown)
 	{
 		return 0;
@@ -1562,6 +1670,8 @@ int ModelWindow::populateErrorTree(void)
 		}
 		errorTreePopulated = true;
 	}
+	SetWindowRedraw(hErrorTree, TRUE);
+	RedrawWindow(hErrorTree, NULL, NULL, 0);
 	sprintf(buf, "%d Error%s", errorCount, errorCount == 1 ? "" : "s");
 	SendMessage(hErrorStatusWindow, SB_SETTEXT, 0, (LPARAM)buf);
 	return errorCount;

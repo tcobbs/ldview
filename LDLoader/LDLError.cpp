@@ -31,7 +31,12 @@ void LDLError::dealloc(void)
 
 const char *LDLError::getTypeName(void)
 {
-	switch (m_type)
+	return getTypeName(m_type);
+}
+
+const char *LDLError::getTypeName(LDLErrorType type)
+{
+	switch (type)
 	{
 	case LDLEGeneral:
 		return "General error";

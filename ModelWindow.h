@@ -25,6 +25,22 @@ typedef enum
 	LDVViewFlythrough
 } LDVViewMode;
 
+class ErrorInfo: public TCObject
+{
+public:
+	ErrorInfo(void);
+	void setType(LDLErrorType type) { m_type = type; }
+	LDLErrorType getType(void) { return m_type; }
+	void setTypeName(const char *typeName);
+	char *getTypeName(void) { return m_typeName; }
+protected:
+	~ErrorInfo(void);
+	virtual void dealloc(void);
+
+	LDLErrorType m_type;
+	char *m_typeName;
+};
+
 class ControlInfo: public TCObject
 {
 public:
@@ -37,6 +53,7 @@ public:
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 typedef TCTypedObjectArray<ControlInfo> ControlInfoArray;
+typedef TCTypedObjectArray<ErrorInfo> ErrorInfoArray;
 
 class ModelWindow: public CUIOGLWindow
 {
@@ -145,8 +162,10 @@ class ModelWindow: public CUIOGLWindow
 		virtual void createErrorWindow(void);
 		virtual void setupErrorWindow(void);
 		virtual int populateErrorTree(void);
+		virtual void populateErrorList(void);
 		virtual void showErrorsIfNeeded(BOOL onlyIfNeeded = TRUE);
 		virtual BOOL doErrorTreeNotify(LPNMHDR notification);
+		virtual BOOL doErrorWindowNotify(LPNMHDR notification);
 		virtual BOOL doErrorTreeKeyDown(LPNMTVKEYDOWN notification);
 		virtual BOOL doErrorTreeCopy(void);
 		virtual BOOL doDialogInit(HWND hDlg, HWND hFocusWindow, LPARAM lParam);
@@ -249,6 +268,8 @@ class ModelWindow: public CUIOGLWindow
 		virtual void initFail(char *reason);
 		void ldlErrorCallback(LDLError *error);
 		void progressAlertCallback(TCProgressAlert *error);
+		void populateErrorInfos(void);
+		BOOL setAllErrorsSelected(bool selected);
 
 		void loadSettings(void);
 
@@ -297,21 +318,22 @@ class ModelWindow: public CUIOGLWindow
 		HWND hErrorWindow;
 		HWND hErrorStatusWindow;
 		HWND hErrorTree;
+		HWND hErrorList;
 //		HWND hErrorOk;
-		int errorTreeX;
-		int errorTreeY;
-		int errorTreeRight;
-		int errorTreeBottom;
-		int errorOkX;
-		int errorOkY;
-		int errorOkWidth;
-		int errorOkHeight;
-		int errorWindowWidth;
+//		int errorTreeX;
+//		int errorTreeY;
+//		int errorTreeRight;
+//		int errorTreeBottom;
+//		int errorOkX;
+//		int errorOkY;
+//		int errorOkWidth;
+//		int errorOkHeight;
+//		int errorWindowWidth;
 		WNDPROC originalErrorDlgProc;
 		LDLErrorArray* errors;
-		int errorImageIndices[14];
+		int errorImageIndices[13];
 		bool errorTreePopulated;
-		ControlInfoArray *topRightErrorControls;
+		ErrorInfoArray *errorInfos;
 		LDViewPreferences *prefs;
 		bool applyingPrefs;
 		bool offscreenActive;
@@ -360,6 +382,7 @@ class ModelWindow: public CUIOGLWindow
 		HGLRC hCurrentGLRC;
 		CUIWindowResizer *errorWindowResizer;
 		bool savingFromCommandLine;
+		bool skipErrorUpdates;
 };
 
 #endif
