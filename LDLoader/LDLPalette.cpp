@@ -316,6 +316,10 @@ void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 		{
 			getRGBA(colorInfo, r, g, b, a);
 		}
+		else if (colorNumber != 16 && colorNumber != 24)
+		{
+			debugPrintf("Unknown color: %d\n", colorNumber);
+		}
 	}
 	else if (!getCustomColorRGBA(colorNumber, r, g, b, a))
 	{

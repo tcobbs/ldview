@@ -1292,6 +1292,12 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 	item.lParam = (LPARAM)error;
 	insertStruct.hParent = parent;
 	insertStruct.hInsertAfter = TVI_LAST;
+	if (error->getLevel() != LDLAWarning)
+	{
+		item.mask |= TVIF_STATE;
+		item.stateMask = TVIS_BOLD;
+		item.state = TVIS_BOLD;
+	}
 	if (imageIndex >= 0)
 	{
         item.mask |= TVIF_IMAGE | TVIF_SELECTEDIMAGE; 
@@ -1595,6 +1601,7 @@ void ModelWindow::createErrorWindow(void)
 	if (!hErrorWindow)
 	{
 		HWND hActiveWindow = GetActiveWindow();
+		int parts[] = {-1};
 
 		initCommonControls(ICC_TREEVIEW_CLASSES | ICC_BAR_CLASSES);
 		registerErrorWindowClass();
@@ -1602,6 +1609,7 @@ void ModelWindow::createErrorWindow(void)
 		hErrorStatusWindow = CreateStatusWindow(
 			WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, "", hErrorWindow,
 			2000);
+		SendMessage(hErrorStatusWindow, SB_SETPARTS, 1, (LPARAM)parts);
 		originalErrorDlgProc = (WNDPROC)GetWindowLong(hErrorWindow, DWL_DLGPROC);
 		SetWindowLong(hErrorWindow, GWL_USERDATA, (long)this);
 		SetWindowLong(hErrorWindow, DWL_DLGPROC, (long)staticErrorDlgProc);
@@ -1624,13 +1632,25 @@ void ModelWindow::createProgress(void)
 
 void ModelWindow::clearErrorTree(void)
 {
-	SetWindowRedraw(hErrorTree, FALSE);
+//	RECT rect;
+//	POINT topLeft;
+
+//	SetWindowRedraw(hErrorTree, FALSE);
 	if (hErrorWindow)
 	{
 		TreeView_DeleteAllItems(hErrorTree);
 	}
+/*
 	SetWindowRedraw(hErrorTree, TRUE);
-	RedrawWindow(hErrorTree, NULL, NULL, 0);
+	GetWindowRect(hErrorTree, &rect);
+	topLeft.x = rect.left;
+	topLeft.y = rect.top;
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
+	ScreenToClient(GetParent(hErrorTree), &topLeft);
+//	MoveWindow(hErrorTree, topLeft.x, topLeft.y, width - 1, height, TRUE);
+	MoveWindow(hErrorTree, topLeft.x, topLeft.y, width, height, TRUE);
+*/
 	errorTreePopulated = false;
 }
 
@@ -1685,9 +1705,14 @@ void ModelWindow::populateErrorList(void)
 int ModelWindow::populateErrorTree(void)
 {
 	int errorCount = 0;
-	char buf[128];
+	int warningCount = 0;
+	char buf[128] = "";
+//	RECT rect;
+//	POINT topLeft;
+//	int width;
+//	int height;
 
-	SetWindowRedraw(hErrorTree, FALSE);
+//	SetWindowRedraw(hErrorTree, FALSE);
 	if (!windowShown)
 	{
 		return 0;
@@ -1696,16 +1721,51 @@ int ModelWindow::populateErrorTree(void)
 	{
 		for (int i = 0, count = errors->getCount(); i < count; i++)
 		{
-			if (addError((*errors)[i]))
+			LDLError *error = (*errors)[i];
+
+			if (addError(error))
 			{
-				errorCount++;
+				if (error->getLevel() == LDLAWarning)
+				{
+					warningCount++;
+				}
+				else
+				{
+					errorCount++;
+				}
 			}
 		}
 		errorTreePopulated = true;
 	}
+/*
 	SetWindowRedraw(hErrorTree, TRUE);
-	RedrawWindow(hErrorTree, NULL, NULL, 0);
-	sprintf(buf, "%d Error%s", errorCount, errorCount == 1 ? "" : "s");
+	GetWindowRect(hErrorTree, &rect);
+	topLeft.x = rect.left;
+	topLeft.y = rect.top;
+	width = rect.right - rect.left;
+	height = rect.bottom - rect.top;
+	ScreenToClient(GetParent(hErrorTree), &topLeft);
+	if (errorCount > 0 || warningCount > 0)
+	{
+		MoveWindow(hErrorTree, topLeft.x, topLeft.y, width - 1, height, FALSE);
+	}
+	MoveWindow(hErrorTree, topLeft.x, topLeft.y, width, height, TRUE);
+*/
+//	RedrawWindow(hErrorTree, NULL, NULL, RDW_INVALIDATE | RDW_ERASE |
+//		RDW_FRAME | RDW_ALLCHILDREN);
+	if (errorCount > 0)
+	{
+		sprintf(buf, "%d Error%s", errorCount, errorCount == 1 ? "" : "s");
+		if (warningCount > 0)
+		{
+			strcat(buf, ", ");
+		}
+	}
+	if (warningCount > 0)
+	{
+		sprintf(buf + strlen(buf), "%d Warning%s", warningCount,
+			warningCount == 1 ? "" : "s");
+	}
 	SendMessage(hErrorStatusWindow, SB_SETTEXT, 0, (LPARAM)buf);
 	return errorCount;
 }

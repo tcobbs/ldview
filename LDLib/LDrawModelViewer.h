@@ -300,6 +300,8 @@ class LDrawModelViewer: public TCObject
 		virtual float calcDefaultDistance(void);
 		virtual void updateCurrentFov(void);
 		virtual float getStereoWidthModifier(void);
+		virtual float getWideLineMargin(void);
+		virtual float getClipRadius(void);
 
 		void ludcmp(float a[6][6], int n, int index[6], float *d);
 		void lubksb(const float a[6][6], int n, const int index[6], float b[6]);
@@ -372,6 +374,9 @@ class LDrawModelViewer: public TCObject
 		float defaultDistance;
 		TCStringArray *extraSearchDirs;
 		float seamWidth;
+		float zoomToFitWidth;
+		float zoomToFitHeight;
+		float zoomToFitMargin;
 		struct
 		{
 			bool qualityLighting:1;

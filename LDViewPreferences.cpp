@@ -339,10 +339,10 @@ void LDViewPreferences::loadGeometrySettings(void)
 	drawConditionalHighlights =
 		TCUserDefaults::longForKey(CONDITIONAL_HIGHLIGHTS_KEY,
 		(long)drawConditionalHighlights) != 0;
-	showAllConditionalLines = TCUserDefaults::longForKey(SHOW_ALL_TYPE5_KEY, 0,
+	showAllConditionalLines = TCUserDefaults::longForKey(SHOW_ALL_TYPE5_KEY,
 		(long)showAllConditionalLines) != 0;
 	showConditionalControlPoints =
-		TCUserDefaults::longForKey(SHOW_TYPE5_CONTROL_POINTS_KEY, 0,
+		TCUserDefaults::longForKey(SHOW_TYPE5_CONTROL_POINTS_KEY,
 		(long)showConditionalControlPoints)
 		!= 0;
 	usePolygonOffset = TCUserDefaults::longForKey(POLYGON_OFFSET_KEY,

@@ -136,12 +136,15 @@ protected:
 		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel, bool bfc);
+	virtual float getTorusFraction(int size);
 	virtual bool substituteStud(TREModel *treModel, int numSegments);
 	virtual bool substituteStud(TREModel *treModel);
 	virtual bool substituteStu2(TREModel *treModel);
 	virtual bool substituteStu22(TREModel *treModel, bool isA, bool bfc);
 	virtual bool substituteStu23(TREModel *treModel, bool isA, bool bfc);
 	virtual bool substituteStu24(TREModel *treModel, bool isA, bool bfc);
+	virtual bool substituteTorusIO(TREModel *treModel, bool inner, bool bfc);
+	virtual bool substituteTorusQ(TREModel *treModel, bool bfc);
 	virtual bool substituteEighthSphere(TREModel *treModel, bool bfc);
 	virtual bool substituteCylinder(TREModel *treModel, float fraction,
 		bool bfc);
@@ -167,15 +170,17 @@ protected:
 	virtual bool isDisc(const char *filename);
 	virtual bool isNdis(const char *filename);
 	virtual bool isEdge(const char *filename);
-	virtual bool isCcyli(const char *filename);
+//	virtual bool isCcyli(const char *filename);
 	virtual bool is1DigitCon(const char *filename);
 	virtual bool is2DigitCon(const char *filename);
 	virtual bool isCon(const char *filename);
 	virtual bool isOldRing(const char *filename);
 	virtual bool isRing(const char *filename);
 	virtual bool isRin(const char *filename);
+	virtual bool isTorus(const char *filename);
 	virtual bool isTorusO(const char *filename);
 	virtual bool isTorusI(const char *filename);
+	virtual bool isTorusQ(const char *filename);
 	virtual int getNumCircleSegments(float fraction = 0.0f);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
