@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x501
 #include "LDViewPreferences.h"
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -15,6 +16,9 @@
 #include <TCFoundation/TCStringArray.h>
 #include <Commctrl.h>
 #include <stdio.h>
+#include <tmschema.h>
+#include <atlbase.h>
+#include <atlconv.h>
 
 #ifndef IDC_HARDWARE_STEREO
 #define IDC_HARDWARE_STEREO 1030
@@ -43,17 +47,16 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	hBackgroundColorButton(NULL),
 	hDefaultColorBitmap(NULL),
 	hDefaultColorButton(NULL),
-	hDefaultColorTheme(NULL),
 	hMouseOverButton(NULL),
-	previousButtonWindowProc(NULL),
+	origButtonWindowProc(NULL),
 	hButtonColorDC(NULL),
-	hBackgroundColorTheme(NULL),
 	hGeometryPage(NULL),
 	hEffectsPage(NULL),
 	hPrimitivesPage(NULL),
 	hPrefSetsPage(NULL),
 	setActiveWarned(false),
-	checkAbandon(true)
+	checkAbandon(true),
+	hButtonTheme(NULL)
 {
 	CUIThemes::init();
 	loadSettings();
@@ -70,15 +73,10 @@ void LDViewPreferences::dealloc(void)
 	{
 		modelViewer->release();
 	}
-	if (hBackgroundColorTheme)
+	if (hButtonTheme)
 	{
-		CUIThemes::closeThemeData(hBackgroundColorTheme);
-		hBackgroundColorTheme = NULL;
-	}
-	if (hDefaultColorTheme)
-	{
-		CUIThemes::closeThemeData(hDefaultColorTheme);
-		hDefaultColorTheme = NULL;
+		CUIThemes::closeThemeData(hButtonTheme);
+		hButtonTheme = NULL;
 	}
 	CUIPropertySheet::dealloc();
 }
@@ -212,12 +210,15 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 	fov = 45.0f;
 	for (i = 0; i < 16; i++)
 	{
+		customColors[i] = GetSysColor(i + 32);
+/*
 		int r, g, b, a;
 
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		// Windows XP doesn't like the upper bits to be set, so mask those out.
 		customColors[i] = htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
 			0xFFFFFF;
+*/
 	}
 }
 
@@ -452,8 +453,9 @@ void LDViewPreferences::setDrawWireframe(bool value)
 		TCUserDefaults::setLongForKey(drawWireframe ? 1 : 0, WIREFRAME_KEY);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME, BM_SETCHECK,
-				drawWireframe, 0);
+			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, drawWireframe);
+//			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME, BM_SETCHECK,
+//				drawWireframe, 0);
 			if (drawWireframe)
 			{
 				enableWireframe();
@@ -537,8 +539,10 @@ void LDViewPreferences::setShowsHighlightLines(bool value)
 			SHOWS_HIGHLIGHT_LINES_KEY);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
-				showsHighlightLines, 0);
+			setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS,
+				showsHighlightLines);
+//			SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
+//				showsHighlightLines, 0);
 			if (showsHighlightLines)
 			{
 				enableEdges();
@@ -561,8 +565,10 @@ void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 			PRIMITIVE_SUBSTITUTION_KEY);
 		if (hPrimitivesPage)
 		{
-			SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
-				BM_SETCHECK, allowPrimitiveSubstitution, 0);
+			setupGroupCheckButton(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
+				allowPrimitiveSubstitution);
+//			SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
+//				BM_SETCHECK, allowPrimitiveSubstitution, 0);
 			if (allowPrimitiveSubstitution)
 			{
 				enablePrimitives();
@@ -582,9 +588,10 @@ void LDViewPreferences::setBfc(bool value)
 		bfc = value;
 		modelViewer->setBfc(bfc);
 		TCUserDefaults::setLongForKey(bfc ? 1 : 0, BFC_KEY);
-		if (hEffectsPage)
+		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_BFC, BM_SETCHECK, bfc, 0);
+			setupGroupCheckButton(hGeometryPage, IDC_BFC, bfc);
+//			SendDlgItemMessage(hEffectsPage, IDC_BFC, BM_SETCHECK, bfc, 0);
 			if (bfc)
 			{
 				enableBfc();
@@ -606,8 +613,9 @@ void LDViewPreferences::setUseLighting(bool value)
 		TCUserDefaults::setLongForKey(useLighting ? 1 : 0, LIGHTING_KEY);
 		if (hEffectsPage)
 		{
-			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK,
-				useLighting, 0);
+			setupGroupCheckButton(hEffectsPage, IDC_LIGHTING, useLighting);
+//			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK,
+//				useLighting, 0);
 			if (useLighting)
 			{
 				enableLighting();
@@ -646,6 +654,25 @@ int LDViewPreferences::run(void)
 	}
 	return retValue;
 }
+
+/*
+void LDViewPreferences::getGroupBoxTextColor(void)
+{
+	if (!checkedGroupBoxTextColor && CUIThemes::isThemeLibLoaded())
+	{
+		HWND hBox = GetDlgItem(hwndArray->pointerAtIndex(generalPageNumber),
+			IDC_AA_BOX);
+		HTHEME hTheme = CUIThemes::getWindowTheme(hBox);
+
+		if (SUCCEEDED(CUIThemes::getThemeColor(hTheme, BP_GROUPBOX, GBS_NORMAL,
+			TMT_TEXTCOLOR, &groupBoxTextColor)))
+		{
+			haveGroupBoxTextColor = true;
+		}
+		checkedGroupBoxTextColor = true;
+	}
+}
+*/
 
 BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 									   LPNMHDR notification)
@@ -887,29 +914,24 @@ BOOL LDViewPreferences::doPrefSetSelected(bool force)
 
 BOOL LDViewPreferences::doDialogThemeChanged(void)
 {
-	if (hBackgroundColorTheme)
+	if (hButtonTheme)
 	{
-		CUIThemes::closeThemeData(hBackgroundColorTheme);
-		hBackgroundColorTheme = NULL;
-	}
-	if (hDefaultColorTheme)
-	{
-		CUIThemes::closeThemeData(hDefaultColorTheme);
-		hDefaultColorTheme = NULL;
+		CUIThemes::closeThemeData(hButtonTheme);
+		hButtonTheme = NULL;
 	}
 	if (CUIThemes::isThemeLibLoaded())
 	{
 		if (hBackgroundColorButton)
 		{
 			setupBackgroundColorButton();
-//			hBackgroundColorTheme =
-//				CUIThemes::openThemeData(hBackgroundColorButton, L"Button");
 		}
 		if (hDefaultColorButton)
 		{
 			setupDefaultColorButton();
-//			hDefaultColorTheme =
-//				CUIThemes::openThemeData(hDefaultColorButton, L"Button");
+		}
+		if (hGeometryPage)
+		{
+			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, drawWireframe);
 		}
 	}
 	return FALSE;
@@ -953,15 +975,58 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 void LDViewPreferences::setupBackgroundColorButton(void)
 {
 	setupColorButton(hGeneralPage, hBackgroundColorButton,
-		IDC_BACKGROUND_COLOR, hBackgroundColorBitmap, backgroundColor,
-		hBackgroundColorTheme);
+		IDC_BACKGROUND_COLOR, hBackgroundColorBitmap, backgroundColor);
 }
 
 void LDViewPreferences::setupDefaultColorButton(void)
 {
 	setupColorButton(hGeneralPage, hDefaultColorButton,
-		IDC_DEFAULT_COLOR, hDefaultColorBitmap, defaultColor,
-		hDefaultColorTheme);
+		IDC_DEFAULT_COLOR, hDefaultColorBitmap, defaultColor);
+}
+
+LRESULT CALLBACK LDViewPreferences::staticGroupCheckButtonProc(HWND hWnd,
+															   UINT message,
+															   WPARAM wParam,
+															   LPARAM lParam)
+{
+	LDViewPreferences *thisPtr =
+		(LDViewPreferences *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+
+	return thisPtr->groupCheckButtonProc(hWnd, message, wParam, lParam);
+}
+
+LRESULT LDViewPreferences::groupCheckButtonProc(HWND hWnd, UINT message,
+												WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+	case WM_MOUSEMOVE:
+		if (hMouseOverButton != hWnd)
+		{
+			if (hMouseOverButton)
+			{
+				InvalidateRect(hMouseOverButton, NULL, FALSE);
+			}
+			hMouseOverButton = hWnd;
+//			debugPrintf("hMouseOverButton: 0x%08X\n", hWnd);
+			InvalidateRect(hWnd, NULL, FALSE);
+		}
+		break;
+/*
+	case WM_LBUTTONUP:
+		{
+			int state = SendMessage(hWnd, BM_GETSTATE, 0, 0);
+
+			if (hMouseOverButton == hWnd && (state & BST_PUSHED))
+			{
+				checkStates[hWnd] = !checkStates[hWnd];
+			}
+		}
+		break;
+*/
+	}
+	return CallWindowProc((WNDPROC)origButtonWindowProc, hWnd, message, wParam,
+		lParam);
 }
 
 LRESULT CALLBACK LDViewPreferences::staticColorButtonProc(HWND hWnd,
@@ -992,52 +1057,42 @@ LRESULT LDViewPreferences::colorButtonProc(HWND hWnd, UINT message,
 		}
 		break;
 	}
-	return CallWindowProc((WNDPROC)previousButtonWindowProc, hWnd, message,
-		wParam, lParam);
+	return CallWindowProc((WNDPROC)origButtonWindowProc, hWnd, message, wParam,
+		lParam);
 }
 
 void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 										 int controlID, HBITMAP &hButtonBitmap,
-										 COLORREF color, HTHEME &hTheme)
+										 COLORREF color)
 {
 	int imageWidth;
 	int imageHeight;
 	HDC hdc;
 	RECT clientRect;
 
+	initThemes(hColorButton);
 	if (hButtonBitmap)
 	{
 		DeleteObject(hButtonBitmap);
-		if (hTheme)
+		if (origButtonWindowProc)
 		{
-			CUIThemes::closeThemeData(hTheme);
-			hTheme = NULL;
-			if (previousButtonWindowProc)
-			{
-				SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
-					(LONG)previousButtonWindowProc);
-			}
+			SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
+				(LONG_PTR)origButtonWindowProc);
 		}
-//		redrawColorBitmap(hColorButton, hButtonBitmap, color, hTheme);
-//		return;
 	}
 	hColorButton = GetDlgItem(hPage, controlID);
 	GetClientRect(hColorButton, &clientRect);
-	if (CUIThemes::isThemeLibLoaded())
-	{
-		hTheme = CUIThemes::openThemeData(hColorButton, L"Button");
-	}
-	if (hTheme)
+	if (hButtonTheme)
 	{
 		RECT contentRect;
 
 		// subclass the Wizard button so we can know when the mouse has moved
 		// over it
-		SetWindowLongPtr(hColorButton, GWLP_USERDATA, (LONG)this);
-		previousButtonWindowProc = SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
-			(LONG)staticColorButtonProc);
-		CUIThemes::getThemeBackgroundContentRect(hTheme, NULL, BP_PUSHBUTTON,
-			PBS_HOT, &clientRect, &contentRect);
+		SetWindowLongPtr(hColorButton, GWLP_USERDATA, (LONG_PTR)this);
+		origButtonWindowProc = SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
+			(LONG_PTR)staticColorButtonProc);
+		CUIThemes::getThemeBackgroundContentRect(hButtonTheme, NULL,
+			BP_PUSHBUTTON, PBS_HOT, &clientRect, &contentRect);
 		imageWidth = contentRect.right - contentRect.left - 6;
 		imageHeight = contentRect.bottom - contentRect.top - 6;
 
@@ -1055,7 +1110,7 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 	hButtonBitmap = CreateCompatibleBitmap(hdc, imageWidth, imageHeight);
 	ReleaseDC(hPage, hdc);
 	SetBitmapDimensionEx(hButtonBitmap, imageWidth, imageHeight, NULL);
-	redrawColorBitmap(hColorButton, hButtonBitmap, color, hTheme);
+	redrawColorBitmap(hColorButton, hButtonBitmap, color);
 	SendDlgItemMessage(hPage, controlID, BM_SETIMAGE, (WPARAM)IMAGE_BITMAP,
 		(LPARAM)hButtonBitmap);
 }
@@ -1127,8 +1182,8 @@ void LDViewPreferences::enablePrimitives(void)
 	EnableWindow(hTextureStudsButton, TRUE);
 	EnableWindow(hCurveQualityLabel, TRUE);
 	EnableWindow(hCurveQualitySlider, TRUE);
-	SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, BM_SETCHECK,
-		1, 0);
+//	SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, BM_SETCHECK,
+//		1, 0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK,
 		textureStuds, 0);
 	if (textureStuds)
@@ -1146,8 +1201,8 @@ void LDViewPreferences::disablePrimitives(void)
 	EnableWindow(hTextureStudsButton, FALSE);
 	EnableWindow(hCurveQualityLabel, FALSE);
 	EnableWindow(hCurveQualitySlider, FALSE);
-	SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, BM_SETCHECK,
-		0, 0);
+//	SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, BM_SETCHECK,
+//		0, 0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK, 0, 0);
 	disableTextureFiltering();
 }
@@ -1220,8 +1275,7 @@ void LDViewPreferences::drawButtonBorder(HDC hdc, COLORREF color1,
 */
 
 void LDViewPreferences::redrawColorBitmap(HWND hColorButton,
-										  HBITMAP hButtonBitmap, COLORREF color,
-										  HTHEME hTheme)
+										  HBITMAP hButtonBitmap, COLORREF color)
 {
 	HBRUSH hBrush = CreateSolidBrush(color);
 	RECT bitmapRect;
@@ -1240,9 +1294,9 @@ void LDViewPreferences::redrawColorBitmap(HWND hColorButton,
 //	bitmapRect.top++;
 //	bitmapRect.left++;
 //	InflateRect(&bitmapRect, 1, 1);
-	if (CUIThemes::isThemeLibLoaded() && hTheme)
+	if (CUIThemes::isThemeLibLoaded() && hButtonTheme)
 	{
-		CUIThemes::drawThemeEdge(hTheme, hButtonColorDC, BP_PUSHBUTTON,
+		CUIThemes::drawThemeEdge(hButtonTheme, hButtonColorDC, BP_PUSHBUTTON,
 			PBS_PRESSED, &bitmapRect, EDGE_SUNKEN, BF_SOFT | BF_RECT, NULL);
 	}
 	else
@@ -1430,8 +1484,9 @@ void LDViewPreferences::applyGeometryChanges(void)
 		{
 			seamWidth = TCUserDefaults::longForKey(SEAM_WIDTH_KEY);
 		}
-		drawWireframe = SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME,
-			BM_GETCHECK, 0, 0) != 0;
+		drawWireframe = getCheck(hGeometryPage, IDC_WIREFRAME);
+//		drawWireframe = SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME,
+//			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(drawWireframe, WIREFRAME_KEY);
 		useWireframeFog = SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG,
 			BM_GETCHECK, 0, 0) != 0;
@@ -1444,14 +1499,16 @@ void LDViewPreferences::applyGeometryChanges(void)
 			IDC_WIREFRAME_THICKNESS, TBM_GETPOS, 0, 0);
 		TCUserDefaults::setLongForKey(wireframeThickness, 
 			WIREFRAME_THICKNESS_KEY);
-		bfc = SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0) !=
-			0;
+		bfc = getCheck(hGeometryPage, IDC_BFC);
+//		bfc = SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0) !=
+//			0;
 		TCUserDefaults::setLongForKey(bfc, BFC_KEY);
 		redBackFaces = SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES,
 			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(redBackFaces, RED_BACK_FACES_KEY);
-		showsHighlightLines = SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS,
-			BM_GETCHECK, 0, 0) != 0;
+		showsHighlightLines = getCheck(hGeometryPage, IDC_HIGHLIGHTS);
+//		showsHighlightLines = SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS,
+//			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(showsHighlightLines,
 			SHOWS_HIGHLIGHT_LINES_KEY);
 		if (showsHighlightLines)
@@ -1493,8 +1550,9 @@ void LDViewPreferences::applyEffectsChanges(void)
 {
 	if (hEffectsPage)
 	{
-		useLighting = SendDlgItemMessage(hEffectsPage, IDC_LIGHTING,
-			BM_GETCHECK, 0, 0) != 0;
+		useLighting = getCheck(hEffectsPage, IDC_LIGHTING);
+//		useLighting = SendDlgItemMessage(hEffectsPage, IDC_LIGHTING,
+//			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(useLighting, LIGHTING_KEY);
 		if (useLighting)
 		{
@@ -1544,8 +1602,10 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 {
 	if (hPrimitivesPage)
 	{
-		allowPrimitiveSubstitution = SendDlgItemMessage(hPrimitivesPage,
-			IDC_PRIMITIVE_SUBSTITUTION, BM_GETCHECK, 0, 0) != 0;
+		allowPrimitiveSubstitution = getCheck(hPrimitivesPage,
+			IDC_PRIMITIVE_SUBSTITUTION);
+//		allowPrimitiveSubstitution = SendDlgItemMessage(hPrimitivesPage,
+//			IDC_PRIMITIVE_SUBSTITUTION, BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(allowPrimitiveSubstitution,
 			PRIMITIVE_SUBSTITUTION_KEY);
 		if (allowPrimitiveSubstitution)
@@ -1619,17 +1679,16 @@ void LDViewPreferences::getRGB(int color, int &r, int &g, int &b)
 void LDViewPreferences::chooseBackgroundColor(void)
 {
 	chooseColor(hBackgroundColorButton, hBackgroundColorBitmap,
-		backgroundColor, hBackgroundColorTheme);
+		backgroundColor);
 }
 
 void LDViewPreferences::chooseDefaultColor(void)
 {
-	chooseColor(hDefaultColorButton, hDefaultColorBitmap, defaultColor,
-		hDefaultColorTheme);
+	chooseColor(hDefaultColorButton, hDefaultColorBitmap, defaultColor);
 }
 
 void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
-									COLORREF &color, HTHEME hTheme)
+									COLORREF &color)
 {
 	CHOOSECOLOR chooseColor;
 
@@ -1643,7 +1702,7 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 	if (ChooseColor(&chooseColor))
 	{
 		color = chooseColor.rgbResult;
-		redrawColorBitmap(hColorButton, hColorBitmap, color, hTheme);
+		redrawColorBitmap(hColorButton, hColorBitmap, color);
 	}
 	EnableWindow(hPropSheet, TRUE);
 }
@@ -2167,7 +2226,7 @@ void LDViewPreferences::doSmoothCurves(void)
 
 void LDViewPreferences::doHighlights(void)
 {
-	if (SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_GETCHECK, 0, 0))
+	if (getCheck(hGeometryPage, IDC_HIGHLIGHTS, true))
 	{
 		enableEdges();
 	}
@@ -2190,9 +2249,27 @@ void LDViewPreferences::doConditionals(void)
 	}
 }
 
+bool LDViewPreferences::getCheck(HWND hPage, int buttonId, bool action)
+{
+	if (hButtonTheme)
+	{
+		HWND hButton = GetDlgItem(hPage, buttonId);
+
+		if (action)
+		{
+			checkStates[hButton] = !checkStates[hButton];
+		}
+		return checkStates[hButton];
+	}
+	else
+	{
+		return SendDlgItemMessage(hPage, buttonId, BM_GETCHECK, 0, 0) != 0;
+	}
+}
+
 void LDViewPreferences::doWireframe(void)
 {
-	if (SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME, BM_GETCHECK, 0, 0))
+	if (getCheck(hGeometryPage, IDC_WIREFRAME, true))
 	{
 		enableWireframe();
 	}
@@ -2204,7 +2281,7 @@ void LDViewPreferences::doWireframe(void)
 
 void LDViewPreferences::doBfc(void)
 {
-	if (SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0))
+	if (getCheck(hGeometryPage, IDC_BFC, true))
 	{
 		enableBfc();
 	}
@@ -2216,7 +2293,7 @@ void LDViewPreferences::doBfc(void)
 
 void LDViewPreferences::doLighting(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_GETCHECK, 0, 0))
+	if (getCheck(hEffectsPage, IDC_LIGHTING, true))
 	{
 		enableLighting();
 	}
@@ -2228,7 +2305,7 @@ void LDViewPreferences::doLighting(void)
 
 void LDViewPreferences::doStereo(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_GETCHECK, 0, 0))
+	if (getCheck(hEffectsPage, IDC_STEREO, true))
 	{
 		stereoMode = LDVStereoCrossEyed;
 		enableStereo();
@@ -2242,8 +2319,7 @@ void LDViewPreferences::doStereo(void)
 
 void LDViewPreferences::doCutaway(void)
 {
-	if (SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_GETCHECK, 0,
-		0))
+	if (getCheck(hEffectsPage, IDC_CUTAWAY, true))
 	{
 		cutawayMode = LDVCutawayWireframe;
 		enableCutaway();
@@ -2269,8 +2345,9 @@ void LDViewPreferences::doSeams(void)
 
 void LDViewPreferences::doPrimitives(void)
 {
-	if (SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
-		BM_GETCHECK, 0, 0))
+	if (getCheck(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, true))
+//	if (SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
+//		BM_GETCHECK, 0, 0))
 	{
 		enablePrimitives();
 	}
@@ -2447,8 +2524,63 @@ void LDViewPreferences::disableBfc(void)
 	EnableWindow(hRedBackFacesButton, FALSE);
 }
 
+void LDViewPreferences::initThemes(HWND hButton)
+{
+	if (CUIThemes::isThemeLibLoaded() && !hButtonTheme)
+	{
+		hButtonTheme = CUIThemes::openThemeData(hButton, L"Button");
+	}
+}
+
+void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
+											  bool state)
+{
+	bool done = false;
+	if (CUIThemes::isThemeLibLoaded())
+	{
+		HWND hButton = GetDlgItem(hPage, buttonId);
+
+		if (hButton)
+		{
+			initThemes(hButton);
+			if (hButtonTheme)
+			{
+				DWORD dwStyle = GetWindowLong(hButton, GWL_STYLE);
+
+				if ((dwStyle & BS_TYPEMASK) != BS_OWNERDRAW)
+				{
+					dwStyle = (dwStyle & ~BS_TYPEMASK) | BS_OWNERDRAW;
+					SendMessage(hButton, BM_SETSTYLE, LOWORD(dwStyle),
+						MAKELPARAM(1, 0));
+				}
+//				CUIThemes::openThemeData(hButton, L"Button");
+				if (GetWindowLongPtr(hButton, GWLP_WNDPROC) !=
+					(LONG_PTR)staticGroupCheckButtonProc)
+				{
+					SetWindowLongPtr(hButton, GWLP_USERDATA, (LONG_PTR)this);
+					SetWindowLongPtr(hButton, GWLP_WNDPROC,
+						(LONG_PTR)staticGroupCheckButtonProc);
+				}
+				checkStates[hButton] = state;
+				InvalidateRect(hButton, NULL, TRUE);
+				done = true;
+			}
+			else if (origButtonWindowProc)
+			{
+				SetWindowLongPtr(hButton, GWLP_WNDPROC,
+					(LONG_PTR)origButtonWindowProc);
+			}
+		}
+	}
+	if (!done)
+	{
+		SendDlgItemMessage(hPage, buttonId, BM_SETCHECK, state, 0);
+	}
+}
+
 void LDViewPreferences::setupWireframe(void)
 {
+	setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, drawWireframe);
 	hWireframeFogButton = GetDlgItem(hGeometryPage, IDC_WIREFRAME_FOG);
 	hRemoveHiddenLinesButton = GetDlgItem(hGeometryPage,
 		IDC_REMOVE_HIDDEN_LINES);
@@ -2456,8 +2588,6 @@ void LDViewPreferences::setupWireframe(void)
 		IDC_WIREFRAME_THICKNESS_LABEL);
 	hWireframeThicknessSlider = GetDlgItem(hGeometryPage,
 		IDC_WIREFRAME_THICKNESS);
-	SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME, BM_SETCHECK, drawWireframe,
-		0);
 	SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG, BM_SETCHECK,
 		useWireframeFog, 0);
 	SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES, BM_SETCHECK,
@@ -2476,8 +2606,9 @@ void LDViewPreferences::setupWireframe(void)
 
 void LDViewPreferences::setupBfc(void)
 {
+	setupGroupCheckButton(hGeometryPage, IDC_BFC, bfc);
 	hRedBackFacesButton = GetDlgItem(hGeometryPage, IDC_RED_BACK_FACES);
-	SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_SETCHECK, bfc, 0);
+//	SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_SETCHECK, bfc, 0);
 	SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
 		redBackFaces, 0);
 	if (bfc)
@@ -2553,6 +2684,7 @@ void LDViewPreferences::disableEdges(void)
 
 void LDViewPreferences::setupEdgeLines(void)
 {
+	setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS, showsHighlightLines);
 	hConditionalHighlightsButton = GetDlgItem(hGeometryPage,
 		IDC_CONDITIONAL_HIGHLIGHTS);
 	hShowAllConditionalButton = GetDlgItem(hGeometryPage, IDC_ALL_CONDITIONAL);
@@ -2563,8 +2695,8 @@ void LDViewPreferences::setupEdgeLines(void)
 	hAlwaysBlackButton = GetDlgItem(hGeometryPage, IDC_ALWAYS_BLACK);
 	hEdgeThicknessLabel = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS_LABEL);
 	hEdgeThicknessSlider = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS);
-	SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
-		showsHighlightLines, 0);
+//	SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
+//		showsHighlightLines, 0);
 	setupDialogSlider(hGeometryPage, IDC_EDGE_THICKNESS, 1, 5, 1,
 		edgeThickness);
 	if (showsHighlightLines)
@@ -2607,7 +2739,7 @@ void LDViewPreferences::enableCutaway(void)
 {
 	int activeCutaway = 0;
 
-	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_SETCHECK, 1, 0);
+//	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_SETCHECK, 1, 0);
 	EnableWindow(hCutawayColorButton, TRUE);
 	if (LDVExtensionsSetup::haveStencil())
 	{
@@ -2640,7 +2772,7 @@ void LDViewPreferences::enableCutaway(void)
 
 void LDViewPreferences::disableCutaway(void)
 {
-	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_SETCHECK, 0, 0);
+//	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_SETCHECK, 0, 0);
 	EnableWindow(hCutawayColorButton, FALSE);
 	EnableWindow(hCutawayMonochromButton, FALSE);
 	EnableWindow(hCutawayOpacityLabel, FALSE);
@@ -2653,6 +2785,8 @@ void LDViewPreferences::disableCutaway(void)
 
 void LDViewPreferences::setupCutaway(void)
 {
+	setupGroupCheckButton(hEffectsPage, IDC_CUTAWAY,
+		cutawayMode != LDVCutawayNormal);
 	hCutawayColorButton = GetDlgItem(hEffectsPage, IDC_CUTAWAY_COLOR);
 	hCutawayMonochromButton = GetDlgItem(hEffectsPage, IDC_CUTAWAY_MONOCHROME);
 	hCutawayOpacityLabel = GetDlgItem(hEffectsPage, IDC_CUTAWAY_OPACITY_LABEL);
@@ -2678,7 +2812,7 @@ void LDViewPreferences::enableStereo(void)
 {
 	int activeStereo = 0;
 
-	SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_SETCHECK, 1, 0);
+//	SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_SETCHECK, 1, 0);
 	EnableWindow(hHardwareStereoButton, TRUE);
 	EnableWindow(hCrossEyedStereoButton, TRUE);
 	EnableWindow(hParallelStereoButton, TRUE);
@@ -2707,7 +2841,7 @@ void LDViewPreferences::enableStereo(void)
 
 void LDViewPreferences::disableStereo(void)
 {
-	SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_SETCHECK, 0, 0);
+//	SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_SETCHECK, 0, 0);
 	EnableWindow(hHardwareStereoButton, FALSE);
 	EnableWindow(hCrossEyedStereoButton, FALSE);
 	EnableWindow(hParallelStereoButton, FALSE);
@@ -2720,6 +2854,8 @@ void LDViewPreferences::disableStereo(void)
 
 void LDViewPreferences::setupStereo(void)
 {
+	setupGroupCheckButton(hEffectsPage, IDC_STEREO,
+		stereoMode != LDVStereoNone);
 	hHardwareStereoButton = GetDlgItem(hEffectsPage, IDC_HARDWARE_STEREO);
 	hCrossEyedStereoButton = GetDlgItem(hEffectsPage, IDC_CROSS_EYED_STEREO);
 	hParallelStereoButton = GetDlgItem(hEffectsPage, IDC_PARALLEL_STEREO);
@@ -2743,7 +2879,7 @@ void LDViewPreferences::enableLighting(void)
 	EnableWindow(hLightSubduedButton, TRUE);
 	EnableWindow(hLightSpecularButton, TRUE);
 	EnableWindow(hLightAlternateButton, TRUE);
-	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK, 1, 0);
+//	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK, 1, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
 		qualityLighting, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
@@ -2769,6 +2905,7 @@ void LDViewPreferences::disableLighting(void)
 
 void LDViewPreferences::setupLighting(void)
 {
+	setupGroupCheckButton(hEffectsPage, IDC_LIGHTING, useLighting);
 	hLightQualityButton = GetDlgItem(hEffectsPage, IDC_LIGHTING_QUALITY);
 	hLightSubduedButton = GetDlgItem(hEffectsPage, IDC_LIGHTING_SUBDUED);
 	hLightSpecularButton = GetDlgItem(hEffectsPage, IDC_SPECULAR);
@@ -2801,6 +2938,8 @@ void LDViewPreferences::setupEffectsPage(void)
 
 void LDViewPreferences::setupSubstitution(void)
 {
+	setupGroupCheckButton(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
+		allowPrimitiveSubstitution);
 	hTextureStudsButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_STUDS);
 	hTextureNearestButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_NEAREST);
 	hTextureBilinearButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_BILINEAR);
@@ -3079,6 +3218,90 @@ bool LDViewPreferences::getUseNvMultisampleFilter(void)
 	}
 }
 
+BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
+											LPDRAWITEMSTRUCT drawItemStruct)
+{
+	HDC hdc = drawItemStruct->hDC;
+	bool bIsPressed = (drawItemStruct->itemState & ODS_SELECTED) != 0;
+	bool bIsFocused = (drawItemStruct->itemState & ODS_FOCUS) != 0;
+	bool bDrawFocusRect = (drawItemStruct->itemState & ODS_NOFOCUSRECT) == 0;
+	bool bIsChecked = checkStates[hWnd];
+	RECT itemRect = drawItemStruct->rcItem;
+	char title[1024];
+
+	USES_CONVERSION;
+	SendMessage(hWnd, WM_GETTEXT, sizeof(title), (LPARAM)title);
+	SetBkMode(hdc, TRANSPARENT);
+	// Prepare draw... paint button background
+	if (CUIThemes::isThemeLibLoaded() && hTheme)
+	{
+		DWORD state;
+		SIZE boxSize;
+		RECT boxRect = itemRect;
+		RECT textRect;
+
+		if (bIsPressed)
+		{
+			if (bIsChecked)
+			{
+				state = CBS_CHECKEDPRESSED;
+			}
+			else
+			{
+				state = CBS_UNCHECKEDPRESSED;
+			}
+		}
+		else
+		{
+			if (hMouseOverButton == hWnd)
+			{
+				if (bIsChecked)
+				{
+					state = CBS_CHECKEDHOT;
+				}
+				else
+				{
+					state = CBS_UNCHECKEDHOT;
+				}
+			}
+			else
+			{
+				if (bIsChecked)
+				{
+					state = CBS_CHECKEDNORMAL;
+				}
+				else
+				{
+					state = CBS_UNCHECKEDNORMAL;
+				}
+			}
+		}
+		GetThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL, TS_TRUE,
+			&boxSize);
+		boxRect.right = itemRect.left + boxSize.cx;
+		DrawThemeParentBackground(hWnd, hdc, &itemRect);
+		CUIThemes::drawThemeBackground(hTheme, hdc, BP_CHECKBOX, state,
+			&boxRect, NULL);
+		GetThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, A2W(title), -1,
+			DT_LEFT, &itemRect, &textRect);
+		OffsetRect(&textRect, boxSize.cx + 3, 1);
+		// Draw the focus rect
+		if (bIsFocused && bDrawFocusRect)
+		{
+			RECT focusRect = textRect;
+
+			InflateRect(&focusRect, 1, 1);
+			DrawFocusRect(hdc, &focusRect);
+		}
+		// All this so that we can draw the text in the font and color of the
+		// group box text instead of the check box text.  Here's where we do
+		// that.
+		DrawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL, A2W(title), -1,
+			DT_LEFT, NULL, &textRect);
+	}
+	return TRUE;
+}
+
 BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 										  LPDRAWITEMSTRUCT drawItemStruct)
 {
@@ -3112,12 +3335,12 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 	else
 	{
 		if (bIsFocused)
-			{
+		{
 			HBRUSH br = CreateSolidBrush(RGB(0,0,0));  
 			FrameRect(hdc, &itemRect, br);
 			InflateRect(&itemRect, -1, -1);
 			DeleteObject(br);
-			} // if		
+		} // if		
 
 		COLORREF crColor = GetSysColor(COLOR_BTNFACE);
 
@@ -3191,6 +3414,33 @@ BOOL LDViewPreferences::doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 	return TRUE;
 }
 
+BOOL LDViewPreferences::doDrawItem(HWND hDlg, int itemId,
+								   LPDRAWITEMSTRUCT drawItemStruct)
+{
+	HWND hWnd = GetDlgItem(hDlg, itemId);
+
+	if (itemId == IDC_DEFAULT_COLOR || itemId == IDC_BACKGROUND_COLOR)
+	{
+		return doDrawColorButton(hDlg, hWnd, hButtonTheme, drawItemStruct);
+	}
+	else
+	{
+		switch (itemId)
+		{
+		case IDC_WIREFRAME:
+		case IDC_BFC:
+		case IDC_HIGHLIGHTS:
+		case IDC_LIGHTING:
+		case IDC_STEREO:
+		case IDC_CUTAWAY:
+		case IDC_PRIMITIVE_SUBSTITUTION:
+			return doDrawGroupCheckBox(hWnd, hButtonTheme, drawItemStruct);
+			break;
+		}
+	}
+	return FALSE;
+}
+
 BOOL LDViewPreferences::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 						   LPARAM lParam)
 {
@@ -3203,22 +3453,12 @@ BOOL LDViewPreferences::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 			{
 				InvalidateRect(hMouseOverButton, NULL, TRUE);
 				hMouseOverButton = NULL;
+//				debugPrintf("hMouseOverButton: 0x%08X\n", NULL);
 			}
 			break;
 		}
 	case WM_DRAWITEM:
-		if (wParam == IDC_DEFAULT_COLOR || wParam == IDC_BACKGROUND_COLOR)
-		{
-			HWND hWnd = GetDlgItem(hDlg, wParam);
-			HTHEME hTheme = hDefaultColorTheme;
-
-			if (wParam == IDC_BACKGROUND_COLOR)
-			{
-				hTheme = hBackgroundColorTheme;
-			}
-			return doDrawColorButton(hDlg, hWnd, hTheme,
-				(LPDRAWITEMSTRUCT)lParam);
-		}
+		return doDrawItem(hDlg, wParam, (LPDRAWITEMSTRUCT)lParam);
 		break;
 	}
 	return CUIPropertySheet::dialogProc(hDlg, message, wParam, lParam);

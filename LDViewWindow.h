@@ -186,6 +186,7 @@ class LDViewWindow: public CUIWindow
 		virtual void createStatusBar(void);
 		virtual void createToolbar(void);
 		virtual LRESULT switchTopmost(void);
+		virtual LRESULT switchVisualStyle(void);
 		virtual void removeToolbar(void);
 		virtual void addToolbar(void);
 		virtual void removeStatusBar(void);
@@ -196,6 +197,7 @@ class LDViewWindow: public CUIWindow
 		virtual void showStatusIcon(bool examineMode);
 		virtual void reflectViewMode(void);
 		virtual void reflectTopmost(void);
+		virtual void reflectVisualStyle(void);
 		virtual void reflectStatusBar(void);
 		virtual void reflectToolbar(void);
 		virtual void reflectPolling(void);
@@ -279,6 +281,7 @@ class LDViewWindow: public CUIWindow
 		bool showStatusBarOverride;
 		bool showToolbar;
 		bool topmost;
+		bool visualStyleEnabled;
 		BOOL skipMinimize;
 		BOOL screenSaver;
 		int originalMouseX;

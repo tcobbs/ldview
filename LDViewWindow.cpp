@@ -122,6 +122,18 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 //			   modelWindowShown(false)
 {
 	CUIThemes::init();
+	if (CUIThemes::isThemeLibLoaded())
+	{
+		if (TCUserDefaults::longForKey(VISUAL_STYLE_ENABLED_KEY, 1, false))
+		{
+			CUIThemes::setThemeAppProperties(STAP_ALLOW_NONCLIENT |
+				STAP_ALLOW_CONTROLS);
+		}
+		else
+		{
+			CUIThemes::setThemeAppProperties(STAP_ALLOW_NONCLIENT);
+		}
+	}
 	loadSettings();
 	standardWindowStyle = windowStyle;
 	if (!recentFiles)
@@ -180,6 +192,8 @@ void LDViewWindow::loadSettings(void)
 	showStatusBar = TCUserDefaults::longForKey(STATUS_BAR_KEY, 1, false) != 0;
 	showToolbar = TCUserDefaults::longForKey(TOOLBAR_KEY, 1, false) != 0;
 	topmost = TCUserDefaults::longForKey(TOPMOST_KEY, 0, false) != 0;
+	visualStyleEnabled = TCUserDefaults::longForKey(VISUAL_STYLE_ENABLED_KEY,
+		1, false) != 0;
 }
 
 HBRUSH LDViewWindow::getBackgroundBrush(void)
@@ -609,7 +623,16 @@ BOOL LDViewWindow::initWindow(void)
 	{
 		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
-		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
+		hViewAngleMenu = findSubMenu(hViewMenu, 0);
+		if (!CUIThemes::isThemeLibLoaded())
+		{
+			RemoveMenu(hViewMenu, ID_VIEW_VISUALSTYLE, MF_BYCOMMAND);
+		}
+		else
+		{
+			reflectVisualStyle();
+		}
+//		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
 		hToolbarMenu = LoadMenu(getLanguageModule(),
 			MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
 		hEdgesMenu = GetSubMenu(hToolbarMenu, 0);
@@ -2681,6 +2704,23 @@ LRESULT LDViewWindow::switchTopmost(void)
 	return 0;
 }
 
+void LDViewWindow::reflectVisualStyle(void)
+{
+	if (CUIThemes::isThemeLibLoaded())
+	{
+		setMenuCheck(hViewMenu, ID_VIEW_VISUALSTYLE, visualStyleEnabled);
+	}
+}
+
+LRESULT LDViewWindow::switchVisualStyle(void)
+{
+	visualStyleEnabled = !visualStyleEnabled;
+	TCUserDefaults::setLongForKey(visualStyleEnabled ? 1 : 0,
+		VISUAL_STYLE_ENABLED_KEY, false);
+	reflectVisualStyle();
+	return 0;
+}
+
 /*
 LRESULT LDViewWindow::doTimer(UINT timerID)
 {
@@ -2918,6 +2958,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_VIEW_ALWAYSONTOP:
 			return switchTopmost();
+			break;
+		case ID_VIEW_VISUALSTYLE:
+			return switchVisualStyle();
 			break;
 		case ID_VIEW_EXAMINE:
 			return switchToExamineMode();
@@ -3160,6 +3203,9 @@ bool LDViewWindow::doToolbarCheck(bool &value, LPARAM commandId)
 	}
 	if (newValue != value)
 	{
+		HWND hTooltip = (HWND)SendMessage(hToolbar, TB_GETTOOLTIPS, 0, 0);
+
+		SendMessage(hTooltip, TTM_POP, 0, 0);
 		value = newValue;
 		return true;
 	}
@@ -3310,7 +3356,8 @@ HMENU LDViewWindow::menuForBitDepth(HWND hWnd, int bitDepth, int* index)
 		GetMenuItemInfo(viewMenu, i, TRUE, &itemInfo);
 		if (itemInfo.hSubMenu && itemInfo.dwItemData == (unsigned)bitDepth)
 		{
-			bitDepthMenu = GetSubMenu(viewMenu, i);
+			bitDepthMenu = itemInfo.hSubMenu;
+//			bitDepthMenu = GetSubMenu(viewMenu, i);
 			if (index)
 			{
 				*index = i;

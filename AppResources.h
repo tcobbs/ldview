@@ -218,6 +218,7 @@
 #define IDC_BFC_BOX                     1184
 #define ID_VIEWANGLE                    1189
 #define ID_TOOLBAR                      1190
+#define IDC_IGNORE_PBUFFER              1190
 #define ID_STATUS_BAR                   1191
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
@@ -272,6 +273,7 @@
 #define ID_EDGES_CONDITIONALLINES       40072
 #define ID_EDGES_HIGHQUALITY            40073
 #define ID_EDGES_ALWAYSBLACK            40074
+#define ID_VIEW_VISUALSTYLE             40075
 
 // Next default values for new objects
 // 
@@ -280,8 +282,8 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        165
-#define _APS_NEXT_COMMAND_VALUE         40075
-#define _APS_NEXT_CONTROL_VALUE         1190
+#define _APS_NEXT_COMMAND_VALUE         40076
+#define _APS_NEXT_CONTROL_VALUE         1191
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

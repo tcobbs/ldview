@@ -197,9 +197,16 @@ BOOL LDVExtensionsSetup::initWindow(void)
 
 			if (!wglGetExtensionsStringARB)
 			{
-				return FALSE;
+				wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
+					wglGetProcAddress("wglGetExtensionsStringEXT");
 			}
-			wglExtensions = copyString(wglGetExtensionsStringARB(hdc));
+			if (wglGetExtensionsStringARB)
+			{
+				wglExtensions = copyString(wglGetExtensionsStringARB(hdc));
+			}
+		}
+		if (!glExtensions)
+		{
 			glExtensions = copyString((char*)glGetString(GL_EXTENSIONS));
 		}
 		if (checkForWGLExtension("WGL_ARB_pixel_format"))

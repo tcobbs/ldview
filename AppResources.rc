@@ -467,18 +467,18 @@ END
 
 IDD_SAVE_OPTIONS DIALOGEX 0, 0, 289, 64
 STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "     ",IDC_STATIC,4,0,132,57
+    GROUPBOX        "     ",IDC_STATIC,4,0,132,27
     CONTROL         "Save snapshot series",IDC_SAVE_SERIES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,12,0,83,10,
                     WS_EX_TRANSPARENT
-    RTEXT           "Number of Digits:",IDC_SAVE_DIGITS_LABEL,26,27,55,8
-    EDITTEXT        IDC_SAVE_DIGITS,86,25,22,12,ES_AUTOHSCROLL | ES_READONLY | 
+    RTEXT           "Number of Digits:",IDC_SAVE_DIGITS_LABEL,26,13,55,8
+    EDITTEXT        IDC_SAVE_DIGITS,86,11,22,12,ES_AUTOHSCROLL | ES_READONLY | 
                     ES_NUMBER
     CONTROL         "Spin1",IDC_SAVE_DIGITS_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,102,25,9,12
+                    UDS_ARROWKEYS,102,11,9,12
     GROUPBOX        "     ",IDC_STATIC,140,0,132,57
     CONTROL         "Save image with specific size",IDC_SAVE_ACTUAL_SIZE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,0,108,10,
@@ -493,6 +493,9 @@ BEGIN
                     WS_DISABLED
     CONTROL         "Zoom to Fit",IDC_SAVE_ZOOMTOFIT,"Button",
                     BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,51,10
+    GROUPBOX        "Misc",IDC_STATIC,4,29,132,28
+    CONTROL         "Don't use Pixel Buffer",IDC_IGNORE_PBUFFER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,12,41,83,10
 END
 
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 212, 177
@@ -807,6 +810,7 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
+        MENUITEM "Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
         MENUITEM "Switch to &Fullscreen\tCtrl+Enter", ID_VIEW_FULLSCREEN
         MENUITEM "&Errors\tCtrl+Shift+E",       ID_VIEW_ERRORS
         MENUITEM "Toolbar\tCtrl+Shift+T",       ID_VIEW_TOOLBAR

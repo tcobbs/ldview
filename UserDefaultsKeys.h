@@ -107,6 +107,7 @@
 #define IGNORE_MS_FILTER_HINT_KEY "IgnoreMultisampleFilterHint"
 #define IGNORE_MULTI_DRAW_ARRAYS_KEY "IgnoreMultiDrawArrays"
 #define IGNORE_ALL_OGL_EXTENSIONS "IgnoreAllOGLExtensions"
+#define VISUAL_STYLE_ENABLED_KEY "VisualStyleEnabled"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

@@ -12,9 +12,9 @@
 typedef HANDLE HTHEME;          // handle to a section of theme data for class
 #endif
 
-typedef HTHEME(__stdcall *PFNOPENTHEMEDATA)(HWND hwnd, LPCWSTR pszClassList);
-typedef HRESULT(__stdcall *PFNCLOSETHEMEDATA)(HTHEME hTheme);
-typedef HRESULT(__stdcall *PFNDRAWTHEMEBACKGROUND)(HTHEME hTheme, HDC hdc, 
+typedef HTHEME (__stdcall *PFNOPENTHEMEDATA)(HWND hwnd, LPCWSTR pszClassList);
+typedef HRESULT (__stdcall *PFNCLOSETHEMEDATA)(HTHEME hTheme);
+typedef HRESULT (__stdcall *PFNDRAWTHEMEBACKGROUND)(HTHEME hTheme, HDC hdc,
 	int iPartId, int iStateId, const RECT *pRect,  const RECT *pClipRect);
 typedef HRESULT (__stdcall *PFNDRAWTHEMETEXT)(HTHEME hTheme, HDC hdc,
 	int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
@@ -27,6 +27,12 @@ typedef HRESULT (_stdcall *PFNDRAWTHEMEEDGE)(HTHEME hTheme, HDC hdc,
 	RECT *pContentRect);
 typedef HRESULT (_stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pwszSubAppName,
 	LPCWSTR pwszSubIdList);
+typedef HTHEME (_stdcall *PFNGETWINDOWTHEME)(HWND hWnd);
+typedef HRESULT (_stdcall *PFNGETTHEMECOLOR)(HTHEME hTheme, int iPartId,
+	int iStateId, int iPropId, COLORREF *pColor);
+typedef void (_stdcall *PFNSETTHEMEAPPPROPERTIED)(DWORD dwFlags);
+typedef HRESULT (_stdcall *PFNGETTHEMERECT)(HTHEME hTheme, int iPartId,
+	int iStateId, int iPropId, RECT *pRect);
 
 class CUIExport CUIThemes
 {
@@ -50,6 +56,12 @@ public:
 		LPCWSTR pwszSubIdList);
 	static HRESULT setWindowTheme(HWND hWnd, LPCSTR pszSubAppName,
 		LPCSTR pszSubIdList);
+	static HTHEME getWindowTheme(HWND hWnd);
+	static HRESULT getThemeColor(HTHEME hTheme, int iPartId, int iStateId,
+		int iPropId, COLORREF *pColor);
+	static HRESULT getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
+		int iPropId, RECT *pRect);
+	static void setThemeAppProperties(DWORD dwFlags);
 
 protected:
 	CUIThemes(void);
@@ -65,6 +77,10 @@ protected:
 	static PFNGETTHEMEBACKGROUNDCONTENTRECT sm_getThemeBackgroundContentRect;
 	static PFNDRAWTHEMEEDGE sm_drawThemeEdge;
 	static PFNSETWINDOWTHEME sm_setWindowTheme;
+	static PFNGETWINDOWTHEME sm_getWindowTheme;
+	static PFNGETTHEMECOLOR sm_getThemeColor;
+	static PFNSETTHEMEAPPPROPERTIED sm_setThemeAppProperties;
+	static PFNGETTHEMERECT sm_getThemeRect;
 	static void deinit(void);
 
 	static class CUIThemesCleanup

@@ -1806,11 +1806,23 @@ BOOL CUIWindow::doDialogHelp(HWND, LPHELPINFO)
 	return FALSE;
 }
 
+BOOL CUIWindow::doDialogCtlColorStatic(HDC /*hdcStatic*/, HWND)
+{
+	return FALSE;
+}
+
+BOOL CUIWindow::doDialogCtlColorBtn(HDC /*hdcStatic*/, HWND)
+{
+	return FALSE;
+}
+
 BOOL CUIWindow::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 						   LPARAM lParam)
 {
 //	printf("CUIWindow::dialogProc(0x%04X, 0x%04X, 0x%08X, 0x%08X)\n", hDlg,
 //		message, wParam, lParam);
+	BOOL retValue;
+
 	switch (message)
 	{
 		case WM_INITDIALOG:
@@ -1851,11 +1863,25 @@ BOOL CUIWindow::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 		case WM_THEMECHANGED:
 			return doDialogThemeChanged();
 			break;
+		case WM_CTLCOLORSTATIC:
+			retValue = doDialogCtlColorStatic((HDC)wParam, (HWND)lParam);
+			if (retValue)
+			{
+				return retValue;
+			}
+			break;
+		case WM_CTLCOLORBTN:
+			retValue = doDialogCtlColorBtn((HDC)wParam, (HWND)lParam);
+			if (retValue)
+			{
+				return retValue;
+			}
+			break;
 		default:
 			return FALSE;
 			break;
 	}
-	return TRUE;
+	return FALSE;
 }
 
 BOOL CALLBACK CUIWindow::staticDialogProc(HWND hDlg, UINT message,
@@ -2221,4 +2247,33 @@ bool CUIWindow::copyToClipboard(const char *value)
 		}
 	}
 	return false;
+}
+
+HMENU CUIWindow::findSubMenu(HMENU hParentMenu, int subMenuIndex, int *index)
+{
+	int i;
+	int count = GetMenuItemCount(hParentMenu);
+	int foundCount = 0;
+	MENUITEMINFO itemInfo;
+
+	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+	itemInfo.cbSize = sizeof(MENUITEMINFO);
+	itemInfo.fMask = MIIM_DATA | MIIM_SUBMENU;
+	for (i = 0; i < count; i++)
+	{
+		GetMenuItemInfo(hParentMenu, i, TRUE, &itemInfo);
+		if (itemInfo.hSubMenu)
+		{
+			if (foundCount == subMenuIndex)
+			{
+				if (index)
+				{
+					*index = i;
+				}
+				return itemInfo.hSubMenu;
+			}
+			foundCount++;
+		}
+	}
+	return NULL;
 }
