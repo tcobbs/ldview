@@ -19,6 +19,8 @@ public:
 	virtual TCULong getColor(void);
 	virtual bool isColorSet(void) { return m_colorSet; }
 	virtual void draw(void);
+	virtual void drawColored(void);
+	virtual void drawDefaultColor(void);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);

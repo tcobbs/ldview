@@ -1,15 +1,24 @@
 #include "TREVertexStore.h"
 #include "TREVertexArray.h"
-#include "TREGL.h"
 #include <LDLib/Vector.h>
 #include <string.h>
 
 TREVertexStore *TREVertexStore::sm_activeVertexStore = NULL;
+PFNWGLALLOCATEMEMORYNVPROC TREVertexStore::wglAllocateMemoryNV = NULL;
+PFNWGLFREEMEMORYNVPROC TREVertexStore::wglFreeMemoryNV = NULL;
+PFNGLVERTEXARRAYRANGENVPROC TREVertexStore::glVertexArrayRangeNV = NULL;
+TCByte *TREVertexStore::sm_varBuffer = NULL;
+int TREVertexStore::sm_varSize = 0;
 
 TREVertexStore::TREVertexStore(void)
 	:m_vertices(NULL),
 	m_normals(NULL),
-	m_colors(NULL)
+	m_colors(NULL),
+	m_varVerticesOffset(0),
+	m_varNormalsOffset(0),
+	m_varColorsOffset(0),
+	m_varTried(false),
+	m_varFailed(false)
 {
 }
 
@@ -17,7 +26,12 @@ TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	:TCObject(other),
 	m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
-	m_colors((TCULongArray *)TCObject::copy(other.m_colors))
+	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
+	m_varVerticesOffset(0),
+	m_varNormalsOffset(0),
+	m_varColorsOffset(0),
+	m_varTried(false),
+	m_varFailed(false)
 {
 }
 
@@ -27,9 +41,33 @@ TREVertexStore::~TREVertexStore(void)
 
 void TREVertexStore::dealloc(void)
 {
+	if (sm_activeVertexStore == this)
+	{
+		sm_activeVertexStore = NULL;
+	}
 	TCObject::release(m_vertices);
 	TCObject::release(m_normals);
 	TCObject::release(m_colors);
+	if (sm_varBuffer && wglFreeMemoryNV)
+	{
+		wglFreeMemoryNV(sm_varBuffer);
+		sm_varBuffer = NULL;
+		sm_varSize = 0;
+	}
+/*
+	if (m_varVertices)
+	{
+		wglFreeMemoryNV(m_varVertices);
+		if (m_varNormals)
+		{
+			wglFreeMemoryNV(m_varNormals);
+		}
+		if (m_varColors)
+		{
+			wglFreeMemoryNV(m_varColors);
+		}
+	}
+*/
 	TCObject::dealloc();
 }
 
@@ -83,6 +121,86 @@ int TREVertexStore::addVertices(TREVertexArray *vertices, Vector *points,
 	return vertices->getCount() - count;
 }
 
+void TREVertexStore::setupVAR(void)
+{
+	if (m_vertices && wglAllocateMemoryNV && wglFreeMemoryNV &&
+		glVertexArrayRangeNV)
+	{
+		int count = m_vertices->getCount();
+//		float priority = 1.0f;
+		float priority = 0.0f;
+		int offset = sm_varSize;
+		TCByte *oldBuffer = NULL;
+		int verticesSize = count * sizeof(TREVertex);
+		int verticesAllocatedSize = (verticesSize + 31) / 32 * 32;
+		int normalsSize = 0;
+		int normalsAllocatedSize = 0;
+		int colorsSize = 0;
+		int colorsAllocatedSize = 0;
+
+		m_varTried = true;
+		sm_varSize += count * sizeof(TREVertex);
+		if (m_normals)
+		{
+			normalsSize = verticesSize;
+			normalsAllocatedSize = (normalsSize + 31) / 32 * 32;
+			sm_varSize += normalsAllocatedSize;
+		}
+		if (m_colors)
+		{
+			colorsSize = count * sizeof(TCULong);
+			colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
+			sm_varSize += colorsAllocatedSize;
+		}
+		if (offset)
+		{
+			oldBuffer = new TCByte[offset];
+			memcpy(oldBuffer, sm_varBuffer, offset);
+			wglFreeMemoryNV(sm_varBuffer);
+		}
+		sm_varBuffer = (TCByte *)wglAllocateMemoryNV(sm_varSize, 0.0f, 0.0f,
+			priority);
+		if (sm_varBuffer)
+		{
+			if (oldBuffer)
+			{
+				memcpy(sm_varBuffer, oldBuffer, offset);
+			}
+			m_varVerticesOffset = offset;
+			memcpy(sm_varBuffer + m_varVerticesOffset,
+				m_vertices->getVertices(), verticesSize);
+			if (m_normals)
+			{
+				m_varNormalsOffset = offset + verticesAllocatedSize;
+				memcpy(sm_varBuffer + m_varNormalsOffset,
+					m_normals->getVertices(), normalsSize);
+			}
+			if (m_colors)
+			{
+				m_varColorsOffset = offset + verticesAllocatedSize +
+					normalsAllocatedSize;
+				memcpy(sm_varBuffer + m_varColorsOffset, m_colors->getItems(),
+					colorsSize);
+			}
+			glVertexArrayRangeNV(sm_varSize, sm_varBuffer);
+			glEnableClientState(/*0x8533*/GL_VERTEX_ARRAY_RANGE_NV);
+		}
+		else
+		{
+			sm_varSize = 0;
+			m_varFailed = true;
+		}
+		if (oldBuffer)
+		{
+			delete oldBuffer;
+		}
+	}
+	else
+	{
+		m_varFailed = true;
+	}
+}
+
 bool TREVertexStore::activate(void)
 {
 	if (sm_activeVertexStore == this)
@@ -95,7 +213,20 @@ bool TREVertexStore::activate(void)
 		if (m_vertices)
 		{
 			glEnableClientState(GL_VERTEX_ARRAY);
-			glVertexPointer(3, GL_FLOAT, 0, m_vertices->getVertices());
+			if (!m_varTried && !m_varFailed)
+			{
+				setupVAR();
+			}
+			if (sm_varBuffer)
+			{
+				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+					sm_varBuffer + m_varVerticesOffset);
+			}
+			else
+			{
+				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+					m_vertices->getVertices());
+			}
 		}
 		else
 		{
@@ -104,7 +235,16 @@ bool TREVertexStore::activate(void)
 		if (m_normals)
 		{
 			glEnableClientState(GL_NORMAL_ARRAY);
-			glNormalPointer(GL_FLOAT, 0, m_normals->getVertices());
+			if (sm_varBuffer)
+			{
+				glNormalPointer(GL_FLOAT, sizeof(TREVertex),
+					sm_varBuffer + m_varNormalsOffset);
+			}
+			else
+			{
+				glNormalPointer(GL_FLOAT, sizeof(TREVertex),
+					m_normals->getVertices());
+			}
 		}
 		else
 		{
@@ -113,7 +253,16 @@ bool TREVertexStore::activate(void)
 		if (m_colors)
 		{
 			glEnableClientState(GL_COLOR_ARRAY);
-			glColorPointer(4, GL_UNSIGNED_BYTE, 0, m_colors->getValues());
+			if (sm_varBuffer)
+			{
+				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
+					sm_varBuffer + m_varColorsOffset);
+			}
+			else
+			{
+				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
+					m_colors->getValues());
+			}
 		}
 		else
 		{

@@ -53,8 +53,18 @@ void TREMainModel::draw(void)
 {
 	TCULong color = htonl(0xBBBBBBFF);
 
+	if (!m_defaultColorListID)
+	{
+		m_vertexStore->activate();
+		compileDefaultColor();
+		m_coloredVertexStore->activate();
+		compileColored();
+	}
 	glColor4ubv((GLubyte*)&color);
-	TREModel::draw();
+	m_vertexStore->activate();
+	drawDefaultColor();
+	m_coloredVertexStore->activate();
+	drawColored();
 }
 
 TREModel *TREMainModel::modelNamed(const char *name)

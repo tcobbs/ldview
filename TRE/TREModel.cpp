@@ -18,7 +18,9 @@ TREModel::TREModel(void)
 	m_mainModel(NULL),
 	m_subModels(NULL),
 	m_shapes(NULL),
-	m_coloredShapes(NULL)
+	m_coloredShapes(NULL),
+	m_defaultColorListID(0),
+	m_coloredListID(0)
 {
 	m_flags.part = false;
 }
@@ -31,6 +33,8 @@ TREModel::TREModel(const TREModel &other)
 	m_shapes((TREShapeGroup *)TCObject::copy(other.m_shapes)),
 	m_coloredShapes((TREColoredShapeGroup *)TCObject::copy(
 		other.m_coloredShapes)),
+	m_defaultColorListID(0),
+	m_coloredListID(0),
 	m_flags(other.m_flags)
 {
 }
@@ -46,6 +50,14 @@ void TREModel::dealloc(void)
 	TCObject::release(m_subModels);
 	TCObject::release(m_shapes);
 	TCObject::release(m_coloredShapes);
+	if (m_defaultColorListID)
+	{
+		glDeleteLists(m_defaultColorListID, 1);
+	}
+	if (m_coloredListID)
+	{
+		glDeleteLists(m_coloredListID, 1);
+	}
 	TCObject::dealloc();
 }
 
@@ -64,11 +76,11 @@ void TREModel::draw(void)
 {
 	if (m_flags.part)
 	{
-		glNormalize(false);
+		setGlNormalize(false);
 	}
 	else
 	{
-		glNormalize(true);
+		setGlNormalize(true);
 	}
 	if (m_shapes)
 	{
@@ -88,6 +100,118 @@ void TREModel::draw(void)
 		for (i = 0; i < count; i++)
 		{
 			(*m_subModels)[i]->draw();
+		}
+	}
+}
+
+void TREModel::compileDefaultColor(void)
+{
+	if (!m_defaultColorListID)
+	{
+		int listID = glGenLists(1);
+
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getModel()->compileDefaultColor();
+			}
+		}
+		glNewList(listID, GL_COMPILE);
+		drawDefaultColor();
+		glEndList();
+		m_defaultColorListID = listID;
+	}
+}
+
+void TREModel::compileColored(void)
+{
+	if (!m_coloredListID)
+	{
+		int listID = glGenLists(1);
+
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getModel()->compileColored();
+			}
+		}
+		glNewList(listID, GL_COMPILE);
+		drawColored();
+		glEndList();
+		m_coloredListID = listID;
+	}
+}
+
+void TREModel::drawDefaultColor(void)
+{
+	if (m_defaultColorListID)
+	{
+		glCallList(m_defaultColorListID);
+	}
+	else
+	{
+		if (m_flags.part)
+		{
+			setGlNormalize(false);
+		}
+		else
+		{
+			setGlNormalize(true);
+		}
+		if (m_shapes)
+		{
+			m_shapes->draw();
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->drawDefaultColor();
+			}
+		}
+	}
+}
+
+void TREModel::drawColored(void)
+{
+	if (m_coloredListID)
+	{
+		glCallList(m_coloredListID);
+	}
+	else
+	{
+		if (m_flags.part)
+		{
+			setGlNormalize(false);
+		}
+		else
+		{
+			setGlNormalize(true);
+		}
+		if (m_coloredShapes)
+		{
+			m_coloredShapes->draw();
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->drawColored();
+			}
 		}
 	}
 }
@@ -434,7 +558,7 @@ void TREModel::multMatrix(float* left, float* right, float* result)
 		left[11] * right[14] + left[15] * right[15];
 }
 
-void TREModel::glNormalize(bool value)
+void TREModel::setGlNormalize(bool value)
 {
 	if (value != sm_normalizeOn)
 	{

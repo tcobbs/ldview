@@ -35,6 +35,10 @@ public:
 	virtual void addQuad(Vector *vertices);
 	virtual void addQuad(TCULong color, Vector *vertices);
 	virtual void draw(void);
+	virtual void compileDefaultColor(void);
+	virtual void compileColored(void);
+	virtual void drawDefaultColor(void);
+	virtual void drawColored(void);
 	virtual void setPart(bool part) { m_flags.part = part; }
 	virtual bool isPart(void) { return m_flags.part; }
 	virtual void flatten(void);
@@ -53,13 +57,15 @@ protected:
 		bool colorSet, bool includeShapes);
 	virtual void flattenShapes(TREShapeGroup *dstShapes,
 		TREShapeGroup *srcShapes, float *matrix, TCULong color, bool colorSet);
-	static void glNormalize(bool value);
+	static void setGlNormalize(bool value);
 
 	char *m_name;
 	TREMainModel *m_mainModel;
 	TRESubModelArray *m_subModels;
 	TREShapeGroup *m_shapes;
 	TREColoredShapeGroup *m_coloredShapes;
+	int m_defaultColorListID;
+	int m_coloredListID;
 	struct
 	{
 		bool part:1;
