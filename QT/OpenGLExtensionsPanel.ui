@@ -1,0 +1,57 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>OpenGLExtensionsPanel</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>OpenGLExtensionsPanel</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>372</width>
+            <height>333</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>OpenGL Extensions</string>
+    </property>
+    <property name="icon">
+        <pixmap>LDViewIcon16.png</pixmap>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>2</number>
+        </property>
+        <property name="spacing">
+            <number>0</number>
+        </property>
+        <widget class="QTextEdit">
+            <property name="name">
+                <cstring>extensionsBox</cstring>
+            </property>
+            <property name="enabled">
+                <bool>true</bool>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>320</width>
+                    <height>200</height>
+                </size>
+            </property>
+            <property name="textFormat">
+                <enum>PlainText</enum>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
+            </property>
+        </widget>
+    </vbox>
+</widget>
+<toolbars>
+</toolbars>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
