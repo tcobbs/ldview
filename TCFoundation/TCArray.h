@@ -9,6 +9,7 @@ class TCExport TCArray : public TCObject
 {
 	public:
 		explicit TCArray(unsigned int = 0);
+		TCArray (const TCArray &other);
 
 		virtual void addItem(void*);
 		virtual void insertItem(void*, unsigned int = 0);

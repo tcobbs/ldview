@@ -20,6 +20,7 @@ TREModel::TREModel(void)
 	m_coloredShapes(NULL),
 	m_edgeShapes(NULL),
 	m_coloredEdgeShapes(NULL),
+	m_invertedModel(NULL),
 	m_defaultColorListID(0),
 	m_coloredListID(0),
 	m_defaultColorLinesListID(0),
@@ -30,18 +31,45 @@ TREModel::TREModel(void)
 	m_flags.part = false;
 	m_flags.boundingBox = false;
 	m_flags.unshrunkNormals = false;
+	m_flags.inverted = false;
 }
 
 TREModel::TREModel(const TREModel &other)
-	:TCObject(other),
-	m_name(copyString(other.m_name)),
+	:m_name(copyString(other.m_name)),
 	m_mainModel(other.m_mainModel),
 	m_subModels((TRESubModelArray *)TCObject::copy(other.m_subModels)),
 	m_shapes((TREShapeGroup *)TCObject::copy(other.m_shapes)),
 	m_coloredShapes((TREColoredShapeGroup *)TCObject::copy(
 		other.m_coloredShapes)),
+	m_edgeShapes((TREShapeGroup *)TCObject::copy(other.m_edgeShapes)),
 	m_coloredEdgeShapes((TREColoredShapeGroup *)TCObject::copy(
 		other.m_coloredEdgeShapes)),
+	m_invertedModel((TREModel *)TCObject::copy(other.m_invertedModel)),
+	m_defaultColorListID(0),
+	m_coloredListID(0),
+	m_defaultColorLinesListID(0),
+	m_coloredLinesListID(0),
+	m_edgeLinesListID(0),
+	m_coloredEdgeLinesListID(0),
+	m_boundingMin(other.m_boundingMin),
+	m_boundingMax(other.m_boundingMax),
+	m_flags(other.m_flags)
+{
+}
+
+TREModel::TREModel(const TREModel &other, bool shallow)
+	:m_name(copyString(other.m_name)),
+	m_mainModel(other.m_mainModel),
+	m_subModels(shallow ? NULL :
+		(TRESubModelArray *)TCObject::copy(other.m_subModels)),
+	m_shapes((TREShapeGroup *)TCObject::copy(other.m_shapes)),
+	m_coloredShapes((TREColoredShapeGroup *)TCObject::copy(
+		other.m_coloredShapes)),
+	m_edgeShapes((TREShapeGroup *)TCObject::copy(other.m_edgeShapes)),
+	m_coloredEdgeShapes((TREColoredShapeGroup *)TCObject::copy(
+		other.m_coloredEdgeShapes)),
+	m_invertedModel(shallow ? NULL :
+		(TREModel *)TCObject::copy(other.m_invertedModel)),
 	m_defaultColorListID(0),
 	m_coloredListID(0),
 	m_defaultColorLinesListID(0),
@@ -67,6 +95,10 @@ void TREModel::dealloc(void)
 	TCObject::release(m_coloredShapes);
 	TCObject::release(m_edgeShapes);
 	TCObject::release(m_coloredEdgeShapes);
+	if (!m_flags.inverted)
+	{
+		TCObject::release(m_invertedModel);
+	}
 	if (m_defaultColorListID)
 	{
 		glDeleteLists(m_defaultColorListID, 1);
@@ -97,6 +129,51 @@ void TREModel::dealloc(void)
 TCObject *TREModel::copy(void)
 {
 	return new TREModel(*this);
+}
+
+TREModel *TREModel::shallowCopy(void)
+{
+	return new TREModel(*this, true);
+}
+
+TREModel *TREModel::getInvertedModel(void)
+{
+	if (!m_invertedModel)
+	{
+		m_invertedModel = shallowCopy();
+		m_invertedModel->invert(this);
+	}
+	return m_invertedModel;
+}
+
+void TREModel::invert(TREModel *originalModel)
+{
+	m_invertedModel = originalModel;
+	m_flags.inverted = true;
+	if (originalModel->m_subModels)
+	{
+		int i;
+		int count;
+
+		count = originalModel->m_subModels->getCount();
+		m_subModels = new TRESubModelArray(count);
+		for (i = 0; i < count; i++)
+		{
+			TRESubModel *subModel =
+				(*originalModel->m_subModels)[i]->getInvertedSubModel();
+
+			m_subModels->addObject(subModel);
+//			subModel->release();
+		}
+	}
+	if (m_shapes)
+	{
+		m_shapes->invert();
+	}
+	if (m_coloredShapes)
+	{
+		m_coloredShapes->invert();
+	}
 }
 
 void TREModel::setName(const char *name)
@@ -157,7 +234,9 @@ void TREModel::compileDefaultColor(void)
 			(m_flags.part && m_mainModel->getCompilePartsFlag()))
 		{
 			int listID = glGenLists(1);
+			float matrix[16];
 
+			TCVector::initIdentityMatrix(matrix);
 			glNewList(listID, GL_COMPILE);
 			drawDefaultColor();
 			glEndList();
@@ -291,6 +370,14 @@ void TREModel::compileColoredEdgeLines(void)
 
 void TREModel::drawDefaultColor(void)
 {
+	float identityMatrix[16];
+
+	TCVector::initIdentityMatrix(identityMatrix);
+	drawDefaultColor(identityMatrix);
+}
+
+void TREModel::drawDefaultColor(const float *matrix)
+{
 	if (m_defaultColorListID)
 	{
 		glCallList(m_defaultColorListID);
@@ -316,7 +403,7 @@ void TREModel::drawDefaultColor(void)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->drawDefaultColor();
+				(*m_subModels)[i]->drawDefaultColor(matrix);
 			}
 		}
 	}

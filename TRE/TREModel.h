@@ -20,7 +20,9 @@ class TREModel : public TCObject
 public:
 	TREModel(void);
 	TREModel(const TREModel &other);
-	TCObject *copy(void);
+	TREModel(const TREModel &other, bool shallow);
+	virtual TCObject *copy(void);
+	virtual TREModel *shallowCopy(void);
 	virtual void setMainModel(TREMainModel *mainModel)
 	{
 		m_mainModel = mainModel;
@@ -57,6 +59,7 @@ public:
 	virtual void compileEdgeLines(void);
 	virtual void compileColoredEdgeLines(void);
 	virtual void drawDefaultColor(void);
+	virtual void drawDefaultColor(const float *matrix);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColored(void);
 	virtual void drawColoredLines(void);
@@ -88,6 +91,7 @@ public:
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *scaleMatrix);
 	void unshrinkNormals(float *matrix, float *unshrinkMatrix);
+	TREModel *getInvertedModel(void);
 
 //	static void multMatrix(float* left, float* right, float* result);
 	static void transformVertex(TREVertex &vertex, float *matrix);
@@ -127,6 +131,7 @@ protected:
 	virtual void triangleFanToTriangle(int index, TCVector *stripVertices,
 		TCVector *stripNormals, TCVector *triangleVertices,
 		TCVector *triangleNormals);
+	virtual void invert(TREModel *originalModel);
 
 	static void setGlNormalize(bool value);
 
@@ -137,6 +142,7 @@ protected:
 	TREColoredShapeGroup *m_coloredShapes;
 	TREShapeGroup *m_edgeShapes;
 	TREColoredShapeGroup *m_coloredEdgeShapes;
+	TREModel *m_invertedModel;
 	int m_defaultColorListID;
 	int m_coloredListID;
 	int m_defaultColorLinesListID;
@@ -150,6 +156,7 @@ protected:
 		bool part:1;
 		bool boundingBox:1;
 		bool unshrunkNormals:1;
+		bool inverted:1;
 	} m_flags;
 
 	static bool sm_normalizeOn;

@@ -14,13 +14,13 @@ class TREVertexStore : public TCObject
 public:
 	TREVertexStore(void);
 	TREVertexStore(const TREVertexStore &other);
+	virtual TCObject *copy(void);
 	virtual bool activate(void);
 	virtual int addVertices(TCVector *points, int count);
 	virtual int addVertices(TCVector *points, TCVector *normals, int count);
 	virtual int addVertices(TCULong color, TCVector *points, int count);
 	virtual int addVertices(TCULong color, TCVector *points, TCVector *normals,
 		int count);
-	TCObject *copy(void);
 	virtual void setup(void);
 	virtual void setupColored(void);
 	TREVertexArray *getVertices(void) { return m_vertices; }

@@ -12,6 +12,27 @@ TCObjectArray::TCObjectArray(unsigned int allocated)
 #endif
 }
 
+TCObjectArray::TCObjectArray(const TCObjectArray &other)
+	:TCArray(other.count)
+{
+	unsigned int i;
+
+	count = allocated;
+	for (i = 0; i < count; i++)
+	{
+		TCObject *object = (TCObject*)other.items[i];
+
+		if (object)
+		{
+			items[i] = object->copy();
+		}
+		else
+		{
+			items[i] = NULL;
+		}
+	}
+}
+
 TCObjectArray::~TCObjectArray(void)
 {
 }
@@ -39,8 +60,9 @@ int TCObjectArray::replaceObject(TCObject* newObject, unsigned int index)
 		if (oldObject != newObject)
 		{
 			TCObject::release(oldObject);
+			items[index] = newObject;
+			newObject->retain();
 		}
-		items[index] = newObject;
 		return 1;
 	}
 	else
@@ -122,15 +144,7 @@ TCObject* TCObjectArray::operator[](unsigned int index)
 
 TCObject *TCObjectArray::copy(void)
 {
-	TCObjectArray *newObjectArray = new TCObjectArray(count);
-	unsigned int i;
-
-	for (i = 0; i < count; i++)
-	{
-		newObjectArray->items[i] = ((TCObject*)items[i])->copy();
-	}
-	newObjectArray->count = count;
-	return newObjectArray;
+	return new TCObjectArray(*this);
 }
 
 void TCObjectArray::addItem(void* newItem)

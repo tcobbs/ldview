@@ -11,7 +11,7 @@ class TREMainModel : public TREModel
 public:
 	TREMainModel(void);
 	TREMainModel(const TREMainModel &other);
-	TCObject *copy(void);
+	virtual TCObject *copy(void);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual void draw(void);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
