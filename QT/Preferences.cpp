@@ -1392,11 +1392,11 @@ void Preferences::doHotkeyPreferenceSet()
 		hotKeyIndex = 10;
 	}
 	QStringList lst;
-	lst << TCLocalStrings::get("<None>") << "0" << "1" << "2" << "3" << 
-	"4" << "5" << "6" << "7" << "8" << "9";
+	lst << TCLocalStrings::get("<None>") << "1" << "2" << "3" << 
+	"4" << "5" << "6" << "7" << "8" << "9" << "0";
 	bool ok;
 	QString res = QInputDialog::getItem(getSelectedPrefSet(), 
-			"Select a hot key to automatically select this Preference Set:",
+			"Select a hot key to automatically select this Preference Set:\nAlt + ",
 			lst, hotKeyIndex, FALSE, &ok, panel);
 	if (ok)
 	{
@@ -1437,6 +1437,63 @@ int Preferences::getHotKey(const char *currentPrefSetName)
     }
     return retValue;
 }
+
+void Preferences::performHotKey(int hotKeyIndex)
+{
+    char *hotKeyPrefSetName = getHotKey(hotKeyIndex);
+    bool retValue = false;
+    if (hotKeyPrefSetName)
+    {
+        const char *currentSessionName = TCUserDefaults::getSessionName();
+        bool hotKeyIsDefault = strcmp(hotKeyPrefSetName, DEFAULT_PREF_SET) == 0;
+
+        if (currentSessionName)
+        {
+            if (strcmp(currentSessionName, hotKeyPrefSetName) == 0)
+            {
+                retValue = true;
+            }
+        }
+        else if (hotKeyIsDefault)
+        {
+            retValue = true;
+        }
+        if (!retValue)
+        {
+            bool changed = false;
+
+            if (hotKeyIsDefault)
+            {
+                TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
+                changed = true;
+            }
+            else
+            {
+                TCStringArray *sessionNames =
+                    TCUserDefaults::getAllSessionNames();
+
+                if (sessionNames->indexOfString(hotKeyPrefSetName) != -1)
+                {
+                    TCUserDefaults::setSessionName(hotKeyPrefSetName,
+                        PREFERENCE_SET_KEY);
+                    {
+                        changed = true;
+                    }
+                }
+                sessionNames->release();
+            }
+            if (changed)
+            {
+                loadSettings();
+				reflectSettings();
+                doApply();
+                retValue = true;
+            }
+        }
+    }
+	delete hotKeyPrefSetName;
+}
+
 
 int Preferences::getCurrentHotKey(void)
 {
