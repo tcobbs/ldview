@@ -388,13 +388,14 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_vertices)
 		{
 			glEnableClientState(GL_VERTEX_ARRAY);
-			if (!displayLists && !m_flags.vboTried && !m_flags.vboFailed)
-			{
-				setupVBO();
-			}
-			if (!m_flags.varTried && !m_flags.varFailed && !m_vbo)
+			if (!m_flags.varTried && !m_flags.varFailed)
 			{
 				setupVAR();
+			}
+			if (!displayLists && !m_flags.vboTried && !m_flags.vboFailed &&
+				!sm_varBuffer)
+			{
+				setupVBO();
 			}
 			if (!displayLists && m_vbo)
 			{
