@@ -53,6 +53,7 @@
 #define IDB_EXTRA_DIRS                  159
 #define IDB_MATRIX                      160
 #define IDB_MATRIX_MASK                 161
+#define IDR_LOCAL_STRINGS               161
 #define IDB_NON_FLAT_QUAD               162
 #define IDB_NON_FLAT_QUAD_MASK          163
 #define IDB_COLINEAR                    164
@@ -269,7 +270,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        161
+#define _APS_NEXT_RESOURCE_VALUE        162
 #define _APS_NEXT_COMMAND_VALUE         40069
 #define _APS_NEXT_CONTROL_VALUE         1185
 #define _APS_NEXT_SYMED_VALUE           101

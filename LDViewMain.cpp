@@ -268,13 +268,51 @@ int doPreview(HINSTANCE hInstance, LPSTR lpCmdLine)
 	return 1;
 }
 
+static void setupLocalStrings(void)
+{
+	HRSRC hLocalStringsResource = FindResource(NULL,
+		MAKEINTRESOURCE(IDR_LOCAL_STRINGS),
+		"LocalStrings");
+	bool done = false;
+
+	if (hLocalStringsResource)
+	{
+		HGLOBAL hLocalStrings = LoadResource(NULL, hLocalStringsResource);
+
+		if (hLocalStrings)
+		{
+			TCByte *data = (TCByte *)LockResource(hLocalStrings);
+
+			if (data)
+			{
+				DWORD length = SizeofResource(NULL, hLocalStringsResource);
+
+				if (length)
+				{
+					char *localStrings = new char[length + 1];
+
+					memcpy(localStrings, data, length);
+					localStrings[length] = 0;
+					TCLocalStrings::setStringTable(localStrings);
+					delete localStrings;
+					done = true;
+				}
+				UnlockResource(hLocalStrings);
+			}
+		}
+	}
+	if (!done)
+	{
+		TCLocalStrings::loadStringTable("LDViewMessages.ini");
+	}
+}
+
 static void setupUserDefaults(LPSTR lpCmdLine, bool screenSaver)
 {
 	char *appName = "Travis Cobbs/LDView";
 	char *sessionName;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
-	TCLocalStrings::loadStringTable("LDViewMessages.ini");
 	if (screenSaver)
 	{
 		appName = "Travis Cobbs/LDView Screen Saver";
@@ -300,6 +338,7 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 //	TCDictionary* testDict = new TCDictionary;
 
 	setupUserDefaults(lpCmdLine, screenSaver);
+	setupLocalStrings();
 	if (screenSaver)
 	{
 		if (strncasecmp(lpCmdLine, "/p", 2) == 0 ||
