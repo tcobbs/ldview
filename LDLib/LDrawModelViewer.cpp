@@ -673,6 +673,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
 		if (mainModel->load(filename))
 		{
+//			mainModel->release();
+//			return 0;
 			LDModelParser *modelParser = new LDModelParser;
 
 			modelParser->setSeamWidth(LDrawModel::getSeamWidth());
@@ -2564,7 +2566,7 @@ char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	return message;
 }
 
-//static int _numPoints = 0;
+static int _numPoints = 0;
 
 // This is conversion of Lars Hassing's auto camera code from L3P.  It computes
 // the correct distance and pan amount for the camera so that the viewing
@@ -2596,10 +2598,10 @@ void LDrawModelViewer::zoomToFit(void)
 		tmpMatrix[14] = center[2];
 		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
 		preCalcCamera();
-//		_numPoints = 0;
+		_numPoints = 0;
 		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
 			transformationMatrix);
-//		printf("num points: %d\n", _numPoints);
+		printf("num points: %d\n", _numPoints);
 		d = (float)width / (float)height;
 		dh = (cameraData->horMax - cameraData->horMin) / d;
 		dv = cameraData->verMax - cameraData->verMin;
@@ -2720,7 +2722,7 @@ void LDrawModelViewer::scanCameraPoint(const TCVector &point)
 	{
 		cameraData->verMax = d;
 	}
-//	_numPoints++;
+	_numPoints++;
 }
 
 // More of Lars' L3P auto camera positioning code.

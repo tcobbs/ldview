@@ -20,7 +20,7 @@ void TCObjectArray::dealloc(void)
 {
 	for (unsigned int i = 0; i < count; i++)
 	{
-		objectAtIndex(i)->release();
+		TCObject::release(objectAtIndex(i));
 	}
 	TCArray::dealloc();
 }
@@ -38,7 +38,7 @@ int TCObjectArray::replaceObject(TCObject* newObject, unsigned int index)
 
 		if (oldObject != newObject)
 		{
-			oldObject->release();
+			TCObject::release(oldObject);
 		}
 		items[index] = newObject;
 		return 1;
@@ -51,7 +51,7 @@ int TCObjectArray::replaceObject(TCObject* newObject, unsigned int index)
 
 void TCObjectArray::insertObject(TCObject* newObject, unsigned int index)
 {
-	newObject->retain();
+	TCObject::retain(newObject);
 	insertItem(newObject, index);
 }
 
@@ -93,7 +93,7 @@ int TCObjectArray::removeObject(int index)
 {
 	if (index >= 0 && (unsigned)index < count)
 	{
-		objectAtIndex(index)->release();
+		TCObject::release(objectAtIndex(index));
 		return removeItem(index);
 	}
 	else

@@ -1,6 +1,7 @@
 #include "LDVExtensionsSetup.h"
 #include <TCFoundation/mystring.h>
 #include <TRE/TREVertexStore.h>
+#include <TRE/TREShapeGroup.h>
 #include <stdio.h>
 
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
@@ -21,6 +22,8 @@ PFNWGLQUERYPBUFFERARBPROC LDVExtensionsSetup::wglQueryPbufferARB = NULL;
 PFNWGLALLOCATEMEMORYNVPROC LDVExtensionsSetup::wglAllocateMemoryNV = NULL;
 PFNWGLFREEMEMORYNVPROC LDVExtensionsSetup::wglFreeMemoryNV = NULL;
 PFNGLVERTEXARRAYRANGENVPROC LDVExtensionsSetup::glVertexArrayRangeNV = NULL;
+
+PFNGLMULTIDRAWELEMENTSEXTPROC LDVExtensionsSetup::glMultiDrawElementsEXT = NULL;
 
 char *LDVExtensionsSetup::wglExtensions = NULL;
 char *LDVExtensionsSetup::glExtensions = NULL;
@@ -168,6 +171,12 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			TREVertexStore::setWglFreeMemoryNV(wglFreeMemoryNV);
 			TREVertexStore::setGlVertexArrayRangeNV(glVertexArrayRangeNV);
 		}
+		if (haveMultiDrawArraysExtension())
+		{
+			glMultiDrawElementsEXT = (PFNGLMULTIDRAWELEMENTSEXTPROC)
+				wglGetProcAddress("glMultiDrawElementsEXT");
+			TREShapeGroup::setGlMultiDrawElementsEXT(glMultiDrawElementsEXT);
+		}
 		glGetIntegerv(GL_STENCIL_BITS, &intValue);
 		if (intValue)
 		{
@@ -301,6 +310,11 @@ bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(void)
 bool LDVExtensionsSetup::haveVARExtension(void)
 {
 	return checkForExtension("GL_NV_vertex_array_range");
+}
+
+bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
+{
+	return checkForExtension("GL_EXT_multi_draw_arrays");
 }
 
 bool LDVExtensionsSetup::havePixelFormatExtension(void)

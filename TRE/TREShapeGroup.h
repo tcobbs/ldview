@@ -55,6 +55,8 @@ public:
 */
 	virtual TCULongArray *getIndices(TREShapeType shapeType,
 		bool create = false);
+	virtual TCULongArray *getStripCounts(TREShapeType shapeType,
+		bool create = false);
 	virtual void draw(void);
 	virtual void drawNonBFC(void);
 	virtual void drawBFC(void);
@@ -67,16 +69,21 @@ public:
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
+	static void setGlMultiDrawElementsEXT(PFNGLMULTIDRAWELEMENTSEXTPROC value)
+	{
+		glMultiDrawElementsEXT = value;
+	}
 protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
-	virtual TCULong getIndex(TREShapeType shapeType);
+	virtual TCULong getShapeTypeIndex(TREShapeType shapeType);
 	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
 		int count);
 	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
 		TCVector *normals, int count);
 	virtual void addShapeIndices(TREShapeType shapeType, int firstIndex,
 		int count);
+	virtual void addShapeStripCount(TREShapeType shapeType, int count);
 /*
 	virtual void addShape(TREShapeType shapeType, int index1, int index2);
 	virtual void addShape(TREShapeType shapeType, int index1, int index2,
@@ -89,6 +96,8 @@ protected:
 	virtual void drawStripShapeType(TREShapeType shapeType);
 	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
 		TCVector *normals, int count);
+	virtual void initMultiDrawIndices(void);
+	virtual void deleteMultiDrawIndices(void);
 
 	virtual void scanPoints(TCULong index, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
@@ -96,19 +105,25 @@ protected:
 		TREScanPointCallback scanPointCallback);
 	virtual void scanPoints(TCULongArray *indices, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
-	virtual void scanStripPoints(TCULongArray *indices, TCObject *scanner,
+	virtual void scanStripPoints(TCULongArray *indices,
+		TCULongArray *stripCounts, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
 
 	virtual void unshrinkNormal(TCULong index, float *matrix,
 		float *unshrinkMatrix);
 	virtual void unshrinkNormals(TCULongArray *indices, float *matrix,
 		float *unshrinkMatrix);
-	virtual void unshrinkStripNormals(TCULongArray *indices, float *matrix,
+	virtual void unshrinkStripNormals(TCULongArray *indices,
+		TCULongArray *stripCounts, float *matrix,
 		float *unshrinkMatrix);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;
+	TCULongArrayArray *m_stripCounts;
+	TCULong ***m_multiDrawIndices;
 	TCULong m_shapesPresent;
+
+	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
 };
 
 #endif __TRESHAPEGROUP_H__

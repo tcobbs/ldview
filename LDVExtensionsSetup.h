@@ -64,6 +64,10 @@ public:
 	{
 		return glVertexArrayRangeNV;
 	}
+	static PFNGLMULTIDRAWELEMENTSEXTPROC getGlMultiDrawElementsEXT(void)
+	{
+		return glMultiDrawElementsEXT;
+	}
 
 	static bool checkForWGLExtension(char* extension);
 	static bool checkForExtension(char* extension);
@@ -73,6 +77,7 @@ public:
 	static bool haveNvMultisampleFilterHintExtension(void);
 	static bool havePixelFormatExtension(void);
 	static bool haveVARExtension(void);
+	static bool haveMultiDrawArraysExtension(void);
 	static char *getWglExtensions(void) { return wglExtensions; }
 	static bool haveStencil(void) { return stencilPresent; }
 	static bool haveAlpha(void) { return alphaPresent; }
@@ -102,6 +107,7 @@ protected:
 	static PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;
 	static PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV;
 	static PFNGLVERTEXARRAYRANGENVPROC glVertexArrayRangeNV;
+	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
 
 	static char *wglExtensions;
 	static char *glExtensions;

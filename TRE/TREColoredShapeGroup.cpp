@@ -93,7 +93,7 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 
 	m_vertexStore->setup();
 	index = m_vertexStore->addVertices(htonl(color), vertices, normals, count);
-	addShapeIndices(shapeType, count, 1);
+	addShapeStripCount(shapeType, count);
 	addShapeIndices(shapeType, index, count);
 	return index;
 }
