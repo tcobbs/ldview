@@ -1,9 +1,8 @@
 #include "ModelWindow.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCMacros.h>
-#include <LDLib/TGLStudLogo.h>
+//#include <LDLib/TGLStudLogo.h>
 #include "LDVExtensionsSetup.h"
-#include "TestPrefs.h"
 #include "LDViewWindow.h"
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -94,7 +93,7 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 
 				if (length)
 				{
-					TGLStudLogo::setTextureData(data, length);
+//					TGLStudLogo::setTextureData(data, length);
 				}
 			}
 		}

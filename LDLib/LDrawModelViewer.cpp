@@ -407,7 +407,7 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 		// then don't move the camera.
 		camera.setPosition(TCVector(0.0f, 0.0f, defaultDistance));
 	}
-	camera.setFacing(TGLFacing());
+	camera.setFacing(TREFacing());
 	if (!rotationMatrix)
 	{
 		rotationMatrix = new float[16];
