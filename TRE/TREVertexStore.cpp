@@ -559,7 +559,7 @@ void TREVertexStore::openGlWillEnd(void)
 	if (m_vbo && glDeleteBuffersARB)
 	{
 		glDeleteBuffersARB(1, &m_vbo);
-		m_vbo = NULL;
+		m_vbo = 0;
 		m_flags.vboTried = false;
 	}
 }
