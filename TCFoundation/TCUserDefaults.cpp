@@ -142,6 +142,19 @@ void TCUserDefaults::setCommandLine(const char *args)
 		else
 		{
 			end = strchr(tmpString, ' ');
+			if (tmpString[0] == '-')
+			{
+				char *equals = strchr(tmpString, '=');
+
+				if (equals < end && equals[1] == '"')
+				{
+					end = strchr(equals + 2, '"');
+					if (end[0] == '"')
+					{
+						end++;
+					}
+				}
+			}
 		}
 		if (end)
 		{
@@ -336,11 +349,23 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 		if (index >= 0)
 		{
 			char *arg = commandLine->stringAtIndex(index);
-			int keyLength = strlen(key);
 
-			if (strlen(arg + keyLength + 1) > 0)
+			arg += strlen(key) + 2;
+			if (strlen(arg) > 0)
 			{
-				return copyString(arg + keyLength + 2);
+				int argLen = strlen(arg);
+
+				if (arg[0] == '"' && arg[argLen - 1] == '"')
+				{
+					char *retValue = copyString(arg + 1);
+
+					retValue[argLen - 2] = 0;
+					return retValue;
+				}
+				else
+				{
+					return copyString(arg);
+				}
 			}
 		}
 	}
@@ -567,80 +592,86 @@ void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 
 void TCUserDefaults::defSetAppName(const char* value)
 {
-	delete appName;
-	appName = copyString(value);
-	defSetSessionName(NULL);
-#ifdef WIN32
-	if (hAppDefaultsKey)
+	if (appName != value)
 	{
-		RegCloseKey(hAppDefaultsKey);
-	}
-	hAppDefaultsKey = openAppDefaultsKey();
-	hSessionKey = hAppDefaultsKey;
+		delete appName;
+		appName = copyString(value);
+		defSetSessionName(NULL);
+#ifdef WIN32
+		if (hAppDefaultsKey)
+		{
+			RegCloseKey(hAppDefaultsKey);
+		}
+		hAppDefaultsKey = openAppDefaultsKey();
+		hSessionKey = hAppDefaultsKey;
 #endif // WIN32
+	}
 }
 
 void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 {
-	delete sessionName;
-	sessionName = copyString(value);
+	if (value != sessionName)
+	{
+		delete sessionName;
+		sessionName = copyString(value);
 #ifdef WIN32
-	HKEY hOldSessionKey = hSessionKey;
+		HKEY hOldSessionKey = hSessionKey;
 
-	if (sessionName && appName)
-	{
-		hSessionKey = openSessionKey();
-		if (!hSessionKey)
+		if (sessionName && appName)
 		{
-			TCStringArray *allKeys;
-			int i;
-			int count;
-			char *sessionPrefix = new char[strlen(sessionName) + 128];
-
-			sprintf(sessionPrefix, "Sessions/%s/", sessionName);
-			hSessionKey = hOldSessionKey;
-			allKeys = defGetAllKeys();
-			count = allKeys->getCount();
-			for (i = 0; i < count; i++)
-			{
-				char *key = allKeys->stringAtIndex(i);
-				char *newKey = new char[strlen(sessionPrefix) + strlen(key) +
-					4];
-
-				sprintf(newKey, "%s%s", sessionPrefix, key);
-				if (defIsLongKey(key, true))
-				{
-					long value = defLongForKey(key, true);
-
-					hSessionKey = hAppDefaultsKey;
-					setLongForKey(value, newKey);
-				}
-				else
-				{
-					char *value = defStringForKey(key, true);
-
-					hSessionKey = hAppDefaultsKey;
-					setStringForKey(value, newKey);
-					delete value;
-				}
-				hSessionKey = hOldSessionKey;
-				delete newKey;
-			}
-			delete sessionPrefix;
-			allKeys->release();
 			hSessionKey = openSessionKey();
+			if (!hSessionKey)
+			{
+				TCStringArray *allKeys;
+				int i;
+				int count;
+				char *sessionPrefix = new char[strlen(sessionName) + 128];
+
+				sprintf(sessionPrefix, "Sessions/%s/", sessionName);
+				hSessionKey = hOldSessionKey;
+				allKeys = defGetAllKeys();
+				count = allKeys->getCount();
+				for (i = 0; i < count; i++)
+				{
+					char *key = allKeys->stringAtIndex(i);
+					char *newKey = new char[strlen(sessionPrefix) + strlen(key) +
+						4];
+
+					sprintf(newKey, "%s%s", sessionPrefix, key);
+					if (defIsLongKey(key, true))
+					{
+						long value = defLongForKey(key, true);
+
+						hSessionKey = hAppDefaultsKey;
+						setLongForKey(value, newKey);
+					}
+					else
+					{
+						char *value = defStringForKey(key, true);
+
+						hSessionKey = hAppDefaultsKey;
+						setStringForKey(value, newKey);
+						delete value;
+					}
+					hSessionKey = hOldSessionKey;
+					delete newKey;
+				}
+				delete sessionPrefix;
+				allKeys->release();
+				hSessionKey = openSessionKey();
+			}
 		}
+		else
+		{
+			hSessionKey = hAppDefaultsKey;
+		}
+		if (hOldSessionKey && hOldSessionKey != hAppDefaultsKey &&
+			hOldSessionKey != hSessionKey)
+		{
+			RegCloseKey(hOldSessionKey);
+		}
+#endif // WIN32
 	}
-	else
-	{
-		hSessionKey = hAppDefaultsKey;
-	}
-	if (hOldSessionKey && hOldSessionKey != hAppDefaultsKey &&
-		hOldSessionKey != hSessionKey)
-	{
-		RegCloseKey(hOldSessionKey);
-	}
-#endif
 	if (saveKey)
 	{
 		defSaveSessionNameInKey(saveKey);
