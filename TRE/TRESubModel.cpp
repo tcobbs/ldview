@@ -413,10 +413,11 @@ void TRESubModel::shrink(float amount)
 			scaleMatrix[i * 4 + i] = 1.0f - amount / delta[i];
 			if (center[i])
 			{
-				scaleMatrix[12 + i] = amount / delta[i] * center[i] / 2.0f;
+				scaleMatrix[12 + i] = amount / delta[i] * center[i];
 			}
 		}
 	}
+//	TCVector::multMatrix(scaleMatrix, m_matrix, tempMatrix);
 	TCVector::multMatrix(m_matrix, scaleMatrix, tempMatrix);
 	memcpy(m_matrix, tempMatrix, sizeof(m_matrix));
 /*
