@@ -72,3 +72,5 @@ int main(int argc, char *argv[])
 	w->modelViewer->setApplication(&a);
     return a.exec();
 }
+
+// Just a comment to verify I have commit permissions in cvs.
