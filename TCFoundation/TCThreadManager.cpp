@@ -53,11 +53,11 @@ int TCThreadManager::lockExitMutex(void)
 {
 	int retValue;
 
-	debugPrintf(4, "TCThreadManager::lockExitMutex (pre ):%08X\n",
-		GetCurrentThreadId());
+//	debugPrintf(4, "TCThreadManager::lockExitMutex (pre ):%08X\n",
+//		GetCurrentThreadId());
 	retValue = exitMutex->lock();
-	debugPrintf(4, "TCThreadManager::lockExitMutex (post):%08X\n",
-		GetCurrentThreadId());
+//	debugPrintf(4, "TCThreadManager::lockExitMutex (post):%08X\n",
+//		GetCurrentThreadId());
 	return retValue;
 }
 
@@ -69,8 +69,8 @@ int TCThreadManager::tryLockExitMutex(void)
 
 int TCThreadManager::unlockExitMutex(void)
 {
-	debugPrintf(4, "TCThreadManager::unlockExitMutex:     %08X\n",
-		GetCurrentThreadId());
+//	debugPrintf(4, "TCThreadManager::unlockExitMutex:     %08X\n",
+//		GetCurrentThreadId());
 	return exitMutex->unlock();
 }
 

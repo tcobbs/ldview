@@ -7,6 +7,9 @@
 #ifndef YES
 #define YES (!NO)
 #endif
+#ifndef SOCKET_ERROR
+#define SOCKET_ERROR -1
+#endif
 
 #ifdef WIN32
 #include <winsock2.h>

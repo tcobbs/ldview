@@ -6,8 +6,10 @@
 #include <stdio.h>
 
 TCThreadCondition::TCThreadCondition(TCMutex* mutex)
-	:mutex((TCMutex*)(mutex->retain())),
-	triggered(false)
+	:mutex((TCMutex*)(mutex->retain()))
+#ifdef WIN32
+	,triggered(false)
+#endif // WIN32
 {
 #ifdef WIN32
 	waitCount = 0;

@@ -32,6 +32,7 @@
 static const char __pBase64[]="\
 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
+#ifdef WIN32
 static char monthLongNames[12][20] =
 {
 	"January",
@@ -85,6 +86,7 @@ static char dayShortNames[7][4] =
 	"Fri",
 	"Sat"
 };
+#endif // WIN32
 
 TCWebClient::TCWebClient(const char* url)
 	:TCNetworkClient(80),
@@ -314,9 +316,10 @@ time_t TCWebClient::scanDateString(const char* dateString)
 	time_t result = 0;
 	char* tzString;
 //	char dayOfWeek[128];
-	char month[128];
 
 #ifdef WIN32
+	char month[128];
+
 	memset(&tmTime, 0, sizeof(tmTime));
 	if (sscanf(dateString, "%*s %d %s %d %d:%d:%d ", &tmTime.tm_mday, month,
 		&tmTime.tm_year, &tmTime.tm_hour, &tmTime.tm_min, &tmTime.tm_sec) == 6)
