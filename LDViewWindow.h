@@ -247,12 +247,25 @@ class LDViewWindow: public CUIWindow
 		virtual void doBfc(void);
 		virtual void doToolbarDropDown(LPNMTOOLBAR toolbarNot);
 		virtual void doViewAngle(void);
+		virtual void doFog(void);
+		virtual void doRemoveHiddenLines(void);
 		virtual void doShowEdgesOnly(void);
 		virtual void doConditionalLines(void);
 		virtual void doHighQualityEdges(void);
 		virtual void doAlwaysBlack(void);
+		virtual void doTextureStuds(void);
+		virtual void doQualityLighting(void);
+		virtual void doSubduedLighting(void);
+		virtual void doSpecularHighlight(void);
+		virtual void doAlternateLighting(void);
+		virtual void doRedBackFaces(void);
+		virtual void doGreenFrontFaces(void);
 		virtual bool doToolbarCheck(bool &value, LPARAM commandId);
+		virtual void updateWireframeMenu(void);
 		virtual void updateEdgesMenu(void);
+		virtual void updatePrimitivesMenu(void);
+		virtual void updateLightingMenu(void);
+		virtual void updateBFCMenu(void);
 		void progressAlertCallback(TCProgressAlert *error);
 
 		void loadSettings(void);
@@ -299,7 +312,11 @@ class LDViewWindow: public CUIWindow
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
 		HMENU hToolbarMenu;
+		HMENU hWireframeMenu;
 		HMENU hEdgesMenu;
+		HMENU hPrimitivesMenu;
+		HMENU hLightingMenu;
+		HMENU hBFCMenu;
 		bool loading;
 //		bool modelWindowShown;
 		CUIWindowResizer *openGLInfoWindoResizer;
