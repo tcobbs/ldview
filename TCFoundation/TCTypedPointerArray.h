@@ -27,12 +27,8 @@ template <class Type> class TCTypedPointerArray : public TCArray
 			{ return TCArray::replaceItem(pointer, index); }
 		int indexOfPointer(Type pointer)
 			{ return TCArray::indexOfItem(pointer); }
-		int indexOfPointerIdenticalTo(Type pointer)
-			{ return TCArray::indexOfItemIdenticalTo(pointer); }
 		int removePointer(Type pointer)
 			{ return TCArray::removeItem(pointer); }
-		int removePointerIdenticalTo(Type pointer)
-			{ return TCArray::removeItemIdenticalTo(pointer); }
 		int removePointer(int index)
 			{ return TCArray::removeItem(index); }
 		Type pointerAtIndex(unsigned int index)

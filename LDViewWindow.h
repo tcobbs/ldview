@@ -53,6 +53,7 @@ typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
 #define LIBRARY_UPDATE_FINISHED 1
 #define LIBRARY_UPDATE_CANCELED 2
 #define LIBRARY_UPDATE_NONE 3
+#define LIBRARY_UPDATE_ERROR 4
 
 class LDViewWindow: public CUIWindow
 {

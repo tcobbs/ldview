@@ -11,7 +11,7 @@ TCExport char *strnstr(const char *s1, const char *s2, size_t n,
 					   int skipZero = 0);
 TCExport char *strncasestr(const char *s1, const char *s2, size_t n, int 
 skipZero = 0);
-TCExport char *strcasestr(const char *s1, const char *s2);
+TCExport char *strcasestr(const char *s1, const char *s2) __THROW;
 
 //int stringHasPrefix(const char *s1, const char *s2);
 

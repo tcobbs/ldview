@@ -2860,7 +2860,10 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 			strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));
 			break;
 		}
-		SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)statusText);
+		if (strlen(statusText))
+		{
+			SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)statusText);
+		}
 	}
 }
 
@@ -2945,6 +2948,11 @@ void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 				PostMessage(hWindow, WM_COMMAND,
 					MAKELONG(BN_CLICKED, LIBRARY_UPDATE_CANCELED), 0);
 			}
+		}
+		else if (alert->getProgress() == 2.0f)
+		{
+			PostMessage(hWindow, WM_COMMAND,
+				MAKELONG(BN_CLICKED, LIBRARY_UPDATE_ERROR), 0);
 		}
 		if (libraryUpdateCanceled)
 		{
@@ -3145,15 +3153,10 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			switch (notifyCode)
 			{
 			case LIBRARY_UPDATE_FINISHED:
-				doLibraryUpdateFinished(LIBRARY_UPDATE_FINISHED);
-				return 0;
-				break;
 			case LIBRARY_UPDATE_CANCELED:
-				doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
-				return 0;
-				break;
 			case LIBRARY_UPDATE_NONE:
-				doLibraryUpdateFinished(LIBRARY_UPDATE_NONE);
+			case LIBRARY_UPDATE_ERROR:
+				doLibraryUpdateFinished(notifyCode);
 				return 0;
 				break;
 			}

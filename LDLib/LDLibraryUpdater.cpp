@@ -227,7 +227,7 @@ bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
 	}
 }
 
-void LDLibraryUpdater::parseUpdateList(const char *updateList)
+bool LDLibraryUpdater::parseUpdateList(const char *updateList)
 {
 	int lineCount;
 	char **updateListLines = componentsSeparatedByString(updateList, "\n",
@@ -264,6 +264,11 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 	updateArray->sort();
 	TCObject::release(m_updateQueue);
 	m_updateQueue = NULL;
+	if (updateArray->getCount() == 0)
+	{
+		updateArray->release();
+		return false;
+	}
 	if (determineLastUpdate(updateArray, lastUpdateName))
 	{
 		int updatesNeededCount = 0;
@@ -321,6 +326,7 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 	}
 	updateArray->release();
 	TCObject::release(fullUpdateInfo);
+	return true;
 }
 
 TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
@@ -384,12 +390,17 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 			memcpy(string, data, dataLength);
 			string[dataLength] = 0;
 			debugPrintf("Got Page Data! (length = %d)\n", dataLength);
-			parseUpdateList(string);
+			if (!parseUpdateList(string))
+			{
+				strcpy(m_error, TCLocalStrings::get("LDLUpdateDlParseError"));
+				aborted = true;
+			}
 			delete string;
 		}
 		else
 		{
 			strcpy(m_error, TCLocalStrings::get("LDLUpdateDlListError"));
+			aborted = true;
 			debugPrintf("No Page Data!\n");
 		}
 	}
@@ -421,8 +432,15 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 		}
 	}
 	setDebugLevel(0);
-	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get("LDLUpdateDone"), 1.0f, extraInfo);
+	if (strlen(m_error))
+	{
+		TCProgressAlert::send(LD_LIBRARY_UPDATER, m_error, 2.0f);
+	}
+	else
+	{
+		TCProgressAlert::send(LD_LIBRARY_UPDATER,
+			TCLocalStrings::get("LDLUpdateDone"), 1.0f, extraInfo);
+	}
 	TCObject::release(extraInfo);
 	return 0;
 }
