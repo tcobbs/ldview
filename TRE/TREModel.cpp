@@ -1027,7 +1027,7 @@ void TREModel::finishShapeNormals(TREConditionalMap &conditionalMap)
 		for (i = 0; i < count0; i++)
 		{
 			const TREVertex &vertex0 = smoother0.getVertex(i);
-			TRESmoother &smoother1 = conditionalMap[TREVectorKey(vertex0)];
+			TRESmoother &smoother1 = conditionalMap[TREVertexKey(vertex0)];
 			int count1 = smoother1.getVertexCount();
 //			const TREVertex &startVertex1 = smoother1.getStartVertex();
 
@@ -1274,7 +1274,7 @@ int TREModel::getConditionalLine(TREConditionalMap &conditionalMap,
 
 	if (!smoother)
 	{
-		TREVectorKey pointKey(point0);
+		TREVertexKey pointKey(point0);
 		TREConditionalMap::iterator it = conditionalMap.find(pointKey);
 
 //		debugPrintf("%f %f %f -> ", point0.v[0], point0.v[1], point0.v[2]);
@@ -1352,7 +1352,7 @@ void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 								   const TREVertexArray *vertices, int index0,
 								   int index1)
 {
-	TREVectorKey pointKey(vertices->constVertexAtIndex(index0));
+	TREVertexKey pointKey(vertices->constVertexAtIndex(index0));
 	TREConditionalMap::iterator it = conditionalMap.find(pointKey);
 
 	if (it == conditionalMap.end())
