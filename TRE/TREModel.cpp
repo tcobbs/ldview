@@ -16,39 +16,28 @@ TREModel::TREModel(void)
 	:m_name(NULL),
 	m_mainModel(NULL),
 	m_subModels(NULL),
-	m_shapes(NULL),
-	m_coloredShapes(NULL),
-	m_edgeShapes(NULL),
-	m_coloredEdgeShapes(NULL),
-	m_bfcShapes(NULL),
-	m_coloredBFCShapes(NULL),
 	m_unMirroredModel(NULL),
 	m_invertedModel(NULL),
-	m_defaultColorListID(0),
-	m_coloredListID(0),
-	m_defaultColorLinesListID(0),
-	m_coloredLinesListID(0),
-	m_edgeLinesListID(0),
-	m_coloredEdgeLinesListID(0),
-	m_bfcListID(0),
-	m_coloredBFCListID(0)
+	m_sectionsPresent(0),
+	m_coloredSectionsPresent(0)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");
 #endif // _LEAK_DEBUG
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
+	{
+		m_shapes[i] = NULL;
+		m_coloredShapes[i] = NULL;
+		m_listIDs[i] = 0;
+		m_coloredListIDs[i] = 0;
+	}
 	m_flags.part = false;
 	m_flags.boundingBox = false;
 	m_flags.unshrunkNormals = false;
 	m_flags.unMirrored = false;
 	m_flags.inverted = false;
-	m_flags.defaultColorPresent = false;
-	m_flags.bfcPresent = false;
-	m_flags.defaultColorLinesPresent = false;
-	m_flags.edgeLinesPresent = false;
-	m_flags.coloredPresent = false;
-	m_flags.coloredBFCPresent = false;
-	m_flags.coloredLinesPresent = false;
-	m_flags.coloredEdgeLinesPresent = false;
 	m_flags.flattened = false;
 }
 
@@ -56,25 +45,10 @@ TREModel::TREModel(const TREModel &other)
 	:m_name(copyString(other.m_name)),
 	m_mainModel(other.m_mainModel),
 	m_subModels((TRESubModelArray *)TCObject::copy(other.m_subModels)),
-	m_shapes((TREShapeGroup *)TCObject::copy(other.m_shapes)),
-	m_coloredShapes((TREColoredShapeGroup *)TCObject::copy(
-		other.m_coloredShapes)),
-	m_edgeShapes((TREShapeGroup *)TCObject::copy(other.m_edgeShapes)),
-	m_coloredEdgeShapes((TREColoredShapeGroup *)TCObject::copy(
-		other.m_coloredEdgeShapes)),
-	m_bfcShapes((TREShapeGroup *)TCObject::copy(other.m_bfcShapes)),
-	m_coloredBFCShapes((TREColoredShapeGroup *)TCObject::copy(
-		other.m_coloredBFCShapes)),
 	m_unMirroredModel((TREModel *)TCObject::copy(other.m_unMirroredModel)),
 	m_invertedModel((TREModel *)TCObject::copy(other.m_invertedModel)),
-	m_defaultColorListID(0),
-	m_coloredListID(0),
-	m_defaultColorLinesListID(0),
-	m_coloredLinesListID(0),
-	m_edgeLinesListID(0),
-	m_coloredEdgeLinesListID(0),
-	m_bfcListID(0),
-	m_coloredBFCListID(0),
+	m_sectionsPresent(other.m_sectionsPresent),
+	m_coloredSectionsPresent(other.m_coloredSectionsPresent),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
 	m_flags(other.m_flags)
@@ -82,6 +56,16 @@ TREModel::TREModel(const TREModel &other)
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");
 #endif // _LEAK_DEBUG
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
+	{
+		m_shapes[i] = (TREShapeGroup *)TCObject::copy(other.m_shapes[i]);
+		m_coloredShapes[i] =
+			(TREColoredShapeGroup *)TCObject::copy(other.m_coloredShapes[i]);
+		m_listIDs[i] = 0;
+		m_coloredListIDs[i] = 0;
+	}
 }
 
 TREModel::TREModel(const TREModel &other, bool shallow)
@@ -89,27 +73,12 @@ TREModel::TREModel(const TREModel &other, bool shallow)
 	m_mainModel(other.m_mainModel),
 	m_subModels(shallow ? NULL :
 		(TRESubModelArray *)TCObject::copy(other.m_subModels)),
-	m_shapes((TREShapeGroup *)TCObject::copy(other.m_shapes)),
-	m_coloredShapes((TREColoredShapeGroup *)TCObject::copy(
-		other.m_coloredShapes)),
-	m_edgeShapes((TREShapeGroup *)TCObject::copy(other.m_edgeShapes)),
-	m_coloredEdgeShapes((TREColoredShapeGroup *)TCObject::copy(
-		other.m_coloredEdgeShapes)),
-	m_bfcShapes((TREShapeGroup *)TCObject::copy(other.m_bfcShapes)),
-	m_coloredBFCShapes((TREColoredShapeGroup *)TCObject::copy(
-		other.m_coloredBFCShapes)),
 	m_unMirroredModel(shallow ? NULL :
 		(TREModel *)TCObject::copy(other.m_unMirroredModel)),
 	m_invertedModel(shallow ? NULL :
 		(TREModel *)TCObject::copy(other.m_invertedModel)),
-	m_defaultColorListID(0),
-	m_coloredListID(0),
-	m_defaultColorLinesListID(0),
-	m_coloredLinesListID(0),
-	m_edgeLinesListID(0),
-	m_coloredEdgeLinesListID(0),
-	m_bfcListID(0),
-	m_coloredBFCListID(0),
+	m_sectionsPresent(other.m_sectionsPresent),
+	m_coloredSectionsPresent(other.m_coloredSectionsPresent),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
 	m_flags(other.m_flags)
@@ -117,6 +86,16 @@ TREModel::TREModel(const TREModel &other, bool shallow)
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");
 #endif // _LEAK_DEBUG
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
+	{
+		m_shapes[i] = (TREShapeGroup *)TCObject::copy(other.m_shapes[i]);
+		m_coloredShapes[i] =
+			(TREColoredShapeGroup *)TCObject::copy(other.m_coloredShapes[i]);
+		m_listIDs[i] = 0;
+		m_coloredListIDs[i] = 0;
+	}
 }
 
 TREModel::~TREModel(void)
@@ -125,15 +104,11 @@ TREModel::~TREModel(void)
 
 void TREModel::dealloc(void)
 {
+	int i;
+
 	delete m_name;
 	// Don't release m_mainModel
 	TCObject::release(m_subModels);
-	TCObject::release(m_shapes);
-	TCObject::release(m_coloredShapes);
-	TCObject::release(m_edgeShapes);
-	TCObject::release(m_coloredEdgeShapes);
-	TCObject::release(m_bfcShapes);
-	TCObject::release(m_coloredBFCShapes);
 	if (m_unMirroredModel)
 	{
 		// The following points back to us, and since we're being deallocated
@@ -156,37 +131,21 @@ void TREModel::dealloc(void)
 		TCObject::release(m_invertedModel);
 	}
 	m_invertedModel = NULL;
-	if (m_defaultColorListID)
+	for (i = 0; i <= TREMLast; i++)
 	{
-		glDeleteLists(m_defaultColorListID, 1);
-	}
-	if (m_coloredListID)
-	{
-		glDeleteLists(m_coloredListID, 1);
-	}
-	if (m_defaultColorLinesListID)
-	{
-		glDeleteLists(m_defaultColorLinesListID, 1);
-	}
-	if (m_coloredLinesListID)
-	{
-		glDeleteLists(m_coloredLinesListID, 1);
-	}
-	if (m_edgeLinesListID)
-	{
-		glDeleteLists(m_edgeLinesListID, 1);
-	}
-	if (m_coloredEdgeLinesListID)
-	{
-		glDeleteLists(m_coloredEdgeLinesListID, 1);
-	}
-	if (m_bfcListID)
-	{
-		glDeleteLists(m_bfcListID, 1);
-	}
-	if (m_coloredBFCListID)
-	{
-		glDeleteLists(m_coloredBFCListID, 1);
+		TCULong listID = m_listIDs[i];
+
+		if (listID)
+		{
+			glDeleteLists(listID, 1);
+		}
+		listID = m_coloredListIDs[i];
+		if (listID)
+		{
+			glDeleteLists(listID, 1);
+		}
+		TCObject::release(m_shapes[i]);
+		TCObject::release(m_coloredShapes[i]);
 	}
 	TCObject::dealloc();
 }
@@ -223,6 +182,8 @@ TREModel *TREModel::getInvertedModel(void)
 
 void TREModel::unMirror(TREModel *originalModel)
 {
+	int i;
+
 	m_unMirroredModel = originalModel;
 	m_flags.unMirrored = true;
 	if (m_unMirroredModel->m_invertedModel)
@@ -248,26 +209,29 @@ void TREModel::unMirror(TREModel *originalModel)
 			m_subModels->addObject(subModel);
 		}
 	}
-	if (m_shapes)
+	for (i = 0; i <= TREMLast; i++)
 	{
-		m_shapes->unMirror();
-	}
-	if (m_coloredShapes)
-	{
-		m_coloredShapes->unMirror();
-	}
-	if (m_bfcShapes)
-	{
-		m_bfcShapes->unMirror();
-	}
-	if (m_coloredBFCShapes)
-	{
-		m_coloredBFCShapes->unMirror();
+		if (!isLineSection(i))
+		{
+			TREShapeGroup *shapeGroup = m_shapes[i];
+			TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[i];
+
+			if (shapeGroup)
+			{
+				shapeGroup->unMirror();
+			}
+			if (coloredShapeGroup)
+			{
+				coloredShapeGroup->unMirror();
+			}
+		}
 	}
 }
 
 void TREModel::invert(TREModel *originalModel)
 {
+	int i;
+
 	m_invertedModel = originalModel;
 	m_flags.inverted = true;
 	if (m_invertedModel->m_unMirroredModel)
@@ -293,21 +257,22 @@ void TREModel::invert(TREModel *originalModel)
 			m_subModels->addObject(subModel);
 		}
 	}
-	if (m_shapes)
+	for (i = 0; i <= TREMLast; i++)
 	{
-		m_shapes->invert();
-	}
-	if (m_coloredShapes)
-	{
-		m_coloredShapes->invert();
-	}
-	if (m_bfcShapes)
-	{
-		m_bfcShapes->invert();
-	}
-	if (m_coloredBFCShapes)
-	{
-		m_coloredBFCShapes->invert();
+		if (!isLineSection(i))
+		{
+			TREShapeGroup *shapeGroup = m_shapes[i];
+			TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[i];
+
+			if (shapeGroup)
+			{
+				shapeGroup->invert();
+			}
+			if (coloredShapeGroup)
+			{
+				coloredShapeGroup->invert();
+			}
+		}
 	}
 }
 
@@ -317,9 +282,51 @@ void TREModel::setName(const char *name)
 	m_name = copyString(name);
 }
 
+void TREModel::compile(TREMSection section, bool colored)
+{
+	int *listIDs;
+
+	if (colored)
+	{
+		listIDs = m_coloredListIDs;
+	}
+	else
+	{
+		listIDs = m_listIDs;
+	}
+	if (!listIDs[section] && isSectionPresent(section, colored))
+	{
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->getEffectiveModel()->compile(section,
+					colored);
+			}
+		}
+		if (m_mainModel->getCompileAllFlag() ||
+			(m_flags.part && m_mainModel->getCompilePartsFlag()))
+		{
+			int listID = glGenLists(1);
+
+			glNewList(listID, GL_COMPILE);
+			draw(section, colored);
+			glEndList();
+			listIDs[section] = listID;
+//			debugPrintf("U Standard <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+//				m_flags.inverted);
+		}
+	}
+}
+
 void TREModel::compileDefaultColor(void)
 {
-	if (!m_defaultColorListID && m_flags.defaultColorPresent)
+	compile(TREMStandard, false);
+/*
+	if (!m_listIDs[TREMStandard] && isSectionPresent(TREMStandard, false))
 	{
 		if (m_subModels)
 		{
@@ -335,20 +342,23 @@ void TREModel::compileDefaultColor(void)
 			(m_flags.part && m_mainModel->getCompilePartsFlag()))
 		{
 			int listID = glGenLists(1);
-			float matrix[16];
 
-			TCVector::initIdentityMatrix(matrix);
 			glNewList(listID, GL_COMPILE);
 			drawDefaultColor();
 			glEndList();
-			m_defaultColorListID = listID;
+			m_listIDs[TREMStandard] = listID;
+			debugPrintf("U Standard <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileBFC(void)
 {
-	if (!m_bfcListID && m_flags.bfcPresent)
+	compile(TREMBFC, false);
+/*
+	if (!m_listIDs[TREMBFC] && isSectionPresent(TREMBFC, false))
 	{
 		if (m_subModels)
 		{
@@ -368,14 +378,19 @@ void TREModel::compileBFC(void)
 			glNewList(listID, GL_COMPILE);
 			drawBFC();
 			glEndList();
-			m_bfcListID = listID;
+			m_listIDs[TREMBFC] = listID;
+			debugPrintf("U BFC      <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileDefaultColorLines(void)
 {
-	if (!m_defaultColorLinesListID && m_flags.defaultColorLinesPresent)
+	compile(TREMLines, false);
+/*
+	if (!m_listIDs[TREMLines] && isSectionPresent(TREMLines, false))
 	{
 		if (m_subModels)
 		{
@@ -395,14 +410,19 @@ void TREModel::compileDefaultColorLines(void)
 			glNewList(listID, GL_COMPILE);
 			drawDefaultColorLines();
 			glEndList();
-			m_defaultColorLinesListID = listID;
+			m_listIDs[TREMLines] = listID;
+			debugPrintf("U Lines    <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileEdgeLines(void)
 {
-	if (!m_edgeLinesListID && m_flags.edgeLinesPresent)
+	compile(TREMEdgeLines, false);
+/*
+	if (!m_listIDs[TREMEdgeLines] && isSectionPresent(TREMEdgeLines, false))
 	{
 		if (m_subModels)
 		{
@@ -422,14 +442,20 @@ void TREModel::compileEdgeLines(void)
 			glNewList(listID, GL_COMPILE);
 			drawEdgeLines();
 			glEndList();
-			m_edgeLinesListID = listID;
+			m_listIDs[TREMEdgeLines] = listID;
+			debugPrintf("U Edges    <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileColored(void)
 {
-	if (!m_coloredListID && m_flags.coloredPresent)
+	compile(TREMStandard, true);
+/*
+	if (!m_coloredListIDs[TREMStandard] &&
+		isSectionPresent(TREMStandard, true))
 	{
 		if (m_subModels)
 		{
@@ -439,7 +465,6 @@ void TREModel::compileColored(void)
 			for (i = 0; i < count; i++)
 			{
 				(*m_subModels)[i]->getEffectiveModel()->compileColored();
-//				(*m_subModels)[i]->compileColored();
 			}
 		}
 		if (m_mainModel->getCompileAllFlag() ||
@@ -450,14 +475,19 @@ void TREModel::compileColored(void)
 			glNewList(listID, GL_COMPILE);
 			drawColored();
 			glEndList();
-			m_coloredListID = listID;
+			m_coloredListIDs[TREMStandard] = listID;
+			debugPrintf("C Standard <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileColoredBFC(void)
 {
-	if (!m_coloredBFCListID && m_flags.coloredBFCPresent)
+	compile(TREMBFC, true);
+/*
+	if (!m_coloredListIDs[TREMBFC] && isSectionPresent(TREMBFC, true))
 	{
 		if (m_subModels)
 		{
@@ -477,14 +507,19 @@ void TREModel::compileColoredBFC(void)
 			glNewList(listID, GL_COMPILE);
 			drawColoredBFC();
 			glEndList();
-			m_coloredBFCListID = listID;
+			m_coloredListIDs[TREMBFC] = listID;
+			debugPrintf("C BFC      <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileColoredLines(void)
 {
-	if (!m_coloredLinesListID && m_flags.coloredLinesPresent)
+	compile(TREMLines, true);
+/*
+	if (!m_coloredListIDs[TREMLines] && isSectionPresent(TREMLines, true))
 	{
 		if (m_subModels)
 		{
@@ -504,14 +539,20 @@ void TREModel::compileColoredLines(void)
 			glNewList(listID, GL_COMPILE);
 			drawColoredLines();
 			glEndList();
-			m_coloredLinesListID = listID;
+			m_coloredListIDs[TREMLines] = listID;
+			debugPrintf("C Lines    <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+*/
 }
 
 void TREModel::compileColoredEdgeLines(void)
 {
-	if (!m_coloredEdgeLinesListID && m_flags.coloredEdgeLinesPresent)
+	compile(TREMEdgeLines, true);
+/*
+	if (!m_coloredListIDs[TREMEdgeLines] &&
+		isSectionPresent(TREMEdgeLines, true))
 	{
 		if (m_subModels)
 		{
@@ -531,375 +572,273 @@ void TREModel::compileColoredEdgeLines(void)
 			glNewList(listID, GL_COMPILE);
 			drawColoredEdgeLines();
 			glEndList();
-			m_coloredEdgeLinesListID = listID;
+			m_coloredListIDs[TREMEdgeLines] = listID;
+			debugPrintf("C Edges    <<%s>> %d %d\n", m_name, m_flags.unMirrored,
+				m_flags.inverted);
 		}
 	}
+	if (!isSectionPresent(TREMEdgeLines, true))
+	{
+		printf("good\n");
+	}
+*/
+}
+
+void TREModel::draw(TREMSection section)
+{
+	draw(section, false);
+}
+
+void TREModel::draw(TREMSection section, bool colored)
+{
+	TCULong listID;
+
+	if (colored)
+	{
+		listID = m_coloredListIDs[section];
+	}
+	else
+	{
+		listID = m_listIDs[section];
+	}
+	if (listID)
+	{
+		glCallList(listID);
+	}
+	else if (isSectionPresent(section, colored))
+	{
+		TREShapeGroup *shapeGroup;
+
+		if (colored)
+		{
+			shapeGroup = m_coloredShapes[section];
+		}
+		else
+		{
+			shapeGroup = m_shapes[section];
+		}
+		if (isLineSection(section))
+		{
+			if (shapeGroup)
+			{
+				shapeGroup->drawLines();
+			}
+		}
+		else
+		{
+			if (m_flags.part && isFlattened())
+			{
+				setGlNormalize(false);
+			}
+			else
+			{
+				setGlNormalize(true);
+			}
+			if (shapeGroup)
+			{
+				shapeGroup->draw();
+			}
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->draw(section, colored);
+			}
+		}
+	}
+}
+
+void TREModel::drawColored(TREMSection section)
+{
+	draw(section, true);
 }
 
 void TREModel::drawDefaultColor(void)
 {
-	if (m_defaultColorListID)
-	{
-		glCallList(m_defaultColorListID);
-	}
-	else if (m_flags.defaultColorPresent)
-	{
-		if (m_flags.part && isFlattened())
-		{
-			setGlNormalize(false);
-		}
-		else
-		{
-			setGlNormalize(true);
-		}
-		if (m_shapes)
-		{
-			m_shapes->draw();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawDefaultColor();
-			}
-		}
-	}
+	draw(TREMStandard);
 }
 
 void TREModel::drawBFC(void)
 {
-	if (m_bfcListID)
-	{
-		glCallList(m_bfcListID);
-	}
-	else if (m_flags.bfcPresent)
-	{
-		if (m_flags.part && isFlattened())
-		{
-			setGlNormalize(false);
-		}
-		else
-		{
-			setGlNormalize(true);
-		}
-		if (m_bfcShapes)
-		{
-			m_bfcShapes->draw();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawBFC();
-			}
-		}
-	}
+	draw(TREMBFC);
 }
 
 void TREModel::drawDefaultColorLines(void)
 {
-	if (m_defaultColorLinesListID)
-	{
-		glCallList(m_defaultColorLinesListID);
-	}
-	else if (m_flags.defaultColorLinesPresent)
-	{
-		if (m_shapes)
-		{
-			m_shapes->drawLines();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawDefaultColorLines();
-			}
-		}
-	}
-}
-
-void TREModel::drawColored(void)
-{
-	if (m_coloredListID)
-	{
-		glCallList(m_coloredListID);
-	}
-	else if (m_flags.coloredPresent)
-	{
-		if (m_flags.part && isFlattened())
-		{
-			setGlNormalize(false);
-		}
-		else
-		{
-			setGlNormalize(true);
-		}
-		if (m_coloredShapes)
-		{
-			m_coloredShapes->draw();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawColored();
-			}
-		}
-	}
-}
-
-void TREModel::drawColoredBFC(void)
-{
-	if (m_coloredBFCListID)
-	{
-		glCallList(m_coloredBFCListID);
-	}
-	else if (m_flags.coloredBFCPresent)
-	{
-		if (m_flags.part)
-		{
-			setGlNormalize(false && isFlattened());
-		}
-		else
-		{
-			setGlNormalize(true);
-		}
-		if (m_coloredBFCShapes)
-		{
-			m_coloredBFCShapes->draw();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawColoredBFC();
-			}
-		}
-	}
-}
-
-void TREModel::drawColoredLines(void)
-{
-	if (m_coloredLinesListID)
-	{
-		glCallList(m_coloredLinesListID);
-	}
-	else if (m_flags.coloredLinesPresent)
-	{
-		if (m_coloredShapes)
-		{
-			m_coloredShapes->drawLines();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawColoredLines();
-			}
-		}
-	}
+	draw(TREMLines);
 }
 
 void TREModel::drawEdgeLines(void)
 {
-	if (m_edgeLinesListID)
-	{
-		glCallList(m_edgeLinesListID);
-	}
-	else if (m_flags.edgeLinesPresent)
-	{
-		if (m_edgeShapes)
-		{
-			m_edgeShapes->drawLines();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
+	draw(TREMEdgeLines);
+}
 
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawEdgeLines();
-			}
-		}
-	}
+void TREModel::drawColored(void)
+{
+	drawColored(TREMStandard);
+}
+
+void TREModel::drawColoredBFC(void)
+{
+	drawColored(TREMBFC);
+}
+
+void TREModel::drawColoredLines(void)
+{
+	drawColored(TREMLines);
 }
 
 void TREModel::drawColoredEdgeLines(void)
 {
-	if (m_coloredEdgeLinesListID)
-	{
-		glCallList(m_coloredEdgeLinesListID);
-	}
-	else if (m_flags.coloredEdgeLinesPresent)
-	{
-		if (m_coloredEdgeShapes)
-		{
-			m_coloredEdgeShapes->drawLines();
-		}
-		if (m_subModels)
-		{
-			int i;
-			int count = m_subModels->getCount();
+	drawColored(TREMEdgeLines);
+}
 
-			for (i = 0; i < count; i++)
-			{
-				(*m_subModels)[i]->drawColoredEdgeLines();
-			}
-		}
+void TREModel::setup(TREMSection section)
+{
+	if (!m_shapes[section])
+	{
+		TREShapeGroup *shapeGroup = new TREShapeGroup;
+
+		shapeGroup->setVertexStore(m_mainModel->getVertexStore());
+		// No need to release previous, since we determined it is NULL.
+		m_shapes[section] = shapeGroup;
+		// Don't release shapeGroup, becase m_shapes isn't a TCObjectArray.
 	}
 }
 
-void TREModel::setup(void)
+void TREModel::setupColored(TREMSection section)
 {
-	if (!m_shapes)
+	if (!m_coloredShapes[section])
 	{
-		m_shapes = new TREShapeGroup;
-		m_shapes->setVertexStore(m_mainModel->getVertexStore());
+		TREColoredShapeGroup *shapeGroup = new TREColoredShapeGroup;
+
+		shapeGroup->setVertexStore(m_mainModel->getColoredVertexStore());
+		// No need to release previous, since we determined it is NULL.
+		m_coloredShapes[section] = shapeGroup;
+		// Don't release shapeGroup, becase m_shapes isn't a TCObjectArray.
 	}
+}
+
+void TREModel::setupStandard(void)
+{
+	setup(TREMStandard);
+}
+
+void TREModel::setupLines(void)
+{
+	setup(TREMLines);
 }
 
 void TREModel::setupBFC(void)
 {
-	if (!m_bfcShapes)
-	{
-		m_bfcShapes = new TREShapeGroup;
-		m_bfcShapes->setVertexStore(m_mainModel->getVertexStore());
-	}
+	setup(TREMBFC);
 }
 
 void TREModel::setupEdges(void)
 {
-	if (!m_edgeShapes)
-	{
-		m_edgeShapes = new TREShapeGroup;
-		m_edgeShapes->setVertexStore(m_mainModel->getVertexStore());
-	}
+	setup(TREMEdgeLines);
 }
 
 void TREModel::setupColored(void)
 {
-	if (!m_coloredShapes)
-	{
-		m_coloredShapes = new TREColoredShapeGroup;
-		m_coloredShapes->setVertexStore(m_mainModel->getColoredVertexStore());
-	}
+	setupColored(TREMStandard);
+}
+
+void TREModel::setupColoredLines(void)
+{
+	setupColored(TREMLines);
 }
 
 void TREModel::setupColoredBFC(void)
 {
-	if (!m_coloredBFCShapes)
-	{
-		m_coloredBFCShapes = new TREColoredShapeGroup;
-		m_coloredBFCShapes->setVertexStore(
-			m_mainModel->getColoredVertexStore());
-	}
+	setupColored(TREMBFC);
 }
 
 void TREModel::setupColoredEdges(void)
 {
-	if (!m_coloredEdgeShapes)
-	{
-		m_coloredEdgeShapes = new TREColoredShapeGroup;
-		m_coloredEdgeShapes->setVertexStore(
-			m_mainModel->getColoredVertexStore());
-	}
+	setupColored(TREMEdgeLines);
 }
 
 void TREModel::addLine(TCULong color, TCVector *vertices)
 {
-	setupColored();
-	m_coloredShapes->addLine(color, vertices);
+	setupColoredLines();
+	m_coloredShapes[TREMLines]->addLine(color, vertices);
 }
 
 void TREModel::addLine(TCVector *vertices)
 {
-	setup();
-	m_shapes->addLine(vertices);
+	setupLines();
+	m_shapes[TREMLines]->addLine(vertices);
 }
 
 void TREModel::addEdgeLine(TCVector *vertices)
 {
 	setupEdges();
-	m_edgeShapes->addLine(vertices);
+	m_shapes[TREMEdgeLines]->addLine(vertices);
 }
 
 void TREModel::addTriangle(TCULong color, TCVector *vertices)
 {
 	setupColored();
-	m_coloredShapes->addTriangle(color, vertices);
+	m_coloredShapes[TREMStandard]->addTriangle(color, vertices);
 }
 
 void TREModel::addTriangle(TCVector *vertices)
 {
-	setup();
-	m_shapes->addTriangle(vertices);
+	setupStandard();
+	m_shapes[TREMStandard]->addTriangle(vertices);
 }
 
 void TREModel::addBFCTriangle(TCULong color, TCVector *vertices)
 {
 	setupColoredBFC();
-	m_coloredBFCShapes->addTriangle(color, vertices);
+	m_coloredShapes[TREMBFC]->addTriangle(color, vertices);
 }
 
 void TREModel::addBFCTriangle(TCVector *vertices)
 {
 	setupBFC();
-	m_bfcShapes->addTriangle(vertices);
+	m_shapes[TREMBFC]->addTriangle(vertices);
 }
 
 void TREModel::addTriangle(TCVector *vertices, TCVector *normals)
 {
-	setup();
-	m_shapes->addTriangle(vertices, normals);
+	setupStandard();
+	m_shapes[TREMStandard]->addTriangle(vertices, normals);
 }
 
 void TREModel::addBFCTriangle(TCVector *vertices, TCVector *normals)
 {
 	setupBFC();
-	m_bfcShapes->addTriangle(vertices, normals);
+	m_shapes[TREMBFC]->addTriangle(vertices, normals);
 }
 
 void TREModel::addQuad(TCULong color, TCVector *vertices)
 {
 	setupColored();
-	m_coloredShapes->addQuad(color, vertices);
+	m_coloredShapes[TREMStandard]->addQuad(color, vertices);
 }
 
 void TREModel::addQuad(TCVector *vertices)
 {
-	setup();
-	m_shapes->addQuad(vertices);
+	setupStandard();
+	m_shapes[TREMStandard]->addQuad(vertices);
 }
 
 void TREModel::addBFCQuad(TCVector *vertices)
 {
 	setupBFC();
-	m_bfcShapes->addQuad(vertices);
+	m_shapes[TREMBFC]->addQuad(vertices);
 }
 
 void TREModel::addBFCQuad(TCULong color, TCVector *vertices)
 {
 	setupColoredBFC();
-	m_coloredBFCShapes->addQuad(color, vertices);
+	m_coloredShapes[TREMBFC]->addQuad(color, vertices);
 }
 
 void TREModel::quadStripToQuad(int index, TCVector *stripVertices,
@@ -919,8 +858,8 @@ void TREModel::quadStripToQuad(int index, TCVector *stripVertices,
 void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count,
 							bool flat)
 {
-	setup();
-	addQuadStrip(m_shapes, vertices, normals, count, flat);
+	setupStandard();
+	addQuadStrip(m_shapes[TREMStandard], vertices, normals, count, flat);
 }
 
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
@@ -949,14 +888,15 @@ void TREModel::addBFCQuadStrip(TCVector *vertices, TCVector *normals, int count,
 							   bool flat)
 {
 	setupBFC();
-	addQuadStrip(m_bfcShapes, vertices, normals, count, flat);
+	addQuadStrip(m_shapes[TREMBFC], vertices, normals, count, flat);
 }
 
 void TREModel::addQuadStrip(TCULong color, TCVector *vertices,
 							TCVector *normals, int count, bool flat)
 {
 	setupColored();
-	addQuadStrip(m_coloredShapes, color, vertices, normals, count, flat);
+	addQuadStrip(m_coloredShapes[TREMStandard], color, vertices, normals,
+		count, flat);
 }
 
 void TREModel::addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
@@ -986,7 +926,8 @@ void TREModel::addBFCQuadStrip(TCULong color, TCVector *vertices,
 							   TCVector *normals, int count, bool flat)
 {
 	setupColoredBFC();
-	addQuadStrip(m_coloredBFCShapes, color, vertices, normals, count, flat);
+	addQuadStrip(m_coloredShapes[TREMBFC], color, vertices, normals, count,
+		flat);
 }
 
 void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
@@ -1005,8 +946,8 @@ void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
 void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count,
 							  bool flat)
 {
-	setup();
-	addTriangleFan(m_shapes, vertices, normals, count, flat);
+	setupStandard();
+	addTriangleFan(m_shapes[TREMStandard], vertices, normals, count, flat);
 }
 
 void TREModel::addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
@@ -1036,14 +977,15 @@ void TREModel::addBFCTriangleFan(TCVector *vertices, TCVector *normals,
 								 int count, bool flat)
 {
 	setupBFC();
-	addTriangleFan(m_bfcShapes, vertices, normals, count, flat);
+	addTriangleFan(m_shapes[TREMBFC], vertices, normals, count, flat);
 }
 
 void TREModel::addTriangleFan(TCULong color, TCVector *vertices,
 							  TCVector *normals, int count, bool flat)
 {
 	setupColored();
-	addTriangleFan(m_coloredShapes, color, vertices, normals, count, flat);
+	addTriangleFan(m_coloredShapes[TREMStandard], color, vertices, normals,
+		count, flat);
 }
 
 void TREModel::addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
@@ -1074,7 +1016,8 @@ void TREModel::addBFCTriangleFan(TCULong color, TCVector *vertices,
 								 TCVector *normals, int count, bool flat)
 {
 	setupColoredBFC();
-	addTriangleFan(m_coloredBFCShapes, color, vertices, normals, count, flat);
+	addTriangleFan(m_coloredShapes[TREMBFC], color, vertices, normals, count,
+		flat);
 }
 
 TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model, bool invert)
@@ -1106,11 +1049,9 @@ void TREModel::flatten(void)
 {
 	if (m_subModels && m_subModels->getCount())
 	{
-		float identityMatrix[16] = {1.0f, 0.0f, 0.0f, 0.0f,
-									0.0f, 1.0f, 0.0f, 0.0f,
-									0.0f, 0.0f, 1.0f, 0.0f,
-									0.0f, 0.0f, 0.0f, 1.0f};
+		float identityMatrix[16];
 
+		TCVector::initIdentityMatrix(identityMatrix);
 		flatten(this, identityMatrix, 0, false, 0, false, false);
 		if (m_subModels)
 		{
@@ -1128,70 +1069,47 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 
 	if (includeShapes)
 	{
-		if (model->m_shapes)
+		int i;
+
+		for (i = 0; i <= TREMLast; i++)
 		{
-			if (colorSet)
+			TREShapeGroup *otherShapeGroup = model->m_shapes[i];
+			TREColoredShapeGroup *otherColoredShapeGroup =
+				model->m_coloredShapes[i];
+
+			if (otherShapeGroup)
 			{
-				setupColored();
-				m_coloredShapes->getVertexStore()->setupColored();
-				flattenShapes(m_coloredShapes, model->m_shapes, matrix, color,
-					true);
+				bool actualColorSet = colorSet;
+				TCULong actualColor = color;
+
+				if (i == TREMEdgeLines)
+				{
+					actualColorSet = edgeColorSet;
+					actualColor = edgeColor;
+				}
+				if (actualColorSet)
+				{
+					TREColoredShapeGroup *coloredShapeGroup;
+					
+					setupColored((TREMSection)i);
+					coloredShapeGroup = m_coloredShapes[i];
+					coloredShapeGroup->getVertexStore()->setupColored();
+					flattenShapes(coloredShapeGroup, otherShapeGroup,
+						matrix, actualColor, true);
+				}
+				else
+				{
+					setup((TREMSection)i);
+					flattenShapes(m_shapes[i], otherShapeGroup, matrix, 0,
+						false);
+				}
 			}
-			else
+			if (otherColoredShapeGroup)
 			{
-				setup();
-				flattenShapes(m_shapes, model->m_shapes, matrix, 0, false);
+				setupColored((TREMSection)i);
+				flattenShapes(m_coloredShapes[i], otherColoredShapeGroup,
+					matrix, 0, false);
 			}
-		}
-		if (model->m_bfcShapes)
-		{
-			if (colorSet)
-			{
-				setupColoredBFC();
-				m_coloredBFCShapes->getVertexStore()->setupColored();
-				flattenShapes(m_coloredBFCShapes, model->m_bfcShapes, matrix,
-					color, true);
-			}
-			else
-			{
-				setupBFC();
-				flattenShapes(m_bfcShapes, model->m_bfcShapes, matrix, 0,
-					false);
-			}
-		}
-		if (model->m_edgeShapes)
-		{
-			if (edgeColorSet)
-			{
-				setupColoredEdges();
-				m_coloredEdgeShapes->getVertexStore()->setupColored();
-				flattenShapes(m_coloredEdgeShapes, model->m_edgeShapes, matrix,
-					edgeColor, true);
-			}
-			else
-			{
-				setupEdges();
-				flattenShapes(m_edgeShapes, model->m_edgeShapes, matrix,
-					edgeColor, false);
-			}
-		}
-		if (model->m_coloredShapes)
-		{
-			setupColored();
-			flattenShapes(m_coloredShapes, model->m_coloredShapes, matrix,
-				0, false);
-		}
-		if (model->m_coloredBFCShapes)
-		{
-			setupColoredBFC();
-			flattenShapes(m_coloredBFCShapes, model->m_coloredBFCShapes, matrix,
-				0, false);
-		}
-		if (model->m_coloredEdgeShapes)
-		{
-			setupColoredEdges();
-			flattenShapes(m_coloredEdgeShapes, model->m_coloredEdgeShapes,
-				matrix, 0, false);
 		}
 	}
 	if (subModels)
@@ -1420,94 +1338,8 @@ void TREModel::transformNormal(TREVertex &normal, float *matrix)
 	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y +
 		inverseMatrix[10]*z;
 	newNormal.normalize();
-//	if (det < 0)
-//	{
-//		newNormal *= -1.0f;
-//	}
 	TREVertexStore::initVertex(normal, newNormal);
 }
-
-/*
-float TREModel::invertMatrix(float* matrix, float* inverseMatrix)
-{
-	float det = TCVector::determinant(matrix);
-
-	if (fEq(det, 0.0f))
-	{
-		debugPrintf("Error: Matrix inversion failed.\n");
-	}
-	else
-	{
-		float oneOverDet = 1.0f / det;
-
-		inverseMatrix[0]  =  (matrix[5] * matrix[10] - matrix[6] * matrix[9]) *
-			oneOverDet;
-		inverseMatrix[1]  = -(matrix[1] * matrix[10] - matrix[2] * matrix[9]) *
-			oneOverDet;
-		inverseMatrix[2]  =  (matrix[1] * matrix[6]  - matrix[2] * matrix[5]) *
-			oneOverDet;
-		inverseMatrix[4]  = -(matrix[4] * matrix[10] - matrix[6] * matrix[8]) *
-			oneOverDet;
-		inverseMatrix[5]  =  (matrix[0] * matrix[10] - matrix[2] * matrix[8]) *
-			oneOverDet;
-		inverseMatrix[6]  = -(matrix[0] * matrix[6]  - matrix[2] * matrix[4]) *
-			oneOverDet;
-		inverseMatrix[8]  =  (matrix[4] * matrix[9]  - matrix[5] * matrix[8]) *
-			oneOverDet;
-		inverseMatrix[9]  = -(matrix[0] * matrix[9]  - matrix[1] * matrix[8]) *
-			oneOverDet;
-		inverseMatrix[10] =  (matrix[0] * matrix[5]  - matrix[1] * matrix[4]) *
-			oneOverDet;
-
-		inverseMatrix[12] = -(matrix[12] * matrix[0] + matrix[13] * matrix[4] +
-							matrix[14] * matrix[8]);
-		inverseMatrix[13] = -(matrix[12] * matrix[1] + matrix[13] * matrix[5] +
-							matrix[14] * matrix[9]);
-		inverseMatrix[14] = -(matrix[12] * matrix[2] + matrix[13] * matrix[6] +
-							matrix[14] * matrix[10]);
-
-		inverseMatrix[3] = inverseMatrix[7] = inverseMatrix[11] = 0.0;
-		inverseMatrix[15] = 1.0;
-	}
-	return det;
-}
-
-void TREModel::multMatrix(float* left, float* right, float* result)
-{
-	result[0] = left[0] * right[0] + left[4] * right[1] +
-		left[8] * right[2] + left[12] * right[3];
-	result[1] = left[1] * right[0] + left[5] * right[1] +
-		left[9] * right[2] + left[13] * right[3];
-	result[2] = left[2] * right[0] + left[6] * right[1] +
-		left[10] * right[2] + left[14] * right[3];
-	result[3] = left[3] * right[0] + left[7] * right[1] +
-		left[11] * right[2] + left[15] * right[3];
-	result[4] = left[0] * right[4] + left[4] * right[5] +
-		left[8] * right[6] + left[12] * right[7];
-	result[5] = left[1] * right[4] + left[5] * right[5] +
-		left[9] * right[6] + left[13] * right[7];
-	result[6] = left[2] * right[4] + left[6] * right[5] +
-		left[10] * right[6] + left[14] * right[7];
-	result[7] = left[3] * right[4] + left[7] * right[5] +
-		left[11] * right[6] + left[15] * right[7];
-	result[8] = left[0] * right[8] + left[4] * right[9] +
-		left[8] * right[10] + left[12] * right[11];
-	result[9] = left[1] * right[8] + left[5] * right[9] +
-		left[9] * right[10] + left[13] * right[11];
-	result[10] = left[2] * right[8] + left[6] * right[9] +
-		left[10] * right[10] + left[14] * right[11];
-	result[11] = left[3] * right[8] + left[7] * right[9] +
-		left[11] * right[10] + left[15] * right[11];
-	result[12] = left[0] * right[12] + left[4] * right[13] +
-		left[8] * right[14] + left[12] * right[15];
-	result[13] = left[1] * right[12] + left[5] * right[13] +
-		left[9] * right[14] + left[13] * right[15];
-	result[14] = left[2] * right[12] + left[6] * right[13] +
-		left[10] * right[14] + left[14] * right[15];
-	result[15] = left[3] * right[12] + left[7] * right[13] +
-		left[11] * right[14] + left[15] * right[15];
-}
-*/
 
 void TREModel::setGlNormalize(bool value)
 {
@@ -1528,7 +1360,7 @@ void TREModel::setGlNormalize(bool value)
 
 void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 								 float height, int numSegments,
-								 int usedSegments)
+								 int usedSegments, bool bfc)
 {
 	int vertexCount;
 	TCVector *points;
@@ -1565,7 +1397,14 @@ void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 				(points[i * 2 + 1] - top).normalize();
 		}
 	}
-	addQuadStrip(points, normals, vertexCount);
+	if (bfc)
+	{
+		addBFCQuadStrip(points, normals, vertexCount);
+	}
+	else
+	{
+		addQuadStrip(points, normals, vertexCount);
+	}
 	delete[] points;
 	delete[] normals;
 /*
@@ -1578,7 +1417,7 @@ void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 
 void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
 								  float height, int numSegments,
-								  int usedSegments)
+								  int usedSegments, bool bfc)
 {
 	int vertexCount;
 	TCVector *points;
@@ -1614,7 +1453,14 @@ void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
 				(points[i * 2 + 1] - top).normalize();
 		}
 	}
-	addQuadStrip(points, normals, vertexCount);
+	if (bfc)
+	{
+		addBFCQuadStrip(points, normals, vertexCount);
+	}
+	else
+	{
+		addQuadStrip(points, normals, vertexCount);
+	}
 	delete[] points;
 	delete[] normals;
 /*
@@ -1670,7 +1516,7 @@ void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 }
 
 void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
-						  int usedSegments)
+						  int usedSegments, bool bfc)
 {
 	int quarter = numSegments / 4;
 	int numQuarters;
@@ -1728,7 +1574,14 @@ void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
 			points[quarterSegments - j + 1] = p1;
 			normals[quarterSegments - j + 1] = normal;
 		}
-		addTriangleFan(points, normals, vertexCount, true);
+		if (bfc)
+		{
+			addBFCTriangleFan(points, normals, vertexCount, true);
+		}
+		else
+		{
+			addTriangleFan(points, normals, vertexCount, true);
+		}
 		delete[] points;
 		delete[] normals;
 	}
@@ -1910,9 +1763,10 @@ void TREModel::addCircularEdge(const TCVector& center, float radius,
 }
 
 void TREModel::addRing(const TCVector& center, float radius1, float radius2,
-					   int numSegments, int usedSegments)
+					   int numSegments, int usedSegments, bool bfc)
 {
-	addOpenCone(center, radius1, radius2, 0.0f, numSegments, usedSegments);
+	addOpenCone(center, radius1, radius2, 0.0f, numSegments, usedSegments,
+		bfc);
 }
 
 void TREModel::calculateBoundingBox(void)
@@ -1937,29 +1791,21 @@ void TREModel::calculateBoundingBox(void)
 void TREModel::scanPoints(TCObject *scanner,
 						  TREScanPointCallback scanPointCallback, float *matrix)
 {
-	if (m_shapes)
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
 	{
-		m_shapes->scanPoints(scanner, scanPointCallback, matrix);
-	}
-	if (m_coloredShapes)
-	{
-		m_coloredShapes->scanPoints(scanner, scanPointCallback, matrix);
-	}
-	if (m_edgeShapes)
-	{
-		m_edgeShapes->scanPoints(scanner, scanPointCallback, matrix);
-	}
-	if (m_coloredEdgeShapes)
-	{
-		m_coloredEdgeShapes->scanPoints(scanner, scanPointCallback, matrix);
-	}
-	if (m_bfcShapes)
-	{
-		m_bfcShapes->scanPoints(scanner, scanPointCallback, matrix);
-	}
-	if (m_coloredBFCShapes)
-	{
-		m_coloredBFCShapes->scanPoints(scanner, scanPointCallback, matrix);
+		TREShapeGroup *shapeGroup = m_shapes[i];
+
+		if (shapeGroup)
+		{
+			shapeGroup->scanPoints(scanner, scanPointCallback, matrix);
+		}
+		shapeGroup = m_coloredShapes[i];
+		if (shapeGroup)
+		{
+			shapeGroup->scanPoints(scanner, scanPointCallback, matrix);
+		}
 	}
 	if (m_subModels)
 	{
@@ -1975,29 +1821,24 @@ void TREModel::scanPoints(TCObject *scanner,
 
 void TREModel::unshrinkNormals(float *matrix, float *unshrinkMatrix)
 {
-	if (m_shapes)
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
 	{
-		m_shapes->unshrinkNormals(matrix, unshrinkMatrix);
-	}
-	if (m_coloredShapes)
-	{
-		m_coloredShapes->unshrinkNormals(matrix, unshrinkMatrix);
-	}
-	if (m_edgeShapes)
-	{
-		m_edgeShapes->unshrinkNormals(matrix, unshrinkMatrix);
-	}
-	if (m_coloredEdgeShapes)
-	{
-		m_coloredEdgeShapes->unshrinkNormals(matrix, unshrinkMatrix);
-	}
-	if (m_bfcShapes)
-	{
-		m_bfcShapes->unshrinkNormals(matrix, unshrinkMatrix);
-	}
-	if (m_coloredBFCShapes)
-	{
-		m_coloredBFCShapes->unshrinkNormals(matrix, unshrinkMatrix);
+		if (!isLineSection(i))
+		{
+			TREShapeGroup *shapeGroup = m_shapes[i];
+
+			if (shapeGroup)
+			{
+				shapeGroup->unshrinkNormals(matrix, unshrinkMatrix);
+			}
+			shapeGroup = m_coloredShapes[i];
+			if (shapeGroup)
+			{
+				shapeGroup->unshrinkNormals(matrix, unshrinkMatrix);
+			}
+		}
 	}
 	if (m_subModels)
 	{
@@ -2079,15 +1920,40 @@ void TREModel::unshrinkNormals(float *scaleMatrix)
 	}
 }
 
-bool TREModel::checkDefaultColorPresent(void)
+void TREModel::setSectionPresent(TREMSection section, bool colored)
 {
-	if (m_shapes && (m_shapes->getIndices(TRESTriangle) ||
-		m_shapes->getIndices(TRESQuad) ||
-		m_shapes->getIndices(TRESTriangleStrip) ||
-		m_shapes->getIndices(TRESQuadStrip) ||
-		m_shapes->getIndices(TRESTriangleFan)))
+	TCULong bit = 1 << section;
+
+	if (colored)
 	{
-		m_flags.defaultColorPresent = true;
+		m_coloredSectionsPresent |= bit;
+	}
+	else
+	{
+		m_sectionsPresent |= bit;
+	}
+}
+
+bool TREModel::isSectionPresent(TREMSection section, bool colored)
+{
+	TCULong bit = 1 << section;
+
+	if (colored)
+	{
+		return (m_coloredSectionsPresent & bit) != 0;
+	}
+	else
+	{
+		return (m_sectionsPresent & bit) != 0;
+	}
+}
+
+bool TREModel::checkShapeGroupPresent(TREShapeGroup *shapeGroup,
+									  TREMSection section, bool colored)
+{
+	if (shapeGroup)
+	{
+		setSectionPresent(section, colored);
 	}
 	if (m_subModels)
 	{
@@ -2097,218 +1963,97 @@ bool TREModel::checkDefaultColorPresent(void)
 		for (i = 0; i < count; i++)
 		{
 			if ((*m_subModels)[i]->getEffectiveModel()->
-				checkDefaultColorPresent())
+				checkSectionPresent(section, colored))
 			{
-				m_flags.defaultColorPresent = true;
+				setSectionPresent(section, colored);
 			}
 		}
 	}
-	return m_flags.defaultColorPresent;
+	return isSectionPresent(section, colored);
+}
+
+bool TREModel::checkSectionPresent(TREMSection section, bool colored)
+{
+	if (colored)
+	{
+		return checkShapeGroupPresent(m_coloredShapes[section], section,
+			true);
+	}
+	else
+	{
+		return checkShapeGroupPresent(m_shapes[section], section, false);
+	}
+}
+
+bool TREModel::checkSectionPresent(TREMSection section)
+{
+	return checkSectionPresent(section, false);
+}
+
+bool TREModel::checkColoredSectionPresent(TREMSection section)
+{
+	return checkSectionPresent(section, true);
+}
+
+bool TREModel::checkDefaultColorPresent(void)
+{
+	return checkSectionPresent(TREMStandard);
 }
 
 bool TREModel::checkBFCPresent(void)
 {
-	if (m_bfcShapes)
-	{
-		m_flags.bfcPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->checkBFCPresent())
-			{
-				m_flags.bfcPresent = true;
-			}
-		}
-	}
-	return m_flags.bfcPresent;
+	return checkSectionPresent(TREMBFC);
 }
 
 bool TREModel::checkDefaultColorLinesPresent(void)
 {
-	if (m_shapes && m_shapes->getIndices(TRESLine))
-	{
-		m_flags.defaultColorLinesPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->checkBFCPresent())
-			{
-				m_flags.defaultColorLinesPresent = true;
-			}
-		}
-	}
-	return m_flags.defaultColorLinesPresent;
+	return checkSectionPresent(TREMLines);
 }
 
 bool TREModel::checkEdgeLinesPresent(void)
 {
-	if (m_edgeShapes)
-	{
-		m_flags.edgeLinesPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->checkEdgeLinesPresent())
-			{
-				m_flags.edgeLinesPresent = true;
-			}
-		}
-	}
-	return m_flags.edgeLinesPresent;
+	return checkSectionPresent(TREMEdgeLines);
 }
 
 bool TREModel::checkColoredPresent(void)
 {
-	if (m_coloredShapes && (m_coloredShapes->getIndices(TRESTriangle) ||
-		m_coloredShapes->getIndices(TRESQuad) ||
-		m_coloredShapes->getIndices(TRESTriangleStrip) ||
-		m_coloredShapes->getIndices(TRESQuadStrip) ||
-		m_coloredShapes->getIndices(TRESTriangleFan)))
-	if (m_coloredShapes)
-	{
-		m_flags.coloredPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->checkColoredPresent())
-			{
-				m_flags.coloredPresent = true;
-			}
-		}
-	}
-	return m_flags.coloredPresent;
+	return checkColoredSectionPresent(TREMStandard);
 }
 
 bool TREModel::checkColoredBFCPresent(void)
 {
-	if (m_coloredBFCShapes)
-	{
-		m_flags.coloredBFCPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->
-				checkColoredBFCPresent())
-			{
-				m_flags.coloredBFCPresent = true;
-			}
-		}
-	}
-	return m_flags.coloredBFCPresent;
+	return checkColoredSectionPresent(TREMBFC);
 }
 
 bool TREModel::checkColoredLinesPresent(void)
 {
-	if (m_coloredShapes && m_coloredShapes->getIndices(TRESLine))
-	{
-		m_flags.coloredLinesPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->
-				checkColoredLinesPresent())
-			{
-				m_flags.coloredLinesPresent = true;
-			}
-		}
-	}
-	return m_flags.coloredLinesPresent;
+	return checkColoredSectionPresent(TREMLines);
 }
 
 bool TREModel::checkColoredEdgeLinesPresent(void)
 {
-	if (m_coloredEdgeShapes)
-	{
-		m_flags.coloredEdgeLinesPresent = true;
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			if ((*m_subModels)[i]->getEffectiveModel()->
-				checkColoredEdgeLinesPresent())
-			{
-				m_flags.coloredEdgeLinesPresent = true;
-			}
-		}
-	}
-	return m_flags.coloredEdgeLinesPresent;
+	return checkColoredSectionPresent(TREMEdgeLines);
 }
 
 void TREModel::uncompile(void)
 {
-	if (m_defaultColorListID)
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
 	{
-		glDeleteLists(m_defaultColorListID, 1);
-		m_defaultColorListID = 0;
-	}
-	if (m_coloredListID)
-	{
-		glDeleteLists(m_coloredListID, 1);
-		m_coloredListID = 0;
-	}
-	if (m_defaultColorLinesListID)
-	{
-		glDeleteLists(m_defaultColorLinesListID, 1);
-		m_defaultColorLinesListID = 0;
-	}
-	if (m_coloredLinesListID)
-	{
-		glDeleteLists(m_coloredLinesListID, 1);
-		m_coloredLinesListID = 0;
-	}
-	if (m_edgeLinesListID)
-	{
-		glDeleteLists(m_edgeLinesListID, 1);
-		m_edgeLinesListID = 0;
-	}
-	if (m_coloredEdgeLinesListID)
-	{
-		glDeleteLists(m_coloredEdgeLinesListID, 1);
-		m_coloredEdgeLinesListID = 0;
-	}
-	if (m_bfcListID)
-	{
-		glDeleteLists(m_bfcListID, 1);
-		m_bfcListID = 0;
-	}
-	if (m_coloredBFCListID)
-	{
-		glDeleteLists(m_coloredBFCListID, 1);
-		m_coloredBFCListID = 0;
+		TCULong listID = m_listIDs[i];
+
+		if (listID)
+		{
+			glDeleteLists(listID, 1);
+			m_listIDs[i] = 0;
+		}
+		listID = m_coloredListIDs[i];
+		if (listID)
+		{
+			glDeleteLists(listID, 1);
+			m_coloredListIDs[i] = 0;
+		}
 	}
 	if (m_subModels)
 	{

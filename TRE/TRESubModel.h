@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TRE/TREShapeGroup.h>
+#include <TRE/TREModel.h>
 
 class TREModel;
 
@@ -29,6 +30,7 @@ public:
 	virtual void setBFCInvertFlag(bool value) { m_flags.bfcInvert = value; }
 	virtual bool getBFCInvertFlag(void) { return m_flags.bfcInvert != false; }
 	virtual void drawColored(void);
+	virtual void draw(TREMSection section, bool colored);
 	virtual void drawDefaultColor(void);
 	virtual void drawBFC(void);
 	virtual void drawColoredBFC(void);
