@@ -467,6 +467,7 @@ LRESULT CUIWindow::doDestroy(void)
 LRESULT CUIWindow::doNCDestroy(void)
 {
 	// Clean up.
+	SetWindowLong(hWindow, GWL_USERDATA, (long)NULL);
 	hWindow = NULL;
 	hdc = NULL;
 	hParentWindow = NULL;
@@ -1692,8 +1693,8 @@ bool CUIWindow::flushModal(HWND hWnd, bool isDialog, int maxFlush)
 		{
 			return false;
 		}
-		printf("0x%08x\n", msg.hwnd);
-		printMessageName(msg.message);
+//		printf("0x%08x\n", msg.hwnd);
+//		printMessageName(msg.message);
 		if (msg.hwnd == hWnd || IsChild(hWnd, msg.hwnd))
 		{
 			if (!isDialog || !IsDialogMessage(hWnd, &msg))

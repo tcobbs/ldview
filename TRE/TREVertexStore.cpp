@@ -545,3 +545,21 @@ void TREVertexStore::setLightingFlag(bool value)
 	m_flags.lighting = value;
 	sm_activeVertexStore = NULL;
 }
+
+void TREVertexStore::openGlWillEnd(void)
+{
+	deactivate();
+	if (sm_varBuffer && wglFreeMemoryNV)
+	{
+		wglFreeMemoryNV(sm_varBuffer);
+		sm_varBuffer = NULL;
+		sm_varSize = 0;
+		m_flags.varTried = false;
+	}
+	if (m_vbo && glDeleteBuffersARB)
+	{
+		glDeleteBuffersARB(1, &m_vbo);
+		m_vbo = NULL;
+		m_flags.vboTried = false;
+	}
+}

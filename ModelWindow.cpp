@@ -424,9 +424,18 @@ void ModelWindow::checkFileForUpdates(void)
 	}
 }
 
+void ModelWindow::openGlWillEnd(void)
+{
+	if (modelViewer)
+	{
+		modelViewer->openGlWillEnd();
+	}
+}
+
 void ModelWindow::updateFSAA()
 {
 	applyingPrefs = true;
+//	openGlWillEnd();
 	uncompile();
 	closeWindow();
 	if (!((LDViewWindow*)parentWindow)->getFullScreen())
@@ -2424,6 +2433,7 @@ LRESULT ModelWindow::doNCDestroy(void)
 LRESULT ModelWindow::doDestroy(void)
 {
 	cancelLoad = true;
+	openGlWillEnd();
 //	RevokeDragDrop(hWindow);
 	return CUIOGLWindow::doDestroy();
 }

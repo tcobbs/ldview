@@ -58,6 +58,7 @@ public:
 	{
 		return m_flags.conditionalControlPoints != false;
 	}
+	virtual void openGlWillEnd(void);
 
 	static void initVertex(TREVertex &vertex, const TCVector &point);
 	static TCVector calcNormal(const TCVector *points, bool normalize = true);

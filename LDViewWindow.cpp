@@ -416,11 +416,13 @@ void LDViewWindow::populateTbButtonInfos(void)
 		seams = prefs->getUseSeams() != 0;
 		edges = prefs->getShowsHighlightLines();
 		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
+		lighting = prefs->getUseLighting();
 		addTbCheckButtonInfo("Wireframe", IDC_WIREFRAME, -1, 1, drawWireframe);
 		addTbCheckButtonInfo("Seams", IDC_SEAMS, -1, 2, seams);
 		addTbCheckButtonInfo("Edge Lines", IDC_HIGHLIGHTS, -1, 3, edges);
 		addTbCheckButtonInfo("Primitive Substitution",
 			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution);
+		addTbCheckButtonInfo("Lighting", IDC_LIGHTING, -1, 7, lighting);
 		addTbButtonInfo("Viewing angle", ID_VIEWANGLE, -1, 6, TBSTYLE_DROPDOWN);
 	}
 }
@@ -538,7 +540,10 @@ void LDViewWindow::reflectViewMode(void)
 
 BOOL LDViewWindow::initWindow(void)
 {
-	createModelWindow();
+	if (!modelWindow)
+	{
+		createModelWindow();
+	}
 	if (fullScreen || screenSaver)
 	{
 		if (hWindowMenu)
@@ -1359,6 +1364,10 @@ void LDViewWindow::switchModes(void)
 	if (hStatusBar)
 	{
 		removeStatusBar();
+	}
+	if (hToolbar)
+	{
+		removeToolbar();
 	}
 	skipMinimize = YES;
 	if (!getCurrentVideoMode())
@@ -2820,6 +2829,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case IDC_PRIMITIVE_SUBSTITUTION:
 			doPrimitiveSubstitution();
 			break;
+		case IDC_LIGHTING:
+			doLighting();
+			break;
 		case ID_VIEWANGLE:
 			doViewAngle();
 			break;
@@ -2863,16 +2875,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 
 void LDViewWindow::doWireframe(void)
 {
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_WIREFRAME, 0);
-	bool newWireframe = false;
-
-	if (state & TBSTATE_CHECKED)
+	if (doToolbarCheck(drawWireframe, IDC_WIREFRAME))
 	{
-		newWireframe = true;
-	}
-	if (newWireframe != drawWireframe)
-	{
-		drawWireframe = newWireframe;
 		prefs->setDrawWireframe(drawWireframe);
 		modelWindow->forceRedraw();
 	}
@@ -2880,16 +2884,8 @@ void LDViewWindow::doWireframe(void)
 
 void LDViewWindow::doSeams(void)
 {
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_SEAMS, 0);
-	bool newSeams = false;
-
-	if (state & TBSTATE_CHECKED)
+	if (doToolbarCheck(seams, IDC_SEAMS))
 	{
-		newSeams = true;
-	}
-	if (newSeams != seams)
-	{
-		seams = newSeams;
 		prefs->setUseSeams(seams);
 		modelWindow->forceRedraw();
 	}
@@ -2897,16 +2893,8 @@ void LDViewWindow::doSeams(void)
 
 void LDViewWindow::doEdges(void)
 {
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_HIGHLIGHTS, 0);
-	bool newEdges = false;
-
-	if (state & TBSTATE_CHECKED)
+	if (doToolbarCheck(edges, IDC_HIGHLIGHTS))
 	{
-		newEdges = true;
-	}
-	if (newEdges != edges)
-	{
-		edges = newEdges;
 		prefs->setShowsHighlightLines(edges);
 		modelWindow->forceRedraw();
 	}
@@ -2914,24 +2902,45 @@ void LDViewWindow::doEdges(void)
 
 void LDViewWindow::doPrimitiveSubstitution(void)
 {
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
-		IDC_PRIMITIVE_SUBSTITUTION, 0);
-	bool newPrimSub = false;
-
-	if (state & TBSTATE_CHECKED)
+	if (doToolbarCheck(primitiveSubstitution, IDC_PRIMITIVE_SUBSTITUTION))
 	{
-		newPrimSub = true;
-	}
-	if (newPrimSub != primitiveSubstitution)
-	{
-		primitiveSubstitution = newPrimSub;
 		prefs->setAllowPrimitiveSubstitution(primitiveSubstitution);
 		modelWindow->forceRedraw();
 	}
 }
 
+void LDViewWindow::doLighting(void)
+{
+	if (doToolbarCheck(lighting, IDC_LIGHTING))
+	{
+//		prefs->setUseLighting(lighting);
+		modelWindow->forceRedraw();
+	}
+}
+
+bool LDViewWindow::doToolbarCheck(bool &value, LPARAM commandId)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, commandId, 0);
+	bool newValue = false;
+
+	if (state & TBSTATE_CHECKED)
+	{
+		newValue = true;
+	}
+	if (newValue != value)
+	{
+		value = newValue;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void LDViewWindow::doViewAngle(void)
 {
+/*
 	int newViewAngle = lastViewAngle + 1;
 
 	if (newViewAngle > LDVAngleIso)
@@ -2939,6 +2948,7 @@ void LDViewWindow::doViewAngle(void)
 		newViewAngle = LDVAngleDefault;
 	}
 	lastViewAngle = (LDVAngle)newViewAngle;
+*/
 	if (modelWindow)
 	{
 		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
@@ -3482,7 +3492,7 @@ void LDViewWindow::resetDefaultView(void)
 
 void LDViewWindow::resetView(LDVAngle viewAngle)
 {
-	lastViewAngle = viewAngle;
+//	lastViewAngle = viewAngle;
 	modelWindow->resetView(viewAngle);
 }
 
@@ -4057,88 +4067,35 @@ void LDViewWindow::reflectVideoMode(void)
 	}
 }
 
-void LDViewWindow::reflectWireframe(void)
+void LDViewWindow::toolbarCheckReflect(bool &value, bool prefsValue,
+									   LPARAM commandID)
 {
-	if (drawWireframe != prefs->getDrawWireframe())
+	if (value != prefsValue)
 	{
-		drawWireframe = prefs->getDrawWireframe();
+		value = prefsValue;
 		if (hToolbar)
 		{
-			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
-				IDC_WIREFRAME, 0);
+			BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, commandID, 0);
 
-			oldState &= ~TBSTATE_CHECKED;
-			if (drawWireframe)
+			state &= ~TBSTATE_CHECKED;
+			if (value)
 			{
-				oldState |= TBSTATE_CHECKED;
+				state |= TBSTATE_CHECKED;
 			}
-			SendMessage(hToolbar, TB_SETSTATE, IDC_WIREFRAME,
-				MAKELONG(oldState, 0));
+			SendMessage(hToolbar, TB_SETSTATE, commandID, MAKELONG(state, 0));
 		}
 	}
 }
 
-void LDViewWindow::reflectSeams(void)
+void LDViewWindow::toolbarChecksReflect(void)
 {
-	if (seams != (prefs->getUseSeams() != 0))
-	{
-		seams = prefs->getUseSeams() != 0;
-		if (hToolbar)
-		{
-			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_SEAMS,
-				0);
-
-			oldState &= ~TBSTATE_CHECKED;
-			if (seams)
-			{
-				oldState |= TBSTATE_CHECKED;
-			}
-			SendMessage(hToolbar, TB_SETSTATE, IDC_SEAMS,
-				MAKELONG(oldState, 0));
-		}
-	}
-}
-
-void LDViewWindow::reflectEdges(void)
-{
-	if (edges != prefs->getShowsHighlightLines())
-	{
-		edges = prefs->getShowsHighlightLines();
-		if (hToolbar)
-		{
-			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
-				IDC_HIGHLIGHTS, 0);
-
-			oldState &= ~TBSTATE_CHECKED;
-			if (edges)
-			{
-				oldState |= TBSTATE_CHECKED;
-			}
-			SendMessage(hToolbar, TB_SETSTATE, IDC_HIGHLIGHTS,
-				MAKELONG(oldState, 0));
-		}
-	}
-}
-
-void LDViewWindow::reflectPrimitiveSubstitution(void)
-{
-	if (primitiveSubstitution != prefs->getAllowPrimitiveSubstitution())
-	{
-		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
-		if (hToolbar)
-		{
-			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
-				IDC_PRIMITIVE_SUBSTITUTION, 0);
-
-			oldState &= ~TBSTATE_CHECKED;
-			if (primitiveSubstitution)
-			{
-				oldState |= TBSTATE_CHECKED;
-			}
-			SendMessage(hToolbar, TB_SETSTATE, IDC_PRIMITIVE_SUBSTITUTION,
-				MAKELONG(oldState, 0));
-		}
-	}
+	toolbarCheckReflect(drawWireframe, prefs->getDrawWireframe(),
+		IDC_WIREFRAME);
+	toolbarCheckReflect(seams, prefs->getUseSeams() != 0, IDC_SEAMS);
+	toolbarCheckReflect(edges, prefs->getShowsHighlightLines(), IDC_HIGHLIGHTS);
+	toolbarCheckReflect(primitiveSubstitution,
+		prefs->getAllowPrimitiveSubstitution(), IDC_PRIMITIVE_SUBSTITUTION);
+	toolbarCheckReflect(lighting, prefs->getUseLighting(), IDC_LIGHTING);
 }
 
 void LDViewWindow::applyPrefs(void)
@@ -4147,13 +4104,11 @@ void LDViewWindow::applyPrefs(void)
 	reflectViewMode();
 	populateRecentFileMenuItems();
 	reflectStatusBar();
+	reflectToolbar();
 	reflectTopmost();
 	reflectPolling();
 	reflectVideoMode();
-	reflectWireframe();
-	reflectSeams();
-	reflectEdges();
-	reflectPrimitiveSubstitution();
+	toolbarChecksReflect();
 	if (TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false))
 	{
 		ShowWindow(hWindow, SW_MAXIMIZE);

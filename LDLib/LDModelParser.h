@@ -143,45 +143,51 @@ protected:
 	virtual bool substituteStu22(TREModel *treModel, bool isA, bool bfc);
 	virtual bool substituteStu23(TREModel *treModel, bool isA, bool bfc);
 	virtual bool substituteStu24(TREModel *treModel, bool isA, bool bfc);
-	virtual bool substituteTorusIO(TREModel *treModel, bool inner, bool bfc);
-	virtual bool substituteTorusQ(TREModel *treModel, bool bfc);
-	virtual bool substituteEighthSphere(TREModel *treModel, bool bfc);
+	virtual bool substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
+		bool is48 = false);
+	virtual bool substituteTorusQ(TREModel *treModel, bool bfc,
+		bool is48 = false);
+	virtual bool substituteEighthSphere(TREModel *treModel, bool bfc,
+		bool is48 = false);
 	virtual bool substituteCylinder(TREModel *treModel, float fraction,
-		bool bfc);
+		bool bfc, bool is48 = false);
 	virtual bool substituteSlopedCylinder(TREModel *treModel, float fraction,
-		bool bfc);
+		bool bfc, bool is48 = false);
 	virtual bool substituteSlopedCylinder2(TREModel *treModel, float fraction,
-		bool bfc);
-	virtual bool substituteDisc(TREModel *treModel, float fraction, bool bfc);
+		bool bfc, bool is48 = false);
+	virtual bool substituteDisc(TREModel *treModel, float fraction, bool bfc,
+		bool is48 = false);
 	virtual bool substituteNotDisc(TREModel *treModel, float fraction,
-		bool bfc);
-	virtual bool substituteCircularEdge(TREModel *treModel, float fraction);
+		bool bfc, bool is48 = false);
+	virtual bool substituteCircularEdge(TREModel *treModel, float fraction,
+		bool is48 = false);
 	virtual bool substituteCone(TREModel *treModel, float fraction, int size,
-		bool bfc);
+		bool bfc, bool is48 = false);
 	virtual bool substituteRing(TREModel *treModel, float fraction, int size,
-		bool bfc);
+		bool bfc, bool is48 = false);
 	virtual float startingFraction(const char *filename);
 	virtual bool startsWithFraction(const char *filename);
 	virtual bool startsWithFraction2(const char *filename);
-	virtual bool isPrimitive(const char *filename, const char *suffix);
-	virtual bool isCyli(const char *filename);
-	virtual bool isCyls(const char *filename);
-	virtual bool isCyls2(const char *filename);
-	virtual bool isDisc(const char *filename);
-	virtual bool isNdis(const char *filename);
-	virtual bool isEdge(const char *filename);
-//	virtual bool isCcyli(const char *filename);
-	virtual bool is1DigitCon(const char *filename);
-	virtual bool is2DigitCon(const char *filename);
-	virtual bool isCon(const char *filename);
-	virtual bool isOldRing(const char *filename);
-	virtual bool isRing(const char *filename);
-	virtual bool isRin(const char *filename);
-	virtual bool isTorus(const char *filename);
-	virtual bool isTorusO(const char *filename);
-	virtual bool isTorusI(const char *filename);
-	virtual bool isTorusQ(const char *filename);
-	virtual int getNumCircleSegments(float fraction = 0.0f);
+	virtual bool isPrimitive(const char *filename, const char *suffix,
+		bool *is48 = NULL);
+	virtual bool isCyli(const char *filename, bool *is48 = NULL);
+	virtual bool isCyls(const char *filename, bool *is48 = NULL);
+	virtual bool isCyls2(const char *filename, bool *is48 = NULL);
+	virtual bool isDisc(const char *filename, bool *is48 = NULL);
+	virtual bool isNdis(const char *filename, bool *is48 = NULL);
+	virtual bool isEdge(const char *filename, bool *is48 = NULL);
+//	virtual bool isCcyli(const char *filename, bool *is48 = NULL);
+	virtual bool is1DigitCon(const char *filename, bool *is48 = NULL);
+	virtual bool is2DigitCon(const char *filename, bool *is48 = NULL);
+	virtual bool isCon(const char *filename, bool *is48 = NULL);
+	virtual bool isOldRing(const char *filename, bool *is48 = NULL);
+	virtual bool isRing(const char *filename, bool *is48 = NULL);
+	virtual bool isRin(const char *filename, bool *is48 = NULL);
+	virtual bool isTorus(const char *filename, bool *is48 = NULL);
+	virtual bool isTorusO(const char *filename, bool *is48 = NULL);
+	virtual bool isTorusI(const char *filename, bool *is48 = NULL);
+	virtual bool isTorusQ(const char *filename, bool *is48 = NULL);
+	virtual int getNumCircleSegments(float fraction = 0.0f, bool is48 = false);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 
