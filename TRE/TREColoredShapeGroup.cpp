@@ -1,7 +1,6 @@
 #include "TREColoredShapeGroup.h"
 #include "TREVertexStore.h"
 #include "TREGL.h"
-#include "TREMainModel.h"
 
 TREColoredShapeGroup::TREColoredShapeGroup(void)
 {
@@ -104,8 +103,7 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 	return index;
 }
 
-void TREColoredShapeGroup::transferColoredTransparent(TREMainModel *mainModel,
-													  const float *matrix)
+void TREColoredShapeGroup::transferColoredTransparent(const float *matrix)
 {
 	if (m_indices)
 	{
@@ -115,14 +113,13 @@ void TREColoredShapeGroup::transferColoredTransparent(TREMainModel *mainModel,
 		{
 			TREShapeType shapeType = (TREShapeType)bit;
 			transferColoredTransparent(shapeType, getIndices(shapeType),
-				mainModel, matrix);
+				matrix);
 		}
 	}
 }
 
 void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 													  TCULongArray *indices,
-													  TREMainModel *mainModel,
 													  const float *matrix)
 {
 	TCULongArray *colors = m_vertexStore->getColors();
@@ -152,12 +149,12 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 						TCVector vertices[3];
 						TCVector normals[3];
 
-						transferTriangle(mainModel, color, index,
-							(*indices)[i + 1], (*indices)[i + 2], matrix);
+						transferTriangle(color, index, (*indices)[i + 1],
+							(*indices)[i + 2], matrix);
 						if (shapeSize == 4)
 						{
-							transferTriangle(mainModel, color, index,
-								(*indices)[i + 2], (*indices)[i + 3], matrix);
+							transferTriangle(color, index, (*indices)[i + 2],
+								(*indices)[i + 3], matrix);
 						}
 						indices->removeValues(i, shapeSize);
 					}
@@ -187,12 +184,12 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 					case TRESTriangleStrip:
 						break;
 					case TRESQuadStrip:
-						transferQuadStrip(mainModel, shapeTypeIndex, color,
-							offset, stripCount, matrix, true);
+						transferQuadStrip(shapeTypeIndex, color, offset,
+							stripCount, matrix, true);
 						break;
 					case TRESTriangleFan:
-						transferTriangleFan(mainModel, shapeTypeIndex, color,
-							offset, stripCount, matrix, true);
+						transferTriangleFan(shapeTypeIndex, color, offset,
+							stripCount, matrix, true);
 						break;
 					default:
 						break;

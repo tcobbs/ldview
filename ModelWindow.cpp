@@ -2466,6 +2466,8 @@ bool ModelWindow::writeImage(char *filename, int width, int height,
 {
 	TCImage *image = new TCImage;
 	bool retValue;
+	const char *version = ((LDViewWindow *)parentWindow)->getProductVersion();
+	char comment[1024];
 
 	if (canSaveAlpha())
 	{
@@ -2476,6 +2478,20 @@ bool ModelWindow::writeImage(char *filename, int width, int height,
 	image->setImageData(buffer);
 	image->setFormatName(formatName);
 	image->setFlipped(true);
+	if (strcasecmp(formatName, "PNG") == 0)
+	{
+		strcpy(comment, "Software:!:!:LDView");
+	}
+	else
+	{
+		strcpy(comment, "Created by LDView");
+	}
+	if (version)
+	{
+		strcat(comment, " ");
+		strcat(comment, version);
+	}
+	image->setComment(comment);
 	retValue = image->saveFile(filename, staticImageProgressCallback, this);
 	image->release();
 	return retValue;

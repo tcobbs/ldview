@@ -49,6 +49,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.compiling = false;
 	m_mainFlags.removingHiddenLines = false;
 	m_mainFlags.cutawayDraw = false;
+	m_mainFlags.activeLineJoins = false;
 
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
@@ -69,6 +70,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.conditionalControlPoints = false;
 	m_mainFlags.studLogo = true;
 	m_mainFlags.redBackFaces = false;
+	m_mainFlags.lineJoins = false;	// Doesn't work right
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -230,7 +232,18 @@ void TREMainModel::compile(void)
 						{
 							m_vertexStore->activate(true);
 						}
+						if (section == TREMEdgeLines)
+						{
+							if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
+							{
+//								glPointSize(m_edgeLineWidth);
+								m_mainFlags.activeLineJoins = true;
+//								glEnable(GL_POINT_SMOOTH);
+//								glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+							}
+						}
 						TREModel::compile(section, false);
+						m_mainFlags.activeLineJoins = false;
 					}
 				}
 			}
@@ -506,12 +519,24 @@ void TREMainModel::drawLines(void)
 	// different color, which can lead to non-default colored edge lines.
 	glColor4ubv((GLubyte*)&m_edgeColor);
 	glLineWidth(m_edgeLineWidth);
+	if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
+	{
+		glPointSize(m_edgeLineWidth);
+		m_mainFlags.activeLineJoins = true;
+		glEnable(GL_POINT_SMOOTH);
+		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+	}
 	TREModel::draw(TREMEdgeLines);
 	m_vertexStore->deactivate();
 	m_vertexStore->activate(false);
 	if (getConditionalLinesFlag())
 	{
 		TREModel::draw(TREMConditionalLines);
+	}
+	if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
+	{
+		glPointSize(1.0f);
+		m_mainFlags.activeLineJoins = false;
 	}
 	// Next, draw the specific colored lines.  As with the specific colored
 	// triangles and quads, every point in the vertex store specifies a color.

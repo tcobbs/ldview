@@ -56,8 +56,6 @@ void ModelLoader::startup(void)
 	int width;
 	int height;
 	int widthDelta = 0;
-	int xOffset = 0;
-	int yOffset = 0;
 	bool maximized;
 
 	width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false);
@@ -68,6 +66,7 @@ void ModelLoader::startup(void)
 	parentWindow->setMinWidth(320);
 	parentWindow->setMinHeight(240);
 	parentWindow->setScreenSaver(screenSaver);
+/*
 	if (screenSaver)
 	{
 		modelWindow = new SSModelWindow(parentWindow, 0, 0, width, height);
@@ -78,7 +77,7 @@ void ModelLoader::startup(void)
 			height);
 	}
 	parentWindow->setModelWindow(modelWindow);
-
+*/
 	if (parentWindow->initWindow())
 	{
 		char *commandLineFilename = getCommandLineFilename();
@@ -86,6 +85,8 @@ void ModelLoader::startup(void)
 			TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
 		bool savedSnapshot = false;
 
+		modelWindow = parentWindow->getModelWindow();
+		modelWindow->retain();
 		if (snapshotFilename)
 		{
 			char originalDir[MAX_PATH];
@@ -99,7 +100,7 @@ void ModelLoader::startup(void)
 				SetCurrentDirectory(originalDir);
 			}
 		}
-		modelWindow->initWindow();
+//		modelWindow->initWindow();
 		if (!screenSaver && commandLineFilename && snapshotFilename &&
 			LDVExtensionsSetup::havePixelBufferExtension())
 		{

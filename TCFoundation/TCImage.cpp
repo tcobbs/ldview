@@ -29,7 +29,8 @@ TCImage::TCImage(void)
 		 lineAlignment(1),
 		 flipped(false),
 		 formatName(NULL),
-		 userImageData(false)
+		 userImageData(false),
+		 comment(NULL)
 {
 	initStandardFormats();
 #ifdef _LEAK_DEBUG
@@ -48,6 +49,7 @@ void TCImage::dealloc(void)
 		delete imageData;
 	}
 	delete formatName;
+	delete comment;
 	TCObject::dealloc();
 }
 
@@ -316,4 +318,13 @@ TCImage *TCImage::createSubImage(int x, int y, int cx, int cy)
 		}
 	}
 	return newImage;
+}
+
+void TCImage::setComment(const char *value)
+{
+	if (value != comment)
+	{
+		delete comment;
+		comment = copyString(value);
+	}
 }

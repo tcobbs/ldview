@@ -376,7 +376,6 @@ class LDrawModelViewer: public TCObject
 		float seamWidth;
 		float zoomToFitWidth;
 		float zoomToFitHeight;
-		float zoomToFitMargin;
 		struct
 		{
 			bool qualityLighting:1;

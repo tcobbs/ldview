@@ -606,6 +606,11 @@ void CUIWindow::calcSystemSizes(void)
 	}
 }
 
+LRESULT CUIWindow::doNotify(int /*controlId*/, LPNMHDR /*notification*/)
+{
+	return 0;
+}
+
 LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 {
 	if (initialized && !parentWindow && !hParentWindow)
@@ -1557,6 +1562,9 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 			{
 				return 0;
 			}
+			break;
+		case WM_NOTIFY:
+			return doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam);
 			break;
 		default:
 			break;

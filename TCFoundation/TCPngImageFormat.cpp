@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mystring.h"
 
 #include "TCPngImageFormat.h"
 
 TCPngImageFormat::TCPngImageFormat(void)
+	:commentData(NULL),
+	commentDataCount(0)
 {
 	name = "PNG";
 #ifdef _LEAK_DEBUG
@@ -18,6 +21,10 @@ TCPngImageFormat::~TCPngImageFormat(void)
 
 void TCPngImageFormat::dealloc(void)
 {
+	if (commentDataCount)
+	{
+		deleteStringArray(commentData, commentDataCount);
+	}
 	TCImageFormat::dealloc();
 }
 
@@ -265,20 +272,20 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 {
 	bool retValue = false;
 	bool canceledSave = false;
-	png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+	png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 		NULL, NULL, NULL);
 
-	if (png_ptr)
+	if (pngPtr)
 	{
-		png_infop info_ptr = png_create_info_struct(png_ptr);
+		png_infop infoPtr = png_create_info_struct(pngPtr);
 
-		if (info_ptr)
+		if (infoPtr)
 		{
 #ifdef WIN32
 #pragma warning( push )
 #pragma warning( disable : 4611 )
 #endif // WIN32
-			if (!setjmp(png_ptr->jmpbuf))
+			if (!setjmp(png_jmpbuf(pngPtr)))
 #ifdef WIN32
 #pragma warning( pop )
 #endif // WIN32
@@ -291,6 +298,39 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 				TCByte *imageData = image->getImageData();
 				bool failed = false;
 
+				if (image->getComment() && strlen(image->getComment()) > 0)
+				{
+					png_textp textPtr;
+					int i;
+					int count;
+
+					if (commentDataCount)
+					{
+						deleteStringArray(commentData, commentDataCount);
+					}
+					commentData =
+						componentsSeparatedByString(image->getComment(),
+						":!:!:", commentDataCount);
+					if (commentDataCount % 2)
+					{
+						deleteStringArray(commentData, commentDataCount);
+						commentData = new char*[2];
+						commentDataCount = 2;
+						commentData[0] = copyString("Comment");
+						commentData[1] = copyString(image->getComment());
+					}
+					count = commentDataCount / 2;
+					textPtr = new png_text[count];
+					for (i = 0; i < count; i++)
+					{
+						memset(&textPtr[i], 0, sizeof(png_textp));
+						textPtr[i].compression = PNG_TEXT_COMPRESSION_NONE;
+						textPtr[i].key = commentData[i * 2];
+						textPtr[i].text = commentData[i * 2 + 1];
+					}
+					png_set_text(pngPtr, infoPtr, textPtr, count);
+					delete textPtr;
+				}
 				switch (image->getDataFormat())
 				{
 				case TCRgb8:
@@ -305,12 +345,12 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 				}
 				if (!failed)
 				{
-					png_init_io(png_ptr, file);
-					png_set_sRGB(png_ptr, info_ptr, PNG_sRGB_INTENT_PERCEPTUAL);
-					png_set_IHDR(png_ptr, info_ptr, width, height, 8,
+					png_init_io(pngPtr, file);
+					png_set_sRGB(pngPtr, infoPtr, PNG_sRGB_INTENT_PERCEPTUAL);
+					png_set_IHDR(pngPtr, infoPtr, width, height, 8,
 						pngColorType, PNG_INTERLACE_NONE,
 						PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-					png_write_info(png_ptr, info_ptr);
+					png_write_info(pngPtr, infoPtr);
 					callProgressCallback(progressCallback, "Saving PNG.", 0.0f,
 						progressUserData);
 					for (i = 0; i < height; i++)
@@ -323,25 +363,25 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 						}
 						if (image->getFlipped())
 						{
-							png_write_row(png_ptr,
+							png_write_row(pngPtr,
 								imageData + (height - i - 1) * rowSize);
 						}
 						else
 						{
-							png_write_row(png_ptr, imageData + i * rowSize);
+							png_write_row(pngPtr, imageData + i * rowSize);
 						}
 					}
-					png_write_end(png_ptr, info_ptr);
+					png_write_end(pngPtr, infoPtr);
 					callProgressCallback(progressCallback, NULL, 1.0f,
 						progressUserData);
 					retValue = true;
 				}
 			}
-			png_destroy_write_struct(&png_ptr, &info_ptr);
+			png_destroy_write_struct(&pngPtr, &infoPtr);
 		}
 		else
 		{
-			png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+			png_destroy_write_struct(&pngPtr, (png_infopp)NULL);
 		}
 	}
 	callProgressCallback(progressCallback, NULL, 2.0f, progressUserData);

@@ -265,6 +265,11 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 	{
 		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
 			GL_UNSIGNED_INT, indexArray->getValues());
+		if (shapeType == TRESLine && m_mainModel->getActiveLineJoinsFlag())
+		{
+			glDrawElements(GL_POINTS, indexArray->getCount(), GL_UNSIGNED_INT,
+				indexArray->getValues());
+		}
 	}
 }
 
@@ -601,6 +606,11 @@ void TREShapeGroup::drawConditionalLines(void)
 			{
 				glDrawElements(GL_LINES, activeIndices->getCount(),
 					GL_UNSIGNED_INT, activeIndices->getValues());
+				if (m_mainModel->getActiveLineJoinsFlag())
+				{
+					glDrawElements(GL_POINTS, activeIndices->getCount(),
+						GL_UNSIGNED_INT, activeIndices->getValues());
+				}
 			}
 			activeIndices->release();
 		}
@@ -1175,9 +1185,9 @@ void TREShapeGroup::mirrorTextureCoords(TCULongArray *indices)
 	}
 }
 
-void TREShapeGroup::transferTriangle(TREMainModel *mainModel, TCULong color,
-									 TCULong index0, TCULong index1,
-									 TCULong index2, const float *matrix)
+void TREShapeGroup::transferTriangle(TCULong color, TCULong index0,
+									 TCULong index1, TCULong index2,
+									 const float *matrix)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
 	TREVertexArray *oldNormals = m_vertexStore->getNormals();
@@ -1215,11 +1225,10 @@ void TREShapeGroup::transferTriangle(TREMainModel *mainModel, TCULong color,
 	{
 		normals[2] *= -1.0f;
 	}
-	mainModel->addTransparentTriangle(color, vertices, normals);
+	m_mainModel->addTransparentTriangle(color, vertices, normals);
 }
 
-void TREShapeGroup::transferQuadStrip(TREMainModel *mainModel,
-									  int shapeTypeIndex, TCULong color,
+void TREShapeGroup::transferQuadStrip(int shapeTypeIndex, TCULong color,
 									  int offset, int stripCount,
 									  const float *matrix, bool remove)
 {
@@ -1230,13 +1239,13 @@ void TREShapeGroup::transferQuadStrip(TREMainModel *mainModel,
 	{
 		if ((i - offset) % 2)
 		{
-			transferTriangle(mainModel, color, (*indices)[i],
-				(*indices)[i + 2], (*indices)[i + 1], matrix);
+			transferTriangle(color, (*indices)[i], (*indices)[i + 2],
+				(*indices)[i + 1], matrix);
 		}
 		else
 		{
-			transferTriangle(mainModel, color, (*indices)[i],
-				(*indices)[i + 1], (*indices)[i + 2], matrix);
+			transferTriangle(color, (*indices)[i], (*indices)[i + 1],
+				(*indices)[i + 2], matrix);
 		}
 	}
 	if (remove)
@@ -1245,8 +1254,7 @@ void TREShapeGroup::transferQuadStrip(TREMainModel *mainModel,
 	}
 }
 
-void TREShapeGroup::transferTriangleFan(TREMainModel *mainModel,
-										int shapeTypeIndex, TCULong color,
+void TREShapeGroup::transferTriangleFan(int shapeTypeIndex, TCULong color,
 										int offset, int stripCount,
 										const float *matrix, bool remove)
 {
@@ -1255,8 +1263,8 @@ void TREShapeGroup::transferTriangleFan(TREMainModel *mainModel,
 
 	for (i = offset; i < offset + stripCount - 2; i++)
 	{
-		transferTriangle(mainModel, color, (*indices)[offset],
-			(*indices)[i + 1], (*indices)[i + 2], matrix);
+		transferTriangle(color, (*indices)[offset], (*indices)[i + 1],
+			(*indices)[i + 2], matrix);
 	}
 	if (remove)
 	{
@@ -1276,8 +1284,7 @@ bool TREShapeGroup::isTransparent(TCULong color, bool hostFormat)
 	}
 }
 
-void TREShapeGroup::transferTransparent(TCULong color, TREMainModel *mainModel,
-										const float *matrix)
+void TREShapeGroup::transferTransparent(TCULong color, const float *matrix)
 {
 	if (m_indices && isTransparent(color, true))
 	{
@@ -1287,14 +1294,13 @@ void TREShapeGroup::transferTransparent(TCULong color, TREMainModel *mainModel,
 		{
 			TREShapeType shapeType = (TREShapeType)bit;
 			transferTransparent(htonl(color), shapeType, getIndices(shapeType),
-				mainModel, matrix);
+				matrix);
 		}
 	}
 }
 
 void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 										TCULongArray *indices,
-										TREMainModel *mainModel,
 										const float *matrix)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
@@ -1319,12 +1325,12 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 					TCVector vertices[3];
 					TCVector normals[3];
 
-					transferTriangle(mainModel, color, index,
-						(*indices)[i + 1], (*indices)[i + 2], matrix);
+					transferTriangle(color, index, (*indices)[i + 1],
+						(*indices)[i + 2], matrix);
 					if (shapeSize == 4)
 					{
-						transferTriangle(mainModel, color, index,
-							(*indices)[i + 2], (*indices)[i + 3], matrix);
+						transferTriangle(color, index, (*indices)[i + 2],
+							(*indices)[i + 3], matrix);
 					}
 				}
 			}
@@ -1348,12 +1354,12 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 				case TRESTriangleStrip:
 					break;
 				case TRESQuadStrip:
-					transferQuadStrip(mainModel, shapeTypeIndex, color,
-						offset, stripCount, matrix, false);
+					transferQuadStrip(shapeTypeIndex, color, offset, stripCount,
+						matrix, false);
 					break;
 				case TRESTriangleFan:
-					transferTriangleFan(mainModel, shapeTypeIndex, color,
-						offset, stripCount, matrix, false);
+					transferTriangleFan(shapeTypeIndex, color, offset,
+						stripCount, matrix, false);
 					break;
 				default:
 					break;

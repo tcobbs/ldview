@@ -67,10 +67,11 @@ public:
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
 	virtual void unMirror(void);
 	virtual void invert(void);
-	virtual void transferTransparent(TCULong color, TREMainModel *mainModel,
-		const float *matrix);
+	virtual void transferTransparent(TCULong color, const float *matrix);
 	virtual void flatten(TREShapeGroup *srcShapes, float *matrix, TCULong color,
 		bool colorSet);
+	void setMainModel(TREMainModel *value) { m_mainModel = value; }
+	TREMainModel *getMainModel(void) { return m_mainModel; }
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -114,16 +115,14 @@ protected:
 	virtual void invertShapes(TCULongArray *oldIndices,
 		TCULongArray *newIndices);
 	virtual int flipNormal(int index);
-	virtual void transferTriangle(TREMainModel *mainModel, TCULong color,
-		TCULong index0, TCULong index1, TCULong index2, const float *matrix);
-	virtual void transferQuadStrip(TREMainModel *mainModel,
-		int shapeTypeIndex, TCULong color, int offset, int stripCount,
-		const float *matrix, bool remove);
-	virtual void transferTriangleFan(TREMainModel *mainModel,
-		int shapeTypeIndex, TCULong color, int offset, int stripCount,
-		const float *matrix, bool remove);
+	virtual void transferTriangle(TCULong color, TCULong index0, TCULong index1,
+		TCULong index2, const float *matrix);
+	virtual void transferQuadStrip(int shapeTypeIndex, TCULong color,
+		int offset, int stripCount, const float *matrix, bool remove);
+	virtual void transferTriangleFan(int shapeTypeIndex, TCULong color,
+		int offset, int stripCount, const float *matrix, bool remove);
 	virtual void transferTransparent(TCULong color, TREShapeType shapeType,
-		TCULongArray *indices, TREMainModel *mainModel, const float *matrix);
+		TCULongArray *indices, const float *matrix);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,
 		TCULong cpIndex1, TCULong cpIndex2, const float *matrix);
 
@@ -187,6 +186,7 @@ protected:
 	TCULongArrayArray *m_stripCounts;
 	TCULong ***m_multiDrawIndices;
 	TCULong m_shapesPresent;
+	TREMainModel *m_mainModel;
 
 	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
 };

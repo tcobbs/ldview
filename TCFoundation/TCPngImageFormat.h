@@ -34,6 +34,8 @@ protected:
 	unsigned long imageHeight;
 	TCImage *image;
 	int pngRowSize;
+	char **commentData;
+	int commentDataCount;
 };
 
 #endif // __TCPNGIMAGEFORMAT_H__
