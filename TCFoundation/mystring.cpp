@@ -152,6 +152,7 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 
 	if (strlen(string) == 0)
 	{
+		count = 0;
 		return NULL;
 	}
 	for (i = 0; (spot = strstr(spot, separator)) != NULL; i++)

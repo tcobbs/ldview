@@ -32,7 +32,7 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 		partCount);
 	bool retValue = false;
 
-	if (partCount > 2)
+	if (updateParts && partCount > 2)
 	{
 		if (stringHasPrefix(updateParts[0], "FULL"))
 		{

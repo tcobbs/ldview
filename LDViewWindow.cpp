@@ -2083,7 +2083,7 @@ void LDViewWindow::doLibraryUpdateFinished(void)
 	{
 		TCThreadManager *threadManager = TCThreadManager::threadManager();
 
-		if (threadManager->timedWaitForFinishedThread(0))
+		if (threadManager->timedWaitForFinishedThread(250))
 		{
 			TCThread *finishedThread;
 
@@ -2093,8 +2093,14 @@ void LDViewWindow::doLibraryUpdateFinished(void)
 				threadManager->removeFinishedThread(finishedThread);
 			}
 		}
+		else
+		{
+			MessageBox(hWindow, "No finished thread!!!\n", "LDView", MB_OK);
+		}
 		libraryUpdater->release();
 		libraryUpdater = NULL;
+		SendMessage(modelWindow->getProgressBar(), PBM_SETPOS, 0, 0);
+		MessageBox(hWindow, "Library update complete!", "LDView", MB_OK);
 	}
 }
 

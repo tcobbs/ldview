@@ -217,6 +217,11 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 				PostMessage(hParentWindow, WM_COMMAND,
 					MAKELONG(BN_CLICKED, LIBRARY_UPDATE_FINISHED), 0);
 			}
+			else
+			{
+				PostMessage(hProgressBar, PBM_SETPOS,
+					(int)(alert->getProgress() * 100), 0);
+			}
 		}
 		else
 		{

@@ -3,6 +3,7 @@
 
 #include "TCThreadCondition.h"
 #include "TCMutex.h"
+#include <stdio.h>
 
 TCThreadCondition::TCThreadCondition(TCMutex* mutex)
 	:mutex((TCMutex*)(mutex->retain())),
@@ -40,13 +41,11 @@ void TCThreadCondition::signal(void)
 #ifdef WIN32
 	bool done = false;
 
-	mutex->lock();
 	if (waitCount == 0)
 	{
 		done = true;
 	}
 	triggered = true;
-	mutex->unlock();
 	if (!done)
 	{
 		SetEvent(event);
@@ -75,13 +74,15 @@ void TCThreadCondition::broadcast(void)
 
 	while (!done)
 	{
-		mutex->lock();
 		if (waitCount == 0)
 		{
 			done = true;
 		}
+		else
+		{
+			printf("broadcast wait\n");
+		}
 		triggered = true;
-		mutex->unlock();
 		if (!done)
 		{
 			SetEvent(event);

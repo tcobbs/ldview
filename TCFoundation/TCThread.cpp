@@ -70,14 +70,19 @@ bool TCThread::getStarted(void)
 	threadManager->unlockExitMutex();
 	return value;
 }
-
+#include <stdio.h>
 void TCThread::setFinished(void)
 {
+	printf("TCThread::setFinished 1\n");
 	threadManager->lockExitMutex();
+	printf("TCThread::setFinished 2\n");
 	finished = YES;
+	printf("TCThread::setFinished 3\n");
 	threadManager->registerThreadExit(this);
-	threadManager->getExitCondition()->broadcast();
+	printf("TCThread::setFinished 4\n");
 	threadManager->unlockExitMutex();
+	printf("TCThread::setFinished 5\n");
+	threadManager->getExitCondition()->broadcast();
 }
 
 bool TCThread::getFinished(void)

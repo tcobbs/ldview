@@ -1047,7 +1047,7 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 	}
 	if (readDescs && FD_ISSET(dataSocket, readDescs))
 	{
-		debugPrintf(4, "Read ready.\n");
+		debugPrintf(5, "Read ready.\n");
 	}
 	if ((readDescs && !FD_ISSET(dataSocket, readDescs)) ||
 		 (writeDescs && !FD_ISSET(dataSocket, writeDescs)))
@@ -1228,6 +1228,7 @@ int TCWebClient::downloadData(void)
 			}
 		}
 	}
+	pageLength = bytesRead;
 	delete readBuffer;
 	readBuffer = NULL;
 	readBufferPosition = NULL;
@@ -1911,7 +1912,7 @@ int TCWebClient::openDataFile(void)
 	{
 		dataFilePath = copyString(filename);
 	}
-	if ((dataFile = fopen(dataFilePath, "w")) != NULL)
+	if ((dataFile = fopen(dataFilePath, "wb")) != NULL)
 	{
 		return 1;
 	}
