@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
     }
 	else
 	{
+		// The 64 at the end is padding, so that we can add onto it.
 		char *path = copyString(argv[0], 64);
 
 		if (strrchr(path, '/'))
