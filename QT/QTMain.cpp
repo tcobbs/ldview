@@ -8,6 +8,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
+#include <UserDefaultsKeys.h>
 
 static QGLFormat defaultFormat;
 
@@ -60,6 +61,14 @@ int main(int argc, char *argv[])
 	}
 	TCUserDefaults::setCommandLine(argv);
 	TCUserDefaults::setAppName("LDView");
+	char *sessionName =
+        TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+    if (sessionName && sessionName[0])
+    {
+        TCUserDefaults::setSessionName(sessionName);
+    }
+    delete sessionName;
+
     QApplication::setColorSpec(QApplication::CustomColor);
 	setupDefaultFormat();
 //	QApplication::setStyle(new QWindowsStyle);

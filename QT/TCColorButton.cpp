@@ -29,7 +29,7 @@ void TCColorButton::drawButtonLabel(QPainter *painter)
 	QStyle &style = QApplication::style();
 	QRect rect = style.subRect(QStyle::SR_PushButtonContents, this);
 	QRect focusRect = style.subRect(QStyle::SR_PushButtonFocusRect, this);
-	int margin = 4;
+	int margin = 1;
 
 	QPushButton::drawButtonLabel(painter);
 	if (focusRect.width() < rect.width() && focusRect.height() < rect.height())
@@ -46,6 +46,10 @@ void TCColorButton::drawButtonLabel(QPainter *painter)
 
 void TCColorButton::onClick(void)
 {
-	setColor(QColorDialog::getColor());
+	QColor color = QColorDialog::getColor(m_color);
+	if (color.isValid())
+	{
+		setColor(color);
+	}
 }
 

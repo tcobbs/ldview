@@ -41,12 +41,19 @@ public:
 	void doLighting(bool value);
 	void doStereo(bool value);
 	void doWireframe(bool value);
+	void doSortTransparency(bool value);
+	void doStippleTransparency(bool value);
 	void doBFC(bool value);
 	void doEdgeLines(bool value);
 	void doConditionalShow(bool value);
 	void doPrimitiveSubstitution(bool value);
 	void doTextureStuds(bool value);
-
+    void doNewPreferenceSet(void);
+    void doDelPreferenceSet(void);
+    void doHotkeyPreferenceSet(void);
+	bool doPrefSetSelected(bool);
+	void doPrefSetsApply(void);
+	void abandonChanges(void);
 	void show(void);
 	bool getAllowPrimitiveSubstitution(void);
 	void getRGB(int color, int &r, int &g, int &b);
@@ -85,6 +92,8 @@ public:
 	static void setPollMode(LDVPollMode value);
 	static LDVViewMode getViewMode(void);
 	static void setViewMode(LDVViewMode value);
+
+    void setupPrefSetsList(void);
 
 protected:
 	void doGeneralApply(void);
@@ -136,7 +145,15 @@ protected:
 	void disablePrimitiveSubstitution(void);
 	void disableTextureStuds(void);
 	void setupDefaultRotationMatrix(void);
-	
+
+	const char *getPrefSet(int);
+	const char *getSelectedPrefSet(void);
+	void selectPrefSet(const char *prefSet = NULL, bool force = false);	
+	char *getHotKey(int);
+	int getHotKey(const char*);
+	int getCurrentHotKey(void);
+	void saveCurrentHotKey(void);
+
 	char *getErrorKey(int errorNumber);
 	static const QString &getRecentFileKey(int index);
 
@@ -198,6 +215,9 @@ protected:
 	int curveQuality;
 	bool qualityStuds;
 	bool hiresPrimitives;
+
+	bool checkAbandon;
+	int hotKeyIndex;
 
 	// Other Settings
 	bool statusBar;

@@ -149,3 +149,52 @@ void PreferencesPanel::doTextureStuds(bool value)
         preferences->doTextureStuds(value);
     }
 }
+
+void PreferencesPanel::doNewPreferenceSet()
+{
+    if (preferences)
+    {
+        preferences->doNewPreferenceSet();
+    }
+}
+
+void PreferencesPanel::doDelPreferenceSet()
+{
+    if (preferences)
+    {
+        preferences->doDelPreferenceSet();
+    }
+}
+
+void PreferencesPanel::doHotkeyPreferenceSet()
+{
+    if (preferences)
+    {
+        preferences->doHotkeyPreferenceSet();
+    }
+}
+
+void PreferencesPanel::doPrefSetSelected()
+{
+	if(preferences)
+	{
+		preferences->doPrefSetSelected(true);
+	}
+}
+
+void PreferencesPanel::doSortTransparency( bool value )
+{
+	if(preferences)
+	{
+		preferences->doSortTransparency(value);
+	}
+}
+
+void PreferencesPanel::doStippleTransparency( bool value )
+{
+	if(preferences)
+	{
+		preferences->doStippleTransparency(value);
+	}
+}
+
