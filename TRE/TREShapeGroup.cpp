@@ -507,7 +507,7 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 void TREShapeGroup::draw(void)
 {
 	drawNonBFC();
-	drawBFC();
+//	drawBFC();
 }
 
 void TREShapeGroup::drawBFC(void)
@@ -823,7 +823,116 @@ static void invertULongArray(TCULongArray *array, int start = 0, int end = -1)
 	}
 }
 
+int TREShapeGroup::flipNormal(int index)
+{
+	TREVertexArray *vertices = m_vertexStore->getVertices();
+	TREVertexArray *normals = m_vertexStore->getNormals();
+	TCULongArray *colors = m_vertexStore->getColors();
+	TREVertex vertex = (*vertices)[index];
+	TREVertex normal = (*normals)[index];
+
+	normal.v[0] = -normal.v[0];
+	normal.v[1] = -normal.v[1];
+	normal.v[2] = -normal.v[2];
+	vertices->addVertex(vertex);
+	normals->addVertex(normal);
+	if (colors)
+	{
+		colors->addValue((*colors)[index]);
+	}
+	return vertices->getCount() - 1;
+}
+
+void TREShapeGroup::invertShapes(TCULongArray *oldIndices,
+								 TCULongArray *newIndices)
+{
+	int i;
+	int indexCount = oldIndices->getCount();
+
+	for (i = indexCount - 1; i >= 0; i--)
+	{
+		int index = (*oldIndices)[i];
+
+		newIndices->addValue(flipNormal(index));
+	}
+}
+
 void TREShapeGroup::invert(void)
+{
+	if (m_indices)
+	{
+		int i, j;
+		int shapeTypeCount = m_indices->getCount();
+		int firstStripIndex = getShapeTypeIndex(TRESFirstStrip);
+		int triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
+		int quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
+		int triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
+
+		for (i = 0; i < shapeTypeCount; i++)
+		{
+			TCULongArray *theseIndices = (*m_indices)[i];
+			TCULongArray *newIndices =
+				new TCULongArray(theseIndices->getCount());
+			TCULongArray *theseStripCounts = (*m_stripCounts)[i];
+			int indexCount = theseIndices->getCount();
+
+			if (i < firstStripIndex)
+			{
+				invertShapes(theseIndices, newIndices);
+//				printULongArray("in: ", theseIndices);
+//				printULongArray("in: ", theseIndices);
+			}
+			else
+			{
+				if ((m_shapesPresent & TRESTriangleStrip) &&
+					i == triangleStripIndex)
+				{
+					// WRONG!
+					//invertShapes(theseIndices, newIndices);
+				}
+				else if ((m_shapesPresent & TRESQuadStrip) &&
+					i == quadStripIndex)
+				{
+//					printULongArray("qs: ", theseIndices);
+					for (j = 0; j < indexCount; j += 2)
+					{
+						TCULong index1 = (*theseIndices)[j];
+						TCULong index2 = (*theseIndices)[j + 1];
+
+						newIndices->addValue(flipNormal(index2));
+						newIndices->addValue(flipNormal(index1));
+					}
+//					printULongArray("qs: ", theseIndices);
+				}
+				else if ((m_shapesPresent & TRESTriangleFan) &&
+					i == triangleFanIndex)
+				{
+					int numStrips = theseStripCounts->getCount();
+					int indexOffset = 0;
+
+//					printULongArray("tf: ", theseIndices);
+					for (j = 0; j < numStrips; j++)
+					{
+						int stripCount = (*theseStripCounts)[j];
+
+						invertULongArray(theseIndices, indexOffset + 1,
+							indexOffset + stripCount);
+						indexOffset += stripCount;
+					}
+					for (j = 0; j < indexCount; j++)
+					{
+						newIndices->addValue(flipNormal((*theseIndices)[j]));
+					}
+//					printULongArray("tf: ", theseIndices);
+				}
+			}
+			m_indices->replaceObject(newIndices, i);
+			newIndices->release();
+		}
+	}
+}
+
+void TREShapeGroup::unMirror(void)
 {
 	if (m_indices)
 	{

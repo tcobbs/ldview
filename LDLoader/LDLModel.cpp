@@ -210,6 +210,7 @@ bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
 	if (m_flags.loadingPart)
 	{
 		subModel->m_flags.part = true;
+//		subModel->m_flags.bfcCertify = BFCForcedOnState;
 	}
 	if (subModelFile && !subModel->load(subModelFile))
 	{
@@ -321,6 +322,12 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 		else
 		{
 			m_flags.part = true;
+			// This is now a part, so if we've already hit a BFC CERTIFY line
+			// switch it to forced certify.
+			if (m_flags.bfcCertify == BFCOnState)
+			{
+				m_flags.bfcCertify = BFCForcedOnState;
+			}
 		}
 	}
 }
@@ -460,7 +467,16 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			{
 				// Unless a NOCERTIFY is present, CERTIFY gets turned on by
 				// default for any BFC command.
-				m_flags.bfcCertify = BFCOnState;
+				if (m_flags.part)
+				{
+					// BFC certified parts force BFC to be on, even if their
+					// parent models don't have BFC certification.
+					m_flags.bfcCertify = BFCForcedOnState;
+				}
+				else
+				{
+					m_flags.bfcCertify = BFCOnState;
+				}
 				m_flags.bfcClip = true;
 			}
 		}
@@ -469,7 +485,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 	{
 		if (commentLine->containsBFCCommand("CERTIFY"))
 		{
-			if (m_flags.bfcCertify == BFCOnState)
+			if (getBFCOn())
 			{
 				reportWarning(LDLEBFCWarning, *commentLine,
 					"CERTIFY command after other BFC commands.");
@@ -484,7 +500,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 		// have both certify AND nocertify.
 		if (commentLine->containsBFCCommand("NOCERTIFY"))
 		{
-			if (m_flags.bfcCertify == BFCOnState)
+			if (getBFCOn())
 			{
 				reportError(LDLEBFCError, *commentLine,
 					"NOCERTIFY command after CERTIFY command.");
@@ -496,7 +512,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			}
 		}
 	}
-	if (m_flags.bfcCertify == BFCOnState)
+	if (getBFCOn())
 	{
 		if (commentLine->containsBFCCommand("CLIP"))
 		{
@@ -804,6 +820,9 @@ void LDLModel::print(int indent)
 		break;
 	case BFCOnState:
 		printf(" (BFC On)");
+		break;
+	case BFCForcedOnState:
+		printf(" (BFC Forced On)");
 		break;
 	}
 	printf(": ");

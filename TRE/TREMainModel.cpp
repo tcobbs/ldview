@@ -16,11 +16,15 @@ TREMainModel::TREMainModel(void)
 	m_edgeColor(htonl(0x666658FF)),
 	m_maxRadiusSquared(0.0f)
 {
+#ifdef _LEAK_DEBUG
+	strcpy(className, "TREMainModel");
+#endif // _LEAK_DEBUG
 	m_mainModel = this;
 	m_mainFlags.compileParts = true;
-	m_mainFlags.compileAll = false;
+	m_mainFlags.compileAll = true;
 	m_mainFlags.compiled = false;
 	m_mainFlags.useFlatStrips = false;
+	m_mainFlags.bfc = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -33,6 +37,9 @@ TREMainModel::TREMainModel(const TREMainModel &other)
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor)
 {
+#ifdef _LEAK_DEBUG
+	strcpy(className, "TREMainModel");
+#endif // _LEAK_DEBUG
 	m_mainModel = this;
 }
 
@@ -62,6 +69,26 @@ TCDictionary *TREMainModel::getLoadedModels(void)
 	return m_loadedModels;
 }
 
+void TREMainModel::activateBFC(void)
+{
+	// Note that GL_BACK is the default face to cull, and GL_CCW is the
+	// default polygon winding.
+	glEnable(GL_CULL_FACE);
+	if (getTwoSidedLightingFlag())
+	{
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+	}
+}
+
+void TREMainModel::deactivateBFC(void)
+{
+	if (getTwoSidedLightingFlag())
+	{
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+	}
+	glDisable(GL_CULL_FACE);
+}
+
 void TREMainModel::draw(void)
 {
 	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
@@ -70,10 +97,18 @@ void TREMainModel::draw(void)
 		{
 			m_vertexStore->activate();
 			compileDefaultColor();
+			if (getBFCFlag())
+			{
+				compileBFC();
+			}
 			compileDefaultColorLines();
 			compileEdgeLines();
 			m_coloredVertexStore->activate();
 			compileColored();
+			if (getBFCFlag())
+			{
+				compileColoredBFC();
+			}
 			compileColoredLines();
 			compileColoredEdgeLines();
 			m_mainFlags.compiled = true;
@@ -99,10 +134,20 @@ void TREMainModel::draw(void)
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate();
 	drawDefaultColor();
+	if (getBFCFlag())
+	{
+		activateBFC();
+		drawBFC();
+	}
 	// Next draw all opaque triangles and quads that were specified with a color
 	// number other than 16.  Note that the colored vertex store includes color
 	// information for every vertex.
 	m_coloredVertexStore->activate();
+	if (getBFCFlag())
+	{
+		drawColoredBFC();
+		deactivateBFC();
+	}
 	drawColored();
 	// Next, disable lighting and draw lines.  First draw default colored lines,
 	// which probably don't exist, since color number 16 doesn't often get used

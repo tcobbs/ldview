@@ -67,6 +67,7 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
+	virtual void unMirror(void);
 	virtual void invert(void);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
@@ -100,6 +101,9 @@ protected:
 		TCVector *normals, int count);
 	virtual void initMultiDrawIndices(void);
 	virtual void deleteMultiDrawIndices(void);
+	virtual void invertShapes(TCULongArray *oldIndices,
+		TCULongArray *newIndices);
+	virtual int flipNormal(int index);
 
 	virtual void scanPoints(TCULong index, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);

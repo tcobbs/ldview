@@ -6,33 +6,50 @@
 
 TRESubModel::TRESubModel(void)
 	:m_model(NULL),
+	m_unMirroredSubModel(NULL),
 	m_invertedSubModel(NULL),
 	m_color(0),
 	m_edgeColor(0)
 {
+#ifdef _LEAK_DEBUG
+	strcpy(className, "TRESubModel");
+#endif // _LEAK_DEBUG
 	m_flags.colorSet = false;
-	m_flags.inverted = false;
+	m_flags.unMirrored = false;
 	m_flags.mirrorMatrix = false;
+	m_flags.bfcInvert = false;
+	m_flags.inverted = false;
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
 	:m_model((TREModel *)TCObject::copy(other.m_model)),
-	m_invertedSubModel((TRESubModel *)TCObject::copy(other.m_invertedSubModel)),
+	m_unMirroredSubModel((TRESubModel *)TCObject::copy(
+		other.m_unMirroredSubModel)),
+	m_invertedSubModel((TRESubModel *)TCObject::copy(
+		other.m_invertedSubModel)),
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor),
 	m_flags(other.m_flags)
 {
+#ifdef _LEAK_DEBUG
+	strcpy(className, "TRESubModel");
+#endif // _LEAK_DEBUG
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
 	:m_model(shallow ? NULL : (TREModel *)TCObject::copy(other.m_model)),
+	m_unMirroredSubModel(shallow ? NULL :
+		(TRESubModel *)TCObject::copy(other.m_unMirroredSubModel)),
 	m_invertedSubModel(shallow ? NULL :
 		(TRESubModel *)TCObject::copy(other.m_invertedSubModel)),
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor),
 	m_flags(other.m_flags)
 {
+#ifdef _LEAK_DEBUG
+	strcpy(className, "TRESubModel");
+#endif // _LEAK_DEBUG
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
 }
 
@@ -43,10 +60,28 @@ TRESubModel::~TRESubModel(void)
 void TRESubModel::dealloc(void)
 {
 	TCObject::release(m_model);
+	if (m_unMirroredSubModel)
+	{
+		// The following points back to us, and since we're being deallocated
+		// right now, we don't want it to deallocate us.
+		m_unMirroredSubModel->m_unMirroredSubModel = NULL;
+	}
+	if (m_invertedSubModel)
+	{
+		// The following points back to us, and since we're being deallocated
+		// right now, we don't want it to deallocate us.
+		m_invertedSubModel->m_invertedSubModel = NULL;
+	}
+	if (!m_flags.unMirrored)
+	{
+		TCObject::release(m_unMirroredSubModel);
+	}
+	m_unMirroredSubModel = NULL;
 	if (!m_flags.inverted)
 	{
 		TCObject::release(m_invertedSubModel);
 	}
+	m_invertedSubModel = NULL;
 	TCObject::dealloc();
 }
 
@@ -60,6 +95,16 @@ TRESubModel *TRESubModel::shallowCopy(void)
 	return new TRESubModel(*this, true);
 }
 
+TRESubModel *TRESubModel::getUnMirroredSubModel(void)
+{
+	if (!m_unMirroredSubModel)
+	{
+		m_unMirroredSubModel = shallowCopy();
+		m_unMirroredSubModel->unMirror(this);
+	}
+	return m_unMirroredSubModel;
+}
+
 TRESubModel *TRESubModel::getInvertedSubModel(void)
 {
 	if (!m_invertedSubModel)
@@ -70,10 +115,38 @@ TRESubModel *TRESubModel::getInvertedSubModel(void)
 	return m_invertedSubModel;
 }
 
+void TRESubModel::unMirror(TRESubModel *originalSubModel)
+{
+	m_unMirroredSubModel = originalSubModel;
+	m_flags.unMirrored = !originalSubModel->m_flags.unMirrored;
+	if (m_unMirroredSubModel->m_invertedSubModel)
+	{
+		m_invertedSubModel =
+			m_unMirroredSubModel->m_invertedSubModel->m_unMirroredSubModel;
+		if (m_invertedSubModel)
+		{
+			m_invertedSubModel->m_invertedSubModel = this;
+		}
+	}
+	m_flags.bfcInvert = originalSubModel->m_flags.bfcInvert;
+	m_model = originalSubModel->m_model->getUnMirroredModel();
+	m_model->retain();
+}
+
 void TRESubModel::invert(TRESubModel *originalSubModel)
 {
 	m_invertedSubModel = originalSubModel;
-	m_flags.inverted = true;
+	m_flags.inverted = !originalSubModel->m_flags.inverted;
+	if (m_invertedSubModel->m_unMirroredSubModel)
+	{
+		m_unMirroredSubModel =
+			m_invertedSubModel->m_unMirroredSubModel->m_invertedSubModel;
+		if (m_unMirroredSubModel)
+		{
+			m_unMirroredSubModel->m_unMirroredSubModel = this;
+		}
+	}
+//	m_flags.bfcInvert = false;
 	m_model = originalSubModel->m_model->getInvertedModel();
 	m_model->retain();
 }
@@ -95,6 +168,29 @@ void TRESubModel::setMatrix(float *matrix)
 	else
 	{
 		m_flags.mirrorMatrix = false;
+	}
+}
+
+TREModel *TRESubModel::getEffectiveModel(void) const
+{
+	if (m_flags.mirrorMatrix)
+	{
+		if (m_flags.bfcInvert)
+		{
+			return m_model->getUnMirroredModel()->getInvertedModel();
+		}
+		else
+		{
+			return m_model->getUnMirroredModel();
+		}
+	}
+	else if (m_flags.bfcInvert)
+	{
+		return m_model->getInvertedModel();
+	}
+	else
+	{
+		return m_model;
 	}
 }
 
@@ -136,14 +232,12 @@ void TRESubModel::draw(void)
 
 void TRESubModel::compileDefaultColor(void)
 {
-	if (m_flags.mirrorMatrix)
-	{
-		m_model->getInvertedModel()->compileDefaultColor();
-	}
-	else
-	{
-		m_model->compileDefaultColor();
-	}
+	getEffectiveModel()->compileDefaultColor();
+}
+
+void TRESubModel::compileColored(void)
+{
+	getEffectiveModel()->compileColored();
 }
 
 void TRESubModel::drawDefaultColor(void)
@@ -157,14 +251,24 @@ void TRESubModel::drawDefaultColor(void)
 	glMultMatrixf(m_matrix);
 //	TCVector::multMatrix(matrix, m_matrix, newMatrix);
 //	if (TCVector::determinant(newMatrix) < 0.0f)
-	if (m_flags.mirrorMatrix)
+	getEffectiveModel()->drawDefaultColor();
+	glPopMatrix();
+	if (m_flags.colorSet)
 	{
-		m_model->getInvertedModel()->drawDefaultColor();
+		glPopAttrib();
 	}
-	else
+}
+
+void TRESubModel::drawBFC(void)
+{
+	if (m_flags.colorSet)
 	{
-		m_model->drawDefaultColor();
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor4ubv((GLubyte*)&m_color);
 	}
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	getEffectiveModel()->drawBFC();
 	glPopMatrix();
 	if (m_flags.colorSet)
 	{
@@ -210,7 +314,15 @@ void TRESubModel::drawColored(void)
 {
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	m_model->drawColored();
+	getEffectiveModel()->drawColored();
+	glPopMatrix();
+}
+
+void TRESubModel::drawColoredBFC(void)
+{
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	getEffectiveModel()->drawColoredBFC();
 	glPopMatrix();
 }
 

@@ -20,7 +20,8 @@ typedef enum
 	// which doesn't match.
 	BFCUnknownState,
 	BFCOffState,
-	BFCOnState
+	BFCOnState,
+	BFCForcedOnState
 } BFCState;
 
 class LDLModel : public TCObject
@@ -60,6 +61,14 @@ public:
 	// instead of returning the flag value directly.
 	bool isPart(void) { return m_flags.part != false; }
 	bool isMPD(void) { return m_flags.mpd != false; }
+
+	BFCState getBFCState(void) { return m_flags.bfcCertify; }
+
+	bool getBFCOn(void)
+	{
+		return m_flags.bfcCertify == BFCOnState ||
+			m_flags.bfcCertify == BFCForcedOnState;
+	}
 
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
