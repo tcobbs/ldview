@@ -17,7 +17,7 @@ LDLShapeLine::LDLShapeLine(const LDLShapeLine &other)
 		int i;
 		int count = other.getNumPoints();
 
-		m_points = new Vector[count];
+		m_points = new TCVector[count];
 		for (i = 0; i < count; i++)
 		{
 			m_points[i] = other.m_points[i];

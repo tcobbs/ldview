@@ -35,6 +35,7 @@ public:
 	// Color numbers might become dynamic, so not static.
 	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
 	virtual TCULong getPackedRGBA(TCULong colorNumber);
+	virtual TCULong getHighlightColorNumber(TCULong colorNumber);
 	virtual LDLModel *subModelNamed(const char *subModelName,
 		bool lowRes = false);
 	virtual const char *getFilename(void) { return m_filename; }
@@ -50,11 +51,17 @@ public:
 		const char *format, va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
 		const char *format, ...);
+	virtual LDLError *newError(LDLErrorType type, const char *format,
+		va_list argPtr);
+	virtual LDLError *newError(LDLErrorType type, const char *format, ...);
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
 	virtual int getActiveLineCount(void) { return m_activeLineCount; }
 
 	// Flags
-	bool isPart(void) { return m_flags.part; }
+	// Note that bit flags can cause odd results; thus returning the != false,
+	// instead of returning the flag value directly.
+	bool isPart(void) { return m_flags.part != false; }
+	bool isMPD(void) { return m_flags.mpd != false; }
 
 	// Transparency detection is fixed, so static.
 	static bool colorNumberIsTransparent(TCULong colorNumber);
@@ -74,7 +81,10 @@ protected:
 	virtual void reportError(LDLError *error);
 	virtual void reportError(LDLErrorType type, const LDLFileLine &fileLine,
 		const char* format, ...);
+	virtual void reportError(LDLErrorType type, const char* format, ...);
 //	virtual void processModelLine(LDLModelLine *modelLine);
+
+	static bool verifyLDrawDir(const char *value);
 
 	char *m_filename;
 	char *m_name;
@@ -94,6 +104,7 @@ protected:
 		bool bfcInvertNext:1;		// Temporal
 		// Public flags
 		bool part:1;
+		bool mpd:1;
 		BFCState bfcCertify:3;
 	} m_flags;
 

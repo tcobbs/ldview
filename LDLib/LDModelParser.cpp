@@ -1,5 +1,4 @@
 #include "LDModelParser.h"
-#include "Vector.h"
 
 #include <string.h>
 
@@ -12,6 +11,7 @@
 #include <TRE/TREShapeGroup.h>
 #include <TCFoundation/mystring.h>
 #include <LDLoader/LDLMacros.h>
+#include <TCFoundation/TCVector.h>
 
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
@@ -25,6 +25,7 @@ LDModelParser::LDModelParser(void)
 	m_flags.flattenParts = true;
 	m_flags.primitiveSubstitution = false;
 	m_flags.seams = false;
+	m_flags.edgeLines = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -87,8 +88,13 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 	}
 	else
 	{
+		LDLModel *parentModel = modelLine->getParentModel();
+		TCULong highlightColorNumber =
+			parentModel->getHighlightColorNumber(colorNumber);
+
 		treSubModel = treParentModel->addSubModel(
-			modelLine->getParentModel()->getPackedRGBA(colorNumber),
+			parentModel->getPackedRGBA(colorNumber),
+			parentModel->getPackedRGBA(highlightColorNumber),
 			modelLine->getMatrix(), treModel);
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
@@ -174,55 +180,68 @@ bool LDModelParser::isCyli(const char *filename)
 	return isPrimitive(filename, "cyli.dat");
 }
 
+bool LDModelParser::is1DigitCon(const char *filename)
+{
+	return strlen(filename) == 11 && startsWithFraction(filename) &&
+		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
+		isdigit(filename[6]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
+bool LDModelParser::is2DigitCon(const char *filename)
+{
+	return strlen(filename) == 12 && startsWithFraction(filename) &&
+		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
+		isdigit(filename[6]) && isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
+bool LDModelParser::isCon(const char *filename)
+{
+	return is1DigitCon(filename) || is2DigitCon(filename);
+}
+
 bool LDModelParser::substituteStud(TREModel *treModel)
 {
 	int numSegments = getNumCircleSegments();
 
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addDisk(Vector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
+	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
 /*
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	addEdge(Vector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
 */
 	return true;
 }
 
 bool LDModelParser::substituteStu2(TREModel *treModel)
 {
-	int numSegments;
-	int origCurveQuality = m_curveQuality;
+	int numSegments = LO_NUM_SEGMENTS;
 
-	m_curveQuality = 1;
-	numSegments = getNumCircleSegments();
-	m_curveQuality = origCurveQuality;
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addDisk(Vector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
+	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
 /*
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	addEdge(Vector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
 */
 	return true;
 }
 
 bool LDModelParser::substituteStu22(TREModel *treModel, bool /*isA*/)
 {
-	int numSegments;
-	int origCurveQuality = m_curveQuality;
+	int numSegments = LO_NUM_SEGMENTS;
 
-	m_curveQuality = 1;
-	numSegments = getNumCircleSegments();
-	m_curveQuality = origCurveQuality;
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addOpenCone(Vector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, 0.0f,
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
+	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, 0.0f,
 		numSegments);
 /*
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
 	if (!isA)
 	{
-		addEdge(Vector(0.0f, 0.0f, 0.0f), 4.0f, numSegments);
-		addEdge(Vector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
+		addEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f, numSegments);
+		addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
 	}
 */
 	return true;
@@ -230,19 +249,15 @@ bool LDModelParser::substituteStu22(TREModel *treModel, bool /*isA*/)
 
 bool LDModelParser::substituteStu23(TREModel *treModel, bool /*isA*/)
 {
-	int numSegments;
-	int origCurveQuality = m_curveQuality;
+	int numSegments = LO_NUM_SEGMENTS;
 
-	m_curveQuality = 1;
-	numSegments = getNumCircleSegments();
-	m_curveQuality = origCurveQuality;
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
-	treModel->addDisk(Vector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
+	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
 /*
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
 	if (!isA)
 	{
-		addEdge(Vector(0.0f, 0.0f, 0.0f), 4.0f, numSegments);
+		addEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f, numSegments);
 	}
 */
 	return true;
@@ -250,23 +265,19 @@ bool LDModelParser::substituteStu23(TREModel *treModel, bool /*isA*/)
 
 bool LDModelParser::substituteStu24(TREModel *treModel, bool /*isA*/)
 {
-	int numSegments;
-	int origCurveQuality = m_curveQuality;
+	int numSegments = LO_NUM_SEGMENTS;
 
-	m_curveQuality = 1;
-	numSegments = getNumCircleSegments();
-	m_curveQuality = origCurveQuality;
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addCylinder(Vector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments);
-	treModel->addOpenCone(Vector(0.0f, -4.0f, 0.0f), 8.0f, 6.0f, 0.0f,
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments);
+	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 6.0f, 0.0f,
 		numSegments);
 /*
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	addEdge(Vector(0.0f, -4.0f, 0.0f), 8.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	addEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f, numSegments);
 	if (!isA)
 	{
-		addEdge(Vector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
-		addEdge(Vector(0.0f, 0.0f, 0.0f), 8.0f, numSegments);
+		addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
+		addEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f, numSegments);
 	}
 */
 	return true;
@@ -276,8 +287,17 @@ bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
-	treModel->addCylinder(Vector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
+	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
 		(int)(numSegments * fraction));
+	return true;
+}
+
+bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
+		(float)size, 1.0f, numSegments, (int)(numSegments * fraction));
 	return true;
 }
 
@@ -285,7 +305,7 @@ int LDModelParser::getNumCircleSegments(float fraction)
 {
 	int retValue = m_curveQuality * LO_NUM_SEGMENTS;
 
-	if (fraction)
+	if (fraction != 0.0f)
 	{
 		int i;
 		
@@ -345,6 +365,13 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		{
 			return substituteCylinder(treModel, startingFraction(modelName));
 		}
+		else if (isCon(modelName))
+		{
+			int size;
+
+			sscanf(modelName + 6, "%d", &size);
+			return substituteCone(treModel, startingFraction(modelName), size);
+		}
 	}
 	return false;
 }
@@ -373,6 +400,7 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel)
 						parseModel((LDLModelLine *)fileLine, treModel);
 						break;
 					case LDLLineTypeLine:
+						parseLine((LDLShapeLine *)fileLine, treModel);
 						break;
 					case LDLLineTypeTriangle:
 						parseTriangle((LDLShapeLine *)fileLine, treModel);
@@ -388,6 +416,28 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel)
 		}
 	}
 	return true;
+}
+
+void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
+{
+	TCULong colorNumber = shapeLine->getColorNumber();
+
+	if (colorNumber == 16)
+	{
+		treModel->addLine(shapeLine->getPoints());
+	}
+	else if (colorNumber == 24)
+	{
+		if (m_flags.edgeLines)
+		{
+			treModel->addHighlightLine(shapeLine->getPoints());
+		}
+	}
+	else
+	{
+		treModel->addLine(shapeLine->getParentModel()->
+			getPackedRGBA(colorNumber), shapeLine->getPoints());
+	}
 }
 
 void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel)
@@ -449,7 +499,7 @@ float LDModelParser::getSeamWidth(void)
 int LDModelParser::parseShapeVertices(LDLShapeLine *shapeLine,
 									   TREModel *treModel)
 {
-	Vector *points = shapeLine->getPoints();
+	TCVector *points = shapeLine->getPoints();
 	TREVertexArray *vertices = treModel->getVertices();
 	int i;
 	int count = shapeLine->getNumPoints();

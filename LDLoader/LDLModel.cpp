@@ -7,6 +7,13 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCAlertManager.h>
 
+#ifdef WIN32
+#include <direct.h>
+#include <windows.h>
+#else // WIN32
+#include <unistd.h>
+#endif // WIN32
+
 #define LDL_LOWRES_PREFIX "LDL-LOWRES:"
 
 char *LDLModel::sm_systemLDrawDir = NULL;
@@ -38,6 +45,7 @@ LDLModel::LDLModel(void)
 	m_flags.bfcInvertNext = false;
 	// Initialize Public flags
 	m_flags.part = false;
+	m_flags.mpd = false;
 	m_flags.bfcCertify = BFCUnknownState;
 	sm_modelCount++;
 }
@@ -91,6 +99,11 @@ TCULong LDLModel::getPackedRGBA(TCULong colorNumber)
 
 	getRGBA(colorNumber, r, g, b, a);
 	return r << 24 | g << 16 | b << 8 | a;
+}
+
+TCULong LDLModel::getHighlightColorNumber(TCULong colorNumber)
+{
+	return m_mainModel->getHighlightColorNumber(colorNumber);
 }
 
 void LDLModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
@@ -507,14 +520,61 @@ bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
 	return true;
 }
 
+bool LDLModel::verifyLDrawDir(const char *value)
+{
+	char currentDir[1024];
+	bool retValue = false;
+
+	if (value && getcwd(currentDir, sizeof(currentDir)))
+	{
+		if (chdir(value) == 0)
+		{
+			if (chdir("parts") == 0 && chdir("..") == 0 && chdir("p") == 0)
+			{
+				retValue = true;
+			}
+		}
+		chdir(currentDir);
+	}
+	return retValue;
+}
+
 const char* LDLModel::lDrawDir(void)
 {
 	if (!sm_systemLDrawDir)
 	{
 		sm_systemLDrawDir = copyString(getenv("LDRAWDIR"));
+		if (!verifyLDrawDir(sm_systemLDrawDir))
+		{
+			delete sm_systemLDrawDir;
+			sm_systemLDrawDir = NULL;
+		}
 		if (!sm_systemLDrawDir)
 		{
-			sm_systemLDrawDir = copyString("C:\\LDRAW");
+#ifdef WIN32
+			char buf[1024];
+
+			if (GetPrivateProfileString("LDraw", "BaseDirectory",
+				"", buf, 1024, "ldraw.ini"))
+			{
+				buf[1023] = 0;
+				if (verifyLDrawDir(buf))
+				{
+					sm_systemLDrawDir = copyString(buf);
+				}
+			}
+			if (!sm_systemLDrawDir)
+			{
+				sm_systemLDrawDir = copyString("C:\\LDRAW");
+			}
+#else // WIN32
+			sm_systemLDrawDir = copyString("/usr/local/ldraw");
+#endif // WIN32
+		}
+		if (!verifyLDrawDir(sm_systemLDrawDir))
+		{
+			delete sm_systemLDrawDir;
+			sm_systemLDrawDir = copyString("");
 		}
 	}
 	return sm_systemLDrawDir;
@@ -544,6 +604,7 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 		else
 		{
 			m_flags.mainModelLoaded = true;
+			m_flags.mpd = true;
 		}
 	}
 	else if (commentLine->isPartMeta())
@@ -902,6 +963,18 @@ void LDLModel::reportError(LDLErrorType type, const LDLFileLine &fileLine,
 	error->release();
 }
 
+void LDLModel::reportError(LDLErrorType type, const char* format, ...)
+{
+	va_list argPtr;
+	LDLError *error;
+
+	va_start(argPtr, type);
+	error = newError(type, format, argPtr);
+	va_end(argPtr);
+	reportError(error);
+	error->release();
+}
+
 TCDictionary *LDLModel::getLoadedModels(void)
 {
 	return (m_mainModel->getLoadedModels());
@@ -991,6 +1064,47 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 
 	va_start(argPtr, type);
 	return newError(type, fileLine, format, argPtr);
+	va_end(argPtr);
+}
+
+LDLError *LDLModel::newError(LDLErrorType type, const char* format,
+							 va_list argPtr)
+{
+	char message[1024];
+	char** components;
+	int componentCount;
+	LDLError *error = NULL;
+
+	vsprintf(message, format, argPtr);
+	stripCRLF(message);
+	components = componentsSeparatedByString(message, "\n", componentCount);
+	if (componentCount > 1)
+	{
+		int i;
+		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
+
+		*strchr(message, '\n') = 0;
+		for (i = 1; i < componentCount; i++)
+		{
+			extraInfo->addString(components[i]);
+		}
+		error = new LDLError(type, message, m_filename, NULL, -1, extraInfo);
+		extraInfo->release();
+	}
+	else
+	{
+		error = new LDLError(type, message, m_filename, NULL, -1);
+	}
+	deleteStringArray(components, componentCount);
+	return error;
+}
+
+LDLError *LDLModel::newError(LDLErrorType type, const char* format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, type);
+	return newError(type, format, argPtr);
 	va_end(argPtr);
 }
 

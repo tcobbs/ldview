@@ -4,6 +4,9 @@
 
 #include <TCFoundation/TCDictionary.h>
 
+static const float POLYGON_OFFSET_FACTOR = 0.85f;
+static const float POLYGON_OFFSET_UNITS = 0.0f;
+
 TREMainModel::TREMainModel(void)
 	:m_loadedModels(NULL),
 	m_vertexStore(new TREVertexStore),
@@ -11,7 +14,7 @@ TREMainModel::TREMainModel(void)
 {
 	m_mainModel = this;
 	m_mainFlags.compileParts = true;
-	m_mainFlags.compileAll = true;
+	m_mainFlags.compileAll = false;
 	m_mainFlags.compiled = false;
 }
 
@@ -67,11 +70,21 @@ void TREMainModel::draw(void)
 			m_mainFlags.compiled = true;
 		}
 	}
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
 	glColor4ubv((GLubyte*)&color);
 	m_vertexStore->activate();
 	drawDefaultColor();
 	m_coloredVertexStore->activate();
 	drawColored();
+	glDisable(GL_LIGHTING);
+	glColor4ubv((GLubyte*)&color);
+	m_vertexStore->activate();
+	drawDefaultColorLines();
+	drawHighlightLines();
+	m_coloredVertexStore->activate();
+	drawColoredLines();
+	glEnable(GL_LIGHTING);
 }
 
 TREModel *TREMainModel::modelNamed(const char *name)

@@ -5,7 +5,7 @@
 
 class TREModel;
 
-class Vector;
+class TCVector;
 
 class TRESubModel : public TCObject
 {
@@ -17,13 +17,16 @@ public:
 	virtual TREModel *getModel(void) const { return m_model; }
 	virtual void setMatrix(float *matrix);
 	virtual float *getMatrix(void) { return m_matrix; }
-	virtual void setColor(TCULong color);
+	virtual void setColor(TCULong color, TCULong highlightColor);
 	virtual TCULong getColor(void);
 	virtual bool isColorSet(void) { return m_colorSet; }
 	virtual void draw(void);
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
-	virtual void getMinMax(Vector& min, Vector& max, float* matrix);
+	virtual void drawDefaultColorLines(void);
+	virtual void drawColoredLines(void);
+	virtual void drawHighlightLines(void);
+	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
 	virtual void shrink(float amount);
 protected:
 	virtual ~TRESubModel(void);
@@ -32,6 +35,7 @@ protected:
 	TREModel *m_model;
 	float m_matrix[16];
 	TCULong m_color;
+	TCULong m_highlightColor;
 	bool m_colorSet;
 };
 

@@ -20,7 +20,17 @@ void TREColoredShapeGroup::dealloc(void)
 	TREShapeGroup::dealloc();
 }
 
-int TREColoredShapeGroup::addTriangle(TCULong color, Vector *vertices)
+int TREColoredShapeGroup::addLine(TCULong color, TCVector *vertices)
+{
+	int index;
+
+	m_vertexStore->setupColored();
+	index = m_vertexStore->addVertices(htonl(color), vertices, 2);
+	addShape(TRESLine, index, 2);
+	return index;
+}
+
+int TREColoredShapeGroup::addTriangle(TCULong color, TCVector *vertices)
 {
 	int index;
 
@@ -30,7 +40,7 @@ int TREColoredShapeGroup::addTriangle(TCULong color, Vector *vertices)
 	return index;
 }
 
-int TREColoredShapeGroup::addQuad(TCULong color, Vector *vertices)
+int TREColoredShapeGroup::addQuad(TCULong color, TCVector *vertices)
 {
 	int index;
 
@@ -40,20 +50,20 @@ int TREColoredShapeGroup::addQuad(TCULong color, Vector *vertices)
 	return index;
 }
 
-int TREColoredShapeGroup::addQuadStrip(TCULong color, Vector *vertices,
-									   Vector *normals, int count)
+int TREColoredShapeGroup::addQuadStrip(TCULong color, TCVector *vertices,
+									   TCVector *normals, int count)
 {
 	return addStrip(color, TRESQuadStrip, vertices, normals, count);
 }
 
-int TREColoredShapeGroup::addTriangleFan(TCULong color, Vector *vertices,
-										 Vector *normals, int count)
+int TREColoredShapeGroup::addTriangleFan(TCULong color, TCVector *vertices,
+										 TCVector *normals, int count)
 {
 	return addStrip(color, TRESTriangleFan, vertices, normals, count);
 }
 
 int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
-								   Vector *vertices, Vector *normals, int count)
+								   TCVector *vertices, TCVector *normals, int count)
 {
 	int index;
 

@@ -1,0 +1,346 @@
+#ifndef __MODELWINDOW_H__
+#define __MODELWINDOW_H__
+
+#include <CUI/CUIOGLWindow.h>
+#include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCVector.h>
+#include <LDLib/LDrawModel.h>
+#include "LDViewPreferences.h"
+#include <Commctrl.h>
+#include <GL/glext.h>
+#include <GL/wglext.h>
+
+class LDrawModelViewer;
+class TCStringArray;
+class CUIWindowResizer;
+
+#define POLL_NONE 0
+#define POLL_PROMPT 1
+#define POLL_AUTO 2
+#define POLL_BACKGROUND 3
+
+typedef enum
+{
+	LDVViewExamine,
+	LDVViewFlythrough
+} LDVViewMode;
+
+class ControlInfo: public TCObject
+{
+public:
+	ControlInfo(void);
+//	HWND handle;
+//	int controlId;
+//	RECT originalRect;
+	LDMErrorType errorType;
+};
+
+typedef TCTypedObjectArray<LDMError> LDMErrorArray;
+typedef TCTypedObjectArray<ControlInfo> ControlInfoArray;
+
+class ModelWindow: public CUIOGLWindow
+{
+	public:
+		ModelWindow(CUIWindow*, int, int, int, int);
+		virtual void update(void);
+		virtual void perspectiveView(void);
+		virtual BOOL showPreferences(void);
+		virtual void showErrors(void);
+		virtual void setFilename(const char*);
+		virtual char* getFilename(void);
+		virtual int loadModel(void);
+		virtual void setZoomSpeed(float);
+		virtual float getZoomSpeed(void);
+//		void setRotationSpeed(float value) { rotationSpeed = value; }
+		virtual void setRotationSpeed(float value);
+		virtual void setXRotate(float value);
+		virtual void setYRotate(float value);
+		float getRotationSpeed(void) { return rotationSpeed; }
+		virtual void forceRedraw(int = 0);
+		virtual void recompile(void);
+		virtual void uncompile(void);
+		virtual void zoom(float);
+		virtual void setClipZoom(bool);
+		virtual bool getClipZoom(void);
+		virtual BOOL chDirFromFilename(const char* filename, char* outFilename);
+		virtual void reload(void);
+		virtual void startPolling(void);
+		virtual BOOL stopPolling(void);
+		virtual void checkFileForUpdates(void);
+		virtual void updateFSAA(void);
+		virtual void setPollSetting(int);
+		int getPollSetting(void) { return pollSetting; }
+		BOOL initWindow(void);
+		void setNeedsRecompile(void) { needsRecompile = true; }
+		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
+		virtual void finalSetup(void);
+		virtual void closeWindow(void);
+		virtual bool print(void);
+		virtual bool pageSetup(void);
+		virtual bool saveSnapshot(void);
+		virtual bool saveSnapshot(char *saveFilename);
+		virtual void setViewMode(LDVViewMode mode);
+		LDVViewMode getViewMode(void) { return viewMode; }
+		LDrawModelViewer* getModelViewer(void) { return modelViewer; }
+		HWND getHPrefsWindow(void) { return hPrefsWindow; }
+		virtual LRESULT processKeyDown(int keyCode, long keyData);
+		virtual LRESULT processKeyUp(int keyCode, long keyData);
+		void setStatusBar(HWND value) { hStatusBar = value; }
+		HWND getStatusBar(void) { return hStatusBar; }
+		void setProgressBar(HWND value) { hProgressBar = value; }
+		HWND getProgressBar(void) { return hProgressBar; }
+		void setCancelLoad(void) { cancelLoad = true; }
+		bool performHotKey(int hotKeyIndex);
+
+		static void initCommonControls(DWORD mask);
+	protected:
+		virtual ~ModelWindow(void);
+		virtual void dealloc(void);
+
+		virtual BOOL setupPFD(void);
+		virtual LRESULT doCreate(HWND, LPCREATESTRUCT);
+		virtual void doPaint(void);
+		virtual void doPostPaint(void);
+		virtual LRESULT doNCDestroy(void);
+		virtual LRESULT doDestroy(void);
+		virtual void drawFPS(void);
+		virtual void updateFPS(void);
+		virtual void printSystemError(void);
+		virtual void setupLighting(void);
+		virtual void setupMaterial(void);
+		virtual LRESULT doLButtonDown(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doLButtonUp(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doRButtonDown(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doRButtonUp(WPARAM keyFlags, int xPos, int yPos);
+//		virtual LRESULT doMButtonUp(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doMouseMove(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doSize(WPARAM, int, int);
+		virtual LRESULT doMove(int newX, int newY);
+		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);
+		virtual void updateSpinRateXY(int, int);
+		virtual void updatePanXY(int xPos, int yPos);
+		virtual void updateHeadXY(int xPos, int yPos);
+		virtual void updateZoom(int);
+		virtual void updateSpinRate(void);
+		virtual void captureMouse(void);
+		virtual void releaseMouse(void);
+//		virtual void createPreferences(void);
+//		virtual void setupPreferences(void);
+//		virtual BOOL doPreferencesOK(void);
+		virtual BOOL doErrorOK(void);
+//		virtual BOOL doPreferencesClick(int controlId, HWND controlHWnd);
+		virtual BOOL doProgressClick(int controlId, HWND controlHWnd);
+		virtual BOOL doErrorClick(int controlId, HWND controlHWnd);
+		virtual BOOL doPageSetupClick(int controlId, HWND controlHWnd);
+//		virtual void doPreferencesCancel(void);
+//		virtual void doPreferencesApply(void);
+//		virtual void doPreferencesFSRefresh(void);
+//		virtual void doPreferencesStipple(void);
+//		virtual void doPreferencesSort(void);
+		virtual void createErrorWindow(void);
+		virtual void setupErrorWindow(void);
+		virtual int populateErrorTree(void);
+		virtual void showErrorsIfNeeded(BOOL onlyIfNeeded = TRUE);
+		virtual BOOL doErrorTreeNotify(LPNMHDR notification);
+		virtual BOOL doErrorTreeKeyDown(LPNMTVKEYDOWN notification);
+		virtual BOOL doErrorTreeCopy(void);
+		virtual BOOL doDialogInit(HWND hDlg, HWND hFocusWindow, LPARAM lParam);
+//		virtual BOOL doDialogVScroll(HWND, int, int, HWND);
+		virtual BOOL doDialogNotify(HWND hDlg, int controlId,
+			LPNMHDR notification);
+		virtual BOOL doDialogCommand(HWND, int, int, HWND);
+		virtual BOOL doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
+			int newHeight);
+		virtual BOOL doErrorSize(WPARAM sizeType, int newWidth, int newHeight);
+		virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
+		virtual LRESULT doEraseBackground(RECT* updateRect);
+		virtual LRESULT doTimer(UINT);
+		virtual BOOL getFileTime(FILETIME*);
+		virtual void checkForPart(void);
+		virtual int progressCallback(char* message, float progress,
+			bool showErrors = false);
+		static int staticProgressCallback(char* message, float progress,
+			void* userData);
+		static bool staticImageProgressCallback(char* message, float progress,
+			void* userData);
+		virtual BOOL showProgress(void);
+		virtual void hideProgress(void);
+		virtual void createProgress(void);
+		virtual void setupProgress(void);
+		virtual void doProgressCancel(void);
+		virtual int errorCallback(LDMError* error);
+		static int staticErrorCallback(LDMError* error, void* userData);
+		virtual LRESULT windowProc(HWND, UINT, WPARAM, LPARAM);
+		static LRESULT CALLBACK staticErrorDlgProc(HWND, UINT, WPARAM, LPARAM);
+		virtual LRESULT errorDlgProc(HWND, UINT, WPARAM, LPARAM);
+		virtual void registerErrorWindowClass(void);
+		virtual bool addError(LDMError* error);
+		virtual HTREEITEM addErrorLine(HTREEITEM parent, char* line,
+			LDMError* error, int imageIndex = -1);
+		virtual void clearErrors(void);
+		virtual void clearErrorTree(void);
+		virtual void getTreeViewLine(HWND hTreeView, HTREEITEM hItem,
+			TCStringArray *lines);
+		virtual char* getErrorKey(LDMErrorType errorType);
+		virtual BOOL showsErrorType(LDMErrorType errorType);
+		virtual void swapBuffers(void);
+		virtual LRESULT doCommand(int itemId, int notifyCode, HWND controlHWnd);
+		virtual bool writePng(char *filename, int width, int height,
+			BYTE *buffer);
+		virtual bool writeBmp(char *filename, int width, int height,
+			BYTE *buffer);
+		virtual bool writeImage(char *filename, int width, int height,
+			BYTE *buffer, char *formatName);
+		virtual BYTE *grabImage(int imageWidth, int imageHeight,
+			BYTE *buffer = NULL);
+		virtual bool saveImage(char *filename, int imageWidth, int imageHeight);
+		virtual void renderOffscreenImage(void);
+		virtual bool setupPBuffer(int imageWidth, int imageHeight,
+			bool antialias = false);
+		virtual void cleanupPBuffer(void);
+		virtual bool selectPrinter(PRINTDLG &pd);
+		virtual bool printPage(const PRINTDLG &pd);
+		virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
+			int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer);
+		virtual void calcTiling(HDC hPrinterDC, int &bitmapWidth,
+			int &bitmapHeight, int &numXTiles, int &numYTiles);
+		virtual void sizeView(void);
+		virtual void setupSaveExtras(void);
+		virtual void setupPrintExtras(void);
+		virtual void setupPageSetupExtras(void);
+		virtual void disableSaveSize(void);
+		virtual void enableSaveSize(void);
+		virtual void disableSaveSeries(void);
+		virtual void enableSaveSeries(void);
+		virtual void updateSaveWidth(void);
+		virtual void updateSaveHeight(void);
+		virtual void updateSaveDigits(void);
+		virtual bool getSaveFilename(char* saveFilename, int len);
+		virtual bool shouldOverwriteFile(char* filename);
+		virtual bool calcSaveFilename(char* saveFilename, int len);
+		virtual BOOL doSaveCommand(int controlId, int notifyCode,
+			HWND hControlWnd);
+		virtual BOOL doSaveNotify(int controlId, LPOFNOTIFY notification);
+		virtual BOOL doSaveClick(int controlId, HWND hControlWnd);
+		virtual BOOL doSaveKillFocus(int controlId, HWND hControlWnd);
+		virtual BOOL doPrintCommand(int controlId, int notifyCode,
+			HWND hControlWnd);
+		virtual BOOL doPrintClick(int controlId, HWND hControlWnd);
+		virtual BOOL doPrintKillFocus(int controlId, HWND hControlWnd);
+		virtual LRESULT doDropFiles(HDROP hDrop);
+		virtual void updatePrintDPIField(void);
+		virtual void updatePrintDPI(void);
+		virtual bool parseDevMode(HGLOBAL hDevMode);
+		virtual void applyPrefs(void);
+		virtual bool frontBufferFPS(void);
+		virtual bool canSaveAlpha(void);
+		virtual void makeCurrent(void);
+		virtual void setStatusText(HWND hStatus, int part, char *text);
+		virtual void initFail(char *reason);
+
+		void loadSettings(void);
+
+		static UINT CALLBACK staticPrintHook(HWND hDlg, UINT uiMsg,
+			WPARAM wParam, LPARAM lParam);
+		static UINT CALLBACK staticPageSetupHook(HWND hDlg, UINT uiMsg,
+			WPARAM wParam, LPARAM lParam);
+		static UINT CALLBACK staticSaveHook(HWND hDlg, UINT uiMsg,
+			WPARAM wParam, LPARAM lParam);
+		static bool fileExists(char *filename);
+		static int roundUp(int value, int nearest);
+		static void swap(int &left, int &right);
+
+		LDrawModelViewer* modelViewer;
+		DWORD referenceFrameTime;
+		int numFramesSinceReference;
+		float fps;
+		bool firstFPSPass;
+		DWORD lastMoveTime;
+		float rotationSpeed;
+		float distance;
+		int lastX;
+		int lastY;
+		int originalZoomY;
+		int lButtonDown;
+		int rButtonDown;
+		HWND oldMouseWindow;
+		HWND hPrefsWindow;
+		int captureCount;
+		int redrawCount;
+		int pollSetting;
+		FILETIME lastWriteTime;
+		bool pollTimerRunning;
+		HWND hProgressWindow;
+		HWND hProgressCancelButton;
+		HWND hProgress;
+		HWND hProgressMessage;
+		bool cancelLoad;
+		DWORD lastProgressUpdate;
+		bool loading;
+		bool needsRecompile;
+		HWND hErrorWindow;
+		HWND hErrorStatusWindow;
+		HWND hErrorTree;
+//		HWND hErrorOk;
+		int errorTreeX;
+		int errorTreeY;
+		int errorTreeRight;
+		int errorTreeBottom;
+		int errorOkX;
+		int errorOkY;
+		int errorOkWidth;
+		int errorOkHeight;
+		int errorWindowWidth;
+		WNDPROC originalErrorDlgProc;
+		LDMErrorArray* errors;
+		int errorImageIndices[7];
+		bool errorTreePopulated;
+		ControlInfoArray *topRightErrorControls;
+		LDViewPreferences *prefs;
+		bool applyingPrefs;
+		bool offscreenActive;
+		HPBUFFERARB hPBuffer;
+		HDC hPBufferDC;
+		HGLRC hPBufferGLRC;
+		HWND hPrintDialog;
+		HWND hPageSetupDialog;
+		float printLeftMargin;
+		float printRightMargin;
+		float printTopMargin;
+		float printBottomMargin;
+		int printOrientation;
+		int printPaperSize;
+		int printHDPI;
+		int printVDPI;
+		int printLMarginPixels;
+		int printTMarginPixels;
+		bool saveActualSize;
+		int saveWidth;
+		int saveHeight;
+		bool saveSeries;
+		int saveDigits;
+		HWND hSaveDialog;
+		HWND hSaveWidthLabel;
+		HWND hSaveWidth;
+		HWND hSaveHeightLabel;
+		HWND hSaveHeight;
+		HWND hSaveDigitsLabel;
+		HWND hSaveDigitsField;
+		HWND hSaveDigitsSpin;
+		HWND hStatusBar;
+		HWND hProgressBar;
+		bool usePrinterDPI;
+		int printDPI;
+		bool printBackground;
+		HWND hPrintDPI;
+		int currentAntialiasType;
+		int saveImageType;
+		bool windowShown;
+		bool saveAlpha;
+		LDVViewMode viewMode;
+		HDC hCurrentDC;
+		HGLRC hCurrentGLRC;
+		CUIWindowResizer *errorWindowResizer;
+};
+
+#endif

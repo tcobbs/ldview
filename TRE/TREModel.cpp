@@ -18,8 +18,12 @@ TREModel::TREModel(void)
 	m_subModels(NULL),
 	m_shapes(NULL),
 	m_coloredShapes(NULL),
+	m_highlightShapes(NULL),
 	m_defaultColorListID(0),
-	m_coloredListID(0)
+	m_coloredListID(0),
+	m_defaultColorLinesListID(0),
+	m_coloredLinesListID(0),
+	m_highlightLinesListID(0)
 {
 	m_flags.part = false;
 	m_flags.boundingBox = false;
@@ -35,6 +39,9 @@ TREModel::TREModel(const TREModel &other)
 		other.m_coloredShapes)),
 	m_defaultColorListID(0),
 	m_coloredListID(0),
+	m_defaultColorLinesListID(0),
+	m_coloredLinesListID(0),
+	m_highlightLinesListID(0),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
 	m_flags(other.m_flags)
@@ -59,6 +66,18 @@ void TREModel::dealloc(void)
 	if (m_coloredListID)
 	{
 		glDeleteLists(m_coloredListID, 1);
+	}
+	if (m_defaultColorLinesListID)
+	{
+		glDeleteLists(m_defaultColorLinesListID, 1);
+	}
+	if (m_coloredLinesListID)
+	{
+		glDeleteLists(m_coloredLinesListID, 1);
+	}
+	if (m_highlightLinesListID)
+	{
+		glDeleteLists(m_highlightLinesListID, 1);
 	}
 	TCObject::dealloc();
 }
@@ -189,6 +208,31 @@ void TREModel::drawDefaultColor(void)
 	}
 }
 
+void TREModel::drawDefaultColorLines(void)
+{
+	if (m_defaultColorLinesListID)
+	{
+		glCallList(m_defaultColorLinesListID);
+	}
+	else
+	{
+		if (m_shapes)
+		{
+			m_shapes->drawLines();
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->drawDefaultColorLines();
+			}
+		}
+	}
+}
+
 void TREModel::drawColored(void)
 {
 	if (m_coloredListID)
@@ -222,12 +266,71 @@ void TREModel::drawColored(void)
 	}
 }
 
+void TREModel::drawColoredLines(void)
+{
+	if (m_coloredLinesListID)
+	{
+		glCallList(m_coloredLinesListID);
+	}
+	else
+	{
+		if (m_coloredShapes)
+		{
+			m_coloredShapes->drawLines();
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->drawColoredLines();
+			}
+		}
+	}
+}
+
+void TREModel::drawHighlightLines(void)
+{
+	if (m_highlightLinesListID)
+	{
+		glCallList(m_highlightLinesListID);
+	}
+	else
+	{
+		if (m_highlightShapes)
+		{
+			m_highlightShapes->drawLines();
+		}
+		if (m_subModels)
+		{
+			int i;
+			int count = m_subModels->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				(*m_subModels)[i]->drawHighlightLines();
+			}
+		}
+	}
+}
+
 void TREModel::setup(void)
 {
 	if (!m_shapes)
 	{
 		m_shapes = new TREShapeGroup;
 		m_shapes->setVertexStore(m_mainModel->getVertexStore());
+	}
+}
+
+void TREModel::setupHighlight(void)
+{
+	if (!m_highlightShapes)
+	{
+		m_highlightShapes = new TREShapeGroup;
+		m_highlightShapes->setVertexStore(m_mainModel->getVertexStore());
 	}
 }
 
@@ -240,50 +343,68 @@ void TREModel::setupColored(void)
 	}
 }
 
-void TREModel::addTriangle(TCULong color, Vector *vertices)
+void TREModel::addLine(TCULong color, TCVector *vertices)
+{
+	setupColored();
+	m_coloredShapes->addLine(color, vertices);
+}
+
+void TREModel::addLine(TCVector *vertices)
+{
+	setup();
+	m_shapes->addLine(vertices);
+}
+
+void TREModel::addHighlightLine(TCVector *vertices)
+{
+	setupHighlight();
+	m_highlightShapes->addLine(vertices);
+}
+
+void TREModel::addTriangle(TCULong color, TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes->addTriangle(color, vertices);
 }
 
-void TREModel::addTriangle(Vector *vertices)
+void TREModel::addTriangle(TCVector *vertices)
 {
 	setup();
 	m_shapes->addTriangle(vertices);
 }
 
-void TREModel::addQuad(TCULong color, Vector *vertices)
+void TREModel::addQuad(TCULong color, TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes->addQuad(color, vertices);
 }
 
-void TREModel::addQuad(Vector *vertices)
+void TREModel::addQuad(TCVector *vertices)
 {
 	setup();
 	m_shapes->addQuad(vertices);
 }
 
-void TREModel::addQuadStrip(Vector *vertices, Vector *normals, int count)
+void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
 {
 	setup();
 	m_shapes->addQuadStrip(vertices, normals, count);
 }
 
-void TREModel::addQuadStrip(TCULong color, Vector *vertices, Vector *normals,
+void TREModel::addQuadStrip(TCULong color, TCVector *vertices, TCVector *normals,
 							int count)
 {
 	setupColored();
 	m_coloredShapes->addQuadStrip(color, vertices, normals, count);
 }
 
-void TREModel::addTriangleFan(Vector *vertices, Vector *normals, int count)
+void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count)
 {
 	setup();
 	m_shapes->addTriangleFan(vertices, normals, count);
 }
 
-void TREModel::addTriangleFan(TCULong color, Vector *vertices, Vector *normals,
+void TREModel::addTriangleFan(TCULong color, TCVector *vertices, TCVector *normals,
 							  int count)
 {
 	setupColored();
@@ -305,11 +426,12 @@ TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model)
 	return subModel;
 }
 
-TRESubModel *TREModel::addSubModel(TCULong color, float *matrix, TREModel *model)
+TRESubModel *TREModel::addSubModel(TCULong color, TCULong highlightColor,
+								   float *matrix, TREModel *model)
 {
 	TRESubModel *subModel = addSubModel(matrix, model);
 
-	subModel->setColor(color);
+	subModel->setColor(color, highlightColor);
 	return subModel;
 }
 
@@ -392,8 +514,8 @@ void TREModel::flattenShapes(TREShapeType shapeType,
 							 TCULong color, bool colorSet)
 {
 	int shapeSize = TREShapeGroup::numPointsForShapeType(shapeType);
-	Vector normal;
-	Vector points[3];
+	TCVector normal;
+	TCVector points[3];
 	TREVertex normalVertex;
 	int i;
 	int count = srcIndices->getCount();
@@ -454,8 +576,8 @@ void TREModel::flattenStrips(TREShapeType shapeType,
 							 TCULong color, bool colorSet)
 {
 	int shapeSize = TREShapeGroup::numPointsForShapeType(shapeType);
-	Vector normal;
-	Vector points[3];
+	TCVector normal;
+	TCVector points[3];
 	TREVertex normalVertex;
 	int i, j;
 	int count = srcIndices->getCount();
@@ -562,7 +684,7 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 
 void TREModel::transformVertex(TREVertex &vertex, float *matrix)
 {
-	Vector newVertex;
+	TCVector newVertex;
 	float x = vertex.v[0];
 	float y = vertex.v[1];
 	float z = vertex.v[2];
@@ -578,7 +700,7 @@ void TREModel::transformVertex(TREVertex &vertex, float *matrix)
 
 void TREModel::transformNormal(TREVertex &normal, float *matrix)
 {
-	Vector newNormal;
+	TCVector newNormal;
 	float inverseMatrix[16];
 	float x = normal.v[0];
 	float y = normal.v[1];
@@ -602,19 +724,9 @@ void TREModel::transformNormal(TREVertex &normal, float *matrix)
 	TREVertexStore::initVertex(normal, newNormal);
 }
 
-float TREModel::determinant(float* matrix)
-{
-	float det;
-
-	det = matrix[0] * (matrix[5] * matrix[10] - matrix[6] * matrix[9]);
-	det -= matrix[4] * (matrix[1] * matrix[10] - matrix[2] * matrix[9]);
-	det += matrix[8] * (matrix[1] * matrix[6] - matrix[2] * matrix[5]);
-	return det;
-}
-
 float TREModel::invertMatrix(float* matrix, float* inverseMatrix)
 {
-	float det = determinant(matrix);
+	float det = TCVector::determinant(matrix);
 
 	if (fEq(det, 0.0f))
 	{
@@ -709,14 +821,14 @@ void TREModel::setGlNormalize(bool value)
 	}
 }
 
-void TREModel::addCylinder(const Vector& center, float radius, float height,
+void TREModel::addCylinder(const TCVector& center, float radius, float height,
 						   int numSegments, int usedSegments)
 {
 	addOpenCone(center, radius, radius, height, numSegments, usedSegments);
 }
 
-void TREModel::setCirclePoint(float angle, float radius, const Vector& center,
-							  Vector& point)
+void TREModel::setCirclePoint(float angle, float radius, const TCVector& center,
+							  TCVector& point)
 {
 	float x1, z1;
 
@@ -727,12 +839,12 @@ void TREModel::setCirclePoint(float angle, float radius, const Vector& center,
 	point[2] = center.get(2) + z1;
 }
 
-void TREModel::addCone(const Vector &center, float radius, float height,
+void TREModel::addCone(const TCVector &center, float radius, float height,
 					   int numSegments, int usedSegments)
 {
 }
 
-void TREModel::addOpenCone(const Vector& center, float radius1, float radius2,
+void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 					   float height, int numSegments, int usedSegments)
 {
 	if (usedSegments == -1)
@@ -750,14 +862,23 @@ void TREModel::addOpenCone(const Vector& center, float radius1, float radius2,
 	else
 	{
 		int vertexCount = usedSegments * 2 + 2;
-		Vector *points = new Vector[vertexCount];
-		Vector *normals = new Vector[vertexCount];
+		TCVector *points = new TCVector[vertexCount];
+		TCVector *normals = new TCVector[vertexCount];
 		int i;
-		Vector p1, p2;
-		Vector top = center;
-		Vector normal = Vector(0.0f, 1.0f, 0.0f);
+		TCVector p1, p2;
+		TCVector top = center;
+		TCVector normal = TCVector(0.0f, 1.0f, 0.0f);
+		TCVector topNormalPoint;
+		TCVector normalPoint;
 
 		top[1] += height;
+		if (height)
+		{
+			topNormalPoint = top + normal * radius2 * (radius2 - radius1) /
+				height;
+			normalPoint = center + normal * radius1 * (radius2 - radius1) /
+				height;
+		}
 		for (i = 0; i <= usedSegments; i++)
 		{
 			float angle;
@@ -772,8 +893,9 @@ void TREModel::addOpenCone(const Vector& center, float radius1, float radius2,
 			}
 			else
 			{
-				normals[i * 2] = (points[i * 2] - center).normalize();
-				normals[i * 2 + 1] = (points[i * 2 + 1] - top).normalize();
+				normals[i * 2] = (points[i * 2] - normalPoint).normalize();
+				normals[i * 2 + 1] =
+					(points[i * 2 + 1] - topNormalPoint).normalize();
 			}
 		}
 		addQuadStrip(points, normals, vertexCount);
@@ -788,22 +910,22 @@ void TREModel::addOpenCone(const Vector& center, float radius1, float radius2,
 	}
 }
 
-void TREModel::addDisk(const Vector& center, float radius, int numSegments,
+void TREModel::addDisk(const TCVector& center, float radius, int numSegments,
 					   int usedSegments)
 {
 	int i;
 	int vertexCount;
-	Vector *points;
-	Vector *normals;
-	Vector normal = Vector(0.0f, 1.0f, 0.0f);
+	TCVector *points;
+	TCVector *normals;
+	TCVector normal = TCVector(0.0f, 1.0f, 0.0f);
 
 	if (usedSegments == -1)
 	{
 		usedSegments = numSegments;
 	}
 	vertexCount = usedSegments + 2;
-	points = new Vector[vertexCount];
-	normals = new Vector[vertexCount];
+	points = new TCVector[vertexCount];
+	normals = new TCVector[vertexCount];
 	points[0] = center;
 	normals[0] = normal;
 	for (i = 0; i <= usedSegments; i++)
@@ -828,7 +950,7 @@ void TREModel::calculateBoundingBox(void)
 	}
 }
 
-void TREModel::getMinMax(Vector& min, Vector& max, float* matrix)
+void TREModel::getMinMax(TCVector& min, TCVector& max, float* matrix)
 {
 	if (m_shapes)
 	{
@@ -850,7 +972,7 @@ void TREModel::getMinMax(Vector& min, Vector& max, float* matrix)
 	}
 }
 
-void TREModel::getMinMax(Vector& min, Vector& max)
+void TREModel::getMinMax(TCVector& min, TCVector& max)
 {
 	if (m_flags.boundingBox)
 	{

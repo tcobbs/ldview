@@ -10,7 +10,7 @@ typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 
 struct TREVertex;
 class TREVertexStore;
-class Vector;
+class TCVector;
 
 typedef enum
 {
@@ -33,11 +33,11 @@ class TREShapeGroup : public TCObject
 public:
 	TREShapeGroup(void);
 	TREShapeGroup(const TREShapeGroup &other);
-	virtual int addLine(Vector *vertices);
-	virtual int addTriangle(Vector *vertices);
-	virtual int addQuad(Vector *vertices);
-	virtual int addQuadStrip(Vector *vertices, Vector *normals, int count);
-	virtual int addTriangleFan(Vector *vertices, Vector *normals, int count);
+	virtual int addLine(TCVector *vertices);
+	virtual int addTriangle(TCVector *vertices);
+	virtual int addQuad(TCVector *vertices);
+	virtual int addQuadStrip(TCVector *vertices, TCVector *normals, int count);
+	virtual int addTriangleFan(TCVector *vertices, TCVector *normals, int count);
 /*
 	virtual void addConditionalLine(int index1, int index2, int index3,
 		int index4);
@@ -47,9 +47,10 @@ public:
 	virtual TCULongArray *getIndices(TREShapeType shapeType,
 		bool create = false);
 	virtual void draw(void);
+	virtual void drawLines(void);
 	virtual void setVertexStore(TREVertexStore *vertexStore);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
-	virtual void getMinMax(Vector& min, Vector& max, float* matrix);
+	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -68,14 +69,14 @@ protected:
 	virtual void addShapeType(TREShapeType shapeType, int index);
 	virtual void drawShapeType(TREShapeType shapeType);
 	virtual void drawStripShapeType(TREShapeType shapeType);
-	virtual int addStrip(TREShapeType shapeType, Vector *vertices,
-		Vector *normals, int count);
-	virtual void getMinMax(TCULong index, Vector& min, Vector& max,
+	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
+		TCVector *normals, int count);
+	virtual void getMinMax(TCULong index, TCVector& min, TCVector& max,
 		float* matrix);
-	virtual void getMinMax(const TREVertex &vertex, Vector& min, Vector& max);
-	virtual void getMinMax(TCULongArray *indices, Vector& min, Vector& max,
+	virtual void getMinMax(const TREVertex &vertex, TCVector& min, TCVector& max);
+	virtual void getMinMax(TCULongArray *indices, TCVector& min, TCVector& max,
 		float* matrix);
-	virtual void getStripMinMax(TCULongArray *indices, Vector& min, Vector& max,
+	virtual void getStripMinMax(TCULongArray *indices, TCVector& min, TCVector& max,
 		float* matrix);
 
 	TREVertexStore *m_vertexStore;

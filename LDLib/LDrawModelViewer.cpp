@@ -1,0 +1,2272 @@
+#include "LDrawModelViewer.h"
+#include "LDrawModel.h"
+#include "ModelMacros.h"
+#include "TGLShape.h"
+#include "TGLStudLogo.h"
+#include <TCFoundation/TCAutoreleasePool.h>
+#include <TCFoundation/mystring.h>
+#include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <LDLoader/LDLMainModel.h>
+#include <LDLoader/LDLError.h>
+#include "LDModelParser.h"
+#include <TRE/TREMainModel.h>
+
+#define FONT_CHAR_WIDTH 8
+#define FONT_CHAR_HEIGHT 16
+#define FONT_IMAGE_WIDTH 128
+#define FONT_IMAGE_HEIGHT 256
+#define FONT_NUM_CHARACTERS 256
+
+#if defined(__APPLE__)
+#	include <OpenGL/OpenGL.h>
+#	include <GLUT/GLUT.h>
+#else
+#	include <GL/glu.h>
+#endif
+
+#define DEF_DISTANCE_MULT 1.25f
+
+TREMainModel *mainTREModel = NULL;
+
+LDrawModelViewer::LDrawModelViewer(int width, int height)
+			:lDrawModel(NULL),
+			 filename(NULL),
+			 programPath(NULL),
+			 width(width),
+			 height(height),
+			 pixelAspectRatio(1.0f),
+			 cullBackFaces(0),
+			 xRotate(1.0f),
+			 yRotate(1.0f),
+			 zRotate(0.0f),
+			 rotationSpeed(0.0f),
+			 cameraXRotate(0.0f),
+			 cameraYRotate(0.0f),
+			 cameraZRotate(0.0f),
+			 zoomSpeed(0.0f),
+			 xPan(0.0f),
+			 yPan(0.0f),
+			 rotationMatrix(NULL),
+			 clipAmount(0.0f),
+			 highlightLineWidth(1.0f),
+			 wireframeLineWidth(1.0f),
+			 clipZoom(false),
+			 fontListBase(0),
+			 defaultR(153),
+			 defaultG(153),
+			 defaultB(153),
+			 defaultColorNumber(-1),
+			 progressCallback(NULL),
+			 errorCallback(NULL),
+			 xTile(0),
+			 yTile(0),
+			 numXTiles(1),
+			 numYTiles(1),
+			 stereoMode(LDVStereoNone),
+			 stereoEyeSpacing(50.0f),
+			 cutawayMode(LDVCutawayNormal),
+			 cutawayAlpha(1.0f),
+			 cutawayLineWidth(1.0f),
+			 zoomMax(1.99f),
+			 curveQuality(2),
+			 textureFilterType(GL_LINEAR_MIPMAP_LINEAR),
+			 distanceMultiplier(DEF_DISTANCE_MULT),
+			 fontImage(NULL),
+			 aspectRatio(1.0f),
+			 currentFov(45.0f)
+{
+#ifdef _LEAK_DEBUG
+	strcpy(className, "LDrawModelViewer");
+#endif
+	flags.qualityLighting = 0;
+	flags.showsHighlightLines = 0;
+	flags.qualityStuds = 0;
+	flags.usesFlatShading = 0;
+	flags.usesSpecular = 1;
+	flags.drawWireframe = 0;
+	flags.useWireframeFog = 0;
+	flags.usePolygonOffset = 1;
+	flags.useLighting = 1;
+	flags.subduedLighting = 0;
+	flags.allowPrimitiveSubstitution = true;
+	flags.useStipple = 0;
+	flags.sortTransparent = 1;
+	flags.needsSetup = true;
+	flags.needsTextureSetup = true;
+	flags.needsMaterialSetup = true;
+	flags.needsLightingSetup = true;
+	flags.needsReload = false;
+	flags.needsRecompile = false;
+	flags.needsResize = true;
+	flags.paused = 0;
+	flags.slowClear = false;
+	flags.blackHighlights = false;
+	flags.textureStuds = true;
+	flags.oneLight = false;
+	flags.drawConditionalHighlights = false;
+	flags.showAllConditionalLines = false;
+	flags.showConditionalControlPoints = false;
+	flags.performSmoothing = true;
+	flags.lineSmoothing = false;
+	flags.constrainZoom = true;
+	flags.rotationMatrixNeedsSetup = true;
+	flags.edgesOnly = false;
+}
+
+LDrawModelViewer::~LDrawModelViewer(void)
+{
+}
+
+void LDrawModelViewer::dealloc(void)
+{
+	if (lDrawModel)
+	{
+		lDrawModel->release();
+		lDrawModel = NULL;
+	}
+	delete filename;
+	filename = NULL;
+	delete programPath;
+	programPath = NULL;
+	delete rotationMatrix;
+	rotationMatrix = NULL;
+	if (fontImage)
+	{
+		fontImage->release();
+		fontImage = NULL;
+	}
+	TCObject::release(mainTREModel);
+	mainTREModel = NULL;
+	TCObject::dealloc();
+}
+
+void LDrawModelViewer::setFilename(const char* value)
+{
+	delete filename;
+	filename = copyString(value);
+}
+
+void LDrawModelViewer::setProgramPath(const char *value)
+{
+	delete programPath;
+	programPath = copyString(value);
+	stripTrailingPathSeparators(programPath);
+}
+
+void LDrawModelViewer::setFileIsPart(bool value)
+{
+	flags.fileIsPart = value;
+}
+
+void LDrawModelViewer::applyTile(void)
+{
+	if (1 || numXTiles > 1 || numYTiles > 1)
+	{
+//		GLfloat tileWidth, tileHeight;
+		GLint tileLeft, tileRight;
+		GLint tileBottom, tileTop;
+//		GLint thisTileWidth, thisTileHeight;
+		GLfloat xScale, yScale;
+		GLfloat xOffset, yOffset;
+
+//		tileWidth = (float)width / numXTiles;
+//		tileHeight = (float)height / numYTiles;
+		tileLeft = (int)(xTile * width);
+		tileRight = (int)((xTile + 1) * width);
+		tileBottom = (int)((numYTiles - yTile - 1) * height);
+		tileTop = (int)(((numYTiles - yTile - 1) + 1) * height);
+//		thisTileWidth = tileRight - tileLeft;
+//		thisTileHeight = tileTop - tileBottom;
+		xScale = (GLfloat)(width * numXTiles) / (GLfloat)width;
+		yScale = (GLfloat)(height * numYTiles) / (GLfloat)height;
+		xOffset = (-2.0f * tileLeft) / (width * numXTiles) +
+			(1 - 1.0f / numXTiles);
+		yOffset = (-2.0f * tileBottom) / (height * numYTiles) +
+			(1 - 1.0f / numYTiles);
+		glScalef(xScale, yScale, 1.0f);
+		glTranslatef(xOffset, yOffset, 0.0f);
+	}
+}
+
+void LDrawModelViewer::setFieldOfView(double fov, float nClip, float fClip)
+{
+	GLdouble aspectWidth, aspectHeight;
+
+//	printf("LDrawModelViewer::setFieldOfView(%.5f, %.5f, %.5f)\n", fov, nClip,
+//		fClip);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	applyTile();
+	aspectWidth = width * numXTiles;
+	aspectHeight = height * numYTiles * pixelAspectRatio;
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		aspectWidth /= 2.0;
+	}
+	gluPerspective(fov, aspectWidth / aspectHeight, nClip, fClip);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void LDrawModelViewer::perspectiveView(void)
+{
+	perspectiveView(true);
+}
+
+void LDrawModelViewer::perspectiveView(bool resetViewport)
+{
+	float nClip;
+	float fClip;
+	int actualWidth = width;
+	float distance = (camera.getPosition()).length();
+	float aspectAdjust = (float)tan(1.0f);
+
+	currentFov = 45.0f;
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		actualWidth = width / 2;
+	}
+	aspectRatio = (float)actualWidth / height;
+	if (actualWidth * numXTiles < height * numYTiles)
+	{
+		currentFov = (float)(180.0 / M_PI *
+			atan((double)height * numYTiles / (actualWidth * numXTiles)));
+		if (currentFov > 170.0f)
+		{
+			currentFov = 170.0f;
+		}
+		aspectRatio = (float)height / actualWidth;
+	}
+	if (resetViewport)
+	{
+		glViewport(0, 0, actualWidth, height);
+		flags.needsResize = false;
+	}
+//	printf("aspectRatio1: %f ", aspectRatio);
+	aspectRatio = (float)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
+//	printf("aspectRatio2: %f\n", aspectRatio);
+	nClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
+		size;
+	if (nClip < size / 1000.0f)
+	{
+		nClip = size / 1000.0f;
+	}
+	fClip = distance + size * aspectRatio / 2.0f;
+	setFieldOfView(currentFov, nClip, fClip);
+	glLoadIdentity();
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+	glFogf(GL_FOG_START, nClip);
+	glFogf(GL_FOG_END, fClip);
+}
+
+void LDrawModelViewer::perspectiveViewToClipPlane(void)
+{
+	float nClip;
+	float fClip;
+	float distance = (camera.getPosition()).length();
+//	float distance = (camera.getPosition() - center).length();
+
+	nClip = distance - size / 2.0f;
+	fClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
+		size;
+	if (fClip < size / 1000.0f)
+	{
+		fClip = size / 1000.0f;
+	}
+	if (nClip < size / 1000.0f)
+	{
+		nClip = size / 1000.0f;
+	}
+	setFieldOfView(currentFov, nClip, fClip);
+	glLoadIdentity();
+	glFogi(GL_FOG_MODE, GL_LINEAR);
+	glFogf(GL_FOG_START, nClip);
+	glFogf(GL_FOG_END, fClip);
+}
+
+void LDrawModelViewer::setProgressCallback(LDMProgressCallback callback,
+										   void* userData)
+{
+	progressCallback = callback;
+	progressUserData = userData;
+}
+
+void LDrawModelViewer::setErrorCallback(LDMErrorCallback callback,
+										void* userData)
+{
+	errorCallback = callback;
+	errorUserData = userData;
+}
+
+void LDrawModelViewer::resetView(LDVAngle viewAngle)
+{
+	if (clipAmount != 0.0f)
+	{
+		clipAmount = 0.0f;
+		perspectiveView();
+	}
+	camera.setPosition(TCVector(0.0f, 0.0f, size * distanceMultiplier));
+	camera.setFacing(TGLFacing());
+//	distance = size * distanceMultiplier;
+	if (!rotationMatrix)
+	{
+		rotationMatrix = new float[16];
+	}
+	switch (viewAngle)
+	{
+	case LDVAngleDefault:
+		setupDefaultViewAngle();
+		break;
+	case LDVAngleFront:
+		setupFrontViewAngle();
+		break;
+	case LDVAngleBack:
+		setupBackViewAngle();
+		break;
+	case LDVAngleLeft:
+		setupLeftViewAngle();
+		break;
+	case LDVAngleRight:
+		setupRightViewAngle();
+		break;
+	case LDVAngleTop:
+		setupTopViewAngle();
+		break;
+	case LDVAngleBottom:
+		setupBottomViewAngle();
+		break;
+	}
+	flags.rotationMatrixNeedsSetup = true;
+	xPan = 0.0f;
+	yPan = 0.0f;
+	perspectiveView(true);
+}
+
+void LDrawModelViewer::setupDefaultViewAngle(void)
+{
+	rotationMatrix[0] = (float)(sqrt(2.0) / 2.0);
+	rotationMatrix[1] = (float)(sqrt(2.0) / 4.0);
+	rotationMatrix[2] = (float)(-sqrt(1.5) / 2.0);
+	rotationMatrix[3] = 0.0f;
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = (float)(sin(M_PI / 3.0));
+	rotationMatrix[6] = 0.5f;
+	rotationMatrix[7] = 0.0f;
+	rotationMatrix[8] = (float)(sqrt(2.0) / 2.0);
+	rotationMatrix[9] = (float)(-sqrt(2.0) / 4.0);
+	rotationMatrix[10] = (float)(sqrt(1.5) / 2.0);
+	rotationMatrix[11] = 0.0f;
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::setupFrontViewAngle(void)
+{
+	rotationMatrix[0] = 1.0f;
+	rotationMatrix[1] = 0.0f;
+	rotationMatrix[2] = 0.0f;
+	rotationMatrix[3] = 0.0f;
+
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = 1.0f;
+	rotationMatrix[6] = 0.0f;
+	rotationMatrix[7] = 0.0f;
+
+	rotationMatrix[8] = 0.0f;
+	rotationMatrix[9] = 0.0f;
+	rotationMatrix[10] = 1.0f;
+	rotationMatrix[11] = 0.0f;
+
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::setupBackViewAngle(void)
+{
+	rotationMatrix[0] = -1.0f;
+	rotationMatrix[1] = 0.0f;
+	rotationMatrix[2] = 0.0f;
+	rotationMatrix[3] = 0.0f;
+
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = 1.0f;
+	rotationMatrix[6] = 0.0f;
+	rotationMatrix[7] = 0.0f;
+
+	rotationMatrix[8] = 0.0f;
+	rotationMatrix[9] = 0.0f;
+	rotationMatrix[10] = -1.0f;
+	rotationMatrix[11] = 0.0f;
+
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::setupLeftViewAngle(void)
+{
+	rotationMatrix[0] = 0.0f;
+	rotationMatrix[1] = 0.0f;
+	rotationMatrix[2] = -1.0f;
+	rotationMatrix[3] = 0.0f;
+
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = 1.0f;
+	rotationMatrix[6] = 0.0f;
+	rotationMatrix[7] = 0.0f;
+
+	rotationMatrix[8] = 1.0f;
+	rotationMatrix[9] = 0.0f;
+	rotationMatrix[10] = 0.0f;
+	rotationMatrix[11] = 0.0f;
+
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::setupRightViewAngle(void)
+{
+	rotationMatrix[0] = 0.0f;
+	rotationMatrix[1] = 0.0f;
+	rotationMatrix[2] = 1.0f;
+	rotationMatrix[3] = 0.0f;
+
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = 1.0f;
+	rotationMatrix[6] = 0.0f;
+	rotationMatrix[7] = 0.0f;
+
+	rotationMatrix[8] = -1.0f;
+	rotationMatrix[9] = 0.0f;
+	rotationMatrix[10] = 0.0f;
+	rotationMatrix[11] = 0.0f;
+
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::setupTopViewAngle(void)
+{
+	rotationMatrix[0] = 1.0f;
+	rotationMatrix[1] = 0.0f;
+	rotationMatrix[2] = 0.0f;
+	rotationMatrix[3] = 0.0f;
+
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = 0.0f;
+	rotationMatrix[6] = 1.0f;
+	rotationMatrix[7] = 0.0f;
+
+	rotationMatrix[8] = 0.0f;
+	rotationMatrix[9] = -1.0f;
+	rotationMatrix[10] = 0.0f;
+	rotationMatrix[11] = 0.0f;
+
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::setupBottomViewAngle(void)
+{
+	rotationMatrix[0] = 1.0f;
+	rotationMatrix[1] = 0.0f;
+	rotationMatrix[2] = 0.0f;
+	rotationMatrix[3] = 0.0f;
+
+	rotationMatrix[4] = 0.0f;
+	rotationMatrix[5] = 0.0f;
+	rotationMatrix[6] = -1.0f;
+	rotationMatrix[7] = 0.0f;
+
+	rotationMatrix[8] = 0.0f;
+	rotationMatrix[9] = 1.0f;
+	rotationMatrix[10] = 0.0f;
+	rotationMatrix[11] = 0.0f;
+
+	rotationMatrix[12] = 0.0f;
+	rotationMatrix[13] = 0.0f;
+	rotationMatrix[14] = 0.0f;
+	rotationMatrix[15] = 1.0f;
+}
+
+void LDrawModelViewer::ldlErrorCallback(LDLError *error)
+{
+	if (error)
+	{
+//		printf("Error:\n%s\n", error->getMessage());
+		printf("Error on line %d in: %s\n", error->getLineNumber(),
+			error->getFilename());
+		indentPrintf(4, "%s\n", error->getMessage());
+		indentPrintf(4, "%s\n", error->getFileLine());
+	}
+}
+
+int LDrawModelViewer::loadModel(bool resetViewpoint)
+{
+	if (filename)
+	{
+		LDLMainModel *mainModel = new LDLMainModel;
+		LDModelParser *modelParser = new LDModelParser;
+		TCAlert *alert = new TCAlert(0, "this is an alert test.");
+
+		modelParser->setSeamWidth(LDrawModel::getSeamWidth());
+		modelParser->setPrimitiveSubstitution(flags.allowPrimitiveSubstitution);
+		modelParser->setCurveQuality(curveQuality);
+		modelParser->setEdgeLines(flags.showsHighlightLines);
+		TCAlertManager::registerHandler(LDLError::alertClass(), this,
+			(TCAlertCallback)ldlErrorCallback);
+		TCAlertManager::sendAlert(alert);
+		alert->release();
+		TCObject::release(mainTREModel);
+		mainModel->setLowResStuds(!flags.qualityStuds);
+		mainModel->setBlackEdgeLines(flags.blackHighlights);
+		mainModel->load(filename);
+		modelParser->parseMainModel(mainModel);
+		mainTREModel = modelParser->getMainTREModel();
+		mainTREModel->retain();
+		mainTREModel->getMinMax(min, max);
+		modelParser->release();
+//		mainModel->print();
+		mainModel->release();
+		TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
+		// Use binary mode to work around problem with fseek on a non-binary
+		// file.  My file parsing code will still work fine and strip out the
+		// extra data.
+		FILE* modelFile = fopen(filename, "rb");
+
+		if (clipAmount != 0.0f && resetViewpoint)
+		{
+			clipAmount = 0.0f;
+			perspectiveView();
+		}
+		if (modelFile)
+		{
+			int readResult = 0;
+			bool failed = false;
+
+			if (lDrawModel)
+			{
+				lDrawModel->release();
+				lDrawModel = NULL;
+			}
+			TGLStudLogo::resetTextureCoords();
+			TGLShape::setShowAllConditionalLines(flags.showAllConditionalLines);
+			TGLShape::setShowConditionalControlPoints(
+				flags.showConditionalControlPoints);
+			LDrawModel::setDrawWireframe(flags.drawWireframe);
+			LDrawModel::setUsePolygonOffset(flags.usePolygonOffset);
+			LDrawModel::setUseLighting(flags.useLighting);
+			lDrawModel = new LDrawModel;
+			if (progressCallback)
+			{
+				lDrawModel->setProgressCallback(progressCallback,
+					progressUserData);
+			}
+			if (errorCallback)
+			{
+				lDrawModel->setErrorCallback(errorCallback, errorUserData);
+			}
+			lDrawModel->setAllowLowResStuds(!flags.qualityStuds);
+			lDrawModel->setAllowLowPrimitiveSubstitution(
+				flags.allowPrimitiveSubstitution);
+			lDrawModel->setDrawHighlights(flags.showsHighlightLines);
+			lDrawModel->setDrawConditionalHighlights(
+				flags.drawConditionalHighlights);
+			lDrawModel->setPerformSmoothing(flags.performSmoothing);
+			lDrawModel->setLineSmoothing(flags.lineSmoothing);
+			lDrawModel->setBlackHighlights(flags.blackHighlights);
+			lDrawModel->setIsPart(flags.fileIsPart);
+			lDrawModel->setUseStipple(flags.useStipple);
+			lDrawModel->setSortTransparent(flags.sortTransparent);
+			lDrawModel->setFilename(filename);
+			lDrawModel->setCurveQuality(curveQuality);
+			lDrawModel->setEdgesOnly(flags.edgesOnly &&
+				flags.showsHighlightLines);
+			lDrawModel->setHiResPrimitives(flags.hiResPrimitives);
+			lDrawModel->setEdgeLineWidth(highlightLineWidth);
+			if (defaultColorNumber != -1)
+			{
+				lDrawModel->setDefaultColorNumber(defaultColorNumber);
+			}
+			else
+			{
+				lDrawModel->setDefaultRGB(defaultR, defaultG, defaultB);
+			}
+//			readResult = lDrawModel->read(modelFile, 0);
+			fclose(modelFile);
+			if (readResult == 0)
+			{
+//				lDrawModel->getMinMax(min, max);
+				lDrawModel->setCullBackFaces(cullBackFaces);
+//				lDrawModel->writeToFile();
+//				lDrawModel->flatten();
+				if (true || lDrawModel->compile(0))
+				{
+					if (progressCallback)
+					{
+						progressCallback("", 2.0, progressUserData);
+					}
+					flags.needsRecompile = false;
+					size = (max - min).length();
+					if (resetViewpoint)
+					{
+						resetView();
+/*
+						camera.setPosition(
+							TCVector(0.0f, 0.0f, size * distanceMultiplier));
+//						distance = size * distanceMultiplier;
+						xPan = 0.0f;
+						yPan = 0.0f;
+*/
+					}
+					center = (min + max) / 2.0f;
+				}
+				else
+				{
+					failed = true;
+				}
+			}
+			else
+			{
+				failed = true;
+			}
+			if (failed)
+			{
+				lDrawModel->release();
+				lDrawModel = NULL;
+				resetViewpoint = true;
+			}
+		}
+		if (resetViewpoint)
+		{
+			resetView();
+//			delete rotationMatrix;
+//			rotationMatrix = NULL;
+		}
+		if (lDrawModel)
+		{
+			flags.needsResize = true;
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void LDrawModelViewer::setShowsHighlightLines(bool value)
+{
+	if (value != flags.showsHighlightLines)
+	{
+		flags.showsHighlightLines = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setDrawConditionalHighlights(bool value)
+{
+	if (flags.drawConditionalHighlights != value)
+	{
+		flags.drawConditionalHighlights = value;
+		if (flags.showsHighlightLines)
+		{
+			flags.needsReload = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setPerformSmoothing(bool value)
+{
+	if (flags.performSmoothing != value)
+	{
+		flags.performSmoothing = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setLineSmoothing(bool value)
+{
+	if (flags.lineSmoothing != value)
+	{
+		flags.lineSmoothing = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setSubduedLighting(bool value)
+{
+	if (value != flags.subduedLighting)
+	{
+		flags.subduedLighting = value;
+		flags.needsLightingSetup = true;
+	}
+}
+
+bool LDrawModelViewer::recompile(void)
+{
+	bool retValue = false;
+
+	if (lDrawModel)
+	{
+//		retValue = lDrawModel->compile(0);
+		retValue = true;
+		flags.needsRecompile = false;
+	}
+	return retValue;
+}
+
+void LDrawModelViewer::uncompile(void)
+{
+	if (fontListBase)
+	{
+		glDeleteLists(fontListBase, 128);
+		fontListBase = 0;
+	}
+	if (lDrawModel)
+	{
+		lDrawModel->uncompile();
+	}
+}
+
+void LDrawModelViewer::reload(void)
+{
+	if (filename)
+	{
+		loadModel(false);
+	}
+	flags.needsReload = false;
+}
+
+void LDrawModelViewer::setUsesSpecular(bool value)
+{
+	if (value != flags.usesSpecular)
+	{
+		flags.usesSpecular = value;
+		flags.needsMaterialSetup = true;
+		flags.needsLightingSetup = true;
+	}
+}
+
+void LDrawModelViewer::setOneLight(bool value)
+{
+	if (value != flags.oneLight)
+	{
+		flags.oneLight = value;
+		flags.needsLightingSetup = true;
+	}
+}
+
+void LDrawModelViewer::setupMaterial(void)
+{
+//	float mAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
+	float mAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+//	float mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	float mSpecular[] = {0.5f, 0.5f, 0.5f, 1.0f};
+//	float mSpecular[] = {0.0f, 0.0f, 0.0f, 1.0f};
+	float mEmission[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
+	if (!flags.usesSpecular)
+	{
+		mSpecular[0] = mSpecular[1] = mSpecular[2] = 0.0f;
+	}
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mAmbient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mSpecular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 64.0f);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mEmission);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+	glEnable(GL_COLOR_MATERIAL);
+	flags.needsMaterialSetup = false;
+}
+
+void LDrawModelViewer::setupLight(GLenum light)
+{
+	float lAmbient[4];
+	float lDiffuse[4];
+	float lSpecular[4];
+
+	if (flags.subduedLighting)
+	{
+		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.5f;
+		lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 0.5f;
+	}
+	else
+	{
+		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.0f;
+		lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 1.0f;
+	}
+	if (!flags.usesSpecular)
+	{
+		lSpecular[0] = lSpecular[1] = lSpecular[2] = 0.0f;
+	}
+	else
+	{
+		lSpecular[0] = lSpecular[1] = lSpecular[2] = 1.0f;
+	}
+	lAmbient[3] = 1.0f;
+	lDiffuse[3] = 1.0f;
+	lSpecular[3] = 1.0f;
+	if (light == GL_LIGHT0)
+	{
+		glLightfv(light, GL_AMBIENT, lAmbient);
+	}
+	glLightfv(light, GL_SPECULAR, lSpecular);
+	glLightfv(light, GL_DIFFUSE, lDiffuse);
+	glEnable(light);
+}
+
+void LDrawModelViewer::setupLighting(void)
+{
+	if (flags.useLighting)
+	{
+		setupLight(GL_LIGHT0);
+		glEnable(GL_LIGHTING);
+		if (flags.oneLight || flags.usesSpecular)
+		{
+			glDisable(GL_LIGHT1);
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		}
+		else
+		{
+			setupLight(GL_LIGHT1);
+//			glDisable(GL_LIGHT1);
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+		}
+		flags.needsLightingSetup = false;
+	}
+	else
+	{
+		glDisable(GL_LIGHTING);
+		flags.needsLightingSetup = false;
+	}
+}
+
+void LDrawModelViewer::setFontData(TCByte *fontData, long length)
+{
+	if (length == 4096)
+	{
+		int i, j;
+		TCByte *imageData = NULL;
+		int rowSize;
+		int imageSize;
+
+		fontImage = new TCImage;
+		fontImage->setFlipped(true);
+		fontImage->setLineAlignment(4);
+		fontImage->setDataFormat(TCRgba8);
+		fontImage->setSize(FONT_IMAGE_WIDTH, FONT_IMAGE_HEIGHT);
+		fontImage->allocateImageData();
+		imageData = fontImage->getImageData();
+		rowSize = fontImage->getRowSize();
+		imageSize = rowSize * FONT_IMAGE_HEIGHT;
+		for (i = 0; i < imageSize; i++)
+		{
+			if (i % 4 == 3)
+			{
+				imageData[i] = 0x00;	// Init alpha channel to clear.
+			}
+			else
+			{
+				imageData[i] = 0xFF;	// Init color channels to white.
+			}
+		}
+		for (i = 0; i < 4096; i++)
+		{
+			int row = i / 256 * 16 + i % 16;	// logical row (kinda)
+			int col = i / 16 % 16;				// logical column
+			int yOffset = (FONT_IMAGE_HEIGHT - row - 1) * rowSize;
+			TCByte fontByte = fontData[i];
+
+			for (j = 0; j < 8; j++)
+			{
+				if (fontByte & (1 << (7 - j)))
+				{
+					// That spot should be on, so set the bit.
+					imageData[yOffset + (col * FONT_CHAR_WIDTH + j) * 4 + 3] =
+						0xFF;
+				}
+			}
+		}
+	}
+}
+
+// Loads a font file in the format of VGA text-mode font data.
+void LDrawModelViewer::loadVGAFont(char *fontFilename)
+{
+	if (!fontImage)
+	{
+		FILE *fontFile = fopen(fontFilename, "rb");
+
+		if (fontFile)
+		{
+			TCByte fontData[4096];
+
+			if (fread(fontData, 1, 4096, fontFile) == 4096)
+			{
+				setFontData(fontData, 4096);
+			}
+			fclose(fontFile);
+		}
+	}
+}
+
+void LDrawModelViewer::setupFont(char *fontFilename)
+{
+//	printf("LDrawModelViewer::setupFont\n");
+	return;
+	loadVGAFont(fontFilename);
+/*
+	if (!fontImage)
+	{
+		fontImage = new TCImage;
+
+		fontImage->setFlipped(true);
+		fontImage->setLineAlignment(4);
+		if (!fontImage->loadFile(fontFilename))
+		{
+			fontImage->release();
+			fontImage = NULL;
+		}
+	}
+*/
+	if (fontImage)
+	{
+		int i;
+
+		glGenTextures(1, &fontTextureID);
+		glBindTexture(GL_TEXTURE_2D, fontTextureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, FONT_IMAGE_WIDTH, FONT_IMAGE_HEIGHT,
+			0, GL_RGBA, GL_UNSIGNED_BYTE, fontImage->getImageData());
+		if (fontListBase)
+		{
+			glDeleteLists(fontListBase, FONT_NUM_CHARACTERS);
+		}
+		fontListBase = glGenLists(FONT_NUM_CHARACTERS);
+		for (i = 0; i < FONT_NUM_CHARACTERS; i++)
+		{
+			float cx, cy;
+			float wx, hy;
+			float tx, ty;
+
+			cx = (float)(i % 16) * FONT_CHAR_WIDTH / (float)(FONT_IMAGE_WIDTH);
+			cy = (float)(i / 16) * FONT_CHAR_HEIGHT / (float)(FONT_IMAGE_HEIGHT);
+			wx = (float)FONT_CHAR_WIDTH / FONT_IMAGE_WIDTH;
+			hy = (float)FONT_CHAR_HEIGHT / FONT_IMAGE_HEIGHT;
+			glNewList(fontListBase + i, GL_COMPILE);
+				glBegin(GL_QUADS);
+					tx = cx;
+					ty = 1.0f - cy - hy;
+					glTexCoord2f(tx, ty);			// Bottom Left
+					glVertex2i(0, 0);
+					tx = cx + wx;
+					ty = 1.0f - cy - hy;
+					glTexCoord2f(tx, ty);			// Bottom Right
+					glVertex2i(FONT_CHAR_WIDTH, 0);
+					tx = cx + wx;
+					ty = 1 - cy;
+					glTexCoord2f(tx, ty);			// Top Right
+					glVertex2i(FONT_CHAR_WIDTH, FONT_CHAR_HEIGHT);
+					tx = cx;
+					ty = 1 - cy;
+					glTexCoord2f(tx , ty);			// Top Left
+					glVertex2i(0, FONT_CHAR_HEIGHT);
+				glEnd();
+				glTranslated(FONT_CHAR_WIDTH + 1, 0, 0);
+			glEndList();
+		}
+	}
+}
+
+void LDrawModelViewer::setupTextures(void)
+{
+	if (programPath)
+	{
+		char textureFilename[1024];
+
+		sprintf(textureFilename, "%s/StudLogo.png", programPath);
+		TGLStudLogo::loadTexture(textureFilename);
+//		sprintf(textureFilename, "%s/Font.png", programPath);
+		sprintf(textureFilename, "%s/SansSerif.fnt", programPath);
+		setupFont(textureFilename);
+	}
+	flags.needsTextureSetup = false;
+}
+
+void LDrawModelViewer::setup(void)
+{
+	glEnable(GL_DEPTH_TEST);
+	setupLighting();
+	setupMaterial();
+	setupTextures();
+	flags.needsSetup = false;
+}
+
+void LDrawModelViewer::drawBoundingBox(void)
+{
+	int lightingEnabled = glIsEnabled(GL_LIGHTING);
+
+	if (lightingEnabled)
+	{
+		glDisable(GL_LIGHTING);
+	}
+	glColor3ub(255, 255, 255);
+	glBegin(GL_LINE_STRIP);
+		glVertex3fv(min);
+		glVertex3f(max[0], min[1], min[2]);
+		glVertex3f(max[0], max[1], min[2]);
+		glVertex3f(min[0], max[1], min[2]);
+		glVertex3fv(min);
+		glVertex3f(min[0], min[1], max[2]);
+		glVertex3f(max[0], min[1], max[2]);
+		glVertex3fv(max);
+		glVertex3f(min[0], max[1], max[2]);
+		glVertex3f(min[0], min[1], max[2]);
+	glEnd();
+	glBegin(GL_LINES);
+		glVertex3f(min[0], max[1], min[2]);
+		glVertex3f(min[0], max[1], max[2]);
+		glVertex3f(max[0], max[1], min[2]);
+		glVertex3f(max[0], max[1], max[2]);
+		glVertex3f(max[0], min[1], min[2]);
+		glVertex3f(max[0], min[1], max[2]);
+	glEnd();
+	if (lightingEnabled)
+	{
+		glEnable(GL_LIGHTING);
+	}
+}
+
+void LDrawModelViewer::orthoView(void)
+{
+	int actualWidth = width;
+	static char glVendor[1024];
+	static bool glVendorRead = false;
+
+	if (!glVendorRead)
+	{
+		strcpy(glVendor, (const char *)glGetString(GL_VENDOR));
+	}
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		glViewport(0, 0, width, height);
+//		actualWidth = width / 2;
+	}
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0.0, actualWidth, 0.0, height);
+//	gluOrtho2D(-0.5, actualWidth - 0.5, -0.5, height - 0.5);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	if (strncmp(glVendor, "ATI Technologies Inc.", 3) != 0)
+	{
+		// This doesn't work right on ATI video cards, so skip.
+		glTranslatef(0.375f, 0.375f, 0.0f);
+		debugPrintf("Not an ATI.\n");
+	}
+}
+
+void LDrawModelViewer::setSeamWidth(float value)
+{
+	if (!fEq(value, LDrawModel::getSeamWidth()))
+	{
+		LDrawModel::setSeamWidth(value);
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::drawString(GLfloat xPos, GLfloat yPos, char* string)
+{
+	if (!fontListBase)
+	{
+		setupTextures();
+	}
+	if ((backgroundR + backgroundG + backgroundB) / 3.0f > 0.5)
+	{
+		glColor3ub(0, 0, 0);
+	}
+	else
+	{
+		glColor3ub(255, 255, 255);
+	}
+	orthoView();
+	glTranslated(xPos, yPos, 0);
+	glPushAttrib(GL_ENABLE_BIT | GL_POLYGON_BIT | GL_TEXTURE_BIT);
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glBindTexture(GL_TEXTURE_2D, fontTextureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glListBase(fontListBase);
+	glCallLists(strlen(string), GL_UNSIGNED_BYTE, string);
+	glPopAttrib();
+	perspectiveView();
+}
+
+void LDrawModelViewer::drawFPS(float fps)
+{
+	if (lDrawModel)
+	{
+		char fpsString[1024];
+		int lightingEnabled = glIsEnabled(GL_LIGHTING);
+		int zBufferEnabled = glIsEnabled(GL_DEPTH_TEST);
+		//float xMult = (float)width / (float)height;
+
+		if (lightingEnabled)
+		{
+			glDisable(GL_LIGHTING);
+		}
+		if (zBufferEnabled)
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+		if (fps > 0.0f)
+		{
+			sprintf(fpsString, "%4.4f", fps);
+		}
+		else
+		{
+			strcpy(fpsString, "Spin Model for FPS");
+/*
+			for (int i = 0; i < 128; i++)
+			{
+				fpsString[i] = i + 64;//28;
+			}
+			fpsString[i] = 0;
+*/
+		}
+		drawString(2.0f, 0.0f, fpsString);
+		if (lightingEnabled)
+		{
+			glEnable(GL_LIGHTING);
+		}
+		if (zBufferEnabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+	}
+}
+
+void LDrawModelViewer::drawLight(GLenum light, float x, float y, float z)
+{
+	float position[4];
+	float direction[4];
+	//float fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+	position[0] = x;
+	position[1] = y;
+	position[2] = z;
+	position[3] = 0.0f;
+	direction[0] = -x;
+	direction[1] = -y;
+	direction[2] = -z;
+	direction[3] = 0.0f;
+	glLightfv(light, GL_POSITION, position);
+	glLightfv(light, GL_SPOT_DIRECTION, direction);
+//	glLightfv(light, GL_DIFFUSE, fullIntensity);
+//	glLightfv(light, GL_SPECULAR, fullIntensity);
+}
+
+void LDrawModelViewer::drawLights(void)
+{
+//	drawLight(GL_LIGHT1, 0.0f, 0.0f, -10000.0f);
+	drawLight(GL_LIGHT0, 0.0f, 0.0f, 1.0f);
+	drawLight(GL_LIGHT1, 0.0f, 0.0f, -1.0f);
+}
+
+void LDrawModelViewer::setBackgroundRGB(int r, int g, int b)
+{
+	setBackgroundRGBA(r, g, b, 255);
+/*
+	backgroundR = (GLclampf)r / 255.0f;
+	backgroundG = (GLclampf)g / 255.0f;
+	backgroundB = (GLclampf)b / 255.0f;
+	backgroundA = 1.0f;
+*/
+}
+
+void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b)
+{
+	if (defaultR != r || defaultG != g || defaultB != b)
+	{
+		defaultR = r;
+		defaultG = g;
+		defaultB = b;
+		if (lDrawModel && defaultColorNumber == -1)
+		{
+			flags.needsReload = true;
+		}
+	}
+}
+
+void LDrawModelViewer::getDefaultRGB(TCByte &r, TCByte &g, TCByte &b)
+{
+	r = defaultR;
+	g = defaultG;
+	b = defaultB;
+}
+
+void LDrawModelViewer::setDefaultColorNumber(int value)
+{
+	if (value != defaultColorNumber)
+	{
+		defaultColorNumber = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setBackgroundRGBA(int r, int g, int b, int a)
+{
+	backgroundR = (GLclampf)r / 255.0f;
+	backgroundG = (GLclampf)g / 255.0f;
+	backgroundB = (GLclampf)b / 255.0f;
+	backgroundA = (GLclampf)a / 255.0f;
+}
+
+void LDrawModelViewer::setDrawWireframe(bool value)
+{
+	if (value != flags.drawWireframe)
+	{
+		flags.drawWireframe = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setUseWireframeFog(bool value)
+{
+	flags.useWireframeFog = value;
+}
+
+void LDrawModelViewer::setEdgesOnly(bool value)
+{
+	if (value != flags.edgesOnly)
+	{
+		flags.edgesOnly = value;
+	}
+	if (lDrawModel)
+	{
+		bool realValue = flags.edgesOnly && flags.showsHighlightLines;
+
+		if (realValue != lDrawModel->getEdgesOnly())
+		{
+			lDrawModel->setEdgesOnly(realValue);
+			flags.needsReload = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setHiResPrimitives(bool value)
+{
+	if (value != flags.hiResPrimitives)
+	{
+		flags.hiResPrimitives = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setUsePolygonOffset(bool value)
+{
+	if (value != flags.usePolygonOffset)
+	{
+		flags.usePolygonOffset = value;
+		LDrawModel::setUsePolygonOffset(flags.usePolygonOffset);
+		flags.needsRecompile = true;
+	}
+}
+
+void LDrawModelViewer::setBlackHighlights(bool value)
+{
+	if (value != flags.blackHighlights)
+	{
+		flags.blackHighlights = value;
+		if (flags.showsHighlightLines)
+		{
+			flags.needsReload = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setShowAllConditionalLines(bool value)
+{
+	if (value != flags.showAllConditionalLines)
+	{
+		flags.showAllConditionalLines = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setShowConditionalControlPoints(bool value)
+{
+	if (value != flags.showConditionalControlPoints)
+	{
+		flags.showConditionalControlPoints = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setCurveQuality(int value)
+{
+	if (value != curveQuality)
+	{
+		curveQuality = value;
+		if (flags.allowPrimitiveSubstitution)
+		{
+			flags.needsReload = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setTextureStuds(bool value)
+{
+	if (value != flags.textureStuds)
+	{
+		flags.textureStuds = value;
+		TGLStudLogo::setTextureStuds(value);
+		flags.needsRecompile = true;
+	}
+}
+
+void LDrawModelViewer::setTextureFilterType(int value)
+{
+	if (value != textureFilterType)
+	{
+		textureFilterType = value;
+		TGLStudLogo::setTextureFilterType(value);
+		flags.needsRecompile = true;
+		flags.needsTextureSetup = true;
+	}
+}
+
+void LDrawModelViewer::setWidth(int value)
+{
+	if (value != width)
+	{
+		width = value;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setHeight(int value)
+{
+	if (value != height)
+	{
+		height = value;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setXTile(int value)
+{
+	if (value != xTile)
+	{
+		xTile = value;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setYTile(int value)
+{
+	if (value != yTile)
+	{
+		yTile = value;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setNumXTiles(int value)
+{
+	if (value != numXTiles)
+	{
+		numXTiles = value;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setNumYTiles(int value)
+{
+	if (value != numYTiles)
+	{
+		numYTiles = value;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setStereoMode(LDVStereoMode mode)
+{
+	if (mode != stereoMode)
+	{
+		stereoMode = mode;
+		flags.needsResize = true;
+	}
+}
+
+void LDrawModelViewer::setCutawayMode(LDVCutawayMode mode)
+{
+	cutawayMode = mode;
+}
+
+void LDrawModelViewer::setCutawayLineWidth(float value)
+{
+	cutawayLineWidth = value;
+}
+
+void LDrawModelViewer::setCutawayAlpha(float value)
+{
+	cutawayAlpha = value;
+}
+
+void LDrawModelViewer::setUseLighting(bool value)
+{
+	if (value != flags.useLighting)
+	{
+		flags.useLighting = value;
+		LDrawModel::setUseLighting(flags.useLighting);
+		flags.needsRecompile = true;
+		flags.needsLightingSetup = true;
+	}
+}
+
+void LDrawModelViewer::setUseStipple(bool value)
+{
+	if (value != flags.useStipple)
+	{
+		flags.useStipple = value;
+		if (lDrawModel)
+		{
+			lDrawModel->setUseStipple(value);
+		}
+		if (flags.sortTransparent)
+		{
+			flags.needsReload = true;
+		}
+		else
+		{
+			flags.needsRecompile = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setSortTransparent(bool value)
+{
+	if (value != flags.sortTransparent)
+	{
+		flags.sortTransparent = value;
+		if (lDrawModel)
+		{
+			lDrawModel->setSortTransparent(value);
+		}
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setHighlightLineWidth(float value)
+{
+	if (value != highlightLineWidth)
+	{
+		highlightLineWidth = value;
+		if (lDrawModel)
+		{
+			lDrawModel->setEdgeLineWidth(highlightLineWidth);
+			flags.needsRecompile = true;
+		}
+	}
+}
+
+void LDrawModelViewer::setWireframeLineWidth(float value)
+{
+	wireframeLineWidth = value;
+}
+
+void LDrawModelViewer::setQualityStuds(bool value)
+{
+	if (value != flags.qualityStuds)
+	{
+		flags.qualityStuds = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setAllowPrimitiveSubstitution(bool value)
+{
+	if (value != flags.allowPrimitiveSubstitution)
+	{
+		flags.allowPrimitiveSubstitution = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::zoom(float amount)
+{
+	if (flags.paused)
+	{
+		return;
+	}
+	if (clipZoom)
+	{
+		float newClipAmount = clipAmount - amount / 1000.0f;
+
+		if (newClipAmount > aspectRatio/*1.0f*/)
+		{
+			newClipAmount = aspectRatio/*1.0f*/;
+		}
+		else if (newClipAmount < 0.0f)
+		{
+			newClipAmount = 0.0f;
+		}
+		if (!fEq(clipAmount, newClipAmount))
+		{
+			clipAmount = newClipAmount;
+			perspectiveView(false);
+		}
+	}
+	else
+	{
+		float distance = (camera.getPosition()).length();
+//		float distance = (camera.getPosition() - center).length();
+		float newDistance = distance + (amount * distance / 300.0f);
+
+		if (flags.constrainZoom)
+		{
+			if (newDistance <= size / zoomMax)
+			{
+				newDistance = size / zoomMax;
+			}
+		}
+		// We may as well always constrain the maximum zoom, since there not
+		// really any reason to move too far away.
+		if (newDistance > size * 10.0f)
+		{
+			newDistance = size * 10.0f;
+		}
+		if (!fEq(distance, newDistance))
+		{
+			camera.move(TCVector(0.0f, 0.0f, newDistance - distance));
+//			distance = newDistance;
+//			camera.move(TCVector(0.0f, 0.0f, amount * size / 300.0f));
+			perspectiveView(false);
+		}
+	}
+}
+
+void LDrawModelViewer::clearBackground(void)
+{
+	float backgroundColor[3];
+
+	if (cullBackFaces)
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
+	glClearDepth(1.0);
+	backgroundColor[0] = backgroundR;
+	backgroundColor[1] = backgroundG;
+	backgroundColor[2] = backgroundB;
+	glFogfv(GL_FOG_COLOR, backgroundColor);
+	if (flags.slowClear)
+	{
+		GLint oldDepthFunc;
+
+		orthoView();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunc);
+		glDepthFunc(GL_ALWAYS);
+		glColor4f(backgroundR, backgroundG, backgroundB, backgroundA);
+		glDisable(GL_LIGHTING);
+		glDepthMask(1);
+		glBegin(GL_QUADS);
+		glVertex3i(-1, -1, -1);
+		glVertex3i(width + 1, -1, -1);
+		glVertex3i(width + 1, height + 1, -1);
+		glVertex3i(-1, height + 1, -1);
+		glEnd();
+		glDepthFunc(oldDepthFunc);
+		perspectiveView();
+	}
+	else
+	{
+		glClearColor(backgroundR, backgroundG, backgroundB, backgroundA);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+	if (flags.drawWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(wireframeLineWidth);
+		if (flags.useWireframeFog)
+		{
+			glEnable(GL_FOG);
+		}
+		else
+		{
+			glDisable(GL_FOG);
+		}
+	}
+	else
+	{
+		glLineWidth(highlightLineWidth);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glDisable(GL_FOG);
+	}
+}
+
+void LDrawModelViewer::drawSetup(GLfloat eyeXOffset)
+{
+	glLoadIdentity();
+	if (flags.qualityLighting)
+	{
+		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+	}
+	else
+	{
+		glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 0);
+	}
+	if (flags.usesFlatShading)
+	{
+		glShadeModel(GL_FLAT);
+	}
+	else
+	{
+		glShadeModel(GL_SMOOTH);
+	}
+	drawLights();
+	glLoadIdentity();
+	if (lDrawModel)
+	{
+		zoom(zoomSpeed);
+		camera.move(cameraMotion * size / 100.0f);
+		perspectiveView(false);
+		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
+		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+//		glTranslatef(eyeXOffset + xPan, yPan, -distance);
+	}
+	else
+	{
+		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 10.0f));
+//		glTranslatef(eyeXOffset + xPan, yPan, -10.0f);
+	}
+}
+
+void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
+{
+	perspectiveViewToClipPlane();
+	glDisable(GL_DEPTH_TEST);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, ~0u);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(cutawayLineWidth);
+	glDisable(GL_FOG);
+	glLoadIdentity();
+	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+//	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+	if (rotationMatrix)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+		glMultMatrixf(rotationMatrix);
+		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		glPopMatrix();
+		glMultMatrixf(rotationMatrix);
+	}
+	glTranslatef(-center[0], -center[1], -center[2]);
+	lDrawModel->draw();
+	glDisable(GL_LIGHTING);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, 1, 0, 1, 0, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	if ((backgroundR + backgroundG + backgroundB) / 3.0f > 0.5)
+	{
+		glColor4f(0.0f, 0.0f, 0.0f, cutawayAlpha);
+	}
+	else
+	{
+		glColor4f(1.0f, 1.0f, 1.0f, cutawayAlpha);
+	}
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glStencilFunc(GL_EQUAL, 1, ~0u);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glRectf(0.0, 0.0, 1.0, 1.0);
+	perspectiveView();
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_BLEND);
+}
+
+/*
+void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
+{
+	float weight = 0.25f;
+	float oldZoomSpeed = zoomSpeed;
+
+	glReadBuffer(GL_BACK);
+	glAccum(GL_LOAD, 1.0f - weight);
+	glClearColor(backgroundR, backgroundG, backgroundB, backgroundA);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	zoomSpeed = 0.0f;
+	clearBackground();
+	drawSetup();
+	zoomSpeed = oldZoomSpeed;
+	if (rotationMatrix)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glMultMatrixf(rotationMatrix);
+		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		glPopMatrix();
+		glMultMatrixf(rotationMatrix);
+	}
+	glTranslatef(-center[0], -center[1], -center[2]);
+	glColor3ub(192, 192, 192);
+	lDrawModel->draw();
+
+	glClearDepth(1.0);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	perspectiveViewToClipPlane();
+	glClearDepth(1.0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(cutawayLineWidth);
+	glDisable(GL_FOG);
+	glLoadIdentity();
+	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+	if (rotationMatrix)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glMultMatrixf(rotationMatrix);
+		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		glPopMatrix();
+		glMultMatrixf(rotationMatrix);
+	}
+	glTranslatef(-center[0], -center[1], -center[2]);
+	lDrawModel->draw();
+	perspectiveView();
+	glAccum(GL_ACCUM, weight);
+	glAccum(GL_RETURN, 1.0f);
+}
+*/
+
+void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset)
+{
+	float weight = cutawayAlpha;
+
+	perspectiveViewToClipPlane();
+	glClearDepth(1.0);
+	glClearColor(weight, weight, weight, weight);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(cutawayLineWidth);
+	glDisable(GL_FOG);
+	glLoadIdentity();
+	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+//	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+	//glTranslatef(0.0f, 0.0f, -distance);
+	if (rotationMatrix)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+		glMultMatrixf(rotationMatrix);
+		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		glPopMatrix();
+		glMultMatrixf(rotationMatrix);
+	}
+	glTranslatef(-center[0], -center[1], -center[2]);
+	lDrawModel->setCutawayDraw(true);
+	lDrawModel->draw();
+	lDrawModel->setCutawayDraw(false);
+	perspectiveView();
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDisable(GL_BLEND);
+}
+
+void LDrawModelViewer::drawToClipPlaneUsingNoEffect(GLfloat eyeXOffset)
+{
+	perspectiveViewToClipPlane();
+	glClearDepth(1.0);
+	glClear(GL_DEPTH_BUFFER_BIT);
+//	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(cutawayLineWidth);
+	glDisable(GL_FOG);
+	glLoadIdentity();
+	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+//	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+	if (rotationMatrix)
+	{
+		glPushMatrix();
+		glLoadIdentity();
+		glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+		glMultMatrixf(rotationMatrix);
+		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		glPopMatrix();
+		glMultMatrixf(rotationMatrix);
+	}
+	glTranslatef(-center[0], -center[1], -center[2]);
+	lDrawModel->draw();
+	perspectiveView();
+//	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+}
+
+void LDrawModelViewer::drawToClipPlane(GLfloat eyeXOffset)
+{
+	switch (cutawayMode)
+	{
+	case LDVCutawayNormal:
+		// Don't do anything
+		break;
+	case LDVCutawayWireframe:
+		if (fEq(cutawayAlpha, 1.0f))
+		{
+			drawToClipPlaneUsingNoEffect(eyeXOffset);
+		}
+		else
+		{
+			drawToClipPlaneUsingDestinationAlpha(eyeXOffset);
+		}
+		break;
+	case LDVCutawayStencil:
+		drawToClipPlaneUsingStencil(eyeXOffset);
+		break;
+	}
+//	drawToClipPlaneUsingAccum(eyeXOffset);
+}
+
+void LDrawModelViewer::clear(void)
+{
+	glClearDepth(1.0);
+	glClearColor(backgroundR, backgroundG, backgroundB, backgroundA);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+bool LDrawModelViewer::getLDrawCommandLineMatrix(char *matrixString,
+												 int bufferLength)
+{
+	if (rotationMatrix && bufferLength)
+	{
+		char buf[1024];
+		float matrix[16];
+		int i;
+		TCVector point = -center;
+
+		for (i = 0; i < 16; i++)
+		{
+			if (fEq(rotationMatrix[i], 0.0f))
+			{
+				matrix[i] = 0.0f;
+			}
+			else if (i == 0 || i  == 4 || i == 8)
+			{
+				matrix[i] = rotationMatrix[i];
+			}
+			else
+			{
+				matrix[i] = -rotationMatrix[i];
+			}
+		}
+		point = TGLShape::transformPoint(point, matrix);
+		sprintf(buf, "-a%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g",
+			matrix[0], matrix[4], matrix[8],
+			matrix[1], matrix[5], matrix[9],
+			matrix[2], matrix[6], matrix[10]);
+		strncpy(matrixString, buf, bufferLength);
+		matrixString[bufferLength - 1] = 0;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
+											 int bufferLength)
+{
+	if (rotationMatrix && bufferLength)
+	{
+		char buf[1024];
+		char matrixString[512];
+		TCVector cameraPoint = camera.getPosition();
+//		TCVector cameraPoint = TCVector(0.0f, 0.0f, distance);
+		TCVector lookAt = center;
+		int i;
+		float transformationMatrix[16];
+
+		if (!getLDrawCommandLineMatrix(matrixString, 512))
+		{
+			return false;
+		}
+		TGLShape::invertMatrix(rotationMatrix, transformationMatrix);
+		lookAt = TGLShape::transformPoint(center, rotationMatrix);
+		cameraPoint += lookAt;
+//		cameraPoint = TGLShape::transformPoint(cameraPoint, rotationMatrix);
+		for (i = 0; i < 3; i++)
+		{
+			if (fEq(cameraPoint[i], 0.0f))
+			{
+				cameraPoint[i] = 0.0f;
+			}
+		}
+		sprintf(buf, "ldglite -J -v%d,%d "
+			"-cc%.4f,%.4f,%.4f -co%.4f,%.4f,%.4f "
+			"-cu0,1,0 %s \"%s\"", width, height,
+			cameraPoint[0], cameraPoint[1], cameraPoint[2],
+			lookAt[0], lookAt[1], lookAt[2],
+			matrixString, filename);
+		strncpy(commandString, buf, bufferLength);
+		commandString[bufferLength - 1] = 0;
+		return true;
+	}
+	return false;
+}
+
+bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
+										   char *commandString,
+										   int bufferLength)
+{
+	if (rotationMatrix && bufferLength)
+	{
+		char buf[1024];
+		float matrix[16];
+		int i;
+		TCVector point = -center;
+		float scaleFactor = 500.0f;
+		float distance = (camera.getPosition()).length();
+//		float distance = (camera.getPosition() - center).length();
+
+		for (i = 0; i < 16; i++)
+		{
+			if (fEq(rotationMatrix[i], 0.0f))
+			{
+				matrix[i] = 0.0f;
+			}
+			else if (i == 0 || i  == 4 || i == 8)
+			{
+				matrix[i] = rotationMatrix[i];
+			}
+			else
+			{
+				matrix[i] = -rotationMatrix[i];
+			}
+		}
+		point = TGLShape::transformPoint(point, matrix);
+		sprintf(buf, "ldraw -s%.4g -o%d,%d "
+			"-a%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g "
+			"%s",
+			scaleFactor / distance,
+			(int)(point[0] * scaleFactor / distance),
+			(int)(point[1] * scaleFactor / distance),
+			matrix[0], matrix[4], matrix[8],
+			matrix[1], matrix[5], matrix[9],
+			matrix[2], matrix[6], matrix[10],
+			shortFilename);
+		strncpy(commandString, buf, bufferLength);
+		commandString[bufferLength - 1] = 0;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void LDrawModelViewer::update(void)
+{
+	static GLubyte stipplePattern[128];
+	static bool stipplePatternSet = false;
+	GLfloat eyeXOffset = 0.0f;
+
+	if (!stipplePatternSet)
+	{
+		int i;
+
+		for (i = 0; i < 32; i++)
+		{
+			if (i % 2)
+			{
+				memset(stipplePattern + i * 4, 0xAA, 4);
+			}
+			else
+			{
+				memset(stipplePattern + i * 4, 0x55, 4);
+			}
+		}
+		stipplePatternSet = true;
+	}
+	if (!rotationMatrix)
+	{
+		rotationMatrix = new float[16];
+		setupDefaultViewAngle();
+		flags.rotationMatrixNeedsSetup = true;
+	}
+	if (flags.needsSetup)
+	{
+		setup();
+	}
+	if (flags.needsTextureSetup)
+	{
+		setupTextures();
+	}
+	if (flags.needsLightingSetup)
+	{
+		setupLighting();
+	}
+	if (flags.needsMaterialSetup)
+	{
+		setupMaterial();
+	}
+	if (flags.needsReload)
+	{
+		reload();
+	}
+	else if (flags.needsRecompile)
+	{
+		recompile();
+	}
+	if (flags.needsResize)
+	{
+		perspectiveView();
+	}
+//	glPolygonStipple(stipplePattern);
+	if (flags.rotationMatrixNeedsSetup)
+	{
+		setupRotationMatrix();
+	}
+	clearBackground();
+	if (!lDrawModel)
+	{
+		return;
+	}
+	if (false && !lDrawModel->getCompiled())
+	{
+		if (!lDrawModel->getCompiling())
+		{
+			drawString(2.0f, height - 16.0f, "Model Compile Canceled");
+		}
+		return;
+	}
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		float distance = (camera.getPosition()).length();
+//		float distance = (camera.getPosition() - center).length();
+
+		eyeXOffset = stereoEyeSpacing * 2.0f / (float)pow(distance, 0.25);
+		if (stereoMode == LDVStereoCrossEyed)
+		{
+			eyeXOffset = -eyeXOffset;
+		}
+	}
+	if (rotationMatrix)
+	{
+		if (!flags.paused)
+		{
+			float matrix[16];
+			TCVector rotation = TCVector(xRotate, yRotate, zRotate);
+
+			camera.getFacing().getInverseMatrix(matrix);
+			glPushMatrix();
+			glLoadIdentity();
+			rotation = rotation.mult(matrix);
+//			printf("[%f %f %f] [%f %f %f]\n", xRotate, yRotate, zRotate,
+//				rotation[0], rotation[1], rotation[2]);
+//			glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+			glRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
+			glMultMatrixf(rotationMatrix);
+			glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+			glPopMatrix();
+		}
+	}
+	drawModel(eyeXOffset);
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		eyeXOffset = -eyeXOffset;
+		glViewport(width / 2, 0, width / 2, height);
+		if (flags.slowClear)
+		{
+			clearBackground();
+			glViewport(width / 2, 0, width / 2, height);
+		}
+		drawModel(eyeXOffset);
+		glViewport(0, 0, width / 2, height);
+	}
+}
+
+void LDrawModelViewer::setupRotationMatrix(void)
+{
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+	glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+	glMultMatrixf(rotationMatrix);
+	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+	glPopMatrix();
+	flags.rotationMatrixNeedsSetup = false;
+/*
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+	glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+	glRotatef(50.0f, 0.0f, -1.5f, 1.0f);
+	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+	glPopMatrix();
+*/
+}
+
+void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
+{
+	drawSetup(eyeXOffset);
+	if (rotationMatrix)
+	{
+		glMultMatrixf(rotationMatrix);
+	}
+	glTranslatef(-center[0], -center[1], -center[2]);
+//	drawBoundingBox();
+	glColor3ub(192, 192, 192);
+	if (mainTREModel)
+	{
+		mainTREModel->draw();
+	}
+	else if (lDrawModel)
+	{
+		lDrawModel->draw();
+		if (clipAmount > 0.01)
+		{
+			drawToClipPlane(eyeXOffset);
+		}
+	}
+}
+
+void LDrawModelViewer::pause(void)
+{
+	flags.paused = true;
+}
+
+void LDrawModelViewer::unpause(void)
+{
+	flags.paused = false;
+}
+
+void LDrawModelViewer::setRotationSpeed(float value)
+{
+	rotationSpeed = value;
+	if (value)
+	{
+		flags.paused = false;
+	}
+}
+
+void LDrawModelViewer::setZoomSpeed(float value)
+{
+	zoomSpeed = value;
+	if (value)
+	{
+		flags.paused = false;
+	}
+}
+
+void LDrawModelViewer::panXY(int xValue, int yValue)
+{
+	float adjustment;
+	float distance = (camera.getPosition()).length();
+//	float distance = (camera.getPosition() - center).length();
+
+	if (width > height)
+	{
+		adjustment = (float)width;
+	}
+	else
+	{
+		adjustment = (float)height;
+	}
+//	xPan += xValue / (float)pow(distance, 0.001);
+//	yPan -= yValue / (float)pow(distance, 0.001);
+	xPan += xValue / adjustment / (float)pow(2 / distance, 1.1);
+	yPan -= yValue / adjustment / (float)pow(2 / distance, 1.1);
+}
+
+char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
+{
+	char *vendorString = (char*)glGetString(GL_VENDOR);
+	char *rendererString = (char*)glGetString(GL_RENDERER);
+	char *versionString = (char*)glGetString(GL_VERSION);
+	char *extensionsString = (char*)glGetString(GL_EXTENSIONS);
+	int len;
+	char *message;
+
+	numExtensions = 1;
+	if (!vendorString)
+	{
+		vendorString = "*Unknown*";
+	}
+	if (!rendererString)
+	{
+		rendererString = "*Unknown*";
+	}
+	if (!versionString)
+	{
+		versionString = "*Unknown*";
+	}
+	if (!extensionsString)
+	{
+		extensionsString = "*None*";
+		numExtensions = 0;
+	}
+	len = strlen(extensionsString);
+	if (len && (extensionsString[len - 1] == ' '))
+	{
+		extensionsString[len - 1] = 0;
+	}
+	extensionsString = stringByReplacingSubstring(extensionsString, " ",
+		"\r\n");
+	len = strlen(vendorString) + strlen(rendererString) +
+		strlen(versionString) + strlen(extensionsString) + 128;
+	message = new char[len];
+	sprintf(message, "Vendor: %s\n"
+		"Renderer: %s\n"
+		"Version: %s\n\n"
+		"Extenstions:\n%s",
+		vendorString, rendererString, versionString, extensionsString);
+	if (numExtensions)
+	{
+		numExtensions = countStringLines(extensionsString);
+	}
+	return message;
+}

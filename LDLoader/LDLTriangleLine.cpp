@@ -21,10 +21,10 @@ bool LDLTriangleLine::parse(void)
 	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f", &lineType,
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3) == 11)
 	{
-		m_points = new Vector[3];
-		m_points[0] = Vector(x1, y1, z1);
-		m_points[1] = Vector(x2, y2, z2);
-		m_points[2] = Vector(x3, y3, z3);
+		m_points = new TCVector[3];
+		m_points[0] = TCVector(x1, y1, z1);
+		m_points[1] = TCVector(x2, y2, z2);
+		m_points[2] = TCVector(x3, y3, z3);
 		return true;
 	}
 	else

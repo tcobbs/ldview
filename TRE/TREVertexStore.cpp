@@ -1,6 +1,6 @@
 #include "TREVertexStore.h"
 #include "TREVertexArray.h"
-#include <LDLib/Vector.h>
+#include <TCFoundation/TCVector.h>
 #include <string.h>
 
 TREVertexStore *TREVertexStore::sm_activeVertexStore = NULL;
@@ -76,12 +76,16 @@ TCObject *TREVertexStore::copy(void)
 	return new TREVertexStore(*this);
 }
 
-int TREVertexStore::addVertices(Vector *points, int count)
+int TREVertexStore::addVertices(TCVector *points, int count)
 {
-	Vector normal = calcNormal(points);
+	TCVector normal;
 	TREVertex normalVertex;
 	int i;
 
+	if (count > 2)
+	{
+		normal = calcNormal(points);
+	}
 	initVertex(normalVertex, normal);
 	for (i = 0; i < count; i++)
 	{
@@ -90,13 +94,13 @@ int TREVertexStore::addVertices(Vector *points, int count)
 	return addVertices(m_vertices, points, count);
 }
 
-int TREVertexStore::addVertices(Vector *points, Vector *normals, int count)
+int TREVertexStore::addVertices(TCVector *points, TCVector *normals, int count)
 {
 	addVertices(m_normals, normals, count);
 	return addVertices(m_vertices, points, count);
 }
 
-int TREVertexStore::addVertices(TCULong color, Vector *points, int count)
+int TREVertexStore::addVertices(TCULong color, TCVector *points, int count)
 {
 	int i;
 
@@ -107,7 +111,7 @@ int TREVertexStore::addVertices(TCULong color, Vector *points, int count)
 	return addVertices(points, count);
 }
 
-int TREVertexStore::addVertices(TCULong color, Vector *points, Vector *normals,
+int TREVertexStore::addVertices(TCULong color, TCVector *points, TCVector *normals,
 								int count)
 {
 	int i;
@@ -119,12 +123,12 @@ int TREVertexStore::addVertices(TCULong color, Vector *points, Vector *normals,
 	return addVertices(points, normals, count);
 }
 
-void TREVertexStore::initVertex(TREVertex &vertex, Vector &point)
+void TREVertexStore::initVertex(TREVertex &vertex, TCVector &point)
 {
 	memcpy(vertex.v, (float *)point, sizeof(vertex.v));
 }
 
-int TREVertexStore::addVertices(TREVertexArray *vertices, Vector *points,
+int TREVertexStore::addVertices(TREVertexArray *vertices, TCVector *points,
 								int count)
 {
 	int i;
@@ -312,10 +316,10 @@ void TREVertexStore::setupColored(void)
 	}
 }
 
-Vector TREVertexStore::calcNormal(Vector *points, bool normalize)
+TCVector TREVertexStore::calcNormal(TCVector *points, bool normalize)
 {
-	Vector normal = (points[1] - points[2]) * (points[1] - points[0]);
-//	Vector normal = (points[2] - points[1]) * (points[0] - points[1]);
+	TCVector normal = (points[1] - points[2]) * (points[1] - points[0]);
+//	TCVector normal = (points[2] - points[1]) * (points[0] - points[1]);
 
 	if (normalize)
 	{

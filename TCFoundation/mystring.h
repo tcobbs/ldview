@@ -5,7 +5,7 @@
 
 #include <string.h>
 
-#define copyString(a) ((a) ? strcpy(new char[strlen(a)+1], (a)) : NULL)
+TCExport char *copyString(const char *string, int pad = 0);
 
 TCExport char *strnstr(const char *s1, const char *s2, size_t n,
 					   int skipZero = 0);

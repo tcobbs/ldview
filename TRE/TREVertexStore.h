@@ -7,7 +7,7 @@
 
 struct TREVertex;
 class TREVertexArray;
-class Vector;
+class TCVector;
 
 class TREVertexStore : public TCObject
 {
@@ -15,10 +15,10 @@ public:
 	TREVertexStore(void);
 	TREVertexStore(const TREVertexStore &other);
 	virtual bool activate(void);
-	virtual int addVertices(Vector *points, int count);
-	virtual int addVertices(Vector *points, Vector *normals, int count);
-	virtual int addVertices(TCULong color, Vector *points, int count);
-	virtual int addVertices(TCULong color, Vector *points, Vector *normals,
+	virtual int addVertices(TCVector *points, int count);
+	virtual int addVertices(TCVector *points, TCVector *normals, int count);
+	virtual int addVertices(TCULong color, TCVector *points, int count);
+	virtual int addVertices(TCULong color, TCVector *points, TCVector *normals,
 		int count);
 	TCObject *copy(void);
 	virtual void setup(void);
@@ -27,8 +27,8 @@ public:
 	TREVertexArray *getNormals(void) { return m_normals; }
 	TCULongArray *getColors(void) { return m_colors; }
 
-	static void initVertex(TREVertex &vertex, Vector &point);
-	static Vector calcNormal(Vector *points, bool normalize = true);
+	static void initVertex(TREVertex &vertex, TCVector &point);
+	static TCVector calcNormal(TCVector *points, bool normalize = true);
 	static void setWglAllocateMemoryNV(PFNWGLALLOCATEMEMORYNVPROC value)
 	{
 		wglAllocateMemoryNV = value;
@@ -44,7 +44,7 @@ public:
 protected:
 	virtual ~TREVertexStore(void);
 	virtual void dealloc(void);
-	virtual int addVertices(TREVertexArray *vertices, Vector *points,
+	virtual int addVertices(TREVertexArray *vertices, TCVector *points,
 		int count);
 	virtual void setupVAR(void);
 
