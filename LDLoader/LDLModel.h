@@ -136,7 +136,7 @@ protected:
 	public:
 		~LDLModelCleanup(void);
 	} sm_cleanup;
-	friend LDLModelCleanup;
+	friend class LDLModelCleanup;
 };
 
 #endif // __LDLMODEL_H__

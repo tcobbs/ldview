@@ -56,6 +56,7 @@ LDVExtensionsSetup::LDVExtensionsSetupCleanup
 
 static int pfIntAttribs[] =
 {
+	WGL_MAX_PBUFFER_WIDTH_ARB,
 	WGL_DRAW_TO_WINDOW_ARB,
 	WGL_DRAW_TO_BITMAP_ARB,
 	WGL_ACCELERATION_ARB,
@@ -360,13 +361,11 @@ bool LDVExtensionsSetup::haveVARExtension(void)
 
 bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
 {
-//	return false;
 	return checkForExtension("GL_EXT_multi_draw_arrays");
 }
 
 bool LDVExtensionsSetup::haveVBOExtension(void)
 {
-//	return false;
 	return checkForExtension("GL_ARB_vertex_buffer_object");
 }
 

@@ -165,7 +165,6 @@ BOOL CUIOGLWindow::setupRenderingContext(void)
 
 void CUIOGLWindow::drawLight(GLenum light, float x, float y, float z)
 {
-	return;
 	float position[4];
 	float direction[4];
 //	float fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -186,21 +185,18 @@ void CUIOGLWindow::drawLight(GLenum light, float x, float y, float z)
 
 void CUIOGLWindow::drawLights(void)
 {
-	return;
 //	drawLight(GL_LIGHT0, 0.0f, 0.0f, 10000.0f);
 	drawLight(GL_LIGHT1, 0.0f, 0.0f, -10000.0f);
 }
 
 void CUIOGLWindow::perspectiveView(void)
 {
-	return;
 	setFieldOfView((float)45.0, (float)2.0, (float)2002.0);
 	glLoadIdentity();
 }
 
 void CUIOGLWindow::orthoView(void)
 {
-	return;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, width, 0.0, height);
@@ -213,7 +209,6 @@ void CUIOGLWindow::orthoView(void)
 
 void CUIOGLWindow::setupMaterial(void)
 {
-	return;
 	float mAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 //	float mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	float mSpecular[] = {0.5f, 0.5f, 0.5f, 1.0f};
@@ -230,7 +225,6 @@ void CUIOGLWindow::setupMaterial(void)
 
 void CUIOGLWindow::setupLight(GLenum light)
 {
-	return;
 //	float lAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 	float lAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 	float lDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -245,7 +239,6 @@ void CUIOGLWindow::setupLight(GLenum light)
 
 void CUIOGLWindow::setupLighting(void)
 {
-	return;
 	setupLight(GL_LIGHT0);
 //	setupLight(GL_LIGHT1);
 	glEnable(GL_LIGHTING);
@@ -365,3 +358,4 @@ void CUIOGLWindow::initFail(char* /*reason*/)
 	MessageBox(hWindow, msg, "Error", MB_OK);
 */
 }
+

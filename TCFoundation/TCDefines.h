@@ -9,7 +9,7 @@
 #endif
 
 #ifdef WIN32
-
+#include <winsock2.h>
 #include <crtdbg.h>
 
 #ifdef WIN32

@@ -291,6 +291,7 @@ bool SSModelWindow::checkForExit(HWND hWnd, UINT message, WPARAM wParam,
 		if (ssPassword->verifyPassword(hWindow))
 		{
 			return true;
+/*
 			if (initializedGL && hglrc)
 			{
 				wglMakeCurrent(NULL, NULL);
@@ -301,6 +302,7 @@ bool SSModelWindow::checkForExit(HWND hWnd, UINT message, WPARAM wParam,
 			((LDViewWindow*)parentWindow)->shutdown();
 			ssPassword->release();
 			ssPassword = NULL;
+*/
 		}
 		else
 		{

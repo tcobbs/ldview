@@ -35,6 +35,12 @@ int TCDictionary::isCaseSensitve(void)
 	return keys->isCaseSensitive();
 }
 
+void TCDictionary::removeAll(void)
+{
+	keys->removeAll();
+	objects->removeAll();
+}
+
 void TCDictionary::setObjectForKey(TCObject* object, const char* key)
 {
 	int index = indexOfKey(key);

@@ -15,7 +15,7 @@ protected:
 	LDLUnknownLine(const LDLUnknownLine &other);
 	virtual ~LDLUnknownLine(void);
 
-	friend LDLFileLine; // Needed because constructors are protected.
+	friend class LDLFileLine; // Needed because constructors are protected.
 };
 
 #endif // __LDLUNKNOWNLINE_H__

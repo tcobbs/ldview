@@ -70,7 +70,7 @@ protected:
 	public:
 		~LDLPaletteCleanup(void);
 	} sm_cleanup;
-	friend LDLPaletteCleanup;
+	friend class LDLPaletteCleanup;
 };
 
 #endif __LDLPALETTE_H__

@@ -68,11 +68,11 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 aspectRatio(1.0f),
 			 currentFov(45.0f),
 			 fov(45.0f),
-			 cameraData(NULL),
-			 extraSearchDirs(NULL)
+			 extraSearchDirs(NULL),
+			 cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
-//	strcpy(className, "LDrawModelViewer");
+	strcpy(className, "LDrawModelViewer");
 #endif
 	flags.qualityLighting = 0;
 	flags.showsHighlightLines = 0;
@@ -193,6 +193,18 @@ void LDrawModelViewer::applyTile(void)
 	}
 }
 
+float LDrawModelViewer::getStereoWidthModifier(void)
+{
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		return 2.0f;
+	}
+	else
+	{
+		return 1.0f;
+	}
+}
+
 void LDrawModelViewer::setFieldOfView(double fov, float nClip, float fClip)
 {
 	GLdouble aspectWidth, aspectHeight;
@@ -202,12 +214,8 @@ void LDrawModelViewer::setFieldOfView(double fov, float nClip, float fClip)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	applyTile();
-	aspectWidth = width * numXTiles;
+	aspectWidth = width * numXTiles / getStereoWidthModifier();
 	aspectHeight = height * numYTiles * pixelAspectRatio;
-	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
-	{
-		aspectWidth /= 2.0;
-	}
 	gluPerspective(fov, aspectWidth / aspectHeight, nClip, fClip);
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -228,13 +236,9 @@ void LDrawModelViewer::setFov(float value)
 
 void LDrawModelViewer::updateCurrentFov(void)
 {
-	int actualWidth = width;
+	int actualWidth = width / (int)getStereoWidthModifier();
 
 	currentFov = fov;
-	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
-	{
-		actualWidth = width / 2;
-	}
 	if (actualWidth * numXTiles < height * numYTiles)
 	{
 		// When the window is taller than it is wide, we want our current FOV to
@@ -262,7 +266,7 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	float nClip;
 	float fClip;
 	float clipRadius;
-	int actualWidth = width;
+	int actualWidth = width / (int)getStereoWidthModifier();
 	float distance;
 	float aspectAdjust = (float)tan(1.0f);
 	TCVector vector;
@@ -277,10 +281,6 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	}
 	distance = (camera.getPosition() - vector).length();
 	currentFov = fov;
-	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
-	{
-		actualWidth = width / 2;
-	}
 	updateCurrentFov();
 	if (resetViewport)
 	{
@@ -367,15 +367,16 @@ bool LDrawModelViewer::skipCameraPositioning(void)
 float LDrawModelViewer::calcDefaultDistance(void)
 {
 	updateCurrentFov();
-//	return (float)(size / 2.0 / sin(deg2rad(currentFov / 2.0)));
-
+	return (float)(size / 2.0 / sin(deg2rad(currentFov / 2.0))) *
+		distanceMultiplier;
+/*
 	double angle1 = deg2rad(90.0f - (currentFov / 2.0));
 	double angle2 = deg2rad(currentFov / 4.0);
 	double radius = size / 2.0;
 
-	 return (float)(radius * tan(angle1) + radius * tan(angle2)) *
+	return (float)(radius * tan(angle1) + radius * tan(angle2)) *
 		distanceMultiplier;
-
+*/
 }
 
 void LDrawModelViewer::resetView(LDVAngle viewAngle)
@@ -708,6 +709,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 					flags.showConditionalControlPoints);
 				modelParser->setEdgesOnlyFlag(flags.edgesOnly);
 			}
+			modelParser->setSmoothCurvesFlag(flags.performSmoothing);
 			modelParser->setFileIsPartFlag(flags.fileIsPart);
 			modelParser->setStudLogoFlag(flags.textureStuds);
 			modelParser->setDefaultRGB(defaultR, defaultG, defaultB);
@@ -837,17 +839,10 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						progressCallback("", 2.0, progressUserData);
 					}
 					flags.needsRecompile = false;
-//					size = (boundingMax - boundingMin).length();
 					if (resetViewpoint)
 					{
 						resetView();
-//						camera.setPosition(
-//							TCVector(0.0f, 0.0f, size * distanceMultiplier));
-//						distance = size * distanceMultiplier;
-//						xPan = 0.0f;
-//						yPan = 0.0f;
 					}
-//					center = (boundingMin + boundingMax) / 2.0f;
 				}
 				else
 				{
@@ -1157,10 +1152,11 @@ void LDrawModelViewer::loadVGAFont(char *fontFilename)
 	}
 }
 
-void LDrawModelViewer::setupFont(char *fontFilename)
+void LDrawModelViewer::setupFont(char * /*fontFilename*/)
 {
 //	printf("LDrawModelViewer::setupFont\n");
 	return;
+#if 0
 	loadVGAFont(fontFilename);
 /*
 	if (!fontImage)
@@ -1223,6 +1219,7 @@ void LDrawModelViewer::setupFont(char *fontFilename)
 			glEndList();
 		}
 	}
+#endif // 0
 }
 
 void LDrawModelViewer::setupTextures(void)
@@ -2674,7 +2671,8 @@ void LDrawModelViewer::zoomToFit(void)
 		char message[1024];
 		sprintf(message, "num points: %d", _numPoints);
 //		MessageBox(NULL, message, "Points", MB_OK);
-		d = (float)width / (float)height;
+		d = (float)(width * numXTiles / getStereoWidthModifier()) /
+			(float)(height * numYTiles);
 		dh = (cameraData->horMax - cameraData->horMin) / d;
 		dv = cameraData->verMax - cameraData->verMin;
 		memset(a, 0, sizeof(a));
@@ -2805,10 +2803,11 @@ void LDrawModelViewer::preCalcCamera(void)
 
 	delete cameraData;
 	cameraData = new CameraData;
-	if (width > height)
+	if ((width * numXTiles / getStereoWidthModifier()) > (height * numYTiles))
 	{
 		cameraData->fov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
-			(double)width / (double)height)));
+			(double)(width * numXTiles / getStereoWidthModifier()) /
+			(double)(height * numYTiles))));
 	}
 	else
 	{
@@ -2819,7 +2818,8 @@ void LDrawModelViewer::preCalcCamera(void)
 		(cameraData->horizontal * d);
 	cameraData->normal[3] = cameraData->direction +
 		(cameraData->horizontal * d);
-	d *= (float)width / (float)height;
+	d *= (float)(width * numXTiles / getStereoWidthModifier()) /
+		(float)(height * numYTiles);
 	cameraData->normal[0] = cameraData->direction -
 		(cameraData->vertical * d);
 	cameraData->normal[1] = cameraData->direction +

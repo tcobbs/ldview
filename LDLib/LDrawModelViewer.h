@@ -293,6 +293,7 @@ class LDrawModelViewer: public TCObject
 		virtual void preCalcCamera(void);
 		virtual float calcDefaultDistance(void);
 		virtual void updateCurrentFov(void);
+		virtual float getStereoWidthModifier(void);
 
 		void ludcmp(float a[6][6], int n, int index[6], float *d);
 		void lubksb(const float a[6][6], int n, const int index[6], float b[6]);

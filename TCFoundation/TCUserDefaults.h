@@ -16,7 +16,6 @@ class TCStringArray;
 class TCExport TCUserDefaults: public TCObject
 {
 	public:
-		TCUserDefaults(void);
 		static void setStringForKey(const char* value,
 			const char* key, bool sessionSpecific = true);
 		static char* stringForKey(const char* key,
@@ -45,6 +44,7 @@ class TCExport TCUserDefaults: public TCObject
 		static char* getSavedSessionNameFromKey(const char *key);
 		static void removeSession(const char *value);
 	protected:
+		TCUserDefaults(void);
 		virtual void dealloc(void);
 		virtual ~TCUserDefaults(void);
 		static TCUserDefaults* getCurrentUserDefaults(void);
@@ -106,7 +106,7 @@ class TCExport TCUserDefaults: public TCObject
 		public:
 			~TCUserDefaultsCleanup(void);
 		} userDefaultsCleanup;
-		friend TCUserDefaultsCleanup;
+		friend class TCUserDefaultsCleanup;
 };
 
 #endif // __TCUSERDEFAULTS_H__

@@ -20,6 +20,8 @@ public:
 	TREMainModel *getMainTREModel(void) { return m_mainTREModel; }
 	void setFileIsPartFlag(bool value) { m_flags.fileIsPart = value; }
 	bool getFileIsPartFlag(void) { return m_flags.fileIsPart != false; }
+	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
+	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
 	void setPrimitiveSubstitutionFlag(bool value)
 	{
 		m_flags.primitiveSubstitution = value;
@@ -28,6 +30,7 @@ public:
 	{
 		return m_flags.primitiveSubstitution != false;
 	}
+	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_flags.edgeLines != false; }
 	void setEdgesOnlyFlag(bool value) { m_flags.edgesOnly = value; }
@@ -63,6 +66,8 @@ public:
 	{
 		return m_flags.conditionalLines != false;
 	}
+	void setSmoothCurvesFlag(bool value) { m_flags.smoothCurves = value; }
+	bool getSmoothCurvesFlag(void) { return m_flags.smoothCurves != false; }
 	void setShowAllConditionalFlag(bool value)
 	{
 		m_flags.showAllConditional = value;
@@ -97,9 +102,24 @@ public:
 	void setDefaultColorNumber(int colorNumber);
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
 	int getStudTextureFilter(void) { return m_studTextureFilter; }
+	virtual bool shouldLoadConditionalLines(void);
 protected:
 	virtual ~LDModelParser(void);
 	virtual void dealloc(void);
+	void setSeamsFlag(bool value) { m_flags.seams = value; }
+	void setDefaultColorSetFlag(bool value) { m_flags.defaultColorSet = value; }
+	bool getDefaultColorSetFlag(void)
+	{
+		return m_flags.defaultColorSet != false;
+	}
+	void setDefaultColorNumberSetFlag(bool value)
+	{
+		m_flags.defaultColorNumberSet = value;
+	}
+	bool getDefaultColorNumberSetFlag(void)
+	{
+		return m_flags.defaultColorNumberSet != false;
+	}
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
 		bool bfc);
@@ -186,6 +206,7 @@ protected:
 		bool stipple:1;
 		bool wireframe:1;
 		bool conditionalLines:1;
+		bool smoothCurves:1;
 		bool showAllConditional:1;
 		bool conditionalControlPoints:1;
 		bool defaultColorSet:1;

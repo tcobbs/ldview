@@ -244,6 +244,7 @@
 #define ID_VIEW_SAVE_DEFAULT            40064
 #define ID_VIEW_ZOOMTOFIT               40065
 #define ID_FILE_EXTRADIRS               40068
+#define ID_FILE_DOWNLOADTEST            40069
 
 // Next default values for new objects
 // 
@@ -252,7 +253,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        160
-#define _APS_NEXT_COMMAND_VALUE         40069
+#define _APS_NEXT_COMMAND_VALUE         40070
 #define _APS_NEXT_CONTROL_VALUE         1172
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

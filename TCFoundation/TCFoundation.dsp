@@ -131,6 +131,22 @@ SOURCE=.\TCImageFormat.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCLocalStrings.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCMutex.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCNetwork.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCNetworkClient.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCObject.cpp
 # End Source File
 # Begin Source File
@@ -163,11 +179,27 @@ SOURCE=.\TCStringObjectTree.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCThread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCThreadCondition.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCThreadManager.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCUserDefaults.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\TCVector.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCWebClient.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -223,7 +255,23 @@ SOURCE=.\TCImageFormat.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCLocalStrings.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCMacros.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCMutex.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCNetwork.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCNetworkClient.h
 # End Source File
 # Begin Source File
 
@@ -259,6 +307,18 @@ SOURCE=.\TCStringObjectTree.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCThread.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCThreadCondition.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCThreadManager.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCTypedDictionary.h
 # End Source File
 # Begin Source File
@@ -280,6 +340,10 @@ SOURCE=.\TCUserDefaults.h
 # Begin Source File
 
 SOURCE=.\TCVector.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCWebClient.h
 # End Source File
 # End Group
 # End Target

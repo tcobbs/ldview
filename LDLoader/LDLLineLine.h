@@ -17,8 +17,8 @@ protected:
 		const char *originalLine = NULL);
 	LDLLineLine(const LDLLineLine &other);
 
-	friend LDLFileLine;		// Needed because constructors are protected.
-	friend LDLTriangleLine;	// Needed because constructors are protected, and
+	friend class LDLFileLine;		// Needed because constructors are protected.
+	friend class LDLTriangleLine;	// Needed because constructors are protected, and
 							// some bad triangles can be converted to a line.
 };
 

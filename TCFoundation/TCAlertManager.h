@@ -43,7 +43,7 @@ protected:
 	public:
 		~TCAlertManagerCleanup(void);
 	} sm_alertManagerCleanup;
-	friend TCAlertManagerCleanup;
+	friend class TCAlertManagerCleanup;
 };
 
 #endif __TCALERTMANAGER_H__

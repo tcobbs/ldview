@@ -66,7 +66,7 @@ int TCObjectArray::replaceObject(TCObject* newObject, unsigned int index)
 		{
 			TCObject::release(oldObject);
 			items[index] = newObject;
-			newObject->retain();
+			TCObject::retain(newObject);
 		}
 		return 1;
 	}

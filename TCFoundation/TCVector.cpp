@@ -2,6 +2,7 @@
 //#include <stdio.h>
 
 #ifdef WIN32
+#include <TCFoundation/TCDefines.h>
 #include <windows.h>
 #endif // WIN32
 
@@ -569,10 +570,6 @@ void TCVector::transformNormal(const float *matrix, TCVector& newNormal,
 	{
 		newNormal.normalize();
 	}
-//	if (det < 0)
-//	{
-//		newNormal *= -1.0f;
-//	}
 }
 
 TCVector TCVector::transformNormal(const float *matrix, bool shouldNormalize)

@@ -44,6 +44,7 @@ LDModelParser::LDModelParser(void)
 	m_flags.stipple = false;
 	m_flags.wireframe = false;
 	m_flags.conditionalLines = false;
+	m_flags.smoothCurves = true;
 	m_flags.showAllConditional = false;
 	m_flags.conditionalControlPoints = false;
 	m_flags.defaultColorSet = false;
@@ -62,15 +63,21 @@ void LDModelParser::dealloc(void)
 	TCObject::dealloc();
 }
 
+bool LDModelParser::shouldLoadConditionalLines(void)
+{
+	return (getEdgeLinesFlag() && getConditionalLinesFlag()) ||
+		getSmoothCurvesFlag();
+}
+
 void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 {
-	if (m_flags.flattenParts)
+	if (getFlattenPartsFlag())
 	{
 		treModel->flatten();
 	}
 	if (subModel)
 	{
-		if (m_flags.seams)
+		if (getSeamsFlag())
 		{
 			subModel->shrink(m_seamWidth);
 		}
@@ -82,13 +89,13 @@ void LDModelParser::setDefaultRGB(TCByte r, TCByte g, TCByte b)
 	m_defaultR = r;
 	m_defaultG = g;
 	m_defaultB = b;
-	m_flags.defaultColorSet = true;
+	setDefaultColorSetFlag(true);
 }
 
 void LDModelParser::setDefaultColorNumber(int colorNumber)
 {
 	m_defaultColorNumber = colorNumber;
-	m_flags.defaultColorNumberSet = true;
+	setDefaultColorNumberSetFlag(true);
 }
 
 bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
@@ -114,16 +121,17 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setStippleFlag(getStippleFlag());
 	m_mainTREModel->setWireframeFlag(getWireframeFlag());
 	m_mainTREModel->setConditionalLinesFlag(getConditionalLinesFlag());
+	m_mainTREModel->setSmoothCurvesFlag(getSmoothCurvesFlag());
 	m_mainTREModel->setShowAllConditionalFlag(getShowAllConditionalFlag());
 	m_mainTREModel->setConditionalControlPointsFlag(
 		getConditionalControlPointsFlag());
 	m_mainTREModel->setStudLogoFlag(getStudLogoFlag());
 	m_mainTREModel->setStudTextureFilter(getStudTextureFilter());
-	if (m_flags.defaultColorNumberSet)
+	if (getDefaultColorNumberSetFlag())
 	{
 		colorNumber = m_defaultColorNumber;
 	}
-	else if (m_flags.defaultColorSet)
+	else if (getDefaultColorSetFlag())
 	{
 		colorNumber = palette->getColorNumberForRGB(m_defaultR, m_defaultG,
 			m_defaultB);
@@ -381,10 +389,10 @@ bool LDModelParser::isTorusI(const char *filename)
 bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
 {
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
-		numSegments, m_flags.bfc);
+		numSegments, getBFCFlag());
 	treModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
-		numSegments, m_flags.bfc);
-	if (m_flags.edgeLines)
+		numSegments, getBFCFlag());
+	if (getEdgeLinesFlag())
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments);
@@ -414,7 +422,7 @@ bool LDModelParser::substituteStu22(TREModel *treModel, bool isA, bool bfc)
 		numSegments, bfc);
 	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 6.0f, 0.0f,
 		numSegments, numSegments, bfc);
-	if (m_flags.edgeLines)
+	if (getEdgeLinesFlag())
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
 			numSegments);
@@ -439,7 +447,7 @@ bool LDModelParser::substituteStu23(TREModel *treModel, bool isA, bool bfc)
 		numSegments, bfc);
 	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments,
 		numSegments, bfc);
-	if (m_flags.edgeLines)
+	if (getEdgeLinesFlag())
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
 			numSegments);
@@ -462,7 +470,7 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
 		numSegments, bfc);
 	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 8.0f, 0.0f,
 		numSegments, numSegments, bfc);
-	if (m_flags.edgeLines)
+	if (getEdgeLinesFlag())
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments);
@@ -530,7 +538,7 @@ bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction,
 
 bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction)
 {
-	if (m_flags.edgeLines)
+	if (getEdgeLinesFlag())
 	{
 		int numSegments = getNumCircleSegments(fraction);
 
@@ -580,7 +588,7 @@ int LDModelParser::getNumCircleSegments(float fraction)
 bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 												 TREModel *treModel, bool bfc)
 {
-	if (m_flags.primitiveSubstitution)
+	if (getPrimitiveSubstitutionFlag())
 	{
 		const char *modelName = ldlModel->getName();
 
@@ -784,7 +792,7 @@ void LDModelParser::parseConditionalLine(LDLConditionalLineLine
 										 *conditionalLine,
 										 TREModel *treModel)
 {
-	if (getConditionalLinesFlag())
+	if (shouldLoadConditionalLines())
 	{
 		treModel->addConditionalLine(conditionalLine->getPoints(),
 			conditionalLine->getControlPoints());
@@ -921,17 +929,17 @@ void LDModelParser::setSeamWidth(float seamWidth)
 	m_seamWidth = seamWidth;
 	if (m_seamWidth)
 	{
-		m_flags.seams = true;
+		setSeamsFlag(true);
 	}
 	else
 	{
-		m_flags.seams = false;
+		setSeamsFlag(false);
 	}
 }
 
 float LDModelParser::getSeamWidth(void)
 {
-	if (m_flags.seams)
+	if (getSeamsFlag())
 	{
 		return m_seamWidth;
 	}

@@ -65,7 +65,7 @@ protected:
 	public:
 		~CUIThemesCleanup(void);
 	} sm_cuiThemesCleanup;
-	friend CUIThemesCleanup;
+	friend class CUIThemesCleanup;
 };
 
 #endif // __CUITHEMES_H__

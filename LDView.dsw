@@ -69,6 +69,30 @@ Package=<4>
 
 ###############################################################################
 
+Project: "LangCheck"=.\LangCheck\LangCheck.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "LangEnglishUS"=.\LangEnglishUS\LangEnglishUS.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "TCFoundation"=.\TCFoundation\TCFoundation.dsp - Package Owner=<4>
 
 Package=<5>
@@ -103,6 +127,21 @@ Package=<4>
 {{{
     Begin Project Dependency
     Project_Dep_Name LDLoader
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "WebGrabber"=.\WebGrabber\WebGrabber.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name TCFoundation
     End Project Dependency
 }}}
 

@@ -1,9 +1,9 @@
 #ifndef __CUIWINDOW_H__
 #define __CUIWINDOW_H__
 
+#include <TCFoundation/TCObject.h>
 #include <windows.h>
 //#include <windowsx.h>
-#include <TCFoundation/TCObject.h>
 #include <CUI/CUIDefines.h>
 #include <TCFoundation/TCTypedPointerArray.h>
 
@@ -173,6 +173,8 @@ class CUIExport CUIWindow : public TCObject
 		static BOOL CALLBACK enableNonModalWindow(HWND hWnd,
 			LPARAM hModalDialog);
 		static void calcSystemSizes(void);
+		static void populateAppVersion(void);
+		static HINSTANCE getLanguageModule(void);
 
 		char* windowTitle;
 		int x;
@@ -185,6 +187,7 @@ class CUIExport CUIWindow : public TCObject
 		int maxHeight;
 		HINSTANCE hInstance;
 		HWND hWindow;
+		HMENU hWindowMenu;
 		HDC hdc;
 		CUIWindow* parentWindow;
 		HWND hParentWindow;
@@ -209,7 +212,14 @@ class CUIExport CUIWindow : public TCObject
 		static int systemMaxTrackHeight;
 		static HCURSOR hArrowCursor;
 		static HCURSOR hWaitCursor;
+		static bool appVersionPopulated;
+		static DWORD appVersionMS;
+		static DWORD appVersionLS;
 	private:
+		static void populateLanguageModule(HINSTANCE hDefaultModule);
+		static bool loadLanguageModule(LCID lcid, bool includeSub = true);
+
+		static HINSTANCE hLanguageModule;	// Always use getLanguageModule()
 };
 
 #endif

@@ -470,7 +470,6 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		return defaultValue;
 	}
 #endif // WIN32
-	return defaultValue;
 }
 
 void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)

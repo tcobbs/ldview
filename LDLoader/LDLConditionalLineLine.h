@@ -22,7 +22,7 @@ protected:
 
 	TCVector *m_controlPoints;
 
-	friend LDLFileLine; // Needed because constructors are protected.
+	friend class LDLFileLine; // Needed because constructors are protected.
 };
 
 #endif // __LDLCONDITIONALLINELINE_H__
