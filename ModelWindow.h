@@ -110,6 +110,7 @@ class ModelWindow: public CUIOGLWindow
 		HWND getProgressBar(void) { return hProgressBar; }
 		void setCancelLoad(void) { cancelLoad = true; }
 		bool performHotKey(int hotKeyIndex);
+		LDViewPreferences *getPrefs(void) { return prefs; }
 
 		void orthoView(void);
 

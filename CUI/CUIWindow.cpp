@@ -1668,8 +1668,12 @@ bool CUIWindow::flushDialogModal(HWND hDlg)
 	return flushModal(hDlg, true);
 }
 
-bool CUIWindow::flushModal(HWND hWnd, bool isDialog)
+bool CUIWindow::flushModal(HWND hWnd, bool isDialog, int maxFlush)
 {
+	int i = maxFlush;
+	MSG lastMsg = {0};
+	bool firstMessage = true;
+
 	if (!IsWindowVisible(hWnd))
 	{
 		ShowWindow(hWnd, SW_SHOWNORMAL);
@@ -1688,12 +1692,30 @@ bool CUIWindow::flushModal(HWND hWnd, bool isDialog)
 		{
 			return false;
 		}
+		printf("0x%08x\n", msg.hwnd);
+		printMessageName(msg.message);
 		if (msg.hwnd == hWnd || IsChild(hWnd, msg.hwnd))
 		{
 			if (!isDialog || !IsDialogMessage(hWnd, &msg))
 			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+				// This message checking code is a hack, but for some reason
+				// the toolbar goes into an infinite paint loop if I don't do
+				// it.
+				if (firstMessage || lastMsg.hwnd != msg.hwnd ||
+					lastMsg.message != msg.message)
+				{
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
+				}
+				else
+				{
+					if (msg.message == WM_PAINT)
+					{
+						// More of the hack: break the infinite paint loop by
+						// claiming it's no longer needed.
+						ValidateRect(msg.hwnd, NULL);
+					}
+				}
 			}
 			else
 			{
@@ -1716,6 +1738,12 @@ bool CUIWindow::flushModal(HWND hWnd, bool isDialog)
 		{
 			break;
 		}
+		if (i-- == 0)
+		{
+			break;
+		}
+		firstMessage = false;
+		lastMsg = msg;
 	}
 	return true;
 }

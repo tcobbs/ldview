@@ -119,6 +119,8 @@ protected:
 		TCULong index2, const float *matrix);
 	virtual void transferQuadStrip(int shapeTypeIndex, TCULong color,
 		int offset, int stripCount, const float *matrix, bool remove);
+	virtual void transferTriangleStrip(int shapeTypeIndex, TCULong color,
+		int offset, int stripCount, const float *matrix, bool remove);
 	virtual void transferTriangleFan(int shapeTypeIndex, TCULong color,
 		int offset, int stripCount, const float *matrix, bool remove);
 	virtual void transferTransparent(TCULong color, TREShapeType shapeType,
