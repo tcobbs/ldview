@@ -85,75 +85,11 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\LDMError.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDMFileLine.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDModelParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDrawModel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDrawModelFile.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDrawModelViewer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDrawSubModel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\ModelFile.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLCamera.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLCustomShape.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLEighthSphere.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLFacing.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLShape.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLSmoothingShape.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLStudLogo.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLTorus.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLTorusQ.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\VectorShapeArrayTree.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -161,79 +97,11 @@ SOURCE=.\VectorShapeArrayTree.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\LDMError.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDMFileLine.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDModelParser.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDrawModel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDrawModelFile.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDrawModelViewer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDrawSubModel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ModelFile.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLCamera.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLCustomShape.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLEighthSphere.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLFacing.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLShape.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLSmoothingShape.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLStudLogo.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLTorus.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TGLTorusQ.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\VectorKey.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\VectorShapeArrayTree.h
 # End Source File
 # End Group
 # End Target
