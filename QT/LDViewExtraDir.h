@@ -2,7 +2,6 @@
 #define __LDVIEWEXTRADIR_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-#include <LDLib/LDMError.h>
 #include "ModelViewerWidget.h"
 #include <qfiledialog.h>
 

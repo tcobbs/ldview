@@ -1892,7 +1892,7 @@ void ModelViewerWidget::doSaveDefaultViewAngle(void)
                                                                                                                                                              
     memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
         sizeof(rotationMatrix));
-    TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+    TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
     matrix[12] = 0.0f;
     matrix[13] = 0.0f;
     matrix[14] = 0.0f;
@@ -1928,14 +1928,14 @@ void ModelViewerWidget::doShowViewInfo(void)
         char matrixString[1024];
         char zoomString[128];
         char message[4096];
-        TGLCamera &camera = modelViewer->getCamera();
+        TRECamera &camera = modelViewer->getCamera();
         float defaultDistance = modelViewer->getDefaultDistance();
         float distanceMultiplier = modelViewer->getDistanceMultiplier();
         float cameraDistance;
                                                                                 
         memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
             sizeof(rotationMatrix));
-        TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+        TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
         cleanupMatrix(matrix);
         sprintf(matrixString,
             "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
