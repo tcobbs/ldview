@@ -20,10 +20,13 @@ protected:
 	LDLTriangleLine(const LDLTriangleLine &other);
 	void checkForColinearPoints(void);
 	int getColinearIndex(void);
+	LDLFileLineArray *removePoint(int index);
+	LDLFileLineArray *removeMatchingPoint(void);
 	LDLFileLineArray *removeColinearPoint(void);
 	LDLLineLine *newLineLine(const TCVector &p1, const TCVector &p2);
 
 	int m_colinearIndex;
+	int m_matchingIndex;
 
 	friend LDLFileLine; // Needed because constructors are protected.
 	friend LDLQuadLine; // Needed because constructors are protected, and bad

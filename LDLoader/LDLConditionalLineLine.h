@@ -9,7 +9,7 @@ public:
 	TCObject *copy(void);
 	virtual bool parse(void);
 	virtual int getNumControlPoints(void) const { return 2; }
-	virtual TCVector *getControlPoints(void) { return m_controlPoints; }
+	virtual TCVector *getControlPoints(void) const { return m_controlPoints; }
 	virtual LDLLineType getLineType(void) const
 	{
 		return LDLLineTypeConditionalLine;

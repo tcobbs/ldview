@@ -75,10 +75,17 @@ protected:
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
-	virtual void reportError(LDLError *error);
+	virtual void sendAlert(LDLError *alert);
+	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
+		const char* format, va_list argPtr);
+	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
+		const LDLFileLine &fileLine, const char* format, va_list argPtr);
 	virtual void reportError(LDLErrorType type, const LDLFileLine &fileLine,
 		const char* format, ...);
+	virtual void reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
+		const char* format, ...);
 	virtual void reportError(LDLErrorType type, const char* format, ...);
+	virtual void reportWarning(LDLErrorType type, const char* format, ...);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 
 	static bool verifyLDrawDir(const char *value);

@@ -101,7 +101,7 @@ bool UnMirrorStuds::checkOption(const char *option)
 
 void UnMirrorStuds::ldlErrorCallback(LDLError *error)
 {
-	if (error && (m_verbose || error->getLevel() == 0))
+	if (error && (m_verbose || error->getLevel() == LDLACriticalError))
 	{
 		char *filename = copyString(error->getFilename());
 

@@ -769,7 +769,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 		{
 			if (m_flags.bfcCertify == BFCOnState)
 			{
-				reportError(LDLEBFCWarning, *commentLine,
+				reportWarning(LDLEBFCWarning, *commentLine,
 					"CERTIFY command after other BFC commands.");
 			}
 			else
@@ -789,7 +789,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			}
 			else
 			{
-				reportError(LDLEBFCWarning, *commentLine,
+				reportWarning(LDLEBFCWarning, *commentLine,
 					"Repeat NOCERTIFY command.");
 			}
 		}
@@ -896,7 +896,7 @@ bool LDLModel::parse(void)
 				{
 					if (fileLine->getError())
 					{
-						reportError(fileLine->getError());
+						sendAlert(fileLine->getError());
 					}
 				}
 				else
@@ -921,7 +921,7 @@ bool LDLModel::parse(void)
 						count += replacementCount;
 						if (fileLine->getError())
 						{
-							reportError(fileLine->getError());
+							sendAlert(fileLine->getError());
 						}
 						// ****************************************************
 						// Note the use of continue below.  I really shy away
@@ -933,13 +933,13 @@ bool LDLModel::parse(void)
 					}
 					else
 					{
-						reportError(fileLine->getError());
+						sendAlert(fileLine->getError());
 					}
 				}
 			}
 			else
 			{
-				reportError(fileLine->getError());
+				sendAlert(fileLine->getError());
 			}
 			if (fileLine->isActionLine())
 			{
@@ -999,43 +999,73 @@ bool LDLModel::parse(void)
 	}
 }
 
-void LDLModel::reportError(LDLError *error)
+void LDLModel::sendAlert(LDLError *alert)
 {
-	if (error)
+	if (alert)
 	{
-		TCAlertManager::sendAlert(error);
-/*
-		printf("Error on line %d in: %s\n", error->getLineNumber(),
-			error->getFilename());
-		indentPrintf(4, "%s\n", error->getMessage());
-		indentPrintf(4, "%s\n", error->getFileLine());
-*/
+		TCAlertManager::sendAlert(alert);
 	}
+}
+
+void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
+						 const char* format, va_list argPtr)
+{
+	LDLError *alert;
+
+	alert = newError(type, format, argPtr);
+	alert->setLevel(level);
+	sendAlert(alert);
+	alert->release();
+}
+
+void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
+						 const LDLFileLine &fileLine, const char* format,
+						 va_list argPtr)
+{
+	LDLError *alert;
+
+	alert = newError(type, fileLine, format, argPtr);
+	alert->setLevel(level);
+	sendAlert(alert);
+	alert->release();
 }
 
 void LDLModel::reportError(LDLErrorType type, const LDLFileLine &fileLine,
 						   const char* format, ...)
 {
 	va_list argPtr;
-	LDLError *error;
 
 	va_start(argPtr, type);
-	error = newError(type, fileLine, format, argPtr);
+	sendAlert(type, LDLAError, fileLine, format, argPtr);
 	va_end(argPtr);
-	reportError(error);
-	error->release();
+}
+
+void LDLModel::reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
+							 const char* format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, type);
+	sendAlert(type, LDLAWarning, fileLine, format, argPtr);
+	va_end(argPtr);
 }
 
 void LDLModel::reportError(LDLErrorType type, const char* format, ...)
 {
 	va_list argPtr;
-	LDLError *error;
 
 	va_start(argPtr, type);
-	error = newError(type, format, argPtr);
+	sendAlert(type, LDLAError, format, argPtr);
 	va_end(argPtr);
-	reportError(error);
-	error->release();
+}
+
+void LDLModel::reportWarning(LDLErrorType type, const char* format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, type);
+	sendAlert(type, LDLAWarning, format, argPtr);
+	va_end(argPtr);
 }
 
 TCDictionary *LDLModel::getLoadedModels(void)

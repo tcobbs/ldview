@@ -23,6 +23,8 @@ protected:
 	void swapPoints(int index1, int index2);
 	void rotPoints(int index1, int index2, int index3);
 	int getColinearIndex(void);
+	LDLFileLineArray *removePoint(int index);
+	LDLFileLineArray *removeMatchingPoint(void);
 	LDLFileLineArray *removeColinearPoint(void);
 	LDLFileLineArray *splitConcaveQuad(void);
 	LDLFileLineArray *splitConcaveQuad(int index1, int index2, int index3,
@@ -35,6 +37,7 @@ protected:
 		const TCVector &p3);
 
 	int m_colinearIndex;
+	int m_matchingIndex;
 
 	friend LDLFileLine; // Needed because constructors are protected.
 };

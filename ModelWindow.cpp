@@ -66,7 +66,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 windowShown(false),
 			 hCurrentDC(NULL),
 			 hCurrentGLRC(NULL),
-			 errorWindowResizer(NULL)
+			 errorWindowResizer(NULL),
+			 savingFromCommandLine(false)
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
@@ -2332,12 +2333,19 @@ void ModelWindow::cleanupPBuffer(void)
 			{
 				wglDeleteContext(hPBufferGLRC);
 				hPBufferGLRC = NULL;
-				makeCurrent();
-				modelViewer->setWidth(width);
-				modelViewer->setHeight(height);
-				modelViewer->recompile();
-				modelViewer->unpause();
-				modelViewer->setup();
+				if (!savingFromCommandLine)
+				{
+					// If we're saving from the command line, there's no need to
+					// put things back for regular rendering (particularly
+					// recompiling the model, which takes quite a bit of extra
+					// time.
+					makeCurrent();
+					modelViewer->setWidth(width);
+					modelViewer->setHeight(height);
+					modelViewer->recompile();
+					modelViewer->unpause();
+					modelViewer->setup();
+				}
 			}
 			wglReleasePbufferDCARB(hPBuffer, hPBufferDC);
 			hPBufferDC = NULL;
@@ -3569,10 +3577,11 @@ bool ModelWindow::saveSnapshot(void)
 	return saveSnapshot(saveFilename);
 }
 
-bool ModelWindow::saveSnapshot(char *saveFilename)
+bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine)
 {
 	bool externalFilename = saveFilename[0] != 0;
 
+	savingFromCommandLine = fromCommandLine;
 	if (saveFilename[0])
 	{
 		if (stringHasCaseInsensitiveSuffix(saveFilename, ".png"))

@@ -10,7 +10,7 @@ LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
 	m_filename(copyString(filename)),
 	m_fileLine(copyString(fileLine)),
 	m_lineNumber(lineNumber),
-	m_level(1)
+	m_level(LDLAError)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLError");
@@ -37,25 +37,23 @@ const char *LDLError::getTypeName(void)
 	case LDLEParse:
 		return "Parse error";
 	case LDLEFileNotFound:
-		return "File not found error";
+		return "File not found";
 	case LDLEMatrix:
-		return "Singular matrix warning";
-	case LDLEMatrixFailed:
-		return "Singular matrix error";
+		return "Singular matrix";
 	case LDLEPartDeterminant:
-		return "Part transformed non-uniformly error";
+		return "Part transformed non-uniformly";
 	case LDLENonFlatQuad:
-		return "Non-flat quad error";
+		return "Non-flat quad";
 	case LDLEConcaveQuad:
-		return "Concave quad warning";
+		return "Concave quad";
 	case LDLEConcaveQuadSplit:
 		return "Error splitting concave quad";
+	case LDLEMatchingPoints:
+		return "Identical vertices";
 	case LDLEOpenGL:
 		return "OpenGL error";
-	case LDLEColor:
-		return "Error parsing color";
 	case LDLEColinear:
-		return "Co-linear points warning";
+		return "Co-linear points";
 	case LDLEBFCWarning:
 		return "BFC warning";
 	case LDLEBFCError:

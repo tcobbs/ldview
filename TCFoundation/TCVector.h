@@ -39,6 +39,7 @@ public:
 	TCVector& normalize(void) {return *this *= 1.0f/length();}
 	float get(int i) const { return vector[i];}
 	bool approxEquals(const TCVector &right, float epsilon) const;
+	bool exactlyEquals(const TCVector &right) const;
 
 	// Overloaded Operators
 	TCVector operator*(const TCVector&) const;

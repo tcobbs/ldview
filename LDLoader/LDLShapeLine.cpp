@@ -37,7 +37,7 @@ void LDLShapeLine::dealloc(void)
 }
 
 int LDLShapeLine::middleIndex(const TCVector &p1, const TCVector &p2,
-							 const TCVector &p3)
+							 const TCVector &p3) const
 {
 	TCVector min = p1;
 	TCVector max = p1;
@@ -112,4 +112,32 @@ bool LDLShapeLine::isXZPlanar(const float *matrix) const
 		}
 	}
 	return true;
+}
+
+bool LDLShapeLine::getMatchingPoints(int *index1, int *index2)
+{
+	int i, j;
+	int count = getNumPoints();
+
+	for (i = 0; i < count - 1; i++)
+	{
+		for (j = i + 1; j < count; j++)
+		{
+			if (m_points[i].exactlyEquals(m_points[j]))
+			{
+				if (index1)
+				{
+					*index1 = i;
+				}
+				if (index2)
+				{
+					*index2 = j;
+				}
+				setWarning(LDLEMatchingPoints,
+					"Vertices %d and %d are the same.", i + 1, j + 1);
+				return true;
+			}
+		}
+	}
+	return false;
 }

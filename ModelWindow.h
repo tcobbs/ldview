@@ -79,7 +79,8 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool print(void);
 		virtual bool pageSetup(void);
 		virtual bool saveSnapshot(void);
-		virtual bool saveSnapshot(char *saveFilename);
+		virtual bool saveSnapshot(char *saveFilename,
+			bool fromCommandLine = false);
 		virtual void setViewMode(LDVViewMode mode);
 		LDVViewMode getViewMode(void) { return viewMode; }
 		LDrawModelViewer* getModelViewer(void) { return modelViewer; }
@@ -346,6 +347,7 @@ class ModelWindow: public CUIOGLWindow
 		HDC hCurrentDC;
 		HGLRC hCurrentGLRC;
 		CUIWindowResizer *errorWindowResizer;
+		bool savingFromCommandLine;
 };
 
 #endif

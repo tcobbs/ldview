@@ -17,7 +17,7 @@ LDLUnknownLine::~LDLUnknownLine(void)
 
 bool LDLUnknownLine::parse(void)
 {
-	setError(LDLEParse, "Couldn't parse line.");
+	setError(LDLEParse, "Error parsing line.");
 	return false;
 }
 

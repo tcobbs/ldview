@@ -101,7 +101,7 @@ bool LDLModelLine::parse(void)
 				if (determinant == 0.0f)
 				{
 					// If it's still zero, we failed to fix it.
-					setError(LDLEMatrixFailed,
+					setError(LDLEMatrix,
 						"Singular matrix that cannot be fixed");
 				}
 			}
@@ -109,7 +109,7 @@ bool LDLModelLine::parse(void)
 			{
 				// We don't want to even try to fix if the sub-model isn't
 				// XZ-planar at Y == 0.
-				setError(LDLEMatrixFailed,
+				setError(LDLEMatrix,
 					"Singular matrix reference to non-flat sub-model");
 			}
 			if (determinant == 0.0f)
@@ -128,7 +128,7 @@ bool LDLModelLine::parse(void)
 				// If the determinant is not either 1 or -1, they applied a
 				// non-uniform scale.  Note that we are being EXTREMELY
 				//  loose with this "equality" check (within 0.05).
-				setError(LDLEPartDeterminant,
+				setWarning(LDLEPartDeterminant,
 					"Part transformed non-uniformly.");
 			}
 		}
@@ -271,7 +271,7 @@ float LDLModelLine::tryToFixPlanarMatrix(void)
 			determinant = TCVector::determinant(m_matrix);
 			if (determinant != 0.0f)
 			{
-				setError(LDLEMatrix, "Matrix row %d all zeros", i);
+				setWarning(LDLEMatrix, "Matrix row %d all zeros", i);
 				return determinant;
 			}
 		}
@@ -286,7 +286,7 @@ float LDLModelLine::tryToFixPlanarMatrix(void)
 			determinant = TCVector::determinant(m_matrix);
 			if (determinant != 0.0f)
 			{
-				setError(LDLEMatrix, "Matrix Y column all zeros", i);
+				setWarning(LDLEMatrix, "Matrix Y column all zeros", i);
 				return determinant;
 			}
 		}
