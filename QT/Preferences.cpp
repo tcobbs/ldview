@@ -1381,6 +1381,32 @@ void Preferences::doDelPreferenceSet()
 
 void Preferences::doHotkeyPreferenceSet()
 {
+	hotKeyIndex = getCurrentHotKey();
+
+	if (hotKeyIndex == -1)
+	{
+		hotKeyIndex++;
+	}
+	else if (hotKeyIndex == 0)
+	{
+		hotKeyIndex = 10;
+	}
+	QStringList lst;
+	lst << TCLocalStrings::get("<None>") << "0" << "1" << "2" << "3" << 
+	"4" << "5" << "6" << "7" << "8" << "9";
+	bool ok;
+	QString res = QInputDialog::getItem(getSelectedPrefSet(), 
+			"Select a hot key to automatically select this Preference Set:",
+			lst, hotKeyIndex, FALSE, &ok, panel);
+	if (ok)
+	{
+		hotKeyIndex = lst.findIndex(res.ascii());
+		if(hotKeyIndex != -1)
+		{
+			saveCurrentHotKey();
+		}
+	}
+	
 }
 
 char *Preferences::getHotKey(int index)
