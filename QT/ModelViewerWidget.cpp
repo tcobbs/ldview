@@ -2173,6 +2173,11 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 {
 	lock();
+	if(fullscreen && (event->key()==Qt::Key_Escape))
+	{
+		event->accept();
+		doViewFullScreen();
+	}
 	if (viewMode == LDVViewFlythrough)
 	{
 		processKey(event, false);
