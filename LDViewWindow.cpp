@@ -2362,6 +2362,9 @@ void LDViewWindow::updateExtraDirsEnabled(void)
 	}
 	else
 	{
+		// There's a selection; therefore it can be deleted.
+		SendMessage(hExtraDirsToolbar, TB_SETSTATE, 43,
+			MAKELONG(TBSTATE_ENABLED, 0));
 		if (index == 0)
 		{
 			// Can't move up from the top

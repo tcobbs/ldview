@@ -80,11 +80,11 @@ STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "About LDView"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
-    LTEXT           "LDView %s (15 Aug, 2004)\n%s",IDC_VERSION_LABEL,50,10,
+    LTEXT           "LDView %s (06 Sep, 2004)\n%s",IDC_VERSION_LABEL,50,10,
                     135,19
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",
                     IDC_STATIC,15,40,215,20
@@ -909,14 +909,12 @@ IDB_PARSE               BITMAP  DISCARDABLE     "Icons\\error_parse.bmp"
 IDB_FNF                 BITMAP  DISCARDABLE     "Icons\\error_fnf.bmp"
 IDB_MATCHING_POINTS     BITMAP  DISCARDABLE     "Icons\\error_matching_points.bmp"
 IDB_CONCAVE_QUAD        BITMAP  DISCARDABLE     "Icons\\error_concave_quad.bmp"
-IDB_CONCAVE_QUAD_SPLIT  BITMAP  DISCARDABLE     "Icons\\error_concave_quad_split.bmp"
 IDB_OPENGL              BITMAP  DISCARDABLE     "Icons\\error_opengl.bmp"
 IDB_DETERMINANT         BITMAP  DISCARDABLE     "Icons\\error_determinant.bmp"
 IDB_INFO                BITMAP  DISCARDABLE     "Icons\\error_info.bmp"
 IDB_PARSE_MASK          BITMAP  DISCARDABLE     "Icons\\error_parse_mask.bmp"
 IDB_CONCAVE_QUAD_MASK   BITMAP  DISCARDABLE     "Icons\\error_concave_quad_mask.bmp"
 IDB_MATCHING_POINTS_MASK BITMAP  DISCARDABLE     "Icons\\error_matching_points_mask.bmp"
-IDB_CONCAVE_QUAD_SPLIT_MASK BITMAP  DISCARDABLE     "Icons\\error_concave_quad_split_mask.bmp"
 IDB_DETERMINANT_MASK    BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.bmp"
 IDB_FNF_MASK            BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
 IDB_INFO_MASK           BITMAP  DISCARDABLE     "Icons\\error_info_mask.bmp"
@@ -930,6 +928,8 @@ IDB_NON_FLAT_QUAD_MASK  BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask
 IDB_COLINEAR            BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
 IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
 IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
+IDB_VERTEX_ORDER        BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
+IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -938,8 +938,8 @@ IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,9,99,1
- PRODUCTVERSION 2,9,99,1
+ FILEVERSION 2,9,99,2
+ PRODUCTVERSION 2,9,99,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -957,14 +957,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", " \0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.0 Alpha 1\0"
+            VALUE "FileVersion", "3.0 Alpha 2\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2000-2004 Travis Cobbs\0"
             VALUE "LegalTrademarks", " \0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", " \0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.0 Alpha 1\0"
+            VALUE "ProductVersion", "3.0 Alpha 2\0"
             VALUE "SpecialBuild", "\0"
         END
     END

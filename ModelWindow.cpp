@@ -1435,7 +1435,7 @@ void ModelWindow::populateErrorInfos(void)
 		int i;
 
 		errorInfos = new ErrorInfoArray;
-		for (i = LDLEGeneral; i <= LDLEMPDError; i++)
+		for (i = LDLEFirstError; i <= LDLELastError; i++)
 		{
 			ErrorInfo *errorInfo = new ErrorInfo;
 			LDLErrorType type = (LDLErrorType)i;
@@ -1534,7 +1534,9 @@ void ModelWindow::setupErrorWindow(void)
 	DeleteObject(hMask);
 
 	// Not sure this error is possible.  I can't figure out how to make it
-	// happen.
+	// happen.  It's now joined with the other one; an error if it ever happens,
+	// a warning for the lesser problem.
+/*
 	hbmp = LoadBitmap(getLanguageModule(),
 		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT));
 	hMask = LoadBitmap(getLanguageModule(),
@@ -1542,6 +1544,7 @@ void ModelWindow::setupErrorWindow(void)
 	errorImageIndices[LDLEConcaveQuadSplit] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
+*/
 
 	hbmp = LoadBitmap(getLanguageModule(),
 		MAKEINTRESOURCE(IDB_MATCHING_POINTS));
@@ -1554,6 +1557,13 @@ void ModelWindow::setupErrorWindow(void)
 	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLINEAR));
 	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLINEAR_MASK));
 	errorImageIndices[LDLEColinear] = ImageList_Add(himl, hbmp, hMask);
+	DeleteObject(hbmp);
+	DeleteObject(hMask);
+
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_VERTEX_ORDER));
+	hMask = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_VERTEX_ORDER_MASK));
+	errorImageIndices[LDLEVertexOrder] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 

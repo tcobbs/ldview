@@ -9,19 +9,21 @@ class TCStringArray;
 typedef enum
 {
 	LDLEGeneral,
+	LDLEFirstError = LDLEGeneral,
 	LDLEParse,
 	LDLEFileNotFound,
 	LDLEMatrix,
 	LDLEPartDeterminant,
 	LDLENonFlatQuad,
 	LDLEConcaveQuad,
-	LDLEConcaveQuadSplit,
+	LDLEVertexOrder,
 	LDLEMatchingPoints,
 //	LDLEOpenGL,
 	LDLEColinear,
 	LDLEBFCWarning,
 	LDLEBFCError,
-	LDLEMPDError
+	LDLEMPDError,
+	LDLELastError = LDLEMPDError
 } LDLErrorType;
 
 typedef enum

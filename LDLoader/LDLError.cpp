@@ -52,8 +52,8 @@ const char *LDLError::getTypeName(LDLErrorType type)
 		return "Non-flat quad";
 	case LDLEConcaveQuad:
 		return "Concave quad";
-	case LDLEConcaveQuadSplit:
-		return "Error splitting concave quad";
+//	case LDLEConcaveQuadSplit:
+//		return "Error splitting concave quad";
 	case LDLEMatchingPoints:
 		return "Identical vertices";
 //	case LDLEOpenGL:
@@ -66,6 +66,8 @@ const char *LDLError::getTypeName(LDLErrorType type)
 		return "BFC error";
 	case LDLEMPDError:
 		return "MPD error";
+	case LDLEVertexOrder:
+		return "Bad vertex sequence";
 	default:
 		return "Unknown error";
 	}
