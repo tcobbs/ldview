@@ -501,6 +501,29 @@ void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 	}
 }
 
+void LDViewPreferences::setUseLighting(bool value)
+{
+	if (value != useLighting)
+	{
+		useLighting = value;
+		modelViewer->setUseLighting(useLighting);
+		TCUserDefaults::setLongForKey(useLighting ? 1 : 0, LIGHTING_KEY);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK,
+				useLighting, 0);
+			if (useLighting)
+			{
+				enableLighting();
+			}
+			else
+			{
+				disableLighting();
+			}
+		}
+	}
+}
+
 int LDViewPreferences::run(void)
 {
 	bool wasPaused = true;

@@ -443,6 +443,8 @@ void LDViewWindow::populateTbButtonInfos(void)
 			7, lighting);
 		addTbButtonInfo(TCLocalStrings::get("ResetSelectView"), ID_VIEWANGLE,
 			-1, 6, TBSTYLE_DROPDOWN);
+		addTbButtonInfo(TCLocalStrings::get("Preferences"), ID_EDIT_PREFERENCES,
+			-1, 8);
 	}
 }
 
@@ -3026,7 +3028,7 @@ void LDViewWindow::doLighting(void)
 {
 	if (doToolbarCheck(lighting, IDC_LIGHTING))
 	{
-//		prefs->setUseLighting(lighting);
+		prefs->setUseLighting(lighting);
 		modelWindow->forceRedraw();
 	}
 }
