@@ -315,7 +315,7 @@
     </connection>
 </connections>
 <includes>
-    <include location="global" impldecl="in implementation">LDLib/LDMError.h</include>
+    <include location="global" impldecl="in implementation">LDLoader/LDLError.h</include>
     <include location="local" impldecl="in implementation">LDViewErrors.h</include>
     <include location="local" impldecl="in implementation">ErrorPanel.ui.h</include>
 </includes>

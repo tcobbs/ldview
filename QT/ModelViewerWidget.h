@@ -3,6 +3,7 @@
 
 #include <qgl.h>
 #include <qdatetime.h>
+#include <TCFoundation/TCObject.h>
 
 #include "Preferences.h"
 
@@ -16,16 +17,18 @@ class OpenGLExtensionsPanel;
 class AboutPanel;
 class QFileDialog;
 class LDViewErrors;
-class LDMError;
 class QMenuBar;
 class QPopupMenu;
 class QFileInfo;
 class QAction;
 class TCStringArray;
+class LDLError;
+class TCProgressAlert;
 
 #define MAX_MOUSE_BUTTONS 10
 
-class ModelViewerWidget : public QGLWidget
+// Ahhh!!! Nobody said anything about multiple inheritance!!!!
+class ModelViewerWidget : public QGLWidget, TCObject
 {
 	Q_OBJECT
 public:
@@ -104,7 +107,7 @@ protected:
 	bool verifyLDrawDir(char *value);
 	char *getLDrawDir(void);
 	bool promptForLDrawDir(void);
-	int errorCallback(LDMError *error);
+	int errorCallback(LDLError *error);
 	void clearErrors(void);
 	void preLoad(void);
 	void postLoad(void);
@@ -123,12 +126,14 @@ protected:
 	void setViewMode(LDVViewMode value);
 	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
+	void ldlErrorCallback(LDLError *error);
+	void progressAlertCallback(TCProgressAlert *alert);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);
-	static int staticProgressCallback(char *message, float progress,
-		void *userData);
-	static int staticErrorCallback(LDMError *error, void *userData);
+//	static int staticProgressCallback(char *message, float progress,
+//		void *userData);
+//	static int staticErrorCallback(LDLError *error, void *userData);
 
 	LDrawModelViewer *modelViewer;
 	bool mouseButtonsDown[MAX_MOUSE_BUTTONS];

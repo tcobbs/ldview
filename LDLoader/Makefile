@@ -2,7 +2,7 @@ CC = g++
 RM = rm -f
 RMDIR = rmdir --ignore-fail-on-non-empty
 AR = ar rcs
-MAKEDEPEND = gcc -M
+MAKEDEPEND = gcc -MM
 
 OBJDIR = .obj
 
@@ -25,7 +25,7 @@ CCSRCS = \
 	LDLShapeLine.cpp \
 	LDLTriangleLine.cpp \
 	LDLUnknownLine.cpp
-EXECS= libLDraw.a
+EXECS= libLDLoader.a
 SRCS = $(CSRCS) $(CCSRCS)
 COBJS = $(CSRCS:.c=.o)
 CCOBJS = $(CCSRCS:.cpp=.o)
@@ -49,16 +49,16 @@ LIBS = -lm -lTCFoundation $(HOSTLIBS)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDE) -c $<
 
-all:	$(OBJDIR) libLDraw.a
+all:	$(OBJDIR) libLDLoader.a
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then	\
 		mkdir $(OBJDIR);				\
 	fi
 
-libLDraw.a:	$(OBJS)
-	rm -f libLDraw.a
-	cd $(OBJDIR); $(AR) ../libLDraw.a $(OBJS)
+libLDLoader.a:	$(OBJS)
+	rm -f libLDLoader.a
+	cd $(OBJDIR); $(AR) ../libLDLoader.a $(OBJS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
@@ -70,6 +70,6 @@ depend:
 clean:
 	cd $(OBJDIR); $(RM) $(OBJS)
 	$(RMDIR) $(OBJDIR)
-	$(RM) libLDraw.a core
+	$(RM) libLDLoader.a core
 
 -include .depend

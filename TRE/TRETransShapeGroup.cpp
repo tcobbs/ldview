@@ -2,6 +2,7 @@
 #include "TREVertexArray.h"
 #include "TREVertexStore.h"
 #include <TCFoundation/TCMacros.h>
+#include <stdlib.h>
 
 TRETransShapeGroup::TRETransShapeGroup(void)
 	:m_sortedTriangles(NULL)

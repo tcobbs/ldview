@@ -191,4 +191,4 @@ protected:
 	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
 };
 
-#endif __TRESHAPEGROUP_H__
+#endif // __TRESHAPEGROUP_H__

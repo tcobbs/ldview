@@ -2,7 +2,7 @@ CC = g++
 RM = rm -f
 RMDIR = rmdir --ignore-fail-on-non-empty
 AR = ar rcs
-MAKEDEPEND = gcc -M
+MAKEDEPEND = gcc -MM
 
 OBJDIR = .obj
 
@@ -11,6 +11,7 @@ VPATH = $(OBJDIR)
 CSRCS = 
 CCSRCS = \
 	TCArray.cpp \
+	TCAlert.cpp \
 	TCAlertManager.cpp \
 	TCAutoreleasePool.cpp \
 	TCBinaryObjectTree.cpp \

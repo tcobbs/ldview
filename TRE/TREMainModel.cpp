@@ -3,6 +3,7 @@
 #include "TRETransShapeGroup.h"
 #include "TREGL.h"
 #include <math.h>
+#include <string.h>
 
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCProgressAlert.h>
@@ -86,13 +87,13 @@ TREMainModel::TREMainModel(const TREMainModel &other)
 		other.m_coloredStudVertexStore)),
 	m_transVertexStore((TREVertexStore *)TCObject::copy(
 		other.m_transVertexStore)),
-	m_mainFlags(other.m_mainFlags),
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor),
 	m_maxRadiusSquared(other.m_maxRadiusSquared),
 	m_edgeLineWidth(other.m_edgeLineWidth),
 	m_abort(false),
-	m_studTextureFilter(other.m_studTextureFilter)
+	m_studTextureFilter(other.m_studTextureFilter),
+	m_mainFlags(other.m_mainFlags)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -508,7 +509,7 @@ void TREMainModel::drawLines(void)
 		enableLineSmooth();
 		// Smooth lines produce odd effects on the edge of transparent surfaces
 		// when depth writing is enabled, so disable.
-		glDepthMask(FALSE);
+		glDepthMask(GL_FALSE);
 	}
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
@@ -557,7 +558,7 @@ void TREMainModel::drawLines(void)
 	{
 		// Note that if we're in wireframe mode, smoothing was enabled
 		// elsewhere, and will therefore be disabled eleswhere.
-		glDepthMask(TRUE);
+		glDepthMask(GL_TRUE);
 		// We use glPushAttrib() when we enable line smoothing.
 		glPopAttrib();
 	}
@@ -641,7 +642,8 @@ float TREMainModel::getMaxRadiusSquared(const TCVector &center)
 		TCVector::initIdentityMatrix(identityMatrix);
 
 		m_center = center;
-		scanPoints(this, (TREScanPointCallback)scanMaxRadiusSquaredPoint,
+		scanPoints(this,
+			(TREScanPointCallback)&TREMainModel::scanMaxRadiusSquaredPoint,
 			identityMatrix);
 	}
 	return m_maxRadiusSquared;
@@ -842,7 +844,7 @@ void TREMainModel::drawTransparent(void)
 			{
 				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 			}
-			glDepthMask(FALSE);
+			glDepthMask(GL_FALSE);
 		}
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -881,7 +883,7 @@ void TREMainModel::drawTransparent(void)
 			{
 				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 			}
-			glDepthMask(TRUE);
+			glDepthMask(GL_TRUE);
 		}
 	}
 }

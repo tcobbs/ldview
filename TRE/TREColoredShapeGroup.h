@@ -33,4 +33,4 @@ protected:
 		TCULongArray *indices, const float *matrix);
 };
 
-#endif __TRECOLOREDSHAPEGROUP_H__
+#endif // __TRECOLOREDSHAPEGROUP_H__

@@ -327,7 +327,11 @@ void TREModel::draw(TREMSection section)
 	draw(section, false);
 }
 
+#ifdef _DEBUG
 void TREModel::checkGLError(char *msg)
+#else // _DEBUG
+void TREModel::checkGLError(char *)
+#endif // _DEBUG
 {
 	GLenum errorCode;
 	
@@ -361,10 +365,7 @@ void TREModel::checkGLError(char *msg)
 		}
 #ifdef _DEBUG
 		debugPrintf("%s: %s\n", msg, errorString);
-#else
-		// Get rid of unreferenced parameter warning.
-		msg;
-#endif
+#endif // _DEBUG
 //		reportError("OpenGL error:\n%s: %s\n", LDMEOpenGL, msg, errorString);
 	}
 }
@@ -1379,7 +1380,7 @@ void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
 
 		angle = 2.0f * (float)M_PI / numSegments * i + (float)M_PI / 2.0f;
 		setCirclePoint(angle, radius, center, points[i * 2]);
-		top[1] = abs(points[i * 2][0]);
+		top[1] = myabs(points[i * 2][0]);
 		setCirclePoint(angle, radius, top, points[i * 2 + 1]);
 		if (height == 0.0f)
 		{
@@ -2440,7 +2441,8 @@ void TREModel::calculateBoundingBox(void)
 		m_boundingMax[0] = -1e10f;
 		m_boundingMax[1] = -1e10f;
 		m_boundingMax[2] = -1e10f;
-		scanPoints(this, (TREScanPointCallback)scanBoundingBoxPoint,
+		scanPoints(this,
+			(TREScanPointCallback)&TREModel::scanBoundingBoxPoint,
 			identityMatrix);
 		m_flags.boundingBox = true;
 	}

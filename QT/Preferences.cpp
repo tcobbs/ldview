@@ -1,8 +1,8 @@
 #include "Preferences.h"
 #include "PreferencesPanel.h"
 #include "ModelViewerWidget.h"
-#include <LDLib/LDrawModel.h>
-#include <LDLib/TGLShape.h>
+#include <LDLoader/LDLModel.h>
+#include <LDLoader/LDLPalette.h>
 #include "TCColorButton.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
@@ -69,7 +69,7 @@ void Preferences::doGeneralApply(void)
 	}
 	cTemp = panel->backgroundColorButton->color();
 	cTemp.rgb(&br, &bg, &bb);
-	iTemp = TGLShape::colorForRGBA(br, bg, bb, 255);
+	iTemp = LDLPalette::colorForRGBA(br, bg, bb, 255);
 	if (iTemp != backgroundColor)
 	{
 		backgroundColor = iTemp;
@@ -82,7 +82,7 @@ void Preferences::doGeneralApply(void)
 	}
 	cTemp = panel->defaultColorButton->color();
 	cTemp.rgb(&dr, &dg, &db);
-	iTemp = TGLShape::colorForRGBA(dr, dg, db, 255);
+	iTemp = LDLPalette::colorForRGBA(dr, dg, db, 255);
 	if (iTemp != defaultColor)
 	{
 		defaultColor = iTemp;
@@ -100,7 +100,10 @@ void Preferences::doGeneralApply(void)
 	{
 		modelViewer->setLineSmoothing(lineSmoothing);
 		modelViewer->setBackgroundRGB(br, bg, bb);
-		modelViewer->setDefaultRGB((TCByte)dr, (TCByte)dg, (TCByte)db);
+		// TC TODO: last param should be user-setable flag that decides
+		// whether or not the default color is transparent.
+		modelViewer->setDefaultRGB((TCByte)dr, (TCByte)dg, (TCByte)db,
+			false);
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
 	}
 }
@@ -773,13 +776,13 @@ char *Preferences::getLastOpenPath(char *pathKey)
 	return path;
 }
 
-void Preferences::setLastOpenPath(const char *path, char *pathKey = NULL)
+void Preferences::setLastOpenPath(const char *path, char *pathKey)
 {
 	if (!pathKey)
 	{
 		pathKey = LAST_OPEN_PATH_KEY;
 	}
-	TCUserDefaults::setStringForKey(path, pathKey, NULL, false);
+	TCUserDefaults::setStringForKey(path, pathKey, false);
 }
 
 char *Preferences::getLDrawDir(void)
@@ -1000,6 +1003,8 @@ void Preferences::enableStereo(void)
 		break;
 	case LDVStereoParallel:
 		panel->parallelStereoButton->toggle();
+		break;
+	default:
 		break;
 	}
 }

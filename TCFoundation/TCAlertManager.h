@@ -46,4 +46,4 @@ protected:
 	friend class TCAlertManagerCleanup;
 };
 
-#endif __TCALERTMANAGER_H__
+#endif // __TCALERTMANAGER_H__

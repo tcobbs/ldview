@@ -146,8 +146,8 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 
 					if (isTransparent(color, false))
 					{
-						TCVector vertices[3];
-						TCVector normals[3];
+//						TCVector vertices[3];
+//						TCVector normals[3];
 
 						transferTriangle(color, index, (*indices)[i + 1],
 							(*indices)[i + 2], matrix);

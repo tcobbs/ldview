@@ -656,7 +656,7 @@ void LDrawModelViewer::setupBottomViewAngle(void)
 
 void LDrawModelViewer::ldlErrorCallback(LDLError *error)
 {
-	static int errorCount = 0;
+//	static int errorCount = 0;
 
 	if (error)
 	{
@@ -2738,7 +2738,8 @@ void LDrawModelViewer::zoomToFit(void)
 		margin = getWideLineMargin() * 2.0f;
 		preCalcCamera();
 		_numPoints = 0;
-		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
+		mainTREModel->scanPoints(this,
+			(TREScanPointCallback)&LDrawModelViewer::scanCameraPoint,
 			transformationMatrix);
 		printf("num points: %d\n", _numPoints);
 		char message[1024];
