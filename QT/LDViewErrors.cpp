@@ -266,6 +266,7 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
         {
             case LDLEGeneral:
             case LDLEBFCError:
+			case LDLEBFCWarning:
             case LDLEMPDError:
             case LDLEParse:
                     item->setPixmap(0,
@@ -298,8 +299,6 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
             case LDLENonFlatQuad:
                     item->setPixmap(0,
                         QPixmap::fromMimeSource( "error_non_flat_quad.png"));
-                    break;
-            case LDLEBFCWarning:
                     break;
             case LDLEPartDeterminant:
                     item->setPixmap(0,
