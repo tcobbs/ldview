@@ -5,20 +5,15 @@
 LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
 				   const char *fileLine, int lineNumber,
 				   TCStringArray *extraInfo)
-		 :type(type),
-		  message(copyString(message)),
-		  filename(copyString(filename)),
-		  fileLine(copyString(fileLine)),
-		  lineNumber(lineNumber),
-		  extraInfo(extraInfo)
+	:TCAlert(LDLError::alertClass(), message, extraInfo),
+	m_type(type),
+	m_filename(copyString(filename)),
+	m_fileLine(copyString(fileLine)),
+	m_lineNumber(lineNumber)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLError");
 #endif
-	if (extraInfo)
-	{
-		extraInfo->retain();
-	}
 }
 
 LDLError::~LDLError(void)
@@ -27,12 +22,7 @@ LDLError::~LDLError(void)
 
 void LDLError::dealloc(void)
 {
-	delete message;
-	delete filename;
-	delete fileLine;
-	if (extraInfo)
-	{
-		extraInfo->release();
-	}
-	TCObject::dealloc();
+	delete m_filename;
+	delete m_fileLine;
+	TCAlert::dealloc();
 }

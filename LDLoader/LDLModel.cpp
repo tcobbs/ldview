@@ -5,11 +5,20 @@
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCAlertManager.h>
+
+#define LDL_LOWRES_PREFIX "LDL-LOWRES:"
 
 char *LDLModel::sm_systemLDrawDir = NULL;
 int LDLModel::sm_modelCount = 0;
+LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 
-#define LDL_LOWRES_PREFIX "LDL-LOWRES:"
+LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
+{
+	delete LDLModel::sm_systemLDrawDir;
+	LDLModel::sm_systemLDrawDir = NULL;
+}
+
 
 LDLModel::LDLModel(void)
 	:m_filename(NULL),
@@ -857,10 +866,13 @@ void LDLModel::reportError(LDLError *error)
 {
 	if (error)
 	{
+		TCAlertManager::sendAlert(error);
+/*
 		printf("Error on line %d in: %s\n", error->getLineNumber(),
 			error->getFilename());
 		indentPrintf(4, "%s\n", error->getMessage());
 		indentPrintf(4, "%s\n", error->getFileLine());
+*/
 	}
 }
 
