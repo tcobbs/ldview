@@ -13,6 +13,7 @@ typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 
 struct TREVertex;
 class TREVertexStore;
+class TREMainModel;
 class TCVector;
 
 typedef enum
@@ -59,6 +60,8 @@ public:
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
 	virtual void unMirror(void);
 	virtual void invert(void);
+	virtual void transferTransparent(TCULong color, TREMainModel *mainModel,
+		const float *matrix);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -66,6 +69,7 @@ public:
 	{
 		glMultiDrawElementsEXT = value;
 	}
+	static bool isTransparent(TCULong color, bool hostFormat);
 protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
@@ -94,6 +98,16 @@ protected:
 	virtual void invertShapes(TCULongArray *oldIndices,
 		TCULongArray *newIndices);
 	virtual int flipNormal(int index);
+	virtual void transferTriangle(TREMainModel *mainModel, TCULong color,
+		TCULong index0, TCULong index1, TCULong index2, const float *matrix);
+	virtual void transferQuadStrip(TREMainModel *mainModel,
+		int shapeTypeIndex, TCULong color, int offset, int stripCount,
+		const float *matrix, bool remove);
+	virtual void transferTriangleFan(TREMainModel *mainModel,
+		int shapeTypeIndex, TCULong color, int offset, int stripCount,
+		const float *matrix, bool remove);
+	virtual void transferTransparent(TCULong color, TREShapeType shapeType,
+		TCULongArray *indices, TREMainModel *mainModel, const float *matrix);
 
 	virtual void scanPoints(TCULong index, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);

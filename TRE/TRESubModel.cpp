@@ -235,6 +235,14 @@ void TRESubModel::draw(TREMSection section, bool colored)
 			}
 			else
 			{
+				if (section != TREMLines)
+				{
+					if (TREShapeGroup::isTransparent(m_color, true))
+					{
+						// Don't draw transparent shapes here.
+						return;
+					}
+				}
 				glColor4ubv((GLubyte*)&m_color);
 			}
 		}
@@ -398,4 +406,26 @@ void TRESubModel::shrink(float amount)
 	}
 	TCVector::multMatrix(tempMatrix, scaleMatrix, m_matrix);
 	m_model->unshrinkNormals(scaleMatrix);
+}
+
+void TRESubModel::transferColoredTransparent(TREMSection section,
+											 const float *matrix)
+{
+	float newMatrix[16];
+
+	TCVector::multMatrix(matrix, m_matrix, newMatrix);
+	m_model->transferColoredTransparent(section, newMatrix);
+}
+
+void TRESubModel::transferTransparent(TCULong color, TREMSection section,
+									  const float *matrix)
+{
+	float newMatrix[16];
+
+	TCVector::multMatrix(matrix, m_matrix, newMatrix);
+	if (m_flags.colorSet)
+	{
+		color = m_color;
+	}
+	m_model->transferTransparent(color, section, newMatrix);
 }

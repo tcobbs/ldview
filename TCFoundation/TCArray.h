@@ -17,6 +17,7 @@ class TCExport TCArray : public TCObject
 		virtual int indexOfItem(void*);
 		virtual int removeItem(void*);
 		virtual int removeItem(int);
+		virtual int removeItems(int index, int numItems);
 		virtual void removeAll(void);
 		virtual void* itemAtIndex(unsigned int);
 		int getCount(void) { return count; }

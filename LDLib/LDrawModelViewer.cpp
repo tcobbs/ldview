@@ -685,6 +685,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setLightingFlag(flags.useLighting);
 			modelParser->setTwoSidedLightingFlag(flags.oneLight ||
 				flags.usesSpecular);
+			modelParser->setAALinesFlag(flags.lineSmoothing);
+			modelParser->setSortTransparentFlag(flags.sortTransparent);
 			if (modelParser->parseMainModel(mainModel))
 			{
 				mainTREModel = modelParser->getMainTREModel();

@@ -46,6 +46,10 @@ public:
 	virtual void shrink(float amount);
 	TRESubModel *getUnMirroredSubModel(void);
 	TRESubModel *getInvertedSubModel(void);
+	virtual void transferColoredTransparent(TREMSection section,
+		const float *matrix);
+	virtual void transferTransparent(TCULong color, TREMSection section,
+		const float *matrix);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);

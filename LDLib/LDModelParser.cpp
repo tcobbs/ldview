@@ -27,11 +27,13 @@ LDModelParser::LDModelParser(void)
 	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
-	m_flags.bfc = true;
+	m_flags.bfc = false;
 	m_flags.compileParts = true;
 	m_flags.compileAll = true;
 	m_flags.lighting = false;
 	m_flags.twoSidedLighting = false;
+	m_flags.aaLines = false;
+	m_flags.sortTransparent = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -76,6 +78,8 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
+	m_mainTREModel->setAALinesFlag(getAALinesFlag());
+	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
 	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag()))
 	{
 		if (m_mainTREModel->isPart())
@@ -135,7 +139,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 	if (ldlModel)
 	{
 		const char *name = ldlModel->getName();
-		TREModel *model = m_mainTREModel->modelNamed(name);
+		TREModel *model = m_mainTREModel->modelNamed(name, bfc);
 
 		if (model)
 		{
@@ -149,7 +153,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 			model->setPartFlag(ldlModel->isPart());
 			if (parseModel(ldlModel, model, bfc))
 			{
-				m_mainTREModel->registerModel(model);
+				m_mainTREModel->registerModel(model, bfc);
 				model->release();
 				return addSubModel(modelLine, treModel, model, bfc && invert);
 			}

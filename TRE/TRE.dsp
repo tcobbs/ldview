@@ -105,6 +105,10 @@ SOURCE=.\TRESubModel.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TRETransShapeGroup.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TREVertexArray.cpp
 # End Source File
 # Begin Source File
@@ -138,6 +142,10 @@ SOURCE=.\TREShapeGroup.h
 # Begin Source File
 
 SOURCE=.\TRESubModel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TRETransShapeGroup.h
 # End Source File
 # Begin Source File
 

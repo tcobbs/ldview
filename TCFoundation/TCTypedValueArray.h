@@ -29,6 +29,8 @@ template <class Type> class TCTypedValueArray : public TCArray
 			{ return TCArray::indexOfItem((void *)value); }
 		int removeValue(int index)
 			{ return TCArray::removeItem(index); }
+		int removeValues(int index, int numValues)
+			{ return TCArray::removeItems(index, numValues); }
 		Type valueAtIndex(unsigned int index)
 			{ return (Type)TCArray::itemAtIndex(index); }
 		Type operator[](unsigned int index)
