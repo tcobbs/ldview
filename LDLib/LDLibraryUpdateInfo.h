@@ -3,12 +3,24 @@
 
 #include <TCFoundation/TCObject.h>
 
+typedef enum
+{
+	LDLibraryFullUpdate,
+	LDLibraryPartialUpdate,
+	LDLibraryUnknownUpdate
+} LDLibraryUpdateType;
+
 class LDLibraryUpdateInfo : public TCObject
 {
 public:
 	LDLibraryUpdateInfo(void);
 	bool parseUpdateLine(const char *updateLine);
-	bool isFullUpdate(void) { return m_fullUpdate; }
+	bool isFullUpdate(void) { return m_updateType == LDLibraryFullUpdate; }
+	bool isPartialUpdate(void)
+	{
+		return m_updateType == LDLibraryPartialUpdate;
+	}
+	LDLibraryUpdateType getUpdateType(void) { return m_updateType; }
 	const char *getName(void) { return m_name; }
 	const char *getDate(void) { return m_date; }
 	const char *getExeUrl(void) { return m_exeUrl; }
@@ -20,7 +32,7 @@ protected:
 	virtual ~LDLibraryUpdateInfo(void);
 	virtual void dealloc(void);
 
-	bool m_fullUpdate;
+	LDLibraryUpdateType m_updateType;
 	char *m_name;
 	char *m_date;
 	char *m_exeUrl;

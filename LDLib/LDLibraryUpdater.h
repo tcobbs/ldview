@@ -22,7 +22,7 @@ protected:
 	virtual ~LDLibraryUpdater(void);
 	virtual void dealloc(void);
 	virtual THREAD_RET_TYPE threadStart(TCThread*);
-	virtual void threadFinish(TCThread*);
+//	virtual void threadFinish(TCThread*);
 	void parseUpdateList(const char *updateList);
 	bool determineLastUpdate(LDLibraryUpdateInfoArray *updateArray,
 		char *updateName);
