@@ -484,7 +484,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 {
 #ifdef _QT
-	qSettings->removeEntry(key);
+	qSettings->removeEntry(qKeyForKey(key, sessionSpecific));
 #endif // _QT
 #ifdef WIN32
 	HKEY hParentKey;
