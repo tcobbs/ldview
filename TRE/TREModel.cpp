@@ -460,6 +460,7 @@ void TREModel::setup(TREMSection section)
 	{
 		TREShapeGroup *shapeGroup = new TREShapeGroup;
 
+		shapeGroup->setMainModel(m_mainModel);
 		if (section == TREMStud || section == TREMStudBFC)
 		{
 			shapeGroup->setVertexStore(m_mainModel->getStudVertexStore());
@@ -480,6 +481,7 @@ void TREModel::setupColored(TREMSection section)
 	{
 		TREColoredShapeGroup *shapeGroup = new TREColoredShapeGroup;
 
+		shapeGroup->setMainModel(m_mainModel);
 		if (section == TREMStud || section == TREMStudBFC)
 		{
 			shapeGroup->setVertexStore(
@@ -2747,7 +2749,7 @@ void TREModel::transferColoredTransparent(TREMSection section,
 
 	if (shapeGroup)
 	{
-		shapeGroup->transferColoredTransparent(m_mainModel, matrix);
+		shapeGroup->transferColoredTransparent(matrix);
 	}
 	if (m_subModels)
 	{
@@ -2768,7 +2770,7 @@ void TREModel::transferTransparent(TCULong color, TREMSection section,
 
 	if (shapeGroup)
 	{
-		shapeGroup->transferTransparent(color, m_mainModel, matrix);
+		shapeGroup->transferTransparent(color, matrix);
 	}
 	if (m_subModels)
 	{

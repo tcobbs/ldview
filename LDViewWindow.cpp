@@ -21,6 +21,8 @@
 #include <TCFoundation/TCMacros.h>
 
 #define DOWNLOAD_TIMER 12
+#define DEFAULT_WIN_WIDTH 640
+#define DEFAULT_WIN_HEIGHT 480
 
 TCStringArray* LDViewWindow::recentFiles = NULL;
 TCStringArray* LDViewWindow::extraSearchDirs = NULL;
@@ -49,6 +51,7 @@ LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
 			   hOpenGLInfoWindow(NULL),
 			   hExtraDirsWindow(NULL),
 			   hStatusBar(NULL),
+			   hToolbar(NULL),
 			   userLDrawDir(NULL),
 			   fullScreen(NO),
 			   fullScreenActive(NO),
@@ -68,7 +71,9 @@ LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
 			   hOpenGLStatusBar(NULL),
 			   hExamineIcon(NULL),
 			   hFlythroughIcon(NULL),
-			   libraryUpdater(NULL)
+			   libraryUpdater(NULL),
+			   productVersion(NULL),
+			   legalCopyright(NULL)
 //			   modelWindowShown(false)
 {
 //	DWORD backgroundColor = TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
@@ -115,6 +120,8 @@ void LDViewWindow::dealloc(void)
 	{
 		DestroyWindow(hExtraDirsWindow);
 	}
+	delete productVersion;
+	delete legalCopyright;
 	CUIWindow::dealloc();
 }
 
@@ -124,6 +131,7 @@ void LDViewWindow::loadSettings(void)
 	fsHeight = TCUserDefaults::longForKey(FULLSCREEN_HEIGHT_KEY, 480);
 	fsDepth = TCUserDefaults::longForKey(FULLSCREEN_DEPTH_KEY, 32);
 	showStatusBar = TCUserDefaults::longForKey(STATUS_BAR_KEY, 1, false) != 0;
+	showToolbar = TCUserDefaults::longForKey(TOOLBAR_KEY, 1, false) != 0;
 	topmost = TCUserDefaults::longForKey(TOPMOST_KEY, 0, false) != 0;
 }
 
@@ -184,7 +192,6 @@ char* LDViewWindow::windowClassName(void)
 
 LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 {
-
 	BOOL noRect = FALSE;
 
 	if (updateRect == NULL)
@@ -207,13 +214,15 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 	if (!fullScreen && !screenSaver)
 	{
 		int bottomMargin = 2;
+		int topMargin = 2;
+
 		if (updateRect->left < 2)
 		{
 			updateRect->left = 2;
 		}
 		if (updateRect->top < 2)
 		{
-			updateRect->top = 2;
+			updateRect->top = 0;
 		}
 		if (updateRect->right > width - 2)
 		{
@@ -226,6 +235,14 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 		if (updateRect->bottom > height - bottomMargin)
 		{
 			updateRect->bottom = height - bottomMargin;
+		}
+		if (showToolbar)
+		{
+			topMargin += getToolbarHeight();
+		}
+		if (updateRect->top < topMargin)
+		{
+			updateRect->top = topMargin;
 		}
 	}
 	debugPrintf(2, "updateRect size2: %d, %d\n",
@@ -276,6 +293,60 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 		}
 		SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)hModeIcon);
 		SendMessage(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)tipText);
+	}
+}
+
+#define LDV_TB_BITMAP_COUNT 4
+
+void LDViewWindow::createToolbar(void)
+{
+	if (showToolbar)
+	{
+		TBADDBITMAP addBitmap;
+		TBBUTTON buttons[4];
+		char buttonTitle[128];
+		int i;
+		int stdBitmapStart;
+		int myBitmapStart;
+
+		ModelWindow::initCommonControls(ICC_BAR_CLASSES);
+		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD |
+			WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0,
+			hWindow, (HMENU)42001, hInstance, NULL);
+/*
+			hWindow, , 42001, LDV_TB_BITMAP_COUNT,
+			hInstance, IDB_EXTRA_DIRS, buttons, 4, 25, 16, 16, 16,
+			sizeof(TBBUTTON));
+*/
+		memset(buttonTitle, 0, sizeof(buttonTitle));
+		strcpy(buttonTitle, "");
+		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
+		SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+		SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
+		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(25, 16));
+		addBitmap.hInst = HINST_COMMCTRL;
+		addBitmap.nID = IDB_STD_SMALL_COLOR;
+		stdBitmapStart = SendMessage(hToolbar, TB_ADDBITMAP, 0,
+			(LPARAM)&addBitmap);
+		addBitmap.hInst = getLanguageModule();
+		addBitmap.nID = IDB_EXTRA_DIRS;
+		myBitmapStart = SendMessage(hToolbar, TB_ADDBITMAP, 4,
+			(LPARAM)&addBitmap);
+		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
+		buttons[0].iBitmap = stdBitmapStart + STD_FILEOPEN;
+		buttons[1].iBitmap = stdBitmapStart + STD_FILESAVE;
+		buttons[2].iBitmap = myBitmapStart + 0;
+		buttons[3].iBitmap = myBitmapStart + 1;
+		for (i = 0; i < 4; i++)
+		{
+			buttons[i].idCommand = 42 + i;
+			buttons[i].fsState = TBSTATE_ENABLED;
+			buttons[i].fsStyle = TBSTYLE_BUTTON;
+			buttons[i].dwData = (DWORD)this;
+			buttons[i].iString = -1;
+		}
+		SendMessage(hToolbar, TB_ADDBUTTONS, 4, (LPARAM)buttons);
+		SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
 	}
 }
 
@@ -341,8 +412,6 @@ void LDViewWindow::reflectViewMode(void)
 
 BOOL LDViewWindow::initWindow(void)
 {
-	BOOL retValue;
-
 	if (fullScreen || screenSaver)
 	{
 		if (hWindowMenu)
@@ -377,17 +446,57 @@ BOOL LDViewWindow::initWindow(void)
 			exWindowStyle &= ~WS_EX_TOPMOST;
 		}
 	}
-	retValue = CUIWindow::initWindow();
-	hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
-	hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
-	reflectViewMode();
-	populateRecentFileMenuItems();
-	updateModelMenuItems();
-	if (!fullScreen && !screenSaver)
+	if (CUIWindow::initWindow())
 	{
-		setMenuCheck(hViewMenu, ID_VIEW_ALWAYSONTOP, topmost);
+		if (!fullScreen)
+		{
+			createToolbar();
+		}
+		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
+		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
+		createModelWindow();
+		reflectViewMode();
+		populateRecentFileMenuItems();
+		updateModelMenuItems();
+		if (!fullScreen && !screenSaver)
+		{
+			setMenuCheck(hViewMenu, ID_VIEW_ALWAYSONTOP, topmost);
+		}
+		return modelWindow->initWindow();
 	}
-	return retValue;
+	return FALSE;
+}
+
+void LDViewWindow::createModelWindow(void)
+{
+	int width;
+	int height;
+	int xOffset = 0;
+	int yOffset = 0;
+	bool maximized;
+
+	TCObject::release(modelWindow);
+	width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, DEFAULT_WIN_WIDTH,
+		false);
+	height = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, DEFAULT_WIN_HEIGHT,
+		false);
+	maximized = TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false) != 0;
+	if (showToolbar)
+	{
+		RECT rect;
+
+		GetWindowRect(hToolbar, &rect);
+		yOffset = rect.bottom - rect.top;
+		height -= yOffset;
+	}
+	if (screenSaver)
+	{
+		modelWindow = new SSModelWindow(this, 0, 0, width, height);
+	}
+	else
+	{
+		modelWindow = new ModelWindow(this, xOffset, yOffset, width, height);
+	}
 }
 
 BOOL LDViewWindow::showAboutBox(void)
@@ -404,17 +513,28 @@ BOOL LDViewWindow::showAboutBox(void)
 	return FALSE;
 }
 
-void LDViewWindow::createAboutBox(void)
+const char *LDViewWindow::getProductVersion(void)
 {
-	char fullVersionFormat[1024];
-	char fullVersionString[1024];
-	char moduleFilename[1024];
-	char versionString[128] = "!Unknown Version!";
-	char copyrightString[128] = "Copyright (c) 2000-2004 Travis Cobbs";
+	if (!productVersion)
+	{
+		readVersionInfo();
+	}
+	return productVersion;
+}
 
-	hAboutWindow = createDialog(IDD_ABOUT_BOX);
-	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_GETTEXT,
-		sizeof(fullVersionFormat), (LPARAM)fullVersionFormat);
+const char *LDViewWindow::getLegalCopyright(void)
+{
+	if (!legalCopyright)
+	{
+		readVersionInfo();
+	}
+	return legalCopyright;
+}
+
+void LDViewWindow::readVersionInfo(void)
+{
+	char moduleFilename[1024];
+
 	if (GetModuleFileName(NULL, moduleFilename, sizeof(moduleFilename)) > 0)
 	{
 		DWORD zero;
@@ -427,25 +547,45 @@ void LDViewWindow::createAboutBox(void)
 			if (GetFileVersionInfo(moduleFilename, NULL, versionInfoSize,
 				versionInfo))
 			{
-				char *productVersion;
-				char *legalCopyright;
+				char *value;
 				UINT versionLength;
 
 				if (VerQueryValue(versionInfo,
 					"\\StringFileInfo\\040904B0\\ProductVersion",
-					(void**)&productVersion, &versionLength))
+					(void**)&value, &versionLength))
 				{
-					strcpy(versionString, productVersion);
+					productVersion = copyString(value);
 				}
 				if (VerQueryValue(versionInfo,
 					"\\StringFileInfo\\040904B0\\LegalCopyright",
-					(void**)&legalCopyright, &versionLength))
+					(void**)&value, &versionLength))
 				{
-					strcpy(copyrightString, legalCopyright);
+					legalCopyright = copyString(value);
 				}
 			}
 			delete versionInfo;
 		}
+	}
+}
+
+void LDViewWindow::createAboutBox(void)
+{
+	char fullVersionFormat[1024];
+	char fullVersionString[1024];
+	char versionString[128] = "!Unknown Version!";
+	char copyrightString[128] = "Copyright (c) 2000-2004 Travis Cobbs";
+
+	hAboutWindow = createDialog(IDD_ABOUT_BOX);
+	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_GETTEXT,
+		sizeof(fullVersionFormat), (LPARAM)fullVersionFormat);
+	readVersionInfo();
+	if (productVersion)
+	{
+		strcpy(versionString, productVersion);
+	}
+	if (legalCopyright)
+	{
+		strcpy(copyrightString, legalCopyright);
 	}
 	sprintf(fullVersionString, fullVersionFormat, versionString,
 		copyrightString);
@@ -650,6 +790,7 @@ void LDViewWindow::restoreDisplayMode(void)
 	}
 }
 
+/*
 void LDViewWindow::setModelWindow(ModelWindow *value)
 {
 	value->retain();
@@ -659,6 +800,7 @@ void LDViewWindow::setModelWindow(ModelWindow *value)
 	}
 	modelWindow = value;
 }
+*/
 
 void LDViewWindow::activateFullScreenMode(void)
 {
@@ -1817,6 +1959,46 @@ LRESULT LDViewWindow::switchToFlythroughMode(void)
 	return 0;
 }
 
+LRESULT LDViewWindow::doNotify(int controlId, LPNMHDR notification)
+{
+//	debugPrintf("LDViewWindow::doNotify: 0x%04X, 0x%04x\n", controlId,
+//		notification->code);
+	if (controlId >= 42 && controlId <= 45)
+	{
+		switch (notification->code)
+		{
+		case TTN_GETDISPINFO:
+			{
+				LPNMTTDISPINFO dispInfo = (LPNMTTDISPINFO)notification;
+
+				switch (controlId)
+				{
+				case 42:
+					strcpy(dispInfo->szText,
+						"Add directory to search list");
+					break;
+				case 43:
+					strcpy(dispInfo->szText,
+						"Remove directory from search list");
+					break;
+				case 44:
+					strcpy(dispInfo->szText, "Move directory up");
+					break;
+				case 45:
+					strcpy(dispInfo->szText, "Move directory down");
+					break;
+				}
+				dispInfo->hinst = NULL;
+			}
+			break;
+		case WM_COMMAND:
+			debugPrintf("WM_COMMAND\n");
+			break;
+		}
+	}
+	return 0;
+}
+
 BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
 								  LPNMHDR notification)
 {
@@ -1837,7 +2019,8 @@ BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
 						switch (controlId)
 						{
 						case 42:
-							strcpy(dispInfo->szText, "Add directory to search list");
+							strcpy(dispInfo->szText,
+								"Add directory to search list");
 							break;
 						case 43:
 							strcpy(dispInfo->szText,
@@ -1939,7 +2122,7 @@ void LDViewWindow::chooseExtraDirs(void)
 		populateExtraDirsListBox();
 		GetClientRect(hExtraDirsToolbar, &tbRect);
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR,
-			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(buttons[0]), 0);
+			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
 		addBitmap.hInst = getLanguageModule();
 		addBitmap.nID = IDB_EXTRA_DIRS;
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETINDENT,
@@ -1990,8 +2173,8 @@ void LDViewWindow::resizeModelWindow(int newWidth, int newHeight)
 {
 	if (modelWindow)
 	{
-		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 0, 0, newWidth,
-			newHeight, 0);
+		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 0,
+			getModelWindowTop(), newWidth, newHeight, 0);
 /*
 		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 2, 2, newWidth - 4,
 			newHeight - 4, 0);
@@ -2024,6 +2207,31 @@ void LDViewWindow::removeStatusBar(void)
 	}
 }
 
+int LDViewWindow::getDockedHeight(void)
+{
+	return getToolbarHeight() + getStatusBarHeight();
+}
+
+int LDViewWindow::getModelWindowTop(void)
+{
+	return getToolbarHeight();
+}
+
+int LDViewWindow::getToolbarHeight(void)
+{
+	if (hToolbar)
+	{
+		RECT rect;
+
+		GetWindowRect(hToolbar, &rect);
+		return rect.bottom - rect.top;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 int LDViewWindow::getStatusBarHeight(void)
 {
 	if (hStatusBar)
@@ -2042,7 +2250,7 @@ int LDViewWindow::getStatusBarHeight(void)
 void LDViewWindow::addStatusBar(void)
 {
 	createStatusBar();
-	resizeModelWindow(width, height - getStatusBarHeight());
+	resizeModelWindow(width, height - getDockedHeight());
 }
 
 LRESULT LDViewWindow::switchStatusBar(void)
@@ -2489,6 +2697,10 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 			SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
 			parts[1] += rect.right - rect.left - 32;
 			SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
+		}
+		if (showToolbar && hToolbar)
+		{
+			SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
 		}
 	}
 	return CUIWindow::doSize(sizeType, newWidth, newHeight);

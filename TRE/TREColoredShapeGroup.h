@@ -19,8 +19,7 @@ public:
 		TCVector *normals, int count);
 	virtual int addTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count);
-	virtual void transferColoredTransparent(TREMainModel *mainModel,
-		const float *matrix);
+	virtual void transferColoredTransparent(const float *matrix);
 protected:
 	virtual ~TREColoredShapeGroup(void);
 	virtual void dealloc(void);
@@ -31,7 +30,7 @@ protected:
 	virtual int addShape(TREShapeType shapeType, TCULong color,
 		const TCVector *vertices, const TCVector *normals, int count);
 	virtual void transferColoredTransparent(TREShapeType shapeType,
-		TCULongArray *indices, TREMainModel *mainModel, const float *matrix);
+		TCULongArray *indices, const float *matrix);
 };
 
 #endif __TRECOLOREDSHAPEGROUP_H__

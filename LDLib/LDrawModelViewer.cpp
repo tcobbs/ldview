@@ -374,7 +374,9 @@ bool LDrawModelViewer::skipCameraPositioning(void)
 
 float LDrawModelViewer::calcDefaultDistance(void)
 {
-	float margin = getWideLineMargin();
+	// Note that the margin is on all sides, so it's on two edges per axis,
+	// which is why we multiply by 2.
+	float margin = getWideLineMargin() * 2.0f;
 	float marginAdjust = 1.0f;
 
 	if (margin != 0.0f)
@@ -2724,6 +2726,7 @@ void LDrawModelViewer::zoomToFit(void)
 		TCVector location;
 		float tmpMatrix[16];
 		float transformationMatrix[16];
+		float margin;
 
 		TCVector::initIdentityMatrix(tmpMatrix);
 		tmpMatrix[12] = center[0];
@@ -2732,7 +2735,7 @@ void LDrawModelViewer::zoomToFit(void)
 		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
 		zoomToFitWidth = width * numXTiles / getStereoWidthModifier();
 		zoomToFitHeight = (float)(height * numYTiles);
-		zoomToFitMargin = getWideLineMargin() * 2.0f;
+		margin = getWideLineMargin() * 2.0f;
 		preCalcCamera();
 		_numPoints = 0;
 		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
@@ -2814,15 +2817,13 @@ void LDrawModelViewer::zoomToFit(void)
 		{
 			location[0] = b[0];
 			location[1] = b[1];
-			location[2] = b[2] * (zoomToFitHeight + zoomToFitMargin) /
-				zoomToFitHeight;
+			location[2] = b[2] * (zoomToFitHeight + margin) / zoomToFitHeight;
 		}
 		else
 		{
 			location[0] = b[3];
 			location[1] = b[4];
-			location[2] = b[5] * (zoomToFitWidth + zoomToFitMargin) /
-				zoomToFitWidth;
+			location[2] = b[5] * (zoomToFitWidth + margin) / zoomToFitWidth;
 		}
 		location[2] *= distanceMultiplier;
 		camera.setPosition(location - center);

@@ -28,7 +28,7 @@ class LDViewWindow: public CUIWindow
 	public:
 		LDViewWindow(char*, HINSTANCE, int, int, int, int);
 		virtual char* windowClassName(void);
-		virtual void setModelWindow(ModelWindow* value);
+//		virtual void setModelWindow(ModelWindow* value);
 //		virtual int getDecorationHeight(void);
 		virtual void openModel(const char* = NULL, bool skipLoad = false);
 		virtual BOOL initWindow(void);
@@ -46,6 +46,9 @@ class LDViewWindow: public CUIWindow
 		void forceShowStatusBar(bool value);
 		void applyPrefs(void);
 		virtual LRESULT switchStatusBar(void);
+		virtual const char *getProductVersion(void);
+		virtual const char *getLegalCopyright(void);
+		ModelWindow *getModelWindow(void) { return modelWindow; }
 
 		static char* getLDrawDir(void);
 		static char* lastOpenPath(char* pathKey = NULL);
@@ -79,6 +82,7 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT doKeyUp(int keyCode, long keyData);
 		virtual LRESULT doDrawItem(HWND hControlWnd,
 			LPDRAWITEMSTRUCT drawItemStruct);
+		virtual LRESULT doNotify(int controlId, LPNMHDR notification);
 		virtual BOOL doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 			int newHeight);
 		virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
@@ -147,6 +151,7 @@ class LDViewWindow: public CUIWindow
 		virtual void chooseExtraDirs(void);
 		virtual void chooseNewLDrawDir(void);
 		virtual void createStatusBar(void);
+		virtual void createToolbar(void);
 		virtual LRESULT switchTopmost(void);
 		virtual void removeStatusBar(void);
 		virtual void addStatusBar(void);
@@ -160,6 +165,9 @@ class LDViewWindow: public CUIWindow
 		virtual void reflectPolling(void);
 		virtual void reflectVideoMode(void);
 		virtual int getStatusBarHeight(void);
+		virtual int getDockedHeight(void);
+		virtual int getToolbarHeight(void);
+		virtual int getModelWindowTop(void);
 		virtual BOOL doDialogNotify(HWND hDlg, int controlId,
 			LPNMHDR notification);
 		virtual BOOL doExtraDirsCommand(int controlId, int notifyCode,
@@ -175,6 +183,8 @@ class LDViewWindow: public CUIWindow
 		void checkForLibraryUpdates(void);
 //		virtual LRESULT doTimer(UINT timerID);
 		virtual void doLibraryUpdateFinished(int finishType);
+		virtual void readVersionInfo(void);
+		virtual void createModelWindow(void);
 
 		void loadSettings(void);
 
@@ -190,6 +200,7 @@ class LDViewWindow: public CUIWindow
 		HWND hExtraDirsToolbar;
 		HWND hExtraDirsList;
 		HWND hStatusBar;
+		HWND hToolbar;
 		HWND hFrameWindow;
 		char* userLDrawDir;
 		BOOL fullScreen;
@@ -205,6 +216,7 @@ class LDViewWindow: public CUIWindow
 		int fsDepth;
 		bool showStatusBar;
 		bool showStatusBarOverride;
+		bool showToolbar;
 		bool topmost;
 		BOOL skipMinimize;
 		BOOL screenSaver;
@@ -219,6 +231,8 @@ class LDViewWindow: public CUIWindow
 		HICON hExamineIcon;
 		HICON hFlythroughIcon;
 		LDLibraryUpdater *libraryUpdater;
+		char *productVersion;
+		char *legalCopyright;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;

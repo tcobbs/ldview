@@ -137,6 +137,7 @@ class CUIExport CUIWindow : public TCObject
 		virtual LRESULT doDrawItem(HWND hControlWnd,
 			LPDRAWITEMSTRUCT drawItemStruct);
 		virtual LRESULT doThemeChanged(void);
+		virtual LRESULT doNotify(int controlId, LPNMHDR notification);
 		virtual BOOL doDialogThemeChanged(void);
 		virtual void doDialogClose(HWND hDlg);
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId,

@@ -61,6 +61,12 @@ public:
 	bool getBFCFlag(void) { return m_mainFlags.bfc != false; }
 	void setRedBackFacesFlag(bool value) { m_mainFlags.redBackFaces = value; }
 	bool getRedBackFacesFlag(void) { return m_mainFlags.redBackFaces != false; }
+	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
+	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
+	bool getActiveLineJoinsFlag(void)
+	{
+		return m_mainFlags.activeLineJoins != false;
+	}
 	void setAALinesFlag(bool value) { m_mainFlags.aaLines = value; }
 	bool getAALinesFlag(void) { return m_mainFlags.aaLines != false; }
 	void setSortTransparentFlag(bool value)
@@ -190,6 +196,7 @@ protected:
 		bool compiled:1;
 		bool removingHiddenLines:1;	// This one is changed externally
 		bool cutawayDraw:1;			// This one is changed externally
+		bool activeLineJoins:1;
 		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;
@@ -211,6 +218,7 @@ protected:
 		bool polygonOffset:1;
 		bool studLogo:1;
 		bool redBackFaces:1;
+		bool lineJoins:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;
