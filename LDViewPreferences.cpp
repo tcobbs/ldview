@@ -476,6 +476,36 @@ void LDViewPreferences::setDrawWireframe(bool value)
 	}
 }
 
+void LDViewPreferences::setUseWireframeFog(bool value)
+{
+	if (value != useWireframeFog)
+	{
+		useWireframeFog = value;
+		modelViewer->setUseWireframeFog(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, WIREFRAME_FOG_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setRemoveHiddenLines(bool value)
+{
+	if (value != removeHiddenLines)
+	{
+		removeHiddenLines = value;
+		modelViewer->setRemoveHiddenLines(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, REMOVE_HIDDEN_LINES_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
 void LDViewPreferences::setEdgesOnly(bool value)
 {
 	if (value != edgesOnly)
@@ -563,6 +593,21 @@ void LDViewPreferences::setShowsHighlightLines(bool value)
 	}
 }
 
+void LDViewPreferences::setTextureStuds(bool value)
+{
+	if (value != textureStuds)
+	{
+		textureStuds = value;
+		modelViewer->setTextureStuds(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, TEXTURE_STUDS_KEY);
+		if (hPrimitivesPage)
+		{
+			SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
 void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 {
 	if (value != allowPrimitiveSubstitution)
@@ -589,6 +634,36 @@ void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 	}
 }
 
+void LDViewPreferences::setRedBackFaces(bool value)
+{
+	if (value != redBackFaces)
+	{
+		redBackFaces = value;
+		modelViewer->setRedBackFaces(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, RED_BACK_FACES_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setGreenFrontFaces(bool value)
+{
+	if (value != greenFrontFaces)
+	{
+		greenFrontFaces = value;
+		modelViewer->setGreenFrontFaces(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, GREEN_FRONT_FACES_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
 void LDViewPreferences::setBfc(bool value)
 {
 	if (value != bfc)
@@ -608,6 +683,66 @@ void LDViewPreferences::setBfc(bool value)
 			{
 				disableBfc();
 			}
+		}
+	}
+}
+
+void LDViewPreferences::setQualityLighting(bool value)
+{
+	if (value != qualityLighting)
+	{
+		qualityLighting = value;
+		modelViewer->setQualityLighting(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, QUALITY_LIGHTING_KEY);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setSubduedLighting(bool value)
+{
+	if (value != subduedLighting)
+	{
+		subduedLighting = value;
+		modelViewer->setSubduedLighting(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, SUBDUED_LIGHTING_KEY);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setUsesSpecular(bool value)
+{
+	if (value != usesSpecular)
+	{
+		usesSpecular = value;
+		modelViewer->setUsesSpecular(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, SPECULAR_KEY);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, value,
+				0);
+		}
+	}
+}
+
+void LDViewPreferences::setOneLight(bool value)
+{
+	if (value != oneLight)
+	{
+		oneLight = value;
+		modelViewer->setOneLight(value);
+		TCUserDefaults::setLongForKey(value ? 1 : 0, ONE_LIGHT_KEY);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING,
+				BM_SETCHECK, value, 0);
 		}
 	}
 }

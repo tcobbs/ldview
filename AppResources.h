@@ -283,6 +283,15 @@
 #define ID_EDGES_HIGHQUALITY            40073
 #define ID_EDGES_ALWAYSBLACK            40074
 #define ID_VIEW_VISUALSTYLE             40075
+#define ID_WIREFRAME_FOG                40076
+#define ID_WIREFRAME_REMOVEHIDDENLINES  40077
+#define ID_PRIMITIVES_TEXTURESTUDS      40079
+#define ID_LIGHTING_HIGHQUALITY         40080
+#define ID_LIGHTING_SUBDUED             40081
+#define ID_LIGHTING_SPECULARHIGHLIGHT   40082
+#define ID_LIGHTING_ALTERNATESETUP      40083
+#define ID_BFC_REDBACKFACES             40084
+#define ID_BFC_GREENFRONTFACES          40085
 
 // Next default values for new objects
 // 
@@ -291,7 +300,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
-#define _APS_NEXT_COMMAND_VALUE         40076
+#define _APS_NEXT_COMMAND_VALUE         40086
 #define _APS_NEXT_CONTROL_VALUE         1197
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

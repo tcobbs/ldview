@@ -40,6 +40,7 @@ public:
 		LDrawModelViewer *modelViewer = NULL);
 
 	bool getQualityLighting(void) { return qualityLighting; }
+	void setQualityLighting(bool value);
 	bool getShowsFPS(void) { return showsFPS; }
 	bool getShowsHighlightLines(void) { return showsHighlightLines; }
 	void setShowsHighlightLines(bool value);
@@ -60,6 +61,9 @@ public:
 	void setAllowPrimitiveSubstitution(bool value);
 	bool getUsesFlatShading(void) { return usesFlatShading; }
 	bool getUsesSpecular(void) { return usesSpecular; }
+	void setUsesSpecular(bool value);
+	bool getOneLight(void) { return oneLight; }
+	void setOneLight(bool value);
 	COLORREF getBackgroundColor(void) { return backgroundColor; }
 	COLORREF* getCustomColors(void) { return customColors; }
 	int getUseSeams(void) { return useSeams; }
@@ -70,9 +74,13 @@ public:
 	bool getBfc(void) { return bfc; }
 	void setBfc(bool value);
 	bool getRedBackFaces(void) { return redBackFaces; }
+	void setRedBackFaces(bool value);
 	bool getGreenFrontFaces(void) { return greenFrontFaces; }
+	void setGreenFrontFaces(bool value);
 	bool getUseWireframeFog(void) { return useWireframeFog; }
+	void setUseWireframeFog(bool value);
 	bool getRemoveHiddenLines(void) { return removeHiddenLines; }
+	void setRemoveHiddenLines(bool value);
 	bool getUsePolygonOffset(void) { return usePolygonOffset; }
 	void setUsePolygonOffset(bool value);
 	bool getBlackHighlights(void) { return blackHighlights; }
@@ -80,9 +88,12 @@ public:
 	bool getUseLighting(void) { return useLighting; }
 	void setUseLighting(bool value);
 	bool getSubduedLighting(void) { return subduedLighting; }
+	void setSubduedLighting(bool value);
 	int getFullScreenRefresh(void) { return fullScreenRefresh; }
 	bool getUseStipple(void) { return useStipple; }
 	bool getSortTransparent(void) { return sortTransparent; }
+	bool getTextureStuds(void) { return textureStuds; }
+	void setTextureStuds(bool value);
 	virtual void applyChanges(void);
 	virtual int run(void);
 

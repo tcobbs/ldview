@@ -476,16 +476,18 @@ void LDViewWindow::populateTbButtonInfos(void)
 		lighting = prefs->getUseLighting();
 		bfc = prefs->getBfc();
 		addTbCheckButtonInfo(TCLocalStrings::get("Wireframe"), IDC_WIREFRAME,
-			-1, 1, drawWireframe);
+			-1, 1, drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(TCLocalStrings::get("Seams"), IDC_SEAMS, -1, 2,
 			seams);
 		addTbCheckButtonInfo(TCLocalStrings::get("EdgeLines"), IDC_HIGHLIGHTS,
 			-1, 3, edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(TCLocalStrings::get("PrimitiveSubstitution"),
-			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution);
+			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution,
+			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(TCLocalStrings::get("Lighting"), IDC_LIGHTING, -1,
-			7, lighting);
-		addTbCheckButtonInfo(TCLocalStrings::get("BFC"), IDC_BFC, -1, 9, bfc);
+			7, lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(TCLocalStrings::get("BFC"), IDC_BFC, -1, 9, bfc,
+			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbButtonInfo(TCLocalStrings::get("ResetSelectView"), ID_VIEWANGLE,
 			-1, 6, TBSTYLE_DROPDOWN);
 		addTbButtonInfo(TCLocalStrings::get("Preferences"), ID_EDIT_PREFERENCES,
@@ -661,7 +663,11 @@ BOOL LDViewWindow::initWindow(void)
 //		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
 		hToolbarMenu = LoadMenu(getLanguageModule(),
 			MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
-		hEdgesMenu = GetSubMenu(hToolbarMenu, 0);
+		hWireframeMenu = GetSubMenu(hToolbarMenu, 0);
+		hEdgesMenu = GetSubMenu(hToolbarMenu, 1);
+		hPrimitivesMenu = GetSubMenu(hToolbarMenu, 2);
+		hLightingMenu = GetSubMenu(hToolbarMenu, 3);
+		hBFCMenu = GetSubMenu(hToolbarMenu, 4);
 		reflectViewMode();
 		populateRecentFileMenuItems();
 		updateModelMenuItems();
@@ -2319,6 +2325,14 @@ LRESULT LDViewWindow::switchToFlythroughMode(void)
 	return 0;
 }
 
+void LDViewWindow::updateWireframeMenu(void)
+{
+	setMenuCheck(hWireframeMenu, ID_WIREFRAME_FOG, prefs->getUseWireframeFog());
+	setMenuCheck(hWireframeMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
+		prefs->getRemoveHiddenLines());
+	setMenuItemsEnabled(hWireframeMenu, drawWireframe);
+}
+
 void LDViewWindow::updateEdgesMenu(void)
 {
 	setMenuCheck(hEdgesMenu, ID_EDGES_SHOWEDGESONLY, prefs->getEdgesOnly());
@@ -2329,6 +2343,34 @@ void LDViewWindow::updateEdgesMenu(void)
 	setMenuCheck(hEdgesMenu, ID_EDGES_ALWAYSBLACK, prefs->getBlackHighlights());
 	setMenuItemsEnabled(hEdgesMenu, edges);
 }
+
+void LDViewWindow::updatePrimitivesMenu(void)
+{
+	setMenuCheck(hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
+		prefs->getTextureStuds());
+	setMenuItemsEnabled(hPrimitivesMenu, primitiveSubstitution);
+}
+
+void LDViewWindow::updateLightingMenu(void)
+{
+	setMenuCheck(hLightingMenu, ID_LIGHTING_HIGHQUALITY,
+		prefs->getQualityLighting());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_SUBDUED,
+		prefs->getSubduedLighting());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
+		prefs->getUsesSpecular());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_ALTERNATESETUP,
+		prefs->getOneLight());
+	setMenuItemsEnabled(hLightingMenu, lighting);
+}
+
+void LDViewWindow::updateBFCMenu(void)
+{
+	setMenuCheck(hBFCMenu, ID_BFC_REDBACKFACES, prefs->getRedBackFaces());
+	setMenuCheck(hBFCMenu, ID_BFC_GREENFRONTFACES, prefs->getGreenFrontFaces());
+	setMenuItemsEnabled(hBFCMenu, bfc);
+}
+
 
 void LDViewWindow::doToolbarDropDown(LPNMTOOLBAR toolbarNot)
 {
@@ -2346,8 +2388,20 @@ void LDViewWindow::doToolbarDropDown(LPNMTOOLBAR toolbarNot)
 	tpm.rcExclude.right  = rect.right;
 	switch (toolbarNot->iItem)
 	{
+	case IDC_WIREFRAME:
+		hMenu = hWireframeMenu;
+		break;
 	case IDC_HIGHLIGHTS:
 		hMenu = hEdgesMenu;
+		break;
+	case IDC_PRIMITIVE_SUBSTITUTION:
+		hMenu = hPrimitivesMenu;
+		break;
+	case IDC_LIGHTING:
+		hMenu = hLightingMenu;
+		break;
+	case IDC_BFC:
+		hMenu = hBFCMenu;
 		break;
 	case ID_VIEWANGLE:
 		hMenu = hViewAngleMenu;
@@ -3014,10 +3068,12 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			shutdown();
 			return 0;
 			break;
+/*
 		case ID_FILE_CHECKFORLIBUPDATES:
 			checkForLibraryUpdates();
 			return 0;
 			break;
+*/
 		case ID_VIEW_FULLSCREEN:
 			switchModes();
 			return 0;
@@ -3181,6 +3237,12 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_VIEWANGLE:
 			doViewAngle();
 			break;
+		case ID_WIREFRAME_FOG:
+			doFog();
+			break;
+		case ID_WIREFRAME_REMOVEHIDDENLINES:
+			doRemoveHiddenLines();
+			break;
 		case ID_EDGES_SHOWEDGESONLY:
 			doShowEdgesOnly();
 			break;
@@ -3192,6 +3254,27 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_EDGES_ALWAYSBLACK:
 			doAlwaysBlack();
+			break;
+		case ID_PRIMITIVES_TEXTURESTUDS:
+			doTextureStuds();
+			break;
+		case ID_LIGHTING_HIGHQUALITY:
+			doQualityLighting();
+			break;
+		case ID_LIGHTING_SUBDUED:
+			doSubduedLighting();
+			break;
+		case ID_LIGHTING_SPECULARHIGHLIGHT:
+			doSpecularHighlight();
+			break;
+		case ID_LIGHTING_ALTERNATESETUP:
+			doAlternateLighting();
+			break;
+		case ID_BFC_REDBACKFACES:
+			doRedBackFaces();
+			break;
+		case ID_BFC_GREENFRONTFACES:
+			doGreenFrontFaces();
 			break;
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
@@ -3278,6 +3361,19 @@ void LDViewWindow::doLighting(void)
 	}
 }
 
+void LDViewWindow::doFog(void)
+{
+	prefs->setUseWireframeFog(!prefs->getUseWireframeFog());
+	setMenuCheck(hWireframeMenu, ID_WIREFRAME_FOG, prefs->getUseWireframeFog());
+}
+
+void LDViewWindow::doRemoveHiddenLines(void)
+{
+	prefs->setRemoveHiddenLines(!prefs->getRemoveHiddenLines());
+	setMenuCheck(hWireframeMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
+		prefs->getRemoveHiddenLines());
+}
+
 void LDViewWindow::doShowEdgesOnly(void)
 {
 	prefs->setEdgesOnly(!prefs->getEdgesOnly());
@@ -3302,6 +3398,53 @@ void LDViewWindow::doAlwaysBlack(void)
 {
 	prefs->setBlackHighlights(!prefs->getBlackHighlights());
 	setMenuCheck(hEdgesMenu, ID_EDGES_ALWAYSBLACK, prefs->getBlackHighlights());
+}
+
+void LDViewWindow::doTextureStuds(void)
+{
+	prefs->setTextureStuds(!prefs->getTextureStuds());
+	setMenuCheck(hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
+		prefs->getTextureStuds());
+}
+
+void LDViewWindow::doQualityLighting(void)
+{
+	prefs->setQualityLighting(!prefs->getQualityLighting());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_HIGHQUALITY,
+		prefs->getQualityLighting());
+}
+
+void LDViewWindow::doSubduedLighting(void)
+{
+	prefs->setSubduedLighting(!prefs->getSubduedLighting());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_SUBDUED,
+		prefs->getSubduedLighting());
+}
+
+void LDViewWindow::doSpecularHighlight(void)
+{
+	prefs->setUsesSpecular(!prefs->getUsesSpecular());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
+		prefs->getUsesSpecular());
+}
+
+void LDViewWindow::doAlternateLighting(void)
+{
+	prefs->setOneLight(!prefs->getOneLight());
+	setMenuCheck(hLightingMenu, ID_LIGHTING_ALTERNATESETUP,
+		prefs->getOneLight());
+}
+
+void LDViewWindow::doRedBackFaces(void)
+{
+	prefs->setRedBackFaces(!prefs->getRedBackFaces());
+	setMenuCheck(hBFCMenu, ID_BFC_REDBACKFACES, prefs->getRedBackFaces());
+}
+
+void LDViewWindow::doGreenFrontFaces(void)
+{
+	prefs->setGreenFrontFaces(!prefs->getGreenFrontFaces());
+	setMenuCheck(hBFCMenu, ID_BFC_GREENFRONTFACES, prefs->getGreenFrontFaces());
 }
 
 void LDViewWindow::doBfc(void)
@@ -4389,9 +4532,25 @@ void LDViewWindow::setMenuItemsEnabled(HMENU hMenu, bool enabled)
 LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
 									  BOOL /*fSystemMenu*/)
 {
-	if (hPopupMenu == hEdgesMenu)
+	if (hPopupMenu == hWireframeMenu)
+	{
+		updateWireframeMenu();
+	}
+	else if (hPopupMenu == hEdgesMenu)
 	{
 		updateEdgesMenu();
+	}
+	else if (hPopupMenu == hPrimitivesMenu)
+	{
+		updatePrimitivesMenu();
+	}
+	else if (hPopupMenu == hLightingMenu)
+	{
+		updateLightingMenu();
+	}
+	else if (hPopupMenu == hBFCMenu)
+	{
+		updateBFCMenu();
 	}
 	else
 	{
