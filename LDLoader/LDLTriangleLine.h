@@ -28,8 +28,8 @@ protected:
 	int m_colinearIndex;
 	int m_matchingIndex;
 
-	friend LDLFileLine; // Needed because constructors are protected.
-	friend LDLQuadLine; // Needed because constructors are protected, and bad
+	friend class LDLFileLine; // Needed because constructors are protected.
+	friend class LDLQuadLine; // Needed because constructors are protected, and bad
 						// quads can be converted to one or two triangles.
 };
 

@@ -123,7 +123,7 @@ int CUIPropertySheet::createPropSheet(void)
 	{
 		psHeader.hwndParent = hWindow;
 	}
-	psHeader.hInstance = hInstance;
+	psHeader.hInstance = getLanguageModule();
 	psHeader.pszCaption = windowTitle;
 	psHeader.nPages = hwndArray->getCount();
 	psHeader.nStartPage = 0;
@@ -146,7 +146,8 @@ void CUIPropertySheet::addPage(int resourceId, char* title)
 	{
 		page.dwFlags = PSP_DEFAULT;
 	}
-	page.hInstance = hInstance;
+
+	page.hInstance = getLanguageModule();
 	page.pszTemplate = MAKEINTRESOURCE(resourceId);
 //	page.hIcon = ???
 	page.pszTitle = title;

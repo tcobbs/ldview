@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include <stdio.h>
 
 CUIExport int			CUIWindow::systemMaxWidth = -1;
@@ -12,6 +13,10 @@ CUIExport int			CUIWindow::systemMaxTrackWidth = -1;
 CUIExport int			CUIWindow::systemMaxTrackHeight = -1;
 CUIExport HCURSOR		CUIWindow::hArrowCursor = NULL;
 CUIExport HCURSOR		CUIWindow::hWaitCursor = NULL;
+CUIExport HINSTANCE		CUIWindow::hLanguageModule = NULL;
+CUIExport bool			CUIWindow::appVersionPopulated = false;
+CUIExport DWORD			CUIWindow::appVersionMS;
+CUIExport DWORD			CUIWindow::appVersionLS;
 
 CUIWindow::CUIWindow(void)
 		  :windowTitle(copyString("")),
@@ -29,6 +34,7 @@ CUIWindow::CUIWindow(void)
 		   windowClassStyle(0),
 		   exWindowStyle(0),
 		   hWindow(NULL),
+		   hWindowMenu(NULL),
 		   parentWindow(NULL),
 		   hParentWindow(NULL),
 		   initialized(FALSE),
@@ -58,6 +64,7 @@ CUIWindow::CUIWindow(char* windowTitle, HINSTANCE hInstance, int x, int y,
 		   windowClassStyle(CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS),
 		   exWindowStyle(WS_EX_CONTROLPARENT),
 		   hWindow(NULL),
+		   hWindowMenu(NULL),
 		   parentWindow(NULL),
 		   hParentWindow(NULL),
 		   initialized(FALSE),
@@ -86,6 +93,7 @@ CUIWindow::CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 		   windowClassStyle(CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS),
 		   exWindowStyle(WS_EX_CONTROLPARENT),
 		   hWindow(NULL),
+		   hWindowMenu(NULL),
 		   parentWindow(parentWindow),
 		   hParentWindow(parentWindow->getHWindow()),
 		   initialized(FALSE),
@@ -115,6 +123,7 @@ CUIWindow::CUIWindow(HWND hParentWindow, HINSTANCE hInstance, int x, int y,
 		   exWindowStyle(WS_EX_CONTROLPARENT),
 		   hInstance(hInstance),
 		   hWindow(NULL),
+		   hWindowMenu(NULL),
 		   parentWindow(NULL),
 		   hParentWindow(hParentWindow),
 		   initialized(FALSE),
@@ -163,6 +172,11 @@ void CUIWindow::dealloc(void)
 	{
 		DestroyWindow(hWindow);
 		hWindow = NULL;
+	}
+	if (hWindowMenu)
+	{
+		DestroyMenu(hWindowMenu);
+		hWindowMenu = NULL;
 	}
 	delete windowTitle;
 	windowTitle = NULL;
@@ -1833,6 +1847,131 @@ BOOL CALLBACK CUIWindow::staticDialogProc(HWND hDlg, UINT message,
 	}
 }
 
+void CUIWindow::populateAppVersion(void)
+{
+	if (!appVersionPopulated)
+	{
+		char appFilename[1024];
+
+		if (GetModuleFileName(NULL, appFilename, sizeof(appFilename)) > 0)
+		{
+			DWORD zero;
+			DWORD versionInfoSize = GetFileVersionInfoSize(appFilename, &zero);
+			
+			if (versionInfoSize > 0)
+			{
+				BYTE *versionInfo = new BYTE[versionInfoSize];
+
+				if (GetFileVersionInfo(appFilename, NULL, versionInfoSize,
+					versionInfo))
+				{
+					VS_FIXEDFILEINFO *fixedVersionInfo;
+					UINT versionLength;
+
+					if (VerQueryValue(versionInfo, "\\",
+						(void**)&fixedVersionInfo, &versionLength))
+					{
+						appVersionMS = fixedVersionInfo->dwProductVersionMS;
+						appVersionLS = fixedVersionInfo->dwProductVersionLS;
+						appVersionPopulated = true;
+					}
+				}
+				delete versionInfo;
+			}
+		}
+	}
+}
+
+bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
+{
+	char localeInfo[1024];
+	LCTYPE lcType = LOCALE_SENGLANGUAGE;
+
+	if (includeSub)
+	{
+		lcType = LOCALE_SLANGUAGE;
+	}
+	if (GetLocaleInfo(lcid, lcType, localeInfo, sizeof(localeInfo)) > 0)
+	{
+		char languageModuleName[1024];
+		const char *appName = TCUserDefaults::getAppName();
+
+		if (strchr(appName, '/'))
+		{
+			appName = strrchr(appName, '/') + 1;
+		}
+		if (strchr(appName, '\\'))
+		{
+			appName = strrchr(appName, '\\') + 1;
+		}
+		sprintf(languageModuleName, "%s-%s.dll", appName, localeInfo);
+		hLanguageModule = LoadLibrary(languageModuleName);
+		if (hLanguageModule)
+		{
+			DWORD (*getCUIAppLanguageModuleVersion)(const char *, int) =
+				(DWORD (*)(const char *, int))GetProcAddress(hLanguageModule,
+				"getCUIAppLanguageModuleVersion");
+
+			if (getCUIAppLanguageModuleVersion)
+			{
+				DWORD dllVersionMS;
+				DWORD dllVersionLS;
+
+				dllVersionMS = getCUIAppLanguageModuleVersion(appName, 0);
+				dllVersionLS = getCUIAppLanguageModuleVersion(appName, 1);
+				if (dllVersionMS != appVersionMS ||
+					dllVersionLS != appVersionLS)
+				{
+					char message[1024];
+
+					sprintf(message, "Language module %s found.\n"
+						"This language module was created for a different "
+						"version of LDView, and therefore cannot be used.",
+						languageModuleName);
+					MessageBox(NULL, message, "Wrong Language Module",
+						MB_ICONWARNING | MB_OK);
+					FreeLibrary(hLanguageModule);
+					hLanguageModule = NULL;
+				}
+			}
+			else
+			{
+				FreeLibrary(hLanguageModule);
+				hLanguageModule = NULL;
+			}
+		}
+	}
+	if (includeSub && hLanguageModule == NULL)
+	{
+		return loadLanguageModule(lcid, false);
+	}
+	else
+	{
+		return hLanguageModule != NULL;
+	}
+}
+
+void CUIWindow::populateLanguageModule(HINSTANCE hDefaultModule)
+{
+	if (!hLanguageModule)
+	{
+		populateAppVersion();
+		if (!loadLanguageModule(LOCALE_USER_DEFAULT))
+		{
+			hLanguageModule = hDefaultModule;
+		}
+	}
+}
+
+HINSTANCE CUIWindow::getLanguageModule(void)
+{
+	if (!hLanguageModule)
+	{
+		populateLanguageModule(GetModuleHandle(NULL));
+	}
+	return hLanguageModule;
+}
+
 HWND CUIWindow::createDialog(char* templateName, BOOL asChildWindow)
 {
 	HWND hWnd;
@@ -1845,8 +1984,9 @@ HWND CUIWindow::createDialog(char* templateName, BOOL asChildWindow)
 	{
 		hWnd = NULL;
 	}
-	return CreateDialogParam(hInstance, templateName, hWnd, staticDialogProc,
-		(long)this);
+	populateLanguageModule(hInstance);
+	return CreateDialogParam(getLanguageModule(), templateName, hWnd,
+		staticDialogProc, (long)this);
 }
 
 HWND CUIWindow::createDialog(int templateNumber, BOOL asChildWindow)
@@ -1912,7 +2052,8 @@ BOOL CUIWindow::createMainWindow(void)
 	int dy = decorationSize.cy;
 
 	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
-		windowStyle, x, y, width + dx, height + dy, NULL, NULL, hInstance, this);
+		windowStyle, x, y, width + dx, height + dy, NULL, hWindowMenu,
+		hInstance, this);
 	if (!hWindow)
 	{
 		DWORD error = GetLastError();
@@ -1940,7 +2081,7 @@ BOOL CUIWindow::createSubWindow(void)
 	}
 	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
 		windowStyle, x - dx / 2, y - dy / 2, width, height,
-		hParentWindow, NULL, hInstance, this);
+		hParentWindow, hWindowMenu, hInstance, this);
 
 	if (!hWindow)
 	{
@@ -2044,4 +2185,3 @@ bool CUIWindow::copyToClipboard(const char *value)
 	}
 	return false;
 }
-

@@ -1,6 +1,6 @@
+#include "LDViewWindow.h"
 #include <shlobj.h>
 #include <shlwapi.h>
-#include "LDViewWindow.h"
 #include "LDVExtensionsSetup.h"
 #include "LDViewPreferences.h"
 #include "SSModelWindow.h"
@@ -11,11 +11,15 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCWebClient.h>
+#include <TCFoundation/TCThreadManager.h>
 #include <CUI/CUIWindowResizer.h>
 #include <afxres.h>
 
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
+
+#define DOWNLOAD_TIMER 12
 
 TCStringArray* LDViewWindow::recentFiles = NULL;
 TCStringArray* LDViewWindow::extraSearchDirs = NULL;
@@ -66,7 +70,6 @@ LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
 //			   modelWindowShown(false)
 {
 //	DWORD backgroundColor = TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
-
 	loadSettings();
 	standardWindowStyle = windowStyle;
 	if (!recentFiles)
@@ -79,9 +82,9 @@ LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
 		extraSearchDirs = new TCStringArray;
 		populateExtraSearchDirs();
 	}
-	hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
-		IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
-	hFlythroughIcon = (HICON)LoadImage(hInstance,
+	hExamineIcon = (HICON)LoadImage(getLanguageModule(),
+		MAKEINTRESOURCE(IDI_EXAMINE), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
+	hFlythroughIcon = (HICON)LoadImage(getLanguageModule(),
 		MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 //	DeleteObject(hBackgroundBrush);
 // 	hBackgroundBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
@@ -340,6 +343,11 @@ BOOL LDViewWindow::initWindow(void)
 
 	if (fullScreen || screenSaver)
 	{
+		if (hWindowMenu)
+		{
+			DestroyMenu(hWindowMenu);
+			hWindowMenu = NULL;
+		}
 		windowStyle = WS_POPUP | WS_MAXIMIZE;
 		if (screenSaver)
 		{
@@ -351,6 +359,8 @@ BOOL LDViewWindow::initWindow(void)
 	}
 	else
 	{
+		hWindowMenu = LoadMenu(getLanguageModule(),
+			MAKEINTRESOURCE(IDR_MAIN_MENU));
 		windowStyle = standardWindowStyle;
 		if (TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false))
 		{
@@ -699,10 +709,12 @@ LRESULT LDViewWindow::doActivateApp(BOOL activateFlag, DWORD /*threadId*/)
 	else
 	{
 		return 1;
+/*
 		if (activateFlag)
 		{
 			SetActiveWindow(hWindow);
 		}
+*/
 	}
 }
 
@@ -868,7 +880,6 @@ BOOL LDViewWindow::doExtraDirsCommand(int controlId, int notifyCode,
 		default:
 			return FALSE;
 		}
-		return TRUE;
 	}
 	else if (notifyCode == BN_CLICKED)
 	{
@@ -1883,7 +1894,7 @@ void LDViewWindow::chooseExtraDirs(void)
 		GetClientRect(hExtraDirsToolbar, &tbRect);
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR,
 			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(buttons[0]), 0);
-		addBitmap.hInst = hInstance;
+		addBitmap.hInst = getLanguageModule();
 		addBitmap.nID = IDB_EXTRA_DIRS;
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETINDENT,
 			tbRect.right - tbRect.left - 100, 0);
@@ -2040,6 +2051,87 @@ LRESULT LDViewWindow::switchTopmost(void)
 	return 0;
 }
 
+LRESULT LDViewWindow::doTimer(UINT timerID)
+{
+	switch (timerID)
+	{
+	case DOWNLOAD_TIMER:
+		TCThreadManager *threadManager = TCThreadManager::threadManager();
+
+		if (threadManager->timedWaitForFinishedThread(0))
+		{
+			TCThread *finishedThread;
+
+			while ((finishedThread = threadManager->getFinishedThread()) !=
+				NULL)
+			{
+				threadManager->removeFinishedThread(finishedThread);
+			}
+		}
+		break;
+	}
+	return 0;
+}
+
+void LDViewWindow::fetchHeaderFinish(TCWebClient* webClient)
+{
+	debugPrintf("fetchHeaderFinish: 0x%08X\n", GetCurrentThreadId());
+	webClient->fetchURLInBackground();
+}
+
+void LDViewWindow::fetchURLFinish(TCWebClient* webClient)
+{
+	int dataLength = webClient->getPageLength();
+
+	debugPrintf("fetchURLFinish: 0x%08X\n", GetCurrentThreadId());
+	if (dataLength)
+	{
+		BYTE *data = webClient->getPageData();
+		char *string = new char[dataLength + 1];
+
+		memcpy(string, data, dataLength);
+		string[dataLength] = 0;
+		debugPrintf("Got Page Data!\n");
+		debugPrintf(3, "%s\n", string);
+		delete string;
+	}
+	else
+	{
+		debugPrintf("No Page Data!\n");
+	}
+	webClient->release();
+	setDebugLevel(0);
+}
+
+void LDViewWindow::downloadTest(void)
+{
+	TCWebClient *webClient;
+//	TCThreadManager *threadManager = TCThreadManager::threadManager();
+
+	setDebugLevel(3);
+	debugPrintf("downloadTest: 0x%08X\n", GetCurrentThreadId());
+//	webClient = new TCWebClient("http://www.google.com/");
+	webClient = new TCWebClient("http://www.ldraw.org/cgi-bin/ptreleases.cgi");
+	webClient->setOwner(this);
+	webClient->setFinishHeaderMemberFunction((WebClientFinishMemberFunction)
+		&LDViewWindow::fetchHeaderFinish);
+	webClient->setFinishURLMemberFunction((WebClientFinishMemberFunction)
+		&LDViewWindow::fetchURLFinish);
+/*
+	if (webClient->fetchURL())
+	{
+		fetchURLFinish(webClient);
+	}
+	else
+	{
+		webClient->release();
+		setDebugLevel(0);
+	}
+*/
+	webClient->fetchHeaderInBackground();
+	setTimer(DOWNLOAD_TIMER, 250);
+}
+
 LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 {
 	char* message = NULL;
@@ -2091,6 +2183,10 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_FILE_EXIT:
 			shutdown();
+			return 0;
+			break;
+		case ID_FILE_DOWNLOADTEST:
+			downloadTest();
 			return 0;
 			break;
 		case ID_VIEW_FULLSCREEN:
@@ -2258,15 +2354,8 @@ WNDCLASSEX LDViewWindow::getWindowClass(void)
 {
 	WNDCLASSEX windowClass = CUIWindow::getWindowClass();
 
-	windowClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
-	if (fullScreen || screenSaver)
-	{
-		windowClass.lpszMenuName = NULL;
-	}
-	else
-	{
-		windowClass.lpszMenuName = MAKEINTRESOURCE(IDR_MAIN_MENU);
-	}
+	windowClass.hIcon = LoadIcon(getLanguageModule(),
+		MAKEINTRESOURCE(IDI_APP_ICON));
 	return windowClass;
 }
 

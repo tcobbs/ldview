@@ -94,6 +94,8 @@ class ModelWindow: public CUIOGLWindow
 		void setCancelLoad(void) { cancelLoad = true; }
 		bool performHotKey(int hotKeyIndex);
 
+		void orthoView(void);
+
 		static void initCommonControls(DWORD mask);
 		static bool chDirFromFilename(const char* filename, char* outFilename);
 	protected:
@@ -195,8 +197,8 @@ class ModelWindow: public CUIOGLWindow
 			BYTE *buffer);
 		virtual bool writeImage(char *filename, int width, int height,
 			BYTE *buffer, char *formatName);
-		virtual BYTE *grabImage(int imageWidth, int imageHeight, bool zoomToFit,
-			BYTE *buffer = NULL);
+		virtual BYTE *grabImage(int &imageWidth, int &imageHeight,
+			bool zoomToFit, BYTE *buffer = NULL);
 		virtual bool saveImage(char *filename, int imageWidth, int imageHeight,
 			bool zoomToFit);
 		virtual void renderOffscreenImage(void);
@@ -209,6 +211,9 @@ class ModelWindow: public CUIOGLWindow
 			int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer);
 		virtual void calcTiling(HDC hPrinterDC, int &bitmapWidth,
 			int &bitmapHeight, int &numXTiles, int &numYTiles);
+		virtual void calcTiling(int desiredWidth, int desiredHeight,
+			int &bitmapWidth, int &bitmapHeight, int &numXTiles,
+			int &numYTiles);
 		virtual void sizeView(void);
 		virtual void setupSaveExtras(void);
 		virtual void setupPrintExtras(void);
@@ -246,6 +251,10 @@ class ModelWindow: public CUIOGLWindow
 		void progressAlertCallback(TCProgressAlert *error);
 
 		void loadSettings(void);
+
+		virtual void drawLight(GLenum, float, float, float);
+		virtual void drawLights(void);
+		virtual void setupLight(GLenum);
 
 		static UINT CALLBACK staticPrintHook(HWND hDlg, UINT uiMsg,
 			WPARAM wParam, LPARAM lParam);

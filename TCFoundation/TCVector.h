@@ -10,6 +10,7 @@
 #ifndef __TCVECTOR_H__
 #define __TCVECTOR_H__
 
+#include <TCFoundation/TCDefines.h>
 #include <stdio.h>
 //#include <windows.h>
 //#include <GL/gl.h>

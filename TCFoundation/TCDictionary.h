@@ -14,6 +14,7 @@ class TCExport TCDictionary: public TCObject
 		/*virtual*/ TCObject* objectForKey(const char*);
 		TCObjectArray *allObjects(void) { return objects; }
 		virtual int removeObjectForKey(const char*);
+		virtual void removeAll(void);
 		virtual int isCaseSensitve(void);
 		virtual TCObject *copy(void);
 	protected:

@@ -34,7 +34,7 @@ protected:
 	TCULong m_color;
 	int m_colorNumber;
 
-	friend LDLFileLine; // Needed because constructors are protected.
+	friend class LDLFileLine; // Needed because constructors are protected.
 };
 
 #endif __LDLMODELLINE_H__

@@ -145,6 +145,7 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 {
 	int i;
 	char* spot = (char*)string;
+	char* tokenEnd = NULL;
 	int separatorLength = strlen(separator);
 	char** components;
 	char* stringCopy;
@@ -161,7 +162,12 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 	components = new char*[count];
 	stringCopy = new char[strlen(string) + 1];
 	strcpy(stringCopy, string);
-	spot = strtok(stringCopy, separator);
+	tokenEnd = strstr(stringCopy, separator);
+	if (tokenEnd)
+	{
+		*tokenEnd = 0;
+	}
+	spot = stringCopy;
 	for (i = 0; i < count; i++)
 	{
 		if (spot)
@@ -174,7 +180,26 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 			components[i] = new char[1];
 			components[i][0] = 0;
 		}
-		spot = strtok(NULL, separator);
+		if (tokenEnd)
+		{
+			spot = tokenEnd + separatorLength;
+		}
+		else
+		{
+			spot = NULL;
+		}
+		if (spot)
+		{
+			tokenEnd = strstr(spot, separator);
+			if (tokenEnd)
+			{
+				*tokenEnd = 0;
+			}
+		}
+		else
+		{
+			tokenEnd = NULL;
+		}
 	}
 	delete stringCopy;
 	return components;

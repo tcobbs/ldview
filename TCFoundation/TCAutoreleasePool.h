@@ -40,7 +40,7 @@ class TCAutoreleasePool
 		public:
 			~TCAutoreleasePoolCleanup(void);
 		} poolCleanup;
-		friend TCAutoreleasePoolCleanup;
+		friend class TCAutoreleasePoolCleanup;
 };
 
 #endif

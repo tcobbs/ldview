@@ -103,9 +103,11 @@ void SSPreview::doPaint(void)
 
 	if (!hBitmap)
 	{
-		hBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_SS_PREVIEW));
-		hBitmap = (HBITMAP)LoadImage(hInstance, MAKEINTRESOURCE(IDB_SS_PREVIEW),
-			IMAGE_BITMAP, width, height, LR_DEFAULTCOLOR);
+//		hBitmap = LoadBitmap(getLanguageModule(),
+//			MAKEINTRESOURCE(IDB_SS_PREVIEW));
+		hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
+			MAKEINTRESOURCE(IDB_SS_PREVIEW), IMAGE_BITMAP, width, height,
+			LR_DEFAULTCOLOR);
 		hBrush = CreatePatternBrush(hBitmap);
 	}
 	FillRect(hdc, &rect, hBrush);

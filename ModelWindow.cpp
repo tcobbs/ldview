@@ -29,6 +29,8 @@
 #define PNG_IMAGE_TYPE_INDEX 1
 #define BMP_IMAGE_TYPE_INDEX 2
 
+#define MAX_SNAPSHOT_WIDTH 10000
+#define MAX_SNAPSHOT_HEIGHT 10000
 
 ControlInfo::ControlInfo(void)
 {
@@ -1313,51 +1315,55 @@ void ModelWindow::setupErrorWindow(void)
 		return;
 
 	// Add the bitmaps.
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_INFO));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_INFO_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_INFO));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_INFO_MASK));
 	ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE_MASK));
 	errorImageIndices[LDLEParse] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_FNF));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_FNF_MASK));
 	errorImageIndices[LDLEFileNotFound] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_DETERMINANT));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_DETERMINANT_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_DETERMINANT));
+	hMask = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_DETERMINANT_MASK));
 	errorImageIndices[LDLEPartDeterminant] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
+	hMask = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_MASK));
 	errorImageIndices[LDLEConcaveQuad] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT_MASK));
+	hbmp = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT));
+	hMask = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT_MASK));
 	errorImageIndices[LDLEConcaveQuadSplit] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_OPENGL));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_OPENGL_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_OPENGL));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_OPENGL_MASK));
 	errorImageIndices[LDLEOpenGL] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 /*
-	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLOR));
-	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLOR_MASK));
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLOR));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLOR_MASK));
 	errorImageIndices[LDMEColor] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
@@ -1444,7 +1450,8 @@ void ModelWindow::registerErrorWindowClass(void)
 	GetClassName(hProgressWindow, prefsClassName, 1024);
 	windowClass.cbSize = sizeof(windowClass);
 	GetClassInfoEx(hInstance, prefsClassName, &windowClass);
-	windowClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
+	windowClass.hIcon = LoadIcon(getLanguageModule(),
+		MAKEINTRESOURCE(IDI_APP_ICON));
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = "LDViewErrorWindow";
 	RegisterClassEx(&windowClass);
@@ -2296,66 +2303,88 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 				LDVExtensionsSetup::getWglCreatePbufferARB();
 			PFNWGLGETPBUFFERDCARBPROC wglGetPbufferDCARB =
 				LDVExtensionsSetup::getWglGetPbufferDCARB();
+			PFNWGLGETPIXELFORMATATTRIBIVEXTPROC wglGetPixelFormatAttribivARB =
+				LDVExtensionsSetup::getWglGetPixelFormatAttribivARB();
 
-			if (wglCreatePbufferARB && wglGetPbufferDCARB)
+			if (wglCreatePbufferARB && wglGetPbufferDCARB &&
+				wglGetPixelFormatAttribivARB)
 			{
-				GLint intValues[] = { 
-					WGL_PBUFFER_LARGEST_ARB, 0,
-					0, 0
+				int pfSizeAttribs[3] = {
+					WGL_MAX_PBUFFER_WIDTH_ARB,
+					WGL_MAX_PBUFFER_HEIGHT_ARB,
+					WGL_MAX_PBUFFER_PIXELS_ARB
 				};
-				hPBuffer = wglCreatePbufferARB(hdc, index, imageWidth,
-					imageHeight, intValues);
+				int attribValues[3];
 
-				if (hPBuffer)
+				wglGetPixelFormatAttribivARB(hdc, index, 0, 3, pfSizeAttribs,
+					attribValues);
+				// This shouldn't be necessary, but ATI returns a PBuffer even
+				// if we ask for one that is too big, so we can't rely on their
+				// failure to trigger failure.  The one it returns CLAIMS to be
+				// the size we asked for; it just doesn't work right.
+				if (attribValues[0] >= imageWidth &&
+					attribValues[1] >= imageHeight &&
+					attribValues[2] >= imageWidth * imageHeight)
 				{
-					hPBufferDC = wglGetPbufferDCARB(hPBuffer);
+					// Given the above check, the following shouldn't really
+					// matter, but I'll leave it in anyway.
+					GLint intValues[] = { 
+						WGL_PBUFFER_LARGEST_ARB, 0,
+						0, 0
+					};
+					hPBuffer = wglCreatePbufferARB(hdc, index, imageWidth,
+						imageHeight, intValues);
 
-					if (hPBufferDC)
+					if (hPBuffer)
 					{
-						hPBufferGLRC = wglCreateContext(hPBufferDC);
-
-						if (hPBufferGLRC)
+						hPBufferDC = wglGetPbufferDCARB(hPBuffer);
+						if (hPBufferDC)
 						{
-							wglShareLists(hglrc, hPBufferGLRC);
-							hCurrentDC = hPBufferDC;
-							hCurrentGLRC = hPBufferGLRC;
-							makeCurrent();
-							if (currentAntialiasType && antialias &&
-								LDVExtensionsSetup::
-								haveNvMultisampleFilterHintExtension())
+							hPBufferGLRC = wglCreateContext(hPBufferDC);
+
+							if (hPBufferGLRC)
 							{
-								if (LDViewPreferences::
-									getUseNvMultisampleFilter())
+							wglShareLists(hglrc, hPBufferGLRC);
+								hCurrentDC = hPBufferDC;
+								hCurrentGLRC = hPBufferGLRC;
+								makeCurrent();
+								if (currentAntialiasType && antialias &&
+									LDVExtensionsSetup::
+									haveNvMultisampleFilterHintExtension())
 								{
-									glHint(GL_MULTISAMPLE_FILTER_HINT_NV,
-										GL_NICEST);
+									if (LDViewPreferences::
+										getUseNvMultisampleFilter())
+									{
+										glHint(GL_MULTISAMPLE_FILTER_HINT_NV,
+											GL_NICEST);
+									}
+									else
+									{
+										glHint(GL_MULTISAMPLE_FILTER_HINT_NV,
+											GL_FASTEST);
+									}
+									glEnable(GL_MULTISAMPLE_ARB);
+								}
+								setupMaterial();
+								setupLighting();
+								glDepthFunc(GL_LEQUAL);
+								glEnable(GL_DEPTH_TEST);
+								glDrawBuffer(GL_FRONT);
+								glReadBuffer(GL_FRONT);
+								modelViewer->setWidth(imageWidth);
+								modelViewer->setHeight(imageHeight);
+								modelViewer->setup();
+								modelViewer->pause();
+								if (modelViewer->getNeedsReload())
+								{
+									return true;
 								}
 								else
 								{
-									glHint(GL_MULTISAMPLE_FILTER_HINT_NV,
-										GL_FASTEST);
+									// No need to recompile as before, because
+									// we're sharing display lists.
+									return true;
 								}
-								glEnable(GL_MULTISAMPLE_ARB);
-							}
-							setupMaterial();
-							setupLighting();
-							glDepthFunc(GL_LEQUAL);
-							glEnable(GL_DEPTH_TEST);
-							glDrawBuffer(GL_FRONT);
-							glReadBuffer(GL_FRONT);
-							modelViewer->setWidth(imageWidth);
-							modelViewer->setHeight(imageHeight);
-							modelViewer->setup();
-							modelViewer->pause();
-							if (modelViewer->getNeedsReload())
-							{
-								return true;
-							}
-							else
-							{
-								// No need to recompile as before, because we're
-								// sharing display lists.
-								return true;
 							}
 						}
 					}
@@ -2459,7 +2488,7 @@ bool ModelWindow::canSaveAlpha(void)
 	return false;
 }
 
-BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, bool zoomToFit,
+BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 							 BYTE *buffer)
 {
 	RECT rect = {0, 0, 0, 0};
@@ -2470,80 +2499,123 @@ BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, bool zoomToFit,
 	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
 	bool origForceZoomToFit = modelViewer->getForceZoomToFit();
 	TCVector origCameraPosition = modelViewer->getCamera().getPosition();
+	int newWidth = 1600;
+	int newHeight = 1200;
+	int numXTiles, numYTiles;
+	int xTile;
+	int yTile;
+	BYTE *smallBuffer;
+	int bytesPerPixel = 3;
+	int bytesPerLine;
+	int smallBytesPerLine;
+	bool canceled = false;
+	bool bufferAllocated = false;
 
 	offscreenActive = true;
-//	if (setupPBuffer(imageWidth, imageHeight/*, currentAntialiasType > 0*/))
 	if (zoomToFit)
 	{
 		modelViewer->setForceZoomToFit(true);
 	}
-	if (setupPBuffer(imageWidth, imageHeight, currentAntialiasType > 0))
+	calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
+		numYTiles);
+	imageWidth = newWidth * numXTiles;
+	imageHeight = newHeight * numYTiles;
+	if (!setupPBuffer(newWidth, newHeight, currentAntialiasType > 0))
 	{
-		renderOffscreenImage();
+		newWidth = width;		// width is OpenGL window width
+		newHeight = height;		// height is OpenGL window height
+		calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
+			numYTiles);
+		modelViewer->setSlowClear(true);
+		GetWindowRect(hParentWindow, &rect);
+		needReset = true;
+		MoveWindow(hParentWindow, 0, 0, rect.right - rect.left,
+			rect.bottom - rect.top, TRUE);
+		modelViewer->setWidth(newWidth);
+		modelViewer->setHeight(newHeight);
+		makeCurrent();
+		glReadBuffer(GL_BACK);
+	}
+	if (canSaveAlpha())
+	{
+		bytesPerPixel = 4;
+		bufferFormat = GL_RGBA;
+	}
+	smallBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
+	bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
+	if (!buffer)
+	{
+		buffer = new BYTE[bytesPerLine * imageHeight];
+		bufferAllocated = true;
+	}
+	if (numXTiles == 1 && numYTiles == 1)
+	{
+		smallBuffer = buffer;
 	}
 	else
 	{
-		if (!modelViewer->getCompiled())
+		smallBuffer = new BYTE[smallBytesPerLine * newHeight];
+	}
+	modelViewer->setNumXTiles(numXTiles);
+	modelViewer->setNumYTiles(numYTiles);
+	for (yTile = 0; yTile < numYTiles; yTile++)
+	{
+		modelViewer->setYTile(yTile);
+		for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
 		{
-			cleanupPBuffer();
-			return NULL;
-		}
-		if (imageWidth <= width && imageHeight <= height && windowShown)
-		{
-			modelViewer->setSlowClear(true);
-			GetWindowRect(hParentWindow, &rect);
-			needReset = true;
-			MoveWindow(hParentWindow, 0, 0, rect.right - rect.left,
-				rect.bottom - rect.top, FALSE);
-			modelViewer->setWidth(imageWidth);
-			modelViewer->setHeight(imageHeight);
-			makeCurrent();
+			modelViewer->setXTile(xTile);
 			renderOffscreenImage();
-//			modelViewer->update();
-			glReadBuffer(GL_BACK);
-		}
-		else
-		{
-			offscreenActive = false;
-			if (LDVExtensionsSetup::havePixelBufferExtension())
+			if (progressCallback("Rendering snapshot.",
+				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles)))
 			{
-				MessageBox(hParentWindow, "Save Failed.\n"
-					"The dimensions you requested are too large.  "
-					"Try either decreasing the image dimensions or not "
-					"specifying them at all.", "LDView",
-					MB_OK | MB_ICONEXCLAMATION);
+				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
+					GL_UNSIGNED_BYTE, smallBuffer);
+				if (smallBuffer != buffer)
+				{
+					int x;
+					int y;
+
+					for (y = 0; y < newHeight; y++)
+					{
+						int smallOffset = y * smallBytesPerLine;
+						int offset = (y + (numYTiles - yTile - 1) * newHeight) *
+							bytesPerLine;
+
+						for (x = 0; x < newWidth; x++)
+						{
+							int spot = offset + x * bytesPerPixel +
+								xTile * newWidth * bytesPerPixel;
+							int smallSpot = smallOffset + x * bytesPerPixel;
+
+							buffer[spot] = smallBuffer[smallSpot];
+							buffer[spot + 1] = smallBuffer[smallSpot + 1];
+							buffer[spot + 2] = smallBuffer[smallSpot + 2];
+						}
+						// We only need to zoom to fit on the first tile; the
+						// rest will already be correct.
+						modelViewer->setForceZoomToFit(false);
+					}
+				}
 			}
 			else
 			{
-				MessageBox(hParentWindow, "Save Failed.\n"
-					"Your video driver does not support off-screen "
-					"rendering.  You must either decrease the image dimensions "
-					"to be no greater than the size of the window, or not "
-					"specify them at all.", "LDView",
-					MB_OK | MB_ICONEXCLAMATION);
+				canceled = true;
 			}
-			return NULL;
 		}
 	}
-	if (zoomToFit)
+	modelViewer->setXTile(0);
+	modelViewer->setYTile(0);
+	modelViewer->setNumXTiles(1);
+	modelViewer->setNumYTiles(1);
+	if (canceled && bufferAllocated)
 	{
-		modelViewer->setForceZoomToFit(origForceZoomToFit);
-		modelViewer->getCamera().setPosition(origCameraPosition);
+		delete buffer;
+		buffer = NULL;
 	}
-	if (!buffer)
+	if (smallBuffer != buffer)
 	{
-		if (canSaveAlpha())
-		{
-			buffer = new BYTE[imageWidth * 4 * imageHeight];
-			bufferFormat = GL_RGBA;
-		}
-		else
-		{
-			buffer = new BYTE[roundUp(imageWidth * 3, 4) * imageHeight];
-		}
+		delete smallBuffer;
 	}
-	glReadPixels(0, 0, imageWidth, imageHeight, bufferFormat, GL_UNSIGNED_BYTE,
-		buffer);
 	if (hPBuffer)
 	{
 		cleanupPBuffer();
@@ -2556,8 +2628,13 @@ BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, bool zoomToFit,
 	if (needReset)
 	{
 		MoveWindow(hParentWindow, rect.left, rect.top, rect.right - rect.left,
-			rect.bottom - rect.top, FALSE);
+			rect.bottom - rect.top, TRUE);
 		RedrawWindow(hParentWindow, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
+	}
+	if (zoomToFit)
+	{
+		modelViewer->setForceZoomToFit(origForceZoomToFit);
+		modelViewer->getCamera().setPosition(origCameraPosition);
 	}
 	offscreenActive = false;
 	modelViewer->setSlowClear(oldSlowClear);
@@ -2650,7 +2727,7 @@ bool ModelWindow::selectPrinter(PRINTDLG &pd)
 	pd.nMinPage = 0;
 	pd.nMaxPage = 0;
 	pd.nCopies = 1;
-	pd.hInstance = hInstance;
+	pd.hInstance = getLanguageModule();
 	pd.lCustData = (long)this;
 	pd.lpfnPrintHook = staticPrintHook;
 	pd.lpfnSetupHook = NULL;
@@ -2707,6 +2784,30 @@ void ModelWindow::swap(int &left, int &right)
 
 	left = right;
 	right = temp;
+}
+
+void ModelWindow::calcTiling(int desiredWidth, int desiredHeight,
+							 int &bitmapWidth, int &bitmapHeight,
+							 int &numXTiles, int &numYTiles)
+{
+	if (desiredWidth > bitmapWidth)
+	{
+		numXTiles = (desiredWidth + bitmapWidth - 1) / bitmapWidth;
+	}
+	else
+	{
+		numXTiles = 1;
+	}
+	bitmapWidth = desiredWidth / numXTiles;
+	if (desiredHeight > bitmapHeight)
+	{
+		numYTiles = (desiredHeight + bitmapHeight - 1) / bitmapHeight;
+	}
+	else
+	{
+		numYTiles = 1;
+	}
+	bitmapHeight = desiredHeight / numYTiles;
 }
 
 void ModelWindow::calcTiling(HDC hPrinterDC, int &bitmapWidth,
@@ -3057,7 +3158,7 @@ bool ModelWindow::pageSetup(void)
 	psd.rtMargin.top = (long)(printTopMargin * 1000);
 	psd.rtMargin.bottom = (long)(printBottomMargin * 1000);
 	psd.lCustData = (long)this;
-	psd.hInstance = hInstance;
+	psd.hInstance = getLanguageModule();
 	psd.lpfnPageSetupHook = staticPageSetupHook;
 	psd.lpPageSetupTemplateName = MAKEINTRESOURCE(PAGESETUPDLGORD);
 
@@ -3272,7 +3373,8 @@ void ModelWindow::updateSaveWidth(void)
 
 		SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_GETTEXT, 128,
 			(LPARAM)buf);
-		if (sscanf(buf, "%d", &temp) == 1 && temp > 0 && temp <= 4096)
+		if (sscanf(buf, "%d", &temp) == 1 && temp > 0 &&
+			temp <= MAX_SNAPSHOT_WIDTH)
 		{
 			saveWidth = temp;
 		}
@@ -3295,7 +3397,8 @@ void ModelWindow::updateSaveHeight(void)
 
 		SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_GETTEXT, 128,
 			(LPARAM)buf);
-		if (sscanf(buf, "%d", &temp) == 1 && temp > 0 && temp <= 4096)
+		if (sscanf(buf, "%d", &temp) == 1 && temp > 0 &&
+			temp <= MAX_SNAPSHOT_HEIGHT)
 		{
 			saveHeight = temp;
 		}
@@ -3599,7 +3702,7 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 			| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT;
 		openStruct.lpstrDefExt = NULL;
 		openStruct.lCustData = (long)this;
-		openStruct.hInstance = hInstance;
+		openStruct.hInstance = getLanguageModule();
 		openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_SAVE_OPTIONS);
 		openStruct.lpfnHook = staticSaveHook;
 		if (GetSaveFileName(&openStruct))
@@ -4004,4 +4107,25 @@ void ModelWindow::initFail(char * /*reason*/)
 	MessageBox(hWindow, "LDView was unable to initialize OpenGL.\n"
 		"Hit OK to exit.", "Fatal Error", MB_OK | MB_ICONERROR);
 	PostQuitMessage(-1);
+}
+
+void ModelWindow::drawLight(GLenum /*light*/, float /*x*/, float /*y*/,
+							float /*z*/)
+{
+	// Don't call super.
+}
+
+void ModelWindow::drawLights(void)
+{
+	// Don't call super.
+}
+
+void ModelWindow::orthoView(void)
+{
+	// Don't call super.
+}
+
+void ModelWindow::setupLight(GLenum /*light*/)
+{
+	// Don't call super.
 }

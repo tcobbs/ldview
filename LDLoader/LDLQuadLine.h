@@ -39,7 +39,7 @@ protected:
 	int m_colinearIndex;
 	int m_matchingIndex;
 
-	friend LDLFileLine; // Needed because constructors are protected.
+	friend class LDLFileLine; // Needed because constructors are protected.
 };
 
 #endif // __LDLQUADLINE_H__

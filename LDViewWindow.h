@@ -16,6 +16,7 @@ typedef struct
 class ModelWindow;
 class TCStringArray;
 class CUIWindowResizer;
+class TCWebClient;
 
 class LDViewWindow: public CUIWindow
 {
@@ -166,6 +167,10 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL doMoveExtraDirDown(void);
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
+		void downloadTest(void);
+		void fetchURLFinish(TCWebClient *webClient);
+		void fetchHeaderFinish(TCWebClient *webClient);
+		LRESULT doTimer(UINT timerID);
 
 		void loadSettings(void);
 
@@ -218,7 +223,7 @@ class LDViewWindow: public CUIWindow
 		public:
 			~LDViewWindowCleanup(void);
 		} ldViewWindowCleanup;
-		friend LDViewWindowCleanup;
+		friend class LDViewWindowCleanup;
 };
 
 #endif // __LD3VIEWWINDOW_H__

@@ -947,10 +947,12 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 							 const char* format, ...)
 {
 	va_list argPtr;
+	LDLError *retValue;
 
 	va_start(argPtr, type);
-	return newError(type, fileLine, format, argPtr);
+	retValue = newError(type, fileLine, format, argPtr);
 	va_end(argPtr);
+	return retValue;
 }
 
 LDLError *LDLModel::newError(LDLErrorType type, const char* format,
@@ -988,8 +990,10 @@ LDLError *LDLModel::newError(LDLErrorType type, const char* format,
 LDLError *LDLModel::newError(LDLErrorType type, const char* format, ...)
 {
 	va_list argPtr;
+	LDLError *retValue;
 
 	va_start(argPtr, type);
-	return newError(type, format, argPtr);
+	retValue = newError(type, format, argPtr);
 	va_end(argPtr);
+	return retValue;
 }

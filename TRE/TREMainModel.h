@@ -81,6 +81,8 @@ public:
 	{
 		return m_mainFlags.conditionalLines != false && getEdgeLinesFlag();
 	}
+	void setSmoothCurvesFlag(bool value) { m_mainFlags.smoothCurves = value; }
+	bool getSmoothCurvesFlag(void) { return m_mainFlags.smoothCurves != false; }
 	void setShowAllConditionalFlag(bool value);
 	bool getShowAllConditionalFlag(void)
 	{
@@ -215,7 +217,7 @@ protected:
 	public:
 		~TREMainModelCleanup(void);
 	} sm_mainModelCleanup;
-	friend TREMainModelCleanup;
+	friend class TREMainModelCleanup;
 };
 
 #endif // __TREMAINMODEL_H__

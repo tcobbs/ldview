@@ -3,8 +3,6 @@
 
 #include <TCFoundation/TCDefines.h>
 
-//#define _LEAK_DEBUG
-
 class TCAutoreleasePool;
 
 class TCExport TCObject
@@ -30,7 +28,7 @@ class TCExport TCObject
 		char className[32];
 #endif
 		int retainCount;
-		friend TCAutoreleasePool;
+		friend class TCAutoreleasePool;
 };
 
 #endif

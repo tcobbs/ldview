@@ -1,5 +1,5 @@
-#include <windows.h>
 #include "SSPassword.h"
+#include <windows.h>
 #include <windowsx.h> 
 #include <regstr.h> 
 

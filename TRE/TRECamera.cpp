@@ -1,11 +1,8 @@
 #include <string.h>
 #include "TRECamera.h"
-#ifdef WIN32
-#include <windows.h>
-#endif // WIN32
+#include "TREGL.h"
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/mystring.h>
-#include "TREGL.h"
 
 TRECamera::TRECamera(void)
 	:name(NULL)

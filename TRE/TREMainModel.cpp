@@ -64,7 +64,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.stipple = false;
 	m_mainFlags.wireframe = false;
 	m_mainFlags.conditionalLines = false;
-	m_mainFlags.smoothCurves = false;
+	m_mainFlags.smoothCurves = true;
 	m_mainFlags.showAllConditional = false;
 	m_mainFlags.conditionalControlPoints = false;
 	m_mainFlags.studLogo = true;
@@ -483,7 +483,10 @@ void TREMainModel::drawLines(void)
 	TREModel::draw(TREMEdgeLines);
 	m_vertexStore->deactivate();
 	m_vertexStore->activate(false);
-	TREModel::draw(TREMConditionalLines);
+	if (getConditionalLinesFlag())
+	{
+		TREModel::draw(TREMConditionalLines);
+	}
 	// Next, draw the specific colored lines.  As with the specific colored
 	// triangles and quads, every point in the vertex store specifies a color.
 	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
@@ -495,7 +498,10 @@ void TREMainModel::drawLines(void)
 	drawColored(TREMEdgeLines);
 	m_coloredVertexStore->deactivate();
 	m_coloredVertexStore->activate(false);
-	drawColored(TREMConditionalLines);
+	if (getConditionalLinesFlag())
+	{
+		drawColored(TREMConditionalLines);
+	}
 	if (getAALinesFlag() && !getWireframeFlag())
 	{
 		// Note that if we're in wireframe mode, smoothing was enabled

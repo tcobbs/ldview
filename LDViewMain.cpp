@@ -1,3 +1,4 @@
+#include <TCFoundation/TCDefines.h>
 #include <windows.h>
 #include <windowsx.h>
 #include "ModelLoader.h"
@@ -5,6 +6,7 @@
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
 #include <CUI/CUIWindow.h>
 #include "SSPreview.h"
@@ -272,6 +274,7 @@ static void setupUserDefaults(LPSTR lpCmdLine, bool screenSaver)
 	char *sessionName;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
+	TCLocalStrings::loadStringTable("LDViewMessages.ini");
 	if (screenSaver)
 	{
 		appName = "Travis Cobbs/LDView Screen Saver";

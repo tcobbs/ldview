@@ -77,7 +77,7 @@ class TCExport TCImage : public TCObject
 		public:
 			~TCImageCleanup(void);
 		} imageCleanup;
-		friend TCImageCleanup;
+		friend class TCImageCleanup;
 };
 
 typedef TCTypedObjectArray<TCImage> TCImageArray;

@@ -186,7 +186,7 @@ protected:
 	public:
 		~LDVExtensionsSetupCleanup(void);
 	} extensionsSetupCleanup;
-	friend LDVExtensionsSetupCleanup;
+	friend class LDVExtensionsSetupCleanup;
 };
 
 #endif // __LDVEXTENSIONSSETUP_H__

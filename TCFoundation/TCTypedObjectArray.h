@@ -14,25 +14,6 @@ template <class Type> class TCTypedObjectArray : public TCObjectArray
 			:TCObjectArray(count) {}
 		TCTypedObjectArray(const TCTypedObjectArray<Type> &other)
 			:TCObjectArray(other) {}
-/*
-		{
-			unsigned int i;
-
-			for (i = 0; i < count; i++)
-			{
-				Type *object = (Type*)other.items[i];
-
-				if (object)
-				{
-					items[i] = object->copy();
-				}
-				else
-				{
-					items[i] = NULL;
-				}
-			}
-		}
-*/
 		virtual TCObject *copy(void)
 		{
 			return new TCTypedObjectArray<Type>(*this);

@@ -1,6 +1,6 @@
 #ifdef WIN32
+#include <winsock2.h>
 #include <windows.h>
-#include <winsock.h>
 #else // WIN32
 #include <netinet/in.h>
 #endif // WIN32

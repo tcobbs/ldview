@@ -777,6 +777,7 @@ BEGIN
         MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",               ID_FILE_EXIT
+        MENUITEM "Download Test",               ID_FILE_DOWNLOADTEST
     END
     POPUP "&Edit"
     BEGIN
@@ -905,8 +906,8 @@ IDB_EXTRA_DIRS          BITMAP  DISCARDABLE     "Icons\\extra_dirs_toolbar.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,0,0
- PRODUCTVERSION 2,1,0,0
+ FILEVERSION 2,9,99,1
+ PRODUCTVERSION 2,9,99,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -924,14 +925,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", " \0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "2.1\0"
+            VALUE "FileVersion", "2.9.99.001\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2000-2004 Travis Cobbs\0"
             VALUE "LegalTrademarks", " \0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", " \0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "2.1\0"
+            VALUE "ProductVersion", "2.9.99.001\0"
             VALUE "SpecialBuild", "\0"
         END
     END

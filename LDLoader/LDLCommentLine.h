@@ -24,7 +24,7 @@ protected:
 	char *m_processedLine;
 	TCStringArray *m_words;
 
-	friend LDLFileLine; // Needed because constructors are protected.
+	friend class LDLFileLine; // Needed because constructors are protected.
 };
 
 #endif // __LDLCOMMENTLINE_H__

@@ -26,7 +26,7 @@ class CUIWindowList
 		CUIWindowListItem* head;
 		CUIWindowListItem* tail;
 	private:
-		friend CUIWindowListEnumerator;
+		friend class CUIWindowListEnumerator;
 };
 
 #endif

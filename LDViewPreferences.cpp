@@ -1,15 +1,17 @@
+#include "LDViewPreferences.h"
 #include <shlobj.h>
 #include <shlwapi.h>
-#include "LDViewPreferences.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLoader/LDLPalette.h>
 #include <TCFoundation/TCMacros.h>
 #include "LDVExtensionsSetup.h"
 #include "AppResources.h"
 #include "UserDefaultsKeys.h"
+#include "LocalStringsKeys.h"
 #include "ModelWindow.h"
 
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 #include <Commctrl.h>
@@ -589,8 +591,9 @@ void LDViewPreferences::abandonChanges(void)
 
 int LDViewPreferences::runPrefSetApplyDialog(void)
 {
-	int retValue = DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_PREFSET_APPLY),
-		hWindow, staticDialogProc, (LPARAM)this);
+	int retValue = DialogBoxParam(getLanguageModule(),
+		MAKEINTRESOURCE(IDD_PREFSET_APPLY), hWindow, staticDialogProc,
+		(LPARAM)this);
 
 	if (retValue == IDC_APPLY)
 	{
@@ -1511,11 +1514,18 @@ void LDViewPreferences::doDeletePrefSet(void)
 
 		if (checkAbandon && getApplyEnabled())
 		{
+/*
 			if (MessageBox(hWindow, "You have made changes to the current pref "
 				"set that have not been applied.  If you delete this pref set, "
 				"those changes will be lost.  Are you sure you want to delete "
-				"it?", "Abandon changes?", MB_YESNO | MB_ICONQUESTION) ==
+				"it?", TCLocalStrings::getLocalString(ABANDON_CHANGES_KEY),
+				MB_YESNO | MB_ICONQUESTION) ==
 				IDYES)
+*/
+			if (MessageBox(hWindow,
+				TCLocalStrings::getLocalString(PREF_SET_ABANDON_CONFIRM_KEY),
+				TCLocalStrings::getLocalString(ABANDON_CHANGES_KEY),
+				MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				abandonChanges();
 			}
@@ -1541,7 +1551,7 @@ void LDViewPreferences::doDeletePrefSet(void)
 void LDViewPreferences::doNewPrefSet(void)
 {
 	newPrefSetName = NULL;
-	if (DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_NEW_PREF_SET),
+	if (DialogBoxParam(getLanguageModule(), MAKEINTRESOURCE(IDD_NEW_PREF_SET),
 		hPropSheet, staticDialogProc, (LPARAM)this) == IDOK)
 	{
 		if (newPrefSetName)
@@ -1686,8 +1696,8 @@ void LDViewPreferences::doPrefSetHotKey(void)
 	{
 		hotKeyIndex = 10;
 	}
-	if (DialogBoxParam(hInstance, MAKEINTRESOURCE(IDD_HOTKEY), hPropSheet,
-		staticDialogProc, (LPARAM)this) == IDOK)
+	if (DialogBoxParam(getLanguageModule(), MAKEINTRESOURCE(IDD_HOTKEY),
+		hPropSheet, staticDialogProc, (LPARAM)this) == IDOK)
 	{
 		if (hotKeyIndex != CB_ERR)
 		{
