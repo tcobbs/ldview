@@ -19,11 +19,13 @@ TREShapeGroup::TREShapeGroup(void)
 TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 	:m_vertexStore(other.m_vertexStore),
 	m_indices(NULL),
-	m_stripCounts(NULL),
+//	m_stripCounts(NULL),
+	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
 	m_multiDrawIndices(NULL),
 	m_shapesPresent(other.m_shapesPresent)
 {
 	m_vertexStore->retain();
+/*
 	if (other.m_stripCounts)
 	{
 		int shapeTypeCount = other.m_stripCounts->getCount();
@@ -52,6 +54,7 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 			}
 		}
 	}
+*/
 	if (other.m_shapesPresent)
 	{
 		int i, j;

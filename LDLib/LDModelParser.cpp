@@ -45,7 +45,6 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	if (m_flags.flattenParts)
 	{
 		treModel->flatten();
-		treModel->getInvertedModel();
 	}
 	if (subModel)
 	{
@@ -103,6 +102,12 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 			parentModel->getPackedRGBA(colorNumber),
 			parentModel->getPackedRGBA(edgeColorNumber),
 			modelLine->getMatrix(), treModel);
+		if (TCVector::determinant(treSubModel->getMatrix()) < 0.0f)
+		{
+			// Generate an inverted version of the child model, because this
+			// reference to it involves a mirror.
+			treModel->getInvertedModel();
+		}
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
 	{

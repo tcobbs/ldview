@@ -59,7 +59,6 @@ public:
 	virtual void compileEdgeLines(void);
 	virtual void compileColoredEdgeLines(void);
 	virtual void drawDefaultColor(void);
-	virtual void drawDefaultColor(const float *matrix);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColored(void);
 	virtual void drawColoredLines(void);

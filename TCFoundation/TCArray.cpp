@@ -27,7 +27,7 @@ TCArray::TCArray(const TCArray &other)
 	{
 		items = new void*[count];
 	}
-	memcpy(items, other.items, count);
+	memcpy(items, other.items, count * sizeof(void*));
 }
 
 TCArray::~TCArray(void)

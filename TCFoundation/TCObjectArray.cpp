@@ -24,7 +24,8 @@ TCObjectArray::TCObjectArray(const TCObjectArray &other)
 
 		if (object)
 		{
-			items[i] = object->copy();
+			TCObject *newObject = object->copy();
+			items[i] = newObject;
 		}
 		else
 		{
