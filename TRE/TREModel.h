@@ -23,8 +23,10 @@ typedef enum
 	TREMStandard,
 	TREMLines,
 	TREMEdgeLines,
+	TREMConditionalLines,
 	TREMBFC,
-	TREMLast = TREMBFC
+	TREMTransparent,
+	TREMLast = TREMTransparent
 } TREMSection;
 
 class TREModel : public TCObject
@@ -49,6 +51,8 @@ public:
 		float *matrix, TREModel *model, bool invert);
 	virtual void addLine(TCVector *vertices);
 	virtual void addEdgeLine(TCVector *vertices);
+	virtual void addConditionalLine(TCVector *vertices,
+		TCVector *controlPoints);
 	virtual void addLine(TCULong color, TCVector *vertices);
 	virtual void addTriangle(TCVector *vertices);
 	virtual void addTriangle(TCVector *vertices, TCVector *normals);
@@ -93,6 +97,7 @@ public:
 	virtual void compileColoredLines(void);
 	virtual void compileEdgeLines(void);
 	virtual void compileColoredEdgeLines(void);
+	virtual void compileTransparent(void);
 	virtual void draw(TREMSection section);
 	virtual void draw(TREMSection section, bool colored);
 	virtual void drawDefaultColor(void);
@@ -104,6 +109,8 @@ public:
 	virtual void drawColoredLines(void);
 	virtual void drawEdgeLines(void);
 	virtual void drawColoredEdgeLines(void);
+	virtual void drawConditionalLines(void);
+	virtual void drawColoredConditionalLines(void);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part != false; }
 	virtual bool isFlattened(void) { return m_flags.flattened != false; }
@@ -165,17 +172,21 @@ protected:
 	virtual void setupColoredBFC(void);
 	virtual void setupEdges(void);
 	virtual void setupColoredEdges(void);
+	virtual void setupConditional(void);
+	virtual void setupColoredConditional(void);
 	virtual void flatten(TREModel *model, float *matrix, TCULong color,
 		bool colorSet, TCULong edgeColor, bool edgeColorSet,
 		bool includeShapes);
 	virtual void flattenShapes(TREShapeGroup *dstShapes,
 		TREShapeGroup *srcShapes, float *matrix, TCULong color, bool colorSet);
-	virtual void flattenShapes(TREShapeType shapeType,
-		TREVertexArray *dstVertices, TREVertexArray *dstNormals,
+	virtual void flattenShapes(TREVertexArray *dstVertices,
+		TREVertexArray *dstNormals, TREVertexArray *dstControlPoints,
 		TCULongArray *dstColors, TCULongArray *dstIndices,
-		TREVertexArray *srcVertices, TREVertexArray *srcNormals,
-		TCULongArray *srcColors, TCULongArray *srcIndices, float *matrix,
-		TCULong color, bool colorSet);
+		TCULongArray *dstCPIndices, TREVertexArray *srcVertices,
+		TREVertexArray *srcNormals, TREVertexArray *srcControlPoints,
+		TCULongArray *srcColors, TCULongArray *srcIndices,
+		TCULongArray *srcCPIndices, float *matrix, TCULong color,
+		bool colorSet);
 	virtual void flattenStrips(TREVertexArray *dstVertices,
 		TREVertexArray *dstNormals, TCULongArray *dstColors,
 		TCULongArray *dstIndices, TCULongArray *dstStripCounts,
@@ -203,10 +214,12 @@ protected:
 	virtual bool checkBFCPresent(void);
 	virtual bool checkDefaultColorLinesPresent(void);
 	virtual bool checkEdgeLinesPresent(void);
+	virtual bool checkConditionalLinesPresent(void);
 	virtual bool checkColoredPresent(void);
 	virtual bool checkColoredBFCPresent(void);
 	virtual bool checkColoredLinesPresent(void);
 	virtual bool checkColoredEdgeLinesPresent(void);
+	virtual bool checkColoredConditionalLinesPresent(void);
 	virtual void setSectionPresent(TREMSection section, bool colored);
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 

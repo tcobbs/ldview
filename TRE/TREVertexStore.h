@@ -18,6 +18,7 @@ public:
 	virtual bool activate(bool displayLists);
 	virtual void deactivate(void);
 	virtual int addVertices(const TCVector *points, int count);
+	virtual int addControlPoints(const TCVector *points, int count);
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
 		int count);
 	virtual int addVertices(TCULong color, const TCVector *points, int count);
@@ -25,8 +26,10 @@ public:
 		const TCVector *normals, int count);
 	virtual void setup(void);
 	virtual void setupColored(void);
+	virtual void setupConditional(void);
 	TREVertexArray *getVertices(void) { return m_vertices; }
 	TREVertexArray *getNormals(void) { return m_normals; }
+	TREVertexArray *getControlPoints(void) { return m_controlPoints; }
 	TCULongArray *getColors(void) { return m_colors; }
 	void setLightingFlag(bool value);
 	bool getLightingFlag(void) { return m_flags.lighting != false; }
@@ -79,6 +82,7 @@ protected:
 
 	TREVertexArray *m_vertices;
 	TREVertexArray *m_normals;
+	TREVertexArray *m_controlPoints;
 	TCULongArray *m_colors;
 	TCULong m_verticesOffset;
 	TCULong m_normalsOffset;

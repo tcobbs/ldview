@@ -5,6 +5,7 @@
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLShapeLine.h>
 #include <LDLoader/LDLModelLine.h>
+#include <LDLoader/LDLConditionalLineLine.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TRESubModel.h>
 #include <TRE/TREVertexArray.h>
@@ -34,6 +35,9 @@ LDModelParser::LDModelParser(void)
 	m_flags.twoSidedLighting = false;
 	m_flags.aaLines = false;
 	m_flags.sortTransparent = false;
+	m_flags.stipple = false;
+	m_flags.wireframe = false;
+	m_flags.conditionalLines = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -80,6 +84,9 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	m_mainTREModel->setAALinesFlag(getAALinesFlag());
 	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
+	m_mainTREModel->setStippleFlag(getStippleFlag());
+	m_mainTREModel->setWireframeFlag(getWireframeFlag());
+	m_mainTREModel->setConditionalLinesFlag(getConditionalLinesFlag());
 	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag()))
 	{
 		if (m_mainTREModel->isPart())
@@ -681,6 +688,8 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 							false);
 						break;
 					case LDLLineTypeConditionalLine:
+						parseConditionalLine((LDLConditionalLineLine *)fileLine,
+							treModel);
 						break;
 					}
 				}
@@ -709,6 +718,17 @@ void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
 	{
 		treModel->addLine(shapeLine->getParentModel()->
 			getPackedRGBA(colorNumber), shapeLine->getPoints());
+	}
+}
+
+void LDModelParser::parseConditionalLine(LDLConditionalLineLine
+										 *conditionalLine,
+										 TREModel *treModel)
+{
+	if (m_flags.conditionalLines)
+	{
+		treModel->addConditionalLine(conditionalLine->getPoints(),
+			conditionalLine->getControlPoints());
 	}
 }
 

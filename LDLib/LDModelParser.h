@@ -10,6 +10,7 @@ class TREModel;
 class TRESubModel;
 class LDLShapeLine;
 class LDLModelLine;
+class LDLConditionalLineLine;
 
 class LDModelParser : public TCObject
 {
@@ -46,6 +47,18 @@ public:
 	{
 		return m_flags.sortTransparent != false;
 	}
+	void setStippleFlag(bool value) { m_flags.stipple = value; }
+	bool getStippleFlag(void) { return m_flags.stipple != false; }
+	void setWireframeFlag(bool value) { m_flags.wireframe = value; }
+	bool getWireframeFlag(void) { return m_flags.wireframe != false; }
+	void setConditionalLinesFlag(bool value)
+	{
+		m_flags.conditionalLines = value;
+	}
+	bool getConditionalLinesFlag(void)
+	{
+		return m_flags.conditionalLines != false;
+	}
 	void setCompilePartsFlag(bool value) { m_flags.compileParts = value; }
 	bool getCompilePartsFlag(void) { return m_flags.compileParts != false; }
 	void setCompileAllFlag(bool value) { m_flags.compileAll = value; }
@@ -65,6 +78,8 @@ protected:
 		bool bfc, bool invert);
 	virtual void parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
 		bool bfc, bool invert);
+	virtual void parseConditionalLine(LDLConditionalLineLine *conditionalLine,
+		TREModel *treModel);
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
 		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
@@ -129,6 +144,9 @@ protected:
 		bool lighting:1;
 		bool aaLines:1;
 		bool sortTransparent:1;
+		bool stipple:1;
+		bool wireframe:1;
+		bool conditionalLines:1;
 	} m_flags;
 };
 

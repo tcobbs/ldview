@@ -20,6 +20,7 @@ int TREVertexStore::sm_varSize = 0;
 TREVertexStore::TREVertexStore(void)
 	:m_vertices(NULL),
 	m_normals(NULL),
+	m_controlPoints(NULL),
 	m_colors(NULL),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
@@ -36,6 +37,7 @@ TREVertexStore::TREVertexStore(void)
 TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	:m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
+	m_controlPoints((TREVertexArray *)TCObject::copy(other.m_controlPoints)),
 	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
@@ -61,6 +63,7 @@ void TREVertexStore::dealloc(void)
 	}
 	TCObject::release(m_vertices);
 	TCObject::release(m_normals);
+	TCObject::release(m_controlPoints);
 	TCObject::release(m_colors);
 	if (sm_varBuffer && wglFreeMemoryNV)
 	{
@@ -92,6 +95,11 @@ void TREVertexStore::dealloc(void)
 TCObject *TREVertexStore::copy(void)
 {
 	return new TREVertexStore(*this);
+}
+
+int TREVertexStore::addControlPoints(const TCVector *points, int count)
+{
+	return addVertices(m_controlPoints, points, count);
 }
 
 int TREVertexStore::addVertices(const TCVector *points, int count)
@@ -152,11 +160,10 @@ int TREVertexStore::addVertices(TREVertexArray *vertices,
 								const TCVector *points, int count)
 {
 	int i;
+	TREVertex vertex;
 
 	for (i = 0; i < count; i++)
 	{
-		TREVertex vertex;
-
 		initVertex(vertex, points[i]);
 		vertices->addVertex(vertex);
 	}
@@ -359,15 +366,22 @@ bool TREVertexStore::activate(bool displayLists)
 				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(0));
 			}
-			else if (sm_varBuffer)
-			{
-				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
-					sm_varBuffer + m_verticesOffset);
-			}
 			else
 			{
-				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
-					m_vertices->getVertices());
+				if (glBindBufferARB)
+				{
+					glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
+				}
+				if (sm_varBuffer)
+				{
+					glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+						sm_varBuffer + m_verticesOffset);
+				}
+				else
+				{
+					glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+						m_vertices->getVertices());
+				}
 			}
 		}
 		else
@@ -422,6 +436,15 @@ bool TREVertexStore::activate(bool displayLists)
 		}
 		sm_activeVertexStore = this;
 		return true;
+	}
+}
+
+void TREVertexStore::setupConditional(void)
+{
+	setup();
+	if (!m_controlPoints)
+	{
+		m_controlPoints = new TREVertexArray;
 	}
 }
 

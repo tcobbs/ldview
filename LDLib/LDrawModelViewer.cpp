@@ -27,10 +27,9 @@
 
 #define DEF_DISTANCE_MULT 1.0f
 
-TREMainModel *mainTREModel = NULL;
-
 LDrawModelViewer::LDrawModelViewer(int width, int height)
 			:lDrawModel(NULL),
+			 mainTREModel(NULL),
 			 filename(NULL),
 			 programPath(NULL),
 			 width(width),
@@ -136,6 +135,8 @@ void LDrawModelViewer::dealloc(void)
 	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 	TCObject::release(lDrawModel);
 	lDrawModel = NULL;
+	TCObject::release(mainTREModel);
+	mainTREModel = NULL;
 	delete filename;
 	filename = NULL;
 	delete programPath;
@@ -150,8 +151,6 @@ void LDrawModelViewer::dealloc(void)
 	extraSearchDirs = NULL;
 	delete cameraData;
 	cameraData = NULL;
-	TCObject::release(mainTREModel);
-	mainTREModel = NULL;
 	TCObject::dealloc();
 }
 
@@ -687,6 +686,10 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				flags.usesSpecular);
 			modelParser->setAALinesFlag(flags.lineSmoothing);
 			modelParser->setSortTransparentFlag(flags.sortTransparent);
+			modelParser->setStippleFlag(flags.useStipple);
+			modelParser->setWireframeFlag(flags.drawWireframe);
+			modelParser->setConditionalLinesFlag(
+				flags.drawConditionalHighlights);
 			if (modelParser->parseMainModel(mainModel))
 			{
 				mainTREModel = modelParser->getMainTREModel();
@@ -1643,6 +1646,10 @@ void LDrawModelViewer::setUseStipple(bool value)
 		if (lDrawModel)
 		{
 			lDrawModel->setUseStipple(value);
+		}
+		if (mainTREModel)
+		{
+			mainTREModel->setStippleFlag(value);
 		}
 		if (flags.sortTransparent)
 		{
