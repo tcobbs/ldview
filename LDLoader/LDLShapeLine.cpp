@@ -78,3 +78,38 @@ int LDLShapeLine::middleIndex(const TCVector &p1, const TCVector &p2,
 		return 2;
 	}
 }
+
+bool LDLShapeLine::isXZPlanar(void) const
+{
+	// This returns true if the all the points in this file line have Y == 0.
+	int i;
+	int count = getNumPoints();
+
+	for (i = 0; i < count; i++)
+	{
+		if (m_points[i][1] != 0.0f)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool LDLShapeLine::isXZPlanar(const float *matrix) const
+{
+	// This returns true if the all the points in this file line have Y == 0,
+	// after being transformed by matrix.
+	int i;
+	int count = getNumPoints();
+
+	for (i = 0; i < count; i++)
+	{
+		TCVector newPoint = m_points[i].transformPoint(matrix);
+
+		if (newPoint[1] != 0.0f)
+		{
+			return false;
+		}
+	}
+	return true;
+}

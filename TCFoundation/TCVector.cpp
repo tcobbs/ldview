@@ -375,7 +375,7 @@ TCVector TCVector::mult(float* matrix) const
 	return tempVec;
 }
 
-float TCVector::determinant(float* matrix)
+float TCVector::determinant(const float *matrix)
 {
 	float det;
 
@@ -385,7 +385,7 @@ float TCVector::determinant(float* matrix)
 	return det;
 }
 
-void TCVector::invertMatrix(float* matrix, float* inverseMatrix)
+void TCVector::invertMatrix(const float *matrix, float *inverseMatrix)
 {
 	float det = determinant(matrix);
 
@@ -428,7 +428,7 @@ void TCVector::invertMatrix(float* matrix, float* inverseMatrix)
 	}
 }
 
-void TCVector::multMatrix(float* left, float* right, float* result)
+void TCVector::multMatrix(const float* left, const float* right, float* result)
 {
 	result[0] = left[0] * right[0] + left[4] * right[1] +
 		left[8] * right[2] + left[12] * right[3];
@@ -464,7 +464,8 @@ void TCVector::multMatrix(float* left, float* right, float* result)
 		left[11] * right[14] + left[15] * right[15];
 }
 
-void TCVector::multMatrixd(double* left, double* right, double* result)
+void TCVector::multMatrixd(const double *left, const double *right,
+						   double *result)
 {
 	result[0] = left[0] * right[0] + left[4] * right[1] +
 		left[8] * right[2] + left[12] * right[3];
@@ -514,4 +515,54 @@ void TCVector::initIdentityMatrix(float *matrix)
 	matrix[5] = 1.0f;
 	matrix[10] = 1.0f;
 	matrix[15] = 1.0f;
+}
+
+void TCVector::transformPoint(const float *matrix, TCVector &newPoint)
+{
+	float x = vector[0];
+	float y = vector[1];
+	float z = vector[2];
+
+//	x' = a*x + b*y + c*z + X
+//	y' = d*x + e*y + f*z + Y
+//	z' = g*x + h*y + i*z + Z
+	newPoint[0] = matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12];
+	newPoint[1] = matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13];
+	newPoint[2] = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14];
+}
+
+TCVector TCVector::transformPoint(const float *matrix)
+{
+	TCVector newPoint;
+
+	transformPoint(matrix, newPoint);
+	return newPoint;
+}
+
+void TCVector::transformNormal(const float *matrix, TCVector& newNormal)
+{
+	float inverseMatrix[16];
+	float x = vector[0];
+	float y = vector[1];
+	float z = vector[2];
+
+	invertMatrix(matrix, inverseMatrix);
+//	x' = a*x + b*y + c*z + X
+//	y' = d*x + e*y + f*z + Y
+//	z' = g*x + h*y + i*z + Z
+//	newNormal[0] = inverseMatrix[0]*x + inverseMatrix[4]*y + inverseMatrix[8]*z;
+//	newNormal[1] = inverseMatrix[1]*x + inverseMatrix[5]*y + inverseMatrix[9]*z;
+//	newNormal[2] = inverseMatrix[2]*x + inverseMatrix[6]*y + inverseMatrix[10]*z;
+	newNormal[0] = inverseMatrix[0]*x + inverseMatrix[1]*y + inverseMatrix[2]*z;
+	newNormal[1] = inverseMatrix[4]*x + inverseMatrix[5]*y + inverseMatrix[6]*z;
+	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y + inverseMatrix[10]*z;
+	newNormal.normalize();
+}
+
+TCVector TCVector::transformNormal(const float *matrix)
+{
+	TCVector newNormal;
+
+	transformNormal(matrix, newNormal);
+	return newNormal;
 }

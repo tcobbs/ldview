@@ -13,6 +13,8 @@ public:
 	virtual TCVector *getPoints(void) { return m_points; }
 	virtual TCVector *getControlPoints(void) { return NULL; }
 	virtual TCULong getColorNumber(void) { return m_colorNumber; }
+	virtual bool isXZPlanar(void) const;
+	virtual bool isXZPlanar(const float *matrix) const;
 protected:
 	LDLShapeLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
