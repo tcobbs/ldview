@@ -44,6 +44,7 @@ void LDLMainModel::dealloc(void)
 {
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_mainPalette);
+	TCObject::release(m_extraSearchDirs);
 	LDLModel::dealloc();
 }
 

@@ -69,6 +69,7 @@ bool TREVertexArray::setCapacity(unsigned int newCapacity)
 bool TREVertexArray::insertVertex(const TREVertex &vertex, unsigned int index)
 {
 	bool expanded = false;
+	TREVertex *oldVertices = NULL;
 
 	if (index > m_count)
 	{
@@ -97,7 +98,10 @@ bool TREVertexArray::insertVertex(const TREVertex &vertex, unsigned int index)
 			memcpy(newVertices + index + 1, m_vertices + index,
 				(m_count - index) * sizeof(TREVertex));
 		}
-		delete m_vertices;
+		// We can't delete m_vertices, because the incoming vertex could
+		// potentially be a const ref to one of the members of the old array.
+		// Save the pointer for deletion later.
+		oldVertices = m_vertices;
 		m_vertices = newVertices;
 	}
 	if (!expanded && index < m_count)
@@ -107,6 +111,10 @@ bool TREVertexArray::insertVertex(const TREVertex &vertex, unsigned int index)
 	}
 	m_vertices[index] = vertex;
 	m_count++;
+	if (oldVertices)
+	{
+		delete oldVertices;
+	}
 	return true;
 }
 

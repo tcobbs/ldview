@@ -20,13 +20,17 @@ public:
 	virtual int addVertices(const TCVector *points, int count);
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
 		int count);
+	virtual int addVertices(const TCVector *points, const TCVector *normals,
+		const TCVector *textureCoords, int count);
 	virtual int addVertices(TCULong color, const TCVector *points, int count);
 	virtual int addVertices(TCULong color, const TCVector *points,
 		const TCVector *normals, int count);
 	virtual void setup(void);
 	virtual void setupColored(void);
+	virtual void setupTextured(void);
 	TREVertexArray *getVertices(void) { return m_vertices; }
 	TREVertexArray *getNormals(void) { return m_normals; }
+	TREVertexArray *getTextureCoords(void) { return m_textureCoords; }
 	TCULongArray *getColors(void) { return m_colors; }
 	void setLightingFlag(bool value);
 	bool getLightingFlag(void) { return m_flags.lighting != false; }
@@ -95,9 +99,11 @@ protected:
 
 	TREVertexArray *m_vertices;
 	TREVertexArray *m_normals;
+	TREVertexArray *m_textureCoords;
 	TCULongArray *m_colors;
 	TCULong m_verticesOffset;
 	TCULong m_normalsOffset;
+	TCULong m_textureCoordsOffset;
 	TCULong m_colorsOffset;
 	GLuint m_vbo;
 	struct

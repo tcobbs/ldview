@@ -34,6 +34,7 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 		int shapeTypeCount = other.m_indices->getCount();
 		TREVertexArray *vertices = m_vertexStore->getVertices();
 		TREVertexArray *normals = m_vertexStore->getNormals();
+		TREVertexArray *textureCoords = m_vertexStore->getTextureCoords();
 		TCULongArray *colors = m_vertexStore->getColors();
 
 		m_indices = new TCULongArrayArray(shapeTypeCount);
@@ -47,17 +48,17 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 			for (j = 0; j < indexCount; j++)
 			{
 				int index = (*thoseIndices)[j];
-				TREVertex vertex = (*vertices)[index];
-				TREVertex normal = (*normals)[index];
 
 				theseIndices->addValue(vertices->getCount());
-				vertices->addVertex(vertex);
-				normals->addVertex(normal);
+				vertices->addVertex((*vertices)[index]);
+				normals->addVertex((*normals)[index]);
+				if (textureCoords)
+				{
+					textureCoords->addVertex((*textureCoords)[index]);
+				}
 				if (colors)
 				{
-					TCULong color = (*colors)[index];
-
-					colors->addValue(color);
+					colors->addValue((*colors)[index]);
 				}
 			}
 			theseIndices->release();
@@ -615,12 +616,34 @@ int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
 int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
 							TCVector *normals, int count)
 {
+	return addShape(shapeType, vertices, normals, NULL, count);
+}
+
+int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
+							TCVector *normals, TCVector *textureCoords,
+							int count)
+{
 	int index;
 
-	m_vertexStore->setup();
+	if (textureCoords)
+	{
+		m_vertexStore->setupTextured();
+	}
+	else
+	{
+		m_vertexStore->setup();
+	}
 	if (normals)
 	{
-		index = m_vertexStore->addVertices(vertices, normals, count);
+		if (textureCoords)
+		{
+			index = m_vertexStore->addVertices(vertices, normals, textureCoords,
+				count);
+		}
+		else
+		{
+			index = m_vertexStore->addVertices(vertices, normals, count);
+		}
 	}
 	else
 	{
@@ -662,6 +685,12 @@ int TREShapeGroup::addTriangle(TCVector *vertices, TCVector *normals)
 	return addShape(TRESTriangle, vertices, normals, 3);
 }
 
+int TREShapeGroup::addTriangle(TCVector *vertices, TCVector *normals,
+							   TCVector *textureCoords)
+{
+	return addShape(TRESTriangle, vertices, normals, textureCoords, 3);
+}
+
 int TREShapeGroup::addQuad(TCVector *vertices)
 {
 	return addShape(TRESQuad, vertices, 4);
@@ -672,23 +701,53 @@ int TREShapeGroup::addQuad(TCVector *vertices, TCVector *normals)
 	return addShape(TRESQuad, vertices, normals, 4);
 }
 
-int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
+int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals,
+								int count)
 {
 	return addStrip(TRESQuadStrip, vertices, normals, count);
 }
 
-int TREShapeGroup::addTriangleFan(TCVector *vertices, TCVector *normals, int count)
+int TREShapeGroup::addTriangleFan(TCVector *vertices, TCVector *normals,
+								  int count)
 {
 	return addStrip(TRESTriangleFan, vertices, normals, count);
+}
+
+int TREShapeGroup::addTriangleFan(TCVector *vertices, TCVector *normals,
+								  TCVector *textureCoords, int count)
+{
+	return addStrip(TRESTriangleFan, vertices, normals, textureCoords, count);
 }
 
 int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
 							TCVector *normals, int count)
 {
+	return addStrip(shapeType, vertices, normals, NULL, count);
+}
+
+int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
+							TCVector *normals, TCVector *textureCoords,
+							int count)
+{
 	int index;
 
-	m_vertexStore->setup();
-	index = m_vertexStore->addVertices(vertices, normals, count);
+	if (textureCoords)
+	{
+		m_vertexStore->setupTextured();
+	}
+	else
+	{
+		m_vertexStore->setup();
+	}
+	if (textureCoords)
+	{
+		index = m_vertexStore->addVertices(vertices, normals, textureCoords,
+			count);
+	}
+	else
+	{
+		index = m_vertexStore->addVertices(vertices, normals, count);
+	}
 	addShapeStripCount(shapeType, count);
 	addShapeIndices(shapeType, index, count);
 	return index;
@@ -774,7 +833,7 @@ void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
 {
 	TREVertex vertex = (*m_vertexStore->getVertices())[index];
 
-	TREModel::transformVertex(vertex, matrix);
+	transformVertex(vertex, matrix);
 	scanPoints(vertex, scanner, scanPointCallback);
 }
 
@@ -871,6 +930,7 @@ int TREShapeGroup::flipNormal(int index)
 {
 	TREVertexArray *vertices = m_vertexStore->getVertices();
 	TREVertexArray *normals = m_vertexStore->getNormals();
+	TREVertexArray *textureCoords = m_vertexStore->getTextureCoords();
 	TCULongArray *colors = m_vertexStore->getColors();
 	TREVertex vertex = (*vertices)[index];
 	TREVertex normal = (*normals)[index];
@@ -880,6 +940,13 @@ int TREShapeGroup::flipNormal(int index)
 	normal.v[2] = -normal.v[2];
 	vertices->addVertex(vertex);
 	normals->addVertex(normal);
+	if (textureCoords)
+	{
+		TREVertex textureCoord = (*textureCoords)[index];
+
+		textureCoord.v[0] = 1.0f - textureCoord.v[0];
+		textureCoords->addVertex(textureCoord);
+	}
 	if (colors)
 	{
 		colors->addValue((*colors)[index]);
@@ -1023,6 +1090,7 @@ void TREShapeGroup::unMirror(void)
 			if (i < firstStripIndex)
 			{
 				invertULongArray(theseIndices);
+				mirrorTextureCoords(theseIndices);
 			}
 			else
 			{
@@ -1075,8 +1143,28 @@ void TREShapeGroup::unMirror(void)
 							indexOffset + stripCount);
 						indexOffset += stripCount;
 					}
+					mirrorTextureCoords(theseIndices);
 				}
 			}
+		}
+	}
+}
+
+void TREShapeGroup::mirrorTextureCoords(TCULongArray *indices)
+{
+	TREVertexArray *textureCoords = m_vertexStore->getTextureCoords();
+
+	if (textureCoords)
+	{
+		int i;
+		int count = indices->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			int index = (*indices)[i];
+			TREVertex &textureCoord = textureCoords->vertexAtIndex(index);
+
+			textureCoord.v[0] = 1.0f - textureCoord.v[0];
 		}
 	}
 }
@@ -1254,5 +1342,231 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 			}
 		}
 	}
+}
+
+void TREShapeGroup::flatten(TREShapeGroup *srcShapes, float *matrix,
+							TCULong color, bool colorSet)
+{
+	TREVertexStore *srcVertexStore = NULL;
+
+	if (srcShapes && (srcVertexStore = srcShapes->getVertexStore()) != NULL &&
+		m_vertexStore != NULL)
+	{
+		TCULong bit;
+
+		for (bit = TRESFirst; bit <= TRESLast; bit = bit << 1)
+		{
+			TCULongArray *srcIndices = srcShapes->getIndices((TREShapeType)bit);
+			
+			if (srcIndices)
+			{
+				TREVertexArray *srcVertices = srcVertexStore->getVertices();
+				TREVertexArray *srcNormals = srcVertexStore->getNormals();
+				TREVertexArray *srcTextureCoords =
+					srcVertexStore->getTextureCoords();
+				TCULongArray *srcColors = srcVertexStore->getColors();
+				TCULongArray *dstIndices = getIndices((TREShapeType)bit, true);
+				TCULongArray *srcCPIndices = NULL;
+				TCULongArray *dstCPIndices = NULL;
+
+				if ((TREShapeType)bit == TRESConditionalLine)
+				{
+					srcCPIndices = srcShapes->getControlPointIndices();
+					dstCPIndices = getControlPointIndices(true);
+				}
+				if (srcVertices)
+				{
+					TREVertexArray *dstVertices = m_vertexStore->getVertices();
+					TREVertexArray *dstNormals = m_vertexStore->getNormals();
+					TREVertexArray *dstTextureCoords =
+						m_vertexStore->getTextureCoords();
+					TCULongArray *dstColors = m_vertexStore->getColors();
+					TREShapeType shapeType = (TREShapeType)bit;
+
+					if (shapeType < TRESFirstStrip)
+					{
+						flattenShapes(dstVertices, dstNormals, dstTextureCoords,
+							dstColors, dstIndices, dstCPIndices, srcVertices,
+							srcNormals, srcTextureCoords, srcColors, srcIndices,
+							srcCPIndices, matrix, color, colorSet);
+					}
+					else
+					{
+						TCULongArray *dstStripCounts =
+							getStripCounts((TREShapeType)bit, true);
+						TCULongArray *srcStripCounts =
+							srcShapes->getStripCounts((TREShapeType)bit);
+
+						flattenStrips(dstVertices, dstNormals, dstTextureCoords,
+							dstColors, dstIndices, dstStripCounts, srcVertices,
+							srcNormals, srcTextureCoords, srcColors, srcIndices,
+							srcStripCounts, matrix, color, colorSet);
+					}
+				}
+			}
+		}
+	}
+}
+
+void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
+								  TREVertexArray *dstNormals,
+								  TREVertexArray *dstTextureCoords,
+								  TCULongArray *dstColors,
+								  TCULongArray *dstIndices,
+								  TCULongArray *dstCPIndices,
+								  TREVertexArray *srcVertices,
+								  TREVertexArray *srcNormals,
+								  TREVertexArray *srcTextureCoords,
+								  TCULongArray *srcColors,
+								  TCULongArray *srcIndices,
+								  TCULongArray *srcCPIndices,
+								  float *matrix,
+								  TCULong color,
+								  bool colorSet)
+{
+	int i;
+	int count = srcIndices->getCount();
+
+	for (i = 0; i < count; i++)
+	{
+		int index = (*srcIndices)[i];
+		TREVertex vertex = (*srcVertices)[index];
+
+		dstIndices->addValue(dstVertices->getCount());
+		transformVertex(vertex, matrix);
+		dstVertices->addVertex(vertex);
+		if (srcNormals)
+		{
+			TREVertex normal = (*srcNormals)[index];
+
+			transformNormal(normal, matrix);
+			dstNormals->addVertex(normal);
+		}
+		if (srcTextureCoords)
+		{
+			dstTextureCoords->addVertex((*srcTextureCoords)[index]);
+		}
+		if (colorSet)
+		{
+			dstColors->addValue(color);
+		}
+		else if (srcColors)
+		{
+			dstColors->addValue((*srcColors)[index]);
+		}
+		if (srcCPIndices && dstCPIndices)
+		{
+			index = (*srcCPIndices)[i];
+			vertex = (*srcVertices)[index];
+			dstCPIndices->addValue(dstVertices->getCount());
+			transformVertex(vertex, matrix);
+			dstVertices->addVertex(vertex);
+			if (srcNormals)
+			{
+				dstNormals->addVertex((*srcNormals)[index]);
+			}
+			if (colorSet)
+			{
+				dstColors->addValue(color);
+			}
+			else if (srcColors)
+			{
+				dstColors->addValue((*srcColors)[index]);
+			}
+		}
+	}
+}
+
+void TREShapeGroup::flattenStrips(TREVertexArray *dstVertices,
+								  TREVertexArray *dstNormals,
+								  TREVertexArray *dstTextureCoords,
+								  TCULongArray *dstColors,
+								  TCULongArray *dstIndices,
+								  TCULongArray *dstStripCounts,
+								  TREVertexArray *srcVertices,
+								  TREVertexArray *srcNormals,
+								  TREVertexArray *srcTextureCoords,
+								  TCULongArray *srcColors,
+								  TCULongArray *srcIndices,
+								  TCULongArray *srcStripCounts, float *matrix,
+								  TCULong color, bool colorSet)
+{
+	int i, j;
+	int numStrips = srcStripCounts->getCount();
+	int indexOffset = 0;
+
+	for (i = 0; i < numStrips; i++)
+	{
+		int stripCount = (*srcStripCounts)[i];
+
+		dstStripCounts->addValue(stripCount);
+		for (j = 0; j < stripCount; j++)
+		{
+			int index = (*srcIndices)[j + indexOffset];
+			TREVertex vertex = (*srcVertices)[index];
+
+			dstIndices->addValue(dstVertices->getCount());
+			transformVertex(vertex, matrix);
+			dstVertices->addVertex(vertex);
+			if (srcNormals)
+			{
+				TREVertex normal = (*srcNormals)[index];
+
+				transformNormal(normal, matrix);
+				dstNormals->addVertex(normal);
+			}
+			if (srcTextureCoords)
+			{
+				dstTextureCoords->addVertex((*srcTextureCoords)[index]);
+			}
+			if (colorSet)
+			{
+				dstColors->addValue(color);
+			}
+			else if (srcColors)
+			{
+				dstColors->addValue((*srcColors)[index]);
+			}
+		}
+		indexOffset += stripCount;
+	}
+}
+
+void TREShapeGroup::transformVertex(TREVertex &vertex, float *matrix)
+{
+	TCVector newVertex;
+	float x = vertex.v[0];
+	float y = vertex.v[1];
+	float z = vertex.v[2];
+
+//	x' = a*x + b*y + c*z + X
+//	y' = d*x + e*y + f*z + Y
+//	z' = g*x + h*y + i*z + Z
+	newVertex[0] = matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12];
+	newVertex[1] = matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13];
+	newVertex[2] = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14];
+	TREVertexStore::initVertex(vertex, newVertex);
+}
+
+void TREShapeGroup::transformNormal(TREVertex &normal, float *matrix)
+{
+	TCVector newNormal;
+	float inverseMatrix[16];
+	float x = normal.v[0];
+	float y = normal.v[1];
+	float z = normal.v[2];
+	float det;
+
+	det = TCVector::invertMatrix(matrix, inverseMatrix);
+//	x' = a*x + b*y + c*z + X
+//	y' = d*x + e*y + f*z + Y
+//	z' = g*x + h*y + i*z + Z
+	newNormal[0] = inverseMatrix[0]*x + inverseMatrix[1]*y +
+		inverseMatrix[2]*z;
+	newNormal[1] = inverseMatrix[4]*x + inverseMatrix[5]*y + inverseMatrix[6]*z;
+	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y +
+		inverseMatrix[10]*z;
+	newNormal.normalize();
+	TREVertexStore::initVertex(normal, newNormal);
 }
 

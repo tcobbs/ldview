@@ -7,6 +7,10 @@
 TCObjectArray::TCObjectArray(unsigned int allocated)
 				  :TCArray(allocated)
 {
+	if (allocated)
+	{
+		memset(items, 0, allocated * sizeof(void *));
+	}
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCObjectArray");
 #endif

@@ -10,17 +10,33 @@
 const float POLYGON_OFFSET_FACTOR = 0.85f;
 const float POLYGON_OFFSET_UNITS = 0.0f;
 
+TCImageArray *TREMainModel::sm_studTextures = NULL;
+unsigned TREMainModel::sm_studTextureID = 0;
+TREMainModel::TREMainModelCleanup TREMainModel::sm_mainModelCleanup;
+
+TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
+{
+	TCObject::release(TREMainModel::sm_studTextures);
+	TREMainModel::sm_studTextures = NULL;
+	if (TREMainModel::sm_studTextureID)
+	{
+		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
+	}
+}
+
 TREMainModel::TREMainModel(void)
 	:m_loadedModels(NULL),
 	m_loadedBFCModels(NULL),
 	m_vertexStore(new TREVertexStore),
+	m_texturedVertexStore(new TREVertexStore),
 	m_coloredVertexStore(new TREVertexStore),
 	m_transVertexStore(NULL),
 	m_color(htonl(0x999999FF)),
 	m_edgeColor(htonl(0x666658FF)),
 	m_maxRadiusSquared(0.0f),
 	m_edgeLineWidth(1.0f),
-	m_abort(false)
+	m_abort(false),
+	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -34,6 +50,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
 	m_mainFlags.edgeLines = false;
+	m_mainFlags.edgesOnly = false;
 	m_mainFlags.twoSidedLighting = false;
 	m_mainFlags.lighting = false;
 	m_mainFlags.useStrips = true;
@@ -47,6 +64,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.smoothCurves = false;
 	m_mainFlags.showAllConditional = false;
 	m_mainFlags.conditionalControlPoints = false;
+	m_mainFlags.studLogo = true;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -54,13 +72,19 @@ TREMainModel::TREMainModel(const TREMainModel &other)
 	m_loadedModels((TCDictionary *)TCObject::copy(other.m_loadedModels)),
 	m_loadedBFCModels((TCDictionary *)TCObject::copy(other.m_loadedBFCModels)),
 	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
+	m_texturedVertexStore((TREVertexStore *)TCObject::copy(
+		other.m_texturedVertexStore)),
 	m_coloredVertexStore((TREVertexStore *)TCObject::copy(
 		other.m_coloredVertexStore)),
 	m_transVertexStore((TREVertexStore *)TCObject::copy(
 		other.m_transVertexStore)),
 	m_mainFlags(other.m_mainFlags),
 	m_color(other.m_color),
-	m_edgeColor(other.m_edgeColor)
+	m_edgeColor(other.m_edgeColor),
+	m_maxRadiusSquared(other.m_maxRadiusSquared),
+	m_edgeLineWidth(other.m_edgeLineWidth),
+	m_abort(false),
+	m_studTextureFilter(other.m_studTextureFilter)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -77,6 +101,7 @@ void TREMainModel::dealloc(void)
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
 	TCObject::release(m_vertexStore);
+	TCObject::release(m_texturedVertexStore);
 	TCObject::release(m_coloredVertexStore);
 	TCObject::release(m_transVertexStore);
 	TREModel::dealloc();
@@ -148,61 +173,111 @@ void TREMainModel::compile(void)
 {
 	if (!m_mainFlags.compiled)
 	{
-		TCProgressAlert::send("TREMainModel", "Compiling...", 0.0f, &m_abort);
+		int i;
+		float numSections = (float)(TREMTransparent - TREMStandard);
+
+//		TCProgressAlert::send("TREMainModel", "Compiling...", 0.0f, &m_abort);
 		if (!m_abort)
 		{
 			m_mainFlags.compiling = true;
-			m_vertexStore->activate(true);
-			compileDefaultColor();
+			for (i = TREMFirst; i < TREMTransparent && !m_abort; i++)
+			{
+				float progress = (float)i / (numSections * 2.0f);
+				TREMSection section = (TREMSection)i;
+
+				TCProgressAlert::send("TREMainModel", "Compiling...", progress,
+					&m_abort);
+				if (!m_abort && isSectionPresent(section, false))
+				{
+					if (isStudSection(section))
+					{
+						m_texturedVertexStore->activate(true);
+					}
+					else
+					{
+						m_vertexStore->activate(true);
+					}
+					TREModel::compile(section, false);
+				}
+			}
+/*
+			TREModel::compile(TREMStandard, false);
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.2f,
 				&m_abort);
+*/
 		}
+/*
 		if (!m_abort)
 		{
 			if (getBFCFlag())
 			{
-				compileBFC();
+				TREModel::compile(TREMBFC, false);
 			}
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.3f,
 				&m_abort);
 		}
 		if (!m_abort)
 		{
-			compileDefaultColorLines();
+			TREModel::compile(TREMLines, false);
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.35f,
 				&m_abort);
 		}
 		if (!m_abort)
 		{
-			compileEdgeLines();
+			TREModel::compile(TREMEdgeLines, false);
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.45f,
 				&m_abort);
 		}
+*/
 		if (!m_abort)
 		{
-			m_coloredVertexStore->activate(true);
-			compileColored();
+			for (i = TREMFirst; i < TREMTransparent && !m_abort; i++)
+			{
+				float progress = (float)i / (numSections * 2.0f) + 0.5f;
+				TREMSection section = (TREMSection)i;
+
+				TCProgressAlert::send("TREMainModel", "Compiling...", progress,
+					&m_abort);
+				if (!m_abort && isSectionPresent(section, true))
+				{
+					if (isStudSection(section))
+					{
+						// PUNT!!!
+						continue;
+//						m_texturedVertexStore->activate(true);
+					}
+					else
+					{
+						m_coloredVertexStore->activate(true);
+					}
+					TREModel::compile(section, true);
+				}
+			}
+/*
+			TREModel::compile(TREMStandard, true);
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.55f,
 				&m_abort);
+*/
 		}
+/*
 		if (!m_abort)
 		{
 			if (getBFCFlag())
 			{
-				compileColoredBFC();
+				TREModel::compile(TREMBFC, true);
 			}
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.65f,
 				&m_abort);
 		}
 		if (!m_abort)
 		{
-			compileColoredLines();
+			TREModel::compile(TREMBFC, true);
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.7f,
 				&m_abort);
 		}
 		if (!m_abort)
 		{
-			compileColoredEdgeLines();
+			TREModel::compile(TREMEdgeLines, true);
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.8f,
 				&m_abort);
 		}
@@ -214,17 +289,19 @@ void TREMainModel::compile(void)
 			}
 			if (!getSortTransparentFlag())
 			{
-				compileTransparent();
+				TREModel::compile(TREMTransparent, true);
 			}
 			TCProgressAlert::send("TREMainModel", "Compiling...", 0.9f,
 				&m_abort);
 		}
+*/
 		if (!m_abort)
 		{
 			m_mainFlags.compiled = true;
 			m_mainFlags.compiling = false;
 			TCProgressAlert::send("TREMainModel", "Compiling...", 1.0f,
 				&m_abort);
+//			TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
 		}
 	}
 }
@@ -307,11 +384,31 @@ void TREMainModel::drawSolid(void)
 	// color number 16 when you use a part in your model.
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
-	drawDefaultColor();
+	TREModel::draw(TREMStandard);
+	if (getStudLogoFlag())
+	{
+		glEnable(GL_TEXTURE_2D);
+		bindStudTexture();
+		configureStudTexture();
+		m_texturedVertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
+		TREModel::draw(TREMStud);
+	}
 	if (getBFCFlag())
 	{
 		activateBFC();
-		drawBFC();
+		if (getStudLogoFlag())
+		{
+			TREModel::draw(TREMStudBFC);
+			glDisable(GL_TEXTURE_2D);
+			m_vertexStore->activate(m_mainFlags.compileAll ||
+				m_mainFlags.compileParts);
+		}
+		TREModel::draw(TREMBFC);
+	}
+	else if (getStudLogoFlag())
+	{
+		glDisable(GL_TEXTURE_2D);
 	}
 	// Next draw all opaque triangles and quads that were specified with a color
 	// number other than 16.  Note that the colored vertex store includes color
@@ -320,10 +417,10 @@ void TREMainModel::drawSolid(void)
 		m_mainFlags.compileParts);
 	if (getBFCFlag())
 	{
-		drawColoredBFC();
+		drawColored(TREMBFC);
 		deactivateBFC();
 	}
-	drawColored();
+	drawColored(TREMStandard);
 }
 
 void TREMainModel::drawLines(void)
@@ -342,29 +439,29 @@ void TREMainModel::drawLines(void)
 	}
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
-	drawDefaultColorLines();
+	TREModel::draw(TREMLines);
 	// Next, switch to the default edge color, and draw the edge lines.  By
 	// definition, edge lines in the original files use the default edge color.
 	// However, if parts are flattened, they can contain sub-models of a
 	// different color, which can lead to non-default colored edge lines.
 	glColor4ubv((GLubyte*)&m_edgeColor);
 	glLineWidth(m_edgeLineWidth);
-	drawEdgeLines();
+	TREModel::draw(TREMEdgeLines);
 	m_vertexStore->deactivate();
 	m_vertexStore->activate(false);
-	drawConditionalLines();
+	TREModel::draw(TREMConditionalLines);
 	// Next, draw the specific colored lines.  As with the specific colored
 	// triangles and quads, every point in the vertex store specifies a color.
 	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
 		m_mainFlags.compileParts);
-	drawColoredLines();
+	drawColored(TREMLines);
 	// Next draw the specific colored edge lines.  Note that if it weren't for
 	// the fact that edge lines can be turned off, these could simply be added
 	// to the colored lines list.
-	drawColoredEdgeLines();
+	drawColored(TREMEdgeLines);
 	m_coloredVertexStore->deactivate();
 	m_coloredVertexStore->activate(false);
-	drawColoredConditionalLines();
+	drawColored(TREMConditionalLines);
 	if (getAALinesFlag() && !getWireframeFlag())
 	{
 		// Note that if we're in wireframe mode, smoothing was enabled
@@ -409,6 +506,7 @@ void TREMainModel::setLightingFlag(bool value)
 {
 	m_mainFlags.lighting = value;
 	m_vertexStore->setLightingFlag(value);
+	m_texturedVertexStore->setLightingFlag(value);
 	m_coloredVertexStore->setLightingFlag(value);
 	if (m_transVertexStore)
 	{
@@ -420,6 +518,7 @@ void TREMainModel::setTwoSidedLightingFlag(bool value)
 {
 	m_mainFlags.twoSidedLighting = value;
 	m_vertexStore->setTwoSidedLightingFlag(value);
+	m_texturedVertexStore->setTwoSidedLightingFlag(value);
 	m_coloredVertexStore->setTwoSidedLightingFlag(value);
 	if (m_transVertexStore)
 	{
@@ -431,6 +530,7 @@ void TREMainModel::setShowAllConditionalFlag(bool value)
 {
 	m_mainFlags.showAllConditional = value;
 	m_vertexStore->setShowAllConditionalFlag(value);
+	m_texturedVertexStore->setShowAllConditionalFlag(value);
 	m_coloredVertexStore->setShowAllConditionalFlag(value);
 	if (m_transVertexStore)
 	{
@@ -442,6 +542,7 @@ void TREMainModel::setConditionalControlPointsFlag(bool value)
 {
 	m_mainFlags.conditionalControlPoints = value;
 	m_vertexStore->setConditionalControlPointsFlag(value);
+	m_texturedVertexStore->setConditionalControlPointsFlag(value);
 	m_coloredVertexStore->setConditionalControlPointsFlag(value);
 	if (m_transVertexStore)
 	{
@@ -483,18 +584,41 @@ float TREMainModel::getMaxRadius(const TCVector &center)
 
 bool TREMainModel::postProcess(void)
 {
+	int i;
+	float numSections = (float)(TREMTransparent - TREMStandard);
+
 	TCProgressAlert::send("TREMainModel", "Processing...", 0.0f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	transferTransparent();
-	TCProgressAlert::send("TREMainModel", "Processing...", 0.2f, &m_abort);
+	// Note: I DON'T want to check if the transparent section is present.
+	// That's why I'm using < below, instead of <=.
+	for (i = TREMFirst; i < TREMTransparent && !m_abort; i++)
+	{
+		float progress = (float)i / numSections * 0.8f + 0.2f;
+
+		TCProgressAlert::send("TREMainModel", "Processing...", progress,
+			&m_abort);
+		if (!m_abort)
+		{
+			checkSectionPresent((TREMSection)i);
+			checkSectionPresent((TREMSection)i, true);
+		}
+	}
 	if (m_abort)
 	{
 		return false;
 	}
+/*
 	checkDefaultColorPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.3f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
+	checkStudsPresent();
 	TCProgressAlert::send("TREMainModel", "Processing...", 0.3f, &m_abort);
 	if (m_abort)
 	{
@@ -549,15 +673,18 @@ bool TREMainModel::postProcess(void)
 		return false;
 	}
 	checkColoredConditionalLinesPresent();
+*/
 	TCProgressAlert::send("TREMainModel", "Processing...", 1.0f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
+
 	if (getCompilePartsFlag() || getCompileAllFlag())
 	{
 		compile();
 	}
+
 	return !m_abort;
 }
 
@@ -581,12 +708,12 @@ void TREMainModel::transferTransparent(void)
 	float identityMatrix[16];
 
 	TCVector::initIdentityMatrix(identityMatrix);
-	transferColoredTransparent(TREMStandard, identityMatrix);
 	TREModel::transferTransparent(m_color, TREMStandard, identityMatrix);
+	transferColoredTransparent(TREMStandard, identityMatrix);
 	if (getBFCFlag())
 	{
-		transferColoredTransparent(TREMBFC, identityMatrix);
 		TREModel::transferTransparent(m_color, TREMBFC, identityMatrix);
+		transferColoredTransparent(TREMBFC, identityMatrix);
 	}
 }
 
@@ -686,4 +813,136 @@ bool TREMainModel::shouldLoadConditionalLines(void)
 {
 	return (m_mainFlags.edgeLines && m_mainFlags.conditionalLines) ||
 		m_mainFlags.smoothCurves;
+}
+
+void TREMainModel::bindStudTexture(void)
+{
+	if (!sm_studTextureID && sm_studTextures)
+	{
+		int i;
+		int count = sm_studTextures->getCount();
+
+		glGenTextures(1, &sm_studTextureID);
+		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
+		for (i = 0; i < count; i++)
+		{
+			TCImage *texture = (*sm_studTextures)[i];
+
+			if (texture)
+			{
+				int textureSize = texture->getWidth();
+
+				glTexImage2D(GL_TEXTURE_2D, i, 4, textureSize, textureSize, 0,
+					GL_RGBA, GL_UNSIGNED_BYTE, texture->getImageData());
+			}
+		}
+	}
+}
+
+void TREMainModel::configureStudTexture(void)
+{
+	if (sm_studTextureID)
+	{
+		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		if (m_studTextureFilter == GL_NEAREST_MIPMAP_NEAREST ||
+			m_studTextureFilter == GL_NEAREST_MIPMAP_LINEAR ||
+			m_studTextureFilter == GL_NEAREST)
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+			m_studTextureFilter);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	}
+}
+
+// NOTE: static function
+void TREMainModel::loadStudTexture(const char *filename)
+{
+	if (!sm_studTextures)
+	{
+		TCImage *mainImage = new TCImage;
+
+		mainImage->setFlipped(true);
+		mainImage->setLineAlignment(4);
+		if (mainImage->loadFile(filename))
+		{
+			loadStudMipTextures(mainImage);
+		}
+		mainImage->release();
+	}
+}
+
+// NOTE: static function
+void TREMainModel::loadStudMipTextures(TCImage *mainImage)
+{
+	int i;
+	int yPosition = 0;
+	int thisSize = mainImage->getWidth();
+	int imageHeight = mainImage->getHeight();
+
+	TCObject::release(sm_studTextures);
+	sm_studTextures = new TCImageArray(8);
+	for (i = 0; thisSize > 0 && yPosition + thisSize <= imageHeight; i++)
+	{
+		TCImage *texture = mainImage->createSubImage(0, yPosition,
+			thisSize, thisSize);
+		sm_studTextures->addObject(texture);
+		texture->release();
+		yPosition += thisSize;
+		thisSize /= 2;
+	}
+}
+
+// NOTE: static function
+void TREMainModel::setStudTextureData(TCByte *data, long length)
+{
+	if (!sm_studTextures)
+	{
+		TCImage *mainImage = new TCImage;
+
+		mainImage->setFlipped(true);
+		mainImage->setLineAlignment(4);
+		if (mainImage->loadData(data, length))
+		{
+			loadStudMipTextures(mainImage);
+		}
+		mainImage->release();
+	}
+}
+
+// NOTE: static function
+void TREMainModel::setRawStudTextureData(TCByte *data, long length)
+{
+	if (!sm_studTextures)
+	{
+		TCImage *mainImage = new TCImage;
+		int rowSize;
+
+		mainImage->setFlipped(true);
+		mainImage->setLineAlignment(4);
+		mainImage->setDataFormat(TCRgba8);
+		mainImage->setSize(128, 255);
+		mainImage->allocateImageData();
+		rowSize = mainImage->getRowSize();
+		if (length == rowSize * 255)
+		{
+			TCByte *imageData = mainImage->getImageData();
+			int i;
+
+			for (i = 0; i < 255; i++)
+			{
+				memcpy(imageData + rowSize * (254 - i), data + rowSize * i,
+					rowSize);
+			}
+			loadStudMipTextures(mainImage);
+		}
+		mainImage->release();
+	}
 }

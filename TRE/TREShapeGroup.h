@@ -14,6 +14,7 @@ typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 struct TREVertex;
 class TREVertexStore;
 class TREMainModel;
+class TREVertexArray;
 class TCVector;
 
 typedef enum
@@ -40,10 +41,15 @@ public:
 	virtual int addConditionalLine(TCVector *vertices, TCVector *controlPoints);
 	virtual int addTriangle(TCVector *vertices);
 	virtual int addTriangle(TCVector *vertices, TCVector *normals);
+	virtual int addTriangle(TCVector *vertices, TCVector *normals,
+		TCVector *textureCoords);
 	virtual int addQuad(TCVector *vertices);
 	virtual int addQuad(TCVector *vertices, TCVector *normals);
 	virtual int addQuadStrip(TCVector *vertices, TCVector *normals, int count);
-	virtual int addTriangleFan(TCVector *vertices, TCVector *normals, int count);
+	virtual int addTriangleFan(TCVector *vertices, TCVector *normals,
+		int count);
+	virtual int addTriangleFan(TCVector *vertices, TCVector *normals,
+		TCVector *textureCoords, int count);
 	virtual TCULongArray *getIndices(TREShapeType shapeType,
 		bool create = false);
 	virtual TCULongArray *getControlPointIndices(bool create = false);
@@ -61,6 +67,8 @@ public:
 	virtual void invert(void);
 	virtual void transferTransparent(TCULong color, TREMainModel *mainModel,
 		const float *matrix);
+	virtual void flatten(TREShapeGroup *srcShapes, float *matrix, TCULong color,
+		bool colorSet);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -69,6 +77,8 @@ public:
 		glMultiDrawElementsEXT = value;
 	}
 	static bool isTransparent(TCULong color, bool hostFormat);
+	static void transformVertex(TREVertex &vertex, float *matrix);
+	static void transformNormal(TREVertex &normal, float *matrix);
 protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
@@ -77,6 +87,8 @@ protected:
 		int count);
 	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
 		TCVector *normals, int count);
+	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
+		TCVector *normals, TCVector *textureCoords, int count);
 	virtual void addShapeIndices(TREShapeType shapeType, int firstIndex,
 		int count);
 	virtual void addIndices(TCULongArray *indices, int firstIndex, int count);
@@ -93,6 +105,8 @@ protected:
 	virtual void drawStripShapeType(TREShapeType shapeType);
 	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
 		TCVector *normals, int count);
+	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
+		TCVector *normals, TCVector *textureCoords, int count);
 	virtual void initMultiDrawIndices(void);
 	virtual void deleteMultiDrawIndices(void);
 	virtual void invertShapes(TCULongArray *oldIndices,
@@ -120,6 +134,37 @@ protected:
 	virtual void scanStripPoints(TCULongArray *indices,
 		TCULongArray *stripCounts, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
+	virtual void flattenShapes(TREVertexArray *dstVertices,
+		TREVertexArray *dstNormals,
+		TREVertexArray *dstTextureCoords,
+		TCULongArray *dstColors,
+		TCULongArray *dstIndices,
+		TCULongArray *dstCPIndices,
+		TREVertexArray *srcVertices,
+		TREVertexArray *srcNormals,
+		TREVertexArray *srcTextureCoords,
+		TCULongArray *srcColors,
+		TCULongArray *srcIndices,
+		TCULongArray *srcCPIndices,
+		float *matrix,
+		TCULong color,
+		bool colorSet);
+	virtual void flattenStrips(TREVertexArray *dstVertices,
+		TREVertexArray *dstNormals,
+		TREVertexArray *dstTextureCoords,
+		TCULongArray *dstColors,
+		TCULongArray *dstIndices,
+		TCULongArray *dstStripCounts,
+		TREVertexArray *srcVertices,
+		TREVertexArray *srcNormals,
+		TREVertexArray *srcTextureCoords,
+		TCULongArray *srcColors,
+		TCULongArray *srcIndices,
+		TCULongArray *srcStripCounts,
+		float *matrix,
+		TCULong color,
+		bool colorSet);
+	virtual void mirrorTextureCoords(TCULongArray *indices);
 
 	virtual void unshrinkNormal(TCULong index, float *matrix,
 		float *unshrinkMatrix);

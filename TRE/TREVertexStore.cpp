@@ -20,9 +20,11 @@ int TREVertexStore::sm_varSize = 0;
 TREVertexStore::TREVertexStore(void)
 	:m_vertices(NULL),
 	m_normals(NULL),
+	m_textureCoords(NULL),
 	m_colors(NULL),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
+	m_textureCoordsOffset(0),
 	m_colorsOffset(0),
 	m_vbo(0)
 {
@@ -38,9 +40,11 @@ TREVertexStore::TREVertexStore(void)
 TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	:m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
+	m_textureCoords((TREVertexArray *)TCObject::copy(other.m_textureCoords)),
 	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
+	m_textureCoordsOffset(0),
 	m_colorsOffset(0),
 	m_vbo(0),
 	m_flags(other.m_flags)
@@ -63,6 +67,7 @@ void TREVertexStore::dealloc(void)
 	}
 	TCObject::release(m_vertices);
 	TCObject::release(m_normals);
+	TCObject::release(m_textureCoords);
 	TCObject::release(m_colors);
 	if (sm_varBuffer && wglFreeMemoryNV)
 	{
@@ -119,6 +124,13 @@ int TREVertexStore::addVertices(const TCVector *points, const TCVector *normals,
 {
 	addVertices(m_normals, normals, count);
 	return addVertices(m_vertices, points, count);
+}
+
+int TREVertexStore::addVertices(const TCVector *points, const TCVector *normals,
+								const TCVector *textureCoords, int count)
+{
+	addVertices(m_textureCoords, textureCoords, count);
+	return addVertices(points, normals, count);
 }
 
 int TREVertexStore::addVertices(TCULong color, const TCVector *points,
@@ -178,6 +190,8 @@ void TREVertexStore::setupVAR(void)
 		int verticesAllocatedSize = (verticesSize + 31) / 32 * 32;
 		int normalsSize = 0;
 		int normalsAllocatedSize = 0;
+		int textureCoordsSize = 0;
+		int textureCoordsAllocatedSize = 0;
 		int colorsSize = 0;
 		int colorsAllocatedSize = 0;
 
@@ -188,6 +202,12 @@ void TREVertexStore::setupVAR(void)
 			normalsSize = verticesSize;
 			normalsAllocatedSize = (normalsSize + 31) / 32 * 32;
 			sm_varSize += normalsAllocatedSize;
+		}
+		if (m_textureCoords)
+		{
+			textureCoordsSize = verticesSize;
+			textureCoordsAllocatedSize = (textureCoordsSize + 31) / 32 * 32;
+			sm_varSize += textureCoordsAllocatedSize;
 		}
 		if (m_colors)
 		{
@@ -218,10 +238,17 @@ void TREVertexStore::setupVAR(void)
 				memcpy(sm_varBuffer + m_normalsOffset,
 					m_normals->getVertices(), normalsSize);
 			}
+			if (m_textureCoords)
+			{
+				m_textureCoordsOffset = offset + verticesAllocatedSize
+					+ normalsAllocatedSize;
+				memcpy(sm_varBuffer + m_textureCoordsOffset,
+					m_textureCoords->getVertices(), textureCoordsSize);
+			}
 			if (m_colors)
 			{
 				m_colorsOffset = offset + verticesAllocatedSize +
-					normalsAllocatedSize;
+					normalsAllocatedSize + textureCoordsAllocatedSize;
 				memcpy(sm_varBuffer + m_colorsOffset, m_colors->getItems(),
 					colorsSize);
 			}
@@ -258,6 +285,8 @@ void TREVertexStore::setupVBO(void)
 			int verticesAllocatedSize = (verticesSize + 31) / 32 * 32;
 			int normalsSize = 0;
 			int normalsAllocatedSize = 0;
+			int textureCoordsSize = 0;
+			int textureCoordsAllocatedSize = 0;
 			int colorsSize = 0;
 			int colorsAllocatedSize = 0;
 			TCByte *vboBuffer;
@@ -269,6 +298,12 @@ void TREVertexStore::setupVBO(void)
 				normalsSize = verticesSize;
 				normalsAllocatedSize = (normalsSize + 31) / 32 * 32;
 				vboSize += normalsAllocatedSize;
+			}
+			if (m_textureCoords)
+			{
+				textureCoordsSize = verticesSize;
+				textureCoordsAllocatedSize = (textureCoordsSize + 31) / 32 * 32;
+				vboSize += textureCoordsAllocatedSize;
 			}
 			if (m_colors)
 			{
@@ -286,10 +321,17 @@ void TREVertexStore::setupVBO(void)
 					memcpy(vboBuffer + m_normalsOffset,
 						m_normals->getVertices(), normalsSize);
 				}
+				if (m_textureCoords)
+				{
+					m_textureCoordsOffset = verticesAllocatedSize +
+						normalsAllocatedSize;
+					memcpy(vboBuffer + m_textureCoordsOffset,
+						m_textureCoords->getVertices(), textureCoordsSize);
+				}
 				if (m_colors)
 				{
 					m_colorsOffset = verticesAllocatedSize +
-						normalsAllocatedSize;
+						normalsAllocatedSize + textureCoordsAllocatedSize;
 					memcpy(vboBuffer + m_colorsOffset,
 						m_colors->getItems(), colorsSize);
 				}
@@ -405,6 +447,29 @@ bool TREVertexStore::activate(bool displayLists)
 		{
 			glDisableClientState(GL_NORMAL_ARRAY);
 		}
+		if (m_textureCoords)
+		{
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			if (!displayLists && m_vbo)
+			{
+				glTexCoordPointer(3, GL_FLOAT, sizeof(TREVertex),
+					BUFFER_OFFSET(m_textureCoordsOffset));
+			}
+			else if (sm_varBuffer)
+			{
+				glTexCoordPointer(3, GL_FLOAT, sizeof(TREVertex),
+					sm_varBuffer + m_textureCoordsOffset);
+			}
+			else
+			{
+				glTexCoordPointer(3, GL_FLOAT, sizeof(TREVertex),
+					m_textureCoords->getVertices());
+			}
+		}
+		else
+		{
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		}
 		if (m_colors)
 		{
 			glEnableClientState(GL_COLOR_ARRAY);
@@ -451,6 +516,15 @@ void TREVertexStore::setupColored(void)
 	if (!m_colors)
 	{
 		m_colors = new TCULongArray;
+	}
+}
+
+void TREVertexStore::setupTextured(void)
+{
+	setup();
+	if (!m_textureCoords)
+	{
+		m_textureCoords = new TREVertexArray;
 	}
 }
 
