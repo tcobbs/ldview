@@ -162,7 +162,10 @@ void TCUserDefaults::setCommandLine(const char *args)
 
 			strncpy(tmpBuf, tmpString, length);
 			tmpBuf[length] = 0;
-			argArray->addString(tmpBuf);
+			if (length)
+			{
+				argArray->addString(tmpBuf);
+			}
 			tmpString += length + 1;
 			if (end[0] == '"' && tmpString[0])
 			{
@@ -171,7 +174,10 @@ void TCUserDefaults::setCommandLine(const char *args)
 		}
 		else
 		{
-			argArray->addString(tmpString);
+			if (strlen(tmpString))
+			{
+				argArray->addString(tmpString);
+			}
 			tmpString += strlen(tmpString);
 		}
 	}

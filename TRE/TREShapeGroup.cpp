@@ -5,6 +5,7 @@
 #include "TREMainModel.h"
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCMacros.h>
+#include <TCFoundation/mystring.h>
 #include <string.h>
 
 PFNGLMULTIDRAWELEMENTSEXTPROC TREShapeGroup::glMultiDrawElementsEXT = NULL;
@@ -264,6 +265,16 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 {
 	TCULongArray *indexArray = getIndices(shapeType);
 
+/*
+	if (glIsEnabled(GL_NORMALIZE))
+	{
+		debugPrintf("Normalized\n");
+	}
+	else
+	{
+		debugPrintf("Not Normalized\n");
+	}
+*/
 	if (indexArray)
 	{
 		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
@@ -284,7 +295,12 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 {
 	TREVertexArray *vertices = m_vertexStore->getVertices();
 	TREVertexArray *normals = m_vertexStore->getNormals();
+	float oldColor[4];
+	GLboolean lighting = glIsEnabled(GL_LIGHTING);
 
+	glGetFloatv(GL_CURRENT_COLOR, oldColor);
+	glColor3ub(255, 0, 0);
+	glDisable(GL_LIGHTING);
 	if (vertices && normals)
 	{
 		int i;
@@ -298,9 +314,14 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 			TCVector normal = (*normals)[index].v;
 
 			glVertex3fv(vertex);
-			glVertex3fv(vertex + normal);
+			glVertex3fv(vertex + (normal * 10.0f));
 		}
 		glEnd();
+	}
+	glColor4fv(oldColor);
+	if (lighting)
+	{
+		glEnable(GL_LIGHTING);
 	}
 }
 
