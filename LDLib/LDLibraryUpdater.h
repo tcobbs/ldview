@@ -38,8 +38,9 @@ protected:
 	void updateDlFinish(TCWebClient *webClient);
 	void processUpdateQueue(void);
 	void sendDlProgress(bool *aborted);
+	void sendExtractProgress(bool *aborted);
 	void extractUpdate(const char *filename);
-	void extractUpdates(void);
+	void extractUpdates(bool *aborted);
 
 	TCWebClientArray *m_webClients;
 	TCThread *m_thread;

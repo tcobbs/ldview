@@ -75,8 +75,9 @@ int TCUnzip::unzip(const char *filename, const char *outputDir)
 		dcl.lpszExtractDir = NULL;
 	}
 	return Wiz_SingleEntryUnzip(0, NULL, 0, NULL, &dcl, &userfunctions);
-#endif
+#else // WIN32
 	return -1;
+#endif
 }
 
 #ifdef WIN32
@@ -110,6 +111,7 @@ bool TCUnzip::supported(void)
 {
 #ifdef WIN32
 	return true;
-#endif
+#else // WIN32
 	return false;
+#endif // WIN32
 }

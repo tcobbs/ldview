@@ -20,6 +20,8 @@ class CUIWindowResizer;
 class LDLibraryUpdater;
 
 #define LIBRARY_UPDATE_FINISHED 1
+#define LIBRARY_UPDATE_CANCELED 2
+#define LIBRARY_UPDATE_NONE 3
 
 class LDViewWindow: public CUIWindow
 {
@@ -172,7 +174,7 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL doExtraDirSelected(void);
 		void checkForLibraryUpdates(void);
 //		virtual LRESULT doTimer(UINT timerID);
-		virtual void doLibraryUpdateFinished(void);
+		virtual void doLibraryUpdateFinished(int finishType);
 
 		void loadSettings(void);
 

@@ -380,6 +380,10 @@ SOURCE=.\LDView.exe.manifest
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDViewMessages.ini
+# End Source File
+# Begin Source File
+
 SOURCE=.\Textures\SansSerif.fnt
 # End Source File
 # Begin Source File

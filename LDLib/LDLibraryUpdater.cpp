@@ -350,6 +350,7 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	TCWebClient *webClient = NULL;
 	int dataLength;
 	bool aborted;
+	TCStringArray *extraInfo = NULL;
 //	int oldDebugLevel = getDebugLevel();
 
 	retain();	// We don't want to go away until our thread has finished.
@@ -391,18 +392,31 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	{
 		webClient->release();
 	}
-	if (m_updateQueue && m_updateQueue->getCount() && !aborted)
+	if (!aborted)
 	{
-		TCProgressAlert::send(LD_LIBRARY_UPDATER, "Downloading updates", 0.1f,
-			&aborted);
-		downloadUpdates(&aborted);
-		if (!aborted)
+		if (m_updateQueue && m_updateQueue->getCount())
 		{
-			extractUpdates();
+			TCProgressAlert::send(LD_LIBRARY_UPDATER, "Downloading updates",
+				0.1f, &aborted);
+			downloadUpdates(&aborted);
+			if (!aborted)
+			{
+				extractUpdates(&aborted);
+				if (!aborted)
+				{
+					extraInfo = (TCStringArray *)m_updateUrlList->copy();
+				}
+			}
+		}
+		else
+		{
+			extraInfo = new TCStringArray;
+			extraInfo->addString("None");
 		}
 	}
 	setDebugLevel(0);
-	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Done", 1.0f);
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Done", 1.0f, extraInfo);
+	TCObject::release(extraInfo);
 	return 0;
 }
 
@@ -478,12 +492,14 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 	}
 }
 
-void LDLibraryUpdater::extractUpdates(void)
+void LDLibraryUpdater::extractUpdates(bool *aborted)
 {
 	int i, j;
 	int count = m_updateUrlList->getCount();
 
-	for (i = 0; i < count; i++)
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Extracting updates", 0.9f,
+		aborted);
+	for (i = 0; i < count && !*aborted; i++)
 	{
 		const char *url = (*m_updateUrlList)[i];
 		const char *urlFile = strrchr(url, '\\');
@@ -521,6 +537,7 @@ void LDLibraryUpdater::extractUpdates(void)
 			{
 				extractUpdate(filename);
 				m_downloadList->removeString(j);
+				sendExtractProgress(aborted);
 				break;
 			}
 		}
@@ -585,6 +602,17 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 		}
 	}
 	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Downloading updates", progress,
+		aborted);
+}
+
+void LDLibraryUpdater::sendExtractProgress(bool *aborted)
+{
+	int total = m_updateUrlList->getCount();
+	int finished = total - m_downloadList->getCount();
+	float fileFraction = 0.99f / (float)total * 0.1f;
+	float progress = 0.9f + (float)finished * fileFraction;
+
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Extracting updates", progress,
 		aborted);
 }
 
