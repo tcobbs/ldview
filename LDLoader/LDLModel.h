@@ -98,6 +98,12 @@ protected:
 
 	static char *sm_systemLDrawDir;
 	static int sm_modelCount;
+	static class LDLModelCleanup
+	{
+	public:
+		~LDLModelCleanup(void);
+	} sm_cleanup;
+	friend LDLModelCleanup;
 };
 
 #endif // __LDLMODEL_H__
