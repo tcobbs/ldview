@@ -340,7 +340,6 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 
 bool LDVExtensionsSetup::haveMultisampleExtension(void)
 {
-//	return false;
 	return checkForWGLExtension("WGL_ARB_multisample");
 }
 
