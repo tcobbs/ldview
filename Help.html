@@ -60,6 +60,7 @@ ALINK="#FFFF80">
 <UL>
 <LI><A HREF="#GeometryModelBox">Model Box</A></LI>
 <LI><A HREF="#GeometryWireframeBox">Wireframe Box</A></LI>
+<LI><A HREF="#GeometryBFCBox">BFC Box</A></LI>
 <LI><A HREF="#GeometryEdgeLinesBox">Edge Lines Box</A></LI>
 </UL>
 <LI><A HREF="#EffectsTab">Effects Tab</A></LI>
@@ -581,55 +582,65 @@ someone else on your network is modifying, it's not likely to be very useful.
 		</TD>
 	</TR>
 </TABLE>
-When you save a snapshot, the following LDView-specific options show up in the
-standard save dialog box.
+When you save a snapshot, the following LDView-specific options show up at the
+bottom of the standard save dialog box.
 </P>
 <P>
-<I>Save snapshot series</I><BR>
-Checking this check box will cause a number to automatically be appended to the
-end of your filename in order to allow you to save a number of shots of the
-same model without having to enter a new filename each time.
+<I>Save snapshot series</I> (Default: <I>Off</I>):<BR>
+Enabling this option causes a unique number to automatically be appended to the
+filename.  This allows you to save a number of shots of the same model without
+having to enter a new filename each time.
 </P>
 <P>
-<I>Number of Digits</I><BR>
-This controls the number of digits in the number that is appended to the
-filename, and is only available with the <I>Save snapshot series</I> check box
-is checked.  Zeroes are added before the number to make up the number of
-digits you select here.  For example, if you select 3 here, and the number is
-5, then 005 will be used in the filename instead of just 5.
+<I>Number of Digits</I> (Default: <I>1</I>):<BR>
+This option is only available when save snapshot series is enabled.  It controls
+the number of digits in the number that is appended to the filename.  Zeroes are
+added before the number to make up the number of digits you select here.  For
+example, if you select 3 here, and the number is 5, then 005 will be used in the
+filename instead of just 5.
 </P>
 <P>
-<I>Save image with specific size</I><BR>
-Checking this check box will cause an image file to be generated with the
-specified width and height, instead of the current dimensions of the LDView
-window.
+<I>Don't use Pixel Buffer</I> (Default: <I>Off</I>):<BR>
+Enabling this option disables the use of a pixel buffer for snapshot rendering.
+Use of a pixel buffer can result in a corrupt image on certain video cards with
+certain video drivers.  If your snapshots are corrupted, enable this.
+Otherwise, leave it disabled.
 </P>
 <P>
-<I>Width</I><BR>
-This is only available with the <I>Save image with specific size</I> check box
-checked.  It then sets the width (in pixels) of the image file being
-created.  Note that if this is bigger than a certain threshold (which differs
-from one video card to another), a number of tiles will be rendered and stitched
-together automatically to form the full image.  This may cause the actual image
-width to be slightly less than the requested width due to rounding.</I>
+<I>Save image with specific size</I> (Default: <I>Off</I>):<BR>
+Enabling this option allows you to specify a width and height for the snapshot
+image.  Otherwise, the snapshot created will have the same dimensions as the
+LDView window.
 </P>
 <P>
-<I>Height</I><BR>
-This is only available with the <I>Save image with specific size</I> check box
-checked.  It then sets the height (in pixels) of the image file being
-created.  Note that if this is bigger than a certain threshold (which differs
-from one video card to another), a number of tiles will be rendered and stitched
-together automatically to form the full image.  This may cause the actual image
-height to be slightly less than the requested height due to rounding.</I>
+<I>Width</I> (Default: <I>1024</I>):<BR>
+This option is only available when save image with specific size is enabled.  It
+sets the width (in pixels) of the resulting snapshot image.
 </P>
 <P>
-<I>Zoom to Fit</I><BR>
-This is only available with the <I>Save image with specific size</I> check box
-checked.  If checked, it then causes the model to be zoomed to fill the
-snapshot, as much as possible.  (Most models will only fill the image in either
-the vertical direction or the horizontal direction, but not both.)  Note that
-the viewing angle is left the same, but the model may be panned so that it fits
-best.
+Note that if this is bigger than a certain threshold (which differs from one
+video card to another), a number of tiles will be rendered and stitched together
+automatically to form the full image.  This may cause the actual image width to
+be slightly less than the requested width due to rounding.
+</P>
+<P>
+<I>Height</I> (Default: <I>768</I>):<BR>
+This option is only available when save image with specific size is enabled.  It
+sets the height (in pixels) of the resulting snapshot image.
+</P>
+<P>
+Note that if this is bigger than a certain threshold (which differs from one
+video card to another), a number of tiles will be rendered and stitched together
+automatically to form the full image.  This may cause the actual image width to
+be slightly less than the requested width due to rounding.
+</P>
+<P>
+<I>Zoom to Fit</I> (Default: <I>Off</I>):<BR>
+This option is only available when save image with specific size is enabled.
+Enabling it causes the model to be zoomed to fill up the snapshot, as much as
+possible.  (Most models will only fill the image in either the vertical
+direction or the horizontal direction, but not both.)  Note that the viewing
+angle is left the same, but the model may be panned so that it fits best.
 </P>
 <P>
 The reason this requires the <I>Save image with specific size</I>
@@ -664,63 +675,112 @@ the line of text itself.  Neither of these has any actions associated with it.
 Certain errors may contain further information as well.
 </P>
 <P>
-On the right-hand side of the window are a set of check boxes that determine
-what types of errors should be shown.  By default, all types of errors are
-shown.  You can disable any errors you don't care about.  Following are the
-error types:
+Below the tree view is the <I>Include Warnings</I> check box.  Checking this
+will cause LDView to show both errors and warnings.  Unchecking it will hide all
+the warnings.  Please note that warnings don't mean there is anything wrong with
+the file, so warnings are hidden by default.
 </P>
 <P>
-<I>Parse Error</I><BR>
+Beside the <I>Include Warnings</I> check box is the <I>Copy Error to
+Clipboard</I> button.  Clicking this will cause all the text from the currently
+selected error to copied into the clipboard, so that it can be pasted into
+another application.
+</P>
+<P>
+On the right-hand side of the window is a list view containing a set of check
+boxes that determine what types of errors should be shown.  By default, all
+types of errors are shown.  You can disable any errors you don't care about.
+Following are the error types:
+</P>
+<P>
+<I>General error</I><BR>
+You probably won't ever see an error of this type.  It is used for rare
+situations that shouldn't ever happen.  (For example, if you delete the LDraw
+directory while a model is loading, you might get one of these.)
+</P>
+<P>
+<I>Parse error</I><BR>
 A line in the model file was invalid.
 </P>
 <P>
-<I>File Not Found</I><BR>
+<I>File not found</I><BR>
 The model referenced another model which could not be found in any of the
-standard search locations (the current directory, or the LDraw model, parts, or
-p directories).
+standard search locations (the current directory; the LDraw model, parts, and
+p directories; entries in the <A HREF="#ExtraDirs">extra search directories</A>
+list).
 </P>
 <P>
-<I>Color Error</I><BR>
-The model contains a color specification which LDView was unable to recognize.
-When this error occurs, LDView uses an orange color instead.
+<I>Singular matrix</I><BR>
+The model contains a reference to another model with one of the three dimensions
+scaled to zero.  This is generally considered bad form, but is often done when
+referencing another file that happens to be two-dimensional.
 </P>
 <P>
-<I>Part Determinant</I><BR>
+<I>Part transformed non-uniformly</I><BR>
 The model contains a part which has been distorted in some way.  While parts are
 rotated and moved around to make up a model, they should seldom if ever be
-stretched or skewed.  This isn't technically an error, but usually indicates
-that the model has a problem.
+stretched or skewed.  This usually indicates that the model referencing the part
+has a problem.
 </P>
 <P>
-<I>Concave Quad</I><BR>
+<I>Non-flat quad</I><BR>
+The model contains a quadrilateral (quad) that isn't flat.  There are two
+perfectly valid ways to split a quad into two triangles, and they result in
+different geometry when the quad isn't flat.  Consequently, non-flat quads are
+considered to be errors.  Note that there is a reasonable amount of leeway in
+LDView's definition of "flat", so rounding in the file shouldn't trigger this
+error.
+</P>
+<P>
+<I>Concave quad</I><BR>
 The model contains a concave quadrilateral.  Concave means that one of the four
-points is inside the triangle formed by the other three points.  This also isn't
-technically an error, but is considered bad form, and may produce incorrect
-results on other LDraw-compatible renderering programs.
+points is inside the triangle formed by the other three points.  While not
+technically an error, this is considered bad form, and may produce incorrect
+results in other LDraw-compatible renderering programs.
 </P>
 <P>
-<I>Concave Quad Split</I><BR>
-The model contains a concave quadrilateral that could not be successfully split
-into two triangles.  It may not be possible to generate this error.
+<I>Bad vertex sequence</I><BR>
+The model contains a quadrilateral whose points are specified in "bow-tie"
+order.  In other words, if you visit the points in the order given, you'll end
+up with two triangles that meet at a point.  Two of the vertices must be
+swapped in order to create the quad that was desired.  Once again, this isn't
+techically an error (unless it is in a BFC-certified portion of a file), but is
+considered bad form, and may produce incorrect results in other
+LDraw-compatible rendering programs.
 </P>
 <P>
-<I>Co-linear Points</I><BR>
+<I>Co-linear points</I><BR>
 The model contains a quad or a triangle that has three or four co-linear points.
 When this is detected in a quad, the quad is turned into a triangle (or a line
 if all four points are co-linear).  When it is detected in a triangle (all three
-points are co-linear), the triangle is turned into a line.
+points are co-linear), the triangle is turned into a line.  Note that some
+people might think that using co-linear points in a quad is a valid way to get
+rid of T-junctions (a computer graphic term whose explanation isn't important
+here).  However, since there are two legitimate ways to split a quad into two
+triangles, and one of those ways results in a triangle and a line (instead of
+two triangles), this is <B>not</B> a legitimate way to avoid T-junctions.
 </P>
 <P>
-<I>OpenGL Error</I><BR>
-There was an OpenGL error during the compilation of the model.
+<I>BFC warning</I><BR>
+The model contains back-face culling (BFC) information that seems unusual (but
+is still valid).
+</P>
+<P>
+<I>BFC error</I><BR>
+The model contains back-face culling (BFC) information that is invalid.
+</P>
+<P>
+<I>MPD error</I><BR>
+The model contains multi-part DAT (MPD) information that is invalid.
 </P>
 <P>
 If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
 preferences dialog, the error window will automatically be displayed when a
-model is loaded that contains errors that are set to be shown.  It will not be
-shown if the only errors in the model have been unchecked in the error window,
-the model contains no errors, or the error window isn't set to show
-automatically.
+model is loaded that contains errors or warnings that are set to be shown.  It
+will not be shown if the only errors or warnings in the model have been
+unchecked in the error window, the model only contains warnings and warnings are
+disabled, the model contains no errors or warnings, or the error window isn't
+set to show automatically.
 </P>
 <BR>
 <P>
@@ -879,6 +939,33 @@ behind them, even though these portions themselves aren't actually drawn.
 <I>Thickness</I> (Default: <I>0%</I>):<BR>
 This option is only available if wireframe drawing is enabled.  It adjusts the
 thickness of the lines used to draw the model in wireframe mode.
+</P>
+
+<P>
+<FONT SIZE=+1><B><A NAME="GeometryBFCBox">BFC Box</A></B></FONT><BR>
+<I>BFC</I> (Default: <I>On</I>):<BR>
+Enabling this option turns on back-face culling (BFC).  BFC is a technique that
+can improve rendering performance by not drawing the back faces of polygons.
+(Only BFC-certified parts have their back faces removed.)
+<P>
+Note that while this can improve rendering performance, it can also slow things
+down, so don't assume that enabling this will always result in the best
+performance.
+</P>
+</P>
+<P>
+<I>Red back faces</I> (Default: <I>Off</I>):<BR>
+This option is only available while BFC is enabled.  Enabling it causes the back
+faces of polygons to be drawn in red.  This is mainly useful for part authors to
+allow them to correctly specify which direction faces should face in order to
+BFC certify their part files.
+</P>
+<P>
+<I>Green front faces</I> (Default: <I>Off</I>):<BR>
+This option is only available while BFC is enabled.  Enabling it causes the
+front faces of polygons to be drawn in green.  This is mainly useful for part
+authors to allow them to correctly specify which direction faces should face in
+order to BFC certify their part files.
 </P>
 
 <P>
@@ -2754,11 +2841,12 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Specifies the initial height of the LDView viewing area.  The
-			overall LDView window height will be larger due to the menu, title
-			bar, and window borders.  The maximum is dependent on the resolution
-			of your display.  Specifying a value greater than the maximum will
-			result in a window that is the maximum allowable height.
+			Specifies the initial height of the LDView window.  Note that the
+			height of the actual model viewing area will be smaller than this,
+			due to the window borders, title bar, menu bar, toolbar, and status
+			bar.  The maximum is dependent on the resolution of your display.
+			Specifying a value greater than the maximum will result in a window
+			that is the maximum allowable height.
 		</TD>
 	</TR>
 	<TR>
@@ -2782,17 +2870,17 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP"NOWRAP>
 			Integer<BR>
-			(240-???)
+			(320-???)
 		</TD>
 		<TD VALIGN="TOP">
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Specifies the initial width of the LDView viewing area.  The
-			overall LDView window width will be larger due to the window
-			borders.  The maximum is dependent on the resolution of your
-			display.  Specifying a value greater than the maximum will result in
-			a window that is the maximum allowable width.
+			Specifies the initial width of the LDView window.  Note that the
+			width of the actual model viewing area will be smaller than this,
+			due to the window borders.  The maximum is dependent on the
+			resolution of your display.  Specifying a value greater than the
+			maximum will result in a window that is the maximum allowable width.
 		</TD>
 	</TR>
 	<TR>
