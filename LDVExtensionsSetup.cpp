@@ -209,7 +209,12 @@ BOOL LDVExtensionsSetup::initWindow(void)
 		{
 			glExtensions = copyString((char*)glGetString(GL_EXTENSIONS));
 		}
-		if (checkForWGLExtension("WGL_ARB_pixel_format"))
+		// Note that when we load the function pointers, don't want to pay
+		// attention to any ignore flags in the registry, so all the checks for
+		// extensions have the force flag set to true.  Otherwise, if the
+		// program starts with the ignore flag set, and it later gets cleared,
+		// the function pointers won't be loaded.
+		if (checkForWGLExtension("WGL_ARB_pixel_format", true))
 		{
 			wglGetPixelFormatAttribivARB = (PFNWGLGETPIXELFORMATATTRIBIVEXTPROC)
 				wglGetProcAddress("wglGetPixelFormatAttribivARB");
@@ -218,7 +223,7 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATEXTPROC)
 				wglGetProcAddress("wglChoosePixelFormatARB");
 		}
-		if (havePixelBufferExtension())
+		if (havePixelBufferExtension(true))
 		{
 			wglCreatePbufferARB = (PFNWGLCREATEPBUFFERARBPROC)
 				wglGetProcAddress("wglCreatePbufferARB");
@@ -231,7 +236,7 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			wglQueryPbufferARB = (PFNWGLQUERYPBUFFERARBPROC)
 				wglGetProcAddress("wglQueryPbufferARB");
 		}
-		if (haveVARExtension())
+		if (haveVARExtension(true))
 		{
 			wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
 				wglGetProcAddress("wglAllocateMemoryNV");
@@ -243,13 +248,13 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			TREVertexStore::setWglFreeMemoryNV(wglFreeMemoryNV);
 			TREVertexStore::setGlVertexArrayRangeNV(glVertexArrayRangeNV);
 		}
-		if (haveMultiDrawArraysExtension())
+		if (haveMultiDrawArraysExtension(true))
 		{
 			glMultiDrawElementsEXT = (PFNGLMULTIDRAWELEMENTSEXTPROC)
 				wglGetProcAddress("glMultiDrawElementsEXT");
 			TREShapeGroup::setGlMultiDrawElementsEXT(glMultiDrawElementsEXT);
 		}
-		if (haveVBOExtension())
+		if (haveVBOExtension(true))
 		{
 			glBindBufferARB = (PFNGLBINDBUFFERARBPROC)
 				wglGetProcAddress("glBindBufferARB");
@@ -394,67 +399,69 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 	}
 }
 
-bool LDVExtensionsSetup::haveMultisampleExtension(void)
+bool LDVExtensionsSetup::haveMultisampleExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTISAMPLE_KEY, 0, false)
 		!= 0;
 
-	return !ignore && checkForWGLExtension("WGL_ARB_multisample");
+	return (!ignore || force) && checkForWGLExtension("WGL_ARB_multisample");
 }
 
-bool LDVExtensionsSetup::havePixelBufferExtension(void)
+bool LDVExtensionsSetup::havePixelBufferExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 0, false) != 0;
 
-	return !ignore && checkForWGLExtension("WGL_ARB_pbuffer");
+	return (!ignore || force) && checkForWGLExtension("WGL_ARB_pbuffer", force);
 }
 
-bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(void)
+bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MS_FILTER_HINT_KEY, 0,
 		false) != 0;
 
-	return !ignore && checkForExtension("GL_NV_multisample_filter_hint");
+	return (!ignore || force) &&
+		checkForExtension("GL_NV_multisample_filter_hint");
 }
 
-bool LDVExtensionsSetup::haveVARExtension(void)
+bool LDVExtensionsSetup::haveVARExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_VAR_KEY, 0, false) != 0;
 
-	return !ignore && checkForExtension("GL_NV_vertex_array_range") &&
-		checkForWGLExtension("WGL_NV_allocate_memory");
+	return (!ignore || force) && checkForExtension("GL_NV_vertex_array_range")
+		&& checkForWGLExtension("WGL_NV_allocate_memory");
 }
 
-bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
+bool LDVExtensionsSetup::haveMultiDrawArraysExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
 		false) != 0;
 
-	return !ignore && checkForExtension("GL_EXT_multi_draw_arrays");
+	return (!ignore || force) && checkForExtension("GL_EXT_multi_draw_arrays");
 }
 
-bool LDVExtensionsSetup::haveVBOExtension(void)
+bool LDVExtensionsSetup::haveVBOExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_VBO_KEY, 0, false) != 0;
 
-	return !ignore && checkForExtension("GL_ARB_vertex_buffer_object");
+	return (!ignore || force) &&
+		checkForExtension("GL_ARB_vertex_buffer_object");
 }
 
-bool LDVExtensionsSetup::havePixelFormatExtension(void)
+bool LDVExtensionsSetup::havePixelFormatExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_PIXEL_FORMAT_KEY, 0, false)
 		!= 0;
 
-	return !ignore && checkForWGLExtension("WGL_ARB_pixel_format");
+	return (!ignore || force) && checkForWGLExtension("WGL_ARB_pixel_format");
 }
 
 bool LDVExtensionsSetup::checkForExtension(char* extensionsString,
-										   char* extension)
+										   char* extension, bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
 		false) != 0;
 
-	if (!ignore && extensionsString)
+	if ((!ignore || force) && extensionsString)
 	{
 		int extensionLen = strlen(extension);
 		char* extensions = extensionsString;
@@ -474,14 +481,14 @@ bool LDVExtensionsSetup::checkForExtension(char* extensionsString,
 	return false;
 }
 
-bool LDVExtensionsSetup::checkForExtension(char* extension)
+bool LDVExtensionsSetup::checkForExtension(char* extension, bool force)
 {
-	return checkForExtension(glExtensions, extension);
+	return checkForExtension(glExtensions, extension, force);
 }
 
-bool LDVExtensionsSetup::checkForWGLExtension(char* extension)
+bool LDVExtensionsSetup::checkForWGLExtension(char* extension, bool force)
 {
-	return checkForExtension(wglExtensions, extension);
+	return checkForExtension(wglExtensions, extension, force);
 }
 
 void LDVExtensionsSetup::closeWindow(void)

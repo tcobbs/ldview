@@ -17,8 +17,6 @@
 #include <Commctrl.h>
 #include <stdio.h>
 #include <tmschema.h>
-#include <atlbase.h>
-#include <atlconv.h>
 
 #ifndef IDC_HARDWARE_STEREO
 #define IDC_HARDWARE_STEREO 1030
@@ -3279,9 +3277,11 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 	bool bIsChecked = checkStates[hWnd];
 	RECT itemRect = drawItemStruct->rcItem;
 	char title[1024];
+	WCHAR wtitle[1024];
 
-	USES_CONVERSION;
 	SendMessage(hWnd, WM_GETTEXT, sizeof(title), (LPARAM)title);
+	MultiByteToWideChar(CP_ACP, 0, title, -1, wtitle,
+		sizeof(wtitle) / sizeof(wtitle[0]));
 	SetBkMode(hdc, TRANSPARENT);
 	// Prepare draw... paint button background
 	if (CUIThemes::isThemeLibLoaded() && hTheme)
@@ -3333,8 +3333,8 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		DrawThemeParentBackground(hWnd, hdc, &itemRect);
 		CUIThemes::drawThemeBackground(hTheme, hdc, BP_CHECKBOX, state,
 			&boxRect, NULL);
-		GetThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, A2W(title), -1,
-			DT_LEFT, &itemRect, &textRect);
+		GetThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, wtitle, -1, DT_LEFT,
+			&itemRect, &textRect);
 		OffsetRect(&textRect, boxSize.cx + 3, 1);
 		// Draw the focus rect
 		if (bIsFocused && bDrawFocusRect)
@@ -3347,8 +3347,8 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		// All this so that we can draw the text in the font and color of the
 		// group box text instead of the check box text.  Here's where we do
 		// that.
-		DrawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL, A2W(title), -1,
-			DT_LEFT, NULL, &textRect);
+		DrawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL, wtitle, -1, DT_LEFT,
+			NULL, &textRect);
 	}
 	return TRUE;
 }

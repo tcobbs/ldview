@@ -13,6 +13,8 @@ public:
 	virtual int addTriangle(TCULong color, const TCVector *vertices,
 		const TCVector *normals);
 	virtual int addTriangle(TCULong color, TCVector *vertices);
+	virtual int addTriangle(TCULong color, const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords);
 	virtual int addQuad(TCULong color, TCVector *vertices);
 	virtual int addQuad(TCULong color, TCVector *vertices, TCVector *normals);
 	virtual int addQuadStrip(TCULong color, TCVector *vertices,
@@ -30,6 +32,9 @@ protected:
 		TCVector *vertices, int count);
 	virtual int addShape(TREShapeType shapeType, TCULong color,
 		const TCVector *vertices, const TCVector *normals, int count);
+	virtual int addShape(TREShapeType shapeType, TCULong color,
+		const TCVector *vertices, const TCVector *normals,
+		const TCVector *textureCoords, int count);
 	virtual void transferColoredTransparent(TREShapeType shapeType,
 		TCULongArray *indices, TCULongArray *transparentIndices,
 		const float *matrix);

@@ -43,13 +43,33 @@ int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
 								   const TCVector *vertices,
 								   const TCVector *normals, int count)
 {
+	return addShape(shapeType, color, vertices, normals, NULL, count);
+}
+
+int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
+								   const TCVector *vertices,
+								   const TCVector *normals,
+								   const TCVector *textureCoords, int count)
+{
 	int index;
 
 	m_vertexStore->setupColored();
+	if (textureCoords)
+	{
+		m_vertexStore->setupTextured();
+	}
 	if (normals)
 	{
-		index = m_vertexStore->addVertices(htonl(color), vertices, normals,
-			count);
+		if (textureCoords)
+		{
+			index = m_vertexStore->addVertices(htonl(color), vertices, normals,
+				textureCoords, count);
+		}
+		else
+		{
+			index = m_vertexStore->addVertices(htonl(color), vertices, normals,
+				count);
+		}
 	}
 	else
 	{
@@ -73,6 +93,13 @@ int TREColoredShapeGroup::addTriangle(TCULong color, const TCVector *vertices,
 									  const TCVector *normals)
 {
 	return addShape(TRESTriangle, color, vertices, normals, 3);
+}
+
+int TREColoredShapeGroup::addTriangle(TCULong color, const TCVector *vertices,
+									  const TCVector *normals,
+									  const TCVector *textureCoords)
+{
+	return addShape(TRESTriangle, color, vertices, normals, textureCoords, 3);
 }
 
 int TREColoredShapeGroup::addQuad(TCULong color, TCVector *vertices)

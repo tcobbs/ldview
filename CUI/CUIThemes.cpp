@@ -1,7 +1,5 @@
 #include "CUIThemes.h"
 #include <windows.h>
-#include <atlbase.h>
-#include <atlconv.h>
 
 bool CUIThemes::sm_initTried = false;
 bool CUIThemes::sm_themeLibLoaded = false;
@@ -190,13 +188,6 @@ HRESULT CUIThemes::setWindowTheme(HWND hWnd, LPCWSTR pwszSubAppName,
 	{
 		return E_NOTIMPL;
 	}
-}
-
-HRESULT CUIThemes::setWindowTheme(HWND hWnd, LPCSTR pszSubAppName,
-								  LPCSTR pszSubIdList)
-{
-	USES_CONVERSION;
-	return setWindowTheme(hWnd, A2W(pszSubAppName), A2W(pszSubIdList));
 }
 
 HTHEME CUIThemes::getWindowTheme(HWND hWnd)

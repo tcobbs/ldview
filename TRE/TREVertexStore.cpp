@@ -157,6 +157,19 @@ int TREVertexStore::addVertices(TCULong color, const TCVector *points,
 	return addVertices(points, normals, count);
 }
 
+int TREVertexStore::addVertices(TCULong color, const TCVector *points,
+								const TCVector *normals,
+								const TCVector *textureCoords, int count)
+{
+	int i;
+
+	for (i = 0; i < count; i++)
+	{
+		m_colors->addValue(color);
+	}
+	return addVertices(points, normals, textureCoords, count);
+}
+
 void TREVertexStore::initVertex(TREVertex &vertex, const TCVector &point)
 {
 	memcpy(vertex.v, (const float *)point, sizeof(vertex.v));

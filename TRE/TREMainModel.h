@@ -154,7 +154,8 @@ public:
 	void compile(void);
 	void recompile(void);
 	virtual void addTransparentTriangle(TCULong color,
-		const TCVector vertices[], const TCVector normals[]);
+		const TCVector vertices[], const TCVector normals[],
+		const TCVector *textureCoords = NULL);
 	virtual bool shouldLoadConditionalLines(void);
 	bool isStudSection(TREMSection section)
 	{
