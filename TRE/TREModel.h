@@ -94,7 +94,8 @@ public:
 		TCVector *normals, int count, bool flat = false);
 	virtual void compile(TREMSection section, bool colored);
 	virtual void draw(TREMSection section);
-	virtual void draw(TREMSection section, bool colored);
+	virtual void draw(TREMSection section, bool colored,
+		bool subModelsOnly = false);
 	virtual void drawColored(TREMSection section);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part != false; }

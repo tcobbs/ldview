@@ -161,6 +161,7 @@ protected:
 	virtual void enableLineSmooth(void);
 	virtual void bindStudTexture(void);
 	virtual void configureStudTexture(void);
+	virtual bool shouldCompileSection(TREMSection section);
 
 	static void loadStudMipTextures(TCImage *mainImage);
 

@@ -7,8 +7,10 @@
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCProgressAlert.h>
 
-const float POLYGON_OFFSET_FACTOR = 0.85f;
-const float POLYGON_OFFSET_UNITS = 0.0f;
+//const float POLYGON_OFFSET_FACTOR = 0.85f;
+//const float POLYGON_OFFSET_UNITS = 0.0f;
+const float POLYGON_OFFSET_FACTOR = 1.0f;
+const float POLYGON_OFFSET_UNITS = 1.0f;
 
 TCImageArray *TREMainModel::sm_studTextures = NULL;
 unsigned TREMainModel::sm_studTextureID = 0;
@@ -173,35 +175,44 @@ void TREMainModel::compileTransparent(void)
 }
 */
 
+bool TREMainModel::shouldCompileSection(TREMSection section)
+{
+	return section != TREMConditionalLines && section != TREMTransparent;
+}
+
 void TREMainModel::compile(void)
 {
 	if (!m_mainFlags.compiled)
 	{
 		int i;
-		float numSections = (float)(TREMTransparent - TREMStandard);
+		float numSections = (float)(TREMLast - TREMFirst + 1);
 
 //		TCProgressAlert::send("TREMainModel", "Compiling...", 0.0f, &m_abort);
 		if (!m_abort)
 		{
 			m_mainFlags.compiling = true;
-			for (i = TREMFirst; i < TREMTransparent && !m_abort; i++)
+			for (i = TREMFirst; i <= TREMLast && !m_abort; i++)
 			{
-				float progress = (float)i / (numSections * 2.0f);
 				TREMSection section = (TREMSection)i;
 
-				TCProgressAlert::send("TREMainModel", "Compiling...", progress,
-					&m_abort);
-				if (!m_abort && isSectionPresent(section, false))
+				if (shouldCompileSection(section))
 				{
-					if (isStudSection(section))
+					float progress = (float)i / (numSections * 2.0f);
+
+					TCProgressAlert::send("TREMainModel", "Compiling...",
+						progress, &m_abort);
+					if (!m_abort && isSectionPresent(section, false))
 					{
-						m_studVertexStore->activate(true);
+						if (isStudSection(section))
+						{
+							m_studVertexStore->activate(true);
+						}
+						else
+						{
+							m_vertexStore->activate(true);
+						}
+						TREModel::compile(section, false);
 					}
-					else
-					{
-						m_vertexStore->activate(true);
-					}
-					TREModel::compile(section, false);
 				}
 			}
 /*
@@ -235,24 +246,28 @@ void TREMainModel::compile(void)
 */
 		if (!m_abort)
 		{
-			for (i = TREMFirst; i < TREMTransparent && !m_abort; i++)
+			for (i = TREMFirst; i <= TREMLast && !m_abort; i++)
 			{
-				float progress = (float)i / (numSections * 2.0f) + 0.5f;
 				TREMSection section = (TREMSection)i;
 
-				TCProgressAlert::send("TREMainModel", "Compiling...", progress,
-					&m_abort);
-				if (!m_abort && isSectionPresent(section, true))
+				if (shouldCompileSection(section))
 				{
-					if (isStudSection(section))
+					float progress = (float)i / (numSections * 2.0f) + 0.5f;
+
+					TCProgressAlert::send("TREMainModel", "Compiling...",
+						progress, &m_abort);
+					if (!m_abort && isSectionPresent(section, true))
 					{
-						m_coloredStudVertexStore->activate(true);
+						if (isStudSection(section))
+						{
+							m_coloredStudVertexStore->activate(true);
+						}
+						else
+						{
+							m_coloredVertexStore->activate(true);
+						}
+						TREModel::compile(section, true);
 					}
-					else
-					{
-						m_coloredVertexStore->activate(true);
-					}
-					TREModel::compile(section, true);
 				}
 			}
 /*

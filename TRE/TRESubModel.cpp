@@ -210,7 +210,7 @@ TCULong TRESubModel::getEdgeColor(void)
 	return htonl(m_edgeColor);
 }
 
-void TRESubModel::draw(TREMSection section, bool colored)
+void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly)
 {
 	if (!colored)
 	{
@@ -219,6 +219,9 @@ void TRESubModel::draw(TREMSection section, bool colored)
 		// OpenGL color to be set.
 		if (m_flags.colorSet)
 		{
+			// If our color is set, reset to not be in subModelsOnly mode.  It
+			// might get turned back on below, of course.
+			subModelsOnly = false;
 			if (section == TREMEdgeLines || section == TREMConditionalLines)
 			{
 				glPushAttrib(GL_CURRENT_BIT);
@@ -230,22 +233,27 @@ void TRESubModel::draw(TREMSection section, bool colored)
 				{
 					if (TREShapeGroup::isTransparent(m_color, true))
 					{
-						// Don't draw transparent shapes here.
-						return;
+						// We don't want to draw transparent geometry here.
+						// However, we do want to draw our submodels, just in
+						// case any of them have non-transparent geometry.
+						subModelsOnly = true;
 					}
 				}
-				glPushAttrib(GL_CURRENT_BIT);
-				glColor4ubv((GLubyte*)&m_color);
+				if (!subModelsOnly)
+				{
+					glPushAttrib(GL_CURRENT_BIT);
+					glColor4ubv((GLubyte*)&m_color);
+				}
 			}
 		}
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	getEffectiveModel()->draw(section, colored);
+	getEffectiveModel()->draw(section, colored, subModelsOnly);
 	glPopMatrix();
 	if (!colored)
 	{
-		if (m_flags.colorSet)
+		if (m_flags.colorSet && !subModelsOnly)
 		{
 			glPopAttrib();
 		}

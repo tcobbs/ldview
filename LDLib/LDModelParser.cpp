@@ -34,9 +34,9 @@ LDModelParser::LDModelParser(void)
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
 	m_flags.edgesOnly = false;
-	m_flags.bfc = true;
+	m_flags.bfc = false;
 	m_flags.compileParts = true;
-	m_flags.compileAll = true;
+	m_flags.compileAll = false;
 	m_flags.lighting = false;
 	m_flags.twoSidedLighting = false;
 	m_flags.aaLines = false;

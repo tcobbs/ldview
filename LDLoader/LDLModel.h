@@ -61,6 +61,7 @@ public:
 	// Note that bit flags can cause odd results; thus returning the != false,
 	// instead of returning the flag value directly.
 	bool isPart(void) { return m_flags.part != false; }
+	bool isPrimitive(void) { return m_flags.primitive != false; }
 	bool isMPD(void) { return m_flags.mpd != false; }
 
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
@@ -114,6 +115,7 @@ protected:
 	{
 		// Private flags
 		bool loadingPart:1;			// Temporal
+		bool loadingPrimitive:1;	// Temporal
 		bool mainModelLoaded:1;		// Temporal
 		bool mainModelParsed:1;		// Temporal
 		bool started:1;				// Temporal
@@ -122,6 +124,7 @@ protected:
 		bool bfcInvertNext:1;		// Temporal
 		// Public flags
 		bool part:1;
+		bool primitive:1;
 		bool mpd:1;
 		BFCState bfcCertify:3;
 	} m_flags;

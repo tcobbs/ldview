@@ -2316,6 +2316,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 
 						if (hPBufferGLRC)
 						{
+							wglShareLists(hglrc, hPBufferGLRC);
 							hCurrentDC = hPBufferDC;
 							hCurrentGLRC = hPBufferGLRC;
 							makeCurrent();
@@ -2352,7 +2353,9 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 							}
 							else
 							{
-								return modelViewer->recompile();
+								// No need to recompile as before, because we're
+								// sharing display lists.
+								return true;
 							}
 						}
 					}
@@ -3662,8 +3665,10 @@ bool ModelWindow::shouldOverwriteFile(char* filename)
 bool ModelWindow::saveSnapshot(void)
 {
 	char saveFilename[1024] = "";
+	bool retValue = saveSnapshot(saveFilename);
 
-	return saveSnapshot(saveFilename);
+	forceRedraw();
+	return retValue;
 }
 
 bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine)

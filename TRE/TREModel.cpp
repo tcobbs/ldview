@@ -362,13 +362,14 @@ void TREModel::checkGLError(char *msg)
 #ifdef _DEBUG
 		debugPrintf("%s: %s\n", msg, errorString);
 #else
-		MessageBox(NULL, msg, "OpenGL Error", MB_OK);
+		// Get rid of unreferenced parameter warning.
+		msg;
 #endif
 //		reportError("OpenGL error:\n%s: %s\n", LDMEOpenGL, msg, errorString);
 	}
 }
 
-void TREModel::draw(TREMSection section, bool colored)
+void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly)
 {
 	TCULong listID;
 
@@ -380,51 +381,59 @@ void TREModel::draw(TREMSection section, bool colored)
 	{
 		listID = m_listIDs[section];
 	}
-	if (listID)
+	if (listID && !subModelsOnly)
 	{
-		checkGLError("Before glCallList");
+		// Note that subModelsOnly gets set when the current color is
+		// transparent.  In that case, we don't want to draw our geometry,
+		// because transparent geometry gets drawn elsewhere.  However, we do
+		// want to draw any sub-models, because some of them not be
+		// transparent.
+//		checkGLError("Before glCallList");
 		glCallList(listID);
-		checkGLError("After glCallList");
+//		checkGLError("After glCallList");
 	}
 	else if (isSectionPresent(section, colored))
 	{
-		TREShapeGroup *shapeGroup;
+		if (!subModelsOnly)
+		{
+			TREShapeGroup *shapeGroup;
 
-		if (colored)
-		{
-			shapeGroup = m_coloredShapes[section];
-		}
-		else
-		{
-			shapeGroup = m_shapes[section];
-		}
-		if (isLineSection(section))
-		{
-			if (shapeGroup)
+			if (colored)
 			{
-				shapeGroup->drawLines();
-			}
-		}
-		else if (section == TREMConditionalLines)
-		{
-			if (shapeGroup)
-			{
-				shapeGroup->drawConditionalLines();
-			}
-		}
-		else
-		{
-			if (m_flags.part && isFlattened())
-			{
-				setGlNormalize(false);
+				shapeGroup = m_coloredShapes[section];
 			}
 			else
 			{
-				setGlNormalize(true);
+				shapeGroup = m_shapes[section];
 			}
-			if (shapeGroup)
+			if (isLineSection(section))
 			{
-				shapeGroup->draw();
+				if (shapeGroup)
+				{
+					shapeGroup->drawLines();
+				}
+			}
+			else if (section == TREMConditionalLines)
+			{
+				if (shapeGroup)
+				{
+					shapeGroup->drawConditionalLines();
+				}
+			}
+			else
+			{
+				if (m_flags.part && isFlattened())
+				{
+					setGlNormalize(false);
+				}
+				else
+				{
+					setGlNormalize(true);
+				}
+				if (shapeGroup)
+				{
+					shapeGroup->draw();
+				}
 			}
 		}
 		if (m_subModels)
@@ -434,7 +443,7 @@ void TREModel::draw(TREMSection section, bool colored)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->draw(section, colored);
+				(*m_subModels)[i]->draw(section, colored, subModelsOnly);
 			}
 		}
 	}
