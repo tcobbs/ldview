@@ -20,7 +20,7 @@ class CUIExport CUIWindow : public TCObject
 {
 	public:
 		CUIWindow(void);
-		CUIWindow(char* windowTitle, HINSTANCE hInstance, int x,
+		CUIWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 			int y, int width, int height);
 		CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 			int height);

@@ -7,7 +7,6 @@
 #include "LDVExtensionsSetup.h"
 #include "AppResources.h"
 #include "UserDefaultsKeys.h"
-#include "LocalStringsKeys.h"
 #include "ModelWindow.h"
 
 #include <TCFoundation/TCUserDefaults.h>
@@ -25,13 +24,13 @@
 #define ODS_NOFOCUSRECT 0x0200
 #endif // (_WIN32_WINNT < 0x0500)
 
-#define DEFAULT_PREF_SET "<Default>"
+#define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
 char LDViewPreferences::ldviewPath[MAX_PATH] = "";
 
 LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 									 LDrawModelViewer* modelViewer)
-	:CUIPropertySheet("LDView Preferences", hInstance),
+	:CUIPropertySheet(TCLocalStrings::get("LDViewPreferences"), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
 	generalPageNumber(0),
@@ -803,7 +802,7 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 	char className[1024];
 
 	GetClassName(controlHWnd, className, sizeof(className));
-	if (strcmp(className, "ComboBox") == 0)
+	if (strcmp(className, WC_COMBOBOX) == 0)
 	{
 		if (notifyCode == CBN_SELCHANGE)
 		{
@@ -1641,17 +1640,9 @@ void LDViewPreferences::doDeletePrefSet(void)
 
 		if (checkAbandon && getApplyEnabled())
 		{
-/*
-			if (MessageBox(hWindow, "You have made changes to the current pref "
-				"set that have not been applied.  If you delete this pref set, "
-				"those changes will be lost.  Are you sure you want to delete "
-				"it?", TCLocalStrings::getLocalString(ABANDON_CHANGES_KEY),
-				MB_YESNO | MB_ICONQUESTION) ==
-				IDYES)
-*/
 			if (MessageBox(hWindow,
-				TCLocalStrings::get(PREF_SET_ABANDON_CONFIRM_KEY),
-				TCLocalStrings::get(ABANDON_CHANGES_KEY),
+				TCLocalStrings::get("PrefSetAbandonConfirm"),
+				TCLocalStrings::get("AbandonChanges"),
 				MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				abandonChanges();
@@ -1873,9 +1864,8 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 				if (strchr(editText, '/') || strchr(editText, '\\'))
 				{
 				MessageBox(hDlg,
-					"Preference set names cannot contain the characters '\\' "
-					"or '/'.  ",
-					"Invalid name", MB_OK | MB_ICONWARNING);
+					TCLocalStrings::get("PrefSetNameBadChars"),
+					TCLocalStrings::get("InvalidName"), MB_OK | MB_ICONWARNING);
 				}
 				else
 				{
@@ -1886,16 +1876,16 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 			else
 			{
 				MessageBox(hDlg,
-					"A preference set already exists with that name.  "
-					"You must enter a new unique name.",
-					"Duplicate name", MB_OK | MB_ICONWARNING);
+					TCLocalStrings::get("PrefSetAlreadyExists"),
+					TCLocalStrings::get("DuplicateName"),
+					MB_OK | MB_ICONWARNING);
 			}
 		}
 		else
 		{
 			MessageBox(hDlg,
-				"You must enter a name for the new preference set.",
-				"Empty name", MB_OK | MB_ICONWARNING);
+				TCLocalStrings::get("PrefSetNameRequired"),
+				TCLocalStrings::get("EmptyName"), MB_OK | MB_ICONWARNING);
 		}
 	}
 	else if (controlId == IDC_HOTKEY_OK)
@@ -1947,7 +1937,7 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 
 		SendDlgItemMessage(hPage, controlId, WM_GETTEXT, sizeof(selectedString),
 			(LPARAM)selectedString);
-		if (strcmp(selectedString, "None") == 0)
+		if (strcmp(selectedString, TCLocalStrings::get("FsaaNone")) == 0)
 		{
 			fsaaMode = 0;
 		}
@@ -1958,7 +1948,8 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 			{
 				fsaaMode = fsaaMode << 3;
 			}
-			else if (strstr(selectedString, "Enhanced"))
+			else if (strstr(selectedString,
+				TCLocalStrings::get("FsaaEnhanced")))
 			{
 				fsaaMode |= 1;
 			}
@@ -2268,9 +2259,8 @@ void LDViewPreferences::setupFov(bool warn)
 		(LPARAM)buf);
 	if (warn)
 	{
-		sprintf(buf, "Field of view must be a number from %g to %g.  It has "
-			"been reset to its previous value.", minFov, maxFov);
-		MessageBox(hPropSheet, buf, "Invalid value",
+		sprintf(buf, TCLocalStrings::get("FovRangeError"), minFov, maxFov);
+		MessageBox(hPropSheet, buf, TCLocalStrings::get("InvalidValue"),
 			MB_OK | MB_ICONWARNING);
 	}
 }
@@ -2782,7 +2772,7 @@ void LDViewPreferences::setupAntialiasing(void)
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_RESETCONTENT, 0, 0);
 	// Add "None" to FSAA combo box list as only item.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)"None");
+		(LPARAM)TCLocalStrings::get("FsaaNone"));
 	// Select "None", just in case something else doesn't get selected later.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SETCURSEL, 0, 0);
 	// The following array should always exist, even if it is empty, but check
@@ -2797,7 +2787,7 @@ void LDViewPreferences::setupAntialiasing(void)
 		{
 			int value = (*fsaaModes)[i];
 
-			sprintf(modeString, "%dx", value);
+			sprintf(modeString, TCLocalStrings::get("FsaaNx"), value);
 			SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
 				(LPARAM)modeString);
 			// nVidia hardare supports Quincunx and 9-box pattern, so add an
@@ -2806,7 +2796,9 @@ void LDViewPreferences::setupAntialiasing(void)
 			if ((value == 2 || value == 4) &&
 				LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
 			{
-				sprintf(modeString, "%dx Enhanced", value);
+				sprintf(modeString, TCLocalStrings::get("FsaaNx"), value);
+				strcat(modeString, " ");
+				strcat(modeString, TCLocalStrings::get("FsaaEnhanced"));
 				SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
 					0, (LPARAM)modeString);
 			}
@@ -2814,10 +2806,11 @@ void LDViewPreferences::setupAntialiasing(void)
 	}
 	if (fsaaMode)
 	{
-		sprintf(modeString, "%dx", getFSAAFactor());
+		sprintf(modeString, TCLocalStrings::get("FsaaNx"), getFSAAFactor());
 		if (getUseNvMultisampleFilter())
 		{
-			strcat(modeString, " Enhanced");
+			strcat(modeString, " ");
+			strcat(modeString, TCLocalStrings::get("FsaaEnhanced"));
 		}
 		if (SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SELECTSTRING, 0,
 			(LPARAM)modeString) == CB_ERR)
@@ -2883,7 +2876,7 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)"???");
 	}
 	SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)"<None>");
+		(LPARAM)TCLocalStrings::get("<None>"));
 	for (i = 1; i <= 10; i++)
 	{
 		char numString[5];
@@ -2924,8 +2917,8 @@ bool LDViewPreferences::shouldSetActive(int index)
 		{
 			setActiveWarned = true;
 			MessageBox(hWindow,
-				"You must apply your changes before you can leave this tab.",
-				"Error", MB_OK | MB_ICONWARNING);
+				TCLocalStrings::get("PrefSetApplyBeforeLeave"),
+				TCLocalStrings::get("Error"), MB_OK | MB_ICONWARNING);
 		}
 		return false;
 	}

@@ -4,7 +4,7 @@
 
 CUIPropertySheet *CUIPropertySheet::globalCUIPropertySheet = NULL;
 
-CUIPropertySheet::CUIPropertySheet(char *windowTitle, HINSTANCE hInstance):
+CUIPropertySheet::CUIPropertySheet(const char *windowTitle, HINSTANCE hInstance):
 	CUIWindow(windowTitle, hInstance, 0, 0, 100, 100),
 	hDlgParent(NULL),
 	hPropSheet(NULL),

@@ -13,7 +13,7 @@ typedef TCTypedPointerArray<HPROPSHEETPAGE> CUIHPropSheetPageArray;
 class CUIExport CUIPropertySheet: public CUIWindow
 {
 public:
-	CUIPropertySheet(char* windowTitle, HINSTANCE hInstance);
+	CUIPropertySheet(const char* windowTitle, HINSTANCE hInstance);
 	virtual int run(void);
 	virtual int show(void);
 	virtual void addPage(int resourceId, char* title = NULL);
