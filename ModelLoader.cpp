@@ -58,6 +58,7 @@ void ModelLoader::startup(void)
 	int widthDelta = 0;
 	bool maximized;
 	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+	HWND hParentWindow = NULL;
 
 	TCUserDefaults::removeValue(HFOV_KEY, false);
 	TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
@@ -69,6 +70,7 @@ void ModelLoader::startup(void)
 		for (i = 0; i < count; i++)
 		{
 			char *command = (*commandLine)[i];
+			int num;
 
 			if (stringHasCaseInsensitivePrefix(command, "-ca"))
 			{
@@ -84,6 +86,11 @@ void ModelLoader::startup(void)
 				TCUserDefaults::setStringForKey(command + 3, CAMERA_GLOBE_KEY,
 					false);
 			}
+			else if (strcasecmp(command, "-float") == 0 && i + 1 < count &&
+				sscanf((*commandLine)[i + 1], "%i", &num) == 1 && num != 0)
+			{
+				hParentWindow = (HWND)num;
+			}
 		}
 	}
 	width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false);
@@ -94,6 +101,10 @@ void ModelLoader::startup(void)
 	parentWindow->setMinWidth(320);
 	parentWindow->setMinHeight(240);
 	parentWindow->setScreenSaver(screenSaver);
+	if (hParentWindow)
+	{
+		parentWindow->setHParentWindow(hParentWindow);
+	}
 /*
 	if (screenSaver)
 	{

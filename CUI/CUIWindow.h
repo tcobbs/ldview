@@ -55,6 +55,7 @@ class CUIExport CUIWindow : public TCObject
 		virtual void restore(void);
 		virtual UINT setTimer(UINT timerID, UINT elapse);
 		virtual BOOL killTimer(UINT timerID);
+		HWND getHParentWindow(void) { return hParentWindow; }
 
 		static void setArrowCursor(void);
 		static void setWaitCursor(void);

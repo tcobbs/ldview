@@ -1907,7 +1907,8 @@ BOOL ModelWindow::initWindow(void)
 {
 	LDVExtensionsSetup::setup(hInstance);
 	if (((LDViewWindow*)parentWindow)->getFullScreen() ||
-		((LDViewWindow*)parentWindow)->getScreenSaver())
+		((LDViewWindow*)parentWindow)->getScreenSaver() ||
+		((LDViewWindow*)parentWindow)->getHParentWindow())
 	{
 		exWindowStyle &= ~WS_EX_CLIENTEDGE;
 	}
