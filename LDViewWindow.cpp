@@ -299,7 +299,7 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 	debugPrintf(2, "updateRect size1: %d, %d\n",
 		updateRect->right - updateRect->left,
 		updateRect->bottom - updateRect->top);
-	if (!fullScreen && !screenSaver)
+	if (!fullScreen && !screenSaver && !hParentWindow)
 	{
 		int bottomMargin = 2;
 		int topMargin = 2;
@@ -496,6 +496,11 @@ void LDViewWindow::populateTbButtonInfos(void)
 	}
 }
 
+void LDViewWindow::setHParentWindow(HWND hWnd)
+{
+	hParentWindow = hWnd;
+}
+
 void LDViewWindow::createToolbar(void)
 {
 	if (showToolbar)
@@ -629,6 +634,10 @@ BOOL LDViewWindow::initWindow(void)
 #ifndef _DEBUG
 		exWindowStyle |= WS_EX_TOPMOST;
 #endif
+	}
+	else if (hParentWindow)
+	{
+		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_SYSMENU;
 	}
 	else
 	{
@@ -4608,7 +4617,7 @@ BOOL LDViewWindow::doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo)
 
 void LDViewWindow::reflectToolbar(void)
 {
-	if (fullScreen || screenSaver)
+	if (fullScreen || screenSaver || hParentWindow)
 	{
 		return;
 	}
@@ -4626,7 +4635,7 @@ void LDViewWindow::reflectToolbar(void)
 
 void LDViewWindow::reflectStatusBar(void)
 {
-	if (fullScreen || screenSaver)
+	if (fullScreen || screenSaver || hParentWindow)
 	{
 		return;
 	}

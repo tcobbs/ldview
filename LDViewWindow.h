@@ -81,6 +81,7 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchStatusBar(void);
 		virtual const char *getProductVersion(void);
 		virtual const char *getLegalCopyright(void);
+		virtual void setHParentWindow(HWND hWnd);
 		ModelWindow *getModelWindow(void) { return modelWindow; }
 
 		static char* getLDrawDir(void);
