@@ -74,3 +74,29 @@ void TRESubModel::draw(void)
 		glPopAttrib();
 	}
 }
+
+void TRESubModel::drawDefaultColor(void)
+{
+	if (m_colorSet)
+	{
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor4ubv((GLubyte*)&m_color);
+	}
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	m_model->drawDefaultColor();
+	glPopMatrix();
+	if (m_colorSet)
+	{
+		glPopAttrib();
+	}
+}
+
+void TRESubModel::drawColored(void)
+{
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	m_model->drawColored();
+	glPopMatrix();
+}
+

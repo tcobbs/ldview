@@ -193,7 +193,7 @@ void TREShapeGroup::draw(void)
 {
 	if (m_vertexStore)
 	{
-		m_vertexStore->activate();
+//		m_vertexStore->activate();
 		drawShapeType(TRESTriangle);
 		drawShapeType(TRESQuad);
 	}
