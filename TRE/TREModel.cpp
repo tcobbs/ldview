@@ -1569,9 +1569,9 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 		top[1] += height;
 		if (height)
 		{
-			topNormalPoint = top + normal * radius2 * (radius2 - radius1) /
+			topNormalPoint = top - normal * radius2 * (radius2 - radius1) /
 				height;
-			normalPoint = center + normal * radius1 * (radius2 - radius1) /
+			normalPoint = center - normal * radius1 * (radius2 - radius1) /
 				height;
 		}
 		for (i = 0; i <= usedSegments; i++)

@@ -98,6 +98,7 @@ TCWebClient::TCWebClient(const char* url)
 	 dataFile(NULL),
 	 dataFilePath(NULL),
 	 contentType(NULL),
+	 locationField(NULL),
 	 chunked(false),
 	 bufferLength(0),
 	 readBuffer(NULL),
@@ -145,6 +146,7 @@ void TCWebClient::dealloc(void)
 	}
 	delete dataFilePath;
 	delete contentType;
+	delete locationField;
 	delete readBuffer;
 	// Do NOT delete readBufferPosition
 	delete pageData;
@@ -208,6 +210,10 @@ int TCWebClient::parseURL(void)
 	char* spot = strstr(url, "://");
 	char* hostSpot;
 
+	delete webServer;
+	webServer = NULL;
+	delete serverPath;
+	serverPath = NULL;
 	if (spot)
 	{
 		hostSpot = spot + 3;
@@ -238,6 +244,28 @@ int TCWebClient::parseURL(void)
 	}
 	setServerHost(webServer);
 	return 1;
+}
+
+void TCWebClient::setLocationField(const char* value)
+{
+	if (value != locationField)
+	{
+		char *fieldEnd = strstr(value, "\r\n");
+
+		delete locationField;
+		if (fieldEnd)
+		{
+			int len = fieldEnd - value;
+
+			locationField = new char[len + 1];
+			strncpy(locationField, value, len);
+			locationField[len] = 0;
+		}
+		else
+		{
+			locationField = copyString(value);
+		}
+	}
 }
 
 void TCWebClient::setContentType(const char* value)
@@ -406,8 +434,7 @@ bool TCWebClient::receiveHeader(void)
 				if (readBuffer)
 				{
 					memcpy(tmpBuffer, readBuffer, bufferLength);
-					delete readBuffer;
-					readBuffer = NULL;
+					clearReadBuffer();
 				}
 				readBuffer = tmpBuffer;
 				memcpy(readBuffer + bufferLength, buf, receiveLength);
@@ -477,6 +504,11 @@ void TCWebClient::parseHeaderFields(int headerLength)
 			chunked = true;
 		}
 	}
+	fieldData = strncasestr(readBuffer, "\r\nLocation: ", headerLength);
+	if (fieldData)
+	{
+		setLocationField(fieldData + 12);
+	}
 }
 
 bool TCWebClient::parseHeader(void)
@@ -499,22 +531,19 @@ bool TCWebClient::parseHeader(void)
 	{
 		return 0;
 	}
+	parseHeaderFields(headerLength);
+	if (headerLength < bufferLength)
+	{
+		readBufferPosition = readBuffer + headerLength;
+		bufferLength -= headerLength;
+	}
+	else
+	{
+		clearReadBuffer();
+	}
 	if (resultCode / 100 == 2)
 	{
 		retValue = true;
-		parseHeaderFields(headerLength);
-		if (headerLength < bufferLength)
-		{
-			readBufferPosition = readBuffer + headerLength;
-			bufferLength -= headerLength;
-		}
-		else
-		{
-			delete readBuffer;
-			bufferLength = 0;
-			readBuffer = NULL;
-			readBufferPosition = NULL;
-		}
 	}
 	else
 	{
@@ -535,15 +564,24 @@ bool TCWebClient::parseHeader(void)
 		{
 			setErrorNumber(WCE_FILE_NOT_FOUND);
 		}
+		else if (resultCode == 302)
+		{
+			setErrorNumber(WCE_URL_MOVED);
+		}
 	}
 	return retValue;
 }
 
-int TCWebClient::fetchHeader(void)
+int TCWebClient::fetchHeader(int recursionCount)
 {
 //	char* result;
 //	int length;
 
+	if (recursionCount > 3)
+	{
+		// Don't allow more than 3 re-directs.
+		return 0;
+	}
 	if (!sendFetchCommands())
 	{
 		return 0;
@@ -562,6 +600,32 @@ int TCWebClient::fetchHeader(void)
 	}
 	if (!parseHeader())
 	{
+		if (errorNumber == WCE_URL_MOVED && locationField != NULL &&
+			strlen(locationField))
+		{
+			errorNumber = 0;
+			setErrorString(NULL);
+			// Switch to the new URL.
+			delete url;
+			url = copyString(locationField);
+			parseURL();
+			// Reset all the header data
+			pageLength = 0;
+			delete contentType;
+			contentType = NULL;
+			serverTime = 0;
+			serverTimeDelta = 0;
+			lastModifiedTime = 0;
+			chunked = false;
+			delete locationField;
+			locationField = NULL;
+			closeConnection();
+			delete readBuffer;
+			bufferLength = 0;
+			readBuffer = NULL;
+			readBufferPosition = NULL;
+			return fetchHeader(recursionCount + 1);
+		}
 		return 0;
 	}
 	headerFetched = 1;
@@ -1162,10 +1226,7 @@ int TCWebClient::downloadData(void)
 			{
 				bytesRead = bufferLength;
 				bytesLeft -= bufferLength;
-				delete readBuffer;
-				readBuffer = NULL;
-				readBufferPosition = NULL;
-				bufferLength = 0;
+				clearReadBuffer();
 			}
 		}
 		readBuffer = new char[BUFFER_SIZE];
@@ -1229,13 +1290,18 @@ int TCWebClient::downloadData(void)
 		}
 	}
 	pageLength = bytesRead;
+	clearReadBuffer();
+	fclose(dataFile);
+	dataFile = NULL;
+	return result;
+}
+
+void TCWebClient::clearReadBuffer(void)
+{
 	delete readBuffer;
 	readBuffer = NULL;
 	readBufferPosition = NULL;
 	bufferLength = 0;
-	fclose(dataFile);
-	dataFile = NULL;
-	return result;
 }
 
 TCByte *TCWebClient::getChunkedData(int &length)
@@ -1291,10 +1357,7 @@ TCByte *TCWebClient::getChunkedData(int &length)
 			break;
 		}
 	}
-	delete readBuffer;
-	readBuffer = NULL;
-	readBufferPosition = NULL;
-	bufferLength = 0;
+	clearReadBuffer();
 	return (TCByte *)data;
 }
 
@@ -1356,10 +1419,7 @@ TCByte* TCWebClient::getData(int& length)
 			length = 0;
 			if (readBuffer)
 			{
-				delete[] readBuffer;
-				readBuffer = NULL;
-				readBufferPosition = NULL;
-				bufferLength = 0;
+				clearReadBuffer();
 			}
 			return NULL;
 		}
@@ -1402,10 +1462,7 @@ TCByte* TCWebClient::getData(int& length)
 					length = 0;
 					if (readBuffer)
 					{
-						delete[] readBuffer;
-						readBuffer = NULL;
-						readBufferPosition = NULL;
-						bufferLength = 0;
+						clearReadBuffer();
 					}
 					return NULL;
 				}
@@ -1421,10 +1478,7 @@ TCByte* TCWebClient::getData(int& length)
 				length = 0;
 				if (readBuffer)
 				{
-					delete[] readBuffer;
-					readBuffer = NULL;
-					readBufferPosition = NULL;
-					bufferLength = 0;
+					clearReadBuffer();
 				}
 				return NULL;
 			}
@@ -1485,10 +1539,7 @@ char* TCWebClient::getLine(int& length)
 			}
 			else
 			{
-				delete[] readBuffer;
-				readBuffer = NULL;
-				readBufferPosition = NULL;
-				bufferLength = 0;
+				clearReadBuffer();
 			}
 			length++;
 			return data;
@@ -1498,10 +1549,7 @@ char* TCWebClient::getLine(int& length)
 			length = bufferLength;
 			data = new char[length];
 			memcpy(data, readBufferPosition, length);
-			delete[] readBuffer;
-			readBuffer = NULL;
-			readBufferPosition = NULL;
-			bufferLength = 0;
+			clearReadBuffer();
 		}
 	}
 	while (1)
@@ -1520,10 +1568,7 @@ char* TCWebClient::getLine(int& length)
 	//					delete[] data;
 						if (readBuffer)
 						{
-							delete[] readBuffer;
-							readBuffer = NULL;
-							readBufferPosition = NULL;
-							bufferLength = 0;
+							clearReadBuffer();
 						}
 						else
 						{
@@ -1544,10 +1589,7 @@ char* TCWebClient::getLine(int& length)
 	//				delete[] data;
 					if (readBuffer)
 					{
-						delete[] readBuffer;
-						readBuffer = NULL;
-						readBufferPosition = NULL;
-						bufferLength = 0;
+						clearReadBuffer();
 					}
 					else
 					{
@@ -1569,10 +1611,7 @@ char* TCWebClient::getLine(int& length)
 			}
 			if (readBuffer)
 			{
-				delete[] readBuffer;
-				readBuffer = NULL;
-				readBufferPosition = NULL;
-				bufferLength = 0;
+				clearReadBuffer();
 			}
 			else
 			{
@@ -1734,6 +1773,9 @@ void TCWebClient::setErrorNumber(int value)
 			break;
 		case WCE_MAX_RETRIES:
 			setErrorString("Max retries reached.");
+			break;
+		case WCE_URL_MOVED:
+			setErrorString("URL Moved.");
 			break;
 		default:
 			TCNetworkClient::setErrorNumber(value);

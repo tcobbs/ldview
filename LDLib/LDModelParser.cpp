@@ -84,11 +84,13 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	}
 }
 
-void LDModelParser::setDefaultRGB(TCByte r, TCByte g, TCByte b)
+void LDModelParser::setDefaultRGB(TCByte r, TCByte g, TCByte b,
+								  bool transparent)
 {
 	m_defaultR = r;
 	m_defaultG = g;
 	m_defaultB = b;
+	m_flags.defaultTrans = transparent;
 	setDefaultColorSetFlag(true);
 }
 
@@ -134,7 +136,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	else if (getDefaultColorSetFlag())
 	{
 		colorNumber = palette->getColorNumberForRGB(m_defaultR, m_defaultG,
-			m_defaultB);
+			m_defaultB, m_flags.defaultTrans);
 	}
 	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
@@ -554,7 +556,8 @@ bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size,
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
-		(float)size, 1.0f, numSegments, (int)(numSegments * fraction), bfc);
+		(float)size, 1.0f, numSegments, (int)(numSegments * fraction),
+		bfc);
 	return true;
 }
 

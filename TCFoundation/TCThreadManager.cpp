@@ -220,6 +220,10 @@ void TCThreadManager::joinExitedThreads(void)
 		{
 			exitedThread->setReturnValue(threadReturnValue);
 		}
+		else
+		{
+			debugPrintf("GetExitCodeThread returned 0.\n");
+		}
 #else // WIN32
 #ifdef _QT
 		if (pthread_join(exitedThread->getPThread(), &threadReturnValue) == 0)

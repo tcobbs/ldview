@@ -2,6 +2,7 @@
 #include "TREModel.h"
 #include "TREGL.h"
 #include "TREMainModel.h"
+#include <TCFoundation/mystring.h>
 
 #include <string.h>
 
@@ -394,14 +395,14 @@ void TRESubModel::shrink(float amount)
 {
 	TCVector boundingMin;
 	TCVector boundingMax;
+	TCVector center;
+	TCVector newCenter;
 	TCVector delta;
-	float scaleMatrix[16] = {1.0f, 0.0f, 0.0f, 0.0f,
-							 0.0f, 1.0f, 0.0f, 0.0f,
-							 0.0f, 0.0f, 1.0f, 0.0f,
-							 0.0f, 0.0f, 0.0f, 1.0f};
+	float scaleMatrix[16];
 	float tempMatrix[16];
+	float translateMatrix[16];
 
-	memcpy(tempMatrix, m_matrix, sizeof(tempMatrix));
+	TCVector::initIdentityMatrix(scaleMatrix);
 	m_model->getBoundingBox(boundingMin, boundingMax);
 	delta = boundingMax - boundingMin;
 	if (delta[0] > amount)
@@ -416,7 +417,20 @@ void TRESubModel::shrink(float amount)
 	{
 		scaleMatrix[10] = (delta[2] - amount) / delta[2];
 	}
+
+	center = boundingMin + boundingMax / 2.0f;
+	newCenter = center.transformPoint(scaleMatrix);
+	delta = center - newCenter;
+	TCVector::initIdentityMatrix(translateMatrix);
+	translateMatrix[12] = delta[0];
+	translateMatrix[13] = delta[1];
+	translateMatrix[14] = delta[2];
+	TCVector::multMatrix(translateMatrix, m_matrix, tempMatrix);
 	TCVector::multMatrix(tempMatrix, scaleMatrix, m_matrix);
+/*
+	memcpy(tempMatrix, m_matrix, sizeof(tempMatrix));
+	TCVector::multMatrix(tempMatrix, scaleMatrix, m_matrix);
+*/
 	m_model->unshrinkNormals(scaleMatrix);
 }
 

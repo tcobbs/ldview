@@ -39,6 +39,7 @@ class TCThread;
 #define WCE_DIR_STAT TCNC_MAX_ERROR + 14
 #define WCE_NOT_DIR TCNC_MAX_ERROR + 15
 #define WCE_MAX_RETRIES TCNC_MAX_ERROR + 16
+#define WCE_URL_MOVED TCNC_MAX_ERROR + 17
 
 class TCWebClient;
 
@@ -63,7 +64,7 @@ class TCWebClient : public TCNetworkClient
 		char* getURL(void) { return url; }
 		virtual int fetchURL(void);
 		virtual int fetchURLInBackground(void);
-		virtual int fetchHeader(void);
+		virtual int fetchHeader(int recursionCount = 0);
 		virtual int fetchHeaderInBackground(void);
 		virtual int retryFetchHeaderInBackground(void);
 		TCByte* getPageData(void) { return pageData; }
@@ -78,7 +79,9 @@ class TCWebClient : public TCNetworkClient
 		virtual void setAuthorizationString(const char*);
 		virtual char* getAuthorizationString(void);
 		virtual void setContentType(const char*);
+		virtual void setLocationField(const char* value);
 		char* getContentType(void) { return contentType; }
+		char* getLocationField(void) { return locationField; }
 		const time_t& getServerTime(void) { return serverTime; }
 		const time_t& getServerTimeDelta(void) { return serverTimeDelta; }
 		const time_t& getLastModifiedTime(void) { return lastModifiedTime; }
@@ -139,6 +142,7 @@ class TCWebClient : public TCNetworkClient
 		void parseHeaderFields(int headerLength);
 		TCByte *getChunkedData(int &length);
 		bool downloadChunkedData(void);
+		void clearReadBuffer(void);
 
 		int socketTimeout;
 		char* webServer;
@@ -150,6 +154,7 @@ class TCWebClient : public TCNetworkClient
 		FILE* dataFile;
 		char* dataFilePath;
 		char* contentType;
+		char* locationField;
 		bool chunked;
 		int bufferLength;
 		char* readBuffer;

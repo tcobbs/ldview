@@ -98,7 +98,7 @@ public:
 	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
 	void setSeamWidth(float seamWidth);
 	float getSeamWidth(void);
-	void setDefaultRGB(TCByte r, TCByte g, TCByte b);
+	void setDefaultRGB(TCByte r, TCByte g, TCByte b, bool transparent);
 	void setDefaultColorNumber(int colorNumber);
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
 	int getStudTextureFilter(void) { return m_studTextureFilter; }
@@ -213,6 +213,7 @@ protected:
 		bool defaultColorNumberSet:1;
 		bool polygonOffset:1;
 		bool studLogo:1;
+		bool defaultTrans:1;
 	} m_flags;
 };
 

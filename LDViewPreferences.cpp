@@ -114,7 +114,8 @@ void LDViewPreferences::applyGeneralSettings(void)
 		// showErrors taken care of automatically.
 		// fullScreenRefresh taken care of automatically.
 		modelViewer->setFov(fov);
-		modelViewer->setDefaultRGB((BYTE)r, (BYTE)g, (BYTE)b);
+		modelViewer->setDefaultRGB((BYTE)r, (BYTE)g, (BYTE)b,
+			transDefaultColor);
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
 		modelViewer->setLineSmoothing(lineSmoothing);
 	}
@@ -201,6 +202,7 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 	lineSmoothing = false;
 	backgroundColor = (COLORREF)0;
 	defaultColor = (COLORREF)0x999999;
+	transDefaultColor = false;
 	defaultColorNumber = -1;
 	processLDConfig = true;
 	showsFPS = false;
@@ -276,6 +278,8 @@ void LDViewPreferences::loadGeneralSettings(void)
 		(long)backgroundColor);
 	defaultColor = (COLORREF)TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
 		(long)defaultColor);
+	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
+		transDefaultColor) != 0;
 	defaultColorNumber = TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
 		defaultColorNumber);
 	processLDConfig = TCUserDefaults::longForKey(PROCESS_LDCONFIG_KEY,
@@ -1116,6 +1120,10 @@ void LDViewPreferences::applyGeneralChanges(void)
 			BACKGROUND_COLOR_KEY);
 		TCUserDefaults::setLongForKey((long)defaultColor,
 			DEFAULT_COLOR_KEY);
+		transDefaultColor = SendDlgItemMessage(hGeneralPage,
+			IDC_TRANS_DEFAULT_COLOR, BM_GETCHECK, 0, 0) != 0;
+		TCUserDefaults::setLongForKey(transDefaultColor,
+			TRANS_DEFAULT_COLOR_KEY);
 		for (i = 0; i < 16; i++)
 		{
 			if (customColors[i])
@@ -2150,6 +2158,8 @@ void LDViewPreferences::setupGeneralPage(void)
 	setupFullScreenRefresh();
 	setupBackgroundColorButton();
 	setupDefaultColorButton();
+	SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR, BM_SETCHECK,
+		transDefaultColor ? 1 : 0, 0);
 }
 
 void LDViewPreferences::setupModelGeometry(void)

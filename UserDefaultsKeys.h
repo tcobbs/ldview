@@ -68,6 +68,7 @@
 #define TEXTURE_STUDS_KEY "TextureStuds"
 #define TOP_MARGIN_KEY "TopMargin"
 #define TOPMOST_KEY "Topmost"
+#define TRANS_DEFAULT_COLOR_KEY "TransDefaultColor"
 #define FLAT_SHADING_KEY "UseFlatShading"
 #define QUALITY_LIGHTING_KEY "UseQualityLighting"
 #define QUALITY_STUDS_KEY "UseQualityStuds"

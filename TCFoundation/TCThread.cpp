@@ -73,6 +73,8 @@ bool TCThread::getStarted(void)
 #include <stdio.h>
 void TCThread::setFinished(void)
 {
+	TCThreadManager *origThreadManager = threadManager;
+
 	printf("TCThread::setFinished 1\n");
 	threadManager->lockExitMutex();
 	printf("TCThread::setFinished 2\n");
@@ -82,7 +84,7 @@ void TCThread::setFinished(void)
 	printf("TCThread::setFinished 4\n");
 	threadManager->unlockExitMutex();
 	printf("TCThread::setFinished 5\n");
-	threadManager->getExitCondition()->broadcast();
+	origThreadManager->getExitCondition()->broadcast();
 }
 
 bool TCThread::getFinished(void)

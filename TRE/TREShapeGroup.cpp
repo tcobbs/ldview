@@ -1179,23 +1179,36 @@ void TREShapeGroup::transferTriangle(TREMainModel *mainModel, TCULong color,
 	TREVertex normal = (*oldNormals)[index0];
 	TCVector vertices[3];
 	TCVector normals[3];
+	bool mirrored = TCVector::determinant(matrix) < 0.0 ? true : false;
 
 	vertices[0] =
 		TCVector(vertex.v[0], vertex.v[1], vertex.v[2]).transformPoint(matrix);
 	normals[0] =
 		TCVector(normal.v[0], normal.v[1], normal.v[2]).transformNormal(matrix);
+	if (mirrored)
+	{
+		normals[0] *= -1.0f;
+	}
 	vertex = (*oldVertices)[index1];
 	normal = (*oldNormals)[index1];
 	vertices[1] =
 		TCVector(vertex.v[0], vertex.v[1], vertex.v[2]).transformPoint(matrix);
 	normals[1] =
 		TCVector(normal.v[0], normal.v[1], normal.v[2]).transformNormal(matrix);
+	if (mirrored)
+	{
+		normals[1] *= -1.0f;
+	}
 	vertex = (*oldVertices)[index2];
 	normal = (*oldNormals)[index2];
 	vertices[2] =
 		TCVector(vertex.v[0], vertex.v[1], vertex.v[2]).transformPoint(matrix);
 	normals[2] =
 		TCVector(normal.v[0], normal.v[1], normal.v[2]).transformNormal(matrix);
+	if (mirrored)
+	{
+		normals[2] *= -1.0f;
+	}
 	mainModel->addTransparentTriangle(color, vertices, normals);
 }
 

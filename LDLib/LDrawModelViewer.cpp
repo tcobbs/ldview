@@ -112,6 +112,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.processLDConfig = true;
 	flags.autoCenter = true;
 	flags.forceZoomToFit = false;
+	flags.defaultTrans = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -712,7 +713,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setSmoothCurvesFlag(flags.performSmoothing);
 			modelParser->setFileIsPartFlag(flags.fileIsPart);
 			modelParser->setStudLogoFlag(flags.textureStuds);
-			modelParser->setDefaultRGB(defaultR, defaultG, defaultB);
+			modelParser->setDefaultRGB(defaultR, defaultG, defaultB,
+				flags.defaultTrans);
 			modelParser->setPolygonOffsetFlag(flags.usePolygonOffset);
 			modelParser->setEdgeLineWidth(highlightLineWidth);
 			modelParser->setStudTextureFilter(textureFilterType);
@@ -1435,13 +1437,16 @@ void LDrawModelViewer::setBackgroundRGB(int r, int g, int b)
 */
 }
 
-void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b)
+void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b,
+									 bool transparent)
 {
-	if (defaultR != r || defaultG != g || defaultB != b)
+	if (defaultR != r || defaultG != g || defaultB != b ||
+		flags.defaultTrans != transparent)
 	{
 		defaultR = r;
 		defaultG = g;
 		defaultB = b;
+		flags.defaultTrans = transparent;
 		if (mainTREModel && defaultColorNumber == -1)
 		{
 			flags.needsReload = true;
@@ -1449,11 +1454,13 @@ void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b)
 	}
 }
 
-void LDrawModelViewer::getDefaultRGB(TCByte &r, TCByte &g, TCByte &b)
+void LDrawModelViewer::getDefaultRGB(TCByte &r, TCByte &g, TCByte &b,
+									 bool &transparent)
 {
 	r = defaultR;
 	g = defaultG;
 	b = defaultB;
+	transparent = flags.defaultTrans;
 }
 
 void LDrawModelViewer::setDefaultColorNumber(int value)

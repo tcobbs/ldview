@@ -405,7 +405,7 @@ SIZE CUIWindow::getDecorationSize(void)
 	SIZE size;
 
 	AdjustWindowRectEx(&windowRect, windowStyle,
-		windowClass.lpszMenuName != NULL, exWindowStyle);
+		windowClass.lpszMenuName != NULL || hWindowMenu, exWindowStyle);
 	size.cx = windowRect.right - windowRect.left - 100;
 	size.cy = windowRect.bottom - windowRect.top - 100;
 	if (!(windowStyle & WS_POPUP) && !(windowStyle & WS_CHILD))

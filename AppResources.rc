@@ -80,12 +80,12 @@ STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "About LDView"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
-    LTEXT           "LDView Version 2.1 (03 Jan, 2004)\nCopyright © 2000-2004 Travis Cobbs",
-                    IDC_STATIC,50,10,135,19
+    LTEXT           "LDView %s (10 July, 2004)\n%s",IDC_VERSION_LABEL,50,10,
+                    135,19
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",
                     IDC_STATIC,15,40,215,20
     LTEXT           "LEGO® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponser, endorse, or authorize this program.",
@@ -154,7 +154,7 @@ END
 IDD_SS_SETTINGS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Screen Saver"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "File:",IDC_SS_FILENAME_RADIO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,7,9,25,10,0,
@@ -203,7 +203,7 @@ END
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,198,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -339,7 +339,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,97,49,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -350,15 +350,15 @@ BEGIN
                     WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
     GROUPBOX        "&Colors",IDC_COLORS_BOX,108,7,97,49,WS_GROUP,0,
                     HIDC_COLORS_BOX
-    RTEXT           "Background:",IDC_BACKGROUND_COLOR_LABEL,124,21,45,8,0,0,
+    LTEXT           "Background",IDC_BACKGROUND_COLOR_LABEL,142,21,45,8,0,0,
                     HIDC_BACKGROUND_COLOR_LABEL
     CONTROL         "",IDC_BACKGROUND_COLOR,"Button",BS_OWNERDRAW | 
-                    BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,175,18,24,
+                    BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,116,18,24,
                     14,0,HIDC_BACKGROUND_COLOR
-    RTEXT           "Default:",IDC_DEFAULT_COLOR_LABEL,124,39,45,8,0,0,
+    LTEXT           "Default",IDC_DEFAULT_COLOR_LABEL,142,39,27,8,0,0,
                     HIDC_DEFAULT_COLOR_LABEL
     CONTROL         "",IDC_DEFAULT_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,175,36,24,14,0,
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,116,36,24,14,0,
                     HIDC_DEFAULT_COLOR
     GROUPBOX        "&Misc",IDC_GENERAL_MISC_BOX,7,57,198,80,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
@@ -384,6 +384,9 @@ BEGIN
                     HIDC_GENERAL_RESET
     LTEXT           "(0.1 - 90.0)",IDC_FOV_RANGE_LABEL,146,120,35,8,0,0,
                     HIDC_FOV_RANGE_LABEL
+    CONTROL         "Trans",IDC_TRANS_DEFAULT_COLOR,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,171,39,30,10,0,
+                    HIDC_TRANS_DEFAULT_COLOR
 END
 
 PAGESETUPDLGORD DIALOG DISCARDABLE  32, 32, 240, 240
@@ -466,7 +469,7 @@ END
 
 IDD_SAVE_OPTIONS DIALOGEX 0, 0, 289, 64
 STYLE DS_3DLOOK | DS_CONTROL | WS_CHILD | WS_CLIPSIBLINGS
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "     ",IDC_STATIC,4,0,132,57
     CONTROL         "Save snapshot series",IDC_SAVE_SERIES,"Button",
