@@ -146,6 +146,7 @@ void TREMainModel::activateBFC(void)
 		float mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
 
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+//		glMaterialfv(GL_BACK, GL_AMBIENT, mRed);
 		glMaterialfv(GL_BACK, GL_DIFFUSE, mRed);
 	}
 	else

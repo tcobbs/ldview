@@ -142,6 +142,7 @@ protected:
 	virtual bool substituteStu22(TREModel *treModel, bool isA, bool bfc);
 	virtual bool substituteStu23(TREModel *treModel, bool isA, bool bfc);
 	virtual bool substituteStu24(TREModel *treModel, bool isA, bool bfc);
+	virtual bool substituteEighthSphere(TREModel *treModel, bool bfc);
 	virtual bool substituteCylinder(TREModel *treModel, float fraction,
 		bool bfc);
 	virtual bool substituteSlopedCylinder(TREModel *treModel, float fraction,

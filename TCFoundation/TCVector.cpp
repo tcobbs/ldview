@@ -579,3 +579,8 @@ TCVector TCVector::transformNormal(const float *matrix, bool shouldNormalize)
 	transformNormal(matrix, newNormal, shouldNormalize);
 	return newNormal;
 }
+
+TCVector TCVector::rearrange(int x, int y, int z) const
+{
+	return TCVector(get(x), get(y), get(z));
+}
