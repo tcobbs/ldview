@@ -10,6 +10,10 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
+#include <LDLoader/LDLError.h>
+#include <LDLoader/LDLModel.h>
 #include "AppResources.h"
 #include <Commctrl.h>
 #include "UserDefaultsKeys.h"
@@ -50,7 +54,7 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 loading(false),
 			 needsRecompile(false),
 			 hErrorWindow(NULL),
-			 errors(new LDMErrorArray),
+			 errors(new LDLErrorArray),
 			 errorTreePopulated(false),
 			 topRightErrorControls(NULL),
 			 prefs(new LDViewPreferences(parentWindow->getHInstance(),
@@ -115,8 +119,14 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		}
 	}
 	windowStyle = windowStyle & ~WS_VISIBLE;
+	TCAlertManager::registerHandler(LDLError::alertClass(), this,
+		(TCAlertCallback)ldlErrorCallback);
+	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+		(TCAlertCallback)progressAlertCallback);
+/*
 	modelViewer->setProgressCallback(staticProgressCallback, this);
 	modelViewer->setErrorCallback(staticErrorCallback, this);
+*/
 	if (programPath)
 	{
 		modelViewer->setProgramPath(programPath);
@@ -131,6 +141,8 @@ ModelWindow::~ModelWindow(void)
 
 void ModelWindow::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
+	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
 	if (topRightErrorControls)
 	{
 		topRightErrorControls->release();
@@ -156,6 +168,58 @@ void ModelWindow::dealloc(void)
 	}
 	stopPolling();
 	CUIOGLWindow::dealloc();
+}
+
+void ModelWindow::ldlErrorCallback(LDLError *error)
+{
+	static int errorCount = 0;
+
+	if (error)
+	{
+		if (!errorCallback(error))
+		{
+			error->cancelLoad();
+		}
+	}
+/*
+		TCStringArray *extraInfo = error->getExtraInfo();
+
+		printf("Error on line %d in: %s\n", error->getLineNumber(),
+			error->getFilename());
+		indentPrintf(4, "%s\n", error->getMessage());
+		indentPrintf(4, "%s\n", error->getFileLine());
+		if (extraInfo)
+		{
+			int i;
+			int count = extraInfo->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				indentPrintf(4, "%s\n", (*extraInfo)[i]);
+			}
+		}
+	}
+*/
+}
+
+void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
+{
+	if (alert)
+	{
+		bool showErrors = true;
+
+		if (strcmp(alert->getSource(), "TCImage") == 0)
+		{
+			showErrors = false;
+		}
+		if (!progressCallback(alert->getMessage(), alert->getProgress(),
+			showErrors))
+		{
+			alert->abort();
+		}
+//		printf("Progress message from %s:\n%s (%f)\n", alert->getSource(),
+//			alert->getMessage(), alert->getProgress());
+	}
 }
 
 void ModelWindow::loadSettings(void)
@@ -924,11 +988,11 @@ BOOL ModelWindow::doProgressClick(int controlId, HWND /*controlHWnd*/)
 	return TRUE;
 }
 
-char* ModelWindow::getErrorKey(LDMErrorType errorType)
+char* ModelWindow::getErrorKey(LDLErrorType errorType)
 {
 	static char key[128];
 
-	sprintf(key, "%s/Error%02d", SHOW_ERRORS_KEY, errorType);
+	sprintf(key, "%s/LDLError%02d", SHOW_ERRORS_KEY, errorType);
 	return key;
 }
 
@@ -1101,8 +1165,8 @@ void ModelWindow::hideProgress(void)
 	{
 		SendMessage(hProgressBar, PBM_SETPOS, 0, 0);
 		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)"");
-//		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
-//			enableNonModalWindow, (LPARAM)hParentWindow);
+		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
+			enableNonModalWindow, (LPARAM)hParentWindow);
 		((LDViewWindow*)parentWindow)->setLoading(false);
 //		doDialogClose(hProgressWindow);
 		loading = false;
@@ -1111,7 +1175,7 @@ void ModelWindow::hideProgress(void)
 }
 
 HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
-									LDMError* error, int imageIndex)
+									LDLError* error, int imageIndex)
 {
 	TVINSERTSTRUCT insertStruct;
 	TVITEMEX item;
@@ -1132,13 +1196,13 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 	return TreeView_InsertItem(hErrorTree, &insertStruct);
 }
 
-bool ModelWindow::addError(LDMError* error)
+bool ModelWindow::addError(LDLError* error)
 {
 	char buf[1024];
 	char* string;
 	HTREEITEM parent;
 
-	if (!showsErrorType(error->getType()))
+	if (!showsError(error))
 	{
 		return false;
 	}
@@ -1151,7 +1215,8 @@ bool ModelWindow::addError(LDMError* error)
 	{
 		sprintf(buf, "");
 	}
-	parent = addErrorLine(NULL, buf, error, errorImageIndices[error->getType()]);
+	parent = addErrorLine(NULL, buf, error,
+		errorImageIndices[error->getType()]);
 
 	if (parent)
 	{
@@ -1202,7 +1267,23 @@ bool ModelWindow::addError(LDMError* error)
 	return true;
 }
 
-BOOL ModelWindow::showsErrorType(LDMErrorType errorType)
+bool ModelWindow::showsError(LDLError *error)
+{
+	LDLErrorType errorType = error->getType();
+
+	if (error->getLevel() == LDLAWarning)
+	{
+		return TCUserDefaults::longForKey(getErrorKey(errorType), 0, false) !=
+			0;
+	}
+	else
+	{
+		return TCUserDefaults::longForKey(getErrorKey(errorType), 1, false) !=
+			0;
+	}
+}
+
+BOOL ModelWindow::showsErrorType(LDLErrorType errorType)
 {
 	return TCUserDefaults::longForKey(getErrorKey(errorType), 1, false);
 }
@@ -1217,6 +1298,7 @@ void ModelWindow::setupErrorWindow(void)
 	RECT windowRect;
 	POINT clientPoint;
 
+	memset(errorImageIndices, 0, sizeof(errorImageIndices));
 	if (errorWindowResizer)
 	{
 		errorWindowResizer->release();
@@ -1239,45 +1321,47 @@ void ModelWindow::setupErrorWindow(void)
 
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE_MASK));
-	errorImageIndices[LDMEParse] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEParse] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF_MASK));
-	errorImageIndices[LDMEFileNotFound] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEFileNotFound] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_DETERMINANT));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_DETERMINANT_MASK));
-	errorImageIndices[LDMEPartDeterminant] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEPartDeterminant] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD_MASK));
-	errorImageIndices[LDMEConcaveQuad] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEConcaveQuad] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT_MASK));
-	errorImageIndices[LDMEConcaveQuadSplit] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEConcaveQuadSplit] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_OPENGL));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_OPENGL_MASK));
-	errorImageIndices[LDMEOpenGL] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEOpenGL] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
+/*
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLOR));
 	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLOR_MASK));
 	errorImageIndices[LDMEColor] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
+*/
 
 	// Associate the image list with the tree view control.
 	TreeView_SetImageList(hErrorTree, himl, TVSIL_NORMAL);
@@ -1328,7 +1412,7 @@ void ModelWindow::setupErrorWindow(void)
 		if (i > IDC_SHOW_ERRORS)
 		{
 			controlInfo->errorType =
-				(LDMErrorType)(i - IDC_PARSE_ERROR + LDMEParse);
+				(LDLErrorType)(i - IDC_PARSE_ERROR + LDLEGeneral);
 			if (showsErrorType(controlInfo->errorType))
 			{
 				SendDlgItemMessage(hErrorWindow, i, BM_SETCHECK, 1, 0);
@@ -1336,7 +1420,7 @@ void ModelWindow::setupErrorWindow(void)
 		}
 		else
 		{
-			controlInfo->errorType = (LDMErrorType)-1;
+			controlInfo->errorType = (LDLErrorType)-1;
 		}
 		topRightErrorControls->addObject(controlInfo);
 		controlInfo->release();
@@ -1619,7 +1703,8 @@ LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
 
-int ModelWindow::progressCallback(char* message, float progress, bool showErrors)
+int ModelWindow::progressCallback(char* message, float progress,
+								  bool showErrors)
 {
 	DWORD thisProgressUpdate = GetTickCount();
 
@@ -1703,7 +1788,7 @@ bool ModelWindow::staticImageProgressCallback(char* message, float progress,
 		: false;
 }
 
-int ModelWindow::errorCallback(LDMError* error)
+int ModelWindow::errorCallback(LDLError* error)
 {
 //	debugPrintf("Error of type %d: %s\n", error->getType(),
 //		error->getMessage());
@@ -1714,10 +1799,12 @@ int ModelWindow::errorCallback(LDMError* error)
 	return 1;
 }
 
+/*
 int ModelWindow::staticErrorCallback(LDMError* error, void* userData)
 {
 	return ((ModelWindow*)userData)->errorCallback(error);
 }
+*/
 
 LRESULT ModelWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 {
@@ -1753,7 +1840,7 @@ void ModelWindow::checkForPart(void)
 	{
 		char partsDir[1024];
 
-		strcpy(partsDir, LDrawModel::lDrawDir());
+		strcpy(partsDir, LDLModel::lDrawDir());
 		strcat(partsDir, "\\PARTS");
 		convertStringToUpper(partsDir);
 		convertStringToUpper(buf);
@@ -1822,7 +1909,7 @@ void ModelWindow::setupMaterial(void)
 
 void ModelWindow::setupLighting(void)
 {
-	LDrawModelViewer::setPolygonOffsetFunc((GLPolygonOffsetFunc)glPolygonOffset);
+//	LDrawModelViewer::setPolygonOffsetFunc((GLPolygonOffsetFunc)glPolygonOffset);
 	modelViewer->setup();
 }
 
@@ -1858,7 +1945,7 @@ void ModelWindow::drawFPS(void)
 		{
 			char fpsString[1024] = "";
 
-			if (modelViewer->getLDrawModel())
+			if (modelViewer->getMainTREModel())
 			{
 				if (fps > 0.0f)
 				{
@@ -1984,8 +2071,8 @@ void ModelWindow::swapBuffers(void)
 
 void ModelWindow::doPaint(void)
 {
-	bool needsPostRedraw = modelViewer->getNeedsReload() ||
-		modelViewer->getNeedsRecompile();
+	bool needsPostRedraw = (modelViewer->getNeedsReload() ||
+		modelViewer->getNeedsRecompile()) && modelViewer->getMainTREModel();
 
 	if (offscreenActive || loading)
 	{

@@ -51,8 +51,8 @@ const char *LDLError::getTypeName(void)
 		return "Error splitting concave quad";
 	case LDLEMatchingPoints:
 		return "Identical vertices";
-	case LDLEOpenGL:
-		return "OpenGL error";
+//	case LDLEOpenGL:
+//		return "OpenGL error";
 	case LDLEColinear:
 		return "Co-linear points";
 	case LDLEBFCWarning:

@@ -1,5 +1,4 @@
 #include "LDrawModelViewer.h"
-#include "LDrawModel.h"
 #include <TCFoundation/TCMacros.h>
 #include "TGLShape.h"
 #include "TGLStudLogo.h"
@@ -29,8 +28,7 @@
 #define DEF_DISTANCE_MULT 1.0f
 
 LDrawModelViewer::LDrawModelViewer(int width, int height)
-			:lDrawModel(NULL),
-			 mainTREModel(NULL),
+			:mainTREModel(NULL),
 			 filename(NULL),
 			 programPath(NULL),
 			 width(width),
@@ -60,8 +58,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 defaultG(153),
 			 defaultB(153),
 			 defaultColorNumber(-1),
-			 progressCallback(NULL),
-			 errorCallback(NULL),
+//			 progressCallback(NULL),
+//			 errorCallback(NULL),
 			 xTile(0),
 			 yTile(0),
 			 numXTiles(1),
@@ -123,10 +121,10 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.processLDConfig = true;
 	flags.autoCenter = true;
 	flags.forceZoomToFit = false;
-	TCAlertManager::registerHandler(LDLError::alertClass(), this,
-		(TCAlertCallback)ldlErrorCallback);
-	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
-		(TCAlertCallback)progressAlertCallback);
+//	TCAlertManager::registerHandler(LDLError::alertClass(), this,
+//		(TCAlertCallback)ldlErrorCallback);
+//	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+//		(TCAlertCallback)progressAlertCallback);
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)
@@ -135,9 +133,8 @@ LDrawModelViewer::~LDrawModelViewer(void)
 
 void LDrawModelViewer::dealloc(void)
 {
-	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
-	TCObject::release(lDrawModel);
-	lDrawModel = NULL;
+//	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
+//	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
 	TCObject::release(mainTREModel);
 	mainTREModel = NULL;
 	delete filename;
@@ -354,6 +351,7 @@ void LDrawModelViewer::perspectiveViewToClipPlane(void)
 	glFogf(GL_FOG_END, fClip);
 }
 
+/*
 void LDrawModelViewer::setProgressCallback(LDMProgressCallback callback,
 										   void* userData)
 {
@@ -367,6 +365,7 @@ void LDrawModelViewer::setErrorCallback(LDMErrorCallback callback,
 	errorCallback = callback;
 	errorUserData = userData;
 }
+*/
 
 bool LDrawModelViewer::skipCameraPositioning(void)
 {
@@ -673,15 +672,24 @@ void LDrawModelViewer::progressAlertCallback(TCProgressAlert *alert)
 
 int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
+	int retValue = 0;
+
 	if (filename)
 	{
 		LDLMainModel *mainModel = new LDLMainModel;
+
+		if (clipAmount != 0.0f && resetViewpoint)
+		{
+			clipAmount = 0.0f;
+			perspectiveView();
+		}
 
 		// First, release the current TREModel, if it exists.
 		TCObject::release(mainTREModel);
 		mainTREModel = NULL;
 		mainModel->setLowResStuds(!flags.qualityStuds);
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
+		mainModel->setExtraSearchDirs(extraSearchDirs);
 		if (mainModel->load(filename))
 		{
 			LDModelParser *modelParser = new LDModelParser;
@@ -712,22 +720,50 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setFileIsPartFlag(flags.fileIsPart);
 			modelParser->setDefaultRGB(defaultR, defaultG, defaultB);
 			modelParser->setPolygonOffsetFlag(flags.usePolygonOffset);
+			modelParser->setEdgeLineWidth(highlightLineWidth);
 			if (defaultColorNumber != -1)
 			{
 				modelParser->setDefaultColorNumber(defaultColorNumber);
 			}
 			if (modelParser->parseMainModel(mainModel))
 			{
+				bool abort;
+
 				mainTREModel = modelParser->getMainTREModel();
 				mainTREModel->retain();
-				mainTREModel->getBoundingBox(boundingMin, boundingMax);
-				center = (boundingMin + boundingMax) / 2.0f;
-				size = mainTREModel->getMaxRadius(center) * 2.0f;
+				TCProgressAlert::send("LDrawModelViewer", "Calculating Size...",
+					0.0f, &abort);
+				if (!abort)
+				{
+					mainTREModel->getBoundingBox(boundingMin, boundingMax);
+					TCProgressAlert::send("LDrawModelViewer",
+						"Calculating Size...", 0.5f, &abort);
+				}
+				if (!abort)
+				{
+					center = (boundingMin + boundingMax) / 2.0f;
+					size = mainTREModel->getMaxRadius(center) * 2.0f;
+					TCProgressAlert::send("LDrawModelViewer",
+						"Calculating Size...", 1.0f, &abort);
+				}
+				if (!abort)
+				{
+					flags.needsRecompile = false;
+					retValue = 1;
+				}
 			}
 			modelParser->release();
 		}
 		mainModel->release();
+		TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
+		if (resetViewpoint)
+		{
+			resetView();
+		}
+	}
+	return retValue;
 
+/*
 		// Use binary mode to work around problem with fseek on a non-binary
 		// file.  My file parsing code will still work fine and strip out the
 		// extra data.
@@ -812,13 +848,11 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 					if (resetViewpoint)
 					{
 						resetView();
-/*
-						camera.setPosition(
-							TCVector(0.0f, 0.0f, size * distanceMultiplier));
+//						camera.setPosition(
+//							TCVector(0.0f, 0.0f, size * distanceMultiplier));
 //						distance = size * distanceMultiplier;
-						xPan = 0.0f;
-						yPan = 0.0f;
-*/
+//						xPan = 0.0f;
+//						yPan = 0.0f;
 					}
 //					center = (boundingMin + boundingMax) / 2.0f;
 				}
@@ -858,6 +892,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	{
 		return 0;
 	}
+*/
 }
 
 void LDrawModelViewer::setShowsHighlightLines(bool value)
@@ -931,6 +966,7 @@ bool LDrawModelViewer::recompile(void)
 	{
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
+		TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
 	}
 	return true;
 }
@@ -1658,7 +1694,7 @@ void LDrawModelViewer::setUseLighting(bool value)
 		{
 			mainTREModel->setLightingFlag(value);
 		}
-		flags.needsRecompile = true;
+//		flags.needsRecompile = true;
 		flags.needsLightingSetup = true;
 	}
 }
@@ -1678,7 +1714,7 @@ void LDrawModelViewer::setUseStipple(bool value)
 		}
 		else
 		{
-			flags.needsRecompile = true;
+//			flags.needsRecompile = true;
 		}
 	}
 }
@@ -1697,10 +1733,9 @@ void LDrawModelViewer::setHighlightLineWidth(float value)
 	if (value != highlightLineWidth)
 	{
 		highlightLineWidth = value;
-		if (lDrawModel)
+		if (mainTREModel)
 		{
-			lDrawModel->setEdgeLineWidth(highlightLineWidth);
-			flags.needsRecompile = true;
+			mainTREModel->setEdgeLineWidth(value);
 		}
 	}
 }
@@ -2047,9 +2082,9 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset)
 	{
 		glTranslatef(-center[0], -center[1], -center[2]);
 	}
-	lDrawModel->setCutawayDraw(true);
-	lDrawModel->draw();
-	lDrawModel->setCutawayDraw(false);
+	mainTREModel->setCutawayDrawFlag(true);
+	mainTREModel->draw();
+	mainTREModel->setCutawayDrawFlag(false);
 	perspectiveView();
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glDisable(GL_BLEND);
@@ -2476,16 +2511,6 @@ void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
 			drawToClipPlane(eyeXOffset);
 		}
 	}
-/*
-	else if (lDrawModel)
-	{
-		lDrawModel->draw();
-		if (clipAmount > 0.01)
-		{
-			drawToClipPlane(eyeXOffset);
-		}
-	}
-*/
 }
 
 void LDrawModelViewer::pause(void)
@@ -2523,7 +2548,6 @@ void LDrawModelViewer::setExtraSearchDirs(TCStringArray *value)
 		TCObject::release(extraSearchDirs);
 		extraSearchDirs = value;
 		TCObject::retain(extraSearchDirs);
-		LDrawModel::setExtraSearchDirs(extraSearchDirs);
 	}
 	// Since it is a string array, the contents might have changed, even if
 	// the array pointer itself didn't.
@@ -2548,6 +2572,18 @@ void LDrawModelViewer::panXY(int xValue, int yValue)
 //	yPan -= yValue / (float)pow(distance, 0.001);
 	xPan += xValue / adjustment / (float)pow(2 / distance, 1.1);
 	yPan -= yValue / adjustment / (float)pow(2 / distance, 1.1);
+}
+
+bool LDrawModelViewer::getCompiled(void)
+{
+	if (mainTREModel)
+	{
+		return mainTREModel->getCompiled();
+	}
+	else
+	{
+		return false;
+	}
 }
 
 char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)

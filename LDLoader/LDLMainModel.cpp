@@ -1,12 +1,14 @@
 #include "LDLMainModel.h"
 #include "LDLPalette.h"
 #include <TCFoundation/TCDictionary.h>
+#include <TCFoundation/TCStringArray.h>
 #include <stdio.h>
 #include <string.h>
 
 LDLMainModel::LDLMainModel(void)
 	:m_loadedModels(NULL),
-	m_mainPalette(new LDLPalette)
+	m_mainPalette(new LDLPalette),
+	m_extraSearchDirs(NULL)
 {
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
@@ -118,4 +120,14 @@ TCULong LDLMainModel::getEdgeColorNumber(TCULong colorNumber)
 		}
 	}
 	return m_mainPalette->getEdgeColorNumber(colorNumber);
+}
+
+void LDLMainModel::setExtraSearchDirs(TCStringArray *value)
+{
+	if (m_extraSearchDirs != value)
+	{
+		TCObject::release(m_extraSearchDirs);
+		m_extraSearchDirs = value;
+		TCObject::retain(m_extraSearchDirs);
+	}
 }

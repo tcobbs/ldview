@@ -1500,10 +1500,15 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 		TCVector *normals = new TCVector[vertexCount];
 		int i;
 		TCVector top = center;
-		TCVector normal = TCVector(0.0f, 1.0f, 0.0f);
+		TCVector normal = TCVector(0.0f, -1.0f, 0.0f);
 		TCVector topNormalPoint;
 		TCVector normalPoint;
+		float normalAdjust = 1.0f;
 
+		if (height < 0.0f)
+		{
+			normalAdjust = -1.0f;
+		}
 		top[1] += height;
 		if (height)
 		{
@@ -1526,9 +1531,11 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 			}
 			else
 			{
-				normals[i * 2] = (points[i * 2] - normalPoint).normalize();
+				normals[i * 2] = (points[i * 2] - normalPoint).normalize() *
+					normalAdjust;
 				normals[i * 2 + 1] =
-					(points[i * 2 + 1] - topNormalPoint).normalize();
+					(points[i * 2 + 1] - topNormalPoint).normalize() *
+					normalAdjust;
 			}
 		}
 		if (bfc)

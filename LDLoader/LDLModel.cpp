@@ -116,12 +116,6 @@ bool LDLModel::colorNumberIsTransparent(TCULong colorNumber)
 	return m_mainModel->colorNumberIsTransparent(colorNumber);
 }
 
-// NOTE: static function.
-TCULong LDLModel::colorForRGBA(int r, int g, int b, int a)
-{
-	return (r & 0xFF) << 24 | (g & 0xFF) << 16 | (b & 0xFF) << 8 | (a & 0xFF);
-}
-
 LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes)
 {
 	TCDictionary* subModelDict = getLoadedModels();
@@ -177,8 +171,12 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes)
 FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 {
 	FILE* subModelFile;
+	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
 
 	strcpy(subModelPath, subModelName);
+	// Use binary mode to work around problem with fseek on a non-binary file.
+	// file.  The file parsing code will still work fine and strip out the extra
+	// data.
 	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
 	{
 		return subModelFile;
@@ -198,6 +196,20 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
 	{
 		return subModelFile;
+	}
+	if (extraSearchDirs)
+	{
+		int i;
+		int count = extraSearchDirs->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			sprintf(subModelPath, "%s/%s", (*extraSearchDirs)[i], subModelName);
+			if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
+			{
+				return subModelFile;
+			}
+		}
 	}
 	return NULL;
 }
@@ -242,6 +254,16 @@ bool LDLModel::verifyLDrawDir(const char *value)
 		chdir(currentDir);
 	}
 	return retValue;
+}
+
+// NOTE: static function.
+void LDLModel::setLDrawDir(const char *value)
+{
+	if (value != sm_systemLDrawDir)
+	{
+		delete sm_systemLDrawDir;
+		sm_systemLDrawDir = copyString(value);
+	}
 }
 
 // NOTE: static function.

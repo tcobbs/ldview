@@ -18,6 +18,9 @@ public:
 	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 	virtual LDLPalette *getPalette(void) { return m_mainPalette; }
+	virtual void setExtraSearchDirs(TCStringArray *value);
+	TCStringArray *getExtraSearchDirs(void) { return m_extraSearchDirs; }
+	virtual bool isMainModel(void) { return true; }
 
 	// Flags
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }
@@ -34,6 +37,7 @@ protected:
 
 	TCDictionary *m_loadedModels;
 	LDLPalette *m_mainPalette;
+	TCStringArray *m_extraSearchDirs;
 	struct
 	{
 		// Public flags

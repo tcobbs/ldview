@@ -228,8 +228,7 @@ void TRESubModel::draw(TREMSection section, bool colored)
 			{
 				if (section != TREMLines)
 				{
-					if (TREShapeGroup::isTransparent(m_color, true) &&
-						!m_model->getMainModel()->getWireframeFlag())
+					if (TREShapeGroup::isTransparent(m_color, true))
 					{
 						// Don't draw transparent shapes here.
 						return;

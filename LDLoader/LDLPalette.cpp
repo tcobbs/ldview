@@ -5,6 +5,15 @@
 
 #define GOLD_SCALE (255.0f / 240.0f * 2.0f)
 
+LDLPalette *LDLPalette::sm_defaultPalette = NULL;
+LDLPalette::LDLPaletteCleanup LDLPalette::sm_cleanup;
+
+LDLPalette::LDLPaletteCleanup::~LDLPaletteCleanup(void)
+{
+	TCObject::release(LDLPalette::sm_defaultPalette);
+	LDLPalette::sm_defaultPalette = NULL;
+}
+
 static const TCByte transA = 110;
 static const int standardColorSize = 5;
 
@@ -75,13 +84,13 @@ static const TCULong standardColors[] =
 };
 
 LDLPalette::LDLPalette(void)
-	:customColors(new TCTypedObjectArray<CustomColor>)
+	:m_customColors(new TCTypedObjectArray<CustomColor>)
 {
 	init();
 }
 
 LDLPalette::LDLPalette(const LDLPalette &other)
-	:customColors(new TCTypedObjectArray<CustomColor>)
+	:m_customColors(new TCTypedObjectArray<CustomColor>)
 {
 	memcpy(m_colors, other.m_colors, sizeof(m_colors));
 }
@@ -92,7 +101,7 @@ LDLPalette::~LDLPalette(void)
 
 void LDLPalette::dealloc(void)
 {
-	TCObject::release(customColors);
+	TCObject::release(m_customColors);
 	TCObject::dealloc();
 }
 
@@ -129,7 +138,7 @@ void LDLPalette::init(void)
 
 void LDLPalette::reset(void)
 {
-	customColors->removeAll();
+	m_customColors->removeAll();
 	init();
 }
 
@@ -241,11 +250,11 @@ bool LDLPalette::getCustomColorRGBA(int colorNumber, int &r, int &g, int &b,
 									int &a)
 {
 	int i;
-	int count = customColors->getCount();
+	int count = m_customColors->getCount();
 
 	for (i = 0; i < count; i++)
 	{
-		CustomColor *customColor = (*customColors)[i];
+		CustomColor *customColor = (*m_customColors)[i];
 
 		if (customColor->colorNumber == colorNumber)
 		{
@@ -394,13 +403,13 @@ void LDLPalette::parseLDLiteColorComment(const char *comment)
 		else
 		{
 			// A custom color was requested, but it won't fit into our main
-			// color array.  So add a new item in the customColors array, and it
-			// will be noticed during look-up.
+			// color array.  So add a new item in the m_customColors array, and
+			// it will be noticed during look-up.
 			CustomColor *customColor = new CustomColor;
 
 			customColor->colorNumber = colorNumber;
 			colorInfo = &customColor->colorInfo;
-			customColors->addObject(customColor);
+			m_customColors->addObject(customColor);
 			customColor->release();
 		}
 		colorInfo->color = color;
@@ -447,3 +456,24 @@ bool LDLPalette::isColorNumberRGB(int colorNumber, TCByte r, TCByte g, TCByte b)
 	}
 }
 
+// NOTE: static function.
+LDLPalette *LDLPalette::getDefaultPalette(void)
+{
+	if (!sm_defaultPalette)
+	{
+		sm_defaultPalette = new LDLPalette;
+	}
+	return sm_defaultPalette;
+}
+
+// NOTE: static function.
+void LDLPalette::getDefaultRGBA(int colorNumber, int &r, int &g, int &b, int &a)
+{
+	getDefaultPalette()->getRGBA(colorNumber, r, g, b, a);
+}
+
+// NOTE: static function.
+TCULong LDLPalette::colorForRGBA(int r, int g, int b, int a)
+{
+	return (r & 0xFF) << 24 | (g & 0xFF) << 16 | (b & 0xFF) << 8 | (a & 0xFF);
+}

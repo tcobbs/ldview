@@ -5,9 +5,10 @@
 #include <math.h>
 
 #include <TCFoundation/TCDictionary.h>
+#include <TCFoundation/TCProgressAlert.h>
 
-static const float POLYGON_OFFSET_FACTOR = 0.85f;
-static const float POLYGON_OFFSET_UNITS = 0.0f;
+const float POLYGON_OFFSET_FACTOR = 0.85f;
+const float POLYGON_OFFSET_UNITS = 0.0f;
 
 TREMainModel::TREMainModel(void)
 	:m_loadedModels(NULL),
@@ -17,7 +18,9 @@ TREMainModel::TREMainModel(void)
 	m_transVertexStore(NULL),
 	m_color(htonl(0x999999FF)),
 	m_edgeColor(htonl(0x666658FF)),
-	m_maxRadiusSquared(0.0f)
+	m_maxRadiusSquared(0.0f),
+	m_edgeLineWidth(1.0f),
+	m_abort(false)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -26,6 +29,8 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.compiled = false;
 	m_mainFlags.compiling = false;
 	m_mainFlags.removingHiddenLines = false;
+	m_mainFlags.cutawayDraw = false;
+
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
 	m_mainFlags.edgeLines = false;
@@ -143,33 +148,84 @@ void TREMainModel::compile(void)
 {
 	if (!m_mainFlags.compiled)
 	{
-		m_mainFlags.compiling = true;
-		m_vertexStore->activate(true);
-		compileDefaultColor();
-		if (getBFCFlag())
+		TCProgressAlert::send("TREMainModel", "Compiling...", 0.0f, &m_abort);
+		if (!m_abort)
 		{
-			compileBFC();
+			m_mainFlags.compiling = true;
+			m_vertexStore->activate(true);
+			compileDefaultColor();
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.2f,
+				&m_abort);
 		}
-		compileDefaultColorLines();
-		compileEdgeLines();
-		m_coloredVertexStore->activate(true);
-		compileColored();
-		if (getBFCFlag())
+		if (!m_abort)
 		{
-			compileColoredBFC();
+			if (getBFCFlag())
+			{
+				compileBFC();
+			}
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.3f,
+				&m_abort);
 		}
-		compileColoredLines();
-		compileColoredEdgeLines();
-		if (m_transVertexStore)
+		if (!m_abort)
 		{
-			m_transVertexStore->activate(true);
+			compileDefaultColorLines();
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.35f,
+				&m_abort);
 		}
-		if (!getSortTransparentFlag())
+		if (!m_abort)
 		{
-			compileTransparent();
+			compileEdgeLines();
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.45f,
+				&m_abort);
 		}
-		m_mainFlags.compiled = true;
-		m_mainFlags.compiling = false;
+		if (!m_abort)
+		{
+			m_coloredVertexStore->activate(true);
+			compileColored();
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.55f,
+				&m_abort);
+		}
+		if (!m_abort)
+		{
+			if (getBFCFlag())
+			{
+				compileColoredBFC();
+			}
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.65f,
+				&m_abort);
+		}
+		if (!m_abort)
+		{
+			compileColoredLines();
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.7f,
+				&m_abort);
+		}
+		if (!m_abort)
+		{
+			compileColoredEdgeLines();
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.8f,
+				&m_abort);
+		}
+		if (!m_abort)
+		{
+			if (m_transVertexStore)
+			{
+				m_transVertexStore->activate(true);
+			}
+			if (!getSortTransparentFlag())
+			{
+				compileTransparent();
+			}
+			TCProgressAlert::send("TREMainModel", "Compiling...", 0.9f,
+				&m_abort);
+		}
+		if (!m_abort)
+		{
+			m_mainFlags.compiled = true;
+			m_mainFlags.compiling = false;
+			TCProgressAlert::send("TREMainModel", "Compiling...", 1.0f,
+				&m_abort);
+		}
 	}
 }
 
@@ -292,6 +348,7 @@ void TREMainModel::drawLines(void)
 	// However, if parts are flattened, they can contain sub-models of a
 	// different color, which can lead to non-default colored edge lines.
 	glColor4ubv((GLubyte*)&m_edgeColor);
+	glLineWidth(m_edgeLineWidth);
 	drawEdgeLines();
 	m_vertexStore->deactivate();
 	m_vertexStore->activate(false);
@@ -424,26 +481,84 @@ float TREMainModel::getMaxRadius(const TCVector &center)
 	return (float)sqrt(getMaxRadiusSquared(center));
 }
 
-void TREMainModel::postProcess(void)
+bool TREMainModel::postProcess(void)
 {
-	if (!getWireframeFlag())
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.0f, &m_abort);
+	if (m_abort)
 	{
-		transferTransparent();
+		return false;
+	}
+	transferTransparent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.2f, &m_abort);
+	if (m_abort)
+	{
+		return false;
 	}
 	checkDefaultColorPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.3f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkBFCPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.4f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkDefaultColorLinesPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.45f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkEdgeLinesPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.55f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkConditionalLinesPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.65f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkColoredPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.7f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkColoredBFCPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.75f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkColoredLinesPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.8f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkColoredEdgeLinesPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 0.9f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	checkColoredConditionalLinesPresent();
+	TCProgressAlert::send("TREMainModel", "Processing...", 1.0f, &m_abort);
+	if (m_abort)
+	{
+		return false;
+	}
 	if (getCompilePartsFlag() || getCompileAllFlag())
 	{
 		compile();
 	}
+	return !m_abort;
 }
 
 // We have to remove all the transparent objects from the whole tree after we've
@@ -515,7 +630,7 @@ void TREMainModel::drawTransparent(void)
 		{
 			glEnable(GL_POLYGON_STIPPLE);
 		}
-		else
+		else if (!getCutawayDrawFlag())
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -546,7 +661,7 @@ void TREMainModel::drawTransparent(void)
 		else
 		{
 			((TRETransShapeGroup *)m_coloredShapes[TREMTransparent])->
-				draw(m_mainFlags.sortTransparent);
+				draw(getSortTransparentFlag() && !getCutawayDrawFlag());
 		}
 		glDisable(GL_POLYGON_OFFSET_FILL);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, oldSpecular);
@@ -555,10 +670,10 @@ void TREMainModel::drawTransparent(void)
 		{
 			glDisable(GL_POLYGON_STIPPLE);
 		}
-		else if (true /*!cutawayDraw*/)
+		else if (!getCutawayDrawFlag())
 		{
 			glDisable(GL_BLEND);
-			if (true /*!drawWireframe*/)
+			if (!getWireframeFlag())
 			{
 				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 			}

@@ -30,6 +30,10 @@ public:
 	void parseColorComment(const char *comment);
 	LDLColorInfo &getColorInfo(int index) { return m_colors[index]; }
 	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b);
+
+	static void getDefaultRGBA(int colorNumber, int &r, int &g, int &b, int &a);
+	static LDLPalette *getDefaultPalette(void);
+	static TCULong colorForRGBA(int r, int g, int b, int a);
 protected:
 	virtual ~LDLPalette(void);
 	virtual void dealloc(void);
@@ -58,7 +62,15 @@ protected:
 	};
 
 	LDLColorInfo m_colors[512];
-	TCTypedObjectArray<CustomColor> *customColors;
+	TCTypedObjectArray<CustomColor> *m_customColors;
+
+	static LDLPalette *sm_defaultPalette;
+	static class LDLPaletteCleanup
+	{
+	public:
+		~LDLPaletteCleanup(void);
+	} sm_cleanup;
+	friend LDLPaletteCleanup;
 };
 
 #endif __LDLPALETTE_H__
