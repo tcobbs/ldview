@@ -40,7 +40,8 @@ void ErrorPanel::concaveQuad()
 
 void ErrorPanel::concaveQuadSplit()
 {
-    errors->doErrorClick(concaveQuadSplitButton, LDLEConcaveQuadSplit);
+	// TC TODO: Get rid of this error
+    errors->doErrorClick(concaveQuadSplitButton, LDLEGeneral/*LDLEConcaveQuadSplit*/);
 }
 
 void ErrorPanel::colinearPoints()

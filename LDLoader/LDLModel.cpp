@@ -537,7 +537,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			}
 		}
 	}
-	else
+	else if (m_flags.bfcCertify != BFCForcedOffState)
 	{
 		if (commentLine->containsBFCCommand("CERTIFY"))
 		{

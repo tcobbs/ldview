@@ -33,6 +33,7 @@ protected:
 		const TCVector& q3, const TCVector& q4, const TCVector& t1,
 		const TCVector& t2, const TCVector& t3, const TCVector& t4,
 		const TCVector& t5, const TCVector& t6);
+	void reportBadVertexOrder(int index1, int index2, int index3, int index4);
 	LDLTriangleLine *newTriangleLine(const TCVector &p1, const TCVector &p2,
 		const TCVector &p3);
 

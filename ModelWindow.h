@@ -333,7 +333,7 @@ class ModelWindow: public CUIOGLWindow
 //		int errorWindowWidth;
 		WNDPROC originalErrorDlgProc;
 		LDLErrorArray* errors;
-		int errorImageIndices[13];
+		int errorImageIndices[14];
 		bool errorTreePopulated;
 		ErrorInfoArray *errorInfos;
 		LDViewPreferences *prefs;

@@ -31,8 +31,8 @@ LDViewErrors::LDViewErrors(Preferences *preferences)
 		preferences->getShowError(LDLEPartDeterminant));
 	preferences->setButtonState(panel->concaveQuadButton,
 		preferences->getShowError(LDLEConcaveQuad));
-	preferences->setButtonState(panel->concaveQuadSplitButton,
-		preferences->getShowError(LDLEConcaveQuadSplit));
+//	preferences->setButtonState(panel->concaveQuadSplitButton,
+//		preferences->getShowError(LDLEConcaveQuadSplit));
 	preferences->setButtonState(panel->colinearPointsButton,
 		preferences->getShowError(LDLEColinear));
 //	preferences->setButtonState(panel->openGLErrorButton,

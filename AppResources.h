@@ -60,6 +60,8 @@
 #define IDB_COLINEAR                    164
 #define IDB_COLINEAR_MASK               165
 #define IDB_TOOLBAR                     166
+#define IDB_VERTEX_ORDER                167
+#define IDB_VERTEX_ORDER_MASK           168
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003

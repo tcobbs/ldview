@@ -21,7 +21,8 @@ typedef enum
 	BFCUnknownState,
 	BFCOffState,
 	BFCOnState,
-	BFCForcedOnState
+	BFCForcedOnState,
+	BFCForcedOffState
 } BFCState;
 
 class LDLModel : public TCObject
@@ -65,6 +66,7 @@ public:
 	bool isMPD(void) { return m_flags.mpd != false; }
 
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
+	void setBFCState(BFCState value) { m_flags.bfcCertify = value; }
 
 	bool getBFCOn(void)
 	{
@@ -126,7 +128,7 @@ protected:
 		bool part:1;
 		bool primitive:1;
 		bool mpd:1;
-		BFCState bfcCertify:3;
+		BFCState bfcCertify:4;
 	} m_flags;
 
 	static char *sm_systemLDrawDir;

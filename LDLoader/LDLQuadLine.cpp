@@ -69,22 +69,27 @@ void LDLQuadLine::swapPointsIfNeeded(void)
 		// standard convex quad.
 		if (!swapNeeded(0, 1, 3, 2))
 		{
+			reportBadVertexOrder(0, 1, 3, 2);
 			swapPoints(2, 3);
 		}
 		else if (!swapNeeded(0, 2, 1, 3))
 		{
+			reportBadVertexOrder(0, 2, 1, 3);
 			swapPoints(1, 2);
 		}
 		else if (!swapNeeded(0, 2, 3, 1))
 		{
+			reportBadVertexOrder(0, 2, 3, 1);
 			rotPoints(1, 2, 3);
 		}
 		else if (!swapNeeded(0, 3, 1, 2))
 		{
+			reportBadVertexOrder(0, 3, 1, 2);
 			rotPoints(1, 3, 2);
 		}
 		else if (!swapNeeded(0, 3, 2, 1))
 		{
+			reportBadVertexOrder(0, 3, 2, 1);
 			swapPoints(1, 3);
 		}
 		else
@@ -382,7 +387,7 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(void)
 	if (!fileLineArray)
 	{
 		// All split attempts failed, the quad must not be flat.
-		setError(LDLEConcaveQuadSplit,
+		setError(LDLEConcaveQuad,
 			"Unable to determine split for concave quad.\n");
 	}
 	return fileLineArray;
@@ -455,6 +460,48 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(int index1, int index2,
 		triangle2->release();
 	}
 	return fileLineArray;
+}
+
+void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
+									   int index4)
+{
+	char oldBuf[4][64];
+	char newBuf[4][64];
+	int indices[4];
+	int i;
+
+	indices[0] = index1;
+	indices[1] = index2;
+	indices[2] = index3;
+	indices[3] = index4;
+	for (i = 0; i < 4; i++)
+	{
+		m_points[i].print(oldBuf[i]);
+		m_points[indices[i]].print(newBuf[i]);
+	}
+	if (m_parentModel->getBFCOn() ||
+		m_parentModel->getBFCState() == BFCForcedOffState)
+	{
+		char format[1024];
+
+		strcpy(format, "Bad vertex sequence in BFC-certified file.\n");
+		if (m_parentModel->getBFCOn())
+		{
+			strcat(format, "(Note: disabling BFC for this file.)\n");
+		}
+		strcat(format, "Original Quad: <%s> <%s> <%s> <%s>\n"
+			"New Quad: <%s> <%s> <%s> <%s>\n");
+		setError(LDLEVertexOrder, format, oldBuf[0], oldBuf[1], oldBuf[2],
+			oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
+		m_parentModel->setBFCState(BFCForcedOffState);
+	}
+	else
+	{
+		setWarning(LDLEVertexOrder, "Bad vertex sequence.\n"
+			"Original Quad: <%s> <%s> <%s> <%s>\n"
+			"New Quad: <%s> <%s> <%s> <%s>\n", oldBuf[0], oldBuf[1], oldBuf[2],
+			oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
+	}
 }
 
 void LDLQuadLine::reportQuadSplit(bool flat, const TCVector& q1,
