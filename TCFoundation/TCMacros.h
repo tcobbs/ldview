@@ -5,7 +5,7 @@
 
 #ifndef M_PI
 
-#define M_PI (3.141592653589)
+#define M_PI (3.1415926535897932384626433832795)
 
 #endif
 
@@ -20,6 +20,8 @@
 	x = y;			\
 	y = tmp;		\
 }
+#define deg2rad(x) ((x) * M_PI / 180.0)
+#define rad2deg(x) ((x) * 180.0 / M_PI)
 #define sqr(x) ((x) * (x))
 #define sqrAmp(x) ((x) * abs(x))
 #define sqrtAmp(x) ((x) < 0 ? -sqrt(-x) : sqrt(x))

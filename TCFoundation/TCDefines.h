@@ -12,7 +12,9 @@
 
 #include <crtdbg.h>
 
+#ifdef WIN32
 #pragma warning( disable : 4514 4127 )
+#endif // WIN32
 
 #ifdef _BUILDING_TCFOUNDATION
 #define TCExport __declspec(dllexport)

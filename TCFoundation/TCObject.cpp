@@ -72,6 +72,9 @@ TCObject *TCObject::retain(TCObject *object)
 
 void TCObject::release(TCObject *object)
 {
+	// NOTE: object cannot be a TCObject *&, because inheritance won't allow
+	// a sub-class to match a reference.  So we cann't have this function also
+	// set the original pointer to NULL.
 	if (object)
 	{
 		object->release();
