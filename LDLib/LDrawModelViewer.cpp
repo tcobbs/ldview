@@ -1886,7 +1886,7 @@ void LDrawModelViewer::updateCameraPosition(void)
 	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
 }
 
-void LDrawModelViewer::zoom(float amount)
+void LDrawModelViewer::zoom(float amount, bool apply)
 {
 	if (flags.paused)
 	{
@@ -1930,6 +1930,10 @@ void LDrawModelViewer::zoom(float amount)
 		{
 			nextDistance = defaultDistance * 10.0f;
 		}
+	}
+	if (apply)
+	{
+		applyZoom();
 	}
 }
 
@@ -2566,7 +2570,7 @@ void LDrawModelViewer::update(void)
 		}
 	}
 	updateCameraPosition();
-	zoom(zoomSpeed);
+	zoom(zoomSpeed, false);
 	if (flags.drawWireframe && flags.removeHiddenLines)
 	{
 		removeHiddenLines();

@@ -110,6 +110,7 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 			   hLibraryUpdateWindow(NULL),
 			   hStatusBar(NULL),
 			   hToolbar(NULL),
+			   hDeactivatedTooltip(NULL),
 			   userLDrawDir(NULL),
 			   fullScreen(NO),
 			   fullScreenActive(NO),
@@ -845,6 +846,7 @@ BOOL LDViewWindow::doLDrawDirOK(HWND hDlg)
 LRESULT LDViewWindow::doMouseWheel(short keyFlags, short zDelta, int /*xPos*/,
 								  int /*yPos*/)
 {
+	debugPrintf("doMouseWheel(%d, %d)\n", keyFlags, zDelta);
 	if (modelWindow)
 	{
 		if (keyFlags & MK_CONTROL)
@@ -3013,6 +3015,13 @@ void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 			alert->abort();
 		}
 	}
+	else if (alert && strcmp(alert->getSource(), "TCImage") != 0)
+	{
+		if (alert->getProgress() == 2.0 && hDeactivatedTooltip != NULL)
+		{
+			SendMessage(hDeactivatedTooltip, TTM_ACTIVATE, 1, 0);
+		}
+	}
 }
 
 LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
@@ -3467,9 +3476,13 @@ bool LDViewWindow::doToolbarCheck(bool &value, LPARAM commandId)
 	}
 	if (newValue != value)
 	{
-		HWND hTooltip = (HWND)SendMessage(hToolbar, TB_GETTOOLTIPS, 0, 0);
-
-		SendMessage(hTooltip, TTM_POP, 0, 0);
+		if (hDeactivatedTooltip)
+		{
+			SendMessage(hDeactivatedTooltip, TTM_ACTIVATE, 1, 0);
+		}
+		hDeactivatedTooltip = (HWND)SendMessage(hToolbar, TB_GETTOOLTIPS, 0, 0);
+		SendMessage(hDeactivatedTooltip, TTM_POP, 0, 0);
+		SendMessage(hDeactivatedTooltip, TTM_ACTIVATE, 0, 0);
 		value = newValue;
 		return true;
 	}
