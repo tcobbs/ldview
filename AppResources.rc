@@ -930,7 +930,6 @@ IDB_DETERMINANT_MASK    BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.b
 IDB_FNF_MASK            BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
 IDB_INFO_MASK           BITMAP  DISCARDABLE     "Icons\\error_info_mask.bmp"
 IDB_OPENGL_MASK         BITMAP  DISCARDABLE     "Icons\\error_opengl_mask.bmp"
-IDB_SS_PREVIEW          BITMAP  DISCARDABLE     "Icons\\screen_saver_preview.bmp"
 IDB_EXTRA_DIRS          BITMAP  DISCARDABLE     "Icons\\extra_dirs_toolbar.bmp"
 IDB_MATRIX              BITMAP  DISCARDABLE     "icons\\error_matrix.bmp"
 IDB_MATRIX_MASK         BITMAP  DISCARDABLE     "icons\\error_matrix_mask.bmp"
@@ -994,6 +993,7 @@ END
 //
 
 IDR_STUDLOGO_PNG        PNG     DISCARDABLE     "Textures\\StudLogo.png"
+IDR_SS_PREVIEW          PNG     DISCARDABLE     "Icons\\screen_saver_preview.png"
 
 /////////////////////////////////////////////////////////////////////////////
 //

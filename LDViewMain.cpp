@@ -8,6 +8,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCImage.h>
 #include <CUI/CUIWindow.h>
 #include "SSPreview.h"
 #include "AppResources.h"
