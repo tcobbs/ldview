@@ -18,6 +18,7 @@
 #define IDB_PARSE                       113
 #define IDB_FNF                         115
 #define IDB_COLOR                       116
+#define IDB_MATCHING_POINTS             116
 #define IDB_CONCAVE_QUAD                117
 #define IDB_CONCAVE_QUAD_SPLIT          118
 #define IDB_OPENGL                      119
@@ -26,6 +27,7 @@
 #define IDB_PARSE_MASK                  123
 #define IDB_CONCAVE_QUAD_MASK           124
 #define IDB_COLOR_MASK                  125
+#define IDB_MATCHING_POINTS_MASK        125
 #define IDB_CONCAVE_QUAD_SPLIT_MASK     126
 #define IDB_DETERMINANT_MASK            127
 #define IDB_FNF_MASK                    128
@@ -53,6 +55,8 @@
 #define IDB_MATRIX_MASK                 161
 #define IDB_NON_FLAT_QUAD               162
 #define IDB_NON_FLAT_QUAD_MASK          163
+#define IDB_COLINEAR                    164
+#define IDB_COLINEAR_MASK               165
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003

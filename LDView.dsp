@@ -275,6 +275,30 @@ SOURCE=.\Icons\error_info_mask.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\error_matching_points.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_matching_points_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_matrix.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_matrix_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_non_flat_quad.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_non_flat_quad_mask.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\error_opengl.bmp
 # End Source File
 # Begin Source File
