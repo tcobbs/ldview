@@ -69,6 +69,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 aspectRatio(1.0f),
 			 currentFov(45.0f),
 			 fov(45.0f),
+			 memoryUsage(2),
 			 extraSearchDirs(NULL),
 			 cameraData(NULL)
 {
@@ -116,6 +117,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.defaultTrans = false;
 	flags.bfc = true;
 	flags.redBackFaces = false;
+	flags.greenFrontFaces = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -718,6 +720,21 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		{
 			LDModelParser *modelParser = new LDModelParser;
 
+			switch (memoryUsage)
+			{
+			case 0:
+				modelParser->setCompilePartsFlag(false);
+				modelParser->setCompileAllFlag(false);
+				break;
+			case 1:
+				modelParser->setCompilePartsFlag(true);
+				modelParser->setCompileAllFlag(false);
+				break;
+			case 2:
+				modelParser->setCompilePartsFlag(true);
+				modelParser->setCompileAllFlag(true);
+				break;
+			}
 			modelParser->setSeamWidth(seamWidth);
 			modelParser->setPrimitiveSubstitutionFlag(
 				flags.allowPrimitiveSubstitution);
@@ -731,6 +748,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setWireframeFlag(flags.drawWireframe);
 			modelParser->setBFCFlag(flags.bfc);
 			modelParser->setRedBackFacesFlag(flags.redBackFaces);
+			modelParser->setGreenFrontFacesFlag(flags.greenFrontFaces);
 			if (flags.showsHighlightLines)
 			{
 				// Note that the default for all of these is false.
@@ -968,6 +986,19 @@ void LDrawModelViewer::setProcessLDConfig(bool value)
 	}
 }
 
+void LDrawModelViewer::setMemoryUsage(int value)
+{
+	if (value < 0 || value > 2)
+	{
+		value = 2;
+	}
+	if (value != memoryUsage)
+	{
+		memoryUsage = value;
+		flags.needsReload = true;
+	}
+}
+
 void LDrawModelViewer::setLineSmoothing(bool value)
 {
 	if (flags.lineSmoothing != value)
@@ -1104,7 +1135,7 @@ void LDrawModelViewer::setupLighting(void)
 		setupLight(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
 		if (flags.oneLight || flags.usesSpecular ||
-			(flags.bfc && flags.redBackFaces))
+			(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces)))
 		{
 			glDisable(GL_LIGHT1);
 			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
@@ -1514,13 +1545,26 @@ void LDrawModelViewer::setRedBackFaces(bool value)
 	}
 }
 
+void LDrawModelViewer::setGreenFrontFaces(bool value)
+{
+	if (value != flags.greenFrontFaces)
+	{
+		flags.greenFrontFaces = value;
+		if (flags.bfc)
+		{
+			flags.needsReload = true;
+			flags.needsLightingSetup = true;
+		}
+	}
+}
+
 void LDrawModelViewer::setBfc(bool value)
 {
 	if (value != flags.bfc)
 	{
 		flags.bfc = value;
 		flags.needsReload = true;
-		if (flags.redBackFaces)
+		if (flags.redBackFaces || flags.greenFrontFaces)
 		{
 			flags.needsMaterialSetup = true;
 		}
@@ -1917,13 +1961,30 @@ void LDrawModelViewer::clearBackground(void)
 	if (flags.slowClear)
 	{
 		GLint oldDepthFunc;
+		bool oldBlendEnabled = false;
+		bool oldPolygonOffsetEnabled = false;
+		bool oldLightingEnabled = false;
 
 		orthoView();
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunc);
 		glDepthFunc(GL_ALWAYS);
 		glColor4f(backgroundR, backgroundG, backgroundB, backgroundA);
-		glDisable(GL_LIGHTING);
+		if (glIsEnabled(GL_BLEND))
+		{
+			glDisable(GL_BLEND);
+			oldBlendEnabled = true;
+		}
+		if (glIsEnabled(GL_POLYGON_OFFSET_FILL))
+		{
+			glDisable(GL_POLYGON_OFFSET_FILL);
+			oldPolygonOffsetEnabled = true;
+		}
+		if (glIsEnabled(GL_LIGHTING))
+		{
+			glDisable(GL_LIGHTING);
+			oldLightingEnabled = true;
+		}
 		glDepthMask(1);
 		glBegin(GL_QUADS);
 		glVertex3i(-1, -1, -1);
@@ -1932,6 +1993,18 @@ void LDrawModelViewer::clearBackground(void)
 		glVertex3i(-1, height + 1, -1);
 		glEnd();
 		glDepthFunc(oldDepthFunc);
+		if (oldBlendEnabled)
+		{
+			glEnable(GL_BLEND);
+		}
+		if (oldPolygonOffsetEnabled)
+		{
+			glEnable(GL_POLYGON_OFFSET_FILL);
+		}
+		if (oldLightingEnabled)
+		{
+			glEnable(GL_LIGHTING);
+		}
 		perspectiveView();
 	}
 	else

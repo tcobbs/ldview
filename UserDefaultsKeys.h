@@ -108,6 +108,8 @@
 #define IGNORE_MULTI_DRAW_ARRAYS_KEY "IgnoreMultiDrawArrays"
 #define IGNORE_ALL_OGL_EXTENSIONS "IgnoreAllOGLExtensions"
 #define VISUAL_STYLE_ENABLED_KEY "VisualStyleEnabled"
+#define GREEN_FRONT_FACES_KEY "GreenFrontFaces"
+#define MEMORY_USAGE_KEY "MemoryUsage"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

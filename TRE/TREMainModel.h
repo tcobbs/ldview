@@ -61,6 +61,14 @@ public:
 	bool getBFCFlag(void) { return m_mainFlags.bfc != false; }
 	void setRedBackFacesFlag(bool value) { m_mainFlags.redBackFaces = value; }
 	bool getRedBackFacesFlag(void) { return m_mainFlags.redBackFaces != false; }
+	void setGreenFrontFacesFlag(bool value)
+	{
+		m_mainFlags.greenFrontFaces = value;
+	}
+	bool getGreenFrontFacesFlag(void)
+	{
+		return m_mainFlags.greenFrontFaces != false;
+	}
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
 	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
 	bool getActiveLineJoinsFlag(void)
@@ -219,6 +227,7 @@ protected:
 		bool polygonOffset:1;
 		bool studLogo:1;
 		bool redBackFaces:1;
+		bool greenFrontFaces:1;
 		bool lineJoins:1;
 	} m_mainFlags;
 

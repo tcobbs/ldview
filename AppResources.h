@@ -104,6 +104,7 @@
 #define IDC_CANCEL                      1043
 #define IDC_RED_BACK_FACES              1043
 #define IDC_APPLY                       1044
+#define IDC_GREEN_FRONT_FACES           1044
 #define IDC_ABANDON                     1045
 #define IDC_FS_REFRESH                  1046
 #define IDC_FS_RATE                     1047
@@ -200,6 +201,7 @@
 #define IDC_FOV_LABEL                   1154
 #define IDC_FOV_RANGE_LABEL             1155
 #define IDC_COLORS_BOX                  1156
+#define IDC_MEMORY_LABEL                1157
 #define IDC_SAVE_ZOOMTOFIT              1158
 #define IDC_ESD_TOOLBAR                 1159
 #define IDC_ESD_LIST                    1163
@@ -220,6 +222,10 @@
 #define ID_TOOLBAR                      1190
 #define IDC_IGNORE_PBUFFER              1190
 #define ID_STATUS_BAR                   1191
+#define IDC_SAVE_SERIES_BOX             1191
+#define IDC_MISC_BOX                    1192
+#define IDC_SAVE_ACTUAL_SIZE_BOX        1193
+#define IDC_MEMORY_COMBO                1194
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -283,7 +289,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        165
 #define _APS_NEXT_COMMAND_VALUE         40076
-#define _APS_NEXT_CONTROL_VALUE         1191
+#define _APS_NEXT_CONTROL_VALUE         1195
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

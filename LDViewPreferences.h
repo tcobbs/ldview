@@ -70,6 +70,7 @@ public:
 	bool getBfc(void) { return bfc; }
 	void setBfc(bool value);
 	bool getRedBackFaces(void) { return redBackFaces; }
+	bool getGreenFrontFaces(void) { return greenFrontFaces; }
 	bool getUseWireframeFog(void) { return useWireframeFog; }
 	bool getRemoveHiddenLines(void) { return removeHiddenLines; }
 	bool getUsePolygonOffset(void) { return usePolygonOffset; }
@@ -114,6 +115,7 @@ protected:
 	virtual void dealloc(void);
 	virtual void setupColorButton(HWND hPage, HWND &hColorButton,
 		int controlID, HBITMAP &hButtonBitmap, COLORREF color);
+	virtual void setupMemoryUsage(void);
 	virtual void setupFov(bool warn = false);
 	virtual void setupBackgroundColorButton(void);
 	virtual void setupDefaultColorButton(void);
@@ -278,6 +280,8 @@ protected:
 	bool showErrors;
 	int fullScreenRefresh;
 	float fov;
+	int memoryUsage;
+
 	float defaultZoom;
 
 	int useSeams;
@@ -288,6 +292,7 @@ protected:
 	long wireframeThickness;
 	bool bfc;
 	bool redBackFaces;
+	bool greenFrontFaces;
 	bool showsHighlightLines;
 	bool drawConditionalHighlights;
 	bool showAllConditionalLines;
@@ -348,6 +353,7 @@ protected:
 	HWND hWireframeThicknessLabel;
 	HWND hWireframeThicknessSlider;
 	HWND hRedBackFacesButton;
+	HWND hGreenFrontFacesButton;
 	HWND hEdgesOnlyButton;
 	HWND hConditionalHighlightsButton;
 	HWND hShowAllConditionalButton;

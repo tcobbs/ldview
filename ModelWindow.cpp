@@ -315,6 +315,8 @@ void ModelWindow::loadSettings(void)
 		!= 0;
 	saveSeries = TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0;
 	saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
+	ignorePBuffer = TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 0, false)
+		!= 0;
 	usePrinterDPI = TCUserDefaults::longForKey(USE_PRINTER_DPI_KEY, 1) != 0;
 	printDPI = TCUserDefaults::longForKey(PRINT_DPI_KEY, 300);
 	printBackground = TCUserDefaults::longForKey(PRINT_BACKGROUND_KEY, 0, false)
@@ -960,7 +962,7 @@ BOOL ModelWindow::doErrorWindowNotify(LPNMHDR notification)
 
 			// The new state/old state check lies when you click on an item, and
 			// not the item's check box.
-			if (TCUserDefaults::longForKey(errorKey) != value)
+			if (TCUserDefaults::longForKey(errorKey, 0, false) != value)
 			{
 				TCUserDefaults::setLongForKey(value, errorKey, false);
 				if (!skipErrorUpdates)
@@ -1204,6 +1206,29 @@ LRESULT ModelWindow::doCommand(int /*itemId*/, int notifyCode, HWND controlHWnd)
 		}
 	}
 	return 1;
+}
+
+BOOL ModelWindow::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
+{
+	BOOL retValue = FALSE;
+	DWORD dialogId = 0;
+
+	if (hDlg == hSaveDialog)
+	{
+		dialogId = IDD_SAVE_OPTIONS;
+	}
+	if (dialogId)
+	{
+		char* helpPath = LDViewPreferences::getLDViewPath("LDView.hlp");
+		DWORD helpId;
+
+		helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
+		WinHelp((HWND)helpInfo->hItemHandle, helpPath, HELP_CONTEXTPOPUP,
+			helpId);
+		retValue = TRUE;
+		delete helpPath;
+	}
+	return retValue;
 }
 
 BOOL ModelWindow::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
@@ -2137,11 +2162,15 @@ void ModelWindow::checkForPart(void)
 {
 	bool isPart = false;
 	char buf[MAX_PATH];
+	char *filePart;
 
-	if (GetCurrentDirectory(MAX_PATH, buf))
+	if (GetFullPathName(modelViewer->getFilename(), sizeof(buf), buf,
+		&filePart))
 	{
 		char partsDir[1024];
 
+		*filePart = 0;
+		stripTrailingPathSeparators(buf);
 		strcpy(partsDir, LDLModel::lDrawDir());
 		strcat(partsDir, "\\PARTS");
 		convertStringToUpper(partsDir);
@@ -2722,17 +2751,41 @@ void ModelWindow::renderOffscreenImage(void)
 {
 	makeCurrent();
 	modelViewer->update();
-	if (canSaveAlpha())
+	if (false && canSaveAlpha())
 	{
+		bool oldBlendEnable = true;
+		bool oldDepthTestEnable = true;
+		bool oldLightingEnable = false;
+		bool oldPolygonOffsetEnabled = false;
+		GLint oldDepthFunc;
+
 		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
-		glEnable(GL_BLEND);
 		orthoView();
 		glColor4ub(0, 0, 0, 255 - 28);	// 255 - (110 / 4), which equals 2 faces
 										// worth of standard alpha blending.
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
-		glEnable(GL_DEPTH_TEST);
+		glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunc);
+		if (!glIsEnabled(GL_BLEND))
+		{
+			oldBlendEnable = false;
+			glEnable(GL_BLEND);
+		}
+		if (!glIsEnabled(GL_DEPTH_TEST))
+		{
+			oldDepthTestEnable = false;
+			glEnable(GL_DEPTH_TEST);
+		}
+		if (glIsEnabled(GL_LIGHTING))
+		{
+			oldLightingEnable = true;
+			glDisable(GL_LIGHTING);
+		}
+		if (glIsEnabled(GL_POLYGON_OFFSET_FILL))
+		{
+			glDisable(GL_POLYGON_OFFSET_FILL);
+			oldPolygonOffsetEnabled = true;
+		}
 		glDepthFunc(GL_GREATER);
-		glDisable(GL_LIGHTING);
 		glDepthRange(0.0f, 1.0f);
 		glBegin(GL_QUADS);
 			glVertex3f(0.0f, 0.0f, -1.0f);
@@ -2746,7 +2799,23 @@ void ModelWindow::renderOffscreenImage(void)
 			glVertex3f(0.0f, 480.0f, -1.0f);
 */
 		glEnd();
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(oldDepthFunc);
+		if (oldLightingEnable)
+		{
+			glEnable(GL_LIGHTING);
+		}
+		if (oldPolygonOffsetEnabled)
+		{
+			glEnable(GL_POLYGON_OFFSET_FILL);
+		}
+		if (!oldBlendEnable)
+		{
+			glDisable(GL_BLEND);
+		}
+		if (!oldDepthTestEnable)
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 }
@@ -3670,6 +3739,8 @@ void ModelWindow::setupSaveExtras(void)
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS_SPIN, UDM_SETRANGE32, 1, 5);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS_SPIN, UDM_SETPOS, 0,
 		MAKELONG(saveDigits, 0));
+	SendDlgItemMessage(hSaveDialog, IDC_IGNORE_PBUFFER, BM_SETCHECK,
+		ignorePBuffer ? 1 : 0, 0);
 	if (saveActualSize)
 	{
 		disableSaveSize();
@@ -3782,6 +3853,10 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 			disableSaveSeries();
 		}
 		break;
+	case IDC_IGNORE_PBUFFER:
+		ignorePBuffer = SendDlgItemMessage(hSaveDialog, IDC_IGNORE_PBUFFER,
+			BM_GETCHECK, 0, 0) ? true : false;
+		break;
 	case IDC_SAVE_ZOOMTOFIT:
 		saveZoomToFit = SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT,
 			BM_GETCHECK, 0, 0) ? true : false;
@@ -3813,16 +3888,23 @@ BOOL ModelWindow::doSaveKillFocus(int controlId, HWND /*hControlWnd*/)
 
 BOOL ModelWindow::doSaveNotify(int /*controlId*/, LPOFNOTIFY notification)
 {
-	if (notification->hdr.code == CDN_TYPECHANGE)
+	switch(notification->hdr.code)
 	{
-		char buf[1024];
-
-		saveImageType = notification->lpOFN->nFilterIndex;
-		if (calcSaveFilename(buf, 1024))
+	case CDN_TYPECHANGE:
 		{
-			SendMessage(GetParent(hSaveDialog), CDM_SETCONTROLTEXT, edt1,
-				(LPARAM)buf);
+			char buf[1024];
+
+			saveImageType = notification->lpOFN->nFilterIndex;
+			if (calcSaveFilename(buf, 1024))
+			{
+				SendMessage(GetParent(hSaveDialog), CDM_SETCONTROLTEXT, edt1,
+					(LPARAM)buf);
+			}
 		}
+		break;
+	default:
+//		debugPrintf("%d\n", notification->hdr.code);
+		break;
 	}
 	return FALSE;
 }
@@ -4129,6 +4211,8 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine)
 	}
 	if (saveFilename[0] || getSaveFilename(saveFilename, 1024))
 	{
+		TCUserDefaults::setLongForKey(ignorePBuffer ? 1 : 0, IGNORE_PBUFFER_KEY,
+			false);
 		if (saveSeries)
 		{
 			TCUserDefaults::setLongForKey(1, SAVE_SERIES_KEY, false);
