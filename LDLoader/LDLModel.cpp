@@ -537,7 +537,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			}
 		}
 	}
-	else if (m_flags.bfcCertify != BFCForcedOffState)
+	else
 	{
 		if (commentLine->containsBFCCommand("CERTIFY"))
 		{
@@ -664,6 +664,17 @@ bool LDLModel::parse(void)
 			LDLFileLine *fileLine = (*m_fileLines)[i];
 			bool checkInvertNext = true;
 
+			if (fileLine->isActionLine())
+			{
+				m_flags.started = true;
+				((LDLActionLine *)fileLine)->setBFCSettings(m_flags.bfcCertify,
+					m_flags.bfcClip, m_flags.bfcWindingCCW,
+					m_flags.bfcInvertNext);
+			}
+			else
+			{
+				checkInvertNext = false;
+			}
 			if (fileLine->parse())
 			{
 				if (fileLine->isValid())
@@ -715,17 +726,6 @@ bool LDLModel::parse(void)
 			else
 			{
 				sendAlert(fileLine->getError());
-			}
-			if (fileLine->isActionLine())
-			{
-				m_flags.started = true;
-				((LDLActionLine *)fileLine)->setBFCSettings(m_flags.bfcCertify,
-					m_flags.bfcClip, m_flags.bfcWindingCCW,
-					m_flags.bfcInvertNext);
-			}
-			else
-			{
-				checkInvertNext = false;
 			}
 			switch (fileLine->getLineType())
 			{

@@ -98,6 +98,7 @@ void LDLQuadLine::swapPointsIfNeeded(void)
 			// so this quad must be concave or non-planar.
 			m_valid = false;
 		}
+		m_actionFlags.bfcClip = false;
 	}
 }
 
@@ -479,21 +480,13 @@ void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 		m_points[i].print(oldBuf[i]);
 		m_points[indices[i]].print(newBuf[i]);
 	}
-	if (m_parentModel->getBFCOn() ||
-		m_parentModel->getBFCState() == BFCForcedOffState)
+	if (m_actionFlags.bfcClip)
 	{
-		char format[1024];
-
-		strcpy(format, "Bad vertex sequence in BFC-certified file.\n");
-		if (m_parentModel->getBFCOn())
-		{
-			strcat(format, "(Note: disabling BFC for this file.)\n");
-		}
-		strcat(format, "Original Quad: <%s> <%s> <%s> <%s>\n"
-			"New Quad: <%s> <%s> <%s> <%s>\n");
-		setError(LDLEVertexOrder, format, oldBuf[0], oldBuf[1], oldBuf[2],
+		setError(LDLEVertexOrder, "Bad vertex sequence in BFC-enabled quad.\n"
+			"(Note: disabling BFC for this quad.)\n"
+			"Original Quad: <%s> <%s> <%s> <%s>\n"
+			"New Quad: <%s> <%s> <%s> <%s>\n", oldBuf[0], oldBuf[1], oldBuf[2],
 			oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
-		m_parentModel->setBFCState(BFCForcedOffState);
 	}
 	else
 	{
