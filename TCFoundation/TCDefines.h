@@ -43,4 +43,8 @@ typedef unsigned char TCUChar;
 typedef unsigned long TCULong;
 typedef unsigned short TCUShort;
 
+#ifndef __THROW
+#define __THROW
+#endif //__THROW
+
 #endif // __TCDEFINES_H__

@@ -34,7 +34,7 @@ char *strnstr(const char *s1, const char *s2, size_t n, int skipZero)
 	return NULL;
 }
 
-char *strcasestr(const char *s1, const char *s2)
+char *strcasestr(const char *s1, const char *s2) __THROW
 {
 	char* spot;
 	int len1 = strlen(s1);
