@@ -33,7 +33,7 @@ bool LDLShapeLine::parse(void)
 void LDLShapeLine::dealloc(void)
 {
 	delete[] m_points;
-	LDLFileLine::dealloc();
+	LDLActionLine::dealloc();
 }
 
 int LDLShapeLine::middleIndex(const TCVector &p1, const TCVector &p2,

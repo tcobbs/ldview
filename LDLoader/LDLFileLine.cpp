@@ -43,11 +43,8 @@ void LDLFileLine::dealloc(void)
 {
 	delete m_line;
 	delete m_originalLine;
-	if (m_error)
-	{
-		m_error->release();
-		m_error = NULL;
-	}
+	TCObject::release(m_error);
+	m_error = NULL;
 	TCObject::dealloc();
 }
 

@@ -36,15 +36,9 @@ LDLModelLine::~LDLModelLine(void)
 
 void LDLModelLine::dealloc(void)
 {
-	if (m_highResModel)
-	{
-		m_highResModel->release();
-	}
-	if (m_lowResModel)
-	{
-		m_lowResModel->release();
-	}
-	LDLFileLine::dealloc();
+	TCObject::release(m_highResModel);
+	TCObject::release(m_lowResModel);
+	LDLActionLine::dealloc();
 }
 
 TCObject *LDLModelLine::copy(void)

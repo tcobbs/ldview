@@ -41,12 +41,14 @@ public:
 	virtual void addTriangle(TCULong color, TCVector *vertices);
 	virtual void addQuad(TCVector *vertices);
 	virtual void addQuad(TCULong color, TCVector *vertices);
-	virtual void addQuadStrip(TCVector *vertices, TCVector *normals, int count);
-	virtual void addQuadStrip(TCULong color, TCVector *vertices, TCVector *normals,
-		int count);
-	virtual void addTriangleFan(TCVector *vertices, TCVector *normals, int count);
+	virtual void addQuadStrip(TCVector *vertices, TCVector *normals, int count,
+		bool flat = false);
+	virtual void addQuadStrip(TCULong color, TCVector *vertices,
+		TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleFan(TCVector *vertices, TCVector *normals,
+		int count, bool flat = false);
 	virtual void addTriangleFan(TCULong color, TCVector *vertices,
-		TCVector *normals, int count);
+		TCVector *normals, int count, bool flat = false);
 //	virtual void draw(void);
 	virtual void compileDefaultColor(void);
 	virtual void compileColored(void);
@@ -75,11 +77,11 @@ public:
 		int numSegments, int usedSegments = -1);
 	virtual void addCone(const TCVector &center, float radius, float height,
 		int numSegments, int usedSegments = -1);
-	virtual void addOpenCone(const TCVector &center, float radius1, float radius2,
-		float height, int numSegments, int usedSegments = -1);
-	virtual void addDisk(const TCVector &center, float radius, int numSegments,
-		int usedSegments = -1);
+	virtual void addOpenCone(const TCVector &center, float radius1,
+		float radius2, float height, int numSegments, int usedSegments = -1);
 	virtual void addCircularEdge(const TCVector &center, float radius,
+		int numSegments, int usedSegments = -1);
+	virtual void addRing(const TCVector &center, float radius1, float radius2,
 		int numSegments, int usedSegments = -1);
 	virtual void getBoundingBox(TCVector& min, TCVector& max);
 	virtual void scanPoints(TCObject *scanner,
@@ -109,16 +111,22 @@ protected:
 		TREVertexArray *srcVertices, TREVertexArray *srcNormals,
 		TCULongArray *srcColors, TCULongArray *srcIndices, float *matrix,
 		TCULong color, bool colorSet);
-	virtual void flattenStrips(TREShapeType shapeType,
-		TREVertexArray *dstVertices, TREVertexArray *dstNormals,
-		TCULongArray *dstColors, TCULongArray *dstIndices,
+	virtual void flattenStrips(TREVertexArray *dstVertices,
+		TREVertexArray *dstNormals, TCULongArray *dstColors,
+		TCULongArray *dstIndices, TCULongArray *dstStripCounts,
 		TREVertexArray *srcVertices, TREVertexArray *srcNormals,
-		TCULongArray *srcColors, TCULongArray *srcIndices, float *matrix,
-		TCULong color, bool colorSet);
+		TCULongArray *srcColors, TCULongArray *srcIndices,
+		TCULongArray *srcStripCounts, float *matrix, TCULong color,
+		bool colorSet);
 	void setCirclePoint(float angle, float radius, const TCVector& center,
 		TCVector& point);
 	void scanBoundingBoxPoint(const TCVector &point);
 	virtual void calculateBoundingBox(void);
+	virtual void quadStripToQuad(int index, TCVector *stripVertices,
+		TCVector *stripNormals, TCVector *quadVertices, TCVector *quadNormals);
+	virtual void triangleFanToTriangle(int index, TCVector *stripVertices,
+		TCVector *stripNormals, TCVector *triangleVertices,
+		TCVector *triangleNormals);
 
 	static void setGlNormalize(bool value);
 

@@ -20,6 +20,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.compileParts = true;
 	m_mainFlags.compileAll = false;
 	m_mainFlags.compiled = false;
+	m_mainFlags.useFlatStrips = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)

@@ -22,7 +22,8 @@ LDModelParser::LDModelParser(void)
 	m_curveQuality(2),
 	m_seamWidth(0.0f)
 {
-	m_flags.flattenParts = true;
+	m_flags.flattenParts = true;	// Supporting false here could take a lot
+									// of work.
 	m_flags.primitiveSubstitution = false;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
@@ -210,6 +211,11 @@ bool LDModelParser::isEdge(const char *filename)
 	return isPrimitive(filename, "edge.dat");
 }
 
+bool LDModelParser::isCcyli(const char *filename)
+{
+	return isPrimitive(filename, "ccyli.dat");
+}
+
 bool LDModelParser::is1DigitCon(const char *filename)
 {
 	return strlen(filename) == 11 && startsWithFraction(filename) &&
@@ -231,10 +237,71 @@ bool LDModelParser::isCon(const char *filename)
 	return is1DigitCon(filename) || is2DigitCon(filename);
 }
 
+bool LDModelParser::isOldRing(const char *filename)
+{
+	int len = strlen(filename);
+
+	if (len >= 9 && len <= 12 &&
+		stringHasCaseInsensitivePrefix(filename, "ring") &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat"))
+	{
+		int i;
+
+		for (i = 4; i < len - 5; i++)
+		{
+			if (!isdigit(filename[i]))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDModelParser::isRing(const char *filename)
+{
+	return strlen(filename) == 12 && startsWithFraction(filename) &&
+		stringHasCaseInsensitivePrefix(filename + 3, "ring") &&
+		isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
+bool LDModelParser::isRin(const char *filename)
+{
+	return strlen(filename) == 12 && startsWithFraction(filename) &&
+		stringHasCaseInsensitivePrefix(filename + 3, "rin") &&
+		isdigit(filename[6]) && isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
+bool LDModelParser::isTorusO(const char *filename)
+{
+	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
+		isdigit(filename[1]) && isdigit(filename[2]) &&
+		toupper(filename[3]) == 'O' && isdigit(filename[4]) &&
+		isdigit(filename[7]) && isdigit(filename[6]) &&
+		isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
+bool LDModelParser::isTorusI(const char *filename)
+{
+	return strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
+		isdigit(filename[1]) && isdigit(filename[2]) &&
+		toupper(filename[3]) == 'I' && isdigit(filename[4]) &&
+		isdigit(filename[7]) && isdigit(filename[6]) &&
+		isdigit(filename[7]) &&
+		stringHasCaseInsensitiveSuffix(filename, ".dat");
+}
+
 bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
 {
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
+	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
 	if (m_flags.edgeLines)
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
@@ -285,7 +352,7 @@ bool LDModelParser::substituteStu23(TREModel *treModel, bool isA)
 	int numSegments = LO_NUM_SEGMENTS;
 
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
-	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
+	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
 	if (m_flags.edgeLines)
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
@@ -372,10 +439,13 @@ bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction)
 
 bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction)
 {
-	int numSegments = getNumCircleSegments(fraction);
+	if (m_flags.edgeLines)
+	{
+		int numSegments = getNumCircleSegments(fraction);
 
-	treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-		(int)(numSegments * fraction));
+		treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+			(int)(numSegments * fraction));
+	}
 	return true;
 }
 
@@ -385,6 +455,15 @@ bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size)
 
 	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
 		(float)size, 1.0f, numSegments, (int)(numSegments * fraction));
+	return true;
+}
+
+bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
+		(float)size, numSegments, (int)(numSegments * fraction));
 	return true;
 }
 
@@ -444,9 +523,13 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		{
 			return substituteStu24(treModel, true);
 		}
-		else if (strcmp(modelName, "stud.dat") == 0)
+		else if (strcasecmp(modelName, "stud.dat") == 0)
 		{
 			return substituteStud(treModel);
+		}
+		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
+		{
+			// Need to do eighth sphere substitution
 		}
 		else if (isCyli(modelName))
 		{
@@ -475,12 +558,45 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 			return substituteCircularEdge(treModel,
 				startingFraction(modelName));
 		}
+		else if (isCcyli(modelName))
+		{
+			// Need to do old-style torus substitution
+		}
 		else if (isCon(modelName))
 		{
 			int size;
 
 			sscanf(modelName + 6, "%d", &size);
 			return substituteCone(treModel, startingFraction(modelName), size);
+		}
+		else if (isOldRing(modelName))
+		{
+			int size;
+
+			sscanf(modelName + 4, "%d", &size);
+			return substituteRing(treModel, 1.0f, size);
+		}
+		else if (isRing(modelName))
+		{
+			int size;
+
+			sscanf(modelName + 7, "%d", &size);
+			return substituteRing(treModel, startingFraction(modelName), size);
+		}
+		else if (isRin(modelName))
+		{
+			int size;
+
+			sscanf(modelName + 6, "%d", &size);
+			return substituteRing(treModel, startingFraction(modelName), size);
+		}
+		else if (isTorusO(modelName))
+		{
+			// Need to do outer torus substitution
+		}
+		else if (isTorusI(modelName))
+		{
+			// Need to do inner torus substitution
 		}
 	}
 	return false;
@@ -605,22 +721,3 @@ float LDModelParser::getSeamWidth(void)
 	}
 }
 
-/*
-int LDModelParser::parseShapeVertices(LDLShapeLine *shapeLine,
-									   TREModel *treModel)
-{
-	TCVector *points = shapeLine->getPoints();
-	TREVertexArray *vertices = treModel->getVertices();
-	int i;
-	int count = shapeLine->getNumPoints();
-
-	for (i = 0; i < count; i++)
-	{
-		TREVertex vertex;
-
-		memcpy(vertex.v, (float *)points[i], sizeof(vertex.v));
-		vertices->addVertex(vertex);
-	}
-	return vertices->getCount() - count;
-}
-*/

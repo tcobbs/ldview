@@ -5,9 +5,13 @@
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCMacros.h>
 
+PFNGLMULTIDRAWELEMENTSEXTPROC TREShapeGroup::glMultiDrawElementsEXT = NULL;
+
 TREShapeGroup::TREShapeGroup(void)
 	:m_vertexStore(NULL),
 	m_indices(NULL),
+	m_stripCounts(NULL),
+	m_multiDrawIndices(NULL),
 	m_shapesPresent(0)
 {
 }
@@ -16,6 +20,7 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 	:TCObject(other),
 	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
 	m_indices((TCULongArrayArray *)TCObject::copy(other.m_indices)),
+	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
 	m_shapesPresent(other.m_shapesPresent)
 {
 }
@@ -26,27 +31,49 @@ TREShapeGroup::~TREShapeGroup(void)
 
 void TREShapeGroup::dealloc(void)
 {
+	// ************************************************************************
+	// The deleteMultiDrawIndices call MUST precede the release calls for
+	// m_indices and m_stripCounts.
+	deleteMultiDrawIndices();
+	// ************************************************************************
 	TCObject::release(m_vertexStore);
 	TCObject::release(m_indices);
+	TCObject::release(m_stripCounts);
 	TCObject::dealloc();
 }
 
 void TREShapeGroup::addShapeType(TREShapeType shapeType, int index)
 {
-	TCULongArray *newIntArray = new TCULongArray;
+	TCULongArray *newIndexArray = new TCULongArray;
 
 	if (!m_indices)
 	{
 		m_indices = new TCULongArrayArray;
 	}
-	m_indices->insertObject(newIntArray, index);
-	newIntArray->release();
+	m_indices->insertObject(newIndexArray, index);
+	newIndexArray->release();
 	m_shapesPresent |= shapeType;
+	if (!m_stripCounts)
+	{
+		m_stripCounts = new TCULongArrayArray;
+	}
+	if (shapeType >= TRESFirstStrip)
+	{
+		TCULongArray *newCountArray = new TCULongArray;
+
+		newCountArray->addValue(0);
+		m_stripCounts->insertObject(newCountArray, index);
+		newCountArray->release();
+	}
+	else
+	{
+		m_stripCounts->insertObject(NULL);
+	}
 }
 
 TCULongArray *TREShapeGroup::getIndices(TREShapeType shapeType, bool create)
 {
-	TCULong index = getIndex(shapeType);
+	TCULong index = getShapeTypeIndex(shapeType);
 
 	if (!(m_shapesPresent & shapeType))
 	{
@@ -62,7 +89,25 @@ TCULongArray *TREShapeGroup::getIndices(TREShapeType shapeType, bool create)
 	return m_indices->objectAtIndex(index);
 }
 
-TCULong TREShapeGroup::getIndex(TREShapeType shapeType)
+TCULongArray *TREShapeGroup::getStripCounts(TREShapeType shapeType, bool create)
+{
+	TCULong index = getShapeTypeIndex(shapeType);
+
+	if (!(m_shapesPresent & shapeType))
+	{
+		if (create)
+		{
+			addShapeType(shapeType, index);
+		}
+		else
+		{
+			return NULL;
+		}
+	}
+	return m_stripCounts->objectAtIndex(index);
+}
+
+TCULong TREShapeGroup::getShapeTypeIndex(TREShapeType shapeType)
 {
 	int bit;
 	TCULong index = 0;
@@ -95,6 +140,13 @@ void TREShapeGroup::addShapeIndices(TREShapeType shapeType, int firstIndex,
 	{
 		indices->addValue(firstIndex + i);
 	}
+}
+
+void TREShapeGroup::addShapeStripCount(TREShapeType shapeType, int count)
+{
+	TCULongArray *counts = getStripCounts(shapeType, true);
+
+	counts->addValue(count);
 }
 
 GLenum TREShapeGroup::modeForShapeType(TREShapeType shapeType)
@@ -175,23 +227,144 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 	}
 }
 
+// This is really ugly, but I really need to use dynamic arrays while filling
+// in the data.  Since that can't be passed to glMultiDrawElements, I have to
+// create a new copy of the data and copy it here.
+void TREShapeGroup::initMultiDrawIndices(void)
+{
+	if (!m_multiDrawIndices)
+	{
+		int shapeTypeCount = m_indices->getCount();
+		int i, j;
+
+		m_multiDrawIndices = new TCULong**[shapeTypeCount];
+		for (i = 0; i < shapeTypeCount; i++)
+		{
+			TCULongArray *stripCounts = (*m_stripCounts)[i];
+
+			if (stripCounts)
+			{
+				TCULongArray *indices = (*m_indices)[i];
+				int numStrips = stripCounts->getCount();
+
+				if (numStrips)
+				{
+					int indexOffset = 0;
+
+					m_multiDrawIndices[i] = new TCULong*[numStrips];
+					for (j = 0; j < numStrips; j++)
+					{
+						int stripCount = (*stripCounts)[j];
+
+						if (stripCount)
+						{
+							m_multiDrawIndices[i][j] = new TCULong[stripCount];
+							memcpy(m_multiDrawIndices[i][j],
+								indices->getValues() + indexOffset,
+								stripCount * sizeof(TCULong));
+						}
+						else
+						{
+							m_multiDrawIndices[i][j] = NULL;
+						}
+						indexOffset += stripCount;
+					}
+				}
+				else
+				{
+					m_multiDrawIndices[i] = NULL;
+				}
+			}
+			else
+			{
+				m_multiDrawIndices[i] = NULL;
+			}
+		}
+	}
+}
+
+// The m_multiDrawIndices array doesn't have any internal tracking of the size
+// of the various nesting levels, so we just need to get that info from the
+// other variables the same way we did when we originally created it.
+void TREShapeGroup::deleteMultiDrawIndices(void)
+{
+	if (m_multiDrawIndices)
+	{
+		int shapeTypeCount = m_indices->getCount();
+		int i, j;
+
+		for (i = 0; i < shapeTypeCount; i++)
+		{
+			TCULongArray *stripCounts = (*m_stripCounts)[i];
+
+			if (stripCounts)
+			{
+				int numStrips = stripCounts->getCount();
+
+				if (numStrips)
+				{
+					for (j = 0; j < numStrips; j++)
+					{
+						if (m_multiDrawIndices[i][j])
+						{
+							delete m_multiDrawIndices[i][j];
+						}
+					}
+				}
+			}
+			if (m_multiDrawIndices[i])
+			{
+				delete m_multiDrawIndices[i];
+			}
+		}
+		delete m_multiDrawIndices;
+	}
+}
+
 void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 {
-	TCULongArray *indexArray = getIndices(shapeType);
-
-	if (indexArray)
+	if (m_shapesPresent & shapeType)
 	{
-		TCULong *indices = indexArray->getValues();
-		int totalIndices = indexArray->getCount();
-		int stripCount = 0;
-		int i;
-		GLenum glMode = modeForShapeType(shapeType);
+		TCULongArray *indexArray = getIndices(shapeType);
+		TCULongArray *countArray = getStripCounts(shapeType);
 
-		for (i = 0; i < totalIndices; i += stripCount)
+		if (indexArray && countArray)
 		{
-			stripCount = indices[i];
-			i++;
-			glDrawElements(glMode, stripCount, GL_UNSIGNED_INT, indices + i);
+			int numStrips = countArray->getCount();
+
+			if (numStrips)
+			{
+				GLenum glMode = modeForShapeType(shapeType);
+
+				if (glMultiDrawElementsEXT)
+				{
+					int shapeTypeIndex = getShapeTypeIndex(shapeType);
+
+					if (!m_multiDrawIndices)
+					{
+						initMultiDrawIndices();
+					}
+					glMultiDrawElementsEXT(glMode,
+						(GLsizei *)countArray->getValues(), GL_UNSIGNED_INT,
+						(const void **)m_multiDrawIndices[shapeTypeIndex],
+						numStrips);
+				}
+				else
+				{
+					TCULong *indices = indexArray->getValues();
+					int indexOffset = 0;
+					int i;
+
+					for (i = 0; i < numStrips; i++)
+					{
+						int stripCount = (*countArray)[i];
+
+						glDrawElements(glMode, stripCount, GL_UNSIGNED_INT,
+							indices + indexOffset);
+						indexOffset += stripCount;
+					}
+				}
+			}
 		}
 	}
 }
@@ -329,7 +502,7 @@ int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
 
 	m_vertexStore->setup();
 	index = m_vertexStore->addVertices(vertices, normals, count);
-	addShapeIndices(shapeType, count, 1);
+	addShapeStripCount(shapeType, count);
 	addShapeIndices(shapeType, index, count);
 	return index;
 }
@@ -354,8 +527,9 @@ void TREShapeGroup::scanPoints(TCObject *scanner,
 	}
 	for (; (TREShapeType)bit <= TRESLast; bit = bit << 1)
 	{
-		scanStripPoints(getIndices((TREShapeType)bit), scanner,
-			scanPointCallback, matrix);
+		scanStripPoints(getIndices((TREShapeType)bit),
+			getStripCounts((TREShapeType)bit), scanner, scanPointCallback,
+			matrix);
 	}
 }
 
@@ -375,25 +549,27 @@ void TREShapeGroup::scanPoints(TCULongArray *indices, TCObject *scanner,
 	}
 }
 
-void TREShapeGroup::scanStripPoints(TCULongArray *indices, TCObject *scanner,
+void TREShapeGroup::scanStripPoints(TCULongArray *indices,
+									TCULongArray *stripCounts,
+									TCObject *scanner,
 									TREScanPointCallback scanPointCallback,
 									float* matrix)
 {
-	if (indices)
+	if (indices && stripCounts)
 	{
 		int i, j;
-		int count = indices->getCount();
-		int stripCount = 0;
+		int numStrips = stripCounts->getCount();
+		int indexOffset = 0;
 
-		for (i = 0; i < count; i += stripCount)
+		for (i = 0; i < numStrips; i++)
 		{
-			stripCount = (*indices)[i];
-			i++;
+			int stripCount = (*stripCounts)[i];
 			for (j = 0; j < stripCount; j++)
 			{
-				scanPoints((*indices)[i + j], scanner, scanPointCallback,
-					matrix);
+				scanPoints((*indices)[i + indexOffset], scanner,
+					scanPointCallback, matrix);
 			}
+			indexOffset += stripCount;
 		}
 	}
 }
@@ -425,8 +601,8 @@ void TREShapeGroup::unshrinkNormals(float *matrix, float *unshrinkMatrix)
 	}
 	for (; (TREShapeType)bit <= TRESLast; bit = bit << 1)
 	{
-		unshrinkStripNormals(getIndices((TREShapeType)bit), matrix,
-			unshrinkMatrix);
+		unshrinkStripNormals(getIndices((TREShapeType)bit),
+			getStripCounts((TREShapeType)bit), matrix, unshrinkMatrix);
 	}
 }
 
@@ -445,23 +621,25 @@ void TREShapeGroup::unshrinkNormals(TCULongArray *indices, float *matrix,
 	}
 }
 
-void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices, float *matrix,
-										 float *unshrinkMatrix)
+void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
+										 TCULongArray *stripCounts,
+										 float *matrix, float *unshrinkMatrix)
 {
-	if (indices)
+	if (indices && stripCounts)
 	{
 		int i, j;
-		int count = indices->getCount();
-		int stripCount = 0;
+		int numStrips = stripCounts->getCount();
+		int indexOffset = 0;
 
-		for (i = 0; i < count; i += stripCount)
+		for (i = 0; i < numStrips; i++)
 		{
-			stripCount = (*indices)[i];
-			i++;
+			int stripCount = (*stripCounts)[i];
 			for (j = 0; j < stripCount; j++)
 			{
-				unshrinkNormal((*indices)[i + j], matrix, unshrinkMatrix);
+				unshrinkNormal((*indices)[i + indexOffset],matrix,
+					unshrinkMatrix);
 			}
+			indexOffset += stripCount;
 		}
 	}
 }

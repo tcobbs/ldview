@@ -540,30 +540,122 @@ void TREModel::addQuad(TCVector *vertices)
 	m_shapes->addQuad(vertices);
 }
 
-void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
+void TREModel::quadStripToQuad(int index, TCVector *stripVertices,
+							   TCVector *stripNormals, TCVector *quadVertices,
+							   TCVector *quadNormals)
+{
+	quadVertices[0] = stripVertices[index];
+	quadVertices[1] = stripVertices[index + 1];
+	quadVertices[2] = stripVertices[index + 3];
+	quadVertices[3] = stripVertices[index + 2];
+	quadNormals[0] = stripNormals[index];
+	quadNormals[1] = stripNormals[index + 1];
+	quadNormals[2] = stripNormals[index + 3];
+	quadNormals[3] = stripNormals[index + 2];
+}
+
+void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count,
+							bool flat)
 {
 	setup();
-	m_shapes->addQuadStrip(vertices, normals, count);
+	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	{
+		m_shapes->addQuadStrip(vertices, normals, count);
+	}
+	else
+	{
+		int i;
+		TCVector quadVertices[4];
+		TCVector quadNormals[4];
+
+		for (i = 0; i < count - 3; i += 2)
+		{
+			quadStripToQuad(i, vertices, normals, quadVertices, quadNormals);
+			m_shapes->addQuad(quadVertices, quadNormals);
+		}
+	}
 }
 
 void TREModel::addQuadStrip(TCULong color, TCVector *vertices,
-							TCVector *normals, int count)
+							TCVector *normals, int count, bool flat)
 {
 	setupColored();
-	m_coloredShapes->addQuadStrip(color, vertices, normals, count);
+	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	{
+		m_coloredShapes->addQuadStrip(color, vertices, normals, count);
+	}
+	else
+	{
+		int i;
+		TCVector quadVertices[4];
+		TCVector quadNormals[4];
+
+		for (i = 0; i < count - 3; i += 2)
+		{
+			quadStripToQuad(i, vertices, normals, quadVertices, quadNormals);
+			m_coloredShapes->addQuad(color, quadVertices, quadNormals);
+		}
+	}
 }
 
-void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count)
+void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
+									 TCVector *stripNormals,
+									 TCVector *triangleVertices,
+									 TCVector *triangleNormals)
+{
+	triangleVertices[0] = stripVertices[0];
+	triangleVertices[1] = stripVertices[index];
+	triangleVertices[2] = stripVertices[index + 1];
+	triangleNormals[0] = stripNormals[0];
+	triangleNormals[1] = stripNormals[index];
+	triangleNormals[2] = stripNormals[index + 1];
+}
+
+void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count,
+							  bool flat)
 {
 	setup();
-	m_shapes->addTriangleFan(vertices, normals, count);
+	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	{
+		m_shapes->addTriangleFan(vertices, normals, count);
+	}
+	else
+	{
+		int i;
+		TCVector triangleVertices[3];
+		TCVector triangleNormals[3];
+
+		for (i = 1; i < count - 1; i++)
+		{
+			triangleFanToTriangle(i, vertices, normals, triangleVertices,
+				triangleNormals);
+			m_shapes->addTriangle(triangleVertices, triangleNormals);
+		}
+	}
 }
 
 void TREModel::addTriangleFan(TCULong color, TCVector *vertices,
-							  TCVector *normals, int count)
+							  TCVector *normals, int count, bool flat)
 {
 	setupColored();
-	m_coloredShapes->addTriangleFan(color, vertices, normals, count);
+	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	{
+		m_coloredShapes->addTriangleFan(color, vertices, normals, count);
+	}
+	else
+	{
+		int i;
+		TCVector triangleVertices[3];
+		TCVector triangleNormals[3];
+
+		for (i = 1; i < count - 1; i++)
+		{
+			triangleFanToTriangle(i, vertices, normals, triangleVertices,
+				triangleNormals);
+			m_coloredShapes->addTriangle(color, triangleVertices,
+				triangleNormals);
+		}
+	}
 }
 
 TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model)
@@ -604,10 +696,6 @@ void TREModel::flatten(void)
 		{
 			m_subModels->removeAll();
 		}
-	}
-	else
-	{
-		printf("re-flatten.\n");
 	}
 }
 
@@ -715,7 +803,14 @@ void TREModel::flattenShapes(TREShapeType shapeType,
 		dstIndices->addValue(dstVertices->getCount());
 		transformVertex(vertex, matrix);
 		dstVertices->addVertex(vertex);
-		if (shapeSize > 2)
+		if (srcNormals)
+		{
+			TREVertex normal = (*srcNormals)[index];
+
+			transformNormal(normal, matrix);
+			dstNormals->addVertex(normal);
+		}
+		else if (shapeSize > 2)
 		{
 			if (i % shapeSize == 0)
 			{
@@ -733,13 +828,6 @@ void TREModel::flattenShapes(TREShapeType shapeType,
 			}
 			dstNormals->addVertex(normalVertex);
 		}
-		else if (srcNormals)
-		{
-			TREVertex normal = (*srcNormals)[index];
-
-			transformNormal(normal, matrix);
-			dstNormals->addVertex(normal);
-		}
 		if (colorSet)
 		{
 			dstColors->addValue(color);
@@ -751,58 +839,36 @@ void TREModel::flattenShapes(TREShapeType shapeType,
 	}
 }
 
-void TREModel::flattenStrips(TREShapeType shapeType,
-							 TREVertexArray *dstVertices,
+void TREModel::flattenStrips(TREVertexArray *dstVertices,
 							 TREVertexArray *dstNormals,
 							 TCULongArray *dstColors,
 							 TCULongArray *dstIndices,
+							 TCULongArray *dstStripCounts,
 							 TREVertexArray *srcVertices,
 							 TREVertexArray *srcNormals,
 							 TCULongArray *srcColors,
-							 TCULongArray *srcIndices, float *matrix,
+							 TCULongArray *srcIndices,
+							 TCULongArray *srcStripCounts, float *matrix,
 							 TCULong color, bool colorSet)
 {
-	int shapeSize = TREShapeGroup::numPointsForShapeType(shapeType);
-	TCVector normal;
-	TCVector points[3];
-	TREVertex normalVertex;
 	int i, j;
-	int count = srcIndices->getCount();
-	int stripCount = 0;
+	int numStrips = srcStripCounts->getCount();
+	int indexOffset = 0;
 
-	for (i = 0; i < count; i += stripCount)
+	for (i = 0; i < numStrips; i++)
 	{
-		stripCount = (*srcIndices)[i];
+		int stripCount = (*srcStripCounts)[i];
 
-		dstIndices->addValue(stripCount);
-		i++;
+		dstStripCounts->addValue(stripCount);
 		for (j = 0; j < stripCount; j++)
 		{
-			int index = (*srcIndices)[i + j];
+			int index = (*srcIndices)[j + indexOffset];
 			TREVertex vertex = (*srcVertices)[index];
 
 			dstIndices->addValue(dstVertices->getCount());
 			transformVertex(vertex, matrix);
 			dstVertices->addVertex(vertex);
-			if (shapeSize > 2)
-			{
-				if (i % shapeSize == 0)
-				{
-					int j;
-
-					for (j = 0; j < 3; j++)
-					{
-						TREVertex v = (*srcVertices)[(*srcIndices)[i + j]];
-
-						transformVertex(v, matrix);
-						memcpy((float *)points[j], v.v, sizeof(v.v));
-					}
-					normal = TREVertexStore::calcNormal(points);
-					TREVertexStore::initVertex(normalVertex, normal);
-				}
-				dstNormals->addVertex(normalVertex);
-			}
-			else if (srcNormals)
+			if (srcNormals)
 			{
 				TREVertex normal = (*srcNormals)[index];
 
@@ -818,6 +884,7 @@ void TREModel::flattenStrips(TREShapeType shapeType,
 				dstColors->addValue((*srcColors)[index]);
 			}
 		}
+		indexOffset += stripCount;
 	}
 }
 
@@ -859,9 +926,15 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 					}
 					else
 					{
-						flattenStrips(shapeType, dstVertices, dstNormals,
-							dstColors, dstIndices, srcVertices, srcNormals,
-							srcColors, srcIndices, matrix, color, colorSet);
+						TCULongArray *dstStripCounts =
+							dstShapes->getStripCounts((TREShapeType)bit, true);
+						TCULongArray *srcStripCounts =
+							srcShapes->getStripCounts((TREShapeType)bit);
+
+						flattenStrips(dstVertices, dstNormals, dstColors,
+							dstIndices, dstStripCounts, srcVertices, srcNormals,
+							srcColors, srcIndices, srcStripCounts, matrix,
+							color, colorSet);
 					}
 				}
 			}
@@ -1122,7 +1195,6 @@ void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 	TCVector *points;
 	TCVector *normals;
 	int i;
-	TCVector top = center;
 	TCVector normal = TCVector(0.0f, -1.0f, 0.0f);
 
 	if (usedSegments == -1)
@@ -1142,7 +1214,7 @@ void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 		setCirclePoint(angle, radius, center, points[i + 1]);
 		normals[i + 1] = normal;
 	}
-	addTriangleFan(points, normals, vertexCount);
+	addTriangleFan(points, normals, vertexCount, true);
 	delete[] points;
 	delete[] normals;
 }
@@ -1206,7 +1278,7 @@ void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
 			points[quarterSegments - j + 1] = p1;
 			normals[quarterSegments - j + 1] = normal;
 		}
-		addTriangleFan(points, normals, vertexCount);
+		addTriangleFan(points, normals, vertexCount, true);
 		delete[] points;
 		delete[] normals;
 	}
@@ -1325,7 +1397,7 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 					(points[i * 2 + 1] - topNormalPoint).normalize();
 			}
 		}
-		addQuadStrip(points, normals, vertexCount);
+		addQuadStrip(points, normals, vertexCount, height == 0.0f);
 		delete[] points;
 		delete[] normals;
 /*
@@ -1372,35 +1444,10 @@ void TREModel::addCircularEdge(const TCVector& center, float radius,
 	delete[] allPoints;
 }
 
-void TREModel::addDisk(const TCVector& center, float radius, int numSegments,
-					   int usedSegments)
+void TREModel::addRing(const TCVector& center, float radius1, float radius2,
+					   int numSegments, int usedSegments)
 {
-	int i;
-	int vertexCount;
-	TCVector *points;
-	TCVector *normals;
-	TCVector normal = TCVector(0.0f, 1.0f, 0.0f);
-
-	if (usedSegments == -1)
-	{
-		usedSegments = numSegments;
-	}
-	vertexCount = usedSegments + 2;
-	points = new TCVector[vertexCount];
-	normals = new TCVector[vertexCount];
-	points[0] = center;
-	normals[0] = normal;
-	for (i = 0; i <= usedSegments; i++)
-	{
-		float angle;
-
-		angle = -2.0f * (float)M_PI / numSegments * i;
-		setCirclePoint(angle, radius, center, points[i + 1]);
-		normals[i + 1] = normal;
-	}
-	addTriangleFan(points, normals, vertexCount);
-	delete[] points;
-	delete[] normals;
+	addOpenCone(center, radius1, radius2, 0.0f, numSegments, usedSegments);
 }
 
 void TREModel::calculateBoundingBox(void)
@@ -1521,15 +1568,31 @@ void TREModel::scanBoundingBoxPoint(const TCVector &point)
 	}
 }
 
+// When you shrink a part, all the normals end up getting lengthened by an
+// amount that is based on their direction and the magnitude of the shrinkage
+// matrix.  If that isn't adjusted for, then all normals have to be normalized
+// by OpenGL, which slows things down.  This functions shortens all the normals
+// in a part by the appropriate amount based on the shrinkage matrix.  Then when
+// the part is drawn with the shrinkage matrix, they automatically get adjusted
+// back to being unit length, and we don't have to force OpenGL to normalize
+// them.
+//
+// Note: At first glance, this would appear to mess up parts that are mirror
+// images of each other.  Since one part will reference the other with a mirror
+// matrix, it makes it possible to shrink the normals twice.  However, since
+// all parts get flattenned, and the flatenning process re-normalizes the
+// normals to be unit lenght, everything is fine.  If it ever becomes desirable
+// to allow parts not to be flattened, things will get more complicated.
 void TREModel::unshrinkNormals(float *scaleMatrix)
 {
+	// If the same part is referenced twice in a model, we'll get here twice.
+	// We only want to adjust the normals once, or we'll be in trouble, so
+	// record the fact that the normals have been adjusted.
 	if (!m_flags.unshrunkNormals)
 	{
 		float identityMatrix[16];
-		float unshrinkMatrix[16];
 
 		TCVector::initIdentityMatrix(identityMatrix);
-		TCVector::invertMatrix(scaleMatrix, unshrinkMatrix);
 		unshrinkNormals(identityMatrix, scaleMatrix);
 		m_flags.unshrunkNormals = true;
 	}

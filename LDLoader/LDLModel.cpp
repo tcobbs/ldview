@@ -68,10 +68,7 @@ void LDLModel::dealloc(void)
 {
 	delete m_filename;
 	delete m_name;
-	if (m_fileLines)
-	{
-		m_fileLines->release();
-	}
+	TCObject::release(m_fileLines);
 	sm_modelCount--;
 	TCObject::dealloc();
 }
@@ -628,6 +625,7 @@ bool LDLModel::parse(void)
 						{
 							sendAlert(fileLine->getError());
 						}
+						replacementLines->release();
 						// ****************************************************
 						// Note the use of continue below.  I really shy away
 						// from using it, but I'm goint to do so here.

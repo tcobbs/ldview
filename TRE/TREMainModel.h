@@ -17,12 +17,20 @@ public:
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual TREModel *modelNamed(const char *name);
 	virtual void registerModel(TREModel *model);
-	bool getCompilePartsFlag(void) { return m_mainFlags.compileParts; }
-	bool getCompileAllFlag(void) { return m_mainFlags.compileAll; }
+	bool getCompilePartsFlag(void) { return m_mainFlags.compileParts != false; }
+	bool getCompileAllFlag(void) { return m_mainFlags.compileAll != false; }
 	void setEdgeLinesFlag(bool value) { m_mainFlags.edgeLines = value; }
-	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines; }
+	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines != false; }
 	void setTwoSidedLightingFlag(bool value);
-	bool getTwoSidedLightingFlag(void) { return m_mainFlags.twoSidedLighting; }
+	bool getTwoSidedLightingFlag(void)
+	{
+		return m_mainFlags.twoSidedLighting != false;
+	}
+	void setUseFlatStripsFlag(bool value) { m_mainFlags.useFlatStrips = value; }
+	bool getUseFlatStripsFlag(void)
+	{
+		return m_mainFlags.useFlatStrips != false;
+	}
 	virtual float getMaxRadiusSquared(const TCVector &center);
 	virtual float getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
@@ -51,6 +59,7 @@ protected:
 		bool compiled:1;
 		bool edgeLines:1;
 		bool twoSidedLighting:1;
+		bool useFlatStrips:1;
 	} m_mainFlags;
 };
 
