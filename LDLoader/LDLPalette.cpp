@@ -129,6 +129,7 @@ void LDLPalette::init(void)
 		m_colors[i].ditherColor.b = 0;
 		m_colors[i].ditherColor.a = 0;
 		m_colors[i].edgeColorNumber = 255;
+		m_colors[i].luminance = 1.0f;
 		initSpecularAndShininess(m_colors[i]);
 	}
 	initStandardColors();
@@ -158,6 +159,24 @@ void LDLPalette::initStandardColors(void)
 		m_colors[i].color.a = (TCByte)standardColors[ofs + 3];
 		m_colors[i].ditherColor = m_colors[i].color;
 		m_colors[i].edgeColorNumber = (int)standardColors[ofs + 4];
+	}
+	for (i = 0; i < 256; i++)
+	{
+		LDLColorInfo &colorInfo = m_colors[i];
+
+		if (colorInfo.color.r == 0 && colorInfo.color.g == 0 &&
+			colorInfo.color.b == 0 && colorInfo.color.a == 0 &&
+			colorInfo.edgeColorNumber == 255)
+		{
+			if (i & 0x20)
+			{
+				colorInfo = m_colors[i % 16 + 32];
+			}
+			else
+			{
+				colorInfo = m_colors[i % 16];
+			}
+		}
 	}
 }
 
@@ -195,14 +214,20 @@ void LDLPalette::initOtherColor(int index, TCByte r, TCByte g, TCByte b,
 	m_colors[index].edgeColorNumber = 0;
 }
 
+void LDLPalette::initSpecular(LDLColorInfo &colorInfo, float sr, float sg,
+							  float sb, float sa, float shininess)
+{
+	colorInfo.specular[0] = sr;
+	colorInfo.specular[1] = sg;
+	colorInfo.specular[2] = sb;
+	colorInfo.specular[3] = sa;
+	colorInfo.shininess = shininess;
+}
+
 void LDLPalette::initSpecular(int index, float sr, float sg, float sb, float sa,
 							  float shininess)
 {
-	m_colors[index].specular[0] = sr;
-	m_colors[index].specular[1] = sg;
-	m_colors[index].specular[2] = sb;
-	m_colors[index].specular[3] = sa;
-	m_colors[index].shininess = shininess;
+	initSpecular(m_colors[index], sr, sg, sb, sa, shininess);
 }
 
 void LDLPalette::initOtherColors(void)
@@ -368,7 +393,8 @@ void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 
 bool LDLPalette::isColorComment(const char *comment)
 {
-	if (stringHasCaseInsensitivePrefix(comment, "0 color "))
+	if (stringHasCaseInsensitivePrefix(comment, "0 color ") ||
+		stringHasCaseInsensitivePrefix(comment, "0 !colour "))
 	{
 		return true;
 	}
@@ -378,15 +404,162 @@ bool LDLPalette::isColorComment(const char *comment)
 	}
 }
 
-void LDLPalette::parseColorComment(const char *comment)
+bool LDLPalette::parseColorComment(const char *comment)
 {
 	if (stringHasCaseInsensitivePrefix(comment, "0 color "))
 	{
-		parseLDLiteColorComment(comment);
+		return parseLDLiteColorComment(comment);
+	}
+	else if (stringHasCaseInsensitivePrefix(comment, "0 !colour "))
+	{
+		return parseLDrawOrgColorComment(comment);
+	}
+	else
+	{
+		return false;
 	}
 }
 
-void LDLPalette::parseLDLiteColorComment(const char *comment)
+bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
+{
+	char *itemSpot = strcasestr(comment, "CODE ");
+	int colorNumber;
+	int colorValue;
+	int edgeColorNumber;
+	int alpha = 255;
+	int luminance = 255;
+	LDLColor color;
+	LDLColor ditherColor;
+	LDLColorInfo *colorInfo;
+	bool chrome = false;
+	bool rubber = false;
+	bool metal = false;
+
+	if (!itemSpot)
+	{
+		debugPrintf("Couldn't find color CODE in color meta-comment:\n%s\n",
+			comment);
+		return false;
+	}
+	if (sscanf(itemSpot + 5, "%d", &colorNumber) != 1)
+	{
+		debugPrintf("Error parsing color CODE in color meta-comment:\n%s\n",
+			comment);
+		return false;
+	}
+	itemSpot = strcasestr(comment, "VALUE ");
+	if (!itemSpot)
+	{
+		debugPrintf("Couldn't find color VALUE in color meta-comment:\n%s\n",
+			comment);
+		return false;
+	}
+	if (sscanf(itemSpot + 6, "#%x", &colorValue) != 1 &&
+		sscanf(itemSpot + 6, "0x%x", &colorValue) != 1)
+	{
+		debugPrintf("Error parsing color VALUE in color meta-comment:\n%s\n",
+			comment);
+		return false;
+	}
+	itemSpot = strcasestr(comment, "EDGE ");
+	if (!itemSpot)
+	{
+		debugPrintf("Couldn't find color EDGE in color meta-comment:\n%s\n",
+			comment);
+		return false;
+	}
+	if (sscanf(itemSpot + 5, "#%x", &edgeColorNumber) != 1 &&
+		sscanf(itemSpot + 5, "0x%x", &edgeColorNumber) != 1)
+	{
+		if (sscanf(itemSpot + 5, "%d", &edgeColorNumber) != 1)
+		{
+			debugPrintf("Error parsing color VALUE in color "
+				"meta-comment:\n%s\n", comment);
+			return false;
+		}
+	}
+	else
+	{
+		edgeColorNumber &= 0xFFFFFF;
+		edgeColorNumber |= 0x2000000;
+	}
+	itemSpot = strcasestr(comment, "ALPHA ");
+	if (itemSpot)
+	{
+		if (sscanf(itemSpot + 6, "%d", &alpha) == 1)
+		{
+			// This is a little odd, but we want 128 to map to our standard
+			// transparent alpha (transA), anything below transZ to smoothly map
+			// from 0 to transA, and anything transA to smoothly map from
+			// transA to 255.
+			if (alpha == 128)
+			{
+				alpha = transA;
+			}
+			else if (alpha < 128)
+			{
+				alpha = alpha * transA / 128;
+			}
+			else
+			{
+				alpha = transA + (alpha - 127) * (255 - transA) / 128;
+			}
+		}
+		else
+		{
+			debugPrintf("Error parsing color ALPHA in color meta-comment:\n"
+				"%s\n", comment);
+			return false;
+		}
+	}
+	itemSpot = strcasestr(comment, "LUMINANCE ");
+	if (itemSpot)
+	{
+		if (sscanf(itemSpot + 10, "%d", &luminance) != 1)
+		{
+			debugPrintf("Error parsing color LUMINANCE in color meta-comment:\n"
+				"%s\n", comment);
+			return false;
+		}
+	}
+	if (strcasestr(comment, "CHROME"))
+	{
+		chrome = true;
+	}
+	if (strcasestr(comment, "RUBBER"))
+	{
+		rubber = true;
+	}
+	if (strcasestr(comment, "METAL"))
+	{
+		metal = true;
+	}
+	color.r = (TCByte)(colorValue >> 16);
+	color.g = (TCByte)(colorValue >> 8);
+	color.b = (TCByte)colorValue;
+	color.a = (TCByte)alpha;
+	ditherColor = color;
+	colorInfo = updateColor(colorNumber, color, ditherColor, edgeColorNumber,
+		(float)luminance / 255.0f);
+	if (colorInfo)
+	{
+		if (rubber)
+		{
+			initSpecular(*colorInfo, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
+		}
+		else if (chrome)
+		{
+			initSpecular(*colorInfo, 0.9f, 1.2f, 1.5f, -100.0f, 5.0f);
+		}
+		else if (metal)
+		{
+			initSpecular(*colorInfo, 0.9f, 0.9f, 1.5f, -100.0f, 5.0f);
+		}
+	}
+	return true;
+}
+
+bool LDLPalette::parseLDLiteColorComment(const char *comment)
 {
 	int colorNumber;
 	int edgeColorNumber;
@@ -398,7 +571,6 @@ void LDLPalette::parseLDLiteColorComment(const char *comment)
 	{
 		LDLColor color;
 		LDLColor ditherColor;
-		LDLColorInfo *colorInfo;
 
 		color.r = (TCByte)r;
 		color.g = (TCByte)g;
@@ -408,27 +580,43 @@ void LDLPalette::parseLDLiteColorComment(const char *comment)
 		ditherColor.g = (TCByte)dg;
 		ditherColor.b = (TCByte)db;
 		ditherColor.a = (TCByte)da;
-		if (colorNumber < 512 && colorNumber >= 0)
-		{
-			colorInfo = m_colors + colorNumber;
-		}
-		else
-		{
-			// A custom color was requested, but it won't fit into our main
-			// color array.  So add a new item in the m_customColors array, and
-			// it will be noticed during look-up.
-			CustomColor *customColor = new CustomColor;
-
-			customColor->colorNumber = colorNumber;
-			colorInfo = &customColor->colorInfo;
-			m_customColors->addObject(customColor);
-			customColor->release();
-		}
-		colorInfo->color = color;
-		colorInfo->ditherColor = ditherColor;
-		colorInfo->edgeColorNumber = edgeColorNumber;
-		initSpecularAndShininess(*colorInfo);
+		updateColor(colorNumber, color, ditherColor, edgeColorNumber);
+		return true;
 	}
+	else
+	{
+		return false;
+	}
+}
+
+LDLColorInfo *LDLPalette::updateColor(int colorNumber, const LDLColor &color,
+									  const LDLColor &ditherColor,
+									  int edgeColorNumber, float luminance)
+{
+	LDLColorInfo *colorInfo;
+
+	if (colorNumber < 512 && colorNumber >= 0)
+	{
+		colorInfo = m_colors + colorNumber;
+	}
+	else
+	{
+		// A custom color was requested, but it won't fit into our main
+		// color array.  So add a new item in the m_customColors array, and
+		// it will be noticed during look-up.
+		CustomColor *customColor = new CustomColor;
+
+		customColor->colorNumber = colorNumber;
+		colorInfo = &customColor->colorInfo;
+		m_customColors->addObject(customColor);
+		customColor->release();
+	}
+	colorInfo->color = color;
+	colorInfo->ditherColor = ditherColor;
+	colorInfo->edgeColorNumber = edgeColorNumber;
+	colorInfo->luminance = luminance;
+	initSpecularAndShininess(*colorInfo);
+	return colorInfo;
 }
 
 int LDLPalette::getColorNumberForRGB(TCByte r, TCByte g, TCByte b,

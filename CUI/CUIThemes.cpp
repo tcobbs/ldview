@@ -16,6 +16,9 @@ PFNGETWINDOWTHEME CUIThemes::sm_getWindowTheme = NULL;
 PFNGETTHEMECOLOR CUIThemes::sm_getThemeColor = NULL;
 PFNSETTHEMEAPPPROPERTIED CUIThemes::sm_setThemeAppProperties = NULL;
 PFNGETTHEMERECT CUIThemes::sm_getThemeRect = NULL;
+PFNGETTHEMETEXTEXTENT CUIThemes::sm_getThemeTextExtent = NULL;
+PFNDDRAWTHEMEPARENTBACKGROUND CUIThemes::sm_drawThemeParentBackground = NULL;
+PFNGETTHEMEPARTSIZE CUIThemes::sm_getThemePartSize = NULL;
 
 CUIThemes::CUIThemesCleanup::~CUIThemesCleanup(void)
 {
@@ -65,12 +68,22 @@ void CUIThemes::init(void)
 				"SetThemeAppProperties");
 			sm_getThemeRect = (PFNGETTHEMERECT)GetProcAddress(sm_hModThemes,
 				"GetThemeRect");
+			sm_getThemeTextExtent =
+				(PFNGETTHEMETEXTEXTENT)GetProcAddress(sm_hModThemes,
+				"GetThemeTextExtent");
+			sm_drawThemeParentBackground =
+				(PFNDDRAWTHEMEPARENTBACKGROUND)GetProcAddress(sm_hModThemes,
+				"DrawThemeParentBackground");
+			sm_getThemePartSize =
+				(PFNGETTHEMEPARTSIZE)GetProcAddress(sm_hModThemes,
+				"GetThemePartSize");
 
 			if (sm_openThemeData && sm_closeThemeData && sm_drawThemeBackground
 				&& sm_drawThemeText && sm_getThemeBackgroundContentRect &&
 				sm_drawThemeEdge && sm_setWindowTheme && sm_getWindowTheme &&
 				sm_getThemeColor && sm_setThemeAppProperties &&
-				sm_getThemeRect)
+				sm_getThemeRect && sm_getThemeTextExtent &&
+				sm_drawThemeParentBackground && sm_getThemePartSize)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -236,3 +249,46 @@ HRESULT CUIThemes::getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
 	}
 }
 
+HRESULT CUIThemes::getThemeTextExtent(HTHEME hTheme, HDC hdc, int iPartId,
+									  int iStateId, LPCWSTR pszText,
+									  int iCharCount, DWORD dwTextFlags,
+									  const RECT *pBoundingRect,
+									  RECT *pExtentRect)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemeTextExtent(hTheme, hdc, iPartId, iStateId, pszText,
+			iCharCount, dwTextFlags, pBoundingRect, pExtentRect);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+HRESULT CUIThemes::drawThemeParentBackground(HWND hwnd, HDC hdc, RECT* prc)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_drawThemeParentBackground(hwnd, hdc, prc);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+HRESULT CUIThemes::getThemePartSize(HTHEME hTheme, HDC hdc, int iPartId,
+									int iStateId, RECT *prc,
+									enum THEMESIZE eSize, SIZE *psz)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemePartSize(hTheme, hdc, iPartId, iStateId, prc, eSize,
+			psz);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}

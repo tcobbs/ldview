@@ -88,6 +88,26 @@
         </widget>
     </vbox>
 </widget>
+<toolbars>
+	<toolbar dock="2">
+		<property name="name">
+            <cstring>toolbar</cstring>
+        </property>
+        <property name="label">
+            <string>Tools</string>
+        </property>
+		<action name="fileOpenAction"/>
+		<action name="fileSaveAction"/>
+		<action name="fileReloadAction"/>
+		<separator/>
+		<action name="toolbarWireframeAction"/>
+		<action name="toolbarSeamsAction"/>
+		<action name="toolbarEdgeAction"/>
+		<action name="toolbarPrimitiveSubstitutionAction"/>
+		<action name="toolbarLightingAction"/>
+		<action name="editPreferencesAction"/>
+	</toolbar>
+</toolbars>
 <menubar>
     <property name="name">
         <cstring>menubar</cstring>
@@ -112,6 +132,7 @@
 		<action name="viewFullScreenAction"/>
         <action name="viewResetViewAction"/>
         <action name="viewShowErrorsAction"/>
+		<action name="viewToolBarAction"/>
         <action name="viewStatusBarAction"/>
 		<action name="viewZoomToFitAction"/>
 		<action name="viewAngleGroup"/>
@@ -164,6 +185,106 @@
         </property>
         <property name="accel">
             <number>4194383</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarWireframeAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_wireframe.png</iconset>
+        </property>
+        <property name="text">
+            <string>Wireframe</string>
+        </property>
+        <property name="menuText">
+            <string>Wireframe</string>
+        </property>
+		<property name="toolTip">
+			<string>Wireframe</string>
+		</property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+	</action>
+    <action>
+        <property name="name">
+            <cstring>toolbarSeamsAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_seams.png</iconset>
+        </property>
+        <property name="text">
+            <string>Seams</string>
+        </property>
+        <property name="menuText">
+            <string>Seams</string>
+        </property>
+		<property name="toolTip">
+            <string>Seams</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarEdgeAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_edge.png</iconset>
+        </property>
+        <property name="text">
+            <string>Edge</string>
+        </property>
+        <property name="menuText">
+            <string>Edge</string>
+        </property>
+        <property name="toolTip">
+            <string>Edge</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarPrimitiveSubstitutionAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_privsubs.png</iconset>
+        </property>
+        <property name="text">
+            <string>Primitive substitution</string>
+        </property>
+        <property name="menuText">
+            <string>Primitive substitution</string>
+        </property>
+        <property name="toolTip">
+            <string>Primitive Substitution</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarLightingAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_light.png</iconset>
+        </property>
+        <property name="text">
+            <string>Lighting</string>
+        </property>
+        <property name="menuText">
+            <string>Lighting</string>
+        </property>
+        <property name="toolTip">
+            <string>Lighting</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
         </property>
     </action>
     <action>
@@ -255,12 +376,35 @@
         <property name="text">
             <string>Preferences</string>
         </property>
+        <property name="iconSet">
+            <iconset>toolbar_preferences.png</iconset>
+        </property>
         <property name="menuText">
             <string>&amp;Preferences...</string>
         </property>
         <property name="accel">
             <number>6291536</number>
         </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewToolBarAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Toolbar</string>
+        </property>
+        <property name="menuText">
+            <string>Toolbar</string>
+        </property>
+        <property name="toolTip">
+            <string>Toolbar</string>
+        </property>
+        <property name="statusTip">
+            <string>Show or hide toolbar</string>
+		</property>
     </action>
     <action>
         <property name="name">
@@ -361,6 +505,9 @@
         </property>
         <property name="text">
             <string>Reload</string>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_reload.png</iconset>
         </property>
         <property name="menuText">
             <string>&amp;Reload</string>
@@ -705,6 +852,42 @@
         <slot>editPreferences()</slot>
     </connection>
     <connection>
+        <sender>viewToolBarAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>viewToolBar(bool)</slot>
+    </connection>
+	<connection>
+		<sender>toolbarWireframeAction</sender>
+		<signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>toolbarWireframe(bool)</slot>
+    </connection>
+    <connection>
+        <sender>toolbarEdgeAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>toolbarEdge(bool)</slot>
+    </connection>
+	<connection>
+		<sender>toolbarPrimitiveSubstitutionAction</sender>
+		<signal>toggled(bool)</signal>
+		<receiver>LDView</receiver>
+        <slot>toolbarPrimitiveSubstitution(bool)</slot>
+	</connection>
+    <connection>
+        <sender>toolbarLightingAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>toolbarLighting(bool)</slot>
+    </connection>
+	<connection>
+		<sender>toolbarSeamsAction</sender>
+		<signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>toolbarSeams(bool)</slot>
+    </connection>
+    <connection>
         <sender>viewStatusBarAction</sender>
         <signal>toggled(bool)</signal>
         <receiver>LDView</receiver>
@@ -845,6 +1028,12 @@
     <slot>editPreferences()</slot>
     <slot>closeEvent( QCloseEvent * event )</slot>
     <slot>viewStatusBar( bool flag )</slot>
+	<slot>viewToolBar( bool flag )</slot>
+	<slot>toolbarWireframe( bool flag )</slot>
+	<slot>toolbarEdge( bool flag )</slot>
+	<slot>toolbarPrimitiveSubstitution( bool flag )</slot>
+	<slot>toolbarLighting( bool flag )</slot>
+	<slot>toolbarSeams( bool flag )</slot>
 	<slot>viewFullScreen()</slot>
     <slot>viewResetView()</slot>
     <slot>helpOpenGLDriverInfo()</slot>

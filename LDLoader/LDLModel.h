@@ -24,6 +24,8 @@ typedef enum
 	BFCForcedOnState
 } BFCState;
 
+typedef bool (*LDLFileCaseCallback)(char *filename);
+
 class LDLModel : public TCObject
 {
 public:
@@ -40,7 +42,7 @@ public:
 	virtual void setFilename(const char *filename);
 	virtual const char *getName(void) { return m_name; }
 	virtual void setName(const char *name);
-	virtual bool load(FILE *file);
+	virtual bool load(FILE *file, bool trackProgress = true);
 	virtual void print(int indent);
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
@@ -74,13 +76,23 @@ public:
 
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
+	LDLMainModel *getMainModel(void) { return m_mainModel; }
 
 	static const char *lDrawDir(void);
 	static void setLDrawDir(const char *value);
+	static void setFileCaseCallback(LDLFileCaseCallback value)
+	{
+		fileCaseCallback = value;
+	}
+	static LDLFileCaseCallback getFileCaseCallback(void)
+	{
+		return fileCaseCallback;
+	}
 protected:
 	virtual void dealloc(void);
 	virtual FILE *openSubModelNamed(const char* subModelName,
 		char* subModelPath);
+	virtual FILE *openModelFile(const char *filename);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char  *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);
@@ -131,6 +143,7 @@ protected:
 
 	static char *sm_systemLDrawDir;
 	static int sm_modelCount;
+	static LDLFileCaseCallback fileCaseCallback;
 	static class LDLModelCleanup
 	{
 	public:

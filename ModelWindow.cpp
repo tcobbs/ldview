@@ -242,38 +242,7 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 {
 	if (alert)
 	{
-		if (strcmp(alert->getSource(), LD_LIBRARY_UPDATER) == 0)
-		{
-			debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
-				alert->getProgress());
-			if (alert->getProgress() == 1.0f)
-			{
-				if (alert->getExtraInfo())
-				{
-					if (strcmp((*(alert->getExtraInfo()))[0], "None") == 0)
-					{
-						PostMessage(hParentWindow, WM_COMMAND,
-							MAKELONG(BN_CLICKED, LIBRARY_UPDATE_NONE), 0);
-					}
-					else
-					{
-						PostMessage(hParentWindow, WM_COMMAND,
-							MAKELONG(BN_CLICKED, LIBRARY_UPDATE_FINISHED), 0);
-					}
-				}
-				else
-				{
-					PostMessage(hParentWindow, WM_COMMAND,
-						MAKELONG(BN_CLICKED, LIBRARY_UPDATE_CANCELED), 0);
-				}
-			}
-			else
-			{
-				PostMessage(hProgressBar, PBM_SETPOS,
-					(int)(alert->getProgress() * 100), 0);
-			}
-		}
-		else
+		if (strcmp(alert->getSource(), LD_LIBRARY_UPDATER) != 0)
 		{
 			bool showErrors = true;
 
@@ -2905,6 +2874,9 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
 	bool origForceZoomToFit = modelViewer->getForceZoomToFit();
 	TCVector origCameraPosition = modelViewer->getCamera().getPosition();
+	float origXPan = modelViewer->getXPan();
+	float origYPan = modelViewer->getYPan();
+	bool origAutoCenter = modelViewer->getAutoCenter();
 	int newWidth = 1600;
 	int newHeight = 1200;
 	int numXTiles, numYTiles;
@@ -3027,6 +2999,8 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	{
 		modelViewer->setForceZoomToFit(origForceZoomToFit);
 		modelViewer->getCamera().setPosition(origCameraPosition);
+		modelViewer->setXYPan(origXPan, origYPan);
+		modelViewer->setAutoCenter(origAutoCenter);
 	}
 	offscreenActive = false;
 	modelViewer->setSlowClear(oldSlowClear);

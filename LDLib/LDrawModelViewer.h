@@ -107,6 +107,9 @@ class LDrawModelViewer: public TCObject
 		float getYRotate(void) { return yRotate; }
 		float getZRotate(void) { return zRotate; }
 		void panXY(int xValue, int yValue);
+		float getXPan(void) { return xPan; }
+		float getYPan(void) { return yPan; }
+		void setXYPan(float xValue, float yValue);
 		void setRotationSpeed(float value);
 		void setCameraXRotate(float value) { cameraXRotate = value; }
 		void setCameraYRotate(float value) { cameraYRotate = value; }
@@ -175,6 +178,8 @@ class LDrawModelViewer: public TCObject
 		float getWireframeLineWidth(void) { return wireframeLineWidth; }
 		virtual void setProcessLDConfig(bool value);
 		bool getProcessLDConfig(void) { return flags.processLDConfig; }
+		void setAutoCenter(bool value) { flags.autoCenter = value; }
+		bool getAutoCenter(void) { return flags.autoCenter; }
 		virtual void setForceZoomToFit(bool value);
 		bool getForceZoomToFit(void) { return flags.forceZoomToFit; }
 		virtual bool recompile(void);

@@ -65,6 +65,36 @@ void LDView::viewStatusBar(bool flag)
     modelViewer->doViewStatusBar(flag);
 }
 
+void LDView::viewToolBar(bool flag)
+{
+    modelViewer->doViewToolBar(flag);
+}
+
+void LDView::toolbarWireframe(bool flag)
+{
+    modelViewer->doWireframe(flag);
+}
+
+void LDView::toolbarEdge(bool flag)
+{
+    modelViewer->doEdge(flag);
+}
+
+void LDView::toolbarLighting(bool flag)
+{
+    modelViewer->doLighting(flag);
+}
+
+void LDView::toolbarPrimitiveSubstitution(bool flag)
+{
+    modelViewer->doPrimitiveSubstitution(flag);
+}
+
+void LDView::toolbarSeams(bool flag)
+{
+    modelViewer->doSeams(flag);
+}
+
 void LDView::viewFullScreen()
 {
 	modelViewer->doViewFullScreen();

@@ -273,7 +273,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual void setStatusText(HWND hStatus, int part, char *text);
 		virtual void initFail(char *reason);
 		void ldlErrorCallback(LDLError *error);
-		void progressAlertCallback(TCProgressAlert *error);
+		void progressAlertCallback(TCProgressAlert *alert);
 		void populateErrorInfos(void);
 		BOOL setAllErrorsSelected(bool selected);
 		void setupMultisample(void);

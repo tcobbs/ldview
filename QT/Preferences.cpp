@@ -503,6 +503,7 @@ void Preferences::doApply(void)
 	panel->applyButton->setEnabled(false);
 	if (modelWidget)
 	{
+		modelWidget->reflectSettings();
 		modelWidget->doApply();
 		setupDefaultRotationMatrix();
 	}
@@ -675,6 +676,8 @@ void Preferences::loadOtherSettings(void)
 	loadDefaultOtherSettings();
 	statusBar = TCUserDefaults::longForKey(STATUS_BAR_KEY, (long)statusBar,
 		false) != 0;
+	toolBar  = TCUserDefaults::longForKey(TOOLBAR_KEY, (long)toolBar,
+        false) != 0;
 	windowWidth = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, 640, false);
 	windowHeight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, 480, false);
 }
@@ -746,6 +749,73 @@ void Preferences::loadDefaultPrimitivesSettings(void)
 void Preferences::loadDefaultOtherSettings(void)
 {
 	statusBar = true;
+	toolBar = true;
+}
+
+void Preferences::setDrawWireframe(bool value)
+{
+    if (value != wireframe)
+    {
+        wireframe = value;
+        modelViewer->setDrawWireframe(wireframe);
+        TCUserDefaults::setLongForKey(wireframe ? 1 : 0, WIREFRAME_KEY);
+		reflectWireframeSettings();
+	}
+}
+
+void Preferences::setShowsHighlightLines(bool value)
+{
+	if (value != edgeLines)
+	{
+		edgeLines = value;
+		modelViewer->setShowsHighlightLines(edgeLines);
+		TCUserDefaults::setLongForKey(edgeLines ? 1 : 0,
+            SHOWS_HIGHLIGHT_LINES_KEY);
+		reflectGeometrySettings();
+	}
+}
+
+void Preferences::setAllowPrimitiveSubstitution(bool value)
+{
+	if (value != allowPrimitiveSubstitution)
+	{
+		allowPrimitiveSubstitution = value;
+		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
+		TCUserDefaults::setLongForKey(allowPrimitiveSubstitution ? 1 : 0,
+            PRIMITIVE_SUBSTITUTION_KEY);
+		reflectPrimitivesSettings();
+	}
+}
+
+void Preferences::setUseLighting(bool value)
+{
+    if (value != lighting)
+	{
+		lighting = value;
+		modelViewer->setUseLighting(lighting);
+		TCUserDefaults::setLongForKey(lighting ? 1 : 0, LIGHTING_KEY);
+		reflectEffectsSettings();
+	}
+}
+
+void Preferences::setUseSeams(bool value)
+{
+	int newValue = value ? 1 : 0;
+                                                                                
+    if (newValue != seams)
+	{
+		seams= newValue;
+		if(seams)
+		{
+			modelViewer->setSeamWidth(seamWidth / 100.0f);
+        }
+        else
+        {
+            modelViewer->setSeamWidth(0.0f);
+        }
+        TCUserDefaults::setLongForKey(seams, SEAMS_KEY);
+		reflectGeometrySettings();
+	}
 }
 
 void Preferences::reflectSettings(void)
@@ -912,6 +982,15 @@ void Preferences::setStatusBar(bool value)
 	{
 		statusBar = value;
 		TCUserDefaults::setLongForKey(statusBar ? 1 : 0, STATUS_BAR_KEY, false);
+	}
+}
+
+void Preferences::setToolBar(bool value)
+{
+    if (value != toolBar)
+	{
+		toolBar = value;
+		 TCUserDefaults::setLongForKey(toolBar ? 1 : 0, TOOLBAR_KEY, false);
 	}
 }
 
