@@ -2,6 +2,7 @@
 #include "LDLMainModel.h"
 #include "LDLCommentLine.h"
 #include "LDLModelLine.h"
+#include "LDrawIni.h"
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
@@ -21,6 +22,7 @@
 #define MAIN_READ_FRACTION 0.1f
 
 char *LDLModel::sm_systemLDrawDir = NULL;
+LDrawIniS *LDLModel::sm_lDrawIni = NULL;
 int LDLModel::sm_modelCount = 0;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
@@ -29,6 +31,10 @@ LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 {
 	delete LDLModel::sm_systemLDrawDir;
 	LDLModel::sm_systemLDrawDir = NULL;
+	if (LDLModel::sm_lDrawIni)
+	{
+		LDrawIniFree(LDLModel::sm_lDrawIni);
+	}
 }
 
 
@@ -181,6 +187,9 @@ FILE *LDLModel::openModelFile(const char *filename)
 		FILE *modelFile;
 
 		convertStringToLower(newFilename);
+		// Use binary mode to work around problem with fseek on a non-binary
+		// file.  The file parsing code will still work fine and strip out the
+		// extra data.
 		if ((modelFile = fopen(newFilename, "rb")) == NULL)
 		{
 			convertStringToUpper(newFilename);
@@ -217,29 +226,55 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
 
 	strcpy(subModelPath, subModelName);
-	// Use binary mode to work around problem with fseek on a non-binary file.
-	// file.  The file parsing code will still work fine and strip out the extra
-	// data.
 	if ((subModelFile = openModelFile(subModelPath)) != NULL)
 	{
 		return subModelFile;
 	}
-	sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
-	if ((subModelFile = openModelFile(subModelPath)) != NULL)
+	if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
-		m_flags.loadingPrimitive = true;
-		return subModelFile;
+		int i;
+
+		for (i = 0; i < sm_lDrawIni->nSearchDirs; i++)
+		{
+			LDrawSearchDirS *searchDir = &sm_lDrawIni->SearchDirs[i];
+
+			if ((searchDir->Flags & LDSDF_SKIP) == 0)
+			{
+				sprintf(subModelPath, "%s/%s", searchDir->Dir, subModelName);
+				if ((subModelFile = openModelFile(subModelPath)) != NULL)
+				{
+					if (searchDir->Flags & LDSDF_DEFPRIM)
+					{
+						m_flags.loadingPrimitive = true;
+					}
+					else if (searchDir->Flags & LDSDF_DEFPART)
+					{
+						m_flags.loadingPart = true;
+					}
+					return subModelFile;
+				}
+			}
+		}
 	}
-	sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
-	if ((subModelFile = openModelFile(subModelPath)) != NULL)
+	else
 	{
-		m_flags.loadingPart = true;
-		return subModelFile;
-	}
-	sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
-	if ((subModelFile = openModelFile(subModelPath)) != NULL)
-	{
-		return subModelFile;
+		sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
+		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		{
+			m_flags.loadingPrimitive = true;
+			return subModelFile;
+		}
+		sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
+		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		{
+			m_flags.loadingPart = true;
+			return subModelFile;
+		}
+		sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
+		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		{
+			return subModelFile;
+		}
 	}
 	if (extraSearchDirs)
 	{
@@ -307,10 +342,27 @@ bool LDLModel::verifyLDrawDir(const char *value)
 // NOTE: static function.
 void LDLModel::setLDrawDir(const char *value)
 {
-	if (value != sm_systemLDrawDir)
+	if (value != sm_systemLDrawDir || !value)
 	{
 		delete sm_systemLDrawDir;
 		sm_systemLDrawDir = copyString(value);
+		if (sm_lDrawIni)
+		{
+			LDrawIniFree(sm_lDrawIni);
+		}
+		sm_lDrawIni = LDrawIniGet(sm_systemLDrawDir, NULL);
+		if (sm_lDrawIni)
+		{
+			if (!sm_systemLDrawDir)
+			{
+				sm_systemLDrawDir = copyString(sm_lDrawIni->LDrawDir);
+			}
+			if (sm_systemLDrawDir)
+			{
+				stripTrailingPathSeparators(sm_systemLDrawDir);
+				LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, NULL);
+			}
+		}
 	}
 }
 
@@ -319,11 +371,16 @@ const char* LDLModel::lDrawDir(void)
 {
 	if (!sm_systemLDrawDir)
 	{
-		sm_systemLDrawDir = copyString(getenv("LDRAWDIR"));
+		setLDrawDir(getenv("LDRAWDIR"));
+//		sm_systemLDrawDir = copyString(getenv("LDRAWDIR"));
 		if (!verifyLDrawDir(sm_systemLDrawDir))
 		{
 			delete sm_systemLDrawDir;
 			sm_systemLDrawDir = NULL;
+		}
+		if (!sm_systemLDrawDir)
+		{
+			setLDrawDir(NULL);
 		}
 		if (!sm_systemLDrawDir)
 		{
@@ -336,15 +393,18 @@ const char* LDLModel::lDrawDir(void)
 				buf[1023] = 0;
 				if (verifyLDrawDir(buf))
 				{
-					sm_systemLDrawDir = copyString(buf);
+					setLDrawDir(buf);
+//					sm_systemLDrawDir = copyString(buf);
 				}
 			}
 			if (!sm_systemLDrawDir)
 			{
-				sm_systemLDrawDir = copyString("C:\\LDRAW");
+				setLDrawDir("C:\\LDRAW");
+//				sm_systemLDrawDir = copyString("C:\\LDRAW");
 			}
 #else // WIN32
-			sm_systemLDrawDir = copyString("/usr/local/ldraw");
+			setLDrawDir("/usr/local/ldraw");
+//			sm_systemLDrawDir = copyString("/usr/local/ldraw");
 #endif // WIN32
 		}
 		if (!verifyLDrawDir(sm_systemLDrawDir))

@@ -146,7 +146,7 @@ void TCUserDefaults::setCommandLine(const char *args)
 			{
 				char *equals = strchr(tmpString, '=');
 
-				if (equals < end && equals[1] == '"')
+				if (equals && equals < end && equals[1] == '"')
 				{
 					end = strchr(equals + 2, '"');
 					if (end[0] == '"')

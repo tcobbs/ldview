@@ -4041,15 +4041,14 @@ char* LDViewWindow::getLDrawDir(void)
 	{
 		char buf[1024];
 
-		if (GetPrivateProfileString("LDraw", "BaseDirectory",
-			LDLModel::lDrawDir(), buf, 1024, "ldraw.ini"))
+		if (GetPrivateProfileString("LDraw", "BaseDirectory", NULL, buf, 1024,
+			"ldraw.ini"))
 		{
 			buf[1023] = 0;
 			lDrawDir = copyString(buf);
 		}
 		else
 		{
-			// We shouldn't be able to get here, but just to be safe...
 			lDrawDir = copyString(LDLModel::lDrawDir());
 		}
 	}
