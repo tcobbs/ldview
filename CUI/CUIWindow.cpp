@@ -46,7 +46,7 @@ CUIWindow::CUIWindow(void)
 	init();
 }
 
-CUIWindow::CUIWindow(char* windowTitle, HINSTANCE hInstance, int x, int y,
+CUIWindow::CUIWindow(const char* windowTitle, HINSTANCE hInstance, int x, int y,
 					 int width, int height)
 		  :windowTitle(copyString(windowTitle)),
 		   hInstance(hInstance),
