@@ -10,10 +10,21 @@ VPATH = $(OBJDIR)
 
 CSRCS = 
 CCSRCS = \
-	LDLibraryUpdateInfo.cpp \
-	LDLibraryUpdater.cpp \
-	LDModelParser.cpp \
-	LDrawModelViewer.cpp
+	LDLActionLine.cpp \
+	LDLCommentLine.cpp \
+	LDLConditionalLineLine.cpp \
+	LDLEmptyLine.cpp \
+	LDLError.cpp \
+	LDLFileLine.cpp \
+	LDLLineLine.cpp \
+	LDLMainModel.cpp \
+	LDLModel.cpp \
+	LDLModelLine.cpp \
+	LDLPalette.cpp \
+	LDLQuadLine.cpp \
+	LDLShapeLine.cpp \
+	LDLTriangleLine.cpp \
+	LDLUnknownLine.cpp
 EXECS= libLDraw.a
 SRCS = $(CSRCS) $(CCSRCS)
 COBJS = $(CSRCS:.c=.o)

@@ -10,10 +10,16 @@ VPATH = $(OBJDIR)
 
 CSRCS = 
 CCSRCS = \
-	LDLibraryUpdateInfo.cpp \
-	LDLibraryUpdater.cpp \
-	LDModelParser.cpp \
-	LDrawModelViewer.cpp
+	TRECamera.cpp \
+	TREColoredShapeGroup.cpp \
+	TREFacing.cpp \
+	TREMainModel.cpp \
+	TREModel.cpp \
+	TREShapeGroup.cpp \
+	TRESubModel.cpp \
+	TRETransShapeGroup.cpp \
+	TREVertexArray.cpp \
+	TREVertexStore.cpp
 EXECS= libLDraw.a
 SRCS = $(CSRCS) $(CCSRCS)
 COBJS = $(CSRCS:.c=.o)

@@ -25,7 +25,7 @@ bool LDLQuadLine::parse(void)
 	float x4, y4, z4;
 	int lineType;
 
-	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f %f %f %f", &lineType,
+	if (sscanf(m_line, "%d %li %f %f %f %f %f %f %f %f %f %f %f %f", &lineType,
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3,
 		&x4, &y4, &z4) == 14)
 	{
@@ -504,7 +504,7 @@ LDLTriangleLine *LDLQuadLine::newTriangleLine(const TCVector &p1,
 	p1.print(pointBuf1, 8);
 	p2.print(pointBuf2, 8);
 	p3.print(pointBuf3, 8);
-	sprintf(newLine, "3 %d %s %s %s", m_colorNumber, pointBuf1, pointBuf2,
+	sprintf(newLine, "3 %ld %s %s %s", m_colorNumber, pointBuf1, pointBuf2,
 		pointBuf3);
 	return new LDLTriangleLine(m_parentModel, newLine, m_lineNumber, m_line);
 }

@@ -23,7 +23,7 @@ bool LDLTriangleLine::parse(void)
 	float x3, y3, z3;
 	int lineType;
 
-	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f", &lineType,
+	if (sscanf(m_line, "%d %li %f %f %f %f %f %f %f %f %f", &lineType,
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3) == 11)
 	{
 		m_points = new TCVector[3];
@@ -183,6 +183,6 @@ LDLLineLine *LDLTriangleLine::newLineLine(const TCVector &p1,
 
 	p1.print(pointBuf1, 8);
 	p2.print(pointBuf2, 8);
-	sprintf(newLine, "3 %d %s %s", m_colorNumber, pointBuf1, pointBuf2);
+	sprintf(newLine, "3 %ld %s %s", m_colorNumber, pointBuf1, pointBuf2);
 	return new LDLLineLine(m_parentModel, newLine, m_lineNumber, m_line);
 }
