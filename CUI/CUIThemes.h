@@ -25,6 +25,8 @@ typedef HRESULT (__stdcall *PFNGETTHEMEBACKGROUNDCONTENTRECT)(HTHEME hTheme,
 typedef HRESULT (_stdcall *PFNDRAWTHEMEEDGE)(HTHEME hTheme, HDC hdc,
 	int iPartId, int iStateId, const RECT *pDestRect, UINT uEdge, UINT uFlags,
 	RECT *pContentRect);
+typedef HRESULT (_stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pwszSubAppName,
+	LPCWSTR pwszSubIdList);
 
 class CUIExport CUIThemes
 {
@@ -44,6 +46,10 @@ public:
 	static HRESULT drawThemeEdge(HTHEME hTheme, HDC hdc, int iPartId,
 		int iStateId, const RECT *pDestRect, UINT uEdge, UINT uFlags,
 		RECT *pContentRect);
+	static HRESULT setWindowTheme(HWND hWnd, LPCWSTR pwszSubAppName,
+		LPCWSTR pwszSubIdList);
+	static HRESULT setWindowTheme(HWND hWnd, LPCSTR pszSubAppName,
+		LPCSTR pszSubIdList);
 
 protected:
 	CUIThemes(void);
@@ -58,6 +64,7 @@ protected:
 	static PFNDRAWTHEMETEXT sm_drawThemeText;
 	static PFNGETTHEMEBACKGROUNDCONTENTRECT sm_getThemeBackgroundContentRect;
 	static PFNDRAWTHEMEEDGE sm_drawThemeEdge;
+	static PFNSETWINDOWTHEME sm_setWindowTheme;
 	static void deinit(void);
 
 	static class CUIThemesCleanup

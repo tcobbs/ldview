@@ -1,4 +1,7 @@
 #include "CUIThemes.h"
+#include <windows.h>
+#include <atlbase.h>
+#include <atlconv.h>
 
 bool CUIThemes::sm_initTried = false;
 bool CUIThemes::sm_themeLibLoaded = false;
@@ -10,6 +13,7 @@ PFNDRAWTHEMETEXT CUIThemes::sm_drawThemeText = NULL;
 PFNGETTHEMEBACKGROUNDCONTENTRECT CUIThemes::sm_getThemeBackgroundContentRect =
 	NULL;
 PFNDRAWTHEMEEDGE CUIThemes::sm_drawThemeEdge = NULL;
+PFNSETWINDOWTHEME CUIThemes::sm_setWindowTheme = NULL;
 
 CUIThemes::CUIThemesCleanup::~CUIThemesCleanup(void)
 {
@@ -48,10 +52,12 @@ void CUIThemes::init(void)
 				"GetThemeBackgroundContentRect");
 			sm_drawThemeEdge = (PFNDRAWTHEMEEDGE)GetProcAddress(sm_hModThemes,
 				"DrawThemeEdge");
+			sm_setWindowTheme = (PFNSETWINDOWTHEME)GetProcAddress(sm_hModThemes,
+				"SetWindowTheme");
 
 			if (sm_openThemeData && sm_closeThemeData && sm_drawThemeBackground
 				&& sm_drawThemeText && sm_getThemeBackgroundContentRect &&
-				sm_drawThemeEdge)
+				sm_drawThemeEdge && sm_setWindowTheme)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -156,4 +162,24 @@ HRESULT CUIThemes::drawThemeEdge(HTHEME hTheme, HDC hdc, int iPartId,
 	{
 		return E_NOTIMPL;
 	}
+}
+
+HRESULT CUIThemes::setWindowTheme(HWND hWnd, LPCWSTR pwszSubAppName,
+								  LPCWSTR pwszSubIdList)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_setWindowTheme(hWnd, pwszSubAppName, pwszSubIdList);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+HRESULT CUIThemes::setWindowTheme(HWND hWnd, LPCSTR pszSubAppName,
+								  LPCSTR pszSubIdList)
+{
+	USES_CONVERSION;
+	return setWindowTheme(hWnd, A2W(pszSubAppName), A2W(pszSubIdList));
 }

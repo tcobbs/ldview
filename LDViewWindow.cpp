@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x501
 #include "LDViewWindow.h"
 #include <shlwapi.h>
 #include "LDVExtensionsSetup.h"
@@ -120,6 +121,7 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 			   lastViewAngle(LDVAngleDefault)
 //			   modelWindowShown(false)
 {
+	CUIThemes::init();
 	loadSettings();
 	standardWindowStyle = windowStyle;
 	if (!recentFiles)
@@ -464,7 +466,7 @@ void LDViewWindow::createToolbar(void)
 		populateTbButtonInfos();
 		ModelWindow::initCommonControls(ICC_BAR_CLASSES);
 		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME,
-			NULL, WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0,
+			NULL, WS_CHILD | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0,
 			0, 0, hWindow, (HMENU)ID_TOOLBAR, hInstance, NULL);
 		SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 		memset(buttonTitle, 0, sizeof(buttonTitle));
@@ -498,6 +500,7 @@ void LDViewWindow::createToolbar(void)
 		}
 		SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
 		delete[] buttons;
+		ShowWindow(hToolbar, SW_SHOW);
 		SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
 	}
 }
@@ -2292,6 +2295,18 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 
 				if ((DWORD)buttonInfo->getCommandId() == notification->idFrom)
 				{
+					if (CUIThemes::isThemeLibLoaded())
+					{
+						// Turning off theme support in the tooltip makes it
+						// work properly.  With theme support on, it gets erased
+						// by the OpenGL window immediately after being drawn.
+						// Haven't the foggiest why this happens, but turning
+						// off theme support solves the problem.  This has to
+						// be done ever time the tooltip is about to pop up.
+						// Not sure why that is either, but it is.
+						CUIThemes::setWindowTheme(notification->hwndFrom, NULL,
+							"");
+					}
 					strcpy(dispInfo->szText, buttonInfo->getTooltipText());
 					break;
 				}
@@ -2325,6 +2340,7 @@ BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
 				case TTN_GETDISPINFO:
 					{
 						LPNMTTDISPINFO dispInfo = (LPNMTTDISPINFO)notification;
+						bool gotTooltip = true;
 
 						switch (controlId)
 						{
@@ -2344,6 +2360,23 @@ BOOL LDViewWindow::doDialogNotify(HWND hDlg, int controlId,
 							strcpy(dispInfo->szText,
 								TCLocalStrings::get("MoveExtraDirDownTooltip"));
 							break;
+						default:
+							gotTooltip = false;
+							break;
+						}
+						if (gotTooltip && CUIThemes::isThemeLibLoaded())
+						{
+							// Turning off theme support in the tooltip makes it
+							// work properly.  With theme support on, it gets
+							// erased by the OpenGL window immediately after
+							// being drawn if it overlaps the OpenGL window.
+							// Haven't the foggiest why this happens, but
+							// turning off theme support solves the problem.
+							// This has to be done ever time the tooltip is
+							// about to pop up. Not sure why that is either, but
+							// it is.
+							CUIThemes::setWindowTheme(notification->hwndFrom,
+								NULL, "");
 						}
 						dispInfo->hinst = NULL;
 					}
