@@ -19,6 +19,7 @@ CFG=TRE - Win32 Debug
 !MESSAGE 
 !MESSAGE "TRE - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "TRE - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "TRE - Win32 PartialDebug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -74,12 +75,36 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
+!ELSEIF  "$(CFG)" == "TRE - Win32 PartialDebug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "TRE___Win32_PartialDebug"
+# PROP BASE Intermediate_Dir "TRE___Win32_PartialDebug"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "PartialDebug"
+# PROP Intermediate_Dir "PartialDebug"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /W4 /GX /O2 /I ".." /I "..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
+# ADD CPP /nologo /W4 /GX /O2 /I ".." /I "..\include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
 !ENDIF 
 
 # Begin Target
 
 # Name "TRE - Win32 Release"
 # Name "TRE - Win32 Debug"
+# Name "TRE - Win32 PartialDebug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

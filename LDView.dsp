@@ -109,7 +109,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib wsock32.lib winmm.lib TCFoundation\Release\TCFoundation.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\lib" /libpath:".\TCFoundation\Release" /libpath:".\CUI\Release" /libpath:".\LDLib\Release"
+# ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\lib" /libpath:".\TCFoundation\PartialDebug" /libpath:".\CUI\Release" /libpath:".\LDLib\PartialDebug" /libpath:".\LDLoader\PartialDebug"
 
 !ENDIF 
 

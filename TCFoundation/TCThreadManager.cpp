@@ -53,9 +53,11 @@ int TCThreadManager::lockExitMutex(void)
 {
 	int retValue;
 
-	debugPrintf(4, "TCThreadManager::lockExitMutex:%08X\n", exitMutex);
+	debugPrintf(4, "TCThreadManager::lockExitMutex (pre ):%08X\n",
+		GetCurrentThreadId());
 	retValue = exitMutex->lock();
-	debugPrintf(4, "TCThreadManager::lockExitMutex: %d\n", retValue);
+	debugPrintf(4, "TCThreadManager::lockExitMutex (post):%08X\n",
+		GetCurrentThreadId());
 	return retValue;
 }
 
@@ -67,7 +69,8 @@ int TCThreadManager::tryLockExitMutex(void)
 
 int TCThreadManager::unlockExitMutex(void)
 {
-	debugPrintf(4, "TCThreadManager::unlockExitMutex\n");
+	debugPrintf(4, "TCThreadManager::unlockExitMutex:     %08X\n",
+		GetCurrentThreadId());
 	return exitMutex->unlock();
 }
 
@@ -234,21 +237,15 @@ void TCThreadManager::joinExitedThreads(void)
 
 void TCThreadManager::waitForFinishedThread(void)
 {
-	int needToUnlock = 1;
-
-	if (lockExitMutex() == TC_MUTEX_DEADLOCK)
-	{
-		needToUnlock = 0;
-	}
+	lockExitMutex();
 	if (!finishedThreads->getCount())
 	{
+		unlockExitMutex();
 		exitCondition->wait();
+		lockExitMutex();
 	}
 	joinExitedThreads();
-	if (needToUnlock)
-	{
-		unlockExitMutex();
-	}
+	unlockExitMutex();
 }
 
 int TCThreadManager::timedWaitForFinishedThread(int timeoutMsec)
@@ -263,20 +260,15 @@ int TCThreadManager::timedWaitForFinishedThread(int timeoutMsec)
 int TCThreadManager::timedWaitForFinishedThread(struct timeval timeout)
 {
 	int result = 1;
-	int needToUnlock = 1;
 
-	if (lockExitMutex() == TC_MUTEX_DEADLOCK)
-	{
-		needToUnlock = 0;
-	}
+	lockExitMutex();
 	if (!finishedThreads->getCount())
 	{
+		unlockExitMutex();
 		result = exitCondition->timedWait(timeout);
+		lockExitMutex();
 	}
 	joinExitedThreads();
-	if (needToUnlock)
-	{
-		unlockExitMutex();
-	}
+	unlockExitMutex();
 	return result;
 }

@@ -3,17 +3,20 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCWebClient.h>
 #include <TCFoundation/TCThread.h>
+#include <TCFoundation/TCThreadManager.h>
 #include <TCFoundation/TCTypedObjectArray.h>
-#include <TCFoundation/TCSortedStringArray.h>
+#include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
 
+#define MAX_DL_THREADS 2
 
 LDLibraryUpdater::LDLibraryUpdater(void)
 	:m_webClients(new TCWebClientArray),
 	m_thread(NULL),
 	m_libraryUpdateKey(NULL),
-	m_ldrawDir(NULL)
+	m_ldrawDir(NULL),
+	m_updateQueue(NULL)
 {
 }
 
@@ -27,6 +30,7 @@ void LDLibraryUpdater::dealloc(void)
 	TCObject::release(m_thread);
 	delete m_libraryUpdateKey;
 	delete m_ldrawDir;
+	TCObject::release(m_updateQueue);
 	TCObject::dealloc();
 }
 
@@ -225,6 +229,8 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 	}
 	deleteStringArray(updateListLines, lineCount);
 	updateArray->sort();
+	TCObject::release(m_updateQueue);
+	m_updateQueue = NULL;
 	if (determineLastUpdate(updateArray, lastUpdateName))
 	{
 		int updatesNeededCount = 0;
@@ -246,7 +252,7 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 			{
 				LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
 
-				debugPrintf("Update file: %s\n", updateInfo->getExeUrl());
+				getUpdateQueue()->addString(updateInfo->getExeUrl());
 			}
 			if (!updatesNeededCount)
 			{
@@ -259,7 +265,7 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 		printf("Full update needed.\n");
 		if (fullUpdateInfo)
 		{
-			debugPrintf("Full file: %s\n", fullUpdateInfo->getExeUrl());
+			getUpdateQueue()->addString(fullUpdateInfo->getExeUrl());
 		}
 		else
 		{
@@ -270,14 +276,24 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 	TCObject::release(fullUpdateInfo);
 }
 
+TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
+{
+	if (!m_updateQueue)
+	{
+		m_updateQueue = new TCStringArray;
+	}
+	return m_updateQueue;
+}
+
 void LDLibraryUpdater::checkForUpdates(void)
 {
 	if (m_ldrawDir)
 	{
+		setDebugLevel(3);
 		m_thread = new TCThread(this,
 		 (TCThreadStartMemberFunction)(&LDLibraryUpdater::threadStart));
-//		m_thread->setFinishMemberFunction(
-//		 (TCThreadFinishMemberFunction)(&LDLibraryUpdater::threadFinish));
+		m_thread->setFinishMemberFunction(
+		 (TCThreadFinishMemberFunction)(&LDLibraryUpdater::threadFinish));
 		m_thread->run();
 	}
 }
@@ -287,10 +303,10 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	TCWebClient *webClient = NULL;
 	int dataLength;
 	bool aborted;
-	int oldDebugLevel = getDebugLevel();
+//	int oldDebugLevel = getDebugLevel();
 
-	setDebugLevel(1);
-	TCProgressAlert::send("LDLibraryUpdater",
+	retain();	// We don't want to go away until our thread has finished.
+	TCProgressAlert::send(LD_LIBRARY_UPDATER,
 		"Downloading update list from ldraw.org", 0.01f, &aborted);
 	if (!aborted)
 	{
@@ -300,7 +316,7 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 			"http://www.halibut.com/~tcobbs/ldraw/private/ptreleases_cgi.txt");
 		webClient->setOwner(this);
 		webClient->fetchURL();
-		TCProgressAlert::send("LDLibraryUpdater", "Parsing update list", 0.1f,
+		TCProgressAlert::send(LD_LIBRARY_UPDATER, "Parsing update list", 0.09f,
 			&aborted);
 	}
 	if (!aborted)
@@ -326,14 +342,110 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	{
 		webClient->release();
 	}
-	setDebugLevel(oldDebugLevel);
-	TCProgressAlert::send("LDLibraryUpdater", "Done", 1.0f);
+	if (m_updateQueue && m_updateQueue->getCount())
+	{
+		TCProgressAlert::send(LD_LIBRARY_UPDATER, "Downloading updates", 0.1f,
+			&aborted);
+		downloadUpdates();
+	}
+	setDebugLevel(0);
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Done", 1.0f);
 	return 0;
 }
 
-//void LDLibraryUpdater::threadFinish(TCThread * /*thread*/)
-//{
-//}
+void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
+{
+	if (webClient->getPageLength())
+	{
+		char filename[1024];
+
+		sprintf(filename, "%s\\%s", m_ldrawDir, webClient->getFilename());
+		debugPrintf("Done downloading file: %s\n", filename);
+	}
+	m_webClients->removeObject(webClient);
+}
+
+void LDLibraryUpdater::processUpdateQueue(void)
+{
+	while (m_webClients->getCount() < MAX_DL_THREADS &&
+		m_updateQueue->getCount() > 0)
+	{
+		TCWebClient *webClient = new TCWebClient((*m_updateQueue)[0]);
+
+		m_updateQueue->removeString(0);
+		webClient->setOwner(this);
+		webClient->setFinishURLMemberFunction(
+			(WebClientFinishMemberFunction)(&LDLibraryUpdater::updateDlFinish));
+		webClient->setOutputDirectory(m_ldrawDir);
+		if (webClient->fetchURLInBackground())
+		{
+			m_webClients->addObject(webClient);
+		}
+		webClient->release();
+	}
+}
+
+void LDLibraryUpdater::sendDlProgress(bool *aborted)
+{
+	int i;
+	int count = m_webClients->getCount();
+	int completedUpdates = m_initialQueueSize - m_updateQueue->getCount()
+		- m_webClients->getCount();
+	float fileFraction = 0.99f / (float)m_initialQueueSize * 0.9f;
+	float progress = 0.1f + (float)completedUpdates * fileFraction;
+
+	for (i = 0; i < count; i++)
+	{
+		TCWebClient *webClient = (*m_webClients)[i];
+		int bytesRead = webClient->getBytesRead();
+		int pageLength = webClient->getPageLength();
+
+		if (bytesRead && pageLength)
+		{
+			progress += (float)(bytesRead) / (float)(pageLength) * fileFraction;
+		}
+	}
+	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Downloading updates", progress,
+		aborted);
+}
+
+void LDLibraryUpdater::downloadUpdates(void)
+{
+	TCThreadManager *threadManager = TCThreadManager::threadManager();
+	TCThread *finishedThread;
+	bool done = false;
+
+	m_initialQueueSize = m_updateQueue->getCount();
+	while (!done)
+	{
+		processUpdateQueue();
+		if (m_webClients->getCount())
+		{
+			struct timeval timeout;
+
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 250000; // 250 msec
+			if (threadManager->timedWaitForFinishedThread(timeout))
+			{
+				while ((finishedThread = threadManager->getFinishedThread())
+					!= NULL)
+				{
+					threadManager->removeFinishedThread(finishedThread);
+				}
+			}
+			sendDlProgress(NULL);
+		}
+		else
+		{
+			done = true;
+		}
+	}
+}
+
+void LDLibraryUpdater::threadFinish(TCThread * /*thread*/)
+{
+	release();
+}
 
 bool LDLibraryUpdater::fileExists(const char *filename)
 {
