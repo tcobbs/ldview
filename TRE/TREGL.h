@@ -12,6 +12,7 @@
 #else	// __APPLE__
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include <GL/glu.h>
 #endif	// __APPLE__
 
 #ifdef WIN32
