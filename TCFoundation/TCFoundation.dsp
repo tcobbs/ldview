@@ -1,0 +1,266 @@
+# Microsoft Developer Studio Project File - Name="TCFoundation" - Package Owner=<4>
+# Microsoft Developer Studio Generated Build File, Format Version 6.00
+# ** DO NOT EDIT **
+
+# TARGTYPE "Win32 (x86) Static Library" 0x0104
+
+CFG=TCFoundation - Win32 Debug
+!MESSAGE This is not a valid makefile. To build this project using NMAKE,
+!MESSAGE use the Export Makefile command and run
+!MESSAGE 
+!MESSAGE NMAKE /f "TCFoundation.mak".
+!MESSAGE 
+!MESSAGE You can specify a configuration when running NMAKE
+!MESSAGE by defining the macro CFG on the command line. For example:
+!MESSAGE 
+!MESSAGE NMAKE /f "TCFoundation.mak" CFG="TCFoundation - Win32 Debug"
+!MESSAGE 
+!MESSAGE Possible choices for configuration are:
+!MESSAGE 
+!MESSAGE "TCFoundation - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "TCFoundation - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE 
+
+# Begin Project
+# PROP AllowPerConfigDependencies 0
+# PROP Scc_ProjName ""
+# PROP Scc_LocalPath ""
+CPP=cl.exe
+RSC=rc.exe
+
+!IF  "$(CFG)" == "TCFoundation - Win32 Release"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "Release"
+# PROP BASE Intermediate_Dir "Release"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "Release"
+# PROP Intermediate_Dir "Release"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
+# ADD CPP /nologo /W4 /O2 /I "../" /I "../include/" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
+# SUBTRACT CPP /u
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
+!ELSEIF  "$(CFG)" == "TCFoundation - Win32 Debug"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "Debug"
+# PROP BASE Intermediate_Dir "Debug"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "Debug"
+# PROP Intermediate_Dir "Debug"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
+# ADD CPP /nologo /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
+# SUBTRACT CPP /u
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
+!ENDIF 
+
+# Begin Target
+
+# Name "TCFoundation - Win32 Release"
+# Name "TCFoundation - Win32 Debug"
+# Begin Group "Source Files"
+
+# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Source File
+
+SOURCE=.\mystring.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCAlert.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCAlertManager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCArray.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCAutoreleasePool.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCBinaryObjectTree.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCBinaryTree.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCBmpImageFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCDictionary.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCImage.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCImageFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCObject.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCObjectArray.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCObjectTree.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCPngImageFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCSortedStringArray.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCStringArray.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCStringObjectTree.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCUserDefaults.cpp
+# End Source File
+# End Group
+# Begin Group "Header Files"
+
+# PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\mystring.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCAlert.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCAlertManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCAutoreleasePool.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCBinaryObjectTree.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCBinaryTree.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCBmpImageFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCDefines.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCDictionary.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCImage.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCImageFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCObject.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCObjectArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCObjectTree.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCPngImageFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCSortedStringArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCStringArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCStringObjectTree.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCTypedDictionary.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCTypedObjectArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCTypedPointerArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCTypedValueArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCUserDefaults.h
+# End Source File
+# End Group
+# End Target
+# End Project
