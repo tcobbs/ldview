@@ -1181,5 +1181,5 @@ void TREMainModel::finish(void)
 	float matrix[16];
 
 	TCVector::initIdentityMatrix(matrix);
-	flattenNonUniform(this, matrix, matrix, 0, false, 0, false);
+	flattenNonUniform(matrix, matrix, 0, false, 0, false);
 }

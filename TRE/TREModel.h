@@ -313,9 +313,8 @@ protected:
 		const TREVertex point0, const TREVertex point1, TRESmoother *&smoother);
 	void applyShapeNormals(TRENormalInfoArray *normalInfos);
 	void finishShapeNormals(TREConditionalMap &conditionalMap);
-	bool flattenNonUniform(TREModel *model, float *matrix,
-		float *originalMatrix, TCULong color, bool colorSet, TCULong edgeColor,
-		bool edgeColorSet);
+	void flattenNonUniform(float *matrix, float *originalMatrix,
+		TCULong color, bool colorSet, TCULong edgeColor, bool edgeColorSet);
 
 //	static void setGlNormalize(bool value);
 

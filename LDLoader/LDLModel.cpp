@@ -226,10 +226,6 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
 
 	strcpy(subModelPath, subModelName);
-	if ((subModelFile = openModelFile(subModelPath)) != NULL)
-	{
-		return subModelFile;
-	}
 	if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
 		int i;
@@ -258,6 +254,10 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	}
 	else
 	{
+		if ((subModelFile = openModelFile(subModelPath)) != NULL)
+		{
+			return subModelFile;
+		}
 		sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
 		if ((subModelFile = openModelFile(subModelPath)) != NULL)
 		{

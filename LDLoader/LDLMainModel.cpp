@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include "LDrawIni.h"
 
 LDLMainModel::LDLMainModel(void)
 	:m_loadedModels(NULL),
@@ -56,6 +57,10 @@ bool LDLMainModel::load(const char *filename)
 	LDLError *error;
 
 	setFilename(filename);
+	if (sm_lDrawIni)
+	{
+		LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, filename);
+	}
 	if (!strlen(lDrawDir()))
 	{
 		error = newError(LDLEGeneral,
