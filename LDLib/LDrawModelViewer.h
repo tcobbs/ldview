@@ -312,6 +312,7 @@ class LDrawModelViewer: public TCObject
 		virtual float getStereoWidthModifier(void);
 		virtual float getWideLineMargin(void);
 		virtual float getClipRadius(void);
+		virtual float getZDistance(void);
 
 		void ludcmp(float a[6][6], int n, int index[6], float *d);
 		void lubksb(const float a[6][6], int n, const int index[6], float b[6]);
