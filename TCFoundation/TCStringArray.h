@@ -24,6 +24,7 @@ class TCExport TCStringArray : public TCArray
 		virtual int removeString(const char*);
 		virtual int removeString(int);
 		virtual void removeAll(void);
+		virtual const char* constStringAtIndex(unsigned int) const;
 		virtual char* stringAtIndex(unsigned int);
 		virtual char* operator[](unsigned int);
 		virtual int readFile(const char*);

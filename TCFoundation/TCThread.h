@@ -34,8 +34,8 @@ class TCThread : public TCObject
 		{
 			return startMemberFunction;
 		}
-		virtual int getStarted(void);
-		virtual int getFinished(void);
+		virtual bool getStarted(void);
+		virtual bool getFinished(void);
 		void* getUserData(void) { return userData; }
 		virtual void setUserData(void*);
 #ifdef WIN32
@@ -54,6 +54,7 @@ class TCThread : public TCObject
 			return finishMemberFunction;
 		}
 		void performFinish(void);
+		void terminate(THREAD_RET_TYPE exitValue);
 	protected:
 		virtual void setStarted(void);
 		virtual void setFinished(void);
@@ -65,13 +66,15 @@ class TCThread : public TCObject
 		TCThreadStartMemberFunction startMemberFunction;
 		TCThreadFinishMemberFunction finishMemberFunction;
 		TCThreadManager* threadManager;
-		int started;
-		int finished;
+		bool started;
+		bool finished;
 #ifdef WIN32
 		HANDLE thread;
 #else // WIN32
 #ifdef _QT
 		pthread_t thread;
+		THREAD_RET_TYPE cancelExitValue;
+		static THREAD_RET_TYPE cancelCleanupFunction(void *arg);
 #endif // _QT
 #endif // WIN32
 		void* userData;

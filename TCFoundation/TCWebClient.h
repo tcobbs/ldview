@@ -2,6 +2,7 @@
 #define __WEBCLIENT_H__
 
 #include <TCFoundation/TCNetworkClient.h>
+#include <TCFoundation/TCThread.h>
 #include <stdio.h>
 
 #ifdef WIN32
@@ -120,8 +121,8 @@ class TCWebClient : public TCNetworkClient
 		int waitForRead(void);
 		int waitForWrite(void);
 		virtual void dealloc(void);
-		virtual void* backgroundFetchURLFunction(TCThread*);
-		virtual void* backgroundFetchHeaderFunction(TCThread*);
+		virtual THREAD_RET_TYPE backgroundFetchURLFunction(TCThread*);
+		virtual THREAD_RET_TYPE backgroundFetchHeaderFunction(TCThread*);
 		virtual void backgroundFetchURLFinish(TCThread*);
 		virtual void backgroundFetchHeaderFinish(TCThread*);
 		virtual void setErrorNumber(int);

@@ -15,8 +15,9 @@ typedef struct
 
 class ModelWindow;
 class TCStringArray;
+class TCSortedStringArray;
 class CUIWindowResizer;
-class TCWebClient;
+class LDLibraryUpdater;
 
 class LDViewWindow: public CUIWindow
 {
@@ -167,9 +168,7 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL doMoveExtraDirDown(void);
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
-		void downloadTest(void);
-		void fetchURLFinish(TCWebClient *webClient);
-		void fetchHeaderFinish(TCWebClient *webClient);
+		void checkForLibraryUpdates(void);
 		LRESULT doTimer(UINT timerID);
 
 		void loadSettings(void);
@@ -214,6 +213,7 @@ class LDViewWindow: public CUIWindow
 		HWND hOpenGLStatusBar;
 		HICON hExamineIcon;
 		HICON hFlythroughIcon;
+		LDLibraryUpdater *libraryUpdater;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;
