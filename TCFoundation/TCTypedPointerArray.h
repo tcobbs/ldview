@@ -42,4 +42,4 @@ template <class Type> class TCTypedPointerArray : public TCArray
 	protected:
 };
 
-#endif __TCTYPEDPOINTERARRAY_H__
+#endif // __TCTYPEDPOINTERARRAY_H__

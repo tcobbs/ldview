@@ -74,4 +74,4 @@ protected:
 	friend class LDLPaletteCleanup;
 };
 
-#endif __LDLPALETTE_H__
+#endif // __LDLPALETTE_H__

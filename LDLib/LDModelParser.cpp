@@ -1,6 +1,6 @@
-#include "LDModelParser.h"
-
 #include <string.h>
+
+#include "LDModelParser.h"
 
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLShapeLine.h>
@@ -15,6 +15,7 @@
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <ctype.h>
 
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
@@ -856,6 +857,8 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 					case LDLLineTypeConditionalLine:
 						parseConditionalLine((LDLConditionalLineLine *)fileLine,
 							treModel);
+						break;
+					default:
 						break;
 					}
 				}

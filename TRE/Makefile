@@ -2,7 +2,7 @@ CC = g++
 RM = rm -f
 RMDIR = rmdir --ignore-fail-on-non-empty
 AR = ar rcs
-MAKEDEPEND = gcc -M
+MAKEDEPEND = gcc -MM
 
 OBJDIR = .obj
 
@@ -20,7 +20,7 @@ CCSRCS = \
 	TRETransShapeGroup.cpp \
 	TREVertexArray.cpp \
 	TREVertexStore.cpp
-EXECS= libLDraw.a
+EXECS= libTRE.a
 SRCS = $(CSRCS) $(CCSRCS)
 COBJS = $(CSRCS:.c=.o)
 CCOBJS = $(CCSRCS:.cpp=.o)
@@ -44,16 +44,16 @@ LIBS = -lm -lTCFoundation $(HOSTLIBS)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDE) -c $<
 
-all:	$(OBJDIR) libLDraw.a
+all:	$(OBJDIR) libTRE.a
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then	\
 		mkdir $(OBJDIR);				\
 	fi
 
-libLDraw.a:	$(OBJS)
-	rm -f libLDraw.a
-	cd $(OBJDIR); $(AR) ../libLDraw.a $(OBJS)
+libTRE.a:	$(OBJS)
+	rm -f libTRE.a
+	cd $(OBJDIR); $(AR) ../libTRE.a $(OBJS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
@@ -65,6 +65,6 @@ depend:
 clean:
 	cd $(OBJDIR); $(RM) $(OBJS)
 	$(RMDIR) $(OBJDIR)
-	$(RM) libLDraw.a core
+	$(RM) libTRE.a core
 
 -include .depend

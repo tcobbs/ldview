@@ -2,7 +2,7 @@
 #include "ErrorPanel.h"
 #include "Preferences.h"
 
-#include <LDLib/LDMError.h>
+#include <LDLoader/LDLError.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/mystring.h>
 
@@ -15,28 +15,28 @@
 LDViewErrors::LDViewErrors(Preferences *preferences)
 	:panel(new ErrorPanel),
 	preferences(preferences),
-	errors(new LDMErrorArray),
+	errors(new LDLErrorArray),
 	listViewPopulated(false)
 {
 	panel->setErrors(this);
 	panel->errorListView->setColumnWidthMode(0, QListView::Maximum);
 	panel->errorListView->header()->hide();
 	preferences->setButtonState(panel->parseErrorButton,
-		preferences->getShowError(LDMEParse));
+		preferences->getShowError(LDLEParse));
 	preferences->setButtonState(panel->fileNotFoundButton,
-		preferences->getShowError(LDMEFileNotFound));
-	preferences->setButtonState(panel->colorErrorButton,
-		preferences->getShowError(LDMEColor));
+		preferences->getShowError(LDLEFileNotFound));
+//	preferences->setButtonState(panel->colorErrorButton,
+//		preferences->getShowError(LDLEColor));
 	preferences->setButtonState(panel->partDeterminantButton,
-		preferences->getShowError(LDMEPartDeterminant));
+		preferences->getShowError(LDLEPartDeterminant));
 	preferences->setButtonState(panel->concaveQuadButton,
-		preferences->getShowError(LDMEConcaveQuad));
+		preferences->getShowError(LDLEConcaveQuad));
 	preferences->setButtonState(panel->concaveQuadSplitButton,
-		preferences->getShowError(LDMEConcaveQuadSplit));
+		preferences->getShowError(LDLEConcaveQuadSplit));
 	preferences->setButtonState(panel->colinearPointsButton,
-		preferences->getShowError(LDMEColinear));
-	preferences->setButtonState(panel->openGLErrorButton,
-		preferences->getShowError(LDMEOpenGL));
+		preferences->getShowError(LDLEColinear));
+//	preferences->setButtonState(panel->openGLErrorButton,
+//		preferences->getShowError(LDLEOpenGL));
 }
 
 LDViewErrors::~LDViewErrors(void)
@@ -67,7 +67,7 @@ void LDViewErrors::clearListView(void)
 	listViewPopulated = false;
 }
 
-void LDViewErrors::addError(LDMError *error)
+void LDViewErrors::addError(LDLError *error)
 {
 	errors->addObject(error);
 }
@@ -93,7 +93,7 @@ int LDViewErrors::populateListView(void)
 	return errorCount;
 }
 
-bool LDViewErrors::addErrorToListView(LDMError *error)
+bool LDViewErrors::addErrorToListView(LDLError *error)
 {
 	char *string;
 	QListViewItem *parent;
@@ -155,13 +155,13 @@ bool LDViewErrors::addErrorToListView(LDMError *error)
 	return true;
 }
 
-bool LDViewErrors::showsErrorType(LDMErrorType errorType)
+bool LDViewErrors::showsErrorType(LDLErrorType errorType)
 {
 	return preferences->getShowError(errorType);
 }
 
 QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
-	const char *line, LDMError * /*error*/, int /*imageIndex*/)
+	const char *line, LDLError * /*error*/, int /*imageIndex*/)
 {
 	QListViewItem *item;
 
@@ -176,7 +176,7 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 	return item;
 }
 
-void LDViewErrors::doErrorClick(QButton *button, LDMErrorType errorType)
+void LDViewErrors::doErrorClick(QButton *button, LDLErrorType errorType)
 {
 	preferences->setShowError(errorType, button->state());
 	clearListView();

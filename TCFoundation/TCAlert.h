@@ -29,4 +29,4 @@ protected:
 	TCStringArray *m_extraInfo;
 };
 
-#endif __TCALERT_H__
+#endif // __TCALERT_H__

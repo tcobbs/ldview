@@ -37,4 +37,4 @@ protected:
 	friend class LDLFileLine; // Needed because constructors are protected.
 };
 
-#endif __LDLMODELLINE_H__
+#endif // __LDLMODELLINE_H__

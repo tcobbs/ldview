@@ -5,6 +5,7 @@
 #include "TREMainModel.h"
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCMacros.h>
+#include <string.h>
 
 PFNGLMULTIDRAWELEMENTSEXTPROC TREShapeGroup::glMultiDrawElementsEXT = NULL;
 
@@ -1322,8 +1323,8 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 				for (i = count - shapeSize; i >= 0; i -= shapeSize)
 				{
 					TCULong index = (*indices)[i];
-					TCVector vertices[3];
-					TCVector normals[3];
+//					TCVector vertices[3];
+//					TCVector normals[3];
 
 					transferTriangle(color, index, (*indices)[i + 1],
 						(*indices)[i + 2], matrix);

@@ -18,4 +18,4 @@ protected:
 	virtual void dealloc(void);
 };
 
-#endif __TCUNZIP_H__
+#endif // __TCUNZIP_H__

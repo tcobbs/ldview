@@ -2,14 +2,14 @@
 #define __LDVIEWERRORS_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-#include <LDLib/LDMError.h>
+#include <LDLoader/LDLError.h>
 
 class ErrorPanel;
 class Preferences;
 class QListViewItem;
 class QButton;
 
-typedef TCTypedObjectArray<LDMError> LDMErrorArray;
+typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
 class LDViewErrors
 {
@@ -19,21 +19,21 @@ public:
 
 	void show(void);
 	void clear(void);
-	void addError(LDMError *error);
+	void addError(LDLError *error);
 	int populateListView(void);
 	
-	void doErrorClick(QButton *button, LDMErrorType errorNumber);
+	void doErrorClick(QButton *button, LDLErrorType errorNumber);
 
 protected:
 	void clearListView(void);
-	bool addErrorToListView(LDMError *error);
-	bool showsErrorType(LDMErrorType errorType);
+	bool addErrorToListView(LDLError *error);
+	bool showsErrorType(LDLErrorType errorType);
 	QListViewItem *addErrorLine(QListViewItem *parent, const char *line,
-	LDMError *error, int imageIndex = -1);
+	LDLError *error, int imageIndex = -1);
 
 	ErrorPanel *panel;
 	Preferences *preferences;
-	LDMErrorArray *errors;
+	LDLErrorArray *errors;
 	bool listViewPopulated;
 };
 

@@ -13,41 +13,43 @@ void ErrorPanel::setErrors(LDViewErrors *value)
 
 void ErrorPanel::parseError()
 {
-    errors->doErrorClick(parseErrorButton, LDMEParse);
+    errors->doErrorClick(parseErrorButton, LDLEParse);
 }
 
 void ErrorPanel::fileNotFound()
 {
-    errors->doErrorClick(fileNotFoundButton, LDMEFileNotFound);
+    errors->doErrorClick(fileNotFoundButton, LDLEFileNotFound);
 }
 
 
 void ErrorPanel::colorError()
 {
-    errors->doErrorClick(colorErrorButton, LDMEColor);
+	// TC TODO: Get rid of this error
+    errors->doErrorClick(colorErrorButton, LDLEGeneral/*LDLEColor*/);
 }
 
 void ErrorPanel::partDeterminant()
 {
-    errors->doErrorClick(partDeterminantButton, LDMEPartDeterminant);
+    errors->doErrorClick(partDeterminantButton, LDLEPartDeterminant);
 }
 
 void ErrorPanel::concaveQuad()
 {
-    errors->doErrorClick(concaveQuadButton, LDMEConcaveQuad);
+    errors->doErrorClick(concaveQuadButton, LDLEConcaveQuad);
 }
 
 void ErrorPanel::concaveQuadSplit()
 {
-    errors->doErrorClick(concaveQuadSplitButton, LDMEConcaveQuadSplit);
+    errors->doErrorClick(concaveQuadSplitButton, LDLEConcaveQuadSplit);
 }
 
 void ErrorPanel::colinearPoints()
 {
-    errors->doErrorClick(colinearPointsButton, LDMEColinear);
+    errors->doErrorClick(colinearPointsButton, LDLEColinear);
 }
 
 void ErrorPanel::openGLError()
 {
-    errors->doErrorClick(openGLErrorButton, LDMEOpenGL);
+	// TC TODO: Get rid of this error
+    errors->doErrorClick(openGLErrorButton, LDLEGeneral/*LDLEOpenGL*/);
 }

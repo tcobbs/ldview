@@ -1,9 +1,14 @@
 #include "ModelViewerWidget.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCMacros.h>
+#include <LDLoader/LDLError.h>
+#include <LDLoader/LDLModel.h>
 #include <LDLib/LDrawModelViewer.h>
-#include <LDLib/ModelMacros.h>
-#include <LDLib/TGLStudLogo.h>
+//#include <LDLib/ModelMacros.h>
+#include <TRE/TREMainModel.h>
 #include "OpenGLExtensionsPanel.h"
 #include "AboutPanel.h"
 #include "LDView.h"
@@ -83,10 +88,16 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		QImage studImage;
 
 		QImageDrag::decode(mimeSource, studImage);
-		TGLStudLogo::setRawTextureData(studImage.bits(), studImage.numBytes());
+		TREMainModel::setStudTextureData(studImage.bits(),
+			studImage.numBytes());
 	}
-	modelViewer->setProgressCallback(staticProgressCallback, this);
-	modelViewer->setErrorCallback(staticErrorCallback, this);
+	TCAlertManager::registerHandler(LDLError::alertClass(), this,
+		(TCAlertCallback)&ModelViewerWidget::ldlErrorCallback);
+	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+		(TCAlertCallback)&ModelViewerWidget::progressAlertCallback);
+
+//	modelViewer->setProgressCallback(staticProgressCallback, this);
+//	modelViewer->setErrorCallback(staticErrorCallback, this);
 	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
 	{
 		mouseButtonsDown[i] = false;
@@ -671,6 +682,8 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	case LDVPollBackground:
 		pollAction = mainWindow->backgroundPollingAction;
 		break;
+	default:
+		break;
 	}
 	pollAction->setOn(true);
 	if (viewMode == LDVViewExamine)
@@ -847,12 +860,14 @@ void ModelViewerWidget::doRecentFile(int index)
 	unlock();
 }
 
+/*
 int ModelViewerWidget::staticProgressCallback(char *message, float progress,
 	void *userData)
 {
 	return ((ModelViewerWidget *)userData)->progressCallback(message, progress,
 		true);
 }
+*/
 
 void ModelViewerWidget::setupProgress(void)
 {
@@ -1038,7 +1053,7 @@ void ModelViewerWidget::updateFPS(void)
 
 void ModelViewerWidget::drawFPS(void)
 {
-	if (showFPS && modelViewer->getLDrawModel())
+	if (showFPS && modelViewer->getMainTREModel())
 	{
 		if (statusBar->isHidden())
 		{
@@ -1135,7 +1150,7 @@ bool ModelViewerWidget::verifyLDrawDir(char *value)
 			QDir::setCurrent(value);
 			if (QDir::current().cd("p"))
 			{
-				LDrawModel::setLDrawDir(value);
+				LDLModel::setLDrawDir(value);
 				found = true;
 			}
 		}
@@ -1277,7 +1292,7 @@ void ModelViewerWidget::doFileCancelLoad(void)
 	unlock();
 }
 
-int ModelViewerWidget::errorCallback(LDMError* error)
+int ModelViewerWidget::errorCallback(LDLError* error)
 {
 	if (!errors)
 	{
@@ -1287,10 +1302,12 @@ int ModelViewerWidget::errorCallback(LDMError* error)
 	return 1;
 }
 
-int ModelViewerWidget::staticErrorCallback(LDMError* error, void* userData)
+/*
+int ModelViewerWidget::staticErrorCallback(LDLError* error, void* userData)
 {
 	return ((ModelViewerWidget*)userData)->errorCallback(error);
 }
+*/
 
 void ModelViewerWidget::clearErrors(void)
 {
@@ -1621,7 +1638,7 @@ void ModelViewerWidget::doFileMenuAboutToShow(void)
 	{
 		setMenuItemsEnabled(fileMenu, true);
 		fileMenu->setItemEnabled(fileCancelLoadId, false);
-		if (!modelViewer || !modelViewer->getLDrawModel())
+		if (!modelViewer || !modelViewer->getMainTREModel())
 		{
 			fileMenu->setItemEnabled(fileReloadId, false);
 			fileMenu->setItemEnabled(fileSaveSnapshotId, false);
@@ -1662,6 +1679,43 @@ void ModelViewerWidget::doHelpMenuAboutToShow(void)
 	else
 	{
 		setMenuItemsEnabled(helpMenu, true);
+	}
+}
+
+void ModelViewerWidget::ldlErrorCallback(LDLError *error)
+{
+	if (error)
+	{
+		if (!errorCallback(error))
+		{
+			error->cancelLoad();
+		}
+	}
+}
+
+void ModelViewerWidget::progressAlertCallback(TCProgressAlert *alert)
+{
+	if (alert)
+	{
+		if (strcmp(alert->getSource(), "LDLibraryUpdater") == 0)
+		{
+			debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+				alert->getProgress());
+		}
+		else
+		{
+			bool showErrors = true;
+
+			if (strcmp(alert->getSource(), "TCImage") == 0)
+			{
+				showErrors = false;
+			}
+			if (!progressCallback(alert->getMessage(), alert->getProgress(),
+				showErrors))
+			{
+				alert->abort();
+			}
+		}
 	}
 }
 
