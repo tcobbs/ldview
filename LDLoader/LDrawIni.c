@@ -11,6 +11,7 @@ If not, I don't know who wrote it.
 040307 lch Added LgeoDir
 040319 lch Added LDrawInP.h (Really LDrawIniP.h but 8+3 name...)
 040513 lch Added LDrawIniParseSymbolicSearchDir
+041202 lch Changed parameter ModelDir to ModelPath in LDrawIniComputeRealDirs
 */
 
 #include <stdio.h>
@@ -259,6 +260,8 @@ void LDrawIniFree(struct LDrawIniS * LDrawIni)
    if (LDrawIni->LDrawDir)
       free(LDrawIni->LDrawDir);
    FreeSearchDirs(LDrawIni);
+   if (LDrawIni->ModelDir)
+      free(LDrawIni->ModelDir);
    if (LDrawIni->LgeoDir)
       free(LDrawIni->LgeoDir);
 
@@ -578,13 +581,14 @@ Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
 the Symbolic Dirs read from the env vars or ini files.
 If OnlyValidDirs is true then non-existing search dirs is skipped
 If AddTrailingSlash is true then the search dirs will have a slash/backslash appended.
-If ModelDir is NULL then search dir <MODELDIR> is skipped.
+If ModelPath is NULL then search dir <MODELDIR> is skipped.
+Otherwise LDrawIni->ModelDir is updated.
 Returns 1 if OK, 0 on error
 */
 int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
                             int OnlyValidDirs,
                             int AddTrailingSlash,
-                            const char *ModelDir)
+                            const char *ModelPath)
 {
    struct LDrawIniPrivateDataS *pd;
    const char    *HomeDir;
@@ -608,13 +612,46 @@ int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
                                         sizeof(struct LDrawSearchDirS));
    if (!LDrawIni->SearchDirs)
       return 0;
+   if (LDrawIni->ModelDir)
+      free(LDrawIni->ModelDir);
+   if (ModelPath)
+   {
+/*
+ModelPath    ModelDir
+dir/car.ldr  dir
+dir\car.ldr  dir
+car.ldr      .
+c:\car.ldr   c:
+/car.ldr
+*/
+      i = strlen(ModelPath);
+      while (--i >= 0)
+      {
+         if (ModelPath[i] == '/' || ModelPath[i] == '\\')
+            break;  
+      }
+      /* i is now reduced to only copy dir part of ModelPath */
+      if (i < 0)
+      {
+         /* ModelPath is only a filename, use "." as directory */
+         ModelPath = ".";
+         i = 1;
+      }
+      LDrawIni->ModelDir = (char *) malloc(i + 1);
+      if (!LDrawIni->ModelDir)
+         return 0;
+      memcpy(LDrawIni->ModelDir, ModelPath, i);
+      LDrawIni->ModelDir[i] = '\0';
+   }
+   else
+      LDrawIni->ModelDir = NULL;
    HomeDir = getenv(HOME_ENV_VAR);
    for (i = 0; i < pd->nSymbolicSearchDirs; i++)
    {
       Res = LDrawIniParseSymbolicSearchDir(&SearchDir,
                                            pd->SymbolicSearchDirs[i],
                                            LDrawIni->LDrawDir,
-                                           ModelDir,
+                                           LDrawIni->ModelDir,
                                            HomeDir);
 
       if (Res < 0)
@@ -703,8 +740,8 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
          s += 9;
          continue;
       }
-      if (strncmp(s, "<MODELDIR>", 10) == 0 ||
-          strncmp(s, "<LDRAWDIR>", 10) == 0 ||
+      if (strncmp(s, "<LDRAWDIR>", 10) == 0 ||
+          strncmp(s, "<MODELDIR>", 10) == 0 ||
           strncmp(s, "<HOMEDIR>", 9) == 0)
       {
          /* These are not flags, but indicate start of Dir */
@@ -728,17 +765,11 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    t = strchr(s, '"');
    if (t)
    {
-      s = ++t;                  /* s points to after begin quote             */
+      s = t + 1;                /* s points to after begin quote             */
       t = strchr(s, '"');       /* Find end quote                            */
    }
    PrefixDir = "";              /* Empty (NULL is error)                     */
-   if (strncmp(s, "<MODELDIR>", 10) == 0)
-   {
-      s += 10;
-      PrefixDir = ModelDir;     /* ModelDir may be both empty and NULL       */
-      Flags |= LDSDF_MODELDIR;
-   }
-   else if (strncmp(s, "<LDRAWDIR>", 10) == 0)
+   if (strncmp(s, "<LDRAWDIR>", 10) == 0)
    {
       s += 10;
       PrefixDir = LDrawDir;
@@ -749,6 +780,12 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
          if (strcmp(s + 1, "PARTS") == 0)
             Flags |= LDSDF_DEFPART;
       }
+   }
+   else if (strncmp(s, "<MODELDIR>", 10) == 0)
+   {
+      s += 10;
+      PrefixDir = ModelDir;
+      Flags |= LDSDF_MODELDIR;
    }
    else if (strncmp(s, "<HOMEDIR>", 9) == 0)
    {
@@ -763,7 +800,7 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    }
    OldLen = strlen(PrefixDir);
    Len = t ? t - s : strlen(s);
-   Dir = (char *) malloc(OldLen + Len + 1 + 1); /* Room for \\ and \0        */
+   Dir = (char *) malloc(OldLen + Len + 1 + 1); /* See AddTrailingSlash      */
    if (!Dir)
       return 0;
    strcpy(Dir, PrefixDir);

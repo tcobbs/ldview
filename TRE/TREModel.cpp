@@ -3251,53 +3251,56 @@ bool TREModel::shouldLoadConditionalLines(void)
 	return m_mainModel->shouldLoadConditionalLines();
 }
 
-bool TREModel::flattenNonUniform(TREModel *model, float *matrix,
-								 float *originalMatrix, TCULong color,
-								 bool colorSet, TCULong edgeColor,
+void TREModel::flattenNonUniform(float *matrix, float *originalMatrix,
+								 TCULong color, bool colorSet, TCULong edgeColor,
 								 bool edgeColorSet)
 {
-	float determinant = TCVector::determinant(originalMatrix);
-	TRESubModelArray *subModels = model->m_subModels;
-
-	if (!fEq(determinant, 1.0) && !fEq(determinant, -1.0))
-	{
-		flatten(model, matrix, color, colorSet, edgeColor, edgeColorSet, true);
-		debugPrintf("Flattened non-uniform sub-model: %g.\n", determinant);
-		return true;
-	}
-	else if (subModels)
+	if (m_subModels)
 	{
 		int i;
-		int count = subModels->getCount();
+		int count = m_subModels->getCount();
 		float newMatrix[16];
 		float newOriginalMatrix[16];
+		float determinant;
 
 		for (i = count - 1; i >= 0; i--)
 		{
-			TRESubModel *subModel = (*subModels)[i];
+			TRESubModel *subModel = (*m_subModels)[i];
 			TREModel *newModel = subModel->getEffectiveModel();
-			bool remove;
 
 			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
 			TCVector::multMatrix(originalMatrix, subModel->getOriginalMatrix(),
 				newOriginalMatrix);
-			if (subModel->isColorSet())
+			determinant = TCVector::determinant(newOriginalMatrix);
+			if (!fEq(determinant, 1.0) && !fEq(determinant, -1.0))
 			{
-				remove = flattenNonUniform(newModel,
-					newMatrix, newOriginalMatrix, htonl(subModel->getColor()),
-					true, htonl(subModel->getEdgeColor()), true);
+				if (subModel->isColorSet())
+				{
+					flatten(newModel, newMatrix, htonl(subModel->getColor()),
+						true, htonl(subModel->getEdgeColor()), true, true);
+				}
+				else
+				{
+					flatten(newModel, newMatrix, color, colorSet, edgeColor,
+						edgeColorSet, true);
+				}
+				debugPrintf("Flattened non-uniform sub-model: %g.\n", determinant);
+				m_subModels->removeObject(i);
 			}
 			else
 			{
-				remove = flattenNonUniform(newModel,
-					newMatrix, newOriginalMatrix, color, colorSet, edgeColor,
-					edgeColorSet);
-			}
-			if (remove)
-			{
-				subModels->removeObject(i);
+				if (subModel->isColorSet())
+				{
+					newModel->flattenNonUniform(newMatrix, newOriginalMatrix,
+						htonl(subModel->getColor()), true,
+						htonl(subModel->getEdgeColor()), true);
+				}
+				else
+				{
+					newModel->flattenNonUniform(newMatrix, newOriginalMatrix,
+						color, colorSet, edgeColor, edgeColorSet);
+				}
 			}
 		}
 	}
-	return false;
 }

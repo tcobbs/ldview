@@ -3,6 +3,7 @@
 040228 lch First version of LDrawIni handling routines
 040307 lch Added LgeoDir
 040319 lch Added LDrawInP.h (Really LDrawIniP.h but 8+3 name...)
+041202 lch Changed parameter ModelDir to ModelPath in LDrawIniComputeRealDirs
 */
 
 #ifndef LDRAWINI_INCLUDED
@@ -24,6 +25,9 @@ struct LDrawIniS
    /* The LDrawSearch directories ready to use */
    int            nSearchDirs;
    struct LDrawSearchDirS *SearchDirs;
+
+   /* The dir extracted from ModelPath in last LDrawIniComputeRealDirs call */
+   char          *ModelDir;
 
    /* The LGEODIR (named LGEO) containing the LGEO .inc files */
    char          *LgeoDir;
@@ -59,13 +63,13 @@ Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
 the Symbolic Dirs read from the env vars or ini files.
 If OnlyValidDirs is true then non-existing search dirs is skipped
 If AddTrailingSlash is true then the search dirs will have a slash/backslash appended.
-If ModelDir is NULL then search dir <MODELDIR> is skipped.
+If ModelPath is NULL then search dir <MODELDIR> is skipped.
 Returns 1 if OK, 0 on error
 */
 int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni, 
                             int OnlyValidDirs,
                             int AddTrailingSlash,
-                            const char *ModelDir);
+                            const char *ModelPath);
 /* 
 Reset search dirs to default if LDrawSearch is NULL
 or to the dirs specified in LDrawSearch delimited by |.
