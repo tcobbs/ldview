@@ -7,6 +7,19 @@
 #include <windows.h>
 
 #include <LDLib/LDrawModelViewer.h>
+#ifdef WIN32
+// In Windows, we have to disable a number of warnings in order to use any STL
+// classes without getting tons of warnings.  The following warning is shut off
+// completely; it's just the warning that identifiers longer than 255 characters
+// will be truncated in the debug info.  I really don't care about this.  Note
+// that the other warnings are only disabled during the #include of the STL
+// headers due to the warning(push) and warning(pop).
+#pragma warning(push, 1)	// Minimum warnings during STL includes
+#endif // WIN32
+#include <map>
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 
 //class LDrawModelViewer;
 
@@ -17,6 +30,8 @@
 #define LDP_NEEDS_RELOAD 0x08
 #define LDP_NEEDS_RECOMPILE 0x10
 */
+
+typedef std::map<HWND, bool> HwndBoolMap;
 
 class LDViewPreferences: public CUIPropertySheet
 {
@@ -70,6 +85,7 @@ public:
 	virtual void applyChanges(void);
 	virtual int run(void);
 
+//	virtual BOOL doDialogCtlColorStatic(HDC hdcStatic, HWND hwndStatic);
 	virtual BOOL doDialogThemeChanged(void);
 	virtual BOOL doDialogVScroll(HWND hDlg, int scrollCode, int position,
 		HWND hScrollBar);
@@ -97,17 +113,17 @@ protected:
 	virtual ~LDViewPreferences(void);
 	virtual void dealloc(void);
 	virtual void setupColorButton(HWND hPage, HWND &hColorButton,
-		int controlID, HBITMAP &hButtonBitmap, COLORREF color, HTHEME &hTheme);
+		int controlID, HBITMAP &hButtonBitmap, COLORREF color);
 	virtual void setupFov(bool warn = false);
 	virtual void setupBackgroundColorButton(void);
 	virtual void setupDefaultColorButton(void);
 	virtual void setupSeamWidth(void);
 	virtual void setupFullScreenRefresh(void);
 	virtual void redrawColorBitmap(HWND hColorButton, HBITMAP hButtonBitmap,
-		COLORREF color, HTHEME hTheme);
+		COLORREF color);
 	virtual void getRGB(int color, int &r, int &g, int &b);
 	virtual void chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
-		COLORREF &color, HTHEME hTheme);
+		COLORREF &color);
 	virtual void chooseBackgroundColor(void);
 	virtual void chooseDefaultColor(void);
 	virtual void doFSRefresh(void);
@@ -147,6 +163,8 @@ protected:
 	virtual BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 		HWND controlHWnd);
 	virtual BOOL doDialogHelp(HWND hDlg, LPHELPINFO helpInfo);
+	virtual BOOL doDrawItem(HWND hDlg, int itemId,
+		LPDRAWITEMSTRUCT drawItemStruct);
 	virtual DWORD getPageDialogID(HWND hDlg);
 	virtual void doReset(void);
 	virtual void setupPage(int pageNumber);
@@ -206,6 +224,10 @@ protected:
 		LPARAM lParam);
 	virtual float getMinFov(void);
 	virtual float getMaxFov(void);
+	virtual void initThemes(HWND hButton);
+	virtual void setupGroupCheckButton(HWND hPage, int buttonId, bool state);
+	virtual bool getCheck(HWND hPage, int buttonId, bool action = false);
+//	virtual void getGroupBoxTextColor(void);
 
 
 	// These are called from the constructor, and cannot be properly made into
@@ -229,11 +251,17 @@ protected:
 
 	BOOL doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 		LPDRAWITEMSTRUCT drawItemStruct);
+	BOOL doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
+		LPDRAWITEMSTRUCT drawItemStruct);
 
 	LRESULT colorButtonProc(HWND hWnd, UINT message, WPARAM wParam,
 		LPARAM lParam);
+	LRESULT groupCheckButtonProc(HWND hWnd, UINT message, WPARAM wParam,
+		LPARAM lParam);
 
 	static LRESULT CALLBACK staticColorButtonProc(HWND hWnd, UINT message,
+		WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK staticGroupCheckButtonProc(HWND hWnd, UINT message,
 		WPARAM wParam, LPARAM lParam);
 	static void setColor(const char *key, COLORREF color);
 
@@ -310,10 +338,8 @@ protected:
 	HBITMAP hDefaultColorBitmap;
 	HWND hDefaultColorButton;
 	HDC hButtonColorDC;
-	HTHEME hBackgroundColorTheme;
-	HTHEME hDefaultColorTheme;
 	HWND hMouseOverButton;
-	long previousButtonWindowProc;
+	long origButtonWindowProc;
 
 	HWND hGeometryPage;
 	HWND hSeamSpin;
@@ -365,7 +391,10 @@ protected:
 	bool setActiveWarned;
 	bool checkAbandon;
 
+	HTHEME hButtonTheme;
+
 	static char ldviewPath[MAX_PATH];
+	HwndBoolMap checkStates;
 };
 
 #endif // __LDVPREFERENCES_H__

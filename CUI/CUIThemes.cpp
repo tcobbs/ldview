@@ -14,6 +14,10 @@ PFNGETTHEMEBACKGROUNDCONTENTRECT CUIThemes::sm_getThemeBackgroundContentRect =
 	NULL;
 PFNDRAWTHEMEEDGE CUIThemes::sm_drawThemeEdge = NULL;
 PFNSETWINDOWTHEME CUIThemes::sm_setWindowTheme = NULL;
+PFNGETWINDOWTHEME CUIThemes::sm_getWindowTheme = NULL;
+PFNGETTHEMECOLOR CUIThemes::sm_getThemeColor = NULL;
+PFNSETTHEMEAPPPROPERTIED CUIThemes::sm_setThemeAppProperties = NULL;
+PFNGETTHEMERECT CUIThemes::sm_getThemeRect = NULL;
 
 CUIThemes::CUIThemesCleanup::~CUIThemesCleanup(void)
 {
@@ -54,10 +58,21 @@ void CUIThemes::init(void)
 				"DrawThemeEdge");
 			sm_setWindowTheme = (PFNSETWINDOWTHEME)GetProcAddress(sm_hModThemes,
 				"SetWindowTheme");
+			sm_getWindowTheme = (PFNGETWINDOWTHEME)GetProcAddress(sm_hModThemes,
+				"GetWindowTheme");
+			sm_getThemeColor = (PFNGETTHEMECOLOR)GetProcAddress(sm_hModThemes,
+				"GetThemeColor");
+			sm_setThemeAppProperties =
+				(PFNSETTHEMEAPPPROPERTIED)GetProcAddress(sm_hModThemes,
+				"SetThemeAppProperties");
+			sm_getThemeRect = (PFNGETTHEMERECT)GetProcAddress(sm_hModThemes,
+				"GetThemeRect");
 
 			if (sm_openThemeData && sm_closeThemeData && sm_drawThemeBackground
 				&& sm_drawThemeText && sm_getThemeBackgroundContentRect &&
-				sm_drawThemeEdge && sm_setWindowTheme)
+				sm_drawThemeEdge && sm_setWindowTheme && sm_getWindowTheme &&
+				sm_getThemeColor && sm_setThemeAppProperties &&
+				sm_getThemeRect)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -183,3 +198,50 @@ HRESULT CUIThemes::setWindowTheme(HWND hWnd, LPCSTR pszSubAppName,
 	USES_CONVERSION;
 	return setWindowTheme(hWnd, A2W(pszSubAppName), A2W(pszSubIdList));
 }
+
+HTHEME CUIThemes::getWindowTheme(HWND hWnd)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getWindowTheme(hWnd);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+HRESULT CUIThemes::getThemeColor(HTHEME hTheme, int iPartId, int iStateId,
+								 int iPropId, COLORREF *pColor)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemeColor(hTheme, iPartId, iStateId, iPropId, pColor);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+void CUIThemes::setThemeAppProperties(DWORD dwFlags)
+{
+	if (sm_themeLibLoaded)
+	{
+		sm_setThemeAppProperties(dwFlags);
+	}
+}
+
+HRESULT CUIThemes::getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
+								int iPropId, RECT *pRect)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemeRect(hTheme, iPartId, iStateId, iPropId, pRect);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+

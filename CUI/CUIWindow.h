@@ -58,6 +58,8 @@ class CUIExport CUIWindow : public TCObject
 
 		static void setArrowCursor(void);
 		static void setWaitCursor(void);
+		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,
+			int *index = NULL);
 	protected:
 		~CUIWindow(void);
 		virtual void dealloc(void);
@@ -139,6 +141,8 @@ class CUIExport CUIWindow : public TCObject
 		virtual LRESULT doThemeChanged(void);
 		virtual LRESULT doNotify(int controlId, LPNMHDR notification);
 		virtual BOOL doDialogThemeChanged(void);
+		virtual BOOL doDialogCtlColorStatic(HDC hdcStatic, HWND hwndStatic);
+		virtual BOOL doDialogCtlColorBtn(HDC hdcStatic, HWND hwndStatic);
 		virtual void doDialogClose(HWND hDlg);
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId,
 			int notifyCode, HWND controlHWnd);
