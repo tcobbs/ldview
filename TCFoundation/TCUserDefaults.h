@@ -83,6 +83,7 @@ class TCExport TCUserDefaults: public TCObject
 		void defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 			TCStringArray *allKeys);
 		bool defIsLongKey(const char* key, bool sessionSpecific);
+		void deleteSubKeys(HKEY hKey);
 
 		HKEY hAppDefaultsKey;
 		HKEY hSessionKey;

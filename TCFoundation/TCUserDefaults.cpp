@@ -293,7 +293,14 @@ void TCUserDefaults::defRemoveSession(const char *value)
 
 	if (hSessionsKey)
 	{
-		RegDeleteKey(hSessionsKey, value);
+		HKEY hDelKey = openKeyPathUnderKey(hSessionsKey, value);
+
+		if (hDelKey)
+		{
+			deleteSubKeys(hDelKey);
+			RegCloseKey(hDelKey);
+			RegDeleteKey(hSessionsKey, value);
+		}
 	}
 	RegCloseKey(hSessionsKey);
 #endif // WIN32
@@ -920,6 +927,28 @@ HKEY TCUserDefaults::openSessionKey(void)
 	retValue = openKeyPathUnderKey(HKEY_CURRENT_USER, keyPath, false);
 	delete keyPath;
 	return retValue;
+}
+
+void TCUserDefaults::deleteSubKeys(HKEY hKey)
+{
+	while (1)
+	{
+		char name[1024];
+		HKEY hSubKey;
+
+		// Since we're deleting all sub-keys, we always just want the first
+		// one.
+		if (RegEnumKey(hKey, 0, name, sizeof(name)) != ERROR_SUCCESS)
+		{
+			break;
+		}
+		if (RegOpenKey(hKey, name, &hSubKey) == ERROR_SUCCESS)
+		{
+			deleteSubKeys(hSubKey);
+			RegCloseKey(hSubKey);
+			RegDeleteKey(hKey, name);
+		}
+	}
 }
 
 #endif // WIN32
