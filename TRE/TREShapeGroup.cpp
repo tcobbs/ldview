@@ -701,6 +701,12 @@ int TREShapeGroup::addQuad(TCVector *vertices, TCVector *normals)
 	return addShape(TRESQuad, vertices, normals, 4);
 }
 
+int TREShapeGroup::addTriangleStrip(TCVector *vertices, TCVector *normals,
+									int count)
+{
+	return addStrip(TRESTriangleStrip, vertices, normals, count);
+}
+
 int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals,
 								int count)
 {
@@ -1011,7 +1017,7 @@ void TREShapeGroup::invert(void)
 
 						if (stripCount % 2)
 						{
-							invertULongArray(theseIndices, indexOffset + 1,
+							invertULongArray(theseIndices, indexOffset,
 								indexOffset + stripCount);
 						}
 						else
@@ -1106,7 +1112,7 @@ void TREShapeGroup::unMirror(void)
 
 						if (stripCount % 2)
 						{
-							invertULongArray(theseIndices, indexOffset + 1,
+							invertULongArray(theseIndices, indexOffset,
 								indexOffset + stripCount);
 						}
 						else

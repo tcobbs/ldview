@@ -45,6 +45,8 @@ public:
 		TCVector *textureCoords);
 	virtual int addQuad(TCVector *vertices);
 	virtual int addQuad(TCVector *vertices, TCVector *normals);
+	virtual int addTriangleStrip(TCVector *vertices, TCVector *normals,
+		int count);
 	virtual int addQuadStrip(TCVector *vertices, TCVector *normals, int count);
 	virtual int addTriangleFan(TCVector *vertices, TCVector *normals,
 		int count);

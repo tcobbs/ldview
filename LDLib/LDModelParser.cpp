@@ -490,6 +490,15 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
 	return true;
 }
 
+bool LDModelParser::substituteEighthSphere(TREModel *treModel, bool bfc)
+{
+	int numSegments = getNumCircleSegments(1.0);
+
+	treModel->addEighthSphere(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		bfc);
+	return true;
+}
+
 bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
 									   bool bfc)
 {
@@ -634,6 +643,7 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		}
 		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
 		{
+			return substituteEighthSphere(treModel, bfc);
 			// Need to do eighth sphere substitution
 		}
 		else if (isCyli(modelName))

@@ -1069,7 +1069,8 @@ void LDrawModelViewer::setupLighting(void)
 	{
 		setupLight(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
-		if (flags.oneLight || flags.usesSpecular)
+		if (flags.oneLight || flags.usesSpecular ||
+			(flags.bfc && flags.redBackFaces))
 		{
 			glDisable(GL_LIGHT1);
 			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
@@ -1808,10 +1809,17 @@ void LDrawModelViewer::zoom(float amount)
 	if (clipZoom)
 	{
 		nextClipAmount = clipAmount - amount / 1000.0f;
-		if (nextClipAmount > aspectRatio/*1.0f*/)
+
+		if (nextClipAmount > aspectRatio * 2)
 		{
-			nextClipAmount = aspectRatio/*1.0f*/;
+			nextClipAmount = aspectRatio * 2;
 		}
+/*
+		if (nextClipAmount > 1.0f)
+		{
+			nextClipAmount = 1.0f;
+		}
+*/
 		else if (nextClipAmount < 0.0f)
 		{
 			nextClipAmount = 0.0f;

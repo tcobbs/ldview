@@ -73,6 +73,7 @@ public:
 		bool shouldNormalize = true);
 	TCVector transformNormal(const float *matrix,
 		bool shouldNormalize = true);
+	TCVector rearrange(int x, int y, int z) const;
 
 	static float determinant(const float *matrix);
 	static void multMatrix(const float *left, const float *right,

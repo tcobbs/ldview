@@ -649,6 +649,27 @@ void TREModel::addBFCQuad(TCULong color, TCVector *vertices)
 	m_coloredShapes[TREMBFC]->addQuad(color, vertices);
 }
 
+void TREModel::triangleStripToTriangle(int index, TCVector *stripVertices,
+									   TCVector *stripNormals,
+									   TCVector *triangleVertices,
+									   TCVector *triangleNormals)
+{
+	int ofs1 = 1;
+	int ofs2 = 2;
+
+	if (index % 2)
+	{
+		ofs1 = 2;
+		ofs2 = 1;
+	}
+	triangleVertices[0] = stripVertices[index];
+	triangleVertices[1] = stripVertices[index + ofs1];
+	triangleVertices[2] = stripVertices[index + ofs2];
+	triangleNormals[0] = stripNormals[index];
+	triangleNormals[1] = stripNormals[index + ofs1];
+	triangleNormals[2] = stripNormals[index + ofs2];
+}
+
 void TREModel::quadStripToQuad(int index, TCVector *stripVertices,
 							   TCVector *stripNormals, TCVector *quadVertices,
 							   TCVector *quadNormals)
@@ -668,6 +689,13 @@ void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count,
 {
 	setupStandard();
 	addQuadStrip(m_shapes[TREMStandard], vertices, normals, count, flat);
+}
+
+void TREModel::addTriangleStrip(TCVector *vertices, TCVector *normals,
+								int count, bool flat)
+{
+	setupStandard();
+	addTriangleStrip(m_shapes[TREMStandard], vertices, normals, count, flat);
 }
 
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
@@ -707,6 +735,55 @@ void TREModel::addQuadStrip(TCULong color, TCVector *vertices,
 		count, flat);
 }
 
+void TREModel::addTriangleStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
+								TCVector *normals, int count, bool flat)
+{
+	if (m_mainModel->getUseStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
+	{
+		shapeGroup->addTriangleStrip(vertices, normals, count);
+	}
+	else
+	{
+		int i;
+		TCVector triangleVertices[3];
+		TCVector triangleNormals[3];
+
+		for (i = 0; i < count - 2; i++)
+		{
+			triangleStripToTriangle(i, vertices, normals, triangleVertices,
+				triangleNormals);
+			shapeGroup->addTriangle(triangleVertices, triangleNormals);
+		}
+	}
+}
+
+/*
+void TREModel::addTriangleStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
+								TCVector *vertices, TCVector *normals,
+								int count, bool flat)
+{
+	if (m_mainModel->getUseStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
+	{
+//		shapeGroup->addTriangleStrip(color, vertices, normals, count);
+	}
+	else
+	{
+		int i;
+		TCVector triangleVertices[3];
+		TCVector triangleNormals[3];
+
+		for (i = 0; i < count - 2; i++)
+		{
+			triangleStripToTriangle(i, vertices, normals, triangleVertices,
+				triangleNormals);
+			shapeGroup->addTriangle(color, triangleVertices, triangleNormals);
+		}
+	}
+}
+*/
+
 void TREModel::addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
 							TCVector *vertices, TCVector *normals, int count,
 							bool flat)
@@ -736,6 +813,23 @@ void TREModel::addBFCQuadStrip(TCULong color, TCVector *vertices,
 	setupColoredBFC();
 	addQuadStrip(m_coloredShapes[TREMBFC], color, vertices, normals, count,
 		flat);
+}
+
+/*
+void TREModel::addBFCTriangleStrip(TCULong color, TCVector *vertices,
+								   TCVector *normals, int count, bool flat)
+{
+	setupColoredBFC();
+	addTriangleStrip(m_coloredShapes[TREMBFC], color, vertices, normals, count,
+		flat);
+}
+*/
+
+void TREModel::addBFCTriangleStrip(TCVector *vertices, TCVector *normals,
+								   int count, bool flat)
+{
+	setupBFC();
+	addTriangleStrip(m_shapes[TREMBFC], vertices, normals, count, flat);
 }
 
 void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
@@ -1485,6 +1579,8 @@ void TREModel::addCone(const TCVector &center, float radius, float height,
 	int i;
 	TCVector top = center;
 	TCVector p1, p2, p3;
+	TCVector linePoints[2];
+	TCVector controlPoints[2];
 
 	if (usedSegments == -1)
 	{
@@ -1507,15 +1603,26 @@ void TREModel::addCone(const TCVector &center, float radius, float height,
 		points[1] = p1;
 		points[2] = top;
 		setCirclePoint(angle0, radius, center, p3);
-/*
-		if (i == 0)
+		if (i == 0 && shouldLoadConditionalLines())
 		{
-			newConditionalLine(24, p1, top, p3, p2);
+			linePoints[0] = p1;
+			linePoints[1] = top;
+			controlPoints[0] = p3;
+			controlPoints[1] = p2;
+			addConditionalLine(linePoints, controlPoints);
+//			newConditionalLine(24, p1, top, p3, p2);
 		}
-*/
 		normals[0] = ((p1 - top) * (p1 - p2)) + ((p3 - top) * (p3 - p1));
 		normals[0].normalize();
 		setCirclePoint(angle3, radius, center, p3);
+		if (shouldLoadConditionalLines())
+		{
+			linePoints[0] = p2;
+			linePoints[1] = top;
+			controlPoints[0] = p1;
+			controlPoints[1] = p3;
+			addConditionalLine(linePoints, controlPoints);
+		}
 //		newConditionalLine(24, p2, top, p1, p3);
 		normals[1] = ((p2 - top) * (p2 - p3)) + ((p1 - top) * (p1 - p2));
 		normals[1].normalize();
@@ -1532,6 +1639,221 @@ void TREModel::addCone(const TCVector &center, float radius, float height,
 		delete[] points;
 		delete[] normals;
 	}
+}
+
+TCVector TREModel::calcIntersection(int i, int j, int num,
+									TCVector* zeroXPoints,
+									TCVector* zeroYPoints,
+									TCVector* zeroZPoints)
+{
+	TCVector temp1, temp2, temp3, temp4, temp5, temp6;
+	TCVector p1, p2, p3;
+
+	if (i + j == num)
+	{
+		return zeroXPoints[j];
+	}
+	else if (i == 0)
+	{
+		return zeroZPoints[num - j];
+	}
+	else if (j == 0)
+	{
+		return zeroYPoints[i];
+	}
+	temp1 = zeroYPoints[i];
+	temp2 = zeroXPoints[num - i];
+	temp3 = zeroZPoints[num - j];
+	temp4 = zeroXPoints[j];
+	temp5 = zeroYPoints[i + j];
+	temp6 = zeroZPoints[num - i - j];
+	return (temp1 + temp2 + temp3 + temp4 + temp5 + temp6 -
+		zeroXPoints[0] - zeroYPoints[0] - zeroZPoints[0]) / 9.0f;
+}
+
+void TREModel::addEighthSphere(const TCVector& center, float radius,
+							   int numSegments, bool bfc)
+{
+	TCVector* zeroXPoints;
+	TCVector* zeroYPoints;
+	TCVector* zeroZPoints;
+	int usedSegments = numSegments / 4;
+	int i, j;
+	TCVector p1, p2, p3;
+	TCVector *spherePoints = NULL;
+	int numMainPoints = (usedSegments + 1) * (usedSegments + 1) - 1;
+	int mainSpot = 0;
+
+	if (shouldLoadConditionalLines())
+	{
+		spherePoints = new TCVector[numMainPoints];
+	}
+	zeroXPoints = new TCVector[usedSegments + 1];
+	zeroYPoints = new TCVector[usedSegments + 1];
+	zeroZPoints = new TCVector[usedSegments + 1];
+	for (i = 0; i <= usedSegments; i++)
+	{
+		float angle = 2.0f * (float)M_PI / numSegments * i;
+
+		zeroYPoints[i][0] = 1.0f / ((float)tan(angle) + 1);
+		zeroYPoints[i][1] = 0.0f;
+		zeroYPoints[i][2] = 1.0f - zeroYPoints[i][0];
+		zeroZPoints[i] = zeroYPoints[i].rearrange(2, 0, 1);
+		zeroXPoints[i] = zeroYPoints[i].rearrange(1, 2, 0);
+		zeroXPoints[i] += center;
+		zeroYPoints[i] += center;
+		zeroZPoints[i] += center;
+	}
+	for (j = 0; j < usedSegments; j++)
+	{
+		int stripCount = usedSegments - j;
+		int stripSpot = 0;
+		TCVector *points = new TCVector[stripCount * 2 + 1];
+		TCVector *normals = new TCVector[stripCount * 2 + 1];
+
+		for (i = 0; i < stripCount; i++)
+		{
+			if (i == 0)
+			{
+				p1 = calcIntersection(i, j, usedSegments, zeroXPoints,
+					zeroYPoints, zeroZPoints);
+				p1 *= radius / p1.length();
+				normals[stripSpot] = (p1 - center).normalize();
+				points[stripSpot++] = p1;
+				if (shouldLoadConditionalLines())
+				{
+					spherePoints[mainSpot++] = p1;
+				}
+			}
+			p2 = calcIntersection(i, j + 1, usedSegments, zeroXPoints,
+				zeroYPoints, zeroZPoints);
+			p2 *= radius / p2.length();
+			p3 = calcIntersection(i + 1, j, usedSegments, zeroXPoints,
+				zeroYPoints, zeroZPoints);
+			p3 *= radius / p3.length();
+			normals[stripSpot] = (p2 - center).normalize();
+			points[stripSpot++] = p2;
+			normals[stripSpot] = (p3 - center).normalize();
+			points[stripSpot++] = p3;
+			if (shouldLoadConditionalLines())
+			{
+				spherePoints[mainSpot++] = p2;
+				spherePoints[mainSpot++] = p3;
+			}
+		}
+		if (bfc)
+		{
+			addBFCTriangleStrip(points, normals, stripSpot);
+		}
+		else
+		{
+			addTriangleStrip(points, normals, stripSpot);
+		}
+		delete[] points;
+		delete[] normals;
+	}
+	if (shouldLoadConditionalLines())
+	{
+		addEighthSphereConditionals(spherePoints, numSegments);
+	}
+	delete[] spherePoints;
+	delete[] zeroXPoints;
+	delete[] zeroYPoints;
+	delete[] zeroZPoints;
+}
+
+void TREModel::addConditionalLine(const TCVector &p1, const TCVector &p2,
+								  const TCVector &c1, const TCVector &c2)
+{
+	TCVector points[2];
+	TCVector conditionalPoints[2];
+
+	points[0] = p1;
+	points[1] = p2;
+	conditionalPoints[0] = c1;
+	conditionalPoints[1] = c2;
+	addConditionalLine(points, conditionalPoints);
+}
+
+void TREModel::addEighthSphereConditionals(TCVector *points, int numSegments)
+{
+	int usedSegments = numSegments / 4;
+	int i, j;
+	TCVector p1, p2, p3, p4;
+	TCVector circlePoint;
+	int mainSpot = 0;
+
+	for (j = 0; j < usedSegments; j++)
+	{
+		int stripCount = usedSegments - j;
+		
+		for (i = 0; i < stripCount; i++)
+		{
+			if (i > 0)
+			{
+				p3 = points[mainSpot - 1];
+			}
+			else
+			{
+				if (j > 0)
+				{
+					p3 = points[mainSpot];
+					p3[2] -= 0.1f;
+				}
+				else
+				{
+					p3 = points[mainSpot];
+					p3[2] -= 0.1f;
+				}
+			}
+			p4 = points[mainSpot + 2];
+			p1 = points[mainSpot];
+			p2 = points[mainSpot + 1];
+			addConditionalLine(p1, p2, p3, p4);
+			p3 = p1;
+			p1 = p2;
+			p2 = p4;
+			if (i < stripCount - 1)
+			{
+				p4 = points[mainSpot + 3];
+			}
+			else
+			{
+				p4 = points[mainSpot + 1];
+				p4[0] -= 0.1f;
+			}
+			addConditionalLine(p1, p2, p3, p4);
+			p1 = points[mainSpot];
+			p2 = points[mainSpot + 2];
+			p3 = points[mainSpot + 1];
+			if (j == 0)
+			{
+				p4 = points[mainSpot];
+				p4[1] -= 0.1f;
+			}
+			else
+			{
+				p4 = points[sphereIndex(i * 2 + 2, j - 1, usedSegments)];
+			}
+			addConditionalLine(p1, p2, p3, p4);
+			mainSpot += 2;
+		}
+		mainSpot++;
+	}
+}
+
+int TREModel::sphereIndex(int i, int j, int usedSegments)
+{
+	int retVal = 0;
+	int k;
+
+	for (k = 0; k < j; k++)
+	{
+		int rowSize = usedSegments - k;
+
+		retVal += rowSize * 2 + 1;
+	}
+	return retVal + i;
 }
 
 void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
@@ -1692,6 +2014,7 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 											  int numSegments, int usedSegments)
 {
 	int i;
+	TCVector linePoints[2];
 	TCVector controlPoints[2];
 	int axis2 = 2;
 	TCVector *p1;
@@ -1703,8 +2026,10 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 	}
 	for (i = 1; i <= usedSegments; i++)
 	{
-		p1 = &points[i * 2];
-		p2 = &points[i * 2 + 1];
+		linePoints[0] = points[i * 2];
+		linePoints[1] = points[i * 2 + 1];
+		p1 = &linePoints[0];
+		p2 = &linePoints[1];
 		if (p1 == p2)
 		{
 			continue;
@@ -1743,7 +2068,7 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 		{
 			controlPoints[1] = points[(i + 1) * 2];
 		}
-		addConditionalLine(p1, controlPoints);
+		addConditionalLine(linePoints, controlPoints);
 	}
 }
 
