@@ -2381,7 +2381,8 @@ void LDrawModelViewer::update(void)
 		float distance = (camera.getPosition()).length();
 //		float distance = (camera.getPosition() - center).length();
 
-		eyeXOffset = stereoEyeSpacing * 2.0f / (float)pow(distance, 0.25);
+		eyeXOffset = stereoEyeSpacing * 2.0f / (float)pow((double)distance,
+			0.25);
 		if (stereoMode == LDVStereoCrossEyed)
 		{
 			eyeXOffset = -eyeXOffset;
@@ -2569,8 +2570,8 @@ void LDrawModelViewer::panXY(int xValue, int yValue)
 	}
 //	xPan += xValue / (float)pow(distance, 0.001);
 //	yPan -= yValue / (float)pow(distance, 0.001);
-	xPan += xValue / adjustment / (float)pow(2 / distance, 1.1);
-	yPan -= yValue / adjustment / (float)pow(2 / distance, 1.1);
+	xPan += xValue / adjustment / (float)pow(2.0 / distance, 1.1);
+	yPan -= yValue / adjustment / (float)pow(2.0 / distance, 1.1);
 }
 
 bool LDrawModelViewer::getCompiled(void)
