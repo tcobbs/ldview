@@ -604,11 +604,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 		processUpdateQueue();
 		if (m_webClients->getCount())
 		{
-			struct timeval timeout;
-
-			timeout.tv_sec = 0;
-			timeout.tv_usec = 250000; // 250 msec
-			if (threadManager->timedWaitForFinishedThread(timeout))
+			if (threadManager->timedWaitForFinishedThread(250))
 			{
 				while ((finishedThread = threadManager->getFinishedThread())
 					!= NULL)

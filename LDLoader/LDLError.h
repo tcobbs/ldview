@@ -17,7 +17,7 @@ typedef enum
 	LDLEConcaveQuad,
 	LDLEConcaveQuadSplit,
 	LDLEMatchingPoints,
-	LDLEOpenGL,
+//	LDLEOpenGL,
 	LDLEColinear,
 	LDLEBFCWarning,
 	LDLEBFCError,
@@ -43,6 +43,7 @@ public:
 	int getLineNumber(void) { return m_lineNumber; }
 	static TCULong alertClass(void) { return USER_ALERTS + 0; }
 	virtual const char *getTypeName(void);
+	static const char *getTypeName(LDLErrorType type);
 	void setLevel(LDLAlertLevel value) { m_level = value; }
 	LDLAlertLevel getLevel(void) { return m_level; }
 	void cancelLoad(void) { m_loadCanceled = true; }

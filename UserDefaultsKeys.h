@@ -93,6 +93,7 @@
 
 // The following are undocumented, but need to be documented.
 #define LAST_LIBRARY_UPDATE_KEY "LastLibraryUpdate"
+#define SHOW_WARNINGS_KEY "ShowWarnings"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"
