@@ -5,6 +5,7 @@
 #include <CUI/CUIWindow.h>
 
 #include <LDLib/LDrawModelViewer.h>
+#include <shlobj.h>
 
 typedef struct
 {
@@ -13,11 +14,41 @@ typedef struct
 	int depth;
 } VideoModeT;
 
+class TbButtonInfo: public TCObject
+{
+public:
+	TbButtonInfo(void);
+	const char *getTooltipText(void) { return tooltipText; }
+	void setTooltipText(const char *value);
+	int getCommandId(void) { return commandId; }
+	void setCommandId(int value) { commandId = value; }
+	int getBmpId(int stdBitmapStartId, int tbBitmapStartId);
+	void setStdBmpId(int value) { stdBmpId = value; }
+	void setTbBmpId(int value) { tbBmpId = value; }
+	BYTE getState(void) { return state; }
+	void setState(BYTE value) { state = value; }
+	BYTE getStyle(void) { return style; }
+	void setStyle(BYTE value) { style = value; }
+protected:
+	virtual void dealloc(void);
+
+	char *tooltipText;
+	int commandId;
+	int stdBmpId;
+	int tbBmpId;
+	BYTE state;
+	BYTE style;
+};
+
 class ModelWindow;
 class TCStringArray;
 class TCSortedStringArray;
 class CUIWindowResizer;
 class LDLibraryUpdater;
+class LDViewPreferences;
+template <class Type> class TCTypedObjectArray;
+
+typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
 
 #define LIBRARY_UPDATE_FINISHED 1
 #define LIBRARY_UPDATE_CANCELED 2
@@ -45,6 +76,7 @@ class LDViewWindow: public CUIWindow
 		bool getTopmost(void) { return topmost; }
 		void forceShowStatusBar(bool value);
 		void applyPrefs(void);
+		virtual LRESULT switchToolbar(void);
 		virtual LRESULT switchStatusBar(void);
 		virtual const char *getProductVersion(void);
 		virtual const char *getLegalCopyright(void);
@@ -153,17 +185,24 @@ class LDViewWindow: public CUIWindow
 		virtual void createStatusBar(void);
 		virtual void createToolbar(void);
 		virtual LRESULT switchTopmost(void);
+		virtual void removeToolbar(void);
+		virtual void addToolbar(void);
 		virtual void removeStatusBar(void);
 		virtual void addStatusBar(void);
-		virtual void resizeModelWindow(int newWidth, int newHeight);
+		virtual void reshapeModelWindow(void);
 		virtual void startLoading(void);
 		virtual void stopLoading(void);
 		virtual void showStatusIcon(bool examineMode);
 		virtual void reflectViewMode(void);
 		virtual void reflectTopmost(void);
 		virtual void reflectStatusBar(void);
+		virtual void reflectToolbar(void);
 		virtual void reflectPolling(void);
 		virtual void reflectVideoMode(void);
+		virtual void reflectWireframe(void);
+		virtual void reflectSeams(void);
+		virtual void reflectEdges(void);
+		virtual void reflectPrimitiveSubstitution(void);
 		virtual int getStatusBarHeight(void);
 		virtual int getDockedHeight(void);
 		virtual int getToolbarHeight(void);
@@ -185,6 +224,20 @@ class LDViewWindow: public CUIWindow
 		virtual void doLibraryUpdateFinished(int finishType);
 		virtual void readVersionInfo(void);
 		virtual void createModelWindow(void);
+		virtual void populateTbButtonInfos(void);
+		virtual void addTbButtonInfo(const char *tooltipText, int commandId,
+			int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
+			BYTE state = TBSTATE_ENABLED);
+		virtual void addTbCheckButtonInfo(const char *tooltipText,
+			int commandId, int stdBmpId, int tbBmpId, bool checked,
+			BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
+		virtual void addTbSeparatorInfo(void);
+		virtual void doWireframe(void);
+		virtual void doSeams(void);
+		virtual void doEdges(void);
+		virtual void doPrimitiveSubstitution(void);
+		virtual void doViewAngleDropDown(LPNMTOOLBAR toolbarNot);
+		virtual void doViewAngle(void);
 
 		void loadSettings(void);
 
@@ -224,6 +277,7 @@ class LDViewWindow: public CUIWindow
 		int originalMouseY;
 		HMENU hFileMenu;
 		HMENU hViewMenu;
+		HMENU hViewAngleMenu;
 		bool loading;
 //		bool modelWindowShown;
 		CUIWindowResizer *openGLInfoWindoResizer;
@@ -233,6 +287,15 @@ class LDViewWindow: public CUIWindow
 		LDLibraryUpdater *libraryUpdater;
 		char *productVersion;
 		char *legalCopyright;
+		TbButtonInfoArray *tbButtonInfos;
+		int stdBitmapStartId;
+		int tbBitmapStartId;
+		LDViewPreferences *prefs;
+		bool drawWireframe;
+		bool seams;
+		bool edges;
+		bool primitiveSubstitution;
+		LDVAngle lastViewAngle;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;

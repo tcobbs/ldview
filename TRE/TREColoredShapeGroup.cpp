@@ -182,6 +182,8 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 					switch (shapeType)
 					{
 					case TRESTriangleStrip:
+						transferTriangleStrip(shapeTypeIndex, color, offset,
+							stripCount, matrix, true);
 						break;
 					case TRESQuadStrip:
 						transferQuadStrip(shapeTypeIndex, color, offset,

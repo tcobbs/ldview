@@ -55,9 +55,11 @@
 #define IDB_MATRIX_MASK                 161
 #define IDR_LOCAL_STRINGS               161
 #define IDB_NON_FLAT_QUAD               162
+#define IDD_INVISIBLE_COMMANDS          162
 #define IDB_NON_FLAT_QUAD_MASK          163
 #define IDB_COLINEAR                    164
 #define IDB_COLINEAR_MASK               165
+#define IDB_TOOLBAR                     166
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -210,6 +212,9 @@
 #define IDC_ERROR_SHOW_ALL              1181
 #define IDC_ERROR_SHOW_NONE             1182
 #define IDC_BFC_BOX                     1184
+#define ID_VIEWANGLE                    1189
+#define ID_TOOLBAR                      1190
+#define ID_STATUS_BAR                   1191
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -270,9 +275,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        162
-#define _APS_NEXT_COMMAND_VALUE         40069
-#define _APS_NEXT_CONTROL_VALUE         1185
+#define _APS_NEXT_RESOURCE_VALUE        163
+#define _APS_NEXT_COMMAND_VALUE         40070
+#define _APS_NEXT_CONTROL_VALUE         1190
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

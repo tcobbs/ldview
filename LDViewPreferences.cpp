@@ -399,6 +399,109 @@ void LDViewPreferences::loadPrimitivesSettings(void)
 		(long)hiResPrimitives) != 0;
 }
 
+void LDViewPreferences::setUseSeams(bool value)
+{
+	int newValue = value ? 1 : 0;
+
+	if (newValue != useSeams)
+	{
+		useSeams = newValue;
+		if (useSeams)
+		{
+			modelViewer->setSeamWidth(seamWidth / 100.0f);
+		}
+		else
+		{
+			modelViewer->setSeamWidth(0.0f);
+		}
+		TCUserDefaults::setLongForKey(useSeams, SEAMS_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, useSeams,
+				0);
+			if (useSeams)
+			{
+				enableSeams();
+			}
+			else
+			{
+				disableSeams();
+			}
+		}
+	}
+}
+
+void LDViewPreferences::setDrawWireframe(bool value)
+{
+	if (value != drawWireframe)
+	{
+		drawWireframe = value;
+		modelViewer->setDrawWireframe(drawWireframe);
+		TCUserDefaults::setLongForKey(drawWireframe ? 1 : 0, WIREFRAME_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME, BM_SETCHECK,
+				drawWireframe, 0);
+			if (drawWireframe)
+			{
+				enableWireframe();
+			}
+			else
+			{
+				disableWireframe();
+			}
+		}
+	}
+}
+
+void LDViewPreferences::setShowsHighlightLines(bool value)
+{
+	if (value != showsHighlightLines)
+	{
+		showsHighlightLines = value;
+		modelViewer->setShowsHighlightLines(showsHighlightLines);
+		TCUserDefaults::setLongForKey(showsHighlightLines ? 1 : 0,
+			SHOWS_HIGHLIGHT_LINES_KEY);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
+				showsHighlightLines, 0);
+			if (showsHighlightLines)
+			{
+				enableEdges();
+			}
+			else
+			{
+				disableEdges();
+			}
+		}
+	}
+}
+
+void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
+{
+	if (value != allowPrimitiveSubstitution)
+	{
+		allowPrimitiveSubstitution = value;
+		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
+		TCUserDefaults::setLongForKey(allowPrimitiveSubstitution ? 1 : 0,
+			PRIMITIVE_SUBSTITUTION_KEY);
+		if (hPrimitivesPage)
+		{
+			SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
+				BM_SETCHECK, allowPrimitiveSubstitution, 0);
+			if (allowPrimitiveSubstitution)
+			{
+				enablePrimitives();
+			}
+			else
+			{
+				disablePrimitives();
+			}
+		}
+	}
+}
+
 int LDViewPreferences::run(void)
 {
 	bool wasPaused = true;

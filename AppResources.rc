@@ -263,7 +263,7 @@ END
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effects"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,97,61,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
@@ -616,6 +616,18 @@ BEGIN
                     IDC_STATIC,7,7,219,10
 END
 
+IDD_INVISIBLE_COMMANDS DIALOG DISCARDABLE  0, 0, 320, 228
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Invisible Commands"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "The controls in this dialog are place-holders to force command IDs to be generated.",
+                    IDC_STATIC,7,7,128,28
+    LTEXT           "ID_VIEW_ANGLE",ID_VIEWANGLE,15,42,59,8
+    LTEXT           "ID_TOOLBAR",ID_TOOLBAR,15,60,46,8
+    LTEXT           "ID_STATUS_BAR",ID_STATUS_BAR,13,80,60,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -746,6 +758,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 181
     END
+
+    IDD_INVISIBLE_COMMANDS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 221
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -789,6 +809,7 @@ BEGIN
     BEGIN
         MENUITEM "Switch to &Fullscreen\tCtrl+Enter", ID_VIEW_FULLSCREEN
         MENUITEM "&Errors\tCtrl+Shift+E",       ID_VIEW_ERRORS
+        MENUITEM "Toolbar\tCtrl+Shift+T",       ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
         MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET
@@ -870,6 +891,8 @@ BEGIN
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_VIEW_STATUSBAR,      VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    "T",            ID_VIEW_TOOLBAR,        VIRTKEY, SHIFT, CONTROL, 
+                                                    NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_FILE_RELOAD,         VIRTKEY, NOINVERT
     "X",            ID_VIEW_EXAMINE,        VIRTKEY, SHIFT, CONTROL, 
@@ -906,6 +929,7 @@ IDB_NON_FLAT_QUAD       BITMAP  DISCARDABLE     "icons\\error_non_flat_quad.bmp"
 IDB_NON_FLAT_QUAD_MASK  BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask.bmp"
 IDB_COLINEAR            BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
 IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
+IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////

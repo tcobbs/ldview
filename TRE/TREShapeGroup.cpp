@@ -26,7 +26,8 @@ TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
 		other.m_controlPointIndices)),
 	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
 	m_multiDrawIndices(NULL),
-	m_shapesPresent(other.m_shapesPresent)
+	m_shapesPresent(other.m_shapesPresent),
+	m_mainModel(other.m_mainModel)
 {
 	m_vertexStore->retain();
 	if (other.m_shapesPresent)
@@ -1255,6 +1256,31 @@ void TREShapeGroup::transferQuadStrip(int shapeTypeIndex, TCULong color,
 	}
 }
 
+void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
+										  int offset, int stripCount,
+										  const float *matrix, bool remove)
+{
+	int i;
+	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
+
+	for (i = offset; i < offset + stripCount - 2; i++)
+	{
+		transferTriangle(color, (*indices)[i], (*indices)[i + 1],
+			(*indices)[i + 2], matrix);
+/*
+		if ((i - offset) % 2)
+		{
+			transferTriangle(color, (*indices)[i], (*indices)[i + 2],
+				(*indices)[i + 1], matrix);
+		}
+*/
+	}
+	if (remove)
+	{
+		indices->removeValues(offset, stripCount);
+	}
+}
+
 void TREShapeGroup::transferTriangleFan(int shapeTypeIndex, TCULong color,
 										int offset, int stripCount,
 										const float *matrix, bool remove)
@@ -1353,6 +1379,8 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 				switch (shapeType)
 				{
 				case TRESTriangleStrip:
+					transferTriangleStrip(shapeTypeIndex, color, offset,
+						stripCount, matrix, false);
 					break;
 				case TRESQuadStrip:
 					transferQuadStrip(shapeTypeIndex, color, offset, stripCount,

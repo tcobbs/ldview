@@ -343,6 +343,10 @@ SOURCE=.\Icons\screen_saver_preview.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\toolbar.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\wide_ico.ico
 # End Source File
 # End Group

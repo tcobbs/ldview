@@ -1,5 +1,4 @@
 #include "LDViewWindow.h"
-#include <shlobj.h>
 #include <shlwapi.h>
 #include "LDVExtensionsSetup.h"
 #include "LDViewPreferences.h"
@@ -13,6 +12,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCSortedStringArray.h>
 #include <TCFoundation/TCThreadManager.h>
+#include <TCFoundation/TCTypedObjectArray.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
 #include <afxres.h>
@@ -30,6 +30,43 @@ TCStringArray* LDViewWindow::extraSearchDirs = NULL;
 LDViewWindow::LDViewWindowCleanup LDViewWindow::ldViewWindowCleanup;
 
 void debugOut(char *fmt, ...);
+
+TbButtonInfo::TbButtonInfo(void)
+	:tooltipText(NULL),
+	commandId(-1),
+	stdBmpId(-1),
+	tbBmpId(-1),
+	state(TBSTATE_ENABLED),
+	style(TBSTYLE_BUTTON)
+{
+}
+
+void TbButtonInfo::dealloc(void)
+{
+	delete tooltipText;
+	TCObject::dealloc();
+}
+
+void TbButtonInfo::setTooltipText(const char *value)
+{
+	if (value != tooltipText)
+	{
+		delete tooltipText;
+		tooltipText = copyString(value);
+	}
+}
+
+int TbButtonInfo::getBmpId(int stdBitmapStartId, int tbBitmapStartId)
+{
+	if (stdBmpId == -1)
+	{
+		return tbBitmapStartId + tbBmpId;
+	}
+	else
+	{
+		return stdBitmapStartId + stdBmpId;
+	}
+}
 
 LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 {
@@ -73,7 +110,13 @@ LDViewWindow::LDViewWindow(char* windowTitle, HINSTANCE hInstance, int x,
 			   hFlythroughIcon(NULL),
 			   libraryUpdater(NULL),
 			   productVersion(NULL),
-			   legalCopyright(NULL)
+			   legalCopyright(NULL),
+			   tbButtonInfos(NULL),
+			   stdBitmapStartId(-1),
+			   tbBitmapStartId(-1),
+			   prefs(NULL),
+			   drawWireframe(false),
+			   lastViewAngle(LDVAngleDefault)
 //			   modelWindowShown(false)
 {
 //	DWORD backgroundColor = TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
@@ -122,6 +165,8 @@ void LDViewWindow::dealloc(void)
 	}
 	delete productVersion;
 	delete legalCopyright;
+	TCObject::release(tbButtonInfos);
+	TCObject::release(prefs);
 	CUIWindow::dealloc();
 }
 
@@ -222,7 +267,7 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 		}
 		if (updateRect->top < 2)
 		{
-			updateRect->top = 0;
+			updateRect->top = 2;
 		}
 		if (updateRect->right > width - 2)
 		{
@@ -250,13 +295,38 @@ LRESULT LDViewWindow::doEraseBackground(RECT* updateRect)
 		updateRect->bottom - updateRect->top);
 	FillRect(hdc, updateRect, hBrush);
 	DeleteObject(hBrush);
+	CUIWindow::doEraseBackground(updateRect);
+	if (hToolbar)
+	{
+		HRGN region = CreateRectRgn(updateRect->left, updateRect->top,
+			updateRect->right, updateRect->bottom);
+		RECT rect;
+		POINT points[2];
+
+		GetClientRect(hToolbar, &rect);
+		points[0].x = rect.left;
+		points[0].y = rect.top;
+		points[1].x = rect.right;
+		points[1].y = rect.bottom;
+		MapWindowPoints(hWindow, hWindow, points, 2);
+		rect.left = points[0].x;
+		rect.top = points[0].y;
+		rect.right = points[1].x;
+		rect.bottom = points[1].y;
+		if (RectInRegion(region, &rect))
+		{
+			// For some reason, the toolbar won't redraw itself until there's an
+			// idle moment.  So it won't redraw while the model is spinning, for
+			// example.  The folowing forces it to redraw itself right now.
+			RedrawWindow(hToolbar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+		}
+		DeleteObject(region);
+	}
 	if (noRect)
 	{
 		delete updateRect;
 		updateRect = NULL;
 	}
-
-	CUIWindow::doEraseBackground(updateRect);
 	return 0;
 }
 
@@ -296,28 +366,81 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 	}
 }
 
-#define LDV_TB_BITMAP_COUNT 4
+void LDViewWindow::addTbButtonInfo(const char *tooltipText, int commandId,
+								   int stdBmpId, int tbBmpId, BYTE style,
+								   BYTE state)
+{
+	TbButtonInfo *buttonInfo = new TbButtonInfo;
+
+	buttonInfo->setTooltipText(tooltipText);
+	buttonInfo->setCommandId(commandId);
+	buttonInfo->setStdBmpId(stdBmpId);
+	buttonInfo->setTbBmpId(tbBmpId);
+	buttonInfo->setStyle(style);
+	buttonInfo->setState(state);
+	tbButtonInfos->addObject(buttonInfo);
+	buttonInfo->release();
+}
+
+void LDViewWindow::addTbCheckButtonInfo(const char *tooltipText, int commandId,
+										int stdBmpId, int tbBmpId, bool checked,
+										BYTE style, BYTE state)
+{
+	state &= ~TBSTATE_CHECKED;
+	if (checked)
+	{
+		state |= TBSTATE_CHECKED;
+	}
+	addTbButtonInfo(tooltipText, commandId, stdBmpId, tbBmpId, style, state);
+}
+
+void LDViewWindow::addTbSeparatorInfo(void)
+{
+	TbButtonInfo *buttonInfo = new TbButtonInfo;
+
+	buttonInfo->setStyle(TBSTYLE_SEP);
+	tbButtonInfos->addObject(buttonInfo);
+	buttonInfo->release();
+}
+
+void LDViewWindow::populateTbButtonInfos(void)
+{
+	if (!tbButtonInfos)
+	{
+		tbButtonInfos = new TbButtonInfoArray;
+		addTbButtonInfo("Open File", ID_FILE_OPEN, STD_FILEOPEN, -1);
+		addTbButtonInfo("Save Snapshot", ID_FILE_SAVE, -1, 5);
+		addTbButtonInfo("Reload", ID_FILE_RELOAD, -1, 0);
+		addTbSeparatorInfo();
+		drawWireframe = prefs->getDrawWireframe();
+		seams = prefs->getUseSeams() != 0;
+		edges = prefs->getShowsHighlightLines();
+		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
+		addTbCheckButtonInfo("Wireframe", IDC_WIREFRAME, -1, 1, drawWireframe);
+		addTbCheckButtonInfo("Seams", IDC_SEAMS, -1, 2, seams);
+		addTbCheckButtonInfo("Edge Lines", IDC_HIGHLIGHTS, -1, 3, edges);
+		addTbCheckButtonInfo("Primitive Substitution",
+			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution);
+		addTbButtonInfo("Viewing angle", ID_VIEWANGLE, -1, 6, TBSTYLE_DROPDOWN);
+	}
+}
 
 void LDViewWindow::createToolbar(void)
 {
 	if (showToolbar)
 	{
 		TBADDBITMAP addBitmap;
-		TBBUTTON buttons[4];
+		TBBUTTON *buttons;
 		char buttonTitle[128];
 		int i;
-		int stdBitmapStart;
-		int myBitmapStart;
+		int count;
 
+		populateTbButtonInfos();
 		ModelWindow::initCommonControls(ICC_BAR_CLASSES);
-		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD |
-			WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0,
-			hWindow, (HMENU)42001, hInstance, NULL);
-/*
-			hWindow, , 42001, LDV_TB_BITMAP_COUNT,
-			hInstance, IDB_EXTRA_DIRS, buttons, 4, 25, 16, 16, 16,
-			sizeof(TBBUTTON));
-*/
+		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME,
+			NULL, WS_CHILD | WS_VISIBLE | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0,
+			0, 0, hWindow, (HMENU)ID_TOOLBAR, hInstance, NULL);
+		SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 		memset(buttonTitle, 0, sizeof(buttonTitle));
 		strcpy(buttonTitle, "");
 		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
@@ -326,26 +449,29 @@ void LDViewWindow::createToolbar(void)
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(25, 16));
 		addBitmap.hInst = HINST_COMMCTRL;
 		addBitmap.nID = IDB_STD_SMALL_COLOR;
-		stdBitmapStart = SendMessage(hToolbar, TB_ADDBITMAP, 0,
+		stdBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 0,
 			(LPARAM)&addBitmap);
 		addBitmap.hInst = getLanguageModule();
-		addBitmap.nID = IDB_EXTRA_DIRS;
-		myBitmapStart = SendMessage(hToolbar, TB_ADDBITMAP, 4,
+		addBitmap.nID = IDB_TOOLBAR;
+		tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 4,
 			(LPARAM)&addBitmap);
 		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
-		buttons[0].iBitmap = stdBitmapStart + STD_FILEOPEN;
-		buttons[1].iBitmap = stdBitmapStart + STD_FILESAVE;
-		buttons[2].iBitmap = myBitmapStart + 0;
-		buttons[3].iBitmap = myBitmapStart + 1;
-		for (i = 0; i < 4; i++)
+		count = tbButtonInfos->getCount();
+		buttons = new TBBUTTON[count];
+		for (i = 0; i < count; i++)
 		{
-			buttons[i].idCommand = 42 + i;
-			buttons[i].fsState = TBSTATE_ENABLED;
-			buttons[i].fsStyle = TBSTYLE_BUTTON;
+			TbButtonInfo *buttonInfo = (*tbButtonInfos)[i];
+
+			buttons[i].iBitmap = buttonInfo->getBmpId(stdBitmapStartId,
+				tbBitmapStartId);
+			buttons[i].idCommand = buttonInfo->getCommandId();
+			buttons[i].fsState = buttonInfo->getState();
+			buttons[i].fsStyle = buttonInfo->getStyle();
 			buttons[i].dwData = (DWORD)this;
 			buttons[i].iString = -1;
 		}
-		SendMessage(hToolbar, TB_ADDBUTTONS, 4, (LPARAM)buttons);
+		SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
+		delete[] buttons;
 		SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
 	}
 }
@@ -360,7 +486,7 @@ void LDViewWindow::createStatusBar(void)
 
 		ModelWindow::initCommonControls(ICC_TREEVIEW_CLASSES | ICC_BAR_CLASSES);
 		hStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP |
-			SBT_TOOLTIPS, "", hWindow, 42000);
+			SBT_TOOLTIPS, "", hWindow, ID_STATUS_BAR);
 		SetWindowLong(hStatusBar, GWL_EXSTYLE, WS_EX_TRANSPARENT);
 		SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 //		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)"");
@@ -412,6 +538,7 @@ void LDViewWindow::reflectViewMode(void)
 
 BOOL LDViewWindow::initWindow(void)
 {
+	createModelWindow();
 	if (fullScreen || screenSaver)
 	{
 		if (hWindowMenu)
@@ -448,13 +575,9 @@ BOOL LDViewWindow::initWindow(void)
 	}
 	if (CUIWindow::initWindow())
 	{
-		if (!fullScreen)
-		{
-			createToolbar();
-		}
 		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
-		createModelWindow();
+		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
 		reflectViewMode();
 		populateRecentFileMenuItems();
 		updateModelMenuItems();
@@ -497,6 +620,8 @@ void LDViewWindow::createModelWindow(void)
 	{
 		modelWindow = new ModelWindow(this, xOffset, yOffset, width, height);
 	}
+	prefs = modelWindow->getPrefs();
+	prefs->retain();
 }
 
 BOOL LDViewWindow::showAboutBox(void)
@@ -1525,6 +1650,7 @@ void LDViewWindow::setMenuEnabled(HMENU hParentMenu, int itemID, bool enabled,
 								  BOOL byPosition)
 {
 	MENUITEMINFO itemInfo;
+	BYTE tbState = 0;
 
 	itemInfo.cbSize = sizeof(itemInfo);
 	itemInfo.fMask = MIIM_STATE;
@@ -1539,6 +1665,34 @@ void LDViewWindow::setMenuEnabled(HMENU hParentMenu, int itemID, bool enabled,
 	}
 	itemInfo.fMask = MIIM_STATE;
 	SetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo);
+	if (enabled)
+	{
+		tbState |= TBSTATE_ENABLED;
+	}
+	if (hToolbar)
+	{
+		SendMessage(hToolbar, TB_SETSTATE, (WPARAM)itemID,
+			MAKELONG(tbState, 0));
+	}
+	else
+	{
+		int i;
+		int count;
+
+		populateTbButtonInfos();
+		count = tbButtonInfos->getCount();
+		for (i = 0; i < count; i++)
+		{
+			TbButtonInfo *buttonInfo = (*tbButtonInfos)[i];
+
+			if (buttonInfo->getCommandId() == itemID)
+			{
+				buttonInfo->setState((BYTE)(tbState |
+					(buttonInfo->getState() & ~TBSTATE_ENABLED)));
+				break;
+			}
+		}
+	}
 }
 
 void LDViewWindow::updateModelMenuItems(void)
@@ -1546,6 +1700,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	bool haveModel = modelIsLoaded();
 
 	setMenuEnabled(hFileMenu, ID_FILE_SAVE, haveModel);
+	setMenuEnabled(hFileMenu, ID_FILE_RELOAD, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PRINT, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PAGESETUP, haveModel);
 }
@@ -1827,7 +1982,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		SendDlgItemMessage(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT, 0,
 			(LPARAM)message);
 		hOpenGLStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE |
-			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, 42001);
+			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, ID_TOOLBAR);
 		SendMessage(hOpenGLStatusBar, SB_SETPARTS, 2, (LPARAM)parts);
 		count = countStringLines(extensionsString);
 		if (count == 1)
@@ -1959,42 +2114,54 @@ LRESULT LDViewWindow::switchToFlythroughMode(void)
 	return 0;
 }
 
-LRESULT LDViewWindow::doNotify(int controlId, LPNMHDR notification)
+void LDViewWindow::doViewAngleDropDown(LPNMTOOLBAR toolbarNot)
+{
+	RECT rect;
+	TPMPARAMS tpm;
+
+    SendMessage(toolbarNot->hdr.hwndFrom, TB_GETRECT, (WPARAM)toolbarNot->iItem,
+		(LPARAM)&rect);
+	MapWindowPoints(toolbarNot->hdr.hwndFrom, HWND_DESKTOP, (LPPOINT)&rect, 2);
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude.top    = rect.top;
+	tpm.rcExclude.left   = rect.left;
+	tpm.rcExclude.bottom = rect.bottom;
+	tpm.rcExclude.right  = rect.right;
+	TrackPopupMenuEx(hViewAngleMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON |
+		TPM_VERTICAL, rect.left, rect.bottom, hWindow, &tpm);
+}
+
+LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 {
 //	debugPrintf("LDViewWindow::doNotify: 0x%04X, 0x%04x\n", controlId,
 //		notification->code);
-	if (controlId >= 42 && controlId <= 45)
+	switch (notification->code)
 	{
-		switch (notification->code)
+	case TTN_GETDISPINFO:
 		{
-		case TTN_GETDISPINFO:
-			{
-				LPNMTTDISPINFO dispInfo = (LPNMTTDISPINFO)notification;
+			LPNMTTDISPINFO dispInfo = (LPNMTTDISPINFO)notification;
+			int i;
+			int count = tbButtonInfos->getCount();
 
-				switch (controlId)
+			for (i = 0; i < count; i++)
+			{
+				TbButtonInfo *buttonInfo = (*tbButtonInfos)[i];
+
+				if ((DWORD)buttonInfo->getCommandId() == notification->idFrom)
 				{
-				case 42:
-					strcpy(dispInfo->szText,
-						"Add directory to search list");
-					break;
-				case 43:
-					strcpy(dispInfo->szText,
-						"Remove directory from search list");
-					break;
-				case 44:
-					strcpy(dispInfo->szText, "Move directory up");
-					break;
-				case 45:
-					strcpy(dispInfo->szText, "Move directory down");
+					strcpy(dispInfo->szText, buttonInfo->getTooltipText());
 					break;
 				}
-				dispInfo->hinst = NULL;
 			}
-			break;
-		case WM_COMMAND:
-			debugPrintf("WM_COMMAND\n");
-			break;
+			dispInfo->hinst = NULL;
 		}
+		break;
+	case TBN_DROPDOWN:
+		if (notification->idFrom == ID_TOOLBAR)
+		{
+			doViewAngleDropDown((LPNMTOOLBAR)notification);
+		}
+		break;
 	}
 	return 0;
 }
@@ -2169,12 +2336,17 @@ void LDViewWindow::chooseNewLDrawDir(void)
 	delete oldDir;
 }
 
-void LDViewWindow::resizeModelWindow(int newWidth, int newHeight)
+void LDViewWindow::reshapeModelWindow(void)
 {
 	if (modelWindow)
 	{
-		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 0,
-			getModelWindowTop(), newWidth, newHeight, 0);
+		int newX = 0;
+		int newY = getToolbarHeight();
+		int newWidth = width;
+		int newHeight = height - getDockedHeight();
+
+		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, newX, newY, newWidth,
+			newHeight, 0);
 /*
 		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 2, 2, newWidth - 4,
 			newHeight - 4, 0);
@@ -2193,7 +2365,6 @@ void LDViewWindow::removeStatusBar(void)
 	bool needActive = hActiveWindow == hStatusBar;
 
 	debugPrintf(2, "0x%08X: removing status bar: 0x%08X\n", hWindow, hStatusBar);
-	resizeModelWindow(width, height);
 	if (modelWindow)
 	{
 		modelWindow->setStatusBar(NULL);
@@ -2201,6 +2372,7 @@ void LDViewWindow::removeStatusBar(void)
 	}
 	DestroyWindow(hStatusBar);
 	hStatusBar = NULL;
+	reshapeModelWindow();
 	if (needActive)
 	{
 		SetActiveWindow(hWindow);
@@ -2247,10 +2419,45 @@ int LDViewWindow::getStatusBarHeight(void)
 	}
 }
 
+void LDViewWindow::removeToolbar(void)
+{
+	HWND hActiveWindow = GetActiveWindow();
+	bool needActive = hActiveWindow == hToolbar;
+
+	debugPrintf(2, "0x%08X: removing toolbar: 0x%08X\n", hWindow, hToolbar);
+/*
+	if (modelWindow)
+	{
+		modelWindow->setToolbar(NULL);
+	}
+*/
+	DestroyWindow(hToolbar);
+	hToolbar = NULL;
+	reshapeModelWindow();
+	if (needActive)
+	{
+		SetActiveWindow(hWindow);
+	}
+}
+
+void LDViewWindow::addToolbar(void)
+{
+	createToolbar();
+	reshapeModelWindow();
+}
+
+LRESULT LDViewWindow::switchToolbar(void)
+{
+	showToolbar = !showToolbar;
+	TCUserDefaults::setLongForKey(showToolbar ? 1 : 0, TOOLBAR_KEY, false);
+	reflectToolbar();
+	return 0;
+}
+
 void LDViewWindow::addStatusBar(void)
 {
 	createStatusBar();
-	resizeModelWindow(width, height - getDockedHeight());
+	reshapeModelWindow();
 }
 
 LRESULT LDViewWindow::switchStatusBar(void)
@@ -2258,18 +2465,6 @@ LRESULT LDViewWindow::switchStatusBar(void)
 	showStatusBar = !showStatusBar;
 	TCUserDefaults::setLongForKey(showStatusBar ? 1 : 0, STATUS_BAR_KEY, false);
 	reflectStatusBar();
-/*
-	if (showStatusBar || showStatusBarOverride)
-	{
-		addStatusBar();
-		setMenuCheck(hViewMenu, ID_VIEW_STATUSBAR, true);
-	}
-	else
-	{
-		removeStatusBar();
-		setMenuCheck(hViewMenu, ID_VIEW_STATUSBAR, false);
-	}
-*/
 	return 0;
 }
 
@@ -2532,6 +2727,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_VIEW_STATUSBAR:
 			return switchStatusBar();
 			break;
+		case ID_VIEW_TOOLBAR:
+			return switchToolbar();
+			break;
 		case ID_VIEW_ALWAYSONTOP:
 			return switchTopmost();
 			break;
@@ -2610,6 +2808,21 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 				return 0;
 				break;
 			}
+		case IDC_WIREFRAME:
+			doWireframe();
+			break;
+		case IDC_SEAMS:
+			doSeams();
+			break;
+		case IDC_HIGHLIGHTS:
+			doEdges();
+			break;
+		case IDC_PRIMITIVE_SUBSTITUTION:
+			doPrimitiveSubstitution();
+			break;
+		case ID_VIEWANGLE:
+			doViewAngle();
+			break;
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
 	{
@@ -2646,6 +2859,96 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		return 0;
 	}
 	return CUIWindow::doCommand(itemId, notifyCode, controlHWnd);
+}
+
+void LDViewWindow::doWireframe(void)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_WIREFRAME, 0);
+	bool newWireframe = false;
+
+	if (state & TBSTATE_CHECKED)
+	{
+		newWireframe = true;
+	}
+	if (newWireframe != drawWireframe)
+	{
+		drawWireframe = newWireframe;
+		prefs->setDrawWireframe(drawWireframe);
+		modelWindow->forceRedraw();
+	}
+}
+
+void LDViewWindow::doSeams(void)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_SEAMS, 0);
+	bool newSeams = false;
+
+	if (state & TBSTATE_CHECKED)
+	{
+		newSeams = true;
+	}
+	if (newSeams != seams)
+	{
+		seams = newSeams;
+		prefs->setUseSeams(seams);
+		modelWindow->forceRedraw();
+	}
+}
+
+void LDViewWindow::doEdges(void)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_HIGHLIGHTS, 0);
+	bool newEdges = false;
+
+	if (state & TBSTATE_CHECKED)
+	{
+		newEdges = true;
+	}
+	if (newEdges != edges)
+	{
+		edges = newEdges;
+		prefs->setShowsHighlightLines(edges);
+		modelWindow->forceRedraw();
+	}
+}
+
+void LDViewWindow::doPrimitiveSubstitution(void)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
+		IDC_PRIMITIVE_SUBSTITUTION, 0);
+	bool newPrimSub = false;
+
+	if (state & TBSTATE_CHECKED)
+	{
+		newPrimSub = true;
+	}
+	if (newPrimSub != primitiveSubstitution)
+	{
+		primitiveSubstitution = newPrimSub;
+		prefs->setAllowPrimitiveSubstitution(primitiveSubstitution);
+		modelWindow->forceRedraw();
+	}
+}
+
+void LDViewWindow::doViewAngle(void)
+{
+	int newViewAngle = lastViewAngle + 1;
+
+	if (newViewAngle > LDVAngleIso)
+	{
+		newViewAngle = LDVAngleDefault;
+	}
+	lastViewAngle = (LDVAngle)newViewAngle;
+	if (modelWindow)
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
+			modelViewer->resetView(lastViewAngle);
+			modelWindow->forceRedraw();
+		}
+	}
 }
 
 WNDCLASSEX LDViewWindow::getWindowClass(void)
@@ -3179,6 +3482,7 @@ void LDViewWindow::resetDefaultView(void)
 
 void LDViewWindow::resetView(LDVAngle viewAngle)
 {
+	lastViewAngle = viewAngle;
 	modelWindow->resetView(viewAngle);
 }
 
@@ -3571,6 +3875,7 @@ LRESULT LDViewWindow::doShowWindow(BOOL showFlag, LPARAM status)
 		// shown results in a status bar that doesn't update properly in XP, so
 		// show it here instead of in initWindow.
 		reflectStatusBar();
+		reflectToolbar();
 	}
 	return CUIWindow::doShowWindow(showFlag, status);
 }
@@ -3700,6 +4005,24 @@ BOOL LDViewWindow::doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo)
 	return FALSE;
 }
 
+void LDViewWindow::reflectToolbar(void)
+{
+	if (fullScreen || screenSaver)
+	{
+		return;
+	}
+	if (showToolbar && !hToolbar)
+	{
+		addToolbar();
+		setMenuCheck(hViewMenu, ID_VIEW_TOOLBAR, true);
+	}
+	else if (!showToolbar && hToolbar)
+	{
+		removeToolbar();
+		setMenuCheck(hViewMenu, ID_VIEW_TOOLBAR, false);
+	}
+}
+
 void LDViewWindow::reflectStatusBar(void)
 {
 	if (fullScreen || screenSaver)
@@ -3734,6 +4057,90 @@ void LDViewWindow::reflectVideoMode(void)
 	}
 }
 
+void LDViewWindow::reflectWireframe(void)
+{
+	if (drawWireframe != prefs->getDrawWireframe())
+	{
+		drawWireframe = prefs->getDrawWireframe();
+		if (hToolbar)
+		{
+			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
+				IDC_WIREFRAME, 0);
+
+			oldState &= ~TBSTATE_CHECKED;
+			if (drawWireframe)
+			{
+				oldState |= TBSTATE_CHECKED;
+			}
+			SendMessage(hToolbar, TB_SETSTATE, IDC_WIREFRAME,
+				MAKELONG(oldState, 0));
+		}
+	}
+}
+
+void LDViewWindow::reflectSeams(void)
+{
+	if (seams != (prefs->getUseSeams() != 0))
+	{
+		seams = prefs->getUseSeams() != 0;
+		if (hToolbar)
+		{
+			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE, IDC_SEAMS,
+				0);
+
+			oldState &= ~TBSTATE_CHECKED;
+			if (seams)
+			{
+				oldState |= TBSTATE_CHECKED;
+			}
+			SendMessage(hToolbar, TB_SETSTATE, IDC_SEAMS,
+				MAKELONG(oldState, 0));
+		}
+	}
+}
+
+void LDViewWindow::reflectEdges(void)
+{
+	if (edges != prefs->getShowsHighlightLines())
+	{
+		edges = prefs->getShowsHighlightLines();
+		if (hToolbar)
+		{
+			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
+				IDC_HIGHLIGHTS, 0);
+
+			oldState &= ~TBSTATE_CHECKED;
+			if (edges)
+			{
+				oldState |= TBSTATE_CHECKED;
+			}
+			SendMessage(hToolbar, TB_SETSTATE, IDC_HIGHLIGHTS,
+				MAKELONG(oldState, 0));
+		}
+	}
+}
+
+void LDViewWindow::reflectPrimitiveSubstitution(void)
+{
+	if (primitiveSubstitution != prefs->getAllowPrimitiveSubstitution())
+	{
+		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
+		if (hToolbar)
+		{
+			BYTE oldState = (BYTE)SendMessage(hToolbar, TB_GETSTATE,
+				IDC_PRIMITIVE_SUBSTITUTION, 0);
+
+			oldState &= ~TBSTATE_CHECKED;
+			if (primitiveSubstitution)
+			{
+				oldState |= TBSTATE_CHECKED;
+			}
+			SendMessage(hToolbar, TB_SETSTATE, IDC_PRIMITIVE_SUBSTITUTION,
+				MAKELONG(oldState, 0));
+		}
+	}
+}
+
 void LDViewWindow::applyPrefs(void)
 {
 	loadSettings();
@@ -3743,6 +4150,10 @@ void LDViewWindow::applyPrefs(void)
 	reflectTopmost();
 	reflectPolling();
 	reflectVideoMode();
+	reflectWireframe();
+	reflectSeams();
+	reflectEdges();
+	reflectPrimitiveSubstitution();
 	if (TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false))
 	{
 		ShowWindow(hWindow, SW_MAXIMIZE);

@@ -27,6 +27,7 @@ public:
 	bool getQualityLighting(void) { return qualityLighting; }
 	bool getShowsFPS(void) { return showsFPS; }
 	bool getShowsHighlightLines(void) { return showsHighlightLines; }
+	void setShowsHighlightLines(bool value);
 	bool getDrawConditionalHighlights(void)
 	{
 		return drawConditionalHighlights;
@@ -38,13 +39,16 @@ public:
 	{
 		return allowPrimitiveSubstitution;
 	}
+	void setAllowPrimitiveSubstitution(bool value);
 	bool getUsesFlatShading(void) { return usesFlatShading; }
 	bool getUsesSpecular(void) { return usesSpecular; }
 	COLORREF getBackgroundColor(void) { return backgroundColor; }
 	COLORREF* getCustomColors(void) { return customColors; }
 	int getUseSeams(void) { return useSeams; }
+	void setUseSeams(bool value);
 	int getSeamWidth(void) { return seamWidth; }
 	bool getDrawWireframe(void) { return drawWireframe; }
+	void setDrawWireframe(bool value);
 	bool getBfc(void) { return bfc; }
 	bool getRedBackFaces(void) { return redBackFaces; }
 	bool getUseWireframeFog(void) { return useWireframeFog; }

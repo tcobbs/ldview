@@ -946,13 +946,18 @@ BOOL ModelWindow::doErrorWindowNotify(LPNMHDR notification)
 		{
 			BOOL value = ListView_GetCheckState(hErrorList, info->iItem);
 			ErrorInfo *errorInfo = (*errorInfos)[info->iItem];
+			char *errorKey = getErrorKey(errorInfo->getType());
 
-			TCUserDefaults::setLongForKey(value,
-				getErrorKey(errorInfo->getType()), false);
-			if (!skipErrorUpdates)
+			// The new state/old state check lies when you click on an item, and
+			// not the item's check box.
+			if (TCUserDefaults::longForKey(errorKey) != value)
 			{
-				clearErrorTree();
-				populateErrorTree();
+				TCUserDefaults::setLongForKey(value, errorKey, false);
+				if (!skipErrorUpdates)
+				{
+					clearErrorTree();
+					populateErrorTree();
+				}
 			}
 		}
 		break;
@@ -1638,7 +1643,18 @@ void ModelWindow::clearErrorTree(void)
 //	SetWindowRedraw(hErrorTree, FALSE);
 	if (hErrorWindow)
 	{
-		TreeView_DeleteAllItems(hErrorTree);
+		HTREEITEM hItem;
+		
+		// Delete all is really, REALLY, slow for trees with lots of data.  I
+		// think it starts at the beginning, and keeps copying the items back
+		// each time the first is deleted.  Oh, and the "Visible" in
+		// "LastVisible" doesn't mean it's visible on-screen, just that its
+		// parent is expanded.
+		while ((hItem = TreeView_GetLastVisible(hErrorTree)) != NULL)
+		{
+			TreeView_DeleteItem(hErrorTree, hItem);
+		}
+		TreeView_DeleteItem(hErrorTree, TVI_ROOT);
 	}
 /*
 	SetWindowRedraw(hErrorTree, TRUE);
@@ -2307,11 +2323,29 @@ void ModelWindow::doPaint(void)
 		static bool looping = false;
 		if (!looping)
 		{
+			RECT rect;
+			POINT points[2];
+
+			GetClientRect(hWindow, &rect);
+			points[0].x = rect.left;
+			points[0].y = rect.top;
+			points[1].x = rect.right;
+			points[1].y = rect.bottom;
+			MapWindowPoints(hWindow, hParentWindow, points, 2);
+			rect.left = points[0].x;
+			rect.top = points[0].y;
+			rect.right = points[1].x;
+			rect.bottom = points[1].y;
 			looping = true;
-			RedrawWindow(hParentWindow, NULL, NULL, RDW_ERASE | RDW_INVALIDATE
+//			RedrawWindow(hWindow, NULL, NULL, RDW_ERASE/* | RDW_ERASENOW*/);
+			RedrawWindow(hParentWindow, &rect, NULL, RDW_ERASE | RDW_INVALIDATE
 				| RDW_ERASENOW | RDW_UPDATENOW);
 			ValidateRect(hWindow, NULL);
 			looping = false;
+		}
+		else
+		{
+			ValidateRect(hWindow, NULL);
 		}
 		return;
 	}
