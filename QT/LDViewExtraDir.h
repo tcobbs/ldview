@@ -24,7 +24,6 @@ public:
 	void doUpExtraDir(void);
 	void doDownExtraDir(void);
 	void doOk(void);
-	void setButtonState(QButton *button, bool state);
 	void recordExtraSearchDirs(void);
 	void populateExtraSearchDirs(void);
 	static TCStringArray* extraSearchDirs;

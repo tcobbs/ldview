@@ -1,6 +1,6 @@
 <!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>ExtraDirPanel</class>
-<widget class="QMainWindow">
+<widget class="QDialog">
     <property name="name">
         <cstring>ExtraDirPanel</cstring>
     </property>
