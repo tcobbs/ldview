@@ -1,6 +1,7 @@
 #include "TREColoredShapeGroup.h"
 #include "TREVertexStore.h"
 #include "TREGL.h"
+#include "TREMainModel.h"
 
 TREColoredShapeGroup::TREColoredShapeGroup(void)
 {
@@ -32,8 +33,8 @@ int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
 }
 
 int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
-								   TCVector *vertices, TCVector *normals,
-								   int count)
+								   const TCVector *vertices,
+								   const TCVector *normals, int count)
 {
 	int index;
 
@@ -61,8 +62,8 @@ int TREColoredShapeGroup::addTriangle(TCULong color, TCVector *vertices)
 	return addShape(TRESTriangle, color, vertices, 3);
 }
 
-int TREColoredShapeGroup::addTriangle(TCULong color, TCVector *vertices,
-									  TCVector *normals)
+int TREColoredShapeGroup::addTriangle(TCULong color, const TCVector *vertices,
+									  const TCVector *normals)
 {
 	return addShape(TRESTriangle, color, vertices, normals, 3);
 }
@@ -103,3 +104,102 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 	return index;
 }
 
+void TREColoredShapeGroup::transferColoredTransparent(TREMainModel *mainModel,
+													  const float *matrix)
+{
+	if (m_indices)
+	{
+		int bit;
+
+		for (bit = TRESFirst; (TREShapeType)bit <= TRESLast; bit = bit << 1)
+		{
+			TREShapeType shapeType = (TREShapeType)bit;
+			transferColoredTransparent(shapeType, getIndices(shapeType),
+				mainModel, matrix);
+		}
+	}
+}
+
+void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
+													  TCULongArray *indices,
+													  TREMainModel *mainModel,
+													  const float *matrix)
+{
+	TCULongArray *colors = m_vertexStore->getColors();
+	TREVertexArray *oldVertices = m_vertexStore->getVertices();
+	TREVertexArray *oldNormals = m_vertexStore->getNormals();
+
+	if (indices && colors && oldVertices && oldNormals)
+	{
+		int i;
+		int count = indices->getCount();
+
+		if (shapeType == TRESTriangle || shapeType == TRESQuad)
+		{
+			int shapeSize = numPointsForShapeType(shapeType);
+
+			if (shapeSize > 2)
+			{
+				// Start at the end and work backward.  Otherwise our index will
+				// have to change every time items are removed.
+				for (i = count - shapeSize; i >= 0; i -= shapeSize)
+				{
+					TCULong index = (*indices)[i];
+					TCULong color = htonl((*colors)[index]);
+
+					if (isTransparent(color, false))
+					{
+						TCVector vertices[3];
+						TCVector normals[3];
+
+						transferTriangle(mainModel, color, index,
+							(*indices)[i + 1], (*indices)[i + 2], matrix);
+						if (shapeSize == 4)
+						{
+							transferTriangle(mainModel, color, index,
+								(*indices)[i + 2], (*indices)[i + 3], matrix);
+						}
+						indices->removeValues(i, shapeSize);
+					}
+				}
+			}
+		}
+		else if (shapeType >= TRESFirstStrip && shapeType <= TRESLast)
+		{
+			int shapeTypeIndex = getShapeTypeIndex(shapeType);
+			TCULongArray *stripCounts = (*m_stripCounts)[shapeTypeIndex];
+			int numStrips = stripCounts->getCount();
+			int offset = count;
+
+			for (i = numStrips - 1; i >= 0; i--)
+			{
+				int stripCount = (*stripCounts)[i];
+				int index;
+				int color;
+
+				offset -= stripCount;
+				index = (*indices)[offset];
+				color = htonl((*colors)[index]);
+				if (isTransparent(color, false))
+				{
+					switch (shapeType)
+					{
+					case TRESTriangleStrip:
+						break;
+					case TRESQuadStrip:
+						transferQuadStrip(mainModel, shapeTypeIndex, color,
+							offset, stripCount, matrix, true);
+						break;
+					case TRESTriangleFan:
+						transferTriangleFan(mainModel, shapeTypeIndex, color,
+							offset, stripCount, matrix, true);
+						break;
+					default:
+						break;
+					}
+					stripCounts->removeValue(i);
+				}
+			}
+		}
+	}
+}

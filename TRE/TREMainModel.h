@@ -5,6 +5,8 @@
 
 class TCDictionary;
 class TREVertexStore;
+class TREColoredShapeGroup;
+class TRETransShapeGroup;
 
 class TREMainModel : public TREModel
 {
@@ -12,11 +14,11 @@ public:
 	TREMainModel(void);
 	TREMainModel(const TREMainModel &other);
 	virtual TCObject *copy(void);
-	virtual TCDictionary* getLoadedModels(void);
+	virtual TCDictionary* getLoadedModels(bool bfc);
 	virtual void draw(void);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
-	virtual TREModel *modelNamed(const char *name);
-	virtual void registerModel(TREModel *model);
+	virtual TREModel *modelNamed(const char *name, bool bfc);
+	virtual void registerModel(TREModel *model, bool bfc);
 	void setCompilePartsFlag(bool value) { m_mainFlags.compileParts = value; }
 	bool getCompilePartsFlag(void) { return m_mainFlags.compileParts != false; }
 	void setCompileAllFlag(bool value) { m_mainFlags.compileAll = value; }
@@ -39,11 +41,25 @@ public:
 	}
 	void setBFCFlag(bool value) { m_mainFlags.bfc = value; }
 	bool getBFCFlag(void) { return m_mainFlags.bfc != false; }
+	void setAALinesFlag(bool value) { m_mainFlags.aaLines = value; }
+	bool getAALinesFlag(void) { return m_mainFlags.aaLines != false; }
+	void setSortTransparentFlag(bool value)
+	{
+		m_mainFlags.sortTransparent = value;
+	}
+	bool getSortTransparentFlag(void)
+	{
+		return m_mainFlags.sortTransparent != false;
+	}
 	virtual float getMaxRadiusSquared(const TCVector &center);
 	virtual float getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
 	{
 		return m_coloredVertexStore;
+	}
+	TREVertexStore *getTransVertexStore(void)
+	{
+		return m_transVertexStore;
 	}
 	void setColor(TCULong color, TCULong edgeColor);
 	TCULong getColor(void);
@@ -51,20 +67,30 @@ public:
 	void postProcess(void);
 	void compile(void);
 	void recompile(void);
+	virtual void addTransparentTriangle(TCULong color,
+		const TCVector vertices[], const TCVector normals[]);
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
 	void scanMaxRadiusSquaredPoint(const TCVector &point);
 	virtual void activateBFC(void);
 	virtual void deactivateBFC(void);
+	void transferTransparent(void);
+	virtual void drawTransparent(void);
+	virtual void drawLines(void);
+	virtual void compileTransparent(void);
 
 	TCDictionary *m_loadedModels;
+	TCDictionary *m_loadedBFCModels;
 	TREVertexStore *m_vertexStore;
 	TREVertexStore *m_coloredVertexStore;
+	TREVertexStore *m_transVertexStore;
+	TRETransShapeGroup *m_transShapes;
 	TCULong m_color;
 	TCULong m_edgeColor;
 	float m_maxRadiusSquared;
 	TCVector m_center;
+	int m_transListID;
 	struct
 	{
 		bool compileParts:1;
@@ -76,6 +102,8 @@ protected:
 		bool useStrips:1;
 		bool useFlatStrips:1;
 		bool bfc:1;
+		bool aaLines:1;
+		bool sortTransparent:1;
 	} m_mainFlags;
 };
 

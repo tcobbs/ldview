@@ -18,6 +18,7 @@
 // dot product is not an overloaded operator, simply dot.
 
 typedef float* GlPt;
+typedef const float *ConstGlPt;
 
 class TCVector
 {
@@ -62,6 +63,7 @@ public:
 	int operator>=(const TCVector& right) const;
 	float& operator[](int i) {return vector[i];}
 	operator GlPt(void) {return vector;}
+	operator ConstGlPt(void) const {return vector;}
 	TCVector mult(float* matrix) const;
 	TCVector mult2(float* matrix) const;
 	void transformPoint(const float *matrix, TCVector &newPoint);

@@ -166,6 +166,20 @@ int TCArray::removeItem(int index)
 	}
 }
 
+int TCArray::removeItems(int index, int numItems)
+{
+	int i;
+
+	for (i = index + numItems - 1; i >= index; i--)
+	{
+		if (!removeItem(i))
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
 void* TCArray::itemAtIndex(unsigned int index)
 {
 	if (index < count)

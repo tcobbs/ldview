@@ -39,6 +39,13 @@ public:
 	}
 	void setBFCFlag(bool value) { m_flags.bfc = value; }
 	bool getBFCFlag(void) { return m_flags.bfc != false; }
+	void setAALinesFlag(bool value) { m_flags.aaLines = value; }
+	bool getAALinesFlag(void) { return m_flags.aaLines != false; }
+	void setSortTransparentFlag(bool value) { m_flags.sortTransparent = value; }
+	bool getSortTransparentFlag(void)
+	{
+		return m_flags.sortTransparent != false;
+	}
 	void setCompilePartsFlag(bool value) { m_flags.compileParts = value; }
 	bool getCompilePartsFlag(void) { return m_flags.compileParts != false; }
 	void setCompileAllFlag(bool value) { m_flags.compileAll = value; }
@@ -120,6 +127,8 @@ protected:
 		bool compileParts:1;
 		bool compileAll:1;
 		bool lighting:1;
+		bool aaLines:1;
+		bool sortTransparent:1;
 	} m_flags;
 };
 

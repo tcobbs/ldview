@@ -143,6 +143,10 @@ public:
 	{
 		return section == TREMLines || section == TREMEdgeLines;
 	}
+	virtual void transferColoredTransparent(TREMSection section,
+		const float *matrix);
+	virtual void transferTransparent(TCULong color, TREMSection section,
+		const float *matrix);
 
 //	static void multMatrix(float* left, float* right, float* result);
 	static void transformVertex(TREVertex &vertex, float *matrix);

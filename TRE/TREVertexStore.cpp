@@ -94,7 +94,7 @@ TCObject *TREVertexStore::copy(void)
 	return new TREVertexStore(*this);
 }
 
-int TREVertexStore::addVertices(TCVector *points, int count)
+int TREVertexStore::addVertices(const TCVector *points, int count)
 {
 	TCVector normal;
 	TREVertex normalVertex;
@@ -112,13 +112,15 @@ int TREVertexStore::addVertices(TCVector *points, int count)
 	return addVertices(m_vertices, points, count);
 }
 
-int TREVertexStore::addVertices(TCVector *points, TCVector *normals, int count)
+int TREVertexStore::addVertices(const TCVector *points, const TCVector *normals,
+								int count)
 {
 	addVertices(m_normals, normals, count);
 	return addVertices(m_vertices, points, count);
 }
 
-int TREVertexStore::addVertices(TCULong color, TCVector *points, int count)
+int TREVertexStore::addVertices(TCULong color, const TCVector *points,
+								int count)
 {
 	int i;
 
@@ -129,8 +131,8 @@ int TREVertexStore::addVertices(TCULong color, TCVector *points, int count)
 	return addVertices(points, count);
 }
 
-int TREVertexStore::addVertices(TCULong color, TCVector *points,
-								TCVector *normals, int count)
+int TREVertexStore::addVertices(TCULong color, const TCVector *points,
+								const TCVector *normals, int count)
 {
 	int i;
 
@@ -141,13 +143,13 @@ int TREVertexStore::addVertices(TCULong color, TCVector *points,
 	return addVertices(points, normals, count);
 }
 
-void TREVertexStore::initVertex(TREVertex &vertex, TCVector &point)
+void TREVertexStore::initVertex(TREVertex &vertex, const TCVector &point)
 {
-	memcpy(vertex.v, (float *)point, sizeof(vertex.v));
+	memcpy(vertex.v, (const float *)point, sizeof(vertex.v));
 }
 
-int TREVertexStore::addVertices(TREVertexArray *vertices, TCVector *points,
-								int count)
+int TREVertexStore::addVertices(TREVertexArray *vertices,
+								const TCVector *points, int count)
 {
 	int i;
 
@@ -323,6 +325,14 @@ void TREVertexStore::setupVBO(void)
 	}
 }
 
+void TREVertexStore::deactivate(void)
+{
+	if (sm_activeVertexStore == this)
+	{
+		sm_activeVertexStore = NULL;
+	}
+}
+
 bool TREVertexStore::activate(bool displayLists)
 {
 	if (sm_activeVertexStore == this)
@@ -343,7 +353,7 @@ bool TREVertexStore::activate(bool displayLists)
 			{
 				setupVAR();
 			}
-			if (m_vbo)
+			if (!displayLists && m_vbo)
 			{
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
 				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
@@ -367,7 +377,7 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_normals && getLightingFlag())
 		{
 			glEnableClientState(GL_NORMAL_ARRAY);
-			if (m_vbo)
+			if (!displayLists && m_vbo)
 			{
 				glNormalPointer(GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(m_normalsOffset));
@@ -390,7 +400,7 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_colors)
 		{
 			glEnableClientState(GL_COLOR_ARRAY);
-			if (m_vbo)
+			if (!displayLists && m_vbo)
 			{
 				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
 					BUFFER_OFFSET(m_colorsOffset));
@@ -436,7 +446,7 @@ void TREVertexStore::setupColored(void)
 	}
 }
 
-TCVector TREVertexStore::calcNormal(TCVector *points, bool normalize)
+TCVector TREVertexStore::calcNormal(const TCVector *points, bool normalize)
 {
 	TCVector normal = (points[1] - points[2]) * (points[1] - points[0]);
 //	TCVector normal = (points[2] - points[1]) * (points[0] - points[1]);

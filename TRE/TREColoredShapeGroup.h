@@ -10,8 +10,8 @@ public:
 	TREColoredShapeGroup(const TREColoredShapeGroup &other);
 	virtual TCObject *copy(void);
 	virtual int addLine(TCULong color, TCVector *vertices);
-	virtual int addTriangle(TCULong color, TCVector *vertices,
-		TCVector *normals);
+	virtual int addTriangle(TCULong color, const TCVector *vertices,
+		const TCVector *normals);
 	virtual int addTriangle(TCULong color, TCVector *vertices);
 	virtual int addQuad(TCULong color, TCVector *vertices);
 	virtual int addQuad(TCULong color, TCVector *vertices, TCVector *normals);
@@ -19,6 +19,8 @@ public:
 		TCVector *normals, int count);
 	virtual int addTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count);
+	virtual void transferColoredTransparent(TREMainModel *mainModel,
+		const float *matrix);
 protected:
 	virtual ~TREColoredShapeGroup(void);
 	virtual void dealloc(void);
@@ -27,7 +29,9 @@ protected:
 	virtual int addShape(TREShapeType shapeType, TCULong color,
 		TCVector *vertices, int count);
 	virtual int addShape(TREShapeType shapeType, TCULong color,
-		TCVector *vertices, TCVector *normals, int count);
+		const TCVector *vertices, const TCVector *normals, int count);
+	virtual void transferColoredTransparent(TREShapeType shapeType,
+		TCULongArray *indices, TREMainModel *mainModel, const float *matrix);
 };
 
 #endif __TRECOLOREDSHAPEGROUP_H__

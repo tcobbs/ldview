@@ -2066,3 +2066,46 @@ void TREModel::uncompile(void)
 		}
 	}
 }
+
+void TREModel::transferColoredTransparent(TREMSection section,
+										  const float *matrix)
+{
+	TREColoredShapeGroup *shapeGroup = m_coloredShapes[section];
+
+	if (shapeGroup)
+	{
+		shapeGroup->transferColoredTransparent(m_mainModel, matrix);
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->transferColoredTransparent(section, matrix);
+		}
+	}
+}
+
+void TREModel::transferTransparent(TCULong color, TREMSection section,
+								   const float *matrix)
+{
+	TREShapeGroup *shapeGroup = m_shapes[section];
+
+	if (shapeGroup)
+	{
+		shapeGroup->transferTransparent(color, m_mainModel, matrix);
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->transferTransparent(color, section, matrix);
+		}
+	}
+}
+
