@@ -292,7 +292,7 @@
             <cstring>fileSaveAction</cstring>
         </property>
         <property name="iconSet">
-            <iconset>filesave.png</iconset>
+            <iconset>toolbar_snapshot.png</iconset>
         </property>
         <property name="text">
             <string>Save Snapshot</string>

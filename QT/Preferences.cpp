@@ -15,12 +15,18 @@
 #include <qspinbox.h>
 #include <qlabel.h>
 #include <qcombobox.h>
-
+#include <qinputdialog.h>
+#include <qlistbox.h>
+#include <qmessagebox.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <netinet/in.h>
+
+#define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
 Preferences::Preferences(ModelViewerWidget *modelWidget)
 	:modelWidget(modelWidget),
-	panel(new PreferencesPanel)
+	panel(new PreferencesPanel),
+	checkAbandon(true)
 {
 	modelViewer = modelWidget->getModelViewer();
 	panel->setPreferences(this);
@@ -40,6 +46,80 @@ void Preferences::show(void)
 	panel->show();
 	panel->raise();
 	panel->setActiveWindow();
+}
+
+void Preferences::doPrefSetsApply(void)
+{
+	TCStringArray *oldPrefSetNames = TCUserDefaults::getAllSessionNames();
+	int i;
+	uint b;
+	int count = oldPrefSetNames->getCount();
+//	char *prefSetName = NULL;
+	const char *sessionName = TCUserDefaults::getSessionName();
+	bool changed = false;
+
+	for (i = 0; i < count; i++)
+	{
+		char *oldPrefSetName = oldPrefSetNames->stringAtIndex(i);
+		int index=-1;
+		for(b = 0; b < panel->preferenceSetList->count(); b++)
+		{
+			if (strcmp(oldPrefSetNames->stringAtIndex(i),
+						panel->preferenceSetList->text(b).ascii()) == 0) 
+			{
+				index = b;
+			}	
+		}
+		if (index == -1)
+		{
+			TCUserDefaults::removeSession(oldPrefSetName);
+		}
+	}
+	count=panel->preferenceSetList->count();
+	for(i = 1; i < count; i++)
+	{
+		if (oldPrefSetNames->indexOfString(getPrefSet(i)) < 0)
+		{
+			TCUserDefaults::setSessionName(getPrefSet(i));
+		}
+	}
+	oldPrefSetNames->release();
+	if (getSelectedPrefSet() && 
+		(strcmp(getSelectedPrefSet(), DEFAULT_PREF_SET) == 0))
+	{
+		if (sessionName && sessionName[0])
+        {
+			TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
+			changed = true;
+		}
+	}
+	else
+	{
+		if (!sessionName || strcmp(sessionName, getSelectedPrefSet()) != 0)
+		{
+			TCUserDefaults::setSessionName(getSelectedPrefSet(), PREFERENCE_SET_KEY);
+			changed = true;
+		}
+	}
+	if (changed)
+	{
+		loadSettings();
+		reflectSettings();
+
+		doGeneralApply();
+    	doGeometryApply();
+    	doEffectsApply();
+    	doPrimitivesApply();
+    	panel->applyButton->setEnabled(false);
+    	if (modelWidget)
+    	{
+        	modelWidget->reflectSettings();
+        	modelWidget->doApply();
+        	setupDefaultRotationMatrix();
+    	}
+    	checkAbandon = true;
+	
+	}
 }
 
 void Preferences::doGeneralApply(void)
@@ -477,7 +557,7 @@ void Preferences::doPrimitivesApply(void)
 		qualityStuds = bTemp;
 		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, QUALITY_STUDS_KEY);
 	}
-	bTemp = ! panel->hiresPrimitivesButton->state();
+	bTemp = panel->hiresPrimitivesButton->state();
 	if (bTemp != hiresPrimitives)
 	{
 		hiresPrimitives = bTemp;
@@ -500,6 +580,7 @@ void Preferences::doApply(void)
 	doGeometryApply();
 	doEffectsApply();
 	doPrimitivesApply();
+	doPrefSetsApply();
 	panel->applyButton->setEnabled(false);
 	if (modelWidget)
 	{
@@ -507,6 +588,7 @@ void Preferences::doApply(void)
 		modelWidget->doApply();
 		setupDefaultRotationMatrix();
 	}
+	checkAbandon = true;
 }
 
 void Preferences::doCancel(void)
@@ -824,6 +906,7 @@ void Preferences::reflectSettings(void)
 	reflectGeometrySettings();
 	reflectEffectsSettings();
 	reflectPrimitivesSettings();
+	setupPrefSetsList();
 }
 
 void Preferences::reflectGeneralSettings(void)
@@ -941,7 +1024,7 @@ void Preferences::reflectPrimitivesSettings(void)
 	}
 	panel->curveQualitySlider->setValue(curveQuality);
 	setButtonState(panel->lowQualityStudsButton, !qualityStuds);
-	setButtonState(panel->hiresPrimitivesButton, !hiresPrimitives);
+	setButtonState(panel->hiresPrimitivesButton, hiresPrimitives);
 }
 
 void Preferences::doResetGeneral(void)
@@ -1139,6 +1222,22 @@ void Preferences::doStereo(bool value)
 	}
 }
 
+void Preferences::doSortTransparency(bool value)
+{
+	if(value)
+	{
+		setButtonState(panel->stippleTransparencyButton,false);
+	}
+}
+
+void Preferences::doStippleTransparency(bool value)
+{
+	if(value)
+	{
+		setButtonState(panel->sortTransparencyButton,false);
+	}
+}
+
 void Preferences::doWireframe(bool value)
 {
 	if (value)
@@ -1209,6 +1308,245 @@ void Preferences::doTextureStuds(bool value)
 	{
 		disableTextureStuds();
 	}
+}
+
+void Preferences::doNewPreferenceSet()
+{
+    bool ok;
+    QString name = QInputDialog::getText("LDView New Preference Set", 
+                   "Enter name of the new PreferenceSet", QLineEdit::Normal,
+                   QString::null, &ok, panel);
+    if (ok && !name.isEmpty())
+	{
+		for(uint i = 0; i < panel->preferenceSetList->count(); i++)
+		{
+			if (getPrefSet(i) && strcmp(getPrefSet(i), name.ascii())==0)
+			{
+				QMessageBox::warning(panel,
+					TCLocalStrings::get("PrefSetAlreadyExists"),
+					TCLocalStrings::get("DuplicateName"),
+					QMessageBox::Ok,0);
+				return;
+			}
+		}
+		if (name.find('/')!=-1)
+		{
+			QMessageBox::warning(panel,
+				TCLocalStrings::get("PrefSetNameBadChars"),
+				TCLocalStrings::get("InvalidName"),
+				QMessageBox::Ok,0);
+				return;
+		}
+		panel->preferenceSetList->insertItem(name);
+		selectPrefSet(name.ascii());
+		return;
+	}
+	if (name.isEmpty() && ok);
+	{
+		QMessageBox::warning(panel,
+			TCLocalStrings::get("PrefSetNameRequired"),
+			TCLocalStrings::get("EmptyName"),
+			QMessageBox::Ok,0);
+		return;
+	}
+}
+
+void Preferences::doDelPreferenceSet()
+{
+	const char *selectedPrefSet = getSelectedPrefSet();
+	if (selectedPrefSet)
+	{
+		int selectedIndex = panel->preferenceSetList->currentItem();
+		if (checkAbandon && panel->applyButton->isEnabled())
+		{
+			if(QMessageBox::warning(panel,
+				TCLocalStrings::get("PrefSetAbandonConfirm"),
+				TCLocalStrings::get("AbandonChanges"),
+				 QMessageBox::Yes, QMessageBox::No)== QMessageBox::Yes)
+			{
+				abandonChanges();
+			}
+			else
+			{
+				return;
+			}
+		}
+		checkAbandon = false;
+		panel->preferenceSetList->removeItem(selectedIndex);
+		selectedIndex = panel->preferenceSetList->currentItem();
+		selectedPrefSet = getPrefSet(selectedIndex);
+		selectPrefSet(selectedPrefSet, true);
+	}
+}
+
+void Preferences::doHotkeyPreferenceSet()
+{
+}
+
+char *Preferences::getHotKey(int index)
+{
+    char key[128];
+                                                                                
+    sprintf(key, "%s/Key%d", HOT_KEYS_KEY, index);
+    return TCUserDefaults::stringForKey(key, NULL, false);
+}
+
+int Preferences::getHotKey(const char *currentPrefSetName)
+{
+    int i;
+    int retValue = -1;
+                                                                                
+    for (i = 0; i < 10 && retValue == -1; i++)
+    {
+        char *prefSetName = getHotKey(i);
+                                                                                
+        if (prefSetName)
+        {
+            if (strcmp(prefSetName, currentPrefSetName) == 0)
+            {
+                retValue = i;
+            }
+            delete prefSetName;
+        }
+    }
+    return retValue;
+}
+
+int Preferences::getCurrentHotKey(void)
+{
+	int retValue = -1;
+                                                                                
+	if (getSelectedPrefSet())
+	{
+		return getHotKey(getSelectedPrefSet());
+	}
+	return retValue;
+}
+
+void Preferences::saveCurrentHotKey(void)
+{
+    int currentHotKey = getCurrentHotKey();
+                                                                                
+    if (currentHotKey >= 0)
+    {
+        char key[128];
+                                                                                
+        sprintf(key, "%s/Key%d", HOT_KEYS_KEY, currentHotKey);
+        TCUserDefaults::removeValue(key, false);
+    }
+    if (hotKeyIndex > 0)
+    {
+        char key[128];
+                                                                                
+        sprintf(key, "%s/Key%d", HOT_KEYS_KEY, hotKeyIndex % 10);
+        TCUserDefaults::setStringForKey(getSelectedPrefSet(), key, false);
+    }
+}
+
+void Preferences::abandonChanges(void)
+{
+	panel->applyButton->setEnabled(false);
+	loadSettings();
+	reflectSettings();
+}
+
+const char *Preferences::getPrefSet(int index)
+{
+	return panel->preferenceSetList->text(index).ascii();
+}
+
+const char *Preferences::getSelectedPrefSet(void)
+{
+    int selectedIndex = panel->preferenceSetList->currentItem();
+	if (selectedIndex!=-1)
+	{
+		return panel->preferenceSetList->currentText().ascii();
+	}
+	return NULL;
+}
+bool Preferences::doPrefSetSelected(bool force)
+{
+    const char *selectedPrefSet = getSelectedPrefSet();
+    bool needToReselect = false;
+
+	if (checkAbandon && panel->applyButton->isEnabled() && !force)
+    {
+        char *savedSession =
+            TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+
+        if (!savedSession || !savedSession[0])
+        {
+            delete savedSession;
+            savedSession = copyString(DEFAULT_PREF_SET);
+        }
+        if (selectedPrefSet && (strcmp(savedSession, selectedPrefSet) != 0))
+        {
+            needToReselect = true;
+            selectPrefSet(NULL, true);
+		}
+		delete savedSession;
+	}
+	if (selectedPrefSet)
+    {
+        bool enabled = true;
+
+        if (needToReselect)
+        {
+            selectPrefSet(selectedPrefSet);
+        }
+		if (strcmp(selectedPrefSet, DEFAULT_PREF_SET) == 0)
+        {
+            enabled = false;
+        }
+		panel->delPreferenceSetButton->setEnabled(enabled);
+    }
+	panel->applyButton->setEnabled(true);
+	checkAbandon = false;
+    return FALSE;
+}
+	
+void Preferences::selectPrefSet(const char *prefSet, bool force)
+{
+    if (prefSet)
+    {
+		for (uint i=0;i<panel->preferenceSetList->count();i++)
+		{
+			if (strcmp(prefSet,panel->preferenceSetList->text(i).ascii())==0)
+			{
+				panel->preferenceSetList->setCurrentItem(i);
+			}
+		}
+		doPrefSetSelected(force);
+	}
+    else
+    {
+        char *savedSession =
+            TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+
+        if (savedSession && savedSession[0])
+        {
+            selectPrefSet(savedSession, force);
+        }
+        else
+        {
+            selectPrefSet(DEFAULT_PREF_SET, force);
+        }
+        delete savedSession;
+    }
+}
+void Preferences::setupPrefSetsList(void)
+{
+    TCStringArray *sessionNames = TCUserDefaults::getAllSessionNames();
+    int i;
+    int count = sessionNames->getCount();
+	panel->preferenceSetList->clear();
+    panel->preferenceSetList->insertItem(DEFAULT_PREF_SET);
+    for (i = 0; i < count; i++)
+    {
+        panel->preferenceSetList->insertItem(sessionNames->stringAtIndex(i));
+    }
+    selectPrefSet();
+	sessionNames->release();
 }
 
 void Preferences::enableWireframeCutaway(void)

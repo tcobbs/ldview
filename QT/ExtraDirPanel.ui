@@ -15,6 +15,9 @@
     <property name="caption">
         <string>Extra Dir</string>
     </property>
+    <property name="icon">
+        <pixmap>LDViewIcon16.png</pixmap>
+    </property>
 	<vbox>
         <widget class="QLayoutWidget">
         <property name="name">
@@ -86,7 +89,7 @@
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>5</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
@@ -102,7 +105,7 @@
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>5</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
@@ -118,7 +121,7 @@
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>5</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>

@@ -173,7 +173,7 @@
                                             <enum>TabFocus</enum>
                                         </property>
                                     </widget>
-                                    <spacer row="1" column="2">
+                                    <spacer row="0" column="2">
                                         <property name="name">
                                             <cstring>Spacer5_2</cstring>
                                         </property>
@@ -254,7 +254,7 @@
 											<number>45</number>
 										</property>
                                    	</widget>
-									<widget class="QCheckBox" row="0" column="2">
+									<widget class="QCheckBox" row="1" column="2">
                         		        <property name="name">
                                			    <cstring>transparentButton</cstring>
                                 		</property>
@@ -2424,7 +2424,7 @@
                     </property>
 	                <widget class="QListBox">
                     	<property name="name">
-                        	<cstring>extraDirList</cstring>
+                        	<cstring>preferenceSetList</cstring>
                     	</property>
 					</widget>
 					<vbox>
@@ -2450,7 +2450,7 @@
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>5</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
@@ -2466,7 +2466,7 @@
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
-                                    <hsizetype>0</hsizetype>
+                                    <hsizetype>5</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
@@ -2818,9 +2818,9 @@
     </connection>
     <connection>
         <sender>sortTransparencyButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
-        <slot>enableApply()</slot>
+        <slot>doSortTransparency(bool)</slot>
     </connection>
     <connection>
         <sender>cutawayOpacitySlider</sender>
@@ -2836,9 +2836,9 @@
     </connection>
     <connection>
         <sender>stippleTransparencyButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
-        <slot>enableApply()</slot>
+        <slot>doStippleTransparency(bool)</slot>
     </connection>
     <connection>
         <sender>flatShadingButton</sender>
@@ -3014,6 +3014,42 @@
         <receiver>PreferencesPanel</receiver>
         <slot>doTextureStuds(bool)</slot>
     </connection>
+    <connection>
+        <sender>newPreferenceSetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doNewPreferenceSet()</slot>
+    </connection>
+    <connection>
+        <sender>delPreferenceSetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doDelPreferenceSet()</slot>
+    </connection>
+    <connection>
+        <sender>hotkeyPreferenceSetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doHotkeyPreferenceSet()</slot>
+    </connection>
+	<connection>
+		<sender>preferenceSetList</sender>
+		<signal>highlighted(int)</signal>
+		<receiver>PreferencesPanel</receiver>
+        <slot>doPrefSetSelected()</slot>
+	</connection>
+	<connection>
+        <sender>backgroundColorButton</sender>
+        <signal>changed(const QColor &amp;)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+	<connection>
+        <sender>defaultColorButton</sender>
+        <signal>changed(const QColor &amp;)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>tabs</tabstop>
@@ -3022,8 +3058,8 @@
     <tabstop>showErrorsButton</tabstop>
     <tabstop>processLdconfigLdrButton</tabstop>
     <tabstop>backgroundColorButton</tabstop>
-    <tabstop>transparentButton</tabstop>
     <tabstop>defaultColorButton</tabstop>
+	<tabstop>transparentButton</tabstop>
     <tabstop>fieldOfViewSpin</tabstop>
 	<tabstop>memoryUsageBox</tabstop>
     <tabstop>generalResetButton</tabstop>
@@ -3101,12 +3137,18 @@
     <slot>doWireframeCutaway( bool value )</slot>
     <slot>doLighting( bool value )</slot>
     <slot>doStereo( bool value )</slot>
+	<slot>doSortTransparency( bool value )</slot>
+	<slot>doStippleTransparency( bool value )</slot>
     <slot>doWireframe( bool value )</slot>
     <slot>doBFC( bool value )</slot>
     <slot>doEdgeLines( bool value )</slot>
     <slot>doConditionalShow( bool value )</slot>
     <slot>doPrimitiveSubstitution( bool value )</slot>
     <slot>doTextureStuds( bool value )</slot>
+    <slot>doNewPreferenceSet()</slot>
+    <slot>doDelPreferenceSet()</slot>
+    <slot>doHotkeyPreferenceSet()</slot>
+	<slot>doPrefSetSelected()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
