@@ -11,9 +11,15 @@
 #include <TRE/TREMainModel.h>
 #include "OpenGLExtensionsPanel.h"
 #include "AboutPanel.h"
+#include "HelpPanel.h"
 #include "LDView.h"
 #include "LDViewErrors.h"
+#include "ExtraDirPanel.h"
+#include "LDViewExtraDir.h"
+#include <TCFoundation/TCUserDefaults.h>
+#include "UserDefaultsKeys.h"
 
+#include <qtextbrowser.h>
 #include <qapplication.h>
 #include <qfiledialog.h>
 #include <qstatusbar.h>
@@ -33,8 +39,14 @@
 #include <qdatetime.h>
 #include <qdragobject.h>
 #include <qmime.h>
+#include <qregexp.h>
+#include <qgroupbox.h>
+#include <qlayout.h>
 
 #define POLL_INTERVAL 500
+
+#define PNG_IMAGE_TYPE_INDEX 1
+#define BMP_IMAGE_TYPE_INDEX 2
 
 TCStringArray *ModelViewerWidget::recentFiles = NULL;
 
@@ -49,9 +61,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	spinButton(1),
 	zoomButton(2),
 	preferences(NULL),
+	extradir(NULL),
 	extensionsPanel(NULL),
 	openGLDriverInfo(NULL),
 	aboutPanel(NULL),
+	helpContents(NULL),
 	mainWindow(NULL),
 	menuBar(NULL),
 	fileMenu(NULL),
@@ -65,6 +79,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	statusBar(NULL),
 	progressBar(NULL),
 	progressLabel(NULL),
+	progressMode(NULL),
 	loading(false),
 	cancelLoad(false),
 	app(NULL),
@@ -75,9 +90,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	pollTimer(0),
 	loadTimer(0),
 	fileDialog(NULL),
+	saveDialog(NULL),
 	errors(NULL),
 	fileInfo(NULL),
-	lockCount(0)
+	lockCount(0),
+	fullscreen(0)
 {
 	int i;
 	const QMimeSource *mimeSource =
@@ -103,6 +120,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		mouseButtonsDown[i] = false;
 	}
 	preferences = new Preferences(this);
+	extradir = new ExtraDir(this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode());
 	setFocusPolicy(QWidget::StrongFocus);
@@ -185,12 +203,25 @@ void ModelViewerWidget::updateSpinRate(void)
 	}
 }
 
+void ModelViewerWidget::swap_Buffers(void)
+{
+    glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
+    glDisable(GL_MULTISAMPLE_ARB);
+    glDrawBuffer(GL_FRONT);
+//    drawFPS();
+    glDrawBuffer(GL_BACK);
+    glFlush();
+    glEnable(GL_MULTISAMPLE_ARB);
+    glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
+}
+
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
 	if (!painting && !loading)
 	{
 		painting = true;
+		makeCurrent();
 		updateSpinRate();
 		modelViewer->update();
 		updateFPS();
@@ -208,6 +239,7 @@ void ModelViewerWidget::paintGL(void)
 		{
 			startPaintTimer();
 		}
+		swap_Buffers();
 		painting = false;
 	}
 	unlock();
@@ -637,6 +669,11 @@ void ModelViewerWidget::showPreferences(void)
 	preferences->show();
 }
 
+void ModelViewerWidget::showFileExtraDir(void)
+{
+	extradir->show();
+}
+
 void ModelViewerWidget::connectMenuShows(void)
 {
 	connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
@@ -667,9 +704,11 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	statusBar = mainWindow->statusBar();
 	progressBar = new QProgressBar(statusBar);
 	progressLabel = new QLabel(statusBar);
+	progressMode = new QLabel(statusBar);
 	progressBar->setPercentageVisible(false);
 	statusBar->addWidget(progressBar);
 	statusBar->addWidget(progressLabel, 1);
+	statusBar->addWidget(progressMode);
 	mainWindow->viewStatusBarAction->setOn(preferences->getStatusBar());
 	switch (Preferences::getPollMode())
 	{
@@ -689,17 +728,19 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	if (viewMode == LDVViewExamine)
 	{
 		mainWindow->examineModeAction->setOn(true);
+		progressMode->setText("Examine");
 	}
 	else
 	{
 		mainWindow->flythroughModeAction->setOn(true);
+		progressMode->setText("Fly-through");
 	}
 	menuBar = mainWindow->menuBar();
 	item = menuBar->findItem(menuBar->idAt(0));
 	if (item)
 	{
 		fileMenu = item->popup();
-		fileCancelLoadId = fileMenu->idAt(4);
+		fileCancelLoadId = fileMenu->idAt(6);
 		fileReloadId = fileMenu->idAt(1);
 	}
 	for (i = 0; ; i++)
@@ -936,6 +977,30 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 	unlock();
 }
 
+void ModelViewerWidget::doViewFullScreen(void)
+{
+	static QPoint pos;
+	if (!fullscreen)
+	{
+		pos=mainWindow->pos();
+		menuBar->hide();
+		statusBar->hide();
+		mainWindow->GroupBox12->setFrameShape( QFrame::NoFrame );
+		mainWindow->GroupBox12->layout()->setMargin( 0 );
+		mainWindow->showFullScreen();
+		fullscreen=1;
+	} else
+	{
+		mainWindow->GroupBox12->setFrameShape( QGroupBox::WinPanel );
+        mainWindow->GroupBox12->layout()->setMargin( 2 );
+        mainWindow->showNormal();
+		mainWindow->move(pos);
+        menuBar->show();
+        if(preferences->getStatusBar()) {statusBar->show();}
+		fullscreen=0;
+	}
+}
+
 void ModelViewerWidget::doViewReset(void)
 {
 	lock();
@@ -997,6 +1062,19 @@ void ModelViewerWidget::doHelpContents(void)
 		}
 		return;
 	}
+	if(!helpContents)
+	{
+		helpContents = new HelpPanel;
+        QFile file( "Help.html" ); 
+        if ( file.open( IO_ReadOnly ) ) {
+            QTextStream stream( &file );
+            helpContents->HelpTextBrowser->setText(
+				stream.read().replace(QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
+												"i=") );
+		    helpContents->HelpTextBrowser->setReadOnly(TRUE);
+        }
+	}
+	helpContents->show();
 }
 
 void ModelViewerWidget::doHelpAbout(void)
@@ -1453,10 +1531,12 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 		if (viewMode == LDVViewExamine)
 		{
 			modelViewer->setConstrainZoom(true);
+			progressMode->setText("Examine");
 		}
 		else
 		{
 			modelViewer->setConstrainZoom(false);
+			progressMode->setText("Fly-through");
 		}
 		Preferences::setViewMode(viewMode);
 	}
@@ -1475,6 +1555,417 @@ void ModelViewerWidget::doViewModeChanged(QAction *action)
 	unlock();
 }
 
+void ModelViewerWidget::doZoomToFit(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+	modelViewer->zoomToFit();
+    startPaintTimer();
+    unlock();
+}
+
+bool ModelViewerWidget::staticImageProgressCallback(char* message, float progress,
+                                              void* userData)
+{
+    return ((ModelViewerWidget*)userData)->progressCallback(message, progress, true);
+}
+
+bool ModelViewerWidget::writeImage(char *filename, int width, int height,
+                             char *buffer, char *formatName)
+{
+    TCImage *image = new TCImage;
+    bool retValue;
+                                                                                                                                                             
+    image->setSize(width, height);
+    image->setLineAlignment(4);
+    image->setImageData((TCByte*)buffer);
+    image->setFormatName(formatName);
+    image->setFlipped(true);
+    retValue = image->saveFile(filename, staticImageProgressCallback, this);
+    image->release();
+    return retValue;
+}
+
+int ModelViewerWidget::roundUp(int value, int nearest)
+{
+    return (value + nearest - 1) / nearest * nearest;
+}
+
+char *ModelViewerWidget::grabImage(int imageWidth, int imageHeight, 
+									char *buffer)
+{
+    bool oldSlowClear = modelViewer->getSlowClear();
+    GLenum bufferFormat = GL_RGB;
+    TCVector origCameraPosition = modelViewer->getCamera().getPosition();
+
+    modelViewer->setSlowClear(true);
+    makeCurrent();
+    modelViewer->update();
+    glReadBuffer(GL_BACK);
+    if (!buffer)
+    {
+       buffer = (char *)malloc(roundUp(imageWidth * 3, 4) * imageHeight);
+    }
+    glReadPixels(0, 0, imageWidth, imageHeight, bufferFormat, GL_UNSIGNED_BYTE,
+        buffer);
+	modelViewer->setSlowClear(oldSlowClear);
+	doApply();
+    return buffer;
+}
+
+bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
+{
+	char *initialDir = Preferences::getLastOpenPath();
+                                                                                                                                                             
+    QDir::setCurrent(initialDir);
+    if (!saveDialog)
+    {
+        saveDialog = new QFileDialog(".",
+            "Portable Network Graphics (*.png)",
+            this,
+            "open model dialog",
+            true);
+        saveDialog->setCaption("Save Snapshot");
+        saveDialog->addFilter("Windows Bitmap (*.bmp)");
+        saveDialog->setSelectedFilter(0);
+        saveDialog->setIcon(*mainWindow->icon());
+		saveDialog->setMode(QFileDialog::AnyFile);
+    }
+    if (saveDialog->exec() == QDialog::Accepted)
+    {
+        QString filename = saveDialog->selectedFile();
+        QDir::setCurrent(saveDialog->dirPath());
+        strncpy(saveFilename,filename,len);
+		saveImageType = (strcmp(saveDialog->selectedFilter().ascii(),
+			"Portable Network Graphics (*.png)")==0 ? PNG_IMAGE_TYPE_INDEX :
+			BMP_IMAGE_TYPE_INDEX);
+		if(strlen(saveFilename)>5 && saveFilename[strlen(saveFilename)-4]!='.')
+		{
+            if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+            {
+                strcat(saveFilename, ".png");
+            }
+            else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+            {
+                strcat(saveFilename, ".bmp");
+            }
+		}
+		return true;
+    }
+	return false;
+}
+
+bool ModelViewerWidget::writeBmp(char *filename, int width, int height, 
+								 char *buffer)
+{
+    return writeImage(filename, width, height, buffer, "BMP");
+}
+                                                                                                                                                             
+bool ModelViewerWidget::writePng(char *filename, int width, int height, 
+								 char *buffer)
+{
+    return writeImage(filename, width, height, buffer, "PNG");
+}
+
+bool ModelViewerWidget::saveImage(char *filename, int imageWidth, 
+									int imageHeight)
+{
+    char *buffer = grabImage(imageWidth, imageHeight);
+    bool retValue = false;
+    if (buffer)
+    {
+        if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+        {
+            retValue = writePng(filename, imageWidth, imageHeight, buffer);
+        }
+        else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+        {
+            retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
+        }
+       	free(buffer);
+    }
+    return retValue;
+}
+
+bool ModelViewerWidget::fileExists(char* filename)
+{
+    FILE* file = fopen(filename, "r");
+                                                                                
+    if (file)
+    {
+        fclose(file);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool ModelViewerWidget::shouldOverwriteFile(char* filename)
+{
+    char buf[256];
+                                                                                
+    sprintf(buf, "%s\nThis file already exists.\nReplace existing file?",
+        filename);
+	switch( QMessageBox::warning( this, "LDView",
+        buf,
+        QMessageBox::Yes | QMessageBox::Default,
+        QMessageBox::No | QMessageBox::Escape )) {
+    case QMessageBox::Yes: 
+		return true;
+        break;
+	}
+		return false;
+}
+
+bool ModelViewerWidget::doFileSave(void)
+{
+    char saveFilename[1024] = "";
+
+    return doFileSave(saveFilename);
+}
+
+bool ModelViewerWidget::doFileSave(char *saveFilename)
+{
+    if (getSaveFilename(saveFilename, 1024))
+    {
+		if(fileExists(saveFilename)&&!shouldOverwriteFile(saveFilename))
+		{
+			return false;
+		}
+        return saveImage(saveFilename, modelViewer->getWidth(), 
+				modelViewer->getHeight());
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void ModelViewerWidget::doFrontViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleFront);
+    startPaintTimer();
+    unlock();
+}
+
+void ModelViewerWidget::doBackViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleBack);
+    startPaintTimer();
+    unlock();
+}
+
+void ModelViewerWidget::doLeftViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleLeft);
+    startPaintTimer();
+    unlock();
+}
+                                                                                                                                                             
+void ModelViewerWidget::doRightViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleRight);
+    startPaintTimer();
+    unlock();
+}
+
+void ModelViewerWidget::doTopViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleTop);
+    startPaintTimer();
+    unlock();
+}
+                                                                                                                                                             
+void ModelViewerWidget::doBottomViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleBottom);
+    startPaintTimer();
+    unlock();
+}
+                                                                                                                                                             
+void ModelViewerWidget::doIsoViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+    rotationSpeed = 0.0f;
+    modelViewer->setRotationSpeed(0.0f);
+    modelViewer->setZoomSpeed(0.0f);
+    modelViewer->resetView(LDVAngleIso);
+    startPaintTimer();
+    unlock();
+}
+                                                                                                                                                             
+void ModelViewerWidget::doSaveDefaultViewAngle(void)
+{
+    float matrix[16];
+    float rotationMatrix[16];
+    float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+    char matrixString[1024];
+                                                                                                                                                             
+    memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+        sizeof(rotationMatrix));
+    TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+    matrix[12] = 0.0f;
+    matrix[13] = 0.0f;
+    matrix[14] = 0.0f;
+    sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
+        matrix[0], matrix[4], matrix[8],
+        matrix[1], matrix[5], matrix[9],
+        matrix[2], matrix[6], matrix[10]);
+    TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
+    modelViewer->setDefaultRotationMatrix(matrix);
+}
+
+void cleanupMatrix(float *matrix)
+{
+    int i;
+                                                                                
+    for (i = 0; i < 16; i++)
+    {
+        if (fabs(matrix[i]) < 1e-6)
+        {
+            matrix[i] = 0.0f;
+        }
+    }
+}
+
+void ModelViewerWidget::doShowViewInfo(void)
+{
+	QString qmessage;
+    if (modelViewer)
+	{
+        float matrix[16];
+        float rotationMatrix[16];
+        float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+        char matrixString[1024];
+        char zoomString[128];
+        char message[4096];
+        TGLCamera &camera = modelViewer->getCamera();
+        float defaultDistance = modelViewer->getDefaultDistance();
+        float distanceMultiplier = modelViewer->getDistanceMultiplier();
+        float cameraDistance;
+                                                                                
+        memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+            sizeof(rotationMatrix));
+        TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+        cleanupMatrix(matrix);
+        sprintf(matrixString,
+            "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
+            matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
+            matrix[2], matrix[6], matrix[10]);
+        cameraDistance = camera.getPosition().length();
+        if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
+        {
+            // If we don't have a model, we don't know the default zoom, so
+            // just say 1.
+            strcpy(zoomString, "1");
+        }
+        else
+        {
+            sprintf(zoomString, "%.6g", defaultDistance /
+               distanceMultiplier / cameraDistance);
+        }
+        sprintf(message, "The following is the current rotation matrix:\n\n"                "%s\n\nThe following is the current zoom level:\n\n"
+            "%s\n\n",
+            matrixString, zoomString);
+ 
+
+
+    qmessage.sprintf("%s",message);
+
+	QMessageBox::information(this, "View Info", qmessage, QMessageBox::Ok,
+            QMessageBox::NoButton);
+	}
+}
+                                                                                                                                                             
 void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
 {
 	TCVector cameraMotion = modelViewer->getCameraMotion();

@@ -1,5 +1,5 @@
-SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp TCColorButton.cpp LDViewErrors.cpp 
-HEADERS	+= ModelViewerWidget.h Preferences.h TCColorButton.h LDViewErrors.h 
+SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp TCColorButton.cpp LDViewErrors.cpp LDViewExtraDir.cpp
+HEADERS	+= ModelViewerWidget.h Preferences.h TCColorButton.h LDViewErrors.h LDViewExtraDir.h
 unix {
   UI_DIR = .ui
   MOC_DIR = .moc

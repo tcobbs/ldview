@@ -6,6 +6,7 @@
 #include <TCFoundation/TCObject.h>
 
 #include "Preferences.h"
+#include "LDViewExtraDir.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -15,6 +16,8 @@ class QLabel;
 class QApplication;
 class OpenGLExtensionsPanel;
 class AboutPanel;
+class HelpPanel;
+class ExtraDirPanel;
 class QFileDialog;
 class LDViewErrors;
 class QMenuBar;
@@ -24,6 +27,7 @@ class QAction;
 class TCStringArray;
 class LDLError;
 class TCProgressAlert;
+class QTextBrowser;
 
 #define MAX_MOUSE_BUTTONS 10
 
@@ -46,7 +50,9 @@ public:
 	void doFileOpen(void);
 	void doFileReload(void);
 	void doFileLDrawDir(void);
+	void showFileExtraDir(void);
 	void doFileCancelLoad(void);
+	void doViewFullScreen(void);
 	void doViewReset(void);
 	void doViewStatusBar(bool flag);
 	void doViewErrors(void);
@@ -56,7 +62,36 @@ public:
 	void doApply(void);
 	void doPollChanged(QAction *action);
 	void doViewModeChanged(QAction *action);
+	void doZoomToFit(void);
+	bool doFileSave(void);
+	bool fileExists(char* filename);
+	bool shouldOverwriteFile(char* filename);
+	bool doFileSave(char *saveFilename);
+	bool getSaveFilename(char* saveFilename, int len);
+	static bool staticImageProgressCallback(char* message, float progress,
+            void* userData);
+	bool writeImagee(char *filename, int width, int height,
+                     char *buffer, char *formatName);
+	bool saveImage(char *filename, int imageWidth, int imageHeight);
+	bool writePng(char *filename, int width, int height,
+            char *buffer);
+    bool writeBmp(char *filename, int width, int height,
+            char *buffer);
+	bool writeImage(char *filename, int width, int height,
+            char *buffer, char *formatName);
+	char *grabImage(int imageWidth, int imageHeight,
+            char *buffer = NULL);
+	int roundUp(int value, int nearest);
 
+	void doFrontViewAngle(void);
+    void doBackViewAngle(void);
+    void doLeftViewAngle(void);
+    void doRightViewAngle(void);
+    void doTopViewAngle(void);
+    void doBottomViewAngle(void);
+    void doIsoViewAngle(void);
+    void doSaveDefaultViewAngle(void);
+	void doShowViewInfo(void);
 	QSize minimumSize(void);
 
 protected slots:
@@ -71,6 +106,7 @@ protected:
 	// GL Widget overrides
 	void initializeGL(void);
 	void resizeGL(int width, int height);
+	void swap_Buffers(void);
 	void paintGL(void);
 
 	void updateSpinRateXY(int xPos, int yPos);
@@ -148,9 +184,11 @@ protected:
 	QTime lastProgressTime;
 	QTime referenceFrameTime;
 	Preferences *preferences;
+	ExtraDir *extradir;
 	OpenGLExtensionsPanel *extensionsPanel;
 	char *openGLDriverInfo;
 	AboutPanel *aboutPanel;
+	HelpPanel *helpContents;
 	LDView *mainWindow;
 	QMenuBar *menuBar;
 	QPopupMenu *fileMenu;
@@ -163,7 +201,7 @@ protected:
 	int fileSaveSnapshotId;
 	QStatusBar *statusBar;
 	QProgressBar *progressBar;
-	QLabel *progressLabel;
+	QLabel *progressLabel, *progressMode;
 	bool loading;
 	bool cancelLoad;
 	QApplication *app;
@@ -173,12 +211,20 @@ protected:
 	int paintTimer;
 	int pollTimer;
 	int loadTimer;
-	QFileDialog *fileDialog;
+	QFileDialog *fileDialog, *saveDialog;
 	bool showFPS;
 	LDViewErrors *errors;
 	QDateTime lastWriteTime;
 	QFileInfo *fileInfo;
 	int lockCount;
+    bool saveActualSize;
+    int saveWidth;
+    int saveHeight;
+    bool saveZoomToFit;
+    bool saveSeries;
+    int saveDigits;
+	int saveImageType;
+	int fullscreen;
 
 	static TCStringArray* recentFiles;
 };

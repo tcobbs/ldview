@@ -96,7 +96,9 @@
         <action name="fileOpenAction"/>
         <action name="fileReloadAction"/>
         <action name="pollActionGroup"/>
+		<action name="fileSaveAction"/>
         <action name="fileLDrawDirAction"/>
+		<action name="fileExtraDirAction"/>
         <action name="fileCancelLoadAction"/>
         <separator/>
         <action name="filePrintAction"/>
@@ -107,16 +109,22 @@
         <action name="editPreferencesAction"/>
     </item>
     <item text="&amp;View" name="viewMenu">
+		<action name="viewFullScreenAction"/>
         <action name="viewResetViewAction"/>
         <action name="viewShowErrorsAction"/>
         <action name="viewStatusBarAction"/>
+		<action name="viewZoomToFitAction"/>
+		<action name="viewAngleGroup"/>
         <separator/>
         <action name="examineModeAction"/>
         <action name="flythroughModeAction"/>
+		<separator/>
+		<action name="showViewInfoAction"/>
     </item>
     <item text="&amp;Help" name="helpMenu">
         <action name="helpOpenGLDriverInfoAction"/>
         <separator/>
+		<action name="helpContentsAction"/>
         <action name="helpAboutAction"/>
     </item>
 </menubar>
@@ -206,7 +214,7 @@
             <string>E&amp;xit</string>
         </property>
         <property name="accel">
-            <number>0</number>
+            <string>Alt+X</string>
         </property>
     </action>
     <action>
@@ -220,7 +228,7 @@
             <string>&amp;Contents...</string>
         </property>
         <property name="accel">
-            <number>0</number>
+            <string>F1</string>
         </property>
     </action>
     <action>
@@ -277,6 +285,20 @@
             <number>6291539</number>
         </property>
     </action>
+	<action>
+        <property name="name">
+            <cstring>viewFullScreenAction</cstring>
+        </property>
+        <property name="text">
+            <string>Full Screen</string>
+        </property>
+        <property name="menuText">
+            <string>Full Screen</string>
+        </property>
+        <property name="accel">
+			<string>F10</string>
+		</property>
+	</action>
     <action>
         <property name="name">
             <cstring>viewResetViewAction</cstring>
@@ -322,6 +344,17 @@
             <string>Tell LDView where to find the LDraw parts library</string>
         </property>
     </action>
+	<action>
+		<property name="name">
+            <cstring>fileExtraDirAction</cstring>
+		</property>
+        <property name="menuText">
+            <string>Extra Dirs...</string>
+		</property>
+		<property name="text">
+            <string>Extra Dirs...</string>
+		</property>
+	</action>
     <action>
         <property name="name">
             <cstring>fileReloadAction</cstring>
@@ -353,6 +386,120 @@
             <number>6291525</number>
         </property>
     </action>
+	<action>
+		<property name="name">
+			<cstring>viewZoomToFitAction</cstring>
+        </property>
+        <property name="menuText">
+            <string>Zoom to fit</string>
+		</property>
+        <property name="text">
+            <string>Zoom to fit</string>
+        </property>
+		<property name="accel">
+			<string>Ctrl+F</string>
+		</property>
+	</action>
+    <actiongroup>
+        <property name="name">
+            <cstring>viewAngleGroup</cstring>
+        </property>
+        <property name="text">
+            <string>Viewing Angle</string>
+        </property>
+        <property name="menuText">
+            <string>Viewing Angle</string>
+        </property>
+        <property name="usesDropDown">
+            <bool>true</bool>
+        </property>
+		<action>
+            <property name="name">
+                <cstring>frontViewAngleAction</cstring>
+			</property>
+			<property name="menuText">
+                <string>Front</string>
+			</property>
+        <property name="accel">
+            <string>Ctrl+1</string>
+        </property>
+		</action>
+		<action>
+            <property name="name">
+                <cstring>backViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Back</string>
+            </property>
+        <property name="accel">
+            <string>Ctrl+2</string>
+        </property>
+		</action>
+        <action>
+            <property name="name">
+                <cstring>leftViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Left</string>
+            </property>
+        <property name="accel">
+            <string>Ctrl+3</string>
+        </property>
+		</action>
+        <action>
+            <property name="name">
+                <cstring>rightViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Right</string>
+            </property>
+        <property name="accel">
+            <string>Ctrl+4</string>
+        </property>
+        </action>
+        <action>
+            <property name="name">
+                <cstring>topViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Top</string>
+            </property>
+        <property name="accel">
+            <string>Ctrl+5</string>
+        </property>
+        </action>
+        <action>
+            <property name="name">
+                <cstring>bottomViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Bottom</string>
+            </property>
+        <property name="accel">
+            <string>Ctrl+6</string>
+        </property>
+        </action>
+        <action>
+            <property name="name">
+                <cstring>isoViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Isometric</string>
+            </property>
+        <property name="accel">
+            <string>Ctrl+0</string>
+        </property>
+        </action>
+		<separator/>
+		<action>
+            <property name="name">
+                <cstring>saveDefaultViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Save Current as Default</string>
+			</property>
+		</action>
+	</actiongroup>
     <actiongroup>
         <property name="name">
             <cstring>pollActionGroup</cstring>
@@ -500,6 +647,14 @@
             <number>4096</number>
         </property>
     </action>
+	<action>
+        <property name="name">
+            <cstring>showViewInfoAction</cstring>
+        </property>
+        <property name="text">
+            <string>Show View Info</string>
+        </property>
+	</action>
 </actions>
 <images>
     <image name="image0">
@@ -556,6 +711,12 @@
         <slot>viewStatusBar(bool)</slot>
     </connection>
     <connection>
+        <sender>viewFullScreenAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>viewFullScreen()</slot>
+	</connection>
+    <connection>
         <sender>viewResetViewAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -573,6 +734,12 @@
         <receiver>LDView</receiver>
         <slot>fileLDrawDir()</slot>
     </connection>
+	<connection>
+		<sender>fileExtraDirAction</sender>
+		<signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>fileExtraDir()</slot>
+	</connection>
     <connection>
         <sender>fileReloadAction</sender>
         <signal>activated()</signal>
@@ -591,17 +758,77 @@
         <receiver>LDView</receiver>
         <slot>pollChanged(QAction*)</slot>
     </connection>
+	<connection>
+		<sender>viewZoomToFitAction</sender>
+		<signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>viewZoomToFit()</slot>
+    </connection>
     <connection>
         <sender>viewModeActionGroup</sender>
         <signal>selected(QAction*)</signal>
         <receiver>LDView</receiver>
         <slot>viewModeChanged(QAction*)</slot>
     </connection>
+	<connection>
+		<sender>frontViewAngleAction</sender>
+		<signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>frontViewAngle()</slot>
+	</connection>
+    <connection>
+        <sender>backViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>backViewAngle()</slot>
+    </connection>
+    <connection>
+        <sender>leftViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>leftViewAngle()</slot>
+    </connection>
+    <connection>
+        <sender>rightViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>rightViewAngle()</slot>
+    </connection>
+    <connection>
+        <sender>topViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>topViewAngle()</slot>
+    </connection>
+    <connection>
+        <sender>bottomViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>bottomViewAngle()</slot>
+    </connection>
+    <connection>
+        <sender>isoViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>isoViewAngle()</slot>
+    </connection>
+    <connection>
+        <sender>saveDefaultViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>saveDefaultViewAngle()</slot>
+    </connection>
     <connection>
         <sender>fileCancelLoadAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
         <slot>fileCancelLoad()</slot>
+    </connection>
+    <connection>
+        <sender>showViewInfoAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>showViewInfo()</slot>
     </connection>
 </connections>
 <includes>
@@ -618,14 +845,26 @@
     <slot>editPreferences()</slot>
     <slot>closeEvent( QCloseEvent * event )</slot>
     <slot>viewStatusBar( bool flag )</slot>
+	<slot>viewFullScreen()</slot>
     <slot>viewResetView()</slot>
     <slot>helpOpenGLDriverInfo()</slot>
     <slot>fileLDrawDir()</slot>
+	<slot>fileExtraDir()</slot>
     <slot>fileReload()</slot>
     <slot>viewShowErrors()</slot>
     <slot>pollChanged( QAction * action )</slot>
     <slot>viewModeChanged( QAction * action )</slot>
+	<slot>viewZoomToFit()</slot>
+	<slot>frontViewAngle()</slot>
+	<slot>backViewAngle()</slot>
+	<slot>leftViewAngle()</slot>
+	<slot>rightViewAngle()</slot>
+    <slot>topViewAngle()</slot>
+    <slot>bottomViewAngle()</slot>
+    <slot>isoViewAngle()</slot>
+	<slot>saveDefaultViewAngle()</slot>
     <slot>fileCancelLoad()</slot>
+    <slot>showViewInfo()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

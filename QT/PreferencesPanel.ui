@@ -135,6 +135,14 @@
                                     <string>Show errors after loading</string>
                                 </property>
                             </widget>
+							<widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>processLdconfigLdrButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Process ldconfig.ldr</string>
+                                </property>
+                            </widget>
                             <widget class="QLayoutWidget">
                                 <property name="name">
                                     <cstring>Layout34</cstring>
@@ -221,6 +229,48 @@
                                             <set>AlignVCenter|AlignRight</set>
                                         </property>
                                     </widget>
+                                    <spacer row="2" column="2">
+                                        <property name="name">
+                                            <cstring>Spacer5</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>20</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLabel" row="2" column="0">
+                                        <property name="name">
+                                            <cstring>fieldOfViewLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Field of View:</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignRight</set>
+                                        </property>
+									</widget>
+                                   	<widget class="QSpinBox" row="2" column="1">
+                                       	<property name="name">
+                                           	<cstring>fieldOfViewSpin</cstring>
+                                       	</property>
+                                       	<property name="maxValue">
+                                           	<number>90</number>
+                                       	</property>
+										<property name="minValue">
+											<number>1</number>
+										</property>
+										<property name="value">
+											<number>45</number>
+										</property>
+                                   	</widget>
                                 </grid>
                             </widget>
                         </vbox>
@@ -470,6 +520,14 @@
                                                             <string>Fog</string>
                                                         </property>
                                                     </widget>
+                                                    <widget class="QCheckBox">
+                                                        <property name="name">
+                                                            <cstring>wireframeRemoveHiddenLineButton</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string>Remove hidden lines</string>
+                                                        </property>
+                                                    </widget>
                                                     <widget class="QLayoutWidget">
                                                         <property name="name">
                                                             <cstring>Layout23</cstring>
@@ -655,12 +713,77 @@
                                                     </property>
                                                     <widget class="QCheckBox">
                                                         <property name="name">
+                                                            <cstring>edgesOnlyButton</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string>Show edges only</string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QCheckBox">
+                                                        <property name="name">
                                                             <cstring>conditionalLinesButton</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string>Conditional lines</string>
                                                         </property>
                                                     </widget>
+				                                    <widget class="QLayoutWidget">
+               				                        	<property name="name">
+                                            				<cstring>unnamed</cstring>
+                                        				</property>
+                                        				<hbox>
+                                            				<property name="name">
+                                                				<cstring>unnamed</cstring>
+                                            				</property>
+                                            				<property name="margin">
+                                                				<number>0</number>
+                                            				</property>
+                                            				<property name="spacing">
+                                                				<number>0</number>
+                                            				</property>
+                                            				<spacer>
+                                                				<property name="name">
+                                                    				<cstring>unnamed</cstring>
+                                                				</property>
+                                                				<property name="orientation">
+                                                    				<enum>Horizontal</enum>
+                                                				</property>
+                                                				<property name="sizeType">
+                                                    				<enum>Fixed</enum>
+                                                				</property>
+                                                				<property name="sizeHint">
+                                                    				<size>
+                                                        				<width>16</width>
+                                                        				<height>20</height>
+                                                    				</size>
+                                                				</property>
+                                            				</spacer>
+															<widget class="QLayoutWidget">
+																<property name="name">
+																	<cstring>unnamed</cstring>
+																</property>
+																<vbox>
+                                                    			<widget class="QCheckBox">
+                                                        			<property name="name">
+																		<cstring>conditionalShowAllButton</cstring>
+																	</property>
+																	<property name="text">
+																		<cstring>Show all</cstring>
+																	</property>
+																</widget>
+                                                                <widget class="QCheckBox">
+                                                                    <property name="name">
+                                                                        <cstring>conditionalShowControlPtsButton</cstring>
+                                                                    </property>
+                                                                    <property name="text">
+                                                                        <cstring>Show control pts</cstring>
+                                                                    </property>
+                                                                </widget>
+
+																</vbox>
+															</widget>
+														</hbox>
+													</widget>
                                                     <widget class="QCheckBox">
                                                         <property name="name">
                                                             <cstring>highQualityLinesButton</cstring>
@@ -2068,6 +2191,14 @@
                                     <string>Low quality studs (faster)</string>
                                 </property>
                             </widget>
+			    <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>hiresPrimitivesButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Use hi-res primitives when available</string>
+                                </property>
+                            </widget>
                         </vbox>
                     </widget>
                     <spacer>
@@ -2138,7 +2269,98 @@
                     </widget>
                 </vbox>
             </widget>
-        </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>preferencSetTab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Preference set</string>
+                </attribute>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>4</number>
+                    </property>
+	                <widget class="QListBox">
+                    	<property name="name">
+                        	<cstring>extraDirList</cstring>
+                    	</property>
+					</widget>
+					<vbox>
+                		<widget class="QPushButton">
+                    		<property name="name">
+                        		<cstring>newPreferenceSetButton</cstring>
+                    		</property>
+                    		<property name="sizePolicy">
+                        		<sizepolicy>
+                            		<hsizetype>0</hsizetype>
+                            		<vsizetype>0</vsizetype>
+                            		<horstretch>0</horstretch>
+                            		<verstretch>0</verstretch>
+                        		</sizepolicy>
+                    		</property>
+                    		<property name="text">
+                        		<string>New</string>
+                    		</property>
+						</widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>delPreferenceSetButton</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>Delete</string>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>hotkeyPreferenceSetButton</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>Hot Key</string>
+                            </property>
+                        </widget>
+                    	<spacer>
+                        	<property name="name">
+                            	<cstring>Spacer3</cstring>
+                        	</property>
+                        	<property name="orientation">
+                            	<enum>Vertical</enum>
+                        	</property>
+                        	<property name="sizeType">
+                            	<enum>Expanding</enum>
+                        	</property>
+                        	<property name="sizeHint">
+                            	<size>
+                                	<width>20</width>
+                                	<height>20</height>
+                            	</size>
+                        	</property>
+                    	</spacer>
+					</vbox>
+				</hbox>
+			</widget>
+		</widget>
         <widget class="QLayoutWidget">
             <property name="name">
                 <cstring>Layout2</cstring>
@@ -2296,8 +2518,20 @@
         <slot>enableApply()</slot>
     </connection>
     <connection>
+		<sender>fieldOfViewSpin</sender>
+		<signal>valueChanged(int)</signal>
+		<receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection> 
+    <connection>
         <sender>wireframeThicknessSlider</sender>
         <signal>valueChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>edgesOnlyButton</sender>
+        <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
@@ -2308,7 +2542,32 @@
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>conditionalLinesButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doConditionalShow(bool)</slot>
+    </connection>
+
+	<connection>
+        <sender>conditionalShowAllButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>conditionalShowControlPtsButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
         <sender>wireframeFogButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>wireframeRemoveHiddenLineButton</sender>
         <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
@@ -2333,6 +2592,12 @@
     </connection>
     <connection>
         <sender>showErrorsButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+	<connection>
+        <sender>processLdconfigLdrButton</sender>
         <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
@@ -2470,6 +2735,12 @@
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>hiresPrimitivesButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
         <sender>generalResetButton</sender>
         <signal>clicked()</signal>
         <receiver>PreferencesPanel</receiver>
@@ -2577,16 +2848,22 @@
     <tabstop>aaLinesButton</tabstop>
     <tabstop>frameRateButton</tabstop>
     <tabstop>showErrorsButton</tabstop>
+	<tabstop>processLdconfigLdrButton</tabstop>
     <tabstop>backgroundColorButton</tabstop>
     <tabstop>defaultColorButton</tabstop>
     <tabstop>generalResetButton</tabstop>
+	<tabstop>fieldOfViewSpin</tabstop>
     <tabstop>seamWidthButton</tabstop>
     <tabstop>seamWidthSpin</tabstop>
     <tabstop>wireframeButton</tabstop>
     <tabstop>wireframeFogButton</tabstop>
+    <tabstop>wireframeRemoveHiddenLineButton</tabstop>
     <tabstop>wireframeThicknessSlider</tabstop>
     <tabstop>edgeLinesButton</tabstop>
+    <tabstop>edgesOnlyButton</tabstop>
     <tabstop>conditionalLinesButton</tabstop>
+	<tabstop>conditionalShowAllButton</tabstop>
+	<tabstop>conditionalShowControlPtsButton</tabstop>
     <tabstop>highQualityLinesButton</tabstop>
     <tabstop>alwaysBlackLinesButton</tabstop>
     <tabstop>edgeThicknessSlider</tabstop>
@@ -2617,6 +2894,7 @@
     <tabstop>trilinearFilteringButton</tabstop>
     <tabstop>curveQualitySlider</tabstop>
     <tabstop>lowQualityStudsButton</tabstop>
+    <tabstop>hiresPrimitivesButton</tabstop>
     <tabstop>primitvesResetButton</tabstop>
     <tabstop>okButton</tabstop>
     <tabstop>cancelButton</tabstop>
@@ -2648,6 +2926,7 @@
     <slot>doStereo( bool value )</slot>
     <slot>doWireframe( bool value )</slot>
     <slot>doEdgeLines( bool value )</slot>
+	<slot>doConditionalShow( bool value )</slot>
     <slot>doPrimitiveSubstitution( bool value )</slot>
     <slot>doTextureStuds( bool value )</slot>
 </slots>
