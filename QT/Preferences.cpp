@@ -14,6 +14,7 @@
 #include <qcolor.h>
 #include <qspinbox.h>
 #include <qlabel.h>
+#include <qcombobox.h>
 
 #include <netinet/in.h>
 
@@ -105,6 +106,12 @@ void Preferences::doGeneralApply(void)
 		fieldOfView = iTemp;
 		TCUserDefaults::setLongForKey(iTemp, FOV_KEY);
 	}
+	iTemp = panel->memoryUsageBox->currentItem();
+	if (iTemp != memoryUsage)
+	{
+		memoryUsage = iTemp;
+		TCUserDefaults::setLongForKey(iTemp, MEMORY_USAGE_KEY);
+	}
 	bTemp = panel->transparentButton->state();
 	if (bTemp != transDefaultColor)
 	{
@@ -125,6 +132,7 @@ void Preferences::doGeneralApply(void)
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
 		modelViewer->setFov((float)fieldOfView);
 		modelViewer->setProcessLDConfig(processLdconfigLdr);
+		modelViewer->setMemoryUsage(memoryUsage);
 	}
 }
 
@@ -180,6 +188,12 @@ void Preferences::doGeometryApply(void)
 			bfcRedBackFace = bTemp;
 			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, RED_BACK_FACES_KEY);
 		}
+                bTemp = panel->bfcGreenFrontFaceButton->state();
+                if (bTemp != bfcGreenFrontFace)
+                {
+                        bfcGreenFrontFace = bTemp;
+                        TCUserDefaults::setLongForKey(bTemp ? 1 : 0, GREEN_FRONT_FACES_KEY);
+                }
 	}
 	iTemp = panel->wireframeThicknessSlider->value();
 	if (iTemp != wireframeThickness)
@@ -270,6 +284,7 @@ void Preferences::doGeometryApply(void)
 		modelViewer->setHighlightLineWidth(edgeThickness);
 		modelViewer->setBfc(bfc);
 		modelViewer->setRedBackFaces(bfcRedBackFace);
+                modelViewer->setGreenFrontFaces(bfcGreenFrontFace);
 	}
 }
 
@@ -561,6 +576,13 @@ void Preferences::loadGeneralSettings(void)
 	fieldOfView = TCUserDefaults::longForKey(FOV_KEY, fieldOfView);
 	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
         transDefaultColor) != 0;
+	memoryUsage = TCUserDefaults::longForKey(MEMORY_USAGE_KEY,
+		(long)memoryUsage);
+	if (memoryUsage < 0 || memoryUsage > 2)
+	{
+		memoryUsage = 2;
+		TCUserDefaults::setLongForKey(2, MEMORY_USAGE_KEY);
+	}
 }
 
 void Preferences::loadGeometrySettings(void)
@@ -578,7 +600,8 @@ void Preferences::loadGeometrySettings(void)
 	bfc = TCUserDefaults::longForKey(BFC_KEY, (long)bfc) != 0;
 	bfcRedBackFace = TCUserDefaults::longForKey(RED_BACK_FACES_KEY, 
 		(long)bfcRedBackFace) !=0;
-
+        bfcGreenFrontFace = TCUserDefaults::longForKey(GREEN_FRONT_FACES_KEY,
+                (long)bfcGreenFrontFace) !=0;
 	edgeLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
 		(long)edgeLines) != 0;
 	conditionalLines =
@@ -666,6 +689,7 @@ void Preferences::loadDefaultGeneralSettings(void)
 	defaultColor = 0x999999;
 	defaultColorNumber = -1;
 	fieldOfView = 45;
+	memoryUsage = 2;
 	transDefaultColor = false;
 	// User colors?
 }
@@ -680,6 +704,7 @@ void Preferences::loadDefaultGeometrySettings(void)
 	wireframeThickness = 1;
 	bfc = false;
 	bfcRedBackFace = false;
+        bfcGreenFrontFace = false;
 	edgeLines = false;
 	conditionalLines = false;
 	conditionalShowAll = false;
@@ -741,6 +766,7 @@ void Preferences::reflectGeneralSettings(void)
 	setupColorButton(panel->defaultColorButton, defaultColor);
 	setRangeValue(panel->fieldOfViewSpin, fieldOfView);
 	setButtonState(panel->transparentButton, transDefaultColor);
+	panel->memoryUsageBox->setCurrentItem(memoryUsage);
 }
 
 void Preferences::reflectGeometrySettings(void)
@@ -1175,7 +1201,9 @@ void Preferences::enableWireframe(void)
 void Preferences::enableBFC(void)
 {
 	panel->bfcRedBackFaceButton->setEnabled(true);
+        panel->bfcGreenFrontFaceButton->setEnabled(true);
 	setButtonState(panel->bfcRedBackFaceButton, bfcRedBackFace);
+        setButtonState(panel->bfcGreenFrontFaceButton, bfcGreenFrontFace);
 }
 
 void Preferences::enableEdgeLines(void)
@@ -1293,7 +1321,9 @@ void Preferences::disableWireframe(void)
 void Preferences::disableBFC(void)
 {
 	panel->bfcRedBackFaceButton->setEnabled(false);
+        panel->bfcGreenFrontFaceButton->setEnabled(false);
 	setButtonState(panel->bfcRedBackFaceButton, false);
+        setButtonState(panel->bfcGreenFrontFaceButton, false);
 }
 
 void Preferences::disableEdgeLines(void)
