@@ -3,10 +3,10 @@
 
 [Setup]
 AppName=LDView
-AppVerName=LDView 2.1
-AppVersion=2.1
-OutputBaseFilename=LDView-2100
-SourceDir=C:\TEMP\Releases\LDView-2100
+AppVerName=LDView 3.0 Beta 1
+AppVersion=2.9.99.11
+OutputBaseFilename=LDView-3000B1
+SourceDir=C:\TEMP\Releases\LDView-3000B1
 AppPublisher=Travis Cobbs
 AppPublisherURL=http://home.san.rr.com/tcobbs/LDView/
 AppSupportURL=http://home.san.rr.com/tcobbs/LDView/

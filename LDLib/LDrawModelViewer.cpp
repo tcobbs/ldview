@@ -306,20 +306,30 @@ float LDrawModelViewer::getClipRadius(void)
 	return clipRadius;
 }
 
+float LDrawModelViewer::getZDistance(void)
+{
+	float inverseMatrix[16];
+	TCVector vector = camera.getPosition();
+
+	camera.getFacing().getInverseMatrix(inverseMatrix);
+	vector = vector.transformPoint(inverseMatrix);
+	return vector[2];
+}
+
 void LDrawModelViewer::perspectiveView(bool resetViewport)
 {
 	float nClip;
 	float fClip;
 	float clipRadius = getClipRadius();
 	int actualWidth = width / (int)getStereoWidthModifier();
-	float distance;
+	float zDistance = getZDistance();
 	float aspectAdjust = (float)tan(1.0f);
 
 	if (flags.forceZoomToFit)
 	{
 		zoomToFit();
 	}
-	distance = camera.getPosition().length();
+//	zDistance = camera.getPosition().length();
 	updateCurrentFov();
 	if (resetViewport)
 	{
@@ -330,13 +340,13 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	aspectRatio = (float)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
 	aspectRatio = 1.0f;
 //	printf("aspectRatio2: %f\n", aspectRatio);
-	nClip = distance - clipRadius * aspectRatio + clipAmount * aspectRatio *
+	nClip = zDistance - clipRadius * aspectRatio + clipAmount * aspectRatio *
 		clipRadius;
 	if (nClip < size / 1000.0f)
 	{
 		nClip = size / 1000.0f;
 	}
-	fClip = distance + clipRadius * aspectRatio;
+	fClip = zDistance + clipRadius * aspectRatio;
 	setFieldOfView(currentFov, nClip, fClip);
 	glLoadIdentity();
 	glFogi(GL_FOG_MODE, GL_LINEAR);
@@ -348,14 +358,15 @@ void LDrawModelViewer::perspectiveViewToClipPlane(void)
 {
 	float nClip;
 	float fClip;
-	float distance = (camera.getPosition()).length();
+	float zDistance = getZDistance();
+//	float zDistance = (camera.getPosition()).length();
 	float clipRadius = getClipRadius();
 //	float distance = (camera.getPosition() - center).length();
 
-	nClip = distance - size / 2.0f;
+	nClip = zDistance - size / 2.0f;
 //	fClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
 //		size;
-	fClip = distance - clipRadius * aspectRatio + clipAmount * aspectRatio *
+	fClip = zDistance - clipRadius * aspectRatio + clipAmount * aspectRatio *
 		clipRadius;
 	if (fClip < size / 1000.0f)
 	{
