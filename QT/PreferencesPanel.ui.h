@@ -118,6 +118,14 @@ void PreferencesPanel::doEdgeLines(bool value)
     }
 }
 
+void PreferencesPanel::doConditionalShow(bool value)
+{
+    if (preferences)
+    {
+        preferences->doConditionalShow(value);
+	}
+}
+
 void PreferencesPanel::doPrimitiveSubstitution(bool value)
 {
     if (preferences)

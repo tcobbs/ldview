@@ -42,6 +42,7 @@ public:
 	void doStereo(bool value);
 	void doWireframe(bool value);
 	void doEdgeLines(bool value);
+	void doConditionalShow(bool value);
 	void doPrimitiveSubstitution(bool value);
 	void doTextureStuds(bool value);
 
@@ -107,6 +108,7 @@ protected:
 	void enableStereo(void);
 	void enableWireframe(void);
 	void enableEdgeLines(void);
+	void enableConditionalShow(void);
 	void enablePrimitiveSubstitution(void);
 	void enableTextureStuds(void);
 
@@ -115,8 +117,10 @@ protected:
 	void disableStereo(void);
 	void disableWireframe(void);
 	void disableEdgeLines(void);
+	void disableConditionalShow(void);
 	void disablePrimitiveSubstitution(void);
 	void disableTextureStuds(void);
+	void setupDefaultRotationMatrix(void);
 	
 	char *getErrorKey(int errorNumber);
 	static const QString &getRecentFileKey(int index);
@@ -129,18 +133,24 @@ protected:
 	bool lineSmoothing;
 	bool showFPS;
 	bool showErrors;
+	bool processLdconfigLdr;
 	int backgroundColor;
 	int defaultColor;
 	int defaultColorNumber;	// No UI for this.
+	int fieldOfView;
 
 	// Geometry Settings
 	bool seams;
 	int seamWidth;
 	bool wireframe;
 	bool wireframeFog;
+	bool wireframeRemoveHiddenLines;
 	int wireframeThickness;
 	bool edgeLines;
+	bool edgesOnly;
 	bool conditionalLines;
+	bool conditionalShowAll;
+	bool conditionalShowControlPts;
 	bool polygonOffset;
 	bool blackEdgeLines;
 	int edgeThickness;
@@ -167,6 +177,7 @@ protected:
 	int textureFilterType;
 	int curveQuality;
 	bool qualityStuds;
+	bool hiresPrimitives;
 
 	// Other Settings
 	bool statusBar;

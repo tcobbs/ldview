@@ -34,7 +34,7 @@
     </customwidget>
     <customwidget>
         <class>TCColorButton</class>
-        <header location="global">/home/tcobbs/src/LDView/QT/TCColorButton.h</header>
+        <header location="global">TCColorButton.h</header>
         <sizehint>
             <width>58</width>
             <height>26</height>

@@ -7,7 +7,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
 #include "UserDefaultsKeys.h"
-
+#include <TCFoundation/TCMacros.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qslider.h>
@@ -67,6 +67,13 @@ void Preferences::doGeneralApply(void)
 		showErrors = bTemp;
 		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SHOW_ERRORS_KEY, false);
 	}
+	bTemp = panel->processLdconfigLdrButton->state();
+    if (bTemp !=  processLdconfigLdr)
+	{
+		processLdconfigLdr = bTemp;
+		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, 
+				PROCESS_LDCONFIG_KEY, false);
+	}
 	cTemp = panel->backgroundColorButton->color();
 	cTemp.rgb(&br, &bg, &bb);
 	iTemp = LDLPalette::colorForRGBA(br, bg, bb, 255);
@@ -92,6 +99,12 @@ void Preferences::doGeneralApply(void)
 	{
 		getRGB(defaultColor, dr, dg, db);
 	}
+	iTemp = panel->fieldOfViewSpin->value();
+	if (iTemp != fieldOfView)
+	{
+		fieldOfView = iTemp;
+		TCUserDefaults::setLongForKey(iTemp, FOV_KEY);
+	}
 	if (modelWidget)
 	{
 		modelWidget->setShowFPS(showFPS);
@@ -105,6 +118,8 @@ void Preferences::doGeneralApply(void)
 		modelViewer->setDefaultRGB((TCByte)dr, (TCByte)dg, (TCByte)db,
 			false);
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
+		modelViewer->setFov((float)fieldOfView);
+		modelViewer->setProcessLDConfig(processLdconfigLdr);
 	}
 }
 
@@ -139,6 +154,12 @@ void Preferences::doGeometryApply(void)
 			wireframeFog = bTemp;
 			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, WIREFRAME_FOG_KEY);
 		}
+		bTemp = panel->wireframeRemoveHiddenLineButton->state();
+		if (bTemp != wireframeRemoveHiddenLines)
+		{
+			wireframeRemoveHiddenLines = bTemp;
+			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, REMOVE_HIDDEN_LINES_KEY);
+		}
 	}
 	iTemp = panel->wireframeThicknessSlider->value();
 	if (iTemp != wireframeThickness)
@@ -161,6 +182,13 @@ void Preferences::doGeometryApply(void)
 			TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
 				CONDITIONAL_HIGHLIGHTS_KEY);
 		}
+		bTemp = panel->edgesOnlyButton->state();
+		if (bTemp != edgesOnly)
+		{
+			edgesOnly = bTemp;
+			TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
+				EDGES_ONLY_KEY);
+		}
 		bTemp = panel->highQualityLinesButton->state();
 		if (bTemp != polygonOffset)
 		{
@@ -179,6 +207,23 @@ void Preferences::doGeometryApply(void)
 			edgeThickness = iTemp;
 			TCUserDefaults::setLongForKey(iTemp, EDGE_THICKNESS_KEY);
 		}
+		if (conditionalLines)
+		{
+			bTemp = panel->conditionalShowAllButton->state();
+			if (bTemp != conditionalShowAll)
+			{
+				conditionalShowAll = bTemp;
+				TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
+					SHOW_ALL_TYPE5_KEY);
+			}
+			bTemp = panel->conditionalShowControlPtsButton->state();
+			if (bTemp != conditionalShowControlPts)
+			{
+				conditionalShowControlPts = bTemp;
+				TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
+					SHOW_TYPE5_CONTROL_POINTS_KEY);
+			}
+		}
 	}
 	if (modelViewer)
 	{
@@ -192,9 +237,14 @@ void Preferences::doGeometryApply(void)
 		}
 		modelViewer->setDrawWireframe(wireframe);
 		modelViewer->setUseWireframeFog(wireframeFog);
+		modelViewer->setRemoveHiddenLines(wireframeRemoveHiddenLines);
 		modelViewer->setWireframeLineWidth(wireframeThickness);
 		modelViewer->setShowsHighlightLines(edgeLines);
 		modelViewer->setDrawConditionalHighlights(conditionalLines);
+		modelViewer->setShowAllConditionalLines(conditionalShowAll);
+		modelViewer->setShowConditionalControlPoints(
+			conditionalShowControlPts);
+		modelViewer->setEdgesOnly(edgesOnly);
 		modelViewer->setUsePolygonOffset(polygonOffset);
 		modelViewer->setBlackHighlights(blackEdgeLines);
 		modelViewer->setHighlightLineWidth(edgeThickness);
@@ -390,6 +440,12 @@ void Preferences::doPrimitivesApply(void)
 		qualityStuds = bTemp;
 		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, QUALITY_STUDS_KEY);
 	}
+	bTemp = ! panel->hiresPrimitivesButton->state();
+	if (bTemp != hiresPrimitives)
+	{
+		hiresPrimitives = bTemp;
+		TCUserDefaults::setLongForKey(bTemp ? 1 : 0,  HI_RES_PRIMITIVES_KEY);
+	}
 	if (modelViewer)
 	{
 		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
@@ -397,6 +453,7 @@ void Preferences::doPrimitivesApply(void)
 		modelViewer->setTextureFilterType(textureFilterType);
 		modelViewer->setCurveQuality(curveQuality);
 		modelViewer->setQualityStuds(qualityStuds);
+		modelViewer->setHiResPrimitives(hiresPrimitives);
 	}
 }
 
@@ -410,6 +467,7 @@ void Preferences::doApply(void)
 	if (modelWidget)
 	{
 		modelWidget->doApply();
+		setupDefaultRotationMatrix();
 	}
 }
 
@@ -469,6 +527,8 @@ void Preferences::loadGeneralSettings(void)
 	showFPS = TCUserDefaults::longForKey(SHOW_FPS_KEY, (long)showFPS) != 0;
 	showErrors = TCUserDefaults::longForKey(SHOW_ERRORS_KEY, (long)showErrors,
 		false) != 0;
+	processLdconfigLdr = TCUserDefaults::longForKey(PROCESS_LDCONFIG_KEY,
+		(long)processLdconfigLdr, false) != 0;
 	backgroundColor = (int)TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY,
 		(long)backgroundColor);
 	defaultColor = (int)TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
@@ -476,6 +536,7 @@ void Preferences::loadGeneralSettings(void)
 	defaultColorNumber =
 		(int)TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
 		defaultColorNumber);
+	fieldOfView = TCUserDefaults::longForKey(FOV_KEY, fieldOfView);
 }
 
 void Preferences::loadGeometrySettings(void)
@@ -486,6 +547,8 @@ void Preferences::loadGeometrySettings(void)
 	wireframe = TCUserDefaults::longForKey(WIREFRAME_KEY, (long)wireframe) != 0;
 	wireframeFog = TCUserDefaults::longForKey(WIREFRAME_FOG_KEY,
 		(long)wireframeFog) != 0;
+        wireframeRemoveHiddenLines=TCUserDefaults::longForKey(REMOVE_HIDDEN_LINES_KEY, 
+		(long)wireframeRemoveHiddenLines) !=0;
 	wireframeThickness = TCUserDefaults::longForKey(WIREFRAME_THICKNESS_KEY,
 		wireframeThickness);
 	edgeLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
@@ -493,6 +556,14 @@ void Preferences::loadGeometrySettings(void)
 	conditionalLines =
 		TCUserDefaults::longForKey(CONDITIONAL_HIGHLIGHTS_KEY,
 		(long)conditionalLines) != 0;
+	conditionalShowAll =
+		TCUserDefaults::longForKey(SHOW_ALL_TYPE5_KEY,
+		(long)conditionalShowAll) != 0;
+	conditionalShowControlPts =
+		TCUserDefaults::longForKey(SHOW_TYPE5_CONTROL_POINTS_KEY,
+		(long)conditionalShowControlPts) != 0;
+	edgesOnly = TCUserDefaults::longForKey(EDGES_ONLY_KEY,
+		(long)edgesOnly) != 0;
 	polygonOffset = TCUserDefaults::longForKey(POLYGON_OFFSET_KEY,
 		(long)polygonOffset) != 0;
 	blackEdgeLines = TCUserDefaults::longForKey(BLACK_HIGHLIGHTS_KEY,
@@ -544,6 +615,8 @@ void Preferences::loadPrimitivesSettings(void)
 	curveQuality = TCUserDefaults::longForKey(CURVE_QUALITY_KEY, curveQuality);
 	qualityStuds = TCUserDefaults::longForKey(QUALITY_STUDS_KEY,
 		(long)qualityStuds) != 0;
+	hiresPrimitives = TCUserDefaults::longForKey(HI_RES_PRIMITIVES_KEY,
+		(long)hiresPrimitives) !=0;
 }
 
 void Preferences::loadOtherSettings(void)
@@ -560,9 +633,11 @@ void Preferences::loadDefaultGeneralSettings(void)
 	lineSmoothing = false;
 	showFPS = false;
 	showErrors = true;
+	processLdconfigLdr = true;
 	backgroundColor = 0;
 	defaultColor = 0x999999;
 	defaultColorNumber = -1;
+	fieldOfView = 45;
 	// User colors?
 }
 
@@ -572,9 +647,13 @@ void Preferences::loadDefaultGeometrySettings(void)
 	seamWidth = 50;
 	wireframe = false;
 	wireframeFog = false;
+	wireframeRemoveHiddenLines=false;
 	wireframeThickness = 1;
 	edgeLines = false;
 	conditionalLines = false;
+	conditionalShowAll = false;
+	conditionalShowControlPts = false;
+	edgesOnly = false;
 	polygonOffset = true;
 	blackEdgeLines = false;
 	edgeThickness = 1;
@@ -605,6 +684,7 @@ void Preferences::loadDefaultPrimitivesSettings(void)
 	textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
 	curveQuality = 2;
 	qualityStuds = false;
+    hiresPrimitives = false;
 }
 
 void Preferences::loadDefaultOtherSettings(void)
@@ -625,8 +705,10 @@ void Preferences::reflectGeneralSettings(void)
 	setButtonState(panel->aaLinesButton, lineSmoothing);
 	setButtonState(panel->frameRateButton, showFPS);
 	setButtonState(panel->showErrorsButton, showErrors);
+	setButtonState(panel->processLdconfigLdrButton, processLdconfigLdr);
 	setupColorButton(panel->backgroundColorButton, backgroundColor);
 	setupColorButton(panel->defaultColorButton, defaultColor);
+	setRangeValue(panel->fieldOfViewSpin, fieldOfView);
 }
 
 void Preferences::reflectGeometrySettings(void)
@@ -717,6 +799,7 @@ void Preferences::reflectPrimitivesSettings(void)
 	}
 	panel->curveQualitySlider->setValue(curveQuality);
 	setButtonState(panel->lowQualityStudsButton, !qualityStuds);
+	setButtonState(panel->hiresPrimitivesButton, !hiresPrimitives);
 }
 
 void Preferences::doResetGeneral(void)
@@ -929,6 +1012,18 @@ void Preferences::doEdgeLines(bool value)
 	}
 }
 
+void Preferences::doConditionalShow(bool value)
+{
+    if (value)
+    {
+        enableConditionalShow();
+	}
+	else
+	{
+		disableConditionalShow();
+	}
+}
+
 void Preferences::doPrimitiveSubstitution(bool value)
 {
 	if (value)
@@ -1012,22 +1107,42 @@ void Preferences::enableStereo(void)
 void Preferences::enableWireframe(void)
 {
 	panel->wireframeFogButton->setEnabled(true);
+	panel->wireframeRemoveHiddenLineButton->setEnabled(true);
 	panel->wireframeThicknessSlider->setEnabled(true);
 	panel->wireframeThicknessLabel->setEnabled(true);
 	setButtonState(panel->wireframeFogButton, wireframeFog);
+    setButtonState(panel->wireframeRemoveHiddenLineButton, wireframeRemoveHiddenLines);
 }
 
 void Preferences::enableEdgeLines(void)
 {
 	panel->conditionalLinesButton->setEnabled(true);
+	panel->edgesOnlyButton->setEnabled(true);
 	panel->highQualityLinesButton->setEnabled(true);
 	panel->alwaysBlackLinesButton->setEnabled(true);
 	panel->edgeThicknessLabel->setEnabled(true);
 	panel->edgeThicknessSlider->setEnabled(true);
 	setButtonState(panel->conditionalLinesButton, conditionalLines);
+	setButtonState(panel->edgesOnlyButton, edgesOnly);
 	setButtonState(panel->highQualityLinesButton, polygonOffset);
 	setButtonState(panel->alwaysBlackLinesButton, blackEdgeLines);
+	if (conditionalLines)
+	{
+		panel->conditionalShowAllButton->setEnabled(true);
+		panel->conditionalShowControlPtsButton->setEnabled(true);
+		setButtonState(panel->conditionalShowAllButton, conditionalShowAll);
+		setButtonState(panel->conditionalShowControlPtsButton, conditionalShowControlPts);
+	}
 }
+
+void Preferences::enableConditionalShow(void)
+{
+	panel->conditionalShowAllButton->setEnabled(true);
+	panel->conditionalShowControlPtsButton->setEnabled(true);
+	setButtonState(panel->conditionalShowAllButton, conditionalShowAll);
+	setButtonState(panel->conditionalShowControlPtsButton, conditionalShowControlPts);
+}
+
 
 void Preferences::enablePrimitiveSubstitution(void)
 {
@@ -1104,21 +1219,37 @@ void Preferences::disableStereo(void)
 void Preferences::disableWireframe(void)
 {
 	panel->wireframeFogButton->setEnabled(false);
+	panel->wireframeRemoveHiddenLineButton->setEnabled(false);
 	panel->wireframeThicknessSlider->setEnabled(false);
 	panel->wireframeThicknessLabel->setEnabled(false);
 	setButtonState(panel->wireframeFogButton, false);
+	setButtonState(panel->wireframeRemoveHiddenLineButton, false);
 }
 
 void Preferences::disableEdgeLines(void)
 {
 	panel->conditionalLinesButton->setEnabled(false);
+	panel->conditionalShowAllButton->setEnabled(false);
+	panel->conditionalShowControlPtsButton->setEnabled(false);
+	panel->edgesOnlyButton->setEnabled(false);
 	panel->highQualityLinesButton->setEnabled(false);
 	panel->alwaysBlackLinesButton->setEnabled(false);
 	panel->edgeThicknessLabel->setEnabled(false);
 	panel->edgeThicknessSlider->setEnabled(false);
 	setButtonState(panel->conditionalLinesButton, false);
+	setButtonState(panel->conditionalShowAllButton, false);
+	setButtonState(panel->conditionalShowControlPtsButton, false);
+	setButtonState(panel->edgesOnlyButton, false);
 	setButtonState(panel->highQualityLinesButton, false);
 	setButtonState(panel->alwaysBlackLinesButton, false);
+}
+
+void Preferences::disableConditionalShow(void)
+{
+	panel->conditionalShowAllButton->setEnabled(false);
+    panel->conditionalShowControlPtsButton->setEnabled(false);
+    setButtonState(panel->conditionalShowAllButton, false);
+    setButtonState(panel->conditionalShowControlPtsButton, false);
 }
 
 void Preferences::disablePrimitiveSubstitution(void)
@@ -1158,3 +1289,85 @@ bool Preferences::getShowError(int errorNumber)
 {
 	return TCUserDefaults::longForKey(getErrorKey(errorNumber), 1, false) != 0;
 }
+
+void Preferences::setupDefaultRotationMatrix(void)
+{
+    char *value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
+                                                                                                                                                             
+    if (value)
+    {
+        float latitude;
+        float longitude;
+                                                                                                                                                             
+        if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
+        {
+            float leftMatrix[16];
+            float rightMatrix[16];
+            float resultMatrix[16];
+            float cosTheta;
+            float sinTheta;
+                                                                                                                                                             
+            TCVector::initIdentityMatrix(leftMatrix);
+            TCVector::initIdentityMatrix(rightMatrix);
+            latitude = (float)deg2rad(latitude);
+            longitude = (float)deg2rad(longitude);
+                                                                                                                                                             
+            // First, apply latitude by rotating around X.
+            cosTheta = (float)cos(latitude);
+            sinTheta = (float)sin(latitude);
+            rightMatrix[5] = cosTheta;
+            rightMatrix[6] = sinTheta;
+            rightMatrix[9] = -sinTheta;
+            rightMatrix[10] = cosTheta;
+            TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
+                                                                                                                                                             
+            memcpy(leftMatrix, resultMatrix, sizeof(leftMatrix));
+            TCVector::initIdentityMatrix(rightMatrix);
+                                                                                                                                                             
+            // Next, apply longitude by rotating around Y.
+            cosTheta = (float)cos(longitude);
+            sinTheta = (float)sin(longitude);
+            rightMatrix[0] = cosTheta;
+            rightMatrix[2] = -sinTheta;
+            rightMatrix[8] = sinTheta;
+            rightMatrix[10] = cosTheta;
+            TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
+                                                                                                                                                             
+            modelViewer->setDefaultRotationMatrix(resultMatrix);
+        }
+        delete value;
+    }
+    else
+    {
+        value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
+        if (value)
+        {
+            float matrix[16];
+                                                                                                                                                             
+/*
+            if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
+                &matrix[0], &matrix[4], &matrix[8], &matrix[12],
+                &matrix[1], &matrix[5], &matrix[9], &matrix[13],
+                &matrix[2], &matrix[6], &matrix[10], &matrix[14],
+                &matrix[3], &matrix[7], &matrix[11], &matrix[15]) == 16)
+            {
+                modelViewer->setDefaultRotationMatrix(matrix);
+            }
+            else
+            {
+*/
+            memset(matrix, 0, sizeof(matrix));
+            matrix[15] = 1.0f;
+            if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
+                &matrix[0], &matrix[4], &matrix[8],
+                &matrix[1], &matrix[5], &matrix[9],
+                &matrix[2], &matrix[6], &matrix[10]) == 9)
+            {
+                modelViewer->setDefaultRotationMatrix(matrix);
+            }
+//          }
+            delete value;
+        }
+    }
+}
+

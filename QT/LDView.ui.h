@@ -22,7 +22,9 @@ void LDView::fileOpen()
 }
 
 void LDView::fileSave()
+
 {
+	modelViewer->doFileSave();
 }
 
 void LDView::filePrint()
@@ -63,6 +65,10 @@ void LDView::viewStatusBar(bool flag)
     modelViewer->doViewStatusBar(flag);
 }
 
+void LDView::viewFullScreen()
+{
+	modelViewer->doViewFullScreen();
+}
 
 void LDView::viewResetView()
 {
@@ -78,6 +84,11 @@ void LDView::helpOpenGLDriverInfo()
 void LDView::fileLDrawDir()
 {
     modelViewer->doFileLDrawDir();
+}
+
+void LDView::fileExtraDir()
+{
+	modelViewer->showFileExtraDir();
 }
 
 void LDView::fileReload()
@@ -100,7 +111,57 @@ void LDView::viewModeChanged(QAction *action)
     modelViewer->doViewModeChanged(action);
 }
 
+void LDView::viewZoomToFit()
+{
+	modelViewer->doZoomToFit();
+}
+
+void LDView::frontViewAngle()
+{
+	modelViewer->doFrontViewAngle();
+}
+
+void LDView::backViewAngle()
+{
+    modelViewer->doBackViewAngle();
+}
+                                                                                                                                                             
+void LDView::leftViewAngle()
+{
+    modelViewer->doLeftViewAngle();
+}
+                                                                                                                                                             
+void LDView::rightViewAngle()
+{
+    modelViewer->doRightViewAngle();
+}
+
+void LDView::topViewAngle()
+{
+    modelViewer->doTopViewAngle();
+}
+
+void LDView::bottomViewAngle()
+{
+    modelViewer->doBottomViewAngle();
+}
+
+void LDView::isoViewAngle()
+{
+    modelViewer->doIsoViewAngle();
+}
+
+void LDView::saveDefaultViewAngle()
+{
+    modelViewer->doSaveDefaultViewAngle();
+}
+
 void LDView::fileCancelLoad()
 {
     modelViewer->doFileCancelLoad();
+}
+
+void LDView::showViewInfo()
+{
+	modelViewer->doShowViewInfo();
 }
