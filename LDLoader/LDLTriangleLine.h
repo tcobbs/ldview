@@ -11,7 +11,7 @@ public:
 	virtual int getNumPoints(void) const { return 3; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeTriangle; }
 protected:
-	LDLTriangleLine(LDLModel *mainModel, const char *line, int lineNumber);
+	LDLTriangleLine(LDLModel *parentModel, const char *line, int lineNumber);
 	LDLTriangleLine(const LDLTriangleLine &other);
 
 	friend LDLFileLine; // Needed because constructors are protected.

@@ -1,8 +1,8 @@
 #include "LDLConditionalLineLine.h"
 
-LDLConditionalLineLine::LDLConditionalLineLine(LDLModel *mainModel,
+LDLConditionalLineLine::LDLConditionalLineLine(LDLModel *parentModel,
 											   const char *line, int lineNumber)
-	:LDLLineLine(mainModel, line, lineNumber),
+	:LDLLineLine(parentModel, line, lineNumber),
 	m_controlPoints(NULL)
 {
 }

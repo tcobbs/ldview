@@ -3,19 +3,16 @@
 #include <stdio.h>
 #include "LDLMacros.h"
 
-LDLModelLine::LDLModelLine(LDLModel *mainModel, const char *line, int lineNumber)
-	:LDLFileLine(mainModel, line, lineNumber),
+LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
+						   int lineNumber)
+	:LDLActionLine(parentModel, line, lineNumber),
 	m_highResModel(NULL),
 	m_lowResModel(NULL)
 {
-	m_flags.bfcCertify = BFCUnknownState;
-	m_flags.bfcClip = false;
-	m_flags.bfcWindingCCW = true;
-	m_flags.bfcInvert = false;
 }
 
 LDLModelLine::LDLModelLine(const LDLModelLine &other)
-	:LDLFileLine(other),
+	:LDLActionLine(other),
 	m_highResModel(NULL),
 	m_lowResModel(NULL),
 	m_color(other.m_color),
@@ -119,9 +116,9 @@ void LDLModelLine::setTransformation(float x, float y, float z,
 	m_transformationMatrix[14] = z;
 }
 
-void LDLModelLine::print(int indent)
+void LDLModelLine::print(int indent) const
 {
-	LDLFileLine::print(indent);
+	LDLActionLine::print(indent);
 	if (getModel())
 	{
 		getModel()->print(indent);
@@ -145,13 +142,4 @@ LDLModel *LDLModelLine::getModel(void) const
 	{
 		return NULL;
 	}
-}
-
-void LDLModelLine::setBFCSettings(BFCState bfcCertify, bool bfcClip,
-								  bool bfcWindingCCW, bool bfcInvert)
-{
-	m_flags.bfcCertify = bfcCertify;
-	m_flags.bfcClip = bfcClip;
-	m_flags.bfcWindingCCW = bfcWindingCCW;
-	m_flags.bfcInvert = bfcInvert;
 }

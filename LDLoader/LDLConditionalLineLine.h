@@ -15,7 +15,8 @@ public:
 		return LDLLineTypeConditionalLine;
 	}
 protected:
-	LDLConditionalLineLine(LDLModel *mainModel, const char *line, int lineNumber);
+	LDLConditionalLineLine(LDLModel *parentModel, const char *line,
+		int lineNumber);
 	LDLConditionalLineLine(const LDLConditionalLineLine &other);
 	virtual void dealloc(void);
 

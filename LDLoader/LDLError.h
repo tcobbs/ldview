@@ -17,7 +17,8 @@ typedef enum
 	LDLEColor,
 	LDLEColinear,
 	LDLEBFCWarning,
-	LDLEBFCError
+	LDLEBFCError,
+	LDLEMPDError
 } LDLErrorType;
 
 class LDLError: public TCObject

@@ -1,8 +1,8 @@
 #include "LDLTriangleLine.h"
 
-LDLTriangleLine::LDLTriangleLine(LDLModel *mainModel, const char *line,
+LDLTriangleLine::LDLTriangleLine(LDLModel *parentModel, const char *line,
 							   int lineNumber)
-	:LDLShapeLine(mainModel, line, lineNumber)
+	:LDLShapeLine(parentModel, line, lineNumber)
 {
 }
 

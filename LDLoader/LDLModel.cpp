@@ -7,6 +7,7 @@
 #include <TCFoundation/TCStringArray.h>
 
 char *LDLModel::sm_systemLDrawDir = NULL;
+int LDLModel::sm_modelCount = 0;
 
 #define LDL_LOWRES_PREFIX "LDL-LOWRES:"
 
@@ -27,6 +28,7 @@ LDLModel::LDLModel(void)
 	// Initialize Public flags
 	m_flags.part = false;
 	m_flags.bfcCertify = BFCUnknownState;
+	sm_modelCount++;
 }
 
 LDLModel::LDLModel(const LDLModel &other)
@@ -50,6 +52,7 @@ void LDLModel::dealloc(void)
 	{
 		m_fileLines->release();
 	}
+	sm_modelCount--;
 	TCObject::dealloc();
 }
 
@@ -70,7 +73,15 @@ void LDLModel::setName(const char *name)
 	m_name = copyString(name);
 }
 
-void LDLModel::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
+TCULong LDLModel::getPackedRGBA(TCULong colorNumber)
+{
+	int r, g, b, a;
+
+	getRGBA(colorNumber, r, g, b, a);
+	return r << 24 | g << 16 | b << 8 | a;
+}
+
+void LDLModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
 {
 	if (colorNumberIsTransparent(colorNumber))
 	{
@@ -369,7 +380,7 @@ void LDLModel::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 	}
 }
 
-bool LDLModel::colorNumberIsTransparent(int colorNumber)
+bool LDLModel::colorNumberIsTransparent(TCULong colorNumber)
 {
 	return (colorNumber >= 32 && colorNumber < 48) ||
 		(colorNumber >= 0x3000000 && colorNumber < 0x4000000) ||
@@ -569,31 +580,30 @@ bool LDLModel::load(FILE *file)
 	return parse();
 }
 
-int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
+int LDLModel::parseMPDMeta(int index, const char *filename)
 {
-	char filename[1024];
 	int i = index + 1;
 	int count = m_fileLines->getCount();
 
-	if (commentLine->getMPDFilename(filename, sizeof(filename)))
+	if (m_flags.mainModelParsed)
 	{
-		if (m_flags.mainModelParsed)
+		LDLModel *subModel;
+
+		for (i = index + 1; i < count; i++)
 		{
-			LDLModel *subModel;
+			LDLFileLine *fileLine = (*m_fileLines)[i];
 
-			for (i = index + 1; i < count; i++)
+			if (fileLine->getLineType() == LDLLineTypeComment &&
+				((LDLCommentLine *)fileLine)->getMPDFilename(NULL, 0))
 			{
-				LDLFileLine *fileLine = (*m_fileLines)[i];
-
-				if (fileLine->getLineType() == LDLLineTypeComment &&
-					((LDLCommentLine *)fileLine)->getMPDFilename(NULL, 0))
-				{
-					break;
-				}
+				break;
 			}
-			count = i;
-			subModel = (LDLModel *)getLoadedModels()->objectForKey(filename);
-			if (subModel && !subModel->m_fileLines)
+		}
+		count = i;
+		subModel = (LDLModel *)getLoadedModels()->objectForKey(filename);
+		if (subModel)
+		{
+			if (!subModel->m_fileLines)
 			{
 				subModel->m_fileLines = new LDLFileLineArray(count - index - 1);
 				for (i = index + 1; i < count; i++)
@@ -609,21 +619,46 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 			}
 			else
 			{
-				i = count;
+				reportError(LDLEMPDError, *(*m_fileLines)[index],
+					"MPD sub-file already loaded: ignoring");
+			}
+		}
+	}
+	else
+	{
+		m_flags.mainModelParsed = true;
+	}
+	return i - index - 1;
+}
+
+int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
+{
+	if (m_flags.bfcInvertNext)
+	{
+		reportError(LDLEBFCError, *commentLine,
+			"First action following BFC INVERTNEXT isn't linetype 1.\n"
+			"Ignoring BFC INVERTNEXT command.");
+		m_flags.bfcInvertNext = false;
+	}
+	if (m_flags.bfcCertify == BFCUnknownState)
+	{
+		if (commentLine->containsBFCCommand("NOCERTIFY"))
+		{
+			m_flags.bfcCertify = BFCOffState;
+			if (m_flags.started)
+			{
+				reportError(LDLEBFCError, *commentLine,
+					"NOCERTIFY command isn't the first action in file.");
 			}
 		}
 		else
 		{
-			m_flags.mainModelParsed = true;
-		}
-	}
-	else if (commentLine->isBFCMeta())
-	{
-		if (m_flags.bfcCertify == BFCUnknownState)
-		{
-			if (commentLine->containsBFCCommand("NOCERTIFY"))
+			if (m_flags.started)
 			{
 				m_flags.bfcCertify = BFCOffState;
+				reportError(LDLEBFCError, *commentLine,
+					"First BFC command isn't the first action in file; "
+					"changing to NOCERTIFY.");
 			}
 			else
 			{
@@ -633,99 +668,113 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 				m_flags.bfcClip = true;
 			}
 		}
-		else
+	}
+	else
+	{
+		if (commentLine->containsBFCCommand("CERTIFY"))
 		{
-			if (commentLine->containsBFCCommand("CERTIFY"))
+			if (m_flags.bfcCertify == BFCOnState)
 			{
-				if (m_flags.bfcCertify == BFCOnState)
-				{
-					reportError(LDLEBFCWarning, *commentLine,
-						"CERTIFY command after other BFC commands.");
-				}
-				else
-				{
-					reportError(LDLEBFCError, *commentLine,
-						"CERTIFY command after NOCERTIFY command.");
-				}
+				reportError(LDLEBFCWarning, *commentLine,
+					"CERTIFY command after other BFC commands.");
 			}
-			// Not else if below, because each BFC command could potentially
-			// have both certify AND nocertify.
-			if (commentLine->containsBFCCommand("NOCERTIFY"))
-			{
-				if (m_flags.bfcCertify == BFCOnState)
-				{
-					reportError(LDLEBFCError, *commentLine,
-						"NOCERTIFY command after CERTIFY command.");
-				}
-				else
-				{
-					reportError(LDLEBFCWarning, *commentLine,
-						"Repeat NOCERTIFY command.");
-				}
-			}
-		}
-		if (m_flags.bfcCertify == BFCOnState)
-		{
-			if (commentLine->containsBFCCommand("CLIP"))
-			{
-				if (commentLine->containsBFCCommand("NOCLIP"))
-				{
-					reportError(LDLEBFCError, *commentLine,
-						"CLIP and NOCLIP both specified in one BFC command.");
-				}
-				else
-				{
-					m_flags.bfcClip = true;
-				}
-			}
-			else if (commentLine->containsBFCCommand("NOCLIP"))
-			{
-				m_flags.bfcClip = false;
-			}
-			if (commentLine->containsBFCCommand("CCW"))
-			{
-				if (commentLine->containsBFCCommand("CW"))
-				{
-					reportError(LDLEBFCError, *commentLine,
-						"CW and CCW both specified in one BFC command.");
-				}
-				else
-				{
-					m_flags.bfcWindingCCW = true;
-				}
-			}
-			else if (commentLine->containsBFCCommand("CW"))
-			{
-				m_flags.bfcWindingCCW = false;
-			}
-			if (commentLine->containsBFCCommand("INVERTNEXT"))
-			{
-				m_flags.bfcInvertNext = true;
-			}
-		}
-		else
-		{
-			if (commentLine->containsBFCCommand("CLIP") ||
-				commentLine->containsBFCCommand("NOCLIP") ||
-				commentLine->containsBFCCommand("CW") ||
-				commentLine->containsBFCCommand("CCW") ||
-				commentLine->containsBFCCommand("INVERTNEXT"))
+			else
 			{
 				reportError(LDLEBFCError, *commentLine,
-					"BFC command after NOCERTIFY command.");
+					"CERTIFY command after NOCERTIFY command.");
+			}
+		}
+		// Not else if below, because each BFC command could potentially
+		// have both certify AND nocertify.
+		if (commentLine->containsBFCCommand("NOCERTIFY"))
+		{
+			if (m_flags.bfcCertify == BFCOnState)
+			{
+				reportError(LDLEBFCError, *commentLine,
+					"NOCERTIFY command after CERTIFY command.");
+			}
+			else
+			{
+				reportError(LDLEBFCWarning, *commentLine,
+					"Repeat NOCERTIFY command.");
 			}
 		}
 	}
-	return i - index - 1;
+	if (m_flags.bfcCertify == BFCOnState)
+	{
+		if (commentLine->containsBFCCommand("CLIP"))
+		{
+			if (commentLine->containsBFCCommand("NOCLIP"))
+			{
+				reportError(LDLEBFCError, *commentLine,
+					"CLIP and NOCLIP both specified in one BFC command.");
+			}
+			else
+			{
+				m_flags.bfcClip = true;
+			}
+		}
+		else if (commentLine->containsBFCCommand("NOCLIP"))
+		{
+			m_flags.bfcClip = false;
+		}
+		if (commentLine->containsBFCCommand("CCW"))
+		{
+			if (commentLine->containsBFCCommand("CW"))
+			{
+				reportError(LDLEBFCError, *commentLine,
+					"CW and CCW both specified in one BFC command.");
+			}
+			else
+			{
+				m_flags.bfcWindingCCW = true;
+			}
+		}
+		else if (commentLine->containsBFCCommand("CW"))
+		{
+			m_flags.bfcWindingCCW = false;
+		}
+		if (commentLine->containsBFCCommand("INVERTNEXT"))
+		{
+			m_flags.bfcInvertNext = true;
+		}
+	}
+	else
+	{
+		if (commentLine->containsBFCCommand("CLIP") ||
+			commentLine->containsBFCCommand("NOCLIP") ||
+			commentLine->containsBFCCommand("CW") ||
+			commentLine->containsBFCCommand("CCW") ||
+			commentLine->containsBFCCommand("INVERTNEXT"))
+		{
+			reportError(LDLEBFCError, *commentLine,
+				"BFC command after NOCERTIFY command.");
+		}
+	}
+	return 0;
 }
 
+int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
+{
+	char filename[1024];
+
+	if (commentLine->getMPDFilename(filename, sizeof(filename)))
+	{
+		return parseMPDMeta(index, filename);
+	}
+	else if (commentLine->isBFCMeta())
+	{
+		return parseBFCMeta(commentLine);
+	}
+	return 0;
+}
+
+/*
 void LDLModel::processModelLine(LDLModelLine *modelLine)
 {
 	m_flags.started = true;
-	modelLine->setBFCSettings(m_flags.bfcCertify, m_flags.bfcClip,
-		m_flags.bfcWindingCCW, m_flags.bfcInvertNext);
-	m_flags.bfcInvertNext = false;
 }
+*/
 
 bool LDLModel::parse(void)
 {
@@ -742,6 +791,17 @@ bool LDLModel::parse(void)
 			if (!fileLine->parse())
 			{
 				reportError(fileLine->getError());
+			}
+			if (fileLine->isActionLine())
+			{
+				m_flags.started = true;
+				((LDLActionLine *)fileLine)->setBFCSettings(m_flags.bfcCertify,
+					m_flags.bfcClip, m_flags.bfcWindingCCW,
+					m_flags.bfcInvertNext);
+			}
+			else
+			{
+				checkInvertNext = false;
 			}
 			switch (fileLine->getLineType())
 			{
@@ -762,31 +822,15 @@ bool LDLModel::parse(void)
 				}
 				break;
 			case LDLLineTypeModel:
-				processModelLine((LDLModelLine *)fileLine);
-				break;
-			case LDLLineTypeLine:
-				m_flags.started = true;
-				break;
-			case LDLLineTypeTriangle:
-				m_flags.started = true;
-				break;
-			case LDLLineTypeQuad:
-				m_flags.started = true;
-				break;
-			case LDLLineTypeConditionalLine:
-				m_flags.started = true;
-				break;
-			case LDLLineTypeEmpty:
-				checkInvertNext = false;
-				break;
-			case LDLLineTypeUnknown:
-				checkInvertNext = false;
+				m_flags.bfcInvertNext = false;
 				break;
 			}
 			if (checkInvertNext && m_flags.bfcInvertNext)
 			{
 				reportError(LDLEBFCError, *fileLine,
-					"Line following BFC INVERTNEXT isn't a linetype 1.");
+					"First action following BFC INVERTNEXT isn't linetype "
+					"1.\nIgnoring BFC INVERTNEXT command.");
+				m_flags.bfcInvertNext = false;
 			}
 		}
 		return true;
@@ -802,7 +846,9 @@ void LDLModel::reportError(LDLError *error)
 {
 	if (error)
 	{
-		printf("Error: %s\n", error->getMessage());
+		printf("Error in: %s\n", error->getFilename());
+		indentPrintf(4, "%s\n", error->getMessage());
+		indentPrintf(4, "%s\n", error->getFileLine());
 	}
 }
 
@@ -830,6 +876,15 @@ void LDLModel::print(int indent)
 	if (m_flags.part)
 	{
 		printf(" (Part)");
+	}
+	switch (m_flags.bfcCertify)
+	{
+	case BFCOffState:
+		printf(" (BFC Off)");
+		break;
+	case BFCOnState:
+		printf(" (BFC On)");
+		break;
 	}
 	printf(": ");
 	if (m_filename)

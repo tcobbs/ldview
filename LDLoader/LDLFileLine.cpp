@@ -80,7 +80,7 @@ bool LDLFileLine::lineIsEmpty(const char *line)
 	{
 		char thisChar = line[0];
 
-		if (thisChar != ' ' || thisChar != '\t')
+		if (thisChar != ' ' && thisChar != '\t')
 		{
 			return false;
 		}

@@ -18,6 +18,9 @@ class LDLModelLine;
 typedef enum
 {
 	// WARNING: Increasing this list past 4 members requires more bits in flags.
+	// Note that even now, it requires 3 bits, because the compiler treats it
+	// as a signed integer.  When the value 2 is sign-extended, it becomes -2,
+	// which doesn't match.
 	BFCUnknownState,
 	BFCOffState,
 	BFCOnState
@@ -30,7 +33,8 @@ public:
 	LDLModel(const LDLModel &other);
 	virtual TCObject *copy(void);
 	// Color numbers might become dynamic, so not static.
-	virtual void getRGBA(int colorNumber, int& r, int& g, int& b, int& a);
+	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
+	virtual TCULong getPackedRGBA(TCULong colorNumber);
 	virtual LDLModel *subModelNamed(const char *subModelName,
 		bool lowRes = false);
 	virtual const char *getFilename(void) { return m_filename; }
@@ -38,7 +42,7 @@ public:
 	virtual const char *getName(void) { return m_name; }
 	virtual void setName(const char *name);
 	virtual bool load(FILE *file);
-	virtual void print(int indent = 0);
+	virtual void print(int indent);
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual bool getLowResStuds(void) const;
@@ -46,12 +50,13 @@ public:
 		const char *format, va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
 		const char *format, ...);
+	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
 
 	// Flags
 	bool isPart(void) { return m_flags.part; }
 
 	// Transparency detection is fixed, so static.
-	static bool colorNumberIsTransparent(int);
+	static bool colorNumberIsTransparent(TCULong colorNumber);
 	static TCULong colorForRGBA(int r, int g, int b, int a);
 	static const char *lDrawDir(void);
 protected:
@@ -62,11 +67,13 @@ protected:
 		const char  *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
+	virtual int parseMPDMeta(int index, const char *filename);
+	virtual int parseBFCMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void reportError(LDLError *error);
 	virtual void reportError(LDLErrorType type, const LDLFileLine &fileLine,
 		const char* format, ...);
-	virtual void processModelLine(LDLModelLine *modelLine);
+//	virtual void processModelLine(LDLModelLine *modelLine);
 
 	char *m_filename;
 	char *m_name;
@@ -75,19 +82,20 @@ protected:
 	struct
 	{
 		// Private flags
-		bool loadingPart:1;
-		bool mainModelLoaded:1;
-		bool mainModelParsed:1;
-		bool started:1;
-		bool bfcClip:1;
-		bool bfcWindingCCW:1;
-		bool bfcInvertNext:1;
+		bool loadingPart:1;			// Temporal
+		bool mainModelLoaded:1;		// Temporal
+		bool mainModelParsed:1;		// Temporal
+		bool started:1;				// Temporal
+		bool bfcClip:1;				// Temporal
+		bool bfcWindingCCW:1;		// Temporal
+		bool bfcInvertNext:1;		// Temporal
 		// Public flags
 		bool part:1;
-		BFCState bfcCertify:2;
+		BFCState bfcCertify:3;
 	} m_flags;
 
 	static char *sm_systemLDrawDir;
+	static int sm_modelCount;
 };
 
 #endif // __LDLMODEL_H__

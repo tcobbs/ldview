@@ -1,13 +1,14 @@
 #include "LDLShapeLine.h"
 
-LDLShapeLine::LDLShapeLine(LDLModel *mainModel, const char *line, int lineNumber)
-	:LDLFileLine(mainModel, line, lineNumber),
+LDLShapeLine::LDLShapeLine(LDLModel *parentModel, const char *line,
+						   int lineNumber)
+	:LDLActionLine(parentModel, line, lineNumber),
 	m_points(NULL)
 {
 }
 
 LDLShapeLine::LDLShapeLine(const LDLShapeLine &other)
-	:LDLFileLine(other),
+	:LDLActionLine(other),
 	m_points(NULL),
 	m_colorNumber(other.m_colorNumber)
 {
