@@ -57,9 +57,15 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 
 bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 {
+	TCULong colorNumber = 7;
+	TCULong edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
+
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
-	m_mainTREModel->setPart(mainLDLModel->isPart());
+	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
+	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
+	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
+		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	if (parseModel(m_mainLDLModel, m_mainTREModel))
 	{
 		if (m_mainTREModel->isPart())
@@ -89,12 +95,11 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 	else
 	{
 		LDLModel *parentModel = modelLine->getParentModel();
-		TCULong highlightColorNumber =
-			parentModel->getHighlightColorNumber(colorNumber);
+		TCULong edgeColorNumber = parentModel->getEdgeColorNumber(colorNumber);
 
 		treSubModel = treParentModel->addSubModel(
 			parentModel->getPackedRGBA(colorNumber),
-			parentModel->getPackedRGBA(highlightColorNumber),
+			parentModel->getPackedRGBA(edgeColorNumber),
 			modelLine->getMatrix(), treModel);
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
@@ -122,7 +127,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel)
 			model = new TREModel;
 			model->setMainModel(treModel->getMainModel());
 			model->setName(name);
-			model->setPart(ldlModel->isPart());
+			model->setPartFlag(ldlModel->isPart());
 			if (parseModel(ldlModel, model))
 			{
 				m_mainTREModel->registerModel(model);
@@ -201,33 +206,31 @@ bool LDModelParser::isCon(const char *filename)
 	return is1DigitCon(filename) || is2DigitCon(filename);
 }
 
-bool LDModelParser::substituteStud(TREModel *treModel)
+bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
 {
-	int numSegments = getNumCircleSegments();
-
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
 	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-/*
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
-*/
+	if (m_flags.edgeLines)
+	{
+		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+			numSegments);
+		treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+			numSegments);
+	}
 	return true;
+}
+
+bool LDModelParser::substituteStud(TREModel *treModel)
+{
+	return substituteStud(treModel, getNumCircleSegments());
 }
 
 bool LDModelParser::substituteStu2(TREModel *treModel)
 {
-	int numSegments = LO_NUM_SEGMENTS;
-
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-/*
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
-*/
-	return true;
+	return substituteStud(treModel, LO_NUM_SEGMENTS);
 }
 
-bool LDModelParser::substituteStu22(TREModel *treModel, bool /*isA*/)
+bool LDModelParser::substituteStu22(TREModel *treModel, bool isA)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
@@ -235,35 +238,43 @@ bool LDModelParser::substituteStu22(TREModel *treModel, bool /*isA*/)
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
 	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, 0.0f,
 		numSegments);
-/*
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	if (!isA)
+	if (m_flags.edgeLines)
 	{
-		addEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f, numSegments);
-		addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
+		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
+			numSegments);
+		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+			numSegments);
+		if (!isA)
+		{
+			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
+				numSegments);
+			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+				numSegments);
+		}
 	}
-*/
 	return true;
 }
 
-bool LDModelParser::substituteStu23(TREModel *treModel, bool /*isA*/)
+bool LDModelParser::substituteStu23(TREModel *treModel, bool isA)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
 	treModel->addDisk(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
-/*
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
-	if (!isA)
+	if (m_flags.edgeLines)
 	{
-		addEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f, numSegments);
+		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
+			numSegments);
+		if (!isA)
+		{
+			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
+				numSegments);
+		}
 	}
-*/
 	return true;
 }
 
-bool LDModelParser::substituteStu24(TREModel *treModel, bool /*isA*/)
+bool LDModelParser::substituteStu24(TREModel *treModel, bool isA)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
@@ -271,15 +282,20 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool /*isA*/)
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments);
 	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 6.0f, 0.0f,
 		numSegments);
-/*
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments);
-	addEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f, numSegments);
-	if (!isA)
+	if (m_flags.edgeLines)
 	{
-		addEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f, numSegments);
-		addEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f, numSegments);
+		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+			numSegments);
+		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f,
+			numSegments);
+		if (!isA)
+		{
+			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+				numSegments);
+			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f,
+				numSegments);
+		}
 	}
-*/
 	return true;
 }
 
@@ -430,7 +446,7 @@ void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
 	{
 		if (m_flags.edgeLines)
 		{
-			treModel->addHighlightLine(shapeLine->getPoints());
+			treModel->addEdgeLine(shapeLine->getPoints());
 		}
 	}
 	else

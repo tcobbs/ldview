@@ -17,16 +17,16 @@ public:
 	LDModelParser(void);
 	virtual bool parseMainModel(LDLMainModel *mainLDLModel);
 	TREMainModel *getMainTREModel(void) { return m_mainTREModel; }
-	void setPrimitiveSubstitution(bool value)
+	void setPrimitiveSubstitutionFlag(bool value)
 	{
 		m_flags.primitiveSubstitution = value;
 	}
-	bool getPrimitiveSubstitution(void)
+	bool getPrimitiveSubstitutionFlag(void)
 	{
 		return m_flags.primitiveSubstitution;
 	}
-	void setEdgeLines(bool value) { m_flags.edgeLines = value; }
-	bool getEdgeLines(void) { return m_flags.edgeLines; }
+	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
+	bool getEdgeLinesFlag(void) { return m_flags.edgeLines; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	virtual void setSeamWidth(float seamWidth);
@@ -43,6 +43,7 @@ protected:
 		TREModel *treModel);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel);
+	virtual bool substituteStud(TREModel *treModel, int numSegments);
 	virtual bool substituteStud(TREModel *treModel);
 	virtual bool substituteStu2(TREModel *treModel);
 	virtual bool substituteStu22(TREModel *treModel, bool isA = false);

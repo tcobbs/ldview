@@ -22,6 +22,8 @@ protected:
 	virtual void dealloc(void);
 	int middleIndex(const TCVector &p1, const TCVector &p2, const TCVector &p3)
 		const;
+	bool getMatchingPoints(const TCVector *points, int count,
+		int *index1 = NULL, int *index2 = NULL);
 	bool getMatchingPoints(int *index1 = NULL, int *index2 = NULL);
 
 	TCVector *m_points;

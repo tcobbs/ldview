@@ -116,14 +116,19 @@ bool LDLShapeLine::isXZPlanar(const float *matrix) const
 
 bool LDLShapeLine::getMatchingPoints(int *index1, int *index2)
 {
+	return getMatchingPoints(m_points, getNumPoints(), index1, index2);
+}
+
+bool LDLShapeLine::getMatchingPoints(const TCVector *points, int count,
+									 int *index1, int *index2)
+{
 	int i, j;
-	int count = getNumPoints();
 
 	for (i = 0; i < count - 1; i++)
 	{
 		for (j = i + 1; j < count; j++)
 		{
-			if (m_points[i].exactlyEquals(m_points[j]))
+			if (points[i].exactlyEquals(points[j]))
 			{
 				if (index1)
 				{
