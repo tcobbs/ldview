@@ -5,8 +5,6 @@
 #include <TRE/TREShapeGroup.h>
 #include <TRE/TREModel.h>
 
-class TREModel;
-
 class TCVector;
 
 class TRESubModel : public TCObject

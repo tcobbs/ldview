@@ -27,6 +27,7 @@ public:
 	// Constructors
 	TCVector(void);
 	TCVector(float, float, float);
+	TCVector(const float *);
 	TCVector(const TCVector&);
 
 	// Destructor

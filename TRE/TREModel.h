@@ -6,7 +6,24 @@
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TRE/TREShapeGroup.h>
 #include <TRE/TREColoredShapeGroup.h>
+#include <TRE/TREVectorKey.h>
+#include <TRE/TRESmoother.h>
 #include <TCFoundation/TCVector.h>
+
+#ifdef WIN32
+// In Windows, we have to disable a number of warnings in order to use any STL
+// classes without getting tons of warnings.  The following warning is shut off
+// completely; it's just the warning that identifiers longer than 255 characters
+// will be truncated in the debug info.  I really don't care about this.  Note
+// that the other warnings are only disabled during the #include of the STL
+// headers due to the warning(push) and warning(pop).
+#pragma warning(push, 1)	// Minimum warnings during STL includes
+#endif // WIN32
+#include <map>
+//#include <vector>
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 
 struct TREVertex;
 class TRESubModel;
@@ -14,9 +31,26 @@ class TREMainModel;
 class TREColoredShapeGroup;
 class TREVertexArray;
 
+class TRENormalInfo : public TCObject
+{
+public:
+	TRENormalInfo(void)
+		:m_normals(NULL),
+		m_normalIndex(-1),
+		m_smoother(NULL),
+		m_smootherIndex(-1) {};
+
+	TREVertexArray *m_normals;
+	int m_normalIndex;
+	TRESmoother *m_smoother;
+	int m_smootherIndex;
+};
+
 typedef TCTypedObjectArray<TRESubModel> TRESubModelArray;
 typedef TCTypedObjectArray<TREShapeGroup> TREShapeGroupArray;
 typedef TCTypedObjectArray<TREColoredShapeGroup> TREColoredShapeGroupArray;
+typedef TCTypedObjectArray<TRENormalInfo> TRENormalInfoArray;
+typedef std::map<TREVectorKey, TRESmoother> TREConditionalMap;
 
 typedef enum
 {
@@ -114,6 +148,7 @@ public:
 	virtual bool isPart(void) { return m_flags.part != false; }
 	virtual bool isFlattened(void) { return m_flags.flattened != false; }
 	virtual void flatten(void);
+	virtual void smooth(void);
 	virtual void addCylinder(const TCVector &center, float radius, float height,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addSlopedCylinder(const TCVector &center, float radius,
@@ -256,6 +291,26 @@ protected:
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 	virtual bool shouldLoadConditionalLines(void);
 	virtual void genStudTextureCoords(TCVector *textureCoords, int vertexCount);
+	virtual void fillConditionalMap(TREConditionalMap &conditionalMap);
+	virtual void fillConditionalMap(TREConditionalMap &conditionalMap,
+		TREShapeGroup *shapeGroup);
+	virtual void addConditionalPoint(TREConditionalMap &conditionalMap,
+		const TREVertexArray *vertices, int index0, int index1);
+	virtual void calcShapeNormals(TREConditionalMap &conditionalMap,
+		TRENormalInfoArray *normalInfos, TREShapeType shapeType);
+	virtual void calcShapeNormals(TREConditionalMap &conditionalMap,
+		TRENormalInfoArray *normalInfos, TREMSection section,
+		TREShapeType shapeType);
+	virtual void calcShapeNormals(TREConditionalMap &conditionalMap,
+		TRENormalInfoArray *normalInfos, TREShapeGroup *shapeGroup,
+		TREShapeType shapeType);
+	virtual void processSmoothEdge(TREConditionalMap &conditionalMap,
+		TRENormalInfoArray *normalInfos, const TREVertexArray *vertices,
+		TREVertexArray *normals, int index0, int index1, int index2);
+	virtual int getConditionalLine(TREConditionalMap &conditionalMap,
+		const TREVertex point0, const TREVertex point1, TRESmoother *&smoother);
+	void applyShapeNormals(TRENormalInfoArray *normalInfos);
+	void finishShapeNormals(TREConditionalMap &conditionalMap);
 
 	static void setGlNormalize(bool value);
 

@@ -997,6 +997,386 @@ TRESubModel *TREModel::addSubModel(TCULong color, TCULong edgeColor,
 	return subModel;
 }
 
+void TREModel::smooth(void)
+{
+	TREConditionalMap conditionalMap;
+	TRENormalInfoArray *normalInfos = new TRENormalInfoArray;
+
+	fillConditionalMap(conditionalMap);
+	calcShapeNormals(conditionalMap, normalInfos, TRESTriangle);
+	calcShapeNormals(conditionalMap, normalInfos, TRESQuad);
+	finishShapeNormals(conditionalMap);
+	applyShapeNormals(normalInfos);
+	normalInfos->release();
+}
+
+void TREModel::finishShapeNormals(TREConditionalMap &conditionalMap)
+{
+	TREConditionalMap::iterator it = conditionalMap.begin();
+
+	while (it != conditionalMap.end())
+	{
+		TRESmoother &smoother0 = it->second;
+
+		smoother0.finish();
+/*
+		int i, j;
+		int count0 = smoother0.getVertexCount();
+		const TREVertex &startVertex0 = smoother0.getStartVertex();
+
+		for (i = 0; i < count0; i++)
+		{
+			const TREVertex &vertex0 = smoother0.getVertex(i);
+			TRESmoother &smoother1 = conditionalMap[TREVectorKey(vertex0)];
+			int count1 = smoother1.getVertexCount();
+//			const TREVertex &startVertex1 = smoother1.getStartVertex();
+
+			for (j = 0; j < count1; j++)
+			{
+				const TREVertex &vertex1 = smoother1.getVertex(j);
+
+				if (vertex1.v[0] == startVertex0.v[0] &&
+					vertex1.v[1] == startVertex0.v[1] &&
+					vertex1.v[2] == startVertex0.v[2])
+				{
+					TCVector &normal0 = smoother0.getNormal(i);
+					TCVector &normal1 = smoother1.getNormal(j);
+
+					if (TRESmoother::shouldFlipNormal(normal0, normal1))
+					{
+						normal0 -= normal1;
+					}
+					else
+					{
+						normal0 += normal1;
+					}
+					normal1 = normal0.normalize();
+					break;
+				}
+			}
+		}
+*/
+		it++;
+	}
+}
+
+void TREModel::applyShapeNormals(TRENormalInfoArray *normalInfos)
+{
+	int i;
+	int infoCount = normalInfos->getCount();
+
+	for (i = 0; i < infoCount; i++)
+	{
+		TRENormalInfo *normalInfo = (*normalInfos)[i];
+		TREVertexArray *normals = normalInfo->m_normals;
+		TRESmoother *smoother = normalInfo->m_smoother;
+		TCVector normal = smoother->getNormal(normalInfo->m_smootherIndex);
+		TREVertex &vertex = normals->vertexAtIndex(normalInfo->m_normalIndex);
+
+		if (TRESmoother::shouldFlipNormal(normal, TCVector(vertex.v)))
+		{
+			normal *= -1.0f;
+		}
+		memcpy(vertex.v, (const float *)normal, 3 * sizeof(float));
+	}
+}
+
+void TREModel::calcShapeNormals(TREConditionalMap &conditionalMap,
+								TRENormalInfoArray *normalInfos,
+								TREShapeType shapeType)
+{
+	calcShapeNormals(conditionalMap, normalInfos, TREMStandard, shapeType);
+	calcShapeNormals(conditionalMap, normalInfos, TREMBFC, shapeType);
+}
+
+void TREModel::calcShapeNormals(TREConditionalMap &conditionalMap,
+								TRENormalInfoArray *normalInfos,
+								TREMSection section, TREShapeType shapeType)
+{
+	calcShapeNormals(conditionalMap, normalInfos, m_shapes[section], shapeType);
+	calcShapeNormals(conditionalMap, normalInfos, m_coloredShapes[section],
+		shapeType);
+}
+
+/*
+This function causes all the smoothed normals to be calculated.  It doesn't
+actually apply them, but calculates their values, and records them so that they
+can be later applied to the actual geometry.
+*/
+void TREModel::calcShapeNormals(TREConditionalMap &conditionalMap,
+								TRENormalInfoArray *normalInfos,
+								TREShapeGroup *shapeGroup,
+								TREShapeType shapeType)
+{
+	if (shapeGroup)
+	{
+		TCULongArray *indices = shapeGroup->getIndices(shapeType);
+
+		if (indices)
+		{
+			int i, j;
+			int count = indices->getCount();
+			int shapeSize = 3;
+			TREVertexArray *vertices =
+				shapeGroup->getVertexStore()->getVertices();
+			TREVertexArray *normals =
+				shapeGroup->getVertexStore()->getNormals();
+
+			if (shapeType == TRESQuad)
+			{
+				shapeSize = 4;
+			}
+			for (i = 0; i < count; i += shapeSize)
+			{
+				for (j = 0; j < shapeSize; j++)
+				{
+					// Process the smooth edge between points i + j and
+					// i + j + 1 (with wrap-around based on shapeSize).  Pass
+					// i + j + 2 (with wrap-around) in to allow multiple
+					// continuous shapes that all share one point to all get
+					// smoothed together.
+					processSmoothEdge(conditionalMap, normalInfos, vertices,
+						normals, (*indices)[i + j],
+						(*indices)[i + ((j + 1) % shapeSize)],
+						(*indices)[i + ((j + 2) % shapeSize)]);
+				}
+			}
+		}
+	}
+}
+
+/*
+This function looks for a conditional line between the points at index0 and
+index1, and also between index1 and index2.  If it finds one between index0 and
+index1, it considers that edge to be smooth, and adds the surface normal
+associated with the point at index0 to the surface normal stored in the
+TRESmoother associated with each of the two points at the ends of the
+conditional line.  If it finds the second conditional line, it adds that line to
+the TGLSmoother associated with index1.  Smoothers that are associated with
+each other will later be smoothed together.
+*/
+void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
+								TRENormalInfoArray *normalInfos,
+								 const TREVertexArray *vertices,
+								 TREVertexArray *normals, int index0,
+								 int index1, int index2)
+{
+	TRESmoother *smoother0 = NULL;
+	int line0Index = getConditionalLine(conditionalMap,
+		vertices->constVertexAtIndex(index0),
+		vertices->constVertexAtIndex(index1), smoother0);
+
+	if (line0Index >= 0)
+	{
+		// line0Index is the index in smoother of the condtional line that goes
+		// between the points at index0 and index1.  Note that smoother has
+		// been initialized to point to the smoother associated with the point
+		// at index0.
+		TRESmoother *smoother1 = NULL;
+		int line1Index = getConditionalLine(conditionalMap,
+			vertices->constVertexAtIndex(index1),
+			vertices->constVertexAtIndex(index0), smoother1);
+
+		if (smoother1)
+		{
+			// If we found the first conditional line (line0Index >= 0), then we
+			// should always get smoother1, since smoother1 just corresponds to
+			// the point at the other end of the conditional line.  Since we
+			// found a conditional line, and all of them are inserted keyed off
+			// of both ends, smoother1 should always be non-NULL if line0Index
+			// >= 0.
+			const TCVector &normal0 =
+				TCVector(normals->constVertexAtIndex(index0).v);
+			TRENormalInfo *normalInfo;
+			// Check to see if there is conditional line between the points at
+			// index1 and index2.  Note that by passing smoother1 into
+			// getConditionalLine with a value already set, it uses that
+			// smoother, and skips the lookup.  If line2Index comes out >= 0,
+			// the point will be marked as shared between the two conditionals,
+			// so that it will be smoothed betwen them.
+			int line2Index = getConditionalLine(conditionalMap,
+				vertices->constVertexAtIndex(index1),
+				vertices->constVertexAtIndex(index2), smoother1);
+
+			// Check to see if the normal for index0 is more than 90 degrees
+			// away from the running total normal stored in smoother0.  Note
+			// that each conditional line gets its own normal unless two are
+			// merged together below.
+			if (TRESmoother::shouldFlipNormal(smoother0->getNormal(line0Index),
+				normal0))
+			{
+				// Subtract shape's normal from the running total, since it is
+				// more than 90 degrees off.
+				smoother0->getNormal(line0Index) -= normal0;
+			}
+			else
+			{
+				// Add shape's normal to the running total.
+				smoother0->getNormal(line0Index) += normal0;
+			}
+			normalInfo = new TRENormalInfo;
+			normalInfo->m_normals = normals;
+			normalInfo->m_normalIndex = index0;
+			normalInfo->m_smoother = smoother0;
+			normalInfo->m_smootherIndex = line0Index;
+			normalInfos->addObject(normalInfo);
+			normalInfo->release();
+			if (line1Index >= 0)
+			{
+				// This should always be the case.
+				const TCVector &normal1 =
+					TCVector(normals->constVertexAtIndex(index1).v);
+
+				// Check to see if the normal for index1 is more than 90 degrees
+				// away from the running total normal stored in smoother1.  Note
+				// that each conditional line gets its own normal unless two are
+				// merged together below.
+				if (TRESmoother::shouldFlipNormal(smoother1->getNormal(
+					line1Index), normal1))
+				{
+					// Subtract shape's normal from the running total, since it is
+					// more than 90 degrees off.
+					smoother1->getNormal(line1Index) -= normal1;
+				}
+				else
+				{
+					// Add shape's normal to the running total.
+					smoother1->getNormal(line1Index) += normal1;
+				}
+				normalInfo = new TRENormalInfo;
+				normalInfo->m_normals = normals;
+				normalInfo->m_normalIndex = index1;
+				normalInfo->m_smoother = smoother1;
+				normalInfo->m_smootherIndex = line1Index;
+				normalInfos->addObject(normalInfo);
+				normalInfo->release();
+			}
+			if (line2Index >= 0)
+			{
+				smoother1->markShared(line1Index, line2Index);
+			}
+		}
+	}
+}
+
+/*
+This functions finds a conditional line in conditionalMap that goes from vertex0
+to vertex1, and returns its index if it exists.  Returns -1 otherwise.  Also,
+sets smoother equal to the TRESmoother that goes with point0 in conditionalMap
+in order to speed up processing in the function that calls us.
+*/
+int TREModel::getConditionalLine(TREConditionalMap &conditionalMap,
+								 const TREVertex point0, const TREVertex point1,
+								 TRESmoother *&smoother)
+{
+	int i;
+	int count;
+
+	if (!smoother)
+	{
+		TREVectorKey pointKey(point0);
+		TREConditionalMap::iterator it = conditionalMap.find(pointKey);
+
+//		debugPrintf("%f %f %f -> ", point0.v[0], point0.v[1], point0.v[2]);
+//		debugPrintf("%f %f %f\n", point1.v[0], point1.v[1], point1.v[2]);
+		if (it == conditionalMap.end())
+		{
+			return -1;
+		}
+		else
+		{
+			smoother = &(*it).second;
+		}
+	}
+	count = smoother->getVertexCount();
+	for (i = 0; i < count; i++)
+	{
+		// Note that by definition point0 will match the start point of the
+		// smoother, so there's no need to check.
+		if (smoother->getVertex(i).approxEquals(point1, 0.01f))
+		{
+//			debugPrintf("*\n");
+			return i;
+		}
+	}
+	return -1;
+}
+
+/*
+This function fills conditionalMap with all the conditional lines, using the
+points at each end of each conditional line as keys in the tree.  This means
+that each conditional line will go into the tree twice.
+*/
+void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap)
+{
+	fillConditionalMap(conditionalMap, m_shapes[TREMConditionalLines]);
+	fillConditionalMap(conditionalMap, m_coloredShapes[TREMConditionalLines]);
+}
+
+void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
+								  TREShapeGroup *shapeGroup)
+{
+	if (shapeGroup)
+	{
+		TCULongArray *indices = shapeGroup->getIndices(TRESConditionalLine);
+
+		if (indices)
+		{
+			int i;
+			int count = indices->getCount();
+			TREVertexArray *vertices =
+				shapeGroup->getVertexStore()->getVertices();
+
+			// Note there are 2 indices per conditional line; hence the += 2.
+			for (i = 0; i < count; i += 2)
+			{
+				int index0 = (*indices)[i];
+				int index1 = (*indices)[i + 1];
+
+				// Add the conditional line to the map using its first point as
+				// the key in the map.
+				addConditionalPoint(conditionalMap, vertices, index0, index1);
+				// Add the conditional line to the map using its second point as
+				// the key in the map.
+				addConditionalPoint(conditionalMap, vertices, index1, index0);
+			}
+		}
+	}
+}
+
+/*
+This function adds the line between index0 and index1 to conditionalMap, using
+the point at index0 as its key in the map.
+*/
+void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
+								   const TREVertexArray *vertices, int index0,
+								   int index1)
+{
+	TREVectorKey pointKey(vertices->constVertexAtIndex(index0));
+	TREConditionalMap::iterator it = conditionalMap.find(pointKey);
+
+	if (it == conditionalMap.end())
+	{
+		// Note that this would probably be more clear if we used the []
+		// operator of map.  However, that would require extra lookups, and
+		// we're trying to keep the lookups to a minimum.
+		TREConditionalMap::value_type newValue(pointKey,
+			TRESmoother(vertices->constVertexAtIndex(index0)));
+
+		// The insert function returns a pair, where the first of the pair is
+		// an iterator pointing to the newly inserted item, and the second of
+		// the pair is a boolean saying whether or not an insertion occurred.
+		// Since we got here, we know the item doesn't already exist, so we
+		// really don't care about the second of the pair.
+		it = conditionalMap.insert(newValue).first;
+	}
+	// If the item didn't originally exist, it gets set during insertion above.
+	// If the item did exist, it's set in the find() call.  Note that not all
+	// the vertices that match are necessarily equal.  However, this won't
+	// effect the results.
+	(*it).second.addVertex(vertices->constVertexAtIndex(index1));
+}
+
 void TREModel::flatten(void)
 {
 	if (m_subModels && m_subModels->getCount())

@@ -134,6 +134,10 @@ SOURCE=.\TREShapeGroup.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TRESmoother.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TRESubModel.cpp
 # End Source File
 # Begin Source File
@@ -182,11 +186,19 @@ SOURCE=.\TREShapeGroup.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\TRESmoother.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TRESubModel.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\TRETransShapeGroup.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TREVectorKey.h
 # End Source File
 # Begin Source File
 

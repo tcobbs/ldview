@@ -44,6 +44,21 @@ TCVector::TCVector(float x, float y, float z)
 //	vectorCount++;
 }
 
+// TCVector::TCVector(float *) -- Constructor
+// Expects:
+//		v	: An array of 3 floats to store in the TCVector
+TCVector::TCVector(const float *v)
+{
+#ifdef _LEAK_DEBUG
+	className[0] = 'V';
+	className[1] = 'e';
+	className[2] = 'c';
+	className[3] = 0;
+#endif
+	memcpy(vector, v, sizeof(vector));
+//	vectorCount++;
+}
+
 // TCVector::TCVector(const TCVector&) -- Copy Constructor
 // Expects:
 //		v	: The TCVector to copy.
