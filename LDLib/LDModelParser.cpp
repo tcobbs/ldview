@@ -45,7 +45,6 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	{
 		treModel->flatten();
 	}
-	treModel->calculateBoundingBox();
 	if (subModel)
 	{
 		if (m_flags.seams)
@@ -186,6 +185,31 @@ bool LDModelParser::isCyli(const char *filename)
 	return isPrimitive(filename, "cyli.dat");
 }
 
+bool LDModelParser::isCyls(const char *filename)
+{
+	return isPrimitive(filename, "cyls.dat");
+}
+
+bool LDModelParser::isCyls2(const char *filename)
+{
+	return isPrimitive(filename, "cyls2.dat");
+}
+
+bool LDModelParser::isDisc(const char *filename)
+{
+	return isPrimitive(filename, "disc.dat");
+}
+
+bool LDModelParser::isNdis(const char *filename)
+{
+	return isPrimitive(filename, "ndis.dat");
+}
+
+bool LDModelParser::isEdge(const char *filename)
+{
+	return isPrimitive(filename, "edge.dat");
+}
+
 bool LDModelParser::is1DigitCon(const char *filename)
 {
 	return strlen(filename) == 11 && startsWithFraction(filename) &&
@@ -309,6 +333,52 @@ bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction)
 	return true;
 }
 
+bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
+		numSegments, (int)(numSegments * fraction));
+	return true;
+}
+
+bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
+											  float fraction)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
+		numSegments, (int)(numSegments * fraction));
+	return true;
+}
+
+bool LDModelParser::substituteDisc(TREModel *treModel, float fraction)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		(int)(numSegments * fraction));
+	return true;
+}
+
+bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		(int)(numSegments * fraction));
+	return true;
+}
+
+bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction)
+{
+	int numSegments = getNumCircleSegments(fraction);
+
+	treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		(int)(numSegments * fraction));
+	return true;
+}
+
 bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size)
 {
 	int numSegments = getNumCircleSegments(fraction);
@@ -381,6 +451,29 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		else if (isCyli(modelName))
 		{
 			return substituteCylinder(treModel, startingFraction(modelName));
+		}
+		else if (isCyls(modelName))
+		{
+			return substituteSlopedCylinder(treModel,
+				startingFraction(modelName));
+		}
+		else if (isCyls2(modelName))
+		{
+			return substituteSlopedCylinder2(treModel,
+				startingFraction(modelName));
+		}
+		else if (isDisc(modelName))
+		{
+			return substituteDisc(treModel, startingFraction(modelName));
+		}
+		else if (isNdis(modelName))
+		{
+			return substituteNotDisc(treModel, startingFraction(modelName));
+		}
+		else if (isEdge(modelName))
+		{
+			return substituteCircularEdge(treModel,
+				startingFraction(modelName));
 		}
 		else if (isCon(modelName))
 		{

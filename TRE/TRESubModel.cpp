@@ -160,37 +160,28 @@ void TRESubModel::drawColoredEdgeLines(void)
 	glPopMatrix();
 }
 
-void TRESubModel::getMinMax(TCVector& min, TCVector& max, float* matrix)
-{
-	float newMatrix[16];
-
-	TREModel::multMatrix(matrix, m_matrix, newMatrix);
-	m_model->getMinMax(min, max, newMatrix);
-}
-
 void TRESubModel::scanPoints(TCObject *scanner,
 							 TREScanPointCallback scanPointCallback,
 							 float *matrix)
 {
 	float newMatrix[16];
 
-	TREModel::multMatrix(matrix, m_matrix, newMatrix);
+	TCVector::multMatrix(matrix, m_matrix, newMatrix);
 	m_model->scanPoints(scanner, scanPointCallback, newMatrix);
 }
 
-void TRESubModel::getMaxRadiusSquared(const TCVector &center, float &rSquared,
-									  float *matrix)
+void TRESubModel::unshrinkNormals(float *matrix, float *unshrinkMatrix)
 {
 	float newMatrix[16];
 
-	TREModel::multMatrix(matrix, m_matrix, newMatrix);
-	m_model->getMaxRadiusSquared(center, rSquared, newMatrix);
+	TCVector::multMatrix(matrix, m_matrix, newMatrix);
+	m_model->unshrinkNormals(newMatrix, unshrinkMatrix);
 }
 
 void TRESubModel::shrink(float amount)
 {
-	TCVector min;
-	TCVector max;
+	TCVector boundingMin;
+	TCVector boundingMax;
 	TCVector delta;
 	float scaleMatrix[16] = {1.0f, 0.0f, 0.0f, 0.0f,
 							 0.0f, 1.0f, 0.0f, 0.0f,
@@ -199,8 +190,8 @@ void TRESubModel::shrink(float amount)
 	float tempMatrix[16];
 
 	memcpy(tempMatrix, m_matrix, sizeof(tempMatrix));
-	m_model->getMinMax(min, max);
-	delta = max - min;
+	m_model->getBoundingBox(boundingMin, boundingMax);
+	delta = boundingMax - boundingMin;
 	if (delta[0] > amount)
 	{
 		scaleMatrix[0] = (delta[0] - amount) / delta[0];
@@ -213,5 +204,6 @@ void TRESubModel::shrink(float amount)
 	{
 		scaleMatrix[10] = (delta[2] - amount) / delta[2];
 	}
-	TREModel::multMatrix(tempMatrix, scaleMatrix, m_matrix);
+	TCVector::multMatrix(tempMatrix, scaleMatrix, m_matrix);
+	m_model->unshrinkNormals(scaleMatrix);
 }

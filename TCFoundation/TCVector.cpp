@@ -385,7 +385,7 @@ float TCVector::determinant(const float *matrix)
 	return det;
 }
 
-void TCVector::invertMatrix(const float *matrix, float *inverseMatrix)
+float TCVector::invertMatrix(const float *matrix, float *inverseMatrix)
 {
 	float det = determinant(matrix);
 
@@ -426,6 +426,7 @@ void TCVector::invertMatrix(const float *matrix, float *inverseMatrix)
 		inverseMatrix[3] = inverseMatrix[7] = inverseMatrix[11] = 0.0;
 		inverseMatrix[15] = 1.0;
 	}
+	return det;
 }
 
 void TCVector::multMatrix(const float* left, const float* right, float* result)
@@ -545,14 +546,16 @@ TCVector TCVector::transformPoint(const float *matrix)
 	return newPoint;
 }
 
-void TCVector::transformNormal(const float *matrix, TCVector& newNormal)
+void TCVector::transformNormal(const float *matrix, TCVector& newNormal,
+							   bool shouldNormalize)
 {
 	float inverseMatrix[16];
 	float x = vector[0];
 	float y = vector[1];
 	float z = vector[2];
+	float det;
 
-	invertMatrix(matrix, inverseMatrix);
+	det = invertMatrix(matrix, inverseMatrix);
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
 //	z' = g*x + h*y + i*z + Z
@@ -562,13 +565,20 @@ void TCVector::transformNormal(const float *matrix, TCVector& newNormal)
 	newNormal[0] = inverseMatrix[0]*x + inverseMatrix[1]*y + inverseMatrix[2]*z;
 	newNormal[1] = inverseMatrix[4]*x + inverseMatrix[5]*y + inverseMatrix[6]*z;
 	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y + inverseMatrix[10]*z;
-	newNormal.normalize();
+	if (shouldNormalize)
+	{
+		newNormal.normalize();
+	}
+	if (det < 0)
+	{
+		newNormal *= -1.0f;
+	}
 }
 
-TCVector TCVector::transformNormal(const float *matrix)
+TCVector TCVector::transformNormal(const float *matrix, bool shouldNormalize)
 {
 	TCVector newNormal;
 
-	transformNormal(matrix, newNormal);
+	transformNormal(matrix, newNormal, shouldNormalize);
 	return newNormal;
 }

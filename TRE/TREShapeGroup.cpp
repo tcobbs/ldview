@@ -3,6 +3,7 @@
 #include "TREVertexStore.h"
 #include "TREModel.h"
 #include <TCFoundation/TCVector.h>
+#include <TCFoundation/TCMacros.h>
 
 TREShapeGroup::TREShapeGroup(void)
 	:m_vertexStore(NULL),
@@ -340,173 +341,6 @@ void TREShapeGroup::setVertexStore(TREVertexStore *vertexStore)
 	m_vertexStore = vertexStore;
 }
 
-void TREShapeGroup::getMinMax(TCVector& min, TCVector& max, float* matrix)
-{
-	int bit;
-
-	for (bit = 1; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
-	{
-		getMinMax(getIndices((TREShapeType)bit), min, max, matrix);
-	}
-	for (; (TREShapeType)bit < TRESLast; bit = bit << 1)
-	{
-		getStripMinMax(getIndices((TREShapeType)bit), min, max, matrix);
-	}
-}
-
-void TREShapeGroup::getMinMax(TCULongArray *indices, TCVector& min, TCVector& max,
-							  float* matrix)
-{
-	if (indices)
-	{
-		int i;
-		int count = indices->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			getMinMax((*indices)[i], min, max, matrix);
-		}
-	}
-}
-
-void TREShapeGroup::getStripMinMax(TCULongArray *indices, TCVector& min,
-								   TCVector& max, float* matrix)
-{
-	if (indices)
-	{
-		int i, j;
-		int count = indices->getCount();
-		int stripCount = 0;
-
-		for (i = 0; i < count; i += stripCount)
-		{
-			stripCount = (*indices)[i];
-			i++;
-			for (j = 0; j < stripCount; j++)
-			{
-				getMinMax((*indices)[i + j], min, max, matrix);
-			}
-		}
-	}
-}
-
-void TREShapeGroup::getMinMax(const TREVertex &vertex, TCVector& min,
-							  TCVector& max)
-{
-	TCVector point = TCVector(vertex.v[0], vertex.v[1], vertex.v[2]);
-
-	if (point[0] < min[0])
-	{
-		min[0] = point[0];
-	}
-	if (point[1] < min[1])
-	{
-		min[1] = point[1];
-	}
-	if (point[2] < min[2])
-	{
-		min[2] = point[2];
-	}
-	if (point[0] > max[0])
-	{
-		max[0] = point[0];
-	}
-	if (point[1] > max[1])
-	{
-		max[1] = point[1];
-	}
-	if (point[2] > max[2])
-	{
-		max[2] = point[2];
-	}
-}
-
-void TREShapeGroup::getMinMax(TCULong index, TCVector& min, TCVector& max,
-							  float* matrix)
-{
-	TREVertex vertex = (*m_vertexStore->getVertices())[index];
-
-	TREModel::transformVertex(vertex, matrix);
-	getMinMax(vertex, min, max);
-}
-
-void TREShapeGroup::getMaxRadiusSquared(const TCVector &center, float &rSquared,
-										float *matrix)
-{
-	int bit;
-
-	for (bit = 1; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
-	{
-		getMaxRadiusSquared(getIndices((TREShapeType)bit), center, rSquared,
-			matrix);
-	}
-	for (; (TREShapeType)bit < TRESLast; bit = bit << 1)
-	{
-		getStripMaxRadiusSquared(getIndices((TREShapeType)bit), center,
-			rSquared, matrix);
-	}
-}
-
-void TREShapeGroup::getMaxRadiusSquared(TCULongArray *indices,
-										const TCVector &center, float &rSquared,
-										float* matrix)
-{
-	if (indices)
-	{
-		int i;
-		int count = indices->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			getMaxRadiusSquared((*indices)[i], center, rSquared, matrix);
-		}
-	}
-}
-
-void TREShapeGroup::getStripMaxRadiusSquared(TCULongArray *indices,
-											 const TCVector &center,
-											 float &rSquared, float* matrix)
-{
-	if (indices)
-	{
-		int i, j;
-		int count = indices->getCount();
-		int stripCount = 0;
-
-		for (i = 0; i < count; i += stripCount)
-		{
-			stripCount = (*indices)[i];
-			i++;
-			for (j = 0; j < stripCount; j++)
-			{
-				getMaxRadiusSquared((*indices)[i + j], center, rSquared,
-					matrix);
-			}
-		}
-	}
-}
-
-void TREShapeGroup::getMaxRadiusSquared(const TREVertex &vertex,
-										const TCVector &center, float &rSquared)
-{
-	TCVector point = TCVector(vertex.v[0], vertex.v[1], vertex.v[2]);
-	float thisRSquared = (point - center).lengthSquared();
-
-	if (thisRSquared > rSquared)
-	{
-		rSquared = thisRSquared;
-	}
-}
-
-void TREShapeGroup::getMaxRadiusSquared(TCULong index, const TCVector &center,
-										float &rSquared, float* matrix)
-{
-	TREVertex vertex = (*m_vertexStore->getVertices())[index];
-
-	TREModel::transformVertex(vertex, matrix);
-	getMaxRadiusSquared(vertex, center, rSquared);
-}
-
 void TREShapeGroup::scanPoints(TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
 							   float* matrix)
@@ -518,7 +352,7 @@ void TREShapeGroup::scanPoints(TCObject *scanner,
 		scanPoints(getIndices((TREShapeType)bit), scanner, scanPointCallback,
 			matrix);
 	}
-	for (; (TREShapeType)bit < TRESLast; bit = bit << 1)
+	for (; (TREShapeType)bit <= TRESLast; bit = bit << 1)
 	{
 		scanStripPoints(getIndices((TREShapeType)bit), scanner,
 			scanPointCallback, matrix);
@@ -579,4 +413,80 @@ void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
 
 	TREModel::transformVertex(vertex, matrix);
 	scanPoints(vertex, scanner, scanPointCallback);
+}
+
+void TREShapeGroup::unshrinkNormals(float *matrix, float *unshrinkMatrix)
+{
+	int bit;
+
+	for (bit = 1; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
+	{
+		unshrinkNormals(getIndices((TREShapeType)bit), matrix, unshrinkMatrix);
+	}
+	for (; (TREShapeType)bit <= TRESLast; bit = bit << 1)
+	{
+		unshrinkStripNormals(getIndices((TREShapeType)bit), matrix,
+			unshrinkMatrix);
+	}
+}
+
+void TREShapeGroup::unshrinkNormals(TCULongArray *indices, float *matrix,
+									float *unshrinkMatrix)
+{
+	if (indices)
+	{
+		int i;
+		int count = indices->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			unshrinkNormal((*indices)[i], matrix, unshrinkMatrix);
+		}
+	}
+}
+
+void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices, float *matrix,
+										 float *unshrinkMatrix)
+{
+	if (indices)
+	{
+		int i, j;
+		int count = indices->getCount();
+		int stripCount = 0;
+
+		for (i = 0; i < count; i += stripCount)
+		{
+			stripCount = (*indices)[i];
+			i++;
+			for (j = 0; j < stripCount; j++)
+			{
+				unshrinkNormal((*indices)[i + j], matrix, unshrinkMatrix);
+			}
+		}
+	}
+}
+
+void TREShapeGroup::unshrinkNormal(TCULong index, float *matrix,
+								   float *unshrinkMatrix)
+{
+	TREVertexArray *normals = m_vertexStore->getNormals();
+	TREVertex normal = (*normals)[index];
+	TCVector newNormal = TCVector(normal.v[0], normal.v[1], normal.v[2]);
+	float adjust;
+
+	if (!fEq(newNormal.length(), 1.0f))
+	{
+		printf("Huh?\n");
+	}
+	newNormal = newNormal.transformNormal(matrix);
+	newNormal = newNormal.transformNormal(unshrinkMatrix, false);
+	adjust = 1.0f / newNormal.length();
+	if (adjust > 1.0f)
+	{
+		printf("adjust: %f\n", adjust);
+	}
+	normal.v[0] *= adjust;
+	normal.v[1] *= adjust;
+	normal.v[2] *= adjust;
+	normals->replaceVertex(normal, index);
 }

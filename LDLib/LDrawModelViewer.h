@@ -322,8 +322,8 @@ class LDrawModelViewer: public TCObject
 		float pixelAspectRatio;
 		float size;
 		TCVector center;
-		TCVector min;
-		TCVector max;
+		TCVector boundingMin;
+		TCVector boundingMax;
 		int lastFrameTimeLength;
 		int cullBackFaces;
 		float xRotate;
