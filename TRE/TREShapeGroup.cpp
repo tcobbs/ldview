@@ -505,23 +505,20 @@ int TREShapeGroup::turnVector(float vx1, float vy1, float vx2, float vy2)
 	return 0;
 }
 
-// Note that this doesn't make any attempt at all to come up with the actual
-// correct point.  However, multiple points run through this with the same
-// matrix will be in consistent positions relative to each other.  The scale
-// present in the matrix is ignored.  Since all we want for conditional lines
-// is relative locations, this doesn't matter.
 void TREShapeGroup::transformPoint(const TCVector &point, const float *matrix,
 								   float *tx, float *ty)
 {
 	float x = point.get(0);
 	float y = point.get(1);
 	float z = point.get(2);
+	float tw;
 
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
 //	z' = g*x + h*y + i*z + Z
-	*tx = matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12];
-	*ty = matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13];
+	tw = 1.0f / (matrix[3]*x + matrix[7]*y + matrix[11]*z + matrix[15]);
+	*tx = (matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12]) * tw;
+	*ty = (matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13]) * tw;
 }
 
 bool TREShapeGroup::shouldDrawConditional(TCULong index1, TCULong index2,

@@ -134,6 +134,10 @@ public:
 		int numSegments, int usedSegments = -1);
 	virtual void addRing(const TCVector &center, float radius1, float radius2,
 		int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addOpenConeConditionals(TCVector *points, int numSegments,
+		int usedSegments);
+	virtual void addSlopedCylinder2Conditionals(TCVector *points,
+		int numSegments, int usedSegments);
 	virtual void getBoundingBox(TCVector& min, TCVector& max);
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
@@ -222,6 +226,7 @@ protected:
 	virtual bool checkColoredConditionalLinesPresent(void);
 	virtual void setSectionPresent(TREMSection section, bool colored);
 	virtual bool isSectionPresent(TREMSection section, bool colored);
+	virtual bool shouldLoadConditionalLines(void);
 
 	static void setGlNormalize(bool value);
 
