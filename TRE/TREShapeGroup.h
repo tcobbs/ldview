@@ -8,6 +8,7 @@
 
 typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 
+struct TREVertex;
 class TREVertexStore;
 class Vector;
 
@@ -20,7 +21,11 @@ typedef enum
 	TRESConditionalLine	= 0x0008,
 	TRESBFCTriangle		= 0x0010,
 	TRESBFCQuad			= 0x0020,
-	TRESLast			= TRESBFCQuad
+	TRESTriangleStrip	= 0x0040,
+	TRESFirstStrip		= TRESTriangleStrip,
+	TRESQuadStrip		= 0x0080,
+	TRESTriangleFan		= 0x0100,
+	TRESLast			= TRESTriangleFan
 } TREShapeType;
 
 class TREShapeGroup : public TCObject
@@ -31,15 +36,20 @@ public:
 	virtual int addLine(Vector *vertices);
 	virtual int addTriangle(Vector *vertices);
 	virtual int addQuad(Vector *vertices);
+	virtual int addQuadStrip(Vector *vertices, Vector *normals, int count);
+	virtual int addTriangleFan(Vector *vertices, Vector *normals, int count);
+/*
 	virtual void addConditionalLine(int index1, int index2, int index3,
 		int index4);
 	virtual void addBFCTriangle(int index1, int index2, int index3);
 	virtual void addBFCQuad(int index1, int index2, int index3, int index4);
+*/
 	virtual TCULongArray *getIndices(TREShapeType shapeType,
 		bool create = false);
 	virtual void draw(void);
 	virtual void setVertexStore(TREVertexStore *vertexStore);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
+	virtual void getMinMax(Vector& min, Vector& max, float* matrix);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -47,13 +57,26 @@ protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
 	virtual TCULong getIndex(TREShapeType shapeType);
+	virtual void addShape(TREShapeType shapeType, int firstIndex, int count);
+/*
 	virtual void addShape(TREShapeType shapeType, int index1, int index2);
 	virtual void addShape(TREShapeType shapeType, int index1, int index2,
 		int index3);
 	virtual void addShape(TREShapeType shapeType, int index1, int index2,
 		int index3, int index4);
+*/
 	virtual void addShapeType(TREShapeType shapeType, int index);
 	virtual void drawShapeType(TREShapeType shapeType);
+	virtual void drawStripShapeType(TREShapeType shapeType);
+	virtual int addStrip(TREShapeType shapeType, Vector *vertices,
+		Vector *normals, int count);
+	virtual void getMinMax(TCULong index, Vector& min, Vector& max,
+		float* matrix);
+	virtual void getMinMax(const TREVertex &vertex, Vector& min, Vector& max);
+	virtual void getMinMax(TCULongArray *indices, Vector& min, Vector& max,
+		float* matrix);
+	virtual void getStripMinMax(TCULongArray *indices, Vector& min, Vector& max,
+		float* matrix);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;

@@ -16,7 +16,10 @@ public:
 	TREVertexStore(const TREVertexStore &other);
 	virtual bool activate(void);
 	virtual int addVertices(Vector *points, int count);
+	virtual int addVertices(Vector *points, Vector *normals, int count);
 	virtual int addVertices(TCULong color, Vector *points, int count);
+	virtual int addVertices(TCULong color, Vector *points, Vector *normals,
+		int count);
 	TCObject *copy(void);
 	virtual void setup(void);
 	virtual void setupColored(void);

@@ -10,6 +10,9 @@ TREMainModel::TREMainModel(void)
 	m_coloredVertexStore(new TREVertexStore)
 {
 	m_mainModel = this;
+	m_mainFlags.compileParts = true;
+	m_mainFlags.compileAll = true;
+	m_mainFlags.compiled = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -53,12 +56,16 @@ void TREMainModel::draw(void)
 {
 	TCULong color = htonl(0xBBBBBBFF);
 
-	if (!m_defaultColorListID)
+	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
 	{
-		m_vertexStore->activate();
-		compileDefaultColor();
-		m_coloredVertexStore->activate();
-		compileColored();
+		if (!m_mainFlags.compiled)
+		{
+			m_vertexStore->activate();
+			compileDefaultColor();
+			m_coloredVertexStore->activate();
+			compileColored();
+			m_mainFlags.compiled = true;
+		}
 	}
 	glColor4ubv((GLubyte*)&color);
 	m_vertexStore->activate();

@@ -17,6 +17,8 @@ public:
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual TREModel *modelNamed(const char *name);
 	virtual void registerModel(TREModel *model);
+	bool getCompileParts(void) { return m_mainFlags.compileParts; }
+	bool getCompileAll(void) { return m_mainFlags.compileAll; }
 	TREVertexStore *getColoredVertexStore(void)
 	{
 		return m_coloredVertexStore;
@@ -30,6 +32,9 @@ protected:
 	TREVertexStore *m_coloredVertexStore;
 	struct
 	{
+		bool compileParts:1;
+		bool compileAll:1;
+		bool compiled:1;
 	} m_mainFlags;
 };
 

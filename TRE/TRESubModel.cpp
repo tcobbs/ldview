@@ -100,3 +100,39 @@ void TRESubModel::drawColored(void)
 	glPopMatrix();
 }
 
+void TRESubModel::getMinMax(Vector& min, Vector& max, float* matrix)
+{
+	float newMatrix[16];
+
+	TREModel::multMatrix(matrix, m_matrix, newMatrix);
+	m_model->getMinMax(min, max, newMatrix);
+}
+
+void TRESubModel::shrink(float amount)
+{
+	Vector min;
+	Vector max;
+	Vector delta;
+	float scaleMatrix[16] = {1.0f, 0.0f, 0.0f, 0.0f,
+							 0.0f, 1.0f, 0.0f, 0.0f,
+							 0.0f, 0.0f, 1.0f, 0.0f,
+							 0.0f, 0.0f, 0.0f, 1.0f};
+	float tempMatrix[16];
+
+	memcpy(tempMatrix, m_matrix, sizeof(tempMatrix));
+	m_model->getMinMax(min, max);
+	delta = max - min;
+	if (delta[0] > amount)
+	{
+		scaleMatrix[0] = (delta[0] - amount) / delta[0];
+	}
+	if (delta[1] > amount)
+	{
+		scaleMatrix[5] = (delta[1] - amount) / delta[1];
+	}
+	if (delta[2] > amount)
+	{
+		scaleMatrix[10] = (delta[2] - amount) / delta[2];
+	}
+	TREModel::multMatrix(tempMatrix, scaleMatrix, m_matrix);
+}

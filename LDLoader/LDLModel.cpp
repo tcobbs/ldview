@@ -25,7 +25,8 @@ LDLModel::LDLModel(void)
 	m_name(NULL),
 	m_fileLines(NULL),
 	m_mainModel(NULL),
-	m_activeLineCount(0)
+	m_activeLineCount(0),
+	m_activeMPDModel(NULL)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
@@ -537,6 +538,7 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 
 				subModel->setFilename(m_filename);
 				initializeNewSubModel(subModel, filename);
+				m_activeMPDModel = subModel;
 			}
 		}
 		else
@@ -546,7 +548,17 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 	}
 	else if (commentLine->isPartMeta())
 	{
-		m_flags.part = true;
+		if (m_flags.mainModelLoaded)
+		{
+			if (m_activeMPDModel)
+			{
+				m_activeMPDModel->m_flags.part = true;
+			}
+		}
+		else
+		{
+			m_flags.part = true;
+		}
 	}
 }
 
@@ -587,6 +599,7 @@ bool LDLModel::read(FILE *file)
 		}
 	}
 	fclose(file);
+	m_activeMPDModel = NULL;
 	return retValue;
 }
 

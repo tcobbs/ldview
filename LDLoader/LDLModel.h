@@ -81,6 +81,7 @@ protected:
 	LDLFileLineArray *m_fileLines;
 	LDLMainModel *m_mainModel;
 	int m_activeLineCount;
+	LDLModel *m_activeMPDModel;
 	struct
 	{
 		// Private flags
