@@ -1451,6 +1451,8 @@ void ModelWindow::setupErrorWindow(void)
 	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE_MASK));
 	errorImageIndices[LDLEParse] = ImageList_Add(himl, hbmp, hMask);
 	errorImageIndices[LDLEGeneral] = errorImageIndices[LDLEParse];
+	errorImageIndices[LDLEBFCError] = errorImageIndices[LDLEParse];
+	errorImageIndices[LDLEMPDError] = errorImageIndices[LDLEParse];
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
@@ -1494,6 +1496,20 @@ void ModelWindow::setupErrorWindow(void)
 	hMask = LoadBitmap(getLanguageModule(),
 		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT_MASK));
 	errorImageIndices[LDLEConcaveQuadSplit] = ImageList_Add(himl, hbmp, hMask);
+	DeleteObject(hbmp);
+	DeleteObject(hMask);
+
+	hbmp = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_MATCHING_POINTS));
+	hMask = LoadBitmap(getLanguageModule(),
+		MAKEINTRESOURCE(IDB_MATCHING_POINTS_MASK));
+	errorImageIndices[LDLEMatchingPoints] = ImageList_Add(himl, hbmp, hMask);
+	DeleteObject(hbmp);
+	DeleteObject(hMask);
+
+	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLINEAR));
+	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLINEAR_MASK));
+	errorImageIndices[LDLEColinear] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 

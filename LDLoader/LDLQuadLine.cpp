@@ -324,7 +324,7 @@ LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
 		char pointBuf[64] = "";
 
 		m_points[m_matchingIndex].print(pointBuf);
-		setWarning(LDLEColinear, "Quad contains identical vertices.\n"
+		setWarning(LDLEMatchingPoints, "Quad contains identical vertices.\n"
 			"Point %d <%s> removed.\n", m_matchingIndex + 1, pointBuf);
 	}
 	else

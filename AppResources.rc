@@ -878,7 +878,7 @@ END
 
 IDB_PARSE               BITMAP  DISCARDABLE     "Icons\\error_parse.bmp"
 IDB_FNF                 BITMAP  DISCARDABLE     "Icons\\error_fnf.bmp"
-IDB_COLOR               BITMAP  DISCARDABLE     "Icons\\error_color.bmp"
+IDB_MATCHING_POINTS     BITMAP  DISCARDABLE     "Icons\\error_matching_points.bmp"
 IDB_CONCAVE_QUAD        BITMAP  DISCARDABLE     "Icons\\error_concave_quad.bmp"
 IDB_CONCAVE_QUAD_SPLIT  BITMAP  DISCARDABLE     "Icons\\error_concave_quad_split.bmp"
 IDB_OPENGL              BITMAP  DISCARDABLE     "Icons\\error_opengl.bmp"
@@ -886,7 +886,7 @@ IDB_DETERMINANT         BITMAP  DISCARDABLE     "Icons\\error_determinant.bmp"
 IDB_INFO                BITMAP  DISCARDABLE     "Icons\\error_info.bmp"
 IDB_PARSE_MASK          BITMAP  DISCARDABLE     "Icons\\error_parse_mask.bmp"
 IDB_CONCAVE_QUAD_MASK   BITMAP  DISCARDABLE     "Icons\\error_concave_quad_mask.bmp"
-IDB_COLOR_MASK          BITMAP  DISCARDABLE     "Icons\\error_color_mask.bmp"
+IDB_MATCHING_POINTS_MASK BITMAP  DISCARDABLE     "Icons\\error_matching_points_mask.bmp"
 IDB_CONCAVE_QUAD_SPLIT_MASK BITMAP  DISCARDABLE     "Icons\\error_concave_quad_split_mask.bmp"
 IDB_DETERMINANT_MASK    BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.bmp"
 IDB_FNF_MASK            BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
@@ -898,6 +898,8 @@ IDB_MATRIX              BITMAP  DISCARDABLE     "icons\\error_matrix.bmp"
 IDB_MATRIX_MASK         BITMAP  DISCARDABLE     "icons\\error_matrix_mask.bmp"
 IDB_NON_FLAT_QUAD       BITMAP  DISCARDABLE     "icons\\error_non_flat_quad.bmp"
 IDB_NON_FLAT_QUAD_MASK  BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask.bmp"
+IDB_COLINEAR            BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
+IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
