@@ -1,6 +1,7 @@
 #include "LDLQuadLine.h"
 #include "LDLTriangleLine.h"
 #include <TCFoundation/TCMacros.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLQuadLine::LDLQuadLine(LDLModel *parentModel, const char *line,
 						 int lineNumber, const char *originalLine)
@@ -51,7 +52,7 @@ bool LDLQuadLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, "Error parsing quad line.");
+		setError(LDLEParse, TCLocalStrings::get("LDLQuadLineParse"));
 		return false;
 	}
 }
@@ -195,7 +196,8 @@ bool LDLQuadLine::swapNeeded(int index1, int index2, int index3, int index4)
 	}
 	if (nonFlat)
 	{
-		setWarning(LDLENonFlatQuad, "Non-flat quad found; results might vary.");
+		setWarning(LDLENonFlatQuad,
+			TCLocalStrings::get("LDLQuadLineNonFlatError"));
 	}
 	return false;
 }
@@ -330,13 +332,13 @@ LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
 		char pointBuf[64] = "";
 
 		m_points[m_matchingIndex].print(pointBuf);
-		setWarning(LDLEMatchingPoints, "Quad contains identical vertices.\n"
-			"Point %d <%s> removed.\n", m_matchingIndex + 1, pointBuf);
+		setWarning(LDLEMatchingPoints,
+			TCLocalStrings::get("LDLQuadLineIdentical"), m_matchingIndex + 1,
+			pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, "Unexpected error removing identical vertices "
-			"from quad.\n");
+		setError(LDLEGeneral, TCLocalStrings::get("LDLQuadLineIdenticalError"));
 	}
 	return fileLineArray;
 }
@@ -350,13 +352,12 @@ LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
 		char pointBuf[64] = "";
 
 		m_points[m_colinearIndex].print(pointBuf);
-		setWarning(LDLEColinear, "Quad contains co-linear points.\n"
-			"Point %d <%s> removed.\n", m_colinearIndex + 1, pointBuf);
+		setWarning(LDLEColinear, TCLocalStrings::get("LDLQuadLineCoLinear"),
+			m_colinearIndex + 1, pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, "Unexpected error removing co-linear points from "
-			"quad.\n");
+		setError(LDLEGeneral, TCLocalStrings::get("LDLQuadLineCoLinearError"));
 	}
 	return fileLineArray;
 }
@@ -389,7 +390,7 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(void)
 	{
 		// All split attempts failed, the quad must not be flat.
 		setError(LDLEConcaveQuad,
-			"Unable to determine split for concave quad.\n");
+			TCLocalStrings::get("LDLQuadLineConcaveError"));
 	}
 	return fileLineArray;
 }
@@ -482,18 +483,16 @@ void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 	}
 	if (m_actionFlags.bfcClip)
 	{
-		setError(LDLEVertexOrder, "Bad vertex sequence in BFC-enabled quad.\n"
-			"(Note: disabling BFC for this quad.)\n"
-			"Original Quad: <%s> <%s> <%s> <%s>\n"
-			"New Quad: <%s> <%s> <%s> <%s>\n", oldBuf[0], oldBuf[1], oldBuf[2],
-			oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
+		setError(LDLEVertexOrder,
+			TCLocalStrings::get("LDLQuadLineBfcBadVertSeq"), oldBuf[0],
+			oldBuf[1], oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2],
+			newBuf[3]);
 	}
 	else
 	{
-		setWarning(LDLEVertexOrder, "Bad vertex sequence.\n"
-			"Original Quad: <%s> <%s> <%s> <%s>\n"
-			"New Quad: <%s> <%s> <%s> <%s>\n", oldBuf[0], oldBuf[1], oldBuf[2],
-			oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
+		setWarning(LDLEVertexOrder,
+			TCLocalStrings::get("LDLQuadLineBadVertSeq"), oldBuf[0], oldBuf[1],
+			oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
 	}
 }
 
@@ -506,12 +505,12 @@ void LDLQuadLine::reportQuadSplit(bool flat, const TCVector& q1,
 {
 	char q1Buf[64], q2Buf[64], q3Buf[64], q4Buf[64];
 	char t1Buf[64], t2Buf[64], t3Buf[64], t4Buf[64], t5Buf[64], t6Buf[64];
-	char *errorTypeString = "Concave";
+	const char *errorTypeString = TCLocalStrings::get("LDLQuadLineConcave");
 	LDLErrorType errorType = LDLEConcaveQuad;
 
 	if (!flat)
 	{
-		errorTypeString = "Non-flat";
+		errorTypeString = TCLocalStrings::get("LDLQuadLineNonFlat");
 		errorType = LDLENonFlatQuad;
 	}
 	q1.print(q1Buf);
@@ -524,10 +523,7 @@ void LDLQuadLine::reportQuadSplit(bool flat, const TCVector& q1,
 	t4.print(t4Buf);
 	t5.print(t5Buf);
 	t6.print(t6Buf);
-	setWarning(errorType, "%s quad split into two triangles.\n"
-		"Original Quad: <%s> <%s> <%s> <%s>\n"
-		"Triangle 1: <%s> <%s> <%s>\n"
-		"Triangle 2: <%s> <%s> <%s>\n",
+	setWarning(errorType, TCLocalStrings::get("LDLQuadLineSpit"),
 		errorTypeString, q1Buf, q2Buf, q3Buf, q4Buf, t1Buf, t2Buf, t3Buf, t4Buf,
 		t5Buf, t6Buf);
 }

@@ -1,4 +1,5 @@
 #include "LDLConditionalLineLine.h"
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLConditionalLineLine::LDLConditionalLineLine(LDLModel *parentModel,
 											   const char *line, int lineNumber,
@@ -47,13 +48,13 @@ bool LDLConditionalLineLine::parse(void)
 		if (getMatchingPoints())
 		{
 			setError(LDLEMatchingPoints,
-				"Both vertices are the same; cannot use");
+				TCLocalStrings::get("LDLCondMatchingVertices"));
 			return false;
 		}
 		if (getMatchingPoints(m_controlPoints, getNumControlPoints()))
 		{
 			setError(LDLEMatchingPoints,
-				"Both control points are the same; cannot use");
+				TCLocalStrings::get("LDLCondMatchingControlPts"));
 			return false;
 		}
 		return true;
@@ -61,7 +62,7 @@ bool LDLConditionalLineLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, "Error parsing conditional line line.");
+		setError(LDLEParse, TCLocalStrings::get("LDLCondParse"));
 		return false;
 	}
 }

@@ -7,6 +7,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 #ifdef WIN32
 #include <direct.h>
@@ -548,8 +549,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 	if (m_flags.bfcInvertNext)
 	{
 		reportError(LDLEBFCError, *commentLine,
-			"First action following BFC INVERTNEXT isn't linetype 1.\n"
-			"Ignoring BFC INVERTNEXT command.");
+			TCLocalStrings::get("LDLModelBfcInvert"));
 		m_flags.bfcInvertNext = false;
 	}
 	if (m_flags.bfcCertify == BFCUnknownState)
@@ -560,7 +560,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (m_flags.started)
 			{
 				reportError(LDLEBFCError, *commentLine,
-					"NOCERTIFY command isn't the first action in file.");
+					TCLocalStrings::get("LDLModelBfcNoCertFirst"));
 			}
 		}
 		else
@@ -569,8 +569,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			{
 				m_flags.bfcCertify = BFCOffState;
 				reportError(LDLEBFCError, *commentLine,
-					"First BFC command isn't the first action in file; "
-					"changing to NOCERTIFY.");
+					TCLocalStrings::get("LDLModelBfcFirst"));
 			}
 			else
 			{
@@ -597,12 +596,12 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (getBFCOn())
 			{
 				reportWarning(LDLEBFCWarning, *commentLine,
-					"CERTIFY command after other BFC commands.");
+					TCLocalStrings::get("LDLModelBfcCertNotFirst"));
 			}
 			else
 			{
 				reportError(LDLEBFCError, *commentLine,
-					"CERTIFY command after NOCERTIFY command.");
+					TCLocalStrings::get("LDLModelBfcCertNoCert"));
 			}
 		}
 		// Not else if below, because each BFC command could potentially
@@ -612,12 +611,12 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (getBFCOn())
 			{
 				reportError(LDLEBFCError, *commentLine,
-					"NOCERTIFY command after CERTIFY command.");
+					TCLocalStrings::get("LDLModelBfcNoCertCert"));
 			}
 			else
 			{
 				reportWarning(LDLEBFCWarning, *commentLine,
-					"Repeat NOCERTIFY command.");
+					TCLocalStrings::get("LDLModelBfcNoCertMulti"));
 			}
 		}
 	}
@@ -628,7 +627,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (commentLine->containsBFCCommand("NOCLIP"))
 			{
 				reportError(LDLEBFCError, *commentLine,
-					"CLIP and NOCLIP both specified in one BFC command.");
+					TCLocalStrings::get("LDLModelBfcClipNoClip"));
 			}
 			else
 			{
@@ -644,7 +643,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (commentLine->containsBFCCommand("CW"))
 			{
 				reportError(LDLEBFCError, *commentLine,
-					"CW and CCW both specified in one BFC command.");
+					TCLocalStrings::get("LDLModelBfcCwCcw"));
 			}
 			else
 			{
@@ -669,7 +668,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			commentLine->containsBFCCommand("INVERTNEXT"))
 		{
 			reportError(LDLEBFCError, *commentLine,
-				"BFC command after NOCERTIFY command.");
+				TCLocalStrings::get("LDLModelBfcAfterNoCert"));
 		}
 	}
 	return 0;

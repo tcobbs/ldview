@@ -1,4 +1,5 @@
 #include "LDLUnknownLine.h"
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLUnknownLine::LDLUnknownLine(LDLModel *parentModel, const char *line,
 							   int lineNumber, const char *originalLine)
@@ -17,7 +18,7 @@ LDLUnknownLine::~LDLUnknownLine(void)
 
 bool LDLUnknownLine::parse(void)
 {
-	setError(LDLEParse, "Error parsing line.");
+	setError(LDLEParse, TCLocalStrings::get("LDLUnknownLineParse"));
 	return false;
 }
 
