@@ -711,7 +711,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 	
 	sprintf(key, "/%s/Sessions/", appName);
 	sessionNames = qSettings->subkeyList(key);
-	if (sessionNames.findIndex(value) == -1)
+	if (value && sessionNames.findIndex(value) == -1)
 	{
 		char srcKey[1024];
 		char dstKey[1024];
