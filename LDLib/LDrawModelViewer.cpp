@@ -1,7 +1,6 @@
 #include "LDrawModelViewer.h"
 #include <TCFoundation/TCMacros.h>
-#include "TGLShape.h"
-#include "TGLStudLogo.h"
+//#include "TGLStudLogo.h"
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCImage.h>
@@ -11,20 +10,13 @@
 #include <LDLoader/LDLError.h>
 #include "LDModelParser.h"
 #include <TRE/TREMainModel.h>
+#include <TRE/TREGL.h>
 
 #define FONT_CHAR_WIDTH 8
 #define FONT_CHAR_HEIGHT 16
 #define FONT_IMAGE_WIDTH 128
 #define FONT_IMAGE_HEIGHT 256
 #define FONT_NUM_CHARACTERS 256
-
-#if defined(__APPLE__)
-#	include <OpenGL/OpenGL.h>
-#	include <GLUT/GLUT.h>
-#else
-#	include <GL/glu.h>
-#endif
-
 #define DEF_DISTANCE_MULT 1.0f
 
 LDrawModelViewer::LDrawModelViewer(int width, int height)
@@ -282,7 +274,7 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	}
 	if (rotationMatrix)
 	{
-		vector = TGLShape::transformPoint(vector, rotationMatrix);
+		vector = vector.transformPoint(rotationMatrix);
 	}
 	distance = (camera.getPosition() - vector).length();
 	currentFov = fov;
@@ -1239,7 +1231,7 @@ void LDrawModelViewer::setupTextures(void)
 		char textureFilename[1024];
 
 		sprintf(textureFilename, "%s/StudLogo.png", programPath);
-		TGLStudLogo::loadTexture(textureFilename);
+//		TGLStudLogo::loadTexture(textureFilename);
 //		sprintf(textureFilename, "%s/Font.png", programPath);
 		sprintf(textureFilename, "%s/SansSerif.fnt", programPath);
 		setupFont(textureFilename);
@@ -1591,7 +1583,7 @@ void LDrawModelViewer::setTextureStuds(bool value)
 	if (value != flags.textureStuds)
 	{
 		flags.textureStuds = value;
-		TGLStudLogo::setTextureStuds(value);
+//		TGLStudLogo::setTextureStuds(value);
 		flags.needsRecompile = true;
 	}
 }
@@ -1601,7 +1593,7 @@ void LDrawModelViewer::setTextureFilterType(int value)
 	if (value != textureFilterType)
 	{
 		textureFilterType = value;
-		TGLStudLogo::setTextureFilterType(value);
+//		TGLStudLogo::setTextureFilterType(value);
 		flags.needsRecompile = true;
 		flags.needsTextureSetup = true;
 	}
@@ -2181,7 +2173,7 @@ bool LDrawModelViewer::getLDrawCommandLineMatrix(char *matrixString,
 				matrix[i] = -rotationMatrix[i];
 			}
 		}
-		point = TGLShape::transformPoint(point, matrix);
+		point = point.transformPoint(matrix);
 		sprintf(buf, "-a%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g,%.2g",
 			matrix[0], matrix[4], matrix[8],
 			matrix[1], matrix[5], matrix[9],
@@ -2218,8 +2210,8 @@ bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
 		{
 			return false;
 		}
-		TGLShape::invertMatrix(rotationMatrix, transformationMatrix);
-		lookAt = TGLShape::transformPoint(lookAt, rotationMatrix);
+		TCVector::invertMatrix(rotationMatrix, transformationMatrix);
+		lookAt = lookAt.transformPoint(rotationMatrix);
 		cameraPoint += lookAt;
 //		cameraPoint = TGLShape::transformPoint(cameraPoint, rotationMatrix);
 		for (i = 0; i < 3; i++)
@@ -2275,7 +2267,7 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 				matrix[i] = -rotationMatrix[i];
 			}
 		}
-		point = TGLShape::transformPoint(point, matrix);
+		point = point.transformPoint(matrix);
 		sprintf(buf, "ldraw -s%.4g -o%d,%d "
 			"-a%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g,%.4g "
 			"%s",

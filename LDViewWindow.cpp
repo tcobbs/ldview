@@ -13,7 +13,6 @@
 #include <TCFoundation/TCStringArray.h>
 #include <CUI/CUIWindowResizer.h>
 #include <afxres.h>
-#include <LDLib/TGLShape.h>
 
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
@@ -1423,7 +1422,7 @@ void LDViewWindow::showTransformationMatrix(void)
 
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 				sizeof(rotationMatrix));
-			TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
 			matrix[12] = cameraPosition[0];
 			matrix[13] = cameraPosition[1];
 			matrix[14] = cameraPosition[2];
@@ -1461,7 +1460,7 @@ void LDViewWindow::showViewInfo(void)
 
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 				sizeof(rotationMatrix));
-			TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
 			cleanupMatrix(matrix);
 			sprintf(matrixString,
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
@@ -1511,7 +1510,7 @@ void LDViewWindow::showRotationMatrix(void)
 
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 				sizeof(rotationMatrix));
-			TGLShape::multMatrix(otherMatrix, rotationMatrix, matrix);
+			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
 			cleanupMatrix(matrix);
 			sprintf(matrixString,
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
