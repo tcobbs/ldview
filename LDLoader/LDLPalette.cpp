@@ -214,8 +214,8 @@ void LDLPalette::initOtherColors(void)
 
 	// Black rubber
 	initSpecular(256, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
-//	m_colors[256].edgeColorNumber = 8;
-	m_colors[256].edgeColorNumber = 0x4000000;
+	m_colors[256].edgeColorNumber = 8;
+//	m_colors[256].edgeColorNumber = 0x4000000;
 
 	// Gray rubber
 	initSpecular(375, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
