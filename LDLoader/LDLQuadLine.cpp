@@ -5,13 +5,15 @@
 LDLQuadLine::LDLQuadLine(LDLModel *parentModel, const char *line,
 						 int lineNumber, const char *originalLine)
 	:LDLShapeLine(parentModel, line, lineNumber, originalLine),
-	m_colinearIndex(-1)
+	m_colinearIndex(-1),
+	m_matchingIndex(-1)
 {
 }
 
 LDLQuadLine::LDLQuadLine(const LDLQuadLine &other)
 	:LDLShapeLine(other),
-	m_colinearIndex(-1)
+	m_colinearIndex(-1),
+	m_matchingIndex(other.m_matchingIndex)
 {
 }
 
@@ -32,8 +34,18 @@ bool LDLQuadLine::parse(void)
 		m_points[1] = TCVector(x2, y2, z2);
 		m_points[2] = TCVector(x3, y3, z3);
 		m_points[3] = TCVector(x4, y4, z4);
-		swapPointsIfNeeded();
-		checkForColinearPoints();
+		// Note that we don't care what the second matching index is, because
+		// we only need to throw out one of the two points, so don't bother to
+		// even read it.
+		if (getMatchingPoints(&m_matchingIndex))
+		{
+			m_valid = false;
+		}
+		else
+		{
+			swapPointsIfNeeded();
+			checkForColinearPoints();
+		}
 		return true;
 	}
 	else
@@ -177,7 +189,7 @@ bool LDLQuadLine::swapNeeded(int index1, int index2, int index3, int index4)
 	}
 	if (nonFlat)
 	{
-		setError(LDLENonFlatQuad, "Non-flat quad found; results might vary.");
+		setWarning(LDLENonFlatQuad, "Non-flat quad found; results might vary.");
 	}
 	return false;
 }
@@ -253,6 +265,10 @@ LDLFileLineArray *LDLQuadLine::getReplacementLines(void)
 	}
 	else
 	{
+		if (m_matchingIndex >= 0)
+		{
+			return removeMatchingPoint();
+		}
 		if (m_colinearIndex >= 0)
 		{
 			return removeColinearPoint();
@@ -264,7 +280,7 @@ LDLFileLineArray *LDLQuadLine::getReplacementLines(void)
 	}
 }
 
-LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
+LDLFileLineArray *LDLQuadLine::removePoint(int index)
 {
 	LDLFileLineArray *fileLineArray = NULL;
 	LDLTriangleLine *triangleLine = NULL;
@@ -272,24 +288,19 @@ LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
 	TCVector &p2 = m_points[1];
 	TCVector &p3 = m_points[2];
 	TCVector &p4 = m_points[3];
-	char pointBuf[64] = "";
 
-	switch (m_colinearIndex)
+	switch (index)
 	{
 	case 0:
-		p1.print(pointBuf);
 		triangleLine = newTriangleLine(p2, p3, p4);
 		break;
 	case 1:
-		p2.print(pointBuf);
 		triangleLine = newTriangleLine(p1, p3, p4);
 		break;
 	case 2:
-		p3.print(pointBuf);
 		triangleLine = newTriangleLine(p1, p2, p4);
 		break;
 	case 3:
-		p4.print(pointBuf);
 		triangleLine = newTriangleLine(p1, p2, p3);
 		break;
 	default:
@@ -300,7 +311,40 @@ LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
 		fileLineArray = new LDLFileLineArray(1);
 		fileLineArray->addObject(triangleLine);
 		triangleLine->release();
-		setError(LDLEColinear, "Quad contains co-linear points.\n"
+	}
+	return fileLineArray;
+}
+
+LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
+{
+	LDLFileLineArray *fileLineArray = removePoint(m_matchingIndex);
+
+	if (fileLineArray)
+	{
+		char pointBuf[64] = "";
+
+		m_points[m_matchingIndex].print(pointBuf);
+		setWarning(LDLEColinear, "Quad contains identical vertices.\n"
+			"Point %d <%s> removed.\n", m_matchingIndex + 1, pointBuf);
+	}
+	else
+	{
+		setError(LDLEGeneral, "Unexpected error removing identical vertices "
+			"from quad.\n");
+	}
+	return fileLineArray;
+}
+
+LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
+{
+	LDLFileLineArray *fileLineArray = removePoint(m_colinearIndex);
+
+	if (fileLineArray)
+	{
+		char pointBuf[64] = "";
+
+		m_points[m_colinearIndex].print(pointBuf);
+		setWarning(LDLEColinear, "Quad contains co-linear points.\n"
 			"Point %d <%s> removed.\n", m_colinearIndex + 1, pointBuf);
 	}
 	else
@@ -440,7 +484,7 @@ void LDLQuadLine::reportQuadSplit(bool flat, const TCVector& q1,
 	t4.print(t4Buf);
 	t5.print(t5Buf);
 	t6.print(t6Buf);
-	setError(errorType, "%s quad split into two triangles.\n"
+	setWarning(errorType, "%s quad split into two triangles.\n"
 		"Original Quad: <%s> <%s> <%s> <%s>\n"
 		"Triangle 1: <%s> <%s> <%s>\n"
 		"Triangle 2: <%s> <%s> <%s>\n",

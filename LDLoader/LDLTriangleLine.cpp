@@ -3,12 +3,16 @@
 
 LDLTriangleLine::LDLTriangleLine(LDLModel *parentModel, const char *line,
 							   int lineNumber, const char *originalLine)
-	:LDLShapeLine(parentModel, line, lineNumber, originalLine)
+	:LDLShapeLine(parentModel, line, lineNumber, originalLine),
+	m_colinearIndex(-1),
+	m_matchingIndex(-1)
 {
 }
 
 LDLTriangleLine::LDLTriangleLine(const LDLTriangleLine &other)
-	:LDLShapeLine(other)
+	:LDLShapeLine(other),
+	m_colinearIndex(other.m_colinearIndex),
+	m_matchingIndex(other.m_matchingIndex)
 {
 }
 
@@ -26,7 +30,17 @@ bool LDLTriangleLine::parse(void)
 		m_points[0] = TCVector(x1, y1, z1);
 		m_points[1] = TCVector(x2, y2, z2);
 		m_points[2] = TCVector(x3, y3, z3);
-		checkForColinearPoints();
+		// Note that we don't care what the second matching index is, because
+		// we only need to throw out one of the two points, so don't bother to
+		// even read it.
+		if (getMatchingPoints(&m_matchingIndex))
+		{
+			m_valid = false;
+		}
+		else
+		{
+			checkForColinearPoints();
+		}
 		return true;
 	}
 	else
@@ -73,6 +87,10 @@ LDLFileLineArray *LDLTriangleLine::getReplacementLines(void)
 	}
 	else
 	{
+		if (m_matchingIndex >= 0)
+		{
+			return removeMatchingPoint();
+		}
 		if (m_colinearIndex >= 0)
 		{
 			return removeColinearPoint();
@@ -84,27 +102,23 @@ LDLFileLineArray *LDLTriangleLine::getReplacementLines(void)
 	}
 }
 
-LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
+LDLFileLineArray *LDLTriangleLine::removePoint(int index)
 {
 	LDLFileLineArray *fileLineArray = NULL;
 	LDLLineLine *lineLine = NULL;
 	TCVector &p1 = m_points[0];
 	TCVector &p2 = m_points[1];
 	TCVector &p3 = m_points[2];
-	char pointBuf[64] = "";
 
-	switch (m_colinearIndex)
+	switch (index)
 	{
 	case 0:
-		p1.print(pointBuf);
 		lineLine = newLineLine(p2, p3);
 		break;
 	case 1:
-		p2.print(pointBuf);
 		lineLine = newLineLine(p1, p3);
 		break;
 	case 2:
-		p3.print(pointBuf);
 		lineLine = newLineLine(p1, p2);
 		break;
 	default:
@@ -115,7 +129,41 @@ LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
 		fileLineArray = new LDLFileLineArray(1);
 		fileLineArray->addObject(lineLine);
 		lineLine->release();
-		setError(LDLEColinear, "Triangle contains co-linear points.\n"
+	}
+	return fileLineArray;
+}
+
+LDLFileLineArray *LDLTriangleLine::removeMatchingPoint(void)
+{
+	LDLFileLineArray *fileLineArray = removePoint(m_matchingIndex);
+
+	if (fileLineArray)
+	{
+		char pointBuf[64] = "";
+
+		m_points[m_matchingIndex].print(pointBuf);
+		setWarning(LDLEMatchingPoints, "Triangle contains identical "
+			"vertices.\nPoint %d <%s> removed.\n", m_matchingIndex + 1,
+			pointBuf);
+	}
+	else
+	{
+		setError(LDLEGeneral, "Unexpected error removing identical vertices "
+			"from triangle.\n");
+	}
+	return fileLineArray;
+}
+
+LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
+{
+	LDLFileLineArray *fileLineArray = removePoint(m_colinearIndex);
+
+	if (fileLineArray)
+	{
+		char pointBuf[64] = "";
+
+		m_points[m_colinearIndex].print(pointBuf);
+		setWarning(LDLEColinear, "Triangle contains co-linear points.\n"
 			"Point %d <%s> removed.\n", m_colinearIndex + 1, pointBuf);
 	}
 	else

@@ -1,7 +1,6 @@
 #include "LDLFileLine.h"
 #include <string.h>
 #include <stdio.h>
-#include <stdarg.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 
@@ -64,17 +63,33 @@ LDLFileLine::operator const char *(void) const
 	}
 }
 
-void LDLFileLine::setError(LDLErrorType type, const char* format, ...)
+void LDLFileLine::setErrorV(LDLErrorType type, const char* format,
+							va_list argPtr)
 {
-	va_list argPtr;
-
 	if (m_error)
 	{
 		m_error->release();
 	}
-	va_start(argPtr, format);
 	m_error = m_parentModel->newError(type, *this, format, argPtr);
+}
+
+void LDLFileLine::setError(LDLErrorType type, const char* format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	setErrorV(type, format, argPtr);
 	va_end(argPtr);
+}
+
+void LDLFileLine::setWarning(LDLErrorType type, const char* format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	setErrorV(type, format, argPtr);
+	va_end(argPtr);
+	m_error->setLevel(LDLAWarning);
 }
 
 int LDLFileLine::scanLineType(const char *line)

@@ -4,6 +4,7 @@
 #include <TCFoundation/TCObject.h>
 #include <LDLoader/LDLError.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <stdarg.h>
 
 // The following is needed in order to declare the array below (which is used
 // in the definition of LDLFileLine itself).
@@ -52,7 +53,10 @@ protected:
 	LDLFileLine(const LDLFileLine &other);
 	virtual ~LDLFileLine(void);
 	virtual void dealloc(void);
+	virtual void setErrorV(LDLErrorType type, const char* format,
+		va_list argPtr);
 	virtual void setError(LDLErrorType type, const char* format, ...);
+	virtual void setWarning(LDLErrorType type, const char* format, ...);
 
 	static bool lineIsEmpty(const char *line);
 	static int scanLineType(const char *line);

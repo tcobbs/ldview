@@ -12,18 +12,24 @@ typedef enum
 	LDLEParse,
 	LDLEFileNotFound,
 	LDLEMatrix,
-	LDLEMatrixFailed,
 	LDLEPartDeterminant,
 	LDLENonFlatQuad,
 	LDLEConcaveQuad,
 	LDLEConcaveQuadSplit,
+	LDLEMatchingPoints,
 	LDLEOpenGL,
-	LDLEColor,
 	LDLEColinear,
 	LDLEBFCWarning,
 	LDLEBFCError,
 	LDLEMPDError
 } LDLErrorType;
+
+typedef enum
+{
+	LDLACriticalError,	// This means the model couldn't be loaded at all.
+	LDLAError,
+	LDLAWarning
+} LDLAlertLevel;
 
 class LDLError: public TCAlert
 {
@@ -37,8 +43,8 @@ public:
 	int getLineNumber(void) { return m_lineNumber; }
 	static TCULong alertClass(void) { return 1; }
 	virtual const char *getTypeName(void);
-	void setLevel(int value) { m_level = value; }
-	int getLevel(void) { return m_level; }
+	void setLevel(LDLAlertLevel value) { m_level = value; }
+	LDLAlertLevel getLevel(void) { return m_level; }
 protected:
 	virtual ~LDLError(void);
 	virtual void dealloc(void);
@@ -47,7 +53,7 @@ protected:
 	char *m_filename;
 	char *m_fileLine;
 	int m_lineNumber;
-	int m_level;
+	LDLAlertLevel m_level;
 };
 
 #endif // __LDLERROR_H__

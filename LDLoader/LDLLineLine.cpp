@@ -23,6 +23,7 @@ bool LDLLineLine::parse(void)
 		m_points = new TCVector[2];
 		m_points[0] = TCVector(x1, y1, z1);
 		m_points[1] = TCVector(x2, y2, z2);
+		getMatchingPoints();
 		return true;
 	}
 	else

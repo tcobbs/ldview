@@ -50,8 +50,8 @@ bool LDLMainModel::load(const char *filename)
 	if (!strlen(lDrawDir()))
 	{
 		error = newError(LDLEGeneral, "Could not find LDraw directory.");
-		error->setLevel(0);
-		reportError(error);
+		error->setLevel(LDLACriticalError);
+		sendAlert(error);
 		error->release();
 		return false;
 	}
@@ -68,8 +68,8 @@ bool LDLMainModel::load(const char *filename)
 	else
 	{
 		error = newError(LDLEFileNotFound, "Could not find main model file.");
-		error->setLevel(0);
-		reportError(error);
+		error->setLevel(LDLACriticalError);
+		sendAlert(error);
 		error->release();
 		return false;
 	}

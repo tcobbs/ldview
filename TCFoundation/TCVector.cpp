@@ -253,7 +253,7 @@ TCVector& TCVector::operator=(const TCVector& right)
 // Returns:
 //		If the contents of "*this" equal the contents of "right", then 1.
 //		Otherwise, 0.  The contents are defined to be equal if they are within a
-//		very small distance from each other.
+//		small distance from each other (based on the default epsilon).
 int TCVector::operator==(const TCVector& right) const
 {
 	return fEq(vector[0], right.vector[0]) &&
@@ -499,6 +499,12 @@ void TCVector::multMatrixd(const double *left, const double *right,
 		left[10] * right[14] + left[14] * right[15];
 	result[15] = left[3] * right[12] + left[7] * right[13] +
 		left[11] * right[14] + left[15] * right[15];
+}
+
+bool TCVector::exactlyEquals(const TCVector &right) const
+{
+	return vector[0] == right.vector[0] && vector[1] == right.vector[1] &&
+		vector[2] == right.vector[2];
 }
 
 bool TCVector::approxEquals(const TCVector &right, float epsilon) const
