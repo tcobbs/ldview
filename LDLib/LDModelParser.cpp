@@ -45,6 +45,7 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	if (m_flags.flattenParts)
 	{
 		treModel->flatten();
+		treModel->getInvertedModel();
 	}
 	if (subModel)
 	{

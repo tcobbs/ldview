@@ -36,6 +36,7 @@ class TREShapeGroup : public TCObject
 public:
 	TREShapeGroup(void);
 	TREShapeGroup(const TREShapeGroup &other);
+	virtual TCObject *copy(void);
 	virtual int addLine(TCVector *vertices);
 	virtual int addTriangle(TCVector *vertices);
 	virtual int addTriangle(TCVector *vertices, TCVector *normals);
@@ -66,6 +67,7 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
+	virtual void invert(void);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);

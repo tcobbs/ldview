@@ -25,8 +25,7 @@ TREVertexStore::TREVertexStore(void)
 }
 
 TREVertexStore::TREVertexStore(const TREVertexStore &other)
-	:TCObject(other),
-	m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
+	:m_vertices((TREVertexArray *)TCObject::copy(other.m_vertices)),
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
 	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
 	m_varVerticesOffset(0),

@@ -18,6 +18,18 @@ TCArray::TCArray(unsigned int allocated)
 #endif
 }
 
+TCArray::TCArray(const TCArray &other)
+	:items(NULL),
+	count(other.count),
+	allocated(other.count)
+{
+	if (allocated)
+	{
+		items = new void*[count];
+	}
+	memcpy(items, other.items, count);
+}
+
 TCArray::~TCArray(void)
 {
 }
@@ -187,8 +199,5 @@ void* TCArray::operator[](unsigned int index)
 
 TCObject *TCArray::copy(void)
 {
-	TCArray *newArray = new TCArray(count);
-
-	memcpy(newArray->items, items, count);
-	return newArray;
+	return new TCArray(*this);
 }

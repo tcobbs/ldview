@@ -14,6 +14,7 @@ class TCExport TCObject
 		virtual TCObject* autorelease(void);
 		virtual int isEqual(TCObject& other);
 		virtual TCObject *copy(void);
+		int getRetainCount(void) { return retainCount; }
 
 		static TCObject *retain(TCObject *object);
 		static void release(TCObject *object);

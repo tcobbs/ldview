@@ -13,7 +13,9 @@ class TRESubModel : public TCObject
 public:
 	TRESubModel(void);
 	TRESubModel(const TRESubModel &other);
+	TRESubModel(const TRESubModel &other, bool shallow);
 	virtual TCObject *copy(void);
+	virtual TRESubModel *shallowCopy(void);
 	virtual void setModel(TREModel *model);
 	virtual TREModel *getModel(void) const { return m_model; }
 	virtual void setMatrix(float *matrix);
@@ -21,10 +23,10 @@ public:
 	virtual void setColor(TCULong color, TCULong edgeColor);
 	virtual TCULong getColor(void);
 	virtual TCULong getEdgeColor(void);
-	virtual bool isColorSet(void) { return m_colorSet; }
+	virtual bool isColorSet(void) { return m_flags.colorSet != false; }
 //	virtual void draw(void);
 	virtual void drawColored(void);
-	virtual void drawDefaultColor(void);
+	virtual void drawDefaultColor(const float *matrix);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColoredLines(void);
 	virtual void drawEdgeLines(void);
@@ -33,15 +35,21 @@ public:
 		TREScanPointCallback scanPointCallback, float *matrix);
 	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
 	virtual void shrink(float amount);
+	TRESubModel *getInvertedSubModel(void);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);
+	virtual void invert(TRESubModel *originalSubModel);
 
 	TREModel *m_model;
+	TRESubModel *m_invertedSubModel;
 	float m_matrix[16];
 	TCULong m_color;
 	TCULong m_edgeColor;
-	bool m_colorSet;
+	struct {
+		bool colorSet:1;
+		bool inverted:1;
+	} m_flags;
 };
 
 #endif // __TRESUBMODEL_H__

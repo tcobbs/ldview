@@ -6,18 +6,31 @@
 
 TRESubModel::TRESubModel(void)
 	:m_model(NULL),
+	m_invertedSubModel(NULL),
 	m_color(0),
-	m_edgeColor(0),
-	m_colorSet(false)
+	m_edgeColor(0)
 {
+	m_flags.colorSet = false;
+	m_flags.inverted = false;
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
-	:TCObject(other),
-	m_model((TREModel *)TCObject::copy(other.m_model)),
+	:m_model((TREModel *)TCObject::copy(other.m_model)),
+	m_invertedSubModel((TRESubModel *)TCObject::copy(other.m_invertedSubModel)),
 	m_color(other.m_color),
 	m_edgeColor(other.m_edgeColor),
-	m_colorSet(other.m_colorSet)
+	m_flags(other.m_flags)
+{
+	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
+}
+
+TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
+	:m_model(shallow ? NULL : (TREModel *)TCObject::copy(other.m_model)),
+	m_invertedSubModel(shallow ? NULL :
+		(TRESubModel *)TCObject::copy(other.m_invertedSubModel)),
+	m_color(other.m_color),
+	m_edgeColor(other.m_edgeColor),
+	m_flags(other.m_flags)
 {
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
 }
@@ -29,12 +42,39 @@ TRESubModel::~TRESubModel(void)
 void TRESubModel::dealloc(void)
 {
 	TCObject::release(m_model);
+	if (!m_flags.inverted)
+	{
+		TCObject::release(m_invertedSubModel);
+	}
 	TCObject::dealloc();
 }
 
 TCObject *TRESubModel::copy(void)
 {
 	return new TRESubModel(*this);
+}
+
+TRESubModel *TRESubModel::shallowCopy(void)
+{
+	return new TRESubModel(*this, true);
+}
+
+TRESubModel *TRESubModel::getInvertedSubModel(void)
+{
+	if (!m_invertedSubModel)
+	{
+		m_invertedSubModel = shallowCopy();
+		m_invertedSubModel->invert(this);
+	}
+	return m_invertedSubModel;
+}
+
+void TRESubModel::invert(TRESubModel *originalSubModel)
+{
+	m_invertedSubModel = originalSubModel;
+	m_flags.inverted = true;
+	m_model = originalSubModel->m_model->getInvertedModel();
+	m_model->retain();
 }
 
 void TRESubModel::setModel(TREModel *model)
@@ -53,7 +93,7 @@ void TRESubModel::setColor(TCULong color, TCULong edgeColor)
 {
 	m_color = htonl(color);
 	m_edgeColor = htonl(edgeColor);
-	m_colorSet = true;
+	m_flags.colorSet = true;
 }
 
 TCULong TRESubModel::getColor(void)
@@ -69,7 +109,7 @@ TCULong TRESubModel::getEdgeColor(void)
 /*
 void TRESubModel::draw(void)
 {
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPushAttrib(GL_CURRENT_BIT);
 		glColor4ubv((GLubyte*)&m_color);
@@ -78,25 +118,35 @@ void TRESubModel::draw(void)
 	glMultMatrixf(m_matrix);
 	m_model->draw();
 	glPopMatrix();
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPopAttrib();
 	}
 }
 */
 
-void TRESubModel::drawDefaultColor(void)
+void TRESubModel::drawDefaultColor(const float *matrix)
 {
-	if (m_colorSet)
+	float newMatrix[16];
+
+	if (m_flags.colorSet)
 	{
 		glPushAttrib(GL_CURRENT_BIT);
 		glColor4ubv((GLubyte*)&m_color);
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	m_model->drawDefaultColor();
+	TCVector::multMatrix(matrix, m_matrix, newMatrix);
+	if (TCVector::determinant(newMatrix) < 0.0f)
+	{
+		m_model->getInvertedModel()->drawDefaultColor(newMatrix);
+	}
+	else
+	{
+		m_model->drawDefaultColor(newMatrix);
+	}
 	glPopMatrix();
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPopAttrib();
 	}
@@ -104,7 +154,7 @@ void TRESubModel::drawDefaultColor(void)
 
 void TRESubModel::drawDefaultColorLines(void)
 {
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPushAttrib(GL_CURRENT_BIT);
 		glColor4ubv((GLubyte*)&m_color);
@@ -113,7 +163,7 @@ void TRESubModel::drawDefaultColorLines(void)
 	glMultMatrixf(m_matrix);
 	m_model->drawDefaultColorLines();
 	glPopMatrix();
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPopAttrib();
 	}
@@ -121,7 +171,7 @@ void TRESubModel::drawDefaultColorLines(void)
 
 void TRESubModel::drawEdgeLines(void)
 {
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPushAttrib(GL_CURRENT_BIT);
 		glColor4ubv((GLubyte*)&m_edgeColor);
@@ -130,7 +180,7 @@ void TRESubModel::drawEdgeLines(void)
 	glMultMatrixf(m_matrix);
 	m_model->drawEdgeLines();
 	glPopMatrix();
-	if (m_colorSet)
+	if (m_flags.colorSet)
 	{
 		glPopAttrib();
 	}

@@ -20,6 +20,11 @@ void TREColoredShapeGroup::dealloc(void)
 	TREShapeGroup::dealloc();
 }
 
+TCObject *TREColoredShapeGroup::copy(void)
+{
+	return new TREColoredShapeGroup(*this);
+}
+
 int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
 								   TCVector *vertices, int count)
 {

@@ -12,6 +12,31 @@ template <class Type> class TCTypedObjectArray : public TCObjectArray
 	public:
 		explicit TCTypedObjectArray(unsigned int count = 0)
 			:TCObjectArray(count) {}
+		TCTypedObjectArray(const TCTypedObjectArray<Type> &other)
+			:TCObjectArray(other) {}
+/*
+		{
+			unsigned int i;
+
+			for (i = 0; i < count; i++)
+			{
+				Type *object = (Type*)other.items[i];
+
+				if (object)
+				{
+					items[i] = object->copy();
+				}
+				else
+				{
+					items[i] = NULL;
+				}
+			}
+		}
+*/
+		virtual TCObject *copy(void)
+		{
+			return new TCTypedObjectArray<Type>(*this);
+		}
 
 		void addObject(Type* object)
 			{ TCObjectArray::addObject(object); }

@@ -17,16 +17,85 @@ TREShapeGroup::TREShapeGroup(void)
 }
 
 TREShapeGroup::TREShapeGroup(const TREShapeGroup &other)
-	:TCObject(other),
-	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
-	m_indices((TCULongArrayArray *)TCObject::copy(other.m_indices)),
-	m_stripCounts((TCULongArrayArray *)TCObject::copy(other.m_stripCounts)),
+	:m_vertexStore(other.m_vertexStore),
+	m_indices(NULL),
+	m_stripCounts(NULL),
+	m_multiDrawIndices(NULL),
 	m_shapesPresent(other.m_shapesPresent)
 {
+	m_vertexStore->retain();
+	if (other.m_stripCounts)
+	{
+		int shapeTypeCount = other.m_stripCounts->getCount();
+		int i, j;
+
+		m_stripCounts = new TCULongArrayArray(shapeTypeCount);
+		for (i = 0; i < shapeTypeCount; i++)
+		{
+			TCULongArray *thoseStripCounts = (*other.m_stripCounts)[i];
+
+			if (thoseStripCounts)
+			{
+				int numStrips = thoseStripCounts->getCount();
+				TCULongArray *theseStripCounts = new TCULongArray(numStrips);
+
+				for (j = 0; j < numStrips; j++)
+				{
+					theseStripCounts->addValue((*thoseStripCounts)[j]);
+				}
+				m_stripCounts->addObject(theseStripCounts);
+				theseStripCounts->release();
+			}
+			else
+			{
+				m_stripCounts->addObject(NULL);
+			}
+		}
+	}
+	if (other.m_shapesPresent)
+	{
+		int i, j;
+		int shapeTypeCount = other.m_indices->getCount();
+		TREVertexArray *vertices = m_vertexStore->getVertices();
+		TREVertexArray *normals = m_vertexStore->getNormals();
+		TCULongArray *colors = m_vertexStore->getColors();
+
+		m_indices = new TCULongArrayArray(shapeTypeCount);
+		for (i = 0; i < shapeTypeCount; i++)
+		{
+			TCULongArray *thoseIndices = (*other.m_indices)[i];
+			int indexCount = thoseIndices->getCount();
+			TCULongArray *theseIndices = new TCULongArray(indexCount);
+
+			m_indices->addObject(theseIndices);
+			for (j = 0; j < indexCount; j++)
+			{
+				int index = (*thoseIndices)[j];
+				TREVertex vertex = (*vertices)[index];
+				TREVertex normal = (*normals)[index];
+
+				theseIndices->addValue(vertices->getCount());
+				vertices->addVertex(vertex);
+				normals->addVertex(normal);
+				if (colors)
+				{
+					TCULong color = (*colors)[index];
+
+					colors->addValue(color);
+				}
+			}
+			theseIndices->release();
+		}
+	}
 }
 
 TREShapeGroup::~TREShapeGroup(void)
 {
+}
+
+TCObject *TREShapeGroup::copy(void)
+{
+	return new TREShapeGroup(*this);
 }
 
 void TREShapeGroup::dealloc(void)
@@ -61,7 +130,7 @@ void TREShapeGroup::addShapeType(TREShapeType shapeType, int index)
 	{
 		TCULongArray *newCountArray = new TCULongArray;
 
-		newCountArray->addValue(0);
+//		newCountArray->addValue(0);
 		m_stripCounts->insertObject(newCountArray, index);
 		newCountArray->release();
 	}
@@ -216,12 +285,57 @@ int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 	}
 }
 
+/*
+static void printULongArray(char *label, TCULongArray *array)
+{
+	printf("%s", label);
+	if (array)
+	{
+		int i;
+		int count = array->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			printf("%d ", (*array)[i]);
+		}
+	}
+	printf("\n");
+}
+*/
+
 void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 {
 	TCULongArray *indexArray = getIndices(shapeType);
 
 	if (indexArray)
 	{
+//		int count = indexArray->getCount();
+//		TCULong *values = indexArray->getValues();
+//		int i;
+
+/*
+		printf("TREShapeGroup::drawShapeType\n");
+		for (i = 0; i < count; i++)
+		{
+			TCULong index = values[i];
+			TREVertex vertex = (*m_vertexStore->getVertices())[index];
+			TREVertex normal = (*m_vertexStore->getNormals())[index];
+
+			printf("%10f %10f %10f      ", vertex.v[0], vertex.v[1], vertex.v[2]);
+			printf("%10f %10f %10f\n", normal.v[0], normal.v[1], normal.v[2]);
+		}
+		if (!_CrtIsValidPointer(values, count * 4, TRUE))
+		{
+			printf("Bad Pointer!\n");
+		}
+*/
+/*
+		printf(" count: %d\n", count);
+		printf("values: 0x%08X\n", values);
+		printf("retain: %d\n", indexArray->getRetainCount());
+		printf("    vc: %d\n", m_vertexStore->getVertices()->getCount());
+		printULongArray("", indexArray);
+*/
 		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
 			GL_UNSIGNED_INT, indexArray->getValues());
 	}
@@ -344,6 +458,7 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 					{
 						initMultiDrawIndices();
 					}
+//					printf("TREShapeGroup::drawStripShapeType:multi\n");
 					glMultiDrawElementsEXT(glMode,
 						(GLsizei *)countArray->getValues(), GL_UNSIGNED_INT,
 						(const void **)m_multiDrawIndices[shapeTypeIndex],
@@ -354,7 +469,24 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 					TCULong *indices = indexArray->getValues();
 					int indexOffset = 0;
 					int i;
+/*
+					int count = indexArray->getCount();
 
+					printf("TREShapeGroup::drawStripShapeType:nonmulti\n");
+					if (!_CrtIsValidPointer(indices, count * 4, TRUE))
+					{
+						printf("Bad Pointer!\n");
+					}
+					for (i = 0; i < count; i++)
+					{
+						TCULong index = indices[i];
+						TREVertex vertex = (*m_vertexStore->getVertices())[index];
+						TREVertex normal = (*m_vertexStore->getNormals())[index];
+
+						printf("%10f %10f %10f      ", vertex.v[0], vertex.v[1], vertex.v[2]);
+						printf("%10f %10f %10f\n", normal.v[0], normal.v[1], normal.v[2]);
+					}
+*/
 					for (i = 0; i < numStrips; i++)
 					{
 						int stripCount = (*countArray)[i];
@@ -566,7 +698,7 @@ void TREShapeGroup::scanStripPoints(TCULongArray *indices,
 			int stripCount = (*stripCounts)[i];
 			for (j = 0; j < stripCount; j++)
 			{
-				scanPoints((*indices)[i + indexOffset], scanner,
+				scanPoints((*indices)[j + indexOffset], scanner,
 					scanPointCallback, matrix);
 			}
 			indexOffset += stripCount;
@@ -636,7 +768,7 @@ void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
 			int stripCount = (*stripCounts)[i];
 			for (j = 0; j < stripCount; j++)
 			{
-				unshrinkNormal((*indices)[i + indexOffset],matrix,
+				unshrinkNormal((*indices)[j + indexOffset], matrix,
 					unshrinkMatrix);
 			}
 			indexOffset += stripCount;
@@ -667,4 +799,99 @@ void TREShapeGroup::unshrinkNormal(TCULong index, float *matrix,
 	normal.v[1] *= adjust;
 	normal.v[2] *= adjust;
 	normals->replaceVertex(normal, index);
+}
+
+static void invertULongArray(TCULongArray *array, int start = 0, int end = -1)
+{
+	int i;
+	int count = array->getCount();
+
+	if (end == -1)
+	{
+		end = count;
+	}
+	for (i = start; i < (end - start) / 2 + start; i++)
+	{
+		TCULong temp1 = (*array)[i];
+		TCULong temp2 = (*array)[end - i - 1 + start];
+
+		array->replaceValue(temp2, i);
+		array->replaceValue(temp1, end - i - 1 + start);
+	}
+}
+
+void TREShapeGroup::invert(void)
+{
+	if (m_indices)
+	{
+		int i, j;
+		int shapeTypeCount = m_indices->getCount();
+		int firstStripIndex = getShapeTypeIndex(TRESFirstStrip);
+		int triangleStripIndex = getShapeTypeIndex(TRESTriangleStrip);
+		int quadStripIndex = getShapeTypeIndex(TRESQuadStrip);
+		int triangleFanIndex = getShapeTypeIndex(TRESTriangleFan);
+
+		for (i = 0; i < shapeTypeCount; i++)
+		{
+			TCULongArray *theseIndices = (*m_indices)[i];
+			TCULongArray *theseStripCounts = (*m_stripCounts)[i];
+			int indexCount = theseIndices->getCount();
+
+			if (i < firstStripIndex)
+			{
+//				printULongArray("in: ", theseIndices);
+				invertULongArray(theseIndices);
+//				printULongArray("in: ", theseIndices);
+			}
+			else
+			{
+				if ((m_shapesPresent & TRESTriangleStrip) &&
+					i == triangleStripIndex)
+				{
+					if ((*theseStripCounts)[i] % 2)
+					{
+//						printULongArray("sc: ", theseStripCounts);
+						invertULongArray(theseStripCounts);
+//						printULongArray("sc: ", theseStripCounts);
+					}
+					else
+					{
+						printf("Cannot invert tri strip with even number of "
+							"points.\n");
+					}
+				}
+				else if ((m_shapesPresent & TRESQuadStrip) &&
+					i == quadStripIndex)
+				{
+//					printULongArray("qs: ", theseIndices);
+					for (j = 0; j < indexCount; j += 2)
+					{
+						TCULong temp1 = (*theseIndices)[j];
+						TCULong temp2 = (*theseIndices)[j + 1];
+
+						theseIndices->replaceValue(temp2, j);
+						theseIndices->replaceValue(temp1, j + 1);
+					}
+//					printULongArray("qs: ", theseIndices);
+				}
+				else if ((m_shapesPresent & TRESTriangleFan) &&
+					i == triangleFanIndex)
+				{
+					int numStrips = theseStripCounts->getCount();
+					int indexOffset = 0;
+
+//					printULongArray("tf: ", theseIndices);
+					for (j = 0; j < numStrips; j++)
+					{
+						int stripCount = (*theseStripCounts)[j];
+
+						invertULongArray(theseIndices, indexOffset + 1,
+							indexOffset + stripCount);
+						indexOffset += stripCount;
+					}
+//					printULongArray("tf: ", theseIndices);
+				}
+			}
+		}
+	}
 }
