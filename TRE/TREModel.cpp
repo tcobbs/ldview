@@ -8,7 +8,7 @@
 #include "TREGL.h"
 
 #include <TCFoundation/mystring.h>
-#include <LDLoader/LDLMacros.h>		// TODO: remove dependency
+#include <TCFoundation/TCMacros.h>
 
 bool TREModel::sm_normalizeOn = false;
 
@@ -104,6 +104,7 @@ void TREModel::setName(const char *name)
 	m_name = copyString(name);
 }
 
+/*
 void TREModel::draw(void)
 {
 	if (m_flags.part)
@@ -135,6 +136,7 @@ void TREModel::draw(void)
 		}
 	}
 }
+*/
 
 void TREModel::compileDefaultColor(void)
 {
@@ -1205,6 +1207,37 @@ void TREModel::calculateBoundingBox(void)
 	}
 }
 
+void TREModel::scanPoints(TCObject *scanner,
+						  TREScanPointCallback scanPointCallback, float *matrix)
+{
+	if (m_shapes)
+	{
+		m_shapes->scanPoints(scanner, scanPointCallback, matrix);
+	}
+	if (m_coloredShapes)
+	{
+		m_coloredShapes->scanPoints(scanner, scanPointCallback, matrix);
+	}
+	if (m_edgeShapes)
+	{
+		m_edgeShapes->scanPoints(scanner, scanPointCallback, matrix);
+	}
+	if (m_coloredEdgeShapes)
+	{
+		m_coloredEdgeShapes->scanPoints(scanner, scanPointCallback, matrix);
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->scanPoints(scanner, scanPointCallback, matrix);
+		}
+	}
+}
+
 void TREModel::getMinMax(TCVector& min, TCVector& max, float* matrix)
 {
 	if (m_shapes)
@@ -1214,6 +1247,14 @@ void TREModel::getMinMax(TCVector& min, TCVector& max, float* matrix)
 	if (m_coloredShapes)
 	{
 		m_coloredShapes->getMinMax(min, max, matrix);
+	}
+	if (m_edgeShapes)
+	{
+		m_edgeShapes->getMinMax(min, max, matrix);
+	}
+	if (m_coloredEdgeShapes)
+	{
+		m_coloredEdgeShapes->getMinMax(min, max, matrix);
 	}
 	if (m_subModels)
 	{
@@ -1247,5 +1288,36 @@ void TREModel::getMinMax(TCVector& min, TCVector& max)
 		max[1] = -9999999.0f;
 		max[2] = -9999999.0f;
 		getMinMax(min, max, identityMatrix);
+	}
+}
+
+void TREModel::getMaxRadiusSquared(const TCVector &center, float &rSquared,
+								   float *matrix)
+{
+	if (m_shapes)
+	{
+		m_shapes->getMaxRadiusSquared(center, rSquared, matrix);
+	}
+	if (m_coloredShapes)
+	{
+		m_coloredShapes->getMaxRadiusSquared(center, rSquared, matrix);
+	}
+	if (m_edgeShapes)
+	{
+		m_edgeShapes->getMaxRadiusSquared(center, rSquared, matrix);
+	}
+	if (m_coloredEdgeShapes)
+	{
+		m_coloredEdgeShapes->getMaxRadiusSquared(center, rSquared, matrix);
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->getMaxRadiusSquared(center, rSquared, matrix);
+		}
 	}
 }

@@ -4,7 +4,10 @@
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCVector.h>
 #include <TRE/TREGL.h>
+
+typedef void (TCObject::*TREScanPointCallback)(const TCVector &point);
 
 typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 
@@ -59,6 +62,10 @@ public:
 	virtual void setVertexStore(TREVertexStore *vertexStore);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
+	virtual void getMaxRadiusSquared(const TCVector &center, float &rSquared,
+		float *matrix);
+	virtual void scanPoints(TCObject *scanner,
+		TREScanPointCallback scanPointCallback, float* matrix);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -84,6 +91,7 @@ protected:
 	virtual void drawStripShapeType(TREShapeType shapeType);
 	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
 		TCVector *normals, int count);
+
 	virtual void getMinMax(TCULong index, TCVector& min, TCVector& max,
 		float* matrix);
 	virtual void getMinMax(const TREVertex &vertex, TCVector& min, TCVector& max);
@@ -91,6 +99,24 @@ protected:
 		float* matrix);
 	virtual void getStripMinMax(TCULongArray *indices, TCVector& min, TCVector& max,
 		float* matrix);
+
+	virtual void getMaxRadiusSquared(TCULong index, const TCVector &center,
+		float &rSquared, float* matrix);
+	virtual void getMaxRadiusSquared(const TREVertex &vertex,
+		const TCVector &center, float &rSquared);
+	virtual void getMaxRadiusSquared(TCULongArray *indices,
+		const TCVector &center, float &rSquared, float* matrix);
+	virtual void getStripMaxRadiusSquared(TCULongArray *indices,
+		const TCVector &center, float &rSquared, float* matrix);
+
+	virtual void scanPoints(TCULong index, TCObject *scanner,
+		TREScanPointCallback scanPointCallback, float* matrix);
+	virtual void scanPoints(const TREVertex &vertex, TCObject *scanner,
+		TREScanPointCallback scanPointCallback);
+	virtual void scanPoints(TCULongArray *indices, TCObject *scanner,
+		TREScanPointCallback scanPointCallback, float* matrix);
+	virtual void scanStripPoints(TCULongArray *indices, TCObject *scanner,
+		TREScanPointCallback scanPointCallback, float* matrix);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;

@@ -45,6 +45,8 @@ public:
 	virtual const char *getTypeName(void);
 	void setLevel(LDLAlertLevel value) { m_level = value; }
 	LDLAlertLevel getLevel(void) { return m_level; }
+	void cancelLoad(void) { m_loadCanceled = true; }
+	bool getLoadCanceled(void) { return m_loadCanceled; }
 protected:
 	virtual ~LDLError(void);
 	virtual void dealloc(void);
@@ -54,6 +56,7 @@ protected:
 	char *m_fileLine;
 	int m_lineNumber;
 	LDLAlertLevel m_level;
+	bool m_loadCanceled;
 };
 
 #endif // __LDLERROR_H__

@@ -10,7 +10,7 @@
 #include <TRE/TREVertexArray.h>
 #include <TRE/TREShapeGroup.h>
 #include <TCFoundation/mystring.h>
-#include <LDLoader/LDLMacros.h>
+#include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 
 static const int LO_NUM_SEGMENTS = 8;

@@ -1,6 +1,7 @@
 #include "TREMainModel.h"
 #include "TREVertexStore.h"
 #include "TREGL.h"
+#include <math.h>
 
 #include <TCFoundation/TCDictionary.h>
 
@@ -12,7 +13,8 @@ TREMainModel::TREMainModel(void)
 	m_vertexStore(new TREVertexStore),
 	m_coloredVertexStore(new TREVertexStore),
 	m_color(htonl(0x999999FF)),
-	m_edgeColor(htonl(0x666658FF))
+	m_edgeColor(htonl(0x666658FF)),
+	m_maxRadiusSquared(0.0f)
 {
 	m_mainModel = this;
 	m_mainFlags.compileParts = true;
@@ -156,4 +158,43 @@ void TREMainModel::setTwoSidedLightingFlag(bool value)
 	m_mainFlags.twoSidedLighting = value;
 	m_vertexStore->setTwoSidedLightingFlag(value);
 	m_coloredVertexStore->setTwoSidedLightingFlag(value);
+}
+
+float TREMainModel::getMaxRadiusSquared(const TCVector &center)
+{
+	if (!m_maxRadiusSquared)
+	{
+		float identityMatrix[16];
+		TCVector::initIdentityMatrix(identityMatrix);
+
+		m_center = center;
+		scanPoints(this, (TREScanPointCallback)scanMaxRadiusSquaredPoint,
+			identityMatrix);
+	}
+	return m_maxRadiusSquared;
+/*
+	float rSquared = 0.0f;
+
+	TCVector::initIdentityMatrix(identityMatrix);
+	TREModel::getMaxRadiusSquared(center, rSquared, identityMatrix);
+	return rSquared;
+*/
+}
+
+void TREMainModel::scanMaxRadiusSquaredPoint(const TCVector &point)
+{
+	float rSquared = (point - m_center).lengthSquared();
+
+	if (rSquared > m_maxRadiusSquared)
+	{
+		m_maxRadiusSquared = rSquared;
+	}
+}
+
+// By asking for the maximum radius squared, and then returning the square root
+// of that, we only have to do one square root for the whole radius calculation.
+// Otherwise, we would have to do one for every point.
+float TREMainModel::getMaxRadius(const TCVector &center)
+{
+	return (float)sqrt(getMaxRadiusSquared(center));
 }

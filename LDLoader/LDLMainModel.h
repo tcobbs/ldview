@@ -23,6 +23,11 @@ public:
 	bool getLowResStuds(void) const { return m_mainFlags.lowResStuds; }
 	void setBlackEdgeLines(bool value) { m_mainFlags.blackEdgeLines = value; }
 	bool getBlackEdgeLines(void) { return m_mainFlags.blackEdgeLines; }
+	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
+	virtual bool getLoadCanceled(void)
+	{
+		return m_mainFlags.loadCanceled != false;
+	}
 protected:
 	virtual void dealloc(void);
 
@@ -33,6 +38,8 @@ protected:
 		// Public flags
 		bool lowResStuds:1;
 		bool blackEdgeLines:1;
+		// Semi-public flags
+		bool loadCanceled:1;
 	} m_mainFlags;
 };
 

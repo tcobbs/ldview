@@ -336,7 +336,7 @@ bool LDLModel::read(FILE *file)
 	bool retValue = true;
 
 	m_fileLines = new LDLFileLineArray;
-	while (!done)
+	while (!done && !getLoadCanceled())
 	{
 		if (fgets(buf, 2048, file))
 		{
@@ -366,7 +366,7 @@ bool LDLModel::read(FILE *file)
 	}
 	fclose(file);
 	m_activeMPDModel = NULL;
-	return retValue;
+	return retValue && !getLoadCanceled();
 }
 
 bool LDLModel::load(FILE *file)
@@ -590,7 +590,7 @@ bool LDLModel::parse(void)
 		// (when it sees an MPD secondary file), it increases i to skip over all
 		// the lines in that secondary file (they get parsed separately).
 		// ********************************************************************
-		for (i = 0; i < count; i++)
+		for (i = 0; i < count && !getLoadCanceled(); i++)
 		{
 			LDLFileLine *fileLine = (*m_fileLines)[i];
 			bool checkInvertNext = true;
@@ -695,7 +695,7 @@ bool LDLModel::parse(void)
 				m_flags.bfcInvertNext = false;
 			}
 		}
-		return true;
+		return !getLoadCanceled();
 	}
 	else
 	{
@@ -704,11 +704,25 @@ bool LDLModel::parse(void)
 	}
 }
 
+void LDLModel::cancelLoad(void)
+{
+	m_mainModel->cancelLoad();
+}
+
+bool LDLModel::getLoadCanceled(void)
+{
+	return m_mainModel->getLoadCanceled();
+}
+
 void LDLModel::sendAlert(LDLError *alert)
 {
 	if (alert)
 	{
 		TCAlertManager::sendAlert(alert);
+		if (alert->getLoadCanceled())
+		{
+			cancelLoad();
+		}
 	}
 }
 

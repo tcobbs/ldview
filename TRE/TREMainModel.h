@@ -23,6 +23,8 @@ public:
 	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines; }
 	void setTwoSidedLightingFlag(bool value);
 	bool getTwoSidedLightingFlag(void) { return m_mainFlags.twoSidedLighting; }
+	virtual float getMaxRadiusSquared(const TCVector &center);
+	virtual float getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
 	{
 		return m_coloredVertexStore;
@@ -33,12 +35,15 @@ public:
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
+	void scanMaxRadiusSquaredPoint(const TCVector &point);
 
 	TCDictionary *m_loadedModels;
 	TREVertexStore *m_vertexStore;
 	TREVertexStore *m_coloredVertexStore;
 	TCULong m_color;
 	TCULong m_edgeColor;
+	float m_maxRadiusSquared;
+	TCVector m_center;
 	struct
 	{
 		bool compileParts:1;

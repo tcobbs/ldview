@@ -123,6 +123,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.processLDConfig = true;
 	flags.autoCenter = true;
 	flags.forceZoomToFit = false;
+	TCAlertManager::registerHandler(LDLError::alertClass(), this,
+		(TCAlertCallback)ldlErrorCallback);
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)
@@ -131,6 +133,7 @@ LDrawModelViewer::~LDrawModelViewer(void)
 
 void LDrawModelViewer::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 	TCObject::release(lDrawModel);
 	lDrawModel = NULL;
 	delete filename;
@@ -634,11 +637,12 @@ void LDrawModelViewer::setupBottomViewAngle(void)
 
 void LDrawModelViewer::ldlErrorCallback(LDLError *error)
 {
+	static int errorCount = 0;
+
 	if (error)
 	{
 		TCStringArray *extraInfo = error->getExtraInfo();
 
-//		printf("Error:\n%s\n", error->getMessage());
 		printf("Error on line %d in: %s\n", error->getLineNumber(),
 			error->getFilename());
 		indentPrintf(4, "%s\n", error->getMessage());
@@ -661,32 +665,36 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	if (filename)
 	{
 		LDLMainModel *mainModel = new LDLMainModel;
-		LDModelParser *modelParser = new LDModelParser;
-		TCAlert *alert = new TCAlert(0, "this is an alert test.");
 
-		modelParser->setSeamWidth(LDrawModel::getSeamWidth());
-		modelParser->setPrimitiveSubstitutionFlag(
-			flags.allowPrimitiveSubstitution);
-		modelParser->setCurveQuality(curveQuality);
-		modelParser->setEdgeLinesFlag(flags.showsHighlightLines);
-		modelParser->setTwoSidedLightingFlag(flags.oneLight ||
-			flags.usesSpecular);
-		TCAlertManager::registerHandler(LDLError::alertClass(), this,
-			(TCAlertCallback)ldlErrorCallback);
-		TCAlertManager::sendAlert(alert);
-		alert->release();
+		// First, release the current TREModel, if it exists.
 		TCObject::release(mainTREModel);
+		mainTREModel = NULL;
 		mainModel->setLowResStuds(!flags.qualityStuds);
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
-		mainModel->load(filename);
-		modelParser->parseMainModel(mainModel);
-		mainTREModel = modelParser->getMainTREModel();
-		mainTREModel->retain();
-		mainTREModel->getMinMax(min, max);
-		modelParser->release();
-//		mainModel->print();
+		if (mainModel->load(filename))
+		{
+			LDModelParser *modelParser = new LDModelParser;
+
+			modelParser->setSeamWidth(LDrawModel::getSeamWidth());
+			modelParser->setPrimitiveSubstitutionFlag(
+				flags.allowPrimitiveSubstitution);
+			modelParser->setCurveQuality(curveQuality);
+			modelParser->setEdgeLinesFlag(flags.showsHighlightLines);
+			modelParser->setTwoSidedLightingFlag(flags.oneLight ||
+				flags.usesSpecular);
+			if (modelParser->parseMainModel(mainModel))
+			{
+				mainTREModel = modelParser->getMainTREModel();
+				mainTREModel->retain();
+				mainTREModel->getMinMax(min, max);
+				center = (min + max) / 2.0f;
+				size = mainTREModel->getMaxRadius(center) * 2.0f;
+			}
+			modelParser->release();
+//			mainModel->print();
+		}
 		mainModel->release();
-		TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
+
 		// Use binary mode to work around problem with fseek on a non-binary
 		// file.  My file parsing code will still work fine and strip out the
 		// extra data.
@@ -757,7 +765,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			if (readResult == 0)
 			{
 //				lDrawModel->getMinMax(min, max);
-				lDrawModel->setCullBackFaces(cullBackFaces);
+//				lDrawModel->setCullBackFaces(cullBackFaces);
 //				lDrawModel->writeToFile();
 //				lDrawModel->flatten();
 				if (true || lDrawModel->compile(0))
@@ -767,7 +775,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						progressCallback("", 2.0, progressUserData);
 					}
 					flags.needsRecompile = false;
-					size = (max - min).length();
+//					size = (max - min).length();
 					if (resetViewpoint)
 					{
 						resetView();
@@ -779,7 +787,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						yPan = 0.0f;
 */
 					}
-					center = (min + max) / 2.0f;
+//					center = (min + max) / 2.0f;
 				}
 				else
 				{
@@ -2434,6 +2442,7 @@ void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
 	{
 		mainTREModel->draw();
 	}
+/*
 	else if (lDrawModel)
 	{
 		lDrawModel->draw();
@@ -2442,6 +2451,7 @@ void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
 			drawToClipPlane(eyeXOffset);
 		}
 	}
+*/
 }
 
 void LDrawModelViewer::pause(void)
@@ -2567,7 +2577,7 @@ char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 // uses that as the camera location.
 void LDrawModelViewer::zoomToFit(void)
 {
-	if (lDrawModel)
+	if (mainTREModel)
 	{
 		float d;
 		float dh;
@@ -2585,7 +2595,7 @@ void LDrawModelViewer::zoomToFit(void)
 		tmpMatrix[14] = center[2];
 		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
 		preCalcCamera();
-		lDrawModel->scanPoints(this, (TGLScanPointCallback)scanCameraPoint,
+		mainTREModel->scanPoints(this, (TREScanPointCallback)scanCameraPoint,
 			transformationMatrix);
 		d = (float)width / (float)height;
 		dh = (cameraData->horMax - cameraData->horMin) / d;
