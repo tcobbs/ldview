@@ -56,10 +56,11 @@ LDLModel::LDLModel(void)
 LDLModel::LDLModel(const LDLModel &other)
 	:m_filename(copyString(other.m_filename)),
 	m_name(copyString(other.m_name)),
-	m_flags(other.m_flags),
 	m_fileLines(NULL),
 	m_mainModel(other.m_mainModel),
-	m_activeLineCount(other.m_activeLineCount)
+	m_activeLineCount(other.m_activeLineCount),
+	m_activeMPDModel(NULL),
+	m_flags(other.m_flags)
 {
 	if (other.m_fileLines)
 	{
@@ -755,6 +756,8 @@ bool LDLModel::parse(void)
 			case LDLLineTypeModel:
 				m_flags.bfcInvertNext = false;
 				break;
+			default:
+				break;
 			}
 			if (checkInvertNext && m_flags.bfcInvertNext)
 			{
@@ -825,7 +828,7 @@ void LDLModel::reportError(LDLErrorType type, const LDLFileLine &fileLine,
 {
 	va_list argPtr;
 
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	sendAlert(type, LDLAError, fileLine, format, argPtr);
 	va_end(argPtr);
 }
@@ -835,7 +838,7 @@ void LDLModel::reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
 {
 	va_list argPtr;
 
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	sendAlert(type, LDLAWarning, fileLine, format, argPtr);
 	va_end(argPtr);
 }
@@ -844,7 +847,7 @@ void LDLModel::reportError(LDLErrorType type, const char* format, ...)
 {
 	va_list argPtr;
 
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	sendAlert(type, LDLAError, format, argPtr);
 	va_end(argPtr);
 }
@@ -853,7 +856,7 @@ void LDLModel::reportWarning(LDLErrorType type, const char* format, ...)
 {
 	va_list argPtr;
 
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	sendAlert(type, LDLAWarning, format, argPtr);
 	va_end(argPtr);
 }
@@ -880,6 +883,8 @@ void LDLModel::print(int indent)
 		break;
 	case BFCForcedOnState:
 		printf(" (BFC Forced On)");
+		break;
+	default:
 		break;
 	}
 	printf(": ");
@@ -949,7 +954,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 	va_list argPtr;
 	LDLError *retValue;
 
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	retValue = newError(type, fileLine, format, argPtr);
 	va_end(argPtr);
 	return retValue;
@@ -992,7 +997,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const char* format, ...)
 	va_list argPtr;
 	LDLError *retValue;
 
-	va_start(argPtr, type);
+	va_start(argPtr, format);
 	retValue = newError(type, format, argPtr);
 	va_end(argPtr);
 	return retValue;

@@ -7,17 +7,12 @@
 #ifndef YES
 #define YES (!NO)
 #endif
-#ifndef SOCKET_ERROR
-#define SOCKET_ERROR -1
-#endif
 
 #ifdef WIN32
 #include <winsock2.h>
 #include <crtdbg.h>
 
-#ifdef WIN32
 #pragma warning( disable : 4514 4127 )
-#endif // WIN32
 
 #ifdef _BUILDING_TCFOUNDATION
 #define TCExport __declspec(dllexport)
@@ -32,6 +27,10 @@
 #define TCExport
 
 #endif // WIN32
+
+#ifndef SOCKET_ERROR
+#define SOCKET_ERROR -1
+#endif
 
 typedef unsigned char TCByte;
 typedef unsigned char TCUChar;
