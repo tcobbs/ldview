@@ -57,7 +57,35 @@ void ModelLoader::startup(void)
 	int height;
 	int widthDelta = 0;
 	bool maximized;
+	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
 
+	TCUserDefaults::removeValue(HFOV_KEY, false);
+	TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
+	if (commandLine)
+	{
+		int i;
+		int count = commandLine->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			char *command = (*commandLine)[i];
+
+			if (stringHasCaseInsensitivePrefix(command, "-ca"))
+			{
+				float value;
+
+				if (sscanf(command + 3, "%f", &value) == 1)
+				{
+					TCUserDefaults::setFloatForKey(value, HFOV_KEY, false);
+				}
+			}
+			else if (stringHasCaseInsensitivePrefix(command, "-cg"))
+			{
+				TCUserDefaults::setStringForKey(command + 3, CAMERA_GLOBE_KEY,
+					false);
+			}
+		}
+	}
 	width = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false);
 	height = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false);
 	maximized = TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false) != 0;

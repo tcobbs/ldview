@@ -41,6 +41,7 @@ LDLModel::LDLModel(void)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
+	m_flags.loadingPrimitive = false;
 	m_flags.mainModelLoaded = false;
 	m_flags.mainModelParsed = false;
 	m_flags.started = false;
@@ -49,6 +50,7 @@ LDLModel::LDLModel(void)
 	m_flags.bfcInvertNext = false;
 	// Initialize Public flags
 	m_flags.part = false;
+	m_flags.primitive = false;
 	m_flags.mpd = false;
 	m_flags.bfcCertify = BFCUnknownState;
 	sm_modelCount++;

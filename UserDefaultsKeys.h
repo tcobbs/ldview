@@ -121,5 +121,7 @@
 #define SS_FILE_MODE_KEY "SSFileMode"
 #define SS_SLEEP_WORKAROUND_KEY "SSSleepWorkaround"
 #define SS_RANDOM_PREF_SET_KEY "SSRandomPrefSet"
+#define HFOV_KEY "HFOV"
+#define CAMERA_GLOBE_KEY "CameraGlobe"
 
 #endif // __USERDEFAULTSKEYS_H__
