@@ -1683,11 +1683,13 @@ void TREModel::setGlNormalize(bool value)
 	{
 		if (value)
 		{
+//			glEnable(GL_RESCALE_NORMAL);
 			glEnable(GL_NORMALIZE);
 //			sm_normalizeOn = true;
 		}
 		else
 		{
+//			glDisable(GL_RESCALE_NORMAL);
 			glDisable(GL_NORMALIZE);
 //			sm_normalizeOn = false;
 		}
