@@ -10,6 +10,7 @@ typedef enum
 {
 	LDLEParse,
 	LDLEFileNotFound,
+	LDLEMatrix,
 	LDLEPartDeterminant,
 	LDLEConcaveQuad,
 	LDLEConcaveQuadSplit,

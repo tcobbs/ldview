@@ -4,6 +4,7 @@
 #include <TRE/TREModel.h>
 
 class TCDictionary;
+class TREVertexStore;
 
 class TREMainModel : public TREModel
 {
@@ -13,11 +14,20 @@ public:
 	TCObject *copy(void);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual void draw(void);
+	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
+	virtual TREModel *modelNamed(const char *name);
+	virtual void registerModel(TREModel *model);
+	TREVertexStore *getColoredVertexStore(void)
+	{
+		return m_coloredVertexStore;
+	}
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
 
 	TCDictionary *m_loadedModels;
+	TREVertexStore *m_vertexStore;
+	TREVertexStore *m_coloredVertexStore;
 	struct
 	{
 	} m_mainFlags;

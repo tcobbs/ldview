@@ -32,6 +32,7 @@ bool LDLQuadLine::parse(void)
 	}
 	else
 	{
+		m_valid = false;
 		setError(LDLEParse, "Error parsing quad line.");
 		return false;
 	}

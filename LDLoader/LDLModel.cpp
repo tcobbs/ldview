@@ -15,7 +15,8 @@ LDLModel::LDLModel(void)
 	:m_filename(NULL),
 	m_name(NULL),
 	m_fileLines(NULL),
-	m_mainModel(NULL)
+	m_mainModel(NULL),
+	m_activeLineCount(0)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
@@ -36,7 +37,8 @@ LDLModel::LDLModel(const LDLModel &other)
 	m_name(copyString(other.m_name)),
 	m_flags(other.m_flags),
 	m_fileLines(NULL),
-	m_mainModel(other.m_mainModel)
+	m_mainModel(other.m_mainModel),
+	m_activeLineCount(other.m_activeLineCount)
 {
 	if (other.m_fileLines)
 	{
@@ -516,6 +518,10 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 	{
 		if (m_flags.mainModelLoaded)
 		{
+			if (m_activeLineCount == 0)
+			{
+				m_activeLineCount = commentLine->getLineNumber() - 1;
+			}
 			if (!getLoadedModels()->objectForKey(filename))
 			{
 				LDLModel *subModel = new LDLModel;
@@ -564,6 +570,10 @@ bool LDLModel::read(FILE *file)
 		}
 		else
 		{
+			if (m_activeLineCount == 0)
+			{
+				m_activeLineCount = m_fileLines->getCount();
+			}
 			done = true;
 		}
 	}
@@ -612,6 +622,7 @@ int LDLModel::parseMPDMeta(int index, const char *filename)
 
 					subModel->m_fileLines->addObject(fileLine);
 				}
+				subModel->m_activeLineCount = subModel->m_fileLines->getCount();
 				if (!subModel->parse())
 				{
 					return -1;
@@ -846,7 +857,8 @@ void LDLModel::reportError(LDLError *error)
 {
 	if (error)
 	{
-		printf("Error in: %s\n", error->getFilename());
+		printf("Error on line %d in: %s\n", error->getLineNumber(),
+			error->getFilename());
 		indentPrintf(4, "%s\n", error->getMessage());
 		indentPrintf(4, "%s\n", error->getFileLine());
 	}

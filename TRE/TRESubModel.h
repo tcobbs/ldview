@@ -17,6 +17,7 @@ public:
 	virtual float *getMatrix(void) { return m_matrix; }
 	virtual void setColor(TCULong color);
 	virtual TCULong getColor(void);
+	virtual bool isColorSet(void) { return m_colorSet; }
 	virtual void draw(void);
 protected:
 	virtual ~TRESubModel(void);

@@ -9,7 +9,7 @@ public:
 	virtual TCObject *copy(void);
 	virtual bool parse(void);
 	virtual LDLModel *getModel(void) const;
-	float *getTransformationMatrix(void) { return m_transformationMatrix; }
+	float *getMatrix(void) { return m_matrix; }
 	TCULong getColor(void) { return m_color; }
 	int getColorNumber(void) { return m_colorNumber; }
 	virtual void print(int indent) const;
@@ -19,14 +19,14 @@ protected:
 	LDLModelLine(const LDLModelLine &other);
 	virtual ~LDLModelLine(void);
 	virtual void dealloc(void);
-	virtual void setTransformation(float x, float y, float z,
+	virtual bool setTransformation(float x, float y, float z,
 		float a, float b, float c,
 		float d, float e, float f,
 		float g, float h, float i);
 
 	LDLModel *m_highResModel;
 	LDLModel *m_lowResModel;
-	float m_transformationMatrix[16];
+	float m_matrix[16];
 	TCULong m_color;
 	int m_colorNumber;
 
