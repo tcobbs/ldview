@@ -92,7 +92,9 @@ class TCExport TCUserDefaults: public TCObject
 		QSettings *qSettings;
 		char qKey[1024];
 
-		char *qKeyForKey(const char *key);
+		char *qKeyForKey(const char *key, bool sessionSpecific);
+		void deleteSubkeys(const char *key);
+		void defGetAllKeysUnderKey(const char *key, TCStringArray *allKeys);
 #endif // _QT
 #endif // !WIN32
 
