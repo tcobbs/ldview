@@ -1227,14 +1227,12 @@ void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 	{
 		addQuadStrip(points, normals, vertexCount);
 	}
-	delete[] points;
-	delete[] normals;
-/*
 	if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 	{
-		genSlopedCylinderConditionals(cone, numSegments, usedSegments);
+		addOpenConeConditionals(points, numSegments, usedSegments);
 	}
-*/
+	delete[] points;
+	delete[] normals;
 }
 
 void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
@@ -1283,14 +1281,12 @@ void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
 	{
 		addQuadStrip(points, normals, vertexCount);
 	}
-	delete[] points;
-	delete[] normals;
-/*
 	if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 	{
-		genSlopedCylinder2Conditionals(cone, numSegments, usedSegments);
+		addSlopedCylinder2Conditionals(points, numSegments, usedSegments);
 	}
-*/
+	delete[] points;
+	delete[] normals;
 }
 
 void TREModel::addCylinder(const TCVector& center, float radius, float height,
@@ -1538,14 +1534,147 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 		{
 			addQuadStrip(points, normals, vertexCount, height == 0.0f);
 		}
-		delete[] points;
-		delete[] normals;
-/*
 		if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 		{
-			genConeConditionals(cone, numSegments, usedSegments);
+			addOpenConeConditionals(points, numSegments, usedSegments);
 		}
-*/
+		delete[] points;
+		delete[] normals;
+	}
+}
+
+void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
+									   int usedSegments)
+{
+	int i;
+	TCVector controlPoints[2];
+	int axis1 = 2;
+	int axis2 = 0;
+	TCVector *p1;
+	TCVector *p2;
+
+	if (numSegments == usedSegments * 2)
+	{
+		axis2 = 2;
+	}
+	for (i = 0; i <= usedSegments; i++)
+	{
+		p1 = &points[i * 2];
+		p2 = &points[i * 2 + 1];
+		if (p1 == p2)
+		{
+			continue;
+		}
+		if (i == 0)
+		{
+			if (numSegments == usedSegments)
+			{
+				controlPoints[0] = points[numSegments * 2 - 2];
+			}
+			else
+			{
+				controlPoints[0] = *p1;
+				controlPoints[0][axis1] -= 1.0f;
+			}
+		}
+		else
+		{
+			controlPoints[0] = points[(i - 1) * 2];
+		}
+		if (i == usedSegments)
+		{
+			if (numSegments == usedSegments)
+			{
+				// No need to repeat the last one if it's a closed surface.
+				return;
+			}
+			else
+			{
+				controlPoints[1] = *p1;
+				if (usedSegments * 8 == numSegments)
+				{
+					controlPoints[1][0] -= 1.0f;
+					controlPoints[1][2] += 1.0f;
+				}
+				else if (usedSegments * 8 == numSegments * 3)
+				{
+					controlPoints[1][0] -= 1.0f;
+					controlPoints[1][2] -= 1.0f;
+				}
+				else if (usedSegments * 4 == numSegments * 3)
+				{
+					controlPoints[1][0] += 1.0f;
+				}
+				else
+				{
+					controlPoints[1][axis2] -= 1.0f;
+				}
+			}
+		}
+		else
+		{
+			controlPoints[1] = points[(i + 1) * 2];
+		}
+		addConditionalLine(p1, controlPoints);
+	}
+}
+
+void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
+											  int numSegments, int usedSegments)
+{
+	int i;
+	TCVector controlPoints[2];
+	int axis2 = 2;
+	TCVector *p1;
+	TCVector *p2;
+
+	if (numSegments == usedSegments * 2)
+	{
+		axis2 = 0;
+	}
+	for (i = 1; i <= usedSegments; i++)
+	{
+		p1 = &points[i * 2];
+		p2 = &points[i * 2 + 1];
+		if (p1 == p2)
+		{
+			continue;
+		}
+		controlPoints[0] = points[(i - 1) * 2];
+		if (i == usedSegments)
+		{
+			if (numSegments == usedSegments)
+			{
+				controlPoints[1] = points[2];
+			}
+			else
+			{
+				controlPoints[1] = *p1;
+				if (usedSegments * 8 == numSegments)
+				{
+					controlPoints[1][0] += 1.0f;
+					controlPoints[1][2] -= 1.0f;
+				}
+				else if (usedSegments * 8 == numSegments * 3)
+				{
+					controlPoints[1][0] -= 1.0f;
+					controlPoints[1][2] -= 1.0f;
+				}
+				else if (usedSegments * 4 == numSegments * 3)
+				{
+					controlPoints[1][2] += 1.0f;
+				}
+				else
+				{
+					controlPoints[1][axis2] -= 1.0f;
+				}
+			}
+		}
+		else
+		{
+			controlPoints[1] = points[(i + 1) * 2];
+		}
+		addConditionalLine(p1, controlPoints);
 	}
 }
 
@@ -1941,3 +2070,7 @@ void TREModel::transferTransparent(TCULong color, TREMSection section,
 	}
 }
 
+bool TREModel::shouldLoadConditionalLines(void)
+{
+	return m_mainModel->shouldLoadConditionalLines();
+}

@@ -81,6 +81,7 @@ public:
 	void recompile(void);
 	virtual void addTransparentTriangle(TCULong color,
 		const TCVector vertices[], const TCVector normals[]);
+	virtual bool shouldLoadConditionalLines(void);
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
@@ -117,6 +118,7 @@ protected:
 		bool stipple:1;
 		bool wireframe:1;
 		bool conditionalLines:1;
+		bool smoothCurves:1;
 	} m_mainFlags;
 };
 

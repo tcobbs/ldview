@@ -37,6 +37,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.stipple = false;
 	m_mainFlags.wireframe = false;
 	m_mainFlags.conditionalLines = false;
+	m_mainFlags.smoothCurves = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -513,4 +514,10 @@ void TREMainModel::drawTransparent(void)
 			glDepthMask(TRUE);
 		}
 	}
+}
+
+bool TREMainModel::shouldLoadConditionalLines(void)
+{
+	return (m_mainFlags.edgeLines && m_mainFlags.conditionalLines) ||
+		m_mainFlags.smoothCurves;
 }
