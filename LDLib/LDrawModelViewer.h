@@ -121,7 +121,7 @@ class LDrawModelViewer: public TCObject
 		TCVector getCameraMotion(void) { return cameraMotion; }
 		virtual void setZoomSpeed(float value);
 		float getZoomSpeed(void) { return zoomSpeed; }
-		virtual void zoom(float);
+		virtual void zoom(float amount, bool apply = true);
 		virtual void updateCameraPosition(void);
 		virtual void applyZoom(void);
 		void setClipZoom(bool value) { clipZoom = value; }
