@@ -110,6 +110,14 @@ void PreferencesPanel::doWireframe(bool value)
     }
 }
 
+void PreferencesPanel::doBFC(bool value)
+{
+	if (preferences)
+	{
+		preferences->doBFC(value);
+	}
+}
+
 void PreferencesPanel::doEdgeLines(bool value)
 {
     if (preferences)

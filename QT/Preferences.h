@@ -41,6 +41,7 @@ public:
 	void doLighting(bool value);
 	void doStereo(bool value);
 	void doWireframe(bool value);
+	void doBFC(bool value);
 	void doEdgeLines(bool value);
 	void doConditionalShow(bool value);
 	void doPrimitiveSubstitution(bool value);
@@ -97,6 +98,7 @@ protected:
 	void reflectGeneralSettings(void);
 	void reflectGeometrySettings(void);
 	void reflectWireframeSettings(void);
+	void reflectBFCSettings(void);
 	void reflectEffectsSettings(void);
 	void reflectPrimitivesSettings(void);
 
@@ -107,6 +109,7 @@ protected:
 	void enableLighting(void);
 	void enableStereo(void);
 	void enableWireframe(void);
+	void enableBFC(void);
 	void enableEdgeLines(void);
 	void enableConditionalShow(void);
 	void enablePrimitiveSubstitution(void);
@@ -116,6 +119,7 @@ protected:
 	void disableLighting(void);
 	void disableStereo(void);
 	void disableWireframe(void);
+	void disableBFC(void);
 	void disableEdgeLines(void);
 	void disableConditionalShow(void);
 	void disablePrimitiveSubstitution(void);
@@ -137,6 +141,7 @@ protected:
 	int backgroundColor;
 	int defaultColor;
 	int defaultColorNumber;	// No UI for this.
+	bool transDefaultColor;
 	int fieldOfView;
 
 	// Geometry Settings
@@ -146,6 +151,8 @@ protected:
 	bool wireframeFog;
 	bool wireframeRemoveHiddenLines;
 	int wireframeThickness;
+	bool bfc;
+	bool bfcRedBackFace;
 	bool edgeLines;
 	bool edgesOnly;
 	bool conditionalLines;
