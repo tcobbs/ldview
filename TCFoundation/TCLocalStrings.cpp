@@ -250,6 +250,10 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 	}
 	else
 	{
-		return NULL;
+		debugPrintf("LocalString %s not found!!!!!!\n", key);
+//		return NULL;
+		// It should really be NULL, but that means a mistake will likely cause
+		// a crash.  At least with an empty string it's less likely to crash.
+		return "";
 	}
 }

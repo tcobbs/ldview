@@ -15,6 +15,7 @@
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <ctype.h>
 
 static const int LO_NUM_SEGMENTS = 8;
@@ -149,7 +150,8 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 		{
 			finishPart(m_mainTREModel);
 		}
-		TCProgressAlert::send("LDModelParser", "Parsing...", 1.0f, &m_abort);
+		TCProgressAlert::send("LDModelParser",
+			TCLocalStrings::get("ParsingStatus"), 1.0f, &m_abort);
 		if (m_abort)
 		{
 			return false;
@@ -1057,7 +1059,8 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 				}
 				if (ldlModel->isMainModel())
 				{
-					TCProgressAlert::send("LDLModelParser", "Parsing...",
+					TCProgressAlert::send("LDLModelParser",
+						TCLocalStrings::get("ParsingStatus"),
 						(float)(i + 1) / (float)(count + 1), &m_abort);
 				}
 			}
