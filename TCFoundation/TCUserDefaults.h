@@ -25,6 +25,10 @@ class TCExport TCUserDefaults: public TCObject
 			bool sessionSpecific = true);
 		static long longForKey(const char* key, long defaultValue = 0,
 			bool sessionSpecific = true);
+		static void setFloatForKey(float value, const char* key,
+			bool sessionSpecific = true);
+		static float floatForKey(const char* key, float defaultValue = 0.0f,
+			bool sessionSpecific = true);
 		static void removeValue(const char* key, bool sessionSpecific = true);
 		static void setAppName(const char* value);
 		static const char* getAppName(void);

@@ -213,6 +213,32 @@ long TCUserDefaults::longForKey(const char* key, long defaultValue,
 		defaultValue);
 }
 
+void TCUserDefaults::setFloatForKey(float value, const char* key,
+									bool sessionSpecific)
+{
+	char stringValue[128];
+
+	sprintf(stringValue, "%.24g", value);
+	setStringForKey(stringValue, key, sessionSpecific);
+}
+
+float TCUserDefaults::floatForKey(const char* key, float defaultValue,
+								  bool sessionSpecific)
+{
+	char *stringValue = stringForKey(key, NULL, sessionSpecific);
+	float returnValue = defaultValue;
+
+	if (stringValue)
+	{
+		if (sscanf(stringValue, "%g", &returnValue) != 1)
+		{
+			returnValue = defaultValue;
+		}
+		delete stringValue;
+	}
+	return returnValue;
+}
+
 void TCUserDefaults::removeValue(const char* key, bool sessionSpecific)
 {
 	getCurrentUserDefaults()->defRemoveValue(key, sessionSpecific);
