@@ -47,7 +47,7 @@ public:
 	virtual void addTriangleFan(TCVector *vertices, TCVector *normals, int count);
 	virtual void addTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count);
-	virtual void draw(void);
+//	virtual void draw(void);
 	virtual void compileDefaultColor(void);
 	virtual void compileColored(void);
 	virtual void compileDefaultColorLines(void);
@@ -76,6 +76,10 @@ public:
 	virtual void calculateBoundingBox(void);
 	virtual void getMinMax(TCVector& min, TCVector& max);
 	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
+	virtual void getMaxRadiusSquared(const TCVector &center,
+		float &rSquared, float *matrix);
+	virtual void scanPoints(TCObject *scanner,
+		TREScanPointCallback scanPointCallback, float *matrix);
 
 	static void multMatrix(float* left, float* right, float* result);
 	static void transformVertex(TREVertex &vertex, float *matrix);

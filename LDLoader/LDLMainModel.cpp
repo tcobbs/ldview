@@ -10,6 +10,7 @@ LDLMainModel::LDLMainModel(void)
 {
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
+	m_mainFlags.loadCanceled = false;
 }
 
 LDLMainModel::LDLMainModel(const LDLMainModel &other)

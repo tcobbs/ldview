@@ -66,6 +66,7 @@ TCULong TRESubModel::getEdgeColor(void)
 	return htonl(m_edgeColor);
 }
 
+/*
 void TRESubModel::draw(void)
 {
 	if (m_colorSet)
@@ -82,6 +83,7 @@ void TRESubModel::draw(void)
 		glPopAttrib();
 	}
 }
+*/
 
 void TRESubModel::drawDefaultColor(void)
 {
@@ -164,6 +166,25 @@ void TRESubModel::getMinMax(TCVector& min, TCVector& max, float* matrix)
 
 	TREModel::multMatrix(matrix, m_matrix, newMatrix);
 	m_model->getMinMax(min, max, newMatrix);
+}
+
+void TRESubModel::scanPoints(TCObject *scanner,
+							 TREScanPointCallback scanPointCallback,
+							 float *matrix)
+{
+	float newMatrix[16];
+
+	TREModel::multMatrix(matrix, m_matrix, newMatrix);
+	m_model->scanPoints(scanner, scanPointCallback, newMatrix);
+}
+
+void TRESubModel::getMaxRadiusSquared(const TCVector &center, float &rSquared,
+									  float *matrix)
+{
+	float newMatrix[16];
+
+	TREModel::multMatrix(matrix, m_matrix, newMatrix);
+	m_model->getMaxRadiusSquared(center, rSquared, newMatrix);
 }
 
 void TRESubModel::shrink(float amount)

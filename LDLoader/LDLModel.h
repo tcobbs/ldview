@@ -61,6 +61,9 @@ public:
 	bool isPart(void) { return m_flags.part != false; }
 	bool isMPD(void) { return m_flags.mpd != false; }
 
+	virtual void cancelLoad(void);
+	virtual bool getLoadCanceled(void);
+
 	// Transparency detection is fixed, so static.
 	static TCULong colorForRGBA(int r, int g, int b, int a);
 	static const char *lDrawDir(void);

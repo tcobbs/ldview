@@ -10,7 +10,8 @@ LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
 	m_filename(copyString(filename)),
 	m_fileLine(copyString(fileLine)),
 	m_lineNumber(lineNumber),
-	m_level(LDLAError)
+	m_level(LDLAError),
+	m_loadCanceled(false)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLError");

@@ -390,7 +390,8 @@ void TREShapeGroup::getStripMinMax(TCULongArray *indices, TCVector& min,
 	}
 }
 
-void TREShapeGroup::getMinMax(const TREVertex &vertex, TCVector& min, TCVector& max)
+void TREShapeGroup::getMinMax(const TREVertex &vertex, TCVector& min,
+							  TCVector& max)
 {
 	TCVector point = TCVector(vertex.v[0], vertex.v[1], vertex.v[2]);
 
@@ -427,4 +428,155 @@ void TREShapeGroup::getMinMax(TCULong index, TCVector& min, TCVector& max,
 
 	TREModel::transformVertex(vertex, matrix);
 	getMinMax(vertex, min, max);
+}
+
+void TREShapeGroup::getMaxRadiusSquared(const TCVector &center, float &rSquared,
+										float *matrix)
+{
+	int bit;
+
+	for (bit = 1; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
+	{
+		getMaxRadiusSquared(getIndices((TREShapeType)bit), center, rSquared,
+			matrix);
+	}
+	for (; (TREShapeType)bit < TRESLast; bit = bit << 1)
+	{
+		getStripMaxRadiusSquared(getIndices((TREShapeType)bit), center,
+			rSquared, matrix);
+	}
+}
+
+void TREShapeGroup::getMaxRadiusSquared(TCULongArray *indices,
+										const TCVector &center, float &rSquared,
+										float* matrix)
+{
+	if (indices)
+	{
+		int i;
+		int count = indices->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			getMaxRadiusSquared((*indices)[i], center, rSquared, matrix);
+		}
+	}
+}
+
+void TREShapeGroup::getStripMaxRadiusSquared(TCULongArray *indices,
+											 const TCVector &center,
+											 float &rSquared, float* matrix)
+{
+	if (indices)
+	{
+		int i, j;
+		int count = indices->getCount();
+		int stripCount = 0;
+
+		for (i = 0; i < count; i += stripCount)
+		{
+			stripCount = (*indices)[i];
+			i++;
+			for (j = 0; j < stripCount; j++)
+			{
+				getMaxRadiusSquared((*indices)[i + j], center, rSquared,
+					matrix);
+			}
+		}
+	}
+}
+
+void TREShapeGroup::getMaxRadiusSquared(const TREVertex &vertex,
+										const TCVector &center, float &rSquared)
+{
+	TCVector point = TCVector(vertex.v[0], vertex.v[1], vertex.v[2]);
+	float thisRSquared = (point - center).lengthSquared();
+
+	if (thisRSquared > rSquared)
+	{
+		rSquared = thisRSquared;
+	}
+}
+
+void TREShapeGroup::getMaxRadiusSquared(TCULong index, const TCVector &center,
+										float &rSquared, float* matrix)
+{
+	TREVertex vertex = (*m_vertexStore->getVertices())[index];
+
+	TREModel::transformVertex(vertex, matrix);
+	getMaxRadiusSquared(vertex, center, rSquared);
+}
+
+void TREShapeGroup::scanPoints(TCObject *scanner,
+							   TREScanPointCallback scanPointCallback,
+							   float* matrix)
+{
+	int bit;
+
+	for (bit = 1; (TREShapeType)bit < TRESFirstStrip; bit = bit << 1)
+	{
+		scanPoints(getIndices((TREShapeType)bit), scanner, scanPointCallback,
+			matrix);
+	}
+	for (; (TREShapeType)bit < TRESLast; bit = bit << 1)
+	{
+		scanStripPoints(getIndices((TREShapeType)bit), scanner,
+			scanPointCallback, matrix);
+	}
+}
+
+void TREShapeGroup::scanPoints(TCULongArray *indices, TCObject *scanner,
+							   TREScanPointCallback scanPointCallback,
+							   float* matrix)
+{
+	if (indices)
+	{
+		int i;
+		int count = indices->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			scanPoints((*indices)[i], scanner, scanPointCallback, matrix);
+		}
+	}
+}
+
+void TREShapeGroup::scanStripPoints(TCULongArray *indices, TCObject *scanner,
+									TREScanPointCallback scanPointCallback,
+									float* matrix)
+{
+	if (indices)
+	{
+		int i, j;
+		int count = indices->getCount();
+		int stripCount = 0;
+
+		for (i = 0; i < count; i += stripCount)
+		{
+			stripCount = (*indices)[i];
+			i++;
+			for (j = 0; j < stripCount; j++)
+			{
+				scanPoints((*indices)[i + j], scanner, scanPointCallback,
+					matrix);
+			}
+		}
+	}
+}
+
+void TREShapeGroup::scanPoints(const TREVertex &vertex, TCObject *scanner,
+							   TREScanPointCallback scanPointCallback)
+{
+	TCVector point = TCVector(vertex.v[0], vertex.v[1], vertex.v[2]);
+	((*scanner).*scanPointCallback)(point);
+}
+
+void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
+							   TREScanPointCallback scanPointCallback,
+							   float* matrix)
+{
+	TREVertex vertex = (*m_vertexStore->getVertices())[index];
+
+	TREModel::transformVertex(vertex, matrix);
+	scanPoints(vertex, scanner, scanPointCallback);
 }
