@@ -164,6 +164,7 @@ public:
 		return section == TREMStud || section == TREMStudBFC;
 	}
 	virtual void openGlWillEnd(void);
+	virtual void finish(void);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -182,7 +183,7 @@ protected:
 	virtual void drawSolid(void);
 	virtual void enableLineSmooth(void);
 	virtual void bindStudTexture(void);
-	virtual void configureStudTexture(void);
+	virtual void configureStudTexture(bool allowMipMap = true);
 	virtual bool shouldCompileSection(TREMSection section);
 
 	static void loadStudMipTextures(TCImage *mainImage);
@@ -199,7 +200,9 @@ protected:
 	float m_maxRadiusSquared;
 	TCVector m_center;
 	float m_edgeLineWidth;
-	bool m_abort;				// Easier not to be a bit field.
+	bool m_abort;	// Easier not to be a bit field.  A pointer to it is passed
+					// into other functions, and that doesn't work with a bit
+					// field.
 	int m_studTextureFilter;
 	struct
 	{

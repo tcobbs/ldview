@@ -156,6 +156,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 			m_mainTREModel->setPartFlag(true);
 			finishPart(m_mainTREModel);
 		}
+		m_mainTREModel->finish();
 		TCProgressAlert::send("LDModelParser",
 			TCLocalStrings::get("ParsingStatus"), 1.0f, &m_abort);
 		if (m_abort)
@@ -194,6 +195,7 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 			parentModel->getPackedRGBA(colorNumber),
 			parentModel->getPackedRGBA(edgeColorNumber),
 			modelLine->getMatrix(), treModel, invert);
+		treSubModel->setNonUniformFlag(modelLine->getNonUniformFlag());
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
 	{
@@ -692,17 +694,17 @@ bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
 	fraction = (float)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
 	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
-		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
-		bfc);
+		getTorusFraction(size), numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	treModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
-		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
-		bfc);
+		getTorusFraction(size), numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
-		-getTorusFraction(size), numSegments, (int)(numSegments * fraction),
-		bfc);
+		-getTorusFraction(size), numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	treModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
-		-getTorusFraction(size), numSegments, (int)(numSegments * fraction),
-		bfc);
+		-getTorusFraction(size), numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -724,8 +726,8 @@ bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
 	fraction = (float)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
 	treModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
-		getTorusFraction(size), numSegments, (int)(numSegments * fraction),
-		bfc);
+		getTorusFraction(size), numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -745,7 +747,7 @@ bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
-		(int)(numSegments * fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -755,7 +757,7 @@ bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
-		numSegments, (int)(numSegments * fraction), bfc);
+		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -766,7 +768,7 @@ bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
-		numSegments, (int)(numSegments * fraction), bfc);
+		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -776,7 +778,7 @@ bool LDModelParser::substituteChrd(TREModel *treModel, float fraction, bool bfc,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addChrd(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-		(int)(numSegments * fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -786,7 +788,7 @@ bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-		(int)(numSegments * fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -796,7 +798,7 @@ bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-		(int)(numSegments * fraction), bfc);
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -808,7 +810,7 @@ bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction,
 		int numSegments = getNumCircleSegments(fraction, is48);
 
 		treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-			(int)(numSegments * fraction));
+			getUsedCircleSegments(numSegments, fraction));
 	}
 	return true;
 }
@@ -819,8 +821,8 @@ bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
-		(float)size, 1.0f, numSegments, (int)(numSegments * fraction),
-		bfc);
+		(float)size, 1.0f, numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
@@ -830,8 +832,14 @@ bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size,
 	int numSegments = getNumCircleSegments(fraction, is48);
 
 	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size,
-		(float)size + 1.0f, numSegments, (int)(numSegments * fraction), bfc);
+		(float)size + 1.0f, numSegments,
+		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
+}
+
+int LDModelParser::getUsedCircleSegments(int numSegments, float fraction)
+{
+	return (int)(numSegments * fraction + 0.000001);
 }
 
 int LDModelParser::getNumCircleSegments(float fraction, bool is48)
@@ -847,9 +855,14 @@ int LDModelParser::getNumCircleSegments(float fraction, bool is48)
 		int i;
 		
 		for (i = m_curveQuality; !fEq(fraction * retValue,
-			(float)(int)(fraction * retValue)) && i < 12; i++)
+			(float)getUsedCircleSegments(retValue, fraction)) && i < 12; i++)
 		{
-			retValue = (i + 1) * LO_NUM_SEGMENTS;
+			int newValue = (i + 1) * LO_NUM_SEGMENTS;
+
+			if (newValue > retValue)
+			{
+				retValue = newValue;
+			}
 		}
 	}
 	return retValue;

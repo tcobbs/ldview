@@ -282,7 +282,7 @@ void TREModel::setName(const char *name)
 	m_name = copyString(name);
 }
 
-void TREModel::compile(TREMSection section, bool colored)
+void TREModel::compile(TREMSection section, bool colored, bool nonUniform)
 {
 	int *listIDs;
 
@@ -303,8 +303,9 @@ void TREModel::compile(TREMSection section, bool colored)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->getEffectiveModel()->compile(section,
-					colored);
+				TRESubModel *subModel = (*m_subModels)[i];
+				subModel->getEffectiveModel()->compile(section, colored,
+					nonUniform | subModel->getNonUniformFlag());
 			}
 		}
 		if (m_mainModel->getCompileAllFlag() ||
@@ -313,7 +314,7 @@ void TREModel::compile(TREMSection section, bool colored)
 			int listID = glGenLists(1);
 
 			glNewList(listID, GL_COMPILE);
-			draw(section, colored);
+			draw(section, colored, false, nonUniform);
 			glEndList();
 			listIDs[section] = listID;
 //			debugPrintf("U Standard <<%s>> %d %d\n", m_name, m_flags.unMirrored,
@@ -370,7 +371,8 @@ void TREModel::checkGLError(char *)
 	}
 }
 
-void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly)
+void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
+					bool nonUniform)
 {
 	TCULong listID;
 
@@ -423,14 +425,16 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly)
 			}
 			else
 			{
+/*
 				if (m_flags.part && isFlattened())
 				{
-					setGlNormalize(false);
+					setGlNormalize(false | nonUniform);
 				}
 				else
 				{
 					setGlNormalize(true);
 				}
+*/
 				if (shapeGroup)
 				{
 					shapeGroup->draw();
@@ -444,7 +448,8 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly)
 
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->draw(section, colored, subModelsOnly);
+				(*m_subModels)[i]->draw(section, colored, subModelsOnly,
+					nonUniform);
 			}
 		}
 	}
@@ -1677,6 +1682,7 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 }
 */
 
+/*
 void TREModel::setGlNormalize(bool value)
 {
 //	if (value != sm_normalizeOn)
@@ -1695,6 +1701,7 @@ void TREModel::setGlNormalize(bool value)
 		}
 	}
 }
+*/
 
 void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 								 float height, int numSegments,
@@ -3242,4 +3249,55 @@ void TREModel::transferTransparent(TCULong color, TREMSection section,
 bool TREModel::shouldLoadConditionalLines(void)
 {
 	return m_mainModel->shouldLoadConditionalLines();
+}
+
+bool TREModel::flattenNonUniform(TREModel *model, float *matrix,
+								 float *originalMatrix, TCULong color,
+								 bool colorSet, TCULong edgeColor,
+								 bool edgeColorSet)
+{
+	float determinant = TCVector::determinant(originalMatrix);
+	TRESubModelArray *subModels = model->m_subModels;
+
+	if (!fEq(determinant, 1.0) && !fEq(determinant, -1.0))
+	{
+		flatten(model, matrix, color, colorSet, edgeColor, edgeColorSet, true);
+		debugPrintf("Flattened non-uniform sub-model: %g.\n", determinant);
+		return true;
+	}
+	else if (subModels)
+	{
+		int i;
+		int count = subModels->getCount();
+		float newMatrix[16];
+		float newOriginalMatrix[16];
+
+		for (i = count - 1; i >= 0; i--)
+		{
+			TRESubModel *subModel = (*subModels)[i];
+			TREModel *newModel = subModel->getEffectiveModel();
+			bool remove;
+
+			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
+			TCVector::multMatrix(originalMatrix, subModel->getOriginalMatrix(),
+				newOriginalMatrix);
+			if (subModel->isColorSet())
+			{
+				remove = flattenNonUniform(newModel,
+					newMatrix, newOriginalMatrix, htonl(subModel->getColor()),
+					true, htonl(subModel->getEdgeColor()), true);
+			}
+			else
+			{
+				remove = flattenNonUniform(newModel,
+					newMatrix, newOriginalMatrix, color, colorSet, edgeColor,
+					edgeColorSet);
+			}
+			if (remove)
+			{
+				subModels->removeObject(i);
+			}
+		}
+	}
+	return false;
 }

@@ -36,6 +36,7 @@ TRESubModel::TRESubModel(const TRESubModel &other)
 	strcpy(className, "TRESubModel");
 #endif // _LEAK_DEBUG
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
+	memcpy(m_originalMatrix, other.m_originalMatrix, sizeof(m_originalMatrix));
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
@@ -52,6 +53,7 @@ TRESubModel::TRESubModel(const TRESubModel &other, bool shallow)
 	strcpy(className, "TRESubModel");
 #endif // _LEAK_DEBUG
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
+	memcpy(m_originalMatrix, other.m_originalMatrix, sizeof(m_originalMatrix));
 }
 
 TRESubModel::~TRESubModel(void)
@@ -160,6 +162,7 @@ void TRESubModel::setModel(TREModel *model)
 void TRESubModel::setMatrix(float *matrix)
 {
 	memcpy(m_matrix, matrix, sizeof(m_matrix));
+	memcpy(m_originalMatrix, matrix, sizeof(m_originalMatrix));
 	if (TCVector::determinant(m_matrix) < 0.0f)
 	{
 		m_flags.mirrorMatrix = true;
@@ -210,7 +213,8 @@ TCULong TRESubModel::getEdgeColor(void)
 	return htonl(m_edgeColor);
 }
 
-void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly)
+void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
+					   bool nonUniform)
 {
 	if (!colored)
 	{
@@ -249,7 +253,8 @@ void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly)
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	getEffectiveModel()->draw(section, colored, subModelsOnly);
+	getEffectiveModel()->draw(section, colored, subModelsOnly,
+		getNonUniformFlag() | nonUniform);
 	glPopMatrix();
 	if (!colored)
 	{

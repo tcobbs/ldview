@@ -139,10 +139,11 @@ public:
 		TCVector *vertices, TCVector *normals, int count, bool flat = false);
 	virtual void addBFCTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
-	virtual void compile(TREMSection section, bool colored);
+	virtual void compile(TREMSection section, bool colored,
+		bool nonUniform = false);
 	virtual void draw(TREMSection section);
 	virtual void draw(TREMSection section, bool colored,
-		bool subModelsOnly = false);
+		bool subModelsOnly = false, bool nonUniform = false);
 	virtual void drawColored(TREMSection section);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part != false; }
@@ -312,8 +313,11 @@ protected:
 		const TREVertex point0, const TREVertex point1, TRESmoother *&smoother);
 	void applyShapeNormals(TRENormalInfoArray *normalInfos);
 	void finishShapeNormals(TREConditionalMap &conditionalMap);
+	bool flattenNonUniform(TREModel *model, float *matrix,
+		float *originalMatrix, TCULong color, bool colorSet, TCULong edgeColor,
+		bool edgeColorSet);
 
-	static void setGlNormalize(bool value);
+//	static void setGlNormalize(bool value);
 
 	char *m_name;
 	TREMainModel *m_mainModel;

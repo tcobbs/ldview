@@ -119,7 +119,8 @@ bool LDLCommentLine::isPartMeta(void) const
 
 	if (numWords >= 2 && (strcasecmp((*m_words)[0], "unofficial") == 0 ||
 		strcasecmp((*m_words)[0], "un-official") == 0 ||
-		strcasecmp((*m_words)[0], "ldraw_org") == 0))
+		strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
+		strcasecmp((*m_words)[0], "custom") == 0))
 	{
 		if (strcasecmp((*m_words)[1], "ldraw") == 0)
 		{

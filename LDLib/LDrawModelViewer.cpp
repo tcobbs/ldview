@@ -1161,6 +1161,7 @@ void LDrawModelViewer::setupLight(GLenum light)
 
 void LDrawModelViewer::setupLighting(void)
 {
+	glDisable(GL_NORMALIZE);
 	if (flags.useLighting)
 	{
 		setupLight(GL_LIGHT0);
