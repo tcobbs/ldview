@@ -198,11 +198,11 @@ SOURCE=.\TRETransShapeGroup.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TREVectorKey.h
+SOURCE=.\TREVertexArray.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TREVertexArray.h
+SOURCE=.\TREVertexKey.h
 # End Source File
 # Begin Source File
 
