@@ -340,6 +340,7 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 
 bool LDVExtensionsSetup::haveMultisampleExtension(void)
 {
+//	return false;
 	return checkForWGLExtension("WGL_ARB_multisample");
 }
 
@@ -506,14 +507,14 @@ int LDVExtensionsSetup::choosePixelFormat(HDC hdc, GLint customValues[])
 	memcpy(intValues + count, commonValues, sizeof(commonValues));
 	for (i = 0; intValues[i]; i += 2)
 	{
-		printf("%d %d\n", intValues[i], intValues[i + 1]);
+		debugPrintf("%d %d\n", intValues[i], intValues[i + 1]);
 	}
-	printf("%d %d\n", intValues[i], intValues[i + 1]);
+	debugPrintf("%d %d\n", intValues[i], intValues[i + 1]);
 	for (i = 0; floatValues[i]; i += 2)
 	{
-		printf("%g %g\n", floatValues[i], floatValues[i + 1]);
+		debugPrintf("%g %g\n", floatValues[i], floatValues[i + 1]);
 	}
-	printf("%g %g\n", floatValues[i], floatValues[i + 1]);
+	debugPrintf("%g %g\n", floatValues[i], floatValues[i + 1]);
 	if (wglChoosePixelFormatARB(hdc, intValues,
 		floatValues, 100, indexes, &count))
 	{

@@ -203,6 +203,11 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 							}
 							if (!appended)
 							{
+								if (stringDict->objectForKey(line))
+								{
+									debugPrintf("Local String key \"%s\" "
+										"defined multiple times.\n", line);
+								}
 								stringObject = new TCStringObject(value);
 								stringDict->setObjectForKey(stringObject, line);
 								stringObject->release();

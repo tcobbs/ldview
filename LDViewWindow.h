@@ -57,7 +57,7 @@ typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
 class LDViewWindow: public CUIWindow
 {
 	public:
-		LDViewWindow(char*, HINSTANCE, int, int, int, int);
+		LDViewWindow(const char*, HINSTANCE, int, int, int, int);
 		virtual char* windowClassName(void);
 //		virtual void setModelWindow(ModelWindow* value);
 //		virtual int getDecorationHeight(void);

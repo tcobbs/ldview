@@ -337,6 +337,13 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	int retValue;
 //	TCDictionary* testDict = new TCDictionary;
 
+#ifdef _DEBUG
+	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;
+	_CrtSetDbgFlag(_debugFlag);
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+	createConsole();
+#endif // _DEBUG
 	setupUserDefaults(lpCmdLine, screenSaver);
 	setupLocalStrings();
 	if (screenSaver)
@@ -375,13 +382,6 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 			return 0;
 		}
 	}
-#ifdef _DEBUG
-	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
-	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;
-	_CrtSetDbgFlag(_debugFlag);
-	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	createConsole();
-#endif // _DEBUG
 #ifdef _LOG_PERFORMANCE
 	LARGE_INTEGER frequency;
 	if (QueryPerformanceFrequency(&frequency))

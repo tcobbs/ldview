@@ -9,8 +9,8 @@ CUIOGLWindow::CUIOGLWindow(void)
 	init();
 }
 
-CUIOGLWindow::CUIOGLWindow(char* windowTitle, HINSTANCE hInstance, int x, int y, int width,
-						   int height)
+CUIOGLWindow::CUIOGLWindow(const char* windowTitle, HINSTANCE hInstance, int x,
+						   int y, int width, int height)
 			 :initializedGL(FALSE),
 			  hasParent(FALSE),
 			  CUIWindow(windowTitle, hInstance, x, y, width, height)
