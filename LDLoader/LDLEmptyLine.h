@@ -10,8 +10,9 @@ public:
 	virtual bool parse(void);
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeEmpty; }
 protected:
-	LDLEmptyLine(LDLModel *mainModel, const char *line, int lineNumber);
+	LDLEmptyLine(LDLModel *parentModel, const char *line, int lineNumber);
 	LDLEmptyLine(const LDLEmptyLine &other);
+	virtual ~LDLEmptyLine(void);
 
 	friend LDLFileLine; // Needed because constructors are protected.
 };

@@ -1,10 +1,9 @@
 #ifndef __LDLMODELLINE_H__
 #define __LDLMODELLINE_H__
 
-#include <LDLoader/LDLFileLine.h>
-#include <LDLoader/LDLModel.h>
+#include <LDLoader/LDLActionLine.h>
 
-class LDLModelLine : public LDLFileLine
+class LDLModelLine : public LDLActionLine
 {
 public:
 	virtual TCObject *copy(void);
@@ -13,12 +12,10 @@ public:
 	float *getTransformationMatrix(void) { return m_transformationMatrix; }
 	TCULong getColor(void) { return m_color; }
 	int getColorNumber(void) { return m_colorNumber; }
-	virtual void print(int indent);
+	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeModel; }
-	virtual void setBFCSettings(BFCState bfcCertify, bool bfcClip,
-		bool bfcWindingCCW, bool bfcInvert);
 protected:
-	LDLModelLine(LDLModel *mainModel, const char *line, int lineNumber);
+	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber);
 	LDLModelLine(const LDLModelLine &other);
 	virtual ~LDLModelLine(void);
 	virtual void dealloc(void);
@@ -32,14 +29,6 @@ protected:
 	float m_transformationMatrix[16];
 	TCULong m_color;
 	int m_colorNumber;
-	struct
-	{
-		// Public flags
-		BFCState bfcCertify:2;
-		bool bfcClip:1;
-		bool bfcWindingCCW:1;
-		bool bfcInvert:1;
-	} m_flags;
 
 	friend LDLFileLine; // Needed because constructors are protected.
 };

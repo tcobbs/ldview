@@ -35,10 +35,7 @@ TCDictionary *LDLMainModel::getLoadedModels(void)
 
 void LDLMainModel::dealloc(void)
 {
-	if (m_loadedModels)
-	{
-		m_loadedModels->release();
-	}
+	TCObject::release(m_loadedModels);
 	LDLModel::dealloc();
 }
 
@@ -50,7 +47,11 @@ bool LDLMainModel::load(const char *filename)
 	m_mainModel = this;
 	if (file)
 	{
-		return LDLModel::load(file);
+		bool retValue = LDLModel::load(file);
+
+		TCObject::release(m_loadedModels);
+		m_loadedModels = NULL;
+		return retValue;
 	}
 	else
 	{
@@ -58,3 +59,8 @@ bool LDLMainModel::load(const char *filename)
 	}
 }
 
+void LDLMainModel::print(void)
+{
+	printf("Model Count: %d\n", sm_modelCount);
+	LDLModel::print(0);
+}

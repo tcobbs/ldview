@@ -1,12 +1,17 @@
 #include "LDLEmptyLine.h"
 
-LDLEmptyLine::LDLEmptyLine(LDLModel *mainModel, const char *line, int lineNumber)
-	:LDLFileLine(mainModel, line, lineNumber)
+LDLEmptyLine::LDLEmptyLine(LDLModel *parentModel, const char *line,
+						   int lineNumber)
+	:LDLFileLine(parentModel, line, lineNumber)
 {
 }
 
 LDLEmptyLine::LDLEmptyLine(const LDLEmptyLine &other)
 	:LDLFileLine(other)
+{
+}
+
+LDLEmptyLine::~LDLEmptyLine(void)
 {
 }
 

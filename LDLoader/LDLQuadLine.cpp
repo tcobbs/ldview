@@ -1,7 +1,8 @@
 #include "LDLQuadLine.h"
 
-LDLQuadLine::LDLQuadLine(LDLModel *mainModel, const char *line, int lineNumber)
-	:LDLShapeLine(mainModel, line, lineNumber)
+LDLQuadLine::LDLQuadLine(LDLModel *parentModel, const char *line,
+						 int lineNumber)
+	:LDLShapeLine(parentModel, line, lineNumber)
 {
 }
 

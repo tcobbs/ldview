@@ -1,7 +1,8 @@
 #include "LDLLineLine.h"
 
-LDLLineLine::LDLLineLine(LDLModel *mainModel, const char *line, int lineNumber)
-	:LDLShapeLine(mainModel, line, lineNumber)
+LDLLineLine::LDLLineLine(LDLModel *parentModel, const char *line,
+						 int lineNumber)
+	:LDLShapeLine(parentModel, line, lineNumber)
 {
 }
 

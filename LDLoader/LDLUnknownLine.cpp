@@ -1,13 +1,17 @@
 #include "LDLUnknownLine.h"
 
-LDLUnknownLine::LDLUnknownLine(LDLModel *mainModel, const char *line,
+LDLUnknownLine::LDLUnknownLine(LDLModel *parentModel, const char *line,
 							   int lineNumber)
-	:LDLFileLine(mainModel, line, lineNumber)
+	:LDLFileLine(parentModel, line, lineNumber)
 {
 }
 
 LDLUnknownLine::LDLUnknownLine(const LDLUnknownLine &other)
 	:LDLFileLine(other)
+{
+}
+
+LDLUnknownLine::~LDLUnknownLine(void)
 {
 }
 

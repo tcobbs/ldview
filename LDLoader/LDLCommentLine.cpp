@@ -3,9 +3,9 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 
-LDLCommentLine::LDLCommentLine(LDLModel *mainModel, const char *line,
+LDLCommentLine::LDLCommentLine(LDLModel *parentModel, const char *line,
 							   int lineNumber)
-	:LDLFileLine(mainModel, line, lineNumber),
+	:LDLFileLine(parentModel, line, lineNumber),
 	m_processedLine(NULL),
 	m_words(NULL)
 {
@@ -16,6 +16,10 @@ LDLCommentLine::LDLCommentLine(const LDLCommentLine &other)
 	:LDLFileLine(other),
 	m_processedLine(copyString(other.m_processedLine)),
 	m_words((TCStringArray *)TCObject::copy(other.m_words))
+{
+}
+
+LDLCommentLine::~LDLCommentLine(void)
 {
 }
 
@@ -38,7 +42,8 @@ TCObject *LDLCommentLine::copy(void)
 
 bool LDLCommentLine::getMPDFilename(char *filename, int maxLength) const
 {
-	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 FILE ") &&
+//	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 FILE ") &&
+	if (stringHasPrefix(m_processedLine, "0 FILE ") &&
 		strlen(m_processedLine) > 7)
 	{
 		if (maxLength)
@@ -82,6 +87,10 @@ void LDLCommentLine::setupProcessedLine(void)
 		m_words = new TCStringArray(words, numWords);
 		deleteStringArray(words, numWords);
 	}
+	else
+	{
+		m_words = new TCStringArray(0);
+	}
 }
 
 bool LDLCommentLine::isPartMeta(void) const
@@ -110,7 +119,8 @@ bool LDLCommentLine::isPartMeta(void) const
 
 bool LDLCommentLine::isBFCMeta(void) const
 {
-	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 BFC"))
+//	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 BFC "))
+	if (stringHasPrefix(m_processedLine, "0 BFC "))
 	{
 		return true;
 	}
@@ -126,7 +136,8 @@ bool LDLCommentLine::containsBFCCommand(const char *command) const
 
 		for (i = 1; i < numWords; i++)
 		{
-			if (strcasecmp((*m_words)[i], command) == 0)
+//			if (strcasecmp((*m_words)[i], command) == 0)
+			if (strcmp((*m_words)[i], command) == 0)
 			{
 				return true;
 			}

@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="LDLoader" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="TRE" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=LDLoader - Win32 Debug
+CFG=TRE - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "LDLoader.mak".
+!MESSAGE NMAKE /f "TRE.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "LDLoader.mak" CFG="LDLoader - Win32 Debug"
+!MESSAGE NMAKE /f "TRE.mak" CFG="TRE - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "LDLoader - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "LDLoader - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "TRE - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "TRE - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=LDLoader - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "LDLoader - Win32 Release"
+!IF  "$(CFG)" == "TRE - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W4 /GX /O2 /I ".." /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
+# ADD CPP /nologo /W4 /GX /O2 /I ".." /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -51,7 +51,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
-!ELSEIF  "$(CFG)" == "LDLoader - Win32 Debug"
+!ELSEIF  "$(CFG)" == "TRE - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /W4 /Gm /GX /ZI /Od /I ".." /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /W4 /Gm /GX /ZI /Od /I ".." /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -78,66 +78,34 @@ LIB32=link.exe -lib
 
 # Begin Target
 
-# Name "LDLoader - Win32 Release"
-# Name "LDLoader - Win32 Debug"
+# Name "TRE - Win32 Release"
+# Name "TRE - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\LDLActionLine.cpp
+SOURCE=.\TREColoredShapeGroup.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLCommentLine.cpp
+SOURCE=.\TREMainModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLConditionalLineLine.cpp
+SOURCE=.\TREModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLEmptyLine.cpp
+SOURCE=.\TREShapeGroup.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLError.cpp
+SOURCE=.\TRESubModel.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLFileLine.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLLineLine.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLMainModel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLModel.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLModelLine.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLQuadLine.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLShapeLine.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLTriangleLine.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLUnknownLine.cpp
+SOURCE=.\TREVertexArray.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -145,63 +113,27 @@ SOURCE=.\LDLUnknownLine.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\LDLActionLine.h
+SOURCE=.\TREColoredShapeGroup.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLCommentLine.h
+SOURCE=.\TREMainModel.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLConditionalLineLine.h
+SOURCE=.\TREModel.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLEmptyLine.h
+SOURCE=.\TREShapeGroup.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLError.h
+SOURCE=.\TRESubModel.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLFileLine.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLLineLine.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLMacros.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLMainModel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLModel.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLModelLine.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLQuadLine.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLShapeLine.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLTriangleLine.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLUnknownLine.h
+SOURCE=.\TREVertexArray.h
 # End Source File
 # End Group
 # End Target

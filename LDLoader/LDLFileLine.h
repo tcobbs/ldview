@@ -28,6 +28,8 @@ public:
 	virtual LDLError *getError(void) { return m_error; }
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const = 0;
+	virtual bool isActionLine(void) { return false; }
+	virtual LDLModel *getParentModel(void) { return m_parentModel; }
 
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
 		int lineNumber);

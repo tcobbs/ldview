@@ -11,6 +11,7 @@ public:
 	TCObject *copy(void);
 	virtual bool load(const char *filename);
 	virtual TCDictionary* getLoadedModels(void);
+	virtual void print(void);
 
 	// Flags
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }
