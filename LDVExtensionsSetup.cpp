@@ -108,7 +108,7 @@ LDVExtensionsSetup::LDVExtensionsSetupCleanup::~LDVExtensionsSetupCleanup(void)
 
 
 LDVExtensionsSetup::LDVExtensionsSetup(HINSTANCE hInstance):
-		   CUIOGLWindow("", hInstance, 100, 100, 100, 100)
+	CUIOGLWindow("", hInstance, 100, 100, 100, 100)
 {
 }
 
@@ -339,26 +339,6 @@ bool LDVExtensionsSetup::checkForExtension(char* extension)
 bool LDVExtensionsSetup::checkForWGLExtension(char* extension)
 {
 	return checkForExtension(wglExtensions, extension);
-/*
-	if (wglExtensions)
-	{
-		int extensionLen = strlen(extension);
-		char* extensions = wglExtensions;
-
-		while (extensions)
-		{
-			if (strcmp(extensions, extension) == 0 ||
-				(strncmp(extensions, extension, extensionLen) == 0 &&
-				extensions[extensionLen] == ' ') &&
-				(extensions == wglExtensions || extensions[-1] == ' '))
-			{
-				return true;
-			}
-			extensions = strstr(extensions, extension);
-		}
-	}
-	return false;
-*/
 }
 
 void LDVExtensionsSetup::closeWindow(void)
@@ -374,11 +354,8 @@ void LDVExtensionsSetup::setup(HINSTANCE hInstance)
 {
 	if (!performedInitialSetup)
 	{
-		LDVExtensionsSetup *extensionsSetup = new LDVExtensionsSetup(hInstance);
-
+		extensionsSetup = new LDVExtensionsSetup(hInstance);
 		extensionsSetup->initWindow();
-		extensionsSetup->closeWindow();
-		extensionsSetup->release();
 		performedInitialSetup = true;
 	}
 }

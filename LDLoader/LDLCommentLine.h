@@ -14,7 +14,8 @@ public:
 	virtual bool isBFCMeta(void) const;
 	virtual bool containsBFCCommand(const char *command) const;
 protected:
-	LDLCommentLine(LDLModel *parentModel, const char *line, int lineNumber);
+	LDLCommentLine(LDLModel *parentModel, const char *line, int lineNumber,
+		const char *originalLine = NULL);
 	LDLCommentLine(const LDLCommentLine &other);
 	~LDLCommentLine(void);
 	virtual void dealloc(void);

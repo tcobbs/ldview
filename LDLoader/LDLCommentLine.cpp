@@ -4,8 +4,8 @@
 #include <TCFoundation/TCStringArray.h>
 
 LDLCommentLine::LDLCommentLine(LDLModel *parentModel, const char *line,
-							   int lineNumber)
-	:LDLFileLine(parentModel, line, lineNumber),
+							   int lineNumber, const char *originalLine)
+	:LDLFileLine(parentModel, line, lineNumber, originalLine),
 	m_processedLine(NULL),
 	m_words(NULL)
 {

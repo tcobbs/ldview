@@ -32,7 +32,7 @@ class TCVector
 
 		// Member Functions
 		void print(FILE* = stdout) const;
-		void print(char* buffer) const;
+		void print(char* buffer, int precision = 3) const;
 		float length(void) const;
 		float lengthSquared(void) const;
 		float dot(const TCVector&) const;

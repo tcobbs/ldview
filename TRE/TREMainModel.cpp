@@ -70,8 +70,8 @@ void TREMainModel::draw(void)
 			m_mainFlags.compiled = true;
 		}
 	}
-	glEnable(GL_POLYGON_OFFSET_FILL);
-	glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+//	glEnable(GL_POLYGON_OFFSET_FILL);
+//	glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
 	glColor4ubv((GLubyte*)&color);
 	m_vertexStore->activate();
 	drawDefaultColor();

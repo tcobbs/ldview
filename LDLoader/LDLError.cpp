@@ -42,6 +42,8 @@ const char *LDLError::getTypeName(void)
 		return "Degenerate matrix error";
 	case LDLEPartDeterminant:
 		return "Part transformed non-uniformly error";
+	case LDLENonFlatQuad:
+		return "Non-flat quad error";
 	case LDLEConcaveQuad:
 		return "Concave quad warning";
 	case LDLEConcaveQuadSplit:

@@ -413,7 +413,10 @@ void UnMirrorStuds::mirrorModel(LDLModel *model, float *matrix,
 				LDLFileLine *fileLine = (*fileLines)[i];
 				bool written = false;
 
-				if (fileLine->getLineType() == LDLLineTypeModel)
+				// If the line has an original line, then it is a duplicate of
+				// another one.
+				if (fileLine->getLineType() == LDLLineTypeModel &&
+					!fileLine->getOriginalLine())
 				{
 					LDLModelLine *modelLine = (LDLModelLine *)fileLine;
 					LDLModel *newModel = modelLine->getModel();
@@ -447,7 +450,7 @@ void UnMirrorStuds::mirrorModel(LDLModel *model, float *matrix,
 						}
 					}
 				}
-				if (!written)
+				if (!written && !fileLine->getOriginalLine())
 				{
 					fprintf(mirroredFile, "%s\n", fileLine->getLine());
 				}

@@ -877,12 +877,67 @@ bool LDLModel::parse(void)
 		int i;
 		int count = m_fileLines->getCount();
 
+		// ********************************************************************
+		// NOTE: This for loop does a number of things that aren't normally
+		// done (at least by me).  In one place (when a line needs to be
+		// replaced by new ones), it inserts new items in the array just after
+		// the current spot, changes count, and uses continue.  In another place
+		// (when it sees an MPD secondary file), it increases i to skip over all
+		// the lines in that secondary file (they get parsed separately).
+		// ********************************************************************
 		for (i = 0; i < count; i++)
 		{
 			LDLFileLine *fileLine = (*m_fileLines)[i];
 			bool checkInvertNext = true;
 
-			if (!fileLine->parse())
+			if (fileLine->parse())
+			{
+				if (fileLine->isValid())
+				{
+					if (fileLine->getError())
+					{
+						reportError(fileLine->getError());
+					}
+				}
+				else
+				{
+					LDLFileLineArray *replacementLines =
+						fileLine->getReplacementLines();
+
+					if (replacementLines)
+					{
+						int replacementCount = replacementLines->getCount();
+						int j;
+
+						for (j = 0; j < replacementCount; j++)
+						{
+							m_fileLines->insertObject((*replacementLines)[j],
+								i + 1);
+						}
+						// Note that if we do get here, we haven't gotten past
+						// m_activeLineCount, because that parsing gets done in
+						// the secondary files themselves.
+						m_activeLineCount += replacementCount;
+						count += replacementCount;
+						if (fileLine->getError())
+						{
+							reportError(fileLine->getError());
+						}
+						// ****************************************************
+						// Note the use of continue below.  I really shy away
+						// from using it, but I'm goint to do so here.
+						// ****************************************************
+						continue;
+						// ****************************************************
+						// ****************************************************
+					}
+					else
+					{
+						reportError(fileLine->getError());
+					}
+				}
+			}
+			else
 			{
 				reportError(fileLine->getError());
 			}
@@ -907,7 +962,15 @@ bool LDLModel::parse(void)
 					checkInvertNext = false;
 					if (skippedLines >= 0)
 					{
+						// ****************************************************
+						// Note that I increment i below to skip over the lines
+						// in the MPD secondary file I just encountered.  (The
+						// parseComment function will only return a number
+						// greater than 0 if it found an MPD secondary file.
+						// ****************************************************
 						i += skippedLines;
+						// ****************************************************
+						// ****************************************************
 					}
 					else
 					{

@@ -1,6 +1,6 @@
 #include "LDrawModelViewer.h"
 #include "LDrawModel.h"
-#include "ModelMacros.h"
+#include <TCFoundation/TCMacros.h>
 #include "TGLShape.h"
 #include "TGLStudLogo.h"
 #include <TCFoundation/TCAutoreleasePool.h>
@@ -25,7 +25,7 @@
 #	include <GL/glu.h>
 #endif
 
-#define DEF_DISTANCE_MULT 1.25f
+#define DEF_DISTANCE_MULT 1.0f
 
 TREMainModel *mainTREModel = NULL;
 
@@ -48,7 +48,10 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 xPan(0.0f),
 			 yPan(0.0f),
 			 rotationMatrix(NULL),
+			 defaultRotationMatrix(NULL),
 			 clipAmount(0.0f),
+			 nextClipAmount(-1.0f),
+			 nextDistance(-1.0f),
 			 highlightLineWidth(1.0f),
 			 wireframeLineWidth(1.0f),
 			 clipZoom(false),
@@ -74,7 +77,10 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 distanceMultiplier(DEF_DISTANCE_MULT),
 			 fontImage(NULL),
 			 aspectRatio(1.0f),
-			 currentFov(45.0f)
+			 currentFov(45.0f),
+			 fov(45.0f),
+			 cameraData(NULL),
+			 extraSearchDirs(NULL)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
@@ -110,8 +116,13 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.performSmoothing = true;
 	flags.lineSmoothing = false;
 	flags.constrainZoom = true;
-	flags.rotationMatrixNeedsSetup = true;
+	flags.needsRotationMatrixSetup = true;
 	flags.edgesOnly = false;
+	flags.hiResPrimitives = false;
+	flags.needsViewReset = true;
+	flags.processLDConfig = true;
+	flags.autoCenter = true;
+	flags.forceZoomToFit = false;
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)
@@ -120,22 +131,22 @@ LDrawModelViewer::~LDrawModelViewer(void)
 
 void LDrawModelViewer::dealloc(void)
 {
-	if (lDrawModel)
-	{
-		lDrawModel->release();
-		lDrawModel = NULL;
-	}
+	TCObject::release(lDrawModel);
+	lDrawModel = NULL;
 	delete filename;
 	filename = NULL;
 	delete programPath;
 	programPath = NULL;
 	delete rotationMatrix;
 	rotationMatrix = NULL;
-	if (fontImage)
-	{
-		fontImage->release();
-		fontImage = NULL;
-	}
+	delete defaultRotationMatrix;
+	defaultRotationMatrix = NULL;
+	TCObject::release(fontImage);
+	fontImage = NULL;
+	TCObject::release(extraSearchDirs);
+	extraSearchDirs = NULL;
+	delete cameraData;
+	cameraData = NULL;
 	TCObject::release(mainTREModel);
 	mainTREModel = NULL;
 	TCObject::dealloc();
@@ -213,30 +224,71 @@ void LDrawModelViewer::perspectiveView(void)
 	perspectiveView(true);
 }
 
-void LDrawModelViewer::perspectiveView(bool resetViewport)
+void LDrawModelViewer::setFov(float value)
 {
-	float nClip;
-	float fClip;
-	int actualWidth = width;
-	float distance = (camera.getPosition()).length();
-	float aspectAdjust = (float)tan(1.0f);
+	if (value != fov)
+	{
+		fov = value;
+		flags.needsViewReset = true;
+	}
+}
 
-	currentFov = 45.0f;
+void LDrawModelViewer::updateCurrentFov(void)
+{
+	int actualWidth = width;
+
+	currentFov = fov;
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		actualWidth = width / 2;
 	}
-	aspectRatio = (float)actualWidth / height;
 	if (actualWidth * numXTiles < height * numYTiles)
 	{
-		currentFov = (float)(180.0 / M_PI *
-			atan((double)height * numYTiles / (actualWidth * numXTiles)));
-		if (currentFov > 170.0f)
+		// When the window is taller than it is wide, we want our current FOV to
+		// be the horizontal FOV, so we need to calculate the vertical FOV.
+		//
+		// From Lars Hassing:
+		// Vertical FOV = 2*atan(tan(hfov/2)/(width/height))
+		currentFov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+			(double)height * numYTiles / (actualWidth * numXTiles))));
+
+		if (currentFov > 179.0f)
 		{
-			currentFov = 170.0f;
+			currentFov = 179.0f;
 		}
 		aspectRatio = (float)height / actualWidth;
 	}
+	else
+	{
+		aspectRatio = (float)actualWidth / height;
+	}
+}
+
+void LDrawModelViewer::perspectiveView(bool resetViewport)
+{
+	float nClip;
+	float fClip;
+	float clipRadius;
+	int actualWidth = width;
+	float distance;
+	float aspectAdjust = (float)tan(1.0f);
+	TCVector vector;
+
+	if (flags.forceZoomToFit)
+	{
+		zoomToFit();
+	}
+	if (rotationMatrix)
+	{
+		vector = TGLShape::transformPoint(vector, rotationMatrix);
+	}
+	distance = (camera.getPosition() - vector).length();
+	currentFov = fov;
+	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+	{
+		actualWidth = width / 2;
+	}
+	updateCurrentFov();
 	if (resetViewport)
 	{
 		glViewport(0, 0, actualWidth, height);
@@ -244,14 +296,27 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	}
 //	printf("aspectRatio1: %f ", aspectRatio);
 	aspectRatio = (float)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
+	aspectRatio = 1.0f;
 //	printf("aspectRatio2: %f\n", aspectRatio);
-	nClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
-		size;
+	if (flags.autoCenter)
+	{
+		clipRadius = size / 2.0f;
+	}
+	else
+	{
+		// If we aren't centered, then just double the clip radius, and that
+		// guarantees everything will fit.  Remember that the near clip plane
+		// has a minimum distance, so even if it ends up initially behind the
+		// camera, we clamp it to be in front.
+		clipRadius = size;
+	}
+	nClip = distance - clipRadius * aspectRatio + clipAmount * aspectRatio *
+		clipRadius;
 	if (nClip < size / 1000.0f)
 	{
 		nClip = size / 1000.0f;
 	}
-	fClip = distance + size * aspectRatio / 2.0f;
+	fClip = distance + clipRadius * aspectRatio;
 	setFieldOfView(currentFov, nClip, fClip);
 	glLoadIdentity();
 	glFogi(GL_FOG_MODE, GL_LINEAR);
@@ -298,16 +363,47 @@ void LDrawModelViewer::setErrorCallback(LDMErrorCallback callback,
 	errorUserData = userData;
 }
 
+bool LDrawModelViewer::skipCameraPositioning(void)
+{
+	return defaultRotationMatrix && (defaultRotationMatrix[12] != 0.0f ||
+		defaultRotationMatrix[13] != 0.0f || defaultRotationMatrix[14] != 0.0f);
+}
+
+float LDrawModelViewer::calcDefaultDistance(void)
+{
+	updateCurrentFov();
+//	return (float)(size / 2.0 / sin(deg2rad(currentFov / 2.0)));
+
+	double angle1 = deg2rad(90.0f - (currentFov / 2.0));
+	double angle2 = deg2rad(currentFov / 4.0);
+	double radius = size / 2.0;
+
+	 return (float)(radius * tan(angle1) + radius * tan(angle2)) *
+		distanceMultiplier;
+
+}
+
 void LDrawModelViewer::resetView(LDVAngle viewAngle)
 {
+	flags.needsViewReset = false;
+	flags.autoCenter = true;
+	if (!lDrawModel)
+	{
+		return;
+	}
 	if (clipAmount != 0.0f)
 	{
 		clipAmount = 0.0f;
 		perspectiveView();
 	}
-	camera.setPosition(TCVector(0.0f, 0.0f, size * distanceMultiplier));
+	defaultDistance = calcDefaultDistance();
+	if (!skipCameraPositioning())
+	{
+		// If the user specifies a rotation matrix that includes a translation,
+		// then don't move the camera.
+		camera.setPosition(TCVector(0.0f, 0.0f, defaultDistance));
+	}
 	camera.setFacing(TGLFacing());
-//	distance = size * distanceMultiplier;
 	if (!rotationMatrix)
 	{
 		rotationMatrix = new float[16];
@@ -335,14 +431,50 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 	case LDVAngleBottom:
 		setupBottomViewAngle();
 		break;
+	case LDVAngleIso:
+		setupIsoViewAngle();
+		break;
 	}
-	flags.rotationMatrixNeedsSetup = true;
+	flags.needsRotationMatrixSetup = true;
 	xPan = 0.0f;
 	yPan = 0.0f;
 	perspectiveView(true);
 }
 
+void LDrawModelViewer::setDefaultRotationMatrix(const float *value)
+{
+	if (value)
+	{
+		if (!defaultRotationMatrix || memcmp(defaultRotationMatrix, value,
+			16 * sizeof(float)) != 0)
+		{
+			delete defaultRotationMatrix;
+			defaultRotationMatrix = new float[16];
+			memcpy(defaultRotationMatrix, value, 16 * sizeof(float));
+			flags.needsSetup = true;
+		}
+	}
+	else if (defaultRotationMatrix)
+	{
+		delete defaultRotationMatrix;
+		defaultRotationMatrix = NULL;
+		flags.needsSetup = true;
+	}
+}
+
 void LDrawModelViewer::setupDefaultViewAngle(void)
+{
+	if (defaultRotationMatrix)
+	{
+		memcpy(rotationMatrix, defaultRotationMatrix, 16 * sizeof(float));
+	}
+	else
+	{
+		setupIsoViewAngle();
+	}
+}
+
+void LDrawModelViewer::setupIsoViewAngle(void)
 {
 	rotationMatrix[0] = (float)(sqrt(2.0) / 2.0);
 	rotationMatrix[1] = (float)(sqrt(2.0) / 4.0);
@@ -504,11 +636,23 @@ void LDrawModelViewer::ldlErrorCallback(LDLError *error)
 {
 	if (error)
 	{
+		TCStringArray *extraInfo = error->getExtraInfo();
+
 //		printf("Error:\n%s\n", error->getMessage());
 		printf("Error on line %d in: %s\n", error->getLineNumber(),
 			error->getFilename());
 		indentPrintf(4, "%s\n", error->getMessage());
 		indentPrintf(4, "%s\n", error->getFileLine());
+		if (extraInfo)
+		{
+			int i;
+			int count = extraInfo->getCount();
+
+			for (i = 0; i < count; i++)
+			{
+				indentPrintf(4, "%s\n", (*extraInfo)[i]);
+			}
+		}
 	}
 }
 
@@ -564,7 +708,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			TGLShape::setShowAllConditionalLines(flags.showAllConditionalLines);
 			TGLShape::setShowConditionalControlPoints(
 				flags.showConditionalControlPoints);
-			LDrawModel::setDrawWireframe(flags.drawWireframe);
+			LDrawModel::setDrawWireframe(flags.drawWireframe &&
+				(!flags.drawWireframe || !flags.removeHiddenLines));
 			LDrawModel::setUsePolygonOffset(flags.usePolygonOffset);
 			LDrawModel::setUseLighting(flags.useLighting);
 			lDrawModel = new LDrawModel;
@@ -595,6 +740,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				flags.showsHighlightLines);
 			lDrawModel->setHiResPrimitives(flags.hiResPrimitives);
 			lDrawModel->setEdgeLineWidth(highlightLineWidth);
+			lDrawModel->setProcessLDConfig(flags.processLDConfig);
 			if (defaultColorNumber != -1)
 			{
 				lDrawModel->setDefaultColorNumber(defaultColorNumber);
@@ -696,6 +842,23 @@ void LDrawModelViewer::setPerformSmoothing(bool value)
 	if (flags.performSmoothing != value)
 	{
 		flags.performSmoothing = value;
+		flags.needsReload = true;
+	}
+}
+
+void LDrawModelViewer::setForceZoomToFit(bool value)
+{
+	if (flags.forceZoomToFit != value)
+	{
+		flags.forceZoomToFit = value;
+	}
+}
+
+void LDrawModelViewer::setProcessLDConfig(bool value)
+{
+	if (flags.processLDConfig != value)
+	{
+		flags.processLDConfig = value;
 		flags.needsReload = true;
 	}
 }
@@ -964,7 +1127,8 @@ void LDrawModelViewer::setupFont(char *fontFilename)
 			float tx, ty;
 
 			cx = (float)(i % 16) * FONT_CHAR_WIDTH / (float)(FONT_IMAGE_WIDTH);
-			cy = (float)(i / 16) * FONT_CHAR_HEIGHT / (float)(FONT_IMAGE_HEIGHT);
+			cy = (float)(i / 16) * FONT_CHAR_HEIGHT /
+				(float)(FONT_IMAGE_HEIGHT);
 			wx = (float)FONT_CHAR_WIDTH / FONT_IMAGE_WIDTH;
 			hy = (float)FONT_CHAR_HEIGHT / FONT_IMAGE_HEIGHT;
 			glNewList(fontListBase + i, GL_COMPILE);
@@ -1257,6 +1421,15 @@ void LDrawModelViewer::setUseWireframeFog(bool value)
 	flags.useWireframeFog = value;
 }
 
+void LDrawModelViewer::setRemoveHiddenLines(bool value)
+{
+	if (value != flags.removeHiddenLines)
+	{
+		flags.removeHiddenLines = value;
+		flags.needsReload = true;
+	}
+}
+
 void LDrawModelViewer::setEdgesOnly(bool value)
 {
 	if (value != flags.edgesOnly)
@@ -1515,6 +1688,12 @@ void LDrawModelViewer::setAllowPrimitiveSubstitution(bool value)
 	}
 }
 
+void LDrawModelViewer::updateCameraPosition(void)
+{
+	camera.move(cameraMotion * size / 100.0f);
+	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
+}
+
 void LDrawModelViewer::zoom(float amount)
 {
 	if (flags.paused)
@@ -1523,44 +1702,59 @@ void LDrawModelViewer::zoom(float amount)
 	}
 	if (clipZoom)
 	{
-		float newClipAmount = clipAmount - amount / 1000.0f;
-
-		if (newClipAmount > aspectRatio/*1.0f*/)
+		nextClipAmount = clipAmount - amount / 1000.0f;
+		if (nextClipAmount > aspectRatio/*1.0f*/)
 		{
-			newClipAmount = aspectRatio/*1.0f*/;
+			nextClipAmount = aspectRatio/*1.0f*/;
 		}
-		else if (newClipAmount < 0.0f)
+		else if (nextClipAmount < 0.0f)
 		{
-			newClipAmount = 0.0f;
-		}
-		if (!fEq(clipAmount, newClipAmount))
-		{
-			clipAmount = newClipAmount;
-			perspectiveView(false);
+			nextClipAmount = 0.0f;
 		}
 	}
 	else
 	{
 		float distance = (camera.getPosition()).length();
 //		float distance = (camera.getPosition() - center).length();
-		float newDistance = distance + (amount * distance / 300.0f);
 
-		if (flags.constrainZoom)
+		nextDistance = distance + (amount * distance / 300.0f);
+		if (flags.constrainZoom && !skipCameraPositioning())
 		{
-			if (newDistance <= size / zoomMax)
+			if (nextDistance < size / zoomMax)
 			{
-				newDistance = size / zoomMax;
+				nextDistance = size / zoomMax;
 			}
 		}
 		// We may as well always constrain the maximum zoom, since there not
 		// really any reason to move too far away.
-		if (newDistance > size * 10.0f)
+		if (nextDistance > defaultDistance * 10.0f && !skipCameraPositioning())
 		{
-			newDistance = size * 10.0f;
+			nextDistance = defaultDistance * 10.0f;
 		}
-		if (!fEq(distance, newDistance))
+	}
+}
+
+void LDrawModelViewer::applyZoom(void)
+{
+	if (flags.paused)
+	{
+		return;
+	}
+	if (clipZoom)
+	{
+		if (!fEq(clipAmount, nextClipAmount))
 		{
-			camera.move(TCVector(0.0f, 0.0f, newDistance - distance));
+			clipAmount = nextClipAmount;
+			perspectiveView(false);
+		}
+	}
+	else
+	{
+		float distance = (camera.getPosition()).length();
+
+		if (!fEq(distance, nextDistance))
+		{
+			camera.move(TCVector(0.0f, 0.0f, nextDistance - distance));
 //			distance = newDistance;
 //			camera.move(TCVector(0.0f, 0.0f, amount * size / 300.0f));
 			perspectiveView(false);
@@ -1655,10 +1849,10 @@ void LDrawModelViewer::drawSetup(GLfloat eyeXOffset)
 	glLoadIdentity();
 	if (lDrawModel)
 	{
-		zoom(zoomSpeed);
-		camera.move(cameraMotion * size / 100.0f);
+		applyZoom();
+//		camera.move(cameraMotion * size / 100.0f);
 		perspectiveView(false);
-		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
+//		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
 		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
 //		glTranslatef(eyeXOffset + xPan, yPan, -distance);
 	}
@@ -1694,7 +1888,10 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
 		glPopMatrix();
 		glMultMatrixf(rotationMatrix);
 	}
-	glTranslatef(-center[0], -center[1], -center[2]);
+	if (flags.autoCenter)
+	{
+		glTranslatef(-center[0], -center[1], -center[2]);
+	}
 	lDrawModel->draw();
 	glDisable(GL_LIGHTING);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -1806,7 +2003,10 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset)
 		glPopMatrix();
 		glMultMatrixf(rotationMatrix);
 	}
-	glTranslatef(-center[0], -center[1], -center[2]);
+	if (flags.autoCenter)
+	{
+		glTranslatef(-center[0], -center[1], -center[2]);
+	}
 	lDrawModel->setCutawayDraw(true);
 	lDrawModel->draw();
 	lDrawModel->setCutawayDraw(false);
@@ -1837,7 +2037,10 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(GLfloat eyeXOffset)
 		glPopMatrix();
 		glMultMatrixf(rotationMatrix);
 	}
-	glTranslatef(-center[0], -center[1], -center[2]);
+	if (flags.autoCenter)
+	{
+		glTranslatef(-center[0], -center[1], -center[2]);
+	}
 	lDrawModel->draw();
 	perspectiveView();
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -1882,8 +2085,12 @@ bool LDrawModelViewer::getLDrawCommandLineMatrix(char *matrixString,
 		char buf[1024];
 		float matrix[16];
 		int i;
-		TCVector point = -center;
-
+		TCVector point;
+		
+		if (flags.autoCenter)
+		{
+			point = -center;
+		}
 		for (i = 0; i < 16; i++)
 		{
 			if (fEq(rotationMatrix[i], 0.0f))
@@ -1923,7 +2130,12 @@ bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
 		char matrixString[512];
 		TCVector cameraPoint = camera.getPosition();
 //		TCVector cameraPoint = TCVector(0.0f, 0.0f, distance);
-		TCVector lookAt = center;
+		TCVector lookAt;
+
+		if (flags.autoCenter)
+		{
+			lookAt = center;
+		}
 		int i;
 		float transformationMatrix[16];
 
@@ -1932,7 +2144,7 @@ bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
 			return false;
 		}
 		TGLShape::invertMatrix(rotationMatrix, transformationMatrix);
-		lookAt = TGLShape::transformPoint(center, rotationMatrix);
+		lookAt = TGLShape::transformPoint(lookAt, rotationMatrix);
 		cameraPoint += lookAt;
 //		cameraPoint = TGLShape::transformPoint(cameraPoint, rotationMatrix);
 		for (i = 0; i < 3; i++)
@@ -1964,11 +2176,15 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 		char buf[1024];
 		float matrix[16];
 		int i;
-		TCVector point = -center;
+		TCVector point;
 		float scaleFactor = 500.0f;
 		float distance = (camera.getPosition()).length();
 //		float distance = (camera.getPosition() - center).length();
 
+		if (flags.autoCenter)
+		{
+			point = -center;
+		}
 		for (i = 0; i < 16; i++)
 		{
 			if (fEq(rotationMatrix[i], 0.0f))
@@ -2032,7 +2248,7 @@ void LDrawModelViewer::update(void)
 	{
 		rotationMatrix = new float[16];
 		setupDefaultViewAngle();
-		flags.rotationMatrixNeedsSetup = true;
+		flags.needsRotationMatrixSetup = true;
 	}
 	if (flags.needsSetup)
 	{
@@ -2058,12 +2274,17 @@ void LDrawModelViewer::update(void)
 	{
 		recompile();
 	}
+	if (flags.needsViewReset)
+	{
+		perspectiveView();
+		resetView();
+	}
 	if (flags.needsResize)
 	{
 		perspectiveView();
 	}
-//	glPolygonStipple(stipplePattern);
-	if (flags.rotationMatrixNeedsSetup)
+	glPolygonStipple(stipplePattern);
+	if (flags.needsRotationMatrixSetup)
 	{
 		setupRotationMatrix();
 	}
@@ -2111,7 +2332,17 @@ void LDrawModelViewer::update(void)
 			glPopMatrix();
 		}
 	}
-	drawModel(eyeXOffset);
+	updateCameraPosition();
+	zoom(zoomSpeed);
+	if (flags.drawWireframe && flags.removeHiddenLines)
+	{
+		removeHiddenLines();
+		drawModel(0.0f);
+	}
+	else
+	{
+		drawModel(eyeXOffset);
+	}
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		eyeXOffset = -eyeXOffset;
@@ -2121,9 +2352,42 @@ void LDrawModelViewer::update(void)
 			clearBackground();
 			glViewport(width / 2, 0, width / 2, height);
 		}
-		drawModel(eyeXOffset);
+		if (flags.drawWireframe && flags.removeHiddenLines)
+		{
+			removeHiddenLines();
+			drawModel(0.0f);
+		}
+		else
+		{
+			drawModel(eyeXOffset);
+		}
 		glViewport(0, 0, width / 2, height);
 	}
+}
+
+void LDrawModelViewer::removeHiddenLines(GLfloat eyeXOffset)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	lDrawModel->setUseLighting(false);
+	lDrawModel->setRemovingHiddenLines(true);
+	if (flags.usePolygonOffset)
+	{
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+	}
+	drawModel(eyeXOffset);
+	// Not sure why the following is necessary.
+	glLineWidth(wireframeLineWidth);
+	if (flags.usePolygonOffset)
+	{
+		glEnable(GL_POLYGON_OFFSET_FILL);
+		glPolygonOffset(0.0f, 0.0f);
+	}
+	lDrawModel->setRemovingHiddenLines(false);
+	lDrawModel->setUseLighting(flags.useLighting);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
 void LDrawModelViewer::setupRotationMatrix(void)
@@ -2136,7 +2400,7 @@ void LDrawModelViewer::setupRotationMatrix(void)
 	glMultMatrixf(rotationMatrix);
 	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 	glPopMatrix();
-	flags.rotationMatrixNeedsSetup = false;
+	flags.needsRotationMatrixSetup = false;
 /*
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -2157,7 +2421,10 @@ void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
 	{
 		glMultMatrixf(rotationMatrix);
 	}
-	glTranslatef(-center[0], -center[1], -center[2]);
+	if (flags.autoCenter)
+	{
+		glTranslatef(-center[0], -center[1], -center[2]);
+	}
 //	drawBoundingBox();
 	glColor3ub(192, 192, 192);
 	if (mainTREModel)
@@ -2200,6 +2467,20 @@ void LDrawModelViewer::setZoomSpeed(float value)
 	{
 		flags.paused = false;
 	}
+}
+
+void LDrawModelViewer::setExtraSearchDirs(TCStringArray *value)
+{
+	if (extraSearchDirs != value)
+	{
+		TCObject::release(extraSearchDirs);
+		extraSearchDirs = value;
+		TCObject::retain(extraSearchDirs);
+		LDrawModel::setExtraSearchDirs(extraSearchDirs);
+	}
+	// Since it is a string array, the contents might have changed, even if
+	// the array pointer itself didn't.
+	flags.needsReload = true;
 }
 
 void LDrawModelViewer::panXY(int xValue, int yValue)
@@ -2270,3 +2551,353 @@ char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	}
 	return message;
 }
+
+// This is conversion of Lars Hassing's auto camera code from L3P.  It computes
+// the correct distance and pan amount for the camera so that the viewing
+// pyramid will be positioned in the closest possible position, such that the
+// model just touches the edges of the view on either the top and bottom, the
+// left and right, or all four.
+// After processing all the model data for the current camera angle, it ends up
+// with 6 equations with 6 unknowns.  It uses a matrix solving routine to solve
+// these.  The 6 values seem to be the X, Y, and Z coordinates of two points.
+// Once it has the values, it decides which point is the correct point, and then
+// uses that as the camera location.
+void LDrawModelViewer::zoomToFit(void)
+{
+	if (lDrawModel)
+	{
+		float d;
+		float dh;
+		float dv;
+		float a[6][6];
+		float b[6];
+		int index[6];
+		TCVector location;
+		float tmpMatrix[16];
+		float transformationMatrix[16];
+
+		TCVector::initIdentityMatrix(tmpMatrix);
+		tmpMatrix[12] = center[0];
+		tmpMatrix[13] = center[1];
+		tmpMatrix[14] = center[2];
+		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
+		preCalcCamera();
+		lDrawModel->scanPoints(this, (TGLScanPointCallback)scanCameraPoint,
+			transformationMatrix);
+		d = (float)width / (float)height;
+		dh = (cameraData->horMax - cameraData->horMin) / d;
+		dv = cameraData->verMax - cameraData->verMin;
+		memset(a, 0, sizeof(a));
+		memset(b, 0, sizeof(b));
+		a[0][0] = cameraData->normal[0][0];
+		a[0][1] = cameraData->normal[0][1];
+		a[0][2] = cameraData->normal[0][2];
+		b[0] = cameraData->dMin[0];
+		a[1][0] = cameraData->normal[1][0];
+		a[1][1] = cameraData->normal[1][1];
+		a[1][2] = cameraData->normal[1][2];
+		b[1] = cameraData->dMin[1];
+		a[2][3] = cameraData->normal[2][0];
+		a[2][4] = cameraData->normal[2][1];
+		a[2][5] = cameraData->normal[2][2];
+		b[2] = cameraData->dMin[2];
+		a[3][3] = cameraData->normal[3][0];
+		a[3][4] = cameraData->normal[3][1];
+		a[3][5] = cameraData->normal[3][2];
+		b[3] = cameraData->dMin[3];
+		if (cameraData->direction[0] == 0.0)
+		{
+			a[4][1] = -cameraData->direction[2];
+			a[4][2] = cameraData->direction[1];
+			a[4][4] = cameraData->direction[2];
+			a[4][5] = -cameraData->direction[1];
+			if (cameraData->direction[1] == 0.0)
+			{
+				a[5][0] = -cameraData->direction[2];
+				a[5][2] = cameraData->direction[0];
+				a[5][3] = cameraData->direction[2];
+				a[5][5] = -cameraData->direction[0];
+			}
+			else
+			{
+				a[5][0] = -cameraData->direction[1];
+				a[5][1] = cameraData->direction[0];
+				a[5][3] = cameraData->direction[1];
+				a[5][4] = -cameraData->direction[0];
+			}
+		}
+		else
+		{
+			a[4][0] = -cameraData->direction[2];
+			a[4][2] = cameraData->direction[0];
+			a[4][3] = cameraData->direction[2];
+			a[4][5] = -cameraData->direction[0];
+			if (cameraData->direction[1] == 0.0 && cameraData->direction[2] != 0.0)
+			{
+				a[5][1] = -cameraData->direction[2];
+				a[5][2] = cameraData->direction[1];
+				a[5][4] = cameraData->direction[2];
+				a[5][5] = -cameraData->direction[1];
+			}
+			else
+			{
+				a[5][0] = -cameraData->direction[1];
+				a[5][1] = cameraData->direction[0];
+				a[5][3] = cameraData->direction[1];
+				a[5][4] = -cameraData->direction[0];
+			}
+		}
+		ludcmp(a, 6, index, &d);
+		lubksb(a, 6, index, b);
+		d = cameraData->direction[0] * (b[3] - b[0]) +
+			cameraData->direction[1] * (b[4] - b[1]) +
+			cameraData->direction[2] * (b[5] - b[2]);
+		if (d > 0.0)
+		{
+			location[0] = b[0];
+			location[1] = b[1];
+			location[2] = b[2];
+		}
+		else
+		{
+			location[0] = b[3];
+			location[1] = b[4];
+			location[2] = b[5];
+		}
+		location[2] *= distanceMultiplier;
+		camera.setPosition(location - center);
+		flags.autoCenter = false;
+	}
+}
+
+// More of Lars' L3P auto camera positioning code.
+void LDrawModelViewer::scanCameraPoint(const TCVector &point)
+{
+	float d;
+	int i;
+
+	for (i = 0; i < 4; i++)
+	{
+		d = cameraData->normal[i].dot(point);
+		if (d < cameraData->dMin[i])
+		{
+			cameraData->dMin[i] = d;
+		}
+	}
+	d = cameraData->horizontal.dot(point);
+	if (d < cameraData->horMin)
+	{
+		cameraData->horMin = d;
+	}
+	if (d > cameraData->horMax)
+	{
+		cameraData->horMax = d;
+	}
+	d = cameraData->vertical.dot(point);
+	if (d < cameraData->verMin)
+	{
+		cameraData->verMin = d;
+	}
+	if (d > cameraData->verMax)
+	{
+		cameraData->verMax = d;
+	}
+}
+
+// More of Lars' L3P auto camera positioning code.
+void LDrawModelViewer::preCalcCamera(void)
+{
+	float d;
+	int i;
+
+	delete cameraData;
+	cameraData = new CameraData;
+	if (width > height)
+	{
+		cameraData->fov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+			(double)width / (double)height)));
+	}
+	else
+	{
+		cameraData->fov = fov;
+	}
+	d = (float)(1.0 / tan(deg2rad(cameraData->fov / 2.0)));
+	cameraData->normal[2] = cameraData->direction -
+		(cameraData->horizontal * d);
+	cameraData->normal[3] = cameraData->direction +
+		(cameraData->horizontal * d);
+	d *= (float)width / (float)height;
+	cameraData->normal[0] = cameraData->direction -
+		(cameraData->vertical * d);
+	cameraData->normal[1] = cameraData->direction +
+		(cameraData->vertical * d);
+	for (i = 0; i < 4; i++)
+	{
+		cameraData->normal[i].normalize();
+	}
+}
+
+#define TINY 1.0e-20                      /* A small number.                 */
+
+// More of Lars' L3P auto camera positioning code.
+void LDrawModelViewer::ludcmp(float a[6][6], int n, int index[6], float *d)
+/* Given a matrix a[0..n-1][0..n-1], this routine replaces it by the LU
+   decomposition of a rowwise permutation of itself. a and n are input. a is
+   output, arranged as in equation (2.3.14) above; index[0..n-1] is an output
+   vector that records the row permutation effected by the partial pivoting; d
+   is output as +1/-1 depending on whether the number of row interchanges was
+   even or odd, respectively. This routine is used in combination with lubksb
+   to solve linear equations or invert a matrix.                             */
+{
+   int                  i,
+                        imax,
+                        j,
+                        k;
+   float                big,
+                        dum,
+                        sum,
+                        temp;
+   float                vv[8];            /* vv stores the implicit scaling of
+                                             each row.                       */
+
+   imax = 0; // Get rid of warning.
+   *d = 1.0;                              /* No row interchanges yet.        */
+   for (i = 0; i < n; i++)
+   {                                      /* Loop over rows to get the implicit
+                                             scaling information.            */
+      big = 0.0;
+      for (j = 0; j < n; j++)
+         if ((temp = (float)fabs(a[i][j])) > big)
+            big = temp;
+      if (big == 0.0)
+      {
+		  // Singular matrix
+		  // We should display an error, except that hopefully it is impossible
+		  // to get here.
+      }
+      /* No nonzero largest element. */
+      vv[i] = (float)(1.0 / big);         /* Save the scaling.               */
+   }
+   for (j = 0; j < n; j++)
+   {                                      /* This is the loop over columns of
+                                             Crout's method.                 */
+      for (i = 0; i < j; i++)
+      {                                   /* This is equation (2.3.12) except
+                                             for i = j.                      */
+         sum = a[i][j];
+         for (k = 0; k < i; k++)
+            sum -= a[i][k] * a[k][j];
+         a[i][j] = sum;
+      }
+      big = 0.0;                          /* Initialize for the search for
+                                             largest pivot element.          */
+      for (i = j; i < n; i++)
+      {                                   /* This is i = j of equation (2.3.12)
+                                             and i = j +1...N of equation
+                                             (2.3.13).                       */
+         sum = a[i][j];
+         for (k = 0; k < j; k++)
+            sum -= a[i][k] * a[k][j];
+         a[i][j] = sum;
+         if ((dum = (float)(vv[i] * fabs(sum))) >= big)
+         {
+            /* Is the figure of merit for the pivot better than the best so
+               far?                                                          */
+            big = dum;
+            imax = i;
+         }
+      }
+      if (j != imax)
+      {                                   /* Do we need to interchange rows? */
+         for (k = 0; k < n; k++)
+         {                                /* Yes, do so...                   */
+            dum = a[imax][k];
+            a[imax][k] = a[j][k];
+            a[j][k] = dum;
+         }
+         *d = -(*d);                      /* ...and change the parity of d.  */
+         vv[imax] = vv[j];                /* Also interchange the scale
+                                             factor.                         */
+      }
+      index[j] = imax;
+      if (a[j][j] == 0.0)
+         a[j][j] = (float)TINY;
+      /* If the pivot element is zero the matrix is singular (at least to the
+         precision of the algorithm). For some applications on singular
+         matrices, it is desirable to substitute TINY for zero.              */
+      if (j != n - 1)
+      {                                   /* Now, finally, divide by the pivot
+                                             element.                        */
+         dum = (float)(1.0 / (a[j][j]));
+         for (i = j + 1; i < n; i++)
+            a[i][j] *= dum;
+      }
+   }                                      /* Go back for the next column in the
+                                             reduction.                      */
+}
+
+// More of Lars' L3P auto camera positioning code.
+/* Here is the routine for forward substitution and backsubstitution, implementing equations (2.3.6) and (2.3.7). */
+void LDrawModelViewer::lubksb(const float a[6][6], int n, const int index[6],
+							  float b[6])
+/* Solves the set of n linear equations A . X = B. Here a[0..n-1][0..n-1] is
+   input, not as the matrix A but rather as its LU decomposition, determined
+   by the routine ludcmp. index[0..n-1] is input as the permutation vector
+   returned by ludcmp. b[0..n-1] is input as the right-hand side vector B, and
+   returns with the solution vector X. a, n, and index are not modified by this
+   routine and can be left in place for successive calls with different
+   right-hand sides b. This routine takes into account the possibility that b
+   will begin with many zero elements, so it is efficient for use in matrix
+   inversion.                                                                */
+{
+   int                  i,
+                        ii = -1,
+                        ip,
+                        j;
+   float                sum;
+
+   for (i = 0; i < n; i++)
+   {
+      /* When ii is set to a value >= 0, it will become the index of the
+         first nonvanishing element of b. We now do the forward substitution,
+         equation (2.3.6). The only new wrinkle is to unscramble the
+         permutation as we go.                                               */
+      ip = index[i];
+      sum = b[ip];
+      b[ip] = b[i];
+      if (ii >= 0)
+         for (j = ii; j < i; j++)
+            sum -= a[i][j] * b[j];
+      else if (sum)
+         ii = i;                          /* A nonzero element was encountered,
+                                             so from now on we will have to do
+                                             the sums in the loop above.     */
+      b[i] = sum;
+   }
+   for (i = n - 1; i >= 0; i--)
+   {                                      /* Now we do the backsubstitution,
+                                             equation (2.3.7).               */
+      sum = b[i];
+      for (j = i + 1; j < n; j++)
+         sum -= a[i][j] * b[j];
+      b[i] = sum / a[i][i];               /* Store a component of the solution
+                                             vector X.                       */
+   }                                      /* All done!                       */
+}
+/* The LU decomposition in ludcmp requires about 1/3 N^3 executions of the
+   inner loops (each with one multiply and one add). This is thus the
+   operation count for solving one (or a few) right-hand sides, and is a
+   factor of 3 better than the Gauss-Jordan routine gaussj which was given in
+   Section 2.1, and a factor of 1.5 better than a Gauss-Jordan routine (not
+   given) that does not compute the inverse matrix. For inverting a matrix,
+   the total count (including the forward and backsubstitution as discussed
+   following equation 2.3.7 above) is ( 1/3 + 1/6 + 1/2 )N^3 = N^3, the same
+   as gaussj. To summarize, this is the preferred way to solve the linear set
+   of equations A . x = b:                                                   */
+/* float **a,*b,d; */
+/* int n,*index; */
+/* ... */
+/* ludcmp(a,n,index,&d); */
+/* lubksb(a,n,index,b); */
+/* The answer x will be given back in b. Your original matrix A will have
+   been destroyed.                                                           */

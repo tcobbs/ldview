@@ -2,13 +2,10 @@
 #define __LDLMODEL_H__
 
 #include <TCFoundation/TCObject.h>
-#include <TCFoundation/TCTypedObjectArray.h>
 #include <LDLoader/LDLFileLine.h>
 #include <LDLoader/LDLError.h>
 #include <stdio.h>
 #include <stdarg.h>
-
-typedef TCTypedObjectArray<LDLFileLine> LDLFileLineArray;
 
 class TCDictionary;
 class LDLMainModel;

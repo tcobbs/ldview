@@ -327,9 +327,13 @@ void TCVector::print(FILE* outFile) const
 	fprintf(outFile, "%f %f %f", vector[0], vector[1], vector[2]);
 }
 
-void TCVector::print(char* buffer) const
+void TCVector::print(char* buffer, int precision) const
 {
-	sprintf(buffer, "%.3g %.3g %.3g", vector[0], vector[1], vector[2]);
+	char formatString[128];
+
+	sprintf(formatString, "%%.%dg %%.%dg %%.%dg", precision, precision,
+		precision);
+	sprintf(buffer, formatString, vector[0], vector[1], vector[2]);
 }
 
 // operator*(float, TCVector&) -- Overloaded Non-Member Operator
