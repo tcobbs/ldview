@@ -25,6 +25,7 @@ typedef enum
 } BFCState;
 
 typedef bool (*LDLFileCaseCallback)(char *filename);
+struct LDrawIniS;
 
 class LDLModel : public TCObject
 {
@@ -142,6 +143,7 @@ protected:
 	} m_flags;
 
 	static char *sm_systemLDrawDir;
+	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
 	static LDLFileCaseCallback fileCaseCallback;
 	static class LDLModelCleanup

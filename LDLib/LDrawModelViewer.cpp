@@ -2949,8 +2949,23 @@ void LDrawModelViewer::zoomToFit(void)
 		{
 			if (globeRadius >= 0)
 			{
-				location.normalize();
-				location *= globeRadius;
+				location[2] = globeRadius;
+/*
+				double xSquared = sqr(location[0]);
+				double ySquared = sqr(location[1]);
+				double rSquared = sqr(globeRadius);
+				double sum = xSquared + ySquared;
+
+				if (sum > rSquared)
+				{
+					rSquared = -rSquared;
+				}
+				else
+				{
+					sum = -sum;
+				}
+				location[2] = (float)sqrt(rSquared + sum);
+*/
 			}
 			else
 			{

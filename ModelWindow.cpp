@@ -3010,9 +3010,13 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 							bool zoomToFit)
 {
-	BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit);
+	char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
+		false);
+	BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit || cameraGlobe
+		!= NULL);
 	bool retValue = false;
 
+	delete cameraGlobe;
 	if (buffer)
 	{
 		if (saveImageType == PNG_IMAGE_TYPE_INDEX)

@@ -168,6 +168,10 @@ SOURCE=.\LDLTriangleLine.cpp
 
 SOURCE=.\LDLUnknownLine.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\LDrawIni.c
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -235,6 +239,14 @@ SOURCE=.\LDLTriangleLine.h
 # Begin Source File
 
 SOURCE=.\LDLUnknownLine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDrawIni.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDrawInP.h
 # End Source File
 # End Group
 # End Target
