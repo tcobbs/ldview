@@ -31,6 +31,20 @@
         <property name="spacing">
             <number>6</number>
         </property>
+	<widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout71</cstring>
+            </property>
+	<vbox>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>0</number>
+            </property>
+            <property name="spacing">
+                <number>6</number>
+            </property>
         <widget class="QListView">
             <column>
                 <property name="text">
@@ -73,6 +87,16 @@
                 <enum>NoColumn</enum>
             </property>
         </widget>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>showWarningsButton</cstring>
+            </property>
+            <property name="text">
+                <string>Show Warnings</string>
+            </property>
+        </widget>
+	</vbox>
+	</widget>
         <widget class="QLayoutWidget">
             <property name="name">
                 <cstring>Layout7</cstring>
@@ -173,6 +197,14 @@
                                 <property name="spacing">
                                     <number>6</number>
                                 </property>
+				<widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>generalErrorButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>General Error</string>
+                                    </property>
+				</widget>
                                 <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>parseErrorButton</cstring>
@@ -191,10 +223,10 @@
                                 </widget>
                                 <widget class="QCheckBox">
                                     <property name="name">
-                                        <cstring>colorErrorButton</cstring>
+                                        <cstring>singularMatrixButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Color Error</string>
+                                        <string>Singular matrix</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -207,6 +239,14 @@
                                 </widget>
                                 <widget class="QCheckBox">
                                     <property name="name">
+                                        <cstring>nonFlatQuadButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Non-flat Quad</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
                                         <cstring>concaveQuadButton</cstring>
                                     </property>
                                     <property name="text">
@@ -215,10 +255,18 @@
                                 </widget>
                                 <widget class="QCheckBox">
                                     <property name="name">
-                                        <cstring>concaveQuadSplitButton</cstring>
+                                        <cstring>badVertexOrderButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Concave Quad Split</string>
+                                        <string>Bad vertex order</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>identicalVerticesButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Identical vertices</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -229,12 +277,28 @@
                                         <string>Co-linear Points</string>
                                     </property>
                                 </widget>
-                                <widget class="QCheckBox">
+				<widget class="QCheckBox">
                                     <property name="name">
-                                        <cstring>openGLErrorButton</cstring>
+                                        <cstring>BFCWarningButton</cstring>
                                     </property>
-                                    <property name="text">
-                                        <string>OpenGL Error</string>
+                                        <property name="text">
+                                        <string>BFC Warning</string>
+                                    </property>
+                                </widget>
+				<widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>BFCErrorButton</cstring>
+                                    </property>
+                                        <property name="text">
+                                        <string>BFC Error</string>
+                                    </property>
+				</widget>
+				<widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>MPDErrorButton</cstring>
+                                    </property>
+					<property name="text">
+                                        <string>MPD Error</string>
                                     </property>
                                 </widget>
                             </vbox>
@@ -258,6 +322,82 @@
                         </size>
                     </property>
                 </spacer>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout72</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                             <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>showAllButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Show All</string>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>Spacer35</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>showNoneButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Show None</string>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                               </sizepolicy>
+                           </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>Spacer36</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>20</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </hbox>
+                </widget>
             </vbox>
         </widget>
     </hbox>
@@ -265,6 +405,12 @@
 <toolbars>
 </toolbars>
 <connections>
+    <connection>
+        <sender>generalErrorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>generalError()</slot>
+    </connection>
     <connection>
         <sender>parseErrorButton</sender>
         <signal>clicked()</signal>
@@ -278,10 +424,10 @@
         <slot>fileNotFound()</slot>
     </connection>
     <connection>
-        <sender>colorErrorButton</sender>
+        <sender>singularMatrixButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
-        <slot>colorError()</slot>
+        <slot>singularMatrix()</slot>
     </connection>
     <connection>
         <sender>partDeterminantButton</sender>
@@ -296,10 +442,10 @@
         <slot>concaveQuad()</slot>
     </connection>
     <connection>
-        <sender>concaveQuadSplitButton</sender>
+        <sender>badVertexOrderButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
-        <slot>concaveQuadSplit()</slot>
+        <slot>badVertexOrder()</slot>
     </connection>
     <connection>
         <sender>colinearPointsButton</sender>
@@ -308,10 +454,52 @@
         <slot>colinearPoints()</slot>
     </connection>
     <connection>
-        <sender>openGLErrorButton</sender>
+        <sender>MPDErrorButton</sender>
+	<signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>MPDError()</slot>
+    </connection>
+    <connection>
+        <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
-        <slot>openGLError()</slot>
+        <slot>showWarnings()</slot>
+    </connection>
+    <connection>
+        <sender>identicalVerticesButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>identicalVertices()</slot>
+    </connection>
+    <connection>
+        <sender>BFCErrorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>BFCError()</slot>
+    </connection>
+    <connection>
+        <sender>BFCWarningButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>BFCWarning()</slot>
+    </connection>
+    <connection>
+        <sender>showAllButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>showAllError()</slot>
+    </connection>
+    <connection>
+        <sender>showNoneButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>showNoneError()</slot>
+    </connection>
+    <connection>
+        <sender>nonFlatQuadButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>nonFlatQuad()</slot>
     </connection>
 </connections>
 <includes>
@@ -327,14 +515,22 @@
 </variables>
 <slots>
     <slot>setErrors( LDViewErrors * value )</slot>
+    <slot>generalError()</slot>
     <slot>parseError()</slot>
     <slot>fileNotFound()</slot>
-    <slot>colorError()</slot>
+    <slot>singularMatrix()</slot>
     <slot>partDeterminant()</slot>
     <slot>concaveQuad()</slot>
-    <slot>concaveQuadSplit()</slot>
+    <slot>badVertexOrder()</slot>
+    <slot>identicalVertices()</slot>
     <slot>colinearPoints()</slot>
-    <slot>openGLError()</slot>
+    <slot>BFCWarning()</slot>
+    <slot>BFCError()</slot>
+    <slot>MPDError()</slot>
+    <slot>nonFlatQuad()</slot>
+    <slot>showAllError()</slot>
+    <slot>showNoneError()</slot>
+    <slot>showWarnings()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>

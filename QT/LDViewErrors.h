@@ -8,6 +8,8 @@ class ErrorPanel;
 class Preferences;
 class QListViewItem;
 class QButton;
+class QStatusBar;
+class QLabel;
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
@@ -21,7 +23,11 @@ public:
 	void clear(void);
 	void addError(LDLError *error);
 	int populateListView(void);
-	
+	void doShowWarnings(void);
+	void doShowAllError(void);
+	void doShowNoneError(void);
+	void reflectSettings(void);
+	void setValues(bool);
 	void doErrorClick(QButton *button, LDLErrorType errorNumber);
 
 protected:
@@ -35,6 +41,8 @@ protected:
 	Preferences *preferences;
 	LDLErrorArray *errors;
 	bool listViewPopulated;
+	QStatusBar *statusBar;
+	QLabel *messageText;
 };
 
 #endif // __LDVIEWERRORS_H__
