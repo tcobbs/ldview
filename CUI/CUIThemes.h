@@ -33,6 +33,13 @@ typedef HRESULT (_stdcall *PFNGETTHEMECOLOR)(HTHEME hTheme, int iPartId,
 typedef void (_stdcall *PFNSETTHEMEAPPPROPERTIED)(DWORD dwFlags);
 typedef HRESULT (_stdcall *PFNGETTHEMERECT)(HTHEME hTheme, int iPartId,
 	int iStateId, int iPropId, RECT *pRect);
+typedef HRESULT (_stdcall *PFNGETTHEMETEXTEXTENT)(HTHEME hTheme, HDC hdc,
+    int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
+	DWORD dwTextFlags, const RECT *pBoundingRect, RECT *pExtentRect);
+typedef HRESULT (_stdcall *PFNDDRAWTHEMEPARENTBACKGROUND)(HWND hwnd, HDC hdc,
+	RECT* prc);
+typedef HRESULT (_stdcall *PFNGETTHEMEPARTSIZE)(HTHEME hTheme, HDC hdc,
+	int iPartId, int iStateId, RECT *prc, enum THEMESIZE eSize, SIZE *psz);
 
 class CUIExport CUIThemes
 {
@@ -60,6 +67,12 @@ public:
 	static HRESULT getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
 		int iPropId, RECT *pRect);
 	static void setThemeAppProperties(DWORD dwFlags);
+	static HRESULT getThemeTextExtent(HTHEME hTheme, HDC hdc, int iPartId,
+		int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags,
+		const RECT *pBoundingRect, RECT *pExtentRect);
+	static HRESULT drawThemeParentBackground(HWND hwnd, HDC hdc, RECT* prc);
+	static HRESULT getThemePartSize(HTHEME hTheme, HDC hdc, int iPartId,
+		int iStateId, RECT *prc, enum THEMESIZE eSize, SIZE *psz);
 
 protected:
 	CUIThemes(void);
@@ -79,6 +92,9 @@ protected:
 	static PFNGETTHEMECOLOR sm_getThemeColor;
 	static PFNSETTHEMEAPPPROPERTIED sm_setThemeAppProperties;
 	static PFNGETTHEMERECT sm_getThemeRect;
+	static PFNGETTHEMETEXTEXTENT sm_getThemeTextExtent;
+	static PFNDDRAWTHEMEPARENTBACKGROUND sm_drawThemeParentBackground;
+	static PFNGETTHEMEPARTSIZE sm_getThemePartSize;
 	static void deinit(void);
 
 	static class CUIThemesCleanup

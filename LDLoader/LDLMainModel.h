@@ -27,6 +27,11 @@ public:
 	bool getLowResStuds(void) const { return m_mainFlags.lowResStuds; }
 	void setBlackEdgeLines(bool value) { m_mainFlags.blackEdgeLines = value; }
 	bool getBlackEdgeLines(void) { return m_mainFlags.blackEdgeLines; }
+	void setProcessLDConfig(bool value) { m_mainFlags.processLDConfig = value; }
+	bool getProcessLDConfig(void)
+	{
+		return m_mainFlags.processLDConfig != false;
+	}
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
 	virtual bool getLoadCanceled(void)
 	{
@@ -34,6 +39,7 @@ public:
 	}
 protected:
 	virtual void dealloc(void);
+	virtual void processLDConfig(void);
 
 	TCDictionary *m_loadedModels;
 	LDLPalette *m_mainPalette;
@@ -43,6 +49,7 @@ protected:
 		// Public flags
 		bool lowResStuds:1;
 		bool blackEdgeLines:1;
+		bool processLDConfig:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

@@ -716,6 +716,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		mainModel->setLowResStuds(!flags.qualityStuds);
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
 		mainModel->setExtraSearchDirs(extraSearchDirs);
+		mainModel->setProcessLDConfig(flags.processLDConfig);
 		if (mainModel->load(filename))
 		{
 			LDModelParser *modelParser = new LDModelParser;
@@ -2710,6 +2711,12 @@ void LDrawModelViewer::panXY(int xValue, int yValue)
 		(float)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
 	yPan -= yValue / adjustment / (float)pow(2.0 / distance, 1.1) *
 		(float)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
+}
+
+void LDrawModelViewer::setXYPan(float xValue, float yValue)
+{
+	xPan = xValue;
+	yPan = yValue;
 }
 
 void LDrawModelViewer::openGlWillEnd(void)

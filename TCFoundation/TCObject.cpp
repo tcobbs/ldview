@@ -24,7 +24,7 @@ TCObject* TCObject::retain(void)
 
 void TCObject::release(void)
 {
-	assert(retainCount > 0);
+//	assert(retainCount > 0);
 	retainCount--;
 	if (!retainCount)
 	{

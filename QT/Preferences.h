@@ -58,10 +58,21 @@ public:
 
 	bool getStatusBar(void) { return statusBar; }
 	void setStatusBar(bool value);
+	bool getToolBar(void) { return toolBar; }
+	void setToolBar(bool value);
 	void setButtonState(QButton *button, bool state);
 	void setWindowSize(int width, int height);
 	int getWindowWidth(void);
 	int getWindowHeight(void);
+	void setDrawWireframe(bool);
+	bool getDrawWireframe(void) { return wireframe; }
+	void setShowsHighlightLines(bool);
+	bool getShowsHighlightLines(void) { return edgeLines; }
+	void setUseLighting(bool);
+	bool getUseLighting(void) { return lighting; }
+	void setAllowPrimitiveSubstitution(bool);
+	void setUseSeams(bool);
+	bool getUseSeams(void) { return seams; }
 
 	static char *getLastOpenPath(char *pathKey = NULL);
 	static void setLastOpenPath(const char *path, char *pathKey = NULL);
@@ -190,6 +201,7 @@ protected:
 
 	// Other Settings
 	bool statusBar;
+	bool toolBar;
 	int windowWidth;
 	int windowHeight;
 };

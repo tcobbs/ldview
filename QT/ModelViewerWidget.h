@@ -11,6 +11,7 @@
 class LDrawModelViewer;
 class LDView;
 class QStatusBar;
+class QToolBar;
 class QProgressBar;
 class QLabel;
 class QApplication;
@@ -24,6 +25,7 @@ class QMenuBar;
 class QPopupMenu;
 class QFileInfo;
 class QAction;
+class QDir;
 class TCStringArray;
 class LDLError;
 class TCProgressAlert;
@@ -55,6 +57,7 @@ public:
 	void doViewFullScreen(void);
 	void doViewReset(void);
 	void doViewStatusBar(bool flag);
+	void doViewToolBar(bool flag);
 	void doViewErrors(void);
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
@@ -93,6 +96,12 @@ public:
     void doSaveDefaultViewAngle(void);
 	void doShowViewInfo(void);
 	QSize minimumSize(void);
+	void doWireframe(bool);
+	void doEdge(bool);
+	void doLighting(bool);
+	void doPrimitiveSubstitution(bool);
+	void doSeams(bool);
+	void reflectSettings(void);
 
 protected slots:
 	virtual void doAboutOK(void);
@@ -170,6 +179,8 @@ protected:
 //	static int staticProgressCallback(char *message, float progress,
 //		void *userData);
 //	static int staticErrorCallback(LDLError *error, void *userData);
+	static bool staticFileCaseCallback(char *filename);
+	static bool staticFileCaseLevel(QDir &dir, char *filename);
 
 	LDrawModelViewer *modelViewer;
 	bool mouseButtonsDown[MAX_MOUSE_BUTTONS];
@@ -200,6 +211,7 @@ protected:
 	int fileReloadId;
 	int fileSaveSnapshotId;
 	QStatusBar *statusBar;
+	QToolBar *toolBar;
 	QProgressBar *progressBar;
 	QLabel *progressLabel, *progressMode;
 	bool loading;

@@ -21,6 +21,7 @@
 
 char *LDLModel::sm_systemLDrawDir = NULL;
 int LDLModel::sm_modelCount = 0;
+LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 
 LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
@@ -169,6 +170,44 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes)
 	return subModel;
 }
 
+FILE *LDLModel::openModelFile(const char *filename)
+{
+	if (fileCaseCallback)
+	{
+		char *newFilename = copyString(filename);
+		FILE *modelFile;
+
+		convertStringToLower(newFilename);
+		if ((modelFile = fopen(newFilename, "rb")) == NULL)
+		{
+			convertStringToUpper(newFilename);
+			if ((modelFile = fopen(newFilename, "rb")) == NULL)
+			{
+				strcpy(newFilename, filename);
+				if ((modelFile = fopen(filename, "rb")) == NULL)
+				{
+					if (fileCaseCallback(newFilename))
+					{
+						modelFile = fopen(newFilename, "rb");
+					}
+				}
+			}
+		}
+		delete newFilename;
+		return modelFile;
+	}
+	else
+	{
+		char *newFilename = copyString(filename);
+		FILE *modelFile;
+
+		convertStringToLower(newFilename);
+		modelFile = fopen(newFilename, "rb");
+		delete newFilename;
+		return modelFile;
+	}
+}
+
 FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 {
 	FILE* subModelFile;
@@ -178,24 +217,24 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	// Use binary mode to work around problem with fseek on a non-binary file.
 	// file.  The file parsing code will still work fine and strip out the extra
 	// data.
-	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
+	if ((subModelFile = openModelFile(subModelPath)) != NULL)
 	{
 		return subModelFile;
 	}
 	sprintf(subModelPath, "%s/P/%s", lDrawDir(), subModelName);
-	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
+	if ((subModelFile = openModelFile(subModelPath)) != NULL)
 	{
 		m_flags.loadingPrimitive = true;
 		return subModelFile;
 	}
 	sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
-	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
+	if ((subModelFile = openModelFile(subModelPath)) != NULL)
 	{
 		m_flags.loadingPart = true;
 		return subModelFile;
 	}
 	sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
-	if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
+	if ((subModelFile = openModelFile(subModelPath)) != NULL)
 	{
 		return subModelFile;
 	}
@@ -207,7 +246,7 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 		for (i = 0; i < count; i++)
 		{
 			sprintf(subModelPath, "%s/%s", (*extraSearchDirs)[i], subModelName);
-			if ((subModelFile = fopen(subModelPath, "rb")) != NULL)
+			if ((subModelFile = openModelFile(subModelPath)) != NULL)
 			{
 				return subModelFile;
 			}
@@ -422,19 +461,31 @@ void LDLModel::reportProgress(const char *message, float progress,
 	}
 }
 
-bool LDLModel::load(FILE *file)
+bool LDLModel::load(FILE *file, bool trackProgress)
 {
 	bool retValue;
 
-	reportProgress(LOAD_MESSAGE, 0.0f);
+	if (trackProgress)
+	{
+		reportProgress(LOAD_MESSAGE, 0.0f);
+	}
 	if (!read(file))
 	{
-		reportProgress(LOAD_MESSAGE, 1.0f);
+		if (trackProgress)
+		{
+			reportProgress(LOAD_MESSAGE, 1.0f);
+		}
 		return false;
 	}
-	reportProgress(LOAD_MESSAGE, MAIN_READ_FRACTION);
+	if (trackProgress)
+	{
+		reportProgress(LOAD_MESSAGE, MAIN_READ_FRACTION);
+	}
 	retValue = parse();
-	reportProgress(LOAD_MESSAGE, 1.0f);
+	if (trackProgress)
+	{
+		reportProgress(LOAD_MESSAGE, 1.0f);
+	}
 	return retValue;
 }
 

@@ -13,6 +13,7 @@ LDLMainModel::LDLMainModel(void)
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
 	m_mainFlags.loadCanceled = false;
+	m_mainFlags.processLDConfig = true;
 }
 
 LDLMainModel::LDLMainModel(const LDLMainModel &other)
@@ -66,8 +67,13 @@ bool LDLMainModel::load(const char *filename)
 	m_mainModel = this;
 	if (file)
 	{
-		bool retValue = LDLModel::load(file);
+		bool retValue;
 
+		if (m_mainFlags.processLDConfig)
+		{
+			processLDConfig();
+		}
+		retValue = LDLModel::load(file);
 		TCObject::release(m_loadedModels);
 		m_loadedModels = NULL;
 		return retValue;
@@ -79,6 +85,22 @@ bool LDLMainModel::load(const char *filename)
 		sendAlert(error);
 		error->release();
 		return false;
+	}
+}
+
+void LDLMainModel::processLDConfig(void)
+{
+	char filename[1024];
+	FILE *configFile;
+
+	sprintf(filename, "%s/ldconfig.ldr", lDrawDir());
+	configFile = fopen(filename, "rb");
+	if (configFile)
+	{
+		LDLModel *subModel;
+
+		fclose(configFile);
+		subModel = subModelNamed(filename);
 	}
 }
 

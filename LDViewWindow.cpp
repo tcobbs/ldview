@@ -14,6 +14,8 @@
 #include <TCFoundation/TCSortedStringArray.h>
 #include <TCFoundation/TCThreadManager.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
@@ -105,6 +107,7 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 			   hLDrawDirWindow(NULL),
 			   hOpenGLInfoWindow(NULL),
 			   hExtraDirsWindow(NULL),
+			   hLibraryUpdateWindow(NULL),
 			   hStatusBar(NULL),
 			   hToolbar(NULL),
 			   userLDrawDir(NULL),
@@ -166,6 +169,8 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 		MAKEINTRESOURCE(IDI_EXAMINE), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	hFlythroughIcon = (HICON)LoadImage(getLanguageModule(),
 		MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
+	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+		(TCAlertCallback)progressAlertCallback);
 //	DeleteObject(hBackgroundBrush);
 // 	hBackgroundBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
 //		(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));
@@ -177,6 +182,7 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
 	delete videoModes;
@@ -192,6 +198,10 @@ void LDViewWindow::dealloc(void)
 	if (hExtraDirsWindow)
 	{
 		DestroyWindow(hExtraDirsWindow);
+	}
+	if (hLibraryUpdateWindow)
+	{
+		DestroyWindow(hLibraryUpdateWindow);
 	}
 	delete productVersion;
 	delete legalCopyright;
@@ -768,11 +778,13 @@ void LDViewWindow::createAboutBox(void)
 	char fullVersionString[1024];
 	char versionString[128];
 	char copyrightString[128];
-	char buildDateString[128] = __DATE__;
+	char buildDateString[128];
+	char *tmpString = stringByReplacingSubstring(__DATE__, "  ", " ");
 	int dateCount;
-	char **dateComponents = componentsSeparatedByString(buildDateString, " ",
+	char **dateComponents = componentsSeparatedByString(tmpString, " ",
 		dateCount);
 
+	delete tmpString;
 	sprintf(buildDateString, "!UnknownDate!");
 	if (dateCount == 3)
 	{
@@ -1336,6 +1348,20 @@ BOOL LDViewWindow::doLDrawDirCommand(int controlId, int notifyCode,
 	}
 }
 
+void LDViewWindow::doDialogOK(HWND hDlg)
+{
+	doDialogClose(hDlg);
+}
+
+void LDViewWindow::doDialogCancel(HWND hDlg)
+{
+	if (hDlg == hLibraryUpdateWindow)
+	{
+		libraryUpdateCanceled = true;
+	}
+	doDialogClose(hDlg);
+}
+
 BOOL LDViewWindow::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 								   HWND hControlWnd)
 {
@@ -1357,10 +1383,10 @@ BOOL LDViewWindow::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 		switch (controlId)
 		{
 			case IDOK:
-				doDialogClose(hDlg);
+				doDialogOK(hDlg);
 				break;
 			case IDCANCEL:
-				doDialogClose(hDlg);
+				doDialogCancel(hDlg);
 				break;
 			default:
 				return FALSE;
@@ -2786,6 +2812,7 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 		TCThreadManager *threadManager = TCThreadManager::threadManager();
 		bool gotFinish = false;
 		DWORD dwStartTicks = GetTickCount();
+		char statusText[1024] = "";
 
 		while (!gotFinish)
 		{
@@ -2815,30 +2842,25 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 		}
 		if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
 		{
-			char error[1024];
-
-			strcpy(error, libraryUpdater->getError());
-			MessageBox(hWindow, error,
-				TCLocalStrings::get("LibraryUpdateError"), MB_OK);
+			sprintf(statusText, "%s:\n%s",
+				TCLocalStrings::get("LibraryUpdateError"),
+				libraryUpdater->getError());
 		}
 		libraryUpdater->release();
 		libraryUpdater = NULL;
-		SendMessage(modelWindow->getProgressBar(), PBM_SETPOS, 0, 0);
 		switch (finishType)
 		{
 		case LIBRARY_UPDATE_FINISHED:
-			MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateComplete"),
-				"LDView", MB_OK);
+			strcpy(statusText, TCLocalStrings::get("LibraryUpdateComplete"));
 			break;
 		case LIBRARY_UPDATE_CANCELED:
-			MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateCanceled"),
-				"LDView", MB_OK);
+			strcpy(statusText, TCLocalStrings::get("LibraryUpdateCanceled"));
 			break;
 		case LIBRARY_UPDATE_NONE:
-			MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateUnnecessary"),
-				"LDView", MB_OK);
+			strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));
 			break;
 		}
+		SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)statusText);
 	}
 }
 
@@ -2850,22 +2872,84 @@ void LDViewWindow::fetchHeaderFinish(TCWebClient* webClient)
 }
 */
 
+void LDViewWindow::createLibraryUpdateWindow(void)
+{
+	if (!hLibraryUpdateWindow)
+	{
+		hLibraryUpdateWindow = createDialog(IDD_LIBRARY_UPDATES, FALSE);
+	}
+	hUpdateProgressBar = GetDlgItem(hLibraryUpdateWindow, IDC_UPDATE_PROGRESS);
+	hUpdateStatus = GetDlgItem(hLibraryUpdateWindow, IDC_UPDATE_STATUS_FIELD);
+	SendMessage(hUpdateStatus, WM_SETTEXT, 0,
+		(LPARAM)TCLocalStrings::get("CheckingForUpdates"));
+	SendMessage(hUpdateProgressBar, PBM_SETPOS, 0, 0);
+}
+
+void LDViewWindow::showLibraryUpdateWindow(void)
+{
+	if (!hLibraryUpdateWindow)
+	{
+		createLibraryUpdateWindow();
+	}
+	ShowWindow(hLibraryUpdateWindow, SW_SHOW);
+}
+
 void LDViewWindow::checkForLibraryUpdates(void)
 {
 	if (libraryUpdater)
 	{
-		MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateAlready"),
-			TCLocalStrings::get("Error"), MB_OK);
+		showLibraryUpdateWindow();
+//		MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateAlready"),
+//			TCLocalStrings::get("Error"), MB_OK);
 	}
 	else
 	{
 		libraryUpdater = new LDLibraryUpdater;
 		char *ldrawDir = getLDrawDir();
-		
+
+		libraryUpdateCanceled = false;
+		showLibraryUpdateWindow();
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
 		libraryUpdater->setLdrawDir(ldrawDir);
 		delete ldrawDir;
 		libraryUpdater->checkForUpdates();
+	}
+}
+
+void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
+{
+	if (alert && strcmp(alert->getSource(), LD_LIBRARY_UPDATER) == 0)
+	{
+		debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+			alert->getProgress());
+		SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)alert->getMessage());
+		SendMessage(hUpdateProgressBar, PBM_SETPOS,
+			(int)(alert->getProgress() * 100), 0);
+		if (alert->getProgress() == 1.0f)
+		{
+			if (alert->getExtraInfo())
+			{
+				if (strcmp((*(alert->getExtraInfo()))[0], "None") == 0)
+				{
+					PostMessage(hWindow, WM_COMMAND,
+						MAKELONG(BN_CLICKED, LIBRARY_UPDATE_NONE), 0);
+				}
+				else
+				{
+					PostMessage(hWindow, WM_COMMAND,
+						MAKELONG(BN_CLICKED, LIBRARY_UPDATE_FINISHED), 0);
+				}
+			}
+			else
+			{
+				PostMessage(hWindow, WM_COMMAND,
+					MAKELONG(BN_CLICKED, LIBRARY_UPDATE_CANCELED), 0);
+			}
+		}
+		if (libraryUpdateCanceled)
+		{
+			alert->abort();
+		}
 	}
 }
 

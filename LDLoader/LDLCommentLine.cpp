@@ -1,4 +1,6 @@
 #include "LDLCommentLine.h"
+#include "LDLPalette.h"
+#include "LDLMainModel.h"
 #include <stdio.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
@@ -32,6 +34,23 @@ void LDLCommentLine::dealloc(void)
 
 bool LDLCommentLine::parse(void)
 {
+	if (m_parentModel)
+	{
+		LDLMainModel *mainModel = m_parentModel->getMainModel();
+
+		if (mainModel)
+		{
+			LDLPalette *palette = mainModel->getPalette();
+
+			if (palette)
+			{
+				if (palette->isColorComment(m_processedLine))
+				{
+					palette->parseColorComment(m_processedLine);
+				}
+			}
+		}
+	}
 	return true;
 }
 

@@ -61,6 +61,7 @@
 #define IDB_COLINEAR                    164
 #define IDR_SS_PREVIEW                  164
 #define IDB_COLINEAR_MASK               165
+#define IDD_LIBRARY_UPDATES             165
 #define IDB_TOOLBAR                     166
 #define IDB_VERTEX_ORDER                167
 #define IDB_VERTEX_ORDER_MASK           168
@@ -226,6 +227,8 @@
 #define IDC_MISC_BOX                    1192
 #define IDC_SAVE_ACTUAL_SIZE_BOX        1193
 #define IDC_MEMORY_COMBO                1194
+#define IDC_UPDATE_PROGRESS             1195
+#define IDC_UPDATE_STATUS_FIELD         1196
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -287,9 +290,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        165
+#define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40076
-#define _APS_NEXT_CONTROL_VALUE         1195
+#define _APS_NEXT_CONTROL_VALUE         1197
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

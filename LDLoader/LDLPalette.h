@@ -16,6 +16,7 @@ typedef struct
 	int edgeColorNumber;
 	float specular[4];
 	float shininess;
+	float luminance;
 } LDLColorInfo;
 
 class LDLPalette : public TCObject
@@ -27,7 +28,7 @@ public:
 	void getRGBA(int colorNumber, int &r, int &g, int &b, int &a);
 	int getEdgeColorNumber(int colorNumber);
 	bool isColorComment(const char *comment);
-	void parseColorComment(const char *comment);
+	bool parseColorComment(const char *comment);
 	LDLColorInfo &getColorInfo(int index) { return m_colors[index]; }
 	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b,
 		bool transparent);
@@ -43,10 +44,13 @@ protected:
 	void initDitherColors(void);
 	void initSpecular(int index, float sr, float sg, float sb, float sa,
 		float shininess);
+	void initSpecular(LDLColorInfo &colorInfo, float sr, float sg, float sb,
+		float sa, float shininess);
 	void initOtherColors(void);
 	void initOtherColor(int index, TCByte r, TCByte g, TCByte b,
 		TCByte a = 255);
-	void parseLDLiteColorComment(const char *comment);
+	bool parseLDLiteColorComment(const char *comment);
+	bool parseLDrawOrgColorComment(const char *comment);
 	void initSpecularAndShininess(LDLColorInfo &color);
 	void getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b, int &a);
 	bool getCustomColorRGBA(int colorNumber, int &r, int &g, int &b, int &a);
@@ -54,6 +58,9 @@ protected:
 		TCULong a2);
 	virtual bool isColorNumberRGB(int colorNumber, TCByte r, TCByte g,
 		TCByte b);
+	virtual LDLColorInfo *updateColor(int colorNumber, const LDLColor &color,
+		const LDLColor &ditherColor, int edgeColorNumber,
+		float luminance = 1.0f);
 
 	class CustomColor : public TCObject
 	{

@@ -3324,14 +3324,14 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 				}
 			}
 		}
-		GetThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL, TS_TRUE,
-			&boxSize);
+		CUIThemes::getThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL,
+			TS_TRUE, &boxSize);
 		boxRect.right = itemRect.left + boxSize.cx;
-		DrawThemeParentBackground(hWnd, hdc, &itemRect);
+		CUIThemes::drawThemeParentBackground(hWnd, hdc, &itemRect);
 		CUIThemes::drawThemeBackground(hTheme, hdc, BP_CHECKBOX, state,
 			&boxRect, NULL);
-		GetThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, wtitle, -1, DT_LEFT,
-			&itemRect, &textRect);
+		CUIThemes::getThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, wtitle,
+			-1, DT_LEFT, &itemRect, &textRect);
 		OffsetRect(&textRect, boxSize.cx + 3, 1);
 		// Draw the focus rect
 		if (bIsFocused && bDrawFocusRect)
@@ -3344,8 +3344,8 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		// All this so that we can draw the text in the font and color of the
 		// group box text instead of the check box text.  Here's where we do
 		// that.
-		DrawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL, wtitle, -1, DT_LEFT,
-			NULL, &textRect);
+		CUIThemes::drawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL, wtitle,
+			-1, DT_LEFT, NULL, &textRect);
 	}
 	return TRUE;
 }

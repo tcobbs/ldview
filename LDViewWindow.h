@@ -122,8 +122,12 @@ class LDViewWindow: public CUIWindow
 		virtual HBRUSH getBackgroundBrush(void);
 		virtual void createAboutBox(void);
 		virtual BOOL showAboutBox(void);
+		virtual void createLibraryUpdateWindow(void);
+		virtual void showLibraryUpdateWindow(void);
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 			HWND controlHWnd);
+		virtual void doDialogOK(HWND hDlg);
+		virtual void doDialogCancel(HWND hDlg);
 		virtual void createLDrawDirWindow(void);
 		virtual BOOL doLDrawDirOK(HWND);
 //		virtual BOOL doLDrawDirBrowse(HWND);
@@ -248,6 +252,7 @@ class LDViewWindow: public CUIWindow
 		virtual void doAlwaysBlack(void);
 		virtual bool doToolbarCheck(bool &value, LPARAM commandId);
 		virtual void updateEdgesMenu(void);
+		void progressAlertCallback(TCProgressAlert *error);
 
 		void loadSettings(void);
 
@@ -265,6 +270,9 @@ class LDViewWindow: public CUIWindow
 		HWND hStatusBar;
 		HWND hToolbar;
 		HWND hFrameWindow;
+		HWND hLibraryUpdateWindow;
+		HWND hUpdateProgressBar;
+		HWND hUpdateStatus;
 		char* userLDrawDir;
 		BOOL fullScreen;
 		BOOL fullScreenActive;
@@ -311,6 +319,7 @@ class LDViewWindow: public CUIWindow
 		bool lighting;
 		bool bfc;
 		LDVAngle lastViewAngle;
+		bool libraryUpdateCanceled;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;

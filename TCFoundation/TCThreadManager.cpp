@@ -178,6 +178,7 @@ TCThread* TCThreadManager::getFinishedThread(void)
 	if (finishedThreads->getCount())
 	{
 		result = finishedThreads->objectAtIndex(0);
+		TCObject::retain(result);
 	}
 	if (needToUnlock)
 	{
@@ -186,6 +187,7 @@ TCThread* TCThreadManager::getFinishedThread(void)
 	if (result)
 	{
 		result->performFinish();
+		result->release();
 	}
 	return result;
 }

@@ -23,6 +23,7 @@
 #include <qapplication.h>
 #include <qfiledialog.h>
 #include <qstatusbar.h>
+#include <qtoolbar.h>
 #include <qprogressbar.h>
 #include <qlabel.h>
 #include <qpainter.h>
@@ -77,6 +78,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	fileReloadId(-1),
 	fileSaveSnapshotId(-1),
 	statusBar(NULL),
+	toolBar(NULL),
 	progressBar(NULL),
 	progressLabel(NULL),
 	progressMode(NULL),
@@ -100,6 +102,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	const QMimeSource *mimeSource =
 		QMimeSourceFactory::defaultFactory()->data("StudLogo.png");
 
+	LDLModel::setFileCaseCallback(staticFileCaseCallback);
 	if (mimeSource)
 	{
 		QImage studImage;
@@ -173,6 +176,7 @@ void ModelViewerWidget::initializeGL(void)
 {
 	lock();
 	doViewStatusBar(preferences->getStatusBar());
+	doViewToolBar(preferences->getToolBar());
 	unlock();
 }
 
@@ -319,6 +323,9 @@ void ModelViewerWidget::postLoad(void)
 	makeCurrent();
 	resizeGL(width(), height());
 	startPaintTimer();
+    mainWindow->fileSaveAction->setEnabled(true);
+    mainWindow->fileReloadAction->setEnabled(true);
+
 }
 
 void ModelViewerWidget::doFileReload(void)
@@ -702,6 +709,10 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 */
 	pollAction = mainWindow->noPollingAction;
 	statusBar = mainWindow->statusBar();
+	toolBar = new QToolBar;
+	reflectSettings();
+    mainWindow->fileSaveAction->setEnabled(false);
+    mainWindow->fileReloadAction->setEnabled(false);
 	progressBar = new QProgressBar(statusBar);
 	progressLabel = new QLabel(statusBar);
 	progressMode = new QLabel(statusBar);
@@ -710,6 +721,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	statusBar->addWidget(progressLabel, 1);
 	statusBar->addWidget(progressMode);
 	mainWindow->viewStatusBarAction->setOn(preferences->getStatusBar());
+	mainWindow->viewToolBarAction->setOn(preferences->getToolBar());
 	switch (Preferences::getPollMode())
 	{
 	case LDVPollPrompt:
@@ -977,6 +989,21 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 	unlock();
 }
 
+void ModelViewerWidget::doViewToolBar(bool flag)
+{
+    lock();
+    if (flag)
+    {
+		mainWindow->dockWindows().take()->show();
+    }
+    else
+    {
+        mainWindow->dockWindows().take()->hide();
+	}
+	preferences->setToolBar(flag);
+	unlock();
+}
+
 void ModelViewerWidget::doViewFullScreen(void)
 {
 	static QPoint pos;
@@ -987,6 +1014,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		statusBar->hide();
 		mainWindow->GroupBox12->setFrameShape( QFrame::NoFrame );
 		mainWindow->GroupBox12->layout()->setMargin( 0 );
+		mainWindow->dockWindows().take()->hide();
 		mainWindow->showFullScreen();
 		fullscreen=1;
 	} else
@@ -997,6 +1025,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		mainWindow->move(pos);
         menuBar->show();
         if(preferences->getStatusBar()) {statusBar->show();}
+		if(preferences->getToolBar()) {mainWindow->dockWindows().take()->show();}
 		fullscreen=0;
 	}
 }
@@ -1104,6 +1133,48 @@ void ModelViewerWidget::doAboutOK(void)
 	lock();
 	aboutPanel->hide();
 	unlock();
+}
+
+void ModelViewerWidget::doWireframe(bool value)
+{
+	preferences->setDrawWireframe(value);
+	doApply();
+}
+
+void ModelViewerWidget::doEdge(bool value)
+{
+    preferences->setShowsHighlightLines(value);
+    doApply();
+}
+
+void ModelViewerWidget::doLighting(bool value)
+{
+    preferences->setUseLighting(value);
+    doApply();
+}
+
+void ModelViewerWidget::doPrimitiveSubstitution(bool value)
+{
+    preferences->setAllowPrimitiveSubstitution(value);
+	doApply();
+}
+
+void ModelViewerWidget::doSeams(bool value)
+{
+	preferences->setUseSeams(value);
+	doApply();
+}
+
+void ModelViewerWidget::reflectSettings(void)
+{
+    if (mainWindow && mainWindow->toolbarWireframeAction && preferences)
+    {
+        mainWindow->toolbarWireframeAction->setOn(preferences->getDrawWireframe());
+		mainWindow->toolbarEdgeAction->setOn(preferences->getShowsHighlightLines());
+		mainWindow->toolbarLightingAction->setOn(preferences->getUseLighting());
+		mainWindow->toolbarSeamsAction->setOn(preferences->getUseSeams());
+		mainWindow->toolbarPrimitiveSubstitutionAction->setOn(preferences->getAllowPrimitiveSubstitution());
+    }
 }
 
 void ModelViewerWidget::updateFPS(void)
@@ -1220,13 +1291,16 @@ bool ModelViewerWidget::verifyLDrawDir(char *value)
 {
 	QString currentDir = QDir::currentDirPath();
 	bool found = false;
+	char buf[128];
 
 	if (QDir::setCurrent(value))
 	{
-		if (QDir::current().cd("parts"))
+		strcpy(buf, "parts");
+		if (staticFileCaseCallback(buf) && QDir::current().cd(buf))
 		{
 			QDir::setCurrent(value);
-			if (QDir::current().cd("p"))
+			strcpy(buf, "p");
+			if (staticFileCaseCallback(buf) && QDir::current().cd(buf))
 			{
 				LDLModel::setLDrawDir(value);
 				found = true;
@@ -2210,3 +2284,96 @@ void ModelViewerWidget::progressAlertCallback(TCProgressAlert *alert)
 	}
 }
 
+bool ModelViewerWidget::staticFileCaseLevel(QDir &dir, char *filename)
+{
+	int i;
+	int len = strlen(filename);
+	QString wildcard;
+	QStringList files;
+
+	if (!dir.isReadable())
+	{
+		return false;
+	}
+	for (i = 0; i < len; i++)
+	{
+		QChar letter = filename[i];
+
+		if (letter.isLetter())
+		{
+			wildcard.append('[');
+			wildcard.append(letter.lower());
+			wildcard.append(letter.upper());
+			wildcard.append(']');
+		}
+		else
+		{
+			wildcard.append(letter);
+		}
+	}
+	dir.setNameFilter(wildcard);
+	files = dir.entryList();
+	if (files.count())
+	{
+		QString file = files[0];
+
+		if (file.length() == strlen(filename))
+		{
+			// This should never be false, but just want to be sure.
+			strcpy(filename, file);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool ModelViewerWidget::staticFileCaseCallback(char *filename)
+{
+	char *shortName;
+	QDir dir;
+	char *firstSlashSpot;
+
+	dir.setFilter(QDir::All | QDir::Readable | QDir::Hidden | QDir::System);
+	replaceStringCharacter(filename, '\\', '/');
+	firstSlashSpot = strchr(filename, '/');
+	if (firstSlashSpot)
+	{
+		char *lastSlashSpot = strrchr(filename, '/');
+		int dirLen;
+		char *dirName;
+
+		while (firstSlashSpot != lastSlashSpot)
+		{
+			char *nextSlashSpot = strchr(firstSlashSpot + 1, '/');
+
+			dirLen = firstSlashSpot - filename + 1;
+			dirName = new char[dirLen + 1];
+			*nextSlashSpot = 0;
+			strncpy(dirName, filename, dirLen);
+			dirName[dirLen] = 0;
+			if (dirLen)
+			{
+				dir.setPath(dirName);
+				delete dirName;
+				if (!staticFileCaseLevel(dir, firstSlashSpot + 1))
+				{
+					return false;
+				}
+			}
+			firstSlashSpot = nextSlashSpot;
+			*firstSlashSpot = '/';
+		}
+		dirLen = lastSlashSpot - filename;
+		dirName = new char[dirLen + 1];
+		strncpy(dirName, filename, dirLen);
+		dirName[dirLen] = 0;
+		dir.setPath(dirName);
+		shortName = lastSlashSpot + 1;
+		delete dirName;
+	}
+	else
+	{
+		shortName = filename;
+	}
+	return staticFileCaseLevel(dir, shortName);
+}

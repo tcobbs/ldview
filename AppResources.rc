@@ -642,6 +642,18 @@ BEGIN
     LTEXT           "ID_STATUS_BAR",ID_STATUS_BAR,13,80,60,8
 END
 
+IDD_LIBRARY_UPDATES DIALOG DISCARDABLE  0, 0, 280, 81
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "LDraw Library Updates"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,170,60,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,223,60,50,14
+    CONTROL         "Progress1",IDC_UPDATE_PROGRESS,"msctls_progress32",
+                    WS_BORDER,7,34,266,14
+    LTEXT           "Static",IDC_UPDATE_STATUS_FIELD,7,7,266,25
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -779,6 +791,14 @@ BEGIN
         RIGHTMARGIN, 313
         TOPMARGIN, 7
         BOTTOMMARGIN, 221
+    END
+
+    IDD_LIBRARY_UPDATES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 273
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 74
     END
 END
 #endif    // APSTUDIO_INVOKED
