@@ -95,6 +95,8 @@ class TCExport TCUserDefaults: public TCObject
 		char *qKeyForKey(const char *key, bool sessionSpecific);
 		void deleteSubkeys(const char *key);
 		void defGetAllKeysUnderKey(const char *key, TCStringArray *allKeys);
+		void copyTree(const char *dstKey, const char *srcKey,
+			const char *skipKey);
 #endif // _QT
 #endif // !WIN32
 

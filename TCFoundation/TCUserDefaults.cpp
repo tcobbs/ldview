@@ -646,11 +646,11 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 {
 	if (value != sessionName)
 	{
-		delete sessionName;
-		sessionName = copyString(value);
 #ifdef WIN32
 		HKEY hOldSessionKey = hSessionKey;
 
+		delete sessionName;
+		sessionName = copyString(value);
 		if (sessionName && appName)
 		{
 			hSessionKey = openSessionKey();
@@ -707,15 +707,28 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 #else // WIN32
 #ifdef _QT
 	char key[1024];
-	QStringList subkeyList;
+	QStringList sessionNames;
 	
 	sprintf(key, "/%s/Sessions/", appName);
-	subkeyList = qSettings->subkeyList(key);
-	if (subkeyList.findIndex(value) == -1)
+	sessionNames = qSettings->subkeyList(key);
+	if (sessionNames.findIndex(value) == -1)
 	{
-		// We need to copy all the data from our current session into the new
-		// one.
+		char srcKey[1024];
+		char dstKey[1024];
+
+		sprintf(dstKey, "%s%s", key, value);
+		if (sessionName)
+		{
+			sprintf(srcKey, "%s%s", key, sessionName);
+		}
+		else
+		{
+			sprintf(srcKey, "/%s/", appName);
+		}
+		copyTree(dstKey, srcKey, key);
 	}
+	delete sessionName;
+	sessionName = copyString(value);
 #endif // _QT
 #endif // !WIN32
 	}
@@ -1049,6 +1062,39 @@ void TCUserDefaults::defGetAllKeysUnderKey(const char *key,
 	for (i = 0; i < count; i++)
 	{
 		allKeys->addString(subkeyList[i]);
+	}
+}
+
+void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
+							  const char *skipKey)
+{
+	QStringList subkeyList = qSettings->subkeyList(srcKey);
+	QStringList entryList = qSettings->entryList(srcKey);
+	int i;
+	int count = subkeyList.count();
+
+	if (strcmp(dstKey, skipKey) == 0)
+	{
+		return;
+	}
+	for (i = 0; i < count; i++)
+	{
+		char srcSubkey[1024];
+		char dstSubkey[1024];
+
+		sprintf(srcSubkey, "%s/%s", srcKey, (const char *)subkeyList[i]);
+		sprintf(dstSubkey, "%s/%s", dstKey, (const char *)subkeyList[i]);
+		copyTree(dstSubkey, srcSubkey, skipKey);
+	}
+	count = entryList.count();
+	for (i = 0; i < count; i++)
+	{
+		char srcSubKey[1024];
+		char dstSubKey[1024];
+
+		sprintf(srcSubKey, "%s/%s", srcKey, (const char *)entryList[i]);
+		sprintf(dstSubKey, "%s/%s", dstKey, (const char *)entryList[i]);
+		qSettings->writeEntry(dstSubKey, qSettings->readEntry(srcSubKey));
 	}
 }
 
