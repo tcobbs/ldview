@@ -227,6 +227,14 @@ SOURCE=.\Icons\edt_up.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\error_colinear.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_colinear_mask.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\error_color.bmp
 # End Source File
 # Begin Source File
