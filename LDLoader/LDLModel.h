@@ -32,7 +32,7 @@ public:
 	// Color numbers might become dynamic, so not static.
 	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
 	virtual TCULong getPackedRGBA(TCULong colorNumber);
-	virtual TCULong getHighlightColorNumber(TCULong colorNumber);
+	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
 	virtual LDLModel *subModelNamed(const char *subModelName,
 		bool lowRes = false);
 	virtual const char *getFilename(void) { return m_filename; }

@@ -125,6 +125,10 @@ SOURCE=.\LDLModelLine.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLPalette.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLQuadLine.cpp
 # End Source File
 # Begin Source File
@@ -186,6 +190,10 @@ SOURCE=.\LDLModel.h
 # Begin Source File
 
 SOURCE=.\LDLModelLine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLPalette.h
 # End Source File
 # Begin Source File
 

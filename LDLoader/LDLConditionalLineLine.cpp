@@ -44,6 +44,18 @@ bool LDLConditionalLineLine::parse(void)
 		m_controlPoints = new TCVector[2];
 		m_controlPoints[0] = TCVector(x3, y3, z3);
 		m_controlPoints[1] = TCVector(x4, y4, z4);
+		if (getMatchingPoints())
+		{
+			setError(LDLEMatchingPoints,
+				"Both vertices are the same; cannot use");
+			return false;
+		}
+		if (getMatchingPoints(m_controlPoints, getNumControlPoints()))
+		{
+			setError(LDLEMatchingPoints,
+				"Both control points are the same; cannot use");
+			return false;
+		}
 		return true;
 	}
 	else

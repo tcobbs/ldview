@@ -3,6 +3,8 @@
 
 #include <LDLoader/LDLModel.h>
 
+class LDLPalette;
+
 class LDLMainModel : public LDLModel
 {
 public:
@@ -12,7 +14,8 @@ public:
 	virtual bool load(const char *filename);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual void print(void);
-	virtual TCULong getHighlightColorNumber(TCULong colorNumber);
+	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
+	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
 
 	// Flags
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }
@@ -23,6 +26,7 @@ protected:
 	virtual void dealloc(void);
 
 	TCDictionary *m_loadedModels;
+	LDLPalette *m_mainPalette;
 	struct
 	{
 		// Public flags

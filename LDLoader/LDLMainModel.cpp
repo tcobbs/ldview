@@ -1,10 +1,12 @@
 #include "LDLMainModel.h"
+#include "LDLPalette.h"
 #include <TCFoundation/TCDictionary.h>
 #include <stdio.h>
 #include <string.h>
 
 LDLMainModel::LDLMainModel(void)
-	:m_loadedModels(NULL)
+	:m_loadedModels(NULL),
+	m_mainPalette(new LDLPalette)
 {
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
@@ -38,6 +40,7 @@ TCDictionary *LDLMainModel::getLoadedModels(void)
 void LDLMainModel::dealloc(void)
 {
 	TCObject::release(m_loadedModels);
+	TCObject::release(m_mainPalette);
 	LDLModel::dealloc();
 }
 
@@ -81,8 +84,15 @@ void LDLMainModel::print(void)
 	LDLModel::print(0);
 }
 
-TCULong LDLMainModel::getHighlightColorNumber(TCULong colorNumber)
+void LDLMainModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
 {
+	m_mainPalette->getRGBA(colorNumber, r, g, b, a);
+}
+
+TCULong LDLMainModel::getEdgeColorNumber(TCULong colorNumber)
+{
+	return m_mainPalette->getEdgeColorNumber(colorNumber);
+/*
 	if (m_mainFlags.blackEdgeLines)
 	{
 		if (colorNumberIsTransparent(colorNumber))
@@ -148,13 +158,11 @@ TCULong LDLMainModel::getHighlightColorNumber(TCULong colorNumber)
 			return 8;
 			break;
 		case 16:
-/*
-			if (defaultColorNumber != 16)
-			{
-				return getHighlightColor(defaultColorNumber);
-			}
-			else
-*/
+//			if (defaultColorNumber != 16)
+//			{
+//				return getEdgeColor(defaultColorNumber);
+//			}
+//			else
 			{
 				return 16;
 			}
@@ -214,4 +222,5 @@ TCULong LDLMainModel::getHighlightColorNumber(TCULong colorNumber)
 			return 0;
 			break;
 	}
+*/
 }

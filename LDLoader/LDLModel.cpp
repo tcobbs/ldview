@@ -101,13 +101,15 @@ TCULong LDLModel::getPackedRGBA(TCULong colorNumber)
 	return r << 24 | g << 16 | b << 8 | a;
 }
 
-TCULong LDLModel::getHighlightColorNumber(TCULong colorNumber)
+TCULong LDLModel::getEdgeColorNumber(TCULong colorNumber)
 {
-	return m_mainModel->getHighlightColorNumber(colorNumber);
+	return m_mainModel->getEdgeColorNumber(colorNumber);
 }
 
 void LDLModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
 {
+	m_mainModel->getRGBA(colorNumber, r, g, b, a);
+/*
 	if (colorNumberIsTransparent(colorNumber))
 	{
 		a = 110;
@@ -403,6 +405,7 @@ void LDLModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
 			}
 			break;
 	}
+*/
 }
 
 bool LDLModel::colorNumberIsTransparent(TCULong colorNumber)

@@ -665,9 +665,10 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		TCAlert *alert = new TCAlert(0, "this is an alert test.");
 
 		modelParser->setSeamWidth(LDrawModel::getSeamWidth());
-		modelParser->setPrimitiveSubstitution(flags.allowPrimitiveSubstitution);
+		modelParser->setPrimitiveSubstitutionFlag(
+			flags.allowPrimitiveSubstitution);
 		modelParser->setCurveQuality(curveQuality);
-		modelParser->setEdgeLines(flags.showsHighlightLines);
+		modelParser->setEdgeLinesFlag(flags.showsHighlightLines);
 		TCAlertManager::registerHandler(LDLError::alertClass(), this,
 			(TCAlertCallback)ldlErrorCallback);
 		TCAlertManager::sendAlert(alert);
