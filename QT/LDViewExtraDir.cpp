@@ -3,7 +3,7 @@
 #include <UserDefaultsKeys.h>
 #include <TCFoundation/mystring.h>
 
-#include <qbutton.h>
+#include <qpushbutton.h>
 #include <qlistbox.h>
 #include <qstring.h>
 #include <qheader.h>
@@ -41,16 +41,6 @@ void ExtraDir::show(void)
 	panel->setActiveWindow();
 }
 
-void ExtraDir::setButtonState(QButton *button, bool state)
-{
-    bool buttonState = button->state() == QButton::On ? true : false;
-                                                                                
-    if (state != buttonState)
-    {
-        button->toggle();
-    }
-}
-
 void ExtraDir::doAddExtraDir(void)
 {
 	int count=panel->ExtraDirListView->count();
@@ -59,22 +49,26 @@ void ExtraDir::doAddExtraDir(void)
 	{
 		fileDialog = new QFileDialog(".",
                 "All Files (*)",
-                NULL,
+                panel,
                 "open model dialog",
                 true);
         fileDialog->setCaption("Choose a Directory");
         fileDialog->setSelectedFilter(0);
 		fileDialog->setMode(QFileDialog::DirectoryOnly);
-	
-
 	}
 	if (fileDialog->exec() == QDialog::Accepted)
     {
 		panel->ExtraDirListView->insertItem(fileDialog->selectedFile());
 		extraSearchDirs->addString(fileDialog->selectedFile().ascii());
-		if (count>=2)
+		panel->delExtraDirButton->setEnabled(true);
+		if (count>=1)
 		{
-//			panel->okButton->setEnabled(true);
+			panel->upExtraDirButton->setEnabled(true);
+			panel->downExtraDirButton->setEnabled(true);
+		}
+		if (count==MAX_EXTRA_DIR-1)
+		{
+			panel->addExtraDirButton->setEnabled(false);
 		}
 	}
 }
@@ -89,7 +83,16 @@ void ExtraDir::doDelExtraDir(void)
 		panel->ExtraDirListView->removeItem(index);
 		if (count==1)
 		{
-//			panel->delSetEnabled(false);
+			panel->delExtraDirButton->setEnabled(false);
+		}
+		if (count==2)
+		{
+			panel->upExtraDirButton->setEnabled(false);
+			panel->downExtraDirButton->setEnabled(false);
+		}
+		if (count==MAX_EXTRA_DIR)
+		{
+			panel->addExtraDirButton->setEnabled(true);
 		}
 	}
 }
@@ -151,13 +154,26 @@ void ExtraDir::populateExtraDirsListBox(void)
 			panel->ExtraDirListView->insertItem(extraSearchDirs->stringAtIndex(i));
 		}
 	}
+	if (count==MAX_EXTRA_DIR)
+	{
+		panel->addExtraDirButton->setEnabled(false);
+	}
+	if (count<2)
+	{
+		panel->upExtraDirButton->setEnabled(false);
+		panel->downExtraDirButton->setEnabled(false);
+	}
+	if (!count)
+	{
+		panel->delExtraDirButton->setEnabled(false);
+	}
 }
 
 void ExtraDir::recordExtraSearchDirs(void)
 {
     int i;
     int count = extraSearchDirs->getCount();
-                                                                                                                                                             
+
     for (i = 0; i <= count; i++)
     {
         char key[128];
@@ -192,13 +208,13 @@ void ExtraDir::recordExtraSearchDirs(void)
 void ExtraDir::populateExtraSearchDirs(void)
 {
     int i;
-                                                                                                                                                             
+
     extraSearchDirs->removeAll();
     for (i = 1; true; i++)
     {
         char key[128];
         char *extraSearchDir;
-                                                                                                                                                             
+
         sprintf(key, "%s/Dir%03d", EXTRA_SEARCH_DIRS_KEY, i);
         extraSearchDir = TCUserDefaults::stringForKey(key, NULL, false);
         if (extraSearchDir && extraSearchDir[0])
