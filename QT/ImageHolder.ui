@@ -1,0 +1,40 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>ImageHolder</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>ImageHolder</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>600</width>
+            <height>480</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Form1</string>
+    </property>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>PixmapLabel1</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>120</x>
+                <y>50</y>
+                <width>128</width>
+                <height>255</height>
+            </rect>
+        </property>
+        <property name="pixmap">
+            <pixmap>StudLogo.png</pixmap>
+        </property>
+        <property name="scaledContents">
+            <bool>true</bool>
+        </property>
+    </widget>
+</widget>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

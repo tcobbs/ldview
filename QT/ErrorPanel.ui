@@ -1,0 +1,341 @@
+<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<class>ErrorPanel</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>ErrorPanel</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>446</width>
+            <height>362</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>LDView Errors</string>
+    </property>
+    <property name="icon">
+        <pixmap>LDViewIcon16.png</pixmap>
+    </property>
+    <property name="usesTextLabel">
+        <bool>false</bool>
+    </property>
+    <hbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QListView">
+            <column>
+                <property name="text">
+                    <string>Errors</string>
+                </property>
+                <property name="clickable">
+                    <bool>false</bool>
+                </property>
+                <property name="resizeable">
+                    <bool>false</bool>
+                </property>
+            </column>
+            <property name="name">
+                <cstring>errorListView</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>3</hsizetype>
+                    <vsizetype>3</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="frameShape">
+                <enum>StyledPanel</enum>
+            </property>
+            <property name="resizePolicy">
+                <enum>AutoOneFit</enum>
+            </property>
+            <property name="vScrollBarMode">
+                <enum>Auto</enum>
+            </property>
+            <property name="hScrollBarMode">
+                <enum>Auto</enum>
+            </property>
+            <property name="rootIsDecorated">
+                <bool>true</bool>
+            </property>
+            <property name="resizeMode">
+                <enum>NoColumn</enum>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout7</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout6</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>0</number>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>TextLabel1</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Show the following errors:</string>
+                            </property>
+                        </widget>
+                        <spacer>
+                            <property name="name">
+                                <cstring>Spacer1_2</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Fixed</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>16</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout4</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>0</number>
+                        </property>
+                        <spacer>
+                            <property name="name">
+                                <cstring>Spacer1</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Fixed</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>16</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>Layout1</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <property name="spacing">
+                                    <number>6</number>
+                                </property>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>parseErrorButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Parse Error</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>fileNotFoundButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>File Not Found</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>colorErrorButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Color Error</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>partDeterminantButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Part Determinant</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>concaveQuadButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Concave Quad</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>concaveQuadSplitButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Concave Quad Split</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>colinearPointsButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Co-linear Points</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>openGLErrorButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>OpenGL Error</string>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </hbox>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>Spacer3</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </vbox>
+        </widget>
+    </hbox>
+</widget>
+<toolbars>
+</toolbars>
+<connections>
+    <connection>
+        <sender>parseErrorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>parseError()</slot>
+    </connection>
+    <connection>
+        <sender>fileNotFoundButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>fileNotFound()</slot>
+    </connection>
+    <connection>
+        <sender>colorErrorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>colorError()</slot>
+    </connection>
+    <connection>
+        <sender>partDeterminantButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>partDeterminant()</slot>
+    </connection>
+    <connection>
+        <sender>concaveQuadButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>concaveQuad()</slot>
+    </connection>
+    <connection>
+        <sender>concaveQuadSplitButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>concaveQuadSplit()</slot>
+    </connection>
+    <connection>
+        <sender>colinearPointsButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>colinearPoints()</slot>
+    </connection>
+    <connection>
+        <sender>openGLErrorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>openGLError()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in implementation">LDLib/LDMError.h</include>
+    <include location="local" impldecl="in implementation">LDViewErrors.h</include>
+    <include location="local" impldecl="in implementation">ErrorPanel.ui.h</include>
+</includes>
+<forwards>
+    <forward>class LDViewErrors;</forward>
+</forwards>
+<variables>
+    <variable>LDViewErrors *errors;</variable>
+</variables>
+<slots>
+    <slot>setErrors( LDViewErrors * value )</slot>
+    <slot>parseError()</slot>
+    <slot>fileNotFound()</slot>
+    <slot>colorError()</slot>
+    <slot>partDeterminant()</slot>
+    <slot>concaveQuad()</slot>
+    <slot>concaveQuadSplit()</slot>
+    <slot>colinearPoints()</slot>
+    <slot>openGLError()</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
