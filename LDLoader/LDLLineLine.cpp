@@ -1,4 +1,5 @@
 #include "LDLLineLine.h"
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLLineLine::LDLLineLine(LDLModel *parentModel, const char *line,
 						 int lineNumber, const char *originalLine)
@@ -29,7 +30,7 @@ bool LDLLineLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, "Error parsing line line.");
+		setError(LDLEParse, TCLocalStrings::get("LDLLineParse"));
 		return false;
 	}
 }

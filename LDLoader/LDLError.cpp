@@ -1,6 +1,7 @@
 #include "LDLError.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
 				   const char *fileLine, int lineNumber,
@@ -39,36 +40,36 @@ const char *LDLError::getTypeName(LDLErrorType type)
 	switch (type)
 	{
 	case LDLEGeneral:
-		return "General error";
+		return TCLocalStrings::get("LDLEGeneral");
 	case LDLEParse:
-		return "Parse error";
+		return TCLocalStrings::get("LDLEParse");
 	case LDLEFileNotFound:
-		return "File not found";
+		return TCLocalStrings::get("LDLEFileNotFound");
 	case LDLEMatrix:
-		return "Singular matrix";
+		return TCLocalStrings::get("LDLEMatrix");
 	case LDLEPartDeterminant:
-		return "Part transformed non-uniformly";
+		return TCLocalStrings::get("LDLEPartDeterminant");
 	case LDLENonFlatQuad:
-		return "Non-flat quad";
+		return TCLocalStrings::get("LDLENonFlatQuad");
 	case LDLEConcaveQuad:
-		return "Concave quad";
+		return TCLocalStrings::get("LDLEConcaveQuad");
 //	case LDLEConcaveQuadSplit:
 //		return "Error splitting concave quad";
 	case LDLEMatchingPoints:
-		return "Identical vertices";
+		return TCLocalStrings::get("LDLEMatchingPoints");
 //	case LDLEOpenGL:
 //		return "OpenGL error";
 	case LDLEColinear:
-		return "Co-linear points";
+		return TCLocalStrings::get("LDLEColinear");
 	case LDLEBFCWarning:
-		return "BFC warning";
+		return TCLocalStrings::get("LDLEBFCWarning");
 	case LDLEBFCError:
-		return "BFC error";
+		return TCLocalStrings::get("LDLEBFCError");
 	case LDLEMPDError:
-		return "MPD error";
+		return TCLocalStrings::get("LDLEMPDError");
 	case LDLEVertexOrder:
-		return "Bad vertex sequence";
+		return TCLocalStrings::get("LDLEVertexOrder");
 	default:
-		return "Unknown error";
+		return TCLocalStrings::get("LDLEUnknown");
 	}
 }

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
 						   int lineNumber, const char *originalLine)
@@ -69,7 +70,7 @@ bool LDLModelLine::parse(void)
 		else
 		{
 			m_valid = false;
-			setError(LDLEFileNotFound, "Error loading submodel %s",
+			setError(LDLEFileNotFound, TCLocalStrings::get("LDLModelLineFNF"),
 				subModelName);
 			return false;
 		}
@@ -97,7 +98,7 @@ bool LDLModelLine::parse(void)
 				{
 					// If it's still zero, we failed to fix it.
 					setError(LDLEMatrix,
-						"Singular matrix that cannot be fixed");
+						TCLocalStrings::get("LDLModelLineSingular"));
 				}
 			}
 			else
@@ -105,7 +106,7 @@ bool LDLModelLine::parse(void)
 				// We don't want to even try to fix if the sub-model isn't
 				// XZ-planar at Y == 0.
 				setError(LDLEMatrix,
-					"Singular matrix reference to non-flat sub-model");
+					TCLocalStrings::get("LDLModelLineSingularNonFlat"));
 			}
 			if (determinant == 0.0f)
 			{
@@ -124,7 +125,7 @@ bool LDLModelLine::parse(void)
 				// non-uniform scale.  Note that we are being EXTREMELY
 				//  loose with this "equality" check (within 0.05).
 				setWarning(LDLEPartDeterminant,
-					"Part transformed non-uniformly.");
+					TCLocalStrings::get("LDLModelLineNonUniformPart"));
 			}
 		}
 		return true;
@@ -132,7 +133,7 @@ bool LDLModelLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, "Error parsing model line.");
+		setError(LDLEParse, TCLocalStrings::get("LDLModelLineParse"));
 		return false;
 	}
 }
@@ -266,7 +267,8 @@ float LDLModelLine::tryToFixPlanarMatrix(void)
 			determinant = TCVector::determinant(m_matrix);
 			if (determinant != 0.0f)
 			{
-				setWarning(LDLEMatrix, "Matrix row %d all zeros", i);
+				setWarning(LDLEMatrix,
+					TCLocalStrings::get("LDLModelLineZeroMatrixRow"), i);
 				return determinant;
 			}
 		}
@@ -281,7 +283,8 @@ float LDLModelLine::tryToFixPlanarMatrix(void)
 			determinant = TCVector::determinant(m_matrix);
 			if (determinant != 0.0f)
 			{
-				setWarning(LDLEMatrix, "Matrix Y column all zeros", i);
+				setWarning(LDLEMatrix,
+					TCLocalStrings::get("LDLModelLineZeroMatrixCol"), i);
 				return determinant;
 			}
 		}

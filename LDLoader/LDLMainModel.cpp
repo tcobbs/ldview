@@ -4,6 +4,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <stdio.h>
 #include <string.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLMainModel::LDLMainModel(void)
 	:m_loadedModels(NULL),
@@ -57,7 +58,8 @@ bool LDLMainModel::load(const char *filename)
 	setFilename(filename);
 	if (!strlen(lDrawDir()))
 	{
-		error = newError(LDLEGeneral, "Could not find LDraw directory.");
+		error = newError(LDLEGeneral,
+			TCLocalStrings::get("LDLMainModelNoLDrawDir"));
 		error->setLevel(LDLACriticalError);
 		sendAlert(error);
 		error->release();
@@ -80,7 +82,8 @@ bool LDLMainModel::load(const char *filename)
 	}
 	else
 	{
-		error = newError(LDLEFileNotFound, "Could not find main model file.");
+		error = newError(LDLEFileNotFound,
+			TCLocalStrings::get("LDLMainModelNoMainModel"));
 		error->setLevel(LDLACriticalError);
 		sendAlert(error);
 		error->release();

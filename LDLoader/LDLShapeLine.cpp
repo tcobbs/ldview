@@ -1,4 +1,5 @@
 #include "LDLShapeLine.h"
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLShapeLine::LDLShapeLine(LDLModel *parentModel, const char *line,
 						   int lineNumber, const char *originalLine)
@@ -139,7 +140,7 @@ bool LDLShapeLine::getMatchingPoints(const TCVector *points, int count,
 					*index2 = j;
 				}
 				setWarning(LDLEMatchingPoints,
-					"Vertices %d and %d are the same.", i + 1, j + 1);
+					TCLocalStrings::get("LDLShapeLineSameVerts"), i + 1, j + 1);
 				return true;
 			}
 		}

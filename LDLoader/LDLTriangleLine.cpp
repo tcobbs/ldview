@@ -1,5 +1,6 @@
 #include "LDLTriangleLine.h"
 #include "LDLLineLine.h"
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLTriangleLine::LDLTriangleLine(LDLModel *parentModel, const char *line,
 							   int lineNumber, const char *originalLine)
@@ -46,7 +47,7 @@ bool LDLTriangleLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, "Error parsing triangle line.");
+		setError(LDLEParse, TCLocalStrings::get("LDLTriLineParse"));
 		return false;
 	}
 }
@@ -142,14 +143,13 @@ LDLFileLineArray *LDLTriangleLine::removeMatchingPoint(void)
 		char pointBuf[64] = "";
 
 		m_points[m_matchingIndex].print(pointBuf);
-		setWarning(LDLEMatchingPoints, "Triangle contains identical "
-			"vertices.\nPoint %d <%s> removed.\n", m_matchingIndex + 1,
+		setWarning(LDLEMatchingPoints,
+			TCLocalStrings::get("LDLTriLineIdentical"), m_matchingIndex + 1,
 			pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, "Unexpected error removing identical vertices "
-			"from triangle.\n");
+		setError(LDLEGeneral, TCLocalStrings::get("LDLTriLineIdenticalError"));
 	}
 	return fileLineArray;
 }
@@ -163,13 +163,12 @@ LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
 		char pointBuf[64] = "";
 
 		m_points[m_colinearIndex].print(pointBuf);
-		setWarning(LDLEColinear, "Triangle contains co-linear points.\n"
-			"Point %d <%s> removed.\n", m_colinearIndex + 1, pointBuf);
+		setWarning(LDLEColinear, TCLocalStrings::get("LDLTriLineCoLinear"),
+			m_colinearIndex + 1, pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, "Unexpected error removing co-linear points from "
-			"triangle.\n");
+		setError(LDLEGeneral, TCLocalStrings::get("LDLTriLineCoLinearError"));
 	}
 	return fileLineArray;
 }
