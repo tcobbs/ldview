@@ -40,13 +40,12 @@ class TCThread : public TCObject
 		virtual void setUserData(void*);
 #ifdef WIN32
 		HANDLE getHThread(void) { return thread; }
-#include <windows.h>
 #else // WIN32
 #ifdef _QT
 		pthread_t getPThread(void) { return thread; }
 #endif // _QT
 #endif // WIN32
-		virtual void setReturnValue(THREAD_RET_TYPE);
+		virtual void setReturnValue(THREAD_RET_TYPE value);
 		THREAD_RET_TYPE getReturnValue(void) { return returnValue; }
 		virtual void setFinishMemberFunction(TCThreadFinishMemberFunction);
 		TCThreadFinishMemberFunction getFinishMemberFunction(void)
@@ -74,7 +73,7 @@ class TCThread : public TCObject
 #ifdef _QT
 		pthread_t thread;
 		THREAD_RET_TYPE cancelExitValue;
-		static THREAD_RET_TYPE cancelCleanupFunction(void *arg);
+		static void cancelCleanupFunction(void *arg);
 #endif // _QT
 #endif // WIN32
 		void* userData;

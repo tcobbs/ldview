@@ -3,6 +3,10 @@
 
 #include <TCFoundation/TCObject.h>
 
+#ifdef _QT
+#include <stdlib.h>
+#endif // _QT
+
 class TCUnzip : public TCObject
 {
 public:

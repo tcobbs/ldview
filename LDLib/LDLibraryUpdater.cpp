@@ -10,6 +10,10 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUnzip.h>
 
+#ifdef _QT
+#include <ctype.h>
+#endif // _QT
+
 #define MAX_DL_THREADS 2
 
 LDLibraryUpdater::LDLibraryUpdater(void)
@@ -358,7 +362,7 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 		"Downloading update list from ldraw.org", 0.01f, &aborted);
 	if (!aborted)
 	{
-		debugPrintf("downloadTest: 0x%08X\n", GetCurrentThreadId());
+//		debugPrintf("downloadTest: 0x%08X\n", GetCurrentThreadId());
 		webClient =
 			new TCWebClient("http://www.ldraw.org/cgi-bin/ptreleases.cgi");
 //		webClient = new TCWebClient(
@@ -373,7 +377,7 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 		dataLength = webClient->getPageLength();
 		if (dataLength)
 		{
-			BYTE *data = webClient->getPageData();
+			TCByte *data = webClient->getPageData();
 			char *string = new char[dataLength + 1];
 
 			memcpy(string, data, dataLength);

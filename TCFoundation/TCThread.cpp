@@ -136,7 +136,6 @@ int TCThread::run(void)
 	{
 		return 0;
 	}
-#include <windows.h>
 #else // WIN32
 #ifdef _QT
 	if (pthread_create(&thread, NULL, threadStartFunction, this))
@@ -145,9 +144,12 @@ int TCThread::run(void)
 	}
 	else
 	{
-		pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS);
+		pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 		pthread_cleanup_push(cancelCleanupFunction, this);
 		return 1;
+	}
+	// WHAT!?!?!?!
+	// It doesn't compile without the following extra close brace.
 	}
 #endif // _QT
 #endif // WIN32
@@ -191,12 +193,12 @@ void TCThread::terminate(THREAD_RET_TYPE exitValue)
 }
 
 #ifdef _QT
-void *TCThread::cancelCleanupFunction(void *arg)
+void TCThread::cancelCleanupFunction(void *arg)
 {
 	TCThread *thread = (TCThread *)arg;
-	void *retValue = thread->cancelExitValue;
+//	void *retValue = thread->cancelExitValue;
 
-	tcThread->setFinished();
-	return retValue;
+	thread->setFinished();
+//	return retValue;
 }
 #endif // _QT

@@ -3,6 +3,10 @@
 
 #include <TCFoundation/TCObject.h>
 
+#ifdef _QT
+#include <stdlib.h>
+#endif // _QT
+
 #define USER_ALERTS 0x1000
 
 class TCStringArray;

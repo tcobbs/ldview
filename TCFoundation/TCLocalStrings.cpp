@@ -128,7 +128,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 			{
 				// We haven't found the [StringTable] section yet
 				stripTrailingWhitespace(line);
-				if (stricmp(line, "[StringTable]") == 0)
+				if (strcasecmp(line, "[StringTable]") == 0)
 				{
 					sectionFound = true;
 				}
