@@ -1923,37 +1923,42 @@ BOOL ModelWindow::initWindow(void)
 	windowStyle |= WS_CHILD;
 	if (CUIOGLWindow::initWindow())
 	{
-		if (LDVExtensionsSetup::haveMultisampleExtension())
-		{
-			if (currentAntialiasType)
-			{
-				if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
-				{
-					if (LDViewPreferences::getUseNvMultisampleFilter())
-					{
-						glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
-					}
-					else
-					{
-						glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
-					}
-				}
-				glEnable(GL_MULTISAMPLE_ARB);
-			}
-			else
-			{
-				if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
-				{
-					glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
-				}
-				glDisable(GL_MULTISAMPLE_ARB);
-			}
-		}
+		setupMultisample();
 		return TRUE;
 	}
 	else
 	{
 		return FALSE;
+	}
+}
+
+void ModelWindow::setupMultisample(void)
+{
+	if (LDVExtensionsSetup::haveMultisampleExtension())
+	{
+		if (currentAntialiasType)
+		{
+			if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
+			{
+				if (LDViewPreferences::getUseNvMultisampleFilter())
+				{
+					glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
+				}
+				else
+				{
+					glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
+				}
+			}
+			glEnable(GL_MULTISAMPLE_ARB);
+		}
+		else
+		{
+			if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
+			{
+				glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
+			}
+			glDisable(GL_MULTISAMPLE_ARB);
+		}
 	}
 }
 
@@ -2672,22 +2677,9 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 								hCurrentDC = hPBufferDC;
 								hCurrentGLRC = hPBufferGLRC;
 								makeCurrent();
-								if (currentAntialiasType && antialias &&
-									LDVExtensionsSetup::
-									haveNvMultisampleFilterHintExtension())
+								if (antialias)
 								{
-									if (LDViewPreferences::
-										getUseNvMultisampleFilter())
-									{
-										glHint(GL_MULTISAMPLE_FILTER_HINT_NV,
-											GL_NICEST);
-									}
-									else
-									{
-										glHint(GL_MULTISAMPLE_FILTER_HINT_NV,
-											GL_FASTEST);
-									}
-									glEnable(GL_MULTISAMPLE_ARB);
+									setupMultisample();
 								}
 								setupMaterial();
 								setupLighting();
@@ -2726,11 +2718,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 
 void ModelWindow::renderOffscreenImage(void)
 {
-	if (hPBufferGLRC)
-	{
-		makeCurrent();
-//		wglMakeCurrent(hPBufferDC, hPBufferGLRC);
-	}
+	makeCurrent();
 	modelViewer->update();
 	if (canSaveAlpha())
 	{
@@ -2787,7 +2775,7 @@ void ModelWindow::cleanupPBuffer(void)
 					makeCurrent();
 					modelViewer->setWidth(width);
 					modelViewer->setHeight(height);
-					modelViewer->recompile();
+					//modelViewer->recompile();
 					modelViewer->unpause();
 					modelViewer->setup();
 				}
@@ -2812,12 +2800,35 @@ bool ModelWindow::canSaveAlpha(void)
 	return false;
 }
 
+void ModelWindow::setupSnapshotBackBuffer(int imageWidth, int imageHeight,
+										  RECT &rect)
+{
+	makeCurrent();
+	modelViewer->setSlowClear(true);
+	GetWindowRect(hParentWindow, &rect);
+	MoveWindow(hParentWindow, 0, 0, rect.right - rect.left,
+		rect.bottom - rect.top, TRUE);
+	modelViewer->setWidth(imageWidth);
+	modelViewer->setHeight(imageHeight);
+	modelViewer->setup();
+	glReadBuffer(GL_BACK);
+}
+
+void ModelWindow::cleanupSnapshotBackBuffer(RECT &rect)
+{
+	MoveWindow(hParentWindow, rect.left, rect.top, rect.right - rect.left,
+		rect.bottom - rect.top, TRUE);
+	RedrawWindow(hParentWindow, NULL, NULL,
+		RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW);
+	modelViewer->setWidth(width);
+	modelViewer->setHeight(height);
+	modelViewer->setup();
+}
+
 BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 							 BYTE *buffer)
 {
 	RECT rect = {0, 0, 0, 0};
-	HWND hParentWindow = GetParent(hWindow);
-	bool needReset = false;
 	bool oldSlowClear = modelViewer->getSlowClear();
 	GLenum bufferFormat = GL_RGB;
 	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
@@ -2850,15 +2861,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		newHeight = height;		// height is OpenGL window height
 		calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
 			numYTiles);
-		modelViewer->setSlowClear(true);
-		GetWindowRect(hParentWindow, &rect);
-		needReset = true;
-		MoveWindow(hParentWindow, 0, 0, rect.right - rect.left,
-			rect.bottom - rect.top, TRUE);
-		modelViewer->setWidth(newWidth);
-		modelViewer->setHeight(newHeight);
-		makeCurrent();
-		glReadBuffer(GL_BACK);
+		setupSnapshotBackBuffer(newWidth, newHeight, rect);
 	}
 	if (canSaveAlpha())
 	{
@@ -2892,6 +2895,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 			if (progressCallback(TCLocalStrings::get("RenderingSnapshot"),
 				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles)))
 			{
+//				glFinish();
 				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
 					GL_UNSIGNED_BYTE, smallBuffer);
 				if (smallBuffer != buffer)
@@ -2946,14 +2950,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	}
 	else
 	{
-		modelViewer->setWidth(width);
-		modelViewer->setHeight(height);
-	}
-	if (needReset)
-	{
-		MoveWindow(hParentWindow, rect.left, rect.top, rect.right - rect.left,
-			rect.bottom - rect.top, TRUE);
-		RedrawWindow(hParentWindow, NULL, NULL, RDW_FRAME | RDW_INVALIDATE);
+		cleanupSnapshotBackBuffer(rect);
 	}
 	if (zoomToFit)
 	{

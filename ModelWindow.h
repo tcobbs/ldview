@@ -226,6 +226,9 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool setupPBuffer(int imageWidth, int imageHeight,
 			bool antialias = false);
 		virtual void cleanupPBuffer(void);
+		virtual void setupSnapshotBackBuffer(int imageWidth, int imageHeight,
+			RECT &rect);
+		virtual void cleanupSnapshotBackBuffer(RECT &rect);
 		virtual bool selectPrinter(PRINTDLG &pd);
 		virtual bool printPage(const PRINTDLG &pd);
 		virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
@@ -272,6 +275,7 @@ class ModelWindow: public CUIOGLWindow
 		void progressAlertCallback(TCProgressAlert *error);
 		void populateErrorInfos(void);
 		BOOL setAllErrorsSelected(bool selected);
+		void setupMultisample(void);
 
 		void loadSettings(void);
 
