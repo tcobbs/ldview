@@ -27,8 +27,8 @@ LDModelParser::LDModelParser(void)
 	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
-	m_flags.bfc = false;
-	m_flags.compileParts = false;
+	m_flags.bfc = true;
+	m_flags.compileParts = true;
 	m_flags.compileAll = true;
 	m_flags.lighting = false;
 	m_flags.twoSidedLighting = false;
@@ -76,7 +76,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
-	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag(), false))
+	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag()))
 	{
 		if (m_mainTREModel->isPart())
 		{
@@ -127,17 +127,11 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 }
 
 bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
-							   bool bfc, bool invert)
+							   bool bfc)
 {
 	LDLModel *ldlModel = modelLine->getModel();
+	bool invert = modelLine->getBFCInvert();
 
-	invert = modelLine->getBFCInvert();
-/*
-	if (modelLine->getBFCInvert())
-	{
-		invert = !invert;
-	}
-*/
 	if (ldlModel)
 	{
 		const char *name = ldlModel->getName();
@@ -153,7 +147,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 			model->setMainModel(treModel->getMainModel());
 			model->setName(name);
 			model->setPartFlag(ldlModel->isPart());
-			if (parseModel(ldlModel, model, bfc, invert))
+			if (parseModel(ldlModel, model, bfc))
 			{
 				m_mainTREModel->registerModel(model);
 				model->release();
@@ -348,14 +342,16 @@ bool LDModelParser::substituteStu2(TREModel *treModel)
 	return substituteStud(treModel, LO_NUM_SEGMENTS);
 }
 
-bool LDModelParser::substituteStu22(TREModel *treModel, bool isA)
+bool LDModelParser::substituteStu22(TREModel *treModel, bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments,
+		numSegments, bfc);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
+		numSegments, bfc);
 	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, 0.0f,
-		numSegments);
+		numSegments, numSegments, bfc);
 	if (m_flags.edgeLines)
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
@@ -373,12 +369,14 @@ bool LDModelParser::substituteStu22(TREModel *treModel, bool isA)
 	return true;
 }
 
-bool LDModelParser::substituteStu23(TREModel *treModel, bool isA)
+bool LDModelParser::substituteStu23(TREModel *treModel, bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments);
-	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments,
+		numSegments, bfc);
+	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments,
+		numSegments, bfc);
 	if (m_flags.edgeLines)
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
@@ -392,14 +390,16 @@ bool LDModelParser::substituteStu23(TREModel *treModel, bool isA)
 	return true;
 }
 
-bool LDModelParser::substituteStu24(TREModel *treModel, bool isA)
+bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments);
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
+		numSegments, bfc);
+	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments,
+		numSegments, bfc);
 	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 6.0f, 0.0f,
-		numSegments);
+		numSegments, numSegments, bfc);
 	if (m_flags.edgeLines)
 	{
 		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
@@ -417,49 +417,52 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool isA)
 	return true;
 }
 
-bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction)
+bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
+									   bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
-		(int)(numSegments * fraction));
+		(int)(numSegments * fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction)
+bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction,
+											 bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
-		numSegments, (int)(numSegments * fraction));
+		numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
 bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
-											  float fraction)
+											  float fraction, bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
-		numSegments, (int)(numSegments * fraction));
+		numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteDisc(TREModel *treModel, float fraction)
+bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-		(int)(numSegments * fraction));
+		(int)(numSegments * fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction)
+bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction,
+									  bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
-		(int)(numSegments * fraction));
+		(int)(numSegments * fraction), bfc);
 	return true;
 }
 
@@ -475,21 +478,23 @@ bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction)
 	return true;
 }
 
-bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size)
+bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size,
+								   bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
-		(float)size, 1.0f, numSegments, (int)(numSegments * fraction));
+		(float)size, 1.0f, numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size)
+bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size,
+								   bool bfc)
 {
 	int numSegments = getNumCircleSegments(fraction);
 
 	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
-		(float)size, numSegments, (int)(numSegments * fraction));
+		(float)size, numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
@@ -511,7 +516,7 @@ int LDModelParser::getNumCircleSegments(float fraction)
 }
 
 bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
-												 TREModel *treModel)
+												 TREModel *treModel, bool bfc)
 {
 	if (m_flags.primitiveSubstitution)
 	{
@@ -527,27 +532,27 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		}
 		else if (strcasecmp(modelName, "LDL-LOWRES:stu22.dat") == 0)
 		{
-			return substituteStu22(treModel);
+			return substituteStu22(treModel, false, bfc);
 		}
 		else if (strcasecmp(modelName, "LDL-LOWRES:stu22a.dat") == 0)
 		{
-			return substituteStu22(treModel, true);
+			return substituteStu22(treModel, true, bfc);
 		}
 		else if (strcasecmp(modelName, "LDL-LOWRES:stu23.dat") == 0)
 		{
-			return substituteStu23(treModel);
+			return substituteStu23(treModel, false, bfc);
 		}
 		else if (strcasecmp(modelName, "LDL-LOWRES:stu23a.dat") == 0)
 		{
-			return substituteStu23(treModel, true);
+			return substituteStu23(treModel, true, bfc);
 		}
 		else if (strcasecmp(modelName, "LDL-LOWRES:stu24.dat") == 0)
 		{
-			return substituteStu24(treModel);
+			return substituteStu24(treModel, false, bfc);
 		}
 		else if (strcasecmp(modelName, "LDL-LOWRES:stu24a.dat") == 0)
 		{
-			return substituteStu24(treModel, true);
+			return substituteStu24(treModel, true, bfc);
 		}
 		else if (strcasecmp(modelName, "stud.dat") == 0)
 		{
@@ -559,25 +564,27 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		}
 		else if (isCyli(modelName))
 		{
-			return substituteCylinder(treModel, startingFraction(modelName));
+			return substituteCylinder(treModel, startingFraction(modelName),
+				bfc);
 		}
 		else if (isCyls(modelName))
 		{
 			return substituteSlopedCylinder(treModel,
-				startingFraction(modelName));
+				startingFraction(modelName), bfc);
 		}
 		else if (isCyls2(modelName))
 		{
 			return substituteSlopedCylinder2(treModel,
-				startingFraction(modelName));
+				startingFraction(modelName), bfc);
 		}
 		else if (isDisc(modelName))
 		{
-			return substituteDisc(treModel, startingFraction(modelName));
+			return substituteDisc(treModel, startingFraction(modelName), bfc);
 		}
 		else if (isNdis(modelName))
 		{
-			return substituteNotDisc(treModel, startingFraction(modelName));
+			return substituteNotDisc(treModel, startingFraction(modelName),
+				bfc);
 		}
 		else if (isEdge(modelName))
 		{
@@ -593,28 +600,31 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 			int size;
 
 			sscanf(modelName + 6, "%d", &size);
-			return substituteCone(treModel, startingFraction(modelName), size);
+			return substituteCone(treModel, startingFraction(modelName), size,
+				bfc);
 		}
 		else if (isOldRing(modelName))
 		{
 			int size;
 
 			sscanf(modelName + 4, "%d", &size);
-			return substituteRing(treModel, 1.0f, size);
+			return substituteRing(treModel, 1.0f, size, bfc);
 		}
 		else if (isRing(modelName))
 		{
 			int size;
 
 			sscanf(modelName + 7, "%d", &size);
-			return substituteRing(treModel, startingFraction(modelName), size);
+			return substituteRing(treModel, startingFraction(modelName), size,
+				bfc);
 		}
 		else if (isRin(modelName))
 		{
 			int size;
 
 			sscanf(modelName + 6, "%d", &size);
-			return substituteRing(treModel, startingFraction(modelName), size);
+			return substituteRing(treModel, startingFraction(modelName), size,
+				bfc);
 		}
 		else if (isTorusO(modelName))
 		{
@@ -628,14 +638,13 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 	return false;
 }
 
-bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
-							   bool invert)
+bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 {
 	BFCState newState = ldlModel->getBFCState();
 
 	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)
 		&& getBFCFlag();
-	if (ldlModel && !performPrimitiveSubstitution(ldlModel, treModel))
+	if (ldlModel && !performPrimitiveSubstitution(ldlModel, treModel, bfc))
 	{
 		LDLFileLineArray *fileLines = ldlModel->getFileLines();
 
@@ -654,8 +663,7 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
 					switch (fileLine->getLineType())
 					{
 					case LDLLineTypeModel:
-						parseModel((LDLModelLine *)fileLine, treModel, bfc,
-							invert);
+						parseModel((LDLModelLine *)fileLine, treModel, bfc);
 						break;
 					case LDLLineTypeLine:
 						parseLine((LDLShapeLine *)fileLine, treModel);

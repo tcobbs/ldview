@@ -50,10 +50,9 @@ public:
 protected:
 	virtual ~LDModelParser(void);
 	virtual void dealloc(void);
-	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
-		bool invert);
+	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
-		bool bfc, bool invert);
+		bool bfc);
 	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel);
 	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
 		bool bfc, bool invert);
@@ -62,21 +61,27 @@ protected:
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
 		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
-		TREModel *treModel);
+		TREModel *treModel, bool bfc);
 	virtual bool substituteStud(TREModel *treModel, int numSegments);
 	virtual bool substituteStud(TREModel *treModel);
 	virtual bool substituteStu2(TREModel *treModel);
-	virtual bool substituteStu22(TREModel *treModel, bool isA = false);
-	virtual bool substituteStu23(TREModel *treModel, bool isA = false);
-	virtual bool substituteStu24(TREModel *treModel, bool isA = false);
-	virtual bool substituteCylinder(TREModel *treModel, float fraction);
-	virtual bool substituteSlopedCylinder(TREModel *treModel, float fraction);
-	virtual bool substituteSlopedCylinder2(TREModel *treModel, float fraction);
-	virtual bool substituteDisc(TREModel *treModel, float fraction);
-	virtual bool substituteNotDisc(TREModel *treModel, float fraction);
+	virtual bool substituteStu22(TREModel *treModel, bool isA, bool bfc);
+	virtual bool substituteStu23(TREModel *treModel, bool isA, bool bfc);
+	virtual bool substituteStu24(TREModel *treModel, bool isA, bool bfc);
+	virtual bool substituteCylinder(TREModel *treModel, float fraction,
+		bool bfc);
+	virtual bool substituteSlopedCylinder(TREModel *treModel, float fraction,
+		bool bfc);
+	virtual bool substituteSlopedCylinder2(TREModel *treModel, float fraction,
+		bool bfc);
+	virtual bool substituteDisc(TREModel *treModel, float fraction, bool bfc);
+	virtual bool substituteNotDisc(TREModel *treModel, float fraction,
+		bool bfc);
 	virtual bool substituteCircularEdge(TREModel *treModel, float fraction);
-	virtual bool substituteCone(TREModel *treModel, float fraction, int size);
-	virtual bool substituteRing(TREModel *treModel, float fraction, int size);
+	virtual bool substituteCone(TREModel *treModel, float fraction, int size,
+		bool bfc);
+	virtual bool substituteRing(TREModel *treModel, float fraction, int size,
+		bool bfc);
 	virtual float startingFraction(const char *filename);
 	virtual bool startsWithFraction(const char *filename);
 	virtual bool startsWithFraction2(const char *filename);

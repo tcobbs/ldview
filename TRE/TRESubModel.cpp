@@ -219,6 +219,39 @@ void TRESubModel::compileColored(void)
 	getEffectiveModel()->compileColored();
 }
 
+void TRESubModel::draw(TREMSection section, bool colored)
+{
+	if (!colored)
+	{
+		// I know this looks backwards.  However, the colored geometry has the
+		// color set for each primitive.  Consequently, it doesn't need the
+		// OpenGL color to be set.
+		if (m_flags.colorSet)
+		{
+			glPushAttrib(GL_CURRENT_BIT);
+			if (section == TREMEdgeLines)
+			{
+				glColor4ubv((GLubyte*)&m_edgeColor);
+			}
+			else
+			{
+				glColor4ubv((GLubyte*)&m_color);
+			}
+		}
+	}
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	getEffectiveModel()->draw(section, colored);
+	glPopMatrix();
+	if (!colored)
+	{
+		if (m_flags.colorSet)
+		{
+			glPopAttrib();
+		}
+	}
+}
+
 void TRESubModel::drawDefaultColor(void)
 {
 	if (m_flags.colorSet)
