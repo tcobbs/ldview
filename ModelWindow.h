@@ -4,7 +4,7 @@
 #include <CUI/CUIOGLWindow.h>
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCVector.h>
-#include <LDLib/LDrawModel.h>
+#include <LDLoader/LDLError.h>
 #include "LDViewPreferences.h"
 #include <Commctrl.h>
 #include <GL/glext.h>
@@ -32,10 +32,10 @@ public:
 //	HWND handle;
 //	int controlId;
 //	RECT originalRect;
-	LDMErrorType errorType;
+	LDLErrorType errorType;
 };
 
-typedef TCTypedObjectArray<LDMError> LDMErrorArray;
+typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 typedef TCTypedObjectArray<ControlInfo> ControlInfoArray;
 
 class ModelWindow: public CUIOGLWindow
@@ -171,21 +171,22 @@ class ModelWindow: public CUIOGLWindow
 		virtual void createProgress(void);
 		virtual void setupProgress(void);
 		virtual void doProgressCancel(void);
-		virtual int errorCallback(LDMError* error);
-		static int staticErrorCallback(LDMError* error, void* userData);
+		virtual int errorCallback(LDLError* error);
+//		static int staticErrorCallback(LDMError* error, void* userData);
 		virtual LRESULT windowProc(HWND, UINT, WPARAM, LPARAM);
 		static LRESULT CALLBACK staticErrorDlgProc(HWND, UINT, WPARAM, LPARAM);
 		virtual LRESULT errorDlgProc(HWND, UINT, WPARAM, LPARAM);
 		virtual void registerErrorWindowClass(void);
-		virtual bool addError(LDMError* error);
+		virtual bool addError(LDLError* error);
 		virtual HTREEITEM addErrorLine(HTREEITEM parent, char* line,
-			LDMError* error, int imageIndex = -1);
+			LDLError* error, int imageIndex = -1);
 		virtual void clearErrors(void);
 		virtual void clearErrorTree(void);
 		virtual void getTreeViewLine(HWND hTreeView, HTREEITEM hItem,
 			TCStringArray *lines);
-		virtual char* getErrorKey(LDMErrorType errorType);
-		virtual BOOL showsErrorType(LDMErrorType errorType);
+		virtual char* getErrorKey(LDLErrorType errorType);
+		virtual bool showsError(LDLError *error);
+		virtual BOOL showsErrorType(LDLErrorType errorType);
 		virtual void swapBuffers(void);
 		virtual LRESULT doCommand(int itemId, int notifyCode, HWND controlHWnd);
 		virtual bool writePng(char *filename, int width, int height,
@@ -241,6 +242,8 @@ class ModelWindow: public CUIOGLWindow
 		virtual void makeCurrent(void);
 		virtual void setStatusText(HWND hStatus, int part, char *text);
 		virtual void initFail(char *reason);
+		void ldlErrorCallback(LDLError *error);
+		void progressAlertCallback(TCProgressAlert *error);
 
 		void loadSettings(void);
 
@@ -296,8 +299,8 @@ class ModelWindow: public CUIOGLWindow
 		int errorOkHeight;
 		int errorWindowWidth;
 		WNDPROC originalErrorDlgProc;
-		LDMErrorArray* errors;
-		int errorImageIndices[7];
+		LDLErrorArray* errors;
+		int errorImageIndices[14];
 		bool errorTreePopulated;
 		ControlInfoArray *topRightErrorControls;
 		LDViewPreferences *prefs;

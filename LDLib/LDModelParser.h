@@ -87,6 +87,8 @@ public:
 	bool getPolygonOffsetFlag(void) { return m_flags.polygonOffset != false; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
+	void setEdgeLineWidth(float value) { m_edgeLineWidth = value; }
+	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
 	virtual void setSeamWidth(float seamWidth);
 	virtual float getSeamWidth(void);
 	virtual void setDefaultRGB(TCByte r, TCByte g, TCByte b);
@@ -155,10 +157,12 @@ protected:
 	TREMainModel *m_mainTREModel;
 	int m_curveQuality;
 	float m_seamWidth;
-	TCByte defaultR;
-	TCByte defaultG;
-	TCByte defaultB;
-	int defaultColorNumber;
+	float m_edgeLineWidth;
+	TCByte m_defaultR;
+	TCByte m_defaultG;
+	TCByte m_defaultB;
+	int m_defaultColorNumber;
+	bool m_abort;	// Easier to not be a bit field.
 	struct
 	{
 		bool fileIsPart:1;

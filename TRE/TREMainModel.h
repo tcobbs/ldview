@@ -8,6 +8,9 @@ class TREVertexStore;
 class TREColoredShapeGroup;
 class TRETransShapeGroup;
 
+extern const float POLYGON_OFFSET_FACTOR;
+extern const float POLYGON_OFFSET_UNITS;
+
 class TREMainModel : public TREModel
 {
 public:
@@ -91,6 +94,10 @@ public:
 	{
 		return m_mainFlags.removingHiddenLines != false;
 	}
+	void setCutawayDrawFlag(bool value) { m_mainFlags.cutawayDraw = value; }
+	bool getCutawayDrawFlag(void) { return m_mainFlags.cutawayDraw != false; }
+	void setEdgeLineWidth(float value) { m_edgeLineWidth = value; }
+	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
 	virtual bool getCompiled(void) { return m_mainFlags.compiled != false; }
 	virtual bool getCompiling(void) { return m_mainFlags.compiling != false; }
 	virtual float getMaxRadiusSquared(const TCVector &center);
@@ -106,7 +113,7 @@ public:
 	void setColor(TCULong color, TCULong edgeColor);
 	TCULong getColor(void);
 	TCULong getEdgeColor(void);
-	void postProcess(void);
+	bool postProcess(void);
 	void compile(void);
 	void recompile(void);
 	virtual void addTransparentTriangle(TCULong color,
@@ -133,12 +140,15 @@ protected:
 	TCULong m_edgeColor;
 	float m_maxRadiusSquared;
 	TCVector m_center;
+	float m_edgeLineWidth;
+	bool m_abort;				// Easier not to be a bit field.
 	struct
 	{
 		// The following are temporal
 		bool compiling:1;
 		bool compiled:1;
 		bool removingHiddenLines:1;	// This one is changed externally
+		bool cutawayDraw:1;			// This one is changed externally
 		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;

@@ -1,4 +1,5 @@
 #include "LDLModelLine.h"
+#include "LDLPalette.h"
 #include <string.h>
 #include <stdio.h>
 #include <TCFoundation/TCMacros.h>
@@ -78,7 +79,7 @@ bool LDLModelLine::parse(void)
 			m_lowResModel->retain();
 		}
 		m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
-		m_color = LDLModel::colorForRGBA(red, green, blue, alpha);
+		m_color = LDLPalette::colorForRGBA(red, green, blue, alpha);
 		setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
 		determinant = TCVector::determinant(m_matrix);
 		if (determinant == 0.0f)
@@ -114,7 +115,7 @@ bool LDLModelLine::parse(void)
 		}
 		// Note that if we get this far, determinant still holds the current
 		// determinant of the matrix, even if the matrix got adjusted above.
-		if (m_highResModel->isPart())
+		if (m_highResModel->isPart() && !m_parentModel->isPart())
 		{
 			if (!fEq2(determinant, 1.0f, 0.05f) &&
 				!fEq2(determinant, -1.0f, 0.05f))

@@ -55,6 +55,7 @@ public:
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
 	virtual int getActiveLineCount(void) { return m_activeLineCount; }
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
+	virtual bool isMainModel(void) { return false; }
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
@@ -73,9 +74,8 @@ public:
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
 
-	// Transparency detection is fixed, so static.
-	static TCULong colorForRGBA(int r, int g, int b, int a);
 	static const char *lDrawDir(void);
+	static void setLDrawDir(const char *value);
 protected:
 	virtual void dealloc(void);
 	virtual FILE *openSubModelNamed(const char* subModelName,

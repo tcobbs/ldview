@@ -107,6 +107,10 @@ bool LDLCommentLine::isPartMeta(void) const
 	else if (numWords >= 3 && strcasecmp((*m_words)[0], "official") == 0 &&
 		strcasecmp((*m_words)[1], "lcad") == 0)
 	{
+		if (strcasecmp((*m_words)[2], "update") == 0)
+		{
+			return true;
+		}
 		word = 2;
 	}
 	if (word && (strcasecmp((*m_words)[word], "part") == 0 ||

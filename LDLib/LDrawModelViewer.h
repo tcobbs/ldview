@@ -3,8 +3,8 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCStringArray.h>
-#include <LDLib/LDrawModel.h>
 #include <LDLib/TGLCamera.h>
+#include <TRE/TREGL.h>
 
 
 typedef enum
@@ -140,7 +140,7 @@ class LDrawModelViewer: public TCObject
 		virtual void setDefaultColorNumber(int value);
 		int getDefaultColorNumber(void) { return defaultColorNumber; }
 		virtual void setSeamWidth(float);
-		float getSeamWidth(void) { return LDrawModel::getSeamWidth(); }
+		float getSeamWidth(void) { return seamWidth; }
 		virtual void setDrawWireframe(bool);
 		bool getDrawWireframe(void) { return flags.drawWireframe; }
 		virtual void setUseWireframeFog(bool);
@@ -170,10 +170,10 @@ class LDrawModelViewer: public TCObject
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
-		virtual void setProgressCallback(LDMProgressCallback callback,
-			void* userData);
-		virtual void setErrorCallback(LDMErrorCallback callback,
-			void* userData);
+//		virtual void setProgressCallback(LDMProgressCallback callback,
+//			void* userData);
+//		virtual void setErrorCallback(LDMErrorCallback callback,
+//			void* userData);
 		virtual void clear(void);
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
 		virtual void pause(void);
@@ -224,18 +224,8 @@ class LDrawModelViewer: public TCObject
 		bool getTextureStuds(void) { return flags.textureStuds; }
 		void setTextureFilterType(int value);
 		int getTextureFilterType(void) { return textureFilterType; }
-		LDrawModel* getLDrawModel(void) { return lDrawModel; }
-		bool getCompiled(void)
-		{
-			if (lDrawModel)
-			{
-				return lDrawModel->getCompiled() ? true : false;
-			}
-			else
-			{
-				return false;
-			}
-		}
+		TREMainModel *getMainTREModel(void) { return mainTREModel; }
+		bool getCompiled(void);
 		void setPixelAspectRatio(float value) { pixelAspectRatio = value; }
 		float getPixelAspectRatio(void) { return pixelAspectRatio; }
 		bool getLDrawCommandLineMatrix(char *matrixString, int bufferLength);
@@ -264,14 +254,6 @@ class LDrawModelViewer: public TCObject
 		virtual TGLCamera &getCamera(void) { return camera; }
 		virtual void zoomToFit(void);
 
-		static void setPolygonOffsetFunc(GLPolygonOffsetFunc func)
-		{
-			LDrawModel::setPolygonOffsetFunc(func);
-		}
-		static GLPolygonOffsetFunc getPolygonOffsetFunc(void)
-		{
-			return LDrawModel::getPolygonOffsetFunc();
-		}
 		static char *getOpenGLDriverInfo(int &numExtensions);
 	protected:
 		~LDrawModelViewer(void);
@@ -317,7 +299,6 @@ class LDrawModelViewer: public TCObject
 
 		void scanCameraPoint(const TCVector &point);
 
-		LDrawModel* lDrawModel;
 		TREMainModel *mainTREModel;
 		char* filename;
 		char* programPath;
@@ -358,10 +339,10 @@ class LDrawModelViewer: public TCObject
 		TCByte defaultG;
 		TCByte defaultB;
 		int defaultColorNumber;
-		LDMProgressCallback progressCallback;
-		void* progressUserData;
-		LDMErrorCallback errorCallback;
-		void* errorUserData;
+//		LDMProgressCallback progressCallback;
+//		void* progressUserData;
+//		LDMErrorCallback errorCallback;
+//		void* errorUserData;
 		int xTile;
 		int yTile;
 		int numXTiles;

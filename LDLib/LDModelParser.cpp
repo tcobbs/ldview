@@ -14,6 +14,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
+#include <TCFoundation/TCProgressAlert.h>
 
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
@@ -22,14 +23,16 @@ LDModelParser::LDModelParser(void)
 	:m_mainLDLModel(NULL),
 	m_mainTREModel(NULL),
 	m_curveQuality(2),
-	m_seamWidth(0.0f)
+	m_seamWidth(0.0f),
+	m_edgeLineWidth(0.0f),
+	m_abort(false)
 {
 	m_flags.flattenParts = true;	// Supporting false here could take a lot
 									// of work.
 	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
-	m_flags.bfc = false;
+	m_flags.bfc = true;
 	m_flags.compileParts = true;
 	m_flags.compileAll = true;
 	m_flags.lighting = false;
@@ -73,15 +76,15 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 
 void LDModelParser::setDefaultRGB(TCByte r, TCByte g, TCByte b)
 {
-	defaultR = r;
-	defaultG = g;
-	defaultB = b;
+	m_defaultR = r;
+	m_defaultG = g;
+	m_defaultB = b;
 	m_flags.defaultColorSet = true;
 }
 
 void LDModelParser::setDefaultColorNumber(int colorNumber)
 {
-	defaultColorNumber = colorNumber;
+	m_defaultColorNumber = colorNumber;
 	m_flags.defaultColorNumberSet = true;
 }
 
@@ -102,14 +105,15 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setCompilePartsFlag(getCompilePartsFlag());
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
+	m_mainTREModel->setEdgeLineWidth(m_edgeLineWidth);
 	if (m_flags.defaultColorNumberSet)
 	{
-		colorNumber = defaultColorNumber;
+		colorNumber = m_defaultColorNumber;
 	}
 	else if (m_flags.defaultColorSet)
 	{
-		colorNumber = palette->getColorNumberForRGB(defaultR, defaultG,
-			defaultB);
+		colorNumber = palette->getColorNumberForRGB(m_defaultR, m_defaultG,
+			m_defaultB);
 	}
 	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
@@ -128,8 +132,15 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 		{
 			finishPart(m_mainTREModel);
 		}
-		m_mainTREModel->postProcess();
-		return true;
+		TCProgressAlert::send("LDModelParser", "Parsing...", 1.0f, &m_abort);
+		if (m_abort)
+		{
+			return false;
+		}
+		else
+		{
+			return m_mainTREModel->postProcess();
+		}
 	}
 	else
 	{
@@ -392,11 +403,11 @@ bool LDModelParser::substituteStu22(TREModel *treModel, bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments,
+	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 4.0f, -4.0f, numSegments,
 		numSegments, bfc);
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, 0.0f,
+	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 6.0f, 0.0f,
 		numSegments, numSegments, bfc);
 	if (m_flags.edgeLines)
 	{
@@ -440,11 +451,11 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
+	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 6.0f, -4.0f, numSegments,
 		numSegments, bfc);
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 6.0f, 0.0f,
+	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 8.0f, 0.0f,
 		numSegments, numSegments, bfc);
 	if (m_flags.edgeLines)
 	{
@@ -539,8 +550,8 @@ bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size,
 {
 	int numSegments = getNumCircleSegments(fraction);
 
-	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
-		(float)size, numSegments, (int)(numSegments * fraction), bfc);
+	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size,
+		(float)size + 1.0f, numSegments, (int)(numSegments * fraction), bfc);
 	return true;
 }
 
@@ -700,7 +711,7 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 			int count = ldlModel->getActiveLineCount();
 
 			treModel->setName(ldlModel->getName());
-			for (i = 0; i < count; i++)
+			for (i = 0; i < count && !m_abort; i++)
 			{
 				LDLFileLine *fileLine = (*fileLines)[i];
 
@@ -728,10 +739,15 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 						break;
 					}
 				}
+				if (ldlModel->isMainModel())
+				{
+					TCProgressAlert::send("LDLModelParser", "Parsing...",
+						(float)(i + 1) / (float)(count + 1), &m_abort);
+				}
 			}
 		}
 	}
-	return true;
+	return !m_abort;
 }
 
 void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
