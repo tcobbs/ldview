@@ -3,7 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCStringArray.h>
-#include <LDLib/TGLCamera.h>
+#include <TRE/TRECamera.h>
 #include <TRE/TREGL.h>
 
 
@@ -251,7 +251,7 @@ class LDrawModelViewer: public TCObject
 		void setExtraSearchDirs(TCStringArray *value);
 		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }
 		bool skipCameraPositioning(void);
-		virtual TGLCamera &getCamera(void) { return camera; }
+		virtual TRECamera &getCamera(void) { return camera; }
 		virtual void zoomToFit(void);
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
@@ -358,7 +358,7 @@ class LDrawModelViewer: public TCObject
 		GLfloat distanceMultiplier;
 		TCImage *fontImage;
 		GLuint fontTextureID;
-		TGLCamera camera;
+		TRECamera camera;
 		float aspectRatio;
 		float currentFov;
 		float fov;

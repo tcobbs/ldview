@@ -85,7 +85,15 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\TRECamera.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TREColoredShapeGroup.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TREFacing.cpp
 # End Source File
 # Begin Source File
 
@@ -121,7 +129,15 @@ SOURCE=.\TREVertexStore.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\TRECamera.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TREColoredShapeGroup.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TREFacing.h
 # End Source File
 # Begin Source File
 
