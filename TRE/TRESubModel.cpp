@@ -7,6 +7,7 @@
 TRESubModel::TRESubModel(void)
 	:m_model(NULL),
 	m_color(0),
+	m_highlightColor(0),
 	m_colorSet(false)
 {
 }
@@ -15,6 +16,7 @@ TRESubModel::TRESubModel(const TRESubModel &other)
 	:TCObject(other),
 	m_model((TREModel *)TCObject::copy(other.m_model)),
 	m_color(other.m_color),
+	m_highlightColor(other.m_highlightColor),
 	m_colorSet(other.m_colorSet)
 {
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
@@ -47,9 +49,10 @@ void TRESubModel::setMatrix(float *matrix)
 	memcpy(m_matrix, matrix, sizeof(m_matrix));
 }
 
-void TRESubModel::setColor(TCULong color)
+void TRESubModel::setColor(TCULong color, TCULong highlightColor)
 {
 	m_color = htonl(color);
+	m_highlightColor = htonl(highlightColor);
 	m_colorSet = true;
 }
 
@@ -92,6 +95,40 @@ void TRESubModel::drawDefaultColor(void)
 	}
 }
 
+void TRESubModel::drawDefaultColorLines(void)
+{
+	if (m_colorSet)
+	{
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor4ubv((GLubyte*)&m_color);
+	}
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	m_model->drawDefaultColorLines();
+	glPopMatrix();
+	if (m_colorSet)
+	{
+		glPopAttrib();
+	}
+}
+
+void TRESubModel::drawHighlightLines(void)
+{
+	if (m_colorSet)
+	{
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor4ubv((GLubyte*)&m_highlightColor);
+	}
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	m_model->drawHighlightLines();
+	glPopMatrix();
+	if (m_colorSet)
+	{
+		glPopAttrib();
+	}
+}
+
 void TRESubModel::drawColored(void)
 {
 	glPushMatrix();
@@ -100,7 +137,15 @@ void TRESubModel::drawColored(void)
 	glPopMatrix();
 }
 
-void TRESubModel::getMinMax(Vector& min, Vector& max, float* matrix)
+void TRESubModel::drawColoredLines(void)
+{
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	m_model->drawColoredLines();
+	glPopMatrix();
+}
+
+void TRESubModel::getMinMax(TCVector& min, TCVector& max, float* matrix)
 {
 	float newMatrix[16];
 
@@ -110,9 +155,9 @@ void TRESubModel::getMinMax(Vector& min, Vector& max, float* matrix)
 
 void TRESubModel::shrink(float amount)
 {
-	Vector min;
-	Vector max;
-	Vector delta;
+	TCVector min;
+	TCVector max;
+	TCVector delta;
 	float scaleMatrix[16] = {1.0f, 0.0f, 0.0f, 0.0f,
 							 0.0f, 1.0f, 0.0f, 0.0f,
 							 0.0f, 0.0f, 1.0f, 0.0f,

@@ -9,7 +9,7 @@ public:
 	TCObject *copy(void);
 	virtual bool parse(void);
 	virtual int getNumControlPoints(void) const { return 2; }
-	virtual Vector *getControlPoints(void) { return m_controlPoints; }
+	virtual TCVector *getControlPoints(void) { return m_controlPoints; }
 	virtual LDLLineType getLineType(void) const
 	{
 		return LDLLineTypeConditionalLine;
@@ -20,7 +20,7 @@ protected:
 	LDLConditionalLineLine(const LDLConditionalLineLine &other);
 	virtual void dealloc(void);
 
-	Vector *m_controlPoints;
+	TCVector *m_controlPoints;
 
 	friend LDLFileLine; // Needed because constructors are protected.
 };

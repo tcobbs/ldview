@@ -25,6 +25,10 @@ public:
 	{
 		return m_flags.primitiveSubstitution;
 	}
+	void setEdgeLines(bool value) { m_flags.edgeLines = value; }
+	bool getEdgeLines(void) { return m_flags.edgeLines; }
+	void setCurveQuality(int value) { m_curveQuality = value; }
+	int getCurveQuality(void) { return m_curveQuality; }
 	virtual void setSeamWidth(float seamWidth);
 	virtual float getSeamWidth(void);
 protected:
@@ -32,6 +36,7 @@ protected:
 	virtual void dealloc(void);
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel);
+	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel);
 	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel);
 	virtual void parseQuad(LDLShapeLine *shapeLine, TREModel *treModel);
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
@@ -44,6 +49,7 @@ protected:
 	virtual bool substituteStu23(TREModel *treModel, bool isA = false);
 	virtual bool substituteStu24(TREModel *treModel, bool isA = false);
 	virtual bool substituteCylinder(TREModel *treModel, float fraction);
+	virtual bool substituteCone(TREModel *treModel, float fraction, int size);
 //	virtual int parseShapeVertices(LDLShapeLine *shapeLine,
 //		TREModel *treModel);
 	virtual float startingFraction(const char *filename);
@@ -51,6 +57,9 @@ protected:
 	virtual bool startsWithFraction2(const char *filename);
 	virtual bool isPrimitive(const char *filename, const char *suffix);
 	virtual bool isCyli(const char *filename);
+	virtual bool is1DigitCon(const char *filename);
+	virtual bool is2DigitCon(const char *filename);
+	virtual bool isCon(const char *filename);
 	virtual int getNumCircleSegments(float fraction = 0.0f);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 
@@ -63,6 +72,7 @@ protected:
 		bool flattenParts:1;
 		bool primitiveSubstitution:1;
 		bool seams:1;
+		bool edgeLines:1;
 	} m_flags;
 };
 

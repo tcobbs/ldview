@@ -8,6 +8,7 @@ class TCStringArray;
 
 typedef enum
 {
+	LDLEGeneral,
 	LDLEParse,
 	LDLEFileNotFound,
 	LDLEMatrix,
@@ -33,6 +34,9 @@ public:
 	char *getFileLine(void) { return m_fileLine; }
 	int getLineNumber(void) { return m_lineNumber; }
 	static TCULong alertClass(void) { return 1; }
+	virtual const char *getTypeName(void);
+	void setLevel(int value) { m_level = value; }
+	int getLevel(void) { return m_level; }
 protected:
 	virtual ~LDLError(void);
 	virtual void dealloc(void);
@@ -41,6 +45,7 @@ protected:
 	char *m_filename;
 	char *m_fileLine;
 	int m_lineNumber;
+	int m_level;
 };
 
 #endif // __LDLERROR_H__

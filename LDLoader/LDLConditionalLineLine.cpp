@@ -17,7 +17,7 @@ LDLConditionalLineLine::LDLConditionalLineLine(const LDLConditionalLineLine
 		int i;
 		int count = other.getNumControlPoints();
 
-		m_controlPoints = new Vector[count];
+		m_controlPoints = new TCVector[count];
 		for (i = 0; i < count; i++)
 		{
 			m_controlPoints[i] = other.m_controlPoints[i];
@@ -37,12 +37,12 @@ bool LDLConditionalLineLine::parse(void)
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3,
 		&x4, &y4, &z4) == 14)
 	{
-		m_points = new Vector[2];
-		m_points[0] = Vector(x1, y1, z1);
-		m_points[1] = Vector(x2, y2, z2);
-		m_controlPoints = new Vector[2];
-		m_controlPoints[0] = Vector(x3, y3, z3);
-		m_controlPoints[1] = Vector(x4, y4, z4);
+		m_points = new TCVector[2];
+		m_points[0] = TCVector(x1, y1, z1);
+		m_points[1] = TCVector(x2, y2, z2);
+		m_controlPoints = new TCVector[2];
+		m_controlPoints[0] = TCVector(x3, y3, z3);
+		m_controlPoints[1] = TCVector(x4, y4, z4);
 		return true;
 	}
 	else

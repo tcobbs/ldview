@@ -161,6 +161,10 @@ SOURCE=.\TCStringObjectTree.cpp
 
 SOURCE=.\TCUserDefaults.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\TCVector.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -215,6 +219,10 @@ SOURCE=.\TCImageFormat.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCMacros.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCObject.h
 # End Source File
 # Begin Source File
@@ -260,6 +268,10 @@ SOURCE=.\TCTypedValueArray.h
 # Begin Source File
 
 SOURCE=.\TCUserDefaults.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCVector.h
 # End Source File
 # End Group
 # End Target

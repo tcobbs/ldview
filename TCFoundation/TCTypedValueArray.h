@@ -29,8 +29,28 @@ template <class Type> class TCTypedValueArray : public TCArray
 			{ return (Type)TCArray::itemAtIndex(index); }
 		Type *getValues(void)
 			{ return (Type *)TCArray::getItems(); }
+		void sort(void)
+			{ sortUsingFunction(valueSortFunction); }
 	protected:
 		~TCTypedValueArray(void) {}
+		static int valueSortFunction(const void *left, const void *right)
+		{
+			Type leftVal = *(Type*)left;
+			Type rightVal = *(Type*)right;
+
+			if (leftVal < rightVal)
+			{
+				return -1;
+			}
+			else if (leftVal > rightVal)
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
+		}
 };
 
 typedef TCTypedValueArray<int> TCIntArray;

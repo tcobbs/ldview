@@ -6,6 +6,18 @@
 
 static int debugLevel = 0;
 
+char *copyString(const char *string, int pad)
+{
+	if (string)
+	{
+		return strcpy(new char[strlen(string) + 1 + pad], string);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
 char *strnstr(const char *s1, const char *s2, size_t n, int skipZero)
 {
 	char* spot;

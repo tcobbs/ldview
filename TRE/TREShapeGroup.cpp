@@ -2,7 +2,7 @@
 #include "TREVertexArray.h"
 #include "TREVertexStore.h"
 #include "TREModel.h"
-#include <LDLib/Vector.h>
+#include <TCFoundation/TCVector.h>
 
 TREShapeGroup::TREShapeGroup(void)
 	:m_vertexStore(NULL),
@@ -248,7 +248,15 @@ void TREShapeGroup::draw(void)
 	}
 }
 
-int TREShapeGroup::addLine(Vector *vertices)
+void TREShapeGroup::drawLines(void)
+{
+	if (m_vertexStore)
+	{
+		drawShapeType(TRESLine);
+	}
+}
+
+int TREShapeGroup::addLine(TCVector *vertices)
 {
 	int index;
 
@@ -258,7 +266,7 @@ int TREShapeGroup::addLine(Vector *vertices)
 	return index;
 }
 
-int TREShapeGroup::addTriangle(Vector *vertices)
+int TREShapeGroup::addTriangle(TCVector *vertices)
 {
 	int index;
 
@@ -268,7 +276,7 @@ int TREShapeGroup::addTriangle(Vector *vertices)
 	return index;
 }
 
-int TREShapeGroup::addQuad(Vector *vertices)
+int TREShapeGroup::addQuad(TCVector *vertices)
 {
 	int index;
 
@@ -278,18 +286,18 @@ int TREShapeGroup::addQuad(Vector *vertices)
 	return index;
 }
 
-int TREShapeGroup::addQuadStrip(Vector *vertices, Vector *normals, int count)
+int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
 {
 	return addStrip(TRESQuadStrip, vertices, normals, count);
 }
 
-int TREShapeGroup::addTriangleFan(Vector *vertices, Vector *normals, int count)
+int TREShapeGroup::addTriangleFan(TCVector *vertices, TCVector *normals, int count)
 {
 	return addStrip(TRESTriangleFan, vertices, normals, count);
 }
 
-int TREShapeGroup::addStrip(TREShapeType shapeType, Vector *vertices,
-							Vector *normals, int count)
+int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
+							TCVector *normals, int count)
 {
 	int index;
 
@@ -307,7 +315,7 @@ void TREShapeGroup::setVertexStore(TREVertexStore *vertexStore)
 	m_vertexStore = vertexStore;
 }
 
-void TREShapeGroup::getMinMax(Vector& min, Vector& max, float* matrix)
+void TREShapeGroup::getMinMax(TCVector& min, TCVector& max, float* matrix)
 {
 	int bit;
 
@@ -321,7 +329,7 @@ void TREShapeGroup::getMinMax(Vector& min, Vector& max, float* matrix)
 	}
 }
 
-void TREShapeGroup::getMinMax(TCULongArray *indices, Vector& min, Vector& max,
+void TREShapeGroup::getMinMax(TCULongArray *indices, TCVector& min, TCVector& max,
 							  float* matrix)
 {
 	if (indices)
@@ -336,8 +344,8 @@ void TREShapeGroup::getMinMax(TCULongArray *indices, Vector& min, Vector& max,
 	}
 }
 
-void TREShapeGroup::getStripMinMax(TCULongArray *indices, Vector& min,
-								   Vector& max, float* matrix)
+void TREShapeGroup::getStripMinMax(TCULongArray *indices, TCVector& min,
+								   TCVector& max, float* matrix)
 {
 	if (indices)
 	{
@@ -357,9 +365,9 @@ void TREShapeGroup::getStripMinMax(TCULongArray *indices, Vector& min,
 	}
 }
 
-void TREShapeGroup::getMinMax(const TREVertex &vertex, Vector& min, Vector& max)
+void TREShapeGroup::getMinMax(const TREVertex &vertex, TCVector& min, TCVector& max)
 {
-	Vector point = Vector(vertex.v[0], vertex.v[1], vertex.v[2]);
+	TCVector point = TCVector(vertex.v[0], vertex.v[1], vertex.v[2]);
 
 	if (point[0] < min[0])
 	{
@@ -387,7 +395,7 @@ void TREShapeGroup::getMinMax(const TREVertex &vertex, Vector& min, Vector& max)
 	}
 }
 
-void TREShapeGroup::getMinMax(TCULong index, Vector& min, Vector& max,
+void TREShapeGroup::getMinMax(TCULong index, TCVector& min, TCVector& max,
 							  float* matrix)
 {
 	TREVertex vertex = (*m_vertexStore->getVertices())[index];

@@ -23,11 +23,11 @@ bool LDLQuadLine::parse(void)
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3,
 		&x4, &y4, &z4) == 14)
 	{
-		m_points = new Vector[4];
-		m_points[0] = Vector(x1, y1, z1);
-		m_points[1] = Vector(x2, y2, z2);
-		m_points[2] = Vector(x3, y3, z3);
-		m_points[3] = Vector(x4, y4, z4);
+		m_points = new TCVector[4];
+		m_points[0] = TCVector(x1, y1, z1);
+		m_points[1] = TCVector(x2, y2, z2);
+		m_points[2] = TCVector(x3, y3, z3);
+		m_points[3] = TCVector(x4, y4, z4);
 		return true;
 	}
 	else
