@@ -55,6 +55,7 @@ public:
 	bool getRemoveHiddenLines(void) { return removeHiddenLines; }
 	bool getUsePolygonOffset(void) { return usePolygonOffset; }
 	bool getUseLighting(void) { return useLighting; }
+	void setUseLighting(bool value);
 	bool getSubduedLighting(void) { return subduedLighting; }
 	int getFullScreenRefresh(void) { return fullScreenRefresh; }
 	bool getUseStipple(void) { return useStipple; }
