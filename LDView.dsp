@@ -323,6 +323,14 @@ SOURCE=.\Icons\error_parse_mask.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\error_vertex_order.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_vertex_order_mask.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\examine.ico
 # End Source File
 # Begin Source File
