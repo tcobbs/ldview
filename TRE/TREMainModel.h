@@ -17,12 +17,19 @@ public:
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual TREModel *modelNamed(const char *name);
 	virtual void registerModel(TREModel *model);
-	bool getCompileParts(void) { return m_mainFlags.compileParts; }
-	bool getCompileAll(void) { return m_mainFlags.compileAll; }
+	bool getCompilePartsFlag(void) { return m_mainFlags.compileParts; }
+	bool getCompileAllFlag(void) { return m_mainFlags.compileAll; }
+	void setEdgeLinesFlag(bool value) { m_mainFlags.edgeLines = value; }
+	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines; }
+	void setTwoSidedLightingFlag(bool value);
+	bool getTwoSidedLightingFlag(void) { return m_mainFlags.twoSidedLighting; }
 	TREVertexStore *getColoredVertexStore(void)
 	{
 		return m_coloredVertexStore;
 	}
+	void setColor(TCULong color, TCULong edgeColor);
+	TCULong getColor(void);
+	TCULong getEdgeColor(void);
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
@@ -30,11 +37,15 @@ protected:
 	TCDictionary *m_loadedModels;
 	TREVertexStore *m_vertexStore;
 	TREVertexStore *m_coloredVertexStore;
+	TCULong m_color;
+	TCULong m_edgeColor;
 	struct
 	{
 		bool compileParts:1;
 		bool compileAll:1;
 		bool compiled:1;
+		bool edgeLines:1;
+		bool twoSidedLighting:1;
 	} m_mainFlags;
 };
 

@@ -82,19 +82,10 @@ void TREShapeGroup::addConditionalLine(int index1, int index2, int index3,
 {
 	addShape(TRESConditionalLine, index1, index2, index3, index4);
 }
-
-void TREShapeGroup::addBFCTriangle(int index1, int index2, int index3)
-{
-	addShape(TRESBFCTriangle, index1, index2, index3);
-}
-
-void TREShapeGroup::addBFCQuad(int index1, int index2, int index3, int index4)
-{
-	addShape(TRESBFCQuad, index1, index2, index3, index4);
-}
 */
 
-void TREShapeGroup::addShape(TREShapeType shapeType, int firstIndex, int count)
+void TREShapeGroup::addShapeIndices(TREShapeType shapeType, int firstIndex,
+									int count)
 {
 	TCULongArray *indices = getIndices(shapeType, true);
 	int i;
@@ -104,37 +95,6 @@ void TREShapeGroup::addShape(TREShapeType shapeType, int firstIndex, int count)
 		indices->addValue(firstIndex + i);
 	}
 }
-
-/*
-void TREShapeGroup::addShape(TREShapeType shapeType, int index1, int index2)
-{
-	TCULongArray *indices = getIndices(shapeType, true);
-
-	indices->addValue(index1);
-	indices->addValue(index2);
-}
-
-void TREShapeGroup::addShape(TREShapeType shapeType, int index1, int index2,
-							 int index3)
-{
-	TCULongArray *indices = getIndices(shapeType, true);
-
-	indices->addValue(index1);
-	indices->addValue(index2);
-	indices->addValue(index3);
-}
-
-void TREShapeGroup::addShape(TREShapeType shapeType, int index1, int index2,
-							 int index3, int index4)
-{
-	TCULongArray *indices = getIndices(shapeType, true);
-
-	indices->addValue(index1);
-	indices->addValue(index2);
-	indices->addValue(index3);
-	indices->addValue(index4);
-}
-*/
 
 GLenum TREShapeGroup::modeForShapeType(TREShapeType shapeType)
 {
@@ -237,9 +197,35 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 
 void TREShapeGroup::draw(void)
 {
+	drawNonBFC();
+	drawBFC();
+}
+
+void TREShapeGroup::drawBFC(void)
+{
+	if (m_vertexStore && (m_shapesPresent & (TRESBFCTriangle | TRESBFCQuad)))
+	{
+		// Note that GL_BACK is the default face to cull, and GL_CCW is the
+		// default polygon winding.
+		glEnable(GL_CULL_FACE);
+		if (m_vertexStore->getTwoSidedLightingFlag())
+		{
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+		}
+		drawShapeType(TRESBFCTriangle);
+		drawShapeType(TRESBFCQuad);
+		if (m_vertexStore->getTwoSidedLightingFlag())
+		{
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		}
+		glDisable(GL_CULL_FACE);
+	}
+}
+
+void TREShapeGroup::drawNonBFC(void)
+{
 	if (m_vertexStore)
 	{
-//		m_vertexStore->activate();
 		drawShapeType(TRESTriangle);
 		drawShapeType(TRESQuad);
 		drawStripShapeType(TRESTriangleStrip);
@@ -256,34 +242,73 @@ void TREShapeGroup::drawLines(void)
 	}
 }
 
-int TREShapeGroup::addLine(TCVector *vertices)
+int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
+							int count)
+{
+	return addShape(shapeType, vertices, NULL, count);
+}
+
+int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
+							TCVector *normals, int count)
 {
 	int index;
 
 	m_vertexStore->setup();
-	index = m_vertexStore->addVertices(vertices, 3);
-	addShape(TRESLine, index, 2);
+	if (normals)
+	{
+		index = m_vertexStore->addVertices(vertices, normals, count);
+	}
+	else
+	{
+		index = m_vertexStore->addVertices(vertices, count);
+	}
+	addShapeIndices(shapeType, index, count);
 	return index;
+}
+
+int TREShapeGroup::addLine(TCVector *vertices)
+{
+	return addShape(TRESLine, vertices, 2);
 }
 
 int TREShapeGroup::addTriangle(TCVector *vertices)
 {
-	int index;
+	return addShape(TRESTriangle, vertices, 3);
+}
 
-	m_vertexStore->setup();
-	index = m_vertexStore->addVertices(vertices, 3);
-	addShape(TRESTriangle, index, 3);
-	return index;
+int TREShapeGroup::addTriangle(TCVector *vertices, TCVector *normals)
+{
+	return addShape(TRESTriangle, vertices, normals, 3);
 }
 
 int TREShapeGroup::addQuad(TCVector *vertices)
 {
-	int index;
+	return addShape(TRESQuad, vertices, 4);
+}
 
-	m_vertexStore->setup();
-	index = m_vertexStore->addVertices(vertices, 4);
-	addShape(TRESQuad, index, 4);
-	return index;
+int TREShapeGroup::addQuad(TCVector *vertices, TCVector *normals)
+{
+	return addShape(TRESQuad, vertices, normals, 4);
+}
+
+int TREShapeGroup::addBFCTriangle(TCVector *vertices)
+{
+	return addShape(TRESBFCTriangle, vertices, 3);
+}
+
+int TREShapeGroup::addBFCTriangle(TCVector *vertices, TCVector *normals)
+{
+	return addShape(TRESBFCTriangle, vertices, normals, 3);
+}
+
+int TREShapeGroup::addBFCQuad(TCVector *vertices)
+{
+	return addShape(TRESBFCQuad, vertices, 4);
+}
+
+int TREShapeGroup::addBFCQuad(TCVector *vertices, TCVector *normals)
+{
+	return addShape(TRESBFCQuad, vertices, normals, 4);
 }
 
 int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals, int count)
@@ -303,8 +328,8 @@ int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
 
 	m_vertexStore->setup();
 	index = m_vertexStore->addVertices(vertices, normals, count);
-	addShape(shapeType, count, 1);
-	addShape(shapeType, index, count);
+	addShapeIndices(shapeType, count, 1);
+	addShapeIndices(shapeType, index, count);
 	return index;
 }
 

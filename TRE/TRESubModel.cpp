@@ -7,7 +7,7 @@
 TRESubModel::TRESubModel(void)
 	:m_model(NULL),
 	m_color(0),
-	m_highlightColor(0),
+	m_edgeColor(0),
 	m_colorSet(false)
 {
 }
@@ -16,7 +16,7 @@ TRESubModel::TRESubModel(const TRESubModel &other)
 	:TCObject(other),
 	m_model((TREModel *)TCObject::copy(other.m_model)),
 	m_color(other.m_color),
-	m_highlightColor(other.m_highlightColor),
+	m_edgeColor(other.m_edgeColor),
 	m_colorSet(other.m_colorSet)
 {
 	memcpy(m_matrix, other.m_matrix, sizeof(m_matrix));
@@ -49,16 +49,21 @@ void TRESubModel::setMatrix(float *matrix)
 	memcpy(m_matrix, matrix, sizeof(m_matrix));
 }
 
-void TRESubModel::setColor(TCULong color, TCULong highlightColor)
+void TRESubModel::setColor(TCULong color, TCULong edgeColor)
 {
 	m_color = htonl(color);
-	m_highlightColor = htonl(highlightColor);
+	m_edgeColor = htonl(edgeColor);
 	m_colorSet = true;
 }
 
 TCULong TRESubModel::getColor(void)
 {
 	return htonl(m_color);
+}
+
+TCULong TRESubModel::getEdgeColor(void)
+{
+	return htonl(m_edgeColor);
 }
 
 void TRESubModel::draw(void)
@@ -112,16 +117,16 @@ void TRESubModel::drawDefaultColorLines(void)
 	}
 }
 
-void TRESubModel::drawHighlightLines(void)
+void TRESubModel::drawEdgeLines(void)
 {
 	if (m_colorSet)
 	{
 		glPushAttrib(GL_CURRENT_BIT);
-		glColor4ubv((GLubyte*)&m_highlightColor);
+		glColor4ubv((GLubyte*)&m_edgeColor);
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-	m_model->drawHighlightLines();
+	m_model->drawEdgeLines();
 	glPopMatrix();
 	if (m_colorSet)
 	{
@@ -142,6 +147,14 @@ void TRESubModel::drawColoredLines(void)
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
 	m_model->drawColoredLines();
+	glPopMatrix();
+}
+
+void TRESubModel::drawColoredEdgeLines(void)
+{
+	glPushMatrix();
+	glMultMatrixf(m_matrix);
+	m_model->drawColoredEdgeLines();
 	glPopMatrix();
 }
 

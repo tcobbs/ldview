@@ -27,6 +27,11 @@ public:
 	}
 	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_flags.edgeLines; }
+	void setTwoSidedLightingFlag(bool value)
+	{
+		m_flags.twoSidedLighting = value;
+	}
+	bool getTwoSidedLightingFlag(void) { return m_flags.twoSidedLighting; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	virtual void setSeamWidth(float seamWidth);
@@ -74,6 +79,7 @@ protected:
 		bool primitiveSubstitution:1;
 		bool seams:1;
 		bool edgeLines:1;
+		bool twoSidedLighting:1;
 	} m_flags;
 };
 

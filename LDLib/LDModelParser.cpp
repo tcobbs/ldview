@@ -64,6 +64,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel = new TREMainModel;
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
+	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	if (parseModel(m_mainLDLModel, m_mainTREModel))

@@ -53,6 +53,7 @@ public:
 	virtual LDLError *newError(LDLErrorType type, const char *format, ...);
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
 	virtual int getActiveLineCount(void) { return m_activeLineCount; }
+	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
@@ -61,7 +62,6 @@ public:
 	bool isMPD(void) { return m_flags.mpd != false; }
 
 	// Transparency detection is fixed, so static.
-	static bool colorNumberIsTransparent(TCULong colorNumber);
 	static TCULong colorForRGBA(int r, int g, int b, int a);
 	static const char *lDrawDir(void);
 protected:

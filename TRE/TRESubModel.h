@@ -17,15 +17,17 @@ public:
 	virtual TREModel *getModel(void) const { return m_model; }
 	virtual void setMatrix(float *matrix);
 	virtual float *getMatrix(void) { return m_matrix; }
-	virtual void setColor(TCULong color, TCULong highlightColor);
+	virtual void setColor(TCULong color, TCULong edgeColor);
 	virtual TCULong getColor(void);
+	virtual TCULong getEdgeColor(void);
 	virtual bool isColorSet(void) { return m_colorSet; }
 	virtual void draw(void);
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
 	virtual void drawDefaultColorLines(void);
 	virtual void drawColoredLines(void);
-	virtual void drawHighlightLines(void);
+	virtual void drawEdgeLines(void);
+	virtual void drawColoredEdgeLines(void);
 	virtual void getMinMax(TCVector& min, TCVector& max, float* matrix);
 	virtual void shrink(float amount);
 protected:
@@ -35,7 +37,7 @@ protected:
 	TREModel *m_model;
 	float m_matrix[16];
 	TCULong m_color;
-	TCULong m_highlightColor;
+	TCULong m_edgeColor;
 	bool m_colorSet;
 };
 
