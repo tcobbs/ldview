@@ -2,10 +2,17 @@
 #define __TREVERTEXARRAY_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCMacros.h>
 
 struct TREVertex
 {
 	float v[3];
+	bool approxEquals(const TREVertex &right, float epsilon) const
+	{
+		return fEq2(v[0], right.v[0], epsilon) &&
+			fEq2(v[1], right.v[1], epsilon) &&
+			fEq2(v[2], right.v[2], epsilon);
+	}
 };
 
 
@@ -25,6 +32,10 @@ public:
 	virtual const TREVertex &operator[](unsigned int index) const;
 	int getCount(void) const { return m_count; }
 	virtual bool setCapacity(unsigned newCapacity);
+	virtual const TREVertex &constVertexAtIndex(int index) const
+	{
+		return m_vertices[index];
+	}
 //	virtual void sortUsingFunction(TCArraySortFunction function);
 	TREVertex *getVertices(void) const { return m_vertices; }
 protected:

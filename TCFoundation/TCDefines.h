@@ -9,6 +9,12 @@
 #endif
 
 #ifdef WIN32
+// The following shouldn't be necessary here, but due to bugs in Microsoft's
+// precompiled headers, it is.  The warning being disabled below is the one
+// that warns about identifiers longer than 255 characters being truncated to
+// 255 characters in the debug info.
+#pragma warning(disable : 4786 4702)
+
 #include <winsock2.h>
 #include <crtdbg.h>
 

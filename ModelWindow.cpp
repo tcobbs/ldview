@@ -2015,15 +2015,28 @@ int ModelWindow::progressCallback(const char* message, float progress,
 //	debugPrintf("%s: %f\n", message, progress);
 	if (message)
 	{
+		char oldMessage[1024];
+
+		SendMessage(hStatusBar, SB_GETTEXT, 1, (LPARAM)oldMessage);
+		if (strcmp(message, oldMessage) != 0)
+		{
+			SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
+		}
 //		SendDlgItemMessage(hProgressWindow, IDC_LOAD_PROGRESS_MSG, WM_SETTEXT,
 //			0, (LPARAM)message);
-		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
 	}
 	if (progress >= 0.0f)
 	{
+		int oldProgress;
+		int newProgress = (int)(progress * 100);
+
+		oldProgress = SendMessage(hProgressBar, PBM_GETPOS, 0, 0);
+		if (oldProgress != newProgress)
+		{
+			SendMessage(hProgressBar, PBM_SETPOS, newProgress, 0);
+		}
 //		SendDlgItemMessage(hProgressWindow, IDC_PROGRESS, PBM_SETPOS,
 //			(int)(progress * 100), 0);
-		SendMessage(hProgressBar, PBM_SETPOS, (int)(progress * 100), 0);
 	}
 	if (thisProgressUpdate < lastProgressUpdate || thisProgressUpdate >
 		lastProgressUpdate + 100 || progress == 1.0f)

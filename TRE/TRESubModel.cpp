@@ -1,5 +1,4 @@
 #include "TRESubModel.h"
-#include "TREModel.h"
 #include "TREGL.h"
 #include "TREMainModel.h"
 #include <TCFoundation/mystring.h>

@@ -19,7 +19,7 @@ public:
 	}
 	const char *getString(void) { return string; }
 protected:
-	virtual ~TCStringObject(void) {}
+	virtual ~TCStringObject(void);
 	virtual void dealloc(void)
 	{
 		delete string;
@@ -28,6 +28,12 @@ protected:
 
 	char *string;
 };
+
+// I got a compiler warning about this not being inlined when it was in the
+// class definition, so I pulled it out.
+TCStringObject::~TCStringObject(void)
+{
+}
 
 TCLocalStrings *TCLocalStrings::currentLocalStrings = NULL;
 TCLocalStrings::TCLocalStringsCleanup TCLocalStrings::localStringsCleanup;

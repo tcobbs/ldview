@@ -77,6 +77,10 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	{
 		treModel->flatten();
 	}
+	if (getSmoothCurvesFlag())
+	{
+		treModel->smooth();
+	}
 	if (subModel)
 	{
 		if (getSeamsFlag())
