@@ -6,6 +6,8 @@
 #include "LDView.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/mystring.h>
 
 static QGLFormat defaultFormat;
 
@@ -18,6 +20,42 @@ void setupDefaultFormat(void)
 
 int main(int argc, char *argv[])
 {
+	if (TCLocalStrings::loadStringTable("LDViewMessages.ini"))
+	{
+//		printf("Using LDViewMessages.ini\n");
+	}
+	else if (TCLocalStrings::loadStringTable("../LDViewMessages.ini"))
+	{
+//		printf("Using ../LDViewMessages.ini\n");
+	}
+	else if (TCLocalStrings::loadStringTable("/usr/local/etc/LDViewMessages.ini"))
+	{
+//		printf("Using /usr/local/etc/LDViewMessages.ini\n");
+	}
+	else if (TCLocalStrings::loadStringTable("/usr/local/lib/LDViewMessages.ini"))
+	{
+//      printf("Using /usr/local/lib/LDViewMessages.ini\n");
+    }
+	else
+	{
+		char *path = copyString(argv[0], 64);
+
+		if (strrchr(path, '/'))
+		{
+			*strrchr(path, '/') = 0;
+		}
+		strcat(path, "/LDViewMessages.ini");
+		if (TCLocalStrings::loadStringTable(path))
+		{
+//			printf("Using %s\n", path);
+		}
+		else
+		{
+			printf("Could not find LDViewMessages.ini file.\nPlease copy this "
+				"file to /usr/local/etc directory.\n");
+			exit(0);
+		}
+	}
 	TCUserDefaults::setCommandLine(argv);
 	TCUserDefaults::setAppName("LDView");
     QApplication::setColorSpec(QApplication::CustomColor);
