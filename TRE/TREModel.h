@@ -156,6 +156,8 @@ protected:
 	virtual void setupBFC(void);
 	virtual void setupColored(TREMSection section);
 	virtual void setupColored(void);
+	virtual void setupColoredStud(void);
+	virtual void setupColoredStudBFC(void);
 	virtual void setupColoredLines(void);
 	virtual void setupColoredBFC(void);
 	virtual void setupEdges(void);
@@ -207,6 +209,7 @@ protected:
 	virtual bool checkSectionPresent(TREMSection section);
 	virtual bool checkColoredSectionPresent(TREMSection section);
 	virtual bool checkSectionPresent(TREMSection section, bool colored);
+/*
 	virtual bool checkDefaultColorPresent(void);
 	virtual bool checkStudsPresent(void);
 	virtual bool checkBFCPresent(void);
@@ -218,6 +221,7 @@ protected:
 	virtual bool checkColoredLinesPresent(void);
 	virtual bool checkColoredEdgeLinesPresent(void);
 	virtual bool checkColoredConditionalLinesPresent(void);
+*/
 	virtual void setSectionPresent(TREMSection section, bool colored);
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 	virtual bool shouldLoadConditionalLines(void);

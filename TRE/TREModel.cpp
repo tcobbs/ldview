@@ -453,7 +453,7 @@ void TREModel::setup(TREMSection section)
 
 		if (section == TREMStud || section == TREMStudBFC)
 		{
-			shapeGroup->setVertexStore(m_mainModel->getTexturedVertexStore());
+			shapeGroup->setVertexStore(m_mainModel->getStudVertexStore());
 		}
 		else
 		{
@@ -471,7 +471,15 @@ void TREModel::setupColored(TREMSection section)
 	{
 		TREColoredShapeGroup *shapeGroup = new TREColoredShapeGroup;
 
-		shapeGroup->setVertexStore(m_mainModel->getColoredVertexStore());
+		if (section == TREMStud || section == TREMStudBFC)
+		{
+			shapeGroup->setVertexStore(
+				m_mainModel->getColoredStudVertexStore());
+		}
+		else
+		{
+			shapeGroup->setVertexStore(m_mainModel->getColoredVertexStore());
+		}
 		// No need to release previous, since we determined it is NULL.
 		m_coloredShapes[section] = shapeGroup;
 		// Don't release shapeGroup, becase m_shapes isn't a TCObjectArray.
@@ -516,6 +524,16 @@ void TREModel::setupConditional(void)
 void TREModel::setupColored(void)
 {
 	setupColored(TREMStandard);
+}
+
+void TREModel::setupColoredStud(void)
+{
+	setupColored(TREMStud);
+}
+
+void TREModel::setupColoredStudBFC(void)
+{
+	setupColored(TREMStudBFC);
 }
 
 void TREModel::setupColoredLines(void)
@@ -1988,6 +2006,7 @@ bool TREModel::checkColoredSectionPresent(TREMSection section)
 	return checkSectionPresent(section, true);
 }
 
+/*
 bool TREModel::checkDefaultColorPresent(void)
 {
 	return checkSectionPresent(TREMStandard);
@@ -2042,6 +2061,7 @@ bool TREModel::checkColoredConditionalLinesPresent(void)
 {
 	return checkColoredSectionPresent(TREMConditionalLines);
 }
+*/
 
 void TREModel::uncompile(void)
 {

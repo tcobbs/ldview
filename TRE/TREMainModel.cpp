@@ -28,9 +28,10 @@ TREMainModel::TREMainModel(void)
 	:m_loadedModels(NULL),
 	m_loadedBFCModels(NULL),
 	m_vertexStore(new TREVertexStore),
-	m_texturedVertexStore(new TREVertexStore),
+	m_studVertexStore(new TREVertexStore),
 	m_coloredVertexStore(new TREVertexStore),
-	m_transVertexStore(NULL),
+	m_coloredStudVertexStore(new TREVertexStore),
+	m_transVertexStore(new TREVertexStore),
 	m_color(htonl(0x999999FF)),
 	m_edgeColor(htonl(0x666658FF)),
 	m_maxRadiusSquared(0.0f),
@@ -72,10 +73,12 @@ TREMainModel::TREMainModel(const TREMainModel &other)
 	m_loadedModels((TCDictionary *)TCObject::copy(other.m_loadedModels)),
 	m_loadedBFCModels((TCDictionary *)TCObject::copy(other.m_loadedBFCModels)),
 	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
-	m_texturedVertexStore((TREVertexStore *)TCObject::copy(
-		other.m_texturedVertexStore)),
+	m_studVertexStore((TREVertexStore *)TCObject::copy(
+		other.m_studVertexStore)),
 	m_coloredVertexStore((TREVertexStore *)TCObject::copy(
 		other.m_coloredVertexStore)),
+	m_coloredStudVertexStore((TREVertexStore *)TCObject::copy(
+		other.m_coloredStudVertexStore)),
 	m_transVertexStore((TREVertexStore *)TCObject::copy(
 		other.m_transVertexStore)),
 	m_mainFlags(other.m_mainFlags),
@@ -101,8 +104,9 @@ void TREMainModel::dealloc(void)
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
 	TCObject::release(m_vertexStore);
-	TCObject::release(m_texturedVertexStore);
+	TCObject::release(m_studVertexStore);
 	TCObject::release(m_coloredVertexStore);
+	TCObject::release(m_coloredStudVertexStore);
 	TCObject::release(m_transVertexStore);
 	TREModel::dealloc();
 }
@@ -191,7 +195,7 @@ void TREMainModel::compile(void)
 				{
 					if (isStudSection(section))
 					{
-						m_texturedVertexStore->activate(true);
+						m_studVertexStore->activate(true);
 					}
 					else
 					{
@@ -242,9 +246,7 @@ void TREMainModel::compile(void)
 				{
 					if (isStudSection(section))
 					{
-						// PUNT!!!
-						continue;
-//						m_texturedVertexStore->activate(true);
+						m_coloredStudVertexStore->activate(true);
 					}
 					else
 					{
@@ -390,7 +392,7 @@ void TREMainModel::drawSolid(void)
 		glEnable(GL_TEXTURE_2D);
 		bindStudTexture();
 		configureStudTexture();
-		m_texturedVertexStore->activate(m_mainFlags.compileAll ||
+		m_studVertexStore->activate(m_mainFlags.compileAll ||
 			m_mainFlags.compileParts);
 		TREModel::draw(TREMStud);
 	}
@@ -418,7 +420,24 @@ void TREMainModel::drawSolid(void)
 	if (getBFCFlag())
 	{
 		drawColored(TREMBFC);
+		if (getStudLogoFlag())
+		{
+			glEnable(GL_TEXTURE_2D);
+			m_coloredStudVertexStore->activate(m_mainFlags.compileAll ||
+				m_mainFlags.compileParts);
+			drawColored(TREMStudBFC);
+			// Don't bother to disable GL_TEXTURE_2D; it will be disabled just
+			// below.
+		}
 		deactivateBFC();
+	}
+	if (getStudLogoFlag())
+	{
+		glEnable(GL_TEXTURE_2D);
+		m_coloredStudVertexStore->activate(m_mainFlags.compileAll ||
+			m_mainFlags.compileParts);
+		drawColored(TREMStud);
+		glDisable(GL_TEXTURE_2D);
 	}
 	drawColored(TREMStandard);
 }
@@ -506,48 +525,40 @@ void TREMainModel::setLightingFlag(bool value)
 {
 	m_mainFlags.lighting = value;
 	m_vertexStore->setLightingFlag(value);
-	m_texturedVertexStore->setLightingFlag(value);
+	m_studVertexStore->setLightingFlag(value);
 	m_coloredVertexStore->setLightingFlag(value);
-	if (m_transVertexStore)
-	{
-		m_transVertexStore->setLightingFlag(value);
-	}
+	m_coloredStudVertexStore->setLightingFlag(value);
+	m_transVertexStore->setLightingFlag(value);
 }
 
 void TREMainModel::setTwoSidedLightingFlag(bool value)
 {
 	m_mainFlags.twoSidedLighting = value;
 	m_vertexStore->setTwoSidedLightingFlag(value);
-	m_texturedVertexStore->setTwoSidedLightingFlag(value);
+	m_studVertexStore->setTwoSidedLightingFlag(value);
 	m_coloredVertexStore->setTwoSidedLightingFlag(value);
-	if (m_transVertexStore)
-	{
-		m_transVertexStore->setTwoSidedLightingFlag(value);
-	}
+	m_coloredStudVertexStore->setTwoSidedLightingFlag(value);
+	m_transVertexStore->setTwoSidedLightingFlag(value);
 }
 
 void TREMainModel::setShowAllConditionalFlag(bool value)
 {
 	m_mainFlags.showAllConditional = value;
 	m_vertexStore->setShowAllConditionalFlag(value);
-	m_texturedVertexStore->setShowAllConditionalFlag(value);
+	m_studVertexStore->setShowAllConditionalFlag(value);
 	m_coloredVertexStore->setShowAllConditionalFlag(value);
-	if (m_transVertexStore)
-	{
-		m_transVertexStore->setShowAllConditionalFlag(value);
-	}
+	m_coloredStudVertexStore->setShowAllConditionalFlag(value);
+	m_transVertexStore->setShowAllConditionalFlag(value);
 }
 
 void TREMainModel::setConditionalControlPointsFlag(bool value)
 {
 	m_mainFlags.conditionalControlPoints = value;
 	m_vertexStore->setConditionalControlPointsFlag(value);
-	m_texturedVertexStore->setConditionalControlPointsFlag(value);
+	m_studVertexStore->setConditionalControlPointsFlag(value);
 	m_coloredVertexStore->setConditionalControlPointsFlag(value);
-	if (m_transVertexStore)
-	{
-		m_transVertexStore->setConditionalControlPointsFlag(value);
-	}
+	m_coloredStudVertexStore->setConditionalControlPointsFlag(value);
+	m_transVertexStore->setConditionalControlPointsFlag(value);
 }
 
 float TREMainModel::getMaxRadiusSquared(const TCVector &center)
@@ -709,11 +720,15 @@ void TREMainModel::transferTransparent(void)
 
 	TCVector::initIdentityMatrix(identityMatrix);
 	TREModel::transferTransparent(m_color, TREMStandard, identityMatrix);
+	TREModel::transferTransparent(m_color, TREMStud, identityMatrix);
 	transferColoredTransparent(TREMStandard, identityMatrix);
+	transferColoredTransparent(TREMStud, identityMatrix);
 	if (getBFCFlag())
 	{
 		TREModel::transferTransparent(m_color, TREMBFC, identityMatrix);
+		TREModel::transferTransparent(m_color, TREMStudBFC, identityMatrix);
 		transferColoredTransparent(TREMBFC, identityMatrix);
+		transferColoredTransparent(TREMStudBFC, identityMatrix);
 	}
 }
 
@@ -724,16 +739,6 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 										  const TCVector vertices[],
 										  const TCVector normals[])
 {
-	if (!m_transVertexStore)
-	{
-		m_transVertexStore = new TREVertexStore;
-		m_transVertexStore->setLightingFlag(getLightingFlag());
-		m_transVertexStore->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
-		m_transVertexStore->setShowAllConditionalFlag(
-			getShowAllConditionalFlag());
-		m_transVertexStore->setConditionalControlPointsFlag(
-			getConditionalControlPointsFlag());
-	}
 	if (!m_coloredShapes[TREMTransparent])
 	{
 		m_coloredShapes[TREMTransparent] = new TRETransShapeGroup;

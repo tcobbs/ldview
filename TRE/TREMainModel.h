@@ -22,9 +22,13 @@ public:
 	virtual TCDictionary* getLoadedModels(bool bfc);
 	virtual void draw(void);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
-	virtual TREVertexStore *getTexturedVertexStore(void)
+	virtual TREVertexStore *getStudVertexStore(void)
 	{
-		return m_texturedVertexStore;
+		return m_studVertexStore;
+	}
+	virtual TREVertexStore *getColoredStudVertexStore(void)
+	{
+		return m_coloredStudVertexStore;
 	}
 	virtual TREModel *modelNamed(const char *name, bool bfc);
 	virtual void registerModel(TREModel *model, bool bfc);
@@ -163,8 +167,9 @@ protected:
 	TCDictionary *m_loadedModels;
 	TCDictionary *m_loadedBFCModels;
 	TREVertexStore *m_vertexStore;
-	TREVertexStore *m_texturedVertexStore;
+	TREVertexStore *m_studVertexStore;
 	TREVertexStore *m_coloredVertexStore;
+	TREVertexStore *m_coloredStudVertexStore;
 	TREVertexStore *m_transVertexStore;
 	TCULong m_color;
 	TCULong m_edgeColor;
