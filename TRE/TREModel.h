@@ -206,6 +206,7 @@ public:
 		const float *matrix);
 	virtual void transferTransparent(TCULong color, TREMSection section,
 		const float *matrix);
+	virtual void cleanupTransparent(TREMSection section);
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);

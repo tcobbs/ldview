@@ -1,7 +1,6 @@
 #include "ModelWindow.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCMacros.h>
-//#include <LDLib/TGLStudLogo.h>
 #include "LDVExtensionsSetup.h"
 #include "LDViewWindow.h"
 #include <TCFoundation/TCAutoreleasePool.h>
@@ -2669,7 +2668,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 
 							if (hPBufferGLRC)
 							{
-							wglShareLists(hglrc, hPBufferGLRC);
+								wglShareLists(hglrc, hPBufferGLRC);
 								hCurrentDC = hPBufferDC;
 								hCurrentGLRC = hPBufferGLRC;
 								makeCurrent();
@@ -3990,9 +3989,17 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 		}
 		else
 		{
-			sprintf(saveFilename, "%s.%s", baseFilename, "png");
+			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+			{
+				sprintf(saveFilename, "%s.%s", baseFilename, "png");
+				return true;
+			}
+			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+			{
+				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
+				return true;
+			}
 		}
-		return true;
 	}
 	return false;
 }
@@ -4002,60 +4009,60 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 	OPENFILENAME openStruct;
 	char fileTypes[1024];
 	char* initialDir = ".";
+	int maxImageType = 2;
 
-	if (calcSaveFilename(saveFilename, len))
+	if (!calcSaveFilename(saveFilename, len))
 	{
-		int maxImageType = 2;
+		saveFilename[0] = 0;
+	}
+	if (saveImageType < 1 || saveImageType > maxImageType)
+	{
+		saveImageType = 1;
+	}
+	memset(fileTypes, 0, 2);
+	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("PngFileType"),
+		"*.png");
+	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("BmpFileType"),
+		"*.bmp");
+	memset(&openStruct, 0, sizeof(OPENFILENAME));
+	openStruct.lStructSize = sizeof(OPENFILENAME);
+	openStruct.hwndOwner = hWindow;
+	openStruct.lpstrFilter = fileTypes;
+	openStruct.nFilterIndex = saveImageType;
+	openStruct.lpstrFile = saveFilename;
+	openStruct.nMaxFile = len;
+	openStruct.lpstrInitialDir = initialDir;
+	openStruct.lpstrTitle = TCLocalStrings::get("SaveSnapshot");
+	openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_ENABLETEMPLATE
+		| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT;
+	openStruct.lpstrDefExt = NULL;
+	openStruct.lCustData = (long)this;
+	openStruct.hInstance = getLanguageModule();
+	openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_SAVE_OPTIONS);
+	openStruct.lpfnHook = staticSaveHook;
+	if (GetSaveFileName(&openStruct))
+	{
+		int index = (int)openStruct.nFilterIndex;
 
-		if (saveImageType < 1 || saveImageType > maxImageType)
+		if (index > 0 && index <= maxImageType)
 		{
-			saveImageType = 1;
+			TCUserDefaults::setLongForKey(saveImageType,
+				SAVE_IMAGE_TYPE_KEY, false);
 		}
-		memset(fileTypes, 0, 2);
-		LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("PngFileType"),
-			"*.png");
-		LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("BmpFileType"),
-			"*.bmp");
-		memset(&openStruct, 0, sizeof(OPENFILENAME));
-		openStruct.lStructSize = sizeof(OPENFILENAME);
-		openStruct.hwndOwner = hWindow;
-		openStruct.lpstrFilter = fileTypes;
-		openStruct.nFilterIndex = saveImageType;
-		openStruct.lpstrFile = saveFilename;
-		openStruct.nMaxFile = len;
-		openStruct.lpstrInitialDir = initialDir;
-		openStruct.lpstrTitle = TCLocalStrings::get("SaveSnapshot");
-		openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_ENABLETEMPLATE
-			| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT;
-		openStruct.lpstrDefExt = NULL;
-		openStruct.lCustData = (long)this;
-		openStruct.hInstance = getLanguageModule();
-		openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_SAVE_OPTIONS);
-		openStruct.lpfnHook = staticSaveHook;
-		if (GetSaveFileName(&openStruct))
+		if (!strchr(saveFilename, '.') &&
+			(int)strlen(saveFilename) < len - 5)
 		{
-			int index = (int)openStruct.nFilterIndex;
-
-			if (index > 0 && index <= maxImageType)
+			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 			{
-				TCUserDefaults::setLongForKey(saveImageType,
-					SAVE_IMAGE_TYPE_KEY, false);
+				strcat(saveFilename, ".png");
 			}
-			if (!strchr(saveFilename, '.') &&
-				(int)strlen(saveFilename) < len - 5)
+			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 			{
-				if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-				{
-					strcat(saveFilename, ".png");
-				}
-				else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-				{
-					strcat(saveFilename, ".bmp");
-				}
-
+				strcat(saveFilename, ".bmp");
 			}
-			return true;
+
 		}
+		return true;
 	}
 	return false;
 }

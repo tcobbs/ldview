@@ -57,6 +57,7 @@
 #define IDB_NON_FLAT_QUAD               162
 #define IDD_INVISIBLE_COMMANDS          162
 #define IDB_NON_FLAT_QUAD_MASK          163
+#define IDR_TOOLBAR_MENU                163
 #define IDB_COLINEAR                    164
 #define IDB_COLINEAR_MASK               165
 #define IDB_TOOLBAR                     166
@@ -266,6 +267,10 @@
 #define ID_VIEW_ZOOMTOFIT               40065
 #define ID_FILE_EXTRADIRS               40068
 #define ID_FILE_CHECKFORLIBUPDATES      40070
+#define ID_EDGES_SHOWEDGESONLY          40071
+#define ID_EDGES_CONDITIONALLINES       40072
+#define ID_EDGES_HIGHQUALITY            40073
+#define ID_EDGES_ALWAYSBLACK            40074
 
 // Next default values for new objects
 // 
@@ -273,8 +278,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        163
-#define _APS_NEXT_COMMAND_VALUE         40070
+#define _APS_NEXT_RESOURCE_VALUE        164
+#define _APS_NEXT_COMMAND_VALUE         40075
 #define _APS_NEXT_CONTROL_VALUE         1190
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

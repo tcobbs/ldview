@@ -1,7 +1,9 @@
 #include "LDVExtensionsSetup.h"
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include <TRE/TREVertexStore.h>
 #include <TRE/TREShapeGroup.h>
+#include "UserDefaultsKeys.h"
 
 // WGL_EXT_pixel_format
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
@@ -53,6 +55,53 @@ LDVExtensionsSetup::LDVExtensionsSetupCleanup
 	LDVExtensionsSetup::extensionsSetupCleanup;
 
 
+static char *pfIntAttribNames[] =
+{
+	"WGL_MAX_PBUFFER_WIDTH_ARB",
+	"WGL_DRAW_TO_WINDOW_ARB",
+	"WGL_DRAW_TO_BITMAP_ARB",
+	"WGL_ACCELERATION_ARB",
+	"WGL_NEED_PALETTE_ARB",
+	"WGL_NEED_SYSTEM_PALETTE_ARB",
+	"WGL_SWAP_LAYER_BUFFERS_ARB",
+	"WGL_SWAP_METHOD_ARB",
+	"WGL_NUMBER_OVERLAYS_ARB",
+	"WGL_NUMBER_UNDERLAYS_ARB",
+	"WGL_TRANSPARENT_ARB",
+	"WGL_TRANSPARENT_RED_VALUE_ARB",
+	"WGL_TRANSPARENT_GREEN_VALUE_ARB",
+	"WGL_TRANSPARENT_BLUE_VALUE_ARB",
+	"WGL_TRANSPARENT_ALPHA_VALUE_ARB",
+	"WGL_TRANSPARENT_INDEX_VALUE_ARB",
+	"WGL_SHARE_DEPTH_ARB",
+	"WGL_SHARE_STENCIL_ARB",
+	"WGL_SHARE_ACCUM_ARB",
+	"WGL_SUPPORT_GDI_ARB",
+	"WGL_SUPPORT_OPENGL_ARB",
+	"WGL_DOUBLE_BUFFER_ARB",
+	"WGL_STEREO_ARB",
+	"WGL_PIXEL_TYPE_ARB",
+	"WGL_COLOR_BITS_ARB",
+	"WGL_RED_BITS_ARB",
+	"WGL_RED_SHIFT_ARB",
+	"WGL_GREEN_BITS_ARB",
+	"WGL_GREEN_SHIFT_ARB",
+	"WGL_BLUE_BITS_ARB",
+	"WGL_BLUE_SHIFT_ARB",
+	"WGL_ALPHA_BITS_ARB",
+	"WGL_ALPHA_SHIFT_ARB",
+	"WGL_ACCUM_BITS_ARB",
+	"WGL_ACCUM_RED_BITS_ARB",
+	"WGL_ACCUM_GREEN_BITS_ARB",
+	"WGL_ACCUM_BLUE_BITS_ARB",
+	"WGL_ACCUM_ALPHA_BITS_ARB",
+	"WGL_DEPTH_BITS_ARB",
+	"WGL_STENCIL_BITS_ARB",
+	"WGL_AUX_BUFFERS_ARB",
+	"WGL_DRAW_TO_PBUFFER_ARB",
+	"WGL_SAMPLE_BUFFERS_EXT",
+	"WGL_SAMPLES_EXT",
+};
 static int pfIntAttribs[] =
 {
 	WGL_MAX_PBUFFER_WIDTH_ARB,
@@ -270,6 +319,7 @@ void LDVExtensionsSetup::recordPixelFormats(void)
 				TCIntArray *valueArray = new TCIntArray;
 				int j;
 
+				memset(values, -1, pfIntAttribCount * sizeof(GLint));
 				wglGetPixelFormatAttribivARB(hdc, indexes[i], 0,
 					pfIntAttribCount, pfIntAttribs, values);
 				for (j = 0; j < pfIntAttribCount; j++)
@@ -339,44 +389,65 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 
 bool LDVExtensionsSetup::haveMultisampleExtension(void)
 {
-	return checkForWGLExtension("WGL_ARB_multisample");
+	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTISAMPLE_KEY, 0, false)
+		!= 0;
+
+	return !ignore && checkForWGLExtension("WGL_ARB_multisample");
 }
 
 bool LDVExtensionsSetup::havePixelBufferExtension(void)
 {
-	return checkForWGLExtension("WGL_ARB_pbuffer");
+	bool ignore = TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 0, false) != 0;
+
+	return !ignore && checkForWGLExtension("WGL_ARB_pbuffer");
 }
 
 bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(void)
 {
-	return checkForExtension("GL_NV_multisample_filter_hint");
+	bool ignore = TCUserDefaults::longForKey(IGNORE_MS_FILTER_HINT_KEY, 0,
+		false) != 0;
+
+	return !ignore && checkForExtension("GL_NV_multisample_filter_hint");
 }
 
 bool LDVExtensionsSetup::haveVARExtension(void)
 {
-	return checkForExtension("GL_NV_vertex_array_range") &&
+	bool ignore = TCUserDefaults::longForKey(IGNORE_VAR_KEY, 0, false) != 0;
+
+	return !ignore && checkForExtension("GL_NV_vertex_array_range") &&
 		checkForWGLExtension("WGL_NV_allocate_memory");
 }
 
 bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
 {
-	return checkForExtension("GL_EXT_multi_draw_arrays");
+	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
+		false) != 0;
+
+	return !ignore && checkForExtension("GL_EXT_multi_draw_arrays");
 }
 
 bool LDVExtensionsSetup::haveVBOExtension(void)
 {
-	return checkForExtension("GL_ARB_vertex_buffer_object");
+	bool ignore = TCUserDefaults::longForKey(IGNORE_VBO_KEY, 0, false) != 0;
+
+	return !ignore && checkForExtension("GL_ARB_vertex_buffer_object");
 }
 
 bool LDVExtensionsSetup::havePixelFormatExtension(void)
 {
-	return checkForWGLExtension("WGL_ARB_pixel_format");
+	bool ignore = TCUserDefaults::longForKey(IGNORE_PIXEL_FORMAT_KEY, 0, false)
+		!= 0;
+
+	return !ignore && checkForWGLExtension("WGL_ARB_pixel_format");
 }
 
 bool LDVExtensionsSetup::checkForExtension(char* extensionsString,
 										   char* extension)
 {
-	if (extensionsString)
+	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
+		false) != 0;
+
+	if (!ignore && extensionsString)
 	{
 		int extensionLen = strlen(extension);
 		char* extensions = extensionsString;
@@ -519,6 +590,7 @@ int LDVExtensionsSetup::choosePixelFormat(HDC hdc, GLint customValues[])
 		if (count)
 		{
 			printPixelFormats(indexes, count);
+			printPixelFormat(hdc, indexes[0]);
 			retValue = indexes[0];
 		}
 		else
@@ -528,6 +600,7 @@ int LDVExtensionsSetup::choosePixelFormat(HDC hdc, GLint customValues[])
 			// code if the standard matching code fails.
 			retValue = matchPixelFormat(intValues);
 			debugPrintf("matchPixelFormat returned: %d\n", retValue);
+			printPixelFormat(hdc, indexes[0]);
 		}
 	}
 	delete intValues;
@@ -542,4 +615,18 @@ void LDVExtensionsSetup::printPixelFormats(int *indexes, GLuint count)
 		debugPrintf("%5d", indexes[i]);
 	}
 	debugPrintf("\n");
+}
+
+void LDVExtensionsSetup::printPixelFormat(HDC hdc, int index)
+{
+	int i;
+	int values[1024];
+
+	memset(values, -1, sizeof(values));
+	wglGetPixelFormatAttribivARB(hdc, index, 0, pfIntAttribCount, pfIntAttribs,
+		values);
+	for (i = 0; i < pfIntAttribCount; i++)
+	{
+		printf("%31s: 0x%08X %d\n", pfIntAttribNames[i], values[i], values[i]);
+	}
 }

@@ -1232,7 +1232,7 @@ void TREShapeGroup::transferTriangle(TCULong color, TCULong index0,
 
 void TREShapeGroup::transferQuadStrip(int shapeTypeIndex, TCULong color,
 									  int offset, int stripCount,
-									  const float *matrix, bool remove)
+									  const float *matrix)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1250,15 +1250,11 @@ void TREShapeGroup::transferQuadStrip(int shapeTypeIndex, TCULong color,
 				(*indices)[i + 2], matrix);
 		}
 	}
-	if (remove)
-	{
-		indices->removeValues(offset, stripCount);
-	}
 }
 
 void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
 										  int offset, int stripCount,
-										  const float *matrix, bool remove)
+										  const float *matrix)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1275,15 +1271,11 @@ void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
 		}
 */
 	}
-	if (remove)
-	{
-		indices->removeValues(offset, stripCount);
-	}
 }
 
 void TREShapeGroup::transferTriangleFan(int shapeTypeIndex, TCULong color,
 										int offset, int stripCount,
-										const float *matrix, bool remove)
+										const float *matrix)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1292,10 +1284,6 @@ void TREShapeGroup::transferTriangleFan(int shapeTypeIndex, TCULong color,
 	{
 		transferTriangle(color, (*indices)[offset], (*indices)[i + 1],
 			(*indices)[i + 2], matrix);
-	}
-	if (remove)
-	{
-		indices->removeValues(offset, stripCount);
 	}
 }
 
@@ -1344,8 +1332,8 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 
 			if (shapeSize > 2)
 			{
-				// Start at the end and work backward.  Otherwise our index will
-				// have to change every time items are removed.
+				// Start at the end and work backward.  This makes the removal
+				// of fully transparent geometry more efficient later.
 				for (i = count - shapeSize; i >= 0; i -= shapeSize)
 				{
 					TCULong index = (*indices)[i];
@@ -1380,15 +1368,15 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 				{
 				case TRESTriangleStrip:
 					transferTriangleStrip(shapeTypeIndex, color, offset,
-						stripCount, matrix, false);
+						stripCount, matrix);
 					break;
 				case TRESQuadStrip:
 					transferQuadStrip(shapeTypeIndex, color, offset, stripCount,
-						matrix, false);
+						matrix);
 					break;
 				case TRESTriangleFan:
 					transferTriangleFan(shapeTypeIndex, color, offset,
-						stripCount, matrix, false);
+						stripCount, matrix);
 					break;
 				default:
 					break;

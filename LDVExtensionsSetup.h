@@ -128,6 +128,7 @@ public:
 	static bool haveAlpha(void) { return alphaPresent; }
 	static int choosePixelFormat(HDC hdc, GLint customValues[]);
 	static void printPixelFormats(int *indexes, GLuint count);
+	static void printPixelFormat(HDC hdc, int index);
 	static TCIntArray *getFSAAModes(void) { return fsaaModes; }
 protected:
 	LDVExtensionsSetup(HINSTANCE hInstance);

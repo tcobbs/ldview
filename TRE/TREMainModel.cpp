@@ -798,12 +798,16 @@ void TREMainModel::transferTransparent(void)
 	TREModel::transferTransparent(m_color, TREMStud, identityMatrix);
 	transferColoredTransparent(TREMStandard, identityMatrix);
 	transferColoredTransparent(TREMStud, identityMatrix);
+	TREModel::cleanupTransparent(TREMStandard);
+	TREModel::cleanupTransparent(TREMStud);
 	if (getBFCFlag())
 	{
 		TREModel::transferTransparent(m_color, TREMBFC, identityMatrix);
 		TREModel::transferTransparent(m_color, TREMStudBFC, identityMatrix);
 		transferColoredTransparent(TREMBFC, identityMatrix);
 		transferColoredTransparent(TREMStudBFC, identityMatrix);
+		TREModel::cleanupTransparent(TREMBFC);
+		TREModel::cleanupTransparent(TREMStudBFC);
 	}
 }
 
@@ -1035,4 +1039,9 @@ void TREMainModel::openGlWillEnd(void)
 	m_coloredVertexStore->openGlWillEnd();
 	m_coloredStudVertexStore->openGlWillEnd();
 	m_transVertexStore->openGlWillEnd();
+	if (sm_studTextureID)
+	{
+		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
+		sm_studTextureID = 0;
+	}
 }

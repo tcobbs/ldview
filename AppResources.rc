@@ -80,11 +80,11 @@ STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "About LDView"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
-    LTEXT           "LDView %s (06 Sep, 2004)\n%s",IDC_VERSION_LABEL,50,10,
+    LTEXT           "LDView %s (11 Sep, 2004)\n%s",IDC_VERSION_LABEL,50,10,
                     135,19
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",
                     IDC_STATIC,15,40,215,20
@@ -842,6 +842,17 @@ BEGIN
     END
 END
 
+IDR_TOOLBAR_MENU MENU DISCARDABLE 
+BEGIN
+    POPUP "Edges", CHECKED
+    BEGIN
+        MENUITEM "Show edges only",             ID_EDGES_SHOWEDGESONLY
+        MENUITEM "Conditional lines",           ID_EDGES_CONDITIONALLINES
+        MENUITEM "High quality",                ID_EDGES_HIGHQUALITY
+        MENUITEM "Always black",                ID_EDGES_ALWAYSBLACK
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -957,14 +968,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", " \0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.0 Alpha 2\0"
+            VALUE "FileVersion", "3.0 Alpha 2C\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2000-2004 Travis Cobbs\0"
             VALUE "LegalTrademarks", " \0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", " \0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.0 Alpha 2\0"
+            VALUE "ProductVersion", "3.0 Alpha 2C\0"
             VALUE "SpecialBuild", "\0"
         END
     END

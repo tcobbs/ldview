@@ -28,10 +28,13 @@ public:
 	bool getShowsFPS(void) { return showsFPS; }
 	bool getShowsHighlightLines(void) { return showsHighlightLines; }
 	void setShowsHighlightLines(bool value);
+	bool getEdgesOnly(void) { return edgesOnly; }
+	void setEdgesOnly(bool value);
 	bool getDrawConditionalHighlights(void)
 	{
 		return drawConditionalHighlights;
 	}
+	void setDrawConditionalHighlights(bool value);
 	bool getPerformSmoothing(void) { return performSmoothing; }
 	bool getLineSmoothing(void) { return lineSmoothing; }
 	bool getQualityStuds(void) { return qualityStuds; }
@@ -50,10 +53,14 @@ public:
 	bool getDrawWireframe(void) { return drawWireframe; }
 	void setDrawWireframe(bool value);
 	bool getBfc(void) { return bfc; }
+	void setBfc(bool value);
 	bool getRedBackFaces(void) { return redBackFaces; }
 	bool getUseWireframeFog(void) { return useWireframeFog; }
 	bool getRemoveHiddenLines(void) { return removeHiddenLines; }
 	bool getUsePolygonOffset(void) { return usePolygonOffset; }
+	void setUsePolygonOffset(bool value);
+	bool getBlackHighlights(void) { return blackHighlights; }
+	void setBlackHighlights(bool value);
 	bool getUseLighting(void) { return useLighting; }
 	void setUseLighting(bool value);
 	bool getSubduedLighting(void) { return subduedLighting; }
@@ -85,6 +92,7 @@ public:
 	static char* getLDViewPath(bool useQuotes = false);
 	static int getFSAAFactor(void);
 	static bool getUseNvMultisampleFilter(void);
+	static COLORREF getColor(const char *key, COLORREF defaultColor = 0);
 protected:
 	virtual ~LDViewPreferences(void);
 	virtual void dealloc(void);
@@ -227,6 +235,7 @@ protected:
 
 	static LRESULT CALLBACK staticColorButtonProc(HWND hWnd, UINT message,
 		WPARAM wParam, LPARAM lParam);
+	static void setColor(const char *key, COLORREF color);
 
 	LDrawModelViewer* modelViewer;
 
