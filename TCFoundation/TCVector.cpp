@@ -569,10 +569,10 @@ void TCVector::transformNormal(const float *matrix, TCVector& newNormal,
 	{
 		newNormal.normalize();
 	}
-	if (det < 0)
-	{
+//	if (det < 0)
+//	{
 //		newNormal *= -1.0f;
-	}
+//	}
 }
 
 TCVector TCVector::transformNormal(const float *matrix, bool shouldNormalize)

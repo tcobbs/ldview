@@ -682,6 +682,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				flags.allowPrimitiveSubstitution);
 			modelParser->setCurveQuality(curveQuality);
 			modelParser->setEdgeLinesFlag(flags.showsHighlightLines);
+			modelParser->setLightingFlag(flags.useLighting);
 			modelParser->setTwoSidedLightingFlag(flags.oneLight ||
 				flags.usesSpecular);
 			if (modelParser->parseMainModel(mainModel))
@@ -896,15 +897,12 @@ void LDrawModelViewer::setSubduedLighting(bool value)
 
 bool LDrawModelViewer::recompile(void)
 {
-	bool retValue = false;
-
-	if (lDrawModel)
+	if (mainTREModel)
 	{
-//		retValue = lDrawModel->compile(0);
-		retValue = true;
+		mainTREModel->recompile();
 		flags.needsRecompile = false;
 	}
-	return retValue;
+	return true;
 }
 
 void LDrawModelViewer::uncompile(void)
@@ -1626,6 +1624,10 @@ void LDrawModelViewer::setUseLighting(bool value)
 	{
 		flags.useLighting = value;
 		LDrawModel::setUseLighting(flags.useLighting);
+		if (mainTREModel)
+		{
+			mainTREModel->setLightingFlag(value);
+		}
 		flags.needsRecompile = true;
 		flags.needsLightingSetup = true;
 	}
@@ -2604,7 +2606,7 @@ void LDrawModelViewer::zoomToFit(void)
 		printf("num points: %d\n", _numPoints);
 		char message[1024];
 		sprintf(message, "num points: %d", _numPoints);
-//		MessageBox(NULL, message, "Points", MB_OK);
+		MessageBox(NULL, message, "Points", MB_OK);
 		d = (float)width / (float)height;
 		dh = (cameraData->horMax - cameraData->horMin) / d;
 		dv = cameraData->verMax - cameraData->verMin;

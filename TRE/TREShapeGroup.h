@@ -22,12 +22,10 @@ typedef enum
 	TRESTriangle		= 0x0002,
 	TRESQuad			= 0x0004,
 	TRESConditionalLine	= 0x0008,
-	TRESBFCTriangle		= 0x0010,
-	TRESBFCQuad			= 0x0020,
-	TRESTriangleStrip	= 0x0040,
+	TRESTriangleStrip	= 0x0010,
 	TRESFirstStrip		= TRESTriangleStrip,
-	TRESQuadStrip		= 0x0080,
-	TRESTriangleFan		= 0x0100,
+	TRESQuadStrip		= 0x0020,
+	TRESTriangleFan		= 0x0040,
 	TRESLast			= TRESTriangleFan
 } TREShapeType;
 
@@ -44,23 +42,15 @@ public:
 	virtual int addQuad(TCVector *vertices, TCVector *normals);
 	virtual int addQuadStrip(TCVector *vertices, TCVector *normals, int count);
 	virtual int addTriangleFan(TCVector *vertices, TCVector *normals, int count);
-	virtual int addBFCTriangle(TCVector *vertices);
-	virtual int addBFCTriangle(TCVector *vertices, TCVector *normals);
-	virtual int addBFCQuad(TCVector *vertices);
-	virtual int addBFCQuad(TCVector *vertices, TCVector *normals);
 /*
 	virtual void addConditionalLine(int index1, int index2, int index3,
 		int index4);
-	virtual void addBFCTriangle(int index1, int index2, int index3);
-	virtual void addBFCQuad(int index1, int index2, int index3, int index4);
 */
 	virtual TCULongArray *getIndices(TREShapeType shapeType,
 		bool create = false);
 	virtual TCULongArray *getStripCounts(TREShapeType shapeType,
 		bool create = false);
 	virtual void draw(void);
-	virtual void drawNonBFC(void);
-	virtual void drawBFC(void);
 	virtual void drawLines(void);
 	virtual void setVertexStore(TREVertexStore *vertexStore);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }

@@ -23,17 +23,26 @@ public:
 	}
 	bool getPrimitiveSubstitutionFlag(void)
 	{
-		return m_flags.primitiveSubstitution;
+		return m_flags.primitiveSubstitution != false;
 	}
 	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
-	bool getEdgeLinesFlag(void) { return m_flags.edgeLines; }
+	bool getEdgeLinesFlag(void) { return m_flags.edgeLines != false; }
+	void setLightingFlag(bool value) { m_flags.lighting = value; }
+	bool getLightingFlag(void) { return m_flags.lighting != false; }
 	void setTwoSidedLightingFlag(bool value)
 	{
 		m_flags.twoSidedLighting = value;
 	}
-	bool getTwoSidedLightingFlag(void) { return m_flags.twoSidedLighting; }
+	bool getTwoSidedLightingFlag(void)
+	{
+		return m_flags.twoSidedLighting != false;
+	}
 	void setBFCFlag(bool value) { m_flags.bfc = value; }
 	bool getBFCFlag(void) { return m_flags.bfc != false; }
+	void setCompilePartsFlag(bool value) { m_flags.compileParts = value; }
+	bool getCompilePartsFlag(void) { return m_flags.compileParts != false; }
+	void setCompileAllFlag(bool value) { m_flags.compileAll = value; }
+	bool getCompileAllFlag(void) { return m_flags.compileAll != false; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	virtual void setSeamWidth(float seamWidth);
@@ -103,6 +112,9 @@ protected:
 		bool edgeLines:1;
 		bool twoSidedLighting:1;
 		bool bfc:1;
+		bool compileParts:1;
+		bool compileAll:1;
+		bool lighting:1;
 	} m_flags;
 };
 

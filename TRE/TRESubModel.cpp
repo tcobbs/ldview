@@ -128,7 +128,6 @@ void TRESubModel::unMirror(TRESubModel *originalSubModel)
 			m_invertedSubModel->m_invertedSubModel = this;
 		}
 	}
-	m_flags.bfcInvert = originalSubModel->m_flags.bfcInvert;
 	m_model = originalSubModel->m_model->getUnMirroredModel();
 	m_model->retain();
 }
@@ -146,7 +145,6 @@ void TRESubModel::invert(TRESubModel *originalSubModel)
 			m_unMirroredSubModel->m_unMirroredSubModel = this;
 		}
 	}
-//	m_flags.bfcInvert = false;
 	m_model = originalSubModel->m_model->getInvertedModel();
 	m_model->retain();
 }
@@ -211,25 +209,6 @@ TCULong TRESubModel::getEdgeColor(void)
 	return htonl(m_edgeColor);
 }
 
-/*
-void TRESubModel::draw(void)
-{
-	if (m_flags.colorSet)
-	{
-		glPushAttrib(GL_CURRENT_BIT);
-		glColor4ubv((GLubyte*)&m_color);
-	}
-	glPushMatrix();
-	glMultMatrixf(m_matrix);
-	m_model->draw();
-	glPopMatrix();
-	if (m_flags.colorSet)
-	{
-		glPopAttrib();
-	}
-}
-*/
-
 void TRESubModel::compileDefaultColor(void)
 {
 	getEffectiveModel()->compileDefaultColor();
@@ -249,8 +228,6 @@ void TRESubModel::drawDefaultColor(void)
 	}
 	glPushMatrix();
 	glMultMatrixf(m_matrix);
-//	TCVector::multMatrix(matrix, m_matrix, newMatrix);
-//	if (TCVector::determinant(newMatrix) < 0.0f)
 	getEffectiveModel()->drawDefaultColor();
 	glPopMatrix();
 	if (m_flags.colorSet)
@@ -349,7 +326,7 @@ void TRESubModel::scanPoints(TCObject *scanner,
 	float newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
-	m_model->scanPoints(scanner, scanPointCallback, newMatrix);
+	getEffectiveModel()->scanPoints(scanner, scanPointCallback, newMatrix);
 }
 
 void TRESubModel::unshrinkNormals(float *matrix, float *unshrinkMatrix)

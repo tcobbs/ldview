@@ -41,6 +41,15 @@ TREModel::TREModel(void)
 	m_flags.unshrunkNormals = false;
 	m_flags.unMirrored = false;
 	m_flags.inverted = false;
+	m_flags.defaultColorPresent = false;
+	m_flags.bfcPresent = false;
+	m_flags.defaultColorLinesPresent = false;
+	m_flags.edgeLinesPresent = false;
+	m_flags.coloredPresent = false;
+	m_flags.coloredBFCPresent = false;
+	m_flags.coloredLinesPresent = false;
+	m_flags.coloredEdgeLinesPresent = false;
+	m_flags.flattened = false;
 }
 
 TREModel::TREModel(const TREModel &other)
@@ -237,7 +246,6 @@ void TREModel::unMirror(TREModel *originalModel)
 				(*originalModel->m_subModels)[i]->getUnMirroredSubModel();
 
 			m_subModels->addObject(subModel);
-//			subModel->release();
 		}
 	}
 	if (m_shapes)
@@ -283,7 +291,6 @@ void TREModel::invert(TREModel *originalModel)
 				(*originalModel->m_subModels)[i]->getInvertedSubModel();
 
 			m_subModels->addObject(subModel);
-//			subModel->release();
 		}
 	}
 	if (m_shapes)
@@ -310,43 +317,9 @@ void TREModel::setName(const char *name)
 	m_name = copyString(name);
 }
 
-/*
-void TREModel::draw(void)
-{
-	if (m_flags.part)
-	{
-		setGlNormalize(false);
-	}
-	else
-	{
-		setGlNormalize(true);
-	}
-	if (m_shapes)
-	{
-		m_shapes->draw();
-	}
-	if (m_coloredShapes)
-	{
-		glPushAttrib(GL_CURRENT_BIT);
-		m_coloredShapes->draw();
-		glPopAttrib();
-	}
-	if (m_subModels)
-	{
-		int i;
-		int count = m_subModels->getCount();
-
-		for (i = 0; i < count; i++)
-		{
-			(*m_subModels)[i]->draw();
-		}
-	}
-}
-*/
-
 void TREModel::compileDefaultColor(void)
 {
-	if (!m_defaultColorListID)
+	if (!m_defaultColorListID && m_flags.defaultColorPresent)
 	{
 		if (m_subModels)
 		{
@@ -356,7 +329,6 @@ void TREModel::compileDefaultColor(void)
 			for (i = 0; i < count; i++)
 			{
 				(*m_subModels)[i]->getEffectiveModel()->compileDefaultColor();
-//				(*m_subModels)[i]->compileDefaultColor();
 			}
 		}
 		if (m_mainModel->getCompileAllFlag() ||
@@ -376,7 +348,7 @@ void TREModel::compileDefaultColor(void)
 
 void TREModel::compileBFC(void)
 {
-	if (!m_bfcListID)
+	if (!m_bfcListID && m_flags.bfcPresent)
 	{
 		if (m_subModels)
 		{
@@ -392,9 +364,7 @@ void TREModel::compileBFC(void)
 			(m_flags.part && m_mainModel->getCompilePartsFlag()))
 		{
 			int listID = glGenLists(1);
-			float matrix[16];
 
-			TCVector::initIdentityMatrix(matrix);
 			glNewList(listID, GL_COMPILE);
 			drawBFC();
 			glEndList();
@@ -405,7 +375,7 @@ void TREModel::compileBFC(void)
 
 void TREModel::compileDefaultColorLines(void)
 {
-	if (!m_defaultColorLinesListID)
+	if (!m_defaultColorLinesListID && m_flags.defaultColorLinesPresent)
 	{
 		if (m_subModels)
 		{
@@ -432,7 +402,7 @@ void TREModel::compileDefaultColorLines(void)
 
 void TREModel::compileEdgeLines(void)
 {
-	if (!m_edgeLinesListID)
+	if (!m_edgeLinesListID && m_flags.edgeLinesPresent)
 	{
 		if (m_subModels)
 		{
@@ -459,7 +429,7 @@ void TREModel::compileEdgeLines(void)
 
 void TREModel::compileColored(void)
 {
-	if (!m_coloredListID)
+	if (!m_coloredListID && m_flags.coloredPresent)
 	{
 		if (m_subModels)
 		{
@@ -487,7 +457,7 @@ void TREModel::compileColored(void)
 
 void TREModel::compileColoredBFC(void)
 {
-	if (!m_coloredBFCListID)
+	if (!m_coloredBFCListID && m_flags.coloredBFCPresent)
 	{
 		if (m_subModels)
 		{
@@ -514,7 +484,7 @@ void TREModel::compileColoredBFC(void)
 
 void TREModel::compileColoredLines(void)
 {
-	if (!m_coloredLinesListID)
+	if (!m_coloredLinesListID && m_flags.coloredLinesPresent)
 	{
 		if (m_subModels)
 		{
@@ -541,7 +511,7 @@ void TREModel::compileColoredLines(void)
 
 void TREModel::compileColoredEdgeLines(void)
 {
-	if (!m_coloredEdgeLinesListID)
+	if (!m_coloredEdgeLinesListID && m_flags.coloredEdgeLinesPresent)
 	{
 		if (m_subModels)
 		{
@@ -572,9 +542,9 @@ void TREModel::drawDefaultColor(void)
 	{
 		glCallList(m_defaultColorListID);
 	}
-	else
+	else if (m_flags.defaultColorPresent)
 	{
-		if (m_flags.part)
+		if (m_flags.part && isFlattened())
 		{
 			setGlNormalize(false);
 		}
@@ -605,9 +575,9 @@ void TREModel::drawBFC(void)
 	{
 		glCallList(m_bfcListID);
 	}
-	else
+	else if (m_flags.bfcPresent)
 	{
-		if (m_flags.part)
+		if (m_flags.part && isFlattened())
 		{
 			setGlNormalize(false);
 		}
@@ -638,7 +608,7 @@ void TREModel::drawDefaultColorLines(void)
 	{
 		glCallList(m_defaultColorLinesListID);
 	}
-	else
+	else if (m_flags.defaultColorLinesPresent)
 	{
 		if (m_shapes)
 		{
@@ -663,9 +633,9 @@ void TREModel::drawColored(void)
 	{
 		glCallList(m_coloredListID);
 	}
-	else
+	else if (m_flags.coloredPresent)
 	{
-		if (m_flags.part)
+		if (m_flags.part && isFlattened())
 		{
 			setGlNormalize(false);
 		}
@@ -696,11 +666,11 @@ void TREModel::drawColoredBFC(void)
 	{
 		glCallList(m_coloredBFCListID);
 	}
-	else
+	else if (m_flags.coloredBFCPresent)
 	{
 		if (m_flags.part)
 		{
-			setGlNormalize(false);
+			setGlNormalize(false && isFlattened());
 		}
 		else
 		{
@@ -729,7 +699,7 @@ void TREModel::drawColoredLines(void)
 	{
 		glCallList(m_coloredLinesListID);
 	}
-	else
+	else if (m_flags.coloredLinesPresent)
 	{
 		if (m_coloredShapes)
 		{
@@ -754,7 +724,7 @@ void TREModel::drawEdgeLines(void)
 	{
 		glCallList(m_edgeLinesListID);
 	}
-	else
+	else if (m_flags.edgeLinesPresent)
 	{
 		if (m_edgeShapes)
 		{
@@ -779,7 +749,7 @@ void TREModel::drawColoredEdgeLines(void)
 	{
 		glCallList(m_coloredEdgeLinesListID);
 	}
-	else
+	else if (m_flags.coloredEdgeLinesPresent)
 	{
 		if (m_coloredEdgeShapes)
 		{
@@ -956,7 +926,8 @@ void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count,
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
 							TCVector *normals, int count, bool flat)
 {
-	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	if (m_mainModel->getUseStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addQuadStrip(vertices, normals, count);
 	}
@@ -992,7 +963,8 @@ void TREModel::addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
 							TCVector *vertices, TCVector *normals, int count,
 							bool flat)
 {
-	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	if (m_mainModel->getUseStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addQuadStrip(color, vertices, normals, count);
 	}
@@ -1040,7 +1012,8 @@ void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count,
 void TREModel::addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
 							  TCVector *normals, int count, bool flat)
 {
-	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	if (m_mainModel->getUseStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addTriangleFan(vertices, normals, count);
 	}
@@ -1077,7 +1050,8 @@ void TREModel::addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
 							  TCVector *vertices, TCVector *normals, int count,
 							  bool flat)
 {
-	if (!flat || m_mainModel->getUseFlatStripsFlag())
+	if (m_mainModel->getUseStripsFlag() && (!flat ||
+		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addTriangleFan(color, vertices, normals, count);
 	}
@@ -1142,6 +1116,7 @@ void TREModel::flatten(void)
 		{
 			m_subModels->removeAll();
 		}
+		m_flags.flattened = true;
 	}
 }
 
@@ -1445,10 +1420,10 @@ void TREModel::transformNormal(TREVertex &normal, float *matrix)
 	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y +
 		inverseMatrix[10]*z;
 	newNormal.normalize();
-	if (det < 0)
-	{
+//	if (det < 0)
+//	{
 //		newNormal *= -1.0f;
-	}
+//	}
 	TREVertexStore::initVertex(normal, newNormal);
 }
 
@@ -1541,12 +1516,12 @@ void TREModel::setGlNormalize(bool value)
 		if (value)
 		{
 			glEnable(GL_NORMALIZE);
-			sm_normalizeOn = true;
+//			sm_normalizeOn = true;
 		}
 		else
 		{
 			glDisable(GL_NORMALIZE);
-			sm_normalizeOn = false;
+//			sm_normalizeOn = false;
 		}
 	}
 }
@@ -2101,5 +2076,248 @@ void TREModel::unshrinkNormals(float *scaleMatrix)
 		TCVector::initIdentityMatrix(identityMatrix);
 		unshrinkNormals(identityMatrix, scaleMatrix);
 		m_flags.unshrunkNormals = true;
+	}
+}
+
+bool TREModel::checkDefaultColorPresent(void)
+{
+	if (m_shapes && (m_shapes->getIndices(TRESTriangle) ||
+		m_shapes->getIndices(TRESQuad) ||
+		m_shapes->getIndices(TRESTriangleStrip) ||
+		m_shapes->getIndices(TRESQuadStrip) ||
+		m_shapes->getIndices(TRESTriangleFan)))
+	{
+		m_flags.defaultColorPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->
+				checkDefaultColorPresent())
+			{
+				m_flags.defaultColorPresent = true;
+			}
+		}
+	}
+	return m_flags.defaultColorPresent;
+}
+
+bool TREModel::checkBFCPresent(void)
+{
+	if (m_bfcShapes)
+	{
+		m_flags.bfcPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->checkBFCPresent())
+			{
+				m_flags.bfcPresent = true;
+			}
+		}
+	}
+	return m_flags.bfcPresent;
+}
+
+bool TREModel::checkDefaultColorLinesPresent(void)
+{
+	if (m_shapes && m_shapes->getIndices(TRESLine))
+	{
+		m_flags.defaultColorLinesPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->checkBFCPresent())
+			{
+				m_flags.defaultColorLinesPresent = true;
+			}
+		}
+	}
+	return m_flags.defaultColorLinesPresent;
+}
+
+bool TREModel::checkEdgeLinesPresent(void)
+{
+	if (m_edgeShapes)
+	{
+		m_flags.edgeLinesPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->checkEdgeLinesPresent())
+			{
+				m_flags.edgeLinesPresent = true;
+			}
+		}
+	}
+	return m_flags.edgeLinesPresent;
+}
+
+bool TREModel::checkColoredPresent(void)
+{
+	if (m_coloredShapes && (m_coloredShapes->getIndices(TRESTriangle) ||
+		m_coloredShapes->getIndices(TRESQuad) ||
+		m_coloredShapes->getIndices(TRESTriangleStrip) ||
+		m_coloredShapes->getIndices(TRESQuadStrip) ||
+		m_coloredShapes->getIndices(TRESTriangleFan)))
+	if (m_coloredShapes)
+	{
+		m_flags.coloredPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->checkColoredPresent())
+			{
+				m_flags.coloredPresent = true;
+			}
+		}
+	}
+	return m_flags.coloredPresent;
+}
+
+bool TREModel::checkColoredBFCPresent(void)
+{
+	if (m_coloredBFCShapes)
+	{
+		m_flags.coloredBFCPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->
+				checkColoredBFCPresent())
+			{
+				m_flags.coloredBFCPresent = true;
+			}
+		}
+	}
+	return m_flags.coloredBFCPresent;
+}
+
+bool TREModel::checkColoredLinesPresent(void)
+{
+	if (m_coloredShapes && m_coloredShapes->getIndices(TRESLine))
+	{
+		m_flags.coloredLinesPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->
+				checkColoredLinesPresent())
+			{
+				m_flags.coloredLinesPresent = true;
+			}
+		}
+	}
+	return m_flags.coloredLinesPresent;
+}
+
+bool TREModel::checkColoredEdgeLinesPresent(void)
+{
+	if (m_coloredEdgeShapes)
+	{
+		m_flags.coloredEdgeLinesPresent = true;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			if ((*m_subModels)[i]->getEffectiveModel()->
+				checkColoredEdgeLinesPresent())
+			{
+				m_flags.coloredEdgeLinesPresent = true;
+			}
+		}
+	}
+	return m_flags.coloredEdgeLinesPresent;
+}
+
+void TREModel::uncompile(void)
+{
+	if (m_defaultColorListID)
+	{
+		glDeleteLists(m_defaultColorListID, 1);
+		m_defaultColorListID = 0;
+	}
+	if (m_coloredListID)
+	{
+		glDeleteLists(m_coloredListID, 1);
+		m_coloredListID = 0;
+	}
+	if (m_defaultColorLinesListID)
+	{
+		glDeleteLists(m_defaultColorLinesListID, 1);
+		m_defaultColorLinesListID = 0;
+	}
+	if (m_coloredLinesListID)
+	{
+		glDeleteLists(m_coloredLinesListID, 1);
+		m_coloredLinesListID = 0;
+	}
+	if (m_edgeLinesListID)
+	{
+		glDeleteLists(m_edgeLinesListID, 1);
+		m_edgeLinesListID = 0;
+	}
+	if (m_coloredEdgeLinesListID)
+	{
+		glDeleteLists(m_coloredEdgeLinesListID, 1);
+		m_coloredEdgeLinesListID = 0;
+	}
+	if (m_bfcListID)
+	{
+		glDeleteLists(m_bfcListID, 1);
+		m_bfcListID = 0;
+	}
+	if (m_coloredBFCListID)
+	{
+		glDeleteLists(m_coloredBFCListID, 1);
+		m_coloredBFCListID = 0;
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->getEffectiveModel()->uncompile();
+		}
 	}
 }
