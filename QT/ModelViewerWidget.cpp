@@ -1531,12 +1531,12 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 		if (viewMode == LDVViewExamine)
 		{
 			modelViewer->setConstrainZoom(true);
-			progressMode->setText("Examine");
+			if (progressMode) {progressMode->setText("Examine");}
 		}
 		else
 		{
 			modelViewer->setConstrainZoom(false);
-			progressMode->setText("Fly-through");
+			if (progressMode) {progressMode->setText("Fly-through");}
 		}
 		Preferences::setViewMode(viewMode);
 	}

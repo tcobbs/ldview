@@ -105,6 +105,13 @@ void Preferences::doGeneralApply(void)
 		fieldOfView = iTemp;
 		TCUserDefaults::setLongForKey(iTemp, FOV_KEY);
 	}
+	bTemp = panel->transparentButton->state();
+	if (bTemp != transDefaultColor)
+	{
+		transDefaultColor = bTemp;
+		TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
+			TRANS_DEFAULT_COLOR_KEY, false);
+	}
 	if (modelWidget)
 	{
 		modelWidget->setShowFPS(showFPS);
@@ -113,10 +120,8 @@ void Preferences::doGeneralApply(void)
 	{
 		modelViewer->setLineSmoothing(lineSmoothing);
 		modelViewer->setBackgroundRGB(br, bg, bb);
-		// TC TODO: last param should be user-setable flag that decides
-		// whether or not the default color is transparent.
 		modelViewer->setDefaultRGB((TCByte)dr, (TCByte)dg, (TCByte)db,
-			false);
+			transDefaultColor);
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
 		modelViewer->setFov((float)fieldOfView);
 		modelViewer->setProcessLDConfig(processLdconfigLdr);
@@ -159,6 +164,21 @@ void Preferences::doGeometryApply(void)
 		{
 			wireframeRemoveHiddenLines = bTemp;
 			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, REMOVE_HIDDEN_LINES_KEY);
+		}
+	}
+	bTemp = panel->enableBFCButton->state();
+	if (bTemp != bfc)
+	{
+		bfc = bTemp;
+		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, BFC_KEY);
+	}
+	if (bfc)
+	{
+		bTemp = panel->bfcRedBackFaceButton->state();
+		if (bTemp != bfcRedBackFace)
+		{
+			bfcRedBackFace = bTemp;
+			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, RED_BACK_FACES_KEY);
 		}
 	}
 	iTemp = panel->wireframeThicknessSlider->value();
@@ -248,6 +268,8 @@ void Preferences::doGeometryApply(void)
 		modelViewer->setUsePolygonOffset(polygonOffset);
 		modelViewer->setBlackHighlights(blackEdgeLines);
 		modelViewer->setHighlightLineWidth(edgeThickness);
+		modelViewer->setBfc(bfc);
+		modelViewer->setRedBackFaces(bfcRedBackFace);
 	}
 }
 
@@ -537,6 +559,8 @@ void Preferences::loadGeneralSettings(void)
 		(int)TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
 		defaultColorNumber);
 	fieldOfView = TCUserDefaults::longForKey(FOV_KEY, fieldOfView);
+	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
+        transDefaultColor) != 0;
 }
 
 void Preferences::loadGeometrySettings(void)
@@ -551,6 +575,10 @@ void Preferences::loadGeometrySettings(void)
 		(long)wireframeRemoveHiddenLines) !=0;
 	wireframeThickness = TCUserDefaults::longForKey(WIREFRAME_THICKNESS_KEY,
 		wireframeThickness);
+	bfc = TCUserDefaults::longForKey(BFC_KEY, (long)bfc) != 0;
+	bfcRedBackFace = TCUserDefaults::longForKey(RED_BACK_FACES_KEY, 
+		(long)bfcRedBackFace) !=0;
+
 	edgeLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
 		(long)edgeLines) != 0;
 	conditionalLines =
@@ -638,6 +666,7 @@ void Preferences::loadDefaultGeneralSettings(void)
 	defaultColor = 0x999999;
 	defaultColorNumber = -1;
 	fieldOfView = 45;
+	transDefaultColor = false;
 	// User colors?
 }
 
@@ -649,6 +678,8 @@ void Preferences::loadDefaultGeometrySettings(void)
 	wireframeFog = false;
 	wireframeRemoveHiddenLines=false;
 	wireframeThickness = 1;
+	bfc = false;
+	bfcRedBackFace = false;
 	edgeLines = false;
 	conditionalLines = false;
 	conditionalShowAll = false;
@@ -709,6 +740,7 @@ void Preferences::reflectGeneralSettings(void)
 	setupColorButton(panel->backgroundColorButton, backgroundColor);
 	setupColorButton(panel->defaultColorButton, defaultColor);
 	setRangeValue(panel->fieldOfViewSpin, fieldOfView);
+	setButtonState(panel->transparentButton, transDefaultColor);
 }
 
 void Preferences::reflectGeometrySettings(void)
@@ -717,6 +749,7 @@ void Preferences::reflectGeometrySettings(void)
 	setRangeValue(panel->seamWidthSpin, seamWidth);
 //	panel->seamWidthSpin->setValue(seamWidth);
 	reflectWireframeSettings();
+	reflectBFCSettings();
 //	panel->wireframeThicknessSlider->setValue(wireframeThickness);
 	setButtonState(panel->edgeLinesButton, edgeLines);
 	if (edgeLines)
@@ -742,6 +775,19 @@ void Preferences::reflectWireframeSettings(void)
 	else
 	{
 		disableWireframe();
+	}
+}
+
+void Preferences::reflectBFCSettings()
+{
+	setButtonState(panel->enableBFCButton, bfc);
+	if (bfc)
+	{
+		enableBFC();
+	}
+	else
+	{
+		disableBFC();
 	}
 }
 
@@ -828,7 +874,7 @@ void Preferences::doResetPrimitives(void)
 
 void Preferences::getRGB(int color, int &r, int &g, int &b)
 {
-	color = htonl(color);
+//	color = htonl(color);
 	r = (color >> 24) & 0xFF;
 	g = (color >> 16) & 0xFF;
 	b = (color >> 8) & 0xFF;
@@ -1000,6 +1046,18 @@ void Preferences::doWireframe(bool value)
 	}
 }
 
+void Preferences::doBFC(bool value)
+{
+	if (value)
+	{
+		enableBFC();
+	}
+	else
+	{
+		disableBFC();
+	}
+}
+
 void Preferences::doEdgeLines(bool value)
 {
 	if (value)
@@ -1114,6 +1172,12 @@ void Preferences::enableWireframe(void)
     setButtonState(panel->wireframeRemoveHiddenLineButton, wireframeRemoveHiddenLines);
 }
 
+void Preferences::enableBFC(void)
+{
+	panel->bfcRedBackFaceButton->setEnabled(true);
+	setButtonState(panel->bfcRedBackFaceButton, bfcRedBackFace);
+}
+
 void Preferences::enableEdgeLines(void)
 {
 	panel->conditionalLinesButton->setEnabled(true);
@@ -1224,6 +1288,12 @@ void Preferences::disableWireframe(void)
 	panel->wireframeThicknessLabel->setEnabled(false);
 	setButtonState(panel->wireframeFogButton, false);
 	setButtonState(panel->wireframeRemoveHiddenLineButton, false);
+}
+
+void Preferences::disableBFC(void)
+{
+	panel->bfcRedBackFaceButton->setEnabled(false);
+	setButtonState(panel->bfcRedBackFaceButton, false);
 }
 
 void Preferences::disableEdgeLines(void)

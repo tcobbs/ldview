@@ -51,6 +51,9 @@ LIBS = -lm -lTCFoundation $(HOSTLIBS)
 
 all:	$(OBJDIR) libLDLoader.a
 
+debug: CFLAGS = -o $(OBJDIR)/$*.o -g -Wall -D_GNU_SOURCE -D_QT
+debug: all
+
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then	\
 		mkdir $(OBJDIR);				\

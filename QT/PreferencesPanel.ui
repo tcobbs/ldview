@@ -190,23 +190,6 @@
                                             </size>
                                         </property>
                                     </spacer>
-                                    <spacer row="0" column="2">
-                                        <property name="name">
-                                            <cstring>Spacer5</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Expanding</enum>
-                                        </property>
-                                        <property name="sizeHint">
-                                            <size>
-                                                <width>20</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
                                     <widget class="QLabel" row="1" column="0">
                                         <property name="name">
                                             <cstring>defaultColorLabel</cstring>
@@ -271,6 +254,14 @@
 											<number>45</number>
 										</property>
                                    	</widget>
+									<widget class="QCheckBox" row="0" column="2">
+                        		        <property name="name">
+                               			    <cstring>transparentButton</cstring>
+                                		</property>
+                                		<property name="text">
+                                    		<string>Transparent</string>
+                                		</property>
+									</widget>
                                 </grid>
                             </widget>
                         </vbox>
@@ -442,6 +433,22 @@
                             <property name="spacing">
                                 <number>4</number>
                             </property>
+							<widget class="QLayoutWidget">
+								 <property name="name">
+   			                         <cstring>Layout299</cstring>
+	       		                 </property>
+								<vbox>
+                           			<property name="name">
+                                		<cstring>unnamed</cstring>
+                            		</property>
+                            		<property name="margin">
+                                		<number>0</number>
+                            		</property>
+                            		<property name="spacing">
+                                		<number>4</number>
+                            		</property>
+
+
                             <widget class="QGroupBox">
                                 <property name="name">
                                     <cstring>geometryWireframeBox</cstring>
@@ -622,6 +629,90 @@
                                             </widget>
                                         </hbox>
                                     </widget>
+                                </vbox>
+                            </widget>
+							<widget class="QGroupBox">
+								<property name="name">
+                                    <cstring>bfcBox</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>BFC</string>
+                                </property>
+								<vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>11</number>
+                                    </property>
+                                    <property name="spacing">
+                                        <number>4</number>
+                                    </property>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>enableBFCButton</cstring>
+										</property>
+                                        <property name="text">
+                                            <string>Enabled</string>
+                                        </property>
+                                    </widget>
+   									<widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>Layout289</cstring>
+                                        </property>
+                                        <hbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <property name="margin">
+                                                <number>0</number>
+                                            </property>
+                                            <property name="spacing">
+                                                <number>0</number>
+                                            </property>
+                                            <spacer>
+                                                <property name="name">
+                                                    <cstring>Spacer16_29</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Horizontal</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Fixed</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>16</width>
+                                                        <height>20</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                            <widget class="QLayoutWidget">
+                                                <property name="name">
+                                                    <cstring>Layout279</cstring>
+                                                </property>
+                                                <vbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <property name="margin">
+                                                        <number>0</number>
+                                                    </property>
+                                                    <property name="spacing">
+                                                        <number>4</number>
+                                                    </property>
+                                                    <widget class="QCheckBox">
+                                                        <property name="name">
+                                                            <cstring>bfcRedBackFaceButton</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string>Red back faces</string>
+                                                        </property>
+                                                    </widget>
+												</vbox>
+											</widget>
+										</hbox>
+									</widget>
                                     <spacer>
                                         <property name="name">
                                             <cstring>Spacer18</cstring>
@@ -639,8 +730,14 @@
                                             </size>
                                         </property>
                                     </spacer>
-                                </vbox>
-                            </widget>
+
+								</vbox>
+							</widget>
+							</vbox>
+							</widget>
+
+
+
                             <widget class="QGroupBox">
                                 <property name="name">
                                     <cstring>edgeLinesBox</cstring>
@@ -2523,6 +2620,12 @@
 		<receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection> 
+	<connection>
+		<sender>transparentButton</sender>
+		<signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
     <connection>
         <sender>wireframeThicknessSlider</sender>
         <signal>valueChanged(int)</signal>
@@ -2764,6 +2867,24 @@
         <receiver>PreferencesPanel</receiver>
         <slot>doWireframe(bool)</slot>
     </connection>
+	<connection>
+		<sender>enableBFCButton</sender>
+		<signal>toggled(bool)</signal>
+		<receiver>PreferencesPanel</receiver>
+		<slot>doBFC(bool)</slot>
+	</connection>
+	<connection>
+		<sender>enableBFCButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+	</connection>
+	<connection>
+        <sender>bfcRedBackFaceButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
     <connection>
         <sender>wireframeButton</sender>
         <signal>stateChanged(int)</signal>
@@ -2850,9 +2971,10 @@
     <tabstop>showErrorsButton</tabstop>
 	<tabstop>processLdconfigLdrButton</tabstop>
     <tabstop>backgroundColorButton</tabstop>
+	<tabstop>transparentButton</tabstop>
     <tabstop>defaultColorButton</tabstop>
-    <tabstop>generalResetButton</tabstop>
 	<tabstop>fieldOfViewSpin</tabstop>
+    <tabstop>generalResetButton</tabstop>
     <tabstop>seamWidthButton</tabstop>
     <tabstop>seamWidthSpin</tabstop>
     <tabstop>wireframeButton</tabstop>
@@ -2925,6 +3047,7 @@
     <slot>doLighting( bool value )</slot>
     <slot>doStereo( bool value )</slot>
     <slot>doWireframe( bool value )</slot>
+	<slot>doBFC( bool value )</slot>
     <slot>doEdgeLines( bool value )</slot>
 	<slot>doConditionalShow( bool value )</slot>
     <slot>doPrimitiveSubstitution( bool value )</slot>
