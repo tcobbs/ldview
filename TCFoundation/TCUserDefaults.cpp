@@ -1039,7 +1039,10 @@ void TCUserDefaults::deleteSubkeys(const char *key)
 	count = entryList.count();
 	for (i = 0; i < count; i++)
 	{
-		qSettings->removeEntry(entryList[i]);
+		char subkey[1024];
+
+		sprintf(subkey, "%s/%s", key, (const char *)entryList[i]);
+		qSettings->removeEntry(subkey);
 	}
 }
 
