@@ -8,7 +8,6 @@
 #include "TCVector.h"
 #include "TCMacros.h"
 #include "mystring.h"
-//#include "simMacros.h"
 
 //static int vectorCount = 0;
 
@@ -70,6 +69,15 @@ TCVector::~TCVector(void)
 //	}
 }
 
+// TCVector::lengthSquared(void) -- Member Function
+// Returns:
+//		The square of the length of the TCVector (avoids sqrt if you don't need
+//		actual length, only to compare two relative lengths.
+float TCVector::lengthSquared(void) const
+{
+	return sqr(vector[0]) + sqr(vector[1]) + sqr(vector[2]);
+}
+
 // TCVector::length(void) -- Member Function
 // Returns:
 //		The length of the TCVector.
@@ -99,8 +107,8 @@ TCVector TCVector::operator*(const TCVector& right) const
 	// <a, b, c> x <d, e, f> = <bf-ce, cd-af, ae-bd>
 	// <x1, y1, z1> x <x2, y2, z2> = <y1*z2-y2*z1, z1*x2-z2*x1, x1*y2-x2*y1>
 	return TCVector(vector[1] * right.vector[2] - vector[2] * right.vector[1],
-					  vector[2] * right.vector[0] - vector[0] * right.vector[2],
-					  vector[0] * right.vector[1] - vector[1] * right.vector[0]);
+		vector[2] * right.vector[0] - vector[0] * right.vector[2],
+		vector[0] * right.vector[1] - vector[1] * right.vector[0]);
 }
 
 // TCVector::operator*(float) -- Overloaded Operator
@@ -133,7 +141,7 @@ TCVector TCVector::operator/(float right) const
 TCVector TCVector::operator+(const TCVector& right) const
 {
 	return TCVector(vector[0] + right.vector[0], vector[1] + right.vector[1],
-					  vector[2] + right.vector[2]);
+		vector[2] + right.vector[2]);
 }
 
 // TCVector::operator-(const TCVector&) -- Overloaded Operator
@@ -144,7 +152,7 @@ TCVector TCVector::operator+(const TCVector& right) const
 TCVector TCVector::operator-(const TCVector& right) const
 {
 	return TCVector(vector[0] - right.vector[0], vector[1] - right.vector[1],
-					  vector[2] - right.vector[2]);
+		vector[2] - right.vector[2]);
 }
 
 // TCVector::operator-(void) -- Overloaded Operator
@@ -269,8 +277,8 @@ int TCVector::operator!=(const TCVector& right) const
 // Expects:
 //		right	: The right hand side of the < test.
 // Returns:
-//		If the contents of "*this" < the contents of "right", then 1.  Otherwise,
-//		0.
+//		If the contents of "*this" < the contents of "right", then 1.
+//		Otherwise, 0.
 int TCVector::operator<(const TCVector& right) const
 {
 	return length() < right.length();
@@ -280,8 +288,8 @@ int TCVector::operator<(const TCVector& right) const
 // Expects:
 //		right	: The right hand side of the > test.
 // Returns:
-//		If the contents of "*this" > the contents of "right", then 1.  Otherwise,
-//		0.
+//		If the contents of "*this" > the contents of "right", then 1.
+//		Otherwise, 0.
 int TCVector::operator>(const TCVector& right) const
 {
 	return length() > right.length();
@@ -329,7 +337,8 @@ void TCVector::print(char* buffer) const
 //		left	: The left hand side of the scalar multiply.
 //		right	: The right hand side of the scalar multiply.
 // Returns:
-//		The TCVector resulting from "right" being multiplied by the scalar "left".
+//		The TCVector resulting from "right" being multiplied by the scalar
+//		"left".
 TCVector operator*(float left, const TCVector& right)
 {
 	return right * left;
@@ -492,4 +501,13 @@ bool TCVector::approxEquals(const TCVector &right, float epsilon) const
 	return fEq2(vector[0], right.vector[0], epsilon) &&
 		fEq2(vector[1], right.vector[1], epsilon) &&
 		fEq2(vector[2], right.vector[2], epsilon);
+}
+
+void TCVector::initIdentityMatrix(float *matrix)
+{
+	memset(matrix, 0, 16 * sizeof(float));
+	matrix[0] = 1.0f;
+	matrix[5] = 1.0f;
+	matrix[10] = 1.0f;
+	matrix[15] = 1.0f;
 }

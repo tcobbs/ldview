@@ -34,6 +34,7 @@ class TCVector
 		void print(FILE* = stdout) const;
 		void print(char* buffer) const;
 		float length(void) const;
+		float lengthSquared(void) const;
 		float dot(const TCVector&) const;
 		TCVector& normalize(void) {return *this *= 1.0f/length();}
 		float get(int i) const { return vector[i];}
@@ -67,6 +68,7 @@ class TCVector
 		static void multMatrix(float*, float*, float*);
 		static void multMatrixd(double*, double*, double*);
 		static void invertMatrix(float*, float*);
+		static void initIdentityMatrix(float*);
 	protected:
 #ifdef _LEAK_DEBUG
 		char className[4];
