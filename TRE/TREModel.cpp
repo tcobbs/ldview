@@ -9,7 +9,6 @@
 
 #include <TCFoundation/mystring.h>
 #include <LDLoader/LDLMacros.h>		// TODO: remove dependency
-#include <LDLib/Vector.h>			// TODO: remove dependency
 
 bool TREModel::sm_normalizeOn = false;
 
@@ -23,6 +22,7 @@ TREModel::TREModel(void)
 	m_coloredListID(0)
 {
 	m_flags.part = false;
+	m_flags.boundingBox = false;
 }
 
 TREModel::TREModel(const TREModel &other)
@@ -35,6 +35,8 @@ TREModel::TREModel(const TREModel &other)
 		other.m_coloredShapes)),
 	m_defaultColorListID(0),
 	m_coloredListID(0),
+	m_boundingMin(other.m_boundingMin),
+	m_boundingMax(other.m_boundingMax),
 	m_flags(other.m_flags)
 {
 }
@@ -108,8 +110,6 @@ void TREModel::compileDefaultColor(void)
 {
 	if (!m_defaultColorListID)
 	{
-		int listID = glGenLists(1);
-
 		if (m_subModels)
 		{
 			int i;
@@ -120,10 +120,16 @@ void TREModel::compileDefaultColor(void)
 				(*m_subModels)[i]->getModel()->compileDefaultColor();
 			}
 		}
-		glNewList(listID, GL_COMPILE);
-		drawDefaultColor();
-		glEndList();
-		m_defaultColorListID = listID;
+		if (m_mainModel->getCompileAll() ||
+			(m_flags.part && m_mainModel->getCompileParts()))
+		{
+			int listID = glGenLists(1);
+
+			glNewList(listID, GL_COMPILE);
+			drawDefaultColor();
+			glEndList();
+			m_defaultColorListID = listID;
+		}
 	}
 }
 
@@ -258,7 +264,33 @@ void TREModel::addQuad(Vector *vertices)
 	m_shapes->addQuad(vertices);
 }
 
-void TREModel::addSubModel(float *matrix, TREModel *model)
+void TREModel::addQuadStrip(Vector *vertices, Vector *normals, int count)
+{
+	setup();
+	m_shapes->addQuadStrip(vertices, normals, count);
+}
+
+void TREModel::addQuadStrip(TCULong color, Vector *vertices, Vector *normals,
+							int count)
+{
+	setupColored();
+	m_coloredShapes->addQuadStrip(color, vertices, normals, count);
+}
+
+void TREModel::addTriangleFan(Vector *vertices, Vector *normals, int count)
+{
+	setup();
+	m_shapes->addTriangleFan(vertices, normals, count);
+}
+
+void TREModel::addTriangleFan(TCULong color, Vector *vertices, Vector *normals,
+							  int count)
+{
+	setupColored();
+	m_coloredShapes->addTriangleFan(color, vertices, normals, count);
+}
+
+TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model)
 {
 	TRESubModel *subModel = new TRESubModel;
 
@@ -270,12 +302,15 @@ void TREModel::addSubModel(float *matrix, TREModel *model)
 	subModel->setModel(model);
 	m_subModels->addObject(subModel);
 	subModel->release();
+	return subModel;
 }
 
-void TREModel::addSubModel(TCULong color, float *matrix, TREModel *model)
+TRESubModel *TREModel::addSubModel(TCULong color, float *matrix, TREModel *model)
 {
-	addSubModel(matrix, model);
-	(*m_subModels)[m_subModels->getCount() - 1]->setColor(color);
+	TRESubModel *subModel = addSubModel(matrix, model);
+
+	subModel->setColor(color);
+	return subModel;
 }
 
 void TREModel::flatten(void)
@@ -345,6 +380,138 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 	}
 }
 
+void TREModel::flattenShapes(TREShapeType shapeType,
+							 TREVertexArray *dstVertices,
+							 TREVertexArray *dstNormals,
+							 TCULongArray *dstColors,
+							 TCULongArray *dstIndices,
+							 TREVertexArray *srcVertices,
+							 TREVertexArray *srcNormals,
+							 TCULongArray *srcColors,
+							 TCULongArray *srcIndices, float *matrix,
+							 TCULong color, bool colorSet)
+{
+	int shapeSize = TREShapeGroup::numPointsForShapeType(shapeType);
+	Vector normal;
+	Vector points[3];
+	TREVertex normalVertex;
+	int i;
+	int count = srcIndices->getCount();
+
+	for (i = 0; i < count; i++)
+	{
+		int index = (*srcIndices)[i];
+		TREVertex vertex = (*srcVertices)[index];
+
+		dstIndices->addValue(dstVertices->getCount());
+		transformVertex(vertex, matrix);
+		dstVertices->addVertex(vertex);
+		if (shapeSize > 2)
+		{
+			if (i % shapeSize == 0)
+			{
+				int j;
+
+				for (j = 0; j < 3; j++)
+				{
+					TREVertex v = (*srcVertices)[(*srcIndices)[i + j]];
+
+					transformVertex(v, matrix);
+					memcpy((float *)points[j], v.v, sizeof(v.v));
+				}
+				normal = TREVertexStore::calcNormal(points);
+				TREVertexStore::initVertex(normalVertex, normal);
+			}
+			dstNormals->addVertex(normalVertex);
+		}
+		else if (srcNormals)
+		{
+			TREVertex normal = (*srcNormals)[index];
+
+			transformNormal(normal, matrix);
+			dstNormals->addVertex(normal);
+		}
+		if (colorSet)
+		{
+			dstColors->addValue(color);
+		}
+		else if (srcColors)
+		{
+			dstColors->addValue((*srcColors)[index]);
+		}
+	}
+}
+
+void TREModel::flattenStrips(TREShapeType shapeType,
+							 TREVertexArray *dstVertices,
+							 TREVertexArray *dstNormals,
+							 TCULongArray *dstColors,
+							 TCULongArray *dstIndices,
+							 TREVertexArray *srcVertices,
+							 TREVertexArray *srcNormals,
+							 TCULongArray *srcColors,
+							 TCULongArray *srcIndices, float *matrix,
+							 TCULong color, bool colorSet)
+{
+	int shapeSize = TREShapeGroup::numPointsForShapeType(shapeType);
+	Vector normal;
+	Vector points[3];
+	TREVertex normalVertex;
+	int i, j;
+	int count = srcIndices->getCount();
+	int stripCount = 0;
+
+	for (i = 0; i < count; i += stripCount)
+	{
+		stripCount = (*srcIndices)[i];
+
+		dstIndices->addValue(stripCount);
+		i++;
+		for (j = 0; j < stripCount; j++)
+		{
+			int index = (*srcIndices)[i + j];
+			TREVertex vertex = (*srcVertices)[index];
+
+			dstIndices->addValue(dstVertices->getCount());
+			transformVertex(vertex, matrix);
+			dstVertices->addVertex(vertex);
+			if (shapeSize > 2)
+			{
+				if (i % shapeSize == 0)
+				{
+					int j;
+
+					for (j = 0; j < 3; j++)
+					{
+						TREVertex v = (*srcVertices)[(*srcIndices)[i + j]];
+
+						transformVertex(v, matrix);
+						memcpy((float *)points[j], v.v, sizeof(v.v));
+					}
+					normal = TREVertexStore::calcNormal(points);
+					TREVertexStore::initVertex(normalVertex, normal);
+				}
+				dstNormals->addVertex(normalVertex);
+			}
+			else if (srcNormals)
+			{
+				TREVertex normal = (*srcNormals)[index];
+
+				transformNormal(normal, matrix);
+				dstNormals->addVertex(normal);
+			}
+			if (colorSet)
+			{
+				dstColors->addValue(color);
+			}
+			else if (srcColors)
+			{
+				dstColors->addValue((*srcColors)[index]);
+			}
+		}
+	}
+}
+
 void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 							 float *matrix, TCULong color, bool colorSet)
 {
@@ -362,8 +529,6 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 
 			if (srcIndices)
 			{
-				int i;
-				int count = srcIndices->getCount();
 				TREVertexArray *srcVertices = srcVertexStore->getVertices();
 				TREVertexArray *srcNormals = srcVertexStore->getNormals();
 				TCULongArray *srcColors = srcVertexStore->getColors();
@@ -375,56 +540,19 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 					TREVertexArray *dstVertices = dstVertexStore->getVertices();
 					TREVertexArray *dstNormals = dstVertexStore->getNormals();
 					TCULongArray *dstColors = dstVertexStore->getColors();
-					int shapeSize =
-						TREShapeGroup::numPointsForShapeType((TREShapeType)bit);
-					Vector normal;
-					Vector points[3];
-					TREVertex normalVertex;
+					TREShapeType shapeType = (TREShapeType)bit;
 
-					for (i = 0; i < count; i++)
+					if (shapeType < TRESFirstStrip)
 					{
-						int index = (*srcIndices)[i];
-						TREVertex vertex = (*srcVertices)[index];
-
-						dstIndices->addValue(dstVertices->getCount());
-						transformVertex(vertex, matrix);
-						dstVertices->addVertex(vertex);
-						if (shapeSize > 2)
-						{
-							if (i % shapeSize == 0)
-							{
-								int j;
-
-								for (j = 0; j < 3; j++)
-								{
-									TREVertex v =
-										(*srcVertices)[(*srcIndices)[i + j]];
-
-									transformVertex(v, matrix);
-									memcpy((float *)points[j], v.v,
-										sizeof(v.v));
-								}
-								normal = TREVertexStore::calcNormal(points);
-								TREVertexStore::initVertex(normalVertex,
-									normal);
-							}
-							dstNormals->addVertex(normalVertex);
-						}
-						else if (srcNormals)
-						{
-							TREVertex normal = (*srcNormals)[index];
-
-							transformNormal(normal, matrix);
-							dstNormals->addVertex(normal);
-						}
-						if (colorSet)
-						{
-							dstColors->addValue(color);
-						}
-						else if (srcColors)
-						{
-							dstColors->addValue((*srcColors)[index]);
-						}
+						flattenShapes(shapeType, dstVertices, dstNormals,
+							dstColors, dstIndices, srcVertices, srcNormals,
+							srcColors, srcIndices, matrix, color, colorSet);
+					}
+					else
+					{
+						flattenStrips(shapeType, dstVertices, dstNormals,
+							dstColors, dstIndices, srcVertices, srcNormals,
+							srcColors, srcIndices, matrix, color, colorSet);
 					}
 				}
 			}
@@ -455,8 +583,9 @@ void TREModel::transformNormal(TREVertex &normal, float *matrix)
 	float x = normal.v[0];
 	float y = normal.v[1];
 	float z = normal.v[2];
+	float det;
 
-	invertMatrix(matrix, inverseMatrix);
+	det = invertMatrix(matrix, inverseMatrix);
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
 //	z' = g*x + h*y + i*z + Z
@@ -466,6 +595,10 @@ void TREModel::transformNormal(TREVertex &normal, float *matrix)
 	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y +
 		inverseMatrix[10]*z;
 	newNormal.normalize();
+	if (det < 0)
+	{
+		newNormal *= -1.0f;
+	}
 	TREVertexStore::initVertex(normal, newNormal);
 }
 
@@ -479,7 +612,7 @@ float TREModel::determinant(float* matrix)
 	return det;
 }
 
-void TREModel::invertMatrix(float* matrix, float* inverseMatrix)
+float TREModel::invertMatrix(float* matrix, float* inverseMatrix)
 {
 	float det = determinant(matrix);
 
@@ -489,26 +622,26 @@ void TREModel::invertMatrix(float* matrix, float* inverseMatrix)
 	}
 	else
 	{
-		det = 1.0f / det;
+		float oneOverDet = 1.0f / det;
 
 		inverseMatrix[0]  =  (matrix[5] * matrix[10] - matrix[6] * matrix[9]) *
-			det;
+			oneOverDet;
 		inverseMatrix[1]  = -(matrix[1] * matrix[10] - matrix[2] * matrix[9]) *
-			det;
+			oneOverDet;
 		inverseMatrix[2]  =  (matrix[1] * matrix[6]  - matrix[2] * matrix[5]) *
-			det;
+			oneOverDet;
 		inverseMatrix[4]  = -(matrix[4] * matrix[10] - matrix[6] * matrix[8]) *
-			det;
+			oneOverDet;
 		inverseMatrix[5]  =  (matrix[0] * matrix[10] - matrix[2] * matrix[8]) *
-			det;
+			oneOverDet;
 		inverseMatrix[6]  = -(matrix[0] * matrix[6]  - matrix[2] * matrix[4]) *
-			det;
+			oneOverDet;
 		inverseMatrix[8]  =  (matrix[4] * matrix[9]  - matrix[5] * matrix[8]) *
-			det;
+			oneOverDet;
 		inverseMatrix[9]  = -(matrix[0] * matrix[9]  - matrix[1] * matrix[8]) *
-			det;
+			oneOverDet;
 		inverseMatrix[10] =  (matrix[0] * matrix[5]  - matrix[1] * matrix[4]) *
-			det;
+			oneOverDet;
 
 		inverseMatrix[12] = -(matrix[12] * matrix[0] + matrix[13] * matrix[4] +
 							matrix[14] * matrix[8]);
@@ -520,6 +653,7 @@ void TREModel::invertMatrix(float* matrix, float* inverseMatrix)
 		inverseMatrix[3] = inverseMatrix[7] = inverseMatrix[11] = 0.0;
 		inverseMatrix[15] = 1.0;
 	}
+	return det;
 }
 
 void TREModel::multMatrix(float* left, float* right, float* result)
@@ -572,5 +706,169 @@ void TREModel::setGlNormalize(bool value)
 			glDisable(GL_NORMALIZE);
 			sm_normalizeOn = false;
 		}
+	}
+}
+
+void TREModel::addCylinder(const Vector& center, float radius, float height,
+						   int numSegments, int usedSegments)
+{
+	addOpenCone(center, radius, radius, height, numSegments, usedSegments);
+}
+
+void TREModel::setCirclePoint(float angle, float radius, const Vector& center,
+							  Vector& point)
+{
+	float x1, z1;
+
+	x1 = radius * (float)cos(angle);
+	z1 = radius * (float)sin(angle);
+	point[0] = center.get(0) + x1;
+	point[1] = center.get(1);
+	point[2] = center.get(2) + z1;
+}
+
+void TREModel::addCone(const Vector &center, float radius, float height,
+					   int numSegments, int usedSegments)
+{
+}
+
+void TREModel::addOpenCone(const Vector& center, float radius1, float radius2,
+					   float height, int numSegments, int usedSegments)
+{
+	if (usedSegments == -1)
+	{
+		usedSegments = numSegments;
+	}
+	if (radius1 == 0.0f)
+	{
+		addCone(center, radius2, height, numSegments, usedSegments);
+	}
+	else if (radius2 == 0.0f)
+	{
+		addCone(center, radius1, height, numSegments, usedSegments);
+	}
+	else
+	{
+		int vertexCount = usedSegments * 2 + 2;
+		Vector *points = new Vector[vertexCount];
+		Vector *normals = new Vector[vertexCount];
+		int i;
+		Vector p1, p2;
+		Vector top = center;
+		Vector normal = Vector(0.0f, 1.0f, 0.0f);
+
+		top[1] += height;
+		for (i = 0; i <= usedSegments; i++)
+		{
+			float angle;
+
+			angle = 2.0f * (float)M_PI / numSegments * i;
+			setCirclePoint(angle, radius1, center, points[i * 2]);
+			setCirclePoint(angle, radius2, top, points[i * 2 + 1]);
+			if (height == 0.0f)
+			{
+				normals[i * 2] = normal;
+				normals[i * 2 + 1] = normal;
+			}
+			else
+			{
+				normals[i * 2] = (points[i * 2] - center).normalize();
+				normals[i * 2 + 1] = (points[i * 2 + 1] - top).normalize();
+			}
+		}
+		addQuadStrip(points, normals, vertexCount);
+		delete[] points;
+		delete[] normals;
+/*
+		if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
+		{
+			genConeConditionals(cone, numSegments, usedSegments);
+		}
+*/
+	}
+}
+
+void TREModel::addDisk(const Vector& center, float radius, int numSegments,
+					   int usedSegments)
+{
+	int i;
+	int vertexCount;
+	Vector *points;
+	Vector *normals;
+	Vector normal = Vector(0.0f, 1.0f, 0.0f);
+
+	if (usedSegments == -1)
+	{
+		usedSegments = numSegments;
+	}
+	vertexCount = usedSegments + 2;
+	points = new Vector[vertexCount];
+	normals = new Vector[vertexCount];
+	points[0] = center;
+	normals[0] = normal;
+	for (i = 0; i <= usedSegments; i++)
+	{
+		float angle;
+
+		angle = -2.0f * (float)M_PI / numSegments * i;
+		setCirclePoint(angle, radius, center, points[i + 1]);
+		normals[i + 1] = normal;
+	}
+	addTriangleFan(points, normals, vertexCount);
+	delete[] points;
+	delete[] normals;
+}
+
+void TREModel::calculateBoundingBox(void)
+{
+	if (!m_flags.boundingBox)
+	{
+		getMinMax(m_boundingMin, m_boundingMax);
+		m_flags.boundingBox = true;
+	}
+}
+
+void TREModel::getMinMax(Vector& min, Vector& max, float* matrix)
+{
+	if (m_shapes)
+	{
+		m_shapes->getMinMax(min, max, matrix);
+	}
+	if (m_coloredShapes)
+	{
+		m_coloredShapes->getMinMax(min, max, matrix);
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		for (i = 0; i < count; i++)
+		{
+			(*m_subModels)[i]->getMinMax(min, max, matrix);
+		}
+	}
+}
+
+void TREModel::getMinMax(Vector& min, Vector& max)
+{
+	if (m_flags.boundingBox)
+	{
+		min = m_boundingMin;
+		max = m_boundingMax;
+	}
+	else
+	{
+		float identityMatrix[16] = {1.0f, 0.0f, 0.0f, 0.0f,
+									0.0f, 1.0f, 0.0f, 0.0f,
+									0.0f, 0.0f, 1.0f, 0.0f,
+									0.0f, 0.0f, 0.0f, 1.0f};
+		min[0] = 9999999.0f;
+		min[1] = 9999999.0f;
+		min[2] = 9999999.0f;
+		max[0] = -9999999.0f;
+		max[1] = -9999999.0f;
+		max[2] = -9999999.0f;
+		getMinMax(min, max, identityMatrix);
 	}
 }

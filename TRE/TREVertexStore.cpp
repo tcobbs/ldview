@@ -90,6 +90,12 @@ int TREVertexStore::addVertices(Vector *points, int count)
 	return addVertices(m_vertices, points, count);
 }
 
+int TREVertexStore::addVertices(Vector *points, Vector *normals, int count)
+{
+	addVertices(m_normals, normals, count);
+	return addVertices(m_vertices, points, count);
+}
+
 int TREVertexStore::addVertices(TCULong color, Vector *points, int count)
 {
 	int i;
@@ -99,6 +105,18 @@ int TREVertexStore::addVertices(TCULong color, Vector *points, int count)
 		m_colors->addValue(color);
 	}
 	return addVertices(points, count);
+}
+
+int TREVertexStore::addVertices(TCULong color, Vector *points, Vector *normals,
+								int count)
+{
+	int i;
+
+	for (i = 0; i < count; i++)
+	{
+		m_colors->addValue(color);
+	}
+	return addVertices(points, normals, count);
 }
 
 void TREVertexStore::initVertex(TREVertex &vertex, Vector &point)

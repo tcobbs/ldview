@@ -5,6 +5,8 @@
 
 class TREModel;
 
+class Vector;
+
 class TRESubModel : public TCObject
 {
 public:
@@ -21,6 +23,8 @@ public:
 	virtual void draw(void);
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
+	virtual void getMinMax(Vector& min, Vector& max, float* matrix);
+	virtual void shrink(float amount);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);
