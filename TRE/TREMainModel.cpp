@@ -391,6 +391,12 @@ void TREMainModel::enableLineSmooth(void)
 
 void TREMainModel::drawSolid(void)
 {
+	bool subModelsOnly = false;
+
+	if (TREShapeGroup::isTransparent(m_color, true))
+	{
+		subModelsOnly = true;
+	}
 	// I admit, this is a mess.  But I'm not sure how to make it less of a mess.
 	// The various things do need to be drawn separately, and they have to get
 	// drawn in a specific order.
@@ -401,7 +407,7 @@ void TREMainModel::drawSolid(void)
 	// color number 16 when you use a part in your model.
 	glColor4ubv((GLubyte*)&m_color);
 	m_vertexStore->activate(m_mainFlags.compileAll || m_mainFlags.compileParts);
-	TREModel::draw(TREMStandard);
+	TREModel::draw(TREMStandard, false, subModelsOnly);
 	if (getStudLogoFlag())
 	{
 		glEnable(GL_TEXTURE_2D);
@@ -409,19 +415,19 @@ void TREMainModel::drawSolid(void)
 		configureStudTexture();
 		m_studVertexStore->activate(m_mainFlags.compileAll ||
 			m_mainFlags.compileParts);
-		TREModel::draw(TREMStud);
+		TREModel::draw(TREMStud, false, subModelsOnly);
 	}
 	if (getBFCFlag())
 	{
 		activateBFC();
 		if (getStudLogoFlag())
 		{
-			TREModel::draw(TREMStudBFC);
+			TREModel::draw(TREMStudBFC, false, subModelsOnly);
 			glDisable(GL_TEXTURE_2D);
 			m_vertexStore->activate(m_mainFlags.compileAll ||
 				m_mainFlags.compileParts);
 		}
-		TREModel::draw(TREMBFC);
+		TREModel::draw(TREMBFC, false, subModelsOnly);
 	}
 	else if (getStudLogoFlag())
 	{
@@ -430,8 +436,6 @@ void TREMainModel::drawSolid(void)
 	// Next draw all opaque triangles and quads that were specified with a color
 	// number other than 16.  Note that the colored vertex store includes color
 	// information for every vertex.
-	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
-		m_mainFlags.compileParts);
 	if (getBFCFlag())
 	{
 		drawColored(TREMBFC);
@@ -446,6 +450,9 @@ void TREMainModel::drawSolid(void)
 		}
 		deactivateBFC();
 	}
+	m_coloredVertexStore->activate(m_mainFlags.compileAll ||
+		m_mainFlags.compileParts);
+	drawColored(TREMStandard);
 	if (getStudLogoFlag())
 	{
 		glEnable(GL_TEXTURE_2D);
@@ -454,7 +461,6 @@ void TREMainModel::drawSolid(void)
 		drawColored(TREMStud);
 		glDisable(GL_TEXTURE_2D);
 	}
-	drawColored(TREMStandard);
 }
 
 void TREMainModel::drawLines(void)

@@ -8,6 +8,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCUnzip.h>
 
 #define MAX_DL_THREADS 2
 
@@ -16,8 +17,12 @@ LDLibraryUpdater::LDLibraryUpdater(void)
 	m_thread(NULL),
 	m_libraryUpdateKey(NULL),
 	m_ldrawDir(NULL),
-	m_updateQueue(NULL)
+	m_ldrawDirParent(NULL),
+	m_updateQueue(NULL),
+	m_updateUrlList(NULL),
+	m_downloadList(NULL)
 {
+	m_error[0] = 0;
 }
 
 LDLibraryUpdater::~LDLibraryUpdater(void)
@@ -30,7 +35,10 @@ void LDLibraryUpdater::dealloc(void)
 	TCObject::release(m_thread);
 	delete m_libraryUpdateKey;
 	delete m_ldrawDir;
+	delete m_ldrawDirParent;
 	TCObject::release(m_updateQueue);
+	TCObject::release(m_updateUrlList);
+	TCObject::release(m_downloadList);
 	TCObject::dealloc();
 }
 
@@ -43,8 +51,27 @@ void LDLibraryUpdater::setLdrawDir(const char *ldrawDir)
 {
 	if (ldrawDir != m_ldrawDir)
 	{
+		char *trimSpot;
+		char *slashSpot;
+
 		delete m_ldrawDir;
 		m_ldrawDir = copyString(ldrawDir);
+		delete m_ldrawDirParent;
+		m_ldrawDirParent = copyString(ldrawDir);
+		stripTrailingPathSeparators(m_ldrawDirParent);
+		trimSpot = strrchr(m_ldrawDirParent, '\\');
+		slashSpot = strrchr(m_ldrawDirParent, '/');
+		if (slashSpot)
+		{
+			if (!trimSpot || slashSpot > trimSpot)
+			{
+				trimSpot = slashSpot;
+			}
+		}
+		if (trimSpot)
+		{
+			trimSpot[1] = 0;
+		}
 	}
 }
 
@@ -205,6 +232,7 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 	bool fullUpdateNeeded = true;
 	LDLibraryUpdateInfoArray *updateArray = new LDLibraryUpdateInfoArray;
 	LDLibraryUpdateInfo *fullUpdateInfo = NULL;
+	bool zipSupported = TCUnzip::supported();
 
 	for (i = 0; i < lineCount; i++)
 	{
@@ -252,7 +280,14 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 			{
 				LDLibraryUpdateInfo *updateInfo = (*updateArray)[i];
 
-				getUpdateQueue()->addString(updateInfo->getExeUrl());
+				if (zipSupported && updateInfo->getZipUrl())
+				{
+					getUpdateQueue()->addString(updateInfo->getZipUrl());
+				}
+				else
+				{
+					getUpdateQueue()->addString(updateInfo->getExeUrl());
+				}
 			}
 			if (!updatesNeededCount)
 			{
@@ -265,7 +300,14 @@ void LDLibraryUpdater::parseUpdateList(const char *updateList)
 		printf("Full update needed.\n");
 		if (fullUpdateInfo)
 		{
-			getUpdateQueue()->addString(fullUpdateInfo->getExeUrl());
+			if (zipSupported && fullUpdateInfo->getZipUrl())
+			{
+				getUpdateQueue()->addString(fullUpdateInfo->getZipUrl());
+			}
+			else
+			{
+				getUpdateQueue()->addString(fullUpdateInfo->getExeUrl());
+			}
 		}
 		else
 		{
@@ -287,6 +329,7 @@ TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
 
 void LDLibraryUpdater::checkForUpdates(void)
 {
+	m_error[0] = 0;
 	if (m_ldrawDir)
 	{
 		setDebugLevel(3);
@@ -295,6 +338,10 @@ void LDLibraryUpdater::checkForUpdates(void)
 		m_thread->setFinishMemberFunction(
 		 (TCThreadFinishMemberFunction)(&LDLibraryUpdater::threadFinish));
 		m_thread->run();
+	}
+	else
+	{
+		strcpy(m_error, "Cannot determine LDraw directory.\n");
 	}
 }
 
@@ -311,9 +358,10 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	if (!aborted)
 	{
 		debugPrintf("downloadTest: 0x%08X\n", GetCurrentThreadId());
-//		webClient = new TCWebClient("http://www.ldraw.org/cgi-bin/ptreleases.cgi");
-		webClient = new TCWebClient(
-			"http://www.halibut.com/~tcobbs/ldraw/private/ptreleases_cgi.txt");
+		webClient =
+			new TCWebClient("http://www.ldraw.org/cgi-bin/ptreleases.cgi");
+//		webClient = new TCWebClient(
+//			"http://www.halibut.com/~tcobbs/ldraw/private/ptreleases_cgi.txt");
 		webClient->setOwner(this);
 		webClient->fetchURL();
 		TCProgressAlert::send(LD_LIBRARY_UPDATER, "Parsing update list", 0.09f,
@@ -335,6 +383,7 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 		}
 		else
 		{
+			strcpy(m_error, "Error downloading update list.\n");
 			debugPrintf("No Page Data!\n");
 		}
 	}
@@ -342,15 +391,140 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	{
 		webClient->release();
 	}
-	if (m_updateQueue && m_updateQueue->getCount())
+	if (m_updateQueue && m_updateQueue->getCount() && !aborted)
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER, "Downloading updates", 0.1f,
 			&aborted);
-		downloadUpdates();
+		downloadUpdates(&aborted);
+		if (!aborted)
+		{
+			extractUpdates();
+		}
 	}
 	setDebugLevel(0);
 	TCProgressAlert::send(LD_LIBRARY_UPDATER, "Done", 1.0f);
 	return 0;
+}
+
+void LDLibraryUpdater::extractUpdate(const char *filename)
+{
+	if (stringHasCaseInsensitiveSuffix(filename, ".zip"))
+	{
+		TCUnzip *unzip = new TCUnzip;
+
+		if (unzip->unzip(filename, m_ldrawDirParent) != 0)
+		{
+			sprintf(m_error, "Error unzipping %s.\n", filename);
+		}
+		unzip->release();
+	}
+	else if (stringHasCaseInsensitiveSuffix(filename, ".exe"))
+	{
+#ifdef WIN32
+		char commandLine[2048];
+		char shortFilename[1024];
+		char startupDir[1024];
+		STARTUPINFO startupInfo;
+		PROCESS_INFORMATION processInfo;
+		int len;
+
+		// We're dealing with 16-bit DOS programs, so we don't want any long
+		// filenames in the executable path or the working directory path.
+		len = GetShortPathName(filename, shortFilename, sizeof(shortFilename));
+		if (len == 0 || len >= sizeof(shortFilename))
+		{
+			strncpy(shortFilename, filename, sizeof(shortFilename));
+			shortFilename[sizeof(shortFilename) - 1] = 0;
+		}
+		len = GetShortPathName(m_ldrawDirParent, startupDir,
+			sizeof(startupDir));
+		if (len == 0 || len >= sizeof(startupDir))
+		{
+			strncpy(startupDir, m_ldrawDirParent, sizeof(startupDir));
+			startupDir[sizeof(startupDir) - 1] = 0;
+		}
+		sprintf(commandLine, "%s /y", shortFilename);
+		memset(&startupInfo, 0, sizeof(STARTUPINFO));
+		startupInfo.cb = sizeof(STARTUPINFO);
+		startupInfo.dwFlags = STARTF_USESHOWWINDOW;
+		startupInfo.wShowWindow = SW_SHOWMINNOACTIVE;
+		if (CreateProcess(shortFilename, commandLine, NULL, NULL, FALSE,
+			DETACHED_PROCESS | NORMAL_PRIORITY_CLASS, NULL, startupDir,
+			&startupInfo, &processInfo))
+		{
+			while (1)
+			{
+				DWORD exitCode;
+
+				GetExitCodeProcess(processInfo.hProcess, &exitCode);
+				if (exitCode != STILL_ACTIVE)
+				{
+					break;
+				}
+				Sleep(50);
+			}
+		}
+		else
+		{
+			sprintf(m_error, "Error executing %s.\n", filename);
+		}
+#else
+		strcpy(m_error, "DOS executables not supported.\n");
+#endif
+	}
+	else
+	{
+		sprintf(m_error, "Unknown update file type for file %s.\n", filename);
+	}
+}
+
+void LDLibraryUpdater::extractUpdates(void)
+{
+	int i, j;
+	int count = m_updateUrlList->getCount();
+
+	for (i = 0; i < count; i++)
+	{
+		const char *url = (*m_updateUrlList)[i];
+		const char *urlFile = strrchr(url, '\\');
+		const char *slashSpot = strrchr(url, '/');
+
+		if (slashSpot)
+		{
+			if (!urlFile || slashSpot > urlFile)
+			{
+				urlFile = slashSpot + 1;
+			}
+		}
+		else if (urlFile)
+		{
+			urlFile++;
+		}
+		for (j = 0; j < m_downloadList->getCount(); j++)
+		{
+			const char *filename = (*m_downloadList)[j];
+			const char *downloadFile = strrchr(filename, '\\');
+
+			slashSpot = strrchr(filename, '/');
+			if (slashSpot)
+			{
+				if (!downloadFile || slashSpot > downloadFile)
+				{
+					downloadFile = slashSpot + 1;
+				}
+			}
+			else if (downloadFile)
+			{
+				downloadFile++;
+			}
+			if (strcasecmp(urlFile, downloadFile) == 0)
+			{
+				extractUpdate(filename);
+				m_downloadList->removeString(j);
+				break;
+			}
+		}
+	}
 }
 
 void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
@@ -361,6 +535,11 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 
 		sprintf(filename, "%s\\%s", m_ldrawDir, webClient->getFilename());
 		debugPrintf("Done downloading file: %s\n", filename);
+		m_downloadList->addString(filename);
+	}
+	else
+	{
+		sprintf(m_error, "Error downloading %s.\n", webClient->getURL());
 	}
 	m_webClients->removeObject(webClient);
 }
@@ -391,7 +570,7 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 	int count = m_webClients->getCount();
 	int completedUpdates = m_initialQueueSize - m_updateQueue->getCount()
 		- m_webClients->getCount();
-	float fileFraction = 0.99f / (float)m_initialQueueSize * 0.9f;
+	float fileFraction = 0.99f / (float)m_initialQueueSize * 0.8f;
 	float progress = 0.1f + (float)completedUpdates * fileFraction;
 
 	for (i = 0; i < count; i++)
@@ -409,14 +588,18 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 		aborted);
 }
 
-void LDLibraryUpdater::downloadUpdates(void)
+void LDLibraryUpdater::downloadUpdates(bool *aborted)
 {
 	TCThreadManager *threadManager = TCThreadManager::threadManager();
 	TCThread *finishedThread;
 	bool done = false;
 
+	TCObject::release(m_downloadList);
+	m_downloadList = new TCStringArray;
 	m_initialQueueSize = m_updateQueue->getCount();
-	while (!done)
+	TCObject::release(m_updateUrlList);
+	m_updateUrlList = (TCStringArray *)m_updateQueue->copy();
+	while (!done && !*aborted)
 	{
 		processUpdateQueue();
 		if (m_webClients->getCount())
@@ -433,7 +616,7 @@ void LDLibraryUpdater::downloadUpdates(void)
 					threadManager->removeFinishedThread(finishedThread);
 				}
 			}
-			sendDlProgress(NULL);
+			sendDlProgress(aborted);
 		}
 		else
 		{

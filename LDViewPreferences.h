@@ -223,6 +223,7 @@ protected:
 	bool lineSmoothing;
 	COLORREF backgroundColor;
 	COLORREF defaultColor;
+	bool transDefaultColor;
 	int defaultColorNumber;
 	bool processLDConfig;
 	bool showsFPS;

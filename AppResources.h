@@ -54,6 +54,7 @@
 #define IDC_HIGHLIGHTS                  1003
 #define IDC_PROCESS_LDCONFIG            1003
 #define IDC_STUD_QUALITY                1004
+#define IDC_TRANS_DEFAULT_COLOR         1004
 #define IDC_FLAT_SHADING                1005
 #define IDC_HI_RES                      1005
 #define IDC_SPECULAR                    1006
@@ -192,6 +193,7 @@
 #define IDC_SS_FILENAME_RADIO           1169
 #define IDC_SS_DIRECTORY_RADIO          1170
 #define IDC_SS_RANDOM_PREF_SET          1171
+#define IDC_VERSION_LABEL               1172
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -253,8 +255,8 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        160
-#define _APS_NEXT_COMMAND_VALUE         40071
-#define _APS_NEXT_CONTROL_VALUE         1172
+#define _APS_NEXT_COMMAND_VALUE         40069
+#define _APS_NEXT_CONTROL_VALUE         1173
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

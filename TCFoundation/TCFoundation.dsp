@@ -218,6 +218,10 @@ SOURCE=.\TCThreadManager.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCUnzip.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCUserDefaults.cpp
 # End Source File
 # Begin Source File
@@ -359,6 +363,10 @@ SOURCE=.\TCTypedPointerArray.h
 # Begin Source File
 
 SOURCE=.\TCTypedValueArray.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCUnzip.h
 # End Source File
 # Begin Source File
 

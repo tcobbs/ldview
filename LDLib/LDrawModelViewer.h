@@ -135,8 +135,10 @@ class LDrawModelViewer: public TCObject
 		int getBackgroundG(void) { return (int)(backgroundG * 255); }
 		int getBackgroundB(void) { return (int)(backgroundB * 255); }
 		int getBackgroundA(void) { return (int)(backgroundA * 255); }
-		virtual void setDefaultRGB(TCByte r, TCByte g, TCByte b);
-		virtual void getDefaultRGB(TCByte &r, TCByte &g, TCByte &b);
+		virtual void setDefaultRGB(TCByte r, TCByte g, TCByte b,
+			bool transparent);
+		virtual void getDefaultRGB(TCByte &r, TCByte &g, TCByte &b,
+			bool &transparent);
 		virtual void setDefaultColorNumber(int value);
 		int getDefaultColorNumber(void) { return defaultColorNumber; }
 		virtual void setSeamWidth(float);
@@ -408,6 +410,7 @@ class LDrawModelViewer: public TCObject
 			bool processLDConfig:1;
 			bool autoCenter:1;
 			bool forceZoomToFit:1;
+			bool defaultTrans:1;
 		} flags;
 		struct CameraData
 		{

@@ -406,7 +406,51 @@ BOOL LDViewWindow::showAboutBox(void)
 
 void LDViewWindow::createAboutBox(void)
 {
+	char fullVersionFormat[1024];
+	char fullVersionString[1024];
+	char moduleFilename[1024];
+	char versionString[128] = "!Unknown Version!";
+	char copyrightString[128] = "Copyright (c) 2000-2004 Travis Cobbs";
+
 	hAboutWindow = createDialog(IDD_ABOUT_BOX);
+	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_GETTEXT,
+		sizeof(fullVersionFormat), (LPARAM)fullVersionFormat);
+	if (GetModuleFileName(NULL, moduleFilename, sizeof(moduleFilename)) > 0)
+	{
+		DWORD zero;
+		DWORD versionInfoSize = GetFileVersionInfoSize(moduleFilename, &zero);
+
+		if (versionInfoSize > 0)
+		{
+			BYTE *versionInfo = new BYTE[versionInfoSize];
+
+			if (GetFileVersionInfo(moduleFilename, NULL, versionInfoSize,
+				versionInfo))
+			{
+				char *productVersion;
+				char *legalCopyright;
+				UINT versionLength;
+
+				if (VerQueryValue(versionInfo,
+					"\\StringFileInfo\\040904B0\\ProductVersion",
+					(void**)&productVersion, &versionLength))
+				{
+					strcpy(versionString, productVersion);
+				}
+				if (VerQueryValue(versionInfo,
+					"\\StringFileInfo\\040904B0\\LegalCopyright",
+					(void**)&legalCopyright, &versionLength))
+				{
+					strcpy(copyrightString, legalCopyright);
+				}
+			}
+			delete versionInfo;
+		}
+	}
+	sprintf(fullVersionString, fullVersionFormat, versionString,
+		copyrightString);
+	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_SETTEXT,
+		sizeof(fullVersionString), (LPARAM)fullVersionString);
 }
 
 BOOL LDViewWindow::doLDrawDirOK(HWND hDlg)
@@ -2082,20 +2126,41 @@ void LDViewWindow::doLibraryUpdateFinished(void)
 	if (libraryUpdater)
 	{
 		TCThreadManager *threadManager = TCThreadManager::threadManager();
+		bool gotFinish = false;
+		DWORD dwStartTicks = GetTickCount();
 
-		if (threadManager->timedWaitForFinishedThread(250))
+		while (!gotFinish)
 		{
-			TCThread *finishedThread;
-
-			while ((finishedThread = threadManager->getFinishedThread()) !=
-				NULL)
+			if (threadManager->timedWaitForFinishedThread(250))
 			{
-				threadManager->removeFinishedThread(finishedThread);
+				TCThread *finishedThread;
+
+				while ((finishedThread = threadManager->getFinishedThread()) !=
+					NULL)
+				{
+					threadManager->removeFinishedThread(finishedThread);
+					gotFinish = true;
+				}
+			}
+			if (GetTickCount() - dwStartTicks > 1000)
+			{
+				break;
+			}
+			if (!gotFinish)
+			{
+				Sleep(50);
 			}
 		}
-		else
+		if (!gotFinish)
 		{
 			MessageBox(hWindow, "No finished thread!!!\n", "LDView", MB_OK);
+		}
+		if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
+		{
+			char error[1024];
+
+			strcpy(error, libraryUpdater->getError());
+			MessageBox(hWindow, error, "Library update error", MB_OK);
 		}
 		libraryUpdater->release();
 		libraryUpdater = NULL;
@@ -2362,6 +2427,16 @@ WNDCLASSEX LDViewWindow::getWindowClass(void)
 
 	windowClass.hIcon = LoadIcon(getLanguageModule(),
 		MAKEINTRESOURCE(IDI_APP_ICON));
+/*
+	if (fullScreen || screenSaver)
+	{
+		windowClass.lpszMenuName = NULL;
+	}
+	else
+	{
+		windowClass.lpszMenuName = MAKEINTRESOURCE(IDR_MAIN_MENU);
+	}
+*/
 	return windowClass;
 }
 

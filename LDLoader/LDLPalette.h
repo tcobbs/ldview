@@ -29,7 +29,8 @@ public:
 	bool isColorComment(const char *comment);
 	void parseColorComment(const char *comment);
 	LDLColorInfo &getColorInfo(int index) { return m_colors[index]; }
-	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b);
+	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b,
+		bool transparent);
 
 	static void getDefaultRGBA(int colorNumber, int &r, int &g, int &b, int &a);
 	static LDLPalette *getDefaultPalette(void);
