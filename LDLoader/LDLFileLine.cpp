@@ -15,9 +15,11 @@
 #include "LDLEmptyLine.h"
 #include "LDLUnknownLine.h"
 
-LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line, int lineNumber)
+LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
+						 int lineNumber, const char *originalLine)
 	:m_parentModel(parentModel),
 	m_line(copyString(line)),
+	m_originalLine(copyString(originalLine)),
 	m_lineNumber(lineNumber),
 	m_error(NULL),
 	m_valid(true)
@@ -27,6 +29,7 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line, int lineNumber
 LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	:m_parentModel(other.m_parentModel),
 	m_line(copyString(other.m_line)),
+	m_originalLine(copyString(other.m_originalLine)),
 	m_lineNumber(other.m_lineNumber),
 	m_error((LDLError *)TCObject::retain(other.m_error)),
 	m_valid(other.m_valid)
@@ -40,12 +43,25 @@ LDLFileLine::~LDLFileLine(void)
 void LDLFileLine::dealloc(void)
 {
 	delete m_line;
+	delete m_originalLine;
 	if (m_error)
 	{
 		m_error->release();
 		m_error = NULL;
 	}
 	TCObject::dealloc();
+}
+
+LDLFileLine::operator const char *(void) const
+{
+	if (m_originalLine)
+	{
+		return m_originalLine;
+	}
+	else
+	{
+		return m_line;
+	}
 }
 
 void LDLFileLine::setError(LDLErrorType type, const char* format, ...)
@@ -127,4 +143,9 @@ LDLFileLine *LDLFileLine::initFileLine(LDLModel *parentModel, const char *line,
 void LDLFileLine::print(int /*indent*/) const
 {
 //	printf("%d: %s\n", m_lineNumber, m_line);
+}
+
+LDLFileLineArray *LDLFileLine::getReplacementLines(void)
+{
+	return NULL;
 }

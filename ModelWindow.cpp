@@ -1,6 +1,6 @@
 #include "ModelWindow.h"
 #include <LDLib/LDrawModelViewer.h>
-#include <LDLib/ModelMacros.h>
+#include <TCFoundation/TCMacros.h>
 #include <LDLib/TGLStudLogo.h>
 #include "LDVExtensionsSetup.h"
 #include "TestPrefs.h"
@@ -176,6 +176,8 @@ void ModelWindow::loadSettings(void)
 		!= 0;
 	saveWidth = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false);
 	saveHeight = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false);
+	saveZoomToFit = TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false)
+		!= 0;
 	saveSeries = TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0;
 	saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
 	usePrinterDPI = TCUserDefaults::longForKey(USE_PRINTER_DPI_KEY, 1) != 0;
@@ -305,6 +307,15 @@ void ModelWindow::updateFSAA()
 	applyingPrefs = false;
 	killTimer(FSAA_UPDATE_TIMER);
 	forceRedraw();
+	if (hStatusBar)
+	{
+		// For some unknown reason, the status bar only updates its text on the
+		// fly while the model is rotating if it is created after the model
+		// window.  Since we just destroyed and recreated the model window, we
+		// need to destroy and recreate the status window.
+		((LDViewWindow*)parentWindow)->switchStatusBar();
+		((LDViewWindow*)parentWindow)->switchStatusBar();
+	}
 }
 
 LRESULT ModelWindow::doTimer(UINT timerID)
@@ -383,9 +394,15 @@ void ModelWindow::updateHeadXY(int xPos, int yPos)
 	float magnitude = (float)(xPos - lastX);
 	float denom = 5000.0f;
 
+	if (modelViewer)
+	{
+		float fov = modelViewer->getFov();
+
+		denom /= (float)tan(deg2rad(fov));
+	}
 	if (GetKeyState(VK_SHIFT) & 0x8000)
 	{
-		denom = 2500.0f;
+		denom /= 2.0f;
 	}
 	modelViewer->setCameraXRotate(magnitude / denom);
 	magnitude = (float)(yPos - lastY);
@@ -647,6 +664,16 @@ void ModelWindow::resetView(LDVAngle viewAngle)
 	modelViewer->setZoomSpeed(0.0f);
 	fps = 0.0f;
 	forceRedraw();
+}
+
+void ModelWindow::saveDefaultView(void)
+{
+	prefs->saveDefaultView();
+}
+
+void ModelWindow::resetDefaultView(void)
+{
+	prefs->resetDefaultView();
 }
 
 void ModelWindow::reload(void)
@@ -1749,7 +1776,7 @@ void ModelWindow::checkForPart(void)
 	modelViewer->setFileIsPart(isPart);
 }
 
-BOOL ModelWindow::chDirFromFilename(const char* filename, char* outFilename)
+bool ModelWindow::chDirFromFilename(const char* filename, char* outFilename)
 {
 	char buf[MAX_PATH];
 	char* fileSpot;
@@ -1757,17 +1784,17 @@ BOOL ModelWindow::chDirFromFilename(const char* filename, char* outFilename)
 
 	if (result <= MAX_PATH && result > 0)
 	{
-		if (strlen(fileSpot) < strlen(filename))
+//		if (strlen(fileSpot) < strlen(filename))
 		{
 			strcpy(outFilename, buf);
 		}
 		*fileSpot = 0;
 		if (SetCurrentDirectory(buf))
 		{
-			return YES;
+			return true;
 		}
 	}
-	return NO;
+	return false;
 }
 
 void ModelWindow::printSystemError(void)
@@ -1804,11 +1831,6 @@ void ModelWindow::setStatusText(HWND hStatus, int part, char *text)
 	if (strcmp(text, oldText) != 0)
 	{
 		SendMessage(hStatus, SB_SETTEXT, part, (LPARAM)text);
-/*
-		RedrawWindow(hStatus, NULL, NULL, RDW_ERASE | RDW_INVALIDATE
-			| RDW_ERASENOW | RDW_UPDATENOW);
-*/
-//		RedrawWindow(hStatus, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
 	}
 }
@@ -1959,6 +1981,9 @@ void ModelWindow::swapBuffers(void)
 
 void ModelWindow::doPaint(void)
 {
+	bool needsPostRedraw = modelViewer->getNeedsReload() ||
+		modelViewer->getNeedsRecompile();
+
 	if (offscreenActive || loading)
 	{
 		static bool looping = false;
@@ -2018,6 +2043,10 @@ void ModelWindow::doPaint(void)
 		redrawCount--;
 	}
 	swapBuffers();
+	if (needsPostRedraw)
+	{
+		forceRedraw();
+	}
 }
 
 LRESULT ModelWindow::doNCDestroy(void)
@@ -2271,10 +2300,18 @@ void ModelWindow::renderOffscreenImage(void)
 		glDepthRange(0.0f, 1.0f);
 		glBegin(GL_QUADS);
 			glVertex3f(0.0f, 0.0f, -1.0f);
+			glVertex3f((float)width, 0.0f, -1.0f);
+			glVertex3f((float)width, (float)height, -1.0f);
+			glVertex3f(0.0f, (float)height, -1.0f);
+/*
+			glVertex3f(0.0f, 0.0f, -1.0f);
 			glVertex3f(640.0f, 0.0f, -1.0f);
 			glVertex3f(640.0f, 480.0f, -1.0f);
 			glVertex3f(0.0f, 480.0f, -1.0f);
+*/
 		glEnd();
+		glDepthFunc(GL_LEQUAL);
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	}
 }
 
@@ -2322,7 +2359,8 @@ bool ModelWindow::canSaveAlpha(void)
 	return false;
 }
 
-BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, BYTE *buffer)
+BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, bool zoomToFit,
+							 BYTE *buffer)
 {
 	RECT rect = {0, 0, 0, 0};
 	HWND hParentWindow = GetParent(hWindow);
@@ -2330,35 +2368,42 @@ BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, BYTE *buffer)
 	bool oldSlowClear = modelViewer->getSlowClear();
 	GLenum bufferFormat = GL_RGB;
 	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
+	bool origForceZoomToFit = modelViewer->getForceZoomToFit();
+	TCVector origCameraPosition = modelViewer->getCamera().getPosition();
 
 	offscreenActive = true;
-	if (imageWidth <= width && imageHeight <= height && windowShown)
+//	if (setupPBuffer(imageWidth, imageHeight/*, currentAntialiasType > 0*/))
+	if (zoomToFit)
 	{
-		modelViewer->setSlowClear(true);
-		GetWindowRect(hParentWindow, &rect);
-		needReset = true;
-		MoveWindow(hParentWindow, 0, 0, rect.right - rect.left,
-			rect.bottom - rect.top, FALSE);
-		modelViewer->setWidth(imageWidth);
-		modelViewer->setHeight(imageHeight);
-		makeCurrent();
-		modelViewer->update();
-		glReadBuffer(GL_BACK);
+		modelViewer->setForceZoomToFit(true);
+	}
+	if (setupPBuffer(imageWidth, imageHeight, currentAntialiasType > 0))
+	{
+		renderOffscreenImage();
 	}
 	else
 	{
-//		if (setupPBuffer(imageWidth, imageHeight/*, currentAntialiasType > 0*/))
-		if (setupPBuffer(imageWidth, imageHeight, currentAntialiasType > 0))
+		if (!modelViewer->getCompiled())
 		{
+			cleanupPBuffer();
+			return NULL;
+		}
+		if (imageWidth <= width && imageHeight <= height && windowShown)
+		{
+			modelViewer->setSlowClear(true);
+			GetWindowRect(hParentWindow, &rect);
+			needReset = true;
+			MoveWindow(hParentWindow, 0, 0, rect.right - rect.left,
+				rect.bottom - rect.top, FALSE);
+			modelViewer->setWidth(imageWidth);
+			modelViewer->setHeight(imageHeight);
+			makeCurrent();
 			renderOffscreenImage();
+//			modelViewer->update();
+			glReadBuffer(GL_BACK);
 		}
 		else
 		{
-			if (!modelViewer->getCompiled())
-			{
-				cleanupPBuffer();
-				return NULL;
-			}
 			offscreenActive = false;
 			if (LDVExtensionsSetup::havePixelBufferExtension())
 			{
@@ -2379,6 +2424,11 @@ BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, BYTE *buffer)
 			}
 			return NULL;
 		}
+	}
+	if (zoomToFit)
+	{
+		modelViewer->setForceZoomToFit(origForceZoomToFit);
+		modelViewer->getCamera().setPosition(origCameraPosition);
 	}
 	if (!buffer)
 	{
@@ -2414,9 +2464,10 @@ BYTE *ModelWindow::grabImage(int imageWidth, int imageHeight, BYTE *buffer)
 	return buffer;
 }
 
-bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight)
+bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
+							bool zoomToFit)
 {
-	BYTE *buffer = grabImage(imageWidth, imageHeight);
+	BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit);
 	bool retValue = false;
 
 	if (buffer)
@@ -2988,6 +3039,7 @@ void ModelWindow::disableSaveSize(void)
 	EnableWindow(hSaveWidth, FALSE);
 	EnableWindow(hSaveHeightLabel, FALSE);
 	EnableWindow(hSaveHeight, FALSE);
+	EnableWindow(hSaveZoomToFitButton, FALSE);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_SETTEXT, 0, (LPARAM)"");
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_SETTEXT, 0, (LPARAM)"");
 }
@@ -3000,6 +3052,7 @@ void ModelWindow::enableSaveSize(void)
 	EnableWindow(hSaveWidth, TRUE);
 	EnableWindow(hSaveHeightLabel, TRUE);
 	EnableWindow(hSaveHeight, TRUE);
+	EnableWindow(hSaveZoomToFitButton, TRUE);
 	sprintf(buf, "%d", saveWidth);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_SETTEXT, 0, (LPARAM)buf);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, EM_LIMITTEXT, 4, 0);
@@ -3007,6 +3060,8 @@ void ModelWindow::enableSaveSize(void)
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_SETTEXT, 0,
 		(LPARAM)buf);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, EM_LIMITTEXT, 4, 0);
+	SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT, BM_SETCHECK,
+		saveZoomToFit ? 1 : 0, 0);
 }
 
 void ModelWindow::disableSaveSeries(void)
@@ -3079,6 +3134,7 @@ void ModelWindow::setupSaveExtras(void)
 	hSaveWidth = GetDlgItem(hSaveDialog, IDC_SAVE_WIDTH);
 	hSaveHeightLabel = GetDlgItem(hSaveDialog, IDC_SAVE_HEIGHT_LABEL);
 	hSaveHeight = GetDlgItem(hSaveDialog, IDC_SAVE_HEIGHT);
+	hSaveZoomToFitButton = GetDlgItem(hSaveDialog, IDC_SAVE_ZOOMTOFIT);
 	hSaveDigitsLabel = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS_LABEL);
 	hSaveDigitsField = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS);
 	hSaveDigitsSpin = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS_SPIN);
@@ -3198,6 +3254,10 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 		{
 			disableSaveSeries();
 		}
+		break;
+	case IDC_SAVE_ZOOMTOFIT:
+		saveZoomToFit = SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT,
+			BM_GETCHECK, 0, 0) ? true : false;
 		break;
 	default:
 		return FALSE;
@@ -3511,6 +3571,8 @@ bool ModelWindow::saveSnapshot(void)
 
 bool ModelWindow::saveSnapshot(char *saveFilename)
 {
+	bool externalFilename = saveFilename[0] != 0;
+
 	if (saveFilename[0])
 	{
 		if (stringHasCaseInsensitiveSuffix(saveFilename, ".png"))
@@ -3540,14 +3602,18 @@ bool ModelWindow::saveSnapshot(char *saveFilename)
 		if (saveActualSize)
 		{
 			TCUserDefaults::setLongForKey(1, SAVE_ACTUAL_SIZE_KEY, false);
-			return saveImage(saveFilename, width, height);
+			return saveImage(saveFilename, width, height, externalFilename &&
+				saveZoomToFit);
 		}
 		else
 		{
 			TCUserDefaults::setLongForKey(0, SAVE_ACTUAL_SIZE_KEY, false);
 			TCUserDefaults::setLongForKey(saveWidth, SAVE_WIDTH_KEY, false);
 			TCUserDefaults::setLongForKey(saveHeight, SAVE_HEIGHT_KEY, false);
-			return saveImage(saveFilename, saveWidth, saveHeight);
+			TCUserDefaults::setLongForKey(saveZoomToFit, SAVE_ZOOM_TO_FIT_KEY,
+				false);
+			return saveImage(saveFilename, saveWidth, saveHeight,
+				saveZoomToFit);
 		}
 	}
 	else
@@ -3650,11 +3716,22 @@ LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
 	{
 		TCVector cameraMotion = modelViewer->getCameraMotion();
 		float motionAmount = 1.0f;
+		float rotationAmount = 0.01f;
+		float strafeAmount = 1.0f;
 		int i;
 
+		if (modelViewer)
+		{
+			float fov = modelViewer->getFov();
+
+			motionAmount = modelViewer->getDefaultDistance() / 400.0f;
+			rotationAmount *= (float)tan(deg2rad(fov));
+			strafeAmount *= (float)sqrt(fov / 45.0f);
+		}
 		if (GetKeyState(VK_SHIFT) & 0x8000)
 		{
-			motionAmount = 2.0f;
+			motionAmount *= 2.0f;
+			strafeAmount *= 2.0f;
 		}
 		switch (keyCode)
 		{
@@ -3665,16 +3742,16 @@ LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
 			cameraMotion[2] = motionAmount;
 			break;
 		case 'A':
-			cameraMotion[0] = -motionAmount;
+			cameraMotion[0] = -strafeAmount;
 			break;
 		case 'D':
-			cameraMotion[0] = motionAmount;
+			cameraMotion[0] = strafeAmount;
 			break;
 		case 'R':
-			cameraMotion[1] = motionAmount;
+			cameraMotion[1] = strafeAmount;
 			break;
 		case 'F':
-			cameraMotion[1] = -motionAmount;
+			cameraMotion[1] = -strafeAmount;
 			break;
 		case 'E':
 			modelViewer->setCameraZRotate(0.01f);
@@ -3683,16 +3760,16 @@ LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
 			modelViewer->setCameraZRotate(-0.01f);
 			break;
 		case VK_UP:
-			modelViewer->setCameraYRotate(0.01f);
+			modelViewer->setCameraYRotate(rotationAmount);
 			break;
 		case VK_DOWN:
-			modelViewer->setCameraYRotate(-0.01f);
+			modelViewer->setCameraYRotate(-rotationAmount);
 			break;
 		case VK_LEFT:
-			modelViewer->setCameraXRotate(-0.01f);
+			modelViewer->setCameraXRotate(-rotationAmount);
 			break;
 		case VK_RIGHT:
-			modelViewer->setCameraXRotate(0.01f);
+			modelViewer->setCameraXRotate(rotationAmount);
 			break;
 		case VK_SHIFT:
 			for (i = 0; i < 3; i++)

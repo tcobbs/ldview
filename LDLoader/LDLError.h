@@ -13,6 +13,7 @@ typedef enum
 	LDLEFileNotFound,
 	LDLEMatrix,
 	LDLEPartDeterminant,
+	LDLENonFlatQuad,
 	LDLEConcaveQuad,
 	LDLEConcaveQuadSplit,
 	LDLEOpenGL,

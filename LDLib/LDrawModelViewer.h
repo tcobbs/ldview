@@ -2,8 +2,10 @@
 #define __LDRAWMODELVIEWER_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCStringArray.h>
 #include <LDLib/LDrawModel.h>
 #include <LDLib/TGLCamera.h>
+
 
 typedef enum
 {
@@ -29,6 +31,7 @@ typedef enum
 	LDVAngleRight,
 	LDVAngleTop,
 	LDVAngleBottom,
+	LDVAngleIso,
 } LDVAngle;
 
 class TCImage;
@@ -112,6 +115,8 @@ class LDrawModelViewer: public TCObject
 		virtual void setZoomSpeed(float value);
 		float getZoomSpeed(void) { return zoomSpeed; }
 		virtual void zoom(float);
+		virtual void updateCameraPosition(void);
+		virtual void applyZoom(void);
 		void setClipZoom(bool value) { clipZoom = value; }
 		bool getClipZoom(void) { return clipZoom; }
 		virtual void setFilename(const char*);
@@ -138,6 +143,8 @@ class LDrawModelViewer: public TCObject
 		bool getDrawWireframe(void) { return flags.drawWireframe; }
 		virtual void setUseWireframeFog(bool);
 		bool getUseWireframeFog(void) { return flags.useWireframeFog; }
+		virtual void setRemoveHiddenLines(bool value);
+		bool getRemoveHiddenLines(void) { return flags.removeHiddenLines; }
 		virtual void setEdgesOnly(bool value);
 		bool getEdgesOnly(void) { return flags.edgesOnly; }
 		virtual void setHiResPrimitives(bool value);
@@ -154,6 +161,10 @@ class LDrawModelViewer: public TCObject
 		float getHighlightLineWidth(void) { return highlightLineWidth; }
 		virtual void setWireframeLineWidth(float value);
 		float getWireframeLineWidth(void) { return wireframeLineWidth; }
+		virtual void setProcessLDConfig(bool value);
+		bool getProcessLDConfig(void) { return flags.processLDConfig; }
+		virtual void setForceZoomToFit(bool value);
+		bool getForceZoomToFit(void) { return flags.forceZoomToFit; }
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
@@ -204,6 +215,7 @@ class LDrawModelViewer: public TCObject
 			return flags.showConditionalControlPoints;
 		}
 		bool getNeedsReload(void) { return flags.needsReload != 0; }
+		bool getNeedsRecompile(void) { return flags.needsRecompile != 0; }
 		void setCurveQuality(int value);
 		int getCurveQuality(void) { return curveQuality; }
 		void setTextureStuds(bool value);
@@ -235,6 +247,20 @@ class LDrawModelViewer: public TCObject
 		GLfloat getDistanceMultiplier(void) { return distanceMultiplier; }
 		virtual void clearBackground(void);
 		virtual void setFontData(TCByte *fontData, long length);
+		virtual void setDefaultRotationMatrix(const float *value);
+		const float *getDefaultRotationMatrix(void)
+		{
+			return defaultRotationMatrix;
+		}
+		const float *getRotationMatrix(void) { return rotationMatrix; }
+		virtual void setFov(float value);
+		float getFov(void) { return fov; }
+		float getDefaultDistance(void) { return defaultDistance; }
+		void setExtraSearchDirs(TCStringArray *value);
+		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }
+		bool skipCameraPositioning(void);
+		virtual TGLCamera &getCamera(void) { return camera; }
+		virtual void zoomToFit(void);
 
 		static void setPolygonOffsetFunc(GLPolygonOffsetFunc func)
 		{
@@ -250,6 +276,7 @@ class LDrawModelViewer: public TCObject
 		void dealloc(void);
 		virtual void drawSetup(GLfloat eyeXOffset = 0.0f);
 		virtual void drawModel(GLfloat eyeXOffset = 0.0f);
+		virtual void removeHiddenLines(GLfloat eyeXOffset = 0.0f);
 		virtual void setFieldOfView(double, float, float);
 		virtual void setupRotationMatrix(void);
 		virtual void setupMaterial(void);
@@ -277,6 +304,15 @@ class LDrawModelViewer: public TCObject
 		virtual void setupTopViewAngle(void);
 		virtual void setupBottomViewAngle(void);
 		void ldlErrorCallback(LDLError *error);
+		virtual void setupIsoViewAngle(void);
+		virtual void preCalcCamera(void);
+		virtual float calcDefaultDistance(void);
+		virtual void updateCurrentFov(void);
+
+		void ludcmp(float a[6][6], int n, int index[6], float *d);
+		void lubksb(const float a[6][6], int n, const int index[6], float b[6]);
+
+		void scanCameraPoint(const TCVector &point);
 
 		LDrawModel* lDrawModel;
 		char* filename;
@@ -299,11 +335,13 @@ class LDrawModelViewer: public TCObject
 		float cameraZRotate;
 		TCVector cameraMotion;
 		float zoomSpeed;
-//		float distance;
 		float xPan;
 		float yPan;
 		float* rotationMatrix;
+		float* defaultRotationMatrix;
 		float clipAmount;
+		float nextClipAmount;
+		float nextDistance;
 		float highlightLineWidth;
 		float wireframeLineWidth;
 		bool clipZoom;
@@ -338,6 +376,9 @@ class LDrawModelViewer: public TCObject
 		TGLCamera camera;
 		float aspectRatio;
 		float currentFov;
+		float fov;
+		float defaultDistance;
+		TCStringArray *extraSearchDirs;
 		struct
 		{
 			bool qualityLighting:1;
@@ -347,6 +388,7 @@ class LDrawModelViewer: public TCObject
 			bool usesSpecular:1;
 			bool drawWireframe:1;
 			bool useWireframeFog:1;
+			bool removeHiddenLines:1;
 			bool usePolygonOffset:1;
 			bool useLighting:1;
 			bool subduedLighting:1;
@@ -372,10 +414,46 @@ class LDrawModelViewer: public TCObject
 			bool performSmoothing:1;
 			bool lineSmoothing:1;
 			bool constrainZoom:1;
-			bool rotationMatrixNeedsSetup:1;
+			bool needsRotationMatrixSetup:1;
 			bool edgesOnly:1;
 			bool hiResPrimitives:1;
+			bool needsViewReset:1;
+			bool processLDConfig:1;
+			bool autoCenter:1;
+			bool forceZoomToFit:1;
 		} flags;
+		struct CameraData
+		{
+			CameraData(void)
+				:direction(0.0f, 0.0f, -1.0f),
+				horizontal(1.0f, 0.0f, 0.0f),
+				vertical(0.0f, -1.0f, 0.0f),
+				horMin(1e6),
+				horMax(-1e6),
+				verMin(1e6),
+				verMax(-1e6)
+			{
+				int i;
+//				TCVector up = vertical;
+
+//				horizontal = direction * up;
+//				vertical = horizontal * direction;
+				for (i = 0; i < 4; i++)
+				{
+					dMin[i] = 1e6;
+				}
+			}
+			TCVector direction;
+			TCVector horizontal;
+			TCVector vertical;
+			TCVector normal[4];
+			float dMin[4];
+			float horMin;
+			float horMax;
+			float verMin;
+			float verMax;
+			float fov;
+		} *cameraData;
 };
 
 #endif // __LDRAWMODELVIEWER_H__

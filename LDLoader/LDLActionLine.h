@@ -11,7 +11,8 @@ public:
 	virtual void setBFCSettings(BFCState bfcCertify, bool bfcClip,
 		bool bfcWindingCCW, bool bfcInvert);
 protected:
-	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber);
+	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
+		const char *originalLine = NULL);
 	LDLActionLine(const LDLActionLine &other);
 
 	struct

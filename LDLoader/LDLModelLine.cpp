@@ -1,11 +1,12 @@
 #include "LDLModelLine.h"
 #include <string.h>
 #include <stdio.h>
-#include "LDLMacros.h"
+#include <TCFoundation/TCMacros.h>
+#include <TCFoundation/TCVector.h>
 
 LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
-						   int lineNumber)
-	:LDLActionLine(parentModel, line, lineNumber),
+						   int lineNumber, const char *originalLine)
+	:LDLActionLine(parentModel, line, lineNumber, originalLine),
 	m_highResModel(NULL),
 	m_lowResModel(NULL)
 {
@@ -83,7 +84,28 @@ bool LDLModelLine::parse(void)
 		}
 		m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
 		m_color = LDLModel::colorForRGBA(red, green, blue, alpha);
-		return setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
+		if (setTransformation(x, y, z, a, b, c, d, e, f, g, h, i))
+		{
+			if (m_highResModel->isPart())
+			{
+				float determinant = TCVector::determinant(m_matrix);
+
+				if (!fEq2(determinant, 1.0f, 0.05f) &&
+					!fEq2(determinant, -1.0f, 0.05f))
+				{
+					// If the determinant is not either 1 or -1, they applied a
+					// non-uniform scale.  Note that we are being EXTREMELY
+					//  loose with this "equality" check (within 0.05).
+					setError(LDLEPartDeterminant,
+						"Part transformed non-uniformly.");
+				}
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{
@@ -152,7 +174,7 @@ LDLModel *LDLModelLine::getModel(void) const
 {
 	if (m_parentModel)
 	{
-		if (m_parentModel->getLowResStuds() && m_lowResModel)
+		if (m_lowResModel && m_parentModel->getLowResStuds())
 		{
 			return m_lowResModel;
 		}

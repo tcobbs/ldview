@@ -62,7 +62,6 @@ class ModelWindow: public CUIOGLWindow
 		virtual void zoom(float);
 		virtual void setClipZoom(bool);
 		virtual bool getClipZoom(void);
-		virtual BOOL chDirFromFilename(const char* filename, char* outFilename);
 		virtual void reload(void);
 		virtual void startPolling(void);
 		virtual BOOL stopPolling(void);
@@ -73,6 +72,8 @@ class ModelWindow: public CUIOGLWindow
 		BOOL initWindow(void);
 		void setNeedsRecompile(void) { needsRecompile = true; }
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
+		virtual void saveDefaultView(void);
+		virtual void resetDefaultView(void);
 		virtual void finalSetup(void);
 		virtual void closeWindow(void);
 		virtual bool print(void);
@@ -93,6 +94,7 @@ class ModelWindow: public CUIOGLWindow
 		bool performHotKey(int hotKeyIndex);
 
 		static void initCommonControls(DWORD mask);
+		static bool chDirFromFilename(const char* filename, char* outFilename);
 	protected:
 		virtual ~ModelWindow(void);
 		virtual void dealloc(void);
@@ -191,9 +193,10 @@ class ModelWindow: public CUIOGLWindow
 			BYTE *buffer);
 		virtual bool writeImage(char *filename, int width, int height,
 			BYTE *buffer, char *formatName);
-		virtual BYTE *grabImage(int imageWidth, int imageHeight,
+		virtual BYTE *grabImage(int imageWidth, int imageHeight, bool zoomToFit,
 			BYTE *buffer = NULL);
-		virtual bool saveImage(char *filename, int imageWidth, int imageHeight);
+		virtual bool saveImage(char *filename, int imageWidth, int imageHeight,
+			bool zoomToFit);
 		virtual void renderOffscreenImage(void);
 		virtual bool setupPBuffer(int imageWidth, int imageHeight,
 			bool antialias = false);
@@ -317,6 +320,7 @@ class ModelWindow: public CUIOGLWindow
 		bool saveActualSize;
 		int saveWidth;
 		int saveHeight;
+		bool saveZoomToFit;
 		bool saveSeries;
 		int saveDigits;
 		HWND hSaveDialog;
@@ -324,6 +328,7 @@ class ModelWindow: public CUIOGLWindow
 		HWND hSaveWidth;
 		HWND hSaveHeightLabel;
 		HWND hSaveHeight;
+		HWND hSaveZoomToFitButton;
 		HWND hSaveDigitsLabel;
 		HWND hSaveDigitsField;
 		HWND hSaveDigitsSpin;

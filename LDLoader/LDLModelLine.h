@@ -15,7 +15,8 @@ public:
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeModel; }
 protected:
-	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber);
+	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber,
+		const char *originalLine = NULL);
 	LDLModelLine(const LDLModelLine &other);
 	virtual ~LDLModelLine(void);
 	virtual void dealloc(void);

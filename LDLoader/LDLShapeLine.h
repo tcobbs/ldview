@@ -14,9 +14,11 @@ public:
 	virtual TCVector *getControlPoints(void) { return NULL; }
 	virtual TCULong getColorNumber(void) { return m_colorNumber; }
 protected:
-	LDLShapeLine(LDLModel *parentModel, const char *line, int lineNumber);
+	LDLShapeLine(LDLModel *parentModel, const char *line, int lineNumber,
+		const char *originalLine = NULL);
 	LDLShapeLine(const LDLShapeLine &other);
 	virtual void dealloc(void);
+	int middleIndex(const TCVector &p1, const TCVector &p2, const TCVector &p3);
 
 	TCVector *m_points;
 	TCULong m_colorNumber;

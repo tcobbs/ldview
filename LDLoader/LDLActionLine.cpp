@@ -2,8 +2,8 @@
 
 
 LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
-							 int lineNumber)
-	:LDLFileLine(parentModel, line, lineNumber)
+							 int lineNumber, const char *originalLine)
+	:LDLFileLine(parentModel, line, lineNumber, originalLine)
 {
 	m_actionFlags.bfcCertify = BFCUnknownState;
 	m_actionFlags.bfcClip = false;
