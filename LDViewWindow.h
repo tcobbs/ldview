@@ -19,6 +19,8 @@ class TCSortedStringArray;
 class CUIWindowResizer;
 class LDLibraryUpdater;
 
+#define LIBRARY_UPDATE_FINISHED 1
+
 class LDViewWindow: public CUIWindow
 {
 	public:
@@ -169,7 +171,8 @@ class LDViewWindow: public CUIWindow
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
 		void checkForLibraryUpdates(void);
-		LRESULT doTimer(UINT timerID);
+//		virtual LRESULT doTimer(UINT timerID);
+		virtual void doLibraryUpdateFinished(void);
 
 		void loadSettings(void);
 

@@ -208,19 +208,32 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 {
 	if (alert)
 	{
-		bool showErrors = true;
+		if (strcmp(alert->getSource(), "LDLibraryUpdater") == 0)
+		{
+			debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+				alert->getProgress());
+			if (alert->getProgress() == 1.0f)
+			{
+				PostMessage(hParentWindow, WM_COMMAND,
+					MAKELONG(BN_CLICKED, LIBRARY_UPDATE_FINISHED), 0);
+			}
+		}
+		else
+		{
+			bool showErrors = true;
 
-		if (strcmp(alert->getSource(), "TCImage") == 0)
-		{
-			showErrors = false;
+			if (strcmp(alert->getSource(), "TCImage") == 0)
+			{
+				showErrors = false;
+			}
+			if (!progressCallback(alert->getMessage(), alert->getProgress(),
+				showErrors))
+			{
+				alert->abort();
+			}
+//			printf("Progress message from %s:\n%s (%f)\n", alert->getSource(),
+//				alert->getMessage(), alert->getProgress());
 		}
-		if (!progressCallback(alert->getMessage(), alert->getProgress(),
-			showErrors))
-		{
-			alert->abort();
-		}
-//		printf("Progress message from %s:\n%s (%f)\n", alert->getSource(),
-//			alert->getMessage(), alert->getProgress());
 	}
 }
 

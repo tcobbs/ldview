@@ -26,6 +26,7 @@ void LDLibraryUpdater::dealloc(void)
 	TCObject::release(m_webClients);
 	TCObject::release(m_thread);
 	delete m_libraryUpdateKey;
+	delete m_ldrawDir;
 	TCObject::dealloc();
 }
 
@@ -36,7 +37,11 @@ void LDLibraryUpdater::setLibraryUpdateKey(const char *libraryUpdateKey)
 
 void LDLibraryUpdater::setLdrawDir(const char *ldrawDir)
 {
-	m_ldrawDir = copyString(ldrawDir);
+	if (ldrawDir != m_ldrawDir)
+	{
+		delete m_ldrawDir;
+		m_ldrawDir = copyString(ldrawDir);
+	}
 }
 
 int LDLibraryUpdater::compareUpdates(LDLibraryUpdateInfoArray *updateArray,
@@ -184,43 +189,6 @@ bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
 		}
 		return true;
 	}
-/*
-		char noteGlob[1024];
-		WIN32_FIND_DATA findData;
-		HANDLE findHandle;
-
-		sprintf(noteGlob, "%s\\models\\note????.txt", m_ldrawDir);
-		findHandle = FindFirstFile(noteGlob, &findData);
-		while (findHandle != INVALID_HANDLE_VALUE)
-		{
-			char *filename = findData.cFileName;
-
-			if (isdigit(filename[4]) && isdigit(filename[5]) &&
-				isdigit(filename[6]) && isdigit(filename[7]))
-			{
-				if (strcmp(updateName, filename) < 0)
-				{
-					strcpy(updateName, filename);
-				}
-			}
-			if (!FindNextFile(findHandle, &findData))
-			{
-				FindClose(findHandle);
-				findHandle = INVALID_HANDLE_VALUE;
-			}
-		}
-		if (strlen(updateName))
-		{
-			updateName[8] = 0;
-			strncpy(updateName, "lcad", 4);
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-*/
 }
 
 void LDLibraryUpdater::parseUpdateList(const char *updateList)
@@ -308,8 +276,8 @@ void LDLibraryUpdater::checkForUpdates(void)
 	{
 		m_thread = new TCThread(this,
 		 (TCThreadStartMemberFunction)(&LDLibraryUpdater::threadStart));
-		m_thread->setFinishMemberFunction(
-		 (TCThreadFinishMemberFunction)(&LDLibraryUpdater::threadFinish));
+//		m_thread->setFinishMemberFunction(
+//		 (TCThreadFinishMemberFunction)(&LDLibraryUpdater::threadFinish));
 		m_thread->run();
 	}
 }
@@ -319,6 +287,7 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 	TCWebClient *webClient = NULL;
 	int dataLength;
 	bool aborted;
+	int oldDebugLevel = getDebugLevel();
 
 	setDebugLevel(1);
 	TCProgressAlert::send("LDLibraryUpdater",
@@ -353,17 +322,18 @@ THREAD_RET_TYPE LDLibraryUpdater::threadStart(TCThread * /*thread*/)
 			debugPrintf("No Page Data!\n");
 		}
 	}
-	setDebugLevel(0);
 	if (webClient)
 	{
 		webClient->release();
 	}
+	setDebugLevel(oldDebugLevel);
+	TCProgressAlert::send("LDLibraryUpdater", "Done", 1.0f);
 	return 0;
 }
 
-void LDLibraryUpdater::threadFinish(TCThread * /*thread*/)
-{
-}
+//void LDLibraryUpdater::threadFinish(TCThread * /*thread*/)
+//{
+//}
 
 bool LDLibraryUpdater::fileExists(const char *filename)
 {

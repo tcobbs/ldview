@@ -2053,6 +2053,7 @@ LRESULT LDViewWindow::switchTopmost(void)
 	return 0;
 }
 
+/*
 LRESULT LDViewWindow::doTimer(UINT timerID)
 {
 	switch (timerID)
@@ -2074,6 +2075,28 @@ LRESULT LDViewWindow::doTimer(UINT timerID)
 	}
 	return 0;
 }
+*/
+
+void LDViewWindow::doLibraryUpdateFinished(void)
+{
+	if (libraryUpdater)
+	{
+		TCThreadManager *threadManager = TCThreadManager::threadManager();
+
+		if (threadManager->timedWaitForFinishedThread(0))
+		{
+			TCThread *finishedThread;
+
+			while ((finishedThread = threadManager->getFinishedThread()) !=
+				NULL)
+			{
+				threadManager->removeFinishedThread(finishedThread);
+			}
+		}
+		libraryUpdater->release();
+		libraryUpdater = NULL;
+	}
+}
 
 /*
 void LDViewWindow::fetchHeaderFinish(TCWebClient* webClient)
@@ -2092,9 +2115,11 @@ void LDViewWindow::checkForLibraryUpdates(void)
 	else
 	{
 		libraryUpdater = new LDLibraryUpdater;
+		char *ldrawDir = getLDrawDir();
 		
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
-		libraryUpdater->setLdrawDir(getLDrawDir());
+		libraryUpdater->setLdrawDir(ldrawDir);
+		delete ldrawDir;
 		libraryUpdater->checkForUpdates();
 	}
 }
@@ -2279,6 +2304,14 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 				message = "None";
 			}
 			break;
+		case BN_CLICKED:
+			switch (notifyCode)
+			{
+			case LIBRARY_UPDATE_FINISHED:
+				doLibraryUpdateFinished();
+				return 0;
+				break;
+			}
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
 	{
