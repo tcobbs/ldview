@@ -1447,6 +1447,44 @@ void TREModel::genStudTextureCoords(TCVector *textureCoords, int vertexCount)
 	}
 }
 
+void TREModel::addChrd(const TCVector &center, float radius, int numSegments,
+					   int usedSegments, bool bfc)
+{
+	int vertexCount;
+	TCVector *points;
+	TCVector *normals;
+	int i;
+	TCVector normal = TCVector(0.0f, -1.0f, 0.0f);
+
+	if (usedSegments == -1)
+	{
+		usedSegments = numSegments;
+	}
+	vertexCount = usedSegments + 1;
+	points = new TCVector[vertexCount];
+	normals = new TCVector[vertexCount];
+//	points[0] = center + TCVector(1.0f, 0.0f, 0.0f);
+//	normals[0] = normal;
+	for (i = 0; i <= usedSegments; i++)
+	{
+		float angle;
+
+		angle = 2.0f * (float)M_PI / numSegments * i;
+		setCirclePoint(angle, radius, center, points[i]);
+		normals[i] = normal;
+	}
+	if (bfc)
+	{
+		addBFCTriangleFan(points, normals, NULL, vertexCount, true);
+	}
+	else
+	{
+		addTriangleFan(points, normals, NULL, vertexCount, true);
+	}
+	delete[] points;
+	delete[] normals;
+}
+
 void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 					   int usedSegments, bool bfc, bool stud)
 {

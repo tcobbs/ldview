@@ -50,6 +50,8 @@ TCExport void debugPrintf(const char *format, ...);
 TCExport void debugPrintf(int level, const char *format, ...);
 TCExport void indentPrintf(int indent, const char *format, ...);
 
+TCExport void processEscapedString(char *string);
+
 #ifdef WIN32
 
 #define strcasecmp stricmp

@@ -23,6 +23,7 @@ protected:
 	virtual void dealloc(void)
 	{
 		delete string;
+		TCObject::dealloc();
 	}
 
 	char *string;
@@ -59,7 +60,7 @@ bool TCLocalStrings::setStringTable(const char *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
-const char *TCLocalStrings::getLocalString(const char *key)
+const char *TCLocalStrings::get(const char *key)
 {
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
@@ -162,8 +163,10 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 						{
 							bool appended = false;
 
-							value = stringByReplacingSubstring(equalSpot + 1,
-								"\\n", "\n");
+							value = copyString(equalSpot + 1);
+							processEscapedString(value);
+//							value = stringByReplacingSubstring(equalSpot + 1,
+//								"\\n", "\n");
 							if (isdigit(key[keyLen - 1]))
 							{
 								// If the last character of the key is a digit,
