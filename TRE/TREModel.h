@@ -21,10 +21,13 @@ typedef TCTypedObjectArray<TREColoredShapeGroup> TREColoredShapeGroupArray;
 typedef enum
 {
 	TREMStandard,
+	TREMFirst = TREMStandard,
 	TREMLines,
 	TREMEdgeLines,
 	TREMConditionalLines,
+	TREMStud,
 	TREMBFC,
+	TREMStudBFC,
 	TREMTransparent,
 	TREMLast = TREMTransparent
 } TREMSection;
@@ -77,11 +80,12 @@ public:
 	virtual void addBFCQuadStrip(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
 	virtual void addTriangleFan(TCVector *vertices, TCVector *normals,
-		int count, bool flat = false);
+		TCVector *textureCoords, int count, bool flat = false);
 	virtual void addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
-		TCVector *normals, int count, bool flat = false);
+		TCVector *normals, TCVector *textureCoords, int count,
+		bool flat = false);
 	virtual void addBFCTriangleFan(TCVector *vertices, TCVector *normals,
-		int count, bool flat = false);
+		TCVector *textureCoords, int count, bool flat = false);
 	virtual void addTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
 	virtual void addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
@@ -89,28 +93,9 @@ public:
 	virtual void addBFCTriangleFan(TCULong color, TCVector *vertices,
 		TCVector *normals, int count, bool flat = false);
 	virtual void compile(TREMSection section, bool colored);
-	virtual void compileDefaultColor(void);
-	virtual void compileBFC(void);
-	virtual void compileColored(void);
-	virtual void compileColoredBFC(void);
-	virtual void compileDefaultColorLines(void);
-	virtual void compileColoredLines(void);
-	virtual void compileEdgeLines(void);
-	virtual void compileColoredEdgeLines(void);
-	virtual void compileTransparent(void);
 	virtual void draw(TREMSection section);
 	virtual void draw(TREMSection section, bool colored);
-	virtual void drawDefaultColor(void);
-	virtual void drawBFC(void);
-	virtual void drawDefaultColorLines(void);
 	virtual void drawColored(TREMSection section);
-	virtual void drawColored(void);
-	virtual void drawColoredBFC(void);
-	virtual void drawColoredLines(void);
-	virtual void drawEdgeLines(void);
-	virtual void drawColoredEdgeLines(void);
-	virtual void drawConditionalLines(void);
-	virtual void drawColoredConditionalLines(void);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part != false; }
 	virtual bool isFlattened(void) { return m_flags.flattened != false; }
@@ -121,8 +106,10 @@ public:
 		float height, int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addSlopedCylinder2(const TCVector &center, float radius,
 		float height, int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addStudDisc(const TCVector &center, float radius,
+		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addDisc(const TCVector &center, float radius, int numSegments,
-		int usedSegments = -1, bool bfc = false);
+		int usedSegments = -1, bool bfc = false, bool stud = false);
 	virtual void addNotDisc(const TCVector &center, float radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addCone(const TCVector &center, float radius, float height,
@@ -158,15 +145,14 @@ public:
 		const float *matrix);
 	virtual void transferTransparent(TCULong color, TREMSection section,
 		const float *matrix);
-
-	static void transformVertex(TREVertex &vertex, float *matrix);
-	static void transformNormal(TREVertex &normal, float *matrix);
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
 	virtual void setup(TREMSection section);
 	virtual void setupLines(void);
 	virtual void setupStandard(void);
+	virtual void setupStud(void);
+	virtual void setupStudBFC(void);
 	virtual void setupBFC(void);
 	virtual void setupColored(TREMSection section);
 	virtual void setupColored(void);
@@ -179,6 +165,8 @@ protected:
 	virtual void flatten(TREModel *model, float *matrix, TCULong color,
 		bool colorSet, TCULong edgeColor, bool edgeColorSet,
 		bool includeShapes);
+	virtual void checkGLError(char *msg);
+/*
 	virtual void flattenShapes(TREShapeGroup *dstShapes,
 		TREShapeGroup *srcShapes, float *matrix, TCULong color, bool colorSet);
 	virtual void flattenShapes(TREVertexArray *dstVertices,
@@ -201,6 +189,7 @@ protected:
 		TCULongArray *srcColors, TCULongArray *srcIndices,
 		TCULongArray *srcStripCounts, float *matrix, TCULong color,
 		bool colorSet);
+*/
 	void setCirclePoint(float angle, float radius, const TCVector& center,
 		TCVector& point);
 	void scanBoundingBoxPoint(const TCVector &point);
@@ -208,8 +197,9 @@ protected:
 	virtual void quadStripToQuad(int index, TCVector *stripVertices,
 		TCVector *stripNormals, TCVector *quadVertices, TCVector *quadNormals);
 	virtual void triangleFanToTriangle(int index, TCVector *stripVertices,
-		TCVector *stripNormals, TCVector *triangleVertices,
-		TCVector *triangleNormals);
+		TCVector *stripNormals, TCVector *stripTextureCoords,
+		TCVector *triangleVertices, TCVector *triangleNormals,
+		TCVector *triangleTextureCoords);
 	virtual void unMirror(TREModel *originalModel);
 	virtual void invert(TREModel *originalModel);
 	virtual bool checkShapeGroupPresent(TREShapeGroup *shapeGroup,
@@ -218,6 +208,7 @@ protected:
 	virtual bool checkColoredSectionPresent(TREMSection section);
 	virtual bool checkSectionPresent(TREMSection section, bool colored);
 	virtual bool checkDefaultColorPresent(void);
+	virtual bool checkStudsPresent(void);
 	virtual bool checkBFCPresent(void);
 	virtual bool checkDefaultColorLinesPresent(void);
 	virtual bool checkEdgeLinesPresent(void);
@@ -230,6 +221,7 @@ protected:
 	virtual void setSectionPresent(TREMSection section, bool colored);
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 	virtual bool shouldLoadConditionalLines(void);
+	virtual void genStudTextureCoords(TCVector *textureCoords, int vertexCount);
 
 	static void setGlNormalize(bool value);
 

@@ -38,12 +38,12 @@ class TCExport TCImage : public TCObject
 		virtual int getRowSize(void);
 //		virtual TCObject *copy(void);
 		virtual bool loadData(TCByte *data, long length);
-		virtual bool loadFile(char *filename);
-		virtual bool saveFile(char *filename,
+		virtual bool loadFile(const char *filename);
+		virtual bool saveFile(const char *filename,
 			TCImageProgressCallback progressCallback = NULL,
 			void *progressUserData = NULL);
 		char *getFormatName(void) { return formatName; }
-		virtual void setFormatName(char *value);
+		virtual void setFormatName(const char *value);
 		virtual TCImage *createSubImage(int x, int y, int cx, int cy);
 
 		static int roundUp(int value, int nearest);
@@ -55,8 +55,8 @@ class TCExport TCImage : public TCObject
 		virtual void syncImageData(void);
 
 		static TCImageFormat *formatWithName(char *name);
-		static TCImageFormat *formatForData(TCByte *data, long length);
-		static TCImageFormat *formatForFile(char *filename);
+		static TCImageFormat *formatForData(const TCByte *data, long length);
+		static TCImageFormat *formatForFile(const char *filename);
 		static TCImageFormat *formatForFile(FILE *file);
 		static void initStandardFormats(void);
 

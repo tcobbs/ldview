@@ -1,6 +1,5 @@
 #include "LDrawModelViewer.h"
 #include <TCFoundation/TCMacros.h>
-//#include "TGLStudLogo.h"
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCImage.h>
@@ -710,9 +709,11 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				modelParser->setEdgesOnlyFlag(flags.edgesOnly);
 			}
 			modelParser->setFileIsPartFlag(flags.fileIsPart);
+			modelParser->setStudLogoFlag(flags.textureStuds);
 			modelParser->setDefaultRGB(defaultR, defaultG, defaultB);
 			modelParser->setPolygonOffsetFlag(flags.usePolygonOffset);
 			modelParser->setEdgeLineWidth(highlightLineWidth);
+			modelParser->setStudTextureFilter(textureFilterType);
 			if (defaultColorNumber != -1)
 			{
 				modelParser->setDefaultColorNumber(defaultColorNumber);
@@ -1231,7 +1232,7 @@ void LDrawModelViewer::setupTextures(void)
 		char textureFilename[1024];
 
 		sprintf(textureFilename, "%s/StudLogo.png", programPath);
-//		TGLStudLogo::loadTexture(textureFilename);
+		TREMainModel::loadStudTexture(textureFilename);
 //		sprintf(textureFilename, "%s/Font.png", programPath);
 		sprintf(textureFilename, "%s/SansSerif.fnt", programPath);
 		setupFont(textureFilename);
@@ -1584,7 +1585,7 @@ void LDrawModelViewer::setTextureStuds(bool value)
 	{
 		flags.textureStuds = value;
 //		TGLStudLogo::setTextureStuds(value);
-		flags.needsRecompile = true;
+		flags.needsReload = true;
 	}
 }
 
@@ -1593,9 +1594,13 @@ void LDrawModelViewer::setTextureFilterType(int value)
 	if (value != textureFilterType)
 	{
 		textureFilterType = value;
+		if (mainTREModel)
+		{
+			mainTREModel->setStudTextureFilter(value);
+		}
 //		TGLStudLogo::setTextureFilterType(value);
-		flags.needsRecompile = true;
-		flags.needsTextureSetup = true;
+//		flags.needsRecompile = true;
+//		flags.needsTextureSetup = true;
 	}
 }
 
@@ -2360,6 +2365,7 @@ void LDrawModelViewer::update(void)
 	{
 		return;
 	}
+/*
 	if (!mainTREModel->getCompiled() && (mainTREModel->getCompileAllFlag() ||
 		mainTREModel->getCompilePartsFlag()))
 	{
@@ -2369,6 +2375,7 @@ void LDrawModelViewer::update(void)
 		}
 		return;
 	}
+*/
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		float distance = (camera.getPosition()).length();

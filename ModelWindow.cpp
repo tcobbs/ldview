@@ -17,6 +17,7 @@
 #include <Commctrl.h>
 #include "UserDefaultsKeys.h"
 #include <CUI/CUIWindowResizer.h>
+#include <TRE/TREMainModel.h>
 
 #define DISTANCE_MULT 1.325f
 
@@ -93,7 +94,7 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 
 				if (length)
 				{
-//					TGLStudLogo::setTextureData(data, length);
+					TREMainModel::setStudTextureData(data, length);
 				}
 			}
 		}

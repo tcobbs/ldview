@@ -164,7 +164,7 @@ void TCImage::initStandardFormats(void)
 	}
 }
 
-void TCImage::setFormatName(char *value)
+void TCImage::setFormatName(const char *value)
 {
 	delete formatName;
 	formatName = copyString(value);
@@ -185,7 +185,7 @@ bool TCImage::loadData(TCByte *data, long length)
 	return false;
 }
 
-bool TCImage::loadFile(char *filename)
+bool TCImage::loadFile(const char *filename)
 {
 	TCImageFormat *imageFormat = formatForFile(filename);
 
@@ -200,7 +200,7 @@ bool TCImage::loadFile(char *filename)
 	return false;
 }
 
-bool TCImage::saveFile(char *filename,
+bool TCImage::saveFile(const char *filename,
 					   TCImageProgressCallback progressCallback,
 					   void *progressUserData)
 {
@@ -214,7 +214,7 @@ bool TCImage::saveFile(char *filename,
 	return false;
 }
 
-TCImageFormat *TCImage::formatForFile(char *filename)
+TCImageFormat *TCImage::formatForFile(const char *filename)
 {
 	TCImageFormat *retValue = NULL;
 	FILE *file = fopen(filename, "rb");
@@ -243,7 +243,7 @@ TCImageFormat *TCImage::formatForFile(FILE *file)
 	return NULL;
 }
 
-TCImageFormat *TCImage::formatForData(TCByte *data, long length)
+TCImageFormat *TCImage::formatForData(const TCByte *data, long length)
 {
 	int i;
 	int count = imageFormats->getCount();
@@ -306,12 +306,13 @@ TCImage *TCImage::createSubImage(int x, int y, int cx, int cy)
 		if (flipped)
 		{
 			memcpy(newImage->imageData + (cy - i - 1) * newRowSize,
-				imageData + (height - y - i - 1) * rowSize + x, newRowSize);
+				imageData + (height - y - i - 1) * rowSize + x * bytesPerPixel,
+				newRowSize);
 		}
 		else
 		{
 			memcpy(newImage->imageData + i * newRowSize,
-				imageData + (y + i) * rowSize + x, newRowSize);
+				imageData + (y + i) * rowSize + x * bytesPerPixel, newRowSize);
 		}
 	}
 	return newImage;

@@ -85,14 +85,18 @@ public:
 	bool getCompileAllFlag(void) { return m_flags.compileAll != false; }
 	void setPolygonOffsetFlag(bool value) { m_flags.polygonOffset = value; }
 	bool getPolygonOffsetFlag(void) { return m_flags.polygonOffset != false; }
+	void setStudLogoFlag(bool value) { m_flags.studLogo = value; }
+	bool getStudLogoFlag(void) { return m_flags.studLogo != false; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	void setEdgeLineWidth(float value) { m_edgeLineWidth = value; }
 	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
-	virtual void setSeamWidth(float seamWidth);
-	virtual float getSeamWidth(void);
-	virtual void setDefaultRGB(TCByte r, TCByte g, TCByte b);
-	virtual void setDefaultColorNumber(int colorNumber);
+	void setSeamWidth(float seamWidth);
+	float getSeamWidth(void);
+	void setDefaultRGB(TCByte r, TCByte g, TCByte b);
+	void setDefaultColorNumber(int colorNumber);
+	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
+	int getStudTextureFilter(void) { return m_studTextureFilter; }
 protected:
 	virtual ~LDModelParser(void);
 	virtual void dealloc(void);
@@ -163,6 +167,7 @@ protected:
 	TCByte m_defaultB;
 	int m_defaultColorNumber;
 	bool m_abort;	// Easier to not be a bit field.
+	int m_studTextureFilter;
 	struct
 	{
 		bool fileIsPart:1;
@@ -186,6 +191,7 @@ protected:
 		bool defaultColorSet:1;
 		bool defaultColorNumberSet:1;
 		bool polygonOffset:1;
+		bool studLogo:1;
 	} m_flags;
 };
 

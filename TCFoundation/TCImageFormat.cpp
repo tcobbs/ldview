@@ -25,7 +25,7 @@ void TCImageFormat::dealloc(void)
 	TCObject::dealloc();
 }
 
-bool TCImageFormat::checkSignature(char *filename)
+bool TCImageFormat::checkSignature(const char *filename)
 {
 	FILE *file = fopen(filename, "rb");
 	bool retValue = false;
@@ -38,7 +38,7 @@ bool TCImageFormat::checkSignature(char *filename)
 	return retValue;
 }
 
-bool TCImageFormat::loadFile(TCImage *image, char *filename)
+bool TCImageFormat::loadFile(TCImage *image, const char *filename)
 {
 	FILE *file = fopen(filename, "rb");
 	bool retValue = false;
@@ -51,7 +51,7 @@ bool TCImageFormat::loadFile(TCImage *image, char *filename)
 	return retValue;
 }
 
-bool TCImageFormat::saveFile(TCImage *image, char *filename,
+bool TCImageFormat::saveFile(TCImage *image, const char *filename,
 							 TCImageProgressCallback progressCallback,
 							 void *progressUserData)
 {

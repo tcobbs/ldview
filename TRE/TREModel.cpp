@@ -322,54 +322,50 @@ void TREModel::compile(TREMSection section, bool colored)
 	}
 }
 
-void TREModel::compileDefaultColor(void)
-{
-	compile(TREMStandard, false);
-}
-
-void TREModel::compileBFC(void)
-{
-	compile(TREMBFC, false);
-}
-
-void TREModel::compileDefaultColorLines(void)
-{
-	compile(TREMLines, false);
-}
-
-void TREModel::compileEdgeLines(void)
-{
-	compile(TREMEdgeLines, false);
-}
-
-void TREModel::compileColored(void)
-{
-	compile(TREMStandard, true);
-}
-
-void TREModel::compileColoredBFC(void)
-{
-	compile(TREMBFC, true);
-}
-
-void TREModel::compileColoredLines(void)
-{
-	compile(TREMLines, true);
-}
-
-void TREModel::compileColoredEdgeLines(void)
-{
-	compile(TREMEdgeLines, true);
-}
-
-void TREModel::compileTransparent(void)
-{
-	compile(TREMTransparent, true);
-}
-
 void TREModel::draw(TREMSection section)
 {
 	draw(section, false);
+}
+
+void TREModel::checkGLError(char *msg)
+{
+	GLenum errorCode;
+	
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
+	{
+		const char* errorString;// = interpretGLError(errorCode);
+
+		switch (errorCode)
+		{
+			case GL_INVALID_ENUM:
+				errorString = "GL_INVALID_ENUM";
+				break;
+			case GL_INVALID_VALUE:
+				errorString = "GL_INVALID_VALUE";
+				break;
+			case GL_INVALID_OPERATION:
+				errorString = "GL_INVALID_OPERATION";
+				break;
+			case GL_STACK_OVERFLOW:
+				errorString = "GL_STACK_OVERFLOW";
+				break;
+			case GL_STACK_UNDERFLOW:
+				errorString = "GL_STACK_UNDERFLOW";
+				break;
+			case GL_OUT_OF_MEMORY:
+				errorString = "GL_OUT_OF_MEMORY";
+				break;
+			default:
+				errorString = "Unknown Error";
+				break;
+		}
+#ifdef _DEBUG
+		debugPrintf("%s: %s\n", msg, errorString);
+#else
+		MessageBox(NULL, msg, "OpenGL Error", MB_OK);
+#endif
+//		reportError("OpenGL error:\n%s: %s\n", LDMEOpenGL, msg, errorString);
+	}
 }
 
 void TREModel::draw(TREMSection section, bool colored)
@@ -386,7 +382,9 @@ void TREModel::draw(TREMSection section, bool colored)
 	}
 	if (listID)
 	{
+		checkGLError("Before glCallList");
 		glCallList(listID);
+		checkGLError("After glCallList");
 	}
 	else if (isSectionPresent(section, colored))
 	{
@@ -447,63 +445,20 @@ void TREModel::drawColored(TREMSection section)
 	draw(section, true);
 }
 
-void TREModel::drawDefaultColor(void)
-{
-	draw(TREMStandard);
-}
-
-void TREModel::drawBFC(void)
-{
-	draw(TREMBFC);
-}
-
-void TREModel::drawDefaultColorLines(void)
-{
-	draw(TREMLines);
-}
-
-void TREModel::drawEdgeLines(void)
-{
-	draw(TREMEdgeLines);
-}
-
-void TREModel::drawConditionalLines(void)
-{
-	draw(TREMConditionalLines);
-}
-
-void TREModel::drawColored(void)
-{
-	drawColored(TREMStandard);
-}
-
-void TREModel::drawColoredBFC(void)
-{
-	drawColored(TREMBFC);
-}
-
-void TREModel::drawColoredLines(void)
-{
-	drawColored(TREMLines);
-}
-
-void TREModel::drawColoredEdgeLines(void)
-{
-	drawColored(TREMEdgeLines);
-}
-
-void TREModel::drawColoredConditionalLines(void)
-{
-	drawColored(TREMConditionalLines);
-}
-
 void TREModel::setup(TREMSection section)
 {
 	if (!m_shapes[section])
 	{
 		TREShapeGroup *shapeGroup = new TREShapeGroup;
 
-		shapeGroup->setVertexStore(m_mainModel->getVertexStore());
+		if (section == TREMStud || section == TREMStudBFC)
+		{
+			shapeGroup->setVertexStore(m_mainModel->getTexturedVertexStore());
+		}
+		else
+		{
+			shapeGroup->setVertexStore(m_mainModel->getVertexStore());
+		}
 		// No need to release previous, since we determined it is NULL.
 		m_shapes[section] = shapeGroup;
 		// Don't release shapeGroup, becase m_shapes isn't a TCObjectArray.
@@ -526,6 +481,16 @@ void TREModel::setupColored(TREMSection section)
 void TREModel::setupStandard(void)
 {
 	setup(TREMStandard);
+}
+
+void TREModel::setupStud(void)
+{
+	setup(TREMStud);
+}
+
+void TREModel::setupStudBFC(void)
+{
+	setup(TREMStudBFC);
 }
 
 void TREModel::setupLines(void)
@@ -748,8 +713,10 @@ void TREModel::addBFCQuadStrip(TCULong color, TCVector *vertices,
 
 void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
 									 TCVector *stripNormals,
+									 TCVector *stripTextureCoords,
 									 TCVector *triangleVertices,
-									 TCVector *triangleNormals)
+									 TCVector *triangleNormals,
+									 TCVector *triangleTextureCoords)
 {
 	triangleVertices[0] = stripVertices[0];
 	triangleVertices[1] = stripVertices[index];
@@ -757,43 +724,88 @@ void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
 	triangleNormals[0] = stripNormals[0];
 	triangleNormals[1] = stripNormals[index];
 	triangleNormals[2] = stripNormals[index + 1];
+	if (stripTextureCoords)
+	{
+		triangleTextureCoords[0] = stripTextureCoords[0];
+		triangleTextureCoords[1] = stripTextureCoords[index];
+		triangleTextureCoords[2] = stripTextureCoords[index + 1];
+	}
 }
 
-void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals, int count,
-							  bool flat)
+void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals,
+							  TCVector *textureCoords, int count, bool flat)
 {
-	setupStandard();
-	addTriangleFan(m_shapes[TREMStandard], vertices, normals, count, flat);
+	TREShapeGroup *shapeGroup;
+
+	if (textureCoords)
+	{
+		setupStud();
+		shapeGroup = m_shapes[TREMStud];
+	}
+	else
+	{
+		setupStandard();
+		shapeGroup = m_shapes[TREMStandard];
+	}
+	addTriangleFan(shapeGroup, vertices, normals, textureCoords, count, flat);
 }
 
 void TREModel::addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
-							  TCVector *normals, int count, bool flat)
+							  TCVector *normals, TCVector *textureCoords,
+							  int count, bool flat)
 {
 	if (m_mainModel->getUseStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
 	{
-		shapeGroup->addTriangleFan(vertices, normals, count);
+		if (textureCoords)
+		{
+			shapeGroup->addTriangleFan(vertices, normals, textureCoords, count);
+		}
+		else
+		{
+			shapeGroup->addTriangleFan(vertices, normals, count);
+		}
 	}
 	else
 	{
 		int i;
 		TCVector triangleVertices[3];
 		TCVector triangleNormals[3];
+		TCVector triangleTextureCoords[3];
 
 		for (i = 1; i < count - 1; i++)
 		{
-			triangleFanToTriangle(i, vertices, normals, triangleVertices,
-				triangleNormals);
-			shapeGroup->addTriangle(triangleVertices, triangleNormals);
+			triangleFanToTriangle(i, vertices, normals, textureCoords,
+				triangleVertices, triangleNormals, triangleTextureCoords);
+			if (textureCoords)
+			{
+				shapeGroup->addTriangle(triangleVertices, triangleNormals,
+					triangleTextureCoords);
+			}
+			else
+			{
+				shapeGroup->addTriangle(triangleVertices, triangleNormals);
+			}
 		}
 	}
 }
 
 void TREModel::addBFCTriangleFan(TCVector *vertices, TCVector *normals,
-								 int count, bool flat)
+								 TCVector *textureCoords, int count, bool flat)
 {
-	setupBFC();
-	addTriangleFan(m_shapes[TREMBFC], vertices, normals, count, flat);
+	TREShapeGroup *shapeGroup;
+
+	if (textureCoords)
+	{
+		setupStudBFC();
+		shapeGroup = m_shapes[TREMStudBFC];
+	}
+	else
+	{
+		setupBFC();
+		shapeGroup = m_shapes[TREMBFC];
+	}
+	addTriangleFan(shapeGroup, vertices, normals, textureCoords, count, flat);
 }
 
 void TREModel::addTriangleFan(TCULong color, TCVector *vertices,
@@ -821,8 +833,8 @@ void TREModel::addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
 
 		for (i = 1; i < count - 1; i++)
 		{
-			triangleFanToTriangle(i, vertices, normals, triangleVertices,
-				triangleNormals);
+			triangleFanToTriangle(i, vertices, normals, NULL, triangleVertices,
+				triangleNormals, NULL);
 			shapeGroup->addTriangle(color, triangleVertices, triangleNormals);
 		}
 	}
@@ -910,21 +922,37 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 					setupColored((TREMSection)i);
 					coloredShapeGroup = m_coloredShapes[i];
 					coloredShapeGroup->getVertexStore()->setupColored();
-					flattenShapes(coloredShapeGroup, otherShapeGroup,
-						matrix, actualColor, true);
+					if (i == TREMStud || i == TREMStudBFC)
+					{
+						coloredShapeGroup->getVertexStore()->setupTextured();
+					}
+					coloredShapeGroup->flatten(otherShapeGroup, matrix,
+						actualColor, true);
+//					flattenShapes(coloredShapeGroup, otherShapeGroup,
+//						matrix, actualColor, true);
 				}
 				else
 				{
+					TREShapeGroup *shapeGroup;
+
 					setup((TREMSection)i);
-					flattenShapes(m_shapes[i], otherShapeGroup, matrix, 0,
-						false);
+					shapeGroup = m_shapes[i];
+					if (i == TREMStud || i == TREMStudBFC)
+					{
+						shapeGroup->getVertexStore()->setupTextured();
+					}
+					shapeGroup->flatten(otherShapeGroup, matrix, 0, false);
+//					flattenShapes(shapeGroup, otherShapeGroup, matrix, 0,
+//						false);
 				}
 			}
 			if (otherColoredShapeGroup)
 			{
 				setupColored((TREMSection)i);
-				flattenShapes(m_coloredShapes[i], otherColoredShapeGroup,
-					matrix, 0, false);
+				m_coloredShapes[i]->flatten(otherColoredShapeGroup, matrix, 0,
+					false);
+//				flattenShapes(m_coloredShapes[i], otherColoredShapeGroup,
+//					matrix, 0, false);
 			}
 		}
 	}
@@ -954,6 +982,7 @@ void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
 	}
 }
 
+/*
 void TREModel::flattenShapes(TREVertexArray *dstVertices,
 							 TREVertexArray *dstNormals,
 							 TCULongArray *dstColors,
@@ -1129,44 +1158,7 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 		}
 	}
 }
-
-void TREModel::transformVertex(TREVertex &vertex, float *matrix)
-{
-	TCVector newVertex;
-	float x = vertex.v[0];
-	float y = vertex.v[1];
-	float z = vertex.v[2];
-
-//	x' = a*x + b*y + c*z + X
-//	y' = d*x + e*y + f*z + Y
-//	z' = g*x + h*y + i*z + Z
-	newVertex[0] = matrix[0]*x + matrix[4]*y + matrix[8]*z + matrix[12];
-	newVertex[1] = matrix[1]*x + matrix[5]*y + matrix[9]*z + matrix[13];
-	newVertex[2] = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14];
-	TREVertexStore::initVertex(vertex, newVertex);
-}
-
-void TREModel::transformNormal(TREVertex &normal, float *matrix)
-{
-	TCVector newNormal;
-	float inverseMatrix[16];
-	float x = normal.v[0];
-	float y = normal.v[1];
-	float z = normal.v[2];
-	float det;
-
-	det = TCVector::invertMatrix(matrix, inverseMatrix);
-//	x' = a*x + b*y + c*z + X
-//	y' = d*x + e*y + f*z + Y
-//	z' = g*x + h*y + i*z + Z
-	newNormal[0] = inverseMatrix[0]*x + inverseMatrix[1]*y +
-		inverseMatrix[2]*z;
-	newNormal[1] = inverseMatrix[4]*x + inverseMatrix[5]*y + inverseMatrix[6]*z;
-	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y +
-		inverseMatrix[10]*z;
-	newNormal.normalize();
-	TREVertexStore::initVertex(normal, newNormal);
-}
+*/
 
 void TREModel::setGlNormalize(bool value)
 {
@@ -1300,12 +1292,44 @@ void TREModel::addCylinder(const TCVector& center, float radius, float height,
 	addOpenCone(center, radius, radius, height, numSegments, usedSegments, bfc);
 }
 
+void TREModel::addStudDisc(const TCVector &center, float radius,
+						   int numSegments, int usedSegments, bool bfc)
+{
+	addDisc(center, radius, numSegments, usedSegments, bfc,
+		m_mainModel->getStudLogoFlag());
+}
+
+void TREModel::genStudTextureCoords(TCVector *textureCoords, int vertexCount)
+{
+	int i;
+	TCVector p1;
+	TCVector offset = TCVector(0.5f, 0.5f, 0.0f);
+	int numSegments = vertexCount - 2;
+
+	textureCoords[0] = TCVector(0.5f, 0.5f, 0.0f);
+	for (i = 1; i < vertexCount; i++)
+	{
+		float x, z;
+		float angle;
+
+		angle = 2.0f * (float)M_PI / numSegments * (i - 1);
+		x = (float)cos(angle) * 0.5f;
+		z = (float)sin(angle) * 0.5f;
+		p1[0] = z;
+		p1[1] = x;
+		p1 += offset;
+		p1[1] = 1.0f - p1[1];
+		textureCoords[i] = p1;
+	}
+}
+
 void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
-					   int usedSegments, bool bfc)
+					   int usedSegments, bool bfc, bool stud)
 {
 	int vertexCount;
 	TCVector *points;
 	TCVector *normals;
+	TCVector *textureCoords = NULL;
 	int i;
 	TCVector normal = TCVector(0.0f, -1.0f, 0.0f);
 
@@ -1326,16 +1350,22 @@ void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 		setCirclePoint(angle, radius, center, points[i + 1]);
 		normals[i + 1] = normal;
 	}
+	if (stud && TREMainModel::getStudTextures())
+	{
+		textureCoords = new TCVector[vertexCount];
+		genStudTextureCoords(textureCoords, vertexCount);
+	}
 	if (bfc)
 	{
-		addBFCTriangleFan(points, normals, vertexCount, true);
+		addBFCTriangleFan(points, normals, textureCoords, vertexCount, true);
 	}
 	else
 	{
-		addTriangleFan(points, normals, vertexCount, true);
+		addTriangleFan(points, normals, textureCoords, vertexCount, true);
 	}
 	delete[] points;
 	delete[] normals;
+	delete[] textureCoords;
 }
 
 void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
@@ -1399,11 +1429,11 @@ void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
 		}
 		if (bfc)
 		{
-			addBFCTriangleFan(points, normals, vertexCount, true);
+			addBFCTriangleFan(points, normals, NULL, vertexCount, true);
 		}
 		else
 		{
-			addTriangleFan(points, normals, vertexCount, true);
+			addTriangleFan(points, normals, NULL, vertexCount, true);
 		}
 		delete[] points;
 		delete[] normals;
@@ -1963,11 +1993,6 @@ bool TREModel::checkDefaultColorPresent(void)
 	return checkSectionPresent(TREMStandard);
 }
 
-bool TREModel::checkBFCPresent(void)
-{
-	return checkSectionPresent(TREMBFC);
-}
-
 bool TREModel::checkDefaultColorLinesPresent(void)
 {
 	return checkSectionPresent(TREMLines);
@@ -1981,6 +2006,16 @@ bool TREModel::checkEdgeLinesPresent(void)
 bool TREModel::checkConditionalLinesPresent(void)
 {
 	return checkSectionPresent(TREMConditionalLines);
+}
+
+bool TREModel::checkStudsPresent(void)
+{
+	return checkSectionPresent(TREMStud);
+}
+
+bool TREModel::checkBFCPresent(void)
+{
+	return checkSectionPresent(TREMBFC);
 }
 
 bool TREModel::checkColoredPresent(void)

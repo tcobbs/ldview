@@ -2,11 +2,13 @@
 #define __TREMAINMODEL_H__
 
 #include <TRE/TREModel.h>
+#include <TCFoundation/TCImage.h>
 
 class TCDictionary;
 class TREVertexStore;
 class TREColoredShapeGroup;
 class TRETransShapeGroup;
+class TCImage;
 
 extern const float POLYGON_OFFSET_FACTOR;
 extern const float POLYGON_OFFSET_UNITS;
@@ -20,6 +22,10 @@ public:
 	virtual TCDictionary* getLoadedModels(bool bfc);
 	virtual void draw(void);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
+	virtual TREVertexStore *getTexturedVertexStore(void)
+	{
+		return m_texturedVertexStore;
+	}
 	virtual TREModel *modelNamed(const char *name, bool bfc);
 	virtual void registerModel(TREModel *model, bool bfc);
 	void setCompilePartsFlag(bool value) { m_mainFlags.compileParts = value; }
@@ -29,7 +35,10 @@ public:
 	void setEdgeLinesFlag(bool value) { m_mainFlags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines != false; }
 	void setEdgesOnlyFlag(bool value) { m_mainFlags.edgesOnly = value; }
-	bool getEdgesOnlyFlag(void) { return m_mainFlags.edgesOnly != false; }
+	bool getEdgesOnlyFlag(void)
+	{
+		return m_mainFlags.edgesOnly != false && getEdgeLinesFlag();
+	}
 	void setTwoSidedLightingFlag(bool value);
 	bool getTwoSidedLightingFlag(void)
 	{
@@ -66,17 +75,19 @@ public:
 	}
 	bool getConditionalLinesFlag(void)
 	{
-		return m_mainFlags.conditionalLines != false;
+		return m_mainFlags.conditionalLines != false && getEdgeLinesFlag();
 	}
 	void setShowAllConditionalFlag(bool value);
 	bool getShowAllConditionalFlag(void)
 	{
-		return m_mainFlags.showAllConditional != false;
+		return m_mainFlags.showAllConditional != false &&
+			getConditionalLinesFlag();
 	}
 	void setConditionalControlPointsFlag(bool value);
 	bool getConditionalControlPointsFlag(void)
 	{
-		return m_mainFlags.conditionalControlPoints != false;
+		return m_mainFlags.conditionalControlPoints != false &&
+			getConditionalLinesFlag();
 	}
 	void setPolygonOffsetFlag(bool value)
 	{
@@ -86,6 +97,8 @@ public:
 	{
 		return m_mainFlags.polygonOffset != false;
 	}
+	void setStudLogoFlag(bool value) { m_mainFlags.studLogo = value; }
+	bool getStudLogoFlag(void) { return m_mainFlags.studLogo != false; }
 	void setRemovingHiddenLines(bool value)
 	{
 		m_mainFlags.removingHiddenLines = value;
@@ -98,6 +111,8 @@ public:
 	bool getCutawayDrawFlag(void) { return m_mainFlags.cutawayDraw != false; }
 	void setEdgeLineWidth(float value) { m_edgeLineWidth = value; }
 	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
+	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
+	int getStudTextureFilter(void) { return m_studTextureFilter; }
 	virtual bool getCompiled(void) { return m_mainFlags.compiled != false; }
 	virtual bool getCompiling(void) { return m_mainFlags.compiling != false; }
 	virtual float getMaxRadiusSquared(const TCVector &center);
@@ -119,6 +134,16 @@ public:
 	virtual void addTransparentTriangle(TCULong color,
 		const TCVector vertices[], const TCVector normals[]);
 	virtual bool shouldLoadConditionalLines(void);
+	bool isStudSection(TREMSection section)
+	{
+		return section == TREMStud || section == TREMStudBFC;
+	}
+
+	static void loadStudTexture(const char *filename);
+	static void setStudTextureData(TCByte *data, long length);
+	static void setRawStudTextureData(TCByte *data, long length);
+	static TCImageArray *getStudTextures(void) { return sm_studTextures; }
+	static unsigned getStudTextureID(void) { return sm_studTextureID; }
 protected:
 	virtual ~TREMainModel(void);
 	virtual void dealloc(void);
@@ -130,10 +155,15 @@ protected:
 	virtual void drawLines(void);
 	virtual void drawSolid(void);
 	virtual void enableLineSmooth(void);
+	virtual void bindStudTexture(void);
+	virtual void configureStudTexture(void);
+
+	static void loadStudMipTextures(TCImage *mainImage);
 
 	TCDictionary *m_loadedModels;
 	TCDictionary *m_loadedBFCModels;
 	TREVertexStore *m_vertexStore;
+	TREVertexStore *m_texturedVertexStore;
 	TREVertexStore *m_coloredVertexStore;
 	TREVertexStore *m_transVertexStore;
 	TCULong m_color;
@@ -142,6 +172,7 @@ protected:
 	TCVector m_center;
 	float m_edgeLineWidth;
 	bool m_abort;				// Easier not to be a bit field.
+	int m_studTextureFilter;
 	struct
 	{
 		// The following are temporal
@@ -168,7 +199,17 @@ protected:
 		bool showAllConditional:1;
 		bool conditionalControlPoints:1;
 		bool polygonOffset:1;
+		bool studLogo:1;
 	} m_mainFlags;
+
+	static TCImageArray *sm_studTextures;
+	static unsigned sm_studTextureID;
+	static class TREMainModelCleanup
+	{
+	public:
+		~TREMainModelCleanup(void);
+	} sm_mainModelCleanup;
+	friend TREMainModelCleanup;
 };
 
 #endif // __TREMAINMODEL_H__

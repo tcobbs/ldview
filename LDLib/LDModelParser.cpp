@@ -25,14 +25,16 @@ LDModelParser::LDModelParser(void)
 	m_curveQuality(2),
 	m_seamWidth(0.0f),
 	m_edgeLineWidth(0.0f),
-	m_abort(false)
+	m_abort(false),
+	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 {
 	m_flags.flattenParts = true;	// Supporting false here could take a lot
 									// of work.
 	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
-	m_flags.bfc = true;
+	m_flags.edgesOnly = false;
+	m_flags.bfc = false;
 	m_flags.compileParts = true;
 	m_flags.compileAll = true;
 	m_flags.lighting = false;
@@ -46,6 +48,7 @@ LDModelParser::LDModelParser(void)
 	m_flags.conditionalControlPoints = false;
 	m_flags.defaultColorSet = false;
 	m_flags.defaultColorNumberSet = false;
+	m_flags.studLogo = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -106,6 +109,16 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
 	m_mainTREModel->setEdgeLineWidth(m_edgeLineWidth);
+	m_mainTREModel->setAALinesFlag(getAALinesFlag());
+	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
+	m_mainTREModel->setStippleFlag(getStippleFlag());
+	m_mainTREModel->setWireframeFlag(getWireframeFlag());
+	m_mainTREModel->setConditionalLinesFlag(getConditionalLinesFlag());
+	m_mainTREModel->setShowAllConditionalFlag(getShowAllConditionalFlag());
+	m_mainTREModel->setConditionalControlPointsFlag(
+		getConditionalControlPointsFlag());
+	m_mainTREModel->setStudLogoFlag(getStudLogoFlag());
+	m_mainTREModel->setStudTextureFilter(getStudTextureFilter());
 	if (m_flags.defaultColorNumberSet)
 	{
 		colorNumber = m_defaultColorNumber;
@@ -118,14 +131,6 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
-	m_mainTREModel->setAALinesFlag(getAALinesFlag());
-	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
-	m_mainTREModel->setStippleFlag(getStippleFlag());
-	m_mainTREModel->setWireframeFlag(getWireframeFlag());
-	m_mainTREModel->setConditionalLinesFlag(getConditionalLinesFlag());
-	m_mainTREModel->setShowAllConditionalFlag(getShowAllConditionalFlag());
-	m_mainTREModel->setConditionalControlPointsFlag(
-		getConditionalControlPointsFlag());
 	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag()))
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
@@ -377,7 +382,7 @@ bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
 {
 	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
 		numSegments, m_flags.bfc);
-	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
+	treModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
 		numSegments, m_flags.bfc);
 	if (m_flags.edgeLines)
 	{

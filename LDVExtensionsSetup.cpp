@@ -360,6 +360,7 @@ bool LDVExtensionsSetup::haveVARExtension(void)
 
 bool LDVExtensionsSetup::haveMultiDrawArraysExtension(void)
 {
+//	return false;
 	return checkForExtension("GL_EXT_multi_draw_arrays");
 }
 
