@@ -1007,9 +1007,11 @@ void ModelViewerWidget::doViewToolBar(bool flag)
 void ModelViewerWidget::doViewFullScreen(void)
 {
 	static QPoint pos;
+	static QSize size;
 	if (!fullscreen)
 	{
 		pos=mainWindow->pos();
+		size=mainWindow->size();
 		menuBar->hide();
 		statusBar->hide();
 		mainWindow->GroupBox12->setFrameShape( QFrame::NoFrame );
@@ -1022,6 +1024,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		mainWindow->GroupBox12->setFrameShape( QGroupBox::WinPanel );
         mainWindow->GroupBox12->layout()->setMargin( 2 );
         mainWindow->showNormal();
+		mainWindow->resize(size);
 		mainWindow->move(pos);
         menuBar->show();
         if(preferences->getStatusBar()) {statusBar->show();}
