@@ -20,13 +20,13 @@ template <class Type> class TCTypedValueArray : public TCArray
 			return new TCTypedValueArray<Type>(*this);
 		}
 		void addValue(Type value)
-			{ TCArray::addItem((void *)value); }
+			{ TCArray::addItem((void *)(long)value); }
 		void insertValue(Type value, unsigned int index = 0)
-			{ TCArray::insertItem((void *)value, index); }
+			{ TCArray::insertItem((void *)(long)value, index); }
 		int replaceValue(Type value, unsigned int index)
-			{ return TCArray::replaceItem((void *)value, index); }
+			{ return TCArray::replaceItem((void *)(long)value, index); }
 		int indexOfValue(Type value)
-			{ return TCArray::indexOfItem((void *)value); }
+			{ return TCArray::indexOfItem((void *)(long)value); }
 		int removeValue(int index)
 			{ return TCArray::removeItem(index); }
 		int removeValues(int index, int numValues)
