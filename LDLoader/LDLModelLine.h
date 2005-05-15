@@ -28,6 +28,7 @@ protected:
 		float d, float e, float f,
 		float g, float h, float i);
 	virtual float tryToFixPlanarMatrix(void);
+	virtual void fixLine(void);
 
 	LDLModel *m_highResModel;
 	LDLModel *m_lowResModel;

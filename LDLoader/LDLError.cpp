@@ -69,6 +69,8 @@ const char *LDLError::getTypeName(LDLErrorType type)
 		return TCLocalStrings::get("LDLEMPDError");
 	case LDLEVertexOrder:
 		return TCLocalStrings::get("LDLEVertexOrder");
+	case LDLEWhitespace:
+		return TCLocalStrings::get("LDLEWhitespace");
 	default:
 		return TCLocalStrings::get("LDLEUnknown");
 	}

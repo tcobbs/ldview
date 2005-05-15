@@ -5,6 +5,7 @@
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/mystring.h>
 
 LDLModelLine::LDLModelLine(LDLModel *parentModel, const char *line,
 						   int lineNumber, const char *originalLine)
@@ -50,6 +51,53 @@ TCObject *LDLModelLine::copy(void)
 	return new LDLModelLine(*this);
 }
 
+void LDLModelLine::fixLine(void)
+{
+	if (m_line)
+	{
+		int i, j, k;
+		int newLen = 0;
+		int diff;
+		bool done = false;
+
+		if (!m_originalLine)
+		{
+			m_originalLine = copyString(m_line);
+		}
+		memset(m_line, 0, strlen(m_line));
+//		m_line[0] = 0;
+		for (i = 0; isspace(m_originalLine[i]); i++)
+		{
+			// Don't do anything
+		}
+		for (j = 0; j < 14 && !done; j++)
+		{
+			for (k = 0; !isspace(m_originalLine[i + k]); k++)
+			{
+				// Don't do anything
+			}
+			diff = k;
+			if (diff)
+			{
+				strncpy(&m_line[newLen], &m_originalLine[i], diff);
+				m_line[newLen + diff] = ' ';
+				newLen += diff + 1;
+				done = true;
+				for (i = i + diff; isspace(m_originalLine[i]); i++)
+				{
+					done = false;
+				}
+			}
+			else
+			{
+				done = true;
+			}
+		}
+		strcpy(&m_line[newLen], &m_originalLine[i]);
+		stripTrailingWhitespace(m_line);
+	}
+}
+
 bool LDLModelLine::parse(void)
 {
 	float x, y, z;
@@ -57,13 +105,27 @@ bool LDLModelLine::parse(void)
 	char subModelName[1024];
 	int lineType;
 
+	fixLine();
 	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f %f %f %f %s",
 		&lineType, &m_colorNumber, &x, &y, &z, &a, &b, &c, &d, &e, &f,
 		&g, &h, &i, subModelName) == 15)
 	{
 		int red, green, blue, alpha;
 		float determinant;
+		int k;
+		char *spaceSpot = strchr(m_line, ' ');
 
+		for (k = 0; k < 13; k++)
+		{
+			spaceSpot = strchr(spaceSpot + 1, ' ');
+		}
+		spaceSpot++;
+		if (strcmp(spaceSpot, subModelName) != 0)
+		{
+			strcpy(subModelName, spaceSpot);
+			setWarning(LDLEWhitespace,
+				TCLocalStrings::get("LDLModelLineWhitespace"), subModelName);
+		}
 		m_highResModel = m_parentModel->subModelNamed(subModelName);
 		if (m_highResModel)
 		{

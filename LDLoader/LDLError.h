@@ -23,7 +23,8 @@ typedef enum
 	LDLEBFCWarning,
 	LDLEBFCError,
 	LDLEMPDError,
-	LDLELastError = LDLEMPDError
+	LDLEWhitespace,
+	LDLELastError = LDLEWhitespace
 } LDLErrorType;
 
 typedef enum
