@@ -83,7 +83,7 @@ void LDModelParser::finishPart(TREModel *treModel, TRESubModel *subModel)
 	}
 	if (subModel)
 	{
-		if (getSeamsFlag())
+		if (getSeamsFlag() && !treModel->getNoShrinkFlag())
 		{
 			subModel->shrink(m_seamWidth);
 		}
@@ -231,6 +231,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 			model->setMainModel(treModel->getMainModel());
 			model->setName(name);
 			model->setPartFlag(ldlModel->isPart());
+			model->setNoShrinkFlag(ldlModel->getNoShrinkFlag());
 			if (parseModel(ldlModel, model, bfc))
 			{
 				m_mainTREModel->registerModel(model, bfc);

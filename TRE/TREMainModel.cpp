@@ -719,13 +719,10 @@ float TREMainModel::getMaxRadiusSquared(const TCVector &center)
 {
 	if (!m_maxRadiusSquared)
 	{
-		float identityMatrix[16];
-		TCVector::initIdentityMatrix(identityMatrix);
-
 		m_center = center;
 		scanPoints(this,
 			(TREScanPointCallback)&TREMainModel::scanMaxRadiusSquaredPoint,
-			identityMatrix);
+			TCVector::getIdentityMatrix());
 	}
 	return m_maxRadiusSquared;
 }
@@ -883,21 +880,22 @@ bool TREMainModel::postProcess(void)
 // transparent.
 void TREMainModel::transferTransparent(void)
 {
-	float identityMatrix[16];
-
-	TCVector::initIdentityMatrix(identityMatrix);
-	TREModel::transferTransparent(m_color, TREMStandard, identityMatrix);
-	TREModel::transferTransparent(m_color, TREMStud, identityMatrix);
-	transferColoredTransparent(TREMStandard, identityMatrix);
-	transferColoredTransparent(TREMStud, identityMatrix);
+	TREModel::transferTransparent(m_color, TREMStandard,
+		TCVector::getIdentityMatrix());
+	TREModel::transferTransparent(m_color, TREMStud,
+		TCVector::getIdentityMatrix());
+	transferColoredTransparent(TREMStandard, TCVector::getIdentityMatrix());
+	transferColoredTransparent(TREMStud, TCVector::getIdentityMatrix());
 	TREModel::cleanupTransparent(TREMStandard);
 	TREModel::cleanupTransparent(TREMStud);
 	if (getBFCFlag())
 	{
-		TREModel::transferTransparent(m_color, TREMBFC, identityMatrix);
-		TREModel::transferTransparent(m_color, TREMStudBFC, identityMatrix);
-		transferColoredTransparent(TREMBFC, identityMatrix);
-		transferColoredTransparent(TREMStudBFC, identityMatrix);
+		TREModel::transferTransparent(m_color, TREMBFC,
+			TCVector::getIdentityMatrix());
+		TREModel::transferTransparent(m_color, TREMStudBFC,
+			TCVector::getIdentityMatrix());
+		transferColoredTransparent(TREMBFC, TCVector::getIdentityMatrix());
+		transferColoredTransparent(TREMStudBFC, TCVector::getIdentityMatrix());
 		TREModel::cleanupTransparent(TREMBFC);
 		TREModel::cleanupTransparent(TREMStudBFC);
 	}
@@ -1193,8 +1191,5 @@ void TREMainModel::openGlWillEnd(void)
 
 void TREMainModel::finish(void)
 {
-	float matrix[16];
-
-	TCVector::initIdentityMatrix(matrix);
-	flattenNonUniform(matrix, matrix, 0, false, 0, false);
+	flattenNonUniform(0, false, 0, false);
 }

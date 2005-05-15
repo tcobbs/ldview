@@ -12,6 +12,14 @@
 
 //static int vectorCount = 0;
 
+float TCVector::identityMatrix[16] =
+{
+	1.0, 0.0, 0.0, 0.0,
+	0.0, 1.0, 0.0, 0.0,
+	0.0, 0.0, 1.0, 0.0,
+	0.0, 0.0, 0.0, 1.0
+};
+
 // TCVector::TCVector(void) -- Default Constructor
 TCVector::TCVector(void)
 {
@@ -533,11 +541,14 @@ bool TCVector::approxEquals(const TCVector &right, float epsilon) const
 
 void TCVector::initIdentityMatrix(float *matrix)
 {
+	memcpy(matrix, identityMatrix, sizeof(identityMatrix));
+/*
 	memset(matrix, 0, 16 * sizeof(float));
 	matrix[0] = 1.0f;
 	matrix[5] = 1.0f;
 	matrix[10] = 1.0f;
 	matrix[15] = 1.0f;
+*/
 }
 
 void TCVector::transformPoint(const float *matrix, TCVector &newPoint)
@@ -598,4 +609,9 @@ TCVector TCVector::transformNormal(const float *matrix, bool shouldNormalize)
 TCVector TCVector::rearrange(int x, int y, int z) const
 {
 	return TCVector(get(x), get(y), get(z));
+}
+
+const float *TCVector::getIdentityMatrix(void)
+{
+	return identityMatrix;
 }

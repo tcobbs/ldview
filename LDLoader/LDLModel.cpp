@@ -60,6 +60,7 @@ LDLModel::LDLModel(void)
 	m_flags.primitive = false;
 	m_flags.mpd = false;
 	m_flags.bfcCertify = BFCUnknownState;
+	m_flags.noShrink = false;
 	sm_modelCount++;
 }
 
@@ -464,6 +465,20 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 			{
 				m_flags.bfcCertify = BFCForcedOnState;
 			}
+		}
+	}
+	else if (commentLine->isNoShrinkMeta())
+	{
+		if (m_flags.mainModelLoaded)
+		{
+			if (m_activeMPDModel)
+			{
+				m_activeMPDModel->m_flags.noShrink = true;
+			}
+		}
+		else
+		{
+			m_flags.noShrink = true;
 		}
 	}
 }

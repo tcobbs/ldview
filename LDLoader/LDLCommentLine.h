@@ -11,6 +11,7 @@ public:
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeComment; }
 	virtual bool getMPDFilename(char *filename, int maxLength) const;
 	virtual bool isPartMeta(void) const;
+	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
 	virtual bool containsBFCCommand(const char *command) const;
 protected:

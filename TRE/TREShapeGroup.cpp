@@ -941,7 +941,7 @@ void TREShapeGroup::setVertexStore(TREVertexStore *vertexStore)
 
 void TREShapeGroup::scanPoints(TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
-							   float* matrix)
+							   const float* matrix)
 {
 	int bit;
 
@@ -960,7 +960,7 @@ void TREShapeGroup::scanPoints(TCObject *scanner,
 
 void TREShapeGroup::scanPoints(TCULongArray *indices, TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
-							   float* matrix)
+							   const float* matrix)
 {
 	if (indices)
 	{
@@ -978,7 +978,7 @@ void TREShapeGroup::scanStripPoints(TCULongArray *indices,
 									TCULongArray *stripCounts,
 									TCObject *scanner,
 									TREScanPointCallback scanPointCallback,
-									float* matrix)
+									const float* matrix)
 {
 	if (indices && stripCounts)
 	{
@@ -1008,7 +1008,7 @@ void TREShapeGroup::scanPoints(const TREVertex &vertex, TCObject *scanner,
 
 void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
-							   float* matrix)
+							   const float *matrix)
 {
 	TREVertex vertex = (*m_vertexStore->getVertices())[index];
 
@@ -1016,7 +1016,8 @@ void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
 	scanPoints(vertex, scanner, scanPointCallback);
 }
 
-void TREShapeGroup::unshrinkNormals(float *matrix, float *unshrinkMatrix)
+void TREShapeGroup::unshrinkNormals(const float *matrix,
+									const float *unshrinkMatrix)
 {
 	int bit;
 
@@ -1032,8 +1033,8 @@ void TREShapeGroup::unshrinkNormals(float *matrix, float *unshrinkMatrix)
 	}
 }
 
-void TREShapeGroup::unshrinkNormals(TCULongArray *indices, float *matrix,
-									float *unshrinkMatrix)
+void TREShapeGroup::unshrinkNormals(TCULongArray *indices, const float *matrix,
+									const float *unshrinkMatrix)
 {
 	if (indices)
 	{
@@ -1049,7 +1050,8 @@ void TREShapeGroup::unshrinkNormals(TCULongArray *indices, float *matrix,
 
 void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
 										 TCULongArray *stripCounts,
-										 float *matrix, float *unshrinkMatrix)
+										 const float *matrix,
+										 const float *unshrinkMatrix)
 {
 	if (indices && stripCounts)
 	{
@@ -1070,8 +1072,8 @@ void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
 	}
 }
 
-void TREShapeGroup::unshrinkNormal(TCULong index, float *matrix,
-								   float *unshrinkMatrix)
+void TREShapeGroup::unshrinkNormal(TCULong index, const float *matrix,
+								   const float *unshrinkMatrix)
 {
 	TREVertexArray *normals = m_vertexStore->getNormals();
 	TREVertex &normal = normals->vertexAtIndex(index);
@@ -1564,7 +1566,7 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 	}
 }
 
-void TREShapeGroup::flatten(TREShapeGroup *srcShapes, float *matrix,
+void TREShapeGroup::flatten(TREShapeGroup *srcShapes, const float *matrix,
 							TCULong color, bool colorSet)
 {
 	TREVertexStore *srcVertexStore = NULL;
@@ -1646,7 +1648,7 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 								  TCULongArray *srcIndices,
 								  TCULongArray *srcCPIndices,
 								  GLbooleanArray *srcEdgeFlags,
-								  float *matrix,
+								  const float *matrix,
 								  TCULong color,
 								  bool colorSet)
 {
@@ -1769,8 +1771,9 @@ void TREShapeGroup::flattenStrips(TREVertexArray *dstVertices,
 								  TREVertexArray *srcTextureCoords,
 								  TCULongArray *srcColors,
 								  TCULongArray *srcIndices,
-								  TCULongArray *srcStripCounts, float *matrix,
-								  TCULong color, bool colorSet)
+								  TCULongArray *srcStripCounts,
+								  const float *matrix, TCULong color,
+								  bool colorSet)
 {
 	int i, j;
 	int numStrips = srcStripCounts->getCount();
@@ -1813,7 +1816,7 @@ void TREShapeGroup::flattenStrips(TREVertexArray *dstVertices,
 	}
 }
 
-void TREShapeGroup::transformVertex(TREVertex &vertex, float *matrix)
+void TREShapeGroup::transformVertex(TREVertex &vertex, const float *matrix)
 {
 	TCVector newVertex;
 	float x = vertex.v[0];
@@ -1829,7 +1832,7 @@ void TREShapeGroup::transformVertex(TREVertex &vertex, float *matrix)
 	TREVertexStore::initVertex(vertex, newVertex);
 }
 
-void TREShapeGroup::transformNormal(TREVertex &normal, float *matrix)
+void TREShapeGroup::transformNormal(TREVertex &normal, const float *matrix)
 {
 	TCVector newNormal;
 	float inverseMatrix[16];

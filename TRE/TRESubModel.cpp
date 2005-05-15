@@ -159,7 +159,7 @@ void TRESubModel::setModel(TREModel *model)
 	m_model = model;
 }
 
-void TRESubModel::setMatrix(float *matrix)
+void TRESubModel::setMatrix(const float *matrix)
 {
 	memcpy(m_matrix, matrix, sizeof(m_matrix));
 	memcpy(m_originalMatrix, matrix, sizeof(m_originalMatrix));
@@ -379,7 +379,7 @@ void TRESubModel::drawColoredEdgeLines(void)
 
 void TRESubModel::scanPoints(TCObject *scanner,
 							 TREScanPointCallback scanPointCallback,
-							 float *matrix)
+							 const float *matrix)
 {
 	float newMatrix[16];
 
@@ -387,7 +387,8 @@ void TRESubModel::scanPoints(TCObject *scanner,
 	getEffectiveModel()->scanPoints(scanner, scanPointCallback, newMatrix);
 }
 
-void TRESubModel::unshrinkNormals(float *matrix, float *unshrinkMatrix)
+void TRESubModel::unshrinkNormals(const float *matrix,
+								  const float *unshrinkMatrix)
 {
 	float newMatrix[16];
 

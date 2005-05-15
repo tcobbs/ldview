@@ -228,10 +228,8 @@ bool LDLModelLine::isXZPlanar(void) const
 		if (fileLine->getLineType() == LDLLineTypeModel)
 		{
 			LDLModelLine *modelLine = (LDLModelLine *)fileLine;
-			float identityMatrix[16];
 
-			TCVector::initIdentityMatrix(identityMatrix);
-			if (!modelLine->isXZPlanar(identityMatrix))
+			if (!modelLine->isXZPlanar(TCVector::getIdentityMatrix()))
 			{
 				return false;
 			}
