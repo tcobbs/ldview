@@ -18,7 +18,7 @@ public:
 	virtual void setModel(TREModel *model);
 	virtual TREModel *getModel(void) const { return m_model; }
 	virtual TREModel *getEffectiveModel(void) const;
-	virtual void setMatrix(float *matrix);
+	virtual void setMatrix(const float *matrix);
 	virtual float *getMatrix(void) { return m_matrix; }
 	virtual float *getOriginalMatrix(void) { return m_originalMatrix; }
 	virtual void setColor(TCULong color, TCULong edgeColor);
@@ -45,8 +45,9 @@ public:
 	virtual void compileColored(void);
 */
 	virtual void scanPoints(TCObject *scanner,
-		TREScanPointCallback scanPointCallback, float *matrix);
-	virtual void unshrinkNormals(float *matrix, float *unshrinkMatrix);
+		TREScanPointCallback scanPointCallback, const float *matrix);
+	virtual void unshrinkNormals(const float *matrix,
+		const float *unshrinkMatrix);
 	virtual void shrink(float amount);
 	TRESubModel *getUnMirroredSubModel(void);
 	TRESubModel *getInvertedSubModel(void);

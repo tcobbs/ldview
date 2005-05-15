@@ -1399,10 +1399,7 @@ void TREModel::flatten(void)
 {
 	if (m_subModels && m_subModels->getCount())
 	{
-		float identityMatrix[16];
-
-		TCVector::initIdentityMatrix(identityMatrix);
-		flatten(this, identityMatrix, 0, false, 0, false, false);
+		flatten(this, TCVector::getIdentityMatrix(), 0, false, 0, false, false);
 		if (m_subModels)
 		{
 			m_subModels->removeAll();
@@ -1411,7 +1408,7 @@ void TREModel::flatten(void)
 	}
 }
 
-void TREModel::flatten(TREModel *model, float *matrix, TCULong color,
+void TREModel::flatten(TREModel *model, const float *matrix, TCULong color,
 					   bool colorSet, TCULong edgeColor, bool edgeColorSet,
 					   bool includeShapes)
 {
@@ -2872,9 +2869,6 @@ void TREModel::calculateBoundingBox(void)
 {
 	if (!m_flags.boundingBox)
 	{
-		float identityMatrix[16];
-
-		TCVector::initIdentityMatrix(identityMatrix);
 		m_boundingMin[0] = 1e10f;
 		m_boundingMin[1] = 1e10f;
 		m_boundingMin[2] = 1e10f;
@@ -2883,13 +2877,14 @@ void TREModel::calculateBoundingBox(void)
 		m_boundingMax[2] = -1e10f;
 		scanPoints(this,
 			(TREScanPointCallback)&TREModel::scanBoundingBoxPoint,
-			identityMatrix);
+			TCVector::getIdentityMatrix());
 		m_flags.boundingBox = true;
 	}
 }
 
 void TREModel::scanPoints(TCObject *scanner,
-						  TREScanPointCallback scanPointCallback, float *matrix)
+						  TREScanPointCallback scanPointCallback,
+						  const float *matrix)
 {
 	int i;
 
@@ -2919,7 +2914,7 @@ void TREModel::scanPoints(TCObject *scanner,
 	}
 }
 
-void TREModel::unshrinkNormals(float *matrix, float *unshrinkMatrix)
+void TREModel::unshrinkNormals(const float *matrix, const float *unshrinkMatrix)
 {
 	int i;
 
@@ -3005,17 +3000,14 @@ void TREModel::scanBoundingBoxPoint(const TCVector &point)
 // all parts get flattenned, and the flatenning process re-normalizes the
 // normals to be unit lenght, everything is fine.  If it ever becomes desirable
 // to allow parts not to be flattened, things will get more complicated.
-void TREModel::unshrinkNormals(float *scaleMatrix)
+void TREModel::unshrinkNormals(const float *scaleMatrix)
 {
 	// If the same part is referenced twice in a model, we'll get here twice.
 	// We only want to adjust the normals once, or we'll be in trouble, so
 	// record the fact that the normals have been adjusted.
 	if (!m_flags.unshrunkNormals)
 	{
-		float identityMatrix[16];
-
-		TCVector::initIdentityMatrix(identityMatrix);
-		unshrinkNormals(identityMatrix, scaleMatrix);
+		unshrinkNormals(TCVector::getIdentityMatrix(), scaleMatrix);
 		m_flags.unshrunkNormals = true;
 	}
 }
@@ -3251,16 +3243,13 @@ bool TREModel::shouldLoadConditionalLines(void)
 	return m_mainModel->shouldLoadConditionalLines();
 }
 
-void TREModel::flattenNonUniform(float *matrix, float *originalMatrix,
-								 TCULong color, bool colorSet, TCULong edgeColor,
+void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
 								 bool edgeColorSet)
 {
 	if (m_subModels)
 	{
 		int i;
 		int count = m_subModels->getCount();
-		float newMatrix[16];
-		float newOriginalMatrix[16];
 		float determinant;
 
 		for (i = count - 1; i >= 0; i--)
@@ -3268,37 +3257,35 @@ void TREModel::flattenNonUniform(float *matrix, float *originalMatrix,
 			TRESubModel *subModel = (*m_subModels)[i];
 			TREModel *newModel = subModel->getEffectiveModel();
 
-			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
-			TCVector::multMatrix(originalMatrix, subModel->getOriginalMatrix(),
-				newOriginalMatrix);
-			determinant = TCVector::determinant(newOriginalMatrix);
+			determinant = TCVector::determinant(subModel->getOriginalMatrix());
 			if (!fEq(determinant, 1.0) && !fEq(determinant, -1.0))
 			{
 				if (subModel->isColorSet())
 				{
-					flatten(newModel, newMatrix, htonl(subModel->getColor()),
-						true, htonl(subModel->getEdgeColor()), true, true);
+					flatten(newModel, subModel->getMatrix(),
+						htonl(subModel->getColor()), true,
+						htonl(subModel->getEdgeColor()), true, true);
 				}
 				else
 				{
-					flatten(newModel, newMatrix, color, colorSet, edgeColor,
-						edgeColorSet, true);
+					flatten(newModel, subModel->getMatrix(), color, colorSet,
+						edgeColor, edgeColorSet, true);
 				}
-				debugPrintf("Flattened non-uniform sub-model: %g.\n", determinant);
 				m_subModels->removeObject(i);
+				debugPrintf("Flattened non-uniform sub-model: %g.\n",
+					determinant);
 			}
 			else
 			{
 				if (subModel->isColorSet())
 				{
-					newModel->flattenNonUniform(newMatrix, newOriginalMatrix,
-						htonl(subModel->getColor()), true,
-						htonl(subModel->getEdgeColor()), true);
+					newModel->flattenNonUniform(htonl(subModel->getColor()),
+						true, htonl(subModel->getEdgeColor()), true);
 				}
 				else
 				{
-					newModel->flattenNonUniform(newMatrix, newOriginalMatrix,
-						color, colorSet, edgeColor, edgeColorSet);
+					newModel->flattenNonUniform(color, colorSet, edgeColor,
+						edgeColorSet);
 				}
 			}
 		}

@@ -147,6 +147,8 @@ public:
 	virtual void drawColored(TREMSection section);
 	virtual void setPartFlag(bool value) { m_flags.part = value; }
 	virtual bool isPart(void) { return m_flags.part != false; }
+	virtual void setNoShrinkFlag(bool value) { m_flags.noShrink = value; }
+	virtual bool getNoShrinkFlag(void) { return m_flags.noShrink != false; }
 	virtual bool isFlattened(void) { return m_flags.flattened != false; }
 	virtual void flatten(void);
 	virtual void smooth(void);
@@ -189,9 +191,9 @@ public:
 		TCVector* zeroYPoints, TCVector* zeroZPoints);
 	virtual void getBoundingBox(TCVector& min, TCVector& max);
 	virtual void scanPoints(TCObject *scanner,
-		TREScanPointCallback scanPointCallback, float *matrix);
-	virtual void unshrinkNormals(float *scaleMatrix);
-	void unshrinkNormals(float *matrix, float *unshrinkMatrix);
+		TREScanPointCallback scanPointCallback, const float *matrix);
+	virtual void unshrinkNormals(const float *scaleMatrix);
+	void unshrinkNormals(const float *matrix, const float *unshrinkMatrix);
 	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
 	virtual void uncompile(void);
@@ -227,7 +229,7 @@ protected:
 	virtual void setupColoredEdges(void);
 	virtual void setupConditional(void);
 	virtual void setupColoredConditional(void);
-	virtual void flatten(TREModel *model, float *matrix, TCULong color,
+	virtual void flatten(TREModel *model, const float *matrix, TCULong color,
 		bool colorSet, TCULong edgeColor, bool edgeColorSet,
 		bool includeShapes);
 	virtual void checkGLError(char *msg);
@@ -313,8 +315,8 @@ protected:
 		const TREVertex point0, const TREVertex point1, TRESmoother *&smoother);
 	void applyShapeNormals(TRENormalInfoArray *normalInfos);
 	void finishShapeNormals(TREConditionalMap &conditionalMap);
-	void flattenNonUniform(float *matrix, float *originalMatrix,
-		TCULong color, bool colorSet, TCULong edgeColor, bool edgeColorSet);
+	void flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
+		bool edgeColorSet);
 
 //	static void setGlNormalize(bool value);
 
@@ -334,6 +336,7 @@ protected:
 	struct
 	{
 		bool part:1;
+		bool noShrink:1;
 		bool boundingBox:1;
 		bool unshrunkNormals:1;
 		bool unMirrored:1;

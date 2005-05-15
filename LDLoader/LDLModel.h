@@ -66,6 +66,7 @@ public:
 	bool isPart(void) { return m_flags.part != false; }
 	bool isPrimitive(void) { return m_flags.primitive != false; }
 	bool isMPD(void) { return m_flags.mpd != false; }
+	bool getNoShrinkFlag(void) { return m_flags.noShrink != false; }
 
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
 
@@ -139,6 +140,7 @@ protected:
 		bool part:1;
 		bool primitive:1;
 		bool mpd:1;
+		bool noShrink:1;
 		BFCState bfcCertify:3;
 	} m_flags;
 

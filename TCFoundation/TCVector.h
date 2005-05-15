@@ -83,11 +83,13 @@ public:
 		double *result);
 	static float invertMatrix(const float *matrix, float *inverseMatrix);
 	static void initIdentityMatrix(float*);
+	static const float *getIdentityMatrix(void);
 protected:
 #ifdef _LEAK_DEBUG
 	char className[4];
 #endif
 	float vector[3];
+	static float identityMatrix[16];
 };
 
 // Overloaded Operator with non-TCVector as first argument

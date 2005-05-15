@@ -112,6 +112,18 @@ void LDLCommentLine::setupProcessedLine(void)
 	}
 }
 
+bool LDLCommentLine::isNoShrinkMeta(void) const
+{
+	int numWords = m_words->getCount();
+
+	if (numWords >= 2 && strcasecmp((*m_words)[0], "~lsynth") == 0 &&
+		strcasecmp((*m_words)[1], "constraint") == 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool LDLCommentLine::isPartMeta(void) const
 {
 	int word = 0;
