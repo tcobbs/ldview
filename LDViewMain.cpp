@@ -344,6 +344,7 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	_CrtSetDbgFlag(_debugFlag);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
 	createConsole();
+//	MessageBox(NULL, "Attach a debugger now...", "Debug", MB_OK);
 #endif // _DEBUG
 	setupUserDefaults(lpCmdLine, screenSaver);
 	setupLocalStrings();
