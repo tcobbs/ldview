@@ -48,6 +48,7 @@ LDLModel::LDLModel(void)
 {
 	// Initialize Private flags
 	m_flags.loadingPart = false;
+	m_flags.loadingSubPart = false;
 	m_flags.loadingPrimitive = false;
 	m_flags.mainModelLoaded = false;
 	m_flags.mainModelParsed = false;
@@ -57,6 +58,7 @@ LDLModel::LDLModel(void)
 	m_flags.bfcInvertNext = false;
 	// Initialize Public flags
 	m_flags.part = false;
+	m_flags.subPart = false;
 	m_flags.primitive = false;
 	m_flags.mpd = false;
 	m_flags.bfcCertify = BFCUnknownState;
@@ -173,6 +175,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes)
 				subModel = NULL;
 			}
 			m_flags.loadingPart = false;
+			m_flags.loadingSubPart = false;
 		}
 	}
 	delete adjustedName;
@@ -221,6 +224,12 @@ FILE *LDLModel::openModelFile(const char *filename)
 	}
 }
 
+bool LDLModel::isSubPart(const char *subModelName)
+{
+	return stringHasCaseInsensitivePrefix(subModelName, "s/") ||
+		stringHasCaseInsensitivePrefix(subModelName, "s\\");
+}
+
 FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 {
 	FILE* subModelFile;
@@ -246,7 +255,14 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 					}
 					else if (searchDir->Flags & LDSDF_DEFPART)
 					{
-						m_flags.loadingPart = true;
+						if (isSubPart(subModelName))
+						{
+							m_flags.loadingSubPart = true;
+						}
+						else
+						{
+							m_flags.loadingPart = true;
+						}
 					}
 					return subModelFile;
 				}
@@ -268,7 +284,14 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 		sprintf(subModelPath, "%s/PARTS/%s", lDrawDir(), subModelName);
 		if ((subModelFile = openModelFile(subModelPath)) != NULL)
 		{
-			m_flags.loadingPart = true;
+			if (isSubPart(subModelName))
+			{
+				m_flags.loadingSubPart = true;
+			}
+			else
+			{
+				m_flags.loadingPart = true;
+			}
 			return subModelFile;
 		}
 		sprintf(subModelPath, "%s/MODELS/%s", lDrawDir(), subModelName);
@@ -305,7 +328,13 @@ bool LDLModel::initializeNewSubModel(LDLModel *subModel, const char *dictName,
 	if (m_flags.loadingPart)
 	{
 		subModel->m_flags.part = true;
+		subModel->m_flags.subPart = false;
 //		subModel->m_flags.bfcCertify = BFCForcedOnState;
+	}
+	if (m_flags.loadingSubPart)
+	{
+		subModel->m_flags.part = false;
+		subModel->m_flags.subPart = true;
 	}
 	if (m_flags.loadingPrimitive)
 	{
@@ -453,12 +482,26 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 		{
 			if (m_activeMPDModel && !m_activeMPDModel->isPrimitive())
 			{
-				m_activeMPDModel->m_flags.part = true;
+				if (m_flags.loadingSubPart)
+				{
+					m_activeMPDModel->m_flags.subPart = true;
+				}
+				else if (!m_activeMPDModel->m_flags.subPart)
+				{
+					m_activeMPDModel->m_flags.part = true;
+				}
 			}
 		}
 		else if (!isPrimitive())
 		{
-			m_flags.part = true;
+			if (m_flags.loadingSubPart)
+			{
+				m_flags.subPart = true;
+			}
+			else if (!m_flags.subPart)
+			{
+				m_flags.part = true;
+			}
 			// This is now a part, so if we've already hit a BFC CERTIFY line
 			// switch it to forced certify.
 			if (m_flags.bfcCertify == BFCOnState)
@@ -650,7 +693,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			{
 				// Unless a NOCERTIFY is present, CERTIFY gets turned on by
 				// default for any BFC command.
-				if (m_flags.part)
+				if (m_flags.part || m_flags.subPart)
 				{
 					// BFC certified parts force BFC to be on, even if their
 					// parent models don't have BFC certification.
@@ -999,6 +1042,10 @@ void LDLModel::print(int indent)
 	if (m_flags.part)
 	{
 		printf(" (Part)");
+	}
+	if (m_flags.subPart)
+	{
+		printf(" (SubPart)");
 	}
 	switch (m_flags.bfcCertify)
 	{

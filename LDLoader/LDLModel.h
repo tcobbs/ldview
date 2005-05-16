@@ -115,6 +115,7 @@ protected:
 	virtual void reportWarning(LDLErrorType type, const char* format, ...);
 	virtual void reportProgress(const char *message, float progress,
 		bool mainOnly = true);
+	virtual bool isSubPart(const char *subModelName);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 
 	static bool verifyLDrawDir(const char *value);
@@ -129,6 +130,7 @@ protected:
 	{
 		// Private flags
 		bool loadingPart:1;			// Temporal
+		bool loadingSubPart:1;		// Temporal
 		bool loadingPrimitive:1;	// Temporal
 		bool mainModelLoaded:1;		// Temporal
 		bool mainModelParsed:1;		// Temporal
@@ -138,6 +140,7 @@ protected:
 		bool bfcInvertNext:1;		// Temporal
 		// Public flags
 		bool part:1;
+		bool subPart:1;
 		bool primitive:1;
 		bool mpd:1;
 		bool noShrink:1;
