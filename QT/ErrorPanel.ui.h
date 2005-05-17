@@ -92,6 +92,11 @@ void ErrorPanel::MPDError()
     errors->doErrorClick(MPDErrorButton, LDLEMPDError);
 }
 
+void ErrorPanel::whitespace()
+{
+	errors->doErrorClick(whitespaceButton, LDLEWhitespace);
+}
+
 void ErrorPanel::identicalVertices()
 {
     errors->doErrorClick(identicalVerticesButton,LDLEMatchingPoints);

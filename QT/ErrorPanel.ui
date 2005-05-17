@@ -197,14 +197,14 @@
                                 <property name="spacing">
                                     <number>6</number>
                                 </property>
-				<widget class="QCheckBox">
+								<widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>generalErrorButton</cstring>
                                     </property>
                                     <property name="text">
                                         <string>General Error</string>
                                     </property>
-				</widget>
+								</widget>
                                 <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>parseErrorButton</cstring>
@@ -277,7 +277,7 @@
                                         <string>Co-linear Points</string>
                                     </property>
                                 </widget>
-				<widget class="QCheckBox">
+								<widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>BFCWarningButton</cstring>
                                     </property>
@@ -285,22 +285,30 @@
                                         <string>BFC Warning</string>
                                     </property>
                                 </widget>
-				<widget class="QCheckBox">
+								<widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>BFCErrorButton</cstring>
                                     </property>
                                         <property name="text">
                                         <string>BFC Error</string>
                                     </property>
-				</widget>
-				<widget class="QCheckBox">
+								</widget>
+								<widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>MPDErrorButton</cstring>
                                     </property>
-					<property name="text">
+									<property name="text">
                                         <string>MPD Error</string>
                                     </property>
                                 </widget>
+								<widget class="QCheckBox">
+									<property name="name">
+										<cstring>whitespaceButton</cstring>
+									</property>
+									<property name="text">
+										<string>Whitespace</string>
+									</property>
+								</widget>
                             </vbox>
                         </widget>
                     </hbox>
@@ -455,10 +463,16 @@
     </connection>
     <connection>
         <sender>MPDErrorButton</sender>
-	<signal>clicked()</signal>
+		<signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
         <slot>MPDError()</slot>
     </connection>
+	<connection>
+		<sender>whitespaceButton</sender>
+		<signal>clicked()</signal>
+		<receiver>ErrorPanel</receiver>
+		<slot>whitespace()</slot>
+	</connection>
     <connection>
         <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
@@ -527,6 +541,7 @@
     <slot>BFCWarning()</slot>
     <slot>BFCError()</slot>
     <slot>MPDError()</slot>
+	<slot>whitespace()</slot>
     <slot>nonFlatQuad()</slot>
     <slot>showAllError()</slot>
     <slot>showNoneError()</slot>
