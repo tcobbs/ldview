@@ -62,6 +62,8 @@ void LDViewErrors::reflectSettings(void)
 		preferences->getShowError(LDLEBFCError));
 	preferences->setButtonState(panel->MPDErrorButton,
 		preferences->getShowError(LDLEMPDError));
+	preferences->setButtonState(panel->whitespaceButton,
+		preferences->getShowError(LDLEWhitespace));
 	preferences->setButtonState(panel->showWarningsButton,
 		TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 1 : 0);
 	preferences->setButtonState(panel->identicalVerticesButton,
@@ -268,6 +270,7 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
             case LDLEBFCError:
 			case LDLEBFCWarning:
             case LDLEMPDError:
+		    case LDLEWhitespace:
             case LDLEParse:
                     item->setPixmap(0,
                         QPixmap::fromMimeSource( "error_parse.png"));
