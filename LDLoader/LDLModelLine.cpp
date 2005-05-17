@@ -2,6 +2,7 @@
 #include "LDLPalette.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCLocalStrings.h>
