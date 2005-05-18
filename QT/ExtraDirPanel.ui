@@ -18,55 +18,57 @@
     <property name="icon">
         <pixmap>LDViewIcon16.png</pixmap>
     </property>
-	<vbox>
-        <widget class="QLayoutWidget">
+    <vbox>
         <property name="name">
-            <cstring>Layout1</cstring>
+            <cstring>unnamed</cstring>
         </property>
-        <property name="margin">
-            <number>0</number>
-        </property>
-        <property name="spacing">
-            <number>6</number>
-        </property>
-    	<hbox>
-       		<property name="name">
-            	<cstring>unnamed</cstring>
-        	</property>
-        	<property name="margin">
-            	<number>0</number>
-        	</property>
-        	<property name="spacing">
-            	<number>6</number>
-        	</property>
-        	<widget class="QListBox">
-            	<property name="name">
-                	<cstring>ExtraDirListView</cstring>
-            	</property>
-            	<property name="sizePolicy">
-                	<sizepolicy>
-                    	<hsizetype>3</hsizetype>
-                    	<vsizetype>3</vsizetype>
-                    	<horstretch>0</horstretch>
-                    	<verstretch>0</verstretch>
-                	</sizepolicy>
-            	</property>
-        	</widget>
-	        <widget class="QLayoutWidget">
-   	        	<property name="name">
-                	<cstring>Layout7</cstring>
-            	</property>
-
-			<vbox>
-            	<property name="name">
-                	<cstring>unnamed</cstring>
-            	</property>
-            	<property name="margin">
-                	<number>0</number>
-            	</property>
-            	<property name="spacing">
-                	<number>6</number>
-            	</property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout1</cstring>
+            </property>
+            <property name="margin" stdset="0">
+                <number>0</number>
+            </property>
+            <property name="spacing" stdset="0">
+                <number>6</number>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QListBox">
+                    <property name="name">
+                        <cstring>ExtraDirListView</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>3</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>Layout7</cstring>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <property name="margin">
+                            <number>0</number>
+                        </property>
+                        <property name="spacing">
+                            <number>6</number>
+                        </property>
                         <widget class="QPushButton">
                             <property name="name">
                                 <cstring>addExtraDirButton</cstring>
@@ -148,32 +150,35 @@
                                 </size>
                             </property>
                         </spacer>
-			</vbox>
-			</widget>
-    	</hbox>
-		</widget>
+                    </vbox>
+                </widget>
+            </hbox>
+        </widget>
         <widget class="QLayoutWidget">
             <property name="name">
                 <cstring>Layout7</cstring>
             </property>
-			<hbox>
-                        <spacer>
-                            <property name="name">
-                                <cstring>Spacer13</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Horizontal</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Expanding</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>20</width>
-                                    <height>20</height>
-                                </size>
-                            </property>
-                        </spacer>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <spacer>
+                    <property name="name">
+                        <cstring>Spacer13</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
                 <widget class="QPushButton">
                     <property name="name">
                         <cstring>okButton</cstring>
@@ -190,7 +195,7 @@
                         <string>OK</string>
                     </property>
                     <property name="accel">
-                        <number>0</number>
+                        <string></string>
                     </property>
                     <property name="default">
                         <bool>true</bool>
@@ -212,29 +217,13 @@
                         <string>Cancel</string>
                     </property>
                     <property name="accel">
-                        <number>4096</number>
+                        <string>Esc</string>
                     </property>
                 </widget>
-			</hbox>
-		</widget>
-	</vbox>
+            </hbox>
+        </widget>
+    </vbox>
 </widget>
-<toolbars>
-</toolbars>
-<tabstops>
-	<tabstop>addExtraDirButton</tabstop>
-	<tabstop>delExtraDirButton</tabstop>
-	<tabstop>upExtraDirButton</tabstop>
-	<tabstop>downExtraDirButton</tabstop>
-	<tabstop>okButton</tabstop>
-    <tabstop>cancelButton</tabstop>
-</tabstops>
-<forwards>
-    <forward>class ExtraDir;</forward>
-</forwards>
-<variables>
-    <variable>ExtraDir *extradir;</variable>
-</variables>
 <connections>
     <connection>
         <sender>okButton</sender>
@@ -255,7 +244,7 @@
         <slot>doAddExtraDir()</slot>
     </connection>
     <connection>
-		<sender>delExtraDirButton</sender>
+        <sender>delExtraDirButton</sender>
         <signal>clicked()</signal>
         <receiver>ExtraDirPanel</receiver>
         <slot>doDelExtraDir()</slot>
@@ -273,14 +262,28 @@
         <slot>doDownExtraDir()</slot>
     </connection>
 </connections>
+<tabstops>
+    <tabstop>addExtraDirButton</tabstop>
+    <tabstop>delExtraDirButton</tabstop>
+    <tabstop>upExtraDirButton</tabstop>
+    <tabstop>downExtraDirButton</tabstop>
+    <tabstop>okButton</tabstop>
+    <tabstop>cancelButton</tabstop>
+</tabstops>
 <includes>
+    <include location="local" impldecl="in implementation">LDViewExtraDir.h</include>
     <include location="local" impldecl="in implementation">ExtraDirPanel.ui.h</include>
-	<include location="local" impldecl="in implementation">LDViewExtraDir.h</include>
 </includes>
+<forwards>
+    <forward>class ExtraDir;</forward>
+</forwards>
+<variables>
+    <variable>ExtraDir *extradir;</variable>
+</variables>
 <slots>
-	<slot>doOk()</slot>
-	<slot>setExtraDir( ExtraDir * value)</slot>
     <slot>doCancel()</slot>
+    <slot>doOk()</slot>
+    <slot>setExtraDir( ExtraDir * value)</slot>
     <slot>doAddExtraDir()</slot>
     <slot>doDelExtraDir()</slot>
     <slot>doUpExtraDir()</slot>
