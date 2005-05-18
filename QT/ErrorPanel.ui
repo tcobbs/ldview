@@ -31,72 +31,72 @@
         <property name="spacing">
             <number>6</number>
         </property>
-	<widget class="QLayoutWidget">
+        <widget class="QLayoutWidget">
             <property name="name">
                 <cstring>Layout71</cstring>
             </property>
-	<vbox>
-            <property name="name">
-                <cstring>unnamed</cstring>
-            </property>
-            <property name="margin">
-                <number>0</number>
-            </property>
-            <property name="spacing">
-                <number>6</number>
-            </property>
-        <widget class="QListView">
-            <column>
-                <property name="text">
-                    <string>Errors</string>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
                 </property>
-                <property name="clickable">
-                    <bool>false</bool>
+                <property name="margin">
+                    <number>0</number>
                 </property>
-                <property name="resizeable">
-                    <bool>false</bool>
+                <property name="spacing">
+                    <number>6</number>
                 </property>
-            </column>
-            <property name="name">
-                <cstring>errorListView</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>3</hsizetype>
-                    <vsizetype>3</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="frameShape">
-                <enum>StyledPanel</enum>
-            </property>
-            <property name="resizePolicy">
-                <enum>AutoOneFit</enum>
-            </property>
-            <property name="vScrollBarMode">
-                <enum>Auto</enum>
-            </property>
-            <property name="hScrollBarMode">
-                <enum>Auto</enum>
-            </property>
-            <property name="rootIsDecorated">
-                <bool>true</bool>
-            </property>
-            <property name="resizeMode">
-                <enum>NoColumn</enum>
-            </property>
+                <widget class="QListView">
+                    <column>
+                        <property name="text">
+                            <string>Errors</string>
+                        </property>
+                        <property name="clickable">
+                            <bool>false</bool>
+                        </property>
+                        <property name="resizable">
+                            <bool>false</bool>
+                        </property>
+                    </column>
+                    <property name="name">
+                        <cstring>errorListView</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>3</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                        <enum>StyledPanel</enum>
+                    </property>
+                    <property name="resizePolicy">
+                        <enum>AutoOneFit</enum>
+                    </property>
+                    <property name="vScrollBarMode">
+                        <enum>Auto</enum>
+                    </property>
+                    <property name="hScrollBarMode">
+                        <enum>Auto</enum>
+                    </property>
+                    <property name="rootIsDecorated">
+                        <bool>true</bool>
+                    </property>
+                    <property name="resizeMode">
+                        <enum>NoColumn</enum>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>showWarningsButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Show Warnings</string>
+                    </property>
+                </widget>
+            </vbox>
         </widget>
-        <widget class="QCheckBox">
-            <property name="name">
-                <cstring>showWarningsButton</cstring>
-            </property>
-            <property name="text">
-                <string>Show Warnings</string>
-            </property>
-        </widget>
-	</vbox>
-	</widget>
         <widget class="QLayoutWidget">
             <property name="name">
                 <cstring>Layout7</cstring>
@@ -197,14 +197,14 @@
                                 <property name="spacing">
                                     <number>6</number>
                                 </property>
-								<widget class="QCheckBox">
+                                <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>generalErrorButton</cstring>
                                     </property>
                                     <property name="text">
                                         <string>General Error</string>
                                     </property>
-								</widget>
+                                </widget>
                                 <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>parseErrorButton</cstring>
@@ -277,38 +277,38 @@
                                         <string>Co-linear Points</string>
                                     </property>
                                 </widget>
-								<widget class="QCheckBox">
+                                <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>BFCWarningButton</cstring>
                                     </property>
-                                        <property name="text">
+                                    <property name="text">
                                         <string>BFC Warning</string>
                                     </property>
                                 </widget>
-								<widget class="QCheckBox">
+                                <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>BFCErrorButton</cstring>
                                     </property>
-                                        <property name="text">
+                                    <property name="text">
                                         <string>BFC Error</string>
                                     </property>
-								</widget>
-								<widget class="QCheckBox">
+                                </widget>
+                                <widget class="QCheckBox">
                                     <property name="name">
                                         <cstring>MPDErrorButton</cstring>
                                     </property>
-									<property name="text">
+                                    <property name="text">
                                         <string>MPD Error</string>
                                     </property>
                                 </widget>
-								<widget class="QCheckBox">
-									<property name="name">
-										<cstring>whitespaceButton</cstring>
-									</property>
-									<property name="text">
-										<string>Whitespace</string>
-									</property>
-								</widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>whitespaceButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Whitespace</string>
+                                    </property>
+                                </widget>
                             </vbox>
                         </widget>
                     </hbox>
@@ -336,14 +336,11 @@
                     </property>
                     <hbox>
                         <property name="name">
-                             <cstring>unnamed</cstring>
+                            <cstring>unnamed</cstring>
                         </property>
                         <widget class="QPushButton">
                             <property name="name">
                                 <cstring>showAllButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Show All</string>
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
@@ -352,6 +349,9 @@
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
                                 </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>Show All</string>
                             </property>
                         </widget>
                         <spacer>
@@ -375,17 +375,17 @@
                             <property name="name">
                                 <cstring>showNoneButton</cstring>
                             </property>
-                            <property name="text">
-                                <string>Show None</string>
-                            </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
                                     <hsizetype>0</hsizetype>
                                     <vsizetype>0</vsizetype>
                                     <horstretch>0</horstretch>
                                     <verstretch>0</verstretch>
-                               </sizepolicy>
-                           </property>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>Show None</string>
+                            </property>
                         </widget>
                         <spacer>
                             <property name="name">
@@ -463,16 +463,16 @@
     </connection>
     <connection>
         <sender>MPDErrorButton</sender>
-		<signal>clicked()</signal>
+        <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
         <slot>MPDError()</slot>
     </connection>
-	<connection>
-		<sender>whitespaceButton</sender>
-		<signal>clicked()</signal>
-		<receiver>ErrorPanel</receiver>
-		<slot>whitespace()</slot>
-	</connection>
+    <connection>
+        <sender>whitespaceButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>whitespace()</slot>
+    </connection>
     <connection>
         <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
@@ -536,16 +536,16 @@
     <slot>partDeterminant()</slot>
     <slot>concaveQuad()</slot>
     <slot>badVertexOrder()</slot>
-    <slot>identicalVertices()</slot>
     <slot>colinearPoints()</slot>
+    <slot>showWarnings()</slot>
     <slot>BFCWarning()</slot>
     <slot>BFCError()</slot>
-    <slot>MPDError()</slot>
-	<slot>whitespace()</slot>
     <slot>nonFlatQuad()</slot>
+    <slot>MPDError()</slot>
+    <slot>whitespace()</slot>
+    <slot>identicalVertices()</slot>
     <slot>showAllError()</slot>
     <slot>showNoneError()</slot>
-    <slot>showWarnings()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
