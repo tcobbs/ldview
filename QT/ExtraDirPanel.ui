@@ -261,6 +261,12 @@
         <receiver>ExtraDirPanel</receiver>
         <slot>doDownExtraDir()</slot>
     </connection>
+    <connection>
+        <sender>ExtraDirListView</sender>
+        <signal>highlighted(int)</signal>
+        <receiver>ExtraDirPanel</receiver>
+        <slot>doExtraDirSelected()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>addExtraDirButton</tabstop>
@@ -288,6 +294,7 @@
     <slot>doDelExtraDir()</slot>
     <slot>doUpExtraDir()</slot>
     <slot>doDownExtraDir()</slot>
+    <slot>doExtraDirSelected()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>

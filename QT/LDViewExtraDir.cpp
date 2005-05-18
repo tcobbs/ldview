@@ -35,6 +35,7 @@ ExtraDir::~ExtraDir(void)
 
 void ExtraDir::show(void)
 {
+	populateExtraSearchDirs();
 	populateExtraDirsListBox();
 	panel->show();
 	panel->raise();
@@ -61,16 +62,12 @@ void ExtraDir::doAddExtraDir(void)
 		panel->ExtraDirListView->insertItem(fileDialog->selectedFile());
 		extraSearchDirs->addString(fileDialog->selectedFile().ascii());
 		panel->delExtraDirButton->setEnabled(true);
-		if (count>=1)
-		{
-			panel->upExtraDirButton->setEnabled(true);
-			panel->downExtraDirButton->setEnabled(true);
-		}
 		if (count==MAX_EXTRA_DIR-1)
 		{
 			panel->addExtraDirButton->setEnabled(false);
 		}
 	}
+	doExtraDirSelected();
 }
 
 void ExtraDir::doDelExtraDir(void)
@@ -85,16 +82,18 @@ void ExtraDir::doDelExtraDir(void)
 		{
 			panel->delExtraDirButton->setEnabled(false);
 		}
-		if (count==2)
-		{
-			panel->upExtraDirButton->setEnabled(false);
-			panel->downExtraDirButton->setEnabled(false);
-		}
 		if (count==MAX_EXTRA_DIR)
 		{
 			panel->addExtraDirButton->setEnabled(true);
 		}
 	}
+}
+void ExtraDir::doExtraDirSelected(void)
+{
+	int index=panel->ExtraDirListView->currentItem(),
+		count=panel->ExtraDirListView->count();
+	panel->upExtraDirButton->setEnabled(index>0 ? true : false);
+	panel->downExtraDirButton->setEnabled(index == count-1 ? false : true);
 }
 
 void ExtraDir::doUpExtraDir(void)
@@ -158,15 +157,7 @@ void ExtraDir::populateExtraDirsListBox(void)
 	{
 		panel->addExtraDirButton->setEnabled(false);
 	}
-	if (count<2)
-	{
-		panel->upExtraDirButton->setEnabled(false);
-		panel->downExtraDirButton->setEnabled(false);
-	}
-	if (!count)
-	{
-		panel->delExtraDirButton->setEnabled(false);
-	}
+	panel->delExtraDirButton->setEnabled(count>0 ? true : false);
 }
 
 void ExtraDir::recordExtraSearchDirs(void)
