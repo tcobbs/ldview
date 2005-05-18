@@ -29,7 +29,7 @@ LDViewErrors::LDViewErrors(Preferences *preferences)
 	reflectSettings();
 	statusBar = panel->statusBar();
 	messageText = new QLabel(statusBar);
-	statusBar->addWidget(messageText);
+	statusBar->addWidget(messageText,1);
 }
 
 void LDViewErrors::reflectSettings(void)
