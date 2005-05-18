@@ -23,6 +23,7 @@ public:
 	void doDelExtraDir(void);
 	void doUpExtraDir(void);
 	void doDownExtraDir(void);
+	void doExtraDirSelected(void);
 	void doOk(void);
 	void recordExtraSearchDirs(void);
 	void populateExtraSearchDirs(void);

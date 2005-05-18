@@ -33,3 +33,7 @@ void ExtraDirPanel::doDownExtraDir()
 	extradir->doDownExtraDir();
 }
 
+void ExtraDirPanel::doExtraDirSelected()
+{
+	extradir->doExtraDirSelected();
+}
