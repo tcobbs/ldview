@@ -6,6 +6,8 @@
 #include <TRE/TRECamera.h>
 #include <TRE/TREGL.h>
 
+#define L3ORDERM 6
+#define L3ORDERN 6
 
 typedef enum
 {
@@ -314,8 +316,8 @@ class LDrawModelViewer: public TCObject
 		virtual float getClipRadius(void);
 		virtual float getZDistance(void);
 
-		void ludcmp(float a[6][6], int n, int index[6], float *d);
-		void lubksb(const float a[6][6], int n, const int index[6], float b[6]);
+		int L3Solve6(float x[L3ORDERN], const float A[L3ORDERM][L3ORDERN],
+			const float b[L3ORDERM]);
 
 		void scanCameraPoint(const TCVector &point);
 

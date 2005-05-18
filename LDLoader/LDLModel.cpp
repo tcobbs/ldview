@@ -452,6 +452,7 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 
 	if (commentLine->getMPDFilename(filename, sizeof(filename)))
 	{
+		replaceStringCharacter(filename, '\\', '/');
 		if (m_flags.mainModelLoaded)
 		{
 			if (m_activeLineCount == 0)
@@ -508,6 +509,21 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 			{
 				m_flags.bfcCertify = BFCForcedOnState;
 			}
+		}
+	}
+	else if (commentLine->isPrimitiveMeta())
+	{
+		if (m_flags.mainModelLoaded)
+		{
+			m_activeMPDModel->m_flags.part = false;
+			m_activeMPDModel->m_flags.subPart = false;
+			m_activeMPDModel->m_flags.primitive = true;
+		}
+		else
+		{
+			m_flags.part = false;
+			m_flags.subPart = false;
+			m_flags.primitive = true;
 		}
 	}
 	else if (commentLine->isNoShrinkMeta())
@@ -798,6 +814,7 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 
 	if (commentLine->getMPDFilename(filename, sizeof(filename)))
 	{
+		replaceStringCharacter(filename, '\\', '/');
 		return parseMPDMeta(index, filename);
 	}
 	else if (commentLine->isBFCMeta())

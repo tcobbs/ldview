@@ -2852,12 +2852,12 @@ void LDrawModelViewer::zoomToFit(void)
 	if (mainTREModel)
 	{
 		float d;
-//		float dh;
-//		float dv;
 		float a[6][6];
 		float b[6];
-		int index[6];
+		float x[6];
+		TCVector tmpVec;
 		TCVector location;
+		TCVector cameraDir;
 		float tmpMatrix[16];
 		float transformationMatrix[16];
 		float margin;
@@ -2946,44 +2946,36 @@ void LDrawModelViewer::zoomToFit(void)
 				a[5][4] = -cameraData->direction[0];
 			}
 		}
-		ludcmp(a, 6, index, &d);
-		lubksb(a, 6, index, b);
-		d = cameraData->direction[0] * (b[3] - b[0]) +
-			cameraData->direction[1] * (b[4] - b[1]) +
-			cameraData->direction[2] * (b[5] - b[2]);
+		if (!L3Solve6(x, a, b))
+		{
+			// Singular matrix; can't work
+			// (We shouldn't ever get here, so I'm not going to bother with an
+			// error message.  I'd have to first come up with some mechanism
+			// for communicating the error with the non-portable part of the
+			// app so that it could be displayed to the user.)
+			return;
+		}
+		tmpVec = TCVector(x[3], x[4], x[5]) - TCVector(x[0], x[1], x[2]);
+		cameraDir = TCVector(cameraData->direction[0], cameraData->direction[1],
+			cameraData->direction[2]);
+		d = cameraDir.dot(tmpVec);
 		if (d > 0.0)
 		{
-			location[0] = b[0];
-			location[1] = b[1];
-			location[2] = b[2] * (zoomToFitHeight + margin) / zoomToFitHeight;
+			location[0] = x[0];
+			location[1] = x[1];
+			location[2] = x[2] * (zoomToFitHeight + margin) / zoomToFitHeight;
 		}
 		else
 		{
-			location[0] = b[3];
-			location[1] = b[4];
-			location[2] = b[5] * (zoomToFitWidth + margin) / zoomToFitWidth;
+			location[0] = x[3];
+			location[1] = x[4];
+			location[2] = x[5] * (zoomToFitWidth + margin) / zoomToFitWidth;
 		}
 		if (cameraGlobe && sscanf(cameraGlobe, "%*f,%*f,%f", &globeRadius) == 1)
 		{
 			if (globeRadius >= 0)
 			{
 				location[2] = globeRadius;
-/*
-				double xSquared = sqr(location[0]);
-				double ySquared = sqr(location[1]);
-				double rSquared = sqr(globeRadius);
-				double sum = xSquared + ySquared;
-
-				if (sum > rSquared)
-				{
-					rSquared = -rSquared;
-				}
-				else
-				{
-					sum = -sum;
-				}
-				location[2] = (float)sqrt(rSquared + sum);
-*/
 			}
 			else
 			{
@@ -3071,167 +3063,139 @@ void LDrawModelViewer::preCalcCamera(void)
 	}
 }
 
-#define TINY 1.0e-20                      /* A small number.                 */
 
-// More of Lars' L3P auto camera positioning code.
-void LDrawModelViewer::ludcmp(float a[6][6], int n, int index[6], float *d)
-/* Given a matrix a[0..n-1][0..n-1], this routine replaces it by the LU
-   decomposition of a rowwise permutation of itself. a and n are input. a is
-   output, arranged as in equation (2.3.14) above; index[0..n-1] is an output
-   vector that records the row permutation effected by the partial pivoting; d
-   is output as +1/-1 depending on whether the number of row interchanges was
-   even or odd, respectively. This routine is used in combination with lubksb
-   to solve linear equations or invert a matrix.                             */
+/* The following L3Solve6 was extracted by Lars C. Hassing in May 2005
+  from jama_lu.h, part of the "JAMA/C++ Linear Algebra Package" (JAva MAtrix)
+  found together with the "Template Numerical Toolkit (TNT)"
+  at http://math.nist.gov/tnt/download.html
+  Their disclaimer:
+  "This software was developed at the National Institute of Standards and
+   Technology (NIST) by employees of the Federal Government in the course
+   of their official duties. Pursuant to title 17 Section 105 of the
+   United States Code this software is not subject to copyright protection
+   and is in the public domain. NIST assumes no responsibility whatsoever
+   for its use by other parties, and makes no guarantees, expressed or
+   implied, about its quality, reliability, or any other characteristic."
+*/
+
+/* Solve A*x=b, returns 1 if OK, 0 if A is singular */
+int LDrawModelViewer::L3Solve6(float x[L3ORDERN],
+            const float A[L3ORDERM][L3ORDERN],
+            const float b[L3ORDERM])
 {
-   int                  i,
-                        imax,
-                        j,
-                        k;
-   float                big,
-                        dum,
-                        sum,
-                        temp;
-   float                vv[8];            /* vv stores the implicit scaling of
-                                             each row.                       */
+  float          LU_[L3ORDERM][L3ORDERN];
+  int            pivsign;
+  int            piv[L3ORDERM];/* pivot permutation vector                  */
+  int            i;
+  int            j;
+  int            k;
+  int            p;
+  float         *LUrowi;
+  float          LUcolj[L3ORDERM];
+  int            kmax;
+  double         s;
+  float          t;
 
-   imax = 0; // Get rid of warning.
-   *d = 1.0;                              /* No row interchanges yet.        */
-   for (i = 0; i < n; i++)
-   {                                      /* Loop over rows to get the implicit
-                                             scaling information.            */
-      big = 0.0;
-      for (j = 0; j < n; j++)
-         if ((temp = (float)fabs(a[i][j])) > big)
-            big = temp;
-      if (big == 0.0)
-      {
-		  // Singular matrix
-		  // We should display an error, except that hopefully it is impossible
-		  // to get here.
-      }
-      /* No nonzero largest element. */
-      vv[i] = (float)(1.0 / big);         /* Save the scaling.               */
-   }
-   for (j = 0; j < n; j++)
-   {                                      /* This is the loop over columns of
-                                             Crout's method.                 */
-      for (i = 0; i < j; i++)
-      {                                   /* This is equation (2.3.12) except
-                                             for i = j.                      */
-         sum = a[i][j];
-         for (k = 0; k < i; k++)
-            sum -= a[i][k] * a[k][j];
-         a[i][j] = sum;
-      }
-      big = 0.0;                          /* Initialize for the search for
-                                             largest pivot element.          */
-      for (i = j; i < n; i++)
-      {                                   /* This is i = j of equation (2.3.12)
-                                             and i = j +1...N of equation
-                                             (2.3.13).                       */
-         sum = a[i][j];
-         for (k = 0; k < j; k++)
-            sum -= a[i][k] * a[k][j];
-         a[i][j] = sum;
-         if ((dum = (float)(vv[i] * fabs(sum))) >= big)
-         {
-            /* Is the figure of merit for the pivot better than the best so
-               far?                                                          */
-            big = dum;
-            imax = i;
-         }
-      }
-      if (j != imax)
-      {                                   /* Do we need to interchange rows? */
-         for (k = 0; k < n; k++)
-         {                                /* Yes, do so...                   */
-            dum = a[imax][k];
-            a[imax][k] = a[j][k];
-            a[j][k] = dum;
-         }
-         *d = -(*d);                      /* ...and change the parity of d.  */
-         vv[imax] = vv[j];                /* Also interchange the scale
-                                             factor.                         */
-      }
-      index[j] = imax;
-      if (a[j][j] == 0.0)
-         a[j][j] = (float)TINY;
-      /* If the pivot element is zero the matrix is singular (at least to the
-         precision of the algorithm). For some applications on singular
-         matrices, it is desirable to substitute TINY for zero.              */
-      if (j != n - 1)
-      {                                   /* Now, finally, divide by the pivot
-                                             element.                        */
-         dum = (float)(1.0 / (a[j][j]));
-         for (i = j + 1; i < n; i++)
-            a[i][j] *= dum;
-      }
-   }                                      /* Go back for the next column in the
-                                             reduction.                      */
-}
+  /** LU Decomposition.
+  For an m-by-n matrix A with m >= n, the LU decomposition is an m-by-n
+  unit lower triangular matrix L, an n-by-n upper triangular matrix U,
+  and a permutation vector piv of length m so that A(piv,:) = L*U.
+  If m < n, then L is m-by-m and U is m-by-n.
 
-// More of Lars' L3P auto camera positioning code.
-/* Here is the routine for forward substitution and backsubstitution, implementing equations (2.3.6) and (2.3.7). */
-void LDrawModelViewer::lubksb(const float a[6][6], int n, const int index[6],
-							  float b[6])
-/* Solves the set of n linear equations A . X = B. Here a[0..n-1][0..n-1] is
-   input, not as the matrix A but rather as its LU decomposition, determined
-   by the routine ludcmp. index[0..n-1] is input as the permutation vector
-   returned by ludcmp. b[0..n-1] is input as the right-hand side vector B, and
-   returns with the solution vector X. a, n, and index are not modified by this
-   routine and can be left in place for successive calls with different
-   right-hand sides b. This routine takes into account the possibility that b
-   will begin with many zero elements, so it is efficient for use in matrix
-   inversion.                                                                */
-{
-   int                  i,
-                        ii = -1,
-                        ip,
-                        j;
-   float                sum;
+  The LU decompostion with pivoting always exists, even if the matrix is
+  singular, so the constructor will never fail.  The primary use of the
+  LU decomposition is in the solution of square systems of simultaneous
+  linear equations.  This will fail if isNonsingular() returns false.
+                                                                            */
+  memcpy(LU_, A, sizeof(LU_));
 
-   for (i = 0; i < n; i++)
-   {
-      /* When ii is set to a value >= 0, it will become the index of the
-         first nonvanishing element of b. We now do the forward substitution,
-         equation (2.3.6). The only new wrinkle is to unscramble the
-         permutation as we go.                                               */
-      ip = index[i];
-      sum = b[ip];
-      b[ip] = b[i];
-      if (ii >= 0)
-         for (j = ii; j < i; j++)
-            sum -= a[i][j] * b[j];
-      else if (sum)
-         ii = i;                          /* A nonzero element was encountered,
-                                             so from now on we will have to do
-                                             the sums in the loop above.     */
-      b[i] = sum;
-   }
-   for (i = n - 1; i >= 0; i--)
-   {                                      /* Now we do the backsubstitution,
-                                             equation (2.3.7).               */
-      sum = b[i];
-      for (j = i + 1; j < n; j++)
-         sum -= a[i][j] * b[j];
-      b[i] = sum / a[i][i];               /* Store a component of the solution
-                                             vector X.                       */
-   }                                      /* All done!                       */
-}
-/* The LU decomposition in ludcmp requires about 1/3 N^3 executions of the
-   inner loops (each with one multiply and one add). This is thus the
-   operation count for solving one (or a few) right-hand sides, and is a
-   factor of 3 better than the Gauss-Jordan routine gaussj which was given in
-   Section 2.1, and a factor of 1.5 better than a Gauss-Jordan routine (not
-   given) that does not compute the inverse matrix. For inverting a matrix,
-   the total count (including the forward and backsubstitution as discussed
-   following equation 2.3.7 above) is ( 1/3 + 1/6 + 1/2 )N^3 = N^3, the same
-   as gaussj. To summarize, this is the preferred way to solve the linear set
-   of equations A . x = b:                                                   */
-/* float **a,*b,d; */
-/* int n,*index; */
-/* ... */
-/* ludcmp(a,n,index,&d); */
-/* lubksb(a,n,index,b); */
-/* The answer x will be given back in b. Your original matrix A will have
-   been destroyed.                                                           */
+  /* Use a "left-looking", dot-product, Crout/Doolittle algorithm. */
+  for (i = 0; i < L3ORDERM; i++)
+     piv[i] = i;
+  pivsign = 1;
+
+  /* Outer loop. */
+  for (j = 0; j < L3ORDERN; j++)
+  {
+     /* Make a copy of the j-th column to localize references. */
+     for (i = 0; i < L3ORDERM; i++)
+        LUcolj[i] = LU_[i][j];
+
+     /* Apply previous transformations. */
+     for (i = 0; i < L3ORDERM; i++)
+     {
+        LUrowi = LU_[i];
+        /* Most of the time is spent in the following dot product. */
+        kmax = i < j ? i : j;  /* min(i, j)                                 */
+        s = 0.0;
+        for (k = 0; k < kmax; k++)
+           s += LUrowi[k] * LUcolj[k];
+        LUrowi[j] = LUcolj[i] -= (float)s;
+     }
+
+     /* Find pivot and exchange if necessary. */
+     p = j;
+     for (i = j + 1; i < L3ORDERM; i++)
+     {
+        if (fabs(LUcolj[i]) > fabs(LUcolj[p]))
+           p = i;
+     }
+     if (p != j)
+     {
+        for (k = 0; k < L3ORDERN; k++)
+        {
+           t = LU_[p][k];
+           LU_[p][k] = LU_[j][k];
+           LU_[j][k] = t;
+        }
+        k = piv[p];
+        piv[p] = piv[j];
+        piv[j] = k;
+        pivsign = -pivsign;
+     }
+
+     /* Compute multipliers. */
+     if ((j < L3ORDERM) && (LU_[j][j] != 0.0))
+     {
+        for (i = j + 1; i < L3ORDERM; i++)
+           LU_[i][j] /= LU_[j][j];
+     }
+  }
+
+  /* LCH: This was LU Decomposition. Now solve: */
+
+  /** Solve A*x = b, where x and b are vectors of length equal
+        to the number of rows in A.
+
+  @param  b   a vector (Array1D> of length equal to the first dimension of A.
+  @return x   a vector (Array1D> so that L*U*x = b(piv), if B is nonconformant,
+              returns 0x0 (null) array.
+                                                                            */
+  /* Is the matrix nonsingular? I.e. is upper triangular factor U (and hence
+     A) nonsingular (isNonsingular())                                       */
+  for (j = 0; j < L3ORDERN; j++)
+  {
+     if (LU_[j][j] == 0)
+        return 0;
+  }
+
+  for (i = 0; i < L3ORDERN; i++)
+     x[i] = b[piv[i]];
+
+  /* Solve L*Y = B(piv) */
+  for (k = 0; k < L3ORDERN; k++)
+  {
+     for (i = k + 1; i < L3ORDERN; i++)
+        x[i] -= x[k] * LU_[i][k];
+  }
+
+  /* Solve U*X = Y; */
+  for (k = L3ORDERN - 1; k >= 0; k--)
+  {
+     x[k] /= LU_[k][k];
+     for (i = 0; i < k; i++)
+        x[i] -= x[k] * LU_[i][k];
+  }
+
+  return 1;
+}                               /* Solve6                                    */
