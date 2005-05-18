@@ -2555,14 +2555,14 @@ void ModelWindow::setPollSetting(int value)
 }
 
 bool ModelWindow::writeImage(char *filename, int width, int height,
-							 BYTE *buffer, char *formatName)
+							 BYTE *buffer, char *formatName, bool saveAlpha)
 {
 	TCImage *image = new TCImage;
 	bool retValue;
 	const char *version = ((LDViewWindow *)parentWindow)->getProductVersion();
 	char comment[1024];
 
-	if (canSaveAlpha())
+	if (saveAlpha)
 	{
 		image->setDataFormat(TCRgba8);
 	}
@@ -2595,9 +2595,10 @@ bool ModelWindow::writeBmp(char *filename, int width, int height, BYTE *buffer)
 	return writeImage(filename, width, height, buffer, "BMP");
 }
 
-bool ModelWindow::writePng(char *filename, int width, int height, BYTE *buffer)
+bool ModelWindow::writePng(char *filename, int width, int height, BYTE *buffer,
+						   bool saveAlpha)
 {
-	return writeImage(filename, width, height, buffer, "PNG");
+	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
 }
 
 bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
@@ -2721,40 +2722,20 @@ void ModelWindow::renderOffscreenImage(void)
 {
 	makeCurrent();
 	modelViewer->update();
-	if (false && canSaveAlpha())
+	if (canSaveAlpha())
 	{
-		bool oldBlendEnable = true;
-		bool oldDepthTestEnable = true;
-		bool oldLightingEnable = false;
-		bool oldPolygonOffsetEnabled = false;
-		GLint oldDepthFunc;
-
-		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
-		orthoView();
-		glColor4ub(0, 0, 0, 255 - 28);	// 255 - (110 / 4), which equals 2 faces
-										// worth of standard alpha blending.
+		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |
+			GL_VIEWPORT_BIT);
+//		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
+		CUIOGLWindow::orthoView();
+		glColor4ub(0, 0, 0, 255);
+//		glColor4ub(0, 0, 0, 255 - 28);	// 255 - (110 / 4), which equals 2 faces
+//										// worth of standard alpha blending.
 		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
-		glGetIntegerv(GL_DEPTH_FUNC, &oldDepthFunc);
-		if (!glIsEnabled(GL_BLEND))
-		{
-			oldBlendEnable = false;
-			glEnable(GL_BLEND);
-		}
-		if (!glIsEnabled(GL_DEPTH_TEST))
-		{
-			oldDepthTestEnable = false;
-			glEnable(GL_DEPTH_TEST);
-		}
-		if (glIsEnabled(GL_LIGHTING))
-		{
-			oldLightingEnable = true;
-			glDisable(GL_LIGHTING);
-		}
-		if (glIsEnabled(GL_POLYGON_OFFSET_FILL))
-		{
-			glDisable(GL_POLYGON_OFFSET_FILL);
-			oldPolygonOffsetEnabled = true;
-		}
+//		glEnable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glDisable(GL_POLYGON_OFFSET_FILL);
 		glDepthFunc(GL_GREATER);
 		glDepthRange(0.0f, 1.0f);
 		glBegin(GL_QUADS);
@@ -2762,31 +2743,24 @@ void ModelWindow::renderOffscreenImage(void)
 			glVertex3f((float)width, 0.0f, -1.0f);
 			glVertex3f((float)width, (float)height, -1.0f);
 			glVertex3f(0.0f, (float)height, -1.0f);
-/*
-			glVertex3f(0.0f, 0.0f, -1.0f);
-			glVertex3f(640.0f, 0.0f, -1.0f);
-			glVertex3f(640.0f, 480.0f, -1.0f);
-			glVertex3f(0.0f, 480.0f, -1.0f);
-*/
 		glEnd();
-		glDepthFunc(oldDepthFunc);
-		if (oldLightingEnable)
-		{
-			glEnable(GL_LIGHTING);
-		}
-		if (oldPolygonOffsetEnabled)
-		{
-			glEnable(GL_POLYGON_OFFSET_FILL);
-		}
-		if (!oldBlendEnable)
-		{
-			glDisable(GL_BLEND);
-		}
-		if (!oldDepthTestEnable)
-		{
-			glDisable(GL_DEPTH_TEST);
-		}
-		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+/*
+		glColor4ub(0, 0, 0, 129);
+//		glColor4ub(0, 0, 0, 255 - 28);	// 255 - (110 / 4), which equals 2 faces
+										// worth of standard alpha blending.
+		glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_LESS, 1.0);
+		glBegin(GL_QUADS);
+			glVertex3f(0.0f, 0.0f, -1.0f);
+			glVertex3f((float)width, 0.0f, -1.0f);
+			glVertex3f((float)width, (float)height, -1.0f);
+			glVertex3f(0.0f, (float)height, -1.0f);
+		glEnd();
+*/
+		glPopAttrib();
 	}
 }
 
@@ -2867,7 +2841,7 @@ void ModelWindow::cleanupSnapshotBackBuffer(RECT &rect)
 }
 
 BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
-							 BYTE *buffer)
+							 BYTE *buffer, bool *saveAlpha)
 {
 	RECT rect = {0, 0, 0, 0};
 	bool oldSlowClear = modelViewer->getSlowClear();
@@ -2911,6 +2885,17 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	{
 		bytesPerPixel = 4;
 		bufferFormat = GL_RGBA;
+		if (saveAlpha)
+		{
+			*saveAlpha = true;
+		}
+	}
+	else
+	{
+		if (saveAlpha)
+		{
+			*saveAlpha = false;
+		}
 	}
 	smallBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
 	bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
@@ -3013,16 +2998,31 @@ bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 {
 	char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
 		false);
+	bool saveAlpha = false;
 	BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit || cameraGlobe
-		!= NULL);
+		!= NULL, NULL, &saveAlpha);
 	bool retValue = false;
 
 	delete cameraGlobe;
 	if (buffer)
 	{
+		if (saveAlpha)
+		{
+			int i;
+			int totalBytes = imageWidth * imageHeight * 4;
+
+			for (i = 3; i < totalBytes; i += 4)
+			{
+				if (buffer[i] != 0 && buffer[i] != 255)
+				{
+					buffer[i] = 255 - 28;
+				}
+			}
+		}
 		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 		{
-			retValue = writePng(filename, imageWidth, imageHeight, buffer);
+			retValue = writePng(filename, imageWidth, imageHeight, buffer,
+				saveAlpha);
 		}
 		else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 		{

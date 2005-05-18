@@ -124,6 +124,32 @@ bool LDLCommentLine::isNoShrinkMeta(void) const
 	return false;
 }
 
+bool LDLCommentLine::isPrimitiveMeta(void) const
+{
+	int word = 0;
+	int numWords = m_words->getCount();
+
+	if (numWords >= 2 && (strcasecmp((*m_words)[0], "unofficial") == 0 ||
+		strcasecmp((*m_words)[0], "un-official") == 0 ||
+		strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
+		strcasecmp((*m_words)[0], "original") == 0))
+	{
+		if (strcasecmp((*m_words)[1], "ldraw") == 0)
+		{
+			word = 2;
+		}
+		else
+		{
+			word = 1;
+		}
+	}
+	if (word && strcasecmp((*m_words)[word], "primitive") == 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool LDLCommentLine::isPartMeta(void) const
 {
 	int word = 0;

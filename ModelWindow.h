@@ -214,13 +214,13 @@ class ModelWindow: public CUIOGLWindow
 		virtual void swapBuffers(void);
 		virtual LRESULT doCommand(int itemId, int notifyCode, HWND controlHWnd);
 		virtual bool writePng(char *filename, int width, int height,
-			BYTE *buffer);
+			BYTE *buffer, bool saveAlpha);
 		virtual bool writeBmp(char *filename, int width, int height,
 			BYTE *buffer);
 		virtual bool writeImage(char *filename, int width, int height,
-			BYTE *buffer, char *formatName);
+			BYTE *buffer, char *formatName, bool saveAlpha = false);
 		virtual BYTE *grabImage(int &imageWidth, int &imageHeight,
-			bool zoomToFit, BYTE *buffer = NULL);
+			bool zoomToFit, BYTE *buffer = NULL, bool *saveAlpha = NULL);
 		virtual bool saveImage(char *filename, int imageWidth, int imageHeight,
 			bool zoomToFit);
 		virtual void renderOffscreenImage(void);

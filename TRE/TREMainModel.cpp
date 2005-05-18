@@ -968,10 +968,6 @@ void TREMainModel::drawTransparent(void)
 		{
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			if (!getWireframeFlag())
-			{
-				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-			}
 			glDepthMask(GL_FALSE);
 		}
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
@@ -1011,10 +1007,6 @@ void TREMainModel::drawTransparent(void)
 		else if (!getCutawayDrawFlag())
 		{
 			glDisable(GL_BLEND);
-			if (!getWireframeFlag())
-			{
-				glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-			}
 			glDepthMask(GL_TRUE);
 		}
 	}
