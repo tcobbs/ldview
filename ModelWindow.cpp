@@ -3015,7 +3015,14 @@ bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 			{
 				if (buffer[i] != 0 && buffer[i] != 255)
 				{
-					buffer[i] = 255 - 28;
+					if (buffer[i] == 74)
+					{
+						buffer[i] = 255 - 28;
+					}
+					else
+					{
+						buffer[i] = 255;
+					}
 				}
 			}
 		}
