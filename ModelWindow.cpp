@@ -4197,30 +4197,41 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine)
 	}
 	if (saveFilename[0] || getSaveFilename(saveFilename, 1024))
 	{
-		TCUserDefaults::setLongForKey(ignorePBuffer ? 1 : 0, IGNORE_PBUFFER_KEY,
-			false);
-		if (saveSeries)
+		if (!fromCommandLine)
 		{
-			TCUserDefaults::setLongForKey(1, SAVE_SERIES_KEY, false);
-			TCUserDefaults::setLongForKey(saveDigits, SAVE_DIGITS_KEY, false);
-		}
-		else
-		{
-			TCUserDefaults::setLongForKey(0, SAVE_SERIES_KEY, false);
+			TCUserDefaults::setLongForKey(ignorePBuffer ? 1 : 0,
+				IGNORE_PBUFFER_KEY, false);
+			if (saveSeries)
+			{
+				TCUserDefaults::setLongForKey(1, SAVE_SERIES_KEY, false);
+				TCUserDefaults::setLongForKey(saveDigits, SAVE_DIGITS_KEY,
+					false);
+			}
+			else
+			{
+				TCUserDefaults::setLongForKey(0, SAVE_SERIES_KEY, false);
+			}
 		}
 		if (saveActualSize)
 		{
-			TCUserDefaults::setLongForKey(1, SAVE_ACTUAL_SIZE_KEY, false);
+			if (!fromCommandLine)
+			{
+				TCUserDefaults::setLongForKey(1, SAVE_ACTUAL_SIZE_KEY, false);
+			}
 			return saveImage(saveFilename, width, height, externalFilename &&
 				saveZoomToFit);
 		}
 		else
 		{
-			TCUserDefaults::setLongForKey(0, SAVE_ACTUAL_SIZE_KEY, false);
-			TCUserDefaults::setLongForKey(saveWidth, SAVE_WIDTH_KEY, false);
-			TCUserDefaults::setLongForKey(saveHeight, SAVE_HEIGHT_KEY, false);
-			TCUserDefaults::setLongForKey(saveZoomToFit, SAVE_ZOOM_TO_FIT_KEY,
-				false);
+			if (!fromCommandLine)
+			{
+				TCUserDefaults::setLongForKey(0, SAVE_ACTUAL_SIZE_KEY, false);
+				TCUserDefaults::setLongForKey(saveWidth, SAVE_WIDTH_KEY, false);
+				TCUserDefaults::setLongForKey(saveHeight, SAVE_HEIGHT_KEY,
+					false);
+				TCUserDefaults::setLongForKey(saveZoomToFit,
+					SAVE_ZOOM_TO_FIT_KEY, false);
+			}
 			return saveImage(saveFilename, saveWidth, saveHeight,
 				saveZoomToFit);
 		}
@@ -4298,10 +4309,13 @@ BOOL ModelWindow::setupPFD(void)
 	return CUIOGLWindow::setupPFD();
 }
 
-void ModelWindow::setViewMode(LDVViewMode mode)
+void ModelWindow::setViewMode(LDVViewMode mode, bool saveSetting)
 {
 	viewMode = mode;
-	TCUserDefaults::setLongForKey(viewMode, VIEW_MODE_KEY, false);
+	if (saveSetting)
+	{
+		TCUserDefaults::setLongForKey(viewMode, VIEW_MODE_KEY, false);
+	}
 	if (modelViewer)
 	{
 		if (viewMode == LDVViewExamine)

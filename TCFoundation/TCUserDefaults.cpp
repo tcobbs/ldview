@@ -195,9 +195,10 @@ const char* TCUserDefaults::getAppName(void)
 	return getCurrentUserDefaults()->defGetAppName();
 }
 
-void TCUserDefaults::setSessionName(const char* value, const char* saveKey)
+void TCUserDefaults::setSessionName(const char* value, const char* saveKey,
+									bool copyCurrent)
 {
-	getCurrentUserDefaults()->defSetSessionName(value, saveKey);
+	getCurrentUserDefaults()->defSetSessionName(value, saveKey, copyCurrent);
 }
 
 const char* TCUserDefaults::getSessionName(void)
@@ -636,7 +637,7 @@ void TCUserDefaults::defSetAppName(const char* value)
 	{
 		delete appName;
 		appName = copyString(value);
-		defSetSessionName(NULL);
+		defSetSessionName(NULL, NULL, false);
 #ifdef WIN32
 		if (hAppDefaultsKey)
 		{
@@ -648,7 +649,8 @@ void TCUserDefaults::defSetAppName(const char* value)
 	}
 }
 
-void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
+void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
+									   bool copyCurrent)
 {
 	if (value != sessionName)
 	{
@@ -662,42 +664,54 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey)
 			hSessionKey = openSessionKey();
 			if (!hSessionKey)
 			{
-				TCStringArray *allKeys;
-				int i;
-				int count;
-				char *sessionPrefix = new char[strlen(sessionName) + 128];
-
-				sprintf(sessionPrefix, "Sessions/%s/", sessionName);
 				hSessionKey = hOldSessionKey;
-				allKeys = defGetAllKeys();
-				count = allKeys->getCount();
-				for (i = 0; i < count; i++)
+				if (copyCurrent)
 				{
-					char *key = allKeys->stringAtIndex(i);
-					char *newKey = new char[strlen(sessionPrefix) + strlen(key)
-						+ 4];
+					TCStringArray *allKeys;
+					int i;
+					int count;
+					char *sessionPrefix = new char[strlen(sessionName) + 128];
 
-					sprintf(newKey, "%s%s", sessionPrefix, key);
-					if (defIsLongKey(key, true))
+					sprintf(sessionPrefix, "Sessions/%s/", sessionName);
+					allKeys = defGetAllKeys();
+					count = allKeys->getCount();
+					for (i = 0; i < count; i++)
 					{
-						long value = defLongForKey(key, true);
+						char *key = allKeys->stringAtIndex(i);
+						char *newKey = new char[strlen(sessionPrefix) +
+							strlen(key) + 4];
 
-						hSessionKey = hAppDefaultsKey;
-						setLongForKey(value, newKey);
-					}
-					else
-					{
-						char *value = defStringForKey(key, true);
+						sprintf(newKey, "%s%s", sessionPrefix, key);
+						if (defIsLongKey(key, true))
+						{
+							long value = defLongForKey(key, true);
 
-						hSessionKey = hAppDefaultsKey;
-						setStringForKey(value, newKey);
-						delete value;
+							hSessionKey = hAppDefaultsKey;
+							setLongForKey(value, newKey);
+						}
+						else
+						{
+							char *value = defStringForKey(key, true);
+
+							hSessionKey = hAppDefaultsKey;
+							setStringForKey(value, newKey);
+							delete value;
+						}
+						hSessionKey = hOldSessionKey;
+						delete newKey;
 					}
-					hSessionKey = hOldSessionKey;
-					delete newKey;
+					allKeys->release();
+					delete sessionPrefix;
 				}
-				delete sessionPrefix;
-				allKeys->release();
+				else
+				{
+					char *dummyKeyName = new char[strlen(sessionName) + 128];
+
+					sprintf(dummyKeyName, "Sessions/%s/dummy", sessionName);
+					setLongForKey(1, dummyKeyName);
+					removeValue(dummyKeyName);
+					delete dummyKeyName;
+				}
 				hSessionKey = openSessionKey();
 			}
 		}

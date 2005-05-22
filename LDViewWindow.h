@@ -146,7 +146,8 @@ class LDViewWindow: public CUIWindow
 		virtual void recordExtraSearchDirs(void);
 		virtual void populateExtraDirsListBox(void);
 		virtual void populateDisplayModeMenuItems(void);
-		virtual void selectFSVideoModeMenuItem(int);
+		virtual void selectFSVideoModeMenuItem(int index,
+			bool saveSetting = true);
 		virtual HMENU menuForBitDepth(HWND, int, int* = NULL);
 		virtual void selectPollingMenuItem(int);
 		virtual HMENU getPollingMenu(void);
@@ -180,8 +181,8 @@ class LDViewWindow: public CUIWindow
 //		virtual void showTransformationMatrix(void);
 		virtual void showLDrawCommandLine(void);
 		virtual bool modelWindowIsShown(void);
-		virtual LRESULT switchToExamineMode(void);
-		virtual LRESULT switchToFlythroughMode(void);
+		virtual LRESULT switchToExamineMode(bool saveSetting = true);
+		virtual LRESULT switchToFlythroughMode(bool saveSetting = true);
 		virtual void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
 			bool checked);
 		virtual void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
@@ -201,7 +202,7 @@ class LDViewWindow: public CUIWindow
 		virtual void startLoading(void);
 		virtual void stopLoading(void);
 		virtual void showStatusIcon(bool examineMode);
-		virtual void reflectViewMode(void);
+		virtual void reflectViewMode(bool saveSetting = true);
 		virtual void reflectTopmost(void);
 		virtual void reflectVisualStyle(void);
 		virtual void reflectStatusBar(void);

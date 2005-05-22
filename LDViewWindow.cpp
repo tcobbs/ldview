@@ -597,18 +597,18 @@ void LDViewWindow::createStatusBar(void)
 	}
 }
 
-void LDViewWindow::reflectViewMode(void)
+void LDViewWindow::reflectViewMode(bool saveSetting)
 {
 	switch (TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false))
 	{
 	case LDVViewExamine:
-		switchToExamineMode();
+		switchToExamineMode(saveSetting);
 		break;
 	case LDVViewFlythrough:
-		switchToFlythroughMode();
+		switchToFlythroughMode(saveSetting);
 		break;
 	default:
-		switchToExamineMode();
+		switchToExamineMode(saveSetting);
 		break;
 	}
 }
@@ -678,7 +678,7 @@ BOOL LDViewWindow::initWindow(void)
 		hPrimitivesMenu = GetSubMenu(hToolbarMenu, 2);
 		hLightingMenu = GetSubMenu(hToolbarMenu, 3);
 		hBFCMenu = GetSubMenu(hToolbarMenu, 4);
-		reflectViewMode();
+		reflectViewMode(false);
 		populateRecentFileMenuItems();
 		updateModelMenuItems();
 		if (!fullScreen && !screenSaver)
@@ -1619,7 +1619,7 @@ LRESULT LDViewWindow::doChar(TCHAR characterCode, LPARAM /*keyData*/)
 	return 1;
 }
 
-void LDViewWindow::selectFSVideoModeMenuItem(int index)
+void LDViewWindow::selectFSVideoModeMenuItem(int index, bool saveSetting)
 {
 	VideoModeT* videoMode = getCurrentVideoMode();
 	HMENU bitDepthMenu;
@@ -1642,9 +1642,12 @@ void LDViewWindow::selectFSVideoModeMenuItem(int index)
 	fsWidth = videoMode->width;
 	fsHeight = videoMode->height;
 	fsDepth = videoMode->depth;
-	TCUserDefaults::setLongForKey(fsWidth, FULLSCREEN_WIDTH_KEY);
-	TCUserDefaults::setLongForKey(fsHeight, FULLSCREEN_HEIGHT_KEY);
-	TCUserDefaults::setLongForKey(fsDepth, FULLSCREEN_DEPTH_KEY);
+	if (saveSetting)
+	{
+		TCUserDefaults::setLongForKey(fsWidth, FULLSCREEN_WIDTH_KEY);
+		TCUserDefaults::setLongForKey(fsHeight, FULLSCREEN_HEIGHT_KEY);
+		TCUserDefaults::setLongForKey(fsDepth, FULLSCREEN_DEPTH_KEY);
+	}
 	if (videoMode)
 	{
 		bitDepthMenu = menuForBitDepth(hWindow, videoMode->depth, &menuIndex);
@@ -2318,20 +2321,20 @@ void LDViewWindow::setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
 	SetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
 }
 
-LRESULT LDViewWindow::switchToExamineMode(void)
+LRESULT LDViewWindow::switchToExamineMode(bool saveSetting)
 {
 	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, true);
 	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, false);
-	modelWindow->setViewMode(LDVViewExamine);
+	modelWindow->setViewMode(LDVViewExamine, saveSetting);
 	showStatusIcon(true);
 	return 0;
 }
 
-LRESULT LDViewWindow::switchToFlythroughMode(void)
+LRESULT LDViewWindow::switchToFlythroughMode(bool saveSetting)
 {
 	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, false);
 	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, true);
-	modelWindow->setViewMode(LDVViewFlythrough);
+	modelWindow->setViewMode(LDVViewFlythrough, saveSetting);
 	showStatusIcon(false);
 	return 0;
 }
@@ -3551,7 +3554,7 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		{
 			TCUserDefaults::setLongForKey(1, WINDOW_MAXIMIZED_KEY, false);
 		}
-		else
+		else if (IsWindowVisible(hWindow))
 		{
 			TCUserDefaults::setLongForKey(0, WINDOW_MAXIMIZED_KEY, false);
 			if (sizeType == SIZE_RESTORED)
@@ -4026,7 +4029,7 @@ LRESULT LDViewWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 	initPollingMenu();
 	if (currentVideoModeIndex >= 0)
 	{
-		selectFSVideoModeMenuItem(currentVideoModeIndex);
+		selectFSVideoModeMenuItem(currentVideoModeIndex, false);
 	}
 	return retVal;
 }
