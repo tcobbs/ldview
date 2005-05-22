@@ -325,7 +325,7 @@ static void setupUserDefaults(LPSTR lpCmdLine, bool screenSaver)
 		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 	if (sessionName && sessionName[0])
 	{
-		TCUserDefaults::setSessionName(sessionName);
+		TCUserDefaults::setSessionName(sessionName, NULL, false);
 	}
 	delete sessionName;
 }

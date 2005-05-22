@@ -32,7 +32,7 @@ class TCExport TCUserDefaults: public TCObject
 		static void setAppName(const char* value);
 		static const char* getAppName(void);
 		static void setSessionName(const char* value,
-			const char* saveKey = NULL);
+			const char* saveKey = NULL, bool copyCurrent = true);
 		static const char* getSessionName(void);
 		static void deleteResult(void* value);
 		static void setCommandLine(char *argv[]);
@@ -59,7 +59,8 @@ class TCExport TCUserDefaults: public TCObject
 		void defRemoveValue(const char* key, bool sessionSpecific);
 		void defSetAppName(const char* value);
 		const char* defGetAppName(void) { return appName; }
-		void defSetSessionName(const char* value, const char* saveKey = NULL);
+		void defSetSessionName(const char* value, const char* saveKey,
+			bool copyCurrent);
 		const char* defGetSessionName(void) { return sessionName; }
 		void defSetCommandLine(TCStringArray *argArray);
 		char* defCommandLineStringForKey(const char* key);
