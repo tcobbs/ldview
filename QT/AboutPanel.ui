@@ -96,8 +96,8 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>LDView Version 3.0 Beta 1D (18 May, 2005)
-Copyright © 2000-2005 Travis Cobbs</string>
+                                <string>LDView Version 3.0 RC1 (23 May, 2005)
+Copyright © 2000-2005 Travis Cobbs &amp; Peter Bartfai</string>
                             </property>
                             <property name="textFormat">
                                 <enum>PlainText</enum>
@@ -142,8 +142,8 @@ Copyright © 2000-2005 Travis Cobbs</string>
                     </property>
                     <property name="sizePolicy">
                         <sizepolicy>
-                            <hsizetype>5</hsizetype>
-                            <vsizetype>5</vsizetype>
+                            <hsizetype>4</hsizetype>
+                            <vsizetype>4</vsizetype>
                             <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
                         </sizepolicy>
@@ -153,7 +153,6 @@ Copyright © 2000-2005 Travis Cobbs</string>
 Special thanks for contributions to LDView go to the following
 (mostly in alphabetic order):
 
-Peter Bartfai
 Chris Conley
 Lars C. Hassing
 Don Heyse
@@ -219,8 +218,8 @@ Glen  Randers-Pehrson and the rest of the libpng team</string>
                     </property>
                     <property name="sizePolicy">
                         <sizepolicy>
-                            <hsizetype>5</hsizetype>
-                            <vsizetype>5</vsizetype>
+                            <hsizetype>4</hsizetype>
+                            <vsizetype>4</vsizetype>
                             <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
                         </sizepolicy>
