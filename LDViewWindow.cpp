@@ -827,9 +827,6 @@ void LDViewWindow::createAboutBox(void)
 	{
 		strcpy(copyrightString, legalCopyright);
 	}
-	tmpString = stringByReplacingSubstring(copyrightString, "&", "&&");
-	strcpy(copyrightString, tmpString);
-	delete tmpString;
 	sprintf(fullVersionString, fullVersionFormat, versionString,
 		buildDateString, copyrightString);
 	SendDlgItemMessage(hAboutWindow, IDC_VERSION_LABEL, WM_SETTEXT,
