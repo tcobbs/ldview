@@ -2585,6 +2585,12 @@ bool ModelWindow::writeImage(char *filename, int width, int height,
 		strcat(comment, version);
 	}
 	image->setComment(comment);
+	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0))
+	{
+		image->autoCrop((BYTE)modelViewer->getBackgroundR(),
+			(BYTE)modelViewer->getBackgroundG(),
+			(BYTE)modelViewer->getBackgroundB());
+	}
 	retValue = image->saveFile(filename, staticImageProgressCallback, this);
 	image->release();
 	return retValue;
@@ -3006,6 +3012,7 @@ bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 	delete cameraGlobe;
 	if (buffer)
 	{
+
 		if (saveAlpha)
 		{
 			int i;

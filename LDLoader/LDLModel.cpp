@@ -230,13 +230,26 @@ bool LDLModel::isSubPart(const char *subModelName)
 		stringHasCaseInsensitivePrefix(subModelName, "s\\");
 }
 
+bool LDLModel::isAbsolutePath(const char *path)
+{
+#ifdef WIN32
+	return strlen(path) >= 2 && path[1] == ':' || path[0] == '/';
+#else
+	return path[0] == '/';
+#endif
+}
+
 FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 {
 	FILE* subModelFile;
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
 
 	strcpy(subModelPath, subModelName);
-	if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
+	if (isAbsolutePath(subModelPath))
+	{
+		return openModelFile(subModelPath);
+	}
+	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
 		int i;
 

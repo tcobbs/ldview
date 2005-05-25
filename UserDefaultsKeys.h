@@ -123,5 +123,6 @@
 #define SS_RANDOM_PREF_SET_KEY "SSRandomPrefSet"
 #define HFOV_KEY "HFOV"
 #define CAMERA_GLOBE_KEY "CameraGlobe"
+#define AUTO_CROP_KEY "AutoCrop"
 
 #endif // __USERDEFAULTSKEYS_H__
