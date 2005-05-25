@@ -47,6 +47,8 @@ public:
 	virtual void setFormatName(const char *value);
 	virtual TCImage *createSubImage(int x, int y, int cx, int cy);
 	virtual void setComment(const char *value);
+	virtual void autoCrop(TCByte r, TCByte g, TCByte b);
+	virtual void autoCrop(void);
 	const char *getComment(void) { return comment; }
 
 	static int roundUp(int value, int nearest);

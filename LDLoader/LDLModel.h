@@ -116,6 +116,7 @@ protected:
 	virtual void reportProgress(const char *message, float progress,
 		bool mainOnly = true);
 	virtual bool isSubPart(const char *subModelName);
+	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 
 	static bool verifyLDrawDir(const char *value);

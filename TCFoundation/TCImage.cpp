@@ -328,3 +328,115 @@ void TCImage::setComment(const char *value)
 		comment = copyString(value);
 	}
 }
+
+void TCImage::autoCrop(void)
+{
+	autoCrop(imageData[0], imageData[1], imageData[2]);
+}
+
+void TCImage::autoCrop(TCByte r, TCByte g, TCByte b)
+{
+	int minx = 0;
+	int maxx = width - 1;
+	int miny = 0;
+	int maxy = height - 1;
+	int bytesPerLine;
+	bool found = false;
+	int x;
+	int y;
+
+	bytesPerLine = roundUp(width * bytesPerPixel, 4);
+	for (x = 0; x < width && !found; x++)
+	{
+		int xOffset = x * bytesPerPixel;
+
+		for (y = 0; y < height && !found; y++)
+		{
+			int offset = xOffset + y * bytesPerLine;
+
+			if (imageData[offset] != r || imageData[offset + 1] != g ||
+				imageData[offset + 2] != b)
+			{
+				found = true;
+				minx = x;
+			}
+		}
+	}
+	if (found)
+	{
+		int newWidth;
+		int newHeight;
+		int newBytesPerLine;
+		BYTE *newImageData;
+
+		found = false;
+		for (y = 0; y < height && !found; y++)
+		{
+			int yOffset = y * bytesPerLine;
+
+			for (x = 0; x < width && !found; x++)
+			{
+				int offset = yOffset + x * bytesPerPixel;
+
+				if (imageData[offset] != r || imageData[offset + 1] != g ||
+					imageData[offset + 2] != b)
+				{
+					found = true;
+					miny = y;
+				}
+			}
+		}
+		found = false;
+		for (x = width - 1; x >= 0 && !found; x--)
+		{
+			int xOffset = x * bytesPerPixel;
+
+			for (y = 0; y < height && !found; y++)
+			{
+				int offset = xOffset + y * bytesPerLine;
+
+				if (imageData[offset] != r || imageData[offset + 1] != g ||
+					imageData[offset + 2] != b)
+				{
+					found = true;
+					maxx = x;
+				}
+			}
+		}
+		found = false;
+		for (y = height - 1; y >= 0 && !found; y--)
+		{
+			int yOffset = y * bytesPerLine;
+
+			for (x = 0; x < width && !found; x++)
+			{
+				int offset = yOffset + x * bytesPerPixel;
+
+				if (imageData[offset] != r || imageData[offset + 1] != g ||
+					imageData[offset + 2] != b)
+				{
+					found = true;
+					maxy = y;
+				}
+			}
+		}
+		newWidth = maxx - minx + 1;
+		newHeight = maxy - miny + 1;
+		newBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
+		newImageData = new BYTE[newHeight * newBytesPerLine];
+		for (y = 0; y < newHeight; y++)
+		{
+			memcpy(&newImageData[y * newBytesPerLine],
+				&imageData[(y + miny) * bytesPerLine + minx * bytesPerPixel],
+				newBytesPerLine);
+		}
+		if (!userImageData)
+		{
+			delete imageData;
+		}
+		imageData = newImageData;
+		userImageData = false;
+		width = newWidth;
+		height = newHeight;
+	}
+}
