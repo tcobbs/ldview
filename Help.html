@@ -7,7 +7,7 @@
 <BODY BGCOLOR="#000000" TEXT="#FFFF00" VLINK="#909090" LINK="#D0D0D0"
 ALINK="#FFFF80">
 <P>
-<TABLE BORDER BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
 	<TR>
 		<TD ALIGN="CENTER">
 			<B><FONT SIZE=+3 COLOR="#000000"
@@ -83,6 +83,7 @@ ALINK="#FFFF80">
 <UL>
 <LI><A HREF="#CommandLineFilename">Specifying a Filename</A></LI>
 <LI><A HREF="#SnapshotFilename">Specifying a Snapshot Filename</A></LI>
+<LI><A HREF="#L3PCompatibility">L3P-compatible Options</A></LI>
 <LI><A HREF="#CommandLinePrefs">Specifying Preferences</A></LI>
 </UL>
 <LI><A HREF="#Notes">Notes</A></LI>
@@ -1415,6 +1416,48 @@ video card allows this to run without displaying a window, you won't have a
 good way of knowing when LDView has finished executing.
 </P>
 <P>
+<FONT SIZE=+2><B><A NAME="L3PCompatibility">L3P-compatible
+Options</A></B></FONT><BR>
+</P>
+<P>
+To make things easier for L3P users, LDView supports the -cg and -ca options
+from L3P.  Unlike normal LDView settings (described <A
+HREF="#CommandLinePrefs">below</A>, -cg and -ca don't have any equal sign
+after the option name.
+</P>
+<P>
+<TABLE>
+<TR>
+<TD VALIGN="TOP"><TT>-ca&lt;a&gt;</TT></TD>
+<TD>
+Camera Angle:<BR>
+This sets the horizontal camera angle to the value specified by &lt;a&gt;.  Note
+that this is different from the FOV setting (-FOV=&lt;a&gt;).  The FOV setting
+sets either the vertical or horizontal camera angle depending on the shape of
+the image.  If the image is wider than it is tall, it sets the vertical camera
+angle, while if the image is taller than it is wide, it sets the horizontal
+camera angle.  This -ca setting always sets the horizontal camera angle, no
+matter what shape the image is.
+</TD>
+</TR>
+<TR>
+<TD VALIGN="TOP"><TT>-cg&lt;la&gt;,&lt;lo&gt;[,&lt;r&gt;]</TT></TD>
+<TD>Camera Globe position:<BR>
+This places the camera on an imaginary globe at latitude &lt;la&gt; and
+longitude &lt;lo&gt;, pointing at the model.  If the radius &lt;r&gt; is zero or
+not specified, LDView will use its standard camera distance calculation as the
+radius for the imaginary globe.  Otherwise, the camera distance will be set to
+&lt;r&gt;.</TD>
+</TR>
+</TABLE>
+</P>
+<P>
+Example:
+<PRE>
+	LDView -cg30,45,50000 -ca0.1
+</PRE>
+</P>
+<P>
 <FONT SIZE=+2><B><A NAME="CommandLinePrefs">Specifying
 Preferences</A></B></FONT><BR>
 </P>
@@ -1539,8 +1582,8 @@ set-specific, while others aren't.
 			NO
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>General-&gt;Full-scene Antialiasing</I> box.
-			Selects which FSAA option to request:<BR>
+			Equivalent to the <I>General-&gt;Antialiasing-&gt;FSAA</I> combo
+			box.  Selects which FSAA option to request:<BR>
 			0: none (<I>Full-scene Antialiasing</I> check box not checked).<BR>
 			2: 2x<BR>
 			3: 2x Enhanced<BR>
@@ -1550,6 +1593,22 @@ set-specific, while others aren't.
 			will only be used on graphics hardware that supports FSAA in
 			addition to supporting the OpenGL extension that allows it to be set
 			from a program other than the driver control panel.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			AutoCrop
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Sets whether or not LDView will auto-crop snapshots so that the
+			image is only as big as it needs to be to display the model.  Note
+			that there is no way to set this value in the LDView interface.
 		</TD>
 	</TR>
 	<TR>
@@ -1569,6 +1628,20 @@ set-specific, while others aren't.
 			was appended to the end of the name because it used to be in
 			0xBBGGRR format, and would have caused a problem during the
 			upgrade if it had used the same name.)
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			BFC
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Geometry-&gt;BFC</I> check box.
 		</TD>
 	</TR>
 	<TR>
@@ -1776,6 +1849,24 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			Editor
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Sets the editor to use when you double click on the source file line
+			in the error window.  The program listed must either be in the path,
+			or the full path to the program must be given.  The default is
+			"notpad.exe".  Note that there is no way to set this value in the
+			LDView interface.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			EdgesOnly
 		</TD>
 		<TD VALIGN="TOP">
@@ -1922,7 +2013,37 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			GreenFrontFaces
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Green front faces</I> check box in the
+			<I>Geometry-&gt;BFC</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			HiResPrimitives
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Use hi-res primitives when available</I> check
+			box in the <I>Primitives-&gt;Misc</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreAllOGLExtensions
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -1931,8 +2052,115 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Use hi-res primitives when available</I> check
-			box in the <I>Primitives-&gt;Misc</I> box.
+			Causes LDView to ignore all OpenGL extensions supported by your
+			video card.  Some video drivers are buggy, and ignoring all or some
+			OpenGL extensions that they claim to support may correct problems
+			in LDView.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreMultiDrawArrays
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_EXT_multi_draw_arrays OpenGL
+			extension, even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreMultisample
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the WGL_ARB_multisample OpenGL extension,
+			even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreMultisampleFilterHint
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_NV_multisample_filter_hint OpenGL
+			extension, even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnorePBuffer
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the WGL_ARB_pbuffer OpenGL extension, even
+			if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnorePixelFormat
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the WGL_ARB_pixel_format OpenGL extension,
+			even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreVAR
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_NV_vertex_array_range OpenGL
+			extension, even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreVBO
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_ARB_vertex_buffer_object OpenGL
+			extension, even if it is supported by your video card.
 		</TD>
 	</TR>
 	<TR>
@@ -2040,6 +2268,24 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Controls how many recent files are recorded and displayed.  Note
 			that there is no way to set this value in the LDView interface.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			MemoryUsage
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>General-&gt;Misc-&gt;Memory Usage</I> combo
+			box.  Selects the memory usage mode:<BR>
+			0: Low<BR>
+			1: Medium<BR>
+			2: High<BR>
 		</TD>
 	</TR>
 	<TR>
@@ -2209,6 +2455,21 @@ set-specific, while others aren't.
 			these, but it is documented here for the sake of completeness, and
 			for those people who peruse the registry trying to see how things
 			work.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			RedBackFaces
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Red back faces</I> check box in the
+			<I>Geometry-&gt;BFC</I> box.
 		</TD>
 	</TR>
 	<TR>
@@ -2458,7 +2719,22 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error00
+			ShowErrors/LDLError00
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>General Error</I> check box in the Error
+			Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError01
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2472,7 +2748,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error01
+			ShowErrors/LDLError02
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2487,7 +2763,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error02
+			ShowErrors/LDLError03
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2496,13 +2772,13 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Part Determinant</I> check box in the Error
+			Equivalent to the <I>Singular Matrix</I> check box in the Error
 			Window.
 		</TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error03
+			ShowErrors/LDLError04
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2511,12 +2787,13 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Concave Quad</I> check box in the Error Window.
+			Equivalent to the <I>Part transformed non-uniformly</I> check box in
+			the Error Window.
 		</TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error04
+			ShowErrors/LDLError05
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2525,13 +2802,13 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Concave Quad Split</I> check box in the Error
+			Equivalent to the <I>Non-flat quad</I> check box in the Error
 			Window.
 		</TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error05
+			ShowErrors/LDLError06
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2540,12 +2817,12 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>OpenGL Error</I> check box in the Error Window.
+			Equivalent to the <I>Concave quad</I> check box in the Error Window.
 		</TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowErrors/Error06
+			ShowErrors/LDLError07
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -2554,22 +2831,95 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Color Error</I> check box in the Error Window.
-		</TD>
-	</TR>
-	<TR>
-		<TD VALIGN="TOP">
-			ShowErrors/Error07
-		</TD>
-		<TD VALIGN="TOP">
-			Boolean
-		</TD>
-		<TD VALIGN="TOP">
-			YES
-		</TD>
-		<TD VALIGN="TOP">
-			Equivalent to the <I>Co-linear Points</I> check box in the Error
+			Equivalent to the <I>Bad vertex sequence</I> check box in the Error
 			Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError08
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Identical vertices</I> check box in the Error
+			Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError09
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Co-linear points</I> check box in the Error
+			Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError10
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>BFC Warning</I> check box in the Error Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError11
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>BFC Error</I> check box in the Error Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError12
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>MPD Error</I> check box in the Error
+			Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError13
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Whitespace</I> check box in the Error Window.
 		</TD>
 	</TR>
 	<TR>
@@ -2603,13 +2953,27 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ShowType5ControlPoints
+			ShowWarnings
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
 		</TD>
 		<TD VALIGN="TOP">
 			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Include Warnings</I> check box Error Window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowType5ControlPoints
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Show control pts</I> check box under the
@@ -2730,6 +3094,20 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Texture studs</I> check box in the
 			<I>Primitives-&gt;Primitive substitution</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			Toolbar
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Toolbar</I> menu item in the <I>View</I> menu.
 		</TD>
 	</TR>
 	<TR>
@@ -2855,6 +3233,24 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			VerifyLDrawDir
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Allows you to run LDView without having LDraw installed, if you want
+			to use it to view LDraw-format models that don't use the LDraw parts
+			library.  If this is set to 0, LDView won't prompt for the location
+			of the LDraw directory, even if it doesn't see it.  Note that there
+			is no way to set this value in the LDView interface.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			ViewMode
 		</TD>
 		<TD VALIGN="TOP">
@@ -2868,6 +3264,26 @@ set-specific, while others aren't.
 			menu items in the <I>View</I> menu.  Selects the viewing mode:<BR>
 			0: Examine Mode<BR>
 			1: Fly-through Mode
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			VisualStyleEnabled
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Controls whether or not LDView uses the current Windows XP Visual
+			Style when running in Windows XP.  Doesn't have any effect on
+			earlier versions of Windows.  Set this to 0 if you prefer the
+			legacy Windows look-and-feel.  Note that the main window border will
+			still use the Windows XP style in Windows XP.  Note also that there
+			is no way to set this value in the LDView interface.
+		</TD>
 		</TD>
 	</TR>
 	<TR>

@@ -624,7 +624,7 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,231,24,50,14
     CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x904,
-                    7,167,219,14
+                    7,167,219,15
     LISTBOX         IDC_ESD_LIST,7,21,219,145,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Add and organize extra search directories below.",
