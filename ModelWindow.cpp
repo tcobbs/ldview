@@ -2585,7 +2585,7 @@ bool ModelWindow::writeImage(char *filename, int width, int height,
 		strcat(comment, version);
 	}
 	image->setComment(comment);
-	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0))
+	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0, false))
 	{
 		image->autoCrop((BYTE)modelViewer->getBackgroundR(),
 			(BYTE)modelViewer->getBackgroundG(),
