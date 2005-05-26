@@ -1096,8 +1096,16 @@ void ModelViewerWidget::doHelpContents(void)
 	}
 	if(!helpContents)
 	{
+		QString dir = QDir::currentDirPath();
+        QFile file( "Help.html" );
+		if (!file.exists()) QDir::setCurrent("..");
+		if (!file.exists()) QDir::setCurrent("/usr/local/share/ldview");
+		if (!file.exists()) 
+		{
+			QDir::setCurrent(dir);
+			return;
+		}	
 		helpContents = new HelpPanel;
-        QFile file( "Help.html" ); 
         if ( file.open( IO_ReadOnly ) ) {
             QTextStream stream( &file );
             helpContents->HelpTextBrowser->setText(
@@ -1105,6 +1113,7 @@ void ModelViewerWidget::doHelpContents(void)
 												"i=") );
 		    helpContents->HelpTextBrowser->setReadOnly(TRUE);
         }
+		QDir::setCurrent(dir);
 	}
 	helpContents->show();
 }
