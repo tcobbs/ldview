@@ -3,30 +3,77 @@
 <TITLE>LDView Help</TITLE>
 <meta http-equiv = "content-language" content = "en">
 <meta http-equiv = "content-type" content = "text/html; charset=iso-8859-1">
+<STYLE><!--
+BODY
+{
+	margin: 20px;
+	font-family: helvetica, arial, sans-serif
+}
+TABLE
+{
+	border-collapse: collapse;
+}
+TABLE.SectionHeader
+{
+	border: 2px solid #000000;
+	font-size: 150%;
+	font-weight: bold;
+	margin-bottom: 8px;
+	padding: 0px;
+	width: 100%;
+}
+TABLE.SectionHeader TH.MainTitle
+{
+	font-family: arial black, helvetica, arial, sans-serif;
+	text-align: center;
+	padding: 0px;
+}
+TABLE.SectionHeader TH
+{
+	background-color: #0080D0;
+	color: #FFFFFF;
+	text-align: left;
+	padding-left: 10px;
+}
+TABLE.SettingsList
+{
+	border: 2px solid #000000;
+	background-color: #FFFFDD;
+	padding: 0px;
+}
+TABLE.SettingsList TH
+{
+	background-color: #0080D0;
+	color: #FFFFFF;
+	border-bottom: 1px solid #000000;
+	border-right: 1px solid #00558A;
+	padding: 4px 8px;
+}
+TABLE.SettingsList TD
+{
+	border-bottom: 1px solid #BFBFA5;
+	border-right: 1px solid #BFBFA5;
+	padding: 2px 8px;
+}
+--></STYLE>
 </HEAD>
-<BODY BGCOLOR="#000000" TEXT="#FFFF00" VLINK="#909090" LINK="#D0D0D0"
+<BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
 ALINK="#FFFF80">
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD ALIGN="CENTER">
-			<B><FONT SIZE=+3 COLOR="#000000"
-			FACE="Arial Black, Helvetica, Arial">LDV</FONT><FONT SIZE=+2
-			COLOR="#000000" FACE="Arial Black, Helvetica, Arial">IEW</FONT>
-			<FONT SIZE=+3 COLOR="#000000" FACE="Arial Black, Helvetica, Arial">
-			H</FONT><FONT SIZE=+2 COLOR="#000000"
-			FACE="Arial Black, Helvetica, Arial">ELP</FONT></B><BR>
-		</TD>
+		<TH CLASS="MainTitle">
+			<FONT SIZE=+3>LDV</FONT>IEW <FONT SIZE=+3>H</FONT>ELP
+		</TH>
 	</TR>
 </TABLE>
 </P>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B>Contents</B></FONT><BR>
-		</TD>
+		<TH>
+			Contents
+		</TH>
 	</TR>
 </TABLE>
 </P>
@@ -47,8 +94,8 @@ ALINK="#FFFF80">
 </UL>
 <LI><A HREF="#Toolbar">Toolbar</A>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
-<LI><A HREF="#ErrorWindow">Error Window</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
+<LI><A HREF="#ErrorWindow">Error Window</A></LI>
 <LI><A HREF="#Prefs">Preferences</A></LI>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A></LI>
@@ -85,6 +132,7 @@ ALINK="#FFFF80">
 <LI><A HREF="#SnapshotFilename">Specifying a Snapshot Filename</A></LI>
 <LI><A HREF="#L3PCompatibility">L3P-compatible Options</A></LI>
 <LI><A HREF="#CommandLinePrefs">Specifying Preferences</A></LI>
+<LI><A HREF="#PrefList">List of All Preferences</A></LI>
 </UL>
 <LI><A HREF="#Notes">Notes</A></LI>
 <LI><A HREF="#ScreenSaver">Using LDView as a Screen Saver</A></LI>
@@ -92,13 +140,12 @@ ALINK="#FFFF80">
 </UL>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Intro"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Intro">Introduction</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Introduction
+		</TH>
 	</TR>
 </TABLE>
 <I>Please note</I>: this help file documents the Windows version of LDView, with
@@ -132,14 +179,13 @@ time to load.  During this time, the status bar will indicate the progress of
 the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
 from the File menu will cancel the load.
 </P>
-<BR>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<P>
+<A NAME="MouseControl"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="MouseControl">Mouse and Keyboard Control</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Mouse and Keyboard Control
+		</TH>
 	</TR>
 </TABLE>
 LDView has two different modes of user interaction:
@@ -261,13 +307,12 @@ shift to double the speed at which you move.  The movement keys are as follows:
 <BR>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Menus"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Menus">Menus</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Menus
+		</TH>
 	</TR>
 </TABLE>
 The shortcut key for each menu item is given in parentheses.  Note that these
@@ -567,13 +612,12 @@ visible menu.
 </TABLE>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Toolbar"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Toolbar">Toolbar</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Toolbar
+		</TH>
 	</TR>
 </TABLE>
 The toolbar allows you to quickly access certain features and settings.  A
@@ -584,13 +628,12 @@ main one.  The items in the menu are only enabled if the main setting is
 toggled on.
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Fullscreen"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Fullscreen">Fullscreen Mode</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Fullscreen Mode
+		</TH>
 	</TR>
 </TABLE>
 You can switch to fullscreen mode via the View menu.  To do so, select a color
@@ -615,13 +658,12 @@ someone else on your network is modifying, it's not likely to be very useful.
 </P>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="SaveSnapshotOptions"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="SaveSnapshotOptions">Save Snapshot Options</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Save Snapshot Options
+		</TH>
 	</TR>
 </TABLE>
 When you save a snapshot, the following LDView-specific options show up at the
@@ -694,13 +736,12 @@ snapshot to produce the same result.
 </P>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="ErrorWindow"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="ErrorWindow">Error Window</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Error Window
+		</TH>
 	</TR>
 </TABLE>
 The error window displays errors and warnings that were encountered while
@@ -826,13 +867,12 @@ set to show automatically.
 </P>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Prefs"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Prefs">Preferences</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Preferences
+		</TH>
 	</TR>
 </TABLE>
 Here is a brief description of the items in the Preferences panel (accessed
@@ -1360,13 +1400,12 @@ the status bar is not set to be visible, it will be made visible temporarily.
 
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="CommandLine"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="CommandLine">Command Line</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Command Line
+		</TH>
 	</TR>
 </TABLE>
 LDView allows you to do a few things from the command line.  LDView must either
@@ -1442,7 +1481,7 @@ matter what shape the image is.
 </TR>
 <TR>
 <TD VALIGN="TOP"><TT>-cg&lt;la&gt;,&lt;lo&gt;[,&lt;r&gt;]</TT></TD>
-<TD>Camera Globe position:<BR>
+<TD><A NAME="CameraGlobe">Camera Globe position:</A><BR>
 This places the camera on an imaginary globe at latitude &lt;la&gt; and
 longitude &lt;lo&gt;, pointing at the model.  If the radius &lt;r&gt; is zero or
 not specified, LDView will use its standard camera distance calculation as the
@@ -1549,7 +1588,10 @@ In general, settings that show up in the Preferences panel are preference
 set-specific, while others aren't.
 </P>
 <P>
-<TABLE BORDER CELLPADDING="4">
+<FONT SIZE=+2><B><A NAME="PrefList">List of All Preferences</A></B></FONT><BR>
+</P>
+<P>
+<TABLE CLASS="SettingsList">
 	<TR>
 		<TH>Setting</TH>
 		<TH>Type</TH>
@@ -3404,13 +3446,12 @@ set-specific, while others aren't.
 </TABLE>
 </P>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Notes"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Notes">Notes</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Notes
+		</TH>
 	</TR>
 </TABLE>
 <TABLE>
@@ -3485,7 +3526,7 @@ to the model, which looks like this:
 <P>
 <TABLE>
 <TR>
-	<TD BGCOLOR="#FFFF00">
+	<TD BGCOLOR="#000000">
 	</TD>
 	<TD>
 		<TABLE>
@@ -3524,7 +3565,7 @@ to the model, which looks like this:
 			</TR>
 		</TABLE>
 	</TD>
-	<TD BGCOLOR="#FFFF00">
+	<TD BGCOLOR="#000000">
 	</TD>
 </TR>
 </TABLE>
@@ -3567,9 +3608,10 @@ command line is to use the <A HREF="#DefaultLatLongSetting">-DefaultLatLong</A>
 command line option.  (For an alternative way to do this, see the
 <A HREF="#DefaultMatrixSetting">-DefaultMatrix</A> setting.)  The
 -DefaultLatLong setting is a (mostly) user-friendly way of specifying the
-viewing angle.  It is very similar to the -cg option in Lars Hassing's L3P
-program.  It specifies the latitude and longitude of the camera on a virtual
-globe around the model.  It is specified like so:
+viewing angle.  It is very similar to the -cg option in Lars C. Hassing's L3P
+program.  (Note that -cg is also <A HREF="#CameraGlobe">supported</A> by
+LDView.)  -DefaultLatLong specifies the latitude and longitude of the camera on
+a virtual globe around the model.  It is specified like so:
 <P>
 <TT>-DefaultLatLong=latitude,longitude</TT>
 </P>
@@ -3581,25 +3623,25 @@ setting:
 <TT>-DefaultLatLong=30,45</TT>
 </P>
 <P>
-Note that the optional radius parameter of the -cg L3P option isn't supported.
-However, you can use the <A HREF="#DefaultZoomSetting">-DefaultZoom</A> setting
-to move the camera closer to or farther from the model.
+Note that the optional radius parameter of the -cg option isn't supported by
+-DefaultLatLong.  However, you can use the
+<A HREF="#DefaultZoomSetting">-DefaultZoom</A> setting to move the camera closer
+to or farther from the model.  If you want to put the camera at a fixed
+difference, use the <A HREF="#CameraGlobe">-cg</A> option.
 </P>
 </TR>
 </TABLE>
 </P>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="ScreenSaver"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="ScreenSaver">Using LDView as a Screen Saver</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Using LDView as a Screen Saver
+		</TH>
 	</TR>
 </TABLE>
-<P>
 When you install LDView, you are presented with an option near the end to
 install it as a screen saver.  If you select this option, you can use LDView
 as a screen saver.  Simply select it from the list of available screen savers,
@@ -3623,13 +3665,12 @@ any problems, so you don't have to uninstall first.
 </P>
 <BR>
 <P>
-<TABLE BGCOLOR="#FFFF00" WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<A NAME="Website"></A>
+<TABLE CLASS="SectionHeader">
 	<TR>
-		<TD>
-			<FONT SIZE=+2 COLOR="#000000"
-			FACE="Helvetica, Arial">&nbsp;<B><A
-			NAME="Website">Website</A></B></FONT><BR>
-		</TD>
+		<TH>
+			Website
+		</TH>
 	</TR>
 </TABLE>
 You can download an up-to-date copy of LDView at the LDView website at
@@ -3642,7 +3683,7 @@ If you have any comments, questions, or suggestions, please e-mail me at
 <A NAME="EMail" HREF=
 "mailto:ldview@gmail.com">ldview@gmail.com</A>.
 <P>
-LDView is Copyright &copy; 2000-2004 Travis Cobbs.
+LDView is Copyright &copy; 2000-2005 Travis Cobbs and Peter Bartfai.
 </P>
 <P>
 <FONT SIZE=-1>
