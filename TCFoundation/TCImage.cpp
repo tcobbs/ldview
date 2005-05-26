@@ -367,7 +367,7 @@ void TCImage::autoCrop(TCByte r, TCByte g, TCByte b)
 		int newWidth;
 		int newHeight;
 		int newBytesPerLine;
-		BYTE *newImageData;
+		TCByte *newImageData;
 
 		found = false;
 		for (y = 0; y < height && !found; y++)
@@ -423,7 +423,7 @@ void TCImage::autoCrop(TCByte r, TCByte g, TCByte b)
 		newWidth = maxx - minx + 1;
 		newHeight = maxy - miny + 1;
 		newBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
-		newImageData = new BYTE[newHeight * newBytesPerLine];
+		newImageData = new TCByte[newHeight * newBytesPerLine];
 		for (y = 0; y < newHeight; y++)
 		{
 			memcpy(&newImageData[y * newBytesPerLine],
