@@ -23,6 +23,9 @@
     <property name="caption">
         <string>LDView Help</string>
     </property>
+    <property name="icon">
+        <pixmap>LDViewIcon16.png</pixmap>
+    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
