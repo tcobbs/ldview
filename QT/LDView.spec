@@ -4,7 +4,7 @@ Group: Applications/Multimedia
 Version: 3.0RC1
 Release: 1
 License: MIT
-URL: http://ldraw.sourceforge.net
+URL: http://ldview.sourceforge.net
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 
