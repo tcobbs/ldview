@@ -12,16 +12,17 @@ LDView is a real-time 3D viewer for displaying LDraw models using hardware-accel
 The program can read LDraw DAT files as well as MPD files. It then allows you to rotate the model around to any angle with themouse. A fast computer or a video card with T&L support (Transform & Lighting) is strongly recommended for displaying complexmodels. 
 
 %prep
+cd $RPM_SOURCE_DIR
 cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
-cd LDView/QT
+cd $RPM_SOURCE_DIR/LDView/QT
 qmake
 ./makeall
 strip LDView
 
 %install
-cd LDView/QT
+cd $RPM_SOURCE_DIR/LDView/QT
 mkdir -p $RPM_BUILD_ROOT/usr/local/share/ldview
 mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 install -d $RPM_BUILD_ROOT/usr/local/share/ldview
