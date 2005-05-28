@@ -5,6 +5,7 @@ Version: 3.0RC1
 Release: 1
 License: MIT
 URL: http://ldview.sourceforge.net
+Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
 
