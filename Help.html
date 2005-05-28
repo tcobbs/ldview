@@ -1,9 +1,10 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <HTML>
 <HEAD>
 <TITLE>LDView Help</TITLE>
 <meta http-equiv = "content-language" content = "en">
 <meta http-equiv = "content-type" content = "text/html; charset=iso-8859-1">
-<STYLE><!--
+<STYLE TYPE="text/css"><!--
 BODY
 {
 	margin: 20px;
@@ -55,89 +56,90 @@ TABLE.SettingsList TD
 	border-right: 1px solid #BFBFA5;
 	padding: 2px 8px;
 }
+.NoWrap
+{
+	white-space: nowrap;
+}
 --></STYLE>
 </HEAD>
 <BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
 ALINK="#FFFF80">
-<P>
+<P></P>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH CLASS="MainTitle">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
-			<FONT SIZE=+3>LDV</FONT>IEW <FONT SIZE=+3>H</FONT>ELP
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			<FONT SIZE="+3">LDV</FONT>IEW <FONT SIZE="+3">H</FONT>ELP
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
-</P>
-<P>
+<P></P>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Contents
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
-</P>
 <UL>
 <LI><A HREF="#Intro">Introduction</A></LI>
 <LI><A HREF="#MouseControl">Mouse and Keyboard Control</A>
 <UL>
 <LI><A HREF="#ExamineMode">Examine Mode</A></LI>
 <LI><A HREF="#FlyMode">Fly-through Mode</A></LI>
-</UL>
-</LI>
-<LI><A HREF="#Menus">Menus</A></LI>
+</UL></LI>
+<LI><A HREF="#Menus">Menus</A>
 <UL>
 <LI><A HREF="#FileMenu">File Menu</A></LI>
 <LI><A HREF="#EditMenu">Edit Menu</A></LI>
 <LI><A HREF="#ViewMenu">View Menu</A></LI>
 <LI><A HREF="#HelpMenu">Help Menu</A></LI>
-</UL>
+</UL></LI>
 <LI><A HREF="#Toolbar">Toolbar</A>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
 <LI><A HREF="#ErrorWindow">Error Window</A></LI>
-<LI><A HREF="#Prefs">Preferences</A></LI>
+<LI><A HREF="#Prefs">Preferences</A>
 <UL>
-<LI><A HREF="#GeneralTab">General Tab</A></LI>
+<LI><A HREF="#GeneralTab">General Tab</A>
 <UL>
 <LI><A HREF="#GeneralAABox">Antialiasing Box</A></LI>
 <LI><A HREF="#GeneralColorsBox">Colors Box</A></LI>
 <LI><A HREF="#GeneralMiscBox">Misc Box</A></LI>
-</UL>
-<LI><A HREF="#GeometryTab">Geometry Tab</A></LI>
+</UL></LI>
+<LI><A HREF="#GeometryTab">Geometry Tab</A>
 <UL>
 <LI><A HREF="#GeometryModelBox">Model Box</A></LI>
 <LI><A HREF="#GeometryWireframeBox">Wireframe Box</A></LI>
 <LI><A HREF="#GeometryBFCBox">BFC Box</A></LI>
 <LI><A HREF="#GeometryEdgeLinesBox">Edge Lines Box</A></LI>
-</UL>
-<LI><A HREF="#EffectsTab">Effects Tab</A></LI>
+</UL></LI>
+<LI><A HREF="#EffectsTab">Effects Tab</A>
 <UL>
 <LI><A HREF="#EffectsLightingBox">Lighting Box</A></LI>
 <LI><A HREF="#EffectsStereoBox">Stereo Box</A></LI>
 <LI><A HREF="#EffectsCutawayBox">Wireframe Cutaway Box</A></LI>
 <LI><A HREF="#EffectsTransparencyBox">Transparency Box</A></LI>
 <LI><A HREF="#EffectsMiscBox">Misc Box</A></LI>
-</UL>
-<LI><A HREF="#PrimitivesTab">Primitives Tab</A></LI>
+</UL></LI>
+<LI><A HREF="#PrimitivesTab">Primitives Tab</A>
 <UL>
 <LI><A HREF="#PrimitivesSubstitutionBox">Primitive Substitution Box</A></LI>
 <LI><A HREF="#PrimitivesMiscBox">Misc Box</A></LI>
-</UL>
+</UL></LI>
 <LI><A HREF="#PreferenceSetsTab">Preference Sets Tab</A></LI>
-</UL>
-<LI><A HREF="#CommandLine">Command Line</A></LI>
+</UL></LI>
+<LI><A HREF="#CommandLine">Command Line</A>
 <UL>
 <LI><A HREF="#CommandLineFilename">Specifying a Filename</A></LI>
 <LI><A HREF="#SnapshotFilename">Specifying a Snapshot Filename</A></LI>
 <LI><A HREF="#L3PCompatibility">L3P-compatible Options</A></LI>
 <LI><A HREF="#CommandLinePrefs">Specifying Preferences</A></LI>
 <LI><A HREF="#PrefList">List of All Preferences</A></LI>
-</UL>
+</UL></LI>
 <LI><A HREF="#Notes">Notes</A></LI>
 <LI><A HREF="#ScreenSaver">Using LDView as a Screen Saver</A></LI>
 <LI><A HREF="#Website">Website</A></LI>
@@ -148,7 +150,7 @@ ALINK="#FFFF80">
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Introduction
 			</FONT>
 		</TH>
@@ -186,11 +188,12 @@ the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
 from the File menu will cancel the load.
 </P>
 <P>
+</P>
 <A NAME="MouseControl"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Mouse and Keyboard Control
 			</FONT>
 		</TH>
@@ -200,8 +203,8 @@ LDView has two different modes of user interaction:
 <A HREF="#ExamineMode">Examine Mode</A> and <A HREF="#FlyMode">Fly-through
 Mode</A>.  By default LDView is in Examine Mode.  You can switch modes by
 selecting the mode you want from the <A HREF="#ViewMenu">View Menu</A>.
-</P>
-<FONT SIZE=+2><B><A NAME="ExamineMode">Examine Mode</A></B></FONT><BR>
+<P>
+<FONT SIZE="+2"><B><A NAME="ExamineMode">Examine Mode</A></B></FONT><BR>
 Click the left mouse button and drag around to rotate the model.  If you let
 go of the button while the mouse is in motion, the model will continue to
 rotate on its own.
@@ -235,11 +238,12 @@ in wireframe, using the <A HREF="#WireframeCutaway">Wireframe cutaway</A>
 option.  Note that this will slow things down considerably, since the entire
 model has to be rendered twice.
 </P>
-<BR>
-<FONT SIZE=+2><B><A NAME="FlyMode">Fly-through Mode</A></B></FONT><BR>
+<P>
+<FONT SIZE="+2"><B><A NAME="FlyMode">Fly-through Mode</A></B></FONT><BR>
 Click the left mouse button and move it around to turn the camera left, right,
 up, and down.  The further you move the mouse from the point you clicked, the
 faster the camera will turn.
+</P>
 <P>
 The camera can be moved using the keyboard.  At any time, you can hold down
 shift to double the speed at which you move.  The movement keys are as follows:
@@ -315,11 +319,12 @@ shift to double the speed at which you move.  The movement keys are as follows:
 <BR>
 <BR>
 <P>
+</P>
 <A NAME="Menus"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Menus
 			</FONT>
 		</TH>
@@ -328,10 +333,9 @@ shift to double the speed at which you move.  The movement keys are as follows:
 The shortcut key for each menu item is given in parentheses.  Note that these
 keys will continue to function even while in fullscreen mode where there is no
 visible menu.
-</P>
 <TABLE CELLSPACING=6>
 	<TR>
-		<TD COLSPAN=3><FONT SIZE=+1><B><A NAME="FileMenu">File
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="FileMenu">File
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -448,10 +452,10 @@ visible menu.
 		<TD COLSPAN=2>Exit LDView.</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><HR SIZE=1 WIDTH=90% NOSHADE></TD>
+		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE=+1><B><A NAME="EditMenu">Edit
+		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -459,10 +463,10 @@ visible menu.
 		<TD COLSPAN=2>Display the <A HREF="#Prefs">Preferences</A> panel.</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><HR SIZE=1 WIDTH=90% NOSHADE></TD>
+		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE=+1><B><A NAME="ViewMenu">View
+		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="ViewMenu">View
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -595,10 +599,10 @@ visible menu.
 		selected video mode.</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><HR SIZE=1 WIDTH=90% NOSHADE></TD>
+		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE=+1><B><A NAME="HelpMenu">Help
+		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -626,7 +630,7 @@ visible menu.
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Toolbar
 			</FONT>
 		</TH>
@@ -640,18 +644,19 @@ main one.  The items in the menu are only enabled if the main setting is
 toggled on.
 <BR>
 <P>
+</P>
 <A NAME="Fullscreen"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Fullscreen Mode
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
 You can switch to fullscreen mode via the View menu.  To do so, select a color
-depth and resolution combination, and then select the View-&gt;Switch to
+depth and resolution combination, and then select the <SPAN CLASS="NoWrap">View-&gt;Switch</SPAN> to
 Fullscreen menu option, or hit Ctrl+Enter.  To exit full screen mode, either
 hit Ctrl+Enter again or hit Escape.  Note that this feature does not work
 properly on all video cards.  If it doesn't work on your video card, you should
@@ -659,7 +664,6 @@ get an error panel after the screen resolution is changed.  After you dismiss
 the error panel, it should automatically switch back to windowed mode.  While
 in fullscreen mode you can spin the model around with the mouse, and zoom in
 and out the same way you did in windowed mode.
-</P>
 <P>
 As long as your video card supports 2D Windows functionality while in fullscreen
 mode, the Open Panel and Preferences panel can be accessed from fullscreen mode
@@ -672,11 +676,12 @@ someone else on your network is modifying, it's not likely to be very useful.
 </P>
 <BR>
 <P>
+</P>
 <A NAME="SaveSnapshotOptions"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Save Snapshot Options
 			</FONT>
 		</TH>
@@ -684,7 +689,6 @@ someone else on your network is modifying, it's not likely to be very useful.
 </TABLE>
 When you save a snapshot, the following LDView-specific options show up at the
 bottom of the standard save dialog box.
-</P>
 <P>
 <I>Save snapshot series</I> (Default: <I>Off</I>):<BR>
 Enabling this option causes a unique number to automatically be appended to the
@@ -752,11 +756,12 @@ snapshot to produce the same result.
 </P>
 <BR>
 <P>
+</P>
 <A NAME="ErrorWindow"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Error Window
 			</FONT>
 		</TH>
@@ -764,7 +769,6 @@ snapshot to produce the same result.
 </TABLE>
 The error window displays errors and warnings that were encountered while
 loading an LDraw model.
-</P>
 <P>
 On the left-hand side is a tree view which displays all of the errors. By
 default, there is one collapsed entry per error, with a brief description of the
@@ -885,11 +889,12 @@ set to show automatically.
 </P>
 <BR>
 <P>
+</P>
 <A NAME="Prefs"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Preferences
 			</FONT>
 		</TH>
@@ -897,10 +902,9 @@ set to show automatically.
 </TABLE>
 Here is a brief description of the items in the Preferences panel (accessed
 through the Edit-&gt;Preferences menu item).
-</P>
 
 <P>
-<FONT SIZE=+2><B><A NAME="GeneralTab">General Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="GeneralTab">General Tab</A></B></FONT><BR>
 </P>
 <P>
 <I>Reset</I>:<BR>
@@ -910,7 +914,7 @@ into effect.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeneralAABox">Antialiasing Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeneralAABox">Antialiasing Box</A></B></FONT><BR>
 <I><A NAME="FSAA">FSAA</A></I> (Default: <I>None</I>):<BR>
 This allows you to select what level of full-scene antialiasing to use.  Note
 that if your video card does not support full-scene antialiasing, then
@@ -932,7 +936,7 @@ Antialiasing</A> is enabled.
 
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeneralColorsBox">Colors Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeneralColorsBox">Colors Box</A></B></FONT><BR>
 <I>Background</I> (Default: <I>Black</I>):<BR>
 This allows you to set the color used to draw the background behind the model.
 </P>
@@ -951,7 +955,7 @@ Enabling this option causes default-colored items to be transparent.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeneralMiscBox">Misc Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeneralMiscBox">Misc Box</A></B></FONT><BR>
 <I>Process ldconfig.ldr</I> (Default: <I>On</I>):<BR>
 This controls whether or not LDView processes the ldconfig.ldr file that is now
 distributed as part of the LDraw parts library.  This file contains settings
@@ -974,6 +978,7 @@ automatically be displayed after loading a model that contains any errors that
 have been selected for display in the error window.
 </P>
 <P>
+</P>
 <I>Fullscreen refresh override</I> (Default: <I>Off</I>):<BR>
 When checked, this setting allows you to override the default refresh rate used
 in fullscreen mode.  Enter a number in the field for the desired refresh rate.
@@ -988,7 +993,6 @@ rate will be used.<BR><BR>
 		what you actually have, you can damage your monitor.</TD>
 	</TR>
 </TABLE>
-</P>
 <P>
 <I>Field of view</I> (Default: <I>45</I>):<BR>
 Enter a number in this field to control the field of view (in degrees).  Setting
@@ -998,7 +1002,7 @@ view.
 </P>
 
 <P>
-<FONT SIZE=+2><B><A NAME="GeometryTab">Geometry Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="GeometryTab">Geometry Tab</A></B></FONT><BR>
 </P>
 <P>
 <I>Reset</I>:<BR>
@@ -1008,7 +1012,7 @@ into effect.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeometryModelBox">Model Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeometryModelBox">Model Box</A></B></FONT><BR>
 <A NAME="SeamWidth"><I>Seam width</I></A> (Default: <I>On/0.50</I>):<BR>
 Enabling this option allows you to set the width of the seams between pieces
 using the up and down arrows to the right.  This setting produces the same effect
@@ -1020,7 +1024,7 @@ produce extremely odd results.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeometryWireframeBox">Wireframe Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeometryWireframeBox">Wireframe Box</A></B></FONT><BR>
 <I>Wireframe</I> (Default: <I>Off</I>):<BR>
 Enabling this option causes the model to be drawn in wireframe.  Note that with
 many 3D accelerators, this actually runs slower than when drawing as a solid.
@@ -1044,7 +1048,7 @@ thickness of the lines used to draw the model in wireframe mode.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeometryBFCBox">BFC Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeometryBFCBox">BFC Box</A></B></FONT><BR>
 <I>BFC</I> (Default: <I>On</I>):<BR>
 Enabling this option turns on back-face culling (BFC).  BFC is a technique that
 can improve rendering performance by not drawing the back faces of polygons.
@@ -1053,7 +1057,6 @@ can improve rendering performance by not drawing the back faces of polygons.
 Note that while this can improve rendering performance, it can also slow things
 down, so don't assume that enabling this will always result in the best
 performance.
-</P>
 </P>
 <P>
 <I>Red back faces</I> (Default: <I>Off</I>):<BR>
@@ -1071,7 +1074,7 @@ order to BFC certify their part files.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="GeometryEdgeLinesBox">Edge Lines Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="GeometryEdgeLinesBox">Edge Lines Box</A></B></FONT><BR>
 <A NAME="DrawEdges"><I>Edge Lines</I></A> (Default: <I>Off</I>):<BR>
 Enabling this option causes the edge lines that outline all the pieces to be
 drawn.
@@ -1091,6 +1094,7 @@ as a silhouette of curved surfaces; they are only drawn when they are visually
 at the edge of the surface from the current viewing angle.
 </P>
 <P>
+</P>
 <TABLE CELLSPACING=0 CELLPADDING=0>
 <TR>
 <TD NOWRAP>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
@@ -1124,7 +1128,6 @@ location.
 </TD>
 </TR>
 </TABLE>
-</P>
 <P>
 <I>High quality</I> (Default: <I>On</I>):<BR>
 This option is only available if edge lines are enabled.  Enabling it causes
@@ -1136,7 +1139,7 @@ resulting in much better looking lines.
 This option is only available if edge lines are enabled.  Enabling it causes
 all edge lines to be drawn in black.  This can be useful to part authors, as it
 causes the edge lines in the default color (light gray) to be much more
-visible.</LI>
+visible.
 </P>
 <P>
 <I>Thickness</I> (Default: <I>0%</I>):<BR>
@@ -1145,7 +1148,7 @@ thickness of the lines used to draw the edges around the pieces.
 </P>
 
 <P>
-<FONT SIZE=+2><B><A NAME="EffectsTab">Effects Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="EffectsTab">Effects Tab</A></B></FONT><BR>
 </P>
 <P>
 <I>Reset</I>:<BR>
@@ -1155,7 +1158,7 @@ into effect.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="EffectsLightingBox">Lighting Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="EffectsLightingBox">Lighting Box</A></B></FONT><BR>
 <I>Lighting</I> (Default: <I>On</I>):<BR>
 Enabling this option enables lighting.  If you disable lighting, it is strongly
 recommended that you enable <A HREF="#DrawEdges">edge lines</A>, unless you are
@@ -1196,7 +1199,7 @@ properly with the alternate setup.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR>
 <I>Stereo</I> (Default: <I>Off</I>):<BR>
 Enabling this option turns on stereo mode.  Stereo mode draws two images: a
 slightly different one for each eye.
@@ -1232,7 +1235,7 @@ object from a very short distance.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="EffectsCutawayBox">Wireframe Cutaway
+<FONT SIZE="+1"><B><A NAME="EffectsCutawayBox">Wireframe Cutaway
 Box</A></B></FONT><BR>
 <A NAME="WireframeCutaway"><I>Wireframe cutaway</I></A> (Default:
 <I>Off</I>):<BR>
@@ -1268,7 +1271,7 @@ controls the thickness of the lines in the wireframe cutaway.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="EffectsTransparencyBox">Transparency
+<FONT SIZE="+1"><B><A NAME="EffectsTransparencyBox">Transparency
 Box</A></B></FONT><BR>
 <I>Sort transparent polygons</I> (Default: <I>On</I>):<BR>
 Enabling this option causes transparent shapes to be drawn in back-to-front
@@ -1278,6 +1281,7 @@ distant transparent shapes.  Unfortunately, this can cause a significant
 slowdown in some models.  This option is mutually exclusive with the use stipple
 pattern option.
 </P>
+<P>
 <I>Use stipple pattern</I> (Default: <I>Off</I>):<BR>
 Enabling this option causes transparent shapes to be drawn using a stipple
 (checkerboard) pattern.  This may be significantly faster on some video hardware,
@@ -1288,7 +1292,7 @@ transparent polygons option.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="EffectsMiscBox">Misc Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="EffectsMiscBox">Misc Box</A></B></FONT><BR>
 <I>Flat shading</I> (Default: <I>Off</I>):<BR>
 Enabling this option causes flat shading to be used.  Note that while flat
 shading is less complicated to draw, with a modern 3D accelerator this will not
@@ -1298,7 +1302,7 @@ lighting</A> or <A HREF="#PrimitiveSubstitution">primitive substitution</A>
 enabled, in which case turning on flat shading can produce odd results.  This
 option is mutually exclusive with the smooth curves option.
 </P>
-
+<P>
 <I>Smooth curves</I> (Default: <I>On</I>):<BR>
 Enabling this option causes curved surfaces to be shaded as curved surfaces
 instead of as facets.  Since this relies on information in the LDraw model file
@@ -1308,7 +1312,7 @@ option.
 </P>
 
 <P>
-<FONT SIZE=+2><B><A NAME="PrimitivesTab">Primitives Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="PrimitivesTab">Primitives Tab</A></B></FONT><BR>
 </P>
 <P>
 <I>Reset</I>:<BR>
@@ -1318,7 +1322,7 @@ into effect.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="PrimitivesSubstitutionBox">Primitive Substitution
+<FONT SIZE="+1"><B><A NAME="PrimitivesSubstitutionBox">Primitive Substitution
 Box</A></B></FONT><BR>
 <A NAME="PrimitiveSubstitution"><I>Primitive substitution</I></A> (Default:
 <I>On</I>):<BR>
@@ -1361,7 +1365,7 @@ The default setting of 2 (9%) is fine for most models.
 </P>
 
 <P>
-<FONT SIZE=+1><B><A NAME="PrimitivesMiscBox">Misc Box</A></B></FONT><BR>
+<FONT SIZE="+1"><B><A NAME="PrimitivesMiscBox">Misc Box</A></B></FONT><BR>
 <I>Low quality studs (faster)</I> (Default: <I>On</I>):<BR>
 Enabling this option switches to using the low-resolution stud files instead of
 the normal-resolution stud files.  This can produce significantly faster
@@ -1375,13 +1379,10 @@ otherwise known as 48-sided primitives, because they approximate circular
 features with 48-sided features.  Since not all primitives have hi-res versions,
 enabling this can create gaps between the standard resolution primitives and
 the hi-res ones.<BR>
-<FONT COLOR="RED">Note:</FONT> If primitive substitution is enabled, any
-primitives that have been replaced by primitive substitution will be unaffected
-by this setting.
 </P>
 
 <P>
-<FONT SIZE=+2><B><A NAME="PreferenceSetsTab">Preference Sets
+<FONT SIZE="+2"><B><A NAME="PreferenceSetsTab">Preference Sets
 Tab</A></B></FONT><BR>
 </P>
 <P>
@@ -1410,7 +1411,7 @@ This creates a new preference set that will initially contain all the current
 settings.
 </P>
 <P>
-<FONT SIZE=+1><B>OK/Apply</B></FONT><BR>
+<FONT SIZE="+1"><B>OK/Apply</B></FONT><BR>
 Changing certain of the options above will require the model to either be
 reprocessed, or reloaded entirely.  If you change any of these options, there
 will be a pause after you hit OK or Apply while it either reprocesses or
@@ -1420,11 +1421,12 @@ the status bar is not set to be visible, it will be made visible temporarily.
 
 <BR>
 <P>
+</P>
 <A NAME="CommandLine"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Command Line
 			</FONT>
 		</TH>
@@ -1439,9 +1441,8 @@ with running programs from the command line, please note that since LDView is
 a normal Windows program, and not a console program, the command prompt may
 behave as though LDView has exited immediately after it launches.  It won't
 necessarily wait for LDView to exit before giving you another prompt.
-</P>
 <P>
-<FONT SIZE=+2><B><A NAME="CommandLineFilename">Specifying a
+<FONT SIZE="+2"><B><A NAME="CommandLineFilename">Specifying a
 Filename</A></B></FONT><BR>
 </P>
 <P>
@@ -1454,7 +1455,7 @@ must be enclosed in double quotes.  (This is standard for any Windows command
 line with long filenames.)
 </P>
 <P>
-<FONT SIZE=+2><B><A NAME="SnapshotFilename">Specifying a Snapshot
+<FONT SIZE="+2"><B><A NAME="SnapshotFilename">Specifying a Snapshot
 Filename</A></B></FONT><BR>
 </P>
 <P>
@@ -1465,10 +1466,10 @@ only works if you also <A HREF="#CommandLineFilename">specify a filename</A> for
 model you want to take a snapshot of.  For example:
 </P>
 <P>
-<PRE>
-	LDView MyModel.ldr -SaveSnapshot=MyModel.png</TT>
-</PRE>
 </P>
+<PRE>
+	LDView MyModel.ldr -SaveSnapshot=MyModel.png
+</PRE>
 <P>
 The image filename must have either .png or .bmp as its extension, and the
 appropriate image type will be created accordingly.  Remember that control may
@@ -1477,7 +1478,7 @@ video card allows this to run without displaying a window, you won't have a
 good way of knowing when LDView has finished executing.
 </P>
 <P>
-<FONT SIZE=+2><B><A NAME="L3PCompatibility">L3P-compatible
+<FONT SIZE="+2"><B><A NAME="L3PCompatibility">L3P-compatible
 Options</A></B></FONT><BR>
 </P>
 <P>
@@ -1487,6 +1488,7 @@ HREF="#CommandLinePrefs">below</A>, -cg and -ca don't have any equal sign
 after the option name.
 </P>
 <P>
+</P>
 <TABLE>
 <TR>
 <TD VALIGN="TOP"><TT>-ca&lt;a&gt;</TT></TD>
@@ -1511,17 +1513,15 @@ radius for the imaginary globe.  Otherwise, the camera distance will be set to
 &lt;r&gt;.</TD>
 </TR>
 </TABLE>
-</P>
 <P>
 Example:
+</P>
 <PRE>
 	LDView -cg30,45,50000 -ca0.1
 </PRE>
-</P>
 <P>
-<FONT SIZE=+2><B><A NAME="CommandLinePrefs">Specifying
+<FONT SIZE="+2"><B><A NAME="CommandLinePrefs">Specifying
 Preferences</A></B></FONT><BR>
-</P>
 </P>
 <P>
 All of the options available in the Preferences Panel can be set from the
@@ -1532,6 +1532,7 @@ if you modify them or other preferences via the Preferences Panel.  Otherwise,
 the old values will be used the next time you run the program without specifying
 a value for those options on the command line.  Preferences are set on the
 command line in the following manner:
+</P>
 <PRE>
 	LDView -&lt;setting 1&gt;=&lt;value 1&gt; -&lt;setting 2&gt;=&lt;value 2&gt; ...
 </PRE>
@@ -1544,8 +1545,8 @@ Below is a list of all the possible settings.  Note that while most of these
 settings correspond directly to the Preferences Panel interface, some may have
 inverted logic from the panel (as noted).  The Type column can be any one of the
 following:
-</P>
 <P>
+</P>
 <TABLE>
 	<TR>
 		<TD ALIGN="RIGHT" VALIGN="TOP">Integer:&nbsp;&nbsp;</TD>
@@ -1601,7 +1602,6 @@ following:
 		</TD>
 	</TR>
 </TABLE>
-</P>
 <P>
 The <I>Global?</I> column indicates whether the setting is a global setting, or
 one that is preference set-specific.  Global settings apply to all preference
@@ -1610,9 +1610,10 @@ In general, settings that show up in the Preferences panel are preference
 set-specific, while others aren't.
 </P>
 <P>
-<FONT SIZE=+2><B><A NAME="PrefList">List of All Preferences</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="PrefList">List of All Preferences</A></B></FONT><BR>
 </P>
 <P>
+</P>
 <TABLE BGCOLOR="#FFFFDD" CELLPADDING=5 CELLSPACING=0 CLASS="SettingsList">
 	<TR>
 		<TH BGCOLOR="#0080D0"><FONT COLOR="#FFFFFF">Setting</FONT></TH>
@@ -3348,7 +3349,6 @@ set-specific, while others aren't.
 			still use the Windows XP style in Windows XP.  Note also that there
 			is no way to set this value in the LDView interface.
 		</TD>
-		</TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
@@ -3466,13 +3466,13 @@ set-specific, while others aren't.
 		</TD>
 	</TR>
 </TABLE>
-</P>
 <P>
+</P>
 <A NAME="Notes"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Notes
 			</FONT>
 		</TH>
@@ -3507,7 +3507,6 @@ Advanced users can adjust the maximum zoom level.  This isn't something that is
 generally useful except to LDraw part authors.  Currently it can only be done by
 using the <A HREF="#ZoomMaxSetting">-ZoomMax</A> command line option, or
 creating or modifying the following DWORD registry key:
-</P>
 <P>
 <TT>HKEY_CURRENT_USER\Software\Travis Cobbs\LDView\ZoomMax</TT>
 </P>
@@ -3548,6 +3547,7 @@ line option.  (For an alternative way to do this, see the
 -DefaultMatrix setting is used to directly specify the rotation matrix applied
 to the model, which looks like this:
 <P>
+</P>
 <TABLE>
 <TR>
 	<TD BGCOLOR="#000000">
@@ -3593,7 +3593,6 @@ to the model, which looks like this:
 	</TD>
 </TR>
 </TABLE>
-</P>
 <P>
 Note that this is the upper left 3x3 matrix of a standard 4x4 3D transformation
 matrix.  It is specified on the command line like the following:
@@ -3610,7 +3609,7 @@ so:
 </P>
 <P>
 If you want to decide on a viewing angle in LDView and then determine the matrix
-for it that can be used above, use the <A HREF="#ShowViewInfo">View->Show
+for it that can be used above, use the <A HREF="#ShowViewInfo">View-&gt;Show
 view info</A> menu item.
 </P>
 <P>
@@ -3655,14 +3654,14 @@ difference, use the <A HREF="#CameraGlobe">-cg</A> option.
 </P>
 </TR>
 </TABLE>
-</P>
 <BR>
 <P>
+</P>
 <A NAME="ScreenSaver"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Using LDView as a Screen Saver
 			</FONT>
 		</TH>
@@ -3674,7 +3673,6 @@ as a screen saver.  Simply select it from the list of available screen savers,
 and then configure it as desired.  When using LDView as a screen saver, you can
 set most of the settings that are available in standard LDView, and you can
 additionally set screen saver-specific settings.
-</P>
 <P>
 If you don't use the install program to install LDView, or you don't check the
 option to install it as a screen saver and later change your mind, you can
@@ -3691,11 +3689,12 @@ any problems, so you don't have to uninstall first.
 </P>
 <BR>
 <P>
+</P>
 <A NAME="Website"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
-			<FONT SIZE=+2 COLOR="#FFFFFF">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
 			Website
 			</FONT>
 		</TH>
@@ -3703,7 +3702,6 @@ any problems, so you don't have to uninstall first.
 </TABLE>
 You can download an up-to-date copy of LDView at the LDView website at
 <A HREF="http://ldview.sourceforge.net/">http://ldview.sourceforge.net/</A>.
-</P>
 <BR>
 <BR>
 <HR>
