@@ -32,6 +32,8 @@ public:
 	{
 		return m_mainFlags.processLDConfig != false;
 	}
+	void setSkipValidation(bool value) { m_mainFlags.skipValidation = value; }
+	bool getSkipValidation(void) { return m_mainFlags.skipValidation != false; }
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
 	virtual bool getLoadCanceled(void)
 	{
@@ -50,6 +52,7 @@ protected:
 		bool lowResStuds:1;
 		bool blackEdgeLines:1;
 		bool processLDConfig:1;
+		bool skipValidation:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

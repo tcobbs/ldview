@@ -180,6 +180,8 @@ class LDrawModelViewer: public TCObject
 		float getWireframeLineWidth(void) { return wireframeLineWidth; }
 		virtual void setProcessLDConfig(bool value);
 		bool getProcessLDConfig(void) { return flags.processLDConfig; }
+		virtual void setSkipValidation(bool value);
+		bool getSkipValidation(void) { return flags.skipValidation != false; }
 		void setAutoCenter(bool value) { flags.autoCenter = value; }
 		bool getAutoCenter(void) { return flags.autoCenter; }
 		virtual void setForceZoomToFit(bool value);
@@ -430,6 +432,7 @@ class LDrawModelViewer: public TCObject
 			bool hiResPrimitives:1;
 			bool needsViewReset:1;
 			bool processLDConfig:1;
+			bool skipValidation:1;
 			bool autoCenter:1;
 			bool forceZoomToFit:1;
 			bool defaultTrans:1;

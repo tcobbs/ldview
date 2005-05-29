@@ -1,5 +1,6 @@
 #include "LDLModelLine.h"
 #include "LDLPalette.h"
+#include "LDLMainModel.h"
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -112,7 +113,6 @@ bool LDLModelLine::parse(void)
 		&g, &h, &i, subModelName) == 15)
 	{
 		int red, green, blue, alpha;
-		float determinant;
 		int k;
 		char *spaceSpot = strchr(m_line, ' ');
 
@@ -147,51 +147,55 @@ bool LDLModelLine::parse(void)
 		m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
 		m_color = LDLPalette::colorForRGBA(red, green, blue, alpha);
 		setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
-		determinant = TCVector::determinant(m_matrix);
-		if (determinant == 0.0f)
+		if (!getMainModel()->getSkipValidation())
 		{
-			// The determinant is zero.  We will try to fix the
-			// transformation matrix if the part only contains points in an
-			// XZ-plane with Y == 0.0. Many part authors are lazy or
-			// ignorant and specify zero Y values.
-			if (isXZPlanar())
-			{
-				// This is an XZ-planar model, so try to fix the singular
-				// matrix.
-				determinant = tryToFixPlanarMatrix();
-				if (determinant == 0.0f)
-				{
-					// If it's still zero, we failed to fix it.
-					setError(LDLEMatrix,
-						TCLocalStrings::get("LDLModelLineSingular"));
-				}
-			}
-			else
-			{
-				// We don't want to even try to fix if the sub-model isn't
-				// XZ-planar at Y == 0.
-				setError(LDLEMatrix,
-					TCLocalStrings::get("LDLModelLineSingularNonFlat"));
-			}
+			float determinant = TCVector::determinant(m_matrix);
+
 			if (determinant == 0.0f)
 			{
-				m_valid = false;
-				return false;
+				// The determinant is zero.  We will try to fix the
+				// transformation matrix if the part only contains points in an
+				// XZ-plane with Y == 0.0. Many part authors are lazy or
+				// ignorant and specify zero Y values.
+				if (isXZPlanar())
+				{
+					// This is an XZ-planar model, so try to fix the singular
+					// matrix.
+					determinant = tryToFixPlanarMatrix();
+					if (determinant == 0.0f)
+					{
+						// If it's still zero, we failed to fix it.
+						setError(LDLEMatrix,
+							TCLocalStrings::get("LDLModelLineSingular"));
+					}
+				}
+				else
+				{
+					// We don't want to even try to fix if the sub-model isn't
+					// XZ-planar at Y == 0.
+					setError(LDLEMatrix,
+						TCLocalStrings::get("LDLModelLineSingularNonFlat"));
+				}
+				if (determinant == 0.0f)
+				{
+					m_valid = false;
+					return false;
+				}
 			}
-		}
-		// Note that if we get this far, determinant still holds the current
-		// determinant of the matrix, even if the matrix got adjusted above.
-		if (m_highResModel->isPart() && !m_parentModel->isPart())
-		{
-			if (!fEq2(determinant, 1.0f, 0.05f) &&
-				!fEq2(determinant, -1.0f, 0.05f))
+			// Note that if we get this far, determinant still holds the current
+			// determinant of the matrix, even if the matrix got adjusted above.
+			if (m_highResModel->isPart() && !m_parentModel->isPart())
 			{
-				// If the determinant is not either 1 or -1, they applied a
-				// non-uniform scale.  Note that we are being EXTREMELY
-				//  loose with this "equality" check (within 0.05).
-				setWarning(LDLEPartDeterminant,
-					TCLocalStrings::get("LDLModelLineNonUniformPart"));
-				m_flags.nonUniform = true;
+				if (!fEq2(determinant, 1.0f, 0.05f) &&
+					!fEq2(determinant, -1.0f, 0.05f))
+				{
+					// If the determinant is not either 1 or -1, they applied a
+					// non-uniform scale.  Note that we are being EXTREMELY
+					//  loose with this "equality" check (within 0.05).
+					setWarning(LDLEPartDeterminant,
+						TCLocalStrings::get("LDLModelLineNonUniformPart"));
+					m_flags.nonUniform = true;
+				}
 			}
 		}
 		return true;

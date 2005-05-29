@@ -287,6 +287,7 @@ protected:
 	bool transDefaultColor;
 	int defaultColorNumber;
 	bool processLDConfig;
+	bool skipValidation;
 	bool showsFPS;
 	bool showErrors;
 	int fullScreenRefresh;

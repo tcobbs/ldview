@@ -1,5 +1,6 @@
 #include "LDLTriangleLine.h"
 #include "LDLLineLine.h"
+#include "LDLMainModel.h"
 #include <TCFoundation/TCLocalStrings.h>
 
 LDLTriangleLine::LDLTriangleLine(LDLModel *parentModel, const char *line,
@@ -31,16 +32,19 @@ bool LDLTriangleLine::parse(void)
 		m_points[0] = TCVector(x1, y1, z1);
 		m_points[1] = TCVector(x2, y2, z2);
 		m_points[2] = TCVector(x3, y3, z3);
-		// Note that we don't care what the second matching index is, because
-		// we only need to throw out one of the two points, so don't bother to
-		// even read it.
-		if (getMatchingPoints(&m_matchingIndex))
+		if (!getMainModel()->getSkipValidation())
 		{
-			m_valid = false;
-		}
-		else
-		{
-			checkForColinearPoints();
+			// Note that we don't care what the second matching index is,
+			// because we only need to throw out one of the two points, so don't
+			// bother to even read it.
+			if (getMatchingPoints(&m_matchingIndex))
+			{
+				m_valid = false;
+			}
+			else
+			{
+				checkForColinearPoints();
+			}
 		}
 		return true;
 	}
