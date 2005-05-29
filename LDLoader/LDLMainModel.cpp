@@ -14,6 +14,7 @@ LDLMainModel::LDLMainModel(void)
 {
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
+	m_mainFlags.skipValidation = false;
 	m_mainFlags.loadCanceled = false;
 	m_mainFlags.processLDConfig = true;
 }

@@ -105,6 +105,7 @@ void LDViewPreferences::applyGeneralSettings(void)
 		modelViewer->setBackgroundRGBA(r, g, b, 0);
 		getRGB(defaultColor, r, g, b);
 		modelViewer->setProcessLDConfig(processLDConfig);
+		modelViewer->setSkipValidation(skipValidation);
 		// showFrameRate taken care of automatically.
 		// showErrors taken care of automatically.
 		// fullScreenRefresh taken care of automatically.
@@ -204,6 +205,7 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 	transDefaultColor = false;
 	defaultColorNumber = -1;
 	processLDConfig = true;
+	skipValidation = false;
 	showsFPS = false;
 	showErrors = true;
 	fullScreenRefresh = 0;
@@ -300,6 +302,8 @@ void LDViewPreferences::loadGeneralSettings(void)
 		defaultColorNumber);
 	processLDConfig = TCUserDefaults::longForKey(PROCESS_LDCONFIG_KEY,
 		processLDConfig) != 0;
+	skipValidation = TCUserDefaults::longForKey(SKIP_VALIDATION_KEY,
+		skipValidation) != 0;
 	showsFPS = TCUserDefaults::longForKey(SHOW_FPS_KEY, (long)showsFPS) != 0;
 	showErrors = TCUserDefaults::longForKey(SHOW_ERRORS_KEY, (long)showErrors,
 		false) != 0;

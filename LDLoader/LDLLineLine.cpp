@@ -1,4 +1,5 @@
 #include "LDLLineLine.h"
+#include "LDLMainModel.h"
 #include <TCFoundation/TCLocalStrings.h>
 
 LDLLineLine::LDLLineLine(LDLModel *parentModel, const char *line,
@@ -24,7 +25,10 @@ bool LDLLineLine::parse(void)
 		m_points = new TCVector[2];
 		m_points[0] = TCVector(x1, y1, z1);
 		m_points[1] = TCVector(x2, y2, z2);
-		getMatchingPoints();
+		if (!getMainModel()->getSkipValidation())
+		{
+			getMatchingPoints();
+		}
 		return true;
 	}
 	else

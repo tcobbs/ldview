@@ -1,5 +1,6 @@
 #include "LDLQuadLine.h"
 #include "LDLTriangleLine.h"
+#include "LDLMainModel.h"
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCLocalStrings.h>
 
@@ -35,17 +36,20 @@ bool LDLQuadLine::parse(void)
 		m_points[1] = TCVector(x2, y2, z2);
 		m_points[2] = TCVector(x3, y3, z3);
 		m_points[3] = TCVector(x4, y4, z4);
-		// Note that we don't care what the second matching index is, because
-		// we only need to throw out one of the two points, so don't bother to
-		// even read it.
-		if (getMatchingPoints(&m_matchingIndex))
+		if (!getMainModel()->getSkipValidation())
 		{
-			m_valid = false;
-		}
-		else
-		{
-			swapPointsIfNeeded();
-			checkForColinearPoints();
+			// Note that we don't care what the second matching index is,
+			// because we only need to throw out one of the two points, so don't
+			// bother to even read it.
+			if (getMatchingPoints(&m_matchingIndex))
+			{
+				m_valid = false;
+			}
+			else
+			{
+				swapPointsIfNeeded();
+				checkForColinearPoints();
+			}
 		}
 		return true;
 	}

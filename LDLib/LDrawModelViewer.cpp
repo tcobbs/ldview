@@ -113,6 +113,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.hiResPrimitives = false;
 	flags.needsViewReset = true;
 	flags.processLDConfig = true;
+	flags.skipValidation = false;
 	flags.autoCenter = true;
 	flags.forceZoomToFit = false;
 	flags.defaultTrans = false;
@@ -747,6 +748,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
 		mainModel->setExtraSearchDirs(extraSearchDirs);
 		mainModel->setProcessLDConfig(flags.processLDConfig);
+		mainModel->setSkipValidation(flags.skipValidation);
 		if (mainModel->load(filename))
 		{
 			LDModelParser *modelParser = new LDModelParser;
@@ -1005,6 +1007,21 @@ void LDrawModelViewer::setForceZoomToFit(bool value)
 	if (flags.forceZoomToFit != value)
 	{
 		flags.forceZoomToFit = value;
+	}
+}
+
+void LDrawModelViewer::setSkipValidation(bool value)
+{
+	if (flags.skipValidation != value)
+	{
+		flags.skipValidation = value;
+		if (!value)
+		{
+			// If they turn the flag on, there's no point reloading.  If, on the
+			// other hand, they turn the flag off, we need to reload so that we
+			// can work around any problems the model might have.
+			flags.needsReload = true;
+		}
 	}
 }
 

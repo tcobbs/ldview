@@ -176,3 +176,8 @@ bool LDLFileLine::isXZPlanar(const float * /*matrix*/) const
 	// It is implemented in sub-classes that care.
 	return true;
 }
+
+LDLMainModel *LDLFileLine::getMainModel(void)
+{
+	return m_parentModel->getMainModel();
+}
