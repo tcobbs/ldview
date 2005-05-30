@@ -258,7 +258,7 @@ void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 					{
 						for (j = stripCount - 1; j >= 0; j--)
 						{
-							transparentIndices->addValue(i + j);
+							transparentIndices->addValue(offset + j);
 						}
 					}
 					if (transparentStripCounts)

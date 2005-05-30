@@ -450,6 +450,10 @@ void TREMainModel::draw(void)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
 	}
+	else
+	{
+		glDisable(GL_POLYGON_OFFSET_FILL);
+	}
 	if (getWireframeFlag())
 	{
 		enableLineSmooth();
@@ -976,7 +980,8 @@ void TREMainModel::drawTransparent(void)
 		{
 			if (getEdgeLinesFlag())
 			{
-				glPolygonOffset(0.0f, 0.0f);
+				glDisable(GL_POLYGON_OFFSET_FILL);
+//				glPolygonOffset(0.0f, 0.0f);
 			}
 			else
 			{
