@@ -453,10 +453,18 @@ char *SSConfigure::getInstallPath(void)
 {
 	char *installPath;
 	char *oldAppName = copyString(TCUserDefaults::getAppName());
+	char *sessionName;
 
 	TCUserDefaults::setAppName("Travis Cobbs/LDView");
 	installPath = TCUserDefaults::stringForKey(INSTALL_PATH_KEY, NULL, false);
 	TCUserDefaults::setAppName(oldAppName);
+	sessionName =
+		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+	if (sessionName && sessionName[0])
+	{
+		TCUserDefaults::setSessionName(sessionName, NULL, false);
+	}
+	delete sessionName;
 	delete oldAppName;
 	return installPath;
 }

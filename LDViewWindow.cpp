@@ -2458,7 +2458,17 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 						CUIThemes::setWindowTheme(notification->hwndFrom, NULL,
 							L"");
 					}
-					strcpy(dispInfo->szText, buttonInfo->getTooltipText());
+					if (loading)
+					{
+						// Don't allow tooltips to pop up while loading; they
+						// prevent the loading from continuing until they go
+						// away.
+						dispInfo->szText[0] = 0;
+					}
+					else
+					{
+						strcpy(dispInfo->szText, buttonInfo->getTooltipText());
+					}
 					break;
 				}
 			}
