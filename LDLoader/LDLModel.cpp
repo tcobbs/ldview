@@ -115,6 +115,26 @@ TCULong LDLModel::getPackedRGBA(TCULong colorNumber)
 	return r << 24 | g << 16 | b << 8 | a;
 }
 
+bool LDLModel::hasSpecular(TCULong colorNumber)
+{
+	return m_mainModel->hasSpecular(colorNumber);
+}
+
+bool LDLModel::hasShininess(TCULong colorNumber)
+{
+	return m_mainModel->hasShininess(colorNumber);
+}
+
+void LDLModel::getSpecular(TCULong colorNumber, float *specular)
+{
+	m_mainModel->getSpecular(colorNumber, specular);
+}
+
+void LDLModel::getShininess(TCULong colorNumber, float &shininess)
+{
+	m_mainModel->getShininess(colorNumber, shininess);
+}
+
 TCULong LDLModel::getEdgeColorNumber(TCULong colorNumber)
 {
 	return m_mainModel->getEdgeColorNumber(colorNumber);

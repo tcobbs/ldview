@@ -196,6 +196,20 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 			parentModel->getPackedRGBA(edgeColorNumber),
 			modelLine->getMatrix(), treModel, invert);
 		treSubModel->setNonUniformFlag(modelLine->getNonUniformFlag());
+		if (parentModel->hasSpecular(colorNumber))
+		{
+			float specular[4];
+
+			parentModel->getSpecular(colorNumber, specular);
+			treSubModel->setSpecular(specular);
+		}
+		if (parentModel->hasShininess(colorNumber))
+		{
+			float shininess;
+
+			parentModel->getShininess(colorNumber, shininess);
+			treSubModel->setShininess(shininess);
+		}
 	}
 	if (treModel->isPart() && !treParentModel->isPart())
 	{

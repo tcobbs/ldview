@@ -26,9 +26,13 @@ public:
 	LDLPalette(const LDLPalette &other);
 	void reset(void);
 	void getRGBA(int colorNumber, int &r, int &g, int &b, int &a);
+	bool hasSpecular(int colorNumber);
+	bool hasShininess(int colorNumber);
+	bool hasLuminance(int colorNumber);
 	int getEdgeColorNumber(int colorNumber);
 	bool isColorComment(const char *comment);
 	bool parseColorComment(const char *comment);
+	LDLColorInfo getAnyColorInfo(int colorNumber);
 	LDLColorInfo &getColorInfo(int index) { return m_colors[index]; }
 	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b,
 		bool transparent);
@@ -42,6 +46,7 @@ protected:
 	void init(void);
 	void initStandardColors(void);
 	void initDitherColors(void);
+	void initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b, int a);
 	void initSpecular(int index, float sr, float sg, float sb, float sa,
 		float shininess);
 	void initSpecular(LDLColorInfo &colorInfo, float sr, float sg, float sb,
@@ -54,6 +59,7 @@ protected:
 	void initSpecularAndShininess(LDLColorInfo &color);
 	void getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b, int &a);
 	bool getCustomColorRGBA(int colorNumber, int &r, int &g, int &b, int &a);
+	bool getCustomColorInfo(int colorNumber, LDLColorInfo &colorInfo);
 	int getBlendedColorComponent(TCULong c1, TCULong c2, TCULong a1,
 		TCULong a2);
 	virtual bool isColorNumberRGB(int colorNumber, TCByte r, TCByte g,

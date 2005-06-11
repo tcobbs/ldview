@@ -133,6 +133,27 @@ void LDLMainModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
 	m_mainPalette->getRGBA(colorNumber, r, g, b, a);
 }
 
+bool LDLMainModel::hasSpecular(TCULong colorNumber)
+{
+	return m_mainPalette->hasSpecular(colorNumber);
+}
+
+bool LDLMainModel::hasShininess(TCULong colorNumber)
+{
+	return m_mainPalette->hasShininess(colorNumber);
+}
+
+void LDLMainModel::getSpecular(TCULong colorNumber, float *specular)
+{
+	memcpy(specular, m_mainPalette->getAnyColorInfo(colorNumber).specular,
+		4 * sizeof(float));
+}
+
+void LDLMainModel::getShininess(TCULong colorNumber, float &shininess)
+{
+	shininess = m_mainPalette->getAnyColorInfo(colorNumber).shininess;
+}
+
 TCULong LDLMainModel::getEdgeColorNumber(TCULong colorNumber)
 {
 	if (getBlackEdgeLines())

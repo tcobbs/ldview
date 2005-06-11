@@ -22,6 +22,8 @@ public:
 	virtual float *getMatrix(void) { return m_matrix; }
 	virtual float *getOriginalMatrix(void) { return m_originalMatrix; }
 	virtual void setColor(TCULong color, TCULong edgeColor);
+	virtual void setSpecular(const float *specular);
+	virtual void setShininess(float shininess);
 	virtual TCULong getColor(void);
 	virtual TCULong getEdgeColor(void);
 	virtual bool isColorSet(void) { return m_flags.colorSet != false; }
@@ -60,6 +62,7 @@ protected:
 	virtual void dealloc(void);
 	virtual void unMirror(TRESubModel *originalSubModel);
 	virtual void invert(TRESubModel *originalSubModel);
+	virtual void applyColor(TCULong color, bool applySpecular);
 
 	TREModel *m_model;
 	TRESubModel *m_unMirroredSubModel;
@@ -68,6 +71,8 @@ protected:
 	float m_originalMatrix[16];
 	TCULong m_color;
 	TCULong m_edgeColor;
+	float m_specular[4];
+	float m_shininess;
 	struct {
 		bool colorSet:1;
 		bool unMirrored:1;
@@ -75,6 +80,8 @@ protected:
 		bool bfcInvert:1;
 		bool inverted:1;
 		bool nonUniform:1;
+		bool specular:1;
+		bool shininess:1;
 	} m_flags;
 };
 
