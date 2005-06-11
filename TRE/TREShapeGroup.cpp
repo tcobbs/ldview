@@ -295,10 +295,8 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 {
 	TREVertexArray *vertices = m_vertexStore->getVertices();
 	TREVertexArray *normals = m_vertexStore->getNormals();
-	float oldColor[4];
-	GLboolean lighting = glIsEnabled(GL_LIGHTING);
 
-	glGetFloatv(GL_CURRENT_COLOR, oldColor);
+	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
 	glColor3ub(255, 0, 0);
 	glDisable(GL_LIGHTING);
 	if (vertices && normals)
@@ -314,15 +312,11 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 			TCVector normal = (*normals)[index].v;
 
 			glVertex3fv(vertex);
-			glVertex3fv(vertex + (normal * 0.1f));
+			glVertex3fv(vertex + (normal * 1.1f));
 		}
 		glEnd();
 	}
-	glColor4fv(oldColor);
-	if (lighting)
-	{
-		glEnable(GL_LIGHTING);
-	}
+	glPopAttrib();
 }
 
 // This is really ugly, but I really need to use dynamic arrays while filling

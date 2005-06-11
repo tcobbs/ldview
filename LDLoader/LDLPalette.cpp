@@ -120,17 +120,7 @@ void LDLPalette::init(void)
 
 	for (i = 0; i < 512; i++)
 	{
-		m_colors[i].color.r = 0;
-		m_colors[i].color.g = 0;
-		m_colors[i].color.b = 0;
-		m_colors[i].color.a = 0;
-		m_colors[i].ditherColor.r = 0;
-		m_colors[i].ditherColor.g = 0;
-		m_colors[i].ditherColor.b = 0;
-		m_colors[i].ditherColor.a = 0;
-		m_colors[i].edgeColorNumber = 255;
-		m_colors[i].luminance = 1.0f;
-		initSpecularAndShininess(m_colors[i]);
+		initColorInfo(m_colors[i], 0, 0, 0, 0);
 	}
 	initStandardColors();
 	initDitherColors();
@@ -238,25 +228,25 @@ void LDLPalette::initOtherColors(void)
 	initOtherColor(494,	204,	204,	204);	// Electrical Contacts
 
 	// Black rubber
-	initSpecular(256, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
+	initSpecular(256, 0.075f, 0.075f, 0.075f, 1.0f, 15.0f);
 	m_colors[256].edgeColorNumber = 8;
 //	m_colors[256].edgeColorNumber = 0x4000000;
 
 	// Gray rubber
-	initSpecular(375, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
+	initSpecular(375, 0.075f, 0.075f, 0.075f, 1.0f, 15.0f);
 
 	// Gold
 	initSpecular(334,
 		240.0f / 255.0f * GOLD_SCALE,
 		176.0f / 255.0f * GOLD_SCALE,
 		51.0f / 255.0f * GOLD_SCALE,
-		-100.0f, 5.0f);
+		1.0f, 5.0f);
 
 	// Chrome
-	initSpecular(383, 0.9f, 1.2f, 1.5f, -100.0f, 5.0f);
+	initSpecular(383, 0.9f, 1.2f, 1.5f, 1.0f, 5.0f);
 
 	// Electrical contacts
-	initSpecular(494, 0.9f, 0.9f, 1.5f, -100.0f, 5.0f);
+	initSpecular(494, 0.9f, 0.9f, 1.5f, 1.0f, 5.0f);
 }
 
 int LDLPalette::getEdgeColorNumber(int colorNumber)
@@ -271,8 +261,7 @@ int LDLPalette::getEdgeColorNumber(int colorNumber)
 	}
 }
 
-bool LDLPalette::getCustomColorRGBA(int colorNumber, int &r, int &g, int &b,
-									int &a)
+bool LDLPalette::getCustomColorInfo(int colorNumber, LDLColorInfo &colorInfo)
 {
 	int i;
 	int count = m_customColors->getCount();
@@ -283,9 +272,22 @@ bool LDLPalette::getCustomColorRGBA(int colorNumber, int &r, int &g, int &b,
 
 		if (customColor->colorNumber == colorNumber)
 		{
-			getRGBA(customColor->colorInfo, r, g, b, a);
+			colorInfo = customColor->colorInfo;
 			return true;
 		}
+	}
+	return false;
+}
+
+bool LDLPalette::getCustomColorRGBA(int colorNumber, int &r, int &g, int &b,
+									int &a)
+{
+	LDLColorInfo colorInfo;
+
+	if (getCustomColorInfo(colorNumber, colorInfo))
+	{
+		getRGBA(colorInfo, r, g, b, a);
+		return true;
 	}
 	return false;
 }
@@ -324,8 +326,49 @@ void LDLPalette::getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b,
 	a = ((int)colorInfo.color.a + (int)colorInfo.ditherColor.a) / 2;
 }
 
-void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
+void LDLPalette::initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b,
+							   int a)
 {
+	colorInfo.color.r = (TCByte)r;
+	colorInfo.color.g = (TCByte)g;
+	colorInfo.color.b = (TCByte)b;
+	colorInfo.color.a = (TCByte)a;
+	colorInfo.ditherColor.r = (TCByte)r;
+	colorInfo.ditherColor.g = (TCByte)g;
+	colorInfo.ditherColor.b = (TCByte)b;
+	colorInfo.ditherColor.a = (TCByte)a;
+	colorInfo.edgeColorNumber = 255;
+	colorInfo.luminance = -100.0f;
+	initSpecularAndShininess(colorInfo);
+}
+
+bool LDLPalette::hasSpecular(int colorNumber)
+{
+	LDLColorInfo colorInfo = getAnyColorInfo(colorNumber);
+
+	if (colorInfo.specular[0] != -100.0f || colorInfo.specular[1] != -100.0f ||
+		colorInfo.specular[2] != -100.0f || colorInfo.specular[3] != -100.0f)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool LDLPalette::hasShininess(int colorNumber)
+{
+	return getAnyColorInfo(colorNumber).shininess != -100.0f;
+}
+
+bool LDLPalette::hasLuminance(int colorNumber)
+{
+	return getAnyColorInfo(colorNumber).luminance != -100.0f;
+}
+
+LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
+{
+	LDLColorInfo colorInfo;
+	int r, g, b, a;
+
 	// Default color is orange-ish opaque.
 	r = 255;
 	g = 128;
@@ -333,20 +376,23 @@ void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 	a = 255;
 	if (colorNumber < 512 && colorNumber >= 0)
 	{
-		LDLColorInfo &colorInfo = m_colors[colorNumber];
-
+		colorInfo = m_colors[colorNumber];
 		if (colorInfo.color.r != 0 || colorInfo.color.g != 0 ||
 			colorInfo.color.b != 0 || colorInfo.color.a != 0 ||
 			colorInfo.edgeColorNumber != 255)
 		{
-			getRGBA(colorInfo, r, g, b, a);
+			return colorInfo;
 		}
 		else if (colorNumber != 16 && colorNumber != 24)
 		{
 			debugPrintf("Unknown color: %d\n", colorNumber);
 		}
 	}
-	else if (!getCustomColorRGBA(colorNumber, r, g, b, a))
+	else if (getCustomColorInfo(colorNumber, colorInfo))
+	{
+		return colorInfo;
+	}
+	else
 	{
 		if (colorNumber >= 0x2000000 && colorNumber < 0x4000000)
 		{
@@ -389,6 +435,14 @@ void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 			b = (colorNumber & 0xF) * 17;
 		}
 	}
+	initColorInfo(colorInfo, r, g, b, a);
+	return colorInfo;
+}
+
+void LDLPalette::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
+{
+	LDLColorInfo colorInfo = getAnyColorInfo(colorNumber);
+	getRGBA(colorInfo, r, g, b, a);
 }
 
 bool LDLPalette::isColorComment(const char *comment)
@@ -427,7 +481,7 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 	int colorValue;
 	int edgeColorNumber;
 	int alpha = 255;
-	int luminance = 255;
+	int luminance = -25500;
 	LDLColor color;
 	LDLColor ditherColor;
 	LDLColorInfo *colorInfo;

@@ -37,6 +37,10 @@ public:
 	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
 	virtual TCULong getPackedRGBA(TCULong colorNumber);
 	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
+	virtual bool hasSpecular(TCULong colorNumber);
+	virtual bool hasShininess(TCULong colorNumber);
+	virtual void getSpecular(TCULong colorNumber, float *specular);
+	virtual void getShininess(TCULong colorNumber, float &shininess);
 	virtual LDLModel *subModelNamed(const char *subModelName,
 		bool lowRes = false);
 	virtual const char *getFilename(void) { return m_filename; }

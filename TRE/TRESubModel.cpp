@@ -20,6 +20,8 @@ TRESubModel::TRESubModel(void)
 	m_flags.mirrorMatrix = false;
 	m_flags.bfcInvert = false;
 	m_flags.inverted = false;
+	m_flags.specular = false;
+	m_flags.shininess = false;
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)
@@ -213,6 +215,29 @@ TCULong TRESubModel::getEdgeColor(void)
 	return htonl(m_edgeColor);
 }
 
+void TRESubModel::applyColor(TCULong color, bool applySpecular)
+{
+	GLbitfield attributes = GL_CURRENT_BIT;
+
+	if (applySpecular && (m_flags.specular || m_flags.shininess))
+	{
+		attributes |= GL_LIGHTING_BIT;
+	}
+	glPushAttrib(attributes);
+	glColor4ubv((GLubyte*)&color);
+	if (applySpecular)
+	{
+		if (m_flags.shininess)
+		{
+			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, m_shininess);
+		}
+		if (m_flags.specular)
+		{
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, m_specular);
+		}
+	}
+}
+
 void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 					   bool nonUniform)
 {
@@ -228,8 +253,7 @@ void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 			subModelsOnly = false;
 			if (section == TREMEdgeLines || section == TREMConditionalLines)
 			{
-				glPushAttrib(GL_CURRENT_BIT);
-				glColor4ubv((GLubyte*)&m_edgeColor);
+				applyColor(m_edgeColor, false);
 			}
 			else
 			{
@@ -245,8 +269,7 @@ void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 				}
 				if (!subModelsOnly)
 				{
-					glPushAttrib(GL_CURRENT_BIT);
-					glColor4ubv((GLubyte*)&m_color);
+					applyColor(m_color, true);
 				}
 			}
 		}
@@ -448,4 +471,16 @@ void TRESubModel::transferTransparent(TCULong color, TREMSection section,
 		color = m_color;
 	}
 	m_model->transferTransparent(color, section, newMatrix);
+}
+
+void TRESubModel::setSpecular(const float *specular)
+{
+	memcpy(m_specular, specular, sizeof(m_specular));
+	m_flags.specular = true;
+}
+
+void TRESubModel::setShininess(float shininess)
+{
+	m_shininess = shininess;
+	m_flags.shininess = true;
 }

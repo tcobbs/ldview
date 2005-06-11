@@ -16,6 +16,10 @@ public:
 	virtual void print(void);
 	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
 	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
+	virtual bool hasSpecular(TCULong colorNumber);
+	virtual bool hasShininess(TCULong colorNumber);
+	virtual void getSpecular(TCULong colorNumber, float *specular);
+	virtual void getShininess(TCULong colorNumber, float &shininess);
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 	virtual LDLPalette *getPalette(void) { return m_mainPalette; }
 	virtual void setExtraSearchDirs(TCStringArray *value);
