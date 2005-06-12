@@ -37,6 +37,10 @@ int main(int argc, char *argv[])
 	{
 //      printf("Using /usr/local/lib/LDViewMessages.ini\n");
     }
+	else if (TCLocalStrings::loadStringTable("/usr/local/share/ldview/LDViewMessages.ini"))
+	{
+//		printf("Using /usr/local/share/ldview/LDViewMessages.ini\n");
+	}
 	else
 	{
 		// The 64 at the end is padding, so that we can add onto it.
