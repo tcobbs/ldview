@@ -35,7 +35,7 @@ install -m 644 ../Readme.txt $RPM_BUILD_ROOT/usr/local/share/ldview/Readme.txt
 install -m 644 ../ChangeHistory.html $RPM_BUILD_ROOT/usr/local/share/ldview/ChangeHistory.html
 install -m 644 ../license.txt $RPM_BUILD_ROOT/usr/local/share/ldview/license.txt
 install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/local/share/ldview/m6459.ldr
-
+install -m 644 ../LDViewMessages.ini $RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages.ini
 %files
 /usr/local/bin/LDView
 /usr/local/share/ldview/Help.html
@@ -43,6 +43,7 @@ install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/local/share/ldview/m6459.ldr
 /usr/local/share/ldview/ChangeHistory.html
 /usr/local/share/ldview/m6459.ldr
 /usr/local/share/ldview/Readme.txt
+/usr/local/share/ldview/LDViewMessages.ini
 
 %clean
 rm -rf $RPM_BUILD_ROOT
