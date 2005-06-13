@@ -5,7 +5,7 @@ unix {
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
   documentation.path = /usr/local/share/ldview
-  documentation.files = ../Readme.txt ../Help.html ../license.txt ../m6459.ldr ../LDViewMessages.ini
+  documentation.files = ../Readme.txt ../Help.html ../license.txt ../m6459.ldr ../LDViewMessages.ini ../ChangeHistory.html
   target.path = /usr/local/bin
   INSTALLS += documentation target
 }
