@@ -1,4 +1,4 @@
-Copyright (c) 2004 Travis Cobbs
+Copyright (c) 2005 Travis Cobbs & Peter Bartfai
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
