@@ -3,14 +3,14 @@
 
 [Setup]
 AppName=LDView
-AppVerName=LDView 3.0 Beta 1
-AppVersion=2.9.99.11
-OutputBaseFilename=LDView-3000B1
-SourceDir=C:\TEMP\Releases\LDView-3000B1
+AppVerName=LDView 3.0 Release Candidate 1
+AppVersion=3.0.0.1
+OutputBaseFilename=LDView-3000RC1
+SourceDir=C:\TEMP\Releases\LDView-3000RC1
 AppPublisher=Travis Cobbs
-AppPublisherURL=http://home.san.rr.com/tcobbs/LDView/
-AppSupportURL=http://home.san.rr.com/tcobbs/LDView/
-AppUpdatesURL=http://home.san.rr.com/tcobbs/LDView/
+AppPublisherURL=http://ldview.sourceforge.net/
+AppSupportURL=http://ldview.sourceforge.net/
+AppUpdatesURL=http://ldview.sourceforge.net/
 Compression=zip/9
 DefaultDirName={reg:HKCU\Software\Travis Cobbs\LDView,InstallPath|{pf}\LDView}
 DefaultGroupName=LDView
@@ -25,7 +25,7 @@ Name: screensaver; Description: "Install LDView as a screen saver"; GroupDescrip
 
 [Files]
 Source: "LDView.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "license.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 Source: "ChangeHistory.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Help.html"; DestDir: "{app}"; Flags: ignoreversion
