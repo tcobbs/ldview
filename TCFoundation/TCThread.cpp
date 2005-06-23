@@ -107,6 +107,9 @@ THREAD_RET_TYPE START_FUNC_MODS TCThread::threadStartFunction(void* value)
 	debugPrintf("Thread started: 0x%08X\n", GetCurrentThreadId());
 #endif
 	tcThread->setStarted();
+#ifdef _QT
+	pthread_cleanup_push(cancelCleanupFunction, tcThread);
+#endif // _QT
 	if (startFunction)
 	{
 		rval = (*startFunction)(tcThread);
@@ -118,6 +121,9 @@ THREAD_RET_TYPE START_FUNC_MODS TCThread::threadStartFunction(void* value)
 
 		rval = ((*tcThread->getOwner()).*startMemberFunction)(tcThread);
 	}
+#ifdef _QT
+	pthread_cleanup_pop(0);
+#endif // _QT
 	tcThread->setFinished();
 	return rval;
 }
@@ -145,11 +151,7 @@ int TCThread::run(void)
 	else
 	{
 		pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-		pthread_cleanup_push(cancelCleanupFunction, this);
 		return 1;
-	}
-	// WHAT!?!?!?!
-	// It doesn't compile without the following extra close brace.
 	}
 #endif // _QT
 #endif // WIN32
