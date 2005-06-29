@@ -1186,7 +1186,7 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 
 	if (line0Index >= 0)
 	{
-		// line0Index is the index in smoother of the condtional line that goes
+		// line0Index is the index in smoother0 of the condtional line that goes
 		// between the points at index0 and index1.  Note that smoother has
 		// been initialized to point to the smoother associated with the point
 		// at index0.
@@ -1350,13 +1350,29 @@ void TREModel::fillConditionalMap(TREConditionalMap &conditionalMap,
 			{
 				int index0 = (*indices)[i];
 				int index1 = (*indices)[i + 1];
+				const TREVertex &vertex0 = vertices->constVertexAtIndex(index0);
+				const TREVertex &vertex1 = vertices->constVertexAtIndex(index1);
+				TREVertexKey vertex0Key(vertex0);
+				TREVertexKey vertex1Key(vertex1);
 
-				// Add the conditional line to the map using its first point as
-				// the key in the map.
-				addConditionalPoint(conditionalMap, vertices, index0, index1);
-				// Add the conditional line to the map using its second point as
-				// the key in the map.
-				addConditionalPoint(conditionalMap, vertices, index1, index0);
+				if (vertex0Key < vertex1Key || vertex1Key < vertex0Key)
+				{
+					// Add the conditional line to the map using its first point
+					// as the key in the map.
+					addConditionalPoint(conditionalMap, vertices, index0,
+						index1, vertex0Key);
+					// Add the conditional line to the map using its second point
+					// as the key in the map.
+					addConditionalPoint(conditionalMap, vertices, index1,
+						index0, vertex1Key);
+				}
+				else
+				{
+					TCVector length = TCVector(vertex0.v) - TCVector(vertex1.v);
+
+					debugPrintf(2, "Conditional too short to map: %f.\n",
+						length.length());
+				}
 			}
 		}
 	}
@@ -1368,17 +1384,17 @@ the point at index0 as its key in the map.
 */
 void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 								   const TREVertexArray *vertices, int index0,
-								   int index1)
+								   int index1, const TREVertexKey &vertexKey)
 {
-	TREVertexKey pointKey(vertices->constVertexAtIndex(index0));
-	TREConditionalMap::iterator it = conditionalMap.find(pointKey);
+//	TREVertexKey vertexKey(vertices->constVertexAtIndex(index0));
+	TREConditionalMap::iterator it = conditionalMap.find(vertexKey);
 
 	if (it == conditionalMap.end())
 	{
 		// Note that this would probably be more clear if we used the []
 		// operator of map.  However, that would require extra lookups, and
 		// we're trying to keep the lookups to a minimum.
-		TREConditionalMap::value_type newValue(pointKey,
+		TREConditionalMap::value_type newValue(vertexKey,
 			TRESmoother(vertices->constVertexAtIndex(index0)));
 
 		// The insert function returns a pair, where the first of the pair is
