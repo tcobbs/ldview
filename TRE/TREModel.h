@@ -299,7 +299,8 @@ protected:
 	virtual void fillConditionalMap(TREConditionalMap &conditionalMap,
 		TREShapeGroup *shapeGroup);
 	virtual void addConditionalPoint(TREConditionalMap &conditionalMap,
-		const TREVertexArray *vertices, int index0, int index1);
+		const TREVertexArray *vertices, int index0, int index1,
+		const TREVertexKey &vertexKey);
 	virtual void calcShapeNormals(TREConditionalMap &conditionalMap,
 		TRENormalInfoArray *normalInfos, TREShapeType shapeType);
 	virtual void calcShapeNormals(TREConditionalMap &conditionalMap,

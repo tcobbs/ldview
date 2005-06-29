@@ -136,7 +136,7 @@ void TRESmoother::finish(void)
 			{
 				int sharedCount;
 
-				for (j = 0; j < list->getCount(); j++)
+				for (j = 0; list != NULL && j < list->getCount(); j++)
 				{
 					int otherIndex = (*list)[j];
 					TCVector &normal = m_normals[i];
@@ -168,9 +168,15 @@ void TRESmoother::finish(void)
 								}
 							}
 							m_sharedList->replaceObject(NULL, otherIndex);
+							if (otherIndex == i)
+							{
+								// This shouldn't be necessary, but something's
+								// broken.  (See TODO below.)
+								list = NULL;
+							}
 						}
 					}
-					for (k = i + 1; k < count; k++)
+					for (k = i + 1; list != NULL && k < count; k++)
 					{
 						TCULongArray *otherList = (*m_sharedList)[k];
 
@@ -186,6 +192,8 @@ void TRESmoother::finish(void)
 									{
 										list->addValue(k);
 									}
+									// !!! TODO: Fix this. It's broken, and I'm
+									// not sure why.  Part 45708 breaks it.
 									otherList->removeValue((*otherList)[l]);
 								}
 							}
@@ -193,10 +201,13 @@ void TRESmoother::finish(void)
 					}
 				}
 				m_normals[i].normalize();
-				sharedCount = list->getCount();
-				for (j = 0; j < sharedCount; j++)
+				if (list)
 				{
-					m_normals[(*list)[j]] = m_normals[i];
+					sharedCount = list->getCount();
+					for (j = 0; j < sharedCount; j++)
+					{
+						m_normals[(*list)[j]] = m_normals[i];
+					}
 				}
 			}
 			else

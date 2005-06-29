@@ -4,7 +4,7 @@
 //#include <TCFoundation/TCVector.h>
 #include <TRE/TREVertexArray.h>
 
-#define TRE_VERTEX_KEY_PRECISION 100.0f
+#define TRE_VERTEX_KEY_PRECISION 10000.0f
 
 class TREVertexKey
 {
