@@ -622,7 +622,17 @@ void Preferences::setButtonState(QRadioButton *button, bool state)
 	}
 }
 
-void Preferences::setRangeValue(QRangeControl *rangeControl, int value)
+void Preferences::setRangeValue(QSpinBox *rangeControl, int value)
+{
+	int rangeValue = rangeControl->value();
+
+	if (value != rangeValue)
+	{
+		rangeControl->setValue(value);
+	}
+}
+
+void Preferences::setRangeValue(QSlider *rangeControl, int value)
 {
 	int rangeValue = rangeControl->value();
 

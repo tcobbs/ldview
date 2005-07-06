@@ -53,8 +53,10 @@ void LDView::editPreferences()
 
 void LDView::closeEvent(QCloseEvent *event)
 {
+#if (QT_VERSION >>16)==3
     QMainWindow::closeEvent(event);
     if (event->isAccepted())
+#endif
     {
 	fileExit();
     }

@@ -12,6 +12,7 @@ class QString;
 class TCColorButton;
 class QCheckBox;
 class QRadioButton;
+class QSlider;
 class QSpinBox;
 
 typedef enum
@@ -126,7 +127,8 @@ protected:
 	void reflectEffectsSettings(void);
 	void reflectPrimitivesSettings(void);
 
-	void setRangeValue(QRangeControl *rangeConrol, int value);
+	void setRangeValue(QSpinBox *rangeConrol, int value);
+	void setRangeValue(QSlider *rangeConrol, int value);
 	void setupColorButton(TCColorButton *button, int colorNumber);
 
 	void enableWireframeCutaway(void);
