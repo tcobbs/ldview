@@ -10,6 +10,9 @@ class QButton;
 class QRangeControl;
 class QString;
 class TCColorButton;
+class QCheckBox;
+class QRadioButton;
+class QSpinBox;
 
 typedef enum
 {
@@ -67,7 +70,8 @@ public:
 	void setStatusBar(bool value);
 	bool getToolBar(void) { return toolBar; }
 	void setToolBar(bool value);
-	void setButtonState(QButton *button, bool state);
+	void setButtonState(QCheckBox *button, bool state);
+	void setButtonState(QRadioButton *button, bool state);
 	void setWindowSize(int width, int height);
 	int getWindowWidth(void);
 	int getWindowHeight(void);

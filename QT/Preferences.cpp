@@ -1,3 +1,4 @@
+#include "qt4wrapper.h"
 #include "Preferences.h"
 #include "PreferencesPanel.h"
 #include "ModelViewerWidget.h"
@@ -16,7 +17,6 @@
 #include <qlabel.h>
 #include <qcombobox.h>
 #include <qinputdialog.h>
-#include <qlistbox.h>
 #include <qmessagebox.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <netinet/in.h>
@@ -412,11 +412,11 @@ void Preferences::doEffectsApply(void)
 	{
 		smTemp = LDVStereoNone;
 	}
-	else if (panel->crossEyedStereoButton->state())
+	else if (panel->crossEyedStereoButton->isChecked())
 	{
 		smTemp = LDVStereoCrossEyed;
 	}
-	else if (panel->parallelStereoButton->state())
+	else if (panel->parallelStereoButton->isChecked())
 	{
 		smTemp = LDVStereoParallel;
 	}
@@ -435,11 +435,11 @@ void Preferences::doEffectsApply(void)
 	{
 		cmTemp = LDVCutawayNormal;
 	}
-	else if (panel->colorCutawayButton->state())
+	else if (panel->colorCutawayButton->isChecked())
 	{
 		cmTemp = LDVCutawayWireframe;
 	}
-	else if (panel->monochromeCutawayButton->state())
+	else if (panel->monochromeCutawayButton->isChecked())
 	{
 		cmTemp = LDVCutawayStencil;
 	}
@@ -526,15 +526,15 @@ void Preferences::doPrimitivesApply(void)
 		if (textureStuds)
 		{
 			iTemp = GL_NEAREST_MIPMAP_NEAREST;
-			if (panel->nearestFilteringButton->state())
+			if (panel->nearestFilteringButton->isChecked())
 			{
 				iTemp = GL_NEAREST_MIPMAP_NEAREST;
 			}
-			else if (panel->bilinearFilteringButton->state())
+			else if (panel->bilinearFilteringButton->isChecked())
 			{
 				iTemp = GL_LINEAR_MIPMAP_NEAREST;
 			}
-			else if (panel->trilinearFilteringButton->state())
+			else if (panel->trilinearFilteringButton->isChecked())
 			{
 				iTemp = GL_LINEAR_MIPMAP_LINEAR;
 			}
@@ -602,9 +602,19 @@ bool Preferences::getAllowPrimitiveSubstitution(void)
 	return allowPrimitiveSubstitution;
 }
 
-void Preferences::setButtonState(QButton *button, bool state)
+void Preferences::setButtonState(QCheckBox *button, bool state)
 {
-	bool buttonState = button->state() == QButton::On ? true : false;
+	bool buttonState = button->isChecked();
+
+	if (state != buttonState)
+	{
+		button->toggle();
+	}
+}
+
+void Preferences::setButtonState(QRadioButton *button, bool state)
+{
+	bool buttonState = button->isChecked();
 
 	if (state != buttonState)
 	{

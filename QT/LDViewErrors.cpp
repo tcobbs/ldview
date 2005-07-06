@@ -1,6 +1,8 @@
-#include "LDViewErrors.h"
-#include "ErrorPanel.h"
+#include "qt4wrapper.h"
+#include <qradiobutton.h>
 #include "Preferences.h"
+
+#include "LDViewErrors.h"
 
 #include <LDLoader/LDLError.h>
 #include <TCFoundation/TCStringArray.h>
@@ -9,10 +11,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <UserDefaultsKeys.h>
 
-#include <qlistview.h>
 #include <qstring.h>
-#include <qheader.h>
-#include <qbutton.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qstatusbar.h>
@@ -259,7 +258,7 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 	if (parent)
 	{
 		item = new QListViewItem(parent, line);
-		item->setPixmap(0,QPixmap::fromMimeSource( "error_info.png" ));
+		item->setPixmap(0,getimage( "error_info.png" ));
 	}
 	else
 	{
@@ -273,46 +272,46 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 		    case LDLEWhitespace:
             case LDLEParse:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_parse.png"));
+                        getimage( "error_parse.png"));
                     break;
             case LDLEMatrix:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_matrix.png"));
+                        getimage( "error_matrix.png"));
                     break;
             case LDLEFileNotFound:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_fnf.png"));
+                        getimage( "error_fnf.png"));
                     break;
             case LDLEMatchingPoints:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_matching_points.png"));
+                        getimage( "error_matching_points.png"));
                     break;
             case LDLEConcaveQuad:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_concave_quad.png"));
+                        getimage( "error_concave_quad.png"));
                     break;
             case LDLEColinear:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_colinear.png"));
+                        getimage( "error_colinear.png"));
                     break;
             case LDLEVertexOrder:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_vertex_order.png"));
+                        getimage( "error_vertex_order.png"));
                     break;
             case LDLENonFlatQuad:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_non_flat_quad.png"));
+                        getimage( "error_non_flat_quad.png"));
                     break;
             case LDLEPartDeterminant:
                     item->setPixmap(0,
-                        QPixmap::fromMimeSource( "error_determinant.png"));
+                        getimage( "error_determinant.png"));
                     break;
         }
 	}
 	return item;
 }
 
-void LDViewErrors::doErrorClick(QButton *button, LDLErrorType errorType)
+void LDViewErrors::doErrorClick(QCheckBox *button, LDLErrorType errorType)
 {
 	preferences->setShowError(errorType, button->state());
 	clearListView();

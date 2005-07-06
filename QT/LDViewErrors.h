@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <LDLoader/LDLError.h>
+#include "ErrorPanel.h"
 
 class ErrorPanel;
 class Preferences;
@@ -10,6 +11,7 @@ class QListViewItem;
 class QButton;
 class QStatusBar;
 class QLabel;
+class QCheckBox;
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
@@ -28,7 +30,7 @@ public:
 	void doShowNoneError(void);
 	void reflectSettings(void);
 	void setValues(bool);
-	void doErrorClick(QButton *button, LDLErrorType errorNumber);
+	void doErrorClick(QCheckBox *button, LDLErrorType errorNumber);
 
 protected:
 	void clearListView(void);

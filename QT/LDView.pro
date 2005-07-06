@@ -15,6 +15,14 @@ TEMPLATE	=app
 CONFIG	+= qt opengl warn_on release
 DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . ..
+exists($(QTDIR)/include/Qt3Support/q3button.h){
+	CONFIG 	+= uic3
+	DEFINES += QT3_SUPPORT
+	QT 	+= qt3support
+	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore $(QTDIR)/include/QtOpenGL
+	LIBS += -lQtOpenGL
+message(QT4)
+}
 LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -lLDraw -lLDLoader -lTRE -lTCFoundation
 DBFILE	= LDView.db
 LANGUAGE	= C++
