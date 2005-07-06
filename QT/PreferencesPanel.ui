@@ -93,7 +93,7 @@
                         <property name="sizePolicy">
                             <sizepolicy>
                                 <hsizetype>7</hsizetype>
-                                <vsizetype>1</vsizetype>
+                                <vsizetype>0</vsizetype>
                                 <horstretch>0</horstretch>
                                 <verstretch>0</verstretch>
                             </sizepolicy>
@@ -157,20 +157,48 @@
                                     <property name="spacing">
                                         <number>4</number>
                                     </property>
-                                    <widget class="TCColorButton" row="1" column="1">
+                                    <widget class="QTextEdit" row="1" column="1">
                                         <property name="name">
                                             <cstring>defaultColorButton</cstring>
                                         </property>
-                                        <property name="focusPolicy">
-                                            <enum>TabFocus</enum>
+                                        <property name="vScrollBarMode">
+                                            <enum>AlwaysOff</enum>
+                                        </property>
+                                        <property name="hScrollBarMode">
+                                            <enum>AlwaysOff</enum>
+                                        </property>
+                                        <property name="readOnly">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>1</hsizetype>
+                                                <vsizetype>2</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
                                         </property>
                                     </widget>
-                                    <widget class="TCColorButton" row="0" column="1">
+                                    <widget class="QTextEdit" row="0" column="1">
                                         <property name="name">
                                             <cstring>backgroundColorButton</cstring>
                                         </property>
-                                        <property name="focusPolicy">
-                                            <enum>TabFocus</enum>
+                                        <property name="vScrollBarMode">
+                                            <enum>AlwaysOff</enum>
+                                        </property>
+                                        <property name="hScrollBarMode">
+                                            <enum>AlwaysOff</enum>
+                                        </property>
+                                        <property name="readOnly">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>1</hsizetype>
+                                                <vsizetype>2</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
                                         </property>
                                     </widget>
                                     <spacer row="0" column="2">
@@ -253,6 +281,14 @@
                                         <property name="value">
                                             <number>45</number>
                                         </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
                                     </widget>
                                     <widget class="QCheckBox" row="1" column="2">
                                         <property name="name">
@@ -292,6 +328,15 @@
                                         <property name="name">
                                             <cstring>memoryUsageBox</cstring>
                                         </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+
                                     </widget>
                                 </grid>
                             </widget>
@@ -2600,26 +2645,6 @@
     </vbox>
 </widget>
 <customwidgets>
-    <customwidget>
-        <class>TCColorButton</class>
-        <header location="global">TCColorButton.h</header>
-        <sizehint>
-            <width>58</width>
-            <height>26</height>
-        </sizehint>
-        <container>0</container>
-        <sizepolicy>
-            <hordata>1</hordata>
-            <verdata>0</verdata>
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-        </sizepolicy>
-        <pixmap>image0</pixmap>
-        <signal>clicked()</signal>
-        <signal>changed(const QColor&amp;)</signal>
-        <slot access="protected" specifier="">onClick()</slot>
-        <property type="Color">color</property>
-    </customwidget>
 </customwidgets>
 <images>
     <image name="image0">
@@ -3049,15 +3074,15 @@
     </connection>
     <connection>
         <sender>backgroundColorButton</sender>
-        <signal>changed(const QColor &amp;)</signal>
+        <signal>clicked(int,int)</signal>
         <receiver>PreferencesPanel</receiver>
-        <slot>enableApply()</slot>
+        <slot>doBackgroundColor()</slot>
     </connection>
     <connection>
         <sender>defaultColorButton</sender>
-        <signal>changed(const QColor &amp;)</signal>
+        <signal>clicked(int,int)</signal>
         <receiver>PreferencesPanel</receiver>
-        <slot>enableApply()</slot>
+        <slot>doDefaultColor()</slot>
     </connection>
 </connections>
 <tabstops>
@@ -3158,6 +3183,8 @@
     <slot>doPrefSetSelected()</slot>
     <slot>doSortTransparency( bool value )</slot>
     <slot>doStippleTransparency( bool value )</slot>
+	<slot>doDefaultColor()</slot>
+	<slot>doBackgroundColor()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

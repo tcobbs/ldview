@@ -4,7 +4,6 @@
 #include "ModelViewerWidget.h"
 #include <LDLoader/LDLModel.h>
 #include <LDLoader/LDLPalette.h>
-#include "TCColorButton.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
 #include "UserDefaultsKeys.h"
@@ -18,8 +17,11 @@
 #include <qcombobox.h>
 #include <qinputdialog.h>
 #include <qmessagebox.h>
+#include <qpushbutton.h>
+#include <qcolordialog.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <netinet/in.h>
+#include <qtextedit.h>
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
@@ -155,7 +157,7 @@ void Preferences::doGeneralApply(void)
 		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, 
 				PROCESS_LDCONFIG_KEY, false);
 	}
-	cTemp = panel->backgroundColorButton->color();
+	cTemp = panel->backgroundColorButton->backgroundColor();
 	cTemp.rgb(&br, &bg, &bb);
 	iTemp = LDLPalette::colorForRGBA(br, bg, bb, 255);
 	if (iTemp != backgroundColor)
@@ -168,7 +170,7 @@ void Preferences::doGeneralApply(void)
 	{
 		getRGB(backgroundColor, br, bg, bb);
 	}
-	cTemp = panel->defaultColorButton->color();
+	cTemp = panel->defaultColorButton->backgroundColor();
 	cTemp.rgb(&dr, &dg, &db);
 	iTemp = LDLPalette::colorForRGBA(dr, dg, db, 255);
 	if (iTemp != defaultColor)
@@ -574,6 +576,28 @@ void Preferences::doPrimitivesApply(void)
 	}
 }
 
+void Preferences::doBackgroundColor()
+{
+	int r,g,b;
+	getRGB(backgroundColor, r ,g, b);
+	QColor color = QColorDialog::getColor(QColor(r,g,b));
+	if(color.isValid())
+	{
+		panel->backgroundColorButton->setPaletteBackgroundColor(color);
+	}
+}
+
+void Preferences::doDefaultColor()
+{
+	int r, g, b;
+	getRGB(defaultColor, r ,g, b);
+	QColor color = QColorDialog::getColor(QColor(r,g,b));
+	if(color.isValid())
+	{
+		panel->defaultColorButton->setPaletteBackgroundColor(color);
+	}
+}
+
 void Preferences::doApply(void)
 {
 	doGeneralApply();
@@ -640,14 +664,6 @@ void Preferences::setRangeValue(QSlider *rangeControl, int value)
 	{
 		rangeControl->setValue(value);
 	}
-}
-
-void Preferences::setupColorButton(TCColorButton *button, int colorNumber)
-{
-	int r, g, b;
-
-	getRGB(colorNumber, r, g, b);
-	button->setColor(QColor(r, g, b));
 }
 
 void Preferences::loadSettings(void)
@@ -931,12 +947,15 @@ void Preferences::reflectSettings(void)
 
 void Preferences::reflectGeneralSettings(void)
 {
+	int r, g, b;
 	setButtonState(panel->aaLinesButton, lineSmoothing);
 	setButtonState(panel->frameRateButton, showFPS);
 	setButtonState(panel->showErrorsButton, showErrors);
 	setButtonState(panel->processLdconfigLdrButton, processLdconfigLdr);
-	setupColorButton(panel->backgroundColorButton, backgroundColor);
-	setupColorButton(panel->defaultColorButton, defaultColor);
+	getRGB(backgroundColor,r,g,b);
+	panel->backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
+	getRGB(defaultColor,r,g,b);
+	panel->defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
 	setRangeValue(panel->fieldOfViewSpin, fieldOfView);
 	setButtonState(panel->transparentButton, transDefaultColor);
 	panel->memoryUsageBox->setCurrentItem(memoryUsage);

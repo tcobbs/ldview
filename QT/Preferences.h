@@ -9,7 +9,7 @@ class ModelViewerWidget;
 class QButton;
 class QRangeControl;
 class QString;
-class TCColorButton;
+//class TCColorButton;
 class QCheckBox;
 class QRadioButton;
 class QSlider;
@@ -59,6 +59,8 @@ public:
 	void doPrefSetsApply(void);
 	void abandonChanges(void);
 	void show(void);
+	void doBackgroundColor();
+	void doDefaultColor();
 	bool getAllowPrimitiveSubstitution(void);
 	void getRGB(int color, int &r, int &g, int &b);
 	int getBackgroundColor(void) { return backgroundColor; }
@@ -129,7 +131,7 @@ protected:
 
 	void setRangeValue(QSpinBox *rangeConrol, int value);
 	void setRangeValue(QSlider *rangeConrol, int value);
-	void setupColorButton(TCColorButton *button, int colorNumber);
+	//void setupColorButton(TCColorButton *button, int colorNumber);
 
 	void enableWireframeCutaway(void);
 	void enableLighting(void);
