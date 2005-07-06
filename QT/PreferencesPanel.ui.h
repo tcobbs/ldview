@@ -198,3 +198,18 @@ void PreferencesPanel::doStippleTransparency( bool value )
 	}
 }
 
+void PreferencesPanel::doDefaultColor()
+{
+	if(preferences)
+	{
+		preferences->doDefaultColor();
+	}
+}
+
+void PreferencesPanel::doBackgroundColor()
+{
+	if(preferences)
+	{
+		preferences->doBackgroundColor();
+	}
+}
