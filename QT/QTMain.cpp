@@ -1,7 +1,9 @@
+#include "qt4wrapper.h"
 #include <qapplication.h>
 #include <qwindowsstyle.h>
 #include <qmotifstyle.h>
-#include <qmotifplusstyle.h>
+#include <qradiobutton.h>
+//#include <qmotifplusstyle.h>
 #include <qgl.h>
 #include "LDView.h"
 #include "ModelViewerWidget.h"

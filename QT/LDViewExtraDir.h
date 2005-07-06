@@ -3,11 +3,11 @@
 
 #include <TCFoundation/TCTypedObjectArray.h>
 #include "ModelViewerWidget.h"
-#include <qfiledialog.h>
 
 class ExtraDirPanel;
 class QListViewItem;
 class QButton;
+class QFileDialog;
 
 class ExtraDir
 {

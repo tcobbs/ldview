@@ -1,5 +1,5 @@
 DIRECTORIES = ../TCFoundation ../LDLoader ../TRE ../LDLib
-QMAKE = qmake
+QMAKE = $(QTDIR)/bin/qmake
 
 all: Makefile
 	for DIR in $(DIRECTORIES); do	\

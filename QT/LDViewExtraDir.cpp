@@ -1,13 +1,12 @@
+#include "qt4wrapper.h"
+
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <UserDefaultsKeys.h>
 #include <TCFoundation/mystring.h>
 
 #include <qpushbutton.h>
-#include <qlistbox.h>
 #include <qstring.h>
-#include <qheader.h>
-#include <qfiledialog.h>
 #include "ModelViewerWidget.h"
 #include "LDViewExtraDir.h"
 #include "ExtraDirPanel.h"

@@ -1,4 +1,4 @@
-#include "ModelViewerWidget.h"
+#include "qt4wrapper.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCAlertManager.h>
@@ -19,26 +19,25 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include "UserDefaultsKeys.h"
 
+#include "ModelViewerWidget.h"
+
 #include <qtextbrowser.h>
 #include <qapplication.h>
-#include <qfiledialog.h>
 #include <qstatusbar.h>
 #include <qtoolbar.h>
-#include <qprogressbar.h>
 #include <qlabel.h>
 #include <qpainter.h>
 #include <qbrush.h>
 #include <qcolor.h>
 #include <qevent.h>
 #include <qframe.h>
-#include <qaction.h>
 #include <qtextedit.h>
 #include <qpushbutton.h>
 #include <qdir.h>
 #include <qmessagebox.h>
 #include <qmenubar.h>
+#include <qaction.h>
 #include <qdatetime.h>
-#include <qdragobject.h>
 #include <qmime.h>
 #include <qregexp.h>
 #include <qgroupbox.h>
@@ -126,7 +125,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	extradir = new ExtraDir(this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode());
+#if (QT_VERSION >>16)==4
+	setFocusPolicy(Qt::StrongFocus);
+#else
 	setFocusPolicy(QWidget::StrongFocus);
+#endif
 }
 
 ModelViewerWidget::~ModelViewerWidget(void)
@@ -380,7 +383,9 @@ void ModelViewerWidget::finishLoadModel(void)
 			startPollTimer();
 		}
 		setLastOpenFile(filename);
+#if (QT_VERSION >>16)==3
 		populateRecentFileMenuItems();
+#endif
 	}
 	postLoad();
 }
@@ -433,7 +438,7 @@ void ModelViewerWidget::doFileOpen(void)
 			fileDialog->addFilter("Multi-part Models (*.mpd)");
 			fileDialog->addFilter("All Files (*)");
 			fileDialog->setSelectedFilter(0);
-			fileDialog->setIcon(*mainWindow->icon());
+			fileDialog->setIcon(getimage("LDViewIcon16.png"));
 		}
 		if (fileDialog->exec() == QDialog::Accepted)
 		{
@@ -460,7 +465,9 @@ void ModelViewerWidget::setLastOpenFile(const char *filename)
 			// pointer after it had been deleted.
 			recentFiles->removeString(index + 1);
 		}
+#if (QT_VERSION >>16)==3
 		recordRecentFiles();
+#endif
 	}
 }
 
@@ -748,6 +755,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		progressMode->setText("Fly-through");
 	}
 	menuBar = mainWindow->menuBar();
+#if (QT_VERSION >>16)==3
 	item = menuBar->findItem(menuBar->idAt(0));
 	if (item)
 	{
@@ -786,6 +794,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		helpMenu = item->popup();
 	}
 	connectMenuShows();
+#endif
 	unlock();
 }
 
@@ -994,11 +1003,11 @@ void ModelViewerWidget::doViewToolBar(bool flag)
     lock();
     if (flag)
     {
-		mainWindow->dockWindows().take()->show();
+		mainWindow->dockWindows().at(0)->show();
     }
     else
     {
-        mainWindow->dockWindows().take()->hide();
+        mainWindow->dockWindows().at(0)->hide();
 	}
 	preferences->setToolBar(flag);
 	unlock();
@@ -1014,21 +1023,25 @@ void ModelViewerWidget::doViewFullScreen(void)
 		size=mainWindow->size();
 		menuBar->hide();
 		statusBar->hide();
+#if (QT_VERSION >>16)==3
 		mainWindow->GroupBox12->setFrameShape( QFrame::NoFrame );
+#endif
 		mainWindow->GroupBox12->layout()->setMargin( 0 );
-		mainWindow->dockWindows().take()->hide();
+		mainWindow->dockWindows().at(0)->hide();
 		mainWindow->showFullScreen();
 		fullscreen=1;
 	} else
 	{
+#if (QT_VERSION >>16)==3
 		mainWindow->GroupBox12->setFrameShape( QGroupBox::WinPanel );
+#endif
         mainWindow->GroupBox12->layout()->setMargin( 2 );
         mainWindow->showNormal();
 		mainWindow->resize(size);
 		mainWindow->move(pos);
         menuBar->show();
         if(preferences->getStatusBar()) {statusBar->show();}
-		if(preferences->getToolBar()) {mainWindow->dockWindows().take()->show();}
+		if(preferences->getToolBar()) {mainWindow->dockWindows().at(0)->show();}
 		fullscreen=0;
 	}
 }
@@ -1397,7 +1410,7 @@ bool ModelViewerWidget::promptForLDrawDir(void)
 		"open LDraw dir dialog",
 		true);
 	dirDialog->setCaption("Choose the LDraw directory");
-	dirDialog->setIcon(*mainWindow->icon());
+	dirDialog->setIcon(getimage("LDViewIcon16.png"));
 	dirDialog->setMode(QFileDialog::DirectoryOnly);
 	if (dirDialog->exec() == QDialog::Accepted)
 	{
@@ -1721,7 +1734,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         saveDialog->setCaption("Save Snapshot");
         saveDialog->addFilter("Windows Bitmap (*.bmp)");
         saveDialog->setSelectedFilter(0);
-        saveDialog->setIcon(*mainWindow->icon());
+        saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
     }
     if (saveDialog->exec() == QDialog::Accepted)
