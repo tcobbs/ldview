@@ -18,9 +18,8 @@ INCLUDEPATH	+= . ..
 exists($(QTDIR)/include/Qt3Support/q3button.h){
 	CONFIG 	+= uic3
 	DEFINES += QT3_SUPPORT
-	QT 	+= qt3support
-	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore $(QTDIR)/include/QtOpenGL
-	LIBS += -lQtOpenGL
+	QT 	+= qt3support opengl
+	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 message(QT4)
 }
 LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -lLDraw -lLDLoader -lTRE -lTCFoundation
