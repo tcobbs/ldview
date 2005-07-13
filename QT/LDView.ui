@@ -184,7 +184,7 @@
             <string>&amp;Open...</string>
         </property>
         <property name="accel">
-            <number>4194383</number>
+            <string>Ctrl+O</string>
         </property>
     </action>
     <action>
@@ -304,7 +304,7 @@
             <string>Save Snapshot</string>
         </property>
         <property name="accel">
-            <number>4194387</number>
+            <string>Ctrl+S</string>
         </property>
     </action>
     <action>
@@ -383,7 +383,7 @@
             <string>&amp;Preferences...</string>
         </property>
         <property name="accel">
-            <number>6291536</number>
+            <string>Ctrl+Shift+P</string>
         </property>
     </action>
     <action>
@@ -426,7 +426,7 @@
             <string>Show or hide this status bar</string>
         </property>
         <property name="accel">
-            <number>6291539</number>
+            <string>Ctrl+Shift+S</string>
         </property>
     </action>
 	<action>
@@ -457,7 +457,7 @@
             <string>Resets model back to the default view</string>
         </property>
         <property name="accel">
-            <number>4194386</number>
+            <string>Ctrl+R</string>
         </property>
     </action>
     <action>
@@ -513,7 +513,7 @@
             <string>&amp;Reload</string>
         </property>
         <property name="accel">
-            <number>4148</number>
+            <string>F5</string>
         </property>
     </action>
     <action>
@@ -530,7 +530,7 @@
             <string>Show Errors</string>
         </property>
         <property name="accel">
-            <number>6291525</number>
+            <string>Ctrl+Shift+E</string>
         </property>
     </action>
 	<action>
@@ -759,7 +759,7 @@
                 <string>Examine Mode</string>
             </property>
             <property name="accel">
-                <number>6291544</number>
+                <string>Ctrl+Shift+X</string>
             </property>
         </action>
         <action>
@@ -779,7 +779,7 @@
                 <string>Fly-through Mode</string>
             </property>
             <property name="accel">
-                <number>6291526</number>
+                <string>Ctrl+Shift+F</string>
             </property>
         </action>
     </actiongroup>
@@ -791,7 +791,7 @@
             <string>Cancel Load</string>
         </property>
         <property name="accel">
-            <number>4096</number>
+            <string>Esc</string>
         </property>
     </action>
 	<action>
