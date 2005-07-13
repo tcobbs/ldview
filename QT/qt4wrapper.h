@@ -2,7 +2,7 @@
 #if (QT_VERSION >>16)==4
 #define QFileDialog	Q3FileDialog
 #include <q3filedialog.h>
-#define QPopupMenu	Q3PopupMenu
+#define QPopupMenu	QMenu
 #include <q3popupmenu.h>
 #define QListBox	Q3ListBox
 #include <q3listbox.h>

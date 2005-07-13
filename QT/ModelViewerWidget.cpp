@@ -383,9 +383,7 @@ void ModelViewerWidget::finishLoadModel(void)
 			startPollTimer();
 		}
 		setLastOpenFile(filename);
-#if (QT_VERSION >>16)==3
 		populateRecentFileMenuItems();
-#endif
 	}
 	postLoad();
 }
@@ -465,9 +463,7 @@ void ModelViewerWidget::setLastOpenFile(const char *filename)
 			// pointer after it had been deleted.
 			recentFiles->removeString(index + 1);
 		}
-#if (QT_VERSION >>16)==3
 		recordRecentFiles();
-#endif
 	}
 }
 
@@ -755,11 +751,10 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		progressMode->setText("Fly-through");
 	}
 	menuBar = mainWindow->menuBar();
-#if (QT_VERSION >>16)==3
 	item = menuBar->findItem(menuBar->idAt(0));
 	if (item)
 	{
-		fileMenu = item->popup();
+		fileMenu = mainWindow->fileMenu;
 		fileCancelLoadId = fileMenu->idAt(6);
 		fileReloadId = fileMenu->idAt(1);
 	}
@@ -781,20 +776,19 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	item = menuBar->findItem(menuBar->idAt(1));
 	if (item)
 	{
-		editMenu = item->popup();
+		editMenu = mainWindow->editMenu;
 	}
 	item = menuBar->findItem(menuBar->idAt(2));
 	if (item)
 	{
-		viewMenu = item->popup();
+		viewMenu = mainWindow->viewMenu;
 	}
 	item = menuBar->findItem(menuBar->idAt(3));
 	if (item)
 	{
-		helpMenu = item->popup();
+		helpMenu = mainWindow->helpMenu;
 	}
 	connectMenuShows();
-#endif
 	unlock();
 }
 
