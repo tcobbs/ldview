@@ -1,4 +1,4 @@
-Missing features from QT version (impleneted on Win32 version)
+Missing features from QT version (implemented on Win32 version)
 - command line parameters
 - customized File Save dialog for series of pictures and image size
 - offscreen rendering
