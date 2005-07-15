@@ -7,7 +7,6 @@ Missing features from QT version (implemented on Win32 version)
 QT4 know bugs
 - OpenGL is not initialized/updated correctly, the models are not displayed at most of time
 - icons for menu items and toolbars are not displayed
-- submenus are not displayed
 
 QT4 migration
 - when QT4 will be wildly used (part of major linux distributions), the code must be migrated to native QT4 from Qt3Support class. At that time, the code will not support QT3.
