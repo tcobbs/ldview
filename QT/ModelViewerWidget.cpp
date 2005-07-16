@@ -303,8 +303,10 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 		int r, g, b;
 
 		preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
+#if QT_VERSION < 0x40000
 		QPainter painter(this);
 		painter.fillRect(event->rect(), QColor(r, g, b));
+#endif
 	}
 	else
 	{
