@@ -422,6 +422,9 @@
         <property name="statusTip">
             <string>Show or hide toolbar</string>
         </property>
+        <property name="accel">
+            <string>Ctrl+Shift+T</string>
+        </property>
     </action>
     <action>
         <property name="name">
