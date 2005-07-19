@@ -164,6 +164,7 @@
         <separator/>
         <action name="helpContentsAction"/>
         <action name="helpAboutAction"/>
+        <action name="helpAboutQtAction"/>
     </item>
 </menubar>
 <toolbars>
@@ -384,6 +385,20 @@
         </property>
         <property name="accel">
             <number>0</number>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>helpAboutQtAction</cstring>
+        </property>
+        <property name="text">
+            <string>About Qt</string>
+        </property>
+        <property name="menuText">
+            <string>About Qt</string>
+        </property>
+        <property name="statusTip">
+            <string>About Qt</string>
         </property>
     </action>
     <action>
@@ -865,6 +880,12 @@
         <slot>helpAbout()</slot>
     </connection>
     <connection>
+        <sender>helpAboutQtAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>helpAboutQt()</slot>
+    </connection>
+    <connection>
         <sender>editPreferencesAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1044,6 +1065,7 @@
     <slot>fileExit()</slot>
     <slot>helpContents()</slot>
     <slot>helpAbout()</slot>
+    <slot>helpAboutQt()</slot>
     <slot>editPreferences()</slot>
     <slot>closeEvent( QCloseEvent * event )</slot>
     <slot>viewStatusBar( bool flag )</slot>

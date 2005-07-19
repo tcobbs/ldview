@@ -46,6 +46,11 @@ void LDView::helpAbout()
     modelViewer->doHelpAbout();
 }
 
+void LDView::helpAboutQt()
+{
+	modelViewer->doHelpAboutQt();
+}
+
 void LDView::editPreferences()
 {
     modelViewer->showPreferences();
