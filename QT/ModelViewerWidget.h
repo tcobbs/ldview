@@ -62,6 +62,7 @@ public:
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
 	void doHelpAbout(void);
+	void doHelpAboutQt(void);
 	void doApply(void);
 	void doPollChanged(QAction *action);
 	void doViewModeChanged(QAction *action);

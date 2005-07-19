@@ -1149,6 +1149,13 @@ void ModelViewerWidget::doHelpAbout(void)
 	unlock();
 }
 
+void ModelViewerWidget::doHelpAboutQt(void)
+{
+	lock();
+	QMessageBox::aboutQt(this,"");
+	unlock();
+}
+
 void ModelViewerWidget::doAboutOK(void)
 {
 	lock();
