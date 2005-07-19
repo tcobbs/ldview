@@ -6,7 +6,7 @@ Missing features from QT version (implemented on Win32 version)
 
 QT4 know bugs
 - repaint problem during model loading (paintEvent)
-- icons for menu items and toolbars are not displayed (bug reported to Trollech)
+- icons for menu items and toolbars are not displayed (bug reported to Trollech: bug ID 79286)
 
 QT4 migration
 - when QT4 will be wildly used (part of major linux distributions), the code must be migrated to native QT4 from Qt3Support class. At that time, the code will not support QT3.
