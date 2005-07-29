@@ -1188,5 +1188,6 @@ void TREMainModel::openGlWillEnd(void)
 
 void TREMainModel::finish(void)
 {
-	flattenNonUniform(0, false, 0, false);
+	flattenNonUniform();
+//	flattenNonUniform(0, false, 0, false);
 }

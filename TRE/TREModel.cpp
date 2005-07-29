@@ -3259,8 +3259,9 @@ bool TREModel::shouldLoadConditionalLines(void)
 	return m_mainModel->shouldLoadConditionalLines();
 }
 
-void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
-								 bool edgeColorSet)
+//void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
+//								 bool edgeColorSet)
+void TREModel::flattenNonUniform(void)
 {
 	if (m_subModels)
 	{
@@ -3284,8 +3285,10 @@ void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor
 				}
 				else
 				{
-					flatten(newModel, subModel->getMatrix(), color, colorSet,
-						edgeColor, edgeColorSet, true);
+					flatten(newModel, subModel->getMatrix(), 0, false,
+						0, false, true);
+//					flatten(newModel, subModel->getMatrix(), color, colorSet,
+//						edgeColor, edgeColorSet, true);
 				}
 				m_subModels->removeObject(i);
 				debugPrintf("Flattened non-uniform sub-model: %g.\n",
@@ -3295,13 +3298,15 @@ void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor
 			{
 				if (subModel->isColorSet())
 				{
-					newModel->flattenNonUniform(htonl(subModel->getColor()),
-						true, htonl(subModel->getEdgeColor()), true);
+					newModel->flattenNonUniform();
+//					newModel->flattenNonUniform(htonl(subModel->getColor()),
+//						true, htonl(subModel->getEdgeColor()), true);
 				}
 				else
 				{
-					newModel->flattenNonUniform(color, colorSet, edgeColor,
-						edgeColorSet);
+					newModel->flattenNonUniform();
+//					newModel->flattenNonUniform(color, colorSet, edgeColor,
+//						edgeColorSet);
 				}
 			}
 		}
