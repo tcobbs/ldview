@@ -30,11 +30,11 @@ class TCStringArray;
 class LDLError;
 class TCProgressAlert;
 class QTextBrowser;
+class AlertHandler;
 
 #define MAX_MOUSE_BUTTONS 10
 
-// Ahhh!!! Nobody said anything about multiple inheritance!!!!
-class ModelViewerWidget : public QGLWidget, TCObject
+class ModelViewerWidget : public QGLWidget
 {
 	Q_OBJECT
 public:
@@ -45,6 +45,9 @@ public:
 	void showPreferences(void);
 	LDrawModelViewer *getModelViewer(void) { return modelViewer; }
 	void setMainWindow(LDView *value);
+
+	void ldlErrorCallback(LDLError *error);
+	void progressAlertCallback(TCProgressAlert *alert);
 
 	void setShowFPS(bool value) { showFPS = value; }
 	void setApplication(QApplication *value);
@@ -172,8 +175,6 @@ protected:
 	void setViewMode(LDVViewMode value);
 	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
-	void ldlErrorCallback(LDLError *error);
-	void progressAlertCallback(TCProgressAlert *alert);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);
@@ -238,6 +239,7 @@ protected:
     int saveDigits;
 	int saveImageType;
 	int fullscreen;
+	AlertHandler *alertHandler;
 
 	static TCStringArray* recentFiles;
 };
