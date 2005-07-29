@@ -20,6 +20,7 @@
 #include "UserDefaultsKeys.h"
 
 #include "ModelViewerWidget.h"
+#include "AlertHandler.h"
 
 #include <qtextbrowser.h>
 #include <qapplication.h>
@@ -95,7 +96,8 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	errors(NULL),
 	fileInfo(NULL),
 	lockCount(0),
-	fullscreen(0)
+	fullscreen(0),
+	alertHandler(new AlertHandler(this))
 {
 	int i;
 	const QMimeSource *mimeSource =
@@ -110,12 +112,14 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		TREMainModel::setStudTextureData(studImage.bits(),
 			studImage.numBytes());
 	}
+/*
 	TCAlertManager::registerHandler(LDLError::alertClass(),
 		dynamic_cast<TCObject *>(this),
 		(TCAlertCallback)&ModelViewerWidget::ldlErrorCallback);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(),
 		dynamic_cast<TCObject *>(this),
 		(TCAlertCallback)&ModelViewerWidget::progressAlertCallback);
+*/
 
 //	modelViewer->setProgressCallback(staticProgressCallback, this);
 //	modelViewer->setErrorCallback(staticErrorCallback, this);
@@ -144,6 +148,8 @@ ModelViewerWidget::~ModelViewerWidget(void)
 	delete extensionsPanel;
 	delete openGLDriverInfo;
 	delete errors;
+	TCObject::release(alertHandler);
+	alertHandler = NULL;
 }
 
 void ModelViewerWidget::setApplication(QApplication *value)

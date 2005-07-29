@@ -1,5 +1,5 @@
-SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp LDViewExtraDir.cpp
-HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h
+SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp LDViewExtraDir.cpp AlertHandler.cpp
+HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h AlertHandler.h
 unix {
   UI_DIR = .ui
   MOC_DIR = .moc
