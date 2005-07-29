@@ -1060,7 +1060,7 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 			int i;
 			int count = ldlModel->getActiveLineCount();
 
-			treModel->setName(ldlModel->getName());
+			//treModel->setName(ldlModel->getName()); Already done.
 			for (i = 0; i < count && !m_abort; i++)
 			{
 				LDLFileLine *fileLine = (*fileLines)[i];
