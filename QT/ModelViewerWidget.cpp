@@ -110,9 +110,11 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		TREMainModel::setStudTextureData(studImage.bits(),
 			studImage.numBytes());
 	}
-	TCAlertManager::registerHandler(LDLError::alertClass(), this,
+	TCAlertManager::registerHandler(LDLError::alertClass(),
+		dynamic_cast<TCObject *>(this),
 		(TCAlertCallback)&ModelViewerWidget::ldlErrorCallback);
-	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+	TCAlertManager::registerHandler(TCProgressAlert::alertClass(),
+		dynamic_cast<TCObject *>(this),
 		(TCAlertCallback)&ModelViewerWidget::progressAlertCallback);
 
 //	modelViewer->setProgressCallback(staticProgressCallback, this);
