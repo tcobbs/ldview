@@ -80,11 +80,12 @@ STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "About LDView"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
-    LTEXT           "LDView %s (%s)\n%s",IDC_VERSION_LABEL,50,10,135,19
+    LTEXT           "LDView %s (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,
+                    SS_NOPREFIX
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",
                     IDC_STATIC,15,40,215,20
     LTEXT           "LEGO® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponser, endorse, or authorize this program.",
@@ -93,7 +94,7 @@ BEGIN
     LTEXT           "",IDC_STATIC,0,152,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,237,150,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,0,180,245,8,0,WS_EX_TRANSPARENT
-    LTEXT           "Peter Bartfai\nChris Conley\nLars C. Hassing\nDon Heyse\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",
+    LTEXT           "Chris Conley\nLars C. Hassing\nDon Heyse\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",
                     IDC_STATIC,25,61,203,93
 END
 
@@ -119,7 +120,7 @@ BEGIN
     LTEXT           "Hmm",IDC_LOAD_PROGRESS_MSG,7,7,214,8
 END
 
-IDD_ERRORS DIALOGEX 0, 0, 324, 190
+IDD_ERRORS DIALOGEX 0, 0, 324, 199
 STYLE DS_3DLOOK | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_CONTROLPARENT
@@ -129,17 +130,17 @@ FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
-                    WS_BORDER | WS_TABSTOP,2,2,173,156,WS_EX_CLIENTEDGE
+                    WS_BORDER | WS_TABSTOP,2,2,173,163,WS_EX_CLIENTEDGE
     CONTROL         "Include Warnings",IDC_SHOW_WARNINGS,"Button",
-                    BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,160,68,14
-    PUSHBUTTON      "Copy Error to Clipboard",IDC_COPY_ERROR,84,160,91,14
-    GROUPBOX        "Only show the following:",IDC_SHOW_ERRORS,180,2,140,171,
+                    BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,168,68,14
+    PUSHBUTTON      "Copy Error to Clipboard",IDC_COPY_ERROR,84,168,91,14
+    GROUPBOX        "Only show the following:",IDC_SHOW_ERRORS,180,2,140,180,
                     0,WS_EX_TRANSPARENT
     CONTROL         "List3",IDC_ERROR_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | 
-                    WS_BORDER | WS_TABSTOP,185,12,129,140,WS_EX_CLIENTEDGE
-    PUSHBUTTON      "Show All",IDC_ERROR_SHOW_ALL,185,155,50,14
-    PUSHBUTTON      "Show None",IDC_ERROR_SHOW_NONE,264,155,50,14
+                    WS_BORDER | WS_TABSTOP,185,12,129,149,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Show All",IDC_ERROR_SHOW_ALL,185,164,50,14
+    PUSHBUTTON      "Show None",IDC_ERROR_SHOW_NONE,264,164,50,14
 END
 
 IDD_SS_SETTINGS DIALOGEX 0, 0, 212, 177
@@ -623,7 +624,7 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,231,24,50,14
     CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x904,
-                    7,167,219,14
+                    7,167,219,15
     LISTBOX         IDC_ESD_LIST,7,21,219,145,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "Add and organize extra search directories below.",
@@ -689,7 +690,7 @@ BEGIN
 
     IDD_ERRORS, DIALOG
     BEGIN
-        BOTTOMMARGIN, 178
+        BOTTOMMARGIN, 187
     END
 
     IDD_SS_SETTINGS, DIALOG
@@ -1005,8 +1006,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,9,99,3
- PRODUCTVERSION 2,9,99,3
+ FILEVERSION 3,0,0,1
+ PRODUCTVERSION 3,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1022,13 +1023,17 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
+            VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.0 Alpha 3\0"
+            VALUE "FileVersion", "3.0 Release Candidate 1\0"
             VALUE "InternalName", "LDView\0"
-            VALUE "LegalCopyright", "Copyright © 2000-2004 Travis Cobbs\0"
+            VALUE "LegalCopyright", "Copyright © 2000-2005 Travis Cobbs & Peter Bartfai\0"
+            VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
+            VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.0 Alpha 3\0"
+            VALUE "ProductVersion", "3.0 RC 1\0"
+            VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"

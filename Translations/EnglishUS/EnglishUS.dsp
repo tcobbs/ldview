@@ -132,6 +132,10 @@ SOURCE=.\Icons\LDViewIcon.ico
 # End Group
 # Begin Source File
 
+SOURCE=.\LDView.exe.manifest
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDViewMessages.ini
 # End Source File
 # Begin Source File
@@ -141,6 +145,10 @@ SOURCE=.\ReadMe.txt
 # Begin Source File
 
 SOURCE=.\Textures\SansSerif.fnt
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\screen_saver_preview.png
 # End Source File
 # Begin Source File
 
