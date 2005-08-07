@@ -2749,7 +2749,12 @@ void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
 			else
 			{
 				controlPoints[1] = *p1;
-				if (usedSegments * 8 == numSegments)
+				if (usedSegments * 16 == numSegments)
+				{
+					controlPoints[1][0] -= (float)tan(deg2rad(22.5f));
+					controlPoints[1][2] += 1.0f;
+				}
+				else if (usedSegments * 8 == numSegments)
 				{
 					controlPoints[1][0] -= 1.0f;
 					controlPoints[1][2] += 1.0f;
