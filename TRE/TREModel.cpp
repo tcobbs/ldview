@@ -2098,24 +2098,7 @@ void TREModel::addCone(const TCVector &center, float radius, float height,
 			if (i == usedSegments - 1)
 			{
 				controlPoints[1] = p2;
-				if (usedSegments * 8 == numSegments)
-				{
-					controlPoints[1][0] -= 1.0f;
-					controlPoints[1][2] += 1.0f;
-				}
-				else if (usedSegments * 8 == numSegments * 3)
-				{
-					controlPoints[1][0] -= 1.0f;
-					controlPoints[1][2] -= 1.0f;
-				}
-				else if (usedSegments * 4 == numSegments * 3)
-				{
-					controlPoints[1][0] += 1.0f;
-				}
-				else
-				{
-					controlPoints[1][axis2] -= 1.0f;
-				}
+				calcTangentControlPoint(controlPoints[1], i + 1, numSegments);
 			}
 			else
 			{
@@ -2374,6 +2357,8 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 			if (i == usedSegments && numSegments != usedSegments)
 			{
 				p4 = p1;
+				calcTangentControlPoint(p4, i, numSegments);
+/*
 				if (usedSegments * 8 == numSegments)
 				{
 					p4[0] -= 0.1f;
@@ -2392,6 +2377,7 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 				{
 					p4[axis] -= 0.1f;
 				}
+*/
 			}
 			else
 			{
@@ -2701,25 +2687,35 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 	}
 }
 
+void TREModel::calcTangentControlPoint(TCVector &controlPoint, int index,
+									   int numSegments)
+{
+	// The next control point needs to form a tangent with the circle from the
+	// last point on the circle.  On input, controlPoint starts as the last
+	// point on the circle.
+	float angle;
+
+	// First, calculate the angle for the last point on the circle.
+	angle = 2.0f * (float)M_PI / numSegments * index;
+	// Next, add 90 degrees to that to get the tangent angle
+	angle += (float)deg2rad(90);
+	controlPoint[0] += (float)cos(angle);
+	controlPoint[2] += (float)sin(angle);
+}
+
 void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
 									   int usedSegments)
 {
 	int i;
 	TCVector controlPoints[2];
-	int axis1 = 2;
-	int axis2 = 0;
 	TCVector *p1;
 	TCVector *p2;
 
-	if (numSegments == usedSegments * 2)
-	{
-		axis2 = 2;
-	}
 	for (i = 0; i <= usedSegments; i++)
 	{
 		p1 = &points[i * 2];
 		p2 = &points[i * 2 + 1];
-		if (p1 == p2)
+		if (*p1 == *p2)
 		{
 			continue;
 		}
@@ -2732,7 +2728,7 @@ void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
 			else
 			{
 				controlPoints[0] = *p1;
-				controlPoints[0][axis1] -= 1.0f;
+				controlPoints[0][2] -= 1.0f;
 			}
 		}
 		else
@@ -2749,29 +2745,7 @@ void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
 			else
 			{
 				controlPoints[1] = *p1;
-				if (usedSegments * 16 == numSegments)
-				{
-					controlPoints[1][0] -= (float)tan(deg2rad(22.5f));
-					controlPoints[1][2] += 1.0f;
-				}
-				else if (usedSegments * 8 == numSegments)
-				{
-					controlPoints[1][0] -= 1.0f;
-					controlPoints[1][2] += 1.0f;
-				}
-				else if (usedSegments * 8 == numSegments * 3)
-				{
-					controlPoints[1][0] -= 1.0f;
-					controlPoints[1][2] -= 1.0f;
-				}
-				else if (usedSegments * 4 == numSegments * 3)
-				{
-					controlPoints[1][0] += 1.0f;
-				}
-				else
-				{
-					controlPoints[1][axis2] -= 1.0f;
-				}
+				calcTangentControlPoint(controlPoints[1], i, numSegments);
 			}
 		}
 		else
@@ -2788,14 +2762,9 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 	int i;
 	TCVector linePoints[2];
 	TCVector controlPoints[2];
-	int axis2 = 2;
 	TCVector *p1;
 	TCVector *p2;
 
-	if (numSegments == usedSegments * 2)
-	{
-		axis2 = 0;
-	}
 	for (i = 1; i <= usedSegments; i++)
 	{
 		linePoints[0] = points[i * 2];
@@ -2816,24 +2785,7 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 			else
 			{
 				controlPoints[1] = *p1;
-				if (usedSegments * 8 == numSegments)
-				{
-					controlPoints[1][0] += 1.0f;
-					controlPoints[1][2] -= 1.0f;
-				}
-				else if (usedSegments * 8 == numSegments * 3)
-				{
-					controlPoints[1][0] -= 1.0f;
-					controlPoints[1][2] -= 1.0f;
-				}
-				else if (usedSegments * 4 == numSegments * 3)
-				{
-					controlPoints[1][2] += 1.0f;
-				}
-				else
-				{
-					controlPoints[1][axis2] -= 1.0f;
-				}
+				calcTangentControlPoint(controlPoints[1], i + 4, numSegments);
 			}
 		}
 		else
