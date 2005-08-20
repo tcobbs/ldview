@@ -6,8 +6,8 @@ Missing features from QT version (implemented on Win32 version)
 
 QT4 know bugs
 - repaint problem during model loading (paintEvent) bug ID 79310
-- toggle buttons on toolbar not work (toggle signal is not received, bug reported to Trolltech)
-- Open Dialog 
+- toggle buttons on toolbar not work (toggle signal is not received, bug reported to Trolltech, bug ID 80931)
+- Open Dialog (bug ID 75699) 
 	a) does not display directories if the name does not match against filter
 	b) could not change directory which does not contain filter matching file
 	c) only parent directory is listed
