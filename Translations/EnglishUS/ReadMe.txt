@@ -25,6 +25,8 @@ use the short name, since you have to create a whole new DLL for each language.
 You can use the program LangCheck.exe to tell you both the full and short names
 of the current language that you have set in Windows.
 
+When starting a new translation, it is recommended that you do the following
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
