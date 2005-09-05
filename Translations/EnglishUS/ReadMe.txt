@@ -9,7 +9,12 @@ Usage:
 
 This project contains all the resources necessary to create a language module
 for LDView.  Please read this whole section before you begin, since some of the
-instructions at the end make the beginning more clear.
+instructions at the end make the beginning more clear.  Note that this project
+requires Visual Studio 6 to create the translation DLL.  If you have a more
+recent Visual Studio, it will probably still work, but I can't make any absolute
+guarantees.  If you do have a later Visual Studio version, please follow the
+numbered instructions below prior to having Visual Studio convert the project to
+the newer project version.
 
 When starting a new translation, it is recommended that you do the following:
 
