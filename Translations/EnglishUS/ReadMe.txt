@@ -55,14 +55,7 @@ of the current language that you have set in Windows.
 Once you have translated all the resource, you need to create a translation of
 LDViewMessages.ini.  This file contains messages that get shown to the user, but
 aren't in the application resources.  Please read the instructions at the top of
-the file for instructions on translating it.
-
-When translating this file, you must ONLY
-translate the text on the right side of the equal sign.  Be very careful to not
-add or remove any formatting characters (prefaced with %), or you may introduce
-incorrect behavior, and possibly even cause LDView to crash.  Also, make sure
-not to add a space after any of the equal signs.  Please note that if your text
-requires more or less lines
+that file for instructions on translating it.
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,6 +68,8 @@ updated in order to work.  LDView checks the version resource in the language
 module, and won't load the module if it doesn't match the LDView version.  Since
 you won't want to start from scratch each time there is a new release, it's best
 to copy all the changes from LDView's updated sample language module, then
-translate them and update the version by hand.
+translate them and update the version by hand.  You do want to be extremely
+careful not to miss anything, though, and a good file comparison program will
+help out tremendously.
 
 ////////////////////////////////////////////////////////////////////////////////
