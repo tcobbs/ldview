@@ -271,14 +271,15 @@ int doPreview(HINSTANCE hInstance, LPSTR lpCmdLine)
 
 static void setupLocalStrings(void)
 {
-	HRSRC hLocalStringsResource = FindResource(NULL,
+	HMODULE hModule = (HMODULE)CUIWindow::getLanguageModule();
+	HRSRC hLocalStringsResource = FindResource(hModule,
 		MAKEINTRESOURCE(IDR_LOCAL_STRINGS),
 		"LocalStrings");
 	bool done = false;
 
 	if (hLocalStringsResource)
 	{
-		HGLOBAL hLocalStrings = LoadResource(NULL, hLocalStringsResource);
+		HGLOBAL hLocalStrings = LoadResource(hModule, hLocalStringsResource);
 
 		if (hLocalStrings)
 		{
@@ -286,7 +287,7 @@ static void setupLocalStrings(void)
 
 			if (data)
 			{
-				DWORD length = SizeofResource(NULL, hLocalStringsResource);
+				DWORD length = SizeofResource(hModule, hLocalStringsResource);
 
 				if (length)
 				{
@@ -308,17 +309,56 @@ static void setupLocalStrings(void)
 	}
 }
 
+static void loadLanguageModule(void)
+{
+	// This function is something of a hack.  We want to force the language
+	// module to load with certain pre-conditions.  The first is that prior to
+	// going into this function, the app name was set to LDView.  The next is
+	// that we want to change into the LDView directory, so that the
+	// LoadLibrary call will find language modules in that directory, so that
+	// if we're running as a screensaver, it will still find the language
+	// modules.
+	char originalPath[1024];
+	DWORD maxPath = sizeof(originalPath) / sizeof(originalPath[0]);
+	DWORD dirResult = GetCurrentDirectory(maxPath, originalPath);
+	bool dirChange = false;
+
+	if (dirResult > 0 && dirResult <= maxPath)
+	{
+		char *installPath =
+			TCUserDefaults::stringForKey(INSTALL_PATH_KEY, NULL, false);
+
+		if (installPath)
+		{
+			SetCurrentDirectory(installPath);
+			dirChange = true;
+			delete installPath;
+		}
+	}
+	// The following forces CUIWindow to load (and cache) the language module.
+	CUIWindow::getLanguageModule();
+	if (dirChange)
+	{
+		SetCurrentDirectory(originalPath);
+	}
+}
+
 static void setupUserDefaults(LPSTR lpCmdLine, bool screenSaver)
 {
 	char *appName = "Travis Cobbs/LDView";
 	char *sessionName;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
+	TCUserDefaults::setAppName(appName);
+	// The language module needs to be loaded using LDView as the app name.  So
+	// if we're running in screensaver mode, we'll take care of changing our
+	// app name after that is done.
+	loadLanguageModule();
 	if (screenSaver)
 	{
 		appName = "Travis Cobbs/LDView Screen Saver";
+		TCUserDefaults::setAppName(appName);
 	}
-	TCUserDefaults::setAppName(appName);
 	// Set the debug level before selecting a pref set.
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, false));
 	sessionName =
