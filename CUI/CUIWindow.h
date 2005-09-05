@@ -61,6 +61,7 @@ class CUIExport CUIWindow : public TCObject
 		static void setWaitCursor(void);
 		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,
 			int *index = NULL);
+		static HINSTANCE getLanguageModule(void);
 	protected:
 		~CUIWindow(void);
 		virtual void dealloc(void);
@@ -180,7 +181,6 @@ class CUIExport CUIWindow : public TCObject
 			LPARAM hModalDialog);
 		static void calcSystemSizes(void);
 		static void populateAppVersion(void);
-		static HINSTANCE getLanguageModule(void);
 
 		char* windowTitle;
 		int x;
