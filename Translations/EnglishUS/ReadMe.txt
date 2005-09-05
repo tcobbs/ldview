@@ -8,14 +8,41 @@
 Usage:
 
 This project contains all the resources necessary to create a language module
-for LDView.  To create the language module, modify all of the dialog, menu, and
-string resources to translate them to the desired language, and change the name
-of the output DLL to be LDView-<Language>.dll, where <Language> is the name of
-the desired language (either full or short).  For example, the following are all
-valid names:
+for LDView.  Please read this whole section before you begin, since some of the
+instructions at the end make the beginning more clear.
 
+When starting a new translation, it is recommended that you do the following:
+
+1. Copy the EnglishUS directory, and rename it to the name of your language.
+   For this example, I'll use Latin as the name of the language.
+2. In the newly renamed Latin directory, rename EnglishUS.* to be Latin.*.
+3. Edit Latin.cpp, and do a global search and replace from EnglishUS to Latin.
+4. Edit Latin.dsp in a text editor, and do a global search and replace from
+   "English (United States)" to "Latin" (without the quotes).
+5. Still in Latin.dsp, do a case-sensitive global search and replace from
+   EnglishUS to Latin.
+6. Still in Latin.dsp, do a case-sensitive global search and replace from
+   ENGLISHUS to LATIN.  You can save and close Latin.dsp now.
+7. Edit Latin.dsw in a text editor, and do a global search and replace from
+   EnglishUS to Latin.
+
+Once you've don the above, you're ready to start your translation.  To create
+your language module, modify all of the dialog, menu, and string resources to
+translate them to the desired language.
+
+You have two choices for output DLL name, the long name and the short name.  The
+instructions above were for the short name.  If you want to use the long name
+instead, you can do so, but that makes the language module specific to a smaller
+region.  For example, the following are all valid names:
+
+LDView-English (United States).dll
 LDView-English (United Kingdom).dll
 LDView-English.dll
+
+The first would only be loaded in the United States.  The second would only
+be loaded in the United Kingdom.  (This example is somewhat contrived, since
+LDView itself is written using US English.  However, it would be perfectly
+legitimate for someone to create a UK translation.)
 
 Note that if a full name match isn't found, the short version is used instead.
 Also note that the full name should be in that native language.  The short name
@@ -25,7 +52,18 @@ use the short name, since you have to create a whole new DLL for each language.
 You can use the program LangCheck.exe to tell you both the full and short names
 of the current language that you have set in Windows.
 
-When starting a new translation, it is recommended that you do the following
+Once you have translated all the resource, you need to create a translation of
+LDViewMessages.ini.  This file contains messages that get shown to the user, but
+aren't in the application resources.  Please read the instructions at the top of
+the file for instructions on translating it.
+
+When translating this file, you must ONLY
+translate the text on the right side of the equal sign.  Be very careful to not
+add or remove any formatting characters (prefaced with %), or you may introduce
+incorrect behavior, and possibly even cause LDView to crash.  Also, make sure
+not to add a space after any of the equal signs.  Please note that if your text
+requires more or less lines
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
