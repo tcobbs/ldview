@@ -3189,7 +3189,5 @@
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
 <includehints>
-    <includehint>tccolorbutton.h</includehint>
-    <includehint>tccolorbutton.h</includehint>
 </includehints>
 </UI>
