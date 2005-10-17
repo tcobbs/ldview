@@ -157,6 +157,7 @@ void ModelLoader::startup(void)
 //			debugPrintf("Main window shown.\n");
 			if (maximized)
 			{
+//				MessageBox(NULL, "bars?", "debug", MB_OK);
 				parentWindow->maximize();
 			}
 			if (!screenSaver)
