@@ -112,6 +112,7 @@
 // The following are undocumented, but need to be documented.
 #define LAST_LIBRARY_UPDATE_KEY "LastLibraryUpdate"
 #define SKIP_VALIDATION_KEY "SkipValidation"
+#define LIGHT_VECTOR_KEY "LightVector"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

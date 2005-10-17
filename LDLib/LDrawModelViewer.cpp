@@ -72,6 +72,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 fov(45.0f),
 			 extraSearchDirs(NULL),
 			 memoryUsage(2),
+			 lightVector(0.0f, 0.0f, 1.0f),
 			 cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
@@ -120,6 +121,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.bfc = true;
 	flags.redBackFaces = false;
 	flags.greenFrontFaces = false;
+	flags.defaultLightVector = true;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -727,6 +729,12 @@ void LDrawModelViewer::progressAlertCallback(TCProgressAlert *alert)
 }
 */
 
+bool LDrawModelViewer::forceOneLight(void)
+{
+	return flags.oneLight || flags.usesSpecular || !flags.defaultLightVector ||
+			(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces));
+}
+
 int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
 	int retValue = 0;
@@ -773,8 +781,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				flags.allowPrimitiveSubstitution);
 			modelParser->setCurveQuality(curveQuality);
 			modelParser->setLightingFlag(flags.useLighting);
-			modelParser->setTwoSidedLightingFlag(flags.oneLight ||
-				flags.usesSpecular);
+			modelParser->setTwoSidedLightingFlag(forceOneLight());
 			modelParser->setAALinesFlag(flags.lineSmoothing);
 			modelParser->setSortTransparentFlag(flags.sortTransparent);
 			modelParser->setStippleFlag(flags.useStipple);
@@ -1062,8 +1069,7 @@ void LDrawModelViewer::setupLighting(void)
 	{
 		setupLight(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
-		if (flags.oneLight || flags.usesSpecular ||
-			(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces)))
+		if (forceOneLight())
 		{
 			glDisable(GL_LIGHT1);
 			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
@@ -1402,8 +1408,26 @@ void LDrawModelViewer::drawLight(GLenum light, float x, float y, float z)
 void LDrawModelViewer::drawLights(void)
 {
 //	drawLight(GL_LIGHT1, 0.0f, 0.0f, -10000.0f);
-	drawLight(GL_LIGHT0, 0.0f, 0.0f, 1.0f);
-	drawLight(GL_LIGHT1, 0.0f, 0.0f, -1.0f);
+	drawLight(GL_LIGHT0, lightVector[0], lightVector[1], lightVector[2]);
+	drawLight(GL_LIGHT1, -lightVector[0], -lightVector[1], -lightVector[2]);
+}
+
+void LDrawModelViewer::setLightVector(const TCVector &value)
+{
+	float length = value.length();
+
+	if (length)
+	{
+		lightVector = value / length;
+	}
+	if (lightVector.approxEquals(TCVector(0.0f, 0.0f, 1.0f), 0.000001f))
+	{
+		flags.defaultLightVector = true;
+	}
+	else
+	{
+		flags.defaultLightVector = false;
+	}
 }
 
 void LDrawModelViewer::setBackgroundRGB(int r, int g, int b)

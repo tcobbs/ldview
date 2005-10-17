@@ -644,10 +644,6 @@ BOOL LDViewWindow::initWindow(void)
 		hWindowMenu = LoadMenu(getLanguageModule(),
 			MAKEINTRESOURCE(IDR_MAIN_MENU));
 		windowStyle = standardWindowStyle;
-		if (TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false))
-		{
-			windowStyle |= WS_MAXIMIZE;
-		}
 		if (topmost)
 		{
 			exWindowStyle |= WS_EX_TOPMOST;

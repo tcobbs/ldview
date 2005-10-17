@@ -273,6 +273,8 @@ class LDrawModelViewer: public TCObject
 		virtual TRECamera &getCamera(void) { return camera; }
 		virtual void zoomToFit(void);
 		virtual void openGlWillEnd(void);
+		virtual void setLightVector(const TCVector &value);
+		TCVector getLightVector(void) { return lightVector; }
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
 	protected:
@@ -317,6 +319,7 @@ class LDrawModelViewer: public TCObject
 		virtual float getWideLineMargin(void);
 		virtual float getClipRadius(void);
 		virtual float getZDistance(void);
+		virtual bool forceOneLight(void);
 
 		int L3Solve6(float x[L3ORDERN], const float A[L3ORDERM][L3ORDERN],
 			const float b[L3ORDERM]);
@@ -392,6 +395,7 @@ class LDrawModelViewer: public TCObject
 		float zoomToFitWidth;
 		float zoomToFitHeight;
 		int memoryUsage;
+		TCVector lightVector;
 		struct
 		{
 			bool qualityLighting:1;
@@ -439,6 +443,7 @@ class LDrawModelViewer: public TCObject
 			bool bfc:1;
 			bool redBackFaces:1;
 			bool greenFrontFaces:1;
+			bool defaultLightVector:1;
 		} flags;
 		struct CameraData
 		{

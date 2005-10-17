@@ -338,6 +338,7 @@ protected:
 
 	COLORREF customColors[16];
 	float zoomMax;
+	TCVector lightVector;
 
 	int generalPageNumber;
 	int geometryPageNumber;

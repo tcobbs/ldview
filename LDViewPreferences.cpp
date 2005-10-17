@@ -88,6 +88,7 @@ void LDViewPreferences::applySettings(void)
 	if (modelViewer)
 	{
 		modelViewer->setZoomMax(zoomMax);
+		modelViewer->setLightVector(lightVector);
 		modelViewer->setDistanceMultiplier(1.0f / defaultZoom);
 		setupDefaultRotationMatrix();
 	}
@@ -185,12 +186,28 @@ void LDViewPreferences::applyPrimitivesSettings(void)
 
 void LDViewPreferences::loadSettings(void)
 {
+	char *lightVectorString;
 	loadGeneralSettings();
 	loadGeometrySettings();
 	loadEffectsSettings();
 	loadPrimitivesSettings();
 
 	zoomMax = TCUserDefaults::longForKey(ZOOM_MAX_KEY, 199, false) / 100.0f;
+	lightVectorString = TCUserDefaults::stringForKey(LIGHT_VECTOR_KEY);
+	if (lightVectorString)
+	{
+		float lx, ly, lz;
+
+		if (sscanf(lightVectorString, "%f,%f,%f", &lx, &ly, &lz) == 3)
+		{
+			lightVector = TCVector(lx, ly, lz);
+		}
+		delete lightVectorString;
+	}
+	else
+	{
+		lightVector = TCVector(0.0f, 0.0f, 1.0f);
+	}
 	defaultZoom = TCUserDefaults::floatForKey(DEFAULT_ZOOM_KEY, 1.0f);
 }
 
