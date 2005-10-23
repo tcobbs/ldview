@@ -1,9 +1,9 @@
 Summary: 3D Viewer for LDraw models
 Name: ldview
 Group: Applications/Multimedia
-Version: 3.0RC1
+Version: 3.0
 Release: 1
-License: MIT
+License: GPL
 URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
