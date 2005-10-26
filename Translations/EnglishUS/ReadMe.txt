@@ -21,7 +21,8 @@ When starting a new translation, it is recommended that you do the following:
 1. Copy the EnglishUS directory, and rename it to the name of your language.
    For this example, I'll use Latin as the name of the language.
 2. In the newly renamed Latin directory, rename EnglishUS.* to be Latin.*.
-3. Edit Latin.cpp, and do a global search and replace from EnglishUS to Latin.
+3. Edit Latin.cpp (either in Visual Studio or the text editor of your choice),
+   and do a global search and replace from EnglishUS to Latin.
 4. Edit Latin.dsp in a text editor, and do a global search and replace from
    "English (United States)" to "Latin" (without the quotes).
 5. Still in Latin.dsp, do a case-sensitive global search and replace from
