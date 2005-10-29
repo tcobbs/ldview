@@ -1956,18 +1956,28 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 	}
 	if (GetLocaleInfo(lcid, lcType, localeInfo, sizeof(localeInfo)) > 0)
 	{
-		char languageModuleName[1024];
 		const char *appName = TCUserDefaults::getAppName();
+		char languageModuleName[1024];
+		char *nameOverride =
+			TCUserDefaults::stringForKey("LanguageModuleName", NULL, false);
 
-		if (strchr(appName, '/'))
+		if (nameOverride)
 		{
-			appName = strrchr(appName, '/') + 1;
+			strcpy(languageModuleName, nameOverride);
+			delete nameOverride;
 		}
-		if (strchr(appName, '\\'))
+		else
 		{
-			appName = strrchr(appName, '\\') + 1;
+			if (strchr(appName, '/'))
+			{
+				appName = strrchr(appName, '/') + 1;
+			}
+			if (strchr(appName, '\\'))
+			{
+				appName = strrchr(appName, '\\') + 1;
+			}
+			sprintf(languageModuleName, "%s-%s.dll", appName, localeInfo);
 		}
-		sprintf(languageModuleName, "%s-%s.dll", appName, localeInfo);
 		hLanguageModule = LoadLibrary(languageModuleName);
 		if (hLanguageModule)
 		{
