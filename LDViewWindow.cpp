@@ -19,7 +19,6 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
-#include <afxres.h>
 
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
