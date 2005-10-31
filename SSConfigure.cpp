@@ -1,6 +1,5 @@
 #include "SSConfigure.h"
 #include <shlobj.h>
-#include <shlwapi.h>
 #include "LDViewPreferences.h"
 #include "LDViewWindow.h"
 #include "LDVExtensionsSetup.h"
