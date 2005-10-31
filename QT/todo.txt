@@ -6,12 +6,17 @@ Missing features from QT version (implemented on Win32 version)
 
 QT4 know bugs
 - repaint problem during model loading (paintEvent) bug ID 79310
-- toggle buttons on toolbar not work (toggle signal is not received, bug reported to Trolltech, bug ID 80931)
+- toggle buttons on toolbar not work (toggle signal is not received, 
+  bug reported to Trolltech, bug ID 80931)
 - Open Dialog (bug ID 75699) 
-	a) does not display directories if the name does not match against filter
-	b) could not change directory which does not contain filter matching file
-	c) only parent directory is listed
+    a) does not display directories if the name does not match against filter
+    b) could not change directory which does not contain filter matching file
+    c) only parent directory is listed
+- Toolbar buttons initial status is always inactive, does not reflect 
+  the real, stored status (bug id 91403)
 
 QT4 migration
 - when QT4 will be wildly used (part of major linux distributions), the code must be migrated to native QT4 from Qt3Support class. At that time, the code will not support QT3.
 
+Last updated:
+31.10.2005
