@@ -19,6 +19,7 @@ rem set INCLUDE=
 if not "x%INCLUDE%x" == "xx" goto Skip
 
 if exist "%ProgramFiles%\Microsoft Platform SDK\setenv.cmd" goto PSDK
+if exist "%ProgramFiles%\Microsoft SDK\setenv.bat" goto PSDK2
 echo Platform SDK missing
 echo Download from "http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en"
 goto END
@@ -26,6 +27,12 @@ goto END
 :PSDK
 
 call "%ProgramFiles%\Microsoft Platform SDK\setenv.cmd"
+goto PSDKBOTH
+
+:PSDK2
+
+call "%ProgramFiles%\Microsoft SDK\setenv.bat"
+:PSDKBOTH
 
 if exist "%ProgramFiles%\Microsoft Visual C++ Toolkit 2003\vcvars32.bat" goto VCT
 echo Visual C++ Toolkit 2003 missing
