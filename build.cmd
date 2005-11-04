@@ -10,28 +10,28 @@ rem set INCLUDE=
 
 
 
-
-
-
-
-
-
 if not "x%INCLUDE%x" == "xx" goto Skip
 
 if exist "%ProgramFiles%\Microsoft Platform SDK\setenv.cmd" goto PSDK
 if exist "%ProgramFiles%\Microsoft SDK\setenv.bat" goto PSDK2
 echo Platform SDK missing
-echo Download from "http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5&displaylang=en"
+echo Download from http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
 goto END
 
 :PSDK
 
 call "%ProgramFiles%\Microsoft Platform SDK\setenv.cmd"
-goto PSDKBOTH
+if exist "%ProgramFiles%\Microsoft Platform SDK\include\shlwapi.h" goto PSDKBOTH
+:IESDK
+echo Internet Development SDK component of Platform SDK is not installed
+goto END
 
 :PSDK2
 
 call "%ProgramFiles%\Microsoft SDK\setenv.bat"
+if exist "%ProgramFiles%\Microsoft SDK\include\shlwapi.h" goto PSDKBOTH
+goto IESDK
+
 :PSDKBOTH
 
 if exist "%ProgramFiles%\Microsoft Visual C++ Toolkit 2003\vcvars32.bat" goto VCT
@@ -44,13 +44,6 @@ goto END
 call "%ProgramFiles%\Microsoft Visual C++ Toolkit 2003\vcvars32.bat"
 
 :Skip
-
-
-
-
-
-
-
 
 
 
