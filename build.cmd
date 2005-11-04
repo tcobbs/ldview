@@ -1,5 +1,5 @@
 @echo off
-set CFLAGS=/nologo /ML /W4 /GX /O2 /D NDEBUG /D WIN32 /Fo.\Release\\ /Fd.\Release\\ /FD
+set CFLAGS=/nologo /ML /W4 /GX /O2 /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD
 
 rem Remove the rem the following 2 lines to force usage of Visual C++ Toolkit 2003 & Platform SDK
 rem Leave rem to use the default Visual C++ environment
@@ -56,7 +56,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /I ../include/ /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /Fp.\Release\TCFoundation.pch /YX /c *.cpp
+cl %CFLAGS% /I .. /I ../include/ /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /FpRelease\TCFoundation.pch /YX /c *.cpp
 
 link -lib /nologo /out:Release\TCFoundation.lib Release\*.obj
 
@@ -70,7 +70,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /D _MBCS /D _LIB /D _TC_STATIC /Fp.\Release\LDLoader.pch /YX /c *.cpp *.c
+cl %CFLAGS% /I .. /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LDLoader.pch /YX /c *.cpp *.c
 
 link -lib /nologo /out:Release\LDLoader.lib Release\*.obj 
 
@@ -84,7 +84,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /I ../include /D _MBCS /D _LIB /D _TC_STATIC /Fp".\Release\LDLib.pch" /YX /c *.cpp 
+cl %CFLAGS% /I .. /I ../include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LDLib.pch /YX /c *.cpp 
 
 link -lib /nologo /out:Release\LDLib.lib Release\*.obj 
 
@@ -98,7 +98,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /Fp.\Release\TRE.pch /YX /c *.cpp
+cl %CFLAGS% /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\TRE.pch /YX /c *.cpp
 
 link -lib /nologo /out:Release\TRE.lib Release\*.obj
 
@@ -112,7 +112,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /D _MBCS /D _LIB /D _WIN32_WINDOWS=0x0410 /D _BUILDING_CUI_LIB /D _TC_STATIC /Fp.\Release\CUI.pch /YX /c *.cpp
+cl %CFLAGS% /I .. /D _MBCS /D _LIB /D _WIN32_WINDOWS=0x0410 /D _BUILDING_CUI_LIB /D _TC_STATIC /FpRelease\CUI.pch /YX /c *.cpp
 
 link -lib /nologo /out:Release\CUI.lib Release\*.obj 
 
