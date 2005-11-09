@@ -1,5 +1,5 @@
 @echo off
-set CFLAGS=/nologo /ML /W4 /GX /O2 /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD
+set CFLAGS=/nologo /MT /W4 /GX /O2 /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD
 
 rem Remove the rem the following 2 lines to force usage of Visual C++ Toolkit 2003 & Platform SDK
 rem Leave rem to use the default Visual C++ environment
@@ -130,6 +130,6 @@ rc /l 0x409 /foRelease\AppResources.res /d NDEBUG AppResources.rc
 
 cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /c *.cpp
 
-link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /out:Release\LDView.exe /libpath:lib Release\*.obj Release\AppResources.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib
+link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\AppResources.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib
 
 :End
