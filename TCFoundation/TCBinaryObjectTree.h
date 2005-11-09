@@ -1,8 +1,9 @@
 #ifndef __TCBINARYOBJECTTREE_H__
 #define __TCBINARYOBJECTTREE_H__
 
-#include <stdio.h>
 #include <TCFoundation/TCObject.h>
+
+#include <stdio.h>
 
 typedef struct TCBinaryObjectTreeNode
 {

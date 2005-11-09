@@ -1,9 +1,9 @@
+#include "TCStringObjectTree.h"
+#include "mystring.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "TCStringObjectTree.h"
-#include "mystring.h"
 
 char *copyStringFunc(const char *string)
 {

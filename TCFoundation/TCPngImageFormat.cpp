@@ -1,9 +1,9 @@
+#include "TCPngImageFormat.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "mystring.h"
-
-#include "TCPngImageFormat.h"
 
 TCPngImageFormat::TCPngImageFormat(void)
 	:commentData(NULL),

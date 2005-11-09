@@ -1,8 +1,8 @@
+#include "TCArray.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "TCArray.h"
 
 TCArray::TCArray(unsigned int allocated)
 		  :items(NULL),

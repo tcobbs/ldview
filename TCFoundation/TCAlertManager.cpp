@@ -1,5 +1,6 @@
 #include "TCAlertManager.h"
 #include "TCAlert.h"
+
 #include <stdlib.h>
 
 TCAlertManager *TCAlertManager::sm_defaultAlertManager = NULL;

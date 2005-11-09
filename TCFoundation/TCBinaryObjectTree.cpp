@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "TCBinaryObjectTree.h"
 #include "TCStringArray.h"
 #include "mystring.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 TCBinaryObjectTree::TCBinaryObjectTree(bool caseSensitive)
 	:rootNode(NULL),

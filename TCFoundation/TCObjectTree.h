@@ -1,8 +1,9 @@
 #ifndef __TCOBJECTTREE_H__
 #define __TCOBJECTTREE_H__
 
-#include <stdio.h>
 #include <TCFoundation/TCObject.h>
+
+#include <stdio.h>
 
 typedef void (*TCTreeTraversalFunc)(const void *key, TCObject *value);
 typedef int (*TCTreeCompareKeyFunc)(const void *leftKey, const void *rightKey);

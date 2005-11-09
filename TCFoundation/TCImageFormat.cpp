@@ -1,3 +1,5 @@
+#include "TCImageFormat.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,8 +7,6 @@
 #ifndef WIN32
 #include <unistd.h>
 #endif // WIN32
-
-#include "TCImageFormat.h"
 
 TCImageFormat::TCImageFormat(void)
 			  :name(NULL)

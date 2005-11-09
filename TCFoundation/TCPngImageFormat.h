@@ -2,6 +2,7 @@
 #define __TCPNGIMAGEFORMAT_H__
 
 #include <TCFoundation/TCImageFormat.h>
+
 #include <png.h>
 
 class TCExport TCPngImageFormat : public TCImageFormat

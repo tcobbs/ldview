@@ -1,8 +1,9 @@
 #ifndef __TCBINARYTREE_H__
 #define __TCBINARYTREE_H__
 
-#include <stdio.h>
 #include <TCFoundation/TCObject.h>
+
+#include <stdio.h>
 
 class TCStringArray;
 

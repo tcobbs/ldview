@@ -1,11 +1,6 @@
 //#include <math.h>
 //#include <stdio.h>
 
-#ifdef WIN32
-#include <TCFoundation/TCDefines.h>
-#include <windows.h>
-#endif // WIN32
-
 #include "TCVector.h"
 #include "TCMacros.h"
 #include "mystring.h"

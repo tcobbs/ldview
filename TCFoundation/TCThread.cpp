@@ -1,10 +1,10 @@
-//#include <stdio.h>
-
 #include "TCThread.h"
 #include "TCThreadManager.h"
 #include "TCMutex.h"
 #include "TCThreadCondition.h"
 #include "mystring.h"
+
+//#include <stdio.h>
 
 TCThread::TCThread(TCThreadStartFunction startFunction)
 			:owner(NULL),

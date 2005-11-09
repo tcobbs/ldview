@@ -1,10 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "TCBinaryTree.h"
 #include "TCStringArray.h"
 #include "mystring.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 TCBinaryTree::TCBinaryTree(void)
 				 :rootNode(NULL)
