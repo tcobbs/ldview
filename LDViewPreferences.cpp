@@ -1257,8 +1257,16 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 		// subclass the Wizard button so we can know when the mouse has moved
 		// over it
 		SetWindowLongPtr(hColorButton, GWLP_USERDATA, (LONG_PTR)this);
-		origButtonWindowProc = SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
-			(LONG_PTR)staticColorButtonProc);
+		if (origButtonWindowProc)
+		{
+			SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
+				(LONG_PTR)staticColorButtonProc);
+		}
+		else
+		{
+			origButtonWindowProc = SetWindowLongPtr(hColorButton, GWLP_WNDPROC,
+				(LONG_PTR)staticColorButtonProc);
+		}
 		CUIThemes::getThemeBackgroundContentRect(hButtonTheme, NULL,
 			BP_PUSHBUTTON, PBS_HOT, &clientRect, &contentRect);
 		imageWidth = contentRect.right - contentRect.left - 6;
@@ -2757,8 +2765,16 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 					(LONG_PTR)staticGroupCheckButtonProc)
 				{
 					SetWindowLongPtr(hButton, GWLP_USERDATA, (LONG_PTR)this);
-					SetWindowLongPtr(hButton, GWLP_WNDPROC,
-						(LONG_PTR)staticGroupCheckButtonProc);
+					if (origButtonWindowProc)
+					{
+						SetWindowLongPtr(hButton, GWLP_WNDPROC,
+							(LONG_PTR)staticGroupCheckButtonProc);
+					}
+					else
+					{
+						origButtonWindowProc = SetWindowLongPtr(hButton,
+							GWLP_WNDPROC, (LONG_PTR)staticGroupCheckButtonProc);
+					}
 				}
 				checkStates[hButton] = state;
 				InvalidateRect(hButton, NULL, TRUE);
@@ -3427,6 +3443,7 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 	bool bIsPressed = (drawItemStruct->itemState & ODS_SELECTED) != 0;
 	bool bIsFocused = (drawItemStruct->itemState & ODS_FOCUS) != 0;
 	bool bDrawFocusRect = (drawItemStruct->itemState & ODS_NOFOCUSRECT) == 0;
+	bool bIsDisabled = (drawItemStruct->itemState & ODS_DISABLED) != 0;
 	bool bIsChecked = checkStates[hWnd];
 	RECT itemRect = drawItemStruct->rcItem;
 	char title[1024];
@@ -3455,7 +3472,7 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 				state = CBS_UNCHECKEDPRESSED;
 			}
 		}
-		else
+		else if (!bIsDisabled)
 		{
 			if (hMouseOverButton == hWnd)
 			{
@@ -3480,6 +3497,10 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 				}
 			}
 		}
+		else
+		{
+			state = CBS_UNCHECKEDDISABLED;
+		}
 		CUIThemes::getThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL,
 			TS_TRUE, &boxSize);
 		boxRect.right = itemRect.left + boxSize.cx;
@@ -3500,8 +3521,16 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		// All this so that we can draw the text in the font and color of the
 		// group box text instead of the check box text.  Here's where we do
 		// that.
-		CUIThemes::drawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL, wtitle,
-			-1, DT_LEFT, NULL, &textRect);
+		if (bIsDisabled)
+		{
+			CUIThemes::drawThemeText(hTheme, hdc, BP_CHECKBOX, CBS_DISABLED,
+				wtitle, -1, DT_LEFT, NULL, &textRect);
+		}
+		else
+		{
+			CUIThemes::drawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL,
+				wtitle, -1, DT_LEFT, NULL, &textRect);
+		}
 	}
 	return TRUE;
 }
