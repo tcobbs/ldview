@@ -1,8 +1,8 @@
-#include <string.h>
-#include <stdio.h>
-
 #include "TCStringArray.h"
 #include "mystring.h"
+
+#include <string.h>
+#include <stdio.h>
 
 TCStringArray::TCStringArray(unsigned int allocated, int caseSensitive)
 			  :TCArray(allocated),

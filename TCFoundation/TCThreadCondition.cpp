@@ -1,8 +1,7 @@
-#include <errno.h>
-//#include <stdio.h>
-
 #include "TCThreadCondition.h"
 #include "TCMutex.h"
+
+#include <errno.h>
 #include <stdio.h>
 
 TCThreadCondition::TCThreadCondition(TCMutex* mutex)

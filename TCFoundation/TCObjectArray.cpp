@@ -1,8 +1,8 @@
-#include <string.h>
-#include <stdio.h>
-
 #include "TCObjectArray.h"
 #include "mystring.h"
+
+#include <string.h>
+#include <stdio.h>
 
 TCObjectArray::TCObjectArray(unsigned int allocated)
 				  :TCArray(allocated)

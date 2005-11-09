@@ -1,6 +1,8 @@
 #ifndef __TCNETWORK_H__
 #define __TCNETWORK_H__
 
+#include <TCFoundation/TCObject.h>
+
 #ifdef WIN32
 #include <winsock2.h>
 #include <windows.h>
@@ -9,8 +11,6 @@
 #define SOCKET int
 #endif // _QT
 #endif // WIN32
-
-#include <TCFoundation/TCObject.h>
 
 #define MAX_PACKET_SIZE (1 << 20)
 

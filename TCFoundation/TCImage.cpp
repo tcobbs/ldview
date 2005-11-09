@@ -1,11 +1,11 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "mystring.h"
-
 #include "TCImage.h"
 #include "TCPngImageFormat.h"
 #include "TCBmpImageFormat.h"
+#include "mystring.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 TCImageFormatArray *TCImage::imageFormats = NULL;
 

@@ -1,6 +1,8 @@
 #ifndef __TCNETWORKCLIENT_H__
 #define __TCNETWORKCLIENT_H__
 
+#include <TCFoundation/TCNetwork.h>
+
 #ifdef WIN32
 #else // WIN32
 #ifdef _QT
@@ -10,8 +12,6 @@
 #include <netdb.h>
 #endif // _QT
 #endif // WIN32
-
-#include <TCFoundation/TCNetwork.h>
 
 #define TCNCE_SET_LINGER TCN_MAX_ERROR + 1
 #define TCNCE_HOSTNAME_LOOKUP TCN_MAX_ERROR + 2

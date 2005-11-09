@@ -1,8 +1,8 @@
+#include "TCBmpImageFormat.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "TCBmpImageFormat.h"
 
 typedef unsigned short WORD;
 typedef unsigned long DWORD;

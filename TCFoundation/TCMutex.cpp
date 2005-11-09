@@ -1,6 +1,6 @@
-#include <errno.h>
-
 #include "TCMutex.h"
+
+#include <errno.h>
 
 #ifdef WIN32
 #include <stdio.h>

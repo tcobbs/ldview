@@ -1,10 +1,9 @@
-#include <stdlib.h>
-#include <string.h>
-
 #include "TCDictionary.h"
-
 #include "TCObjectArray.h"
 #include "TCSortedStringArray.h"
+
+#include <stdlib.h>
+#include <string.h>
 
 // Note: this REALLY needs to be made to be hash based.  I needed a dictionary,
 // though, and this does work, albeit slowly.
