@@ -3,6 +3,8 @@
 
 #include <TCFoundation/TCObject.h>
 
+#include <string.h>
+
 class LDLMainModel;
 class LDLModel;
 class TREMainModel;
