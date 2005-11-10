@@ -15,6 +15,9 @@
 // 255 characters in the debug info.
 #pragma warning(disable : 4786 4702)
 
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_NONSTDC_NO_DEPRECATE
+
 #include <winsock2.h>
 #include <crtdbg.h>
 

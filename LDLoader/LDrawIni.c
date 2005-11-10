@@ -14,6 +14,8 @@ If not, I don't know who wrote it.
 041202 lch Changed parameter ModelDir to ModelPath in LDrawIniComputeRealDirs
 */
 
+#include <TCFoundation/TCDefines.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

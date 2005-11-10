@@ -132,7 +132,7 @@ void TCUserDefaults::setCommandLine(const char *args)
 
 	while (tmpString[0])
 	{
-		char *end = NULL;
+		const char *end = NULL;
 
 		if (tmpString[0] == '"')
 		{
@@ -144,7 +144,7 @@ void TCUserDefaults::setCommandLine(const char *args)
 			end = strchr(tmpString, ' ');
 			if (tmpString[0] == '-')
 			{
-				char *equals = strchr(tmpString, '=');
+				const char *equals = strchr(tmpString, '=');
 
 				if (equals && equals < end && equals[1] == '"')
 				{

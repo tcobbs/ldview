@@ -170,7 +170,7 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 	hFlythroughIcon = (HICON)LoadImage(getLanguageModule(),
 		MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
-		(TCAlertCallback)progressAlertCallback);
+		(TCAlertCallback)&LDViewWindow::progressAlertCallback);
 //	DeleteObject(hBackgroundBrush);
 // 	hBackgroundBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
 //		(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));
@@ -4419,7 +4419,7 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 {
 	if (filename)
 	{
-		char* spot = strrchr(filename, '\\');
+		const char* spot = strrchr(filename, '\\');
 		int index;
 
 		if (!pathKey)
