@@ -252,7 +252,7 @@ void TCWebClient::setLocationField(const char* value)
 {
 	if (value != locationField)
 	{
-		char *fieldEnd = strstr(value, "\r\n");
+		const char *fieldEnd = strstr(value, "\r\n");
 
 		delete locationField;
 		if (fieldEnd)
@@ -272,9 +272,9 @@ void TCWebClient::setLocationField(const char* value)
 
 void TCWebClient::setContentType(const char* value)
 {
-	char* crSpot = strchr(value, '\r');
-	char* lfSpot = strchr(value, '\n');
-	char* endSpot = 0;
+	const char* crSpot = strchr(value, '\r');
+	const char* lfSpot = strchr(value, '\n');
+	const char* endSpot = 0;
 	int length = -1;
 
 	if (crSpot && lfSpot)
@@ -314,7 +314,7 @@ time_t TCWebClient::scanDateString(const char* dateString)
 {
 	struct tm tmTime;
 	time_t result = 0;
-	char* tzString;
+	const char* tzString;
 //	char dayOfWeek[128];
 
 #ifdef WIN32
@@ -1090,7 +1090,7 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 			{
 				return 1;
 			}
-			timeout.tv_sec -= timeLeft;
+			timeout.tv_sec -= (long)timeLeft;
 			timeout.tv_usec = 0;
 		}
 		else

@@ -1,6 +1,6 @@
-#include <string.h>
-
 #include "LDModelParser.h"
+
+#include <string.h>
 
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLShapeLine.h>

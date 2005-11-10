@@ -158,9 +158,9 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 	}
 	windowStyle = windowStyle & ~WS_VISIBLE;
 	TCAlertManager::registerHandler(LDLError::alertClass(), this,
-		(TCAlertCallback)ldlErrorCallback);
+		(TCAlertCallback)&ModelWindow::ldlErrorCallback);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
-		(TCAlertCallback)progressAlertCallback);
+		(TCAlertCallback)&ModelWindow::progressAlertCallback);
 /*
 	modelViewer->setProgressCallback(staticProgressCallback, this);
 	modelViewer->setErrorCallback(staticErrorCallback, this);

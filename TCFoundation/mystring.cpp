@@ -403,7 +403,7 @@ char *stringByReplacingSubstring(const char* string, const char* oldSubstring,
 	}
 	else
 	{
-		char *oldSpot = strstr(string, oldSubstring);
+		const char *oldSpot = strstr(string, oldSubstring);
 
 		if (oldSpot)
 		{
