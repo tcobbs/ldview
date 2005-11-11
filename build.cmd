@@ -1,5 +1,5 @@
 @echo off
-set CFLAGS=/nologo /MT /W4 /GX /O2 /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD
+set CFLAGS=/nologo /MT /W4 /EHsc /O2 /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD
 
 rem Remove the rem the following 2 lines to force usage of Visual C++ Toolkit 2003 & Platform SDK
 rem Leave rem to use the default Visual C++ environment
