@@ -912,7 +912,7 @@ char* LDViewPreferences::getLDViewPath(bool useQuotes)
 	return copyString(tmpPath);
 }
 
-char* LDViewPreferences::getLDViewPath(char* helpFilename, bool useQuotes)
+char* LDViewPreferences::getLDViewPath(const char* helpFilename, bool useQuotes)
 {
 	char *programPath = getLDViewPath();
 	char tmpPath[MAX_PATH];

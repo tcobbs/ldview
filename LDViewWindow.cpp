@@ -1748,7 +1748,9 @@ HMENU LDViewWindow::getPollingMenu(void)
 void LDViewWindow::showHelp(void)
 {
 	HINSTANCE executeHandle;
-	char* helpPath = LDViewPreferences::getLDViewPath("Help.html", true);
+	char* helpPath =
+		LDViewPreferences::getLDViewPath(TCLocalStrings::get("HelpHtml"),
+		true);
 
 	setWaitCursor();
 	executeHandle = ShellExecute(hWindow, NULL, helpPath, NULL, ".",

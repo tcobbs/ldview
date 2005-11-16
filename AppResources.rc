@@ -15,7 +15,7 @@
 #include "winresrc.h"
 #include "dlgs.h"
 #ifndef IDC_STATIC
-#define IDC_STATIC    (-1)
+#define IDC_STATIC      (-1)
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -53,8 +53,11 @@ END
 
 2 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "#include ""winres.h""\r\n"
-    "#include ""dlgs.h""\0"
+    "#include ""winresrc.h""\r\n"
+    "#include ""dlgs.h""\r\n"
+    "#ifndef IDC_STATIC\r\n"
+    "#define IDC_STATIC      (-1)\r\n"
+    "#endif\0"
 END
 
 3 TEXTINCLUDE DISCARDABLE 
@@ -846,7 +849,7 @@ BEGIN
     BEGIN
         MENUITEM "Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
         MENUITEM "Switch to &Fullscreen\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "&Errors\tCtrl+Shift+E",       ID_VIEW_ERRORS
+        MENUITEM "&Errors...\tCtrl+Shift+E",    ID_VIEW_ERRORS
         MENUITEM "Toolbar\tCtrl+Shift+T",       ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
@@ -868,7 +871,7 @@ BEGIN
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
-        MENUITEM "Show View &Info",             ID_VIEW_INFO
+        MENUITEM "Show View &Info...",          ID_VIEW_INFO
         MENUITEM SEPARATOR
     END
     POPUP "&Help"
@@ -1009,8 +1012,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,0,3
- PRODUCTVERSION 3,0,0,3
+ FILEVERSION 3,0,0,4
+ PRODUCTVERSION 3,0,0,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
