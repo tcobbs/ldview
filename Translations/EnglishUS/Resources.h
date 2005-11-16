@@ -292,6 +292,10 @@
 #define ID_LIGHTING_ALTERNATESETUP      40083
 #define ID_BFC_REDBACKFACES             40084
 #define ID_BFC_GREENFRONTFACES          40085
+#define ID_FILE_OPEN                    0xE101
+#define ID_FILE_SAVE                    0xE103
+#define ID_FILE_PRINT                   0xE107
+#define ID_VIEW_TOOLBAR                 0xE800
 
 // Next default values for new objects
 // 

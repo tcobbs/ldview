@@ -229,7 +229,6 @@
 #define IDC_MEMORY_COMBO                1194
 #define IDC_UPDATE_PROGRESS             1195
 #define IDC_UPDATE_STATUS_FIELD         1196
-#define IDC_BUTTON1                     1197
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -306,7 +305,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
 #define _APS_NEXT_COMMAND_VALUE         40086
-#define _APS_NEXT_CONTROL_VALUE         1198
+#define _APS_NEXT_CONTROL_VALUE         1197
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

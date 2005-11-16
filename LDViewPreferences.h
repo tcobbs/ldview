@@ -116,7 +116,8 @@ public:
 	void applySettings(void);
 	// *************************************************************************
 
-	static char* getLDViewPath(char* helpFilename, bool useQuotes = false);
+	static char* getLDViewPath(const char* helpFilename,
+		bool useQuotes = false);
 	static char* getLDViewPath(bool useQuotes = false);
 	static int getFSAAFactor(void);
 	static bool getUseNvMultisampleFilter(void);
