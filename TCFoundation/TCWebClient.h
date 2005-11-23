@@ -115,6 +115,7 @@ class TCWebClient : public TCNetworkClient
 		char* getReferer(void) { return referer; }
 
 		static int createDirectory(const char*, int *);
+		static time_t scanDateString(const char*);
 	protected:
 		virtual TCByte* getData(int& length);
 		virtual char* getLine(int&);
@@ -130,7 +131,6 @@ class TCWebClient : public TCNetworkClient
 		virtual void backgroundFetchURLFinish(TCThread*);
 		virtual void backgroundFetchHeaderFinish(TCThread*);
 		virtual void setErrorNumber(int);
-		virtual time_t scanDateString(const char*);
 		virtual int createDirectory(const char*);
 		virtual int createDirectories(const char*);
 		virtual int sendFetchCommands(void);
