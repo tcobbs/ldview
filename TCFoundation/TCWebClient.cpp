@@ -376,16 +376,18 @@ time_t TCWebClient::scanDateString(const char* dateString)
 
 		for (i = 0; i < 12; i++)
 		{
-			if (strcasecmp(month, monthLongNames[i]) == 0)
+			if (strcasecmp(month, monthShortNames[i]) == 0)
 			{
 				break;
 			}
 		}
 		if (i == 12)
 		{
+			// The month name is supposed to be always a 3-letter abbreviation,
+			// but go ahead and check the full name if we don't find a match.
 			for (i = 0; i < 12; i++)
 			{
-				if (strcasecmp(month, monthShortNames[i]) == 0)
+				if (strcasecmp(month, monthLongNames[i]) == 0)
 				{
 					break;
 				}
@@ -393,6 +395,7 @@ time_t TCWebClient::scanDateString(const char* dateString)
 		}
 		if (i == 12)
 		{
+			// Not a good solution, but oh well.
 			i = 0;
 		}
 		tmTime.tm_mon = i;
