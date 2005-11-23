@@ -847,10 +847,10 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
-        MENUITEM "Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
+        MENUITEM "&Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
         MENUITEM "Switch to &Fullscreen\tCtrl+Enter", ID_VIEW_FULLSCREEN
         MENUITEM "&Errors...\tCtrl+Shift+E",    ID_VIEW_ERRORS
-        MENUITEM "Toolbar\tCtrl+Shift+T",       ID_VIEW_TOOLBAR
+        MENUITEM "&Toolbar\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
         MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET

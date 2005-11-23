@@ -313,16 +313,64 @@ void TCWebClient::setContentType(const char* value)
 time_t TCWebClient::scanDateString(const char* dateString)
 {
 	struct tm tmTime;
+	struct tm tmLocalTime;
+	struct tm tmGmtTime;
 	time_t result = 0;
-	const char* tzString;
+	const char *commaSpot = strchr(dateString, ',');
 //	char dayOfWeek[128];
-
-#ifdef WIN32
+	bool isRfc822Time = false;
+	bool isRfc850Time = false;
+	bool isAscTime = false;
+	bool failed = true;
 	char month[128];
 
+	if (*commaSpot)
+	{
+		if (commaSpot - dateString == 3)
+		{
+			isRfc822Time = true;
+		}
+		else
+		{
+			isRfc850Time = true;
+		}
+	}
+	else
+	{
+		isAscTime = true;
+	}
 	memset(&tmTime, 0, sizeof(tmTime));
-	if (sscanf(dateString, "%*s %d %s %d %d:%d:%d ", &tmTime.tm_mday, month,
-		&tmTime.tm_year, &tmTime.tm_hour, &tmTime.tm_min, &tmTime.tm_sec) == 6)
+	if (isRfc822Time)
+	{
+		if (sscanf(dateString, "%*s %d %s %d %d:%d:%d ", &tmTime.tm_mday, month,
+			&tmTime.tm_year, &tmTime.tm_hour, &tmTime.tm_min, &tmTime.tm_sec)
+			== 6)
+		{
+			tmTime.tm_year -= 1900;
+			failed = false;
+		}
+	}
+	else if (isRfc850Time)
+	{
+		if (sscanf(dateString, "%*s %d-%3s-%d %d:%d:%d ", month,
+			&tmTime.tm_mday, &tmTime.tm_year, &tmTime.tm_hour, &tmTime.tm_min,
+			&tmTime.tm_sec) == 6)
+		{
+			// Year is already in 2-digit format.
+			failed = false;
+		}
+	}
+	else if (isAscTime)
+	{
+		if (sscanf(dateString, "%*s %s %d %d:%d:%d %d", month, &tmTime.tm_mday,
+			&tmTime.tm_hour, &tmTime.tm_min, &tmTime.tm_sec, &tmTime.tm_year)
+			== 6)
+		{
+			tmTime.tm_year -= 1900;
+			failed = false;
+		}
+	}
+	if (!failed)
 	{
 		int i;
 
@@ -348,61 +396,17 @@ time_t TCWebClient::scanDateString(const char* dateString)
 			i = 0;
 		}
 		tmTime.tm_mon = i;
-		tmTime.tm_isdst = 0;
-		tmTime.tm_year -= 1900;
+		tmTime.tm_isdst = 0;	// All HTTP times are GMT, so no DST
 		// In addition to returning a time_t, the following normalizes the
 		// input tmTime and fills in tm_wday and tm_yday.  (Notice that we
 		// ignored those above.)
 		result = mktime(&tmTime);
-		tzString = strchr(dateString, ':');
-		if (tzString)
-		{
-			tzString = strchr(tzString + 1, ':');
-			if (tzString)
-			{
-				tzString = strchr(tzString + 1, ' ');
-				if (tzString)
-				{
-					tzString++;
-				}
-			}
-		}
-		if (stringHasPrefix(tzString, "GMT"))
-		{
-			TIME_ZONE_INFORMATION tzi;
-			DWORD timeZoneResult = GetTimeZoneInformation(&tzi);
-
-			switch (timeZoneResult)
-			{
-			case TIME_ZONE_ID_STANDARD:
-				result -= tzi.Bias * 60;
-				break;
-			case TIME_ZONE_ID_DAYLIGHT:
-				result -= (tzi.Bias - 60) * 60;
-				break;
-			}
-		}
+		// The above is still in GMT.  Convert it to the local time zone.
+		tmLocalTime = *localtime(&result);
+		tmGmtTime = *gmtime(&result);
+		// Convert it back to a time_t:
+		result += (mktime(&tmLocalTime) - mktime(&tmGmtTime));
 	}
-#else // WIN32
-#ifdef _QT
-	tzString = strptime(dateString, "%A, %d %h %Y %H:%M:%S ", &tmTime);
-	if (tzString)
-	{
-		if (stringHasPrefix(tzString, "GMT"))
-		{
-			struct timezone tz;
-
-			result = mktime(&tmTime);
-			gettimeofday(NULL, &tz);
-			result -= tz.tz_minuteswest * 60;
-		}
-		else
-		{
-			debugPrintf("Unkown timezone: %s\n", tzString);
-		}
-	}
-#endif // _QT
-#endif // WIN32
 	return result;
 }
 
