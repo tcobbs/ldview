@@ -32,7 +32,6 @@
 static const char __pBase64[]="\
 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-#ifdef WIN32
 static char monthLongNames[12][20] =
 {
 	"January",
@@ -65,6 +64,7 @@ static char monthShortNames[12][4] =
 	"Dec"
 };
 
+/*
 static char dayLongNames[7][20] =
 {
 	"Sunday",
@@ -86,7 +86,7 @@ static char dayShortNames[7][4] =
 	"Fri",
 	"Sat"
 };
-#endif // WIN32
+*/
 
 TCWebClient::TCWebClient(const char* url)
 	:TCNetworkClient(80),
@@ -352,8 +352,8 @@ time_t TCWebClient::scanDateString(const char* dateString)
 	}
 	else if (isRfc850Time)
 	{
-		if (sscanf(dateString, "%*s %d-%3s-%d %d:%d:%d ", month,
-			&tmTime.tm_mday, &tmTime.tm_year, &tmTime.tm_hour, &tmTime.tm_min,
+		if (sscanf(dateString, "%*s %d-%3s-%d %d:%d:%d ", &tmTime.tm_mday,
+			month, &tmTime.tm_year, &tmTime.tm_hour, &tmTime.tm_min,
 			&tmTime.tm_sec) == 6)
 		{
 			// Year is already in 2-digit format.
@@ -376,7 +376,7 @@ time_t TCWebClient::scanDateString(const char* dateString)
 
 		for (i = 0; i < 12; i++)
 		{
-			if (stricmp(month, monthLongNames[i]) == 0)
+			if (strcasecmp(month, monthLongNames[i]) == 0)
 			{
 				break;
 			}
@@ -385,7 +385,7 @@ time_t TCWebClient::scanDateString(const char* dateString)
 		{
 			for (i = 0; i < 12; i++)
 			{
-				if (stricmp(month, monthShortNames[i]) == 0)
+				if (strcasecmp(month, monthShortNames[i]) == 0)
 				{
 					break;
 				}
