@@ -87,14 +87,15 @@ void debugOut(char * /*fmt*/, ...)
 */
 }
 
-int mainLoop(HINSTANCE hInstance)
+int mainLoop()
 {
 	MSG msg;
 	HACCEL hAccel;
 	bool screenSaver = isScreenSaver();
 //	DWORD startTickCount = GetTickCount();
 
-	hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDR_ACCELERATORS));
+	hAccel = LoadAccelerators(CUIWindow::getLanguageModule(),
+		MAKEINTRESOURCE(IDR_ACCELERATORS));
 	while (1)
 	{
 		HWND parentWindow;
@@ -443,7 +444,7 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 		debugPrintf("hPrevInstance: 0x%08x\n", hPrevInstance);
 	}
 */
-	retValue = mainLoop(hInstance);
+	retValue = mainLoop();
 	modelLoader->release();
 	return retValue;
 } // WinMain
