@@ -2654,11 +2654,11 @@ void LDViewPreferences::setupMemoryUsage(void)
 		0);
 	}
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)"Low");
+		(LPARAM)TCLocalStrings::get("Low"));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)"Medium");
+		(LPARAM)TCLocalStrings::get("Medium"));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)"High");
+		(LPARAM)TCLocalStrings::get("High"));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
 		(WPARAM)memoryUsage, 0);
 }

@@ -1598,7 +1598,7 @@ void ModelWindow::registerErrorWindowClass(void)
 	}
 	GetClassName(hProgressWindow, prefsClassName, 1024);
 	windowClass.cbSize = sizeof(windowClass);
-	GetClassInfoEx(hInstance, prefsClassName, &windowClass);
+	GetClassInfoEx(getLanguageModule(), prefsClassName, &windowClass);
 	windowClass.hIcon = LoadIcon(getLanguageModule(),
 		MAKEINTRESOURCE(IDI_APP_ICON));
 	windowClass.lpszMenuName = NULL;

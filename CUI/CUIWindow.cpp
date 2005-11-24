@@ -1961,6 +1961,14 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 		char *nameOverride =
 			TCUserDefaults::stringForKey("LanguageModuleName", NULL, false);
 
+		if (strchr(appName, '/'))
+		{
+			appName = strrchr(appName, '/') + 1;
+		}
+		if (strchr(appName, '\\'))
+		{
+			appName = strrchr(appName, '\\') + 1;
+		}
 		if (nameOverride)
 		{
 			strcpy(languageModuleName, nameOverride);
@@ -1968,14 +1976,6 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 		}
 		else
 		{
-			if (strchr(appName, '/'))
-			{
-				appName = strrchr(appName, '/') + 1;
-			}
-			if (strchr(appName, '\\'))
-			{
-				appName = strrchr(appName, '\\') + 1;
-			}
 			sprintf(languageModuleName, "%s-%s.dll", appName, localeInfo);
 		}
 		hLanguageModule = LoadLibrary(languageModuleName);
@@ -2057,7 +2057,6 @@ HWND CUIWindow::createDialog(char* templateName, BOOL asChildWindow)
 	{
 		hWnd = NULL;
 	}
-	populateLanguageModule(hInstance);
 	return CreateDialogParam(getLanguageModule(), templateName, hWnd,
 		staticDialogProc, (long)this);
 }
@@ -2087,13 +2086,13 @@ WNDCLASSEX CUIWindow::getWindowClass(void)
 	windowClass.lpfnWndProc = staticWindowProc;
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
-	windowClass.hInstance = hInstance;
-	windowClass.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
+	windowClass.hInstance = getLanguageModule();
+	windowClass.hIcon = LoadIcon(getLanguageModule(), IDI_APPLICATION);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	windowClass.hbrBackground = getBackgroundBrush();
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = windowClassName();
-	windowClass.hIconSm = LoadIcon(hInstance, IDI_APPLICATION);
+	windowClass.hIconSm = LoadIcon(getLanguageModule(), IDI_APPLICATION);
 	return windowClass;
 }
 
@@ -2101,7 +2100,7 @@ void CUIWindow::registerWindowClass(void)
 {
 	WNDCLASSEX windowClass;
 
-	if (!GetClassInfoEx(hInstance, windowClassName(), &windowClass))
+	if (!GetClassInfoEx(getLanguageModule(), windowClassName(), &windowClass))
 	{
 		windowClass = getWindowClass();
 		RegisterClassEx(&windowClass);
@@ -2126,7 +2125,7 @@ BOOL CUIWindow::createMainWindow(void)
 
 	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
 		windowStyle, x, y, width + dx, height + dy, NULL, hWindowMenu,
-		hInstance, this);
+		getLanguageModule(), this);
 	if (!hWindow)
 	{
 		DWORD error = GetLastError();
@@ -2154,7 +2153,7 @@ BOOL CUIWindow::createSubWindow(void)
 	}
 	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
 		windowStyle, x - dx / 2, y - dy / 2, width, height,
-		hParentWindow, hWindowMenu, hInstance, this);
+		hParentWindow, hWindowMenu, getLanguageModule(), this);
 
 	if (!hWindow)
 	{
