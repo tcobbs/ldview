@@ -1045,6 +1045,10 @@ void TREMainModel::bindStudTexture(void)
 			}
 		}
 	}
+	if (sm_studTextureID)
+	{
+		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
+	}
 }
 
 void TREMainModel::configureStudTexture(bool allowMipMap)
