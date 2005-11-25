@@ -3103,8 +3103,8 @@ bool ModelWindow::selectPrinter(PRINTDLG &pd)
  	pd.lStructSize = sizeof(PRINTDLG);
 	pd.hDevMode = hDevMode;
 	pd.hDevNames = NULL;
-	pd.Flags = PD_RETURNDC | PD_NOPAGENUMS | PD_NOSELECTION;
-	// | PD_ENABLEPRINTHOOK | PD_ENABLEPRINTTEMPLATE;
+	pd.Flags = PD_RETURNDC | PD_NOPAGENUMS | PD_NOSELECTION;// |
+//		PD_ENABLEPRINTHOOK | PD_ENABLEPRINTTEMPLATE;
 	pd.hwndOwner = NULL;//parentWindow->getHWindow();
 	pd.hDC = NULL;
 	pd.nFromPage = 1;
