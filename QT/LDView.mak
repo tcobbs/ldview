@@ -19,6 +19,11 @@ clean:
 	done;
 	make clean
 
+depend:
+	for DIR in $(DIRECTORIES); do		\
+		cd $$DIR; $(MAKE) depend; cd ../QT;	\
+	done;
+
 dotDirs: .ui .moc .obj .test
 	if [ "$?" != "" ]; then			\
 		for DIR in $?; do			\
