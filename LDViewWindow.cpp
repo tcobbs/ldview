@@ -1,4 +1,7 @@
 #define _WIN32_WINNT 0x501
+#ifdef _DEBUG
+#define DEBUG_SIMSTAR 1
+#endif
 #include "LDViewWindow.h"
 #include <shlwapi.h>
 #include "LDVExtensionsSetup.h"
@@ -19,6 +22,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
+#include <TRE/TREMainModel.h>
 
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
@@ -1883,15 +1887,15 @@ LRESULT LDViewWindow::doMenuSelect(UINT menuID, UINT /*flags*/, HMENU hMenu)
 	return 1;
 }
 
-void cleanupMatrix(float *matrix)
+void cleanupFloats(float *array, int count = 16)
 {
 	int i;
 
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < count; i++)
 	{
-		if (fabs(matrix[i]) < 1e-6)
+		if (fabs(array[i]) < 1e-6)
 		{
-			matrix[i] = 0.0f;
+			array[i] = 0.0f;
 		}
 	}
 }
@@ -1933,7 +1937,7 @@ void LDViewWindow::showTransformationMatrix(void)
 			matrix[12] = cameraPosition[0];
 			matrix[13] = cameraPosition[1];
 			matrix[14] = cameraPosition[2];
-			cleanupMatrix(matrix);
+			cleanupFloats(matrix);
 			sprintf(matrixString,
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,"
 				"%.6g,%.6g,%.6g,%.6g",
@@ -1946,6 +1950,132 @@ void LDViewWindow::showTransformationMatrix(void)
 	}
 }
 */
+
+void LDViewWindow::showPovCamera(void)
+{
+	if (modelWindow)
+	{
+		LDrawModelViewer* modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
+			float tmpMatrix[16];
+			float matrix[16];
+			float rotationMatrix[16];
+			float centerMatrix[16];
+			float positionMatrix[16];
+			float cameraMatrix[16];
+			float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+			char locationString[1024];
+			char lookAtString[1204];
+			char upString[1024];
+			char message[4096];
+			TCVector directionVector = TCVector(0.0f, 0.0f, 1.0f);
+			TCVector locationVector;
+			TCVector lookAtVector;
+			TCVector upVector = TCVector(0.0f, -1.0f, 0.0f);
+			double direction[3];
+			double up[3];
+			double location[3];
+			TREFacing facing;
+
+			TRECamera &camera = modelViewer->getCamera();
+			TCVector cameraPosition = camera.getPosition();
+			TCVector boundingMin, boundingMax, center;
+
+			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+				sizeof(rotationMatrix));
+			modelViewer->getMainTREModel()->getBoundingBox(boundingMin,
+				boundingMax);
+			center = (boundingMin + boundingMax) / 2.0f;
+			TCVector::initIdentityMatrix(positionMatrix);
+			positionMatrix[12] = cameraPosition[0] - modelViewer->getXPan();
+			positionMatrix[13] = -cameraPosition[1] + modelViewer->getYPan();
+			positionMatrix[14] = -cameraPosition[2];
+			TCVector::initIdentityMatrix(centerMatrix);
+			if (modelViewer->getAutoCenter())
+			{
+				centerMatrix[12] = center[0];
+				centerMatrix[13] = center[1];
+				centerMatrix[14] = center[2];
+			}
+			TCVector::multMatrix(otherMatrix, rotationMatrix, tmpMatrix);
+			TCVector::invertMatrix(tmpMatrix, cameraMatrix);
+			TCVector::multMatrix(centerMatrix, cameraMatrix, tmpMatrix);
+			TCVector::multMatrix(tmpMatrix, positionMatrix, matrix);
+
+			facing = camera.getFacing();
+			facing[0] = -facing[0];
+			facing.getInverseMatrix(cameraMatrix);
+			TCVector::multMatrix(matrix, cameraMatrix, tmpMatrix);
+			memcpy(matrix, tmpMatrix, sizeof(matrix));
+			cleanupFloats(matrix);
+			locationVector = TCVector(matrix[12], matrix[13], matrix[14]);
+			location[0] = (double)matrix[12];
+			location[1] = (double)matrix[13];
+			location[2] = (double)matrix[14];
+			cleanupFloats(matrix);
+			// Note that the location accuracy isn't nearly as important as the
+			// directional accuracy, so we don't have to re-do this string prior
+			// to putting it on the clipboard in the POV code copy.
+			sprintf(locationString, "%g,%g,%g", location[0], location[1],
+				location[2]);
+
+			matrix[12] = matrix[13] = matrix[14] = 0.0f;
+			directionVector = directionVector.transformPoint(matrix);
+			upVector = upVector.transformPoint(matrix);
+			// Grab the values prior to normalization.  That will make the
+			// normalization more accurate in double precision.
+			directionVector.upConvert(direction);
+			lookAtVector = locationVector + directionVector *
+				locationVector.length();
+			upVector.upConvert(up);
+			directionVector = directionVector.normalize();
+			upVector = upVector.normalize();
+			cleanupFloats(directionVector, 3);
+			cleanupFloats(upVector, 3);
+			// The following 3 strings will get re-done later at higher accuracy
+			// for POV-Ray.
+			sprintf(lookAtString, "%g,%g,%g", lookAtVector[0],
+				lookAtVector[1], lookAtVector[2]);
+			sprintf(upString, "%g,%g,%g", upVector[0], upVector[1],
+				upVector[2]);
+			sprintf(message, TCLocalStrings::get("PovCameraMessage"),
+				locationString, lookAtString, upString);
+			if (MessageBox(hWindow, message,
+				TCLocalStrings::get("PovCameraTitle"), MB_OKCANCEL) == IDOK)
+			{
+				char cameraString[4096];
+				double lookAt[3];
+				double tempV[3];
+
+				TCVector::doubleNormalize(up);
+				TCVector::doubleNormalize(direction);
+				TCVector::doubleMultiply(direction, tempV,
+					TCVector::doubleLength(location));
+				TCVector::doubleAdd(location, tempV, lookAt);
+				// Re-do the strings with higher accuracy, so they'll be
+				// accepted by POV-Ray.
+				sprintf(upString, "%.20g,%.20g,%.20g", up[0], up[1], up[2]);
+				sprintf(lookAtString, "%.20g,%.20g,%.20g", lookAt[0],
+					lookAt[1], lookAt[2]);
+				sprintf(cameraString,
+					"camera\n"
+					"{\n"
+					"\t#declare ASPECT = 4/3;\n"
+					"\tlocation < %s >\n"
+					"\tsky < %s >\n"
+					"\tright ASPECT * < -1,0,0 >\n"
+					"\tlook_at < %s >\n"
+					"\tangle %g\n"
+					"}\n",
+					locationString, upString, lookAtString,
+					modelViewer->getHFov());
+				copyToClipboard(cameraString);
+			}
+		}
+	}
+}
 
 void LDViewWindow::showViewInfo(void)
 {
@@ -1969,7 +2099,7 @@ void LDViewWindow::showViewInfo(void)
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 				sizeof(rotationMatrix));
 			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-			cleanupMatrix(matrix);
+			cleanupFloats(matrix);
 			sprintf(matrixString,
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
 				matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
@@ -2018,7 +2148,7 @@ void LDViewWindow::showRotationMatrix(void)
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 				sizeof(rotationMatrix));
 			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-			cleanupMatrix(matrix);
+			cleanupFloats(matrix);
 			sprintf(matrixString,
 				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
 				matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
@@ -3182,6 +3312,12 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			showViewInfo();
 			return 0;
 			break;
+/*
+		case ID_VIEW_POV_CAMERA:
+			showPovCamera();
+			return 0;
+			break;
+*/
 /*
 		case ID_VIEW_TRANS_MATRIX:
 			showTransformationMatrix();

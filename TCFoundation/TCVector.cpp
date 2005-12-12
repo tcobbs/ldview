@@ -610,3 +610,107 @@ const float *TCVector::getIdentityMatrix(void)
 {
 	return identityMatrix;
 }
+
+// Convert ourselves into a double array.
+void TCVector::upConvert(double *doubleVector)
+{
+	doubleVector[0] = (double)vector[0];
+	doubleVector[1] = (double)vector[1];
+	doubleVector[2] = (double)vector[2];
+}
+
+// Take two double-precision arrays, and adjust the second one slightly so that
+// it is perpendicular to the first.  This assumes that v1 are nearly
+// perpendicular to begin with.  Otherwise, it might not work.
+void TCVector::fixPerpendicular(const double *v1, double *v2)
+{
+	double epsilon = 1e-15;
+	double pairs[3];
+	double dot = 0.0;
+	int i;
+
+	// The dot product of perpendicular vectors is zero, so first calculate
+	// the dot product.
+	for (i = 0; i < 3; i++)
+	{
+		pairs[i] = v1[i] * v2[i];
+		dot += pairs[i];
+	}
+	// If it's already zero, then we don't have to do anything.
+	if (!fEq2(dot, 0.0f, epsilon))
+	{
+		int index0;
+		int index1;
+		int index2;
+
+		// If the vectors were nearly perpendicular, then either two of the
+		// pairs will be negative and one positive, or two of the pairs of the
+		// pairs will be positive and one negative.  Assuming that none of the
+		// pairs is exactly zero, then find the odd pair.  If one of the pairs
+		// is zero, find either one of the other pairs.
+		if (pairs[0] < 0.0 && pairs[1] >= 0.0 && pairs[2] >= 0 ||
+			pairs[0] > 0.0 && pairs[1] <= 0.0 && pairs[2] <= 0.0)
+		{
+			index0 = 0;
+		}
+		else if (pairs[1] < 0.0 && pairs[0] >= 0.0 && pairs[2] >= 0 ||
+			pairs[1] > 0.0 && pairs[0] <= 0.0 && pairs[2] <= 0.0)
+		{
+			index0 = 1;
+		}
+		else
+		{
+			index0 = 2;
+		}
+		index1 = (index0 + 1) % 3;
+		index2 = (index0 + 2) % 3;
+		// Adjust the component we decided upon so that the dot product will
+		// equal zero again.
+		v2[index0] = (pairs[index1] + pairs[index2]) / -v1[index0];
+		// Re-normalize our adjusted vector.  Remember that normalizing a vector
+		// doesn't have any effect on the angle between it and another vector,
+		// so the dot product will remain zero in this case.  This wouldn't work
+		// with any other angles, since the dot product would then be dependent
+		// on the lengths of the vectors, but with perpendicular vectors, the
+		// lengths of the vectors have no effect on the dot product.
+		doubleNormalize(v2);
+	}
+}
+
+void TCVector::doubleNormalize(double *v)
+{
+	double invLength = 1.0 / sqrt(sqr(v[0]) + sqr(v[1]) + sqr(v[2]));
+
+	v[0] *= invLength;
+	v[1] *= invLength;
+	v[2] *= invLength;
+}
+
+// It didn't even enter my mind what this method would be named when I
+// implemented doubleNormalize.  At that point, I didn't even think I'd NEED a
+// cross product for double vectors. :-)
+void TCVector::doubleCross(const double *v1, const double *v2, double *v3)
+{
+	v3[0] = v1[1] * v2[2] - v1[2] * v2[1];
+	v3[1] = v1[2] * v2[0] - v1[0] * v2[2];
+	v3[2] = v1[0] * v2[1] - v1[1] * v2[0];
+}
+
+void TCVector::doubleAdd(const double *v1, const double *v2, double *v3)
+{
+	v3[0] = v1[0] + v2[0];
+	v3[1] = v1[1] + v2[1];
+	v3[2] = v1[2] + v2[2];
+}
+
+double TCVector::doubleLength(const double *v)
+{
+	return sqrt(sqr(v[0]) + sqr(v[1]) + sqr(v[2]));
+}
+
+void TCVector::doubleMultiply(const double *v1, double *v2, double n)
+{
+	v2[0] = v1[0] * n;
+	v2[1] = v1[1] * n;
+	v2[2] = v1[2] * n;
+}

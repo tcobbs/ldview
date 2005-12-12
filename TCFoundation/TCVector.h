@@ -76,6 +76,7 @@ public:
 	TCVector transformNormal(const float *matrix,
 		bool shouldNormalize = true);
 	TCVector rearrange(int x, int y, int z) const;
+	void upConvert(double *doubleVector);
 
 	static float determinant(const float *matrix);
 	static void multMatrix(const float *left, const float *right,
@@ -85,6 +86,12 @@ public:
 	static float invertMatrix(const float *matrix, float *inverseMatrix);
 	static void initIdentityMatrix(float*);
 	static const float *getIdentityMatrix(void);
+	static void doubleNormalize(double *v);
+	static void doubleCross(const double *v1, const double *v2, double *v3);
+	static void doubleAdd(const double *v1, const double *v2, double *v3);
+	static void doubleMultiply(const double *v1, double *v2, double n);
+	static double doubleLength(const double *v);
+	static void fixPerpendicular(const double *v1, double *v2);
 protected:
 #ifdef _LEAK_DEBUG
 	char className[4];

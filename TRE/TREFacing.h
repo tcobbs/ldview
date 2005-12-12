@@ -5,7 +5,7 @@
 
 typedef enum Axis {XAxis, YAxis, ZAxis} SimAxis;
 
-class TREFacing: private TCVector
+class TREFacing: public TCVector
 {
 	private:
 		static float glMatrix[16];
@@ -37,6 +37,8 @@ class TREFacing: private TCVector
 		// getVector returns a vector pointing in the direction of the facing.
 		//		< 0, 0, 1 > is asumed to be a rotation of 0.
 		TCVector getVector(void);
+
+		float getRotation(void) { return rotation; }
 
 		// this gets the angle between two facings, ignoring the top of head.
 		//		Not fully tested at this time.

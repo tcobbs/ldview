@@ -177,6 +177,7 @@ class LDViewWindow: public CUIWindow
 //		virtual void showDefaultMatrix(const char *matrixString,
 //			const char *title);
 		virtual void showViewInfo(void);
+		virtual void showPovCamera(void);
 //		virtual void showRotationMatrix(void);
 //		virtual void showTransformationMatrix(void);
 		virtual void showLDrawCommandLine(void);
