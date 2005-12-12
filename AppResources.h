@@ -292,6 +292,7 @@
 #define ID_LIGHTING_ALTERNATESETUP      40083
 #define ID_BFC_REDBACKFACES             40084
 #define ID_BFC_GREENFRONTFACES          40085
+#define ID_VIEW_POV_CAMERA              40086
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -304,7 +305,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        166
-#define _APS_NEXT_COMMAND_VALUE         40086
+#define _APS_NEXT_COMMAND_VALUE         40087
 #define _APS_NEXT_CONTROL_VALUE         1197
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

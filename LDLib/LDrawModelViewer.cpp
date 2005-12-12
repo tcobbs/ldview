@@ -244,6 +244,14 @@ void LDrawModelViewer::setFov(float value)
 	}
 }
 
+float LDrawModelViewer::getHFov(void)
+{
+	int actualWidth = width / (int)getStereoWidthModifier();
+
+	return (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+		(actualWidth * numXTiles) / (double)height * numYTiles)));
+}
+
 void LDrawModelViewer::updateCurrentFov(void)
 {
 	int actualWidth = width / (int)getStereoWidthModifier();

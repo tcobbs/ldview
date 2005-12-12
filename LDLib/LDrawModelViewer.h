@@ -266,6 +266,7 @@ class LDrawModelViewer: public TCObject
 		const float *getRotationMatrix(void) { return rotationMatrix; }
 		virtual void setFov(float value);
 		float getFov(void) { return fov; }
+		float getHFov(void);
 		float getDefaultDistance(void) { return defaultDistance; }
 		void setExtraSearchDirs(TCStringArray *value);
 		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }
