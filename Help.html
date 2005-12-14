@@ -1000,6 +1000,21 @@ this to the minimum value of 0.1 will produce an image that is essentially
 orthographic.  Setting it to the maximum value of 90 will produce a wide-angle
 view.
 </P>
+<P>
+<I>Memory Usage</I> (Default: <I>High</I>):<BR>
+This allows you to have some control over how much memory LDView uses.
+Normally, setting this to High will result in the best performance.  However, if
+you load a large model that uses more memory than you have available, setting
+this to Medium or Low may improve performance.
+<BR>
+Please note that while the High setting usually results in noticeably faster
+performance than the Medium setting, it usually consumes only marginally more
+memory.  The Low setting should produce a much more considerable memory savings.
+Note also that if you use LDView to perform command line rendering, or use it as
+the renderer in LPub (which is actually command line rendering), the Low setting
+will likely be at least as fast as the other settings, and will very likely
+actually result in faster performance.
+</P>
 
 <P>
 <FONT SIZE="+2"><B><A NAME="GeometryTab">Geometry Tab</A></B></FONT><BR>
@@ -1053,7 +1068,7 @@ thickness of the lines used to draw the model in wireframe mode.
 Enabling this option turns on back-face culling (BFC).  BFC is a technique that
 can improve rendering performance by not drawing the back faces of polygons.
 (Only BFC-certified parts have their back faces removed.)
-<P>
+<BR>
 Note that while this can improve rendering performance, it can also slow things
 down, so don't assume that enabling this will always result in the best
 performance.
