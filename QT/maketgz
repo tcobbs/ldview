@@ -1,0 +1,12 @@
+#!/bin/sh
+if [ ! -x LDView ] ; then
+exit
+fi
+mkdir -p .obj/LDView3
+strip LDView
+cp LDView ../8464.mpd ../ChangeHistory.html ../Help.html \
+../LDViewMessages.ini ../license.txt ../m6459.ldr ../Readme.txt todo.txt \
+.obj/LDView3/
+cd .obj
+tar cfz ../LDView3.tgz LDView3
+rm -rf LDView3
