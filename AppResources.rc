@@ -86,7 +86,7 @@ STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "About LDView"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
@@ -100,7 +100,7 @@ BEGIN
     LTEXT           "",IDC_STATIC,0,152,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,237,150,8,36,0,WS_EX_TRANSPARENT
     LTEXT           "",IDC_STATIC,0,180,245,8,0,WS_EX_TRANSPARENT
-    LTEXT           "Chris Conley\nLars C. Hassing\nDon Heyse\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",
+    LTEXT           "Chris Conley\nLars C. Hassing\nDon Heyse\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nWilly Tschager\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",
                     IDC_STATIC,25,61,203,93
 END
 

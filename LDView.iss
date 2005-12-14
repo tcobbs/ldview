@@ -3,10 +3,10 @@
 
 [Setup]
 AppName=LDView
-AppVerName=LDView 3.0 Release Candidate 1
-AppVersion=3.0.0.1
-OutputBaseFilename=LDView-3000RC1
-SourceDir=C:\TEMP\Releases\LDView-3000RC1
+AppVerName=LDView 3.0
+AppVersion=3.0.0.7
+OutputBaseFilename=LDView-3000
+SourceDir=C:\TEMP\Releases\LDView-3000
 AppPublisher=Travis Cobbs
 AppPublisherURL=http://ldview.sourceforge.net/
 AppSupportURL=http://ldview.sourceforge.net/
@@ -30,6 +30,7 @@ Source: "Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 Source: "ChangeHistory.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Help.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "m6459.ldr"; DestDir: "{app}"; Flags: ignoreversion
+Source: "8464.mpd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LDView.hlp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LDView Home Page.url"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LDView.exe"; DestDir: "{sys}"; DestName: "LDView.scr"; Flags: ignoreversion; Tasks: screensaver
