@@ -71,6 +71,8 @@ const char *LDLError::getTypeName(LDLErrorType type)
 		return TCLocalStrings::get("LDLEVertexOrder");
 	case LDLEWhitespace:
 		return TCLocalStrings::get("LDLEWhitespace");
+	case LDLEMovedTo:
+		return TCLocalStrings::get("LDLEMovedTo");
 	default:
 		return TCLocalStrings::get("LDLEUnknown");
 	}
