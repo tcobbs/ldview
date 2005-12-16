@@ -874,6 +874,7 @@ BEGIN
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
         MENUITEM "Show View &Info...",          ID_VIEW_INFO
+        MENUITEM "Show &POV-Ray Camera Info...", ID_VIEW_POV_CAMERA
         MENUITEM SEPARATOR
     END
     POPUP "&Help"
