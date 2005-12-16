@@ -99,6 +99,8 @@ public:
     void doIsoViewAngle(void);
     void doSaveDefaultViewAngle(void);
 	void doShowViewInfo(void);
+	void cleanupFloats(float *array, int count = 16);
+	void doShowPovCamera(void);
 	QSize minimumSize(void);
 	void doWireframe(bool);
 	void doEdge(bool);
