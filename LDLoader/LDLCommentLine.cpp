@@ -34,6 +34,34 @@ void LDLCommentLine::dealloc(void)
 
 bool LDLCommentLine::parse(void)
 {
+	if (isMovedToMeta())
+	{
+		if (m_parentModel)
+		{
+			char *newName = m_processedLine + strlen("0 ~moved to ");
+			char partName[1024];
+			const char *filename = m_parentModel->getFilename();
+			char *nameSpot = strrchr(filename, '/');
+			char *tmp = strrchr(filename, '\\');
+
+			if (tmp > nameSpot)
+			{
+				nameSpot = tmp;
+			}
+			strcpy(partName, nameSpot + 1);
+			tmp = strchr(partName, '.');
+			if (tmp)
+			{
+				*tmp = 0;
+			}
+			setWarning(LDLEMovedTo, "Part %s has been renamed to %s.", partName,
+				newName);
+		}
+		else
+		{
+			setWarning(LDLEMovedTo, "Unknown part has been renamed.");
+		}
+	}
 	if (m_parentModel)
 	{
 		LDLMainModel *mainModel = m_parentModel->getMainModel();
@@ -190,6 +218,15 @@ bool LDLCommentLine::isBFCMeta(void) const
 {
 //	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 BFC "))
 	if (stringHasPrefix(m_processedLine, "0 BFC "))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool LDLCommentLine::isMovedToMeta(void) const
+{
+	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 ~moved to "))
 	{
 		return true;
 	}

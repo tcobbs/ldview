@@ -24,7 +24,8 @@ typedef enum
 	LDLEBFCError,
 	LDLEMPDError,
 	LDLEWhitespace,
-	LDLELastError = LDLEWhitespace
+	LDLEMovedTo,
+	LDLELastError = LDLEMovedTo
 } LDLErrorType;
 
 typedef enum
