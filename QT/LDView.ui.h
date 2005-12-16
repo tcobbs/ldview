@@ -202,3 +202,9 @@ void LDView::showViewInfo()
 {
 	modelViewer->doShowViewInfo();
 }
+
+void LDView::showPovCamera()
+{
+	modelViewer->doShowPovCamera();
+}
+
