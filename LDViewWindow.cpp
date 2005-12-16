@@ -3312,12 +3312,10 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			showViewInfo();
 			return 0;
 			break;
-/*
 		case ID_VIEW_POV_CAMERA:
 			showPovCamera();
 			return 0;
 			break;
-*/
 /*
 		case ID_VIEW_TRANS_MATRIX:
 			showTransformationMatrix();
