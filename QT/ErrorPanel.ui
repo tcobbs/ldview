@@ -202,7 +202,7 @@
                                         <cstring>generalErrorButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>General Error</string>
+                                        <string>General error</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -210,7 +210,7 @@
                                         <cstring>parseErrorButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Parse Error</string>
+                                        <string>Parse error</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -218,7 +218,7 @@
                                         <cstring>fileNotFoundButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>File Not Found</string>
+                                        <string>File not found</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -234,7 +234,7 @@
                                         <cstring>partDeterminantButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Part Determinant</string>
+                                        <string>Part transformed non-uniform</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -242,7 +242,7 @@
                                         <cstring>nonFlatQuadButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Non-flat Quad</string>
+                                        <string>Non-flat quad</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -250,7 +250,7 @@
                                         <cstring>concaveQuadButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Concave Quad</string>
+                                        <string>Concave quad</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -258,7 +258,7 @@
                                         <cstring>badVertexOrderButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Bad vertex order</string>
+                                        <string>Bad vertex sequence</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -274,7 +274,7 @@
                                         <cstring>colinearPointsButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Co-linear Points</string>
+                                        <string>Co-linear points</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -282,7 +282,7 @@
                                         <cstring>BFCWarningButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>BFC Warning</string>
+                                        <string>BFC warning</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -290,7 +290,7 @@
                                         <cstring>BFCErrorButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>BFC Error</string>
+                                        <string>BFC error</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -298,7 +298,7 @@
                                         <cstring>MPDErrorButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>MPD Error</string>
+                                        <string>MPD error</string>
                                     </property>
                                 </widget>
                                 <widget class="QCheckBox">
@@ -307,6 +307,14 @@
                                     </property>
                                     <property name="text">
                                         <string>Whitespace</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>partrenamedButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Part renamed</string>
                                     </property>
                                 </widget>
                             </vbox>
@@ -474,6 +482,12 @@
         <slot>whitespace()</slot>
     </connection>
     <connection>
+        <sender>partrenamedButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>partrenamed()</slot>
+    </connection>
+    <connection>
         <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
@@ -543,6 +557,7 @@
     <slot>nonFlatQuad()</slot>
     <slot>MPDError()</slot>
     <slot>whitespace()</slot>
+    <slot>partrenamed()</slot>
     <slot>identicalVertices()</slot>
     <slot>showAllError()</slot>
     <slot>showNoneError()</slot>
