@@ -110,7 +110,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		QImage studImage;
 
 		QImageDrag::decode(mimeSource, studImage);
-		TREMainModel::setStudTextureData(studImage.bits(),
+		TREMainModel::setRawStudTextureData(studImage.bits(),
 			studImage.numBytes());
 	}
 /*
