@@ -97,6 +97,11 @@ void ErrorPanel::whitespace()
 	errors->doErrorClick(whitespaceButton, LDLEWhitespace);
 }
 
+void ErrorPanel::partrenamed()
+{
+	errors->doErrorClick(partrenamedButton, LDLEMovedTo);
+}
+
 void ErrorPanel::identicalVertices()
 {
     errors->doErrorClick(identicalVerticesButton,LDLEMatchingPoints);
