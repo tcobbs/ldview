@@ -236,6 +236,8 @@ GLenum TREShapeGroup::modeForShapeType(TREShapeType shapeType)
 		return GL_TRIANGLES;
 		break;
 	}
+	// We can't ever get here, but GCC is apparently too stupid to realize this.
+	return GL_TRIANGLES;
 }
 
 int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
@@ -259,6 +261,8 @@ int TREShapeGroup::numPointsForShapeType(TREShapeType shapeType)
 		return 0;
 		break;
 	}
+	// We can't ever get here, but GCC is apparently too stupid to realize this.
+	return 0;
 }
 
 void TREShapeGroup::drawShapeType(TREShapeType shapeType)
