@@ -20,9 +20,9 @@ When starting a new translation, it is recommended that you do the following:
 
 1. Copy the EnglishUS directory, and rename it to the name of your language.
    For this example, I'll use Latin as the name of the language.
-2. In the newly renamed Latin directory, rename EnglishUS.* to be Latin.*.
-3. Edit Latin.cpp (either in Visual Studio or the text editor of your choice),
-   and do a global search and replace from EnglishUS to Latin.
+2. In the newly renamed Latin directory, rename EnglishUS.* to be Latin.*.  Also
+   rename LDView-EnglishUS.reg to LDView-Latin.reg.
+3. Edit Latin.cpp, and do a global search and replace from EnglishUS to Latin.
 4. Edit Latin.dsp in a text editor, and do a global search and replace from
    "English (United States)" to "Latin" (without the quotes).
 5. Still in Latin.dsp, do a case-sensitive global search and replace from
@@ -31,6 +31,8 @@ When starting a new translation, it is recommended that you do the following:
    ENGLISHUS to LATIN.  You can save and close Latin.dsp now.
 7. Edit Latin.dsw in a text editor, and do a global search and replace from
    EnglishUS to Latin.
+8. Edit LDView-Latin.reg in a text editor, and replace LDView-EnglishUS with
+   LDView-Latin.
 
 Once you've don the above, you're ready to start your translation.  To create
 your language module, modify all of the dialog, menu, and string resources to
@@ -63,6 +65,14 @@ LDViewMessages.ini.  This file contains messages that get shown to the user, but
 aren't in the application resources.  Please read the instructions at the top of
 that file for instructions on translating it.
 
+Finally, translate install.txt, which contains installation instructions for the
+language DLL.  Note that this file references LDView-EnglishUS.  Make sure to
+replace all occurences of EnglishUS in this file with Latin (continuing with the
+example language name from above).  Also, replace English (United States) with
+your language name.  (Don't use the English translation of your language name
+here; use the language name that your users will see in Windows.)  Also, unless
+you're doing a specific dialect, just use the short language name.  Rename
+install.txt to an appropriate filename for your language.
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
