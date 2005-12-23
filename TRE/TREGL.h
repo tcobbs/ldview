@@ -15,6 +15,11 @@
 #include <GL/glu.h>
 #endif	// __APPLE__
 
+//Solaris
+#if defined (__SVR4) && defined (__sun)
+#define APIENTRY
+#endif
+
 #ifdef WIN32
 #include <GL/wglext.h>
 #else // WIN32
@@ -30,6 +35,11 @@ typedef void (APIENTRY * PFNGLBINDBUFFERARBPROC) (GLenum target, GLuint buffer);
 typedef void (APIENTRY * PFNGLDELETEBUFFERSARBPROC) (GLsizei n, const GLuint *buffers);
 typedef void (APIENTRY * PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);
 typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, int size, const GLvoid *data, GLenum usage);
+
+//Solaris
+#if defined (__SVR4) && defined (__sun)
+typedef GLvoid (APIENTRY * PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
+#endif
 
 #define GL_ARRAY_BUFFER_ARB 0x8892
 #define GL_STATIC_DRAW_ARB 0x88E4
