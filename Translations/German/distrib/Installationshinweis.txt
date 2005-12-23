@@ -1,0 +1,3 @@
+Um diese Sprach-DLL verwenden zu können, müssen Sie die Dateien "LDView-German.dll" und "Hilfe.html" in jenen Ordner kopieren, in den Sie LDView installiert haben.
+
+Wenn die Spracheinstellung ihres Betriebssystems nicht auf Deutsch gesetzt ist, können sie die Datei "LDView-German.reg" verwenden, um LDView zu zwingen "LDView-German.dll" als Sprach-DLL zu laden. Doppelklicken Sie einfach auf "LDView-German.reg" und antworten Sie mit "Ja", wenn Sie gefragt werden, ob die Informationen in LDView-German.reg ihrer Registrierung hinzugefügt werden sollen. Sollten Sie zu einem späteren zeitpunkt LDView auf die voreingestellte Sprache (English) zurücksetzten wollen, brauchen Sie nur auf "LDView-DefaultLanguage.reg" doppelklicken.   
