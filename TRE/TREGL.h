@@ -47,4 +47,8 @@ typedef GLvoid (APIENTRY * PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, GLsizei 
 typedef int GLsizeiptrARB;
 #endif // APPLE
 
+#ifndef GL_VERTEX_ARRAY_RANGE_NV
+#define GL_VERTEX_ARRAY_RANGE_NV 0x851D
+#endif
+
 #endif // WIN32
