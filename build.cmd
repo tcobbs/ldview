@@ -132,4 +132,19 @@ cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC
 
 link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\AppResources.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib
 
+
+cd Translations\German
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.idb  *.res *lib *.dll
+cd ..
+
+rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+
+cl %CFLAGS% /W3 /GX /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
+
+link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\Resources.res
+
+cd ..\..
+
 :End
