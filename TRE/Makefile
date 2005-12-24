@@ -1,6 +1,6 @@
 CC = g++
 RM = rm -f
-RMDIR = rmdir --ignore-fail-on-non-empty
+RMDIR = rm -rf
 AR = ar rcs
 MAKEDEPEND = gcc -MM
 
@@ -29,7 +29,7 @@ OBJS = $(COBJS) $(CCOBJS)
 #CFLAGS = -g $(TESTING) -pg -Wall
 #CFLAGS = -o $(OBJDIR)/$*.o -g $(TESTING) -Wall -D_GNU_SOURCE -D_QT
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -O3 -Wall -D_GNU_SOURCE -D_QT
-INCLUDE = -I../
+INCLUDE = -I../ -I../include
 LIBDIRS =
 #HOSTLIBS = -lxnet
 HOSTLIBS =
