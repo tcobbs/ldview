@@ -20,7 +20,15 @@ char *copyString(const char *string, int pad)
 }
 
 #ifndef __APPLE__
-char *strnstr(const char *s1, const char *s2, size_t n, int skipZero)
+
+char *strnstr(const char *s1, const char *s2, size_t n)
+{
+	return strnstr2(s1, s2, n, 0);
+}
+
+#endif // !__APPLE__
+
+char *strnstr2(const char *s1, const char *s2, size_t n, int skipZero)
 {
 	char* spot;
 	int len2 = strlen(s2);
@@ -35,7 +43,6 @@ char *strnstr(const char *s1, const char *s2, size_t n, int skipZero)
 	}
 	return NULL;
 }
-#endif // !__APPLE__
 
 char *strcasestr(const char *s1, const char *s2) __THROW
 {

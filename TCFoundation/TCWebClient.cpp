@@ -1535,7 +1535,7 @@ char* TCWebClient::getLine(int& length)
 	length = 0;
 	if (readBufferPosition)
 	{
-		if ((lineEnd = strnstr(readBufferPosition, "\r\n", bufferLength, 1)) !=
+		if ((lineEnd = strnstr2(readBufferPosition, "\r\n", bufferLength, 1)) !=
 			NULL)
 		{
 			length = lineEnd - readBufferPosition + 2;
@@ -1632,7 +1632,7 @@ char* TCWebClient::getLine(int& length)
 			debugPrintf(4, "In buffer:\n%s\n", tmpData);
 			data = tmpData;
 			length += bytesRead;
-			if ((lineEnd = strnstr(data, "\r\n", length, 1)) != NULL)
+			if ((lineEnd = strnstr2(data, "\r\n", length, 1)) != NULL)
 			{
 				bufferLength = length;
 				length = lineEnd + 2 - data;

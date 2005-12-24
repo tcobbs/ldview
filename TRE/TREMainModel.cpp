@@ -24,7 +24,7 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 	TREMainModel::sm_studTextures = NULL;
 	if (TREMainModel::sm_studTextureID)
 	{
-		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
+		glDeleteTextures(1, (GLuint *)&TREMainModel::sm_studTextureID);
 	}
 }
 
@@ -1030,7 +1030,7 @@ void TREMainModel::bindStudTexture(void)
 		int i;
 		int count = sm_studTextures->getCount();
 
-		glGenTextures(1, &sm_studTextureID);
+		glGenTextures(1, (GLuint*)&sm_studTextureID);
 		glBindTexture(GL_TEXTURE_2D, sm_studTextureID);
 		for (i = 0; i < count; i++)
 		{
@@ -1185,7 +1185,7 @@ void TREMainModel::openGlWillEnd(void)
 	m_transVertexStore->openGlWillEnd();
 	if (sm_studTextureID)
 	{
-		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
+		glDeleteTextures(1, (GLuint *)&TREMainModel::sm_studTextureID);
 		sm_studTextureID = 0;
 	}
 }
