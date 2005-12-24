@@ -37,7 +37,7 @@ typedef void (APIENTRY * PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);
 typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, int size, const GLvoid *data, GLenum usage);
 
 //Solaris
-#if (defined (__SVR4) && defined (__sun)) || defined (__APPLE__)
+#if (defined (__SVR4) && defined (__sun)) || defined (__APPLE__) || defined (_AIX)
 typedef GLvoid (APIENTRY * PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
 #endif
 

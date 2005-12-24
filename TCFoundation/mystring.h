@@ -4,6 +4,9 @@
 #include <TCFoundation/TCDefines.h>
 
 #include <string.h>
+#ifdef _AIX
+#include <strings.h>
+#endif
 
 TCExport char *copyString(const char *string, int pad = 0);
 
