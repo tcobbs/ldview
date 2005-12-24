@@ -11,9 +11,10 @@
 TCExport char *copyString(const char *string, int pad = 0);
 
 #ifndef __APPLE__
-TCExport char *strnstr(const char *s1, const char *s2, size_t n,
-					   int skipZero = 0);
+TCExport char *strnstr(const char *s1, const char *s2, size_t n);
 #endif // !__APPLE__
+TCExport char *strnstr2(const char *s1, const char *s2, size_t n,
+						int skipZero);
 TCExport char *strncasestr(const char *s1, const char *s2, size_t n, int 
 skipZero = 0);
 TCExport char *strcasestr(const char *s1, const char *s2) __THROW;
@@ -25,9 +26,8 @@ TCExport char **copyStringArray(char** array, int count);
 TCExport void deleteStringArray(char** array, int count);
 TCExport int arrayContainsString(char** array, int count, const char* string);
 TCExport int arrayContainsPrefix(char** array, int count, const char* prefix);
-TCExport char **componentsSeparatedByString(const char* string, const char* 
-separator,
-											  int& count);
+TCExport char **componentsSeparatedByString(const char* string,
+											const char* separator, int& count);
 TCExport char *componentsJoinedByString(char** array, int count, const char* 
 separator);
 TCExport int stringHasPrefix(const char* string, const char* prefix);
