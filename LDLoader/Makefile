@@ -1,6 +1,6 @@
 CC = g++
 RM = rm -f
-RMDIR = rmdir --ignore-fail-on-non-empty
+RMDIR = rm -rf
 AR = ar rcs
 MAKEDEPEND = gcc -MM
 
