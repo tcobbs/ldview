@@ -14,7 +14,7 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png images/LDViewI
 TEMPLATE	=app
 CONFIG	+= qt opengl warn_on release
 DEFINES	+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . ..
+INCLUDEPATH	+= . .. ../include
 exists($(QTDIR)/include/Qt3Support/q3button.h){
 	CONFIG 	+= uic3
 	DEFINES += QT3_SUPPORT
