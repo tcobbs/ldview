@@ -3,7 +3,7 @@ QMAKE = $(QTDIR)/bin/qmake
 
 all: Makefile
 	for DIR in $(DIRECTORIES); do	\
-		cd $$DIR; $(MAKE); cd ../QT;	\
+		cd $$DIR; $(MAKE) -k; cd ../QT;	\
 	done;
 	make
 
