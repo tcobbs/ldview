@@ -1,5 +1,8 @@
 #ifndef __TCPNGIMAGEFORMAT_H__
 #define __TCPNGIMAGEFORMAT_H__
+#ifdef _AIX
+#include <stdlib.h>
+#endif
 
 #include <TCFoundation/TCImageFormat.h>
 
