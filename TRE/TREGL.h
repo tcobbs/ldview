@@ -16,7 +16,7 @@
 #endif	// __APPLE__
 
 //Solaris
-#if defined (__SVR4) && defined (__sun)
+#if (defined (__SVR4) && defined (__sun)) || defined (_AIX)
 #define APIENTRY
 #endif
 
