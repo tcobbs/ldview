@@ -12,12 +12,12 @@ TCExport char *copyString(const char *string, int pad = 0);
 
 #ifndef __APPLE__
 TCExport char *strnstr(const char *s1, const char *s2, size_t n);
+TCExport char *strcasestr(const char *s1, const char *s2) __THROW;
 #endif // !__APPLE__
 TCExport char *strnstr2(const char *s1, const char *s2, size_t n,
 						int skipZero);
 TCExport char *strncasestr(const char *s1, const char *s2, size_t n, int 
 skipZero = 0);
-TCExport char *strcasestr(const char *s1, const char *s2) __THROW;
 
 //int stringHasPrefix(const char *s1, const char *s2);
 

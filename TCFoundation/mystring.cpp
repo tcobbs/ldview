@@ -26,6 +26,22 @@ char *strnstr(const char *s1, const char *s2, size_t n)
 	return strnstr2(s1, s2, n, 0);
 }
 
+char *strcasestr(const char *s1, const char *s2) __THROW
+{
+	char* spot;
+	int len1 = strlen(s1);
+	int len2 = strlen(s2);
+
+	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
+	{
+		if (strncasecmp(spot, s2, len2) == 0)
+		{
+			return spot;
+		}
+	}
+	return NULL;
+}
+
 #endif // !__APPLE__
 
 char *strnstr2(const char *s1, const char *s2, size_t n, int skipZero)
@@ -37,22 +53,6 @@ char *strnstr2(const char *s1, const char *s2, size_t n, int skipZero)
 	     (unsigned)(spot-s1) < n; spot++)
 	{
 		if (strncmp(spot, s2, len2) == 0)
-		{
-			return spot;
-		}
-	}
-	return NULL;
-}
-
-char *strcasestr(const char *s1, const char *s2) __THROW
-{
-	char* spot;
-	int len1 = strlen(s1);
-	int len2 = strlen(s2);
-
-	for (spot = (char*)s1; spot - s1 <= len1 - len2; spot++)
-	{
-		if (strncasecmp(spot, s2, len2) == 0)
 		{
 			return spot;
 		}

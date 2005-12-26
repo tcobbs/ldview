@@ -10,14 +10,14 @@ float TREFacing::glMatrix[16] =
 	(float)0.0, (float)0.0, (float)1.0, (float)0.0,
 	(float)0.0, (float)0.0, (float)0.0, (float)1.0
 };
-float emptyMatrix[] =
+static float emptyMatrix[] =
 {
 	(float)0.0, (float)0.0, (float)0.0, (float)0.0,
 	(float)0.0, (float)0.0, (float)0.0, (float)0.0,
 	(float)0.0, (float)0.0, (float)0.0, (float)0.0,
 	(float)0.0, (float)0.0, (float)0.0, (float)0.0
 };
-float identityMatrix[] =
+static float identityMatrix[] =
 {
 	(float)1.0, (float)0.0, (float)0.0, (float)0.0,
 	(float)0.0, (float)1.0, (float)0.0, (float)0.0,
