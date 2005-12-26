@@ -41,8 +41,8 @@ bool LDLCommentLine::parse(void)
 			char *newName = m_processedLine + strlen("0 ~moved to ");
 			char partName[1024];
 			const char *filename = m_parentModel->getFilename();
-			char *nameSpot = strrchr(filename, '/');
-			char *tmp = strrchr(filename, '\\');
+			const char *nameSpot = strrchr(filename, '/');
+			const char *tmp = strrchr(filename, '\\');
 
 			if (tmp > nameSpot)
 			{
@@ -52,7 +52,7 @@ bool LDLCommentLine::parse(void)
 			tmp = strchr(partName, '.');
 			if (tmp)
 			{
-				*tmp = 0;
+				partName[tmp - partName] = 0;
 			}
 			setWarning(LDLEMovedTo, "Part %s has been renamed to %s.", partName,
 				newName);
