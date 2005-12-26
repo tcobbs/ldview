@@ -141,7 +141,7 @@ cd ..
 
 rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
 
-cl %CFLAGS% /W3 /GX /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
+cl %CFLAGS% /GX /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
 
 link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\Resources.res
 
