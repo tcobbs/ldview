@@ -163,19 +163,19 @@ BOOL CUIOGLWindow::setupRenderingContext(void)
 	return rval;
 }
 
-void CUIOGLWindow::drawLight(GLenum light, float x, float y, float z)
+void CUIOGLWindow::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
 {
-	float position[4];
-	float direction[4];
+	GLfloat position[4];
+	GLfloat direction[4];
 //	float fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-	position[0] = x;
-	position[1] = y;
-	position[2] = z;
+	position[0] = (GLfloat)x;
+	position[1] = (GLfloat)y;
+	position[2] = (GLfloat)z;
 	position[3] = 0.0f;
-	direction[0] = -x;
-	direction[1] = -y;
-	direction[2] = -z;
+	direction[0] = (GLfloat)-x;
+	direction[1] = (GLfloat)-y;
+	direction[2] = (GLfloat)-z;
 	direction[3] = 0.0f;
 	glLightfv(light, GL_POSITION, position);
 	glLightfv(light, GL_SPOT_DIRECTION, direction);

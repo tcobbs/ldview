@@ -45,7 +45,7 @@ public:
 	virtual void forgetLine(void) { delete m_line; m_line = NULL; }
 	virtual LDLFileLineArray *getReplacementLines(void);
 	virtual bool isXZPlanar(void) const;
-	virtual bool isXZPlanar(const float *matrix) const;
+	virtual bool isXZPlanar(const TCFloat *matrix) const;
 
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
 		int lineNumber);

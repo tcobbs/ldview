@@ -133,7 +133,7 @@ void TREModel::dealloc(void)
 	m_invertedModel = NULL;
 	for (i = 0; i <= TREMLast; i++)
 	{
-		TCULong listID = m_listIDs[i];
+		GLuint listID = m_listIDs[i];
 
 		if (listID)
 		{
@@ -284,7 +284,7 @@ void TREModel::setName(const char *name)
 
 void TREModel::compile(TREMSection section, bool colored, bool nonUniform)
 {
-	int *listIDs;
+	GLuint *listIDs;
 
 	if (colored)
 	{
@@ -311,7 +311,7 @@ void TREModel::compile(TREMSection section, bool colored, bool nonUniform)
 		if (m_mainModel->getCompileAllFlag() ||
 			(m_flags.part && m_mainModel->getCompilePartsFlag()))
 		{
-			int listID = glGenLists(1);
+			GLuint listID = glGenLists(1);
 
 			glNewList(listID, GL_COMPILE);
 			draw(section, colored, false, nonUniform);
@@ -374,7 +374,7 @@ void TREModel::checkGLError(char *)
 void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 					bool nonUniform)
 {
-	TCULong listID;
+	GLuint listID;
 
 	if (colored)
 	{
@@ -977,7 +977,7 @@ void TREModel::addBFCTriangleFan(TCULong color, TCVector *vertices,
 		flat);
 }
 
-TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model, bool invert)
+TRESubModel *TREModel::addSubModel(TCFloat *matrix, TREModel *model, bool invert)
 {
 	TRESubModel *subModel = new TRESubModel;
 
@@ -994,7 +994,7 @@ TRESubModel *TREModel::addSubModel(float *matrix, TREModel *model, bool invert)
 }
 
 TRESubModel *TREModel::addSubModel(TCULong color, TCULong edgeColor,
-								   float *matrix, TREModel *model, bool invert)
+								   TCFloat *matrix, TREModel *model, bool invert)
 {
 	TRESubModel *subModel = addSubModel(matrix, model, invert);
 
@@ -1094,7 +1094,7 @@ void TREModel::applyShapeNormals(TRENormalInfoArray *normalInfos)
 		// leeway.
 		if (normal.dot(vertexNormal) > 0.906307787f)
 		{
-			memcpy(vertex.v, (const float *)normal, 3 * sizeof(float));
+			memcpy(vertex.v, (const TCFloat *)normal, 3 * sizeof(TCFloat));
 		}
 	}
 }
@@ -1424,7 +1424,7 @@ void TREModel::flatten(void)
 	}
 }
 
-void TREModel::flatten(TREModel *model, const float *matrix, TCULong color,
+void TREModel::flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 					   bool colorSet, TCULong edgeColor, bool edgeColorSet,
 					   bool includeShapes)
 {
@@ -1495,7 +1495,7 @@ void TREModel::flatten(TREModel *model, const float *matrix, TCULong color,
 	{
 		int i;
 		int count = subModels->getCount();
-		float newMatrix[16];
+		TCFloat newMatrix[16];
 
 		for (i = 0; i < count; i++)
 		{
@@ -1528,7 +1528,7 @@ void TREModel::flattenShapes(TREVertexArray *dstVertices,
 							 TCULongArray *srcColors,
 							 TCULongArray *srcIndices,
 							 TCULongArray *srcCPIndices,
-							 float *matrix,
+							 TCFloat *matrix,
 							 TCULong color,
 							 bool colorSet)
 {
@@ -1592,7 +1592,7 @@ void TREModel::flattenStrips(TREVertexArray *dstVertices,
 							 TREVertexArray *srcNormals,
 							 TCULongArray *srcColors,
 							 TCULongArray *srcIndices,
-							 TCULongArray *srcStripCounts, float *matrix,
+							 TCULongArray *srcStripCounts, TCFloat *matrix,
 							 TCULong color, bool colorSet)
 {
 	int i, j;
@@ -1633,7 +1633,7 @@ void TREModel::flattenStrips(TREVertexArray *dstVertices,
 }
 
 void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
-							 float *matrix, TCULong color, bool colorSet)
+							 TCFloat *matrix, TCULong color, bool colorSet)
 {
 	TREVertexStore *srcVertexStore = NULL;
 	TREVertexStore *dstVertexStore = NULL;
@@ -1716,8 +1716,8 @@ void TREModel::setGlNormalize(bool value)
 }
 */
 
-void TREModel::addSlopedCylinder(const TCVector& center, float radius,
-								 float height, int numSegments,
+void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
+								 TCFloat height, int numSegments,
 								 int usedSegments, bool bfc)
 {
 	int vertexCount;
@@ -1736,9 +1736,9 @@ void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 	normals = new TCVector[vertexCount];
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float angle;
+		TCFloat angle;
 
-		angle = 2.0f * (float)M_PI / numSegments * i;
+		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 		setCirclePoint(angle, radius, center, points[i * 2]);
 		top[1] =
 			center.get(1) + height - ((height / radius) * points[i * 2][0]);
@@ -1771,8 +1771,8 @@ void TREModel::addSlopedCylinder(const TCVector& center, float radius,
 	delete[] normals;
 }
 
-void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
-								  float height, int numSegments,
+void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
+								  TCFloat height, int numSegments,
 								  int usedSegments, bool bfc)
 {
 	int vertexCount;
@@ -1791,9 +1791,9 @@ void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
 	normals = new TCVector[vertexCount];
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float angle;
+		TCFloat angle;
 
-		angle = 2.0f * (float)M_PI / numSegments * i + (float)M_PI / 2.0f;
+		angle = 2.0f * (TCFloat)M_PI / numSegments * i + (TCFloat)M_PI / 2.0f;
 		setCirclePoint(angle, radius, center, points[i * 2]);
 		top[1] = myabs(points[i * 2][0]);
 		setCirclePoint(angle, radius, top, points[i * 2 + 1]);
@@ -1825,13 +1825,13 @@ void TREModel::addSlopedCylinder2(const TCVector& center, float radius,
 	delete[] normals;
 }
 
-void TREModel::addCylinder(const TCVector& center, float radius, float height,
+void TREModel::addCylinder(const TCVector& center, TCFloat radius, TCFloat height,
 						   int numSegments, int usedSegments, bool bfc)
 {
 	addOpenCone(center, radius, radius, height, numSegments, usedSegments, bfc);
 }
 
-void TREModel::addStudDisc(const TCVector &center, float radius,
+void TREModel::addStudDisc(const TCVector &center, TCFloat radius,
 						   int numSegments, int usedSegments, bool bfc)
 {
 	addDisc(center, radius, numSegments, usedSegments, bfc,
@@ -1848,12 +1848,12 @@ void TREModel::genStudTextureCoords(TCVector *textureCoords, int vertexCount)
 	textureCoords[0] = TCVector(0.5f, 0.5f, 0.0f);
 	for (i = 1; i < vertexCount; i++)
 	{
-		float x, z;
-		float angle;
+		TCFloat x, z;
+		TCFloat angle;
 
-		angle = 2.0f * (float)M_PI / numSegments * (i - 1);
-		x = (float)cos(angle) * 0.5f;
-		z = (float)sin(angle) * 0.5f;
+		angle = 2.0f * (TCFloat)M_PI / numSegments * (i - 1);
+		x = (TCFloat)cos(angle) * 0.5f;
+		z = (TCFloat)sin(angle) * 0.5f;
 		p1[0] = z;
 		p1[1] = x;
 		p1 += offset;
@@ -1862,7 +1862,7 @@ void TREModel::genStudTextureCoords(TCVector *textureCoords, int vertexCount)
 	}
 }
 
-void TREModel::addChrd(const TCVector &center, float radius, int numSegments,
+void TREModel::addChrd(const TCVector &center, TCFloat radius, int numSegments,
 					   int usedSegments, bool bfc)
 {
 	int vertexCount;
@@ -1882,9 +1882,9 @@ void TREModel::addChrd(const TCVector &center, float radius, int numSegments,
 //	normals[0] = normal;
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float angle;
+		TCFloat angle;
 
-		angle = 2.0f * (float)M_PI / numSegments * i;
+		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 		setCirclePoint(angle, radius, center, points[i]);
 		normals[i] = normal;
 	}
@@ -1900,7 +1900,7 @@ void TREModel::addChrd(const TCVector &center, float radius, int numSegments,
 	delete[] normals;
 }
 
-void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
+void TREModel::addDisc(const TCVector &center, TCFloat radius, int numSegments,
 					   int usedSegments, bool bfc, bool stud)
 {
 	int vertexCount;
@@ -1921,9 +1921,9 @@ void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 	normals[0] = normal;
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float angle;
+		TCFloat angle;
 
-		angle = 2.0f * (float)M_PI / numSegments * i;
+		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 		setCirclePoint(angle, radius, center, points[i + 1]);
 		normals[i + 1] = normal;
 	}
@@ -1945,7 +1945,7 @@ void TREModel::addDisc(const TCVector &center, float radius, int numSegments,
 	delete[] textureCoords;
 }
 
-void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
+void TREModel::addNotDisc(const TCVector &center, TCFloat radius, int numSegments,
 						  int usedSegments, bool bfc)
 {
 	int quarter = numSegments / 4;
@@ -1965,8 +1965,8 @@ void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
 		TCVector *normals;
 		int vertexCount;
 		int quarterSegments = quarter;
-		float zMult = 1.0f;
-		float xMult = 1.0f;
+		TCFloat zMult = 1.0f;
+		TCFloat xMult = 1.0f;
 
 		if (i >= 2)
 		{
@@ -1991,13 +1991,13 @@ void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
 		normals[0] = normal;
 		for (j = 0; j <= quarterSegments; j++)
 		{
-			float x, z;
-			float angle;
+			TCFloat x, z;
+			TCFloat angle;
 
-			angle = 2.0f * (float)M_PI / numSegments *
+			angle = 2.0f * (TCFloat)M_PI / numSegments *
 				(j + i * quarterSegments);
-			x = radius * (float)cos(angle);
-			z = radius * (float)sin(angle);
+			x = radius * (TCFloat)cos(angle);
+			z = radius * (TCFloat)sin(angle);
 			p1[0] = center.get(0) + x;
 			p1[2] = center.get(2) + z;
 			p1[1] = center.get(1);
@@ -2017,19 +2017,19 @@ void TREModel::addNotDisc(const TCVector &center, float radius, int numSegments,
 	}
 }
 
-void TREModel::setCirclePoint(float angle, float radius, const TCVector& center,
+void TREModel::setCirclePoint(TCFloat angle, TCFloat radius, const TCVector& center,
 							  TCVector& point)
 {
-	float x1, z1;
+	TCFloat x1, z1;
 
-	x1 = radius * (float)cos(angle);
-	z1 = radius * (float)sin(angle);
+	x1 = radius * (TCFloat)cos(angle);
+	z1 = radius * (TCFloat)sin(angle);
 	point[0] = center.get(0) + x1;
 	point[1] = center.get(1);
 	point[2] = center.get(2) + z1;
 }
 
-void TREModel::addCone(const TCVector &center, float radius, float height,
+void TREModel::addCone(const TCVector &center, TCFloat radius, TCFloat height,
 					   int numSegments, int usedSegments, bool bfc)
 {
 	int i;
@@ -2057,12 +2057,12 @@ void TREModel::addCone(const TCVector &center, float radius, float height,
 	points[2] = top;
 	for (i = 0; i < usedSegments; i++)
 	{
-		float angle0, angle1, angle2, angle3;
+		TCFloat angle0, angle1, angle2, angle3;
 
-		angle0 = 2.0f * (float)M_PI / numSegments * (i - 1);
-		angle1 = 2.0f * (float)M_PI / numSegments * i;
-		angle2 = 2.0f * (float)M_PI / numSegments * (i + 1);
-		angle3 = 2.0f * (float)M_PI / numSegments * (i + 2);
+		angle0 = 2.0f * (TCFloat)M_PI / numSegments * (i - 1);
+		angle1 = 2.0f * (TCFloat)M_PI / numSegments * i;
+		angle2 = 2.0f * (TCFloat)M_PI / numSegments * (i + 1);
+		angle3 = 2.0f * (TCFloat)M_PI / numSegments * (i + 2);
 		setCirclePoint(angle1, radius, center, p1);
 		setCirclePoint(angle2, radius, center, p2);
 		points[0] = p2;
@@ -2154,8 +2154,8 @@ TCVector TREModel::calcIntersection(int i, int j, int num,
 		zeroXPoints[0] - zeroYPoints[0] - zeroZPoints[0]) / 9.0f;
 }
 
-void TREModel::addTorusIO(bool inner, const TCVector& center, float yRadius,
-						  float xzRadius, int numSegments, int usedSegments,
+void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
+						  TCFloat xzRadius, int numSegments, int usedSegments,
 						  bool bfc)
 {
 	int i, j;
@@ -2173,24 +2173,24 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, float yRadius,
 	stripNormals = new TCVector[stripSize];
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float xzAngle;	// Angle in the xz plane
+		TCFloat xzAngle;	// Angle in the xz plane
 
-		xzAngle = 2.0f * (float)M_PI / numSegments * i;
+		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * i;
 		for (j = 0; j <= ySegments; j++)
 		{
-			float yAngle; // Angle above the xz plane
-			float currentRadius;
+			TCFloat yAngle; // Angle above the xz plane
+			TCFloat currentRadius;
 
 			if (inner)
 			{
-				yAngle = (float)M_PI - 2.0f * (float)M_PI / numSegments * j;
+				yAngle = (TCFloat)M_PI - 2.0f * (TCFloat)M_PI / numSegments * j;
 			}
 			else
 			{
-				yAngle = 2.0f * (float)M_PI / numSegments * j;
+				yAngle = 2.0f * (TCFloat)M_PI / numSegments * j;
 			}
-			top[1] = xzRadius * (float)sin(yAngle) + center.get(1);
-			currentRadius = xzRadius * (float)cos(yAngle) + yRadius;
+			top[1] = xzRadius * (TCFloat)sin(yAngle) + center.get(1);
+			currentRadius = xzRadius * (TCFloat)cos(yAngle) + yRadius;
 			setCirclePoint(xzAngle, currentRadius, top, p1);
 			points[i * (ySegments + 1) + j] = p1;
 		}
@@ -2198,7 +2198,7 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, float yRadius,
 	top = center;
 	for (i = 0; i < usedSegments; i++)
 	{
-		float xzAngle;	// Angle in the xz plane
+		TCFloat xzAngle;	// Angle in the xz plane
 		int ofs1 = 1;
 		int ofs2 = 0;
 
@@ -2208,9 +2208,9 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, float yRadius,
 			ofs2 = 1;
 		}
 
-		xzAngle = 2.0f * (float)M_PI / numSegments * (i + ofs2);
+		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * (i + ofs2);
 		setCirclePoint(xzAngle, yRadius, top, p1);
-		xzAngle = 2.0f * (float)M_PI / numSegments * (i + ofs1);
+		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * (i + ofs1);
 		setCirclePoint(xzAngle, yRadius, top, p2);
 		spot = 0;
 		for (j = 0; j <= ySegments; j++)
@@ -2242,8 +2242,8 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, float yRadius,
 }
 
 /*
-void TREModel::addTorusO(const TCVector& center, float yRadius,
-						 float xzRadius, int numSegments, int usedSegments,
+void TREModel::addTorusO(const TCVector& center, TCFloat yRadius,
+						 TCFloat xzRadius, int numSegments, int usedSegments,
 						 bool bfc)
 {
 	int i, j;
@@ -2261,17 +2261,17 @@ void TREModel::addTorusO(const TCVector& center, float yRadius,
 	stripNormals = new TCVector[stripSize];
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float xzAngle;	// Angle in the xz plane
+		TCFloat xzAngle;	// Angle in the xz plane
 
-		xzAngle = 2.0f * (float)M_PI / numSegments * i;
+		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * i;
 		for (j = 0; j <= ySegments; j++)
 		{
-			float yAngle; // Angle above the xz plane
-			float currentRadius;
+			TCFloat yAngle; // Angle above the xz plane
+			TCFloat currentRadius;
 
-			yAngle = 2.0f * (float)M_PI / numSegments * j;
-			top[1] = xzRadius * (float)sin(yAngle) + center.get(1);
-			currentRadius = xzRadius * (float)cos(yAngle) + yRadius;
+			yAngle = 2.0f * (TCFloat)M_PI / numSegments * j;
+			top[1] = xzRadius * (TCFloat)sin(yAngle) + center.get(1);
+			currentRadius = xzRadius * (TCFloat)cos(yAngle) + yRadius;
 			setCirclePoint(xzAngle, currentRadius, top, p1);
 			points[i * (ySegments + 1) + j] = p1;
 		}
@@ -2279,11 +2279,11 @@ void TREModel::addTorusO(const TCVector& center, float yRadius,
 	top = center;
 	for (i = 0; i < usedSegments; i++)
 	{
-		float xzAngle;	// Angle in the xz plane
+		TCFloat xzAngle;	// Angle in the xz plane
 
-		xzAngle = 2.0f * (float)M_PI / numSegments * i;
+		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * i;
 		setCirclePoint(xzAngle, yRadius, top, p1);
-		xzAngle = 2.0f * (float)M_PI / numSegments * (i + 1);
+		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * (i + 1);
 		setCirclePoint(xzAngle, yRadius, top, p2);
 		spot = 0;
 		for (j = 0; j <= ySegments; j++)
@@ -2317,8 +2317,8 @@ void TREModel::addTorusO(const TCVector& center, float yRadius,
 
 void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 									  int numSegments, int usedSegments,
-									  const TCVector& center, float radius,
-									  float height)
+									  const TCVector& center, TCFloat radius,
+									  TCFloat height)
 {
 	int i, j;
 	TCVector p1, p2, p3, p4;
@@ -2410,7 +2410,7 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 			}
 			if (j == ySegments)
 			{
-				float angle = 2.0f * (float)M_PI / numSegments * i;
+				TCFloat angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 
 				setCirclePoint(angle, radius, top, p4);
 				p4[1] = height;
@@ -2424,7 +2424,7 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 	}
 }
 
-void TREModel::addEighthSphere(const TCVector& center, float radius,
+void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 							   int numSegments, bool bfc)
 {
 	TCVector* zeroXPoints;
@@ -2446,9 +2446,9 @@ void TREModel::addEighthSphere(const TCVector& center, float radius,
 	zeroZPoints = new TCVector[usedSegments + 1];
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float angle = 2.0f * (float)M_PI / numSegments * i;
+		TCFloat angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 
-		zeroYPoints[i][0] = 1.0f / ((float)tan(angle) + 1);
+		zeroYPoints[i][0] = 1.0f / ((TCFloat)tan(angle) + 1);
 		zeroYPoints[i][1] = 0.0f;
 		zeroYPoints[i][2] = 1.0f - zeroYPoints[i][0];
 		zeroZPoints[i] = zeroYPoints[i].rearrange(2, 0, 1);
@@ -2609,8 +2609,8 @@ int TREModel::sphereIndex(int i, int j, int usedSegments)
 	return retVal + i;
 }
 
-void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
-						   float height, int numSegments, int usedSegments,
+void TREModel::addOpenCone(const TCVector& center, TCFloat radius1, TCFloat radius2,
+						   TCFloat height, int numSegments, int usedSegments,
 						   bool bfc)
 {
 	if (usedSegments == -1)
@@ -2635,7 +2635,7 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 		TCVector normal = TCVector(0.0f, -1.0f, 0.0f);
 		TCVector topNormalPoint;
 		TCVector normalPoint;
-		float normalAdjust = 1.0f;
+		TCFloat normalAdjust = 1.0f;
 
 		if (height < 0.0f)
 		{
@@ -2651,9 +2651,9 @@ void TREModel::addOpenCone(const TCVector& center, float radius1, float radius2,
 		}
 		for (i = 0; i <= usedSegments; i++)
 		{
-			float angle;
+			TCFloat angle;
 
-			angle = 2.0f * (float)M_PI / numSegments * i;
+			angle = 2.0f * (TCFloat)M_PI / numSegments * i;
 			setCirclePoint(angle, radius1, center, points[i * 2]);
 			setCirclePoint(angle, radius2, top, points[i * 2 + 1]);
 			if (height == 0.0f)
@@ -2693,14 +2693,14 @@ void TREModel::calcTangentControlPoint(TCVector &controlPoint, int index,
 	// The next control point needs to form a tangent with the circle from the
 	// last point on the circle.  On input, controlPoint starts as the last
 	// point on the circle.
-	float angle;
+	TCFloat angle;
 
 	// First, calculate the angle for the last point on the circle.
-	angle = 2.0f * (float)M_PI / numSegments * index;
+	angle = 2.0f * (TCFloat)M_PI / numSegments * index;
 	// Next, add 90 degrees to that to get the tangent angle
-	angle += (float)deg2rad(90);
-	controlPoint[0] += (float)cos(angle);
-	controlPoint[2] += (float)sin(angle);
+	angle += (TCFloat)deg2rad(90);
+	controlPoint[0] += (TCFloat)cos(angle);
+	controlPoint[2] += (TCFloat)sin(angle);
 }
 
 void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
@@ -2796,7 +2796,7 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 	}
 }
 
-void TREModel::addCircularEdge(const TCVector& center, float radius,
+void TREModel::addCircularEdge(const TCVector& center, TCFloat radius,
 							   int numSegments, int usedSegments)
 {
 	int i;
@@ -2811,12 +2811,12 @@ void TREModel::addCircularEdge(const TCVector& center, float radius,
 	allPoints = new TCVector[usedSegments + 1];
 	for (i = 0; i <= usedSegments; i++)
 	{
-		float x, z;
-		float angle;
+		TCFloat x, z;
+		TCFloat angle;
 
-		angle = 2.0f * (float)M_PI / numSegments * i;
-		x = radius * (float)cos(angle);
-		z = radius * (float)sin(angle);
+		angle = 2.0f * (TCFloat)M_PI / numSegments * i;
+		x = radius * (TCFloat)cos(angle);
+		z = radius * (TCFloat)sin(angle);
 		p1[0] = center.get(0) + x;
 		p1[2] = center.get(2) + z;
 		p1[1] = center.get(1);
@@ -2831,7 +2831,7 @@ void TREModel::addCircularEdge(const TCVector& center, float radius,
 	delete[] allPoints;
 }
 
-void TREModel::addRing(const TCVector& center, float radius1, float radius2,
+void TREModel::addRing(const TCVector& center, TCFloat radius1, TCFloat radius2,
 					   int numSegments, int usedSegments, bool bfc)
 {
 	addOpenCone(center, radius1, radius2, 0.0f, numSegments, usedSegments,
@@ -2857,7 +2857,7 @@ void TREModel::calculateBoundingBox(void)
 
 void TREModel::scanPoints(TCObject *scanner,
 						  TREScanPointCallback scanPointCallback,
-						  const float *matrix)
+						  const TCFloat *matrix)
 {
 	int i;
 
@@ -2887,7 +2887,7 @@ void TREModel::scanPoints(TCObject *scanner,
 	}
 }
 
-void TREModel::unshrinkNormals(const float *matrix, const float *unshrinkMatrix)
+void TREModel::unshrinkNormals(const TCFloat *matrix, const TCFloat *unshrinkMatrix)
 {
 	int i;
 
@@ -2973,7 +2973,7 @@ void TREModel::scanBoundingBoxPoint(const TCVector &point)
 // all parts get flattenned, and the flatenning process re-normalizes the
 // normals to be unit lenght, everything is fine.  If it ever becomes desirable
 // to allow parts not to be flattened, things will get more complicated.
-void TREModel::unshrinkNormals(const float *scaleMatrix)
+void TREModel::unshrinkNormals(const TCFloat *scaleMatrix)
 {
 	// If the same part is referenced twice in a model, we'll get here twice.
 	// We only want to adjust the normals once, or we'll be in trouble, so
@@ -3123,7 +3123,7 @@ void TREModel::uncompile(void)
 
 	for (i = 0; i <= TREMLast; i++)
 	{
-		TCULong listID = m_listIDs[i];
+		GLuint listID = m_listIDs[i];
 
 		if (listID)
 		{
@@ -3170,7 +3170,7 @@ void TREModel::cleanupTransparent(TREMSection section)
 }
 
 void TREModel::transferColoredTransparent(TREMSection section,
-										  const float *matrix)
+										  const TCFloat *matrix)
 {
 	TREColoredShapeGroup *shapeGroup = m_coloredShapes[section];
 
@@ -3191,7 +3191,7 @@ void TREModel::transferColoredTransparent(TREMSection section,
 }
 
 void TREModel::transferTransparent(TCULong color, TREMSection section,
-								   const float *matrix)
+								   const TCFloat *matrix)
 {
 	TREShapeGroup *shapeGroup = m_shapes[section];
 
@@ -3224,7 +3224,7 @@ void TREModel::flattenNonUniform(void)
 	{
 		int i;
 		int count = m_subModels->getCount();
-		float determinant;
+		TCFloat determinant;
 
 		for (i = count - 1; i >= 0; i--)
 		{

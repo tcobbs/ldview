@@ -10,8 +10,8 @@ class TREColoredShapeGroup;
 class TRETransShapeGroup;
 class TCImage;
 
-extern const float POLYGON_OFFSET_FACTOR;
-extern const float POLYGON_OFFSET_UNITS;
+extern const GLfloat POLYGON_OFFSET_FACTOR;
+extern const GLfloat POLYGON_OFFSET_UNITS;
 
 class TREMainModel : public TREModel
 {
@@ -149,14 +149,14 @@ public:
 	}
 	void setCutawayDrawFlag(bool value) { m_mainFlags.cutawayDraw = value; }
 	bool getCutawayDrawFlag(void) { return m_mainFlags.cutawayDraw != false; }
-	void setEdgeLineWidth(float value) { m_edgeLineWidth = value; }
-	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
+	void setEdgeLineWidth(GLfloat value) { m_edgeLineWidth = value; }
+	TCFloat getEdgeLineWidth(void) { return m_edgeLineWidth; }
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
 	int getStudTextureFilter(void) { return m_studTextureFilter; }
 	virtual bool getCompiled(void) { return m_mainFlags.compiled != false; }
 	virtual bool getCompiling(void) { return m_mainFlags.compiling != false; }
-	virtual float getMaxRadiusSquared(const TCVector &center);
-	virtual float getMaxRadius(const TCVector &center);
+	virtual TCFloat getMaxRadiusSquared(const TCVector &center);
+	virtual TCFloat getMaxRadius(const TCVector &center);
 	TREVertexStore *getColoredVertexStore(void)
 	{
 		return m_coloredVertexStore;
@@ -213,13 +213,13 @@ protected:
 	TREVertexStore *m_transVertexStore;
 	TCULong m_color;
 	TCULong m_edgeColor;
-	float m_maxRadiusSquared;
+	TCFloat m_maxRadiusSquared;
 	TCVector m_center;
-	float m_edgeLineWidth;
+	GLfloat m_edgeLineWidth;
 	bool m_abort;	// Easier not to be a bit field.  A pointer to it is passed
 					// into other functions, and that doesn't work with a bit
 					// field.
-	int m_studTextureFilter;
+	GLint m_studTextureFilter;
 	struct
 	{
 		// The following are temporal
@@ -257,7 +257,7 @@ protected:
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;
-	static unsigned sm_studTextureID;
+	static GLuint sm_studTextureID;
 	static class TREMainModelCleanup
 	{
 	public:

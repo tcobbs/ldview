@@ -198,14 +198,14 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 		treSubModel->setNonUniformFlag(modelLine->getNonUniformFlag());
 		if (parentModel->hasSpecular(colorNumber))
 		{
-			float specular[4];
+			GLfloat specular[4];
 
 			parentModel->getSpecular(colorNumber, specular);
 			treSubModel->setSpecular(specular);
 		}
 		if (parentModel->hasShininess(colorNumber))
 		{
-			float shininess;
+			GLfloat shininess;
 
 			parentModel->getShininess(colorNumber, shininess);
 			treSubModel->setShininess(shininess);
@@ -265,7 +265,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 	}
 }
 
-float LDModelParser::startingFraction(const char *filename)
+TCFloat LDModelParser::startingFraction(const char *filename)
 {
 	int top;
 	int bottom;
@@ -277,7 +277,7 @@ float LDModelParser::startingFraction(const char *filename)
 	}
 	sscanf(filename, "%d", &top);
 	sscanf(filename + 2, "%d", &bottom);
-	return (float)top / (float)bottom;
+	return (TCFloat)top / (TCFloat)bottom;
 }
 
 bool LDModelParser::startsWithFraction(const char *filename)
@@ -678,7 +678,7 @@ bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
 	return true;
 }
 
-float LDModelParser::getTorusFraction(int size)
+TCFloat LDModelParser::getTorusFraction(int size)
 {
 	int i;
 
@@ -686,10 +686,10 @@ float LDModelParser::getTorusFraction(int size)
 	{
 		if (size == i + i * 10 + i * 100 + i * 1000)
 		{
-			return (float)i / 9.0f;
+			return (TCFloat)i / 9.0f;
 		}
 	}
-	return (float)size / 10000.0f;
+	return (TCFloat)size / 10000.0f;
 }
 
 bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
@@ -697,7 +697,7 @@ bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
 	int numSegments;
 	int size;
 	const char *modelName = treModel->getName();
-	float fraction;
+	TCFloat fraction;
 	int offset = 0;
 
 	if (is48)
@@ -706,7 +706,7 @@ bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
 	}
 	sscanf(modelName + 1 + offset, "%d", &numSegments);
 	sscanf(modelName + 4 + offset, "%d", &size);
-	fraction = (float)numSegments / 16.0f;
+	fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
 	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
@@ -729,7 +729,7 @@ bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
 	int numSegments;
 	int size;
 	const char *modelName = treModel->getName();
-	float fraction;
+	TCFloat fraction;
 	int offset = 0;
 
 	if (is48)
@@ -738,7 +738,7 @@ bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
 	}
 	sscanf(modelName + 1 + offset, "%d", &numSegments);
 	sscanf(modelName + 4 + offset, "%d", &size);
-	fraction = (float)numSegments / 16.0f;
+	fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
 	treModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
@@ -756,7 +756,7 @@ bool LDModelParser::substituteEighthSphere(TREModel *treModel, bool bfc,
 	return true;
 }
 
-bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
+bool LDModelParser::substituteCylinder(TREModel *treModel, TCFloat fraction,
 									   bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
@@ -766,7 +766,7 @@ bool LDModelParser::substituteCylinder(TREModel *treModel, float fraction,
 	return true;
 }
 
-bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction,
+bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, TCFloat fraction,
 											 bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
@@ -777,7 +777,7 @@ bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, float fraction,
 }
 
 bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
-											  float fraction, bool bfc,
+											  TCFloat fraction, bool bfc,
 											  bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
@@ -787,7 +787,7 @@ bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
 	return true;
 }
 
-bool LDModelParser::substituteChrd(TREModel *treModel, float fraction, bool bfc,
+bool LDModelParser::substituteChrd(TREModel *treModel, TCFloat fraction, bool bfc,
 								   bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
@@ -797,7 +797,7 @@ bool LDModelParser::substituteChrd(TREModel *treModel, float fraction, bool bfc,
 	return true;
 }
 
-bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc,
+bool LDModelParser::substituteDisc(TREModel *treModel, TCFloat fraction, bool bfc,
 								   bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
@@ -807,7 +807,7 @@ bool LDModelParser::substituteDisc(TREModel *treModel, float fraction, bool bfc,
 	return true;
 }
 
-bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction,
+bool LDModelParser::substituteNotDisc(TREModel *treModel, TCFloat fraction,
 									  bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
@@ -817,7 +817,7 @@ bool LDModelParser::substituteNotDisc(TREModel *treModel, float fraction,
 	return true;
 }
 
-bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction,
+bool LDModelParser::substituteCircularEdge(TREModel *treModel, TCFloat fraction,
 										   bool is48)
 {
 	if (getEdgeLinesFlag())
@@ -830,34 +830,34 @@ bool LDModelParser::substituteCircularEdge(TREModel *treModel, float fraction,
 	return true;
 }
 
-bool LDModelParser::substituteCone(TREModel *treModel, float fraction, int size,
+bool LDModelParser::substituteCone(TREModel *treModel, TCFloat fraction, int size,
 								   bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (float)size + 1.0f,
-		(float)size, 1.0f, numSegments,
+	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (TCFloat)size + 1.0f,
+		(TCFloat)size, 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteRing(TREModel *treModel, float fraction, int size,
+bool LDModelParser::substituteRing(TREModel *treModel, TCFloat fraction, int size,
 								   bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (float)size,
-		(float)size + 1.0f, numSegments,
+	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (TCFloat)size,
+		(TCFloat)size + 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-int LDModelParser::getUsedCircleSegments(int numSegments, float fraction)
+int LDModelParser::getUsedCircleSegments(int numSegments, TCFloat fraction)
 {
 	return (int)(numSegments * fraction + 0.000001);
 }
 
-int LDModelParser::getNumCircleSegments(float fraction, bool is48)
+int LDModelParser::getNumCircleSegments(TCFloat fraction, bool is48)
 {
 	int retValue = m_curveQuality * LO_NUM_SEGMENTS;
 
@@ -870,7 +870,7 @@ int LDModelParser::getNumCircleSegments(float fraction, bool is48)
 		int i;
 		
 		for (i = m_curveQuality; !fEq(fraction * retValue,
-			(float)getUsedCircleSegments(retValue, fraction)) && i < 12; i++)
+			(TCFloat)getUsedCircleSegments(retValue, fraction)) && i < 12; i++)
 		{
 			int newValue = (i + 1) * LO_NUM_SEGMENTS;
 
@@ -1264,7 +1264,7 @@ void LDModelParser::parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
 	}
 }
 
-void LDModelParser::setSeamWidth(float seamWidth)
+void LDModelParser::setSeamWidth(TCFloat seamWidth)
 {
 	m_seamWidth = seamWidth;
 	if (m_seamWidth)
@@ -1277,7 +1277,7 @@ void LDModelParser::setSeamWidth(float seamWidth)
 	}
 }
 
-float LDModelParser::getSeamWidth(void)
+TCFloat LDModelParser::getSeamWidth(void)
 {
 	if (getSeamsFlag())
 	{

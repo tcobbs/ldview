@@ -162,8 +162,8 @@ void LDViewPreferences::applyEffectsSettings(void)
 		modelViewer->setStereoMode(stereoMode);
 		modelViewer->setStereoEyeSpacing((GLfloat)stereoEyeSpacing);
 		modelViewer->setCutawayMode(cutawayMode);
-		modelViewer->setCutawayAlpha((float)cutawayAlpha / 100.0f);
-		modelViewer->setCutawayLineWidth((float)cutawayThickness);
+		modelViewer->setCutawayAlpha((TCFloat32)cutawayAlpha / 100.0f);
+		modelViewer->setCutawayLineWidth((TCFloat32)cutawayThickness);
 		modelViewer->setSortTransparent(sortTransparent);
 		modelViewer->setUseStipple(useStipple);
 		modelViewer->setUsesFlatShading(usesFlatShading);
@@ -196,7 +196,7 @@ void LDViewPreferences::loadSettings(void)
 	lightVectorString = TCUserDefaults::stringForKey(LIGHT_VECTOR_KEY);
 	if (lightVectorString)
 	{
-		float lx, ly, lz;
+		TCFloat lx, ly, lz;
 
 		if (sscanf(lightVectorString, "%f,%f,%f", &lx, &ly, &lz) == 3)
 		{
@@ -326,7 +326,7 @@ void LDViewPreferences::loadGeneralSettings(void)
 		false) != 0;
 	fullScreenRefresh = TCUserDefaults::longForKey(FULLSCREEN_REFRESH_KEY,
 		fullScreenRefresh);
-	fov = TCUserDefaults::floatForKey(FOV_KEY, fov);
+	fov = TCUserDefaults::floatForKey(FOV_KEY, (TCFloat32)fov);
 	memoryUsage = TCUserDefaults::longForKey(MEMORY_USAGE_KEY,
 		(long)memoryUsage);
 	if (memoryUsage < 0 || memoryUsage > 2)
@@ -1630,7 +1630,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 			if (fTemp >= getMinFov() && fTemp <= getMaxFov())
 			{
 				fov = fTemp;
-				TCUserDefaults::setFloatForKey(fov, FOV_KEY);
+				TCUserDefaults::setFloatForKey((TCFloat32)fov, FOV_KEY);
 			}
 			else
 			{
@@ -1823,9 +1823,9 @@ void LDViewPreferences::applyChanges(void)
 
 void LDViewPreferences::saveDefaultView(void)
 {
-	float matrix[16];
-	float rotationMatrix[16];
-	float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+	TCFloat matrix[16];
+	TCFloat rotationMatrix[16];
+	TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 	char matrixString[1024];
 
 	memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
@@ -2628,8 +2628,8 @@ void LDViewPreferences::setupPage(int pageNumber)
 void LDViewPreferences::setupFov(bool warn)
 {
 	char buf[1024];
-	float minFov = getMinFov();
-	float maxFov = getMaxFov();
+	TCFloat minFov = getMinFov();
+	TCFloat maxFov = getMaxFov();
 
 	SendDlgItemMessage(hGeneralPage, IDC_FOV, EM_SETLIMITTEXT, 5, 0);
 	sprintf(buf, "%.4g", fov);
@@ -3697,12 +3697,12 @@ BOOL LDViewPreferences::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 	return CUIPropertySheet::dialogProc(hDlg, message, wParam, lParam);
 }
 
-float LDViewPreferences::getMinFov(void)
+TCFloat LDViewPreferences::getMinFov(void)
 {
 	return 0.1f;
 }
 
-float LDViewPreferences::getMaxFov(void)
+TCFloat LDViewPreferences::getMaxFov(void)
 {
 	return 90.0f;
 }
@@ -3717,25 +3717,25 @@ void LDViewPreferences::setupDefaultRotationMatrix(void)
 	}
 	if (value)
 	{
-		float latitude;
-		float longitude;
+		TCFloat latitude;
+		TCFloat longitude;
 
 		if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
 		{
-			float leftMatrix[16];
-			float rightMatrix[16];
-			float resultMatrix[16];
-			float cosTheta;
-			float sinTheta;
+			TCFloat leftMatrix[16];
+			TCFloat rightMatrix[16];
+			TCFloat resultMatrix[16];
+			TCFloat cosTheta;
+			TCFloat sinTheta;
 
 			TCVector::initIdentityMatrix(leftMatrix);
 			TCVector::initIdentityMatrix(rightMatrix);
-			latitude = (float)deg2rad(latitude);
-			longitude = (float)deg2rad(longitude);
+			latitude = (TCFloat)deg2rad(latitude);
+			longitude = (TCFloat)deg2rad(longitude);
 
 			// First, apply latitude by rotating around X.
-			cosTheta = (float)cos(latitude);
-			sinTheta = (float)sin(latitude);
+			cosTheta = (TCFloat)cos(latitude);
+			sinTheta = (TCFloat)sin(latitude);
 			rightMatrix[5] = cosTheta;
 			rightMatrix[6] = sinTheta;
 			rightMatrix[9] = -sinTheta;
@@ -3746,8 +3746,8 @@ void LDViewPreferences::setupDefaultRotationMatrix(void)
 			TCVector::initIdentityMatrix(rightMatrix);
 
 			// Next, apply longitude by rotating around Y.
-			cosTheta = (float)cos(longitude);
-			sinTheta = (float)sin(longitude);
+			cosTheta = (TCFloat)cos(longitude);
+			sinTheta = (TCFloat)sin(longitude);
 			rightMatrix[0] = cosTheta;
 			rightMatrix[2] = -sinTheta;
 			rightMatrix[8] = sinTheta;
@@ -3763,7 +3763,7 @@ void LDViewPreferences::setupDefaultRotationMatrix(void)
 		value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
 		if (value)
 		{
-			float matrix[16];
+			TCFloat matrix[16];
 
 /*
 			if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",

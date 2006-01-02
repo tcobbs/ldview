@@ -195,7 +195,7 @@ int TREVertexStore::addVertices(TCULong color, const TCVector *points,
 
 void TREVertexStore::initVertex(TREVertex &vertex, const TCVector &point)
 {
-	memcpy(vertex.v, (const float *)point, sizeof(vertex.v));
+	memcpy(vertex.v, (const TCFloat *)point, sizeof(vertex.v));
 }
 
 int TREVertexStore::addVertices(TREVertexArray *vertices,
@@ -218,8 +218,8 @@ void TREVertexStore::setupVAR(void)
 		glVertexArrayRangeNV)
 	{
 		int count = m_vertices->getCount();
-//		float priority = 1.0f;
-		float priority = 0.0f;
+//		GLfloat priority = 1.0f;
+		GLfloat priority = 0.0f;
 		int offset = sm_varSize;
 		TCByte *oldBuffer = NULL;
 		int verticesSize = count * sizeof(TREVertex);
@@ -468,7 +468,7 @@ bool TREVertexStore::activate(bool displayLists)
 			if (!displayLists && m_vbo)
 			{
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
-				glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+				glVertexPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(0));
 			}
 			else
@@ -479,12 +479,12 @@ bool TREVertexStore::activate(bool displayLists)
 				}
 				if (sm_varBuffer)
 				{
-					glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+					glVertexPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 						sm_varBuffer + m_verticesOffset);
 				}
 				else
 				{
-					glVertexPointer(3, GL_FLOAT, sizeof(TREVertex),
+					glVertexPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 						m_vertices->getVertices());
 				}
 			}
@@ -498,17 +498,17 @@ bool TREVertexStore::activate(bool displayLists)
 			glEnableClientState(GL_NORMAL_ARRAY);
 			if (!displayLists && m_vbo)
 			{
-				glNormalPointer(GL_FLOAT, sizeof(TREVertex),
+				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(m_normalsOffset));
 			}
 			else if (sm_varBuffer)
 			{
-				glNormalPointer(GL_FLOAT, sizeof(TREVertex),
+				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
 					sm_varBuffer + m_normalsOffset);
 			}
 			else
 			{
-				glNormalPointer(GL_FLOAT, sizeof(TREVertex),
+				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
 					m_normals->getVertices());
 			}
 		}
@@ -521,17 +521,17 @@ bool TREVertexStore::activate(bool displayLists)
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			if (!displayLists && m_vbo)
 			{
-				glTexCoordPointer(3, GL_FLOAT, sizeof(TREVertex),
+				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(m_textureCoordsOffset));
 			}
 			else if (sm_varBuffer)
 			{
-				glTexCoordPointer(3, GL_FLOAT, sizeof(TREVertex),
+				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					sm_varBuffer + m_textureCoordsOffset);
 			}
 			else
 			{
-				glTexCoordPointer(3, GL_FLOAT, sizeof(TREVertex),
+				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					m_textureCoords->getVertices());
 			}
 		}

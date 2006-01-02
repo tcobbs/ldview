@@ -96,7 +96,7 @@ bool LDLShapeLine::isXZPlanar(void) const
 	return true;
 }
 
-bool LDLShapeLine::isXZPlanar(const float *matrix) const
+bool LDLShapeLine::isXZPlanar(const TCFloat *matrix) const
 {
 	// This returns true if the all the points in this file line have Y == 0,
 	// after being transformed by matrix.

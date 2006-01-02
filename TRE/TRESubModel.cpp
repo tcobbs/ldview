@@ -161,7 +161,7 @@ void TRESubModel::setModel(TREModel *model)
 	m_model = model;
 }
 
-void TRESubModel::setMatrix(const float *matrix)
+void TRESubModel::setMatrix(const TCFloat *matrix)
 {
 	memcpy(m_matrix, matrix, sizeof(m_matrix));
 	memcpy(m_originalMatrix, matrix, sizeof(m_originalMatrix));
@@ -275,7 +275,7 @@ void TRESubModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 		}
 	}
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	getEffectiveModel()->draw(section, colored, subModelsOnly,
 		getNonUniformFlag() | nonUniform);
 	glPopMatrix();
@@ -307,7 +307,7 @@ void TRESubModel::drawDefaultColor(void)
 		glColor4ubv((GLubyte*)&m_color);
 	}
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	getEffectiveModel()->drawDefaultColor();
 	glPopMatrix();
 	if (m_flags.colorSet)
@@ -324,7 +324,7 @@ void TRESubModel::drawBFC(void)
 		glColor4ubv((GLubyte*)&m_color);
 	}
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	getEffectiveModel()->drawBFC();
 	glPopMatrix();
 	if (m_flags.colorSet)
@@ -341,7 +341,7 @@ void TRESubModel::drawDefaultColorLines(void)
 		glColor4ubv((GLubyte*)&m_color);
 	}
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	m_model->drawDefaultColorLines();
 	glPopMatrix();
 	if (m_flags.colorSet)
@@ -358,7 +358,7 @@ void TRESubModel::drawEdgeLines(void)
 		glColor4ubv((GLubyte*)&m_edgeColor);
 	}
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	m_model->drawEdgeLines();
 	glPopMatrix();
 	if (m_flags.colorSet)
@@ -370,7 +370,7 @@ void TRESubModel::drawEdgeLines(void)
 void TRESubModel::drawColored(void)
 {
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	getEffectiveModel()->drawColored();
 	glPopMatrix();
 }
@@ -378,7 +378,7 @@ void TRESubModel::drawColored(void)
 void TRESubModel::drawColoredBFC(void)
 {
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	getEffectiveModel()->drawColoredBFC();
 	glPopMatrix();
 }
@@ -386,7 +386,7 @@ void TRESubModel::drawColoredBFC(void)
 void TRESubModel::drawColoredLines(void)
 {
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	m_model->drawColoredLines();
 	glPopMatrix();
 }
@@ -394,7 +394,7 @@ void TRESubModel::drawColoredLines(void)
 void TRESubModel::drawColoredEdgeLines(void)
 {
 	glPushMatrix();
-	glMultMatrixf(m_matrix);
+	treGlMultMatrixf(m_matrix);
 	m_model->drawColoredEdgeLines();
 	glPopMatrix();
 }
@@ -402,18 +402,18 @@ void TRESubModel::drawColoredEdgeLines(void)
 
 void TRESubModel::scanPoints(TCObject *scanner,
 							 TREScanPointCallback scanPointCallback,
-							 const float *matrix)
+							 const TCFloat *matrix)
 {
-	float newMatrix[16];
+	TCFloat newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
 	getEffectiveModel()->scanPoints(scanner, scanPointCallback, newMatrix);
 }
 
-void TRESubModel::unshrinkNormals(const float *matrix,
-								  const float *unshrinkMatrix)
+void TRESubModel::unshrinkNormals(const TCFloat *matrix,
+								  const TCFloat *unshrinkMatrix)
 {
-	float newMatrix[16];
+	TCFloat newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
 	m_model->unshrinkNormals(newMatrix, unshrinkMatrix);
@@ -421,14 +421,14 @@ void TRESubModel::unshrinkNormals(const float *matrix,
 
 // Thanks go to Lars again here for the simplified positioning-after-shrinkage
 // algorithm.
-void TRESubModel::shrink(float amount)
+void TRESubModel::shrink(TCFloat amount)
 {
 	TCVector boundingMin;
 	TCVector boundingMax;
 	TCVector center;
 	TCVector delta;
-	float scaleMatrix[16];
-	float tempMatrix[16];
+	TCFloat scaleMatrix[16];
+	TCFloat tempMatrix[16];
 	int i;
 
 	TCVector::initIdentityMatrix(scaleMatrix);
@@ -452,18 +452,18 @@ void TRESubModel::shrink(float amount)
 }
 
 void TRESubModel::transferColoredTransparent(TREMSection section,
-											 const float *matrix)
+											 const TCFloat *matrix)
 {
-	float newMatrix[16];
+	TCFloat newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
 	m_model->transferColoredTransparent(section, newMatrix);
 }
 
 void TRESubModel::transferTransparent(TCULong color, TREMSection section,
-									  const float *matrix)
+									  const TCFloat *matrix)
 {
-	float newMatrix[16];
+	TCFloat newMatrix[16];
 
 	TCVector::multMatrix(matrix, m_matrix, newMatrix);
 	if (m_flags.colorSet)
@@ -473,13 +473,13 @@ void TRESubModel::transferTransparent(TCULong color, TREMSection section,
 	m_model->transferTransparent(color, section, newMatrix);
 }
 
-void TRESubModel::setSpecular(const float *specular)
+void TRESubModel::setSpecular(const GLfloat *specular)
 {
 	memcpy(m_specular, specular, sizeof(m_specular));
 	m_flags.specular = true;
 }
 
-void TRESubModel::setShininess(float shininess)
+void TRESubModel::setShininess(GLfloat shininess)
 {
 	m_shininess = shininess;
 	m_flags.shininess = true;

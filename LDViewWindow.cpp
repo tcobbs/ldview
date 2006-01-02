@@ -865,7 +865,7 @@ LRESULT LDViewWindow::doMouseWheel(short keyFlags, short zDelta, int /*xPos*/,
 		{
 			modelWindow->setClipZoom(NO);
 		}
-		modelWindow->zoom((float)zDelta * -0.5f);
+		modelWindow->zoom((TCFloat)zDelta * -0.5f);
 		return 0;
 	}
 	return 1;
@@ -1887,7 +1887,7 @@ LRESULT LDViewWindow::doMenuSelect(UINT menuID, UINT /*flags*/, HMENU hMenu)
 	return 1;
 }
 
-void cleanupFloats(float *array, int count = 16)
+void cleanupFloats(TCFloat *array, int count = 16)
 {
 	int i;
 
@@ -1924,9 +1924,9 @@ void LDViewWindow::showTransformationMatrix(void)
 
 		if (modelViewer)
 		{
-			float matrix[16];
-			float rotationMatrix[16];
-			float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+			TCFloat matrix[16];
+			TCFloat rotationMatrix[16];
+			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 			char matrixString[1024];
 			TRECamera &camera = modelViewer->getCamera();
 			TCVector cameraPosition = camera.getPosition();
@@ -1959,13 +1959,13 @@ void LDViewWindow::showPovCamera(void)
 
 		if (modelViewer)
 		{
-			float tmpMatrix[16];
-			float matrix[16];
-			float rotationMatrix[16];
-			float centerMatrix[16];
-			float positionMatrix[16];
-			float cameraMatrix[16];
-			float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+			TCFloat tmpMatrix[16];
+			TCFloat matrix[16];
+			TCFloat rotationMatrix[16];
+			TCFloat centerMatrix[16];
+			TCFloat positionMatrix[16];
+			TCFloat cameraMatrix[16];
+			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 			char locationString[1024];
 			char lookAtString[1204];
 			char upString[1024];
@@ -2085,16 +2085,16 @@ void LDViewWindow::showViewInfo(void)
 
 		if (modelViewer)
 		{
-			float matrix[16];
-			float rotationMatrix[16];
-			float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+			TCFloat matrix[16];
+			TCFloat rotationMatrix[16];
+			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 			char matrixString[1024];
 			char zoomString[128];
 			char message[4096];
 			TRECamera &camera = modelViewer->getCamera();
-			float defaultDistance = modelViewer->getDefaultDistance();
-			float distanceMultiplier = modelViewer->getDistanceMultiplier();
-			float cameraDistance;
+			TCFloat defaultDistance = modelViewer->getDefaultDistance();
+			TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
+			TCFloat cameraDistance;
 
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 				sizeof(rotationMatrix));
@@ -2140,9 +2140,9 @@ void LDViewWindow::showRotationMatrix(void)
 
 		if (modelViewer)
 		{
-			float matrix[16];
-			float rotationMatrix[16];
-			float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+			TCFloat matrix[16];
+			TCFloat rotationMatrix[16];
+			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 			char matrixString[1024];
 
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
@@ -3463,8 +3463,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 /*
 	if (message)
 	{
-		float rotationSpeed = modelWindow->getRotationSpeed();
-		float zoomSpeed = modelWindow->getZoomSpeed();
+		TCFloat rotationSpeed = modelWindow->getRotationSpeed();
+		TCFloat zoomSpeed = modelWindow->getZoomSpeed();
 
 		modelWindow->setRotationSpeed(0.0f);
 		modelWindow->setZoomSpeed(0.0f);

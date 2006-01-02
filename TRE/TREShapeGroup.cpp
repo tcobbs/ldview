@@ -315,8 +315,8 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 			TCVector vertex = (*vertices)[index].v;
 			TCVector normal = (*normals)[index].v;
 
-			glVertex3fv(vertex);
-			glVertex3fv(vertex + (normal * 1.1f));
+			treGlVertex3fv(vertex);
+			treGlVertex3fv(vertex + (normal * 1.1f));
 		}
 		glEnd();
 	}
@@ -491,10 +491,11 @@ void TREShapeGroup::drawLines(void)
 
 //***********************************************************************
 // Return 1 if the v2 bends left of v1, -1 if right, 0 if straight ahead.
-int TREShapeGroup::turnVector(float vx1, float vy1, float vx2, float vy2)
+int TREShapeGroup::turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2,
+							  TCFloat vy2)
 {
 	// Pos for left bend, 0 = linear
-	float vecProduct = (vx1 * vy2) - (vy1 * vx2);
+	TCFloat vecProduct = (vx1 * vy2) - (vy1 * vx2);
 
 	if (vecProduct > 0.0)
 	{
@@ -507,13 +508,13 @@ int TREShapeGroup::turnVector(float vx1, float vy1, float vx2, float vy2)
 	return 0;
 }
 
-void TREShapeGroup::transformPoint(const TCVector &point, const float *matrix,
-								   float *tx, float *ty)
+void TREShapeGroup::transformPoint(const TCVector &point, const TCFloat *matrix,
+								   TCFloat *tx, TCFloat *ty)
 {
-	float x = point.get(0);
-	float y = point.get(1);
-	float z = point.get(2);
-	float tw;
+	TCFloat x = point.get(0);
+	TCFloat y = point.get(1);
+	TCFloat z = point.get(2);
+	TCFloat tw;
 
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
@@ -525,15 +526,15 @@ void TREShapeGroup::transformPoint(const TCVector &point, const float *matrix,
 
 bool TREShapeGroup::shouldDrawConditional(TCULong index1, TCULong index2,
 										  TCULong cpIndex1, TCULong cpIndex2,
-										  const float *matrix)
+										  const TCFloat *matrix)
 {
 	// Use matrix--which contains a combination of the projection and the
 	// model-view matrix--to calculate coords in the plane of the screen, so
 	// we can test optional lines.
-	float s1x, s1y;
-	float s2x, s2y;
-	float s3x, s3y;
-	float s4x, s4y;
+	TCFloat s1x, s1y;
+	TCFloat s2x, s2y;
+	TCFloat s3x, s3y;
+	TCFloat s4x, s4y;
 	TREVertexArray *vertices = m_vertexStore->getVertices();
 	TREVertexArray *controlPoints = vertices; //m_vertexStore->getControlPoints();
 	const TREVertex &v1 = (*vertices)[index1];
@@ -668,17 +669,17 @@ void TREShapeGroup::drawConditionalLines(void)
 						}
 						else
 						{
-							glVertex3fv((*vertices)[index1].v);
+							treGlVertex3fv((*vertices)[index1].v);
 							glEdgeFlag(GL_FALSE);
-							glVertex3fv((*vertices)[index2].v);
-							glVertex3fv((*m_vertexStore->
+							treGlVertex3fv((*vertices)[index2].v);
+							treGlVertex3fv((*m_vertexStore->
 								getVertices())[cpIndex1].v);
 
-							glVertex3fv((*vertices)[index1].v);
-							glVertex3fv((*m_vertexStore->
+							treGlVertex3fv((*vertices)[index1].v);
+							treGlVertex3fv((*m_vertexStore->
 								getVertices())[cpIndex2].v);
 							glEdgeFlag(GL_TRUE);
-							glVertex3fv((*vertices)[index2].v);
+							treGlVertex3fv((*vertices)[index2].v);
 						}
 					}
 					if (m_mainModel->getVertexArrayEdgeFlagsFlag())
@@ -705,13 +706,13 @@ void TREShapeGroup::drawConditionalLines(void)
 				{
 					int i;
 					int count = indices->getCount();
-					float modelViewMatrix[16];
-					float projectionMatrix[16];
-					float matrix[16];
+					TCFloat modelViewMatrix[16];
+					TCFloat projectionMatrix[16];
+					TCFloat matrix[16];
 
 					activeIndices = new TCULongArray;
-					glGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
-					glGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
+					treGlGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
+					treGlGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
 					TCVector::multMatrix(projectionMatrix, modelViewMatrix,
 						matrix);
 					for (i = 0; i < count; i += 2)
@@ -939,7 +940,7 @@ void TREShapeGroup::setVertexStore(TREVertexStore *vertexStore)
 
 void TREShapeGroup::scanPoints(TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
-							   const float* matrix)
+							   const TCFloat* matrix)
 {
 	int bit;
 
@@ -958,7 +959,7 @@ void TREShapeGroup::scanPoints(TCObject *scanner,
 
 void TREShapeGroup::scanPoints(TCULongArray *indices, TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
-							   const float* matrix)
+							   const TCFloat* matrix)
 {
 	if (indices)
 	{
@@ -976,7 +977,7 @@ void TREShapeGroup::scanStripPoints(TCULongArray *indices,
 									TCULongArray *stripCounts,
 									TCObject *scanner,
 									TREScanPointCallback scanPointCallback,
-									const float* matrix)
+									const TCFloat* matrix)
 {
 	if (indices && stripCounts)
 	{
@@ -1006,7 +1007,7 @@ void TREShapeGroup::scanPoints(const TREVertex &vertex, TCObject *scanner,
 
 void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
 							   TREScanPointCallback scanPointCallback,
-							   const float *matrix)
+							   const TCFloat *matrix)
 {
 	TREVertex vertex = (*m_vertexStore->getVertices())[index];
 
@@ -1014,8 +1015,8 @@ void TREShapeGroup::scanPoints(TCULong index, TCObject *scanner,
 	scanPoints(vertex, scanner, scanPointCallback);
 }
 
-void TREShapeGroup::unshrinkNormals(const float *matrix,
-									const float *unshrinkMatrix)
+void TREShapeGroup::unshrinkNormals(const TCFloat *matrix,
+									const TCFloat *unshrinkMatrix)
 {
 	int bit;
 
@@ -1031,8 +1032,8 @@ void TREShapeGroup::unshrinkNormals(const float *matrix,
 	}
 }
 
-void TREShapeGroup::unshrinkNormals(TCULongArray *indices, const float *matrix,
-									const float *unshrinkMatrix)
+void TREShapeGroup::unshrinkNormals(TCULongArray *indices, const TCFloat *matrix,
+									const TCFloat *unshrinkMatrix)
 {
 	if (indices)
 	{
@@ -1048,8 +1049,8 @@ void TREShapeGroup::unshrinkNormals(TCULongArray *indices, const float *matrix,
 
 void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
 										 TCULongArray *stripCounts,
-										 const float *matrix,
-										 const float *unshrinkMatrix)
+										 const TCFloat *matrix,
+										 const TCFloat *unshrinkMatrix)
 {
 	if (indices && stripCounts)
 	{
@@ -1070,13 +1071,13 @@ void TREShapeGroup::unshrinkStripNormals(TCULongArray *indices,
 	}
 }
 
-void TREShapeGroup::unshrinkNormal(TCULong index, const float *matrix,
-								   const float *unshrinkMatrix)
+void TREShapeGroup::unshrinkNormal(TCULong index, const TCFloat *matrix,
+								   const TCFloat *unshrinkMatrix)
 {
 	TREVertexArray *normals = m_vertexStore->getNormals();
 	TREVertex &normal = normals->vertexAtIndex(index);
 	TCVector newNormal = TCVector(normal.v[0], normal.v[1], normal.v[2]);
-	float adjust = newNormal.length();
+	TCFloat adjust = newNormal.length();
 
 	newNormal = newNormal.transformNormal(matrix);
 	newNormal = newNormal.transformNormal(unshrinkMatrix, false);
@@ -1350,7 +1351,7 @@ void TREShapeGroup::mirrorTextureCoords(TCULongArray *indices)
 
 void TREShapeGroup::transferTriangle(TCULong color, TCULong index0,
 									 TCULong index1, TCULong index2,
-									 const float *matrix)
+									 const TCFloat *matrix)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
 	TREVertexArray *oldNormals = m_vertexStore->getNormals();
@@ -1402,7 +1403,7 @@ void TREShapeGroup::transferTriangle(TCULong color, TCULong index0,
 
 void TREShapeGroup::transferQuadStrip(int shapeTypeIndex, TCULong color,
 									  int offset, int stripCount,
-									  const float *matrix)
+									  const TCFloat *matrix)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1424,7 +1425,7 @@ void TREShapeGroup::transferQuadStrip(int shapeTypeIndex, TCULong color,
 
 void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
 										  int offset, int stripCount,
-										  const float *matrix)
+										  const TCFloat *matrix)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1453,7 +1454,7 @@ void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
 
 void TREShapeGroup::transferTriangleFan(int shapeTypeIndex, TCULong color,
 										int offset, int stripCount,
-										const float *matrix)
+										const TCFloat *matrix)
 {
 	int i;
 	TCULongArray *indices = (*m_indices)[shapeTypeIndex];
@@ -1477,7 +1478,7 @@ bool TREShapeGroup::isTransparent(TCULong color, bool hostFormat)
 	}
 }
 
-void TREShapeGroup::transferTransparent(TCULong color, const float *matrix)
+void TREShapeGroup::transferTransparent(TCULong color, const TCFloat *matrix)
 {
 	if (m_indices && isTransparent(color, true))
 	{
@@ -1494,7 +1495,7 @@ void TREShapeGroup::transferTransparent(TCULong color, const float *matrix)
 
 void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 										TCULongArray *indices,
-										const float *matrix)
+										const TCFloat *matrix)
 {
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();
 	TREVertexArray *oldNormals = m_vertexStore->getNormals();
@@ -1564,7 +1565,7 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 	}
 }
 
-void TREShapeGroup::flatten(TREShapeGroup *srcShapes, const float *matrix,
+void TREShapeGroup::flatten(TREShapeGroup *srcShapes, const TCFloat *matrix,
 							TCULong color, bool colorSet)
 {
 	TREVertexStore *srcVertexStore = NULL;
@@ -1646,7 +1647,7 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 								  TCULongArray *srcIndices,
 								  TCULongArray *srcCPIndices,
 								  GLbooleanArray *srcEdgeFlags,
-								  const float *matrix,
+								  const TCFloat *matrix,
 								  TCULong color,
 								  bool colorSet)
 {
@@ -1770,7 +1771,7 @@ void TREShapeGroup::flattenStrips(TREVertexArray *dstVertices,
 								  TCULongArray *srcColors,
 								  TCULongArray *srcIndices,
 								  TCULongArray *srcStripCounts,
-								  const float *matrix, TCULong color,
+								  const TCFloat *matrix, TCULong color,
 								  bool colorSet)
 {
 	int i, j;
@@ -1814,12 +1815,12 @@ void TREShapeGroup::flattenStrips(TREVertexArray *dstVertices,
 	}
 }
 
-void TREShapeGroup::transformVertex(TREVertex &vertex, const float *matrix)
+void TREShapeGroup::transformVertex(TREVertex &vertex, const TCFloat *matrix)
 {
 	TCVector newVertex;
-	float x = vertex.v[0];
-	float y = vertex.v[1];
-	float z = vertex.v[2];
+	TCFloat x = vertex.v[0];
+	TCFloat y = vertex.v[1];
+	TCFloat z = vertex.v[2];
 
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
@@ -1830,14 +1831,14 @@ void TREShapeGroup::transformVertex(TREVertex &vertex, const float *matrix)
 	TREVertexStore::initVertex(vertex, newVertex);
 }
 
-void TREShapeGroup::transformNormal(TREVertex &normal, const float *matrix)
+void TREShapeGroup::transformNormal(TREVertex &normal, const TCFloat *matrix)
 {
 	TCVector newNormal;
-	float inverseMatrix[16];
-	float x = normal.v[0];
-	float y = normal.v[1];
-	float z = normal.v[2];
-	float det;
+	TCFloat inverseMatrix[16];
+	TCFloat x = normal.v[0];
+	TCFloat y = normal.v[1];
+	TCFloat z = normal.v[2];
+	TCFloat det;
 
 	det = TCVector::invertMatrix(matrix, inverseMatrix);
 //	x' = a*x + b*y + c*z + X

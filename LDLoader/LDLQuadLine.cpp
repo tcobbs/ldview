@@ -134,11 +134,11 @@ bool LDLQuadLine::swapNeeded(int index1, int index2, int index3, int index4)
 	TCVector normal2 = (p2 - p1) * (p2 - p3);
 	TCVector normal3 = (p3 - p2) * (p3 - p4);
 	TCVector normal4 = (p4 - p3) * (p4 - p1);
-	float length1 = normal1.length();
-	float length2 = normal2.length();
-	float length3 = normal3.length();
-	float length4 = normal4.length();
-	float dotProduct;
+	TCFloat length1 = normal1.length();
+	TCFloat length2 = normal2.length();
+	TCFloat length3 = normal3.length();
+	TCFloat length4 = normal4.length();
+	TCFloat dotProduct;
 	bool nonFlat = false;
 
 	if (fEq(length1, 0.0) || fEq(length2, 0.0) ||
@@ -410,11 +410,11 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(int index1, int index2,
 	TCVector normal2 = (p2 - p1) * (p2 - p3);
 	TCVector normal3 = (p3 - p2) * (p3 - p4);
 	TCVector normal4 = (p4 - p3) * (p4 - p1);
-	float length1 = normal1.length();
-	float length2 = normal2.length();
-	float length3 = normal3.length();
-	float length4 = normal4.length();
-	float dotProduct;
+	TCFloat length1 = normal1.length();
+	TCFloat length2 = normal2.length();
+	TCFloat length3 = normal3.length();
+	TCFloat length4 = normal4.length();
+	TCFloat dotProduct;
 	LDLTriangleLine *triangle1 = NULL;
 	LDLTriangleLine *triangle2 = NULL;
 	LDLFileLineArray *fileLineArray = NULL;

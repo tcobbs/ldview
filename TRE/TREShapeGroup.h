@@ -64,13 +64,13 @@ public:
 	virtual void setVertexStore(TREVertexStore *vertexStore);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual void scanPoints(TCObject *scanner,
-		TREScanPointCallback scanPointCallback, const float *matrix);
-	virtual void unshrinkNormals(const float *matrix,
-		const float *unshrinkMatrix);
+		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
+	virtual void unshrinkNormals(const TCFloat *matrix,
+		const TCFloat *unshrinkMatrix);
 	virtual void unMirror(void);
 	virtual void invert(void);
-	virtual void transferTransparent(TCULong color, const float *matrix);
-	virtual void flatten(TREShapeGroup *srcShapes, const float *matrix,
+	virtual void transferTransparent(TCULong color, const TCFloat *matrix);
+	virtual void flatten(TREShapeGroup *srcShapes, const TCFloat *matrix,
 		TCULong color, bool colorSet);
 	void setMainModel(TREMainModel *value) { m_mainModel = value; }
 	TREMainModel *getMainModel(void) { return m_mainModel; }
@@ -82,8 +82,8 @@ public:
 		glMultiDrawElementsEXT = value;
 	}
 	static bool isTransparent(TCULong color, bool hostFormat);
-	static void transformVertex(TREVertex &vertex, const float *matrix);
-	static void transformNormal(TREVertex &normal, const float *matrix);
+	static void transformVertex(TREVertex &vertex, const TCFloat *matrix);
+	static void transformNormal(TREVertex &normal, const TCFloat *matrix);
 protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
@@ -119,27 +119,27 @@ protected:
 		TCULongArray *newIndices);
 	virtual int flipNormal(int index);
 	virtual void transferTriangle(TCULong color, TCULong index0, TCULong index1,
-		TCULong index2, const float *matrix);
+		TCULong index2, const TCFloat *matrix);
 	virtual void transferQuadStrip(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const float *matrix);
+		int offset, int stripCount, const TCFloat *matrix);
 	virtual void transferTriangleStrip(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const float *matrix);
+		int offset, int stripCount, const TCFloat *matrix);
 	virtual void transferTriangleFan(int shapeTypeIndex, TCULong color,
-		int offset, int stripCount, const float *matrix);
+		int offset, int stripCount, const TCFloat *matrix);
 	virtual void transferTransparent(TCULong color, TREShapeType shapeType,
-		TCULongArray *indices, const float *matrix);
+		TCULongArray *indices, const TCFloat *matrix);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,
-		TCULong cpIndex1, TCULong cpIndex2, const float *matrix);
+		TCULong cpIndex1, TCULong cpIndex2, const TCFloat *matrix);
 
 	virtual void scanPoints(TCULong index, TCObject *scanner,
-		TREScanPointCallback scanPointCallback, const float *matrix);
+		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
 	virtual void scanPoints(const TREVertex &vertex, TCObject *scanner,
 		TREScanPointCallback scanPointCallback);
 	virtual void scanPoints(TCULongArray *indices, TCObject *scanner,
-		TREScanPointCallback scanPointCallback, const float *matrix);
+		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
 	virtual void scanStripPoints(TCULongArray *indices,
 		TCULongArray *stripCounts, TCObject *scanner,
-		TREScanPointCallback scanPointCallback, const float *matrix);
+		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
 	virtual void flattenShapes(TREVertexArray *dstVertices,
 		TREVertexArray *dstNormals,
 		TREVertexArray *dstTextureCoords,
@@ -154,7 +154,7 @@ protected:
 		TCULongArray *srcIndices,
 		TCULongArray *srcCPIndices,
 		GLbooleanArray *srcEdgeFlags,
-		const float *matrix,
+		const TCFloat *matrix,
 		TCULong color,
 		bool colorSet);
 	virtual void flattenStrips(TREVertexArray *dstVertices,
@@ -169,23 +169,23 @@ protected:
 		TCULongArray *srcColors,
 		TCULongArray *srcIndices,
 		TCULongArray *srcStripCounts,
-		const float *matrix,
+		const TCFloat *matrix,
 		TCULong color,
 		bool colorSet);
 	virtual void mirrorTextureCoords(TCULongArray *indices);
 
-	virtual void unshrinkNormal(TCULong index, const float *matrix,
-		const float *unshrinkMatrix);
-	virtual void unshrinkNormals(TCULongArray *indices, const float *matrix,
-		const float *unshrinkMatrix);
+	virtual void unshrinkNormal(TCULong index, const TCFloat *matrix,
+		const TCFloat *unshrinkMatrix);
+	virtual void unshrinkNormals(TCULongArray *indices, const TCFloat *matrix,
+		const TCFloat *unshrinkMatrix);
 	virtual void unshrinkStripNormals(TCULongArray *indices,
-		TCULongArray *stripCounts, const float *matrix,
-		const float *unshrinkMatrix);
+		TCULongArray *stripCounts, const TCFloat *matrix,
+		const TCFloat *unshrinkMatrix);
 
-	static void transformPoint(const TCVector &point, const float *matrix,
-		float *tx, float *ty);
-	static int TREShapeGroup::turnVector(float vx1, float vy1, float vx2,
-		float vy2);
+	static void transformPoint(const TCVector &point, const TCFloat *matrix,
+		TCFloat *tx, TCFloat *ty);
+	static int TREShapeGroup::turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2,
+		TCFloat vy2);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;

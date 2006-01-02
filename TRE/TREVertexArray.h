@@ -6,8 +6,8 @@
 
 struct TREVertex
 {
-	float v[3];
-	bool approxEquals(const TREVertex &right, float epsilon) const
+	TCFloat v[3];
+	bool approxEquals(const TREVertex &right, TCFloat epsilon) const
 	{
 		return fEq2(v[0], right.v[0], epsilon) &&
 			fEq2(v[1], right.v[1], epsilon) &&

@@ -169,7 +169,7 @@ bool LDLFileLine::isXZPlanar(void) const
 	return true;
 }
 
-bool LDLFileLine::isXZPlanar(const float * /*matrix*/) const
+bool LDLFileLine::isXZPlanar(const TCFloat * /*matrix*/) const
 {
 	// This returns true if the all the points in this file line have Y == 0,
 	// after being transformed by matrix.

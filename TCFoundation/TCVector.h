@@ -19,16 +19,16 @@
 // All overload * operators with 2 vectors are cross product.
 // dot product is not an overloaded operator, simply dot.
 
-typedef float* GlPt;
-typedef const float *ConstGlPt;
+typedef TCFloat* GlPt;
+typedef const TCFloat *ConstGlPt;
 
 class TCVector
 {
 public:
 	// Constructors
 	TCVector(void);
-	TCVector(float, float, float);
-	TCVector(const float *);
+	TCVector(TCFloat, TCFloat, TCFloat);
+	TCVector(const TCFloat *);
 	TCVector(const TCVector&);
 
 	// Destructor
@@ -37,24 +37,24 @@ public:
 	// Member Functions
 	void print(FILE* = stdout) const;
 	void print(char* buffer, int precision = 3) const;
-	float length(void) const;
-	float lengthSquared(void) const;
-	float dot(const TCVector&) const;
+	TCFloat length(void) const;
+	TCFloat lengthSquared(void) const;
+	TCFloat dot(const TCVector&) const;
 	TCVector& normalize(void) {return *this *= 1.0f/length();}
-	float get(int i) const { return vector[i];}
-	bool approxEquals(const TCVector &right, float epsilon) const;
+	TCFloat get(int i) const { return vector[i];}
+	bool approxEquals(const TCVector &right, TCFloat epsilon) const;
 	bool exactlyEquals(const TCVector &right) const;
 
 	// Overloaded Operators
 	TCVector operator*(const TCVector&) const;
-	TCVector operator*(float) const;
-	TCVector operator/(float) const;
+	TCVector operator*(TCFloat) const;
+	TCVector operator/(TCFloat) const;
 	TCVector operator+(const TCVector&) const;
 	TCVector operator-(const TCVector&) const;
 	TCVector operator-(void) const;
 	TCVector& operator*=(const TCVector&);
-	TCVector& operator*=(float);
-	TCVector& operator/=(float);
+	TCVector& operator*=(TCFloat);
+	TCVector& operator/=(TCFloat);
 	TCVector& operator+=(const TCVector&);
 	TCVector& operator-=(const TCVector&);
 	TCVector& operator=(const TCVector&);
@@ -64,28 +64,28 @@ public:
 	int operator>(const TCVector& right) const;
 	int operator<=(const TCVector& right) const;
 	int operator>=(const TCVector& right) const;
-	float& operator[](int i) {return vector[i];}
+	TCFloat& operator[](int i) {return vector[i];}
 	operator GlPt(void) {return vector;}
 	operator ConstGlPt(void) const {return vector;}
-	TCVector mult(float* matrix) const;
-	TCVector mult2(float* matrix) const;
-	void transformPoint(const float *matrix, TCVector &newPoint);
-	TCVector transformPoint(const float *matrix);
-	void transformNormal(const float *matrix, TCVector& newNormal,
+	TCVector mult(TCFloat* matrix) const;
+	TCVector mult2(TCFloat* matrix) const;
+	void transformPoint(const TCFloat *matrix, TCVector &newPoint);
+	TCVector transformPoint(const TCFloat *matrix);
+	void transformNormal(const TCFloat *matrix, TCVector& newNormal,
 		bool shouldNormalize = true);
-	TCVector transformNormal(const float *matrix,
+	TCVector transformNormal(const TCFloat *matrix,
 		bool shouldNormalize = true);
 	TCVector rearrange(int x, int y, int z) const;
 	void upConvert(double *doubleVector);
 
-	static float determinant(const float *matrix);
-	static void multMatrix(const float *left, const float *right,
-		float *result);
+	static TCFloat determinant(const TCFloat *matrix);
+	static void multMatrix(const TCFloat *left, const TCFloat *right,
+		TCFloat *result);
 	static void multMatrixd(const double *left, const double *right,
 		double *result);
-	static float invertMatrix(const float *matrix, float *inverseMatrix);
-	static void initIdentityMatrix(float*);
-	static const float *getIdentityMatrix(void);
+	static TCFloat invertMatrix(const TCFloat *matrix, TCFloat *inverseMatrix);
+	static void initIdentityMatrix(TCFloat*);
+	static const TCFloat *getIdentityMatrix(void);
 	static void doubleNormalize(double *v);
 	static void doubleCross(const double *v1, const double *v2, double *v3);
 	static void doubleAdd(const double *v1, const double *v2, double *v3);
@@ -96,11 +96,11 @@ protected:
 #ifdef _LEAK_DEBUG
 	char className[4];
 #endif
-	float vector[3];
-	static float identityMatrix[16];
+	TCFloat vector[3];
+	static TCFloat identityMatrix[16];
 };
 
 // Overloaded Operator with non-TCVector as first argument
-TCVector operator*(float, const TCVector&);
+TCVector operator*(TCFloat, const TCVector&);
 
 #endif // __TCVECTOR_H__
