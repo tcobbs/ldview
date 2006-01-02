@@ -99,7 +99,7 @@ public:
     void doIsoViewAngle(void);
     void doSaveDefaultViewAngle(void);
 	void doShowViewInfo(void);
-	void cleanupFloats(float *array, int count = 16);
+	void cleanupFloats(TCFloat *array, int count = 16);
 	void doShowPovCamera(void);
 	QSize minimumSize(void);
 	void doWireframe(bool);
@@ -191,7 +191,7 @@ protected:
 	int lastX;
 	int lastY;
 	int originalZoomY;
-	float rotationSpeed;
+	TCFloat rotationSpeed;
 	LDVViewMode viewMode;
 	int spinButton;
 	int zoomButton;

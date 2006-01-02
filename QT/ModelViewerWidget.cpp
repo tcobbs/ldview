@@ -639,7 +639,7 @@ void ModelViewerWidget::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - lastX;
 	int deltaY = yPos - lastY;
-	float magnitude = (float)sqrt((float)(deltaX * deltaX + deltaY * deltaY));
+	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
 
 	lastX = xPos;
 	lastY = yPos;
@@ -650,8 +650,8 @@ void ModelViewerWidget::updateSpinRateXY(int xPos, int yPos)
 	}
 	else
 	{
-		modelViewer->setXRotate((float)deltaY);
-		modelViewer->setYRotate((float)deltaX);
+		modelViewer->setXRotate((TCFloat)deltaY);
+		modelViewer->setYRotate((TCFloat)deltaX);
 	}
 	modelViewer->setRotationSpeed(rotationSpeed);
 }
@@ -670,17 +670,17 @@ void ModelViewerWidget::updatePanXY(int xPos, int yPos)
 
 void ModelViewerWidget::updateHeadXY(int xPos, int yPos)
 {
-	float magnitude = (float)(xPos - lastX);
-	float denom = 5000.0f;
+	TCFloat magnitude = (TCFloat)(xPos - lastX);
+	TCFloat denom = 5000.0f;
 
 	modelViewer->setCameraXRotate(magnitude / denom);
-	magnitude = (float)(yPos - lastY);
+	magnitude = (TCFloat)(yPos - lastY);
 	modelViewer->setCameraYRotate(magnitude / -denom);
 }
 
 void ModelViewerWidget::updateZoom(int yPos)
 {
-	float magnitude = (float)(yPos - originalZoomY);
+	TCFloat magnitude = (TCFloat)(yPos - originalZoomY);
 
 	modelViewer->setZoomSpeed(magnitude / 2.0f);
 }
@@ -1996,9 +1996,9 @@ void ModelViewerWidget::doIsoViewAngle(void)
                                                                                                                                                              
 void ModelViewerWidget::doSaveDefaultViewAngle(void)
 {
-    float matrix[16];
-    float rotationMatrix[16];
-    float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+    TCFloat matrix[16];
+    TCFloat rotationMatrix[16];
+    TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
     char matrixString[1024];
                                                                                                                                                              
     memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
@@ -2015,7 +2015,7 @@ void ModelViewerWidget::doSaveDefaultViewAngle(void)
     modelViewer->setDefaultRotationMatrix(matrix);
 }
 
-void ModelViewerWidget::cleanupFloats(float *array, int count)
+void ModelViewerWidget::cleanupFloats(TCFloat *array, int count)
 {
     int i;
                                                                                 
@@ -2033,16 +2033,16 @@ void ModelViewerWidget::doShowViewInfo(void)
 	QString qmessage;
     if (modelViewer)
 	{
-        float matrix[16];
-        float rotationMatrix[16];
-        float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+        TCFloat matrix[16];
+        TCFloat rotationMatrix[16];
+        TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
         char matrixString[1024];
         char zoomString[128];
         char message[4096];
         TRECamera &camera = modelViewer->getCamera();
-        float defaultDistance = modelViewer->getDefaultDistance();
-        float distanceMultiplier = modelViewer->getDistanceMultiplier();
-        float cameraDistance;
+        TCFloat defaultDistance = modelViewer->getDefaultDistance();
+        TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
+        TCFloat cameraDistance;
                                                                                 
         memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
             sizeof(rotationMatrix));
@@ -2082,13 +2082,13 @@ void ModelViewerWidget::doShowPovCamera(void)
 	QString qmessage;
     if (modelViewer)
     {
-        float tmpMatrix[16];
-        float matrix[16];
-        float rotationMatrix[16];
-        float centerMatrix[16];
-        float positionMatrix[16];
-        float cameraMatrix[16];
-        float otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+        TCFloat tmpMatrix[16];
+        TCFloat matrix[16];
+        TCFloat rotationMatrix[16];
+        TCFloat centerMatrix[16];
+        TCFloat positionMatrix[16];
+        TCFloat cameraMatrix[16];
+        TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
         char locationString[1024];
         char lookAtString[1204];
         char upString[1024];
@@ -2175,10 +2175,10 @@ void ModelViewerWidget::doShowPovCamera(void)
 void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
 {
 	TCVector cameraMotion = modelViewer->getCameraMotion();
-	float originalMotionAmount = 1.0f;
-	float originalRotationAmount = 0.01f;
-	float motionAmount;
-	float rotationAmount;
+	TCFloat originalMotionAmount = 1.0f;
+	TCFloat originalRotationAmount = 0.01f;
+	TCFloat motionAmount;
+	TCFloat rotationAmount;
 	int i;
 
 	event->accept();
