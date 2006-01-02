@@ -212,7 +212,7 @@ void Preferences::doGeneralApply(void)
 		modelViewer->setDefaultRGB((TCByte)dr, (TCByte)dg, (TCByte)db,
 			transDefaultColor);
 		modelViewer->setDefaultColorNumber(defaultColorNumber);
-		modelViewer->setFov((float)fieldOfView);
+		modelViewer->setFov((TCFloat)fieldOfView);
 		modelViewer->setProcessLDConfig(processLdconfigLdr);
 		modelViewer->setMemoryUsage(memoryUsage);
 	}
@@ -494,10 +494,10 @@ void Preferences::doEffectsApply(void)
 		modelViewer->setUsesSpecular(specular);
 		modelViewer->setOneLight(alternateLighting);
 		modelViewer->setStereoMode(stereoMode);
-		modelViewer->setStereoEyeSpacing((GLfloat)stereoEyeSpacing);
+		modelViewer->setStereoEyeSpacing((TCFloat)stereoEyeSpacing);
 		modelViewer->setCutawayMode(cutawayMode);
-		modelViewer->setCutawayAlpha((float)cutawayAlpha / 100.0f);
-		modelViewer->setCutawayLineWidth((float)cutawayThickness);
+		modelViewer->setCutawayAlpha((TCFloat32)cutawayAlpha / 100.0f);
+		modelViewer->setCutawayLineWidth((TCFloat32)cutawayThickness);
 		modelViewer->setSortTransparent(sortTransparent);
 		modelViewer->setUseStipple(stipple);
 		modelViewer->setUsesFlatShading(flatShading);
@@ -1935,25 +1935,25 @@ void Preferences::setupDefaultRotationMatrix(void)
                                                                                                                                                              
     if (value)
     {
-        float latitude;
-        float longitude;
+        TCFloat latitude;
+        TCFloat longitude;
                                                                                                                                                              
         if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
         {
-            float leftMatrix[16];
-            float rightMatrix[16];
-            float resultMatrix[16];
-            float cosTheta;
-            float sinTheta;
+            TCFloat leftMatrix[16];
+            TCFloat rightMatrix[16];
+            TCFloat resultMatrix[16];
+            TCFloat cosTheta;
+            TCFloat sinTheta;
                                                                                                                                                              
             TCVector::initIdentityMatrix(leftMatrix);
             TCVector::initIdentityMatrix(rightMatrix);
-            latitude = (float)deg2rad(latitude);
-            longitude = (float)deg2rad(longitude);
+            latitude = (TCFloat)deg2rad(latitude);
+            longitude = (TCFloat)deg2rad(longitude);
                                                                                                                                                              
             // First, apply latitude by rotating around X.
-            cosTheta = (float)cos(latitude);
-            sinTheta = (float)sin(latitude);
+            cosTheta = (TCFloat)cos(latitude);
+            sinTheta = (TCFloat)sin(latitude);
             rightMatrix[5] = cosTheta;
             rightMatrix[6] = sinTheta;
             rightMatrix[9] = -sinTheta;
@@ -1964,8 +1964,8 @@ void Preferences::setupDefaultRotationMatrix(void)
             TCVector::initIdentityMatrix(rightMatrix);
                                                                                                                                                              
             // Next, apply longitude by rotating around Y.
-            cosTheta = (float)cos(longitude);
-            sinTheta = (float)sin(longitude);
+            cosTheta = (TCFloat)cos(longitude);
+            sinTheta = (TCFloat)sin(longitude);
             rightMatrix[0] = cosTheta;
             rightMatrix[2] = -sinTheta;
             rightMatrix[8] = sinTheta;
@@ -1981,7 +1981,7 @@ void Preferences::setupDefaultRotationMatrix(void)
         value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
         if (value)
         {
-            float matrix[16];
+            TCFloat matrix[16];
                                                                                                                                                              
 /*
             if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
