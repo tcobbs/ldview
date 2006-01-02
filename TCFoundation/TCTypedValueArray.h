@@ -63,6 +63,5 @@ template <class Type> class TCTypedValueArray : public TCArray
 
 typedef TCTypedValueArray<int> TCIntArray;
 typedef TCTypedValueArray<TCULong> TCULongArray;
-typedef TCTypedValueArray<float> TCFloatArray;
 
 #endif // __TCTYPEDVALUEARRAY_H__

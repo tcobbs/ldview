@@ -66,18 +66,18 @@ class ModelWindow: public CUIOGLWindow
 		virtual void setFilename(const char*);
 		virtual char* getFilename(void);
 		virtual int loadModel(void);
-		virtual void setZoomSpeed(float);
-		virtual float getZoomSpeed(void);
-//		void setRotationSpeed(float value) { rotationSpeed = value; }
-		virtual void setRotationSpeed(float value);
-		virtual void setXRotate(float value);
-		virtual void setYRotate(float value);
-		float getRotationSpeed(void) { return rotationSpeed; }
+		virtual void setZoomSpeed(TCFloat);
+		virtual TCFloat getZoomSpeed(void);
+//		void setRotationSpeed(TCFloat value) { rotationSpeed = value; }
+		virtual void setRotationSpeed(TCFloat value);
+		virtual void setXRotate(TCFloat value);
+		virtual void setYRotate(TCFloat value);
+		TCFloat getRotationSpeed(void) { return rotationSpeed; }
 		virtual void forceRedraw(int = 0);
 		virtual void recompile(void);
 		virtual void uncompile(void);
 		virtual void openGlWillEnd(void);
-		virtual void zoom(float);
+		virtual void zoom(TCFloat);
 		virtual void setClipZoom(bool);
 		virtual bool getClipZoom(void);
 		virtual void reload(void);
@@ -280,7 +280,7 @@ class ModelWindow: public CUIOGLWindow
 
 		void loadSettings(void);
 
-		virtual void drawLight(GLenum, float, float, float);
+		virtual void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 		virtual void drawLights(void);
 		virtual void setupLight(GLenum);
 
@@ -297,11 +297,11 @@ class ModelWindow: public CUIOGLWindow
 		LDrawModelViewer* modelViewer;
 		DWORD referenceFrameTime;
 		int numFramesSinceReference;
-		float fps;
+		TCFloat fps;
 		bool firstFPSPass;
 		DWORD lastMoveTime;
-		float rotationSpeed;
-		float distance;
+		TCFloat rotationSpeed;
+		TCFloat distance;
 		int lastX;
 		int lastY;
 		int originalZoomY;

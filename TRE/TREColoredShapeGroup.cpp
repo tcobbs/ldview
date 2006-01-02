@@ -138,7 +138,7 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 	return index;
 }
 
-void TREColoredShapeGroup::transferColoredTransparent(const float *matrix)
+void TREColoredShapeGroup::transferColoredTransparent(const TCFloat *matrix)
 {
 	if (m_indices)
 	{
@@ -166,7 +166,7 @@ void TREColoredShapeGroup::transferColoredTransparent(const float *matrix)
 
 void TREColoredShapeGroup::transferColoredTransparent(TREShapeType shapeType,
 	TCULongArray *indices, TCULongArray *transparentIndices,
-	const float *matrix)
+	const TCFloat *matrix)
 {
 	TCULongArray *colors = m_vertexStore->getColors();
 	TREVertexArray *oldVertices = m_vertexStore->getVertices();

@@ -404,7 +404,8 @@ LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
 				a = transA;
 			}
 		}
-		else if (colorNumber >= 0x4000000 && colorNumber < 0x5000000)
+		else if ((colorNumber >= 0x4000000 && colorNumber < 0x5000000) |
+			(colorNumber >= 0x6000000 && colorNumber < 0x7000000))
 		{
 			r = (((colorNumber & 0xF00000) >> 20) * 17 +
 				((colorNumber & 0xF00) >> 8) * 17) / 2;
@@ -412,6 +413,10 @@ LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
 				((colorNumber & 0xF0) >> 4) * 17) / 2;
 			b = (((colorNumber & 0xF000) >> 12) * 17 +
 				(colorNumber & 0xF) * 17) / 2;
+			if (colorNumber >= 0x6000000 && colorNumber < 0x7000000)
+			{
+				a = transA;
+			}
 		}
 		else if ((colorNumber >= 0x5000000 && colorNumber < 0x6000000) ||
 			(colorNumber >= 0x7000000 && colorNumber < 0x8000000))
@@ -423,16 +428,6 @@ LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
 			{
 				a = transA;
 			}
-			else if (colorNumber >= 0x7000000 && colorNumber < 0x8000000)
-			{
-				a = 0;
-			}
-		}
-		else if (colorNumber >= 0x6000000 && colorNumber < 0x7000000)
-		{
-			r = ((colorNumber & 0xF00) >> 8) * 17;
-			g = ((colorNumber & 0xF0) >> 4) * 17;
-			b = (colorNumber & 0xF) * 17;
 		}
 	}
 	initColorInfo(colorInfo, r, g, b, a);

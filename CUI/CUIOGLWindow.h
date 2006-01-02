@@ -34,7 +34,7 @@ class CUIExport CUIOGLWindow : public CUIWindow
 		virtual void setupMaterial(void);
 		virtual void sizeView(void);
 		virtual void drawLights(void);
-		virtual void drawLight(GLenum, float, float, float);
+		virtual void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 
 		virtual LRESULT doSize(WPARAM, int, int);
 		virtual LRESULT doCreate(HWND, LPCREATESTRUCT);

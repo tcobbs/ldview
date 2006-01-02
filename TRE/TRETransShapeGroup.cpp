@@ -60,11 +60,11 @@ void TRETransShapeGroup::sortShapes(void)
 	int i, j;
 	int count;
 	TREVertexArray *vertices = m_vertexStore->getVertices();
-	const float oneThird = 1.0f / 3.0f;
+	const TCFloat oneThird = 1.0f / 3.0f;
 	TCULong *values;
 	TCULongArray *indices = getIndices(TRESTriangle);
 	int offset = 0;
-	float matrix[16];
+	TCFloat matrix[16];
 
 	if (!m_sortedTriangles)
 	{
@@ -75,9 +75,9 @@ void TRETransShapeGroup::sortShapes(void)
 			for (i = 0; i < count; i += 3)
 			{
 				TRESortedTriangle *sortedTriangle = new TRESortedTriangle;
-				float midX = 0.0f;
-				float midY = 0.0f;
-				float midZ = 0.0f;
+				TCFloat midX = 0.0f;
+				TCFloat midY = 0.0f;
+				TCFloat midZ = 0.0f;
 
 				sortedTriangle->indices[0] = (*indices)[i];
 				sortedTriangle->indices[1] = (*indices)[i + 1];
@@ -103,7 +103,7 @@ void TRETransShapeGroup::sortShapes(void)
 		}
 	}
 	count = m_sortedTriangles->getCount();
-	glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+	treGlGetFloatv(GL_MODELVIEW_MATRIX, matrix);
 	for (i = 0; i < count; i++)
 	{
 		TRESortedTriangle *sortedTriangle = (*m_sortedTriangles)[i];

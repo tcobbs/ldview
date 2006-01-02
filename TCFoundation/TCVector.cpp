@@ -7,7 +7,7 @@
 
 //static int vectorCount = 0;
 
-float TCVector::identityMatrix[16] =
+TCFloat TCVector::identityMatrix[16] =
 {
 	1.0, 0.0, 0.0, 0.0,
 	0.0, 1.0, 0.0, 0.0,
@@ -24,16 +24,16 @@ TCVector::TCVector(void)
 	className[2] = 'c';
 	className[3] = 0;
 #endif
-	vector[0] = (float)0.0;
-	vector[1] = (float)0.0;
-	vector[2] = (float)0.0;
+	vector[0] = (TCFloat)0.0;
+	vector[1] = (TCFloat)0.0;
+	vector[2] = (TCFloat)0.0;
 //	vectorCount++;
 }
 
-// TCVector::TCVector(float, float, float) -- Constructor
+// TCVector::TCVector(TCFloat, TCFloat, TCFloat) -- Constructor
 // Expects:
 //		x, y, z	: The coordinates to store in the TCVector
-TCVector::TCVector(float x, float y, float z)
+TCVector::TCVector(TCFloat x, TCFloat y, TCFloat z)
 {
 #ifdef _LEAK_DEBUG
 	className[0] = 'V';
@@ -47,10 +47,10 @@ TCVector::TCVector(float x, float y, float z)
 //	vectorCount++;
 }
 
-// TCVector::TCVector(float *) -- Constructor
+// TCVector::TCVector(TCFloat *) -- Constructor
 // Expects:
-//		v	: An array of 3 floats to store in the TCVector
-TCVector::TCVector(const float *v)
+//		v	: An array of 3 TCFloats to store in the TCVector
+TCVector::TCVector(const TCFloat *v)
 {
 #ifdef _LEAK_DEBUG
 	className[0] = 'V';
@@ -92,7 +92,7 @@ TCVector::~TCVector(void)
 // Returns:
 //		The square of the length of the TCVector (avoids sqrt if you don't need
 //		actual length, only to compare two relative lengths.
-float TCVector::lengthSquared(void) const
+TCFloat TCVector::lengthSquared(void) const
 {
 	return sqr(vector[0]) + sqr(vector[1]) + sqr(vector[2]);
 }
@@ -100,9 +100,9 @@ float TCVector::lengthSquared(void) const
 // TCVector::length(void) -- Member Function
 // Returns:
 //		The length of the TCVector.
-float TCVector::length(void) const
+TCFloat TCVector::length(void) const
 {
-	return (float)sqrt(sqr(vector[0]) + sqr(vector[1]) + sqr(vector[2]));
+	return (TCFloat)sqrt(sqr(vector[0]) + sqr(vector[1]) + sqr(vector[2]));
 }
 
 // TCVector::dot(const TCVector&) -- Member Function
@@ -110,7 +110,7 @@ float TCVector::length(void) const
 //		right	: The right hand side of the dot product.
 // Returns:
 //		The dot product of "*this" dot "right".
-float TCVector::dot(const TCVector& right) const
+TCFloat TCVector::dot(const TCVector& right) const
 {
 	return vector[0] * right.vector[0] + vector[1] * right.vector[1] +
 			 vector[2] * right.vector[2];
@@ -130,24 +130,24 @@ TCVector TCVector::operator*(const TCVector& right) const
 		vector[0] * right.vector[1] - vector[1] * right.vector[0]);
 }
 
-// TCVector::operator*(float) -- Overloaded Operator
+// TCVector::operator*(TCFloat) -- Overloaded Operator
 // Expects:
 //		right	: The right hand side of the scalar multiply.
 // Returns:
 //		The TCVector multiplied by the scalar "right".
-TCVector TCVector::operator*(float right) const
+TCVector TCVector::operator*(TCFloat right) const
 {
 	return TCVector(vector[0]*right, vector[1]*right, vector[2]*right);
 }
 
-// TCVector::operator/(float) -- Overloaded Operator
+// TCVector::operator/(TCFloat) -- Overloaded Operator
 // Expects:
 //		right	: The right hand side of the scalar divide.
 // Returns:
 //		The TCVector divided by the scalar "right".
-TCVector TCVector::operator/(float right) const
+TCVector TCVector::operator/(TCFloat right) const
 {
-	float mult = 1.0f / right;
+	TCFloat mult = 1.0f / right;
 
 	return TCVector(vector[0]*mult, vector[1]*mult, vector[2]*mult);
 }
@@ -229,7 +229,7 @@ TCVector& TCVector::operator-=(const TCVector& right)
 //		right	: The right hand side of the scalar *=
 // Returns:
 //		*this, after it has been multiplied by the scalar "right".
-TCVector& TCVector::operator*=(float right)
+TCVector& TCVector::operator*=(TCFloat right)
 {
 	vector[0] *= right;
 	vector[1] *= right;
@@ -242,7 +242,7 @@ TCVector& TCVector::operator*=(float right)
 //		right	: The right hand side of the scalar /=
 // Returns:
 //		*this, after it has been divided by the scalar "right".
-TCVector& TCVector::operator/=(float right)
+TCVector& TCVector::operator/=(TCFloat right)
 {
 	return *this *= 1.0f / right;
 /*
@@ -355,19 +355,19 @@ void TCVector::print(char* buffer, int precision) const
 	sprintf(buffer, formatString, vector[0], vector[1], vector[2]);
 }
 
-// operator*(float, TCVector&) -- Overloaded Non-Member Operator
+// operator*(TCFloat, TCVector&) -- Overloaded Non-Member Operator
 // Expects:
 //		left	: The left hand side of the scalar multiply.
 //		right	: The right hand side of the scalar multiply.
 // Returns:
 //		The TCVector resulting from "right" being multiplied by the scalar
 //		"left".
-TCVector operator*(float left, const TCVector& right)
+TCVector operator*(TCFloat left, const TCVector& right)
 {
 	return right * left;
 }
 
-TCVector TCVector::mult2(float* matrix) const
+TCVector TCVector::mult2(TCFloat* matrix) const
 {
 	TCVector tempVec;
 
@@ -381,7 +381,7 @@ TCVector TCVector::mult2(float* matrix) const
 }
 
 
-TCVector TCVector::mult(float* matrix) const
+TCVector TCVector::mult(TCFloat* matrix) const
 {
 	TCVector tempVec;
 
@@ -394,9 +394,9 @@ TCVector TCVector::mult(float* matrix) const
 	return tempVec;
 }
 
-float TCVector::determinant(const float *matrix)
+TCFloat TCVector::determinant(const TCFloat *matrix)
 {
-	float det;
+	TCFloat det;
 
 	det = matrix[0] * (matrix[5] * matrix[10] - matrix[6] * matrix[9]);
 	det -= matrix[4] * (matrix[1] * matrix[10] - matrix[2] * matrix[9]);
@@ -404,9 +404,9 @@ float TCVector::determinant(const float *matrix)
 	return det;
 }
 
-float TCVector::invertMatrix(const float *matrix, float *inverseMatrix)
+TCFloat TCVector::invertMatrix(const TCFloat *matrix, TCFloat *inverseMatrix)
 {
-	float det = determinant(matrix);
+	TCFloat det = determinant(matrix);
 
 	if (fEq(det, 0.0f))
 	{
@@ -448,7 +448,7 @@ float TCVector::invertMatrix(const float *matrix, float *inverseMatrix)
 	return det;
 }
 
-void TCVector::multMatrix(const float* left, const float* right, float* result)
+void TCVector::multMatrix(const TCFloat* left, const TCFloat* right, TCFloat* result)
 {
 	result[0] = left[0] * right[0] + left[4] * right[1] +
 		left[8] * right[2] + left[12] * right[3];
@@ -527,18 +527,18 @@ bool TCVector::exactlyEquals(const TCVector &right) const
 		vector[2] == right.vector[2];
 }
 
-bool TCVector::approxEquals(const TCVector &right, float epsilon) const
+bool TCVector::approxEquals(const TCVector &right, TCFloat epsilon) const
 {
 	return fEq2(vector[0], right.vector[0], epsilon) &&
 		fEq2(vector[1], right.vector[1], epsilon) &&
 		fEq2(vector[2], right.vector[2], epsilon);
 }
 
-void TCVector::initIdentityMatrix(float *matrix)
+void TCVector::initIdentityMatrix(TCFloat *matrix)
 {
 	memcpy(matrix, identityMatrix, sizeof(identityMatrix));
 /*
-	memset(matrix, 0, 16 * sizeof(float));
+	memset(matrix, 0, 16 * sizeof(TCFloat));
 	matrix[0] = 1.0f;
 	matrix[5] = 1.0f;
 	matrix[10] = 1.0f;
@@ -546,11 +546,11 @@ void TCVector::initIdentityMatrix(float *matrix)
 */
 }
 
-void TCVector::transformPoint(const float *matrix, TCVector &newPoint)
+void TCVector::transformPoint(const TCFloat *matrix, TCVector &newPoint)
 {
-	float x = vector[0];
-	float y = vector[1];
-	float z = vector[2];
+	TCFloat x = vector[0];
+	TCFloat y = vector[1];
+	TCFloat z = vector[2];
 
 //	x' = a*x + b*y + c*z + X
 //	y' = d*x + e*y + f*z + Y
@@ -560,7 +560,7 @@ void TCVector::transformPoint(const float *matrix, TCVector &newPoint)
 	newPoint[2] = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14];
 }
 
-TCVector TCVector::transformPoint(const float *matrix)
+TCVector TCVector::transformPoint(const TCFloat *matrix)
 {
 	TCVector newPoint;
 
@@ -568,14 +568,14 @@ TCVector TCVector::transformPoint(const float *matrix)
 	return newPoint;
 }
 
-void TCVector::transformNormal(const float *matrix, TCVector& newNormal,
+void TCVector::transformNormal(const TCFloat *matrix, TCVector& newNormal,
 							   bool shouldNormalize)
 {
-	float inverseMatrix[16];
-	float x = vector[0];
-	float y = vector[1];
-	float z = vector[2];
-	float det;
+	TCFloat inverseMatrix[16];
+	TCFloat x = vector[0];
+	TCFloat y = vector[1];
+	TCFloat z = vector[2];
+	TCFloat det;
 
 	det = invertMatrix(matrix, inverseMatrix);
 //	x' = a*x + b*y + c*z + X
@@ -593,7 +593,7 @@ void TCVector::transformNormal(const float *matrix, TCVector& newNormal,
 	}
 }
 
-TCVector TCVector::transformNormal(const float *matrix, bool shouldNormalize)
+TCVector TCVector::transformNormal(const TCFloat *matrix, bool shouldNormalize)
 {
 	TCVector newNormal;
 
@@ -606,7 +606,7 @@ TCVector TCVector::rearrange(int x, int y, int z) const
 	return TCVector(get(x), get(y), get(z));
 }
 
-const float *TCVector::getIdentityMatrix(void)
+const TCFloat *TCVector::getIdentityMatrix(void)
 {
 	return identityMatrix;
 }

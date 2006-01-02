@@ -149,7 +149,7 @@ bool LDLModelLine::parse(void)
 		setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
 		if (!getMainModel()->getSkipValidation())
 		{
-			float determinant = TCVector::determinant(m_matrix);
+			TCFloat determinant = TCVector::determinant(m_matrix);
 
 			if (determinant == 0.0f)
 			{
@@ -208,10 +208,10 @@ bool LDLModelLine::parse(void)
 	}
 }
 
-void LDLModelLine::setTransformation(float x, float y, float z,
-									 float a, float b, float c,
-									 float d, float e, float f,
-									 float g, float h, float i)
+void LDLModelLine::setTransformation(TCFloat x, TCFloat y, TCFloat z,
+									 TCFloat a, TCFloat b, TCFloat c,
+									 TCFloat d, TCFloat e, TCFloat f,
+									 TCFloat g, TCFloat h, TCFloat i)
 {
 	m_matrix[3] = 0.0f;
 	m_matrix[7] = 0.0f;
@@ -259,11 +259,11 @@ LDLModel *LDLModelLine::getModel(void) const
 	}
 }
 
-bool LDLModelLine::isXZPlanar(const float *matrix) const
+bool LDLModelLine::isXZPlanar(const TCFloat *matrix) const
 {
 	// This returns true if the all the points in this file line have Y == 0,
 	// after being transformed by matrix.
-	float newMatrix[16];
+	TCFloat newMatrix[16];
 	int i;
 	int count = m_highResModel->getActiveLineCount();
 	LDLFileLineArray *fileLines = m_highResModel->getFileLines();
@@ -319,9 +319,9 @@ bool LDLModelLine::isXZPlanar(void) const
 // all zeros.  Here we may set one of the Y values to 1.0 at a time.  Setting
 // all three Y values to 1.0 at the same time may give two rows that are
 // linear dependent (Travis Cobbs: not sure what that means).
-float LDLModelLine::tryToFixPlanarMatrix(void)
+TCFloat LDLModelLine::tryToFixPlanarMatrix(void)
 {
-	float determinant = 0.0f;
+	TCFloat determinant = 0.0f;
 	int i;
 
 	// First, check the rows.

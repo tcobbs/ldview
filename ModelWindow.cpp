@@ -451,7 +451,7 @@ void ModelWindow::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - lastX;
 	int deltaY = yPos - lastY;
-	float magnitude = (float)sqrt((float)(deltaX * deltaX + deltaY * deltaY));
+	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
 
 	lastX = xPos;
 	lastY = yPos;
@@ -464,8 +464,8 @@ void ModelWindow::updateSpinRateXY(int xPos, int yPos)
 	}
 	else
 	{
-		modelViewer->setXRotate((float)deltaY);
-		modelViewer->setYRotate((float)deltaX);
+		modelViewer->setXRotate((TCFloat)deltaY);
+		modelViewer->setYRotate((TCFloat)deltaX);
 	}
 	modelViewer->setRotationSpeed(rotationSpeed);
 }
@@ -480,17 +480,17 @@ void ModelWindow::updatePanXY(int xPos, int yPos)
 	modelViewer->panXY(deltaX, deltaY);
 }
 
-void ModelWindow::setXRotate(float value)
+void ModelWindow::setXRotate(TCFloat value)
 {
 	modelViewer->setXRotate(value);
 }
 
-void ModelWindow::setYRotate(float value)
+void ModelWindow::setYRotate(TCFloat value)
 {
 	modelViewer->setYRotate(value);
 }
 
-void ModelWindow::setRotationSpeed(float value)
+void ModelWindow::setRotationSpeed(TCFloat value)
 {
 	rotationSpeed = value;
 	modelViewer->setRotationSpeed(rotationSpeed);
@@ -498,7 +498,7 @@ void ModelWindow::setRotationSpeed(float value)
 
 void ModelWindow::updateZoom(int yPos)
 {
-	float magnitude = (float)(yPos - originalZoomY);
+	TCFloat magnitude = (TCFloat)(yPos - originalZoomY);
 
 //	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "%d %d\n", originalZoomY, yPos);
 	modelViewer->setZoomSpeed(magnitude / 2.0f);
@@ -506,21 +506,21 @@ void ModelWindow::updateZoom(int yPos)
 
 void ModelWindow::updateHeadXY(int xPos, int yPos)
 {
-	float magnitude = (float)(xPos - lastX);
-	float denom = 5000.0f;
+	TCFloat magnitude = (TCFloat)(xPos - lastX);
+	TCFloat denom = 5000.0f;
 
 	if (modelViewer)
 	{
-		float fov = modelViewer->getFov();
+		TCFloat fov = modelViewer->getFov();
 
-		denom /= (float)tan(deg2rad(fov));
+		denom /= (TCFloat)tan(deg2rad(fov));
 	}
 	if (GetKeyState(VK_SHIFT) & 0x8000)
 	{
 		denom /= 2.0f;
 	}
 	modelViewer->setCameraXRotate(magnitude / denom);
-	magnitude = (float)(yPos - lastY);
+	magnitude = (TCFloat)(yPos - lastY);
 	modelViewer->setCameraYRotate(magnitude / -denom);
 }
 
@@ -748,12 +748,12 @@ void ModelWindow::getBackgroundRGB(int& r, int& g, int& b)
 }
 */
 
-void ModelWindow::setZoomSpeed(float value)
+void ModelWindow::setZoomSpeed(TCFloat value)
 {
 	modelViewer->setZoomSpeed(value);
 }
 
-float ModelWindow::getZoomSpeed(void)
+TCFloat ModelWindow::getZoomSpeed(void)
 {
 	return modelViewer->getZoomSpeed();
 }
@@ -2296,7 +2296,7 @@ void ModelWindow::updateFPS(void)
 	{
 		if (thisFrameTime > referenceFrameTime)
 		{
-			fps = 1000.0f / (float)(thisFrameTime - referenceFrameTime) *
+			fps = 1000.0f / (TCFloat)(thisFrameTime - referenceFrameTime) *
 				numFramesSinceReference;
 		}
 		else
@@ -2487,7 +2487,7 @@ LRESULT ModelWindow::doDestroy(void)
 	return CUIOGLWindow::doDestroy();
 }
 
-void ModelWindow::zoom(float amount)
+void ModelWindow::zoom(TCFloat amount)
 {
 	if (modelViewer)
 	{
@@ -2745,10 +2745,10 @@ void ModelWindow::renderOffscreenImage(void)
 		glDepthFunc(GL_GREATER);
 		glDepthRange(0.0f, 1.0f);
 		glBegin(GL_QUADS);
-			glVertex3f(0.0f, 0.0f, -1.0f);
-			glVertex3f((float)width, 0.0f, -1.0f);
-			glVertex3f((float)width, (float)height, -1.0f);
-			glVertex3f(0.0f, (float)height, -1.0f);
+			treGlVertex3f(0.0f, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)width, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)width, (TCFloat)height, -1.0f);
+			treGlVertex3f(0.0f, (TCFloat)height, -1.0f);
 		glEnd();
 /*
 		glColor4ub(0, 0, 0, 129);
@@ -2760,10 +2760,10 @@ void ModelWindow::renderOffscreenImage(void)
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_LESS, 1.0);
 		glBegin(GL_QUADS);
-			glVertex3f(0.0f, 0.0f, -1.0f);
-			glVertex3f((float)width, 0.0f, -1.0f);
-			glVertex3f((float)width, (float)height, -1.0f);
-			glVertex3f(0.0f, (float)height, -1.0f);
+			treGlVertex3f(0.0f, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)width, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)width, (TCFloat)height, -1.0f);
+			treGlVertex3f(0.0f, (TCFloat)height, -1.0f);
 		glEnd();
 */
 		glPopAttrib();
@@ -2855,8 +2855,8 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
 	bool origForceZoomToFit = modelViewer->getForceZoomToFit();
 	TCVector origCameraPosition = modelViewer->getCamera().getPosition();
-	float origXPan = modelViewer->getXPan();
-	float origYPan = modelViewer->getYPan();
+	TCFloat origXPan = modelViewer->getXPan();
+	TCFloat origYPan = modelViewer->getYPan();
 	bool origAutoCenter = modelViewer->getAutoCenter();
 	int newWidth = 1600;
 	int newHeight = 1200;
@@ -3343,8 +3343,10 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 			int xTile, yTile;
 			int renderLineSize = roundUp(renderWidth * 3, 4);
 			BYTE *buffer = new BYTE[renderLineSize * renderHeight];
-			float oldHighlightLineWidth = modelViewer->getHighlightLineWidth();
-			float oldWireframeLineWidth = modelViewer->getWireframeLineWidth();
+			TCFloat32 oldHighlightLineWidth =
+				modelViewer->getHighlightLineWidth();
+			TCFloat32 oldWireframeLineWidth =
+				modelViewer->getWireframeLineWidth();
 
 			modelViewer->setNumXTiles(numXTiles);
 			modelViewer->setNumYTiles(numYTiles);
@@ -4345,18 +4347,18 @@ LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
 	if (modelViewer && viewMode == LDVViewFlythrough)
 	{
 		TCVector cameraMotion = modelViewer->getCameraMotion();
-		float motionAmount = 1.0f;
-		float rotationAmount = 0.01f;
-		float strafeAmount = 1.0f;
+		TCFloat motionAmount = 1.0f;
+		TCFloat rotationAmount = 0.01f;
+		TCFloat strafeAmount = 1.0f;
 		int i;
 
 		if (modelViewer)
 		{
-			float fov = modelViewer->getFov();
+			TCFloat fov = modelViewer->getFov();
 
 			motionAmount = modelViewer->getDefaultDistance() / 400.0f;
-			rotationAmount *= (float)tan(deg2rad(fov));
-			strafeAmount *= (float)sqrt(fov / 45.0f);
+			rotationAmount *= (TCFloat)tan(deg2rad(fov));
+			strafeAmount *= (TCFloat)sqrt(fov / 45.0f);
 		}
 		if (GetKeyState(VK_SHIFT) & 0x8000)
 		{
@@ -4533,8 +4535,8 @@ void ModelWindow::initFail(char * /*reason*/)
 	PostQuitMessage(-1);
 }
 
-void ModelWindow::drawLight(GLenum /*light*/, float /*x*/, float /*y*/,
-							float /*z*/)
+void ModelWindow::drawLight(GLenum /*light*/, TCFloat /*x*/, TCFloat /*y*/,
+							TCFloat /*z*/)
 {
 	// Don't call super.
 }

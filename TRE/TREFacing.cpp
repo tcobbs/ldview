@@ -3,38 +3,38 @@
 #include <string.h>
 #include <TCFoundation/mystring.h>
 
-float TREFacing::glMatrix[16] =
+TCFloat TREFacing::glMatrix[16] =
 {
-	(float)1.0, (float)0.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)1.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)1.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)0.0, (float)1.0
+	(TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0
 };
-static float emptyMatrix[] =
+static TCFloat emptyMatrix[] =
 {
-	(float)0.0, (float)0.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)0.0, (float)0.0
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0
 };
-static float identityMatrix[] =
+static TCFloat identityMatrix[] =
 {
-	(float)1.0, (float)0.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)1.0, (float)0.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)1.0, (float)0.0,
-	(float)0.0, (float)0.0, (float)0.0, (float)1.0
+	(TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0,
+	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0
 };
 
 TREFacing::TREFacing(void)
-	:TCVector((float)0.0, (float)0.0, (float)0.0)
+	:TCVector((TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0)
 {
 	//TCVector tempVec(1, 0, 0);
 
 	//setFacing(tempVec, 0);
-	rotation = (float)1.0;
+	rotation = (TCFloat)1.0;
 }
 
-TREFacing::TREFacing(TCVector &a, float phi)
+TREFacing::TREFacing(TCVector &a, TCFloat phi)
 {
 	setFacing(a, phi);
 }
@@ -44,7 +44,7 @@ TREFacing TREFacing::operator+(const TREFacing& otherFacing)
 	return mult(otherFacing);
 }
 
-float TREFacing::angleBetween(TREFacing &f2)
+TCFloat TREFacing::angleBetween(TREFacing &f2)
 {
   //t = (q[0]*r[0])+(q[1]*r[1])+(q[2]*r[2])+(q[3]*r[3]);
   return (this->vector[0]*f2.vector[0]) +
@@ -131,12 +131,12 @@ TREFacing TREFacing::dot(TREFacing& f2)
 		answer.rotation*answer.rotation));
 	for (i=0; i<4; i++) 
 	{
-		answer.vector[i] = (float)(answer.vector[i]/temp);
+		answer.vector[i] = (TCFloat)(answer.vector[i]/temp);
 	}
 	return answer;
 }
 
-void TREFacing::setFacing(TCVector &a, float phi)
+void TREFacing::setFacing(TCVector &a, TCFloat phi)
 {
 	double phiOver2 = phi / 2.0;
 
@@ -147,11 +147,11 @@ void TREFacing::setFacing(TCVector &a, float phi)
 	(*this)[2] = a[2];
 
 	//vscale(e, sin(phi/2.0));
-	(*this)[0] *= (float)sin(phiOver2);
-	(*this)[1] *= (float)sin(phiOver2);
-	(*this)[2] *= (float)sin(phiOver2);
+	(*this)[0] *= (TCFloat)sin(phiOver2);
+	(*this)[1] *= (TCFloat)sin(phiOver2);
+	(*this)[2] *= (TCFloat)sin(phiOver2);
 
-	this->rotation = (float)cos(phiOver2);
+	this->rotation = (TCFloat)cos(phiOver2);
 	//printf("TREFacing set to %f, %f, %f, %f\n", (*this)[0], (*this)[1], 
 	// (*this)[2], this->rotation);
 }
@@ -159,7 +159,7 @@ void TREFacing::setFacing(TCVector &a, float phi)
 TREFacing& TREFacing::normalize(void)
 {
 	int which, i;
-	float gr;
+	TCFloat gr;
 
 	which = 0;
 	gr = (*this)[which];
@@ -171,9 +171,9 @@ TREFacing& TREFacing::normalize(void)
 			which = i;
 		}
 	}
-	(*this)[which] = (float)0.0;   /* So it doesn't affect next operation */
+	(*this)[which] = (TCFloat)0.0;   /* So it doesn't affect next operation */
 
-	(*this)[which] = (float)(sqrt(1.0 - ((*this)[0]*(*this)[0] +
+	(*this)[which] = (TCFloat)(sqrt(1.0 - ((*this)[0]*(*this)[0] +
 		(*this)[1]*(*this)[1] +
 		(*this)[2]*(*this)[2] +
 		this->rotation*this->rotation)));
@@ -188,34 +188,34 @@ TREFacing& TREFacing::normalize(void)
 
 }
 
-float* TREFacing::getMatrix(void)
+TCFloat* TREFacing::getMatrix(void)
 {
 //	return glMatrix;
 
-	glMatrix[0] = (float)(1 - 2.0 * ((*this)[1] * (*this)[1] + (*this)[2] * (*this)[2]));
-	glMatrix[1] = (float)(2.0 * ((*this)[0] * (*this)[1] - (*this)[2] * this->rotation));
-	glMatrix[2] = (float)(2.0 * ((*this)[2] * (*this)[0] + (*this)[1] * this->rotation));
-	glMatrix[3] = (float)0.0;
+	glMatrix[0] = (TCFloat)(1 - 2.0 * ((*this)[1] * (*this)[1] + (*this)[2] * (*this)[2]));
+	glMatrix[1] = (TCFloat)(2.0 * ((*this)[0] * (*this)[1] - (*this)[2] * this->rotation));
+	glMatrix[2] = (TCFloat)(2.0 * ((*this)[2] * (*this)[0] + (*this)[1] * this->rotation));
+	glMatrix[3] = (TCFloat)0.0;
 
-	glMatrix[4] = (float)(2.0 * ((*this)[0] * (*this)[1] + (*this)[2] * this->rotation));
-	glMatrix[5] = (float)(1 - 2.0 * ((*this)[2] * (*this)[2] + (*this)[0] * (*this)[0]));
-	glMatrix[6] = (float)(2.0 * ((*this)[1] * (*this)[2] - (*this)[0] * this->rotation));
-	glMatrix[7] = (float)0.0;
+	glMatrix[4] = (TCFloat)(2.0 * ((*this)[0] * (*this)[1] + (*this)[2] * this->rotation));
+	glMatrix[5] = (TCFloat)(1 - 2.0 * ((*this)[2] * (*this)[2] + (*this)[0] * (*this)[0]));
+	glMatrix[6] = (TCFloat)(2.0 * ((*this)[1] * (*this)[2] - (*this)[0] * this->rotation));
+	glMatrix[7] = (TCFloat)0.0;
 
-	glMatrix[8] = (float)(2.0 * ((*this)[2] * (*this)[0] - (*this)[1] * this->rotation));
-	glMatrix[9] = (float)(2.0 * ((*this)[1] * (*this)[2] + (*this)[0] * this->rotation));
-	glMatrix[10] = (float)(1 - 2.0 * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]));
-	glMatrix[11] = (float)0.0;
+	glMatrix[8] = (TCFloat)(2.0 * ((*this)[2] * (*this)[0] - (*this)[1] * this->rotation));
+	glMatrix[9] = (TCFloat)(2.0 * ((*this)[1] * (*this)[2] + (*this)[0] * this->rotation));
+	glMatrix[10] = (TCFloat)(1 - 2.0 * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]));
+	glMatrix[11] = (TCFloat)0.0;
 
-	glMatrix[12] = (float)0.0;
-	glMatrix[13] = (float)0.0;
-	glMatrix[14] = (float)0.0;
-	glMatrix[15] = (float)1.0;
+	glMatrix[12] = (TCFloat)0.0;
+	glMatrix[13] = (TCFloat)0.0;
+	glMatrix[14] = (TCFloat)0.0;
+	glMatrix[15] = (TCFloat)1.0;
 
 	return glMatrix;
 }
 
-void TREFacing::getInverseMatrix(float *inverseMatrix)
+void TREFacing::getInverseMatrix(TCFloat *inverseMatrix)
 {
 	TCVector::invertMatrix(getMatrix(), inverseMatrix);
 
@@ -245,9 +245,9 @@ void TREFacing::getInverseMatrix(float *inverseMatrix)
 TCVector TREFacing::getVector(void)
 {
 	return TCVector(
-	 (float)(2.0*((*this)[2] * (*this)[0] - (*this)[1] * this->rotation)),
-	 (float)(2.0*((*this)[1] * (*this)[2] + (*this)[0] * this->rotation)),
-	 (float)(1-2.0 * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]))).normalize();
+	 (TCFloat)(2.0*((*this)[2] * (*this)[0] - (*this)[1] * this->rotation)),
+	 (TCFloat)(2.0*((*this)[1] * (*this)[2] + (*this)[0] * this->rotation)),
+	 (TCFloat)(1-2.0 * ((*this)[1] * (*this)[1] + (*this)[0] * (*this)[0]))).normalize();
 	//vec[0] = (*this)[0];
 	//vec[1] = (*this)[1];
 	//vec[2] = (*this)[2];
@@ -260,7 +260,7 @@ void TREFacing::pointAt(TCVector &v2)
 	TCVector tempVec = v2;
 	tempVec.normalize();
 	TCVector axis = v2 * this->getVector();
-	float radians = (float)acos(tempVec.dot(this->getVector()));
+	TCFloat radians = (TCFloat)acos(tempVec.dot(this->getVector()));
 	this->setFacing(axis, radians);
 }
 
@@ -277,23 +277,23 @@ TCVector TREFacing::difference(TREFacing from)
 	return newVec;
 }
 
-void TREFacing::swapMatrixRows(float* m, int r1, int r2)
+void TREFacing::swapMatrixRows(TCFloat* m, int r1, int r2)
 {
-	float tmpRow[4];
+	TCFloat tmpRow[4];
 
-	memcpy(tmpRow, m + r1*4, 4*sizeof(float));
-	memmove(m + r1*4, m + r2*4, 4*sizeof(float));
-	memmove(m + r2*4, tmpRow, 4*sizeof(float));
+	memcpy(tmpRow, m + r1*4, 4*sizeof(TCFloat));
+	memmove(m + r1*4, m + r2*4, 4*sizeof(TCFloat));
+	memmove(m + r2*4, tmpRow, 4*sizeof(TCFloat));
 }
 
-float* TREFacing::invertMatrix(float* inM)
+TCFloat* TREFacing::invertMatrix(TCFloat* inM)
 {
-	float* inv;
-	float m[16];
+	TCFloat* inv;
+	TCFloat m[16];
 	int i, j;
-	float tmp;
+	TCFloat tmp;
 
-//	inv = new float[16];
+//	inv = new TCFloat[16];
 	memcpy(m, inM, sizeof(m));
 	inv = glMatrix;
 	memcpy(inv, identityMatrix, sizeof(identityMatrix));

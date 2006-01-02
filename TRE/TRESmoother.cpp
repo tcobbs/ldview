@@ -238,7 +238,7 @@ bool TRESmoother::shouldFlipNormal(const TCVector &normal1,
 	{
 		TCVector normal3 = normal1 / normal1.length();
 		TCVector normal4 = normal2 / normal2.length();
-		float dotProduct = normal3.dot(normal4);
+		TCFloat dotProduct = normal3.dot(normal4);
 
 		if (!fEq(dotProduct, 0.0f) && dotProduct < 0.0f)
 		{

@@ -18,12 +18,12 @@ public:
 	virtual void setModel(TREModel *model);
 	virtual TREModel *getModel(void) const { return m_model; }
 	virtual TREModel *getEffectiveModel(void) const;
-	virtual void setMatrix(const float *matrix);
-	virtual float *getMatrix(void) { return m_matrix; }
-	virtual float *getOriginalMatrix(void) { return m_originalMatrix; }
+	virtual void setMatrix(const TCFloat *matrix);
+	virtual TCFloat *getMatrix(void) { return m_matrix; }
+	virtual TCFloat *getOriginalMatrix(void) { return m_originalMatrix; }
 	virtual void setColor(TCULong color, TCULong edgeColor);
-	virtual void setSpecular(const float *specular);
-	virtual void setShininess(float shininess);
+	virtual void setSpecular(const GLfloat *specular);
+	virtual void setShininess(GLfloat shininess);
 	virtual TCULong getColor(void);
 	virtual TCULong getEdgeColor(void);
 	virtual bool isColorSet(void) { return m_flags.colorSet != false; }
@@ -47,16 +47,16 @@ public:
 	virtual void compileColored(void);
 */
 	virtual void scanPoints(TCObject *scanner,
-		TREScanPointCallback scanPointCallback, const float *matrix);
-	virtual void unshrinkNormals(const float *matrix,
-		const float *unshrinkMatrix);
-	virtual void shrink(float amount);
+		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
+	virtual void unshrinkNormals(const TCFloat *matrix,
+		const TCFloat *unshrinkMatrix);
+	virtual void shrink(TCFloat amount);
 	TRESubModel *getUnMirroredSubModel(void);
 	TRESubModel *getInvertedSubModel(void);
 	virtual void transferColoredTransparent(TREMSection section,
-		const float *matrix);
+		const TCFloat *matrix);
 	virtual void transferTransparent(TCULong color, TREMSection section,
-		const float *matrix);
+		const TCFloat *matrix);
 protected:
 	virtual ~TRESubModel(void);
 	virtual void dealloc(void);
@@ -67,12 +67,12 @@ protected:
 	TREModel *m_model;
 	TRESubModel *m_unMirroredSubModel;
 	TRESubModel *m_invertedSubModel;
-	float m_matrix[16];
-	float m_originalMatrix[16];
+	TCFloat m_matrix[16];
+	TCFloat m_originalMatrix[16];
 	TCULong m_color;
 	TCULong m_edgeColor;
-	float m_specular[4];
-	float m_shininess;
+	GLfloat m_specular[4];
+	GLfloat m_shininess;
 	struct {
 		bool colorSet:1;
 		bool unMirrored:1;

@@ -82,10 +82,10 @@ public:
 	virtual void setName(const char *name);
 	virtual const char *getName(void) const { return m_name; }
 //	virtual TREVertexArray *getVertices(void) { return m_vertices; }
-	virtual TRESubModel *addSubModel(float *matrix, TREModel *model,
+	virtual TRESubModel *addSubModel(TCFloat *matrix, TREModel *model,
 		bool invert);
 	virtual TRESubModel *addSubModel(TCULong color, TCULong edgeColor,
-		float *matrix, TREModel *model, bool invert);
+		TCFloat *matrix, TREModel *model, bool invert);
 	virtual void addLine(TCVector *vertices);
 	virtual void addEdgeLine(TCVector *vertices);
 	virtual void addConditionalLine(TCVector *vertices,
@@ -152,48 +152,48 @@ public:
 	virtual bool isFlattened(void) { return m_flags.flattened != false; }
 	virtual void flatten(void);
 	virtual void smooth(void);
-	virtual void addCylinder(const TCVector &center, float radius, float height,
+	virtual void addCylinder(const TCVector &center, TCFloat radius, TCFloat height,
 		int numSegments, int usedSegments = -1, bool bfc = false);
-	virtual void addSlopedCylinder(const TCVector &center, float radius,
-		float height, int numSegments, int usedSegments = -1, bool bfc = false);
-	virtual void addSlopedCylinder2(const TCVector &center, float radius,
-		float height, int numSegments, int usedSegments = -1, bool bfc = false);
-	virtual void addStudDisc(const TCVector &center, float radius,
+	virtual void addSlopedCylinder(const TCVector &center, TCFloat radius,
+		TCFloat height, int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addSlopedCylinder2(const TCVector &center, TCFloat radius,
+		TCFloat height, int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addStudDisc(const TCVector &center, TCFloat radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
-	virtual void addChrd(const TCVector &center, float radius, int numSegments,
+	virtual void addChrd(const TCVector &center, TCFloat radius, int numSegments,
 		int usedSegments = -1, bool bfc = false);
-	virtual void addDisc(const TCVector &center, float radius, int numSegments,
+	virtual void addDisc(const TCVector &center, TCFloat radius, int numSegments,
 		int usedSegments = -1, bool bfc = false, bool stud = false);
-	virtual void addNotDisc(const TCVector &center, float radius,
+	virtual void addNotDisc(const TCVector &center, TCFloat radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
-	virtual void addCone(const TCVector &center, float radius, float height,
+	virtual void addCone(const TCVector &center, TCFloat radius, TCFloat height,
 		int numSegments, int usedSegments = -1, bool bfc = false);
-	virtual void addEighthSphere(const TCVector& center, float radius,
+	virtual void addEighthSphere(const TCVector& center, TCFloat radius,
 		int numSegments, bool bfc);
-	virtual void addTorusIO(bool inner, const TCVector& center, float yRadius,
-		float xzRadius, int numSegments, int usedSegments, bool bfc);
-	virtual void addOpenCone(const TCVector &center, float radius1,
-		float radius2, float height, int numSegments, int usedSegments = -1,
+	virtual void addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
+		TCFloat xzRadius, int numSegments, int usedSegments, bool bfc);
+	virtual void addOpenCone(const TCVector &center, TCFloat radius1,
+		TCFloat radius2, TCFloat height, int numSegments, int usedSegments = -1,
 		bool bfc = false);
-	virtual void addCircularEdge(const TCVector &center, float radius,
+	virtual void addCircularEdge(const TCVector &center, TCFloat radius,
 		int numSegments, int usedSegments = -1);
-	virtual void addRing(const TCVector &center, float radius1, float radius2,
+	virtual void addRing(const TCVector &center, TCFloat radius1, TCFloat radius2,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addOpenConeConditionals(TCVector *points, int numSegments,
 		int usedSegments);
 	virtual void addSlopedCylinder2Conditionals(TCVector *points,
 		int numSegments, int usedSegments);
 	virtual void addTorusIOConditionals(bool innder, TCVector *points,
-		int numSegments, int usedSegments, const TCVector& center, float radius,
-		float height);
+		int numSegments, int usedSegments, const TCVector& center, TCFloat radius,
+		TCFloat height);
 	virtual void addEighthSphereConditionals(TCVector *points, int numSegments);
 	TCVector calcIntersection(int i, int j, int num, TCVector* zeroXPoints,
 		TCVector* zeroYPoints, TCVector* zeroZPoints);
 	virtual void getBoundingBox(TCVector& min, TCVector& max);
 	virtual void scanPoints(TCObject *scanner,
-		TREScanPointCallback scanPointCallback, const float *matrix);
-	virtual void unshrinkNormals(const float *scaleMatrix);
-	void unshrinkNormals(const float *matrix, const float *unshrinkMatrix);
+		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
+	virtual void unshrinkNormals(const TCFloat *scaleMatrix);
+	void unshrinkNormals(const TCFloat *matrix, const TCFloat *unshrinkMatrix);
 	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
 	virtual void uncompile(void);
@@ -206,9 +206,9 @@ public:
 		return section == TREMLines || section == TREMEdgeLines;
 	}
 	virtual void transferColoredTransparent(TREMSection section,
-		const float *matrix);
+		const TCFloat *matrix);
 	virtual void transferTransparent(TCULong color, TREMSection section,
-		const float *matrix);
+		const TCFloat *matrix);
 	virtual void cleanupTransparent(TREMSection section);
 protected:
 	virtual ~TREModel(void);
@@ -229,13 +229,13 @@ protected:
 	virtual void setupColoredEdges(void);
 	virtual void setupConditional(void);
 	virtual void setupColoredConditional(void);
-	virtual void flatten(TREModel *model, const float *matrix, TCULong color,
+	virtual void flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 		bool colorSet, TCULong edgeColor, bool edgeColorSet,
 		bool includeShapes);
 	virtual void checkGLError(char *msg);
 /*
 	virtual void flattenShapes(TREShapeGroup *dstShapes,
-		TREShapeGroup *srcShapes, float *matrix, TCULong color, bool colorSet);
+		TREShapeGroup *srcShapes, TCFloat *matrix, TCULong color, bool colorSet);
 	virtual void flattenShapes(TREVertexArray *dstVertices,
 		TREVertexArray *dstNormals,
 		TCULongArray *dstColors,
@@ -246,7 +246,7 @@ protected:
 		TCULongArray *srcColors,
 		TCULongArray *srcIndices,
 		TCULongArray *srcCPIndices,
-		float *matrix,
+		TCFloat *matrix,
 		TCULong color,
 		bool colorSet);
 	virtual void flattenStrips(TREVertexArray *dstVertices,
@@ -254,10 +254,10 @@ protected:
 		TCULongArray *dstIndices, TCULongArray *dstStripCounts,
 		TREVertexArray *srcVertices, TREVertexArray *srcNormals,
 		TCULongArray *srcColors, TCULongArray *srcIndices,
-		TCULongArray *srcStripCounts, float *matrix, TCULong color,
+		TCULongArray *srcStripCounts, TCFloat *matrix, TCULong color,
 		bool colorSet);
 */
-	void setCirclePoint(float angle, float radius, const TCVector& center,
+	void setCirclePoint(TCFloat angle, TCFloat radius, const TCVector& center,
 		TCVector& point);
 	void scanBoundingBoxPoint(const TCVector &point);
 	virtual void calculateBoundingBox(void);
@@ -329,8 +329,8 @@ protected:
 	TRESubModelArray *m_subModels;
 	TREShapeGroup *m_shapes[TREMLast + 1];
 	TREColoredShapeGroup *m_coloredShapes[TREMLast + 1];
-	int m_listIDs[TREMLast + 1];
-	int m_coloredListIDs[TREMLast + 1];
+	GLuint m_listIDs[TREMLast + 1];
+	GLuint m_coloredListIDs[TREMLast + 1];
 	TREModel *m_unMirroredModel;
 	TREModel *m_invertedModel;
 	TCULong m_sectionsPresent;

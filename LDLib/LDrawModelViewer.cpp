@@ -184,8 +184,8 @@ void LDrawModelViewer::applyTile(void)
 		GLfloat xScale, yScale;
 		GLfloat xOffset, yOffset;
 
-//		tileWidth = (float)width / numXTiles;
-//		tileHeight = (float)height / numYTiles;
+//		tileWidth = (TCFloat)width / numXTiles;
+//		tileHeight = (TCFloat)height / numYTiles;
 		tileLeft = (int)(xTile * width);
 		tileRight = (int)((xTile + 1) * width);
 		tileBottom = (int)((numYTiles - yTile - 1) * height);
@@ -199,11 +199,11 @@ void LDrawModelViewer::applyTile(void)
 		yOffset = (-2.0f * tileBottom) / (height * numYTiles) +
 			(1 - 1.0f / numYTiles);
 		glScalef(xScale, yScale, 1.0f);
-		glTranslatef(xOffset, yOffset, 0.0f);
+		treGlTranslatef(xOffset, yOffset, 0.0f);
 	}
 }
 
-float LDrawModelViewer::getStereoWidthModifier(void)
+TCFloat LDrawModelViewer::getStereoWidthModifier(void)
 {
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
@@ -215,7 +215,7 @@ float LDrawModelViewer::getStereoWidthModifier(void)
 	}
 }
 
-void LDrawModelViewer::setFieldOfView(double fov, float nClip, float fClip)
+void LDrawModelViewer::setFieldOfView(double fov, TCFloat nClip, TCFloat fClip)
 {
 	GLdouble aspectWidth, aspectHeight;
 
@@ -235,7 +235,7 @@ void LDrawModelViewer::perspectiveView(void)
 	perspectiveView(true);
 }
 
-void LDrawModelViewer::setFov(float value)
+void LDrawModelViewer::setFov(TCFloat value)
 {
 	if (value != fov)
 	{
@@ -244,11 +244,11 @@ void LDrawModelViewer::setFov(float value)
 	}
 }
 
-float LDrawModelViewer::getHFov(void)
+TCFloat LDrawModelViewer::getHFov(void)
 {
 	int actualWidth = width / (int)getStereoWidthModifier();
 
-	return (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+	return (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
 		(actualWidth * numXTiles) / (double)height * numYTiles)));
 }
 
@@ -268,39 +268,39 @@ void LDrawModelViewer::updateCurrentFov(void)
 			//
 			// From Lars Hassing:
 			// Vertical FOV = 2*atan(tan(hfov/2)/(width/height))
-			currentFov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+			currentFov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
 				(double)height * numYTiles / (actualWidth * numXTiles))));
 
 			if (currentFov > 179.0f)
 			{
 				currentFov = 179.0f;
 			}
-			aspectRatio = (float)height / actualWidth;
+			aspectRatio = (TCFloat)height / actualWidth;
 		}
 		else
 		{
-			aspectRatio = (float)actualWidth / height;
+			aspectRatio = (TCFloat)actualWidth / height;
 		}
 	}
 	else
 	{
-		fov = (float)(2.0 * rad2deg(atan(tan(deg2rad(currentFov / 2.0)) *
+		fov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(currentFov / 2.0)) *
 			(double)height * numYTiles / (actualWidth * numXTiles))));
 		if (actualWidth * numXTiles > height * numYTiles)
 		{
 			currentFov = fov;
-			aspectRatio = (float)actualWidth / height;
+			aspectRatio = (TCFloat)actualWidth / height;
 		}
 		else
 		{
-			aspectRatio = (float)height / actualWidth;
+			aspectRatio = (TCFloat)height / actualWidth;
 		}
 	}
 }
 
-float LDrawModelViewer::getClipRadius(void)
+TCFloat LDrawModelViewer::getClipRadius(void)
 {
-	float clipRadius;
+	TCFloat clipRadius;
 
 	if (flags.autoCenter)
 	{
@@ -317,9 +317,9 @@ float LDrawModelViewer::getClipRadius(void)
 	return clipRadius;
 }
 
-float LDrawModelViewer::getZDistance(void)
+TCFloat LDrawModelViewer::getZDistance(void)
 {
-	float inverseMatrix[16];
+	TCFloat inverseMatrix[16];
 	TCVector vector = camera.getPosition();
 
 	camera.getFacing().getInverseMatrix(inverseMatrix);
@@ -329,12 +329,12 @@ float LDrawModelViewer::getZDistance(void)
 
 void LDrawModelViewer::perspectiveView(bool resetViewport)
 {
-	float nClip;
-	float fClip;
-	float clipRadius = getClipRadius();
+	TCFloat nClip;
+	TCFloat fClip;
+	TCFloat clipRadius = getClipRadius();
 	int actualWidth = width / (int)getStereoWidthModifier();
-	float zDistance = getZDistance();
-	float aspectAdjust = (float)tan(1.0f);
+	TCFloat zDistance = getZDistance();
+	TCFloat aspectAdjust = (TCFloat)tan(1.0f);
 
 	if (flags.forceZoomToFit)
 	{
@@ -348,7 +348,7 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 		flags.needsResize = false;
 	}
 //	printf("aspectRatio1: %f ", aspectRatio);
-	aspectRatio = (float)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
+	aspectRatio = (TCFloat)(1.0f / tan(1.0f / aspectRatio)) * aspectAdjust;
 	aspectRatio = 1.0f;
 //	printf("aspectRatio2: %f\n", aspectRatio);
 	nClip = zDistance - clipRadius * aspectRatio + clipAmount * aspectRatio *
@@ -361,18 +361,18 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 	setFieldOfView(currentFov, nClip, fClip);
 	glLoadIdentity();
 	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogf(GL_FOG_START, nClip);
-	glFogf(GL_FOG_END, fClip);
+	glFogf(GL_FOG_START, (GLfloat)nClip);
+	glFogf(GL_FOG_END, (GLfloat)fClip);
 }
 
 void LDrawModelViewer::perspectiveViewToClipPlane(void)
 {
-	float nClip;
-	float fClip;
-	float zDistance = getZDistance();
-//	float zDistance = (camera.getPosition()).length();
-	float clipRadius = getClipRadius();
-//	float distance = (camera.getPosition() - center).length();
+	TCFloat nClip;
+	TCFloat fClip;
+	TCFloat zDistance = getZDistance();
+//	TCFloat zDistance = (camera.getPosition()).length();
+	TCFloat clipRadius = getClipRadius();
+//	TCFloat distance = (camera.getPosition() - center).length();
 
 	nClip = zDistance - size / 2.0f;
 //	fClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
@@ -390,8 +390,8 @@ void LDrawModelViewer::perspectiveViewToClipPlane(void)
 	setFieldOfView(currentFov, nClip, fClip);
 	glLoadIdentity();
 	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogf(GL_FOG_START, nClip);
-	glFogf(GL_FOG_END, fClip);
+	glFogf(GL_FOG_START, (GLfloat)nClip);
+	glFogf(GL_FOG_END, (GLfloat)fClip);
 }
 
 /*
@@ -416,12 +416,12 @@ bool LDrawModelViewer::skipCameraPositioning(void)
 		defaultRotationMatrix[13] != 0.0f || defaultRotationMatrix[14] != 0.0f);
 }
 
-float LDrawModelViewer::calcDefaultDistance(void)
+TCFloat LDrawModelViewer::calcDefaultDistance(void)
 {
 	// Note that the margin is on all sides, so it's on two edges per axis,
 	// which is why we multiply by 2.
-	float margin = getWideLineMargin() * 2.0f;
-	float marginAdjust = 1.0f;
+	TCFloat margin = getWideLineMargin() * 2.0f;
+	TCFloat marginAdjust = 1.0f;
 
 	if (margin != 0.0f)
 	{
@@ -437,14 +437,14 @@ float LDrawModelViewer::calcDefaultDistance(void)
 			marginAdjust = (actualWidth + margin) / actualWidth;
 		}
 	}
-	return (float)(size / 2.0 / sin(deg2rad(fov / 2.0))) * distanceMultiplier *
+	return (TCFloat)(size / 2.0 / sin(deg2rad(fov / 2.0))) * distanceMultiplier *
 		marginAdjust;
 /*
 	double angle1 = deg2rad(90.0f - (currentFov / 2.0));
 	double angle2 = deg2rad(currentFov / 4.0);
 	double radius = size / 2.0;
 
-	return (float)(radius * tan(angle1) + radius * tan(angle2)) *
+	return (TCFloat)(radius * tan(angle1) + radius * tan(angle2)) *
 		distanceMultiplier;
 */
 }
@@ -472,7 +472,7 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 	camera.setFacing(TREFacing());
 	if (!rotationMatrix)
 	{
-		rotationMatrix = new float[16];
+		rotationMatrix = new TCFloat[16];
 	}
 	switch (viewAngle)
 	{
@@ -507,16 +507,16 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 	perspectiveView(true);
 }
 
-void LDrawModelViewer::setDefaultRotationMatrix(const float *value)
+void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 {
 	if (value)
 	{
 		if (!defaultRotationMatrix || memcmp(defaultRotationMatrix, value,
-			16 * sizeof(float)) != 0)
+			16 * sizeof(TCFloat)) != 0)
 		{
 			delete defaultRotationMatrix;
-			defaultRotationMatrix = new float[16];
-			memcpy(defaultRotationMatrix, value, 16 * sizeof(float));
+			defaultRotationMatrix = new TCFloat[16];
+			memcpy(defaultRotationMatrix, value, 16 * sizeof(TCFloat));
 			flags.needsSetup = true;
 		}
 	}
@@ -532,7 +532,7 @@ void LDrawModelViewer::setupDefaultViewAngle(void)
 {
 	if (defaultRotationMatrix)
 	{
-		memcpy(rotationMatrix, defaultRotationMatrix, 16 * sizeof(float));
+		memcpy(rotationMatrix, defaultRotationMatrix, 16 * sizeof(TCFloat));
 	}
 	else
 	{
@@ -542,17 +542,17 @@ void LDrawModelViewer::setupDefaultViewAngle(void)
 
 void LDrawModelViewer::setupIsoViewAngle(void)
 {
-	rotationMatrix[0] = (float)(sqrt(2.0) / 2.0);
-	rotationMatrix[1] = (float)(sqrt(2.0) / 4.0);
-	rotationMatrix[2] = (float)(-sqrt(1.5) / 2.0);
+	rotationMatrix[0] = (TCFloat)(sqrt(2.0) / 2.0);
+	rotationMatrix[1] = (TCFloat)(sqrt(2.0) / 4.0);
+	rotationMatrix[2] = (TCFloat)(-sqrt(1.5) / 2.0);
 	rotationMatrix[3] = 0.0f;
 	rotationMatrix[4] = 0.0f;
-	rotationMatrix[5] = (float)(sin(M_PI / 3.0));
+	rotationMatrix[5] = (TCFloat)(sin(M_PI / 3.0));
 	rotationMatrix[6] = 0.5f;
 	rotationMatrix[7] = 0.0f;
-	rotationMatrix[8] = (float)(sqrt(2.0) / 2.0);
-	rotationMatrix[9] = (float)(-sqrt(2.0) / 4.0);
-	rotationMatrix[10] = (float)(sqrt(1.5) / 2.0);
+	rotationMatrix[8] = (TCFloat)(sqrt(2.0) / 2.0);
+	rotationMatrix[9] = (TCFloat)(-sqrt(2.0) / 4.0);
+	rotationMatrix[10] = (TCFloat)(sqrt(1.5) / 2.0);
 	rotationMatrix[11] = 0.0f;
 	rotationMatrix[12] = 0.0f;
 	rotationMatrix[13] = 0.0f;
@@ -1014,11 +1014,11 @@ void LDrawModelViewer::setOneLight(bool value)
 
 void LDrawModelViewer::setupMaterial(void)
 {
-//	float mAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
-	float mAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
-//	float mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-	float mSpecular[] = {0.5f, 0.5f, 0.5f, 1.0f};
-//	float mSpecular[] = {0.0f, 0.0f, 0.0f, 1.0f};
+//	GLfloat mAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
+	GLfloat mAmbient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+//	GLfloat mSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat mSpecular[] = {0.5f, 0.5f, 0.5f, 1.0f};
+//	GLfloat mSpecular[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	// Note: default emission is <0,0,0,1>, which is what we want.
 	if (!flags.usesSpecular)
@@ -1035,9 +1035,9 @@ void LDrawModelViewer::setupMaterial(void)
 
 void LDrawModelViewer::setupLight(GLenum light)
 {
-	float lAmbient[4];
-	float lDiffuse[4];
-	float lSpecular[4];
+	GLfloat lAmbient[4];
+	GLfloat lDiffuse[4];
+	GLfloat lSpecular[4];
 
 	if (flags.subduedLighting)
 	{
@@ -1184,32 +1184,33 @@ void LDrawModelViewer::setupFont(char *fontFilename)
 		fontListBase = glGenLists(FONT_NUM_CHARACTERS);
 		for (i = 0; i < FONT_NUM_CHARACTERS; i++)
 		{
-			float cx, cy;
-			float wx, hy;
-			float tx, ty;
+			TCFloat cx, cy;
+			TCFloat wx, hy;
+			TCFloat tx, ty;
 
-			cx = (float)(i % 16) * FONT_CHAR_WIDTH / (float)(FONT_IMAGE_WIDTH);
-			cy = (float)(i / 16) * FONT_CHAR_HEIGHT /
-				(float)(FONT_IMAGE_HEIGHT);
-			wx = (float)FONT_CHAR_WIDTH / FONT_IMAGE_WIDTH;
-			hy = (float)FONT_CHAR_HEIGHT / FONT_IMAGE_HEIGHT;
+			cx = (TCFloat)(i % 16) * FONT_CHAR_WIDTH /
+				(TCFloat)(FONT_IMAGE_WIDTH);
+			cy = (TCFloat)(i / 16) * FONT_CHAR_HEIGHT /
+				(TCFloat)(FONT_IMAGE_HEIGHT);
+			wx = (TCFloat)FONT_CHAR_WIDTH / FONT_IMAGE_WIDTH;
+			hy = (TCFloat)FONT_CHAR_HEIGHT / FONT_IMAGE_HEIGHT;
 			glNewList(fontListBase + i, GL_COMPILE);
 				glBegin(GL_QUADS);
 					tx = cx;
 					ty = 1.0f - cy - hy;
-					glTexCoord2f(tx, ty);			// Bottom Left
+					treGlTexCoord2f(tx, ty);			// Bottom Left
 					glVertex2i(0, 0);
 					tx = cx + wx;
 					ty = 1.0f - cy - hy;
-					glTexCoord2f(tx, ty);			// Bottom Right
+					treGlTexCoord2f(tx, ty);			// Bottom Right
 					glVertex2i(FONT_CHAR_WIDTH, 0);
 					tx = cx + wx;
 					ty = 1 - cy;
-					glTexCoord2f(tx, ty);			// Top Right
+					treGlTexCoord2f(tx, ty);			// Top Right
 					glVertex2i(FONT_CHAR_WIDTH, FONT_CHAR_HEIGHT);
 					tx = cx;
 					ty = 1 - cy;
-					glTexCoord2f(tx , ty);			// Top Left
+					treGlTexCoord2f(tx , ty);			// Top Left
 					glVertex2i(0, FONT_CHAR_HEIGHT);
 				glEnd();
 				glTranslated(FONT_CHAR_WIDTH + 1, 0, 0);
@@ -1252,24 +1253,24 @@ void LDrawModelViewer::drawBoundingBox(void)
 	}
 	glColor3ub(255, 255, 255);
 	glBegin(GL_LINE_STRIP);
-		glVertex3fv(boundingMin);
-		glVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
-		glVertex3f(boundingMax[0], boundingMax[1], boundingMin[2]);
-		glVertex3f(boundingMin[0], boundingMax[1], boundingMin[2]);
-		glVertex3fv(boundingMin);
-		glVertex3f(boundingMin[0], boundingMin[1], boundingMax[2]);
-		glVertex3f(boundingMax[0], boundingMin[1], boundingMax[2]);
-		glVertex3fv(boundingMax);
-		glVertex3f(boundingMin[0], boundingMax[1], boundingMax[2]);
-		glVertex3f(boundingMin[0], boundingMin[1], boundingMax[2]);
+		treGlVertex3fv(boundingMin);
+		treGlVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
+		treGlVertex3f(boundingMax[0], boundingMax[1], boundingMin[2]);
+		treGlVertex3f(boundingMin[0], boundingMax[1], boundingMin[2]);
+		treGlVertex3fv(boundingMin);
+		treGlVertex3f(boundingMin[0], boundingMin[1], boundingMax[2]);
+		treGlVertex3f(boundingMax[0], boundingMin[1], boundingMax[2]);
+		treGlVertex3fv(boundingMax);
+		treGlVertex3f(boundingMin[0], boundingMax[1], boundingMax[2]);
+		treGlVertex3f(boundingMin[0], boundingMin[1], boundingMax[2]);
 	glEnd();
 	glBegin(GL_LINES);
-		glVertex3f(boundingMin[0], boundingMax[1], boundingMin[2]);
-		glVertex3f(boundingMin[0], boundingMax[1], boundingMax[2]);
-		glVertex3f(boundingMax[0], boundingMax[1], boundingMin[2]);
-		glVertex3f(boundingMax[0], boundingMax[1], boundingMax[2]);
-		glVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
-		glVertex3f(boundingMax[0], boundingMin[1], boundingMax[2]);
+		treGlVertex3f(boundingMin[0], boundingMax[1], boundingMin[2]);
+		treGlVertex3f(boundingMin[0], boundingMax[1], boundingMax[2]);
+		treGlVertex3f(boundingMax[0], boundingMax[1], boundingMin[2]);
+		treGlVertex3f(boundingMax[0], boundingMax[1], boundingMax[2]);
+		treGlVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
+		treGlVertex3f(boundingMax[0], boundingMin[1], boundingMax[2]);
 	glEnd();
 	if (lightingEnabled)
 	{
@@ -1301,12 +1302,12 @@ void LDrawModelViewer::orthoView(void)
 	if (strncmp(glVendor, "ATI Technologies Inc.", 3) != 0)
 	{
 		// This doesn't work right on ATI video cards, so skip.
-		glTranslatef(0.375f, 0.375f, 0.0f);
+		treGlTranslatef(0.375f, 0.375f, 0.0f);
 		debugPrintf("Not an ATI.\n");
 	}
 }
 
-void LDrawModelViewer::setSeamWidth(float value)
+void LDrawModelViewer::setSeamWidth(TCFloat value)
 {
 	if (!fEq(value, seamWidth))
 	{
@@ -1315,7 +1316,7 @@ void LDrawModelViewer::setSeamWidth(float value)
 	}
 }
 
-void LDrawModelViewer::drawString(GLfloat xPos, GLfloat yPos, char* string)
+void LDrawModelViewer::drawString(TCFloat xPos, TCFloat yPos, char* string)
 {
 	if (!fontListBase)
 	{
@@ -1330,7 +1331,7 @@ void LDrawModelViewer::drawString(GLfloat xPos, GLfloat yPos, char* string)
 		glColor3ub(255, 255, 255);
 	}
 	orthoView();
-	glTranslated(xPos, yPos, 0);
+	treGlTranslatef(xPos, yPos, 0);
 	glPushAttrib(GL_ENABLE_BIT | GL_POLYGON_BIT | GL_TEXTURE_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
@@ -1349,14 +1350,14 @@ void LDrawModelViewer::drawString(GLfloat xPos, GLfloat yPos, char* string)
 	perspectiveView();
 }
 
-void LDrawModelViewer::drawFPS(float fps)
+void LDrawModelViewer::drawFPS(TCFloat fps)
 {
 	if (mainTREModel)
 	{
 		char fpsString[1024];
 		int lightingEnabled = glIsEnabled(GL_LIGHTING);
 		int zBufferEnabled = glIsEnabled(GL_DEPTH_TEST);
-		//float xMult = (float)width / (float)height;
+		//TCFloat xMult = (TCFloat)width / (TCFloat)height;
 
 		if (lightingEnabled)
 		{
@@ -1393,19 +1394,19 @@ void LDrawModelViewer::drawFPS(float fps)
 	}
 }
 
-void LDrawModelViewer::drawLight(GLenum light, float x, float y, float z)
+void LDrawModelViewer::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
 {
-	float position[4];
-	float direction[4];
-	//float fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
+	GLfloat position[4];
+	GLfloat direction[4];
+	//TCFloat fullIntensity[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-	position[0] = x;
-	position[1] = y;
-	position[2] = z;
+	position[0] = (GLfloat)x;
+	position[1] = (GLfloat)y;
+	position[2] = (GLfloat)z;
 	position[3] = 0.0f;
-	direction[0] = -x;
-	direction[1] = -y;
-	direction[2] = -z;
+	direction[0] = (GLfloat)-x;
+	direction[1] = (GLfloat)-y;
+	direction[2] = (GLfloat)-z;
 	direction[3] = 0.0f;
 	glLightfv(light, GL_POSITION, position);
 	glLightfv(light, GL_SPOT_DIRECTION, direction);
@@ -1422,7 +1423,7 @@ void LDrawModelViewer::drawLights(void)
 
 void LDrawModelViewer::setLightVector(const TCVector &value)
 {
-	float length = value.length();
+	TCFloat length = value.length();
 
 	if (length)
 	{
@@ -1732,12 +1733,12 @@ void LDrawModelViewer::setCutawayMode(LDVCutawayMode mode)
 	cutawayMode = mode;
 }
 
-void LDrawModelViewer::setCutawayLineWidth(float value)
+void LDrawModelViewer::setCutawayLineWidth(TCFloat32 value)
 {
 	cutawayLineWidth = value;
 }
 
-void LDrawModelViewer::setCutawayAlpha(float value)
+void LDrawModelViewer::setCutawayAlpha(TCFloat32 value)
 {
 	cutawayAlpha = value;
 }
@@ -1785,7 +1786,7 @@ void LDrawModelViewer::setSortTransparent(bool value)
 	}
 }
 
-void LDrawModelViewer::setHighlightLineWidth(float value)
+void LDrawModelViewer::setHighlightLineWidth(TCFloat32 value)
 {
 	if (value != highlightLineWidth)
 	{
@@ -1797,7 +1798,7 @@ void LDrawModelViewer::setHighlightLineWidth(float value)
 	}
 }
 
-void LDrawModelViewer::setWireframeLineWidth(float value)
+void LDrawModelViewer::setWireframeLineWidth(TCFloat32 value)
 {
 	wireframeLineWidth = value;
 }
@@ -1826,7 +1827,7 @@ void LDrawModelViewer::updateCameraPosition(void)
 	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
 }
 
-void LDrawModelViewer::zoom(float amount, bool apply)
+void LDrawModelViewer::zoom(TCFloat amount, bool apply)
 {
 	if (flags.paused)
 	{
@@ -1853,8 +1854,8 @@ void LDrawModelViewer::zoom(float amount, bool apply)
 	}
 	else
 	{
-		float distance = (camera.getPosition()).length();
-//		float distance = (camera.getPosition() - center).length();
+		TCFloat distance = (camera.getPosition()).length();
+//		TCFloat distance = (camera.getPosition() - center).length();
 
 		nextDistance = distance + (amount * distance / 300.0f);
 		if (flags.constrainZoom && !skipCameraPositioning())
@@ -1893,7 +1894,7 @@ void LDrawModelViewer::applyZoom(void)
 	}
 	else
 	{
-		float distance = (camera.getPosition()).length();
+		TCFloat distance = (camera.getPosition()).length();
 
 		if (!fEq(distance, nextDistance))
 		{
@@ -1907,7 +1908,7 @@ void LDrawModelViewer::applyZoom(void)
 
 void LDrawModelViewer::clearBackground(void)
 {
-	float backgroundColor[3];
+	GLfloat backgroundColor[3];
 
 	if (cullBackFaces)
 	{
@@ -1919,9 +1920,9 @@ void LDrawModelViewer::clearBackground(void)
 		glDisable(GL_CULL_FACE);
 	}
 	glClearDepth(1.0);
-	backgroundColor[0] = backgroundR;
-	backgroundColor[1] = backgroundG;
-	backgroundColor[2] = backgroundB;
+	backgroundColor[0] = (GLfloat)backgroundR;
+	backgroundColor[1] = (GLfloat)backgroundG;
+	backgroundColor[2] = (GLfloat)backgroundB;
 	glFogfv(GL_FOG_COLOR, backgroundColor);
 	if (flags.slowClear)
 	{
@@ -1999,7 +2000,7 @@ void LDrawModelViewer::clearBackground(void)
 	}
 }
 
-void LDrawModelViewer::drawSetup(GLfloat eyeXOffset)
+void LDrawModelViewer::drawSetup(TCFloat eyeXOffset)
 {
 	glLoadIdentity();
 	if (flags.qualityLighting)
@@ -2027,16 +2028,16 @@ void LDrawModelViewer::drawSetup(GLfloat eyeXOffset)
 		perspectiveView(false);
 //		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
 		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
-//		glTranslatef(eyeXOffset + xPan, yPan, -distance);
+//		treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	}
 	else
 	{
 		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 10.0f));
-//		glTranslatef(eyeXOffset + xPan, yPan, -10.0f);
+//		treGlTranslatef(eyeXOffset + xPan, yPan, -10.0f);
 	}
 }
 
-void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
+void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 {
 	perspectiveViewToClipPlane();
 	glDisable(GL_DEPTH_TEST);
@@ -2050,20 +2051,20 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
-//	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+//	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	if (rotationMatrix)
 	{
 		glPushMatrix();
 		glLoadIdentity();
-		glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-		glMultMatrixf(rotationMatrix);
-		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+		treGlMultMatrixf(rotationMatrix);
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 		glPopMatrix();
-		glMultMatrixf(rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
 	}
 	if (flags.autoCenter)
 	{
-		glTranslatef(-center[0], -center[1], -center[2]);
+		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
 	mainTREModel->draw();
 	glDisable(GL_LIGHTING);
@@ -2097,8 +2098,8 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(GLfloat eyeXOffset)
 /*
 void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 {
-	float weight = 0.25f;
-	float oldZoomSpeed = zoomSpeed;
+	TCFloat weight = 0.25f;
+	TCFloat oldZoomSpeed = zoomSpeed;
 
 	glReadBuffer(GL_BACK);
 	glAccum(GL_LOAD, 1.0f - weight);
@@ -2113,12 +2114,12 @@ void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 	{
 		glPushMatrix();
 		glLoadIdentity();
-		glMultMatrixf(rotationMatrix);
-		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 		glPopMatrix();
-		glMultMatrixf(rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
 	}
-	glTranslatef(-center[0], -center[1], -center[2]);
+	treGlTranslatef(-center[0], -center[1], -center[2]);
 	glColor3ub(192, 192, 192);
 	mainTREModel->draw();
 
@@ -2130,17 +2131,17 @@ void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 	glLineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
-	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	if (rotationMatrix)
 	{
 		glPushMatrix();
 		glLoadIdentity();
-		glMultMatrixf(rotationMatrix);
-		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 		glPopMatrix();
-		glMultMatrixf(rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
 	}
-	glTranslatef(-center[0], -center[1], -center[2]);
+	treGlTranslatef(-center[0], -center[1], -center[2]);
 	mainTREModel->draw();
 	perspectiveView();
 	glAccum(GL_ACCUM, weight);
@@ -2148,9 +2149,9 @@ void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 }
 */
 
-void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset)
+void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 {
-	float weight = cutawayAlpha;
+	TCFloat32 weight = cutawayAlpha;
 
 	perspectiveViewToClipPlane();
 	glClearDepth(1.0);
@@ -2165,21 +2166,21 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset)
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
-//	glTranslatef(eyeXOffset + xPan, yPan, -distance);
-	//glTranslatef(0.0f, 0.0f, -distance);
+//	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
+	//treGlTranslatef(0.0f, 0.0f, -distance);
 	if (rotationMatrix)
 	{
 		glPushMatrix();
 		glLoadIdentity();
-		glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-		glMultMatrixf(rotationMatrix);
-		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+		treGlMultMatrixf(rotationMatrix);
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 		glPopMatrix();
-		glMultMatrixf(rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
 	}
 	if (flags.autoCenter)
 	{
-		glTranslatef(-center[0], -center[1], -center[2]);
+		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
 	mainTREModel->setCutawayDrawFlag(true);
 	mainTREModel->draw();
@@ -2189,7 +2190,7 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset)
 	glDisable(GL_BLEND);
 }
 
-void LDrawModelViewer::drawToClipPlaneUsingNoEffect(GLfloat eyeXOffset)
+void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 {
 	perspectiveViewToClipPlane();
 	glClearDepth(1.0);
@@ -2200,27 +2201,27 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(GLfloat eyeXOffset)
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
-//	glTranslatef(eyeXOffset + xPan, yPan, -distance);
+//	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	if (rotationMatrix)
 	{
 		glPushMatrix();
 		glLoadIdentity();
-		glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-		glMultMatrixf(rotationMatrix);
-		glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+		treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+		treGlMultMatrixf(rotationMatrix);
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 		glPopMatrix();
-		glMultMatrixf(rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
 	}
 	if (flags.autoCenter)
 	{
-		glTranslatef(-center[0], -center[1], -center[2]);
+		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
 	mainTREModel->draw();
 	perspectiveView();
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
-void LDrawModelViewer::drawToClipPlane(GLfloat eyeXOffset)
+void LDrawModelViewer::drawToClipPlane(TCFloat eyeXOffset)
 {
 	switch (cutawayMode)
 	{
@@ -2258,7 +2259,7 @@ bool LDrawModelViewer::getLDrawCommandLineMatrix(char *matrixString,
 	if (rotationMatrix && bufferLength)
 	{
 		char buf[1024];
-		float matrix[16];
+		TCFloat matrix[16];
 		int i;
 		TCVector point;
 		
@@ -2312,7 +2313,7 @@ bool LDrawModelViewer::getLDGLiteCommandLine(char *commandString,
 			lookAt = center;
 		}
 		int i;
-		float transformationMatrix[16];
+		TCFloat transformationMatrix[16];
 
 		if (!getLDrawCommandLineMatrix(matrixString, 512))
 		{
@@ -2349,12 +2350,12 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 	if (rotationMatrix && bufferLength)
 	{
 		char buf[1024];
-		float matrix[16];
+		TCFloat matrix[16];
 		int i;
 		TCVector point;
-		float scaleFactor = 500.0f;
-		float distance = (camera.getPosition()).length();
-//		float distance = (camera.getPosition() - center).length();
+		TCFloat scaleFactor = 500.0f;
+		TCFloat distance = (camera.getPosition()).length();
+//		TCFloat distance = (camera.getPosition() - center).length();
 
 		if (flags.autoCenter)
 		{
@@ -2400,7 +2401,7 @@ void LDrawModelViewer::update(void)
 {
 	static GLubyte stipplePattern[128];
 	static bool stipplePatternSet = false;
-	GLfloat eyeXOffset = 0.0f;
+	TCFloat eyeXOffset = 0.0f;
 
 	if (!stipplePatternSet)
 	{
@@ -2421,7 +2422,7 @@ void LDrawModelViewer::update(void)
 	}
 	if (!rotationMatrix)
 	{
-		rotationMatrix = new float[16];
+		rotationMatrix = new TCFloat[16];
 		setupDefaultViewAngle();
 		flags.needsRotationMatrixSetup = true;
 	}
@@ -2481,10 +2482,10 @@ void LDrawModelViewer::update(void)
 */
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
-		float distance = (camera.getPosition()).length();
-//		float distance = (camera.getPosition() - center).length();
+		TCFloat distance = (camera.getPosition()).length();
+//		TCFloat distance = (camera.getPosition() - center).length();
 
-		eyeXOffset = stereoEyeSpacing * 2.0f / (float)pow((double)distance,
+		eyeXOffset = stereoEyeSpacing * 2.0f / (TCFloat)pow((double)distance,
 			0.25);
 		if (stereoMode == LDVStereoCrossEyed)
 		{
@@ -2495,7 +2496,7 @@ void LDrawModelViewer::update(void)
 	{
 		if (!flags.paused)
 		{
-			float matrix[16];
+			TCFloat matrix[16];
 			TCVector rotation = TCVector(xRotate, yRotate, zRotate);
 
 			camera.getFacing().getInverseMatrix(matrix);
@@ -2504,10 +2505,10 @@ void LDrawModelViewer::update(void)
 			rotation = rotation.mult(matrix);
 //			printf("[%f %f %f] [%f %f %f]\n", xRotate, yRotate, zRotate,
 //				rotation[0], rotation[1], rotation[2]);
-//			glRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-			glRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
-			glMultMatrixf(rotationMatrix);
-			glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+//			treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+			treGlRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
+			treGlMultMatrixf(rotationMatrix);
+			treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 			glPopMatrix();
 		}
 	}
@@ -2544,7 +2545,7 @@ void LDrawModelViewer::update(void)
 	}
 }
 
-void LDrawModelViewer::removeHiddenLines(GLfloat eyeXOffset)
+void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
@@ -2574,35 +2575,35 @@ void LDrawModelViewer::setupRotationMatrix(void)
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-	glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
-	glMultMatrixf(rotationMatrix);
-	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+	treGlRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+	treGlRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+	treGlMultMatrixf(rotationMatrix);
+	treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 	glPopMatrix();
 	flags.needsRotationMatrixSetup = false;
 /*
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
-	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
-	glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-	glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
-	glRotatef(50.0f, 0.0f, -1.5f, 1.0f);
-	glGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+	treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+	treGlRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+	treGlRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+	treGlRotatef(50.0f, 0.0f, -1.5f, 1.0f);
+	treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 	glPopMatrix();
 */
 }
 
-void LDrawModelViewer::drawModel(GLfloat eyeXOffset)
+void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 {
 	drawSetup(eyeXOffset);
 	if (rotationMatrix)
 	{
-		glMultMatrixf(rotationMatrix);
+		treGlMultMatrixf(rotationMatrix);
 	}
 	if (flags.autoCenter)
 	{
-		glTranslatef(-center[0], -center[1], -center[2]);
+		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
 //	drawBoundingBox();
 	glColor3ub(192, 192, 192);
@@ -2626,7 +2627,7 @@ void LDrawModelViewer::unpause(void)
 	flags.paused = false;
 }
 
-void LDrawModelViewer::setRotationSpeed(float value)
+void LDrawModelViewer::setRotationSpeed(TCFloat value)
 {
 	rotationSpeed = value;
 	if (value)
@@ -2635,7 +2636,7 @@ void LDrawModelViewer::setRotationSpeed(float value)
 	}
 }
 
-void LDrawModelViewer::setZoomSpeed(float value)
+void LDrawModelViewer::setZoomSpeed(TCFloat value)
 {
 	zoomSpeed = value;
 	if (value)
@@ -2659,27 +2660,27 @@ void LDrawModelViewer::setExtraSearchDirs(TCStringArray *value)
 
 void LDrawModelViewer::panXY(int xValue, int yValue)
 {
-	float adjustment;
-	float distance = (camera.getPosition()).length();
-//	float distance = (camera.getPosition() - center).length();
+	TCFloat adjustment;
+	TCFloat distance = (camera.getPosition()).length();
+//	TCFloat distance = (camera.getPosition() - center).length();
 
 	if (width > height)
 	{
-		adjustment = (float)width;
+		adjustment = (TCFloat)width;
 	}
 	else
 	{
-		adjustment = (float)height;
+		adjustment = (TCFloat)height;
 	}
-//	xPan += xValue / (float)pow(distance, 0.001);
-//	yPan -= yValue / (float)pow(distance, 0.001);
-	xPan += xValue / adjustment / (float)pow(2.0 / distance, 1.1) *
-		(float)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
-	yPan -= yValue / adjustment / (float)pow(2.0 / distance, 1.1) *
-		(float)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
+//	xPan += xValue / (TCFloat)pow(distance, 0.001);
+//	yPan -= yValue / (TCFloat)pow(distance, 0.001);
+	xPan += xValue / adjustment / (TCFloat)pow(2.0 / distance, 1.1) *
+		(TCFloat)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
+	yPan -= yValue / adjustment / (TCFloat)pow(2.0 / distance, 1.1) *
+		(TCFloat)(sin(deg2rad(fov)) / sin(deg2rad(45.0)));
 }
 
-void LDrawModelViewer::setXYPan(float xValue, float yValue)
+void LDrawModelViewer::setXYPan(TCFloat xValue, TCFloat yValue)
 {
 	xPan = xValue;
 	yPan = yValue;
@@ -2745,9 +2746,9 @@ char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	return message;
 }
 
-float LDrawModelViewer::getWideLineMargin(void)
+TCFloat LDrawModelViewer::getWideLineMargin(void)
 {
-	float margin = 0.0f;
+	TCFloat margin = 0.0f;
 
 	if (flags.showsHighlightLines && highlightLineWidth > 1.0f)
 	{
@@ -2779,19 +2780,19 @@ void LDrawModelViewer::zoomToFit(void)
 {
 	if (mainTREModel)
 	{
-		float d;
-		float a[6][6];
-		float b[6];
-		float x[6];
+		TCFloat d;
+		TCFloat a[6][6];
+		TCFloat b[6];
+		TCFloat x[6];
 		TCVector tmpVec;
 		TCVector location;
 		TCVector cameraDir;
-		float tmpMatrix[16];
-		float transformationMatrix[16];
-		float margin;
+		TCFloat tmpMatrix[16];
+		TCFloat transformationMatrix[16];
+		TCFloat margin;
 		char *cameraGlobe = TCUserDefaults::stringForKey("CameraGlobe", NULL,
 			false);
-		float globeRadius;
+		TCFloat globeRadius;
 
 		TCVector::initIdentityMatrix(tmpMatrix);
 		tmpMatrix[12] = center[0];
@@ -2799,7 +2800,7 @@ void LDrawModelViewer::zoomToFit(void)
 		tmpMatrix[14] = center[2];
 		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
 		zoomToFitWidth = width * numXTiles / getStereoWidthModifier();
-		zoomToFitHeight = (float)(height * numYTiles);
+		zoomToFitHeight = (TCFloat)(height * numYTiles);
 		margin = getWideLineMargin() * 2.0f;
 		preCalcCamera();
 		_numPoints = 0;
@@ -2924,7 +2925,7 @@ void LDrawModelViewer::zoomToFit(void)
 // More of Lars' L3P auto camera positioning code.
 void LDrawModelViewer::scanCameraPoint(const TCVector &point)
 {
-	float d;
+	TCFloat d;
 	int i;
 
 	for (i = 0; i < 4; i++)
@@ -2961,21 +2962,21 @@ void LDrawModelViewer::scanCameraPoint(const TCVector &point)
 // More of Lars' L3P auto camera positioning code.
 void LDrawModelViewer::preCalcCamera(void)
 {
-	float d;
+	TCFloat d;
 	int i;
 
 	delete cameraData;
 	cameraData = new CameraData;
 	if (zoomToFitWidth > zoomToFitHeight)
 	{
-		cameraData->fov = (float)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
+		cameraData->fov = (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(fov / 2.0)) *
 			(double)zoomToFitWidth / (double)zoomToFitHeight)));
 	}
 	else
 	{
 		cameraData->fov = fov;
 	}
-	d = (float)(1.0 / tan(deg2rad(cameraData->fov / 2.0)));
+	d = (TCFloat)(1.0 / tan(deg2rad(cameraData->fov / 2.0)));
 	cameraData->normal[2] = cameraData->direction -
 		(cameraData->horizontal * d);
 	cameraData->normal[3] = cameraData->direction +
@@ -3007,22 +3008,22 @@ void LDrawModelViewer::preCalcCamera(void)
 */
 
 /* Solve A*x=b, returns 1 if OK, 0 if A is singular */
-int LDrawModelViewer::L3Solve6(float x[L3ORDERN],
-            const float A[L3ORDERM][L3ORDERN],
-            const float b[L3ORDERM])
+int LDrawModelViewer::L3Solve6(TCFloat x[L3ORDERN],
+            const TCFloat A[L3ORDERM][L3ORDERN],
+            const TCFloat b[L3ORDERM])
 {
-  float          LU_[L3ORDERM][L3ORDERN];
+  TCFloat          LU_[L3ORDERM][L3ORDERN];
   int            pivsign;
   int            piv[L3ORDERM];/* pivot permutation vector                  */
   int            i;
   int            j;
   int            k;
   int            p;
-  float         *LUrowi;
-  float          LUcolj[L3ORDERM];
+  TCFloat         *LUrowi;
+  TCFloat          LUcolj[L3ORDERM];
   int            kmax;
   double         s;
-  float          t;
+  TCFloat          t;
 
   /** LU Decomposition.
   For an m-by-n matrix A with m >= n, the LU decomposition is an m-by-n
@@ -3058,7 +3059,7 @@ int LDrawModelViewer::L3Solve6(float x[L3ORDERN],
         s = 0.0;
         for (k = 0; k < kmax; k++)
            s += LUrowi[k] * LUcolj[k];
-        LUrowi[j] = LUcolj[i] -= (float)s;
+        LUrowi[j] = LUcolj[i] -= (TCFloat)s;
      }
 
      /* Find pivot and exchange if necessary. */

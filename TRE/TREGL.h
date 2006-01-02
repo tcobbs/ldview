@@ -1,3 +1,6 @@
+#ifndef __TREGL_H__
+#define __TREGL_H__
+
 #ifdef WIN32
 #include <winsock2.h>
 #include <windows.h>
@@ -14,6 +17,8 @@
 #include <GL/glext.h>
 #include <GL/glu.h>
 #endif	// __APPLE__
+
+#include <TCFoundation/TCDefines.h>
 
 //Solaris
 #if (defined (__SVR4) && defined (__sun)) || defined (_AIX)
@@ -52,3 +57,25 @@ typedef int GLsizeiptrARB;
 #endif
 
 #endif // WIN32
+
+#ifdef LDVIEW_DOUBLES
+#define treGlMultMatrixf glMultMatrixd
+#define treGlTranslatef glTranslated
+#define treGlVertex3fv glVertex3dv
+#define treGlVertex3f glVertex3d
+#define treGlGetFloatv glGetDoublev
+#define treGlTexCoord2f glTexCoord2d
+#define treGlRotatef glRotated
+#define TRE_GL_FLOAT GL_DOUBLE
+#else // LDVIEW_DOUBLES
+#define treGlMultMatrixf glMultMatrixf
+#define treGlTranslatef glTranslatef
+#define treGlVertex3fv glVertex3fv
+#define treGlVertex3f glVertex3f
+#define treGlGetFloatv glGetFloatv
+#define treGlTexCoord2f glTexCoord2f
+#define treGlRotatef glRotatef
+#define TRE_GL_FLOAT GL_FLOAT
+#endif // LDVIEW_DOUBLES
+
+#endif // __TREGL_H__

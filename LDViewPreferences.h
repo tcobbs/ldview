@@ -236,8 +236,8 @@ protected:
 	virtual void saveCurrentHotKey(void);
 	virtual BOOL dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 		LPARAM lParam);
-	virtual float getMinFov(void);
-	virtual float getMaxFov(void);
+	virtual TCFloat getMinFov(void);
+	virtual TCFloat getMaxFov(void);
 	virtual void initThemes(HWND hButton);
 	virtual void setupGroupCheckButton(HWND hPage, int buttonId, bool state);
 	virtual bool getCheck(HWND hPage, int buttonId, bool action = false);
@@ -292,10 +292,10 @@ protected:
 	bool showsFPS;
 	bool showErrors;
 	int fullScreenRefresh;
-	float fov;
+	TCFloat fov;
 	int memoryUsage;
 
-	float defaultZoom;
+	TCFloat defaultZoom;
 
 	int useSeams;
 	int seamWidth;
@@ -338,7 +338,7 @@ protected:
 	bool hiResPrimitives;
 
 	COLORREF customColors[16];
-	float zoomMax;
+	TCFloat zoomMax;
 	TCVector lightVector;
 
 	int generalPageNumber;

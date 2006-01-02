@@ -36,18 +36,18 @@ void TRECamera::setName(char* n)
 
 void TRECamera::project(const TCVector &distance)
 {
-	float inverseMatrix[16];
+	TCFloat inverseMatrix[16];
 	TCVector center = -distance;
 
 	facing.getInverseMatrix(inverseMatrix);
 	center = -distance.mult(inverseMatrix) - position;
-	glMultMatrixf(inverseMatrix);
-	glTranslatef(center[0], center[1], center[2]);
+	treGlMultMatrixf(inverseMatrix);
+	treGlTranslatef(center[0], center[1], center[2]);
 }
 
 void TRECamera::rotate(const TCVector &rotation)
 {
-	float inverseMatrix[16];
+	TCFloat inverseMatrix[16];
 
 	facing.getInverseMatrix(inverseMatrix);
 	if (!fEq(rotation.get(1), 0.0))
@@ -72,7 +72,7 @@ void TRECamera::rotate(const TCVector &rotation)
 
 void TRECamera::move(const TCVector &distance)
 {
-	float inverseMatrix[16];
+	TCFloat inverseMatrix[16];
 //	float *matrix;
 	TCVector v = distance;
 

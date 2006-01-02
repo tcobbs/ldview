@@ -9,7 +9,7 @@ class TRESortedTriangle: public TCObject
 public:
 	TCULong indices[3];
 	TCVector center;
-	float depth;
+	TCFloat depth;
 };
 
 typedef TCTypedObjectArray<TRESortedTriangle> TRESortedTriangleArray;

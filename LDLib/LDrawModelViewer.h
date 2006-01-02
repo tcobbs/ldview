@@ -102,28 +102,28 @@ class LDrawModelViewer: public TCObject
 		virtual void setHeight(int value);
 		int getWidth(void) { return width; }
 		int getHeight(void) { return height; }
-		void setXRotate(float value) { xRotate = value; }
-		void setYRotate(float value) { yRotate = value; }
-		void setZRotate(float value) { zRotate = value; }
-		float getXRotate(void) { return xRotate; }
-		float getYRotate(void) { return yRotate; }
-		float getZRotate(void) { return zRotate; }
+		void setXRotate(TCFloat value) { xRotate = value; }
+		void setYRotate(TCFloat value) { yRotate = value; }
+		void setZRotate(TCFloat value) { zRotate = value; }
+		TCFloat getXRotate(void) { return xRotate; }
+		TCFloat getYRotate(void) { return yRotate; }
+		TCFloat getZRotate(void) { return zRotate; }
 		void panXY(int xValue, int yValue);
-		float getXPan(void) { return xPan; }
-		float getYPan(void) { return yPan; }
-		void setXYPan(float xValue, float yValue);
-		void setRotationSpeed(float value);
-		void setCameraXRotate(float value) { cameraXRotate = value; }
-		void setCameraYRotate(float value) { cameraYRotate = value; }
-		void setCameraZRotate(float value) { cameraZRotate = value; }
-		float getCameraXRotate(void) { return cameraXRotate; }
-		float getCameraYRotate(void) { return cameraYRotate; }
-		float getCameraZRotate(void) { return cameraZRotate; }
+		TCFloat getXPan(void) { return xPan; }
+		TCFloat getYPan(void) { return yPan; }
+		void setXYPan(TCFloat xValue, TCFloat yValue);
+		void setRotationSpeed(TCFloat value);
+		void setCameraXRotate(TCFloat value) { cameraXRotate = value; }
+		void setCameraYRotate(TCFloat value) { cameraYRotate = value; }
+		void setCameraZRotate(TCFloat value) { cameraZRotate = value; }
+		TCFloat getCameraXRotate(void) { return cameraXRotate; }
+		TCFloat getCameraYRotate(void) { return cameraYRotate; }
+		TCFloat getCameraZRotate(void) { return cameraZRotate; }
 		void setCameraMotion(const TCVector &value) { cameraMotion = value; }
 		TCVector getCameraMotion(void) { return cameraMotion; }
-		virtual void setZoomSpeed(float value);
-		float getZoomSpeed(void) { return zoomSpeed; }
-		virtual void zoom(float amount, bool apply = true);
+		virtual void setZoomSpeed(TCFloat value);
+		TCFloat getZoomSpeed(void) { return zoomSpeed; }
+		virtual void zoom(TCFloat amount, bool apply = true);
 		virtual void updateCameraPosition(void);
 		virtual void applyZoom(void);
 		void setClipZoom(bool value) { clipZoom = value; }
@@ -133,7 +133,7 @@ class LDrawModelViewer: public TCObject
 		virtual void setFileIsPart(bool);
 		char* getFilename(void) { return filename; }
 		virtual int loadModel(bool = true);
-		virtual void drawFPS(float);
+		virtual void drawFPS(TCFloat);
 		virtual void drawBoundingBox(void);
 		virtual void setup(void);
 		virtual void setBackgroundRGB(int r, int g, int b);
@@ -148,8 +148,8 @@ class LDrawModelViewer: public TCObject
 			bool &transparent);
 		virtual void setDefaultColorNumber(int value);
 		int getDefaultColorNumber(void) { return defaultColorNumber; }
-		virtual void setSeamWidth(float);
-		float getSeamWidth(void) { return seamWidth; }
+		virtual void setSeamWidth(TCFloat);
+		TCFloat getSeamWidth(void) { return seamWidth; }
 		virtual void setDrawWireframe(bool);
 		bool getDrawWireframe(void) { return flags.drawWireframe; }
 		virtual void setBfc(bool value);
@@ -174,10 +174,10 @@ class LDrawModelViewer: public TCObject
 		bool getUseStipple(void) { return flags.useStipple; }
 		virtual void setSortTransparent(bool);
 		bool getSortTransparent(void) { return flags.sortTransparent; }
-		virtual void setHighlightLineWidth(float value);
-		float getHighlightLineWidth(void) { return highlightLineWidth; }
-		virtual void setWireframeLineWidth(float value);
-		float getWireframeLineWidth(void) { return wireframeLineWidth; }
+		virtual void setHighlightLineWidth(TCFloat32 value);
+		TCFloat32 getHighlightLineWidth(void) { return highlightLineWidth; }
+		virtual void setWireframeLineWidth(TCFloat32 value);
+		TCFloat32 getWireframeLineWidth(void) { return wireframeLineWidth; }
 		virtual void setProcessLDConfig(bool value);
 		bool getProcessLDConfig(void) { return flags.processLDConfig; }
 		virtual void setSkipValidation(bool value);
@@ -208,23 +208,23 @@ class LDrawModelViewer: public TCObject
 		int getNumYTiles(void) { return numYTiles; }
 		virtual void setStereoMode(LDVStereoMode mode);
 		LDVStereoMode getStereoMode(void) { return stereoMode; }
-		void setStereoEyeSpacing(GLfloat spacing)
+		void setStereoEyeSpacing(TCFloat spacing)
 		{
 			stereoEyeSpacing = spacing;
 		}
-		GLfloat getStereoEyeSpacing(void) { return stereoEyeSpacing; }
+		TCFloat getStereoEyeSpacing(void) { return stereoEyeSpacing; }
 		virtual void setCutawayMode(LDVCutawayMode mode);
 		LDVCutawayMode getCutawayMode(void) { return cutawayMode; }
-		virtual void setCutawayAlpha(GLfloat value);
-		GLfloat getCutawayAlpha(void) { return cutawayAlpha; }
-		virtual void setCutawayLineWidth(GLfloat value);
-		GLfloat getCutawayLineWidth(void) { return cutawayLineWidth; }
+		virtual void setCutawayAlpha(TCFloat32 value);
+		TCFloat32 getCutawayAlpha(void) { return cutawayAlpha; }
+		virtual void setCutawayLineWidth(TCFloat32 value);
+		TCFloat32 getCutawayLineWidth(void) { return cutawayLineWidth; }
 		void setSlowClear(bool value) { flags.slowClear = value; }
 		bool getSlowClear(void) { return flags.slowClear; }
 		virtual void setBlackHighlights(bool value);
 		bool getBlackHighlights(void) { return flags.blackHighlights; }
-		void setZoomMax(float value) { zoomMax = value; }
-		float getZoomMax(void) { return zoomMax; }
+		void setZoomMax(TCFloat value) { zoomMax = value; }
+		TCFloat getZoomMax(void) { return zoomMax; }
 		virtual void setShowAllConditionalLines(bool value);
 		bool getShowAllConditionalLines(void)
 		{
@@ -245,29 +245,29 @@ class LDrawModelViewer: public TCObject
 		int getTextureFilterType(void) { return textureFilterType; }
 		TREMainModel *getMainTREModel(void) { return mainTREModel; }
 		bool getCompiled(void);
-		void setPixelAspectRatio(float value) { pixelAspectRatio = value; }
-		float getPixelAspectRatio(void) { return pixelAspectRatio; }
+		void setPixelAspectRatio(TCFloat value) { pixelAspectRatio = value; }
+		TCFloat getPixelAspectRatio(void) { return pixelAspectRatio; }
 		bool getLDrawCommandLineMatrix(char *matrixString, int bufferLength);
 		bool getLDrawCommandLine(char *shortFilename, char *commandString,
 			int bufferLength);
 		bool getLDGLiteCommandLine(char *commandString, int bufferLength);
-		void setDistanceMultiplier(GLfloat value)
+		void setDistanceMultiplier(TCFloat value)
 		{
 			distanceMultiplier = value;
 		}
-		GLfloat getDistanceMultiplier(void) { return distanceMultiplier; }
+		TCFloat getDistanceMultiplier(void) { return distanceMultiplier; }
 		virtual void clearBackground(void);
 		virtual void setFontData(TCByte *fontData, long length);
-		virtual void setDefaultRotationMatrix(const float *value);
-		const float *getDefaultRotationMatrix(void)
+		virtual void setDefaultRotationMatrix(const TCFloat *value);
+		const TCFloat *getDefaultRotationMatrix(void)
 		{
 			return defaultRotationMatrix;
 		}
-		const float *getRotationMatrix(void) { return rotationMatrix; }
-		virtual void setFov(float value);
-		float getFov(void) { return fov; }
-		float getHFov(void);
-		float getDefaultDistance(void) { return defaultDistance; }
+		const TCFloat *getRotationMatrix(void) { return rotationMatrix; }
+		virtual void setFov(TCFloat value);
+		TCFloat getFov(void) { return fov; }
+		TCFloat getHFov(void);
+		TCFloat getDefaultDistance(void) { return defaultDistance; }
 		void setExtraSearchDirs(TCStringArray *value);
 		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }
 		bool skipCameraPositioning(void);
@@ -281,26 +281,26 @@ class LDrawModelViewer: public TCObject
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
-		virtual void drawSetup(GLfloat eyeXOffset = 0.0f);
-		virtual void drawModel(GLfloat eyeXOffset = 0.0f);
-		virtual void removeHiddenLines(GLfloat eyeXOffset = 0.0f);
-		virtual void setFieldOfView(double, float, float);
+		virtual void drawSetup(TCFloat eyeXOffset = 0.0f);
+		virtual void drawModel(TCFloat eyeXOffset = 0.0f);
+		virtual void removeHiddenLines(TCFloat eyeXOffset = 0.0f);
+		virtual void setFieldOfView(double, TCFloat, TCFloat);
 		virtual void setupRotationMatrix(void);
 		virtual void setupMaterial(void);
 		virtual void setupLight(GLenum);
 		virtual void orthoView(void);
-		void drawLight(GLenum, float, float, float);
+		void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 		virtual void setupLighting(void);
 		virtual void setupTextures(void);
 		void drawLights(void);
-		virtual void drawToClipPlane(GLfloat eyeXOffset);
-		virtual void drawToClipPlaneUsingStencil(GLfloat eyeXOffset);
-//		virtual void drawToClipPlaneUsingAccum(GLfloat eyeXOffset);
-		virtual void drawToClipPlaneUsingDestinationAlpha(GLfloat eyeXOffset);
-		virtual void drawToClipPlaneUsingNoEffect(GLfloat eyeXOffset);
+		virtual void drawToClipPlane(TCFloat eyeXOffset);
+		virtual void drawToClipPlaneUsingStencil(TCFloat eyeXOffset);
+//		virtual void drawToClipPlaneUsingAccum(TCFloat eyeXOffset);
+		virtual void drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset);
+		virtual void drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset);
 		virtual void perspectiveViewToClipPlane(void);
 		virtual void applyTile(void);
-		virtual void drawString(GLfloat xPos, GLfloat yPos, char* string);
+		virtual void drawString(TCFloat xPos, TCFloat yPos, char* string);
 		virtual void setupFont(char *fontFilename);
 		virtual void loadVGAFont(char *fontFilename);
 		virtual void setupDefaultViewAngle(void);
@@ -314,16 +314,16 @@ class LDrawModelViewer: public TCObject
 //		void progressAlertCallback(TCProgressAlert *error);
 		virtual void setupIsoViewAngle(void);
 		virtual void preCalcCamera(void);
-		virtual float calcDefaultDistance(void);
+		virtual TCFloat calcDefaultDistance(void);
 		virtual void updateCurrentFov(void);
-		virtual float getStereoWidthModifier(void);
-		virtual float getWideLineMargin(void);
-		virtual float getClipRadius(void);
-		virtual float getZDistance(void);
+		virtual TCFloat getStereoWidthModifier(void);
+		virtual TCFloat getWideLineMargin(void);
+		virtual TCFloat getClipRadius(void);
+		virtual TCFloat getZDistance(void);
 		virtual bool forceOneLight(void);
 
-		int L3Solve6(float x[L3ORDERN], const float A[L3ORDERM][L3ORDERN],
-			const float b[L3ORDERM]);
+		int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
+			const TCFloat b[L3ORDERM]);
 
 		void scanCameraPoint(const TCVector &point);
 
@@ -332,31 +332,31 @@ class LDrawModelViewer: public TCObject
 		char* programPath;
 		int width;
 		int height;
-		float pixelAspectRatio;
-		float size;
+		TCFloat pixelAspectRatio;
+		TCFloat size;
 		TCVector center;
 		TCVector boundingMin;
 		TCVector boundingMax;
 		int lastFrameTimeLength;
 		int cullBackFaces;
-		float xRotate;
-		float yRotate;
-		float zRotate;
-		float rotationSpeed;
-		float cameraXRotate;
-		float cameraYRotate;
-		float cameraZRotate;
+		TCFloat xRotate;
+		TCFloat yRotate;
+		TCFloat zRotate;
+		TCFloat rotationSpeed;
+		TCFloat cameraXRotate;
+		TCFloat cameraYRotate;
+		TCFloat cameraZRotate;
 		TCVector cameraMotion;
-		float zoomSpeed;
-		float xPan;
-		float yPan;
-		float* rotationMatrix;
-		float* defaultRotationMatrix;
-		float clipAmount;
-		float nextClipAmount;
-		float nextDistance;
-		float highlightLineWidth;
-		float wireframeLineWidth;
+		TCFloat zoomSpeed;
+		TCFloat xPan;
+		TCFloat yPan;
+		TCFloat* rotationMatrix;
+		TCFloat* defaultRotationMatrix;
+		TCFloat clipAmount;
+		TCFloat nextClipAmount;
+		TCFloat nextDistance;
+		TCFloat32 highlightLineWidth;
+		TCFloat32 wireframeLineWidth;
 		bool clipZoom;
 		GLuint fontListBase;
 		GLclampf backgroundR;
@@ -376,25 +376,25 @@ class LDrawModelViewer: public TCObject
 		int numXTiles;
 		int numYTiles;
 		LDVStereoMode stereoMode;
-		GLfloat stereoEyeSpacing;
+		TCFloat stereoEyeSpacing;
 		LDVCutawayMode cutawayMode;
-		GLfloat cutawayAlpha;
-		GLfloat cutawayLineWidth;
-		float zoomMax;
+		TCFloat32 cutawayAlpha;
+		TCFloat32 cutawayLineWidth;
+		TCFloat zoomMax;
 		int curveQuality;
 		int textureFilterType;
-		GLfloat distanceMultiplier;
+		TCFloat distanceMultiplier;
 		TCImage *fontImage;
 		GLuint fontTextureID;
 		TRECamera camera;
-		float aspectRatio;
-		float currentFov;
-		float fov;
-		float defaultDistance;
+		TCFloat aspectRatio;
+		TCFloat currentFov;
+		TCFloat fov;
+		TCFloat defaultDistance;
 		TCStringArray *extraSearchDirs;
-		float seamWidth;
-		float zoomToFitWidth;
-		float zoomToFitHeight;
+		TCFloat seamWidth;
+		TCFloat zoomToFitWidth;
+		TCFloat zoomToFitHeight;
 		int memoryUsage;
 		TCVector lightVector;
 		struct
@@ -471,12 +471,12 @@ class LDrawModelViewer: public TCObject
 			TCVector horizontal;
 			TCVector vertical;
 			TCVector normal[4];
-			float dMin[4];
-			float horMin;
-			float horMax;
-			float verMin;
-			float verMax;
-			float fov;
+			TCFloat dMin[4];
+			TCFloat horMin;
+			TCFloat horMax;
+			TCFloat verMin;
+			TCFloat verMax;
+			TCFloat fov;
 		} *cameraData;
 };
 

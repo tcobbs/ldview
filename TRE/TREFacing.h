@@ -8,23 +8,23 @@ typedef enum Axis {XAxis, YAxis, ZAxis} SimAxis;
 class TREFacing: public TCVector
 {
 	private:
-		static float glMatrix[16];
+		static TCFloat glMatrix[16];
 	public:
 		TREFacing(void);
-		TREFacing(TCVector& a, float phi);
+		TREFacing(TCVector& a, TCFloat phi);
 		~TREFacing(void) {}
 
 		// this creates a gl-compatible 4x4 matrix that you can use to
 		// do rotations
-		float* getMatrix(void);
+		TCFloat* getMatrix(void);
 
 		// this gets the inverse matrix -- it _should_ rotate away for
 		//		the object.  (This might be used in camera translations)
-		void getInverseMatrix(float *inverseMatrix);
+		void getInverseMatrix(TCFloat *inverseMatrix);
 
 		// setFacing sets a vector to be a rotation around vector v by phi 
 		//		radians.
-		void setFacing(TCVector& v, float phi);
+		void setFacing(TCVector& v, TCFloat phi);
 
 		// this multiplies two facings together.
 		TREFacing operator+(const TREFacing& otherFacing);
@@ -38,11 +38,11 @@ class TREFacing: public TCVector
 		//		< 0, 0, 1 > is asumed to be a rotation of 0.
 		TCVector getVector(void);
 
-		float getRotation(void) { return rotation; }
+		TCFloat getRotation(void) { return rotation; }
 
 		// this gets the angle between two facings, ignoring the top of head.
 		//		Not fully tested at this time.
-		float angleBetween(TREFacing &f2);
+		TCFloat angleBetween(TREFacing &f2);
 
 		// this returns the inverse facing.
 		TREFacing inverse(void);
@@ -74,11 +74,11 @@ class TREFacing: public TCVector
 		void print(FILE* = stdout);
 
 	protected:
-		float* invertMatrix(float*);
-		void swapMatrixRows(float*, int, int);
-		// this is the 4th number in the 4 float array of a quaternion.
+		TCFloat* invertMatrix(TCFloat*);
+		void swapMatrixRows(TCFloat*, int, int);
+		// this is the 4th number in the 4 TCFloat array of a quaternion.
 		// (the other 3 are in the private vector superclass.
-		float rotation;
+		TCFloat rotation;
 };
 
 #endif // __TREFACING_H__

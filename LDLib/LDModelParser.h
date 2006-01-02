@@ -103,10 +103,10 @@ public:
 	bool getStudLogoFlag(void) { return m_flags.studLogo != false; }
 	void setCurveQuality(int value) { m_curveQuality = value; }
 	int getCurveQuality(void) { return m_curveQuality; }
-	void setEdgeLineWidth(float value) { m_edgeLineWidth = value; }
-	float getEdgeLineWidth(void) { return m_edgeLineWidth; }
-	void setSeamWidth(float seamWidth);
-	float getSeamWidth(void);
+	void setEdgeLineWidth(TCFloat32 value) { m_edgeLineWidth = value; }
+	TCFloat32 getEdgeLineWidth(void) { return m_edgeLineWidth; }
+	void setSeamWidth(TCFloat seamWidth);
+	TCFloat getSeamWidth(void);
 	void setDefaultRGB(TCByte r, TCByte g, TCByte b, bool transparent);
 	void setDefaultColorNumber(int colorNumber);
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
@@ -143,7 +143,7 @@ protected:
 		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel, bool bfc);
-	virtual float getTorusFraction(int size);
+	virtual TCFloat getTorusFraction(int size);
 	virtual bool substituteStud(TREModel *treModel, int numSegments);
 	virtual bool substituteStud(TREModel *treModel);
 	virtual bool substituteStu2(TREModel *treModel);
@@ -156,25 +156,25 @@ protected:
 		bool is48 = false);
 	virtual bool substituteEighthSphere(TREModel *treModel, bool bfc,
 		bool is48 = false);
-	virtual bool substituteCylinder(TREModel *treModel, float fraction,
+	virtual bool substituteCylinder(TREModel *treModel, TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteSlopedCylinder(TREModel *treModel, float fraction,
+	virtual bool substituteSlopedCylinder(TREModel *treModel, TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteSlopedCylinder2(TREModel *treModel, float fraction,
+	virtual bool substituteSlopedCylinder2(TREModel *treModel, TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteChrd(TREModel *treModel, float fraction, bool bfc,
+	virtual bool substituteChrd(TREModel *treModel, TCFloat fraction, bool bfc,
 		bool is48 = false);
-	virtual bool substituteDisc(TREModel *treModel, float fraction, bool bfc,
+	virtual bool substituteDisc(TREModel *treModel, TCFloat fraction, bool bfc,
 		bool is48 = false);
-	virtual bool substituteNotDisc(TREModel *treModel, float fraction,
+	virtual bool substituteNotDisc(TREModel *treModel, TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteCircularEdge(TREModel *treModel, float fraction,
+	virtual bool substituteCircularEdge(TREModel *treModel, TCFloat fraction,
 		bool is48 = false);
-	virtual bool substituteCone(TREModel *treModel, float fraction, int size,
+	virtual bool substituteCone(TREModel *treModel, TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
-	virtual bool substituteRing(TREModel *treModel, float fraction, int size,
+	virtual bool substituteRing(TREModel *treModel, TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
-	virtual float startingFraction(const char *filename);
+	virtual TCFloat startingFraction(const char *filename);
 	virtual bool startsWithFraction(const char *filename);
 	virtual bool startsWithFraction2(const char *filename);
 	virtual bool isPrimitive(const char *filename, const char *suffix,
@@ -197,16 +197,16 @@ protected:
 	virtual bool isTorusO(const char *filename, bool *is48 = NULL);
 	virtual bool isTorusI(const char *filename, bool *is48 = NULL);
 	virtual bool isTorusQ(const char *filename, bool *is48 = NULL);
-	virtual int getNumCircleSegments(float fraction = 0.0f, bool is48 = false);
-	virtual int getUsedCircleSegments(int numSegments, float fraction);
+	virtual int getNumCircleSegments(TCFloat fraction = 0.0f, bool is48 = false);
+	virtual int getUsedCircleSegments(int numSegments, TCFloat fraction);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 
 	LDLMainModel *m_mainLDLModel;
 	TREMainModel *m_mainTREModel;
 	int m_curveQuality;
-	float m_seamWidth;
-	float m_edgeLineWidth;
+	TCFloat m_seamWidth;
+	TCFloat32 m_edgeLineWidth;
 	TCByte m_defaultR;
 	TCByte m_defaultG;
 	TCByte m_defaultB;

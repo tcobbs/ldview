@@ -9,13 +9,13 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 
-//const float POLYGON_OFFSET_FACTOR = 0.85f;
-//const float POLYGON_OFFSET_UNITS = 0.0f;
-const float POLYGON_OFFSET_FACTOR = 1.0f;
-const float POLYGON_OFFSET_UNITS = 1.0f;
+//const GLfloat POLYGON_OFFSET_FACTOR = 0.85f;
+//const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
+const GLfloat POLYGON_OFFSET_FACTOR = 1.0f;
+const GLfloat POLYGON_OFFSET_UNITS = 1.0f;
 
 TCImageArray *TREMainModel::sm_studTextures = NULL;
-unsigned TREMainModel::sm_studTextureID = 0;
+GLuint TREMainModel::sm_studTextureID = 0;
 TREMainModel::TREMainModelCleanup TREMainModel::sm_mainModelCleanup;
 
 TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
@@ -24,7 +24,7 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 	TREMainModel::sm_studTextures = NULL;
 	if (TREMainModel::sm_studTextureID)
 	{
-		glDeleteTextures(1, (GLuint *)&TREMainModel::sm_studTextureID);
+		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
 	}
 }
 
@@ -161,7 +161,7 @@ void TREMainModel::activateBFC(void)
 		}
 		if (getRedBackFacesFlag())
 		{
-			float mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
+			GLfloat mRed[] = {1.0f, 0.0f, 0.0f, 1.0f};
 
 			if (needColorMaterial)
 			{
@@ -172,7 +172,7 @@ void TREMainModel::activateBFC(void)
 		}
 		if (getGreenFrontFacesFlag())
 		{
-			float mGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
+			GLfloat mGreen[] = {0.0f, 1.0f, 0.0f, 1.0f};
 
 			if (needColorMaterial)
 			{
@@ -438,7 +438,7 @@ void checkNormals(TREVertexStore *vertexStore)
 
 void TREMainModel::draw(void)
 {
-	float normalSpecular[4];
+	GLfloat normalSpecular[4];
 
 	glGetLightfv(GL_LIGHT0, GL_SPECULAR, normalSpecular);
 	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
@@ -719,7 +719,7 @@ void TREMainModel::setConditionalControlPointsFlag(bool value)
 	m_transVertexStore->setConditionalControlPointsFlag(value);
 }
 
-float TREMainModel::getMaxRadiusSquared(const TCVector &center)
+TCFloat TREMainModel::getMaxRadiusSquared(const TCVector &center)
 {
 	if (!m_maxRadiusSquared)
 	{
@@ -733,7 +733,7 @@ float TREMainModel::getMaxRadiusSquared(const TCVector &center)
 
 void TREMainModel::scanMaxRadiusSquaredPoint(const TCVector &point)
 {
-	float rSquared = (point - m_center).lengthSquared();
+	TCFloat rSquared = (point - m_center).lengthSquared();
 
 	if (rSquared > m_maxRadiusSquared)
 	{
@@ -744,9 +744,9 @@ void TREMainModel::scanMaxRadiusSquaredPoint(const TCVector &point)
 // By asking for the maximum radius squared, and then returning the square root
 // of that, we only have to do one square root for the whole radius calculation.
 // Otherwise, we would have to do one for every point.
-float TREMainModel::getMaxRadius(const TCVector &center)
+TCFloat TREMainModel::getMaxRadius(const TCVector &center)
 {
-	return (float)sqrt(getMaxRadiusSquared(center));
+	return (TCFloat)sqrt(getMaxRadiusSquared(center));
 }
 
 bool TREMainModel::postProcess(void)
@@ -949,9 +949,9 @@ void TREMainModel::drawTransparent(void)
 {
 	if (m_coloredShapes[TREMTransparent])
 	{
-		float specular[] = {0.75f, 0.75f, 0.75f, 1.0f};
-		float oldSpecular[4];
-		float oldShininess;
+		GLfloat specular[] = {0.75f, 0.75f, 0.75f, 1.0f};
+		GLfloat oldSpecular[4];
+		GLfloat oldShininess;
 
 		if (getStudLogoFlag())
 		{
@@ -1185,7 +1185,7 @@ void TREMainModel::openGlWillEnd(void)
 	m_transVertexStore->openGlWillEnd();
 	if (sm_studTextureID)
 	{
-		glDeleteTextures(1, (GLuint *)&TREMainModel::sm_studTextureID);
+		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
 		sm_studTextureID = 0;
 	}
 }

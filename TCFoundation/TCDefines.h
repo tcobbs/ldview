@@ -41,10 +41,35 @@
 #define SOCKET_ERROR -1
 #endif
 
+// NOTE: the following should be 1, 2, and 4 bytes each.  So on a 64-bit system,
+// the following defines aren't appropriate, and something else needs to be
+// substituted.
+
 typedef unsigned char TCByte;
 typedef unsigned char TCUChar;
-typedef unsigned long TCULong;
 typedef unsigned short TCUShort;
+typedef unsigned int TCUInt;
+typedef unsigned long TCULong;
+typedef char TCChar;
+typedef short TCShort;
+typedef int TCInt;
+typedef long TCLong;
+
+// Define LDVIEW_DOUBLES to have LDView use doubles instead of floats.  Comment
+// out the definition for floats.
+//#define LDVIEW_DOUBLES
+
+// I'm not sure if floats are 64 bits on a 64-bit system or not.  I know that
+// TCFloat has to be 32 bits when LDVIEW_DOUBLES isn't defined in order for it
+// to work.
+#ifdef LDVIEW_DOUBLES
+typedef double TCFloat;
+#else // LDVIEW_DOUBLES
+typedef float TCFloat;
+#endif // LDVIEW_DOUBLES
+
+// The following must always be defined to 32 bits.
+typedef float TCFloat32;
 
 #ifndef __THROW
 #define __THROW
