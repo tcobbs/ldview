@@ -1,5 +1,5 @@
 @echo off
-set CFLAGS=/nologo /MT /W4 /EHsc /O2 /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD
+set CFLAGS=/nologo /MT /W4 /EHsc /Ox /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD /G7
 
 rem Remove the rem the following 2 lines to force usage of Visual C++ Toolkit 2003 & Platform SDK
 rem Leave rem to use the default Visual C++ environment
@@ -141,7 +141,7 @@ cd ..
 
 rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
 
-cl %CFLAGS% /GX /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
+cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
 
 link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\Resources.res
 
