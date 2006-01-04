@@ -1,0 +1,72 @@
+CPPFLAGS = $(CPPGLOBAL) /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /c 
+
+
+COBJS = 
+CCOBJS = $(OBJDIR)\LDVExtensionsSetup.obj \
+	 $(OBJDIR)\LDViewMain.obj \
+	 $(OBJDIR)\LDViewPreferences.obj \
+	 $(OBJDIR)\LDViewWindow.obj \
+	 $(OBJDIR)\ModelLoader.obj \
+	 $(OBJDIR)\ModelWindow.obj \
+	 $(OBJDIR)\SSConfigure.obj \
+	 $(OBJDIR)\SSModelWindow.obj \
+	 $(OBJDIR)\SSPassword.obj \
+	 $(OBJDIR)\SSPreview.obj 
+
+OBJDIR = Release
+
+
+all: $(OBJDIR) $(OBJDIR)\LDView.exe
+
+distclean:
+	cd TRE 
+	$(MAKE) -f Makefile.vc clean
+	cd ..
+	cd CUI
+	$(MAKE) -f Makefile.vc clean
+	cd ..
+	cd TCFoundation
+	$(MAKE) -f Makefile.vc clean
+	cd ..
+	cd LDLib 
+	$(MAKE) -f Makefile.vc clean
+	cd ..
+	cd LDLoader
+	$(MAKE) -f Makefile.vc clean
+	cd ..
+
+CUI\$(OBJDIR)\CUI.lib:
+	cd CUI
+	$(MAKE) -f Makefile.vc 
+	cd ..
+
+TRE\$(OBJDIR)\TRE.lib:
+	cd TRE
+	$(MAKE) -f Makefile.vc 
+	cd ..
+
+LDLib\$(OBJDIR)\LDLib.lib:
+	cd LDLib
+	$(MAKE) -f Makefile.vc 
+	cd ..
+
+LDLoader\$(OBJDIR)\LDLoader.lib:
+	cd LDLoader
+	$(MAKE) -f Makefile.vc 
+	cd ..
+
+TCFoundation\$(OBJDIR)\TCFoundation.lib:
+	cd TCFoundation
+	$(MAKE) -f Makefile.vc 
+	cd ..
+
+
+$(OBJDIR)\LDView.exe:	CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) $(OBJDIR)\AppResources.res
+	link -nologo -out:$(OBJDIR)\LDView.exe $(CCOBJS) CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib \
+	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib TCFoundation\$(OBJDIR)\TCFoundation.lib \
+	user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib \
+	winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib $(OBJDIR)\AppResources.res \
+	/subsystem:windows /incremental:no /machine:I386 /nodefaultlib:"libc.lib" /pdb:$(OBJDIR)\LDView.pdb \
+	/libpath:lib
+
+!include "Make.inc"

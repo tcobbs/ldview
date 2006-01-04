@@ -1,0 +1,18 @@
+CPPFLAGS=$(CPPGLOBAL) /I .. /D _MBCS /D _LIB /D _WIN32_WINDOWS=0x0410 /D _BUILDING_CUI_LIB /D _TC_STATIC /FpRelease\CUI.pch /YX /c
+
+COBJS = 
+CCOBJS = \
+	$(OBJDIR)\CUIButton.obj \
+	$(OBJDIR)\CUIOGLWindow.obj \
+	$(OBJDIR)\CUIPropertySheet.obj \
+	$(OBJDIR)\CUISubWindowInfo.obj \
+	$(OBJDIR)\CUIThemes.obj \
+	$(OBJDIR)\CUIWindow.obj \
+	$(OBJDIR)\CUIWindowList.obj \
+	$(OBJDIR)\CUIWindowListEnumerator.obj \
+	$(OBJDIR)\CUIWindowResizer.obj
+
+LIBT = CUI.lib
+
+!include "..\Make.inc"
+

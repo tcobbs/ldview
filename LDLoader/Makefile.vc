@@ -1,0 +1,25 @@
+CPPFLAGS=$(CPPGLOBAL) /I .. /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LDLoader.pch /YX /c
+
+COBJS = \
+	$(OBJDIR)\LDrawIni.obj
+CCOBJS = \
+	$(OBJDIR)\LDLActionLine.obj \
+	$(OBJDIR)\LDLCommentLine.obj \
+	$(OBJDIR)\LDLConditionalLineLine.obj \
+	$(OBJDIR)\LDLEmptyLine.obj \
+	$(OBJDIR)\LDLError.obj \
+	$(OBJDIR)\LDLFileLine.obj \
+	$(OBJDIR)\LDLLineLine.obj \
+	$(OBJDIR)\LDLMainModel.obj \
+	$(OBJDIR)\LDLModel.obj \
+	$(OBJDIR)\LDLModelLine.obj \
+	$(OBJDIR)\LDLPalette.obj \
+	$(OBJDIR)\LDLQuadLine.obj \
+	$(OBJDIR)\LDLShapeLine.obj \
+	$(OBJDIR)\LDLTriangleLine.obj \
+	$(OBJDIR)\LDLUnknownLine.obj
+
+LIBT = LDLoader.lib
+
+!include "..\Make.inc"
+

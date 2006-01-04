@@ -1,0 +1,20 @@
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\TRE.pch /YX /c
+
+COBJS = 
+CCOBJS = \
+	$(OBJDIR)\TRECamera.obj 		\
+	$(OBJDIR)\TREColoredShapeGroup.obj 	\
+	$(OBJDIR)\TREFacing.obj 		\
+	$(OBJDIR)\TREMainModel.obj 		\
+	$(OBJDIR)\TREModel.obj			\
+	$(OBJDIR)\TREShapeGroup.obj		\
+	$(OBJDIR)\TRESmoother.obj		\
+	$(OBJDIR)\TRESubModel.obj		\
+	$(OBJDIR)\TRETransShapeGroup.obj	\
+	$(OBJDIR)\TREVertexArray.obj		\
+	$(OBJDIR)\TREVertexStore.obj
+
+LIBT = TRE.lib
+
+!include "..\Make.inc"
+
