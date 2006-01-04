@@ -11,7 +11,7 @@ all:	$(OBJDIR) $(OBJDIR)\$(LIBT)
 $(OBJDIR):
 	if not exist $(OBJDIR) mkdir $(OBJDIR)
 
-{}.cpp{$(OBJDIR)}.obj:
+{}.cpp{$(OBJDIR)}.obj::
 	$(CC) $(CPPFLAGS) $<
 
 {}.c{$(OBJDIR)}.obj:
