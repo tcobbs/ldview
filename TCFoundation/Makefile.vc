@@ -1,0 +1,39 @@
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ../include/ /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /FpRelease\TCFoundation.pch /YX /c
+
+COBJS = 
+CCOBJS = \
+	$(OBJDIR)\mystring.obj \
+	$(OBJDIR)\TCAlert.obj \
+	$(OBJDIR)\TCAlertManager.obj \
+	$(OBJDIR)\TCArray.obj \
+	$(OBJDIR)\TCAutoreleasePool.obj \
+	$(OBJDIR)\TCBinaryObjectTree.obj \
+	$(OBJDIR)\TCBinaryTree.obj \
+	$(OBJDIR)\TCBmpImageFormat.obj \
+	$(OBJDIR)\TCDictionary.obj \
+	$(OBJDIR)\TCImage.obj \
+	$(OBJDIR)\TCImageFormat.obj \
+	$(OBJDIR)\TCLocalStrings.obj \
+	$(OBJDIR)\TCMutex.obj \
+	$(OBJDIR)\TCNetwork.obj \
+	$(OBJDIR)\TCNetworkClient.obj \
+	$(OBJDIR)\TCObject.obj \
+	$(OBJDIR)\TCObjectArray.obj \
+	$(OBJDIR)\TCObjectTree.obj \
+	$(OBJDIR)\TCPngImageFormat.obj \
+	$(OBJDIR)\TCProgressAlert.obj \
+	$(OBJDIR)\TCSortedStringArray.obj \
+	$(OBJDIR)\TCStringArray.obj \
+	$(OBJDIR)\TCStringObjectTree.obj \
+	$(OBJDIR)\TCThread.obj \
+	$(OBJDIR)\TCThreadCondition.obj \
+	$(OBJDIR)\TCThreadManager.obj \
+	$(OBJDIR)\TCUnzip.obj \
+	$(OBJDIR)\TCUserDefaults.obj \
+	$(OBJDIR)\TCVector.obj \
+	$(OBJDIR)\TCWebClient.obj 
+
+LIBT = TCFoundation.lib
+
+!include "..\Make.inc"
+
