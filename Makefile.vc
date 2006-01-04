@@ -20,52 +20,53 @@ all: $(OBJDIR) $(OBJDIR)\LDView.exe
 
 distclean:
 	cd TRE 
-	$(MAKE) -f Makefile.vc clean
+	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd CUI
-	$(MAKE) -f Makefile.vc clean
+	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd TCFoundation
-	$(MAKE) -f Makefile.vc clean
+	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd LDLib 
-	$(MAKE) -f Makefile.vc clean
+	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd LDLoader
-	$(MAKE) -f Makefile.vc clean
+	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 
-CUI\$(OBJDIR)\CUI.lib:
+CUI\$(OBJDIR)\CUI.lib: CUI\*.cpp CUI\*.h
 	cd CUI
-	$(MAKE) -f Makefile.vc 
+	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-TRE\$(OBJDIR)\TRE.lib:
+TRE\$(OBJDIR)\TRE.lib: TRE\*.cpp TRE\*.h
 	cd TRE
-	$(MAKE) -f Makefile.vc 
+	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-LDLib\$(OBJDIR)\LDLib.lib:
+LDLib\$(OBJDIR)\LDLib.lib: LDLib\*.cpp LDLib\*.h
 	cd LDLib
-	$(MAKE) -f Makefile.vc 
+	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-LDLoader\$(OBJDIR)\LDLoader.lib:
+LDLoader\$(OBJDIR)\LDLoader.lib: LDLoader\*.cpp LDLoader\*.h LDLoader\*.c
 	cd LDLoader
-	$(MAKE) -f Makefile.vc 
+	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
-TCFoundation\$(OBJDIR)\TCFoundation.lib:
+TCFoundation\$(OBJDIR)\TCFoundation.lib: TCFoundation\*.cpp TCFoundation\*.h
 	cd TCFoundation
-	$(MAKE) -f Makefile.vc 
+	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
 
-$(OBJDIR)\LDView.exe:	CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) $(OBJDIR)\AppResources.res
-	link -nologo -out:$(OBJDIR)\LDView.exe $(CCOBJS) CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib \
-	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib TCFoundation\$(OBJDIR)\TCFoundation.lib \
+$(OBJDIR)\LDView.exe:	CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib 
+$(OBJDIR)\LDView.exe:	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib 
+$(OBJDIR)\LDView.exe:	TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) $(OBJDIR)\AppResources.res
+	link -nologo -out:$(OBJDIR)\LDView.exe $** \
 	user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib \
-	winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib $(OBJDIR)\AppResources.res \
+	winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib \
 	/subsystem:windows /incremental:no /machine:I386 /nodefaultlib:"libc.lib" /pdb:$(OBJDIR)\LDView.pdb \
 	/libpath:lib
 
