@@ -95,7 +95,7 @@ static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
                              const char *Section, const char *Key,
                              char *Str, int sizeofStr, char *IniFile);
 static void FixSlashes(register char *Path);
-static int IsDir(const char *Path);
+static int IsDir(char *Path, LDrawFileCaseCallback FileCaseCallback);
 static char *L3fgets(char *Str, int n, FILE *fp);
 static void TrimRight(char *Str, int BlanksToo);
 
@@ -250,6 +250,23 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
       *ErrorCode = 0;
    return LDrawIni;
 }                               /* LDrawIniGet                               */
+
+/*
+Set file case callback
+*/
+int LDrawIniSetFileCaseCallback(LDrawIniS *LDrawIni,
+                                LDrawFileCaseCallback FileCaseCallback)
+{
+   if (LDrawIni->PrivateData)
+   {
+      LDrawIni->PrivateData->FileCaseCallback = FileCaseCallback;
+      return 1;
+   }
+   else
+   {
+      return 0;
+   }
+}
 
 
 /*
@@ -664,7 +681,10 @@ c:\car.ldr   c:
       if (Res == 0)
          continue;              /* ModelDir/HomeDir not applicable           */
       /* ModelDir may be "" for current dir */
-      if ((OnlyValidDirs && SearchDir.Dir[0] && !IsDir(SearchDir.Dir)) ||
+      /* NOTE: IsDir might change the case of the value in SearchDir.Dir to */
+      /* match the case of the actual directory on the filesystem. */
+      if ((OnlyValidDirs && SearchDir.Dir[0] && !IsDir(SearchDir.Dir,
+          LDrawIni->PrivateData->FileCaseCallback)) ||
           (SearchDir.Flags & LDSDF_SKIP))
       {
          if (SearchDir.UnknownFlags)
@@ -824,11 +844,22 @@ static void FixSlashes(register char *Path)
          *Path = BACKSLASH_CHAR;
 }
 
-static int IsDir(const char *Path)
+static int IsDir(char *Path, LDrawFileCaseCallback FileCaseCallback)
 {
    struct stat    Stat;
 
-   return (stat(Path, &Stat) == 0 && (Stat.st_mode & S_IFDIR));
+   if (stat(Path, &Stat) == 0)
+   {
+      return (Stat.st_mode & S_IFDIR);
+   }
+   else if (FileCaseCallback != NULL && FileCaseCallback(Path))
+   {
+      if (stat(Path, &Stat) == 0)
+      {
+         return (Stat.st_mode & S_IFDIR);
+      }
+   }
+   return 0;
 }
 
 /* Like fgets, except that any line ending is accepted
