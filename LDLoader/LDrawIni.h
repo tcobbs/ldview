@@ -9,6 +9,19 @@
 #ifndef LDRAWINI_INCLUDED
 #define LDRAWINI_INCLUDED
 
+#ifdef __cplusplus
+typedef bool LDRAW_BOOL;
+#else
+typedef char LDRAW_BOOL;
+#ifndef false
+#define false 0
+#endif
+#ifndef true
+#define true !false
+#endif
+#endif
+typedef LDRAW_BOOL (*LDrawFileCaseCallback)(char *filename);
+
 struct LDrawSearchDirS
 {
    int            Flags;        /* Parsed and known flags LDSDF_XXX          */
@@ -58,6 +71,18 @@ You should then call LDrawIniComputeRealDirs to obtain the search dirs.
 Remember to free the struct by calling LDrawIniFree.
 */
 struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode);
+/*
+Sets the callback function to use for converting an input path to match the case
+of the actual path on the filesystem.  When you implement such a function, you
+must change the contents of the string passed into the function so that it
+matches the case of the actual filesystem files.  This is needed on case
+sensitive file systems, since LDraw files aren't case sensitive.  The callback
+function must return false if no file could be found, and true if a file was
+successfully found.
+Returns 1 if OK, 0 on error
+*/
+int LDrawIniSetFileCaseCallback(struct LDrawIniS *LDrawIni,
+                                LDrawFileCaseCallback func);
 /* 
 Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
 the Symbolic Dirs read from the env vars or ini files.

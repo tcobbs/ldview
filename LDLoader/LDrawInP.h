@@ -12,6 +12,7 @@ struct LDrawIniPrivateDataS
    /* The LDrawSearch directories as read */
    int            nSymbolicSearchDirs;
    char         **SymbolicSearchDirs;
+   LDrawFileCaseCallback FileCaseCallback;
 };
 
 #ifdef __cplusplus

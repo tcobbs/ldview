@@ -403,6 +403,16 @@ bool LDLModel::verifyLDrawDir(const char *value)
 }
 
 // NOTE: static function.
+void LDLModel::setFileCaseCallback(LDLFileCaseCallback value)
+{
+	fileCaseCallback = value;
+	if (sm_lDrawIni)
+	{
+		LDrawIniSetFileCaseCallback(sm_lDrawIni, fileCaseCallback);
+	}
+}
+
+// NOTE: static function.
 void LDLModel::setLDrawDir(const char *value)
 {
 	if (value != sm_systemLDrawDir || !value)
@@ -416,6 +426,10 @@ void LDLModel::setLDrawDir(const char *value)
 		sm_lDrawIni = LDrawIniGet(sm_systemLDrawDir, NULL);
 		if (sm_lDrawIni)
 		{
+			if (fileCaseCallback)
+			{
+				LDrawIniSetFileCaseCallback(sm_lDrawIni, fileCaseCallback);
+			}
 			if (!sm_systemLDrawDir)
 			{
 				sm_systemLDrawDir = copyString(sm_lDrawIni->LDrawDir);

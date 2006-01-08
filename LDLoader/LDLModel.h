@@ -86,10 +86,7 @@ public:
 
 	static const char *lDrawDir(void);
 	static void setLDrawDir(const char *value);
-	static void setFileCaseCallback(LDLFileCaseCallback value)
-	{
-		fileCaseCallback = value;
-	}
+	static void setFileCaseCallback(LDLFileCaseCallback value);
 	static LDLFileCaseCallback getFileCaseCallback(void)
 	{
 		return fileCaseCallback;
