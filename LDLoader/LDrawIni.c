@@ -254,7 +254,7 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
 /*
 Set file case callback
 */
-int LDrawIniSetFileCaseCallback(LDrawIniS *LDrawIni,
+int LDrawIniSetFileCaseCallback(struct LDrawIniS *LDrawIni,
                                 LDrawFileCaseCallback FileCaseCallback)
 {
    if (LDrawIni->PrivateData)
@@ -267,7 +267,6 @@ int LDrawIniSetFileCaseCallback(LDrawIniS *LDrawIni,
       return 0;
    }
 }
-
 
 /*
 Free the LDrawIni data
