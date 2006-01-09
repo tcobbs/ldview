@@ -25,6 +25,7 @@ LDViewErrors::LDViewErrors(Preferences *preferences)
 	panel->setErrors(this);
 	panel->errorListView->setColumnWidthMode(0, QListView::Maximum);
 	panel->errorListView->header()->hide();
+	panel->errorListView->setSorting(-1);
 	reflectSettings();
 	statusBar = panel->statusBar();
 	messageText = new QLabel(statusBar);
@@ -133,7 +134,7 @@ int LDViewErrors::populateListView(void)
 		int i;
 		int count = errors->getCount();
 
-		for (i = 0; i < count; i++)
+		for (i = count - 1; i >= 0; i--)
 		{
 			LDLError *error = (*errors)[i];
 			if (addErrorToListView((*errors)[i]))
@@ -259,7 +260,20 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 
 	if (parent)
 	{
-		item = new QListViewItem(parent, line);
+		if (parent->childCount() > 0)
+		{
+			QListViewItem *lastChild = parent->firstChild();
+
+			while (lastChild->nextSibling() != NULL)
+			{
+				lastChild = lastChild->nextSibling();
+			}
+			item = new QListViewItem(parent, lastChild, line);
+		}
+		else
+		{
+			item = new QListViewItem(parent, line);
+		}
 		item->setPixmap(0,getimage( "error_info.png" ));
 	}
 	else
