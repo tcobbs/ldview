@@ -909,7 +909,7 @@ static void TrimRight(char *Str, int BlanksToo)
    s = Str + strlen(Str) - 1;
    while (s >= Str &&
           (*s == '\n' || *s == '\r' || *s == '\032' ||
-           BlanksToo && (*s == '\t' || *s == ' ')))
+           (BlanksToo && (*s == '\t' || *s == ' '))))
    {
       *s-- = '\0';              /* Clear newline and trailing tabs and
                                    spaces                                    */

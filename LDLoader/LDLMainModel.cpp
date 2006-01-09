@@ -4,6 +4,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include "LDrawIni.h"
 
@@ -82,6 +83,49 @@ bool LDLMainModel::load(const char *filename)
 			processLDConfig();
 		}
 		retValue = LDLModel::load(file);
+		if (sm_lDrawIni)
+		{
+			// If bool isn't 1 byte, then the filename case callback won't
+			// work, so doesn't get used.  Check to see if this will be a
+			// problem.
+			if (sizeof(bool) != sizeof(char) && fileCaseCallback)
+			{
+				char *tmpStr;
+				int len = strlen(lDrawDir());
+				bool failed = false;
+				struct stat statData;
+
+				tmpStr = new char[len + 10];
+				sprintf(tmpStr, "%s/P", lDrawDir());
+				if (stat(tmpStr, &statData) != 0)
+				{
+					// Check to see if we can access the P directory inside the
+					// LDraw directory.  If not, then we have a problem that
+					// needs to be reported to the user.
+					failed = true;
+				}
+				if (!failed)
+				{
+					sprintf(tmpStr, "%s/PARTS", lDrawDir());
+					if (stat(tmpStr, &statData) != 0)
+					{
+						// Check to see if we can access the PARTS directory
+						// inside the LDraw directory.  If not, then we have a
+						// problem that needs to be reported to the user.
+						failed = true;
+					}
+				}
+				delete tmpStr;
+				if (failed)
+				{
+					// Either P or PARTS was inaccessible, so let the user
+					// know that they need to rename the directories to be in
+					// upper case.
+					reportError(LDLEGeneral,
+						TCLocalStrings::get("LDLMainModelFileCase"));
+				}
+			}
+		}
 		TCObject::release(m_loadedModels);
 		m_loadedModels = NULL;
 		return retValue;

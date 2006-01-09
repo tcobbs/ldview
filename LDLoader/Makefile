@@ -1,4 +1,4 @@
-CC = g++
+CC = gcc
 RM = rm -f
 RMDIR = rm -rf
 AR = ar rcs
