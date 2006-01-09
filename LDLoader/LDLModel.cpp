@@ -406,9 +406,15 @@ bool LDLModel::verifyLDrawDir(const char *value)
 void LDLModel::setFileCaseCallback(LDLFileCaseCallback value)
 {
 	fileCaseCallback = value;
-	if (sm_lDrawIni)
+	// If bool isn't 1 byte, then we can't support the case callback, so don't
+	// even try.  This will trigger an error in LDLMainModel if the P and/or
+	// PARTS directory inside the LDraw directory aren't capitalized.
+	if (sizeof(bool) == sizeof(char))
 	{
-		LDrawIniSetFileCaseCallback(sm_lDrawIni, fileCaseCallback);
+		if (sm_lDrawIni)
+		{
+			LDrawIniSetFileCaseCallback(sm_lDrawIni, fileCaseCallback);
+		}
 	}
 }
 
