@@ -370,7 +370,7 @@
                                 <enum>Horizontal</enum>
                             </property>
                             <property name="sizeType">
-                                <enum>Expanding</enum>
+                                <enum>Preferred</enum>
                             </property>
                             <property name="sizeHint">
                                 <size>
@@ -403,7 +403,7 @@
                                 <enum>Horizontal</enum>
                             </property>
                             <property name="sizeType">
-                                <enum>Expanding</enum>
+                                <enum>Preferred</enum>
                             </property>
                             <property name="sizeHint">
                                 <size>
