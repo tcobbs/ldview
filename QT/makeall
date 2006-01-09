@@ -1,5 +1,6 @@
 #! /bin/sh
 $QTDIR/bin/qmake
+rm -f LDView
 if [ -d $QTDIR/include/Qt3Support ] ; then
 export TESTING="-DQT3_SUPPORT -I$QTDIR/include/Qt"
 fi
