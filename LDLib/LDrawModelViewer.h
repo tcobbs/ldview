@@ -276,8 +276,10 @@ class LDrawModelViewer: public TCObject
 		virtual void openGlWillEnd(void);
 		virtual void setLightVector(const TCVector &value);
 		TCVector getLightVector(void) { return lightVector; }
+		virtual void getPovCameraInfo(char *&userMessage, char *&povCamera);
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
+		static void cleanupFloats(TCFloat *array, int count = 16);
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
