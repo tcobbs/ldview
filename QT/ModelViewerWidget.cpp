@@ -2082,93 +2082,17 @@ void ModelViewerWidget::doShowPovCamera(void)
 	QString qmessage;
     if (modelViewer)
     {
-        TCFloat tmpMatrix[16];
-        TCFloat matrix[16];
-        TCFloat rotationMatrix[16];
-        TCFloat centerMatrix[16];
-        TCFloat positionMatrix[16];
-        TCFloat cameraMatrix[16];
-        TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-        char locationString[1024];
-        char lookAtString[1204];
-        char upString[1024];
-        char message[4096];
-        TCVector directionVector = TCVector(0.0f, 0.0f, 1.0f);
-        TCVector locationVector;
-        TCVector lookAtVector;
-        TCVector upVector = TCVector(0.0f, -1.0f, 0.0f);
-        double direction[3];
-        double up[3];
-        double location[3];
-        TREFacing facing;
+		char *userMessage, *povCamera;
+		modelViewer->getPovCameraInfo(userMessage, povCamera);
+		if (userMessage && povCamera)
+		{
+   			qmessage.sprintf("%s",userMessage);
 
-        TRECamera &camera = modelViewer->getCamera();
-        TCVector cameraPosition = camera.getPosition();
-        TCVector boundingMin, boundingMax, center;
-
-        memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-            sizeof(rotationMatrix));
-        modelViewer->getMainTREModel()->getBoundingBox(boundingMin,
-            boundingMax);
-        center = (boundingMin + boundingMax) / 2.0f;
-        TCVector::initIdentityMatrix(positionMatrix);
-        positionMatrix[12] = cameraPosition[0] - modelViewer->getXPan();
-        positionMatrix[13] = -cameraPosition[1] + modelViewer->getYPan();
-        positionMatrix[14] = -cameraPosition[2];
-        TCVector::initIdentityMatrix(centerMatrix);
-        if (modelViewer->getAutoCenter())
-        {
-            centerMatrix[12] = center[0];
-            centerMatrix[13] = center[1];
-            centerMatrix[14] = center[2];
-        }
-        TCVector::multMatrix(otherMatrix, rotationMatrix, tmpMatrix);
-        TCVector::invertMatrix(tmpMatrix, cameraMatrix);
-        TCVector::multMatrix(centerMatrix, cameraMatrix, tmpMatrix);
-        TCVector::multMatrix(tmpMatrix, positionMatrix, matrix);
-
-        facing = camera.getFacing();
-        facing[0] = -facing[0];
-        facing.getInverseMatrix(cameraMatrix);
-        TCVector::multMatrix(matrix, cameraMatrix, tmpMatrix);
-        memcpy(matrix, tmpMatrix, sizeof(matrix));
-        cleanupFloats(matrix);
-        locationVector = TCVector(matrix[12], matrix[13], matrix[14]);
-        location[0] = (double)matrix[12];
-        location[1] = (double)matrix[13];
-        location[2] = (double)matrix[14];
-        cleanupFloats(matrix);
-        // Note that the location accuracy isn't nearly as important as the
-        // directional accuracy, so we don't have to re-do this string prior
-        // to putting it on the clipboard in the POV code copy.
-        sprintf(locationString, "%g,%g,%g", location[0], location[1],
-            location[2]);
-
-        matrix[12] = matrix[13] = matrix[14] = 0.0f;
-        directionVector = directionVector.transformPoint(matrix);
-        upVector = upVector.transformPoint(matrix);
-        // Grab the values prior to normalization.  That will make the
-        // normalization more accurate in double precision.
-        directionVector.upConvert(direction);
-        lookAtVector = locationVector + directionVector *
-            locationVector.length();
-        upVector.upConvert(up);
-        directionVector = directionVector.normalize();
-        upVector = upVector.normalize();
-        cleanupFloats(directionVector, 3);
-        cleanupFloats(upVector, 3);
-        // The following 3 strings will get re-done later at higher accuracy
-        // for POV-Ray.
-        sprintf(lookAtString, "%g,%g,%g", lookAtVector[0],
-            lookAtVector[1], lookAtVector[2]);
-        sprintf(upString, "%g,%g,%g", upVector[0], upVector[1],
-            upVector[2]);
-        sprintf(message, TCLocalStrings::get("PovCameraMessage"),
-            locationString, lookAtString, upString);
-   		qmessage.sprintf("%s",message);
-
-    	QMessageBox::information(this, "POV-Ray camera settings", qmessage, 
-			QMessageBox::Ok, QMessageBox::NoButton);
+    		QMessageBox::information(this, "POV-Ray camera settings", qmessage, 
+				QMessageBox::Ok, QMessageBox::NoButton);
+		}
+		delete userMessage;
+		delete povCamera;
     }
 }
 
