@@ -1950,10 +1950,18 @@ void LDViewWindow::showPovCamera(void)
 			char *povCamera;
 
 			modelViewer->getPovCameraInfo(userMessage, povCamera);
-			if (MessageBox(hWindow, userMessage,
-				TCLocalStrings::get("PovCameraTitle"), MB_OKCANCEL) == IDOK)
+			if (userMessage && povCamera)
 			{
-				copyToClipboard(povCamera);
+				if (MessageBox(hWindow, userMessage,
+					TCLocalStrings::get("PovCameraTitle"), MB_OKCANCEL) == IDOK)
+				{
+					copyToClipboard(povCamera);
+				}
+			}
+			else
+			{
+				MessageBox(hWindow, TCLocalStrings::get("NoModelLoaded"),
+					TCLocalStrings::get("Error"), MB_OK);
 			}
 			delete userMessage;
 			delete povCamera;
