@@ -2745,6 +2745,12 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	double lookAt[3];
 	double tempV[3];
 
+	if (!mainTREModel)
+	{
+		userMessage = NULL;
+		povCamera = NULL;
+		return;
+	}
 	TRECamera &camera = getCamera();
 	TCVector cameraPosition = camera.getPosition();
 	TCVector boundingMin, boundingMax, center;
