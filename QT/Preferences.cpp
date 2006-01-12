@@ -807,7 +807,7 @@ void Preferences::loadDefaultGeneralSettings(void)
 	showErrors = true;
 	processLdconfigLdr = true;
 	backgroundColor = 0;
-	defaultColor = 0x999999;
+	defaultColor = LDLPalette::colorForRGBA(0x99, 0x99, 0x99, 255);
 	defaultColorNumber = -1;
 	fieldOfView = 45;
 	memoryUsage = 2;
