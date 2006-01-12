@@ -44,6 +44,7 @@
 #include <qregexp.h>
 #include <qgroupbox.h>
 #include <qlayout.h>
+#include <qclipboard.h>
 
 #define POLL_INTERVAL 500
 
@@ -2079,17 +2080,18 @@ void ModelViewerWidget::doShowViewInfo(void)
 
 void ModelViewerWidget::doShowPovCamera(void)
 {
-	QString qmessage;
     if (modelViewer)
     {
 		char *userMessage, *povCamera;
 		modelViewer->getPovCameraInfo(userMessage, povCamera);
 		if (userMessage && povCamera)
 		{
-   			qmessage.sprintf("%s",userMessage);
-
-    		QMessageBox::information(this, "POV-Ray camera settings", qmessage, 
-				QMessageBox::Ok, QMessageBox::NoButton);
+    		if(QMessageBox::information(this, "POV-Ray camera settings", 
+				QString(userMessage), QMessageBox::Ok, QMessageBox::Cancel)==
+				QMessageBox::Ok)
+			{
+				QApplication::clipboard()->setText(QString(povCamera));
+			};
 		}
 		delete userMessage;
 		delete povCamera;
