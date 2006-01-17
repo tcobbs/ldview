@@ -589,13 +589,23 @@ void Preferences::doBackgroundColor()
 
 void Preferences::doDefaultColor()
 {
-	int r, g, b;
+	int r, g, b, a, i;
+	QRgb old[16];
+
+    for (i = 0 ; i < 16; i++)
+    {
+		old[i] = QColorDialog::customColor(i);
+        LDLPalette::getDefaultRGBA(i, r, g, b, a);
+        QColorDialog::setCustomColor(i, qRgb(r, g, b));
+    }
 	getRGB(defaultColor, r ,g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
 		panel->defaultColorButton->setPaletteBackgroundColor(color);
 	}
+	for (i = 0 ; i <16 ; i++)
+		QColorDialog::setCustomColor(i, old[i]);
 }
 
 void Preferences::doApply(void)
