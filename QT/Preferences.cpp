@@ -584,6 +584,7 @@ void Preferences::doBackgroundColor()
 	if(color.isValid())
 	{
 		panel->backgroundColorButton->setPaletteBackgroundColor(color);
+		panel->applyButton->setEnabled(true);
 	}
 }
 
@@ -603,6 +604,7 @@ void Preferences::doDefaultColor()
 	if(color.isValid())
 	{
 		panel->defaultColorButton->setPaletteBackgroundColor(color);
+		panel->applyButton->setEnabled(true);
 	}
 	for (i = 0 ; i <16 ; i++)
 		QColorDialog::setCustomColor(i, old[i]);
