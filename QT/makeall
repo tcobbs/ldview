@@ -1,8 +1,14 @@
 #! /bin/sh
-$QTDIR/bin/qmake
+if [ -x $QTDIR/bin/qmake ] ; then
+	$QTDIR/bin/qmake
+else
+	qmake
+fi
 rm -f LDView
 if [ -d $QTDIR/include/Qt3Support ] ; then
-export TESTING="-DQT3_SUPPORT -I$QTDIR/include/Qt"
+	export TESTING="-DQT3_SUPPORT -I$QTDIR/include/Qt"
+elif [ -d /usr/include/qt3 ] ; then
+	export TESTING="-I/usr/include/qt3"
 fi
 make -f LDView.mak all
 if [ "$1" = "-s" ]; then
