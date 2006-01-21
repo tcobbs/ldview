@@ -18,7 +18,7 @@
 #endif // WIN32
 
 #define LDL_LOWRES_PREFIX "LDL-LOWRES:"
-#define LOAD_MESSAGE "Loading..."
+#define LOAD_MESSAGE TCLocalStrings::get("LDLModelLoading")
 #define MAIN_READ_FRACTION 0.1f
 
 char *LDLModel::sm_systemLDrawDir = NULL;
