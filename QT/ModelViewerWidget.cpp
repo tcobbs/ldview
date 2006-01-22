@@ -1403,7 +1403,7 @@ char *ModelViewerWidget::getLDrawDir(void)
 		lDrawDir = copyString(getenv("LDRAWDIR"));
 		if (!lDrawDir)
 		{
-			lDrawDir = copyString("/mnt/c/ldraw");
+			lDrawDir = copyString("/usr/local/share/ldraw");
 		}
 	}
 	stripTrailingPathSeparators(lDrawDir);
