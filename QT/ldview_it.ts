@@ -3,7 +3,7 @@
     <name>AboutPanel</name>
     <message>
         <source>About LDView</source>
-        <translation type="unfinished"></translation>
+        <translation>Informazioni su LDView</translation>
     </message>
     <message encoding="UTF-8">
         <source>LDView Version 3.0 (14 Dec, 2005)
@@ -12,7 +12,7 @@ Copyright © 2000-2005 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>
@@ -30,7 +30,7 @@ Martijn Zwaal
 
 Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Un ringraziamento speciale alle seguenti persone per aver contribuito a LDView (in ordine alfabetico):</translation>
     </message>
     <message encoding="UTF-8">
         <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
@@ -58,19 +58,19 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>General error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore generale</translation>
     </message>
     <message>
         <source>Parse error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errori di analisi</translation>
     </message>
     <message>
         <source>File not found</source>
-        <translation type="unfinished"></translation>
+        <translation>File non trovato</translation>
     </message>
     <message>
         <source>Singular matrix</source>
-        <translation type="unfinished"></translation>
+        <translation>MAtrix singolare</translation>
     </message>
     <message>
         <source>Part transformed non-uniform</source>
@@ -78,15 +78,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Non-flat quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Quadrilatero non piano</translation>
     </message>
     <message>
         <source>Concave quad</source>
-        <translation type="unfinished"></translation>
+        <translation>Quadrilatero concavo</translation>
     </message>
     <message>
         <source>Bad vertex sequence</source>
-        <translation type="unfinished"></translation>
+        <translation>Sequenza vertici errata</translation>
     </message>
     <message>
         <source>Identical vertices</source>
@@ -94,23 +94,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Co-linear points</source>
-        <translation type="unfinished"></translation>
+        <translation>Punti co-lineari</translation>
     </message>
     <message>
         <source>BFC warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Avvisi BFC</translation>
     </message>
     <message>
         <source>BFC error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errori BFC</translation>
     </message>
     <message>
         <source>MPD error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errori MPD</translation>
     </message>
     <message>
         <source>Whitespace</source>
-        <translation type="unfinished"></translation>
+        <translation>Carattere di spazio</translation>
     </message>
     <message>
         <source>Part renamed</source>
@@ -118,18 +118,18 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show All</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra tutti</translation>
     </message>
     <message>
         <source>Show None</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra niente</translation>
     </message>
 </context>
 <context>
     <name>ExtraDirPanel</name>
     <message>
         <source>Extra Dir</source>
-        <translation type="unfinished"></translation>
+        <translation>Cartelle aggiuntive</translation>
     </message>
     <message>
         <source>Add</source>
@@ -137,7 +137,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina</translation>
     </message>
     <message>
         <source>Up</source>
@@ -149,36 +149,36 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Esc</translation>
     </message>
 </context>
 <context>
     <name>HelpPanel</name>
     <message>
         <source>LDView Help</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Guida</translation>
     </message>
 </context>
 <context>
     <name>ImageHolder</name>
     <message>
         <source>Form1</source>
-        <translation type="unfinished"></translation>
+        <translation>Form1</translation>
     </message>
 </context>
 <context>
     <name>LDView</name>
     <message>
         <source>LDView</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView</translation>
     </message>
     <message>
         <source>Tools</source>
@@ -186,35 +186,35 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;File</translation>
     </message>
     <message>
         <source>Po&amp;lling</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Interrogazione</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Modifica</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Visualizza</translation>
     </message>
     <message>
         <source>Viewing Angle</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Guida</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri</translation>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Apri...</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -222,7 +222,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Wireframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Wireframe</translation>
     </message>
     <message>
         <source>Seams</source>
@@ -234,23 +234,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Primitive substitution</source>
-        <translation type="unfinished"></translation>
+        <translation>Sostituzione primitivi</translation>
     </message>
     <message>
         <source>Primitive Substitution</source>
-        <translation type="unfinished"></translation>
+        <translation>Sostituzione primitivi</translation>
     </message>
     <message>
         <source>Lighting</source>
-        <translation type="unfinished"></translation>
+        <translation>Illuminazione</translation>
     </message>
     <message>
         <source>Save Snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva immagine</translation>
     </message>
     <message>
         <source>&amp;Save Snapshot...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Salva immagine</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
@@ -258,11 +258,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Print</translation>
     </message>
     <message>
         <source>&amp;Print...</source>
-        <translation type="unfinished"></translation>
+        <translation>Stam&amp;pa...</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
@@ -270,11 +270,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Esci</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Esci</translation>
     </message>
     <message>
         <source>Alt+X</source>
@@ -282,11 +282,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Contents</source>
-        <translation type="unfinished"></translation>
+        <translation>Contenuto</translation>
     </message>
     <message>
         <source>&amp;Contents...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Contenuto...</translation>
     </message>
     <message>
         <source>F1</source>
@@ -294,27 +294,27 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;About LDView...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Informazioni su LDView</translation>
     </message>
     <message>
         <source>About LDView</source>
-        <translation type="unfinished"></translation>
+        <translation>Informazioni su LDView</translation>
     </message>
     <message>
         <source>About Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>Informazioni su Qt</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Proprietà</translation>
     </message>
     <message>
         <source>&amp;Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Proprietà...</translation>
     </message>
     <message>
         <source>Ctrl+Shift+P</source>
@@ -322,7 +322,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra degli strumenti</translation>
     </message>
     <message>
         <source>Show or hide toolbar</source>
@@ -334,11 +334,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Status Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra di stato</translation>
     </message>
     <message>
         <source>&amp;Status Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra di &amp;stato</translation>
     </message>
     <message>
         <source>Show or hide this status bar</source>
@@ -358,11 +358,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Reset View</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ripristina vista</translation>
     </message>
     <message>
         <source>&amp;Reset View</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&amp;Ripristina vista</translation>
     </message>
     <message>
         <source>Resets model back to the default view</source>
@@ -374,11 +374,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>OpenGL Driver Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Informazione Driver OpenGL</translation>
     </message>
     <message>
         <source>&amp;OpenGL Driver Info...</source>
-        <translation type="unfinished"></translation>
+        <translation>Informazione Driver &amp;OpenGL...</translation>
     </message>
     <message>
         <source>Show OpenGL Driver Info</source>
@@ -386,11 +386,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>LDraw Dir</source>
-        <translation type="unfinished"></translation>
+        <translation>Cartella LDraw</translation>
     </message>
     <message>
         <source>LDraw &amp;Dir...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cartella LDra&amp;w</translation>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
@@ -398,15 +398,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Extra Dirs...</source>
-        <translation type="unfinished"></translation>
+        <translation>Cartelle aggiuntive...</translation>
     </message>
     <message>
         <source>Reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricarica</translation>
     </message>
     <message>
         <source>&amp;Reload</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ricarica</translation>
     </message>
     <message>
         <source>F5</source>
@@ -430,7 +430,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Zoom to fit</source>
-        <translation type="unfinished"></translation>
+        <translation>Adatta zoom</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
@@ -438,7 +438,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Front</source>
-        <translation type="unfinished"></translation>
+        <translation>Fronte</translation>
     </message>
     <message>
         <source>Ctrl+1</source>
@@ -446,7 +446,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Ctrl+2</source>
@@ -454,7 +454,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Sinistra</translation>
     </message>
     <message>
         <source>Ctrl+3</source>
@@ -462,7 +462,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Destra</translation>
     </message>
     <message>
         <source>Ctrl+4</source>
@@ -470,7 +470,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished"></translation>
+        <translation>Alto</translation>
     </message>
     <message>
         <source>Ctrl+5</source>
@@ -478,7 +478,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Basso</translation>
     </message>
     <message>
         <source>Ctrl+6</source>
@@ -486,7 +486,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Isometric</source>
-        <translation type="unfinished"></translation>
+        <translation>Isometrico</translation>
     </message>
     <message>
         <source>Ctrl+0</source>
@@ -494,11 +494,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Save Current as Default</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Salva vista attuale come predefinita</translation>
     </message>
     <message>
         <source>Polling</source>
-        <translation type="unfinished"></translation>
+        <translation>Interrogazione</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -514,11 +514,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Prompt</source>
-        <translation type="unfinished"></translation>
+        <translation>Richiedi</translation>
     </message>
     <message>
         <source>&amp;Prompt</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Richiedi</translation>
     </message>
     <message>
         <source>Prompt when file changes</source>
@@ -526,11 +526,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Auto-update when active</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiornamento automatico se attivo</translation>
     </message>
     <message>
         <source>&amp;Auto-update when active</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiornamento automatico se &amp;attivo</translation>
     </message>
     <message>
         <source>Auto-update once this window is activated</source>
@@ -538,23 +538,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Auto-&amp;update immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiornamento &amp;immediato</translation>
     </message>
     <message>
         <source>Auto-update immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiornamento immediato</translation>
     </message>
     <message>
         <source>ActionGroup</source>
-        <translation type="unfinished"></translation>
+        <translation>ActionGroup</translation>
     </message>
     <message>
         <source>Examine Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo esame</translation>
     </message>
     <message>
         <source>E&amp;xamine Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>M&amp;odo esame</translation>
     </message>
     <message>
         <source>Ctrl+Shift+X</source>
@@ -562,11 +562,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Fly-through Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo panoramica</translation>
     </message>
     <message>
         <source>&amp;Fly-through Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo &amp;panoramica</translation>
     </message>
     <message>
         <source>Ctrl+Shift+F</source>
@@ -574,15 +574,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Cancel Load</source>
-        <translation type="unfinished"></translation>
+        <translation>Annulla caricamento</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Show View Info</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostra informazioni di vista</translation>
     </message>
     <message>
         <source>Show Pov-Ray Camera Info...</source>
@@ -600,7 +600,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <name>PreferencesPanel</name>
     <message>
         <source>LDView Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Proprietà</translation>
     </message>
     <message>
         <source>General</source>
@@ -608,23 +608,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>&amp;Miscellaneous</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Varie</translation>
     </message>
     <message>
         <source>Antialiased lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linee anti-alias</translation>
     </message>
     <message>
         <source>Show frame rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra velocità per fotogramma</translation>
     </message>
     <message>
         <source>Show errors after loading</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra errori dopo caricamento</translation>
     </message>
     <message>
         <source>Process ldconfig.ldr</source>
-        <translation type="unfinished"></translation>
+        <translation>Processare LDconfig.ldr</translation>
     </message>
     <message>
         <source>Default color:</source>
@@ -636,7 +636,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Field of View:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Campo visivo:</translation>
     </message>
     <message>
         <source>Transparent</source>
@@ -644,39 +644,39 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Memory usage</source>
-        <translation type="unfinished"></translation>
+        <translation>Uso della memoria</translation>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Basso</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished"></translation>
+        <translation>Medio</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished"></translation>
+        <translation>Alto</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Reimposta</translation>
     </message>
     <message>
         <source>Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Geometria</translation>
     </message>
     <message>
         <source>&amp;Model</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Modello</translation>
     </message>
     <message>
         <source>Seam width</source>
-        <translation type="unfinished"></translation>
+        <translation>Larghezza spazio</translation>
     </message>
     <message>
         <source>&amp;Wireframe</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Wireframe</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -684,87 +684,87 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Fog</source>
-        <translation type="unfinished"></translation>
+        <translation>Nebbia</translation>
     </message>
     <message>
         <source>Remove hidden lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimuovi bordi nascosti</translation>
     </message>
     <message>
         <source>Thickness:</source>
-        <translation type="unfinished"></translation>
+        <translation>Spessore:</translation>
     </message>
     <message>
         <source>BFC</source>
-        <translation type="unfinished"></translation>
+        <translation>BFC</translation>
     </message>
     <message>
         <source>Red back faces</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lati posteriori in rosso</translation>
     </message>
     <message>
         <source>Green front faces</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lati frontali in verde</translation>
     </message>
     <message>
         <source>&amp;Edge Lines</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Bordi</translation>
     </message>
     <message>
         <source>Show edges only</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra solo bordi</translation>
     </message>
     <message>
         <source>Conditional lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linee di costrizione</translation>
     </message>
     <message>
         <source>Show all</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra tutto</translation>
     </message>
     <message>
         <source>Show control pts</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra pt. controllo</translation>
     </message>
     <message>
         <source>High quality</source>
-        <translation type="unfinished"></translation>
+        <translation>Alta qualità</translation>
     </message>
     <message>
         <source>Always black</source>
-        <translation type="unfinished"></translation>
+        <translation>Sempre nero</translation>
     </message>
     <message>
         <source>Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Effetti</translation>
     </message>
     <message>
         <source>&amp;Lighting</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Illuminazione</translation>
     </message>
     <message>
         <source>Subdued</source>
-        <translation type="unfinished"></translation>
+        <translation>Luce soffusa</translation>
     </message>
     <message>
         <source>Specular highlight</source>
-        <translation type="unfinished"></translation>
+        <translation>Luce speculare</translation>
     </message>
     <message>
         <source>Alternate setup</source>
-        <translation type="unfinished"></translation>
+        <translation>Impostazione alternativa</translation>
     </message>
     <message>
         <source>&amp;Stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Stereo</translation>
     </message>
     <message>
         <source>Cross-eyed</source>
-        <translation type="unfinished"></translation>
+        <translation>Sghembo</translation>
     </message>
     <message>
         <source>Parallel</source>
-        <translation type="unfinished"></translation>
+        <translation>Parallelo</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -772,75 +772,75 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>&amp;Wireframe cutaway</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Wireframe sezionato</translation>
     </message>
     <message>
         <source>Monochrome</source>
-        <translation type="unfinished"></translation>
+        <translation>Monocromatico</translation>
     </message>
     <message>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Colore</translation>
     </message>
     <message>
         <source>Opacity:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opacità:</translation>
     </message>
     <message>
         <source>&amp;Transparency</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Trasparenza</translation>
     </message>
     <message>
         <source>Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordina</translation>
     </message>
     <message>
         <source>Stipple</source>
-        <translation type="unfinished"></translation>
+        <translation>Punteggiato</translation>
     </message>
     <message>
         <source>Flat shading</source>
-        <translation type="unfinished"></translation>
+        <translation>Ombreggiatura piatta</translation>
     </message>
     <message>
         <source>Smooth curves</source>
-        <translation type="unfinished"></translation>
+        <translation>Curve morbide</translation>
     </message>
     <message>
         <source>Primitives</source>
-        <translation type="unfinished"></translation>
+        <translation>Primitivi</translation>
     </message>
     <message>
         <source>&amp;Primitive Substitution</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sostituzione primitivi</translation>
     </message>
     <message>
         <source>Texture studs</source>
-        <translation type="unfinished"></translation>
+        <translation>Trama studs</translation>
     </message>
     <message>
         <source>Nearest filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro più vicino</translation>
     </message>
     <message>
         <source>Bilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro bilineare</translation>
     </message>
     <message>
         <source>Trilinear filtering</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro trilineare</translation>
     </message>
     <message>
         <source>Curve quality:</source>
-        <translation type="unfinished"></translation>
+        <translation>Qualità curve:</translation>
     </message>
     <message>
         <source>Low quality studs (faster)</source>
-        <translation type="unfinished"></translation>
+        <translation>Studs in bassa qualità (più veloce)</translation>
     </message>
     <message>
         <source>Use hi-res primitives when available</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilizza primitivi di alta risoluzione se sono disponibili</translation>
     </message>
     <message>
         <source>Preference set</source>
@@ -848,31 +848,31 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuovo</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina</translation>
     </message>
     <message>
         <source>Hot Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Combinazione di tasti</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Applica</translation>
     </message>
 </context>
 </TS>
