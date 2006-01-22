@@ -6,7 +6,13 @@ mkdir -p .obj/LDView3
 strip LDView
 cp LDView ../8464.mpd ../ChangeHistory.html ../Help.html \
 ../LDViewMessages.ini ../license.txt ../m6459.ldr ../Readme.txt todo.txt \
+ldview_*.qm \
 .obj/LDView3/
-cd .obj
+cp ../Translations/German/LDViewMessages.ini .obj/LDView3/LDViewMessages_de.ini
+cp ../Translations/Italian/LDViewMessages.ini .obj/LDView3/LDViewMessages_it.ini
+cd .obj/LDView3
+mv LDViewMessages.ini LDViewMessages_en.ini
+ln -sf LDViewMessages_en.ini LDViewMessages.ini
+cd ..
 tar cfz ../LDView3.tgz LDView3
 rm -rf LDView3

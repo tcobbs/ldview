@@ -3,6 +3,7 @@
 #include <qwindowsstyle.h>
 #include <qmotifstyle.h>
 #include <qradiobutton.h>
+#include <qtextcodec.h>
 //#include <qmotifplusstyle.h>
 #include <qgl.h>
 #include "LDView.h"
@@ -21,9 +22,17 @@ void setupDefaultFormat(void)
 	QGLFormat::setDefaultFormat(defaultFormat);
 }
 
+bool load(QString file)
+{
+	return TCLocalStrings::loadStringTable(file.ascii());
+}
+
 int main(int argc, char *argv[])
 {
-	if (TCLocalStrings::loadStringTable("LDViewMessages.ini"))
+	const char *locale = QTextCodec::locale();
+	if (load(QString("LDViewMessages_") + locale + ".ini")) {}
+	else if (load(QString("/usr/local/share/ldview/LDViewMessages_") + locale + ".ini")) {}
+	else if (TCLocalStrings::loadStringTable("LDViewMessages.ini"))
 	{
 //		printf("Using LDViewMessages.ini\n");
 	}
@@ -81,6 +90,12 @@ int main(int argc, char *argv[])
 //	QApplication::setStyle(new QMotifStyle);
 //	QApplication::setStyle(new QMotifPlusStyle);
     QApplication a( argc, argv );
+	QTranslator translator(0);
+//	printf("%s\n",locale);
+	if (!translator.load(QString("ldview_")+locale+".qm",".") &&
+		!translator.load(QString("ldview_")+locale+".qm","/usr/local/share/ldview"))
+		printf ("Failed to load translation %s\n",QTextCodec::locale());
+	a.installTranslator(&translator);
     LDView *w = new LDView;
     w->show();
     a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
