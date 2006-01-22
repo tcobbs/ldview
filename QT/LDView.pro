@@ -25,3 +25,6 @@ message(QT4)
 LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -lLDraw -lLDLoader -lTRE -lTCFoundation
 DBFILE	= LDView.db
 LANGUAGE	= C++
+TRANSLATIONS   =  	ldview_en.ts \
+					ldview_de.ts \
+					ldview_it.ts
