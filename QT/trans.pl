@@ -26,6 +26,7 @@ sub zzz {
 			}
 		}
 		if ($s =~ /POPUP[ \t]*"([^"]*)"/) {$popup++;$msg=$1;$id="POPUP".$popup;}
+		if ($s =~ /CAPTION[ \t]*"([^"]*)"/) {$id=$section."_CAPTION"; $msg=$1;}
 		if ($id) {
 			$msg =~ s/\&/\&amp;/g;
 #			$msg =~ s/\xfc/\xc3\xbc/g;
