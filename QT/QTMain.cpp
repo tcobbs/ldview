@@ -12,6 +12,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
 #include <UserDefaultsKeys.h>
+#include <string.h>
 
 static QGLFormat defaultFormat;
 
@@ -29,7 +30,12 @@ bool load(QString file)
 
 int main(int argc, char *argv[])
 {
-	const char *locale = QTextCodec::locale();
+	const char *loc = QTextCodec::locale();
+	char locale[3];
+	locale[0]=locale[1]=locale[2]=0;
+	strncpy(locale,loc,3);
+	locale[2]=0;
+
 	if (load(QString("LDViewMessages_") + locale + ".ini")) {}
 	else if (load(QString("/usr/local/share/ldview/LDViewMessages_") + locale + ".ini")) {}
 	else if (TCLocalStrings::loadStringTable("LDViewMessages.ini"))
