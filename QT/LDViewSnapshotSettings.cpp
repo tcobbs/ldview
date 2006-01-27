@@ -29,6 +29,7 @@ void SnapshotSettings::reflectSettings(void)
     panel->zoomtofitEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false));
 	panel->seriesEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0);
 	panel->sizeEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
+	panel->pbufferEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
 }
 
 SnapshotSettings::~SnapshotSettings(void)
@@ -44,6 +45,20 @@ void SnapshotSettings::show(void)
 
 void SnapshotSettings::doOk()
 {
+	TCUserDefaults::setLongForKey(panel->digitBox->value(),
+		SAVE_DIGITS_KEY, false);
+	TCUserDefaults::setLongForKey(panel->widthBox->value(), 
+		SAVE_WIDTH_KEY, false);
+	TCUserDefaults::setLongForKey(panel->heightBox->value(),
+		SAVE_HEIGHT_KEY, false);
+	TCUserDefaults::setLongForKey(panel->zoomtofitEnabledButton->isChecked(),
+		SAVE_ZOOM_TO_FIT_KEY, false);
+	TCUserDefaults::setLongForKey(panel->seriesEnabledButton->isChecked(),
+		SAVE_SERIES_KEY, false);
+	TCUserDefaults::setLongForKey(panel->sizeEnabledButton->isChecked(),
+		SAVE_ACTUAL_SIZE_KEY, false);
+	TCUserDefaults::setLongForKey(panel->pbufferEnabledButton->isChecked(),
+		SAVE_ACTUAL_SIZE_KEY, false);
 }
 
 void SnapshotSettings::doCancel()
