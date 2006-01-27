@@ -95,7 +95,7 @@
                                 <cstring>SeriesBox</cstring>
                             </property>
                             <property name="title">
-                                <string>Series of Snapshots</string>
+                                <string>Save snapshot series</string>
                             </property>
                             <vbox>
                                 <property name="name">
@@ -194,7 +194,7 @@
                                 <cstring>sizeBox</cstring>
                             </property>
                             <property name="title">
-                                <string>Size</string>
+                                <string>Save image with specific size</string>
                             </property>
                             <vbox>
                                 <property name="name">
@@ -363,7 +363,7 @@
                                 <cstring>pbufferBox</cstring>
                             </property>
                             <property name="title">
-                                <string>Pbuffer</string>
+                                <string>Misc</string>
                             </property>
                             <hbox>
                                 <property name="name">
@@ -380,7 +380,7 @@
                                         <cstring>pbufferEnabledButton</cstring>
                                     </property>
                                     <property name="text">
-                                        <string>Enabled</string>
+                                        <string>Don't use Pixel Buffer</string>
                                     </property>
                                 </widget>
                                 <spacer>
