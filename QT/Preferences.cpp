@@ -1,7 +1,4 @@
 #include "qt4wrapper.h"
-#include "Preferences.h"
-#include "PreferencesPanel.h"
-#include "ModelViewerWidget.h"
 #include <LDLoader/LDLModel.h>
 #include <LDLoader/LDLPalette.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -22,6 +19,9 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <netinet/in.h>
 #include <qtextedit.h>
+#include "ModelViewerWidget.h"
+#include "Preferences.h"
+#include "PreferencesPanel.h"
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
