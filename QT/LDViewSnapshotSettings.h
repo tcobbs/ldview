@@ -18,6 +18,7 @@ public:
 	void clear(void);
 	void doOk(void);
 	void doCancel(void);
+	void setButtonState(QCheckBox *button, bool state);
 protected:
 
 	LDrawModelViewer *modelViewer;

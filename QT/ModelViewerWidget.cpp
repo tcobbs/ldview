@@ -17,6 +17,8 @@
 #include "LDViewErrors.h"
 #include "ExtraDirPanel.h"
 #include "LDViewExtraDir.h"
+#include "SnapshotSettingsPanel.h"
+#include "LDViewSnapshotSettings.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include "UserDefaultsKeys.h"
 
@@ -65,6 +67,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	zoomButton(2),
 	preferences(NULL),
 	extradir(NULL),
+	snapshotsettings(NULL),
 	extensionsPanel(NULL),
 	openGLDriverInfo(NULL),
 	aboutPanel(NULL),
@@ -85,6 +88,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	progressLabel(NULL),
 	progressMode(NULL),
 	loading(false),
+	saving(false),
 	cancelLoad(false),
 	app(NULL),
 	painting(false),
@@ -131,6 +135,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	}
 	preferences = new Preferences(this);
 	extradir = new ExtraDir(this);
+	snapshotsettings = new SnapshotSettings(this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode());
 #if (QT_VERSION >>16)==4
@@ -200,8 +205,8 @@ void ModelViewerWidget::resizeGL(int width, int height)
 	{
 		QSize mainWindowSize = mainWindow->size();
 
-		modelViewer->setWidth(width);
-		modelViewer->setHeight(height);
+		modelViewer->setWidth(mwidth=width);
+		modelViewer->setHeight(mheight=height);
 		glViewport(0, 0, width, height);
 		preferences->setWindowSize(mainWindowSize.width(), mainWindowSize.height());
 	}
@@ -235,7 +240,7 @@ void ModelViewerWidget::swap_Buffers(void)
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
-	if (!painting && !loading)
+	if (!painting && !loading && !saving)
 	{
 		painting = true;
 		makeCurrent();
@@ -767,7 +772,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	if (item)
 	{
 		fileMenu = mainWindow->fileMenu;
-		fileCancelLoadId = fileMenu->idAt(6);
+		fileCancelLoadId = fileMenu->idAt(7);
 		fileReloadId = fileMenu->idAt(1);
 	}
 	for (i = 0; ; i++)
@@ -801,6 +806,8 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		helpMenu = mainWindow->helpMenu;
 	}
 	connectMenuShows();
+    saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
+
 	unlock();
 }
 
@@ -1690,11 +1697,15 @@ bool ModelViewerWidget::staticImageProgressCallback(char* message, float progres
 }
 
 bool ModelViewerWidget::writeImage(char *filename, int width, int height,
-                             char *buffer, char *formatName)
+                             TCByte *buffer, char *formatName, bool saveAlpha)
 {
     TCImage *image = new TCImage;
     bool retValue;
-                                                                                                                                                             
+
+    if (saveAlpha)
+    {
+        image->setDataFormat(TCRgba8);
+    }
     image->setSize(width, height);
     image->setLineAlignment(4);
     image->setImageData((TCByte*)buffer);
@@ -1710,25 +1721,172 @@ int ModelViewerWidget::roundUp(int value, int nearest)
     return (value + nearest - 1) / nearest * nearest;
 }
 
-char *ModelViewerWidget::grabImage(int imageWidth, int imageHeight, 
-									char *buffer)
+void ModelViewerWidget::setupSnapshotBackBuffer(int imageWidth, int imageHeight)
+{
+    modelViewer->setSlowClear(true);
+    modelViewer->setWidth(imageWidth);
+    modelViewer->setHeight(imageHeight);
+    modelViewer->setup();
+    glReadBuffer(GL_BACK);
+}
+
+TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight, 
+									TCByte *buffer, bool zoomToFit, 												bool *saveAlpha)
 {
     bool oldSlowClear = modelViewer->getSlowClear();
     GLenum bufferFormat = GL_RGB;
+    bool origForceZoomToFit = modelViewer->getForceZoomToFit();
     TCVector origCameraPosition = modelViewer->getCamera().getPosition();
+    TCFloat origXPan = modelViewer->getXPan();
+    TCFloat origYPan = modelViewer->getYPan();
+    bool origAutoCenter = modelViewer->getAutoCenter();
+    int newWidth = 1600;
+    int newHeight = 1200;
+    int numXTiles, numYTiles;
+    int xTile;
+    int yTile;
+    TCByte *smallBuffer;
+    int bytesPerPixel = 3;
+    int bytesPerLine;
+    int smallBytesPerLine;
+    bool canceled = false;
+    bool bufferAllocated = false;
 
-    modelViewer->setSlowClear(true);
-    makeCurrent();
-    modelViewer->update();
-    glReadBuffer(GL_BACK);
+	saving = true;
+    if (zoomToFit)
+    {
+        modelViewer->setForceZoomToFit(true);
+    }
+    calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
+        numYTiles);
+    imageWidth = newWidth * numXTiles;
+    imageHeight = newHeight * numYTiles;
+	if (1)
+	{
+        newWidth = mwidth;       // width is OpenGL window width
+        newHeight = mheight;     // height is OpenGL window height
+        calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
+            numYTiles);
+		setupSnapshotBackBuffer(newWidth, newHeight);
+	}
+    if (canSaveAlpha())
+    {
+        bytesPerPixel = 4;
+        bufferFormat = GL_RGBA;
+        if (saveAlpha)
+        {
+            *saveAlpha = true;
+        }
+    }
+    else
+    {
+        if (saveAlpha)
+        {
+            *saveAlpha = false;
+        }
+    }
+    smallBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
+    bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
     if (!buffer)
     {
-       buffer = (char *)malloc(roundUp(imageWidth * 3, 4) * imageHeight);
+        buffer = new TCByte[bytesPerLine * imageHeight];
+        bufferAllocated = true;
+    }
+    if (numXTiles == 1 && numYTiles == 1)
+    {
+        smallBuffer = buffer;
+    }
+    else
+    {
+        smallBuffer = new TCByte[smallBytesPerLine * newHeight];
+    }
+	modelViewer->setNumXTiles(numXTiles);
+    modelViewer->setNumYTiles(numYTiles);
+    for (yTile = 0; yTile < numYTiles; yTile++)
+	{
+        modelViewer->setYTile(yTile);
+        for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
+        {
+            modelViewer->setXTile(xTile);
+            renderOffscreenImage();
+            if (progressCallback((char*)TCLocalStrings::get("RenderingSnapshot"),
+                (float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),true))
+            {
+                glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
+                    GL_UNSIGNED_BYTE, smallBuffer);
+                if (smallBuffer != buffer)
+                {
+                    int x;
+                    int y;
+
+                    for (y = 0; y < newHeight; y++)
+                    {
+                        int smallOffset = y * smallBytesPerLine;
+                        int offset = (y + (numYTiles - yTile - 1) * newHeight) * bytesPerLine;
+
+                        for (x = 0; x < newWidth; x++)
+                        {
+                            int spot = offset + x * bytesPerPixel +
+                                xTile * newWidth * bytesPerPixel;
+                            int smallSpot = smallOffset + x * bytesPerPixel;
+
+                            buffer[spot] = smallBuffer[smallSpot];
+                            buffer[spot + 1] = smallBuffer[smallSpot + 1];
+                            buffer[spot + 2] = smallBuffer[smallSpot + 2];
+                        }
+                        // We only need to zoom to fit on the first tile; the
+                        // rest will already be correct.
+                        modelViewer->setForceZoomToFit(false);
+                    }
+                }
+            }
+            else
+            {
+                canceled = true;
+            }
+        }
+    }
+
+    modelViewer->setSlowClear(true);
+    //makeCurrent();
+/*    modelViewer->update();
+    glReadBuffer(GL_BACK);
+	renderOffscreenImage();
+    if (!buffer)
+    {
+       buffer = (TCByte *)malloc(roundUp(imageWidth * 3, 4) * imageHeight);
     }
     glReadPixels(0, 0, imageWidth, imageHeight, bufferFormat, GL_UNSIGNED_BYTE,
         buffer);
+*/
+    modelViewer->setXTile(0);
+    modelViewer->setYTile(0);
+    modelViewer->setNumXTiles(1);
+    modelViewer->setNumYTiles(1);
+    if (canceled && bufferAllocated)
+    {
+        delete buffer;
+        buffer = NULL;
+    }
+    if (smallBuffer != buffer)
+    {
+        delete smallBuffer;
+    }
+    modelViewer->setWidth(mwidth);
+    modelViewer->setHeight(mheight);
+    modelViewer->setup();
+    if (zoomToFit)
+    {
+        modelViewer->setForceZoomToFit(origForceZoomToFit);
+        modelViewer->getCamera().setPosition(origCameraPosition);
+        modelViewer->setXYPan(origXPan, origYPan);
+        modelViewer->setAutoCenter(origAutoCenter);
+    }
+
+//	makeCurrent();
 	modelViewer->setSlowClear(oldSlowClear);
 	doApply();
+	saving = false;
     return buffer;
 }
 
@@ -1775,27 +1933,51 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 }
 
 bool ModelViewerWidget::writeBmp(char *filename, int width, int height, 
-								 char *buffer)
+								 TCByte *buffer)
 {
     return writeImage(filename, width, height, buffer, "BMP");
 }
                                                                                                                                                              
 bool ModelViewerWidget::writePng(char *filename, int width, int height, 
-								 char *buffer)
+								 TCByte *buffer, bool saveAlpha)
 {
-    return writeImage(filename, width, height, buffer, "PNG");
+    return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
 }
 
 bool ModelViewerWidget::saveImage(char *filename, int imageWidth, 
 									int imageHeight)
 {
-    char *buffer = grabImage(imageWidth, imageHeight);
+	bool saveAlpha = false;
+    TCByte *buffer = grabImage(imageWidth, imageHeight, NULL, 
+				TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false),
+				&saveAlpha);
     bool retValue = false;
     if (buffer)
     {
+        if (saveAlpha)
+        {
+            int i;
+            int totalBytes = imageWidth * imageHeight * 4;
+
+            for (i = 3; i < totalBytes; i += 4)
+            {
+                if (buffer[i] != 0 && buffer[i] != 255)
+                {
+                    if (buffer[i] == 74)
+                    {
+                        buffer[i] = 255 - 28;
+                    }
+                    else
+                    {
+                        buffer[i] = 255;
+                    }
+                }
+            }
+        }
         if (saveImageType == PNG_IMAGE_TYPE_INDEX)
         {
-            retValue = writePng(filename, imageWidth, imageHeight, buffer);
+            retValue = writePng(filename, imageWidth, imageHeight, buffer,
+								saveAlpha);
         }
         else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
         {
@@ -1853,14 +2035,20 @@ bool ModelViewerWidget::doFileSave(char *saveFilename)
 		{
 			return false;
 		}
-        return saveImage(saveFilename, modelViewer->getWidth(), 
-				modelViewer->getHeight());
+        return saveImage(saveFilename, TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : modelViewer->getWidth(), 
+				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false) :  modelViewer->getHeight());
     }
     else
     {
         return false;
     }
 }
+
+void ModelViewerWidget::doFileSaveSettings(void)
+{
+	snapshotsettings->show();
+}
+
 
 void ModelViewerWidget::doFrontViewAngle(void)
 {
@@ -2447,3 +2635,76 @@ bool ModelViewerWidget::staticFileCaseCallback(char *filename)
 	}
 	return staticFileCaseLevel(dir, shortName);
 }
+
+bool ModelViewerWidget::canSaveAlpha(void)
+{
+    if (saveAlpha && (saveImageType == PNG_IMAGE_TYPE_INDEX))
+    {
+        int alphaBits;
+
+        glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
+        return alphaBits > 0;
+    }
+    return false;
+}
+
+void ModelViewerWidget::renderOffscreenImage(void)
+{
+    modelViewer->update();
+	repaint();
+//	offscreen = renderPixmap();
+	if(canSaveAlpha())
+	{
+        glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |            GL_VIEWPORT_BIT);
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_POLYGON_OFFSET_FILL);
+        glDepthFunc(GL_GREATER);
+        glDepthRange(0.0f, 1.0f);
+        glBegin(GL_QUADS);
+            treGlVertex3f(0.0f, 0.0f, -1.0f);
+            treGlVertex3f((TCFloat)mwidth, 0.0f, -1.0f);
+            treGlVertex3f((TCFloat)mwidth, (TCFloat)mheight, -1.0f);
+            treGlVertex3f(0.0f, (TCFloat)mheight, -1.0f);
+        glEnd();
+        glColor4ub(0, 0, 0, 129);
+        glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_LESS, 1.0);
+        glBegin(GL_QUADS);
+            treGlVertex3f(0.0f, 0.0f, -1.0f);
+            treGlVertex3f((TCFloat)mwidth, 0.0f, -1.0f);
+            treGlVertex3f((TCFloat)mwidth, (TCFloat)mheight, -1.0f);
+            treGlVertex3f(0.0f, (TCFloat)mheight, -1.0f);
+        glEnd();
+        glPopAttrib();
+	}
+}
+
+void ModelViewerWidget::calcTiling(int desiredWidth, int desiredHeight,
+                             int &bitmapWidth, int &bitmapHeight,
+                             int &numXTiles, int &numYTiles)
+{
+    if (desiredWidth > bitmapWidth)
+    {
+        numXTiles = (desiredWidth + bitmapWidth - 1) / bitmapWidth;
+    }
+    else
+    {
+        numXTiles = 1;
+    }
+    bitmapWidth = desiredWidth / numXTiles;
+    if (desiredHeight > bitmapHeight)
+    {
+        numYTiles = (desiredHeight + bitmapHeight - 1) / bitmapHeight;
+    }
+    else
+    {
+        numYTiles = 1;
+    }
+    bitmapHeight = desiredHeight / numYTiles;
+}
+
