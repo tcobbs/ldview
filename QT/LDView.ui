@@ -123,6 +123,7 @@
             <action name="backgroundPollingAction"/>
         </item>
         <action name="fileSaveAction"/>
+		<action name="fileSaveSettingsAction"/>
         <action name="fileLDrawDirAction"/>
         <action name="fileExtraDirAction"/>
         <action name="fileCancelLoadAction"/>
@@ -303,6 +304,20 @@
         </property>
         <property name="toggleAction">
             <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileSaveSettingsAction</cstring>
+        </property>
+        <property name="text">
+            <string>Snapshot Settings</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Snapshot Settings...</string>
+        </property>
+        <property name="toolTip">
+            <string>Snapshot Settings</string>
         </property>
     </action>
     <action>
@@ -855,6 +870,12 @@
         <slot>fileOpen()</slot>
     </connection>
     <connection>
+        <sender>fileSaveSettingsAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>fileSaveSettings()</slot>
+    </connection>
+    <connection>
         <sender>fileSaveAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1072,6 +1093,7 @@
     <slot>init()</slot>
     <slot>fileOpen()</slot>
     <slot>fileSave()</slot>
+	<slot>fileSaveSettings()</slot>
     <slot>filePrint()</slot>
     <slot>fileExit()</slot>
     <slot>helpContents()</slot>

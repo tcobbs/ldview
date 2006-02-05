@@ -27,6 +27,11 @@ void LDView::fileSave()
 	modelViewer->doFileSave();
 }
 
+void LDView::fileSaveSettings()
+{
+	modelViewer->doFileSaveSettings();
+}
+
 void LDView::filePrint()
 {
 }

@@ -21,15 +21,31 @@ SnapshotSettings::SnapshotSettings(ModelViewerWidget *modelWidget)
 	reflectSettings();
 }
 
+void SnapshotSettings::setButtonState(QCheckBox *button, bool state)
+{
+    bool buttonState = button->isChecked();
+
+    if (state != buttonState)
+    {
+        button->toggle();
+    }
+}
+
 void SnapshotSettings::reflectSettings(void)
 {
     panel->digitBox->setValue(TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false));
     panel->widthBox->setValue(TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false));
     panel->heightBox->setValue(TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false));
-    panel->zoomtofitEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false));
-	panel->seriesEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0);
-	panel->sizeEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
-	panel->pbufferEnabledButton->setDown(TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
+    setButtonState(panel->zoomtofitEnabledButton,
+		TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false));
+	setButtonState(panel->seriesEnabledButton,
+		TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0);
+	setButtonState(panel->sizeEnabledButton,
+		TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
+	setButtonState(panel->pbufferEnabledButton,
+		TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 1, false));
+	panel->doEnabledSize();
+	panel->doEnabledSeries();
 }
 
 SnapshotSettings::~SnapshotSettings(void)
@@ -58,7 +74,7 @@ void SnapshotSettings::doOk()
 	TCUserDefaults::setLongForKey(panel->sizeEnabledButton->isChecked(),
 		SAVE_ACTUAL_SIZE_KEY, false);
 	TCUserDefaults::setLongForKey(panel->pbufferEnabledButton->isChecked(),
-		SAVE_ACTUAL_SIZE_KEY, false);
+		IGNORE_PBUFFER_KEY, false);
 }
 
 void SnapshotSettings::doCancel()

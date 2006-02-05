@@ -7,6 +7,7 @@
 
 #include "Preferences.h"
 #include "LDViewExtraDir.h"
+#include "LDViewSnapshotSettings.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -19,6 +20,7 @@ class OpenGLExtensionsPanel;
 class AboutPanel;
 class HelpPanel;
 class ExtraDirPanel;
+class SnapshotSettingsPanel;
 class QFileDialog;
 class LDViewErrors;
 class QMenuBar;
@@ -71,23 +73,23 @@ public:
 	void doViewModeChanged(QAction *action);
 	void doZoomToFit(void);
 	bool doFileSave(void);
+	void doFileSaveSettings(void);
 	bool fileExists(char* filename);
 	bool shouldOverwriteFile(char* filename);
 	bool doFileSave(char *saveFilename);
 	bool getSaveFilename(char* saveFilename, int len);
 	static bool staticImageProgressCallback(char* message, float progress,
             void* userData);
-	bool writeImagee(char *filename, int width, int height,
-                     char *buffer, char *formatName);
+	bool writeImage(char *filename, int width, int height,
+                     TCByte *buffer, char *formatName, bool saveAlpha = false);
 	bool saveImage(char *filename, int imageWidth, int imageHeight);
 	bool writePng(char *filename, int width, int height,
-            char *buffer);
+            TCByte *buffer, bool saveAlpha);
     bool writeBmp(char *filename, int width, int height,
-            char *buffer);
-	bool writeImage(char *filename, int width, int height,
-            char *buffer, char *formatName);
-	char *grabImage(int imageWidth, int imageHeight,
-            char *buffer = NULL);
+            TCByte *buffer);
+	TCByte *grabImage(int imageWidth, int imageHeight,
+            TCByte *buffer = NULL, bool zoomToFit = true, 
+			bool *saveAlpha = NULL);
 	int roundUp(int value, int nearest);
 
 	void doFrontViewAngle(void);
@@ -108,6 +110,14 @@ public:
 	void doPrimitiveSubstitution(bool);
 	void doSeams(bool);
 	void reflectSettings(void);
+	int mwidth, mheight;
+	void calcTiling(int desiredWidth, int desiredHeight,
+                    int &bitmapWidth, int &bitmapHeight,
+                    int &numXTiles, int &numYTiles);
+	void setupSnapshotBackBuffer(int imageWidth, int imageHeight);
+	void renderOffscreenImage(void);
+	bool canSaveAlpha(void);
+	bool saveAlpha;
 
 protected slots:
 	virtual void doAboutOK(void);
@@ -200,6 +210,7 @@ protected:
 	QTime referenceFrameTime;
 	Preferences *preferences;
 	ExtraDir *extradir;
+	SnapshotSettings *snapshotsettings;
 	OpenGLExtensionsPanel *extensionsPanel;
 	char *openGLDriverInfo;
 	AboutPanel *aboutPanel;
@@ -218,7 +229,7 @@ protected:
 	QToolBar *toolBar;
 	QProgressBar *progressBar;
 	QLabel *progressLabel, *progressMode;
-	bool loading;
+	bool loading,saving;
 	bool cancelLoad;
 	QApplication *app;
 	bool painting;
