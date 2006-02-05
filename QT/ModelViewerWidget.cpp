@@ -47,6 +47,9 @@
 #include <qgroupbox.h>
 #include <qlayout.h>
 #include <qclipboard.h>
+#include <qpainter.h>
+#include <qpaintdevicemetrics.h>
+#include <qprinter.h>
 
 #define POLL_INTERVAL 500
 
@@ -363,6 +366,51 @@ void ModelViewerWidget::doFileReload(void)
 	modelViewer->reload();
 	postLoad();
 	unlock();
+}
+void ModelViewerWidget::doFilePrint(void)
+{
+	QPrinter *printer;
+	printer = new QPrinter(QPrinter::HighResolution);
+	printer->setOptionEnabled(QPrinter::PrintSelection,false);
+	printer->setOptionEnabled(QPrinter::PrintPageRange,false);
+	printer->setColorMode(QPrinter::Color);
+	printer->setMinMax(1,1);
+	printer->setFullPage(TRUE);
+	if (printer->setup())
+	{
+		QPainter p;
+		if (!p.begin(printer))
+			return;
+		QPaintDeviceMetrics metrics (p.device());
+		int dpix = metrics.logicalDpiX(), 
+		    dpiy = metrics.logicalDpiY(),
+			marginx = (int) (2/2.54)*dpix,
+			marginy = (int) (2/2.54)*dpiy,
+			pwidth = metrics.width()-2*marginx,
+			pheight = metrics.height()-2*marginy,
+			bytesPerLine = roundUp(pwidth * 3, 4),
+			y, x;
+		QImage *image = new QImage(pwidth,pheight,32);
+//		printf("%ix%i\n",pwidth,pheight);
+//		printf("%ix%i\n",image->width(),image->height());
+		int r, g, b;
+        preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
+		modelViewer->setBackgroundRGB(255,255,255);
+		saveImageType = BMP_IMAGE_TYPE_INDEX;
+		TCByte *buffer = grabImage(pwidth,pheight,NULL,true);
+		for(y = 0 ; y < pheight; y++)
+			for(x = 0 ; x < pwidth; x++)
+			{
+				image->setPixel(x,pheight-y-1,qRgb(buffer[x*3 + y*bytesPerLine],
+								buffer[x*3 + y*bytesPerLine + 1], 
+								buffer[x*3 + y*bytesPerLine + 2]));
+			}
+		p.drawImage(marginx,marginy,*image);
+		delete image;
+		delete buffer;
+		modelViewer->setBackgroundRGB(r, g, b);
+	}
+	delete printer;
 }
 
 bool ModelViewerWidget::chDirFromFilename(const char *filename)
@@ -775,12 +823,14 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		fileCancelLoadId = fileMenu->idAt(7);
 		fileReloadId = fileMenu->idAt(1);
 	}
-	for (i = 0; ; i++)
+	int cnt;
+	for ( cnt = i = 0; ; i++)
 	{
 		item = fileMenu->findItem(fileMenu->idAt(i));
 		if (item->isSeparator())
 		{
-			break;
+			if (++cnt == 2)
+				break;
 		}
 	}
 	fileSeparatorIndex = i;

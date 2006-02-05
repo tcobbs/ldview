@@ -34,6 +34,7 @@ void LDView::fileSaveSettings()
 
 void LDView::filePrint()
 {
+	modelViewer->doFilePrint();
 }
 
 void LDView::fileExit()

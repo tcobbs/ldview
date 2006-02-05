@@ -130,6 +130,8 @@
         <separator/>
         <action name="filePrintAction"/>
         <separator/>
+        <action name="filePrintAction"/>
+        <separator/>
         <action name="fileExitAction"/>
     </item>
     <item text="&amp;Edit" name="editMenu">
