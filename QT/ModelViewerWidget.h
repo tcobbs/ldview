@@ -72,6 +72,7 @@ public:
 	void doPollChanged(QAction *action);
 	void doViewModeChanged(QAction *action);
 	void doZoomToFit(void);
+	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
 	bool fileExists(char* filename);
