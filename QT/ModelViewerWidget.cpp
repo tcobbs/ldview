@@ -48,7 +48,12 @@
 #include <qlayout.h>
 #include <qclipboard.h>
 #include <qpainter.h>
+#if (QT_VERSION >>16)==4
+#include <q3paintdevicemetrics.h>
+#define QPaintDeviceMetrics Q3PaintDeviceMetrics
+#else
 #include <qpaintdevicemetrics.h>
+#endif
 #include <qprinter.h>
 
 #define POLL_INTERVAL 500
