@@ -13,6 +13,7 @@
 #include <TCFoundation/mystring.h>
 #include <UserDefaultsKeys.h>
 #include <string.h>
+#include <qtranslator.h>
 
 static QGLFormat defaultFormat;
 
@@ -36,8 +37,8 @@ int main(int argc, char *argv[])
 	strncpy(locale,loc,3);
 	locale[2]=0;
 
-	if (load(QString("LDViewMessages_") + locale + ".ini")) {}
-	else if (load(QString("/usr/local/share/ldview/LDViewMessages_") + locale + ".ini")) {}
+	if (load(QString("LDViewMessages_")+QString(locale) + ".ini")) {}
+	else if (load(QString("/usr/local/share/ldview/LDViewMessages_") +QString(locale) + ".ini")) {}
 	else if (TCLocalStrings::loadStringTable("LDViewMessages.ini"))
 	{
 //		printf("Using LDViewMessages.ini\n");
@@ -98,8 +99,9 @@ int main(int argc, char *argv[])
     QApplication a( argc, argv );
 	QTranslator translator(0);
 //	printf("%s\n",locale);
-	if (!translator.load(QString("ldview_")+locale+".qm",".") &&
-		!translator.load(QString("ldview_")+locale+".qm","/usr/local/share/ldview"))
+	if (!translator.load(QString("ldview_")+QString(locale)+".qm",".") &&
+		!translator.load(QString("ldview_")+QString(locale)+".qm",
+						 "/usr/local/share/ldview"))
 		printf ("Failed to load translation %s\n",QTextCodec::locale());
 	a.installTranslator(&translator);
     LDView *w = new LDView;
