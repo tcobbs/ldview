@@ -1281,12 +1281,12 @@ void LDrawModelViewer::drawBoundingBox(void)
 void LDrawModelViewer::orthoView(void)
 {
 	int actualWidth = width;
-	static char glVendor[1024];
-	static bool glVendorRead = false;
+	const char *glVendor = "";
+	const GLubyte *origVendorString = glGetString(GL_VENDOR);
 
-	if (!glVendorRead)
+	if (origVendorString)
 	{
-		strcpy(glVendor, (const char *)glGetString(GL_VENDOR));
+		glVendor = (const char *)origVendorString;
 	}
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
