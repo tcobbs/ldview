@@ -184,8 +184,7 @@ protected:
 
 	static void transformPoint(const TCVector &point, const TCFloat *matrix,
 		TCFloat *tx, TCFloat *ty);
-	static int TREShapeGroup::turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2,
-		TCFloat vy2);
+	static int turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2, TCFloat vy2);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;

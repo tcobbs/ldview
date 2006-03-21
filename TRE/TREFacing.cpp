@@ -10,6 +10,7 @@ TCFloat TREFacing::glMatrix[16] =
 	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0,
 	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0
 };
+/*
 static TCFloat emptyMatrix[] =
 {
 	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
@@ -24,6 +25,7 @@ static TCFloat identityMatrix[] =
 	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0,
 	(TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)1.0
 };
+*/
 
 TREFacing::TREFacing(void)
 	:TCVector((TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0)
