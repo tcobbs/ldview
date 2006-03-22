@@ -1,30 +1,4 @@
 #include "qt4wrapper.h"
-#include <TCFoundation/mystring.h>
-#include <TCFoundation/TCStringArray.h>
-#include <TCFoundation/TCAlertManager.h>
-#include <TCFoundation/TCProgressAlert.h>
-#include <TCFoundation/TCMacros.h>
-#include <TCFoundation/TCLocalStrings.h>
-#include <LDLoader/LDLError.h>
-#include <LDLoader/LDLModel.h>
-#include <LDLib/LDrawModelViewer.h>
-//#include <LDLib/ModelMacros.h>
-#include <TRE/TREMainModel.h>
-#include "OpenGLExtensionsPanel.h"
-#include "AboutPanel.h"
-#include "HelpPanel.h"
-#include "LDView.h"
-#include "LDViewErrors.h"
-#include "ExtraDirPanel.h"
-#include "LDViewExtraDir.h"
-#include "SnapshotSettingsPanel.h"
-#include "LDViewSnapshotSettings.h"
-#include <TCFoundation/TCUserDefaults.h>
-#include "UserDefaultsKeys.h"
-
-#include "ModelViewerWidget.h"
-#include "AlertHandler.h"
-
 #include <qtextbrowser.h>
 #include <qapplication.h>
 #include <qstatusbar.h>
@@ -55,6 +29,32 @@
 #include <qpaintdevicemetrics.h>
 #endif
 #include <qprinter.h>
+
+#include <TCFoundation/mystring.h>
+#include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCMacros.h>
+#include <TCFoundation/TCLocalStrings.h>
+#include <LDLoader/LDLError.h>
+#include <LDLoader/LDLModel.h>
+#include <LDLib/LDrawModelViewer.h>
+//#include <LDLib/ModelMacros.h>
+#include <TRE/TREMainModel.h>
+#include "OpenGLExtensionsPanel.h"
+#include "AboutPanel.h"
+#include "HelpPanel.h"
+#include "LDView.h"
+#include "LDViewErrors.h"
+#include "ExtraDirPanel.h"
+#include "LDViewExtraDir.h"
+#include "SnapshotSettingsPanel.h"
+#include "LDViewSnapshotSettings.h"
+#include <TCFoundation/TCUserDefaults.h>
+#include "UserDefaultsKeys.h"
+
+#include "ModelViewerWidget.h"
+#include "AlertHandler.h"
 
 #define POLL_INTERVAL 500
 
@@ -203,6 +203,12 @@ void ModelViewerWidget::initializeGL(void)
 	lock();
 	doViewStatusBar(preferences->getStatusBar());
 	doViewToolBar(preferences->getToolBar());
+	if(saving)
+	{
+		modelViewer->setup();
+		modelViewer->openGlWillEnd();
+//		modelViewer->recompile();
+	}
 	unlock();
 }
 
@@ -248,7 +254,7 @@ void ModelViewerWidget::swap_Buffers(void)
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
-	if (!painting && !loading && !saving)
+	if (!painting && !loading)
 	{
 		painting = true;
 		makeCurrent();
@@ -396,8 +402,8 @@ void ModelViewerWidget::doFilePrint(void)
 			bytesPerLine = roundUp(pwidth * 3, 4),
 			y, x;
 		QImage *image = new QImage(pwidth,pheight,32);
-//		printf("%ix%i\n",pwidth,pheight);
-//		printf("%ix%i\n",image->width(),image->height());
+		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
+		printf("%ix%i\n",image->width(),image->height());
 		int r, g, b;
         preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
 		modelViewer->setBackgroundRGB(255,255,255);
@@ -1789,7 +1795,6 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
 									TCByte *buffer, bool zoomToFit, 												bool *saveAlpha)
 {
     bool oldSlowClear = modelViewer->getSlowClear();
-    GLenum bufferFormat = GL_RGB;
     bool origForceZoomToFit = modelViewer->getForceZoomToFit();
     TCVector origCameraPosition = modelViewer->getCamera().getPosition();
     TCFloat origXPan = modelViewer->getXPan();
@@ -1800,14 +1805,14 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
     int numXTiles, numYTiles;
     int xTile;
     int yTile;
-    TCByte *smallBuffer;
     int bytesPerPixel = 3;
     int bytesPerLine;
-    int smallBytesPerLine;
     bool canceled = false;
     bool bufferAllocated = false;
+	int memoryusage = modelViewer->getMemoryUsage();
 
 	saving = true;
+	modelViewer->setMemoryUsage(0);
     if (zoomToFit)
     {
         modelViewer->setForceZoomToFit(true);
@@ -1824,7 +1829,7 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
             numYTiles);
 		setupSnapshotBackBuffer(newWidth, newHeight);
 	}
-    if (canSaveAlpha())
+/*    if (canSaveAlpha())
     {
         bytesPerPixel = 4;
         bufferFormat = GL_RGBA;
@@ -1839,24 +1844,17 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
         {
             *saveAlpha = false;
         }
-    }
-    smallBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
+    } */
     bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
     if (!buffer)
     {
         buffer = new TCByte[bytesPerLine * imageHeight];
         bufferAllocated = true;
     }
-    if (numXTiles == 1 && numYTiles == 1)
-    {
-        smallBuffer = buffer;
-    }
-    else
-    {
-        smallBuffer = new TCByte[smallBytesPerLine * newHeight];
-    }
 	modelViewer->setNumXTiles(numXTiles);
     modelViewer->setNumYTiles(numYTiles);
+	QImage screen;
+	QRgb rgb;
     for (yTile = 0; yTile < numYTiles; yTile++)
 	{
         modelViewer->setYTile(yTile);
@@ -1864,44 +1862,37 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
         {
             modelViewer->setXTile(xTile);
             renderOffscreenImage();
+			screen = renderPixmap(mwidth,mheight).convertToImage();
+			//screen.save("/tmp/ldview.png","PNG");
+			//printf("file %ux%ix%i\n",screen.width(),screen.height(),screen.depth());
             if (progressCallback((char*)TCLocalStrings::get("RenderingSnapshot"),
-                (float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),true))
+                (float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),
+				 true))
             {
-                glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
-                    GL_UNSIGNED_BYTE, smallBuffer);
-                if (smallBuffer != buffer)
-                {
                     int x;
                     int y;
 
                     for (y = 0; y < newHeight; y++)
                     {
-                        int smallOffset = y * smallBytesPerLine;
                         int offset = (y + (numYTiles - yTile - 1) * newHeight) * bytesPerLine;
 
                         for (x = 0; x < newWidth; x++)
                         {
                             int spot = offset + x * bytesPerPixel +
                                 xTile * newWidth * bytesPerPixel;
-                            int smallSpot = smallOffset + x * bytesPerPixel;
-
-                            buffer[spot] = smallBuffer[smallSpot];
-                            buffer[spot + 1] = smallBuffer[smallSpot + 1];
-                            buffer[spot + 2] = smallBuffer[smallSpot + 2];
+							rgb = screen.pixel(x,newHeight - y - 1);
+                            buffer[spot] = qRed(rgb);
+                            buffer[spot + 1] = qGreen(rgb);
+                            buffer[spot + 2] = qBlue(rgb);
                         }
                         // We only need to zoom to fit on the first tile; the
                         // rest will already be correct.
                         modelViewer->setForceZoomToFit(false);
                     }
                 }
-            }
-            else
-            {
-                canceled = true;
-            }
         }
     }
-
+	modelViewer->setMemoryUsage(memoryusage);
     modelViewer->setSlowClear(true);
     //makeCurrent();
 /*    modelViewer->update();
@@ -1922,10 +1913,6 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
     {
         delete buffer;
         buffer = NULL;
-    }
-    if (smallBuffer != buffer)
-    {
-        delete smallBuffer;
     }
     modelViewer->setWidth(mwidth);
     modelViewer->setHeight(mheight);
