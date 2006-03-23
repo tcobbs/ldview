@@ -1894,17 +1894,6 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
     }
 	modelViewer->setMemoryUsage(memoryusage);
     modelViewer->setSlowClear(true);
-    //makeCurrent();
-/*    modelViewer->update();
-    glReadBuffer(GL_BACK);
-	renderOffscreenImage();
-    if (!buffer)
-    {
-       buffer = (TCByte *)malloc(roundUp(imageWidth * 3, 4) * imageHeight);
-    }
-    glReadPixels(0, 0, imageWidth, imageHeight, bufferFormat, GL_UNSIGNED_BYTE,
-        buffer);
-*/
     modelViewer->setXTile(0);
     modelViewer->setYTile(0);
     modelViewer->setNumXTiles(1);
@@ -1924,8 +1913,6 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
         modelViewer->setXYPan(origXPan, origYPan);
         modelViewer->setAutoCenter(origAutoCenter);
     }
-
-//	makeCurrent();
 	modelViewer->setSlowClear(oldSlowClear);
 	doApply();
 	saving = false;
