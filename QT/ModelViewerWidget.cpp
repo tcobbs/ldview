@@ -215,14 +215,15 @@ void ModelViewerWidget::initializeGL(void)
 void ModelViewerWidget::resizeGL(int width, int height)
 {
 	lock();
-	if (!loading)
+	if (!loading && !saving)
 	{
 		QSize mainWindowSize = mainWindow->size();
 
 		modelViewer->setWidth(mwidth=width);
 		modelViewer->setHeight(mheight=height);
 		glViewport(0, 0, width, height);
-		preferences->setWindowSize(mainWindowSize.width(), mainWindowSize.height());
+		preferences->setWindowSize(mainWindowSize.width(),
+			mainWindowSize.height());
 	}
 	unlock();
 }
@@ -254,7 +255,7 @@ void ModelViewerWidget::swap_Buffers(void)
 void ModelViewerWidget::paintGL(void)
 {
 	lock();
-	if (!painting && !loading)
+	if (!painting && (saving || !loading))
 	{
 		painting = true;
 		makeCurrent();
@@ -275,7 +276,10 @@ void ModelViewerWidget::paintGL(void)
 		{
 			startPaintTimer();
 		}
-		swap_Buffers();
+		if (!saving)
+		{
+			swap_Buffers();
+		}
 		painting = false;
 	}
 	unlock();
@@ -1802,6 +1806,8 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
     bool origAutoCenter = modelViewer->getAutoCenter();
     int newWidth = 1600;
     int newHeight = 1200;
+	int origWidth = mwidth;
+	int origHeight = mheight;
     int numXTiles, numYTiles;
     int xTile;
     int yTile;
@@ -1855,222 +1861,231 @@ TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight,
     modelViewer->setNumYTiles(numYTiles);
 	QImage screen;
 	QRgb rgb;
+	modelViewer->setWidth(newWidth);
+	modelViewer->setHeight(newHeight);
     for (yTile = 0; yTile < numYTiles; yTile++)
 	{
-        modelViewer->setYTile(yTile);
-        for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
-        {
-            modelViewer->setXTile(xTile);
-            renderOffscreenImage();
-			screen = renderPixmap(mwidth,mheight).convertToImage();
+		modelViewer->setYTile(yTile);
+		for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
+		{
+			modelViewer->setXTile(xTile);
+			//renderOffscreenImage();
+			screen = renderPixmap(newWidth, newHeight).convertToImage();
 			//screen.save("/tmp/ldview.png","PNG");
-			//printf("file %ux%ix%i\n",screen.width(),screen.height(),screen.depth());
-            if (progressCallback((char*)TCLocalStrings::get("RenderingSnapshot"),
-                (float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),
-				 true))
-            {
-                    int x;
-                    int y;
+			//printf("file %ux%ix%i\n",screen.width(),screen.height(),
+			//	screen.depth());
+			if (progressCallback((char*)TCLocalStrings::get(
+				"RenderingSnapshot"),
+				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),
+				true))
+			{
+				int x;
+				int y;
 
-                    for (y = 0; y < newHeight; y++)
-                    {
-                        int offset = (y + (numYTiles - yTile - 1) * newHeight) * bytesPerLine;
+				for (y = 0; y < newHeight; y++)
+				{
+					int offset = (y + (numYTiles - yTile - 1) * newHeight) *
+						bytesPerLine;
 
-                        for (x = 0; x < newWidth; x++)
-                        {
-                            int spot = offset + x * bytesPerPixel +
-                                xTile * newWidth * bytesPerPixel;
-							rgb = screen.pixel(x,newHeight - y - 1);
-                            buffer[spot] = qRed(rgb);
-                            buffer[spot + 1] = qGreen(rgb);
-                            buffer[spot + 2] = qBlue(rgb);
-                        }
-                        // We only need to zoom to fit on the first tile; the
-                        // rest will already be correct.
-                        modelViewer->setForceZoomToFit(false);
-                    }
-                }
-        }
-    }
+					for (x = 0; x < newWidth; x++)
+					{
+						int spot = offset + x * bytesPerPixel +
+							xTile * newWidth * bytesPerPixel;
+						rgb = screen.pixel(x,newHeight - y - 1);
+						buffer[spot] = qRed(rgb);
+						buffer[spot + 1] = qGreen(rgb);
+						buffer[spot + 2] = qBlue(rgb);
+					}
+					// We only need to zoom to fit on the first tile; the
+					// rest will already be correct.
+					modelViewer->setForceZoomToFit(false);
+				}
+			}
+		}
+	}
+	mwidth = origWidth;
+	mheight = origHeight;
+	modelViewer->setWidth(mwidth);
+	modelViewer->setHeight(mheight);
 	modelViewer->setMemoryUsage(memoryusage);
-    modelViewer->setSlowClear(true);
-    modelViewer->setXTile(0);
-    modelViewer->setYTile(0);
-    modelViewer->setNumXTiles(1);
-    modelViewer->setNumYTiles(1);
-    if (canceled && bufferAllocated)
-    {
-        delete buffer;
-        buffer = NULL;
-    }
-    modelViewer->setWidth(mwidth);
-    modelViewer->setHeight(mheight);
-    modelViewer->setup();
-    if (zoomToFit)
-    {
-        modelViewer->setForceZoomToFit(origForceZoomToFit);
-        modelViewer->getCamera().setPosition(origCameraPosition);
-        modelViewer->setXYPan(origXPan, origYPan);
-        modelViewer->setAutoCenter(origAutoCenter);
-    }
+	modelViewer->setSlowClear(true);
+	modelViewer->setXTile(0);
+	modelViewer->setYTile(0);
+	modelViewer->setNumXTiles(1);
+	modelViewer->setNumYTiles(1);
+	if (canceled && bufferAllocated)
+	{
+		delete buffer;
+		buffer = NULL;
+	}
+	modelViewer->setWidth(mwidth);
+	modelViewer->setHeight(mheight);
+	modelViewer->setup();
+	if (zoomToFit)
+	{
+		modelViewer->setForceZoomToFit(origForceZoomToFit);
+		modelViewer->getCamera().setPosition(origCameraPosition);
+		modelViewer->setXYPan(origXPan, origYPan);
+		modelViewer->setAutoCenter(origAutoCenter);
+	}
 	modelViewer->setSlowClear(oldSlowClear);
 	doApply();
 	saving = false;
-    return buffer;
+	return buffer;
 }
 
 bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 {
 	char *initialDir = Preferences::getLastOpenPath();
-                                                                                                                                                             
-    QDir::setCurrent(initialDir);
-    if (!saveDialog)
-    {
-        saveDialog = new QFileDialog(".",
-            "Portable Network Graphics (*.png)",
-            this,
-            "open model dialog",
-            true);
-        saveDialog->setCaption("Save Snapshot");
-        saveDialog->addFilter("Windows Bitmap (*.bmp)");
-        saveDialog->setSelectedFilter(0);
-        saveDialog->setIcon(getimage("LDViewIcon16.png"));
+																																							 
+	QDir::setCurrent(initialDir);
+	if (!saveDialog)
+	{
+		saveDialog = new QFileDialog(".",
+			"Portable Network Graphics (*.png)",
+			this,
+			"open model dialog",
+			true);
+		saveDialog->setCaption("Save Snapshot");
+		saveDialog->addFilter("Windows Bitmap (*.bmp)");
+		saveDialog->setSelectedFilter(0);
+		saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
-    }
-    if (saveDialog->exec() == QDialog::Accepted)
-    {
-        QString filename = saveDialog->selectedFile();
-        QDir::setCurrent(saveDialog->dirPath());
-        strncpy(saveFilename,filename,len);
+	}
+	if (saveDialog->exec() == QDialog::Accepted)
+	{
+		QString filename = saveDialog->selectedFile();
+		QDir::setCurrent(saveDialog->dirPath());
+		strncpy(saveFilename,filename,len);
 		saveImageType = (strcmp(saveDialog->selectedFilter().ascii(),
 			"Portable Network Graphics (*.png)")==0 ? PNG_IMAGE_TYPE_INDEX :
 			BMP_IMAGE_TYPE_INDEX);
 		if(strlen(saveFilename)>5 && saveFilename[strlen(saveFilename)-4]!='.')
 		{
-            if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-            {
-                strcat(saveFilename, ".png");
-            }
-            else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-            {
-                strcat(saveFilename, ".bmp");
-            }
+			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+			{
+				strcat(saveFilename, ".png");
+			}
+			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+			{
+				strcat(saveFilename, ".bmp");
+			}
 		}
 		return true;
-    }
+	}
 	return false;
 }
 
 bool ModelViewerWidget::writeBmp(char *filename, int width, int height, 
 								 TCByte *buffer)
 {
-    return writeImage(filename, width, height, buffer, "BMP");
+	return writeImage(filename, width, height, buffer, "BMP");
 }
-                                                                                                                                                             
+																																							 
 bool ModelViewerWidget::writePng(char *filename, int width, int height, 
 								 TCByte *buffer, bool saveAlpha)
 {
-    return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
+	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
 }
 
 bool ModelViewerWidget::saveImage(char *filename, int imageWidth, 
 									int imageHeight)
 {
 	bool saveAlpha = false;
-    TCByte *buffer = grabImage(imageWidth, imageHeight, NULL, 
+	TCByte *buffer = grabImage(imageWidth, imageHeight, NULL, 
 				TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false),
 				&saveAlpha);
-    bool retValue = false;
-    if (buffer)
-    {
-        if (saveAlpha)
-        {
-            int i;
-            int totalBytes = imageWidth * imageHeight * 4;
+	bool retValue = false;
+	if (buffer)
+	{
+		if (saveAlpha)
+		{
+			int i;
+			int totalBytes = imageWidth * imageHeight * 4;
 
-            for (i = 3; i < totalBytes; i += 4)
-            {
-                if (buffer[i] != 0 && buffer[i] != 255)
-                {
-                    if (buffer[i] == 74)
-                    {
-                        buffer[i] = 255 - 28;
-                    }
-                    else
-                    {
-                        buffer[i] = 255;
-                    }
-                }
-            }
-        }
-        if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-        {
-            retValue = writePng(filename, imageWidth, imageHeight, buffer,
+			for (i = 3; i < totalBytes; i += 4)
+			{
+				if (buffer[i] != 0 && buffer[i] != 255)
+				{
+					if (buffer[i] == 74)
+					{
+						buffer[i] = 255 - 28;
+					}
+					else
+					{
+						buffer[i] = 255;
+					}
+				}
+			}
+		}
+		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+		{
+			retValue = writePng(filename, imageWidth, imageHeight, buffer,
 								saveAlpha);
-        }
-        else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-        {
-            retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
-        }
-       	free(buffer);
-    }
-    return retValue;
+		}
+		else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+		{
+			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
+		}
+		free(buffer);
+	}
+	return retValue;
 }
 
 bool ModelViewerWidget::fileExists(char* filename)
 {
-    FILE* file = fopen(filename, "r");
-                                                                                
-    if (file)
-    {
-        fclose(file);
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+	FILE* file = fopen(filename, "r");
+																				
+	if (file)
+	{
+		fclose(file);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 {
-    char buf[256];
-                                                                                
-    sprintf(buf, "%s\nThis file already exists.\nReplace existing file?",
-        filename);
+	char buf[256];
+																				
+	sprintf(buf, "%s\nThis file already exists.\nReplace existing file?",
+		filename);
 	switch( QMessageBox::warning( this, "LDView",
-        buf,
-        QMessageBox::Yes | QMessageBox::Default,
-        QMessageBox::No | QMessageBox::Escape )) {
-    case QMessageBox::Yes: 
+		buf,
+		QMessageBox::Yes | QMessageBox::Default,
+		QMessageBox::No | QMessageBox::Escape )) {
+	case QMessageBox::Yes: 
 		return true;
-        break;
+		break;
 	}
 		return false;
 }
 
 bool ModelViewerWidget::doFileSave(void)
 {
-    char saveFilename[1024] = "";
+	char saveFilename[1024] = "";
 
-    return doFileSave(saveFilename);
+	return doFileSave(saveFilename);
 }
 
 bool ModelViewerWidget::doFileSave(char *saveFilename)
 {
-    if (getSaveFilename(saveFilename, 1024))
-    {
+	if (getSaveFilename(saveFilename, 1024))
+	{
 		if(fileExists(saveFilename)&&!shouldOverwriteFile(saveFilename))
 		{
 			return false;
 		}
-        return saveImage(saveFilename, TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : modelViewer->getWidth(), 
+		return saveImage(saveFilename, TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : modelViewer->getWidth(), 
 				TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false) :  modelViewer->getHeight());
-    }
-    else
-    {
-        return false;
-    }
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void ModelViewerWidget::doFileSaveSettings(void)
@@ -2081,229 +2096,229 @@ void ModelViewerWidget::doFileSaveSettings(void)
 
 void ModelViewerWidget::doFrontViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleFront);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleFront);
+	startPaintTimer();
+	unlock();
 }
 
 void ModelViewerWidget::doBackViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleBack);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleBack);
+	startPaintTimer();
+	unlock();
 }
 
 void ModelViewerWidget::doLeftViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleLeft);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleLeft);
+	startPaintTimer();
+	unlock();
 }
-                                                                                                                                                             
+																																							 
 void ModelViewerWidget::doRightViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleRight);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleRight);
+	startPaintTimer();
+	unlock();
 }
 
 void ModelViewerWidget::doTopViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleTop);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleTop);
+	startPaintTimer();
+	unlock();
 }
-                                                                                                                                                             
+																																							 
 void ModelViewerWidget::doBottomViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleBottom);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleBottom);
+	startPaintTimer();
+	unlock();
 }
-                                                                                                                                                             
+																																							 
 void ModelViewerWidget::doIsoViewAngle(void)
 {
-    lock();
-    if (loading)
-    {
-        if (app)
-        {
-            app->beep();
-        }
-        return;
-    }
-    rotationSpeed = 0.0f;
-    modelViewer->setRotationSpeed(0.0f);
-    modelViewer->setZoomSpeed(0.0f);
-    modelViewer->resetView(LDVAngleIso);
-    startPaintTimer();
-    unlock();
+	lock();
+	if (loading)
+	{
+		if (app)
+		{
+			app->beep();
+		}
+		return;
+	}
+	rotationSpeed = 0.0f;
+	modelViewer->setRotationSpeed(0.0f);
+	modelViewer->setZoomSpeed(0.0f);
+	modelViewer->resetView(LDVAngleIso);
+	startPaintTimer();
+	unlock();
 }
-                                                                                                                                                             
+																																							 
 void ModelViewerWidget::doSaveDefaultViewAngle(void)
 {
-    TCFloat matrix[16];
-    TCFloat rotationMatrix[16];
-    TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-    char matrixString[1024];
-                                                                                                                                                             
-    memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-        sizeof(rotationMatrix));
-    TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-    matrix[12] = 0.0f;
-    matrix[13] = 0.0f;
-    matrix[14] = 0.0f;
-    sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
-        matrix[0], matrix[4], matrix[8],
-        matrix[1], matrix[5], matrix[9],
-        matrix[2], matrix[6], matrix[10]);
-    TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
-    modelViewer->setDefaultRotationMatrix(matrix);
+	TCFloat matrix[16];
+	TCFloat rotationMatrix[16];
+	TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+	char matrixString[1024];
+																																							 
+	memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+		sizeof(rotationMatrix));
+	TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
+	matrix[12] = 0.0f;
+	matrix[13] = 0.0f;
+	matrix[14] = 0.0f;
+	sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
+		matrix[0], matrix[4], matrix[8],
+		matrix[1], matrix[5], matrix[9],
+		matrix[2], matrix[6], matrix[10]);
+	TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
+	modelViewer->setDefaultRotationMatrix(matrix);
 }
 
 void ModelViewerWidget::cleanupFloats(TCFloat *array, int count)
 {
-    int i;
-                                                                                
-    for (i = 0; i < count; i++)
-    {
-        if (fabs(array[i]) < 1e-6)
-        {
-            array[i] = 0.0f;
-        }
-    }
+	int i;
+																				
+	for (i = 0; i < count; i++)
+	{
+		if (fabs(array[i]) < 1e-6)
+		{
+			array[i] = 0.0f;
+		}
+	}
 }
 
 void ModelViewerWidget::doShowViewInfo(void)
 {
 	QString qmessage;
-    if (modelViewer)
+	if (modelViewer)
 	{
-        TCFloat matrix[16];
-        TCFloat rotationMatrix[16];
-        TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-        char matrixString[1024];
-        char zoomString[128];
-        char message[4096];
-        TRECamera &camera = modelViewer->getCamera();
-        TCFloat defaultDistance = modelViewer->getDefaultDistance();
-        TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
-        TCFloat cameraDistance;
-                                                                                
-        memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-            sizeof(rotationMatrix));
-        TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-        cleanupFloats(matrix);
-        sprintf(matrixString,
-            "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
-            matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
-            matrix[2], matrix[6], matrix[10]);
-        cameraDistance = camera.getPosition().length();
-        if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
-        {
-            // If we don't have a model, we don't know the default zoom, so
-            // just say 1.
-            strcpy(zoomString, "1");
-        }
-        else
-        {
-            sprintf(zoomString, "%.6g", defaultDistance /
-               distanceMultiplier / cameraDistance);
-        }
-        sprintf(message, "The following is the current rotation matrix:\n\n"                "%s\n\nThe following is the current zoom level:\n\n"
-            "%s\n\n",
-            matrixString, zoomString);
+		TCFloat matrix[16];
+		TCFloat rotationMatrix[16];
+		TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+		char matrixString[1024];
+		char zoomString[128];
+		char message[4096];
+		TRECamera &camera = modelViewer->getCamera();
+		TCFloat defaultDistance = modelViewer->getDefaultDistance();
+		TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
+		TCFloat cameraDistance;
+																				
+		memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+			sizeof(rotationMatrix));
+		TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
+		cleanupFloats(matrix);
+		sprintf(matrixString,
+			"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
+			matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
+			matrix[2], matrix[6], matrix[10]);
+		cameraDistance = camera.getPosition().length();
+		if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
+		{
+			// If we don't have a model, we don't know the default zoom, so
+			// just say 1.
+			strcpy(zoomString, "1");
+		}
+		else
+		{
+			sprintf(zoomString, "%.6g", defaultDistance /
+			   distanceMultiplier / cameraDistance);
+		}
+		sprintf(message, "The following is the current rotation matrix:\n\n"                "%s\n\nThe following is the current zoom level:\n\n"
+			"%s\n\n",
+			matrixString, zoomString);
  
 
 
-    qmessage.sprintf("%s",message);
+	qmessage.sprintf("%s",message);
 
 	QMessageBox::information(this, "View Info", qmessage, QMessageBox::Ok,
-            QMessageBox::NoButton);
+			QMessageBox::NoButton);
 	}
 }
 
 void ModelViewerWidget::doShowPovCamera(void)
 {
-    if (modelViewer)
-    {
+	if (modelViewer)
+	{
 		char *userMessage, *povCamera;
 		modelViewer->getPovCameraInfo(userMessage, povCamera);
 		if (userMessage && povCamera)
 		{
-    		if(QMessageBox::information(this, "POV-Ray camera settings", 
+			if(QMessageBox::information(this, "POV-Ray camera settings", 
 				QString(userMessage), QMessageBox::Ok, QMessageBox::Cancel)==
 				QMessageBox::Ok)
 			{
@@ -2312,7 +2327,7 @@ void ModelViewerWidget::doShowPovCamera(void)
 		}
 		delete userMessage;
 		delete povCamera;
-    }
+	}
 }
 
 void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
@@ -2667,73 +2682,73 @@ bool ModelViewerWidget::staticFileCaseCallback(char *filename)
 
 bool ModelViewerWidget::canSaveAlpha(void)
 {
-    if (saveAlpha && (saveImageType == PNG_IMAGE_TYPE_INDEX))
-    {
-        int alphaBits;
+	if (saveAlpha && (saveImageType == PNG_IMAGE_TYPE_INDEX))
+	{
+		int alphaBits;
 
-        glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
-        return alphaBits > 0;
-    }
-    return false;
+		glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
+		return alphaBits > 0;
+	}
+	return false;
 }
 
 void ModelViewerWidget::renderOffscreenImage(void)
 {
-    modelViewer->update();
+	modelViewer->update();
 	repaint();
 //	offscreen = renderPixmap();
 	if(canSaveAlpha())
 	{
-        glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |            GL_VIEWPORT_BIT);
-        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_LIGHTING);
-        glDisable(GL_POLYGON_OFFSET_FILL);
-        glDepthFunc(GL_GREATER);
-        glDepthRange(0.0f, 1.0f);
-        glBegin(GL_QUADS);
-            treGlVertex3f(0.0f, 0.0f, -1.0f);
-            treGlVertex3f((TCFloat)mwidth, 0.0f, -1.0f);
-            treGlVertex3f((TCFloat)mwidth, (TCFloat)mheight, -1.0f);
-            treGlVertex3f(0.0f, (TCFloat)mheight, -1.0f);
-        glEnd();
-        glColor4ub(0, 0, 0, 129);
-        glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
-        glEnable(GL_BLEND);
-        glDisable(GL_DEPTH_TEST);
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_LESS, 1.0);
-        glBegin(GL_QUADS);
-            treGlVertex3f(0.0f, 0.0f, -1.0f);
-            treGlVertex3f((TCFloat)mwidth, 0.0f, -1.0f);
-            treGlVertex3f((TCFloat)mwidth, (TCFloat)mheight, -1.0f);
-            treGlVertex3f(0.0f, (TCFloat)mheight, -1.0f);
-        glEnd();
-        glPopAttrib();
+		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |            GL_VIEWPORT_BIT);
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glDisable(GL_POLYGON_OFFSET_FILL);
+		glDepthFunc(GL_GREATER);
+		glDepthRange(0.0f, 1.0f);
+		glBegin(GL_QUADS);
+			treGlVertex3f(0.0f, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)mwidth, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)mwidth, (TCFloat)mheight, -1.0f);
+			treGlVertex3f(0.0f, (TCFloat)mheight, -1.0f);
+		glEnd();
+		glColor4ub(0, 0, 0, 129);
+		glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_LESS, 1.0);
+		glBegin(GL_QUADS);
+			treGlVertex3f(0.0f, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)mwidth, 0.0f, -1.0f);
+			treGlVertex3f((TCFloat)mwidth, (TCFloat)mheight, -1.0f);
+			treGlVertex3f(0.0f, (TCFloat)mheight, -1.0f);
+		glEnd();
+		glPopAttrib();
 	}
 }
 
 void ModelViewerWidget::calcTiling(int desiredWidth, int desiredHeight,
-                             int &bitmapWidth, int &bitmapHeight,
-                             int &numXTiles, int &numYTiles)
+							 int &bitmapWidth, int &bitmapHeight,
+							 int &numXTiles, int &numYTiles)
 {
-    if (desiredWidth > bitmapWidth)
-    {
-        numXTiles = (desiredWidth + bitmapWidth - 1) / bitmapWidth;
-    }
-    else
-    {
-        numXTiles = 1;
-    }
-    bitmapWidth = desiredWidth / numXTiles;
-    if (desiredHeight > bitmapHeight)
-    {
-        numYTiles = (desiredHeight + bitmapHeight - 1) / bitmapHeight;
-    }
-    else
-    {
-        numYTiles = 1;
-    }
-    bitmapHeight = desiredHeight / numYTiles;
+	if (desiredWidth > bitmapWidth)
+	{
+		numXTiles = (desiredWidth + bitmapWidth - 1) / bitmapWidth;
+	}
+	else
+	{
+		numXTiles = 1;
+	}
+	bitmapWidth = desiredWidth / numXTiles;
+	if (desiredHeight > bitmapHeight)
+	{
+		numYTiles = (desiredHeight + bitmapHeight - 1) / bitmapHeight;
+	}
+	else
+	{
+		numYTiles = 1;
+	}
+	bitmapHeight = desiredHeight / numYTiles;
 }
 
