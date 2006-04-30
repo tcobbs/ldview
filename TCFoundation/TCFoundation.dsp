@@ -215,8 +215,24 @@ SOURCE=.\TCVector.cpp
 # Begin Source File
 
 SOURCE=.\TCWebClient.cpp
+
+!IF  "$(CFG)" == "TCFoundation - Win32 Release"
+
+# ADD CPP /W4
+# SUBTRACT CPP /YX
+
+!ELSEIF  "$(CFG)" == "TCFoundation - Win32 Debug"
+
 # ADD CPP /W3
 # SUBTRACT CPP /YX
+
+!ELSEIF  "$(CFG)" == "TCFoundation - Win32 PartialDebug"
+
+# ADD CPP /W3
+# SUBTRACT CPP /YX
+
+!ENDIF 
+
 # End Source File
 # End Group
 # Begin Group "Header Files"
