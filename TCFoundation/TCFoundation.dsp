@@ -161,10 +161,6 @@ SOURCE=.\TCLocalStrings.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\TCMutex.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\TCNetwork.cpp
 # ADD CPP /W4
 # End Source File
@@ -203,18 +199,6 @@ SOURCE=.\TCStringArray.cpp
 # Begin Source File
 
 SOURCE=.\TCStringObjectTree.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TCThread.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TCThreadCondition.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TCThreadManager.cpp
 # End Source File
 # Begin Source File
 
@@ -296,10 +280,6 @@ SOURCE=.\TCMacros.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TCMutex.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\TCNetwork.h
 # End Source File
 # Begin Source File
@@ -337,18 +317,6 @@ SOURCE=.\TCStringArray.h
 # Begin Source File
 
 SOURCE=.\TCStringObjectTree.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TCThread.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TCThreadCondition.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TCThreadManager.h
 # End Source File
 # Begin Source File
 
