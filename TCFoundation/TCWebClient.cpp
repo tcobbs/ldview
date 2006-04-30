@@ -1068,11 +1068,18 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 	{
 		origReadDescs = *readDescs;
 	}
+	else
+	{
+		FD_ZERO(&origReadDescs);
+	}
 	if (writeDescs)
 	{
 		origWriteDescs = *writeDescs;
 	}
-
+	else
+	{
+		FD_ZERO(&origWriteDescs);
+	}
 	timeout.tv_sec = 0;
 	timeout.tv_usec = 250000;
 	while (1)
