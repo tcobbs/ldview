@@ -80,7 +80,7 @@ protected:
 	protected:
 		LDLibraryUpdater *m_libraryUpdater;
 	};
-	friend ThreadHelper;
+	friend class ThreadHelper;
 };
 
 #endif // __LDLIBRARYUPDATER_H__
