@@ -21,7 +21,6 @@ CCSRCS = \
 	TCImage.cpp \
 	TCImageFormat.cpp \
 	TCLocalStrings.cpp \
-	TCMutex.cpp \
 	TCNetwork.cpp \
 	TCNetworkClient.cpp \
 	TCObject.cpp \
@@ -32,9 +31,6 @@ CCSRCS = \
 	TCSortedStringArray.cpp \
 	TCStringArray.cpp \
 	TCStringObjectTree.cpp \
-	TCThread.cpp \
-	TCThreadCondition.cpp \
-	TCThreadManager.cpp \
 	TCUnzip.cpp \
 	TCUserDefaults.cpp \
 	TCVector.cpp \
@@ -48,7 +44,7 @@ OBJS = $(COBJS) $(CCOBJS)
 #CFLAGS = -g $(TESTING) -pg -Wall
 #CFLAGS = -o $(OBJDIR)/$*.o -g $(TESTING) -Wall -D_GNU_SOURCE -D_QT
 CFLAGS = -o $(OBJDIR)/$*.o -O3 $(TESTING) -Wall -D_GNU_SOURCE -D_QT
-INCLUDE = -I../ -I$(QTDIR)/include -I../include
+INCLUDE = -I../ -I$(QTDIR)/include -I../include -I../boost/include
 LIBDIRS = -L$(QTDIR)/lib
 #HOSTLIBS = -lxnet
 HOSTLIBS =

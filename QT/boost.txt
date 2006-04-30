@@ -1,0 +1,27 @@
+You must have the Boost library in order to build LDView.  You can download
+Boost from http://www.boost.org/.  Once you have downloaded and unpacked Boost,
+you need to build Boost, and make it available for use during LDView
+compilation.  To do this, do the following:
+
+1. Go into the root of the boost source directory, and run ./configure from the
+   shell.  This will configure boost, and compile bjam, the build tool used to
+   build Boost.
+2. Once this has completed, you need to copy the bjam executable to a location
+   in your path.  The bjam executable is in tools/build/jam_src/bin.<arch>/bjam.
+   (<arch> will match your architecture: for example linuxx86.)
+3. Run rehash after copying the file somewhere in your path if your shell
+   requires this.
+4. Once you have bjam in your path, go to the boost source root and type
+   "bjam stage" (no quotes).  Then wait (probably quite a long time) while it
+   builds.
+5. Once it's done building, all the library files will be in the stage
+   directory.  All of the headers are in the boost directory under the boost
+   source root.  To make them accessible to LDView, go to the QT directory of
+   the LDView source tree (the one that contains this text file), and run
+   "./boost.symlink <path to boost source tree>" (no quotes) from the shell.
+   (Replace <path to boost source tree> with the root directory of your boost
+   tree.)  If you get access denied, change the permissions on boost.symlink
+   to make it executable.  This will create symlinks to the boost files for use
+   during LDView compilation.  Note: if you update your boost library, just run
+   boost.symlink again with the new source root, and it will update the
+   symlinks.

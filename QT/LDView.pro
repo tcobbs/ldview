@@ -40,8 +40,8 @@ exists($(QTDIR)/include/Qt3Support/q3button.h){
 	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 message(QT4)
 }
-LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE \
-		   -lLDraw -lLDLoader -lTRE -lTCFoundation
+LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
+		   -lLDraw -lLDLoader -lTRE -lTCFoundation -lboost_thread_mt
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \

@@ -834,12 +834,9 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 		{
 			int index = m_webClients->getCount() - 1;
 			TCWebClient *webClient = (*m_webClients)[index];
-			DWORD ticks = GetTickCount();
 
 			lock.unlock();
-			debugPrintf("About to join aborted web client...\n");
 			webClient->getFetchThread()->join();
-			debugPrintf("Join finished: %d\n", GetTickCount() - ticks);
 			lock.lock();
 			m_webClients->removeObject(index);
 		}

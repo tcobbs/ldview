@@ -1,0 +1,30 @@
+#! /bin/sh
+
+if [ $# -eq 0 ]; then
+	echo "Usage: boost.symlink <boost source path>"
+else
+	if [ -h ../boost/include/boost ]; then
+		rm ../boost/include/boost
+	fi
+	if [ -e ../boost/include/boost ]; then
+		echo "Error: ../boost/include/boost exists, and isn't a symlink."
+	else
+		ln -s ${1}/boost ../boost/include/boost
+	fi
+	if [ -h ../boost/lib ]; then
+		rm ../boost/lib
+	fi
+	if [ -e ../boost/lib ]; then
+		echo "Error: ../boost/lib exists, and isn't a symlink."
+	else
+		ln -s ${1}/stage/lib ../boost/lib
+	fi
+	if [ -h ../boost/lib/libboost_thread_mt.a ]; then
+		rm ../boost/lib/libboost_thread_mt.a
+	fi
+	if [ -e ../boost/lib/libboost_thread_mt.a ]; then
+		echo "Error: ../boost/lib/libboost_thread_mt.a exists, and isn't a symlink."
+	else
+		ln -s ${1}/stage/lib/libboost_thread*-mt.a ${1}/stage/lib/libboost_thread_mt.a
+	fi
+fi

@@ -212,7 +212,7 @@ protected:
 		TCWebClient *m_webClient;
 		bool m_header;
 	};
-	friend ThreadHelper;
+	friend class ThreadHelper;
 };
 
 #endif
