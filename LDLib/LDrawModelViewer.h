@@ -258,6 +258,8 @@ class LDrawModelViewer: public TCObject
 		TCFloat getDistanceMultiplier(void) { return distanceMultiplier; }
 		virtual void clearBackground(void);
 		virtual void setFontData(TCByte *fontData, long length);
+		virtual void setModelCenter(const TCFloat *value);
+		virtual void setModelSize(const TCFloat value);
 		virtual void setDefaultRotationMatrix(const TCFloat *value);
 		const TCFloat *getDefaultRotationMatrix(void)
 		{
@@ -447,6 +449,8 @@ class LDrawModelViewer: public TCObject
 			bool redBackFaces:1;
 			bool greenFrontFaces:1;
 			bool defaultLightVector:1;
+			bool overrideModelCenter:1;
+			bool overrideModelSize:1;
 		} flags;
 		struct CameraData
 		{

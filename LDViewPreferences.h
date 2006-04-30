@@ -248,6 +248,8 @@ protected:
 	// virtual functions.
 	// *************************************************************************
 	virtual void setupDefaultRotationMatrix(void);
+	void setupModelCenter(void);
+	void setupModelSize(void);
 	void applyGeneralSettings(void);
 	void applyGeometrySettings(void);
 	void applyEffectsSettings(void);

@@ -7,8 +7,16 @@ typedef enum
 {
 	LDLibraryFullUpdate,
 	LDLibraryPartialUpdate,
+	LDLibraryBaseUpdate,
 	LDLibraryUnknownUpdate
 } LDLibraryUpdateType;
+
+typedef enum
+{
+	LDLibraryZipFormat,
+	LDLibraryExeFormat,
+	LDLibraryUnknownFormat
+} LDLibraryUpdateFormat;
 
 class LDLibraryUpdateInfo : public TCObject
 {
@@ -21,24 +29,22 @@ public:
 		return m_updateType == LDLibraryPartialUpdate;
 	}
 	LDLibraryUpdateType getUpdateType(void) { return m_updateType; }
+	LDLibraryUpdateFormat getFormat(void) { return m_format; }
 	const char *getName(void) { return m_name; }
 	const char *getDate(void) { return m_date; }
-	const char *getExeUrl(void) { return m_exeUrl; }
-	const char *getZipUrl(void) { return m_zipUrl; }
-	int getExeSize(void) { return m_exeSize; }
-	int getZipSize(void) { return m_zipSize; }
+	const char *getUrl(void) { return m_url; }
+	int getSize(void) { return m_size; }
 	virtual int compare(const TCObject *other) const;
 protected:
 	virtual ~LDLibraryUpdateInfo(void);
 	virtual void dealloc(void);
 
 	LDLibraryUpdateType m_updateType;
+	LDLibraryUpdateFormat m_format;
 	char *m_name;
 	char *m_date;
-	char *m_exeUrl;
-	char *m_zipUrl;
-	int m_exeSize;
-	int m_zipSize;
+	char *m_url;
+	int m_size;
 };
 
 #endif // __LDLIBRARYUPDATEINFO_H__

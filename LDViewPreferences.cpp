@@ -91,6 +91,8 @@ void LDViewPreferences::applySettings(void)
 		modelViewer->setLightVector(lightVector);
 		modelViewer->setDistanceMultiplier(1.0f / defaultZoom);
 		setupDefaultRotationMatrix();
+		setupModelCenter();
+		setupModelSize();
 	}
 }
 
@@ -198,6 +200,7 @@ void LDViewPreferences::loadSettings(void)
 	{
 		TCFloat lx, ly, lz;
 
+		// ToDo: how to deal with 64-bit float scanf?
 		if (sscanf(lightVectorString, "%f,%f,%f", &lx, &ly, &lz) == 3)
 		{
 			lightVector = TCVector(lx, ly, lz);
@@ -1625,6 +1628,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 				FULLSCREEN_REFRESH_KEY);
 		}
 		SendDlgItemMessage(hGeneralPage, IDC_FOV, WM_GETTEXT, 6, (LPARAM)buf);
+		// ToDo: how to deal with 64-bit float scanf?
 		if (sscanf(buf, "%f", &fTemp) == 1)
 		{
 			if (fTemp >= getMinFov() && fTemp <= getMaxFov())
@@ -3707,6 +3711,36 @@ TCFloat LDViewPreferences::getMaxFov(void)
 	return 90.0f;
 }
 
+void LDViewPreferences::setupModelCenter(void)
+{
+	char *value = TCUserDefaults::stringForKey(MODEL_CENTER_KEY);
+	if (value)
+	{
+		TCFloat center[3];
+		// ToDo: how to deal with 64-bit float scanf?
+		if (sscanf(value, "%f,%f,%f", &center[0], &center[1],&center[2]) == 3)
+		{
+			modelViewer->setModelCenter(center);
+		}
+		delete value;
+	}
+}
+void LDViewPreferences::setupModelSize(void)
+{
+	char *value = TCUserDefaults::stringForKey(MODEL_SIZE_KEY);
+	if (value)
+	{
+		TCFloat size;
+		// ToDo: how to deal with 64-bit float scanf?
+		if (sscanf(value, "%f", &size) == 1)
+		{
+			modelViewer->setModelSize(size);
+		}
+		delete value;
+	}
+}
+
+
 void LDViewPreferences::setupDefaultRotationMatrix(void)
 {
 	char *value = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL, false);
@@ -3779,6 +3813,7 @@ void LDViewPreferences::setupDefaultRotationMatrix(void)
 */
 			memset(matrix, 0, sizeof(matrix));
 			matrix[15] = 1.0f;
+			// ToDo: how to deal with 64-bit float scanf?
 			if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
 				&matrix[0], &matrix[4], &matrix[8],
 				&matrix[1], &matrix[5], &matrix[9],

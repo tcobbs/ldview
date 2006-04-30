@@ -208,9 +208,14 @@ bool SSConfigure::doBrowseFilename(void)
 	OPENFILENAME openStruct;
 	char fileTypes[1024];
 	char openFilename[1024] = "";
-	char* initialDir = LDViewWindow::lastOpenPath(SS_LAST_OPEN_PATH_KEY);
+	char* initialDir =
+		TCUserDefaults::stringForKey(SS_LAST_OPEN_PATH_KEY, NULL, false);
 	bool retValue = false;
 
+	if (!initialDir)
+	{
+		initialDir = LDViewWindow::getLDrawDir();
+	}
 	if (initialDir)
 	{
 		memset(fileTypes, 0, 2);

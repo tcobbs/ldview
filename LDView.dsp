@@ -44,7 +44,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "." /I "./include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "." /I "./include" /I "./boost/include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /FD /G7 /c
 # ADD BASE MTL /nologo /D "NDEBUG" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:".\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ELSEIF  "$(CFG)" == "LDView - Win32 Debug"
 
@@ -70,7 +70,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /c
-# ADD CPP /nologo /MTd /W4 /GX /ZI /Od /I "." /I "./include" /D "_DEBUG" /D "_LOG_PERFORMANCE" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /FR /FD /c
+# ADD CPP /nologo /MTd /W4 /GX /ZI /Od /I "." /I "./include" /I "./boost/include" /D "_DEBUG" /D "_LOG_PERFORMANCE" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /FR /FD /c
 # SUBTRACT CPP /YX
 # ADD BASE MTL /nologo /D "_DEBUG" /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ELSEIF  "$(CFG)" == "LDView - Win32 PartialDebug"
 
@@ -98,7 +98,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /I "D:\MSDEV\PROJECTS\LDView" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /FR /YX /FD /c
-# ADD CPP /nologo /W4 /GX /O2 /I "." /I "./include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /FR /YX /FD /c
+# ADD CPP /nologo /W4 /GX /O2 /I "." /I "./include" /I "./boost/include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /FR /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -108,7 +108,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib wsock32.lib winmm.lib TCFoundation\Release\TCFoundation.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\lib" /libpath:".\TCFoundation\PartialDebug" /libpath:".\CUI\Release" /libpath:".\LDLib\PartialDebug" /libpath:".\LDLoader\PartialDebug"
+# ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\TCFoundation\PartialDebug" /libpath:".\CUI\Release" /libpath:".\LDLib\PartialDebug" /libpath:".\LDLoader\PartialDebug" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ENDIF 
 

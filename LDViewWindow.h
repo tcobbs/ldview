@@ -85,16 +85,16 @@ class LDViewWindow: public CUIWindow
 		ModelWindow *getModelWindow(void) { return modelWindow; }
 
 		static char* getLDrawDir(void);
-		static char* lastOpenPath(char* pathKey = NULL);
+		char* lastOpenPath(char* pathKey = NULL);
 		static void addFileType(char*, const char*, char*);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 	protected:
 		virtual ~LDViewWindow(void);
-		static BOOL verifyLDrawDir(bool forceChoose = false);
 		static BOOL verifyLDrawDir(char*);
 //		static void stripTrailingSlash(char*);
-		static BOOL promptForLDrawDir(void);
+		static BOOL promptForLDrawDir(const char *prompt = NULL);
 
+		virtual BOOL verifyLDrawDir(bool forceChoose = false);
 		virtual void dealloc(void);
 		virtual WNDCLASSEX getWindowClass(void);
 		virtual LRESULT doMouseWheel(short keyFlags, short zDelta, int xPos,
@@ -125,7 +125,7 @@ class LDViewWindow: public CUIWindow
 		virtual void createAboutBox(void);
 		virtual BOOL showAboutBox(void);
 		virtual void createLibraryUpdateWindow(void);
-		virtual void showLibraryUpdateWindow(void);
+		virtual void showLibraryUpdateWindow(bool initialInstall);
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 			HWND controlHWnd);
 		virtual void doDialogOK(HWND hDlg);
@@ -229,7 +229,8 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL doMoveExtraDirDown(void);
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
-		void checkForLibraryUpdates(void);
+		void checkForLibraryUpdates();
+		bool installLDraw();
 //		virtual LRESULT doTimer(UINT timerID);
 		virtual void doLibraryUpdateFinished(int finishType);
 		virtual void readVersionInfo(void);
@@ -340,6 +341,7 @@ class LDViewWindow: public CUIWindow
 		bool primitiveSubstitution;
 		bool lighting;
 		bool bfc;
+		bool libraryUpdateFinished;
 		LDVAngle lastViewAngle;
 		bool libraryUpdateCanceled;
 
