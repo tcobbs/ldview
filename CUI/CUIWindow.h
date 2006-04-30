@@ -46,7 +46,7 @@ class CUIExport CUIWindow : public TCObject
 		void setMaxWidth(int value) { maxWidth = value; }
 		void setMaxHeight(int value) { maxHeight = value; }
 		virtual SIZE getDecorationSize(void);
-		virtual void runDialogModal(HWND hDlg);
+		virtual void runDialogModal(HWND hDlg, bool allowMessages = false);
 		virtual bool flushModal(HWND hWnd, bool isDialog, int maxFlush = -1);
 		virtual bool flushDialogModal(HWND hDlg);
 		virtual void closeWindow(void);

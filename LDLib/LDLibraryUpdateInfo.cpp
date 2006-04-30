@@ -1,14 +1,14 @@
 #include "LDLibraryUpdateInfo.h"
 #include <TCFoundation/mystring.h>
+#include <stdio.h>
 
 LDLibraryUpdateInfo::LDLibraryUpdateInfo(void)
 	:m_updateType(LDLibraryUnknownUpdate),
+	m_format(LDLibraryUnknownFormat),
 	m_name(NULL),
 	m_date(NULL),
-	m_exeUrl(NULL),
-	m_zipUrl(NULL),
-	m_exeSize(-1),
-	m_zipSize(-1)
+	m_url(NULL),
+	m_size(-1)
 {
 }
 
@@ -20,8 +20,7 @@ void LDLibraryUpdateInfo::dealloc(void)
 {
 	delete m_name;
 	delete m_date;
-	delete m_exeUrl;
-	delete m_zipUrl;
+	delete m_url;
 	TCObject::dealloc();
 }
 
@@ -32,9 +31,9 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 		partCount);
 	bool retValue = false;
 
-	if (updateParts && partCount > 2)
+	if (updateParts && partCount > 4)
 	{
-		if (stringHasPrefix(updateParts[0], "FULL"))
+		if (stringHasPrefix(updateParts[0], "COMPLETE"))
 		{
 			m_updateType = LDLibraryFullUpdate;
 		}
@@ -42,42 +41,53 @@ bool LDLibraryUpdateInfo::parseUpdateLine(const char *updateLine)
 		{
 			m_updateType = LDLibraryPartialUpdate;
 		}
-		if (m_updateType != LDLibraryUnknownUpdate)
+		else if (stringHasPrefix(updateParts[0], "BASE"))
 		{
-			unsigned len;
-
-			m_exeUrl = copyString(updateParts[2]);
-			len = strlen(m_exeUrl);
-			if (len >= 12)
+			m_updateType = LDLibraryBaseUpdate;
+		}
+	}
+	if (m_updateType != LDLibraryUnknownUpdate)
+	{
+		if (stringHasPrefix(updateParts[1], "ARJ"))
+		{
+			m_format = LDLibraryExeFormat;
+		}
+		else if (stringHasPrefix(updateParts[1], "ZIP"))
+		{
+			m_format = LDLibraryZipFormat;
+		}
+	}
+	if (m_format != LDLibraryUnknownFormat)
+	{
+		m_date = copyString(updateParts[2]);
+	}
+	if (m_date && m_date[0])
+	{
+		m_url = copyString(updateParts[3]);
+	}
+	if (m_url && m_url[0])
+	{
+		char *spot = strrchr(m_url, '/');
+		
+		if (spot)
+		{
+			m_name = copyString(spot + 1);
+			spot = strchr(m_name, '.');
+			if (spot)
 			{
-				char *filename = m_exeUrl + len - 12;
-
-				if (stringHasCaseInsensitivePrefix(filename, "lcad") &&
-					stringHasCaseInsensitiveSuffix(filename, ".exe"))
-				{
-					m_name = new char[9];
-					strncpy(m_name, filename, 8);
-					m_name[8] = 0;
-				}
-				else if (strcasecmp(filename, "complete.exe") == 0)
-				{
-					m_name = copyString("complete");
-				}
-			}
-			if (m_name)
-			{
-				retValue = true;
-				m_date = copyString(updateParts[1]);
-				if (partCount > 3)
-				{
-					m_zipUrl = copyString(updateParts[3]);
-				}
+				*spot = 0;
 			}
 			else
 			{
-				delete m_exeUrl;
-				m_exeUrl = NULL;
+				m_name[0] = 0;
 			}
+		}
+	}
+	if (m_name && m_name[0])
+	{
+		if (sscanf(updateParts[4], "%d", &m_size) == 1)
+		{
+			retValue = true;
 		}
 	}
 	deleteStringArray(updateParts, partCount);

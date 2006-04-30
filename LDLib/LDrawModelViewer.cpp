@@ -122,6 +122,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.redBackFaces = false;
 	flags.greenFrontFaces = false;
 	flags.defaultLightVector = true;
+	flags.overrideModelCenter = false;
+	flags.overrideModelSize = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -507,6 +509,30 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 	perspectiveView(true);
 }
 
+void LDrawModelViewer::setModelCenter(const TCFloat *value)
+{
+	if (value)
+	{
+		flags.overrideModelCenter = true;
+		center = TCVector(value[0],value[1],value[2]);
+		flags.needsSetup = true;
+				
+	}
+
+}
+void LDrawModelViewer::setModelSize(const TCFloat value)
+{
+	if (value)
+	{
+		flags.overrideModelSize = true;
+		size = value;
+		flags.needsSetup = true;
+				
+	}
+
+}
+
+
 void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 {
 	if (value)
@@ -838,8 +864,14 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				}
 				if (!abort)
 				{
-					center = (boundingMin + boundingMax) / 2.0f;
-					size = mainTREModel->getMaxRadius(center) * 2.0f;
+					if (!flags.overrideModelCenter)
+					{
+						center = (boundingMin + boundingMax) / 2.0f;
+					}
+					if (!flags.overrideModelCenter)
+					{
+						size = mainTREModel->getMaxRadius(center) * 2.0f;
+					}
 					TCProgressAlert::send("LDrawModelViewer",
 						TCLocalStrings::get("CalculatingSizeStatus"), 1.0f,
 						&abort);

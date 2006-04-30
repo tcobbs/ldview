@@ -15,7 +15,6 @@
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCSortedStringArray.h>
-#include <TCFoundation/TCThreadManager.h>
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
@@ -23,7 +22,6 @@
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
 #include <TRE/TREMainModel.h>
-
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
 
@@ -1381,8 +1379,8 @@ void LDViewWindow::doDialogCancel(HWND hDlg)
 BOOL LDViewWindow::doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 								   HWND hControlWnd)
 {
-//	debugPrintf("LDViewWindow::doDialogCommand: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
-//		controlId, notifyCode);
+	debugPrintf("LDViewWindow::doDialogCommand: 0x%04X, 0x%04X, 0x%04x\n", hDlg,
+		controlId, notifyCode);
 	if (hDlg)
 	{
 		if (hDlg == hExtraDirsWindow)
@@ -2878,76 +2876,22 @@ LRESULT LDViewWindow::switchVisualStyle(void)
 	return 0;
 }
 
-/*
-LRESULT LDViewWindow::doTimer(UINT timerID)
-{
-	switch (timerID)
-	{
-	case DOWNLOAD_TIMER:
-		TCThreadManager *threadManager = TCThreadManager::threadManager();
-
-		if (threadManager->timedWaitForFinishedThread(0))
-		{
-			TCThread *finishedThread;
-
-			while ((finishedThread = threadManager->getFinishedThread()) !=
-				NULL)
-			{
-				threadManager->removeFinishedThread(finishedThread);
-			}
-		}
-		break;
-	}
-	return 0;
-}
-*/
-
 void LDViewWindow::doLibraryUpdateFinished(int finishType)
 {
 	if (libraryUpdater)
 	{
-		TCThreadManager *threadManager = TCThreadManager::threadManager();
-		bool gotFinish = false;
-		DWORD dwStartTicks = GetTickCount();
 		char statusText[1024] = "";
 
-		while (!gotFinish)
-		{
-			if (threadManager->timedWaitForFinishedThread(250))
-			{
-				TCThread *finishedThread;
-
-				while ((finishedThread = threadManager->getFinishedThread()) !=
-					NULL)
-				{
-					threadManager->removeFinishedThread(finishedThread);
-					gotFinish = true;
-				}
-			}
-			if (GetTickCount() - dwStartTicks > 1000)
-			{
-				break;
-			}
-			if (!gotFinish)
-			{
-				Sleep(50);
-			}
-		}
-		if (!gotFinish)
-		{
-			debugPrintf("No finished thread!!!\n");
-		}
 		if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
 		{
 			sprintf(statusText, "%s:\n%s",
 				TCLocalStrings::get("LibraryUpdateError"),
 				libraryUpdater->getError());
 		}
-		libraryUpdater->release();
-		libraryUpdater = NULL;
 		switch (finishType)
 		{
 		case LIBRARY_UPDATE_FINISHED:
+			libraryUpdateFinished = true;
 			strcpy(statusText, TCLocalStrings::get("LibraryUpdateComplete"));
 			break;
 		case LIBRARY_UPDATE_CANCELED:
@@ -2957,20 +2901,14 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 			strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));
 			break;
 		}
+		libraryUpdater->release();
+		libraryUpdater = NULL;
 		if (strlen(statusText))
 		{
 			SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)statusText);
 		}
 	}
 }
-
-/*
-void LDViewWindow::fetchHeaderFinish(TCWebClient* webClient)
-{
-	debugPrintf("fetchHeaderFinish: 0x%08X\n", GetCurrentThreadId());
-	webClient->fetchURLInBackground();
-}
-*/
 
 void LDViewWindow::createLibraryUpdateWindow(void)
 {
@@ -2985,20 +2923,75 @@ void LDViewWindow::createLibraryUpdateWindow(void)
 	SendMessage(hUpdateProgressBar, PBM_SETPOS, 0, 0);
 }
 
-void LDViewWindow::showLibraryUpdateWindow(void)
+void LDViewWindow::showLibraryUpdateWindow(bool initialInstall)
 {
-	if (!hLibraryUpdateWindow)
+	//if (!hLibraryUpdateWindow)
 	{
 		createLibraryUpdateWindow();
 	}
-	ShowWindow(hLibraryUpdateWindow, SW_SHOW);
+	if (initialInstall)
+	{
+		runDialogModal(hLibraryUpdateWindow, true);
+	}
+	else
+	{
+		ShowWindow(hLibraryUpdateWindow, SW_SHOW);
+	}
+}
+
+bool LDViewWindow::installLDraw(void)
+{
+	if (libraryUpdater)
+	{
+		debugPrintf("Ack!!! Initial install: already have libraryUpdater.\n");
+		return false;
+	}
+	else
+	{
+		char *ldrawParentDir = getLDrawDir();
+		char *ldrawDir = copyString(ldrawParentDir, 10);
+		char originalDir[MAX_PATH];
+
+		libraryUpdateFinished = false;
+		strcat(ldrawDir, "\\LDRAW");
+		GetCurrentDirectory(sizeof(originalDir), originalDir);
+		if (SetCurrentDirectory(ldrawDir))
+		{
+			SetCurrentDirectory(originalDir);
+		}
+		else
+		{
+			CreateDirectory(ldrawDir, NULL);
+		}
+		libraryUpdater = new LDLibraryUpdater;
+		libraryUpdateCanceled = false;
+		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+		libraryUpdater->setLdrawDir(ldrawDir);
+		libraryUpdater->installLDraw();
+		showLibraryUpdateWindow(true);
+		while (libraryUpdater)
+		{
+			if (libraryUpdateCanceled)
+			{
+				doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
+				libraryUpdateCanceled = false;
+			}
+			Sleep(100);
+		}
+		if (libraryUpdateFinished)
+		{
+			LDLModel::setLDrawDir(ldrawDir);
+		}
+		delete ldrawDir;
+		return libraryUpdateFinished;
+	}
 }
 
 void LDViewWindow::checkForLibraryUpdates(void)
 {
 	if (libraryUpdater)
 	{
-		showLibraryUpdateWindow();
+		showLibraryUpdateWindow(false);
 //		MessageBox(hWindow, TCLocalStrings::get("LibraryUpdateAlready"),
 //			TCLocalStrings::get("Error"), MB_OK);
 	}
@@ -3007,8 +3000,8 @@ void LDViewWindow::checkForLibraryUpdates(void)
 		libraryUpdater = new LDLibraryUpdater;
 		char *ldrawDir = getLDrawDir();
 
+		showLibraryUpdateWindow(false);
 		libraryUpdateCanceled = false;
-		showLibraryUpdateWindow();
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
 		libraryUpdater->setLdrawDir(ldrawDir);
 		delete ldrawDir;
@@ -3118,12 +3111,10 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			shutdown();
 			return 0;
 			break;
-/*
 		case ID_FILE_CHECKFORLIBUPDATES:
 			checkForLibraryUpdates();
 			return 0;
 			break;
-*/
 		case ID_VIEW_FULLSCREEN:
 			switchModes();
 			return 0;
@@ -4287,22 +4278,31 @@ int CALLBACK LDViewWindow::pathBrowserCallback(HWND hwnd, UINT uMsg,
 	}
 	else if (lpData && uMsg == BFFM_INITIALIZED)
 	{
+		if (strcmp((const char *)lpData, "C:") == 0)
+		{
+			// LDLModel strips of the backslash.  We need to add it back.
+			lpData = (LPARAM)"C:\\";
+		}
 		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
 	}
 	return 0;
 }
 
-BOOL LDViewWindow::promptForLDrawDir(void)
+BOOL LDViewWindow::promptForLDrawDir(const char *prompt)
 {
 	BROWSEINFO browseInfo;
 	char displayName[MAX_PATH];
 	ITEMIDLIST* itemIdList;
 	char *oldLDrawDir = getLDrawDir();
 
+	if (!prompt)
+	{
+		prompt = TCLocalStrings::get("LDrawDirPrompt");
+	}
 	browseInfo.hwndOwner = NULL; //hWindow;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
-	browseInfo.lpszTitle = TCLocalStrings::get("LDrawDirPrompt");
+	browseInfo.lpszTitle = prompt;
 	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
 	browseInfo.lpfn = pathBrowserCallback;
 	browseInfo.lParam = (LPARAM)oldLDrawDir;
@@ -4395,26 +4395,46 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 	else
 	{
 		delete lDrawDir;
-		while (!found)
+		if (MessageBox(NULL, TCLocalStrings::get("LDrawDirExistsPrompt"),
+			"LDView", MB_YESNO | MB_ICONQUESTION) == IDYES)
 		{
-			if (promptForLDrawDir())
+			while (!found)
 			{
-				lDrawDir = getLDrawDir();
-				if (verifyLDrawDir(lDrawDir))
+				if (promptForLDrawDir())
 				{
-					found = TRUE;
+					lDrawDir = getLDrawDir();
+					if (verifyLDrawDir(lDrawDir))
+					{
+						found = TRUE;
+					}
+					else
+					{
+						MessageBox(NULL, TCLocalStrings::get("LDrawNotInDir"),
+							TCLocalStrings::get("InvalidDir"),
+							MB_OK | MB_ICONWARNING | MB_TASKMODAL);
+					}
+					delete lDrawDir;
 				}
 				else
 				{
-					MessageBox(NULL, TCLocalStrings::get("LDrawNotInDir"),
-						TCLocalStrings::get("InvalidDir"),
-						MB_OK | MB_ICONWARNING | MB_TASKMODAL);
+					break;
 				}
-				delete lDrawDir;
 			}
-			else
+		}
+		else
+		{
+			if (MessageBox(NULL, TCLocalStrings::get("WillDownloadLDraw"),
+				"LDView", MB_OKCANCEL | MB_ICONINFORMATION) == IDOK)
 			{
-				break;
+				LDLModel::setLDrawDir("C:\\");
+				if (promptForLDrawDir(
+					TCLocalStrings::get("LDrawInstallDirPrompt")))
+				{
+					if (installLDraw())
+					{
+						found = true;
+					}
+				}
 			}
 		}
 	}

@@ -11,9 +11,13 @@
 #include <limits.h>
 #include <signal.h>
 
+#include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/xtime.hpp>
+
 #ifdef WIN32
+//#define sleep(sec) Sleep((sec) * 1000)
 #define timezone _timezone
-#define sleep(sec) Sleep((sec) * 1000)
 #else // WIN32
 #ifdef _QT
 #define send(socket, buf, len, flags) write((socket), (buf), (len))
@@ -22,8 +26,6 @@
 #endif // _QT
 #endif // WIN32
 
-#include <TCFoundation/TCThreadManager.h>
-#include <TCFoundation/TCThread.h>
 #include <TCFoundation/mystring.h>
 
 //#define BUFFER_SIZE 1
@@ -88,6 +90,15 @@ static char dayShortNames[7][4] =
 };
 */
 
+void do_sleep(int sec)
+{
+	boost::xtime xt;
+
+	boost::xtime_get(&xt, boost::TIME_UTC);
+	xt.sec += sec;
+	boost::thread::sleep(xt);
+}
+
 TCWebClient::TCWebClient(const char* url)
 	:TCNetworkClient(80),
 	 socketTimeout(30),
@@ -115,8 +126,8 @@ TCWebClient::TCWebClient(const char* url)
 	 password(NULL),
 	 authorizationString(NULL),
 	 bytesRead(0),
-	 threadManager(TCThreadManager::threadManager()),
 	 fetchThread(NULL),
+	 mutex(new boost::mutex),
 	 totalBytesRead(ZERO64),
 	 doneFetching(0),
 	 owner(NULL),
@@ -124,7 +135,8 @@ TCWebClient::TCWebClient(const char* url)
 	 finishHeaderMemberFunction(NULL),
 	 socketSetup(0),
 	 retryCount(0),
-	 maxRetryCount(10)
+	 maxRetryCount(10),
+	 aborted(false)
 {
 	parseURL();
 }
@@ -157,11 +169,28 @@ void TCWebClient::dealloc(void)
 	delete authorizationString;
 	if (fetchThread)
 	{
-		fetchThread->release();
+//		fetchThread->release();
+//		fetchThread->join();
+		delete fetchThread;
 		fetchThread = NULL;
 	}
+	delete mutex;
 	// Do NOT delete owner
 	TCNetworkClient::dealloc();
+}
+
+void TCWebClient::abort(void)
+{
+	boost::mutex::scoped_lock lock(*mutex);
+
+	aborted = true;
+}
+
+bool TCWebClient::getAborted(void)
+{
+	boost::mutex::scoped_lock lock(*mutex);
+
+	return aborted;
 }
 
 int TCWebClient::openConnection(void)
@@ -418,7 +447,7 @@ bool TCWebClient::receiveHeader(void)
 	bool retValue = false;
 	bool done = false;
 
-	while (!done)
+	while (!done && !getAborted())
 	{
 		if (waitForRead())
 		{
@@ -902,50 +931,37 @@ int TCWebClient::fetchURL(void)
 	return 0;
 }
 
-THREAD_RET_TYPE TCWebClient::backgroundFetchURLFunction(TCThread* /*thread*/)
+void TCWebClient::backgroundFetchURLStart(void)
 {
-	if (fetchURL())
+	if (!fetchURL())
 	{
-		return NULL;
-	}
-	else
-	{
-		if (errorString)
+		if (!errorString)
 		{
-			return (THREAD_RET_TYPE)errorString;
-		}
-		else
-		{
-			return (THREAD_RET_TYPE)"Unknown Error";
+			setErrorString("Unknown Error");
 		}
 	}
 }
 
-THREAD_RET_TYPE TCWebClient::backgroundFetchHeaderFunction(TCThread* /*thread*/)
+void TCWebClient::backgroundFetchHeaderStart(void)
 {
 	if (retryCount > 0)
 	{
-		sleep(1);
+		do_sleep(1);
 	}
 	if (fetchHeader())
 	{
 		retryCount = 0;
-		return NULL;
 	}
 	else
 	{
-		if (errorString)
+		if (!errorString)
 		{
-			return (THREAD_RET_TYPE)errorString;
-		}
-		else
-		{
-			return (THREAD_RET_TYPE)"Unknown Error";
+			setErrorString("Unknown Error");
 		}
 	}
 }
 
-void TCWebClient::backgroundFetchURLFinish(TCThread* /*thread*/)
+void TCWebClient::backgroundFetchURLFinish(void)
 {
 	if (owner && finishURLMemberFunction)
 	{
@@ -953,7 +969,7 @@ void TCWebClient::backgroundFetchURLFinish(TCThread* /*thread*/)
 	}
 }
 
-void TCWebClient::backgroundFetchHeaderFinish(TCThread* /*thread*/)
+void TCWebClient::backgroundFetchHeaderFinish(void)
 {
 	if (owner && finishHeaderMemberFunction)
 	{
@@ -974,25 +990,20 @@ int TCWebClient::retryFetchHeaderInBackground(void)
 	}
 }
 
-int TCWebClient::fetchHeaderInBackground(void)
+int TCWebClient::fetchInBackground(bool header)
 {
-//	if (!socketSetup && !connected)
-//	{
-//		if (!setupSocket())
-//		{
-//			return 0;
-//		}
-//	}
+	ThreadHelper threadHelper(this, header);
+
 	if (fetchThread)
 	{
-		fetchThread->release();
+		fetchThread->join();
+		delete fetchThread;
 	}
-	fetchThread = new TCThread(this,
-	 (TCThreadStartMemberFunction)(&TCWebClient::backgroundFetchHeaderFunction));
-
-	fetchThread->setFinishMemberFunction(
-	 (TCThreadFinishMemberFunction)(&TCWebClient::backgroundFetchHeaderFinish));
-	if (!fetchThread->run())
+	try
+	{
+		fetchThread = new boost::thread(threadHelper);
+	}
+	catch (...)
 	{
 		if (getDebugLevel() > 0)
 		{
@@ -1001,43 +1012,17 @@ int TCWebClient::fetchHeaderInBackground(void)
 		setErrorNumber(WCE_THREAD_CREATE);
 		return 0;
 	}
-	else
-	{
-		return 1;
-	}
+	return 1;
+}
+
+int TCWebClient::fetchHeaderInBackground(void)
+{
+	return fetchInBackground(true);
 }
 
 int TCWebClient::fetchURLInBackground(void)
 {
-//	if (!socketSetup && !connected)
-//	{
-//		if (!setupSocket())
-//		{
-//			return 0;
-//		}
-//	}
-	if (fetchThread)
-	{
-		fetchThread->release();
-	}
-	fetchThread = new TCThread(this,
-	 (TCThreadStartMemberFunction)(&TCWebClient::backgroundFetchURLFunction));
-
-	fetchThread->setFinishMemberFunction(
-	 (TCThreadFinishMemberFunction)(&TCWebClient::backgroundFetchURLFinish));
-	if (!fetchThread->run())
-	{
-		if (getDebugLevel() > 0)
-		{
-			perror("error spawning thread");
-		}
-		setErrorNumber(WCE_THREAD_CREATE);
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+	return fetchInBackground(false);
 }
 
 int TCWebClient::setNonBlock(void)
@@ -1076,29 +1061,59 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 	time_t startTime = time(NULL);
 	time_t timeLeft = socketTimeout;
 	fd_set errorDescs;
+	fd_set origReadDescs;
+	fd_set origWriteDescs;
 
-	FD_ZERO(&errorDescs);
-	FD_SET(dataSocket, &errorDescs);
-	timeout.tv_sec = socketTimeout;
-	timeout.tv_usec = 0;
-	while (select(dataSocket + 1, readDescs, writeDescs, &errorDescs, &timeout)
-		== -1)
+	if (readDescs)
 	{
+		origReadDescs = *readDescs;
+	}
+	if (writeDescs)
+	{
+		origWriteDescs = *writeDescs;
+	}
+
+	timeout.tv_sec = 0;
+	timeout.tv_usec = 250000;
+	while (1)
+	{
+		FD_ZERO(&errorDescs);
+		FD_SET(dataSocket, &errorDescs);
+		if (readDescs)
+		{
+			*readDescs = origReadDescs;
+		}
+		if (writeDescs)
+		{
+			*writeDescs = origWriteDescs;
+		}
+		int result = select(dataSocket + 1, readDescs, writeDescs, &errorDescs,
+			&timeout);
+
+		if (result > 0)
+		{
+			break;
+		}
+		if (result == 0 ||
 #ifdef WIN32
-		if (WSAGetLastError() == WSAEINTR)
+			WSAGetLastError() == WSAEINTR)
 #else // WIN32
 #ifdef _QT
-		if (WSAGetLastError() == EINTR)
+			WSAGetLastError() == EINTR)
 #endif // _QT
 #endif // WIN32
 		{
+			if (getAborted())
+			{
+				return 0;
+			}
 			timeLeft = startTime + socketTimeout - time(NULL);
+			debugPrintf("Timeout: %d seconds left.\n", timeLeft);
 			if (timeLeft <= 0)
 			{
-				return 1;
+				setErrorNumber(WCE_READ_TIMEOUT);
+				return 0;
 			}
-			timeout.tv_sec -= (long)timeLeft;
-			timeout.tv_usec = 0;
 		}
 		else
 		{
@@ -1240,13 +1255,17 @@ int TCWebClient::downloadData(void)
 			}
 		}
 		readBuffer = new char[BUFFER_SIZE];
-		while (bytesLeft > 0 && result)
+		while (bytesLeft > 0 && result && !getAborted())
 		{
 			int packetBytesRead;
 			int readSize;
 
 			if (!waitForRead())
 			{
+				if (getAborted())
+				{
+					break;
+				}
 				if (getDebugLevel() > 0)
 				{
 					perror("Timeout!");
@@ -1272,7 +1291,7 @@ int TCWebClient::downloadData(void)
 			{
 				if (checkBlockingError())
 				{
-					if (!waitForRead())
+					if (getAborted() || !waitForRead())
 					{
 						result = 0;
 					}
@@ -1414,14 +1433,15 @@ TCByte* TCWebClient::getData(int& length)
 		readSpot = data;
 		bytesRead = 0;
 	}
-	while (bytesLeft > 0)
+	while (bytesLeft > 0 && !getAborted())
 	{
 		int packetBytesRead;
 		int readSize;
 
 		if (!waitForRead())
 		{
-			if (getDebugLevel() > 0)
+			bool aborted = getAborted();
+			if (getDebugLevel() > 0 && !aborted)
 			{
 				perror("Timeout!");
 			}
@@ -1466,7 +1486,7 @@ TCByte* TCWebClient::getData(int& length)
 			if (checkBlockingError())
 			{
 				debugPrintf(4, ".");
-				if (!waitForRead())
+				if (getAborted() || !waitForRead())
 				{
 					delete[] data;
 					length = 0;

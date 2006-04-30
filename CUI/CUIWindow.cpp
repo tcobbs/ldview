@@ -1620,7 +1620,7 @@ BOOL CALLBACK CUIWindow::enableNonModalWindow(HWND hWnd, LPARAM hModalDialog)
 	return TRUE;
 }
 
-void CUIWindow::runDialogModal(HWND hDlg)
+void CUIWindow::runDialogModal(HWND hDlg, bool allowMessages)
 {
 	ShowWindow(hDlg, SW_SHOWNORMAL);
 	EnumThreadWindows(GetWindowThreadProcessId(hDlg, NULL),
@@ -1633,7 +1633,7 @@ void CUIWindow::runDialogModal(HWND hDlg)
 		{
 			doDialogClose(hDlg);
 		}
-		if (msg.hwnd == hDlg || IsChild(hDlg, msg.hwnd))
+		if (allowMessages || msg.hwnd == hDlg || IsChild(hDlg, msg.hwnd))
 		{
 			if (!IsDialogMessage(hDlg, &msg))
 			{

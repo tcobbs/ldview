@@ -16,6 +16,8 @@
 #define CUTAWAY_THICKNESS_KEY "CutawayThickness"
 #define DEFAULT_COLOR_KEY "DefaultColor3"
 #define DEFAULT_LAT_LONG_KEY "DefaultLatLong"
+#define MODEL_CENTER_KEY "ModelCenter"
+#define MODEL_SIZE_KEY "ModelSize"
 #define DEFAULT_MATRIX_KEY "DefaultMatrix"
 #define DEFAULT_ZOOM_KEY "DefaultZoom"							// NO UI
 #define EDITOR_KEY "Editor"
