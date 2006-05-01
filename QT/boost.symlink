@@ -19,12 +19,12 @@ else
 	else
 		ln -s ${1}/stage/lib ../boost/lib
 	fi
-	if [ -h ../boost/lib/libboost_thread_mt.a ]; then
-		rm ../boost/lib/libboost_thread_mt.a
+	if [ -h ../boost/lib/libboost_thread.a ]; then
+		rm ../boost/lib/libboost_thread.a
 	fi
-	if [ -e ../boost/lib/libboost_thread_mt.a ]; then
-		echo "Error: ../boost/lib/libboost_thread_mt.a exists, and isn't a symlink."
+	if [ -e ../boost/lib/libboost_thread.a ]; then
+		echo "Error: ../boost/lib/libboost_thread.a exists, and isn't a symlink."
 	else
-		ln -s ${1}/stage/lib/libboost_thread*-mt.a ${1}/stage/lib/libboost_thread_mt.a
+		ln -s ${1}/stage/lib/libboost_thread*-mt.a ${1}/stage/lib/libboost_thread.a
 	fi
 fi
