@@ -1,5 +1,5 @@
-CPPGLOBAL=/nologo /MT /W4 /EHsc /Ox /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD /G7
-RFLAGS=/l 0x409 /d NDEBUG
+CPPGLOBAL=/nologo /MT /W4 /EHsc /Ox /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD /G7 $(EXTRACFLAGS)
+RFLAGS=/l 0x409 /d NDEBUG 
 OBJDIR = Release
 
 MAKE = nmake /nologo
