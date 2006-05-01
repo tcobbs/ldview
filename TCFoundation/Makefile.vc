@@ -14,7 +14,6 @@ CCOBJS = \
 	$(OBJDIR)\TCImage.obj \
 	$(OBJDIR)\TCImageFormat.obj \
 	$(OBJDIR)\TCLocalStrings.obj \
-	$(OBJDIR)\TCMutex.obj \
 	$(OBJDIR)\TCNetwork.obj \
 	$(OBJDIR)\TCNetworkClient.obj \
 	$(OBJDIR)\TCObject.obj \
@@ -25,9 +24,6 @@ CCOBJS = \
 	$(OBJDIR)\TCSortedStringArray.obj \
 	$(OBJDIR)\TCStringArray.obj \
 	$(OBJDIR)\TCStringObjectTree.obj \
-	$(OBJDIR)\TCThread.obj \
-	$(OBJDIR)\TCThreadCondition.obj \
-	$(OBJDIR)\TCThreadManager.obj \
 	$(OBJDIR)\TCUnzip.obj \
 	$(OBJDIR)\TCUserDefaults.obj \
 	$(OBJDIR)\TCVector.obj \
