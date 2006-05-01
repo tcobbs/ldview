@@ -10,8 +10,10 @@
 #include <TCFoundation/TCLocalStrings.h>
 
 // NOTE: warning level on this source file had to be set to level 3 in Visual
-// studio in order to get it to compile without warnings.  For some unknown
+// Studio in order to get it to compile without warnings.  For some unknown
 // reason, disabling the warnings that show up including the below doesn't work.
+// This is only necessary in VS 6.  The Release build target is set to warning
+// level 4, because I built that with VC++ Toolkit 2003.
 #include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/xtime.hpp>
