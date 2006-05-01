@@ -41,7 +41,7 @@ exists($(QTDIR)/include/Qt3Support/q3button.h){
 message(QT4)
 }
 LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-		   -lLDraw -lLDLoader -lTRE -lTCFoundation -lboost_thread_mt
+		   -lLDraw -lLDLoader -lTRE -lTCFoundation -lboost_thread
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \

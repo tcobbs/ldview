@@ -1,7 +1,15 @@
-You must have the Boost library in order to build LDView.  You can download
-Boost from http://www.boost.org/.  Once you have downloaded and unpacked Boost,
-you need to build Boost, and make it available for use during LDView
-compilation.  To do this, do the following:
+You must have the Boost library in order to build LDView.  If you already have
+the Boost library installed on your system, you may be able to build without
+changing anything.  However, you may have to change the Boost library name in
+LDView.pro.  If your installation created a file named libboost_thread.a or
+libboost_thread.so, then you should be good.  Otherwise, you need to change
+the -lboost_thread text in LDView.pro to match the library name of your Boost
+thread library.
+
+If you don't have Boost already installed on your system, you can download it
+from http://www.boost.org/.  Once you have downloaded and unpacked Boost, you
+need to build Boost, and make it available for use during LDView compilation.
+To do this, do the following:
 
 1. Go into the root of the boost source directory, and run ./configure from the
    shell.  This will configure boost, and compile bjam, the build tool used to
