@@ -292,6 +292,8 @@ class LDViewWindow: public CUIWindow
 		HWND hLibraryUpdateWindow;
 		HWND hUpdateProgressBar;
 		HWND hUpdateStatus;
+		HWND hUpdateCancelButton;
+		HWND hUpdateOkButton;
 		char* userLDrawDir;
 		BOOL fullScreen;
 		BOOL fullScreenActive;

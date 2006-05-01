@@ -2882,6 +2882,8 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 	{
 		char statusText[1024] = "";
 
+		EnableWindow(hUpdateOkButton, TRUE);
+		EnableWindow(hUpdateCancelButton, FALSE);
 		if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
 		{
 			sprintf(statusText, "%s:\n%s",
@@ -2918,14 +2920,17 @@ void LDViewWindow::createLibraryUpdateWindow(void)
 	}
 	hUpdateProgressBar = GetDlgItem(hLibraryUpdateWindow, IDC_UPDATE_PROGRESS);
 	hUpdateStatus = GetDlgItem(hLibraryUpdateWindow, IDC_UPDATE_STATUS_FIELD);
+	hUpdateCancelButton = GetDlgItem(hLibraryUpdateWindow, IDCANCEL);
+	hUpdateOkButton = GetDlgItem(hLibraryUpdateWindow, IDOK);
 	SendMessage(hUpdateStatus, WM_SETTEXT, 0,
 		(LPARAM)TCLocalStrings::get("CheckingForUpdates"));
 	SendMessage(hUpdateProgressBar, PBM_SETPOS, 0, 0);
+	EnableWindow(hUpdateOkButton, FALSE);
 }
 
 void LDViewWindow::showLibraryUpdateWindow(bool initialInstall)
 {
-	//if (!hLibraryUpdateWindow)
+	if (!hLibraryUpdateWindow)
 	{
 		createLibraryUpdateWindow();
 	}
