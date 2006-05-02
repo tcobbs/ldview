@@ -134,6 +134,11 @@ void LDView::fileExtraDir()
 	modelViewer->showFileExtraDir();
 }
 
+void LDView::fileCheckForUpdates()
+{
+	 modelViewer->checkForLibraryUpdates();
+}
+
 void LDView::fileReload()
 {
     modelViewer->doFileReload();

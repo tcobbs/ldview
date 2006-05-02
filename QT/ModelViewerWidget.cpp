@@ -22,6 +22,7 @@
 #include <qlayout.h>
 #include <qclipboard.h>
 #include <qpainter.h>
+#include <qprogressdialog.h>
 #if (QT_VERSION >>16)==4
 #include <q3paintdevicemetrics.h>
 #define QPaintDeviceMetrics Q3PaintDeviceMetrics
@@ -111,7 +112,9 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	fileInfo(NULL),
 	lockCount(0),
 	fullscreen(0),
-	alertHandler(new AlertHandler(this))
+	alertHandler(new AlertHandler(this)),
+	libraryUpdater(NULL),
+	libraryUpdateWindow(NULL)
 {
 	int i;
 	const QMimeSource *mimeSource =
@@ -764,6 +767,126 @@ void ModelViewerWidget::showFileExtraDir(void)
 	extradir->show();
 }
 
+void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
+{
+    if (libraryUpdater)
+    {
+        char statusText[1024] = "";
+		libraryUpdateWindow->setCancelButtonText("Cancel");
+        if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
+        {
+            sprintf(statusText, "%s:\n%s",
+                TCLocalStrings::get("LibraryUpdateError"),
+                libraryUpdater->getError());
+        }
+        switch (finishType)
+        {
+        case LIBRARY_UPDATE_FINISHED:
+            libraryUpdateFinished = true;
+            strcpy(statusText, TCLocalStrings::get("LibraryUpdateComplete"));
+            break;
+        case LIBRARY_UPDATE_CANCELED:
+            strcpy(statusText, TCLocalStrings::get("LibraryUpdateCanceled"));
+            break;
+        case LIBRARY_UPDATE_NONE:
+            strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));            break;
+        }
+        libraryUpdater->release();
+        libraryUpdater = NULL;
+        if (strlen(statusText))
+        {
+			libraryUpdateWindow->setLabelText(statusText);
+		}
+	}
+}
+
+void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
+{
+	if(!libraryUpdateWindow)
+	{
+		createLibraryUpdateWindow();
+	}
+}
+
+void ModelViewerWidget::createLibraryUpdateWindow(void)
+{
+	if(!libraryUpdateWindow)
+	{
+		libraryUpdateWindow = new QProgressDialog(
+						TCLocalStrings::get("CheckingForUpdates"),"Cancel",
+#if QT_VERSION >= 0x40000
+						0,100,mainWindow);
+#else
+						100,mainWindow,"progress",TRUE);
+#endif
+		libraryUpdateWindow->setMinimumDuration(0);
+	}
+}
+
+bool ModelViewerWidget::installLDraw(void)
+{
+    if (libraryUpdater)
+    {
+        return false;
+    }
+    else
+    {
+        char *ldrawParentDir = getLDrawDir();
+        char *ldrawDir = copyString(ldrawParentDir, 255);
+        QDir originalDir = QDir::current();
+
+        libraryUpdateFinished = false;
+        strcat(ldrawDir, "/ldraw");
+		
+		QDir dir(ldrawDir);
+		if (!dir.exists())
+		{
+			dir.mkdir(ldrawDir);
+		}
+		libraryUpdater = new LDLibraryUpdater;
+        libraryUpdateCanceled = false;
+        libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+        libraryUpdater->setLdrawDir(ldrawDir);
+        libraryUpdater->installLDraw();
+        showLibraryUpdateWindow(true);
+        while (libraryUpdater)
+        {
+            if (libraryUpdateCanceled)
+            {
+                doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
+                libraryUpdateCanceled = false;
+            }
+            usleep(10000);
+        }
+        if (libraryUpdateFinished)
+        {
+            LDLModel::setLDrawDir(ldrawDir);
+        }
+        delete ldrawDir;
+        return libraryUpdateFinished;
+	}
+}
+
+void ModelViewerWidget::checkForLibraryUpdates(void)
+{
+    if (libraryUpdater)
+    {
+        showLibraryUpdateWindow(false);
+    }
+    else
+    {
+        libraryUpdater = new LDLibraryUpdater;
+        char *ldrawDir = getLDrawDir();
+
+        showLibraryUpdateWindow(false);
+        libraryUpdateCanceled = false;
+        libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
+        libraryUpdater->setLdrawDir(ldrawDir);
+        delete ldrawDir;
+        libraryUpdater->checkForUpdates();
+    }
+}
+
 void ModelViewerWidget::connectMenuShows(void)
 {
 	connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
@@ -835,7 +958,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	if (item)
 	{
 		fileMenu = mainWindow->fileMenu;
-		fileCancelLoadId = fileMenu->idAt(7);
+		fileCancelLoadId = fileMenu->idAt(8);
 		fileReloadId = fileMenu->idAt(1);
 	}
 	int cnt;
@@ -2566,8 +2689,40 @@ void ModelViewerWidget::progressAlertCallback(TCProgressAlert *alert)
 	{
 		if (strcmp(alert->getSource(), "LDLibraryUpdater") == 0)
 		{
-			debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
-				alert->getProgress());
+			//debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+			//	alert->getProgress());
+			libraryUpdateWindow->setLabelText(alert->getMessage());
+#if (QT_VERSION >= 0x40000)
+			libraryUpdateWindow->setValue((int)(alert->getProgress() * 100));
+#else
+			libraryUpdateWindow->setProgress((int)(alert->getProgress() * 100));
+#endif
+			if (alert->getProgress() == 1.0f)
+			{
+				if (alert->getExtraInfo())
+            	{
+                	if (strcmp((*(alert->getExtraInfo()))[0], "None") == 0)
+                	{
+						doLibraryUpdateFinished(LIBRARY_UPDATE_NONE);
+					}
+					else
+					{
+						doLibraryUpdateFinished(LIBRARY_UPDATE_FINISHED);
+					}
+				}
+				else
+				{
+					doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
+				}
+			}
+			else if (alert->getProgress() == 2.0f)
+			{
+				doLibraryUpdateFinished(LIBRARY_UPDATE_ERROR);
+			}
+			if (libraryUpdateCanceled)
+        	{
+            	alert->abort();
+        	}
 		}
 		else
 		{

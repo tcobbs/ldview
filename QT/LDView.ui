@@ -126,6 +126,7 @@
 		<action name="fileSaveSettingsAction"/>
         <action name="fileLDrawDirAction"/>
         <action name="fileExtraDirAction"/>
+        <action name="fileCheckForUpdatesAction"/>
         <action name="fileCancelLoadAction"/>
         <separator/>
         <action name="filePrintAction"/>
@@ -549,6 +550,17 @@
         </property>
         <property name="text">
             <string>Extra Dirs...</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileCheckForUpdatesAction</cstring>
+        </property>
+        <property name="menuText">
+            <string>Check for Library Updates</string>
+        </property>
+        <property name="text">
+            <string>Check for Library Updates</string>
         </property>
     </action>
     <action>
@@ -992,6 +1004,12 @@
         <slot>fileExtraDir()</slot>
     </connection>
     <connection>
+        <sender>fileCheckForUpdatesAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>fileCheckForUpdates()</slot>
+    </connection>
+    <connection>
         <sender>fileReloadAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1115,6 +1133,7 @@
     <slot>helpOpenGLDriverInfo()</slot>
     <slot>fileLDrawDir()</slot>
     <slot>fileExtraDir()</slot>
+    <slot>fileCheckForUpdates()</slot>
     <slot>fileReload()</slot>
     <slot>viewShowErrors()</slot>
     <slot>pollChanged( QAction * action )</slot>

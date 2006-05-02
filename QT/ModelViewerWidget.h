@@ -8,6 +8,7 @@
 #include "Preferences.h"
 #include "LDViewExtraDir.h"
 #include "LDViewSnapshotSettings.h"
+#include "LDLib/LDLibraryUpdater.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -33,8 +34,15 @@ class LDLError;
 class TCProgressAlert;
 class QTextBrowser;
 class AlertHandler;
+class LDLibraryUpdater;
+class QProgressDialog;
 
 #define MAX_MOUSE_BUTTONS 10
+
+#define LIBRARY_UPDATE_FINISHED 1
+#define LIBRARY_UPDATE_CANCELED 2
+#define LIBRARY_UPDATE_NONE 3
+#define LIBRARY_UPDATE_ERROR 4
 
 class ModelViewerWidget : public QGLWidget
 {
@@ -119,6 +127,11 @@ public:
 	void renderOffscreenImage(void);
 	bool canSaveAlpha(void);
 	bool saveAlpha;
+	bool installLDraw();
+    void createLibraryUpdateWindow(void);
+    void showLibraryUpdateWindow(bool initialInstall);
+	void doLibraryUpdateFinished(int finishType);
+	void checkForLibraryUpdates(void);
 
 protected slots:
 	virtual void doAboutOK(void);
@@ -254,6 +267,10 @@ protected:
 	int saveImageType;
 	int fullscreen;
 	AlertHandler *alertHandler;
+	LDLibraryUpdater *libraryUpdater;
+	bool libraryUpdateFinished;
+	bool libraryUpdateCanceled;
+	QProgressDialog *libraryUpdateWindow;
 
 	static TCStringArray* recentFiles;
 };
