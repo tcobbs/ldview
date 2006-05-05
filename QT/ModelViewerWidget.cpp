@@ -338,6 +338,25 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 			libraryUpdateTimer = 0;
 			doLibraryUpdateFinished(libraryUpdateFinishCode);
 		}
+		else if (!libraryUpdateCanceled)
+		{
+			lock();
+			if (libraryUpdateProgressReady)
+			{
+				libraryUpdateProgressReady = false;
+				libraryUpdateWindow->setLabelText(libraryUpdateProgressMessage);
+				delete libraryUpdateProgressMessage;
+				libraryUpdateProgressMessage = NULL;
+#if (QT_VERSION >= 0x40000)
+				libraryUpdateWindow->setValue(
+					(int)(libraryUpdateProgressValue * 100));
+#else
+				libraryUpdateWindow->setProgress(
+					(int)(libraryUpdateProgressValue * 100));
+#endif
+			}
+			unlock();
+		}
 	}
 	unlock();
 }
@@ -802,7 +821,9 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
         case LIBRARY_UPDATE_NONE:
             strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));            break;
         }
+		debugPrintf("About to release library updater.\n");
         libraryUpdater->release();
+		debugPrintf("Released library updater.\n");
         libraryUpdater = NULL;
         if (strlen(statusText))
         {
@@ -932,6 +953,8 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 
         showLibraryUpdateWindow(false);
         libraryUpdateCanceled = false;
+		libraryUpdateFinishNotified = false;
+		libraryUpdateFinished = false;
         libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
         libraryUpdater->setLdrawDir(ldrawDir);
         delete ldrawDir;
@@ -2749,16 +2772,15 @@ void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 	// NOTE: this gets called from inside one of the library update threads.  It
 	// does NOT happen in the app's main thread.
 
-	//debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
-	//	alert->getProgress());
 
-	// Are we allowed to update widgets from outside the main thread?
-	libraryUpdateWindow->setLabelText(alert->getMessage());
-#if (QT_VERSION >= 0x40000)
-	libraryUpdateWindow->setValue((int)(alert->getProgress() * 100));
-#else
-	libraryUpdateWindow->setProgress((int)(alert->getProgress() * 100));
-#endif
+	// Are we allowed to update widgets from outside the main thread? NOPE!
+	lock();
+	debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+		alert->getProgress());
+	libraryUpdateProgressMessage = copyString(alert->getMessage());
+	libraryUpdateProgressValue = alert->getProgress();
+	libraryUpdateProgressReady = true;
+	unlock();
 	if (alert->getProgress() == 1.0f)
 	{
 		// Progress of 1.0 means the library updater is done.

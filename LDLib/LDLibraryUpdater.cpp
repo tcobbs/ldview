@@ -18,6 +18,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/xtime.hpp>
+#include <boost/bind.hpp>
 
 
 #ifdef _QT
@@ -423,11 +424,13 @@ void LDLibraryUpdater::launchThread(void)
 	m_error[0] = 0;
 	if (m_ldrawDir)
 	{
-		ThreadHelper threadHelper(this);
+		//ThreadHelper threadHelper(this);
 		setDebugLevel(3);
 		try
 		{
-			m_thread = new boost::thread(threadHelper);
+			m_thread = new boost::thread(
+				boost::bind(&LDLibraryUpdater::threadRun, this));
+			//m_thread = new boost::thread(threadHelper);
 		}
 		catch (...)
 		{
@@ -438,6 +441,12 @@ void LDLibraryUpdater::launchThread(void)
 	{
 		strcpy(m_error, TCLocalStrings::get("LDLUpdateNoLDrawDir"));
 	}
+}
+
+void LDLibraryUpdater::threadRun(void)
+{
+	threadStart();
+	threadFinish();
 }
 
 void LDLibraryUpdater::threadStart(void)

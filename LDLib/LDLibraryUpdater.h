@@ -2,6 +2,8 @@
 #define __LDLIBRARYUPDATER_H__
 
 #include <TCFoundation/TCObject.h>
+//#include <TCFoundation/mystring.h>
+//#include <stdio.h>
 
 template <class Type> class TCTypedObjectArray;
 class TCWebClient;
@@ -32,6 +34,7 @@ public:
 protected:
 	virtual ~LDLibraryUpdater(void);
 	virtual void dealloc(void);
+	virtual void threadRun(void);
 	virtual void threadStart(void);
 	virtual void threadFinish(void);
 	bool parseUpdateList(const char *updateList);
@@ -65,22 +68,34 @@ protected:
 	char m_error[1024];
 	bool m_aborting;
 	bool m_install;
+/*
 	class ThreadHelper
 	{
 	public:
 		ThreadHelper(LDLibraryUpdater *libraryUpdater)
 			: m_libraryUpdater(libraryUpdater)
 		{
+			printf("     ThreadHelper: 0x%08x.\n", this);
+		}
+		ThreadHelper(const ThreadHelper &other)
+			: m_libraryUpdater(other.m_libraryUpdater)
+		{
+			debugPrintf("ThreadHelper copy: 0x%08x, 0x%08x.\n", this,
+				m_libraryUpdater);
+		}
+		~ThreadHelper(void)
+		{
+			debugPrintf("    ~ThreadHelper: 0x%08x.\n", this);
 		}
 		void operator()()
 		{
 			m_libraryUpdater->threadStart();
 			m_libraryUpdater->threadFinish();
 		}
+*/
 	protected:
 		LDLibraryUpdater *m_libraryUpdater;
-	};
-	friend class ThreadHelper;
+//	friend class ThreadHelper;
 };
 
 #endif // __LDLIBRARYUPDATER_H__
