@@ -23,6 +23,7 @@
 #include <qclipboard.h>
 #include <qpainter.h>
 #include <qprogressdialog.h>
+#include <qtimer.h>
 #if (QT_VERSION >>16)==4
 #include <q3paintdevicemetrics.h>
 #define QPaintDeviceMetrics Q3PaintDeviceMetrics
@@ -106,6 +107,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	paintTimer(0),
 	pollTimer(0),
 	loadTimer(0),
+	libraryUpdateTimer(0),
 	fileDialog(NULL),
 	saveDialog(NULL),
 	errors(NULL),
@@ -327,6 +329,15 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 	{
 		killLoadTimer();
 		finishLoadModel();
+	}
+	else if (event->timerId() == libraryUpdateTimer)
+	{
+		if (libraryUpdateFinishNotified)
+		{
+			killTimer(libraryUpdateTimer);
+			libraryUpdateTimer = 0;
+			doLibraryUpdateFinished(libraryUpdateFinishCode);
+		}
 	}
 	unlock();
 }
@@ -772,7 +783,7 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
     if (libraryUpdater)
     {
         char statusText[1024] = "";
-		libraryUpdateWindow->setCancelButtonText("Cancel");
+		libraryUpdateWindow->setCancelButtonText("OK");
         if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
         {
             sprintf(statusText, "%s:\n%s",
@@ -802,15 +813,26 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 
 void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 {
-	if(!libraryUpdateWindow)
+	if (!libraryUpdateWindow)
 	{
 		createLibraryUpdateWindow();
+		libraryUpdateWindow->setCancelButtonText("Cancel");
+	}
+	if (initialInstall)
+	{
+		libraryUpdateWindow->setModal(true);
+	}
+	else
+	{
+		libraryUpdateWindow->setModal(false);
+		connect(libraryUpdateWindow, SIGNAL(canceled()), this,
+			SLOT(doLibraryUpdateCanceled()));
 	}
 }
 
 void ModelViewerWidget::createLibraryUpdateWindow(void)
 {
-	if(!libraryUpdateWindow)
+	if (!libraryUpdateWindow)
 	{
 		libraryUpdateWindow = new QProgressDialog(
 						TCLocalStrings::get("CheckingForUpdates"),"Cancel",
@@ -820,11 +842,14 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 						100,mainWindow,"progress",TRUE);
 #endif
 		libraryUpdateWindow->setMinimumDuration(0);
+		libraryUpdateWindow->setAutoReset(false);
 	}
 }
 
 bool ModelViewerWidget::installLDraw(void)
 {
+	// Don't lock here unless you're REALLY careful.  In particular, you
+	// DEFINITELY have to unlock prior to doing the event processing.
     if (libraryUpdater)
     {
         return false;
@@ -834,6 +859,7 @@ bool ModelViewerWidget::installLDraw(void)
         char *ldrawParentDir = getLDrawDir();
         char *ldrawDir = copyString(ldrawParentDir, 255);
         QDir originalDir = QDir::current();
+		bool progressDialogClosed = false;
 
         libraryUpdateFinished = false;
         strcat(ldrawDir, "/ldraw");
@@ -845,19 +871,45 @@ bool ModelViewerWidget::installLDraw(void)
 		}
 		libraryUpdater = new LDLibraryUpdater;
         libraryUpdateCanceled = false;
+		libraryUpdateFinishNotified = false;
+		libraryUpdateFinished = false;
         libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
         libraryUpdater->setLdrawDir(ldrawDir);
         libraryUpdater->installLDraw();
         showLibraryUpdateWindow(true);
-        while (libraryUpdater)
-        {
-            if (libraryUpdateCanceled)
-            {
-                doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
-                libraryUpdateCanceled = false;
-            }
-            usleep(10000);
-        }
+		while (libraryUpdater)
+		{
+			// We want the update window to be modal, so process events in a
+			// tight modal loop.  (See modal section in QProgressDialog
+			// documentation.)
+			qApp->processEvents();
+			if (!progressDialogClosed && libraryUpdateWindow->wasCanceled())
+			{
+				progressDialogClosed = true;
+				// When the install finishes for real, we change the button
+				// title from "Cancel" to "OK".  However, it still acts like
+				// a cancel.  So check to se if the update really finished, and
+				// if it didn't, then note that the user canceled.
+				if (!libraryUpdateFinished)
+				{
+					libraryUpdateCanceled = true;
+					doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
+					libraryUpdateCanceled = false;
+				}
+				break;
+			}
+			if (libraryUpdateFinishNotified)
+			{
+                doLibraryUpdateFinished(libraryUpdateFinishCode);
+			}
+			// Sleep for 50ms.  Unlike the QProgressDialog example, we aren't
+			// doing anything inside this loop other than processing the
+			// events.  All the work is happening in other threads.  So sleep
+			// for a short time in order to avoid monopolizing the CPU.  Keep in
+			// mind that while 50ms is essentially unnoticable to a user, it's
+			// quite a long time to the computer.
+			usleep(50000);
+		}
         if (libraryUpdateFinished)
         {
             LDLModel::setLDrawDir(ldrawDir);
@@ -883,6 +935,10 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
         libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
         libraryUpdater->setLdrawDir(ldrawDir);
         delete ldrawDir;
+		if (!libraryUpdateTimer)
+		{
+			libraryUpdateTimer = startTimer(50);
+		}
         libraryUpdater->checkForUpdates();
     }
 }
@@ -1366,6 +1422,11 @@ void ModelViewerWidget::doAboutOK(void)
 	lock();
 	aboutPanel->hide();
 	unlock();
+}
+
+void ModelViewerWidget::doLibraryUpdateCanceled(void)
+{
+	libraryUpdateCanceled = true;
 }
 
 void ModelViewerWidget::doWireframe(bool value)
@@ -1919,7 +1980,7 @@ void ModelViewerWidget::setupSnapshotBackBuffer(int imageWidth, int imageHeight)
 }
 
 TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight, 
-									TCByte *buffer, bool zoomToFit, 												bool *saveAlpha)
+									TCByte *buffer, bool zoomToFit, 												bool * /*saveAlpha*/)
 {
     bool oldSlowClear = modelViewer->getSlowClear();
     bool origForceZoomToFit = modelViewer->getForceZoomToFit();
@@ -2683,46 +2744,76 @@ void ModelViewerWidget::ldlErrorCallback(LDLError *error)
 	}
 }
 
+void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
+{
+	// NOTE: this gets called from inside one of the library update threads.  It
+	// does NOT happen in the app's main thread.
+
+	//debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+	//	alert->getProgress());
+
+	// Are we allowed to update widgets from outside the main thread?
+	libraryUpdateWindow->setLabelText(alert->getMessage());
+#if (QT_VERSION >= 0x40000)
+	libraryUpdateWindow->setValue((int)(alert->getProgress() * 100));
+#else
+	libraryUpdateWindow->setProgress((int)(alert->getProgress() * 100));
+#endif
+	if (alert->getProgress() == 1.0f)
+	{
+		// Progress of 1.0 means the library updater is done.
+		if (alert->getExtraInfo())
+		{
+			// We can't call doLibraryUpdateFinished directly, because we're
+			// executing from the library update thread.  The 
+			// doLibraryUpdateFinished function waits for the library update
+			// thread to complete.  That will never happen if it's executing
+			// inside the library update thread.  So we record the finish code,
+			// tell ourselves we have done so, and the doLibraryUpdateTimer()
+			// slot will take care of the rest when running in non-modal mode,
+			// and the modal loop will take care of things when running in
+			// modal mode (during initial library install).
+			if (strcmp((*(alert->getExtraInfo()))[0], "None") == 0)
+			{
+				libraryUpdateFinishCode = LIBRARY_UPDATE_NONE;
+			}
+			else
+			{
+				libraryUpdateFinishCode = LIBRARY_UPDATE_FINISHED;
+			}
+		}
+		else
+		{
+			libraryUpdateFinishCode = LIBRARY_UPDATE_CANCELED;
+		}
+		// Just as a note, while I believe that assignment of an int is an
+		// atomic operation (and therefore doesn't require thread checking),
+		// I'm not 100% sure of this.  So set the code first, and then once
+		// it's definitely set, set the notification.  I really couldn't care
+		// less if the notification setting is atomic, since I'm only doing a
+		// boolean compare on it.
+		libraryUpdateFinishNotified = true;
+	}
+	else if (alert->getProgress() == 2.0f)
+	{
+		// Progress of 2.0 means the library updater encountered an
+		// error.
+		libraryUpdateFinishCode = LIBRARY_UPDATE_ERROR;
+		libraryUpdateFinishNotified = true;
+	}
+	if (libraryUpdateCanceled)
+	{
+		alert->abort();
+	}
+}
+
 void ModelViewerWidget::progressAlertCallback(TCProgressAlert *alert)
 {
 	if (alert)
 	{
 		if (strcmp(alert->getSource(), "LDLibraryUpdater") == 0)
 		{
-			//debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
-			//	alert->getProgress());
-			libraryUpdateWindow->setLabelText(alert->getMessage());
-#if (QT_VERSION >= 0x40000)
-			libraryUpdateWindow->setValue((int)(alert->getProgress() * 100));
-#else
-			libraryUpdateWindow->setProgress((int)(alert->getProgress() * 100));
-#endif
-			if (alert->getProgress() == 1.0f)
-			{
-				if (alert->getExtraInfo())
-            	{
-                	if (strcmp((*(alert->getExtraInfo()))[0], "None") == 0)
-                	{
-						doLibraryUpdateFinished(LIBRARY_UPDATE_NONE);
-					}
-					else
-					{
-						doLibraryUpdateFinished(LIBRARY_UPDATE_FINISHED);
-					}
-				}
-				else
-				{
-					doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
-				}
-			}
-			else if (alert->getProgress() == 2.0f)
-			{
-				doLibraryUpdateFinished(LIBRARY_UPDATE_ERROR);
-			}
-			if (libraryUpdateCanceled)
-        	{
-            	alert->abort();
-        	}
+			libraryUpdateProgress(alert);
 		}
 		else
 		{

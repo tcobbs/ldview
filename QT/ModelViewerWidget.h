@@ -140,6 +140,7 @@ protected slots:
 	virtual void doEditMenuAboutToShow(void);
 	virtual void doViewMenuAboutToShow(void);
 	virtual void doHelpMenuAboutToShow(void);
+	virtual void doLibraryUpdateCanceled(void);
 
 protected:
 	// GL Widget overrides
@@ -201,6 +202,7 @@ protected:
 	void setViewMode(LDVViewMode value);
 	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
+	void libraryUpdateProgress(TCProgressAlert *alert);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);
@@ -252,6 +254,7 @@ protected:
 	int paintTimer;
 	int pollTimer;
 	int loadTimer;
+	int libraryUpdateTimer;
 	QFileDialog *fileDialog, *saveDialog;
 	bool showFPS;
 	LDViewErrors *errors;
@@ -270,6 +273,8 @@ protected:
 	LDLibraryUpdater *libraryUpdater;
 	bool libraryUpdateFinished;
 	bool libraryUpdateCanceled;
+	bool libraryUpdateFinishNotified;
+	int libraryUpdateFinishCode;
 	QProgressDialog *libraryUpdateWindow;
 
 	static TCStringArray* recentFiles;

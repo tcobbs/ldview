@@ -1,5 +1,6 @@
 #include "LDLibraryUpdater.h"
 #include "LDLibraryUpdateInfo.h"
+#include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCWebClient.h>
 #include <TCFoundation/TCTypedObjectArray.h>
@@ -165,7 +166,10 @@ bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
 
 		updateName[0] = 0;
 		sprintf(buf, "%s\\models\\complete.txt", m_ldrawDir);
-		completeTextFile = fopen(buf, "rb");
+		// Despite the name of the function, LDLModel::openModelFile just opens
+		// a file.  But it supports case-insensitive opening of a file on a
+		// case-sensitive file system.
+		completeTextFile = LDLModel::openModelFile(buf);
 		if (completeTextFile)
 		{
 			bool firstUpdateFound = false;
@@ -852,7 +856,7 @@ void LDLibraryUpdater::threadFinish(void)
 
 bool LDLibraryUpdater::fileExists(const char *filename)
 {
-	FILE* file = fopen(filename, "r");
+	FILE* file = LDLModel::openModelFile(filename);
 
 	if (file)
 	{
