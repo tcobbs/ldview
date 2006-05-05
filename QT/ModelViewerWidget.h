@@ -274,6 +274,9 @@ protected:
 	bool libraryUpdateFinished;
 	bool libraryUpdateCanceled;
 	bool libraryUpdateFinishNotified;
+	char *libraryUpdateProgressMessage;
+	float libraryUpdateProgressValue;
+	bool libraryUpdateProgressReady;
 	int libraryUpdateFinishCode;
 	QProgressDialog *libraryUpdateWindow;
 
