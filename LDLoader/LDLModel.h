@@ -91,11 +91,11 @@ public:
 	{
 		return fileCaseCallback;
 	}
+	static FILE *openModelFile(const char *filename);
 protected:
 	virtual void dealloc(void);
 	virtual FILE *openSubModelNamed(const char* subModelName,
 		char* subModelPath);
-	virtual FILE *openModelFile(const char *filename);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char  *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);

@@ -14,6 +14,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/xtime.hpp>
+#include <boost/bind.hpp>
 
 #ifdef WIN32
 //#define sleep(sec) Sleep((sec) * 1000)
@@ -931,6 +932,18 @@ int TCWebClient::fetchURL(void)
 	return 0;
 }
 
+void TCWebClient::backgroundFetchURL(void)
+{
+	backgroundFetchURLStart();
+	backgroundFetchURLFinish();
+}
+
+void TCWebClient::backgroundFetchHeader(void)
+{
+	backgroundFetchHeaderStart();
+	backgroundFetchHeaderFinish();
+}
+
 void TCWebClient::backgroundFetchURLStart(void)
 {
 	if (!fetchURL())
@@ -992,7 +1005,7 @@ int TCWebClient::retryFetchHeaderInBackground(void)
 
 int TCWebClient::fetchInBackground(bool header)
 {
-	ThreadHelper threadHelper(this, header);
+	//ThreadHelper threadHelper(this, header);
 
 	if (fetchThread)
 	{
@@ -1001,7 +1014,17 @@ int TCWebClient::fetchInBackground(bool header)
 	}
 	try
 	{
-		fetchThread = new boost::thread(threadHelper);
+		if (header)
+		{
+			fetchThread = new boost::thread(
+				boost::bind(&TCWebClient::backgroundFetchHeader, this));
+		}
+		else
+		{
+			fetchThread = new boost::thread(
+				boost::bind(&TCWebClient::backgroundFetchURL, this));
+		}
+		//fetchThread = new boost::thread(threadHelper);
 	}
 	catch (...)
 	{

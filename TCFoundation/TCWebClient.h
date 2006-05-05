@@ -131,6 +131,8 @@ protected:
 	int waitForRead(void);
 	int waitForWrite(void);
 	virtual void dealloc(void);
+	virtual void backgroundFetchURL(void);
+	virtual void backgroundFetchHeader(void);
 	virtual void backgroundFetchURLStart(void);
 	virtual void backgroundFetchHeaderStart(void);
 	virtual void backgroundFetchURLFinish(void);
