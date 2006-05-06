@@ -444,6 +444,8 @@ void ModelViewerWidget::doFilePrint(void)
 		int r, g, b;
         preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
 		modelViewer->setBackgroundRGB(255,255,255);
+		if (dpix != dpiy)
+			modelViewer->setPixelAspectRatio((float)dpix / dpiy);
 		saveImageType = BMP_IMAGE_TYPE_INDEX;
 		TCByte *buffer = grabImage(pwidth,pheight,NULL,true);
 		for(y = 0 ; y < pheight; y++)
@@ -457,8 +459,11 @@ void ModelViewerWidget::doFilePrint(void)
 		delete image;
 		delete buffer;
 		modelViewer->setBackgroundRGB(r, g, b);
+		modelViewer->setPixelAspectRatio(1.0f);
 	}
 	delete printer;
+	endLoad();
+	makeCurrent();
 }
 
 bool ModelViewerWidget::chDirFromFilename(const char *filename)
