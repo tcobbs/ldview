@@ -1,7 +1,6 @@
 Missing features from QT version (implemented on Win32 version)
 - command line parameters
-- customized File Save dialog for series of pictures and image size
-- offscreen rendering
+- customized File Save dialog for series of pictures
 - dropdown buttons on toolbar
 
 QT4 know bugs
@@ -19,4 +18,4 @@ QT4 migration
 - when QT4 will be wildly used (part of major linux distributions), the code must be migrated to native QT4 from Qt3Support class. At that time, the code will not support QT3.
 
 Last updated:
-31.10.2005
+06.05.2006
