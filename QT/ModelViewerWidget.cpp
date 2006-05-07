@@ -436,11 +436,9 @@ void ModelViewerWidget::doFilePrint(void)
 			marginy = (int) (2/2.54)*dpiy,
 			pwidth = metrics.width()-2*marginx,
 			pheight = metrics.height()-2*marginy,
-			bytesPerLine = roundUp(pwidth * 3, 4),
+			bytesPerLine,
 			y, x;
-		QImage *image = new QImage(pwidth,pheight,32);
 		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
-		printf("%ix%i\n",image->width(),image->height());
 		int r, g, b;
         preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
 		modelViewer->setBackgroundRGB(255,255,255);
@@ -448,6 +446,8 @@ void ModelViewerWidget::doFilePrint(void)
 			modelViewer->setPixelAspectRatio((float)dpix / dpiy);
 		saveImageType = BMP_IMAGE_TYPE_INDEX;
 		TCByte *buffer = grabImage(pwidth,pheight,NULL,true);
+		QImage *image = new QImage(pwidth,pheight,32);
+		bytesPerLine = roundUp(pwidth * 3, 4);
 		for(y = 0 ; y < pheight; y++)
 			for(x = 0 ; x < pwidth; x++)
 			{
@@ -2007,7 +2007,7 @@ void ModelViewerWidget::setupSnapshotBackBuffer(int imageWidth, int imageHeight)
     glReadBuffer(GL_BACK);
 }
 
-TCByte *ModelViewerWidget::grabImage(int imageWidth, int imageHeight, 
+TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight, 
 									TCByte *buffer, bool zoomToFit, 												bool * /*saveAlpha*/)
 {
     bool oldSlowClear = modelViewer->getSlowClear();

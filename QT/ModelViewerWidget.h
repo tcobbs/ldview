@@ -96,7 +96,7 @@ public:
             TCByte *buffer, bool saveAlpha);
     bool writeBmp(char *filename, int width, int height,
             TCByte *buffer);
-	TCByte *grabImage(int imageWidth, int imageHeight,
+	TCByte *grabImage(int &imageWidth, int &imageHeight,
             TCByte *buffer = NULL, bool zoomToFit = true, 
 			bool *saveAlpha = NULL);
 	int roundUp(int value, int nearest);
