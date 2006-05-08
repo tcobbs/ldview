@@ -116,6 +116,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	fullscreen(0),
 	alertHandler(new AlertHandler(this)),
 	libraryUpdater(NULL),
+	libraryUpdateProgressReady(false),
 	libraryUpdateWindow(NULL)
 {
 	int i;
@@ -308,6 +309,15 @@ void ModelViewerWidget::unlock(void)
 	}
 }
 
+void ModelViewerWidget::setLibraryUpdateProgress(float progress)
+{
+#if (QT_VERSION >= 0x40000)
+	libraryUpdateWindow->setValue((int)(progress * 100));
+#else
+	libraryUpdateWindow->setProgress((int)(progress * 100));
+#endif
+}
+
 void ModelViewerWidget::timerEvent(QTimerEvent* event)
 {
 	lock();
@@ -347,13 +357,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 				libraryUpdateWindow->setLabelText(libraryUpdateProgressMessage);
 				delete libraryUpdateProgressMessage;
 				libraryUpdateProgressMessage = NULL;
-#if (QT_VERSION >= 0x40000)
-				libraryUpdateWindow->setValue(
-					(int)(libraryUpdateProgressValue * 100));
-#else
-				libraryUpdateWindow->setProgress(
-					(int)(libraryUpdateProgressValue * 100));
-#endif
+				setLibraryUpdateProgress(libraryUpdateProgressValue);
 			}
 			unlock();
 		}
@@ -808,6 +812,7 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
     {
         char statusText[1024] = "";
 		libraryUpdateWindow->setCancelButtonText("OK");
+		setLibraryUpdateProgress(1.0f);
         if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
         {
             sprintf(statusText, "%s:\n%s",
@@ -903,7 +908,11 @@ bool ModelViewerWidget::installLDraw(void)
         libraryUpdater->setLdrawDir(ldrawDir);
         libraryUpdater->installLDraw();
         showLibraryUpdateWindow(true);
-		while (libraryUpdater)
+		if (!libraryUpdateTimer)
+		{
+			libraryUpdateTimer = startTimer(50);
+		}
+		while (libraryUpdater || !progressDialogClosed)
 		{
 			// We want the update window to be modal, so process events in a
 			// tight modal loop.  (See modal section in QProgressDialog
@@ -1638,7 +1647,9 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 	char *lDrawDir = getLDrawDir();
 	bool found = false;
 	
-	if (!forceChoose && verifyLDrawDir(lDrawDir))
+	if (!forceChoose &&
+		(!TCUserDefaults::longForKey(VERIFY_LDRAW_DIR_KEY, 1, false) ||
+		verifyLDrawDir(lDrawDir)))
 	{
 		delete lDrawDir;
 		found = true;
@@ -1646,32 +1657,56 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 	else
 	{
 		delete lDrawDir;
+/*
 		if (!forceChoose)
 		{
 			QMessageBox::warning(this, "Can't find LDraw", "The LDraw directory has "
 				"not yet been chosen, or it has moved.  Please select the directory "
 				"that contains LDraw.", QMessageBox::Ok, QMessageBox::NoButton);
 		}
-		while (!found)
+*/
+		if (QMessageBox::question(this, "LDView",
+			TCLocalStrings::get("LDrawDirExistsPrompt"), QMessageBox::Yes,
+			QMessageBox::No | QMessageBox::Default) == QMessageBox::Yes)
 		{
-			if (promptForLDrawDir())
+			while (!found)
 			{
-				lDrawDir = getLDrawDir();
-				if (verifyLDrawDir(lDrawDir))
+				if (promptForLDrawDir())
 				{
-					found = true;
+					lDrawDir = getLDrawDir();
+					if (verifyLDrawDir(lDrawDir))
+					{
+						found = true;
+					}
+					else
+					{
+						QMessageBox::warning(this, "Invalid directory",
+							"The directory you selected does not contain LDraw.",
+							QMessageBox::Ok, QMessageBox::NoButton);
+					}
+					delete lDrawDir;
 				}
 				else
 				{
-					QMessageBox::warning(this, "Invalid directory",
-						"The directory you selected does not contain LDraw.",
-						QMessageBox::Ok, QMessageBox::NoButton);
+					break;
 				}
-				delete lDrawDir;
 			}
-			else
+		}
+		else
+		{
+			if (QMessageBox::warning(this,
+				"LDView", TCLocalStrings::get("WillDownloadLDraw"),
+				QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Ok)
 			{
-				break;
+				LDLModel::setLDrawDir("/");
+				if (promptForLDrawDir(
+					TCLocalStrings::get("LDrawInstallDirPrompt")))
+				{
+					if (installLDraw())
+					{
+						found = true;
+					}
+				}
 			}
 		}
 	}
@@ -1694,19 +1729,23 @@ char *ModelViewerWidget::getLDrawDir(void)
 	return lDrawDir;
 }
 
-bool ModelViewerWidget::promptForLDrawDir(void)
+bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 {
 	char *initialDir = getLDrawDir();
 	QFileDialog *dirDialog;
 	bool retValue = false;
 
+	if (!prompt)
+	{
+		prompt = TCLocalStrings::get("LDrawDirPrompt");
+	}
 	QDir::setCurrent(initialDir);
 	dirDialog = new QFileDialog(".",
 		"Directories",
 		this,
 		"open LDraw dir dialog",
 		true);
-	dirDialog->setCaption("Choose the LDraw directory");
+	dirDialog->setCaption(prompt);
 	dirDialog->setIcon(getimage("LDViewIcon16.png"));
 	dirDialog->setMode(QFileDialog::DirectoryOnly);
 	if (dirDialog->exec() == QDialog::Accepted)
@@ -2780,8 +2819,8 @@ void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 
 	// Are we allowed to update widgets from outside the main thread? NOPE!
 	lock();
-	debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
-		alert->getProgress());
+	//debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
+	//	alert->getProgress());
 	libraryUpdateProgressMessage = copyString(alert->getMessage());
 	libraryUpdateProgressValue = alert->getProgress();
 	libraryUpdateProgressReady = true;

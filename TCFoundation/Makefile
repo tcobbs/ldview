@@ -41,9 +41,10 @@ SRCS = $(CSRCS) $(CCSRCS)
 COBJS = $(CSRCS:.c=.o)
 CCOBJS = $(CCSRCS:.cpp=.o)
 OBJS = $(COBJS) $(CCOBJS)
+CDEFINES = -D_GNU_SOURCE -D_QT -DUNZIP_CMD
 #CFLAGS = -g $(TESTING) -pg -Wall
-#CFLAGS = -o $(OBJDIR)/$*.o -g $(TESTING) -Wall -D_GNU_SOURCE -D_QT
-CFLAGS = -o $(OBJDIR)/$*.o -O3 $(TESTING) -Wall -D_GNU_SOURCE -D_QT
+#CFLAGS = -o $(OBJDIR)/$*.o -g $(TESTING) -Wall $(CDEFINES)
+CFLAGS = -o $(OBJDIR)/$*.o -O3 $(TESTING) -Wall $(CDEFINES)
 INCLUDE = -I../ -I$(QTDIR)/include -I../include -I../boost/include
 LIBDIRS = -L$(QTDIR)/lib
 #HOSTLIBS = -lxnet
@@ -62,7 +63,7 @@ LIBS = -lm -lpthread -lqt-mt $(HOSTLIBS)
 
 all:	$(OBJDIR) libTCFoundation.a
 
-debug: CFLAGS = -o $(OBJDIR)/$*.o -g -Wall -D_GNU_SOURCE -D_QT
+debug: CFLAGS = -o $(OBJDIR)/$*.o -g -Wall $(CDEFINES)
 debug: all
 
 $(OBJDIR):

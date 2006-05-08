@@ -12,7 +12,15 @@ void WINAPI receiveZipMessage(unsigned long, unsigned long, unsigned,
     unsigned, unsigned, unsigned, unsigned, unsigned,
     char, LPSTR, LPSTR, unsigned long, char);
 
-#endif
+#else // WIN32
+#ifdef UNZIP_CMD
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#endif // UNZIP_CMD
+#endif // WIN32
+
 
 TCUnzip::TCUnzip(void)
 {
@@ -30,6 +38,20 @@ void TCUnzip::dealloc(void)
 int TCUnzip::unzip(const char *filename, const char *outputDir)
 {
 #ifdef WIN32
+	return unzipWin32(filename, outputDir);
+#else // WIN32
+#ifdef UNZIP_CMD
+	return unzipExec(filename, outputDir);
+#else
+	return -1;
+#endif // UNZIP_CMD
+#endif // WIN32
+}
+
+#ifdef WIN32
+
+int TCUnzip::unzipWin32(const char *filename, const char *outputDir)
+{
 	DCL dcl;
 	USERFUNCTIONS userfunctions;
 	char filenameBuf[2048];
@@ -75,10 +97,88 @@ int TCUnzip::unzip(const char *filename, const char *outputDir)
 		dcl.lpszExtractDir = NULL;
 	}
 	return Wiz_SingleEntryUnzip(0, NULL, 0, NULL, &dcl, &userfunctions);
-#else // WIN32
-	return -1;
-#endif
 }
+
+#else // WIN32
+#ifdef UNZIP_CMD
+
+void TCUnzip::unzipChildExec(const char *filename, const char *outputDir)
+{
+	char *path = getenv("PATH");
+	char *unzipPath = NULL;
+	int pathCount;
+	char **pathComponents = componentsSeparatedByString(path, ":", pathCount);
+	int i;
+
+	for (i = 0; i < pathCount && unzipPath == NULL; i++)
+	{
+		FILE *file;
+
+		unzipPath = copyString(pathComponents[i], 7);
+		strcat(unzipPath, "/unzip");
+		file = fopen(unzipPath, "r");
+		if (file)
+		{
+			fclose(file);
+		}
+		else
+		{
+			delete unzipPath;
+			unzipPath = NULL;
+		}
+	}
+	deleteStringArray(pathComponents, pathCount);
+	if (unzipPath)
+	{
+		char *zipFile = copyString(filename);
+
+		if (chdir(outputDir) == 0)
+		{
+			char *const argv[] = {unzipPath, "-o", zipFile, NULL};
+
+			// Squash the console output from the unzip program.
+			freopen("/dev/null", "w", stdout);
+			execv(unzipPath, argv);
+		}
+		delete zipFile;
+		delete unzipPath;
+	}
+}
+
+int TCUnzip::unzipExec(const char *filename, const char *outputDir)
+{
+	pid_t forkResult = fork();
+	switch (forkResult)
+	{
+	case 0:
+		// child process
+		unzipChildExec(filename, outputDir);
+		// If we get here at all, there was an error executing unzip.  Since
+		// we've already forked, we have to exit with an error status.
+		exit(1);
+		break;
+	case -1:
+		// error
+		return -1;
+		break;
+	default:
+		// Parent process
+		int status;
+		wait(&status);
+		if (status == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+		break;
+	}
+}
+
+#endif // UNZIP_CMD
+#endif // WIN32
 
 #ifdef WIN32
 
@@ -109,9 +209,9 @@ void WINAPI receiveZipMessage(unsigned long, unsigned long, unsigned,
 
 bool TCUnzip::supported(void)
 {
-#ifdef WIN32
+#if defined(WIN32) || defined(UNZIP_CMD)
 	return true;
-#else // WIN32
+#else // WIN32 || UNZIP_CMD
 	return false;
-#endif // WIN32
+#endif // WIN32 || UNZIP_CMD
 }
