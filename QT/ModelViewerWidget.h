@@ -182,7 +182,7 @@ protected:
 	bool verifyLDrawDir(bool forceChoose = false);
 	bool verifyLDrawDir(char *value);
 	char *getLDrawDir(void);
-	bool promptForLDrawDir(void);
+	bool promptForLDrawDir(const char *prompt = NULL);
 	int errorCallback(LDLError *error);
 	void clearErrors(void);
 	void preLoad(void);
@@ -203,6 +203,7 @@ protected:
 	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);
+	void setLibraryUpdateProgress(float progress);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);

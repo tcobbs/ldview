@@ -653,6 +653,10 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 				{
 					downloadFile = slashSpot + 1;
 				}
+				else
+				{
+					downloadFile++;
+				}
 			}
 			else if (downloadFile)
 			{
@@ -679,7 +683,11 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 		{
 			char filename[1024];
 
+#ifdef WIN32
 			sprintf(filename, "%s\\%s", m_ldrawDir, webClient->getFilename());
+#else // WIN32
+			sprintf(filename, "%s/%s", m_ldrawDir, webClient->getFilename());
+#endif // WIN32
 			debugPrintf("Done downloading file: %s\n", filename);
 			m_downloadList->addString(filename);
 		}
@@ -819,12 +827,12 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 				xt.nsec += 250 * 1000 * 1000;
 				m_threadFinish->timed_wait(lock, xt);
 			}
-			//lock.unlock();
+			lock.unlock();
 			if (!*aborted)
 			{
 				sendDlProgress(aborted);
 			}
-			//lock.lock();
+			lock.lock();
 			if (*aborted)
 			{
 				m_aborting = true;
