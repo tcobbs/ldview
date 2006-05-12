@@ -16,7 +16,7 @@ The program can read LDraw DAT files as well as MPD files. It then allows you to
 
 %prep
 cd $RPM_SOURCE_DIR
-cvs -z3 -d:pserver:anonymous@cvs.sourceforge.net/cvsroot/ldview co LDView
+cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
