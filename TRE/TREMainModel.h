@@ -87,6 +87,14 @@ public:
 	{
 		return m_mainFlags.vertexArrayEdgeFlags != false;
 	}
+	void setThreadsFlag(bool value)
+	{
+		m_mainFlags.threads = value;
+	}
+	bool getThreadsFlag(void)
+	{
+		return m_mainFlags.threads != false;
+	}
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
 	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
 	bool getActiveLineJoinsFlag(void)
@@ -254,6 +262,7 @@ protected:
 		bool drawNormals:1;
 		bool stencilConditionals:1;
 		bool vertexArrayEdgeFlags:1;
+		bool threads:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

@@ -134,6 +134,10 @@ SOURCE=.\LDLFileLine.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLFindFileAlert.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLLineLine.cpp
 # End Source File
 # Begin Source File
@@ -199,6 +203,10 @@ SOURCE=.\LDLError.h
 # Begin Source File
 
 SOURCE=.\LDLFileLine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLFindFileAlert.h
 # End Source File
 # Begin Source File
 

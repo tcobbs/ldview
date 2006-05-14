@@ -42,7 +42,7 @@ public:
 	virtual void getSpecular(TCULong colorNumber, float *specular);
 	virtual void getShininess(TCULong colorNumber, float &shininess);
 	virtual LDLModel *subModelNamed(const char *subModelName,
-		bool lowRes = false);
+		bool lowRes = false, bool secondAttempt = false);
 	virtual const char *getFilename(void) { return m_filename; }
 	virtual void setFilename(const char *filename);
 	virtual const char *getName(void) { return m_name; }

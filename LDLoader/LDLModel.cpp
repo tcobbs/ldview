@@ -2,6 +2,7 @@
 #include "LDLMainModel.h"
 #include "LDLCommentLine.h"
 #include "LDLModelLine.h"
+#include "LDLFindFileAlert.h"
 #include "LDrawIni.h"
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/mystring.h>
@@ -150,7 +151,8 @@ bool LDLModel::colorNumberIsTransparent(TCULong colorNumber)
 	return m_mainModel->colorNumberIsTransparent(colorNumber);
 }
 
-LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes)
+LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
+								  bool secondAttempt)
 {
 	TCDictionary* subModelDict = getLoadedModels();
 	LDLModel* subModel;
@@ -200,6 +202,17 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes)
 	}
 	delete adjustedName;
 	delete dictName;
+	if (!subModel && !secondAttempt)
+	{
+		LDLFindFileAlert *alert = new LDLFindFileAlert(subModelName);
+
+		TCAlertManager::sendAlert(alert);
+		if (alert->getFileFound())
+		{
+			subModel = subModelNamed(alert->getFilename(), lowRes, true);
+		}
+		alert->release();
+	}
 	return subModel;
 }
 

@@ -1908,53 +1908,63 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 	struct stat dirStat;
 	int result = 1;
 	int dummyErrorNumber;
+	bool bDrive = false;
 
 	if (!errorNumber)
 	{
 		errorNumber = &dummyErrorNumber;
 	}
-	if (stat(directory, &dirStat) == -1)
-	{
-		if (errno == ENOENT)
-		{
 #ifdef WIN32
-			if (!CreateDirectory(directory, NULL))
+	if (strlen(directory) == 2 && directory[1] == ':')
+	{
+		bDrive = true;
+	}
+#endif // WIN32
+	if (!bDrive)
+	{
+		if (stat(directory, &dirStat) == -1)
+		{
+			if (errno == ENOENT)
 			{
-				*errorNumber = WCE_DIR_CREATION;
-				result = 0;
-			}
+#ifdef WIN32
+				if (!CreateDirectory(directory, NULL))
+				{
+					*errorNumber = WCE_DIR_CREATION;
+					result = 0;
+				}
 #else // WIN32
 #ifdef _QT
-			if (mkdir(directory, 0) == -1)
-			{
-				*errorNumber = WCE_DIR_CREATION;
-				result = 0;
+				if (mkdir(directory, 0) == -1)
+				{
+					*errorNumber = WCE_DIR_CREATION;
+					result = 0;
+				}
+				else
+				{
+					chmod(directory, S_IRUSR | S_IWUSR | S_IXUSR);
+				}
+#endif // _QT
+#endif // WIN32
 			}
 			else
 			{
-				chmod(directory, S_IRUSR | S_IWUSR | S_IXUSR);
+				*errorNumber = WCE_DIR_STAT;
+				result = 0;
 			}
-#endif // _QT
-#endif // WIN32
 		}
 		else
 		{
-			*errorNumber = WCE_DIR_STAT;
-			result = 0;
-		}
-	}
-	else
-	{
 #ifdef WIN32
-		if (!(dirStat.st_mode & _S_IFDIR))
+			if (!(dirStat.st_mode & _S_IFDIR))
 #else // WIN32
 #ifdef _QT
-		if (!S_ISDIR(dirStat.st_mode))
+			if (!S_ISDIR(dirStat.st_mode))
 #endif // _QT
 #endif // WIN32
-		{
-			*errorNumber = WCE_NOT_DIR;
-			result = 0;
+			{
+				*errorNumber = WCE_NOT_DIR;
+				result = 0;
+			}
 		}
 	}
 	return result;
@@ -1983,7 +1993,7 @@ int TCWebClient::createDirectories(const char* theDirectory)
 			spot++;
 		}
 	}
-	if (directory[strlen(directory) - 1] != '/')
+	if (result && directory[strlen(directory) - 1] != '/')
 	{
 		if (!createDirectory(directory))
 		{

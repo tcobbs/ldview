@@ -270,7 +270,7 @@ class LDViewWindow: public CUIWindow
 		virtual void updatePrimitivesMenu(void);
 		virtual void updateLightingMenu(void);
 		virtual void updateBFCMenu(void);
-		void progressAlertCallback(TCProgressAlert *error);
+		void progressAlertCallback(TCProgressAlert *alert);
 
 		void loadSettings(void);
 

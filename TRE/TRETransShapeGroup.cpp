@@ -4,15 +4,22 @@
 #include <TCFoundation/TCMacros.h>
 #include <stdlib.h>
 
+#include <boost/thread/thread.hpp>
+#include <boost/bind.hpp>
+
 TRETransShapeGroup::TRETransShapeGroup(void)
-	:m_sortedTriangles(NULL)
+	:m_sortedTriangles(NULL),
+	m_useSortThread(false),
+	m_sortThread(NULL)
 {
 }
 
 TRETransShapeGroup::TRETransShapeGroup(const TRETransShapeGroup &other)
 	:TREColoredShapeGroup(other),
 	m_sortedTriangles((TRESortedTriangleArray *)TCObject::copy(
-		other.m_sortedTriangles))
+		other.m_sortedTriangles)),
+	m_useSortThread(false),
+	m_sortThread(NULL)
 {
 }
 
@@ -23,6 +30,12 @@ TRETransShapeGroup::~TRETransShapeGroup(void)
 void TRETransShapeGroup::dealloc(void)
 {
 	TCObject::release(m_sortedTriangles);
+	if (m_sortThread)
+	{
+		m_sortThread->join();
+		delete m_sortThread;
+		m_sortThread = NULL;
+	}
 	TREColoredShapeGroup::dealloc();
 }
 
@@ -30,10 +43,37 @@ void TRETransShapeGroup::draw(bool sort)
 {
 	if (sort)
 	{
-		sortShapes();
+		if (m_useSortThread)
+		{
+			m_sortThread->join();
+			delete m_sortThread;
+			m_sortThread = NULL;
+		}
+		else
+		{
+			treGlGetFloatv(GL_MODELVIEW_MATRIX, m_sortMatrix);
+			sortShapes();
+		}
 	}
 	drawShapeType(TRESTriangle);
 //	TREColoredShapeGroup::draw();
+}
+
+void TRETransShapeGroup::backgroundSort(void)
+{
+	sortShapes();
+}
+
+void TRETransShapeGroup::sortInBackground(bool sort)
+{
+	if (sort)
+	{
+		initSortedTriangles();
+		m_useSortThread = true;
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, m_sortMatrix);
+		m_sortThread = new boost::thread(
+			boost::bind(&TRETransShapeGroup::backgroundSort, this));
+	}
 }
 
 static int triangleCompareFunc(const void *left, const void *right)
@@ -55,22 +95,19 @@ static int triangleCompareFunc(const void *left, const void *right)
 	}
 }
 
-void TRETransShapeGroup::sortShapes(void)
+void TRETransShapeGroup::initSortedTriangles(void)
 {
-	int i, j;
-	int count;
-	TREVertexArray *vertices = m_vertexStore->getVertices();
-	const TCFloat oneThird = 1.0f / 3.0f;
-	TCULong *values;
-	TCULongArray *indices = getIndices(TRESTriangle);
-	int offset = 0;
-	TCFloat matrix[16];
-
 	if (!m_sortedTriangles)
 	{
+		TCULongArray *indices = getIndices(TRESTriangle);
+
 		if (indices)
 		{
-			count = indices->getCount();
+			int i, j;
+			int count = indices->getCount();
+			TREVertexArray *vertices = m_vertexStore->getVertices();
+			const TCFloat oneThird = 1.0f / 3.0f;
+
 			m_sortedTriangles = new TRESortedTriangleArray;
 			for (i = 0; i < count; i += 3)
 			{
@@ -102,13 +139,24 @@ void TRETransShapeGroup::sortShapes(void)
 			return;
 		}
 	}
+}
+
+void TRETransShapeGroup::sortShapes(void)
+{
+	int i;
+	int count;
+	TCULong *values;
+	TCULongArray *indices = getIndices(TRESTriangle);
+	int offset = 0;
+
+	initSortedTriangles();
 	count = m_sortedTriangles->getCount();
-	treGlGetFloatv(GL_MODELVIEW_MATRIX, matrix);
 	for (i = 0; i < count; i++)
 	{
 		TRESortedTriangle *sortedTriangle = (*m_sortedTriangles)[i];
 		sortedTriangle->depth =
-			sortedTriangle->center.transformPoint(matrix).lengthSquared();
+			sortedTriangle->center.transformPoint(m_sortMatrix).
+			lengthSquared();
 	}
 	qsort(m_sortedTriangles->getItems(), m_sortedTriangles->getCount(),
 		sizeof(void *), triangleCompareFunc);

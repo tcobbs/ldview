@@ -290,7 +290,6 @@ class ModelWindow: public CUIOGLWindow
 			WPARAM wParam, LPARAM lParam);
 		static UINT CALLBACK staticSaveHook(HWND hDlg, UINT uiMsg,
 			WPARAM wParam, LPARAM lParam);
-		static bool fileExists(char *filename);
 		static int roundUp(int value, int nearest);
 		static void swap(int &left, int &right);
 
