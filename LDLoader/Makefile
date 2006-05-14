@@ -17,6 +17,7 @@ CCSRCS = \
 	LDLEmptyLine.cpp \
 	LDLError.cpp \
 	LDLFileLine.cpp \
+	LDLFindFileAlert.cpp \
 	LDLLineLine.cpp \
 	LDLMainModel.cpp \
 	LDLModel.cpp \
