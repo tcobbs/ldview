@@ -4057,7 +4057,7 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 				{
 					sprintf(saveFilename, format, baseFilename, i, "bmp");
 				}
-				if (!fileExists(saveFilename))
+				if (!LDrawModelViewer::fileExists(saveFilename))
 				{
 					return true;
 				}
@@ -4141,21 +4141,6 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		return true;
 	}
 	return false;
-}
-
-bool ModelWindow::fileExists(char* filename)
-{
-	FILE* file = fopen(filename, "r");
-
-	if (file)
-	{
-		fclose(file);
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 bool ModelWindow::shouldOverwriteFile(char* filename)

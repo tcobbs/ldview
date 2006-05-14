@@ -7,11 +7,14 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCWebClient.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLError.h>
+#include <LDLoader/LDLFindFileAlert.h>
 #include "LDModelParser.h"
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
+#include <time.h>
 
 #define FONT_CHAR_WIDTH 8
 #define FONT_CHAR_HEIGHT 16
@@ -124,10 +127,13 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.defaultLightVector = true;
 	flags.overrideModelCenter = false;
 	flags.overrideModelSize = false;
+	flags.checkPartTracker = true;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 //		(TCAlertCallback)progressAlertCallback);
+	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
+		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)
@@ -138,6 +144,7 @@ void LDrawModelViewer::dealloc(void)
 {
 //	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 //	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
+	TCAlertManager::unregisterHandler(LDLFindFileAlert::alertClass(), this);
 	TCObject::release(mainTREModel);
 	mainTREModel = NULL;
 	delete filename;
@@ -2736,6 +2743,159 @@ bool LDrawModelViewer::getCompiled(void)
 	{
 		return false;
 	}
+}
+
+void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
+{
+	char *filename = copyString(alert->getFilename());
+	int len = strlen(filename);
+	char *url;
+	char *partOutputFilename = copyString(LDLModel::lDrawDir(), len + 16);
+	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 16);
+	bool primitive = false;
+	bool part = false;
+	const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
+	const char *primitiveUrlBase = "http://www.ldraw.org/library/unofficial/p/";
+	bool found = false;
+
+	replaceStringCharacter(partOutputFilename, '\\', '/');
+	replaceStringCharacter(primitiveOutputFilename, '\\', '/');
+	strcat(partOutputFilename, "/u_parts/");
+	strcat(primitiveOutputFilename, "/u_parts/p/");
+	convertStringToLower(filename);
+	replaceStringCharacter(filename, '\\', '/');
+	if (stringHasPrefix(filename, "48/"))
+	{
+		primitive = true;
+		url = copyString(primitiveUrlBase, len + 2);
+	}
+	else
+	{
+		if (stringHasPrefix(filename, "s/"))
+		{
+			// The only thing this is used for is to prevent it from checking
+			// for the file as a primitive if it's not found as a part.
+			part = true;
+		}
+		url = copyString(partUrlBase, len + 2);
+	}
+	strcat(partOutputFilename, filename);
+	strcat(primitiveOutputFilename, filename);
+	if (fileExists(partOutputFilename))
+	{
+		primitive = false;
+		found = true;
+	}
+	else if (!part && fileExists(primitiveOutputFilename))
+	{
+		primitive = true;
+		found = true;
+	}
+	else if (canCheckForUnofficialPart(filename))
+	{
+		TCWebClient *webClient;
+
+		strcat(url, filename);
+		webClient = new TCWebClient(url);
+		if (primitive)
+		{
+			*strrchr(primitiveOutputFilename, '/') = 0;
+			webClient->setOutputDirectory(primitiveOutputFilename);
+			primitiveOutputFilename[strlen(primitiveOutputFilename)] = '/';
+		}
+		else
+		{
+			*strrchr(partOutputFilename, '/') = 0;
+			webClient->setOutputDirectory(partOutputFilename);
+			partOutputFilename[strlen(partOutputFilename)] = '/';
+		}
+		if (webClient->fetchURL())
+		{
+			found = true;
+		}
+		else if (!primitive && !part)
+		{
+			// We don't know if it's a primitive or a part.  The part download
+			// failed, so try as a primitive.
+			delete url;
+			url = copyString(primitiveUrlBase, len + 2);
+			strcat(url, filename);
+			webClient->release();
+			webClient = new TCWebClient(url);
+			*strrchr(primitiveOutputFilename, '/') = 0;
+			webClient->setOutputDirectory(primitiveOutputFilename);
+			primitiveOutputFilename[strlen(primitiveOutputFilename)] = '/';
+			if (webClient->fetchURL())
+			{
+				primitive = true;
+				found = true;
+			}
+		}
+		webClient->release();
+	}
+	if (found)
+	{
+		alert->setFileFound(true);
+		if (primitive)
+		{
+			alert->setFilename(primitiveOutputFilename);
+		}
+		else
+		{
+			alert->setFilename(partOutputFilename);
+		}
+		setUnofficialPartPrimitive(filename, primitive);
+	}
+	delete filename;
+	delete url;
+	delete partOutputFilename;
+	delete primitiveOutputFilename;
+}
+
+// NOTE: static function
+bool LDrawModelViewer::fileExists(char* filename)
+{
+	FILE* file = fopen(filename, "r");
+
+	if (file)
+	{
+		fclose(file);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+// NOTE: static function
+void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
+												  bool primitive)
+{
+	char *key = new char[strlen(filename) + 128];
+
+	sprintf(key, "UnofficialPartChecks/%s/Primitive", filename);
+	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key, false);
+}
+
+bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename)
+{
+	if (flags.checkPartTracker)
+	{
+		char *key = new char[strlen(filename) + 128];
+		time_t lastCheck;
+		time_t now = time(NULL);
+
+		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
+		lastCheck = (time_t)TCUserDefaults::longForKey(key, 0, false);
+		TCUserDefaults::setLongForKey((long)now, key, false);
+		delete key;
+		if (now - lastCheck > 24 * 3600)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 // NOTE: static function

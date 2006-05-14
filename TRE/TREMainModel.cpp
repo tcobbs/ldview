@@ -77,6 +77,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.drawNormals = false;
 	m_mainFlags.stencilConditionals = false;
 	m_mainFlags.vertexArrayEdgeFlags = false;
+	m_mainFlags.threads = false;
 }
 
 TREMainModel::TREMainModel(const TREMainModel &other)
@@ -440,6 +441,14 @@ void TREMainModel::draw(void)
 {
 	GLfloat normalSpecular[4];
 
+	if (getThreadsFlag() && m_coloredShapes[TREMTransparent])
+	{
+		TRETransShapeGroup* transShapeGroup =
+			(TRETransShapeGroup*)m_coloredShapes[TREMTransparent];
+
+		transShapeGroup->sortInBackground(getSortTransparentFlag() &&
+			!getCutawayDrawFlag());
+	}
 	glGetLightfv(GL_LIGHT0, GL_SPECULAR, normalSpecular);
 	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
 	{

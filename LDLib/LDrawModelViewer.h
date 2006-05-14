@@ -40,6 +40,7 @@ class TCImage;
 class LDLError;
 class TCProgressAlert;
 class TREMainModel;
+class LDLFindFileAlert;
 
 class LDrawModelViewer: public TCObject
 {
@@ -282,6 +283,7 @@ class LDrawModelViewer: public TCObject
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
+		static bool fileExists(char *filename);
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
@@ -325,7 +327,11 @@ class LDrawModelViewer: public TCObject
 		virtual TCFloat getClipRadius(void);
 		virtual TCFloat getZDistance(void);
 		virtual bool forceOneLight(void);
+		void findFileAlertCallback(LDLFindFileAlert *alert);
+		virtual bool canCheckForUnofficialPart(const char *filename);
 
+		static void setUnofficialPartPrimitive(const char *filename,
+			bool primitive);
 		int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
 			const TCFloat b[L3ORDERM]);
 
@@ -451,6 +457,7 @@ class LDrawModelViewer: public TCObject
 			bool defaultLightVector:1;
 			bool overrideModelCenter:1;
 			bool overrideModelSize:1;
+			bool checkPartTracker:1;
 		} flags;
 		struct CameraData
 		{

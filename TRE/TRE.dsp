@@ -143,6 +143,17 @@ SOURCE=.\TRESubModel.cpp
 # Begin Source File
 
 SOURCE=.\TRETransShapeGroup.cpp
+
+!IF  "$(CFG)" == "TRE - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "TRE - Win32 Debug"
+
+# ADD CPP /W3
+
+!ELSEIF  "$(CFG)" == "TRE - Win32 PartialDebug"
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 
