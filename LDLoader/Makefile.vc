@@ -9,6 +9,7 @@ CCOBJS = \
 	$(OBJDIR)\LDLEmptyLine.obj \
 	$(OBJDIR)\LDLError.obj \
 	$(OBJDIR)\LDLFileLine.obj \
+	$(OBJDIR)\LDLFindFileAlert.obj \
 	$(OBJDIR)\LDLLineLine.obj \
 	$(OBJDIR)\LDLMainModel.obj \
 	$(OBJDIR)\LDLModel.obj \
@@ -18,6 +19,7 @@ CCOBJS = \
 	$(OBJDIR)\LDLShapeLine.obj \
 	$(OBJDIR)\LDLTriangleLine.obj \
 	$(OBJDIR)\LDLUnknownLine.obj
+
 
 LIBT = LDLoader.lib
 
