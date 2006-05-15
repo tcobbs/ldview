@@ -121,6 +121,10 @@ public:
 
 	static int createDirectory(const char*, int *);
 	static time_t scanDateString(const char*);
+	static void setProxyServer(const char *value);
+	static const char *getProxyServer(void) { return proxyServer; }
+	static void setProxyPort(int value) { proxyPort = value; }
+	static int getProxyPort(void) { return proxyPort; }
 protected:
 	virtual TCByte* getData(int& length);
 	virtual char* getLine(int&);
@@ -215,6 +219,9 @@ protected:
 		bool m_header;
 	};
 	friend class ThreadHelper;
+
+	static char *proxyServer;
+	static int proxyPort;
 };
 
 #endif
