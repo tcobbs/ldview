@@ -100,6 +100,9 @@ void do_sleep(int sec)
 	boost::thread::sleep(xt);
 }
 
+char *TCWebClient::proxyServer = NULL;
+int TCWebClient::proxyPort = 80;
+
 TCWebClient::TCWebClient(const char* url)
 	:TCNetworkClient(80),
 	 socketTimeout(30),
@@ -194,6 +197,12 @@ bool TCWebClient::getAborted(void)
 	return aborted;
 }
 
+void TCWebClient::setProxyServer(const char *value)
+{
+	delete proxyServer;
+	proxyServer = copyString(value);
+}
+
 int TCWebClient::openConnection(void)
 {
 	if (TCNetworkClient::openConnection())
@@ -274,7 +283,15 @@ int TCWebClient::parseURL(void)
 		serverPath = new char[2];
 		strcpy(serverPath, "/");
 	}
-	setServerHost(webServer);
+	if (proxyServer)
+	{
+		setServerHost(proxyServer);
+		port = proxyPort;
+	}
+	else
+	{
+		setServerHost(webServer);
+	}
 	return 1;
 }
 
@@ -833,7 +850,14 @@ int TCWebClient::sendFetchCommands(void)
 	}
 	if (!headerFetched)
 	{
-		sendCommand("GET %s HTTP/1.1", serverPath);
+		if (proxyServer)
+		{
+			sendCommand("GET http://%s/%s HTTP/1.1", webServer, serverPath);
+		}
+		else
+		{
+			sendCommand("GET %s HTTP/1.1", serverPath);
+		}
 		sendCommand("Host: %s", webServer);
 		sendCommand("Connection: close");
 		if (referer)
