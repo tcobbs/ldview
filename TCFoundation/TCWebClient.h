@@ -83,6 +83,11 @@ public:
 	virtual void setAuthorizationString(const char*);
 	virtual char* getAuthorizationString(void);
 	virtual void setContentType(const char*);
+	virtual void setLastModifiedString(const char*);
+	virtual const char* getLastModifiedString(void)
+	{
+		return lastModifiedString;
+	}
 	virtual void setLocationField(const char* value);
 	char* getContentType(void) { return contentType; }
 	char* getLocationField(void) { return locationField; }
@@ -155,6 +160,7 @@ protected:
 	TCByte *getChunkedData(int &length);
 	bool downloadChunkedData(void);
 	void clearReadBuffer(void);
+	void setFieldString(char *&field, const char *value);
 
 	int socketTimeout;
 	char* webServer;
@@ -177,6 +183,7 @@ protected:
 	time_t serverTime;
 	time_t serverTimeDelta;
 	time_t lastModifiedTime;
+	char* lastModifiedString;
 	TCByte* pageData;
 	char* username;
 	char* password;
@@ -193,6 +200,7 @@ protected:
 	int retryCount;
 	int maxRetryCount;
 	bool aborted;
+
 	class ThreadHelper
 	{
 	public:
@@ -220,7 +228,7 @@ protected:
 	};
 	friend class ThreadHelper;
 
-	static char *proxyServer;
+	static char* proxyServer;
 	static int proxyPort;
 };
 

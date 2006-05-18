@@ -2831,6 +2831,15 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 				found = true;
 			}
 		}
+		if (webClient->getLastModifiedString())
+		{
+			char *key = new char[strlen(filename) + 128];
+
+			sprintf(key, "UnofficialPartChecks/%s/LastModified", filename);
+			TCUserDefaults::setStringForKey(webClient->getLastModifiedString(),
+				key, false);
+			delete key;
+		}
 		webClient->release();
 	}
 	if (found)
@@ -2876,6 +2885,7 @@ void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
 
 	sprintf(key, "UnofficialPartChecks/%s/Primitive", filename);
 	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key, false);
+	delete key;
 }
 
 bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename)
