@@ -125,6 +125,7 @@ TCWebClient::TCWebClient(const char* url)
 	 headerFetched(0),
 	 serverTime(0),
 	 lastModifiedTime(0),
+	 lastModifiedString(NULL),
 	 pageData(NULL),
 	 username(NULL),
 	 password(NULL),
@@ -317,13 +318,27 @@ void TCWebClient::setLocationField(const char* value)
 	}
 }
 
-void TCWebClient::setContentType(const char* value)
+void TCWebClient::setFieldString(char *&field, const char *value)
 {
-	const char* crSpot = strchr(value, '\r');
-	const char* lfSpot = strchr(value, '\n');
+	const char* crSpot;
+	const char* lfSpot;
 	const char* endSpot = 0;
 	int length = -1;
 
+	if (strchr(value, ':'))
+	{
+		value = strchr(value, ':') + 1;
+		while (isspace(value[0]))
+		{
+			value++;
+		}
+	}
+	while (value[0] == '\r' || value[0] == '\n')
+	{
+		value++;
+	}
+	crSpot = strchr(value, '\r');
+	lfSpot = strchr(value, '\n');
 	if (crSpot && lfSpot)
 	{
 		if (crSpot < lfSpot)
@@ -347,14 +362,24 @@ void TCWebClient::setContentType(const char* value)
 	{
 		length = strlen(value);
 	}
-	delete contentType;
+	delete field;
 	if (length == -1)
 	{
 		length = endSpot - value;
 	}
-	contentType = new char[length + 1];
-	strncpy(contentType, value, length);
-	contentType[length] = 0;
+	field = new char[length + 1];
+	strncpy(field, value, length);
+	field[length] = 0;
+}
+
+void TCWebClient::setLastModifiedString(const char* value)
+{
+	setFieldString(lastModifiedString, value);
+}
+
+void TCWebClient::setContentType(const char* value)
+{
+	setFieldString(contentType, value);
 }
 
 time_t TCWebClient::scanDateString(const char* dateString)
@@ -533,7 +558,7 @@ void TCWebClient::parseHeaderFields(int headerLength)
 	fieldData = strncasestr(readBuffer, "\r\nContent-Type: ", headerLength);
 	if (fieldData)
 	{
-		setContentType(fieldData + 16);
+		setContentType(fieldData);
 	}
 	fieldData = strncasestr(readBuffer, "\r\nDate: ", headerLength);
 	if (fieldData)
@@ -551,6 +576,7 @@ void TCWebClient::parseHeaderFields(int headerLength)
 		headerLength);
 	if (fieldData)
 	{
+		setLastModifiedString(fieldData);
 		lastModifiedTime = scanDateString(fieldData + 17);
 	}
 	fieldData = strncasestr(readBuffer, "\r\nTransfer-Encoding: ", headerLength);
