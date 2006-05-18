@@ -1188,7 +1188,7 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 				return 0;
 			}
 			timeLeft = startTime + socketTimeout - time(NULL);
-			//debugPrintf("Timeout: %d seconds left.\n", timeLeft);
+			debugPrintf(3, "Timeout: %d seconds left.\n", timeLeft);
 			if (timeLeft <= 0)
 			{
 				setErrorNumber(WCE_READ_TIMEOUT);
