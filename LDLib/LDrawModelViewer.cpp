@@ -2794,7 +2794,12 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	else if (canCheckForUnofficialPart(filename))
 	{
 		TCWebClient *webClient;
+		// FIX: dynamically allocate and use local string AND handle abort
+		char message[1024];
+		bool abort;
 
+		sprintf(message, "Trying to download %s...", filename);
+		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort);
 		strcat(url, filename);
 		webClient = new TCWebClient(url);
 		if (primitive)
