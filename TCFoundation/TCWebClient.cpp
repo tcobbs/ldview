@@ -951,7 +951,7 @@ bool TCWebClient::skipGZipHeader(z_stream &zStream)
 			// skip the extra field (little endian!?!?!)
 			int len = (zStream.next_in[1] << 8) | zStream.next_in[0];
 
-			if (zStream.avail_in >= len)
+			if ((int)zStream.avail_in >= len)
 			{
 				zStream.next_in += len;
 				zStream.avail_in -= len;
@@ -1124,7 +1124,7 @@ int TCWebClient::fetchURL(void)
 								pageLength = zStream.total_out;
 								done = true;
 							}
-							else if (zStream.total_out != outputAllocated)
+							else if ((int)zStream.total_out != outputAllocated)
 							{
 								returnCode = 0;
 								done = true;
