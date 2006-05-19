@@ -2754,8 +2754,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 16);
 	bool primitive = false;
 	bool part = false;
-	const char *partUrlBase = "http://media.peeron.com/tmp/";
-	//const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
+	//const char *partUrlBase = "http://media.peeron.com/tmp/";
+	const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
 	const char *primitiveUrlBase = "http://www.ldraw.org/library/unofficial/p/";
 	bool found = false;
 
