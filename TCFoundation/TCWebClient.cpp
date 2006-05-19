@@ -10,6 +10,7 @@
 #include <string.h>
 #include <limits.h>
 #include <signal.h>
+#include <zlib.h>
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -31,6 +32,7 @@
 
 //#define BUFFER_SIZE 1
 #define BUFFER_SIZE 1024
+#define GZ_BLOCK_SIZE 1024
 
 static const char __pBase64[]="\
 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -115,6 +117,8 @@ TCWebClient::TCWebClient(const char* url)
 	 dataFile(NULL),
 	 dataFilePath(NULL),
 	 contentType(NULL),
+	 contentEncoding(NULL),
+	 gzipped(false),
 	 locationField(NULL),
 	 chunked(false),
 	 bufferLength(0),
@@ -141,7 +145,10 @@ TCWebClient::TCWebClient(const char* url)
 	 socketSetup(0),
 	 retryCount(0),
 	 maxRetryCount(10),
-	 aborted(false)
+	 aborted(false),
+	 zStreamInitialized(false),
+	 gzHeader(NULL),
+	 gzHeaderLen(0)
 {
 	parseURL();
 }
@@ -382,6 +389,11 @@ void TCWebClient::setContentType(const char* value)
 	setFieldString(contentType, value);
 }
 
+void TCWebClient::setContentEncoding(const char* value)
+{
+	setFieldString(contentEncoding, value);
+}
+
 time_t TCWebClient::scanDateString(const char* dateString)
 {
 	struct tm tmTime;
@@ -494,7 +506,8 @@ bool TCWebClient::receiveHeader(void)
 	{
 		if (waitForRead())
 		{
-			char buf[10241];
+//			char buf[10241];
+			char buf[BUFFER_SIZE + 1];
 			int receiveLength;
 
 			receiveLength = recv(dataSocket, buf, sizeof(buf) - 1, 0);
@@ -516,12 +529,13 @@ bool TCWebClient::receiveHeader(void)
 				if (readBuffer)
 				{
 					memcpy(tmpBuffer, readBuffer, bufferLength);
-					clearReadBuffer();
+					delete readBuffer;
+					//clearReadBuffer();
 				}
 				readBuffer = tmpBuffer;
 				memcpy(readBuffer + bufferLength, buf, receiveLength);
 				bufferLength += receiveLength;
-				if (strstr(buf, "\r\n\r\n") ||
+				if (strnstr(buf, "\r\n\r\n", sizeof(buf) - 1) ||
 					strnstr(readBuffer, "\r\n\r\n", bufferLength))
 				{
 					retValue = true;
@@ -579,7 +593,8 @@ void TCWebClient::parseHeaderFields(int headerLength)
 		setLastModifiedString(fieldData);
 		lastModifiedTime = scanDateString(fieldData + 17);
 	}
-	fieldData = strncasestr(readBuffer, "\r\nTransfer-Encoding: ", headerLength);
+	fieldData = strncasestr(readBuffer, "\r\nTransfer-Encoding: ",
+		headerLength);
 	if (fieldData)
 	{
 		if (stringHasCaseInsensitivePrefix(fieldData + 21, "chunked"))
@@ -591,6 +606,16 @@ void TCWebClient::parseHeaderFields(int headerLength)
 	if (fieldData)
 	{
 		setLocationField(fieldData + 12);
+	}
+	gzipped = false;
+	fieldData = strncasestr(readBuffer, "\r\nContent-Encoding: ", headerLength);
+	if (fieldData)
+	{
+		setContentEncoding(fieldData);
+		if (strcmp(contentEncoding, "gzip") == 0)
+		{
+			gzipped = true;
+		}
 	}
 }
 
@@ -886,6 +911,7 @@ int TCWebClient::sendFetchCommands(void)
 		}
 		sendCommand("Host: %s", webServer);
 		sendCommand("Connection: close");
+		sendCommand("Accept-Encoding: gzip, identity");
 		if (referer)
 		{
 			sendCommand("Referer: %s", referer);
@@ -897,6 +923,90 @@ int TCWebClient::sendFetchCommands(void)
 		sendCommand("");
 	}
 	return 1;
+}
+
+bool TCWebClient::skipGZipHeader(z_stream &zStream)
+{
+	TCByte *originalNextIn = zStream.next_in;
+	int originalAvailIn = zStream.avail_in;
+
+	// First, find the gzip header.
+	while (zStream.avail_in >= 2 &&
+		(zStream.next_in[0] != 0x1f || zStream.next_in[1] != 0x8b))
+	{
+		zStream.next_in++;
+		zStream.avail_in--;
+	}
+	// Assuming we still 10 have bytes left, we should have the header.  (The
+	// header is at least 10 bytes.
+	if (zStream.avail_in >= 10 && zStream.next_in[0] == 0x1f &&
+		zStream.next_in[1] == 0x8b)
+	{
+		TCByte flags = zStream.next_in[3];
+
+		zStream.next_in += 10;
+		zStream.avail_in -= 10;
+		if ((flags & 0x04) != 0)
+		{
+			// skip the extra field (little endian!?!?!)
+			int len = (zStream.next_in[1] << 8) | zStream.next_in[0];
+
+			if (zStream.avail_in >= len)
+			{
+				zStream.next_in += len;
+				zStream.avail_in -= len;
+			}
+			else
+			{
+				zStream.avail_in = 0;
+			}
+		}
+		if ((flags & 0x08) != 0)
+		{
+			// skip original filename
+			while (zStream.avail_in > 0 && zStream.next_in[0] != 0)
+			{
+				zStream.next_in++;
+				zStream.avail_in--;
+			}
+		}
+		if ((flags & 0x10) != 0)
+		{
+			// skip comment
+			while (zStream.avail_in > 0 && zStream.next_in[0] != 0)
+			{
+				zStream.next_in++;
+				zStream.avail_in--;
+			}
+		}
+		if ((flags & 0x02) != 0)
+		{
+			// skip the header CRC
+			if (zStream.avail_in >= 2)
+			{
+				zStream.next_in += 2;
+				zStream.avail_in -= 2;
+			}
+			else
+			{
+				zStream.avail_in = 0;
+			}
+		}
+	}
+	else
+	{
+		zStream.avail_in = 0;
+	}
+	if (zStream.avail_in == 0)
+	{
+		zStream.next_in = originalNextIn;
+		zStream.avail_in = originalAvailIn;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 int TCWebClient::fetchURL(void)
@@ -969,12 +1079,71 @@ int TCWebClient::fetchURL(void)
 			pageData = getData(length);
 			if (pageData)
 			{
+				int returnCode = 1;
+
 				if (length != pageLength)
 				{
 					pageLength = length;
 				}
+				if (gzipped)
+				{
+					int outputAllocated = 0;
+					TCByte *output = NULL;
+					bool done = false;
+
+					memset(&zStream, 0, sizeof(zStream));
+					zStream.next_in = pageData;
+					zStream.avail_in = pageLength;
+					if (skipGZipHeader(zStream))
+					{
+						// I have no idea what the below -MAX_WBITS means, but
+						// that's what the gzip code in zlib uses, so I'm using
+						// it too.
+						inflateInit2(&zStream, -MAX_WBITS);
+						while (!done)
+						{
+							TCByte *newOutput;
+							int zResult;
+
+							newOutput = new TCByte[outputAllocated +
+								GZ_BLOCK_SIZE];
+							if (output)
+							{
+								memcpy(newOutput, output, outputAllocated);
+								delete output;
+							}
+							output = newOutput;
+							zStream.next_out = output + outputAllocated;
+							outputAllocated += GZ_BLOCK_SIZE;
+							zStream.avail_out = GZ_BLOCK_SIZE;
+							zResult = inflate(&zStream, Z_SYNC_FLUSH);
+							if (zResult == Z_STREAM_END)
+							{
+								delete pageData;
+								pageData = output;
+								pageLength = zStream.total_out;
+								done = true;
+							}
+							else if (zStream.total_out != outputAllocated)
+							{
+								returnCode = 0;
+								done = true;
+							}
+							if (zResult < 0)
+							{
+								returnCode = 0;
+								done = true;
+							}
+						}
+						inflateEnd(&zStream);
+					}
+					else
+					{
+						returnCode = 0;
+					}
+				}
 				doneFetching = 1;
-				return 1;
+				return returnCode;
 			}
 		}
 	}
@@ -1249,15 +1418,91 @@ int TCWebClient::waitForWrite(void)
 int TCWebClient::writePacket(const void* packet, int length)
 {
 	int bytesWritten;
+	int returnValue = 1;
+	TCByte* newPacket = (TCByte *)packet;
 
-	if ((bytesWritten = fwrite(packet, 1, length, dataFile)) < length)
+	if (gzipped)
+	{
+		int outputAllocated = 0;
+		TCByte *output = NULL;
+		bool done = false;
+
+		if (gzHeader)
+		{
+			newPacket = new TCByte[gzHeaderLen + length];
+			memcpy(newPacket, gzHeader, gzHeaderLen);
+			memcpy(&newPacket[gzHeaderLen], packet, length);
+			length += gzHeaderLen;
+			delete gzHeader;
+			gzHeader = NULL;
+			gzHeaderLen = 0;
+		}
+		zStream.next_in = newPacket;
+		zStream.avail_in = length;
+		if (!zStreamInitialized)
+		{
+			if (skipGZipHeader(zStream))
+			{
+				// I have no idea what the below -MAX_WBITS means, but that's
+				// what the gzip code in zlib uses, so I'm using it too.
+				inflateInit2(&zStream, -MAX_WBITS);
+				zStreamInitialized = true;
+			}
+			else
+			{
+				gzHeaderLen = zStream.avail_in;
+				gzHeader = new TCByte[gzHeaderLen];
+				memcpy(gzHeader, zStream.next_in, gzHeaderLen);
+				return 1;
+			}
+		}
+		while (!done)
+		{
+			TCByte *newOutput;
+			int zResult;
+
+			newOutput = new TCByte[outputAllocated + GZ_BLOCK_SIZE];
+			if (output)
+			{
+				memcpy(newOutput, output, outputAllocated);
+				delete output;
+			}
+			output = newOutput;
+			zStream.next_out = output + outputAllocated;
+			outputAllocated += GZ_BLOCK_SIZE;
+			zStream.avail_out = GZ_BLOCK_SIZE;
+			zResult = inflate(&zStream, Z_SYNC_FLUSH);
+			if (zResult == Z_STREAM_END ||
+				zStream.next_out - output != outputAllocated)
+			{
+				length = zStream.next_out - output;
+				done = true;
+			}
+			if (zResult < 0)
+			{
+				returnValue = 0;
+				done = true;
+			}
+		}
+		if (newPacket != packet)
+		{
+			delete newPacket;
+		}
+		newPacket = output;
+	}
+	if (returnValue &&
+		(bytesWritten = fwrite(newPacket, 1, length, dataFile)) < length)
 	{
 		debugPrintf("Partial file write of %s: %d < %d\n", dataFilePath,
 			bytesWritten, length);
 		setErrorNumber(WCE_DISK_FULL);
-		return 0;
+		returnValue = 0;
 	}
-	return 1;
+	if (newPacket != packet)
+	{
+		delete newPacket;
+	}
+	return returnValue;
 }
 
 bool TCWebClient::downloadChunkedData(void)
@@ -1307,6 +1552,8 @@ int TCWebClient::downloadData(void)
 		return 0;
 	}
 	debugPrintf("downloading file: %s\n", dataFilePath);
+	memset(&zStream, 0, sizeof(zStream));
+	zStreamInitialized = false;
 	if (chunked)
 	{
 		result = downloadChunkedData() ? 1 : 0;
@@ -1398,7 +1645,15 @@ int TCWebClient::downloadData(void)
 			}
 		}
 	}
-	pageLength = bytesRead;
+	if (gzipped && zStreamInitialized)
+	{
+		pageLength = zStream.total_out;
+		inflateEnd(&zStream);
+	}
+	else
+	{
+		pageLength = bytesRead;
+	}
 	clearReadBuffer();
 	fclose(dataFile);
 	dataFile = NULL;

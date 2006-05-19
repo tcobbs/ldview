@@ -4,6 +4,7 @@
 #include <TCFoundation/TCNetworkClient.h>
 
 #include <stdio.h>
+#include <zlib.h>
 
 #ifdef WIN32
 #include <time.h>
@@ -83,14 +84,16 @@ public:
 	virtual void setAuthorizationString(const char*);
 	virtual char* getAuthorizationString(void);
 	virtual void setContentType(const char*);
+	virtual void setContentEncoding(const char*);
 	virtual void setLastModifiedString(const char*);
 	virtual const char* getLastModifiedString(void)
 	{
 		return lastModifiedString;
 	}
 	virtual void setLocationField(const char* value);
-	char* getContentType(void) { return contentType; }
-	char* getLocationField(void) { return locationField; }
+	const char* getContentType(void) { return contentType; }
+	const char* getContentEncoding(void) { return contentEncoding; }
+	const char* getLocationField(void) { return locationField; }
 	const time_t& getServerTime(void) { return serverTime; }
 	const time_t& getServerTimeDelta(void) { return serverTimeDelta; }
 	const time_t& getLastModifiedTime(void) { return lastModifiedTime; }
@@ -161,6 +164,7 @@ protected:
 	bool downloadChunkedData(void);
 	void clearReadBuffer(void);
 	void setFieldString(char *&field, const char *value);
+	bool skipGZipHeader(z_stream &zStream);
 
 	int socketTimeout;
 	char* webServer;
@@ -172,6 +176,8 @@ protected:
 	FILE* dataFile;
 	char* dataFilePath;
 	char* contentType;
+	char* contentEncoding;
+	bool gzipped;
 	char* locationField;
 	bool chunked;
 	int bufferLength;
@@ -200,6 +206,10 @@ protected:
 	int retryCount;
 	int maxRetryCount;
 	bool aborted;
+	z_stream zStream;
+	bool zStreamInitialized;
+	TCByte *gzHeader;
+	int gzHeaderLen;
 
 	class ThreadHelper
 	{

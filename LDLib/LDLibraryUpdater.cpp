@@ -467,6 +467,7 @@ void LDLibraryUpdater::threadStart(void)
 			"output=TAB&fields=type-format-date-url-size";
 		
 		url = "http://www.halibut.com/~tcobbs/PartUpdates.txt";
+		url = "http://media.peeron.com/tmp/3033.dat";
 		webClient = new TCWebClient(url);
 		webClient->setOwner(this);
 		webClient->fetchURL();
