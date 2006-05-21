@@ -14,6 +14,8 @@ if not "x%INCLUDE%x" == "xx" goto Skip
 
 if exist "%ProgramFiles%\Microsoft Platform SDK\setenv.cmd" goto PSDK
 if exist "%ProgramFiles%\Microsoft SDK\setenv.bat" goto PSDK2
+if exist "%ProgramFiles%\Microsoft Platform SDK for Windows Server 2003 R2\setenv.cmd" goto PDSK3
+
 echo Platform SDK missing
 echo Download from http://www.microsoft.com/msdownload/platformsdk/sdkupdate/
 goto END
@@ -30,6 +32,12 @@ goto END
 
 call "%ProgramFiles%\Microsoft SDK\setenv.bat"
 if exist "%ProgramFiles%\Microsoft SDK\include\shlwapi.h" goto PSDKBOTH
+goto IESDK
+
+:PDSK3
+
+call "%ProgramFiles%\Microsoft Platform SDK for Windows Server 2003 R2\setenv.cmd"
+if exist "%ProgramFiles%\Microsoft Platform SDK for Windows Server 2003 R2\include\shlwapi.h" goto PSDKBOTH
 goto IESDK
 
 :PSDKBOTH
