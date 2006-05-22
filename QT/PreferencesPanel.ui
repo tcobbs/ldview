@@ -2822,13 +2822,13 @@
     </connection>
     <connection>
         <sender>crossEyedStereoButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
     <connection>
         <sender>parallelStereoButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
@@ -2840,13 +2840,13 @@
     </connection>
     <connection>
         <sender>colorCutawayButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
     <connection>
         <sender>monochromeCutawayButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
@@ -2888,19 +2888,19 @@
     </connection>
     <connection>
         <sender>nearestFilteringButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
     <connection>
         <sender>bilinearFilteringButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
     <connection>
         <sender>trilinearFilteringButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
