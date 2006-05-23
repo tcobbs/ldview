@@ -159,6 +159,11 @@ class LDrawModelViewer: public TCObject
 		bool getRedBackFaces(void) { return flags.redBackFaces != false; }
 		virtual void setGreenFrontFaces(bool value);
 		bool getGreenFrontFaces(void) { return flags.greenFrontFaces != false; }
+		void setCheckPartTracker(bool value) { flags.checkPartTracker = value; }
+		bool getCheckPartTracker(void)
+		{
+			return flags.checkPartTracker != false;
+		}
 		virtual void setUseWireframeFog(bool);
 		bool getUseWireframeFog(void) { return flags.useWireframeFog; }
 		virtual void setRemoveHiddenLines(bool value);

@@ -166,6 +166,7 @@ protected:
 	virtual void doGeometryClick(int controlId, HWND controlHWnd);
 	virtual void doEffectsClick(int controlId, HWND controlHWnd);
 	virtual void doPrimitivesClick(int controlId, HWND controlHWnd);
+	virtual void doUpdatesClick(int controlId, HWND controlHWnd);
 	virtual void doPrefSetsClick(int controlId, HWND controlHWnd);
 	virtual void doOtherClick(HWND hDlg, int controlId, HWND controlHWnd);
 //	virtual void drawButtonBorder(HDC hdc, COLORREF color1, COLORREF color2,
@@ -186,13 +187,17 @@ protected:
 	virtual void setupGeometryPage(void);
 	virtual void setupEffectsPage(void);
 	virtual void setupPrimitivesPage(void);
+	virtual void setupUpdatesPage(void);
 	virtual void setupPrefSetsPage(void);
 	virtual void setupAntialiasing(void);
 	virtual void setupModelGeometry(void);
 	virtual void setupWireframe(void);
 	virtual void setupBfc(void);
 	virtual void setupSubstitution(void);
+	virtual void setupProxy(void);
 	virtual void setupPrefSetsList(void);
+	virtual void enableProxyServer(void);
+	virtual void disableProxyServer(void);
 	virtual void enableWireframe(void);
 	virtual void disableWireframe(void);
 	virtual void enableBfc(void);
@@ -207,6 +212,7 @@ protected:
 	virtual void applyGeometryChanges(void);
 	virtual void applyEffectsChanges(void);
 	virtual void applyPrimitivesChanges(void);
+	virtual void applyUpdatesChanges(void);
 	virtual void clear(void);
 	virtual void setupStereo(void);
 	virtual void enableStereo(void);
@@ -254,14 +260,17 @@ protected:
 	void applyGeometrySettings(void);
 	void applyEffectsSettings(void);
 	void applyPrimitivesSettings(void);
+	void applyUpdatesSettings();
 	void loadDefaultGeneralSettings(void);
 	void loadDefaultGeometrySettings(void);
 	void loadDefaultEffectsSettings(void);
 	void loadDefaultPrimitivesSettings(void);
+	void loadDefaultUpdatesSettings(void);
 	void loadGeneralSettings(void);
 	void loadGeometrySettings(void);
 	void loadEffectsSettings(void);
 	void loadPrimitivesSettings(void);
+	void loadUpdatesSettings(void);
 	// *************************************************************************
 
 
@@ -339,6 +348,11 @@ protected:
 	bool qualityStuds;
 	bool hiResPrimitives;
 
+	int proxyType;
+	char *proxyServer;
+	int proxyPort;
+	bool checkPartTracker;
+
 	COLORREF customColors[16];
 	TCFloat zoomMax;
 	TCVector lightVector;
@@ -347,6 +361,7 @@ protected:
 	int geometryPageNumber;
 	int effectsPageNumber;
 	int primitivesPageNumber;
+	int updatesPageNumber;
 	int prefSetsPageNumber;
 
 	char *newPrefSetName;
@@ -403,6 +418,12 @@ protected:
 	HWND hTextureTrilinearButton;
 	HWND hCurveQualityLabel;
 	HWND hCurveQualitySlider;
+
+	HWND hUpdatesPage;
+	HWND hProxyServerLabel;
+	HWND hProxyServer;
+	HWND hProxyPortLabel;
+	HWND hProxyPort;
 
 	HWND hPrefSetsPage;
 	HWND hPrefSetsList;

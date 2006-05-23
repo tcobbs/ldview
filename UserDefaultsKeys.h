@@ -115,6 +115,10 @@
 #define LAST_LIBRARY_UPDATE_KEY "LastLibraryUpdate"
 #define SKIP_VALIDATION_KEY "SkipValidation"
 #define LIGHT_VECTOR_KEY "LightVector"
+#define PROXY_TYPE_KEY "ProxyType"
+#define PROXY_SERVER_KEY "ProxyServer"
+#define PROXY_PORT_KEY "ProxyPort"
+#define CHECK_PART_TRACKER_KEY "CheckPartTracker"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

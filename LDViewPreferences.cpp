@@ -5,6 +5,7 @@
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLoader/LDLPalette.h>
 #include <TCFoundation/TCMacros.h>
+#include <TCFoundation/TCWebClient.h>
 #include "LDVExtensionsSetup.h"
 #include "AppResources.h"
 #include "UserDefaultsKeys.h"
@@ -35,11 +36,13 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	:CUIPropertySheet(TCLocalStrings::get("LDViewPreferences"), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
+	proxyServer(NULL),
 	generalPageNumber(0),
 	geometryPageNumber(1),
 	effectsPageNumber(2),
 	primitivesPageNumber(3),
-	prefSetsPageNumber(4),
+	updatesPageNumber(4),
+	prefSetsPageNumber(5),
 	hGeneralPage(NULL),
 	hBackgroundColorBitmap(NULL),
 	hBackgroundColorButton(NULL),
@@ -51,6 +54,7 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	hGeometryPage(NULL),
 	hEffectsPage(NULL),
 	hPrimitivesPage(NULL),
+	hUpdatesPage(NULL),
 	hPrefSetsPage(NULL),
 	setActiveWarned(false),
 	checkAbandon(true),
@@ -85,6 +89,7 @@ void LDViewPreferences::applySettings(void)
 	applyGeometrySettings();
 	applyEffectsSettings();
 	applyPrimitivesSettings();
+	applyUpdatesSettings();
 	if (modelViewer)
 	{
 		modelViewer->setZoomMax(zoomMax);
@@ -173,6 +178,23 @@ void LDViewPreferences::applyEffectsSettings(void)
 	}
 }
 
+void LDViewPreferences::applyUpdatesSettings(void)
+{
+	if (modelViewer)
+	{
+		modelViewer->setCheckPartTracker(checkPartTracker);
+	}
+	if (proxyType == 2)
+	{
+		TCWebClient::setProxyServer(proxyServer);
+		TCWebClient::setProxyPort(proxyPort);
+	}
+	else
+	{
+		TCWebClient::setProxyServer(NULL);
+	}
+}
+
 void LDViewPreferences::applyPrimitivesSettings(void)
 {
 	if (modelViewer)
@@ -193,6 +215,7 @@ void LDViewPreferences::loadSettings(void)
 	loadGeometrySettings();
 	loadEffectsSettings();
 	loadPrimitivesSettings();
+	loadUpdatesSettings();
 
 	zoomMax = TCUserDefaults::longForKey(ZOOM_MAX_KEY, 199, false) / 100.0f;
 	lightVectorString = TCUserDefaults::stringForKey(LIGHT_VECTOR_KEY);
@@ -289,6 +312,15 @@ void LDViewPreferences::loadDefaultPrimitivesSettings(void)
 	curveQuality = 2;
 	qualityStuds = false;
 	hiResPrimitives = false;
+}
+
+void LDViewPreferences::loadDefaultUpdatesSettings(void)
+{
+	proxyType = 0;
+	delete proxyServer;
+	proxyServer = NULL;
+	proxyPort = 80;
+	checkPartTracker = true;
 }
 
 COLORREF LDViewPreferences::getColor(const char *key, COLORREF defaultColor)
@@ -442,6 +474,16 @@ void LDViewPreferences::loadPrimitivesSettings(void)
 		(long)qualityStuds) != 0;
 	hiResPrimitives = TCUserDefaults::longForKey(HI_RES_PRIMITIVES_KEY,
 		(long)hiResPrimitives) != 0;
+}
+
+void LDViewPreferences::loadUpdatesSettings(void)
+{
+	loadDefaultUpdatesSettings();
+	proxyType = TCUserDefaults::longForKey(PROXY_TYPE_KEY, proxyType, false);
+	proxyServer = TCUserDefaults::stringForKey(PROXY_SERVER_KEY, NULL, false);
+	proxyPort = TCUserDefaults::longForKey(PROXY_PORT_KEY, proxyPort, false);
+	checkPartTracker = TCUserDefaults::longForKey(CHECK_PART_TRACKER_KEY,
+		(long)checkPartTracker, false) != 0;
 }
 
 void LDViewPreferences::setUseSeams(bool value)
@@ -711,6 +753,7 @@ void LDViewPreferences::setBfc(bool value)
 	}
 }
 
+// This is called from LDViewWindow.
 void LDViewPreferences::setQualityLighting(bool value)
 {
 	if (value != qualityLighting)
@@ -812,6 +855,7 @@ int LDViewPreferences::run(void)
 	addPage(IDD_GEOMETRY_PREFS); 
 	addPage(IDD_EFFECTS_PREFS);
 	addPage(IDD_PRIMITIVES_PREFS);
+	addPage(IDD_UPDATES_PREFS);
 	addPage(IDD_PREFSETS_PREFS);
 	checkAbandon = true;
 	retValue = CUIPropertySheet::run();
@@ -950,6 +994,10 @@ DWORD LDViewPreferences::getPageDialogID(HWND hDlg)
 	else if (hDlg == hPrimitivesPage)
 	{
 		return IDD_PRIMITIVES_PREFS;
+	}
+	else if (hDlg == hUpdatesPage)
+	{
+		return IDD_UPDATES_PREFS;
 	}
 	else if (hDlg == hPrefSetsPage)
 	{
@@ -1559,6 +1607,10 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 			{
 				setupPage(primitivesPageNumber);
 			}
+			if (hUpdatesPage)
+			{
+				setupPage(updatesPageNumber);
+			}
 		}
 		delete prefSetName;
 	}
@@ -1815,12 +1867,25 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 	}
 }
 
+void LDViewPreferences::applyUpdatesChanges(void)
+{
+	if (hUpdatesPage)
+	{
+		checkPartTracker = SendDlgItemMessage(hUpdatesPage,
+			IDC_CHECK_PART_TRACKER, BM_GETCHECK, 0, 0) != 0;
+		TCUserDefaults::setLongForKey(checkPartTracker,
+			CHECK_PART_TRACKER_KEY);
+		applyUpdatesSettings();
+	}
+}
+
 void LDViewPreferences::applyChanges(void)
 {
 	applyGeneralChanges();
 	applyGeometryChanges();
 	applyEffectsChanges();
 	applyPrimitivesChanges();
+	applyUpdatesChanges();
 	applyPrefSetsChanges();	// Note that if there are any pref sets changes,
 							// there can't be any other changes.
 }
@@ -2290,6 +2355,41 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 	enableApply(hPrimitivesPage);
 }
 
+void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
+{
+	char tempString[1024];
+	int tempNum;
+
+	SendMessage(hProxyServer, WM_GETTEXT, sizeof(tempString),
+		(LPARAM)tempString);
+	if (strlen(tempString))
+	{
+		delete proxyServer;
+		proxyServer = copyString(tempString);
+	}
+	SendMessage(hProxyPort, WM_GETTEXT, sizeof(tempString),
+		(LPARAM)tempString);
+	if (sscanf(tempString, "%d", &tempNum) == 1)
+	{
+		proxyPort = tempNum;
+	}
+	switch (controlId)
+	{
+	case IDC_PROXY_NONE:
+	case IDC_PROXY_WINDOWS:
+		disableProxyServer();
+		break;
+	case IDC_PROXY_MANUAL:
+		enableProxyServer();
+		break;
+	case IDC_UPDATES_RESET:
+		loadDefaultUpdatesSettings();
+		setupPrimitivesPage();
+		break;
+	}
+	enableApply(hUpdatesPage);
+}
+
 DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 										  HWND /*controlHWnd*/)
 {
@@ -2352,6 +2452,10 @@ DWORD LDViewPreferences::doClick(HWND hPage, int controlId, HWND controlHWnd)
 	else if (hPage == hPrimitivesPage)
 	{
 		doPrimitivesClick(controlId, controlHWnd);
+	}
+	else if (hPage == hUpdatesPage)
+	{
+		doUpdatesClick(controlId, controlHWnd);
 	}
 	else if (hPage == hPrefSetsPage)
 	{
@@ -2621,6 +2725,10 @@ void LDViewPreferences::setupPage(int pageNumber)
 	else if (pageNumber == primitivesPageNumber)
 	{
 		setupPrimitivesPage();
+	}
+	else if (pageNumber == updatesPageNumber)
+	{
+		setupUpdatesPage();
 	}
 	else if (pageNumber == prefSetsPageNumber)
 	{
@@ -3191,6 +3299,73 @@ void LDViewPreferences::setupPrimitivesPage(void)
 		hiResPrimitives, 0);
 }
 
+void LDViewPreferences::enableProxyServer(void)
+{
+	char proxyPortString[128];
+	char *proxyServerString;
+
+	EnableWindow(hProxyServerLabel, TRUE);
+	EnableWindow(hProxyServer, TRUE);
+	EnableWindow(hProxyPortLabel, TRUE);
+	EnableWindow(hProxyPort, TRUE);
+	if (proxyServer)
+	{
+		proxyServerString = copyString(proxyServer);
+	}
+	else
+	{
+		proxyServerString = copyString("");
+	}
+	SendMessage(hProxyServer, WM_SETTEXT, 0, (LPARAM)proxyServerString);
+	delete proxyServerString;
+	sprintf(proxyPortString, "%d", proxyPort);
+	SendMessage(hProxyPort, WM_SETTEXT, 0, (LPARAM)proxyPortString);
+}
+
+void LDViewPreferences::disableProxyServer(void)
+{
+	EnableWindow(hProxyServerLabel, FALSE);
+	EnableWindow(hProxyServer, FALSE);
+	EnableWindow(hProxyPortLabel, FALSE);
+	EnableWindow(hProxyPort, FALSE);
+	SendMessage(hProxyServer, WM_SETTEXT, 0, (LPARAM)"");
+	SendMessage(hProxyPort, WM_SETTEXT, 0, (LPARAM)"");
+}
+
+void LDViewPreferences::setupProxy(void)
+{
+	int activeProxyType = IDC_PROXY_NONE;
+
+	switch (proxyType)
+	{
+	case 0:
+		activeProxyType = IDC_PROXY_NONE;
+		disableProxyServer();
+		break;
+	case 1:
+		activeProxyType = IDC_PROXY_WINDOWS;
+		disableProxyServer();
+		break;
+	case 2:
+		activeProxyType = IDC_PROXY_MANUAL;
+		enableProxyServer();
+		break;
+	}
+	SendDlgItemMessage(hUpdatesPage, activeProxyType, BM_SETCHECK, 1, 0);
+}
+
+void LDViewPreferences::setupUpdatesPage(void)
+{
+	hUpdatesPage = hwndArray->pointerAtIndex(updatesPageNumber);
+	hProxyServerLabel = GetDlgItem(hUpdatesPage, IDC_PROXY_SERVER_LABEL);
+	hProxyServer = GetDlgItem(hUpdatesPage, IDC_PROXY_SERVER);
+	hProxyPortLabel = GetDlgItem(hUpdatesPage, IDC_PROXY_PORT_LABEL);
+	hProxyPort = GetDlgItem(hUpdatesPage, IDC_PROXY_PORT);
+	SendDlgItemMessage(hUpdatesPage, IDC_CHECK_PART_TRACKER, BM_SETCHECK,
+		checkPartTracker, 0);
+	setupProxy();
+}
+
 void LDViewPreferences::selectPrefSet(const char *prefSet, bool force)
 {
 	if (prefSet)
@@ -3329,6 +3504,7 @@ void LDViewPreferences::clear(void)
 	hGeometryPage = NULL;
 	hEffectsPage = NULL;
 	hPrimitivesPage = NULL;
+	hUpdatesPage = NULL;
 	hPrefSetsPage = NULL;
 	CUIPropertySheet::clear();
 }
