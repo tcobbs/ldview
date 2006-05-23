@@ -2750,8 +2750,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	char *filename = copyString(alert->getFilename());
 	int len = strlen(filename);
 	char *url;
-	char *partOutputFilename = copyString(LDLModel::lDrawDir(), len + 16);
-	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 16);
+	char *partOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
+	char *primitiveOutputFilename = copyString(LDLModel::lDrawDir(), len + 32);
 	bool primitive = false;
 	bool part = false;
 	//const char *partUrlBase = "http://media.peeron.com/tmp/";
@@ -2761,8 +2761,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 
 	replaceStringCharacter(partOutputFilename, '\\', '/');
 	replaceStringCharacter(primitiveOutputFilename, '\\', '/');
-	strcat(partOutputFilename, "/u_parts/");
-	strcat(primitiveOutputFilename, "/u_parts/p/");
+	strcat(partOutputFilename, "/Unofficial/parts/");
+	strcat(primitiveOutputFilename, "/Unofficial/p/");
 	convertStringToLower(filename);
 	replaceStringCharacter(filename, '\\', '/');
 	if (stringHasPrefix(filename, "48/"))
