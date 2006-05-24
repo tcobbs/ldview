@@ -41,8 +41,10 @@ public:
 	void doResetGeometry(void);
 	void doResetEffects(void);
 	void doResetPrimitives(void);
+	void doResetUpdates(void);
 	void doWireframeCutaway(bool value);
 	void doLighting(bool value);
+	void doProxyServer(bool value);
 	void doStereo(bool value);
 	void doWireframe(bool value);
 	void doSortTransparency(bool value);
@@ -107,18 +109,21 @@ protected:
 	void doGeometryApply(void);
 	void doEffectsApply(void);
 	void doPrimitivesApply(void);
+	void doUpdatesApply(void);
 
 	void loadSettings(void);
 	void loadGeneralSettings(void);
 	void loadGeometrySettings(void);
 	void loadEffectsSettings(void);
 	void loadPrimitivesSettings(void);
+	void loadUpdatesSettings(void);
 	void loadOtherSettings(void);
 
 	void loadDefaultGeneralSettings(void);
 	void loadDefaultGeometrySettings(void);
 	void loadDefaultEffectsSettings(void);
 	void loadDefaultPrimitivesSettings(void);
+	void loadDefaultUpdatesSettings(void);
 	void loadDefaultOtherSettings(void);
 
 	void reflectSettings(void);
@@ -128,6 +133,7 @@ protected:
 	void reflectBFCSettings(void);
 	void reflectEffectsSettings(void);
 	void reflectPrimitivesSettings(void);
+	void reflectUpdatesSettings(void);
 
 	void setRangeValue(QSpinBox *rangeConrol, int value);
 	void setRangeValue(QSlider *rangeConrol, int value);
@@ -142,6 +148,7 @@ protected:
 	void enableConditionalShow(void);
 	void enablePrimitiveSubstitution(void);
 	void enableTextureStuds(void);
+	void enableProxyServer(void);
 
 	void disableWireframeCutaway(void);
 	void disableLighting(void);
@@ -152,6 +159,7 @@ protected:
 	void disableConditionalShow(void);
 	void disablePrimitiveSubstitution(void);
 	void disableTextureStuds(void);
+	void disableProxyServer(void);
 	void setupDefaultRotationMatrix(void);
 
 	const char *getPrefSet(int);
@@ -223,6 +231,11 @@ protected:
 	int curveQuality;
 	bool qualityStuds;
 	bool hiresPrimitives;
+
+	bool checkPartTracker;
+	int  proxyPort;
+	char *proxyServer;
+	int  proxyType;
 
 	bool checkAbandon;
 	int hotKeyIndex;

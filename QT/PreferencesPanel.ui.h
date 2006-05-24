@@ -73,6 +73,14 @@ void PreferencesPanel::doResetPrimitives()
     }
 }
 
+void PreferencesPanel::doResetUpdates()
+{
+    if (preferences)
+    {
+        preferences->doResetUpdates();
+	}
+}
+
 void PreferencesPanel::enableApply()
 {
     applyButton->setEnabled(true);
@@ -213,3 +221,22 @@ void PreferencesPanel::doBackgroundColor()
 		preferences->doBackgroundColor();
 	}
 }
+
+void PreferencesPanel::enableProxy()
+{
+    if(preferences)
+    {
+        preferences->doProxyServer(true);
+	}
+	enableApply();
+}
+
+void PreferencesPanel::disableProxy()
+{
+    if(preferences)
+    {
+        preferences->doProxyServer(false);
+    }
+	enableApply();
+}
+
