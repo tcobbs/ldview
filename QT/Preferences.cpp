@@ -5,6 +5,7 @@
 #include <TCFoundation/mystring.h>
 #include "UserDefaultsKeys.h"
 #include <TCFoundation/TCMacros.h>
+#include <TCFoundation/TCWebClient.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
 #include <qslider.h>
@@ -28,6 +29,7 @@
 Preferences::Preferences(ModelViewerWidget *modelWidget)
 	:modelWidget(modelWidget),
 	panel(new PreferencesPanel),
+	proxyServer(NULL),
 	checkAbandon(true)
 {
 	modelViewer = modelWidget->getModelViewer();
@@ -576,6 +578,50 @@ void Preferences::doPrimitivesApply(void)
 	}
 }
 
+void Preferences::doUpdatesApply()
+{
+	bool bTemp;
+	int  iTemp;
+	char *sTemp;
+	bTemp = panel->updatesMissingpartsButton->state();
+	if (bTemp != checkPartTracker)
+	{
+		checkPartTracker = bTemp;
+		TCUserDefaults::setLongForKey(checkPartTracker,CHECK_PART_TRACKER_KEY);
+	}
+
+	iTemp = panel->updatesProxyButton->isChecked() ? 1 : 0;
+	if (iTemp != proxyType)
+	{
+		proxyType = iTemp;
+		TCUserDefaults::setLongForKey(proxyType,PROXY_TYPE_KEY);
+	}
+	sscanf(panel->portEdit->text().ascii(),"%i",&iTemp);
+	if(iTemp != proxyPort)
+	{
+		proxyPort = iTemp;
+		TCUserDefaults::setLongForKey(proxyPort,PROXY_PORT_KEY);
+	}
+	sTemp = copyString(panel->proxyEdit->text().ascii());
+	if((!proxyServer) || (strcmp(sTemp,proxyServer)!=0))
+	{
+		if (proxyServer) delete proxyServer;
+		proxyServer = sTemp;
+		TCUserDefaults::setStringForKey(proxyServer,PROXY_SERVER_KEY);
+	}
+	if (modelViewer)
+    {
+		modelViewer->setCheckPartTracker(checkPartTracker);
+	}
+	if (proxyType)
+	{
+		TCWebClient::setProxyServer(proxyServer);
+		TCWebClient::setProxyPort(proxyPort);
+	}
+	else
+		TCWebClient::setProxyServer(NULL);
+}
+
 void Preferences::doBackgroundColor()
 {
 	int r,g,b;
@@ -616,6 +662,7 @@ void Preferences::doApply(void)
 	doGeometryApply();
 	doEffectsApply();
 	doPrimitivesApply();
+	doUpdatesApply();
 	doPrefSetsApply();
 	panel->applyButton->setEnabled(false);
 	if (modelWidget)
@@ -683,6 +730,7 @@ void Preferences::loadSettings(void)
 	loadGeneralSettings();
 	loadGeometrySettings();
 	loadEffectsSettings();
+	loadUpdatesSettings();
 	loadPrimitivesSettings();
 	loadOtherSettings();
 }
@@ -801,6 +849,16 @@ void Preferences::loadPrimitivesSettings(void)
 		(long)hiresPrimitives) !=0;
 }
 
+void Preferences::loadUpdatesSettings(void)
+{
+	loadDefaultUpdatesSettings();
+	proxyType = TCUserDefaults::longForKey(PROXY_TYPE_KEY, proxyType, false);
+	proxyServer = TCUserDefaults::stringForKey(PROXY_SERVER_KEY, NULL, false);
+    proxyPort = TCUserDefaults::longForKey(PROXY_PORT_KEY, proxyPort, false);
+    checkPartTracker = TCUserDefaults::longForKey(CHECK_PART_TRACKER_KEY,
+        (long)checkPartTracker, false) != 0;
+}
+
 void Preferences::loadOtherSettings(void)
 {
 	loadDefaultOtherSettings();
@@ -874,6 +932,15 @@ void Preferences::loadDefaultPrimitivesSettings(void)
 	curveQuality = 2;
 	qualityStuds = false;
     hiresPrimitives = false;
+}
+
+void Preferences::loadDefaultUpdatesSettings(void)
+{
+	proxyType = 0;
+	if (proxyServer) delete proxyServer;
+	proxyServer = NULL;
+	proxyPort = 80;
+	checkPartTracker = true;
 }
 
 void Preferences::loadDefaultOtherSettings(void)
@@ -954,6 +1021,7 @@ void Preferences::reflectSettings(void)
 	reflectGeometrySettings();
 	reflectEffectsSettings();
 	reflectPrimitivesSettings();
+	reflectUpdatesSettings();
 	setupPrefSetsList();
 }
 
@@ -1078,6 +1146,25 @@ void Preferences::reflectPrimitivesSettings(void)
 	setButtonState(panel->hiresPrimitivesButton, hiresPrimitives);
 }
 
+void Preferences::reflectUpdatesSettings(void)
+{
+	char s[16];
+	if(proxyType)
+	{
+		enableProxyServer();
+		panel->updatesProxyButton->setChecked(true);
+	}
+	else
+	{
+		disableProxyServer();
+		panel->updatesNoproxyButton->setChecked(true);
+	}
+	setButtonState(panel->updatesMissingpartsButton, checkPartTracker);
+	panel->proxyEdit->setText(proxyServer ? proxyServer : "");
+	sprintf(s,"%u",proxyPort);
+	panel->portEdit->setText(s);
+}
+
 void Preferences::doResetGeneral(void)
 {
 	loadDefaultGeneralSettings();
@@ -1100,6 +1187,12 @@ void Preferences::doResetPrimitives(void)
 {
 	loadDefaultPrimitivesSettings();
 	reflectPrimitivesSettings();
+}
+
+void Preferences::doResetUpdates(void)
+{
+	loadDefaultUpdatesSettings();
+	reflectUpdatesSettings();
 }
 
 void Preferences::getRGB(int color, int &r, int &g, int &b)
@@ -1247,6 +1340,14 @@ void Preferences::doWireframeCutaway(bool value)
 	{
 		disableWireframeCutaway();
 	}
+}
+
+void Preferences::doProxyServer(bool value)
+{
+	if (value)
+		enableProxyServer();
+	else
+		disableProxyServer();
 }
 
 void Preferences::doLighting(bool value)
@@ -1825,6 +1926,18 @@ void Preferences::enableTextureStuds(void)
 	}
 }
 
+void Preferences::enableProxyServer(void)
+{
+	panel->proxyLabel->setEnabled(true);
+	panel->proxyEdit->setEnabled(true);
+	panel->portLabel->setEnabled(true);
+	panel->portEdit->setEnabled(true);
+	if(proxyServer)
+		panel->proxyEdit->setText(proxyServer);
+	else
+		panel->proxyEdit->setText("");
+}
+
 void Preferences::disableWireframeCutaway(void)
 {
 	panel->colorCutawayButton->setEnabled(false);
@@ -1920,6 +2033,14 @@ void Preferences::disableTextureStuds(void)
 	setButtonState(panel->nearestFilteringButton, false);
 	setButtonState(panel->bilinearFilteringButton, false);
 	setButtonState(panel->trilinearFilteringButton, false);
+}
+
+void Preferences::disableProxyServer(void)
+{
+	panel->proxyLabel->setEnabled(false);
+	panel->proxyEdit->setEnabled(false);
+	panel->portLabel->setEnabled(false);
+	panel->portEdit->setEnabled(false);
 }
 
 char *Preferences::getErrorKey(int errorNumber)

@@ -2448,6 +2448,232 @@
             </widget>
             <widget class="QWidget">
                 <property name="name">
+                    <cstring>updateTab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Updates</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>11</number>
+                    </property>
+                    <property name="spacing">
+                        <number>4</number>
+                    </property>
+                    <widget class="QButtonGroup">
+                        <property name="name">
+                            <cstring>updatesProxyBox</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>7</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="title">
+                            <string>Internet Proxy</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>4</number>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>updatesNoproxyButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Direct connection to the Internet</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>updatesProxyButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Manual proxy configuration:</string>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layoutproxy</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>0</number>
+                                    </property>
+                                    <property name="spacing">
+                                        <number>6</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>proxyLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Proxy</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLineEdit">
+                                        <property name="name">
+                                            <cstring>proxyEdit</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>portLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Port</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLineEdit">
+                                        <property name="name">
+                                            <cstring>portEdit</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>5</hsizetype>
+                                                <vsizetype>5</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="inputMask">
+                                            <string>90000;</string>
+                                        </property>
+
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>updatesMissingpartBox</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>7</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="title">
+                            <string>Missing Parts</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>4</number>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>updatesMissingpartsButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Automatically check ldraw.org for missing parts</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>SpacerU4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>labelnote</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Note: changes to setting on this tab will not go 
+into effect until the next time a model is loaded.</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>LayoutU8</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>0</number>
+                            </property>
+                            <property name="spacing">
+                                <number>6</number>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>SpacerU4</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>updatesResetButton</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>0</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                                <property name="text">
+                                    <string>Reset</string>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
                     <cstring>preferencSetTab</cstring>
                 </property>
                 <attribute name="title">
@@ -2941,6 +3167,12 @@
         <slot>doResetEffects()</slot>
     </connection>
     <connection>
+        <sender>updatesResetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doResetUpdates()</slot>
+    </connection>
+    <connection>
         <sender>wireframeButton</sender>
         <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
@@ -3084,6 +3316,24 @@
         <receiver>PreferencesPanel</receiver>
         <slot>doDefaultColor()</slot>
     </connection>
+    <connection>
+        <sender>updatesNoproxyButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>disableProxy()</slot>
+    </connection>
+    <connection>
+        <sender>updatesProxyButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableProxy()</slot>
+	</connection>
+    <connection>
+        <sender>updatesMissingpartsButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>tabs</tabstop>
@@ -3167,6 +3417,7 @@
     <slot>doResetGeometry()</slot>
     <slot>doResetEffects()</slot>
     <slot>doResetPrimitives()</slot>
+	<slot>doResetUpdates()</slot>
     <slot>enableApply()</slot>
     <slot>doWireframeCutaway( bool value )</slot>
     <slot>doLighting( bool value )</slot>
@@ -3185,6 +3436,8 @@
     <slot>doStippleTransparency( bool value )</slot>
 	<slot>doDefaultColor()</slot>
 	<slot>doBackgroundColor()</slot>
+    <slot>disableProxy()</slot>
+    <slot>enableProxy()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
