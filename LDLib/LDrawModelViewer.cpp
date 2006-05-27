@@ -2896,6 +2896,8 @@ void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
 
 bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename)
 {
+	bool retValue = false;
+
 	if (flags.checkPartTracker)
 	{
 		char *key = new char[strlen(filename) + 128];
@@ -2904,14 +2906,14 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename)
 
 		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
 		lastCheck = (time_t)TCUserDefaults::longForKey(key, 0, false);
-		TCUserDefaults::setLongForKey((long)now, key, false);
-		delete key;
 		if (now - lastCheck > 24 * 3600)
 		{
-			return true;
+			retValue = true;
+			TCUserDefaults::setLongForKey((long)now, key, false);
 		}
+		delete key;
 	}
-	return false;
+	return retValue;;
 }
 
 // NOTE: static function

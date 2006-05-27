@@ -136,6 +136,10 @@ SOURCE=.\LDLibraryUpdater.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLPreferences.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDModelParser.cpp
 # End Source File
 # Begin Source File
@@ -153,6 +157,14 @@ SOURCE=.\LDLibraryUpdateInfo.h
 # Begin Source File
 
 SOURCE=.\LDLibraryUpdater.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLPreferences.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLUserDefaultsKeys.h
 # End Source File
 # Begin Source File
 

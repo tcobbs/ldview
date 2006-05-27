@@ -3,6 +3,7 @@
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDPreferences.h>
 #include <LDLoader/LDLPalette.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCWebClient.h>
@@ -36,6 +37,7 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	:CUIPropertySheet(TCLocalStrings::get("LDViewPreferences"), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
+	ldPrefs(new LDPreferences(modelViewer)),
 	proxyServer(NULL),
 	generalPageNumber(0),
 	geometryPageNumber(1),
@@ -103,27 +105,29 @@ void LDViewPreferences::applySettings(void)
 
 void LDViewPreferences::applyGeneralSettings(void)
 {
+/*
 	if (modelViewer)
 	{
 		int r, g, b;
 
 		// FSAA taken care of automatically.
 		getRGB(backgroundColor, r, g, b);
-//		modelViewer->setBackgroundRGBA(r, g, b, 255);
 		modelViewer->setBackgroundRGBA(r, g, b, 0);
 		getRGB(defaultColor, r, g, b);
+		modelViewer->setDefaultRGB((BYTE)r, (BYTE)g, (BYTE)b,
+			transDefaultColor);
+		modelViewer->setDefaultColorNumber(defaultColorNumber);
 		modelViewer->setProcessLDConfig(processLDConfig);
 		modelViewer->setSkipValidation(skipValidation);
 		// showFrameRate taken care of automatically.
 		// showErrors taken care of automatically.
 		// fullScreenRefresh taken care of automatically.
 		modelViewer->setFov(fov);
-		modelViewer->setDefaultRGB((BYTE)r, (BYTE)g, (BYTE)b,
-			transDefaultColor);
-		modelViewer->setDefaultColorNumber(defaultColorNumber);
 		modelViewer->setLineSmoothing(lineSmoothing);
 		modelViewer->setMemoryUsage(memoryUsage);
 	}
+*/
+	ldPrefs->applyGeneralSettings();
 }
 
 void LDViewPreferences::applyGeometrySettings(void)
@@ -239,6 +243,8 @@ void LDViewPreferences::loadSettings(void)
 
 void LDViewPreferences::loadDefaultGeneralSettings(void)
 {
+	ldPrefs->loadDefaultGeneralSettings();
+/*
 	int i;
 
 	fsaaMode = 0;
@@ -263,6 +269,7 @@ void LDViewPreferences::loadDefaultGeneralSettings(void)
 		customColors[i] = htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
 			0xFFFFFF;
 	}
+*/
 }
 
 void LDViewPreferences::loadDefaultGeometrySettings(void)
@@ -336,18 +343,16 @@ void LDViewPreferences::setColor(const char *key, COLORREF color)
 
 void LDViewPreferences::loadGeneralSettings(void)
 {
-	int i;
+	//int i;
 
 	loadDefaultGeneralSettings();
+	ldPrefs->loadGeneralSettings();
+/*
 	fsaaMode = TCUserDefaults::longForKey(FSAA_MODE_KEY, (long)fsaaMode);
 	lineSmoothing = TCUserDefaults::longForKey(LINE_SMOOTHING_KEY,
 		lineSmoothing) != 0;
 	backgroundColor = getColor(BACKGROUND_COLOR_KEY, backgroundColor);
-//		(COLORREF)htonl(TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY,
-//		(long)(htonl(backgroundColor) >> 8)) << 8);
 	defaultColor = getColor(DEFAULT_COLOR_KEY, defaultColor);
-//		(COLORREF)htonl(TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
-//		(long)(htonl(defaultColor) >> 8)) << 8);
 	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
 		transDefaultColor) != 0;
 	defaultColorNumber = TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
@@ -378,6 +383,7 @@ void LDViewPreferences::loadGeneralSettings(void)
 		customColors[i] = TCUserDefaults::longForKey(key, customColors[i],
 			false) & 0xFFFFFF;
 	}
+*/
 }
 
 void LDViewPreferences::loadGeometrySettings(void)
@@ -409,7 +415,7 @@ void LDViewPreferences::loadGeometrySettings(void)
 		(long)redBackFaces) != 0;
 	greenFrontFaces = TCUserDefaults::longForKey(GREEN_FRONT_FACES_KEY,
 		(long)greenFrontFaces) != 0;
-	showsHighlightLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
+	showsHighlightLines = TCUserDefaults::longForKey(SHOW_HIGHLIGHT_LINES_KEY,
 		(long)showsHighlightLines) != 0;
 	edgesOnly = TCUserDefaults::longForKey(EDGES_ONLY_KEY, (long)edgesOnly)
 		!= 0;
@@ -587,6 +593,26 @@ void LDViewPreferences::setEdgesOnly(bool value)
 	}
 }
 
+int LDViewPreferences::getFullScreenRefresh(void)
+{
+	return ldPrefs->getFullScreenRefresh();
+}
+
+bool LDViewPreferences::getShowsFPS(void)
+{
+	return ldPrefs->getShowFps();
+}
+
+bool LDViewPreferences::getLineSmoothing(void)
+{
+	return ldPrefs->getLineSmoothing();
+}
+
+COLORREF LDViewPreferences::getBackgroundColor(void)
+{
+	return (COLORREF)ldPrefs->getBackgroundColor();
+}
+
 void LDViewPreferences::setDrawConditionalHighlights(bool value)
 {
 	if (value != drawConditionalHighlights)
@@ -640,7 +666,7 @@ void LDViewPreferences::setShowsHighlightLines(bool value)
 		showsHighlightLines = value;
 		modelViewer->setShowsHighlightLines(showsHighlightLines);
 		TCUserDefaults::setLongForKey(showsHighlightLines ? 1 : 0,
-			SHOWS_HIGHLIGHT_LINES_KEY);
+			SHOW_HIGHLIGHT_LINES_KEY);
 		if (hGeometryPage)
 		{
 			setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS,
@@ -1194,13 +1220,15 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 void LDViewPreferences::setupBackgroundColorButton(void)
 {
 	setupColorButton(hGeneralPage, hBackgroundColorButton,
-		IDC_BACKGROUND_COLOR, hBackgroundColorBitmap, backgroundColor);
+		IDC_BACKGROUND_COLOR, hBackgroundColorBitmap,
+		(COLORREF)ldPrefs->getBackgroundColor());
 }
 
 void LDViewPreferences::setupDefaultColorButton(void)
 {
 	setupColorButton(hGeneralPage, hDefaultColorButton,
-		IDC_DEFAULT_COLOR, hDefaultColorBitmap, defaultColor);
+		IDC_DEFAULT_COLOR, hDefaultColorBitmap,
+		(COLORREF)ldPrefs->getDefaultColor());
 }
 
 LRESULT CALLBACK LDViewPreferences::staticGroupCheckButtonProc(HWND hWnd,
@@ -1456,6 +1484,8 @@ void LDViewPreferences::setupSeamWidth(void)
 
 void LDViewPreferences::setupFullScreenRefresh(void)
 {
+	int fullScreenRefresh = ldPrefs->getFullScreenRefresh();
+
 	hFullScreenRateField = GetDlgItem(hGeneralPage, IDC_FS_RATE);
 	SendDlgItemMessage(hGeneralPage, IDC_FS_RATE, EM_SETLIMITTEXT, 3, 0);
 	if (fullScreenRefresh)
@@ -1622,9 +1652,19 @@ void LDViewPreferences::applyGeneralChanges(void)
 	{
 		int iTemp;
 		float fTemp;
-		int i;
+		//int i;
 		char buf[128];
 
+		ldPrefs->setLineSmoothing(getCheck(hGeneralPage, IDC_LINE_AA));
+		ldPrefs->setTransDefaultColor(getCheck(hGeneralPage,
+			IDC_TRANS_DEFAULT_COLOR));
+		ldPrefs->setProcessLdConfig(getCheck(hGeneralPage,
+			IDC_PROCESS_LDCONFIG));
+		ldPrefs->setShowFps(getCheck(hGeneralPage, IDC_FRAME_RATE));
+		ldPrefs->setShowErrors(getCheck(hGeneralPage, IDC_SHOW_ERRORS));
+		ldPrefs->setMemoryUsage((int)SendDlgItemMessage(hGeneralPage,
+			IDC_MEMORY_COMBO, CB_GETCURSEL, 0, 0));
+/*
 		TCUserDefaults::setLongForKey(fsaaMode, FSAA_MODE_KEY);
 		lineSmoothing = SendDlgItemMessage(hGeneralPage, IDC_LINE_AA,
 			BM_GETCHECK, 0, 0) != 0;
@@ -1655,6 +1695,10 @@ void LDViewPreferences::applyGeneralChanges(void)
 		showErrors = SendDlgItemMessage(hGeneralPage, IDC_SHOW_ERRORS,
 			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(showErrors, SHOW_ERRORS_KEY, false);
+		memoryUsage = SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO,
+			CB_GETCURSEL, 0, 0);
+		TCUserDefaults::setLongForKey(memoryUsage, MEMORY_USAGE_KEY);
+*/
 		iTemp = SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_GETCHECK, 0,
 			0);
 		if (iTemp)
@@ -1675,9 +1719,10 @@ void LDViewPreferences::applyGeneralChanges(void)
 		}
 		if (iTemp >= 0)
 		{
-			fullScreenRefresh = iTemp;
-			TCUserDefaults::setLongForKey(fullScreenRefresh,
-				FULLSCREEN_REFRESH_KEY);
+			ldPrefs->setFullScreenRefresh(iTemp);
+			//fullScreenRefresh = iTemp;
+			//TCUserDefaults::setLongForKey(fullScreenRefresh,
+			//	FULLSCREEN_REFRESH_KEY);
 		}
 		SendDlgItemMessage(hGeneralPage, IDC_FOV, WM_GETTEXT, 6, (LPARAM)buf);
 		// ToDo: how to deal with 64-bit float scanf?
@@ -1685,8 +1730,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 		{
 			if (fTemp >= getMinFov() && fTemp <= getMaxFov())
 			{
-				fov = fTemp;
-				TCUserDefaults::setFloatForKey((TCFloat32)fov, FOV_KEY);
+				ldPrefs->setFov(fTemp);
+				//fov = fTemp;
+				//TCUserDefaults::setFloatForKey((TCFloat32)fov, FOV_KEY);
 			}
 			else
 			{
@@ -1697,11 +1743,9 @@ void LDViewPreferences::applyGeneralChanges(void)
 		{
 			setupFov(true);
 		}
-		memoryUsage = SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO,
-			CB_GETCURSEL, 0, 0);
-		TCUserDefaults::setLongForKey(memoryUsage, MEMORY_USAGE_KEY);
 		applyGeneralSettings();
 	}
+	ldPrefs->commitGeneralSettings();
 }
 
 void LDViewPreferences::applyGeometryChanges(void)
@@ -1719,7 +1763,7 @@ void LDViewPreferences::applyGeometryChanges(void)
 		{
 			seamWidth = TCUserDefaults::longForKey(SEAM_WIDTH_KEY);
 		}
-		drawWireframe = getCheck(hGeometryPage, IDC_WIREFRAME);
+		drawWireframe = getCachedCheck(hGeometryPage, IDC_WIREFRAME);
 //		drawWireframe = SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME,
 //			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(drawWireframe, WIREFRAME_KEY);
@@ -1734,7 +1778,7 @@ void LDViewPreferences::applyGeometryChanges(void)
 			IDC_WIREFRAME_THICKNESS, TBM_GETPOS, 0, 0);
 		TCUserDefaults::setLongForKey(wireframeThickness, 
 			WIREFRAME_THICKNESS_KEY);
-		bfc = getCheck(hGeometryPage, IDC_BFC);
+		bfc = getCachedCheck(hGeometryPage, IDC_BFC);
 //		bfc = SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0) !=
 //			0;
 		TCUserDefaults::setLongForKey(bfc, BFC_KEY);
@@ -1744,11 +1788,11 @@ void LDViewPreferences::applyGeometryChanges(void)
 		greenFrontFaces = SendDlgItemMessage(hGeometryPage,
 			IDC_GREEN_FRONT_FACES, BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(greenFrontFaces, GREEN_FRONT_FACES_KEY);
-		showsHighlightLines = getCheck(hGeometryPage, IDC_HIGHLIGHTS);
+		showsHighlightLines = getCachedCheck(hGeometryPage, IDC_HIGHLIGHTS);
 //		showsHighlightLines = SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS,
 //			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(showsHighlightLines,
-			SHOWS_HIGHLIGHT_LINES_KEY);
+			SHOW_HIGHLIGHT_LINES_KEY);
 		if (showsHighlightLines)
 		{
 			edgesOnly = SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY,
@@ -1788,7 +1832,7 @@ void LDViewPreferences::applyEffectsChanges(void)
 {
 	if (hEffectsPage)
 	{
-		useLighting = getCheck(hEffectsPage, IDC_LIGHTING);
+		useLighting = getCachedCheck(hEffectsPage, IDC_LIGHTING);
 //		useLighting = SendDlgItemMessage(hEffectsPage, IDC_LIGHTING,
 //			BM_GETCHECK, 0, 0) != 0;
 		TCUserDefaults::setLongForKey(useLighting, LIGHTING_KEY);
@@ -1840,7 +1884,7 @@ void LDViewPreferences::applyPrimitivesChanges(void)
 {
 	if (hPrimitivesPage)
 	{
-		allowPrimitiveSubstitution = getCheck(hPrimitivesPage,
+		allowPrimitiveSubstitution = getCachedCheck(hPrimitivesPage,
 			IDC_PRIMITIVE_SUBSTITUTION);
 //		allowPrimitiveSubstitution = SendDlgItemMessage(hPrimitivesPage,
 //			IDC_PRIMITIVE_SUBSTITUTION, BM_GETCHECK, 0, 0) != 0;
@@ -1929,20 +1973,32 @@ void LDViewPreferences::getRGB(int color, int &r, int &g, int &b)
 
 void LDViewPreferences::chooseBackgroundColor(void)
 {
+	COLORREF backgroundColor = (COLORREF)ldPrefs->getBackgroundColor();
+
 	chooseColor(hBackgroundColorButton, hBackgroundColorBitmap,
 		backgroundColor);
+	ldPrefs->setBackgroundColor((TCULong)backgroundColor);
 }
 
 void LDViewPreferences::chooseDefaultColor(void)
 {
+	COLORREF defaultColor = (COLORREF)ldPrefs->getDefaultColor();
+
 	chooseColor(hDefaultColorButton, hDefaultColorBitmap, defaultColor);
+	ldPrefs->setDefaultColor((TCULong)defaultColor);
 }
 
 void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 									COLORREF &color)
 {
 	CHOOSECOLOR chooseColor;
+	int i;
+	COLORREF customColors[16];
 
+	for (i = 0; i < 16; i++)
+	{
+		customColors[i] = (COLORREF)ldPrefs->getCustomColor(i);
+	}
 	memset(&chooseColor, 0, sizeof CHOOSECOLOR);
 	chooseColor.lStructSize = sizeof CHOOSECOLOR;
 	chooseColor.hwndOwner = hPropSheet;
@@ -1954,6 +2010,10 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 	{
 		color = chooseColor.rgbResult;
 		redrawColorBitmap(hColorButton, hColorBitmap, color);
+	}
+	for (i = 0; i < 16; i++)
+	{
+		ldPrefs->setCustomColor(i, customColors[i]);
 	}
 	EnableWindow(hPropSheet, TRUE);
 }
@@ -2396,6 +2456,7 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 	if (controlId == IDC_FSAA_COMBO)
 	{
 		char selectedString[1024];
+		int fsaaMode;
 
 		SendDlgItemMessage(hPage, controlId, WM_GETTEXT, sizeof(selectedString),
 			(LPARAM)selectedString);
@@ -2416,6 +2477,7 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 				fsaaMode |= 1;
 			}
 		}
+		ldPrefs->setFsaaMode(fsaaMode);
 		enableApply(hPage);
 	}
 	else if (controlId == IDC_MEMORY_COMBO)
@@ -2520,7 +2582,7 @@ void LDViewPreferences::doSmoothCurves(void)
 
 void LDViewPreferences::doHighlights(void)
 {
-	if (getCheck(hGeometryPage, IDC_HIGHLIGHTS, true))
+	if (getCachedCheck(hGeometryPage, IDC_HIGHLIGHTS, true))
 	{
 		enableEdges();
 	}
@@ -2543,7 +2605,17 @@ void LDViewPreferences::doConditionals(void)
 	}
 }
 
-bool LDViewPreferences::getCheck(HWND hPage, int buttonId, bool action)
+void LDViewPreferences::setCheck(HWND hPage, int buttonId, bool value)
+{
+	SendDlgItemMessage(hPage, buttonId, BM_SETCHECK, value, 0);
+}
+
+bool LDViewPreferences::getCheck(HWND hPage, int buttonId)
+{
+	return SendDlgItemMessage(hPage, buttonId, BM_GETCHECK, 0, 0) != 0;
+}
+
+bool LDViewPreferences::getCachedCheck(HWND hPage, int buttonId, bool action)
 {
 	if (hButtonTheme)
 	{
@@ -2563,7 +2635,7 @@ bool LDViewPreferences::getCheck(HWND hPage, int buttonId, bool action)
 
 void LDViewPreferences::doWireframe(void)
 {
-	if (getCheck(hGeometryPage, IDC_WIREFRAME, true))
+	if (getCachedCheck(hGeometryPage, IDC_WIREFRAME, true))
 	{
 		enableWireframe();
 	}
@@ -2575,7 +2647,7 @@ void LDViewPreferences::doWireframe(void)
 
 void LDViewPreferences::doBfc(void)
 {
-	if (getCheck(hGeometryPage, IDC_BFC, true))
+	if (getCachedCheck(hGeometryPage, IDC_BFC, true))
 	{
 		enableBfc();
 	}
@@ -2587,7 +2659,7 @@ void LDViewPreferences::doBfc(void)
 
 void LDViewPreferences::doLighting(void)
 {
-	if (getCheck(hEffectsPage, IDC_LIGHTING, true))
+	if (getCachedCheck(hEffectsPage, IDC_LIGHTING, true))
 	{
 		enableLighting();
 	}
@@ -2599,7 +2671,7 @@ void LDViewPreferences::doLighting(void)
 
 void LDViewPreferences::doStereo(void)
 {
-	if (getCheck(hEffectsPage, IDC_STEREO, true))
+	if (getCachedCheck(hEffectsPage, IDC_STEREO, true))
 	{
 		stereoMode = LDVStereoCrossEyed;
 		enableStereo();
@@ -2613,7 +2685,7 @@ void LDViewPreferences::doStereo(void)
 
 void LDViewPreferences::doCutaway(void)
 {
-	if (getCheck(hEffectsPage, IDC_CUTAWAY, true))
+	if (getCachedCheck(hEffectsPage, IDC_CUTAWAY, true))
 	{
 		cutawayMode = LDVCutawayWireframe;
 		enableCutaway();
@@ -2639,7 +2711,7 @@ void LDViewPreferences::doSeams(void)
 
 void LDViewPreferences::doPrimitives(void)
 {
-	if (getCheck(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, true))
+	if (getCachedCheck(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, true))
 //	if (SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
 //		BM_GETCHECK, 0, 0))
 	{
@@ -2744,7 +2816,7 @@ void LDViewPreferences::setupFov(bool warn)
 	TCFloat maxFov = getMaxFov();
 
 	SendDlgItemMessage(hGeneralPage, IDC_FOV, EM_SETLIMITTEXT, 5, 0);
-	sprintf(buf, "%.4g", fov);
+	sprintf(buf, "%.4g", ldPrefs->getFov());
 	SendDlgItemMessage(hGeneralPage, IDC_FOV, WM_SETTEXT, 0, (LPARAM)buf);
 	sprintf(buf, "(%g - %g)", minFov, maxFov);
 	SendDlgItemMessage(hGeneralPage, IDC_FOV_RANGE_LABEL, WM_SETTEXT, 0,
@@ -2772,25 +2844,33 @@ void LDViewPreferences::setupMemoryUsage(void)
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
 		(LPARAM)TCLocalStrings::get("High"));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
-		(WPARAM)memoryUsage, 0);
+		(WPARAM)ldPrefs->getMemoryUsage(), 0);
+	//SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
+	//	(WPARAM)memoryUsage, 0);
 }
 
 void LDViewPreferences::setupGeneralPage(void)
 {
 	hGeneralPage = hwndArray->pointerAtIndex(generalPageNumber);
 	setupAntialiasing();
-	SendDlgItemMessage(hGeneralPage, IDC_PROCESS_LDCONFIG, BM_SETCHECK,
-		processLDConfig ? 1 : 0, 0);
-	SendDlgItemMessage(hGeneralPage, IDC_FRAME_RATE, BM_SETCHECK, showsFPS,
-		0);
-	SendDlgItemMessage(hGeneralPage, IDC_SHOW_ERRORS, BM_SETCHECK,
-		showErrors, 0);
+	setCheck(hGeneralPage, IDC_TRANS_DEFAULT_COLOR,
+		ldPrefs->getTransDefaultColor());
+	setCheck(hGeneralPage, IDC_PROCESS_LDCONFIG,
+		ldPrefs->getProcessLdConfig());
+	setCheck(hGeneralPage, IDC_FRAME_RATE, ldPrefs->getShowFps());
+	setCheck(hGeneralPage, IDC_SHOW_ERRORS, ldPrefs->getShowErrors());
+	//SendDlgItemMessage(hGeneralPage, IDC_PROCESS_LDCONFIG, BM_SETCHECK,
+	//	processLDConfig ? 1 : 0, 0);
+	//SendDlgItemMessage(hGeneralPage, IDC_FRAME_RATE, BM_SETCHECK, showsFPS,
+	//	0);
+	//SendDlgItemMessage(hGeneralPage, IDC_SHOW_ERRORS, BM_SETCHECK,
+	//	showErrors, 0);
 	setupFov();
 	setupFullScreenRefresh();
 	setupBackgroundColorButton();
 	setupDefaultColorButton();
-	SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR, BM_SETCHECK,
-		transDefaultColor ? 1 : 0, 0);
+	//SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR, BM_SETCHECK,
+	//	transDefaultColor ? 1 : 0, 0);
 	setupMemoryUsage();
 }
 
@@ -3457,9 +3537,10 @@ void LDViewPreferences::setupAntialiasing(void)
 			}
 		}
 	}
-	if (fsaaMode)
+	if (ldPrefs->getFsaaMode())
 	{
-		sprintf(modeString, TCLocalStrings::get("FsaaNx"), getFSAAFactor());
+		sprintf(modeString, TCLocalStrings::get("FsaaNx"),
+			getFSAAFactor());
 		if (getUseNvMultisampleFilter())
 		{
 			strcat(modeString, " ");
@@ -3469,11 +3550,12 @@ void LDViewPreferences::setupAntialiasing(void)
 			(LPARAM)modeString) == CB_ERR)
 		{
 			// We didn't find the selected mode, so reset to none.
-			fsaaMode = 0;
+			ldPrefs->setFsaaMode(0);
 		}
 	}
-	SendDlgItemMessage(hGeneralPage, IDC_LINE_AA, BM_SETCHECK, lineSmoothing,
-		0);
+	setCheck(hGeneralPage, IDC_LINE_AA, ldPrefs->getLineSmoothing());
+	//SendDlgItemMessage(hGeneralPage, IDC_LINE_AA, BM_SETCHECK, lineSmoothing,
+	//	0);
 }
 
 bool LDViewPreferences::doApply(void)
@@ -3582,7 +3664,7 @@ bool LDViewPreferences::shouldSetActive(int index)
 
 int LDViewPreferences::getFSAAFactor(void)
 {
-	int fsaaMode = TCUserDefaults::longForKey(FSAA_MODE_KEY);
+	int fsaaMode = ldPrefs->getFsaaMode();
 
 	if (fsaaMode && LDVExtensionsSetup::haveMultisampleExtension())
 	{
@@ -3603,7 +3685,7 @@ int LDViewPreferences::getFSAAFactor(void)
 
 bool LDViewPreferences::getUseNvMultisampleFilter(void)
 {
-	int fsaaMode = TCUserDefaults::longForKey(FSAA_MODE_KEY);
+	int fsaaMode = ldPrefs->getFsaaMode();
 
 	if ((fsaaMode & 0x1) &&
 		LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())

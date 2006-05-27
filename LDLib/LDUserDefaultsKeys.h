@@ -1,5 +1,5 @@
-#ifndef __USERDEFAULTSKEYS_H__
-#define __USERDEFAULTSKEYS_H__
+#ifndef __LDLUSERDEFAULTSKEYS_H__
+#define __LDLUSERDEFAULTSKEYS_H__
 
 #define PRIMITIVE_SUBSTITUTION_KEY "AllowPrimitiveSubstitution"
 #define FSAA_MODE_KEY "Antialias"
@@ -133,4 +133,4 @@
 #define HFOV_KEY "HFOV"
 #define CAMERA_GLOBE_KEY "CameraGlobe"
 
-#endif // __USERDEFAULTSKEYS_H__
+#endif // __LDLUSERDEFAULTSKEYS_H__

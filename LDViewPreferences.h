@@ -33,6 +33,8 @@
 
 typedef std::map<HWND, bool> HwndBoolMap;
 
+class LDPreferences;
+
 class LDViewPreferences: public CUIPropertySheet
 {
 public:
@@ -41,7 +43,7 @@ public:
 
 	bool getQualityLighting(void) { return qualityLighting; }
 	void setQualityLighting(bool value);
-	bool getShowsFPS(void) { return showsFPS; }
+	bool getShowsFPS(void);
 	bool getShowsHighlightLines(void) { return showsHighlightLines; }
 	void setShowsHighlightLines(bool value);
 	bool getEdgesOnly(void) { return edgesOnly; }
@@ -52,7 +54,7 @@ public:
 	}
 	void setDrawConditionalHighlights(bool value);
 	bool getPerformSmoothing(void) { return performSmoothing; }
-	bool getLineSmoothing(void) { return lineSmoothing; }
+	bool getLineSmoothing(void);
 	bool getQualityStuds(void) { return qualityStuds; }
 	bool getAllowPrimitiveSubstitution(void)
 	{
@@ -64,8 +66,8 @@ public:
 	void setUsesSpecular(bool value);
 	bool getOneLight(void) { return oneLight; }
 	void setOneLight(bool value);
-	COLORREF getBackgroundColor(void) { return backgroundColor; }
-	COLORREF* getCustomColors(void) { return customColors; }
+	COLORREF getBackgroundColor(void);
+	//COLORREF* getCustomColors(void) { return customColors; }
 	int getUseSeams(void) { return useSeams; }
 	void setUseSeams(bool value);
 	int getSeamWidth(void) { return seamWidth; }
@@ -89,7 +91,7 @@ public:
 	void setUseLighting(bool value);
 	bool getSubduedLighting(void) { return subduedLighting; }
 	void setSubduedLighting(bool value);
-	int getFullScreenRefresh(void) { return fullScreenRefresh; }
+	int getFullScreenRefresh(void);
 	bool getUseStipple(void) { return useStipple; }
 	bool getSortTransparent(void) { return sortTransparent; }
 	bool getTextureStuds(void) { return textureStuds; }
@@ -116,11 +118,12 @@ public:
 	void applySettings(void);
 	// *************************************************************************
 
+	int getFSAAFactor(void);
+	bool getUseNvMultisampleFilter(void);
+
 	static char* getLDViewPath(const char* helpFilename,
 		bool useQuotes = false);
 	static char* getLDViewPath(bool useQuotes = false);
-	static int getFSAAFactor(void);
-	static bool getUseNvMultisampleFilter(void);
 	static COLORREF getColor(const char *key, COLORREF defaultColor = 0);
 protected:
 	virtual ~LDViewPreferences(void);
@@ -246,7 +249,9 @@ protected:
 	virtual TCFloat getMaxFov(void);
 	virtual void initThemes(HWND hButton);
 	virtual void setupGroupCheckButton(HWND hPage, int buttonId, bool state);
-	virtual bool getCheck(HWND hPage, int buttonId, bool action = false);
+	virtual bool getCachedCheck(HWND hPage, int buttonId, bool action = false);
+	virtual bool getCheck(HWND hPage, int buttonId);
+	virtual void setCheck(HWND hPage, int buttonId, bool value);
 //	virtual void getGroupBoxTextColor(void);
 
 
@@ -291,20 +296,25 @@ protected:
 	static void setColor(const char *key, COLORREF color);
 
 	LDrawModelViewer* modelViewer;
+	LDPreferences* ldPrefs;
 
-	int fsaaMode;
-	bool lineSmoothing;
-	COLORREF backgroundColor;
-	COLORREF defaultColor;
-	bool transDefaultColor;
-	int defaultColorNumber;
-	bool processLDConfig;
-	bool skipValidation;
-	bool showsFPS;
-	bool showErrors;
-	int fullScreenRefresh;
-	TCFloat fov;
-	int memoryUsage;
+
+
+
+	//int fsaaMode;
+	//bool lineSmoothing;
+	//COLORREF backgroundColor;
+	//COLORREF defaultColor;
+	//bool transDefaultColor;
+	//int defaultColorNumber;
+	//bool processLDConfig;
+	//bool skipValidation;
+	//bool showsFPS;
+	//bool showErrors;
+	//int fullScreenRefresh;
+	//TCFloat fov;
+	//int memoryUsage;
+	//COLORREF customColors[16];
 
 	TCFloat defaultZoom;
 
@@ -353,9 +363,11 @@ protected:
 	int proxyPort;
 	bool checkPartTracker;
 
-	COLORREF customColors[16];
 	TCFloat zoomMax;
 	TCVector lightVector;
+
+
+
 
 	int generalPageNumber;
 	int geometryPageNumber;
