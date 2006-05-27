@@ -1936,7 +1936,7 @@ void ModelWindow::setupMultisample(void)
 		{
 			if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
 			{
-				if (LDViewPreferences::getUseNvMultisampleFilter())
+				if (prefs->getUseNvMultisampleFilter())
 				{
 					glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_NICEST);
 				}
@@ -2315,7 +2315,7 @@ void ModelWindow::updateFPS(void)
 
 bool ModelWindow::frontBufferFPS(void)
 {
-	if (LDViewPreferences::getUseNvMultisampleFilter())
+	if (prefs->getUseNvMultisampleFilter())
 	{
 		static bool checkedSwapInterval = false;
 		static int swapInterval = 0;
@@ -2629,7 +2629,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 			int offset = sizeof(intValues) / sizeof(GLint) - 6;
 
 			intValues[offset++] = WGL_SAMPLES_EXT;
-			intValues[offset++] = LDViewPreferences::getFSAAFactor();
+			intValues[offset++] = prefs->getFSAAFactor();
 			intValues[offset++] = WGL_SAMPLE_BUFFERS_EXT;
 			intValues[offset++] = GL_TRUE;
 		}
@@ -4255,7 +4255,7 @@ BOOL ModelWindow::setupPFD(void)
 
 		if (currentAntialiasType)
 		{
-			intValues[3] = LDViewPreferences::getFSAAFactor();
+			intValues[3] = prefs->getFSAAFactor();
 		}
 		else
 		{
