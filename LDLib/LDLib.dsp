@@ -136,11 +136,11 @@ SOURCE=.\LDLibraryUpdater.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLPreferences.cpp
+SOURCE=.\LDModelParser.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDModelParser.cpp
+SOURCE=.\LDPreferences.cpp
 # End Source File
 # Begin Source File
 
@@ -160,19 +160,19 @@ SOURCE=.\LDLibraryUpdater.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\LDLPreferences.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\LDLUserDefaultsKeys.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDModelParser.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDPreferences.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDrawModelViewer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDUserDefaultsKeys.h
 # End Source File
 # End Group
 # End Target
