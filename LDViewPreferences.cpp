@@ -38,7 +38,6 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
 	ldPrefs(new LDPreferences(modelViewer)),
-	proxyServer(NULL),
 	generalPageNumber(0),
 	geometryPageNumber(1),
 	effectsPageNumber(2),
@@ -73,10 +72,8 @@ LDViewPreferences::~LDViewPreferences(void)
 
 void LDViewPreferences::dealloc(void)
 {
-	if (modelViewer)
-	{
-		modelViewer->release();
-	}
+	TCObject::release(modelViewer);
+	TCObject::release(ldPrefs);
 	if (hButtonTheme)
 	{
 		CUIThemes::closeThemeData(hButtonTheme);
@@ -87,247 +84,12 @@ void LDViewPreferences::dealloc(void)
 
 void LDViewPreferences::applySettings(void)
 {
-	applyGeneralSettings();
-	applyGeometrySettings();
-	applyEffectsSettings();
-	applyPrimitivesSettings();
-	applyUpdatesSettings();
-	if (modelViewer)
-	{
-		modelViewer->setZoomMax(zoomMax);
-		modelViewer->setLightVector(lightVector);
-		modelViewer->setDistanceMultiplier(1.0f / defaultZoom);
-		setupDefaultRotationMatrix();
-		setupModelCenter();
-		setupModelSize();
-	}
-}
-
-void LDViewPreferences::applyGeneralSettings(void)
-{
-/*
-	if (modelViewer)
-	{
-		int r, g, b;
-
-		// FSAA taken care of automatically.
-		getRGB(backgroundColor, r, g, b);
-		modelViewer->setBackgroundRGBA(r, g, b, 0);
-		getRGB(defaultColor, r, g, b);
-		modelViewer->setDefaultRGB((BYTE)r, (BYTE)g, (BYTE)b,
-			transDefaultColor);
-		modelViewer->setDefaultColorNumber(defaultColorNumber);
-		modelViewer->setProcessLDConfig(processLDConfig);
-		modelViewer->setSkipValidation(skipValidation);
-		// showFrameRate taken care of automatically.
-		// showErrors taken care of automatically.
-		// fullScreenRefresh taken care of automatically.
-		modelViewer->setFov(fov);
-		modelViewer->setLineSmoothing(lineSmoothing);
-		modelViewer->setMemoryUsage(memoryUsage);
-	}
-*/
-	ldPrefs->applyGeneralSettings();
-}
-
-void LDViewPreferences::applyGeometrySettings(void)
-{
-	if (modelViewer)
-	{
-		if (useSeams)
-		{
-			modelViewer->setSeamWidth(seamWidth / 100.0f);
-		}
-		else
-		{
-			modelViewer->setSeamWidth(0.0f);
-		}
-		modelViewer->setDrawWireframe(drawWireframe);
-		modelViewer->setUseWireframeFog(useWireframeFog);
-		modelViewer->setRemoveHiddenLines(removeHiddenLines);
-		modelViewer->setWireframeLineWidth((GLfloat)wireframeThickness);
-		modelViewer->setBfc(bfc);
-		modelViewer->setRedBackFaces(redBackFaces);
-		modelViewer->setGreenFrontFaces(greenFrontFaces);
-		modelViewer->setShowsHighlightLines(showsHighlightLines);
-		modelViewer->setEdgesOnly(edgesOnly);
-		modelViewer->setDrawConditionalHighlights(drawConditionalHighlights);
-		modelViewer->setShowAllConditionalLines(showAllConditionalLines);
-		modelViewer->setShowConditionalControlPoints(
-			showConditionalControlPoints);
-		modelViewer->setUsePolygonOffset(usePolygonOffset);
-		modelViewer->setBlackHighlights(blackHighlights);
-		modelViewer->setHighlightLineWidth((GLfloat)edgeThickness);
-	}
-}
-
-void LDViewPreferences::applyEffectsSettings(void)
-{
-	if (modelViewer)
-	{
-		modelViewer->setUseLighting(useLighting);
-		modelViewer->setQualityLighting(qualityLighting);
-		modelViewer->setSubduedLighting(subduedLighting);
-		modelViewer->setUsesSpecular(usesSpecular);
-		modelViewer->setOneLight(oneLight);
-		modelViewer->setStereoMode(stereoMode);
-		modelViewer->setStereoEyeSpacing((GLfloat)stereoEyeSpacing);
-		modelViewer->setCutawayMode(cutawayMode);
-		modelViewer->setCutawayAlpha((TCFloat32)cutawayAlpha / 100.0f);
-		modelViewer->setCutawayLineWidth((TCFloat32)cutawayThickness);
-		modelViewer->setSortTransparent(sortTransparent);
-		modelViewer->setUseStipple(useStipple);
-		modelViewer->setUsesFlatShading(usesFlatShading);
-		modelViewer->setPerformSmoothing(performSmoothing);
-	}
-}
-
-void LDViewPreferences::applyUpdatesSettings(void)
-{
-	if (modelViewer)
-	{
-		modelViewer->setCheckPartTracker(checkPartTracker);
-	}
-	if (proxyType == 2)
-	{
-		TCWebClient::setProxyServer(proxyServer);
-		TCWebClient::setProxyPort(proxyPort);
-	}
-	else
-	{
-		TCWebClient::setProxyServer(NULL);
-	}
-}
-
-void LDViewPreferences::applyPrimitivesSettings(void)
-{
-	if (modelViewer)
-	{
-		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
-		modelViewer->setTextureStuds(textureStuds);
-		modelViewer->setTextureFilterType(textureFilterType);
-		modelViewer->setCurveQuality(curveQuality);
-		modelViewer->setQualityStuds(qualityStuds);
-		modelViewer->setHiResPrimitives(hiResPrimitives);
-	}
+	ldPrefs->applySettings();
 }
 
 void LDViewPreferences::loadSettings(void)
 {
-	char *lightVectorString;
-	loadGeneralSettings();
-	loadGeometrySettings();
-	loadEffectsSettings();
-	loadPrimitivesSettings();
-	loadUpdatesSettings();
-
-	zoomMax = TCUserDefaults::longForKey(ZOOM_MAX_KEY, 199, false) / 100.0f;
-	lightVectorString = TCUserDefaults::stringForKey(LIGHT_VECTOR_KEY);
-	if (lightVectorString)
-	{
-		TCFloat lx, ly, lz;
-
-		// ToDo: how to deal with 64-bit float scanf?
-		if (sscanf(lightVectorString, "%f,%f,%f", &lx, &ly, &lz) == 3)
-		{
-			lightVector = TCVector(lx, ly, lz);
-		}
-		delete lightVectorString;
-	}
-	else
-	{
-		lightVector = TCVector(0.0f, 0.0f, 1.0f);
-	}
-	defaultZoom = TCUserDefaults::floatForKey(DEFAULT_ZOOM_KEY, 1.0f);
-}
-
-void LDViewPreferences::loadDefaultGeneralSettings(void)
-{
-	ldPrefs->loadDefaultGeneralSettings();
-/*
-	int i;
-
-	fsaaMode = 0;
-	lineSmoothing = false;
-	backgroundColor = (COLORREF)0;
-	defaultColor = (COLORREF)0x999999;
-	transDefaultColor = false;
-	defaultColorNumber = -1;
-	processLDConfig = true;
-	skipValidation = false;
-	showsFPS = false;
-	showErrors = true;
-	fullScreenRefresh = 0;
-	fov = 45.0f;
-	memoryUsage = 2;
-	for (i = 0; i < 16; i++)
-	{
-		int r, g, b, a;
-
-		LDLPalette::getDefaultRGBA(i, r, g, b, a);
-		// Windows XP doesn't like the upper bits to be set, so mask those out.
-		customColors[i] = htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
-			0xFFFFFF;
-	}
-*/
-}
-
-void LDViewPreferences::loadDefaultGeometrySettings(void)
-{
-	useSeams = -1;
-	seamWidth = 50;
-	drawWireframe = false;
-	useWireframeFog = false;
-	removeHiddenLines = false;
-	wireframeThickness = 1;
-	bfc = true;
-	redBackFaces = false;
-	greenFrontFaces = false;
-	showsHighlightLines = false;
-	edgesOnly = false;
-	drawConditionalHighlights = false;
-	showAllConditionalLines = false;
-	showConditionalControlPoints = false;
-	usePolygonOffset = true;
-	blackHighlights = false;
-	edgeThickness = 1;
-}
-
-void LDViewPreferences::loadDefaultEffectsSettings(void)
-{
-	useLighting = true;
-	qualityLighting = false;
-	subduedLighting = false;
-	usesSpecular = true;
-	oneLight = false;
-	stereoMode = LDVStereoNone;
-	stereoEyeSpacing = 50;
-	cutawayMode = LDVCutawayNormal;
-	cutawayAlpha = 100;
-	cutawayThickness = 1;
-	sortTransparent = true;
-	useStipple = false;
-	usesFlatShading = false;
-	performSmoothing = true;
-}
-
-void LDViewPreferences::loadDefaultPrimitivesSettings(void)
-{
-	allowPrimitiveSubstitution = true;
-	textureStuds = true;
-	textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
-	curveQuality = 2;
-	qualityStuds = false;
-	hiResPrimitives = false;
-}
-
-void LDViewPreferences::loadDefaultUpdatesSettings(void)
-{
-	proxyType = 0;
-	delete proxyServer;
-	proxyServer = NULL;
-	proxyPort = 80;
-	checkPartTracker = true;
+	ldPrefs->loadSettings();
 }
 
 COLORREF LDViewPreferences::getColor(const char *key, COLORREF defaultColor)
@@ -341,178 +103,15 @@ void LDViewPreferences::setColor(const char *key, COLORREF color)
 	TCUserDefaults::setLongForKey((long)(htonl(color) >> 8), key);
 }
 
-void LDViewPreferences::loadGeneralSettings(void)
-{
-	//int i;
-
-	loadDefaultGeneralSettings();
-	ldPrefs->loadGeneralSettings();
-/*
-	fsaaMode = TCUserDefaults::longForKey(FSAA_MODE_KEY, (long)fsaaMode);
-	lineSmoothing = TCUserDefaults::longForKey(LINE_SMOOTHING_KEY,
-		lineSmoothing) != 0;
-	backgroundColor = getColor(BACKGROUND_COLOR_KEY, backgroundColor);
-	defaultColor = getColor(DEFAULT_COLOR_KEY, defaultColor);
-	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
-		transDefaultColor) != 0;
-	defaultColorNumber = TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
-		defaultColorNumber);
-	processLDConfig = TCUserDefaults::longForKey(PROCESS_LDCONFIG_KEY,
-		processLDConfig) != 0;
-	skipValidation = TCUserDefaults::longForKey(SKIP_VALIDATION_KEY,
-		skipValidation) != 0;
-	showsFPS = TCUserDefaults::longForKey(SHOW_FPS_KEY, (long)showsFPS) != 0;
-	showErrors = TCUserDefaults::longForKey(SHOW_ERRORS_KEY, (long)showErrors,
-		false) != 0;
-	fullScreenRefresh = TCUserDefaults::longForKey(FULLSCREEN_REFRESH_KEY,
-		fullScreenRefresh);
-	fov = TCUserDefaults::floatForKey(FOV_KEY, (TCFloat32)fov);
-	memoryUsage = TCUserDefaults::longForKey(MEMORY_USAGE_KEY,
-		(long)memoryUsage);
-	if (memoryUsage < 0 || memoryUsage > 2)
-	{
-		memoryUsage = 2;
-		TCUserDefaults::setLongForKey(2, MEMORY_USAGE_KEY);
-	}
-	for (i = 0; i < 16; i++)
-	{
-		char key[128];
-
-		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
-		// Windows XP doesn't like the upper bits to be set, so mask those out.
-		customColors[i] = TCUserDefaults::longForKey(key, customColors[i],
-			false) & 0xFFFFFF;
-	}
-*/
-}
-
-void LDViewPreferences::loadGeometrySettings(void)
-{
-	loadDefaultGeometrySettings();
-	useSeams = TCUserDefaults::longForKey(SEAMS_KEY, useSeams);
-	seamWidth = TCUserDefaults::longForKey(SEAM_WIDTH_KEY, seamWidth);
-	if (useSeams == -1)
-	{
-		if (seamWidth)
-		{
-			useSeams = 1;
-		}
-		else
-		{
-			useSeams = 0;
-		}
-	}
-	drawWireframe = TCUserDefaults::longForKey(WIREFRAME_KEY,
-		(long)drawWireframe) != 0;
-	useWireframeFog = TCUserDefaults::longForKey(WIREFRAME_FOG_KEY,
-		(long)useWireframeFog) != 0;
-	removeHiddenLines = TCUserDefaults::longForKey(REMOVE_HIDDEN_LINES_KEY,
-		(long)removeHiddenLines) != 0;
-	wireframeThickness = TCUserDefaults::longForKey(WIREFRAME_THICKNESS_KEY,
-		wireframeThickness);
-	bfc = TCUserDefaults::longForKey(BFC_KEY, (long)bfc) != 0;
-	redBackFaces = TCUserDefaults::longForKey(RED_BACK_FACES_KEY,
-		(long)redBackFaces) != 0;
-	greenFrontFaces = TCUserDefaults::longForKey(GREEN_FRONT_FACES_KEY,
-		(long)greenFrontFaces) != 0;
-	showsHighlightLines = TCUserDefaults::longForKey(SHOW_HIGHLIGHT_LINES_KEY,
-		(long)showsHighlightLines) != 0;
-	edgesOnly = TCUserDefaults::longForKey(EDGES_ONLY_KEY, (long)edgesOnly)
-		!= 0;
-	drawConditionalHighlights =
-		TCUserDefaults::longForKey(CONDITIONAL_HIGHLIGHTS_KEY,
-		(long)drawConditionalHighlights) != 0;
-	showAllConditionalLines = TCUserDefaults::longForKey(SHOW_ALL_TYPE5_KEY,
-		(long)showAllConditionalLines) != 0;
-	showConditionalControlPoints =
-		TCUserDefaults::longForKey(SHOW_TYPE5_CONTROL_POINTS_KEY,
-		(long)showConditionalControlPoints)
-		!= 0;
-	usePolygonOffset = TCUserDefaults::longForKey(POLYGON_OFFSET_KEY,
-		(long)usePolygonOffset) != 0;
-	blackHighlights = TCUserDefaults::longForKey(BLACK_HIGHLIGHTS_KEY,
-		(long)blackHighlights) != 0;
-	edgeThickness = TCUserDefaults::longForKey(EDGE_THICKNESS_KEY,
-		edgeThickness);
-}
-
-void LDViewPreferences::loadEffectsSettings(void)
-{
-	loadDefaultEffectsSettings();
-	useLighting = TCUserDefaults::longForKey(LIGHTING_KEY, (long)useLighting)
-		!= 0;
-	qualityLighting = TCUserDefaults::longForKey(QUALITY_LIGHTING_KEY,
-		(long)qualityLighting) != 0;
-	subduedLighting = TCUserDefaults::longForKey(SUBDUED_LIGHTING_KEY,
-		(long)subduedLighting) != 0;
-	usesSpecular = TCUserDefaults::longForKey(SPECULAR_KEY, (long)usesSpecular)
-		!= 0;
-	oneLight = TCUserDefaults::longForKey(ONE_LIGHT_KEY, (long)oneLight) != 0;
-	stereoMode = (LDVStereoMode)TCUserDefaults::longForKey(STEREO_MODE_KEY,
-		(long)stereoMode);
-	stereoEyeSpacing = TCUserDefaults::longForKey(STEREO_SPACING_KEY,
-		stereoEyeSpacing);
-	cutawayMode = (LDVCutawayMode)TCUserDefaults::longForKey(CUTAWAY_MODE_KEY,
-		(long)cutawayMode);
-	cutawayAlpha = TCUserDefaults::longForKey(CUTAWAY_ALPHA_KEY, cutawayAlpha);
-	cutawayThickness = TCUserDefaults::longForKey(CUTAWAY_THICKNESS_KEY,
-		cutawayThickness);
-	sortTransparent = TCUserDefaults::longForKey(SORT_KEY,
-		(long)sortTransparent) != 0;
-	useStipple = TCUserDefaults::longForKey(STIPPLE_KEY, (long)useStipple) != 0;
-	usesFlatShading = TCUserDefaults::longForKey(FLAT_SHADING_KEY,
-		(long)usesFlatShading) != 0;
-	performSmoothing = TCUserDefaults::longForKey(PERFORM_SMOOTHING_KEY,
-		(long)performSmoothing) != 0;
-}
-
-void LDViewPreferences::loadPrimitivesSettings(void)
-{
-	loadDefaultPrimitivesSettings();
-	allowPrimitiveSubstitution = TCUserDefaults::longForKey(
-		PRIMITIVE_SUBSTITUTION_KEY, (long)allowPrimitiveSubstitution) != 0;
-	textureStuds = TCUserDefaults::longForKey(TEXTURE_STUDS_KEY,
-		(long)textureStuds) != 0;
-	textureFilterType = TCUserDefaults::longForKey(TEXTURE_FILTER_TYPE_KEY,
-		textureFilterType);
-	curveQuality = TCUserDefaults::longForKey(CURVE_QUALITY_KEY, curveQuality);
-	qualityStuds = TCUserDefaults::longForKey(QUALITY_STUDS_KEY,
-		(long)qualityStuds) != 0;
-	hiResPrimitives = TCUserDefaults::longForKey(HI_RES_PRIMITIVES_KEY,
-		(long)hiResPrimitives) != 0;
-}
-
-void LDViewPreferences::loadUpdatesSettings(void)
-{
-	loadDefaultUpdatesSettings();
-	proxyType = TCUserDefaults::longForKey(PROXY_TYPE_KEY, proxyType, false);
-	proxyServer = TCUserDefaults::stringForKey(PROXY_SERVER_KEY, NULL, false);
-	proxyPort = TCUserDefaults::longForKey(PROXY_PORT_KEY, proxyPort, false);
-	checkPartTracker = TCUserDefaults::longForKey(CHECK_PART_TRACKER_KEY,
-		(long)checkPartTracker, false) != 0;
-}
-
 void LDViewPreferences::setUseSeams(bool value)
 {
-	int newValue = value ? 1 : 0;
-
-	if (newValue != useSeams)
+	if (value != ldPrefs->getUseSeams())
 	{
-		useSeams = newValue;
-		if (useSeams)
-		{
-			modelViewer->setSeamWidth(seamWidth / 100.0f);
-		}
-		else
-		{
-			modelViewer->setSeamWidth(0.0f);
-		}
-		TCUserDefaults::setLongForKey(useSeams, SEAMS_KEY);
+		ldPrefs->setUseSeams(value, true, true);
 		if (hGeometryPage)
 		{
-			SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, useSeams,
-				0);
-			if (useSeams)
+			SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, value, 0);
+			if (value)
 			{
 				enableSeams();
 			}
@@ -526,17 +125,13 @@ void LDViewPreferences::setUseSeams(bool value)
 
 void LDViewPreferences::setDrawWireframe(bool value)
 {
-	if (value != drawWireframe)
+	if (value != ldPrefs->getDrawWireframe())
 	{
-		drawWireframe = value;
-		modelViewer->setDrawWireframe(drawWireframe);
-		TCUserDefaults::setLongForKey(drawWireframe ? 1 : 0, WIREFRAME_KEY);
+		ldPrefs->setDrawWireframe(value, true, true);
 		if (hGeometryPage)
 		{
-			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, drawWireframe);
-//			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME, BM_SETCHECK,
-//				drawWireframe, 0);
-			if (drawWireframe)
+			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, value);
+			if (value)
 			{
 				enableWireframe();
 			}
@@ -550,11 +145,9 @@ void LDViewPreferences::setDrawWireframe(bool value)
 
 void LDViewPreferences::setUseWireframeFog(bool value)
 {
-	if (value != useWireframeFog)
+	if (value != ldPrefs->getUseWireframeFog())
 	{
-		useWireframeFog = value;
-		modelViewer->setUseWireframeFog(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, WIREFRAME_FOG_KEY);
+		ldPrefs->setUseWireframeFog(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG, BM_SETCHECK,
@@ -565,11 +158,9 @@ void LDViewPreferences::setUseWireframeFog(bool value)
 
 void LDViewPreferences::setRemoveHiddenLines(bool value)
 {
-	if (value != removeHiddenLines)
+	if (value != ldPrefs->getRemoveHiddenLines())
 	{
-		removeHiddenLines = value;
-		modelViewer->setRemoveHiddenLines(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, REMOVE_HIDDEN_LINES_KEY);
+		ldPrefs->setRemoveHiddenLines(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES,
@@ -580,11 +171,9 @@ void LDViewPreferences::setRemoveHiddenLines(bool value)
 
 void LDViewPreferences::setEdgesOnly(bool value)
 {
-	if (value != edgesOnly)
+	if (value != ldPrefs->getEdgesOnly())
 	{
-		edgesOnly = value;
-		modelViewer->setEdgesOnly(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, EDGES_ONLY_KEY);
+		ldPrefs->setEdgesOnly(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY, BM_SETCHECK,
@@ -598,6 +187,36 @@ int LDViewPreferences::getFullScreenRefresh(void)
 	return ldPrefs->getFullScreenRefresh();
 }
 
+int LDViewPreferences::getSeamWidth(void)
+{
+	return ldPrefs->getSeamWidth();
+}
+
+bool LDViewPreferences::getQualityLighting(void)
+{
+	return ldPrefs->getQualityLighting();
+}
+
+bool LDViewPreferences::getUsesFlatShading(void)
+{
+	return ldPrefs->getUseFlatShading();
+}
+
+bool LDViewPreferences::getUsesSpecular(void)
+{
+	return ldPrefs->getUseSpecular();
+}
+
+bool LDViewPreferences::getOneLight(void)
+{
+	return ldPrefs->getOneLight();
+}
+
+bool LDViewPreferences::getPerformSmoothing(void)
+{
+	return ldPrefs->getPerformSmoothing();
+}
+
 bool LDViewPreferences::getShowsFPS(void)
 {
 	return ldPrefs->getShowFps();
@@ -608,6 +227,101 @@ bool LDViewPreferences::getLineSmoothing(void)
 	return ldPrefs->getLineSmoothing();
 }
 
+bool LDViewPreferences::getQualityStuds(void)
+{
+	return ldPrefs->getQualityStuds();
+}
+
+bool LDViewPreferences::getAllowPrimitiveSubstitution(void)
+{
+	return ldPrefs->getAllowPrimitiveSubstitution();
+}
+
+bool LDViewPreferences::getShowsHighlightLines(void)
+{
+	return ldPrefs->getShowHighlightLines();
+}
+
+bool LDViewPreferences::getEdgesOnly(void)
+{
+	return ldPrefs->getEdgesOnly();
+}
+
+bool LDViewPreferences::getDrawConditionalHighlights(void)
+{
+	return ldPrefs->getDrawConditionalHighlights();
+}
+
+bool LDViewPreferences::getUseSeams(void)
+{
+	return ldPrefs->getUseSeams();
+}
+
+bool LDViewPreferences::getDrawWireframe(void)
+{
+	return ldPrefs->getDrawWireframe();
+}
+
+bool LDViewPreferences::getBfc(void)
+{
+	return ldPrefs->getBfc();
+}
+
+bool LDViewPreferences::getRedBackFaces(void)
+{
+	return ldPrefs->getRedBackFaces();
+}
+
+bool LDViewPreferences::getGreenFrontFaces(void)
+{
+	return ldPrefs->getGreenFrontFaces();
+}
+
+bool LDViewPreferences::getUseWireframeFog(void)
+{
+	return ldPrefs->getUseWireframeFog();
+}
+
+bool LDViewPreferences::getRemoveHiddenLines(void)
+{
+	return ldPrefs->getRemoveHiddenLines();
+}
+
+bool LDViewPreferences::getUsePolygonOffset(void)
+{
+	return ldPrefs->getUsePolygonOffset();
+}
+
+bool LDViewPreferences::getBlackHighlights(void)
+{
+	return ldPrefs->getBlackHighlights();
+}
+
+bool LDViewPreferences::getUseLighting(void)
+{
+	return ldPrefs->getUseLighting();
+}
+
+bool LDViewPreferences::getSubduedLighting(void)
+{
+	return ldPrefs->getSubduedLighting();
+}
+
+bool LDViewPreferences::getUseStipple(void)
+{
+	return ldPrefs->getUseStipple();
+}
+
+bool LDViewPreferences::getSortTransparent(void)
+{
+	return ldPrefs->getSortTransparent();
+}
+
+bool LDViewPreferences::getTextureStuds(void)
+{
+	return ldPrefs->getTextureStuds();
+}
+
 COLORREF LDViewPreferences::getBackgroundColor(void)
 {
 	return (COLORREF)ldPrefs->getBackgroundColor();
@@ -615,12 +329,9 @@ COLORREF LDViewPreferences::getBackgroundColor(void)
 
 void LDViewPreferences::setDrawConditionalHighlights(bool value)
 {
-	if (value != drawConditionalHighlights)
+	if (value != ldPrefs->getDrawConditionalHighlights())
 	{
-		drawConditionalHighlights = value;
-		modelViewer->setDrawConditionalHighlights(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0,
-			CONDITIONAL_HIGHLIGHTS_KEY);
+		ldPrefs->setDrawConditionalHighlights(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
@@ -631,11 +342,9 @@ void LDViewPreferences::setDrawConditionalHighlights(bool value)
 
 void LDViewPreferences::setUsePolygonOffset(bool value)
 {
-	if (value != usePolygonOffset)
+	if (value != ldPrefs->getUsePolygonOffset())
 	{
-		usePolygonOffset = value;
-		modelViewer->setUsePolygonOffset(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, POLYGON_OFFSET_KEY);
+		ldPrefs->setUsePolygonOffset(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_QUALITY_LINES, BM_SETCHECK,
@@ -646,11 +355,9 @@ void LDViewPreferences::setUsePolygonOffset(bool value)
 
 void LDViewPreferences::setBlackHighlights(bool value)
 {
-	if (value != blackHighlights)
+	if (value != ldPrefs->getBlackHighlights())
 	{
-		blackHighlights = value;
-		modelViewer->setBlackHighlights(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, BLACK_HIGHLIGHTS_KEY);
+		ldPrefs->setBlackHighlights(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_ALWAYS_BLACK, BM_SETCHECK,
@@ -661,19 +368,13 @@ void LDViewPreferences::setBlackHighlights(bool value)
 
 void LDViewPreferences::setShowsHighlightLines(bool value)
 {
-	if (value != showsHighlightLines)
+	if (value != ldPrefs->getShowHighlightLines())
 	{
-		showsHighlightLines = value;
-		modelViewer->setShowsHighlightLines(showsHighlightLines);
-		TCUserDefaults::setLongForKey(showsHighlightLines ? 1 : 0,
-			SHOW_HIGHLIGHT_LINES_KEY);
+		ldPrefs->setShowHighlightLines(value, true, true);
 		if (hGeometryPage)
 		{
-			setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS,
-				showsHighlightLines);
-//			SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
-//				showsHighlightLines, 0);
-			if (showsHighlightLines)
+			setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS, value);
+			if (value)
 			{
 				enableEdges();
 			}
@@ -687,11 +388,9 @@ void LDViewPreferences::setShowsHighlightLines(bool value)
 
 void LDViewPreferences::setTextureStuds(bool value)
 {
-	if (value != textureStuds)
+	if (value != ldPrefs->getTextureStuds())
 	{
-		textureStuds = value;
-		modelViewer->setTextureStuds(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, TEXTURE_STUDS_KEY);
+		ldPrefs->setTextureStuds(value, true, true);
 		if (hPrimitivesPage)
 		{
 			SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK,
@@ -702,19 +401,14 @@ void LDViewPreferences::setTextureStuds(bool value)
 
 void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 {
-	if (value != allowPrimitiveSubstitution)
+	if (value != ldPrefs->getAllowPrimitiveSubstitution())
 	{
-		allowPrimitiveSubstitution = value;
-		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
-		TCUserDefaults::setLongForKey(allowPrimitiveSubstitution ? 1 : 0,
-			PRIMITIVE_SUBSTITUTION_KEY);
+		ldPrefs->setAllowPrimitiveSubstitution(value, true, true);
 		if (hPrimitivesPage)
 		{
 			setupGroupCheckButton(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
-				allowPrimitiveSubstitution);
-//			SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
-//				BM_SETCHECK, allowPrimitiveSubstitution, 0);
-			if (allowPrimitiveSubstitution)
+				value);
+			if (value)
 			{
 				enablePrimitives();
 			}
@@ -728,11 +422,9 @@ void LDViewPreferences::setAllowPrimitiveSubstitution(bool value)
 
 void LDViewPreferences::setRedBackFaces(bool value)
 {
-	if (value != redBackFaces)
+	if (value != ldPrefs->getRedBackFaces())
 	{
-		redBackFaces = value;
-		modelViewer->setRedBackFaces(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, RED_BACK_FACES_KEY);
+		ldPrefs->setRedBackFaces(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
@@ -743,11 +435,9 @@ void LDViewPreferences::setRedBackFaces(bool value)
 
 void LDViewPreferences::setGreenFrontFaces(bool value)
 {
-	if (value != greenFrontFaces)
+	if (value != ldPrefs->getGreenFrontFaces())
 	{
-		greenFrontFaces = value;
-		modelViewer->setGreenFrontFaces(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, GREEN_FRONT_FACES_KEY);
+		ldPrefs->setGreenFrontFaces(value, true, true);
 		if (hGeometryPage)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES,
@@ -758,16 +448,13 @@ void LDViewPreferences::setGreenFrontFaces(bool value)
 
 void LDViewPreferences::setBfc(bool value)
 {
-	if (value != bfc)
+	if (value != ldPrefs->getBfc())
 	{
-		bfc = value;
-		modelViewer->setBfc(bfc);
-		TCUserDefaults::setLongForKey(bfc ? 1 : 0, BFC_KEY);
+		ldPrefs->setBfc(value, true, true);
 		if (hGeometryPage)
 		{
-			setupGroupCheckButton(hGeometryPage, IDC_BFC, bfc);
-//			SendDlgItemMessage(hEffectsPage, IDC_BFC, BM_SETCHECK, bfc, 0);
-			if (bfc)
+			setupGroupCheckButton(hGeometryPage, IDC_BFC, value);
+			if (value)
 			{
 				enableBfc();
 			}
@@ -782,11 +469,9 @@ void LDViewPreferences::setBfc(bool value)
 // This is called from LDViewWindow.
 void LDViewPreferences::setQualityLighting(bool value)
 {
-	if (value != qualityLighting)
+	if (value != ldPrefs->getQualityLighting())
 	{
-		qualityLighting = value;
-		modelViewer->setQualityLighting(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, QUALITY_LIGHTING_KEY);
+		ldPrefs->setQualityLighting(value, true, true);
 		if (hEffectsPage)
 		{
 			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
@@ -797,11 +482,9 @@ void LDViewPreferences::setQualityLighting(bool value)
 
 void LDViewPreferences::setSubduedLighting(bool value)
 {
-	if (value != subduedLighting)
+	if (value != ldPrefs->getSubduedLighting())
 	{
-		subduedLighting = value;
-		modelViewer->setSubduedLighting(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, SUBDUED_LIGHTING_KEY);
+		ldPrefs->setSubduedLighting(value, true, true);
 		if (hEffectsPage)
 		{
 			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
@@ -812,11 +495,9 @@ void LDViewPreferences::setSubduedLighting(bool value)
 
 void LDViewPreferences::setUsesSpecular(bool value)
 {
-	if (value != usesSpecular)
+	if (value != ldPrefs->getUseSpecular())
 	{
-		usesSpecular = value;
-		modelViewer->setUsesSpecular(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, SPECULAR_KEY);
+		ldPrefs->setUseSpecular(value, true, true);
 		if (hEffectsPage)
 		{
 			SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, value,
@@ -827,11 +508,9 @@ void LDViewPreferences::setUsesSpecular(bool value)
 
 void LDViewPreferences::setOneLight(bool value)
 {
-	if (value != oneLight)
+	if (value != ldPrefs->getOneLight())
 	{
-		oneLight = value;
-		modelViewer->setOneLight(value);
-		TCUserDefaults::setLongForKey(value ? 1 : 0, ONE_LIGHT_KEY);
+		ldPrefs->setOneLight(value, true, true);
 		if (hEffectsPage)
 		{
 			SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING,
@@ -842,17 +521,13 @@ void LDViewPreferences::setOneLight(bool value)
 
 void LDViewPreferences::setUseLighting(bool value)
 {
-	if (value != useLighting)
+	if (value != ldPrefs->getUseLighting())
 	{
-		useLighting = value;
-		modelViewer->setUseLighting(useLighting);
-		TCUserDefaults::setLongForKey(useLighting ? 1 : 0, LIGHTING_KEY);
+		ldPrefs->setUseLighting(value, true, true);
 		if (hEffectsPage)
 		{
-			setupGroupCheckButton(hEffectsPage, IDC_LIGHTING, useLighting);
-//			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK,
-//				useLighting, 0);
-			if (useLighting)
+			setupGroupCheckButton(hEffectsPage, IDC_LIGHTING, value);
+			if (value)
 			{
 				enableLighting();
 			}
@@ -891,25 +566,6 @@ int LDViewPreferences::run(void)
 	}
 	return retValue;
 }
-
-/*
-void LDViewPreferences::getGroupBoxTextColor(void)
-{
-	if (!checkedGroupBoxTextColor && CUIThemes::isThemeLibLoaded())
-	{
-		HWND hBox = GetDlgItem(hwndArray->pointerAtIndex(generalPageNumber),
-			IDC_AA_BOX);
-		HTHEME hTheme = CUIThemes::getWindowTheme(hBox);
-
-		if (SUCCEEDED(CUIThemes::getThemeColor(hTheme, BP_GROUPBOX, GBS_NORMAL,
-			TMT_TEXTCOLOR, &groupBoxTextColor)))
-		{
-			haveGroupBoxTextColor = true;
-		}
-		checkedGroupBoxTextColor = true;
-	}
-}
-*/
 
 BOOL LDViewPreferences::doDialogNotify(HWND hDlg, int controlId,
 									   LPNMHDR notification)
@@ -1176,7 +832,8 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 		}
 		if (hGeometryPage)
 		{
-			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, drawWireframe);
+			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME,
+				ldPrefs->getDrawWireframe());
 		}
 	}
 	return FALSE;
@@ -1255,22 +912,9 @@ LRESULT LDViewPreferences::groupCheckButtonProc(HWND hWnd, UINT message,
 				InvalidateRect(hMouseOverButton, NULL, FALSE);
 			}
 			hMouseOverButton = hWnd;
-//			debugPrintf("hMouseOverButton: 0x%08X\n", hWnd);
 			InvalidateRect(hWnd, NULL, FALSE);
 		}
 		break;
-/*
-	case WM_LBUTTONUP:
-		{
-			int state = SendMessage(hWnd, BM_GETSTATE, 0, 0);
-
-			if (hMouseOverButton == hWnd && (state & BST_PUSHED))
-			{
-				checkStates[hWnd] = !checkStates[hWnd];
-			}
-		}
-		break;
-*/
 	}
 	return CallWindowProc((WNDPROC)origButtonWindowProc, hWnd, message, wParam,
 		lParam);
@@ -1376,7 +1020,7 @@ void LDViewPreferences::enableSeams(void)
 
 	EnableWindow(hSeamSpin, TRUE);
 	SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_SETCHECK, 1, 0);
-	sprintf(seamWidthString, "%0.2f", seamWidth / 100.0f);
+	sprintf(seamWidthString, "%0.2f", ldPrefs->getSeamWidth() / 100.0f);
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_WIDTH_FIELD, WM_SETTEXT, 0,
 		(LPARAM)seamWidthString);
 }
@@ -1401,7 +1045,7 @@ void LDViewPreferences::enableTextureFiltering(void)
 		0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_TRILINEAR, BM_SETCHECK, 0,
 		0);
-	switch (textureFilterType)
+	switch (ldPrefs->getTextureFilterType())
 	{
 	case GL_NEAREST_MIPMAP_NEAREST:
 		activeTextureFilter = IDC_TEXTURE_NEAREST;
@@ -1413,7 +1057,7 @@ void LDViewPreferences::enableTextureFiltering(void)
 		activeTextureFilter = IDC_TEXTURE_TRILINEAR;
 		break;
 	default:
-		textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
+		ldPrefs->setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
 		activeTextureFilter = IDC_TEXTURE_TRILINEAR;
 		break;
 	}
@@ -1437,11 +1081,9 @@ void LDViewPreferences::enablePrimitives(void)
 	EnableWindow(hTextureStudsButton, TRUE);
 	EnableWindow(hCurveQualityLabel, TRUE);
 	EnableWindow(hCurveQualitySlider, TRUE);
-//	SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, BM_SETCHECK,
-//		1, 0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK,
-		textureStuds, 0);
-	if (textureStuds)
+		ldPrefs->getTextureStuds(), 0);
+	if (ldPrefs->getTextureStuds())
 	{
 		enableTextureFiltering();
 	}
@@ -1456,8 +1098,6 @@ void LDViewPreferences::disablePrimitives(void)
 	EnableWindow(hTextureStudsButton, FALSE);
 	EnableWindow(hCurveQualityLabel, FALSE);
 	EnableWindow(hCurveQualitySlider, FALSE);
-//	SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, BM_SETCHECK,
-//		0, 0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_STUDS, BM_SETCHECK, 0, 0);
 	disableTextureFiltering();
 }
@@ -1469,10 +1109,11 @@ void LDViewPreferences::setupSeamWidth(void)
 	hSeamSpin = GetDlgItem(hGeometryPage, IDC_SEAM_SPIN);
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETRANGE, 0,
 		MAKELONG((short)500, (short)0)); 
-	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETPOS, 0, seamWidth);
+	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETPOS, 0,
+		ldPrefs->getSeamWidth());
 	SendDlgItemMessage(hGeometryPage, IDC_SEAM_SPIN, UDM_SETACCEL,
 		sizeof(accels) / sizeof(UDACCEL), (long)accels);
-	if (useSeams)
+	if (ldPrefs->getUseSeams())
 	{
 		enableSeams();
 	}
@@ -1508,29 +1149,6 @@ void LDViewPreferences::setupFullScreenRefresh(void)
 	}
 }
 
-/*
-void LDViewPreferences::drawButtonBorder(HDC hdc, COLORREF color1,
-										 COLORREF color2, RECT rect)
-{
-	HPEN hPen1 = CreatePen(PS_SOLID, 1, color1);
-	HPEN hPen2 = CreatePen(PS_SOLID, 1, color2);
-	HPEN hOldPen;
-
-	hOldPen = (HPEN)SelectObject(hdc, hPen1);
-	MoveToEx(hBackgroundColorDC, rect.left, rect.bottom, NULL);
-	LineTo(hBackgroundColorDC, rect.left, rect.top);
-	LineTo(hBackgroundColorDC, rect.right, rect.top);
-	SelectObject(hBackgroundColorDC, hPen2);
-	LineTo(hBackgroundColorDC, rect.right, rect.bottom);
-	LineTo(hBackgroundColorDC, rect.left, rect.bottom);
-	MoveToEx(hBackgroundColorDC, rect.left, rect.bottom, NULL);
-	LineTo(hBackgroundColorDC, rect.right, rect.bottom);
-	SelectObject(hdc, hOldPen);
-	DeleteObject(hPen1);
-	DeleteObject(hPen2);
-}
-*/
-
 void LDViewPreferences::redrawColorBitmap(HWND hColorButton,
 										  HBITMAP hButtonBitmap, COLORREF color)
 {
@@ -1548,9 +1166,6 @@ void LDViewPreferences::redrawColorBitmap(HWND hColorButton,
 	hOldBrush = (HBRUSH)SelectObject(hButtonColorDC, hBrush);
 	hOldBitmap = (HBITMAP)SelectObject(hButtonColorDC, hButtonBitmap);
 	FillRect(hButtonColorDC, &bitmapRect, hBrush);
-//	bitmapRect.top++;
-//	bitmapRect.left++;
-//	InflateRect(&bitmapRect, 1, 1);
 	if (CUIThemes::isThemeLibLoaded() && hButtonTheme)
 	{
 		CUIThemes::drawThemeEdge(hButtonTheme, hButtonColorDC, BP_PUSHBUTTON,
@@ -1664,41 +1279,6 @@ void LDViewPreferences::applyGeneralChanges(void)
 		ldPrefs->setShowErrors(getCheck(hGeneralPage, IDC_SHOW_ERRORS));
 		ldPrefs->setMemoryUsage((int)SendDlgItemMessage(hGeneralPage,
 			IDC_MEMORY_COMBO, CB_GETCURSEL, 0, 0));
-/*
-		TCUserDefaults::setLongForKey(fsaaMode, FSAA_MODE_KEY);
-		lineSmoothing = SendDlgItemMessage(hGeneralPage, IDC_LINE_AA,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(lineSmoothing, LINE_SMOOTHING_KEY);
-		setColor(BACKGROUND_COLOR_KEY, backgroundColor);
-		setColor(DEFAULT_COLOR_KEY, defaultColor);
-		transDefaultColor = SendDlgItemMessage(hGeneralPage,
-			IDC_TRANS_DEFAULT_COLOR, BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(transDefaultColor,
-			TRANS_DEFAULT_COLOR_KEY);
-		for (i = 0; i < 16; i++)
-		{
-			if (customColors[i])
-			{
-				char key[128];
-
-				sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
-				TCUserDefaults::setLongForKey((long)customColors[i], key,
-					false);
-			}
-		}
-		processLDConfig = SendDlgItemMessage(hGeneralPage, IDC_PROCESS_LDCONFIG,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(processLDConfig, PROCESS_LDCONFIG_KEY);
-		showsFPS = SendDlgItemMessage(hGeneralPage, IDC_FRAME_RATE, BM_GETCHECK,
-			0, 0) != 0;
-		TCUserDefaults::setLongForKey(showsFPS, SHOW_FPS_KEY);
-		showErrors = SendDlgItemMessage(hGeneralPage, IDC_SHOW_ERRORS,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(showErrors, SHOW_ERRORS_KEY, false);
-		memoryUsage = SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO,
-			CB_GETCURSEL, 0, 0);
-		TCUserDefaults::setLongForKey(memoryUsage, MEMORY_USAGE_KEY);
-*/
 		iTemp = SendDlgItemMessage(hGeneralPage, IDC_FS_REFRESH, BM_GETCHECK, 0,
 			0);
 		if (iTemp)
@@ -1720,9 +1300,6 @@ void LDViewPreferences::applyGeneralChanges(void)
 		if (iTemp >= 0)
 		{
 			ldPrefs->setFullScreenRefresh(iTemp);
-			//fullScreenRefresh = iTemp;
-			//TCUserDefaults::setLongForKey(fullScreenRefresh,
-			//	FULLSCREEN_REFRESH_KEY);
 		}
 		SendDlgItemMessage(hGeneralPage, IDC_FOV, WM_GETTEXT, 6, (LPARAM)buf);
 		// ToDo: how to deal with 64-bit float scanf?
@@ -1731,8 +1308,6 @@ void LDViewPreferences::applyGeneralChanges(void)
 			if (fTemp >= getMinFov() && fTemp <= getMaxFov())
 			{
 				ldPrefs->setFov(fTemp);
-				//fov = fTemp;
-				//TCUserDefaults::setFloatForKey((TCFloat32)fov, FOV_KEY);
 			}
 			else
 			{
@@ -1743,7 +1318,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 		{
 			setupFov(true);
 		}
-		applyGeneralSettings();
+		ldPrefs->applyGeneralSettings();
 	}
 	ldPrefs->commitGeneralSettings();
 }
@@ -1752,175 +1327,117 @@ void LDViewPreferences::applyGeometryChanges(void)
 {
 	if (hGeometryPage)
 	{
-		useSeams = SendDlgItemMessage(hGeometryPage, IDC_SEAMS, BM_GETCHECK, 0,
-			0);
-		TCUserDefaults::setLongForKey(useSeams, SEAMS_KEY);
-		if (useSeams)
+		ldPrefs->setUseSeams(getCheck(hGeometryPage, IDC_SEAMS));
+		ldPrefs->setDrawWireframe(getCachedCheck(hGeometryPage, IDC_WIREFRAME));
+		ldPrefs->setUseWireframeFog(getCheck(hGeometryPage, IDC_WIREFRAME_FOG));
+		ldPrefs->setRemoveHiddenLines(getCheck(hGeometryPage,
+			IDC_REMOVE_HIDDEN_LINES));
+		ldPrefs->setWireframeThickness((int)SendDlgItemMessage(hGeometryPage,
+			IDC_WIREFRAME_THICKNESS, TBM_GETPOS, 0, 0));
+		ldPrefs->setBfc(getCachedCheck(hGeometryPage, IDC_BFC));
+		ldPrefs->setRedBackFaces(getCheck(hGeometryPage, IDC_RED_BACK_FACES));
+		ldPrefs->setGreenFrontFaces(getCheck(hGeometryPage,
+			IDC_GREEN_FRONT_FACES));
+		ldPrefs->setShowHighlightLines(getCachedCheck(hGeometryPage,
+			IDC_HIGHLIGHTS));
+		if (ldPrefs->getShowHighlightLines())
 		{
-			TCUserDefaults::setLongForKey(seamWidth, SEAM_WIDTH_KEY);
-		}
-		else
-		{
-			seamWidth = TCUserDefaults::longForKey(SEAM_WIDTH_KEY);
-		}
-		drawWireframe = getCachedCheck(hGeometryPage, IDC_WIREFRAME);
-//		drawWireframe = SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME,
-//			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(drawWireframe, WIREFRAME_KEY);
-		useWireframeFog = SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(useWireframeFog, WIREFRAME_FOG_KEY);
-		removeHiddenLines = SendDlgItemMessage(hGeometryPage,
-			IDC_REMOVE_HIDDEN_LINES, BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(removeHiddenLines,
-			REMOVE_HIDDEN_LINES_KEY);
-		wireframeThickness = SendDlgItemMessage(hGeometryPage,
-			IDC_WIREFRAME_THICKNESS, TBM_GETPOS, 0, 0);
-		TCUserDefaults::setLongForKey(wireframeThickness, 
-			WIREFRAME_THICKNESS_KEY);
-		bfc = getCachedCheck(hGeometryPage, IDC_BFC);
-//		bfc = SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_GETCHECK, 0, 0) !=
-//			0;
-		TCUserDefaults::setLongForKey(bfc, BFC_KEY);
-		redBackFaces = SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(redBackFaces, RED_BACK_FACES_KEY);
-		greenFrontFaces = SendDlgItemMessage(hGeometryPage,
-			IDC_GREEN_FRONT_FACES, BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(greenFrontFaces, GREEN_FRONT_FACES_KEY);
-		showsHighlightLines = getCachedCheck(hGeometryPage, IDC_HIGHLIGHTS);
-//		showsHighlightLines = SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS,
-//			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(showsHighlightLines,
-			SHOW_HIGHLIGHT_LINES_KEY);
-		if (showsHighlightLines)
-		{
-			edgesOnly = SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY,
-				BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(edgesOnly, EDGES_ONLY_KEY);
-			drawConditionalHighlights = SendDlgItemMessage(hGeometryPage,
-				IDC_CONDITIONAL_HIGHLIGHTS, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(drawConditionalHighlights,
-				CONDITIONAL_HIGHLIGHTS_KEY);
-			if (drawConditionalHighlights)
+			ldPrefs->setEdgesOnly(getCheck(hGeometryPage, IDC_EDGES_ONLY));
+			ldPrefs->setDrawConditionalHighlights(getCheck(hGeometryPage,
+				IDC_CONDITIONAL_HIGHLIGHTS));
+			if (ldPrefs->getDrawConditionalHighlights())
 			{
-				showAllConditionalLines = SendDlgItemMessage(hGeometryPage,
-					IDC_ALL_CONDITIONAL, BM_GETCHECK, 0, 0) != 0;
-				TCUserDefaults::setLongForKey(showAllConditionalLines ? 1 : 0,
-					SHOW_ALL_TYPE5_KEY);
-				showConditionalControlPoints = SendDlgItemMessage(hGeometryPage,
-					IDC_CONDITIONAL_CONTROLS, BM_GETCHECK, 0, 0) != 0;
-				TCUserDefaults::setLongForKey(showConditionalControlPoints ?
-					1 : 0, SHOW_TYPE5_CONTROL_POINTS_KEY);
+				ldPrefs->setShowAllConditionalLines(getCheck(hGeometryPage,
+					IDC_ALL_CONDITIONAL));
+				ldPrefs->setShowConditionalControlPoints(getCheck(hGeometryPage,
+					IDC_CONDITIONAL_CONTROLS));
 			}
-			usePolygonOffset = SendDlgItemMessage(hGeometryPage,
-				IDC_QUALITY_LINES, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(usePolygonOffset, POLYGON_OFFSET_KEY);
-			blackHighlights = SendDlgItemMessage(hGeometryPage,
-				IDC_ALWAYS_BLACK, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(blackHighlights,
-				BLACK_HIGHLIGHTS_KEY);
+			ldPrefs->setUsePolygonOffset(getCheck(hGeometryPage,
+				IDC_QUALITY_LINES));
+			ldPrefs->setBlackHighlights(getCheck(hGeometryPage,
+				IDC_ALWAYS_BLACK));
 		}
-		edgeThickness = SendDlgItemMessage(hGeometryPage, IDC_EDGE_THICKNESS,
-			TBM_GETPOS, 0, 0);
-		TCUserDefaults::setLongForKey(edgeThickness,  EDGE_THICKNESS_KEY);
-		applyGeometrySettings();
+		ldPrefs->setEdgeThickness((int)SendDlgItemMessage(hGeometryPage,
+			IDC_EDGE_THICKNESS, TBM_GETPOS, 0, 0));
+		ldPrefs->applyGeometrySettings();
 	}
+	ldPrefs->commitGeometrySettings();
 }
 
 void LDViewPreferences::applyEffectsChanges(void)
 {
 	if (hEffectsPage)
 	{
-		useLighting = getCachedCheck(hEffectsPage, IDC_LIGHTING);
-//		useLighting = SendDlgItemMessage(hEffectsPage, IDC_LIGHTING,
-//			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(useLighting, LIGHTING_KEY);
-		if (useLighting)
+		ldPrefs->setUseLighting(getCachedCheck(hEffectsPage, IDC_LIGHTING));
+		if (ldPrefs->getUseLighting())
 		{
-			qualityLighting = SendDlgItemMessage(hEffectsPage,
-				IDC_LIGHTING_QUALITY, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(qualityLighting,
-				QUALITY_LIGHTING_KEY);
-			subduedLighting = SendDlgItemMessage(hEffectsPage,
-				IDC_LIGHTING_SUBDUED, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(subduedLighting,
-				SUBDUED_LIGHTING_KEY);
-			usesSpecular = SendDlgItemMessage(hEffectsPage, IDC_SPECULAR,
-				BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(usesSpecular, SPECULAR_KEY);
-			oneLight = SendDlgItemMessage(hEffectsPage,
-				IDC_ALTERNATE_LIGHTING, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(oneLight, ONE_LIGHT_KEY);
+			ldPrefs->setQualityLighting(getCheck(hEffectsPage,
+				IDC_LIGHTING_QUALITY));
+			ldPrefs->setSubduedLighting(getCheck(hEffectsPage,
+				IDC_LIGHTING_SUBDUED));
+			ldPrefs->setUseSpecular(getCheck(hEffectsPage, IDC_SPECULAR));
+			ldPrefs->setOneLight(getCheck(hEffectsPage,
+				IDC_ALTERNATE_LIGHTING));
 		}
-		TCUserDefaults::setLongForKey(stereoMode, STEREO_MODE_KEY);
-		stereoEyeSpacing = SendDlgItemMessage(hEffectsPage, IDC_STEREO_SPACING,
-			TBM_GETPOS, 0, 0);
-		TCUserDefaults::setLongForKey(stereoEyeSpacing, STEREO_SPACING_KEY);
-		TCUserDefaults::setLongForKey(cutawayMode, CUTAWAY_MODE_KEY);
-		cutawayAlpha = SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_OPACITY,
-			TBM_GETPOS, 0, 0);
-		TCUserDefaults::setLongForKey(cutawayAlpha, CUTAWAY_ALPHA_KEY);
-		cutawayThickness = SendDlgItemMessage(hEffectsPage,
-			IDC_CUTAWAY_THICKNESS, TBM_GETPOS, 0, 0);
-		TCUserDefaults::setLongForKey(cutawayThickness, CUTAWAY_THICKNESS_KEY);
-		useStipple = SendDlgItemMessage(hEffectsPage, IDC_STIPPLE,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(useStipple, STIPPLE_KEY);
-		sortTransparent = SendDlgItemMessage(hEffectsPage, IDC_SORT,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(sortTransparent, SORT_KEY);
-		usesFlatShading = SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(usesFlatShading, FLAT_SHADING_KEY);
-		performSmoothing = SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(performSmoothing, PERFORM_SMOOTHING_KEY);
-		applyEffectsSettings();
+		ldPrefs->setStereoEyeSpacing(SendDlgItemMessage(hEffectsPage,
+			IDC_STEREO_SPACING, TBM_GETPOS, 0, 0));
+		ldPrefs->setCutawayAlpha(SendDlgItemMessage(hEffectsPage,
+			IDC_CUTAWAY_OPACITY, TBM_GETPOS, 0, 0));
+		ldPrefs->setCutawayThickness(SendDlgItemMessage(hEffectsPage,
+			IDC_CUTAWAY_THICKNESS, TBM_GETPOS, 0, 0));
+		ldPrefs->setUseStipple(getCheck(hEffectsPage, IDC_STIPPLE));
+		ldPrefs->setSortTransparent(getCheck(hEffectsPage, IDC_SORT));
+		ldPrefs->setUseFlatShading(getCheck(hEffectsPage, IDC_FLAT_SHADING));
+		ldPrefs->setPerformSmoothing(getCheck(hEffectsPage, IDC_SMOOTH_CURVES));
+		ldPrefs->applyEffectsSettings();
 	}
+	ldPrefs->commitEffectsSettings();
 }
 
 void LDViewPreferences::applyPrimitivesChanges(void)
 {
 	if (hPrimitivesPage)
 	{
-		allowPrimitiveSubstitution = getCachedCheck(hPrimitivesPage,
-			IDC_PRIMITIVE_SUBSTITUTION);
-//		allowPrimitiveSubstitution = SendDlgItemMessage(hPrimitivesPage,
-//			IDC_PRIMITIVE_SUBSTITUTION, BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(allowPrimitiveSubstitution,
-			PRIMITIVE_SUBSTITUTION_KEY);
-		if (allowPrimitiveSubstitution)
+		ldPrefs->setAllowPrimitiveSubstitution(getCachedCheck(hPrimitivesPage,
+			IDC_PRIMITIVE_SUBSTITUTION));
+		if (ldPrefs->getAllowPrimitiveSubstitution())
 		{
-			textureStuds = SendDlgItemMessage(hPrimitivesPage,
-				IDC_TEXTURE_STUDS, BM_GETCHECK, 0, 0) != 0;
-			TCUserDefaults::setLongForKey(textureStuds, TEXTURE_STUDS_KEY);
-			TCUserDefaults::setLongForKey(textureFilterType,
-				TEXTURE_FILTER_TYPE_KEY);
-			curveQuality = SendDlgItemMessage(hPrimitivesPage,
-				IDC_CURVE_QUALITY, TBM_GETPOS, 0, 0);
-			TCUserDefaults::setLongForKey(curveQuality, CURVE_QUALITY_KEY);
+			ldPrefs->setTextureStuds(getCheck(hPrimitivesPage,
+				IDC_TEXTURE_STUDS));
+			ldPrefs->setCurveQuality(SendDlgItemMessage(hPrimitivesPage,
+				IDC_CURVE_QUALITY, TBM_GETPOS, 0, 0));
 		}
-		qualityStuds = SendDlgItemMessage(hPrimitivesPage, IDC_STUD_QUALITY,
-			BM_GETCHECK, 0, 0) == 0;
-		TCUserDefaults::setLongForKey(qualityStuds, QUALITY_STUDS_KEY);
-		hiResPrimitives = SendDlgItemMessage(hPrimitivesPage, IDC_HI_RES,
-			BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(hiResPrimitives, HI_RES_PRIMITIVES_KEY);
-		applyPrimitivesSettings();
+		ldPrefs->setQualityStuds(!getCheck(hPrimitivesPage, IDC_STUD_QUALITY));
+		ldPrefs->setHiResPrimitives(getCheck(hPrimitivesPage, IDC_HI_RES));
+		ldPrefs->applyPrimitivesSettings();
 	}
+	ldPrefs->commitPrimitivesSettings();
 }
 
 void LDViewPreferences::applyUpdatesChanges(void)
 {
 	if (hUpdatesPage)
 	{
-		checkPartTracker = SendDlgItemMessage(hUpdatesPage,
-			IDC_CHECK_PART_TRACKER, BM_GETCHECK, 0, 0) != 0;
-		TCUserDefaults::setLongForKey(checkPartTracker,
-			CHECK_PART_TRACKER_KEY);
-		applyUpdatesSettings();
+		char tempString[1024];
+		int tempNum;
+
+		ldPrefs->setCheckPartTracker(getCheck(hUpdatesPage,
+			IDC_CHECK_PART_TRACKER));
+		SendMessage(hProxyServer, WM_GETTEXT, sizeof(tempString),
+			(LPARAM)tempString);
+		if (strlen(tempString))
+		{
+			ldPrefs->setProxyServer(tempString);
+		}
+		SendMessage(hProxyPort, WM_GETTEXT, sizeof(tempString),
+			(LPARAM)tempString);
+		if (sscanf(tempString, "%d", &tempNum) == 1)
+		{
+			ldPrefs->setProxyPort(tempNum);
+		}
+		ldPrefs->applyUpdatesSettings();
 	}
+	ldPrefs->commitUpdatesSettings();
 }
 
 void LDViewPreferences::applyChanges(void)
@@ -2032,7 +1549,7 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 			chooseDefaultColor();
 			break;
 		case IDC_GENERAL_RESET:
-			loadDefaultGeneralSettings();
+			ldPrefs->loadDefaultGeneralSettings();
 			setupGeneralPage();
 			break;
 	}
@@ -2059,7 +1576,7 @@ void LDViewPreferences::doGeometryClick(int controlId, HWND /*controlHWnd*/)
 			doSeams();
 			break;
 		case IDC_GEOMETRY_RESET:
-			loadDefaultGeometrySettings();
+			ldPrefs->loadDefaultGeometrySettings();
 			setupGeometryPage();
 			break;
 	}
@@ -2089,27 +1606,27 @@ void LDViewPreferences::doEffectsClick(int controlId, HWND /*controlHWnd*/)
 			doStereo();
 			break;
 		case IDC_HARDWARE_STEREO:
-			stereoMode = LDVStereoHardware;
+			ldPrefs->setStereoMode(LDVStereoHardware);
 			break;
 		case IDC_CROSS_EYED_STEREO:
-			stereoMode = LDVStereoCrossEyed;
+			ldPrefs->setStereoMode(LDVStereoCrossEyed);
 			break;
 		case IDC_PARALLEL_STEREO:
-			stereoMode = LDVStereoParallel;
+			ldPrefs->setStereoMode(LDVStereoParallel);
 			break;
 		case IDC_CUTAWAY:
 			doCutaway();
 			break;
 		case IDC_CUTAWAY_COLOR:
-			cutawayMode = LDVCutawayWireframe;
+			ldPrefs->setCutawayMode(LDVCutawayWireframe);
 			setupOpacitySlider();
 			break;
 		case IDC_CUTAWAY_MONOCHROME:
-			cutawayMode = LDVCutawayStencil;
+			ldPrefs->setCutawayMode(LDVCutawayStencil);
 			setupOpacitySlider();
 			break;
 		case IDC_EFFECTS_RESET:
-			loadDefaultEffectsSettings();
+			ldPrefs->loadDefaultEffectsSettings();
 			setupEffectsPage();
 			break;
 	}
@@ -2399,16 +1916,16 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 			doTextureStuds();
 			break;
 		case IDC_TEXTURE_NEAREST:
-			textureFilterType = GL_NEAREST_MIPMAP_NEAREST;
+			ldPrefs->setTextureFilterType(GL_NEAREST_MIPMAP_NEAREST);
 			break;
 		case IDC_TEXTURE_BILINEAR:
-			textureFilterType = GL_LINEAR_MIPMAP_NEAREST;
+			ldPrefs->setTextureFilterType(GL_LINEAR_MIPMAP_NEAREST);
 			break;
 		case IDC_TEXTURE_TRILINEAR:
-			textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
+			ldPrefs->setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
 			break;
 		case IDC_PRIMITIVES_RESET:
-			loadDefaultPrimitivesSettings();
+			ldPrefs->loadDefaultPrimitivesSettings();
 			setupPrimitivesPage();
 			break;
 	}
@@ -2424,27 +1941,31 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 		(LPARAM)tempString);
 	if (strlen(tempString))
 	{
-		delete proxyServer;
-		proxyServer = copyString(tempString);
+		ldPrefs->setProxyServer(tempString);
 	}
 	SendMessage(hProxyPort, WM_GETTEXT, sizeof(tempString),
 		(LPARAM)tempString);
 	if (sscanf(tempString, "%d", &tempNum) == 1)
 	{
-		proxyPort = tempNum;
+		ldPrefs->setProxyPort(tempNum);
 	}
 	switch (controlId)
 	{
 	case IDC_PROXY_NONE:
+		ldPrefs->setProxyType(0);
+		disableProxyServer();
+		break;
 	case IDC_PROXY_WINDOWS:
+		ldPrefs->setProxyType(1);
 		disableProxyServer();
 		break;
 	case IDC_PROXY_MANUAL:
+		ldPrefs->setProxyType(2);
 		enableProxyServer();
 		break;
 	case IDC_UPDATES_RESET:
-		loadDefaultUpdatesSettings();
-		setupPrimitivesPage();
+		ldPrefs->loadDefaultUpdatesSettings();
+		setupUpdatesPage();
 		break;
 	}
 	enableApply(hUpdatesPage);
@@ -2673,12 +2194,12 @@ void LDViewPreferences::doStereo(void)
 {
 	if (getCachedCheck(hEffectsPage, IDC_STEREO, true))
 	{
-		stereoMode = LDVStereoCrossEyed;
+		ldPrefs->setStereoMode(LDVStereoCrossEyed);
 		enableStereo();
 	}
 	else
 	{
-		stereoMode = LDVStereoNone;
+		ldPrefs->setStereoMode(LDVStereoNone);
 		disableStereo();
 	}
 }
@@ -2687,12 +2208,12 @@ void LDViewPreferences::doCutaway(void)
 {
 	if (getCachedCheck(hEffectsPage, IDC_CUTAWAY, true))
 	{
-		cutawayMode = LDVCutawayWireframe;
+		ldPrefs->setCutawayMode(LDVCutawayWireframe);
 		enableCutaway();
 	}
 	else
 	{
-		cutawayMode = LDVCutawayNormal;
+		ldPrefs->setCutawayMode(LDVCutawayNormal);
 		disableCutaway();
 	}
 }
@@ -2712,8 +2233,6 @@ void LDViewPreferences::doSeams(void)
 void LDViewPreferences::doPrimitives(void)
 {
 	if (getCachedCheck(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION, true))
-//	if (SendDlgItemMessage(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
-//		BM_GETCHECK, 0, 0))
 	{
 		enablePrimitives();
 	}
@@ -2739,18 +2258,6 @@ void LDViewPreferences::doTextureStuds(void)
 void LDViewPreferences::doReset(void)
 {
 	loadSettings();
-/*
-	backgroundColor =
-		(COLORREF)TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY);
-	defaultColor = (COLORREF)TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
-		0x999999);
-	seamWidth = TCUserDefaults::longForKey(SEAM_WIDTH_KEY);
-	fsaaMode = TCUserDefaults::longForKey(FSAA_MODE_KEY);
-	stereoMode = (LDVStereoMode)TCUserDefaults::longForKey(STEREO_MODE_KEY);
-	cutawayMode = (LDVCutawayMode)TCUserDefaults::longForKey(CUTAWAY_MODE_KEY);
-	textureFilterType = TCUserDefaults::longForKey(TEXTURE_FILTER_TYPE_KEY,
-		GL_LINEAR_MIPMAP_LINEAR);
-*/
 }
 
 BOOL LDViewPreferences::doDialogVScroll(HWND hDlg, int scrollCode, int position,
@@ -2759,8 +2266,10 @@ BOOL LDViewPreferences::doDialogVScroll(HWND hDlg, int scrollCode, int position,
 	if (scrollCode == SB_THUMBPOSITION && hScrollBar == hSeamSpin)
 	{
 		char seamWidthString[128];
+		int seamWidth = ldPrefs->getSeamWidth();
 
 		seamWidth += (position - seamWidth);
+		ldPrefs->setSeamWidth(seamWidth);
 		sprintf(seamWidthString, "%0.2f", seamWidth / 100.0f);
 		SendDlgItemMessage(hDlg, IDC_SEAM_WIDTH_FIELD, WM_SETTEXT, 0,
 			(LPARAM)seamWidthString);
@@ -2845,8 +2354,6 @@ void LDViewPreferences::setupMemoryUsage(void)
 		(LPARAM)TCLocalStrings::get("High"));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
 		(WPARAM)ldPrefs->getMemoryUsage(), 0);
-	//SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
-	//	(WPARAM)memoryUsage, 0);
 }
 
 void LDViewPreferences::setupGeneralPage(void)
@@ -2859,40 +2366,11 @@ void LDViewPreferences::setupGeneralPage(void)
 		ldPrefs->getProcessLdConfig());
 	setCheck(hGeneralPage, IDC_FRAME_RATE, ldPrefs->getShowFps());
 	setCheck(hGeneralPage, IDC_SHOW_ERRORS, ldPrefs->getShowErrors());
-	//SendDlgItemMessage(hGeneralPage, IDC_PROCESS_LDCONFIG, BM_SETCHECK,
-	//	processLDConfig ? 1 : 0, 0);
-	//SendDlgItemMessage(hGeneralPage, IDC_FRAME_RATE, BM_SETCHECK, showsFPS,
-	//	0);
-	//SendDlgItemMessage(hGeneralPage, IDC_SHOW_ERRORS, BM_SETCHECK,
-	//	showErrors, 0);
 	setupFov();
 	setupFullScreenRefresh();
 	setupBackgroundColorButton();
 	setupDefaultColorButton();
-	//SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR, BM_SETCHECK,
-	//	transDefaultColor ? 1 : 0, 0);
 	setupMemoryUsage();
-}
-
-void LDViewPreferences::setupModelGeometry(void)
-{
-//	hCurveQualityLabel = GetDlgItem(hGeometryPage, IDC_CURVE_QUALITY_LABEL);
-//	hCurveQualitySlider = GetDlgItem(hGeometryPage, IDC_CURVE_QUALITY);
-//	SendDlgItemMessage(hGeometryPage, IDC_STUD_QUALITY, BM_SETCHECK,
-//		!qualityStuds, 0);
-//	setupDialogSlider(hGeometryPage, IDC_CURVE_QUALITY, 1, 6, 1,
-//		curveQuality);
-	setupSeamWidth();
-/*
-	if (allowPrimitiveSubstitution)
-	{
-		enablePrimitives();
-	}
-	else
-	{
-		disablePrimitives();
-	}
-*/
 }
 
 void LDViewPreferences::enableWireframe(void)
@@ -2952,7 +2430,6 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 					SendMessage(hButton, BM_SETSTYLE, LOWORD(dwStyle),
 						MAKELPARAM(1, 0));
 				}
-//				CUIThemes::openThemeData(hButton, L"Button");
 				if (GetWindowLongPtr(hButton, GWLP_WNDPROC) !=
 					(LONG_PTR)staticGroupCheckButtonProc)
 				{
@@ -2987,7 +2464,8 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 
 void LDViewPreferences::setupWireframe(void)
 {
-	setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME, drawWireframe);
+	setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME,
+		ldPrefs->getDrawWireframe());
 	hWireframeFogButton = GetDlgItem(hGeometryPage, IDC_WIREFRAME_FOG);
 	hRemoveHiddenLinesButton = GetDlgItem(hGeometryPage,
 		IDC_REMOVE_HIDDEN_LINES);
@@ -2996,12 +2474,12 @@ void LDViewPreferences::setupWireframe(void)
 	hWireframeThicknessSlider = GetDlgItem(hGeometryPage,
 		IDC_WIREFRAME_THICKNESS);
 	SendDlgItemMessage(hGeometryPage, IDC_WIREFRAME_FOG, BM_SETCHECK,
-		useWireframeFog, 0);
+		ldPrefs->getUseWireframeFog(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_REMOVE_HIDDEN_LINES, BM_SETCHECK,
-		removeHiddenLines, 0);
+		ldPrefs->getRemoveHiddenLines(), 0);
 	setupDialogSlider(hGeometryPage, IDC_WIREFRAME_THICKNESS, 1, 5, 1,
-		wireframeThickness);
-	if (drawWireframe)
+		ldPrefs->getWireframeThickness());
+	if (ldPrefs->getDrawWireframe())
 	{
 		enableWireframe();
 	}
@@ -3013,15 +2491,14 @@ void LDViewPreferences::setupWireframe(void)
 
 void LDViewPreferences::setupBfc(void)
 {
-	setupGroupCheckButton(hGeometryPage, IDC_BFC, bfc);
+	setupGroupCheckButton(hGeometryPage, IDC_BFC, ldPrefs->getBfc());
 	hRedBackFacesButton = GetDlgItem(hGeometryPage, IDC_RED_BACK_FACES);
 	hGreenFrontFacesButton = GetDlgItem(hGeometryPage, IDC_GREEN_FRONT_FACES);
-//	SendDlgItemMessage(hGeometryPage, IDC_BFC, BM_SETCHECK, bfc, 0);
 	SendDlgItemMessage(hGeometryPage, IDC_RED_BACK_FACES, BM_SETCHECK,
-		redBackFaces, 0);
+		ldPrefs->getRedBackFaces(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_GREEN_FRONT_FACES, BM_SETCHECK,
-		greenFrontFaces, 0);
-	if (bfc)
+		ldPrefs->getGreenFrontFaces(), 0);
+	if (ldPrefs->getBfc())
 	{
 		enableBfc();
 	}
@@ -3036,9 +2513,9 @@ void LDViewPreferences::enableConditionals(void)
 	EnableWindow(hShowAllConditionalButton, TRUE);
 	EnableWindow(hShowConditionalControlsButton, TRUE);
 	SendDlgItemMessage(hGeometryPage, IDC_ALL_CONDITIONAL, BM_SETCHECK,
-		showAllConditionalLines ? 1 : 0, 0);
+		ldPrefs->getShowAllConditionalLines(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_CONTROLS, BM_SETCHECK,
-		showConditionalControlPoints ? 1 : 0, 0);
+		ldPrefs->getShowConditionalControlPoints(), 0);
 }
 
 void LDViewPreferences::disableConditionals(void)
@@ -3058,7 +2535,7 @@ void LDViewPreferences::enableEdges(void)
 	EnableWindow(hAlwaysBlackButton, TRUE);
 	EnableWindow(hEdgeThicknessLabel, TRUE);
 	EnableWindow(hEdgeThicknessSlider, TRUE);
-	if (drawConditionalHighlights)
+	if (ldPrefs->getDrawConditionalHighlights())
 	{
 		enableConditionals();
 	}
@@ -3067,13 +2544,13 @@ void LDViewPreferences::enableEdges(void)
 		disableConditionals();
 	}
 	SendDlgItemMessage(hGeometryPage, IDC_EDGES_ONLY, BM_SETCHECK,
-		edgesOnly ? 1 : 0, 0);
+		ldPrefs->getEdgesOnly(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS, BM_SETCHECK,
-		drawConditionalHighlights ? 1 : 0, 0);
+		ldPrefs->getDrawConditionalHighlights(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_QUALITY_LINES, BM_SETCHECK,
-		usePolygonOffset, 0);
+		ldPrefs->getUsePolygonOffset(), 0);
 	SendDlgItemMessage(hGeometryPage, IDC_ALWAYS_BLACK, BM_SETCHECK,
-		blackHighlights, 0);
+		ldPrefs->getBlackHighlights(), 0);
 }
 
 void LDViewPreferences::disableEdges(void)
@@ -3094,7 +2571,8 @@ void LDViewPreferences::disableEdges(void)
 
 void LDViewPreferences::setupEdgeLines(void)
 {
-	setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS, showsHighlightLines);
+	setupGroupCheckButton(hGeometryPage, IDC_HIGHLIGHTS,
+		ldPrefs->getShowHighlightLines());
 	hConditionalHighlightsButton = GetDlgItem(hGeometryPage,
 		IDC_CONDITIONAL_HIGHLIGHTS);
 	hShowAllConditionalButton = GetDlgItem(hGeometryPage, IDC_ALL_CONDITIONAL);
@@ -3105,11 +2583,9 @@ void LDViewPreferences::setupEdgeLines(void)
 	hAlwaysBlackButton = GetDlgItem(hGeometryPage, IDC_ALWAYS_BLACK);
 	hEdgeThicknessLabel = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS_LABEL);
 	hEdgeThicknessSlider = GetDlgItem(hGeometryPage, IDC_EDGE_THICKNESS);
-//	SendDlgItemMessage(hGeometryPage, IDC_HIGHLIGHTS, BM_SETCHECK,
-//		showsHighlightLines, 0);
 	setupDialogSlider(hGeometryPage, IDC_EDGE_THICKNESS, 1, 5, 1,
-		edgeThickness);
-	if (showsHighlightLines)
+		ldPrefs->getEdgeThickness());
+	if (ldPrefs->getShowHighlightLines())
 	{
 		enableEdges();
 	}
@@ -3122,7 +2598,7 @@ void LDViewPreferences::setupEdgeLines(void)
 void LDViewPreferences::setupGeometryPage(void)
 {
 	hGeometryPage = hwndArray->pointerAtIndex(geometryPageNumber);
-	setupModelGeometry();
+	setupSeamWidth();
 	setupWireframe();
 	setupBfc();
 	setupEdgeLines();
@@ -3130,9 +2606,10 @@ void LDViewPreferences::setupGeometryPage(void)
 
 void LDViewPreferences::setupOpacitySlider(void)
 {
-	if (cutawayMode == LDVCutawayWireframe && !LDVExtensionsSetup::haveAlpha())
+	if (ldPrefs->getCutawayMode() == LDVCutawayWireframe &&
+		!LDVExtensionsSetup::haveAlpha())
 	{
-		cutawayAlpha = 100;
+		ldPrefs->setCutawayAlpha(100);
 		EnableWindow(hCutawayOpacitySlider, FALSE);
 		EnableWindow(hCutawayOpacityLabel, FALSE);
 		SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_OPACITY, TBM_SETPOS, 1,
@@ -3149,7 +2626,6 @@ void LDViewPreferences::enableCutaway(void)
 {
 	int activeCutaway = 0;
 
-//	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_SETCHECK, 1, 0);
 	EnableWindow(hCutawayColorButton, TRUE);
 	if (LDVExtensionsSetup::haveStencil())
 	{
@@ -3157,9 +2633,9 @@ void LDViewPreferences::enableCutaway(void)
 	}
 	else
 	{
-		if (cutawayMode == LDVCutawayStencil)
+		if (ldPrefs->getCutawayMode() == LDVCutawayStencil)
 		{
-			cutawayMode = LDVCutawayWireframe;
+			ldPrefs->setCutawayMode(LDVCutawayWireframe);
 		}
 		EnableWindow(hCutawayMonochromButton, FALSE);
 	}
@@ -3168,7 +2644,7 @@ void LDViewPreferences::enableCutaway(void)
 	EnableWindow(hCutawayThicknessLabel, TRUE);
 	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_COLOR, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY_MONOCHROME, BM_SETCHECK, 0, 0);
-	switch (cutawayMode)
+	switch (ldPrefs->getCutawayMode())
 	{
 	case LDVCutawayWireframe:
 		activeCutaway = IDC_CUTAWAY_COLOR;
@@ -3182,7 +2658,6 @@ void LDViewPreferences::enableCutaway(void)
 
 void LDViewPreferences::disableCutaway(void)
 {
-//	SendDlgItemMessage(hEffectsPage, IDC_CUTAWAY, BM_SETCHECK, 0, 0);
 	EnableWindow(hCutawayColorButton, FALSE);
 	EnableWindow(hCutawayMonochromButton, FALSE);
 	EnableWindow(hCutawayOpacityLabel, FALSE);
@@ -3196,7 +2671,7 @@ void LDViewPreferences::disableCutaway(void)
 void LDViewPreferences::setupCutaway(void)
 {
 	setupGroupCheckButton(hEffectsPage, IDC_CUTAWAY,
-		cutawayMode != LDVCutawayNormal);
+		ldPrefs->getCutawayMode() != LDVCutawayNormal);
 	hCutawayColorButton = GetDlgItem(hEffectsPage, IDC_CUTAWAY_COLOR);
 	hCutawayMonochromButton = GetDlgItem(hEffectsPage, IDC_CUTAWAY_MONOCHROME);
 	hCutawayOpacityLabel = GetDlgItem(hEffectsPage, IDC_CUTAWAY_OPACITY_LABEL);
@@ -3205,10 +2680,10 @@ void LDViewPreferences::setupCutaway(void)
 		IDC_CUTAWAY_THICKNESS_LABEL);
 	hCutawayThicknessSlider = GetDlgItem(hEffectsPage, IDC_CUTAWAY_THICKNESS);
 	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_OPACITY, 1, 100, 10,
-		cutawayAlpha);
+		ldPrefs->getCutawayAlpha());
 	setupDialogSlider(hEffectsPage, IDC_CUTAWAY_THICKNESS, 1, 5, 1,
-		cutawayThickness);
-	if (cutawayMode == LDVCutawayNormal)
+		ldPrefs->getCutawayThickness());
+	if (ldPrefs->getCutawayMode() == LDVCutawayNormal)
 	{
 		disableCutaway();
 	}
@@ -3222,7 +2697,6 @@ void LDViewPreferences::enableStereo(void)
 {
 	int activeStereo = 0;
 
-//	SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_SETCHECK, 1, 0);
 	EnableWindow(hHardwareStereoButton, TRUE);
 	EnableWindow(hCrossEyedStereoButton, TRUE);
 	EnableWindow(hParallelStereoButton, TRUE);
@@ -3234,7 +2708,7 @@ void LDViewPreferences::enableStereo(void)
 		0);
 	SendDlgItemMessage(hEffectsPage, IDC_PARALLEL_STEREO, BM_SETCHECK, 0,
 		0);
-	switch (stereoMode)
+	switch (ldPrefs->getStereoMode())
 	{
 	case LDVStereoHardware:
 		activeStereo = IDC_HARDWARE_STEREO;
@@ -3251,7 +2725,6 @@ void LDViewPreferences::enableStereo(void)
 
 void LDViewPreferences::disableStereo(void)
 {
-//	SendDlgItemMessage(hEffectsPage, IDC_STEREO, BM_SETCHECK, 0, 0);
 	EnableWindow(hHardwareStereoButton, FALSE);
 	EnableWindow(hCrossEyedStereoButton, FALSE);
 	EnableWindow(hParallelStereoButton, FALSE);
@@ -3265,15 +2738,15 @@ void LDViewPreferences::disableStereo(void)
 void LDViewPreferences::setupStereo(void)
 {
 	setupGroupCheckButton(hEffectsPage, IDC_STEREO,
-		stereoMode != LDVStereoNone);
+		ldPrefs->getStereoMode() != LDVStereoNone);
 	hHardwareStereoButton = GetDlgItem(hEffectsPage, IDC_HARDWARE_STEREO);
 	hCrossEyedStereoButton = GetDlgItem(hEffectsPage, IDC_CROSS_EYED_STEREO);
 	hParallelStereoButton = GetDlgItem(hEffectsPage, IDC_PARALLEL_STEREO);
 	hStereoSpacingSlider = GetDlgItem(hEffectsPage, IDC_STEREO_SPACING);
 	hStereoSpacingLabel = GetDlgItem(hEffectsPage, IDC_STEREO_SPACING_LABEL);
 	setupDialogSlider(hEffectsPage, IDC_STEREO_SPACING, 0, 100, 10,
-		stereoEyeSpacing);
-	if (stereoMode == LDVStereoNone)
+		ldPrefs->getStereoEyeSpacing());
+	if (ldPrefs->getStereoMode() == LDVStereoNone)
 	{
 		disableStereo();
 	}
@@ -3289,15 +2762,14 @@ void LDViewPreferences::enableLighting(void)
 	EnableWindow(hLightSubduedButton, TRUE);
 	EnableWindow(hLightSpecularButton, TRUE);
 	EnableWindow(hLightAlternateButton, TRUE);
-//	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK, 1, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
-		qualityLighting, 0);
+		ldPrefs->getQualityLighting(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
-		subduedLighting, 0);
+		ldPrefs->getSubduedLighting(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK,
-		usesSpecular, 0);
+		ldPrefs->getUseSpecular(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK,
-		oneLight, 0);
+		ldPrefs->getOneLight(), 0);
 }
 
 void LDViewPreferences::disableLighting(void)
@@ -3315,12 +2787,13 @@ void LDViewPreferences::disableLighting(void)
 
 void LDViewPreferences::setupLighting(void)
 {
-	setupGroupCheckButton(hEffectsPage, IDC_LIGHTING, useLighting);
+	setupGroupCheckButton(hEffectsPage, IDC_LIGHTING,
+		ldPrefs->getUseLighting());
 	hLightQualityButton = GetDlgItem(hEffectsPage, IDC_LIGHTING_QUALITY);
 	hLightSubduedButton = GetDlgItem(hEffectsPage, IDC_LIGHTING_SUBDUED);
 	hLightSpecularButton = GetDlgItem(hEffectsPage, IDC_SPECULAR);
 	hLightAlternateButton = GetDlgItem(hEffectsPage, IDC_ALTERNATE_LIGHTING);
-	if (useLighting)
+	if (ldPrefs->getUseLighting())
 	{
 		enableLighting();
 	}
@@ -3337,19 +2810,19 @@ void LDViewPreferences::setupEffectsPage(void)
 	setupStereo();
 	setupCutaway();
 	SendDlgItemMessage(hEffectsPage, IDC_STIPPLE, BM_SETCHECK,
-		useStipple, 0);
+		ldPrefs->getUseStipple(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_SORT, BM_SETCHECK,
-		sortTransparent, 0);
+		ldPrefs->getSortTransparent(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK,
-		usesFlatShading, 0);
+		ldPrefs->getUseFlatShading(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_SETCHECK,
-		performSmoothing, 0);
+		ldPrefs->getPerformSmoothing(), 0);
 }
 
 void LDViewPreferences::setupSubstitution(void)
 {
 	setupGroupCheckButton(hPrimitivesPage, IDC_PRIMITIVE_SUBSTITUTION,
-		allowPrimitiveSubstitution);
+		ldPrefs->getAllowPrimitiveSubstitution());
 	hTextureStudsButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_STUDS);
 	hTextureNearestButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_NEAREST);
 	hTextureBilinearButton = GetDlgItem(hPrimitivesPage, IDC_TEXTURE_BILINEAR);
@@ -3358,8 +2831,8 @@ void LDViewPreferences::setupSubstitution(void)
 	hCurveQualityLabel = GetDlgItem(hPrimitivesPage, IDC_CURVE_QUALITY_LABEL);
 	hCurveQualitySlider = GetDlgItem(hPrimitivesPage, IDC_CURVE_QUALITY);
 	setupDialogSlider(hPrimitivesPage, IDC_CURVE_QUALITY, 1, 12, 1,
-		curveQuality);
-	if (allowPrimitiveSubstitution)
+		ldPrefs->getCurveQuality());
+	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
 		enablePrimitives();
 	}
@@ -3374,9 +2847,9 @@ void LDViewPreferences::setupPrimitivesPage(void)
 	hPrimitivesPage = hwndArray->pointerAtIndex(primitivesPageNumber);
 	setupSubstitution();
 	SendDlgItemMessage(hPrimitivesPage, IDC_STUD_QUALITY, BM_SETCHECK,
-		!qualityStuds, 0);
+		!ldPrefs->getQualityStuds(), 0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_HI_RES, BM_SETCHECK,
-		hiResPrimitives, 0);
+		ldPrefs->getHiResPrimitives(), 0);
 }
 
 void LDViewPreferences::enableProxyServer(void)
@@ -3388,17 +2861,10 @@ void LDViewPreferences::enableProxyServer(void)
 	EnableWindow(hProxyServer, TRUE);
 	EnableWindow(hProxyPortLabel, TRUE);
 	EnableWindow(hProxyPort, TRUE);
-	if (proxyServer)
-	{
-		proxyServerString = copyString(proxyServer);
-	}
-	else
-	{
-		proxyServerString = copyString("");
-	}
+	proxyServerString = copyString(ldPrefs->getProxyServer());
 	SendMessage(hProxyServer, WM_SETTEXT, 0, (LPARAM)proxyServerString);
 	delete proxyServerString;
-	sprintf(proxyPortString, "%d", proxyPort);
+	sprintf(proxyPortString, "%d", ldPrefs->getProxyPort());
 	SendMessage(hProxyPort, WM_SETTEXT, 0, (LPARAM)proxyPortString);
 }
 
@@ -3416,7 +2882,10 @@ void LDViewPreferences::setupProxy(void)
 {
 	int activeProxyType = IDC_PROXY_NONE;
 
-	switch (proxyType)
+	SendDlgItemMessage(hUpdatesPage, IDC_PROXY_NONE, BM_SETCHECK, 0, 0);
+	SendDlgItemMessage(hUpdatesPage, IDC_PROXY_WINDOWS, BM_SETCHECK, 0, 0);
+	SendDlgItemMessage(hUpdatesPage, IDC_PROXY_MANUAL, BM_SETCHECK, 0, 0);
+	switch (ldPrefs->getProxyType())
 	{
 	case 0:
 		activeProxyType = IDC_PROXY_NONE;
@@ -3442,7 +2911,7 @@ void LDViewPreferences::setupUpdatesPage(void)
 	hProxyPortLabel = GetDlgItem(hUpdatesPage, IDC_PROXY_PORT_LABEL);
 	hProxyPort = GetDlgItem(hUpdatesPage, IDC_PROXY_PORT);
 	SendDlgItemMessage(hUpdatesPage, IDC_CHECK_PART_TRACKER, BM_SETCHECK,
-		checkPartTracker, 0);
+		ldPrefs->getCheckPartTracker(), 0);
 	setupProxy();
 }
 
@@ -3554,8 +3023,6 @@ void LDViewPreferences::setupAntialiasing(void)
 		}
 	}
 	setCheck(hGeneralPage, IDC_LINE_AA, ldPrefs->getLineSmoothing());
-	//SendDlgItemMessage(hGeneralPage, IDC_LINE_AA, BM_SETCHECK, lineSmoothing,
-	//	0);
 }
 
 bool LDViewPreferences::doApply(void)
@@ -3948,7 +3415,6 @@ BOOL LDViewPreferences::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 			{
 				InvalidateRect(hMouseOverButton, NULL, TRUE);
 				hMouseOverButton = NULL;
-//				debugPrintf("hMouseOverButton: 0x%08X\n", NULL);
 			}
 			break;
 		}
@@ -3967,120 +3433,4 @@ TCFloat LDViewPreferences::getMinFov(void)
 TCFloat LDViewPreferences::getMaxFov(void)
 {
 	return 90.0f;
-}
-
-void LDViewPreferences::setupModelCenter(void)
-{
-	char *value = TCUserDefaults::stringForKey(MODEL_CENTER_KEY);
-	if (value)
-	{
-		TCFloat center[3];
-		// ToDo: how to deal with 64-bit float scanf?
-		if (sscanf(value, "%f,%f,%f", &center[0], &center[1],&center[2]) == 3)
-		{
-			modelViewer->setModelCenter(center);
-		}
-		delete value;
-	}
-}
-void LDViewPreferences::setupModelSize(void)
-{
-	char *value = TCUserDefaults::stringForKey(MODEL_SIZE_KEY);
-	if (value)
-	{
-		TCFloat size;
-		// ToDo: how to deal with 64-bit float scanf?
-		if (sscanf(value, "%f", &size) == 1)
-		{
-			modelViewer->setModelSize(size);
-		}
-		delete value;
-	}
-}
-
-
-void LDViewPreferences::setupDefaultRotationMatrix(void)
-{
-	char *value = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL, false);
-
-	if (!value)
-	{
-		value = TCUserDefaults::stringForKey(DEFAULT_LAT_LONG_KEY);
-	}
-	if (value)
-	{
-		TCFloat latitude;
-		TCFloat longitude;
-
-		if (sscanf(value, "%f,%f", &latitude, &longitude) == 2)
-		{
-			TCFloat leftMatrix[16];
-			TCFloat rightMatrix[16];
-			TCFloat resultMatrix[16];
-			TCFloat cosTheta;
-			TCFloat sinTheta;
-
-			TCVector::initIdentityMatrix(leftMatrix);
-			TCVector::initIdentityMatrix(rightMatrix);
-			latitude = (TCFloat)deg2rad(latitude);
-			longitude = (TCFloat)deg2rad(longitude);
-
-			// First, apply latitude by rotating around X.
-			cosTheta = (TCFloat)cos(latitude);
-			sinTheta = (TCFloat)sin(latitude);
-			rightMatrix[5] = cosTheta;
-			rightMatrix[6] = sinTheta;
-			rightMatrix[9] = -sinTheta;
-			rightMatrix[10] = cosTheta;
-			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
-
-			memcpy(leftMatrix, resultMatrix, sizeof(leftMatrix));
-			TCVector::initIdentityMatrix(rightMatrix);
-
-			// Next, apply longitude by rotating around Y.
-			cosTheta = (TCFloat)cos(longitude);
-			sinTheta = (TCFloat)sin(longitude);
-			rightMatrix[0] = cosTheta;
-			rightMatrix[2] = -sinTheta;
-			rightMatrix[8] = sinTheta;
-			rightMatrix[10] = cosTheta;
-			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
-
-			modelViewer->setDefaultRotationMatrix(resultMatrix);
-		}
-		delete value;
-	}
-	else
-	{
-		value = TCUserDefaults::stringForKey(DEFAULT_MATRIX_KEY);
-		if (value)
-		{
-			TCFloat matrix[16];
-
-/*
-			if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
-				&matrix[0], &matrix[4], &matrix[8], &matrix[12],
-				&matrix[1], &matrix[5], &matrix[9], &matrix[13],
-				&matrix[2], &matrix[6], &matrix[10], &matrix[14],
-				&matrix[3], &matrix[7], &matrix[11], &matrix[15]) == 16)
-			{
-				modelViewer->setDefaultRotationMatrix(matrix);
-			}
-			else
-			{
-*/
-			memset(matrix, 0, sizeof(matrix));
-			matrix[15] = 1.0f;
-			// ToDo: how to deal with 64-bit float scanf?
-			if (sscanf(value, "%f,%f,%f,%f,%f,%f,%f,%f,%f",
-				&matrix[0], &matrix[4], &matrix[8],
-				&matrix[1], &matrix[5], &matrix[9],
-				&matrix[2], &matrix[6], &matrix[10]) == 9)
-			{
-				modelViewer->setDefaultRotationMatrix(matrix);
-			}
-//			}
-			delete value;
-		}
-	}
 }
