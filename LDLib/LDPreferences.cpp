@@ -83,7 +83,7 @@ void LDPreferences::applyGeneralSettings(void)
 	// showErrors taken care of automatically.
 	// fullScreenRefresh taken care of automatically.
 	modelViewer->setFov(m_fov);
-	modelViewer->setDefaultRGB((BYTE)r, (BYTE)g, (BYTE)b,
+	modelViewer->setDefaultRGB((TCByte)r, (TCByte)g, (TCByte)b,
 		m_transDefaultColor);
 	modelViewer->setDefaultColorNumber(m_defaultColorNumber);
 	modelViewer->setLineSmoothing(m_lineSmoothing);
@@ -154,6 +154,44 @@ void LDPreferences::applyUpdatesSettings(void)
 		TCWebClient::setProxyServer(m_proxyServer.c_str());
 		TCWebClient::setProxyPort(m_proxyPort);
 	}
+#ifdef WIN32
+	else if (m_proxyType == 1)
+	{
+		std::string appName = TCUserDefaults::getAppName();
+
+		// This is sort of cheating, but since I know exactly how TCUserDefaults
+		// works, I know that this will get the job done.  Note that if the
+		// actual type of the data in the registry doesn't match the requested
+		// type, TCUserDefaults treats the registry value as if it doesn't
+		// exist.
+		TCUserDefaults::setAppName(
+			"Microsoft/Windows/CurrentVersion/Internet Settings");
+		if (TCUserDefaults::longForKey("ProxyEnable", 0, false))
+		{
+			char *proxyServer = TCUserDefaults::stringForKey("ProxyServer",
+				NULL, false);
+
+			if (proxyServer)
+			{
+				char *colon = (char *)strchr(proxyServer, ':');
+
+				if (colon)
+				{
+					int proxyPort;
+
+					*colon = 0;
+					if (sscanf(&colon[1], "%d", &proxyPort) == 1)
+					{
+						TCWebClient::setProxyServer(proxyServer);
+						TCWebClient::setProxyPort(proxyPort);
+					}
+				}
+				delete proxyServer;
+			}
+		}
+		TCUserDefaults::setAppName(appName.c_str());
+	}
+#endif
 	else
 	{
 		TCWebClient::setProxyServer(NULL);
@@ -168,7 +206,9 @@ void LDPreferences::loadSettings(void)
 	loadEffectsSettings();
 	loadPrimitivesSettings();
 	loadUpdatesSettings();
+	changedSettings.clear();
 
+	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
 	lightVectorString = getStringSetting(LIGHT_VECTOR_KEY);
 	if (lightVectorString.length())
@@ -192,85 +232,83 @@ void LDPreferences::loadDefaultGeneralSettings(void)
 {
 	int i;
 
-	m_fsaaMode = 0;
-	m_lineSmoothing = false;
-	m_backgroundColor = (TCULong)0;
-	m_defaultColor = (TCULong)0x999999;
-	m_transDefaultColor = false;
-	m_defaultColorNumber = -1;
-	m_processLdConfig = true;
-	m_skipValidation = false;
-	m_showFps = false;
-	m_showErrors = true;
-	m_fullScreenRefresh = 0;
-	m_fov = 45.0f;
-	m_memoryUsage = 2;
+	setFsaaMode(0);
+	setLineSmoothing(false);
+	setBackgroundColor(0);
+	setDefaultColor(0x999999);
+	setTransDefaultColor(false);
+	setProcessLdConfig(true);
+	setShowFps(false);
+	setShowErrors(true);
+	setFullScreenRefresh(0);
+	setFov(45.0f);
+	setMemoryUsage(2);
 	for (i = 0; i < 16; i++)
 	{
 		int r, g, b, a;
 
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
-		// Windows XP doesn't like the upper bits to be set, so mask those out.
-		m_customColors[i] = htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
-			0xFFFFFF;
+		setCustomColor(i, htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
+			0xFFFFFF);
 	}
 }
 
 void LDPreferences::loadDefaultGeometrySettings(void)
 {
-	m_useSeams = false;
-	m_seamWidth = 50;
-	m_drawWireframe = false;
-	m_useWireframeFog = false;
-	m_removeHiddenLines = false;
-	m_wireframeThickness = 1;
-	m_bfc = true;
-	m_redBackFaces = false;
-	m_greenFrontFaces = false;
-	m_showHighlightLines = false;
-	m_edgesOnly = false;
-	m_drawConditionalHighlights = false;
-	m_showAllConditionalLines = false;
-	m_showConditionalControlPoints = false;
-	m_usePolygonOffset = true;
-	m_blackHighlights = false;
-	m_edgeThickness = 1;
+	setUseSeams(false);
+	setSeamWidth(50);
+	setDrawWireframe(false);
+	setUseWireframeFog(false);
+	setRemoveHiddenLines(false);
+	setWireframeThickness(1);
+	setBfc(true);
+	setRedBackFaces(false);
+	//setGreenFrontFaces(false);
+	setGreenFrontFaces(false);
+	setShowHighlightLines(false);
+	setEdgesOnly(false);
+	setDrawConditionalHighlights(false);
+	setShowAllConditionalLines(false);
+	setShowConditionalControlPoints(false);
+	setUsePolygonOffset(true);
+	setBlackHighlights(false);
+	setEdgeThickness(1);
 }
 
 void LDPreferences::loadDefaultEffectsSettings(void)
 {
-	m_useLighting = true;
-	m_qualityLighting = false;
-	m_subduedLighting = false;
-	m_useSpecular = true;
-	m_oneLight = false;
-	m_stereoMode = LDVStereoNone;
-	m_stereoEyeSpacing = 50;
-	m_cutawayMode = LDVCutawayNormal;
-	m_cutawayAlpha = 100;
-	m_cutawayThickness = 1;
-	m_sortTransparent = true;
-	m_useStipple = false;
-	m_useFlatShading = false;
-	m_performSmoothing = true;
+	setUseLighting(true);
+	setQualityLighting(false);
+	setSubduedLighting(false);
+	setUseSpecular(true);
+	setOneLight(false);
+	setStereoMode(LDVStereoNone);
+	setStereoEyeSpacing(50);
+	setCutawayMode(LDVCutawayNormal);
+	setCutawayAlpha(100);
+	setCutawayThickness(1);
+	setSortTransparent(true);
+	setUseStipple(false);
+	setUseFlatShading(false);
+	setPerformSmoothing(true);
 }
 
 void LDPreferences::loadDefaultPrimitivesSettings(void)
 {
-	m_allowPrimitiveSubstitution = true;
-	m_textureStuds = true;
-	m_textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
-	m_curveQuality = 2;
-	m_qualityStuds = false;
-	m_hiResPrimitives = false;
+	setAllowPrimitiveSubstitution(true);
+	setTextureStuds(true);
+	setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
+	setCurveQuality(2);
+	setQualityStuds(false);
+	setHiResPrimitives(false);
 }
 
 void LDPreferences::loadDefaultUpdatesSettings(void)
 {
-	m_proxyType = 0;
-	m_proxyServer = "";
-	m_proxyPort = 80;
-	m_checkPartTracker = true;
+	setProxyType(0);
+	setProxyServer("");
+	setProxyPort(80);
+	setCheckPartTracker(true);
 }
 
 void LDPreferences::loadGeneralSettings(void)
@@ -505,6 +543,7 @@ void LDPreferences::commitUpdatesSettings(void)
 	if (m_proxyType == 2)
 	{
 		setProxyServer(m_proxyServer.c_str(), true);
+		setProxyPort(m_proxyPort, true);
 	}
 	setCheckPartTracker(m_checkPartTracker, true);
 }
@@ -761,7 +800,7 @@ float LDPreferences::getFloatSetting(const char *key, float defaultValue)
 }
 
 std::string LDPreferences::getStringSetting(const char *key,
-											 const char *defaultValue)
+											const char *defaultValue)
 {
 	char *tmpString = TCUserDefaults::stringForKey(key, defaultValue,
 		!globalSettings[key]);
@@ -770,6 +809,7 @@ std::string LDPreferences::getStringSetting(const char *key,
 	if (tmpString)
 	{
 		result = tmpString;
+		delete tmpString;
 	}
 	return result;
 }
@@ -780,37 +820,37 @@ void LDPreferences::setFsaaMode(int value, bool commit)
 	setSetting(m_fsaaMode, value, FSAA_MODE_KEY, commit);
 }
 
-void LDPreferences::setLineSmoothing(bool value , bool commit)
+void LDPreferences::setLineSmoothing(bool value, bool commit)
 {
 	setSetting(m_lineSmoothing, value, LINE_SMOOTHING_KEY, commit);
 }
 
-void LDPreferences::setBackgroundColor(TCULong value , bool commit)
+void LDPreferences::setBackgroundColor(TCULong value, bool commit)
 {
 	setColorSetting(m_backgroundColor, value, BACKGROUND_COLOR_KEY, commit);
 }
 
-void LDPreferences::setDefaultColor(TCULong value , bool commit)
+void LDPreferences::setDefaultColor(TCULong value, bool commit)
 {
 	setColorSetting(m_defaultColor, value, DEFAULT_COLOR_KEY, commit);
 }
 
-void LDPreferences::setTransDefaultColor(bool value , bool commit)
+void LDPreferences::setTransDefaultColor(bool value, bool commit)
 {
 	setSetting(m_transDefaultColor, value, TRANS_DEFAULT_COLOR_KEY, commit);
 }
 
-void LDPreferences::setProcessLdConfig(bool value , bool commit)
+void LDPreferences::setProcessLdConfig(bool value, bool commit)
 {
 	setSetting(m_processLdConfig, value, PROCESS_LDCONFIG_KEY, commit);
 }
 
-void LDPreferences::setShowFps(bool value , bool commit)
+void LDPreferences::setShowFps(bool value, bool commit)
 {
 	setSetting(m_showFps, value, SHOW_FPS_KEY, commit);
 }
 
-void LDPreferences::setShowErrors(bool value , bool commit)
+void LDPreferences::setShowErrors(bool value, bool commit)
 {
 	setSetting(m_showErrors, value, SHOW_ERRORS_KEY, commit);
 }
@@ -820,7 +860,7 @@ void LDPreferences::setFullScreenRefresh(int value, bool commit)
 	setSetting(m_fullScreenRefresh, value, FULLSCREEN_REFRESH_KEY, commit);
 }
 
-void LDPreferences::setFov(TCFloat value , bool commit)
+void LDPreferences::setFov(TCFloat value, bool commit)
 {
 	setSetting(m_fov, value, FOV_KEY, commit);
 }
@@ -839,9 +879,20 @@ void LDPreferences::setCustomColor(int index, TCULong value, bool commit)
 }
 
 // Geometry settings
-void LDPreferences::setUseSeams(bool value , bool commit)
+void LDPreferences::setUseSeams(bool value, bool commit, bool apply)
 {
 	setSetting(m_useSeams, value, SEAMS_KEY, commit);
+	if (apply)
+	{
+		if (m_useSeams)
+		{
+			modelViewer->setSeamWidth(m_seamWidth / 100.0f);
+		}
+		else
+		{
+			modelViewer->setSeamWidth(0.0f);
+		}
+	}
 }
 
 void LDPreferences::setSeamWidth(int value, bool commit)
@@ -849,19 +900,31 @@ void LDPreferences::setSeamWidth(int value, bool commit)
 	setSetting(m_seamWidth, value, SEAM_WIDTH_KEY, commit);
 }
 
-void LDPreferences::setDrawWireframe(bool value , bool commit)
+void LDPreferences::setDrawWireframe(bool value, bool commit, bool apply)
 {
 	setSetting(m_drawWireframe, value, WIREFRAME_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setDrawWireframe(m_drawWireframe);
+	}
 }
 
-void LDPreferences::setUseWireframeFog(bool value , bool commit)
+void LDPreferences::setUseWireframeFog(bool value, bool commit, bool apply)
 {
 	setSetting(m_useWireframeFog, value, WIREFRAME_FOG_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setUseWireframeFog(m_useWireframeFog);
+	}
 }
 
-void LDPreferences::setRemoveHiddenLines(bool value , bool commit)
+void LDPreferences::setRemoveHiddenLines(bool value, bool commit, bool apply)
 {
 	setSetting(m_removeHiddenLines, value, REMOVE_HIDDEN_LINES_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
+	}
 }
 
 void LDPreferences::setWireframeThickness(int value, bool commit)
@@ -869,55 +932,89 @@ void LDPreferences::setWireframeThickness(int value, bool commit)
 	setSetting(m_wireframeThickness, value, WIREFRAME_THICKNESS_KEY, commit);
 }
 
-void LDPreferences::setBfc(bool value , bool commit)
+void LDPreferences::setBfc(bool value, bool commit, bool apply)
 {
 	setSetting(m_bfc, value, BFC_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setBfc(m_bfc);
+	}
 }
 
-void LDPreferences::setRedBackFaces(bool value , bool commit)
+void LDPreferences::setRedBackFaces(bool value, bool commit, bool apply)
 {
 	setSetting(m_redBackFaces, value, RED_BACK_FACES_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setRedBackFaces(m_redBackFaces);
+	}
 }
 
-void LDPreferences::setGreenFrontFaces(bool value , bool commit)
+void LDPreferences::setGreenFrontFaces(bool value, bool commit, bool apply)
 {
 	setSetting(m_greenFrontFaces, value, GREEN_FRONT_FACES_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setGreenFrontFaces(m_greenFrontFaces);
+	}
 }
 
-void LDPreferences::setShowHighlightLines(bool value , bool commit)
+void LDPreferences::setShowHighlightLines(bool value, bool commit, bool apply)
 {
 	setSetting(m_showHighlightLines, value, SHOW_HIGHLIGHT_LINES_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setShowsHighlightLines(m_showHighlightLines);
+	}
 }
 
-void LDPreferences::setDrawConditionalHighlights(bool value , bool commit)
+void LDPreferences::setDrawConditionalHighlights(bool value, bool commit,
+												 bool apply)
 {
-	setSetting(m_drawConditionalHighlights, value, CONDITIONAL_HIGHLIGHTS_KEY, commit);
+	setSetting(m_drawConditionalHighlights, value, CONDITIONAL_HIGHLIGHTS_KEY,
+		commit);
+	if (apply)
+	{
+		modelViewer->setDrawConditionalHighlights(m_drawConditionalHighlights);
+	}
 }
 
-void LDPreferences::setShowAllConditionalLines(bool value , bool commit)
+void LDPreferences::setShowAllConditionalLines(bool value, bool commit)
 {
 	setSetting(m_showAllConditionalLines, value, SHOW_ALL_TYPE5_KEY, commit);
 }
 
-void LDPreferences::setShowConditionalControlPoints(bool value , bool commit)
+void LDPreferences::setShowConditionalControlPoints(bool value, bool commit)
 {
 	setSetting(m_showConditionalControlPoints, value,
 		SHOW_TYPE5_CONTROL_POINTS_KEY, commit);
 }
 
-void LDPreferences::setEdgesOnly(bool value , bool commit)
+void LDPreferences::setEdgesOnly(bool value, bool commit, bool apply)
 {
 	setSetting(m_edgesOnly, value, EDGES_ONLY_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setEdgesOnly(m_edgesOnly);
+	}
 }
 
-void LDPreferences::setUsePolygonOffset(bool value , bool commit)
+void LDPreferences::setUsePolygonOffset(bool value, bool commit, bool apply)
 {
 	setSetting(m_usePolygonOffset, value, POLYGON_OFFSET_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setUsePolygonOffset(m_usePolygonOffset);
+	}
 }
 
-void LDPreferences::setBlackHighlights(bool value , bool commit)
+void LDPreferences::setBlackHighlights(bool value, bool commit, bool apply)
 {
 	setSetting(m_blackHighlights, value, BLACK_HIGHLIGHTS_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setBlackHighlights(m_blackHighlights);
+	}
 }
 
 void LDPreferences::setEdgeThickness(int value, bool commit)
@@ -927,32 +1024,52 @@ void LDPreferences::setEdgeThickness(int value, bool commit)
 
 
 // Effects settings
-void LDPreferences::setUseLighting(bool value , bool commit)
+void LDPreferences::setUseLighting(bool value, bool commit, bool apply)
 {
 	setSetting(m_useLighting, value, LIGHTING_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setUseLighting(m_useLighting);
+	}
 }
 
-void LDPreferences::setQualityLighting(bool value , bool commit)
+void LDPreferences::setQualityLighting(bool value, bool commit, bool apply)
 {
 	setSetting(m_qualityLighting, value, QUALITY_LIGHTING_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setQualityLighting(m_qualityLighting);
+	}
 }
 
-void LDPreferences::setSubduedLighting(bool value , bool commit)
+void LDPreferences::setSubduedLighting(bool value, bool commit, bool apply)
 {
 	setSetting(m_subduedLighting, value, SUBDUED_LIGHTING_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setSubduedLighting(m_subduedLighting);
+	}
 }
 
-void LDPreferences::setUseSpecular(bool value , bool commit)
+void LDPreferences::setUseSpecular(bool value, bool commit, bool apply)
 {
 	setSetting(m_useSpecular, value, SPECULAR_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setUsesSpecular(m_useSpecular);
+	}
 }
 
-void LDPreferences::setOneLight(bool value , bool commit)
+void LDPreferences::setOneLight(bool value, bool commit, bool apply)
 {
 	setSetting(m_oneLight, value, ONE_LIGHT_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setOneLight(m_oneLight);
+	}
 }
 
-void LDPreferences::setStereoMode(LDVStereoMode value , bool commit)
+void LDPreferences::setStereoMode(LDVStereoMode value, bool commit)
 {
 	setSetting((int &)m_stereoMode, value, STEREO_MODE_KEY, commit);
 }
@@ -962,7 +1079,7 @@ void LDPreferences::setStereoEyeSpacing(int value, bool commit)
 	setSetting(m_stereoEyeSpacing, value, STEREO_SPACING_KEY, commit);
 }
 
-void LDPreferences::setCutawayMode(LDVCutawayMode value , bool commit)
+void LDPreferences::setCutawayMode(LDVCutawayMode value, bool commit)
 {
 	setSetting((int &)m_cutawayMode, value, CUTAWAY_MODE_KEY, commit);
 }
@@ -977,36 +1094,47 @@ void LDPreferences::setCutawayThickness(int value, bool commit)
 	setSetting(m_cutawayThickness, value, CUTAWAY_THICKNESS_KEY, commit);
 }
 
-void LDPreferences::setSortTransparent(bool value , bool commit)
+void LDPreferences::setSortTransparent(bool value, bool commit)
 {
 	setSetting(m_sortTransparent, value, SORT_KEY, commit);
 }
 
-void LDPreferences::setPerformSmoothing(bool value , bool commit)
+void LDPreferences::setPerformSmoothing(bool value, bool commit)
 {
 	setSetting(m_performSmoothing, value, PERFORM_SMOOTHING_KEY, commit);
 }
 
-void LDPreferences::setUseStipple(bool value , bool commit)
+void LDPreferences::setUseStipple(bool value, bool commit)
 {
 	setSetting(m_useStipple, value, STIPPLE_KEY, commit);
 }
 
-void LDPreferences::setUseFlatShading(bool value , bool commit)
+void LDPreferences::setUseFlatShading(bool value, bool commit)
 {
 	setSetting(m_useFlatShading, value, FLAT_SHADING_KEY, commit);
 }
 
 
 // Primitives settings
-void LDPreferences::setAllowPrimitiveSubstitution(bool value , bool commit)
+void LDPreferences::setAllowPrimitiveSubstitution(bool value, bool commit,
+												  bool apply)
 {
-	setSetting(m_allowPrimitiveSubstitution, value, PRIMITIVE_SUBSTITUTION_KEY, commit);
+	setSetting(m_allowPrimitiveSubstitution, value, PRIMITIVE_SUBSTITUTION_KEY,
+		commit);
+	if (apply)
+	{
+		modelViewer->setAllowPrimitiveSubstitution(
+			m_allowPrimitiveSubstitution);
+	}
 }
 
-void LDPreferences::setTextureStuds(bool value , bool commit)
+void LDPreferences::setTextureStuds(bool value, bool commit, bool apply)
 {
 	setSetting(m_textureStuds, value, TEXTURE_STUDS_KEY, commit);
+	if (apply)
+	{
+		modelViewer->setTextureStuds(m_textureStuds);
+	}
 }
 
 void LDPreferences::setTextureFilterType(int value, bool commit)
@@ -1019,12 +1147,12 @@ void LDPreferences::setCurveQuality(int value, bool commit)
 	setSetting(m_curveQuality, value, CURVE_QUALITY_KEY, commit);
 }
 
-void LDPreferences::setQualityStuds(bool value , bool commit)
+void LDPreferences::setQualityStuds(bool value, bool commit)
 {
 	setSetting(m_qualityStuds, value, QUALITY_STUDS_KEY, commit);
 }
 
-void LDPreferences::setHiResPrimitives(bool value , bool commit)
+void LDPreferences::setHiResPrimitives(bool value, bool commit)
 {
 	setSetting(m_hiResPrimitives, value, HI_RES_PRIMITIVES_KEY, commit);
 }
@@ -1036,7 +1164,7 @@ void LDPreferences::setProxyType(int value, bool commit)
 	setSetting(m_proxyType, value, PROXY_TYPE_KEY, commit);
 }
 
-void LDPreferences::setProxyServer(const char *value , bool commit)
+void LDPreferences::setProxyServer(const char *value, bool commit)
 {
 	setSetting(m_proxyServer, value, PROXY_SERVER_KEY, commit);
 }
@@ -1046,7 +1174,12 @@ void LDPreferences::setProxyPort(int value, bool commit)
 	setSetting(m_proxyPort, value, PROXY_PORT_KEY, commit);
 }
 
-void LDPreferences::setCheckPartTracker(bool value , bool commit)
+void LDPreferences::setCheckPartTracker(bool value, bool commit)
 {
 	setSetting(m_checkPartTracker, value, CHECK_PART_TRACKER_KEY, commit);
+}
+
+void LDPreferences::setDefaultZoom(TCFloat value, bool commit)
+{
+	setSetting(m_defaultZoom, value, DEFAULT_ZOOM_KEY, commit);
 }

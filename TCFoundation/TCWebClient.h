@@ -240,6 +240,13 @@ protected:
 
 	static char* proxyServer;
 	static int proxyPort;
+
+	static class TCWebClientCleanup
+	{
+	public:
+		~TCWebClientCleanup(void);
+	} webClientCleanup;
+	friend class TCWebClientCleanup;
 };
 
 #endif

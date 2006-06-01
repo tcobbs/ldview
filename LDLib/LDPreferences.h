@@ -40,11 +40,6 @@ public:
 	void loadDefaultEffectsSettings(void);
 	void loadDefaultPrimitivesSettings(void);
 	void loadDefaultUpdatesSettings(void);
-	void loadGeneralSettings(void);
-	void loadGeometrySettings(void);
-	void loadEffectsSettings(void);
-	void loadPrimitivesSettings(void);
-	void loadUpdatesSettings(void);
 	// *************************************************************************
 
 	void commitSettings(void);
@@ -144,30 +139,37 @@ public:
 	void setCustomColor(int index, TCULong value, bool commit = false);
 
 	// Geometry settings
-	void setUseSeams(bool value, bool commit = false);
+	void setUseSeams(bool value, bool commit = false, bool apply = false);
 	void setSeamWidth(int value, bool commit = false);
-	void setDrawWireframe(bool value, bool commit = false);
-	void setUseWireframeFog(bool value, bool commit = false);
-	void setRemoveHiddenLines(bool value, bool commit = false);
+	void setDrawWireframe(bool value, bool commit = false, bool apply = false);
+	void setUseWireframeFog(bool value, bool commit = false,
+		bool apply = false);
+	void setRemoveHiddenLines(bool value, bool commit = false,
+		bool apply = false);
 	void setWireframeThickness(int value, bool commit = false);
-	void setBfc(bool value, bool commit = false);
-	void setRedBackFaces(bool value, bool commit = false);
-	void setGreenFrontFaces(bool value, bool commit = false);
-	void setShowHighlightLines(bool value, bool commit = false);
-	void setDrawConditionalHighlights(bool value, bool commit = false);
+	void setBfc(bool value, bool commit = false, bool apply = false);
+	void setRedBackFaces(bool value, bool commit = false, bool apply = false);
+	void setGreenFrontFaces(bool value, bool commit = false,
+		bool apply = false);
+	void setShowHighlightLines(bool value, bool commit = false,
+		bool apply = false);
+	void setDrawConditionalHighlights(bool value, bool commit = false,
+		bool apply = false);
 	void setShowAllConditionalLines(bool value, bool commit = false);
 	void setShowConditionalControlPoints(bool value, bool commit = false);
-	void setEdgesOnly(bool value, bool commit = false);
-	void setUsePolygonOffset(bool value, bool commit = false);
-	void setBlackHighlights(bool value, bool commit = false);
+	void setEdgesOnly(bool value, bool commit = false, bool apply = false);
+	void setUsePolygonOffset(bool value, bool commit = false,
+		bool apply = false);
+	void setBlackHighlights(bool value, bool commit = false,
+		bool apply = false);
 	void setEdgeThickness(int value, bool commit = false);
 
 	// Effects settings
-	void setUseLighting(bool value, bool commit = false);
-	void setQualityLighting(bool value, bool commit = false);
-	void setSubduedLighting(bool value, bool commit = false);
-	void setUseSpecular(bool value, bool commit = false);
-	void setOneLight(bool value, bool commit = false);
+	void setUseLighting(bool value, bool commit = false, bool apply = false);
+	void setQualityLighting(bool value, bool commit = false, bool apply = false);
+	void setSubduedLighting(bool value, bool commit = false, bool apply = false);
+	void setUseSpecular(bool value, bool commit = false, bool apply = false);
+	void setOneLight(bool value, bool commit = false, bool apply = false);
 	void setStereoMode(LDVStereoMode value, bool commit = false);
 	void setStereoEyeSpacing(int value, bool commit = false);
 	void setCutawayMode(LDVCutawayMode value, bool commit = false);
@@ -179,8 +181,9 @@ public:
 	void setUseFlatShading(bool value, bool commit = false);
 
 	// Primitives settings
-	void setAllowPrimitiveSubstitution(bool value, bool commit = false);
-	void setTextureStuds(bool value, bool commit = false);
+	void setAllowPrimitiveSubstitution(bool value, bool commit = false,
+		bool apply = false);
+	void setTextureStuds(bool value, bool commit = false, bool apply = false);
 	void setTextureFilterType(int value, bool commit = false);
 	void setCurveQuality(int value, bool commit = false);
 	void setQualityStuds(bool value, bool commit = false);
@@ -191,6 +194,9 @@ public:
 	void setProxyServer(const char *value, bool commit = false);
 	void setProxyPort(int value, bool commit = false);
 	void setCheckPartTracker(bool value, bool commit = false);
+
+	// No UI
+	void setDefaultZoom(TCFloat value, bool commit = false);
 protected:
 	~LDPreferences(void);
 	void dealloc(void);
@@ -217,9 +223,14 @@ protected:
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.
 	// *************************************************************************
-	virtual void setupDefaultRotationMatrix(void);
+	void setupDefaultRotationMatrix(void);
 	void setupModelCenter(void);
 	void setupModelSize(void);
+	void loadGeneralSettings(void);
+	void loadGeometrySettings(void);
+	void loadEffectsSettings(void);
+	void loadPrimitivesSettings(void);
+	void loadUpdatesSettings(void);
 	// *************************************************************************
 
 	LDrawModelViewer* modelViewer;
@@ -298,4 +309,4 @@ protected:
 	StringBoolMap globalSettings;
 };
 
-#endif __LDPREFERENCES_H__
+#endif // __LDPREFERENCES_H__

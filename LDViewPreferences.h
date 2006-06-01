@@ -25,11 +25,6 @@
 
 #define LDP_DONE 0x01
 #define LDP_UNKNOWN_COMMAND 0x02
-/*
-#define LDP_NEEDS_SETUP 0x04
-#define LDP_NEEDS_RELOAD 0x08
-#define LDP_NEEDS_RECOMPILE 0x10
-*/
 
 typedef std::map<HWND, bool> HwndBoolMap;
 
@@ -41,65 +36,57 @@ public:
 	LDViewPreferences(HINSTANCE hInstance,
 		LDrawModelViewer *modelViewer = NULL);
 
-	bool getQualityLighting(void) { return qualityLighting; }
+	bool getQualityLighting(void);
 	void setQualityLighting(bool value);
 	bool getShowsFPS(void);
-	bool getShowsHighlightLines(void) { return showsHighlightLines; }
+	bool getShowsHighlightLines(void);
 	void setShowsHighlightLines(bool value);
-	bool getEdgesOnly(void) { return edgesOnly; }
+	bool getEdgesOnly(void);
 	void setEdgesOnly(bool value);
-	bool getDrawConditionalHighlights(void)
-	{
-		return drawConditionalHighlights;
-	}
+	bool getDrawConditionalHighlights(void);
 	void setDrawConditionalHighlights(bool value);
-	bool getPerformSmoothing(void) { return performSmoothing; }
+	bool getPerformSmoothing(void);
 	bool getLineSmoothing(void);
-	bool getQualityStuds(void) { return qualityStuds; }
-	bool getAllowPrimitiveSubstitution(void)
-	{
-		return allowPrimitiveSubstitution;
-	}
+	bool getQualityStuds(void);
+	bool getAllowPrimitiveSubstitution(void);
 	void setAllowPrimitiveSubstitution(bool value);
-	bool getUsesFlatShading(void) { return usesFlatShading; }
-	bool getUsesSpecular(void) { return usesSpecular; }
+	bool getUsesFlatShading(void);
+	bool getUsesSpecular(void);
 	void setUsesSpecular(bool value);
-	bool getOneLight(void) { return oneLight; }
+	bool getOneLight(void);
 	void setOneLight(bool value);
 	COLORREF getBackgroundColor(void);
-	//COLORREF* getCustomColors(void) { return customColors; }
-	int getUseSeams(void) { return useSeams; }
+	bool getUseSeams(void);
 	void setUseSeams(bool value);
-	int getSeamWidth(void) { return seamWidth; }
-	bool getDrawWireframe(void) { return drawWireframe; }
+	int getSeamWidth(void);
+	bool getDrawWireframe(void);
 	void setDrawWireframe(bool value);
-	bool getBfc(void) { return bfc; }
+	bool getBfc(void);
 	void setBfc(bool value);
-	bool getRedBackFaces(void) { return redBackFaces; }
+	bool getRedBackFaces(void);
 	void setRedBackFaces(bool value);
-	bool getGreenFrontFaces(void) { return greenFrontFaces; }
+	bool getGreenFrontFaces(void);
 	void setGreenFrontFaces(bool value);
-	bool getUseWireframeFog(void) { return useWireframeFog; }
+	bool getUseWireframeFog(void);
 	void setUseWireframeFog(bool value);
-	bool getRemoveHiddenLines(void) { return removeHiddenLines; }
+	bool getRemoveHiddenLines(void);
 	void setRemoveHiddenLines(bool value);
-	bool getUsePolygonOffset(void) { return usePolygonOffset; }
+	bool getUsePolygonOffset(void);
 	void setUsePolygonOffset(bool value);
-	bool getBlackHighlights(void) { return blackHighlights; }
+	bool getBlackHighlights(void);
 	void setBlackHighlights(bool value);
-	bool getUseLighting(void) { return useLighting; }
+	bool getUseLighting(void);
 	void setUseLighting(bool value);
-	bool getSubduedLighting(void) { return subduedLighting; }
+	bool getSubduedLighting(void);
 	void setSubduedLighting(bool value);
 	int getFullScreenRefresh(void);
-	bool getUseStipple(void) { return useStipple; }
-	bool getSortTransparent(void) { return sortTransparent; }
-	bool getTextureStuds(void) { return textureStuds; }
+	bool getUseStipple(void);
+	bool getSortTransparent(void);
+	bool getTextureStuds(void);
 	void setTextureStuds(bool value);
 	virtual void applyChanges(void);
 	virtual int run(void);
 
-//	virtual BOOL doDialogCtlColorStatic(HDC hdcStatic, HWND hwndStatic);
 	virtual BOOL doDialogThemeChanged(void);
 	virtual BOOL doDialogVScroll(HWND hDlg, int scrollCode, int position,
 		HWND hScrollBar);
@@ -172,8 +159,6 @@ protected:
 	virtual void doUpdatesClick(int controlId, HWND controlHWnd);
 	virtual void doPrefSetsClick(int controlId, HWND controlHWnd);
 	virtual void doOtherClick(HWND hDlg, int controlId, HWND controlHWnd);
-//	virtual void drawButtonBorder(HDC hdc, COLORREF color1, COLORREF color2,
-//		RECT rect);
 	virtual BOOL doDialogInit(HWND hDlg, HWND hFocusWindow, LPARAM lParam);
 	virtual BOOL doNewPrefSetInit(HWND hDlg, HWND hNewPrefSetField);
 	virtual BOOL doHotKeyInit(HWND hDlg, HWND hHotKeyCombo);
@@ -193,7 +178,6 @@ protected:
 	virtual void setupUpdatesPage(void);
 	virtual void setupPrefSetsPage(void);
 	virtual void setupAntialiasing(void);
-	virtual void setupModelGeometry(void);
 	virtual void setupWireframe(void);
 	virtual void setupBfc(void);
 	virtual void setupSubstitution(void);
@@ -252,31 +236,6 @@ protected:
 	virtual bool getCachedCheck(HWND hPage, int buttonId, bool action = false);
 	virtual bool getCheck(HWND hPage, int buttonId);
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
-//	virtual void getGroupBoxTextColor(void);
-
-
-	// These are called from the constructor, and cannot be properly made into
-	// virtual functions.
-	// *************************************************************************
-	virtual void setupDefaultRotationMatrix(void);
-	void setupModelCenter(void);
-	void setupModelSize(void);
-	void applyGeneralSettings(void);
-	void applyGeometrySettings(void);
-	void applyEffectsSettings(void);
-	void applyPrimitivesSettings(void);
-	void applyUpdatesSettings();
-	void loadDefaultGeneralSettings(void);
-	void loadDefaultGeometrySettings(void);
-	void loadDefaultEffectsSettings(void);
-	void loadDefaultPrimitivesSettings(void);
-	void loadDefaultUpdatesSettings(void);
-	void loadGeneralSettings(void);
-	void loadGeometrySettings(void);
-	void loadEffectsSettings(void);
-	void loadPrimitivesSettings(void);
-	void loadUpdatesSettings(void);
-	// *************************************************************************
 
 
 	BOOL doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
@@ -297,77 +256,6 @@ protected:
 
 	LDrawModelViewer* modelViewer;
 	LDPreferences* ldPrefs;
-
-
-
-
-	//int fsaaMode;
-	//bool lineSmoothing;
-	//COLORREF backgroundColor;
-	//COLORREF defaultColor;
-	//bool transDefaultColor;
-	//int defaultColorNumber;
-	//bool processLDConfig;
-	//bool skipValidation;
-	//bool showsFPS;
-	//bool showErrors;
-	//int fullScreenRefresh;
-	//TCFloat fov;
-	//int memoryUsage;
-	//COLORREF customColors[16];
-
-	TCFloat defaultZoom;
-
-	int useSeams;
-	int seamWidth;
-	bool drawWireframe;
-	bool useWireframeFog;
-	bool removeHiddenLines;
-	long wireframeThickness;
-	bool bfc;
-	bool redBackFaces;
-	bool greenFrontFaces;
-	bool showsHighlightLines;
-	bool drawConditionalHighlights;
-	bool showAllConditionalLines;
-	bool showConditionalControlPoints;
-	bool edgesOnly;
-	bool usePolygonOffset;
-	bool blackHighlights;
-	long edgeThickness;
-
-	bool useLighting;
-	bool qualityLighting;
-	bool subduedLighting;
-	bool usesSpecular;
-	bool oneLight;
-	LDVStereoMode stereoMode;
-	long stereoEyeSpacing;
-	LDVCutawayMode cutawayMode;
-	long cutawayAlpha;
-	long cutawayThickness;
-	bool sortTransparent;
-	bool performSmoothing;
-	bool useStipple;
-	bool usesFlatShading;
-
-	bool allowPrimitiveSubstitution;
-	bool textureStuds;
-	int textureFilterType;
-	long curveQuality;
-	bool qualityStuds;
-	bool hiResPrimitives;
-
-	int proxyType;
-	char *proxyServer;
-	int proxyPort;
-	bool checkPartTracker;
-
-	TCFloat zoomMax;
-	TCVector lightVector;
-
-
-
 
 	int generalPageNumber;
 	int geometryPageNumber;

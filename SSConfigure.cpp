@@ -4,6 +4,7 @@
 #include "LDViewWindow.h"
 #include "LDVExtensionsSetup.h"
 #include "AppResources.h"
+#include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/myString.h>
 #include <TCFoundation/TCLocalStrings.h>
@@ -34,7 +35,7 @@ SSConfigure::SSConfigure(HINSTANCE hInstance):
 	loadSSSettings();
 	// Our superclass already applied, but we changed at least one setting, so
 	// re-apply.
-	applySettings();
+	ldPrefs->applySettings();
 }
 
 SSConfigure::~SSConfigure(void)
@@ -59,7 +60,8 @@ void SSConfigure::loadDefaultSSSettings(void)
 	ssFileMode = DEFAULT_SS_FILE_MODE;
 	ssSleepWorkaround = DEFAULT_SS_SLEEP_WORKAROUND;
 	ssRandomPrefSet = DEFAULT_SS_RANDOM_PREF_SET;
-	defaultZoom = 1.0f / 1.01f;
+	ldPrefs->setDefaultZoom(1.0f / 1.01f);
+	//defaultZoom = 1.0f / 1.01f;
 }
 
 void SSConfigure::loadSSSettings(void)

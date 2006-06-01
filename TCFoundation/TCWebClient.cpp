@@ -104,6 +104,13 @@ void do_sleep(int sec)
 
 char *TCWebClient::proxyServer = NULL;
 int TCWebClient::proxyPort = 80;
+TCWebClient::TCWebClientCleanup TCWebClient::webClientCleanup;
+
+TCWebClient::TCWebClientCleanup::~TCWebClientCleanup(void)
+{
+	delete proxyServer;
+	proxyServer = NULL;
+}
 
 TCWebClient::TCWebClient(const char* url)
 	:TCNetworkClient(80),
