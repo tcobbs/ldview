@@ -13,6 +13,7 @@ CCSRCS = \
 	LDLibraryUpdateInfo.cpp \
 	LDLibraryUpdater.cpp \
 	LDModelParser.cpp \
+	LDPreferences.cpp \
 	LDrawModelViewer.cpp
 EXECS= libLDraw.a
 SRCS = $(CSRCS) $(CCSRCS)

@@ -289,7 +289,7 @@ void Preferences::doGeometryApply(void)
 	if (bTemp != edgeLines)
 	{
 		edgeLines = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SHOWS_HIGHLIGHT_LINES_KEY);
+		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SHOW_HIGHLIGHT_LINES_KEY);
 	}
 	if (edgeLines)
 	{
@@ -596,11 +596,13 @@ void Preferences::doUpdatesApply()
 		proxyType = iTemp;
 		TCUserDefaults::setLongForKey(proxyType,PROXY_TYPE_KEY);
 	}
-	sscanf(panel->portEdit->text().ascii(),"%i",&iTemp);
-	if(iTemp != proxyPort)
+	if (sscanf(panel->portEdit->text().ascii(),"%i",&iTemp) == 1)
 	{
-		proxyPort = iTemp;
-		TCUserDefaults::setLongForKey(proxyPort,PROXY_PORT_KEY);
+		if(iTemp != proxyPort)
+		{
+			proxyPort = iTemp;
+			TCUserDefaults::setLongForKey(proxyPort,PROXY_PORT_KEY);
+		}
 	}
 	sTemp = copyString(panel->proxyEdit->text().ascii());
 	if((!proxyServer) || (strcmp(sTemp,proxyServer)!=0))
@@ -781,7 +783,7 @@ void Preferences::loadGeometrySettings(void)
 		(long)bfcRedBackFace) !=0;
         bfcGreenFrontFace = TCUserDefaults::longForKey(GREEN_FRONT_FACES_KEY,
                 (long)bfcGreenFrontFace) !=0;
-	edgeLines = TCUserDefaults::longForKey(SHOWS_HIGHLIGHT_LINES_KEY,
+	edgeLines = TCUserDefaults::longForKey(SHOW_HIGHLIGHT_LINES_KEY,
 		(long)edgeLines) != 0;
 	conditionalLines =
 		TCUserDefaults::longForKey(CONDITIONAL_HIGHLIGHTS_KEY,
@@ -967,7 +969,7 @@ void Preferences::setShowsHighlightLines(bool value)
 		edgeLines = value;
 		modelViewer->setShowsHighlightLines(edgeLines);
 		TCUserDefaults::setLongForKey(edgeLines ? 1 : 0,
-            SHOWS_HIGHLIGHT_LINES_KEY);
+            SHOW_HIGHLIGHT_LINES_KEY);
 		reflectGeometrySettings();
 	}
 }
