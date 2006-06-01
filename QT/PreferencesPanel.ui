@@ -1379,6 +1379,9 @@
                                                         <property name="title">
                                                             <string></string>
                                                         </property>
+                                                        <property name="exclusive">
+                                                            <bool>true</bool>
+                                                        </property>
                                                         <vbox>
                                                             <property name="name">
                                                                 <cstring>unnamed</cstring>
@@ -1601,6 +1604,9 @@
                                                         </property>
                                                         <property name="title">
                                                             <string></string>
+                                                        </property>
+                                                        <property name="exclusive">
+                                                            <bool>true</bool>
                                                         </property>
                                                         <widget class="QRadioButton">
                                                             <property name="name">
@@ -2203,6 +2209,9 @@
                                                         <property name="title">
                                                             <string></string>
                                                         </property>
+                                                        <property name="exclusive">
+                                                            <bool>true</bool>
+                                                        </property>
                                                         <vbox>
                                                             <property name="name">
                                                                 <cstring>unnamed</cstring>
@@ -2477,6 +2486,9 @@
                         </property>
                         <property name="title">
                             <string>Internet Proxy</string>
+                        </property>
+                        <property name="exclusive">
+                            <bool>true</bool>
                         </property>
                         <vbox>
                             <property name="name">
