@@ -49,6 +49,9 @@ public:
 	void commitPrimitivesSettings(void);
 	void commitUpdatesSettings(void);
 
+	virtual void saveDefaultView(void);
+	virtual void resetDefaultView(void);
+
 	// General settings
 	int getFsaaMode(void) { return m_fsaaMode; }
 	bool getLineSmoothing(void) { return m_lineSmoothing; }
