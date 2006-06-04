@@ -466,8 +466,6 @@ void LDLibraryUpdater::threadStart(void)
 		const char *url = "http://www.ldraw.org/cgi-bin/ptreleases.cgi?"
 			"output=TAB&fields=type-format-date-url-size";
 		
-		url = "http://www.halibut.com/~tcobbs/PartUpdates.txt";
-		url = "http://media.peeron.com/tmp/3033.dat";
 		webClient = new TCWebClient(url);
 		webClient->setOwner(this);
 		webClient->fetchURL();
