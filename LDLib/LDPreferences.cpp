@@ -668,7 +668,6 @@ void LDPreferences::setupModelSize(void)
 void LDPreferences::setColorSetting(TCULong &setting, TCULong value,
 									 const char *key, bool commit)
 {
-	
 	if (setting != value || (changedSettings[key] && commit))
 	{
 		setting = value;

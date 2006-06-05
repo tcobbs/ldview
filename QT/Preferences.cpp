@@ -23,19 +23,23 @@
 #include "ModelViewerWidget.h"
 #include "Preferences.h"
 #include "PreferencesPanel.h"
+#include <LDLib/LDPreferences.h>
+#include <LDLib/LDrawModelViewer.h>
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
 Preferences::Preferences(ModelViewerWidget *modelWidget)
 	:modelWidget(modelWidget),
+	modelViewer(modelWidget->getModelViewer()),
+	ldPrefs(new LDPreferences(modelViewer)),
 	panel(new PreferencesPanel),
-	proxyServer(NULL),
 	checkAbandon(true)
 {
 	modelViewer = modelWidget->getModelViewer();
 	panel->setPreferences(this);
 	panel->resize(10, 10);
 	loadSettings();
+	ldPrefs->applySettings();
 	reflectSettings();
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY));
 }
@@ -101,7 +105,8 @@ void Preferences::doPrefSetsApply(void)
 	{
 		if (!sessionName || strcmp(sessionName, getSelectedPrefSet()) != 0)
 		{
-			TCUserDefaults::setSessionName(getSelectedPrefSet(), PREFERENCE_SET_KEY);
+			TCUserDefaults::setSessionName(getSelectedPrefSet(),
+				PREFERENCE_SET_KEY);
 			changed = true;
 		}
 	}
@@ -128,11 +133,30 @@ void Preferences::doPrefSetsApply(void)
 
 void Preferences::doGeneralApply(void)
 {
-	bool bTemp;
-	int iTemp;
 	QColor cTemp;
-	int br, bg, bb;
-	int dr, dg, db;
+	int iTemp;
+	int r, g, b;
+
+	ldPrefs->setLineSmoothing(panel->aaLinesButton->state());
+	ldPrefs->setShowFps(panel->frameRateButton->state());
+	ldPrefs->setShowErrors(panel->showErrorsButton->state());
+	ldPrefs->setProcessLdConfig(panel->processLdconfigLdrButton->state());
+	cTemp = panel->backgroundColorButton->backgroundColor();
+	cTemp.rgb(&r, &g, &b);
+	iTemp = htonl(LDLPalette::colorForRGBA(r, g, b, 0));
+	ldPrefs->setBackgroundColor((TCULong)iTemp);
+	cTemp = panel->defaultColorButton->backgroundColor();
+	cTemp.rgb(&r, &g, &b);
+	iTemp = htonl(LDLPalette::colorForRGBA(r, g, b, 0));
+	ldPrefs->setDefaultColor((TCULong)iTemp);
+	ldPrefs->setFov(panel->fieldOfViewSpin->value());
+	ldPrefs->setMemoryUsage(panel->memoryUsageBox->currentItem());
+	ldPrefs->setTransDefaultColor(panel->transparentButton->state());
+	ldPrefs->applyGeneralSettings();
+	ldPrefs->commitGeneralSettings();
+
+/*
+	bool bTemp;
 
 	bTemp = panel->aaLinesButton->state();
 	if (bTemp != lineSmoothing)
@@ -218,199 +242,60 @@ void Preferences::doGeneralApply(void)
 		modelViewer->setProcessLDConfig(processLdconfigLdr);
 		modelViewer->setMemoryUsage(memoryUsage);
 	}
+*/
 }
 
 void Preferences::doGeometryApply(void)
 {
-	bool bTemp;
-	int iTemp;
-
-	bTemp = panel->seamWidthButton->state();
-	if (bTemp != seams)
+	ldPrefs->setUseSeams(panel->seamWidthButton->state());
+	ldPrefs->setSeamWidth(panel->seamWidthSpin->value());
+	ldPrefs->setDrawWireframe(panel->wireframeButton->state());
+	if (ldPrefs->getDrawWireframe())
 	{
-		seams = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SEAMS_KEY);
+		ldPrefs->setUseWireframeFog(panel->wireframeFogButton->state());
+		ldPrefs->setRemoveHiddenLines(
+			panel->wireframeRemoveHiddenLineButton->state());
 	}
-	iTemp = panel->seamWidthSpin->value();
-	if (iTemp != seamWidth)
+	ldPrefs->setBfc(panel->enableBFCButton->state());
+	if (ldPrefs->getBfc())
 	{
-		seamWidth = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, SEAM_WIDTH_KEY);
+		ldPrefs->setRedBackFaces(panel->bfcRedBackFaceButton->state());
+		ldPrefs->setGreenFrontFaces(panel->bfcGreenFrontFaceButton->state());
 	}
-	bTemp = panel->wireframeButton->state();
-	if (bTemp != wireframe)
+	ldPrefs->setWireframeThickness(panel->wireframeThicknessSlider->value());
+	ldPrefs->setShowHighlightLines(panel->edgeLinesButton->state());
+	if (ldPrefs->getShowHighlightLines())
 	{
-		wireframe = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, WIREFRAME_KEY);
+		ldPrefs->setEdgesOnly(panel->edgesOnlyButton->state());
+		ldPrefs->setDrawConditionalHighlights(
+			panel->conditionalLinesButton->state());
+		if (ldPrefs->getDrawConditionalHighlights())
+		{
+			ldPrefs->setShowAllConditionalLines(
+				panel->conditionalShowAllButton->state());
+			ldPrefs->setShowConditionalControlPoints(
+				panel->conditionalShowControlPtsButton->state());
+		}
+		ldPrefs->setUsePolygonOffset(panel->highQualityLinesButton->state());
+		ldPrefs->setBlackHighlights(panel->alwaysBlackLinesButton->state());
+		ldPrefs->setEdgeThickness(panel->edgeThicknessSlider->value());
 	}
-	if (wireframe)
-	{
-		bTemp = panel->wireframeFogButton->state();
-		if (bTemp != wireframeFog)
-		{
-			wireframeFog = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, WIREFRAME_FOG_KEY);
-		}
-		bTemp = panel->wireframeRemoveHiddenLineButton->state();
-		if (bTemp != wireframeRemoveHiddenLines)
-		{
-			wireframeRemoveHiddenLines = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, REMOVE_HIDDEN_LINES_KEY);
-		}
-	}
-	bTemp = panel->enableBFCButton->state();
-	if (bTemp != bfc)
-	{
-		bfc = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, BFC_KEY);
-	}
-	if (bfc)
-	{
-		bTemp = panel->bfcRedBackFaceButton->state();
-		if (bTemp != bfcRedBackFace)
-		{
-			bfcRedBackFace = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, RED_BACK_FACES_KEY);
-		}
-                bTemp = panel->bfcGreenFrontFaceButton->state();
-                if (bTemp != bfcGreenFrontFace)
-                {
-                        bfcGreenFrontFace = bTemp;
-                        TCUserDefaults::setLongForKey(bTemp ? 1 : 0, GREEN_FRONT_FACES_KEY);
-                }
-	}
-	iTemp = panel->wireframeThicknessSlider->value();
-	if (iTemp != wireframeThickness)
-	{
-		wireframeThickness = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, WIREFRAME_THICKNESS_KEY);
-	}
-	bTemp = panel->edgeLinesButton->state();
-	if (bTemp != edgeLines)
-	{
-		edgeLines = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SHOW_HIGHLIGHT_LINES_KEY);
-	}
-	if (edgeLines)
-	{
-		bTemp = panel->conditionalLinesButton->state();
-		if (bTemp != conditionalLines)
-		{
-			conditionalLines = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
-				CONDITIONAL_HIGHLIGHTS_KEY);
-		}
-		bTemp = panel->edgesOnlyButton->state();
-		if (bTemp != edgesOnly)
-		{
-			edgesOnly = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
-				EDGES_ONLY_KEY);
-		}
-		bTemp = panel->highQualityLinesButton->state();
-		if (bTemp != polygonOffset)
-		{
-			polygonOffset = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, POLYGON_OFFSET_KEY);
-		}
-		bTemp = panel->alwaysBlackLinesButton->state();
-		if (bTemp != blackEdgeLines)
-		{
-			blackEdgeLines = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, BLACK_HIGHLIGHTS_KEY);
-		}
-		iTemp = panel->edgeThicknessSlider->value();
-		if (iTemp != edgeThickness)
-		{
-			edgeThickness = iTemp;
-			TCUserDefaults::setLongForKey(iTemp, EDGE_THICKNESS_KEY);
-		}
-		if (conditionalLines)
-		{
-			bTemp = panel->conditionalShowAllButton->state();
-			if (bTemp != conditionalShowAll)
-			{
-				conditionalShowAll = bTemp;
-				TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
-					SHOW_ALL_TYPE5_KEY);
-			}
-			bTemp = panel->conditionalShowControlPtsButton->state();
-			if (bTemp != conditionalShowControlPts)
-			{
-				conditionalShowControlPts = bTemp;
-				TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
-					SHOW_TYPE5_CONTROL_POINTS_KEY);
-			}
-		}
-	}
-	if (modelViewer)
-	{
-		if (seams)
-		{
-			modelViewer->setSeamWidth(seamWidth / 100.0f);
-		}
-		else
-		{
-			modelViewer->setSeamWidth(0.0f);
-		}
-		modelViewer->setDrawWireframe(wireframe);
-		modelViewer->setUseWireframeFog(wireframeFog);
-		modelViewer->setRemoveHiddenLines(wireframeRemoveHiddenLines);
-		modelViewer->setWireframeLineWidth(wireframeThickness);
-		modelViewer->setShowsHighlightLines(edgeLines);
-		modelViewer->setDrawConditionalHighlights(conditionalLines);
-		modelViewer->setShowAllConditionalLines(conditionalShowAll);
-		modelViewer->setShowConditionalControlPoints(
-			conditionalShowControlPts);
-		modelViewer->setEdgesOnly(edgesOnly);
-		modelViewer->setUsePolygonOffset(polygonOffset);
-		modelViewer->setBlackHighlights(blackEdgeLines);
-		modelViewer->setHighlightLineWidth(edgeThickness);
-		modelViewer->setBfc(bfc);
-		modelViewer->setRedBackFaces(bfcRedBackFace);
-                modelViewer->setGreenFrontFaces(bfcGreenFrontFace);
-	}
+	ldPrefs->applyGeometrySettings();
+	ldPrefs->commitGeometrySettings();
 }
 
 void Preferences::doEffectsApply(void)
 {
-	bool bTemp;
-	int iTemp;
 	LDVStereoMode smTemp = LDVStereoNone;
 	LDVCutawayMode cmTemp = LDVCutawayNormal;
 
-	bTemp = panel->lightingButton->state();
-	if (bTemp != lighting)
+	ldPrefs->setUseLighting(panel->lightingButton->state());
+	if (ldPrefs->getUseLighting())
 	{
-		lighting = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, LIGHTING_KEY);
-	}
-	if (lighting)
-	{
-		bTemp = panel->qualityLightingButton->state();
-		if (bTemp != qualityLighting)
-		{
-			qualityLighting = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, QUALITY_LIGHTING_KEY);
-		}
-		bTemp = panel->subduedLightingButton->state();
-		if (bTemp != subduedLighting)
-		{
-			subduedLighting = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SUBDUED_LIGHTING_KEY);
-		}
-		bTemp = panel->specularLightingButton->state();
-		if (bTemp != specular)
-		{
-			specular = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SPECULAR_KEY);
-		}
-		bTemp = panel->alternateLightingButton->state();
-		if (bTemp != alternateLighting)
-		{
-			alternateLighting = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, ONE_LIGHT_KEY);
-		}
+		ldPrefs->setQualityLighting(panel->qualityLightingButton->state());
+		ldPrefs->setSubduedLighting(panel->subduedLightingButton->state());
+		ldPrefs->setUseSpecular(panel->specularLightingButton->state());
+		ldPrefs->setOneLight(panel->alternateLightingButton->state());
 	}
 	if (!panel->stereoButton->state())
 	{
@@ -424,17 +309,8 @@ void Preferences::doEffectsApply(void)
 	{
 		smTemp = LDVStereoParallel;
 	}
-	if (smTemp != stereoMode)
-	{
-		stereoMode = smTemp;
-		TCUserDefaults::setLongForKey(smTemp, STEREO_MODE_KEY);
-	}
-	iTemp = panel->stereoAmountSlider->value();
-	if (iTemp != stereoEyeSpacing)
-	{
-		stereoEyeSpacing = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, STEREO_SPACING_KEY);
-	}
+	ldPrefs->setStereoMode(smTemp);
+	ldPrefs->setStereoEyeSpacing(panel->stereoAmountSlider->value());
 	if (!panel->wireframeCutawayButton->state())
 	{
 		cmTemp = LDVCutawayNormal;
@@ -447,89 +323,28 @@ void Preferences::doEffectsApply(void)
 	{
 		cmTemp = LDVCutawayStencil;
 	}
-	if (cmTemp != cutawayMode)
-	{
-		cutawayMode = cmTemp;
-		TCUserDefaults::setLongForKey(cmTemp, CUTAWAY_MODE_KEY);
-	}
-	iTemp = panel->cutawayOpacitySlider->value();
-	if (iTemp != cutawayAlpha)
-	{
-		cutawayAlpha = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, CUTAWAY_ALPHA_KEY);
-	}
-	iTemp = panel->cutawayThicknessSlider->value();
-	if (iTemp != cutawayThickness)
-	{
-		cutawayThickness = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, CUTAWAY_THICKNESS_KEY);
-	}
-	bTemp = panel->sortTransparencyButton->state();
-	if (bTemp != sortTransparent)
-	{
-		sortTransparent = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SORT_KEY);
-	}
-	bTemp = panel->stippleTransparencyButton->state();
-	if (bTemp != stipple)
-	{
-		stipple = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, STIPPLE_KEY);
-	}
-	bTemp = panel->flatShadingButton->state();
-	if (bTemp != flatShading)
-	{
-		flatShading = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, FLAT_SHADING_KEY);
-	}
-	bTemp = panel->smoothCurvesButton->state();
-	if (bTemp != smoothing)
-	{
-		smoothing = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, PERFORM_SMOOTHING_KEY);
-	}
-	if (modelViewer)
-	{
-		modelViewer->setUseLighting(lighting);
-		modelViewer->setQualityLighting(qualityLighting);
-		modelViewer->setSubduedLighting(subduedLighting);
-		modelViewer->setUsesSpecular(specular);
-		modelViewer->setOneLight(alternateLighting);
-		modelViewer->setStereoMode(stereoMode);
-		modelViewer->setStereoEyeSpacing((TCFloat)stereoEyeSpacing);
-		modelViewer->setCutawayMode(cutawayMode);
-		modelViewer->setCutawayAlpha((TCFloat32)cutawayAlpha / 100.0f);
-		modelViewer->setCutawayLineWidth((TCFloat32)cutawayThickness);
-		modelViewer->setSortTransparent(sortTransparent);
-		modelViewer->setUseStipple(stipple);
-		modelViewer->setUsesFlatShading(flatShading);
-		modelViewer->setPerformSmoothing(smoothing);
-	}
+	ldPrefs->setCutawayMode(cmTemp);
+	ldPrefs->setCutawayAlpha(panel->cutawayOpacitySlider->value());
+	ldPrefs->setCutawayThickness(panel->cutawayThicknessSlider->value());
+	ldPrefs->setSortTransparent(panel->sortTransparencyButton->state());
+	ldPrefs->setUseStipple(panel->stippleTransparencyButton->state());
+	ldPrefs->setUseFlatShading(panel->flatShadingButton->state());
+	ldPrefs->setPerformSmoothing(panel->smoothCurvesButton->state());
+	ldPrefs->applyEffectsSettings();
+	ldPrefs->commitEffectsSettings();
 }
 
 void Preferences::doPrimitivesApply(void)
 {
-	bool bTemp;
-	int iTemp;
+	ldPrefs->setAllowPrimitiveSubstitution(
+		panel->primitiveSubstitutionButton->state());
+	if (ldPrefs->getAllowPrimitiveSubstitution())
+	{
+		ldPrefs->setTextureStuds(panel->textureStudsButton->state());
+		if (ldPrefs->getTextureStuds())
+		{
+			int iTemp = GL_NEAREST_MIPMAP_NEAREST;
 
-	bTemp = panel->primitiveSubstitutionButton->state();
-	if (bTemp != allowPrimitiveSubstitution)
-	{
-		allowPrimitiveSubstitution = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
-			PRIMITIVE_SUBSTITUTION_KEY);
-	}
-	if (allowPrimitiveSubstitution)
-	{
-		bTemp = panel->textureStudsButton->state();
-		if (bTemp != textureStuds)
-		{
-			textureStuds = bTemp;
-			TCUserDefaults::setLongForKey(bTemp ? 1 : 0, TEXTURE_STUDS_KEY);
-		}
-		if (textureStuds)
-		{
-			iTemp = GL_NEAREST_MIPMAP_NEAREST;
 			if (panel->nearestFilteringButton->isChecked())
 			{
 				iTemp = GL_NEAREST_MIPMAP_NEAREST;
@@ -542,92 +357,42 @@ void Preferences::doPrimitivesApply(void)
 			{
 				iTemp = GL_LINEAR_MIPMAP_LINEAR;
 			}
-			if (iTemp != textureFilterType)
-			{
-				textureFilterType = iTemp;
-				TCUserDefaults::setLongForKey(iTemp, TEXTURE_FILTER_TYPE_KEY);
-			}
+			ldPrefs->setTextureFilterType(iTemp);
 		}
-		iTemp = panel->curveQualitySlider->value();
-		if (iTemp != curveQuality)
-		{
-			curveQuality = iTemp;
-			TCUserDefaults::setLongForKey(iTemp, CURVE_QUALITY_KEY);
-		}
+		ldPrefs->setCurveQuality(panel->curveQualitySlider->value());
 	}
-	bTemp = !panel->lowQualityStudsButton->state();
-	if (bTemp != qualityStuds)
-	{
-		qualityStuds = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, QUALITY_STUDS_KEY);
-	}
-	bTemp = panel->hiresPrimitivesButton->state();
-	if (bTemp != hiresPrimitives)
-	{
-		hiresPrimitives = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0,  HI_RES_PRIMITIVES_KEY);
-	}
-	if (modelViewer)
-	{
-		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
-		modelViewer->setTextureStuds(textureStuds);
-		modelViewer->setTextureFilterType(textureFilterType);
-		modelViewer->setCurveQuality(curveQuality);
-		modelViewer->setQualityStuds(qualityStuds);
-		modelViewer->setHiResPrimitives(hiresPrimitives);
-	}
+	ldPrefs->setQualityStuds(!panel->lowQualityStudsButton->state());
+	ldPrefs->setHiResPrimitives(panel->hiresPrimitivesButton->state());
+	ldPrefs->applyPrimitivesSettings();
+	ldPrefs->commitPrimitivesSettings();
 }
 
 void Preferences::doUpdatesApply()
 {
-	bool bTemp;
 	int  iTemp;
-	char *sTemp;
-	bTemp = panel->updatesMissingpartsButton->state();
-	if (bTemp != checkPartTracker)
-	{
-		checkPartTracker = bTemp;
-		TCUserDefaults::setLongForKey(checkPartTracker,CHECK_PART_TRACKER_KEY);
-	}
 
-	iTemp = panel->updatesProxyButton->isChecked() ? 1 : 0;
-	if (iTemp != proxyType)
+	ldPrefs->setCheckPartTracker(panel->updatesMissingpartsButton->state());
+	if (panel->updatesProxyButton->isChecked())
 	{
-		proxyType = iTemp;
-		TCUserDefaults::setLongForKey(proxyType,PROXY_TYPE_KEY);
+		ldPrefs->setProxyType(2);
+	}
+	else
+	{
+		ldPrefs->setProxyType(0);
 	}
 	if (sscanf(panel->portEdit->text().ascii(),"%i",&iTemp) == 1)
 	{
-		if(iTemp != proxyPort)
-		{
-			proxyPort = iTemp;
-			TCUserDefaults::setLongForKey(proxyPort,PROXY_PORT_KEY);
-		}
+		ldPrefs->setProxyPort(iTemp);
 	}
-	sTemp = copyString(panel->proxyEdit->text().ascii());
-	if((!proxyServer) || (strcmp(sTemp,proxyServer)!=0))
-	{
-		if (proxyServer) delete proxyServer;
-		proxyServer = sTemp;
-		TCUserDefaults::setStringForKey(proxyServer,PROXY_SERVER_KEY);
-	}
-	if (modelViewer)
-    {
-		modelViewer->setCheckPartTracker(checkPartTracker);
-	}
-	if (proxyType)
-	{
-		TCWebClient::setProxyServer(proxyServer);
-		TCWebClient::setProxyPort(proxyPort);
-	}
-	else
-		TCWebClient::setProxyServer(NULL);
+	ldPrefs->setProxyServer(panel->proxyEdit->text().ascii());
+	ldPrefs->applyUpdatesSettings();
+	ldPrefs->commitUpdatesSettings();
 }
 
 void Preferences::doBackgroundColor()
 {
 	int r,g,b;
-	getRGB(backgroundColor, r ,g, b);
+	getRGB((int)ldPrefs->getBackgroundColor(), r ,g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
@@ -647,7 +412,7 @@ void Preferences::doDefaultColor()
         LDLPalette::getDefaultRGBA(i, r, g, b, a);
         QColorDialog::setCustomColor(i, qRgb(r, g, b));
     }
-	getRGB(defaultColor, r ,g, b);
+	getRGB((int)ldPrefs->getDefaultColor(), r ,g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
@@ -684,7 +449,7 @@ void Preferences::doCancel(void)
 
 bool Preferences::getAllowPrimitiveSubstitution(void)
 {
-	return allowPrimitiveSubstitution;
+	return ldPrefs->getAllowPrimitiveSubstitution();
 }
 
 void Preferences::setButtonState(QCheckBox *button, bool state)
@@ -729,14 +494,18 @@ void Preferences::setRangeValue(QSlider *rangeControl, int value)
 
 void Preferences::loadSettings(void)
 {
+	ldPrefs->loadSettings();
+	loadOtherSettings();
+/*
 	loadGeneralSettings();
 	loadGeometrySettings();
 	loadEffectsSettings();
 	loadUpdatesSettings();
 	loadPrimitivesSettings();
-	loadOtherSettings();
+*/
 }
 
+/*
 void Preferences::loadGeneralSettings(void)
 {
 	loadDefaultGeneralSettings();
@@ -860,6 +629,7 @@ void Preferences::loadUpdatesSettings(void)
     checkPartTracker = TCUserDefaults::longForKey(CHECK_PART_TRACKER_KEY,
         (long)checkPartTracker, false) != 0;
 }
+*/
 
 void Preferences::loadOtherSettings(void)
 {
@@ -872,6 +642,7 @@ void Preferences::loadOtherSettings(void)
 	windowHeight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, 480, false);
 }
 
+/*
 void Preferences::loadDefaultGeneralSettings(void)
 {
 	lineSmoothing = false;
@@ -944,6 +715,7 @@ void Preferences::loadDefaultUpdatesSettings(void)
 	proxyPort = 80;
 	checkPartTracker = true;
 }
+*/
 
 void Preferences::loadDefaultOtherSettings(void)
 {
@@ -953,66 +725,45 @@ void Preferences::loadDefaultOtherSettings(void)
 
 void Preferences::setDrawWireframe(bool value)
 {
-    if (value != wireframe)
+    if (value != ldPrefs->getDrawWireframe())
     {
-        wireframe = value;
-        modelViewer->setDrawWireframe(wireframe);
-        TCUserDefaults::setLongForKey(wireframe ? 1 : 0, WIREFRAME_KEY);
+		ldPrefs->setDrawWireframe(value, true, true);
 		reflectWireframeSettings();
 	}
 }
 
 void Preferences::setShowsHighlightLines(bool value)
 {
-	if (value != edgeLines)
+	if (value != ldPrefs->getShowHighlightLines())
 	{
-		edgeLines = value;
-		modelViewer->setShowsHighlightLines(edgeLines);
-		TCUserDefaults::setLongForKey(edgeLines ? 1 : 0,
-            SHOW_HIGHLIGHT_LINES_KEY);
+		ldPrefs->setShowHighlightLines(value, true, true);
 		reflectGeometrySettings();
 	}
 }
 
 void Preferences::setAllowPrimitiveSubstitution(bool value)
 {
-	if (value != allowPrimitiveSubstitution)
+	if (value != ldPrefs->getAllowPrimitiveSubstitution())
 	{
-		allowPrimitiveSubstitution = value;
-		modelViewer->setAllowPrimitiveSubstitution(allowPrimitiveSubstitution);
-		TCUserDefaults::setLongForKey(allowPrimitiveSubstitution ? 1 : 0,
-            PRIMITIVE_SUBSTITUTION_KEY);
+		ldPrefs->setAllowPrimitiveSubstitution(value, true, true);
 		reflectPrimitivesSettings();
 	}
 }
 
 void Preferences::setUseLighting(bool value)
 {
-    if (value != lighting)
+    if (value != ldPrefs->getUseLighting())
 	{
-		lighting = value;
-		modelViewer->setUseLighting(lighting);
-		TCUserDefaults::setLongForKey(lighting ? 1 : 0, LIGHTING_KEY);
+		ldPrefs->setUseLighting(value, true, true);
 		reflectEffectsSettings();
 	}
 }
 
 void Preferences::setUseSeams(bool value)
 {
-	int newValue = value ? 1 : 0;
-                                                                                
-    if (newValue != seams)
+    if (value != ldPrefs->getUseSeams())
 	{
-		seams= newValue;
-		if(seams)
-		{
-			modelViewer->setSeamWidth(seamWidth / 100.0f);
-        }
-        else
-        {
-            modelViewer->setSeamWidth(0.0f);
-        }
-        TCUserDefaults::setLongForKey(seams, SEAMS_KEY);
+		ldPrefs->setUseSeams(value, true, true);
 		reflectGeometrySettings();
 	}
 }
@@ -1030,29 +781,30 @@ void Preferences::reflectSettings(void)
 void Preferences::reflectGeneralSettings(void)
 {
 	int r, g, b;
-	setButtonState(panel->aaLinesButton, lineSmoothing);
-	setButtonState(panel->frameRateButton, showFPS);
-	setButtonState(panel->showErrorsButton, showErrors);
-	setButtonState(panel->processLdconfigLdrButton, processLdconfigLdr);
-	getRGB(backgroundColor,r,g,b);
+	setButtonState(panel->aaLinesButton, ldPrefs->getLineSmoothing());
+	setButtonState(panel->frameRateButton, ldPrefs->getShowFps());
+	setButtonState(panel->showErrorsButton, ldPrefs->getShowErrors());
+	setButtonState(panel->processLdconfigLdrButton,
+		ldPrefs->getProcessLdConfig());
+	getRGB((int)ldPrefs->getBackgroundColor(),r,g,b);
 	panel->backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
-	getRGB(defaultColor,r,g,b);
+	getRGB(ldPrefs->getDefaultColor(),r,g,b);
 	panel->defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
-	setRangeValue(panel->fieldOfViewSpin, fieldOfView);
-	setButtonState(panel->transparentButton, transDefaultColor);
-	panel->memoryUsageBox->setCurrentItem(memoryUsage);
+	setRangeValue(panel->fieldOfViewSpin, (int)ldPrefs->getFov());
+	setButtonState(panel->transparentButton, ldPrefs->getTransDefaultColor());
+	panel->memoryUsageBox->setCurrentItem(ldPrefs->getMemoryUsage());
 }
 
 void Preferences::reflectGeometrySettings(void)
 {
-	setButtonState(panel->seamWidthButton, seams);
-	setRangeValue(panel->seamWidthSpin, seamWidth);
+	setButtonState(panel->seamWidthButton, ldPrefs->getUseSeams());
+	setRangeValue(panel->seamWidthSpin, ldPrefs->getSeamWidth());
 //	panel->seamWidthSpin->setValue(seamWidth);
 	reflectWireframeSettings();
 	reflectBFCSettings();
 //	panel->wireframeThicknessSlider->setValue(wireframeThickness);
-	setButtonState(panel->edgeLinesButton, edgeLines);
-	if (edgeLines)
+	setButtonState(panel->edgeLinesButton, ldPrefs->getShowHighlightLines());
+	if (ldPrefs->getShowHighlightLines())
 	{
 		enableEdgeLines();
 	}
@@ -1060,15 +812,16 @@ void Preferences::reflectGeometrySettings(void)
 	{
 		disableEdgeLines();
 	}
-	setRangeValue(panel->edgeThicknessSlider, edgeThickness);
+	setRangeValue(panel->edgeThicknessSlider, ldPrefs->getEdgeThickness());
 //	panel->edgeThicknessSlider->setValue(edgeThickness);
 }
 
 void Preferences::reflectWireframeSettings(void)
 {
-	setButtonState(panel->wireframeButton, wireframe);
-	setRangeValue(panel->wireframeThicknessSlider, wireframeThickness);
-	if (wireframe)
+	setButtonState(panel->wireframeButton, ldPrefs->getDrawWireframe());
+	setRangeValue(panel->wireframeThicknessSlider,
+		ldPrefs->getWireframeThickness());
+	if (ldPrefs->getDrawWireframe())
 	{
 		enableWireframe();
 	}
@@ -1080,8 +833,8 @@ void Preferences::reflectWireframeSettings(void)
 
 void Preferences::reflectBFCSettings()
 {
-	setButtonState(panel->enableBFCButton, bfc);
-	if (bfc)
+	setButtonState(panel->enableBFCButton, ldPrefs->getBfc());
+	if (ldPrefs->getBfc())
 	{
 		enableBFC();
 	}
@@ -1093,8 +846,8 @@ void Preferences::reflectBFCSettings()
 
 void Preferences::reflectEffectsSettings(void)
 {
-	setButtonState(panel->lightingButton, lighting);
-	if (lighting)
+	setButtonState(panel->lightingButton, ldPrefs->getUseLighting());
+	if (ldPrefs->getUseLighting())
 	{
 		enableLighting();
 	}
@@ -1102,7 +855,7 @@ void Preferences::reflectEffectsSettings(void)
 	{
 		disableLighting();
 	}
-	if (stereoMode != LDVStereoNone)
+	if (ldPrefs->getStereoMode() != LDVStereoNone)
 	{
 		setButtonState(panel->stereoButton, true);
 		enableStereo();
@@ -1112,8 +865,8 @@ void Preferences::reflectEffectsSettings(void)
 		setButtonState(panel->stereoButton, false);
 		disableStereo();
 	}
-	panel->stereoAmountSlider->setValue(stereoEyeSpacing);
-	if (cutawayMode != LDVCutawayNormal)
+	panel->stereoAmountSlider->setValue(ldPrefs->getStereoEyeSpacing());
+	if (ldPrefs->getCutawayMode() != LDVCutawayNormal)
 	{
 		setButtonState(panel->wireframeCutawayButton, true);
 		enableWireframeCutaway();
@@ -1123,19 +876,20 @@ void Preferences::reflectEffectsSettings(void)
 		setButtonState(panel->wireframeCutawayButton, false);
 		disableWireframeCutaway();
 	}
-	panel->cutawayOpacitySlider->setValue(cutawayAlpha);
-	panel->cutawayThicknessSlider->setValue(cutawayThickness);
-	setButtonState(panel->sortTransparencyButton, sortTransparent);
-	setButtonState(panel->stippleTransparencyButton, stipple);
-	setButtonState(panel->flatShadingButton, flatShading);
-	setButtonState(panel->smoothCurvesButton, smoothing);
+	panel->cutawayOpacitySlider->setValue(ldPrefs->getCutawayAlpha());
+	panel->cutawayThicknessSlider->setValue(ldPrefs->getCutawayThickness());
+	setButtonState(panel->sortTransparencyButton,
+		ldPrefs->getSortTransparent());
+	setButtonState(panel->stippleTransparencyButton, ldPrefs->getUseStipple());
+	setButtonState(panel->flatShadingButton, ldPrefs->getUseFlatShading());
+	setButtonState(panel->smoothCurvesButton, ldPrefs->getPerformSmoothing());
 }
 
 void Preferences::reflectPrimitivesSettings(void)
 {
 	setButtonState(panel->primitiveSubstitutionButton,
-		allowPrimitiveSubstitution);
-	if (allowPrimitiveSubstitution)
+		ldPrefs->getAllowPrimitiveSubstitution());
+	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
 		enablePrimitiveSubstitution();
 	}
@@ -1143,15 +897,15 @@ void Preferences::reflectPrimitivesSettings(void)
 	{
 		disablePrimitiveSubstitution();
 	}
-	panel->curveQualitySlider->setValue(curveQuality);
-	setButtonState(panel->lowQualityStudsButton, !qualityStuds);
-	setButtonState(panel->hiresPrimitivesButton, hiresPrimitives);
+	panel->curveQualitySlider->setValue(ldPrefs->getCurveQuality());
+	setButtonState(panel->lowQualityStudsButton, !ldPrefs->getQualityStuds());
+	setButtonState(panel->hiresPrimitivesButton, ldPrefs->getHiResPrimitives());
 }
 
 void Preferences::reflectUpdatesSettings(void)
 {
 	char s[16];
-	if(proxyType)
+	if (ldPrefs->getProxyType())
 	{
 		enableProxyServer();
 		panel->updatesProxyButton->setChecked(true);
@@ -1161,45 +915,46 @@ void Preferences::reflectUpdatesSettings(void)
 		disableProxyServer();
 		panel->updatesNoproxyButton->setChecked(true);
 	}
-	setButtonState(panel->updatesMissingpartsButton, checkPartTracker);
-	panel->proxyEdit->setText(proxyServer ? proxyServer : "");
-	sprintf(s,"%u",proxyPort);
+	setButtonState(panel->updatesMissingpartsButton,
+		ldPrefs->getCheckPartTracker());
+	panel->proxyEdit->setText(ldPrefs->getProxyServer());
+	sprintf(s,"%u",ldPrefs->getProxyPort());
 	panel->portEdit->setText(s);
 }
 
 void Preferences::doResetGeneral(void)
 {
-	loadDefaultGeneralSettings();
+	ldPrefs->loadDefaultGeneralSettings();
 	reflectGeneralSettings();
 }
 
 void Preferences::doResetGeometry(void)
 {
-	loadDefaultGeometrySettings();
+	ldPrefs->loadDefaultGeometrySettings();
 	reflectGeometrySettings();
 }
 
 void Preferences::doResetEffects(void)
 {
-	loadDefaultEffectsSettings();
+	ldPrefs->loadDefaultEffectsSettings();
 	reflectEffectsSettings();
 }
 
 void Preferences::doResetPrimitives(void)
 {
-	loadDefaultPrimitivesSettings();
+	ldPrefs->loadDefaultPrimitivesSettings();
 	reflectPrimitivesSettings();
 }
 
 void Preferences::doResetUpdates(void)
 {
-	loadDefaultUpdatesSettings();
+	ldPrefs->loadDefaultUpdatesSettings();
 	reflectUpdatesSettings();
 }
 
 void Preferences::getRGB(int color, int &r, int &g, int &b)
 {
-//	color = htonl(color);
+	color = htonl(color);
 	r = (color >> 24) & 0xFF;
 	g = (color >> 16) & 0xFF;
 	b = (color >> 8) & 0xFF;
@@ -1796,7 +1551,7 @@ void Preferences::enableWireframeCutaway(void)
 	panel->cutawayThicknessLabel->setEnabled(true);
 	setButtonState(panel->colorCutawayButton, false);
 	setButtonState(panel->monochromeCutawayButton, false);
-	switch (cutawayMode)
+	switch (ldPrefs->getCutawayMode())
 	{
 	case LDVCutawayNormal:
 	case LDVCutawayWireframe:
@@ -1814,10 +1569,10 @@ void Preferences::enableLighting(void)
 	panel->subduedLightingButton->setEnabled(true);
 	panel->specularLightingButton->setEnabled(true);
 	panel->alternateLightingButton->setEnabled(true);
-	setButtonState(panel->qualityLightingButton, qualityLighting);
-	setButtonState(panel->subduedLightingButton, subduedLighting);
-	setButtonState(panel->specularLightingButton, specular);
-	setButtonState(panel->alternateLightingButton, alternateLighting);
+	setButtonState(panel->qualityLightingButton, ldPrefs->getQualityLighting());
+	setButtonState(panel->subduedLightingButton, ldPrefs->getSubduedLighting());
+	setButtonState(panel->specularLightingButton, ldPrefs->getUseSpecular());
+	setButtonState(panel->alternateLightingButton, ldPrefs->getOneLight());
 }
 
 void Preferences::enableStereo(void)
@@ -1828,7 +1583,7 @@ void Preferences::enableStereo(void)
 	panel->stereoAmountLabel->setEnabled(true);
 	setButtonState(panel->crossEyedStereoButton, false);
 	setButtonState(panel->parallelStereoButton, false);
-	switch (stereoMode)
+	switch (ldPrefs->getStereoMode())
 	{
 	case LDVStereoNone:
 	case LDVStereoCrossEyed:
@@ -1848,16 +1603,18 @@ void Preferences::enableWireframe(void)
 	panel->wireframeRemoveHiddenLineButton->setEnabled(true);
 	panel->wireframeThicknessSlider->setEnabled(true);
 	panel->wireframeThicknessLabel->setEnabled(true);
-	setButtonState(panel->wireframeFogButton, wireframeFog);
-    setButtonState(panel->wireframeRemoveHiddenLineButton, wireframeRemoveHiddenLines);
+	setButtonState(panel->wireframeFogButton, ldPrefs->getUseWireframeFog());
+    setButtonState(panel->wireframeRemoveHiddenLineButton,
+		ldPrefs->getRemoveHiddenLines());
 }
 
 void Preferences::enableBFC(void)
 {
 	panel->bfcRedBackFaceButton->setEnabled(true);
         panel->bfcGreenFrontFaceButton->setEnabled(true);
-	setButtonState(panel->bfcRedBackFaceButton, bfcRedBackFace);
-        setButtonState(panel->bfcGreenFrontFaceButton, bfcGreenFrontFace);
+	setButtonState(panel->bfcRedBackFaceButton, ldPrefs->getRedBackFaces());
+	setButtonState(panel->bfcGreenFrontFaceButton,
+		ldPrefs->getGreenFrontFaces());
 }
 
 void Preferences::enableEdgeLines(void)
@@ -1868,16 +1625,16 @@ void Preferences::enableEdgeLines(void)
 	panel->alwaysBlackLinesButton->setEnabled(true);
 	panel->edgeThicknessLabel->setEnabled(true);
 	panel->edgeThicknessSlider->setEnabled(true);
-	setButtonState(panel->conditionalLinesButton, conditionalLines);
-	setButtonState(panel->edgesOnlyButton, edgesOnly);
-	setButtonState(panel->highQualityLinesButton, polygonOffset);
-	setButtonState(panel->alwaysBlackLinesButton, blackEdgeLines);
-	if (conditionalLines)
+	setButtonState(panel->conditionalLinesButton,
+		ldPrefs->getDrawConditionalHighlights());
+	setButtonState(panel->edgesOnlyButton, ldPrefs->getEdgesOnly());
+	setButtonState(panel->highQualityLinesButton,
+		ldPrefs->getUsePolygonOffset());
+	setButtonState(panel->alwaysBlackLinesButton,
+		ldPrefs->getBlackHighlights());
+	if (ldPrefs->getDrawConditionalHighlights())
 	{
-		panel->conditionalShowAllButton->setEnabled(true);
-		panel->conditionalShowControlPtsButton->setEnabled(true);
-		setButtonState(panel->conditionalShowAllButton, conditionalShowAll);
-		setButtonState(panel->conditionalShowControlPtsButton, conditionalShowControlPts);
+		enableConditionalShow();
 	}
 }
 
@@ -1885,8 +1642,10 @@ void Preferences::enableConditionalShow(void)
 {
 	panel->conditionalShowAllButton->setEnabled(true);
 	panel->conditionalShowControlPtsButton->setEnabled(true);
-	setButtonState(panel->conditionalShowAllButton, conditionalShowAll);
-	setButtonState(panel->conditionalShowControlPtsButton, conditionalShowControlPts);
+	setButtonState(panel->conditionalShowAllButton,
+		ldPrefs->getShowAllConditionalLines());
+	setButtonState(panel->conditionalShowControlPtsButton,
+		ldPrefs->getShowConditionalControlPoints());
 }
 
 
@@ -1895,8 +1654,8 @@ void Preferences::enablePrimitiveSubstitution(void)
 	panel->textureStudsButton->setEnabled(true);
 	panel->curveQualityLabel->setEnabled(true);
 	panel->curveQualitySlider->setEnabled(true);
-	setButtonState(panel->textureStudsButton, textureStuds);
-	if (textureStuds)
+	setButtonState(panel->textureStudsButton, ldPrefs->getTextureStuds());
+	if (ldPrefs->getTextureStuds())
 	{
 		enableTextureStuds();
 	}
@@ -1914,7 +1673,7 @@ void Preferences::enableTextureStuds(void)
 	setButtonState(panel->nearestFilteringButton, false);
 	setButtonState(panel->bilinearFilteringButton, false);
 	setButtonState(panel->trilinearFilteringButton, false);
-	switch (textureFilterType)
+	switch (ldPrefs->getTextureFilterType())
 	{
 	case GL_NEAREST_MIPMAP_NEAREST:
 		panel->nearestFilteringButton->toggle();
@@ -1934,10 +1693,7 @@ void Preferences::enableProxyServer(void)
 	panel->proxyEdit->setEnabled(true);
 	panel->portLabel->setEnabled(true);
 	panel->portEdit->setEnabled(true);
-	if(proxyServer)
-		panel->proxyEdit->setText(proxyServer);
-	else
-		panel->proxyEdit->setText("");
+	panel->proxyEdit->setText(ldPrefs->getProxyServer());
 }
 
 void Preferences::disableWireframeCutaway(void)
@@ -2143,5 +1899,35 @@ void Preferences::setupDefaultRotationMatrix(void)
             delete value;
         }
     }
+}
+
+int Preferences::getBackgroundColor(void)
+{
+	return (int)ldPrefs->getBackgroundColor();
+}
+
+bool Preferences::getShowErrors(void)
+{
+	return ldPrefs->getShowErrors();
+}
+
+bool Preferences::getDrawWireframe(void)
+{
+	return ldPrefs->getDrawWireframe();
+}
+
+bool Preferences::getShowsHighlightLines(void)
+{
+	return ldPrefs->getShowHighlightLines();
+}
+
+bool Preferences::getUseLighting(void)
+{
+	return ldPrefs->getUseLighting();
+}
+
+bool Preferences::getUseSeams(void)
+{
+	return ldPrefs->getUseSeams();
 }
 
