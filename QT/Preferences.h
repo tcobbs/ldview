@@ -14,6 +14,7 @@ class QCheckBox;
 class QRadioButton;
 class QSlider;
 class QSpinBox;
+class LDPreferences;
 
 typedef enum
 {
@@ -65,8 +66,8 @@ public:
 	void doDefaultColor();
 	bool getAllowPrimitiveSubstitution(void);
 	void getRGB(int color, int &r, int &g, int &b);
-	int getBackgroundColor(void) { return backgroundColor; }
-	bool getShowErrors(void) { return showErrors; }
+	int getBackgroundColor(void);
+	bool getShowErrors(void);
 
 	void setShowError(int errorNumber, bool value);
 	bool getShowError(int errorNumber);
@@ -81,14 +82,14 @@ public:
 	int getWindowWidth(void);
 	int getWindowHeight(void);
 	void setDrawWireframe(bool);
-	bool getDrawWireframe(void) { return wireframe; }
+	bool getDrawWireframe(void);
 	void setShowsHighlightLines(bool);
-	bool getShowsHighlightLines(void) { return edgeLines; }
+	bool getShowsHighlightLines(void);
 	void setUseLighting(bool);
-	bool getUseLighting(void) { return lighting; }
+	bool getUseLighting(void);
 	void setAllowPrimitiveSubstitution(bool);
 	void setUseSeams(bool);
-	bool getUseSeams(void) { return seams; }
+	bool getUseSeams(void);
 
 	static char *getLastOpenPath(char *pathKey = NULL);
 	static void setLastOpenPath(const char *path, char *pathKey = NULL);
@@ -112,18 +113,8 @@ protected:
 	void doUpdatesApply(void);
 
 	void loadSettings(void);
-	void loadGeneralSettings(void);
-	void loadGeometrySettings(void);
-	void loadEffectsSettings(void);
-	void loadPrimitivesSettings(void);
-	void loadUpdatesSettings(void);
 	void loadOtherSettings(void);
 
-	void loadDefaultGeneralSettings(void);
-	void loadDefaultGeometrySettings(void);
-	void loadDefaultEffectsSettings(void);
-	void loadDefaultPrimitivesSettings(void);
-	void loadDefaultUpdatesSettings(void);
 	void loadDefaultOtherSettings(void);
 
 	void reflectSettings(void);
@@ -137,7 +128,6 @@ protected:
 
 	void setRangeValue(QSpinBox *rangeConrol, int value);
 	void setRangeValue(QSlider *rangeConrol, int value);
-	//void setupColorButton(TCColorButton *button, int colorNumber);
 
 	void enableWireframeCutaway(void);
 	void enableLighting(void);
@@ -175,67 +165,8 @@ protected:
 
 	ModelViewerWidget *modelWidget;
 	LDrawModelViewer *modelViewer;
+	LDPreferences *ldPrefs;
 	PreferencesPanel *panel;
-
-	// General Settings
-	bool lineSmoothing;
-	bool showFPS;
-	bool showErrors;
-	bool processLdconfigLdr;
-	int backgroundColor;
-	int defaultColor;
-	int defaultColorNumber;	// No UI for this.
-	bool transDefaultColor;
-	int fieldOfView;
-	int memoryUsage;
-
-	// Geometry Settings
-	bool seams;
-	int seamWidth;
-	bool wireframe;
-	bool wireframeFog;
-	bool wireframeRemoveHiddenLines;
-	int wireframeThickness;
-	bool bfc;
-	bool bfcRedBackFace;
-        bool bfcGreenFrontFace;
-	bool edgeLines;
-	bool edgesOnly;
-	bool conditionalLines;
-	bool conditionalShowAll;
-	bool conditionalShowControlPts;
-	bool polygonOffset;
-	bool blackEdgeLines;
-	int edgeThickness;
-
-	// Effects Settings
-	bool lighting;
-	bool qualityLighting;
-	bool subduedLighting;
-	bool specular;
-	bool alternateLighting;
-	LDVStereoMode stereoMode;
-	long stereoEyeSpacing;
-	LDVCutawayMode cutawayMode;
-	long cutawayAlpha;
-	long cutawayThickness;
-	bool sortTransparent;
-	bool stipple;
-	bool flatShading;
-	bool smoothing;
-
-	// Primitives Settings
-	bool allowPrimitiveSubstitution;
-	bool textureStuds;
-	int textureFilterType;
-	int curveQuality;
-	bool qualityStuds;
-	bool hiresPrimitives;
-
-	bool checkPartTracker;
-	int  proxyPort;
-	char *proxyServer;
-	int  proxyType;
 
 	bool checkAbandon;
 	int hotKeyIndex;
