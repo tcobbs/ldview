@@ -139,6 +139,8 @@ void Preferences::doGeneralApply(void)
 
 	ldPrefs->setLineSmoothing(panel->aaLinesButton->state());
 	ldPrefs->setShowFps(panel->frameRateButton->state());
+	if (modelWidget)
+		modelWidget->setShowFPS(ldPrefs->getShowFps());
 	ldPrefs->setShowErrors(panel->showErrorsButton->state());
 	ldPrefs->setProcessLdConfig(panel->processLdconfigLdrButton->state());
 	cTemp = panel->backgroundColorButton->backgroundColor();
