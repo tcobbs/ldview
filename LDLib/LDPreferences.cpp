@@ -22,6 +22,7 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	globalSettings[PROXY_PORT_KEY] = true;
 	globalSettings[CHECK_PART_TRACKER_KEY] = true;
 	globalSettings[CAMERA_GLOBE_KEY] = true;
+	m_defaultColorNumber = -1;
 	for (i = 0; i < 16; i++)
 	{
 		char key[128];
