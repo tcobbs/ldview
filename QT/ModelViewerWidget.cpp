@@ -948,6 +948,7 @@ bool ModelViewerWidget::installLDraw(void)
         if (libraryUpdateFinished)
         {
             LDLModel::setLDrawDir(ldrawDir);
+			preferences->setLDrawDir(ldrawDir);
         }
         delete ldrawDir;
         return libraryUpdateFinished;
