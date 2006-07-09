@@ -175,6 +175,8 @@ int TCUnzip::unzipExec(const char *filename, const char *outputDir)
 		}
 		break;
 	}
+	// We'll never get to the following, but we get a warning otherwise.
+	return -1;
 }
 
 #endif // UNZIP_CMD

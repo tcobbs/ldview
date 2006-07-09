@@ -9,14 +9,20 @@
 #else // WIN32
 #if defined (_QT) || defined (__APPLE__)
 #define SOCKET int
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include <unistd.h>
 
 #define closesocket close
 #define WSAGetLastError() errno
 #endif // _QT || __APPLE__
 #ifdef _QT
-#define send(socket, buf, len, flags) write((socket), (buf), (len))
-#define recv(socket, buf, len, flags) read((socket), (buf), (len))
+// I think it's a bug, but GCC is substituting this macro even when send is used
+// after being scoped to a class (specifically TCProgressAlert::send).
+#define socketSend(socket, buf, len, flags) write((socket), (buf), (len))
+#define socketRecv(socket, buf, len, flags) read((socket), (buf), (len))
 #endif // _QT
 #ifdef __APPLE__
 #include <sys/types.h>
