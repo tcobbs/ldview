@@ -5,11 +5,19 @@
 
 #ifdef WIN32
 #include <windows.h>
-#else // WIN32
+#endif // WIN32
 #ifdef _QT
 #include <qsettings.h>
+#include <stdlib.h>
 #endif // _QT
-#endif // !WIN32
+#ifdef __APPLE__
+#ifndef __OBJC__
+// We want to use Objective-C stuff, but this file will be included from
+// non-Objective-C files, so we need to make it work there too.
+#define NSString void
+#define NSMutableDictionary void
+#endif // __OBJC__
+#endif // __APPLE__
 
 class TCStringArray;
 
@@ -35,6 +43,8 @@ class TCExport TCUserDefaults: public TCObject
 			const char* saveKey = NULL, bool copyCurrent = true);
 		static const char* getSessionName(void);
 		static void deleteResult(void* value);
+		// The following would be const char *argv[], but for some reason the
+		// non-const argv in main can't be auto-converted to the const version.
 		static void setCommandLine(char *argv[]);
 		static void setCommandLine(const char *args);
 		static TCStringArray* getProcessedCommandLine(void);
@@ -88,7 +98,7 @@ class TCExport TCUserDefaults: public TCObject
 
 		HKEY hAppDefaultsKey;
 		HKEY hSessionKey;
-#else // WIN32
+#endif // WIN32
 #ifdef _QT
 		QSettings *qSettings;
 		char qKey[1024];
@@ -99,13 +109,17 @@ class TCExport TCUserDefaults: public TCObject
 		void copyTree(const char *dstKey, const char *srcKey,
 			const char *skipKey);
 #endif // _QT
-#endif // !WIN32
-
 		char* appName;
 		char* sessionName;
 		static TCUserDefaults* currentUserDefaults;
 		TCStringArray* commandLine;
 
+#ifdef __APPLE__
+		NSMutableDictionary *sessionDict;
+
+		NSString *getSessionKey(const char *key = NULL);
+		void initSessionDict(void);
+#endif // __APPLE__
 		static class TCUserDefaultsCleanup
 		{
 		public:

@@ -50,6 +50,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 wireframeLineWidth(1.0f),
 			 clipZoom(false),
 			 fontListBase(0),
+			 backgroundR(0.0f),
+			 backgroundG(0.0f),
+			 backgroundB(0.0f),
 			 defaultR(153),
 			 defaultG(153),
 			 defaultB(153),
@@ -1175,9 +1178,17 @@ void LDrawModelViewer::setFontData(TCByte *fontData, long length)
 			{
 				if (fontByte & (1 << (7 - j)))
 				{
+					int offset = yOffset + (col * FONT_CHAR_WIDTH + j) * 4 + 3;
+
 					// That spot should be on, so set the bit.
-					imageData[yOffset + (col * FONT_CHAR_WIDTH + j) * 4 + 3] =
-						0xFF;
+					if (offset < 131072)
+					{
+						imageData[offset] = 0xFF;
+					}
+					else
+					{
+						printf("Huh?\n");
+					}
 				}
 			}
 		}

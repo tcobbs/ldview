@@ -19,13 +19,6 @@
 
 #ifdef WIN32
 //#define sleep(sec) Sleep((sec) * 1000)
-#define timezone _timezone
-#else // WIN32
-#ifdef _QT
-#define send(socket, buf, len, flags) write((socket), (buf), (len))
-#define recv(socket, buf, len, flags) read((socket), (buf), (len))
-#define WSAGetLastError() errno
-#endif // _QT
 #endif // WIN32
 
 #include <TCFoundation/mystring.h>
@@ -1288,10 +1281,10 @@ int TCWebClient::setNonBlock(void)
 			1024, NULL);
 		debugPrintf("error: %s\n", buf);
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 	if (fcntl(dataSocket, F_SETFL, O_NDELAY) == -1)
 	{
-#endif // _QT
+#endif // _QT || __APPLE__
 #endif // WIN32
 		debugPrintf("Error setting non-blocking IO.\n");
 		setErrorNumber(WCE_NON_BLOCK);
@@ -1354,7 +1347,7 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 #ifdef WIN32
 			WSAGetLastError() == WSAEINTR)
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 			WSAGetLastError() == EINTR)
 #endif // _QT
 #endif // WIN32
@@ -1873,7 +1866,7 @@ bool TCWebClient::checkBlockingError(void)
 #ifdef WIN32
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 	if (WSAGetLastError() == EAGAIN)
 #endif // _QT
 #endif // WIN32
@@ -2245,7 +2238,7 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 					result = 0;
 				}
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 				if (mkdir(directory, 0) == -1)
 				{
 					*errorNumber = WCE_DIR_CREATION;
@@ -2269,7 +2262,7 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 #ifdef WIN32
 			if (!(dirStat.st_mode & _S_IFDIR))
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 			if (!S_ISDIR(dirStat.st_mode))
 #endif // _QT
 #endif // WIN32
