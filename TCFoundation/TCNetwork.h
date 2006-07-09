@@ -6,6 +6,8 @@
 #ifdef WIN32
 #include <winsock2.h>
 #include <windows.h>
+#define socketSend send
+#define socketRecv recv
 #else // WIN32
 #if defined (_QT) || defined (__APPLE__)
 #define SOCKET int
