@@ -1,8 +1,10 @@
 #include "TCUserDefaults.h"
 #include "TCStringArray.h"
 #include "mystring.h"
-#import <Foundation/Foundation.h>
 
+#ifdef __APPLE__
+#import <Foundation/Foundation.h>
+#endif // __APPLE__
 #include <stdio.h>
 
 TCUserDefaults* TCUserDefaults::currentUserDefaults = NULL;

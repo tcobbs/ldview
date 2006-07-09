@@ -695,7 +695,7 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 
 	if (dialogId)
 	{
-		char* helpPath = getLDViewPath("LDView.hlp");
+		char* helpPath = getLDViewPath(TCLocalStrings::get("LDView.hlp"));
 		DWORD helpId;
 
 		helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
