@@ -7,9 +7,21 @@
 #include <winsock2.h>
 #include <windows.h>
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 #define SOCKET int
+#include <unistd.h>
+
+#define closesocket close
+#define WSAGetLastError() errno
+#endif // _QT || __APPLE__
+#ifdef _QT
+#define send(socket, buf, len, flags) write((socket), (buf), (len))
+#define recv(socket, buf, len, flags) read((socket), (buf), (len))
 #endif // _QT
+#ifdef __APPLE__
+#include <sys/types.h>
+#include <sys/socket.h>
+#endif // __APPLE__
 #endif // WIN32
 
 #define MAX_PACKET_SIZE (1 << 20)

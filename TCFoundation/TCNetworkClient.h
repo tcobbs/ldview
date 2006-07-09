@@ -5,12 +5,12 @@
 
 #ifdef WIN32
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#endif // _QT
+#endif // _QT || __APPLE__
 #endif // WIN32
 
 #define TCNCE_SET_LINGER TCN_MAX_ERROR + 1

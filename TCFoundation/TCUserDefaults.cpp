@@ -1,6 +1,7 @@
 #include "TCUserDefaults.h"
 #include "TCStringArray.h"
 #include "mystring.h"
+#import <Foundation/Foundation.h>
 
 #include <stdio.h>
 
@@ -24,6 +25,9 @@ TCUserDefaults::TCUserDefaults(void)
 	,hAppDefaultsKey(NULL),
 	hSessionKey(NULL)
 #endif // WIN32
+#ifdef __APPLE__
+	,sessionDict(nil)
+#endif // __APPLE__
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCUserDefaults");
@@ -31,6 +35,10 @@ TCUserDefaults::TCUserDefaults(void)
 #ifdef _QT
 	qSettings = new QSettings;
 #endif // _QT
+#ifdef __APPLE__
+	appName = copyString([[[NSBundle mainBundle] bundleIdentifier]
+		cStringUsingEncoding: NSASCIIStringEncoding]);
+#endif // __APPLE__
 }
 
 void TCUserDefaults::dealloc(void)
@@ -38,6 +46,9 @@ void TCUserDefaults::dealloc(void)
 #ifdef _QT
 	delete qSettings;
 #endif // _QT
+#ifdef __APPLE__
+	[sessionDict release];
+#endif // __APPLE__
 	delete appName;
 	delete sessionName;
 	appName = NULL;
@@ -295,6 +306,20 @@ char* TCUserDefaults::defGetSavedSessionNameFromKey(const char* key)
 
 void TCUserDefaults::defRemoveSession(const char *value)
 {
+#ifdef _QT
+	char sessionKey[1024];
+
+	sprintf(sessionKey, "/%s/Sessions/%s", appName, value);
+	deleteSubkeys(sessionKey);
+#endif // _QT
+#ifdef __APPLE__
+	[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:
+		getSessionKey(value)];
+	if (strcmp(sessionName, value) == 0)
+	{
+		[sessionDict removeAllObjects];
+	}
+#endif // __APPLE__
 #ifdef WIN32
 	HKEY hSessionsKey = openKeyPathUnderKey(hAppDefaultsKey, "Sessions");
 
@@ -310,27 +335,37 @@ void TCUserDefaults::defRemoveSession(const char *value)
 		}
 	}
 	RegCloseKey(hSessionsKey);
-#else // WIN32
-#ifdef _QT
-	char sessionKey[1024];
-
-	sprintf(sessionKey, "/%s/Sessions/%s", appName, value);
-	deleteSubkeys(sessionKey);
-#endif // _QT
-#endif // !WIN32
+#endif // WIN32
 }
 
 void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 										bool sessionSpecific)
 {
-#ifdef WIN32
-	defSetValueForKey((LPBYTE)value, strlen(value) + 1, REG_SZ, key,
-		sessionSpecific);
-#else // WIN32
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
 #endif // _QT
-#endif // !WIN32
+#ifdef __APPLE__
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict)
+	{
+		[sessionDict setObject: [NSString stringWithCString: value encoding:
+			NSASCIIStringEncoding] forKey: nsKey];
+		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
+			forName: getSessionKey()];
+	}
+	else
+	{
+		[[NSUserDefaults standardUserDefaults] setObject:
+			[NSString stringWithCString: value encoding: NSASCIIStringEncoding]
+			forKey: nsKey];
+	}
+#endif // __APPLE__
+#ifdef WIN32
+	defSetValueForKey((LPBYTE)value, strlen(value) + 1, REG_SZ, key,
+		sessionSpecific);
+#endif // WIN32
 }
 
 int TCUserDefaults::defCommandLineIndexForKey(const char *key)
@@ -402,19 +437,6 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	{
 		return commandLineValue;
 	}
-#ifdef WIN32
-	DWORD size;
-	LPBYTE value = defValueForKey(size, REG_SZ, key, sessionSpecific);
-
-	if (value)
-	{
-		return (char*)value;
-	}
-	else
-	{
-		return copyString(defaultValue);
-	}
-#else // WIN32
 #ifdef _QT
 	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
 		defaultValue);
@@ -430,23 +452,73 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 		strcpy(returnValue, string);
 		return returnValue;
 	}
-#else // _QT
-	return copyString(defaultValue);
-#endif // !_QT
-#endif // !WIN32
+#endif // _QT
+#ifdef __APPLE__
+	NSString *returnString;
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict)
+	{
+		returnString = [sessionDict objectForKey: nsKey];
+	}
+	else
+	{
+		returnString = [[NSUserDefaults standardUserDefaults] objectForKey:
+			nsKey];
+	}
+	if ([returnString isKindOfClass: [NSString class]])
+	{
+		return copyString([returnString cStringUsingEncoding:
+			NSASCIIStringEncoding]);
+	}
+	else
+	{
+		return copyString(defaultValue);
+	}
+#endif // __APPLE__
+#ifdef WIN32
+	DWORD size;
+	LPBYTE value = defValueForKey(size, REG_SZ, key, sessionSpecific);
+
+	if (value)
+	{
+		return (char*)value;
+	}
+	else
+	{
+		return copyString(defaultValue);
+	}
+#endif // WIN32
 }
 
 void TCUserDefaults::defSetLongForKey(long value, const char* key,
 									  bool sessionSpecific)
 {
-#ifdef WIN32
-	defSetValueForKey((LPBYTE)&value, sizeof value, REG_DWORD, key,
-		sessionSpecific);
-#else // WIN32
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
 #endif // _QT
-#endif // !WIN32
+#ifdef __APPLE__
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+	NSNumber *numberValue = [NSNumber numberWithLong: value];
+
+	if (sessionDict)
+	{
+		[sessionDict setObject: numberValue forKey: nsKey];
+		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
+			forName: getSessionKey()];
+	}
+	else
+	{
+		[[NSUserDefaults standardUserDefaults] setObject: numberValue forKey:
+			nsKey];
+	}
+#endif // __APPLE__
+#ifdef WIN32
+	defSetValueForKey((LPBYTE)&value, sizeof value, REG_DWORD, key,
+		sessionSpecific);
+#endif // WIN32
 }
 
 long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
@@ -469,6 +541,29 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 	return qSettings->readNumEntry(qKeyForKey(key, sessionSpecific),
 		defaultValue);
 #endif // _QT
+#ifdef __APPLE__
+	NSNumber *returnNumber;
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict)
+	{
+		returnNumber = [sessionDict objectForKey: nsKey];
+	}
+	else
+	{
+		returnNumber = [[NSUserDefaults standardUserDefaults] objectForKey:
+			nsKey];
+	}
+	if ([returnNumber isKindOfClass: [NSNumber class]])
+	{
+		return [returnNumber longValue];		
+	}
+	else
+	{
+		return defaultValue;
+	}
+#endif // __APPLE__
 #ifdef WIN32
 	DWORD size;
 	LPBYTE value = defValueForKey(size, REG_DWORD, key, sessionSpecific);
@@ -493,6 +588,21 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 #ifdef _QT
 	qSettings->removeEntry(qKeyForKey(key, sessionSpecific));
 #endif // _QT
+#ifdef __APPLE__
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict)
+	{
+		[sessionDict removeObjectForKey: nsKey];
+		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
+			forName: getSessionKey()];
+	}
+	else
+	{
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey: nsKey];
+	}
+#endif // __APPLE__
 #ifdef WIN32
 	HKEY hParentKey;
 
@@ -528,7 +638,6 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 			RegCloseKey(hParentKey);
 		}
 	}
-#else // WIN32
 #endif // WIN32
 }
 
@@ -541,13 +650,38 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 {
 	TCStringArray *allKeys = new TCStringArray;
 
-#ifdef WIN32
-	defGetAllKeysUnderKey(hSessionKey, "", allKeys);
-#else // WIN32
 #ifdef _QT
 	defGetAllKeysUnderKey(qKeyForKey("", true), allKeys);
 #endif // _QT
-#endif // !WIN32
+#ifdef __APPLE__
+	NSArray *nsAllKeys;
+	int i;
+	int count;
+	
+	if (sessionDict)
+	{
+		nsAllKeys = [sessionDict allKeys];
+	}
+	else
+	{
+		// We have to synchronize before we read things, because
+		// otherwise the non-session values won't get flushed into the
+		// main app's persistent domain.
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		nsAllKeys = [[[NSUserDefaults standardUserDefaults]
+			persistentDomainForName: [NSString stringWithCString:
+			appName encoding: NSASCIIStringEncoding]] allKeys];
+	}
+	count = [nsAllKeys count];
+	for (i = 0; i < count; i++)
+	{
+		allKeys->addString([[nsAllKeys objectAtIndex: i]
+			cStringUsingEncoding: NSASCIIStringEncoding]);
+	}
+#endif // __APPLE__
+#ifdef WIN32
+	defGetAllKeysUnderKey(hSessionKey, "", allKeys);
+#endif // WIN32
 	return allKeys;
 }
 
@@ -555,6 +689,42 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 {
 	TCStringArray *allSessionNames = new TCStringArray;
 
+#ifdef _QT
+	char key[1024];
+	QStringList subkeyList;
+	int i;
+	int count;
+	
+	sprintf(key, "/%s/Sessions/", appName);
+	subkeyList = qSettings->subkeyList(key);
+	count = subkeyList.count();
+	for (i = 0; i < count; i++)
+	{
+		allSessionNames->addString(subkeyList[i]);
+	}
+#endif // _QT
+#ifdef __APPLE__
+	NSArray *domainNames = [[NSUserDefaults standardUserDefaults]
+		persistentDomainNames];
+	NSString *prefix = getSessionKey("");
+	int prefixLength = [prefix length];
+	int i;
+	int count;
+
+	count = [domainNames count];
+	for (i = 0; i < count; i++)
+	{
+		NSString *domainName = [domainNames objectAtIndex: i];
+		if (![domainName isEqualToString: prefix] &&
+			[domainName hasPrefix: prefix])
+		{
+			NSString *sessionName = [domainName substringFromIndex:
+				prefixLength];
+			allSessionNames->addString([sessionName cStringUsingEncoding:
+				NSASCIIStringEncoding]);
+		}
+	}
+#endif // __APPLE__
 #ifdef WIN32
 	HKEY hSessionsKey = openKeyPathUnderKey(hAppDefaultsKey, "Sessions");
 	if (hSessionsKey)
@@ -581,22 +751,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 		}
 		RegCloseKey(hSessionsKey);
 	}
-#else // WIN32
-#ifdef _QT
-	char key[1024];
-	QStringList subkeyList;
-	int i;
-	int count;
-	
-	sprintf(key, "/%s/Sessions/", appName);
-	subkeyList = qSettings->subkeyList(key);
-	count = subkeyList.count();
-	for (i = 0; i < count; i++)
-	{
-		allSessionNames->addString(subkeyList[i]);
-	}
-#endif // _QT
-#endif // !WIN32
+#endif // WIN32
 	return allSessionNames;
 }
 
@@ -646,6 +801,9 @@ void TCUserDefaults::defSetAppName(const char* value)
 		hAppDefaultsKey = openAppDefaultsKey();
 		hSessionKey = hAppDefaultsKey;
 #endif // WIN32
+#ifdef __APPLE__
+		initSessionDict();
+#endif
 	}
 }
 
@@ -654,6 +812,58 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 {
 	if (value != sessionName)
 	{
+#ifdef _QT
+		char key[1024];
+		QStringList sessionNames;
+		
+		sprintf(key, "/%s/Sessions/", appName);
+		sessionNames = qSettings->subkeyList(key);
+		if (value && sessionNames.findIndex(value) == -1)
+		{
+			char srcKey[1024];
+			char dstKey[1024];
+
+			sprintf(dstKey, "%s%s", key, value);
+			if (sessionName)
+			{
+				sprintf(srcKey, "%s%s", key, sessionName);
+			}
+			else
+			{
+				sprintf(srcKey, "/%s/", appName);
+			}
+			copyTree(dstKey, srcKey, key);
+		}
+		delete sessionName;
+		sessionName = copyString(value);
+#endif // _QT
+#ifdef __APPLE__
+		sessionName = copyString(value);
+		if ([[NSUserDefaults standardUserDefaults]
+			persistentDomainForName: getSessionKey()] == nil)
+		{
+			// The new session doesn't exist yet, so copy the current session
+			// into it.  Note that if the current session is already in
+			// sessionDict, we can just continue to use that.  Otherwise,
+			// we need to create a new sessionDict.
+			if (!sessionDict)
+			{
+				// We have to synchronize before we read things, because
+				// otherwise the non-session values won't get flushed into the
+				// main app's persistent domain.
+				[[NSUserDefaults standardUserDefaults] synchronize];
+				sessionDict = [[[NSUserDefaults standardUserDefaults]
+					persistentDomainForName: [NSString stringWithCString:
+					appName encoding: NSASCIIStringEncoding]] mutableCopy];
+			}
+			[[NSUserDefaults standardUserDefaults] setPersistentDomain:
+				sessionDict forName: getSessionKey()];
+		}
+		else
+		{
+			initSessionDict();
+		}
+#endif // __APPLE__
 #ifdef WIN32
 		HKEY hOldSessionKey = hSessionKey;
 
@@ -724,33 +934,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 		{
 			RegCloseKey(hOldSessionKey);
 		}
-#else // WIN32
-#ifdef _QT
-	char key[1024];
-	QStringList sessionNames;
-	
-	sprintf(key, "/%s/Sessions/", appName);
-	sessionNames = qSettings->subkeyList(key);
-	if (value && sessionNames.findIndex(value) == -1)
-	{
-		char srcKey[1024];
-		char dstKey[1024];
-
-		sprintf(dstKey, "%s%s", key, value);
-		if (sessionName)
-		{
-			sprintf(srcKey, "%s%s", key, sessionName);
-		}
-		else
-		{
-			sprintf(srcKey, "/%s/", appName);
-		}
-		copyTree(dstKey, srcKey, key);
-	}
-	delete sessionName;
-	sessionName = copyString(value);
-#endif // _QT
-#endif // !WIN32
+#endif // WIN32
 	}
 	if (saveKey)
 	{
@@ -1122,3 +1306,41 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 }
 
 #endif // _QT
+
+#ifdef __APPLE__
+
+NSString *TCUserDefaults::getSessionKey(const char *key)
+{
+	if (key == NULL)
+	{
+		key = sessionName;
+	}
+	if (key)
+	{
+		return [NSString stringWithFormat: @"%s.Session.%s", appName, key];
+	}
+	else
+	{
+		return [NSString stringWithFormat: @"%s", appName];
+	}
+}
+
+void TCUserDefaults::initSessionDict(void)
+{
+	if (sessionDict)
+	{
+		[sessionDict release];
+		sessionDict = nil;
+	}
+	if (sessionName)
+	{
+		sessionDict = [[[NSUserDefaults standardUserDefaults]
+			persistentDomainForName: getSessionKey()] mutableCopy];
+		if (!sessionDict)
+		{
+			sessionDict = [[NSMutableDictionary alloc] init];
+		}
+	}
+}
+
+#endif // __APPLE__

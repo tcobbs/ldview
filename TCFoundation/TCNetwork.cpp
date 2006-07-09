@@ -29,14 +29,6 @@ TCNetwork::TCNetworkSetupCleanup::~TCNetworkSetupCleanup(void)
 {
 	WSACleanup();
 }
-#else // WIN32
-#ifdef _QT
-#include <unistd.h>
-
-#define send(socket, buf, len, flags) write((socket), (buf), (len))
-#define recv(socket, buf, len, flags) read((socket), (buf), (len))
-#define closesocket close
-#endif // _QT
 #endif // WIN32
 
 TCNetwork::TCNetwork(void)

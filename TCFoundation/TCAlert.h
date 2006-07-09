@@ -3,9 +3,9 @@
 
 #include <TCFoundation/TCObject.h>
 
-#ifdef _QT
+#if defined(_QT) || defined(__APPLE__)
 #include <stdlib.h>
-#endif // _QT
+#endif // _QT || __APPLE__
 
 #define USER_ALERTS 0x1000
 

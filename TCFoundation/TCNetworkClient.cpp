@@ -4,13 +4,11 @@
 #ifdef WIN32
 #define ECONNREFUSED WSAECONNREFUSED
 #else // WIN32
-#ifdef _QT
+#if defined (_QT) || defined (__APPLE__)
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define closesocket close
-#define WSAGetLastError() errno
-#endif // _QT
+#endif // _QT || __APPLE__
 #endif // WIN32
 
 #include <stdarg.h>
