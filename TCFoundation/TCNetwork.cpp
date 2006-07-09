@@ -54,7 +54,7 @@ TCByte* TCNetwork::getData(int& length)
 	TCByte* data;
 	int n;
 
-	if ((unsigned)recv(dataSocket, (char *)&length, sizeof(length), 0) <
+	if ((unsigned)socketRecv(dataSocket, (char *)&length, sizeof(length), 0) <
 		sizeof(length))
 	{
 		setErrorNumber(TCNE_READ_PACKET_SIZE);
@@ -69,12 +69,12 @@ TCByte* TCNetwork::getData(int& length)
 //		cleanShutdown();
 	}
 	data = new TCByte[length];
-	if ((n = recv(dataSocket, (char *)data, length, 0)) < length)
+	if ((n = socketRecv(dataSocket, (char *)data, length, 0)) < length)
 	{
 //		printf("Packet error.\n");
 		setErrorNumber(TCNE_READ);
 	}
-	send(dataSocket, (char *)&n, sizeof(n), 0);
+	socketSend(dataSocket, (char *)&n, sizeof(n), 0);
 	return data;
 }
 
@@ -95,9 +95,10 @@ void TCNetwork::sendData(int length, const void* data)
 		setErrorNumber(TCNE_WRITE_BEFORE_CONNECT);
 		return;
 	}
-	send(dataSocket, (char *)&length, sizeof(length), 0);
-	send(dataSocket, (char *)data, length, 0);
-	if ((unsigned)recv(dataSocket, (char *)&ack, sizeof(ack), 0) < sizeof(ack))
+	socketSend(dataSocket, (char *)&length, sizeof(length), 0);
+	socketSend(dataSocket, (char *)data, length, 0);
+	if ((unsigned)socketRecv(dataSocket, (char *)&ack, sizeof(ack), 0) <
+		sizeof(ack))
 	{
 //		printf("Error: write to socket failed.\n");
 		setErrorNumber(TCNE_WRITE);

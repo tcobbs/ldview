@@ -6,10 +6,10 @@
 #ifdef WIN32
 #else // WIN32
 #if defined (_QT) || defined (__APPLE__)
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
+//#include <sys/types.h>
+//#include <sys/socket.h>
+//#include <netinet/in.h>
+//#include <netdb.h>
 #endif // _QT || __APPLE__
 #endif // WIN32
 
