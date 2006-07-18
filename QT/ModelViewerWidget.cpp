@@ -847,8 +847,9 @@ void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 	if (!libraryUpdateWindow)
 	{
 		createLibraryUpdateWindow();
-		libraryUpdateWindow->setCancelButtonText("Cancel");
 	}
+	libraryUpdateWindow->setCancelButtonText("Cancel");
+	libraryUpdateWindow->reset();
 	if (initialInstall)
 	{
 		libraryUpdateWindow->setModal(true);
@@ -904,6 +905,7 @@ bool ModelViewerWidget::installLDraw(void)
         libraryUpdateCanceled = false;
 		libraryUpdateFinishNotified = false;
 		libraryUpdateFinished = false;
+		progressDialogClosed = false;
         libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
         libraryUpdater->setLdrawDir(ldrawDir);
         libraryUpdater->installLDraw();
@@ -929,7 +931,7 @@ bool ModelViewerWidget::installLDraw(void)
 				{
 					libraryUpdateCanceled = true;
 					doLibraryUpdateFinished(LIBRARY_UPDATE_CANCELED);
-					libraryUpdateCanceled = false;
+					//libraryUpdateCanceled = false;
 				}
 				break;
 			}
