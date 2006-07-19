@@ -296,24 +296,26 @@ LDLFileLineArray *LDLQuadLine::removePoint(int index)
 {
 	LDLFileLineArray *fileLineArray = NULL;
 	LDLTriangleLine *triangleLine = NULL;
+/*
 	TCVector &p1 = m_points[0];
 	TCVector &p2 = m_points[1];
 	TCVector &p3 = m_points[2];
 	TCVector &p4 = m_points[3];
+*/
 
 	switch (index)
 	{
 	case 0:
-		triangleLine = newTriangleLine(p2, p3, p4);
+		triangleLine = newTriangleLine(1, 2, 3);
 		break;
 	case 1:
-		triangleLine = newTriangleLine(p1, p3, p4);
+		triangleLine = newTriangleLine(0, 2, 3);
 		break;
 	case 2:
-		triangleLine = newTriangleLine(p1, p2, p4);
+		triangleLine = newTriangleLine(0, 1, 3);
 		break;
 	case 3:
-		triangleLine = newTriangleLine(p1, p2, p3);
+		triangleLine = newTriangleLine(0, 1, 2);
 		break;
 	default:
 		break;
@@ -335,7 +337,8 @@ LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
 	{
 		char pointBuf[64] = "";
 
-		m_points[m_matchingIndex].print(pointBuf);
+		printPoint(m_matchingIndex, pointBuf);
+//		m_points[m_matchingIndex].print(pointBuf);
 		setWarning(LDLEMatchingPoints,
 			TCLocalStrings::get("LDLQuadLineIdentical"), m_matchingIndex + 1,
 			pointBuf);
@@ -355,7 +358,8 @@ LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
 	{
 		char pointBuf[64] = "";
 
-		m_points[m_colinearIndex].print(pointBuf);
+		printPoint(m_colinearIndex, pointBuf);
+//		m_points[m_colinearIndex].print(pointBuf);
 		setWarning(LDLEColinear, TCLocalStrings::get("LDLQuadLineCoLinear"),
 			m_colinearIndex + 1, pointBuf);
 	}
@@ -431,31 +435,35 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(int index1, int index2,
 	normal4 /= length4;
 	if ((dotProduct = normal1.dot(normal2)) <= 0.0)
 	{
-		triangle1 = newTriangleLine(p1, p2, p4);
-		triangle2 = newTriangleLine(p2, p3, p4);
-		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p4, p2, p3,
-			p4);
+		triangle1 = newTriangleLine(0, 1, 3);
+		triangle2 = newTriangleLine(1, 2, 3);
+		reportQuadSplit(dotProduct < -0.9, 0, 1, 2, 3, 0, 1, 3, 1, 2, 3);
+//		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p4, p2, p3,
+//			p4);
 	}
 	else if ((dotProduct = normal2.dot(normal3)) <= 0.0)
 	{
-		triangle1 = newTriangleLine(p1, p2, p3);
-		triangle2 = newTriangleLine(p1, p3, p4);
-		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p3, p1, p3,
-			p4);
+		triangle1 = newTriangleLine(0, 1, 2);
+		triangle2 = newTriangleLine(0, 2, 3);
+		reportQuadSplit(dotProduct < -0.9, 0, 1, 2, 3, 0, 1, 2, 0, 2, 3);
+//		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p3, p1, p3,
+//			p4);
 	}
 	else if ((dotProduct = normal3.dot(normal4)) <= 0.0)
 	{
-		triangle1 = newTriangleLine(p1, p2, p4);
-		triangle2 = newTriangleLine(p2, p3, p4);
-		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p4, p2, p3,
-			p4);
+		triangle1 = newTriangleLine(0, 1, 3);
+		triangle2 = newTriangleLine(1, 2, 3);
+		reportQuadSplit(dotProduct < -0.9, 0, 1, 2, 3, 0, 1, 3, 1, 2, 3);
+//		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p4, p2, p3,
+//			p4);
 	}
 	else if ((dotProduct = normal4.dot(normal1)) <= 0.0)
 	{
-		triangle1 = newTriangleLine(p1, p2, p3);
-		triangle2 = newTriangleLine(p1, p3, p4);
-		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p3, p1, p3,
-			p4);
+		triangle1 = newTriangleLine(0, 1, 2);
+		triangle2 = newTriangleLine(0, 2, 3);
+		reportQuadSplit(dotProduct < -0.9, 0, 1, 2, 3, 0, 1, 2, 0, 2, 3);
+//		reportQuadSplit(dotProduct < -0.9, p1, p2, p3, p4, p1, p2, p3, p1, p3,
+//			p4);
 	}
 	if (triangle1)
 	{
@@ -482,8 +490,10 @@ void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 	indices[3] = index4;
 	for (i = 0; i < 4; i++)
 	{
-		m_points[i].print(oldBuf[i]);
-		m_points[indices[i]].print(newBuf[i]);
+		printPoint(i, oldBuf[i]);
+		printPoint(indices[i], newBuf[i]);
+//		m_points[i].print(oldBuf[i]);
+//		m_points[indices[i]].print(newBuf[i]);
 	}
 	if (m_actionFlags.bfcClip)
 	{
@@ -500,6 +510,37 @@ void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 	}
 }
 
+void LDLQuadLine::reportQuadSplit(bool flat, const int q1, const int q2,
+								  const int q3, const int q4,
+								  const int t1, const int t2, const int t3,
+								  const int t4, const int t5, const int t6)
+{
+	char q1Buf[64], q2Buf[64], q3Buf[64], q4Buf[64];
+	char t1Buf[64], t2Buf[64], t3Buf[64], t4Buf[64], t5Buf[64], t6Buf[64];
+	const char *errorTypeString = TCLocalStrings::get("LDLQuadLineConcave");
+	LDLErrorType errorType = LDLEConcaveQuad;
+
+	if (!flat)
+	{
+		errorTypeString = TCLocalStrings::get("LDLQuadLineNonFlat");
+		errorType = LDLENonFlatQuad;
+	}
+	printPoint(q1, q1Buf);
+	printPoint(q2, q2Buf);
+	printPoint(q3, q3Buf);
+	printPoint(q4, q4Buf);
+	printPoint(t1, t1Buf);
+	printPoint(t2, t2Buf);
+	printPoint(t3, t3Buf);
+	printPoint(t4, t4Buf);
+	printPoint(t5, t5Buf);
+	printPoint(t6, t6Buf);
+	setWarning(errorType, TCLocalStrings::get("LDLQuadLineSpit"),
+		errorTypeString, q1Buf, q2Buf, q3Buf, q4Buf, t1Buf, t2Buf, t3Buf, t4Buf,
+		t5Buf, t6Buf);
+}
+
+/*
 void LDLQuadLine::reportQuadSplit(bool flat, const TCVector& q1,
 								  const TCVector& q2, const TCVector& q3,
 								  const TCVector& q4, const TCVector& t1,
@@ -531,19 +572,18 @@ void LDLQuadLine::reportQuadSplit(bool flat, const TCVector& q1,
 		errorTypeString, q1Buf, q2Buf, q3Buf, q4Buf, t1Buf, t2Buf, t3Buf, t4Buf,
 		t5Buf, t6Buf);
 }
+*/
 
-LDLTriangleLine *LDLQuadLine::newTriangleLine(const TCVector &p1,
-											  const TCVector &p2,
-											  const TCVector &p3)
+LDLTriangleLine *LDLQuadLine::newTriangleLine(int p1, int p2, int p3)
 {
 	char pointBuf1[64] = "";
 	char pointBuf2[64] = "";
 	char pointBuf3[64] = "";
 	char newLine[1024];
 
-	p1.print(pointBuf1, 8);
-	p2.print(pointBuf2, 8);
-	p3.print(pointBuf3, 8);
+	printPoint(p1, pointBuf1);
+	printPoint(p2, pointBuf2);
+	printPoint(p3, pointBuf3);
 	sprintf(newLine, "3 %ld %s %s %s", m_colorNumber, pointBuf1, pointBuf2,
 		pointBuf3);
 	return new LDLTriangleLine(m_parentModel, newLine, m_lineNumber, m_line);

@@ -111,20 +111,22 @@ LDLFileLineArray *LDLTriangleLine::removePoint(int index)
 {
 	LDLFileLineArray *fileLineArray = NULL;
 	LDLLineLine *lineLine = NULL;
+/*
 	TCVector &p1 = m_points[0];
 	TCVector &p2 = m_points[1];
 	TCVector &p3 = m_points[2];
+*/
 
 	switch (index)
 	{
 	case 0:
-		lineLine = newLineLine(p2, p3);
+		lineLine = newLineLine(1, 2);
 		break;
 	case 1:
-		lineLine = newLineLine(p1, p3);
+		lineLine = newLineLine(0, 2);
 		break;
 	case 2:
-		lineLine = newLineLine(p1, p2);
+		lineLine = newLineLine(0, 1);
 		break;
 	default:
 		break;
@@ -146,7 +148,8 @@ LDLFileLineArray *LDLTriangleLine::removeMatchingPoint(void)
 	{
 		char pointBuf[64] = "";
 
-		m_points[m_matchingIndex].print(pointBuf);
+		printPoint(m_matchingIndex, pointBuf);
+//		m_points[m_matchingIndex].print(pointBuf);
 		setWarning(LDLEMatchingPoints,
 			TCLocalStrings::get("LDLTriLineIdentical"), m_matchingIndex + 1,
 			pointBuf);
@@ -166,7 +169,8 @@ LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
 	{
 		char pointBuf[64] = "";
 
-		m_points[m_colinearIndex].print(pointBuf);
+		printPoint(m_colinearIndex, pointBuf);
+//		m_points[m_colinearIndex].print(pointBuf);
 		setWarning(LDLEColinear, TCLocalStrings::get("LDLTriLineCoLinear"),
 			m_colinearIndex + 1, pointBuf);
 	}
@@ -177,15 +181,16 @@ LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
 	return fileLineArray;
 }
 
-LDLLineLine *LDLTriangleLine::newLineLine(const TCVector &p1,
-										  const TCVector &p2)
+LDLLineLine *LDLTriangleLine::newLineLine(int p1, int p2)
 {
 	char pointBuf1[64] = "";
 	char pointBuf2[64] = "";
 	char newLine[1024];
 
-	p1.print(pointBuf1, 8);
-	p2.print(pointBuf2, 8);
+	printPoint(p1, pointBuf1);
+	printPoint(p2, pointBuf2);
+//	p1.print(pointBuf1, 8);
+//	p2.print(pointBuf2, 8);
 	sprintf(newLine, "3 %ld %s %s", m_colorNumber, pointBuf1, pointBuf2);
 	return new LDLLineLine(m_parentModel, newLine, m_lineNumber, m_line);
 }

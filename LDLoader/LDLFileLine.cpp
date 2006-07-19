@@ -181,3 +181,26 @@ LDLMainModel *LDLFileLine::getMainModel(void)
 {
 	return m_parentModel->getMainModel();
 }
+
+const char *LDLFileLine::findWord(int index) const
+{
+	int n;
+	int i = 0;
+
+	while (isspace(m_line[i]) && m_line[i] != 0)
+	{
+		i++;
+	}
+	for (n = 0; n < index; n++)
+	{
+		while (!isspace(m_line[i]) && m_line[i] != 0)
+		{
+			i++;
+		}
+		while (isspace(m_line[i]) && m_line[i] != 0)
+		{
+			i++;
+		}
+	}
+	return &m_line[i];
+}

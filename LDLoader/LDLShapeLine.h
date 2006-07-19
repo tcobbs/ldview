@@ -25,6 +25,7 @@ protected:
 	bool getMatchingPoints(const TCVector *points, int count,
 		int *index1 = NULL, int *index2 = NULL);
 	bool getMatchingPoints(int *index1 = NULL, int *index2 = NULL);
+	void printPoint(int index, char *buf);
 
 	TCVector *m_points;
 	TCULong m_colorNumber;
