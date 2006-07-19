@@ -23,7 +23,7 @@ protected:
 	LDLFileLineArray *removePoint(int index);
 	LDLFileLineArray *removeMatchingPoint(void);
 	LDLFileLineArray *removeColinearPoint(void);
-	LDLLineLine *newLineLine(const TCVector &p1, const TCVector &p2);
+	LDLLineLine *newLineLine(int p1, int p2);
 
 	int m_colinearIndex;
 	int m_matchingIndex;

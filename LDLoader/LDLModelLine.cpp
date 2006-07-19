@@ -53,6 +53,13 @@ TCObject *LDLModelLine::copy(void)
 	return new LDLModelLine(*this);
 }
 
+// This function does the following:
+// *  Strips out trailing and leading spaces
+// *  Converts all whitespace characters prior to the filename into spaces.
+//    (For example, tabs are replaced with spaces.)
+// *  Makes it so that there are not contiguous spaces prior to the filename.
+//    (In other words, n whitespace characters in a row are replaced by a
+//    single space.)
 void LDLModelLine::fixLine(void)
 {
 	if (m_line)
@@ -67,26 +74,36 @@ void LDLModelLine::fixLine(void)
 			m_originalLine = copyString(m_line);
 		}
 		memset(m_line, 0, strlen(m_line));
-//		m_line[0] = 0;
 		for (i = 0; isspace(m_originalLine[i]); i++)
 		{
 			// Don't do anything
+			// We're skipping over any leading spaces here.
 		}
 		for (j = 0; j < 14 && !done; j++)
 		{
-			for (k = 0; !isspace(m_originalLine[i + k]); k++)
+			for (k = 0; m_originalLine[i + k] != 0 &&
+				!isspace(m_originalLine[i + k]); k++)
 			{
 				// Don't do anything
+				// We're skipping over all non-whitespace characters here.
 			}
 			diff = k;
 			if (diff)
 			{
+				// If we got here, we haven't yet reached the end of our string.
+				// The for loop above will always start with
+				// m_originalLine[i + k] as a non-whitespace character, so if it
+				// doesn't loop at all, then the end of the string was reached.
 				strncpy(&m_line[newLen], &m_originalLine[i], diff);
 				m_line[newLen + diff] = ' ';
 				newLen += diff + 1;
 				done = true;
 				for (i = i + diff; isspace(m_originalLine[i]); i++)
 				{
+					// We're skipping over whitespace characters here.  If we
+					// get in here at all, then we're at the end of the string.
+					// Note that done will be set to false repeatedly, but
+					// that's not the main focus of this loop.
 					done = false;
 				}
 			}
@@ -104,29 +121,39 @@ bool LDLModelLine::parse(void)
 {
 	float x, y, z;
 	float a, b, c, d, e, f, g, h, i;
-	char subModelName[1024];
+	int k;
+	char subModelName[1024] = "";
 	int lineType;
+	char *spaceSpot;
 
 	fixLine();
-	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f %f %f %f %s",
+	spaceSpot = strchr(m_line, ' ');
+	for (k = 0; k < 13 && spaceSpot != NULL; k++)
+	{
+		spaceSpot = strchr(spaceSpot + 1, ' ');
+	}
+	if (spaceSpot != NULL)
+	{
+		int len;
+
+		spaceSpot++;
+		strcpy(subModelName, spaceSpot);
+		len = strlen(subModelName);
+		for (k = 0; k < len; k++)
+		{
+			if (isspace(subModelName[k]))
+			{
+				setWarning(LDLEWhitespace,
+					TCLocalStrings::get("LDLModelLineWhitespace"), subModelName);
+				break;
+			}
+		}
+	}
+	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f %f %f %f",
 		&lineType, &m_colorNumber, &x, &y, &z, &a, &b, &c, &d, &e, &f,
-		&g, &h, &i, subModelName) == 15)
+		&g, &h, &i) == 14 && subModelName[0])
 	{
 		int red, green, blue, alpha;
-		int k;
-		char *spaceSpot = strchr(m_line, ' ');
-
-		for (k = 0; k < 13; k++)
-		{
-			spaceSpot = strchr(spaceSpot + 1, ' ');
-		}
-		spaceSpot++;
-		if (strcmp(spaceSpot, subModelName) != 0)
-		{
-			strcpy(subModelName, spaceSpot);
-			setWarning(LDLEWhitespace,
-				TCLocalStrings::get("LDLModelLineWhitespace"), subModelName);
-		}
 		m_highResModel = m_parentModel->subModelNamed(subModelName);
 		if (m_highResModel)
 		{

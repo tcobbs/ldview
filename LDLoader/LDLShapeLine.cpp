@@ -1,5 +1,6 @@
 #include "LDLShapeLine.h"
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/mystring.h>
 
 LDLShapeLine::LDLShapeLine(LDLModel *parentModel, const char *line,
 						   int lineNumber, const char *originalLine)
@@ -146,4 +147,15 @@ bool LDLShapeLine::getMatchingPoints(const TCVector *points, int count,
 		}
 	}
 	return false;
+}
+
+void LDLShapeLine::printPoint(int index, char *buf)
+{
+	const char *startSpot = findWord(index * 3 + 2);
+	const char *endSpot = findWord((index + 1) * 3 + 2);
+	int len = endSpot - startSpot;
+
+	strncpy(buf, startSpot, len);
+	buf[len] = 0;
+	stripTrailingWhitespace(buf);
 }

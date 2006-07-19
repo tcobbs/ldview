@@ -29,13 +29,18 @@ protected:
 	LDLFileLineArray *splitConcaveQuad(void);
 	LDLFileLineArray *splitConcaveQuad(int index1, int index2, int index3,
 		int index4);
+	void reportQuadSplit(bool flat,
+		const int q1, const int q2, const int q3, const int q4,
+		const int t1, const int t2, const int t3,
+		const int t4, const int t5, const int t6);
+/*
 	void reportQuadSplit(bool flat, const TCVector& q1, const TCVector& q2,
 		const TCVector& q3, const TCVector& q4, const TCVector& t1,
 		const TCVector& t2, const TCVector& t3, const TCVector& t4,
 		const TCVector& t5, const TCVector& t6);
+*/
 	void reportBadVertexOrder(int index1, int index2, int index3, int index4);
-	LDLTriangleLine *newTriangleLine(const TCVector &p1, const TCVector &p2,
-		const TCVector &p3);
+	LDLTriangleLine *newTriangleLine(int p1, int p2, int p3);
 
 	int m_colinearIndex;
 	int m_matchingIndex;

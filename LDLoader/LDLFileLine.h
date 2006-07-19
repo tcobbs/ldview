@@ -59,6 +59,7 @@ protected:
 		va_list argPtr);
 	virtual void setError(LDLErrorType type, const char* format, ...);
 	virtual void setWarning(LDLErrorType type, const char* format, ...);
+	virtual const char *findWord(int index) const;
 
 	static bool lineIsEmpty(const char *line);
 	static int scanLineType(const char *line);
