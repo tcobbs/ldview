@@ -1,6 +1,7 @@
 #include "LDLFileLine.h"
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 
