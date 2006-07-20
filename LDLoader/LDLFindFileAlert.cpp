@@ -3,7 +3,9 @@
 
 LDLFindFileAlert::LDLFindFileAlert(const char *filename)
 	:TCAlert(LDLFindFileAlert::alertClass(), "", NULL),
-	m_filename(copyString(filename))
+	m_filename(copyString(filename)),
+	m_fileFound(false),
+	m_part(false)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLFindFileAlert");

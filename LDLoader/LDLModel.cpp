@@ -152,7 +152,8 @@ bool LDLModel::colorNumberIsTransparent(TCULong colorNumber)
 }
 
 LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
-								  bool secondAttempt)
+								  bool secondAttempt,
+								  const LDLModelLine *fileLine, bool knownPart)
 {
 	TCDictionary* subModelDict = getLoadedModels();
 	LDLModel* subModel;
@@ -186,7 +187,8 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		FILE* subModelFile;
 		char subModelPath[1024];
 
-		if ((subModelFile = openSubModelNamed(adjustedName, subModelPath))
+		if ((subModelFile = openSubModelNamed(adjustedName, subModelPath,
+			knownPart))
 			!= NULL)
 		{
 			replaceStringCharacter(subModelPath, '\\', '/');
@@ -209,21 +211,34 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		TCAlertManager::sendAlert(alert);
 		if (alert->getFileFound())
 		{
-			subModel = subModelNamed(alert->getFilename(), lowRes, true);
+			subModel = subModelNamed(alert->getFilename(), lowRes, true,
+				fileLine, alert->getPartFlag());
+			if (subModel)
+			{
+				if (!isPart() && subModel->isPart())
+				{
+					char szWarning[1024];
+
+					sprintf(szWarning, TCLocalStrings::get("LDLModelUnofficialPart"),
+						subModelName);
+					reportWarning(LDLEUnofficialPart, *fileLine, szWarning);
+				}
+			}
 		}
 		alert->release();
 	}
 	return subModel;
 }
 
-FILE *LDLModel::openModelFile(const char *filename)
+// NOTE: static function
+FILE *LDLModel::openFile(const char *filename)
 {
+	FILE *modelFile = NULL;
+	char *newFilename = copyString(filename);
+
+	convertStringToLower(newFilename);
 	if (fileCaseCallback)
 	{
-		char *newFilename = copyString(filename);
-		FILE *modelFile;
-
-		convertStringToLower(newFilename);
 		// Use binary mode to work around problem with fseek on a non-binary
 		// file.  The file parsing code will still work fine and strip out the
 		// extra data.
@@ -242,19 +257,23 @@ FILE *LDLModel::openModelFile(const char *filename)
 				}
 			}
 		}
-		delete newFilename;
-		return modelFile;
 	}
 	else
 	{
-		char *newFilename = copyString(filename);
-		FILE *modelFile;
-
-		convertStringToLower(newFilename);
 		modelFile = fopen(newFilename, "rb");
-		delete newFilename;
-		return modelFile;
 	}
+	delete newFilename;
+	return modelFile;
+}
+
+FILE *LDLModel::openModelFile(const char *filename, bool knownPart)
+{
+	FILE *modelFile = openFile(filename);
+	if (modelFile && knownPart)
+	{
+		m_flags.loadingPart = true;
+	}
+	return modelFile;
 }
 
 bool LDLModel::isSubPart(const char *subModelName)
@@ -272,7 +291,8 @@ bool LDLModel::isAbsolutePath(const char *path)
 #endif
 }
 
-FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
+FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath,
+								  bool knownPart)
 {
 	FILE* subModelFile;
 	TCStringArray *extraSearchDirs = m_mainModel->getExtraSearchDirs();
@@ -280,7 +300,7 @@ FILE* LDLModel::openSubModelNamed(const char* subModelName, char* subModelPath)
 	strcpy(subModelPath, subModelName);
 	if (isAbsolutePath(subModelPath))
 	{
-		return openModelFile(subModelPath);
+		return openModelFile(subModelPath, knownPart);
 	}
 	else if (sm_lDrawIni && sm_lDrawIni->nSearchDirs > 0)
 	{
