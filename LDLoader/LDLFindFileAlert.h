@@ -12,6 +12,8 @@ public:
 	const char *getFilename(void) { return m_filename; }
 	void setFileFound(bool value) { m_fileFound = value; }
 	bool getFileFound(void) { return m_fileFound; }
+	void setPartFlag(bool value) { m_part = value; }
+	bool getPartFlag(void) { return m_part; }
 
 	static TCULong alertClass(void) { return USER_ALERTS + 1; }
 protected:
@@ -20,6 +22,7 @@ protected:
 
 	char *m_filename;
 	bool m_fileFound;
+	bool m_part;
 };
 
 #endif // __LDLFINDFILEALERT_H__

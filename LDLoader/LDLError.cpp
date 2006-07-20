@@ -73,6 +73,8 @@ const char *LDLError::getTypeName(LDLErrorType type)
 		return TCLocalStrings::get("LDLEWhitespace");
 	case LDLEMovedTo:
 		return TCLocalStrings::get("LDLEMovedTo");
+	case LDLEUnofficialPart:
+		return TCLocalStrings::get("LDLEUnofficialPart");
 	default:
 		return TCLocalStrings::get("LDLEUnknown");
 	}

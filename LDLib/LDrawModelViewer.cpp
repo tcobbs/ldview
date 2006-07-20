@@ -2797,6 +2797,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	{
 		primitive = false;
 		found = true;
+		alert->setPartFlag(true);
 	}
 	else if (!part && fileExists(primitiveOutputFilename))
 	{
@@ -2829,6 +2830,10 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		if (webClient->fetchURL())
 		{
 			found = true;
+			if (!primitive)
+			{
+				alert->setPartFlag(true);
+			}
 		}
 		else if (!primitive && !part)
 		{

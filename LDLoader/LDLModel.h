@@ -42,7 +42,8 @@ public:
 	virtual void getSpecular(TCULong colorNumber, float *specular);
 	virtual void getShininess(TCULong colorNumber, float &shininess);
 	virtual LDLModel *subModelNamed(const char *subModelName,
-		bool lowRes = false, bool secondAttempt = false);
+		bool lowRes = false, bool secondAttempt = false,
+		const LDLModelLine *fileLine = NULL, bool knownPart = false);
 	virtual const char *getFilename(void) { return m_filename; }
 	virtual void setFilename(const char *filename);
 	virtual const char *getName(void) { return m_name; }
@@ -91,11 +92,11 @@ public:
 	{
 		return fileCaseCallback;
 	}
-	static FILE *openModelFile(const char *filename);
+	static FILE *openFile(const char *filename);
 protected:
 	virtual void dealloc(void);
 	virtual FILE *openSubModelNamed(const char* subModelName,
-		char* subModelPath);
+		char* subModelPath, bool knownPart);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
 		const char  *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);
@@ -119,6 +120,7 @@ protected:
 	virtual bool isSubPart(const char *subModelName);
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
+	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
 
 	static bool verifyLDrawDir(const char *value);
 

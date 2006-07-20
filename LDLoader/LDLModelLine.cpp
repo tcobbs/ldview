@@ -154,7 +154,8 @@ bool LDLModelLine::parse(void)
 		&g, &h, &i) == 14 && subModelName[0])
 	{
 		int red, green, blue, alpha;
-		m_highResModel = m_parentModel->subModelNamed(subModelName);
+		m_highResModel = m_parentModel->subModelNamed(subModelName, false,
+			false, this);
 		if (m_highResModel)
 		{
 			m_highResModel->retain();
@@ -166,7 +167,8 @@ bool LDLModelLine::parse(void)
 				subModelName);
 			return false;
 		}
-		m_lowResModel = m_parentModel->subModelNamed(subModelName, true);
+		m_lowResModel = m_parentModel->subModelNamed(subModelName, true, false,
+			this);
 		if (m_lowResModel)
 		{
 			m_lowResModel->retain();
