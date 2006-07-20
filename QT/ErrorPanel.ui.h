@@ -102,6 +102,11 @@ void ErrorPanel::partrenamed()
 	errors->doErrorClick(partrenamedButton, LDLEMovedTo);
 }
 
+void ErrorPanel::unofficialpart()
+{
+	errors->doErrorClick(unofficialPartButton, LDLEUnofficialPart);
+}
+
 void ErrorPanel::identicalVertices()
 {
     errors->doErrorClick(identicalVerticesButton,LDLEMatchingPoints);

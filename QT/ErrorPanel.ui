@@ -317,6 +317,14 @@
                                         <string>Part renamed</string>
                                     </property>
                                 </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>unofficialPartButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Unofficial part used</string>
+                                    </property>
+                                </widget>
                             </vbox>
                         </widget>
                     </hbox>
@@ -488,6 +496,12 @@
         <slot>partrenamed()</slot>
     </connection>
     <connection>
+        <sender>unofficialPartButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>unofficialpart()</slot>
+    </connection>
+    <connection>
         <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
@@ -558,6 +572,7 @@
     <slot>MPDError()</slot>
     <slot>whitespace()</slot>
     <slot>partrenamed()</slot>
+    <slot>unofficialpart()</slot>
     <slot>identicalVertices()</slot>
     <slot>showAllError()</slot>
     <slot>showNoneError()</slot>
