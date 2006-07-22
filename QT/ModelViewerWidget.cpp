@@ -811,7 +811,7 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
     if (libraryUpdater)
     {
         char statusText[1024] = "";
-		libraryUpdateWindow->setCancelButtonText("OK");
+		libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("OK"));
 		setLibraryUpdateProgress(1.0f);
         if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
         {
@@ -848,7 +848,7 @@ void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 	{
 		createLibraryUpdateWindow();
 	}
-	libraryUpdateWindow->setCancelButtonText("Cancel");
+	libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("Cancel"));
 	libraryUpdateWindow->reset();
 	if (initialInstall)
 	{
@@ -867,7 +867,8 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 	if (!libraryUpdateWindow)
 	{
 		libraryUpdateWindow = new QProgressDialog(
-						TCLocalStrings::get("CheckingForUpdates"),"Cancel",
+						TCLocalStrings::get("CheckingForUpdates"),
+						TCLocalStrings::get("Cancel"),
 #if QT_VERSION >= 0x40000
 						0,100,mainWindow);
 #else

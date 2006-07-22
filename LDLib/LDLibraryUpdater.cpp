@@ -424,7 +424,6 @@ void LDLibraryUpdater::launchThread(void)
 	if (m_ldrawDir)
 	{
 		//ThreadHelper threadHelper(this);
-		setDebugLevel(3);
 		try
 		{
 			m_thread = new boost::thread(
@@ -523,7 +522,6 @@ void LDLibraryUpdater::threadStart(void)
 			extraInfo->addString("None");
 		}
 	}
-	setDebugLevel(0);
 	if (strlen(m_error))
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER, m_error, 2.0f);
