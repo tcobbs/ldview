@@ -16,6 +16,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCAlertManager.h>
 #include <Commctrl.h>
 #include <stdio.h>
 #include <tmschema.h>
@@ -64,6 +65,8 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	CUIThemes::init();
 	loadSettings();
 	applySettings();
+	TCAlertManager::registerHandler(TCUserDefaults::alertClass(), this,
+		(TCAlertCallback)&LDViewPreferences::userDefaultChangedAlertCallback);
 }
 
 LDViewPreferences::~LDViewPreferences(void)
@@ -72,6 +75,7 @@ LDViewPreferences::~LDViewPreferences(void)
 
 void LDViewPreferences::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(TCUserDefaults::alertClass(), this);
 	TCObject::release(modelViewer);
 	TCObject::release(ldPrefs);
 	if (hButtonTheme)
@@ -80,6 +84,23 @@ void LDViewPreferences::dealloc(void)
 		hButtonTheme = NULL;
 	}
 	CUIPropertySheet::dealloc();
+}
+
+void LDViewPreferences::userDefaultChangedAlertCallback(TCAlert *alert)
+{
+	const char *key = alert->getMessage();
+
+	if (key)
+	{
+		if (strcmp(key, CHECK_PART_TRACKER_KEY) == 0)
+		{
+			if (hUpdatesPage)
+			{
+				SendDlgItemMessage(hUpdatesPage, IDC_CHECK_PART_TRACKER,
+					BM_SETCHECK, ldPrefs->getCheckPartTracker(), 0);
+			}
+		}
+	}
 }
 
 void LDViewPreferences::applySettings(void)
@@ -858,7 +879,9 @@ BOOL LDViewPreferences::doDialogCommand(HWND hDlg, int controlId,
 	}
 	else if (notifyCode == EN_CHANGE)
 	{
-		if (controlId == IDC_FS_RATE || controlId == IDC_FOV)
+		if (controlId == IDC_FS_RATE || controlId == IDC_FOV ||
+			controlId == IDC_PROXY_SERVER || controlId == IDC_PROXY_PORT ||
+			controlId == IDC_MISSING_DAYS || controlId == IDC_UPDATED_DAYS)
 		{
 			enableApply(hDlg);
 			return 0;
@@ -1423,6 +1446,31 @@ void LDViewPreferences::applyUpdatesChanges(void)
 
 		ldPrefs->setCheckPartTracker(getCheck(hUpdatesPage,
 			IDC_CHECK_PART_TRACKER));
+		if (ldPrefs->getCheckPartTracker())
+		{
+			char buf[128];
+
+			SendMessage(hMissingParts, WM_GETTEXT, sizeof(buf), (LPARAM)buf);
+			if (sscanf(buf, "%d", &tempNum) == 1)
+			{
+				if (tempNum > 0)
+				{
+					ldPrefs->setMissingPartWait(tempNum);
+				}
+			}
+			sprintf(buf, "%0d", ldPrefs->getMissingPartWait());
+			SendMessage(hMissingParts, WM_SETTEXT, 0, (LPARAM)buf);
+			SendMessage(hUpdatedParts, WM_GETTEXT, sizeof(buf), (LPARAM)buf);
+			if (sscanf(buf, "%d", &tempNum) == 1)
+			{
+				if (tempNum > 0)
+				{
+					ldPrefs->setUpdatedPartWait(tempNum);
+				}
+			}
+			sprintf(buf, "%0d", ldPrefs->getUpdatedPartWait());
+			SendMessage(hUpdatedParts, WM_SETTEXT, 0, (LPARAM)buf);
+		}
 		SendMessage(hProxyServer, WM_GETTEXT, sizeof(tempString),
 			(LPARAM)tempString);
 		if (strlen(tempString))
@@ -1912,6 +1960,18 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 	enableApply(hPrimitivesPage);
 }
 
+void LDViewPreferences::doCheckPartTracker(void)
+{
+	if (getCheck(hUpdatesPage, IDC_CHECK_PART_TRACKER))
+	{
+		enableCheckPartTracker();
+	}
+	else
+	{
+		disableCheckPartTracker();
+	}
+}
+
 void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 {
 	char tempString[1024];
@@ -1946,6 +2006,9 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 	case IDC_UPDATES_RESET:
 		ldPrefs->loadDefaultUpdatesSettings();
 		setupUpdatesPage();
+		break;
+	case IDC_CHECK_PART_TRACKER:
+		doCheckPartTracker();
 		break;
 	}
 	enableApply(hUpdatesPage);
@@ -2883,6 +2946,30 @@ void LDViewPreferences::setupProxy(void)
 	SendDlgItemMessage(hUpdatesPage, activeProxyType, BM_SETCHECK, 1, 0);
 }
 
+void LDViewPreferences::enableCheckPartTracker(void)
+{
+	char tmpString[128];
+
+	EnableWindow(hMissingPartsLabel, TRUE);
+	EnableWindow(hMissingParts, TRUE);
+	EnableWindow(hUpdatedPartsLabel, TRUE);
+	EnableWindow(hUpdatedParts, TRUE);
+	sprintf(tmpString, "%0d", ldPrefs->getMissingPartWait());
+	SendMessage(hMissingParts, WM_SETTEXT, 0, (LPARAM)tmpString);
+	sprintf(tmpString, "%0d", ldPrefs->getUpdatedPartWait());
+	SendMessage(hUpdatedParts, WM_SETTEXT, 0, (LPARAM)tmpString);
+}
+
+void LDViewPreferences::disableCheckPartTracker(void)
+{
+	EnableWindow(hMissingPartsLabel, FALSE);
+	EnableWindow(hMissingParts, FALSE);
+	EnableWindow(hUpdatedPartsLabel, FALSE);
+	EnableWindow(hUpdatedParts, FALSE);
+	SendMessage(hMissingParts, WM_SETTEXT, 0, (LPARAM)"");
+	SendMessage(hUpdatedParts, WM_SETTEXT, 0, (LPARAM)"");
+}
+
 void LDViewPreferences::setupUpdatesPage(void)
 {
 	hUpdatesPage = hwndArray->pointerAtIndex(updatesPageNumber);
@@ -2890,6 +2977,19 @@ void LDViewPreferences::setupUpdatesPage(void)
 	hProxyServer = GetDlgItem(hUpdatesPage, IDC_PROXY_SERVER);
 	hProxyPortLabel = GetDlgItem(hUpdatesPage, IDC_PROXY_PORT_LABEL);
 	hProxyPort = GetDlgItem(hUpdatesPage, IDC_PROXY_PORT);
+	hCheckPartTracker = GetDlgItem(hUpdatesPage, IDC_CHECK_PART_TRACKER);
+	hMissingPartsLabel = GetDlgItem(hUpdatesPage, IDC_MISSING_DAYS_LABEL);
+	hMissingParts = GetDlgItem(hUpdatesPage, IDC_MISSING_DAYS);
+	hUpdatedPartsLabel = GetDlgItem(hUpdatesPage, IDC_UPDATED_DAYS_LABEL);
+	hUpdatedParts = GetDlgItem(hUpdatesPage, IDC_UPDATED_DAYS);
+	if (ldPrefs->getCheckPartTracker())
+	{
+		enableCheckPartTracker();
+	}
+	else
+	{
+		disableCheckPartTracker();
+	}
 	SendDlgItemMessage(hUpdatesPage, IDC_CHECK_PART_TRACKER, BM_SETCHECK,
 		ldPrefs->getCheckPartTracker(), 0);
 	setupProxy();

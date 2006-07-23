@@ -41,6 +41,8 @@ class LDLError;
 class TCProgressAlert;
 class TREMainModel;
 class LDLFindFileAlert;
+class TCWebClient;
+class LDPreferences;
 
 class LDrawModelViewer: public TCObject
 {
@@ -164,6 +166,10 @@ class LDrawModelViewer: public TCObject
 		{
 			return flags.checkPartTracker != false;
 		}
+		void setMissingPartWait(int value) { missingPartWait = value; }
+		int getMissingPartWait(void) { return missingPartWait; }
+		void setUpdatedPartWait(int value) { updatedPartWait = value; }
+		int getUpdatedPartWait(void) { return updatedPartWait; }
 		virtual void setUseWireframeFog(bool);
 		bool getUseWireframeFog(void) { return flags.useWireframeFog; }
 		virtual void setRemoveHiddenLines(bool value);
@@ -285,6 +291,11 @@ class LDrawModelViewer: public TCObject
 		virtual void setLightVector(const TCVector &value);
 		TCVector getLightVector(void) { return lightVector; }
 		virtual void getPovCameraInfo(char *&userMessage, char *&povCamera);
+		virtual void setPreferences(LDPreferences *value)
+		{
+			// Don't retain; it retains us.
+			preferences = value;
+		}
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
@@ -333,7 +344,10 @@ class LDrawModelViewer: public TCObject
 		virtual TCFloat getZDistance(void);
 		virtual bool forceOneLight(void);
 		void findFileAlertCallback(LDLFindFileAlert *alert);
-		virtual bool canCheckForUnofficialPart(const char *filename);
+		virtual bool canCheckForUnofficialPart(const char *filename,
+			bool exists);
+		virtual void unofficialPartNotFound(const char *filename);
+		virtual bool connectionFailure(TCWebClient *webClient);
 
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
@@ -412,6 +426,9 @@ class LDrawModelViewer: public TCObject
 		TCFloat zoomToFitHeight;
 		int memoryUsage;
 		TCVector lightVector;
+		LDPreferences *preferences;
+		int missingPartWait;
+		int updatedPartWait;
 		struct
 		{
 			bool qualityLighting:1;

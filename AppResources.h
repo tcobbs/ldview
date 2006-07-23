@@ -167,7 +167,7 @@
 #define IDC_TEXTURE_TRILINEAR           1111
 #define IDC_PRIMITIVES_BOX              1112
 #define IDC_PRIMITIVES_MISC_BOX         1113
-#define IDC_PRIMITIVES_BOX2             1113
+#define IDC_MISSING_PARTS_BOX           1113
 #define IDC_AA_BOX                      1114
 #define IDC_WIREFRAME_BOX               1115
 #define IDC_EDGES_BOX                   1116
@@ -240,6 +240,12 @@
 #define IDC_CHECK_PART_TRACKER          1204
 #define IDC_PROXY_SERVER_LABEL          1205
 #define IDC_PROXY_PORT_LABEL            1206
+#define IDC_PROXY_BOX                   1207
+#define IDC_UPDATES_NOTE                1208
+#define IDC_MISSING_DAYS_LABEL          1209
+#define IDC_UPDATED_DAYS_LABEL          1210
+#define IDC_MISSING_DAYS                1211
+#define IDC_UPDATED_DAYS                1212
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -317,7 +323,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        168
 #define _APS_NEXT_COMMAND_VALUE         40088
-#define _APS_NEXT_CONTROL_VALUE         1207
+#define _APS_NEXT_CONTROL_VALUE         1210
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

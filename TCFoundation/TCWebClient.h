@@ -44,6 +44,7 @@ class mutex;
 #define WCE_NOT_DIR TCNC_MAX_ERROR + 15
 #define WCE_MAX_RETRIES TCNC_MAX_ERROR + 16
 #define WCE_URL_MOVED TCNC_MAX_ERROR + 17
+#define WCE_NOT_MODIFIED TCNC_MAX_ERROR + 18
 
 class TCWebClient;
 
@@ -86,6 +87,7 @@ public:
 	virtual void setContentType(const char*);
 	virtual void setContentEncoding(const char*);
 	virtual void setLastModifiedString(const char*);
+	virtual void setLastModifiedStringField(const char*);
 	virtual const char* getLastModifiedString(void)
 	{
 		return lastModifiedString;

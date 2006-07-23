@@ -668,29 +668,43 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Updates"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "&Internet Proxy",IDC_PRIMITIVES_BOX,7,7,246,66,WS_GROUP,
-                    0,HIDC_PRIMITIVES_BOX
+    GROUPBOX        "&Internet Proxy",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
+                    HIDC_PROXY_BOX
     CONTROL         "&Direct connection to the Internet",IDC_PROXY_NONE,
                     "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,15,
-                    19,118,10
-    CONTROL         "Use &Windows proxy configuration",IDC_PROXY_WINDOWS,
-                    "Button",BS_AUTORADIOBUTTON,15,30,121,10
+                    19,118,10,0,HIDC_PROXY_NONE
+    CONTROL         "Use simple &Windows proxy configuration",
+                    IDC_PROXY_WINDOWS,"Button",BS_AUTORADIOBUTTON,15,30,143,
+                    10,0,HIDC_PROXY_WINDOWS
     CONTROL         "&Manual proxy configuration:",IDC_PROXY_MANUAL,"Button",
-                    BS_AUTORADIOBUTTON,15,41,103,10
-    LTEXT           "Pro&xy:",IDC_PROXY_SERVER_LABEL,15,56,20,8
-    EDITTEXT        IDC_PROXY_SERVER,38,53,150,14,ES_AUTOHSCROLL | WS_GROUP
-    LTEXT           "&Port:",IDC_PROXY_PORT_LABEL,197,56,16,8
+                    BS_AUTORADIOBUTTON,15,41,103,10,0,HIDC_PROXY_MANUAL
+    LTEXT           "Pro&xy:",IDC_PROXY_SERVER_LABEL,15,56,20,8,0,0,
+                    HIDC_PROXY_SERVER_LABEL
+    EDITTEXT        IDC_PROXY_SERVER,38,53,150,14,ES_AUTOHSCROLL | WS_GROUP,
+                    0,HIDC_PROXY_SERVER
+    LTEXT           "&Port:",IDC_PROXY_PORT_LABEL,197,56,16,8,0,0,
+                    HIDC_PROXY_PORT_LABEL
     EDITTEXT        IDC_PROXY_PORT,216,53,30,14,ES_AUTOHSCROLL | ES_NUMBER | 
-                    WS_GROUP
-    GROUPBOX        "Mi&ssing Parts",IDC_PRIMITIVES_BOX2,7,74,246,26,
-                    WS_GROUP,0,HIDC_PRIMITIVES_BOX2
-    CONTROL         "&Automatically check ldraw.org for missing parts",
+                    WS_GROUP,0,HIDC_PROXY_PORT
+    GROUPBOX        "Mi&ssing Parts",IDC_MISSING_PARTS_BOX,7,74,246,61,
+                    WS_GROUP,0,HIDC_MISSING_PARTS_BOX
+    CONTROL         "&Automatically check LDraw.org for missing parts",
                     IDC_CHECK_PART_TRACKER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,15,85,162,10
+                    WS_TABSTOP,15,85,166,10,0,HIDC_CHECK_PART_TRACKER
+    RTEXT           "Days between missing part checks:",
+                    IDC_MISSING_DAYS_LABEL,19,101,116,8,0,0,
+                    HIDC_MISSING_DAYS_LABEL
+    EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | 
+                    WS_GROUP,0,HIDC_MISSING_DAYS
+    RTEXT           "Days between updated part checks:",
+                    IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,
+                    HIDC_UPDATED_DAYS_LABEL
+    EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
     PUSHBUTTON      "&Reset",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_UPDATES_RESET
-    LTEXT           "Note: changes to setting on this tab will not go into effect until the next time\na model is loaded.",
-                    IDC_STATIC,7,189,246,18
+    LTEXT           "Note: changes to setting on this tab will not go into effect until the next time\na model is loaded or a library update is performed.",
+                    IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
 END
 
 

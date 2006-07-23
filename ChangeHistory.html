@@ -28,18 +28,32 @@ ALINK="#FFFF80">
 <TD VALIGN="TOP" COLSPAN=2>
 <B>&nbsp;&nbsp;Additions</B><BR>
 <UL>
+<LI>Added automatic download of the LDraw parts library.</LI>
+<LI>Added automatic updating of the LDraw parts library.</LI>
+<LI>Added automatic downloading of unofficial parts from the LDraw.org Parts
+Tracker.</LI>
 <LI>Added warning for parts that have been renamed.</LI>
+<LI>Added warning for usage of automatically downloaded unofficial parts.</LI>
 </UL>
 <BR>
 <B>Updates</B><BR>
 <UL>
 <LI>Updated <I>m6459.ldr</I> sample model to no longer contain renamed
 parts.</LI>
+<LI>Updated generation of new triangles and lines from quads and triangles that
+contain identical or co-linear vertices to use the original text from the file
+to generate the new primitives, instead of using text generated based on
+rounding of the numbers.</LI>
+<LI>Updated the warning messages generated in the above case to also use the
+text from the file, instead of rounding the numbers.</LI>
 <LI>Renamed the Error window to <I>Errors &amp; Warnings</I>.</LI>
 </UL>
 <B>Bug Fixes</B>
 <UL>
 <LI>Fixed handling of 12-bit dithered transparent direct colors.</LI>
+<LI>Fixed crash that occurred when one of the numeric parameters was missing
+from a line-type 1 line that referenced a filename that began with a number
+(such as a part).</LI>
 </UL>
 </TD></TR>
 

@@ -119,6 +119,8 @@
 #define PROXY_SERVER_KEY "ProxyServer"
 #define PROXY_PORT_KEY "ProxyPort"
 #define CHECK_PART_TRACKER_KEY "CheckPartTracker"
+#define CHECK_PART_WAIT_KEY "CheckPartWait"
+#define CHECK_PART_UPDATE_WAIT_KEY "CheckPartUpdateWait"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

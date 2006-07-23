@@ -381,6 +381,15 @@ void TCWebClient::setFieldString(char *&field, const char *value)
 
 void TCWebClient::setLastModifiedString(const char* value)
 {
+	if (value != lastModifiedString)
+	{
+		delete lastModifiedString;
+		lastModifiedString = copyString(value);
+	}
+}
+
+void TCWebClient::setLastModifiedStringField(const char* value)
+{
 	setFieldString(lastModifiedString, value);
 }
 
@@ -590,7 +599,7 @@ void TCWebClient::parseHeaderFields(int headerLength)
 		headerLength);
 	if (fieldData)
 	{
-		setLastModifiedString(fieldData);
+		setLastModifiedStringField(fieldData);
 		lastModifiedTime = scanDateString(fieldData + 17);
 	}
 	fieldData = strncasestr(readBuffer, "\r\nTransfer-Encoding: ",
@@ -675,6 +684,10 @@ bool TCWebClient::parseHeader(void)
 		else if (resultCode == 302)
 		{
 			setErrorNumber(WCE_URL_MOVED);
+		}
+		else if (resultCode == 304)
+		{
+			setErrorNumber(WCE_NOT_MODIFIED);
 		}
 	}
 	return retValue;
@@ -912,6 +925,10 @@ int TCWebClient::sendFetchCommands(void)
 		sendCommand("Host: %s", webServer);
 		sendCommand("Connection: close");
 		sendCommand("Accept-Encoding: gzip, identity");
+		if (lastModifiedString)
+		{
+			sendCommand("If-Modified-Since: %s", lastModifiedString);
+		}
 		if (referer)
 		{
 			sendCommand("Referer: %s", referer);
@@ -2141,6 +2158,9 @@ void TCWebClient::setErrorNumber(int value)
 			break;
 		case WCE_URL_MOVED:
 			setErrorString("URL Moved.");
+			break;
+		case WCE_NOT_MODIFIED:
+			setErrorString("File not modified.");
 			break;
 		default:
 			TCNetworkClient::setErrorNumber(value);

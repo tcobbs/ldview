@@ -53,6 +53,7 @@ class TCExport TCUserDefaults: public TCObject
 		static void saveSessionNameInKey(const char *key);
 		static char* getSavedSessionNameFromKey(const char *key);
 		static void removeSession(const char *value);
+		static TCULong alertClass(void) { return 2; }
 	protected:
 		TCUserDefaults(void);
 		virtual void dealloc(void);
@@ -81,6 +82,7 @@ class TCExport TCUserDefaults: public TCObject
 		void defSaveSessionNameInKey(const char *key);
 		char* defGetSavedSessionNameFromKey(const char *key);
 		void defRemoveSession(const char *value);
+		void sendValueChangedAlert(const char *key);
 
 #ifdef WIN32
 		HKEY openAppDefaultsKey(void);
