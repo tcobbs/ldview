@@ -1,5 +1,7 @@
 #include "TCUserDefaults.h"
 #include "TCStringArray.h"
+#include "TCAlert.h"
+#include "TCAlertManager.h"
 #include "mystring.h"
 
 #ifdef __APPLE__
@@ -368,6 +370,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	defSetValueForKey((LPBYTE)value, strlen(value) + 1, REG_SZ, key,
 		sessionSpecific);
 #endif // WIN32
+	sendValueChangedAlert(key);
 }
 
 int TCUserDefaults::defCommandLineIndexForKey(const char *key)
@@ -494,6 +497,14 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 #endif // WIN32
 }
 
+void TCUserDefaults::sendValueChangedAlert(const char *key)
+{
+	TCAlert *alert = new TCAlert(TCUserDefaults::alertClass(), key);
+
+	TCAlertManager::sendAlert(alert);
+	alert->release();
+}
+
 void TCUserDefaults::defSetLongForKey(long value, const char* key,
 									  bool sessionSpecific)
 {
@@ -521,6 +532,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 	defSetValueForKey((LPBYTE)&value, sizeof value, REG_DWORD, key,
 		sessionSpecific);
 #endif // WIN32
+	sendValueChangedAlert(key);
 }
 
 long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,

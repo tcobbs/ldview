@@ -29,6 +29,7 @@
 typedef std::map<HWND, bool> HwndBoolMap;
 
 class LDPreferences;
+class TCAlert;
 
 class LDViewPreferences: public CUIPropertySheet
 {
@@ -148,6 +149,7 @@ protected:
 	virtual void doSeams(void);
 	virtual void doPrimitives(void);
 	virtual void doTextureStuds(void);
+	virtual void doCheckPartTracker(void);
 	virtual bool doApply(void);
 	virtual DWORD doClick(HWND hPage, int controlId, HWND controlHWnd);
 	virtual DWORD doComboSelChange(HWND hPage, int controlId, HWND controlHWnd);
@@ -183,6 +185,8 @@ protected:
 	virtual void setupSubstitution(void);
 	virtual void setupProxy(void);
 	virtual void setupPrefSetsList(void);
+	virtual void enableCheckPartTracker(void);
+	virtual void disableCheckPartTracker(void);
 	virtual void enableProxyServer(void);
 	virtual void disableProxyServer(void);
 	virtual void enableWireframe(void);
@@ -236,6 +240,7 @@ protected:
 	virtual bool getCachedCheck(HWND hPage, int buttonId, bool action = false);
 	virtual bool getCheck(HWND hPage, int buttonId);
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
+	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
 
 
 	BOOL doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
@@ -324,6 +329,11 @@ protected:
 	HWND hProxyServer;
 	HWND hProxyPortLabel;
 	HWND hProxyPort;
+	HWND hCheckPartTracker;
+	HWND hMissingPartsLabel;
+	HWND hMissingParts;
+	HWND hUpdatedPartsLabel;
+	HWND hUpdatedParts;
 
 	HWND hPrefSetsPage;
 	HWND hPrefSetsList;

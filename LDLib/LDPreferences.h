@@ -124,6 +124,8 @@ public:
 	const char *getProxyServer(void) { return m_proxyServer.c_str(); }
 	int getProxyPort(void) { return m_proxyPort; }
 	bool getCheckPartTracker(void) { return m_checkPartTracker; }
+	int getMissingPartWait(void) { return m_missingPartWait; }
+	int getUpdatedPartWait(void) { return m_updatedPartWait; }
 
 
 	// General settings
@@ -197,6 +199,8 @@ public:
 	void setProxyServer(const char *value, bool commit = false);
 	void setProxyPort(int value, bool commit = false);
 	void setCheckPartTracker(bool value, bool commit = false);
+	void setMissingPartWait(int value, bool commit = false);
+	void setUpdatedPartWait(int value, bool commit = false);
 
 	// No UI
 	void setDefaultZoom(TCFloat value, bool commit = false);
@@ -301,6 +305,8 @@ protected:
 	std::string m_proxyServer;
 	int m_proxyPort;
 	bool m_checkPartTracker;
+	int m_missingPartWait;
+	int m_updatedPartWait;
 
 	// Settings with no UI
 	bool m_skipValidation;

@@ -12,6 +12,7 @@
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLFindFileAlert.h>
 #include "LDModelParser.h"
+#include "LDPreferences.h"
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
@@ -79,6 +80,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 extraSearchDirs(NULL),
 			 memoryUsage(2),
 			 lightVector(0.0f, 0.0f, 1.0f),
+			 preferences(NULL),
 			 cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
@@ -2756,6 +2758,24 @@ bool LDrawModelViewer::getCompiled(void)
 	}
 }
 
+bool LDrawModelViewer::connectionFailure(TCWebClient *webClient)
+{
+	// I'm not sure if we should add more errors here or not.  Hopefully this is
+	// enough.  In reality, the hostname lookup will fail if the user doesn't
+	// have an internet connection.  If they have a mis-configured proxy, they
+	// should either get TCNCE_CONNECT or TCNCE_CONNECTION_REFUSED.
+	switch (webClient->getErrorNumber())
+	{
+	case TCNCE_HOSTNAME_LOOKUP:
+	case TCNCE_NO_PORT:
+	case TCNCE_CONNECT:
+	case TCNCE_CONNECTION_REFUSED:
+		return true;
+	default:
+		return false;
+	}
+}
+
 void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 {
 	char *filename = copyString(alert->getFilename());
@@ -2769,6 +2789,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	const char *partUrlBase = "http://www.ldraw.org/library/unofficial/parts/";
 	const char *primitiveUrlBase = "http://www.ldraw.org/library/unofficial/p/";
 	bool found = false;
+	char *key = new char[strlen(filename) + 128];
 
 	replaceStringCharacter(partOutputFilename, '\\', '/');
 	replaceStringCharacter(primitiveOutputFilename, '\\', '/');
@@ -2803,18 +2824,39 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	{
 		primitive = true;
 		found = true;
+		delete url;
+		url = copyString(primitiveUrlBase, len + 2);
 	}
-	else if (canCheckForUnofficialPart(filename))
+	if (canCheckForUnofficialPart(filename, found))
 	{
 		TCWebClient *webClient;
 		// FIX: dynamically allocate and use local string AND handle abort
 		char message[1024];
 		bool abort;
 
-		sprintf(message, "Trying to download %s...", filename);
+		sprintf(key, "UnofficialPartChecks/%s/LastModified", filename);
+		if (found)
+		{
+			sprintf(message, TCLocalStrings::get("CheckingForUpdates"),
+				filename);
+		}
+		else
+		{
+			sprintf(message, TCLocalStrings::get("TryingToDownload"), filename);
+		}
 		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort);
 		strcat(url, filename);
 		webClient = new TCWebClient(url);
+		if (found)
+		{
+			char *lastModified = TCUserDefaults::stringForKey(key, NULL, false);
+
+			if (lastModified)
+			{
+				webClient->setLastModifiedString(lastModified);
+				delete lastModified;
+			}
+		}
 		if (primitive)
 		{
 			*strrchr(primitiveOutputFilename, '/') = 0;
@@ -2827,7 +2869,8 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			webClient->setOutputDirectory(partOutputFilename);
 			partOutputFilename[strlen(partOutputFilename)] = '/';
 		}
-		if (webClient->fetchURL())
+		if (webClient->fetchURL() ||
+			webClient->getErrorNumber() == WCE_NOT_MODIFIED)
 		{
 			found = true;
 			if (!primitive)
@@ -2835,34 +2878,49 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 				alert->setPartFlag(true);
 			}
 		}
-		else if (!primitive && !part)
+		else if (connectionFailure(webClient))
 		{
-			// We don't know if it's a primitive or a part.  The part download
-			// failed, so try as a primitive.
-			delete url;
-			url = copyString(primitiveUrlBase, len + 2);
-			strcat(url, filename);
-			webClient->release();
-			webClient = new TCWebClient(url);
-			*strrchr(primitiveOutputFilename, '/') = 0;
-			webClient->setOutputDirectory(primitiveOutputFilename);
-			primitiveOutputFilename[strlen(primitiveOutputFilename)] = '/';
-			if (webClient->fetchURL())
+			// If we had a connection failure, we probably don't have an
+			// internet connection, or our proxy is mis-configured.  Don't try
+			// to connect again for now.
+			preferences->setCheckPartTracker(false, true);
+			flags.checkPartTracker = false;
+		}
+		else
+		{
+			if (!primitive && !part)
 			{
-				primitive = true;
-				found = true;
+				// We don't know if it's a primitive or a part.  The part
+				// download failed, so try as a primitive.
+				delete url;
+				url = copyString(primitiveUrlBase, len + 2);
+				strcat(url, filename);
+				webClient->release();
+				webClient = new TCWebClient(url);
+				*strrchr(primitiveOutputFilename, '/') = 0;
+				webClient->setOutputDirectory(primitiveOutputFilename);
+				primitiveOutputFilename[strlen(primitiveOutputFilename)] = '/';
+				if (webClient->fetchURL() ||
+					webClient->getErrorNumber() == WCE_NOT_MODIFIED)
+				{
+					primitive = true;
+					found = true;
+				}
 			}
 		}
 		if (webClient->getLastModifiedString())
 		{
-			char *key = new char[strlen(filename) + 128];
-
-			sprintf(key, "UnofficialPartChecks/%s/LastModified", filename);
-			TCUserDefaults::setStringForKey(webClient->getLastModifiedString(),
-				key, false);
-			delete key;
+			TCUserDefaults::setStringForKey(
+				webClient->getLastModifiedString(), key, false);
 		}
 		webClient->release();
+		sprintf(key, "UnofficialPartChecks/%s/LastUpdateCheckTime",
+			filename);
+		TCUserDefaults::setLongForKey((long)time(NULL), key, false);
+		if (!found)
+		{
+			unofficialPartNotFound(filename);
+		}
 	}
 	if (found)
 	{
@@ -2877,6 +2935,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		}
 		setUnofficialPartPrimitive(filename, primitive);
 	}
+	delete key;
 	delete filename;
 	delete url;
 	delete partOutputFilename;
@@ -2910,7 +2969,8 @@ void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
 	delete key;
 }
 
-bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename)
+bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename,
+												 bool exists)
 {
 	bool retValue = false;
 
@@ -2919,17 +2979,44 @@ bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename)
 		char *key = new char[strlen(filename) + 128];
 		time_t lastCheck;
 		time_t now = time(NULL);
+		int days;
 
-		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
+		if (exists)
+		{
+			sprintf(key, "UnofficialPartChecks/%s/LastUpdateCheckTime",
+				filename);
+			days = updatedPartWait;
+		}
+		else
+		{
+			sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
+			days = missingPartWait;
+		}
 		lastCheck = (time_t)TCUserDefaults::longForKey(key, 0, false);
-		if (now - lastCheck > 24 * 3600)
+		if (days < 1)
+		{
+			days = 1;
+		}
+		if (now - lastCheck > 24 * 3600 * days)
 		{
 			retValue = true;
-			TCUserDefaults::setLongForKey((long)now, key, false);
 		}
 		delete key;
 	}
-	return retValue;;
+	return retValue;
+}
+
+void LDrawModelViewer::unofficialPartNotFound(const char *filename)
+{
+	if (flags.checkPartTracker)
+	{
+		char *key = new char[strlen(filename) + 128];
+		time_t now = time(NULL);
+
+		sprintf(key, "UnofficialPartChecks/%s/LastCheckTime", filename);
+		TCUserDefaults::setLongForKey((long)now, key, false);
+		delete key;
+	}
 }
 
 // NOTE: static function

@@ -21,6 +21,8 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	globalSettings[PROXY_SERVER_KEY] = true;
 	globalSettings[PROXY_PORT_KEY] = true;
 	globalSettings[CHECK_PART_TRACKER_KEY] = true;
+	globalSettings[CHECK_PART_WAIT_KEY] = true;
+	globalSettings[CHECK_PART_UPDATE_WAIT_KEY] = true;
 	globalSettings[CAMERA_GLOBE_KEY] = true;
 	m_defaultColorNumber = -1;
 	for (i = 0; i < 16; i++)
@@ -30,6 +32,7 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
 		globalSettings[key] = true;
 	}
+	modelViewer->setPreferences(this);
 }
 
 LDPreferences::~LDPreferences(void)
@@ -150,6 +153,8 @@ void LDPreferences::applyPrimitivesSettings(void)
 void LDPreferences::applyUpdatesSettings(void)
 {
 	modelViewer->setCheckPartTracker(m_checkPartTracker);
+	modelViewer->setMissingPartWait(m_missingPartWait);
+	modelViewer->setUpdatedPartWait(m_updatedPartWait);
 	if (m_proxyType == 2)
 	{
 		TCWebClient::setProxyServer(m_proxyServer.c_str());
@@ -310,6 +315,8 @@ void LDPreferences::loadDefaultUpdatesSettings(void)
 	setProxyServer("");
 	setProxyPort(80);
 	setCheckPartTracker(true);
+	setMissingPartWait(7);
+	setUpdatedPartWait(7);
 }
 
 void LDPreferences::loadGeneralSettings(void)
@@ -440,6 +447,9 @@ void LDPreferences::loadUpdatesSettings(void)
 	m_proxyPort = getIntSetting(PROXY_PORT_KEY, m_proxyPort);
 	m_checkPartTracker = getBoolSetting(CHECK_PART_TRACKER_KEY,
 		m_checkPartTracker);
+	m_missingPartWait = getIntSetting(CHECK_PART_WAIT_KEY, m_missingPartWait);
+	m_updatedPartWait = getIntSetting(CHECK_PART_UPDATE_WAIT_KEY,
+		m_updatedPartWait);
 }
 
 void LDPreferences::commitSettings(void)
@@ -547,6 +557,8 @@ void LDPreferences::commitUpdatesSettings(void)
 		setProxyPort(m_proxyPort, true);
 	}
 	setCheckPartTracker(m_checkPartTracker, true);
+	setMissingPartWait(m_missingPartWait, true);
+	setUpdatedPartWait(m_updatedPartWait, true);
 }
 
 void LDPreferences::setupDefaultRotationMatrix(void)
@@ -1177,6 +1189,16 @@ void LDPreferences::setProxyPort(int value, bool commit)
 void LDPreferences::setCheckPartTracker(bool value, bool commit)
 {
 	setSetting(m_checkPartTracker, value, CHECK_PART_TRACKER_KEY, commit);
+}
+
+void LDPreferences::setMissingPartWait(int value, bool commit)
+{
+	setSetting(m_missingPartWait, value, CHECK_PART_WAIT_KEY, commit);
+}
+
+void LDPreferences::setUpdatedPartWait(int value, bool commit)
+{
+	setSetting(m_updatedPartWait, value, CHECK_PART_UPDATE_WAIT_KEY, commit);
 }
 
 void LDPreferences::setDefaultZoom(TCFloat value, bool commit)
