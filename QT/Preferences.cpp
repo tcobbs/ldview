@@ -386,6 +386,14 @@ void Preferences::doUpdatesApply()
 	{
 		ldPrefs->setProxyPort(iTemp);
 	}
+	if (sscanf(panel->daymissingpartcheckText->text().ascii(),"%i",&iTemp) == 1)
+    {
+		ldPrefs->setMissingPartWait(iTemp);
+	}
+	if (sscanf(panel->dayupdatedpartcheckText->text().ascii(),"%i",&iTemp) == 1)
+	{
+		ldPrefs->setUpdatedPartWait(iTemp);
+	}
 	ldPrefs->setProxyServer(panel->proxyEdit->text().ascii());
 	ldPrefs->applyUpdatesSettings();
 	ldPrefs->commitUpdatesSettings();
@@ -922,6 +930,9 @@ void Preferences::reflectUpdatesSettings(void)
 	panel->proxyEdit->setText(ldPrefs->getProxyServer());
 	sprintf(s,"%u",ldPrefs->getProxyPort());
 	panel->portEdit->setText(s);
+	panel->daymissingpartcheckText->setValue(ldPrefs->getMissingPartWait());
+	panel->dayupdatedpartcheckText->setValue(ldPrefs->getUpdatedPartWait());
+	doUpdateMissingparts(ldPrefs->getCheckPartTracker());
 }
 
 void Preferences::doResetGeneral(void)
@@ -1107,6 +1118,14 @@ void Preferences::doProxyServer(bool value)
 		enableProxyServer();
 	else
 		disableProxyServer();
+}
+
+void Preferences::doUpdateMissingparts(bool value)
+{
+    panel->daymissingpartcheckText->setEnabled(value);
+	panel->daymissingpartcheckLabel->setEnabled(value);
+	panel->dayupdatedpartcheckLabel->setEnabled(value);
+	panel->dayupdatedpartcheckText->setEnabled(value);
 }
 
 void Preferences::doLighting(bool value)

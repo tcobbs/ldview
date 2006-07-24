@@ -240,3 +240,11 @@ void PreferencesPanel::disableProxy()
 	enableApply();
 }
 
+void PreferencesPanel::doUpdateMissingparts(bool b)
+{
+    if(preferences)
+    {
+        preferences->doUpdateMissingparts(b);
+	}
+}
+
