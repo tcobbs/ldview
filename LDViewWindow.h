@@ -150,6 +150,7 @@ class LDViewWindow: public CUIWindow
 			bool saveSetting = true);
 		virtual HMENU menuForBitDepth(HWND, int, int* = NULL);
 		virtual void selectPollingMenuItem(int);
+		virtual HMENU getParentOfMenuItem(HMENU hParentMenu, int itemId);
 		virtual HMENU getPollingMenu(void);
 		virtual VideoModeT* getCurrentVideoMode(void);
 		virtual void activateFullScreenMode(void);
@@ -319,11 +320,11 @@ class LDViewWindow: public CUIWindow
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
 		HMENU hToolbarMenu;
-		HMENU hWireframeMenu;
-		HMENU hEdgesMenu;
-		HMENU hPrimitivesMenu;
-		HMENU hLightingMenu;
-		HMENU hBFCMenu;
+		HMENU hWireframeToolbarMenu;
+		HMENU hEdgesToolbarMenu;
+		HMENU hPrimitivesToolbarMenu;
+		HMENU hLightingToolbarMenu;
+		HMENU hBFCToolbarMenu;
 		bool loading;
 //		bool modelWindowShown;
 		CUIWindowResizer *openGLInfoWindoResizer;

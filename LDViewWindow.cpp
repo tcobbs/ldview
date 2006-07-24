@@ -670,11 +670,11 @@ BOOL LDViewWindow::initWindow(void)
 //		hViewAngleMenu = GetSubMenu(hViewMenu, 7);
 		hToolbarMenu = LoadMenu(getLanguageModule(),
 			MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
-		hWireframeMenu = GetSubMenu(hToolbarMenu, 0);
-		hEdgesMenu = GetSubMenu(hToolbarMenu, 1);
-		hPrimitivesMenu = GetSubMenu(hToolbarMenu, 2);
-		hLightingMenu = GetSubMenu(hToolbarMenu, 3);
-		hBFCMenu = GetSubMenu(hToolbarMenu, 4);
+		hWireframeToolbarMenu = GetSubMenu(hToolbarMenu, 0);
+		hEdgesToolbarMenu = GetSubMenu(hToolbarMenu, 1);
+		hPrimitivesToolbarMenu = GetSubMenu(hToolbarMenu, 2);
+		hLightingToolbarMenu = GetSubMenu(hToolbarMenu, 3);
+		hBFCToolbarMenu = GetSubMenu(hToolbarMenu, 4);
 		reflectViewMode(false);
 		populateRecentFileMenuItems();
 		updateModelMenuItems();
@@ -1629,9 +1629,17 @@ void LDViewWindow::selectFSVideoModeMenuItem(int index, bool saveSetting)
 	if (videoMode)
 	{
 		bitDepthMenu = menuForBitDepth(hWindow, videoMode->depth, &menuIndex);
-		itemInfo.fState = MFS_UNCHECKED;
+		GetMenuItemInfo(bitDepthMenu, 30000 + currentVideoModeIndex, FALSE,
+			&itemInfo);
+		itemInfo.fMask = MIIM_STATE;
+		itemInfo.fState &= ~MFS_CHECKED;
+		itemInfo.fState |= MFS_UNCHECKED;
 		SetMenuItemInfo(bitDepthMenu, 30000 + currentVideoModeIndex, FALSE,
 			&itemInfo);
+		GetMenuItemInfo(bitDepthMenu, menuIndex, TRUE, &itemInfo);
+		itemInfo.fMask = MIIM_STATE;
+		itemInfo.fState &= ~MFS_CHECKED;
+		itemInfo.fState |= MFS_UNCHECKED;
 		SetMenuItemInfo(viewMenu, menuIndex, TRUE, &itemInfo);
 	}
 	currentVideoModeIndex = index;
@@ -1648,9 +1656,17 @@ void LDViewWindow::selectFSVideoModeMenuItem(int index, bool saveSetting)
 	if (videoMode)
 	{
 		bitDepthMenu = menuForBitDepth(hWindow, videoMode->depth, &menuIndex);
-		itemInfo.fState = MFS_CHECKED;
+		GetMenuItemInfo(bitDepthMenu, 30000 + currentVideoModeIndex, FALSE,
+			&itemInfo);
+		itemInfo.fMask = MIIM_STATE;
+		itemInfo.fState |= MFS_CHECKED;
+		itemInfo.fState &= ~MFS_UNCHECKED;
 		SetMenuItemInfo(bitDepthMenu, 30000 + currentVideoModeIndex, FALSE,
 			&itemInfo);
+		GetMenuItemInfo(bitDepthMenu, menuIndex, TRUE, &itemInfo);
+		itemInfo.fMask = MIIM_STATE;
+		itemInfo.fState |= MFS_CHECKED;
+		itemInfo.fState &= ~MFS_UNCHECKED;
 		SetMenuItemInfo(viewMenu, menuIndex, TRUE, &itemInfo);
 	}
 }
@@ -1672,6 +1688,14 @@ void LDViewWindow::initPollingMenu(void)
 
 	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
 	itemInfo.cbSize = sizeof(MENUITEMINFO);
+	// Did I mention that Windows sucks?  In order to change the type to be a
+	// radio check instead of a regular check, we have to set the type to
+	// MFT_STRING | MFT_RADIOCHECK.  The thing is, that requires us to set the
+	// title of the menu item at the same time.  So we have to read the title of
+	// the menu item into a buffer so that we can write the same value back,
+	// just so that we can turn on the MFT_RADIO_CHECK bit.  All I can say is
+	// whoever designed this system is a moron, and whoever approved it is also
+	// a moron.
 	itemInfo.fMask = MIIM_TYPE | MIIM_STATE;
 	itemInfo.dwTypeData = title;
 	for (i = 0; i < count; i++)
@@ -1681,11 +1705,13 @@ void LDViewWindow::initPollingMenu(void)
 		itemInfo.fType = MFT_STRING | MFT_RADIOCHECK;
 		if (i == pollSetting)
 		{
-			itemInfo.fState = MFS_CHECKED;
+			itemInfo.fState |= MFS_CHECKED;
+			itemInfo.fState &= ~MFS_UNCHECKED;
 		}
 		else
 		{
-			itemInfo.fState = MFS_UNCHECKED;
+			itemInfo.fState &= ~MFS_CHECKED;
+			itemInfo.fState |= MFS_UNCHECKED;
 		}
 		SetMenuItemInfo(pollingMenu, i, TRUE, &itemInfo);
 	}
@@ -1701,13 +1727,16 @@ void LDViewWindow::selectPollingMenuItem(int index)
 	{
 		itemInfo.cbSize = sizeof(MENUITEMINFO);
 		itemInfo.fMask = MIIM_STATE;
+		GetMenuItemInfo(pollingMenu, i, FALSE, &itemInfo);
 		if (i == index)
 		{
-			itemInfo.fState = MFS_CHECKED;
+			itemInfo.fState |= MFS_CHECKED;
+			itemInfo.fState &= ~MFS_UNCHECKED;
 		}
 		else
 		{
-			itemInfo.fState = MFS_UNCHECKED;
+			itemInfo.fState &= ~MFS_CHECKED;
+			itemInfo.fState |= MFS_UNCHECKED;
 		}
 		SetMenuItemInfo(pollingMenu, i, FALSE, &itemInfo);
 	}
@@ -1719,8 +1748,48 @@ void LDViewWindow::selectPollingMenuItem(int index)
 	}
 }
 
+HMENU LDViewWindow::getParentOfMenuItem(HMENU hParentMenu, int itemId)
+{
+	int i, j;
+	int parentCount = GetMenuItemCount(hParentMenu);
+	HMENU retValue = 0;
+	MENUITEMINFO itemInfo;
+
+	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+	itemInfo.cbSize = sizeof(MENUITEMINFO);
+	itemInfo.fMask = MIIM_SUBMENU | MIIM_ID;
+	for (i = 0; i < parentCount && !retValue; i++)
+	{
+		GetMenuItemInfo(hParentMenu, i, TRUE, &itemInfo);
+		if (itemInfo.hSubMenu)
+		{
+			bool found = false;
+			int childCount;
+			
+			retValue = itemInfo.hSubMenu;
+			childCount = GetMenuItemCount(retValue);
+			for (j = 0; j < childCount && !found; j++)
+			{
+				GetMenuItemInfo(retValue, j, TRUE, &itemInfo);
+				if (itemInfo.wID == (DWORD)itemId)
+				{
+					found = true;
+				}
+			}
+			if (!found)
+			{
+				retValue = 0;
+			}
+		}
+	}
+	return retValue;
+}
+
 HMENU LDViewWindow::getPollingMenu(void)
 {
+	return getParentOfMenuItem(GetSubMenu(GetMenu(hWindow), 0),
+		ID_FILE_POLLING_DISABLED);
+/*
 	HMENU fileMenu = GetSubMenu(GetMenu(hWindow), 0);
 	int i;
 	int count = GetMenuItemCount(fileMenu);
@@ -1736,7 +1805,6 @@ HMENU LDViewWindow::getPollingMenu(void)
 		if (itemInfo.hSubMenu)
 		{
 			pollingMenu = itemInfo.hSubMenu;
-//			pollingMenu = GetSubMenu(viewMenu, i);
 			GetMenuItemInfo(pollingMenu, 0, TRUE, &itemInfo);
 			if (itemInfo.wID != ID_FILE_POLLING_DISABLED)
 			{
@@ -1745,6 +1813,7 @@ HMENU LDViewWindow::getPollingMenu(void)
 		}
 	}
 	return pollingMenu;
+*/
 }
 
 void LDViewWindow::showHelp(void)
@@ -1808,17 +1877,19 @@ void LDViewWindow::setMenuEnabled(HMENU hParentMenu, int itemID, bool enabled,
 
 	itemInfo.cbSize = sizeof(itemInfo);
 	itemInfo.fMask = MIIM_STATE;
-	GetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo);
-	if (enabled)
+	if (GetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo))
 	{
-		itemInfo.fState &= ~MFS_DISABLED;
+		if (enabled)
+		{
+			itemInfo.fState &= ~MFS_DISABLED;
+		}
+		else
+		{
+			itemInfo.fState |= MFS_DISABLED;
+		}
+		itemInfo.fMask = MIIM_STATE;
+		SetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo);
 	}
-	else
-	{
-		itemInfo.fState |= MFS_DISABLED;
-	}
-	itemInfo.fMask = MIIM_STATE;
-	SetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo);
 	if (enabled)
 	{
 		tbState |= TBSTATE_ENABLED;
@@ -1852,11 +1923,22 @@ void LDViewWindow::setMenuEnabled(HMENU hParentMenu, int itemID, bool enabled,
 void LDViewWindow::updateModelMenuItems(void)
 {
 	bool haveModel = modelIsLoaded();
+	HMENU hViewingAngleMenu = getParentOfMenuItem(hViewMenu, ID_VIEW_FRONT);
 
 	setMenuEnabled(hFileMenu, ID_FILE_SAVE, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_RELOAD, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PRINT, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PAGESETUP, haveModel);
+	setMenuEnabled(hViewMenu, ID_VIEW_INFO, haveModel);
+	setMenuEnabled(hViewMenu, ID_VIEW_POV_CAMERA, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_FRONT, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BACK, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_LEFT, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_RIGHT, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_TOP, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BOTTOM, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_ISO, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_SAVE_DEFAULT, haveModel);
 }
 
 bool LDViewWindow::modelIsLoaded(void)
@@ -1877,7 +1959,7 @@ LRESULT LDViewWindow::doMenuSelect(UINT menuID, UINT /*flags*/, HMENU hMenu)
 {
 //	debugPrintf("LDViewWindow::doMenuSelect(%d, 0x%04X, 0x%04X)\n", menuID,
 //		flags, hMenu);
-	if (hMenu == GetMenu(hWindow) && menuID == 0)
+	if (hMenu == GetMenu(hWindow) && (menuID == 0 || menuID == 2))
 	{
 		// This shouldn't ever be necessary, but it can't hurt.
 		updateModelMenuItems();
@@ -2324,11 +2406,13 @@ void LDViewWindow::setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
 	GetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
 	if (checked)
 	{
-		itemInfo.fState = MFS_CHECKED;
+		itemInfo.fState |= MFS_CHECKED;
+		itemInfo.fState &= ~MFS_UNCHECKED;
 	}
 	else
 	{
-		itemInfo.fState = MFS_UNCHECKED;
+		itemInfo.fState &= ~MFS_CHECKED;
+		itemInfo.fState |= MFS_UNCHECKED;
 	}
 	itemInfo.fType = MFT_STRING;
 	if (radio)
@@ -2358,48 +2442,53 @@ LRESULT LDViewWindow::switchToFlythroughMode(bool saveSetting)
 
 void LDViewWindow::updateWireframeMenu(void)
 {
-	setMenuCheck(hWireframeMenu, ID_WIREFRAME_FOG, prefs->getUseWireframeFog());
-	setMenuCheck(hWireframeMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
+	setMenuCheck(hWireframeToolbarMenu, ID_WIREFRAME_FOG,
+		prefs->getUseWireframeFog());
+	setMenuCheck(hWireframeToolbarMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
 		prefs->getRemoveHiddenLines());
-	setMenuItemsEnabled(hWireframeMenu, drawWireframe);
+	setMenuItemsEnabled(hWireframeToolbarMenu, drawWireframe);
 }
 
 void LDViewWindow::updateEdgesMenu(void)
 {
-	setMenuCheck(hEdgesMenu, ID_EDGES_SHOWEDGESONLY, prefs->getEdgesOnly());
-	setMenuCheck(hEdgesMenu, ID_EDGES_CONDITIONALLINES,
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_SHOWEDGESONLY,
+		prefs->getEdgesOnly());
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_CONDITIONALLINES,
 		prefs->getDrawConditionalHighlights());
-	setMenuCheck(hEdgesMenu, ID_EDGES_HIGHQUALITY,
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_HIGHQUALITY,
 		prefs->getUsePolygonOffset());
-	setMenuCheck(hEdgesMenu, ID_EDGES_ALWAYSBLACK, prefs->getBlackHighlights());
-	setMenuItemsEnabled(hEdgesMenu, edges);
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_ALWAYSBLACK,
+		prefs->getBlackHighlights());
+	setMenuItemsEnabled(hEdgesToolbarMenu, edges);
 }
 
 void LDViewWindow::updatePrimitivesMenu(void)
 {
-	setMenuCheck(hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
+	setMenuCheck(hPrimitivesToolbarMenu, ID_PRIMITIVES_TEXTURESTUDS,
 		prefs->getTextureStuds());
-	setMenuItemsEnabled(hPrimitivesMenu, primitiveSubstitution);
+	setMenuItemsEnabled(hPrimitivesToolbarMenu, primitiveSubstitution);
 }
 
 void LDViewWindow::updateLightingMenu(void)
 {
-	setMenuCheck(hLightingMenu, ID_LIGHTING_HIGHQUALITY,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_HIGHQUALITY,
 		prefs->getQualityLighting());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_SUBDUED,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_SUBDUED,
 		prefs->getSubduedLighting());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
 		prefs->getUsesSpecular());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_ALTERNATESETUP,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_ALTERNATESETUP,
 		prefs->getOneLight());
-	setMenuItemsEnabled(hLightingMenu, lighting);
+	setMenuItemsEnabled(hLightingToolbarMenu, lighting);
 }
 
 void LDViewWindow::updateBFCMenu(void)
 {
-	setMenuCheck(hBFCMenu, ID_BFC_REDBACKFACES, prefs->getRedBackFaces());
-	setMenuCheck(hBFCMenu, ID_BFC_GREENFRONTFACES, prefs->getGreenFrontFaces());
-	setMenuItemsEnabled(hBFCMenu, bfc);
+	setMenuCheck(hBFCToolbarMenu, ID_BFC_REDBACKFACES,
+		prefs->getRedBackFaces());
+	setMenuCheck(hBFCToolbarMenu, ID_BFC_GREENFRONTFACES,
+		prefs->getGreenFrontFaces());
+	setMenuItemsEnabled(hBFCToolbarMenu, bfc);
 }
 
 
@@ -2420,19 +2509,19 @@ void LDViewWindow::doToolbarDropDown(LPNMTOOLBAR toolbarNot)
 	switch (toolbarNot->iItem)
 	{
 	case IDC_WIREFRAME:
-		hMenu = hWireframeMenu;
+		hMenu = hWireframeToolbarMenu;
 		break;
 	case IDC_HIGHLIGHTS:
-		hMenu = hEdgesMenu;
+		hMenu = hEdgesToolbarMenu;
 		break;
 	case IDC_PRIMITIVE_SUBSTITUTION:
-		hMenu = hPrimitivesMenu;
+		hMenu = hPrimitivesToolbarMenu;
 		break;
 	case IDC_LIGHTING:
-		hMenu = hLightingMenu;
+		hMenu = hLightingToolbarMenu;
 		break;
 	case IDC_BFC:
-		hMenu = hBFCMenu;
+		hMenu = hBFCToolbarMenu;
 		break;
 	case ID_VIEWANGLE:
 		hMenu = hViewAngleMenu;
@@ -3414,87 +3503,92 @@ void LDViewWindow::doLighting(void)
 void LDViewWindow::doFog(void)
 {
 	prefs->setUseWireframeFog(!prefs->getUseWireframeFog());
-	setMenuCheck(hWireframeMenu, ID_WIREFRAME_FOG, prefs->getUseWireframeFog());
+	setMenuCheck(hWireframeToolbarMenu, ID_WIREFRAME_FOG,
+		prefs->getUseWireframeFog());
 }
 
 void LDViewWindow::doRemoveHiddenLines(void)
 {
 	prefs->setRemoveHiddenLines(!prefs->getRemoveHiddenLines());
-	setMenuCheck(hWireframeMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
+	setMenuCheck(hWireframeToolbarMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
 		prefs->getRemoveHiddenLines());
 }
 
 void LDViewWindow::doShowEdgesOnly(void)
 {
 	prefs->setEdgesOnly(!prefs->getEdgesOnly());
-	setMenuCheck(hEdgesMenu, ID_EDGES_SHOWEDGESONLY, prefs->getEdgesOnly());
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_SHOWEDGESONLY,
+		prefs->getEdgesOnly());
 }
 
 void LDViewWindow::doConditionalLines(void)
 {
 	prefs->setDrawConditionalHighlights(!prefs->getDrawConditionalHighlights());
-	setMenuCheck(hEdgesMenu, ID_EDGES_CONDITIONALLINES,
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_CONDITIONALLINES,
 		prefs->getDrawConditionalHighlights());
 }
 
 void LDViewWindow::doHighQualityEdges(void)
 {
 	prefs->setUsePolygonOffset(!prefs->getUsePolygonOffset());
-	setMenuCheck(hEdgesMenu, ID_EDGES_HIGHQUALITY,
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_HIGHQUALITY,
 		prefs->getUsePolygonOffset());
 }
 
 void LDViewWindow::doAlwaysBlack(void)
 {
 	prefs->setBlackHighlights(!prefs->getBlackHighlights());
-	setMenuCheck(hEdgesMenu, ID_EDGES_ALWAYSBLACK, prefs->getBlackHighlights());
+	setMenuCheck(hEdgesToolbarMenu, ID_EDGES_ALWAYSBLACK,
+		prefs->getBlackHighlights());
 }
 
 void LDViewWindow::doTextureStuds(void)
 {
 	prefs->setTextureStuds(!prefs->getTextureStuds());
-	setMenuCheck(hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
+	setMenuCheck(hPrimitivesToolbarMenu, ID_PRIMITIVES_TEXTURESTUDS,
 		prefs->getTextureStuds());
 }
 
 void LDViewWindow::doQualityLighting(void)
 {
 	prefs->setQualityLighting(!prefs->getQualityLighting());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_HIGHQUALITY,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_HIGHQUALITY,
 		prefs->getQualityLighting());
 }
 
 void LDViewWindow::doSubduedLighting(void)
 {
 	prefs->setSubduedLighting(!prefs->getSubduedLighting());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_SUBDUED,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_SUBDUED,
 		prefs->getSubduedLighting());
 }
 
 void LDViewWindow::doSpecularHighlight(void)
 {
 	prefs->setUsesSpecular(!prefs->getUsesSpecular());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
 		prefs->getUsesSpecular());
 }
 
 void LDViewWindow::doAlternateLighting(void)
 {
 	prefs->setOneLight(!prefs->getOneLight());
-	setMenuCheck(hLightingMenu, ID_LIGHTING_ALTERNATESETUP,
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_ALTERNATESETUP,
 		prefs->getOneLight());
 }
 
 void LDViewWindow::doRedBackFaces(void)
 {
 	prefs->setRedBackFaces(!prefs->getRedBackFaces());
-	setMenuCheck(hBFCMenu, ID_BFC_REDBACKFACES, prefs->getRedBackFaces());
+	setMenuCheck(hBFCToolbarMenu, ID_BFC_REDBACKFACES,
+		prefs->getRedBackFaces());
 }
 
 void LDViewWindow::doGreenFrontFaces(void)
 {
 	prefs->setGreenFrontFaces(!prefs->getGreenFrontFaces());
-	setMenuCheck(hBFCMenu, ID_BFC_GREENFRONTFACES, prefs->getGreenFrontFaces());
+	setMenuCheck(hBFCToolbarMenu, ID_BFC_GREENFRONTFACES,
+		prefs->getGreenFrontFaces());
 }
 
 void LDViewWindow::doBfc(void)
@@ -4621,40 +4715,43 @@ void LDViewWindow::setMenuItemsEnabled(HMENU hMenu, bool enabled)
 LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
 									  BOOL /*fSystemMenu*/)
 {
-	if (hPopupMenu == hWireframeMenu)
+	if (hPopupMenu == hWireframeToolbarMenu)
 	{
 		updateWireframeMenu();
 	}
-	else if (hPopupMenu == hEdgesMenu)
+	else if (hPopupMenu == hEdgesToolbarMenu)
 	{
 		updateEdgesMenu();
 	}
-	else if (hPopupMenu == hPrimitivesMenu)
+	else if (hPopupMenu == hPrimitivesToolbarMenu)
 	{
 		updatePrimitivesMenu();
 	}
-	else if (hPopupMenu == hLightingMenu)
+	else if (hPopupMenu == hLightingToolbarMenu)
 	{
 		updateLightingMenu();
 	}
-	else if (hPopupMenu == hBFCMenu)
+	else if (hPopupMenu == hBFCToolbarMenu)
 	{
 		updateBFCMenu();
 	}
 	else
 	{
 		setMenuItemsEnabled(hPopupMenu, !loading);
-		if (hPopupMenu == hFileMenu)
+		if (loading)
 		{
-			if (loading)
+			if (hPopupMenu == hFileMenu)
 			{
 				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, true);
 			}
-			else
+		}
+		else
+		{
+			if (hPopupMenu == hFileMenu)
 			{
 				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, false);
-				updateModelMenuItems();
 			}
+			updateModelMenuItems();
 		}
 	}
 	return 1;
