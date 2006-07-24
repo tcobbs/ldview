@@ -46,6 +46,7 @@ public:
 	void doWireframeCutaway(bool value);
 	void doLighting(bool value);
 	void doProxyServer(bool value);
+	void doUpdateMissingparts(bool value);
 	void doStereo(bool value);
 	void doWireframe(bool value);
 	void doSortTransparency(bool value);
