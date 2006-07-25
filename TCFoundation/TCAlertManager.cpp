@@ -2,6 +2,7 @@
 #include "TCAlert.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 TCAlertManager *TCAlertManager::sm_defaultAlertManager = NULL;
 
