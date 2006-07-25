@@ -15,6 +15,7 @@ class QRadioButton;
 class QSlider;
 class QSpinBox;
 class LDPreferences;
+class TCAlert;
 
 typedef enum
 {
@@ -105,6 +106,7 @@ public:
 	static void setViewMode(LDVViewMode value);
 	void performHotKey(int);
     void setupPrefSetsList(void);
+	void userDefaultChangedAlertCallback(TCAlert *alert);
 
 protected:
 	void doGeneralApply(void);

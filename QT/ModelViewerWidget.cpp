@@ -3077,3 +3077,10 @@ void ModelViewerWidget::calcTiling(int desiredWidth, int desiredHeight,
 	bitmapHeight = desiredHeight / numYTiles;
 }
 
+void ModelViewerWidget::userDefaultChangedAlertCallback(TCAlert *alert)
+{
+	if (preferences)
+	{
+		preferences->userDefaultChangedAlertCallback(alert);
+	}
+}
