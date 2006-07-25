@@ -11,6 +11,8 @@ AlertHandler::AlertHandler(ModelViewerWidget *mvw)
 		(TCAlertCallback)&AlertHandler::ldlErrorCallback);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&AlertHandler::progressAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::alertClass(), this,
+		(TCAlertCallback)&AlertHandler::modelViewerAlertCallback);
 }
 
 AlertHandler::~AlertHandler(void)
@@ -21,6 +23,7 @@ void AlertHandler::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
+	TCAlertManager::unregisterHandler(LDrawModelViewer::alertClass(), this);
 	TCObject::dealloc();
 }
 
@@ -40,3 +43,10 @@ void AlertHandler::progressAlertCallback(TCProgressAlert *alert)
 	}
 }
 
+void AlertHandler::modelViewerAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->modelViewerAlertCallback(alert);
+	}
+}

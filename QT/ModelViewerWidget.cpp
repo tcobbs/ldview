@@ -2815,6 +2815,15 @@ void ModelViewerWidget::ldlErrorCallback(LDLError *error)
 	}
 }
 
+void ModelViewerWidget::modelViewerAlertCallback(TCAlert *alert)
+{
+	if (alert)
+	{
+		QMessageBox::warning(this,"LDView",alert->getMessage(),
+			QMessageBox::Ok, QMessageBox::NoButton);
+	}
+}
+
 void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 {
 	// NOTE: this gets called from inside one of the library update threads.  It
