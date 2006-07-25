@@ -46,7 +46,7 @@ public:
 	char *getFilename(void) { return m_filename; }
 	char *getFileLine(void) { return m_fileLine; }
 	int getLineNumber(void) { return m_lineNumber; }
-	static TCULong alertClass(void) { return USER_ALERTS + 0; }
+	static const char *alertClass(void) { return "LDLError"; }
 	virtual const char *getTypeName(void);
 	static const char *getTypeName(LDLErrorType type);
 	void setLevel(LDLAlertLevel value) { m_level = value; }

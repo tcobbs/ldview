@@ -274,6 +274,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual void initFail(char *reason);
 		void ldlErrorCallback(LDLError *error);
 		void progressAlertCallback(TCProgressAlert *alert);
+		void modelViewerAlertCallback(TCAlert *alert);
 		void populateErrorInfos(void);
 		BOOL setAllErrorsSelected(bool selected);
 		void setupMultisample(void);

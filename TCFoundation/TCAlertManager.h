@@ -5,6 +5,7 @@
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCTypedPointerArray.h>
 #include <TCFoundation/TCTypedValueArray.h>
+#include <TCFoundation/TCStringArray.h>
 
 class TCAlert;
 
@@ -19,21 +20,21 @@ class TCAlertManager : public TCObject
 {
 public:
 	static void sendAlert(TCAlert *alert);
-	static void registerHandler(TCULong alertClass, TCObject *handler,
+	static void registerHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback alertCallback);
-	static void unregisterHandler(TCULong alertClass, TCObject *handler);
+	static void unregisterHandler(const char *alertClass, TCObject *handler);
 protected:
 	TCAlertManager(void);
 	virtual ~TCAlertManager(void);
 	virtual void dealloc(void);
 	static TCAlertManager *defaultAlertManager(void);
-	int alertClassIndex(TCULong alertClass);
+	int alertClassIndex(const char *alertClass);
 	void defSendAlert(TCAlert *alert);
-	void defRegisterHandler(TCULong alertClass, TCObject *handler,
+	void defRegisterHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback callback);
-	void defUnregisterHandler(TCULong alertClass, TCObject *handler);
+	void defUnregisterHandler(const char *alertClass, TCObject *handler);
 
-	TCULongArray *m_alertClasses;
+	TCStringArray *m_alertClasses;
 	TCObjectPointerArrayArray *m_handlers;
 	TCAlertCallbackArrayArray *m_callbacks;
 

@@ -130,6 +130,11 @@ ALINK="#FFFF80">
 <LI><A HREF="#PrimitivesSubstitutionBox">Primitive Substitution Box</A></LI>
 <LI><A HREF="#PrimitivesMiscBox">Misc Box</A></LI>
 </UL></LI>
+<LI><A HREF="#UpdatesTab">Updates Tab</A>
+<UL>
+<LI><A HREF="#InternetProxyBox">Internet Proxy Box</A></LI>
+<LI><A HREF="#MissingPartsBox">Missing Parts Box</A></LI>
+</UL></LI>
 <LI><A HREF="#PreferenceSetsTab">Preference Sets Tab</A></LI>
 </UL></LI>
 <LI><A HREF="#CommandLine">Command Line</A>
@@ -950,7 +955,7 @@ custom colors in the color panel correspond to the first 16 standard LDraw
 colors.  Resetting the General preferences also resets these colors.
 </P>
 <P>
-<I>Trans</I> (Default: <I>Off</I>):<BR>
+<I>Transparent</I> (Default: <I>Off</I>):<BR>
 Enabling this option causes default-colored items to be transparent.
 </P>
 
@@ -988,7 +993,7 @@ rate will be used.<BR><BR>
 	<TR>
 		<TD VALIGN="TOP"><TABLE CELLSPACING=0 CELLPADDING=0
 		BGCOLOR="RED"><TR><TD><B> WARNING: </B></TD></TR></TABLE></TD>
-		<TD VALIGN="TOP">if you enter a value that is too high, and have told
+		<TD VALIGN="TOP">If you enter a value that is too high, and have told
 		Windows that you have a monitor which is capable of higher refresh than
 		what you actually have, you can damage your monitor.</TD>
 	</TR>
@@ -1393,7 +1398,88 @@ primitives before loading the standard ones.  The hi-res primitives are
 otherwise known as 48-sided primitives, because they approximate circular
 features with 48-sided features.  Since not all primitives have hi-res versions,
 enabling this can create gaps between the standard resolution primitives and
-the hi-res ones.<BR>
+the hi-res ones.
+</P>
+
+<P>
+<FONT SIZE="+2"><B><A NAME="UpdatesTab">Updates Tab</A></B></FONT><BR>
+</P>
+<P>
+<I>Reset</I>:<BR>
+This resets all the Updates preferences to their default values.  As with all
+other preference changes, you must hit OK or Apply for the reset values to go
+into effect.
+</P>
+
+<P>
+<FONT SIZE="+1"><B><A NAME="InternetProxyBox">Internet Proxy
+Box</A></B></FONT><BR>
+<I>Direct connection to the Internet</I> (Default?: <I>Yes</I>):<BR>
+Select this if you have a direct connection to the Internet and don't want to
+use a proxy server.</P>
+<P>
+<I>Use simple Windows proxy configuration</I> (Default?: <I>No</I>):<BR>
+Select this if you want to use the HTTP proxy setting that you configured in
+Internet Explorer.
+</P>
+<P>
+<I>Notes:</I>
+<UL>
+<LI>This only works if you have a proxy server manually configured in Internet
+Explorer.  Automatic proxy configurations are not supported.</LI>
+<LI>As might be expected, this option is only available in the Windows version
+of LDView.</LI>
+</UL>
+</P>
+<P>
+<I>Manual proxy configuration</I> (Default?: <I>No</I>):<BR>
+Select this to manually configure your HTTP proxy server in the space provided
+below.
+</P>
+<P>
+<I>Proxy</I> (Default: <I>None</I>):<BR>
+Set this to the name or IP address of your HTTP proxy server.  This can only be
+entered if Manual proxy configuration is selected above.
+</P>
+<P>
+<I>Port</I> (Default: <I>None</I>):<BR>
+Set this to the port of your HTTP proxy server.  This can only be entered if
+Manual proxy configuration is selected above.
+</P>
+
+<P>
+<FONT SIZE="+1"><B><A NAME="MissingPartsBox">Missing Parts
+Box</A></B></FONT><BR>
+<I>Automatically check LDraw.org for missing parts</I> (Default: <I>On</I>):<BR>
+Enabling this causes LDView to automatically check the LDraw.org Parts Tracker
+when it can't find a file.  If the part exists on the Parts Tracker, it will
+automatically be downloaded and used.
+</P>
+<P>
+<TABLE>
+	<TR VALIGN="TOP">
+		<TD><I>Note:</I></TD>
+		<TD>If LDView fails to connect to the LDraw.org server while checking
+		for an unofficial part, it will automatically disable this setting.  You
+		have to manually re-enable it once you have a working Internet
+		connection again.</TD>
+	</TR>
+</TABLE>
+</P>
+<P>
+<I>Days between missing part checks</I> (Default: <I>7</I>):<BR>
+Set this to the number of days you want LDView to wait between checks to the
+LDraw.org Parts Tracker when a part cannot be found.  This delay is used when
+the part cannot be found on the Parts Tracker.  This number must be greater than
+zero.
+</P>
+<P>
+<I>Days between updated part checks</I> (Default: <I>7</I>):<BR>
+Set this to the number of days you want LDView to wait between checks for
+updates to an unofficial part that it has successfully downloaded from the
+LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts
+Tracker, LDView will check for updates with the specified frequency when it
+encounters unofficial parts in a model.  This number must be greater than zero.
 </P>
 
 <P>

@@ -2882,9 +2882,15 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		{
 			// If we had a connection failure, we probably don't have an
 			// internet connection, or our proxy is mis-configured.  Don't try
-			// to connect again for now.
+			// to connect again for now, and let the user know that auto part
+			// updates have been disabled.
+			TCAlert *alert = new TCAlert(alertClass(),
+				TCLocalStrings::get("PartCheckDisabled"));
+
 			preferences->setCheckPartTracker(false, true);
 			flags.checkPartTracker = false;
+			TCAlertManager::sendAlert(alert);
+			alert->release();
 		}
 		else
 		{
