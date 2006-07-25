@@ -134,6 +134,7 @@ public:
     void showLibraryUpdateWindow(bool initialInstall);
 	void doLibraryUpdateFinished(int finishType);
 	void checkForLibraryUpdates(void);
+	void userDefaultChangedAlertCallback(TCAlert *alert);
 
 protected slots:
 	virtual void doAboutOK(void);

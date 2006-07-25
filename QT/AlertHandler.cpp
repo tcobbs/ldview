@@ -2,6 +2,7 @@
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include <LDLoader/LDLError.h>
 
 AlertHandler::AlertHandler(ModelViewerWidget *mvw)
@@ -13,6 +14,8 @@ AlertHandler::AlertHandler(ModelViewerWidget *mvw)
 		(TCAlertCallback)&AlertHandler::progressAlertCallback);
 	TCAlertManager::registerHandler(LDrawModelViewer::alertClass(), this,
 		(TCAlertCallback)&AlertHandler::modelViewerAlertCallback);
+	TCAlertManager::registerHandler(TCUserDefaults::alertClass(), this,
+		(TCAlertCallback)&AlertHandler::userDefaultChangedAlertCallback);
 }
 
 AlertHandler::~AlertHandler(void)
@@ -24,6 +27,7 @@ void AlertHandler::dealloc(void)
 	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
 	TCAlertManager::unregisterHandler(LDrawModelViewer::alertClass(), this);
+	TCAlertManager::unregisterHandler(TCUserDefaults::alertClass(), this);
 	TCObject::dealloc();
 }
 
@@ -48,5 +52,13 @@ void AlertHandler::modelViewerAlertCallback(TCAlert *alert)
 	if (m_mvw)
 	{
 		m_mvw->modelViewerAlertCallback(alert);
+	}
+}
+
+void AlertHandler::userDefaultChangedAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->userDefaultChangedAlertCallback(alert);
 	}
 }

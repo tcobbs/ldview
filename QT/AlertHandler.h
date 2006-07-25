@@ -18,6 +18,7 @@ protected:
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);
 	void modelViewerAlertCallback(TCAlert *alert);
+	void userDefaultChangedAlertCallback(TCAlert *alert);
 
 	ModelViewerWidget *m_mvw;
 };

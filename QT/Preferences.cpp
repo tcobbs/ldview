@@ -1952,3 +1952,19 @@ bool Preferences::getUseSeams(void)
 	return ldPrefs->getUseSeams();
 }
 
+void Preferences::userDefaultChangedAlertCallback(TCAlert *alert)
+{
+	const char *key = alert->getMessage();
+
+	if (key)
+	{
+		if (strcmp(key, CHECK_PART_TRACKER_KEY) == 0)
+		{
+			if (panel)
+			{
+				reflectUpdatesSettings();
+			}
+		}
+	}
+}
+
