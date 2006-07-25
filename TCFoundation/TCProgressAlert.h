@@ -13,7 +13,7 @@ public:
 	bool getAborted(void) { return m_aborted; }
 	const char *getSource(void) { return m_source; }
 
-	static TCULong alertClass(void) { return 1; }
+	static const char *alertClass(void) { return "TCProgressAlert"; }
 	static void send(const char *source, const char *message, float progress,
 		bool *aborted = NULL, TCStringArray *extraInfo = NULL);
 	static void send(const char *source, const char *message, float progress,

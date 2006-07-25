@@ -15,7 +15,7 @@ public:
 	void setPartFlag(bool value) { m_part = value; }
 	bool getPartFlag(void) { return m_part; }
 
-	static TCULong alertClass(void) { return USER_ALERTS + 1; }
+	static const char *alertClass(void) { return "LDLFindFileAlert"; }
 protected:
 	virtual ~LDLFindFileAlert(void);
 	virtual void dealloc(void);

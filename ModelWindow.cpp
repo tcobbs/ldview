@@ -161,6 +161,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		(TCAlertCallback)&ModelWindow::ldlErrorCallback);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&ModelWindow::progressAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::alertClass(), this,
+		(TCAlertCallback)&ModelWindow::modelViewerAlertCallback);
 /*
 	modelViewer->setProgressCallback(staticProgressCallback, this);
 	modelViewer->setErrorCallback(staticErrorCallback, this);
@@ -181,6 +183,7 @@ void ModelWindow::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
 	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
+	TCAlertManager::unregisterHandler(LDrawModelViewer::alertClass(), this);
 	TCObject::release(errorInfos);
 	errorInfos = NULL;
 	if (prefs)
@@ -236,6 +239,15 @@ void ModelWindow::ldlErrorCallback(LDLError *error)
 		}
 	}
 */
+}
+
+void ModelWindow::modelViewerAlertCallback(TCAlert *alert)
+{
+	if (alert)
+	{
+		MessageBox(hWindow, alert->getMessage(), "LDView",
+			MB_OK | MB_ICONWARNING);
+	}
 }
 
 void ModelWindow::progressAlertCallback(TCProgressAlert *alert)

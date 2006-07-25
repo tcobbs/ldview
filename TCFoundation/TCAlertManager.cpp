@@ -14,7 +14,7 @@ TCAlertManager::TCAlertManagerCleanup::~TCAlertManagerCleanup(void)
 
 
 TCAlertManager::TCAlertManager(void)
-	:m_alertClasses(new TCULongArray),
+	:m_alertClasses(new TCStringArray),
 	m_handlers(new TCObjectPointerArrayArray),
 	m_callbacks(new TCAlertCallbackArrayArray)
 {
@@ -46,13 +46,13 @@ void TCAlertManager::sendAlert(TCAlert *alert)
 	defaultAlertManager()->defSendAlert(alert);
 }
 
-void TCAlertManager::registerHandler(TCULong alertClass, TCObject *handler,
+void TCAlertManager::registerHandler(const char *alertClass, TCObject *handler,
 									 TCAlertCallback callback)
 {
 	defaultAlertManager()->defRegisterHandler(alertClass, handler, callback);
 }
 
-void TCAlertManager::unregisterHandler(TCULong alertClass, TCObject *handler)
+void TCAlertManager::unregisterHandler(const char *alertClass, TCObject *handler)
 {
 	defaultAlertManager()->defUnregisterHandler(alertClass, handler);
 }
@@ -77,7 +77,8 @@ void TCAlertManager::defSendAlert(TCAlert *alert)
 	}
 }
 
-void TCAlertManager::defRegisterHandler(TCULong alertClass, TCObject *handler,
+void TCAlertManager::defRegisterHandler(const char *alertClass,
+										TCObject *handler,
 										TCAlertCallback callback)
 {
 	int index = alertClassIndex(alertClass);
@@ -88,7 +89,7 @@ void TCAlertManager::defRegisterHandler(TCULong alertClass, TCObject *handler,
 		TCObjectPointerArray *objectPointerArray = new TCObjectPointerArray;
 		TCAlertCallbackArray *alertCallbackArray = new TCAlertCallbackArray;
 
-		m_alertClasses->addValue(alertClass);
+		m_alertClasses->addString(alertClass);
 		m_handlers->addObject(objectPointerArray);
 		objectPointerArray->release();
 		m_callbacks->addObject(alertCallbackArray);
@@ -103,7 +104,8 @@ void TCAlertManager::defRegisterHandler(TCULong alertClass, TCObject *handler,
 	(*m_callbacks)[index]->addPointer(callbackPointer);
 }
 
-void TCAlertManager::defUnregisterHandler(TCULong alertClass, TCObject *handler)
+void TCAlertManager::defUnregisterHandler(const char *alertClass,
+										  TCObject *handler)
 {
 	int index = alertClassIndex(alertClass);
 
@@ -132,14 +134,14 @@ void TCAlertManager::defUnregisterHandler(TCULong alertClass, TCObject *handler)
 	}
 }
 
-int TCAlertManager::alertClassIndex(TCULong alertClass)
+int TCAlertManager::alertClassIndex(const char *alertClass)
 {
 	int i;
 	int count = m_alertClasses->getCount();
 
 	for (i = 0; i < count; i++)
 	{
-		if ((*m_alertClasses)[i] == alertClass)
+		if (strcmp((*m_alertClasses)[i], alertClass) == 0)
 		{
 			return i;
 		}

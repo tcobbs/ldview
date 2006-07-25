@@ -300,6 +300,7 @@ class LDrawModelViewer: public TCObject
 		static char *getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
 		static bool fileExists(char *filename);
+		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);

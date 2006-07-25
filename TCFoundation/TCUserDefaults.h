@@ -53,7 +53,7 @@ class TCExport TCUserDefaults: public TCObject
 		static void saveSessionNameInKey(const char *key);
 		static char* getSavedSessionNameFromKey(const char *key);
 		static void removeSession(const char *value);
-		static TCULong alertClass(void) { return 2; }
+		static const char *alertClass(void) { return "TCUserDefaultsChanged"; }
 	protected:
 		TCUserDefaults(void);
 		virtual void dealloc(void);

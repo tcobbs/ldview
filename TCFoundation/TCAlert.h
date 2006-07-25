@@ -14,9 +14,10 @@ class TCStringArray;
 class TCAlert : public TCObject
 {
 public:
-	TCAlert(TCULong alertClass, const char *message,
+	TCAlert(const char *alertClass, const char *message,
 		TCStringArray *extraInfo = NULL);
-	TCULong getAlertClass(void) { return m_alertClass; }
+	//TCULong getAlertClass(void) { return m_alertClass; }
+	const char *getAlertClass(void) { return m_alertClass; }
 	char *getMessage(void) { return m_message; }
 	TCStringArray *getExtraInfo(void) { return m_extraInfo; }
 	static TCULong alertClass(void) { return 0; }
@@ -24,7 +25,8 @@ protected:
 	virtual ~TCAlert(void);
 	virtual void dealloc(void);
 
-	TCULong m_alertClass;
+	//TCULong m_alertClass;
+	char *m_alertClass;
 	char *m_message;
 	TCStringArray *m_extraInfo;
 };
