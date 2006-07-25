@@ -6,6 +6,7 @@
 class ModelViewerWidget;
 class LDLError;
 class TCProgressAlert;
+class TCAlert;
 
 class AlertHandler : public TCObject
 {
@@ -16,6 +17,7 @@ protected:
 	virtual void dealloc(void);
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);
+	void modelViewerAlertCallback(TCAlert *alert);
 
 	ModelViewerWidget *m_mvw;
 };

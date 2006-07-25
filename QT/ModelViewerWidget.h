@@ -4,6 +4,7 @@
 #include <qgl.h>
 #include <qdatetime.h>
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertManager.h>
 
 #include "Preferences.h"
 #include "LDViewExtraDir.h"
@@ -58,6 +59,7 @@ public:
 
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);
+	void modelViewerAlertCallback(TCAlert *alert);
 
 	void setShowFPS(bool value) { showFPS = value; }
 	void setApplication(QApplication *value);
