@@ -96,8 +96,8 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>LDView Version 3.0 (14 Dec, 2005)
-Copyright © 2000-2005 Travis Cobbs &amp; Peter Bartfai</string>
+                                <string>LDView Version 3.1 Beta 1 (29 Jul, 2006)
+Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</string>
                             </property>
                             <property name="textFormat">
                                 <enum>PlainText</enum>
