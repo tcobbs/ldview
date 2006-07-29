@@ -918,7 +918,7 @@ BEGIN
             MENUITEM "&Right\tCtrl+4",              ID_VIEW_RIGHT
             MENUITEM "&Top\tCtrl+5",                ID_VIEW_TOP
             MENUITEM "B&ottom\tCtrl+6",             ID_VIEW_BOTTOM
-            MENUITEM "T&wo thirds\tCtrl+0",         ID_VIEW_ISO
+            MENUITEM "T&wo-thirds\tCtrl+0",         ID_VIEW_ISO
             MENUITEM SEPARATOR
             MENUITEM "&Save Current as Default",    ID_VIEW_SAVE_DEFAULT
         END
