@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>LDView Errors</string>
+        <string>LDView Errors &amp; Warnings</string>
     </property>
     <property name="icon">
         <pixmap>LDViewIcon16.png</pixmap>

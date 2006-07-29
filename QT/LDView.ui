@@ -588,7 +588,7 @@
             <string>Errors</string>
         </property>
         <property name="menuText">
-            <string>&amp;Errors...</string>
+            <string>&amp;Errors &amp;&amp; Warnings...</string>
         </property>
         <property name="toolTip">
             <string>Show Errors</string>
@@ -695,7 +695,7 @@
                 <cstring>isoViewAngleAction</cstring>
             </property>
             <property name="menuText">
-                <string>Isometric</string>
+                <string>Two-third</string>
             </property>
             <property name="accel">
                 <string>Ctrl+0</string>
