@@ -63,7 +63,7 @@ TABLE.SettingsList TD
 --></STYLE>
 </HEAD>
 <BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
-ALINK="#FFFF80">
+ALINK="#0080D0">
 <P></P>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -86,6 +86,7 @@ ALINK="#FFFF80">
 </TABLE>
 <UL>
 <LI><A HREF="#Intro">Introduction</A></LI>
+<LI><A HREF="#LDrawLibrary">LDraw Parts Library</A></LI>
 <LI><A HREF="#MouseControl">Mouse and Keyboard Control</A>
 <UL>
 <LI><A HREF="#ExamineMode">Examine Mode</A></LI>
@@ -101,7 +102,7 @@ ALINK="#FFFF80">
 <LI><A HREF="#Toolbar">Toolbar</A>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
-<LI><A HREF="#ErrorWindow">Error Window</A></LI>
+<LI><A HREF="#ErrorWindow">Errors & Warnings Window</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -191,6 +192,62 @@ Also note that if you open a large model, it could take a substantial amount of
 time to load.  During this time, the status bar will indicate the progress of
 the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
 from the File menu will cancel the load.
+</P>
+<P>
+</P>
+<A NAME="LDrawLibrary"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			LDraw Parts Library
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+LDView displays LDraw models, and LDraw models (almost always) make use of parts
+in the LDraw parts library. In order to display those models, LDView needs for
+the LDraw parts library to be present on your computer, and needs to know where
+on your computer the parts library is located.  (If you only want to use LDView
+to view models that have been created in the LDraw file format that do not make
+use of the LDraw parts library, please see the documentation for the
+<A HREF="#VerifyLDrawSetting">VerifyLDrawDir setting</A>.)
+<P>
+The first time you run LDView, it probably won't be able to find the LDraw parts
+library, even if the library is already present on your computer.  If this
+happens, LDView will ask you if the library has already been installed.  If you
+already have the LDraw parts library on your computer, answer Yes, and then show
+LDView where to find the library.
+</P>
+<P>
+If you don't already have the LDraw parts library on your computer, answer No,
+and you will be asked if you would like LDView to download the library for you.
+As long as you aren't using a proxy server for HTTP connections, you can answer
+Yes, and you will be asked where you want the library to be put.  After this,
+LDView will automatically download the latest version of the LDraw parts library
+from LDraw.org.  Once the library has been downloaded and installed, you can
+then view models.  Please note that the LDraw parts library is somewhat large
+(over 6MB at the time this was written), so it could take a while to download if
+you don't have a fast Internet connection.
+</P>
+<P>
+If you use a proxy server for HTTP connections, tell LDView not to download the
+LDraw parts library right now, and then go to the <A HREF="#UpdatesTab">Updates
+tab</A> in LDView's preferences and configure your proxy server settings.
+</P>
+<P>
+By default, if LDView encounters a request for a part that it cannot find, it
+will attempt to download the part from the LDraw.org parts tracker.  The parts
+tracker contains all the unofficial parts that have been submitted for
+inclusion in the official LDraw parts library that have either not yet been
+approved for inclusion, or have been approved, but not yet been included in an
+official release of
+the library.  Because unofficial parts can change in ways that aren't compatible
+with old models (for example, being rotated), LDView generates a warning any
+time it uses an unofficial file that it has downloaded.  Note that if the part
+subsequently gets added to the official library, the official version will
+automatically be used instead (once you update your parts library), and the
+warning will go away.
 </P>
 <P>
 </P>
@@ -335,32 +392,32 @@ shift to double the speed at which you move.  The movement keys are as follows:
 		</TH>
 	</TR>
 </TABLE>
-The shortcut key for each menu item is given in parentheses.  Note that these
-keys will continue to function even while in fullscreen mode where there is no
-visible menu.
+The shortcut key for each menu item is shown in the menu when running LDView.
+Note that these keys will continue to function even while in fullscreen mode
+where there is no visible menu.
 <TABLE CELLSPACING=6>
 	<TR>
 		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="FileMenu">File
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Open (Ctrl+O):</TD>
+		<TD ALIGN="RIGHT">Open:</TD>
 		<TD COLSPAN=2>Open a new model file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot (Ctrl+S):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot:</TD>
 		<TD COLSPAN=2>Save a PNG or BMP snapshot of the current model with the
 		current view.  See <A HREF="#SaveSnapshotOptions">here</A> for
 		information about the extra settings in the save dialog.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Reload (F5):</TD>
+		<TD ALIGN="RIGHT">Reload:</TD>
 		<TD COLSPAN=2>Reload the current model file.  (Use this if you are
 		viewing a model you are in the process of making changes to in some
 		other program, but don't want to use the polling feature below.)</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Cancel Load (Esc):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Cancel Load:</TD>
 		<TD COLSPAN=2>During a load, you can select this menu item to cancel
 		the load.  It is likely that you will generally just use the keyboard
 		accelerator, though, and hit the Escape key.</TD>
@@ -428,14 +485,12 @@ visible menu.
 		you can move directories in the box up and down to get them in the order
 		you want them to be in.</TD>
 	</TR>
-<!--
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Check for Library Updates:</TD>
 		<TD COLSPAN=2>Checks to see if there are any library updates on
-		ldraw.org that aren't yet installed, and downloads and installs them if
+		LDraw.org that aren't yet installed, and downloads and installs them if
 		any are found.</TD>
 	</TR>
--->
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Page Setup:</TD>
 		<TD COLSPAN=2>Setup the page for printing.  This shows the standard
@@ -444,7 +499,7 @@ visible menu.
 		printed (it isn't by default).</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Print (Ctrl+P):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Print:</TD>
 		<TD COLSPAN=2>Print the current model with the current view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -453,52 +508,54 @@ visible menu.
 		Select any one to load that file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Exit (Ctrl+Q):</TD>
+		<TD ALIGN="RIGHT">Exit:</TD>
 		<TD COLSPAN=2>Exit LDView.</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Preferences (Ctrl+Shift+P):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Preferences:</TD>
 		<TD COLSPAN=2>Display the <A HREF="#Prefs">Preferences</A> panel.</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="ViewMenu">View
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="ViewMenu">View
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Use Visual Style (requires restart):</TD>
+		<TD ALIGN="RIGHT">Use Visual Style (requires restart):</TD>
 		<TD COLSPAN=2>This menu is not visible when running LDView in operating
-		systems prior to Windows XP.  When present, it enables or disables the
-		use of Windows XP Visual Styles.  You must restart LDView for changes in
-		this option to be visible.</TD>
+		systems other than Windows, or in Windows versions prior to Windows XP.
+		When present, it enables or disables the use of Windows XP Visual
+		Styles.  You must restart LDView for changes in this option to become
+		visible.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Switch to Fullscreen (Ctrl+Enter):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Switch to Fullscreen:</TD>
 		<TD COLSPAN=2>Switches to the currently selected
 		<A HREF="#Fullscreen">fullscreen</A> video mode.
 		If you are already in fullscreen mode, Ctrl+Enter switches back to
 		windowed mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Errors (Ctrl+Shift+E):</TD>
-		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Error Window</A>.</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors & Warnings
+		Window</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Toolbar (Ctrl+Shift+T):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Toolbar:</TD>
 		<TD COLSPAN=2>Toggles the <A HREF="#Toolbar">toolbar</A> on and off.
 		Note that the toolbar is never visible in full-screen mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Status Bar (Ctrl+Shift+S):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Status Bar:</TD>
 		<TD COLSPAN=2>Toggles the permanent display of the status bar on and
 		off.  Note that the status bar will always display when there is load
 		progress to be indicated.  Also, except while displaying load progress,
@@ -512,15 +569,14 @@ visible menu.
 		acts just like a normal Windows program.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP><A NAME="ResetView">Reset View</A>
-		(Ctrl+R):</TD>
+		<TD ALIGN="RIGHT" NOWRAP><A NAME="ResetView">Reset View</A>:</TD>
 		<TD COLSPAN=2>Resets the model to the default view that is shown
 		immediately after the initial load.  Any viewing angle can be saved as
 		the default viewing angle using <A HREF="#SaveDefaultView">this</A>
 		menu item.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Zoom to Fit (Ctrl+F):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Zoom to Fit:</TD>
 		<TD COLSPAN=2>Zooms the model in to fill the current window.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -559,8 +615,8 @@ visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
-		<TD ALIGN="RIGHT">Isometric:</TD>
-		<TD>Sets the view to the model from an isometric angle.  This is the
+		<TD ALIGN="RIGHT">Two thirds:</TD>
+		<TD>Sets the view to a two thirds view of the model.  This is the
 		default view until you change it to something else.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -573,13 +629,13 @@ visible menu.
 		to the default view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Examine Mode (Ctrl+Shift+X):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Examine Mode:</TD>
 		<TD COLSPAN=2>Puts LDView in Examine Mode.  In examine mode, clicking
 		and dragging the left mouse button spins the model that is loaded.
 		This is the default mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Fly-through Mode (Ctrl+Shift+F):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Fly-through Mode:</TD>
 		<TD COLSPAN=2>Puts LDView in Fly-through Mode.  In fly-through mode,
 		clicking and dragging the left mouse button rotates the camera, and you
 		can use the W, A, S, D, Q, E, R, and F keys to move the camera.</TD>
@@ -592,6 +648,13 @@ visible menu.
 		LDView on the command line.  Note that the camera's position and viewing
 		angle aren't recorded at this time, so it's recommended that you
 		not try to use this in Fly-through Mode or after having panned.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</A></TD>
+		<TD COLSPAN=2>This shows a panel that contains information about the
+		current camera position as is needed in POV-Ray.  Hitting OK copies a
+		POV-Ray-compatible camera declaration into the clipboard.  This can be
+		directly pasted into a POV-Ray file to replace the existing camera.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>XX-Bit Modes:</TD>
@@ -607,7 +670,7 @@ visible menu.
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -618,7 +681,7 @@ visible menu.
 		copied to the clipboard by hitting Ctrl+C.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Contents (F1):</TD>
+		<TD ALIGN="RIGHT">Contents:</TD>
 		<TD COLSPAN=2>Displays this file in your web browser.  (Only works in
 		Windowed mode; hitting F1 from Fullscreen mode will not have any
 		effect.)</TD>
@@ -767,7 +830,7 @@ snapshot to produce the same result.
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
-			Error Window
+			Errors & Warnings Window
 			</FONT>
 		</TH>
 	</TR>
@@ -3399,7 +3462,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			VerifyLDrawDir
+			<A NAME="VerifyLDrawSetting">VerifyLDrawDir</A>
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean

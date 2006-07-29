@@ -918,7 +918,7 @@ BEGIN
             MENUITEM "&Right\tCtrl+4",              ID_VIEW_RIGHT
             MENUITEM "&Top\tCtrl+5",                ID_VIEW_TOP
             MENUITEM "B&ottom\tCtrl+6",             ID_VIEW_BOTTOM
-            MENUITEM "&Isometric\tCtrl+0",          ID_VIEW_ISO
+            MENUITEM "T&wo thirds\tCtrl+0",         ID_VIEW_ISO
             MENUITEM SEPARATOR
             MENUITEM "&Save Current as Default",    ID_VIEW_SAVE_DEFAULT
         END
@@ -1068,8 +1068,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,1,0
- PRODUCTVERSION 3,0,1,0
+ FILEVERSION 3,1,0,1
+ PRODUCTVERSION 3,1,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1087,14 +1087,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.0.01\0"
+            VALUE "FileVersion", "3.1 Beta 1\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2000-2005 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.0.01\0"
+            VALUE "ProductVersion", "3.1 Beta 1\0"
             VALUE "SpecialBuild", "\0"
         END
     END
