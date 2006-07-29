@@ -1992,8 +1992,10 @@ bool CUIWindow::loadLanguageModule(LCID lcid, bool includeSub)
 
 				dllVersionMS = getCUIAppLanguageModuleVersion(appName, 0);
 				dllVersionLS = getCUIAppLanguageModuleVersion(appName, 1);
+				// Note that we don't care about the least significant version
+				// part, so we mask that part out of our comparison.
 				if (dllVersionMS != appVersionMS ||
-					dllVersionLS != appVersionLS)
+					(dllVersionLS & 0xFFFF0000) != (appVersionLS & 0xFFFF0000))
 				{
 					char message[1024];
 
