@@ -3,10 +3,10 @@
 
 [Setup]
 AppName=LDView
-AppVerName=LDView 3.0
-AppVersion=3.0.0.7
-OutputBaseFilename=LDView-3000
-SourceDir=C:\TEMP\Releases\LDView-3000
+AppVerName=LDView 3.1 Beta 1
+AppVersion=3.1.0.1
+OutputBaseFilename=LDView-3100B1
+SourceDir=L:\TEMP\Releases\LDView-3100B1
 AppPublisher=Travis Cobbs
 AppPublisherURL=http://ldview.sourceforge.net/
 AppSupportURL=http://ldview.sourceforge.net/
@@ -17,6 +17,7 @@ DefaultGroupName=LDView
 OutputDir=Setup
 AllowNoIcons=yes
 LicenseFile=License.txt
+SetupIconFile=LDViewIcon.ico
 
 [Tasks]
 Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
