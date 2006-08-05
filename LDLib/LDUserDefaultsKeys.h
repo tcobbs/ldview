@@ -8,6 +8,9 @@
 #define BFC_KEY "BFC"
 #define BLACK_HIGHLIGHTS_KEY "BlackHighlights"
 #define BOTTOM_MARGIN_KEY "BottomMargin"
+#define CHECK_PART_TRACKER_KEY "CheckPartTracker"
+#define CHECK_PART_UPDATE_WAIT_KEY "CheckPartUpdateWait"
+#define CHECK_PART_WAIT_KEY "CheckPartWait"
 #define CONDITIONAL_HIGHLIGHTS_KEY "ConditionalHighlights"
 #define CURVE_QUALITY_KEY "CurveQuality"
 #define CUSTOM_COLORS_KEY "CustomColors"
@@ -55,6 +58,9 @@
 #define POLYGON_OFFSET_KEY "PolygonOffset"
 #define PRINT_BACKGROUND_KEY "PrintBackground"
 #define PROCESS_LDCONFIG_KEY "ProcessLDConfig"
+#define PROXY_PORT_KEY "ProxyPort"
+#define PROXY_SERVER_KEY "ProxyServer"
+#define PROXY_TYPE_KEY "ProxyType"
 #define RECENT_FILES_KEY "RecentFiles"
 #define RED_BACK_FACES_KEY "RedBackFaces"
 #define REMOVE_HIDDEN_LINES_KEY "RemoveHiddenLines"
@@ -110,17 +116,15 @@
 #define PREFERENCE_SET_KEY "PreferenceSet"
 #define PRINT_DPI_KEY "PrintDPI"								// NOT USED
 #define USE_PRINTER_DPI_KEY "UsePrinterDPI"						// NOT USED
+#define LAST_LIBRARY_UPDATE_KEY "LastLibraryUpdate"
+
+// The following was added to improve load performance.  Since it didn't really
+// help much, I decided not to publicize it, so it will probably never be
+// documented.
+#define SKIP_VALIDATION_KEY "SkipValidation"
 
 // The following are undocumented, but need to be documented.
-#define LAST_LIBRARY_UPDATE_KEY "LastLibraryUpdate"
-#define SKIP_VALIDATION_KEY "SkipValidation"
 #define LIGHT_VECTOR_KEY "LightVector"
-#define PROXY_TYPE_KEY "ProxyType"
-#define PROXY_SERVER_KEY "ProxyServer"
-#define PROXY_PORT_KEY "ProxyPort"
-#define CHECK_PART_TRACKER_KEY "CheckPartTracker"
-#define CHECK_PART_WAIT_KEY "CheckPartWait"
-#define CHECK_PART_UPDATE_WAIT_KEY "CheckPartUpdateWait"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

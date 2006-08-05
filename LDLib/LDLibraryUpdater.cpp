@@ -406,6 +406,97 @@ TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
 	return m_updateQueue;
 }
 
+bool LDLibraryUpdater::caseSensitiveFileSystem(char *&error)
+{
+	char *tempFilename = new char[strlen(m_ldrawDir) + 32];
+	bool retValue = false;
+	int i;
+
+	for (i = 0; i < 100000; i++)
+	{
+		FILE *file;
+
+		sprintf(tempFilename, "%s/LDView%X.tmp", m_ldrawDir, i);
+		file = fopen(tempFilename, "r");
+		if (file)
+		{
+			fclose(file);
+		}
+		else
+		{
+			file = fopen(tempFilename, "w");
+			if (file)
+			{
+				char *tempFilename2 = copyString(tempFilename);
+
+				fclose(file);
+				convertStringToLower(tempFilename2);
+				file = fopen(tempFilename2, "r");
+				delete tempFilename2;
+				if (file)
+				{
+					fclose(file);
+				}
+				else
+				{
+					retValue = true;
+				}
+				unlink(tempFilename);
+			}
+			else
+			{
+				error = copyString(TCLocalStrings::get("LDLUpdateCantWrite"));
+			}
+			break;
+		}
+	}
+	if (i == 100000)
+	{
+		error = copyString(TCLocalStrings::get("LDLUpdateTmpFileError"));
+	}
+	delete tempFilename;
+	return retValue;
+}
+
+bool LDLibraryUpdater::canCheckForUpdates(char *&error)
+{
+	bool caseSensitive;
+	bool goodSuffix = false;
+	error = NULL;
+
+	caseSensitive = caseSensitiveFileSystem(error);
+	if (error == NULL)
+	{
+		if (caseSensitive)
+		{
+#ifdef WIN32
+			// I'm not sure if there ARE any case sensitive file systems in
+			// Windows, but we may as well allow for it, since it's not really
+			// much extra code.
+			goodSuffix = stringHasSuffix(m_ldrawDir, "\\ldraw") ||
+				stringHasSuffix(m_ldrawDir, "/ldraw");
+#else
+			goodSuffix = stringHasSuffix(m_ldrawDir, "/ldraw");
+#endif
+		}
+		else
+		{
+#ifdef WIN32
+			goodSuffix =
+				stringHasCaseInsensitiveSuffix(m_ldrawDir, "\\ldraw") ||
+				stringHasCaseInsensitiveSuffix(m_ldrawDir, "/ldraw");
+#else
+			goodSuffix = stringHasCaseInsensitiveSuffix(m_ldrawDir, "/ldraw");
+#endif
+		}
+		if (!goodSuffix)
+		{
+			error = copyString(TCLocalStrings::get("LDLUpdateNotLDraw"));
+		}
+	}
+	return goodSuffix;
+}
+
 void LDLibraryUpdater::installLDraw(void)
 {
 	m_install = true;
