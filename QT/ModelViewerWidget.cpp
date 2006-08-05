@@ -968,19 +968,29 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
     {
         libraryUpdater = new LDLibraryUpdater;
         char *ldrawDir = getLDrawDir();
+		char *updateCheckError = NULL;
 
-        showLibraryUpdateWindow(false);
         libraryUpdateCanceled = false;
 		libraryUpdateFinishNotified = false;
 		libraryUpdateFinished = false;
         libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
         libraryUpdater->setLdrawDir(ldrawDir);
         delete ldrawDir;
-		if (!libraryUpdateTimer)
+		if (libraryUpdater->canCheckForUpdates(updateCheckError))
 		{
-			libraryUpdateTimer = startTimer(50);
+			showLibraryUpdateWindow(false);
+			if (!libraryUpdateTimer)
+			{
+				libraryUpdateTimer = startTimer(50);
+			}
+			libraryUpdater->checkForUpdates();
 		}
-        libraryUpdater->checkForUpdates();
+		else
+		{
+			QMessageBox::warning(this,"LDView", updateCheckError,
+				QMessageBox::Ok, QMessageBox::NoButton);
+			delete updateCheckError;
+		}
     }
 }
 
