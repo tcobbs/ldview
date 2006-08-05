@@ -3093,13 +3093,23 @@ void LDViewWindow::checkForLibraryUpdates(void)
 	{
 		libraryUpdater = new LDLibraryUpdater;
 		char *ldrawDir = getLDrawDir();
+		char *updateCheckError = NULL;
 
-		showLibraryUpdateWindow(false);
 		libraryUpdateCanceled = false;
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
 		libraryUpdater->setLdrawDir(ldrawDir);
 		delete ldrawDir;
-		libraryUpdater->checkForUpdates();
+		if (libraryUpdater->canCheckForUpdates(updateCheckError))
+		{
+			showLibraryUpdateWindow(false);
+			libraryUpdater->checkForUpdates();
+		}
+		else
+		{
+			MessageBox(hWindow, updateCheckError, "LDView",
+				MB_OK | MB_ICONWARNING);
+			delete updateCheckError;
+		}
 	}
 }
 

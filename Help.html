@@ -1906,6 +1906,51 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			CheckPartTracker
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Automatically check LDraw.org for missing
+			parts</I> check box in the <I>Updates-&gt;Missing Parts</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			CheckPartUpdateWait
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Days between updated part checks</I> field in
+			the <I>Updates-&gt;Missing Parts</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			CheckPartWait
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Days between missing part checks</I> field in
+			the <I>Updates-&gt;Missing Parts</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			ConditionalHighlights
 		</TD>
 		<TD VALIGN="TOP">
@@ -2661,6 +2706,62 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Process ldconfig.ldr</I> check box in the
 			<I>General-&gt;Misc</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="ProxyPortSetting">ProxyPort</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Integer<BR>
+			(0-65535)
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Port</I> field in the <I>Updates-&gt;Internet
+			Proxy</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="ProxyServerSetting">ProxyServer</A>
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Proxy</I> field in the <I>Updates-&gt;Internet
+			Proxy</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ProxyType
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Direct connection to the Internet</I>, <I>Use
+			simple Windows proxy configuration</I>, and <I>Manual proxy
+			configuration</I> radio buttons in the <I>Updates-&gt;Internet
+			Proxy</I> box.  Selects the proxy type:<BR>
+			0: No proxy<BR>
+			1: Simple Windows proxy<BR>
+			2: Manual proxy<BR>
+			The Windows setting is only available in the Windows verion of
+			LDView.  If you set this to 2 (manual), you must also make sure that
+			the <A HREF="#ProxyServerSetting">ProxyServer</A> and
+			<A HREF="#ProxyPortSetting">ProxyPort</A> settings are set
+			correctly.
 		</TD>
 	</TR>
 	<TR>

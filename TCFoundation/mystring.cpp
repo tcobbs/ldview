@@ -121,7 +121,7 @@ void deleteStringArray(char** array, int count)
 	delete array;
 }
 
-int arrayContainsString(char** array, int count, const char* string)
+bool arrayContainsString(char** array, int count, const char* string)
 {
 	int i;
 
@@ -129,13 +129,13 @@ int arrayContainsString(char** array, int count, const char* string)
 	{
 		if (strcmp(array[i], string) == 0)
 		{
-			return 1;
+			return true;
 		}
 	}
-	return 0;
+	return false;
 }
 
-int arrayContainsPrefix(char** array, int count, const char* prefix)
+bool arrayContainsPrefix(char** array, int count, const char* prefix)
 {
 	int i;
 	int prefixLength = strlen(prefix);
@@ -144,10 +144,10 @@ int arrayContainsPrefix(char** array, int count, const char* prefix)
 	{
 		if (strncmp(array[i], prefix, prefixLength) == 0)
 		{
-			return 1;
+			return true;
 		}
 	}
-	return 0;
+	return false;
 }
 
 char** componentsSeparatedByString(const char* string, const char* separator,
@@ -245,7 +245,7 @@ char* componentsJoinedByString(char** array, int count, const char* separator)
 	return string;
 }
 
-int stringHasCaseInsensitivePrefix(const char* string, const char* prefix)
+bool stringHasCaseInsensitivePrefix(const char* string, const char* prefix)
 {
 	int i;
 
@@ -256,7 +256,7 @@ int stringHasCaseInsensitivePrefix(const char* string, const char* prefix)
 	return prefix[i] == 0;
 }
 
-int stringHasPrefix(const char* string, const char* prefix)
+bool stringHasPrefix(const char* string, const char* prefix)
 {
 	int i;
 
@@ -266,7 +266,7 @@ int stringHasPrefix(const char* string, const char* prefix)
 	return prefix[i] == 0;
 }
 
-int stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
+bool stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
 {
 	int i;
 	int len1 = strlen(string);
@@ -279,7 +279,7 @@ int stringHasCaseInsensitiveSuffix(const char* string, const char* suffix)
 	return i == len2;
 }
 
-int stringHasSuffix(const char* string, const char* suffix)
+bool stringHasSuffix(const char* string, const char* suffix)
 {
 	int i;
 	int len1 = strlen(string);

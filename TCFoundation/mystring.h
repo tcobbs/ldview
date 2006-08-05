@@ -24,17 +24,17 @@ skipZero = 0);
 TCExport void printStringArray(char** array, int count);
 TCExport char **copyStringArray(char** array, int count);
 TCExport void deleteStringArray(char** array, int count);
-TCExport int arrayContainsString(char** array, int count, const char* string);
-TCExport int arrayContainsPrefix(char** array, int count, const char* prefix);
+TCExport bool arrayContainsString(char** array, int count, const char* string);
+TCExport bool arrayContainsPrefix(char** array, int count, const char* prefix);
 TCExport char **componentsSeparatedByString(const char* string,
 											const char* separator, int& count);
 TCExport char *componentsJoinedByString(char** array, int count, const char* 
 separator);
-TCExport int stringHasPrefix(const char* string, const char* prefix);
-TCExport int stringHasCaseInsensitivePrefix(const char* string, const char* 
+TCExport bool stringHasPrefix(const char* string, const char* prefix);
+TCExport bool stringHasCaseInsensitivePrefix(const char* string, const char* 
 prefix);
-TCExport int stringHasSuffix(const char* string, const char* suffix);
-TCExport int stringHasCaseInsensitiveSuffix(const char* string, const char* 
+TCExport bool stringHasSuffix(const char* string, const char* suffix);
+TCExport bool stringHasCaseInsensitiveSuffix(const char* string, const char* 
 suffix);
 TCExport void convertStringToUpper(char*);
 TCExport void convertStringToLower(char*);
