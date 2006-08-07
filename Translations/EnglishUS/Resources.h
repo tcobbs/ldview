@@ -64,6 +64,7 @@
 #define IDD_LIBRARY_UPDATES             165
 #define IDB_TOOLBAR                     166
 #define IDB_VERTEX_ORDER                167
+#define IDD_UPDATES_PREFS               167
 #define IDB_VERTEX_ORDER_MASK           168
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
@@ -166,6 +167,7 @@
 #define IDC_TEXTURE_TRILINEAR           1111
 #define IDC_PRIMITIVES_BOX              1112
 #define IDC_PRIMITIVES_MISC_BOX         1113
+#define IDC_MISSING_PARTS_BOX           1113
 #define IDC_AA_BOX                      1114
 #define IDC_WIREFRAME_BOX               1115
 #define IDC_EDGES_BOX                   1116
@@ -229,6 +231,21 @@
 #define IDC_MEMORY_COMBO                1194
 #define IDC_UPDATE_PROGRESS             1195
 #define IDC_UPDATE_STATUS_FIELD         1196
+#define IDC_UPDATES_RESET               1197
+#define IDC_PROXY_NONE                  1199
+#define IDC_PROXY_WINDOWS               1200
+#define IDC_PROXY_MANUAL                1201
+#define IDC_PROXY_SERVER                1202
+#define IDC_PROXY_PORT                  1203
+#define IDC_CHECK_PART_TRACKER          1204
+#define IDC_PROXY_SERVER_LABEL          1205
+#define IDC_PROXY_PORT_LABEL            1206
+#define IDC_PROXY_BOX                   1207
+#define IDC_UPDATES_NOTE                1208
+#define IDC_MISSING_DAYS_LABEL          1209
+#define IDC_UPDATED_DAYS_LABEL          1210
+#define IDC_MISSING_DAYS                1211
+#define IDC_UPDATED_DAYS                1212
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -292,6 +309,7 @@
 #define ID_LIGHTING_ALTERNATESETUP      40083
 #define ID_BFC_REDBACKFACES             40084
 #define ID_BFC_GREENFRONTFACES          40085
+#define ID_VIEW_POV_CAMERA              40087
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -303,9 +321,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        166
-#define _APS_NEXT_COMMAND_VALUE         40086
-#define _APS_NEXT_CONTROL_VALUE         1197
+#define _APS_NEXT_RESOURCE_VALUE        168
+#define _APS_NEXT_COMMAND_VALUE         40088
+#define _APS_NEXT_CONTROL_VALUE         1210
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
