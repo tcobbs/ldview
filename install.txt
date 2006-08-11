@@ -64,7 +64,7 @@ Compilation of LDView
 
 Start build.cmd or make.cmd.
 
-APPENDIX - Recompilation of bundeld libraries on Windows
+APPENDIX - Recompilation of bundled libraries on Windows
 --------------------------------------------------------
 
 
