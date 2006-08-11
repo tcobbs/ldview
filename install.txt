@@ -1,0 +1,83 @@
+Compilation instruction for LDView on Linux/Unix
+------------------------------------------------
+
+Required components
+- QT (with OpenGL, Thread, PNG, BMP support)
+- gcc
+
+Compilation:
+
+# cd LDView/QT
+# ./makeall
+# make install
+
+Build RPM package
+
+# cd LDView/QT
+# rpmbuild -bb LDView.spec
+
+Build Debian package
+
+# cd LDView/QT
+# ./makeall
+# ./makedeb
+
+Compilation instruction for LDView on Windows
+---------------------------------------------
+
+Required components
+- Microsoft Platform SDK
+- C++ compiler (Visual C++ 6.0 or Visual C++ Toolkit 2003, or 
+		Visual Studio Express)
+- boost library
+- Set environment variable INCLUDE, LIB and PATH for the 
+  components above
+
+Bundled binary libraries
+- zlib 1.2.3
+- libpng 1.2.12
+- unzip32
+
+Compilation of boost 1.33.1
+---------------------------
+
+0) If you use Visual C++ Toolkit 2003, make sure MSVCDir is set to 
+   the root directory of the C++ e.g.:
+ 
+   set MSVCDir=c:\Program Files\Microsoft Visual C++ Toolkit 2003
+
+1) Extract the boost library
+2) cd <boost dir>
+
+   cd tools\build\jam_src
+   call build
+   cd bin.*
+   copy /y bjam.exe ..\..\..\..
+   cd ..\..\..\..
+   bjam --without-python --with-thread stage
+
+3) Add boost directory to environment variable INCLUDE
+4) Add boost\stage\lib directory to environment variable LIB
+
+Compilation of LDView
+---------------------
+
+Start build.cmd or make.cmd.
+
+APPENDIX - Recompilation of bundeld libraries on Windows
+--------------------------------------------------------
+
+
+zlib 1.2.3
+----------
+
+copy /y contrib\masmx86\*.* .
+call mkasm
+nmake -f win32\makefile.msc CFLAGS="-MT -O2 -nologo -DASMV -DASMINF" AR="link -lib" OBJA="gvmat32c.obj gvmat32.obj inffas32.obj" clean zlib.lib
+
+libpng 1.2.12
+-------------
+
+nmake -f scripts\makefile.vcawin32 clean all AR="link -lib" CFLAGS="-DPNG_USE_PNGVCRD -nologo -MT -O2 -W3 -I..\zlib" clean all
+
+
