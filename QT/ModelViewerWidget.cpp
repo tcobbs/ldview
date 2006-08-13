@@ -946,7 +946,9 @@ bool ModelViewerWidget::installLDraw(void)
 			// for a short time in order to avoid monopolizing the CPU.  Keep in
 			// mind that while 50ms is essentially unnoticable to a user, it's
 			// quite a long time to the computer.
+#ifndef WIN32
 			usleep(50000);
+#endif
 		}
         if (libraryUpdateFinished)
         {
