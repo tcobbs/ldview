@@ -39,6 +39,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 IDI_APP_ICON            ICON    DISCARDABLE     "Icons\\LDViewIcon.ico"
 IDI_EXAMINE             ICON    DISCARDABLE     "icons\\examine.ico"
 IDI_FLYTHROUGH          ICON    DISCARDABLE     "icons\\flythrou.ico"
+IDI_LDRAW               ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
+IDI_MPD                 ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
