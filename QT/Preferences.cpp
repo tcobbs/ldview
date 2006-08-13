@@ -18,7 +18,7 @@
 #include <qpushbutton.h>
 #include <qcolordialog.h>
 #include <TCFoundation/TCLocalStrings.h>
-#include <netinet/in.h>
+//#include <netinet/in.h>
 #include <qtextedit.h>
 #include "ModelViewerWidget.h"
 #include "Preferences.h"

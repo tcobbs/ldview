@@ -2,17 +2,28 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h
+
+UI_DIR = .ui
+MOC_DIR = .moc
+OBJECTS_DIR = .obj
+
 unix {
-  UI_DIR = .ui
-  MOC_DIR = .moc
-  OBJECTS_DIR = .obj
   documentation.path = /usr/local/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr ../LDViewMessages.ini \
 						../ChangeHistory.html ../8464.mpd todo.txt
   target.path = /usr/local/bin
   INSTALLS += documentation target
+  LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -lLDraw \
+          -lboost_thread
 }
+
+win32 {
+  INCLUDE += -I../../boost_1_33_1
+  LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
+          -L../TRE/Release -lLDLib -L../lib -lunzip32 -llibboost_thread-vc71-mt-s
+}
+
 FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui \
 		  AboutPanel.ui ErrorPanel.ui ImageHolder.ui ExtraDirPanel.ui \
 		  HelpPanel.ui SnapshotSettingsPanel.ui
@@ -40,8 +51,7 @@ exists($(QTDIR)/include/Qt3Support/q3button.h){
 	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 message(QT4)
 }
-LIBS	+= -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-		   -lLDraw -lLDLoader -lTRE -lTCFoundation -lboost_thread
+LIBS	+= -lLDLoader -lTRE -lTCFoundation
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
