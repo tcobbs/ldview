@@ -3,10 +3,10 @@
 
 [Setup]
 AppName=LDView
-AppVerName=LDView 3.1 Beta 1
-AppVersion=3.1.0.1
-OutputBaseFilename=LDView-3100B1
-SourceDir=L:\TEMP\Releases\LDView-3100B1
+AppVerName=LDView 3.1 Beta 2
+AppVersion=3.1.0.2
+OutputBaseFilename=LDView-3100B2
+SourceDir=L:\TEMP\Releases\LDView-3100B2
 AppPublisher=Travis Cobbs
 AppPublisherURL=http://ldview.sourceforge.net/
 AppSupportURL=http://ldview.sourceforge.net/
@@ -18,11 +18,13 @@ OutputDir=Setup
 AllowNoIcons=yes
 LicenseFile=License.txt
 SetupIconFile=LDViewIcon.ico
+ChangesAssociations=yes
 
 [Tasks]
 Name: desktopicon; Description: "Create a &desktop icon"; GroupDescription: "Additional icons:"; Flags: unchecked
 Name: quicklaunchicon; Description: "Create a &Quick Launch icon"; GroupDescription: "Additional icons:"; Flags: unchecked
 Name: screensaver; Description: "Install LDView as a screen saver"; GroupDescription: "Screen Saver:"
+Name: registerfiles; Description: "Use LDView to open LDraw models"; GroupDescription: "File Associations:"; Flags: unchecked
 
 [Files]
 Source: "LDView.exe"; DestDir: "{app}"; Flags: ignoreversion
@@ -46,4 +48,15 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView"; Filename:
 
 [Run]
 Filename: "{app}\LDView.exe"; Parameters: """{app}\m6459.ldr"""; Description: "Launch LDView"; Flags: nowait postinstall skipifsilent
+
+[Registry]
+Root: HKCR; Subkey: ".ldr"; ValueType: string; ValueName: ""; ValueData: "LDView.ldr"; Flags: uninsdeletevalue; Tasks: registerfiles
+Root: HKCR; Subkey: "LDView.ldr"; ValueType: string; ValueName: ""; ValueData: "LDraw Model"; Flags: uninsdeletekey; Tasks: registerfiles
+Root: HKCR; Subkey: "LDView.ldr\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\LDView.exe,3"; Tasks: registerfiles
+Root: HKCR; Subkey: "LDView.ldr\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\LDView.exe"" ""%1"""; Tasks: registerfiles
+
+Root: HKCR; Subkey: ".mpd"; ValueType: string; ValueName: ""; ValueData: "LDView.mpd"; Flags: uninsdeletevalue; Tasks: registerfiles
+Root: HKCR; Subkey: "LDView.mpd"; ValueType: string; ValueName: ""; ValueData: "LDraw Multi-Part Dat"; Flags: uninsdeletekey; Tasks: registerfiles
+Root: HKCR; Subkey: "LDView.mpd\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\LDView.exe,4"; Tasks: registerfiles
+Root: HKCR; Subkey: "LDView.mpd\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\LDView.exe"" ""%1"""; Tasks: registerfiles
 
