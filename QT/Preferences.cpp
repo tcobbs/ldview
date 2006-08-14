@@ -1271,7 +1271,7 @@ void Preferences::doNewPreferenceSet()
 		selectPrefSet(name.ascii());
 		return;
 	}
-	if (name.isEmpty() && ok);
+	if (name.isEmpty() && ok)
 	{
 		QMessageBox::warning(panel,
 			TCLocalStrings::get("PrefSetNameRequired"),
