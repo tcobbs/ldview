@@ -1,13 +1,3 @@
-CC = g++
-RM = rm -f
-RMDIR = rm -rf
-AR = ar rcs
-MAKEDEPEND = gcc -MM
-
-OBJDIR = .obj
-
-VPATH = $(OBJDIR)
-
 CSRCS = 
 CCSRCS = \
 	TCArray.cpp \
@@ -37,55 +27,17 @@ CCSRCS = \
 	TCWebClient.cpp \
 	mystring.cpp
 EXECS= libTCFoundation.a
-SRCS = $(CSRCS) $(CCSRCS)
-COBJS = $(CSRCS:.c=.o)
-CCOBJS = $(CCSRCS:.cpp=.o)
-OBJS = $(COBJS) $(CCOBJS)
 CDEFINES = -D_GNU_SOURCE -D_QT -DUNZIP_CMD
 #CFLAGS = -g $(TESTING) -pg -Wall
 #CFLAGS = -o $(OBJDIR)/$*.o -g $(TESTING) -Wall $(CDEFINES)
 CFLAGS = -o $(OBJDIR)/$*.o -O3 $(TESTING) -Wall $(CDEFINES)
-INCLUDE = -I../ -I$(QTDIR)/include -I../include -I../boost/include
+INCLUDE = -I../ -I$(QTDIR)/include -I../include
 LIBDIRS = -L$(QTDIR)/lib
-#HOSTLIBS = -lxnet
 HOSTLIBS =
-LIBS = -lm -lpthread -lqt-mt $(HOSTLIBS)
-
-.SUFFIXES:
-
-.SUFFIXES:	.cpp .o .c
-
-.cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
-
-.c.o:
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
-
-all:	$(OBJDIR) libTCFoundation.a
 
 debug: CFLAGS = -o $(OBJDIR)/$*.o -g -Wall $(CDEFINES)
 debug: all
 
-$(OBJDIR):
-	if [ ! -d $(OBJDIR) ]; then	\
-		mkdir $(OBJDIR);				\
-	fi
-
-libTCFoundation.a:	$(OBJS)
-	rm -f libTCFoundation.a
-	cd $(OBJDIR); $(AR) ../libTCFoundation.a $(OBJS)
-
-webgrabber:	$(OBJS)
-			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
-
-depend:
-	rm -f .depend
-	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
-
-clean:
-	cd $(OBJDIR); $(RM) $(OBJS)
-	$(RMDIR) $(OBJDIR)
-	$(RM) libTCFoundation.a core
-
+-include ../Makefile.inc
 -include .depend
 # DO NOT DELETE
