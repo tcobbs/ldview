@@ -17,16 +17,16 @@ unix {
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -lLDraw \
           -lboost_thread
   ldlib.target = ../LDLib/libLDraw.a
-  ldlib.commands = cd ../LDLib ; make
+  ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
   tre.target = ../TRE/libTRE.a
-  tre.commands = cd ../TRE ; make
+  tre.commands = cd ../TRE ; make all
   tre.depends = ../TRE/*.cpp ../TRE/*.h
   tcfoundation.target = ../TCFoundation/libTCFoundation.a
-  tcfoundation.commands = cd ../TCFoundation ; make
+  tcfoundation.commands = cd ../TCFoundation ; make all
   tcfoundation.depends = ../TCFoundation/*.cpp ../TCFoundation/*.h
   ldloader.target = ../LDLoader/libLDLoader.a
-  ldloader.commands = cd ../LDLoader ; make
+  ldloader.commands = cd ../LDLoader ; make all
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
   QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \

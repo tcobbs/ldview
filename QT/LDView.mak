@@ -3,7 +3,7 @@ QMAKE = $(QTDIR)/bin/qmake
 
 all: Makefile
 	for DIR in $(DIRECTORIES); do	\
-		cd $$DIR; $(MAKE) -k; cd ../QT;	\
+		cd $$DIR; $(MAKE) -k all; cd ../QT;	\
 	done;
 	make
 	lrelease LDView.pro
