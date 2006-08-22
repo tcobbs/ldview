@@ -26,7 +26,7 @@ INCLUDE = -I../
 LIBDIRS =
 HOSTLIBS =
 
-debug: CFLAGS = -o $(OBJDIR)/$*.o -g -Wall -D_GNU_SOURCE -D_QT
+debug: CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -g -Wall -D_GNU_SOURCE -D_QT
 debug: all
 
 -include ../Makefile.inc
