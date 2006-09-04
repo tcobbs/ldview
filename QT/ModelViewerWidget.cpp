@@ -1397,7 +1397,7 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 			extensionCount);
 		extensionsPanel->extensionsBox->setText(openGLDriverInfo);
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
-		countString.sprintf("%d Extensions", extensionCount);
+		countString.sprintf(TCLocalStrings::get("OpenGlnExtensions"), extensionCount);
 		extensionsCountLabel->setText(countString);
 		extensionsPanel->statusBar()->addWidget(extensionsCountLabel, 1);
 	}
@@ -1561,11 +1561,11 @@ void ModelViewerWidget::drawFPS(void)
 
 			if (fps > 0.0f)
 			{
-				fpsString.sprintf("FPS: %4.4f", fps);
+				fpsString.sprintf(TCLocalStrings::get("FPSFormat"), fps);
 			}
 			else
 			{
-				fpsString = "Spin Model for FPS";
+				fpsString = TCLocalStrings::get("FPSSpinPrompt");
 			}
 			progressLabel->setText(fpsString);
 		}
@@ -1696,8 +1696,9 @@ bool ModelViewerWidget::verifyLDrawDir(bool forceChoose)
 					}
 					else
 					{
-						QMessageBox::warning(this, "Invalid directory",
-							"The directory you selected does not contain LDraw.",
+						QMessageBox::warning(this, 
+							TCLocalStrings::get("InvalidDir"),
+							TCLocalStrings::get("LDrawNotInDir"),
 							QMessageBox::Ok, QMessageBox::NoButton);
 					}
 					delete lDrawDir;
@@ -1915,9 +1916,8 @@ void ModelViewerWidget::checkFileForUpdates(void)
 				lastWriteTime = QDateTime(newWriteTime);
 				if (Preferences::getPollMode() == LDVPollPrompt)
 				{
-					if (QMessageBox::information(this, "File updated",
-						"The model has been modified.\n"
-						"Do you want to reload?",
+					if (QMessageBox::information(this, TCLocalStrings::get("PollFileUpdate"),
+						TCLocalStrings::get("PollReloadCheck"),
 						QMessageBox::Yes, QMessageBox::No) != QMessageBox::Yes)
 					{
 						update = false;
@@ -2213,7 +2213,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 			this,
 			"open model dialog",
 			true);
-		saveDialog->setCaption("Save Snapshot");
+		saveDialog->setCaption(TCLocalStrings::get("SaveSnapshot"));
 		saveDialog->addFilter("Windows Bitmap (*.bmp)");
 		saveDialog->setSelectedFilter(0);
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
@@ -2572,7 +2572,8 @@ void ModelViewerWidget::doShowViewInfo(void)
 
 	qmessage.sprintf("%s",message);
 
-	QMessageBox::information(this, "View Info", qmessage, QMessageBox::Ok,
+	QMessageBox::information(this, TCLocalStrings::get("ViewInfoTitle"), 
+			qmessage, QMessageBox::Ok,
 			QMessageBox::NoButton);
 	}
 }
@@ -2585,7 +2586,7 @@ void ModelViewerWidget::doShowPovCamera(void)
 		modelViewer->getPovCameraInfo(userMessage, povCamera);
 		if (userMessage && povCamera)
 		{
-			if(QMessageBox::information(this, "POV-Ray camera settings", 
+			if(QMessageBox::information(this, TCLocalStrings::get("PovCameraTitle"), 
 				QString(userMessage), QMessageBox::Ok, QMessageBox::Cancel)==
 				QMessageBox::Ok)
 			{

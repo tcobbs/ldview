@@ -211,7 +211,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 		}
 		else
 		{
-			buf.sprintf("Unknown filename");
+			buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownFile"));
 		}
 		addErrorLine(parent, buf, error);
 		string = error->getFileLine();
@@ -221,19 +221,19 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			
 			if (lineNumber > 0)
 			{
-				buf.sprintf("Line #%d", lineNumber);
+				buf.sprintf(TCLocalStrings::get("ErrorTreeLine#"), lineNumber);
 			}
 			else
 			{
-				buf.sprintf("Unknown Line #");
+				buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownLine#"));
 			}
 			addErrorLine(parent, buf, error);
 			stripCRLF(string);
-			buf.sprintf("Line: %s", string);
+			buf.sprintf(TCLocalStrings::get("ErrorTreeLine"), string);
 		}
 		else
 		{
-			buf.sprintf("Unknown Line");
+			buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownLine"));
 		}
 		addErrorLine(parent, buf, error);
 		if ((extraInfo = error->getExtraInfo()) != NULL)
