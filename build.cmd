@@ -155,4 +155,10 @@ link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib versio
 
 cd ..\..
 
+if not exist "%QTDIR%\bin\qmake.exe" goto End
+cd QT
+%QTDIR%\bin\qmake.exe
+nmake clean all
+cd ..
+
 :End
