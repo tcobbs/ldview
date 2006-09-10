@@ -31,7 +31,6 @@ unix {
   QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a
-
 }
 
 win32 {
@@ -40,6 +39,12 @@ win32 {
   LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
           -L../TRE/Release -lLDLib -L../lib -lunzip32 -llibboost_thread-vc71-mt-s
 }
+
+translations.commands = lrelease LDView.pro
+translations.target = ldview_de.qm
+QMAKE_EXTRA_UNIX_TARGETS += translations
+PRE_TARGETDEPS += ldview_de.qm
+QMAKE_CLEAN += *.qm
 
 FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui \
 		  AboutPanel.ui ErrorPanel.ui ImageHolder.ui ExtraDirPanel.ui \
