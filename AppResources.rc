@@ -231,7 +231,7 @@ BEGIN
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,77,68,21,
                     WS_EX_CLIENTEDGE,HIDC_WIREFRAME_THICKNESS
-    GROUPBOX        "    ",IDC_BFC_BOX,7,106,121,40,WS_GROUP,0,HIDC_BFC_BOX
+    GROUPBOX        "    ",IDC_BFC_BOX,7,106,121,42,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,15,106,29,10,WS_EX_TRANSPARENT,HIDC_BFC
     CONTROL         "Red back faces",IDC_RED_BACK_FACES,"Button",
@@ -240,7 +240,7 @@ BEGIN
     CONTROL         "Green front faces",IDC_GREEN_FRONT_FACES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,129,81,10,0,
                     HIDC_GREEN_FRONT_FACES
-    GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,104,WS_GROUP,0,
+    GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,106,WS_GROUP,0,
                     HIDC_EDGES_BOX
     CONTROL         "&Edge Lines",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,42,51,10,
@@ -252,20 +252,20 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,65,70,10,0,
                     HIDC_CONDITIONAL_HIGHLIGHTS
     CONTROL         "Show all",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,153,75,45,10,0,
+                    WS_GROUP | WS_TABSTOP,153,76,45,10,0,
                     HIDC_ALL_CONDITIONAL
-    CONTROL         "Show control pts",IDC_CONDITIONAL_CONTROLS,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,85,68,10,0,
+    CONTROL         "Show control points",IDC_CONDITIONAL_CONTROLS,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,87,74,10,0,
                     HIDC_CONDITIONAL_CONTROLS
     CONTROL         "High quality",IDC_QUALITY_LINES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,96,51,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,98,51,10,0,
                     HIDC_QUALITY_LINES
     CONTROL         "Always black",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,144,107,61,10,0,HIDC_ALWAYS_BLACK
-    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,141,126,36,8,0,
+                    WS_GROUP | WS_TABSTOP,144,109,61,10,0,HIDC_ALWAYS_BLACK
+    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,141,128,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,21,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,122,68,21,
                     WS_EX_CLIENTEDGE,HIDC_EDGE_THICKNESS
     PUSHBUTTON      "&Reset",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_GEOMETRY_RESET
@@ -302,10 +302,10 @@ BEGIN
                     0,HIDC_CROSS_EYED_STEREO
     CONTROL         "Parallel",IDC_PARALLEL_STEREO,"Button",
                     BS_AUTORADIOBUTTON,144,30,39,10,0,HIDC_PARALLEL_STEREO
-    LTEXT           "Amt:",IDC_STEREO_SPACING_LABEL,144,47,15,8,0,
+    LTEXT           "Amount:",IDC_STEREO_SPACING_LABEL,144,47,25,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,160,41,87,21,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,173,41,74,21,
                     WS_EX_CLIENTEDGE,HIDC_STEREO_SPACING
     GROUPBOX        "      ",IDC_CUTAWAY_BOX,7,69,121,83,WS_GROUP,0,
                     HIDC_CUTAWAY_BOX

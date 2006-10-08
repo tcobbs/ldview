@@ -947,6 +947,22 @@ The model contains back-face culling (BFC) information that is invalid.
 The model contains multi-part DAT (MPD) information that is invalid.
 </P>
 <P>
+<I>Whitespace</I><BR>
+The model references a sub-model whose filename contains whitespace (spaces
+and/or tabs).  While this will work in some programs (including LDView), it
+won't work in others, and is discouraged.
+</P>
+<P>
+<I>Part renamed</I><BR>
+The model references a part that has been renamed to a new number (otherwise
+known as "moved to").
+</P>
+<P>
+<I>Unofficial part used</I><BR>
+The model references a part that isn't present in the main LDraw directory, but
+was found by LDView on the LDraw.org Parts Tracker and automatically downloaded.
+</P>
+<P>
 If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
 preferences dialog, the error window will automatically be displayed when a
 model is loaded that contains errors or warnings that are set to be shown.  It
@@ -1028,7 +1044,7 @@ Enabling this option causes default-colored items to be transparent.
 This controls whether or not LDView processes the ldconfig.ldr file that is now
 distributed as part of the LDraw parts library.  This file contains settings
 that can effect how LDraw models are displayed.  Currently the only settings it
-contains are color definitions.  Enabling this option will use the ldraw.org
+contains are color definitions.  Enabling this option will use the LDraw.org
 standard color definitions; disabling it will use LDView's default color
 definitions.</P>
 <P>

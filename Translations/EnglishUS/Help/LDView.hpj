@@ -20,4 +20,4 @@ UpdatesPrefs.rtf
 HIDC_EFFECTS_MISC_BOX=HIDC_GENERAL_MISC_BOX
 
 [MAP]
-#include ..\AppResources.hm
+#include ..\Resources.hm

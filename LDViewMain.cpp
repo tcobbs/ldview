@@ -15,8 +15,6 @@
 #include "UserDefaultsKeys.h"
 #include <stdio.h>
 
-#define NAME "LDView"
-
 void createConsole(void)
 {
 	COORD size = {80, 1000};
