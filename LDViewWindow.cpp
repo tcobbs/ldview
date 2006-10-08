@@ -4231,12 +4231,18 @@ bool LDViewWindow::saveSnapshot(char *saveFilename)
 	return false;
 }
 
+// Just as a note, skipLoad is set to true for command line snapshots.  This is
+// done because parts of the load have to be redone at the time the snapshot is
+// taken, and this lets it avoid the repeat work.  Inside this function, we'll
+// use the same variable to signify that either the user canceled the open file
+// dialog, or the load failed.
 void LDViewWindow::openModel(const char* filename, bool skipLoad)
 {
+	char fullPathName[1024] = "";
+
 	if (filename && strlen(filename) > 0)
 	{
 		char* newFilename = NULL;
-		char fullPathName[1024];
 
 		if (!verifyLDrawDir())
 		{
@@ -4256,14 +4262,9 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		{
 			newFilename = copyString(filename);
 		}
-		if (ModelWindow::chDirFromFilename(newFilename, fullPathName))
+		if (!ModelWindow::chDirFromFilename(newFilename, fullPathName))
 		{
-			modelWindow->setFilename(fullPathName);
-			if (!skipLoad && modelWindow->loadModel())
-			{
-				updateModelMenuItems();
-				setLastOpenFile(fullPathName);
-			}
+			skipLoad = true;
 		}
 		delete newFilename;
 	}
@@ -4271,7 +4272,7 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 	{
 		OPENFILENAME openStruct;
 		char fileTypes[1024];
-		char openFilename[1024] = "";
+		//char openFilename[1024] = "";
 		char* initialDir = lastOpenPath();
 
 		if (initialDir)
@@ -4295,21 +4296,36 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 			openStruct.hwndOwner = hWindow;
 			openStruct.lpstrFilter = fileTypes;
 			openStruct.nFilterIndex = 1;
-			openStruct.lpstrFile = openFilename;
+			openStruct.lpstrFile = fullPathName;
 			openStruct.nMaxFile = 1024;
 			openStruct.lpstrInitialDir = initialDir;
 			openStruct.lpstrTitle = TCLocalStrings::get("SelectModelFile");
 			openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
 				OFN_HIDEREADONLY;
 			openStruct.lpstrDefExt = "ldr";
-			if (GetOpenFileName(&openStruct))
+			if (!GetOpenFileName(&openStruct))
 			{
-				modelWindow->setFilename(openStruct.lpstrFile);
-				setLastOpenFile(openStruct.lpstrFile);
-				modelWindow->loadModel();
-				updateModelMenuItems();
+				skipLoad = true;
 			}
 			delete initialDir;
+		}
+	}
+	if (!skipLoad)
+	{
+		modelWindow->setFilename(fullPathName);
+		if (modelWindow->loadModel())
+		{
+			updateModelMenuItems();
+			setLastOpenFile(fullPathName);
+		}
+		else
+		{
+			char message[2048];
+
+			sprintf(message, TCLocalStrings::get("ErrorLoadingModel"),
+				fullPathName);
+			MessageBox(hWindow, message, "LDView", MB_OK | MB_ICONWARNING);
+			modelWindow->setFilename(NULL);
 		}
 	}
 	populateRecentFileMenuItems();
