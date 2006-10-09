@@ -1226,7 +1226,18 @@ void ModelViewerWidget::doRecentFile(int index)
 
 		if (filename)
 		{
-			loadModel(filename);
+			QFile file (filename);
+			if(!file.exists())
+			{
+				char message[2048];
+				sprintf(message,TCLocalStrings::get("ErrorLoadingModel"),
+						filename);
+				QMessageBox::warning(this, "LDView", message, 
+					QMessageBox::Ok, QMessageBox::NoButton);
+
+			}
+			else
+				loadModel(filename);
 		}
 	}
 	unlock();
