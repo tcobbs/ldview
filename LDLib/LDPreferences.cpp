@@ -11,10 +11,12 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 {
 	int i;
 
+/*
 	if (modelViewer == NULL)
 	{
 		throw "modelViewer must not be NULL";
 	}
+*/
 	globalSettings[ZOOM_MAX_KEY] = true;
 	globalSettings[SHOW_ERRORS_KEY] = true;
 	globalSettings[PROXY_TYPE_KEY] = true;
@@ -32,7 +34,10 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
 		globalSettings[key] = true;
 	}
-	modelViewer->setPreferences(this);
+	if (modelViewer)
+	{
+		modelViewer->setPreferences(this);
+	}
 }
 
 LDPreferences::~LDPreferences(void)
@@ -65,9 +70,12 @@ void LDPreferences::applySettings(void)
 	applyEffectsSettings();
 	applyPrimitivesSettings();
 	applyUpdatesSettings();
-	modelViewer->setZoomMax(m_zoomMax);
-	modelViewer->setLightVector(m_lightVector);
-	modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
+	if (modelViewer)
+	{
+		modelViewer->setZoomMax(m_zoomMax);
+		modelViewer->setLightVector(m_lightVector);
+		modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
+	}
 	setupDefaultRotationMatrix();
 	setupModelCenter();
 	setupModelSize();
@@ -75,132 +83,147 @@ void LDPreferences::applySettings(void)
 
 void LDPreferences::applyGeneralSettings(void)
 {
-	int r, g, b;
+	if (modelViewer)
+	{
+		int r, g, b;
 
-	// FSAA taken care of automatically.
-	getRGB(m_backgroundColor, r, g, b);
-	modelViewer->setBackgroundRGBA(r, g, b, 0);
-	getRGB(m_defaultColor, r, g, b);
-	modelViewer->setProcessLDConfig(m_processLdConfig);
-	modelViewer->setSkipValidation(m_skipValidation);
-	// showFrameRate taken care of automatically.
-	// showErrors taken care of automatically.
-	// fullScreenRefresh taken care of automatically.
-	modelViewer->setFov(m_fov);
-	modelViewer->setDefaultRGB((TCByte)r, (TCByte)g, (TCByte)b,
-		m_transDefaultColor);
-	modelViewer->setDefaultColorNumber(m_defaultColorNumber);
-	modelViewer->setLineSmoothing(m_lineSmoothing);
-	modelViewer->setMemoryUsage(m_memoryUsage);
+		// FSAA taken care of automatically.
+		getRGB(m_backgroundColor, r, g, b);
+		modelViewer->setBackgroundRGBA(r, g, b, 0);
+		getRGB(m_defaultColor, r, g, b);
+		modelViewer->setProcessLDConfig(m_processLdConfig);
+		modelViewer->setSkipValidation(m_skipValidation);
+		// showFrameRate taken care of automatically.
+		// showErrors taken care of automatically.
+		// fullScreenRefresh taken care of automatically.
+		modelViewer->setFov(m_fov);
+		modelViewer->setDefaultRGB((TCByte)r, (TCByte)g, (TCByte)b,
+			m_transDefaultColor);
+		modelViewer->setDefaultColorNumber(m_defaultColorNumber);
+		modelViewer->setLineSmoothing(m_lineSmoothing);
+		modelViewer->setMemoryUsage(m_memoryUsage);
+	}
 }
 
 void LDPreferences::applyGeometrySettings(void)
 {
-	if (m_useSeams)
+	if (modelViewer)
 	{
-		modelViewer->setSeamWidth(m_seamWidth / 100.0f);
+		if (m_useSeams)
+		{
+			modelViewer->setSeamWidth(m_seamWidth / 100.0f);
+		}
+		else
+		{
+			modelViewer->setSeamWidth(0.0f);
+		}
+		modelViewer->setDrawWireframe(m_drawWireframe);
+		modelViewer->setUseWireframeFog(m_useWireframeFog);
+		modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
+		modelViewer->setWireframeLineWidth((GLfloat)m_wireframeThickness);
+		modelViewer->setBfc(m_bfc);
+		modelViewer->setRedBackFaces(m_redBackFaces);
+		modelViewer->setGreenFrontFaces(m_greenFrontFaces);
+		modelViewer->setShowsHighlightLines(m_showHighlightLines);
+		modelViewer->setEdgesOnly(m_edgesOnly);
+		modelViewer->setDrawConditionalHighlights(m_drawConditionalHighlights);
+		modelViewer->setShowAllConditionalLines(m_showAllConditionalLines);
+		modelViewer->setShowConditionalControlPoints(
+			m_showConditionalControlPoints);
+		modelViewer->setUsePolygonOffset(m_usePolygonOffset);
+		modelViewer->setBlackHighlights(m_blackHighlights);
+		modelViewer->setHighlightLineWidth((GLfloat)m_edgeThickness);
 	}
-	else
-	{
-		modelViewer->setSeamWidth(0.0f);
-	}
-	modelViewer->setDrawWireframe(m_drawWireframe);
-	modelViewer->setUseWireframeFog(m_useWireframeFog);
-	modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
-	modelViewer->setWireframeLineWidth((GLfloat)m_wireframeThickness);
-	modelViewer->setBfc(m_bfc);
-	modelViewer->setRedBackFaces(m_redBackFaces);
-	modelViewer->setGreenFrontFaces(m_greenFrontFaces);
-	modelViewer->setShowsHighlightLines(m_showHighlightLines);
-	modelViewer->setEdgesOnly(m_edgesOnly);
-	modelViewer->setDrawConditionalHighlights(m_drawConditionalHighlights);
-	modelViewer->setShowAllConditionalLines(m_showAllConditionalLines);
-	modelViewer->setShowConditionalControlPoints(
-		m_showConditionalControlPoints);
-	modelViewer->setUsePolygonOffset(m_usePolygonOffset);
-	modelViewer->setBlackHighlights(m_blackHighlights);
-	modelViewer->setHighlightLineWidth((GLfloat)m_edgeThickness);
 }
 
 void LDPreferences::applyEffectsSettings(void)
 {
-	modelViewer->setUseLighting(m_useLighting);
-	modelViewer->setQualityLighting(m_qualityLighting);
-	modelViewer->setSubduedLighting(m_subduedLighting);
-	modelViewer->setUsesSpecular(m_useSpecular);
-	modelViewer->setOneLight(m_oneLight);
-	modelViewer->setStereoMode(m_stereoMode);
-	modelViewer->setStereoEyeSpacing((GLfloat)m_stereoEyeSpacing);
-	modelViewer->setCutawayMode(m_cutawayMode);
-	modelViewer->setCutawayAlpha((TCFloat32)m_cutawayAlpha / 100.0f);
-	modelViewer->setCutawayLineWidth((TCFloat32)m_cutawayThickness);
-	modelViewer->setSortTransparent(m_sortTransparent);
-	modelViewer->setUseStipple(m_useStipple);
-	modelViewer->setUsesFlatShading(m_useFlatShading);
-	modelViewer->setPerformSmoothing(m_performSmoothing);
+	if (modelViewer)
+	{
+		modelViewer->setUseLighting(m_useLighting);
+		modelViewer->setQualityLighting(m_qualityLighting);
+		modelViewer->setSubduedLighting(m_subduedLighting);
+		modelViewer->setUsesSpecular(m_useSpecular);
+		modelViewer->setOneLight(m_oneLight);
+		modelViewer->setStereoMode(m_stereoMode);
+		modelViewer->setStereoEyeSpacing((GLfloat)m_stereoEyeSpacing);
+		modelViewer->setCutawayMode(m_cutawayMode);
+		modelViewer->setCutawayAlpha((TCFloat32)m_cutawayAlpha / 100.0f);
+		modelViewer->setCutawayLineWidth((TCFloat32)m_cutawayThickness);
+		modelViewer->setSortTransparent(m_sortTransparent);
+		modelViewer->setUseStipple(m_useStipple);
+		modelViewer->setUsesFlatShading(m_useFlatShading);
+		modelViewer->setPerformSmoothing(m_performSmoothing);
+	}
 }
 
 void LDPreferences::applyPrimitivesSettings(void)
 {
-	modelViewer->setAllowPrimitiveSubstitution(m_allowPrimitiveSubstitution);
-	modelViewer->setTextureStuds(m_textureStuds);
-	modelViewer->setTextureFilterType(m_textureFilterType);
-	modelViewer->setCurveQuality(m_curveQuality);
-	modelViewer->setQualityStuds(m_qualityStuds);
-	modelViewer->setHiResPrimitives(m_hiResPrimitives);
+	if (modelViewer)
+	{
+		modelViewer->setAllowPrimitiveSubstitution(m_allowPrimitiveSubstitution);
+		modelViewer->setTextureStuds(m_textureStuds);
+		modelViewer->setTextureFilterType(m_textureFilterType);
+		modelViewer->setCurveQuality(m_curveQuality);
+		modelViewer->setQualityStuds(m_qualityStuds);
+		modelViewer->setHiResPrimitives(m_hiResPrimitives);
+	}
 }
 
 void LDPreferences::applyUpdatesSettings(void)
 {
-	modelViewer->setCheckPartTracker(m_checkPartTracker);
-	modelViewer->setMissingPartWait(m_missingPartWait);
-	modelViewer->setUpdatedPartWait(m_updatedPartWait);
-	if (m_proxyType == 2)
+	if (modelViewer)
 	{
-		TCWebClient::setProxyServer(m_proxyServer.c_str());
-		TCWebClient::setProxyPort(m_proxyPort);
-	}
-#ifdef WIN32
-	else if (m_proxyType == 1)
-	{
-		std::string appName = TCUserDefaults::getAppName();
-
-		// This is sort of cheating, but since I know exactly how TCUserDefaults
-		// works, I know that this will get the job done.  Note that if the
-		// actual type of the data in the registry doesn't match the requested
-		// type, TCUserDefaults treats the registry value as if it doesn't
-		// exist.
-		TCUserDefaults::setAppName(
-			"Microsoft/Windows/CurrentVersion/Internet Settings");
-		if (TCUserDefaults::longForKey("ProxyEnable", 0, false))
+		modelViewer->setCheckPartTracker(m_checkPartTracker);
+		modelViewer->setMissingPartWait(m_missingPartWait);
+		modelViewer->setUpdatedPartWait(m_updatedPartWait);
+		if (m_proxyType == 2)
 		{
-			char *proxyServer = TCUserDefaults::stringForKey("ProxyServer",
-				NULL, false);
-
-			if (proxyServer)
-			{
-				char *colon = (char *)strchr(proxyServer, ':');
-
-				if (colon)
-				{
-					int proxyPort;
-
-					*colon = 0;
-					if (sscanf(&colon[1], "%d", &proxyPort) == 1)
-					{
-						TCWebClient::setProxyServer(proxyServer);
-						TCWebClient::setProxyPort(proxyPort);
-					}
-				}
-				delete proxyServer;
-			}
+			TCWebClient::setProxyServer(m_proxyServer.c_str());
+			TCWebClient::setProxyPort(m_proxyPort);
 		}
-		TCUserDefaults::setAppName(appName.c_str());
-	}
+#ifdef WIN32
+		else if (m_proxyType == 1)
+		{
+			std::string appName = TCUserDefaults::getAppName();
+
+			// This is sort of cheating, but since I know exactly how TCUserDefaults
+			// works, I know that this will get the job done.  Note that if the
+			// actual type of the data in the registry doesn't match the requested
+			// type, TCUserDefaults treats the registry value as if it doesn't
+			// exist.
+			TCUserDefaults::setAppName(
+				"Microsoft/Windows/CurrentVersion/Internet Settings");
+			if (TCUserDefaults::longForKey("ProxyEnable", 0, false))
+			{
+				char *proxyServer = TCUserDefaults::stringForKey("ProxyServer",
+					NULL, false);
+
+				if (proxyServer)
+				{
+					char *colon = (char *)strchr(proxyServer, ':');
+
+					if (colon)
+					{
+						int proxyPort;
+
+						*colon = 0;
+						if (sscanf(&colon[1], "%d", &proxyPort) == 1)
+						{
+							TCWebClient::setProxyServer(proxyServer);
+							TCWebClient::setProxyPort(proxyPort);
+						}
+					}
+					delete proxyServer;
+				}
+			}
+			TCUserDefaults::setAppName(appName.c_str());
+		}
 #endif
-	else
-	{
-		TCWebClient::setProxyServer(NULL);
+		else
+		{
+			TCWebClient::setProxyServer(NULL);
+		}
 	}
 }
 
@@ -608,7 +631,10 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 			rightMatrix[10] = cosTheta;
 			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
 
-			modelViewer->setDefaultRotationMatrix(resultMatrix);
+			if (modelViewer)
+			{
+				modelViewer->setDefaultRotationMatrix(resultMatrix);
+			}
 		}
 	}
 	else
@@ -618,19 +644,6 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 		{
 			TCFloat matrix[16];
 
-/*
-			if (sscanf(value.c_str(),
-				"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
-				&matrix[0], &matrix[4], &matrix[8], &matrix[12],
-				&matrix[1], &matrix[5], &matrix[9], &matrix[13],
-				&matrix[2], &matrix[6], &matrix[10], &matrix[14],
-				&matrix[3], &matrix[7], &matrix[11], &matrix[15]) == 16)
-			{
-				modelViewer->setDefaultRotationMatrix(matrix);
-			}
-			else
-			{
-*/
 			memset(matrix, 0, sizeof(matrix));
 			matrix[15] = 1.0f;
 			// ToDo: how to deal with 64-bit float scanf?
@@ -639,9 +652,11 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 				&matrix[1], &matrix[5], &matrix[9],
 				&matrix[2], &matrix[6], &matrix[10]) == 9)
 			{
-				modelViewer->setDefaultRotationMatrix(matrix);
+				if (modelViewer)
+				{
+					modelViewer->setDefaultRotationMatrix(matrix);
+				}
 			}
-//			}
 		}
 	}
 }
@@ -657,7 +672,10 @@ void LDPreferences::setupModelCenter(void)
 		if (sscanf(value.c_str(), "%f,%f,%f", &center[0], &center[1],&center[2])
 			== 3)
 		{
-			modelViewer->setModelCenter(center);
+			if (modelViewer)
+			{
+				modelViewer->setModelCenter(center);
+			}
 		}
 	}
 }
@@ -672,7 +690,10 @@ void LDPreferences::setupModelSize(void)
 		// ToDo: how to deal with 64-bit float scanf?
 		if (sscanf(value.c_str(), "%f", &size) == 1)
 		{
-			modelViewer->setModelSize(size);
+			if (modelViewer)
+			{
+				modelViewer->setModelSize(size);
+			}
 		}
 	}
 }
@@ -898,11 +919,17 @@ void LDPreferences::setUseSeams(bool value, bool commit, bool apply)
 	{
 		if (m_useSeams)
 		{
-			modelViewer->setSeamWidth(m_seamWidth / 100.0f);
+			if (modelViewer)
+			{
+				modelViewer->setSeamWidth(m_seamWidth / 100.0f);
+			}
 		}
 		else
 		{
-			modelViewer->setSeamWidth(0.0f);
+			if (modelViewer)
+			{
+				modelViewer->setSeamWidth(0.0f);
+			}
 		}
 	}
 }
@@ -917,7 +944,10 @@ void LDPreferences::setDrawWireframe(bool value, bool commit, bool apply)
 	setSetting(m_drawWireframe, value, WIREFRAME_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setDrawWireframe(m_drawWireframe);
+		if (modelViewer)
+		{
+			modelViewer->setDrawWireframe(m_drawWireframe);
+		}
 	}
 }
 
@@ -926,7 +956,10 @@ void LDPreferences::setUseWireframeFog(bool value, bool commit, bool apply)
 	setSetting(m_useWireframeFog, value, WIREFRAME_FOG_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setUseWireframeFog(m_useWireframeFog);
+		if (modelViewer)
+		{
+			modelViewer->setUseWireframeFog(m_useWireframeFog);
+		}
 	}
 }
 
@@ -935,7 +968,10 @@ void LDPreferences::setRemoveHiddenLines(bool value, bool commit, bool apply)
 	setSetting(m_removeHiddenLines, value, REMOVE_HIDDEN_LINES_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
+		if (modelViewer)
+		{
+			modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
+		}
 	}
 }
 
@@ -949,7 +985,10 @@ void LDPreferences::setBfc(bool value, bool commit, bool apply)
 	setSetting(m_bfc, value, BFC_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setBfc(m_bfc);
+		if (modelViewer)
+		{
+			modelViewer->setBfc(m_bfc);
+		}
 	}
 }
 
@@ -958,7 +997,10 @@ void LDPreferences::setRedBackFaces(bool value, bool commit, bool apply)
 	setSetting(m_redBackFaces, value, RED_BACK_FACES_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setRedBackFaces(m_redBackFaces);
+		if (modelViewer)
+		{
+			modelViewer->setRedBackFaces(m_redBackFaces);
+		}
 	}
 }
 
@@ -967,7 +1009,10 @@ void LDPreferences::setGreenFrontFaces(bool value, bool commit, bool apply)
 	setSetting(m_greenFrontFaces, value, GREEN_FRONT_FACES_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setGreenFrontFaces(m_greenFrontFaces);
+		if (modelViewer)
+		{
+			modelViewer->setGreenFrontFaces(m_greenFrontFaces);
+		}
 	}
 }
 
@@ -976,7 +1021,10 @@ void LDPreferences::setShowHighlightLines(bool value, bool commit, bool apply)
 	setSetting(m_showHighlightLines, value, SHOW_HIGHLIGHT_LINES_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setShowsHighlightLines(m_showHighlightLines);
+		if (modelViewer)
+		{
+			modelViewer->setShowsHighlightLines(m_showHighlightLines);
+		}
 	}
 }
 
@@ -987,7 +1035,11 @@ void LDPreferences::setDrawConditionalHighlights(bool value, bool commit,
 		commit);
 	if (apply)
 	{
-		modelViewer->setDrawConditionalHighlights(m_drawConditionalHighlights);
+		if (modelViewer)
+		{
+			modelViewer->setDrawConditionalHighlights(
+				m_drawConditionalHighlights);
+		}
 	}
 }
 
@@ -1007,7 +1059,10 @@ void LDPreferences::setEdgesOnly(bool value, bool commit, bool apply)
 	setSetting(m_edgesOnly, value, EDGES_ONLY_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setEdgesOnly(m_edgesOnly);
+		if (modelViewer)
+		{
+			modelViewer->setEdgesOnly(m_edgesOnly);
+		}
 	}
 }
 
@@ -1016,7 +1071,10 @@ void LDPreferences::setUsePolygonOffset(bool value, bool commit, bool apply)
 	setSetting(m_usePolygonOffset, value, POLYGON_OFFSET_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setUsePolygonOffset(m_usePolygonOffset);
+		if (modelViewer)
+		{
+			modelViewer->setUsePolygonOffset(m_usePolygonOffset);
+		}
 	}
 }
 
@@ -1025,7 +1083,10 @@ void LDPreferences::setBlackHighlights(bool value, bool commit, bool apply)
 	setSetting(m_blackHighlights, value, BLACK_HIGHLIGHTS_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setBlackHighlights(m_blackHighlights);
+		if (modelViewer)
+		{
+			modelViewer->setBlackHighlights(m_blackHighlights);
+		}
 	}
 }
 
@@ -1041,7 +1102,10 @@ void LDPreferences::setUseLighting(bool value, bool commit, bool apply)
 	setSetting(m_useLighting, value, LIGHTING_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setUseLighting(m_useLighting);
+		if (modelViewer)
+		{
+			modelViewer->setUseLighting(m_useLighting);
+		}
 	}
 }
 
@@ -1050,7 +1114,10 @@ void LDPreferences::setQualityLighting(bool value, bool commit, bool apply)
 	setSetting(m_qualityLighting, value, QUALITY_LIGHTING_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setQualityLighting(m_qualityLighting);
+		if (modelViewer)
+		{
+			modelViewer->setQualityLighting(m_qualityLighting);
+		}
 	}
 }
 
@@ -1059,7 +1126,10 @@ void LDPreferences::setSubduedLighting(bool value, bool commit, bool apply)
 	setSetting(m_subduedLighting, value, SUBDUED_LIGHTING_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setSubduedLighting(m_subduedLighting);
+		if (modelViewer)
+		{
+			modelViewer->setSubduedLighting(m_subduedLighting);
+		}
 	}
 }
 
@@ -1068,7 +1138,10 @@ void LDPreferences::setUseSpecular(bool value, bool commit, bool apply)
 	setSetting(m_useSpecular, value, SPECULAR_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setUsesSpecular(m_useSpecular);
+		if (modelViewer)
+		{
+			modelViewer->setUsesSpecular(m_useSpecular);
+		}
 	}
 }
 
@@ -1077,7 +1150,10 @@ void LDPreferences::setOneLight(bool value, bool commit, bool apply)
 	setSetting(m_oneLight, value, ONE_LIGHT_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setOneLight(m_oneLight);
+		if (modelViewer)
+		{
+			modelViewer->setOneLight(m_oneLight);
+		}
 	}
 }
 
@@ -1135,8 +1211,11 @@ void LDPreferences::setAllowPrimitiveSubstitution(bool value, bool commit,
 		commit);
 	if (apply)
 	{
-		modelViewer->setAllowPrimitiveSubstitution(
-			m_allowPrimitiveSubstitution);
+		if (modelViewer)
+		{
+			modelViewer->setAllowPrimitiveSubstitution(
+				m_allowPrimitiveSubstitution);
+		}
 	}
 }
 
@@ -1145,7 +1224,10 @@ void LDPreferences::setTextureStuds(bool value, bool commit, bool apply)
 	setSetting(m_textureStuds, value, TEXTURE_STUDS_KEY, commit);
 	if (apply)
 	{
-		modelViewer->setTextureStuds(m_textureStuds);
+		if (modelViewer)
+		{
+			modelViewer->setTextureStuds(m_textureStuds);
+		}
 	}
 }
 
@@ -1208,27 +1290,33 @@ void LDPreferences::setDefaultZoom(TCFloat value, bool commit)
 
 void LDPreferences::saveDefaultView(void)
 {
-	TCFloat matrix[16];
-	TCFloat rotationMatrix[16];
-	TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-	char matrixString[1024];
+	if (modelViewer)
+	{
+		TCFloat matrix[16];
+		TCFloat rotationMatrix[16];
+		TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+		char matrixString[1024];
 
-	memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-		sizeof(rotationMatrix));
-	TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-	matrix[12] = 0.0f;
-	matrix[13] = 0.0f;
-	matrix[14] = 0.0f;
-	sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
-		matrix[0], matrix[4], matrix[8],
-		matrix[1], matrix[5], matrix[9],
-		matrix[2], matrix[6], matrix[10]);
-	TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
-	modelViewer->setDefaultRotationMatrix(matrix);
+		memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+			sizeof(rotationMatrix));
+		TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
+		matrix[12] = 0.0f;
+		matrix[13] = 0.0f;
+		matrix[14] = 0.0f;
+		sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
+			matrix[0], matrix[4], matrix[8],
+			matrix[1], matrix[5], matrix[9],
+			matrix[2], matrix[6], matrix[10]);
+		TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
+		modelViewer->setDefaultRotationMatrix(matrix);
+	}
 }
 
 void LDPreferences::resetDefaultView(void)
 {
 	TCUserDefaults::removeValue(DEFAULT_MATRIX_KEY);
-	modelViewer->setDefaultRotationMatrix(NULL);
+	if (modelViewer)
+	{
+		modelViewer->setDefaultRotationMatrix(NULL);
+	}
 }
