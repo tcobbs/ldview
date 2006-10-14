@@ -102,7 +102,7 @@ ALINK="#0080D0">
 <LI><A HREF="#Toolbar">Toolbar</A>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
-<LI><A HREF="#ErrorWindow">Errors & Warnings Window</A></LI>
+<LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -137,6 +137,7 @@ ALINK="#0080D0">
 <LI><A HREF="#MissingPartsBox">Missing Parts Box</A></LI>
 </UL></LI>
 <LI><A HREF="#PreferenceSetsTab">Preference Sets Tab</A></LI>
+<LI><A HREF="#ScreenSaverTab">Screen Saver Tab</A></LI>
 </UL></LI>
 <LI><A HREF="#CommandLine">Command Line</A>
 <UL>
@@ -546,7 +547,7 @@ where there is no visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
-		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors & Warnings
+		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
 		Window</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -830,13 +831,13 @@ snapshot to produce the same result.
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
-			Errors & Warnings Window
+			Errors &amp; Warnings Window
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
-The error window displays errors and warnings that were encountered while
-loading an LDraw model.
+The Errors &amp; Warnings window displays errors and warnings that were
+encountered while loading an LDraw model.
 <P>
 On the left-hand side is a tree view which displays all of the errors. By
 default, there is one collapsed entry per error, with a brief description of the
@@ -964,12 +965,12 @@ was found by LDView on the LDraw.org Parts Tracker and automatically downloaded.
 </P>
 <P>
 If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
-preferences dialog, the error window will automatically be displayed when a
-model is loaded that contains errors or warnings that are set to be shown.  It
-will not be shown if the only errors or warnings in the model have been
-unchecked in the error window, the model only contains warnings and warnings are
-disabled, the model contains no errors or warnings, or the error window isn't
-set to show automatically.
+preferences dialog, the Errors &amp; Warnings window will automatically be
+displayed when a model is loaded that contains errors or warnings that are set
+to be shown.  It will not be shown if the only errors or warnings in the model
+have been unchecked in the Errors &amp; Warnings window, the model only contains
+warnings and warnings are disabled, the model contains no errors or warnings, or
+the Errors &amp; Warnings window isn't set to show automatically.
 </P>
 <BR>
 <P>
@@ -1057,9 +1058,9 @@ constant motion.  The easiest way to do this is to spin it (see
 <P>
 <A NAME="ShowErrors"><I>Show errors after loading</I></A> (Default:
 <I>On</I>):<BR>
-Enabling this option causes the <A HREF="#ErrorWindow">Error Window</A> to
-automatically be displayed after loading a model that contains any errors that
-have been selected for display in the error window.
+Enabling this option causes the <A HREF="#ErrorWindow">Errors &amp; Warnings
+window</A> to automatically be displayed after loading a model that contains any
+errors that have been selected for display in the Errors &amp; Warnings window.
 </P>
 <P>
 </P>
@@ -1597,6 +1598,71 @@ reprocessed, or reloaded entirely.  If you change any of these options, there
 will be a pause after you hit OK or Apply while it either reprocesses or
 reloads the model.  During this pause the status bar will display progress.  If
 the status bar is not set to be visible, it will be made visible temporarily.
+</P>
+
+<P>
+<FONT SIZE="+2"><B><A NAME="ScreenSaverTab">Screen Saver Tab</A></B></FONT><BR>
+</P>
+<P>
+<B>Note:</B> This tab is only available when configuring the
+<A HREF="#ScreenSaver">LDView screen saver.</A>
+</P>
+<P>
+<I>File</I>:<BR>
+Select this to have the LDView Screen Saver always display a specific file.  Use
+the Browse button to the right to select the file.
+</P>
+<P>
+<I>Browse</I> (next to File):<BR>
+Use this to select the file that the LDView Screen Saver will display.
+</P>
+<P>
+<I>Directory</I>:<BR>
+Select this to have the LDView Screen Saver randomly select a model file from
+the specified directory each time it runs.  The file will be randomly selected
+from all the DAT, MPD, and LDR files in the directory.  Use the Browse button to
+the right to select the directory.
+</P>
+<P>
+<I>Browse</I> (next to Directory):<BR>
+Use this to select the directory that the LDView Screen Saver looks in for
+models.
+</P>
+<P>
+<I>Size</I>:<BR>
+Use this to control how large the model that is displayed by the LDView Screen
+Saver will be.
+</P>
+<P>
+<I>Speed</I>:<BR>
+Use this to control how fast the model that is displayed by the LDView Screen
+Saver moves.
+</P>
+<P>
+<I>Rotation Speed</I>:<BR>
+Use this to control how fast the model that is displayed by the LDView Screen
+Saver rotates.
+</P>
+<P>
+<I>Random Preference Set</I>:<BR>
+Causes the screen saver to randomly choose a preference set each time it runs.
+Since the file/directory choice is part of the preference set, this also allows
+you to have different models displayed with different settings.
+</P>
+<P>
+<I>Sleep Mode work-around</I>:<BR>
+This will only be enabled if it is supported by your operating system.  Check
+this if your system won't go into sleep mode when using the LDView Screen Saver,
+even though it is set to go into sleep mode.  It may solve the problem.<BR>
+Note that if you have a screen saver password set and use this, you will have a
+blank screen if you wake the computer up from sleep mode and then cancel the
+password prompt.
+</P>
+<P>
+<I>Reset</I>:<BR>
+This resets all the Screen Saver preferences to their default values.  As with
+all other preference changes, you must hit OK or Apply for the reset values to
+go into effect.
 </P>
 
 <BR>
@@ -2149,10 +2215,10 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Sets the editor to use when you double click on the source file line
-			in the error window.  The program listed must either be in the path,
-			or the full path to the program must be given.  The default is
-			"notpad.exe".  Note that there is no way to set this value in the
-			LDView interface.
+			in the Errors &amp; Warnings window.  The program listed must either
+			be in the path, or the full path to the program must be given.  The
+			default is "notepad.exe".  Note that there is no way to set this
+			value in the LDView interface.
 		</TD>
 	</TR>
 	<TR>
@@ -3074,8 +3140,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>General Error</I> check box in the Error
-			Window.
+			Equivalent to the <I>General Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3089,7 +3155,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Parse Error</I> check box in the Error Window.
+			Equivalent to the <I>Parse Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3103,8 +3170,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>File Not Found</I> check box in the Error
-			Window.
+			Equivalent to the <I>File Not Found</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3118,8 +3185,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Singular Matrix</I> check box in the Error
-			Window.
+			Equivalent to the <I>Singular Matrix</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3134,7 +3201,7 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Part transformed non-uniformly</I> check box in
-			the Error Window.
+			the Errors &amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3148,8 +3215,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Non-flat quad</I> check box in the Error
-			Window.
+			Equivalent to the <I>Non-flat quad</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3163,7 +3230,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Concave quad</I> check box in the Error Window.
+			Equivalent to the <I>Concave quad</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3177,8 +3245,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Bad vertex sequence</I> check box in the Error
-			Window.
+			Equivalent to the <I>Bad vertex sequence</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3192,8 +3260,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Identical vertices</I> check box in the Error
-			Window.
+			Equivalent to the <I>Identical vertices</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3207,8 +3275,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Co-linear points</I> check box in the Error
-			Window.
+			Equivalent to the <I>Co-linear points</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3222,7 +3290,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>BFC Warning</I> check box in the Error Window.
+			Equivalent to the <I>BFC Warning</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3236,7 +3305,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>BFC Error</I> check box in the Error Window.
+			Equivalent to the <I>BFC Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3250,8 +3320,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>MPD Error</I> check box in the Error
-			Window.
+			Equivalent to the <I>MPD Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3265,7 +3335,38 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Whitespace</I> check box in the Error Window.
+			Equivalent to the <I>Whitespace</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError14
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Part renamed</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError15
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Unofficial part used</I> check box in the
+			Errors &amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3308,7 +3409,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Include Warnings</I> check box Error Window.
+			Equivalent to the <I>Include Warnings</I> check box Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3948,12 +4050,13 @@ difference, use the <A HREF="#CameraGlobe">-cg</A> option.
 		</TH>
 	</TR>
 </TABLE>
-When you install LDView, you are presented with an option near the end to
-install it as a screen saver.  If you select this option, you can use LDView
-as a screen saver.  Simply select it from the list of available screen savers,
-and then configure it as desired.  When using LDView as a screen saver, you can
-set most of the settings that are available in standard LDView, and you can
-additionally set screen saver-specific settings.
+When you use the Windows Installer to install LDView, you are presented with an
+option near the end to install it as a screen saver.  If you select this option,
+you can use LDView as a screen saver.  Simply select it from the list of
+available screen savers, and then configure it as desired.  When using LDView as
+a screen saver, you can set most of the settings that are available in standard
+LDView, and you can additionally set screen saver-specific settings.  At the
+moment, Screen Saver mode is only supported in Windows.
 <P>
 If you don't use the install program to install LDView, or you don't check the
 option to install it as a screen saver and later change your mind, you can
@@ -3990,7 +4093,7 @@ If you have any comments, questions, or suggestions, please e-mail me at
 <A NAME="EMail" HREF=
 "mailto:ldview@gmail.com">ldview@gmail.com</A>.
 <P>
-LDView is Copyright &copy; 2000-2005 Travis Cobbs and Peter Bartfai.
+LDView is Copyright &copy; 2000-2006 Travis Cobbs and Peter Bartfai.
 </P>
 <P>
 <FONT SIZE=-1>
