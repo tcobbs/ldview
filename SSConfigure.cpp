@@ -32,6 +32,7 @@ SSConfigure::SSConfigure(HINSTANCE hInstance):
 	effectsPageNumber++;
 	primitivesPageNumber++;
 	prefSetsPageNumber++;
+	updatesPageNumber++;
 	loadSSSettings();
 	// Our superclass already applied, but we changed at least one setting, so
 	// re-apply.
