@@ -10,14 +10,14 @@
 #include <qsettings.h>
 #include <stdlib.h>
 #endif // _QT
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(_QT)
 #ifndef __OBJC__
 // We want to use Objective-C stuff, but this file will be included from
 // non-Objective-C files, so we need to make it work there too.
 #define NSString void
 #define NSMutableDictionary void
 #endif // __OBJC__
-#endif // __APPLE__
+#endif // __APPLE__ && !_QT
 
 class TCStringArray;
 
@@ -116,12 +116,12 @@ class TCExport TCUserDefaults: public TCObject
 		static TCUserDefaults* currentUserDefaults;
 		TCStringArray* commandLine;
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && !defined(_QT)
 		NSMutableDictionary *sessionDict;
 
 		NSString *getSessionKey(const char *key = NULL);
 		void initSessionDict(void);
-#endif // __APPLE__
+#endif // __APPLE__ && !_QT
 		static class TCUserDefaultsCleanup
 		{
 		public:
