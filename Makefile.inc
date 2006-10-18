@@ -1,8 +1,14 @@
 CC = g++
 RM = rm -f
 RMDIR = rm -rf
-AR = ar rcs
 MAKEDEPEND = gcc -MM
+
+ifeq ($(shell uname -s), Darwin)
+EXTRACFLAGS = -arch i386 -arch ppc
+AR=libtool -static  -o
+else
+AR = ar rcs
+endif
 
 OBJDIR = .obj
 

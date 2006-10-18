@@ -26,9 +26,6 @@ CCSRCS = \
 	TCVector.cpp \
 	TCWebClient.cpp \
 	mystring.cpp
-ifeq ($(VENDOR),apple)
-EXTRACFLAGS = -arch i386 -arch ppc
-endif
 EXECS= libTCFoundation.a
 CDEFINES = -D_GNU_SOURCE -D_QT -DUNZIP_CMD
 #CFLAGS = -g $(TESTING) -pg -Wall
