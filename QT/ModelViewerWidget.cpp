@@ -3033,7 +3033,7 @@ bool ModelViewerWidget::canSaveAlpha(void)
 {
 	if (saveAlpha && (saveImageType == PNG_IMAGE_TYPE_INDEX))
 	{
-		int alphaBits;
+		GLint alphaBits;
 
 		glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
 		return alphaBits > 0;
