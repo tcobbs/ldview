@@ -14,8 +14,8 @@ unix {
 						../ChangeHistory.html ../8464.mpd todo.txt
   target.path = /usr/local/bin
   INSTALLS += documentation target
-  LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -lLDraw \
-          -lboost_thread
+  LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
+          -lLDraw -lboost_thread
   ldlib.target = ../LDLib/libLDraw.a
   ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h

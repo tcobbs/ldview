@@ -26,16 +26,19 @@ CCSRCS = \
 	TCVector.cpp \
 	TCWebClient.cpp \
 	mystring.cpp
+ifeq ($(VENDOR),apple)
+EXTRACFLAGS = -arch i386 -arch ppc
+endif
 EXECS= libTCFoundation.a
 CDEFINES = -D_GNU_SOURCE -D_QT -DUNZIP_CMD
 #CFLAGS = -g $(TESTING) -pg -Wall
 #CFLAGS = -o $(OBJDIR)/$*.o -g $(TESTING) -Wall $(CDEFINES)
-CFLAGS = -o $(OBJDIR)/$*.o -O3 $(TESTING) -Wall $(CDEFINES)
+CFLAGS = -o $(OBJDIR)/$*.o -O3 $(TESTING) -Wall $(CDEFINES) $(EXTRACFLAGS)
 INCLUDE = -I../ -I$(QTDIR)/include -I../include
 LIBDIRS = -L$(QTDIR)/lib
 HOSTLIBS =
 
-debug: CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -g -Wall $(CDEFINES)
+debug: CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -g -Wall $(CDEFINES) $(EXTRACFLAGS)
 debug: all
 
 -include ../Makefile.inc
