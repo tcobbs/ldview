@@ -79,3 +79,12 @@ LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
 					ldview_de.ts \
 					ldview_it.ts
+VERSION = 3.1
+macx {
+	RC_FILE = images/LDView.icns
+	messagefile.target = LDView.app/Contents/MacOS/LDViewMessages.ini
+	messagefile.commands = cp ../LDViewMessages.ini LDView.app/Contents/MacOS
+	messagefile.depends = ../LDViewMessages.ini
+	QMAKE_EXTRA_UNIX_TARGETS += messagefile
+	POST_TARGETDEPS += LDView.app/Contents/MacOS/LDViewMessages.ini
+}
