@@ -20,7 +20,8 @@ When starting a new translation, it is recommended that you do the following:
 
 1. Copy the EnglishUS directory, and rename it to the name of your language.
    For this example, I'll use Latin as the name of the language.
-2. In the newly renamed Latin directory, rename EnglishUS.* to be Latin.*.
+2. In the newly renamed Latin directory, rename EnglishUS.* to be Latin.*.  Also
+   rename LDView-EnglishUS.reg to LDView-Latin.reg.
 3. Edit Latin.cpp, and do a global search and replace from EnglishUS to Latin.
 4. Edit Latin.dsp in a text editor, and do a global search and replace from
    "English (United States)" to "Latin" (without the quotes).
@@ -30,10 +31,38 @@ When starting a new translation, it is recommended that you do the following:
    ENGLISHUS to LATIN.  You can save and close Latin.dsp now.
 7. Edit Latin.dsw in a text editor, and do a global search and replace from
    EnglishUS to Latin.
+8. Edit LDView-Latin.reg in a text editor, and replace LDView-EnglishUS with
+   LDView-Latin.
+9. If you're going to translate the HTML help file also, rename Help.html to
+   Help-Latin.html.  Please note that if you do this, you must also update the
+   HelpHtml entry in LDViewMessages.ini to match your new filename.
+10.If you're going to translate the "What's this?" help, edit Help\LDView.hpj
+   in a text editor, and change the HLP=LDView.hlp line to be
+   HLP=LDView-Latin.hlp.  Then update the LDView.hlp entry in LDViewMessages.ini
+   to match the filename you chose.
 
-Once you've don the above, you're ready to start your translation.  To create
-your language module, modify all of the dialog, menu, and string resources to
-translate them to the desired language.
+Once you've done the above, you're ready to start your translation.  To create
+your language module, modify all of the dialog, menu, string, and accelerator
+resources to translate them to the desired language.  (Note that the
+accelerators must be updated to match any changes you make in the menus.  For
+example, if you change Ctrl+O to Ctrl+A, you need to update the ID_FILE_OPEN
+accelerator to be Ctrl+A.)
+
+If you want to translate the "What's this?" help, you will need Microsoft Word
+to open the RTF files.  It might work in other RTF-capable editors, but it also
+might not.  The Microsoft help compiler is fairly picky about what it will
+accept.  Since Visual Studio 6 doesn't seem to register the .hpj file type to
+Microsoft Help Workshop, you need to do this yourself.  Double click on the
+LDView.hpj file, and when prompted to pick a program, pick the following
+program, and click the check box to always open with that program:
+
+C:\Program Files\Microsoft Visual Studio\Common\Tools\HCW.EXE
+
+(The above assumes you installed Visual Studio 6 in the default location.  If
+you installed it in some other location, the path will differ.)  Once you've
+translated all the RTF files, open LDView.hpj in Microsoft Help Workshop and
+click the "Save and Compile" button in the bottom right.  This will create the
+help file.
 
 You have two choices for output DLL name, the long name and the short name.  The
 instructions above were for the short name.  If you want to use the long name
@@ -62,6 +91,14 @@ LDViewMessages.ini.  This file contains messages that get shown to the user, but
 aren't in the application resources.  Please read the instructions at the top of
 that file for instructions on translating it.
 
+Finally, translate install.txt, which contains installation instructions for the
+language DLL.  Note that this file references LDView-EnglishUS.  Make sure to
+replace all occurences of EnglishUS in this file with Latin (continuing with the
+example language name from above).  Also, replace English (United States) with
+your language name.  (Don't use the English translation of your language name
+here; use the language name that your users will see in Windows.)  Also, unless
+you're doing a specific dialect, just use the short language name.  Rename
+install.txt to an appropriate filename for your language.
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
