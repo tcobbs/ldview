@@ -23,7 +23,7 @@ else
 		rm ../boost/lib/libboost_thread.a
 	fi
 	if [ -e ../boost/lib/libboost_thread.a ]; then
-		echo "Error: ../boost/lib/libboost_thread.a exists, and isn't a symlink."
+		echo "../boost/lib/libboost_thread.a exists; leaving it alone"
 	else
 		ln -s ${1}/stage/lib/libboost_thread*-mt.a ${1}/stage/lib/libboost_thread.a
 	fi
