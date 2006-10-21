@@ -33,10 +33,36 @@ When starting a new translation, it is recommended that you do the following:
    EnglishUS to Latin.
 8. Edit LDView-Latin.reg in a text editor, and replace LDView-EnglishUS with
    LDView-Latin.
+9. If you're going to translate the HTML help file also, rename Help.html to
+   Help-Latin.html.  Please note that if you do this, you must also update the
+   HelpHtml entry in LDViewMessages.ini to match your new filename.
+10.If you're going to translate the "What's this?" help, edit Help\LDView.hpj
+   in a text editor, and change the HLP=LDView.hlp line to be
+   HLP=LDView-Latin.hlp.  Then update the LDView.hlp entry in LDViewMessages.ini
+   to match the filename you chose.
 
-Once you've don the above, you're ready to start your translation.  To create
-your language module, modify all of the dialog, menu, and string resources to
-translate them to the desired language.
+Once you've done the above, you're ready to start your translation.  To create
+your language module, modify all of the dialog, menu, string, and accelerator
+resources to translate them to the desired language.  (Note that the
+accelerators must be updated to match any changes you make in the menus.  For
+example, if you change Ctrl+O to Ctrl+A, you need to update the ID_FILE_OPEN
+accelerator to be Ctrl+A.)
+
+If you want to translate the "What's this?" help, you will need Microsoft Word
+to open the RTF files.  It might work in other RTF-capable editors, but it also
+might not.  The Microsoft help compiler is fairly picky about what it will
+accept.  Since Visual Studio 6 doesn't seem to register the .hpj file type to
+Microsoft Help Workshop, you need to do this yourself.  Double click on the
+LDView.hpj file, and when prompted to pick a program, pick the following
+program, and click the check box to always open with that program:
+
+C:\Program Files\Microsoft Visual Studio\Common\Tools\HCW.EXE
+
+(The above assumes you installed Visual Studio 6 in the default location.  If
+you installed it in some other location, the path will differ.)  Once you've
+translated all the RTF files, open LDView.hpj in Microsoft Help Workshop and
+click the "Save and Compile" button in the bottom right.  This will create the
+help file.
 
 You have two choices for output DLL name, the long name and the short name.  The
 instructions above were for the short name.  If you want to use the long name
