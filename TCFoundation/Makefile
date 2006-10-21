@@ -35,9 +35,10 @@ INCLUDE = -I../ -I$(QTDIR)/include -I../include
 LIBDIRS = -L$(QTDIR)/lib
 HOSTLIBS =
 
+-include ../Makefile.inc
+
 debug: CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -g -Wall $(CDEFINES) $(EXTRACFLAGS)
 debug: all
 
--include ../Makefile.inc
 -include .depend
 # DO NOT DELETE

@@ -13,8 +13,9 @@ INCLUDE = -I../ -I$(QTDIR)/include -I../include
 LIBDIRS =
 HOSTLIBS =
 
+-include ../Makefile.inc
+
 debug: CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -g -Wall -D_GNU_SOURCE -D_QT $(EXTRACFLAGS)
 debug: all
 
--include ../Makefile.inc
 -include .depend
