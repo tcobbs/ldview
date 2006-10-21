@@ -63,19 +63,19 @@ TABLE.SettingsList TD
 --></STYLE>
 </HEAD>
 <BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
-ALINK="#FFFF80">
+ALINK="#0080D0">
 <P></P>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH CLASS="MainTitle">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
-			<FONT SIZE="+3">LDV</FONT>IEW <FONT SIZE="+3">H</FONT>ilfe
+			<FONT SIZE="+3">LDV</FONT>IEW <FONT SIZE="+3">H</FONT>ELP
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
 <P></P>
-                <p ALIGN="CENTER">
+		<p ALIGN="CENTER">
                         <FONT SIZE="+2">La guida italiana viene attualmente tradotta. Per favore usare nel frattempo il testo originale inglese.<br> Altrimenti si consiglia di usare gli strumenti di lingua di Google per una traduzione automatizzata. Per fare questo bisogna collegarsi ad Internet e cliccare su questo link: <A HREF="http://translate.google.com/translate?u=http%3A%2F%2Fwww.halibut.com%2F%7Etcobbs%2FLDView%2F3.0.0.7%2FHelp.html&langpair=en%7Cit&hl=it&ie=UTF-8&oe=UTF-8&prev=%2Flanguage_tools">Traduzione automatizzata</A>
                         </FONT>
                 </p>
@@ -89,8 +89,9 @@ ALINK="#FFFF80">
 		</TH>
 	</TR>
 </TABLE>
-<UL>
+		<UL>
 <LI><A HREF="#Intro">Introduction</A></LI>
+<LI><A HREF="#LDrawLibrary">LDraw Parts Library</A></LI>
 <LI><A HREF="#MouseControl">Mouse and Keyboard Control</A>
 <UL>
 <LI><A HREF="#ExamineMode">Examine Mode</A></LI>
@@ -106,7 +107,7 @@ ALINK="#FFFF80">
 <LI><A HREF="#Toolbar">Toolbar</A>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
-<LI><A HREF="#ErrorWindow">Error Window</A></LI>
+<LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -135,7 +136,13 @@ ALINK="#FFFF80">
 <LI><A HREF="#PrimitivesSubstitutionBox">Primitive Substitution Box</A></LI>
 <LI><A HREF="#PrimitivesMiscBox">Misc Box</A></LI>
 </UL></LI>
+<LI><A HREF="#UpdatesTab">Updates Tab</A>
+<UL>
+<LI><A HREF="#InternetProxyBox">Internet Proxy Box</A></LI>
+<LI><A HREF="#MissingPartsBox">Missing Parts Box</A></LI>
+</UL></LI>
 <LI><A HREF="#PreferenceSetsTab">Preference Sets Tab</A></LI>
+<LI><A HREF="#ScreenSaverTab">Screen Saver Tab</A></LI>
 </UL></LI>
 <LI><A HREF="#CommandLine">Command Line</A>
 <UL>
@@ -147,12 +154,11 @@ ALINK="#FFFF80">
 </UL></LI>
 <LI><A HREF="#Notes">Notes</A></LI>
 <LI><A HREF="#ScreenSaver">Using LDView as a Screen Saver</A></LI>
-<LI><A HREF="#Website">Website</A></LI>
-</UL>
-<BR>
-<P>
-<A NAME="Intro"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+			<LI><A HREF="#Website">Website</A></LI>
+		</UL>
+		<p></p>
+		<A NAME="Intro"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -161,7 +167,7 @@ ALINK="#FFFF80">
 		</TH>
 	</TR>
 </TABLE>
-<I>Please note</I>: this help file documents the Windows version of LDView, with
+		<I>Please note</I>: this help file documents the Windows version of LDView, with
 a few notes about the Linux/QT version.  For the most part, the Linux/QT version
 has the same functionality as the Windows version, and looks and acts the same.
 However, certain features (such as full screen support) are missing from the
@@ -191,6 +197,62 @@ Also note that if you open a large model, it could take a substantial amount of
 time to load.  During this time, the status bar will indicate the progress of
 the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
 from the File menu will cancel the load.
+</P>
+<P>
+</P>
+<A NAME="LDrawLibrary"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			LDraw Parts Library
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+LDView displays LDraw models, and LDraw models (almost always) make use of parts
+in the LDraw parts library. In order to display those models, LDView needs for
+the LDraw parts library to be present on your computer, and needs to know where
+on your computer the parts library is located.  (If you only want to use LDView
+to view models that have been created in the LDraw file format that do not make
+use of the LDraw parts library, please see the documentation for the
+<A HREF="#VerifyLDrawSetting">VerifyLDrawDir setting</A>.)
+<P>
+The first time you run LDView, it probably won't be able to find the LDraw parts
+library, even if the library is already present on your computer.  If this
+happens, LDView will ask you if the library has already been installed.  If you
+already have the LDraw parts library on your computer, answer Yes, and then show
+LDView where to find the library.
+</P>
+<P>
+If you don't already have the LDraw parts library on your computer, answer No,
+and you will be asked if you would like LDView to download the library for you.
+As long as you aren't using a proxy server for HTTP connections, you can answer
+Yes, and you will be asked where you want the library to be put.  After this,
+LDView will automatically download the latest version of the LDraw parts library
+from LDraw.org.  Once the library has been downloaded and installed, you can
+then view models.  Please note that the LDraw parts library is somewhat large
+(over 6MB at the time this was written), so it could take a while to download if
+you don't have a fast Internet connection.
+</P>
+<P>
+If you use a proxy server for HTTP connections, tell LDView not to download the
+LDraw parts library right now, and then go to the <A HREF="#UpdatesTab">Updates
+tab</A> in LDView's preferences and configure your proxy server settings.
+</P>
+<P>
+By default, if LDView encounters a request for a part that it cannot find, it
+will attempt to download the part from the LDraw.org parts tracker.  The parts
+tracker contains all the unofficial parts that have been submitted for
+inclusion in the official LDraw parts library that have either not yet been
+approved for inclusion, or have been approved, but not yet been included in an
+official release of
+the library.  Because unofficial parts can change in ways that aren't compatible
+with old models (for example, being rotated), LDView generates a warning any
+time it uses an unofficial file that it has downloaded.  Note that if the part
+subsequently gets added to the official library, the official version will
+automatically be used instead (once you update your parts library), and the
+warning will go away.
 </P>
 <P>
 </P>
@@ -253,7 +315,7 @@ faster the camera will turn.
 The camera can be moved using the keyboard.  At any time, you can hold down
 shift to double the speed at which you move.  The movement keys are as follows:
 </P>
-<TABLE>
+		<TABLE>
 	<TR>
 		<TH ALIGN="RIGHT">Movement Direction</TH>
 		<TH>&nbsp;</TH>
@@ -321,12 +383,9 @@ shift to double the speed at which you move.  The movement keys are as follows:
 		<TD ALIGN="CENTER">Q</TD>
 	</TR>
 </TABLE>
-<BR>
-<BR>
-<P>
-</P>
-<A NAME="Menus"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+		<p></p>
+		<A NAME="Menus"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -335,32 +394,34 @@ shift to double the speed at which you move.  The movement keys are as follows:
 		</TH>
 	</TR>
 </TABLE>
-The shortcut key for each menu item is given in parentheses.  Note that these
-keys will continue to function even while in fullscreen mode where there is no
-visible menu.
-<TABLE CELLSPACING=6>
+The shortcut key for each menu item is shown in the menu when running LDView.
+Note that these keys will continue to function even while in fullscreen mode
+where there is no visible menu.
+
+		
+		<TABLE CELLSPACING=6>
 	<TR>
 		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="FileMenu">File
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Open (Ctrl+O):</TD>
+		<TD ALIGN="RIGHT">Open:</TD>
 		<TD COLSPAN=2>Open a new model file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot (Ctrl+S):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot:</TD>
 		<TD COLSPAN=2>Save a PNG or BMP snapshot of the current model with the
 		current view.  See <A HREF="#SaveSnapshotOptions">here</A> for
 		information about the extra settings in the save dialog.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Reload (F5):</TD>
+		<TD ALIGN="RIGHT">Reload:</TD>
 		<TD COLSPAN=2>Reload the current model file.  (Use this if you are
 		viewing a model you are in the process of making changes to in some
 		other program, but don't want to use the polling feature below.)</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Cancel Load (Esc):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Cancel Load:</TD>
 		<TD COLSPAN=2>During a load, you can select this menu item to cancel
 		the load.  It is likely that you will generally just use the keyboard
 		accelerator, though, and hit the Escape key.</TD>
@@ -428,14 +489,12 @@ visible menu.
 		you can move directories in the box up and down to get them in the order
 		you want them to be in.</TD>
 	</TR>
-<!--
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Check for Library Updates:</TD>
 		<TD COLSPAN=2>Checks to see if there are any library updates on
-		ldraw.org that aren't yet installed, and downloads and installs them if
+		LDraw.org that aren't yet installed, and downloads and installs them if
 		any are found.</TD>
 	</TR>
--->
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Page Setup:</TD>
 		<TD COLSPAN=2>Setup the page for printing.  This shows the standard
@@ -444,7 +503,7 @@ visible menu.
 		printed (it isn't by default).</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Print (Ctrl+P):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Print:</TD>
 		<TD COLSPAN=2>Print the current model with the current view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -453,52 +512,54 @@ visible menu.
 		Select any one to load that file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Exit (Ctrl+Q):</TD>
+		<TD ALIGN="RIGHT">Exit:</TD>
 		<TD COLSPAN=2>Exit LDView.</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Preferences (Ctrl+Shift+P):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Preferences:</TD>
 		<TD COLSPAN=2>Display the <A HREF="#Prefs">Preferences</A> panel.</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="ViewMenu">View
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="ViewMenu">View
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Use Visual Style (requires restart):</TD>
+		<TD ALIGN="RIGHT">Use Visual Style (requires restart):</TD>
 		<TD COLSPAN=2>This menu is not visible when running LDView in operating
-		systems prior to Windows XP.  When present, it enables or disables the
-		use of Windows XP Visual Styles.  You must restart LDView for changes in
-		this option to be visible.</TD>
+		systems other than Windows, or in Windows versions prior to Windows XP.
+		When present, it enables or disables the use of Windows XP Visual
+		Styles.  You must restart LDView for changes in this option to become
+		visible.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Switch to Fullscreen (Ctrl+Enter):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Switch to Fullscreen:</TD>
 		<TD COLSPAN=2>Switches to the currently selected
 		<A HREF="#Fullscreen">fullscreen</A> video mode.
 		If you are already in fullscreen mode, Ctrl+Enter switches back to
 		windowed mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Errors (Ctrl+Shift+E):</TD>
-		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Error Window</A>.</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
+		Window</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Toolbar (Ctrl+Shift+T):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Toolbar:</TD>
 		<TD COLSPAN=2>Toggles the <A HREF="#Toolbar">toolbar</A> on and off.
 		Note that the toolbar is never visible in full-screen mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Status Bar (Ctrl+Shift+S):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Status Bar:</TD>
 		<TD COLSPAN=2>Toggles the permanent display of the status bar on and
 		off.  Note that the status bar will always display when there is load
 		progress to be indicated.  Also, except while displaying load progress,
@@ -512,15 +573,14 @@ visible menu.
 		acts just like a normal Windows program.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP><A NAME="ResetView">Reset View</A>
-		(Ctrl+R):</TD>
+		<TD ALIGN="RIGHT" NOWRAP><A NAME="ResetView">Reset View</A>:</TD>
 		<TD COLSPAN=2>Resets the model to the default view that is shown
 		immediately after the initial load.  Any viewing angle can be saved as
 		the default viewing angle using <A HREF="#SaveDefaultView">this</A>
 		menu item.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Zoom to Fit (Ctrl+F):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Zoom to Fit:</TD>
 		<TD COLSPAN=2>Zooms the model in to fill the current window.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -559,8 +619,8 @@ visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
-		<TD ALIGN="RIGHT">Isometric:</TD>
-		<TD>Sets the view to the model from an isometric angle.  This is the
+		<TD ALIGN="RIGHT">Two-thirds:</TD>
+		<TD>Sets the view to a two-thirds view of the model.  This is the
 		default view until you change it to something else.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -573,13 +633,13 @@ visible menu.
 		to the default view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Examine Mode (Ctrl+Shift+X):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Examine Mode:</TD>
 		<TD COLSPAN=2>Puts LDView in Examine Mode.  In examine mode, clicking
 		and dragging the left mouse button spins the model that is loaded.
 		This is the default mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Fly-through Mode (Ctrl+Shift+F):</TD>
+		<TD ALIGN="RIGHT" NOWRAP>Fly-through Mode:</TD>
 		<TD COLSPAN=2>Puts LDView in Fly-through Mode.  In fly-through mode,
 		clicking and dragging the left mouse button rotates the camera, and you
 		can use the W, A, S, D, Q, E, R, and F keys to move the camera.</TD>
@@ -592,6 +652,13 @@ visible menu.
 		LDView on the command line.  Note that the camera's position and viewing
 		angle aren't recorded at this time, so it's recommended that you
 		not try to use this in Fly-through Mode or after having panned.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
+		<TD COLSPAN=2>This shows a panel that contains information about the
+		current camera position as is needed in POV-Ray.  Hitting OK copies a
+		POV-Ray-compatible camera declaration into the clipboard.  This can be
+		directly pasted into a POV-Ray file to replace the existing camera.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>XX-Bit Modes:</TD>
@@ -607,7 +674,7 @@ visible menu.
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -618,7 +685,7 @@ visible menu.
 		copied to the clipboard by hitting Ctrl+C.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT">Contents (F1):</TD>
+		<TD ALIGN="RIGHT">Contents:</TD>
 		<TD COLSPAN=2>Displays this file in your web browser.  (Only works in
 		Windowed mode; hitting F1 from Fullscreen mode will not have any
 		effect.)</TD>
@@ -629,10 +696,9 @@ visible menu.
 		copyright information about LDView.</TD>
 	</TR>
 </TABLE>
-<BR>
-<P>
+		<p></p>
 <A NAME="Toolbar"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -641,6 +707,7 @@ visible menu.
 		</TH>
 	</TR>
 </TABLE>
+		
 The toolbar allows you to quickly access certain features and settings.  A
 number of the buttons on the toolbar are dual-purpose.  Clicking the button
 toggles a particular setting on and off, and clicking the arrow next to the
@@ -669,7 +736,8 @@ get an error panel after the screen resolution is changed.  After you dismiss
 the error panel, it should automatically switch back to windowed mode.  While
 in fullscreen mode you can spin the model around with the mouse, and zoom in
 and out the same way you did in windowed mode.
-<P>
+
+		<P>
 As long as your video card supports 2D Windows functionality while in fullscreen
 mode, the Open Panel and Preferences panel can be accessed from fullscreen mode
 via their keyboard shortcuts  (Ctrl+O for Open File; Ctrl+Shift+P for
@@ -679,11 +747,8 @@ reload also works--whether or not your video card supports 2D Windows
 funtionality from fullscreen mode--but unless you are displaying a file that
 someone else on your network is modifying, it's not likely to be very useful.
 </P>
-<BR>
-<P>
-</P>
-<A NAME="SaveSnapshotOptions"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+		<A NAME="SaveSnapshotOptions"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -751,7 +816,7 @@ possible.  (Most models will only fill the image in either the vertical
 direction or the horizontal direction, but not both.)  Note that the viewing
 angle is left the same, but the model may be panned so that it fits best.
 </P>
-<P>
+		<P>
 The reason this requires the <I>Save image with specific size</I>
 check box to be checked is that when you save with a different aspect ratio, it
 can effect the cropping of the model.  When creating a snapshot the same size
@@ -759,21 +824,18 @@ as the LDView window, you can position the model exactly like you want manually,
 and are free to use <I>Zoom to Fit</I> on the View menu prior to taking your
 snapshot to produce the same result.
 </P>
-<BR>
-<P>
-</P>
-<A NAME="ErrorWindow"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+		<A NAME="ErrorWindow"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
-			Error Window
+			Errors &amp; Warnings Window
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
-The error window displays errors and warnings that were encountered while
-loading an LDraw model.
+The Errors &amp; Warnings window displays errors and warnings that were
+encountered while loading an LDraw model.
 <P>
 On the left-hand side is a tree view which displays all of the errors. By
 default, there is one collapsed entry per error, with a brief description of the
@@ -884,19 +946,32 @@ The model contains back-face culling (BFC) information that is invalid.
 The model contains multi-part DAT (MPD) information that is invalid.
 </P>
 <P>
-If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
-preferences dialog, the error window will automatically be displayed when a
-model is loaded that contains errors or warnings that are set to be shown.  It
-will not be shown if the only errors or warnings in the model have been
-unchecked in the error window, the model only contains warnings and warnings are
-disabled, the model contains no errors or warnings, or the error window isn't
-set to show automatically.
+<I>Whitespace</I><BR>
+The model references a sub-model whose filename contains whitespace (spaces
+and/or tabs).  While this will work in some programs (including LDView), it
+won't work in others, and is discouraged.
 </P>
-<BR>
 <P>
+<I>Part renamed</I><BR>
+The model references a part that has been renamed to a new number (otherwise
+known as "moved to").
 </P>
-<A NAME="Prefs"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+<P>
+<I>Unofficial part used</I><BR>
+The model references a part that isn't present in the main LDraw directory, but
+was found by LDView on the LDraw.org Parts Tracker and automatically downloaded.
+</P>
+		<P>
+If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
+preferences dialog, the Errors &amp; Warnings window will automatically be
+displayed when a model is loaded that contains errors or warnings that are set
+to be shown.  It will not be shown if the only errors or warnings in the model
+have been unchecked in the Errors &amp; Warnings window, the model only contains
+warnings and warnings are disabled, the model contains no errors or warnings, or
+the Errors &amp; Warnings window isn't set to show automatically.
+</P>
+		<A NAME="Prefs"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -955,7 +1030,7 @@ custom colors in the color panel correspond to the first 16 standard LDraw
 colors.  Resetting the General preferences also resets these colors.
 </P>
 <P>
-<I>Trans</I> (Default: <I>Off</I>):<BR>
+<I>Transparent</I> (Default: <I>Off</I>):<BR>
 Enabling this option causes default-colored items to be transparent.
 </P>
 
@@ -965,7 +1040,7 @@ Enabling this option causes default-colored items to be transparent.
 This controls whether or not LDView processes the ldconfig.ldr file that is now
 distributed as part of the LDraw parts library.  This file contains settings
 that can effect how LDraw models are displayed.  Currently the only settings it
-contains are color definitions.  Enabling this option will use the ldraw.org
+contains are color definitions.  Enabling this option will use the LDraw.org
 standard color definitions; disabling it will use LDView's default color
 definitions.</P>
 <P>
@@ -978,9 +1053,9 @@ constant motion.  The easiest way to do this is to spin it (see
 <P>
 <A NAME="ShowErrors"><I>Show errors after loading</I></A> (Default:
 <I>On</I>):<BR>
-Enabling this option causes the <A HREF="#ErrorWindow">Error Window</A> to
-automatically be displayed after loading a model that contains any errors that
-have been selected for display in the error window.
+Enabling this option causes the <A HREF="#ErrorWindow">Errors &amp; Warnings
+window</A> to automatically be displayed after loading a model that contains any
+errors that have been selected for display in the Errors &amp; Warnings window.
 </P>
 <P>
 </P>
@@ -993,7 +1068,7 @@ rate will be used.<BR><BR>
 	<TR>
 		<TD VALIGN="TOP"><TABLE CELLSPACING=0 CELLPADDING=0
 		BGCOLOR="RED"><TR><TD><B> WARNING: </B></TD></TR></TABLE></TD>
-		<TD VALIGN="TOP">if you enter a value that is too high, and have told
+		<TD VALIGN="TOP">If you enter a value that is too high, and have told
 		Windows that you have a monitor which is capable of higher refresh than
 		what you actually have, you can damage your monitor.</TD>
 	</TR>
@@ -1398,7 +1473,84 @@ primitives before loading the standard ones.  The hi-res primitives are
 otherwise known as 48-sided primitives, because they approximate circular
 features with 48-sided features.  Since not all primitives have hi-res versions,
 enabling this can create gaps between the standard resolution primitives and
-the hi-res ones.<BR>
+the hi-res ones.
+</P>
+
+<P>
+<FONT SIZE="+2"><B><A NAME="UpdatesTab">Updates Tab</A></B></FONT><BR>
+</P>
+<P>
+<I>Reset</I>:<BR>
+This resets all the Updates preferences to their default values.  As with all
+other preference changes, you must hit OK or Apply for the reset values to go
+into effect.
+</P>
+
+<P>
+<FONT SIZE="+1"><B><A NAME="InternetProxyBox">Internet Proxy
+Box</A></B></FONT><BR>
+<I>Direct connection to the Internet</I> (Default?: <I>Yes</I>):<BR>
+Select this if you have a direct connection to the Internet and don't want to
+use a proxy server.</P>
+<P>
+<I>Use simple Windows proxy configuration</I> (Default?: <I>No</I>):<BR>
+Select this if you want to use the HTTP proxy setting that you configured in
+Internet Explorer.
+</P>
+<P>
+<I>Notes:</I>
+		<UL>
+<LI>This only works if you have a proxy server manually configured in Internet
+Explorer.  Automatic proxy configurations are not supported.</LI>
+<LI>As might be expected, this option is only available in the Windows version
+of LDView.</LI>
+</UL>
+		<I>Manual proxy configuration</I> (Default?: <I>No</I>):<BR>
+		Select this to manually configure your HTTP proxy server in the space provided
+below.
+		<P>
+<I>Proxy</I> (Default: <I>None</I>):<BR>
+Set this to the name or IP address of your HTTP proxy server.  This can only be
+entered if Manual proxy configuration is selected above.
+</P>
+		<P>
+<I>Port</I> (Default: <I>None</I>):<BR>
+Set this to the port of your HTTP proxy server.  This can only be entered if
+Manual proxy configuration is selected above.
+</P>
+
+<P>
+<FONT SIZE="+1"><B><A NAME="MissingPartsBox">Missing Parts
+Box</A></B></FONT><BR>
+<I>Automatically check LDraw.org for missing parts</I> (Default: <I>On</I>):<BR>
+Enabling this causes LDView to automatically check the LDraw.org Parts Tracker
+when it can't find a file.  If the part exists on the Parts Tracker, it will
+automatically be downloaded and used.
+</P>
+<P>
+		<TABLE>
+	<TR VALIGN="TOP">
+		<TD><I>Note:</I></TD>
+		<TD>If LDView fails to connect to the LDraw.org server while checking
+		for an unofficial part, it will automatically disable this setting.  You
+		have to manually re-enable it once you have a working Internet
+		connection again.</TD>
+	</TR>
+</TABLE>
+		<P>
+<I>Days between missing part checks</I> (Default: <I>7</I>):<BR>
+Set this to the number of days you want LDView to wait between checks to the
+LDraw.org Parts Tracker when a part cannot be found.  This delay is used when
+the part cannot be found on the Parts Tracker.  This number must be greater than
+zero.
+</P>
+		<P>
+<I>Days between updated part checks</I> (Default: <I>7</I>):<BR>
+Set this to the number of days you want LDView to wait between checks for
+updates to an unofficial part that it has successfully downloaded from the
+LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts
+Tracker, LDView will check for updates with the specified frequency when it
+encounters unofficial parts in a model.  This number must be greater than zero.
 </P>
 
 <P>
@@ -1439,11 +1591,72 @@ reloads the model.  During this pause the status bar will display progress.  If
 the status bar is not set to be visible, it will be made visible temporarily.
 </P>
 
-<BR>
 <P>
+<FONT SIZE="+2"><B><A NAME="ScreenSaverTab">Screen Saver Tab</A></B></FONT><BR>
 </P>
-<A NAME="CommandLine"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+<P>
+<B>Note:</B> This tab is only available when configuring the
+<A HREF="#ScreenSaver">LDView screen saver.</A>
+</P>
+<P>
+<I>File</I>:<BR>
+Select this to have the LDView Screen Saver always display a specific file.  Use
+the Browse button to the right to select the file.
+</P>
+<P>
+<I>Browse</I> (next to File):<BR>
+Use this to select the file that the LDView Screen Saver will display.
+</P>
+<P>
+<I>Directory</I>:<BR>
+Select this to have the LDView Screen Saver randomly select a model file from
+the specified directory each time it runs.  The file will be randomly selected
+from all the DAT, MPD, and LDR files in the directory.  Use the Browse button to
+the right to select the directory.
+</P>
+<P>
+<I>Browse</I> (next to Directory):<BR>
+Use this to select the directory that the LDView Screen Saver looks in for
+models.
+</P>
+<P>
+<I>Size</I>:<BR>
+Use this to control how large the model that is displayed by the LDView Screen
+Saver will be.
+</P>
+<P>
+<I>Speed</I>:<BR>
+Use this to control how fast the model that is displayed by the LDView Screen
+Saver moves.
+</P>
+<P>
+<I>Rotation Speed</I>:<BR>
+Use this to control how fast the model that is displayed by the LDView Screen
+Saver rotates.
+</P>
+<P>
+<I>Random Preference Set</I>:<BR>
+Causes the screen saver to randomly choose a preference set each time it runs.
+Since the file/directory choice is part of the preference set, this also allows
+you to have different models displayed with different settings.
+</P>
+<P>
+<I>Sleep Mode work-around</I>:<BR>
+This will only be enabled if it is supported by your operating system.  Check
+this if your system won't go into sleep mode when using the LDView Screen Saver,
+even though it is set to go into sleep mode.  It may solve the problem.<BR>
+Note that if you have a screen saver password set and use this, you will have a
+blank screen if you wake the computer up from sleep mode and then cancel the
+password prompt.
+</P>
+		<P>
+<I>Reset</I>:<BR>
+This resets all the Screen Saver preferences to their default values.  As with
+all other preference changes, you must hit OK or Apply for the reset values to
+go into effect.
+</P>
+		<A NAME="CommandLine"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -1762,6 +1975,51 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			CheckPartTracker
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Automatically check LDraw.org for missing
+			parts</I> check box in the <I>Updates-&gt;Missing Parts</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			CheckPartUpdateWait
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Days between updated part checks</I> field in
+			the <I>Updates-&gt;Missing Parts</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			CheckPartWait
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Days between missing part checks</I> field in
+			the <I>Updates-&gt;Missing Parts</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			ConditionalHighlights
 		</TD>
 		<TD VALIGN="TOP">
@@ -1944,10 +2202,10 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Sets the editor to use when you double click on the source file line
-			in the error window.  The program listed must either be in the path,
-			or the full path to the program must be given.  The default is
-			"notpad.exe".  Note that there is no way to set this value in the
-			LDView interface.
+			in the Errors &amp; Warnings window.  The program listed must either
+			be in the path, or the full path to the program must be given.  The
+			default is "notepad.exe".  Note that there is no way to set this
+			value in the LDView interface.
 		</TD>
 	</TR>
 	<TR>
@@ -2521,6 +2779,62 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<A NAME="ProxyPortSetting">ProxyPort</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Integer<BR>
+			(0-65535)
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Port</I> field in the <I>Updates-&gt;Internet
+			Proxy</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="ProxyServerSetting">ProxyServer</A>
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Proxy</I> field in the <I>Updates-&gt;Internet
+			Proxy</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ProxyType
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Direct connection to the Internet</I>, <I>Use
+			simple Windows proxy configuration</I>, and <I>Manual proxy
+			configuration</I> radio buttons in the <I>Updates-&gt;Internet
+			Proxy</I> box.  Selects the proxy type:<BR>
+			0: No proxy<BR>
+			1: Simple Windows proxy<BR>
+			2: Manual proxy<BR>
+			The Windows setting is only available in the Windows verion of
+			LDView.  If you set this to 2 (manual), you must also make sure that
+			the <A HREF="#ProxyServerSetting">ProxyServer</A> and
+			<A HREF="#ProxyPortSetting">ProxyPort</A> settings are set
+			correctly.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			RecentFiles/File01 -<BR>
 			RecentFiles/File99
 		</TD>
@@ -2813,8 +3127,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>General Error</I> check box in the Error
-			Window.
+			Equivalent to the <I>General Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2828,7 +3142,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Parse Error</I> check box in the Error Window.
+			Equivalent to the <I>Parse Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2842,8 +3157,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>File Not Found</I> check box in the Error
-			Window.
+			Equivalent to the <I>File Not Found</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2857,8 +3172,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Singular Matrix</I> check box in the Error
-			Window.
+			Equivalent to the <I>Singular Matrix</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2873,7 +3188,7 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Part transformed non-uniformly</I> check box in
-			the Error Window.
+			the Errors &amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2887,8 +3202,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Non-flat quad</I> check box in the Error
-			Window.
+			Equivalent to the <I>Non-flat quad</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2902,7 +3217,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Concave quad</I> check box in the Error Window.
+			Equivalent to the <I>Concave quad</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2916,8 +3232,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Bad vertex sequence</I> check box in the Error
-			Window.
+			Equivalent to the <I>Bad vertex sequence</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2931,8 +3247,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Identical vertices</I> check box in the Error
-			Window.
+			Equivalent to the <I>Identical vertices</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2946,8 +3262,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Co-linear points</I> check box in the Error
-			Window.
+			Equivalent to the <I>Co-linear points</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2961,7 +3277,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>BFC Warning</I> check box in the Error Window.
+			Equivalent to the <I>BFC Warning</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2975,7 +3292,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>BFC Error</I> check box in the Error Window.
+			Equivalent to the <I>BFC Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -2989,8 +3307,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>MPD Error</I> check box in the Error
-			Window.
+			Equivalent to the <I>MPD Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3004,7 +3322,38 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Whitespace</I> check box in the Error Window.
+			Equivalent to the <I>Whitespace</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError14
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Part renamed</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError15
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Unofficial part used</I> check box in the
+			Errors &amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3047,7 +3396,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Include Warnings</I> check box Error Window.
+			Equivalent to the <I>Include Warnings</I> check box Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3318,7 +3668,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			VerifyLDrawDir
+			<A NAME="VerifyLDrawSetting">VerifyLDrawDir</A>
 		</TD>
 		<TD VALIGN="TOP">
 			Boolean
@@ -3498,7 +3848,7 @@ set-specific, while others aren't.
 		</TH>
 	</TR>
 </TABLE>
-<TABLE>
+		<TABLE>
 <TR>
 <TD ALIGN="RIGHT" VALIGN="TOP">1.</TD>
 <TD>
@@ -3659,8 +4009,8 @@ a virtual globe around the model.  It is specified like so:
 <TT>-DefaultLatLong=latitude,longitude</TT>
 </P>
 <P>
-You can produce LDView's standard isometric viewing angle by using the following
-setting:
+You can produce LDView's standard two-thirds viewing angle by using the
+following setting:
 </P>
 <P>
 <TT>-DefaultLatLong=30,45</TT>
@@ -3674,10 +4024,9 @@ difference, use the <A HREF="#CameraGlobe">-cg</A> option.
 </P>
 </TR>
 </TABLE>
-<BR>
-<P>
+		<P>
 </P>
-<A NAME="ScreenSaver"></A>
+		<A NAME="ScreenSaver"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
@@ -3687,13 +4036,15 @@ difference, use the <A HREF="#CameraGlobe">-cg</A> option.
 		</TH>
 	</TR>
 </TABLE>
-When you install LDView, you are presented with an option near the end to
-install it as a screen saver.  If you select this option, you can use LDView
-as a screen saver.  Simply select it from the list of available screen savers,
-and then configure it as desired.  When using LDView as a screen saver, you can
-set most of the settings that are available in standard LDView, and you can
-additionally set screen saver-specific settings.
-<P>
+When you use the Windows Installer to install LDView, you are presented with an
+option near the end to install it as a screen saver.  If you select this option,
+you can use LDView as a screen saver.  Simply select it from the list of
+available screen savers, and then configure it as desired.  When using LDView as
+a screen saver, you can set most of the settings that are available in standard
+LDView, and you can additionally set screen saver-specific settings.  At the
+moment, Screen Saver mode is only supported in Windows.
+
+		<P>
 If you don't use the install program to install LDView, or you don't check the
 option to install it as a screen saver and later change your mind, you can
 manually install it as a screen saver.  Simply copy LDView.exe into your
@@ -3707,11 +4058,8 @@ run the LDView install program, and make sure to check the option to have the
 screen saver module installed.  You can re-install LDView over itself without
 any problems, so you don't have to uninstall first.
 </P>
-<BR>
-<P>
-</P>
-<A NAME="Website"></A>
-<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+		<A NAME="Website"></A>
+		<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
@@ -3729,7 +4077,7 @@ If you have any comments, questions, or suggestions, please e-mail me at
 <A NAME="EMail" HREF=
 "mailto:ldview@gmail.com">ldview@gmail.com</A>.
 <P>
-LDView is Copyright &copy; 2000-2005 Travis Cobbs and Peter Bartfai.
+LDView is Copyright &copy; 2000-2006 Travis Cobbs and Peter Bartfai.
 </P>
 <P>
 <FONT SIZE=-1>
