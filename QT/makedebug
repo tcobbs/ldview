@@ -1,3 +1,5 @@
 #! /bin/sh
 
+sed "s/warn_on release/warn_on debug/" LDView.pro > LDView.debug.pro
+mv LDView.debug.pro LDView.pro
 make -f LDView.mak debug
