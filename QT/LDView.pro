@@ -63,7 +63,7 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/error_non_flat_quad.png images/error_opengl.png \
 		  images/error_parse.png images/error_vertex_order.png
 TEMPLATE	=app
-CONFIG	+= qt opengl warn_on release
+CONFIG	+= qt opengl thread warn_on release
 DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include
 exists($(QTDIR)/include/Qt3Support/q3button.h){
