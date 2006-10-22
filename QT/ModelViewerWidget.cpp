@@ -1114,7 +1114,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 			0, -1, 0);
 		// Remove the (empty without Preferences) edit menu.
 		menuBar->removeItem(menuBar->idAt(1));
-#endif __APPLE__
+#endif //__APPLE__
 	}
 	item = menuBar->findItem(menuBar->idAt(2));
 	if (item)
@@ -3153,9 +3153,9 @@ void ModelViewerWidget::userDefaultChangedAlertCallback(TCAlert *alert)
 	}
 }
 
-#ifdef __APPLE__
 void ModelViewerWidget::doPreferences(void)
 {
+#ifdef __APPLE__
 	showPreferences();
-}
 #endif // __APPLE__
+}
