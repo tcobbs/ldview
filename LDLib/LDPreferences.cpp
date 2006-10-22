@@ -50,17 +50,25 @@ void LDPreferences::dealloc(void)
 	TCObject::dealloc();
 }
 
-void LDPreferences::getRGB(int color, int &r, int &g, int &b)
+int LDPreferences::getColor(int r, int g, int b)
 {
-	r = color & 0xFF;
-	g = (color >> 8) & 0xFF;
-	b = (color >> 16) & 0xFF;
+	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
 }
 
-TCULong LDPreferences::getColorSetting(const char *key, TCULong defaultColor)
+void LDPreferences::getRGB(int color, int &r, int &g, int &b)
 {
-	return (TCULong)htonl(getLongSetting(key,
-		(htonl(defaultColor) >> 8)) << 8);
+	// Colors are stored in RGB format.
+	r = (color >> 16) & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = color & 0xFF;
+}
+
+void LDPreferences::getColorSetting(const char *key, int &r, int &g, int &b,
+	TCULong defaultColor)
+{
+	long value = getLongSetting(key, defaultColor);
+
+	getRGB(value, r, g, b);
 }
 
 void LDPreferences::applySettings(void)
@@ -263,8 +271,8 @@ void LDPreferences::loadDefaultGeneralSettings(void)
 
 	setFsaaMode(0);
 	setLineSmoothing(false);
-	setBackgroundColor(0);
-	setDefaultColor(0x999999);
+	setBackgroundColor(0, 0, 0);
+	setDefaultColor(0x99, 0x99, 0x99);
 	setTransDefaultColor(false);
 	setProcessLdConfig(true);
 	setShowFps(false);
@@ -277,8 +285,7 @@ void LDPreferences::loadDefaultGeneralSettings(void)
 		int r, g, b, a;
 
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
-		setCustomColor(i, htonl(LDLPalette::colorForRGBA(r, g, b, a)) &
-			0xFFFFFF);
+		setCustomColor(i, r, g, b);
 	}
 }
 
@@ -349,9 +356,9 @@ void LDPreferences::loadGeneralSettings(void)
 	loadDefaultGeneralSettings();
 	m_fsaaMode = getIntSetting(FSAA_MODE_KEY, m_fsaaMode);
 	m_lineSmoothing = getBoolSetting(LINE_SMOOTHING_KEY, m_lineSmoothing);
-	m_backgroundColor = getColorSetting(BACKGROUND_COLOR_KEY,
+	m_backgroundColor = getLongSetting(BACKGROUND_COLOR_KEY,
 		m_backgroundColor);
-	m_defaultColor = getColorSetting(DEFAULT_COLOR_KEY, m_defaultColor);
+	m_defaultColor = getLongSetting(DEFAULT_COLOR_KEY, m_defaultColor);
 	m_transDefaultColor = getBoolSetting(TRANS_DEFAULT_COLOR_KEY,
 		m_transDefaultColor);
 	m_defaultColorNumber = getIntSetting(DEFAULT_COLOR_NUMBER_KEY,
@@ -488,15 +495,19 @@ void LDPreferences::commitSettings(void)
 void LDPreferences::commitGeneralSettings(void)
 {
 	int i;
+	int r, g, b;
 
 	setFsaaMode(m_fsaaMode, true);
 	setLineSmoothing(m_lineSmoothing, true);
-	setBackgroundColor(m_backgroundColor, true);
-	setDefaultColor(m_defaultColor, true);
+	getRGB(m_backgroundColor, r, g, b);
+	setBackgroundColor(r, g, b, true);
+	getRGB(m_defaultColor, r, g, b);
+	setDefaultColor(r, g, b, true);
 	setTransDefaultColor(m_transDefaultColor, true);
 	for (i = 0; i < 16; i++)
 	{
-		setCustomColor(i, m_customColors[i], true);
+		getRGB(m_customColors[i], r, g, b);
+		setCustomColor(i, r, g, b, true);
 	}
 	setProcessLdConfig(m_processLdConfig, true);
 	setShowFps(m_showFps, true);
@@ -698,16 +709,16 @@ void LDPreferences::setupModelSize(void)
 	}
 }
 
-void LDPreferences::setColorSetting(TCULong &setting, TCULong value,
+void LDPreferences::setColorSetting(TCULong &setting, int r, int g, int b,
 									 const char *key, bool commit)
 {
+	TCULong value = getColor(r, g, b);
 	if (setting != value || (changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
-			TCUserDefaults::setLongForKey((htonl(value) >> 8), key,
-				!globalSettings[key]);
+			TCUserDefaults::setLongForKey(setting, key, !globalSettings[key]);
 			changedSettings.erase(key);
 		}
 		else
@@ -858,14 +869,14 @@ void LDPreferences::setLineSmoothing(bool value, bool commit)
 	setSetting(m_lineSmoothing, value, LINE_SMOOTHING_KEY, commit);
 }
 
-void LDPreferences::setBackgroundColor(TCULong value, bool commit)
+void LDPreferences::setBackgroundColor(int r, int g, int b, bool commit)
 {
-	setColorSetting(m_backgroundColor, value, BACKGROUND_COLOR_KEY, commit);
+	setColorSetting(m_backgroundColor, r, g, b, BACKGROUND_COLOR_KEY, commit);
 }
 
-void LDPreferences::setDefaultColor(TCULong value, bool commit)
+void LDPreferences::setDefaultColor(int r, int g, int b, bool commit)
 {
-	setColorSetting(m_defaultColor, value, DEFAULT_COLOR_KEY, commit);
+	setColorSetting(m_defaultColor, r, g, b, DEFAULT_COLOR_KEY, commit);
 }
 
 void LDPreferences::setTransDefaultColor(bool value, bool commit)
@@ -903,12 +914,12 @@ void LDPreferences::setMemoryUsage(int value, bool commit)
 	setSetting(m_memoryUsage, value, MEMORY_USAGE_KEY, commit);
 }
 
-void LDPreferences::setCustomColor(int index, TCULong value, bool commit)
+void LDPreferences::setCustomColor(int index, int r, int g, int b, bool commit)
 {
 	char key[128];
 
 	sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, index);
-	setSetting(m_customColors[index], value, key, commit);
+	setColorSetting(m_customColors[index], r, g, b, key, commit);
 }
 
 // Geometry settings
@@ -1319,4 +1330,19 @@ void LDPreferences::resetDefaultView(void)
 	{
 		modelViewer->setDefaultRotationMatrix(NULL);
 	}
+}
+
+void LDPreferences::getBackgroundColor(int &r, int &g, int &b)
+{
+	getRGB(m_backgroundColor, r, g, b);
+}
+
+void LDPreferences::getDefaultColor(int &r, int &g, int &b)
+{
+	getRGB(m_defaultColor, r, g, b);
+}
+
+void LDPreferences::getCustomColor(int index, int &r, int &g, int &b)
+{
+	getRGB(m_customColors[index], r, g, b);
 }
