@@ -328,6 +328,10 @@ SOURCE=.\TCSortedStringArray.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCStlIncludes.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCStringArray.h
 # End Source File
 # Begin Source File
