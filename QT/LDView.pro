@@ -83,9 +83,13 @@ TRANSLATIONS   =  	ldview_en.ts \
 VERSION = 3.1
 macx {
 	RC_FILE = images/LDView.icns
+	helpfile.target = LDView.app/Contents/MacOS/Help.html
+	helpfile.commands = cp ../Help.html LDView.app/Contents/MacOS
+	helpfile.depends = ../Help.html
 	messagefile.target = LDView.app/Contents/MacOS/LDViewMessages.ini
 	messagefile.commands = cp ../LDViewMessages.ini LDView.app/Contents/MacOS
 	messagefile.depends = ../LDViewMessages.ini
-	QMAKE_EXTRA_UNIX_TARGETS += messagefile
-	POST_TARGETDEPS += LDView.app/Contents/MacOS/LDViewMessages.ini
+	QMAKE_EXTRA_UNIX_TARGETS += helpfile messagefile
+	POST_TARGETDEPS += LDView.app/Contents/MacOS/LDViewMessages.ini \
+		LDView.app/Contents/MacOS/Help.html
 }
