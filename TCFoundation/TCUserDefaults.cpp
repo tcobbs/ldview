@@ -12,9 +12,12 @@
 TCUserDefaults* TCUserDefaults::currentUserDefaults = NULL;
 
 TCUserDefaults::TCUserDefaultsCleanup TCUserDefaults::userDefaultsCleanup;
+char *TCUserDefaults::argv0 = NULL;
 
 TCUserDefaults::TCUserDefaultsCleanup::~TCUserDefaultsCleanup(void)
 {
+	delete argv0;
+	argv0 = NULL;
 	if (currentUserDefaults)
 	{
 		currentUserDefaults->release();
@@ -128,6 +131,8 @@ void TCUserDefaults::setCommandLine(char *argv[])
 	TCStringArray *argArray = new TCStringArray;
 	int i;
 
+	delete argv0;
+	argv0 = copyString(argv[0]);
 	for (i = 0; argv[i]; i++)
 	{
 		if (i > 0)

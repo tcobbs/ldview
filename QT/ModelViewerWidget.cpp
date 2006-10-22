@@ -1474,15 +1474,12 @@ void ModelViewerWidget::doHelpContents(void)
 	}
 	if(!helpContents)
 	{
-		QString dir = QDir::currentDirPath();
-        QFile file( "Help.html" );
-		if (!file.exists()) QDir::setCurrent("..");
-		if (!file.exists()) QDir::setCurrent("/usr/local/share/ldview");
-		if (!file.exists()) 
+		QString helpFilename = findPackageFile("Help.html");
+		QFile file(helpFilename);
+		if (!file.exists())
 		{
-			QDir::setCurrent(dir);
 			return;
-		}	
+		}
 		helpContents = new HelpPanel;
         if ( file.open( IO_ReadOnly ) ) {
             QTextStream stream( &file );
@@ -1491,7 +1488,6 @@ void ModelViewerWidget::doHelpContents(void)
 												"i=") );
 		    helpContents->HelpTextBrowser->setReadOnly(TRUE);
         }
-		QDir::setCurrent(dir);
 	}
 	helpContents->show();
 }
@@ -3156,4 +3152,43 @@ void ModelViewerWidget::userDefaultChangedAlertCallback(TCAlert *alert)
 void ModelViewerWidget::doPreferences(void)
 {
 	showPreferences();
+}
+
+QString ModelViewerWidget::findPackageFile(const QString &filename)
+{
+	QString dir = QDir::currentDirPath();
+	QFile file(filename);
+	QString retValue;
+
+	if (!file.exists())
+		QDir::setCurrent("..");
+	if (!file.exists())
+		QDir::setCurrent("/usr/local/share/ldview");
+	if (!file.exists())
+		QDir::setCurrent("/usr/local/etc");
+	if (!file.exists())
+		QDir::setCurrent("/usr/local/lib");
+	if (!file.exists()) 
+	{
+		const char *argv0 = TCUserDefaults::getArgv0();
+
+		QDir::setCurrent(dir);
+		if (argv0)
+		{
+			char *path = copyString(argv0, filename.length() + 5);
+
+			if (strrchr(path, '/'))
+			{
+				*strrchr(path, '/') = 0;
+			}
+			QDir::setCurrent(path);
+		}
+	}
+	if (file.exists())
+	{
+		QString newDir = QDir::currentDirPath();
+		retValue = newDir + "/" + file.name();
+	}
+	QDir::setCurrent(dir);
+	return retValue;
 }

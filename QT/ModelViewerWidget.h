@@ -135,6 +135,7 @@ public:
 	void doLibraryUpdateFinished(int finishType);
 	void checkForLibraryUpdates(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
+	static QString findPackageFile(const QString &filename);
 
 protected slots:
 	virtual void doAboutOK(void);
