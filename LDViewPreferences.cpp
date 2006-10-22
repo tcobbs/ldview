@@ -345,7 +345,18 @@ bool LDViewPreferences::getTextureStuds(void)
 
 COLORREF LDViewPreferences::getBackgroundColor(void)
 {
-	return (COLORREF)ldPrefs->getBackgroundColor();
+	int r, g, b;
+
+	ldPrefs->getBackgroundColor(r, g, b);
+	return RGB((BYTE)r, (BYTE)g, (BYTE)b);
+}
+
+COLORREF LDViewPreferences::getDefaultColor(void)
+{
+	int r, g, b;
+
+	ldPrefs->getDefaultColor(r, g, b);
+	return RGB((BYTE)r, (BYTE)g, (BYTE)b);
 }
 
 void LDViewPreferences::setDrawConditionalHighlights(bool value)
@@ -901,14 +912,14 @@ void LDViewPreferences::setupBackgroundColorButton(void)
 {
 	setupColorButton(hGeneralPage, hBackgroundColorButton,
 		IDC_BACKGROUND_COLOR, hBackgroundColorBitmap,
-		(COLORREF)ldPrefs->getBackgroundColor());
+		getBackgroundColor());
 }
 
 void LDViewPreferences::setupDefaultColorButton(void)
 {
 	setupColorButton(hGeneralPage, hDefaultColorButton,
 		IDC_DEFAULT_COLOR, hDefaultColorBitmap,
-		(COLORREF)ldPrefs->getDefaultColor());
+		getDefaultColor());
 }
 
 LRESULT CALLBACK LDViewPreferences::staticGroupCheckButtonProc(HWND hWnd,
@@ -1518,19 +1529,27 @@ void LDViewPreferences::getRGB(int color, int &r, int &g, int &b)
 
 void LDViewPreferences::chooseBackgroundColor(void)
 {
-	COLORREF backgroundColor = (COLORREF)ldPrefs->getBackgroundColor();
+	COLORREF backgroundColor = getBackgroundColor();
+	int r, g, b;
 
 	chooseColor(hBackgroundColorButton, hBackgroundColorBitmap,
 		backgroundColor);
-	ldPrefs->setBackgroundColor((TCULong)backgroundColor);
+	r = GetRValue(backgroundColor);
+	g = GetGValue(backgroundColor);
+	b = GetBValue(backgroundColor);
+	ldPrefs->setBackgroundColor(r, g, b);
 }
 
 void LDViewPreferences::chooseDefaultColor(void)
 {
-	COLORREF defaultColor = (COLORREF)ldPrefs->getDefaultColor();
+	COLORREF defaultColor = getDefaultColor();
+	int r, g, b;
 
 	chooseColor(hDefaultColorButton, hDefaultColorBitmap, defaultColor);
-	ldPrefs->setDefaultColor((TCULong)defaultColor);
+	r = GetRValue(defaultColor);
+	g = GetGValue(defaultColor);
+	b = GetBValue(defaultColor);
+	ldPrefs->setDefaultColor(r, g, b);
 }
 
 void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
@@ -1539,10 +1558,12 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 	CHOOSECOLOR chooseColor;
 	int i;
 	COLORREF customColors[16];
+	int r, g, b;
 
 	for (i = 0; i < 16; i++)
 	{
-		customColors[i] = (COLORREF)ldPrefs->getCustomColor(i);
+		ldPrefs->getCustomColor(i, r, g, b);
+		customColors[i] = RGB(r, g, b);
 	}
 	memset(&chooseColor, 0, sizeof CHOOSECOLOR);
 	chooseColor.lStructSize = sizeof CHOOSECOLOR;
@@ -1558,7 +1579,10 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 	}
 	for (i = 0; i < 16; i++)
 	{
-		ldPrefs->setCustomColor(i, customColors[i]);
+		r = GetRValue(customColors[i]);
+		g = GetGValue(customColors[i]);
+		b = GetBValue(customColors[i]);
+		ldPrefs->setCustomColor(i, r, g, b);
 	}
 	EnableWindow(hPropSheet, TRUE);
 }
