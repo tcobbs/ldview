@@ -24,11 +24,6 @@ void setupDefaultFormat(void)
 	QGLFormat::setDefaultFormat(defaultFormat);
 }
 
-bool load(QString file)
-{
-	return TCLocalStrings::loadStringTable(file.ascii());
-}
-
 int main(int argc, char *argv[])
 {
 	const char *loc = QTextCodec::locale();
@@ -36,52 +31,21 @@ int main(int argc, char *argv[])
 	locale[0]=locale[1]=locale[2]=0;
 	strncpy(locale,loc,3);
 	locale[2]=0;
-
-	if (load(QString("LDViewMessages_")+QString(locale) + ".ini")) {}
-	else if (load(QString("/usr/local/share/ldview/LDViewMessages_") +QString(locale) + ".ini")) {}
-	else if (TCLocalStrings::loadStringTable("LDViewMessages.ini"))
-	{
-//		printf("Using LDViewMessages.ini\n");
-	}
-	else if (TCLocalStrings::loadStringTable("../LDViewMessages.ini"))
-	{
-//		printf("Using ../LDViewMessages.ini\n");
-	}
-	else if (TCLocalStrings::loadStringTable("/usr/local/etc/LDViewMessages.ini"))
-	{
-//		printf("Using /usr/local/etc/LDViewMessages.ini\n");
-	}
-	else if (TCLocalStrings::loadStringTable("/usr/local/lib/LDViewMessages.ini"))
-	{
-//      printf("Using /usr/local/lib/LDViewMessages.ini\n");
-    }
-	else if (TCLocalStrings::loadStringTable("/usr/local/share/ldview/LDViewMessages.ini"))
-	{
-//		printf("Using /usr/local/share/ldview/LDViewMessages.ini\n");
-	}
-	else
-	{
-		// The 64 at the end is padding, so that we can add onto it.
-		char *path = copyString(argv[0], 64);
-
-		if (strrchr(path, '/'))
-		{
-			*strrchr(path, '/') = 0;
-		}
-		strcat(path, "/LDViewMessages.ini");
-		if (TCLocalStrings::loadStringTable(path))
-		{
-//			printf("Using %s\n", path);
-		}
-		else
-		{
-			printf("Could not find LDViewMessages.ini file.\nPlease copy this "
-				"file to /usr/local/etc directory.\n");
-			exit(0);
-		}
-		delete path;
-	}
+	QString filename;
+	
 	TCUserDefaults::setCommandLine(argv);
+	filename = ModelViewerWidget::findPackageFile(
+		QString("LDViewMessages_")+QString(locale) + ".ini");
+	if (!filename.length())
+	{
+		filename = ModelViewerWidget::findPackageFile("LDViewMessages.ini");
+	}
+	if (!TCLocalStrings::loadStringTable(filename))
+	{
+		printf("Could not find LDViewMessages.ini file.\nPlease copy this "
+			"file to /usr/local/etc directory.\n");
+		exit(0);
+	}
 	TCUserDefaults::setAppName("LDView");
 	char *sessionName =
         TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
