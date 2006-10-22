@@ -144,9 +144,7 @@ protected slots:
 	virtual void doViewMenuAboutToShow(void);
 	virtual void doHelpMenuAboutToShow(void);
 	virtual void doLibraryUpdateCanceled(void);
-#ifdef __APPLE__
 	virtual void doPreferences(void);
-#endif // __APPLE__
 
 protected:
 	// GL Widget overrides
