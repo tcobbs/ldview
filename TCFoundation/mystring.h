@@ -36,8 +36,12 @@ prefix);
 TCExport bool stringHasSuffix(const char* string, const char* suffix);
 TCExport bool stringHasCaseInsensitiveSuffix(const char* string, const char* 
 suffix);
-TCExport void convertStringToUpper(char*);
-TCExport void convertStringToLower(char*);
+TCExport char* convertStringToUpper(char*);
+TCExport char* convertStringToLower(char*);
+
+TCExport char* filenameFromPath(const char*);
+TCExport char* directoryFromPath(const char*);
+
 TCExport void stripCRLF(char*);
 TCExport void stripTrailingWhitespace(char*);
 TCExport void stripLeadingWhitespace(char*);
