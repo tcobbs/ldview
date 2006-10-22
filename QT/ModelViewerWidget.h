@@ -144,6 +144,9 @@ protected slots:
 	virtual void doViewMenuAboutToShow(void);
 	virtual void doHelpMenuAboutToShow(void);
 	virtual void doLibraryUpdateCanceled(void);
+#ifdef __APPLE__
+	virtual void doPreferences(void);
+#endif // __APPLE__
 
 protected:
 	// GL Widget overrides
@@ -273,6 +276,9 @@ protected:
     int saveDigits;
 	int saveImageType;
 	int fullscreen;
+#ifdef __APPLE__
+	QPopupMenu *openRecentMenu;
+#endif // __APPLE__
 	AlertHandler *alertHandler;
 	LDLibraryUpdater *libraryUpdater;
 	bool libraryUpdateFinished;
