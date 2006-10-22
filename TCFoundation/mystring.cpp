@@ -292,7 +292,7 @@ bool stringHasSuffix(const char* string, const char* suffix)
 	return i == len2;
 }
 
-void convertStringToUpper(char* string)
+char* convertStringToUpper(char* string)
 {
 	int length = strlen(string);
 	int i;
@@ -301,9 +301,10 @@ void convertStringToUpper(char* string)
 	{
 		string[i] = (char)toupper(string[i]);
 	}
+	return string;
 }
 
-void convertStringToLower(char* string)
+char* convertStringToLower(char* string)
 {
 	int length = strlen(string);
 	int i;
@@ -311,6 +312,69 @@ void convertStringToLower(char* string)
 	for (i = 0; i < length; i++)
 	{
 		string[i] = (char)tolower(string[i]);
+	}
+	return string;
+}
+
+char* directoryFromPath(const char* path)
+{
+	if (path)
+	{
+		const char* slashSpot = strrchr(path, '/');
+#ifdef WIN32
+		const char* backslashSpot = strrchr(path, '\\');
+
+		if (backslashSpot > slashSpot)
+		{
+			slashSpot = backslashSpot;
+		}
+#endif // WIN32
+		if (slashSpot)
+		{
+			int length = slashSpot - path;
+			char* directory = new char[length + 1];
+
+			strncpy(directory, path, length);
+			directory[length] = 0;
+			return directory;
+		}
+		else
+		{
+			return copyString("");
+		}
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+char* filenameFromPath(const char* path)
+{
+	if (path)
+	{
+		const char* slashSpot = strrchr(path, '/');
+#ifdef WIN32
+		const char* backslashSpot = strrchr(path, '\\');
+
+		if (backslashSpot > slashSpot)
+		{
+			slashSpot = backslashSpot;
+		}
+#endif // WIN32
+		if (slashSpot)
+		{
+			slashSpot++;
+			return copyString(slashSpot);
+		}
+		else
+		{
+			return copyString(path);
+		}
+	}
+	else
+	{
+		return NULL;
 	}
 }
 
