@@ -68,7 +68,7 @@ public:
 	void doDefaultColor();
 	bool getAllowPrimitiveSubstitution(void);
 	void getRGB(int color, int &r, int &g, int &b);
-	int getBackgroundColor(void);
+	void getBackgroundColor(int &r, int &g, int &b);
 	bool getShowErrors(void);
 
 	void setShowError(int errorNumber, bool value);

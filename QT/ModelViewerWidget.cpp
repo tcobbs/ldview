@@ -114,6 +114,9 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	fileInfo(NULL),
 	lockCount(0),
 	fullscreen(0),
+#ifdef __APPLE__
+	openRecentMenu(NULL),
+#endif // __APPLE__
 	alertHandler(new AlertHandler(this)),
 	libraryUpdater(NULL),
 	libraryUpdateProgressReady(false),
@@ -372,7 +375,7 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 	{
 		int r, g, b;
 
-		preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
+		preferences->getBackgroundColor(r, g, b);
 #if QT_VERSION < 0x40000
 		QPainter painter(this);
 		painter.fillRect(event->rect(), QColor(r, g, b));
@@ -444,7 +447,7 @@ void ModelViewerWidget::doFilePrint(void)
 			y, x;
 		printf("%ix%i %ix%i DPI\n",pwidth,pheight,dpix,dpiy);
 		int r, g, b;
-        preferences->getRGB(preferences->getBackgroundColor(), r, g, b);
+        preferences->getBackgroundColor(r, g, b);
 		modelViewer->setBackgroundRGB(255,255,255);
 		if (dpix != dpiy)
 			modelViewer->setPixelAspectRatio((float)dpix / dpiy);
@@ -1007,10 +1010,11 @@ void ModelViewerWidget::connectMenuShows(void)
 void ModelViewerWidget::setMainWindow(LDView *value)
 {
 	QMenuItem *item;
-	int i;
 	QAction *pollAction;
 	int width, height;
 //	QSize windowSize;
+	int i;
+	int cnt;
 
 	lock();
 	mainWindow = value;
@@ -1070,7 +1074,6 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		fileCancelLoadId = fileMenu->idAt(8);
 		fileReloadId = fileMenu->idAt(1);
 	}
-	int cnt;
 	for ( cnt = i = 0; ; i++)
 	{
 		item = fileMenu->findItem(fileMenu->idAt(i));
@@ -1081,6 +1084,12 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		}
 	}
 	fileSeparatorIndex = i;
+#ifdef __APPLE__
+	fileMenu->removeItemAt(fileSeparatorIndex);
+	fileSeparatorIndex = -1;
+	openRecentMenu = new QPopupMenu(this, "openRecentMenu");
+	fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
+#endif // __APPLE__
 	if (!recentFiles)
 	{
 		recentFiles = new TCStringArray(10);
@@ -1091,6 +1100,21 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	if (item)
 	{
 		editMenu = mainWindow->editMenu;
+#ifdef __APPLE__
+		// Since Preferences is the only item in the edit menu, we need to
+		// delete the edit menu on the Mac, since the item is going to get
+		// magically moved to the LDView menu.  The problem is, if we delete
+		// the edit menu, the magic stops working, since it's apparently all
+		// done on the fly.  So, we're going to create a new fully-functional
+		// Preferences menu item at the top of the File menu, and THEN delete
+		// the edit menu.  This newly created menu item won't be visible to the
+		// user, but it will make the other one continue to function after the
+		// deletion of the edit menu.
+		fileMenu->insertItem("Preferences", this, SLOT(doPreferences()),
+			0, -1, 0);
+		// Remove the (empty without Preferences) edit menu.
+		menuBar->removeItem(menuBar->idAt(1));
+#endif __APPLE__
 	}
 	item = menuBar->findItem(menuBar->idAt(2));
 	if (item)
@@ -1145,6 +1169,12 @@ void ModelViewerWidget::recordRecentFiles(void)
 
 void ModelViewerWidget::clearRecentFileMenuItems(void)
 {
+#ifdef __APPLE__
+	if (openRecentMenu)
+	{
+		openRecentMenu->clear();
+	}
+#else // __APPLE__
 	QMenuItem *item;
 	int index = fileSeparatorIndex + 1;
 	int i;
@@ -1155,6 +1185,7 @@ void ModelViewerWidget::clearRecentFileMenuItems(void)
 		item = fileMenu->findItem(fileMenu->idAt(index));
 		fileMenu->removeItemAt(index);
 	}
+#endif // __APPLE__
 }
 
 char *ModelViewerWidget::truncateFilename(const char *filename)
@@ -1185,8 +1216,14 @@ char *ModelViewerWidget::truncateFilename(const char *filename)
 
 void ModelViewerWidget::populateRecentFileMenuItems(void)
 {
+#ifdef __APPLE__
+	if (!openRecentMenu)
+	{
+		return;
+	}
+#endif // __APPLE__
 	clearRecentFileMenuItems();
-	
+
 	if (recentFiles->stringAtIndex(0))
 	{
 		int i;
@@ -1198,14 +1235,21 @@ void ModelViewerWidget::populateRecentFileMenuItems(void)
 
 			if (filename)
 			{
-				int id = fileMenu->insertItem(filename, this, SLOT(doRecentFile(int)),
-					0, -1, fileSeparatorIndex + i + 1);
+#ifdef __APPLE__
+				QPopupMenu *menu = openRecentMenu;
+#else // __APPLE__
+				QPopupMenu *menu = fileMenu;
+#endif // __APPLE__
+				int id = menu->insertItem(filename, this,
+					SLOT(doRecentFile(int)), 0, -1, fileSeparatorIndex + i + 1);
 
-				fileMenu->setItemParameter(id, i);
+				menu->setItemParameter(id, i);
 				delete filename;
 			}
 		}
+#ifndef __APPLE__
 		fileMenu->insertSeparator(fileMenu->count() - 1);
+#endif // __APPLE__
 	}
 }
 
@@ -3108,3 +3152,10 @@ void ModelViewerWidget::userDefaultChangedAlertCallback(TCAlert *alert)
 		preferences->userDefaultChangedAlertCallback(alert);
 	}
 }
+
+#ifdef __APPLE__
+void ModelViewerWidget::doPreferences(void)
+{
+	showPreferences();
+}
+#endif // __APPLE__

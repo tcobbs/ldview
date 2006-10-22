@@ -134,7 +134,6 @@ void Preferences::doPrefSetsApply(void)
 void Preferences::doGeneralApply(void)
 {
 	QColor cTemp;
-	int iTemp;
 	int r, g, b;
 
 	ldPrefs->setLineSmoothing(panel->aaLinesButton->state());
@@ -145,12 +144,10 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setProcessLdConfig(panel->processLdconfigLdrButton->state());
 	cTemp = panel->backgroundColorButton->backgroundColor();
 	cTemp.rgb(&r, &g, &b);
-	iTemp = htonl(LDLPalette::colorForRGBA(r, g, b, 0));
-	ldPrefs->setBackgroundColor((TCULong)iTemp);
+	ldPrefs->setBackgroundColor(r, g, b);
 	cTemp = panel->defaultColorButton->backgroundColor();
 	cTemp.rgb(&r, &g, &b);
-	iTemp = htonl(LDLPalette::colorForRGBA(r, g, b, 0));
-	ldPrefs->setDefaultColor((TCULong)iTemp);
+	ldPrefs->setDefaultColor(r, g, b);
 	ldPrefs->setFov(panel->fieldOfViewSpin->value());
 	ldPrefs->setMemoryUsage(panel->memoryUsageBox->currentItem());
 	ldPrefs->setTransDefaultColor(panel->transparentButton->state());
@@ -402,7 +399,8 @@ void Preferences::doUpdatesApply()
 void Preferences::doBackgroundColor()
 {
 	int r,g,b;
-	getRGB((int)ldPrefs->getBackgroundColor(), r ,g, b);
+
+	ldPrefs->getBackgroundColor(r, g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
@@ -422,7 +420,7 @@ void Preferences::doDefaultColor()
         LDLPalette::getDefaultRGBA(i, r, g, b, a);
         QColorDialog::setCustomColor(i, qRgb(r, g, b));
     }
-	getRGB((int)ldPrefs->getDefaultColor(), r ,g, b);
+	ldPrefs->getDefaultColor(r, g, b);
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
@@ -791,14 +789,15 @@ void Preferences::reflectSettings(void)
 void Preferences::reflectGeneralSettings(void)
 {
 	int r, g, b;
+
 	setButtonState(panel->aaLinesButton, ldPrefs->getLineSmoothing());
 	setButtonState(panel->frameRateButton, ldPrefs->getShowFps());
 	setButtonState(panel->showErrorsButton, ldPrefs->getShowErrors());
 	setButtonState(panel->processLdconfigLdrButton,
 		ldPrefs->getProcessLdConfig());
-	getRGB((int)ldPrefs->getBackgroundColor(),r,g,b);
+	ldPrefs->getBackgroundColor(r, g, b);
 	panel->backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
-	getRGB(ldPrefs->getDefaultColor(),r,g,b);
+	ldPrefs->getDefaultColor(r, g, b);
 	panel->defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
 	setRangeValue(panel->fieldOfViewSpin, (int)ldPrefs->getFov());
 	setButtonState(panel->transparentButton, ldPrefs->getTransDefaultColor());
@@ -967,10 +966,9 @@ void Preferences::doResetUpdates(void)
 
 void Preferences::getRGB(int color, int &r, int &g, int &b)
 {
-	color = htonl(color);
-	r = (color >> 24) & 0xFF;
-	g = (color >> 16) & 0xFF;
-	b = (color >> 8) & 0xFF;
+	r = color & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = (color >> 16) & 0xFF;
 }
 
 void Preferences::setStatusBar(bool value)
@@ -1922,9 +1920,9 @@ void Preferences::setupDefaultRotationMatrix(void)
     }
 }
 
-int Preferences::getBackgroundColor(void)
+void Preferences::getBackgroundColor(int &r, int &g, int &b)
 {
-	return (int)ldPrefs->getBackgroundColor();
+	ldPrefs->getBackgroundColor(r, g, b);
 }
 
 bool Preferences::getShowErrors(void)
