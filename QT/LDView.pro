@@ -43,6 +43,7 @@ win32 {
 translations.commands = lrelease LDView.pro
 translations.target = ldview_de.qm
 QMAKE_EXTRA_UNIX_TARGETS += translations
+QMAKE_EXTRA_WIN_TARGETS += translations
 PRE_TARGETDEPS += ldview_de.qm
 QMAKE_CLEAN += *.qm
 
