@@ -7,19 +7,7 @@
 #include <windows.h>
 
 #include <LDLib/LDrawModelViewer.h>
-#ifdef WIN32
-// In Windows, we have to disable a number of warnings in order to use any STL
-// classes without getting tons of warnings.  The following warning is shut off
-// completely; it's just the warning that identifiers longer than 255 characters
-// will be truncated in the debug info.  I really don't care about this.  Note
-// that the other warnings are only disabled during the #include of the STL
-// headers due to the warning(push) and warning(pop).
-#pragma warning(push, 1)	// Minimum warnings during STL includes
-#endif // WIN32
-#include <map>
-#ifdef WIN32
-#pragma warning(pop)
-#endif // WIN32
+#include <TCFoundation/TCStlIncludes.h>
 
 //class LDrawModelViewer;
 
@@ -57,6 +45,7 @@ public:
 	bool getOneLight(void);
 	void setOneLight(bool value);
 	COLORREF getBackgroundColor(void);
+	COLORREF getDefaultColor(void);
 	bool getUseSeams(void);
 	void setUseSeams(bool value);
 	int getSeamWidth(void);
