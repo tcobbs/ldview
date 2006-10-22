@@ -55,8 +55,8 @@ public:
 	// General settings
 	int getFsaaMode(void) { return m_fsaaMode; }
 	bool getLineSmoothing(void) { return m_lineSmoothing; }
-	TCULong getBackgroundColor(void) { return m_backgroundColor; }
-	TCULong getDefaultColor(void) { return m_defaultColor; }
+	void getBackgroundColor(int &r, int &g, int &b);
+	void getDefaultColor(int &r, int &g, int &b);
 	bool getTransDefaultColor(void) { return m_transDefaultColor; }
 	int getDefaultColorNumber(void) { return m_defaultColorNumber; }
 	bool getProcessLdConfig(void) { return m_processLdConfig; }
@@ -65,7 +65,7 @@ public:
 	int getFullScreenRefresh(void) { return m_fullScreenRefresh; }
 	TCFloat getFov(void) { return m_fov; }
 	int getMemoryUsage(void) { return m_memoryUsage; }
-	TCULong getCustomColor(int index) { return m_customColors[index]; }
+	void getCustomColor(int index, int &r, int &g, int &b);
 
 	// Geometry settings
 	bool getUseSeams(void) { return m_useSeams; }
@@ -131,8 +131,8 @@ public:
 	// General settings
 	void setFsaaMode(int value, bool commit = false);
 	void setLineSmoothing(bool value, bool commit = false);
-	void setBackgroundColor(TCULong value, bool commit = false);
-	void setDefaultColor(TCULong value, bool commit = false);
+	void setBackgroundColor(int r, int g, int b, bool commit = false);
+	void setDefaultColor(int r, int g, int b, bool commit = false);
 	void setTransDefaultColor(bool value, bool commit = false);
 	void setDefaultColorNumber(int value, bool commit = false);
 	void setProcessLdConfig(bool value, bool commit = false);
@@ -141,7 +141,7 @@ public:
 	void setFullScreenRefresh(int value, bool commit = false);
 	void setFov(TCFloat value, bool commit = false);
 	void setMemoryUsage(int value, bool commit = false);
-	void setCustomColor(int index, TCULong value, bool commit = false);
+	void setCustomColor(int index, int r, int g, int b, bool commit = false);
 
 	// Geometry settings
 	void setUseSeams(bool value, bool commit = false, bool apply = false);
@@ -215,7 +215,7 @@ protected:
 		bool commit);
 	void setSetting(std::string &setting, const std::string value,
 		const char *key, bool commit);
-	void setColorSetting(TCULong &setting, TCULong value, const char *key,
+	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
 		bool commit);
 	bool getBoolSetting(const char *key, bool defaultValue = false);
 	long getLongSetting(const char *key, long defaultValue = 0);
@@ -223,9 +223,11 @@ protected:
 	float getFloatSetting(const char *key, float defaultValue = 0.0f);
 	std::string getStringSetting(const char *key,
 		const char *defaultValue = NULL);
-	TCULong getColorSetting(const char *key, TCULong defaultColor = 0);
+	void getColorSetting(const char *key, int &r, int &g, int &b,
+		TCULong defaultColor = 0);
 
 	virtual void getRGB(int color, int &r, int &g, int &b);
+	virtual int getColor(int r, int g, int b);
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.
