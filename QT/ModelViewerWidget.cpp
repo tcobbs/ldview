@@ -3155,7 +3155,5 @@ void ModelViewerWidget::userDefaultChangedAlertCallback(TCAlert *alert)
 
 void ModelViewerWidget::doPreferences(void)
 {
-#ifdef __APPLE__
 	showPreferences();
-#endif // __APPLE__
 }
