@@ -8,7 +8,7 @@ URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
-BuildRequires: qt-devel, boost-devel, perl-Unicode-String
+BuildRequires: qt-devel, boost-devel
 
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site. 
@@ -47,6 +47,7 @@ install -m 644 todo.txt $RPM_BUILD_ROOT/usr/local/share/ldview/todo.txt
 install -m 644 ldview_en.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_en.qm
 install -m 644 ldview_de.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_de.qm
 install -m 644 ldview_it.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_it.qm
+install -m 644 ldview_cz.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_cz.qm
 %files
 /usr/local/bin/LDView
 /usr/local/share/ldview/Help.html
@@ -62,6 +63,7 @@ install -m 644 ldview_it.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_it.qm
 /usr/local/share/ldview/ldview_en.qm
 /usr/local/share/ldview/ldview_de.qm
 /usr/local/share/ldview/ldview_it.qm
+/usr/local/share/ldview/ldview_cz.qm
 
 %clean
 rm -rf $RPM_BUILD_ROOT
