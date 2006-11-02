@@ -5,11 +5,6 @@
         <source>About LDView</source>
         <translation>Über LDView</translation>
     </message>
-    <message encoding="UTF-8">
-        <source>LDView Version 3.0 (14 Dec, 2005)
-Copyright © 2000-2005 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>OK</source>
         <translation>OK</translation>
@@ -30,11 +25,17 @@ Martijn Zwaal
 
 Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
-        <translation type="unfinished">Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):</translation>
+        <translation type="unfinished">Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):
+Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):</translation>
     </message>
     <message encoding="UTF-8">
         <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
 Group, which does not sponsor, endorse, or authorize this program.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <source>LDView Version 3.1 (9 Oct 2006)
+Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -42,7 +43,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <name>ErrorPanel</name>
     <message>
         <source>LDView Errors</source>
-        <translation>LDView Fehler</translation>
+        <translation type="obsolete">LDView Fehler</translation>
     </message>
     <message>
         <source>Errors</source>
@@ -123,6 +124,14 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <message>
         <source>Show None</source>
         <translation>Nichts zeigen</translation>
+    </message>
+    <message>
+        <source>LDView Errors &amp; Warnings</source>
+        <translation>LDView Fehler &amp; Warnungen</translation>
+    </message>
+    <message>
+        <source>Unofficial part used</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -334,11 +343,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Status Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Statusleiste</translation>
     </message>
     <message>
         <source>&amp;Status Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Statusleiste</translation>
     </message>
     <message>
         <source>Show or hide this status bar</source>
@@ -418,10 +427,6 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Errors...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Show Errors</source>
         <translation>Alles zeigen</translation>
     </message>
@@ -487,7 +492,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Isometric</source>
-        <translation>Isometrisch</translation>
+        <translation type="obsolete">Isometrisch</translation>
     </message>
     <message>
         <source>Ctrl+0</source>
@@ -535,7 +540,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Auto-update once this window is activated</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Auto-&amp;update immediately</source>
@@ -587,6 +592,26 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show Pov-Ray Camera Info...</source>
+        <translation>Zeige POV-Ray Kamera-Information...</translation>
+    </message>
+    <message>
+        <source>Snapshot Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Snapshot Settings...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Check for Library Updates</source>
+        <translation>Nach Bauteile-Updates suchen</translation>
+    </message>
+    <message>
+        <source>&amp;Errors &amp;&amp; Warnings...</source>
+        <translation>&amp;Fehler &amp;&amp; Warnungen...</translation>
+    </message>
+    <message>
+        <source>Two-third</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -625,7 +650,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Process ldconfig.ldr</source>
-        <translation type="unfinished">LDconfig.ldr verarbeiten</translation>
+        <translation>LDconfig.ldr verarbeiten</translation>
     </message>
     <message>
         <source>Default color:</source>
@@ -874,6 +899,110 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <message>
         <source>Apply</source>
         <translation>Übernehmen</translation>
+    </message>
+    <message>
+        <source>Updates</source>
+        <translation>Updates</translation>
+    </message>
+    <message>
+        <source>Internet Proxy</source>
+        <translation>Internet Proxy</translation>
+    </message>
+    <message>
+        <source>Direct connection to the Internet</source>
+        <translation>Direkte Verbindung zum Internet</translation>
+    </message>
+    <message>
+        <source>Manual proxy configuration:</source>
+        <translation>Manuelle Proxy-Konfiguration:</translation>
+    </message>
+    <message>
+        <source>Proxy</source>
+        <translation>Proxy</translation>
+    </message>
+    <message>
+        <source>Port</source>
+        <translation>Port</translation>
+    </message>
+    <message>
+        <source>90000;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Missing Parts</source>
+        <translation>Fehlende Bauteile</translation>
+    </message>
+    <message>
+        <source>Automatically check ldraw.org for missing parts</source>
+        <translation type="unfinished">Automatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
+    </message>
+    <message>
+        <source>Days between missing part checks</source>
+        <translation>Zeit zwischen der Suche nach fehlenden Bauteilen (Tage)</translation>
+    </message>
+    <message>
+        <source>Days between updated part checks</source>
+        <translation>Zeit zwischen der Suche nach überarbeiten Bauteilen (Tage)</translation>
+    </message>
+    <message>
+        <source>Note: changes to setting on this tab will not go 
+into effect until the next time a model is loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SnapshotSettingsPanel</name>
+    <message>
+        <source>LDView Snapshot Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save snapshot series</source>
+        <translation>Bilderserie speichern</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Number of Digits:</source>
+        <translation>Anzahl der Ziffern:</translation>
+    </message>
+    <message>
+        <source>Save image with specific size</source>
+        <translation>Bild mit bestimmter Größe speichern</translation>
+    </message>
+    <message>
+        <source>Width:</source>
+        <translation>Breite:</translation>
+    </message>
+    <message>
+        <source>Height:</source>
+        <translation>Höhe:</translation>
+    </message>
+    <message>
+        <source>Misc</source>
+        <translation>Verschiedenes</translation>
+    </message>
+    <message>
+        <source>Don&apos;t use Pixel Buffer</source>
+        <translation>Pixelspeicher nicht verwenden</translation>
+    </message>
+    <message>
+        <source>Zoom to Fit</source>
+        <translation>Zoom anpassen</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Esc</source>
+        <translation>Esc</translation>
     </message>
 </context>
 </TS>
