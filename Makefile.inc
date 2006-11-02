@@ -3,11 +3,31 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -D_QT
+
+CSRCS = $(wildcard *.c)
+CCSRCS =  $(wildcard *.cpp)
+
 ifeq ($(shell uname -s), Darwin)
-EXTRACFLAGS = -arch i386 -arch ppc
-AR=libtool -static  -o
+CFLAGS += -arch i386 -arch ppc
+AR = libtool -static  -o
 else
 AR = ar rcs
+endif
+
+INCLUDE = -I.. -I../include
+
+ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
+INCLUDE += -I$(QTDIR)/include
+endif
+
+ifeq ($(shell if [ -d $(QTDIR)/include/Qt3Support ]; then echo OK; fi),OK)
+INCLUDE += -I$(QTDIR)/include/Qt
+CFLAGS += -DQT3_SUPPORT
+endif
+
+ifeq ($(shell if [ -d /usr/include/qt3 ]; then echo OK; fi),OK)
+INCLUDE += -I/usr/include/qt3
 endif
 
 OBJDIR = .obj
@@ -24,10 +44,10 @@ OBJS = $(COBJS) $(CCOBJS)
 .SUFFIXES:  .cpp .o .c
 
 .cpp.o:
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
+	$(CC) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
 
 .c.o:
-	$(CC) $(CFLAGS) $(INCLUDE) -c $<
+	$(CC) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
 
 all:    $(OBJDIR) $(EXECS)
 
@@ -37,11 +57,11 @@ $(OBJDIR):
 	fi
 
 depend:
-	rm -f .depend
+	$(RM) .depend
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
 $(EXECS):   $(OBJS)
-	rm -f $(EXECS)
+	$(RM) $(EXECS)
 	cd $(OBJDIR); $(AR) ../$(EXECS) $(OBJS)
 
 webgrabber:	$(OBJS)

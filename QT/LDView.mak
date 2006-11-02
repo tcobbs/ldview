@@ -6,7 +6,6 @@ all: Makefile
 		cd $$DIR; $(MAKE) -k all; cd ../QT;	\
 	done;
 	make
-	lrelease LDView.pro
 
 debug: Makefile
 	for DIR in $(DIRECTORIES); do	\
