@@ -1,0 +1,23 @@
+; This file is maintained by HCW. Do not modify this file directly.
+
+[OPTIONS]
+LCID=0x405 0x0 0x0 ; Èeština
+REPORT=Yes
+PREFIX=HIDC_
+HLP=LDView-Czech.hlp
+
+[FILES]
+GeneralPrefs.rtf
+GeometryPrefs.rtf
+EffectsPrefs.rtf
+PrimitivesPrefs.rtf
+PrefSetsPrefs.rtf
+ScreenSaverPrefs.rtf
+SaveSnapshot.rtf
+UpdatesPrefs.rtf
+
+[ALIAS]
+HIDC_EFFECTS_MISC_BOX=HIDC_GENERAL_MISC_BOX
+
+[MAP]
+#include ..\Resources.hm
