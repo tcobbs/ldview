@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use Unicode::String qw(utf8 latin1);
-
+use Encode qw(encode decode from_to);
 sub zzz {
 	($filename,$lang) = @_;
 	open(FILE,$filename);
@@ -36,8 +36,9 @@ sub zzz {
 #			$msg =~ s/\xd6/\xc3\x96/g;
 #			$msg =~ s/\xdc/\xc3\x9c/g;
 #			$msg =~ s/\xdf/\xc3\x9f/g;
-			$u=Unicode::String::latin1($msg);
-			$msg = $u->utf8;
+#			$u=decode("iso-8859-2", $msg);
+#			$msg=encode("utf8",$u); 
+			from_to($msg,"windows-1250","utf8");
 			if ($msg =~ /(.*)\\t/) { $msg=$1;}
 			#print $id.",".$msg."\n" 
 			$$lang{$id}=$msg;
@@ -50,11 +51,12 @@ sub zzz {
 zzz("../AppResources.rc","english");
 zzz("../Translations/German/Resources.rc","german");
 zzz("../Translations/Italian/Resources.rc","italian");
+zzz("../Translations/Czech/Resources.rc","czech");
 
 print "<!DOCTYPE QPH><QPH>\n";
-while (($key, $value) = each(%german)) {
-#	printf $key.",".$english{$key}.",".$german{$key}."\n";
+while (($key, $value) = each(%czech)) {
+#	printf $key.",".$english{$key}.",".$czech{$key}."\n";
 	print "<phrase>\n    <source>".$english{$key}."</source>\n    <target>";
-	print $german{$key}."</target>\n</phrase>\n";
+	print $czech{$key}."</target>\n</phrase>\n";
 }
 print "</QPH>";
