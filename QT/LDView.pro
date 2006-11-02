@@ -79,7 +79,8 @@ DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
 					ldview_de.ts \
-					ldview_it.ts
+					ldview_it.ts \
+					ldview_cz.ts
 VERSION = 3.1
 macx {
 	RC_FILE = images/LDView.icns
