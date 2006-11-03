@@ -102,15 +102,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>BFC error</source>
-        <translation type="unfinished"></translation>
+        <translation>BFC chyba</translation>
     </message>
     <message>
         <source>MPD error</source>
-        <translation type="unfinished"></translation>
+        <translation>MPD chyba</translation>
     </message>
     <message>
         <source>Whitespace</source>
-        <translation type="unfinished"></translation>
+        <translation>Prázdný znak</translation>
     </message>
     <message>
         <source>Part renamed</source>
@@ -230,7 +230,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Seams</source>
-        <translation type="unfinished"></translation>
+        <translation>Spáry</translation>
     </message>
     <message>
         <source>Edge</source>
@@ -598,7 +598,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show View Info</source>
-        <translation type="unfinished">Zobrazit informace o pohledu</translation>
+        <translation>Zobrazit informace o pohledu</translation>
     </message>
     <message>
         <source>Show Pov-Ray Camera Info...</source>
@@ -616,7 +616,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <name>PreferencesPanel</name>
     <message>
         <source>LDView Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení LDView</translation>
     </message>
     <message>
         <source>General</source>
@@ -664,15 +664,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Low</source>
-        <translation type="unfinished"></translation>
+        <translation>Nízké</translation>
     </message>
     <message>
         <source>Medium</source>
-        <translation type="unfinished"></translation>
+        <translation>Střední</translation>
     </message>
     <message>
         <source>High</source>
-        <translation type="unfinished"></translation>
+        <translation>Vysoké</translation>
     </message>
     <message>
         <source>Reset</source>

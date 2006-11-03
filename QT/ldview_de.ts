@@ -25,8 +25,7 @@ Martijn Zwaal
 
 Jean-Ioup Gailly, Mark Adler, and the rest of the zlib team
 Glen  Randers-Pehrson and the rest of the libpng team</source>
-        <translation type="unfinished">Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):
-Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):</translation>
+        <translation type="unfinished">Ein besonderer Dank für ihren Beitrag zu LDView geht an folgende Personen (die meisten in alphabetischer Reihenfolge):</translation>
     </message>
     <message encoding="UTF-8">
         <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
@@ -91,7 +90,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Identical vertices</source>
-        <translation type="unfinished"></translation>
+        <translation>Identische Scheitelpunkte</translation>
     </message>
     <message>
         <source>Co-linear points</source>
@@ -115,7 +114,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Part renamed</source>
-        <translation type="unfinished"></translation>
+        <translation>Bauteilnummer wurde geändert</translation>
     </message>
     <message>
         <source>Show All</source>
@@ -131,7 +130,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Unofficial part used</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht zertifiziertes Bauteil</translation>
     </message>
 </context>
 <context>
@@ -235,7 +234,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Seams</source>
-        <translation type="unfinished"></translation>
+        <translation>Spalten</translation>
     </message>
     <message>
         <source>Edge</source>
@@ -926,7 +925,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>90000;</source>
-        <translation type="unfinished"></translation>
+        <translation>90000;</translation>
     </message>
     <message>
         <source>Missing Parts</source>
@@ -934,7 +933,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Automatically check ldraw.org for missing parts</source>
-        <translation type="unfinished">Automatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
+        <translation type="unfinished">Automatisch auf LDraw.org nach fehlenden Bauteilen suchenAutomatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
     </message>
     <message>
         <source>Days between missing part checks</source>
