@@ -11,7 +11,8 @@ unix {
   documentation.path = /usr/local/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr ../LDViewMessages.ini \
-						../ChangeHistory.html ../8464.mpd todo.txt
+						../ChangeHistory.html ../8464.mpd todo.txt \
+						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
   target.path = /usr/local/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
