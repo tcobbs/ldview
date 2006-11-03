@@ -110,7 +110,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Part renamed</source>
-        <translation type="unfinished"></translation>
+        <translation>Part con numero cambiato</translation>
     </message>
     <message>
         <source>Show All</source>
@@ -122,11 +122,11 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>LDView Errors &amp; Warnings</source>
-        <translation type="unfinished"></translation>
+        <translation>Errori &amp; Avvisi LDView</translation>
     </message>
     <message>
         <source>Unofficial part used</source>
-        <translation type="unfinished"></translation>
+        <translation>Quadrilatero non piano</translation>
     </message>
 </context>
 <context>
@@ -161,7 +161,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished">Esc</translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
@@ -230,7 +230,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Seams</source>
-        <translation type="unfinished"></translation>
+        <translation>Spazi</translation>
     </message>
     <message>
         <source>Edge</source>
@@ -394,7 +394,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>LDraw &amp;Dir...</source>
-        <translation type="unfinished">Cartella LDra&amp;w</translation>
+        <translation>Cartella LDra&amp;w...</translation>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
@@ -502,11 +502,11 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Disattivato</translation>
     </message>
     <message>
         <source>&amp;Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Disattivato</translation>
     </message>
     <message>
         <source>Disable polling</source>
@@ -586,7 +586,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Show Pov-Ray Camera Info...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostra informazioni &amp;fotocamera POV-Ray...</translation>
     </message>
     <message>
         <source>Snapshot Settings</source>
@@ -598,11 +598,11 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Check for Library Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Cerca aggiornamenti libreria</translation>
     </message>
     <message>
         <source>&amp;Errors &amp;&amp; Warnings...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Errori &amp;&amp; avvisi... </translation>
     </message>
     <message>
         <source>Two-third</source>
@@ -656,11 +656,11 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Field of View:</source>
-        <translation type="unfinished">Campo visivo:</translation>
+        <translation>Campo visivo:</translation>
     </message>
     <message>
         <source>Transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>Trasparenza</translation>
     </message>
     <message>
         <source>Memory usage</source>
@@ -788,7 +788,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Amount:</source>
-        <translation type="unfinished"></translation>
+        <translation>Distanza:</translation>
     </message>
     <message>
         <source>&amp;Wireframe cutaway</source>
@@ -896,47 +896,47 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiornamenti</translation>
     </message>
     <message>
         <source>Internet Proxy</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet Proxy</translation>
     </message>
     <message>
         <source>Direct connection to the Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessione diretta a Internet</translation>
     </message>
     <message>
         <source>Manual proxy configuration:</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurazione manuale del proxy:</translation>
     </message>
     <message>
         <source>Proxy</source>
-        <translation type="unfinished"></translation>
+        <translation>Proxy</translation>
     </message>
     <message>
         <source>Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta</translation>
     </message>
     <message>
         <source>90000;</source>
-        <translation type="unfinished"></translation>
+        <translation>90000;</translation>
     </message>
     <message>
         <source>Missing Parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Parts mancanti</translation>
     </message>
     <message>
         <source>Automatically check ldraw.org for missing parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Ricerca automatica di parts mancanti su LDraw.org</translation>
     </message>
     <message>
         <source>Days between missing part checks</source>
-        <translation type="unfinished"></translation>
+        <translation>Giorni fra le ricerche di parts mancanti</translation>
     </message>
     <message>
         <source>Days between updated part checks</source>
-        <translation type="unfinished"></translation>
+        <translation>Giorni fra le ricerche di parts aggiornati</translation>
     </message>
     <message>
         <source>Note: changes to setting on this tab will not go 
@@ -952,7 +952,7 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Save snapshot series</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva sequenza immagini</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -960,43 +960,43 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Number of Digits:</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero di cifre:</translation>
     </message>
     <message>
         <source>Save image with specific size</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva con dimensione specifica</translation>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Larghezza:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Altezza:</translation>
     </message>
     <message>
         <source>Misc</source>
-        <translation type="unfinished"></translation>
+        <translation>Varie</translation>
     </message>
     <message>
         <source>Don&apos;t use Pixel Buffer</source>
-        <translation type="unfinished"></translation>
+        <translation>Non usare il Buffer Pixel</translation>
     </message>
     <message>
         <source>Zoom to Fit</source>
-        <translation type="unfinished"></translation>
+        <translation>Adatta zoom</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Cancella</translation>
+        <translation>Cancella</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished">Esc</translation>
+        <translation>Esc</translation>
     </message>
 </context>
 </TS>
