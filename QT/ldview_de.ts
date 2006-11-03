@@ -933,7 +933,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>Automatically check ldraw.org for missing parts</source>
-        <translation type="unfinished">Automatisch auf LDraw.org nach fehlenden Bauteilen suchenAutomatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
+        <translation type="unfinished">Automatisch auf LDraw.org nach fehlenden Bauteilen suchen</translation>
     </message>
     <message>
         <source>Days between missing part checks</source>
