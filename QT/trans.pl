@@ -8,6 +8,7 @@ sub zzz {
 	while($sor=<FILE>){
 		$text.=$sor;
 	}
+	close FILE;
 	$text =~ s/,[\t ]*\n[\t ]*/,/g;
 	$text =~ s/\|[\t ]*\n[\t ]*/\|/g;
 	$popup=0;
@@ -29,13 +30,6 @@ sub zzz {
 		if ($s =~ /CAPTION[ \t]*"([^"]*)"/) {$id=$section."_CAPTION"; $msg=$1;}
 		if ($id) {
 			$msg =~ s/\&/\&amp;/g;
-#			$msg =~ s/\xfc/\xc3\xbc/g;
-#			$msg =~ s/\xe4/\xc3\xa4/g;
-#			$msg =~ s/\xf6/\xc3\xb6/g;
-#			$msg =~ s/\xc4/\xc3\x84/g;
-#			$msg =~ s/\xd6/\xc3\x96/g;
-#			$msg =~ s/\xdc/\xc3\x9c/g;
-#			$msg =~ s/\xdf/\xc3\x9f/g;
 #			$u=decode("iso-8859-2", $msg);
 #			$msg=encode("utf8",$u); 
 			from_to($msg,"windows-1250","utf8");
@@ -45,6 +39,26 @@ sub zzz {
 		}
 		#print $s."\n";
 	}
+    open(FILE,$inifile);
+    while($sor=<FILE>){
+		$key=$value="";
+		$seq=0;
+		$sor =~ s/;.*//g;
+		if ($sor=~/(.*)=(.*)/) {$key=$1;$value=$2;}
+		if ($key=~/^(.*)[\s]@$/) {$key=$1;}
+		if ($key=~/^([a-zA-Z_]*)([0-9][0-9]*)[\s]*$/) {$key=$1;$seq=$2;}
+		if ($key) {
+			from_to($value,"windows-1250","utf8");
+			$key="ini_".$key;
+#			if ($$lang{$key}) {$$lang{$key}.="\n";}
+			$value =~ s/</&lt;/g;
+			$value =~ s/>/&gt;/g;
+			$value =~ s/\&/\&amp;/g;
+			$$lang{$key}.=$value;
+#			print $key,",",$seq,",",$value,"\n";
+		}
+    }
+	close(FILE);
 }
 
 sub dumptrans {
@@ -52,8 +66,9 @@ sub dumptrans {
 	open FILE, '>'.$filename || die "open error";
 	print FILE "<!DOCTYPE QPH><QPH>\n";
 	while (($key, $value) = each(%$lang)) {
-	print FILE "<phrase>\n    <source>".$english{$key}."</source>\n    <target>";
-	print FILE $$lang{$key}."</target>\n</phrase>\n";
+		print FILE "<phrase>\n    <source>".$english{$key}."</source>\n";
+		print FILE "    <target>";
+		print FILE $$lang{$key}."</target>\n</phrase>\n";
 	}
 	print FILE "</QPH>";
 	close(FILE);
