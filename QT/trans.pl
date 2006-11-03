@@ -1,8 +1,8 @@
 #!/usr/bin/perl
-use Unicode::String qw(utf8 latin1);
+#use Unicode::String qw(utf8 latin1);
 use Encode qw(encode decode from_to);
 sub zzz {
-	($filename,$lang) = @_;
+	($filename,$lang,$inifile) = @_;
 	open(FILE,$filename);
 	$text="";
 	while($sor=<FILE>){
@@ -47,16 +47,23 @@ sub zzz {
 	}
 }
 
-
-zzz("../AppResources.rc","english");
-zzz("../Translations/German/Resources.rc","german");
-zzz("../Translations/Italian/Resources.rc","italian");
-zzz("../Translations/Czech/Resources.rc","czech");
-
-print "<!DOCTYPE QPH><QPH>\n";
-while (($key, $value) = each(%czech)) {
-#	printf $key.",".$english{$key}.",".$czech{$key}."\n";
-	print "<phrase>\n    <source>".$english{$key}."</source>\n    <target>";
-	print $czech{$key}."</target>\n</phrase>\n";
+sub dumptrans {
+	($lang,$filename) = @_;
+	open FILE, '>'.$filename || die "open error";
+	print FILE "<!DOCTYPE QPH><QPH>\n";
+	while (($key, $value) = each(%$lang)) {
+	print FILE "<phrase>\n    <source>".$english{$key}."</source>\n    <target>";
+	print FILE $$lang{$key}."</target>\n</phrase>\n";
+	}
+	print FILE "</QPH>";
+	close(FILE);
 }
-print "</QPH>";
+
+zzz("../AppResources.rc","english","../LDViewMessages.ini");
+zzz("../Translations/German/Resources.rc","german","../Translations/German/LDViewMessages.ini");
+zzz("../Translations/Italian/Resources.rc","italian","../Translations/Italian/LDViewMessages.ini");
+zzz("../Translations/Czech/Resources.rc","czech","../Translations/Czech/LDViewMessages.ini");
+
+dumptrans("czech","/tmp/czech.qph");
+dumptrans("german","/tmp/german.qph");
+dumptrans("italian","/tmp/italian.qph");
