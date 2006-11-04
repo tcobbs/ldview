@@ -1337,7 +1337,7 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 
 bool ModelWindow::addError(LDLError* error)
 {
-	char buf[1024];
+	char *buf;
 	char* string;
 	HTREEITEM parent;
 
@@ -1346,22 +1346,21 @@ bool ModelWindow::addError(LDLError* error)
 		return false;
 	}
 	string = error->getMessage();
-	if (string)
+	if (!string)
 	{
-		sprintf(buf, "%s", string);
+		string = "";
 	}
-	else
-	{
-		sprintf(buf, "");
-	}
+	buf = copyString(string);
 	parent = addErrorLine(NULL, buf, error,
 		errorImageIndices[error->getType()]);
+	delete buf;
 
 	if (parent)
 	{
 		TCStringArray *extraInfo;
 
    		string = error->getFilename();
+		buf = new char[strlen(string) + 512];
 		if (string)
 		{
 			sprintf(buf, "%s%s", TCLocalStrings::get("ErrorTreeFilePrefix"),
@@ -1372,11 +1371,13 @@ bool ModelWindow::addError(LDLError* error)
 			sprintf(buf, TCLocalStrings::get("ErrorTreeUnknownFile"));
 		}
 		addErrorLine(parent, buf, error);
+		delete buf;
 		string = error->getFileLine();
 		if (string)
 		{
 			int lineNumber = error->getLineNumber();
 
+			buf = new char[strlen(string) + 512];
 			if (lineNumber > 0)
 			{
 				sprintf(buf, TCLocalStrings::get("ErrorTreeLine#"), lineNumber);
@@ -1390,9 +1391,11 @@ bool ModelWindow::addError(LDLError* error)
 		}
 		else
 		{
+			buf = new char[512];
 			sprintf(buf, TCLocalStrings::get("ErrorTreeUnknownLine"));
 		}
 		addErrorLine(parent, buf, error);
+		delete buf;
 		if ((extraInfo = error->getExtraInfo()) != NULL)
 		{
 			int i;
