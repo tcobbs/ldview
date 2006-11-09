@@ -151,22 +151,22 @@ END
 
 IDD_SS_SETTINGS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Screen Saver"
+CAPTION "Képernyõvédõ"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    CONTROL         "File:",IDC_SS_FILENAME_RADIO,"Button",
+    CONTROL         "Állomány:",IDC_SS_FILENAME_RADIO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,7,9,25,10,0,
                     HIDC_SS_FILENAME_RADIO
-    CONTROL         "Directory:",IDC_SS_DIRECTORY_RADIO,"Button",
+    CONTROL         "Könyvtár:",IDC_SS_DIRECTORY_RADIO,"Button",
                     BS_AUTORADIOBUTTON,7,26,41,10,0,HIDC_SS_DIRECTORY_RADIO
     EDITTEXT        IDC_SS_FILENAME_FIELD,53,7,100,14,ES_AUTOHSCROLL | 
                     ES_READONLY | WS_GROUP | NOT WS_TABSTOP,0,
                     HIDC_SS_FILENAME_FIELD
-    PUSHBUTTON      "Browse...",IDC_SS_BROWSE_FILE_BUTTON,155,7,50,14,0,0,
+    PUSHBUTTON      "Böngészõ...",IDC_SS_BROWSE_FILE_BUTTON,155,7,50,14,0,0,
                     HIDC_SS_BROWSE_FILE_BUTTON
     EDITTEXT        IDC_SS_DIRECTORY_FIELD,53,24,100,14,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_TABSTOP,0,HIDC_SS_DIRECTORY_FIELD
-    PUSHBUTTON      "Browse...",IDC_SS_BROWSE_DIR_BUTTON,155,24,50,14,0,0,
+    PUSHBUTTON      "Böngészõ...",IDC_SS_BROWSE_DIR_BUTTON,155,24,50,14,0,0,
                     HIDC_SS_BROWSE_DIR_BUTTON
     GROUPBOX        "Size",IDC_SS_SIZE_BOX,7,41,198,32,WS_GROUP,0,
                     HIDC_SS_SIZE_BOX
@@ -175,14 +175,14 @@ BEGIN
                     TBS_AUTOTICKS | WS_TABSTOP,31,50,150,17,0,
                     HIDC_SS_SIZE_SLIDER
     LTEXT           "Max",IDC_STATIC,184,53,14,8
-    GROUPBOX        "Speed",IDC_SS_SPEED_BOX,7,74,198,32,0,0,
+    GROUPBOX        "Sebesség",IDC_SS_SPEED_BOX,7,74,198,32,0,0,
                     HIDC_SS_SPEED_BOX
     LTEXT           "Min",IDC_STATIC,16,86,12,8
     CONTROL         "Slider1",IDC_SS_SPEED_SLIDER,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_TABSTOP,31,83,150,17,0,
                     HIDC_SS_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,184,86,14,8
-    GROUPBOX        "Rotation Speed",IDC_SS_ROTATION_SPEED_BOX,7,107,198,32,
+    GROUPBOX        "Forgás sebessége",IDC_SS_ROTATION_SPEED_BOX,7,107,198,32,
                     0,0,HIDC_SS_ROTATION_SPEED_BOX
     LTEXT           "Min",IDC_STATIC,16,119,12,8
     CONTROL         "Slider1",IDC_SS_ROTATION_SPEED_SLIDER,"msctls_trackbar32",
@@ -205,14 +205,14 @@ FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Modell",IDC_MODEL_BOX,7,7,246,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
-    CONTROL         "Illsztés szélessége:",IDC_SEAMS,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,21,53,10,0,
+    CONTROL         "Illesztés szélessége:",IDC_SEAMS,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,21,83,10,0,
                     HIDC_SEAMS
-    EDITTEXT        IDC_SEAM_WIDTH_FIELD,70,19,30,14,ES_RIGHT | 
+    EDITTEXT        IDC_SEAM_WIDTH_FIELD,100,19,30,14,ES_RIGHT | 
                     ES_AUTOHSCROLL | ES_READONLY | WS_GROUP,0,
                     HIDC_SEAM_WIDTH_FIELD
     CONTROL         "Spin1",IDC_SEAM_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
-                    UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_GROUP,101,19,11,14,0,
+                    UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_GROUP,111,19,11,14,0,
                     HIDC_SEAM_SPIN
     GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,121,62,WS_GROUP,0,
                     HIDC_WIREFRAME_BOX
@@ -222,7 +222,7 @@ BEGIN
     CONTROL         "Köd",IDC_WIREFRAME_FOG,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,19,54,55,10,0,HIDC_WIREFRAME_FOG
     CONTROL         "Takart vonalak elrejtése",IDC_REMOVE_HIDDEN_LINES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,79,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,99,10,0,
                     HIDC_REMOVE_HIDDEN_LINES
     LTEXT           "Vastagság:",IDC_WIREFRAME_THICKNESS_LABEL,16,83,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
@@ -271,15 +271,15 @@ END
 
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Effects"
+CAPTION "Effektek"
 FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,61,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
-    CONTROL         "&Lighting",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Vi&lágítás",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,7,41,10,WS_EX_TRANSPARENT,
                     HIDC_LIGHTING
-    CONTROL         "High quality",IDC_LIGHTING_QUALITY,"Button",
+    CONTROL         "Kiválló minõságû",IDC_LIGHTING_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     19,77,10,0,HIDC_LIGHTING_QUALITY
     CONTROL         "Subdued",IDC_LIGHTING_SUBDUED,"Button",BS_AUTOCHECKBOX | 
@@ -293,7 +293,7 @@ BEGIN
                     52,77,10,0,HIDC_ALTERNATE_LIGHTING
     GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,61,WS_GROUP,0,
                     HIDC_STEREO_BOX
-    CONTROL         "&Stereo",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+    CONTROL         "&Sztereó",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,140,7,37,10,WS_EX_TRANSPARENT,HIDC_STEREO
     CONTROL         "Cross-eyed",IDC_CROSS_EYED_STEREO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,144,19,51,10,
@@ -310,21 +310,21 @@ BEGIN
     CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,69,77,10,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY
-    CONTROL         "Color",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
+    CONTROL         "Szines",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
                     WS_GROUP | WS_TABSTOP,19,82,32,10,0,HIDC_CUTAWAY_COLOR
-    CONTROL         "Monochrome",IDC_CUTAWAY_MONOCHROME,"Button",
+    CONTROL         "Egyszínû",IDC_CUTAWAY_MONOCHROME,"Button",
                     BS_AUTORADIOBUTTON,19,93,57,10,0,HIDC_CUTAWAY_MONOCHROME
     RTEXT           "Opacity:",IDC_CUTAWAY_OPACITY_LABEL,16,110,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,104,68,21,
                     WS_EX_CLIENTEDGE,HIDC_CUTAWAY_OPACITY
-    LTEXT           "Thickness:",IDC_CUTAWAY_THICKNESS_LABEL,16,133,36,8,0,
+    LTEXT           "Vastagság:",IDC_CUTAWAY_THICKNESS_LABEL,16,133,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,127,68,21,
                     WS_EX_CLIENTEDGE,HIDC_CUTAWAY_THICKNESS
-    GROUPBOX        "&Transparency",IDC_TRANSPARENCY_BOX,132,69,121,40,
+    GROUPBOX        "Á&tlátszóság",IDC_TRANSPARENCY_BOX,132,69,121,40,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,140,81,60,10,0,HIDC_SORT
@@ -365,7 +365,7 @@ BEGIN
     CONTROL         "",IDC_DEFAULT_COLOR,"Button",BS_OWNERDRAW | BS_BITMAP | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,36,24,14,0,
                     HIDC_DEFAULT_COLOR
-    LTEXT           "Default",IDC_DEFAULT_COLOR_LABEL,166,39,27,8,0,0,
+    LTEXT           "Alap",IDC_DEFAULT_COLOR_LABEL,166,39,27,8,0,0,
                     HIDC_DEFAULT_COLOR_LABEL
     CONTROL         "Átlátszó",IDC_TRANS_DEFAULT_COLOR,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,195,
@@ -375,13 +375,13 @@ BEGIN
     CONTROL         "ldconfig.ldr használata",IDC_PROCESS_LDCONFIG,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     69,90,10,0,HIDC_PROCESS_LDCONFIG
-    CONTROL         "Show frame rate",IDC_FRAME_RATE,"Button",
+    CONTROL         "Képfrissítés mérése",IDC_FRAME_RATE,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     80,90,10,0,HIDC_FRAME_RATE
-    CONTROL         "Show errors after loading",IDC_SHOW_ERRORS,"Button",
+    CONTROL         "Hibák listája betöltéskor",IDC_SHOW_ERRORS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     91,90,10,0,HIDC_SHOW_ERRORS
-    CONTROL         "Fullscreen refresh override:",IDC_FS_REFRESH,"Button",
+    CONTROL         "Teljes képermyõ frissírése:",IDC_FS_REFRESH,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,102,101,10,0,
                     HIDC_FS_REFRESH
     EDITTEXT        IDC_FS_RATE,117,99,24,14,ES_AUTOHSCROLL | ES_NUMBER | 
@@ -403,37 +403,37 @@ END
 PAGESETUPDLGORD DIALOG DISCARDABLE  32, 32, 240, 240
 STYLE DS_MODALFRAME | DS_3DLOOK | DS_CONTEXTHELP | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
-CAPTION "Page Setup"
+CAPTION "Oldal beállítás"
 FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "",1080,"Static",SS_WHITERECT | WS_GROUP,130,8,80,80
     CONTROL         "",1081,"Static",SS_GRAYRECT | WS_GROUP,210,12,4,80
     CONTROL         "",1082,"Static",SS_GRAYRECT | WS_GROUP,134,88,80,4
-    GROUPBOX        "Paper",1073,8,96,224,56,WS_GROUP
-    LTEXT           "Si&ze:",1089,16,112,36,8
+    GROUPBOX        "Papír",1073,8,96,224,56,WS_GROUP
+    LTEXT           "Méret:",1089,16,112,36,8
     COMBOBOX        1137,64,110,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    LTEXT           "&Source:",1090,16,132,36,8
+    LTEXT           "Tálca:",1090,16,132,36,8
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
-    GROUPBOX        "Orientation",1072,8,156,64,56,WS_GROUP
-    CONTROL         "P&ortrait",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+    GROUPBOX        "Irány",1072,8,156,64,56,WS_GROUP
+    CONTROL         "Álló",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
-    CONTROL         "L&andscape",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
+    CONTROL         "Fekvõ",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
                     12
-    GROUPBOX        "Margins",1075,80,156,152,56,WS_GROUP
-    LTEXT           "&Left:",1102,88,172,32,8
+    GROUPBOX        "Margók",1075,80,156,152,56,WS_GROUP
+    LTEXT           "Bal:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
-    LTEXT           "&Right:",1103,164,172,32,8
+    LTEXT           "Jobb:",1103,164,172,32,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
-    LTEXT           "&Top:",1104,88,192,32,8
+    LTEXT           "Fent:",1104,88,192,32,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
-    LTEXT           "&Bottom:",1105,164,192,32,8
+    LTEXT           "Lent:",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
     DEFPUSHBUTTON   "OK",IDOK,80,220,48,14,WS_GROUP
     PUSHBUTTON      "Mégsem",IDCANCEL,132,220,48,14
-    PUSHBUTTON      "&Printer...",1026,184,220,48,14
-    CONTROL         "Print Background Color",IDC_PRINT_BACKGROUND,"Button",
+    PUSHBUTTON      "Nyomtató...",1026,184,220,48,14
+    CONTROL         "Háttérszín nyomtatása",IDC_PRINT_BACKGROUND,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,44,89,10
 END
 
@@ -486,10 +486,10 @@ FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_SAVE_SERIES_BOX,4,0,132,27,0,0,
                     HIDC_SAVE_SERIES_BOX
-    CONTROL         "Save snapshot series",IDC_SAVE_SERIES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,12,0,83,10,
+    CONTROL         "Pillanatkés sorozatok mentése",IDC_SAVE_SERIES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,12,0,113,10,
                     WS_EX_TRANSPARENT,HIDC_SAVE_SERIES
-    RTEXT           "Number of Digits:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,0,
+    RTEXT           "Számjegyek száma:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,0,
                     HIDC_SAVE_DIGITS_LABEL
     EDITTEXT        IDC_SAVE_DIGITS,86,11,22,12,ES_AUTOHSCROLL | ES_READONLY | 
                     ES_NUMBER,0,HIDC_SAVE_DIGITS
@@ -497,24 +497,24 @@ BEGIN
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
                     UDS_ARROWKEYS,102,11,9,12,0,HIDC_SAVE_DIGITS_SPIN
     GROUPBOX        "Misc",IDC_MISC_BOX,4,29,132,28,0,0,HIDC_MISC_BOX
-    CONTROL         "Don't use Pixel Buffer",IDC_IGNORE_PBUFFER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,12,41,83,10,0,
+    CONTROL         "Ne használjon Pixel Buffer-t",IDC_IGNORE_PBUFFER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,12,41,103,10,0,
                     HIDC_IGNORE_PBUFFER
     GROUPBOX        "     ",IDC_SAVE_ACTUAL_SIZE_BOX,140,0,132,57,0,0,
                     HIDC_SAVE_ACTUAL_SIZE_BOX
-    CONTROL         "Save image with specific size",IDC_SAVE_ACTUAL_SIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,0,108,10,
+    CONTROL         "Kép mentése megadott méretben",IDC_SAVE_ACTUAL_SIZE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,0,118,10,
                     WS_EX_TRANSPARENT,HIDC_SAVE_ACTUAL_SIZE
-    LTEXT           "Szélesség:",IDC_SAVE_WIDTH_LABEL,168,14,24,8,WS_DISABLED,
+    LTEXT           "Szélesség:",IDC_SAVE_WIDTH_LABEL,158,14,34,8,WS_DISABLED,
                     WS_EX_RIGHT,HIDC_SAVE_WIDTH_LABEL
     EDITTEXT        IDC_SAVE_WIDTH,196,12,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_DISABLED,0,HIDC_SAVE_WIDTH
-    LTEXT           "Magasság:",IDC_SAVE_HEIGHT_LABEL,168,30,24,8,WS_DISABLED,
+    LTEXT           "Magasság:",IDC_SAVE_HEIGHT_LABEL,158,30,34,8,WS_DISABLED,
                     WS_EX_RIGHT,HIDC_SAVE_HEIGHT_LABEL
     EDITTEXT        IDC_SAVE_HEIGHT,196,28,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_DISABLED,0,HIDC_SAVE_HEIGHT
     CONTROL         "Teljes méretre nagyít",IDC_SAVE_ZOOMTOFIT,"Button",
-                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,51,10,
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,81,10,
                     0,HIDC_SAVE_ZOOMTOFIT
 END
 
@@ -527,7 +527,7 @@ BEGIN
                     HIDC_PRIMITIVES_BOX
     CONTROL         "&Primitív behelyettesítés",IDC_PRIMITIVE_SUBSTITUTION,
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
-                    WS_TABSTOP,15,7,79,10,WS_EX_TRANSPARENT,
+                    WS_TABSTOP,15,7,85,10,WS_EX_TRANSPARENT,
                     HIDC_PRIMITIVE_SUBSTITUTION
     CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
@@ -539,7 +539,7 @@ BEGIN
                     BS_AUTORADIOBUTTON,23,41,75,10,0,HIDC_TEXTURE_BILINEAR
     CONTROL         "Trilinear szûrõ",IDC_TEXTURE_TRILINEAR,"Button",
                     BS_AUTORADIOBUTTON,23,52,75,10,0,HIDC_TEXTURE_TRILINEAR
-    LTEXT           "Ívek minõsége:",IDC_CURVE_QUALITY_LABEL,121,25,44,10,
+    LTEXT           "Ívek minõsége:",IDC_CURVE_QUALITY_LABEL,111,25,54,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
@@ -549,10 +549,10 @@ BEGIN
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
     CONTROL         "Low quality studs (gyorsabb)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    90,93,10,0,HIDC_STUD_QUALITY
+                    90,133,10,0,HIDC_STUD_QUALITY
     CONTROL         "Nagyfelbontású primitívek használata ha lehet",IDC_HI_RES,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    101,127,10,0,HIDC_HI_RES
+                    101,167,10,0,HIDC_HI_RES
     PUSHBUTTON      "Visszaállítás",IDC_PRIMITIVES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_PRIMITIVES_RESET
 END
@@ -571,12 +571,12 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Beállítás-készletek"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "A következõ beállítás készletet használata:",IDC_PREFSETS_LABEL,7,
-                    7,104,8,0,0,HIDC_PREFSETS_LABEL
+    LTEXT           "A következõ beállítás-készlet használata:",IDC_PREFSETS_LABEL,7,
+                    7,144,8,0,0,HIDC_PREFSETS_LABEL
     LISTBOX         IDC_PREFSETS_LIST,7,18,246,191,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP,0,HIDC_PREFSETS_LIST
-    PUSHBUTTON      "Gyorsbillentyû...",IDC_PREF_SET_HOT_KEY,93,214,50,14,0,0,
+    PUSHBUTTON      "Gyorsbillentyû...",IDC_PREF_SET_HOT_KEY,83,214,60,14,0,0,
                     HIDC_PREF_SET_HOT_KEY
     PUSHBUTTON      "Törtlés",IDC_DELETE_PREF_SET,148,214,50,14,0,0,
                     HIDC_DELETE_PREF_SET
@@ -587,10 +587,10 @@ END
 IDD_NEW_PREF_SET DIALOGEX 0, 0, 233, 46
 STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "New Preference Set"
+CAPTION "Új beállítás-készlet"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    LTEXT           "Enter the name of the new preference set:",IDC_STATIC,7,
+    LTEXT           "Adja meg az beállítás-készlet nevét:",IDC_STATIC,7,
                     11,134,8
     EDITTEXT        IDC_NEW_PREF_SET_FIELD,7,24,157,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDC_NEW_PREF_SET_OK,176,7,50,14
@@ -604,18 +604,18 @@ FONT 8, "MS Sans Serif"
 BEGIN
     PUSHBUTTON      "Mégsem",IDCANCEL,201,43,50,14
     PUSHBUTTON      "Apply",IDC_APPLY,79,43,50,14
-    PUSHBUTTON      "Abandon",IDC_ABANDON,140,43,50,14
-    LTEXT           "You have made changes to the current preference set.  You must either apply those changes or abandon them before you can select a new preference set.",
+    PUSHBUTTON      "Abbahagy",IDC_ABANDON,140,43,50,14
+    LTEXT           "Megváltoztatta az aktuális beállítás-készletet. You must either apply those changes or abandon them before you can select a new preference set.",
                     IDC_STATIC,36,7,269,22
     ICON            32515,IDC_STATIC,7,7,20,20
 END
 
 IDD_HOTKEY DIALOG DISCARDABLE  0, 0, 186, 46
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Hot Key"
+CAPTION "Gyorsbillantyû"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Select a hot key to automatically select this Preference Set:",
+    LTEXT           "Válasszon egy gyorsbillentyût a beállítás-készlet kiválasztásához:",
                     IDC_STATIC,7,7,107,20
     LTEXT           "Ctrl + Shift +",IDC_STATIC,27,29,38,8
     COMBOBOX        IDC_HOTKEY_COMBO,69,27,42,119,CBS_DROPDOWNLIST | 
@@ -626,7 +626,7 @@ END
 
 IDD_EXTRA_DIRS DIALOG DISCARDABLE  0, 0, 288, 188
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Extra Search Directories"
+CAPTION "Extra keresési útvonalak"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
@@ -635,7 +635,7 @@ BEGIN
                     7,167,219,15
     LISTBOX         IDC_ESD_LIST,7,21,219,145,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Add and organize extra search directories below.",
+    LTEXT           "Alább tudja szervezni az extra keresési útvonalakat.",
                     IDC_STATIC,7,7,219,10
 END
 
@@ -665,7 +665,7 @@ END
 
 IDD_UPDATES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Updates"
+CAPTION "Frissítés"
 FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Internet Proxy",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
@@ -690,20 +690,20 @@ BEGIN
                     WS_GROUP,0,HIDC_MISSING_PARTS_BOX
     CONTROL         "&Automatikusan ellenõrizze az LDraw.org-ot hiányzó részekért",
                     IDC_CHECK_PART_TRACKER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,15,85,166,10,0,HIDC_CHECK_PART_TRACKER
-    RTEXT           "Days between missing part checks:",
+                    WS_TABSTOP,15,85,206,10,0,HIDC_CHECK_PART_TRACKER
+    RTEXT           "Hiányzó alkatrészek ellenörzése (naponként):",
                     IDC_MISSING_DAYS_LABEL,19,101,116,8,0,0,
                     HIDC_MISSING_DAYS_LABEL
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_GROUP,0,HIDC_MISSING_DAYS
-    RTEXT           "Days between updated part checks:",
+    RTEXT           "Frissített alkatrészek ellenõrzése (naponként):",
                     IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,
                     HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | 
                     ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
     PUSHBUTTON      "Visszaállítás",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_UPDATES_RESET
-    LTEXT           "Note: changes to setting on this tab will not go into effect until the next time\na model is loaded or a library update is performed.",
+    LTEXT           "A változások csak a következõ modell betöltésénél\nvagy adatbázis frissítésénél jutnak érvényre.",
                     IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
 END
 
@@ -908,7 +908,7 @@ BEGIN
         MENUITEM "Eszközsáv\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
         MENUITEM "Állapotsáv\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "Mindig legfelül",              ID_VIEW_ALWAYSONTOP
-        MENUITEM "&Reset View\tCtrl+R",         ID_VIEW_RESET
+        MENUITEM "Visszaáll alapértelmezett nézetre\tCtrl+R",         ID_VIEW_RESET
         MENUITEM "Teljes méretre nagyít\tCtrl+F",        ID_VIEW_ZOOMTOFIT
         POPUP "Nézõpontok"
         BEGIN
@@ -947,20 +947,20 @@ BEGIN
         MENUITEM "Takart vonalak elrejtése",    ID_WIREFRAME_REMOVEHIDDENLINES
 
     END
-    POPUP "Edges", CHECKED
+    POPUP "Élek", CHECKED
     BEGIN
         MENUITEM "Show edges only",             ID_EDGES_SHOWEDGESONLY
         MENUITEM "Conditional lines",           ID_EDGES_CONDITIONALLINES
-        MENUITEM "High quality",                ID_EDGES_HIGHQUALITY
-        MENUITEM "Always black",                ID_EDGES_ALWAYSBLACK
+        MENUITEM "Kiválló minõség",             ID_EDGES_HIGHQUALITY
+        MENUITEM "Mindig fekete",               ID_EDGES_ALWAYSBLACK
     END
-    POPUP "Primitives"
+    POPUP "Primitívek"
     BEGIN
         MENUITEM "Texture studs",               ID_PRIMITIVES_TEXTURESTUDS
     END
-    POPUP "Lighting"
+    POPUP "Világítás"
     BEGIN
-        MENUITEM "High quality",                ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Kiválló minõség",             ID_LIGHTING_HIGHQUALITY
         MENUITEM "Subdued",                     ID_LIGHTING_SUBDUED
         MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
 
