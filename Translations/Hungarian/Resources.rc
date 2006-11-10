@@ -137,7 +137,7 @@ BEGIN
     CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
                     WS_BORDER | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
-    CONTROL         "Figyelmeztetéseket is",IDC_SHOW_WARNINGS,"Button",
+    CONTROL         "Figyelmeztetések",IDC_SHOW_WARNINGS,"Button",
                     BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
     PUSHBUTTON      "Hibák másolása vágólapra",IDC_COPY_ERROR,84,179,91,14
     GROUPBOX        "Csak a következõket mutassa:",IDC_SHOW_ERRORS,180,2,140,191,
@@ -240,23 +240,23 @@ BEGIN
                     HIDC_GREEN_FRONT_FACES
     GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,104,WS_GROUP,0,
                     HIDC_EDGES_BOX
-    CONTROL         "&Edge Lines",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Élvonalak",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,42,51,10,
                     WS_EX_TRANSPARENT,HIDC_HIGHLIGHTS
-    CONTROL         "Show edges only",IDC_EDGES_ONLY,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,54,81,10,0,
+    CONTROL         "Csak az éleket mutassa",IDC_EDGES_ONLY,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,54,91,10,0,
                     HIDC_EDGES_ONLY
-    CONTROL         "Conditional lines",IDC_CONDITIONAL_HIGHLIGHTS,"Button",
+    CONTROL         "Segédvonalak",IDC_CONDITIONAL_HIGHLIGHTS,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,65,70,10,0,
                     HIDC_CONDITIONAL_HIGHLIGHTS
-    CONTROL         "Show all",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,153,75,45,10,0,
+    CONTROL         "Mindet mutassa",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,153,75,65,10,0,
                     HIDC_ALL_CONDITIONAL
-    CONTROL         "Show control pts",IDC_CONDITIONAL_CONTROLS,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,85,68,10,0,
+    CONTROL         "Csak a kontrolpontokat",IDC_CONDITIONAL_CONTROLS,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,85,88,10,0,
                     HIDC_CONDITIONAL_CONTROLS
-    CONTROL         "High quality",IDC_QUALITY_LINES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,96,51,10,0,
+    CONTROL         "Kiválló minõség",IDC_QUALITY_LINES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,96,61,10,0,
                     HIDC_QUALITY_LINES
     CONTROL         "Mindig fekete",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,144,107,61,10,0,HIDC_ALWAYS_BLACK
@@ -282,10 +282,10 @@ BEGIN
     CONTROL         "Kiválló minõságû",IDC_LIGHTING_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     19,77,10,0,HIDC_LIGHTING_QUALITY
-    CONTROL         "Subdued",IDC_LIGHTING_SUBDUED,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Tompított",IDC_LIGHTING_SUBDUED,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,19,30,77,10,0,
                     HIDC_LIGHTING_SUBDUED
-    CONTROL         "Specular highlight",IDC_SPECULAR,"Button",
+    CONTROL         "Megcsillanás",IDC_SPECULAR,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     41,77,10,0,HIDC_SPECULAR
     CONTROL         "Alternate setup",IDC_ALTERNATE_LIGHTING,"Button",
@@ -311,10 +311,10 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,69,77,10,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY
     CONTROL         "Szines",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,19,82,32,10,0,HIDC_CUTAWAY_COLOR
+                    WS_GROUP | WS_TABSTOP,19,82,42,10,0,HIDC_CUTAWAY_COLOR
     CONTROL         "Egyszínû",IDC_CUTAWAY_MONOCHROME,"Button",
                     BS_AUTORADIOBUTTON,19,93,57,10,0,HIDC_CUTAWAY_MONOCHROME
-    RTEXT           "Opacity:",IDC_CUTAWAY_OPACITY_LABEL,16,110,36,8,0,
+    RTEXT           "Fedés:",IDC_CUTAWAY_OPACITY_LABEL,16,110,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,104,68,21,
@@ -331,12 +331,12 @@ BEGIN
     CONTROL         "Stipple",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,92,60,10,0,
                     HIDC_STIPPLE
-    GROUPBOX        "&Misc",IDC_EFFECTS_MISC_BOX,132,111,121,41,WS_GROUP,
+    GROUPBOX        "Egyéb",IDC_EFFECTS_MISC_BOX,132,111,121,41,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Flat shading",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,123,60,10,0,
+    CONTROL         "Egyszrû árnyalás",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,123,80,10,0,
                     HIDC_FLAT_SHADING
-    CONTROL         "Smooth curves",IDC_SMOOTH_CURVES,"Button",
+    CONTROL         "Egyenletes ívek",IDC_SMOOTH_CURVES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,134,63,10,0,
                     HIDC_SMOOTH_CURVES
     PUSHBUTTON      "Visszaállítás",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
@@ -381,7 +381,7 @@ BEGIN
     CONTROL         "Hibák listája betöltéskor",IDC_SHOW_ERRORS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     91,90,10,0,HIDC_SHOW_ERRORS
-    CONTROL         "Teljes képermyõ frissírése:",IDC_FS_REFRESH,"Button",
+    CONTROL         "Teljes képernyõ frissírése:",IDC_FS_REFRESH,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,102,101,10,0,
                     HIDC_FS_REFRESH
     EDITTEXT        IDC_FS_RATE,117,99,24,14,ES_AUTOHSCROLL | ES_NUMBER | 
@@ -529,9 +529,9 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
                     WS_TABSTOP,15,7,85,10,WS_EX_TRANSPARENT,
                     HIDC_PRIMITIVE_SUBSTITUTION
-    CONTROL         "Texture studs",IDC_TEXTURE_STUDS,"Button",
+    CONTROL         "Texturázott pötty",IDC_TEXTURE_STUDS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
-                    19,59,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
+                    19,69,10,WS_EX_TRANSPARENT,HIDC_TEXTURE_STUDS
     CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,30,75,10,0,
                     HIDC_TEXTURE_NEAREST
@@ -547,7 +547,7 @@ BEGIN
                     WS_EX_CLIENTEDGE,HIDC_CURVE_QUALITY
     GROUPBOX        "Egyéb",IDC_PRIMITIVES_MISC_BOX,7,78,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Low quality studs (gyorsabb)",IDC_STUD_QUALITY,"Button",
+    CONTROL         "Egyszerû pöttyök (gyorsabb)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     90,133,10,0,HIDC_STUD_QUALITY
     CONTROL         "Nagyfelbontású primitívek használata ha lehet",IDC_HI_RES,"Button",
@@ -949,7 +949,7 @@ BEGIN
     END
     POPUP "Élek", CHECKED
     BEGIN
-        MENUITEM "Show edges only",             ID_EDGES_SHOWEDGESONLY
+        MENUITEM "Csak az éleket mutassa",             ID_EDGES_SHOWEDGESONLY
         MENUITEM "Conditional lines",           ID_EDGES_CONDITIONALLINES
         MENUITEM "Kiválló minõség",             ID_EDGES_HIGHQUALITY
         MENUITEM "Mindig fekete",               ID_EDGES_ALWAYSBLACK
