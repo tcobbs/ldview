@@ -72,4 +72,22 @@ $(OBJDIR)\LDView.exe:	TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) $(OBJDIR
 	/subsystem:windows /incremental:no /machine:I386 /nodefaultlib:"libc.lib" \
 	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib $(EXTRALFLAGS)
 
+!IF DEFINED(QTDIR)
+all: QT\LDView.exe
+
+QT\LDView.exe:
+	cd QT
+	$(QTDIR)\bin\qmake
+	nmake /nologo
+
+qtclean:
+	cd QT
+	nmake /nologo clean
+	-del LDView.exe
+	cd ..
+
+clean: qtclean
+
+!ENDIF
+
 !include "Make.inc"
