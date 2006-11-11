@@ -151,14 +151,50 @@ rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
 
 cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
 
-link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\Resources.res
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\Resources.res
+
+cd ..\..
+
+cd Translations\Czech
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.idb  *.res *lib *.dll
+cd ..
+
+rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D CZECH_EXPORTS /c Czech.cpp
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Czech.pdb /machine:I386 /out:Release\LDView-Czech.dll /implib:Release\LDView-Czech.lib Release\Czech.obj  Release\Resources.res
+
+cd ..\..
+
+cd Translations\Italian
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.idb  *.res *lib *.dll
+cd ..
+
+rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D ITALIAN_EXPORTS /c Italian.cpp
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Italian.pdb /machine:I386 /out:Release\LDView-Italian.dll /implib:Release\LDView-Italian.lib Release\Italian.obj  Release\Resources.res
+
+cd ..\..
+
+cd Translations\Hungarian
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.idb  *.res *lib *.dll
+cd ..
+
+rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D HUNGARIAN_EXPORTS /c Hungarian.cpp
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Hungarian.pdb /machine:I386 /out:Release\LDView-Hungarian.dll /implib:Release\LDView-Hungarian.lib Release\Hungarian.obj  Release\Resources.res
 
 cd ..\..
 
 if not exist "%QTDIR%\bin\qmake.exe" goto End
 cd QT
 %QTDIR%\bin\qmake.exe
-nmake clean all
+nmake /nologo clean all
 cd ..
 
 :End
