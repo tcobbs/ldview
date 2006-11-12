@@ -34,6 +34,18 @@ distclean:
 	cd LDLoader
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
+	cd Translations\Hungarian
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..\..
+	cd Translations\German
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..\..
+	cd Translations\Italian
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..\..
+	cd Translations\Czech
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..\..
 	$(MAKE) -nologo -f Makefile.vc clean
 
 CUI\$(OBJDIR)\CUI.lib: CUI\*.cpp CUI\*.h
@@ -72,10 +84,41 @@ $(OBJDIR)\LDView.exe:	TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) $(OBJDIR
 	/subsystem:windows /incremental:no /machine:I386 /nodefaultlib:"libc.lib" \
 	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib $(EXTRALFLAGS)
 
+all:			translations
+translations:	hungarian german czech italian
+
+hungarian:		Translations\Hungarian\$(OBJDIR)\LDView-Hungarian.dll
+Translations\Hungarian\$(OBJDIR)\LDView-Hungarian.dll: Translations\Hungarian\*.cpp Translations\Hungarian\*.rc Translations\Hungarian\*.h*
+			cd Translations\Hungarian
+			$(MAKE) /f Makefile.vc all
+			cd ..\..
+
+czech:		Translations\Czech\$(OBJDIR)\LDView-Czech.dll
+Translations\Czech\$(OBJDIR)\LDView-Czech.dll: Translations\Czech\*.cpp Translations\Czech\*.rc Translations\Czech\*.h*
+			cd Translations\Czech
+			$(MAKE) /f Makefile.vc all
+			cd ..\..
+
+german:		Translations\German\$(OBJDIR)\LDView-German.dll
+Translations\German\$(OBJDIR)\LDView-German.dll: Translations\German\*.cpp Translations\German\*.rc Translations\German\*.h*
+			cd Translations\German
+			$(MAKE) /f Makefile.vc all
+			cd ..\..
+
+italian:		Translations\Italian\$(OBJDIR)\LDView-Italian.dll
+Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Translations\Italian\*.rc Translations\Italian\*.h*
+			cd Translations\Italian
+			$(MAKE) /f Makefile.vc all
+			cd ..\..
+
+
+
 !IF DEFINED(QTDIR)
 all: QT\LDView.exe
 
-QT\LDView.exe:
+QT\LDView.exe:	TRE\$(OBJDIR)\TRE.lib TCFoundation\$(OBJDIR)\TCFoundation.lib
+QT\LDView.exe:	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib
+QT\LDView.exe:	QT\*.cpp QT\*.h QT\*.ui
 	cd QT
 	$(QTDIR)\bin\qmake
 	nmake /nologo

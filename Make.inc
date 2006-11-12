@@ -8,6 +8,20 @@ MAKE = nmake /nologo
 all:	$(OBJDIR) $(OBJDIR)\$(LIBT)
 !ENDIF
 
+!IF DEFINED(LANG)
+
+COBJS = 
+CCOBJS = $(OBJDIR)\$(LANG).obj 
+
+all: $(OBJDIR) $(OBJDIR)\LDView-$(LANG).dll
+
+$(OBJDIR)\LDView-$(LANG).dll:	$(CCOBJS) $(OBJDIR)\Resources.res
+	link version.lib /nologo /dll /incremental:no /pdb:$(OBJDIR)\LDView-$(LANG).pdb \
+	/machine:I386 /out:$(OBJDIR)\LDView-$(LANG).dll /implib:$(OBJDIR)\LDView-$(LANG).lib \
+	$(OBJDIR)\$(LANG).obj  $(OBJDIR)\Resources.res
+
+!ENDIF
+
 $(OBJDIR):
 	if not exist $(OBJDIR) mkdir $(OBJDIR)
 
@@ -27,5 +41,5 @@ $(OBJDIR)\$(LIBT):  $(OBJDIR) $(CCOBJS) $(COBJS)
 
 clean:
 	cd $(OBJDIR)
-	-del *.obj *.lib *.exe *.pch *.idb *.res
+	-del *.obj *.lib *.exe *.pch *.idb *.res *.dll *.exp
 
