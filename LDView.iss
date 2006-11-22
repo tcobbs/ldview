@@ -6,7 +6,7 @@ AppName=LDView
 AppVerName=LDView 3.1
 AppVersion=3.1.0.2
 OutputBaseFilename=LDView-3100
-SourceDir=L:\TEMP\Releases\LDView-3100
+SourceDir=.
 AppPublisher=Travis Cobbs
 AppPublisherURL=http://ldview.sourceforge.net/
 AppSupportURL=http://ldview.sourceforge.net/
@@ -17,7 +17,7 @@ DefaultGroupName=LDView
 OutputDir=Setup
 AllowNoIcons=yes
 LicenseFile=License.txt
-SetupIconFile=LDViewIcon.ico
+SetupIconFile=Icons\LDViewIcon.ico
 ChangesAssociations=yes
 
 [Tasks]
@@ -27,16 +27,16 @@ Name: screensaver; Description: "Install LDView as a screen saver"; GroupDescrip
 Name: registerfiles; Description: "Use LDView to open LDraw models"; GroupDescription: "File Associations:"; Flags: unchecked
 
 [Files]
-Source: "LDView.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Release\LDView.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "license.txt"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
 Source: "ChangeHistory.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Help.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "m6459.ldr"; DestDir: "{app}"; Flags: ignoreversion
 Source: "8464.mpd"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LDView.hlp"; DestDir: "{app}"; Flags: ignoreversion
+Source: "Help\LDView.hlp"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LDView Home Page.url"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LDView.exe"; DestDir: "{sys}"; DestName: "LDView.scr"; Flags: ignoreversion; Tasks: screensaver
+Source: "Release\LDView.exe"; DestDir: "{sys}"; DestName: "LDView.scr"; Flags: ignoreversion; Tasks: screensaver
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
