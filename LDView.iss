@@ -29,7 +29,12 @@ Name: registerfiles; Description: "Use LDView to open LDraw models"; GroupDescri
 [Files]
 Source: "Release\LDView.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "license.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
+; NOTE: The first Readme.txt is for everything prior to Windows Vista, and can
+;       be shown at the end of the installation.  However, since in Vista that
+;       would launch Notepad with the same security permissions as the
+;       installer, we won't let the user view it from the installer there.
+Source: "Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme; OnlyBelowVersion: 0,6
+Source: "Readme.txt"; DestDir: "{app}"; Flags: ignoreversion; MinVersion: 0,6
 Source: "ChangeHistory.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "Help.html"; DestDir: "{app}"; Flags: ignoreversion
 Source: "m6459.ldr"; DestDir: "{app}"; Flags: ignoreversion
@@ -47,7 +52,11 @@ Name: "{userdesktop}\LDView"; Filename: "{app}\LDView.exe"; Tasks: desktopicon
 Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView"; Filename: "{app}\LDView.exe"; Tasks: quicklaunchicon
 
 [Run]
-Filename: "{app}\LDView.exe"; Parameters: """{app}\m6459.ldr"""; Description: "Launch LDView"; Flags: nowait postinstall skipifsilent
+; NOTE: The OnlyBelowVersion flag below prevents this from showing up in Windows
+;       Vista.  If it did show up in Vista, LDView would be executed with the
+;       same security permissions as the installer, and that's considered to be
+;       a bad thing there.
+Filename: "{app}\LDView.exe"; Parameters: """{app}\m6459.ldr"""; Description: "Launch LDView"; Flags: nowait postinstall skipifsilent; OnlyBelowVersion: 0,6
 
 [Registry]
 Root: HKCR; Subkey: ".ldr"; ValueType: string; ValueName: ""; ValueData: "LDView.ldr"; Flags: uninsdeletevalue; Tasks: registerfiles
