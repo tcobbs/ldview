@@ -59,6 +59,8 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\LDView"; Filename:
 Filename: "{app}\LDView.exe"; Parameters: """{app}\m6459.ldr"""; Description: "Launch LDView"; Flags: nowait postinstall skipifsilent; OnlyBelowVersion: 0,6
 
 [Registry]
+Root: HKLM; Subkey: "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\LDView.exe"; ValueType: string; ValueName: ""; ValueData: "{app}\LDView.exe"; Flags: uninsdeletekey
+
 Root: HKCR; Subkey: ".ldr"; ValueType: string; ValueName: ""; ValueData: "LDView.ldr"; Flags: uninsdeletevalue; Tasks: registerfiles
 Root: HKCR; Subkey: "LDView.ldr"; ValueType: string; ValueName: ""; ValueData: "LDraw Model"; Flags: uninsdeletekey; Tasks: registerfiles
 Root: HKCR; Subkey: "LDView.ldr\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\LDView.exe,3"; Tasks: registerfiles
