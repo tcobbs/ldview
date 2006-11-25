@@ -767,6 +767,15 @@ void Preferences::setUseLighting(bool value)
 	}
 }
 
+void Preferences::setUseBFC(bool value)
+{
+	if (value != ldPrefs->getBfc())
+	{
+		ldPrefs->setBfc(value, true, true);
+		reflectGeometrySettings();
+	}
+}
+
 void Preferences::setUseSeams(bool value)
 {
     if (value != ldPrefs->getUseSeams())
@@ -1943,6 +1952,11 @@ bool Preferences::getShowsHighlightLines(void)
 bool Preferences::getUseLighting(void)
 {
 	return ldPrefs->getUseLighting();
+}
+
+bool Preferences::getUseBFC(void)
+{
+	return ldPrefs->getBfc();
 }
 
 bool Preferences::getUseSeams(void)
