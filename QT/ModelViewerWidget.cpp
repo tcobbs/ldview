@@ -1551,6 +1551,12 @@ void ModelViewerWidget::doLighting(bool value)
     doApply();
 }
 
+void ModelViewerWidget::doBFC(bool value)
+{
+	preferences->setUseBFC(value);
+	doApply();
+}
+
 void ModelViewerWidget::doPrimitiveSubstitution(bool value)
 {
     preferences->setAllowPrimitiveSubstitution(value);
@@ -1570,6 +1576,7 @@ void ModelViewerWidget::reflectSettings(void)
         mainWindow->toolbarWireframeAction->setOn(preferences->getDrawWireframe());
 		mainWindow->toolbarEdgeAction->setOn(preferences->getShowsHighlightLines());
 		mainWindow->toolbarLightingAction->setOn(preferences->getUseLighting());
+		mainWindow->toolbarBFCAction->setOn(preferences->getUseBFC());
 		mainWindow->toolbarSeamsAction->setOn(preferences->getUseSeams());
 		mainWindow->toolbarPrimitiveSubstitutionAction->setOn(preferences->getAllowPrimitiveSubstitution());
     }

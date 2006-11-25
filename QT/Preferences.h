@@ -89,6 +89,8 @@ public:
 	bool getShowsHighlightLines(void);
 	void setUseLighting(bool);
 	bool getUseLighting(void);
+	bool getUseBFC(void);
+	void setUseBFC(bool);
 	void setAllowPrimitiveSubstitution(bool);
 	void setUseSeams(bool);
 	bool getUseSeams(void);

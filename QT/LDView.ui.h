@@ -98,6 +98,11 @@ void LDView::toolbarLighting(bool flag)
     modelViewer->doLighting(flag);
 }
 
+void LDView::toolbarBFC(bool flag)
+{
+    modelViewer->doBFC(flag);
+}
+
 void LDView::toolbarPrimitiveSubstitution(bool flag)
 {
     modelViewer->doPrimitiveSubstitution(flag);

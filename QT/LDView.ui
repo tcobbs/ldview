@@ -105,6 +105,7 @@
 		<action name="toolbarEdgeAction"/>
 		<action name="toolbarPrimitiveSubstitutionAction"/>
 		<action name="toolbarLightingAction"/>
+		<action name="toolbarBFCAction"/>
 		<action name="editPreferencesAction"/>
 	</toolbar>
 </toolbars>
@@ -302,6 +303,26 @@
         </property>
         <property name="toolTip">
             <string>Lighting</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarBFCAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_bfc.png</iconset>
+        </property>
+        <property name="text">
+            <string>BFC</string>
+        </property>
+        <property name="menuText">
+            <string>BFC</string>
+        </property>
+        <property name="toolTip">
+            <string>BFC</string>
         </property>
         <property name="toggleAction">
             <bool>true</bool>
@@ -960,6 +981,12 @@
         <slot>toolbarLighting(bool)</slot>
     </connection>
     <connection>
+        <sender>toolbarBFCAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>toolbarBFC(bool)</slot>
+    </connection>
+    <connection>
         <sender>toolbarSeamsAction</sender>
         <signal>toggled(bool)</signal>
         <receiver>LDView</receiver>
@@ -1125,6 +1152,7 @@
     <slot>toolbarEdge( bool flag )</slot>
     <slot>toolbarPrimitiveSubstitution( bool flag )</slot>
     <slot>toolbarLighting( bool flag )</slot>
+	<slot>toolbarBFC( bool flag )</slot>
     <slot>toolbarSeams( bool flag )</slot>
     <slot>viewFullScreen()</slot>
     <slot>viewResetView()</slot>
