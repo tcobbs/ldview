@@ -699,6 +699,30 @@ void ModelViewerWidget::zoomButtonRelease(QMouseEvent * /*event*/)
 	modelViewer->setZoomSpeed(0.0f);
 }
 
+void ModelViewerWidget::wheelEvent(QWheelEvent *event)
+{
+	bool controlPressed;
+
+	lock();
+	if (loading)
+	{
+		unlock();
+		return;
+	}
+	controlPressed = event->state() & Qt::ControlButton;
+	startPaintTimer();
+	if (controlPressed)
+	{
+		modelViewer->setClipZoom(true);
+	}
+	else
+	{
+		modelViewer->setClipZoom(false);
+	}
+	modelViewer->zoom((TCFloat)event->delta() * -0.1f);
+	unlock();
+}
+
 void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 {
 	bool controlPressed;

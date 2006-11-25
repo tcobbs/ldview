@@ -168,6 +168,7 @@ protected:
 	// Events
 	void mousePressEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);
 	void timerEvent(QTimerEvent *event);
 	void paintEvent(QPaintEvent *event);
