@@ -1152,7 +1152,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	}
 	connectMenuShows();
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-
+	mainWindow->toolbarViewButton->setPopup(mainWindow->viewingAnglePopupMenu);
 	unlock();
 }
 

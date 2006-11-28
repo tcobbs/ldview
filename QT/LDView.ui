@@ -106,6 +106,26 @@
 		<action name="toolbarPrimitiveSubstitutionAction"/>
 		<action name="toolbarLightingAction"/>
 		<action name="toolbarBFCAction"/>
+		<widget class="QPushButton">
+			<property name="name">
+				<cstring>toolbarViewButton</cstring>
+			</property>
+	        <property name="iconSet">
+    	        <iconset>toolbar_view.png</iconset>
+        	</property>
+            <property name="maximumSize">
+                <size>
+                    <width>40</width>
+                    <height>32767</height>
+                </size>
+            </property>
+            <property name="focusPolicy">
+                <enum>NoFocus</enum>
+            </property>
+            <property name="flat">
+                <bool>true</bool>
+            </property>
+		</widget>
 		<action name="editPreferencesAction"/>
 	</toolbar>
 </toolbars>
@@ -145,7 +165,7 @@
         <action name="viewStatusBarAction"/>
         <action name="viewZoomToFitAction"/>
         <actiongroup name="viewAngleGroup"/>
-        <item text="Viewing Angle" name="popupMenu_19" accel="">
+        <item text="Viewing Angle" name="viewingAnglePopupMenu" accel="">
             <action name="frontViewAngleAction"/>
             <action name="backViewAngleAction"/>
             <action name="leftViewAngleAction"/>
