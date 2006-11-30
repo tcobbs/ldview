@@ -4,10 +4,9 @@
 ; http://www.jrsoftware.org/isdl.php#qsp
 
 #define AppFilename 'Release\LDView.exe'
-#define PrettyVersion(str Filename) GetFileVersionString(Filename)
 #define SetupFilename(str Filename) ParseVersion(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2])
 
-#define AppVerName GetFileDescription(AppFilename) + ' ' + PrettyVersion(AppFilename)
+#define AppVerName GetFileDescription(AppFilename) + ' ' + GetFileVersionString(AppFilename)
 #define IntallDescription  AppVerName + ' Setup'
 #define AppVersion GetFileVersion(AppFilename)
 
