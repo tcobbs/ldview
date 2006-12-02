@@ -24,6 +24,7 @@
 #include <qpainter.h>
 #include <qprogressdialog.h>
 #include <qtimer.h>
+#include <qtoolbutton.h>
 #if (QT_VERSION >>16)==4
 #include <q3paintdevicemetrics.h>
 #define QPaintDeviceMetrics Q3PaintDeviceMetrics
@@ -1152,7 +1153,13 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	}
 	connectMenuShows();
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-	mainWindow->toolbarViewButton->setPopup(mainWindow->viewingAnglePopupMenu);
+	QToolButton *viewButton = (QToolButton*)mainWindow->toolbar->child(
+		"toolbarViewAction_action_button");
+	if (viewButton)
+	{
+		viewButton->setPopup(mainWindow->viewingAnglePopupMenu);
+		viewButton->setPopupDelay(1);
+	}
 	unlock();
 }
 
