@@ -32,6 +32,7 @@
 #include <qpaintdevicemetrics.h>
 #endif
 #include <qprinter.h>
+#include <qobjectlist.h>
 
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
@@ -1153,12 +1154,18 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	}
 	connectMenuShows();
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-	QToolButton *viewButton = (QToolButton*)mainWindow->toolbar->child(
-		"toolbarViewAction_action_button");
-	if (viewButton)
+	QObjectList *toolButtons = mainWindow->toolbar->queryList("QToolButton");
+	QObjectListIt it(*toolButtons);
+	QObject *object;
+	for (; (object = it.current()) != NULL; ++it)
 	{
-		viewButton->setPopup(mainWindow->viewingAnglePopupMenu);
-		viewButton->setPopupDelay(1);
+		QToolButton *button = (QToolButton*)object;
+		if (button->textLabel() == TCLocalStrings::get("ViewingAngle"))
+		{
+			printf("found button: %s\n", button->name());
+			button->setPopup(mainWindow->viewingAnglePopupMenu);
+			button->setPopupDelay(1);
+		}
 	}
 	unlock();
 }

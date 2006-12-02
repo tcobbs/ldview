@@ -337,13 +337,13 @@
 			<iconset>toolbar_view.png</iconset>
 		</property>
 		<property name="text">
-			<string>Viewing Angles</string>
+			<string>Viewing Angle</string>
 		</property>
 		<property name="menuText">
-			<string>Viewing Angles</string>
+			<string>Viewing Angle</string>
 		</property>
 		<property name="toolTip">
-			<string>Viewing Angles</string>
+			<string>Viewing Angle</string>
 		</property>
 	</action>
     <action>
