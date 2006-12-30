@@ -19,6 +19,9 @@ OBJDIR = Release
 all: $(OBJDIR) $(OBJDIR)\LDView.exe
 
 distclean:
+	cd Help
+	-del LDView.hlp
+	cd ..
 	cd TRE 
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
@@ -111,7 +114,13 @@ Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Tr
 			$(MAKE) /f Makefile.vc all
 			cd ..\..
 
+Help\LDVIEW.HLP:	Help\*.rtf Help\LDView.hpj
+	cd Help
+	$(HCW) /c /e LDView.hpj
+	cd ..
 
+installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss
+	"$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
 
 !IF DEFINED(QTDIR)
 all: QT\LDView.exe
