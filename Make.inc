@@ -41,6 +41,8 @@ $(OBJDIR)\$(LIBT):  $(OBJDIR) $(CCOBJS) $(COBJS)
 	link -lib -nologo -out:$(OBJDIR)\$(LIBT) $(CCOBJS) $(COBJS)
 !ENDIF
 
+HCW=$(PROGRAMFILES)\Help Workshop\hcw.exe
+
 clean:
 	cd $(OBJDIR)
 	-del *.obj *.lib *.exe *.pch *.idb *.res *.dll *.exp
