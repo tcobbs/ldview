@@ -6,9 +6,21 @@ rem Leave rem to use the default Visual C++ environment
 rem set LIB=
 rem set INCLUDE=
 
+for %%i IN ( hcw.exe ) do set HCW="%%~$PATH:i"
+if not %HCW%=="" goto INNOCHECK
 
+set HCW="%ProgramFiles%\Help Workshop\hcw.exe"
+if exist "%ProgramFiles%\Help Workshop\hcw.exe" goto INNOCHECK
+echo Please download Help Workshop from: ftp://ftp.microsoft.com/Softlib/MSLFILES/hcwsetup.EXE
+goto END
 
+:INNOCHECK
 
+if exist "%ProgramFiles%\Inno Setup 5\iscc.exe" goto SDKCHECK
+echo Please Download Inno Setup from http://www.jrsoftware.org/isdl.php#qsp
+goto END
+
+:SDKCHECK
 
 if not "x%INCLUDE%x" == "xx" goto Skip
 
@@ -55,6 +67,11 @@ call "%ProgramFiles%\Microsoft Visual C++ Toolkit 2003\vcvars32.bat"
 
 
 
+
+cd Help
+echo Compiling Help using %HCW%
+%HCW% /c /e LDView.hlp
+cd ..
 
 
 
@@ -190,6 +207,8 @@ cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D HUNGARIAN_EXPORTS /c Hungarian.cp
 link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Hungarian.pdb /machine:I386 /out:Release\LDView-Hungarian.dll /implib:Release\LDView-Hungarian.lib Release\Hungarian.obj  Release\Resources.res
 
 cd ..\..
+
+"%ProgramFiles%\Inno Setup 5\iscc.exe" LDView.iss
 
 if not exist "%QTDIR%\bin\qmake.exe" goto End
 cd QT
