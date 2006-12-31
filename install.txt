@@ -29,6 +29,8 @@ Required components
 - Microsoft Platform SDK
 - C++ compiler (Visual C++ 6.0 or Visual C++ Toolkit 2003, or 
 		Visual Studio Express)
+- Microsoft Help Workshop
+- Inno Setup 5 with Preprocessor (for installer package)
 - boost library
 - Set environment variable INCLUDE, LIB and PATH for the 
   components above
@@ -80,4 +82,9 @@ libpng 1.2.12
 
 nmake -f scripts\makefile.vcawin32 clean all AR="link -lib" CFLAGS="-DPNG_USE_PNGVCRD -nologo -MT -O2 -W3 -I..\zlib" clean all
 
+unzip32.lib 5.5.2
+-----------------
+
+set INCLUDE=%INCLUDE%;..\zlib
+nmake -f win32\Makefile DLLSTANDALONE=1 USEZLIB=1 clean lib cvarsdll=$(cvarsmt)
 
