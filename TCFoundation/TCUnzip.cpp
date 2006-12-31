@@ -2,8 +2,8 @@
 #include "mystring.h"
 
 #ifdef WIN32
-#include <UnzipWinDll/structs.h>
-#include <UnzipWinDll/decs.h>
+#include <windll/structs.h>
+#include <windll/decs.h>
 
 int WINAPI passwordFunc(char *, int, const char *, const char *);
 int WINAPI printFunc(LPSTR, unsigned long);
