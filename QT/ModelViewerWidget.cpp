@@ -33,6 +33,7 @@
 #endif
 #include <qprinter.h>
 #include <qobjectlist.h>
+#include <qfileinfo.h>
 
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
@@ -1166,6 +1167,27 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 			button->setPopup(mainWindow->viewingAnglePopupMenu);
 			button->setPopupDelay(1);
 		}
+	}
+	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+	char *commandLineFilename = NULL;
+
+	if (commandLine)
+	{
+		int i;
+		int count = commandLine->getCount();
+		for (i = 0; i < count && !commandLineFilename; i++)
+		{
+			char *arg = commandLine->stringAtIndex(i);
+
+			if (arg[0] != '-')
+				commandLineFilename = arg;
+		}
+	}
+	if (commandLineFilename && verifyLDrawDir())
+	{
+		QFileInfo fi(commandLineFilename);
+		commandLineFilename = copyString(fi.absFilePath().ascii());
+		loadModel(commandLineFilename);
 	}
 	unlock();
 }
