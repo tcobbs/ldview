@@ -95,25 +95,25 @@ translations:	hungarian german czech italian
 hungarian:		Translations\Hungarian\$(OBJDIR)\LDView-Hungarian.dll
 Translations\Hungarian\$(OBJDIR)\LDView-Hungarian.dll: Translations\Hungarian\*.cpp Translations\Hungarian\*.rc Translations\Hungarian\*.h*
 			cd Translations\Hungarian
-			$(MAKE) /f Makefile.vc all
+			$(MAKE)  -nologo /f Makefile.vc all
 			cd ..\..
 
 czech:		Translations\Czech\$(OBJDIR)\LDView-Czech.dll
 Translations\Czech\$(OBJDIR)\LDView-Czech.dll: Translations\Czech\*.cpp Translations\Czech\*.rc Translations\Czech\*.h*
 			cd Translations\Czech
-			$(MAKE) /f Makefile.vc all
+			$(MAKE)  -nologo /f Makefile.vc all
 			cd ..\..
 
 german:		Translations\German\$(OBJDIR)\LDView-German.dll
 Translations\German\$(OBJDIR)\LDView-German.dll: Translations\German\*.cpp Translations\German\*.rc Translations\German\*.h*
 			cd Translations\German
-			$(MAKE) /f Makefile.vc all
+			$(MAKE)  -nologo /f Makefile.vc all
 			cd ..\..
 
 italian:		Translations\Italian\$(OBJDIR)\LDView-Italian.dll
 Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Translations\Italian\*.rc Translations\Italian\*.h*
 			cd Translations\Italian
-			$(MAKE) /f Makefile.vc all
+			$(MAKE)  -nologo /f Makefile.vc all
 			cd ..\..
 
 Help\LDVIEW.HLP:	Help\*.rtf Help\LDView.hpj
