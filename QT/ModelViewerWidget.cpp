@@ -65,6 +65,8 @@
 
 #define PNG_IMAGE_TYPE_INDEX 1
 #define BMP_IMAGE_TYPE_INDEX 2
+#define WIN_WIDTH 640
+#define WIN_HEIGHT 480
 
 TCStringArray *ModelViewerWidget::recentFiles = NULL;
 
@@ -191,6 +193,52 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	}
 	modelViewer->setProgramPath(arg0);
 	delete arg0;
+    TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
+    char *commandLineFilename = NULL;
+
+    if (commandLine)
+    {
+        int i;
+        int count = commandLine->getCount();
+        for (i = 0; i < count && !commandLineFilename; i++)
+        {
+            char *arg = commandLine->stringAtIndex(i);
+
+            if (arg[0] != '-')
+                commandLineFilename = arg;
+        }
+    }
+	QString current = QDir::currentDirPath();
+    if (commandLineFilename && verifyLDrawDir())
+    {
+        QFileInfo fi(commandLineFilename);
+        commandLineFilename = copyString(fi.absFilePath().ascii());
+//      loadModel(commandLineFilename);
+        if (chDirFromFilename(commandLineFilename))
+        {
+            modelViewer->setFilename(commandLineFilename);
+            modelViewer->loadModel();
+        }
+    }
+    char *snapshotFilename =
+        TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
+    if (snapshotFilename)
+    {
+		QDir::setCurrent(current);
+		QFileInfo fi(snapshotFilename);
+		QString s(snapshotFilename);
+		char *s2=copyString(fi.absFilePath().ascii());
+		saveImageType = ( s.lower().right(4)==".png" ? 
+			PNG_IMAGE_TYPE_INDEX : BMP_IMAGE_TYPE_INDEX);
+		saveImage(s2, 
+			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+			TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : 
+			TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false),
+            TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false) :  
+			TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false));
+		QApplication::exit();
+    }
 }
 
 /*
@@ -1167,27 +1215,6 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 			button->setPopup(mainWindow->viewingAnglePopupMenu);
 			button->setPopupDelay(1);
 		}
-	}
-	TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
-	char *commandLineFilename = NULL;
-
-	if (commandLine)
-	{
-		int i;
-		int count = commandLine->getCount();
-		for (i = 0; i < count && !commandLineFilename; i++)
-		{
-			char *arg = commandLine->stringAtIndex(i);
-
-			if (arg[0] != '-')
-				commandLineFilename = arg;
-		}
-	}
-	if (commandLineFilename && verifyLDrawDir())
-	{
-		QFileInfo fi(commandLineFilename);
-		commandLineFilename = copyString(fi.absFilePath().ascii());
-		loadModel(commandLineFilename);
 	}
 	unlock();
 }
