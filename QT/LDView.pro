@@ -32,6 +32,7 @@ unix {
   QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a
+  QMAKE_CLEAN += ../[TL]*/.obj/*.o ../[TL]*/lib*.a
 }
 
 win32 {
