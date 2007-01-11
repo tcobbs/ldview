@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-ldraw">
+    <comment>LDraw Model</comment>
+    <glob pattern="*.ldr" />
+    <glob pattern="*.LDR" />
+  </mime-type>
+
+  <mime-type type="application/x-multipart-ldraw">
+    <comment>LDraw Model</comment>
+    <glob pattern="*.mpd" />
+    <glob pattern="*.MPD" />
+  </mime-type>
+
+</mime-info>
