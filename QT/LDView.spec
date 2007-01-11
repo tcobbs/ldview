@@ -63,7 +63,8 @@ install -m 644 desktop/ldview.applications $RPM_BUILD_ROOT/usr/share/application
 install -m 644 desktop/ldraw.desktop $RPM_BUILD_ROOT/usr/share/applications/ldraw.desktop
 install -m 755 desktop/ldraw-thumbnailer $RPM_BUILD_ROOT/usr/bin/ldraw-thumbnailer
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
-install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-image-x-ldraw.png
+install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.schemas
 %files
 /usr/local/bin/LDView
@@ -88,7 +89,8 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/share/applications/ldraw.desktop
 /usr/bin/ldraw-thumbnailer
 /usr/share/pixmaps/gnome-ldraw.png
-/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-image-x-ldraw.png
+/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 /etc/gconf/schemas/ldraw.schemas
 %clean
 rm -rf $RPM_BUILD_ROOT
