@@ -10,8 +10,11 @@ update-mime-database  /usr/share/mime
 update-desktop-database
 
 cp -f images/LDViewIcon.png /usr/share/pixmaps/gnome-ldraw.png
-ln -sf /usr/share/pixmaps/gnome-ldraw.png \
-/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-image-x-ldraw.png
+cp -f images/LDViewIcon.png \
+/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
+cp -f images/LDViewIcon.png \
+/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
+
 
 chmod +x /usr/bin/ldraw-thumbnailer
 cp -f desktop/ldraw.schemas /etc/gconf/schemas/
