@@ -1,0 +1,7 @@
+ldview
+	command=/usr/local/bin/LDView
+	name=LDView
+	can_open_multiple_files=false
+	expects_uris=false
+	requires_terminal=false
+	mime_types=application/x-ldraw,application/x-multipart-ldraw
