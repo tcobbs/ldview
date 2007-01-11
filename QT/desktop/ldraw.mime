@@ -1,0 +1,5 @@
+application/x-ldraw
+	ext: ldr LDR
+
+application/x-multipart-ldraw
+	ext: mpd MPD 

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=LDView
+GenericName=LDraw model viewer
+Comment=LDraw Model Viewer
+Exec=/usr/local/bin/LDView %f
+Icon=gnome-ldraw.png
+Terminal=false
+Type=Application
+MimeType=application/x-ldraw;application/x-multipart-ldraw
+Categories=Application;

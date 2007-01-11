@@ -1,0 +1,16 @@
+application/x-ldraw
+    category=Images
+    description=LDraw Model
+    icon_filename=gnome-ldraw
+    short_list_application_ids_for_novice_user_level=ldview
+    short_list_application_ids_for_intermediate_user_level=ldview
+    short_list_application_ids_for_advanced_user_level=ldview
+
+application/x-multipart-ldraw
+    category=Images
+    description=LDraw Model
+    icon_filename=gnome-ldraw
+    short_list_application_ids_for_novice_user_level=ldview
+    short_list_application_ids_for_intermediate_user_level=ldview
+    short_list_application_ids_for_advanced_user_level=ldview
+
