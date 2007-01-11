@@ -60,7 +60,7 @@ install -m 644 desktop/ldraw.mime $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.mime
 install -m 644 desktop/ldraw.xml  $RPM_BUILD_ROOT/usr/share/mime/packages/ldraw.xml
 install -m 644 desktop/ldraw.keys $RPM_BUILD_ROOT/usr/share/mime-info/ldraw.keys
 install -m 644 desktop/ldview.applications $RPM_BUILD_ROOT/usr/share/application-registry/ldview.applications
-install -m 644 desktop/ldview.desktop $RPM_BUILD_ROOT/usr/share/applications/ldview.desktop
+install -m 644 desktop/ldraw.desktop $RPM_BUILD_ROOT/usr/share/applications/ldraw.desktop
 install -m 755 desktop/ldraw-thumbnailer $RPM_BUILD_ROOT/usr/bin/ldraw-thumbnailer
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldraw.png
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-image-x-ldraw.png
