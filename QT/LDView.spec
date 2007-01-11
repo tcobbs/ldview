@@ -85,7 +85,7 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/share/mime/packages/ldraw.xml
 /usr/share/mime-info/ldraw.keys
 /usr/share/application-registry/ldview.applications
-/usr/share/applications/ldview.desktop
+/usr/share/applications/ldraw.desktop
 /usr/bin/ldraw-thumbnailer
 /usr/share/pixmaps/gnome-ldraw.png
 /usr/share/icons/gnome/32x32/mimetypes/gnome-mime-image-x-ldraw.png
