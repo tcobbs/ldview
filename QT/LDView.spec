@@ -8,7 +8,7 @@ URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
-BuildRequires: qt-devel, boost-devel
+BuildPreReq: qt-devel, boost-devel
 
 %description
 LDView is a real-time 3D viewer for displaying LDraw models using hardware-accellerated 3D graphics. It was written using OpenGL, so should be accellerated on any video card which provides full OpenGL 3D accelleration (so-called mini-drivers are not likely to work). It should also work on other video cards using OpenGL software rendering, albeit at a much slower speed. For information on LDraw, please visit www.ldraw.org, the centralized LDraw information site. 
@@ -22,7 +22,7 @@ cvs -z3 -d:pserver:anonymous@ldview.cvs.sourceforge.net/cvsroot/ldview co LDView
 %build
 cd $RPM_SOURCE_DIR/LDView/QT
 qmake
-./makeall
+make
 strip LDView
 
 %install
@@ -66,6 +66,7 @@ install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/pixmaps/gnome-ldr
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 install -m 644 images/LDViewIcon.png $RPM_BUILD_ROOT/usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.schemas
+
 %files
 /usr/local/bin/LDView
 /usr/local/share/ldview/Help.html
@@ -82,6 +83,18 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/local/share/ldview/ldview_de.qm
 /usr/local/share/ldview/ldview_it.qm
 /usr/local/share/ldview/ldview_cz.qm
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%package gnome
+Summary: Gnome integration for LDView
+Group: Applications/Multimedia
+PreReq: GConf2, shared-mime-info, desktop-file-utils
+%description gnome
+Gnome integration for LDView
+
+%files gnome
 /usr/share/mime-info/ldraw.mime
 /usr/share/mime/packages/ldraw.xml
 /usr/share/mime-info/ldraw.keys
@@ -92,6 +105,20 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-ldraw.png
 /usr/share/icons/gnome/32x32/mimetypes/gnome-mime-application-x-multipart-ldraw.png
 /etc/gconf/schemas/ldraw.schemas
-%clean
-rm -rf $RPM_BUILD_ROOT
+
+%post gnome
+update-mime-database  /usr/share/mime
+update-desktop-database
+cd /etc/gconf/schemas
+GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+gconftool-2 --makefile-install-rule ldraw.schemas
+
+%postun gnome
+update-mime-database  /usr/share/mime
+update-desktop-database
+
+%preun gnome
+cd /etc/gconf/schemas
+GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+gconftool-2 --makefile-uninstall-rule ldraw.schemas
 
