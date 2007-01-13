@@ -1,0 +1,38 @@
+// LDViewThumbs.idl : IDL source for LDViewThumbs.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (LDViewThumbs.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(0F7171EC-663E-4C01-9777-5B6496E3DD91),
+	
+		helpstring("ILDViewThumbExtractor Interface"),
+		pointer_default(unique)
+	]
+	interface ILDViewThumbExtractor : IUnknown
+	{
+	};
+
+[
+	uuid(9FB564E8-0F22-48FE-859C-372B4A8B1CFB),
+	version(1.0),
+	helpstring("LDViewThumbs 1.0 Type Library")
+]
+library LDVIEWTHUMBSLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(FA993BF4-40AF-49C1-BD0B-035A275757C1),
+		helpstring("LDViewThumbExtractor Class")
+	]
+	coclass LDViewThumbExtractor
+	{
+		[default] interface ILDViewThumbExtractor;
+	};
+};
