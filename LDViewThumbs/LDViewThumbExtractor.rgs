@@ -1,0 +1,41 @@
+HKCR
+{
+	LDViewThumbs.LDViewThumbExtractor.1 = s 'LDViewThumbExtractor Class'
+	{
+		CLSID = s '{FA993BF4-40AF-49C1-BD0B-035A275757C1}'
+	}
+	LDViewThumbs.LDViewThumbExtractor = s 'LDViewThumbExtractor Class'
+	{
+		CLSID = s '{FA993BF4-40AF-49C1-BD0B-035A275757C1}'
+		CurVer = s 'LDViewThumbs.LDViewThumbExtractor.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {FA993BF4-40AF-49C1-BD0B-035A275757C1} = s 'LDViewThumbExtractor Class'
+		{
+			ProgID = s 'LDViewThumbs.LDViewThumbExtractor.1'
+			VersionIndependentProgID = s 'LDViewThumbs.LDViewThumbExtractor'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{9FB564E8-0F22-48FE-859C-372B4A8B1CFB}'
+		}
+	}
+
+	NoRemove .ldr
+	{
+		shellex
+		{
+			{BB2E617C-0920-11d1-9A0B-00C04FC2D6C1} = s '{FA993BF4-40AF-49C1-BD0B-035A275757C1}'
+		}
+	}
+
+	NoRemove .mpd
+	{
+		shellex
+		{
+			{BB2E617C-0920-11d1-9A0B-00C04FC2D6C1} = s '{FA993BF4-40AF-49C1-BD0B-035A275757C1}'
+		}
+	}
+}
