@@ -9,7 +9,7 @@
 #include <TCFoundation/myString.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <commctrl.h>
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 
 #include <stdio.h>
 

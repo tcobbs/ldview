@@ -3,27 +3,14 @@
 
 #include <TCFoundation/TCObject.h>
 #include <LDLib/LDrawModelViewer.h>
-#ifdef WIN32
-// In Windows, we have to disable a number of warnings in order to use any STL
-// classes without getting tons of warnings.  The following warning is shut off
-// completely; it's just the warning that identifiers longer than 255 characters
-// will be truncated in the debug info.  I really don't care about this.  Note
-// that the other warnings are only disabled during the #include of the STL
-// headers due to the warning(push) and warning(pop).
-#pragma warning(push, 1)	// Minimum warnings during STL includes
-#endif // WIN32
-#include <string>
-#include <map>
-#ifdef WIN32
-#pragma warning(pop)
-#endif // WIN32
+#include <TCFoundation/TCStlIncludes.h>
 
 typedef std::map<std::string, bool> StringBoolMap;
 
 class LDPreferences : public TCObject
 {
 public:
-	LDPreferences(LDrawModelViewer* modelViewer);
+	LDPreferences(LDrawModelViewer* modelViewer = NULL);
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.
@@ -40,6 +27,8 @@ public:
 	void loadDefaultEffectsSettings(void);
 	void loadDefaultPrimitivesSettings(void);
 	void loadDefaultUpdatesSettings(void);
+	void loadDefaultInventorySettings(void);
+	void loadInventorySettings(void);
 	// *************************************************************************
 
 	void commitSettings(void);
@@ -48,6 +37,7 @@ public:
 	void commitEffectsSettings(void);
 	void commitPrimitivesSettings(void);
 	void commitUpdatesSettings(void);
+	void commitInventorySettings(void);
 
 	virtual void saveDefaultView(void);
 	virtual void resetDefaultView(void);
@@ -127,6 +117,11 @@ public:
 	int getMissingPartWait(void) { return m_missingPartWait; }
 	int getUpdatedPartWait(void) { return m_updatedPartWait; }
 
+	// Inventory settings
+	bool getInvShowModel(void) { return m_invShowModel; }
+	bool getInvExternalCss(void) { return m_invExternalCss; }
+	const char *getInvLastSavePath(void) { return m_invLastSavePath.c_str(); }
+
 
 	// General settings
 	void setFsaaMode(int value, bool commit = false);
@@ -201,6 +196,11 @@ public:
 	void setCheckPartTracker(bool value, bool commit = false);
 	void setMissingPartWait(int value, bool commit = false);
 	void setUpdatedPartWait(int value, bool commit = false);
+
+	// Inventory settings
+	void setInvShowModel(bool value, bool commit = false);
+	void setInvExternalCss(bool value, bool commit = false);
+	void setInvLastSavePath(const char *value, bool commit = false);
 
 	// No UI
 	void setDefaultZoom(TCFloat value, bool commit = false);
@@ -309,6 +309,11 @@ protected:
 	bool m_checkPartTracker;
 	int m_missingPartWait;
 	int m_updatedPartWait;
+
+	// Inventory settings
+	bool m_invShowModel;
+	bool m_invExternalCss;
+	std::string m_invLastSavePath;
 
 	// Settings with no UI
 	bool m_skipValidation;

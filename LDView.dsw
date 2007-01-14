@@ -69,6 +69,21 @@ Package=<4>
 
 ###############################################################################
 
+Project: "LDViewThumbs"=.\LDViewThumbs\LDViewThumbs.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name TCFoundation
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "TCFoundation"=.\TCFoundation\TCFoundation.dsp - Package Owner=<4>
 
 Package=<5>

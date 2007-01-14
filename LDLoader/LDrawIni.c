@@ -847,6 +847,15 @@ static int IsDir(char *Path, LDrawFileCaseCallback FileCaseCallback)
 {
    struct stat    Stat;
 
+#ifdef _WIN32
+   char NewPath[4];
+   if (strlen(Path) == 2 && Path[1] == ':')
+   {
+	   strcpy(NewPath, Path);
+	   strcat(NewPath, "\\");
+	   Path = NewPath;
+   }
+#endif
    if (stat(Path, &Stat) == 0)
    {
       return (Stat.st_mode & S_IFDIR);

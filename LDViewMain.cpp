@@ -12,7 +12,7 @@
 #include <CUI/CUIWindow.h>
 #include "SSPreview.h"
 #include "AppResources.h"
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <stdio.h>
 
 void createConsole(void)

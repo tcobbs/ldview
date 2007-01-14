@@ -2,7 +2,7 @@
 #include "ModelWindow.h"
 #include "SSModelWindow.h"
 #include "LDViewWindow.h"
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 #include "LDVExtensionsSetup.h"
 
 #include <TCFoundation/mystring.h>

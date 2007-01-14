@@ -13,6 +13,7 @@
 #include <LDLoader/LDLFindFileAlert.h>
 #include "LDModelParser.h"
 #include "LDPreferences.h"
+#include "LDPartsList.h"
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
@@ -26,6 +27,7 @@
 
 LDrawModelViewer::LDrawModelViewer(int width, int height)
 			:mainTREModel(NULL),
+			 mainModel(NULL),
 			 filename(NULL),
 			 programPath(NULL),
 			 width(width),
@@ -151,6 +153,7 @@ void LDrawModelViewer::dealloc(void)
 //	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
 	TCAlertManager::unregisterHandler(LDLFindFileAlert::alertClass(), this);
 	TCObject::release(mainTREModel);
+	TCObject::release(mainModel);
 	mainTREModel = NULL;
 	delete filename;
 	filename = NULL;
@@ -333,12 +336,19 @@ TCFloat LDrawModelViewer::getClipRadius(void)
 
 TCFloat LDrawModelViewer::getZDistance(void)
 {
-	TCFloat inverseMatrix[16];
-	TCVector vector = camera.getPosition();
+	if (flags.autoCenter)
+	{
+		TCFloat inverseMatrix[16];
+		TCVector vector = camera.getPosition();
 
-	camera.getFacing().getInverseMatrix(inverseMatrix);
-	vector = vector.transformPoint(inverseMatrix);
-	return vector[2];
+		camera.getFacing().getInverseMatrix(inverseMatrix);
+		vector = vector.transformPoint(inverseMatrix);
+		return vector[2];
+	}
+	else
+	{
+		return (center - camera.getPosition()).length();
+	}
 }
 
 void LDrawModelViewer::perspectiveView(bool resetViewport)
@@ -787,8 +797,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 
 	if (filename)
 	{
-		LDLMainModel *mainModel = new LDLMainModel;
-
+		TCObject::release(mainModel);
+		mainModel = new LDLMainModel;
 		if (clipAmount != 0.0f && resetViewpoint)
 		{
 			clipAmount = 0.0f;
@@ -896,7 +906,6 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			}
 			modelParser->release();
 		}
-		mainModel->release();
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
 			2.0f);
 		if (resetViewpoint)
@@ -2946,6 +2955,21 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	delete url;
 	delete partOutputFilename;
 	delete primitiveOutputFilename;
+}
+
+LDPartsList *LDrawModelViewer::getPartsList(void)
+{
+	if (mainModel)
+	{
+		LDPartsList *partsList = new LDPartsList;
+
+		partsList->scanModel(mainModel);
+		return partsList;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 // NOTE: static function

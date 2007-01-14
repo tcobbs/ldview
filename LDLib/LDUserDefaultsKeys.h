@@ -125,6 +125,10 @@
 
 // The following are undocumented, but need to be documented.
 #define LIGHT_VECTOR_KEY "LightVector"
+#define INV_SHOW_MODEL_KEY "InventoryShowModel"
+#define INV_EXTERNAL_CSS_KEY "InventoryExternalCss"
+#define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
+#define SNAPSHOT_SUFFIX_KEY "SnapshotSuffix"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

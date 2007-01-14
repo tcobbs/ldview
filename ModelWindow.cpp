@@ -16,7 +16,7 @@
 #include <LDLib/LDLibraryUpdater.h>
 #include "AppResources.h"
 #include <Commctrl.h>
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
 #include <TRE/TREMainModel.h>
 #include <windowsx.h>
@@ -220,25 +220,6 @@ void ModelWindow::ldlErrorCallback(LDLError *error)
 			error->cancelLoad();
 		}
 	}
-/*
-		TCStringArray *extraInfo = error->getExtraInfo();
-
-		printf("Error on line %d in: %s\n", error->getLineNumber(),
-			error->getFilename());
-		indentPrintf(4, "%s\n", error->getMessage());
-		indentPrintf(4, "%s\n", error->getFileLine());
-		if (extraInfo)
-		{
-			int i;
-			int count = extraInfo->getCount();
-
-			for (i = 0; i < count; i++)
-			{
-				indentPrintf(4, "%s\n", (*extraInfo)[i]);
-			}
-		}
-	}
-*/
 }
 
 void ModelWindow::modelViewerAlertCallback(TCAlert *alert)
@@ -4192,18 +4173,27 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine)
 	savingFromCommandLine = fromCommandLine;
 	if (saveFilename[0])
 	{
-		if (stringHasCaseInsensitiveSuffix(saveFilename, ".png"))
+		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
+			NULL, false);
+
+		if (!snapshotSuffix)
+		{
+			snapshotSuffix = copyString(saveFilename);
+		}
+		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
 		}
-		else if (stringHasCaseInsensitiveSuffix(saveFilename, ".bmp"))
+		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
 		{
 			saveImageType = BMP_IMAGE_TYPE_INDEX;
 		}
 		else
 		{
+			delete snapshotSuffix;
 			return false;
 		}
+		delete snapshotSuffix;
 	}
 	if (saveFilename[0] || getSaveFilename(saveFilename, 1024))
 	{
