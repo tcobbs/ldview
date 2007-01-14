@@ -4,7 +4,6 @@
 #include "LDViewThumbExtractor.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCImage.h>
-#include <comutil.h>
 
 #define INSTALL_PATH_KEY "InstallPath"
 
@@ -38,11 +37,11 @@ bool CLDViewThumbExtractor::findLDView(void)
 }
 
 bool CLDViewThumbExtractor::processFile(
-	const char *datPath,
+	const wchar_t *datPath,
 	const char *imageFilename)
 {
-	char commandLine[1024];
-	STARTUPINFO startupInfo;
+	wchar_t commandLine[1024];
+	STARTUPINFOW startupInfo;
 	PROCESS_INFORMATION processInfo;
 	int windowWidth = m_size.cx;
 	int windowHeight = m_size.cy;
@@ -56,10 +55,10 @@ bool CLDViewThumbExtractor::processFile(
 	{
 		windowHeight = 240;
 	}
-	sprintf(commandLine, "\"%s\" \"%s\" -SaveSnapshot=%s -SaveActualSize=0 "
-		"-SaveWidth=%d -SaveHeight=%d "
-		"-WindowWidth=%d -WindowHeight=%d -SaveZoomToFit=1 "
-		"-PreferenceSet=Thumbnails",
+	wsprintfW(commandLine, L"\"%S\" \"%s\" -SaveSnapshot=%S -SaveActualSize=0 "
+		L"-SaveWidth=%d -SaveHeight=%d "
+		L"-WindowWidth=%d -WindowHeight=%d -SaveZoomToFit=1 "
+		L"-PreferenceSet=Thumbnails -SnapshotSuffix=.bmp",
 		m_ldviewPath.c_str(), datPath, imageFilename, m_size.cx, m_size.cy,
 		windowWidth, windowHeight);
 	memset(&startupInfo, 0, sizeof(STARTUPINFO));
@@ -67,7 +66,8 @@ bool CLDViewThumbExtractor::processFile(
 	startupInfo.dwFlags = STARTF_USEPOSITION;
 	startupInfo.dwX = 0;
 	startupInfo.dwY = 0;
-	if (CreateProcess(m_ldviewPath.c_str(), commandLine, NULL, NULL, FALSE,
+	USES_CONVERSION;
+	if (CreateProcessW(A2W(m_ldviewPath.c_str()), commandLine, NULL, NULL, FALSE,
 		DETACHED_PROCESS | priority, NULL, NULL, &startupInfo, &processInfo))
 	{
 		while (1)
@@ -158,25 +158,14 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 	{
 		TCHAR szTempPath[1024];
 		TCHAR szTempFilename[MAX_PATH + 16];
-		int i;
 
 		if (GetTempPath(sizeof(szTempPath) / sizeof(szTempPath[0]), szTempPath) == 0)
 		{
 			strcpy(szTempPath, "C:\\Temp");
 		}
-		for (i = 0; i < 1000; i++)
+		if (GetTempFileName(szTempPath, "LDVThumb", 0, szTempFilename))
 		{
-			FILE *testFile;
-			sprintf(szTempFilename, "%sLDVThumb%04d.tmp.bmp", szTempPath, i);
-			if ((testFile = fopen(szTempFilename, "rb")) == NULL)
-			{
-				break;
-			}
-			fclose(testFile);
-		}
-		if (i < 1000)
-		{
-			if (processFile((_bstr_t)m_path.c_str(), szTempFilename))
+			if (processFile(m_path.c_str(), szTempFilename))
 			{
 				TCImage *image = new TCImage;
 

@@ -28,10 +28,14 @@
 #include "LDViewThumbs.h"
 #include "dlldatax.h"
 
+#ifdef _DEBUG
 #pragma warning (push, 3)
+#endif // _DEBUG
 #include "LDViewThumbs_i.c"
 #include "LDViewThumbExtractor.h"
+#ifdef _DEBUG
 #pragma warning (pop)
+#endif // _DEBUG
 
 #ifdef _MERGE_PROXYSTUB
 extern "C" HINSTANCE hProxyDll;

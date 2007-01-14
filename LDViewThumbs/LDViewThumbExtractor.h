@@ -84,7 +84,7 @@ public:
 
 private:
 	bool findLDView(void);
-	bool processFile(const char *datFilename, const char *imageFilename);
+	bool processFile(const wchar_t *datFilename, const char *imageFilename);
 
 	std::wstring m_path;
 	std::string m_ldviewPath;
