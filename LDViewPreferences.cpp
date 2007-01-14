@@ -9,7 +9,7 @@
 #include <TCFoundation/TCWebClient.h>
 #include "LDVExtensionsSetup.h"
 #include "AppResources.h"
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 #include "ModelWindow.h"
 
 #include <TCFoundation/TCUserDefaults.h>

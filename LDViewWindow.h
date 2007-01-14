@@ -271,6 +271,7 @@ class LDViewWindow: public CUIWindow
 		virtual void updatePrimitivesMenu(void);
 		virtual void updateLightingMenu(void);
 		virtual void updateBFCMenu(void);
+		virtual LRESULT generatePartsList(void);
 		void progressAlertCallback(TCProgressAlert *alert);
 
 		void loadSettings(void);
@@ -319,6 +320,7 @@ class LDViewWindow: public CUIWindow
 		HMENU hFileMenu;
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
+		HMENU hToolsMenu;
 		HMENU hToolbarMenu;
 		HMENU hWireframeToolbarMenu;
 		HMENU hEdgesToolbarMenu;

@@ -26,6 +26,9 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	globalSettings[CHECK_PART_WAIT_KEY] = true;
 	globalSettings[CHECK_PART_UPDATE_WAIT_KEY] = true;
 	globalSettings[CAMERA_GLOBE_KEY] = true;
+	globalSettings[INV_SHOW_MODEL_KEY] = true;
+	globalSettings[INV_EXTERNAL_CSS_KEY] = true;
+	globalSettings[INV_LAST_SAVE_PATH_KEY] = true;
 	m_defaultColorNumber = -1;
 	for (i = 0; i < 16; i++)
 	{
@@ -243,6 +246,7 @@ void LDPreferences::loadSettings(void)
 	loadEffectsSettings();
 	loadPrimitivesSettings();
 	loadUpdatesSettings();
+	loadInventorySettings();
 	changedSettings.clear();
 
 	m_skipValidation = false;
@@ -347,6 +351,13 @@ void LDPreferences::loadDefaultUpdatesSettings(void)
 	setCheckPartTracker(true);
 	setMissingPartWait(7);
 	setUpdatedPartWait(7);
+}
+
+void LDPreferences::loadDefaultInventorySettings(void)
+{
+	setInvShowModel(false);
+	setInvExternalCss(false);
+	setInvLastSavePath("");
 }
 
 void LDPreferences::loadGeneralSettings(void)
@@ -482,6 +493,15 @@ void LDPreferences::loadUpdatesSettings(void)
 		m_updatedPartWait);
 }
 
+void LDPreferences::loadInventorySettings(void)
+{
+	loadDefaultInventorySettings();
+	m_invShowModel = getBoolSetting(INV_SHOW_MODEL_KEY, m_invShowModel);
+	m_invExternalCss = getBoolSetting(INV_EXTERNAL_CSS_KEY, m_invExternalCss);
+	m_invLastSavePath = getStringSetting(INV_LAST_SAVE_PATH_KEY,
+		m_invLastSavePath.c_str());
+}
+
 void LDPreferences::commitSettings(void)
 {
 	commitGeneralSettings();
@@ -489,6 +509,7 @@ void LDPreferences::commitSettings(void)
 	commitEffectsSettings();
 	commitPrimitivesSettings();
 	commitUpdatesSettings();
+	commitInventorySettings();
 	//commitPrefSetsSettings();
 }
 
@@ -593,6 +614,13 @@ void LDPreferences::commitUpdatesSettings(void)
 	setCheckPartTracker(m_checkPartTracker, true);
 	setMissingPartWait(m_missingPartWait, true);
 	setUpdatedPartWait(m_updatedPartWait, true);
+}
+
+void LDPreferences::commitInventorySettings(void)
+{
+	setInvShowModel(m_invShowModel, true);
+	setInvExternalCss(m_invExternalCss, true);
+	setInvLastSavePath(m_invLastSavePath.c_str(), true);
 }
 
 void LDPreferences::setupDefaultRotationMatrix(void)
@@ -1292,6 +1320,21 @@ void LDPreferences::setMissingPartWait(int value, bool commit)
 void LDPreferences::setUpdatedPartWait(int value, bool commit)
 {
 	setSetting(m_updatedPartWait, value, CHECK_PART_UPDATE_WAIT_KEY, commit);
+}
+
+void LDPreferences::setInvShowModel(bool value, bool commit)
+{
+	setSetting(m_invShowModel, value, INV_SHOW_MODEL_KEY, commit);
+}
+
+void LDPreferences::setInvExternalCss(bool value, bool commit)
+{
+	setSetting(m_invExternalCss, value, INV_EXTERNAL_CSS_KEY, commit);
+}
+
+void LDPreferences::setInvLastSavePath(const char *value, bool commit)
+{
+	setSetting(m_invLastSavePath, value, INV_LAST_SAVE_PATH_KEY, commit);
 }
 
 void LDPreferences::setDefaultZoom(TCFloat value, bool commit)

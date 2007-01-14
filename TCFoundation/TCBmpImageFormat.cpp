@@ -53,15 +53,244 @@ bool TCBmpImageFormat::checkSignature(FILE *file)
 	return retValue;
 }
 
-bool TCBmpImageFormat::loadFile(TCImage * /*image*/, FILE * /*file*/)
+bool TCBmpImageFormat::loadFile(TCImage *image, FILE *file)
 {
-	return false;
+	if (!readFileHeader(image, file))
+	{
+		return false;
+	}
+	if (!readInfoHeader(image, file))
+	{
+		return false;
+	}
+	return readImageData(image, file);
 }
 
 bool TCBmpImageFormat::loadData(TCImage * /*image*/, TCByte * /*data*/,
 								long /*length*/)
 {
 	return false;
+}
+
+bool TCBmpImageFormat::readValue(FILE *file, unsigned short &value)
+{
+	TCByte buf[2];
+
+	// Read the value in little endian format
+	if (fread(buf, 1, 2, file) == 2)
+	{
+		value = (unsigned short)(buf[0] | ((short)buf[1] << 8));
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool TCBmpImageFormat::readValue(FILE *file, unsigned long &value)
+{
+	TCByte buf[4];
+
+	// Read the value in little endian format
+	if (fread(buf, 1, 4, file) == 4)
+	{
+		value = buf[0] | ((short)buf[1] << 8) | ((short)buf[2] << 16) | ((short)buf[3] << 24);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool TCBmpImageFormat::readValue(FILE *file, long &value)
+{
+	unsigned long temp;
+
+	if (readValue(file, temp))
+	{
+		value = (long)temp;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool TCBmpImageFormat::readFileHeader(TCImage *image, FILE *file)
+{
+	int rowSize = image->roundUp(image->getWidth() * 3, 4);
+	DWORD imageSize = rowSize * image->getHeight();
+	WORD wTemp;
+	DWORD dwTemp;
+
+	if (!readValue(file, wTemp)) // 'BM'
+	{
+		return false;
+	}
+	if (!readValue(file, dwTemp))
+	{
+		return false;
+	}
+	imageSize = dwTemp - BMP_FILE_HEADER_SIZE - BMP_INFO_HEADER_SIZE;
+	if (!readValue(file, dwTemp)) // Reserved
+	{
+		return false;
+	}
+	if (!readValue(file, dwTemp))
+	{
+		return false;
+	}
+	return true;
+}
+
+bool TCBmpImageFormat::readInfoHeader(TCImage *image, FILE *file)
+{
+	int rowSize = image->roundUp(image->getWidth() * 3, 4);
+	DWORD imageSize = rowSize * image->getHeight();
+	DWORD dwTemp;
+	long lTemp;
+	WORD wTemp;
+	long width, height;
+
+	if (!readValue(file, dwTemp))
+	{
+		return false;
+	}
+	if (!readValue(file, width))
+	{
+		return false;
+	}
+	if (!readValue(file, height))
+	{
+		return false;
+	}
+	image->setSize((int)width, (int)height);
+	if (!readValue(file, wTemp)) // # of planes
+	{
+		return false;
+	}
+	if (wTemp != 1)
+	{
+		return false;
+	}
+	if (!readValue(file, wTemp)) // BPP
+	{
+		return false;
+	}
+	if (wTemp != 24)
+	{
+		return false;
+	}
+	if (!readValue(file, dwTemp)) // Compression
+	{
+		return false;
+	}
+	if (dwTemp != 0)
+	{
+		return false;
+	}
+	if (!readValue(file, imageSize))
+	{
+		return false;
+	}
+	if (!readValue(file, lTemp)) // X Pixels per meter: 72 DPI
+	{
+		return false;
+	}
+	if (!readValue(file, lTemp)) // Y Pixels per meter: 72 DPI
+	{
+		return false;
+	}
+	if (!readValue(file, dwTemp)) // # of colors used
+	{
+		return false;
+	}
+	if (dwTemp != 0)
+	{
+		return false;
+	}
+	if (!readValue(file, dwTemp)) // # of important colors: 0 == all
+	{
+		return false;
+	}
+	if (dwTemp != 0)
+	{
+		return false;
+	}
+	return true;
+}
+
+bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
+{
+	int rowSize = image->roundUp(image->getWidth() * 3, 4);
+	bool failed = false;
+	int i, j;
+	bool rgba = image->getDataFormat() == TCRgba8;
+	int imageRowSize = image->getRowSize();
+	TCByte *rowData = new TCByte[rowSize];
+
+	memset(rowData, 0, rowSize);
+	image->allocateImageData();
+	for (i = 0; i < image->getHeight() && !failed; i++)
+	{
+
+		if (fread(rowData, 1, rowSize, file) != (unsigned)rowSize)
+		{
+			failed = true;
+		}
+		else
+		{
+			if (rgba)
+			{
+				int lineOffset;
+
+				if (image->getFlipped())
+				{
+					lineOffset = i * imageRowSize;
+				}
+				else
+				{
+					lineOffset = (image->getHeight() - i - 1) * imageRowSize;
+				}
+				for (j = 0; j < image->getWidth(); j++)
+				{
+					image->getImageData()[lineOffset + j * 4 + 0] =
+						rowData[j * 3 + 2];
+					image->getImageData()[lineOffset + j * 4 + 1] =
+						rowData[j * 3 + 1];
+					image->getImageData()[lineOffset + j * 4 + 2] =
+						rowData[j * 3 + 0];
+				}
+			}
+			else
+			{
+				int lineOffset;
+
+				if (image->getFlipped())
+				{
+					lineOffset = i * imageRowSize;
+				}
+				else
+				{
+					lineOffset = (image->getHeight() - i - 1) * imageRowSize;
+				}
+				for (j = 0; j < image->getWidth(); j++)
+				{
+					image->getImageData()[lineOffset + j * 3 + 0] =
+						rowData[j * 3 + 2];
+					image->getImageData()[lineOffset + j * 3 + 1] =
+						rowData[j * 3 + 1];
+					image->getImageData()[lineOffset + j * 3 + 2] =
+						rowData[j * 3 + 0];
+				}
+			}
+		}
+	}
+	delete rowData;
+	return !failed;
 }
 
 bool TCBmpImageFormat::writeValue(FILE *file, unsigned short value)

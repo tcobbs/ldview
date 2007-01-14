@@ -154,7 +154,7 @@ END
 IDD_SS_SETTINGS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Screen Saver"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "File:",IDC_SS_FILENAME_RADIO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,7,9,25,10,0,
@@ -203,7 +203,7 @@ END
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,246,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -274,7 +274,7 @@ END
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effects"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,61,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
@@ -348,7 +348,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -523,7 +523,7 @@ END
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Primitives"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,60,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
@@ -571,7 +571,7 @@ END
 IDD_PREFSETS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preference Sets"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     LTEXT           "Use the following preference set:",IDC_PREFSETS_LABEL,7,
                     7,104,8,0,0,HIDC_PREFSETS_LABEL
@@ -668,7 +668,7 @@ END
 IDD_UPDATES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Updates"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Internet Proxy",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
                     HIDC_PROXY_BOX
@@ -906,7 +906,6 @@ BEGIN
     BEGIN
         MENUITEM "&Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
         MENUITEM "Switch to &Fullscreen\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_VIEW_ERRORS
         MENUITEM "&Toolbar\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
@@ -928,9 +927,14 @@ BEGIN
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
-        MENUITEM "Show View &Info...",          ID_VIEW_INFO
-        MENUITEM "Show &POV-Ray Camera Info...", ID_VIEW_POV_CAMERA
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
+        MENUITEM "Parts &List",                 ID_TOOLS_PARTSLIST
         MENUITEM SEPARATOR
+        MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
+        MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
     END
     POPUP "&Help"
     BEGIN
@@ -1010,7 +1014,7 @@ BEGIN
                                                     NOINVERT
     "9",            ID_HOT_KEY_9,           VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
-    "E",            ID_VIEW_ERRORS,         VIRTKEY, SHIFT, CONTROL, 
+    "E",            ID_TOOLS_ERRORS,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
@@ -1070,8 +1074,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,2
- PRODUCTVERSION 3,1,0,2
+ FILEVERSION 3,1,0,3
+ PRODUCTVERSION 3,1,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L

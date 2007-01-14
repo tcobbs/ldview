@@ -264,7 +264,7 @@
 #define ID_FILE_RELOAD                  40021
 #define ID_HELP_CONTENTS                40023
 #define ID_VIEW_RESET                   40025
-#define ID_VIEW_ERRORS                  40026
+#define ID_TOOLS_ERRORS                 40026
 #define ID_FILE_PAGESETUP               40032
 #define ID_HELP_OPENGLINFO_WGLEXTENSIONS 40033
 #define ID_HELP_OPENGL_INFO             40035
@@ -291,7 +291,7 @@
 #define ID_VIEW_RIGHT                   40058
 #define ID_VIEW_TOP                     40059
 #define ID_VIEW_BOTTOM                  40060
-#define ID_VIEW_INFO                    40061
+#define ID_TOOLS_VIEW_INFO              40061
 #define ID_VIEW_ISO                     40063
 #define ID_VIEW_SAVE_DEFAULT            40064
 #define ID_VIEW_ZOOMTOFIT               40065
@@ -311,7 +311,8 @@
 #define ID_LIGHTING_ALTERNATESETUP      40083
 #define ID_BFC_REDBACKFACES             40084
 #define ID_BFC_GREENFRONTFACES          40085
-#define ID_VIEW_POV_CAMERA              40087
+#define ID_TOOLS_POV_CAMERA             40087
+#define ID_TOOLS_PARTSLIST              40088
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -324,7 +325,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        171
-#define _APS_NEXT_COMMAND_VALUE         40088
+#define _APS_NEXT_COMMAND_VALUE         40089
 #define _APS_NEXT_CONTROL_VALUE         1210
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

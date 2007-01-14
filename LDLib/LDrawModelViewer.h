@@ -40,9 +40,11 @@ class TCImage;
 class LDLError;
 class TCProgressAlert;
 class TREMainModel;
+class LDLMainModel;
 class LDLFindFileAlert;
 class TCWebClient;
 class LDPreferences;
+class LDPartsList;
 
 class LDrawModelViewer: public TCObject
 {
@@ -296,6 +298,7 @@ class LDrawModelViewer: public TCObject
 			// Don't retain; it retains us.
 			preferences = value;
 		}
+		virtual LDPartsList *getPartsList(void);
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
@@ -358,6 +361,7 @@ class LDrawModelViewer: public TCObject
 		void scanCameraPoint(const TCVector &point);
 
 		TREMainModel *mainTREModel;
+		LDLMainModel *mainModel;
 		char* filename;
 		char* programPath;
 		int width;

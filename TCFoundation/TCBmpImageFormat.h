@@ -18,6 +18,12 @@ class TCExport TCBmpImageFormat : public TCImageFormat
 	protected:
 		virtual ~TCBmpImageFormat(void);
 		virtual void dealloc(void);
+		virtual bool readValue(FILE *file, unsigned short &value);
+		virtual bool readValue(FILE *file, unsigned long &value);
+		virtual bool readValue(FILE *file, long &value);
+		virtual bool readFileHeader(TCImage *image, FILE *file);
+		virtual bool readInfoHeader(TCImage *image, FILE *file);
+		virtual bool readImageData(TCImage *image, FILE *file);
 		virtual bool writeValue(FILE *file, unsigned short value);
 		virtual bool writeValue(FILE *file, unsigned long value);
 		virtual bool writeValue(FILE *file, long value);

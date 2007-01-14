@@ -2,7 +2,7 @@
 #include "SSConfigure.h"
 #include "SSPassword.h"
 #include "LDViewWindow.h"
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 
 #include <TCFoundation/myString.h>
 #include <TCFoundation/TCUserDefaults.h>

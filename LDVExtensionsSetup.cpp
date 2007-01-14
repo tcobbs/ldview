@@ -3,7 +3,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TRE/TREVertexStore.h>
 #include <TRE/TREShapeGroup.h>
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 
 // WGL_EXT_pixel_format
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC

@@ -11,6 +11,7 @@ typedef struct
 
 typedef struct
 {
+	char name[64];
 	LDLColor color;
 	LDLColor ditherColor;
 	int edgeColorNumber;
@@ -26,6 +27,7 @@ public:
 	LDLPalette(const LDLPalette &other);
 	void reset(void);
 	void getRGBA(int colorNumber, int &r, int &g, int &b, int &a);
+	void getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b, int &a);
 	bool hasSpecular(int colorNumber);
 	bool hasShininess(int colorNumber);
 	bool hasLuminance(int colorNumber);
@@ -57,7 +59,6 @@ protected:
 	bool parseLDLiteColorComment(const char *comment);
 	bool parseLDrawOrgColorComment(const char *comment);
 	void initSpecularAndShininess(LDLColorInfo &color);
-	void getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b, int &a);
 	bool getCustomColorRGBA(int colorNumber, int &r, int &g, int &b, int &a);
 	bool getCustomColorInfo(int colorNumber, LDLColorInfo &colorInfo);
 	int getBlendedColorComponent(TCULong c1, TCULong c2, TCULong a1,

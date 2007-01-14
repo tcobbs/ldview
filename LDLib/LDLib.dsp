@@ -110,6 +110,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\LDHtmlInventory.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLibraryUpdateInfo.cpp
 # End Source File
 # Begin Source File
@@ -140,6 +144,14 @@ SOURCE=.\LDModelParser.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDPartCount.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDPartsList.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDPreferences.cpp
 # End Source File
 # Begin Source File
@@ -152,6 +164,10 @@ SOURCE=.\LDrawModelViewer.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\LDHtmlInventory.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLibraryUpdateInfo.h
 # End Source File
 # Begin Source File
@@ -161,6 +177,14 @@ SOURCE=.\LDLibraryUpdater.h
 # Begin Source File
 
 SOURCE=.\LDModelParser.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDPartCount.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDPartsList.h
 # End Source File
 # Begin Source File
 

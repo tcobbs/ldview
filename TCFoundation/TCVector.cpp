@@ -147,6 +147,9 @@ TCVector TCVector::operator*(TCFloat right) const
 //		The TCVector divided by the scalar "right".
 TCVector TCVector::operator/(TCFloat right) const
 {
+	// Note: this is done so we can perform 3 multiplies and a divide instead of
+	// three divides.  My understanding is that FP divides can take
+	// significantly longer than FP multiplies.
 	TCFloat mult = 1.0f / right;
 
 	return TCVector(vector[0]*mult, vector[1]*mult, vector[2]*mult);
@@ -244,13 +247,15 @@ TCVector& TCVector::operator*=(TCFloat right)
 //		*this, after it has been divided by the scalar "right".
 TCVector& TCVector::operator/=(TCFloat right)
 {
-	return *this *= 1.0f / right;
-/*
-	vector[0] /= right;
-	vector[1] /= right;
-	vector[2] /= right;
+	// Note: this is done so we can perform 3 multiplies and a divide instead of
+	// three divides.  My understanding is that FP divides can take
+	// significantly longer than FP multiplies.
+	TCFloat mult = 1.0f / right;
+
+	vector[0] *= mult;
+	vector[1] *= mult;
+	vector[2] *= mult;
 	return *this;
-*/
 }
 
 // TCVector::operator=(const TCVector&) -- Overloaded Operator

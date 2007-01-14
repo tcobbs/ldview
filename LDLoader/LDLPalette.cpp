@@ -17,6 +17,68 @@ LDLPalette::LDLPaletteCleanup::~LDLPaletteCleanup(void)
 static const TCByte transA = 110;
 static const int standardColorSize = 5;
 
+static const char standardColorNames[][64] =
+{
+	"Black",
+	"Blue",
+	"Green",
+	"Teal",
+	"Red",
+	"Dark Pink",
+	"Brown",
+	"Gray",
+	"Dark Gray",
+	"Light Blue",
+	"Light Green",
+	"Turquoise",
+	"Light Red",
+	"Pink",
+	"Yellow",
+	"White",
+	"",
+	"Mint Green",
+	"Light Yellow",
+	"Tan",
+	"Light Purple",
+	"Glow in the dark",
+	"Purple",
+	"Violet Blue",
+	"",
+	"Orange",
+	"Magenta",
+	"Yellow Green",
+	"Dark Tan",
+	"",
+	"",
+	"",
+	"Trans Black",
+	"Trans Blue",
+	"Trans Green",
+	"Trans Dark Cyan",
+	"Trans Red",
+	"Trans Purple",
+	"Trans Brown",
+	"Trans Light Gray",
+	"Trans Gray",
+	"Trans Light Cyan",
+	"Trans Yellow Green",
+	"Trans Cyan",
+	"Trans Light Red",
+	"Trans Pink",
+	"Trans Yellow",
+	"Clear",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"Trans Orange"
+};
+
 static const TCULong standardColors[] =
 {
 //	R		G		B		A		Edge	   #	Description
@@ -143,6 +205,7 @@ void LDLPalette::initStandardColors(void)
 	{
 		int ofs = i * standardColorSize;
 
+		strcpy(m_colors[i].name, standardColorNames[i]);
 		m_colors[i].color.r = (TCByte)standardColors[ofs];
 		m_colors[i].color.g = (TCByte)standardColors[ofs + 1];
 		m_colors[i].color.b = (TCByte)standardColors[ofs + 2];
@@ -329,6 +392,7 @@ void LDLPalette::getRGBA(const LDLColorInfo &colorInfo, int &r, int &g, int &b,
 void LDLPalette::initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b,
 							   int a)
 {
+	colorInfo.name[0] = 0;
 	colorInfo.color.r = (TCByte)r;
 	colorInfo.color.g = (TCByte)g;
 	colorInfo.color.b = (TCByte)b;
@@ -483,7 +547,20 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 	bool chrome = false;
 	bool rubber = false;
 	bool metal = false;
+	char name[1024];
 
+	strncpy(name, &comment[10], sizeof(name));
+	name[sizeof(name) - 1] = 0;
+	stripLeadingWhitespace(name);
+	if (strchr(name, ' '))
+	{
+		*strchr(name, ' ') = 0;
+	}
+	if (strchr(name, '\t'))
+	{
+		*strchr(name, '\t') = 0;
+	}
+	replaceStringCharacter(name, '_', ' ');
 	if (!itemSpot)
 	{
 		debugPrintf("Couldn't find color CODE in color meta-comment:\n%s\n",
@@ -592,6 +669,8 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 		(float)luminance / 255.0f);
 	if (colorInfo)
 	{
+		strncpy(colorInfo->name, name, sizeof(colorInfo->name));
+		colorInfo->name[sizeof(colorInfo->name) - 1] = 0;
 		if (rubber)
 		{
 			initSpecular(*colorInfo, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);

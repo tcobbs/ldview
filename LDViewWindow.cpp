@@ -8,7 +8,7 @@
 #include "LDViewPreferences.h"
 #include "SSModelWindow.h"
 #include "AppResources.h"
-#include "UserDefaultsKeys.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
@@ -21,9 +21,13 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
+#include <LDLib/LDPartsList.h>
+#include <LDLoader/LDLPalette.h>
+#include <LDLoader/LDLMainModel.h>
 #include <TRE/TREMainModel.h>
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
+#include <LDLib/LDHtmlInventory.h>
 
 #define DOWNLOAD_TIMER 12
 #define DEFAULT_WIN_WIDTH 640
@@ -126,6 +130,7 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 			   originalMouseY(-999999),
 			   hFileMenu(NULL),
 			   hViewMenu(NULL),
+			   hToolsMenu(NULL),
 			   loading(FALSE),
 			   openGLInfoWindoResizer(NULL),
 			   hOpenGLStatusBar(NULL),
@@ -658,6 +663,7 @@ BOOL LDViewWindow::initWindow(void)
 	{
 		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
+		hToolsMenu = GetSubMenu(GetMenu(hWindow), 3);
 		hViewAngleMenu = findSubMenu(hViewMenu, 0);
 		if (!CUIThemes::isThemeLibLoaded())
 		{
@@ -1929,8 +1935,9 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hFileMenu, ID_FILE_RELOAD, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PRINT, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PAGESETUP, haveModel);
-	setMenuEnabled(hViewMenu, ID_VIEW_INFO, haveModel);
-	setMenuEnabled(hViewMenu, ID_VIEW_POV_CAMERA, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_VIEW_INFO, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_POV_CAMERA, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_PARTSLIST, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_FRONT, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BACK, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_LEFT, haveModel);
@@ -3012,7 +3019,7 @@ void LDViewWindow::createLibraryUpdateWindow(void)
 	hUpdateCancelButton = GetDlgItem(hLibraryUpdateWindow, IDCANCEL);
 	hUpdateOkButton = GetDlgItem(hLibraryUpdateWindow, IDOK);
 	SendMessage(hUpdateStatus, WM_SETTEXT, 0,
-		(LPARAM)TCLocalStrings::get("CheckingForUpdates"));
+		(LPARAM)TCLocalStrings::get("CheckingForLibraryUpdates"));
 	SendMessage(hUpdateProgressBar, PBM_SETPOS, 0, 0);
 	EnableWindow(hUpdateOkButton, FALSE);
 }
@@ -3273,10 +3280,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return 0;
 			break;
 */
-		case ID_VIEW_ERRORS:
-			modelWindow->showErrors();
-			return 0;
-			break;
 		case ID_VIEW_STATUSBAR:
 			return switchStatusBar();
 			break;
@@ -3295,13 +3298,20 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_VIEW_FLYTHROUGH:
 			return switchToFlythroughMode();
 			break;
-		case ID_VIEW_INFO:
+		case ID_TOOLS_ERRORS:
+			modelWindow->showErrors();
+			return 0;
+			break;
+		case ID_TOOLS_VIEW_INFO:
 			showViewInfo();
 			return 0;
 			break;
-		case ID_VIEW_POV_CAMERA:
+		case ID_TOOLS_POV_CAMERA:
 			showPovCamera();
 			return 0;
+			break;
+		case ID_TOOLS_PARTSLIST:
+			return generatePartsList();
 			break;
 /*
 		case ID_VIEW_TRANS_MATRIX:
@@ -4310,8 +4320,14 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 			delete initialDir;
 		}
 	}
-	if (!skipLoad)
+	if (skipLoad)
 	{
+		modelWindow->setFilename(fullPathName);
+	}
+	else
+	{
+		char dir[1024];
+		GetCurrentDirectory(sizeof(dir), dir);
 		modelWindow->setFilename(fullPathName);
 		if (modelWindow->loadModel())
 		{
@@ -4904,3 +4920,63 @@ void LDViewWindow::applyPrefs(void)
 	}
 }
 
+LRESULT LDViewWindow::generatePartsList(void)
+{
+	if (modelWindow)
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+		if (modelViewer)
+		{
+			LDPartsList *partsList = modelViewer->getPartsList();
+
+			if (partsList)
+			{
+				LDHtmlInventory *htmlInventory = new LDHtmlInventory;
+				OPENFILENAME openStruct;
+				char fileTypes[1024];
+				std::string filename = modelViewer->getFilename();
+				size_t findSpot = filename.find_last_of("/\\");
+
+				if (findSpot < filename.size())
+				{
+					filename = filename.substr(findSpot + 1);
+				}
+				findSpot = filename.find_last_of('.');
+				if (findSpot < filename.size())
+				{
+					filename = filename.substr(0, findSpot);
+				}
+				filename += ".html";
+				filename.reserve(1024);
+				memset(fileTypes, 0, 2);
+				addFileType(fileTypes, TCLocalStrings::get("HtmlFileType"),
+					"*.html");
+				memset(&openStruct, 0, sizeof(OPENFILENAME));
+				openStruct.lStructSize = sizeof(OPENFILENAME);
+				openStruct.hwndOwner = hWindow;
+				openStruct.lpstrFilter = fileTypes;
+				openStruct.nFilterIndex = 0;
+				openStruct.lpstrFile = &filename[0];
+				openStruct.nMaxFile = filename.capacity();
+				openStruct.lpstrInitialDir =
+					htmlInventory->getLastSavePath();
+				openStruct.lpstrTitle =
+					TCLocalStrings::get("GeneratePartsList");
+				openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |
+					OFN_OVERWRITEPROMPT;
+				openStruct.lpstrDefExt = NULL;
+				openStruct.hInstance = getLanguageModule();
+				//htmlInventory->setShowModelFlag(true);
+				//htmlInventory->setExternalCssFlag(true);
+				if (GetSaveFileName(&openStruct))
+				{
+					htmlInventory->generateHtml(filename.c_str(),
+						partsList, modelViewer->getFilename());
+				}
+				htmlInventory->release();
+				partsList->release();
+			}
+		}
+	}
+	return 0;
+}
