@@ -1,6 +1,12 @@
-CPPGLOBAL=/nologo /MT /W4 /EHsc /Ox /D NDEBUG /D WIN32 /FoRelease\ /FdRelease\ /FD /G7 $(EXTRACFLAGS)
 RFLAGS=/l 0x409 /d NDEBUG 
+
+!IF DEFINED(OBJDIR)
+!ELSE
 OBJDIR = Release
+!ENDIF
+
+CPPGLOBAL=/nologo /MT /W4 /EHsc /Ox /D NDEBUG /D WIN32 /Fo$(OBJDIR)\ /Fd$(OBJDIR)\ /FD /G7 $(EXTRACFLAGS)
+
 
 MAKE = nmake /nologo
 
