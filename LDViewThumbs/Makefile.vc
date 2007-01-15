@@ -9,8 +9,8 @@ LDViewThumbs.tlb:
 	midl   /tlb LDViewThumbs.tlb /h LDViewThumbs.h /iid LDViewThumbs_i.c /Oicf LDViewThumbs.idl 
 
 
-$(OBJDIR)\LDViewThumbs.dll:	$(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\LDViewThumbs.res $(OBJDIR)\StdAfx.obj
-	link gdi32.lib libpng.lib zlib.lib comsupp.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll /implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release $(OBJDIR)\LDViewThumbExtractor.obj  $(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\StdAfx.obj  $(OBJDIR)\LDViewThumbs.res
+$(OBJDIR)\LDViewThumbs.dll:	$(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\LDViewThumbs.res $(OBJDIR)\StdAfx.obj $(OBJDIR)\LDViewThumbExtractor.obj
+	link gdi32.lib libpng.lib zlib.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll /implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release $(OBJDIR)\LDViewThumbExtractor.obj  $(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\StdAfx.obj  $(OBJDIR)\LDViewThumbs.res
 
 lclean:
 	del LDViewThumbs.h
