@@ -1212,7 +1212,6 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		QToolButton *button = (QToolButton*)object;
 		if (button->textLabel() == TCLocalStrings::get("ViewingAngle"))
 		{
-			printf("found button: %s\n", button->name());
 			button->setPopup(mainWindow->viewingAnglePopupMenu);
 			button->setPopupDelay(1);
 		}
