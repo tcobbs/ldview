@@ -141,7 +141,6 @@
     <item text="&amp;View" name="viewMenu">
         <action name="viewFullScreenAction"/>
         <action name="viewResetViewAction"/>
-        <action name="viewShowErrorsAction"/>
         <action name="viewToolBarAction"/>
         <action name="viewStatusBarAction"/>
         <action name="viewZoomToFitAction"/>
@@ -160,6 +159,10 @@
         <separator/>
         <action name="examineModeAction"/>
         <action name="flythroughModeAction"/>
+    </item>
+    <item text="&amp;Tools" name="toolsMenu">
+        <action name="viewShowErrorsAction"/>
+        <action name="toolsPartListAction"/>
         <separator/>
         <action name="showViewInfoAction"/>
         <action name="showPovCameraAction"/>
@@ -910,6 +913,14 @@
             <string>Show Pov-Ray Camera Info...</string>
         </property>
     </action>
+    <action>
+        <property name="name">
+            <cstring>toolsPartListAction</cstring>
+        </property>
+        <property name="text">
+            <string>Part List</string>
+        </property>
+    </action>
 </actions>
 <images>
 </images>
@@ -1148,6 +1159,12 @@
         <receiver>LDView</receiver>
         <slot>showPovCamera()</slot>
     </connection>
+    <connection>
+        <sender>toolsPartListAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>toolsPartList()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">LDView.ui.h</include>
@@ -1194,6 +1211,7 @@
     <slot>fileCancelLoad()</slot>
     <slot>showViewInfo()</slot>
     <slot>showPovCamera()</slot>
+    <slot>toolsPartList()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

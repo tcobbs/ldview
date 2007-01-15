@@ -2744,6 +2744,17 @@ void ModelViewerWidget::doShowPovCamera(void)
 	}
 }
 
+void ModelViewerWidget::doPartList(void)
+{
+	if (modelViewer)
+	{
+		LDPartsList *partsList = modelViewer->getPartsList();
+		if (partsList)
+		{
+		}
+	}
+}
+
 void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
 {
 	TCVector cameraMotion = modelViewer->getCameraMotion();
