@@ -51,6 +51,9 @@ distclean:
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..\..
 	$(MAKE) -nologo -f Makefile.vc clean
+	cd LDViewThumbs
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..
 
 CUI\$(OBJDIR)\CUI.lib: CUI\*.cpp CUI\*.h
 	cd CUI
@@ -121,6 +124,12 @@ Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Tr
 installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss
 	"$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
 
+thumbs:		LDViewThumbs\ReleaseMinDependency\LDViewThumbs.dll
+LDViewThumbs\ReleaseMinDependency\LDViewThumbs.dll: LDViewThumbs\*.cpp TCFoundation\$(OBJDIR)\TCFoundation.lib
+	cd LDViewThumbs
+	$(MAKE) -nologo -f Makefile.vc all
+	cd ..
+		
 !IF DEFINED(QTDIR)
 all: QT\LDView.exe
 

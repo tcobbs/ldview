@@ -27,8 +27,9 @@ Compilation instruction for LDView on Windows
 
 Required components
 - Microsoft Platform SDK
+- Microsoft WinDDK (for building LDViewThumbs.dll)
 - C++ compiler (Visual C++ 6.0 or Visual C++ Toolkit 2003, or 
-		Visual Studio Express)
+		Visual Studio Express 2005)
 - Microsoft Help Workshop
 - Inno Setup 5 with Preprocessor (for installer package)
 - boost library
