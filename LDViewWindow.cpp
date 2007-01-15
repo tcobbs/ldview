@@ -4966,8 +4966,6 @@ LRESULT LDViewWindow::generatePartsList(void)
 					OFN_OVERWRITEPROMPT;
 				openStruct.lpstrDefExt = NULL;
 				openStruct.hInstance = getLanguageModule();
-				//htmlInventory->setShowModelFlag(true);
-				//htmlInventory->setExternalCssFlag(true);
 				if (GetSaveFileName(&openStruct))
 				{
 					htmlInventory->generateHtml(filename.c_str(),
