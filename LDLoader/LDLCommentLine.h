@@ -11,11 +11,16 @@ public:
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeComment; }
 	virtual bool getMPDFilename(char *filename, int maxLength) const;
 	virtual bool isPartMeta(void) const;
+	virtual bool isOfficialPartMeta(bool partMeta) const;
 	virtual bool isPrimitiveMeta(void) const;
 	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
 	virtual bool isMovedToMeta(void) const;
 	virtual bool containsBFCCommand(const char *command) const;
+	virtual const char *getProcessedLine(void) const
+	{
+		return m_processedLine;
+	}
 protected:
 	LDLCommentLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
