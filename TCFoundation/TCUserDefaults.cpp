@@ -253,6 +253,21 @@ long TCUserDefaults::longForKey(const char* key, long defaultValue,
 		defaultValue);
 }
 
+void TCUserDefaults::setLongVectorForKey(const LongVector &value,
+										 const char* key, bool sessionSpecific)
+{
+	getCurrentUserDefaults()->setLongVectorForKey(value, key,
+		sessionSpecific);
+}
+
+LongVector TCUserDefaults::longVectorForKey(const char* key,
+											const LongVector &defaultValue,
+											bool sessionSpecific)
+{
+	return getCurrentUserDefaults()->defLongVectorForKey(key, sessionSpecific,
+		defaultValue);
+}
+
 void TCUserDefaults::setFloatForKey(float value, const char* key,
 									bool sessionSpecific)
 {
@@ -541,10 +556,14 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 }
 
 long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
-								   long defaultValue)
+								   long defaultValue, bool *found)
 {
 	char *commandLineValue = defCommandLineStringForKey(key);
 
+	if (found)
+	{
+		*found = false;
+	}
 	if (commandLineValue)
 	{
 		long returnValue;
@@ -552,13 +571,17 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		if (sscanf(commandLineValue, "%li", &returnValue) == 1)
 		{
 			delete commandLineValue;
+			if (found)
+			{
+				*found = true;
+			}
 			return returnValue;
 		}
 		delete commandLineValue;
 	}
 #ifdef _QT
 	return qSettings->readNumEntry(qKeyForKey(key, sessionSpecific),
-		defaultValue);
+		defaultValue, found);
 #endif // _QT
 #if defined(__APPLE__) && !defined(_QT)
 	NSNumber *returnNumber;
@@ -576,6 +599,10 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 	}
 	if ([returnNumber isKindOfClass: [NSNumber class]])
 	{
+		if (found)
+		{
+			*found = true;
+		}
 		return [returnNumber longValue];		
 	}
 	else
@@ -593,6 +620,10 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 
 		memcpy(&returnValue, value, sizeof returnValue);
 		delete value;
+		if (found)
+		{
+			*found = true;
+		}
 		return returnValue;
 	}
 	else
@@ -600,6 +631,61 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		return defaultValue;
 	}
 #endif // WIN32
+}
+
+// Note: static function
+std::string TCUserDefaults::arrayKey(const char *key, int index)
+{
+	char indexString[16];
+
+	sprintf(indexString, "%02d", index);
+	return (std::string)key + indexString;
+}
+
+void TCUserDefaults::defSetLongVectorForKey(const LongVector &value,
+											const char* key,
+											bool sessionSpecific)
+{
+	size_t i;
+
+	for (i = 0; i < value.size(); i++)
+	{
+		defSetLongForKey(value[i], arrayKey(key, i).c_str(), sessionSpecific);
+	}
+	// Remove the next value after the ones given.  Note that we don't have to
+	// remove all subsequent values, just the one, because when we read the
+	// array back, we stop when he hit the first missing one.
+	defRemoveValue(arrayKey(key, i).c_str(), sessionSpecific);
+}
+
+LongVector TCUserDefaults::defLongVectorForKey(const char* key,
+											   bool sessionSpecific,
+											   const LongVector &defaultValue)
+{
+	bool found;
+
+	defLongForKey(arrayKey(key, 0).c_str(), sessionSpecific, 0, &found);
+	if (found)
+	{
+		size_t i;
+		LongVector retValue;
+
+		for (i = 0; found; i++)
+		{
+			long value = defLongForKey(arrayKey(key, i).c_str(),
+				sessionSpecific, 0, &found);
+
+			if (found)
+			{
+				retValue.push_back(value);
+			}
+		}
+		return retValue;
+	}
+	else
+	{
+		return defaultValue;
+	}
 }
 
 void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
