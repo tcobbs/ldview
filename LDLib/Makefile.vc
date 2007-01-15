@@ -7,7 +7,10 @@ CCOBJS = \
 	$(OBJDIR)\LDLibraryUpdater.obj \
 	$(OBJDIR)\LDModelParser.obj \
 	$(OBJDIR)\LDrawModelViewer.obj \
-	$(OBJDIR)\LDPreferences.obj
+	$(OBJDIR)\LDPreferences.obj \
+	$(OBJDIR)\LDHtmlInventory.obj \
+	$(OBJDIR)\LDPartCount.obj \
+	$(OBJDIR)\LDPartsList.obj 
 
 LIBT = LDLib.lib
 
