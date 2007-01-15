@@ -171,9 +171,29 @@ bool LDLCommentLine::isPrimitiveMeta(void) const
 			word = 1;
 		}
 	}
+	else if (numWords >= 3 && strcasecmp((*m_words)[0], "original") == 0 &&
+		strcasecmp((*m_words)[1], "ldraw") == 0 &&
+		strcasecmp((*m_words)[2], "primitive") == 0)
+	{
+		return true;
+	}
 	if (word && strcasecmp((*m_words)[word], "primitive") == 0)
 	{
 		return true;
+	}
+	return false;
+}
+
+bool LDLCommentLine::isOfficialPartMeta(bool partMeta) const
+{
+	if (partMeta)
+	{
+		if (strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
+			strcasecmp((*m_words)[0], "official") == 0 ||
+			strcasecmp((*m_words)[0], "original") == 0)
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -205,6 +225,12 @@ bool LDLCommentLine::isPartMeta(void) const
 			return true;
 		}
 		word = 2;
+	}
+	else if (numWords >= 3 && strcasecmp((*m_words)[0], "original") == 0 &&
+		strcasecmp((*m_words)[1], "ldraw") == 0 &&
+		strcasecmp((*m_words)[2], "part") == 0)
+	{
+		return true;
 	}
 	if (word && (strcasecmp((*m_words)[word], "part") == 0 ||
 		strcasecmp((*m_words)[word], "element") == 0))

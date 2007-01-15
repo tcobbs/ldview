@@ -44,9 +44,10 @@ public:
 	virtual LDLModel *subModelNamed(const char *subModelName,
 		bool lowRes = false, bool secondAttempt = false,
 		const LDLModelLine *fileLine = NULL, bool knownPart = false);
-	virtual const char *getFilename(void) { return m_filename; }
+	virtual const char *getFilename(void) const { return m_filename; }
 	virtual void setFilename(const char *filename);
-	virtual const char *getName(void) { return m_name; }
+	virtual const char *getName(void) const { return m_name; }
+	virtual const char *getDescription(void) const { return m_description; }
 	virtual void setName(const char *name);
 	virtual bool load(FILE *file, bool trackProgress = true);
 	virtual void print(int indent);
@@ -61,17 +62,19 @@ public:
 		va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, const char *format, ...);
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
-	virtual int getActiveLineCount(void) { return m_activeLineCount; }
+	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
-	virtual bool isMainModel(void) { return false; }
+	virtual bool isMainModel(void) const { return false; }
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
 	// instead of returning the flag value directly.
-	bool isPart(void) { return m_flags.part != false; }
-	bool isPrimitive(void) { return m_flags.primitive != false; }
-	bool isMPD(void) { return m_flags.mpd != false; }
-	bool getNoShrinkFlag(void) { return m_flags.noShrink != false; }
+	bool isPart(void) const { return m_flags.part != false; }
+	bool isPrimitive(void) const { return m_flags.primitive != false; }
+	bool isSubPart(void) const { return m_flags.subPart != false; }
+	bool isMPD(void) const { return m_flags.mpd != false; }
+	bool getNoShrinkFlag(void) const { return m_flags.noShrink != false; }
+	bool isOfficial(void) const { return m_flags.official != false; }
 
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
 
@@ -126,6 +129,7 @@ protected:
 
 	char *m_filename;
 	char *m_name;
+	char *m_description;
 	LDLFileLineArray *m_fileLines;
 	LDLMainModel *m_mainModel;
 	int m_activeLineCount;
@@ -148,6 +152,7 @@ protected:
 		bool primitive:1;
 		bool mpd:1;
 		bool noShrink:1;
+		bool official:1;
 		BFCState bfcCertify:3;
 	} m_flags;
 

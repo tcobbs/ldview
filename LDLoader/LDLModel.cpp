@@ -42,6 +42,7 @@ LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 LDLModel::LDLModel(void)
 	:m_filename(NULL),
 	m_name(NULL),
+	m_description(NULL),
 	m_fileLines(NULL),
 	m_mainModel(NULL),
 	m_activeLineCount(0),
@@ -62,6 +63,7 @@ LDLModel::LDLModel(void)
 	m_flags.subPart = false;
 	m_flags.primitive = false;
 	m_flags.mpd = false;
+	m_flags.official = false;
 	m_flags.bfcCertify = BFCUnknownState;
 	m_flags.noShrink = false;
 	sm_modelCount++;
@@ -70,6 +72,7 @@ LDLModel::LDLModel(void)
 LDLModel::LDLModel(const LDLModel &other)
 	:m_filename(copyString(other.m_filename)),
 	m_name(copyString(other.m_name)),
+	m_description(copyString(other.m_description)),
 	m_fileLines(NULL),
 	m_mainModel(other.m_mainModel),
 	m_activeLineCount(other.m_activeLineCount),
@@ -86,6 +89,7 @@ void LDLModel::dealloc(void)
 {
 	delete m_filename;
 	delete m_name;
+	delete m_description;
 	TCObject::release(m_fileLines);
 	sm_modelCount--;
 	TCObject::dealloc();
@@ -562,6 +566,12 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 	}
 	else if (commentLine->isPartMeta())
 	{
+		if (commentLine->isOfficialPartMeta(true))
+		{
+			// Note that even if we decide it's a primitive, it can still be an
+			// official file.
+			m_flags.official = true;
+		}
 		// No matter what the comment says, remember that a primitive cannot
 		// be a part, so if we found the file in the P directory, then by
 		// definition it isn't a part.
@@ -906,6 +916,13 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 	else if (commentLine->isBFCMeta())
 	{
 		return parseBFCMeta(commentLine);
+	}
+	else if (index == 0)
+	{
+		delete m_description;
+		m_description = copyString(&commentLine->getLine()[1]);
+		stripLeadingWhitespace(m_description);
+		stripTrailingWhitespace(m_description);
 	}
 	return 0;
 }
