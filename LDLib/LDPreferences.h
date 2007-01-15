@@ -4,6 +4,7 @@
 #include <TCFoundation/TCObject.h>
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/TCUserDefaults.h>
 
 typedef std::map<std::string, bool> StringBoolMap;
 
@@ -120,6 +121,8 @@ public:
 	// Inventory settings
 	bool getInvShowModel(void) { return m_invShowModel; }
 	bool getInvExternalCss(void) { return m_invExternalCss; }
+	bool getInvPartImages(void) { return m_invPartImages; }
+	const LongVector &getInvColumnOrder(void) { return m_invColumnOrder; }
 	const char *getInvLastSavePath(void) { return m_invLastSavePath.c_str(); }
 
 
@@ -200,6 +203,8 @@ public:
 	// Inventory settings
 	void setInvShowModel(bool value, bool commit = false);
 	void setInvExternalCss(bool value, bool commit = false);
+	void setInvPartImages(bool value, bool commit = false);
+	void setInvColumnOrder(const LongVector &value, bool commit = false);
 	void setInvLastSavePath(const char *value, bool commit = false);
 
 	// No UI
@@ -213,11 +218,15 @@ protected:
 		bool commit);
 	void setSetting(TCFloat &setting, TCFloat value, const char *key,
 		bool commit);
-	void setSetting(std::string &setting, const std::string value,
+	void setSetting(std::string &setting, const std::string &value,
+		const char *key, bool commit);
+	void setSetting(LongVector &setting, const LongVector &value,
 		const char *key, bool commit);
 	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
 		bool commit);
 	bool getBoolSetting(const char *key, bool defaultValue = false);
+	LongVector getLongVectorSetting(const char *key,
+		const LongVector &defaultValue = LongVector());
 	long getLongSetting(const char *key, long defaultValue = 0);
 	int getIntSetting(const char *key, int defaultValue = 0);
 	float getFloatSetting(const char *key, float defaultValue = 0.0f);
@@ -313,6 +322,8 @@ protected:
 	// Inventory settings
 	bool m_invShowModel;
 	bool m_invExternalCss;
+	bool m_invPartImages;
+	LongVector m_invColumnOrder;
 	std::string m_invLastSavePath;
 
 	// Settings with no UI
@@ -321,8 +332,10 @@ protected:
 	TCFloat m_zoomMax;
 	TCVector m_lightVector;
 
-	StringBoolMap changedSettings;
-	StringBoolMap globalSettings;
+	StringBoolMap m_changedSettings;
+	StringBoolMap m_globalSettings;
+
+	bool m_initializing;
 };
 
 #endif // __LDPREFERENCES_H__

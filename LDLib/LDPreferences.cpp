@@ -17,25 +17,27 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 		throw "modelViewer must not be NULL";
 	}
 */
-	globalSettings[ZOOM_MAX_KEY] = true;
-	globalSettings[SHOW_ERRORS_KEY] = true;
-	globalSettings[PROXY_TYPE_KEY] = true;
-	globalSettings[PROXY_SERVER_KEY] = true;
-	globalSettings[PROXY_PORT_KEY] = true;
-	globalSettings[CHECK_PART_TRACKER_KEY] = true;
-	globalSettings[CHECK_PART_WAIT_KEY] = true;
-	globalSettings[CHECK_PART_UPDATE_WAIT_KEY] = true;
-	globalSettings[CAMERA_GLOBE_KEY] = true;
-	globalSettings[INV_SHOW_MODEL_KEY] = true;
-	globalSettings[INV_EXTERNAL_CSS_KEY] = true;
-	globalSettings[INV_LAST_SAVE_PATH_KEY] = true;
+	m_globalSettings[ZOOM_MAX_KEY] = true;
+	m_globalSettings[SHOW_ERRORS_KEY] = true;
+	m_globalSettings[PROXY_TYPE_KEY] = true;
+	m_globalSettings[PROXY_SERVER_KEY] = true;
+	m_globalSettings[PROXY_PORT_KEY] = true;
+	m_globalSettings[CHECK_PART_TRACKER_KEY] = true;
+	m_globalSettings[CHECK_PART_WAIT_KEY] = true;
+	m_globalSettings[CHECK_PART_UPDATE_WAIT_KEY] = true;
+	m_globalSettings[CAMERA_GLOBE_KEY] = true;
+	m_globalSettings[INV_SHOW_MODEL_KEY] = true;
+	m_globalSettings[INV_EXTERNAL_CSS_KEY] = true;
+	m_globalSettings[INV_PART_IMAGES_KEY] = true;
+	m_globalSettings[INV_COLUMN_ORDER_KEY] = true;
+	m_globalSettings[INV_LAST_SAVE_PATH_KEY] = true;
 	m_defaultColorNumber = -1;
 	for (i = 0; i < 16; i++)
 	{
 		char key[128];
 
 		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
-		globalSettings[key] = true;
+		m_globalSettings[key] = true;
 	}
 	if (modelViewer)
 	{
@@ -247,7 +249,7 @@ void LDPreferences::loadSettings(void)
 	loadPrimitivesSettings();
 	loadUpdatesSettings();
 	loadInventorySettings();
-	changedSettings.clear();
+	m_changedSettings.clear();
 
 	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
@@ -273,6 +275,7 @@ void LDPreferences::loadDefaultGeneralSettings(void)
 {
 	int i;
 
+	m_initializing = true;
 	setFsaaMode(0);
 	setLineSmoothing(false);
 	setBackgroundColor(0, 0, 0);
@@ -291,10 +294,12 @@ void LDPreferences::loadDefaultGeneralSettings(void)
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		setCustomColor(i, r, g, b);
 	}
+	m_initializing = false;
 }
 
 void LDPreferences::loadDefaultGeometrySettings(void)
 {
+	m_initializing = true;
 	setUseSeams(false);
 	setSeamWidth(50);
 	setDrawWireframe(false);
@@ -313,10 +318,12 @@ void LDPreferences::loadDefaultGeometrySettings(void)
 	setUsePolygonOffset(true);
 	setBlackHighlights(false);
 	setEdgeThickness(1);
+	m_initializing = false;
 }
 
 void LDPreferences::loadDefaultEffectsSettings(void)
 {
+	m_initializing = true;
 	setUseLighting(true);
 	setQualityLighting(false);
 	setSubduedLighting(false);
@@ -331,33 +338,46 @@ void LDPreferences::loadDefaultEffectsSettings(void)
 	setUseStipple(false);
 	setUseFlatShading(false);
 	setPerformSmoothing(true);
+	m_initializing = false;
 }
 
 void LDPreferences::loadDefaultPrimitivesSettings(void)
 {
+	m_initializing = true;
 	setAllowPrimitiveSubstitution(true);
 	setTextureStuds(true);
 	setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
 	setCurveQuality(2);
 	setQualityStuds(false);
 	setHiResPrimitives(false);
+	m_initializing = false;
 }
 
 void LDPreferences::loadDefaultUpdatesSettings(void)
 {
+	m_initializing = true;
 	setProxyType(0);
 	setProxyServer("");
 	setProxyPort(80);
 	setCheckPartTracker(true);
 	setMissingPartWait(7);
 	setUpdatedPartWait(7);
+	m_initializing = false;
 }
 
 void LDPreferences::loadDefaultInventorySettings(void)
 {
+	m_initializing = true;
 	setInvShowModel(false);
 	setInvExternalCss(false);
+	setInvPartImages(true);
+	LongVector columnOrder;
+	columnOrder.push_back(1);	// Part
+	columnOrder.push_back(3);	// Color
+	columnOrder.push_back(4);	// Quantity
+	setInvColumnOrder(columnOrder);
 	setInvLastSavePath("");
+	m_initializing = false;
 }
 
 void LDPreferences::loadGeneralSettings(void)
@@ -498,6 +518,9 @@ void LDPreferences::loadInventorySettings(void)
 	loadDefaultInventorySettings();
 	m_invShowModel = getBoolSetting(INV_SHOW_MODEL_KEY, m_invShowModel);
 	m_invExternalCss = getBoolSetting(INV_EXTERNAL_CSS_KEY, m_invExternalCss);
+	m_invPartImages = getBoolSetting(INV_PART_IMAGES_KEY, m_invPartImages);
+	m_invColumnOrder = getLongVectorSetting(INV_COLUMN_ORDER_KEY,
+		m_invColumnOrder);
 	m_invLastSavePath = getStringSetting(INV_LAST_SAVE_PATH_KEY,
 		m_invLastSavePath.c_str());
 }
@@ -620,6 +643,8 @@ void LDPreferences::commitInventorySettings(void)
 {
 	setInvShowModel(m_invShowModel, true);
 	setInvExternalCss(m_invExternalCss, true);
+	setInvPartImages(m_invPartImages, true);
+	setInvColumnOrder(m_invColumnOrder, true);
 	setInvLastSavePath(m_invLastSavePath.c_str(), true);
 }
 
@@ -741,17 +766,36 @@ void LDPreferences::setColorSetting(TCULong &setting, int r, int g, int b,
 									 const char *key, bool commit)
 {
 	TCULong value = getColor(r, g, b);
-	if (setting != value || (changedSettings[key] && commit))
+	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
-			TCUserDefaults::setLongForKey(setting, key, !globalSettings[key]);
-			changedSettings.erase(key);
+			TCUserDefaults::setLongForKey(setting, key, !m_globalSettings[key]);
+			m_changedSettings.erase(key);
 		}
 		else
 		{
-			changedSettings[key] = true;
+			m_changedSettings[key] = true;
+		}
+	}
+}
+
+void LDPreferences::setSetting(LongVector &setting, const LongVector &value,
+							   const char *key, bool commit)
+{
+	if (setting != value || (m_changedSettings[key] && commit))
+	{
+		setting = value;
+		if (commit)
+		{
+			TCUserDefaults::setLongVectorForKey(value, key,
+				!m_globalSettings[key]);
+			m_changedSettings.erase(key);
+		}
+		else if (!m_initializing)
+		{
+			m_changedSettings[key] = true;
 		}
 	}
 }
@@ -759,18 +803,18 @@ void LDPreferences::setColorSetting(TCULong &setting, int r, int g, int b,
 void LDPreferences::setSetting(bool &setting, bool value, const char *key,
 								bool commit)
 {
-	if (setting != value || (changedSettings[key] && commit))
+	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
 			TCUserDefaults::setLongForKey(value ? 1 : 0, key,
-				!globalSettings[key]);
-			changedSettings.erase(key);
+				!m_globalSettings[key]);
+			m_changedSettings.erase(key);
 		}
-		else
+		else if (!m_initializing)
 		{
-			changedSettings[key] = true;
+			m_changedSettings[key] = true;
 		}
 	}
 }
@@ -778,17 +822,17 @@ void LDPreferences::setSetting(bool &setting, bool value, const char *key,
 void LDPreferences::setSetting(int &setting, int value, const char *key,
 								bool commit)
 {
-	if (setting != value || (changedSettings[key] && commit))
+	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
-			TCUserDefaults::setLongForKey(value, key, !globalSettings[key]);
-			changedSettings.erase(key);
+			TCUserDefaults::setLongForKey(value, key, !m_globalSettings[key]);
+			m_changedSettings.erase(key);
 		}
-		else
+		else if (!m_initializing)
 		{
-			changedSettings[key] = true;
+			m_changedSettings[key] = true;
 		}
 	}
 }
@@ -796,18 +840,18 @@ void LDPreferences::setSetting(int &setting, int value, const char *key,
 void LDPreferences::setSetting(TCULong &setting, TCULong value, const char *key,
 								bool commit)
 {
-	if (setting != value || (changedSettings[key] && commit))
+	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
 			TCUserDefaults::setLongForKey((long)value, key,
-				!globalSettings[key]);
-			changedSettings.erase(key);
+				!m_globalSettings[key]);
+			m_changedSettings.erase(key);
 		}
-		else
+		else if (!m_initializing)
 		{
-			changedSettings[key] = true;
+			m_changedSettings[key] = true;
 		}
 	}
 }
@@ -815,36 +859,36 @@ void LDPreferences::setSetting(TCULong &setting, TCULong value, const char *key,
 void LDPreferences::setSetting(TCFloat &setting, TCFloat value, const char *key,
 								bool commit)
 {
-	if (setting != value || (changedSettings[key] && commit))
+	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
-			TCUserDefaults::setFloatForKey(value, key, !globalSettings[key]);
-			changedSettings.erase(key);
+			TCUserDefaults::setFloatForKey(value, key, !m_globalSettings[key]);
+			m_changedSettings.erase(key);
 		}
-		else
+		else if (!m_initializing)
 		{
-			changedSettings[key] = true;
+			m_changedSettings[key] = true;
 		}
 	}
 }
 
-void LDPreferences::setSetting(std::string &setting, const std::string value,
+void LDPreferences::setSetting(std::string &setting, const std::string &value,
 								const char *key, bool commit)
 {
-	if (setting != value || (changedSettings[key] && commit))
+	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
 			TCUserDefaults::setStringForKey(value.c_str(), key,
-				!globalSettings[key]);
-			changedSettings.erase(key);
+				!m_globalSettings[key]);
+			m_changedSettings.erase(key);
 		}
-		else
+		else if (!m_initializing)
 		{
-			changedSettings[key] = true;
+			m_changedSettings[key] = true;
 		}
 	}
 }
@@ -852,30 +896,37 @@ void LDPreferences::setSetting(std::string &setting, const std::string value,
 bool LDPreferences::getBoolSetting(const char *key, bool defaultValue)
 {
 	return TCUserDefaults::longForKey(key, (long)defaultValue,
-		!globalSettings[key]) != 0;
+		!m_globalSettings[key]) != 0;
+}
+
+LongVector LDPreferences::getLongVectorSetting(const char *key,
+										 const LongVector &defaultValue)
+{
+	return TCUserDefaults::longVectorForKey(key, defaultValue,
+		!m_globalSettings[key]);
 }
 
 long LDPreferences::getLongSetting(const char *key, long defaultValue)
 {
-	return TCUserDefaults::longForKey(key, defaultValue, !globalSettings[key]);
+	return TCUserDefaults::longForKey(key, defaultValue, !m_globalSettings[key]);
 }
 
 int LDPreferences::getIntSetting(const char *key, int defaultValue)
 {
 	return (int)TCUserDefaults::longForKey(key, defaultValue,
-		!globalSettings[key]);
+		!m_globalSettings[key]);
 }
 
 float LDPreferences::getFloatSetting(const char *key, float defaultValue)
 {
-	return TCUserDefaults::floatForKey(key, defaultValue, !globalSettings[key]);
+	return TCUserDefaults::floatForKey(key, defaultValue, !m_globalSettings[key]);
 }
 
 std::string LDPreferences::getStringSetting(const char *key,
 											const char *defaultValue)
 {
 	char *tmpString = TCUserDefaults::stringForKey(key, defaultValue,
-		!globalSettings[key]);
+		!m_globalSettings[key]);
 	std::string result;
 
 	if (tmpString)
@@ -1330,6 +1381,16 @@ void LDPreferences::setInvShowModel(bool value, bool commit)
 void LDPreferences::setInvExternalCss(bool value, bool commit)
 {
 	setSetting(m_invExternalCss, value, INV_EXTERNAL_CSS_KEY, commit);
+}
+
+void LDPreferences::setInvPartImages(bool value, bool commit)
+{
+	setSetting(m_invPartImages, value, INV_PART_IMAGES_KEY, commit);
+}
+
+void LDPreferences::setInvColumnOrder(const LongVector &value, bool commit)
+{
+	setSetting(m_invColumnOrder, value, INV_COLUMN_ORDER_KEY, commit);
 }
 
 void LDPreferences::setInvLastSavePath(const char *value, bool commit)
