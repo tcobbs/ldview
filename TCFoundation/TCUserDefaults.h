@@ -2,10 +2,11 @@
 #define __TCUSERDEFAULTS_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCStlIncludes.h>
 
-#ifdef WIN32
-#include <windows.h>
-#endif // WIN32
+//#ifdef WIN32
+//#include <windows.h>
+//#endif // WIN32
 #ifdef _QT
 #include <qsettings.h>
 #include <stdlib.h>
@@ -19,6 +20,8 @@
 #endif // __OBJC__
 #endif // __APPLE__ && !_QT
 
+typedef std::vector<long> LongVector;
+
 class TCStringArray;
 
 class TCExport TCUserDefaults: public TCObject
@@ -31,6 +34,11 @@ class TCExport TCUserDefaults: public TCObject
 		static void setLongForKey(long value, const char* key,
 			bool sessionSpecific = true);
 		static long longForKey(const char* key, long defaultValue = 0,
+			bool sessionSpecific = true);
+		static void setLongVectorForKey(const LongVector &value,
+			const char* key, bool sessionSpecific = true);
+		static LongVector longVectorForKey(const char* key,
+			const LongVector &defaultValue = LongVector(),
 			bool sessionSpecific = true);
 		static void setFloatForKey(float value, const char* key,
 			bool sessionSpecific = true);
@@ -67,7 +75,12 @@ class TCExport TCUserDefaults: public TCObject
 		void defSetLongForKey(long value, const char* key,
 			bool sessionSpecific);
 		long defLongForKey(const char* key, bool sessionSpecific,
-			long defaultValue = 0);
+			long defaultValue = 0, bool *found = NULL);
+		void defSetLongVectorForKey(const LongVector &value,
+			const char* key, bool sessionSpecific = true);
+		LongVector defLongVectorForKey(const char* key,
+			bool sessionSpecific,
+			const LongVector &defaultValue = LongVector());
 		void defRemoveValue(const char* key, bool sessionSpecific);
 		void defSetAppName(const char* value);
 		const char* defGetAppName(void) { return appName; }
@@ -84,6 +97,7 @@ class TCExport TCUserDefaults: public TCObject
 		char* defGetSavedSessionNameFromKey(const char *key);
 		void defRemoveSession(const char *value);
 		void sendValueChangedAlert(const char *key);
+		static std::string arrayKey(const char *key, int index);
 
 #ifdef WIN32
 		HKEY openAppDefaultsKey(void);
