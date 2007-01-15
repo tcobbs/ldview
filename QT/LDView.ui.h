@@ -224,3 +224,8 @@ void LDView::showPovCamera()
 	modelViewer->doShowPovCamera();
 }
 
+void LDView::toolsPartList()
+{
+	modelViewer->doPartList();
+}
+

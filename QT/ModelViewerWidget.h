@@ -74,6 +74,7 @@ public:
 	void doViewStatusBar(bool flag);
 	void doViewToolBar(bool flag);
 	void doViewErrors(void);
+	void doPartList();
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
 	void doHelpAbout(void);
