@@ -82,6 +82,7 @@
 #define SHOW_HIGHLIGHT_LINES_KEY "ShowHighlightLines"
 #define SHOW_TYPE5_CONTROL_POINTS_KEY "ShowType5ControlPoints"
 #define SHOW_WARNINGS_KEY "ShowWarnings"
+#define SNAPSHOT_SUFFIX_KEY "SnapshotSuffix"
 #define SORT_KEY "SortTransparent"
 #define STATUS_BAR_KEY "StatusBar"
 #define STEREO_MODE_KEY "StereoMode"
@@ -127,8 +128,9 @@
 #define LIGHT_VECTOR_KEY "LightVector"
 #define INV_SHOW_MODEL_KEY "InventoryShowModel"
 #define INV_EXTERNAL_CSS_KEY "InventoryExternalCss"
+#define INV_PART_IMAGES_KEY "InventoryPartImages"
+#define INV_COLUMN_ORDER_KEY "InventoryColumnOrder"
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
-#define SNAPSHOT_SUFFIX_KEY "SnapshotSuffix"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"
