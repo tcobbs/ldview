@@ -2047,7 +2047,8 @@ HINSTANCE CUIWindow::getLanguageModule(void)
 	return hLanguageModule;
 }
 
-HWND CUIWindow::createDialog(char* templateName, BOOL asChildWindow)
+HWND CUIWindow::createDialog(char* templateName, BOOL asChildWindow,
+							 DLGPROC dialogProc, LPARAM lParam)
 {
 	HWND hWnd;
 
@@ -2059,13 +2060,19 @@ HWND CUIWindow::createDialog(char* templateName, BOOL asChildWindow)
 	{
 		hWnd = NULL;
 	}
+	if (!lParam)
+	{
+		lParam = (LPARAM)this;
+	}
 	return CreateDialogParam(getLanguageModule(), templateName, hWnd,
-		staticDialogProc, (long)this);
+		dialogProc, lParam);
 }
 
-HWND CUIWindow::createDialog(int templateNumber, BOOL asChildWindow)
+HWND CUIWindow::createDialog(int templateNumber, BOOL asChildWindow,
+							 DLGPROC dialogProc, LPARAM lParam)
 {
-	return createDialog(MAKEINTRESOURCE(templateNumber), asChildWindow);
+	return createDialog(MAKEINTRESOURCE(templateNumber), asChildWindow,
+		dialogProc, lParam);
 }
 
 HBRUSH CUIWindow::getBackgroundBrush(void)

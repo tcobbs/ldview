@@ -150,6 +150,10 @@ SOURCE=.\ModelWindow.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PartsListDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SSConfigure.cpp
 # End Source File
 # Begin Source File
@@ -191,6 +195,10 @@ SOURCE=.\ModelLoader.h
 # Begin Source File
 
 SOURCE=.\ModelWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PartsListDialog.h
 # End Source File
 # Begin Source File
 

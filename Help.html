@@ -3049,6 +3049,27 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			SaveZoomToFit
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Mostly equivalent to the <I>Zoom to Fit</I> check box in the <I>Save
+			Snapshot</I> dialog box.  In addition, if you use the
+			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting and set
+			this setting to 1 on the command line, the resulting image will be
+			zoomed to fit.  Note that you can use this in combination with the
+			<A HREF="#DefaultZoomSetting">DefaultZoom</A> setting on the command
+			line to zoom in or out.  Setting DefaultZoom to 0.95, for instance,
+			will provide a small margin all the way around the model.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			Seams
 		</TD>
 		<TD VALIGN="TOP">
@@ -3076,27 +3097,6 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to 100 times the value of the <I>Seam Width</I> field in
 			the <I>Geometry-&gt;Model</I> box.
-		</TD>
-	</TR>
-	<TR>
-		<TD VALIGN="TOP">
-			SaveZoomToFit
-		</TD>
-		<TD VALIGN="TOP">
-			Boolean
-		</TD>
-		<TD VALIGN="TOP">
-			YES
-		</TD>
-		<TD VALIGN="TOP">
-			Mostly equivalent to the <I>Zoom to Fit</I> check box in the <I>Save
-			Snapshot</I> dialog box.  In addition, if you use the
-			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting and set
-			this setting to 1 on the command line, the resulting image will be
-			zoomed to fit.  Note that you can use this in combination with the
-			<A HREF="#DefaultZoomSetting">DefaultZoom</A> setting on the command
-			line to zoom in or out.  Setting DefaultZoom to 0.95, for instance,
-			will provide a small margin all the way around the model.
 		</TD>
 	</TR>
 	<TR>
@@ -3427,6 +3427,28 @@ set-specific, while others aren't.
 			Equivalent to the <I>Show control pts</I> check box under the
 			<I>Conditional lines</I> check box in the <I>Geometry-&gt;Edge
 			Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			SnapshotSuffix
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Suffix to use when determining what file format to use for the
+			snapshot.  This is designed to be used in conjunction with the
+			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting so that you
+			can specify a temporary file on the command line without being
+			forced to give the temporary file a known suffix.  Currently, the
+			only values that are recognized are:<BR>
+			.bmp<BR>
+			.png<BR>
+			(Note that the dot preceding the extension is required.)
 		</TD>
 	</TR>
 	<TR>

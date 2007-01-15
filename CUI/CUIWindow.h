@@ -56,6 +56,13 @@ class CUIExport CUIWindow : public TCObject
 		virtual UINT setTimer(UINT timerID, UINT elapse);
 		virtual BOOL killTimer(UINT timerID);
 		HWND getHParentWindow(void) { return hParentWindow; }
+		virtual HWND createDialog(char* templateName,
+			BOOL asChildWindow = TRUE, DLGPROC dialogProc = staticDialogProc,
+			LPARAM lParam = 0);
+		virtual HWND createDialog(int templateNumber,
+			BOOL asChildWindow = TRUE, DLGPROC dialogProc = staticDialogProc,
+			LPARAM lParam = 0);
+		virtual void doDialogClose(HWND hDlg);
 
 		static void setArrowCursor(void);
 		static void setWaitCursor(void);
@@ -145,7 +152,6 @@ class CUIExport CUIWindow : public TCObject
 		virtual BOOL doDialogThemeChanged(void);
 		virtual BOOL doDialogCtlColorStatic(HDC hdcStatic, HWND hwndStatic);
 		virtual BOOL doDialogCtlColorBtn(HDC hdcStatic, HWND hwndStatic);
-		virtual void doDialogClose(HWND hDlg);
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId,
 			int notifyCode, HWND controlHWnd);
 		virtual BOOL doDialogVScroll(HWND hDlg, int scrollCode,
@@ -162,10 +168,6 @@ class CUIExport CUIWindow : public TCObject
 		virtual BOOL doDialogChar(HWND hDlg, TCHAR characterCode,
 			LPARAM keyData);
 		virtual BOOL doDialogHelp(HWND hDlg, LPHELPINFO helpInfo);
-		virtual HWND createDialog(char* templateName,
-			BOOL asChildWindow = TRUE);
-		virtual HWND createDialog(int templateNumber,
-			BOOL asChildWindow = TRUE);
 		virtual void setupDialogSlider(HWND hDlg, int controlId, short min,
 			short max, WORD frequency, int value);
 		virtual bool copyToClipboard(const char *value);

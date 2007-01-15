@@ -28,6 +28,7 @@
 #include "ModelWindow.h"
 #include <TCFoundation/TCMacros.h>
 #include <LDLib/LDHtmlInventory.h>
+#include "PartsListDialog.h"
 
 #define DOWNLOAD_TIMER 12
 #define DEFAULT_WIN_WIDTH 640
@@ -4932,47 +4933,54 @@ LRESULT LDViewWindow::generatePartsList(void)
 			if (partsList)
 			{
 				LDHtmlInventory *htmlInventory = new LDHtmlInventory;
-				OPENFILENAME openStruct;
-				char fileTypes[1024];
-				std::string filename = modelViewer->getFilename();
-				size_t findSpot = filename.find_last_of("/\\");
+				PartsListDialog *dialog = new PartsListDialog(this,
+					htmlInventory);
 
-				if (findSpot < filename.size())
+				if (dialog->runModal() == IDOK)
 				{
-					filename = filename.substr(findSpot + 1);
-				}
-				findSpot = filename.find_last_of('.');
-				if (findSpot < filename.size())
-				{
-					filename = filename.substr(0, findSpot);
-				}
-				filename += ".html";
-				filename.reserve(1024);
-				memset(fileTypes, 0, 2);
-				addFileType(fileTypes, TCLocalStrings::get("HtmlFileType"),
-					"*.html");
-				memset(&openStruct, 0, sizeof(OPENFILENAME));
-				openStruct.lStructSize = sizeof(OPENFILENAME);
-				openStruct.hwndOwner = hWindow;
-				openStruct.lpstrFilter = fileTypes;
-				openStruct.nFilterIndex = 0;
-				openStruct.lpstrFile = &filename[0];
-				openStruct.nMaxFile = filename.capacity();
-				openStruct.lpstrInitialDir =
-					htmlInventory->getLastSavePath();
-				openStruct.lpstrTitle =
-					TCLocalStrings::get("GeneratePartsList");
-				openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |
-					OFN_OVERWRITEPROMPT;
-				openStruct.lpstrDefExt = NULL;
-				openStruct.hInstance = getLanguageModule();
-				if (GetSaveFileName(&openStruct))
-				{
-					htmlInventory->generateHtml(filename.c_str(),
-						partsList, modelViewer->getFilename());
+					OPENFILENAME openStruct;
+					char fileTypes[1024];
+					std::string filename = modelViewer->getFilename();
+					size_t findSpot = filename.find_last_of("/\\");
+
+					if (findSpot < filename.size())
+					{
+						filename = filename.substr(findSpot + 1);
+					}
+					findSpot = filename.find_last_of('.');
+					if (findSpot < filename.size())
+					{
+						filename = filename.substr(0, findSpot);
+					}
+					filename += ".html";
+					filename.reserve(1024);
+					memset(fileTypes, 0, 2);
+					addFileType(fileTypes, TCLocalStrings::get("HtmlFileType"),
+						"*.html");
+					memset(&openStruct, 0, sizeof(OPENFILENAME));
+					openStruct.lStructSize = sizeof(OPENFILENAME);
+					openStruct.hwndOwner = hWindow;
+					openStruct.lpstrFilter = fileTypes;
+					openStruct.nFilterIndex = 0;
+					openStruct.lpstrFile = &filename[0];
+					openStruct.nMaxFile = filename.capacity();
+					openStruct.lpstrInitialDir =
+						htmlInventory->getLastSavePath();
+					openStruct.lpstrTitle =
+						TCLocalStrings::get("GeneratePartsList");
+					openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |
+						OFN_OVERWRITEPROMPT;
+					openStruct.lpstrDefExt = NULL;
+					openStruct.hInstance = getLanguageModule();
+					if (GetSaveFileName(&openStruct))
+					{
+						htmlInventory->generateHtml(filename.c_str(),
+							partsList, modelViewer->getFilename());
+					}
 				}
 				htmlInventory->release();
 				partsList->release();
+				dialog->release();
 			}
 		}
 	}
