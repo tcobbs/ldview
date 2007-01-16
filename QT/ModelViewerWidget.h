@@ -145,6 +145,7 @@ protected slots:
 	virtual void doFileMenuAboutToShow(void);
 	virtual void doEditMenuAboutToShow(void);
 	virtual void doViewMenuAboutToShow(void);
+	virtual void doToolsMenuAboutToShow(void);
 	virtual void doHelpMenuAboutToShow(void);
 	virtual void doLibraryUpdateCanceled(void);
 	virtual void doPreferences(void);
@@ -245,6 +246,7 @@ protected:
 	QPopupMenu *fileMenu;
 	QPopupMenu *editMenu;
 	QPopupMenu *viewMenu;
+	QPopupMenu *toolsMenu;
 	QPopupMenu *helpMenu;
 	int fileSeparatorIndex;
 	int fileCancelLoadId;

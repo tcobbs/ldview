@@ -92,6 +92,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	fileMenu(NULL),
 	editMenu(NULL),
 	viewMenu(NULL),
+	toolsMenu(NULL),
 	helpMenu(NULL),
 	fileSeparatorIndex(-1),
 	fileCancelLoadId(-1),
@@ -1080,6 +1081,7 @@ void ModelViewerWidget::connectMenuShows(void)
 	connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
 	connect(editMenu, SIGNAL(aboutToShow()), this, SLOT(doEditMenuAboutToShow()));
 	connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(doViewMenuAboutToShow()));
+	connect(toolsMenu,SIGNAL(aboutToShow()), this, SLOT(doToolsMenuAboutToShow()));
 	connect(helpMenu, SIGNAL(aboutToShow()), this, SLOT(doHelpMenuAboutToShow()));
 }
 
@@ -1198,6 +1200,11 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		viewMenu = mainWindow->viewMenu;
 	}
 	item = menuBar->findItem(menuBar->idAt(3));
+	if (item)
+	{
+		toolsMenu = mainWindow->toolsMenu;
+	}
+	item = menuBar->findItem(menuBar->idAt(4));
 	if (item)
 	{
 		helpMenu = mainWindow->helpMenu;
@@ -2933,6 +2940,8 @@ void ModelViewerWidget::doFileMenuAboutToShow(void)
 		{
 			fileMenu->setItemEnabled(fileReloadId, false);
 			fileMenu->setItemEnabled(fileSaveSnapshotId, false);
+			fileMenu->setItemEnabled(fileMenu->idAt(3), false);
+			fileMenu->setItemEnabled(fileMenu->idAt(10), false);
 		}
 	}
 }
@@ -2957,8 +2966,32 @@ void ModelViewerWidget::doViewMenuAboutToShow(void)
 	}
 	else
 	{
-		setMenuItemsEnabled(viewMenu, true);
+		if (!modelViewer || !modelViewer->getMainTREModel())
+		{
+			setMenuItemsEnabled(viewMenu, false);
+			viewMenu->setItemEnabled(viewMenu->idAt(3), true);
+			viewMenu->setItemEnabled(viewMenu->idAt(2), true);
+		}
+		else
+			setMenuItemsEnabled(viewMenu, true);
 	}
+}
+
+void ModelViewerWidget::doToolsMenuAboutToShow(void)
+{
+    if (loading)
+    {
+        setMenuItemsEnabled(toolsMenu, false);
+    }
+    else
+    {
+        if (!modelViewer || !modelViewer->getMainTREModel())
+        {
+            setMenuItemsEnabled(toolsMenu, false);
+        }
+        else
+            setMenuItemsEnabled(toolsMenu, true);
+    }
 }
 
 void ModelViewerWidget::doHelpMenuAboutToShow(void)
