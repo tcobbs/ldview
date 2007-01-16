@@ -1,4 +1,18 @@
 #include "LDLibraryUpdater.h"
+
+// One of the include files triggerred below the boost ones causes warnings to
+// show up during the parsing of the boost ones if these are moved down.  Please
+// don't move them down.
+
+#pragma warning(push, 3)
+
+#include <boost/thread/thread.hpp>
+#include <boost/thread/condition.hpp>
+#include <boost/thread/xtime.hpp>
+#include <boost/bind.hpp>
+
+#pragma warning(pop)
+
 #include "LDLibraryUpdateInfo.h"
 #include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCProgressAlert.h>
@@ -9,17 +23,6 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUnzip.h>
 #include <TCFoundation/TCLocalStrings.h>
-
-// NOTE: warning level on this source file had to be set to level 3 in Visual
-// Studio in order to get it to compile without warnings.  For some unknown
-// reason, disabling the warnings that show up including the below doesn't work.
-// This is only necessary in VS 6.  The Release build target is set to warning
-// level 4, because I built that with VC++ Toolkit 2003.
-#include <boost/thread/thread.hpp>
-#include <boost/thread/condition.hpp>
-#include <boost/thread/xtime.hpp>
-#include <boost/bind.hpp>
-
 
 #ifdef _QT
 #include <ctype.h>

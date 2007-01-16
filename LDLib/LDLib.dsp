@@ -122,17 +122,14 @@ SOURCE=.\LDLibraryUpdater.cpp
 
 !IF  "$(CFG)" == "LDLib - Win32 Release"
 
-# ADD CPP /W4
 # SUBTRACT CPP /YX
 
 !ELSEIF  "$(CFG)" == "LDLib - Win32 Debug"
 
-# ADD CPP /W3
 # SUBTRACT CPP /YX
 
 !ELSEIF  "$(CFG)" == "LDLib - Win32 PartialDebug"
 
-# ADD CPP /W3
 # SUBTRACT CPP /YX
 
 !ENDIF 

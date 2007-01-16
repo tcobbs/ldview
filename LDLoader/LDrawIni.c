@@ -14,6 +14,10 @@ If not, I don't know who wrote it.
 041202 lch Changed parameter ModelDir to ModelPath in LDrawIniComputeRealDirs
 */
 
+#ifdef WIN32
+#pragma warning(disable: 4305)
+#endif // WIN32
+
 #include <TCFoundation/TCDefines.h>
 
 #include <stdio.h>

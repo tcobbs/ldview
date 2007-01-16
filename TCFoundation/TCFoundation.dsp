@@ -162,7 +162,6 @@ SOURCE=.\TCLocalStrings.cpp
 # Begin Source File
 
 SOURCE=.\TCNetwork.cpp
-# ADD CPP /W4
 # End Source File
 # Begin Source File
 
@@ -218,17 +217,14 @@ SOURCE=.\TCWebClient.cpp
 
 !IF  "$(CFG)" == "TCFoundation - Win32 Release"
 
-# ADD CPP /W4
 # SUBTRACT CPP /YX
 
 !ELSEIF  "$(CFG)" == "TCFoundation - Win32 Debug"
 
-# ADD CPP /W3
 # SUBTRACT CPP /YX
 
 !ELSEIF  "$(CFG)" == "TCFoundation - Win32 PartialDebug"
 
-# ADD CPP /W3
 # SUBTRACT CPP /YX
 
 !ENDIF 

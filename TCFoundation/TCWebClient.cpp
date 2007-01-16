@@ -12,10 +12,18 @@
 #include <signal.h>
 #include <zlib.h>
 
+#ifndef _DEBUG
+#pragma warning(disable: 4710) // "Not inlined" warnings in release mode.
+#endif // _DEBUG
+
+#pragma warning(push, 3)
+
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
+
+#pragma warning(pop)
 
 #ifdef WIN32
 //#define sleep(sec) Sleep((sec) * 1000)
