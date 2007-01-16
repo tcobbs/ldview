@@ -13,6 +13,9 @@
 // 4702: Unreachable code.
 // 4786: Identifier truncated to 255 characters in debug info.
 #pragma warning(disable: 4702 4786)	// Unreachable code warnings pop up also.
+#ifndef _DEBUG
+#pragma warning(disable: 4710) // "Not inlined" warnings in release mode.
+#endif // _DEBUG
 #endif // WIN32
 #include <string>
 #include <map>

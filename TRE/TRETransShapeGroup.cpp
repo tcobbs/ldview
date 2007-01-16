@@ -4,8 +4,12 @@
 #include <TCFoundation/TCMacros.h>
 #include <stdlib.h>
 
+#pragma warning(push, 3)
+
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
+
+#pragma warning(pop)
 
 TRETransShapeGroup::TRETransShapeGroup(void)
 	:m_sortedTriangles(NULL),
