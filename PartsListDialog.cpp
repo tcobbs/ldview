@@ -285,7 +285,7 @@ void PartsListDialog::saveSettings(void)
 
 INT_PTR PartsListDialog::doMoveColumn(int distance)
 {
-	int selectedIndex = ListView_GetNextItem(m_hColumnList, 0, LVNI_SELECTED);
+	int selectedIndex = ListView_GetNextItem(m_hColumnList, -1, LVNI_SELECTED);
 	int count = ListView_GetItemCount(m_hColumnList);
 
 	if (selectedIndex + distance < 0 ||
@@ -372,7 +372,7 @@ INT_PTR PartsListDialog::doCommand(int controlId, int notifyCode, HWND hControl)
 	return FALSE;
 }
 
-void PartsListDialog::doListViewItemChanged(int controlId, LPNMLISTVIEW pnmlv)
+void PartsListDialog::doListViewItemChanged(int controlId, LPNMLISTVIEW /*pnmlv*/)
 {
 	if (controlId == IDC_COLUMN_ORDER_LIST)
 	{
@@ -380,7 +380,10 @@ void PartsListDialog::doListViewItemChanged(int controlId, LPNMLISTVIEW pnmlv)
 
 		if (count > 1)
 		{
-			if (pnmlv->iItem > 0)
+			int selectedIndex = ListView_GetNextItem(m_hColumnList, -1,
+				LVNI_SELECTED);
+
+			if (selectedIndex > 0)
 			{
 				// Enable up button
 				SendMessage(m_hToolbar, TB_SETSTATE, 42,
@@ -391,7 +394,7 @@ void PartsListDialog::doListViewItemChanged(int controlId, LPNMLISTVIEW pnmlv)
 				// Disable up button
 				SendMessage(m_hToolbar, TB_SETSTATE, 42, MAKELONG(0, 0));
 			}
-			if (pnmlv->iItem < count - 1)
+			if (selectedIndex < count - 1 && selectedIndex >= 0)
 			{
 				// Enable down button
 				SendMessage(m_hToolbar, TB_SETSTATE, 43,
