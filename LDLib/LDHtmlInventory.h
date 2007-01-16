@@ -13,10 +13,12 @@ class LDPreferences;
 
 typedef enum
 {
-	LDPLCPart = 1,
+	LDPLCFirst = 1,
+	LDPLCPart = LDPLCFirst,
 	LDPLCDescription,
 	LDPLCColor,
-	LDPLCQuantity
+	LDPLCQuantity,
+	LDPLCLast = LDPLCQuantity
 } LDPartListColumn;
 
 #include <TCFoundation/TCTypedValueArray.h>
@@ -41,9 +43,12 @@ public:
 	}
 	void setColumnOrder(const LDPartListColumnVector &value); 
 	const char *getLastSavePath(void) { return m_lastSavePath.c_str(); }
+	bool isColumnEnabled(LDPartListColumn column);
 
 	bool generateHtml(const char *filename, LDPartsList *partsList,
 		const char *modelName);
+
+	static const char *getColumnName(LDPartListColumn column);
 protected:
 	virtual ~LDHtmlInventory(void);
 	virtual void dealloc(void);
@@ -70,6 +75,7 @@ protected:
 	void writeCell(FILE *file, LDPartListColumn column,
 		const LDPartCount &partCount, LDLPalette *palette,
 		const LDLColorInfo &colorInfo, int colorNumber);
+	void populateColumnMap(void);
 
 	std::string m_modelName;
 	LDPreferences *m_prefs;

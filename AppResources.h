@@ -253,6 +253,7 @@
 #define IDC_SHOW_MODEL                  1213
 #define IDC_EXTERNAL_CSS                1214
 #define IDC_SHOW_PART_IMAGES            1215
+#define IDC_TOOLBAR                     1216
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -331,7 +332,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
 #define _APS_NEXT_COMMAND_VALUE         40089
-#define _APS_NEXT_CONTROL_VALUE         1216
+#define _APS_NEXT_CONTROL_VALUE         1217
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

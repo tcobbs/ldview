@@ -1585,7 +1585,10 @@ LRESULT CALLBACK CUIWindow::staticWindowProc(HWND hWnd, UINT message,
 			CREATESTRUCT* createStruct = (LPCREATESTRUCT)lParam;
 
 			cuiWindow = (CUIWindow*)(createStruct->lpCreateParams);
-			SetWindowLong(hWnd, GWL_USERDATA, (long)cuiWindow);
+			if (cuiWindow)
+			{
+				SetWindowLong(hWnd, GWL_USERDATA, (long)cuiWindow);
+			}
 		}
 		else
 		{
@@ -1622,6 +1625,17 @@ BOOL CALLBACK CUIWindow::enableNonModalWindow(HWND hWnd, LPARAM hModalDialog)
 
 void CUIWindow::runDialogModal(HWND hDlg, bool allowMessages)
 {
+	DWORD processId = GetCurrentProcessId();
+	DWORD dlgProcessId;
+
+	if (hDlg == NULL || GetWindowThreadProcessId(hDlg, &dlgProcessId) == 0 ||
+		processId != dlgProcessId)
+	{
+		// If we get garbage input to this function, we end up disabling
+		// ALL windows on the whole screen, instead of just the LDView ones.
+		// That makes life difficult on the user.
+		return;
+	}
 	ShowWindow(hDlg, SW_SHOWNORMAL);
 	EnumThreadWindows(GetWindowThreadProcessId(hDlg, NULL),
 		disableNonModalWindow, (LPARAM)hDlg);
