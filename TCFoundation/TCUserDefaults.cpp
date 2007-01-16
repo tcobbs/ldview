@@ -256,7 +256,7 @@ long TCUserDefaults::longForKey(const char* key, long defaultValue,
 void TCUserDefaults::setLongVectorForKey(const LongVector &value,
 										 const char* key, bool sessionSpecific)
 {
-	getCurrentUserDefaults()->setLongVectorForKey(value, key,
+	getCurrentUserDefaults()->defSetLongVectorForKey(value, key,
 		sessionSpecific);
 }
 
