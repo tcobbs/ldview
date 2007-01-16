@@ -189,16 +189,10 @@ void LDHtmlInventory::dealloc(void)
 	TCObject::dealloc();
 }
 
-bool LDHtmlInventory::generateHtml(
-	const char *filename,
-	LDPartsList *partsList,
-	const char *modelName)
+void LDHtmlInventory::populateColumnMap(void)
 {
-	FILE *file = fopen(filename, "w");
-	size_t nSlashSpot;
 	int i;
 
-	m_lastSavePath = filename;
 	m_columns = m_columnOrder.size();
 	m_columnMap.clear();
 	for (i = 0; i < (int)m_columnOrder.size(); i++)
@@ -219,6 +213,18 @@ bool LDHtmlInventory::generateHtml(
 			break;
 		}
 	}
+}
+
+bool LDHtmlInventory::generateHtml(
+	const char *filename,
+	LDPartsList *partsList,
+	const char *modelName)
+{
+	FILE *file = fopen(filename, "w");
+	size_t nSlashSpot;
+
+	m_lastSavePath = filename;
+	populateColumnMap();
 	nSlashSpot = m_lastSavePath.find_last_of("/\\");
 	if (nSlashSpot < m_lastSavePath.size())
 	{
@@ -673,7 +679,33 @@ void LDHtmlInventory::setColumnOrder(const LDPartListColumnVector &value)
 	m_columnOrder = value;
 	for (i = 0; i < (int)value.size(); i++)
 	{
-		columnOrder[i] = value[i];
+		columnOrder.push_back(value[i]);
 	}
 	m_prefs->setInvColumnOrder(columnOrder);
+}
+
+bool LDHtmlInventory::isColumnEnabled(LDPartListColumn column)
+{
+	populateColumnMap();
+	return m_columnMap[column];
+}
+
+const char *LDHtmlInventory::getColumnName(LDPartListColumn column)
+{
+	switch (column)
+	{
+	case LDPLCPart:
+		return "Part";
+		break;
+	case LDPLCDescription:
+		return "Description";
+		break;
+	case LDPLCColor:
+		return "Color";
+		break;
+	case LDPLCQuantity:
+		return "Quantity";
+		break;
+	}
+	return "<Unknown Column Name>";
 }
