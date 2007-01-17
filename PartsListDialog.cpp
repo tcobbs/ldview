@@ -239,6 +239,7 @@ INT_PTR PartsListDialog::doInitDialog(HWND hDlg, HWND /*hFocus*/,
 	setCheck(IDC_SHOW_MODEL, m_htmlInventory->getShowModelFlag());
 	setCheck(IDC_EXTERNAL_CSS, m_htmlInventory->getExternalCssFlag());
 	setCheck(IDC_SHOW_PART_IMAGES, m_htmlInventory->getPartImagesFlag());
+	setCheck(IDC_SHOW_FILE, m_htmlInventory->getShowFileFlag());
 	m_hColumnList = GetDlgItem(m_hDlg, IDC_COLUMN_ORDER_LIST);
 	m_hToolbar = GetDlgItem(m_hDlg, IDC_TOOLBAR);
 	populateColumnList();
@@ -265,6 +266,7 @@ void PartsListDialog::saveSettings(void)
 	m_htmlInventory->setShowModelFlag(getCheck(IDC_SHOW_MODEL));
 	m_htmlInventory->setExternalCssFlag(getCheck(IDC_EXTERNAL_CSS));
 	m_htmlInventory->setPartImagesFlag(getCheck(IDC_SHOW_PART_IMAGES));
+	m_htmlInventory->setShowFileFlag(getCheck(IDC_SHOW_FILE));
 	for (i = 0; i < count; i++)
 	{
 		if (ListView_GetCheckState(m_hColumnList, i))

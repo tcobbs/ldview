@@ -1825,40 +1825,52 @@ HMENU LDViewWindow::getPollingMenu(void)
 
 void LDViewWindow::showHelp(void)
 {
+	char *helpPath = LDViewPreferences::getLDViewPath(
+		TCLocalStrings::get("HelpHtml"), true);
+
+	shellExecute(helpPath);
+	delete helpPath;
+}
+
+void LDViewWindow::shellExecute(const char *filename)
+{
 	HINSTANCE executeHandle;
-	char* helpPath =
-		LDViewPreferences::getLDViewPath(TCLocalStrings::get("HelpHtml"),
-		true);
 
 	setWaitCursor();
-	executeHandle = ShellExecute(hWindow, NULL, helpPath, NULL, ".",
+	executeHandle = ShellExecute(hWindow, NULL, filename, NULL, ".",
 		SW_SHOWNORMAL);
-	delete helpPath;
 	setArrowCursor();
 	if ((int)executeHandle <= 32)
 	{
-		const char* errorString;
+		char errorString[1024] = "";
 
 		switch ((int)executeHandle)
 		{
 			case 0:
 			case SE_ERR_OOM:
-				errorString = TCLocalStrings::get("HelpHtmlOom");
+				strcpy(errorString, TCLocalStrings::get("HelpHtmlOom"));
 				break;
 			case ERROR_FILE_NOT_FOUND:
-				errorString = TCLocalStrings::get("HelpHtmlFileNotFound");
+				sprintf(errorString,
+					TCLocalStrings::get("HelpHtmlFileNotFound"),
+					filename);
 				break;
 			case ERROR_PATH_NOT_FOUND:
-				errorString = TCLocalStrings::get("HelpHtmlPathNotFound");
+				sprintf(errorString,
+					TCLocalStrings::get("HelpHtmlPathNotFound"),
+					filename);
 				break;
 			case SE_ERR_ACCESSDENIED:
-				errorString = TCLocalStrings::get("HelpHtmlAccess");
+				sprintf(errorString, TCLocalStrings::get("HelpHtmlAccess"),
+					filename);
 				break;
 			case SE_ERR_SHARE:
-				errorString = TCLocalStrings::get("HelpHtmlShare");
+				sprintf(errorString, TCLocalStrings::get("HelpHtmlShare"),
+					filename);
 				break;
 			default:
-				errorString = TCLocalStrings::get("HelpHtmlError");
+				sprintf(errorString, TCLocalStrings::get("HelpHtmlError"),
+					filename);
 				break;
 		}
 		MessageBox(hWindow, errorString, TCLocalStrings::get("Error"),
@@ -4974,8 +4986,17 @@ LRESULT LDViewWindow::generatePartsList(void)
 					openStruct.hInstance = getLanguageModule();
 					if (GetSaveFileName(&openStruct))
 					{
-						htmlInventory->generateHtml(filename.c_str(),
-							partsList, modelViewer->getFilename());
+						if (htmlInventory->generateHtml(filename.c_str(),
+							partsList, modelViewer->getFilename()))
+						{
+							if (htmlInventory->getShowFileFlag())
+							{
+								shellExecute(filename.c_str());
+							}
+						}
+						else
+						{
+						}
 					}
 				}
 				htmlInventory->release();

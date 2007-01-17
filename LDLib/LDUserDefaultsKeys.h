@@ -129,6 +129,7 @@
 #define INV_SHOW_MODEL_KEY "InventoryShowModel"
 #define INV_EXTERNAL_CSS_KEY "InventoryExternalCss"
 #define INV_PART_IMAGES_KEY "InventoryPartImages"
+#define INV_SHOW_FILE_KEY "InventoryShowFile"
 #define INV_COLUMN_ORDER_KEY "InventoryColumnOrder"
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
 

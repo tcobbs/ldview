@@ -254,6 +254,7 @@
 #define IDC_EXTERNAL_CSS                1214
 #define IDC_SHOW_PART_IMAGES            1215
 #define IDC_TOOLBAR                     1216
+#define IDC_SHOW_FILE                   1217
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
