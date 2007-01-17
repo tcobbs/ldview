@@ -39,6 +39,7 @@ protected:
 	HWND m_hColumnList;
 	HWND m_hToolbar;
 	int m_modalReturn;
+	bool m_showFile;
 };
 
 #endif // __PARTLISTDIALOG_H__

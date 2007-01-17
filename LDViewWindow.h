@@ -157,6 +157,7 @@ class LDViewWindow: public CUIWindow
 		virtual void deactivateFullScreenMode(void);
 		virtual void initPollingMenu(void);
 		virtual void showHelp(void);
+		virtual void shellExecute(const char *filename);
 		virtual LRESULT windowProc(HWND, UINT, WPARAM, LPARAM);
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
 		virtual void saveDefaultView(void);

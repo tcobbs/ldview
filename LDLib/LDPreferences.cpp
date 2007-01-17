@@ -371,6 +371,7 @@ void LDPreferences::loadDefaultInventorySettings(void)
 	setInvShowModel(false);
 	setInvExternalCss(false);
 	setInvPartImages(true);
+	setInvShowFile(true);
 	LongVector columnOrder;
 	columnOrder.push_back(1);	// Part
 	columnOrder.push_back(3);	// Color
@@ -519,6 +520,7 @@ void LDPreferences::loadInventorySettings(void)
 	m_invShowModel = getBoolSetting(INV_SHOW_MODEL_KEY, m_invShowModel);
 	m_invExternalCss = getBoolSetting(INV_EXTERNAL_CSS_KEY, m_invExternalCss);
 	m_invPartImages = getBoolSetting(INV_PART_IMAGES_KEY, m_invPartImages);
+	m_invShowFile = getBoolSetting(INV_SHOW_FILE_KEY, m_invShowFile);
 	m_invColumnOrder = getLongVectorSetting(INV_COLUMN_ORDER_KEY,
 		m_invColumnOrder);
 	m_invLastSavePath = getStringSetting(INV_LAST_SAVE_PATH_KEY,
@@ -644,6 +646,7 @@ void LDPreferences::commitInventorySettings(void)
 	setInvShowModel(m_invShowModel, true);
 	setInvExternalCss(m_invExternalCss, true);
 	setInvPartImages(m_invPartImages, true);
+	setInvShowFile(m_invShowFile, true);
 	setInvColumnOrder(m_invColumnOrder, true);
 	setInvLastSavePath(m_invLastSavePath.c_str(), true);
 }
@@ -1386,6 +1389,11 @@ void LDPreferences::setInvExternalCss(bool value, bool commit)
 void LDPreferences::setInvPartImages(bool value, bool commit)
 {
 	setSetting(m_invPartImages, value, INV_PART_IMAGES_KEY, commit);
+}
+
+void LDPreferences::setInvShowFile(bool value, bool commit)
+{
+	setSetting(m_invShowFile, value, INV_SHOW_FILE_KEY, commit);
 }
 
 void LDPreferences::setInvColumnOrder(const LongVector &value, bool commit)

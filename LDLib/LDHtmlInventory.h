@@ -37,6 +37,8 @@ public:
 	bool getExternalCssFlag(void) { return m_externalCss; }
 	void setPartImagesFlag(bool value);
 	bool getPartImagesFlag(void) { return m_partImages; }
+	void setShowFileFlag(bool value);
+	bool getShowFileFlag(void) { return m_showFile; }
 	const LDPartListColumnVector &getColumnOrder(void) const
 	{
 		return m_columnOrder;
@@ -61,9 +63,7 @@ protected:
 	bool writeExternalCss(void);
 	FILE *safeOpenCssFile(const std::string &cssFilename, bool &match);
 	void writePartHeaderCell(FILE *file);
-	void writeDescriptionHeaderCell(FILE *file);
-	void writeColorHeaderCell(FILE *file);
-	void writeQuantityHeaderCell(FILE *file);
+	void writeHeaderCell(FILE *file, LDPartListColumn column, int colSpan);
 	void writeHeaderCell(FILE *file, LDPartListColumn column);
 	void writePartCell(FILE *file, const LDPartCount &partCount,
 		LDLPalette *palette, const LDLColorInfo &colorInfo, int colorNumber);
@@ -83,6 +83,7 @@ protected:
 	bool m_showModel;
 	bool m_externalCss;
 	bool m_partImages;
+	bool m_showFile;
 	std::string m_lastSavePath;
 	int m_columns;
 	LDPartListColumnVector m_columnOrder;
