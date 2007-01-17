@@ -1,7 +1,8 @@
 SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
-		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp
+		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp \
+           LDViewPartList.cpp
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
-		   AlertHandler.h
+		   AlertHandler.h LDViewPartList.h
 
 UI_DIR = .ui
 MOC_DIR = .moc
@@ -51,7 +52,7 @@ QMAKE_CLEAN += *.qm
 
 FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui \
 		  AboutPanel.ui ErrorPanel.ui ImageHolder.ui ExtraDirPanel.ui \
-		  HelpPanel.ui SnapshotSettingsPanel.ui
+		  HelpPanel.ui SnapshotSettingsPanel.ui PartList.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png \
 		  images/toolbar_reload.png images/toolbar_wireframe.png \

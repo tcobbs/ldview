@@ -54,9 +54,12 @@
 #include "ExtraDirPanel.h"
 #include "LDViewExtraDir.h"
 #include "SnapshotSettingsPanel.h"
+#include "PartList.h"
 #include "LDViewSnapshotSettings.h"
+#include "LDViewPartList.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include "UserDefaultsKeys.h"
+#include <LDLib/LDPartsList.h>
 
 #include "ModelViewerWidget.h"
 #include "AlertHandler.h"
@@ -2757,6 +2760,9 @@ void ModelViewerWidget::doPartList(void)
 		LDPartsList *partsList = modelViewer->getPartsList();
 		if (partsList)
 		{
+			LDHtmlInventory *htmlInventory = new LDHtmlInventory;
+			PartList *partlist = new PartList(this, htmlInventory);
+			partlist->show();
 		}
 	}
 }
