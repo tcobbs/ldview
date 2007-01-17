@@ -9,6 +9,7 @@
 #include "Preferences.h"
 #include "LDViewExtraDir.h"
 #include "LDViewSnapshotSettings.h"
+#include "LDViewPartList.h"
 #include "LDLib/LDLibraryUpdater.h"
 
 class LDrawModelViewer;
