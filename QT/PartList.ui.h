@@ -28,3 +28,8 @@ void PartListPanel::doDown()
 	partlist->doDown();
 }
 
+void PartListPanel::doHighlighted()
+{
+	partlist->controlDirectionButtons();
+}
+

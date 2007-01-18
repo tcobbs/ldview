@@ -20,11 +20,13 @@ public:
 	void doUp();
 	void doDown();
 	void show();
+	void controlDirectionButtons();
 	void populateColumnList();
 	QCheckListItem *description;
 protected:
-        LDrawModelViewer *modelViewer;
-        ModelViewerWidget *modelWidget;
+	void doMoveColumn(int distance);
+	LDrawModelViewer *modelViewer;
+	ModelViewerWidget *modelWidget;
 	PartListPanel *panel;
 	LDHtmlInventory *m_htmlInventory;
 };

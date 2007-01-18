@@ -11,7 +11,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
-#include <UserDefaultsKeys.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <string.h>
 #include <qtranslator.h>
 

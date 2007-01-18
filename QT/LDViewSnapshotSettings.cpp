@@ -2,7 +2,7 @@
 
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCUserDefaults.h>
-#include <UserDefaultsKeys.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/mystring.h>
 #include <qspinbox.h>
 #include <qcheckbox.h>
