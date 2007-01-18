@@ -10,12 +10,12 @@ void PartListPanel::init()
 void PartListPanel::doOk()
 {
 	partlist->doOk();
-	close();
+	accept();
 }
 
 void PartListPanel::doCancel()
 {
-	close();
+	reject();
 }
 
 void PartListPanel::doUp()
