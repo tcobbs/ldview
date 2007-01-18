@@ -19,7 +19,8 @@ public:
 	void doCancel();
 	void doUp();
 	void doDown();
-	void show();
+	int exec();
+	int result();
 	void controlDirectionButtons();
 	void populateColumnList();
 	QCheckListItem *description;

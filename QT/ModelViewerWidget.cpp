@@ -2762,7 +2762,36 @@ void ModelViewerWidget::doPartList(void)
 		{
 			LDHtmlInventory *htmlInventory = new LDHtmlInventory;
 			PartList *partlist = new PartList(this, htmlInventory);
-			partlist->show();
+			if (partlist->exec() == QDialog::Accepted)
+			{
+				QString filename = modelViewer->getFilename();
+				int findSpot = filename.findRev(QRegExp("/\\"));
+				if (findSpot < filename.length())
+					filename=filename.mid(findSpot+1);
+				findSpot = filename.findRev('.');
+				if (findSpot < filename.length())
+                    filename=filename.left(findSpot);
+				filename += ".html";
+            	QFileDialog *fileDialog = new QFileDialog(
+			    	htmlInventory->getLastSavePath(),
+                	QString(TCLocalStrings::get("HtmlFileType"))+" (*.html)",
+                	this,
+                	"open model dialog",
+                	true);
+            	fileDialog->setCaption(QString(
+							TCLocalStrings::get("GeneratePartsList")));
+            	fileDialog->setIcon(getimage("LDViewIcon16.png"));
+				fileDialog->setMode(QFileDialog::AnyFile);
+				fileDialog->setSelection(filename);
+        		if (fileDialog->exec() == QDialog::Accepted)
+        		{
+					QString filename = fileDialog->selectedFile();
+					htmlInventory->generateHtml(filename.ascii(),
+						partsList, modelViewer->getFilename());
+        		}
+			}
+			htmlInventory->release();
+			partsList->release();
 		}
 	}
 }

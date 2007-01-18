@@ -54,7 +54,6 @@ void PartList::doOk()
 {
 	int i;
 	QListViewItem *item;
-	QCheckListItem *item2;
 	LDPartListColumnVector columnOrder;
 	m_htmlInventory->setExternalCssFlag(panel->generateExternalSSButton->isChecked());
 	m_htmlInventory->setPartImagesFlag(panel->showPartImageButton->isChecked());
@@ -109,7 +108,7 @@ void PartList::controlDirectionButtons()
 	}
 }
 
-void PartList::show()
+int PartList::exec()
 {
 	if (panel)
 	{
@@ -120,8 +119,11 @@ void PartList::show()
 			m_htmlInventory->getPartImagesFlag());
     	panel->showModelButton->setChecked(
 			m_htmlInventory->getShowModelFlag());
-		panel->show();
-		panel->raise();
-      	panel->setActiveWindow();
+		return panel->exec();
 	}
+}
+
+int PartList::result()
+{
+	return panel->result();
 }
