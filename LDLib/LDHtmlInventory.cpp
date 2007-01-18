@@ -70,6 +70,38 @@ td.image\n\
 	border-right-style: none;\n\
 }\n\
 \n\
+table.color\n\
+{\n\
+	border-style: none;\n\
+	width: 100%;\n\
+}\n\
+\n\
+table.color td\n\
+{\n\
+	border-style: none;\n\
+	padding: 0px 8px 0px 0px;\n\
+	width: 100%\n\
+}\n\
+\n\
+table.color td.colorBox\n\
+{\n\
+	padding: 1px 0px;\n\
+	width: auto\n\
+}\n\
+\n\
+table.colorBox\n\
+{\n\
+	border: 1px solid black;\n\
+	width: 2em;\n\
+	height: 1em;\n\
+	padding: 0px;\n\
+}\n\
+\n\
+table.colorBox td\n\
+{\n\
+	padding: 0px;\n\
+}\n\
+\n\
 table.credits\n\
 {\n\
 	border-collapse: collapse;\n\
@@ -141,7 +173,7 @@ a img\n\
 	background-color: #A0C0FF;\n\
 }\n\
 \n\
-.colorBox\n\
+.colorBox2\n\
 {\n\
 	border: 1px solid black;\n\
 	width: 2em;\n\
@@ -504,8 +536,6 @@ void LDHtmlInventory::writeColorCell(
 	{
 		fprintf(file, "			<td class=\"colorNumber\">%d:</td>\n",
 			colorNumber);
-		fprintf(file, "			<td><div class=\"colorName\">%s</div>",
-			colorInfo.name);
 	}
 	else
 	{
@@ -519,10 +549,18 @@ void LDHtmlInventory::writeColorCell(
 			fprintf(file, "			<td class=\"colorNumber\">#%X"
 				"</td>\n", colorNumber);
 		}
-		fprintf(file, "			<td>");
 	}
-	fprintf(file, "<div class=\"colorBox\" style="
-		"\"background-color: #%02X%02X%02X\"></div></td>\n", r, g, b);
+	fprintf(file, "			<td>\n");
+	fprintf(file, "				<table class=\"color\">\n");
+	fprintf(file, "					<tr>\n");
+	fprintf(file, "						<td rowspan=\"2\">"
+		"%s<td>\n", colorInfo.name);
+	fprintf(file, "						<td class=\"colorBox\"><table "
+		"class=\"colorBox\"><tr><td style=\"background-color: #%02X%02X%02X\">"
+		"</td></tr></table></td>\n", r, g, b);
+	fprintf(file, "					</tr>\n");
+	fprintf(file, "				</table>\n");
+	fprintf(file, "			</td>\n");
 }
 
 void LDHtmlInventory::writeQuantityCell(
