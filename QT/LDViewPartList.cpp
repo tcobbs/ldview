@@ -30,9 +30,8 @@ void PartList::populateColumnList(void)
 	panel->fieldOrderView->clear();
 	for (i = 0; i < (int)columnOrder.size(); i++)
 	{
-		char *name;
 		LDPartListColumn column = columnOrder[i];
-		name = copyString(LDHtmlInventory::getColumnName(column));
+		const char *name = LDHtmlInventory::getColumnName(column);
 		QCheckListItem *item = new QCheckListItem(panel->fieldOrderView,
 								name, QCheckListItem::CheckBoxController );
 		item->setState(m_htmlInventory->isColumnEnabled(column) ? 
@@ -64,21 +63,19 @@ void PartList::doOk()
 	for (item = panel->fieldOrderView->firstChild() ; item ;
 		 item = item->itemBelow())
 	{
-		char * itemname = copyString(item->text(0).ascii());
+		const char * itemname = item->text(0).ascii();
 		
 		for (i = LDPLCFirst; i <= LDPLCLast; i++)
 		{
 			LDPartListColumn column = (LDPartListColumn)i;
 			char *name = copyString(LDHtmlInventory::getColumnName(column));
 
-			char * itemname = copyString(item->text(0).ascii());
+			const char * itemname = item->text(0).ascii();
 			if (strcmp(name,itemname)==0)
 			{
 				columnOrder.push_back(column);
 			}
-			delete name;
 		}
-		delete itemname;
 	}
 	m_htmlInventory->setColumnOrder(columnOrder);
 }
