@@ -206,7 +206,7 @@ void PartsListDialog::setupToolbar(void)
 {
 	RECT tbRect;
 	TBADDBITMAP addBitmap;
-	TBBUTTON buttons[1];
+	TBBUTTON buttons[2];
 	char buttonTitle[128];
 	int i;
 
