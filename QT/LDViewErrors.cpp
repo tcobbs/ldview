@@ -9,7 +9,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
-#include <UserDefaultsKeys.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 
 #include <qstring.h>
 #include <qcheckbox.h>

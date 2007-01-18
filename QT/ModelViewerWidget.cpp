@@ -58,7 +58,7 @@
 #include "LDViewSnapshotSettings.h"
 #include "LDViewPartList.h"
 #include <TCFoundation/TCUserDefaults.h>
-#include "UserDefaultsKeys.h"
+#include "LDLib/LDUserDefaultsKeys.h"
 #include <LDLib/LDPartsList.h>
 
 #include "ModelViewerWidget.h"

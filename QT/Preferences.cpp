@@ -3,7 +3,7 @@
 #include <LDLoader/LDLPalette.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
-#include "UserDefaultsKeys.h"
+#include "LDLib/LDUserDefaultsKeys.h"
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCWebClient.h>
 #include <qcheckbox.h>
