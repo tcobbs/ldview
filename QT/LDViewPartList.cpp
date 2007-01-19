@@ -16,6 +16,7 @@ PartList::PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventor
     modelViewer = modelWidget->getModelViewer();
     panel->setPartList(this);
 	panel->fieldOrderView->header()->hide();
+	panel->fieldOrderView->setSorting(-1);
 }
 
 PartList::~PartList(void)
@@ -28,14 +29,27 @@ void PartList::populateColumnList(void)
         m_htmlInventory->getColumnOrder();
 	int count = 0, i;
 	panel->fieldOrderView->clear();
-	for (i = 0; i < (int)columnOrder.size(); i++)
+    for (i = LDPLCLast; i >= LDPLCFirst; i--)
+    {
+        LDPartListColumn column = (LDPartListColumn)i;
+        if (!m_htmlInventory->isColumnEnabled(column))
+        {
+            const char *name = LDHtmlInventory::getColumnName(column);
+            QCheckListItem *item = new QCheckListItem(panel->fieldOrderView,
+                name, QCheckListItem::CheckBoxController );
+            item->setOn(m_htmlInventory->isColumnEnabled(column));
+			item->setTristate(false);
+            count++;
+        }
+    }
+	for (i = (int)columnOrder.size()-1; i >= 0 ; i--)
 	{
 		LDPartListColumn column = columnOrder[i];
 		const char *name = LDHtmlInventory::getColumnName(column);
 		QCheckListItem *item = new QCheckListItem(panel->fieldOrderView,
 								name, QCheckListItem::CheckBoxController );
-		item->setState(m_htmlInventory->isColumnEnabled(column) ? 
-						QCheckListItem::On : QCheckListItem::Off);
+		item->setOn(m_htmlInventory->isColumnEnabled(column));
+		item->setTristate(false);
 		count++;
 	}
 }
@@ -63,16 +77,17 @@ void PartList::doOk()
 		 item = item->itemBelow())
 	{
 		const char * itemname = item->text(0).ascii();
-		
+		QCheckListItem *item2 = (QCheckListItem*) item;
 		for (i = LDPLCFirst; i <= LDPLCLast; i++)
 		{
 			LDPartListColumn column = (LDPartListColumn)i;
-			char *name = copyString(LDHtmlInventory::getColumnName(column));
-
-			const char * itemname = item->text(0).ascii();
+			const char *name = LDHtmlInventory::getColumnName(column);
 			if (strcmp(name,itemname)==0)
 			{
-				columnOrder.push_back(column);
+				if (item2->isOn())
+				{
+					columnOrder.push_back(column);
+				}
 			}
 		}
 	}
@@ -89,11 +104,11 @@ void PartList::doMoveColumn(int distance)
 	QListViewItem *newitem = ( distance == 1 ? item->itemBelow() : item->itemAbove());
 	if (!newitem) return;
 	QString ttt=newitem->text(0);
-	QCheckListItem::ToggleState s = ((QCheckListItem*)newitem)->state();
+	bool s = ((QCheckListItem*)newitem)->isOn();
 	newitem->setText(0,item->text(0));
-	((QCheckListItem*)newitem)->setState(((QCheckListItem*)item)->state());
+	((QCheckListItem*)newitem)->setOn(((QCheckListItem*)item)->isOn());
 	item->setText(0,ttt);
-	((QCheckListItem*)item)->setState(s);
+	((QCheckListItem*)item)->setOn(s);
 	panel->fieldOrderView->setCurrentItem(newitem);
 	controlDirectionButtons();
 }
@@ -121,6 +136,7 @@ int PartList::exec()
 			m_htmlInventory->getShowModelFlag());
 		return panel->exec();
 	}
+	return 0;
 }
 
 int PartList::result()
