@@ -231,6 +231,9 @@ void LDHtmlInventory::populateColumnMap(void)
 		case LDPLCColor:
 			m_columns++;
 			break;
+		default:
+			// Get rid of gcc warning
+			break;
 		}
 	}
 }

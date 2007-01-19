@@ -13,17 +13,23 @@
 #include <zlib.h>
 
 #ifndef _DEBUG
+#ifdef WIN32
 #pragma warning(disable: 4710) // "Not inlined" warnings in release mode.
+#endif // WIN32
 #endif // _DEBUG
 
+#ifdef WIN32
 #pragma warning(push, 3)
+#endif // WIN32
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
 
+#ifdef WIN32
 #pragma warning(pop)
+#endif // WIN32
 
 #ifdef WIN32
 //#define sleep(sec) Sleep((sec) * 1000)
