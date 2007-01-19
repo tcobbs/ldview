@@ -1252,7 +1252,10 @@ void LDPreferences::setOneLight(bool value, bool commit, bool apply)
 
 void LDPreferences::setStereoMode(LDVStereoMode value, bool commit)
 {
-	setSetting((int &)m_stereoMode, value, STEREO_MODE_KEY, commit);
+	int temp = (int)m_stereoMode;
+
+	setSetting(temp, value, STEREO_MODE_KEY, commit);
+	m_stereoMode = (LDVStereoMode)temp;
 }
 
 void LDPreferences::setStereoEyeSpacing(int value, bool commit)
@@ -1262,7 +1265,10 @@ void LDPreferences::setStereoEyeSpacing(int value, bool commit)
 
 void LDPreferences::setCutawayMode(LDVCutawayMode value, bool commit)
 {
-	setSetting((int &)m_cutawayMode, value, CUTAWAY_MODE_KEY, commit);
+	int temp = (int)m_cutawayMode;
+
+	setSetting(temp, value, CUTAWAY_MODE_KEY, commit);
+	m_cutawayMode = (LDVCutawayMode)temp;
 }
 
 void LDPreferences::setCutawayAlpha(int value, bool commit)

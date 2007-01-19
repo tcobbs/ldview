@@ -4,14 +4,18 @@
 // show up during the parsing of the boost ones if these are moved down.  Please
 // don't move them down.
 
+#ifdef WIN32
 #pragma warning(push, 3)
+#endif // WIN32
 
 #include <boost/thread/thread.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
 
+#ifdef WIN32
 #pragma warning(pop)
+#endif // WIN32
 
 #include "LDLibraryUpdateInfo.h"
 #include <LDLoader/LDLModel.h>
