@@ -91,6 +91,7 @@ protected:
 
 	static const char *sm_style;
 	static const char *sm_cssHeader;
+	static const char *sm_cssFilename;
 };
 
 #endif // __LDHTMLINVENTORY_H__
