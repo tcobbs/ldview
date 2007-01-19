@@ -2766,10 +2766,10 @@ void ModelViewerWidget::doPartList(void)
 			{
 				QString filename = modelViewer->getFilename();
 				int findSpot = filename.findRev(QRegExp("/\\"));
-				if (findSpot < filename.length())
+				if (findSpot < (int)filename.length())
 					filename=filename.mid(findSpot+1);
 				findSpot = filename.findRev('.');
-				if (findSpot < filename.length())
+				if (findSpot < (int)filename.length())
                     filename=filename.left(findSpot);
 				filename += ".html";
             	QFileDialog *fileDialog = new QFileDialog(
