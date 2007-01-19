@@ -112,6 +112,7 @@ update-desktop-database
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-install-rule ldraw.schemas
+kill -HUP `pidof nautilus`
 
 %postun gnome
 update-mime-database  /usr/share/mime
