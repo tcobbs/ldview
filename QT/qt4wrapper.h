@@ -23,6 +23,8 @@
 #include <q3header.h>
 #include <QMenuItem>
 #define  getimage(x)    QPixmap(qPixmapFromMimeSource(x))
+#include <Q3CheckListItem>
+#define QCheckListItem  Q3CheckListItem
 #else
 #include <qfiledialog.h>
 #include <qpopupmenu.h>
