@@ -377,7 +377,8 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	}
 	else
 	{
-		fprintf(file, "<style type=\"text/css\">\n");
+		fprintf(file, "<style type=\"text/css\" title=\"%s\">\n",
+			TCLocalStrings::get("PLStyleSheetTitle"));
 		fprintf(file, "%s", sm_style);
 		fprintf(file, "</style>\n");
 	}
