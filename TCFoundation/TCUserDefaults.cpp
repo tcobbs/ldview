@@ -365,6 +365,12 @@ void TCUserDefaults::defRemoveSession(const char *value)
 void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 										bool sessionSpecific)
 {
+	if (matchesCommandLine(key, value))
+	{
+		// We're being asked to store a value that matches one provided on the
+		// command line.
+		return;
+	}
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
 #endif // _QT
