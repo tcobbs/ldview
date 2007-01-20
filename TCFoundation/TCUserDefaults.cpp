@@ -525,9 +525,53 @@ void TCUserDefaults::sendValueChangedAlert(const char *key)
 	alert->release();
 }
 
+bool TCUserDefaults::matchesCommandLine(const char *key, long value)
+{
+	// Don't just convert to string and do a string compare with the command
+	// line value.  If they give -someValue=32st on the command line, that will
+	// result in a longValueForKey("someValue") returning 32, but "32" won't
+	// match "32st".
+	bool matches = false;
+	char *commandLineValue = defCommandLineStringForKey(key);
+
+	if (commandLineValue)
+	{
+		int temp;
+
+		if (sscanf(commandLineValue, "%ld", &temp) == 1 && temp == value)
+		{
+			matches = true;
+		}
+		delete commandLineValue;
+	}
+	return matches;
+}
+
+bool TCUserDefaults::matchesCommandLine(const char *key, const char *value)
+{
+	bool matches = false;
+	char *commandLineValue = defCommandLineStringForKey(key);
+
+	if (commandLineValue)
+	{
+		if (strcmp(commandLineValue, value) == 0)
+		{
+			matches = true;
+		}
+		delete commandLineValue;
+	}
+	return matches;
+}
+
 void TCUserDefaults::defSetLongForKey(long value, const char* key,
 									  bool sessionSpecific)
 {
+	if (matchesCommandLine(key, value))
+	{
+		// We're being asked to store a value that matches one provided on the
+		// command line.
+		return;
+	}
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
 #endif // _QT

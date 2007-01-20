@@ -97,6 +97,8 @@ class TCExport TCUserDefaults: public TCObject
 		char* defGetSavedSessionNameFromKey(const char *key);
 		void defRemoveSession(const char *value);
 		void sendValueChangedAlert(const char *key);
+		bool matchesCommandLine(const char *key, long value);
+		bool matchesCommandLine(const char *key, const char *value);
 		static std::string arrayKey(const char *key, int index);
 
 #ifdef WIN32
