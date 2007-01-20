@@ -536,7 +536,7 @@ bool TCUserDefaults::matchesCommandLine(const char *key, long value)
 
 	if (commandLineValue)
 	{
-		int temp;
+		long temp;
 
 		if (sscanf(commandLineValue, "%ld", &temp) == 1 && temp == value)
 		{
