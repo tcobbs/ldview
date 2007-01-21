@@ -191,6 +191,7 @@ LDHtmlInventory::LDHtmlInventory(void) :
 	m_externalCss = m_prefs->getInvExternalCss();
 	m_partImages = m_prefs->getInvPartImages();
 	m_showFile = m_prefs->getInvShowFile();
+	m_showTotal = m_prefs->getInvShowTotal();
 	m_lastSavePath = m_prefs->getInvLastSavePath();
 	const LongVector &columnOrder = m_prefs->getInvColumnOrder();
 	for (i = 0; i < (int)columnOrder.size(); i++)
@@ -267,7 +268,7 @@ bool LDHtmlInventory::generateHtml(
 		int i, j;
 
 		writeHeader(file);
-		writeTableHeader(file);
+		writeTableHeader(file, partsList->getTotalParts());
 		for (i = 0; i < (int)partCounts.size(); i++)
 		{
 			const LDPartCount &partCount = partCounts[i];
@@ -586,7 +587,7 @@ void LDHtmlInventory::writeCell(
 	}
 }
 
-void LDHtmlInventory::writeTableHeader(FILE *file)
+void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 {
 	const char *ldviewCreditAlign = "left";
 	size_t i;
@@ -619,7 +620,12 @@ void LDHtmlInventory::writeTableHeader(FILE *file)
 	fprintf(file, "			<th class=\"title\" colspan=\"%d\">\n", m_columns);
 	char title[1024];
 	sprintf(title, TCLocalStrings::get("PLTitle"), m_modelName.c_str());
-	fprintf(file, "				%s\n", title);
+	fprintf(file, "				%s", title);
+	if (m_showTotal)
+	{
+		fprintf(file, TCLocalStrings::get("PLTotalParts"), totalParts);
+	}
+	fprintf(file, "\n");
 	fprintf(file, "			</th>\n");
 	fprintf(file, "		</tr>\n");
 	fprintf(file, "		<tr>\n");
@@ -709,6 +715,12 @@ void LDHtmlInventory::setShowFileFlag(bool value)
 	// the value and makes sure it gets saved and restored in the user defaults.
 	m_showFile = value;
 	m_prefs->setInvShowFile(value);
+}
+
+void LDHtmlInventory::setShowTotalFlag(bool value)
+{
+	m_showTotal = value;
+	m_prefs->setInvShowTotal(value);
 }
 
 void LDHtmlInventory::setColumnOrder(const LDPartListColumnVector &value)
