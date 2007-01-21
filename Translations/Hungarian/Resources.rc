@@ -707,6 +707,31 @@ BEGIN
                     IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
 END
 
+IDD_PARTS_LIST DIALOG DISCARDABLE  0, 0, 197, 171
+STYLE DS_MODALFRAME | WS_POPUP | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
+CAPTION "LDView alkatrész lista"
+CLASS "LDViewPartsListWindow"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "Beállítások",IDC_STATIC,7,7,128,63
+    CONTROL         "&Modell képe",IDC_SHOW_MODEL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,15,21,55,10
+    CONTROL         "Külsõ stíluslap",IDC_EXTERNAL_CSS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,32,107,10
+    CONTROL         "Alkatrészek képei",IDC_SHOW_PART_IMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,43,72,10
+    CONTROL         "&Generált weblap megnyitása",IDC_SHOW_FILE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,55,101,10
+    GROUPBOX        "Oszlopok sorrendje",IDC_STATIC,7,72,128,92
+    CONTROL         "",IDC_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x904,15,
+                    147,111,15
+    CONTROL         "List1",IDC_COLUMN_ORDER_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | 
+                    WS_BORDER | WS_TABSTOP,15,86,111,62
+    DEFPUSHBUTTON   "OK",IDOK,140,7,50,14
+    PUSHBUTTON      "Mégsem",IDCANCEL,140,24,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -904,7 +929,6 @@ BEGIN
     BEGIN
         MENUITEM "&Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
         MENUITEM "Teljes képernyõs nézet\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "Hibák és figyelmeztetések...\tCtrl+Shift+E", ID_VIEW_ERRORS
         MENUITEM "Eszközsáv\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
         MENUITEM "Állapotsáv\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "Mindig legfelül",              ID_VIEW_ALWAYSONTOP
@@ -926,9 +950,14 @@ BEGIN
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
-        MENUITEM "Show View &Info...",          ID_VIEW_INFO
-        MENUITEM "Show &POV-Ray Camera Info...", ID_VIEW_POV_CAMERA
+    END
+    POPUP "Eszközök"
+    BEGIN
+        MENUITEM "Hibák és figyelmeztetések...\tCtrl+Shift+E", ID_TOOLS_ERRORS
+        MENUITEM "Elem&lista",                 ID_TOOLS_PARTSLIST
         MENUITEM SEPARATOR
+        MENUITEM "Nézõpont &infó...",          ID_TOOLS_VIEW_INFO
+        MENUITEM "&POV-Ray kamera infó...", ID_TOOLS_POV_CAMERA
     END
     POPUP "Sugó"
     BEGIN
@@ -1008,7 +1037,7 @@ BEGIN
                                                     NOINVERT
     "9",            ID_HOT_KEY_9,           VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
-    "E",            ID_VIEW_ERRORS,         VIRTKEY, SHIFT, CONTROL, 
+    "E",            ID_TOOLS_ERRORS,         VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
@@ -1068,8 +1097,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,1
- PRODUCTVERSION 3,1,0,1
+ FILEVERSION 3,1,0,3
+ PRODUCTVERSION 3,1,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
