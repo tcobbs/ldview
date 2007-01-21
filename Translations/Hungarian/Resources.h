@@ -66,6 +66,9 @@
 #define IDB_VERTEX_ORDER                167
 #define IDD_UPDATES_PREFS               167
 #define IDB_VERTEX_ORDER_MASK           168
+#define IDI_LDRAW                       169
+#define IDI_MPD                         170
+#define IDD_PARTS_LIST                  171
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -244,8 +247,14 @@
 #define IDC_UPDATES_NOTE                1208
 #define IDC_MISSING_DAYS_LABEL          1209
 #define IDC_UPDATED_DAYS_LABEL          1210
+#define IDC_COLUMN_ORDER_LIST           1210
 #define IDC_MISSING_DAYS                1211
 #define IDC_UPDATED_DAYS                1212
+#define IDC_SHOW_MODEL                  1213
+#define IDC_EXTERNAL_CSS                1214
+#define IDC_SHOW_PART_IMAGES            1215
+#define IDC_TOOLBAR                     1216
+#define IDC_SHOW_FILE                   1217
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -262,7 +271,7 @@
 #define ID_FILE_RELOAD                  40021
 #define ID_HELP_CONTENTS                40023
 #define ID_VIEW_RESET                   40025
-#define ID_VIEW_ERRORS                  40026
+#define ID_TOOLS_ERRORS                 40026
 #define ID_FILE_PAGESETUP               40032
 #define ID_HELP_OPENGLINFO_WGLEXTENSIONS 40033
 #define ID_HELP_OPENGL_INFO             40035
@@ -289,7 +298,7 @@
 #define ID_VIEW_RIGHT                   40058
 #define ID_VIEW_TOP                     40059
 #define ID_VIEW_BOTTOM                  40060
-#define ID_VIEW_INFO                    40061
+#define ID_TOOLS_VIEW_INFO              40061
 #define ID_VIEW_ISO                     40063
 #define ID_VIEW_SAVE_DEFAULT            40064
 #define ID_VIEW_ZOOMTOFIT               40065
@@ -309,7 +318,8 @@
 #define ID_LIGHTING_ALTERNATESETUP      40083
 #define ID_BFC_REDBACKFACES             40084
 #define ID_BFC_GREENFRONTFACES          40085
-#define ID_VIEW_POV_CAMERA              40087
+#define ID_TOOLS_POV_CAMERA             40087
+#define ID_TOOLS_PARTSLIST              40088
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -321,9 +331,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        168
-#define _APS_NEXT_COMMAND_VALUE         40088
-#define _APS_NEXT_CONTROL_VALUE         1210
+#define _APS_NEXT_RESOURCE_VALUE        172
+#define _APS_NEXT_COMMAND_VALUE         40089
+#define _APS_NEXT_CONTROL_VALUE         1217
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
