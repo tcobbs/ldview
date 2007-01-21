@@ -6,7 +6,7 @@ cp -f desktop/ldview.applications /usr/share/application-registry/
 cp -f desktop/ldraw.desktop      /usr/share/applications/
 cp -f desktop/ldraw-thumbnailer   /usr/bin/
 
-update-mime-database  /usr/share/mime
+update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 
 cp -f images/LDViewIcon.png /usr/share/pixmaps/gnome-ldraw.png
@@ -21,7 +21,7 @@ cp -f desktop/ldraw.schemas /etc/gconf/schemas/
 
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-gconftool-2 --makefile-install-rule ldraw.schemas
+gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 
 kill -HUP `pidof nautilus`
 
