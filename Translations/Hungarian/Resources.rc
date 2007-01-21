@@ -168,7 +168,7 @@ BEGIN
                     ES_READONLY | NOT WS_TABSTOP,0,HIDC_SS_DIRECTORY_FIELD
     PUSHBUTTON      "Böngészõ...",IDC_SS_BROWSE_DIR_BUTTON,155,24,50,14,0,0,
                     HIDC_SS_BROWSE_DIR_BUTTON
-    GROUPBOX        "Size",IDC_SS_SIZE_BOX,7,41,198,32,WS_GROUP,0,
+    GROUPBOX        "Méret",IDC_SS_SIZE_BOX,7,41,198,32,WS_GROUP,0,
                     HIDC_SS_SIZE_BOX
     LTEXT           "Min",IDC_STATIC,16,53,12,8
     CONTROL         "Slider1",IDC_SS_SIZE_SLIDER,"msctls_trackbar32",
@@ -189,7 +189,7 @@ BEGIN
                     TBS_AUTOTICKS | WS_TABSTOP,31,116,150,17,0,
                     HIDC_SS_ROTATION_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,184,119,14,8
-    CONTROL         "Random Preference Set",IDC_SS_RANDOM_PREF_SET,"Button",
+    CONTROL         "Véletlen Beállítás-készlet",IDC_SS_RANDOM_PREF_SET,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,
                     HIDC_SS_RANDOM_PREF_SET
     CONTROL         "Sleep Mode work-around",IDC_SS_SLEEP,"Button",
@@ -298,8 +298,8 @@ BEGIN
     CONTROL         "Cross-eyed",IDC_CROSS_EYED_STEREO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,144,19,51,10,
                     0,HIDC_CROSS_EYED_STEREO
-    CONTROL         "Parallel",IDC_PARALLEL_STEREO,"Button",
-                    BS_AUTORADIOBUTTON,144,30,39,10,0,HIDC_PARALLEL_STEREO
+    CONTROL         "Párhuzamos",IDC_PARALLEL_STEREO,"Button",
+                    BS_AUTORADIOBUTTON,144,30,49,10,0,HIDC_PARALLEL_STEREO
     LTEXT           "Amt:",IDC_STEREO_SPACING_LABEL,144,47,15,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
@@ -333,7 +333,7 @@ BEGIN
                     HIDC_STIPPLE
     GROUPBOX        "Egyéb",IDC_EFFECTS_MISC_BOX,132,111,121,41,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Egyszrû árnyalás",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Egyszerû árnyalás",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,123,80,10,0,
                     HIDC_FLAT_SHADING
     CONTROL         "Egyenletes ívek",IDC_SMOOTH_CURVES,"Button",
