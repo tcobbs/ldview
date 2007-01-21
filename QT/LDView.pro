@@ -83,7 +83,8 @@ LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
 					ldview_de.ts \
 					ldview_it.ts \
-					ldview_cz.ts
+					ldview_cz.ts \
+					ldview_hu.ts
 VERSION = 3.1
 macx {
 	RC_FILE = images/LDView.icns
