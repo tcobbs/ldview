@@ -20,6 +20,7 @@ public:
 	{
 		return m_partCounts;
 	}
+	int getTotalParts(void) { return m_totalParts; }
 protected:
 	virtual ~LDPartsList(void);
 	virtual void dealloc(void);
@@ -27,6 +28,7 @@ protected:
 
 	LDPartCountMap m_partCountMap;
 	LDPartCountVector m_partCounts;
+	int m_totalParts;
 };
 
 #endif // __LDPARTSLIST_H__

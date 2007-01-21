@@ -21,6 +21,7 @@ void LDPartsList::scanModel(LDLModel *model)
 	LDPartCountMap::iterator it;
 
 	m_partCountMap.clear();
+	m_totalParts = 0;
 	scanSubModel(model);
 	m_partCounts.clear();
 	m_partCounts.reserve(m_partCountMap.size());
@@ -61,6 +62,7 @@ void LDPartsList::scanSubModel(LDLModel *subModel)
 							partCount.setModel(filename, model);
 						}
 						partCount.addPart(modelLine->getColorNumber());
+						m_totalParts++;
 						delete filename;
 					}
 					else

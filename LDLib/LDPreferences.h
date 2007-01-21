@@ -123,6 +123,7 @@ public:
 	bool getInvExternalCss(void) { return m_invExternalCss; }
 	bool getInvPartImages(void) { return m_invPartImages; }
 	bool getInvShowFile(void) { return m_invShowFile; }
+	bool getInvShowTotal(void) { return m_invShowTotal; }
 	const LongVector &getInvColumnOrder(void) { return m_invColumnOrder; }
 	const char *getInvLastSavePath(void) { return m_invLastSavePath.c_str(); }
 
@@ -206,6 +207,7 @@ public:
 	void setInvExternalCss(bool value, bool commit = false);
 	void setInvPartImages(bool value, bool commit = false);
 	void setInvShowFile(bool value, bool commit = false);
+	void setInvShowTotal(bool value, bool commit = false);
 	void setInvColumnOrder(const LongVector &value, bool commit = false);
 	void setInvLastSavePath(const char *value, bool commit = false);
 
@@ -326,6 +328,7 @@ protected:
 	bool m_invExternalCss;
 	bool m_invPartImages;
 	bool m_invShowFile;
+	bool m_invShowTotal;
 	LongVector m_invColumnOrder;
 	std::string m_invLastSavePath;
 

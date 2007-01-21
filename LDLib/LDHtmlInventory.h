@@ -39,6 +39,8 @@ public:
 	bool getPartImagesFlag(void) { return m_partImages; }
 	void setShowFileFlag(bool value);
 	bool getShowFileFlag(void) { return m_showFile; }
+	void setShowTotalFlag(bool value);
+	bool getShowTotalFlag(void) { return m_showTotal; }
 	const LDPartListColumnVector &getColumnOrder(void) const
 	{
 		return m_columnOrder;
@@ -56,7 +58,7 @@ protected:
 	virtual void dealloc(void);
 	void writeHeader(FILE *file);
 	void writeFooter(FILE *file);
-	void writeTableHeader(FILE *file);
+	void writeTableHeader(FILE *file, int totalParts);
 	void writeTableFooter(FILE *file);
 	void writePartRow(FILE *file, const LDPartCount &partCount,
 		LDLPalette *palette, const LDLColorInfo &colorInfo, int colorNumber);
@@ -84,6 +86,7 @@ protected:
 	bool m_externalCss;
 	bool m_partImages;
 	bool m_showFile;
+	bool m_showTotal;
 	std::string m_lastSavePath;
 	int m_columns;
 	LDPartListColumnVector m_columnOrder;
