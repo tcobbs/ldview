@@ -107,19 +107,19 @@ Gnome integration for LDView
 /etc/gconf/schemas/ldraw.schemas
 
 %post gnome
-update-mime-database  /usr/share/mime
+update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-gconftool-2 --makefile-install-rule ldraw.schemas
+gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 kill -HUP `pidof nautilus`
 
 %postun gnome
-update-mime-database  /usr/share/mime
+update-mime-database  /usr/share/mime >/dev/null
 update-desktop-database
 
 %preun gnome
 cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-gconftool-2 --makefile-uninstall-rule ldraw.schemas
+gconftool-2 --makefile-uninstall-rule ldraw.schemas >/dev/null
 
