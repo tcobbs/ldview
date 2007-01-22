@@ -7,6 +7,8 @@
 #include <LDLib/LDrawModelViewer.h>
 #include <shlobj.h>
 
+class LDHtmlInventory;
+
 typedef struct
 {
 	int width;
@@ -273,6 +275,8 @@ class LDViewWindow: public CUIWindow
 		virtual void updateLightingMenu(void);
 		virtual void updateBFCMenu(void);
 		virtual LRESULT generatePartsList(void);
+		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
+			LDPartsList *partsList, const char *filename);
 		void progressAlertCallback(TCProgressAlert *alert);
 
 		void loadSettings(void);

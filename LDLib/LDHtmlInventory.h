@@ -10,6 +10,8 @@ class LDPartsList;
 class LDPartCount;
 class LDLPalette;
 class LDPreferences;
+class LDrawModelViewer;
+class LDViewPoint;
 
 typedef enum
 {
@@ -47,10 +49,15 @@ public:
 	}
 	void setColumnOrder(const LDPartListColumnVector &value); 
 	const char *getLastSavePath(void) { return m_lastSavePath.c_str(); }
+	const char *getSnapshotPath(void) const;
 	bool isColumnEnabled(LDPartListColumn column);
+	bool isSnapshotNeeded(void) const;
 
 	bool generateHtml(const char *filename, LDPartsList *partsList,
 		const char *modelName);
+
+	void prepForSnapshot(LDrawModelViewer *modelViewer);
+	void restoreAfterSnapshot(LDrawModelViewer *modelViewer);
 
 	static const char *getColumnName(LDPartListColumn column);
 protected:
@@ -78,6 +85,7 @@ protected:
 		const LDPartCount &partCount, LDLPalette *palette,
 		const LDLColorInfo &colorInfo, int colorNumber);
 	void populateColumnMap(void);
+	std::string getSnapshotFilename(void) const;
 
 	std::string m_modelName;
 	LDPreferences *m_prefs;
@@ -88,9 +96,12 @@ protected:
 	bool m_showFile;
 	bool m_showTotal;
 	std::string m_lastSavePath;
+	std::string m_lastFilename;
 	int m_columns;
 	LDPartListColumnVector m_columnOrder;
 	LDPartListColumnBoolMap m_columnMap;
+	LDViewPoint *m_viewPoint;
+	mutable std::string m_snapshotPath;
 
 	static const char *sm_style;
 	static const char *sm_cssHeader;

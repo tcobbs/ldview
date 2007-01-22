@@ -141,6 +141,10 @@ SOURCE=.\LDPreferences.cpp
 
 SOURCE=.\LDrawModelViewer.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\LDViewPoint.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -180,6 +184,10 @@ SOURCE=.\LDrawModelViewer.h
 # Begin Source File
 
 SOURCE=.\LDUserDefaultsKeys.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDViewPoint.h
 # End Source File
 # End Group
 # End Target

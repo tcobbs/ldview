@@ -4933,6 +4933,55 @@ void LDViewWindow::applyPrefs(void)
 	}
 }
 
+void LDViewWindow::generatePartsList(
+	LDHtmlInventory *htmlInventory,
+	LDPartsList *partsList,
+	const char *filename)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	// Note: if we get here, modelViewer is guaranteed to be non-NULL, so
+	// there's no need to check it.
+	if (htmlInventory->generateHtml(filename, partsList,
+		modelViewer->getFilename()))
+	{
+		if (htmlInventory->isSnapshotNeeded())
+		{
+			char *snapshotPath = copyString(htmlInventory->getSnapshotPath());
+			bool saveZoomToFit = modelWindow->getSaveZoomToFit();
+			bool saveActualSize = modelWindow->getSaveActualSize();
+			int saveWidth = modelWindow->getSaveWidth();
+			int saveHeight = modelWindow->getSaveHeight();
+
+			htmlInventory->prepForSnapshot(modelViewer);
+			modelWindow->setSaveZoomToFit(true);
+			modelWindow->setSaveActualSize(false);
+			modelWindow->setSaveWidth(400);
+			modelWindow->setSaveHeight(300);
+			// By saying it's from the command line, none of the above settings
+			// will be written to TCUserDefaults.  I know it's not really from
+			// the command line, but it produces the behavior we want.
+			modelWindow->saveSnapshot(snapshotPath, true);
+			delete snapshotPath;
+			htmlInventory->restoreAfterSnapshot(modelViewer);
+			modelWindow->setSaveZoomToFit(saveZoomToFit);
+			modelWindow->setSaveActualSize(saveActualSize);
+			modelWindow->setSaveWidth(saveWidth);
+			modelWindow->setSaveHeight(saveHeight);
+			modelWindow->forceRedraw();
+		}
+		if (htmlInventory->getShowFileFlag())
+		{
+			shellExecute(filename);
+		}
+	}
+	else
+	{
+		MessageBox(hWindow, TCLocalStrings::get("PLGenerateError"),
+			TCLocalStrings::get("Error"), MB_OK | MB_ICONWARNING);
+	}
+}
+
 LRESULT LDViewWindow::generatePartsList(void)
 {
 	if (modelWindow)
@@ -4986,17 +5035,8 @@ LRESULT LDViewWindow::generatePartsList(void)
 					openStruct.hInstance = getLanguageModule();
 					if (GetSaveFileName(&openStruct))
 					{
-						if (htmlInventory->generateHtml(filename.c_str(),
-							partsList, modelViewer->getFilename()))
-						{
-							if (htmlInventory->getShowFileFlag())
-							{
-								shellExecute(filename.c_str());
-							}
-						}
-						else
-						{
-						}
+						generatePartsList(htmlInventory, partsList,
+							filename.c_str());
 					}
 				}
 				htmlInventory->release();
@@ -5006,4 +5046,23 @@ LRESULT LDViewWindow::generatePartsList(void)
 		}
 	}
 	return 0;
+}
+
+bool LDHtmlInventory::isSnapshotNeeded(void) const
+{
+	if (m_showModel)
+	{
+		const char *snapshotPath = getSnapshotPath();
+		FILE *pFile = fopen(snapshotPath, "rb");
+
+		if (pFile)
+		{
+			fclose(pFile);
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
 }

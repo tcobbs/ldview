@@ -10,6 +10,7 @@ TRECamera::TRECamera(void)
 }
 
 TRECamera::TRECamera(const TRECamera &other)
+	:name(NULL)
 {
 	duplicate(other);
 }

@@ -45,6 +45,7 @@ class LDLFindFileAlert;
 class TCWebClient;
 class LDPreferences;
 class LDPartsList;
+class LDViewPoint;
 
 class LDrawModelViewer: public TCObject
 {
@@ -299,6 +300,8 @@ class LDrawModelViewer: public TCObject
 			preferences = value;
 		}
 		virtual LDPartsList *getPartsList(void);
+		LDViewPoint *saveViewPoint(void) const;
+		void restoreViewPoint(const LDViewPoint *viewPoint);
 
 		static char *getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);

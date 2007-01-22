@@ -14,6 +14,7 @@
 #include "LDModelParser.h"
 #include "LDPreferences.h"
 #include "LDPartsList.h"
+#include "LDViewPoint.h"
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
@@ -2997,6 +2998,53 @@ void LDrawModelViewer::setUnofficialPartPrimitive(const char *filename,
 	sprintf(key, "UnofficialPartChecks/%s/Primitive", filename);
 	TCUserDefaults::setLongForKey(primitive ? 1 : 0, key, false);
 	delete key;
+}
+
+LDViewPoint *LDrawModelViewer::saveViewPoint(void) const
+{
+	LDViewPoint *viewPoint = new LDViewPoint;
+
+	viewPoint->setCamera(camera);
+	viewPoint->setRotation(TCVector(xRotate, yRotate, zRotate));
+	viewPoint->setCameraRotation(TCVector(cameraXRotate, cameraYRotate,
+		cameraZRotate));
+	viewPoint->setPan(TCVector(xPan, yPan, 0.0f));
+	viewPoint->setRotationMatrix(rotationMatrix);
+	viewPoint->setRotationSpeed(rotationSpeed);
+	viewPoint->setAutoCenter(flags.autoCenter != false);
+	viewPoint->setBackgroundColor(backgroundR, backgroundG, backgroundB,
+		backgroundA);
+	viewPoint->setStereoMode(stereoMode);
+	viewPoint->setClipAmount(clipAmount);
+	viewPoint->setDefaultDistance(defaultDistance);
+	return viewPoint;
+}
+
+void LDrawModelViewer::restoreViewPoint(const LDViewPoint *viewPoint)
+{
+	TCVector tempVector;
+
+	camera = viewPoint->getCamera();
+	tempVector = viewPoint->getRotation();
+	xRotate = tempVector[0];
+	yRotate = tempVector[1];
+	zRotate = tempVector[2];
+	tempVector = viewPoint->getCameraRotation();
+	cameraXRotate = tempVector[0];
+	cameraYRotate = tempVector[1];
+	cameraZRotate = tempVector[2];
+	tempVector = viewPoint->getPan();
+	xPan = tempVector[0];
+	yPan = tempVector[1];
+	memcpy(rotationMatrix, viewPoint->getRotationMatrix(),
+		16 * sizeof(rotationMatrix[0]));
+	rotationSpeed = viewPoint->getRotationSpeed();
+	flags.autoCenter = viewPoint->getAutoCenter();
+	viewPoint->getBackgroundColor(backgroundR, backgroundG, backgroundB,
+		backgroundA);
+	stereoMode = viewPoint->getStereoMode();
+	clipAmount = viewPoint->getClipAmount();
+	defaultDistance = viewPoint->getDefaultDistance();
 }
 
 bool LDrawModelViewer::canCheckForUnofficialPart(const char *filename,

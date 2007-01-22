@@ -4,6 +4,8 @@
 #include <LDLoader/LDLMainModel.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include "LDPreferences.h"
+#include "LDrawModelViewer.h"
+#include "LDViewPoint.h"
 #include <string>
 
 const char *LDHtmlInventory::sm_style = "\
@@ -182,7 +184,8 @@ const char *LDHtmlInventory::sm_cssHeader = "\
 const char *LDHtmlInventory::sm_cssFilename = "LDViewPartsList.css";
 
 LDHtmlInventory::LDHtmlInventory(void) :
-	m_prefs(new LDPreferences)
+	m_prefs(new LDPreferences),
+	m_viewPoint(NULL)
 {
 	int i;
 
@@ -247,6 +250,7 @@ bool LDHtmlInventory::generateHtml(
 	FILE *file = fopen(filename, "w");
 	size_t nSlashSpot;
 
+	m_lastFilename = filename;
 	m_lastSavePath = filename;
 	populateColumnMap();
 	nSlashSpot = m_lastSavePath.find_last_of("/\\");
@@ -587,6 +591,34 @@ void LDHtmlInventory::writeCell(
 	}
 }
 
+const char *LDHtmlInventory::getSnapshotPath(void) const
+{
+	m_snapshotPath = m_lastSavePath + "/" + getSnapshotFilename();
+	return m_snapshotPath.c_str();
+}
+
+std::string LDHtmlInventory::getSnapshotFilename(void) const
+{
+	size_t nSpot = m_lastFilename.find_last_of('.');
+	std::string filename;
+
+	if (nSpot < m_lastFilename.size())
+	{
+		filename = m_lastFilename.substr(0, nSpot);
+	}
+	else
+	{
+		filename = m_lastFilename;
+	}
+	filename += ".png";
+	nSpot = filename.find_last_of("/\\");
+	if (nSpot < filename.size())
+	{
+		filename = filename.substr(nSpot + 1);
+	}
+	return filename;
+}
+
 void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 {
 	const char *ldviewCreditAlign = "left";
@@ -596,23 +628,13 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "	<thead>\n");
 	if (m_showModel)
 	{
-		size_t nDotSpot = m_modelName.find('.');
-		std::string modelName;
-
-		if (nDotSpot < m_modelName.size())
-		{
-			modelName = m_modelName.substr(0, nDotSpot);
-		}
-		else
-		{
-			modelName = m_modelName;
-		}
 		fprintf(file, "		<tr>\n");
 		fprintf(file, "			<th class=\"titleImage\" "
 			"colspan=\"%d\">\n", m_columns);
 		fprintf(file, "				<img alt=\"&lt;%s&gt;\" "
-			"title=\"&lt;%s&gt;\" src=\"%s.png\">\n",
-			m_modelName.c_str(), m_modelName.c_str(), modelName.c_str());
+			"title=\"&lt;%s&gt;\" src=\"%s\">\n",
+			m_modelName.c_str(), m_modelName.c_str(),
+			getSnapshotFilename().c_str());
 		fprintf(file, "			</th>\n");
 		fprintf(file, "		</tr>\n");
 	}
@@ -760,4 +782,25 @@ const char *LDHtmlInventory::getColumnName(LDPartListColumn column)
 		break;
 	}
 	return "<Unknown Column Name>";
+}
+
+
+void LDHtmlInventory::prepForSnapshot(LDrawModelViewer *modelViewer)
+{
+	TCObject::release(m_viewPoint);
+	m_viewPoint = modelViewer->saveViewPoint();
+	modelViewer->resetView();
+	modelViewer->setRotationSpeed(0);
+	modelViewer->setXYPan(0, 0);
+	modelViewer->setBackgroundRGB(0xEE, 0xEE, 0xEE);
+	modelViewer->setStereoMode(LDVStereoNone);
+}
+
+void LDHtmlInventory::restoreAfterSnapshot(LDrawModelViewer *modelViewer)
+{
+	if (m_viewPoint)
+	{
+		modelViewer->restoreViewPoint(m_viewPoint);
+		m_viewPoint->release();
+	}
 }
