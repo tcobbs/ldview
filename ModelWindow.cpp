@@ -4546,3 +4546,12 @@ void ModelWindow::setupLight(GLenum /*light*/)
 {
 	// Don't call super.
 }
+
+void ModelWindow::setSaveZoomToFit(bool value, bool commit /*= false*/)
+{
+	saveZoomToFit = value;
+	if (commit)
+	{
+		TCUserDefaults::setLongForKey(value, SAVE_ZOOM_TO_FIT_KEY, false);
+	}
+}

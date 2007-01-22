@@ -112,6 +112,14 @@ class ModelWindow: public CUIOGLWindow
 		void setCancelLoad(void) { cancelLoad = true; }
 		bool performHotKey(int hotKeyIndex);
 		LDViewPreferences *getPrefs(void) { return prefs; }
+		void setSaveZoomToFit(bool value, bool commit = false);
+		bool getSaveZoomToFit(void) const { return saveZoomToFit; }
+		void setSaveActualSize(bool value) { saveActualSize = value; }
+		bool getSaveActualSize(void) const { return saveActualSize; }
+		void setSaveWidth(int value) { saveWidth = value; }
+		int getSaveWidth(void) const { return saveWidth; }
+		void setSaveHeight(int value) { saveHeight = value; }
+		int getSaveHeight(void) const { return saveHeight; }
 
 		void orthoView(void);
 
