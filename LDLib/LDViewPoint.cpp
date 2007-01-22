@@ -1,5 +1,6 @@
 #include "LDViewPoint.h"
 #include <TRE/TRECamera.h>
+#include <TCFoundation/mystring.h>
 
 LDViewPoint::LDViewPoint(void):
 	m_camera(NULL)
