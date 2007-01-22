@@ -10,7 +10,8 @@ CCOBJS = \
 	$(OBJDIR)\LDPreferences.obj \
 	$(OBJDIR)\LDHtmlInventory.obj \
 	$(OBJDIR)\LDPartCount.obj \
-	$(OBJDIR)\LDPartsList.obj 
+	$(OBJDIR)\LDPartsList.obj \
+	$(OBJDIR)\LDViewPoint.obj
 
 LIBT = LDLib.lib
 
