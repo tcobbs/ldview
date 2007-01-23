@@ -23,5 +23,38 @@ cd /etc/gconf/schemas
 GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
 gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
 
-kill -HUP `pidof nautilus`
+PIDOF=""
+KilledNautilus=0
+# Try to find the pidof command in path.  Note that if the path has directories
+# in it that contain spaces, the following won't work right for those
+# directories, but it seems unlikely that pidof will be found in one of those
+# directories.
+for dir in `echo $PATH | tr : ' '`
+do
+	if [ -x ${dir}/pidof ]; then
+		PIDOF=${dir}/pidof
+	fi
+done
+if [ "$PIDOF" = "" ]; then
+	# Couldn't find pidof in path; check some standard locations.
+	if [ -x /sbin/pidof ]; then
+		PIDOF=/sbin/pidof
+	else
+		if [ -x /bin/pidof ]; then
+			PIDOF=/bin/pidof
+		fi
+	fi
+fi
+if [ "$PIDOF" != "" ]; then
+	NautilusPid=`$PIDOF nautilus`
+	if [ "$NautilusPid" != "" ]; then
+		kill -HUP $NautilusPid
+		KilledNautilus=1
+	else
+		echo Could not find nautilus task.
+	fi
+fi
+if [ $KilledNautilus -eq 0 ]; then
+	echo Please log out and log back in for thumbnail generation to activate.
+fi
 
