@@ -15,7 +15,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include
+INCLUDE = -I.. -I../include -I../boost/include
 
 ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
 INCLUDE += -I$(QTDIR)/include
