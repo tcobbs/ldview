@@ -20,9 +20,8 @@ To do this, do the following:
 3. Run rehash after copying the file somewhere in your path if your shell
    requires this.
 4. Once you have bjam in your path, go to the boost source root and type
-   "bjam stage" (no quotes).  Then wait (probably quite a long time) while it
-   builds.
-5. Once it's done building, all the library files will be in the stage
+   "bjam --with-thread stage" (no quotes).  Then wait while it builds.
+5. Once it's done building, the thread library files will be in the stage
    directory.  All of the headers are in the boost directory under the boost
    source root.  To make them accessible to LDView, go to the QT directory of
    the LDView source tree (the one that contains this text file), and run
