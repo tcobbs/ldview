@@ -208,14 +208,6 @@ link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Hungarian.pdb 
 
 cd ..\..
 
-"%ProgramFiles%\Inno Setup 5\iscc.exe" LDView.iss
-
-if not exist "%QTDIR%\bin\qmake.exe" goto End
-cd QT
-%QTDIR%\bin\qmake.exe
-nmake /nologo clean all
-cd ..
-
 cd LDViewThumbs
 f not exist ReleaseMinDependency mkdir ReleaseMinDependency
 cd ReleaseMinDependency
@@ -225,6 +217,14 @@ midl   /tlb LDViewThumbs.tlb /h LDViewThumbs.h /iid LDViewThumbs_i.c /Oicf LDVie
 cl %CFLAGS% /FoReleaseMinDependency\ /FdReleaseMinDependency\ /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D _TC_STATIC /FpReleaseMinDependency\LDViewThumbs.pch /Yc"stdafx.h" /c *.cpp
 rc /l 0x409 /d NDEBUG /foReleaseMinDependency\LDViewThumbs.res LDViewThumbs.rc
 link gdi32.lib libpng.lib zlib.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:ReleaseMinDependency\LDViewThumbs.dll /implib:ReleaseMinDependency\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release ReleaseMinDependency\LDViewThumbExtractor.obj  ReleaseMinDependency\LDViewThumbs.obj ReleaseMinDependency\StdAfx.obj  ReleaseMinDependency\LDViewThumbs.res
+cd ..
+
+"%ProgramFiles%\Inno Setup 5\iscc.exe" LDView.iss
+
+if not exist "%QTDIR%\bin\qmake.exe" goto End
+cd QT
+%QTDIR%\bin\qmake.exe
+nmake /nologo clean all
 cd ..
 
 :End
