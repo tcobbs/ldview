@@ -63,6 +63,7 @@ class TCExport TCUserDefaults: public TCObject
 		static char* getSavedSessionNameFromKey(const char *key);
 		static void removeSession(const char *value);
 		static const char *alertClass(void) { return "TCUserDefaultsChanged"; }
+		static void flush(void);
 	protected:
 		TCUserDefaults(void);
 		virtual void dealloc(void);
@@ -96,6 +97,7 @@ class TCExport TCUserDefaults: public TCObject
 		void defSaveSessionNameInKey(const char *key);
 		char* defGetSavedSessionNameFromKey(const char *key);
 		void defRemoveSession(const char *value);
+		void defFlush(void);
 		void sendValueChangedAlert(const char *key);
 		bool matchesCommandLine(const char *key, long value);
 		bool matchesCommandLine(const char *key, const char *value);

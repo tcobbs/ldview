@@ -533,16 +533,17 @@ void LDPreferences::loadInventorySettings(void)
 
 void LDPreferences::commitSettings(void)
 {
-	commitGeneralSettings();
-	commitGeometrySettings();
-	commitEffectsSettings();
-	commitPrimitivesSettings();
-	commitUpdatesSettings();
-	commitInventorySettings();
+	commitGeneralSettings(false);
+	commitGeometrySettings(false);
+	commitEffectsSettings(false);
+	commitPrimitivesSettings(false);
+	commitUpdatesSettings(false);
+	commitInventorySettings(false);
+	TCUserDefaults::flush();
 	//commitPrefSetsSettings();
 }
 
-void LDPreferences::commitGeneralSettings(void)
+void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 {
 	int i;
 	int r, g, b;
@@ -565,9 +566,13 @@ void LDPreferences::commitGeneralSettings(void)
 	setFullScreenRefresh(m_fullScreenRefresh, true);
 	setFov(m_fov, true);
 	setMemoryUsage(m_memoryUsage, true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
 }
 
-void LDPreferences::commitGeometrySettings(void)
+void LDPreferences::commitGeometrySettings(bool flush /*= true*/)
 {
 	setSetting(m_useSeams, m_useSeams, SEAMS_KEY, true);
 	if (getUseSeams())
@@ -596,9 +601,13 @@ void LDPreferences::commitGeometrySettings(void)
 		setBlackHighlights(m_blackHighlights, true);
 	}
 	setEdgeThickness(m_edgeThickness, true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
 }
 
-void LDPreferences::commitEffectsSettings(void)
+void LDPreferences::commitEffectsSettings(bool flush /*= true*/)
 {
 	setUseLighting(m_useLighting, true);
 	if (m_useLighting)
@@ -617,9 +626,13 @@ void LDPreferences::commitEffectsSettings(void)
 	setSortTransparent(m_sortTransparent, true);
 	setUseFlatShading(m_useFlatShading, true);
 	setPerformSmoothing(m_performSmoothing, true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
 }
 
-void LDPreferences::commitPrimitivesSettings(void)
+void LDPreferences::commitPrimitivesSettings(bool flush /*= true*/)
 {
 	setAllowPrimitiveSubstitution(m_allowPrimitiveSubstitution, true);
 	if (m_allowPrimitiveSubstitution)
@@ -630,9 +643,13 @@ void LDPreferences::commitPrimitivesSettings(void)
 	}
 	setQualityStuds(m_qualityStuds, true);
 	setHiResPrimitives(m_hiResPrimitives, true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
 }
 
-void LDPreferences::commitUpdatesSettings(void)
+void LDPreferences::commitUpdatesSettings(bool flush /*= true*/)
 {
 	setProxyType(m_proxyType, true);
 	if (m_proxyType == 2)
@@ -643,9 +660,13 @@ void LDPreferences::commitUpdatesSettings(void)
 	setCheckPartTracker(m_checkPartTracker, true);
 	setMissingPartWait(m_missingPartWait, true);
 	setUpdatedPartWait(m_updatedPartWait, true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
 }
 
-void LDPreferences::commitInventorySettings(void)
+void LDPreferences::commitInventorySettings(bool flush /*= true*/)
 {
 	setInvShowModel(m_invShowModel, true);
 	setInvExternalCss(m_invExternalCss, true);
@@ -654,6 +675,10 @@ void LDPreferences::commitInventorySettings(void)
 	setInvShowTotal(m_invShowTotal, true);
 	setInvColumnOrder(m_invColumnOrder, true);
 	setInvLastSavePath(m_invLastSavePath.c_str(), true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
 }
 
 void LDPreferences::setupDefaultRotationMatrix(void)

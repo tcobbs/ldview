@@ -299,6 +299,11 @@ void TCUserDefaults::removeValue(const char* key, bool sessionSpecific)
 	getCurrentUserDefaults()->defRemoveValue(key, sessionSpecific);
 }
 
+void TCUserDefaults::flush(void)
+{
+	getCurrentUserDefaults()->defFlush();
+}
+
 void TCUserDefaults::defSaveSessionNameInKey(const char* key)
 {
 	char *savedSessionName = copyString(sessionName);
@@ -794,6 +799,16 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 		}
 	}
 #endif // WIN32
+}
+
+void TCUserDefaults::defFlush(void)
+{
+#ifdef _QT
+	// QSettings only writes to disk when the object is destroyed.  If LDView
+	// crashes, all settings that were set are lost.
+	delete qSettings;
+	qSettings = new QSettings;
+#endif // _QT
 }
 
 TCStringArray* TCUserDefaults::defGetProcessedCommandLine(void)

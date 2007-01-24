@@ -33,12 +33,12 @@ public:
 	// *************************************************************************
 
 	void commitSettings(void);
-	void commitGeneralSettings(void);
-	void commitGeometrySettings(void);
-	void commitEffectsSettings(void);
-	void commitPrimitivesSettings(void);
-	void commitUpdatesSettings(void);
-	void commitInventorySettings(void);
+	void commitGeneralSettings(bool flush = true);
+	void commitGeometrySettings(bool flush = true);
+	void commitEffectsSettings(bool flush = true);
+	void commitPrimitivesSettings(bool flush = true);
+	void commitUpdatesSettings(bool flush = true);
+	void commitInventorySettings(bool flush = true);
 
 	virtual void saveDefaultView(void);
 	virtual void resetDefaultView(void);

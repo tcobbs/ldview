@@ -17,11 +17,21 @@ cp -f images/LDViewIcon.png \
 
 
 chmod +x /usr/bin/ldraw-thumbnailer
-cp -f desktop/ldraw.schemas /etc/gconf/schemas/
+GCONF_SCHEMA_DIR=""
+if [ -d /etc/gconf/schemas ]; then
+	GCONF_SCHEMA_DIR=/etc/gconf/schemas
+elif [ -d /usr/share/gconf/schemas ]; then
+	GCONF_SCHEMA_DIR=/usr/share/gconf/schemas
+fi
+if [ "$GCONF_SCHEMA_DIR" != "" ]; then
+	cp -f desktop/ldraw.schemas ${GCONF_SCHEMA_DIR}/
 
-cd /etc/gconf/schemas
-GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
-gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
+	cd $GCONF_SCHEMA_DIR
+	GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source` \
+		gconftool-2 --makefile-install-rule ldraw.schemas >/dev/null
+else
+	echo "Could not locate gconf schema directory; thumbnails won't work."
+fi
 
 PIDOF=""
 KilledNautilus=0
@@ -39,10 +49,8 @@ if [ "$PIDOF" = "" ]; then
 	# Couldn't find pidof in path; check some standard locations.
 	if [ -x /sbin/pidof ]; then
 		PIDOF=/sbin/pidof
-	else
-		if [ -x /bin/pidof ]; then
-			PIDOF=/bin/pidof
-		fi
+	elif [ -x /bin/pidof ]; then
+		PIDOF=/bin/pidof
 	fi
 fi
 if [ "$PIDOF" != "" ]; then
@@ -56,5 +64,7 @@ if [ "$PIDOF" != "" ]; then
 fi
 if [ $KilledNautilus -eq 0 ]; then
 	echo Please log out and log back in for thumbnail generation to activate.
+else
+	echo You may have to log out and back in before thumbnail generation starts.
 fi
 
