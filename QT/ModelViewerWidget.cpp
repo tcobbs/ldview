@@ -236,11 +236,11 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			PNG_IMAGE_TYPE_INDEX : BMP_IMAGE_TYPE_INDEX);
 		saveImage(s2, 
 			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
-			TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false) : 
-			TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false),
+			TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false) :
+			TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false),
             TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
-			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false) :  
-			TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false));
+			TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
+			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false));
 //		QApplication::exit();
 		exit(0);
     }
