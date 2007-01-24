@@ -37,6 +37,7 @@ Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additi
 Name: quicklaunchicon; Description: Create a &Quick Launch icon; GroupDescription: Additional icons:; Flags: unchecked
 Name: screensaver; Description: Install LDView as a screen saver; GroupDescription: Screen Saver:
 Name: registerfiles; Description: Use LDView to open LDraw models; GroupDescription: File Associations:; Flags: unchecked
+Name: thumbnails; Description: Use LDView to generate thumbnails in Windows Explorer; GroupDescription: Explorer Thumbnails:; Flags: unchecked
 
 [Files]
 Source: Release\LDView.exe; DestDir: {app}; Flags: ignoreversion
@@ -54,7 +55,7 @@ Source: 8464.mpd; DestDir: {app}; Flags: ignoreversion
 Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
 Source: Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion; Tasks: screensaver
-Source: LDViewThumbs\ReleaseMinDependency\LDViewThumbs.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: registerfiles
+Source: LDViewThumbs\ReleaseMinDependency\LDViewThumbs.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
