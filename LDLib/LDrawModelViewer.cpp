@@ -3311,6 +3311,7 @@ void LDrawModelViewer::zoomToFit(void)
 		TCVector location;
 		TCVector cameraDir;
 		TCFloat tmpMatrix[16];
+		TCFloat tmpMatrix2[16];
 		TCFloat transformationMatrix[16];
 		TCFloat margin;
 		char *cameraGlobe = TCUserDefaults::stringForKey("CameraGlobe", NULL,
@@ -3321,7 +3322,11 @@ void LDrawModelViewer::zoomToFit(void)
 		tmpMatrix[12] = center[0];
 		tmpMatrix[13] = center[1];
 		tmpMatrix[14] = center[2];
-		TCVector::multMatrix(tmpMatrix, rotationMatrix, transformationMatrix);
+		TCVector::multMatrix(tmpMatrix, rotationMatrix, tmpMatrix2);
+		tmpMatrix[12] = -center[0];
+		tmpMatrix[13] = -center[1];
+		tmpMatrix[14] = -center[2];
+		TCVector::multMatrix(tmpMatrix2, tmpMatrix, transformationMatrix);
 		zoomToFitWidth = width * numXTiles / getStereoWidthModifier();
 		zoomToFitHeight = (TCFloat)(height * numYTiles);
 		margin = getWideLineMargin() * 2.0f;
@@ -3438,10 +3443,9 @@ void LDrawModelViewer::zoomToFit(void)
 		{
 			location[2] *= distanceMultiplier;
 		}
-		camera.setPosition(location - center);
+		camera.setPosition(location);
 		xPan = 0.0f;
 		yPan = 0.0f;
-		flags.autoCenter = false;
 	}
 }
 
@@ -3453,7 +3457,7 @@ void LDrawModelViewer::scanCameraPoint(const TCVector &point)
 
 	for (i = 0; i < 4; i++)
 	{
-		d = cameraData->normal[i].dot(point);
+		d = cameraData->normal[i].dot(point - center);
 		if (d < cameraData->dMin[i])
 		{
 			cameraData->dMin[i] = d;
