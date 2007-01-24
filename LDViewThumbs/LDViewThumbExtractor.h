@@ -3,7 +3,7 @@
 #ifndef __LDVIEWTHUMBEXTRACTOR_H_
 #define __LDVIEWTHUMBEXTRACTOR_H_
 
-#include <string>
+#include <TCFoundation/TCStlIncludes.h>
 
 #include "resource.h"       // main symbols
 
