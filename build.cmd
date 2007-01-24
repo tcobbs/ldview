@@ -216,4 +216,15 @@ cd QT
 nmake /nologo clean all
 cd ..
 
+cd LDViewThumbs
+f not exist ReleaseMinDependency mkdir ReleaseMinDependency
+cd ReleaseMinDependency
+del /q *.pch *.obj *.idb  *.res *lib *.dll
+cd ..
+midl   /tlb LDViewThumbs.tlb /h LDViewThumbs.h /iid LDViewThumbs_i.c /Oicf LDViewThumbs.idl
+cl %CFLAGS% /FoReleaseMinDependency\ /FdReleaseMinDependency\ /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D _TC_STATIC /FpReleaseMinDependency\LDViewThumbs.pch /Yc"stdafx.h" /c *.cpp
+rc /l 0x409 /d NDEBUG /foReleaseMinDependency\LDViewThumbs.res LDViewThumbs.rc
+link gdi32.lib libpng.lib zlib.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:ReleaseMinDependency\LDViewThumbs.dll /implib:ReleaseMinDependency\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release ReleaseMinDependency\LDViewThumbExtractor.obj  ReleaseMinDependency\LDViewThumbs.obj ReleaseMinDependency\StdAfx.obj  ReleaseMinDependency\LDViewThumbs.res
+cd ..
+
 :End
