@@ -19,6 +19,7 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCWebClient.h>
 #include <CUI/CUIWindowResizer.h>
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDPartsList.h>
@@ -179,6 +180,10 @@ LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
 		MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&LDViewWindow::progressAlertCallback);
+	char userAgent[256];
+	sprintf(userAgent, "LDView/%s  (Windows; ldview@gmail.com; "
+		"http://ldview.sf.net/)", getProductVersion());
+	TCWebClient::setUserAgent(userAgent);
 //	DeleteObject(hBackgroundBrush);
 // 	hBackgroundBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
 //		(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));

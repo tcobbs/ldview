@@ -112,11 +112,14 @@ void do_sleep(int sec)
 char *TCWebClient::proxyServer = NULL;
 int TCWebClient::proxyPort = 80;
 TCWebClient::TCWebClientCleanup TCWebClient::webClientCleanup;
+char *TCWebClient::userAgent = NULL;
 
 TCWebClient::TCWebClientCleanup::~TCWebClientCleanup(void)
 {
 	delete proxyServer;
 	proxyServer = NULL;
+	delete userAgent;
+	userAgent = NULL;
 }
 
 TCWebClient::TCWebClient(const char* url)
@@ -221,8 +224,20 @@ bool TCWebClient::getAborted(void)
 
 void TCWebClient::setProxyServer(const char *value)
 {
-	delete proxyServer;
-	proxyServer = copyString(value);
+	if (value != proxyServer)
+	{
+		delete proxyServer;
+		proxyServer = copyString(value);
+	}
+}
+
+void TCWebClient::setUserAgent(const char *value)
+{
+	if (value != userAgent)
+	{
+		delete userAgent;
+		userAgent = copyString(value);
+	}
 }
 
 int TCWebClient::openConnection(void)
@@ -939,6 +954,10 @@ int TCWebClient::sendFetchCommands(void)
 		sendCommand("Host: %s", webServer);
 		sendCommand("Connection: close");
 		sendCommand("Accept-Encoding: gzip, identity");
+		if (userAgent)
+		{
+			sendCommand("User-Agent: %s", userAgent);
+		}
 		if (lastModifiedString)
 		{
 			sendCommand("If-Modified-Since: %s", lastModifiedString);
