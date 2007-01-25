@@ -22,6 +22,7 @@
 #include <qlayout.h>
 #include <qclipboard.h>
 #include <qpainter.h>
+#include <qprocess.h>
 #include <qprogressdialog.h>
 #include <qtimer.h>
 #include <qtoolbutton.h>
@@ -41,6 +42,7 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCWebClient.h>
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLModel.h>
 #include <LDLib/LDrawModelViewer.h>
@@ -60,6 +62,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include "LDLib/LDUserDefaultsKeys.h"
 #include <LDLib/LDPartsList.h>
+#include <assert.h>
 
 #include "ModelViewerWidget.h"
 #include "AlertHandler.h"
@@ -169,6 +172,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 #else
 	setFocusPolicy(QWidget::StrongFocus);
 #endif
+	setupUserAgent();
 }
 
 ModelViewerWidget::~ModelViewerWidget(void)
@@ -183,6 +187,86 @@ ModelViewerWidget::~ModelViewerWidget(void)
 	delete errors;
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
+}
+
+void ModelViewerWidget::setupUserAgent(void)
+{
+	char *unamePath = findExecutable("uname");
+	// If uname below doesn't work, just use the generic "QT" instead.
+	QString osName = "QT";
+	QString userAgent;
+	// If we can't parse the version out of the AboutPanel, use 3.2.  Note: this
+	// should be updated in future versions, but the extraction from the
+	// AboutPanel hopefully won't fail.
+	QString ldviewVersion = "3.2";
+	bool foundVersion = false;
+	QString fullVersion;
+
+	int spot;
+
+	// Try to use the uname command to determine our OS name.
+	if (unamePath)
+	{
+		// uname was found in the path.
+		QProcess unameProcess((QString)unamePath);
+
+		delete unamePath;
+		// We don't care about stdin and stderr.
+		unameProcess.setCommunication(QProcess::Stdout);
+		if (unameProcess.start())
+		{
+			QTime startTime;
+
+			startTime.start();
+			// Wait until we get a line of output on stdout.  That line will
+			// be the OS name.
+			while (!unameProcess.canReadLineStdout())
+			{
+				if (startTime.elapsed() > 5000)
+				{
+					// If uname takes 5 seconds to execute, we're in trouble.
+					break;
+				}
+				// sleep for 50ms.
+#ifdef WIN32
+				Sleep(50);
+#else // WIN32
+				usleep(50000);
+#endif // WIN32
+			}
+			if (unameProcess.canReadLineStdout())
+			{
+				// readLineStdout strips off any CR/LF, so we're left with the
+				// OS name, which is what we want.
+				osName = QString("QT-") + unameProcess.readLineStdout();
+			}
+		}
+	}
+	// We're going to grab the version label from the about panel, so make sure
+	// it's created first.
+	createAboutPanel();
+	fullVersion = aboutPanel->VersionLabel->text();
+	// The version will always begin with a number.
+	if ((spot = fullVersion.find(QRegExp("[0-9]"))) != -1)
+	{
+		fullVersion = fullVersion.right(fullVersion.length() - spot);
+		// The first thing after the version is an open parenthesis.  Look
+		// for that.
+		if ((spot = fullVersion.find("(")) != -1)
+		{
+			fullVersion = fullVersion.left(spot);
+			ldviewVersion = fullVersion.stripWhiteSpace();
+			foundVersion = true;
+		}
+	}
+	// Even though we have a default value for the version, we REALLY want to
+	// extract it from the about panel.  Assert if the above extraction wasn't
+	// successful.
+	assert(foundVersion);
+	userAgent.sprintf("LDView/%s (%s; ldview@gmail.com; "
+		"http://ldview.sf.net/)", (const char *)ldviewVersion,
+		(const char *)osName);
+	TCWebClient::setUserAgent(userAgent);
 }
 
 void ModelViewerWidget::setApplication(QApplication *value)
@@ -1029,9 +1113,11 @@ bool ModelViewerWidget::installLDraw(void)
 			// for a short time in order to avoid monopolizing the CPU.  Keep in
 			// mind that while 50ms is essentially unnoticable to a user, it's
 			// quite a long time to the computer.
-#ifndef WIN32
+#ifdef WIN32
+			Sleep(50);
+#else // WIN32
 			usleep(50000);
-#endif
+#endif // WIN32
 		}
         if (libraryUpdateFinished)
         {
@@ -1600,6 +1686,13 @@ void ModelViewerWidget::doHelpAbout(void)
 		}
 		return;
 	}
+	createAboutPanel();
+	aboutPanel->show();
+	unlock();
+}
+
+void ModelViewerWidget::createAboutPanel(void)
+{
 	if (!aboutPanel)
 	{
 		aboutPanel = new AboutPanel;
@@ -1607,8 +1700,6 @@ void ModelViewerWidget::doHelpAbout(void)
 			SLOT(doAboutOK()));
 		aboutPanel->resize(10, 10);
 	}
-	aboutPanel->show();
-	unlock();
 }
 
 void ModelViewerWidget::doHelpAboutQt(void)

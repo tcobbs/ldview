@@ -85,7 +85,7 @@
                         </widget>
                         <widget class="QLabel">
                             <property name="name">
-                                <cstring>TextLabel1</cstring>
+                                <cstring>VersionLabel</cstring>
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>

@@ -64,6 +64,7 @@ public:
 
 	void setShowFPS(bool value) { showFPS = value; }
 	void setApplication(QApplication *value);
+	void createAboutPanel(void);
 
 	void doFileOpen(void);
 	void doFileReload(void);
@@ -214,6 +215,7 @@ protected:
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);
 	void setLibraryUpdateProgress(float progress);
+	void setupUserAgent(void);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);
