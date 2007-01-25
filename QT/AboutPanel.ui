@@ -96,7 +96,7 @@
                                 </sizepolicy>
                             </property>
                             <property name="text">
-                                <string>LDView Version 3.1 (9 Oct 2006)
+                                <string>LDView Version 3.1 (__DATE__)
 Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</string>
                             </property>
                             <property name="textFormat">

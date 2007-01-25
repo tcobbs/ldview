@@ -1703,6 +1703,9 @@ void ModelViewerWidget::createAboutPanel(void)
 		connect(aboutPanel->okButton, SIGNAL(clicked()), this,
 			SLOT(doAboutOK()));
 		aboutPanel->resize(10, 10);
+		QString text = aboutPanel->VersionLabel->text();
+		text.replace( QRegExp("__DATE__"),__DATE__);
+		aboutPanel->VersionLabel->setText(text);
 	}
 }
 
