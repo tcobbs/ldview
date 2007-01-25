@@ -135,6 +135,8 @@ public:
 	static const char *getProxyServer(void) { return proxyServer; }
 	static void setProxyPort(int value) { proxyPort = value; }
 	static int getProxyPort(void) { return proxyPort; }
+	static void setUserAgent(const char *value);
+	static const char *getUserAgent(void) { return userAgent; }
 protected:
 	virtual TCByte* getData(int& length);
 	virtual char* getLine(int&);
@@ -242,6 +244,7 @@ protected:
 
 	static char* proxyServer;
 	static int proxyPort;
+	static char* userAgent;
 
 	static class TCWebClientCleanup
 	{
