@@ -194,7 +194,8 @@ void ModelViewerWidget::setupUserAgent(void)
 #ifdef WIN32
 	char *unamePath = NULL;
 #else
-	char *unamePath = findExecutable("uname");
+	//char *unamePath = findExecutable("uname");
+	char *unamePath = copyString("uname");
 #endif
 	// If uname below doesn't work, just use the generic "QT" instead.
 	QString osName = "QT";
