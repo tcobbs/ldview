@@ -51,6 +51,7 @@ void CUIWindowResizer::resize(int newWidth, int newHeight)
 	{
 		resizeSubWindow((*subWindowInfos)[i], widthDelta, heightDelta);
 	}
+	RedrawWindow(hWindow, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 }
 
 void CUIWindowResizer::resizeSubWindow(CUISubWindowInfo *subWindowInfo,
@@ -116,9 +117,9 @@ void CUIWindowResizer::resizeSubWindow(CUISubWindowInfo *subWindowInfo,
 				height = (int)(height + heightDelta / heightSprings);
 			}
 		}
-		MoveWindow(hSubWindow, x, y, width, height, TRUE);
-		RedrawWindow(hSubWindow, NULL, NULL,
-			RDW_ERASE | RDW_INVALIDATE | RDW_ERASENOW | RDW_UPDATENOW);
+		MoveWindow(hSubWindow, x, y, width, height, FALSE);
+//		RedrawWindow(hSubWindow, NULL, NULL,
+//			RDW_ERASE | RDW_INVALIDATE | RDW_ERASENOW | RDW_UPDATENOW);
 	}
 }
 

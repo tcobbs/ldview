@@ -47,6 +47,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".,./include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC"
 				StringPooling="true"
@@ -76,11 +79,12 @@
 				OutputFile=".\Release/LDView.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib"
+				AdditionalLibraryDirectories=".\lib;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib"
 				ProgramDatabaseFile=".\Release/LDView.pdb"
 				SubSystem="2"
+				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -172,7 +176,7 @@
 				OutputFile=".\Debug/LDView.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib"
+				AdditionalLibraryDirectories=".\lib;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib,libcmt.lib"
 				GenerateDebugInformation="true"
@@ -271,7 +275,7 @@
 				OutputFile=".\PartialDebug/LDView.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories=".\lib,.\TCFoundation\PartialDebug,.\CUI\Release,.\LDLib\PartialDebug,.\LDLoader\PartialDebug"
+				AdditionalLibraryDirectories=".\lib;.\boost\lib;.\TCFoundation\PartialDebug;.\CUI\Release;.\LDLib\PartialDebug;.\LDLoader\PartialDebug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\PartialDebug/LDView.pdb"
@@ -528,6 +532,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\PartsListDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SSConfigure.cpp"
 				>
 				<FileConfiguration
@@ -678,6 +686,10 @@
 			</File>
 			<File
 				RelativePath="ModelWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PartsListDialog.h"
 				>
 			</File>
 			<File
