@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="TRE"
 	ProjectGUID="{3E28D374-AA9A-4B02-A865-8C369EC4FA1F}"
+	RootNamespace="TRE"
 	>
 	<Platforms>
 		<Platform
@@ -15,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="PartialDebug|Win32"
-			OutputDirectory=".\PartialDebug"
-			IntermediateDirectory=".\PartialDebug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -48,9 +49,6 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\PartialDebug/TRE.pch"
-				AssemblerListingLocation=".\PartialDebug/"
-				ObjectFile=".\PartialDebug/"
-				ProgramDataBaseFileName=".\PartialDebug/"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -67,7 +65,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\PartialDebug\TRE.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -90,8 +87,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -122,9 +119,6 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/TRE.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
 				BrowseInformation="1"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -143,7 +137,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Debug\TRE.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -166,8 +159,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -201,9 +194,6 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\Release/TRE.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -221,7 +211,6 @@
 			<Tool
 				Name="VCLibrarianTool"
 				AdditionalOptions="/LTCG"
-				OutputFile=".\Release\TRE.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool

@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="LDView"
 	ProjectGUID="{80775A55-FFF9-44F4-9B00-A911D030945C}"
+	RootNamespace="LDView"
 	>
 	<Platforms>
 		<Platform
@@ -15,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -56,9 +57,6 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\Release/LDView.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
 			/>
@@ -76,13 +74,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib"
-				OutputFile=".\Release/LDView.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\lib;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib"
-				ProgramDatabaseFile=".\Release/LDView.pdb"
 				SubSystem="2"
 				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
@@ -99,7 +95,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release/LDView.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -116,8 +111,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -151,9 +146,6 @@
 				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/LDView.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
 				BrowseInformation="1"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -173,14 +165,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib"
-				OutputFile=".\Debug/LDView.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\lib;.\boost\lib"
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib,libcmt.lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\Debug/LDView.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -196,7 +186,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug/LDView.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -213,8 +202,8 @@
 		</Configuration>
 		<Configuration
 			Name="PartialDebug|Win32"
-			OutputDirectory=".\PartialDebug"
-			IntermediateDirectory=".\PartialDebug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -251,9 +240,6 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\PartialDebug/LDView.pch"
-				AssemblerListingLocation=".\PartialDebug/"
-				ObjectFile=".\PartialDebug/"
-				ProgramDataBaseFileName=".\PartialDebug/"
 				BrowseInformation="1"
 				WarningLevel="4"
 				SuppressStartupBanner="true"
@@ -272,13 +258,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib"
-				OutputFile=".\PartialDebug/LDView.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\lib;.\boost\lib;.\TCFoundation\PartialDebug;.\CUI\Release;.\LDLib\PartialDebug;.\LDLoader\PartialDebug"
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\PartialDebug/LDView.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -294,7 +278,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\PartialDebug/LDView.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
