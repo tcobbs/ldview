@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..,..\include"
+				AdditionalIncludeDirectories="..,../include,../boost/include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -116,7 +116,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..,../include"
+				AdditionalIncludeDirectories="..,../include,../boost/include"
 				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -192,8 +192,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="..,..\include"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories="..,../include,../boost/include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -218,6 +220,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/LTCG"
 				OutputFile=".\Release\TRE.lib"
 				SuppressStartupBanner="true"
 			/>

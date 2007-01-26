@@ -194,6 +194,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="1"
+				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_TC_STATIC"
 				StringPooling="true"
@@ -219,6 +222,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalOptions="/LTCG"
 				OutputFile=".\Release\LDLoader.lib"
 				SuppressStartupBanner="true"
 			/>
@@ -433,6 +437,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\LDLFindFileAlert.cpp"
+				>
 			</File>
 			<File
 				RelativePath="LDLLineLine.cpp"
@@ -771,6 +779,10 @@
 			</File>
 			<File
 				RelativePath="LDLFileLine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDLFindFileAlert.h"
 				>
 			</File>
 			<File
