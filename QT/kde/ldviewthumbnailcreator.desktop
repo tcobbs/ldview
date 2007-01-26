@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=LDView
+ServiceTypes=ThumbCreator
+MimeTypes=application/x-ldraw, application/x-multipart-ldraw
+CacheThumbnail=true
+X-KDE-Library=libldviewthumbnail
+
