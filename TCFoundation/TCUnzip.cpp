@@ -104,30 +104,8 @@ int TCUnzip::unzipWin32(const char *filename, const char *outputDir)
 
 void TCUnzip::unzipChildExec(const char *filename, const char *outputDir)
 {
-	char *path = getenv("PATH");
-	char *unzipPath = NULL;
-	int pathCount;
-	char **pathComponents = componentsSeparatedByString(path, ":", pathCount);
-	int i;
+	char *unzipPath = findExecutable("unzip");
 
-	for (i = 0; i < pathCount && unzipPath == NULL; i++)
-	{
-		FILE *file;
-
-		unzipPath = copyString(pathComponents[i], 7);
-		strcat(unzipPath, "/unzip");
-		file = fopen(unzipPath, "r");
-		if (file)
-		{
-			fclose(file);
-		}
-		else
-		{
-			delete unzipPath;
-			unzipPath = NULL;
-		}
-	}
-	deleteStringArray(pathComponents, pathCount);
 	if (unzipPath)
 	{
 		char *zipFile = copyString(filename);
