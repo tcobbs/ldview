@@ -5,6 +5,10 @@
 #include <ctype.h>
 #include <stdarg.h>
 
+#ifndef WIN32
+#include <stdlib.h>
+#endif
+
 static int debugLevel = 0;
 
 char *copyString(const char *string, int pad)
@@ -314,6 +318,36 @@ char* convertStringToLower(char* string)
 		string[i] = (char)tolower(string[i]);
 	}
 	return string;
+}
+
+char* findExecutable(const char* executable)
+{
+	char *path = getenv("PATH");
+	char *retValue = NULL;
+	int pathCount;
+	char **pathComponents = componentsSeparatedByString(path, ":", pathCount);
+	int i;
+
+	for (i = 0; i < pathCount && retValue == NULL; i++)
+	{
+		FILE *file;
+
+		retValue = copyString(pathComponents[i], 7);
+		strcat(retValue, "/");
+		strcat(retValue, executable);
+		file = fopen(retValue, "r");
+		if (file)
+		{
+			fclose(file);
+		}
+		else
+		{
+			delete retValue;
+			retValue = NULL;
+		}
+	}
+	deleteStringArray(pathComponents, pathCount);
+	return retValue;
 }
 
 char* directoryFromPath(const char* path)

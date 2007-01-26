@@ -42,6 +42,8 @@ TCExport char* convertStringToLower(char*);
 TCExport char* filenameFromPath(const char*);
 TCExport char* directoryFromPath(const char*);
 
+TCExport char* findExecutable(const char* executable);
+
 TCExport void stripCRLF(char*);
 TCExport void stripTrailingWhitespace(char*);
 TCExport void stripLeadingWhitespace(char*);
