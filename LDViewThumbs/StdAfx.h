@@ -9,6 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_NONSTDC_NO_DEPRECATE
+
 #define STRICT
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0400

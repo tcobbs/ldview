@@ -370,5 +370,9 @@ SOURCE=.\StdAfx.h
 SOURCE=.\LDViewThumbExtractor.rgs
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\Build.txt
+# End Source File
 # End Target
 # End Project
