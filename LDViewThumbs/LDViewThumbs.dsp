@@ -42,8 +42,8 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
+# PROP Output_Dir "Debug-VC6"
+# PROP Intermediate_Dir "Debug-VC6"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /Yu"stdafx.h" /FD /GZ /c
@@ -57,9 +57,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"libcmt.lib" /pdbtype:sept /libpath:"..\lib"
 # Begin Custom Build - Performing registration
-OutDir=.\Debug
-TargetPath=.\Debug\LDViewThumbs.dll
-InputPath=.\Debug\LDViewThumbs.dll
+OutDir=.\Debug-VC6
+TargetPath=.\Debug-VC6\LDViewThumbs.dll
+InputPath=.\Debug-VC6\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -153,8 +153,8 @@ SOURCE="$(InputPath)"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "ReleaseMinDependency"
-# PROP Intermediate_Dir "ReleaseMinDependency"
+# PROP Output_Dir "ReleaseMinDependency-VC6"
+# PROP Intermediate_Dir "ReleaseMinDependency-VC6"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
@@ -168,9 +168,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
 # ADD LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
 # Begin Custom Build - Performing registration
-OutDir=.\ReleaseMinDependency
-TargetPath=.\ReleaseMinDependency\LDViewThumbs.dll
-InputPath=.\ReleaseMinDependency\LDViewThumbs.dll
+OutDir=.\ReleaseMinDependency-VC6
+TargetPath=.\ReleaseMinDependency-VC6\LDViewThumbs.dll
+InputPath=.\ReleaseMinDependency-VC6\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
