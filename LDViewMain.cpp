@@ -430,7 +430,7 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 		debugPrintf("Frequency: %I64d\n", frequency.QuadPart);
 	}
 #endif // _LOG_PERFORMANCE
-//	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "Debug test: %d\n", testDict);
+//	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "Debug test: %d\n", 10);
 //	testDict->release();
 	OleInitialize(NULL);
 	modelLoader = new ModelLoader(hInstance, nCmdShow, screenSaver);
