@@ -382,10 +382,10 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	}
 	else
 	{
-		fprintf(file, "<style type=\"text/css\" title=\"%s\">\n",
+		fprintf(file, "<style type=\"text/css\" title=\"%s\"><!--\n",
 			TCLocalStrings::get("PLStyleSheetTitle"));
 		fprintf(file, "%s", sm_style);
-		fprintf(file, "</style>\n");
+		fprintf(file, "--></style>\n");
 	}
 	fprintf(file, "</head>\n");
 	fprintf(file, "<body>\n");

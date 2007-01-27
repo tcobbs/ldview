@@ -846,27 +846,11 @@
 			Filter="html"
 			>
 			<File
-				RelativePath="..\..\users\tcobbs\LDView\WebPages\ChangeHistory.html"
+				RelativePath=".\ChangeHistory.html"
 				>
 			</File>
 			<File
-				RelativePath="..\..\users\tcobbs\LDView\WebPages\footer.html"
-				>
-			</File>
-			<File
-				RelativePath="..\..\users\tcobbs\LDView\WebPages\FutureFeatures.html"
-				>
-			</File>
-			<File
-				RelativePath="..\..\users\tcobbs\LDView\WebPages\header.html"
-				>
-			</File>
-			<File
-				RelativePath="..\..\users\tcobbs\LDView\WebPages\index.html"
-				>
-			</File>
-			<File
-				RelativePath="..\..\users\tcobbs\LDView\WebPages\index.new.html"
+				RelativePath=".\Help.html"
 				>
 			</File>
 		</Filter>
