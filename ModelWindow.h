@@ -144,6 +144,8 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doLButtonUp(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doRButtonDown(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doRButtonUp(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doMButtonDown(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doMButtonUp(WPARAM keyFlags, int xPos, int yPos);
 //		virtual LRESULT doMButtonUp(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doMouseMove(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doSize(WPARAM, int, int);
@@ -313,8 +315,9 @@ class ModelWindow: public CUIOGLWindow
 		int lastX;
 		int lastY;
 		int originalZoomY;
-		int lButtonDown;
-		int rButtonDown;
+		bool lButtonDown;
+		bool rButtonDown;
+		bool mButtonDown;
 		HWND oldMouseWindow;
 		HWND hPrefsWindow;
 		int captureCount;

@@ -81,8 +81,9 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 numFramesSinceReference(0),
 			 firstFPSPass(true),
 			 rotationSpeed(0.0f),
-			 lButtonDown(0),
-			 rButtonDown(0),
+			 lButtonDown(false),
+			 rButtonDown(false),
+			 mButtonDown(false),
 			 hPrefsWindow(NULL),
 			 captureCount(0),
 			 redrawCount(0),
@@ -367,8 +368,9 @@ void ModelWindow::checkFileForUpdates(void)
 					{
 						releaseMouse();
 					}
-					lButtonDown = NO;
-					rButtonDown = NO;
+					lButtonDown = false;
+					rButtonDown = false;
+					mButtonDown = false;
 					if (MessageBox(hWindow, message,
 						TCLocalStrings::get("PollFileUpdate"),
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
@@ -526,7 +528,7 @@ void ModelWindow::updateSpinRate(void)
 		if (thisMoveTime - lastMoveTime >= 100)
 		{
 			updateSpinRateXY(lastX, lastY);
-			lButtonDown = 1;
+			lButtonDown = true;
 		}
 	}
 }
@@ -556,7 +558,7 @@ void ModelWindow::releaseMouse(void)
 LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
 	forceRedraw();
-	if (rButtonDown)
+	if (rButtonDown || mButtonDown)
 	{
 		return 1;
 	}
@@ -568,7 +570,7 @@ LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 		{
 			updateSpinRateXY(xPos, yPos);
 		}
-		lButtonDown = 1;
+		lButtonDown = true;
 		captureMouse();
 		return 0;
 	}
@@ -579,7 +581,7 @@ LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 	forceRedraw();
 	if (lButtonDown)
 	{
-		lButtonDown = 0;
+		lButtonDown = false;
 		releaseMouse();
 		modelViewer->setCameraXRotate(0.0f);
 		modelViewer->setCameraYRotate(0.0f);
@@ -594,7 +596,7 @@ LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 LRESULT ModelWindow::doRButtonDown(WPARAM /*keyFlags*/, int /*xPos*/, int yPos)
 {
 	forceRedraw();
-	if (lButtonDown)
+	if (lButtonDown || mButtonDown)
 	{
 		return 1;
 	}
@@ -603,7 +605,7 @@ LRESULT ModelWindow::doRButtonDown(WPARAM /*keyFlags*/, int /*xPos*/, int yPos)
 		if (viewMode == LDVViewExamine)
 		{
 			originalZoomY = yPos;
-			rButtonDown = 1;
+			rButtonDown = true;
 			captureMouse();
 		}
 		return 0;
@@ -615,7 +617,7 @@ LRESULT ModelWindow::doRButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 	forceRedraw();
 	if (rButtonDown)
 	{
-		rButtonDown = 0;
+		rButtonDown = false;
 		modelViewer->setZoomSpeed(0.0f);
 		releaseMouse();
 		return 0;
@@ -626,22 +628,42 @@ LRESULT ModelWindow::doRButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 	}
 }
 
-/*
-LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
+LRESULT ModelWindow::doMButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
 	forceRedraw();
-	if (showPreferences())
+	if (lButtonDown || rButtonDown)
 	{
+		return 1;
+	}
+	else
+	{
+		lastX = xPos;
+		lastY = yPos;
+		mButtonDown = true;
+		captureMouse();
 		return 0;
 	}
-	return 1;
 }
-*/
+
+LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/)
+{
+	forceRedraw();
+	if (mButtonDown)
+	{
+		mButtonDown = false;
+		releaseMouse();
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
 	forceRedraw();
-	if (lButtonDown || rButtonDown)
+	if (lButtonDown || rButtonDown || mButtonDown)
 	{
 		lastMoveTime = timeGetTime();
 	}
@@ -676,6 +698,13 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 		}
 		updateZoom(yPos);
 		return 0;
+	}
+	if (mButtonDown)
+	{
+		if (viewMode == LDVViewExamine)
+		{
+			updatePanXY(xPos, yPos);
+		}
 	}
 	return 1;
 }
