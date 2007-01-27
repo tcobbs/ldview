@@ -402,6 +402,10 @@ SOURCE=..\..\..\users\tcobbs\LDView\WebPages\index.new.html
 # End Group
 # Begin Source File
 
+SOURCE=.\Build.txt
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDView.exe.manifest
 # End Source File
 # Begin Source File

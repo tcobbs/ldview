@@ -855,6 +855,10 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath=".\Build.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\LDView.exe.manifest"
 			>
 			<FileConfiguration
