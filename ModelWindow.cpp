@@ -114,9 +114,9 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
-		MAKEINTRESOURCE(IDR_STUDLOGO_PNG), "PNG");
+		MAKEINTRESOURCE(IDR_STUDLOGO_PNG), RT_RCDATA);
 	HRSRC hFontResource = FindResource(NULL, MAKEINTRESOURCE(IDR_SANS_FONT),
-		"TCFont");
+		RT_RCDATA);
 
 	loadSettings();
 	if (hStudLogoResource)

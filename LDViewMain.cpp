@@ -273,7 +273,7 @@ static void setupLocalStrings(void)
 	HMODULE hModule = (HMODULE)CUIWindow::getLanguageModule();
 	HRSRC hLocalStringsResource = FindResource(hModule,
 		MAKEINTRESOURCE(IDR_LOCAL_STRINGS),
-		"LocalStrings");
+		RT_RCDATA);
 	bool done = false;
 
 	if (hLocalStringsResource)
