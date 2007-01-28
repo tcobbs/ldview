@@ -1,5 +1,7 @@
+
+!include "..\Make.inc"
+
 CPPFLAGS = $(CPPGLOBAL) /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D _TC_STATIC /FpReleaseMinDependency\LDViewThumbs.pch /Yc"stdafx.h" /c
-OBJDIR = ReleaseMinDependency
 
 all: $(OBJDIR) $(OBJDIR)\LDViewThumbs.dll
 
@@ -21,4 +23,3 @@ lclean:
 
 clean: lclean
 
-!include "..\Make.inc"
