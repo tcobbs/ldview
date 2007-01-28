@@ -17,6 +17,9 @@
 #ifndef IDC_STATIC
 #define IDC_STATIC      (-1)
 #endif
+#ifndef MANIFEST
+#define MANIFEST        24
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -59,6 +62,9 @@ BEGIN
     "#include ""dlgs.h""\r\n"
     "#ifndef IDC_STATIC\r\n"
     "#define IDC_STATIC      (-1)\r\n"
+    "#endif\r\n"
+    "#ifndef MANIFEST\r\n"
+    "#define MANIFEST        24\r\n"
     "#endif\0"
 END
 
@@ -1148,25 +1154,13 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// PNG
+// Data
 //
 
-IDR_STUDLOGO_PNG        PNG     DISCARDABLE     "Textures\\StudLogo.png"
-IDR_SS_PREVIEW          PNG     DISCARDABLE     "Icons\\screen_saver_preview.png"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// TCFONT
-//
-
-IDR_SANS_FONT           TCFONT  DISCARDABLE     "Textures\\SansSerif.fnt"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// LOCALSTRINGS
-//
-
-IDR_LOCAL_STRINGS       LOCALSTRINGS DISCARDABLE "LDViewMessages.ini"
+IDR_STUDLOGO_PNG        RCDATA  DISCARDABLE     "Textures\\StudLogo.png"
+IDR_SS_PREVIEW          RCDATA  DISCARDABLE     "Icons\\screen_saver_preview.png"
+IDR_SANS_FONT           RCDATA  DISCARDABLE     "Textures\\SansSerif.fnt"
+IDR_LOCAL_STRINGS       RCDATA  DISCARDABLE     "LDViewMessages.ini"
 
 /////////////////////////////////////////////////////////////////////////////
 //
