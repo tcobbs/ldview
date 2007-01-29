@@ -1,16 +1,16 @@
 In order to build this DLL, you first need to get LDView set up and built.
 Please see Build.txt in the main LDView directory for instructions on doing
-that.  In commercial versions of VC++ 2005, you should hopefully just be able to
-build this project and it will work.  In other compilers, you need to do some
-setup work first.
+that.
 
-I believe that if you have the commercial version of Visual Studio 2005, you
-can just open the LDView solution and build the LDViewThumbs project.  I'm not
-100% sure of this, though.
+
 
 ===============================================================================
 ============================== VC++ 2005 Express ==============================
 ===============================================================================
+
+Note: I believe that if you have the commercial version of Visual Studio 2005,
+you can just open the LDView solution and build the LDViewThumbs project.  This
+hasn't been tested, though.
 
 Unfortunately, the ATL portion of the Platform SDK isn't compatible as-is with
 VC++ 2005.  Fortunately, only minor changes are needed in order to make it
@@ -56,11 +56,28 @@ If you want more information about these changes, go here:
 http://www.codeproject.com/wtl/WTLExpress.asp?msg=1336063
 
 You should now be able to build LDViewThumbs.  Just open LDView.sln in the main
-LDView directory, select LDViewThumbs as the default project, and build.
+LDView directory, right click on LDViewThumbs in the project list, and select
+build.
+
 
 
 ===============================================================================
 =============================== Visual Studio 6 ===============================
 ===============================================================================
 
-Coming soon.
+Just open LDView.dsw in the main LDView directory, right click on LDViewThumbs
+in the project list, and select build.
+
+
+
+===============================================================================
+============================== VC++ Toolkit 2003 ==============================
+===============================================================================
+
+Run the following commands from a command prompt in the LDViewThumbs directory:
+
+"C:\Program Files\Microsoft Visual C++ Toolkit 2003\vcvars32.bat"
+nmake -f Makefile.vc
+
+(Note that you may have to adjust the path to the VC++ Toolkit 2003 directory to
+match its location on your computer.)

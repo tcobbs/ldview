@@ -1,17 +1,16 @@
 LDView should be buildable with Visual Studio 6, Visual C++ Toolkit 2003, and
-Visual C++ Express 2005.  Since Visual C++ Toolkit 2003 has been replaced by
-Visaul C++ Express 2005, I won't be providing instructions for building with
-Visual C++ Toolkit 2003.  (Scroll down for Visual Studio 6 instructions.)
+Visual C++ Express 2005.  (Scroll down to the appropriate sections for Visual
+Studio 6 and Visual C++ Toolkit 2003.)
 
-Note that this should also build in the commercial version of Visual Studio
-2005.  I believe that in that version, you can skip everything below related to
-the Platform SDK.  (Start at the Boost section.)  I won't make guarantees,
-though.
 
 
 ===============================================================================
 ============================== VC++ 2005 Express ==============================
 ===============================================================================
+
+Note: this should also build in the commercial version of Visual Studio 2005.  I
+believe that in that version, you can skip everything below related to the
+Platform SDK.  (Start at the Boost section.)  This hasn't been tested, though.
 
 Install the Microsoft Platform SDK for Windows Server 2003 R2.  At the time of
 this writing, this could be downloaded from the following location:
@@ -69,7 +68,7 @@ the current directory.  Copy that file to the main boost directory
 (boost_1_33_1 in my case).  Next, run the following commands:
 
 cd ..\..\..
-bjam --with-thread -sTOOLS=vc-8_0 stage
+bjam --without-python --with-thread -sTOOLS=vc-8_0 stage
 
 When the above command complete, you should have the boost thread library built.
 Now you need to copy files to the LDView source tree.  Copy the boost directory
@@ -142,7 +141,7 @@ directory under the current directory.  Copy that file to the main boost
 directory (boost_1_33_1 in my case).  Next, run the following commands:
 
 cd ..\..\..
-bjam --with-thread -sTOOLS=msvc stage
+bjam --without-python --with-thread -sTOOLS=msvc stage
 
 When the above command completes, you should have the boost thread library
 built.  Now you need to copy files to the LDView source tree.  Copy the boost
@@ -153,3 +152,51 @@ copy the stage\lib directory into the boost directory in the LDView source tree
 
 You should now be able to build LDView.  Just open LDView.dsw, make sure LDView
 is set as the default project, and build.
+
+
+
+===============================================================================
+============================== VC++ Toolkit 2003 ==============================
+===============================================================================
+
+Note: this should also build in the commercial version of Visual Studio 2003.  I
+believe that in that version, you can skip the Platform SDK step below.  (Start
+at the Boost section.)  This hasn't been tested, though.
+
+First, follow the Microsoft Platform SDK instructions in the Visual Studio 6
+section above.
+
+Download the Boost library from http://www.boost.org.  After extracting it to
+a directory somewhere, open a command window and go into the following directory
+inside the location you extracted the library to:
+
+boost_1_33_1\tools\build\jam_src
+
+
+(Change boost_1_33_1 to match whatever version of boost you downloaded.)  Run
+the following (include the quotes):
+
+"C:\Program Files\Microsoft Visual C++ Toolkit 2003\vcvars32.bat"
+
+(Note that the above assumes that you installed Visual C++ Toolkit 2003 into the
+default location.  If not, adjust accordingly.  Make sure to include quotes
+around the entire command line if any part of the path contains spaces.)  Next,
+run the following command:
+
+build.bat
+
+The above will create bjam.exe.  This should be located in the bin.ntx86
+directory under the current directory.  Copy that file to the main boost
+directory (boost_1_33_1 in my case).  Next, run the following commands:
+
+cd ..\..\..
+bjam --without-python --with-thread -sTOOLS=vc-7_1 stage
+
+When the above command completes, you should have the boost thread library
+built.  Now you need to copy files to the LDView source tree.  Copy the boost
+directory inside the boost_1_33_1 directory into the boost\include directory in
+the LDView source directory (so you end up with boost\include\boost).  Next,
+copy the stage\lib directory into the boost directory in the LDView source tree
+(so that you end up with boost\lib).
+
+To build LDView, run make.cmd.
