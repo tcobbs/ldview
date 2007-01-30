@@ -804,3 +804,22 @@ void LDHtmlInventory::restoreAfterSnapshot(LDrawModelViewer *modelViewer)
 		m_viewPoint->release();
 	}
 }
+
+bool LDHtmlInventory::isSnapshotNeeded(void) const
+{
+	if (m_showModel)
+	{
+		const char *snapshotPath = getSnapshotPath();
+		FILE *pFile = fopen(snapshotPath, "rb");
+
+		if (pFile)
+		{
+			fclose(pFile);
+		}
+		else
+		{
+			return true;
+		}
+	}
+	return false;
+}
