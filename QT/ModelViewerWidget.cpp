@@ -2852,6 +2852,39 @@ void ModelViewerWidget::doShowPovCamera(void)
 	}
 }
 
+void ModelViewerWidget::doPartList(
+	LDHtmlInventory *htmlInventory,
+	LDPartsList *partsList,
+	const char *filename)
+{
+	if (htmlInventory->generateHtml(filename, partsList,
+		modelViewer->getFilename()))
+	{
+		if (htmlInventory->isSnapshotNeeded())
+		{
+			char *snapshotPath = copyString(htmlInventory->getSnapshotPath());
+			bool saveZoomToFit = modelViewer->getForceZoomToFit();
+
+			htmlInventory->prepForSnapshot(modelViewer);
+			modelViewer->setForceZoomToFit(true);
+			// By saying it's from the command line, none of the above settings
+			// will be written to TCUserDefaults.  I know it's not really from
+			// the command line, but it produces the behavior we want.
+			saveImageType = PNG_IMAGE_TYPE_INDEX;
+			saveImage(snapshotPath, 400, 300);
+			delete snapshotPath;
+			htmlInventory->restoreAfterSnapshot(modelViewer);
+			modelViewer->setForceZoomToFit(saveZoomToFit);
+			doApply();
+		}
+	}
+	else
+	{
+		QMessageBox::warning(this,"LDView",
+			TCLocalStrings::get("PLGenerateError"),
+			QMessageBox::Ok, QMessageBox::NoButton);
+	}
+}
 void ModelViewerWidget::doPartList(void)
 {
 	if (modelViewer)
@@ -2885,8 +2918,7 @@ void ModelViewerWidget::doPartList(void)
         		if (fileDialog->exec() == QDialog::Accepted)
         		{
 					QString filename = fileDialog->selectedFile();
-					htmlInventory->generateHtml(filename.ascii(),
-						partsList, modelViewer->getFilename());
+					doPartList(htmlInventory, partsList, filename.ascii());
         		}
 			}
 			htmlInventory->release();
@@ -3464,3 +3496,4 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 	QDir::setCurrent(dir);
 	return retValue;
 }
+
