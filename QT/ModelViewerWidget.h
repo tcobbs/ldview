@@ -38,6 +38,7 @@ class QTextBrowser;
 class AlertHandler;
 class LDLibraryUpdater;
 class QProgressDialog;
+class LDHtmlInventory;
 
 #define MAX_MOUSE_BUTTONS 10
 
@@ -76,6 +77,8 @@ public:
 	void doViewStatusBar(bool flag);
 	void doViewToolBar(bool flag);
 	void doViewErrors(void);
+	void doPartList(LDHtmlInventory *htmlInventory,
+			LDPartsList *partsList, const char *filename);
 	void doPartList();
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
