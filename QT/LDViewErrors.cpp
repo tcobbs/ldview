@@ -152,35 +152,35 @@ int LDViewErrors::populateListView(void)
 			}
 		}
 		listViewPopulated = true;
+    	if (errorCount > 0)
+    	{
+        	if (errorCount == 1)
+        	{
+            	sprintf(buf, TCLocalStrings::get("ErrorTreeOneError"));
+        	}
+        	else
+        	{
+            	sprintf(buf, TCLocalStrings::get("ErrorTreeNErrors"), errorCount);
+        	}
+        	if (warningCount > 0)
+        	{
+            	strcat(buf, ", ");
+        	}
+    	}
+    	if (warningCount > 0)
+    	{
+        	if (warningCount == 1)
+        	{
+            	strcat(buf, TCLocalStrings::get("ErrorTreeOneWarning"));
+        	}
+        	else
+        	{
+            	sprintf(buf + strlen(buf),
+               		TCLocalStrings::get("ErrorTreeNWarnings"), warningCount);
+        	}
+    	}
+		messageText->setText(buf);
 	}
-    if (errorCount > 0)
-    {
-        if (errorCount == 1)
-        {
-            sprintf(buf, TCLocalStrings::get("ErrorTreeOneError"));
-        }
-        else
-        {
-            sprintf(buf, TCLocalStrings::get("ErrorTreeNErrors"), errorCount);
-        }
-        if (warningCount > 0)
-        {
-            strcat(buf, ", ");
-        }
-    }
-    if (warningCount > 0)
-    {
-        if (warningCount == 1)
-        {
-            strcat(buf, TCLocalStrings::get("ErrorTreeOneWarning"));
-        }
-        else
-        {
-            sprintf(buf + strlen(buf),
-                TCLocalStrings::get("ErrorTreeNWarnings"), warningCount);
-        }
-    }
-	messageText->setText(buf);
 	return errorCount+warningCount;
 }
 
