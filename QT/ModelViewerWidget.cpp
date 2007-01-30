@@ -1662,7 +1662,7 @@ void ModelViewerWidget::doHelpContents(void)
 	}
 	if(!helpContents)
 	{
-		QString helpFilename = findPackageFile("Help.html");
+		QString helpFilename = findPackageFile(TCLocalStrings::get("HelpHtml"));
 		QFile file(helpFilename);
 		if (!file.exists())
 		{
