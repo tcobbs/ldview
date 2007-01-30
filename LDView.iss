@@ -55,7 +55,7 @@ Source: 8464.mpd; DestDir: {app}; Flags: ignoreversion
 Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
 Source: Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion; Tasks: screensaver
-Source: LDViewThumbs\ReleaseMinDependency\LDViewThumbs.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
+Source: LDViewThumbs\Release\LDViewThumbs.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
