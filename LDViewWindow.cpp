@@ -5052,22 +5052,3 @@ LRESULT LDViewWindow::generatePartsList(void)
 	}
 	return 0;
 }
-
-bool LDHtmlInventory::isSnapshotNeeded(void) const
-{
-	if (m_showModel)
-	{
-		const char *snapshotPath = getSnapshotPath();
-		FILE *pFile = fopen(snapshotPath, "rb");
-
-		if (pFile)
-		{
-			fclose(pFile);
-		}
-		else
-		{
-			return true;
-		}
-	}
-	return false;
-}
