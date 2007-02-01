@@ -86,19 +86,70 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 	if (tableFile)
 	{
 		long fileSize;
-		char *stringTable;
+		TCByte *fileData;
 
 		fseek(tableFile, 0, SEEK_END);
 		fileSize = ftell(tableFile);
 		fseek(tableFile, 0, SEEK_SET);
-		stringTable = new char[fileSize + 1];
-		if (fread(stringTable, 1, fileSize, tableFile) == (unsigned)fileSize)
+		fileData = new TCByte[fileSize + 1];
+		if (fread(fileData, 1, fileSize, tableFile) == (unsigned)fileSize)
 		{
-			// Null terminate the string table
-			stringTable[fileSize] = 0;
-			retValue = setStringTable(stringTable, replace);
+			bool bUnicode16 = false;
+			bool bBigEndian = true;
+
+			if (fileData[0] == 0xFF && fileData[1] == 0xFE)
+			{
+				// Little Endian Unicode
+				bUnicode16 = true;
+				bBigEndian = false;
+			}
+			else if (fileData[0] == 0xFE && fileData[1] == 0xFF)
+			{
+				// Big Endian Unicode
+				bUnicode16 = true;
+			}
+			if (bUnicode16)
+			{
+				std::wstring wstringTable;
+				int i;
+				int count = fileSize / 2;
+
+				wstringTable.reserve(count + 1);
+				// Note: skip first 2 bytes, which are the Byte Order Mark.
+				for (i = 2; i < fileSize; i += 2)
+				{
+					int uByte;
+					int lByte;
+
+					if (bBigEndian)
+					{
+						uByte = fileData[i];
+						lByte = fileData[i + 1];
+					}
+					else
+					{
+						uByte = fileData[i + 1];
+						lByte = fileData[i];
+					}
+					wstringTable.push_back((wchar_t)((uByte << 8) | lByte));
+				}
+				// wstringTable now contains the string table.
+				// TODO: Now we need to actually load it.
+				// Convert existing setStringTable function to do the whole
+				// thing in a wstring (while back-converting to narrow strings),
+				// and then reimplement the narrow setStringTable function to
+				// just convert to a wide string and then call the wide version.
+			}
+			else
+			{
+				char *stringTable = (char *)fileData;
+
+				// Null terminate the string table
+				stringTable[fileSize] = 0;
+				retValue = setStringTable(stringTable, replace);
+			}
 		}
-		delete stringTable;
+		delete fileData;
 		fclose(tableFile);
 	}
 	return retValue;
@@ -127,7 +178,7 @@ void TCLocalStrings::mbstowstring(
 		{
 			length = strlen(src);
 		}
-		dst.reserve(length + 1);
+		dst.resize(length);
 		// Even though we don't check, we can't pass NULL instead of &state and
 		// still be thread-safe.
 		mbsrtowcs(&dst[0], &src, length + 1, &state);
@@ -139,7 +190,7 @@ void TCLocalStrings::wstringtostring(std::string &dst, const std::wstring &src)
 	const wchar_t *temp = src.c_str();
 	mbstate_t state = { 0 };
 
-	dst.reserve(src.length() + 1);
+	dst.resize(src.length() + 1);
 	// Even though we don't check, we can't pass NULL instead of &state and
 	// still be thread-safe.
 	wcsrtombs(&dst[0], &temp, src.length() + 1, &state);
