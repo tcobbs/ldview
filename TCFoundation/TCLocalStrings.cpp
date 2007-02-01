@@ -121,19 +121,28 @@ void TCLocalStrings::mbstowstring(
 	dst.clear();
 	if (src)
 	{
+		mbstate_t state = { 0 };
+
 		if (length == -1)
 		{
 			length = strlen(src);
 		}
 		dst.reserve(length + 1);
-		mbsrtowcs(&dst[0], &src, length + 1, NULL);
+		// Even though we don't check, we can't pass NULL instead of &state and
+		// still be thread-safe.
+		mbsrtowcs(&dst[0], &src, length + 1, &state);
 	}
 }
 
 void TCLocalStrings::wstringtostring(std::string &dst, const std::wstring &src)
 {
+	const wchar_t *temp = src.c_str();
+	mbstate_t state = { 0 };
+
 	dst.reserve(src.length() + 1);
-	wcstombs(&dst[0], src.c_str(), src.length() + 1);
+	// Even though we don't check, we can't pass NULL instead of &state and
+	// still be thread-safe.
+	wcsrtombs(&dst[0], &temp, src.length() + 1, &state);
 }
 
 bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
