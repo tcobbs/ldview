@@ -3,6 +3,7 @@
 #include "mystring.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 class TCStringObject : public TCObject
@@ -72,6 +73,11 @@ const char *TCLocalStrings::get(const char *key)
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
 
+const wchar_t *TCLocalStrings::get(const wchar_t *key)
+{
+	return getCurrentLocalStrings()->instGetLocalString(key);
+}
+
 bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 {
 	FILE *tableFile = fopen(filename, "rb");
@@ -107,9 +113,34 @@ TCLocalStrings *TCLocalStrings::getCurrentLocalStrings(void)
 	return currentLocalStrings;
 }
 
+void TCLocalStrings::mbstowstring(
+	std::wstring &dst,
+	const char *src,
+	int length /*= -1*/)
+{
+	dst.clear();
+	if (src)
+	{
+		if (length == -1)
+		{
+			length = strlen(src);
+		}
+		dst.reserve(length + 1);
+		mbsrtowcs(&dst[0], &src, length + 1, NULL);
+	}
+}
+
+void TCLocalStrings::wstringtostring(std::string &dst, const std::wstring &src)
+{
+	dst.reserve(src.length() + 1);
+	wcstombs(&dst[0], src.c_str(), src.length() + 1);
+}
+
 bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 {
 	bool sectionFound = false;
+	int lastKeyIndex = -1;
+	std::string lastKey;
 
 	if (replace)
 	{
@@ -169,13 +200,19 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 						if (keyLen)
 						{
 							bool appended = false;
+							std::wstring wkey;
+							std::wstring wvalue;
 
+							mbstowstring(wkey, key, keyLen);
 							value = copyString(equalSpot + 1);
 							processEscapedString(value);
+							mbstowstring(wvalue, value);
 //							value = stringByReplacingSubstring(equalSpot + 1,
 //								"\\n", "\n");
 							if (isdigit(key[keyLen - 1]))
 							{
+								int keyIndex;
+
 								// If the last character of the key is a digit,
 								// then it must be a multi-line key.  So strip
 								// off all trailing digits, and append to any
@@ -186,8 +223,23 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 								while (isdigit(key[keyLen - 1]) && keyLen > 0)
 								{
 									keyLen--;
-									key[keyLen] = 0;
 								}
+								keyIndex = atoi(&key[keyLen]);
+								key[keyLen] = 0;
+								if (lastKey != key)
+								{
+									lastKeyIndex = 0;
+								}
+								if (lastKey == key &&
+									lastKeyIndex + 1 != keyIndex)
+								{
+									debugPrintf(
+										"Key index out of sequence: %s%d\n",
+										key, keyIndex);
+								}
+								lastKeyIndex = keyIndex;
+								lastKey = key;
+								mbstowstring(wkey, key, keyLen);
 								stringObject = (TCStringObject*)stringDict->
 									objectForKey(key);
 								if (stringObject)
@@ -206,6 +258,10 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 									stringObject->setString(newValue);
 									delete newValue;
 									appended = true;
+									// wstring copy constructor broken in VC++
+									// 2005?!?!?  The below doesn't work without
+									// the .c_str() calls.
+									m_strings[wkey.c_str()] += wvalue.c_str();
 								}
 							}
 							if (!appended)
@@ -218,6 +274,10 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 								stringObject = new TCStringObject(value);
 								stringDict->setObjectForKey(stringObject, line);
 								stringObject->release();
+								// wstring copy constructor broken in VC++
+								// 2005?!?!?  The below doesn't work without the
+								// .c_str() calls.
+								m_strings[wkey.c_str()] = wvalue.c_str();
 							}
 							delete value;
 						}
@@ -246,6 +306,26 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 	return sectionFound;
 }
 
+const wchar_t *TCLocalStrings::instGetLocalString(const wchar_t *key)
+{
+	WStringWStringMap::iterator it = m_strings.find(key);
+
+	if (it != m_strings.end())
+	{
+		return it->second.c_str();
+	}
+	else
+	{
+		std::string temp;
+
+		wstringtostring(temp, key);
+		debugPrintf("LocalString %s not found!!!!!!\n", temp.c_str());
+		// It should really be NULL, but that means a mistake will likely cause
+		// a crash.  At least with an empty string it's less likely to crash.
+		return L"";
+	}
+}
+
 const char *TCLocalStrings::instGetLocalString(const char *key)
 {
 	TCStringObject *stringObject =
@@ -258,7 +338,6 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 	else
 	{
 		debugPrintf("LocalString %s not found!!!!!!\n", key);
-//		return NULL;
 		// It should really be NULL, but that means a mistake will likely cause
 		// a crash.  At least with an empty string it's less likely to crash.
 		return "";

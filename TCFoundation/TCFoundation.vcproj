@@ -1144,6 +1144,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TCStlIncludes.h"
+				>
+			</File>
+			<File
 				RelativePath="TCStringArray.h"
 				>
 			</File>
