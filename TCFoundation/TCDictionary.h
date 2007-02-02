@@ -13,6 +13,7 @@ class TCExport TCDictionary: public TCObject
 		virtual void setObjectForKey(TCObject*, const char*);
 		/*virtual*/ TCObject* objectForKey(const char*);
 		TCObjectArray *allObjects(void) { return objects; }
+		TCSortedStringArray *allKeys(void) { return keys; }
 		virtual int removeObjectForKey(const char*);
 		virtual void removeAll(void);
 		virtual int isCaseSensitve(void);

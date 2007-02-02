@@ -9,6 +9,7 @@
 #endif
 
 TCExport char *copyString(const char *string, int pad = 0);
+TCExport wchar_t *copyString(const wchar_t *string, int pad = 0);
 
 #ifndef __APPLE__
 TCExport char *strnstr(const char *s1, const char *s2, size_t n);
@@ -45,8 +46,11 @@ TCExport char* directoryFromPath(const char*);
 TCExport char* findExecutable(const char* executable);
 
 TCExport void stripCRLF(char*);
+TCExport void stripCRLF(wchar_t*);
 TCExport void stripTrailingWhitespace(char*);
+TCExport void stripTrailingWhitespace(wchar_t*);
 TCExport void stripLeadingWhitespace(char*);
+TCExport void stripLeadingWhitespace(wchar_t*);
 TCExport void stripTrailingPathSeparators(char*);
 TCExport void replaceStringCharacter(char*, char, char, int = 1);
 TCExport char *stringByReplacingSubstring(const char* string,
@@ -62,11 +66,14 @@ TCExport void debugPrintf(int level, const char *format, ...);
 TCExport void indentPrintf(int indent, const char *format, ...);
 
 TCExport void processEscapedString(char *string);
+TCExport void processEscapedString(wchar_t *string);
 
 #ifdef WIN32
 
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
+#define wcscasecmp wcsicmp
+#define wcsncasecmp wcsnicmp
 
 #else // WIN32
 
