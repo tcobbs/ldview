@@ -121,7 +121,7 @@ Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Tr
 			cd ..\..
 
 
-installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss
+installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss LDViewThumbs\Release\LDViewThumbs.dll
 	"$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
 
 thumbs:		LDViewThumbs\Release\LDViewThumbs.dll
