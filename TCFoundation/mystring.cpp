@@ -7,6 +7,7 @@
 
 #ifndef WIN32
 #include <stdlib.h>
+#include <wchar.h>
 #endif
 
 static int debugLevel = 0;
