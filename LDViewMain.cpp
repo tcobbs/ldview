@@ -306,6 +306,7 @@ static void setupLocalStrings(void)
 	{
 		TCLocalStrings::loadStringTable("LDViewMessages.ini");
 	}
+	//TCLocalStrings::dumpTable("C:\\Temp\\ST-ASCII.txt", "ASCII");
 }
 
 static void loadLanguageModule(void)

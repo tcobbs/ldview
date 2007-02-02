@@ -1,5 +1,6 @@
 #include "TCLocalStrings.h"
 #include "TCDictionary.h"
+#include "TCSortedStringArray.h"
 #include "mystring.h"
 
 #include <stdio.h>
@@ -68,6 +69,11 @@ bool TCLocalStrings::setStringTable(const char *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
+bool TCLocalStrings::setStringTable(const wchar_t *stringTable, bool replace)
+{
+	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
+}
+
 const char *TCLocalStrings::get(const char *key)
 {
 	return getCurrentLocalStrings()->instGetLocalString(key);
@@ -97,6 +103,7 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 			bool bUnicode16 = false;
 			bool bBigEndian = true;
 
+			// Todo? 32-bit Unicode?
 			if (fileData[0] == 0xFF && fileData[1] == 0xFE)
 			{
 				// Little Endian Unicode
@@ -134,11 +141,7 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 					wstringTable.push_back((wchar_t)((uByte << 8) | lByte));
 				}
 				// wstringTable now contains the string table.
-				// TODO: Now we need to actually load it.
-				// Convert existing setStringTable function to do the whole
-				// thing in a wstring (while back-converting to narrow strings),
-				// and then reimplement the narrow setStringTable function to
-				// just convert to a wide string and then call the wide version.
+				retValue = setStringTable(wstringTable.c_str(), replace);
 			}
 			else
 			{
@@ -185,6 +188,27 @@ void TCLocalStrings::mbstowstring(
 	}
 }
 
+void TCLocalStrings::wcstostring(
+	std::string &dst,
+	const wchar_t *src,
+	int length /*= -1*/)
+{
+	dst.clear();
+	if (src)
+	{
+		mbstate_t state = { 0 };
+
+		if (length == -1)
+		{
+			length = wcslen(src);
+		}
+		dst.resize(length);
+		// Even though we don't check, we can't pass NULL instead of &state and
+		// still be thread-safe.
+		wcsrtombs(&dst[0], &src, length + 1, &state);
+	}
+}
+
 void TCLocalStrings::wstringtostring(std::string &dst, const std::wstring &src)
 {
 	const wchar_t *temp = src.c_str();
@@ -194,6 +218,40 @@ void TCLocalStrings::wstringtostring(std::string &dst, const std::wstring &src)
 	// Even though we don't check, we can't pass NULL instead of &state and
 	// still be thread-safe.
 	wcsrtombs(&dst[0], &temp, src.length() + 1, &state);
+}
+
+void TCLocalStrings::dumpTable(const char *filename, const char *header)
+{
+	return getCurrentLocalStrings()->instDumpTable(filename, header);
+}
+
+void TCLocalStrings::instDumpTable(const char *filename, const char *header)
+{
+	FILE *file = fopen(filename, "w");
+
+	if (file)
+	{
+		TCSortedStringArray *keys = stringDict->allKeys();
+		int i;
+		int count = keys->getCount();
+
+		if (header)
+		{
+			fprintf(file, "%s\n", header);
+		}
+		for (i = 0; i < count; i++)
+		{
+			const char *key = keys->stringAtIndex(i);
+			const char *value = ((TCStringObject *)stringDict->objectForKey(key))->getString();
+
+			fprintf(file, "%s = %s\n", key, value);
+		}
+		for (WStringWStringMap::iterator it = m_strings.begin(); it != m_strings.end(); it++)
+		{
+			fprintf(file, "%S = %S\n", it->first.c_str(), it->second.c_str());
+		}
+		fclose(file);
+	}
 }
 
 bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
@@ -338,6 +396,173 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 								// 2005?!?!?  The below doesn't work without the
 								// .c_str() calls.
 								m_strings[wkey.c_str()] = wvalue.c_str();
+							}
+							delete value;
+						}
+					}
+				}
+			}
+			delete line;
+			if (!eol[0])
+			{
+				// If there isn't an EOL at the end of the file, we're done now.
+				break;
+			}
+			stringTable += len + 1;
+			while (stringTable[0] == '\r' || stringTable[0] == '\n')
+			{
+				stringTable++;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+	// Note that the load is considered a success if the [StringTable] section
+	// is found in the data.
+	return sectionFound;
+}
+
+bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable, bool replace)
+{
+	bool sectionFound = false;
+	int lastKeyIndex = -1;
+	std::wstring lastKey;
+
+	if (replace)
+	{
+		stringDict->removeAll();
+	}
+	while (1)
+	{
+		const wchar_t *eol = wcschr(stringTable, '\n');
+
+		if (!eol && wcslen(stringTable) > 0)
+		{
+			eol = stringTable + wcslen(stringTable);
+		}
+		if (eol)
+		{
+			int len = eol - stringTable;
+			wchar_t *line = new wchar_t[len + 1];
+
+			wcsncpy(line, stringTable, len);
+			line[len] = 0;
+			stripCRLF(line);
+			stripLeadingWhitespace(line);
+			if (!sectionFound)
+			{
+				// We haven't found the [StringTable] section yet
+				stripTrailingWhitespace(line);
+				if (wcscasecmp(line, L"[StringTable]") == 0)
+				{
+					sectionFound = true;
+				}
+				// Note that we are ignoring all lines until we find the section
+			}
+			else
+			{
+				// We're in the [StringTable] section
+				if (line[0] == '[' && wcschr(line, ']'))
+				{
+					// We found another section header, which means we are at
+					// the end of the [StringTable] section, so we're done
+					break;
+				}
+				else if (line[0] != ';')
+				{
+					// Comment lines begin with ;
+					wchar_t *equalSpot = wcschr(line, '=');
+
+					if (equalSpot)
+					{
+						wchar_t *value;
+						wchar_t *key = line;
+						TCStringObject *stringObject;
+						int keyLen;
+
+						*equalSpot = 0;
+						stripTrailingWhitespace(key);
+						keyLen = wcslen(key);
+						if (keyLen)
+						{
+							bool appended = false;
+							std::string skey;
+							std::string svalue;
+
+							wcstostring(skey, key, keyLen);
+							value = copyString(equalSpot + 1);
+							processEscapedString(value);
+							wcstostring(svalue, value);
+//							value = stringByReplacingSubstring(equalSpot + 1,
+//								"\\n", "\n");
+							if (isdigit(key[keyLen - 1]))
+							{
+								int keyIndex;
+
+								// If the last character of the key is a digit,
+								// then it must be a multi-line key.  So strip
+								// off all trailing digits, and append to any
+								// existing value.  Note that keys aren't
+								// allowed to end in a digit, so even if there
+								// is only one line, the key still gets the
+								// number stripped off the end.
+								while (isdigit(key[keyLen - 1]) && keyLen > 0)
+								{
+									keyLen--;
+								}
+								keyIndex = wcstoul(&key[keyLen], NULL, 10);
+								key[keyLen] = 0;
+								if (lastKey != key)
+								{
+									lastKeyIndex = 0;
+								}
+								if (lastKey == key &&
+									lastKeyIndex + 1 != keyIndex)
+								{
+									debugPrintf(
+										"Key index out of sequence: %s%d\n",
+										key, keyIndex);
+								}
+								lastKeyIndex = keyIndex;
+								lastKey = key;
+								wcstostring(skey, key, keyLen);
+								stringObject = (TCStringObject*)stringDict->
+									objectForKey(skey.c_str());
+								if (stringObject)
+								{
+									// If we've already got data for this key,
+									// we need to append to it and note that we
+									// did so.
+									char *newValue = new char[svalue.size() +
+										strlen(stringObject->getString()) + 1];
+
+									strcpy(newValue, stringObject->getString());
+									strcat(newValue, svalue.c_str());
+									// Note that we don't have to update the
+									// dict; we're simply updating the text in
+									// the string object already there.
+									stringObject->setString(newValue);
+									delete newValue;
+									appended = true;
+									m_strings[key] += value;
+								}
+							}
+							if (!appended)
+							{
+								if (stringDict->objectForKey(skey.c_str()))
+								{
+									debugPrintf("Local String key \"%s\" "
+										"defined multiple times.\n",
+										skey.c_str());
+								}
+								stringObject =
+									new TCStringObject(svalue.c_str());
+								stringDict->setObjectForKey(stringObject,
+									skey.c_str());
+								stringObject->release();
+								m_strings[key] = value;
 							}
 							delete value;
 						}

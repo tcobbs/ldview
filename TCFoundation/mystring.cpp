@@ -23,6 +23,18 @@ char *copyString(const char *string, int pad)
 	}
 }
 
+wchar_t *copyString(const wchar_t *string, int pad)
+{
+	if (string)
+	{
+		return wcscpy(new wchar_t[wcslen(string) + 1 + pad], string);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
 #ifndef __APPLE__
 
 char *strnstr(const char *s1, const char *s2, size_t n)
@@ -425,6 +437,19 @@ void stripCRLF(char* line)
 	}
 }
 
+void stripCRLF(wchar_t* line)
+{
+	if (line)
+	{
+		int length = wcslen(line);
+
+		while (length > 0 && (line[length-1] == '\r' || line[length-1] == '\n'))
+		{
+			line[--length] = 0;
+		}
+	}
+}
+
 void stripLeadingWhitespace(char* string)
 {
 	char *spot;
@@ -444,11 +469,44 @@ void stripLeadingWhitespace(char* string)
 	}
 }
 
+void stripLeadingWhitespace(wchar_t* string)
+{
+	wchar_t *spot;
+
+	for (spot = string; spot[0] == ' ' || spot[0] == '\t'; spot++)
+		;
+	if (spot[0])
+	{
+		if (spot != string)
+		{
+			memmove(string, spot, (wcslen(spot) + 1) * sizeof(wchar_t));
+		}
+	}
+	else
+	{
+		string[0] = 0;
+	}
+}
+
 void stripTrailingWhitespace(char* string)
 {
 	if (string)
 	{
 		int length = strlen(string);
+
+		while (length > 0 && (string[length - 1] == ' ' ||
+			string[length - 1] == '\t'))
+		{
+			string[--length] = 0;
+		}
+	}
+}
+
+void stripTrailingWhitespace(wchar_t* string)
+{
+	if (string)
+	{
+		int length = wcslen(string);
 
 		while (length > 0 && (string[length - 1] == ' ' ||
 			string[length - 1] == '\t'))
@@ -670,6 +728,57 @@ long long longLongFromString(char* string)
 
 #endif // WIN32
 
+static int escapeReplacement(char ch)
+{
+	switch (ch)
+	{
+	case 'a':
+		return '\a';
+		break;
+	case 'b':
+		return '\b';
+		break;
+	case 'f':
+		return '\f';
+		break;
+	case 'n':
+		return '\n';
+		break;
+	case 'r':
+		return '\r';
+		break;
+	case 't':
+		return '\t';
+		break;
+	case 'v':
+		return '\v';
+		break;
+	case '?':
+		return '\?';
+		break;
+	case '\'':
+		return '\'';
+		break;
+	case '"':
+		return '"';
+		break;
+	case '\\':
+		return '\\';
+		break;
+	case '0':
+		return '\0';
+		break;
+	default:
+		return -1;
+		break;
+	}
+}
+
+static int escapeReplacement(wchar_t wch)
+{
+	return escapeReplacement((char)wch);
+}
+
 void processEscapedString(char *string)
 {
 	int i;
@@ -684,48 +793,9 @@ void processEscapedString(char *string)
 	{
 		if (string[i] == '\\')
 		{
-			int replacement = 1000;
+			int replacement = escapeReplacement(string[i]);
 
-			switch (string[i + 1])
-			{
-			case 'a':
-				replacement = '\a';
-				break;
-			case 'b':
-				replacement = '\b';
-				break;
-			case 'f':
-				replacement = '\f';
-				break;
-			case 'n':
-				replacement = '\n';
-				break;
-			case 'r':
-				replacement = '\r';
-				break;
-			case 't':
-				replacement = '\t';
-				break;
-			case 'v':
-				replacement = '\v';
-				break;
-			case '?':
-				replacement = '\?';
-				break;
-			case '\'':
-				replacement = '\'';
-				break;
-			case '"':
-				replacement = '"';
-				break;
-			case '\\':
-				replacement = '\\';
-				break;
-			case '0':
-				replacement = '\0';
-				break;
-			}
-			if (replacement != 1000)
+			if (replacement != -1)
 			{
 				if (i > lastSpot)
 				{
@@ -743,5 +813,42 @@ void processEscapedString(char *string)
 	}
 	strcpy(&tmpString[tmpLen], &string[lastSpot]);
 	strcpy(string, tmpString);
+	delete tmpString;
+}
+
+void processEscapedString(wchar_t *string)
+{
+	int i;
+	int len = wcslen(string);
+	int tmpLen = 0;
+	wchar_t *tmpString = new wchar_t[len + 1];
+	int lastSpot = 0;
+
+	// Note we skip the last character, because even if it's a backslash, we
+	// can't do anything with it.
+	for (i = 0; i < len - 1; i++)
+	{
+		if (string[i] == '\\')
+		{
+			int replacement = escapeReplacement(string[i]);
+
+			if (replacement != -1)
+			{
+				if (i > lastSpot)
+				{
+					int count = i - lastSpot;
+
+					wcsncpy(&tmpString[tmpLen], &string[lastSpot], count);
+					tmpLen += count;
+					lastSpot += count;
+				}
+				lastSpot += 2;
+				tmpString[tmpLen++] = (wchar_t)replacement;
+				i++;
+			}
+		}
+	}
+	wcscpy(&tmpString[tmpLen], &string[lastSpot]);
+	wcscpy(string, tmpString);
 	delete tmpString;
 }
