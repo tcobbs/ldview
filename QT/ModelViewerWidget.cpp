@@ -2455,11 +2455,77 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
 	return buffer;
 }
 
+bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
+{
+	char* filename = modelViewer->getFilename();
+	saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
+	if (filename)
+	{
+		char baseFilename[1024];
+
+		if (strrchr(filename, '/'))
+		{
+			filename = strrchr(filename, '/') + 1;
+		}
+		if (strrchr(filename, '\\'))
+		{
+			filename = strrchr(filename, '\\') + 1;
+		}
+		strcpy(baseFilename, filename);
+		if (strchr(baseFilename, '.'))
+		{
+			*strchr(baseFilename, '.') = 0;
+		}
+		if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
+		{
+			int max = (int)(pow(10.0, saveDigits + 0.1));
+			int i;
+			char format[32];
+
+			sprintf(format, "%%s%%0%dd.%%s", saveDigits);
+			for (i = 1; i < max; i++)
+			{
+				if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+				{
+					sprintf(saveFilename, format, baseFilename, i, "png");
+				}
+				else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+				{
+					sprintf(saveFilename, format, baseFilename, i, "bmp");
+				}
+				if (!fileExists(saveFilename))
+				{
+					return true;
+				}
+			}
+		}
+		else
+		{
+			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+			{
+				sprintf(saveFilename, "%s.%s", baseFilename, "png");
+				return true;
+			}
+			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+			{
+				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 {
 	char *initialDir = Preferences::getLastOpenPath();
-																																							 
+
 	QDir::setCurrent(initialDir);
+	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
+	if (!calcSaveFilename(saveFilename, len))
+	{
+		saveFilename[0] = 0;
+	}
 	if (!saveDialog)
 	{
 		saveDialog = new QFileDialog(".",
@@ -2473,6 +2539,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
 	}
+	saveDialog->setSelection(saveFilename);
 	if (saveDialog->exec() == QDialog::Accepted)
 	{
 		QString filename = saveDialog->selectedFile();
@@ -2481,6 +2548,8 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveImageType = (strcmp(saveDialog->selectedFilter().ascii(),
 			"Portable Network Graphics (*.png)")==0 ? PNG_IMAGE_TYPE_INDEX :
 			BMP_IMAGE_TYPE_INDEX);
+		TCUserDefaults::setLongForKey(saveImageType,
+				SAVE_IMAGE_TYPE_KEY, false);
 		if(strlen(saveFilename)>5 && saveFilename[strlen(saveFilename)-4]!='.')
 		{
 			if (saveImageType == PNG_IMAGE_TYPE_INDEX)

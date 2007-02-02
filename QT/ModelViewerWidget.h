@@ -219,6 +219,7 @@ protected:
 	void libraryUpdateProgress(TCProgressAlert *alert);
 	void setLibraryUpdateProgress(float progress);
 	void setupUserAgent(void);
+	virtual bool calcSaveFilename(char* saveFilename, int len);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);
