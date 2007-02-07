@@ -3,7 +3,7 @@
     <name>AboutPanel</name>
     <message>
         <source>About LDView</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView névjegy</translation>
     </message>
     <message encoding="UTF-8">
         <source>LDView Version 3.1 (9 Oct 2006)
@@ -50,7 +50,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show Warnings</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Show the following errors:</source>
@@ -194,11 +194,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Po&amp;lling</source>
-        <translation type="unfinished"></translation>
+        <translation>Figye&amp;lés</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation type="unfinished">Szerkesztés</translation>
+        <translation>Szerk&amp;esztés</translation>
     </message>
     <message>
         <source>&amp;View</source>
@@ -222,7 +222,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation type="unfinished">Megyitás...</translation>
+        <translation type="unfinished">Megnyitás...</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -322,11 +322,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>About LDView</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView névjegy</translation>
     </message>
     <message>
         <source>About Qt</source>
-        <translation type="unfinished"></translation>
+        <translation>Qt névjegy</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -346,7 +346,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show or hide toolbar</source>
-        <translation>Eszközsor megjelenítése vagy mentése</translation>
+        <translation>Eszközsor megjelenítése vagy elrejtése</translation>
     </message>
     <message>
         <source>Ctrl+Shift+T</source>
@@ -362,7 +362,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show or hide this status bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Mutatja vagy elrejti az állapotsort</translation>
     </message>
     <message>
         <source>Ctrl+Shift+S</source>
@@ -522,7 +522,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Polling</source>
-        <translation type="unfinished"></translation>
+        <translation>Figyelés</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -534,7 +534,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Disable polling</source>
-        <translation type="unfinished"></translation>
+        <translation>Figyelés letiltva</translation>
     </message>
     <message>
         <source>Prompt</source>
@@ -562,15 +562,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Auto-&amp;update immediately</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Azonnal frissíti</translation>
     </message>
     <message>
         <source>Auto-update immediately</source>
-        <translation type="unfinished"></translation>
+        <translation>Azonnal frissíti</translation>
     </message>
     <message>
         <source>ActionGroup</source>
-        <translation type="unfinished"></translation>
+        <translation>ActionGroup</translation>
     </message>
     <message>
         <source>Examine Mode</source>
@@ -628,7 +628,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <name>PartListPanel</name>
     <message>
         <source>LDView Part List</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Alkatrész Lista</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -636,19 +636,19 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show model</source>
-        <translation type="unfinished"></translation>
+        <translation>Modell képe</translation>
     </message>
     <message>
         <source>Generate external style sheet</source>
-        <translation type="unfinished"></translation>
+        <translation>Külső stíluslap</translation>
     </message>
     <message>
         <source>Show part images</source>
-        <translation type="unfinished"></translation>
+        <translation>Alkatrészek képe</translation>
     </message>
     <message>
         <source>Column Order</source>
-        <translation type="unfinished"></translation>
+        <translation>Oszlopok sorrendje</translation>
     </message>
     <message>
         <source>Field</source>
@@ -691,7 +691,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Antialiased lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Élsimítás</translation>
     </message>
     <message>
         <source>Show frame rate</source>
@@ -707,23 +707,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Default color:</source>
-        <translation type="unfinished"></translation>
+        <translation>Alapértelmezett szín:</translation>
     </message>
     <message>
         <source>Background color:</source>
-        <translation type="unfinished"></translation>
+        <translation>Háttér szín:</translation>
     </message>
     <message>
         <source>Field of View:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lálószög:</translation>
     </message>
     <message>
         <source>Transparent</source>
-        <translation type="unfinished"></translation>
+        <translation>Átlátszó</translation>
     </message>
     <message>
         <source>Memory usage</source>
-        <translation type="unfinished"></translation>
+        <translation>Memória használat</translation>
     </message>
     <message>
         <source>Low</source>
@@ -739,27 +739,27 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Reset</source>
-        <translation type="unfinished"></translation>
+        <translation>Visszaállítás</translation>
     </message>
     <message>
         <source>Geometry</source>
-        <translation type="unfinished"></translation>
+        <translation>Geometria</translation>
     </message>
     <message>
         <source>&amp;Model</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Modell</translation>
     </message>
     <message>
         <source>Seam width</source>
-        <translation type="unfinished"></translation>
+        <translation>Illesztés vastagsága</translation>
     </message>
     <message>
         <source>&amp;Wireframe</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Drótháló</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Engedélyezett</translation>
     </message>
     <message>
         <source>Fog</source>
@@ -767,11 +767,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Remove hidden lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Takart vonalak eltávolítása</translation>
     </message>
     <message>
         <source>Thickness:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vékonyság:</translation>
     </message>
     <message>
         <source>BFC</source>
@@ -779,15 +779,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Red back faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Piros hátlapok</translation>
     </message>
     <message>
         <source>Green front faces</source>
-        <translation type="unfinished"></translation>
+        <translation>Zöld előlapok</translation>
     </message>
     <message>
         <source>&amp;Edge Lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Él&amp;ek</translation>
     </message>
     <message>
         <source>Show edges only</source>
@@ -807,15 +807,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>High quality</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Jó minősgében</translation>
     </message>
     <message>
         <source>Always black</source>
-        <translation type="unfinished"></translation>
+        <translation>Mindig fekete</translation>
     </message>
     <message>
         <source>Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Efektek</translation>
     </message>
     <message>
         <source>&amp;Lighting</source>
@@ -855,7 +855,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Monochrome</source>
-        <translation type="unfinished"></translation>
+        <translation>Monokróm</translation>
     </message>
     <message>
         <source>Color</source>
@@ -923,15 +923,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissítések</translation>
     </message>
     <message>
         <source>Internet Proxy</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet Proxy</translation>
     </message>
     <message>
         <source>Direct connection to the Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Direkt Internet kapcsolat</translation>
     </message>
     <message>
         <source>Manual proxy configuration:</source>
@@ -939,19 +939,19 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Proxy</source>
-        <translation type="unfinished"></translation>
+        <translation>Proxy</translation>
     </message>
     <message>
         <source>Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Port</translation>
     </message>
     <message>
         <source>90000;</source>
-        <translation type="unfinished"></translation>
+        <translation>90000;</translation>
     </message>
     <message>
         <source>Missing Parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiányzó alkatrészek</translation>
     </message>
     <message>
         <source>Automatically check ldraw.org for missing parts</source>
@@ -976,15 +976,15 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Új</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Töröl</translation>
     </message>
     <message>
         <source>Hot Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Gyors billentyű</translation>
     </message>
     <message>
         <source>OK</source>
