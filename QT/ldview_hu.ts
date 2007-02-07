@@ -12,7 +12,7 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <source>
@@ -42,11 +42,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <name>ErrorPanel</name>
     <message>
         <source>LDView Errors &amp; Warnings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">LDView Hibák és figyelmeztetések</translation>
     </message>
     <message>
         <source>Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibák</translation>
     </message>
     <message>
         <source>Show Warnings</source>
@@ -122,26 +122,26 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Show All</source>
-        <translation type="unfinished"></translation>
+        <translation>Mindet mutatja</translation>
     </message>
     <message>
         <source>Show None</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Semmit sem mutat</translation>
     </message>
 </context>
 <context>
     <name>ExtraDirPanel</name>
     <message>
         <source>Extra Dir</source>
-        <translation type="unfinished"></translation>
+        <translation>Extra könyvtár</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Hozzáad</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Töröl</translation>
     </message>
     <message>
         <source>Up</source>
@@ -168,29 +168,29 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <name>HelpPanel</name>
     <message>
         <source>LDView Help</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView Sugó</translation>
     </message>
 </context>
 <context>
     <name>ImageHolder</name>
     <message>
         <source>Form1</source>
-        <translation type="unfinished"></translation>
+        <translation>Form1</translation>
     </message>
 </context>
 <context>
     <name>LDView</name>
     <message>
         <source>LDView</source>
-        <translation type="unfinished"></translation>
+        <translation>LDView</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Eszközök</translation>
     </message>
     <message>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Állomány</translation>
     </message>
     <message>
         <source>Po&amp;lling</source>
@@ -198,31 +198,31 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>&amp;Edit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Szerkesztés</translation>
     </message>
     <message>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nézet</translation>
     </message>
     <message>
         <source>Viewing Angle</source>
-        <translation type="unfinished"></translation>
+        <translation>Nézőpont</translation>
     </message>
     <message>
         <source>&amp;Tools</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Eszközök</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sugó</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Megnyitás</translation>
     </message>
     <message>
         <source>&amp;Open...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Megyitás...</translation>
     </message>
     <message>
         <source>Ctrl+O</source>
@@ -230,7 +230,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Wireframe</source>
-        <translation type="unfinished"></translation>
+        <translation>Drótháló</translation>
     </message>
     <message>
         <source>Seams</source>
@@ -238,7 +238,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Edge</source>
-        <translation type="unfinished"></translation>
+        <translation>Él</translation>
     </message>
     <message>
         <source>Primitive substitution</source>
@@ -246,7 +246,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Primitive Substitution</source>
-        <translation type="unfinished"></translation>
+        <translation>Primitív behelyettesítés</translation>
     </message>
     <message>
         <source>Lighting</source>
@@ -254,15 +254,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>BFC</source>
-        <translation></translation>
+        <translation>BFC</translation>
     </message>
     <message>
         <source>Snapshot Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Pillanatkép beállítások</translation>
     </message>
     <message>
         <source>&amp;Snapshot Settings...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pillanatkép beállítások...</translation>
     </message>
     <message>
         <source>Save Snapshot</source>
@@ -278,11 +278,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyomtatás</translation>
     </message>
     <message>
         <source>&amp;Print...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nyomtatás...</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
@@ -290,11 +290,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Kilépés</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Kilépés</translation>
     </message>
     <message>
         <source>Alt+X</source>
@@ -302,19 +302,19 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Contents</source>
-        <translation type="unfinished"></translation>
+        <translation>Tartalom</translation>
     </message>
     <message>
         <source>&amp;Contents...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tartalom...</translation>
     </message>
     <message>
         <source>F1</source>
-        <translation type="unfinished"></translation>
+        <translation>F1</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Névjegy</translation>
     </message>
     <message>
         <source>&amp;About LDView...</source>
@@ -342,11 +342,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Eszközsor</translation>
     </message>
     <message>
         <source>Show or hide toolbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Eszközsor megjelenítése vagy mentése</translation>
     </message>
     <message>
         <source>Ctrl+Shift+T</source>
@@ -354,11 +354,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Status Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Állapotsor</translation>
     </message>
     <message>
         <source>&amp;Status Bar</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Állapotsor</translation>
     </message>
     <message>
         <source>Show or hide this status bar</source>
@@ -370,23 +370,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Full Screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Teljes képernyő</translation>
     </message>
     <message>
         <source>F10</source>
-        <translation type="unfinished"></translation>
+        <translation>F10</translation>
     </message>
     <message>
         <source>Reset View</source>
-        <translation type="unfinished"></translation>
+        <translation>Nézet visszaállítása</translation>
     </message>
     <message>
         <source>&amp;Reset View</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nézet visszaállítása</translation>
     </message>
     <message>
         <source>Resets model back to the default view</source>
-        <translation type="unfinished"></translation>
+        <translation>Nézet visszaállítása az alapértelemezettre</translation>
     </message>
     <message>
         <source>Ctrl+R</source>
@@ -394,23 +394,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>OpenGL Driver Info</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL adatok</translation>
     </message>
     <message>
         <source>&amp;OpenGL Driver Info...</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;OpenGL adatok...</translation>
     </message>
     <message>
         <source>Show OpenGL Driver Info</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL adatok</translation>
     </message>
     <message>
         <source>LDraw Dir</source>
-        <translation type="unfinished"></translation>
+        <translation>LDraw könyvtár</translation>
     </message>
     <message>
         <source>LDraw &amp;Dir...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">LDraw könyvtár...</translation>
     </message>
     <message>
         <source>Tell LDView where to find the LDraw parts library</source>
@@ -418,11 +418,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Extra Dirs...</source>
-        <translation type="unfinished"></translation>
+        <translation>Extra könyvtárak...</translation>
     </message>
     <message>
         <source>Check for Library Updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Adatbázis frissítése</translation>
     </message>
     <message>
         <source>Reload</source>
@@ -434,19 +434,19 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>F5</source>
-        <translation type="unfinished"></translation>
+        <translation>F5</translation>
     </message>
     <message>
         <source>Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibák</translation>
     </message>
     <message>
         <source>&amp;Errors &amp;&amp; Warnings...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hibák és figyelmeztetések...</translation>
     </message>
     <message>
         <source>Show Errors</source>
-        <translation type="unfinished"></translation>
+        <translation>Hibák listája</translation>
     </message>
     <message>
         <source>Ctrl+Shift+E</source>
@@ -454,7 +454,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Zoom to fit</source>
-        <translation type="unfinished"></translation>
+        <translation>Kinagyít</translation>
     </message>
     <message>
         <source>Ctrl+F</source>
@@ -462,7 +462,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Front</source>
-        <translation type="unfinished"></translation>
+        <translation>Előröl</translation>
     </message>
     <message>
         <source>Ctrl+1</source>
@@ -470,7 +470,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Hátulról</translation>
     </message>
     <message>
         <source>Ctrl+2</source>
@@ -478,7 +478,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Balról</translation>
     </message>
     <message>
         <source>Ctrl+3</source>
@@ -486,7 +486,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Jobbról</translation>
     </message>
     <message>
         <source>Ctrl+4</source>
@@ -494,7 +494,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Top</source>
-        <translation type="unfinished"></translation>
+        <translation>Felülről</translation>
     </message>
     <message>
         <source>Ctrl+5</source>
@@ -502,7 +502,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Bottom</source>
-        <translation type="unfinished"></translation>
+        <translation>Alulról</translation>
     </message>
     <message>
         <source>Ctrl+6</source>
@@ -510,7 +510,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Two-third</source>
-        <translation type="unfinished"></translation>
+        <translation>Isometrikus</translation>
     </message>
     <message>
         <source>Ctrl+0</source>
@@ -518,7 +518,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Save Current as Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Jelenlegi alapértelmezettnek</translation>
     </message>
     <message>
         <source>Polling</source>
@@ -526,11 +526,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Letiltva</translation>
     </message>
     <message>
         <source>&amp;Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Letiltva</translation>
     </message>
     <message>
         <source>Disable polling</source>
@@ -538,23 +538,23 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Prompt</source>
-        <translation type="unfinished"></translation>
+        <translation>Rákérdez</translation>
     </message>
     <message>
         <source>&amp;Prompt</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rákérdez</translation>
     </message>
     <message>
         <source>Prompt when file changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Rákérdez ha az állomány megváltozik</translation>
     </message>
     <message>
         <source>Auto-update when active</source>
-        <translation type="unfinished"></translation>
+        <translation>Autómatikusan frissít amikor aktív</translation>
     </message>
     <message>
         <source>&amp;Auto-update when active</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Autómatikusan frissít amikor aktív</translation>
     </message>
     <message>
         <source>Auto-update once this window is activated</source>
@@ -598,11 +598,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Cancel Load</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Betöltés megszakítása</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Show View Info</source>
@@ -614,14 +614,14 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Part List</source>
-        <translation type="unfinished"></translation>
+        <translation>Alkatrész lista</translation>
     </message>
 </context>
 <context>
     <name>OpenGLExtensionsPanel</name>
     <message>
         <source>OpenGL Extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenGL bővítmények</translation>
     </message>
 </context>
 <context>
@@ -632,7 +632,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Beállítások</translation>
     </message>
     <message>
         <source>Show model</source>
@@ -652,15 +652,15 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Field</source>
-        <translation type="unfinished"></translation>
+        <translation>Mező</translation>
     </message>
     <message>
         <source>Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Fel</translation>
     </message>
     <message>
         <source>Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Le</translation>
     </message>
     <message>
         <source>OK</source>
@@ -668,11 +668,11 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
 </context>
 <context>
@@ -683,7 +683,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Általános</translation>
     </message>
     <message>
         <source>&amp;Miscellaneous</source>
@@ -763,7 +763,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Fog</source>
-        <translation type="unfinished"></translation>
+        <translation>Köd</translation>
     </message>
     <message>
         <source>Remove hidden lines</source>
@@ -996,11 +996,11 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Alkalmaz</translation>
     </message>
 </context>
 <context>
@@ -1015,7 +1015,7 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Engedélyezett</translation>
     </message>
     <message>
         <source>Number of Digits:</source>
@@ -1027,11 +1027,11 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Width:</source>
-        <translation type="unfinished"></translation>
+        <translation>Szélesség:</translation>
     </message>
     <message>
         <source>Height:</source>
-        <translation type="unfinished"></translation>
+        <translation>Magasság:</translation>
     </message>
     <message>
         <source>Misc</source>
@@ -1051,11 +1051,11 @@ into effect until the next time a model is loaded.</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <source>Esc</source>
-        <translation type="unfinished"></translation>
+        <translation>Esc</translation>
     </message>
 </context>
 </TS>
