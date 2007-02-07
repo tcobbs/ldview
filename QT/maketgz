@@ -10,6 +10,9 @@ ldview_*.qm \
 .obj/LDView3/
 cp ../Translations/German/LDViewMessages.ini .obj/LDView3/LDViewMessages_de.ini
 cp ../Translations/Italian/LDViewMessages.ini .obj/LDView3/LDViewMessages_it.ini
+cp ../Translations/Czech/LDViewMessages.ini .obj/LDView3/LDViewMessages_cz.ini
+cp ../Translations/Hungarian/LDViewMessages.ini .obj/LDView3/LDViewMessages_hu.ini
+
 cd .obj/LDView3
 mv LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
