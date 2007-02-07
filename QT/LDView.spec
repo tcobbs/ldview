@@ -43,6 +43,10 @@ install -m 644 ../Translations/German/LDViewMessages.ini \
 				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_de.ini
 install -m 644 ../Translations/Italian/LDViewMessages.ini \
 				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_it.ini
+install -m 644 ../Translations/Czech/LDViewMessages.ini \
+			    $RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_cz.ini
+install -m 644 ../Translations/Hungarian/LDViewMessages.ini \
+				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_hu.ini
 install -m 644 todo.txt $RPM_BUILD_ROOT/usr/local/share/ldview/todo.txt
 install -m 644 ldview_en.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_en.qm
 install -m 644 ldview_de.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_de.qm
