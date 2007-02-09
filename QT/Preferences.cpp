@@ -291,10 +291,52 @@ void Preferences::doEffectsApply(void)
 	ldPrefs->setUseLighting(panel->lightingButton->state());
 	if (ldPrefs->getUseLighting())
 	{
+		LDPreferences::LightDirection lightDirection =
+			LDPreferences::CustomDirection;
 		ldPrefs->setQualityLighting(panel->qualityLightingButton->state());
 		ldPrefs->setSubduedLighting(panel->subduedLightingButton->state());
 		ldPrefs->setUseSpecular(panel->specularLightingButton->state());
 		ldPrefs->setOneLight(panel->alternateLightingButton->state());
+		if(panel->lightingDir11->state())
+		{
+			lightDirection = LDPreferences::UpperLeft;
+		}
+		else if (panel->lightingDir12->state())
+		{
+			lightDirection = LDPreferences::UpperMiddle;
+		}
+		else if (panel->lightingDir13->state())
+		{
+			lightDirection = LDPreferences::UpperRight;
+		}
+		else if (panel->lightingDir21->state())
+		{
+			lightDirection = LDPreferences::MiddleLeft;
+		}
+		else if (panel->lightingDir22->state())
+		{
+			lightDirection = LDPreferences::MiddleMiddle;
+		}
+		else if (panel->lightingDir23->state())
+		{
+			lightDirection = LDPreferences::MiddleRight;
+		}
+		else if (panel->lightingDir31->state())
+		{
+			lightDirection = LDPreferences::LowerLeft;
+		}
+		else if (panel->lightingDir32->state())
+		{
+			lightDirection = LDPreferences::LowerMiddle;
+		}
+		else if (panel->lightingDir33->state())
+		{
+			lightDirection = LDPreferences::LowerRight;
+		}
+		if (lightDirection != LDPreferences::CustomDirection)
+		{
+			ldPrefs->setLightDirection(lightDirection);
+		}
 	}
 	if (!panel->stereoButton->state())
 	{
@@ -1597,10 +1639,51 @@ void Preferences::enableLighting(void)
 	panel->subduedLightingButton->setEnabled(true);
 	panel->specularLightingButton->setEnabled(true);
 	panel->alternateLightingButton->setEnabled(true);
+	panel->lightingDir11->setEnabled(true);
+	panel->lightingDir12->setEnabled(true);
+	panel->lightingDir13->setEnabled(true);
+	panel->lightingDir21->setEnabled(true);
+	panel->lightingDir22->setEnabled(true);
+	panel->lightingDir23->setEnabled(true);
+	panel->lightingDir31->setEnabled(true);
+	panel->lightingDir32->setEnabled(true);
+	panel->lightingDir33->setEnabled(true);
 	setButtonState(panel->qualityLightingButton, ldPrefs->getQualityLighting());
 	setButtonState(panel->subduedLightingButton, ldPrefs->getSubduedLighting());
 	setButtonState(panel->specularLightingButton, ldPrefs->getUseSpecular());
 	setButtonState(panel->alternateLightingButton, ldPrefs->getOneLight());
+	switch (ldPrefs->getLightDirection())
+	{
+    case LDPreferences::UpperLeft:
+		panel->lightingDir11->setChecked(true);
+        break;
+    case LDPreferences::UpperMiddle:
+		panel->lightingDir12->setChecked(true);
+        break;
+    case LDPreferences::UpperRight:
+		panel->lightingDir13->setChecked(true);
+        break;
+    case LDPreferences::MiddleLeft:
+		panel->lightingDir21->setChecked(true);
+        break;
+    case LDPreferences::MiddleMiddle:
+		panel->lightingDir22->setChecked(true);
+        break;
+    case LDPreferences::MiddleRight:
+		panel->lightingDir23->setChecked(true);
+        break;
+    case LDPreferences::LowerLeft:
+		panel->lightingDir31->setChecked(true);
+        break;
+    case LDPreferences::LowerMiddle:
+		panel->lightingDir32->setChecked(true);
+        break;
+    case LDPreferences::LowerRight:
+		panel->lightingDir33->setChecked(true);
+        break;
+	case LDPreferences::CustomDirection:
+		break;
+	}
 }
 
 void Preferences::enableStereo(void)
@@ -1742,10 +1825,29 @@ void Preferences::disableLighting(void)
 	panel->subduedLightingButton->setEnabled(false);
 	panel->specularLightingButton->setEnabled(false);
 	panel->alternateLightingButton->setEnabled(false);
+	panel->lightingDir11->setEnabled(false);
+	panel->lightingDir12->setEnabled(false);
+	panel->lightingDir13->setEnabled(false);
+	panel->lightingDir21->setEnabled(false);
+	panel->lightingDir22->setEnabled(false);
+	panel->lightingDir23->setEnabled(false);
+	panel->lightingDir31->setEnabled(false);
+	panel->lightingDir32->setEnabled(false);
+	panel->lightingDir33->setEnabled(false);
 	setButtonState(panel->qualityLightingButton, false);
 	setButtonState(panel->subduedLightingButton, false);
 	setButtonState(panel->specularLightingButton, false);
 	setButtonState(panel->alternateLightingButton, false);
+    panel->lightingDir11->setChecked(false);
+    panel->lightingDir12->setChecked(false);
+    panel->lightingDir13->setChecked(false);
+    panel->lightingDir21->setChecked(false);
+    panel->lightingDir22->setChecked(false);
+    panel->lightingDir23->setChecked(false);
+    panel->lightingDir31->setChecked(false);
+    panel->lightingDir32->setChecked(false);
+    panel->lightingDir33->setChecked(false);
+
 }
 
 void Preferences::disableStereo(void)

@@ -1297,6 +1297,119 @@
                                             </spacer>
                                         </hbox>
                                     </widget>
+                                    <widget class="QGroupBox">
+                                        <property name="name">
+                                            <cstring>lightingDirectionBox</cstring>
+                                        </property>
+                                        <property name="title">
+                                            <string>Lighting Direction</string>
+                                        </property>
+                                        <vbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <property name="margin">
+                                                <number>11</number>
+                                            </property>
+                                            <property name="spacing">
+                                                <number>4</number>
+                                            </property>
+                                            <widget class="QButtonGroup">
+                                                <property name="name">
+                                                    <cstring>Layout137</cstring>
+                                                </property>
+                                                <property name="frameShape">
+                                                    <enum>NoFrame</enum>
+                                                </property>
+                                                <property name="title">
+                                                    <string></string>
+                                                </property>
+                                                <grid>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <property name="margin">
+                                                        <number>0</number>
+                                                    </property>
+                                                    <property name="spacing">
+                                                        <number>4</number>
+                                                    </property>
+                                                    <widget class="QRadioButton" row="1" column="1">
+                                                        <property name="name">
+                                                            <cstring>lightingDir11</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="1" column="2">
+                                                        <property name="name">
+                                                            <cstring>lightingDir12</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="1" column="3">
+                                                        <property name="name">
+                                                            <cstring>lightingDir13</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="2" column="1">
+                                                        <property name="name">
+                                                            <cstring>lightingDir21</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="2" column="2">
+                                                        <property name="name">
+                                                            <cstring>lightingDir22</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="2" column="3">
+                                                        <property name="name">
+                                                            <cstring>lightingDir23</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="3" column="1">
+                                                        <property name="name">
+                                                            <cstring>lightingDir31</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="3" column="2">
+                                                        <property name="name">
+                                                            <cstring>lightingDir32</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                    <widget class="QRadioButton" row="3" column="3">
+                                                        <property name="name">
+                                                            <cstring>lightingDir33</cstring>
+                                                        </property>
+                                                        <property name="text">
+                                                            <string></string>
+                                                        </property>
+                                                    </widget>
+                                                </grid>
+                                            </widget>
+                                        </vbox>
+                                    </widget>
                                 </vbox>
                             </widget>
                             <widget class="QGroupBox">
