@@ -11,6 +11,20 @@ typedef std::map<std::string, bool> StringBoolMap;
 class LDPreferences : public TCObject
 {
 public:
+	enum LightDirection
+	{
+		CustomDirection	= 0,
+		UpperLeft		= 1,
+		UpperMiddle		= 2,
+		UpperRight		= 3,
+		MiddleLeft		= 4,
+		Middle			= 5,
+		MiddleMiddle	= Middle,
+		MiddleRight		= 6,
+		LowerLeft		= 7,
+		LowerMiddle		= 8,
+		LowerRight		= 9,
+	};
 	LDPreferences(LDrawModelViewer* modelViewer = NULL);
 
 	// These are called from the constructor, and cannot be properly made into
@@ -89,6 +103,8 @@ public:
 	bool getSubduedLighting(void) { return m_subduedLighting; }
 	bool getUseSpecular(void) { return m_useSpecular; }
 	bool getOneLight(void) { return m_oneLight; }
+	LightDirection getLightDirection(void);
+	const TCVector &getLightVector(void) { return m_lightVector; }
 	LDVStereoMode getStereoMode(void) { return m_stereoMode; }
 	int getStereoEyeSpacing(void) { return m_stereoEyeSpacing; }
 	LDVCutawayMode getCutawayMode(void) { return m_cutawayMode; }
@@ -175,6 +191,10 @@ public:
 	void setSubduedLighting(bool value, bool commit = false, bool apply = false);
 	void setUseSpecular(bool value, bool commit = false, bool apply = false);
 	void setOneLight(bool value, bool commit = false, bool apply = false);
+	void setLightDirection(LightDirection value, bool commit = false,
+		bool apply = false);
+	void setLightVector(const TCVector &value, bool commit = false,
+		bool apply = false);
 	void setStereoMode(LDVStereoMode value, bool commit = false);
 	void setStereoEyeSpacing(int value, bool commit = false);
 	void setCutawayMode(LDVCutawayMode value, bool commit = false);
@@ -226,11 +246,15 @@ protected:
 		const char *key, bool commit);
 	void setSetting(LongVector &setting, const LongVector &value,
 		const char *key, bool commit);
+	void setSetting(TCVector &setting, const TCVector &value,
+		const char *key, bool commit);
 	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
 		bool commit);
 	bool getBoolSetting(const char *key, bool defaultValue = false);
 	LongVector getLongVectorSetting(const char *key,
 		const LongVector &defaultValue = LongVector());
+	TCVector getTCVectorSetting(const char *key,
+		const TCVector &defaultValue = TCVector());
 	long getLongSetting(const char *key, long defaultValue = 0);
 	int getIntSetting(const char *key, int defaultValue = 0);
 	float getFloatSetting(const char *key, float defaultValue = 0.0f);

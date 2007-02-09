@@ -201,6 +201,7 @@ protected:
 	virtual void enableCutaway(void);
 	virtual void disableCutaway(void);
 	virtual void setupLighting(void);
+	virtual void uncheckLightDirections(void);
 	virtual void enableLighting(void);
 	virtual void disableLighting(void);
 	virtual void enableSeams(void);

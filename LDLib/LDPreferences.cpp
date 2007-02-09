@@ -88,7 +88,6 @@ void LDPreferences::applySettings(void)
 	if (modelViewer)
 	{
 		modelViewer->setZoomMax(m_zoomMax);
-		modelViewer->setLightVector(m_lightVector);
 		modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
 	}
 	setupDefaultRotationMatrix();
@@ -160,6 +159,7 @@ void LDPreferences::applyEffectsSettings(void)
 		modelViewer->setSubduedLighting(m_subduedLighting);
 		modelViewer->setUsesSpecular(m_useSpecular);
 		modelViewer->setOneLight(m_oneLight);
+		modelViewer->setLightVector(m_lightVector);
 		modelViewer->setStereoMode(m_stereoMode);
 		modelViewer->setStereoEyeSpacing((GLfloat)m_stereoEyeSpacing);
 		modelViewer->setCutawayMode(m_cutawayMode);
@@ -244,7 +244,6 @@ void LDPreferences::applyUpdatesSettings(void)
 
 void LDPreferences::loadSettings(void)
 {
-	std::string lightVectorString;
 	loadGeneralSettings();
 	loadGeometrySettings();
 	loadEffectsSettings();
@@ -255,21 +254,6 @@ void LDPreferences::loadSettings(void)
 
 	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
-	lightVectorString = getStringSetting(LIGHT_VECTOR_KEY);
-	if (lightVectorString.length())
-	{
-		TCFloat lx, ly, lz;
-
-		// ToDo: how to deal with 64-bit float scanf?
-		if (sscanf(lightVectorString.c_str(), "%f,%f,%f", &lx, &ly, &lz) == 3)
-		{
-			m_lightVector = TCVector(lx, ly, lz);
-		}
-	}
-	else
-	{
-		m_lightVector = TCVector(0.0f, 0.0f, 1.0f);
-	}
 	m_defaultZoom = getFloatSetting(DEFAULT_ZOOM_KEY, 1.0f);
 }
 
@@ -331,6 +315,7 @@ void LDPreferences::loadDefaultEffectsSettings(void)
 	setSubduedLighting(false);
 	setUseSpecular(true);
 	setOneLight(false);
+	setLightVector(TCVector(0.0, 0.0, 1.0));
 	setStereoMode(LDVStereoNone);
 	setStereoEyeSpacing(50);
 	setCutawayMode(LDVCutawayNormal);
@@ -475,6 +460,7 @@ void LDPreferences::loadEffectsSettings(void)
 	m_subduedLighting = getBoolSetting(SUBDUED_LIGHTING_KEY, m_subduedLighting);
 	m_useSpecular = getBoolSetting(SPECULAR_KEY, m_useSpecular);
 	m_oneLight = getBoolSetting(ONE_LIGHT_KEY, m_oneLight);
+	m_lightVector = getTCVectorSetting(LIGHT_VECTOR_KEY, m_lightVector);
 	m_stereoMode = (LDVStereoMode)getLongSetting(STEREO_MODE_KEY, m_stereoMode);
 	m_stereoEyeSpacing = getIntSetting(STEREO_SPACING_KEY, m_stereoEyeSpacing);
 	m_cutawayMode = (LDVCutawayMode)getLongSetting(CUTAWAY_MODE_KEY,
@@ -616,6 +602,7 @@ void LDPreferences::commitEffectsSettings(bool flush /*= true*/)
 		setSubduedLighting(m_subduedLighting, true);
 		setUseSpecular(m_useSpecular, true);
 		setOneLight(m_oneLight, true);
+		setLightVector(m_lightVector, true);
 	}
 	setStereoMode(m_stereoMode, true);
 	setStereoEyeSpacing(m_stereoEyeSpacing, true);
@@ -833,6 +820,29 @@ void LDPreferences::setSetting(LongVector &setting, const LongVector &value,
 	}
 }
 
+void LDPreferences::setSetting(TCVector &setting, const TCVector &value,
+							   const char *key, bool commit)
+{
+	if (setting != value || (m_changedSettings[key] && commit))
+	{
+		setting = value;
+		if (commit)
+		{
+			char stringValue[128];
+
+			sprintf(stringValue, "%f,%f,%f", value.get(0), value.get(1),
+				value.get(2));
+			TCUserDefaults::setStringForKey(stringValue, key,
+				!m_globalSettings[key]);
+			m_changedSettings.erase(key);
+		}
+		else if (!m_initializing)
+		{
+			m_changedSettings[key] = true;
+		}
+	}
+}
+
 void LDPreferences::setSetting(bool &setting, bool value, const char *key,
 								bool commit)
 {
@@ -937,6 +947,25 @@ LongVector LDPreferences::getLongVectorSetting(const char *key,
 {
 	return TCUserDefaults::longVectorForKey(key, defaultValue,
 		!m_globalSettings[key]);
+}
+
+TCVector LDPreferences::getTCVectorSetting(const char *key,
+										   const TCVector &defaultValue)
+{
+	std::string vectorString;
+
+	vectorString = getStringSetting(key);
+	if (vectorString.length())
+	{
+		TCFloat lx, ly, lz;
+
+		// ToDo: how to deal with 64-bit float scanf?
+		if (sscanf(vectorString.c_str(), "%f,%f,%f", &lx, &ly, &lz) == 3)
+		{
+			return TCVector(lx, ly, lz);
+		}
+	}
+	return defaultValue;
 }
 
 long LDPreferences::getLongSetting(const char *key, long defaultValue)
@@ -1280,6 +1309,57 @@ void LDPreferences::setOneLight(bool value, bool commit, bool apply)
 	}
 }
 
+void LDPreferences::setLightDirection(LightDirection value, bool commit,
+									  bool apply)
+{
+	TCVector lightVector;
+
+	switch (value)
+	{
+	case UpperLeft:
+		lightVector = TCVector(-1.0f, 1.0f, 1.0f);
+		break;
+	case UpperMiddle:
+		lightVector = TCVector(0.0f, 1.0f, 1.0f);
+		break;
+	case UpperRight:
+		lightVector = TCVector(1.0f, 1.0f, 1.0f);
+		break;
+	case MiddleLeft:
+		lightVector = TCVector(-1.0f, 0.0f, 1.0f);
+		break;
+	case MiddleRight:
+		lightVector = TCVector(1.0f, 0.0f, 1.0f);
+		break;
+	case LowerLeft:
+		lightVector = TCVector(-1.0f, -1.0f, 1.0f);
+		break;
+	case LowerMiddle:
+		lightVector = TCVector(0.0f, -1.0f, 1.0f);
+		break;
+	case LowerRight:
+		lightVector = TCVector(1.0f, -1.0f, 1.0f);
+		break;
+	default:
+		lightVector = TCVector(0.0f, 0.0f, 1.0f);
+		break;
+	}
+	setLightVector(lightVector, commit, apply);
+}
+
+void LDPreferences::setLightVector(const TCVector &value, bool commit,
+								   bool apply)
+{
+	setSetting(m_lightVector, value, LIGHT_VECTOR_KEY, commit);
+	if (apply)
+	{
+		if (modelViewer)
+		{
+			modelViewer->setLightVector(m_lightVector);
+		}
+	}
+}
+
 void LDPreferences::setStereoMode(LDVStereoMode value, bool commit)
 {
 	int temp = (int)m_stereoMode;
@@ -1498,4 +1578,45 @@ void LDPreferences::getDefaultColor(int &r, int &g, int &b)
 void LDPreferences::getCustomColor(int index, int &r, int &g, int &b)
 {
 	getRGB(m_customColors[index], r, g, b);
+}
+
+LDPreferences::LightDirection LDPreferences::getLightDirection(void)
+{
+	if (m_lightVector == TCVector(-1.0f, 1.0f, 1.0f))
+	{
+		return UpperLeft;
+	}
+	else if (m_lightVector == TCVector(0.0f, 1.0f, 1.0f))
+	{
+		return UpperMiddle;
+	}
+	else if (m_lightVector == TCVector(1.0f, 1.0f, 1.0f))
+	{
+		return UpperRight;
+	}
+	else if (m_lightVector == TCVector(-1.0f, 0.0f, 1.0f))
+	{
+		return MiddleLeft;
+	}
+	else if (m_lightVector == TCVector(0.0f, 0.0f, 1.0f))
+	{
+		return Middle;
+	}
+	else if (m_lightVector == TCVector(1.0f, 0.0f, 1.0f))
+	{
+		return MiddleRight;
+	}
+	else if (m_lightVector == TCVector(-1.0f, -1.0f, 1.0f))
+	{
+		return LowerLeft;
+	}
+	else if (m_lightVector == TCVector(0.0f, -1.0f, 1.0f))
+	{
+		return LowerMiddle;
+	}
+	else if (m_lightVector == TCVector(1.0f, -1.0f, 1.0f))
+	{
+		return LowerRight;
+	}
+	return CustomDirection;
 }
