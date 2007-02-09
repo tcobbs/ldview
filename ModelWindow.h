@@ -194,7 +194,11 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doTimer(UINT);
 		virtual BOOL getFileTime(FILETIME*);
 		virtual void checkForPart(void);
+#ifndef TC_NO_UNICODE
 		virtual int progressCallback(const char* message, float progress,
+			bool showErrors = false);
+#endif // TC_NO_UNICODE
+		virtual int progressCallback(UCCSTR message, float progress,
 			bool showErrors = false);
 		static int staticProgressCallback(char* message, float progress,
 			void* userData);
@@ -280,7 +284,10 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool frontBufferFPS(void);
 		virtual bool canSaveAlpha(void);
 		virtual void makeCurrent(void);
-		virtual void setStatusText(HWND hStatus, int part, char *text);
+#ifndef TC_NO_UNICODE
+		virtual void setStatusText(HWND hStatus, int part, const char *text);
+#endif // TC_NO_UNICODE
+		virtual void setStatusText(HWND hStatus, int part, UCCSTR text);
 		virtual void initFail(char *reason);
 		void ldlErrorCallback(LDLError *error);
 		void progressAlertCallback(TCProgressAlert *alert);

@@ -75,4 +75,18 @@ typedef float TCFloat32;
 #define __THROW
 #endif //__THROW
 
+#define TC_NO_UNICODE
+
+#ifdef TC_NO_UNICODE
+typedef char UCCHAR;
+typedef char * UCSTR;
+typedef const char * UCCSTR;
+#define _UC(x) x
+#else // TC_NO_UNICODE
+typedef wchar_t UCCHAR;
+typedef wchar_t * UCSTR;
+typedef const wchar_t * UCCSTR;
+#define _UC(x) L ## x
+#endif // TC_NO_UNICODE
+
 #endif // __TCDEFINES_H__

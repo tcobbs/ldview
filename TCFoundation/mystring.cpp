@@ -853,3 +853,50 @@ void processEscapedString(wchar_t *string)
 	wcscpy(string, tmpString);
 	delete tmpString;
 }
+
+void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
+{
+	dst.erase();
+	if (src)
+	{
+		mbstate_t state = { 0 };
+
+		if (length == -1)
+		{
+			length = strlen(src);
+		}
+		dst.resize(length);
+		// Even though we don't check, we can't pass NULL instead of &state and
+		// still be thread-safe.
+		mbsrtowcs(&dst[0], &src, length + 1, &state);
+	}
+}
+
+void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
+{
+	dst.erase();
+	if (src)
+	{
+		mbstate_t state = { 0 };
+
+		if (length == -1)
+		{
+			length = wcslen(src);
+		}
+		dst.resize(length);
+		// Even though we don't check, we can't pass NULL instead of &state and
+		// still be thread-safe.
+		wcsrtombs(&dst[0], &src, length + 1, &state);
+	}
+}
+
+void wstringtostring(std::string &dst, const std::wstring &src)
+{
+	const wchar_t *temp = src.c_str();
+	mbstate_t state = { 0 };
+
+	dst.resize(src.length() + 1);
+	// Even though we don't check, we can't pass NULL instead of &state and
+	// still be thread-safe.
+	wcsrtombs(&dst[0], &temp, src.length() + 1, &state);
+}

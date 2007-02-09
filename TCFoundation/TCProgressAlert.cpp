@@ -12,6 +12,15 @@ TCProgressAlert::TCProgressAlert(const char *source, const char *message,
 {
 }
 
+TCProgressAlert::TCProgressAlert(const char *source, const wchar_t *message,
+								 float progress, const WStringList &extraInfo)
+	:TCAlert(TCProgressAlert::alertClass(), message, extraInfo),
+	m_source(copyString(source)),
+	m_progress(progress),
+	m_aborted(false)
+{
+}
+
 TCProgressAlert::~TCProgressAlert(void)
 {
 }
@@ -28,9 +37,30 @@ void TCProgressAlert::send(const char *source, const char *message,
 	send(source, message, progress, NULL, extraInfo);
 }
 
+void TCProgressAlert::send(const char *source, const wchar_t *message,
+						   float progress, const WStringList &extraInfo)
+{
+	send(source, message, progress, NULL, extraInfo);
+}
+
 void TCProgressAlert::send(const char *source, const char *message,
 						   float progress, bool *aborted,
 						   TCStringArray *extraInfo)
+{
+	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
+		extraInfo);
+
+	TCAlertManager::sendAlert(alert);
+	if (aborted)
+	{
+		*aborted = alert->getAborted();
+	}
+	alert->release();
+}
+
+void TCProgressAlert::send(const char *source, const wchar_t *message,
+						   float progress, bool *aborted,
+						   const WStringList &extraInfo)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
 		extraInfo);

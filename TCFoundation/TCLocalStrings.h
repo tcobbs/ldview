@@ -26,9 +26,6 @@ class TCExport TCLocalStrings: public TCObject
 		bool instSetStringTable(const wchar_t *stringTable, bool replace);
 		const char *instGetLocalString(const char *key);
 		const wchar_t *instGetLocalString(const wchar_t *key);
-		void mbstowstring(std::wstring &dst, const char *src, int length = -1);
-		void wstringtostring(std::string &dst, const std::wstring &src);
-		void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
 		void instDumpTable(const char *filename, const char *header);
 
 		TCDictionary *stringDict;

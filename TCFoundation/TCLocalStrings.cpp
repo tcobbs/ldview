@@ -138,7 +138,8 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 						uByte = fileData[i + 1];
 						lByte = fileData[i];
 					}
-					wstringTable.push_back((wchar_t)((uByte << 8) | lByte));
+					wchar_t wc = (wchar_t)((uByte << 8) | lByte);
+					wstringTable.append(&wc, 1);
 				}
 				// wstringTable now contains the string table.
 				retValue = setStringTable(wstringTable.c_str(), replace);
@@ -167,62 +168,9 @@ TCLocalStrings *TCLocalStrings::getCurrentLocalStrings(void)
 	return currentLocalStrings;
 }
 
-void TCLocalStrings::mbstowstring(
-	std::wstring &dst,
-	const char *src,
-	int length /*= -1*/)
-{
-	dst.clear();
-	if (src)
-	{
-		mbstate_t state = { 0 };
-
-		if (length == -1)
-		{
-			length = strlen(src);
-		}
-		dst.resize(length);
-		// Even though we don't check, we can't pass NULL instead of &state and
-		// still be thread-safe.
-		mbsrtowcs(&dst[0], &src, length + 1, &state);
-	}
-}
-
-void TCLocalStrings::wcstostring(
-	std::string &dst,
-	const wchar_t *src,
-	int length /*= -1*/)
-{
-	dst.clear();
-	if (src)
-	{
-		mbstate_t state = { 0 };
-
-		if (length == -1)
-		{
-			length = wcslen(src);
-		}
-		dst.resize(length);
-		// Even though we don't check, we can't pass NULL instead of &state and
-		// still be thread-safe.
-		wcsrtombs(&dst[0], &src, length + 1, &state);
-	}
-}
-
-void TCLocalStrings::wstringtostring(std::string &dst, const std::wstring &src)
-{
-	const wchar_t *temp = src.c_str();
-	mbstate_t state = { 0 };
-
-	dst.resize(src.length() + 1);
-	// Even though we don't check, we can't pass NULL instead of &state and
-	// still be thread-safe.
-	wcsrtombs(&dst[0], &temp, src.length() + 1, &state);
-}
-
 void TCLocalStrings::dumpTable(const char *filename, const char *header)
 {
-	return getCurrentLocalStrings()->instDumpTable(filename, header);
+	getCurrentLocalStrings()->instDumpTable(filename, header);
 }
 
 void TCLocalStrings::instDumpTable(const char *filename, const char *header)

@@ -120,6 +120,8 @@ protected:
 	virtual void reportWarning(LDLErrorType type, const char* format, ...);
 	virtual void reportProgress(const char *message, float progress,
 		bool mainOnly = true);
+	virtual void reportProgress(const wchar_t *message, float progress,
+		bool mainOnly = true);
 	virtual bool isSubPart(const char *subModelName);
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);

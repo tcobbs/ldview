@@ -69,6 +69,10 @@ class CUIExport CUIWindow : public TCObject
 		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,
 			int *index = NULL);
 		static HINSTANCE getLanguageModule(void);
+		static int SendMessageUC(HWND hWnd, UINT uMsg, UINT uMsgW, WPARAM wParam,
+			LPARAM lParam);
+		static HWND CreateStatusWindowUC(LONG style, UCCSTR lpszText,
+			HWND hwndParent, UINT wID);
 	protected:
 		~CUIWindow(void);
 		virtual void dealloc(void);
