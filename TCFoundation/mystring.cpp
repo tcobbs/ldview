@@ -794,7 +794,7 @@ void processEscapedString(char *string)
 	{
 		if (string[i] == '\\')
 		{
-			int replacement = escapeReplacement(string[i]);
+			int replacement = escapeReplacement(string[i + 1]);
 
 			if (replacement != -1)
 			{
@@ -831,7 +831,7 @@ void processEscapedString(wchar_t *string)
 	{
 		if (string[i] == '\\')
 		{
-			int replacement = escapeReplacement(string[i]);
+			int replacement = escapeReplacement(string[i + 1]);
 
 			if (replacement != -1)
 			{
