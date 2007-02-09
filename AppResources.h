@@ -255,6 +255,16 @@
 #define IDC_SHOW_PART_IMAGES            1215
 #define IDC_TOOLBAR                     1216
 #define IDC_SHOW_FILE                   1217
+#define IDC_LIGHT_UL                    1217
+#define IDC_LIGHT_UM                    1218
+#define IDC_LIGHT_UR                    1219
+#define IDC_LIGHT_ML                    1220
+#define IDC_LIGHT_MM                    1221
+#define IDC_LIGHT_MR                    1222
+#define IDC_LIGHT_LL                    1223
+#define IDC_LIGHT_LM                    1224
+#define IDC_LIGHT_LR                    1225
+#define IDC_LIGHT_DIR                   1226
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -333,7 +343,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        172
 #define _APS_NEXT_COMMAND_VALUE         40089
-#define _APS_NEXT_CONTROL_VALUE         1217
+#define _APS_NEXT_CONTROL_VALUE         1227
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
