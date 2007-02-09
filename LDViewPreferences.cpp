@@ -1405,6 +1405,8 @@ void LDViewPreferences::applyEffectsChanges(void)
 		ldPrefs->setUseLighting(getCachedCheck(hEffectsPage, IDC_LIGHTING));
 		if (ldPrefs->getUseLighting())
 		{
+			LDPreferences::LightDirection lightDirection =
+				LDPreferences::CustomDirection;
 			ldPrefs->setQualityLighting(getCheck(hEffectsPage,
 				IDC_LIGHTING_QUALITY));
 			ldPrefs->setSubduedLighting(getCheck(hEffectsPage,
@@ -1412,6 +1414,46 @@ void LDViewPreferences::applyEffectsChanges(void)
 			ldPrefs->setUseSpecular(getCheck(hEffectsPage, IDC_SPECULAR));
 			ldPrefs->setOneLight(getCheck(hEffectsPage,
 				IDC_ALTERNATE_LIGHTING));
+			if (getCheck(hEffectsPage, IDC_LIGHT_UL))
+			{
+				lightDirection = LDPreferences::UpperLeft;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_UM))
+			{
+				lightDirection = LDPreferences::UpperMiddle;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_UR))
+			{
+				lightDirection = LDPreferences::UpperRight;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_ML))
+			{
+				lightDirection = LDPreferences::MiddleLeft;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_MM))
+			{
+				lightDirection = LDPreferences::MiddleMiddle;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_MR))
+			{
+				lightDirection = LDPreferences::MiddleRight;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_LL))
+			{
+				lightDirection = LDPreferences::LowerLeft;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_LM))
+			{
+				lightDirection = LDPreferences::LowerMiddle;
+			}
+			else if (getCheck(hEffectsPage, IDC_LIGHT_LR))
+			{
+				lightDirection = LDPreferences::LowerRight;
+			}
+			if (lightDirection != LDPreferences::CustomDirection)
+			{
+				ldPrefs->setLightDirection(lightDirection);
+			}
 		}
 		ldPrefs->setStereoEyeSpacing(SendDlgItemMessage(hEffectsPage,
 			IDC_STEREO_SPACING, TBM_GETPOS, 0, 0));
@@ -2823,12 +2865,37 @@ void LDViewPreferences::setupStereo(void)
 	}
 }
 
+void LDViewPreferences::uncheckLightDirections(void)
+{
+	setCheck(hEffectsPage, IDC_LIGHT_UL, false);
+	setCheck(hEffectsPage, IDC_LIGHT_UM, false);
+	setCheck(hEffectsPage, IDC_LIGHT_UR, false);
+	setCheck(hEffectsPage, IDC_LIGHT_ML, false);
+	setCheck(hEffectsPage, IDC_LIGHT_MM, false);
+	setCheck(hEffectsPage, IDC_LIGHT_MR, false);
+	setCheck(hEffectsPage, IDC_LIGHT_LL, false);
+	setCheck(hEffectsPage, IDC_LIGHT_LM, false);
+	setCheck(hEffectsPage, IDC_LIGHT_LR, false);
+}
+
 void LDViewPreferences::enableLighting(void)
 {
+	int lightDirButton = -1;
+
 	EnableWindow(hLightQualityButton, TRUE);
 	EnableWindow(hLightSubduedButton, TRUE);
 	EnableWindow(hLightSpecularButton, TRUE);
 	EnableWindow(hLightAlternateButton, TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UL), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UM), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UR), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_ML), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_MM), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_MR), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LL), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LM), TRUE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LR), TRUE);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
 		ldPrefs->getQualityLighting(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
@@ -2837,6 +2904,41 @@ void LDViewPreferences::enableLighting(void)
 		ldPrefs->getUseSpecular(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK,
 		ldPrefs->getOneLight(), 0);
+	switch (ldPrefs->getLightDirection())
+	{
+	case LDPreferences::UpperLeft:
+		lightDirButton = IDC_LIGHT_UL;
+		break;
+	case LDPreferences::UpperMiddle:
+		lightDirButton = IDC_LIGHT_UM;
+		break;
+	case LDPreferences::UpperRight:
+		lightDirButton = IDC_LIGHT_UR;
+		break;
+	case LDPreferences::MiddleLeft:
+		lightDirButton = IDC_LIGHT_ML;
+		break;
+	case LDPreferences::MiddleMiddle:
+		lightDirButton = IDC_LIGHT_MM;
+		break;
+	case LDPreferences::MiddleRight:
+		lightDirButton = IDC_LIGHT_MR;
+		break;
+	case LDPreferences::LowerLeft:
+		lightDirButton = IDC_LIGHT_LL;
+		break;
+	case LDPreferences::LowerMiddle:
+		lightDirButton = IDC_LIGHT_LM;
+		break;
+	case LDPreferences::LowerRight:
+		lightDirButton = IDC_LIGHT_LR;
+		break;
+	}
+	uncheckLightDirections();
+	if (lightDirButton != -1)
+	{
+		setCheck(hEffectsPage, lightDirButton, true);
+	}
 }
 
 void LDViewPreferences::disableLighting(void)
@@ -2845,11 +2947,22 @@ void LDViewPreferences::disableLighting(void)
 	EnableWindow(hLightSubduedButton, FALSE);
 	EnableWindow(hLightSpecularButton, FALSE);
 	EnableWindow(hLightAlternateButton, FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UL), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UM), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UR), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_ML), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_MM), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_MR), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LL), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LM), FALSE);
+	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LR), FALSE);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK, 0, 0);
+	uncheckLightDirections();
 }
 
 void LDViewPreferences::setupLighting(void)
