@@ -982,32 +982,33 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 {
     if (libraryUpdater)
     {
-        char statusText[1024] = "";
+		QString statusText;
 		libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("OK"));
 		setLibraryUpdateProgress(1.0f);
         if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
         {
-            sprintf(statusText, "%s:\n%s",
-                TCLocalStrings::get("LibraryUpdateError"),
-                libraryUpdater->getError());
+			statusText = TCLocalStrings::get("LibraryUpdateError");
+			statusText += ":\n";
+			statusText += libraryUpdater->getError();
         }
         switch (finishType)
         {
         case LIBRARY_UPDATE_FINISHED:
             libraryUpdateFinished = true;
-            strcpy(statusText, TCLocalStrings::get("LibraryUpdateComplete"));
+			statusText = TCLocalStrings::get("LibraryUpdateComplete");
             break;
         case LIBRARY_UPDATE_CANCELED:
-            strcpy(statusText, TCLocalStrings::get("LibraryUpdateCanceled"));
+            statusText = TCLocalStrings::get("LibraryUpdateCanceled");
             break;
         case LIBRARY_UPDATE_NONE:
-            strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));            break;
+            statusText = TCLocalStrings::get("LibraryUpdateUnnecessary");
+			break;
         }
 		debugPrintf("About to release library updater.\n");
         libraryUpdater->release();
 		debugPrintf("Released library updater.\n");
         libraryUpdater = NULL;
-        if (strlen(statusText))
+        if (statusText.length())
         {
 			libraryUpdateWindow->setLabelText(statusText);
 		}
@@ -1230,13 +1231,24 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	pollAction->setOn(true);
 	if (viewMode == LDVViewExamine)
 	{
+		const wchar_t *message = TCLocalStrings::get(L"ExamineMode");
+		int len = wcslen(message);
+		QChar *qcString = new QChar[len];
+		for (int i = 0; i < len; i++)
+		{
+			qcString[i] = (QChar)message[i];
+		}
 		mainWindow->examineModeAction->setOn(true);
-		progressMode->setText("Examine");
+		progressMode->setText(QString(qcString, len));
+		delete qcString;
+		//progressMode->setText(QString::fromUtf8(
+		//	TCLocalStrings::get("ExamineMode")));
 	}
 	else
 	{
 		mainWindow->flythroughModeAction->setOn(true);
-		progressMode->setText("Fly-through");
+		progressMode->setText(QString::fromUtf8(
+			TCLocalStrings::get("FlyThroughMode")));
 	}
 	menuBar = mainWindow->menuBar();
 	item = menuBar->findItem(menuBar->idAt(0));
@@ -1499,7 +1511,7 @@ void ModelViewerWidget::endLoad(void)
 	loading = false;
 }
 
-int ModelViewerWidget::progressCallback(char *message, float progress,
+int ModelViewerWidget::progressCallback(const QString &message, float progress,
 	bool /*showErrors*/)
 {
 	if (progress == 2.0f)
@@ -1513,7 +1525,7 @@ int ModelViewerWidget::progressCallback(char *message, float progress,
 	{
 		setupProgress();
 	}
-	if (message)
+	if (message.length())
 	{
 		progressLabel->setText(message);
 	}
@@ -1638,10 +1650,11 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 		extensionsPanel = new OpenGLExtensionsPanel;
 		openGLDriverInfo = LDrawModelViewer::getOpenGLDriverInfo(
 			extensionCount);
-		extensionsPanel->extensionsBox->setText(openGLDriverInfo);
+		extensionsPanel->extensionsBox->setText(
+			QString::fromUtf8(openGLDriverInfo));
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
 		countString.sprintf(TCLocalStrings::get("OpenGlnExtensions"), extensionCount);
-		extensionsCountLabel->setText(countString);
+		extensionsCountLabel->setText(QString::fromUtf8(countString));
 		extensionsPanel->statusBar()->addWidget(extensionsCountLabel, 1);
 	}
 	extensionsPanel->show();
@@ -1821,7 +1834,7 @@ void ModelViewerWidget::drawFPS(void)
 			{
 				fpsString = TCLocalStrings::get("FPSSpinPrompt");
 			}
-			progressLabel->setText(fpsString);
+			progressLabel->setText(QString::fromUtf8(fpsString));
 		}
 	}
 }
@@ -2236,12 +2249,20 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 		if (viewMode == LDVViewExamine)
 		{
 			modelViewer->setConstrainZoom(true);
-			if (progressMode) {progressMode->setText("Examine");}
+			if (progressMode)
+			{
+				progressMode->setText(QString::fromUtf8(
+					TCLocalStrings::get("ExamineMode")));
+			}
 		}
 		else
 		{
 			modelViewer->setConstrainZoom(false);
-			if (progressMode) {progressMode->setText("Fly-through");}
+			if (progressMode)
+			{
+				progressMode->setText(QString::fromUtf8(
+					TCLocalStrings::get("FlyThroughMode")));
+			}
 		}
 		Preferences::setViewMode(viewMode);
 	}
@@ -2395,8 +2416,7 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
 			//screen.save("/tmp/ldview.png","PNG");
 			//printf("file %ux%ix%i\n",screen.width(),screen.height(),
 			//	screen.depth());
-			if (progressCallback((char*)TCLocalStrings::get(
-				"RenderingSnapshot"),
+			if (progressCallback(TCLocalStrings::get("RenderingSnapshot"),
 				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles),
 				true))
 			{

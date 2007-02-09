@@ -182,7 +182,8 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 	void keyReleaseEvent(QKeyEvent *event);
 
-	int progressCallback(char *message, float progress, bool showErrors);
+	int progressCallback(const QString &message, float progress,
+		bool showErrors);
 	void setupProgress(void);
 	void endLoad(void);
 	void updateFPS(void);

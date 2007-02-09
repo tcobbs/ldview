@@ -186,7 +186,7 @@ int LDViewErrors::populateListView(void)
 
 bool LDViewErrors::addErrorToListView(LDLError *error)
 {
-	char *string;
+	const char *string;
 	QListViewItem *parent;
 	QString buf;
 	if (!TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) && 
@@ -228,8 +228,10 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 				buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownLine#"));
 			}
 			addErrorLine(parent, buf, error);
-			stripCRLF(string);
-			buf.sprintf(TCLocalStrings::get("ErrorTreeLine"), string);
+			char *tempString = copyString(string);
+			stripCRLF(tempString);
+			buf.sprintf(TCLocalStrings::get("ErrorTreeLine"), tempString);
+			delete tempString;
 		}
 		else
 		{

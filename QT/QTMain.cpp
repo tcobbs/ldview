@@ -14,6 +14,8 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <string.h>
 #include <qtranslator.h>
+#include <qlocale.h>
+#include <locale.h>
 
 static QGLFormat defaultFormat;
 
@@ -27,12 +29,17 @@ void setupDefaultFormat(void)
 int main(int argc, char *argv[])
 {
 	const char *loc = QTextCodec::locale();
+	QLocale::setDefault(QLocale(loc));
 	char locale[3];
 	locale[0]=locale[1]=locale[2]=0;
 	strncpy(locale,loc,3);
 	locale[2]=0;
 	QString filename;
-	
+
+	printf("QT Locale: %s\n", loc);
+	// Default locale is "C".  Change it to the default one actually set by the
+	// user.
+	setlocale(LC_CTYPE, "");
 	TCUserDefaults::setCommandLine(argv);
 	filename = ModelViewerWidget::findPackageFile(
 		QString("LDViewMessages_")+QString(locale) + ".ini");

@@ -378,12 +378,12 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	{
 		fprintf(file, "<link href=\"%s\" title=\"%s\" "
 			"rel=\"stylesheet\" type=\"text/css\">\n", sm_cssFilename,
-			TCLocalStrings::get("PLStyleSheetTitle"));
+			(const char *)TCLocalStrings::get("PLStyleSheetTitle"));
 	}
 	else
 	{
 		fprintf(file, "<style type=\"text/css\" title=\"%s\"><!--\n",
-			TCLocalStrings::get("PLStyleSheetTitle"));
+			(const char *)TCLocalStrings::get("PLStyleSheetTitle"));
 		fprintf(file, "%s", sm_style);
 		fprintf(file, "--></style>\n");
 	}
@@ -486,13 +486,15 @@ void LDHtmlInventory::writePartCell(
 		{
 			fprintf(file, "<img %salt=\"%s\" title=\"%s\" "
 			"src=\"http://media.peeron.com/ldraw/images/%d/100/%s.png\">",
-			imgStyle.c_str(), TCLocalStrings::get("PLViewOnPeeron"),
-			TCLocalStrings::get("PLViewOnPeeron"), peeronColorNumber,
-			partName.c_str());
+			imgStyle.c_str(),
+			(const char *)TCLocalStrings::get("PLViewOnPeeron"),
+			(const char *)TCLocalStrings::get("PLViewOnPeeron"),
+			peeronColorNumber, partName.c_str());
 		}
 		else
 		{
-			fprintf(file, "%s", TCLocalStrings::get("PLViewOnPeeron"));
+			fprintf(file, "%s",
+				(const char *)TCLocalStrings::get("PLViewOnPeeron"));
 		}
 		fprintf(file, "</a></td>\n");
 	}
@@ -513,7 +515,7 @@ void LDHtmlInventory::writeDescriptionCell(
 		else
 		{
 			fprintf(file, "			<td>&lt;%s&gt;</td>\n",
-				TCLocalStrings::get("PLNoDescription"));
+				(const char *)TCLocalStrings::get("PLNoDescription"));
 		}
 	}
 }
@@ -671,13 +673,13 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "							<td align=\"%s\">\n",
 		ldviewCreditAlign);
 	fprintf(file, "								%s\n",
-		TCLocalStrings::get("PLGeneratedBy"));
+		(const char *)TCLocalStrings::get("PLGeneratedBy"));
 	fprintf(file, "							</td>\n");
 	if (m_partImages)
 	{
 		fprintf(file, "							<td align=\"right\">\n");
 		fprintf(file, "								%s\n",
-			TCLocalStrings::get("PLProvidedBy"));
+			(const char *)TCLocalStrings::get("PLProvidedBy"));
 		fprintf(file, "							</td>\n");
 	}
 	fprintf(file, "						</tr>\n");

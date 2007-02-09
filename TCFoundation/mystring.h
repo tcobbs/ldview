@@ -9,6 +9,10 @@
 #include <strings.h>
 #endif
 
+#ifdef _QT
+#include <qstring.h>
+#endif // _QT
+
 TCExport char *copyString(const char *string, int pad = 0);
 TCExport wchar_t *copyString(const wchar_t *string, int pad = 0);
 
@@ -69,9 +73,15 @@ TCExport void indentPrintf(int indent, const char *format, ...);
 TCExport void processEscapedString(char *string);
 TCExport void processEscapedString(wchar_t *string);
 
+void stringtowstring(std::wstring &dst, const std::string &src);
 void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 void wstringtostring(std::string &dst, const std::wstring &src);
 void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
+
+#ifdef _QT
+void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
+void wstringtoqstring(QString &dst, const std::wstring &src);
+#endif // _QT
 
 #ifdef WIN32
 
