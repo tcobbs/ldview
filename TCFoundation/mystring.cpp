@@ -878,25 +878,61 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 	if (src)
 	{
 		mbstate_t state = { 0 };
+		size_t newLength;
 
 		if (length == -1)
 		{
 			length = wcslen(src);
 		}
+		length *= 2;
 		dst.resize(length);
 		// Even though we don't check, we can't pass NULL instead of &state and
 		// still be thread-safe.
-		wcsrtombs(&dst[0], &src, length + 1, &state);
+		newLength = wcsrtombs(&dst[0], &src, length, &state);
+		if (newLength == (size_t)-1)
+		{
+			dst.resize(strlen(&dst[0]));
+		}
+		else
+		{
+			dst.resize(newLength);
+		}
 	}
 }
 
 void wstringtostring(std::string &dst, const std::wstring &src)
 {
-	const wchar_t *temp = src.c_str();
-	mbstate_t state = { 0 };
-
-	dst.resize(src.length() + 1);
-	// Even though we don't check, we can't pass NULL instead of &state and
-	// still be thread-safe.
-	wcsrtombs(&dst[0], &temp, src.length() + 1, &state);
+	wcstostring(dst, src.c_str(), src.length());
 }
+
+void stringtowstring(std::wstring &dst, const std::string &src)
+{
+	mbstowstring(dst, src.c_str(), src.length());
+}
+
+#ifdef _QT
+void wcstoqstring(QString &dst, const wchar_t *src, int length /*= -1*/)
+{
+	int i;
+	QChar *temp;
+
+	if (length == -1)
+	{
+		length = wcslen(src);
+	}
+	temp = new QChar[length];
+	for (i = 0; i < length; i++)
+	{
+		temp[i] = (QChar)src[i];
+	}
+	dst.truncate(0);
+	dst.insert(0, temp, length);
+	delete temp;
+}
+
+void wstringtoqstring(QString &dst, const std::wstring &src)
+{
+	wcstoqstring(dst, src.c_str(), src.length());
+}
+
+#endif // _QT

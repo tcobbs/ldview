@@ -74,7 +74,11 @@ bool TCLocalStrings::setStringTable(const wchar_t *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
+#ifdef _QT
+const QString &TCLocalStrings::get(const char *key)
+#else // _QT
 const char *TCLocalStrings::get(const char *key)
+#endif // _QT
 {
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
@@ -367,12 +371,16 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 			break;
 		}
 	}
+#ifdef _QT
+	buildQStringMap();
+#endif // _QT
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
 	return sectionFound;
 }
 
-bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable, bool replace)
+bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
+										bool replace)
 {
 	bool sectionFound = false;
 	int lastKeyIndex = -1;
@@ -534,6 +542,9 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable, bool replace
 			break;
 		}
 	}
+#ifdef _QT
+	buildQStringMap();
+#endif // _QT
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
 	return sectionFound;
@@ -559,6 +570,38 @@ const wchar_t *TCLocalStrings::instGetLocalString(const wchar_t *key)
 	}
 }
 
+#ifdef _QT
+const QString &TCLocalStrings::instGetLocalString(const char *key)
+{
+	QStringQStringMap::iterator it = m_qStrings.find(key);
+
+	if (it != m_qStrings.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		debugPrintf("LocalString %s not found!!!!!!\n", key);
+		return m_emptyQString;
+	}
+}
+
+void TCLocalStrings::buildQStringMap(void)
+{
+	m_qStrings.clear();
+	for (WStringWStringMap::iterator it = m_strings.begin();
+		it != m_strings.end(); it++)
+	{
+		QString key;
+		QString value;
+
+		wstringtoqstring(key, it->first);
+		wstringtoqstring(value, it->second);
+		m_qStrings[key] = value;
+	}
+}
+
+#else // _QT
 const char *TCLocalStrings::instGetLocalString(const char *key)
 {
 	TCStringObject *stringObject =
@@ -576,3 +619,4 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 		return "";
 	}
 }
+#endif // _QT
