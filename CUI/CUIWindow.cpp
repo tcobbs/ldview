@@ -2309,3 +2309,40 @@ HMENU CUIWindow::findSubMenu(HMENU hParentMenu, int subMenuIndex, int *index)
 	}
 	return NULL;
 }
+
+// Note: static method.
+int CUIWindow::SendMessageUC(
+	HWND hWnd,
+#ifdef TC_NO_UNICODE
+	UINT uMsg,
+#else // TC_NO_UNICODE
+	UINT /*uMsg*/,
+#endif // TC_NO_UNICODE
+#ifdef TC_NO_UNICODE
+	UINT /*uMsgW*/,
+#else // TC_NO_UNICODE
+	UINT uMsgW,
+#endif // TC_NO_UNICODE
+	WPARAM wParam,
+	LPARAM lParam)
+{
+#ifdef TC_NO_UNICODE
+	return ::SendMessageA(hWnd, uMsg, wParam, lParam);
+#else // TC_NO_UNICODE
+	return ::SendMessageW(hWnd, uMsgW, wParam, lParam);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+HWND CUIWindow::CreateStatusWindowUC(
+	LONG style,
+	UCCSTR lpszText,
+	HWND hwndParent,
+	UINT wID)
+{
+#ifdef TC_NO_UNICODE
+	return ::CreateStatusWindowA(style, lpszText, hwndParent, wID);
+#else // TC_NO_UNICODE
+	return ::CreateStatusWindowW(style, lpszText, hwndParent, wID);
+#endif // TC_NO_UNICODE
+}

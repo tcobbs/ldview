@@ -20,6 +20,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <list>
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32

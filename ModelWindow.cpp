@@ -1306,7 +1306,7 @@ void ModelWindow::hideProgress(void)
 	if (loading)
 	{
 		SendMessage(hProgressBar, PBM_SETPOS, 0, 0);
-		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)"");
+		SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1, (LPARAM)_UC(""));
 		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
 			enableNonModalWindow, (LPARAM)hParentWindow);
 		((LDViewWindow*)parentWindow)->setLoading(false);
@@ -1348,7 +1348,7 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 bool ModelWindow::addError(LDLError* error)
 {
 	char *buf;
-	char* string;
+	const char* string;
 	HTREEITEM parent;
 
 	if (!showsError(error))
@@ -2013,7 +2013,21 @@ LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
 
+#ifndef TC_NO_UNICODE
 int ModelWindow::progressCallback(const char* message, float progress,
+								  bool showErrors)
+{
+	std::wstring temp;
+
+	if (message)
+	{
+		mbstowstring(temp, message);
+	}
+	return progressCallback(temp.c_str(), progress, showErrors);
+}
+#endif // TC_NO_UNICODE
+
+int ModelWindow::progressCallback(UCCSTR message, float progress,
 								  bool showErrors)
 {
 	DWORD thisProgressUpdate = GetTickCount();
@@ -2051,12 +2065,14 @@ int ModelWindow::progressCallback(const char* message, float progress,
 //	debugPrintf("%s: %f\n", message, progress);
 	if (message)
 	{
-		char oldMessage[1024];
+		UCCHAR oldMessage[1024];
 
-		SendMessage(hStatusBar, SB_GETTEXT, 1, (LPARAM)oldMessage);
-		if (strcmp(message, oldMessage) != 0)
+		SendMessageUC(hStatusBar, SB_GETTEXTA, SB_GETTEXTW, 1,
+			(LPARAM)oldMessage);
+		if (ucstrcmp(message, oldMessage) != 0)
 		{
-			SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
+			SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1,
+				(LPARAM)message);
 		}
 //		SendDlgItemMessage(hProgressWindow, IDC_LOAD_PROGRESS_MSG, WM_SETTEXT,
 //			0, (LPARAM)message);
@@ -2240,14 +2256,27 @@ void ModelWindow::setupLighting(void)
 	modelViewer->setup();
 }
 
-void ModelWindow::setStatusText(HWND hStatus, int part, char *text)
+#ifndef TC_NO_UNICODE
+void ModelWindow::setStatusText(HWND hStatus, int part, const char *text)
 {
-	char oldText[1024];
+	std::wstring temp;
 
-	SendMessage(hStatus, SB_GETTEXT, part, (LPARAM)oldText);
-	if (strcmp(text, oldText) != 0)
+	if (text)
 	{
-		SendMessage(hStatus, SB_SETTEXT, part, (LPARAM)text);
+		mbstowstring(temp, text);
+	}
+	setStatusText(hStatus, part, temp.c_str());
+}
+#endif // TC_NO_UNICODE
+
+void ModelWindow::setStatusText(HWND hStatus, int part, UCCSTR text)
+{
+	UCCHAR oldText[1024];
+
+	SendMessageUC(hStatus, SB_GETTEXTA, SB_GETTEXTW, part, (LPARAM)oldText);
+	if (ucstrcmp(text, oldText) != 0)
+	{
+		SendMessageUC(hStatus, SB_SETTEXTA, SB_SETTEXTW, part, (LPARAM)text);
 		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
 	}
 }
@@ -3399,7 +3428,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 				{
 					int x, y;
 
-					if (progressCallback(NULL, (float)(yTile *
+					if (progressCallback((char*)NULL, (float)(yTile *
 						numXTiles + xTile) / (numYTiles * numXTiles)))
 					{
 						if (landscape)
@@ -3468,7 +3497,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 					}
 				}
 			}
-			progressCallback(NULL, 1.0f);
+			progressCallback((char*)NULL, 1.0f);
 			DeleteObject(hBitmap);
 			modelViewer->setHighlightLineWidth(oldHighlightLineWidth);
 			modelViewer->setWireframeLineWidth(oldWireframeLineWidth);
@@ -3477,7 +3506,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 			modelViewer->setNumXTiles(1);
 			modelViewer->setNumYTiles(1);
 			delete buffer;
-			progressCallback(NULL, 2.0f);
+			progressCallback((char*)NULL, 2.0f);
 		}
 		if (hPBuffer)
 		{

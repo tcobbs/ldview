@@ -2,6 +2,7 @@
 #define __MYSTRING_H__
 
 #include <TCFoundation/TCDefines.h>
+#include <TCFoundation/TCStlIncludes.h>
 
 #include <string.h>
 #ifdef _AIX
@@ -68,6 +69,10 @@ TCExport void indentPrintf(int indent, const char *format, ...);
 TCExport void processEscapedString(char *string);
 TCExport void processEscapedString(wchar_t *string);
 
+void mbstowstring(std::wstring &dst, const char *src, int length = -1);
+void wstringtostring(std::string &dst, const std::wstring &src);
+void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
+
 #ifdef WIN32
 
 #define strcasecmp stricmp
@@ -81,5 +86,12 @@ char *prettyLongLongString(long long);
 long long longLongFromString(char*);
 
 #endif // WIN32
+
+#ifdef TC_NO_UNICODE
+#define ucstrcmp strcmp
+#else // TC_NO_UNICODE
+#define ucstrcmp wcscmp
+#endif // TC_NO_UNICODE
+
 
 #endif

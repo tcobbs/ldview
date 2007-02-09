@@ -19,7 +19,7 @@
 #endif // WIN32
 
 #define LDL_LOWRES_PREFIX "LDL-LOWRES:"
-#define LOAD_MESSAGE TCLocalStrings::get("LDLModelLoading")
+#define LOAD_MESSAGE TCLocalStrings::get(_UC("LDLModelLoading"))
 #define MAIN_READ_FRACTION 0.1f
 
 char *LDLModel::sm_systemLDrawDir = NULL;
@@ -680,6 +680,21 @@ bool LDLModel::read(FILE *file)
 }
 
 void LDLModel::reportProgress(const char *message, float progress,
+							  bool mainOnly)
+{
+	if (!mainOnly || this == m_mainModel)
+	{
+		bool loadCanceled;
+
+		TCProgressAlert::send("LDLModel", message, progress, &loadCanceled);
+		if (loadCanceled)
+		{
+			cancelLoad();
+		}
+	}
+}
+
+void LDLModel::reportProgress(const wchar_t *message, float progress,
 							  bool mainOnly)
 {
 	if (!mainOnly || this == m_mainModel)

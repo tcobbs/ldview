@@ -8,6 +8,8 @@ class TCProgressAlert : public TCAlert
 public:
 	TCProgressAlert(const char *source, const char *message, float progress,
 		TCStringArray *extraInfo = NULL);
+	TCProgressAlert(const char *source, const wchar_t *message, float progress,
+		const WStringList &extraInfo = WStringList());
 	float getProgress(void) { return m_progress; }
 	void abort(void) { m_aborted = true; }
 	bool getAborted(void) { return m_aborted; }
@@ -18,6 +20,10 @@ public:
 		bool *aborted = NULL, TCStringArray *extraInfo = NULL);
 	static void send(const char *source, const char *message, float progress,
 		TCStringArray *extraInfo);
+	static void send(const char *source, const wchar_t *message, float progress,
+		bool *aborted = NULL, const WStringList &extraInfo = WStringList());
+	static void send(const char *source, const wchar_t *message, float progress,
+		const WStringList &extraInfo);
 protected:
 	virtual ~TCProgressAlert(void);
 	virtual void dealloc(void);
