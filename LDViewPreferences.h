@@ -15,6 +15,7 @@
 #define LDP_UNKNOWN_COMMAND 0x02
 
 typedef std::map<HWND, bool> HwndBoolMap;
+typedef std::map<int, int> IntIntMap;
 
 class LDPreferences;
 class TCAlert;
@@ -201,6 +202,7 @@ protected:
 	virtual void enableCutaway(void);
 	virtual void disableCutaway(void);
 	virtual void setupLighting(void);
+	virtual void setupLightAngleToolbar(void);
 	virtual void uncheckLightDirections(void);
 	virtual void enableLighting(void);
 	virtual void disableLighting(void);
@@ -225,12 +227,15 @@ protected:
 		LPARAM lParam);
 	virtual TCFloat getMinFov(void);
 	virtual TCFloat getMaxFov(void);
-	virtual void initThemes(HWND hButton);
+	virtual void initThemesButton(HWND hButton);
+	virtual void initThemesTab(HWND hWnd);
 	virtual void setupGroupCheckButton(HWND hPage, int buttonId, bool state);
 	virtual bool getCachedCheck(HWND hPage, int buttonId, bool action = false);
 	virtual bool getCheck(HWND hPage, int buttonId);
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
+	virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
+	virtual bool getToolbarCheck(HWND hToolbar, int id);
 
 
 	BOOL doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
@@ -294,7 +299,9 @@ protected:
 	HWND hLightSubduedButton;
 	HWND hLightSpecularButton;
 	HWND hLightAlternateButton;
+	HWND hLightDirectionToolbar;
 	HWND hHardwareStereoButton;
+	HWND hLightDirStatic;
 	HWND hCrossEyedStereoButton;
 	HWND hParallelStereoButton;
 	HWND hStereoSpacingSlider;
@@ -335,9 +342,14 @@ protected:
 	bool checkAbandon;
 
 	HTHEME hButtonTheme;
+	HTHEME hTabTheme;
 
 	static char ldviewPath[MAX_PATH];
 	HwndBoolMap checkStates;
+	IntIntMap lightDirIndexToId;
+	IntIntMap lightDirIdToIndex;
+	static LRESULT CALLBACK staticLightDirWindowProc(HWND hWnd,
+		UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 #endif // __LDVPREFERENCES_H__

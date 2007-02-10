@@ -2346,3 +2346,23 @@ HWND CUIWindow::CreateStatusWindowUC(
 	return ::CreateStatusWindowW(style, lpszText, hwndParent, wID);
 #endif // TC_NO_UNICODE
 }
+
+// Note: static method.
+BOOL CUIWindow::screenToClient(HWND hWnd, RECT *rect)
+{
+	POINT tempPoint = {rect->left, rect->top};
+	if (::ScreenToClient(hWnd, &tempPoint))
+	{
+		rect->left = tempPoint.x;
+		rect->top = tempPoint.y;
+		tempPoint.x = rect->right;
+		tempPoint.y = rect->bottom;
+		if (::ScreenToClient(hWnd, &tempPoint))
+		{
+			rect->right = tempPoint.x;
+			rect->bottom = tempPoint.y;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}

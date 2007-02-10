@@ -1117,6 +1117,7 @@ IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
 IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
 IDB_VERTEX_ORDER        BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
 IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
+IDB_LIGHT_ANGLES        BITMAP  DISCARDABLE     "Icons\\LightAngles.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
