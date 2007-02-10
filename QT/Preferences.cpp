@@ -1655,31 +1655,31 @@ void Preferences::enableLighting(void)
 	switch (ldPrefs->getLightDirection())
 	{
     case LDPreferences::UpperLeft:
-		panel->lightingDir11->setChecked(true);
+		panel->lightingDir11->setOn(true);
         break;
     case LDPreferences::UpperMiddle:
-		panel->lightingDir12->setChecked(true);
+		panel->lightingDir12->setOn(true);
         break;
     case LDPreferences::UpperRight:
-		panel->lightingDir13->setChecked(true);
+		panel->lightingDir13->setOn(true);
         break;
     case LDPreferences::MiddleLeft:
-		panel->lightingDir21->setChecked(true);
+		panel->lightingDir21->setOn(true);
         break;
     case LDPreferences::MiddleMiddle:
-		panel->lightingDir22->setChecked(true);
+		panel->lightingDir22->setOn(true);
         break;
     case LDPreferences::MiddleRight:
-		panel->lightingDir23->setChecked(true);
+		panel->lightingDir23->setOn(true);
         break;
     case LDPreferences::LowerLeft:
-		panel->lightingDir31->setChecked(true);
+		panel->lightingDir31->setOn(true);
         break;
     case LDPreferences::LowerMiddle:
-		panel->lightingDir32->setChecked(true);
+		panel->lightingDir32->setOn(true);
         break;
     case LDPreferences::LowerRight:
-		panel->lightingDir33->setChecked(true);
+		panel->lightingDir33->setOn(true);
         break;
 	case LDPreferences::CustomDirection:
 		break;
@@ -1838,15 +1838,15 @@ void Preferences::disableLighting(void)
 	setButtonState(panel->subduedLightingButton, false);
 	setButtonState(panel->specularLightingButton, false);
 	setButtonState(panel->alternateLightingButton, false);
-    panel->lightingDir11->setChecked(false);
-    panel->lightingDir12->setChecked(false);
-    panel->lightingDir13->setChecked(false);
-    panel->lightingDir21->setChecked(false);
-    panel->lightingDir22->setChecked(false);
-    panel->lightingDir23->setChecked(false);
-    panel->lightingDir31->setChecked(false);
-    panel->lightingDir32->setChecked(false);
-    panel->lightingDir33->setChecked(false);
+    panel->lightingDir11->setOn(false);
+    panel->lightingDir12->setOn(false);
+    panel->lightingDir13->setOn(false);
+    panel->lightingDir21->setOn(false);
+    panel->lightingDir22->setOn(false);
+    panel->lightingDir23->setOn(false);
+    panel->lightingDir31->setOn(false);
+    panel->lightingDir32->setOn(false);
+    panel->lightingDir33->setOn(false);
 
 }
 
