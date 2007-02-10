@@ -19,6 +19,7 @@ PFNGETTHEMERECT CUIThemes::sm_getThemeRect = NULL;
 PFNGETTHEMETEXTEXTENT CUIThemes::sm_getThemeTextExtent = NULL;
 PFNDDRAWTHEMEPARENTBACKGROUND CUIThemes::sm_drawThemeParentBackground = NULL;
 PFNGETTHEMEPARTSIZE CUIThemes::sm_getThemePartSize = NULL;
+PFNENABLETHEMEDIALOGTEXTURE CUIThemes::sm_enableThemeDialogTexture = NULL;
 
 CUIThemes::CUIThemesCleanup::~CUIThemesCleanup(void)
 {
@@ -77,13 +78,18 @@ void CUIThemes::init(void)
 			sm_getThemePartSize =
 				(PFNGETTHEMEPARTSIZE)GetProcAddress(sm_hModThemes,
 				"GetThemePartSize");
+			sm_enableThemeDialogTexture =
+				(PFNENABLETHEMEDIALOGTEXTURE)GetProcAddress(sm_hModThemes,
+				"EnableThemeDialogTexture");
+
 
 			if (sm_openThemeData && sm_closeThemeData && sm_drawThemeBackground
 				&& sm_drawThemeText && sm_getThemeBackgroundContentRect &&
 				sm_drawThemeEdge && sm_setWindowTheme && sm_getWindowTheme &&
 				sm_getThemeColor && sm_setThemeAppProperties &&
 				sm_getThemeRect && sm_getThemeTextExtent &&
-				sm_drawThemeParentBackground && sm_getThemePartSize)
+				sm_drawThemeParentBackground && sm_getThemePartSize &&
+				sm_enableThemeDialogTexture)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -286,6 +292,18 @@ HRESULT CUIThemes::getThemePartSize(HTHEME hTheme, HDC hdc, int iPartId,
 	{
 		return sm_getThemePartSize(hTheme, hdc, iPartId, iStateId, prc, eSize,
 			psz);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+HRESULT CUIThemes::enableThemeDialogTexture(HWND hwnd, DWORD dwFlags)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_enableThemeDialogTexture(hwnd, dwFlags);
 	}
 	else
 	{

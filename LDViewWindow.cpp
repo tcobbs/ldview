@@ -525,14 +525,13 @@ void LDViewWindow::createToolbar(void)
 		int count;
 
 		populateTbButtonInfos();
-		ModelWindow::initCommonControls(ICC_BAR_CLASSES);
+		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME,
 			NULL, WS_CHILD | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0,
 			0, 0, hWindow, (HMENU)ID_TOOLBAR, hInstance, NULL);
 		SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 		memset(buttonTitle, 0, sizeof(buttonTitle));
 		strcpy(buttonTitle, "");
-		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 		SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(25, 16));
@@ -542,7 +541,8 @@ void LDViewWindow::createToolbar(void)
 			(LPARAM)&addBitmap);
 		addBitmap.hInst = getLanguageModule();
 		addBitmap.nID = IDB_TOOLBAR;
-		tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 4,
+		// The 10 on the following line is the number of buttons in the bitmap.
+		tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 10,
 			(LPARAM)&addBitmap);
 		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 		count = tbButtonInfos->getCount();

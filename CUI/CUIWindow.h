@@ -63,6 +63,10 @@ class CUIExport CUIWindow : public TCObject
 			BOOL asChildWindow = TRUE, DLGPROC dialogProc = staticDialogProc,
 			LPARAM lParam = 0);
 		virtual void doDialogClose(HWND hDlg);
+		virtual LRESULT windowProc(HWND hWnd, UINT message,
+			WPARAM wParam, LPARAM lParam);
+		virtual BOOL dialogProc(HWND hDlg, UINT message,
+			WPARAM wParam, LPARAM lParam);
 
 		static void setArrowCursor(void);
 		static void setWaitCursor(void);
@@ -73,6 +77,11 @@ class CUIExport CUIWindow : public TCObject
 			LPARAM lParam);
 		static HWND CreateStatusWindowUC(LONG style, UCCSTR lpszText,
 			HWND hwndParent, UINT wID);
+		static BOOL screenToClient(HWND hWnd, RECT *rect);
+		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
+			UINT message, WPARAM wParam, LPARAM lParam);
+		static BOOL CALLBACK staticDialogProc(HWND hDlg,
+			UINT message, WPARAM wParam, LPARAM lParam);
 	protected:
 		~CUIWindow(void);
 		virtual void dealloc(void);
@@ -82,10 +91,6 @@ class CUIExport CUIWindow : public TCObject
 		virtual BOOL createMainWindow(void);
 		virtual BOOL createSubWindow(void);
 		virtual char* windowClassName(void);
-		virtual LRESULT windowProc(HWND hWnd, UINT message,
-			WPARAM wParam, LPARAM lParam);
-		virtual BOOL dialogProc(HWND hDlg, UINT message,
-			WPARAM wParam, LPARAM lParam);
 		virtual WNDCLASSEX getWindowClass(void);
 		virtual void addChild(CUIWindow* childWindow);
 		virtual void removeChild(CUIWindow* childWindow);
@@ -177,10 +182,6 @@ class CUIExport CUIWindow : public TCObject
 		virtual bool copyToClipboard(const char *value);
 
 		static void printMessageName(UINT message);
-		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
-			UINT message, WPARAM wParam, LPARAM lParam);
-		static BOOL CALLBACK staticDialogProc(HWND hDlg,
-			UINT message, WPARAM wParam, LPARAM lParam);
 		static BOOL CALLBACK disableNonModalWindow(HWND hWnd,
 			LPARAM hModalDialog);
 		static BOOL CALLBACK enableNonModalWindow(HWND hWnd,

@@ -60,13 +60,28 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	hPrefSetsPage(NULL),
 	setActiveWarned(false),
 	checkAbandon(true),
-	hButtonTheme(NULL)
+	hButtonTheme(NULL),
+	hTabTheme(NULL)
 {
 	CUIThemes::init();
 	loadSettings();
 	applySettings();
 	TCAlertManager::registerHandler(TCUserDefaults::alertClass(), this,
 		(TCAlertCallback)&LDViewPreferences::userDefaultChangedAlertCallback);
+	lightDirIndexToId[0] = IDC_LIGHT_UL;
+	lightDirIndexToId[1] = IDC_LIGHT_UM;
+	lightDirIndexToId[2] = IDC_LIGHT_UR;
+	lightDirIndexToId[3] = IDC_LIGHT_ML;
+	lightDirIndexToId[4] = IDC_LIGHT_MM;
+	lightDirIndexToId[5] = IDC_LIGHT_MR;
+	lightDirIndexToId[6] = IDC_LIGHT_LL;
+	lightDirIndexToId[7] = IDC_LIGHT_LM;
+	lightDirIndexToId[8] = IDC_LIGHT_LR;
+	for (IntIntMap::const_iterator it = lightDirIndexToId.begin();
+		it != lightDirIndexToId.end(); it++)
+	{
+		lightDirIdToIndex[it->second] = it->first;
+	}
 }
 
 LDViewPreferences::~LDViewPreferences(void)
@@ -82,6 +97,11 @@ void LDViewPreferences::dealloc(void)
 	{
 		CUIThemes::closeThemeData(hButtonTheme);
 		hButtonTheme = NULL;
+	}
+	if (hTabTheme)
+	{
+		CUIThemes::closeThemeData(hTabTheme);
+		hTabTheme = NULL;
 	}
 	CUIPropertySheet::dealloc();
 }
@@ -852,6 +872,11 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 		CUIThemes::closeThemeData(hButtonTheme);
 		hButtonTheme = NULL;
 	}
+	if (hTabTheme)
+	{
+		CUIThemes::closeThemeData(hTabTheme);
+		hTabTheme = NULL;
+	}
 	if (CUIThemes::isThemeLibLoaded())
 	{
 		if (hBackgroundColorButton)
@@ -866,6 +891,10 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 		{
 			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME,
 				ldPrefs->getDrawWireframe());
+		}
+		if (hLightDirStatic)
+		{
+			initThemesTab(hLightDirStatic);
 		}
 	}
 	return FALSE;
@@ -995,7 +1024,7 @@ void LDViewPreferences::setupColorButton(HWND hPage, HWND &hColorButton,
 	HDC hdc;
 	RECT clientRect;
 
-	initThemes(hColorButton);
+	initThemesButton(hColorButton);
 	if (hButtonBitmap)
 	{
 		DeleteObject(hButtonBitmap);
@@ -1414,6 +1443,17 @@ void LDViewPreferences::applyEffectsChanges(void)
 			ldPrefs->setUseSpecular(getCheck(hEffectsPage, IDC_SPECULAR));
 			ldPrefs->setOneLight(getCheck(hEffectsPage,
 				IDC_ALTERNATE_LIGHTING));
+			for (IntIntMap::const_iterator it = lightDirIndexToId.begin();
+			it != lightDirIndexToId.end(); it++)
+			{
+				if (getToolbarCheck(hLightDirectionToolbar, it->second))
+				{
+					lightDirection =
+						(LDPreferences::LightDirection)(it->first + 1);
+					break;
+				}
+			}
+/*
 			if (getCheck(hEffectsPage, IDC_LIGHT_UL))
 			{
 				lightDirection = LDPreferences::UpperLeft;
@@ -1450,6 +1490,7 @@ void LDViewPreferences::applyEffectsChanges(void)
 			{
 				lightDirection = LDPreferences::LowerRight;
 			}
+*/
 			if (lightDirection != LDPreferences::CustomDirection)
 			{
 				ldPrefs->setLightDirection(lightDirection);
@@ -2510,11 +2551,18 @@ void LDViewPreferences::disableBfc(void)
 	EnableWindow(hGreenFrontFacesButton, FALSE);
 }
 
-void LDViewPreferences::initThemes(HWND hButton)
+void LDViewPreferences::initThemesButton(HWND hButton)
 {
 	if (CUIThemes::isThemeLibLoaded() && !hButtonTheme)
 	{
 		hButtonTheme = CUIThemes::openThemeData(hButton, L"Button");
+	}
+}
+void LDViewPreferences::initThemesTab(HWND hStatic)
+{
+	if (CUIThemes::isThemeLibLoaded() && !hTabTheme)
+	{
+		hTabTheme = CUIThemes::openThemeData(hStatic, L"Tab");
 	}
 }
 
@@ -2528,7 +2576,7 @@ void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 
 		if (hButton)
 		{
-			initThemes(hButton);
+			initThemesButton(hButton);
 			if (hButtonTheme)
 			{
 				DWORD dwStyle = GetWindowLong(hButton, GWL_STYLE);
@@ -2867,6 +2915,12 @@ void LDViewPreferences::setupStereo(void)
 
 void LDViewPreferences::uncheckLightDirections(void)
 {
+	for (IntIntMap::const_iterator it = lightDirIndexToId.begin();
+		it != lightDirIndexToId.end(); it++)
+	{
+		setToolbarCheck(hLightDirectionToolbar, it->second, false);
+	}
+/*
 	setCheck(hEffectsPage, IDC_LIGHT_UL, false);
 	setCheck(hEffectsPage, IDC_LIGHT_UM, false);
 	setCheck(hEffectsPage, IDC_LIGHT_UR, false);
@@ -2876,6 +2930,29 @@ void LDViewPreferences::uncheckLightDirections(void)
 	setCheck(hEffectsPage, IDC_LIGHT_LL, false);
 	setCheck(hEffectsPage, IDC_LIGHT_LM, false);
 	setCheck(hEffectsPage, IDC_LIGHT_LR, false);
+*/
+}
+
+void LDViewPreferences::setToolbarCheck(HWND hToolbar, int id, bool value)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, id, 0);
+
+	if (value)
+	{
+		state |= TBSTATE_CHECKED;
+	}
+	else
+	{
+		state &= ~TBSTATE_CHECKED;
+	}
+	SendMessage(hToolbar, TB_SETSTATE, id, MAKELONG(state, 0));
+}
+
+bool LDViewPreferences::getToolbarCheck(HWND hToolbar, int id)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, id, 0);
+
+	return state & TBSTATE_CHECKED != 0;
 }
 
 void LDViewPreferences::enableLighting(void)
@@ -2887,6 +2964,8 @@ void LDViewPreferences::enableLighting(void)
 	EnableWindow(hLightSpecularButton, TRUE);
 	EnableWindow(hLightAlternateButton, TRUE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), TRUE);
+	EnableWindow(hLightDirectionToolbar, TRUE);
+/*
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UL), TRUE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UM), TRUE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UR), TRUE);
@@ -2896,6 +2975,7 @@ void LDViewPreferences::enableLighting(void)
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LL), TRUE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LM), TRUE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LR), TRUE);
+*/
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
 		ldPrefs->getQualityLighting(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
@@ -2904,6 +2984,8 @@ void LDViewPreferences::enableLighting(void)
 		ldPrefs->getUseSpecular(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK,
 		ldPrefs->getOneLight(), 0);
+	lightDirButton = lightDirIndexToId[(int)ldPrefs->getLightDirection() - 1];
+/*
 	switch (ldPrefs->getLightDirection())
 	{
 	case LDPreferences::UpperLeft:
@@ -2935,9 +3017,11 @@ void LDViewPreferences::enableLighting(void)
 		break;
 	}
 	uncheckLightDirections();
-	if (lightDirButton != -1)
+*/
+	if (lightDirButton != 0)
 	{
-		setCheck(hEffectsPage, lightDirButton, true);
+		setToolbarCheck(hLightDirectionToolbar, lightDirButton, true);
+		//setCheck(hEffectsPage, lightDirButton, true);
 	}
 }
 
@@ -2948,6 +3032,8 @@ void LDViewPreferences::disableLighting(void)
 	EnableWindow(hLightSpecularButton, FALSE);
 	EnableWindow(hLightAlternateButton, FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), FALSE);
+	EnableWindow(hLightDirectionToolbar, FALSE);
+/*
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UL), FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UM), FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_UR), FALSE);
@@ -2957,12 +3043,144 @@ void LDViewPreferences::disableLighting(void)
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LL), FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LM), FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_LR), FALSE);
+*/
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK, 0, 0);
 	uncheckLightDirections();
+}
+
+LRESULT CALLBACK LDViewPreferences::staticLightDirWindowProc(
+	HWND hWnd,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	CUIWindow *cuiWindow;
+	cuiWindow = (CUIWindow *)GetWindowLong(hWnd, GWL_USERDATA);
+	if (cuiWindow)
+	{
+		LDViewPreferences *prefs = (LDViewPreferences*)cuiWindow;
+		switch (message)
+		{
+		case WM_COMMAND:
+			return cuiWindow->dialogProc(prefs->hEffectsPage, message, wParam,
+				lParam);
+		case WM_ERASEBKGND:
+			if (CUIThemes::isThemeLibLoaded())
+			{
+				HTHEME hTheme = prefs->hTabTheme;
+
+				if (hTheme)
+				{
+					RECT rect;
+					RECT innerRect;
+					HDC hdc = (HDC)wParam;
+
+					GetWindowRect(prefs->hEffectsPage, &rect);
+					GetWindowRect(hWnd, &innerRect);
+					screenToClient(hWnd, &rect);
+					screenToClient(hWnd, &innerRect);
+					ExcludeClipRect(hdc, rect.left, rect.top, rect.right, 0);
+					ExcludeClipRect(hdc, rect.left, 0, 0, rect.bottom);
+					ExcludeClipRect(hdc, innerRect.right, 0, rect.right,
+						rect.bottom);
+					ExcludeClipRect(hdc, 0, innerRect.bottom, innerRect.right,
+						rect.bottom);
+					CUIThemes::drawThemeBackground(hTheme, (HDC)hdc,
+						TABP_BODY, 0, &rect, NULL);
+					return 1;
+				}
+			}
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
+	}
+	return staticWindowProc(hWnd, message, wParam, lParam);
+}
+
+void LDViewPreferences::setupLightAngleToolbar(void)
+{
+	TBADDBITMAP addBitmap;
+	TBBUTTON buttons[9];
+	//char buttonTitle[128];
+	int i;
+	int tbBitmapStartId;
+	RECT itemRect;
+	RECT tbRect;
+	RECT tempRect;
+	int newWidth;
+	int newHeight;
+	POINT tbCenter;
+
+	ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
+	GetWindowRect(GetDlgItem(hEffectsPage, IDC_LIGHT_UL), &tbRect);
+	GetWindowRect(GetDlgItem(hEffectsPage, IDC_LIGHT_LR), &tempRect);
+	tbRect.right = tempRect.right;
+	tbRect.bottom = tempRect.bottom;
+	screenToClient(hEffectsPage, &tbRect);
+	hLightDirStatic = CreateWindowEx(WS_EX_TRANSPARENT, WC_STATIC, "", WS_CHILD | SS_SIMPLE,
+		tbRect.left, tbRect.top, tbRect.right - tbRect.left, tbRect.bottom - tbRect.top,
+		hEffectsPage, NULL, hInstance, NULL);
+	hLightDirectionToolbar = CreateWindowEx(WS_EX_TRANSPARENT, TOOLBARCLASSNAME,
+		NULL, WS_CHILD | TBSTYLE_TRANSPARENT | TBSTYLE_FLAT | TBSTYLE_WRAPABLE |
+		CCS_NOPARENTALIGN | CCS_NORESIZE | CCS_VERT, tbRect.left, tbRect.top,
+		tbRect.right - tbRect.left, tbRect.bottom - tbRect.top,
+		hLightDirStatic, (HMENU)ID_TOOLBAR, hInstance, NULL);
+	//memset(buttonTitle, 0, sizeof(buttonTitle));
+	//strcpy(buttonTitle, "");
+	SendMessage(hLightDirectionToolbar, TB_BUTTONSTRUCTSIZE,
+		(WPARAM)sizeof(TBBUTTON), 0);
+	// Set min/max width.
+	SendMessage(hLightDirectionToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(16, 16));
+	// Set button width/height.
+	SendMessage(hLightDirectionToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(16, 16));
+	addBitmap.hInst = getLanguageModule();
+	addBitmap.nID = IDB_LIGHT_ANGLES;
+	tbBitmapStartId = SendMessage(hLightDirectionToolbar, TB_ADDBITMAP, 9,
+		(LPARAM)&addBitmap);
+	//SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
+	for (i = 0; i < 9; i++)
+	{
+		buttons[i].iBitmap = tbBitmapStartId + i;
+		buttons[i].idCommand = lightDirIndexToId[i];
+		buttons[i].fsState = TBSTATE_ENABLED;
+		if (i % 3 == 2)
+		{
+			buttons[i].fsState |= TBSTATE_WRAP;
+		}
+		buttons[i].fsStyle = TBSTYLE_CHECKGROUP;
+		buttons[i].dwData = (DWORD)this;
+		buttons[i].iString = -1;
+	}
+	SendMessage(hLightDirectionToolbar, TB_ADDBUTTONS, 9, (LPARAM)buttons);
+	SendMessage(hLightDirectionToolbar, TB_GETITEMRECT, 0, (LPARAM)&itemRect);
+	newWidth = (itemRect.right - itemRect.left) * 3;
+	newHeight = (itemRect.bottom - itemRect.top) * 3 + 2;
+	tbCenter.x = (tbRect.left + tbRect.right) / 2;
+	tbCenter.y = (tbRect.top + tbRect.bottom) / 2;
+	tbRect.left = tbCenter.x - newWidth / 2;
+	tbRect.right = tbRect.left + newWidth;
+	tbRect.top = tbCenter.y - newHeight / 2;
+	tbRect.bottom = tbRect.top + newHeight;
+	SendMessage(hLightDirectionToolbar, TB_AUTOSIZE, 0, 0);
+	MoveWindow(hLightDirectionToolbar, 0, -2,/*tbRect.left, tbRect.top,*/ newWidth,
+		newHeight, FALSE);
+	MoveWindow(hLightDirStatic, tbRect.left, tbRect.top, newWidth, newHeight - 2, FALSE);
+	//CUIThemes::enableThemeDialogTexture(hEffectsPage, ETDT_ENABLETAB);
+	ShowWindow(hLightDirectionToolbar, SW_SHOW);
+	for (IntIntMap::const_iterator it = lightDirIndexToId.begin();
+		it != lightDirIndexToId.end(); it++)
+	{
+		ShowWindow(GetDlgItem(hEffectsPage, it->second), SW_HIDE);
+	}
+	SetWindowLong(hLightDirStatic, GWL_USERDATA, (LONG)this);
+	SetWindowLong(hLightDirStatic, GWL_WNDPROC, (LONG)staticLightDirWindowProc);
+	initThemesTab(hWindow);
+	ShowWindow(hLightDirStatic, SW_SHOW);
+	//CUIThemes::enableThemeDialogTexture(hLightDirStatic, ETDT_ENABLETAB);
+	SetWindowPos(hLightDirStatic, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 }
 
 void LDViewPreferences::setupLighting(void)
@@ -2973,6 +3191,7 @@ void LDViewPreferences::setupLighting(void)
 	hLightSubduedButton = GetDlgItem(hEffectsPage, IDC_LIGHTING_SUBDUED);
 	hLightSpecularButton = GetDlgItem(hEffectsPage, IDC_SPECULAR);
 	hLightAlternateButton = GetDlgItem(hEffectsPage, IDC_ALTERNATE_LIGHTING);
+	setupLightAngleToolbar();
 	if (ldPrefs->getUseLighting())
 	{
 		enableLighting();
