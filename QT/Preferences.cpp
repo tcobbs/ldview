@@ -16,6 +16,7 @@
 #include <qinputdialog.h>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
+#include <qgroupbox.h>
 #include <qcolordialog.h>
 #include <TCFoundation/TCLocalStrings.h>
 //#include <netinet/in.h>
@@ -248,21 +249,21 @@ void Preferences::doGeometryApply(void)
 {
 	ldPrefs->setUseSeams(panel->seamWidthButton->state());
 	ldPrefs->setSeamWidth(panel->seamWidthSpin->value());
-	ldPrefs->setDrawWireframe(panel->wireframeButton->state());
+	ldPrefs->setDrawWireframe(panel->wireframeButton->isChecked());
 	if (ldPrefs->getDrawWireframe())
 	{
 		ldPrefs->setUseWireframeFog(panel->wireframeFogButton->state());
 		ldPrefs->setRemoveHiddenLines(
 			panel->wireframeRemoveHiddenLineButton->state());
 	}
-	ldPrefs->setBfc(panel->enableBFCButton->state());
+	ldPrefs->setBfc(panel->enableBFCButton->isChecked());
 	if (ldPrefs->getBfc())
 	{
 		ldPrefs->setRedBackFaces(panel->bfcRedBackFaceButton->state());
 		ldPrefs->setGreenFrontFaces(panel->bfcGreenFrontFaceButton->state());
 	}
 	ldPrefs->setWireframeThickness(panel->wireframeThicknessSlider->value());
-	ldPrefs->setShowHighlightLines(panel->edgeLinesButton->state());
+	ldPrefs->setShowHighlightLines(panel->edgeLinesButton->isChecked());
 	if (ldPrefs->getShowHighlightLines())
 	{
 		ldPrefs->setEdgesOnly(panel->edgesOnlyButton->state());
@@ -288,7 +289,7 @@ void Preferences::doEffectsApply(void)
 	LDVStereoMode smTemp = LDVStereoNone;
 	LDVCutawayMode cmTemp = LDVCutawayNormal;
 
-	ldPrefs->setUseLighting(panel->lightingButton->state());
+	ldPrefs->setUseLighting(panel->lightingButton->isChecked());
 	if (ldPrefs->getUseLighting())
 	{
 		LDPreferences::LightDirection lightDirection =
@@ -338,7 +339,7 @@ void Preferences::doEffectsApply(void)
 			ldPrefs->setLightDirection(lightDirection);
 		}
 	}
-	if (!panel->stereoButton->state())
+	if (!panel->stereoButton->isChecked())
 	{
 		smTemp = LDVStereoNone;
 	}
@@ -352,7 +353,7 @@ void Preferences::doEffectsApply(void)
 	}
 	ldPrefs->setStereoMode(smTemp);
 	ldPrefs->setStereoEyeSpacing(panel->stereoAmountSlider->value());
-	if (!panel->wireframeCutawayButton->state())
+	if (!panel->wireframeCutawayButton->isChecked())
 	{
 		cmTemp = LDVCutawayNormal;
 	}
@@ -378,7 +379,7 @@ void Preferences::doEffectsApply(void)
 void Preferences::doPrimitivesApply(void)
 {
 	ldPrefs->setAllowPrimitiveSubstitution(
-		panel->primitiveSubstitutionButton->state());
+		panel->primitiveSubstitutionButton->isChecked());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
 		ldPrefs->setTextureStuds(panel->textureStudsButton->state());
@@ -863,7 +864,7 @@ void Preferences::reflectGeometrySettings(void)
 	reflectWireframeSettings();
 	reflectBFCSettings();
 //	panel->wireframeThicknessSlider->setValue(wireframeThickness);
-	setButtonState(panel->edgeLinesButton, ldPrefs->getShowHighlightLines());
+	panel->edgeLinesButton->setChecked(ldPrefs->getShowHighlightLines());
 	if (ldPrefs->getShowHighlightLines())
 	{
 		enableEdgeLines();
@@ -878,7 +879,7 @@ void Preferences::reflectGeometrySettings(void)
 
 void Preferences::reflectWireframeSettings(void)
 {
-	setButtonState(panel->wireframeButton, ldPrefs->getDrawWireframe());
+	panel->wireframeButton->setChecked(ldPrefs->getDrawWireframe());
 	setRangeValue(panel->wireframeThicknessSlider,
 		ldPrefs->getWireframeThickness());
 	if (ldPrefs->getDrawWireframe())
@@ -893,7 +894,7 @@ void Preferences::reflectWireframeSettings(void)
 
 void Preferences::reflectBFCSettings()
 {
-	setButtonState(panel->enableBFCButton, ldPrefs->getBfc());
+	panel->enableBFCButton->setChecked(ldPrefs->getBfc());
 	if (ldPrefs->getBfc())
 	{
 		enableBFC();
@@ -906,7 +907,7 @@ void Preferences::reflectBFCSettings()
 
 void Preferences::reflectEffectsSettings(void)
 {
-	setButtonState(panel->lightingButton, ldPrefs->getUseLighting());
+	panel->lightingButton->setChecked(ldPrefs->getUseLighting());
 	if (ldPrefs->getUseLighting())
 	{
 		enableLighting();
@@ -917,23 +918,23 @@ void Preferences::reflectEffectsSettings(void)
 	}
 	if (ldPrefs->getStereoMode() != LDVStereoNone)
 	{
-		setButtonState(panel->stereoButton, true);
+		panel->stereoButton->setChecked(true);
 		enableStereo();
 	}
 	else
 	{
-		setButtonState(panel->stereoButton, false);
+		panel->stereoButton->setChecked(false);
 		disableStereo();
 	}
 	panel->stereoAmountSlider->setValue(ldPrefs->getStereoEyeSpacing());
 	if (ldPrefs->getCutawayMode() != LDVCutawayNormal)
 	{
-		setButtonState(panel->wireframeCutawayButton, true);
+		panel->wireframeCutawayButton->setChecked(true);
 		enableWireframeCutaway();
 	}
 	else
 	{
-		setButtonState(panel->wireframeCutawayButton, false);
+		panel->wireframeCutawayButton->setChecked(false);
 		disableWireframeCutaway();
 	}
 	panel->cutawayOpacitySlider->setValue(ldPrefs->getCutawayAlpha());
@@ -947,7 +948,7 @@ void Preferences::reflectEffectsSettings(void)
 
 void Preferences::reflectPrimitivesSettings(void)
 {
-	setButtonState(panel->primitiveSubstitutionButton,
+	panel->primitiveSubstitutionButton->setChecked(
 		ldPrefs->getAllowPrimitiveSubstitution());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
