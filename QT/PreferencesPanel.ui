@@ -525,10 +525,13 @@
                                     </property>
                                     <widget class="QGroupBox">
                                         <property name="name">
-                                            <cstring>geometryWireframeBox</cstring>
+                                            <cstring>wireframeButton</cstring>
                                         </property>
                                         <property name="title">
                                             <string>&amp;Wireframe</string>
+                                        </property>
+                                        <property name="checkable">
+                                            <bool>true</bool>
                                         </property>
                                         <vbox>
                                             <property name="name">
@@ -540,14 +543,6 @@
                                             <property name="spacing">
                                                 <number>4</number>
                                             </property>
-                                            <widget class="QCheckBox">
-                                                <property name="name">
-                                                    <cstring>wireframeButton</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>Enabled</string>
-                                                </property>
-                                            </widget>
                                             <widget class="QLayoutWidget">
                                                 <property name="name">
                                                     <cstring>Layout25</cstring>
@@ -707,10 +702,13 @@
                                     </widget>
                                     <widget class="QGroupBox">
                                         <property name="name">
-                                            <cstring>bfcBox</cstring>
+                                            <cstring>enableBFCButton</cstring>
                                         </property>
                                         <property name="title">
                                             <string>BFC</string>
+                                        </property>
+                                        <property name="checkable">
+                                            <bool>true</bool>
                                         </property>
                                         <vbox>
                                             <property name="name">
@@ -722,14 +720,6 @@
                                             <property name="spacing">
                                                 <number>4</number>
                                             </property>
-                                            <widget class="QCheckBox">
-                                                <property name="name">
-                                                    <cstring>enableBFCButton</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>Enabled</string>
-                                                </property>
-                                            </widget>
                                             <widget class="QLayoutWidget">
                                                 <property name="name">
                                                     <cstring>Layout289</cstring>
@@ -818,10 +808,13 @@
                             </widget>
                             <widget class="QGroupBox">
                                 <property name="name">
-                                    <cstring>edgeLinesBox</cstring>
+                                    <cstring>edgeLinesButton</cstring>
                                 </property>
                                 <property name="title">
                                     <string>&amp;Edge Lines</string>
+                                </property>
+                                <property name="checkable">
+                                    <bool>true</bool>
                                 </property>
                                 <vbox>
                                     <property name="name">
@@ -833,14 +826,6 @@
                                     <property name="spacing">
                                         <number>4</number>
                                     </property>
-                                    <widget class="QCheckBox">
-                                        <property name="name">
-                                            <cstring>edgeLinesButton</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Enabled</string>
-                                        </property>
-                                    </widget>
                                     <widget class="QLayoutWidget">
                                         <property name="name">
                                             <cstring>Layout28</cstring>
@@ -1176,10 +1161,13 @@
                             </property>
                             <widget class="QGroupBox">
                                 <property name="name">
-                                    <cstring>effectsLightingBox</cstring>
+                                    <cstring>lightingButton</cstring>
                                 </property>
                                 <property name="title">
                                     <string>&amp;Lighting</string>
+                                </property>
+                                <property name="checkable">
+                                    <bool>true</bool>
                                 </property>
                                 <vbox>
                                     <property name="name">
@@ -1191,14 +1179,6 @@
                                     <property name="spacing">
                                         <number>4</number>
                                     </property>
-                                    <widget class="QCheckBox">
-                                        <property name="name">
-                                            <cstring>lightingButton</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Enabled</string>
-                                        </property>
-                                    </widget>
                                     <widget class="QLayoutWidget">
                                         <property name="name">
                                             <cstring>Layout27</cstring>
@@ -1471,10 +1451,13 @@
                             </widget>
                             <widget class="QGroupBox">
                                 <property name="name">
-                                    <cstring>effectsStereoBox</cstring>
+                                    <cstring>stereoButton</cstring>
                                 </property>
                                 <property name="title">
                                     <string>&amp;Stereo</string>
+                                </property>
+                                <property name="checkable">
+                                    <bool>true</bool>
                                 </property>
                                 <vbox>
                                     <property name="name">
@@ -1486,14 +1469,6 @@
                                     <property name="spacing">
                                         <number>4</number>
                                     </property>
-                                    <widget class="QCheckBox">
-                                        <property name="name">
-                                            <cstring>stereoButton</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Enabled</string>
-                                        </property>
-                                    </widget>
                                     <widget class="QLayoutWidget">
                                         <property name="name">
                                             <cstring>Layout37</cstring>
@@ -1697,10 +1672,13 @@
                             </property>
                             <widget class="QGroupBox">
                                 <property name="name">
-                                    <cstring>effectsWireframeCutawayBox</cstring>
+                                    <cstring>wireframeCutawayButton</cstring>
                                 </property>
                                 <property name="title">
                                     <string>&amp;Wireframe cutaway</string>
+                                </property>
+                                <property name="checkable">
+                                    <bool>true</bool>
                                 </property>
                                 <vbox>
                                     <property name="name">
@@ -1712,14 +1690,6 @@
                                     <property name="spacing">
                                         <number>4</number>
                                     </property>
-                                    <widget class="QCheckBox">
-                                        <property name="name">
-                                            <cstring>wireframeCutawayButton</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Enabled</string>
-                                        </property>
-                                    </widget>
                                     <widget class="QLayoutWidget">
                                         <property name="name">
                                             <cstring>Layout37</cstring>
@@ -2259,10 +2229,13 @@
                     </property>
                     <widget class="QGroupBox">
                         <property name="name">
-                            <cstring>primitiveSubstitutionBox</cstring>
+                            <cstring>primitiveSubstitutionButton</cstring>
                         </property>
                         <property name="title">
                             <string>&amp;Primitive Substitution</string>
+                        </property>
+                        <property name="checkable">
+                            <bool>true</bool>
                         </property>
                         <vbox>
                             <property name="name">
@@ -2274,17 +2247,6 @@
                             <property name="spacing">
                                 <number>4</number>
                             </property>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>primitiveSubstitutionButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Enabled</string>
-                                </property>
-                                <property name="checked">
-                                    <bool>true</bool>
-                                </property>
-                            </widget>
                             <widget class="QLayoutWidget">
                                 <property name="name">
                                     <cstring>Layout40</cstring>
@@ -3451,13 +3413,13 @@ into effect until the next time a model is loaded.</string>
     </connection>
     <connection>
         <sender>wireframeButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
     <connection>
         <sender>edgeLinesButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
@@ -3469,7 +3431,7 @@ into effect until the next time a model is loaded.</string>
     </connection>
     <connection>
         <sender>lightingButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
@@ -3541,7 +3503,7 @@ into effect until the next time a model is loaded.</string>
     </connection>
     <connection>
         <sender>stereoButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
@@ -3553,13 +3515,13 @@ into effect until the next time a model is loaded.</string>
     </connection>
     <connection>
         <sender>wireframeCutawayButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
     <connection>
         <sender>primitiveSubstitutionButton</sender>
-        <signal>stateChanged(int)</signal>
+        <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
     </connection>
