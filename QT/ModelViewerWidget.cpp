@@ -30,10 +30,10 @@
 #include <q3paintdevicemetrics.h>
 #define QPaintDeviceMetrics Q3PaintDeviceMetrics
 #else
+#include <qobjectlist.h>
 #include <qpaintdevicemetrics.h>
 #endif
 #include <qprinter.h>
-#include <qobjectlist.h>
 #include <qfileinfo.h>
 
 #include <TCFoundation/mystring.h>
@@ -208,7 +208,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	QString fullVersion;
 
 	int spot;
-
+#if QT_VERSION < 0x40000
 	// Try to use the uname command to determine our OS name.
 	if (unamePath)
 	{
@@ -247,6 +247,7 @@ void ModelViewerWidget::setupUserAgent(void)
 			}
 		}
 	}
+#endif
 	// We're going to grab the version label from the about panel, so make sure
 	// it's created first.
 	createAboutPanel();
@@ -1317,6 +1318,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	}
 	connectMenuShows();
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
+#if QT_VERSION < 0x400
 	QObjectList *toolButtons = mainWindow->toolbar->queryList("QToolButton");
 	QObjectListIt it(*toolButtons);
 	QObject *object;
@@ -1329,6 +1331,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 			button->setPopupDelay(1);
 		}
 	}
+#endif
 	unlock();
 }
 
