@@ -1316,13 +1316,16 @@
                                             </property>
                                             <widget class="QButtonGroup">
                                                 <property name="name">
-                                                    <cstring>Layout137</cstring>
+                                                    <cstring>lightingDirButtonGroup</cstring>
                                                 </property>
                                                 <property name="frameShape">
                                                     <enum>NoFrame</enum>
                                                 </property>
                                                 <property name="title">
                                                     <string></string>
+                                                </property>
+                                                <property name="exclusive">
+                                                    <bool>true</bool>
                                                 </property>
                                                 <grid>
                                                     <property name="name">
@@ -1334,76 +1337,130 @@
                                                     <property name="spacing">
                                                         <number>4</number>
                                                     </property>
-                                                    <widget class="QRadioButton" row="1" column="1">
+                                                    <widget class="QPushButton" row="1" column="1">
                                                         <property name="name">
                                                             <cstring>lightingDir11</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleUL.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="1" column="2">
+                                                    <widget class="QPushButton" row="1" column="2">
                                                         <property name="name">
                                                             <cstring>lightingDir12</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleUM.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="1" column="3">
+                                                    <widget class="QPushButton" row="1" column="3">
                                                         <property name="name">
                                                             <cstring>lightingDir13</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleUR.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="2" column="1">
+                                                    <widget class="QPushButton" row="2" column="1">
                                                         <property name="name">
                                                             <cstring>lightingDir21</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleML.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="2" column="2">
+                                                    <widget class="QPushButton" row="2" column="2">
                                                         <property name="name">
                                                             <cstring>lightingDir22</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleMM.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="2" column="3">
+                                                    <widget class="QPushButton" row="2" column="3">
                                                         <property name="name">
                                                             <cstring>lightingDir23</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleMR.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="3" column="1">
+                                                    <widget class="QPushButton" row="3" column="1">
                                                         <property name="name">
                                                             <cstring>lightingDir31</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleLL.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="3" column="2">
+                                                    <widget class="QPushButton" row="3" column="2">
                                                         <property name="name">
                                                             <cstring>lightingDir32</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
                                                         </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleLM.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
+                                                        </property>
                                                     </widget>
-                                                    <widget class="QRadioButton" row="3" column="3">
+                                                    <widget class="QPushButton" row="3" column="3">
                                                         <property name="name">
                                                             <cstring>lightingDir33</cstring>
                                                         </property>
                                                         <property name="text">
                                                             <string></string>
+                                                        </property>
+                                                        <property name="pixmap">
+                                                            <pixmap>LightAngleLR.png</pixmap>
+                                                        </property>
+                                                        <property name="toggleButton">
+                                                            <bool>true</bool>
                                                         </property>
                                                     </widget>
                                                 </grid>

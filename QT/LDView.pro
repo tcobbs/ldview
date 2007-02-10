@@ -65,7 +65,17 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/error_fnf.png images/error_info.png \
 		  images/error_matching_points.png images/error_matrix.png \
 		  images/error_non_flat_quad.png images/error_opengl.png \
-		  images/error_parse.png images/error_vertex_order.png
+		  images/error_parse.png images/error_vertex_order.png \
+		  ../Icons/LightAngleLL.png \
+          ../Icons/LightAngleLM.png \
+          ../Icons/LightAngleLR.png \
+          ../Icons/LightAngleML.png \
+          ../Icons/LightAngleMM.png \
+          ../Icons/LightAngleMR.png \
+          ../Icons/LightAngleUL.png \
+          ../Icons/LightAngleUM.png \
+          ../Icons/LightAngleUR.png 
+
 TEMPLATE	=app
 CONFIG	+= qt opengl thread warn_on release
 DEFINES	+= QT_THREAD_SUPPORT _QT
