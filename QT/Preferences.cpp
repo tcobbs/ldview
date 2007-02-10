@@ -298,39 +298,39 @@ void Preferences::doEffectsApply(void)
 		ldPrefs->setSubduedLighting(panel->subduedLightingButton->state());
 		ldPrefs->setUseSpecular(panel->specularLightingButton->state());
 		ldPrefs->setOneLight(panel->alternateLightingButton->state());
-		if(panel->lightingDir11->state())
+		if(panel->lightingDir11->isOn())
 		{
 			lightDirection = LDPreferences::UpperLeft;
 		}
-		else if (panel->lightingDir12->state())
+		else if (panel->lightingDir12->isOn())
 		{
 			lightDirection = LDPreferences::UpperMiddle;
 		}
-		else if (panel->lightingDir13->state())
+		else if (panel->lightingDir13->isOn())
 		{
 			lightDirection = LDPreferences::UpperRight;
 		}
-		else if (panel->lightingDir21->state())
+		else if (panel->lightingDir21->isOn())
 		{
 			lightDirection = LDPreferences::MiddleLeft;
 		}
-		else if (panel->lightingDir22->state())
+		else if (panel->lightingDir22->isOn())
 		{
 			lightDirection = LDPreferences::MiddleMiddle;
 		}
-		else if (panel->lightingDir23->state())
+		else if (panel->lightingDir23->isOn())
 		{
 			lightDirection = LDPreferences::MiddleRight;
 		}
-		else if (panel->lightingDir31->state())
+		else if (panel->lightingDir31->isOn())
 		{
 			lightDirection = LDPreferences::LowerLeft;
 		}
-		else if (panel->lightingDir32->state())
+		else if (panel->lightingDir32->isOn())
 		{
 			lightDirection = LDPreferences::LowerMiddle;
 		}
-		else if (panel->lightingDir33->state())
+		else if (panel->lightingDir33->isOn())
 		{
 			lightDirection = LDPreferences::LowerRight;
 		}
