@@ -1,7 +1,9 @@
 Missing features from QT version (implemented on Win32 version)
-- command line parameters
-- customized File Save dialog for series of pictures
 - dropdown buttons on toolbar
+- KDE thumbnail integration
+- Offscreen rendering or at least hide/minimize the window during
+  thumbnail generation.
+- Customize QFileDialog (integrate Snapshot Settings)
 
 QT4 know bugs
 - repaint problem during model loading (paintEvent) bug ID 79310
@@ -15,7 +17,9 @@ QT4 know bugs
   the real, stored status (bug id 91403)
 
 QT4 migration
-- when QT4 will be wildly used (part of major linux distributions), the code must be migrated to native QT4 from Qt3Support class. At that time, the code will not support QT3.
+- when QT4 will be wildly used (part of major linux distributions), the code 
+must be migrated to native QT4 from Qt3Support class. At that time, the code 
+will not support QT3.
 
 Last updated:
-06.05.2006
+02/10/2006
