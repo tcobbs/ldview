@@ -357,6 +357,10 @@ SOURCE=.\Icons\LDViewIcon.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\LightAngles.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\MPDIcon.ico
 # End Source File
 # Begin Source File
