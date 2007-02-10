@@ -22,4 +22,4 @@ must be migrated to native QT4 from Qt3Support class. At that time, the code
 will not support QT3.
 
 Last updated:
-02/10/2006
+02/10/2007
