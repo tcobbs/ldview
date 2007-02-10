@@ -2349,8 +2349,8 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
     TCFloat origXPan = modelViewer->getXPan();
     TCFloat origYPan = modelViewer->getYPan();
     bool origAutoCenter = modelViewer->getAutoCenter();
-    int newWidth = 1600;
-    int newHeight = 1200;
+    int newWidth = 800;
+    int newHeight = 600;
 	int origWidth = mwidth;
 	int origHeight = mheight;
     int numXTiles, numYTiles;
@@ -2372,7 +2372,7 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
         numYTiles);
     imageWidth = newWidth * numXTiles;
     imageHeight = newHeight * numYTiles;
-	if (1)
+	if ((mwidth > 0) && (mheight > 0))
 	{
         newWidth = mwidth;       // width is OpenGL window width
         newHeight = mheight;     // height is OpenGL window height

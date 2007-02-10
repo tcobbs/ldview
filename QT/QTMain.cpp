@@ -76,7 +76,8 @@ int main(int argc, char *argv[])
 		printf ("Failed to load translation %s\n",QTextCodec::locale());
 	a.installTranslator(&translator);
     LDView *w = new LDView;
-    w->show();
+	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
+    	w->show();
     a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
 	w->modelViewer->setApplication(&a);
     return a.exec();
