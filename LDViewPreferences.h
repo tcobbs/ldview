@@ -16,6 +16,8 @@
 
 typedef std::map<HWND, bool> HwndBoolMap;
 typedef std::map<int, int> IntIntMap;
+typedef std::vector<HWND> HwndVector;
+typedef std::map<HWND, int> HwndIntMap;
 
 class LDPreferences;
 class TCAlert;
@@ -106,6 +108,7 @@ public:
 protected:
 	virtual ~LDViewPreferences(void);
 	virtual void dealloc(void);
+	virtual void setupIconButton(HWND hButton);
 	virtual void setupColorButton(HWND hPage, HWND &hColorButton,
 		int controlID, HBITMAP &hButtonBitmap, COLORREF color);
 	virtual void setupMemoryUsage(void);
@@ -202,7 +205,8 @@ protected:
 	virtual void enableCutaway(void);
 	virtual void disableCutaway(void);
 	virtual void setupLighting(void);
-	virtual void setupLightAngleToolbar(void);
+	//virtual void setupLightAngleToolbar(void);
+	virtual void setupLightAngleButtons(void);
 	virtual void uncheckLightDirections(void);
 	virtual void enableLighting(void);
 	virtual void disableLighting(void);
@@ -234,20 +238,26 @@ protected:
 	virtual bool getCheck(HWND hPage, int buttonId);
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
-	virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
-	virtual bool getToolbarCheck(HWND hToolbar, int id);
+	//virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
+	//virtual bool getToolbarCheck(HWND hToolbar, int id);
 
 
 	BOOL doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,
 		LPDRAWITEMSTRUCT drawItemStruct);
 	BOOL doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		LPDRAWITEMSTRUCT drawItemStruct);
+	BOOL doDrawIconPushButton(HWND hWnd, HTHEME hTheme,
+		LPDRAWITEMSTRUCT drawItemStruct);
 
+	LRESULT iconButtonProc(HWND hWnd, UINT message, WPARAM wParam,
+		LPARAM lParam);
 	LRESULT colorButtonProc(HWND hWnd, UINT message, WPARAM wParam,
 		LPARAM lParam);
 	LRESULT groupCheckButtonProc(HWND hWnd, UINT message, WPARAM wParam,
 		LPARAM lParam);
 
+	static LRESULT CALLBACK staticIconButtonProc(HWND hWnd, UINT message,
+		WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK staticColorButtonProc(HWND hWnd, UINT message,
 		WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK staticGroupCheckButtonProc(HWND hWnd, UINT message,
@@ -299,7 +309,7 @@ protected:
 	HWND hLightSubduedButton;
 	HWND hLightSpecularButton;
 	HWND hLightAlternateButton;
-	HWND hLightDirectionToolbar;
+	//HWND hLightDirectionToolbar;
 	HWND hHardwareStereoButton;
 	HWND hLightDirStatic;
 	HWND hCrossEyedStereoButton;
@@ -348,6 +358,8 @@ protected:
 	HwndBoolMap checkStates;
 	IntIntMap lightDirIndexToId;
 	IntIntMap lightDirIdToIndex;
+	HwndIntMap buttonTypes;
+	HwndVector lightAngleButtons;
 	static LRESULT CALLBACK staticLightDirWindowProc(HWND hWnd,
 		UINT message, WPARAM wParam, LPARAM lParam);
 };

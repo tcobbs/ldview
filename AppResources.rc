@@ -44,6 +44,15 @@ IDI_EXAMINE             ICON    DISCARDABLE     "icons\\examine.ico"
 IDI_FLYTHROUGH          ICON    DISCARDABLE     "icons\\flythrou.ico"
 IDI_LDRAW               ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
 IDI_MPD                 ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
+IDR_LIGHT_ANGLE_UR      ICON    DISCARDABLE     "Icons\\LightAngleUR.ico"
+IDR_LIGHT_ANGLE_UL      ICON    DISCARDABLE     "Icons\\LightAngleUL.ico"
+IDR_LIGHT_ANGLE_UM      ICON    DISCARDABLE     "Icons\\LightAngleUM.ico"
+IDR_LIGHT_ANGLE_MR      ICON    DISCARDABLE     "Icons\\LightAngleMR.ico"
+IDR_LIGHT_ANGLE_LL      ICON    DISCARDABLE     "Icons\\LightAngleLL.ico"
+IDR_LIGHT_ANGLE_LM      ICON    DISCARDABLE     "Icons\\LightAngleLM.ico"
+IDR_LIGHT_ANGLE_LR      ICON    DISCARDABLE     "Icons\\LightAngleLR.ico"
+IDR_LIGHT_ANGLE_ML      ICON    DISCARDABLE     "Icons\\LightAngleML.ico"
+IDR_LIGHT_ANGLE_MM      ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -299,17 +308,26 @@ BEGIN
     CONTROL         "Alternate setup",IDC_ALTERNATE_LIGHTING,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     52,77,10,0,HIDC_ALTERNATE_LIGHTING
-    GROUPBOX        "Light &Direction",IDC_LIGHT_DIR,34,67,67,65
-    CONTROL         "",IDC_LIGHT_UL,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,45,82,8,8
-    CONTROL         "",IDC_LIGHT_UM,"Button",BS_AUTORADIOBUTTON,63,82,8,8
-    CONTROL         "",IDC_LIGHT_UR,"Button",BS_AUTORADIOBUTTON,81,82,8,8
-    CONTROL         "",IDC_LIGHT_ML,"Button",BS_AUTORADIOBUTTON,45,98,8,8
-    CONTROL         "",IDC_LIGHT_MM,"Button",BS_AUTORADIOBUTTON,63,98,8,8
-    CONTROL         "",IDC_LIGHT_MR,"Button",BS_AUTORADIOBUTTON,81,98,8,8
-    CONTROL         "",IDC_LIGHT_LL,"Button",BS_AUTORADIOBUTTON,45,114,8,8
-    CONTROL         "",IDC_LIGHT_LM,"Button",BS_AUTORADIOBUTTON,63,114,8,8
-    CONTROL         "",IDC_LIGHT_LR,"Button",BS_AUTORADIOBUTTON,81,114,8,8
+    GROUPBOX        "Light &Direction",IDC_LIGHT_DIR,28,67,79,79
+    CONTROL         "UL",IDR_LIGHT_ANGLE_UL,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP,35,80,20,
+                    19
+    CONTROL         "UM",IDR_LIGHT_ANGLE_UM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,80,20,19
+    CONTROL         "UR",IDR_LIGHT_ANGLE_UR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,80,20,19
+    CONTROL         "ML",IDR_LIGHT_ANGLE_ML,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,35,101,20,19
+    CONTROL         "MM",IDR_LIGHT_ANGLE_MM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,101,20,19
+    CONTROL         "MR",IDR_LIGHT_ANGLE_MR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,101,20,19
+    CONTROL         "LL",IDR_LIGHT_ANGLE_LL,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,35,122,20,19
+    CONTROL         "LM",IDR_LIGHT_ANGLE_LM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,122,20,19
+    CONTROL         "LR",IDR_LIGHT_ANGLE_LR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,122,20,19
     GROUPBOX        "&Transparency",IDC_TRANSPARENCY_BOX,7,153,121,40,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 

@@ -796,7 +796,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
 	int retValue = 0;
 
-	if (filename)
+	if (filename && filename[0])
 	{
 		TCObject::release(mainModel);
 		mainModel = new LDLMainModel;
