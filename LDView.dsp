@@ -357,7 +357,43 @@ SOURCE=.\Icons\LDViewIcon.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\LightAngleLL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleML.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleMM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleMR.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\LightAngles.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUR.ico
 # End Source File
 # Begin Source File
 

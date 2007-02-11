@@ -70,6 +70,18 @@
 #define IDI_MPD                         170
 #define IDD_PARTS_LIST                  171
 #define IDB_LIGHT_ANGLES                173
+#define IDI_LIGHT_ANGLE_UR              174
+#define IDR_LIGHT_ANGLE_UR              174
+#define IDI_LIGHT_ANGLE_UL              175
+#define IDR_LIGHT_ANGLE_UL              175
+#define IDI_LIGHT_ANGLE_UM              176
+#define IDR_LIGHT_ANGLE_UM              176
+#define IDR_LIGHT_ANGLE_MR              177
+#define IDR_LIGHT_ANGLE_LL              178
+#define IDR_LIGHT_ANGLE_ML              179
+#define IDR_LIGHT_ANGLE_MM              180
+#define IDR_LIGHT_ANGLE_LM              181
+#define IDR_LIGHT_ANGLE_LR              182
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -266,6 +278,9 @@
 #define IDC_LIGHT_LM                    1224
 #define IDC_LIGHT_LR                    1225
 #define IDC_LIGHT_DIR                   1226
+#define IDC_UL                          1231
+#define IDC_UM                          1232
+#define IDC_UR                          1233
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -342,9 +357,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        174
+#define _APS_NEXT_RESOURCE_VALUE        183
 #define _APS_NEXT_COMMAND_VALUE         40089
-#define _APS_NEXT_CONTROL_VALUE         1227
+#define _APS_NEXT_CONTROL_VALUE         1232
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

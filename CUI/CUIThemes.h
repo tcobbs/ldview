@@ -42,6 +42,7 @@ typedef HRESULT (_stdcall *PFNGETTHEMEPARTSIZE)(HTHEME hTheme, HDC hdc,
 	int iPartId, int iStateId, RECT *prc, enum THEMESIZE eSize, SIZE *psz);
 typedef HRESULT (_stdcall *PFNENABLETHEMEDIALOGTEXTURE)(HWND hwnd,
 	DWORD dwFlags);
+typedef COLORREF (_stdcall *PFNGETTHEMESYSCOLOR)(HTHEME hTheme, int iColorID);
 
 class CUIExport CUIThemes
 {
@@ -76,6 +77,7 @@ public:
 	static HRESULT getThemePartSize(HTHEME hTheme, HDC hdc, int iPartId,
 		int iStateId, RECT *prc, enum THEMESIZE eSize, SIZE *psz);
 	static HRESULT enableThemeDialogTexture(HWND hwnd, DWORD dwFlags);
+	static COLORREF getThemeSysColor(HTHEME, int iColorID);
 
 protected:
 	CUIThemes(void);
@@ -99,6 +101,7 @@ protected:
 	static PFNDDRAWTHEMEPARENTBACKGROUND sm_drawThemeParentBackground;
 	static PFNGETTHEMEPARTSIZE sm_getThemePartSize;
 	static PFNENABLETHEMEDIALOGTEXTURE sm_enableThemeDialogTexture;
+	static PFNGETTHEMESYSCOLOR sm_getThemeSysColor;
 	static void deinit(void);
 
 	static class CUIThemesCleanup

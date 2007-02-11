@@ -20,6 +20,7 @@ PFNGETTHEMETEXTEXTENT CUIThemes::sm_getThemeTextExtent = NULL;
 PFNDDRAWTHEMEPARENTBACKGROUND CUIThemes::sm_drawThemeParentBackground = NULL;
 PFNGETTHEMEPARTSIZE CUIThemes::sm_getThemePartSize = NULL;
 PFNENABLETHEMEDIALOGTEXTURE CUIThemes::sm_enableThemeDialogTexture = NULL;
+PFNGETTHEMESYSCOLOR CUIThemes::sm_getThemeSysColor = NULL;
 
 CUIThemes::CUIThemesCleanup::~CUIThemesCleanup(void)
 {
@@ -81,6 +82,9 @@ void CUIThemes::init(void)
 			sm_enableThemeDialogTexture =
 				(PFNENABLETHEMEDIALOGTEXTURE)GetProcAddress(sm_hModThemes,
 				"EnableThemeDialogTexture");
+			sm_getThemeSysColor =
+				(PFNGETTHEMESYSCOLOR)GetProcAddress(sm_hModThemes,
+				"GetThemeSysColor");
 
 
 			if (sm_openThemeData && sm_closeThemeData && sm_drawThemeBackground
@@ -89,7 +93,7 @@ void CUIThemes::init(void)
 				sm_getThemeColor && sm_setThemeAppProperties &&
 				sm_getThemeRect && sm_getThemeTextExtent &&
 				sm_drawThemeParentBackground && sm_getThemePartSize &&
-				sm_enableThemeDialogTexture)
+				sm_enableThemeDialogTexture && sm_getThemeSysColor)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -308,5 +312,17 @@ HRESULT CUIThemes::enableThemeDialogTexture(HWND hwnd, DWORD dwFlags)
 	else
 	{
 		return E_NOTIMPL;
+	}
+}
+
+COLORREF CUIThemes::getThemeSysColor(HTHEME hTheme, int iColorID)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemeSysColor(hTheme, iColorID);
+	}
+	else
+	{
+		return GetSysColor(iColorID);
 	}
 }
