@@ -1,8 +1,7 @@
 Missing features from QT version (implemented on Win32 version)
 - dropdown buttons on toolbar
 - KDE thumbnail integration
-- Offscreen rendering or at least hide/minimize the window during
-  thumbnail generation.
+- PBuffer accelerated Offscreen rendering
 - Customize QFileDialog (integrate Snapshot Settings)
 
 QT4 know bugs
