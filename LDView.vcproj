@@ -825,7 +825,55 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Icons\LDrawIcon.ico"
+				>
+			</File>
+			<File
 				RelativePath="Icons\LDViewIcon.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleLL.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleLM.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleLR.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleML.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleMM.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleMR.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngles.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleUL.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleUM.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\LightAngleUR.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\MPDIcon.ico"
 				>
 			</File>
 			<File
