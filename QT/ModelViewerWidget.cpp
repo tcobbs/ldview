@@ -1242,6 +1242,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		mainWindow->examineModeAction->setOn(true);
 		progressMode->setText(QString(qcString, len));
 		delete qcString;
+		progressMode->setText(TCLocalStrings::get("ExamineMode"));
 		//progressMode->setText(QString::fromUtf8(
 		//	TCLocalStrings::get("ExamineMode")));
 	}
@@ -2254,8 +2255,9 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 			modelViewer->setConstrainZoom(true);
 			if (progressMode)
 			{
-				progressMode->setText(QString::fromUtf8(
-					TCLocalStrings::get("ExamineMode")));
+				//progressMode->setText(QString::fromUtf8(
+				//	TCLocalStrings::get("ExamineMode")));
+				progressMode->setText(TCLocalStrings::get("ExamineMode"));
 			}
 		}
 		else
