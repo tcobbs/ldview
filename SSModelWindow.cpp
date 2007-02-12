@@ -104,7 +104,7 @@ void SSModelWindow::getMatchingFiles(char *dir, char *filespec,
 
 	sprintf(fullFilespec, "%s\\%s", dir, filespec);
 	hFind = FindFirstFile(fullFilespec, &findData);
-	if (hFind)
+	if (hFind != INVALID_HANDLE_VALUE)
 	{
 		if ((findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
 		{
