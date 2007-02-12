@@ -6,6 +6,7 @@
 
 #ifdef _QT
 #include <qstring.h>
+#include <qtextcodec.h>
 
 typedef std::map<QString, QString> QStringQStringMap;
 #endif // _QT
@@ -39,14 +40,17 @@ protected:
 #endif // _QT
 	const wchar_t *instGetLocalString(const wchar_t *key);
 	void instDumpTable(const char *filename, const char *header);
+	void instSetCodePage(int codePage);
 
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
 #ifdef _QT
 	QStringQStringMap m_qStrings;
 	QString m_emptyQString;
+	QTextCodec *m_textCodec;
 
 	void buildQStringMap(void);
+	void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 #endif // _QT
 
 	static TCLocalStrings *currentLocalStrings;

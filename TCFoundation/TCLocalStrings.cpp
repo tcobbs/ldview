@@ -50,6 +50,9 @@ TCLocalStrings::TCLocalStringsCleanup::~TCLocalStringsCleanup(void)
 }
 
 TCLocalStrings::TCLocalStrings(void)
+#ifdef _QT
+	:m_textCodec(NULL)
+#endif // _QT
 {
 	stringDict = new TCDictionary;
 }
@@ -237,9 +240,21 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 			{
 				// We haven't found the [StringTable] section yet
 				stripTrailingWhitespace(line);
-				if (strcasecmp(line, "[StringTable]") == 0)
+				if (stringHasCaseInsensitivePrefix(line, "[StringTable") &&
+					stringHasSuffix(line, "]"))
 				{
+					char *codePageString = strcasestr(line, "CP=");
+
 					sectionFound = true;
+					if (codePageString)
+					{
+						int codePage;
+
+						if (sscanf(&codePageString[3], "%d", &codePage) == 1)
+						{
+							instSetCodePage(codePage);
+						}
+					}
 				}
 				// Note that we are ignoring all lines until we find the section
 			}
@@ -377,6 +392,20 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
 	return sectionFound;
+}
+
+#ifdef _QT
+void TCLocalStrings::instSetCodePage(int codePage)
+#else // _QT
+void TCLocalStrings::instSetCodePage(int /*codePage*/)
+#endif // _QT
+{
+#ifdef _QT
+	QString name;
+
+	name.sprintf("CP%d", codePage);
+	m_textCodec = QTextCodec::codecForName(name);
+#endif // _QT
 }
 
 bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
@@ -598,6 +627,27 @@ void TCLocalStrings::buildQStringMap(void)
 		wstringtoqstring(key, it->first);
 		wstringtoqstring(value, it->second);
 		m_qStrings[key] = value;
+	}
+}
+
+void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
+								  int length /*= -1*/)
+{
+	if (m_textCodec)
+	{
+		QString unicodeString = m_textCodec->toUnicode(src);
+		dst.clear();
+		dst.resize(unicodeString.length());
+		for (int i = 0; i < (int)unicodeString.length(); i++)
+		{
+			QChar qchar = unicodeString.at(i);
+
+			dst[i] = (wchar_t)qchar;
+		}
+	}
+	else
+	{
+		::mbstowstring(dst, src, length);
 	}
 }
 

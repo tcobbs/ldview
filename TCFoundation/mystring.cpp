@@ -860,6 +860,7 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 	if (src)
 	{
 		mbstate_t state = { 0 };
+		size_t newLength;
 
 		if (length == -1)
 		{
@@ -868,7 +869,15 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 		dst.resize(length);
 		// Even though we don't check, we can't pass NULL instead of &state and
 		// still be thread-safe.
-		mbsrtowcs(&dst[0], &src, length + 1, &state);
+		newLength = mbsrtowcs(&dst[0], &src, length + 1, &state);
+		if (newLength == (size_t)-1)
+		{
+			dst.resize(wcslen(&dst[0]));
+		}
+		else
+		{
+			dst.resize(newLength);
+		}
 	}
 }
 
