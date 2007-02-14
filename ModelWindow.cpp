@@ -597,19 +597,12 @@ LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 
 LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
-	if (altPressed())
+	if (modelViewer && modelViewer->mouseUp(xPos, yPos))
 	{
-		if (modelViewer && modelViewer->mouseUp(LDVMouseLight, xPos, yPos))
-		{
-			forceRedraw();
-			releaseMouse();
-			prefs->checkLightVector();
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
+		forceRedraw();
+		releaseMouse();
+		prefs->checkLightVector();
+		return 0;
 	}
 	forceRedraw();
 	if (lButtonDown)
