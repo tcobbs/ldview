@@ -1502,6 +1502,23 @@ void LDViewPreferences::applyGeometryChanges(void)
 	ldPrefs->commitGeometrySettings();
 }
 
+LDPreferences::LightDirection LDViewPreferences::getSelectedLightDirection(void)
+{
+	LDPreferences::LightDirection lightDirection =
+		LDPreferences::CustomDirection;
+	for (IntIntMap::const_iterator it = lightDirIndexToId.begin()
+		; it != lightDirIndexToId.end(); it++)
+	{
+		if (getCachedCheck(hEffectsPage, it->second))
+		{
+			lightDirection =
+				(LDPreferences::LightDirection)(it->first + 1);
+			break;
+		}
+	}
+	return lightDirection;
+}
+
 void LDViewPreferences::applyEffectsChanges(void)
 {
 	if (hEffectsPage)
@@ -1510,7 +1527,7 @@ void LDViewPreferences::applyEffectsChanges(void)
 		if (ldPrefs->getUseLighting())
 		{
 			LDPreferences::LightDirection lightDirection =
-				LDPreferences::CustomDirection;
+				getSelectedLightDirection();
 			ldPrefs->setQualityLighting(getCheck(hEffectsPage,
 				IDC_LIGHTING_QUALITY));
 			ldPrefs->setSubduedLighting(getCheck(hEffectsPage,
@@ -1518,16 +1535,6 @@ void LDViewPreferences::applyEffectsChanges(void)
 			ldPrefs->setUseSpecular(getCheck(hEffectsPage, IDC_SPECULAR));
 			ldPrefs->setOneLight(getCheck(hEffectsPage,
 				IDC_ALTERNATE_LIGHTING));
-			for (IntIntMap::const_iterator it = lightDirIndexToId.begin()
-				; it != lightDirIndexToId.end(); it++)
-			{
-				if (getCachedCheck(hEffectsPage, it->second))
-				{
-					lightDirection =
-						(LDPreferences::LightDirection)(it->first + 1);
-					break;
-				}
-			}
 			if (lightDirection != LDPreferences::CustomDirection)
 			{
 				ldPrefs->setLightDirection(lightDirection);
@@ -4116,4 +4123,34 @@ TCFloat LDViewPreferences::getMinFov(void)
 TCFloat LDViewPreferences::getMaxFov(void)
 {
 	return 90.0f;
+}
+
+void LDViewPreferences::checkLightVector(void)
+{
+	if (hEffectsPage)
+	{
+		LDPreferences::LightDirection selectedDirection =
+			getSelectedLightDirection();
+		LDPreferences::LightDirection lightDirection =
+			ldPrefs->getLightDirection();
+
+		if (selectedDirection != lightDirection)
+		{
+			int lightDirButton =
+				lightDirIndexToId[(int)lightDirection - 1];
+
+			uncheckLightDirections();
+			if ((int)selectedDirection > 0)
+			{
+				InvalidateRect(lightAngleButtons[(int)selectedDirection - 1], NULL,
+					TRUE);
+			}
+			if (lightDirButton != 0)
+			{
+				checkStates[GetDlgItem(hEffectsPage, lightDirButton)] = true;
+				InvalidateRect(lightAngleButtons[(int)lightDirection - 1], NULL,
+					TRUE);
+			}
+		}
+	}
 }

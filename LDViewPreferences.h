@@ -7,6 +7,7 @@
 #include <windows.h>
 
 #include <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCStlIncludes.h>
 
 //class LDrawModelViewer;
@@ -19,7 +20,6 @@ typedef std::map<int, int> IntIntMap;
 typedef std::vector<HWND> HwndVector;
 typedef std::map<HWND, int> HwndIntMap;
 
-class LDPreferences;
 class TCAlert;
 
 class LDViewPreferences: public CUIPropertySheet
@@ -100,6 +100,8 @@ public:
 
 	int getFSAAFactor(void);
 	bool getUseNvMultisampleFilter(void);
+
+	void checkLightVector(void);
 
 	static char* getLDViewPath(const char* helpFilename,
 		bool useQuotes = false);
@@ -240,6 +242,8 @@ protected:
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
 	//virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
 	//virtual bool getToolbarCheck(HWND hToolbar, int id);
+
+	virtual LDPreferences::LightDirection getSelectedLightDirection(void);
 
 
 	BOOL doDrawColorButton(HWND hDlg, HWND hWnd, HTHEME hTheme,

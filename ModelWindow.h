@@ -310,6 +310,7 @@ class ModelWindow: public CUIOGLWindow
 			WPARAM wParam, LPARAM lParam);
 		static int roundUp(int value, int nearest);
 		static void swap(int &left, int &right);
+		static bool altPressed(void);
 
 		LDrawModelViewer* modelViewer;
 		DWORD referenceFrameTime;

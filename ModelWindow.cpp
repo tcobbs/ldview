@@ -555,8 +555,27 @@ void ModelWindow::releaseMouse(void)
 	}
 }
 
+// NOTE: Static method.
+bool ModelWindow::altPressed(void)
+{
+	return (GetKeyState(VK_MENU) & 0x8000) != 0;
+}
+
 LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
+	if (altPressed())
+	{
+		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
+		{
+			captureMouse();
+			forceRedraw();
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
 	forceRedraw();
 	if (rButtonDown || mButtonDown)
 	{
@@ -576,8 +595,22 @@ LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 	}
 }
 
-LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/)
+LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
+	if (altPressed())
+	{
+		if (modelViewer && modelViewer->mouseUp(LDVMouseLight, xPos, yPos))
+		{
+			forceRedraw();
+			releaseMouse();
+			prefs->checkLightVector();
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
 	forceRedraw();
 	if (lButtonDown)
 	{
@@ -662,6 +695,11 @@ LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
+	if (modelViewer && modelViewer->mouseMove(xPos, yPos))
+	{
+		forceRedraw();
+		return 0;
+	}
 	forceRedraw();
 	if (lButtonDown || rButtonDown || mButtonDown)
 	{
