@@ -884,7 +884,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 		dst.resize(length);
 		for (i = 0; i < length; i++)
 		{
-			dst[i] = codePageMap[src[i]];
+			dst[i] = codePageMap[(TCByte)src[i]];
 		}
 	}
 #ifdef _QT
