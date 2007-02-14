@@ -3285,15 +3285,11 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 	return true;
 }
 
-bool LDrawModelViewer::mouseUp(LDVMouseMode mode, int x, int y)
+bool LDrawModelViewer::mouseUp(int x, int y)
 {
 	int deltaX = x - lastMouseX;
 	int deltaY = y - lastMouseY;
 
-	if (mouseMode != mode || mode == LDVMouseNone)
-	{
-		return false;
-	}
 	if (mouseMode != LDVMouseLight)
 	{
 		debugPrintf("LDVMouseLight is the only mode currently supported.\n");
@@ -3301,7 +3297,7 @@ bool LDrawModelViewer::mouseUp(LDVMouseMode mode, int x, int y)
 	}
 	lastMouseX = x;
 	lastMouseY = y;
-	switch (mode)
+	switch (mouseMode)
 	{
 	case LDVMouseLight:
 		mouseMoveLight(deltaX, deltaY);

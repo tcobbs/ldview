@@ -313,7 +313,7 @@ class LDrawModelViewer: public TCObject
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 
 		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
-		virtual bool mouseUp(LDVMouseMode mode, int x, int y);
+		virtual bool mouseUp(int x, int y);
 		virtual bool mouseMove(int x, int y);
 		virtual void showLight(void);
 
