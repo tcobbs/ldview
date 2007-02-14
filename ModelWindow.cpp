@@ -561,9 +561,9 @@ bool ModelWindow::altPressed(void)
 	return (GetKeyState(VK_MENU) & 0x8000) != 0;
 }
 
-LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
+LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (altPressed())
+	if (keyFlags && MK_SHIFT)
 	{
 		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
 		{
