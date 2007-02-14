@@ -568,6 +568,9 @@ LRESULT ModelWindow::doLButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
 		{
 			captureMouse();
+			// At this point, the light hasn't moved, so there's no redraw
+			// required for light movement.  However, the light direction
+			// vector now needs to be drawn, so we need a redraw for that.
 			forceRedraw();
 			return 0;
 		}
