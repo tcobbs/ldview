@@ -284,6 +284,49 @@ void Preferences::doGeometryApply(void)
 	ldPrefs->commitGeometrySettings();
 }
 
+LDPreferences::LightDirection Preferences::getSelectedLightDirection(void)
+{
+	LDPreferences::LightDirection lightDirection =
+		LDPreferences::CustomDirection;
+    if(panel->lightingDir11->isOn())
+    {
+        lightDirection = LDPreferences::UpperLeft;
+    }
+    else if (panel->lightingDir12->isOn())
+    {
+    lightDirection = LDPreferences::UpperMiddle;
+    }
+    else if (panel->lightingDir13->isOn())
+    {
+        lightDirection = LDPreferences::UpperRight;
+    }
+    else if (panel->lightingDir21->isOn())
+    {
+        lightDirection = LDPreferences::MiddleLeft;
+    }
+    else if (panel->lightingDir22->isOn())
+    {
+        lightDirection = LDPreferences::MiddleMiddle;
+    }
+    else if (panel->lightingDir23->isOn())
+    {
+        lightDirection = LDPreferences::MiddleRight;
+    }
+    else if (panel->lightingDir31->isOn())
+    {
+        lightDirection = LDPreferences::LowerLeft;
+    }
+    else if (panel->lightingDir32->isOn())
+    {
+        lightDirection = LDPreferences::LowerMiddle;
+    }
+    else if (panel->lightingDir33->isOn())
+    {
+        lightDirection = LDPreferences::LowerRight;
+    }
+	return lightDirection;
+}
+
 void Preferences::doEffectsApply(void)
 {
 	LDVStereoMode smTemp = LDVStereoNone;
@@ -293,47 +336,11 @@ void Preferences::doEffectsApply(void)
 	if (ldPrefs->getUseLighting())
 	{
 		LDPreferences::LightDirection lightDirection =
-			LDPreferences::CustomDirection;
+			getSelectedLightDirection();
 		ldPrefs->setQualityLighting(panel->qualityLightingButton->state());
 		ldPrefs->setSubduedLighting(panel->subduedLightingButton->state());
 		ldPrefs->setUseSpecular(panel->specularLightingButton->state());
 		ldPrefs->setOneLight(panel->alternateLightingButton->state());
-		if(panel->lightingDir11->isOn())
-		{
-			lightDirection = LDPreferences::UpperLeft;
-		}
-		else if (panel->lightingDir12->isOn())
-		{
-			lightDirection = LDPreferences::UpperMiddle;
-		}
-		else if (panel->lightingDir13->isOn())
-		{
-			lightDirection = LDPreferences::UpperRight;
-		}
-		else if (panel->lightingDir21->isOn())
-		{
-			lightDirection = LDPreferences::MiddleLeft;
-		}
-		else if (panel->lightingDir22->isOn())
-		{
-			lightDirection = LDPreferences::MiddleMiddle;
-		}
-		else if (panel->lightingDir23->isOn())
-		{
-			lightDirection = LDPreferences::MiddleRight;
-		}
-		else if (panel->lightingDir31->isOn())
-		{
-			lightDirection = LDPreferences::LowerLeft;
-		}
-		else if (panel->lightingDir32->isOn())
-		{
-			lightDirection = LDPreferences::LowerMiddle;
-		}
-		else if (panel->lightingDir33->isOn())
-		{
-			lightDirection = LDPreferences::LowerRight;
-		}
 		if (lightDirection != LDPreferences::CustomDirection)
 		{
 			ldPrefs->setLightDirection(lightDirection);
@@ -1634,6 +1641,42 @@ void Preferences::enableWireframeCutaway(void)
 	}
 }
 
+void Preferences::selectLightDirection(LDPreferences::LightDirection ld)
+{
+    switch (ld)
+    {
+    case LDPreferences::UpperLeft:
+        panel->lightingDir11->setOn(true);
+        break;
+    case LDPreferences::UpperMiddle:
+        panel->lightingDir12->setOn(true);
+        break;
+    case LDPreferences::UpperRight:
+        panel->lightingDir13->setOn(true);
+        break;
+    case LDPreferences::MiddleLeft:
+        panel->lightingDir21->setOn(true);
+        break;
+    case LDPreferences::MiddleMiddle:
+        panel->lightingDir22->setOn(true);
+        break;
+    case LDPreferences::MiddleRight:
+        panel->lightingDir23->setOn(true);
+        break;
+    case LDPreferences::LowerLeft:
+        panel->lightingDir31->setOn(true);
+        break;
+    case LDPreferences::LowerMiddle:
+        panel->lightingDir32->setOn(true);
+        break;
+    case LDPreferences::LowerRight:
+        panel->lightingDir33->setOn(true);
+        break;
+    case LDPreferences::CustomDirection:
+        break;
+    }
+}
+
 void Preferences::enableLighting(void)
 {
 	panel->qualityLightingButton->setEnabled(true);
@@ -1653,38 +1696,7 @@ void Preferences::enableLighting(void)
 	setButtonState(panel->subduedLightingButton, ldPrefs->getSubduedLighting());
 	setButtonState(panel->specularLightingButton, ldPrefs->getUseSpecular());
 	setButtonState(panel->alternateLightingButton, ldPrefs->getOneLight());
-	switch (ldPrefs->getLightDirection())
-	{
-    case LDPreferences::UpperLeft:
-		panel->lightingDir11->setOn(true);
-        break;
-    case LDPreferences::UpperMiddle:
-		panel->lightingDir12->setOn(true);
-        break;
-    case LDPreferences::UpperRight:
-		panel->lightingDir13->setOn(true);
-        break;
-    case LDPreferences::MiddleLeft:
-		panel->lightingDir21->setOn(true);
-        break;
-    case LDPreferences::MiddleMiddle:
-		panel->lightingDir22->setOn(true);
-        break;
-    case LDPreferences::MiddleRight:
-		panel->lightingDir23->setOn(true);
-        break;
-    case LDPreferences::LowerLeft:
-		panel->lightingDir31->setOn(true);
-        break;
-    case LDPreferences::LowerMiddle:
-		panel->lightingDir32->setOn(true);
-        break;
-    case LDPreferences::LowerRight:
-		panel->lightingDir33->setOn(true);
-        break;
-	case LDPreferences::CustomDirection:
-		break;
-	}
+	selectLightDirection(ldPrefs->getLightDirection());
 }
 
 void Preferences::enableStereo(void)
@@ -1820,6 +1832,19 @@ void Preferences::disableWireframeCutaway(void)
 	setButtonState(panel->monochromeCutawayButton, false);
 }
 
+void Preferences::uncheckLightDirections(void)
+{
+    panel->lightingDir11->setOn(false);
+    panel->lightingDir12->setOn(false);
+    panel->lightingDir13->setOn(false);
+    panel->lightingDir21->setOn(false);
+    panel->lightingDir22->setOn(false);
+    panel->lightingDir23->setOn(false);
+    panel->lightingDir31->setOn(false);
+    panel->lightingDir32->setOn(false);
+    panel->lightingDir33->setOn(false);
+}
+
 void Preferences::disableLighting(void)
 {
 	panel->qualityLightingButton->setEnabled(false);
@@ -1839,16 +1864,7 @@ void Preferences::disableLighting(void)
 	setButtonState(panel->subduedLightingButton, false);
 	setButtonState(panel->specularLightingButton, false);
 	setButtonState(panel->alternateLightingButton, false);
-    panel->lightingDir11->setOn(false);
-    panel->lightingDir12->setOn(false);
-    panel->lightingDir13->setOn(false);
-    panel->lightingDir21->setOn(false);
-    panel->lightingDir22->setOn(false);
-    panel->lightingDir23->setOn(false);
-    panel->lightingDir31->setOn(false);
-    panel->lightingDir32->setOn(false);
-    panel->lightingDir33->setOn(false);
-
+	uncheckLightDirections();
 }
 
 void Preferences::disableStereo(void)
@@ -2083,3 +2099,15 @@ void Preferences::userDefaultChangedAlertCallback(TCAlert *alert)
 	}
 }
 
+void Preferences::checkLightVector(void)
+{
+	LDPreferences::LightDirection selectedDirection =
+		getSelectedLightDirection();
+	LDPreferences::LightDirection lightDirection =
+		ldPrefs->getLightDirection();
+	if (selectedDirection != lightDirection)
+	{
+		uncheckLightDirections();
+		selectLightDirection(lightDirection);
+	}
+}
