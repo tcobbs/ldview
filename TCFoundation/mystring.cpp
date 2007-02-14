@@ -273,6 +273,18 @@ bool stringHasCaseInsensitivePrefix(const char* string, const char* prefix)
 	return prefix[i] == 0;
 }
 
+bool stringHasCaseInsensitivePrefix(const wchar_t* string,
+	const wchar_t* prefix)
+{
+	int i;
+
+	for (i = 0; string[i] && prefix[i] &&
+		toupper(string[i]) == toupper(prefix[i]); i++)
+	{
+	}
+	return prefix[i] == 0;
+}
+
 bool stringHasPrefix(const char* string, const char* prefix)
 {
 	int i;
@@ -301,6 +313,19 @@ bool stringHasSuffix(const char* string, const char* suffix)
 	int i;
 	int len1 = strlen(string);
 	int len2 = strlen(suffix);
+
+	for (i = 0; i < len1 && i < len2 &&
+		string[len1 - i - 1] == suffix[len2 - i - 1]; i++)
+	{
+	}
+	return i == len2;
+}
+
+bool stringHasSuffix(const wchar_t* string, const wchar_t* suffix)
+{
+	int i;
+	int len1 = wcslen(string);
+	int len2 = wcslen(suffix);
 
 	for (i = 0; i < len1 && i < len2 &&
 		string[len1 - i - 1] == suffix[len2 - i - 1]; i++)
