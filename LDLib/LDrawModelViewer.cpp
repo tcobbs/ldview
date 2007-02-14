@@ -3336,10 +3336,12 @@ bool LDrawModelViewer::mouseMove(int x, int y)
 	return true;
 }
 
+#define myMin(a, b) ((a) < (b) ? (a) : (b))
+
 void LDrawModelViewer::mouseMoveLight(int deltaX, int deltaY)
 {
 	TCFloat matrix[16];
-	double scale = std::min(width, height) / 10.0;
+	double scale = myMin(width, height) / 10.0;
 	double angle = deltaX / scale;
 	TCVector newLightVector;
 
