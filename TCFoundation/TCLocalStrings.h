@@ -41,6 +41,7 @@ protected:
 	const wchar_t *instGetLocalString(const wchar_t *key);
 	void instDumpTable(const char *filename, const char *header);
 	void instSetCodePage(int codePage);
+	void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
@@ -50,8 +51,9 @@ protected:
 	QTextCodec *m_textCodec;
 
 	void buildQStringMap(void);
-	void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 #endif // _QT
+
+	int m_codePage;
 
 	static TCLocalStrings *currentLocalStrings;
 	static TCLocalStrings *getCurrentLocalStrings(void);
