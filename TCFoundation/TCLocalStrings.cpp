@@ -7,6 +7,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+// The following map came from here:
+// http://www.microsoft.com/globaldev/reference/sbcs/1250.mspx
+// The <UNMAPPED> entries were added by hand based on the holes in the chart.
 static wchar_t g_cp1250[256] =
 {
 	/*00 = U+*/0x0000, //NULL
