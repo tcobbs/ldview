@@ -65,6 +65,9 @@ void TCLocalStrings::dealloc(void)
 {
 	TCObject::release(stringDict);
 	TCObject::dealloc();
+#ifdef _QT
+	delete m_textCodec;
+#endif // _QT
 }
 
 bool TCLocalStrings::setStringTable(const char *stringTable, bool replace)
