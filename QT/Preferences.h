@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDPreferences.h>
 
 class PreferencesPanel;
 class ModelViewerWidget;
@@ -109,6 +110,7 @@ public:
 	void performHotKey(int);
     void setupPrefSetsList(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
+	void checkLightVector(void);
 
 protected:
 	void doGeneralApply(void);
@@ -156,6 +158,9 @@ protected:
 	void disableTextureStuds(void);
 	void disableProxyServer(void);
 	void setupDefaultRotationMatrix(void);
+	void uncheckLightDirections(void);
+	LDPreferences::LightDirection getSelectedLightDirection(void);
+	void selectLightDirection(LDPreferences::LightDirection);
 
 	const char *getPrefSet(int);
 	const char *getSelectedPrefSet(void);

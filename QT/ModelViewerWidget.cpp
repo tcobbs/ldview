@@ -782,6 +782,14 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 
 void ModelViewerWidget::spinButtonPress(QMouseEvent *event)
 {
+	if (event->state() & Qt::ShiftButton)
+	{
+		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, 
+					event->globalX(), event->globalY()))
+		{
+			return;
+		}
+	}
 	lastX = event->globalX();
 	lastY = event->globalY();
 	if (viewMode == LDVViewExamine)
@@ -831,8 +839,13 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 	unlock();
 }
 
-void ModelViewerWidget::spinButtonRelease(QMouseEvent * /*event*/)
+void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
 {
+	if (modelViewer && modelViewer->mouseUp(event->globalX(), event->globalY()))
+	{
+		preferences->checkLightVector();
+		return;
+	}
 	if (viewMode != LDVViewExamine)
 	{
 		modelViewer->setCameraXRotate(0.0f);
@@ -882,6 +895,11 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 	}
 	startPaintTimer();
+	if (modelViewer && modelViewer->mouseMove(event->globalX(), 
+											  event->globalY()))
+	{
+		return;
+	}
 	if (mouseButtonsDown[spinButton] || mouseButtonsDown[zoomButton])
 	{
 		lastMoveTime.start();
