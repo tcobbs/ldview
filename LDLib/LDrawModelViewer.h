@@ -36,6 +36,15 @@ typedef enum
 	LDVAngleIso,
 } LDVAngle;
 
+typedef enum
+{
+	LDVMouseNone,
+	LDVMouseNormal,
+	LDVMouseZoom,
+	LDVMousePan,
+	LDVMouseLight
+} LDVMouseMode;
+
 class TCImage;
 class LDLError;
 class TCProgressAlert;
@@ -303,6 +312,11 @@ class LDrawModelViewer: public TCObject
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 
+		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
+		virtual bool mouseUp(LDVMouseMode mode, int x, int y);
+		virtual bool mouseMove(int x, int y);
+		virtual void showLight(void);
+
 		static char *getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
 		static bool fileExists(char *filename);
@@ -355,6 +369,7 @@ class LDrawModelViewer: public TCObject
 			bool exists);
 		virtual void unofficialPartNotFound(const char *filename);
 		virtual bool connectionFailure(TCWebClient *webClient);
+		virtual void mouseMoveLight(int deltaX, int deltaY);
 
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
@@ -437,6 +452,9 @@ class LDrawModelViewer: public TCObject
 		LDPreferences *preferences;
 		int missingPartWait;
 		int updatedPartWait;
+		LDVMouseMode mouseMode;
+		int lastMouseX;
+		int lastMouseY;
 		struct
 		{
 			bool qualityLighting:1;
@@ -488,6 +506,7 @@ class LDrawModelViewer: public TCObject
 			bool overrideModelCenter:1;
 			bool overrideModelSize:1;
 			bool checkPartTracker:1;
+			bool showLight:1;
 		} flags;
 		struct CameraData
 		{

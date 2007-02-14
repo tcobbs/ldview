@@ -84,7 +84,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 memoryUsage(2),
 			 lightVector(0.0f, 0.0f, 1.0f),
 			 preferences(NULL),
-			 cameraData(NULL)
+			 cameraData(NULL),
+			 mouseMode(LDVMouseNone)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
@@ -136,6 +137,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.overrideModelCenter = false;
 	flags.overrideModelSize = false;
 	flags.checkPartTracker = true;
+	flags.showLight = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -2656,6 +2658,36 @@ void LDrawModelViewer::setupRotationMatrix(void)
 */
 }
 
+void LDrawModelViewer::showLight(void)
+{
+	if (flags.showLight)
+	{
+		float rotInverse[16];
+		TCVector transformedLightVector;
+		GLboolean wasEnabled = glIsEnabled(GL_LIGHTING);
+		GLfloat oldWidth;
+		
+		glGetFloatv(GL_LINE_WIDTH, &oldWidth);
+		TCVector::invertMatrix(rotationMatrix, rotInverse);
+		lightVector.transformPoint(rotInverse, transformedLightVector);
+		transformedLightVector *= size / 2.0f;
+		transformedLightVector = center + transformedLightVector;
+		glDisable(GL_LIGHTING);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glLineWidth(4.0);
+		glBegin(GL_LINES);
+			glVertex3f(center[0], center[1], center[2]);
+			glVertex3f(transformedLightVector[0], transformedLightVector[1],
+				transformedLightVector[2]);
+		glEnd();
+		if (wasEnabled)
+		{
+			glEnable(GL_LIGHTING);
+		}
+		glLineWidth(oldWidth);
+	}
+}
+
 void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 {
 	drawSetup(eyeXOffset);
@@ -2671,6 +2703,7 @@ void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 	glColor3ub(192, 192, 192);
 	if (mainTREModel)
 	{
+		showLight();
 		mainTREModel->draw();
 		if (clipAmount > 0.01)
 		{
@@ -3228,6 +3261,102 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	povCamera = copyString(cameraString);
 }
 
+bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
+{
+	if ((mouseMode != LDVMouseNone && mouseMode != mode) ||
+		mode == LDVMouseNone)
+	{
+		return false;
+	}
+	if (mode != LDVMouseLight)
+	{
+		debugPrintf("LDVMouseLight is the only mode currently supported.\n");
+		return false;
+	}
+	lastMouseX = x;
+	lastMouseY = y;
+	mouseMode = mode;
+	switch (mouseMode)
+	{
+	case LDVMouseLight:
+		flags.showLight = true;
+		break;
+	}
+	return true;
+}
+
+bool LDrawModelViewer::mouseUp(LDVMouseMode mode, int x, int y)
+{
+	int deltaX = x - lastMouseX;
+	int deltaY = y - lastMouseY;
+
+	if (mouseMode != mode || mode == LDVMouseNone)
+	{
+		return false;
+	}
+	if (mouseMode != LDVMouseLight)
+	{
+		debugPrintf("LDVMouseLight is the only mode currently supported.\n");
+		return false;
+	}
+	lastMouseX = x;
+	lastMouseY = y;
+	switch (mode)
+	{
+	case LDVMouseLight:
+		mouseMoveLight(deltaX, deltaY);
+		preferences->setLightVector(lightVector, true);
+		flags.showLight = false;
+		break;
+	}
+	mouseMode = LDVMouseNone;
+	return true;
+}
+
+bool LDrawModelViewer::mouseMove(int x, int y)
+{
+	int deltaX = x - lastMouseX;
+	int deltaY = y - lastMouseY;
+
+	if (mouseMode != LDVMouseLight)
+	{
+		//debugPrintf("LDVMouseLight is the only mode currently supported.\n");
+		return false;
+	}
+	lastMouseX = x;
+	lastMouseY = y;
+	switch (mouseMode)
+	{
+	case LDVMouseLight:
+		mouseMoveLight(deltaX, deltaY);
+		break;
+	default:
+		break;
+	}
+	return true;
+}
+
+void LDrawModelViewer::mouseMoveLight(int deltaX, int deltaY)
+{
+	TCFloat matrix[16];
+	double scale = min(width, height) / 10.0;
+	double angle = deltaX / scale;
+	TCVector newLightVector;
+
+	TCVector::initIdentityMatrix(matrix);
+	matrix[0] = (float)cos(angle);
+	matrix[2] = (float)-sin(angle);
+	matrix[8] = (float)sin(angle);
+	matrix[10] = (float)cos(angle);
+	newLightVector = lightVector.transformPoint(matrix);
+	angle = deltaY / scale;
+	TCVector::initIdentityMatrix(matrix);
+	matrix[5] = (float)cos(angle);
+	matrix[6] = (float)sin(angle);
+	matrix[9] = (float)-sin(angle);
+	matrix[10] = (float)cos(angle);
+	setLightVector(newLightVector.transformPoint(matrix));
+}
 
 char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 {
