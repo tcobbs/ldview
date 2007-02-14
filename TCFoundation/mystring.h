@@ -34,14 +34,17 @@ TCExport bool arrayContainsString(char** array, int count, const char* string);
 TCExport bool arrayContainsPrefix(char** array, int count, const char* prefix);
 TCExport char **componentsSeparatedByString(const char* string,
 											const char* separator, int& count);
-TCExport char *componentsJoinedByString(char** array, int count, const char* 
-separator);
+TCExport char *componentsJoinedByString(char** array, int count,
+	const char* separator);
 TCExport bool stringHasPrefix(const char* string, const char* prefix);
-TCExport bool stringHasCaseInsensitivePrefix(const char* string, const char* 
-prefix);
+TCExport bool stringHasCaseInsensitivePrefix(const char* string,
+	const char* prefix);
+TCExport bool stringHasCaseInsensitivePrefix(const wchar_t* string,
+	const wchar_t* prefix);
 TCExport bool stringHasSuffix(const char* string, const char* suffix);
-TCExport bool stringHasCaseInsensitiveSuffix(const char* string, const char* 
-suffix);
+TCExport bool stringHasSuffix(const wchar_t* string, const wchar_t* suffix);
+TCExport bool stringHasCaseInsensitiveSuffix(const char* string,
+	const char* suffix);
 TCExport char* convertStringToUpper(char*);
 TCExport char* convertStringToLower(char*);
 

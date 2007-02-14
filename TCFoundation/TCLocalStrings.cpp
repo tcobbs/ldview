@@ -65,9 +65,6 @@ void TCLocalStrings::dealloc(void)
 {
 	TCObject::release(stringDict);
 	TCObject::dealloc();
-#ifdef _QT
-	delete m_textCodec;
-#endif // _QT
 }
 
 bool TCLocalStrings::setStringTable(const char *stringTable, bool replace)
@@ -443,9 +440,12 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 			{
 				// We haven't found the [StringTable] section yet
 				stripTrailingWhitespace(line);
-				if (wcscasecmp(line, L"[StringTable]") == 0)
+				if (stringHasCaseInsensitivePrefix(line, L"[StringTable") &&
+					stringHasSuffix(line, L"]"))
 				{
 					sectionFound = true;
+					debugPrintf("Code Page setting found in Unicode string "
+						"file.  Ignoring.\n");
 				}
 				// Note that we are ignoring all lines until we find the section
 			}
