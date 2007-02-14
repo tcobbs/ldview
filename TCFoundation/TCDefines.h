@@ -21,6 +21,9 @@
 #include <winsock2.h>
 #include <crtdbg.h>
 
+#undef min
+#undef max
+
 #pragma warning( disable : 4514 4127 )
 
 #ifdef _BUILDING_TCFOUNDATION

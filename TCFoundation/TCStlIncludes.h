@@ -21,6 +21,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <algorithm>
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32

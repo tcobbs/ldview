@@ -84,8 +84,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 memoryUsage(2),
 			 lightVector(0.0f, 0.0f, 1.0f),
 			 preferences(NULL),
-			 cameraData(NULL),
-			 mouseMode(LDVMouseNone)
+			 mouseMode(LDVMouseNone),
+			 cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
@@ -3281,6 +3281,8 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 	case LDVMouseLight:
 		flags.showLight = true;
 		break;
+	default:
+		break;
 	}
 	return true;
 }
@@ -3303,6 +3305,8 @@ bool LDrawModelViewer::mouseUp(int x, int y)
 		mouseMoveLight(deltaX, deltaY);
 		preferences->setLightVector(lightVector, true);
 		flags.showLight = false;
+		break;
+	default:
 		break;
 	}
 	mouseMode = LDVMouseNone;
@@ -3335,7 +3339,7 @@ bool LDrawModelViewer::mouseMove(int x, int y)
 void LDrawModelViewer::mouseMoveLight(int deltaX, int deltaY)
 {
 	TCFloat matrix[16];
-	double scale = min(width, height) / 10.0;
+	double scale = std::min(width, height) / 10.0;
 	double angle = deltaX / scale;
 	TCVector newLightVector;
 
