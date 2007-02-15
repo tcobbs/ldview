@@ -1437,7 +1437,7 @@ void LDrawModelViewer::drawFPS(TCFloat fps)
 		}
 		else
 		{
-			strcpy(fpsString, TCLocalStrings::get("FPSSpinPrompt"));
+			strcpy(fpsString, TCLocalStrings::get("FPSSpinPromptGL"));
 /*
 			for (int i = 0; i < 128; i++)
 			{
