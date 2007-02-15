@@ -563,7 +563,7 @@ bool ModelWindow::altPressed(void)
 
 LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	if (keyFlags && MK_SHIFT)
+	if (keyFlags & MK_SHIFT)
 	{
 		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
 		{

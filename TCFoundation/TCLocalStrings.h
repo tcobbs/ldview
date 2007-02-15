@@ -13,6 +13,7 @@ typedef std::map<QString, QString> QStringQStringMap;
 
 class TCDictionary;
 typedef std::map<std::wstring, std::wstring> WStringWStringMap;
+typedef std::map<int, wchar_t *> IntWCharMap;
 
 class TCExport TCLocalStrings: public TCObject
 {
@@ -61,8 +62,12 @@ protected:
 	static class TCLocalStringsCleanup
 	{
 	public:
+		TCLocalStringsCleanup(void);
 		~TCLocalStringsCleanup(void);
 	} localStringsCleanup;
+
+	static IntWCharMap sm_codePages;
+	static void initCodePages(void);
 	friend class TCLocalStringsCleanup;
 };
 
