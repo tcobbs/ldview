@@ -31,6 +31,8 @@ mkdir -p $RPM_BUILD_ROOT/usr/local/share/ldview
 mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 install -d $RPM_BUILD_ROOT/usr/local/share/ldview
 install -m 755 LDView $RPM_BUILD_ROOT/usr/local/bin/LDView
+install -m 644 ../Textures/SansSerif.fnt \
+$RPM_BUILD_ROOT/usr/local/share/ldview/SansSerif.fnt
 install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/local/share/ldview/Help.html
 install -m 644 ../Readme.txt $RPM_BUILD_ROOT/usr/local/share/ldview/Readme.txt
 install -m 644 ../ChangeHistory.html $RPM_BUILD_ROOT/usr/local/share/ldview/ChangeHistory.html
@@ -73,6 +75,7 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 
 %files
 /usr/local/bin/LDView
+/usr/local/share/ldview/SansSerif.fnt
 /usr/local/share/ldview/Help.html
 /usr/local/share/ldview/license.txt
 /usr/local/share/ldview/ChangeHistory.html
