@@ -1690,11 +1690,11 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 		extensionsPanel = new OpenGLExtensionsPanel;
 		openGLDriverInfo = LDrawModelViewer::getOpenGLDriverInfo(
 			extensionCount);
-		extensionsPanel->extensionsBox->setText(
-			QString::fromUtf8(openGLDriverInfo));
+		extensionsPanel->extensionsBox->setText(openGLDriverInfo);
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
-		countString.sprintf(TCLocalStrings::get("OpenGlnExtensions"), extensionCount);
-		extensionsCountLabel->setText(QString::fromUtf8(countString));
+		countString.sprintf("%d", extensionCount);
+		countString += TCLocalStrings::get("OpenGlnExtensionsSuffix");
+		extensionsCountLabel->setText(countString);
 		extensionsPanel->statusBar()->addWidget(extensionsCountLabel, 1);
 	}
 	extensionsPanel->show();
