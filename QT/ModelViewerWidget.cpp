@@ -287,6 +287,24 @@ void ModelViewerWidget::setApplication(QApplication *value)
 	}
 	modelViewer->setProgramPath(arg0);
 	delete arg0;
+
+    QString fontFilePath = findPackageFile("SansSerif.fnt");
+    QFile fontFile (fontFilePath);
+    if (fontFile.exists())
+    {
+        int len = fontFile.size();
+        if (len > 0)
+        {
+            char *buffer = (char*)malloc(len);
+            if ( fontFile.open( IO_ReadOnly ) )
+            {
+                QDataStream stream( &fontFile );
+                stream.readRawBytes(buffer,len);
+                modelViewer->setFontData((TCByte*)buffer,len);
+            }
+        }
+    }
+
     TCStringArray *commandLine = TCUserDefaults::getProcessedCommandLine();
     char *commandLineFilename = NULL;
 
