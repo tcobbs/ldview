@@ -1279,14 +1279,11 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		progressMode->setText(QString(qcString, len));
 		delete qcString;
 		progressMode->setText(TCLocalStrings::get("ExamineMode"));
-		//progressMode->setText(QString::fromUtf8(
-		//	TCLocalStrings::get("ExamineMode")));
 	}
 	else
 	{
 		mainWindow->flythroughModeAction->setOn(true);
-		progressMode->setText(QString::fromUtf8(
-			TCLocalStrings::get("FlyThroughMode")));
+		progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 	}
 	menuBar = mainWindow->menuBar();
 	item = menuBar->findItem(menuBar->idAt(0));
@@ -1874,7 +1871,7 @@ void ModelViewerWidget::drawFPS(void)
 			{
 				fpsString = TCLocalStrings::get("FPSSpinPrompt");
 			}
-			progressLabel->setText(QString::fromUtf8(fpsString));
+			progressLabel->setText(fpsString);
 		}
 	}
 }
@@ -2291,8 +2288,6 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 			modelViewer->setConstrainZoom(true);
 			if (progressMode)
 			{
-				//progressMode->setText(QString::fromUtf8(
-				//	TCLocalStrings::get("ExamineMode")));
 				progressMode->setText(TCLocalStrings::get("ExamineMode"));
 			}
 		}
@@ -2301,8 +2296,7 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 			modelViewer->setConstrainZoom(false);
 			if (progressMode)
 			{
-				progressMode->setText(QString::fromUtf8(
-					TCLocalStrings::get("FlyThroughMode")));
+				progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 			}
 		}
 		Preferences::setViewMode(viewMode);
