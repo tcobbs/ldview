@@ -311,6 +311,7 @@ class LDrawModelViewer: public TCObject
 		virtual LDPartsList *getPartsList(void);
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
+		virtual void setupFont(char *fontFilename);
 
 		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
 		virtual bool mouseUp(int x, int y);
@@ -344,7 +345,6 @@ class LDrawModelViewer: public TCObject
 		virtual void perspectiveViewToClipPlane(void);
 		virtual void applyTile(void);
 		virtual void drawString(TCFloat xPos, TCFloat yPos, char* string);
-		virtual void setupFont(char *fontFilename);
 		virtual void loadVGAFont(char *fontFilename);
 		virtual void setupDefaultViewAngle(void);
 		virtual void setupFrontViewAngle(void);
