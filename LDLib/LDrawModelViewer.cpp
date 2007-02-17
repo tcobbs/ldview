@@ -11,6 +11,7 @@
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLFindFileAlert.h>
+#include <LDLoader/LDLPalette.h>
 #include "LDModelParser.h"
 #include "LDPreferences.h"
 #include "LDPartsList.h"
@@ -29,6 +30,7 @@
 LDrawModelViewer::LDrawModelViewer(int width, int height)
 			:mainTREModel(NULL),
 			 mainModel(NULL),
+			 lightDirModel(NULL),
 			 filename(NULL),
 			 programPath(NULL),
 			 width(width),
@@ -157,6 +159,7 @@ void LDrawModelViewer::dealloc(void)
 	TCAlertManager::unregisterHandler(LDLFindFileAlert::alertClass(), this);
 	TCObject::release(mainTREModel);
 	TCObject::release(mainModel);
+	TCObject::release(lightDirModel);
 	mainTREModel = NULL;
 	delete filename;
 	filename = NULL;
@@ -324,7 +327,7 @@ TCFloat LDrawModelViewer::getClipRadius(void)
 
 	if (flags.autoCenter)
 	{
-		clipRadius = size / 2.0f;
+		clipRadius = size / 1.45f;
 	}
 	else
 	{
@@ -811,6 +814,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		// First, release the current TREModel, if it exists.
 		TCObject::release(mainTREModel);
 		mainTREModel = NULL;
+		TCObject::release(lightDirModel);
+		lightDirModel = NULL;
 		mainModel->setLowResStuds(!flags.qualityStuds);
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
 		mainModel->setExtraSearchDirs(extraSearchDirs);
@@ -909,6 +914,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			}
 			modelParser->release();
 		}
+		initLightDirModel();
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
 			2.0f);
 		if (resetViewpoint)
@@ -1019,6 +1025,16 @@ bool LDrawModelViewer::recompile(void)
 {
 	if (mainTREModel)
 	{
+		if (lightDirModel)
+		{
+			// It crashes after an FSAA change if we simply recompile here.
+			// I suspect it's related to the VBO/VAR extensions.  Deleting the
+			// lightDirModel object and recreating it causes the vertex buffers
+			// to be reloaded from scratch for both models.
+			lightDirModel->release();
+			lightDirModel = NULL;
+			initLightDirModel();
+		}
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
@@ -1037,6 +1053,10 @@ void LDrawModelViewer::uncompile(void)
 	if (mainTREModel)
 	{
 		mainTREModel->uncompile();
+	}
+	if (lightDirModel)
+	{
+		lightDirModel->uncompile();
 	}
 }
 
@@ -1367,7 +1387,7 @@ void LDrawModelViewer::orthoView(void)
 	{
 		// This doesn't work right on ATI video cards, so skip.
 		treGlTranslatef(0.375f, 0.375f, 0.0f);
-		debugPrintf("Not an ATI.\n");
+		//debugPrintf("Not an ATI.\n");
 	}
 }
 
@@ -2103,6 +2123,8 @@ void LDrawModelViewer::drawSetup(TCFloat eyeXOffset)
 
 void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 {
+	glPushAttrib(GL_POLYGON_BIT | GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT |
+		GL_LINE_BIT | GL_STENCIL_BUFFER_BIT);
 	perspectiveViewToClipPlane();
 	glDisable(GL_DEPTH_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
@@ -2130,6 +2152,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	{
 		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
+	showLight();
 	mainTREModel->draw();
 	glDisable(GL_LIGHTING);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -2157,6 +2180,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glEnable(GL_LIGHTING);
+	glPopAttrib();
 }
 
 /*
@@ -2217,6 +2241,8 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 {
 	TCFloat32 weight = cutawayAlpha;
 
+	glPushAttrib(GL_POLYGON_BIT | GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT |
+		GL_LINE_BIT);
 	perspectiveViewToClipPlane();
 	glClearDepth(1.0);
 	glClearColor(weight, weight, weight, weight);
@@ -2246,16 +2272,20 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 	{
 		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
+	showLight();
 	mainTREModel->setCutawayDrawFlag(true);
 	mainTREModel->draw();
 	mainTREModel->setCutawayDrawFlag(false);
 	perspectiveView();
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glDisable(GL_BLEND);
+	glPopAttrib();
 }
 
 void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 {
+	glPushAttrib(GL_POLYGON_BIT | GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT |
+		GL_LINE_BIT);
 	perspectiveViewToClipPlane();
 	glClearDepth(1.0);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -2280,8 +2310,10 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 	{
 		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
+	showLight();
 	mainTREModel->draw();
 	perspectiveView();
+	glPopAttrib();
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 }
 
@@ -2658,33 +2690,70 @@ void LDrawModelViewer::setupRotationMatrix(void)
 */
 }
 
+void LDrawModelViewer::initLightDirModel(void)
+{
+	if (lightDirModel == NULL)
+	{
+		TREModel *subModel = new TREModel;
+		lightDirModel = new TREMainModel;
+		TCFloat identityMatrix[16];
+		TCULong color = LDLPalette::colorForRGBA(255, 255, 255, 255);
+		float length = size / 1.5f;
+		float radius = size / 100.0f;
+		int segments = 32;
+		float coneLength = radius * 4.0f;
+		float coneRadius = radius * 2.0f;
+		float offset = length / 3.0f;
+
+		lightDirModel->setLightingFlag(true);
+		TCVector::initIdentityMatrix(identityMatrix);
+		subModel->setMainModel(lightDirModel);
+		subModel->addCylinder(TCVector(0.0f, coneLength + offset, 0.0f), radius, length - coneLength - offset, segments);
+		subModel->addDisc(TCVector(0.0, coneLength + offset, 0.0), coneRadius, segments);
+		subModel->addDisc(TCVector(0.0, length, 0.0), radius, segments);
+		subModel->addCone(TCVector(0.0, coneLength + offset, 0.0), coneRadius, -coneLength, segments);
+		lightDirModel->addSubModel(color, color, identityMatrix, subModel, false);
+		lightDirModel->postProcess();
+	}
+}
+
 void LDrawModelViewer::showLight(void)
 {
 	if (flags.showLight)
 	{
-		float rotInverse[16];
-		TCVector transformedLightVector;
-		GLboolean wasEnabled = glIsEnabled(GL_LIGHTING);
-		GLfloat oldWidth;
-		
-		glGetFloatv(GL_LINE_WIDTH, &oldWidth);
+		TCVector oldLightVector = lightVector;
+		TCFloat rotInverse[16];
+		TREFacing facing;
+		bool oldSpecular = flags.usesSpecular;
+		bool oldSubdued = flags.subduedLighting;
+
 		TCVector::invertMatrix(rotationMatrix, rotInverse);
-		lightVector.transformPoint(rotInverse, transformedLightVector);
-		transformedLightVector *= size / 2.0f;
-		transformedLightVector = center + transformedLightVector;
-		glDisable(GL_LIGHTING);
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glLineWidth(4.0);
-		glBegin(GL_LINES);
-			glVertex3f(center[0], center[1], center[2]);
-			glVertex3f(transformedLightVector[0], transformedLightVector[1],
-				transformedLightVector[2]);
-		glEnd();
-		if (wasEnabled)
-		{
-			glEnable(GL_LIGHTING);
-		}
-		glLineWidth(oldWidth);
+		flags.usesSpecular = false;
+		flags.subduedLighting = false;
+		glPushMatrix();
+		glPushAttrib(GL_POLYGON_BIT | GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT |
+			GL_LINE_BIT | GL_LIGHTING_BIT);
+		facing.setFacing(TCVector(1.0f, 0.0f, 0.0f), (TCFloat)M_PI / 2.0f);
+		facing.pointAt(oldLightVector);
+		treGlTranslatef(center[0], center[1], center[2]);
+		treGlMultMatrixf(rotInverse);
+		lightVector = TCVector(0.0f, 0.0f, 1.0f);
+		setupLight(GL_LIGHT0);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glDisable(GL_LIGHT1);
+		glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+		glPushMatrix();
+		glLoadIdentity();
+		drawLights();
+		glPopMatrix();
+		lightVector = oldLightVector;
+		treGlMultMatrixf(facing.getMatrix());
+		lightDirModel->draw();
+		glPopAttrib();
+		glPopMatrix();
+		flags.usesSpecular = oldSpecular;
+		flags.subduedLighting = oldSubdued;
 	}
 }
 
@@ -3271,6 +3340,11 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 	if (mode != LDVMouseLight)
 	{
 		debugPrintf("LDVMouseLight is the only mode currently supported.\n");
+		return false;
+	}
+	if (mode == LDVMouseLight && !flags.useLighting)
+	{
+		// Allowing this will likely just lead to confusion.
 		return false;
 	}
 	lastMouseX = x;

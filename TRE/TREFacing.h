@@ -24,7 +24,7 @@ class TREFacing: public TCVector
 
 		// setFacing sets a vector to be a rotation around vector v by phi 
 		//		radians.
-		void setFacing(TCVector& v, TCFloat phi);
+		void setFacing(const TCVector& v, TCFloat phi);
 
 		// this multiplies two facings together.
 		TREFacing operator+(const TREFacing& otherFacing);

@@ -138,15 +138,16 @@ TREFacing TREFacing::dot(TREFacing& f2)
 	return answer;
 }
 
-void TREFacing::setFacing(TCVector &a, TCFloat phi)
+void TREFacing::setFacing(const TCVector &a, TCFloat phi)
 {
 	double phiOver2 = phi / 2.0;
 
-	a.normalize(); /* Normalize axis */
+	//a.normalize(); /* Normalize axis */
 	//(TCVector)(*this) = a;
 	(*this)[0] = a[0];
 	(*this)[1] = a[1];
 	(*this)[2] = a[2];
+	TCVector::normalize();
 
 	//vscale(e, sin(phi/2.0));
 	(*this)[0] *= (TCFloat)sin(phiOver2);
