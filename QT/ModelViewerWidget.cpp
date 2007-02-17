@@ -3591,6 +3591,8 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 	if (!file.exists())
 		QDir::setCurrent("..");
 	if (!file.exists())
+		QDir::setCurrent("Textures");
+	if (!file.exists())
 		QDir::setCurrent("/usr/local/share/ldview");
 	if (!file.exists())
 		QDir::setCurrent("/usr/local/etc");
