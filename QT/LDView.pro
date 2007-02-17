@@ -35,6 +35,16 @@ unix {
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
                     ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a
   QMAKE_CLEAN += ../[TL]*/.obj/*.o ../[TL]*/lib*.a
+  initrans.path = /usr/local/share/ldview
+  initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
+/usr/local/share/ldview/LDViewMessages_hu.ini ;\
+cp ../Translations/Czech/LDViewMessages.ini \
+/usr/local/share/ldview/LDViewMessages_cz.ini ;\
+cp ../Translations/German/LDViewMessages.ini \
+/usr/local/share/ldview/LDViewMessages_de.ini ; \
+cp -f ../Translations/Italian/LDViewMessages.ini \
+/usr/local/share/ldview/LDViewMessages_it.ini ;
+  INSTALLS += initrans
 }
 
 win32 {
