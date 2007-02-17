@@ -132,7 +132,8 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	alertHandler(new AlertHandler(this)),
 	libraryUpdater(NULL),
 	libraryUpdateProgressReady(false),
-	libraryUpdateWindow(NULL)
+	libraryUpdateWindow(NULL),
+	lightingSelection(0)
 {
 	int i;
 	const QMimeSource *mimeSource =
@@ -404,7 +405,7 @@ void ModelViewerWidget::resizeGL(int width, int height)
 void ModelViewerWidget::updateSpinRate(void)
 {
 	// If the mouse stops for more than a set time, stop the spinning.
-	if (mouseButtonsDown[spinButton])
+	if (mouseButtonsDown[spinButton] && !lightingSelection)
 	{
 		if (lastMoveTime.elapsed() >= 100)
 		{
@@ -805,6 +806,7 @@ void ModelViewerWidget::spinButtonPress(QMouseEvent *event)
 		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, 
 					event->globalX(), event->globalY()))
 		{
+			lightingSelection = 1;
 			return;
 		}
 	}
@@ -861,6 +863,7 @@ void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
 {
 	if (modelViewer && modelViewer->mouseUp(event->globalX(), event->globalY()))
 	{
+		lightingSelection = 0;
 		preferences->checkLightVector();
 		return;
 	}
@@ -913,17 +916,18 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		return;
 	}
 	startPaintTimer();
-	if (modelViewer && modelViewer->mouseMove(event->globalX(), 
-											  event->globalY()))
-	{
-		return;
-	}
 	if (mouseButtonsDown[spinButton] || mouseButtonsDown[zoomButton])
 	{
 		lastMoveTime.start();
 	}
+
 	if (mouseButtonsDown[spinButton])
 	{
+			if (modelViewer && modelViewer->mouseMove(event->globalX(),
+												  	  event->globalY()))
+			{
+				return;
+			}
 		if (viewMode == LDVViewExamine)
 		{
 			if (controlPressed)

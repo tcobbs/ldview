@@ -302,6 +302,7 @@ protected:
 	int libraryUpdateFinishCode;
 	QProgressDialog *libraryUpdateWindow;
 
+	int lightingSelection;
 	static TCStringArray* recentFiles;
 };
 
