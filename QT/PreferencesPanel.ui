@@ -1281,7 +1281,7 @@
                                             <cstring>lightingDirectionBox</cstring>
                                         </property>
                                         <property name="title">
-                                            <string>Lighting Direction</string>
+                                            <string>Light Direction</string>
                                         </property>
                                         <vbox>
                                             <property name="name">
