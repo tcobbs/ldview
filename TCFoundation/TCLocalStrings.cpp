@@ -583,9 +583,9 @@ TCLocalStrings::TCLocalStringsCleanup::~TCLocalStringsCleanup(void)
 
 // Note: Code Page 1252 is Windows Latin I, which is the default.
 TCLocalStrings::TCLocalStrings(void):
-#ifdef _QT
+#ifndef WIN32
 	m_textCodec(NULL),
-#endif // _QT
+#endif // WIN32
 	m_codePage(1252)
 {
 	stringDict = new TCDictionary;
@@ -617,11 +617,11 @@ bool TCLocalStrings::setStringTable(const wchar_t *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
-#ifdef _QT
+#ifndef WIN32
 const QString &TCLocalStrings::get(const char *key)
-#else // _QT
+#else // WIN32
 const char *TCLocalStrings::get(const char *key)
-#endif // _QT
+#endif // WIN32
 {
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
@@ -926,9 +926,9 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 			break;
 		}
 	}
-#ifdef _QT
+#ifndef WIN32
 	buildQStringMap();
-#endif // _QT
+#endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
 	return sectionFound;
@@ -941,12 +941,12 @@ void TCLocalStrings::instSetCodePage(int codePage)
 	{
 		return;
 	}
-#ifdef _QT
+#ifndef WIN32
 	QString name;
 
 	name.sprintf("CP%d", codePage);
 	m_textCodec = QTextCodec::codecForName(name);
-#endif // _QT
+#endif // WIN32
 }
 
 bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
@@ -1115,9 +1115,9 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 			break;
 		}
 	}
-#ifdef _QT
+#ifndef WIN32
 	buildQStringMap();
-#endif // _QT
+#endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
 	// is found in the data.
 	return sectionFound;
@@ -1167,7 +1167,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 			dst[i] = codePageTable[(TCByte)src[i]];
 		}
 	}
-#ifdef _QT
+#ifndef WIN32
 	else if (m_textCodec)
 	{
 		QString unicodeString = m_textCodec->toUnicode(src);
@@ -1180,14 +1180,14 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 			dst[i] = (wchar_t)qchar.unicode();
 		}
 	}
-#endif // _QT
+#endif // WIN32
 	else
 	{
 		::mbstowstring(dst, src, length);
 	}
 }
 
-#ifdef _QT
+#ifndef WIN32
 const QString &TCLocalStrings::instGetLocalString(const char *key)
 {
 	QStringQStringMap::iterator it = m_qStrings.find(key);
@@ -1218,7 +1218,7 @@ void TCLocalStrings::buildQStringMap(void)
 	}
 }
 
-#else // _QT
+#else // WIN32
 const char *TCLocalStrings::instGetLocalString(const char *key)
 {
 	TCStringObject *stringObject =
@@ -1236,4 +1236,4 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 		return "";
 	}
 }
-#endif // _QT
+#endif // WIN32

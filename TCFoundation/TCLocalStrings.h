@@ -21,11 +21,11 @@ public:
 	static bool setStringTable(const char *stringTable, bool replace = true);
 	static bool setStringTable(const wchar_t *stringTable, bool replace = true);
 	static bool loadStringTable(const char *filaname, bool replace = true);
-#ifdef _QT
+#ifndef WIN32
 	static const QString &get(const char *key);
-#else // _QT
+#else // WIN32
 	static const char *get(const char *key);
-#endif // _QT
+#endif // WIN32
 	static const wchar_t *get(const wchar_t *key);
 	static void dumpTable(const char *filename, const char *header);
 protected:
@@ -34,11 +34,11 @@ protected:
 	virtual void dealloc(void);
 	bool instSetStringTable(const char *stringTable, bool replace);
 	bool instSetStringTable(const wchar_t *stringTable, bool replace);
-#ifdef _QT
+#ifndef WIN32
 	const QString &instGetLocalString(const char *key);
-#else // _QT
+#else // WIN32
 	const char *instGetLocalString(const char *key);
-#endif // _QT
+#endif // WIN32
 	const wchar_t *instGetLocalString(const wchar_t *key);
 	void instDumpTable(const char *filename, const char *header);
 	void instSetCodePage(int codePage);
@@ -46,13 +46,13 @@ protected:
 
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
-#ifdef _QT
+#ifndef WIN32
 	QStringQStringMap m_qStrings;
 	QString m_emptyQString;
 	QTextCodec *m_textCodec;
 
 	void buildQStringMap(void);
-#endif // _QT
+#endif // WIN32
 
 	int m_codePage;
 
