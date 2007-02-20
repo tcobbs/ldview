@@ -1177,7 +1177,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 		{
 			QChar qchar = unicodeString.at(i);
 
-			dst[i] = (wchar_t)qchar;
+			dst[i] = (wchar_t)qchar.unicode();
 		}
 	}
 #endif // _QT
