@@ -898,7 +898,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 					{
 						center = (boundingMin + boundingMax) / 2.0f;
 					}
-					if (!flags.overrideModelCenter)
+					if (!flags.overrideModelSize)
 					{
 						size = mainTREModel->getMaxRadius(center) * 2.0f;
 					}
