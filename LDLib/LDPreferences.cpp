@@ -683,12 +683,17 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 
 		if (sscanf(value.c_str(), "%f,%f", &latitude, &longitude) == 2)
 		{
+			TCFloat radius = -1;;
 			TCFloat leftMatrix[16];
 			TCFloat rightMatrix[16];
 			TCFloat resultMatrix[16];
 			TCFloat cosTheta;
 			TCFloat sinTheta;
 
+			if (sscanf(value.c_str(), "%*f,%*f,%f", &radius) != 1)
+			{
+				radius = -1;
+			}
 			TCVector::initIdentityMatrix(leftMatrix);
 			TCVector::initIdentityMatrix(rightMatrix);
 			latitude = (TCFloat)deg2rad(latitude);
@@ -718,6 +723,10 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 			if (modelViewer)
 			{
 				modelViewer->setDefaultRotationMatrix(resultMatrix);
+				if (radius > 0)
+				{
+					modelViewer->setDefaultDistance(radius);
+				}
 			}
 		}
 	}
