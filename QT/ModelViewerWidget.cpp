@@ -2452,6 +2452,7 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
 			modelViewer->setXTile(xTile);
 			//renderOffscreenImage();
 			screen = renderPixmap(newWidth, newHeight).convertToImage();
+			makeCurrent();
 			//screen.save("/tmp/ldview.png","PNG");
 			//printf("file %ux%ix%i\n",screen.width(),screen.height(),
 			//	screen.depth());
@@ -2476,10 +2477,10 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
 						buffer[spot + 1] = qGreen(rgb);
 						buffer[spot + 2] = qBlue(rgb);
 					}
-					// We only need to zoom to fit on the first tile; the
-					// rest will already be correct.
-					modelViewer->setForceZoomToFit(false);
 				}
+				// We only need to zoom to fit on the first tile; the
+				// rest will already be correct.
+				modelViewer->setForceZoomToFit(false);
 			}
 		}
 	}
