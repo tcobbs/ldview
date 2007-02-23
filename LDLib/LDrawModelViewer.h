@@ -294,6 +294,7 @@ class LDrawModelViewer: public TCObject
 		TCFloat getFov(void) { return fov; }
 		TCFloat getHFov(void);
 		TCFloat getDefaultDistance(void) { return defaultDistance; }
+		void setDefaultDistance(TCFloat value);
 		void setExtraSearchDirs(TCStringArray *value);
 		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }
 		bool skipCameraPositioning(void);
@@ -507,6 +508,7 @@ class LDrawModelViewer: public TCObject
 			bool defaultLightVector:1;
 			bool overrideModelCenter:1;
 			bool overrideModelSize:1;
+			bool overrideDefaultDistance:1;
 			bool checkPartTracker:1;
 			bool showLight:1;
 		} flags;

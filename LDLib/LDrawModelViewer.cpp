@@ -138,6 +138,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.defaultLightVector = true;
 	flags.overrideModelCenter = false;
 	flags.overrideModelSize = false;
+	flags.overrideDefaultDistance = false;
 	flags.checkPartTracker = true;
 	flags.showLight = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
@@ -448,6 +449,10 @@ bool LDrawModelViewer::skipCameraPositioning(void)
 
 TCFloat LDrawModelViewer::calcDefaultDistance(void)
 {
+	if (flags.overrideDefaultDistance)
+	{
+		return defaultDistance;
+	}
 	// Note that the margin is on all sides, so it's on two edges per axis,
 	// which is why we multiply by 2.
 	TCFloat margin = getWideLineMargin() * 2.0f;
@@ -467,8 +472,8 @@ TCFloat LDrawModelViewer::calcDefaultDistance(void)
 			marginAdjust = (actualWidth + margin) / actualWidth;
 		}
 	}
-	return (TCFloat)(size / 2.0 / sin(deg2rad(fov / 2.0))) * distanceMultiplier *
-		marginAdjust;
+	return (TCFloat)(size / 2.0 / sin(deg2rad(fov / 2.0))) * distanceMultiplier
+		* marginAdjust;
 /*
 	double angle1 = deg2rad(90.0f - (currentFov / 2.0));
 	double angle2 = deg2rad(currentFov / 4.0);
@@ -560,6 +565,14 @@ void LDrawModelViewer::setModelSize(const TCFloat value)
 
 }
 
+void LDrawModelViewer::setDefaultDistance(TCFloat value)
+{
+	if (value > 0)
+	{
+		defaultDistance = value;
+		flags.overrideDefaultDistance = true;
+	}
+}
 
 void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 {
