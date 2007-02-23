@@ -794,10 +794,8 @@ static int escapeReplacement(char ch)
 	case '0':
 		return '\0';
 		break;
-	default:
-		return -1;
-		break;
 	}
+	return -1;
 }
 
 static int escapeReplacement(wchar_t wch)
