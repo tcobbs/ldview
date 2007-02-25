@@ -330,7 +330,19 @@ void ModelViewerWidget::setApplication(QApplication *value)
         if (chDirFromFilename(commandLineFilename))
         {
             modelViewer->setFilename(commandLineFilename);
-            modelViewer->loadModel();
+//            modelViewer->loadModel();
+			if (modelViewer->loadModel())
+			{
+        		getFileTime(commandLineFilename, lastWriteTime);
+        		if (lastWriteTime.isValid())
+        		{
+            		startPollTimer();
+        		}
+        		setLastOpenFile(commandLineFilename);
+        		populateRecentFileMenuItems();
+			    mainWindow->fileSaveAction->setEnabled(true);
+    			mainWindow->fileReloadAction->setEnabled(true);
+    		}
         }
     }
     char *snapshotFilename =
