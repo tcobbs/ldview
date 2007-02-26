@@ -342,6 +342,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
         		populateRecentFileMenuItems();
 			    mainWindow->fileSaveAction->setEnabled(true);
     			mainWindow->fileReloadAction->setEnabled(true);
+				startPaintTimer();
     		}
         }
     }
