@@ -2726,6 +2726,7 @@ void LDrawModelViewer::initLightDirModel(void)
 		subModel->addDisc(TCVector(0.0, length, 0.0), radius, segments);
 		subModel->addCone(TCVector(0.0, coneLength + offset, 0.0), coneRadius, -coneLength, segments);
 		lightDirModel->addSubModel(color, color, identityMatrix, subModel, false);
+		subModel->release();
 		lightDirModel->postProcess();
 	}
 }
