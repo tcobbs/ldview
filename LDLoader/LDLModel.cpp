@@ -648,7 +648,7 @@ bool LDLModel::read(FILE *file)
 	m_fileLines = new LDLFileLineArray;
 	while (!done && !getLoadCanceled())
 	{
-		if (fgets(buf, 2048, file))
+		if (fgets(buf, sizeof(buf), file))
 		{
 			LDLFileLine *fileLine;
 
