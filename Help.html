@@ -651,7 +651,7 @@ where there is no visible menu.
 		not try to use this in Fly-through Mode or after having panned.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</A></TD>
+		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
 		<TD COLSPAN=2>This shows a panel that contains information about the
 		current camera position as is needed in POV-Ray.  Hitting OK copies a
 		POV-Ray-compatible camera declaration into the clipboard.  This can be
@@ -1887,7 +1887,7 @@ set-specific, while others aren't.
 			Antialias
 		</TD>
 		<TD VALIGN="TOP">
-			Enumerant
+			Integer
 		</TD>
 		<TD VALIGN="TOP">
 			NO
@@ -1900,10 +1900,15 @@ set-specific, while others aren't.
 			3: 2x Enhanced<BR>
 			4: 4x<BR>
 			5: 4x Enhanced<BR>
+			16+: FSAA level * 8 (see below)<BR>
 			Note that while all but the first option request FSAA to be used, it
 			will only be used on graphics hardware that supports FSAA in
 			addition to supporting the OpenGL extension that allows it to be set
-			from a program other than the driver control panel.
+			from a program other than the driver control panel.<BR>
+			Any standard FSAA mode can be requested by taking the desired FSAA
+			level and multiplying by 8.  For example, 6x FSAA on ATI cards can
+			be requested by setting Antialias to 48.  If you request a mode that
+			isn't supported by your video card, you end up with no antialiasing.
 		</TD>
 	</TR>
 	<TR>
