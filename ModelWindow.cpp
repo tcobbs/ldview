@@ -3024,29 +3024,19 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 					GL_UNSIGNED_BYTE, smallBuffer);
 				if (smallBuffer != buffer)
 				{
-					int x;
 					int y;
 
 					for (y = 0; y < newHeight; y++)
 					{
 						int smallOffset = y * smallBytesPerLine;
 						int offset = (y + (numYTiles - yTile - 1) * newHeight) *
-							bytesPerLine;
+							bytesPerLine+ xTile * newWidth * bytesPerPixel;
 
-						for (x = 0; x < newWidth; x++)
-						{
-							int spot = offset + x * bytesPerPixel +
-								xTile * newWidth * bytesPerPixel;
-							int smallSpot = smallOffset + x * bytesPerPixel;
-
-							buffer[spot] = smallBuffer[smallSpot];
-							buffer[spot + 1] = smallBuffer[smallSpot + 1];
-							buffer[spot + 2] = smallBuffer[smallSpot + 2];
-						}
-						// We only need to zoom to fit on the first tile; the
-						// rest will already be correct.
-						modelViewer->setForceZoomToFit(false);
+						memcpy(&buffer[offset], &smallBuffer[smallOffset], smallBytesPerLine);
 					}
+					// We only need to zoom to fit on the first tile; the
+					// rest will already be correct.
+					modelViewer->setForceZoomToFit(false);
 				}
 			}
 			else
