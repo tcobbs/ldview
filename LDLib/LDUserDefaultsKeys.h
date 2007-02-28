@@ -8,6 +8,7 @@
 #define BFC_KEY "BFC"
 #define BLACK_HIGHLIGHTS_KEY "BlackHighlights"
 #define BOTTOM_MARGIN_KEY "BottomMargin"
+#define CAMERA_GLOBE_KEY "CameraGlobe"							// NO UI
 #define CHECK_PART_TRACKER_KEY "CheckPartTracker"
 #define CHECK_PART_UPDATE_WAIT_KEY "CheckPartUpdateWait"
 #define CHECK_PART_WAIT_KEY "CheckPartWait"
@@ -19,8 +20,8 @@
 #define CUTAWAY_THICKNESS_KEY "CutawayThickness"
 #define DEFAULT_COLOR_KEY "DefaultColor3"
 #define DEFAULT_LAT_LONG_KEY "DefaultLatLong"
-#define MODEL_CENTER_KEY "ModelCenter"
-#define MODEL_SIZE_KEY "ModelSize"
+#define MODEL_CENTER_KEY "ModelCenter"							// NO UI
+#define MODEL_SIZE_KEY "ModelSize"								// NO UI
 #define DEFAULT_MATRIX_KEY "DefaultMatrix"
 #define DEFAULT_ZOOM_KEY "DefaultZoom"							// NO UI
 #define EDITOR_KEY "Editor"
@@ -145,6 +146,5 @@
 #define SS_SLEEP_WORKAROUND_KEY "SSSleepWorkaround"
 #define SS_RANDOM_PREF_SET_KEY "SSRandomPrefSet"
 #define HFOV_KEY "HFOV"
-#define CAMERA_GLOBE_KEY "CameraGlobe"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__

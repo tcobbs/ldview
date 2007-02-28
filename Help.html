@@ -1988,6 +1988,20 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			CameraGlobe
+		</TD>
+		<TD VALIGN="TOP" NOWRAP>
+			String<BR>
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Same as <A HREF="#CameraGlobe">-cg</A> L3P-compatible option.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			CheckPartTracker
 		</TD>
 		<TD VALIGN="TOP">
@@ -2642,6 +2656,46 @@ set-specific, while others aren't.
 			0: Low<BR>
 			1: Medium<BR>
 			2: High<BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ModelCenter
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Set this to override the default camera placement algorithm.  If you
+			set this, the given value is used as the center of the model.  The
+			default camera placement algorithm uses this location to center the
+			model on the screen.  The value is specified as three
+			comma-separated decimal numbers.  Example:<BR>
+			-ModelCenter=0.0,0.0,0.0
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ModelSize
+		</TD>
+		<TD VALIGN="TOP">
+			Decimal<BR>
+			(Greater than 0.0)
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Set this to override the default camera positioning algorithm.  If
+			you set this, the given value is used as the diameter of the sphere
+			that is considered to fully enclose the model.  The automatic camera
+			distance algorithm positions the camera such that this entire sphere
+			is visible in the default view.  Note that if you provide a value
+			that is smaller than the actual calculated size, cropping of your
+			model may occur.
 		</TD>
 	</TR>
 	<TR>
