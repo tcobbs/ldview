@@ -2966,8 +2966,6 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	}
 	calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
 		numYTiles);
-	imageWidth = newWidth * numXTiles;
-	imageHeight = newHeight * numYTiles;
 	if (!setupPBuffer(newWidth, newHeight, currentAntialiasType > 0))
 	{
 		newWidth = width;		// width is OpenGL window width
@@ -2992,6 +2990,8 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 			*saveAlpha = false;
 		}
 	}
+	imageWidth = newWidth * numXTiles;
+	imageHeight = newHeight * numYTiles;
 	smallBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
 	bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
 	if (!buffer)
