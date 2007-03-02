@@ -3182,7 +3182,7 @@ extern void glBindProgramNV(GLenum target, GLuint id);
 extern void glDeleteProgramsNV(GLsizei n, const GLuint *ids);
 extern void glExecuteProgramNV(GLenum target, GLuint id, const GLfloat *params);
 extern void glGenProgramsNV(GLsizei n, GLuint *ids);
-extern GLboolean glAreProgramsResidentNV(GLsizei n, const GLuint *ids, boolean *residences);
+extern GLboolean glAreProgramsResidentNV(GLsizei n, const GLuint *ids, GLboolean *residences);
 extern void glRequestResidentProgramsNV(GLsizei n, GLuint *ids);
 extern void glGetProgramParameterfvNV(GLenum target, GLuint index, GLenum pname, GLfloat *params);
 extern void glGetProgramParameterdvNV(GLenum target, GLuint index, GLenum pname, GLdouble *params);
@@ -3195,8 +3195,8 @@ extern void glGetVertexAttribivNV(GLuint index, GLenum pname, int *params);
 extern void glGetVertexAttribPointervNV(GLuint index, GLenum pname, void **pointer);
 extern GLboolean glIsProgramNV(GLuint id);
 extern void glLoadProgramNV(GLenum target, GLuint id, GLsizei len, const GLubyte *program);
-extern void glProgramParameter4fNV(GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
-extern void glProgramParameter4dNV(GLenum target, GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+extern void glProgramParameter4fNV(GLenum target, GLuint index, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+extern void glProgramParameter4dNV(GLenum target, GLuint index, GLdouble x, GLdouble y, GLdouble z, GLdouble w);
 extern void glProgramParameter4dvNV(GLenum target, GLuint index, const GLdouble *params);
 extern void glProgramParameter4fvNV(GLenum target, GLuint index, const GLfloat *params);
 extern void glProgramParameters4dvNV(GLenum target, GLuint index, GLuint num, const GLdouble *params);
