@@ -159,6 +159,8 @@ public:
 	bool getCutawayDrawFlag(void) { return m_mainFlags.cutawayDraw != false; }
 	void setEdgeLineWidth(GLfloat value) { m_edgeLineWidth = value; }
 	TCFloat getEdgeLineWidth(void) { return m_edgeLineWidth; }
+	void setAnisoLevel(GLfloat value) { m_anisoLevel = value; }
+	TCFloat getAnisoLevel(void) { return m_anisoLevel; }
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
 	int getStudTextureFilter(void) { return m_studTextureFilter; }
 	virtual bool getCompiled(void) { return m_mainFlags.compiled != false; }
@@ -224,6 +226,7 @@ protected:
 	TCFloat m_maxRadiusSquared;
 	TCVector m_center;
 	GLfloat m_edgeLineWidth;
+	GLfloat m_anisoLevel;
 	bool m_abort;	// Easier not to be a bit field.  A pointer to it is passed
 					// into other functions, and that doesn't work with a bit
 					// field.

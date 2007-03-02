@@ -20,6 +20,7 @@
 #include <Commctrl.h>
 #include <stdio.h>
 #include <tmschema.h>
+#include <TRE/TREGLExtensions.h>
 
 #ifndef IDC_HARDWARE_STEREO
 #define IDC_HARDWARE_STEREO 1030
@@ -3462,7 +3463,7 @@ void LDViewPreferences::setupAntialiasing(void)
 			// "Enhanced" item to the list if the extension is supported and
 			// the current factor is 2 or 4.
 			if ((value == 2 || value == 4) &&
-				LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
+				TREGLExtensions::haveNvMultisampleFilterHintExtension())
 			{
 				sprintf(modeString, TCLocalStrings::get("FsaaNx"), value);
 				strcat(modeString, " ");
@@ -3621,7 +3622,7 @@ bool LDViewPreferences::getUseNvMultisampleFilter(void)
 	int fsaaMode = ldPrefs->getFsaaMode();
 
 	if ((fsaaMode & 0x1) &&
-		LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
+		TREGLExtensions::haveNvMultisampleFilterHintExtension())
 	{
 		return true;
 	}

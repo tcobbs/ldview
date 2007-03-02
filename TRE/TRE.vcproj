@@ -333,6 +333,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TREGLExtensions.cpp"
+				>
+			</File>
+			<File
 				RelativePath="TREMainModel.cpp"
 				>
 				<FileConfiguration
@@ -599,6 +603,10 @@
 			</File>
 			<File
 				RelativePath="TREGL.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TREGLExtensions.h"
 				>
 			</File>
 			<File

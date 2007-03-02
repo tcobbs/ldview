@@ -134,6 +134,7 @@
 #define INV_SHOW_TOTAL_KEY "InventoryShowTotal"
 #define INV_COLUMN_ORDER_KEY "InventoryColumnOrder"
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
+#define IGNORE_ANISO_KEY "IgnoreAniso"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

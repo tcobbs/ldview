@@ -3,6 +3,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TRE/TREVertexStore.h>
 #include <TRE/TREShapeGroup.h>
+#include <TRE/TREGLExtensions.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
 // WGL_EXT_pixel_format
@@ -24,6 +25,7 @@ PFNWGLQUERYPBUFFERARBPROC LDVExtensionsSetup::wglQueryPbufferARB = NULL;
 // WGL_NV_allocate_memory
 PFNWGLALLOCATEMEMORYNVPROC LDVExtensionsSetup::wglAllocateMemoryNV = NULL;
 PFNWGLFREEMEMORYNVPROC LDVExtensionsSetup::wglFreeMemoryNV = NULL;
+/*
 // GL_NV_vertex_array_range
 PFNGLVERTEXARRAYRANGENVPROC LDVExtensionsSetup::glVertexArrayRangeNV = NULL;
 // GL_EXT_multi_draw_arrays
@@ -41,9 +43,10 @@ PFNGLUNMAPBUFFERARBPROC LDVExtensionsSetup::glUnmapBufferARB = NULL;
 PFNGLGETBUFFERPARAMETERIVARBPROC LDVExtensionsSetup::glGetBufferParameterivARB =
 	NULL;
 PFNGLGETBUFFERPOINTERVARBPROC LDVExtensionsSetup::glGetBufferPointervARB = NULL;
+*/
 
 char *LDVExtensionsSetup::wglExtensions = NULL;
-char *LDVExtensionsSetup::glExtensions = NULL;
+//char *LDVExtensionsSetup::glExtensions = NULL;
 bool LDVExtensionsSetup::performedInitialSetup = false;
 bool LDVExtensionsSetup::stencilPresent = false;
 bool LDVExtensionsSetup::alphaPresent = false;
@@ -155,8 +158,8 @@ LDVExtensionsSetup::LDVExtensionsSetupCleanup::~LDVExtensionsSetupCleanup(void)
 {
 	delete LDVExtensionsSetup::wglExtensions;
 	LDVExtensionsSetup::wglExtensions = NULL;
-	delete LDVExtensionsSetup::glExtensions;
-	LDVExtensionsSetup::glExtensions = NULL;
+	//delete LDVExtensionsSetup::glExtensions;
+	//LDVExtensionsSetup::glExtensions = NULL;
 	if (LDVExtensionsSetup::fsaaModes)
 	{
 		LDVExtensionsSetup::fsaaModes->release();
@@ -190,6 +193,7 @@ BOOL LDVExtensionsSetup::initWindow(void)
 	{
 		GLint intValue;
 
+		TREGLExtensions::setup();
 		if (!wglExtensions)
 		{
 			wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
@@ -205,10 +209,12 @@ BOOL LDVExtensionsSetup::initWindow(void)
 				wglExtensions = copyString(wglGetExtensionsStringARB(hdc));
 			}
 		}
+/*
 		if (!glExtensions)
 		{
 			glExtensions = copyString((char*)glGetString(GL_EXTENSIONS));
 		}
+*/
 		// Note that when we load the function pointers, don't want to pay
 		// attention to any ignore flags in the registry, so all the checks for
 		// extensions have the force flag set to true.  Otherwise, if the
@@ -242,12 +248,10 @@ BOOL LDVExtensionsSetup::initWindow(void)
 				wglGetProcAddress("wglAllocateMemoryNV");
 			wglFreeMemoryNV = (PFNWGLFREEMEMORYNVPROC)
 				wglGetProcAddress("wglFreeMemoryNV");
-			glVertexArrayRangeNV = (PFNGLVERTEXARRAYRANGENVPROC)
-				wglGetProcAddress("glVertexArrayRangeNV");
 			TREVertexStore::setWglAllocateMemoryNV(wglAllocateMemoryNV);
 			TREVertexStore::setWglFreeMemoryNV(wglFreeMemoryNV);
-			TREVertexStore::setGlVertexArrayRangeNV(glVertexArrayRangeNV);
 		}
+/*
 		if (haveMultiDrawArraysExtension(true))
 		{
 			glMultiDrawElementsEXT = (PFNGLMULTIDRAWELEMENTSEXTPROC)
@@ -283,6 +287,7 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			TREVertexStore::setGlGenBuffersARB(glGenBuffersARB);
 			TREVertexStore::setGlBufferDataARB(glBufferDataARB);
 		}
+*/
 		glGetIntegerv(GL_STENCIL_BITS, &intValue);
 		if (intValue)
 		{
@@ -414,6 +419,13 @@ bool LDVExtensionsSetup::havePixelBufferExtension(bool force)
 	return (!ignore || force) && checkForWGLExtension("WGL_ARB_pbuffer", force);
 }
 
+bool LDVExtensionsSetup::haveVARExtension(bool force)
+{
+	return TREGLExtensions::haveVARExtension(force) &&
+		checkForWGLExtension("WGL_NV_allocate_memory");
+}
+
+/*
 bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MS_FILTER_HINT_KEY, 0,
@@ -446,6 +458,7 @@ bool LDVExtensionsSetup::haveVBOExtension(bool force)
 	return (!ignore || force) &&
 		checkForExtension("GL_ARB_vertex_buffer_object");
 }
+*/
 
 bool LDVExtensionsSetup::havePixelFormatExtension(bool force)
 {
@@ -455,6 +468,7 @@ bool LDVExtensionsSetup::havePixelFormatExtension(bool force)
 	return (!ignore || force) && checkForWGLExtension("WGL_ARB_pixel_format");
 }
 
+/*
 bool LDVExtensionsSetup::checkForExtension(char* extensionsString,
 										   char* extension, bool force)
 {
@@ -485,10 +499,11 @@ bool LDVExtensionsSetup::checkForExtension(char* extension, bool force)
 {
 	return checkForExtension(glExtensions, extension, force);
 }
+*/
 
 bool LDVExtensionsSetup::checkForWGLExtension(char* extension, bool force)
 {
-	return checkForExtension(wglExtensions, extension, force);
+	return TREGLExtensions::checkForExtension(wglExtensions, extension, force);
 }
 
 void LDVExtensionsSetup::closeWindow(void)
