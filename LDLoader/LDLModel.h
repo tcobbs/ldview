@@ -101,7 +101,7 @@ protected:
 	virtual FILE *openSubModelNamed(const char* subModelName,
 		char* subModelPath, bool knownPart);
 	virtual bool initializeNewSubModel(LDLModel* subModel,
-		const char  *dictName, FILE* subModelFile = NULL);
+		const char *dictName, FILE* subModelFile = NULL);
 	virtual bool read(FILE *file);
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
