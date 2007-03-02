@@ -12,7 +12,8 @@ CCOBJS = \
 	$(OBJDIR)\TRESubModel.obj		\
 	$(OBJDIR)\TRETransShapeGroup.obj	\
 	$(OBJDIR)\TREVertexArray.obj		\
-	$(OBJDIR)\TREVertexStore.obj
+	$(OBJDIR)\TREVertexStore.obj		\
+	$(OBJDIR)\TREGLExtensions.obj
 
 LIBT = TRE.lib
 
