@@ -48,6 +48,7 @@
 #include <LDLib/LDrawModelViewer.h>
 //#include <LDLib/ModelMacros.h>
 #include <TRE/TREMainModel.h>
+#include <TRE/TREGLExtensions.h>
 #include "OpenGLExtensionsPanel.h"
 #include "AboutPanel.h"
 #include "HelpPanel.h"
@@ -388,6 +389,7 @@ QSize ModelViewerWidget::sizeHint(void)
 void ModelViewerWidget::initializeGL(void)
 {
 	lock();
+	TREGLExtensions::setup();
 	doViewStatusBar(preferences->getStatusBar());
 	doViewToolBar(preferences->getToolBar());
 	if(saving)
