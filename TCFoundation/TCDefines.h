@@ -78,7 +78,7 @@ typedef float TCFloat32;
 #define __THROW
 #endif //__THROW
 
-#define TC_NO_UNICODE
+//#define TC_NO_UNICODE
 
 #ifdef TC_NO_UNICODE
 typedef char UCCHAR;

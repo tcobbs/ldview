@@ -2311,7 +2311,7 @@ HMENU CUIWindow::findSubMenu(HMENU hParentMenu, int subMenuIndex, int *index)
 }
 
 // Note: static method.
-int CUIWindow::SendMessageUC(
+int CUIWindow::sendMessageUC(
 	HWND hWnd,
 #ifdef TC_NO_UNICODE
 	UINT uMsg,
@@ -2334,7 +2334,7 @@ int CUIWindow::SendMessageUC(
 }
 
 // Note: static method.
-HWND CUIWindow::CreateStatusWindowUC(
+HWND CUIWindow::createStatusWindowUC(
 	LONG style,
 	UCCSTR lpszText,
 	HWND hwndParent,

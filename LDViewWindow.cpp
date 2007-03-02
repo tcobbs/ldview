@@ -429,8 +429,8 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 			hModeIcon = hFlythroughIcon;
 			tipText = TCLocalStrings::get(_UC("FlyThroughMode"));
 		}
-		SendMessageUC(hStatusBar, SB_SETICON, SB_SETICON, 2, (LPARAM)hModeIcon);
-		SendMessageUC(hStatusBar, SB_SETTIPTEXTA, SB_SETTIPTEXTW, 2,
+		SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)hModeIcon);
+		sendMessageUC(hStatusBar, SB_SETTIPTEXTA, SB_SETTIPTEXTW, 2,
 			(LPARAM)tipText);
 	}
 }
@@ -577,25 +577,24 @@ void LDViewWindow::createStatusBar(void)
 		RECT rect;
 
 		ModelWindow::initCommonControls(ICC_TREEVIEW_CLASSES | ICC_BAR_CLASSES);
-		hStatusBar = CreateStatusWindowUC(WS_CHILD | WS_VISIBLE | 
-			SBARS_SIZEGRIP | SBT_TOOLTIPS, _UC(""), hWindow, ID_STATUS_BAR);
+		hStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE | 
+			SBARS_SIZEGRIP | SBT_TOOLTIPS, "", hWindow, ID_STATUS_BAR);
 		SetWindowLongW(hStatusBar, GWL_EXSTYLE, WS_EX_TRANSPARENT);
-		SendMessageUC(hStatusBar, SB_SETPARTS, SB_SETPARTS, 3, (LPARAM)parts);
-//		SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1, (LPARAM)"");
-//		SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 0 | SBT_OWNERDRAW,
-//			(LPARAM)_UC(""));
-		SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 0 | SBT_NOBORDERS,
-			(LPARAM)_UC(""));
-		SendMessageUC(hStatusBar, SB_GETRECT, SB_GETRECT, 0, (LPARAM)&rect);
+		SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
+//		SendMessage(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1, (LPARAM)"");
+//		SendMessage(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 0 | SBT_OWNERDRAW,
+//			(LPARAM)"");
+		SendMessage(hStatusBar, SB_SETTEXT, 0 | SBT_NOBORDERS, (LPARAM)"");
+		SendMessage(hStatusBar, SB_GETRECT, 0, (LPARAM)&rect);
 		InflateRect(&rect, -4, -3);
 //		OffsetRect(&rect, -2, 0);
 		hProgressBar = CreateWindowEx(0, PROGRESS_CLASS, "",
 			WS_CHILD | WS_VISIBLE | PBS_SMOOTH, rect.left,
 			rect.top, rect.right - rect.left, rect.bottom - rect.top,
 			hStatusBar, NULL, hInstance, NULL);
-		SendMessageUC(hStatusBar, SB_GETRECT, SB_GETRECT, 2, (LPARAM)&rect);
+		SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
 		parts[1] += rect.right - rect.left - 32;
-		SendMessageUC(hStatusBar, SB_SETPARTS, SB_SETPARTS, 3, (LPARAM)parts);
+		SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		if (modelWindow && modelWindow->getViewMode() == LDVViewFlythrough)
 		{
 			showStatusIcon(false);
@@ -3736,13 +3735,12 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 			int parts[] = {100, 150, -1};
 			RECT rect;
 
-			SendMessageUC(hStatusBar, WM_SIZE, WM_SIZE, SIZE_RESTORED,
+			SendMessage(hStatusBar, WM_SIZE, SIZE_RESTORED,
 				MAKELPARAM(newWidth, newHeight));
-			SendMessageUC(hStatusBar, SB_SETPARTS, SB_SETPARTS, 3,
-				(LPARAM)parts);
-			SendMessageUC(hStatusBar, SB_GETRECT, SB_GETRECT, 2, (LPARAM)&rect);
+			SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
+			SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
 			parts[1] += rect.right - rect.left - 32;
-			SendMessageUC(hStatusBar, SB_SETPARTS, SB_SETPARTS, 3, (LPARAM)parts);
+			SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		}
 		if (showToolbar && hToolbar)
 		{

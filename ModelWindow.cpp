@@ -1340,7 +1340,7 @@ void ModelWindow::hideProgress(void)
 	if (loading)
 	{
 		SendMessage(hProgressBar, PBM_SETPOS, 0, 0);
-		SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1, (LPARAM)_UC(""));
+		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)"");
 		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
 			enableNonModalWindow, (LPARAM)hParentWindow);
 		((LDViewWindow*)parentWindow)->setLoading(false);
@@ -2101,11 +2101,11 @@ int ModelWindow::progressCallback(UCCSTR message, float progress,
 	{
 		UCCHAR oldMessage[1024];
 
-		SendMessageUC(hStatusBar, SB_GETTEXTA, SB_GETTEXTW, 1,
+		sendMessageUC(hStatusBar, SB_GETTEXTA, SB_GETTEXTW, 1,
 			(LPARAM)oldMessage);
 		if (ucstrcmp(message, oldMessage) != 0)
 		{
-			SendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1,
+			sendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1,
 				(LPARAM)message);
 		}
 //		SendDlgItemMessage(hProgressWindow, IDC_LOAD_PROGRESS_MSG, WM_SETTEXT,
@@ -2307,10 +2307,10 @@ void ModelWindow::setStatusText(HWND hStatus, int part, UCCSTR text)
 {
 	UCCHAR oldText[1024];
 
-	SendMessageUC(hStatus, SB_GETTEXTA, SB_GETTEXTW, part, (LPARAM)oldText);
+	sendMessageUC(hStatus, SB_GETTEXTA, SB_GETTEXTW, part, (LPARAM)oldText);
 	if (ucstrcmp(text, oldText) != 0)
 	{
-		SendMessageUC(hStatus, SB_SETTEXTA, SB_SETTEXTW, part, (LPARAM)text);
+		sendMessageUC(hStatus, SB_SETTEXTA, SB_SETTEXTW, part, (LPARAM)text);
 		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
 	}
 }
@@ -3030,7 +3030,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 					{
 						int smallOffset = y * smallBytesPerLine;
 						int offset = (y + (numYTiles - yTile - 1) * newHeight) *
-							bytesPerLine+ xTile * newWidth * bytesPerPixel;
+							bytesPerLine + xTile * newWidth * bytesPerPixel;
 
 						memcpy(&buffer[offset], &smallBuffer[smallOffset], smallBytesPerLine);
 					}
