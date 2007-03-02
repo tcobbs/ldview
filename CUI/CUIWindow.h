@@ -73,9 +73,9 @@ class CUIExport CUIWindow : public TCObject
 		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,
 			int *index = NULL);
 		static HINSTANCE getLanguageModule(void);
-		static int SendMessageUC(HWND hWnd, UINT uMsg, UINT uMsgW, WPARAM wParam,
+		static int sendMessageUC(HWND hWnd, UINT uMsg, UINT uMsgW, WPARAM wParam,
 			LPARAM lParam);
-		static HWND CreateStatusWindowUC(LONG style, UCCSTR lpszText,
+		static HWND createStatusWindowUC(LONG style, UCCSTR lpszText,
 			HWND hwndParent, UINT wID);
 		static BOOL screenToClient(HWND hWnd, RECT *rect);
 		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
