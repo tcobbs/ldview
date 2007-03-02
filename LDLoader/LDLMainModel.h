@@ -24,7 +24,7 @@ public:
 	virtual LDLPalette *getPalette(void) { return m_mainPalette; }
 	virtual void setExtraSearchDirs(TCStringArray *value);
 	TCStringArray *getExtraSearchDirs(void) { return m_extraSearchDirs; }
-	virtual bool isMainModel(void) { return true; }
+	virtual bool isMainModel(void) const { return true; }
 
 	// Flags
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }
