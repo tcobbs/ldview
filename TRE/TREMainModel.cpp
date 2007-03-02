@@ -2,6 +2,7 @@
 #include "TREVertexStore.h"
 #include "TRETransShapeGroup.h"
 #include "TREGL.h"
+#include "TREGLExtensions.h"
 #include <math.h>
 #include <string.h>
 
@@ -40,6 +41,7 @@ TREMainModel::TREMainModel(void)
 	m_edgeColor(htonl(0x666658FF)),
 	m_maxRadiusSquared(0.0f),
 	m_edgeLineWidth(1.0f),
+	m_anisoLevel(1.0f),
 	m_abort(false),
 	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 {
@@ -1094,6 +1096,11 @@ void TREMainModel::configureStudTexture(bool allowMipMap)
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 					GL_LINEAR);
 			}
+		}
+		if (TREGLExtensions::haveAnisoExtension() && m_anisoLevel > 1.0f)
+		{
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
+				m_anisoLevel);
 		}
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	}

@@ -8,6 +8,10 @@
 #include <netinet/in.h>
 #endif // WIN32
 
+#ifndef WIN32
+#define GL_GLEXT_PROTOTYPES
+#endif // WIN32
+
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <GLUT/GLUT.h>

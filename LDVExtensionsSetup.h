@@ -60,6 +60,7 @@ public:
 	{
 		return wglFreeMemoryNV;
 	}
+/*
 	static PFNGLVERTEXARRAYRANGENVPROC getGlVertexArrayRangeNV(void)
 	{
 		return glVertexArrayRangeNV;
@@ -112,18 +113,25 @@ public:
 	{
 		return glGetBufferPointervARB;
 	}
+*/
 
 	static bool checkForWGLExtension(char* extension, bool force = false);
+/*
 	static bool checkForExtension(char* extension, bool force = false);
 	static bool checkForExtension(char* extensionsString, char* extension,
 		bool force = false);
+*/
 	static bool haveMultisampleExtension(bool force = false);
 	static bool havePixelBufferExtension(bool force = false);
+/*
 	static bool haveNvMultisampleFilterHintExtension(bool force = false);
+*/
 	static bool havePixelFormatExtension(bool force = false);
 	static bool haveVARExtension(bool force = false);
+/*
 	static bool haveMultiDrawArraysExtension(bool force = false);
 	static bool haveVBOExtension(bool force = false);
+*/
 	static char *getWglExtensions(void) { return wglExtensions; }
 	static bool haveStencil(void) { return stencilPresent; }
 	static bool haveAlpha(void) { return alphaPresent; }
@@ -157,6 +165,7 @@ protected:
 	// WGL_NV_allocate_memory
 	static PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;
 	static PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV;
+/*
 	// GL_NV_vertex_array_range
 	static PFNGLVERTEXARRAYRANGENVPROC glVertexArrayRangeNV;
 	// GL_EXT_multi_draw_arrays
@@ -173,9 +182,10 @@ protected:
 	static PFNGLUNMAPBUFFERARBPROC glUnmapBufferARB;
 	static PFNGLGETBUFFERPARAMETERIVARBPROC glGetBufferParameterivARB;
 	static PFNGLGETBUFFERPOINTERVARBPROC glGetBufferPointervARB;
+*/
 
 	static char *wglExtensions;
-	static char *glExtensions;
+	//static char *glExtensions;
 	static bool performedInitialSetup;
 	static bool stencilPresent;
 	static bool alphaPresent;

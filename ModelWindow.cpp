@@ -19,6 +19,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
 #include <TRE/TREMainModel.h>
+#include <TRE/TREGLExtensions.h>
 #include <windowsx.h>
 
 #define DISTANCE_MULT 1.325f
@@ -1979,6 +1980,7 @@ BOOL ModelWindow::initWindow(void)
 	windowStyle |= WS_CHILD;
 	if (CUIOGLWindow::initWindow())
 	{
+		TREGLExtensions::setup();
 		setupMultisample();
 		return TRUE;
 	}
@@ -1994,7 +1996,7 @@ void ModelWindow::setupMultisample(void)
 	{
 		if (currentAntialiasType)
 		{
-			if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
+			if (TREGLExtensions::haveNvMultisampleFilterHintExtension())
 			{
 				if (prefs->getUseNvMultisampleFilter())
 				{
@@ -2009,7 +2011,7 @@ void ModelWindow::setupMultisample(void)
 		}
 		else
 		{
-			if (LDVExtensionsSetup::haveNvMultisampleFilterHintExtension())
+			if (TREGLExtensions::haveNvMultisampleFilterHintExtension())
 			{
 				glHint(GL_MULTISAMPLE_FILTER_HINT_NV, GL_FASTEST);
 			}
