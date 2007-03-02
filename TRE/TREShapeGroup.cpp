@@ -3,6 +3,7 @@
 #include "TREVertexStore.h"
 #include "TREModel.h"
 #include "TREMainModel.h"
+#include "TREGLExtensions.h"
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/mystring.h>
@@ -432,7 +433,8 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 			{
 				GLenum glMode = modeForShapeType(shapeType);
 
-				if (glMultiDrawElementsEXT)
+				if (glMultiDrawElementsEXT &&
+					TREGLExtensions::haveMultiDrawArraysExtension())
 				{
 					int shapeTypeIndex = getShapeTypeIndex(shapeType);
 
