@@ -62,6 +62,10 @@ void TREGLExtensions::setup(void)
 	if (haveVARExtension(true))
 	{
 #ifndef __APPLE__
+		// NOTE: I should really change the __APPLE__ path to do their
+		// equivalent of wglGetProcAddress.  However, since this extension won't
+		// work anyway without a bunch of glX stuff that I'm not going to do,
+		// I'm not going to make that change just for this.
 		sm_glVertexArrayRangeNV = (PFNGLVERTEXARRAYRANGENVPROC)
 			GET_EXTENSION(glVertexArrayRangeNV);
 #endif // __APPLE__
