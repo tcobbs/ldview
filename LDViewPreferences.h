@@ -240,6 +240,7 @@ protected:
 	virtual bool getCheck(HWND hPage, int buttonId);
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
+	virtual void setAniso(int value);
 	//virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
 	//virtual bool getToolbarCheck(HWND hToolbar, int id);
 
@@ -267,6 +268,8 @@ protected:
 	static LRESULT CALLBACK staticGroupCheckButtonProc(HWND hWnd, UINT message,
 		WPARAM wParam, LPARAM lParam);
 	static void setColor(const char *key, COLORREF color);
+	static int sliderValueFromAniso(double value);
+	static TCFloat32 anisoFromSliderValue(int value);
 
 	LDrawModelViewer* modelViewer;
 	LDPreferences* ldPrefs;
@@ -332,6 +335,9 @@ protected:
 	HWND hTextureNearestButton;
 	HWND hTextureBilinearButton;
 	HWND hTextureTrilinearButton;
+	HWND hTextureAnisoButton;
+	HWND hAnisoLevelSlider;
+	HWND hAnisoLevelLabel;
 	HWND hCurveQualityLabel;
 	HWND hCurveQualitySlider;
 

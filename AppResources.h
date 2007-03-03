@@ -101,6 +101,7 @@
 #define IDC_CROSS_EYED_STEREO           1014
 #define IDC_CURVE_QUALITY               1018
 #define IDC_OK                          1019
+#define IDC_ANISO_LEVEL                 1019
 #define IDC_CURVE_QUALITY_LABEL         1020
 #define IDC_BACKGROUND_COLOR            1021
 #define IDC_GENERAL_MISC_BOX            1022
@@ -185,6 +186,7 @@
 #define IDC_PRIMITIVES_MISC_BOX         1113
 #define IDC_MISSING_PARTS_BOX           1113
 #define IDC_AA_BOX                      1114
+#define IDC_TEXTURE_ANISO               1114
 #define IDC_WIREFRAME_BOX               1115
 #define IDC_EDGES_BOX                   1116
 #define IDC_LIGHTING_BOX                1117
@@ -280,6 +282,7 @@
 #define IDC_LIGHT_DIR                   1226
 #define IDC_UL                          1231
 #define IDC_UM                          1232
+#define IDC_ANISO_LEVEL_LABEL           1232
 #define IDC_UR                          1233
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
@@ -359,7 +362,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        183
 #define _APS_NEXT_COMMAND_VALUE         40089
-#define _APS_NEXT_CONTROL_VALUE         1232
+#define _APS_NEXT_CONTROL_VALUE         1233
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

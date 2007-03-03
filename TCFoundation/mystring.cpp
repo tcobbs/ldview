@@ -889,17 +889,20 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 		{
 			length = strlen(src);
 		}
-		dst.resize(length);
-		// Even though we don't check, we can't pass NULL instead of &state and
-		// still be thread-safe.
-		newLength = mbsrtowcs(&dst[0], &src, length + 1, &state);
-		if (newLength == (size_t)-1)
+		if (length > 0)
 		{
-			dst.resize(wcslen(&dst[0]));
-		}
-		else
-		{
-			dst.resize(newLength);
+			dst.resize(length);
+			// Even though we don't check, we can't pass NULL instead of &state
+			// and still be thread-safe.
+			newLength = mbsrtowcs(&dst[0], &src, length + 1, &state);
+			if (newLength == (size_t)-1)
+			{
+				dst.resize(wcslen(&dst[0]));
+			}
+			else
+			{
+				dst.resize(newLength);
+			}
 		}
 	}
 }

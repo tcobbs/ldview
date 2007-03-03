@@ -29,6 +29,7 @@ PFNGLGETBUFFERPARAMETERIVARBPROC TREGLExtensions::sm_glGetBufferParameterivARB =
 PFNGLGETBUFFERPOINTERVARBPROC TREGLExtensions::sm_glGetBufferPointervARB = NULL;
 
 char *TREGLExtensions::sm_glExtensions = NULL;
+GLfloat TREGLExtensions::sm_maxAnisoLevel = 1.0f;
 
 TREGLExtensions::TREGLExtensionsCleanup TREGLExtensions::sm_extensionsCleanup;
 
@@ -98,6 +99,14 @@ void TREGLExtensions::setup(void)
 		TREVertexStore::setGlDeleteBuffersARB(sm_glDeleteBuffersARB);
 		TREVertexStore::setGlGenBuffersARB(sm_glGenBuffersARB);
 		TREVertexStore::setGlBufferDataARB(sm_glBufferDataARB);
+	}
+	if (haveAnisoExtension(true))
+	{
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &sm_maxAnisoLevel);
+	}
+	else
+	{
+		sm_maxAnisoLevel = 1.0f;
 	}
 }
 
@@ -177,3 +186,14 @@ bool TREGLExtensions::checkForExtension(char* extension, bool force)
 	return checkForExtension(sm_glExtensions, extension, force);
 }
 
+GLfloat TREGLExtensions::getMaxAnisoLevel(void)
+{
+	if (haveAnisoExtension())
+	{
+		return sm_maxAnisoLevel;
+	}
+	else
+	{
+		return 1.0f;
+	}
+}

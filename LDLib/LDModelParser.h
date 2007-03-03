@@ -105,6 +105,8 @@ public:
 	int getCurveQuality(void) { return m_curveQuality; }
 	void setEdgeLineWidth(TCFloat32 value) { m_edgeLineWidth = value; }
 	TCFloat32 getEdgeLineWidth(void) { return m_edgeLineWidth; }
+	void setStudAnisoLevel(TCFloat32 value) { m_studAnisoLevel = value; }
+	TCFloat32 getStudAnisoLevel(void) { return m_studAnisoLevel; }
 	void setSeamWidth(TCFloat seamWidth);
 	TCFloat getSeamWidth(void);
 	void setDefaultRGB(TCByte r, TCByte g, TCByte b, bool transparent);
@@ -207,6 +209,7 @@ protected:
 	int m_curveQuality;
 	TCFloat m_seamWidth;
 	TCFloat32 m_edgeLineWidth;
+	TCFloat32 m_studAnisoLevel;
 	TCByte m_defaultR;
 	TCByte m_defaultG;
 	TCByte m_defaultB;

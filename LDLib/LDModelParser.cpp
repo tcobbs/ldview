@@ -126,6 +126,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
 	m_mainTREModel->setEdgeLineWidth(m_edgeLineWidth);
+	m_mainTREModel->setStudAnisoLevel(m_studAnisoLevel);
 	m_mainTREModel->setAALinesFlag(getAALinesFlag());
 	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
 	m_mainTREModel->setStippleFlag(getStippleFlag());

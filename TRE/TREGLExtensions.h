@@ -74,6 +74,7 @@ public:
 	static bool haveMultiDrawArraysExtension(bool force = false);
 	static bool haveVBOExtension(bool force = false);
 	static bool haveAnisoExtension(bool force = false);
+	static GLfloat getMaxAnisoLevel(void);
 
 protected:
 	static void cleanup(void);
@@ -96,6 +97,7 @@ protected:
 	static PFNGLGETBUFFERPOINTERVARBPROC sm_glGetBufferPointervARB;
 
 	static char *sm_glExtensions;
+	static GLfloat sm_maxAnisoLevel;
 
 	static class TREGLExtensionsCleanup
 	{

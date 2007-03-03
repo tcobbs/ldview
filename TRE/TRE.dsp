@@ -122,6 +122,10 @@ SOURCE=.\TREFacing.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TREGLExtensions.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TREMainModel.cpp
 # End Source File
 # Begin Source File
@@ -171,6 +175,10 @@ SOURCE=.\TREFacing.h
 # Begin Source File
 
 SOURCE=.\TREGL.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TREGLExtensions.h
 # End Source File
 # Begin Source File
 

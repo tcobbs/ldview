@@ -868,7 +868,7 @@ BOOL LDViewWindow::doLDrawDirOK(HWND hDlg)
 LRESULT LDViewWindow::doMouseWheel(short keyFlags, short zDelta, int /*xPos*/,
 								  int /*yPos*/)
 {
-	debugPrintf("doMouseWheel(%d, %d)\n", keyFlags, zDelta);
+	//debugPrintf("doMouseWheel(%d, %d)\n", keyFlags, zDelta);
 	if (modelWindow)
 	{
 		if (keyFlags & MK_CONTROL)
