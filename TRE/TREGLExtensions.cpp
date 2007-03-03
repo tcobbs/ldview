@@ -134,11 +134,11 @@ bool TREGLExtensions::haveVARExtension(bool force)
 
 bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
 {
-#ifndef WIN32
+#if !defined(WIN32) && !defined(__APPLE__)
 	// This one crashes Mesa in Linux right now.  Disable until I figure out
-	// why.
+	// why.  Note that it seems to work fine on a MacBook with Intel Graphics.
 	return false;
-#endif // WIN32
+#endif // !WIN32 && !__APPLE_
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
 		false) != 0;
 
