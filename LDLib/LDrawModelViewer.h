@@ -202,6 +202,8 @@ class LDrawModelViewer: public TCObject
 		TCFloat32 getHighlightLineWidth(void) { return highlightLineWidth; }
 		virtual void setWireframeLineWidth(TCFloat32 value);
 		TCFloat32 getWireframeLineWidth(void) { return wireframeLineWidth; }
+		virtual void setAnisoLevel(TCFloat32 value);
+		TCFloat32 getAnisoLevel(void) { return anisoLevel; }
 		virtual void setProcessLDConfig(bool value);
 		bool getProcessLDConfig(void) { return flags.processLDConfig; }
 		virtual void setSkipValidation(bool value);
@@ -412,6 +414,7 @@ class LDrawModelViewer: public TCObject
 		TCFloat nextDistance;
 		TCFloat32 highlightLineWidth;
 		TCFloat32 wireframeLineWidth;
+		TCFloat32 anisoLevel;
 		bool clipZoom;
 		GLuint fontListBase;
 		GLclampf backgroundR;

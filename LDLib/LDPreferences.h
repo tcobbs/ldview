@@ -122,6 +122,7 @@ public:
 	}
 	bool getTextureStuds(void) { return m_textureStuds; }
 	int getTextureFilterType(void) { return m_textureFilterType; }
+	TCFloat getAnisoLevel(void) { return m_anisoLevel; }
 	int getCurveQuality(void) { return m_curveQuality; }
 	bool getQualityStuds(void) { return m_qualityStuds; }
 	bool getHiResPrimitives(void) { return m_hiResPrimitives; }
@@ -210,6 +211,7 @@ public:
 		bool apply = false);
 	void setTextureStuds(bool value, bool commit = false, bool apply = false);
 	void setTextureFilterType(int value, bool commit = false);
+	void setAnisoLevel(TCFloat value, bool commit = false);
 	void setCurveQuality(int value, bool commit = false);
 	void setQualityStuds(bool value, bool commit = false);
 	void setHiResPrimitives(bool value, bool commit = false);
@@ -335,6 +337,7 @@ protected:
 	bool m_allowPrimitiveSubstitution;
 	bool m_textureStuds;
 	int m_textureFilterType;
+	TCFloat m_anisoLevel;
 	int m_curveQuality;
 	bool m_qualityStuds;
 	bool m_hiResPrimitives;

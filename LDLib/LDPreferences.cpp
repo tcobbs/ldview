@@ -179,6 +179,8 @@ void LDPreferences::applyPrimitivesSettings(void)
 		modelViewer->setAllowPrimitiveSubstitution(m_allowPrimitiveSubstitution);
 		modelViewer->setTextureStuds(m_textureStuds);
 		modelViewer->setTextureFilterType(m_textureFilterType);
+		modelViewer->setAnisoLevel((TCFloat32)m_anisoLevel);
+		modelViewer->setAnisoLevel(m_anisoLevel);
 		modelViewer->setCurveQuality(m_curveQuality);
 		modelViewer->setQualityStuds(m_qualityStuds);
 		modelViewer->setHiResPrimitives(m_hiResPrimitives);
@@ -334,6 +336,7 @@ void LDPreferences::loadDefaultPrimitivesSettings(void)
 	setAllowPrimitiveSubstitution(true);
 	setTextureStuds(true);
 	setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
+	setAnisoLevel(1.0f);
 	setCurveQuality(2);
 	setQualityStuds(false);
 	setHiResPrimitives(false);
@@ -484,6 +487,7 @@ void LDPreferences::loadPrimitivesSettings(void)
 	m_textureStuds = getBoolSetting(TEXTURE_STUDS_KEY, m_textureStuds);
 	m_textureFilterType = getIntSetting(TEXTURE_FILTER_TYPE_KEY,
 		m_textureFilterType);
+	m_anisoLevel = getFloatSetting(ANISO_LEVEL_KEY, m_anisoLevel);
 	m_curveQuality = getIntSetting(CURVE_QUALITY_KEY, m_curveQuality);
 	m_qualityStuds = getBoolSetting(QUALITY_STUDS_KEY, m_qualityStuds);
 	m_hiResPrimitives = getBoolSetting(HI_RES_PRIMITIVES_KEY,
@@ -626,6 +630,7 @@ void LDPreferences::commitPrimitivesSettings(bool flush /*= true*/)
 	{
 		setTextureStuds(m_textureStuds, true);
 		setTextureFilterType(m_textureFilterType, true);
+		setAnisoLevel(m_anisoLevel, true);
 		setCurveQuality(m_curveQuality, true);
 	}
 	setQualityStuds(m_qualityStuds, true);
@@ -1452,6 +1457,11 @@ void LDPreferences::setTextureStuds(bool value, bool commit, bool apply)
 void LDPreferences::setTextureFilterType(int value, bool commit)
 {
 	setSetting(m_textureFilterType, value, TEXTURE_FILTER_TYPE_KEY, commit);
+}
+
+void LDPreferences::setAnisoLevel(TCFloat value, bool commit)
+{
+	setSetting(m_anisoLevel, value, ANISO_LEVEL_KEY, commit);
 }
 
 void LDPreferences::setCurveQuality(int value, bool commit)

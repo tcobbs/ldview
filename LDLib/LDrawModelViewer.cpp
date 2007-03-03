@@ -54,6 +54,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 			 nextDistance(-1.0f),
 			 highlightLineWidth(1.0f),
 			 wireframeLineWidth(1.0f),
+			 anisoLevel(1.0f),
 			 clipZoom(false),
 			 fontListBase(0),
 			 backgroundR(0.0f),
@@ -886,6 +887,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setPolygonOffsetFlag(flags.usePolygonOffset);
 			modelParser->setEdgeLineWidth(highlightLineWidth);
 			modelParser->setStudTextureFilter(textureFilterType);
+			modelParser->setStudAnisoLevel(anisoLevel);
 			if (defaultColorNumber != -1)
 			{
 				modelParser->setDefaultColorNumber(defaultColorNumber);
@@ -1898,6 +1900,18 @@ void LDrawModelViewer::setHighlightLineWidth(TCFloat32 value)
 void LDrawModelViewer::setWireframeLineWidth(TCFloat32 value)
 {
 	wireframeLineWidth = value;
+}
+
+void LDrawModelViewer::setAnisoLevel(TCFloat32 value)
+{
+	if (value != anisoLevel)
+	{
+		anisoLevel = value;
+		if (mainTREModel)
+		{
+			mainTREModel->setStudAnisoLevel(anisoLevel);
+		}
+	}
 }
 
 void LDrawModelViewer::setQualityStuds(bool value)

@@ -41,7 +41,7 @@ TREMainModel::TREMainModel(void)
 	m_edgeColor(htonl(0x666658FF)),
 	m_maxRadiusSquared(0.0f),
 	m_edgeLineWidth(1.0f),
-	m_anisoLevel(1.0f),
+	m_studAnisoLevel(1.0f),
 	m_abort(false),
 	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 {
@@ -99,6 +99,7 @@ TREMainModel::TREMainModel(const TREMainModel &other)
 	m_edgeColor(other.m_edgeColor),
 	m_maxRadiusSquared(other.m_maxRadiusSquared),
 	m_edgeLineWidth(other.m_edgeLineWidth),
+	m_studAnisoLevel(other.m_studAnisoLevel),
 	m_abort(false),
 	m_studTextureFilter(other.m_studTextureFilter),
 	m_mainFlags(other.m_mainFlags)
@@ -1097,10 +1098,16 @@ void TREMainModel::configureStudTexture(bool allowMipMap)
 					GL_LINEAR);
 			}
 		}
-		if (TREGLExtensions::haveAnisoExtension() && m_anisoLevel > 1.0f)
+		if (TREGLExtensions::haveAnisoExtension())
 		{
+			GLfloat aniso = 1.0f;
+
+			if (m_studTextureFilter == GL_LINEAR_MIPMAP_LINEAR)
+			{
+				aniso = m_studAnisoLevel;
+			}
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
-				m_anisoLevel);
+				aniso);
 		}
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	}
