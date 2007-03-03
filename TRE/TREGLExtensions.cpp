@@ -61,8 +61,10 @@ void TREGLExtensions::setup(void)
 	// the function pointers won't be loaded.
 	if (haveVARExtension(true))
 	{
+#ifndef __APPLE__
 		sm_glVertexArrayRangeNV = (PFNGLVERTEXARRAYRANGENVPROC)
 			GET_EXTENSION(glVertexArrayRangeNV);
+#endif // __APPLE__
 		TREVertexStore::setGlVertexArrayRangeNV(sm_glVertexArrayRangeNV);
 	}
 	if (haveMultiDrawArraysExtension(true))
