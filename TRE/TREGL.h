@@ -9,10 +9,15 @@
 #endif // WIN32
 
 #ifndef WIN32
+//#ifndef __APPLE__
 #define GL_GLEXT_PROTOTYPES
+//#endif
 #endif // WIN32
 
 #ifdef __APPLE__
+#define GL_GLEXT_LEGACY
+#include <OpenGL/gl.h>
+#include "../include/GL/glext.h"
 #include <OpenGL/OpenGL.h>
 #include <GLUT/GLUT.h>
 #define APIENTRY
@@ -46,7 +51,7 @@ typedef void (APIENTRY * PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);
 typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, int size, const GLvoid *data, GLenum usage);
 
 //Solaris
-#if (defined (__SVR4) && defined (__sun)) || defined (__APPLE__) || defined (_AIX)
+#if (defined (__SVR4) && defined (__sun)) || defined (_AIX)
 typedef GLvoid (APIENTRY * PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, GLsizei *count, GLenum type, const GLvoid **indices, GLsizei primcount);
 #endif
 
