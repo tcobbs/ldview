@@ -2136,7 +2136,7 @@ void LDViewPreferences::setAniso(int value)
 	ldPrefs->setAnisoLevel(level);
 	if (intLevel >= 2)
 	{
-		sprintf(label, "%dx", intLevel);
+		sprintf(label, TCLocalStrings::get("AnisoNx"), intLevel);
 	}
 	else
 	{
@@ -3312,7 +3312,7 @@ void LDViewPreferences::setupEffectsPage(void)
 
 int LDViewPreferences::sliderValueFromAniso(double value)
 {
-	return (int)(log(value) / log(2) + 0.5f);
+	return (int)(log(value) / log(2.0) + 0.5f);
 }
 
 TCFloat32 LDViewPreferences::anisoFromSliderValue(int value)
