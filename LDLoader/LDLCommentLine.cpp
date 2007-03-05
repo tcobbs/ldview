@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 LDLCommentLine::LDLCommentLine(LDLModel *parentModel, const char *line,
 							   int lineNumber, const char *originalLine)
@@ -54,12 +55,25 @@ bool LDLCommentLine::parse(void)
 			{
 				partName[tmp - partName] = 0;
 			}
-			setWarning(LDLEMovedTo, "Part %s has been renamed to %s.", partName,
-				newName);
+#ifdef TC_NO_UNICODE
+			const char *ucPartName = partName;
+			const char *ucNewName = newName;
+#else // TC_NO_UNICODE
+			std::wstring wcPartName;
+			std::wstring wcNewName;
+			mbstowstring(wcPartName, partName);
+			mbstowstring(wcNewName, newName);
+			const wchar_t *ucPartName = wcPartName.c_str();
+			const wchar_t *ucNewName = wcNewName.c_str();
+#endif // TC_NO_UNICODE
+			setWarning(LDLEMovedTo,
+				TCLocalStrings::get(_UC("LDLComPartRenamed")), ucPartName,
+				ucNewName);
 		}
 		else
 		{
-			setWarning(LDLEMovedTo, "Unknown part has been renamed.");
+			setWarning(LDLEMovedTo,
+				TCLocalStrings::get(_UC("LDLComUnknownPartRenamed")));
 		}
 	}
 	if (m_parentModel)

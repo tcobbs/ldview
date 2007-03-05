@@ -1364,7 +1364,7 @@ HTREEITEM ModelWindow::addErrorLine(HTREEITEM parent, char* line,
 	item.lParam = (LPARAM)error;
 	insertStruct.hParent = parent;
 	insertStruct.hInsertAfter = TVI_LAST;
-	if (error->getLevel() != LDLAWarning)
+	if (error->getLevel() != LDLAWarning && parent == NULL)
 	{
 		item.mask |= TVIF_STATE;
 		item.stateMask = TVIS_BOLD;
@@ -2063,7 +2063,7 @@ int ModelWindow::progressCallback(const char* message, float progress,
 }
 #endif // TC_NO_UNICODE
 
-int ModelWindow::progressCallback(UCCSTR message, float progress,
+int ModelWindow::progressCallback(CUCSTR message, float progress,
 								  bool showErrors)
 {
 	DWORD thisProgressUpdate = GetTickCount();
@@ -2305,7 +2305,7 @@ void ModelWindow::setStatusText(HWND hStatus, int part, const char *text)
 }
 #endif // TC_NO_UNICODE
 
-void ModelWindow::setStatusText(HWND hStatus, int part, UCCSTR text)
+void ModelWindow::setStatusText(HWND hStatus, int part, CUCSTR text)
 {
 	UCCHAR oldText[1024];
 
@@ -2335,17 +2335,19 @@ void ModelWindow::drawFPS(void)
 		}
 		else if (hStatusBar)
 		{
-			char fpsString[1024] = "";
+			UCCHAR fpsString[1024] = _UC("");
 
 			if (modelViewer->getMainTREModel())
 			{
 				if (fps > 0.0f)
 				{
-					sprintf(fpsString, TCLocalStrings::get("FPSFormat"), fps);
+					sucprintf(fpsString, COUNT_OF(fpsString),
+						TCLocalStrings::get(_UC("FPSFormat")), fps);
 				}
 				else
 				{
-					strcpy(fpsString, TCLocalStrings::get("FPSSpinPrompt"));
+					ucstrcpy(fpsString,
+						TCLocalStrings::get(_UC("FPSSpinPrompt")));
 				}
 			}
 			setStatusText(hStatusBar, 1, fpsString);

@@ -48,13 +48,13 @@ bool LDLConditionalLineLine::parse(void)
 		if (getMatchingPoints())
 		{
 			setError(LDLEMatchingPoints,
-				TCLocalStrings::get("LDLCondMatchingVertices"));
+				TCLocalStrings::get(_UC("LDLCondMatchingVertices")));
 			return false;
 		}
 		if (getMatchingPoints(m_controlPoints, getNumControlPoints()))
 		{
 			setError(LDLEMatchingPoints,
-				TCLocalStrings::get("LDLCondMatchingControlPts"));
+				TCLocalStrings::get(_UC("LDLCondMatchingControlPts")));
 			return false;
 		}
 		return true;
@@ -62,7 +62,7 @@ bool LDLConditionalLineLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, TCLocalStrings::get("LDLCondParse"));
+		setError(LDLEParse, TCLocalStrings::get(_UC("LDLCondParse")));
 		return false;
 	}
 }

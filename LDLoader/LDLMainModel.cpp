@@ -66,7 +66,7 @@ bool LDLMainModel::load(const char *filename)
 	if (!strlen(lDrawDir()))
 	{
 		error = newError(LDLEGeneral,
-			TCLocalStrings::get("LDLMainModelNoLDrawDir"));
+			TCLocalStrings::get(_UC("LDLMainModelNoLDrawDir")));
 		error->setLevel(LDLACriticalError);
 		sendAlert(error);
 		error->release();
@@ -122,7 +122,7 @@ bool LDLMainModel::load(const char *filename)
 					// know that they need to rename the directories to be in
 					// upper case.
 					reportError(LDLEGeneral,
-						TCLocalStrings::get("LDLMainModelFileCase"));
+						TCLocalStrings::get(_UC("LDLMainModelFileCase")));
 				}
 			}
 		}
@@ -133,7 +133,7 @@ bool LDLMainModel::load(const char *filename)
 	else
 	{
 		error = newError(LDLEFileNotFound,
-			TCLocalStrings::get("LDLMainModelNoMainModel"));
+			TCLocalStrings::get(_UC("LDLMainModelNoMainModel")));
 		error->setLevel(LDLACriticalError);
 		sendAlert(error);
 		error->release();

@@ -143,8 +143,12 @@ bool LDLModelLine::parse(void)
 		{
 			if (isspace(subModelName[k]))
 			{
+				UCSTR ucSubModelName = mbstoucstring(subModelName);
+
 				setWarning(LDLEWhitespace,
-					TCLocalStrings::get("LDLModelLineWhitespace"), subModelName);
+					TCLocalStrings::get(_UC("LDLModelLineWhitespace")),
+					ucSubModelName);
+				delete ucSubModelName;
 				break;
 			}
 		}
@@ -162,9 +166,12 @@ bool LDLModelLine::parse(void)
 		}
 		else
 		{
+			UCSTR ucSubModelName = mbstoucstring(subModelName);
+
 			m_valid = false;
-			setError(LDLEFileNotFound, TCLocalStrings::get("LDLModelLineFNF"),
-				subModelName);
+			setError(LDLEFileNotFound,
+				TCLocalStrings::get(_UC("LDLModelLineFNF")), ucSubModelName);
+			delete ucSubModelName;
 			return false;
 		}
 		m_lowResModel = m_parentModel->subModelNamed(subModelName, true, false,
@@ -195,7 +202,7 @@ bool LDLModelLine::parse(void)
 					{
 						// If it's still zero, we failed to fix it.
 						setError(LDLEMatrix,
-							TCLocalStrings::get("LDLModelLineSingular"));
+							TCLocalStrings::get(_UC("LDLModelLineSingular")));
 					}
 				}
 				else
@@ -203,7 +210,8 @@ bool LDLModelLine::parse(void)
 					// We don't want to even try to fix if the sub-model isn't
 					// XZ-planar at Y == 0.
 					setError(LDLEMatrix,
-						TCLocalStrings::get("LDLModelLineSingularNonFlat"));
+						TCLocalStrings::get(
+						_UC("LDLModelLineSingularNonFlat")));
 				}
 				if (determinant == 0.0f)
 				{
@@ -222,7 +230,7 @@ bool LDLModelLine::parse(void)
 					// non-uniform scale.  Note that we are being EXTREMELY
 					//  loose with this "equality" check (within 0.05).
 					setWarning(LDLEPartDeterminant,
-						TCLocalStrings::get("LDLModelLineNonUniformPart"));
+						TCLocalStrings::get(_UC("LDLModelLineNonUniformPart")));
 					m_flags.nonUniform = true;
 				}
 			}
@@ -232,7 +240,7 @@ bool LDLModelLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, TCLocalStrings::get("LDLModelLineParse"));
+		setError(LDLEParse, TCLocalStrings::get(_UC("LDLModelLineParse")));
 		return false;
 	}
 }
@@ -365,7 +373,7 @@ TCFloat LDLModelLine::tryToFixPlanarMatrix(void)
 			if (determinant != 0.0f)
 			{
 				setWarning(LDLEMatrix,
-					TCLocalStrings::get("LDLModelLineZeroMatrixRow"), i);
+					TCLocalStrings::get(_UC("LDLModelLineZeroMatrixRow")), i);
 				return determinant;
 			}
 		}
@@ -381,7 +389,7 @@ TCFloat LDLModelLine::tryToFixPlanarMatrix(void)
 			if (determinant != 0.0f)
 			{
 				setWarning(LDLEMatrix,
-					TCLocalStrings::get("LDLModelLineZeroMatrixCol"), i);
+					TCLocalStrings::get(_UC("LDLModelLineZeroMatrixCol")), i);
 				return determinant;
 			}
 		}

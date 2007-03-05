@@ -15,12 +15,12 @@ TCAlert::TCAlert(
 TCAlert::TCAlert(
 		const char *alertClass,
 		const wchar_t *message,
-		const WStringList &extraInfo /*= WStringList()*/):
+		const ucstringVector &extraInfo /*= WStringList()*/):
 	m_alertClass(copyString(alertClass)),
 	m_message(NULL),
 	m_wMessage(message),
 	m_extraInfo(NULL),
-	m_wExtraInfo(extraInfo)
+	m_ucExtraInfo(extraInfo)
 {
 }
 
@@ -59,34 +59,42 @@ const wchar_t *TCAlert::getWMessage(void)
 
 TCStringArray *TCAlert::getExtraInfo(void)
 {
-	if (!m_extraInfo && m_wExtraInfo.size() > 0)
+	if (!m_extraInfo && m_ucExtraInfo.size() > 0)
 	{
 		m_extraInfo = new TCStringArray;
 		std::string temp;
 
-		for (WStringList::iterator it = m_wExtraInfo.begin();
-			it != m_wExtraInfo.end(); it++)
+		for (ucstringVector::iterator it = m_ucExtraInfo.begin();
+			it != m_ucExtraInfo.end(); it++)
 		{
+#ifdef TC_NO_UNICODE
+			temp = *it;
+#else // TC_NO_UNICODE
 			wstringtostring(temp, *it);
+#endif // TC_NO_UNICODE
 			m_extraInfo->addString(temp.c_str());
 		}
 	}
 	return m_extraInfo;
 }
 
-const WStringList &TCAlert::getWExtraInfo(void)
+const ucstringVector &TCAlert::getUCExtraInfo(void)
 {
-	if (!m_wExtraInfo.size() && m_extraInfo && m_extraInfo->getCount() > 0)
+	if (!m_ucExtraInfo.size() && m_extraInfo && m_extraInfo->getCount() > 0)
 	{
 		int i;
 		int count = m_extraInfo->getCount();
 
+		m_ucExtraInfo.resize(count);
 		for (i = 0; i < count; i++)
 		{
-			m_wExtraInfo.resize(m_wExtraInfo.size() + 1);
-			std::wstring &temp = m_wExtraInfo.back();
+			ucstring &temp = m_ucExtraInfo[i];
+#ifdef TC_NO_UNICODE
+			temp = m_extraInfo->stringAtIndex(i);
+#else // TC_NO_UNICODE
 			mbstowstring(temp, m_extraInfo->stringAtIndex(i));
+#endif // TC_NO_UNICODE
 		}
 	}
-	return m_wExtraInfo;
+	return m_ucExtraInfo;
 }

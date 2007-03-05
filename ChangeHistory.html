@@ -37,6 +37,7 @@ Windows Explorer and Gnome Nautilus.</LI>
 <LI>Made it so dragging with the middle mouse button pans (in addition to
 the existing dragging with the left mouse button while holding down
 Control).</LI>
+<LI>Added support for anisotropic filtering on video cards that support it.</LI>
 <LI>Added scroll wheel support to QT version.</LI>
 <LI>Added BFC toolbar button to QT version.</LI>
 </UL>
@@ -49,8 +50,13 @@ command line would result in LDView launching with a window width of 320 the
 next time it was run.)</LI>
 <LI>Updated Zoom to Fit command so that the model remaines auto-centered after
 using it.</LI>
-<LI>Moved Errors &amp; Warnings, Show View Info, and Show POV-Ray Camera Info to a
-new Tools menu.</LI>
+<LI>Moved Errors &amp; Warnings, Show View Info, and Show POV-Ray Camera Info to
+a new Tools menu.</LI>
+<LI>Made it so only the main row of an error entry is bold.  Sub-rows are now
+non-bold.</LI>
+<LI>Made it so that transparency values of 240 and above are considered opaque.
+This was done to get rid of ugly artifacts that show up on the glow-in-the-dark
+color, which has a transparency value of 250.</LI>
 </UL>
 <B>Bug Fixes</B>
 <UL>
@@ -67,6 +73,10 @@ correctly after being resized.</LI>
 wireframe when stereo is enabled.</LI>
 <LI>Fixed tiled snapshot saves to not ignore the SaveAlpha setting.</LI>
 <LI>Fixed -cg option to support the optional radius portion.</LI>
+<LI>Fixed tiled snapshot saves when PBuffer isn't available to make the image
+size an even multiple of the number of tiles used.  It already did this with
+PBuffer snapshots.  With non-PBuffer snapshots, you ended up with a border
+(usually black) on the top and right sides of the image.</LI>
 </UL>
 </TD></TR>
 

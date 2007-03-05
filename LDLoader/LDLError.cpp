@@ -3,9 +3,11 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCLocalStrings.h>
 
-LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
+LDLErrorTypeMap LDLError::sm_typeMap;
+
+LDLError::LDLError(LDLErrorType type, CUCSTR message, const char *filename,
 				   const char *fileLine, int lineNumber,
-				   TCStringArray *extraInfo)
+				   const ucstringVector &extraInfo /*= ucstringVector()*/)
 	:TCAlert(LDLError::alertClass(), message, extraInfo),
 	m_type(type),
 	m_filename(copyString(filename)),
@@ -17,6 +19,25 @@ LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLError");
 #endif
+	if (sm_typeMap.size() == 0)
+	{
+		sm_typeMap[LDLEGeneral] = "LDLEGeneral";
+		sm_typeMap[LDLEParse] = "LDLEParse";
+		sm_typeMap[LDLEFileNotFound] = "LDLEFileNotFound";
+		sm_typeMap[LDLEMatrix] = "LDLEMatrix";
+		sm_typeMap[LDLEPartDeterminant] = "LDLEPartDeterminant";
+		sm_typeMap[LDLENonFlatQuad] = "LDLENonFlatQuad";
+		sm_typeMap[LDLEConcaveQuad] = "LDLEConcaveQuad";
+		sm_typeMap[LDLEMatchingPoints] = "LDLEMatchingPoints";
+		sm_typeMap[LDLEColinear] = "LDLEColinear";
+		sm_typeMap[LDLEBFCWarning] = "LDLEBFCWarning";
+		sm_typeMap[LDLEBFCError] = "LDLEBFCError";
+		sm_typeMap[LDLEMPDError] = "LDLEMPDError";
+		sm_typeMap[LDLEVertexOrder] = "LDLEVertexOrder";
+		sm_typeMap[LDLEWhitespace] = "LDLEWhitespace";
+		sm_typeMap[LDLEMovedTo] = "LDLEMovedTo";
+		sm_typeMap[LDLEUnofficialPart] = "LDLEUnofficialPart";
+	}
 }
 
 LDLError::~LDLError(void)
@@ -35,47 +56,38 @@ const char *LDLError::getTypeName(void)
 	return getTypeName(m_type);
 }
 
+const wchar_t *LDLError::getTypeNameW(void)
+{
+	return getTypeNameW(m_type);
+}
+
 const char *LDLError::getTypeName(LDLErrorType type)
 {
-	switch (type)
+	LDLErrorTypeMap::const_iterator it = sm_typeMap.find(type);
+
+	if (it != sm_typeMap.end())
 	{
-	case LDLEGeneral:
-		return TCLocalStrings::get("LDLEGeneral");
-	case LDLEParse:
-		return TCLocalStrings::get("LDLEParse");
-	case LDLEFileNotFound:
-		return TCLocalStrings::get("LDLEFileNotFound");
-	case LDLEMatrix:
-		return TCLocalStrings::get("LDLEMatrix");
-	case LDLEPartDeterminant:
-		return TCLocalStrings::get("LDLEPartDeterminant");
-	case LDLENonFlatQuad:
-		return TCLocalStrings::get("LDLENonFlatQuad");
-	case LDLEConcaveQuad:
-		return TCLocalStrings::get("LDLEConcaveQuad");
-//	case LDLEConcaveQuadSplit:
-//		return "Error splitting concave quad";
-	case LDLEMatchingPoints:
-		return TCLocalStrings::get("LDLEMatchingPoints");
-//	case LDLEOpenGL:
-//		return "OpenGL error";
-	case LDLEColinear:
-		return TCLocalStrings::get("LDLEColinear");
-	case LDLEBFCWarning:
-		return TCLocalStrings::get("LDLEBFCWarning");
-	case LDLEBFCError:
-		return TCLocalStrings::get("LDLEBFCError");
-	case LDLEMPDError:
-		return TCLocalStrings::get("LDLEMPDError");
-	case LDLEVertexOrder:
-		return TCLocalStrings::get("LDLEVertexOrder");
-	case LDLEWhitespace:
-		return TCLocalStrings::get("LDLEWhitespace");
-	case LDLEMovedTo:
-		return TCLocalStrings::get("LDLEMovedTo");
-	case LDLEUnofficialPart:
-		return TCLocalStrings::get("LDLEUnofficialPart");
-	default:
+		return TCLocalStrings::get(it->second.c_str());
+	}
+	else
+	{
 		return TCLocalStrings::get("LDLEUnknown");
+	}
+}
+
+const wchar_t *LDLError::getTypeNameW(LDLErrorType type)
+{
+	LDLErrorTypeMap::const_iterator it = sm_typeMap.find(type);
+
+	if (it != sm_typeMap.end())
+	{
+		std::wstring wkey;
+
+		stringtowstring(wkey, it->second);
+		return TCLocalStrings::get(wkey.c_str());
+	}
+	else
+	{
+		return TCLocalStrings::get(_UC("LDLEUnknown"));
 	}
 }

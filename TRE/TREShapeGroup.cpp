@@ -1470,13 +1470,14 @@ void TREShapeGroup::transferTriangleFan(int shapeTypeIndex, TCULong color,
 
 bool TREShapeGroup::isTransparent(TCULong color, bool hostFormat)
 {
+	TCULong transparentThreshold = 240;
 	if (hostFormat)
 	{
-		return (htonl(color) & 0xFF) < 0xFF;
+		return (htonl(color) & 0xFF) < transparentThreshold;
 	}
 	else
 	{
-		return (color & 0xFF) < 0xFF;
+		return (color & 0xFF) < transparentThreshold;
 	}
 }
 

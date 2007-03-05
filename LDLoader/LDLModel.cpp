@@ -221,10 +221,19 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 			{
 				if (!isPart() && subModel->isPart())
 				{
-					char szWarning[1024];
+					UCCHAR szWarning[1024];
+					CUCSTR ucSubModelName;
 
-					sprintf(szWarning, TCLocalStrings::get("LDLModelUnofficialPart"),
-						subModelName);
+#ifdef TC_NO_UNICODE
+					ucSubModelName = subModelName;
+#else
+					std::wstring wsSubModelName;
+					mbstowstring(wsSubModelName, subModelName);
+					ucSubModelName = wsSubModelName.c_str();
+#endif
+					sucprintf(szWarning, COUNT_OF(szWarning),
+						TCLocalStrings::get(_UC("LDLModelUnofficialPart")),
+						ucSubModelName);
 					reportWarning(LDLEUnofficialPart, *fileLine, szWarning);
 				}
 			}
@@ -778,7 +787,7 @@ int LDLModel::parseMPDMeta(int index, const char *filename)
 			else
 			{
 				reportError(LDLEMPDError, *(*m_fileLines)[index],
-					"MPD sub-file already loaded: ignoring");
+					TCLocalStrings::get(_UC("LDLModelMpdAlreadyLoaded")));
 			}
 		}
 	}
@@ -794,7 +803,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 	if (m_flags.bfcInvertNext)
 	{
 		reportError(LDLEBFCError, *commentLine,
-			TCLocalStrings::get("LDLModelBfcInvert"));
+			TCLocalStrings::get(_UC("LDLModelBfcInvert")));
 		m_flags.bfcInvertNext = false;
 	}
 	if (m_flags.bfcCertify == BFCUnknownState)
@@ -805,7 +814,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (m_flags.started)
 			{
 				reportError(LDLEBFCError, *commentLine,
-					TCLocalStrings::get("LDLModelBfcNoCertFirst"));
+					TCLocalStrings::get(_UC("LDLModelBfcNoCertFirst")));
 			}
 		}
 		else
@@ -814,7 +823,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			{
 				m_flags.bfcCertify = BFCOffState;
 				reportError(LDLEBFCError, *commentLine,
-					TCLocalStrings::get("LDLModelBfcFirst"));
+					TCLocalStrings::get(_UC("LDLModelBfcFirst")));
 			}
 			else
 			{
@@ -841,12 +850,12 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (getBFCOn())
 			{
 				reportWarning(LDLEBFCWarning, *commentLine,
-					TCLocalStrings::get("LDLModelBfcCertNotFirst"));
+					TCLocalStrings::get(_UC("LDLModelBfcCertNotFirst")));
 			}
 			else
 			{
 				reportError(LDLEBFCError, *commentLine,
-					TCLocalStrings::get("LDLModelBfcCertNoCert"));
+					TCLocalStrings::get(_UC("LDLModelBfcCertNoCert")));
 			}
 		}
 		// Not else if below, because each BFC command could potentially
@@ -856,12 +865,12 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (getBFCOn())
 			{
 				reportError(LDLEBFCError, *commentLine,
-					TCLocalStrings::get("LDLModelBfcNoCertCert"));
+					TCLocalStrings::get(_UC("LDLModelBfcNoCertCert")));
 			}
 			else
 			{
 				reportWarning(LDLEBFCWarning, *commentLine,
-					TCLocalStrings::get("LDLModelBfcNoCertMulti"));
+					TCLocalStrings::get(_UC("LDLModelBfcNoCertMulti")));
 			}
 		}
 	}
@@ -872,7 +881,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (commentLine->containsBFCCommand("NOCLIP"))
 			{
 				reportError(LDLEBFCError, *commentLine,
-					TCLocalStrings::get("LDLModelBfcClipNoClip"));
+					TCLocalStrings::get(_UC("LDLModelBfcClipNoClip")));
 			}
 			else
 			{
@@ -888,7 +897,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			if (commentLine->containsBFCCommand("CW"))
 			{
 				reportError(LDLEBFCError, *commentLine,
-					TCLocalStrings::get("LDLModelBfcCwCcw"));
+					TCLocalStrings::get(_UC("LDLModelBfcCwCcw")));
 			}
 			else
 			{
@@ -913,7 +922,7 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 			commentLine->containsBFCCommand("INVERTNEXT"))
 		{
 			reportError(LDLEBFCError, *commentLine,
-				TCLocalStrings::get("LDLModelBfcAfterNoCert"));
+				TCLocalStrings::get(_UC("LDLModelBfcAfterNoCert")));
 		}
 	}
 	return 0;
@@ -1067,8 +1076,7 @@ bool LDLModel::parse(void)
 			if (checkInvertNext && m_flags.bfcInvertNext)
 			{
 				reportError(LDLEBFCError, *fileLine,
-					"First action following BFC INVERTNEXT isn't linetype "
-					"1.\nIgnoring BFC INVERTNEXT command.");
+					TCLocalStrings::get(_UC("LDLModelBfcInvert")));
 				m_flags.bfcInvertNext = false;
 			}
 			reportProgress(LOAD_MESSAGE, (float)i / (float)m_activeLineCount *
@@ -1105,6 +1113,7 @@ void LDLModel::sendAlert(LDLError *alert)
 	}
 }
 
+/*
 void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
 						 const char* format, va_list argPtr)
 {
@@ -1115,7 +1124,20 @@ void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
 	sendAlert(alert);
 	alert->release();
 }
+*/
 
+void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level, CUCSTR format,
+						 va_list argPtr)
+{
+	LDLError *alert;
+
+	alert = newError(type, format, argPtr);
+	alert->setLevel(level);
+	sendAlert(alert);
+	alert->release();
+}
+
+/*
 void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
 						 const LDLFileLine &fileLine, const char* format,
 						 va_list argPtr)
@@ -1127,7 +1149,21 @@ void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
 	sendAlert(alert);
 	alert->release();
 }
+*/
 
+void LDLModel::sendAlert(LDLErrorType type, LDLAlertLevel level,
+						 const LDLFileLine &fileLine, CUCSTR format,
+						 va_list argPtr)
+{
+	LDLError *alert;
+
+	alert = newError(type, fileLine, format, argPtr);
+	alert->setLevel(level);
+	sendAlert(alert);
+	alert->release();
+}
+
+/*
 void LDLModel::reportError(LDLErrorType type, const LDLFileLine &fileLine,
 						   const char* format, ...)
 {
@@ -1137,7 +1173,19 @@ void LDLModel::reportError(LDLErrorType type, const LDLFileLine &fileLine,
 	sendAlert(type, LDLAError, fileLine, format, argPtr);
 	va_end(argPtr);
 }
+*/
 
+void LDLModel::reportError(LDLErrorType type, const LDLFileLine &fileLine,
+						   CUCSTR format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	sendAlert(type, LDLAError, fileLine, format, argPtr);
+	va_end(argPtr);
+}
+
+/*
 void LDLModel::reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
 							 const char* format, ...)
 {
@@ -1147,7 +1195,19 @@ void LDLModel::reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
 	sendAlert(type, LDLAWarning, fileLine, format, argPtr);
 	va_end(argPtr);
 }
+*/
 
+void LDLModel::reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
+							 CUCSTR format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	sendAlert(type, LDLAWarning, fileLine, format, argPtr);
+	va_end(argPtr);
+}
+
+/*
 void LDLModel::reportError(LDLErrorType type, const char* format, ...)
 {
 	va_list argPtr;
@@ -1156,8 +1216,29 @@ void LDLModel::reportError(LDLErrorType type, const char* format, ...)
 	sendAlert(type, LDLAError, format, argPtr);
 	va_end(argPtr);
 }
+*/
 
+void LDLModel::reportError(LDLErrorType type, CUCSTR format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	sendAlert(type, LDLAError, format, argPtr);
+	va_end(argPtr);
+}
+
+/*
 void LDLModel::reportWarning(LDLErrorType type, const char* format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	sendAlert(type, LDLAWarning, format, argPtr);
+	va_end(argPtr);
+}
+*/
+
+void LDLModel::reportWarning(LDLErrorType type, CUCSTR format, ...)
 {
 	va_list argPtr;
 
@@ -1224,19 +1305,21 @@ bool LDLModel::getLowResStuds(void) const
 }
 
 LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
-							 const char* format, va_list argPtr)
+							 CUCSTR format, va_list argPtr)
 {
-	char message[1024];
-	char** components;
+	UCCHAR message[1024];
+	UCCHAR** components;
 	int componentCount;
 	LDLError *error = NULL;
 
-	vsprintf(message, format, argPtr);
+	vsucprintf(message, COUNT_OF(message), format, argPtr);
 	stripCRLF(message);
-	components = componentsSeparatedByString(message, "\n", componentCount);
+	components = componentsSeparatedByString(message, _UC("\n"),
+		componentCount);
 	if (componentCount > 1)
 	{
 		int i;
+#ifdef TC_NO_UNICODE
 		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
 
 		*strchr(message, '\n') = 0;
@@ -1247,6 +1330,17 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 		error = new LDLError(type, message, m_filename, fileLine,
 			fileLine.getLineNumber(), extraInfo);
 		extraInfo->release();
+#else // TC_NO_UNICODE
+		ucstringVector extraInfo;
+		*wcschr(message, '\n') = 0;
+		extraInfo.reserve(componentCount - 1);
+		for (i = 1; i < componentCount; i++)
+		{
+			extraInfo.push_back(components[i]);
+		}
+		error = new LDLError(type, message, m_filename, fileLine,
+			fileLine.getLineNumber(), extraInfo);
+#endif // TC_NO_UNICODE
 	}
 	else
 	{
@@ -1258,7 +1352,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 }
 
 LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
-							 const char* format, ...)
+							 CUCSTR format, ...)
 {
 	va_list argPtr;
 	LDLError *retValue;
@@ -1269,20 +1363,21 @@ LDLError *LDLModel::newError(LDLErrorType type, const LDLFileLine &fileLine,
 	return retValue;
 }
 
-LDLError *LDLModel::newError(LDLErrorType type, const char* format,
-							 va_list argPtr)
+LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, va_list argPtr)
 {
-	char message[1024];
-	char** components;
+	UCCHAR message[1024];
+	UCCHAR** components;
 	int componentCount;
 	LDLError *error = NULL;
 
-	vsprintf(message, format, argPtr);
+	vsucprintf(message, COUNT_OF(message), format, argPtr);
 	stripCRLF(message);
-	components = componentsSeparatedByString(message, "\n", componentCount);
+	components = componentsSeparatedByString(message, _UC("\n"),
+		componentCount);
 	if (componentCount > 1)
 	{
 		int i;
+#ifdef TC_NO_UNICODE
 		TCStringArray *extraInfo = new TCStringArray(componentCount - 1);
 
 		*strchr(message, '\n') = 0;
@@ -1292,6 +1387,16 @@ LDLError *LDLModel::newError(LDLErrorType type, const char* format,
 		}
 		error = new LDLError(type, message, m_filename, NULL, -1, extraInfo);
 		extraInfo->release();
+#else // TC_NO_UNICODE
+		ucstringVector extraInfo;
+		*wcschr(message, '\n') = 0;
+		extraInfo.reserve(componentCount - 1);
+		for (i = 1; i < componentCount; i++)
+		{
+			extraInfo.push_back(components[i]);
+		}
+		error = new LDLError(type, message, m_filename, NULL, -1, extraInfo);
+#endif // TC_NO_UNICODE
 	}
 	else
 	{
@@ -1301,7 +1406,7 @@ LDLError *LDLModel::newError(LDLErrorType type, const char* format,
 	return error;
 }
 
-LDLError *LDLModel::newError(LDLErrorType type, const char* format, ...)
+LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, ...)
 {
 	va_list argPtr;
 	LDLError *retValue;

@@ -30,12 +30,14 @@
 #define ODS_NOFOCUSRECT 0x0200
 #endif // (_WIN32_WINNT < 0x0500)
 
+// Todo: Unicode
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
 char LDViewPreferences::ldviewPath[MAX_PATH] = "";
 
 LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 									 LDrawModelViewer* modelViewer)
+	// Todo: Unicode
 	:CUIPropertySheet(TCLocalStrings::get("LDViewPreferences"), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
@@ -754,6 +756,7 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 
 	if (dialogId)
 	{
+		// Todo: Unicode
 		char* helpPath = getLDViewPath(TCLocalStrings::get("LDView.hlp"));
 		DWORD helpId;
 
@@ -1185,6 +1188,7 @@ void LDViewPreferences::enableTextureFiltering(void)
 	EnableWindow(hTextureNearestButton, TRUE);
 	EnableWindow(hTextureBilinearButton, TRUE);
 	EnableWindow(hTextureTrilinearButton, TRUE);
+	EnableWindow(hAnisoLevelLabel, TRUE);
 	if (TREGLExtensions::haveAnisoExtension())
 	{
 		EnableWindow(hTextureAnisoButton, TRUE);
@@ -1234,6 +1238,7 @@ void LDViewPreferences::disableTextureFiltering(void)
 	EnableWindow(hTextureTrilinearButton, FALSE);
 	EnableWindow(hTextureAnisoButton, FALSE);
 	EnableWindow(hAnisoLevelSlider, FALSE);
+	EnableWindow(hAnisoLevelLabel, FALSE);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_NEAREST, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hPrimitivesPage, IDC_TEXTURE_BILINEAR, BM_SETCHECK, 0,
 		0);
@@ -1866,9 +1871,9 @@ void LDViewPreferences::doDeletePrefSet(void)
 
 		if (checkAbandon && getApplyEnabled())
 		{
-			if (MessageBox(hWindow,
-				TCLocalStrings::get("PrefSetAbandonConfirm"),
-				TCLocalStrings::get("AbandonChanges"),
+			if (messageBoxUC(hWindow,
+				TCLocalStrings::get(_UC("PrefSetAbandonConfirm")),
+				TCLocalStrings::get(_UC("AbandonChanges")),
 				MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				abandonChanges();
@@ -2089,9 +2094,10 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 			{
 				if (strchr(editText, '/') || strchr(editText, '\\'))
 				{
-				MessageBox(hDlg,
-					TCLocalStrings::get("PrefSetNameBadChars"),
-					TCLocalStrings::get("InvalidName"), MB_OK | MB_ICONWARNING);
+					messageBoxUC(hDlg,
+						TCLocalStrings::get(_UC("PrefSetNameBadChars")),
+						TCLocalStrings::get(_UC("InvalidName")),
+						MB_OK | MB_ICONWARNING);
 				}
 				else
 				{
@@ -2101,17 +2107,17 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 			}
 			else
 			{
-				MessageBox(hDlg,
-					TCLocalStrings::get("PrefSetAlreadyExists"),
-					TCLocalStrings::get("DuplicateName"),
+				messageBoxUC(hDlg,
+					TCLocalStrings::get(_UC("PrefSetAlreadyExists")),
+					TCLocalStrings::get(_UC("DuplicateName")),
 					MB_OK | MB_ICONWARNING);
 			}
 		}
 		else
 		{
-			MessageBox(hDlg,
-				TCLocalStrings::get("PrefSetNameRequired"),
-				TCLocalStrings::get("EmptyName"), MB_OK | MB_ICONWARNING);
+			messageBoxUC(hDlg,
+				TCLocalStrings::get(_UC("PrefSetNameRequired")),
+				TCLocalStrings::get(_UC("EmptyName")), MB_OK | MB_ICONWARNING);
 		}
 	}
 	else if (controlId == IDC_HOTKEY_OK)
@@ -2129,20 +2135,21 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 
 void LDViewPreferences::setAniso(int value)
 {
-	char label[128];
+	UCCHAR label[128];
 	float level = anisoFromSliderValue(value);
 	int intLevel = (int)(level + 0.5);
 
 	ldPrefs->setAnisoLevel(level);
 	if (intLevel >= 2)
 	{
-		sprintf(label, TCLocalStrings::get("AnisoNx"), intLevel);
+		sucprintf(label, sizeof(label) / sizeof(label[0]),
+			TCLocalStrings::get(_UC("AnisoNx")), intLevel);
 	}
 	else
 	{
 		label[0] = 0;
 	}
-	SendMessage(hAnisoLevelLabel, WM_SETTEXT, 0, (LPARAM)label);
+	sendMessageUC(hAnisoLevelLabel, WM_SETTEXT, WM_SETTEXT, 0, (LPARAM)label);
 }
 
 void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
@@ -2248,24 +2255,25 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 {
 	if (controlId == IDC_FSAA_COMBO)
 	{
-		char selectedString[1024];
+		UCCHAR selectedString[1024];
 		int fsaaMode;
 
-		SendDlgItemMessage(hPage, controlId, WM_GETTEXT, sizeof(selectedString),
+		sendDlgItemMessageUC(hPage, controlId, WM_GETTEXT, WM_GETTEXT,
+			sizeof(selectedString) / sizeof(selectedString[0]),
 			(LPARAM)selectedString);
-		if (strcmp(selectedString, TCLocalStrings::get("FsaaNone")) == 0)
+		if (ucstrcmp(selectedString, TCLocalStrings::get(_UC("FsaaNone"))) == 0)
 		{
 			fsaaMode = 0;
 		}
 		else
 		{
-			sscanf(selectedString, "%d", &fsaaMode);
+			sucscanf(selectedString, _UC("%d"), &fsaaMode);
 			if (fsaaMode > 4)
 			{
 				fsaaMode = fsaaMode << 3;
 			}
-			else if (strstr(selectedString,
-				TCLocalStrings::get("FsaaEnhanced")))
+			else if (ucstrstr(selectedString,
+				TCLocalStrings::get(_UC("FsaaEnhanced"))))
 			{
 				fsaaMode |= 1;
 			}
@@ -2604,9 +2612,12 @@ void LDViewPreferences::setupFov(bool warn)
 		(LPARAM)buf);
 	if (warn)
 	{
-		sprintf(buf, TCLocalStrings::get("FovRangeError"), minFov, maxFov);
-		MessageBox(hPropSheet, buf, TCLocalStrings::get("InvalidValue"),
-			MB_OK | MB_ICONWARNING);
+		UCCHAR ucbuf[1024];
+
+		sucprintf(ucbuf, COUNT_OF(ucbuf),
+			TCLocalStrings::get(_UC("FovRangeError")), minFov, maxFov);
+		messageBoxUC(hPropSheet, ucbuf,
+			TCLocalStrings::get(_UC("InvalidValue")), MB_OK | MB_ICONWARNING);
 	}
 }
 
@@ -2615,15 +2626,15 @@ void LDViewPreferences::setupMemoryUsage(void)
 	while (SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_GETCOUNT, 0,
 		0))
 	{
-		SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_DELETESTRING, 0,
-		0);
+		sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_DELETESTRING,
+			CB_DELETESTRING, 0, 0);
 	}
-	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get("Low"));
-	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get("Medium"));
-	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get("High"));
+	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING,
+		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("Low")));
+	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING,
+		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("Medium")));
+	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING,
+		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("High")));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
 		(WPARAM)ldPrefs->getMemoryUsage(), 0);
 }
@@ -3524,13 +3535,13 @@ void LDViewPreferences::setupPrefSetsPage(void)
 void LDViewPreferences::setupAntialiasing(void)
 {
 	TCIntArray *fsaaModes = LDVExtensionsSetup::getFSAAModes();
-	char modeString[1024];
+	UCCHAR modeString[1024];
 
 	// Remove all items from FSAA combo box list.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_RESETCONTENT, 0, 0);
 	// Add "None" to FSAA combo box list as only item.
-	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get("FsaaNone"));
+	sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
+		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("FsaaNone")));
 	// Select "None", just in case something else doesn't get selected later.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SETCURSEL, 0, 0);
 	// The following array should always exist, even if it is empty, but check
@@ -3545,34 +3556,36 @@ void LDViewPreferences::setupAntialiasing(void)
 		{
 			int value = (*fsaaModes)[i];
 
-			sprintf(modeString, TCLocalStrings::get("FsaaNx"), value);
-			SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
-				(LPARAM)modeString);
+			sucprintf(modeString, COUNT_OF(modeString),
+				TCLocalStrings::get(_UC("FsaaNx")), value);
+			sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
+				CB_ADDSTRING, 0, (LPARAM)modeString);
 			// nVidia hardare supports Quincunx and 9-box pattern, so add an
 			// "Enhanced" item to the list if the extension is supported and
 			// the current factor is 2 or 4.
 			if ((value == 2 || value == 4) &&
 				TREGLExtensions::haveNvMultisampleFilterHintExtension())
 			{
-				sprintf(modeString, TCLocalStrings::get("FsaaNx"), value);
-				strcat(modeString, " ");
-				strcat(modeString, TCLocalStrings::get("FsaaEnhanced"));
-				SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
-					0, (LPARAM)modeString);
+				sucprintf(modeString, COUNT_OF(modeString),
+					TCLocalStrings::get(_UC("FsaaNx")), value);
+				ucstrcat(modeString, _UC(" "));
+				ucstrcat(modeString, TCLocalStrings::get(_UC("FsaaEnhanced")));
+				sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
+					CB_ADDSTRING, 0, (LPARAM)modeString);
 			}
 		}
 	}
 	if (ldPrefs->getFsaaMode())
 	{
-		sprintf(modeString, TCLocalStrings::get("FsaaNx"),
-			getFSAAFactor());
+		sucprintf(modeString, COUNT_OF(modeString),
+			TCLocalStrings::get(_UC("FsaaNx")), getFSAAFactor());
 		if (getUseNvMultisampleFilter())
 		{
-			strcat(modeString, " ");
-			strcat(modeString, TCLocalStrings::get("FsaaEnhanced"));
+			ucstrcat(modeString, _UC(" "));
+			ucstrcat(modeString, TCLocalStrings::get(_UC("FsaaEnhanced")));
 		}
-		if (SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SELECTSTRING, 0,
-			(LPARAM)modeString) == CB_ERR)
+		if (sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_SELECTSTRING,
+			CB_SELECTSTRING, 0, (LPARAM)modeString) == CB_ERR)
 		{
 			// We didn't find the selected mode, so reset to none.
 			ldPrefs->setFsaaMode(0);
@@ -3627,6 +3640,7 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 
 	if (prefSetName)
 	{
+		// Todo: Unicode
 		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)prefSetName);
 		delete prefSetName;
 	}
@@ -3634,15 +3648,15 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 	{
 		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)"???");
 	}
-	SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get("<None>"));
+	sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, CB_ADDSTRING, 0,
+		(LPARAM)TCLocalStrings::get(_UC("<None>")));
 	for (i = 1; i <= 10; i++)
 	{
-		char numString[5];
+		UCCHAR numString[5];
 
-		sprintf(numString, "%d", i % 10);
-		SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
-			(LPARAM)numString);
+		sucprintf(numString, COUNT_OF(numString), _UC("%d"), i % 10);
+		sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, CB_ADDSTRING,
+			0, (LPARAM)numString);
 	}
 	SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_SETCURSEL, hotKeyIndex, 0);
 	return TRUE;
@@ -3675,9 +3689,9 @@ bool LDViewPreferences::shouldSetActive(int index)
 		if (!setActiveWarned)
 		{
 			setActiveWarned = true;
-			MessageBox(hWindow,
-				TCLocalStrings::get("PrefSetApplyBeforeLeave"),
-				TCLocalStrings::get("Error"), MB_OK | MB_ICONWARNING);
+			messageBoxUC(hWindow,
+				TCLocalStrings::get(_UC("PrefSetApplyBeforeLeave")),
+				TCLocalStrings::get(_UC("Error")), MB_OK | MB_ICONWARNING);
 		}
 		return false;
 	}

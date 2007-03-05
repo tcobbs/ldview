@@ -2311,7 +2311,7 @@ HMENU CUIWindow::findSubMenu(HMENU hParentMenu, int subMenuIndex, int *index)
 }
 
 // Note: static method.
-int CUIWindow::sendMessageUC(
+LRESULT CUIWindow::sendMessageUC(
 	HWND hWnd,
 #ifdef TC_NO_UNICODE
 	UINT uMsg,
@@ -2334,9 +2334,47 @@ int CUIWindow::sendMessageUC(
 }
 
 // Note: static method.
+LRESULT CUIWindow::sendDlgItemMessageUC(
+	HWND hDlg,
+	int nIDDlgItem,
+#ifdef TC_NO_UNICODE
+	UINT uMsg,
+#else // TC_NO_UNICODE
+	UINT /*uMsg*/,
+#endif // TC_NO_UNICODE
+#ifdef TC_NO_UNICODE
+	UINT /*uMsgW*/,
+#else // TC_NO_UNICODE
+	UINT uMsgW,
+#endif // TC_NO_UNICODE
+	WPARAM wParam,
+	LPARAM lParam)
+{
+#ifdef TC_NO_UNICODE
+	return ::SendDlgItemMessageA(hDlg, nIDDlgItem, uMsg, wParam, lParam);
+#else // TC_NO_UNICODE
+	return ::SendDlgItemMessageW(hDlg, nIDDlgItem, uMsgW, wParam, lParam);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+int CUIWindow::messageBoxUC(
+	HWND hWnd,
+	CUCSTR lpText,
+	CUCSTR lpCaption,
+	UINT uType)
+{
+#ifdef TC_NO_UNICODE
+	return ::MessageBoxA(hWnd, lpText, lpCaption, uType);
+#else // TC_NO_UNICODE
+	return ::MessageBoxW(hWnd, lpText, lpCaption, uType);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
 HWND CUIWindow::createStatusWindowUC(
 	LONG style,
-	UCCSTR lpszText,
+	CUCSTR lpszText,
 	HWND hwndParent,
 	UINT wID)
 {

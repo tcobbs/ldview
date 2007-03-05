@@ -29,11 +29,24 @@ skipZero = 0);
 
 TCExport void printStringArray(char** array, int count);
 TCExport char **copyStringArray(char** array, int count);
-TCExport void deleteStringArray(char** array, int count);
+template<class T> inline TCExport void deleteStringArray(T** array, int count)
+{
+	int i;
+
+	for (i = 0; i < count; i++)
+	{
+		delete array[i];
+	}
+	delete array;
+}
+
 TCExport bool arrayContainsString(char** array, int count, const char* string);
 TCExport bool arrayContainsPrefix(char** array, int count, const char* prefix);
 TCExport char **componentsSeparatedByString(const char* string,
 											const char* separator, int& count);
+TCExport wchar_t **componentsSeparatedByString(const wchar_t* string,
+											   const wchar_t* separator,
+											   int& count);
 TCExport char *componentsJoinedByString(char** array, int count,
 	const char* separator);
 TCExport bool stringHasPrefix(const char* string, const char* prefix);
@@ -80,6 +93,8 @@ void stringtowstring(std::wstring &dst, const std::string &src);
 void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 void wstringtostring(std::string &dst, const std::wstring &src);
 void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
+UCSTR mbstoucstring(const char *src, int length = -1);
+char *ucstringtombs(CUCSTR src, int length = -1);
 
 #ifdef _QT
 void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
@@ -101,10 +116,29 @@ long long longLongFromString(char*);
 #endif // WIN32
 
 #ifdef TC_NO_UNICODE
+#define ucsprintf sprintf
 #define ucstrcmp strcmp
+#define ucstrstr strstr
+#define ucstrcpy strcpy
+#define ucstrcat strcat
+#define ucstrncpy strncpy
+#define sucscanf sscanf
+typedef std::string ucstring;
 #else // TC_NO_UNICODE
 #define ucstrcmp wcscmp
+#define ucstrstr wcsstr
+#define ucstrcpy wcscpy
+#define ucstrcat wcscat
+#define ucstrncpy wcsncpy
+#define sucscanf swscanf
+typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
+
+typedef std::vector<ucstring> ucstringVector;
+
+int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
+int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
+#define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
 
 
 #endif
