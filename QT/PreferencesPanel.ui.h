@@ -248,3 +248,18 @@ void PreferencesPanel::doUpdateMissingparts(bool b)
 	}
 }
 
+void PreferencesPanel::doAnisotropic(bool b)
+{
+	if(preferences)
+	{
+		preferences->doAnisotropic();
+	}
+}
+
+void PreferencesPanel::doAnisotropicSlider(int i)
+{
+	if(preferences)
+	{
+		preferences->doAnisotropicSlider(i);
+	}
+}
