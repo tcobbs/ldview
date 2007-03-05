@@ -26,6 +26,7 @@
 #include "PreferencesPanel.h"
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDrawModelViewer.h>
+#include <TRE/TREGLExtensions.h>
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
@@ -383,8 +384,21 @@ void Preferences::doEffectsApply(void)
 	ldPrefs->commitEffectsSettings();
 }
 
+void Preferences::setAniso(int value)
+{
+    QString s;
+	int intLevel = 1 << value;
+    s = s.setNum(intLevel);
+    s+="x";
+	if (value < 1 ) s = "";
+    panel->anisotropicLabel->setText(s);
+	panel->anisotropicFilteringSlider->setValue(value);
+	ldPrefs->setAnisoLevel(intLevel);
+}
+
 void Preferences::doPrimitivesApply(void)
 {
+	int aniso = 0;
 	ldPrefs->setAllowPrimitiveSubstitution(
 		panel->primitiveSubstitutionButton->isChecked());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
@@ -406,7 +420,13 @@ void Preferences::doPrimitivesApply(void)
 			{
 				iTemp = GL_LINEAR_MIPMAP_LINEAR;
 			}
+			else if (panel->anisotropicFilteringButton->isChecked())
+			{
+				iTemp = GL_LINEAR_MIPMAP_LINEAR;
+				aniso = panel->anisotropicFilteringSlider->value();
+			}
 			ldPrefs->setTextureFilterType(iTemp);
+			setAniso(aniso);
 		}
 		ldPrefs->setCurveQuality(panel->curveQualitySlider->value());
 	}
@@ -503,6 +523,22 @@ void Preferences::doCancel(void)
 {
 	loadSettings();
 	reflectSettings();
+}
+
+void Preferences::doAnisotropic(void)
+{
+	bool x = panel->anisotropicFilteringButton->isChecked();
+	panel->anisotropicFilteringSlider->setEnabled(x);
+	panel->anisotropicLabel->setEnabled(x);
+	doAnisotropicSlider(panel->anisotropicFilteringSlider->value());
+}
+
+void Preferences::doAnisotropicSlider(int i)
+{
+	QString s;
+	s = s.setNum(1 << i);
+	s+="x";
+	panel->anisotropicLabel->setText(s);
 }
 
 bool Preferences::getAllowPrimitiveSubstitution(void)
@@ -1760,6 +1796,10 @@ void Preferences::enableEdgeLines(void)
 	{
 		enableConditionalShow();
 	}
+	else
+	{
+		disableConditionalShow();
+	}
 }
 
 void Preferences::enableConditionalShow(void)
@@ -1791,12 +1831,20 @@ void Preferences::enablePrimitiveSubstitution(void)
 
 void Preferences::enableTextureStuds(void)
 {
+	GLfloat maxAniso = TREGLExtensions::getMaxAnisoLevel();
+	TCFloat32 anisoLevel = ldPrefs->getAnisoLevel();
+	short numAnisoLevels = (short)(log(maxAniso)/log(2) + 0.5f);
+	if (numAnisoLevels) 
+		panel->anisotropicFilteringSlider->setMaxValue(numAnisoLevels);
 	panel->nearestFilteringButton->setEnabled(true);
 	panel->bilinearFilteringButton->setEnabled(true);
 	panel->trilinearFilteringButton->setEnabled(true);
+	panel->anisotropicFilteringButton->setEnabled(
+		TREGLExtensions::haveAnisoExtension());
 	setButtonState(panel->nearestFilteringButton, false);
 	setButtonState(panel->bilinearFilteringButton, false);
 	setButtonState(panel->trilinearFilteringButton, false);
+	setButtonState(panel->anisotropicFilteringButton, false);
 	switch (ldPrefs->getTextureFilterType())
 	{
 	case GL_NEAREST_MIPMAP_NEAREST:
@@ -1809,6 +1857,20 @@ void Preferences::enableTextureStuds(void)
 		panel->trilinearFilteringButton->toggle();
 		break;
 	}
+	if (anisoLevel > 1.0)
+	{
+	 	panel->anisotropicFilteringButton->toggle();
+	 	setAniso((int)(log(anisoLevel)/log(2)+0.5f));
+	}
+	if (anisoLevel > maxAniso)
+	{
+		anisoLevel = (TCFloat32)maxAniso;
+	}
+	if (anisoLevel < 2.0f)
+	{
+		anisoLevel = 2.0f;
+	}
+	doAnisotropic();
 }
 
 void Preferences::enableProxyServer(void)
@@ -1935,9 +1997,13 @@ void Preferences::disableTextureStuds(void)
 	panel->nearestFilteringButton->setEnabled(false);
 	panel->bilinearFilteringButton->setEnabled(false);
 	panel->trilinearFilteringButton->setEnabled(false);
+	panel->anisotropicFilteringButton->setEnabled(false);
+	panel->anisotropicFilteringSlider->setEnabled(false);
+	panel->anisotropicLabel->setEnabled(false);
 	setButtonState(panel->nearestFilteringButton, false);
 	setButtonState(panel->bilinearFilteringButton, false);
 	setButtonState(panel->trilinearFilteringButton, false);
+	setButtonState(panel->anisotropicFilteringButton, false);
 }
 
 void Preferences::disableProxyServer(void)

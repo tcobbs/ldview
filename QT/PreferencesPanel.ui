@@ -2378,6 +2378,76 @@
                                                                     <string>Trilinear filtering</string>
                                                                 </property>
                                                             </widget>
+                                                            <widget class="QLayoutWidget">
+                                                                <property name="name">
+                                                                    <cstring>Layout391</cstring>
+                                                                </property>
+
+                                                                <hbox>
+                                                                    <property name="name">
+                                                                        <cstring>unnamed</cstring>
+                                                                    </property>
+                                                                    <property name="margin">
+                                                                        <number>0</number>
+                                                                    </property>
+                                                                    <property name="spacing">
+                                                                        <number>4</number>
+                                                                    </property>
+                                                                    <widget class="QRadioButton">
+                                                                        <property name="name">
+                                                                            <cstring>anisotropicFilteringButton</cstring>
+                                                                        </property>
+                                                                        <property name="text">
+                                                                            <string>Anisotropic filtering:</string>
+                                                                        </property>
+                                                                    </widget>
+                                                                    <widget class="QSlider">
+                                                                        <property name="name">
+                                                                            <cstring>anisotropicFilteringSlider</cstring>
+                                                                        </property>
+                                                                        <property name="sizePolicy">
+                                                                            <sizepolicy>
+                                                                                <hsizetype>5</hsizetype>
+                                                                                <vsizetype>4</vsizetype>
+                                                                                <horstretch>0</horstretch>
+                                                                                <verstretch>0</verstretch>
+                                                                            </sizepolicy>
+                                                                        </property>
+                                                                        <property name="minValue">
+                                                                            <number>1</number>
+                                                                        </property>
+                                                                        <property name="maxValue">
+                                                                            <number>4</number>
+                                                                        </property>
+                                                                        <property name="pageStep">
+                                                                            <number>1</number>
+                                                                        </property>
+                                                                        <property name="orientation">
+                                                                            <enum>Horizontal</enum>
+                                                                        </property>
+                                                                        <property name="tickmarks">
+                                                                            <enum>Right</enum>
+                                                                        </property>
+                                                                    </widget>
+                                                                    <widget class="QLabel">
+                                                                        <property name="name">
+                                                                            <cstring>anisotropicLabel</cstring>
+                                                                        </property>
+                                                                        <property name="frameShadow">
+                                                                            <enum>Plain</enum>
+                                                                        </property>
+                                                                        <property name="text">
+                                                                            <string>2x</string>
+                                                                        </property>
+                                                                        <property name="textFormat">
+                                                                            <enum>AutoText</enum>
+                                                                        </property>
+                                                                        <property name="alignment">
+                                                                            <set>AlignVCenter|AlignLeft</set>
+                                                                        </property>
+                                                                    </widget>
+                                                                </hbox>
+                                                            </widget>
                                                         </vbox>
                                                     </widget>
                                                 </hbox>
@@ -3340,6 +3410,30 @@ into effect until the next time a model is loaded.</string>
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>anisotropicFilteringButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>anisotropicFilteringButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doAnisotropic(bool)</slot>
+    </connection>
+    <connection>
+        <sender>anisotropicFilteringSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doAnisotropicSlider(int)</slot>
+    </connection>
+    <connection>
+        <sender>anisotropicFilteringSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
         <sender>curveQualitySlider</sender>
         <signal>valueChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
@@ -3658,6 +3752,8 @@ into effect until the next time a model is loaded.</string>
     <tabstop>nearestFilteringButton</tabstop>
     <tabstop>bilinearFilteringButton</tabstop>
     <tabstop>trilinearFilteringButton</tabstop>
+    <tabstop>anisotropicFilteringButton</tabstop>
+    <tabstop>anisotropicFilteringSlider</tabstop>
     <tabstop>curveQualitySlider</tabstop>
     <tabstop>lowQualityStudsButton</tabstop>
     <tabstop>hiresPrimitivesButton</tabstop>
@@ -3708,6 +3804,8 @@ into effect until the next time a model is loaded.</string>
     <slot>disableProxy()</slot>
     <slot>enableProxy()</slot>
     <slot>doUpdateMissingparts(bool b)</slot>
+    <slot>doAnisotropic(bool b)</slot>
+    <slot>doAnisotropicSlider(int i)</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

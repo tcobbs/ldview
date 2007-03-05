@@ -71,6 +71,9 @@ public:
 	void getRGB(int color, int &r, int &g, int &b);
 	void getBackgroundColor(int &r, int &g, int &b);
 	bool getShowErrors(void);
+	void doAnisotropic();
+	void doAnisotropicSlider(int);
+	void setAniso(int);
 
 	void setShowError(int errorNumber, bool value);
 	bool getShowError(int errorNumber);

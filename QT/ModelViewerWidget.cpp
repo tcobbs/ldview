@@ -391,6 +391,7 @@ void ModelViewerWidget::initializeGL(void)
 {
 	lock();
 	TREGLExtensions::setup();
+	preferences->doCancel();
 	doViewStatusBar(preferences->getStatusBar());
 	doViewToolBar(preferences->getToolBar());
 	if(saving)
