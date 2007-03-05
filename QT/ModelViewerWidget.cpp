@@ -26,8 +26,9 @@
 #include <qprogressdialog.h>
 #include <qtimer.h>
 #include <qtoolbutton.h>
-#if (QT_VERSION >>16)==4
+#if (QT_VERSION >>16)>=4
 #include <q3paintdevicemetrics.h>
+#include <q3popupmenu.h>
 #define QPaintDeviceMetrics Q3PaintDeviceMetrics
 #else
 #include <qobjectlist.h>
@@ -169,7 +170,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	snapshotsettings = new SnapshotSettings(this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode());
-#if (QT_VERSION >>16)==4
+#if (QT_VERSION >>16)>=4
 	setFocusPolicy(Qt::StrongFocus);
 #else
 	setFocusPolicy(QWidget::StrongFocus);
@@ -1325,7 +1326,11 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 #ifdef __APPLE__
 	fileMenu->removeItemAt(fileSeparatorIndex);
 	fileSeparatorIndex = -1;
+#if (QT_VERSION >>16)>=4
+	openRecentMenu = new Q3PopupMenu(this, "openRecentMenu");
+#else // QT3
 	openRecentMenu = new QPopupMenu(this, "openRecentMenu");
+#endif // QT3
 	fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
 #endif // __APPLE__
 	if (!recentFiles)
