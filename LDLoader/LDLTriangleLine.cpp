@@ -51,7 +51,7 @@ bool LDLTriangleLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, TCLocalStrings::get("LDLTriLineParse"));
+		setError(LDLEParse, TCLocalStrings::get(_UC("LDLTriLineParse")));
 		return false;
 	}
 }
@@ -146,17 +146,17 @@ LDLFileLineArray *LDLTriangleLine::removeMatchingPoint(void)
 
 	if (fileLineArray)
 	{
-		char pointBuf[64] = "";
+		UCCHAR pointBuf[64] = _UC("");
 
 		printPoint(m_matchingIndex, pointBuf);
-//		m_points[m_matchingIndex].print(pointBuf);
 		setWarning(LDLEMatchingPoints,
-			TCLocalStrings::get("LDLTriLineIdentical"), m_matchingIndex + 1,
-			pointBuf);
+			TCLocalStrings::get(_UC("LDLTriLineIdentical")),
+			m_matchingIndex + 1, pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, TCLocalStrings::get("LDLTriLineIdenticalError"));
+		setError(LDLEGeneral,
+			TCLocalStrings::get(_UC("LDLTriLineIdenticalError")));
 	}
 	return fileLineArray;
 }
@@ -167,30 +167,33 @@ LDLFileLineArray *LDLTriangleLine::removeColinearPoint(void)
 
 	if (fileLineArray)
 	{
-		char pointBuf[64] = "";
+		UCCHAR pointBuf[64] = _UC("");
 
 		printPoint(m_colinearIndex, pointBuf);
-//		m_points[m_colinearIndex].print(pointBuf);
-		setWarning(LDLEColinear, TCLocalStrings::get("LDLTriLineCoLinear"),
+		setWarning(LDLEColinear, TCLocalStrings::get(_UC("LDLTriLineCoLinear")),
 			m_colinearIndex + 1, pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, TCLocalStrings::get("LDLTriLineCoLinearError"));
+		setError(LDLEGeneral, TCLocalStrings::get(_UC("LDLTriLineCoLinearError")));
 	}
 	return fileLineArray;
 }
 
 LDLLineLine *LDLTriangleLine::newLineLine(int p1, int p2)
 {
-	char pointBuf1[64] = "";
-	char pointBuf2[64] = "";
-	char newLine[1024];
+	UCCHAR pointBuf1[64] = _UC("");
+	UCCHAR pointBuf2[64] = _UC("");
+	UCCHAR ucNewLine[1024];
+	char *newLine;
+	LDLLineLine *retValue;
 
 	printPoint(p1, pointBuf1);
 	printPoint(p2, pointBuf2);
-//	p1.print(pointBuf1, 8);
-//	p2.print(pointBuf2, 8);
-	sprintf(newLine, "3 %ld %s %s", m_colorNumber, pointBuf1, pointBuf2);
-	return new LDLLineLine(m_parentModel, newLine, m_lineNumber, m_line);
+	sucprintf(ucNewLine, COUNT_OF(ucNewLine), _UC("3 %ld %s %s"), m_colorNumber,
+		pointBuf1, pointBuf2);
+	newLine = ucstringtombs(ucNewLine);
+	retValue = new LDLLineLine(m_parentModel, newLine, m_lineNumber, m_line);
+	delete newLine;
+	return retValue;
 }

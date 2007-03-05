@@ -198,7 +198,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual int progressCallback(const char* message, float progress,
 			bool showErrors = false);
 #endif // TC_NO_UNICODE
-		virtual int progressCallback(UCCSTR message, float progress,
+		virtual int progressCallback(CUCSTR message, float progress,
 			bool showErrors = false);
 		static int staticProgressCallback(char* message, float progress,
 			void* userData);
@@ -287,7 +287,7 @@ class ModelWindow: public CUIOGLWindow
 #ifndef TC_NO_UNICODE
 		virtual void setStatusText(HWND hStatus, int part, const char *text);
 #endif // TC_NO_UNICODE
-		virtual void setStatusText(HWND hStatus, int part, UCCSTR text);
+		virtual void setStatusText(HWND hStatus, int part, CUCSTR text);
 		virtual void initFail(char *reason);
 		void ldlErrorCallback(LDLError *error);
 		void progressAlertCallback(TCProgressAlert *alert);

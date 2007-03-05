@@ -56,7 +56,7 @@ bool LDLQuadLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, TCLocalStrings::get("LDLQuadLineParse"));
+		setError(LDLEParse, TCLocalStrings::get(_UC("LDLQuadLineParse")));
 		return false;
 	}
 }
@@ -201,7 +201,7 @@ bool LDLQuadLine::swapNeeded(int index1, int index2, int index3, int index4)
 	if (nonFlat)
 	{
 		setWarning(LDLENonFlatQuad,
-			TCLocalStrings::get("LDLQuadLineNonFlatError"));
+			TCLocalStrings::get(_UC("LDLQuadLineNonFlatError")));
 	}
 	return false;
 }
@@ -329,16 +329,17 @@ LDLFileLineArray *LDLQuadLine::removeMatchingPoint(void)
 
 	if (fileLineArray)
 	{
-		char pointBuf[64] = "";
+		UCCHAR pointBuf[64] = _UC("");
 
 		printPoint(m_matchingIndex, pointBuf);
 		setWarning(LDLEMatchingPoints,
-			TCLocalStrings::get("LDLQuadLineIdentical"), m_matchingIndex + 1,
-			pointBuf);
+			TCLocalStrings::get(_UC("LDLQuadLineIdentical")),
+			m_matchingIndex + 1, pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, TCLocalStrings::get("LDLQuadLineIdenticalError"));
+		setError(LDLEGeneral,
+			TCLocalStrings::get(_UC("LDLQuadLineIdenticalError")));
 	}
 	return fileLineArray;
 }
@@ -349,15 +350,16 @@ LDLFileLineArray *LDLQuadLine::removeColinearPoint(void)
 
 	if (fileLineArray)
 	{
-		char pointBuf[64] = "";
+		UCCHAR pointBuf[64] = _UC("");
 
 		printPoint(m_colinearIndex, pointBuf);
-		setWarning(LDLEColinear, TCLocalStrings::get("LDLQuadLineCoLinear"),
+		setWarning(LDLEColinear,
+			TCLocalStrings::get(_UC("LDLQuadLineCoLinear")),
 			m_colinearIndex + 1, pointBuf);
 	}
 	else
 	{
-		setError(LDLEGeneral, TCLocalStrings::get("LDLQuadLineCoLinearError"));
+		setError(LDLEGeneral, TCLocalStrings::get(_UC("LDLQuadLineCoLinearError")));
 	}
 	return fileLineArray;
 }
@@ -390,7 +392,7 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(void)
 	{
 		// All split attempts failed, the quad must not be flat.
 		setError(LDLEConcaveQuad,
-			TCLocalStrings::get("LDLQuadLineConcaveError"));
+			TCLocalStrings::get(_UC("LDLQuadLineConcaveError")));
 	}
 	return fileLineArray;
 }
@@ -463,8 +465,8 @@ LDLFileLineArray *LDLQuadLine::splitConcaveQuad(int index1, int index2,
 void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 									   int index4)
 {
-	char oldBuf[4][64];
-	char newBuf[4][64];
+	UCCHAR oldBuf[4][64];
+	UCCHAR newBuf[4][64];
 	int indices[4];
 	int i;
 
@@ -480,15 +482,16 @@ void LDLQuadLine::reportBadVertexOrder(int index1, int index2, int index3,
 	if (m_actionFlags.bfcClip)
 	{
 		setError(LDLEVertexOrder,
-			TCLocalStrings::get("LDLQuadLineBfcBadVertSeq"), oldBuf[0],
+			TCLocalStrings::get(_UC("LDLQuadLineBfcBadVertSeq")), oldBuf[0],
 			oldBuf[1], oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2],
 			newBuf[3]);
 	}
 	else
 	{
 		setWarning(LDLEVertexOrder,
-			TCLocalStrings::get("LDLQuadLineBadVertSeq"), oldBuf[0], oldBuf[1],
-			oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2], newBuf[3]);
+			TCLocalStrings::get(_UC("LDLQuadLineBadVertSeq")), oldBuf[0],
+			oldBuf[1], oldBuf[2], oldBuf[3], newBuf[0], newBuf[1], newBuf[2],
+			newBuf[3]);
 	}
 }
 
@@ -497,14 +500,15 @@ void LDLQuadLine::reportQuadSplit(bool flat, const int q1, const int q2,
 								  const int t1, const int t2, const int t3,
 								  const int t4, const int t5, const int t6)
 {
-	char q1Buf[64], q2Buf[64], q3Buf[64], q4Buf[64];
-	char t1Buf[64], t2Buf[64], t3Buf[64], t4Buf[64], t5Buf[64], t6Buf[64];
-	const char *errorTypeString = TCLocalStrings::get("LDLQuadLineConcave");
+	UCCHAR q1Buf[64], q2Buf[64], q3Buf[64], q4Buf[64];
+	UCCHAR t1Buf[64], t2Buf[64], t3Buf[64], t4Buf[64], t5Buf[64], t6Buf[64];
+	CUCSTR errorTypeString =
+		TCLocalStrings::get(_UC("LDLQuadLineConcave"));
 	LDLErrorType errorType = LDLEConcaveQuad;
 
 	if (!flat)
 	{
-		errorTypeString = TCLocalStrings::get("LDLQuadLineNonFlat");
+		errorTypeString = TCLocalStrings::get(_UC("LDLQuadLineNonFlat"));
 		errorType = LDLENonFlatQuad;
 	}
 	printPoint(q1, q1Buf);
@@ -517,22 +521,27 @@ void LDLQuadLine::reportQuadSplit(bool flat, const int q1, const int q2,
 	printPoint(t4, t4Buf);
 	printPoint(t5, t5Buf);
 	printPoint(t6, t6Buf);
-	setWarning(errorType, TCLocalStrings::get("LDLQuadLineSpit"),
+	setWarning(errorType, TCLocalStrings::get(_UC("LDLQuadLineSpit")),
 		errorTypeString, q1Buf, q2Buf, q3Buf, q4Buf, t1Buf, t2Buf, t3Buf, t4Buf,
 		t5Buf, t6Buf);
 }
 
 LDLTriangleLine *LDLQuadLine::newTriangleLine(int p1, int p2, int p3)
 {
-	char pointBuf1[64] = "";
-	char pointBuf2[64] = "";
-	char pointBuf3[64] = "";
-	char newLine[1024];
+	UCCHAR pointBuf1[64] = _UC("");
+	UCCHAR pointBuf2[64] = _UC("");
+	UCCHAR pointBuf3[64] = _UC("");
+	UCCHAR ucNewLine[1024];
+	char *newLine;
+	LDLTriangleLine *retValue;
 
 	printPoint(p1, pointBuf1);
 	printPoint(p2, pointBuf2);
 	printPoint(p3, pointBuf3);
-	sprintf(newLine, "3 %ld %s %s %s", m_colorNumber, pointBuf1, pointBuf2,
-		pointBuf3);
-	return new LDLTriangleLine(m_parentModel, newLine, m_lineNumber, m_line);
+	sucprintf(ucNewLine, COUNT_OF(ucNewLine), _UC("3 %ld %s %s %s"),
+		m_colorNumber, pointBuf1, pointBuf2, pointBuf3);
+	newLine = ucstringtombs(ucNewLine);
+	retValue = new LDLTriangleLine(m_parentModel, newLine, m_lineNumber, m_line);
+	delete newLine;
+	return retValue;
 }

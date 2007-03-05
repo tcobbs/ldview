@@ -55,10 +55,9 @@ protected:
 	LDLFileLine(const LDLFileLine &other);
 	virtual ~LDLFileLine(void);
 	virtual void dealloc(void);
-	virtual void setErrorV(LDLErrorType type, const char* format,
-		va_list argPtr);
-	virtual void setError(LDLErrorType type, const char* format, ...);
-	virtual void setWarning(LDLErrorType type, const char* format, ...);
+	virtual void setErrorV(LDLErrorType type, CUCSTR format, va_list argPtr);
+	virtual void setError(LDLErrorType type, CUCSTR format, ...);
+	virtual void setWarning(LDLErrorType type, CUCSTR format, ...);
 	virtual const char *findWord(int index) const;
 
 	static bool lineIsEmpty(const char *line);

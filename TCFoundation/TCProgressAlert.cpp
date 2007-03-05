@@ -13,7 +13,8 @@ TCProgressAlert::TCProgressAlert(const char *source, const char *message,
 }
 
 TCProgressAlert::TCProgressAlert(const char *source, const wchar_t *message,
-								 float progress, const WStringList &extraInfo)
+								 float progress,
+								 const ucstringVector &extraInfo)
 	:TCAlert(TCProgressAlert::alertClass(), message, extraInfo),
 	m_source(copyString(source)),
 	m_progress(progress),
@@ -38,7 +39,7 @@ void TCProgressAlert::send(const char *source, const char *message,
 }
 
 void TCProgressAlert::send(const char *source, const wchar_t *message,
-						   float progress, const WStringList &extraInfo)
+						   float progress, const ucstringVector &extraInfo)
 {
 	send(source, message, progress, NULL, extraInfo);
 }
@@ -60,7 +61,7 @@ void TCProgressAlert::send(const char *source, const char *message,
 
 void TCProgressAlert::send(const char *source, const wchar_t *message,
 						   float progress, bool *aborted,
-						   const WStringList &extraInfo)
+						   const ucstringVector &extraInfo)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
 		extraInfo);

@@ -61,8 +61,7 @@ LDLFileLine::operator const char *(void) const
 	}
 }
 
-void LDLFileLine::setErrorV(LDLErrorType type, const char* format,
-							va_list argPtr)
+void LDLFileLine::setErrorV(LDLErrorType type, CUCSTR format, va_list argPtr)
 {
 	if (m_error)
 	{
@@ -71,7 +70,7 @@ void LDLFileLine::setErrorV(LDLErrorType type, const char* format,
 	m_error = m_parentModel->newError(type, *this, format, argPtr);
 }
 
-void LDLFileLine::setError(LDLErrorType type, const char* format, ...)
+void LDLFileLine::setError(LDLErrorType type, CUCSTR format, ...)
 {
 	va_list argPtr;
 
@@ -80,7 +79,7 @@ void LDLFileLine::setError(LDLErrorType type, const char* format, ...)
 	va_end(argPtr);
 }
 
-void LDLFileLine::setWarning(LDLErrorType type, const char* format, ...)
+void LDLFileLine::setWarning(LDLErrorType type, CUCSTR format, ...)
 {
 	va_list argPtr;
 

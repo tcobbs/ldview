@@ -422,7 +422,7 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 	if ((showStatusBar || showStatusBarOverride) && hStatusBar)
 	{
 		HICON hModeIcon = hExamineIcon;
-		UCCSTR tipText = TCLocalStrings::get(_UC("ExamineMode"));
+		CUCSTR tipText = TCLocalStrings::get(_UC("ExamineMode"));
 
 		if (!examineMode)
 		{

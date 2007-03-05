@@ -18,7 +18,7 @@ LDLUnknownLine::~LDLUnknownLine(void)
 
 bool LDLUnknownLine::parse(void)
 {
-	setError(LDLEParse, TCLocalStrings::get("LDLUnknownLineParse"));
+	setError(LDLEParse, TCLocalStrings::get(_UC("LDLUnknownLineParse")));
 	return false;
 }
 

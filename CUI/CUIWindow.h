@@ -73,15 +73,20 @@ class CUIExport CUIWindow : public TCObject
 		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,
 			int *index = NULL);
 		static HINSTANCE getLanguageModule(void);
-		static int sendMessageUC(HWND hWnd, UINT uMsg, UINT uMsgW, WPARAM wParam,
-			LPARAM lParam);
-		static HWND createStatusWindowUC(LONG style, UCCSTR lpszText,
+		static LRESULT sendMessageUC(HWND hWnd, UINT uMsg, UINT uMsgW,
+			WPARAM wParam, LPARAM lParam);
+		static LRESULT sendDlgItemMessageUC(HWND hDlg, int nIDDlgItem,
+			UINT uMsg, UINT uMsgW, WPARAM wParam, LPARAM lParam);
+		static HWND createStatusWindowUC(LONG style, CUCSTR lpszText,
 			HWND hwndParent, UINT wID);
+		static int messageBoxUC(HWND hWnd, CUCSTR lpText, CUCSTR lpCaption,
+			UINT uType);
 		static BOOL screenToClient(HWND hWnd, RECT *rect);
 		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
 			UINT message, WPARAM wParam, LPARAM lParam);
 		static BOOL CALLBACK staticDialogProc(HWND hDlg,
 			UINT message, WPARAM wParam, LPARAM lParam);
+
 	protected:
 		~CUIWindow(void);
 		virtual void dealloc(void);

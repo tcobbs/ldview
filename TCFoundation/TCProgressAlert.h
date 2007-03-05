@@ -9,7 +9,7 @@ public:
 	TCProgressAlert(const char *source, const char *message, float progress,
 		TCStringArray *extraInfo = NULL);
 	TCProgressAlert(const char *source, const wchar_t *message, float progress,
-		const WStringList &extraInfo = WStringList());
+		const ucstringVector &extraInfo = ucstringVector());
 	float getProgress(void) { return m_progress; }
 	void abort(void) { m_aborted = true; }
 	bool getAborted(void) { return m_aborted; }
@@ -21,9 +21,10 @@ public:
 	static void send(const char *source, const char *message, float progress,
 		TCStringArray *extraInfo);
 	static void send(const char *source, const wchar_t *message, float progress,
-		bool *aborted = NULL, const WStringList &extraInfo = WStringList());
+		bool *aborted = NULL,
+		const ucstringVector &extraInfo = ucstringVector());
 	static void send(const char *source, const wchar_t *message, float progress,
-		const WStringList &extraInfo);
+		const ucstringVector &extraInfo);
 protected:
 	virtual ~TCProgressAlert(void);
 	virtual void dealloc(void);

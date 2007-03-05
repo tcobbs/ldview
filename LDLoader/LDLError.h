@@ -29,6 +29,8 @@ typedef enum
 	LDLELastError = LDLEUnofficialPart
 } LDLErrorType;
 
+typedef std::map<LDLErrorType, std::string> LDLErrorTypeMap;
+
 typedef enum
 {
 	LDLACriticalError,	// This means the model couldn't be loaded at all.
@@ -39,16 +41,18 @@ typedef enum
 class LDLError: public TCAlert
 {
 public:
-	LDLError(LDLErrorType type, const char *message, const char *filename,
+	LDLError(LDLErrorType type, CUCSTR message, const char *filename,
 		const char *fileLine, int lineNumber,
-		TCStringArray *extraInfo = NULL);
+		const ucstringVector &extraInfo = ucstringVector());
 	LDLErrorType getType(void) { return m_type; }
 	char *getFilename(void) { return m_filename; }
 	char *getFileLine(void) { return m_fileLine; }
 	int getLineNumber(void) { return m_lineNumber; }
 	static const char *alertClass(void) { return "LDLError"; }
 	virtual const char *getTypeName(void);
+	virtual const wchar_t *getTypeNameW(void);
 	static const char *getTypeName(LDLErrorType type);
+	static const wchar_t *getTypeNameW(LDLErrorType type);
 	void setLevel(LDLAlertLevel value) { m_level = value; }
 	LDLAlertLevel getLevel(void) { return m_level; }
 	void cancelLoad(void) { m_loadCanceled = true; }
@@ -63,6 +67,7 @@ protected:
 	int m_lineNumber;
 	LDLAlertLevel m_level;
 	bool m_loadCanceled;
+	static LDLErrorTypeMap sm_typeMap;
 };
 
 #endif // __LDLERROR_H__

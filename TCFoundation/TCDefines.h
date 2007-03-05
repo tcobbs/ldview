@@ -83,12 +83,12 @@ typedef float TCFloat32;
 #ifdef TC_NO_UNICODE
 typedef char UCCHAR;
 typedef char * UCSTR;
-typedef const char * UCCSTR;
+typedef const char * CUCSTR;
 #define _UC(x) x
 #else // TC_NO_UNICODE
 typedef wchar_t UCCHAR;
 typedef wchar_t * UCSTR;
-typedef const wchar_t * UCCSTR;
+typedef const wchar_t * CUCSTR;
 #define _UC(x) L ## x
 #endif // TC_NO_UNICODE
 

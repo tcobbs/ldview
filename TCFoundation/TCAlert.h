@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/mystring.h>
 
 #if defined(_QT) || defined(__APPLE__)
 #include <stdlib.h>
@@ -12,21 +13,19 @@
 
 class TCStringArray;
 
-typedef std::list<std::wstring> WStringList;
-
 class TCAlert : public TCObject
 {
 public:
 	TCAlert(const char *alertClass, const char *message,
 		TCStringArray *extraInfo = NULL);
 	TCAlert(const char *alertClass, const wchar_t *message,
-		const WStringList &extraInfo = WStringList());
+		const ucstringVector &extraInfo = ucstringVector());
 	//TCULong getAlertClass(void) { return m_alertClass; }
 	const char *getAlertClass(void) { return m_alertClass; }
 	const char *getMessage(void);
 	const wchar_t *getWMessage(void);
 	TCStringArray *getExtraInfo(void);
-	const WStringList &getWExtraInfo(void);
+	const ucstringVector &getUCExtraInfo(void);
 	static TCULong alertClass(void) { return 0; }
 protected:
 	virtual ~TCAlert(void);
@@ -37,7 +36,7 @@ protected:
 	char *m_message;
 	std::wstring m_wMessage;
 	TCStringArray *m_extraInfo;
-	WStringList m_wExtraInfo;
+	ucstringVector m_ucExtraInfo;
 };
 
 #endif // __TCALERT_H__

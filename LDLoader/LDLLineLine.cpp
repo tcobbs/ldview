@@ -34,7 +34,7 @@ bool LDLLineLine::parse(void)
 	else
 	{
 		m_valid = false;
-		setError(LDLEParse, TCLocalStrings::get("LDLLineParse"));
+		setError(LDLEParse, TCLocalStrings::get(_UC("LDLLineParse")));
 		return false;
 	}
 }

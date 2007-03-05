@@ -12,6 +12,34 @@
 
 static int debugLevel = 0;
 
+int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...)
+{
+	va_list argPtr;
+	int retValue;
+
+	va_start(argPtr, format);
+	retValue = vsucprintf(buffer, maxLen, format, argPtr);
+	va_end(argPtr);
+	return retValue;
+}
+
+#if (defined(_MSC_VER) && _MSC_VER < 1400) || defined(TC_NO_UNICODE)
+int vsucprintf(UCSTR buffer, size_t /*maxLen*/, CUCSTR format, va_list argPtr)
+#else // Not VC, or VC 2005+
+int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
+#endif
+{
+#ifdef TC_NO_UNICODE
+	return vsprintf(buffer, format, argPtr);
+#else // TC_NO_UNICODE
+#if defined(_MSC_VER) && _MSC_VER < 1400	// VC < VC 2005
+	return vswprintf(buffer, format, argPtr);
+#else // Not VC, or VC 2005+
+	return vswprintf(buffer, maxLen, format, argPtr);
+#endif
+#endif // TC_NO_UNICODE
+}
+
 char *copyString(const char *string, int pad)
 {
 	if (string)
@@ -127,7 +155,8 @@ char **copyStringArray(char** array, int count)
 	}
 }
 
-void deleteStringArray(char** array, int count)
+/*
+template<class T>void deleteStringArray(T** array, int count)
 {
 	int i;
 
@@ -137,7 +166,19 @@ void deleteStringArray(char** array, int count)
 	}
 	delete array;
 }
+*/
+/*
+void deleteStringArray(wchar_t** array, int count)
+{
+	int i;
 
+	for (i = 0; i < count; i++)
+	{
+		delete array[i];
+	}
+	delete array;
+}
+*/
 bool arrayContainsString(char** array, int count, const char* string)
 {
 	int i;
@@ -219,6 +260,72 @@ char** componentsSeparatedByString(const char* string, const char* separator,
 		if (spot)
 		{
 			tokenEnd = strstr(spot, separator);
+			if (tokenEnd)
+			{
+				*tokenEnd = 0;
+			}
+		}
+		else
+		{
+			tokenEnd = NULL;
+		}
+	}
+	delete stringCopy;
+	return components;
+}
+
+wchar_t** componentsSeparatedByString(const wchar_t* string,
+									  const wchar_t* separator,
+									  int &count)
+{
+	int i;
+	wchar_t* spot = (wchar_t*)string;
+	wchar_t* tokenEnd = NULL;
+	int separatorLength = wcslen(separator);
+	wchar_t** components;
+	wchar_t* stringCopy;
+
+	if (wcslen(string) == 0)
+	{
+		count = 0;
+		return NULL;
+	}
+	for (i = 0; (spot = wcsstr(spot, separator)) != NULL; i++)
+	{
+		spot += separatorLength;
+	}
+	count = i + 1;
+	components = new wchar_t*[count];
+	stringCopy = copyString(string);
+	tokenEnd = wcsstr(stringCopy, separator);
+	if (tokenEnd)
+	{
+		*tokenEnd = 0;
+	}
+	spot = stringCopy;
+	for (i = 0; i < count; i++)
+	{
+		if (spot)
+		{
+			components[i] = new wchar_t[wcslen(spot) + 1];
+			wcscpy(components[i], spot);
+		}
+		else
+		{
+			components[i] = new wchar_t[1];
+			components[i][0] = 0;
+		}
+		if (tokenEnd)
+		{
+			spot = tokenEnd + separatorLength;
+		}
+		else
+		{
+			spot = NULL;
+		}
+		if (spot)
+		{
+			tokenEnd = wcsstr(spot, separator);
 			if (tokenEnd)
 			{
 				*tokenEnd = 0;
@@ -904,6 +1011,42 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 				dst.resize(newLength);
 			}
 		}
+	}
+}
+
+UCSTR mbstoucstring(const char *src, int length /*= -1*/)
+{
+	if (src)
+	{
+#ifdef TC_NO_UNICODE
+		return copyString(src);
+#else // TC_NO_UNICODE
+		std::wstring dst;
+		mbstowstring(dst, src, length);
+		return copyString(dst.c_str());
+#endif // TC_NO_UNICODE
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+char *ucstringtombs(CUCSTR src, int length /*= -1*/)
+{
+	if (src)
+	{
+#ifdef TC_NO_UNICODE
+		return copyString(src);
+#else // TC_NO_UNICODE
+		std::string dst;
+		wcstostring(dst, src, length);
+		return copyString(dst.c_str());
+#endif // TC_NO_UNICODE
+	}
+	else
+	{
+		return NULL;
 	}
 }
 

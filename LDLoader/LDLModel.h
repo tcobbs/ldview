@@ -55,12 +55,12 @@ public:
 	virtual TCDictionary* getLoadedModels(void);
 	virtual bool getLowResStuds(void) const;
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
-		const char *format, va_list argPtr);
+		CUCSTR format, va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, const LDLFileLine &fileLine,
-		const char *format, ...);
-	virtual LDLError *newError(LDLErrorType type, const char *format,
+		CUCSTR format, ...);
+	virtual LDLError *newError(LDLErrorType type, CUCSTR format,
 		va_list argPtr);
-	virtual LDLError *newError(LDLErrorType type, const char *format, ...);
+	virtual LDLError *newError(LDLErrorType type, CUCSTR format, ...);
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
 	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
@@ -109,15 +109,15 @@ protected:
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
 	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
-		const char* format, va_list argPtr);
+		CUCSTR format, va_list argPtr);
 	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
-		const LDLFileLine &fileLine, const char* format, va_list argPtr);
+		const LDLFileLine &fileLine, CUCSTR format, va_list argPtr);
 	virtual void reportError(LDLErrorType type, const LDLFileLine &fileLine,
-		const char* format, ...);
+		CUCSTR format, ...);
 	virtual void reportWarning(LDLErrorType type, const LDLFileLine &fileLine,
-		const char* format, ...);
-	virtual void reportError(LDLErrorType type, const char* format, ...);
-	virtual void reportWarning(LDLErrorType type, const char* format, ...);
+		CUCSTR format, ...);
+	virtual void reportError(LDLErrorType type, CUCSTR format, ...);
+	virtual void reportWarning(LDLErrorType type, CUCSTR format, ...);
 	virtual void reportProgress(const char *message, float progress,
 		bool mainOnly = true);
 	virtual void reportProgress(const wchar_t *message, float progress,
