@@ -32,11 +32,31 @@ int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr)
 #ifdef TC_NO_UNICODE
 	return vsprintf(buffer, format, argPtr);
 #else // TC_NO_UNICODE
+	int formatLen = wcslen(format);
+	wchar_t *newFormat = new wchar_t[formatLen + 1];
+	wchar_t *spot;
+	int retValue;
+
+	wcscpy(newFormat, format);
+	while ((spot = wcsstr(newFormat, L"%s")) != NULL)
+	{
+		wchar_t *temp = new wchar_t[formatLen + 2];
+		size_t offset = spot - newFormat;
+
+		wcsncpy(temp, newFormat, offset);
+		wcscpy(&temp[offset], L"%ls");
+		wcscpy(&temp[offset + 3], &spot[2]);
+		delete newFormat;
+		newFormat = temp;
+		formatLen++;
+	}
 #if defined(_MSC_VER) && _MSC_VER < 1400	// VC < VC 2005
-	return vswprintf(buffer, format, argPtr);
+	retValue = vswprintf(buffer, newFormat, argPtr);
 #else // Not VC, or VC 2005+
-	return vswprintf(buffer, maxLen, format, argPtr);
+	retValue = vswprintf(buffer, maxLen, newFormat, argPtr);
 #endif
+	delete newFormat;
+	return retValue;
 #endif // TC_NO_UNICODE
 }
 
