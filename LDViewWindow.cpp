@@ -4969,8 +4969,10 @@ void LDViewWindow::generatePartsList(
 			modelWindow->setSaveHeight(300);
 			// By saying it's from the command line, none of the above settings
 			// will be written to TCUserDefaults.  I know it's not really from
-			// the command line, but it produces the behavior we want.
-			modelWindow->saveSnapshot(snapshotPath, true);
+			// the command line, but it produces the behavior we want.  By
+			// saying true to the notReallyCommandLine parameter, we avoid
+			// the behavior we don't want.
+			modelWindow->saveSnapshot(snapshotPath, true, true);
 			delete snapshotPath;
 			htmlInventory->restoreAfterSnapshot(modelViewer);
 			modelWindow->setSaveZoomToFit(saveZoomToFit);

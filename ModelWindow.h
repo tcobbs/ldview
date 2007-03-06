@@ -98,7 +98,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool pageSetup(void);
 		virtual bool saveSnapshot(void);
 		virtual bool saveSnapshot(char *saveFilename,
-			bool fromCommandLine = false);
+			bool fromCommandLine = false, bool notReallyCommandLine = false);
 		virtual void setViewMode(LDVViewMode mode, bool saveSetting = true);
 		LDVViewMode getViewMode(void) { return viewMode; }
 		LDrawModelViewer* getModelViewer(void) { return modelViewer; }
