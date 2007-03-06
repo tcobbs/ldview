@@ -1,3 +1,7 @@
+// On the Mac, TREGL.h has to be included prior to anything else that might
+// include GL/gl.h, or the wrong version of glext.h gets used, and things don't
+// compile.  This is annoying, but it doesn't appear to hurt anything.
+#include <TRE/TREGLExtensions.h>
 #include "qt4wrapper.h"
 #include <LDLoader/LDLModel.h>
 #include <LDLoader/LDLPalette.h>
@@ -26,7 +30,6 @@
 #include "PreferencesPanel.h"
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDrawModelViewer.h>
-#include <TRE/TREGLExtensions.h>
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
