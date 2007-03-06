@@ -60,6 +60,7 @@ public:
 protected:
 	virtual ~LDLError(void);
 	virtual void dealloc(void);
+	static void initTypeMap(void);
 
 	LDLErrorType m_type;
 	char *m_filename;
