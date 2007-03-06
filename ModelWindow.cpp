@@ -4252,11 +4252,12 @@ bool ModelWindow::saveSnapshot(void)
 	return retValue;
 }
 
-bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine)
+bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine,
+							   bool notReallyCommandLine)
 {
 	bool externalFilename = saveFilename[0] != 0;
 
-	savingFromCommandLine = fromCommandLine;
+	savingFromCommandLine = fromCommandLine && !notReallyCommandLine;
 	if (saveFilename[0])
 	{
 		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
