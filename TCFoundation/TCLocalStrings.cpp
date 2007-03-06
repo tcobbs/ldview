@@ -626,6 +626,11 @@ const char *TCLocalStrings::get(const char *key)
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
 
+const char *TCLocalStrings::getUtf8(const char *key)
+{
+	return getCurrentLocalStrings()->instGetUtf8LocalString(key);
+}
+
 const wchar_t *TCLocalStrings::get(const wchar_t *key)
 {
 	return getCurrentLocalStrings()->instGetLocalString(key);
@@ -1125,7 +1130,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 
 const wchar_t *TCLocalStrings::instGetLocalString(const wchar_t *key)
 {
-	WStringWStringMap::iterator it = m_strings.find(key);
+	WStringWStringMap::const_iterator it = m_strings.find(key);
 
 	if (it != m_strings.end())
 	{
@@ -1237,3 +1242,37 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 	}
 }
 #endif // WIN32
+
+const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
+{
+	StringStringMap::const_iterator it = m_utf8Strings.find(key);
+
+	if (it != m_utf8Strings.end())
+	{
+		return it->second.c_str();
+	}
+	else
+	{
+#ifdef TC_NO_UNICODE
+		m_utf8Strings[key] = instGetLocalString(key);
+#else // TC_NO_UNICODE
+		std::wstring wKey;
+		const wchar_t *wValue;
+		char *utf8Value;
+
+		mbstowstring(wKey, key);
+		wValue = instGetLocalString(wKey.c_str());
+		utf8Value = ucstringtoutf8(wValue);
+		if (utf8Value)
+		{
+			m_utf8Strings[key] = utf8Value;
+			delete utf8Value;
+		}
+		else
+		{
+			m_utf8Strings[key] = instGetLocalString(key);
+		}
+#endif // TC_NO_UNICODE
+		return m_utf8Strings[key].c_str();
+	}
+}
