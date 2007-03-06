@@ -1,4 +1,5 @@
 #include "mystring.h"
+#include "ConvertUTF.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -1062,6 +1063,70 @@ char *ucstringtombs(CUCSTR src, int length /*= -1*/)
 		std::string dst;
 		wcstostring(dst, src, length);
 		return copyString(dst.c_str());
+#endif // TC_NO_UNICODE
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
+{
+	if (src)
+	{
+#ifdef TC_NO_UNICODE
+		// This isn't 100% accurate, but we don't have much choice.
+		return copyString(src);
+#else // TC_NO_UNICODE
+		UTF8 *dst;
+		UTF8 *dstDup;
+		UTF16 *src16;
+		const UTF16 *src16Dup;
+		int utf8Length;
+		char *retValue = NULL;
+
+		if (length == -1)
+		{
+			length = wcslen(src);
+		}
+		// I think every UTF-16 character can fit in 4 UTF-8 characters.
+		// (Actually, hopefully it's less than that, but I'm trying to be safe.
+		utf8Length = length * 4 + 1;
+		dst = new UTF8[utf8Length];
+		if (sizeof(wchar_t) == sizeof(UTF16))
+		{
+			src16 = (UTF16 *)src;
+		}
+		else
+		{
+			int i;
+
+			src16 = new UTF16[length + 1];
+			for (i = 0; i < length; i++)
+			{
+				src16[i] = (UTF16)src[i];
+			}
+			src16[length] = 0;
+		}
+		src16Dup = src16;
+		dstDup = dst;
+		// Note: length really is correct for end below, not length - 1.
+		ConversionResult result = ConvertUTF16toUTF8(&src16Dup, &src16[length],
+			&dstDup, &dst[utf8Length], lenientConversion);
+		if (result == conversionOK)
+		{
+			utf8Length = dstDup - dst;
+			retValue = new char[utf8Length + 1];
+			memcpy(retValue, dst, utf8Length);
+			retValue[utf8Length] = 0;
+		}
+		delete dst;
+		if (src16 != (UTF16 *)src)
+		{
+			delete src16;
+		}
+		return retValue;
 #endif // TC_NO_UNICODE
 	}
 	else
