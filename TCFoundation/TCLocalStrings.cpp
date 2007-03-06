@@ -1270,7 +1270,7 @@ const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 		}
 		else
 		{
-			m_utf8Strings[key] = instGetLocalString(key);
+			m_utf8Strings[key] = (const char *)instGetLocalString(key);
 		}
 #endif // TC_NO_UNICODE
 		return m_utf8Strings[key].c_str();
