@@ -19,25 +19,6 @@ LDLError::LDLError(LDLErrorType type, CUCSTR message, const char *filename,
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDLError");
 #endif
-	if (sm_typeMap.size() == 0)
-	{
-		sm_typeMap[LDLEGeneral] = "LDLEGeneral";
-		sm_typeMap[LDLEParse] = "LDLEParse";
-		sm_typeMap[LDLEFileNotFound] = "LDLEFileNotFound";
-		sm_typeMap[LDLEMatrix] = "LDLEMatrix";
-		sm_typeMap[LDLEPartDeterminant] = "LDLEPartDeterminant";
-		sm_typeMap[LDLENonFlatQuad] = "LDLENonFlatQuad";
-		sm_typeMap[LDLEConcaveQuad] = "LDLEConcaveQuad";
-		sm_typeMap[LDLEMatchingPoints] = "LDLEMatchingPoints";
-		sm_typeMap[LDLEColinear] = "LDLEColinear";
-		sm_typeMap[LDLEBFCWarning] = "LDLEBFCWarning";
-		sm_typeMap[LDLEBFCError] = "LDLEBFCError";
-		sm_typeMap[LDLEMPDError] = "LDLEMPDError";
-		sm_typeMap[LDLEVertexOrder] = "LDLEVertexOrder";
-		sm_typeMap[LDLEWhitespace] = "LDLEWhitespace";
-		sm_typeMap[LDLEMovedTo] = "LDLEMovedTo";
-		sm_typeMap[LDLEUnofficialPart] = "LDLEUnofficialPart";
-	}
 }
 
 LDLError::~LDLError(void)
@@ -61,8 +42,32 @@ const wchar_t *LDLError::getTypeNameW(void)
 	return getTypeNameW(m_type);
 }
 
+void LDLError::initTypeMap(void)
+{
+	if (sm_typeMap.size() == 0)
+	{
+		sm_typeMap[LDLEGeneral] = "LDLEGeneral";
+		sm_typeMap[LDLEParse] = "LDLEParse";
+		sm_typeMap[LDLEFileNotFound] = "LDLEFileNotFound";
+		sm_typeMap[LDLEMatrix] = "LDLEMatrix";
+		sm_typeMap[LDLEPartDeterminant] = "LDLEPartDeterminant";
+		sm_typeMap[LDLENonFlatQuad] = "LDLENonFlatQuad";
+		sm_typeMap[LDLEConcaveQuad] = "LDLEConcaveQuad";
+		sm_typeMap[LDLEMatchingPoints] = "LDLEMatchingPoints";
+		sm_typeMap[LDLEColinear] = "LDLEColinear";
+		sm_typeMap[LDLEBFCWarning] = "LDLEBFCWarning";
+		sm_typeMap[LDLEBFCError] = "LDLEBFCError";
+		sm_typeMap[LDLEMPDError] = "LDLEMPDError";
+		sm_typeMap[LDLEVertexOrder] = "LDLEVertexOrder";
+		sm_typeMap[LDLEWhitespace] = "LDLEWhitespace";
+		sm_typeMap[LDLEMovedTo] = "LDLEMovedTo";
+		sm_typeMap[LDLEUnofficialPart] = "LDLEUnofficialPart";
+	}
+}
+
 const char *LDLError::getTypeName(LDLErrorType type)
 {
+	initTypeMap();
 	LDLErrorTypeMap::const_iterator it = sm_typeMap.find(type);
 
 	if (it != sm_typeMap.end())
@@ -77,6 +82,7 @@ const char *LDLError::getTypeName(LDLErrorType type)
 
 const wchar_t *LDLError::getTypeNameW(LDLErrorType type)
 {
+	initTypeMap();
 	LDLErrorTypeMap::const_iterator it = sm_typeMap.find(type);
 
 	if (it != sm_typeMap.end())
