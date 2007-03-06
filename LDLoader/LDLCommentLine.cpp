@@ -55,20 +55,13 @@ bool LDLCommentLine::parse(void)
 			{
 				partName[tmp - partName] = 0;
 			}
-#ifdef TC_NO_UNICODE
-			const char *ucPartName = partName;
-			const char *ucNewName = newName;
-#else // TC_NO_UNICODE
-			std::wstring wcPartName;
-			std::wstring wcNewName;
-			mbstowstring(wcPartName, partName);
-			mbstowstring(wcNewName, newName);
-			const wchar_t *ucPartName = wcPartName.c_str();
-			const wchar_t *ucNewName = wcNewName.c_str();
-#endif // TC_NO_UNICODE
+			UCSTR ucPartName = mbstoucstring(partName);
+			UCSTR ucNewName = mbstoucstring(newName);
 			setWarning(LDLEMovedTo,
 				TCLocalStrings::get(_UC("LDLComPartRenamed")), ucPartName,
 				ucNewName);
+			delete ucPartName;
+			delete ucNewName;
 		}
 		else
 		{
