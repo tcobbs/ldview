@@ -43,6 +43,7 @@ Preferences::Preferences(ModelViewerWidget *modelWidget)
 	modelViewer = modelWidget->getModelViewer();
 	panel->setPreferences(this);
 	panel->resize(10, 10);
+	panel->anisotropicLabel->setBackgroundColor(panel->backgroundColor());
 	loadSettings();
 	ldPrefs->applySettings();
 	reflectSettings();
