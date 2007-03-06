@@ -13,6 +13,7 @@ typedef std::map<QString, QString> QStringQStringMap;
 
 class TCDictionary;
 typedef std::map<std::wstring, std::wstring> WStringWStringMap;
+typedef std::map<std::string, std::string> StringStringMap;
 typedef std::map<int, wchar_t *> IntWCharMap;
 
 class TCExport TCLocalStrings: public TCObject
@@ -26,6 +27,7 @@ public:
 #else // WIN32
 	static const char *get(const char *key);
 #endif // WIN32
+	static const char *getUtf8(const char *key);
 	static const wchar_t *get(const wchar_t *key);
 	static void dumpTable(const char *filename, const char *header);
 protected:
@@ -39,6 +41,7 @@ protected:
 #else // WIN32
 	const char *instGetLocalString(const char *key);
 #endif // WIN32
+	const char *instGetUtf8LocalString(const char *key);
 	const wchar_t *instGetLocalString(const wchar_t *key);
 	void instDumpTable(const char *filename, const char *header);
 	void instSetCodePage(int codePage);
@@ -46,6 +49,7 @@ protected:
 
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
+	StringStringMap m_utf8Strings;
 #ifndef WIN32
 	QStringQStringMap m_qStrings;
 	QString m_emptyQString;

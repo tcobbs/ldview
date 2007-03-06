@@ -241,6 +241,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\ConvertUTF.c"
+				>
+			</File>
+			<File
 				RelativePath="mystring.cpp"
 				>
 				<FileConfiguration
@@ -1051,6 +1055,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\ConvertUTF.h"
+				>
+			</File>
 			<File
 				RelativePath="mystring.h"
 				>

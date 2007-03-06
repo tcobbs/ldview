@@ -95,6 +95,7 @@ void wstringtostring(std::string &dst, const std::wstring &src);
 void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
 UCSTR mbstoucstring(const char *src, int length = -1);
 char *ucstringtombs(CUCSTR src, int length = -1);
+char *ucstringtoutf8(CUCSTR src, int length = -1);
 
 #ifdef _QT
 void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
