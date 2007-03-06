@@ -1836,7 +1836,7 @@ void Preferences::enableTextureStuds(void)
 {
 	GLfloat maxAniso = TREGLExtensions::getMaxAnisoLevel();
 	TCFloat32 anisoLevel = ldPrefs->getAnisoLevel();
-	short numAnisoLevels = (short)(log(maxAniso)/log(2) + 0.5f);
+	short numAnisoLevels = (short)(log(maxAniso)/log(2.0) + 0.5f);
 	if (numAnisoLevels) 
 		panel->anisotropicFilteringSlider->setMaxValue(numAnisoLevels);
 	panel->nearestFilteringButton->setEnabled(true);
@@ -1863,7 +1863,7 @@ void Preferences::enableTextureStuds(void)
 	if (anisoLevel > 1.0)
 	{
 	 	panel->anisotropicFilteringButton->toggle();
-	 	setAniso((int)(log(anisoLevel)/log(2)+0.5f));
+	 	setAniso((int)(log(anisoLevel)/log(2.0)+0.5f));
 	}
 	if (anisoLevel > maxAniso)
 	{
