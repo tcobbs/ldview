@@ -2429,55 +2429,23 @@
                                                                             <enum>Right</enum>
                                                                         </property>
                                                                     </widget>
-                                                                    <widget class="QLineEdit">
+                                                                    <widget class="QLabel">
                                                                         <property name="name">
                                                                             <cstring>anisotropicLabel</cstring>
-                                                                        </property>
-                                                                        <property name="frameShape">
-                                                                            <enum>NoFrame</enum>
                                                                         </property>
                                                                         <property name="frameShadow">
                                                                             <enum>Plain</enum>
                                                                         </property>
                                                                         <property name="text">
-                                                                            <string>2x</string>
+                                                                            <string>128x</string>
+                                                                        </property>
+                                                                        <property name="textFormat">
+                                                                            <enum>AutoText</enum>
                                                                         </property>
                                                                         <property name="alignment">
-                                                                            <set>AlignVCenter|AlignRight</set>
-                                                                        </property>
-                                                                        <property name="readOnly">
-                                                                            <bool>true</bool>
-                                                                        </property>
-                                                                        <property name="minimumSize">
-                                                                            <size>
-                                                                                <width>50</width>
-                                                                                <height>0</height>
-                                                                            </size>
-                                                                        </property>
-                                                                        <property name="maximumSize">
-                                                                            <size>
-                                                                                <width>50</width>
-                                                                                <height>32767</height>
-                                                                            </size>
+                                                                            <set>AlignVCenter|AlignLeft</set>
                                                                         </property>
                                                                     </widget>
-                                                                    <spacer>
-                                                                        <property name="name">
-                                                                            <cstring>Spaceranilab</cstring>
-                                                                        </property>
-                                                                        <property name="orientation">
-                                                                            <enum>Horizontal</enum>
-                                                                        </property>
-                                                                        <property name="sizeType">
-                                                                            <enum>Expanding</enum>
-                                                                        </property>
-                                                                        <property name="sizeHint">
-                                                                            <size>
-                                                                                <width>16</width>
-                                                                                <height>20</height>
-                                                                            </size>
-                                                                        </property>
-                                                                    </spacer>
                                                                 </hbox>
                                                             </widget>
                                                         </vbox>
