@@ -1,5 +1,6 @@
 #include "TREVertexStore.h"
 #include "TREVertexArray.h"
+#include "TREGLExtensions.h"
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCMacros.h>
 #include <string.h>
@@ -215,7 +216,7 @@ int TREVertexStore::addVertices(TREVertexArray *vertices,
 void TREVertexStore::setupVAR(void)
 {
 	if (m_vertices && wglAllocateMemoryNV && wglFreeMemoryNV &&
-		glVertexArrayRangeNV)
+		glVertexArrayRangeNV && TREGLExtensions::haveVARExtension())
 	{
 		int count = m_vertices->getCount();
 //		GLfloat priority = 1.0f;
@@ -326,7 +327,8 @@ void TREVertexStore::setupVAR(void)
 void TREVertexStore::setupVBO(void)
 {
 	if (m_vertices && glBindBufferARB && glDeleteBuffersARB &&
-		glGenBuffersARB && glBufferDataARB)
+		glGenBuffersARB && glBufferDataARB &&
+		TREGLExtensions::haveVBOExtension())
 	{
 		m_flags.vboTried = true;
 		glGenBuffersARB(1, &m_vbo);
