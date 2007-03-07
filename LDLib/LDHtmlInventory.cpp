@@ -365,8 +365,8 @@ bool LDHtmlInventory::writeExternalCss(void)
 
 void LDHtmlInventory::writeHeader(FILE *file)
 {
-	unsigned char utf8Signature[3] = { 0xEF, 0xBB, 0xBF };
-	fwrite(utf8Signature, 3, 1, file);
+	//unsigned char utf8Signature[3] = { 0xEF, 0xBB, 0xBF };
+	//fwrite(utf8Signature, 3, 1, file);
 	fprintf(file, "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" "
 		"\"http://www.w3.org/TR/html4/strict.dtd\">\n");
 	fprintf(file, "<html>\n");
