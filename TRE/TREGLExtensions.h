@@ -98,6 +98,7 @@ protected:
 
 	static char *sm_glExtensions;
 	static GLfloat sm_maxAnisoLevel;
+	static bool sm_rendererIsMesa;
 
 	static class TREGLExtensionsCleanup
 	{
