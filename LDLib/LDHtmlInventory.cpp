@@ -371,8 +371,8 @@ void LDHtmlInventory::writeHeader(FILE *file)
 		"\"http://www.w3.org/TR/html4/strict.dtd\">\n");
 	fprintf(file, "<html>\n");
 	fprintf(file, "<head>\n");
-	fprintf(file, "<meta http-equiv=\"content-type\" "
-		"content=\"text/html;charset=utf-8\">\n");
+	fprintf(file, "<meta http-equiv=\"Content-Type\" "
+		"content=\"text/html; charset=UTF-8\">\n");
 	char title[1024];
 	sprintf(title, TCLocalStrings::getUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "<title>%s</title>\n", title);
@@ -645,7 +645,7 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "		<tr>\n");
 	fprintf(file, "			<th class=\"title\" colspan=\"%d\">\n", m_columns);
 	char title[1024];
-	sprintf(title, TCLocalStrings::get("PLTitle"), m_modelName.c_str());
+	sprintf(title, TCLocalStrings::getUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "				%s", title);
 	if (m_showTotal)
 	{
