@@ -222,7 +222,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 				if (!isPart() && subModel->isPart())
 				{
 					UCCHAR szWarning[1024];
-					CUCSTR ucSubModelName = mbstoucstring(subModelName);
+					UCSTR ucSubModelName = mbstoucstring(subModelName);
 
 					sucprintf(szWarning, COUNT_OF(szWarning),
 						TCLocalStrings::get(_UC("LDLModelUnofficialPart")),
