@@ -372,18 +372,18 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	fprintf(file, "<meta http-equiv=\"content-type\" "
 		"content=\"text/html;charset=utf-8\">\n");
 	char title[1024];
-	sprintf(title, TCLocalStrings::get("PLTitle"), m_modelName.c_str());
+	sprintf(title, TCLocalStrings::getUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "<title>%s</title>\n", title);
 	if (writeExternalCss())
 	{
 		fprintf(file, "<link href=\"%s\" title=\"%s\" "
 			"rel=\"stylesheet\" type=\"text/css\">\n", sm_cssFilename,
-			(const char *)TCLocalStrings::get("PLStyleSheetTitle"));
+			TCLocalStrings::getUtf8("PLStyleSheetTitle"));
 	}
 	else
 	{
 		fprintf(file, "<style type=\"text/css\" title=\"%s\"><!--\n",
-			(const char *)TCLocalStrings::get("PLStyleSheetTitle"));
+			TCLocalStrings::getUtf8("PLStyleSheetTitle"));
 		fprintf(file, "%s", sm_style);
 		fprintf(file, "--></style>\n");
 	}
