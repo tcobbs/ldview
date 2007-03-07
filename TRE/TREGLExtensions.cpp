@@ -30,6 +30,7 @@ PFNGLGETBUFFERPOINTERVARBPROC TREGLExtensions::sm_glGetBufferPointervARB = NULL;
 
 char *TREGLExtensions::sm_glExtensions = NULL;
 GLfloat TREGLExtensions::sm_maxAnisoLevel = 1.0f;
+bool TREGLExtensions::sm_rendererIsMesa = false;
 
 TREGLExtensions::TREGLExtensionsCleanup TREGLExtensions::sm_extensionsCleanup;
 
@@ -70,6 +71,11 @@ void TREGLExtensions::setup(void)
 			GET_EXTENSION(glVertexArrayRangeNV);
 #endif // __APPLE__
 		TREVertexStore::setGlVertexArrayRangeNV(sm_glVertexArrayRangeNV);
+	}
+	const char *renderer = (const char *)glGetString(GL_RENDERER);
+	if (stringHasCaseInsensitivePrefix(renderer, "Mesa "))
+	{
+		sm_rendererIsMesa = true;
 	}
 	if (haveMultiDrawArraysExtension(true))
 	{
@@ -134,11 +140,12 @@ bool TREGLExtensions::haveVARExtension(bool force)
 
 bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
 {
-#if !defined(WIN32) && !defined(__APPLE__)
-	// This one crashes Mesa in Linux right now.  Disable until I figure out
-	// why.  Note that it seems to work fine on a MacBook with Intel Graphics.
-	return false;
-#endif // !WIN32 && !__APPLE_
+	if (sm_rendererIsMesa)
+	{
+		// This extension apparently sucks on Mesa.  As near as I can tell, it
+		// won't work inside a display list.
+		return false;
+	}
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
 		false) != 0;
 
