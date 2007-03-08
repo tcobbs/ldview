@@ -60,6 +60,7 @@ public:
 	void restoreAfterSnapshot(LDrawModelViewer *modelViewer);
 
 	static const char *getColumnName(LDPartListColumn column);
+	static CUCSTR getColumnNameUC(LDPartListColumn column);
 protected:
 	virtual ~LDHtmlInventory(void);
 	virtual void dealloc(void);
