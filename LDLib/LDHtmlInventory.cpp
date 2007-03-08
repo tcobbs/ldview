@@ -489,14 +489,14 @@ void LDHtmlInventory::writePartCell(
 			fprintf(file, "<img %salt=\"%s\" title=\"%s\" "
 			"src=\"http://media.peeron.com/ldraw/images/%d/100/%s.png\">",
 			imgStyle.c_str(),
-			(const char *)TCLocalStrings::get("PLViewOnPeeron"),
-			(const char *)TCLocalStrings::get("PLViewOnPeeron"),
+			(const char *)TCLocalStrings::getUtf8("PLViewOnPeeron"),
+			(const char *)TCLocalStrings::getUtf8("PLViewOnPeeron"),
 			peeronColorNumber, partName.c_str());
 		}
 		else
 		{
 			fprintf(file, "%s",
-				(const char *)TCLocalStrings::get("PLViewOnPeeron"));
+				(const char *)TCLocalStrings::getUtf8("PLViewOnPeeron"));
 		}
 		fprintf(file, "</a></td>\n");
 	}
@@ -517,7 +517,7 @@ void LDHtmlInventory::writeDescriptionCell(
 		else
 		{
 			fprintf(file, "			<td>&lt;%s&gt;</td>\n",
-				(const char *)TCLocalStrings::get("PLNoDescription"));
+				(const char *)TCLocalStrings::getUtf8("PLNoDescription"));
 		}
 	}
 }
@@ -649,7 +649,7 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "				%s", title);
 	if (m_showTotal)
 	{
-		fprintf(file, TCLocalStrings::get("PLTotalParts"), totalParts);
+		fprintf(file, TCLocalStrings::getUtf8("PLTotalParts"), totalParts);
 	}
 	fprintf(file, "\n");
 	fprintf(file, "			</th>\n");
@@ -675,13 +675,13 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "							<td align=\"%s\">\n",
 		ldviewCreditAlign);
 	fprintf(file, "								%s\n",
-		(const char *)TCLocalStrings::get("PLGeneratedBy"));
+		(const char *)TCLocalStrings::getUtf8("PLGeneratedBy"));
 	fprintf(file, "							</td>\n");
 	if (m_partImages)
 	{
 		fprintf(file, "							<td align=\"right\">\n");
 		fprintf(file, "								%s\n",
-			(const char *)TCLocalStrings::get("PLProvidedBy"));
+			(const char *)TCLocalStrings::getUtf8("PLProvidedBy"));
 		fprintf(file, "							</td>\n");
 	}
 	fprintf(file, "						</tr>\n");
@@ -768,6 +768,26 @@ bool LDHtmlInventory::isColumnEnabled(LDPartListColumn column)
 	return m_columnMap[column];
 }
 
+CUCSTR LDHtmlInventory::getColumnNameUC(LDPartListColumn column)
+{
+	switch (column)
+	{
+	case LDPLCPart:
+		return TCLocalStrings::get(_UC("PLPartColName"));
+		break;
+	case LDPLCDescription:
+		return TCLocalStrings::get(_UC("PLDescriptionColName"));
+		break;
+	case LDPLCColor:
+		return TCLocalStrings::get(_UC("PLColorColName"));
+		break;
+	case LDPLCQuantity:
+		return TCLocalStrings::get(_UC("PLQuantityColName"));
+		break;
+	}
+	return _UC("<Unknown Column Name>");
+}
+
 const char *LDHtmlInventory::getColumnName(LDPartListColumn column)
 {
 	switch (column)
@@ -787,7 +807,6 @@ const char *LDHtmlInventory::getColumnName(LDPartListColumn column)
 	}
 	return "<Unknown Column Name>";
 }
-
 
 void LDHtmlInventory::prepForSnapshot(LDrawModelViewer *modelViewer)
 {
