@@ -1035,7 +1035,11 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 	}
 }
 
+#ifdef TC_NO_UNICODE
+UCSTR mbstoucstring(const char *src, int /*length*/ /*= -1*/)
+#else // TC_NO_UNICODE
 UCSTR mbstoucstring(const char *src, int length /*= -1*/)
+#endif // TC_NO_UNICODE
 {
 	if (src)
 	{
@@ -1053,7 +1057,11 @@ UCSTR mbstoucstring(const char *src, int length /*= -1*/)
 	}
 }
 
+#ifdef TC_NO_UNICODE
+char *ucstringtombs(CUCSTR src, int /*length*/ /*= -1*/)
+#else // TC_NO_UNICODE
 char *ucstringtombs(CUCSTR src, int length /*= -1*/)
+#endif // TC_NO_UNICODE
 {
 	if (src)
 	{
@@ -1071,7 +1079,11 @@ char *ucstringtombs(CUCSTR src, int length /*= -1*/)
 	}
 }
 
+#ifdef TC_NO_UNICODE
+char *ucstringtoutf8(CUCSTR src, int /*length*/ /*= -1*/)
+#else // TC_NO_UNICODE
 char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
+#endif // TC_NO_UNICODE
 {
 	if (src)
 	{
