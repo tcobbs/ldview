@@ -41,9 +41,12 @@ typedef enum
 class LDLError: public TCAlert
 {
 public:
-	LDLError(LDLErrorType type, CUCSTR message, const char *filename,
+	LDLError(LDLErrorType type, const wchar_t *message, const char *filename,
 		const char *fileLine, int lineNumber,
 		const ucstringVector &extraInfo = ucstringVector());
+	LDLError(LDLErrorType type, const char *message, const char *filename,
+		const char *fileLine, int lineNumber,
+		TCStringArray *extraInfo = NULL);
 	LDLErrorType getType(void) { return m_type; }
 	char *getFilename(void) { return m_filename; }
 	char *getFileLine(void) { return m_fileLine; }

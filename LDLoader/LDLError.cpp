@@ -5,9 +5,25 @@
 
 LDLErrorTypeMap LDLError::sm_typeMap;
 
-LDLError::LDLError(LDLErrorType type, CUCSTR message, const char *filename,
-				   const char *fileLine, int lineNumber,
+LDLError::LDLError(LDLErrorType type, const wchar_t *message,
+				   const char *filename, const char *fileLine, int lineNumber,
 				   const ucstringVector &extraInfo /*= ucstringVector()*/)
+	:TCAlert(LDLError::alertClass(), message, extraInfo),
+	m_type(type),
+	m_filename(copyString(filename)),
+	m_fileLine(copyString(fileLine)),
+	m_lineNumber(lineNumber),
+	m_level(LDLAError),
+	m_loadCanceled(false)
+{
+#ifdef _LEAK_DEBUG
+	strcpy(className, "LDLError");
+#endif
+}
+
+LDLError::LDLError(LDLErrorType type, const char *message, const char *filename,
+				   const char *fileLine, int lineNumber,
+				   TCStringArray *extraInfo /*= NULL*/)
 	:TCAlert(LDLError::alertClass(), message, extraInfo),
 	m_type(type),
 	m_filename(copyString(filename)),
@@ -94,6 +110,6 @@ const wchar_t *LDLError::getTypeNameW(LDLErrorType type)
 	}
 	else
 	{
-		return TCLocalStrings::get(_UC("LDLEUnknown"));
+		return TCLocalStrings::get(L"LDLEUnknown");
 	}
 }
