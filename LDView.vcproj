@@ -360,6 +360,43 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Help\LDView.hpj"
+				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling Help Project $(InputFileName)"
+						CommandLine="hcrtf /x $(InputPath)&#x0D;&#x0A;copy /y $(InputDir)\LDView.hlp $(OutDir)\LDView.hlp &gt; nul&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
+						Outputs="$(OutDir)\LDView.hlp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling Help Project $(InputFileName)"
+						CommandLine="hcrtf /x $(InputPath)&#x0D;&#x0A;copy /y $(InputDir)\LDView.hlp $(OutDir)\LDView.hlp &gt; nul&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
+						Outputs="$(OutDir)\LDView.hlp"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="PartialDebug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Compiling Help Project $(InputFileName)"
+						CommandLine="hcrtf /x $(InputPath)&#x0D;&#x0A;copy /y $(InputDir)\LDView.hlp $(OutDir)\LDView.hlp &gt; nul&#x0D;&#x0A;"
+						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
+						Outputs="$(OutDir)\LDView.hlp"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="LDViewMain.cpp"
 				>
 				<FileConfiguration
