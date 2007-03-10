@@ -87,7 +87,6 @@ Global
 		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.PartialDebug|Win32.ActiveCfg = Debug|Win32
 		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.PartialDebug|Win32.Build.0 = Debug|Win32
 		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.Release|Win32.ActiveCfg = Release|Win32
-		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
