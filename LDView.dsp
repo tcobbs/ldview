@@ -129,6 +129,41 @@ SOURCE=.\LDVExtensionsSetup.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Help\LDView.hpj
+
+!IF  "$(CFG)" == "LDView - Win32 Release"
+
+USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
+# Begin Custom Build - Compiling help project $(InputPath)
+OutDir=.\Release-VC6
+InputPath=.\Help\LDView.hpj
+
+"$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	hcrtf /x $(InputPath) 
+	copy /y Help\LDView.hlp $(OutDir)\LDView.hlp > nul 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "LDView - Win32 Debug"
+
+USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
+# Begin Custom Build - Compiling help project $(InputPath)
+OutDir=.\Debug-VC6
+InputPath=.\Help\LDView.hpj
+
+"$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	hcrtf /x $(InputPath) 
+	copy /y Help\LDView.hlp $(OutDir)\LDView.hlp > nul 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "LDView - Win32 PartialDebug"
+
+!ENDIF 
+
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDViewMain.cpp
 # End Source File
 # Begin Source File
