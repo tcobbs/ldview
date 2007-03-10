@@ -2765,6 +2765,7 @@ void LDrawModelViewer::showLight(void)
 		facing.pointAt(oldLightVector);
 		treGlTranslatef(center[0], center[1], center[2]);
 		treGlMultMatrixf(rotInverse);
+		treGlMultMatrixf(camera.getFacing().getMatrix());
 		lightVector = TCVector(0.0f, 0.0f, 1.0f);
 		setupLight(GL_LIGHT0);
 		glEnable(GL_LIGHTING);
