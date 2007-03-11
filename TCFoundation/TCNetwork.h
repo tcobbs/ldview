@@ -29,6 +29,8 @@
 #ifdef __APPLE__
 #include <sys/types.h>
 #include <sys/socket.h>
+#define socketSend(socket, buf, len, flags) write((socket), (buf), (len))
+#define socketRecv(socket, buf, len, flags) read((socket), (buf), (len))
 #endif // __APPLE__
 #endif // WIN32
 

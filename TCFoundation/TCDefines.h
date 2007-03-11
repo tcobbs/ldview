@@ -44,6 +44,10 @@
 #define SOCKET_ERROR -1
 #endif
 
+#ifdef __APPLE__
+#include <wchar.h>
+#endif // __APPLE__
+
 // NOTE: the following should be 1, 2, and 4 bytes each.  So on a 64-bit system,
 // the following defines aren't appropriate, and something else needs to be
 // substituted.
