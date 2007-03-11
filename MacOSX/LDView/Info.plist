@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ldr</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>LDraw.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>x-application/ldraw</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>LDraw Model File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>dat</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>LDraw.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>x-application/ldraw</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>LDraw Model File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>mpd</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>LDraw.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>x-application/ldraw</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>LDraw Multi-Part File</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>LDView</string>
+	<key>CFBundleIconFile</key>
+	<string>LDView</string>
+	<key>CFBundleIdentifier</key>
+	<string>LDView</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>3.0</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>

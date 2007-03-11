@@ -1,0 +1,369 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F240B6D0A588AFA00691116 /* TRECamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B550A588AFA00691116 /* TRECamera.cpp */; };
+		1F240B6E0A588AFA00691116 /* TRECamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B560A588AFA00691116 /* TRECamera.h */; };
+		1F240B6F0A588AFA00691116 /* TREColoredShapeGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B570A588AFA00691116 /* TREColoredShapeGroup.cpp */; };
+		1F240B700A588AFA00691116 /* TREColoredShapeGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B580A588AFA00691116 /* TREColoredShapeGroup.h */; };
+		1F240B710A588AFA00691116 /* TREFacing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B590A588AFA00691116 /* TREFacing.cpp */; };
+		1F240B720A588AFA00691116 /* TREFacing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B5A0A588AFA00691116 /* TREFacing.h */; };
+		1F240B730A588AFA00691116 /* TREGL.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B5B0A588AFA00691116 /* TREGL.h */; };
+		1F240B740A588AFA00691116 /* TREMainModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B5C0A588AFA00691116 /* TREMainModel.cpp */; };
+		1F240B750A588AFA00691116 /* TREMainModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B5D0A588AFA00691116 /* TREMainModel.h */; };
+		1F240B760A588AFA00691116 /* TREModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B5E0A588AFA00691116 /* TREModel.cpp */; };
+		1F240B770A588AFA00691116 /* TREModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B5F0A588AFA00691116 /* TREModel.h */; };
+		1F240B780A588AFA00691116 /* TREShapeGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B600A588AFA00691116 /* TREShapeGroup.cpp */; };
+		1F240B790A588AFA00691116 /* TREShapeGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B610A588AFA00691116 /* TREShapeGroup.h */; };
+		1F240B7A0A588AFA00691116 /* TRESmoother.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B620A588AFA00691116 /* TRESmoother.cpp */; };
+		1F240B7B0A588AFA00691116 /* TRESmoother.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B630A588AFA00691116 /* TRESmoother.h */; };
+		1F240B7C0A588AFA00691116 /* TRESubModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B640A588AFA00691116 /* TRESubModel.cpp */; };
+		1F240B7D0A588AFA00691116 /* TRESubModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B650A588AFA00691116 /* TRESubModel.h */; };
+		1F240B7E0A588AFA00691116 /* TRETransShapeGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B660A588AFA00691116 /* TRETransShapeGroup.cpp */; };
+		1F240B7F0A588AFA00691116 /* TRETransShapeGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B670A588AFA00691116 /* TRETransShapeGroup.h */; };
+		1F240B800A588AFA00691116 /* TREVertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B680A588AFA00691116 /* TREVertexArray.cpp */; };
+		1F240B810A588AFA00691116 /* TREVertexArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B690A588AFA00691116 /* TREVertexArray.h */; };
+		1F240B820A588AFA00691116 /* TREVertexKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B6A0A588AFA00691116 /* TREVertexKey.h */; };
+		1F240B830A588AFA00691116 /* TREVertexStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B6B0A588AFA00691116 /* TREVertexStore.cpp */; };
+		1F240B840A588AFA00691116 /* TREVertexStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B6C0A588AFA00691116 /* TREVertexStore.h */; };
+		1FD4D7A50BA4C41B00419677 /* TREGLExtensions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4D7A30BA4C41B00419677 /* TREGLExtensions.cpp */; };
+		1FD4D7A60BA4C41B00419677 /* TREGLExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD4D7A40BA4C41B00419677 /* TREGLExtensions.h */; };
+		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA440018CDF011CA2923 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		014CEA450018CDF011CA2923 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1F240B550A588AFA00691116 /* TRECamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TRECamera.cpp; path = ../../TRE/TRECamera.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B560A588AFA00691116 /* TRECamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TRECamera.h; path = ../../TRE/TRECamera.h; sourceTree = SOURCE_ROOT; };
+		1F240B570A588AFA00691116 /* TREColoredShapeGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREColoredShapeGroup.cpp; path = ../../TRE/TREColoredShapeGroup.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B580A588AFA00691116 /* TREColoredShapeGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREColoredShapeGroup.h; path = ../../TRE/TREColoredShapeGroup.h; sourceTree = SOURCE_ROOT; };
+		1F240B590A588AFA00691116 /* TREFacing.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREFacing.cpp; path = ../../TRE/TREFacing.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B5A0A588AFA00691116 /* TREFacing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREFacing.h; path = ../../TRE/TREFacing.h; sourceTree = SOURCE_ROOT; };
+		1F240B5B0A588AFA00691116 /* TREGL.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREGL.h; path = ../../TRE/TREGL.h; sourceTree = SOURCE_ROOT; };
+		1F240B5C0A588AFA00691116 /* TREMainModel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREMainModel.cpp; path = ../../TRE/TREMainModel.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B5D0A588AFA00691116 /* TREMainModel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREMainModel.h; path = ../../TRE/TREMainModel.h; sourceTree = SOURCE_ROOT; };
+		1F240B5E0A588AFA00691116 /* TREModel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREModel.cpp; path = ../../TRE/TREModel.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B5F0A588AFA00691116 /* TREModel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREModel.h; path = ../../TRE/TREModel.h; sourceTree = SOURCE_ROOT; };
+		1F240B600A588AFA00691116 /* TREShapeGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREShapeGroup.cpp; path = ../../TRE/TREShapeGroup.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B610A588AFA00691116 /* TREShapeGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREShapeGroup.h; path = ../../TRE/TREShapeGroup.h; sourceTree = SOURCE_ROOT; };
+		1F240B620A588AFA00691116 /* TRESmoother.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TRESmoother.cpp; path = ../../TRE/TRESmoother.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B630A588AFA00691116 /* TRESmoother.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TRESmoother.h; path = ../../TRE/TRESmoother.h; sourceTree = SOURCE_ROOT; };
+		1F240B640A588AFA00691116 /* TRESubModel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TRESubModel.cpp; path = ../../TRE/TRESubModel.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B650A588AFA00691116 /* TRESubModel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TRESubModel.h; path = ../../TRE/TRESubModel.h; sourceTree = SOURCE_ROOT; };
+		1F240B660A588AFA00691116 /* TRETransShapeGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TRETransShapeGroup.cpp; path = ../../TRE/TRETransShapeGroup.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B670A588AFA00691116 /* TRETransShapeGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TRETransShapeGroup.h; path = ../../TRE/TRETransShapeGroup.h; sourceTree = SOURCE_ROOT; };
+		1F240B680A588AFA00691116 /* TREVertexArray.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREVertexArray.cpp; path = ../../TRE/TREVertexArray.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B690A588AFA00691116 /* TREVertexArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREVertexArray.h; path = ../../TRE/TREVertexArray.h; sourceTree = SOURCE_ROOT; };
+		1F240B6A0A588AFA00691116 /* TREVertexKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREVertexKey.h; path = ../../TRE/TREVertexKey.h; sourceTree = SOURCE_ROOT; };
+		1F240B6B0A588AFA00691116 /* TREVertexStore.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREVertexStore.cpp; path = ../../TRE/TREVertexStore.cpp; sourceTree = SOURCE_ROOT; };
+		1F240B6C0A588AFA00691116 /* TREVertexStore.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREVertexStore.h; path = ../../TRE/TREVertexStore.h; sourceTree = SOURCE_ROOT; };
+		1FD4D7A30BA4C41B00419677 /* TREGLExtensions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREGLExtensions.cpp; path = ../../TRE/TREGLExtensions.cpp; sourceTree = SOURCE_ROOT; };
+		1FD4D7A40BA4C41B00419677 /* TREGLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREGLExtensions.h; path = ../../TRE/TREGLExtensions.h; sourceTree = SOURCE_ROOT; };
+		32DBCF5E0370ADEE00C91783 /* TRE_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRE_Prefix.pch; sourceTree = "<group>"; };
+		D2AAC07E0554694100DB518D /* libTRE.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTRE.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libTRE.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* TRE */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = TRE;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1FD4D7A30BA4C41B00419677 /* TREGLExtensions.cpp */,
+				1FD4D7A40BA4C41B00419677 /* TREGLExtensions.h */,
+				1F240B550A588AFA00691116 /* TRECamera.cpp */,
+				1F240B560A588AFA00691116 /* TRECamera.h */,
+				1F240B570A588AFA00691116 /* TREColoredShapeGroup.cpp */,
+				1F240B580A588AFA00691116 /* TREColoredShapeGroup.h */,
+				1F240B590A588AFA00691116 /* TREFacing.cpp */,
+				1F240B5A0A588AFA00691116 /* TREFacing.h */,
+				1F240B5B0A588AFA00691116 /* TREGL.h */,
+				1F240B5C0A588AFA00691116 /* TREMainModel.cpp */,
+				1F240B5D0A588AFA00691116 /* TREMainModel.h */,
+				1F240B5E0A588AFA00691116 /* TREModel.cpp */,
+				1F240B5F0A588AFA00691116 /* TREModel.h */,
+				1F240B600A588AFA00691116 /* TREShapeGroup.cpp */,
+				1F240B610A588AFA00691116 /* TREShapeGroup.h */,
+				1F240B620A588AFA00691116 /* TRESmoother.cpp */,
+				1F240B630A588AFA00691116 /* TRESmoother.h */,
+				1F240B640A588AFA00691116 /* TRESubModel.cpp */,
+				1F240B650A588AFA00691116 /* TRESubModel.h */,
+				1F240B660A588AFA00691116 /* TRETransShapeGroup.cpp */,
+				1F240B670A588AFA00691116 /* TRETransShapeGroup.h */,
+				1F240B680A588AFA00691116 /* TREVertexArray.cpp */,
+				1F240B690A588AFA00691116 /* TREVertexArray.h */,
+				1F240B6A0A588AFA00691116 /* TREVertexKey.h */,
+				1F240B6B0A588AFA00691116 /* TREVertexStore.cpp */,
+				1F240B6C0A588AFA00691116 /* TREVertexStore.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
+				D2F7E8BE07B2D77200F64583 /* CoreData.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32DBCF5E0370ADEE00C91783 /* TRE_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F240B6E0A588AFA00691116 /* TRECamera.h in Headers */,
+				1F240B700A588AFA00691116 /* TREColoredShapeGroup.h in Headers */,
+				1F240B720A588AFA00691116 /* TREFacing.h in Headers */,
+				1F240B730A588AFA00691116 /* TREGL.h in Headers */,
+				1F240B750A588AFA00691116 /* TREMainModel.h in Headers */,
+				1F240B770A588AFA00691116 /* TREModel.h in Headers */,
+				1F240B790A588AFA00691116 /* TREShapeGroup.h in Headers */,
+				1F240B7B0A588AFA00691116 /* TRESmoother.h in Headers */,
+				1F240B7D0A588AFA00691116 /* TRESubModel.h in Headers */,
+				1F240B7F0A588AFA00691116 /* TRETransShapeGroup.h in Headers */,
+				1F240B810A588AFA00691116 /* TREVertexArray.h in Headers */,
+				1F240B820A588AFA00691116 /* TREVertexKey.h in Headers */,
+				1F240B840A588AFA00691116 /* TREVertexStore.h in Headers */,
+				1FD4D7A60BA4C41B00419677 /* TREGLExtensions.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* TRE */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "TRE" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+			};
+			dependencies = (
+			);
+			name = TRE;
+			productName = TRE;
+			productReference = D2AAC07E0554694100DB518D /* libTRE.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "TRE" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA440018CDF011CA2923 /* Debug */,
+				014CEA450018CDF011CA2923 /* Release */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* TRE */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* TRE */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F240B6D0A588AFA00691116 /* TRECamera.cpp in Sources */,
+				1F240B6F0A588AFA00691116 /* TREColoredShapeGroup.cpp in Sources */,
+				1F240B710A588AFA00691116 /* TREFacing.cpp in Sources */,
+				1F240B740A588AFA00691116 /* TREMainModel.cpp in Sources */,
+				1F240B760A588AFA00691116 /* TREModel.cpp in Sources */,
+				1F240B780A588AFA00691116 /* TREShapeGroup.cpp in Sources */,
+				1F240B7A0A588AFA00691116 /* TRESmoother.cpp in Sources */,
+				1F240B7C0A588AFA00691116 /* TRESubModel.cpp in Sources */,
+				1F240B7E0A588AFA00691116 /* TRETransShapeGroup.cpp in Sources */,
+				1F240B800A588AFA00691116 /* TREVertexArray.cpp in Sources */,
+				1F240B830A588AFA00691116 /* TREVertexStore.cpp in Sources */,
+				1FD4D7A50BA4C41B00419677 /* TREGLExtensions.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TRE_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = TRE;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TRE_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = TRE;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+					/usr/local/include,
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+					/usr/local/include,
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "TRE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "TRE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

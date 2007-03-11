@@ -1,0 +1,413 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F240A680A58874300691116 /* LDLActionLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A440A58874300691116 /* LDLActionLine.cpp */; };
+		1F240A690A58874300691116 /* LDLActionLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A450A58874300691116 /* LDLActionLine.h */; };
+		1F240A6A0A58874300691116 /* LDLCommentLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A460A58874300691116 /* LDLCommentLine.cpp */; };
+		1F240A6B0A58874300691116 /* LDLCommentLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A470A58874300691116 /* LDLCommentLine.h */; };
+		1F240A6C0A58874300691116 /* LDLConditionalLineLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A480A58874300691116 /* LDLConditionalLineLine.cpp */; };
+		1F240A6D0A58874300691116 /* LDLConditionalLineLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A490A58874300691116 /* LDLConditionalLineLine.h */; };
+		1F240A6E0A58874300691116 /* LDLEmptyLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A4A0A58874300691116 /* LDLEmptyLine.cpp */; };
+		1F240A6F0A58874300691116 /* LDLEmptyLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A4B0A58874300691116 /* LDLEmptyLine.h */; };
+		1F240A700A58874300691116 /* LDLError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A4C0A58874300691116 /* LDLError.cpp */; };
+		1F240A710A58874300691116 /* LDLError.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A4D0A58874300691116 /* LDLError.h */; };
+		1F240A720A58874300691116 /* LDLFileLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A4E0A58874300691116 /* LDLFileLine.cpp */; };
+		1F240A730A58874300691116 /* LDLFileLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A4F0A58874300691116 /* LDLFileLine.h */; };
+		1F240A740A58874300691116 /* LDLFindFileAlert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A500A58874300691116 /* LDLFindFileAlert.cpp */; };
+		1F240A750A58874300691116 /* LDLFindFileAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A510A58874300691116 /* LDLFindFileAlert.h */; };
+		1F240A760A58874300691116 /* LDLLineLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A520A58874300691116 /* LDLLineLine.cpp */; };
+		1F240A770A58874300691116 /* LDLLineLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A530A58874300691116 /* LDLLineLine.h */; };
+		1F240A780A58874300691116 /* LDLMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A540A58874300691116 /* LDLMacros.h */; };
+		1F240A790A58874300691116 /* LDLMainModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A550A58874300691116 /* LDLMainModel.cpp */; };
+		1F240A7A0A58874300691116 /* LDLMainModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A560A58874300691116 /* LDLMainModel.h */; };
+		1F240A7B0A58874300691116 /* LDLModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A570A58874300691116 /* LDLModel.cpp */; };
+		1F240A7C0A58874300691116 /* LDLModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A580A58874300691116 /* LDLModel.h */; };
+		1F240A7D0A58874300691116 /* LDLModelLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A590A58874300691116 /* LDLModelLine.cpp */; };
+		1F240A7E0A58874300691116 /* LDLModelLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A5A0A58874300691116 /* LDLModelLine.h */; };
+		1F240A7F0A58874300691116 /* LDLPalette.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A5B0A58874300691116 /* LDLPalette.cpp */; };
+		1F240A800A58874300691116 /* LDLPalette.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A5C0A58874300691116 /* LDLPalette.h */; };
+		1F240A810A58874300691116 /* LDLQuadLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A5D0A58874300691116 /* LDLQuadLine.cpp */; };
+		1F240A820A58874300691116 /* LDLQuadLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A5E0A58874300691116 /* LDLQuadLine.h */; };
+		1F240A830A58874300691116 /* LDLShapeLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A5F0A58874300691116 /* LDLShapeLine.cpp */; };
+		1F240A840A58874300691116 /* LDLShapeLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A600A58874300691116 /* LDLShapeLine.h */; };
+		1F240A850A58874300691116 /* LDLTriangleLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A610A58874300691116 /* LDLTriangleLine.cpp */; };
+		1F240A860A58874300691116 /* LDLTriangleLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A620A58874300691116 /* LDLTriangleLine.h */; };
+		1F240A870A58874300691116 /* LDLUnknownLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A630A58874300691116 /* LDLUnknownLine.cpp */; };
+		1F240A880A58874300691116 /* LDLUnknownLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A640A58874300691116 /* LDLUnknownLine.h */; };
+		1F240A890A58874300691116 /* LDrawIni.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F240A650A58874300691116 /* LDrawIni.c */; };
+		1F240A8A0A58874300691116 /* LDrawIni.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A660A58874300691116 /* LDrawIni.h */; };
+		1F240A8B0A58874300691116 /* LDrawInP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A670A58874300691116 /* LDrawInP.h */; };
+		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		014CEA440018CDF011CA2923 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		014CEA450018CDF011CA2923 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1F240A440A58874300691116 /* LDLActionLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLActionLine.cpp; path = ../../LDLoader/LDLActionLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A450A58874300691116 /* LDLActionLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLActionLine.h; path = ../../LDLoader/LDLActionLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A460A58874300691116 /* LDLCommentLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLCommentLine.cpp; path = ../../LDLoader/LDLCommentLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A470A58874300691116 /* LDLCommentLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLCommentLine.h; path = ../../LDLoader/LDLCommentLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A480A58874300691116 /* LDLConditionalLineLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLConditionalLineLine.cpp; path = ../../LDLoader/LDLConditionalLineLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A490A58874300691116 /* LDLConditionalLineLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLConditionalLineLine.h; path = ../../LDLoader/LDLConditionalLineLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A4A0A58874300691116 /* LDLEmptyLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLEmptyLine.cpp; path = ../../LDLoader/LDLEmptyLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A4B0A58874300691116 /* LDLEmptyLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLEmptyLine.h; path = ../../LDLoader/LDLEmptyLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A4C0A58874300691116 /* LDLError.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLError.cpp; path = ../../LDLoader/LDLError.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A4D0A58874300691116 /* LDLError.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLError.h; path = ../../LDLoader/LDLError.h; sourceTree = SOURCE_ROOT; };
+		1F240A4E0A58874300691116 /* LDLFileLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLFileLine.cpp; path = ../../LDLoader/LDLFileLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A4F0A58874300691116 /* LDLFileLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLFileLine.h; path = ../../LDLoader/LDLFileLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A500A58874300691116 /* LDLFindFileAlert.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLFindFileAlert.cpp; path = ../../LDLoader/LDLFindFileAlert.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A510A58874300691116 /* LDLFindFileAlert.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLFindFileAlert.h; path = ../../LDLoader/LDLFindFileAlert.h; sourceTree = SOURCE_ROOT; };
+		1F240A520A58874300691116 /* LDLLineLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLLineLine.cpp; path = ../../LDLoader/LDLLineLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A530A58874300691116 /* LDLLineLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLLineLine.h; path = ../../LDLoader/LDLLineLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A540A58874300691116 /* LDLMacros.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLMacros.h; path = ../../LDLoader/LDLMacros.h; sourceTree = SOURCE_ROOT; };
+		1F240A550A58874300691116 /* LDLMainModel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLMainModel.cpp; path = ../../LDLoader/LDLMainModel.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A560A58874300691116 /* LDLMainModel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLMainModel.h; path = ../../LDLoader/LDLMainModel.h; sourceTree = SOURCE_ROOT; };
+		1F240A570A58874300691116 /* LDLModel.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLModel.cpp; path = ../../LDLoader/LDLModel.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A580A58874300691116 /* LDLModel.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLModel.h; path = ../../LDLoader/LDLModel.h; sourceTree = SOURCE_ROOT; };
+		1F240A590A58874300691116 /* LDLModelLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLModelLine.cpp; path = ../../LDLoader/LDLModelLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A5A0A58874300691116 /* LDLModelLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLModelLine.h; path = ../../LDLoader/LDLModelLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A5B0A58874300691116 /* LDLPalette.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLPalette.cpp; path = ../../LDLoader/LDLPalette.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A5C0A58874300691116 /* LDLPalette.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLPalette.h; path = ../../LDLoader/LDLPalette.h; sourceTree = SOURCE_ROOT; };
+		1F240A5D0A58874300691116 /* LDLQuadLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLQuadLine.cpp; path = ../../LDLoader/LDLQuadLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A5E0A58874300691116 /* LDLQuadLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLQuadLine.h; path = ../../LDLoader/LDLQuadLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A5F0A58874300691116 /* LDLShapeLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLShapeLine.cpp; path = ../../LDLoader/LDLShapeLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A600A58874300691116 /* LDLShapeLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLShapeLine.h; path = ../../LDLoader/LDLShapeLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A610A58874300691116 /* LDLTriangleLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLTriangleLine.cpp; path = ../../LDLoader/LDLTriangleLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A620A58874300691116 /* LDLTriangleLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLTriangleLine.h; path = ../../LDLoader/LDLTriangleLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A630A58874300691116 /* LDLUnknownLine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLUnknownLine.cpp; path = ../../LDLoader/LDLUnknownLine.cpp; sourceTree = SOURCE_ROOT; };
+		1F240A640A58874300691116 /* LDLUnknownLine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLUnknownLine.h; path = ../../LDLoader/LDLUnknownLine.h; sourceTree = SOURCE_ROOT; };
+		1F240A650A58874300691116 /* LDrawIni.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = LDrawIni.c; path = ../../LDLoader/LDrawIni.c; sourceTree = SOURCE_ROOT; };
+		1F240A660A58874300691116 /* LDrawIni.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDrawIni.h; path = ../../LDLoader/LDrawIni.h; sourceTree = SOURCE_ROOT; };
+		1F240A670A58874300691116 /* LDrawInP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDrawInP.h; path = ../../LDLoader/LDrawInP.h; sourceTree = SOURCE_ROOT; };
+		32DBCF5E0370ADEE00C91783 /* LDLoader_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDLoader_Prefix.pch; sourceTree = "<group>"; };
+		D2AAC07E0554694100DB518D /* libLDLoader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLDLoader.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libLDLoader.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* LDLoader */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = LDLoader;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1F240A440A58874300691116 /* LDLActionLine.cpp */,
+				1F240A450A58874300691116 /* LDLActionLine.h */,
+				1F240A460A58874300691116 /* LDLCommentLine.cpp */,
+				1F240A470A58874300691116 /* LDLCommentLine.h */,
+				1F240A480A58874300691116 /* LDLConditionalLineLine.cpp */,
+				1F240A490A58874300691116 /* LDLConditionalLineLine.h */,
+				1F240A4A0A58874300691116 /* LDLEmptyLine.cpp */,
+				1F240A4B0A58874300691116 /* LDLEmptyLine.h */,
+				1F240A4C0A58874300691116 /* LDLError.cpp */,
+				1F240A4D0A58874300691116 /* LDLError.h */,
+				1F240A4E0A58874300691116 /* LDLFileLine.cpp */,
+				1F240A4F0A58874300691116 /* LDLFileLine.h */,
+				1F240A500A58874300691116 /* LDLFindFileAlert.cpp */,
+				1F240A510A58874300691116 /* LDLFindFileAlert.h */,
+				1F240A520A58874300691116 /* LDLLineLine.cpp */,
+				1F240A530A58874300691116 /* LDLLineLine.h */,
+				1F240A540A58874300691116 /* LDLMacros.h */,
+				1F240A550A58874300691116 /* LDLMainModel.cpp */,
+				1F240A560A58874300691116 /* LDLMainModel.h */,
+				1F240A570A58874300691116 /* LDLModel.cpp */,
+				1F240A580A58874300691116 /* LDLModel.h */,
+				1F240A590A58874300691116 /* LDLModelLine.cpp */,
+				1F240A5A0A58874300691116 /* LDLModelLine.h */,
+				1F240A5B0A58874300691116 /* LDLPalette.cpp */,
+				1F240A5C0A58874300691116 /* LDLPalette.h */,
+				1F240A5D0A58874300691116 /* LDLQuadLine.cpp */,
+				1F240A5E0A58874300691116 /* LDLQuadLine.h */,
+				1F240A5F0A58874300691116 /* LDLShapeLine.cpp */,
+				1F240A600A58874300691116 /* LDLShapeLine.h */,
+				1F240A610A58874300691116 /* LDLTriangleLine.cpp */,
+				1F240A620A58874300691116 /* LDLTriangleLine.h */,
+				1F240A630A58874300691116 /* LDLUnknownLine.cpp */,
+				1F240A640A58874300691116 /* LDLUnknownLine.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
+				D2F7E8BE07B2D77200F64583 /* CoreData.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				1F240A650A58874300691116 /* LDrawIni.c */,
+				1F240A660A58874300691116 /* LDrawIni.h */,
+				1F240A670A58874300691116 /* LDrawInP.h */,
+				32DBCF5E0370ADEE00C91783 /* LDLoader_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F240A690A58874300691116 /* LDLActionLine.h in Headers */,
+				1F240A6B0A58874300691116 /* LDLCommentLine.h in Headers */,
+				1F240A6D0A58874300691116 /* LDLConditionalLineLine.h in Headers */,
+				1F240A6F0A58874300691116 /* LDLEmptyLine.h in Headers */,
+				1F240A710A58874300691116 /* LDLError.h in Headers */,
+				1F240A730A58874300691116 /* LDLFileLine.h in Headers */,
+				1F240A750A58874300691116 /* LDLFindFileAlert.h in Headers */,
+				1F240A770A58874300691116 /* LDLLineLine.h in Headers */,
+				1F240A780A58874300691116 /* LDLMacros.h in Headers */,
+				1F240A7A0A58874300691116 /* LDLMainModel.h in Headers */,
+				1F240A7C0A58874300691116 /* LDLModel.h in Headers */,
+				1F240A7E0A58874300691116 /* LDLModelLine.h in Headers */,
+				1F240A800A58874300691116 /* LDLPalette.h in Headers */,
+				1F240A820A58874300691116 /* LDLQuadLine.h in Headers */,
+				1F240A840A58874300691116 /* LDLShapeLine.h in Headers */,
+				1F240A860A58874300691116 /* LDLTriangleLine.h in Headers */,
+				1F240A880A58874300691116 /* LDLUnknownLine.h in Headers */,
+				1F240A8A0A58874300691116 /* LDrawIni.h in Headers */,
+				1F240A8B0A58874300691116 /* LDrawInP.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* LDLoader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "LDLoader" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+			};
+			dependencies = (
+			);
+			name = LDLoader;
+			productName = LDLoader;
+			productReference = D2AAC07E0554694100DB518D /* libLDLoader.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "LDLoader" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA440018CDF011CA2923 /* Debug */,
+				014CEA450018CDF011CA2923 /* Release */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* LDLoader */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* LDLoader */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F240A680A58874300691116 /* LDLActionLine.cpp in Sources */,
+				1F240A6A0A58874300691116 /* LDLCommentLine.cpp in Sources */,
+				1F240A6C0A58874300691116 /* LDLConditionalLineLine.cpp in Sources */,
+				1F240A6E0A58874300691116 /* LDLEmptyLine.cpp in Sources */,
+				1F240A700A58874300691116 /* LDLError.cpp in Sources */,
+				1F240A720A58874300691116 /* LDLFileLine.cpp in Sources */,
+				1F240A740A58874300691116 /* LDLFindFileAlert.cpp in Sources */,
+				1F240A760A58874300691116 /* LDLLineLine.cpp in Sources */,
+				1F240A790A58874300691116 /* LDLMainModel.cpp in Sources */,
+				1F240A7B0A58874300691116 /* LDLModel.cpp in Sources */,
+				1F240A7D0A58874300691116 /* LDLModelLine.cpp in Sources */,
+				1F240A7F0A58874300691116 /* LDLPalette.cpp in Sources */,
+				1F240A810A58874300691116 /* LDLQuadLine.cpp in Sources */,
+				1F240A830A58874300691116 /* LDLShapeLine.cpp in Sources */,
+				1F240A850A58874300691116 /* LDLTriangleLine.cpp in Sources */,
+				1F240A870A58874300691116 /* LDLUnknownLine.cpp in Sources */,
+				1F240A890A58874300691116 /* LDrawIni.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LDLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = LDLoader;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LDLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = LDLoader;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				WARNING_CFLAGS = (
+					"$(WARNING_CFLAGS)",
+					"-Wall",
+				);
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				WARNING_CFLAGS = (
+					"$(WARNING_CFLAGS)",
+					"-Wall",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "LDLoader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "LDLoader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

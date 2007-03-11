@@ -1,0 +1,534 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */; };
+		1F20D6520A5F6F8200F677AC /* StudLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20D6510A5F6F8200F677AC /* StudLogo.png */; };
+		1F20D6F40A5F759C00F677AC /* SansSerif.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 1F20D6F30A5F759C00F677AC /* SansSerif.fnt */; };
+		1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */; };
+		1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */; };
+		1F20DB370A60C4B700F677AC /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F20DB360A60C4B700F677AC /* LDViewMessages.ini */; };
+		1F240BC00A58AFC300691116 /* LDViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240BBF0A58AFC300691116 /* LDViewController.mm */; };
+		1F240BE30A58D11D00691116 /* libLDLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240BAC0A588BB800691116 /* libLDLib.a */; };
+		1F240BE50A58D12C00691116 /* libLDLoader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240BA50A588BA700691116 /* libLDLoader.a */; };
+		1F240BE60A58D12E00691116 /* libTCFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240B9C0A588B9000691116 /* libTCFoundation.a */; };
+		1F240BE70A58D13100691116 /* libTRE.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240BB30A588BC600691116 /* libTRE.a */; };
+		1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C020A58D1E400691116 /* OpenGL.framework */; };
+		1F240C060A58D35A00691116 /* libboost_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C050A58D35A00691116 /* libboost_thread.a */; };
+		1F240C1F0A58D3DB00691116 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C1E0A58D3DB00691116 /* libpng.a */; };
+		1F240C220A58D5E900691116 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C210A58D5E900691116 /* libz.dylib */; };
+		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
+		1F240D760A58E01E00691116 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F240D750A58E01E00691116 /* ModelWindow.nib */; };
+		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
+		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		4A9504CCFFE6A4B311CA0CBA /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		4A9504CDFFE6A4B311CA0CBA /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		1F240B9B0A588B9000691116 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240B960A588B9000691116 /* TCFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = TCFoundation;
+		};
+		1F240BA40A588BA700691116 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = LDLoader;
+		};
+		1F240BAB0A588BB800691116 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240BA60A588BB800691116 /* LDLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = LDLib;
+		};
+		1F240BB20A588BC600691116 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240BAD0A588BC600691116 /* TRE.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = TRE;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1F02B0DC0A69EBDC00678F51 /* AlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertHandler.h; sourceTree = "<group>"; };
+		1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AlertHandler.cpp; sourceTree = "<group>"; };
+		1F20D6510A5F6F8200F677AC /* StudLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StudLogo.png; path = ../../Textures/StudLogo.png; sourceTree = SOURCE_ROOT; };
+		1F20D6F30A5F759C00F677AC /* SansSerif.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = SansSerif.fnt; path = ../../Textures/SansSerif.fnt; sourceTree = SOURCE_ROOT; };
+		1F20DAE40A60BE9600F677AC /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
+		1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUserDefaults.h; sourceTree = "<group>"; };
+		1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OCUserDefaults.mm; sourceTree = "<group>"; };
+		1F20DB170A60C39D00F677AC /* OCLocalStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCLocalStrings.h; sourceTree = "<group>"; };
+		1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OCLocalStrings.mm; sourceTree = "<group>"; };
+		1F240B960A588B9000691116 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDLoader.xcodeproj; path = ../LDLoader/LDLoader.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1F240BA60A588BB800691116 /* LDLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDLib.xcodeproj; path = ../LDLib/LDLib.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1F240BAD0A588BC600691116 /* TRE.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TRE.xcodeproj; path = ../TRE/TRE.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1F240BBE0A58AFC300691116 /* LDViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDViewController.h; sourceTree = "<group>"; };
+		1F240BBF0A58AFC300691116 /* LDViewController.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDViewController.mm; sourceTree = "<group>"; };
+		1F240C020A58D1E400691116 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		1F240C050A58D35A00691116 /* libboost_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_thread.a; path = /opt/local/lib/libboost_thread.a; sourceTree = "<absolute>"; };
+		1F240C1E0A58D3DB00691116 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = /usr/local/lib/libpng.a; sourceTree = "<absolute>"; };
+		1F240C210A58D5E900691116 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = /usr/lib/libz.dylib; sourceTree = "<absolute>"; };
+		1F240C9E0A58D98400691116 /* LDrawModelView.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawModelView.mm; sourceTree = "<group>"; };
+		1F240C9F0A58D98400691116 /* LDrawModelView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawModelView.h; sourceTree = "<group>"; };
+		1F240D750A58E01E00691116 /* ModelWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ModelWindow.nib; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
+		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
+		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
+		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = main.m; sourceTree = "<group>"; };
+		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		32CA4F630368D1EE00C91783 /* LDView_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDView_Prefix.pch; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* LDView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LDView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				1F240BE30A58D11D00691116 /* libLDLib.a in Frameworks */,
+				1F240BE50A58D12C00691116 /* libLDLoader.a in Frameworks */,
+				1F240BE60A58D12E00691116 /* libTCFoundation.a in Frameworks */,
+				1F240BE70A58D13100691116 /* libTRE.a in Frameworks */,
+				1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */,
+				1F240C060A58D35A00691116 /* libboost_thread.a in Frameworks */,
+				1F240C1F0A58D3DB00691116 /* libpng.a in Frameworks */,
+				1F240C220A58D5E900691116 /* libz.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1F240C9F0A58D98400691116 /* LDrawModelView.h */,
+				1F240C9E0A58D98400691116 /* LDrawModelView.mm */,
+				1F240BBE0A58AFC300691116 /* LDViewController.h */,
+				1F240BBF0A58AFC300691116 /* LDViewController.mm */,
+				1F240DA30A58E28700691116 /* ModelWindow.h */,
+				1F240DA40A58E28700691116 /* ModelWindow.mm */,
+				1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */,
+				1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */,
+				1F20DB170A60C39D00F677AC /* OCLocalStrings.h */,
+				1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */,
+				1F02B0DC0A69EBDC00678F51 /* AlertHandler.h */,
+				1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* LDView.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F240B970A588B9000691116 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F240B9C0A588B9000691116 /* libTCFoundation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F240BA00A588BA700691116 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F240BA50A588BA700691116 /* libLDLoader.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F240BA70A588BB800691116 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F240BAC0A588BB800691116 /* libLDLib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F240BAE0A588BC600691116 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F240BB30A588BC600691116 /* libTRE.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1F240BB40A588BCB00691116 /* Support Projects */ = {
+			isa = PBXGroup;
+			children = (
+				1F240BA60A588BB800691116 /* LDLib.xcodeproj */,
+				1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */,
+				1F240B960A588B9000691116 /* TCFoundation.xcodeproj */,
+				1F240BAD0A588BC600691116 /* TRE.xcodeproj */,
+			);
+			name = "Support Projects";
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* LDView */ = {
+			isa = PBXGroup;
+			children = (
+				1F240C210A58D5E900691116 /* libz.dylib */,
+				1F240C1E0A58D3DB00691116 /* libpng.a */,
+				1F240C050A58D35A00691116 /* libboost_thread.a */,
+				1F240BB40A588BCB00691116 /* Support Projects */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = LDView;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* LDView_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1F20DB360A60C4B700F677AC /* LDViewMessages.ini */,
+				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
+				1F20D6510A5F6F8200F677AC /* StudLogo.png */,
+				1F92F61D0A5A267C00AE8086 /* LDView.icns */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				1F240D750A58E01E00691116 /* ModelWindow.nib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1F240C020A58D1E400691116 /* OpenGL.framework */,
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* LDView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "LDView" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+			};
+			dependencies = (
+			);
+			name = LDView;
+			productInstallPath = "$(HOME)/Applications";
+			productName = LDView;
+			productReference = 8D1107320486CEB800E47090 /* LDView.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "LDView" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				4A9504CCFFE6A4B311CA0CBA /* Debug */,
+				4A9504CDFFE6A4B311CA0CBA /* Release */,
+			);
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* LDView */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1F240BA70A588BB800691116 /* Products */;
+					ProjectRef = 1F240BA60A588BB800691116 /* LDLib.xcodeproj */;
+				},
+				{
+					ProductGroup = 1F240BA00A588BA700691116 /* Products */;
+					ProjectRef = 1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */;
+				},
+				{
+					ProductGroup = 1F240B970A588B9000691116 /* Products */;
+					ProjectRef = 1F240B960A588B9000691116 /* TCFoundation.xcodeproj */;
+				},
+				{
+					ProductGroup = 1F240BAE0A588BC600691116 /* Products */;
+					ProjectRef = 1F240BAD0A588BC600691116 /* TRE.xcodeproj */;
+				},
+			);
+			targets = (
+				8D1107260486CEB800E47090 /* LDView */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1F240B9C0A588B9000691116 /* libTCFoundation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTCFoundation.a;
+			remoteRef = 1F240B9B0A588B9000691116 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F240BA50A588BA700691116 /* libLDLoader.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLDLoader.a;
+			remoteRef = 1F240BA40A588BA700691116 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F240BAC0A588BB800691116 /* libLDLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLDLib.a;
+			remoteRef = 1F240BAB0A588BB800691116 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F240BB30A588BC600691116 /* libTRE.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTRE.a;
+			remoteRef = 1F240BB20A588BC600691116 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1F240D760A58E01E00691116 /* ModelWindow.nib in Resources */,
+				1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */,
+				1F20D6520A5F6F8200F677AC /* StudLogo.png in Resources */,
+				1F20D6F40A5F759C00F677AC /* SansSerif.fnt in Resources */,
+				1F20DB370A60C4B700F677AC /* LDViewMessages.ini in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072D0486CEB800E47090 /* main.m in Sources */,
+				1F240BC00A58AFC300691116 /* LDViewController.mm in Sources */,
+				1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */,
+				1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */,
+				1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */,
+				1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */,
+				1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1F20DB360A60C4B700F677AC /* LDViewMessages.ini */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F20DAE40A60BE9600F677AC /* LDViewMessages.ini */,
+			);
+			name = LDViewMessages.ini;
+			sourceTree = "<group>";
+		};
+		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29B97319FDCFA39411CA2CEA /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					/opt/local/lib,
+				);
+				PRODUCT_NAME = LDView;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					/opt/local/lib,
+				);
+				PRODUCT_NAME = LDView;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					../TCFoundation/build/Debug,
+					../LDLoader/build/Debug,
+					../TRE/build/Debug,
+					../LDLib/build/Debug,
+					/usr/local/lib,
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "LDView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "LDView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
