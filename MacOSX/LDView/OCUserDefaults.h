@@ -1,0 +1,34 @@
+//
+//  OCUserDefaults.h
+//  LDView
+//
+//  Created by Travis Cobbs on 7/8/06.
+//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//
+
+#import <Cocoa/Cocoa.h>
+
+
+@interface OCUserDefaults : NSObject {
+
+}
+
++ (void)setAppName:(NSString *)value;
++ (NSString *)stringForKey:(NSString *)key;
++ (NSString *)stringForKey:(NSString *)key
+			  defaultValue:(NSString *)defaultValue
+		   sessionSpecific:(BOOL)sessionSpecific;
++ (void)setString:(NSString *)value forKey:(NSString *)key;
++ (void)setString:(NSString *)value
+		   forKey:(NSString *)key
+  sessionSpecific:(BOOL)sessionSpecific;
++ (long)longForKey:(NSString *)key;
++ (long)longForKey:(NSString *)key
+	  defaultValue:(long)defaultValue
+   sessionSpecific:(BOOL)sessionSpecific;
++ (void)setLong:(long)value forKey:(NSString *)key;
++ (void)setLong:(long)value
+		 forKey:(NSString *)key
+sessionSpecific:(BOOL)sessionSpecific;
+
+@end

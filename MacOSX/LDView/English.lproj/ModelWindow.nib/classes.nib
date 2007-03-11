@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = LDrawModelView; LANGUAGE = ObjC; SUPERCLASS = NSOpenGLView; }, 
+        {
+            CLASS = ModelWindow; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                modelView = LDrawModelView; 
+                progress = NSProgressIndicator; 
+                progressMessage = NSTextField; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = NSLevelIndicator; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
+    ); 
+    IBVersion = 1; 
+}
