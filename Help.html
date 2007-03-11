@@ -195,6 +195,27 @@ the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
 from the File menu will cancel the load.
 </P>
 <P>
+<FONT SIZE="+2"><B><A NAME="MacNote">Mac OS X Notes</A></B></FONT><BR>
+LDView on Mac OS X uses the standard Mac convention of using the Command key
+instead of the Control key for common activities.  Anywhere in this document
+that you see the Control key mentioned, remember that the Command key should be
+used instead.
+</P>
+<P>
+The menu layout on Mac OS X is also somewhat different.  The Preferences, About
+LDView, and Exit menu items have been moved to their standard location in the
+application (LDView) menu (with Exit being renamed to the standard of Quit
+LDView).  The recent files list has been placed in a
+standard Open Recent sub-menu of the File menu.  And the Edit menu has been
+removed, since the only item normally found there in LDView is Preferences.
+</P>
+<P>
+If your mouse only has one button, holding down Control while clicking is
+equivalent to using the right mouse button (as is standard).  Additionally, if
+you have a laptop with a touch pad that supports two-finger dragging to scroll,
+this is equivalent to using the mouse wheel (also as is standard).
+</P>
+<P>
 </P>
 <A NAME="LDrawLibrary"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
@@ -273,11 +294,21 @@ go of the button while the mouse is in motion, the model will continue to
 rotate on its own.
 </P>
 <P>
-If you hold down the control key while dragging with the left mouse button down,
-you will pan the model instead of rotating it.  The model will be pulled in the
-direction you move the mouse.  If you accidentally lose the model completely,
-and can't find it, you can use the <A HREF="#ResetView">Reset View</A> option
-on the View menu to reset the view.
+If you hold down the control key prior to clicking and dragging with the left
+mouse button, or if you click the middle mouse button and drag, you will pan the
+model instead of rotating it.  The model will be pulled in the direction you
+move the mouse. If you accidentally lose the model completely, and can't find
+it, you can use the <A HREF="#ResetView">Reset View</A> option on the View menu
+to reset the view.
+</P>
+<P>
+If you <A NAME="MouseLightDirection">hold down the shift key</A> prior to
+clicking and dragging with the left mouse button, you will change the light
+direction.  An arrow will be drawn to indicate the currentl light direction, and
+moving the mouse will rotate the direction that the arrow points, as well as
+updating the light direction.  If you have problems getting it back to its
+default setting, you can choose one of the <A HREF="#LightDirection">preset
+light directions</A> in the Effects tab of the preferences.
 </P>
 <P>
 Click the right mouse button and move it up or down to zoom in or out.  The
@@ -1297,6 +1328,50 @@ used automatically when <A HREF="#Specular">specular highlight</A> is enabled,
 whether or not this option is enabled, since specular highlight only works
 properly with the alternate setup.
 </P>
+<P>
+<A NAME="LightDirection"><I>Light direction</I></A><BR>
+Set the direction the light comes from to a pre-set angle.<BR>
+Please note: If you <A HREF="#MouseLightDirection">change the light direction
+with the mouse</A>, it is almost certain that none of the pre-set light
+direction buttons will be highlighted.
+</P>
+<P>
+<I>Upper left</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the upper left.
+</P>
+<P>
+<I>Above</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from above.
+</P>
+<P>
+<I>Upper right</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the upper right.
+</P>
+<P>
+<I>Left</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the left.
+</P>
+<P>
+<I>Middle</I></A> (Default?: <I>Yes</I>):<BR>
+Set the light direction to come from the middle (always pointing in exactly the
+same direction the camera is pointing).
+</P>
+<P>
+<I>Right</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the right.
+</P>
+<P>
+<I>Lower left</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the lower left.
+</P>
+<P>
+<I>Below</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from below.
+</P>
+<P>
+<I>Lower right</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the lower right.
+</P>
 
 <P>
 <FONT SIZE="+1"><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR>
@@ -1453,6 +1528,21 @@ This is the middle quality texture filtering.
 This option is only available if primitive substitution and texture studs are
 both enabled.  Selecting it causes trilinear texture filtering to be used.
 This is the highest quality texture filtering.
+</P>
+<P>
+<I>Anisotropic filtering</I> (Default?: <I>No</I>):<BR>
+This option is only available if primitive substitution and texture studs are
+both enabled, and your video card supports it.  Selecting it causes anisotropic
+texture filtering to be used.  When anisotropic filtering is selected, you can
+pick the filtering level on the slider to the right of the radio button.  This
+is the highest quality texture filtering.
+</P>
+<P>
+<I>Anisotropic filtering level</I> (Default: <I>Off</I>):<BR>
+This option is only available if primitive substitution and texture studs are
+both enabled, and anisotropic filtering is selected as the filtering type.  It
+adjusts the anisotropic filtering level.  Higher numbers produce higher quality
+filtering.
 </P>
 <P>
 <I>Curve quality</I> (Default: <I>9%</I>):<BR>
