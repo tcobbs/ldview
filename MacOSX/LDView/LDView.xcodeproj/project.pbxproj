@@ -23,9 +23,19 @@
 		1F240C1F0A58D3DB00691116 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C1E0A58D3DB00691116 /* libpng.a */; };
 		1F240C220A58D5E900691116 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C210A58D5E900691116 /* libz.dylib */; };
 		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
-		1F240D760A58E01E00691116 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F240D750A58E01E00691116 /* ModelWindow.nib */; };
 		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */; };
+		1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8330BA4D00E00419677 /* Preferences.nib */; };
+		1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8370BA4D3F400419677 /* LightAngleUL.png */; };
+		1FD4D8430BA4D52800419677 /* LightAngleLL.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D83B0BA4D52800419677 /* LightAngleLL.png */; };
+		1FD4D8440BA4D52800419677 /* LightAngleLM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D83C0BA4D52800419677 /* LightAngleLM.png */; };
+		1FD4D8450BA4D52800419677 /* LightAngleLR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D83D0BA4D52800419677 /* LightAngleLR.png */; };
+		1FD4D8460BA4D52800419677 /* LightAngleML.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D83E0BA4D52800419677 /* LightAngleML.png */; };
+		1FD4D8470BA4D52800419677 /* LightAngleMM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D83F0BA4D52800419677 /* LightAngleMM.png */; };
+		1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8400BA4D52800419677 /* LightAngleMR.png */; };
+		1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8410BA4D52800419677 /* LightAngleUM.png */; };
+		1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8420BA4D52800419677 /* LightAngleUR.png */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
@@ -103,10 +113,20 @@
 		1F240C210A58D5E900691116 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = /usr/lib/libz.dylib; sourceTree = "<absolute>"; };
 		1F240C9E0A58D98400691116 /* LDrawModelView.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawModelView.mm; sourceTree = "<group>"; };
 		1F240C9F0A58D98400691116 /* LDrawModelView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawModelView.h; sourceTree = "<group>"; };
-		1F240D750A58E01E00691116 /* ModelWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ModelWindow.nib; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
 		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
 		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
+		1FD4D8300BA4CF8900419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
+		1FD4D8340BA4D00E00419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
+		1FD4D8370BA4D3F400419677 /* LightAngleUL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUL.png; path = ../../Icons/LightAngleUL.png; sourceTree = SOURCE_ROOT; };
+		1FD4D83B0BA4D52800419677 /* LightAngleLL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleLL.png; path = ../../Icons/LightAngleLL.png; sourceTree = SOURCE_ROOT; };
+		1FD4D83C0BA4D52800419677 /* LightAngleLM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleLM.png; path = ../../Icons/LightAngleLM.png; sourceTree = SOURCE_ROOT; };
+		1FD4D83D0BA4D52800419677 /* LightAngleLR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleLR.png; path = ../../Icons/LightAngleLR.png; sourceTree = SOURCE_ROOT; };
+		1FD4D83E0BA4D52800419677 /* LightAngleML.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleML.png; path = ../../Icons/LightAngleML.png; sourceTree = SOURCE_ROOT; };
+		1FD4D83F0BA4D52800419677 /* LightAngleMM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleMM.png; path = ../../Icons/LightAngleMM.png; sourceTree = SOURCE_ROOT; };
+		1FD4D8400BA4D52800419677 /* LightAngleMR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleMR.png; path = ../../Icons/LightAngleMR.png; sourceTree = SOURCE_ROOT; };
+		1FD4D8410BA4D52800419677 /* LightAngleUM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUM.png; path = ../../Icons/LightAngleUM.png; sourceTree = SOURCE_ROOT; };
+		1FD4D8420BA4D52800419677 /* LightAngleUR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUR.png; path = ../../Icons/LightAngleUR.png; sourceTree = SOURCE_ROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = main.m; sourceTree = "<group>"; };
 		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -252,6 +272,16 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1FD4D83B0BA4D52800419677 /* LightAngleLL.png */,
+				1FD4D83C0BA4D52800419677 /* LightAngleLM.png */,
+				1FD4D83D0BA4D52800419677 /* LightAngleLR.png */,
+				1FD4D83E0BA4D52800419677 /* LightAngleML.png */,
+				1FD4D83F0BA4D52800419677 /* LightAngleMM.png */,
+				1FD4D8400BA4D52800419677 /* LightAngleMR.png */,
+				1FD4D8410BA4D52800419677 /* LightAngleUM.png */,
+				1FD4D8420BA4D52800419677 /* LightAngleUR.png */,
+				1FD4D8370BA4D3F400419677 /* LightAngleUL.png */,
+				1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */,
 				1F20DB360A60C4B700F677AC /* LDViewMessages.ini */,
 				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
 				1F20D6510A5F6F8200F677AC /* StudLogo.png */,
@@ -259,7 +289,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
-				1F240D750A58E01E00691116 /* ModelWindow.nib */,
+				1FD4D8330BA4D00E00419677 /* Preferences.nib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -374,11 +404,21 @@
 			files = (
 				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
-				1F240D760A58E01E00691116 /* ModelWindow.nib in Resources */,
 				1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */,
 				1F20D6520A5F6F8200F677AC /* StudLogo.png in Resources */,
 				1F20D6F40A5F759C00F677AC /* SansSerif.fnt in Resources */,
 				1F20DB370A60C4B700F677AC /* LDViewMessages.ini in Resources */,
+				1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */,
+				1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */,
+				1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */,
+				1FD4D8430BA4D52800419677 /* LightAngleLL.png in Resources */,
+				1FD4D8440BA4D52800419677 /* LightAngleLM.png in Resources */,
+				1FD4D8450BA4D52800419677 /* LightAngleLR.png in Resources */,
+				1FD4D8460BA4D52800419677 /* LightAngleML.png in Resources */,
+				1FD4D8470BA4D52800419677 /* LightAngleMM.png in Resources */,
+				1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */,
+				1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */,
+				1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +456,22 @@
 				1F20DAE40A60BE9600F677AC /* LDViewMessages.ini */,
 			);
 			name = LDViewMessages.ini;
+			sourceTree = "<group>";
+		};
+		1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD4D8300BA4CF8900419677 /* English */,
+			);
+			name = ModelWindow.nib;
+			sourceTree = "<group>";
+		};
+		1FD4D8330BA4D00E00419677 /* Preferences.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD4D8340BA4D00E00419677 /* English */,
+			);
+			name = Preferences.nib;
 			sourceTree = "<group>";
 		};
 		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
