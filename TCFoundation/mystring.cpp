@@ -1210,4 +1210,16 @@ void wstringtoqstring(QString &dst, const std::wstring &src)
 	wcstoqstring(dst, src.c_str(), src.length());
 }
 
+void ucstringtoqstring(QString &dst, const ucstring &src)
+{
+#ifdef TC_NO_UNICODE
+	std::wstring wsrc;
+
+	stringtowstring(wsrc, src);
+	wstringtoqstring(dst, wsrc);
+#else // TC_NO_UNICODE
+	wstringtoqstring(dst, src);
+#endif // TC_NO_UNICODE
+}
+
 #endif // _QT

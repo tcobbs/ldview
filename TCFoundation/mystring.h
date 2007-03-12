@@ -97,11 +97,6 @@ UCSTR mbstoucstring(const char *src, int length = -1);
 char *ucstringtombs(CUCSTR src, int length = -1);
 char *ucstringtoutf8(CUCSTR src, int length = -1);
 
-#ifdef _QT
-void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
-void wstringtoqstring(QString &dst, const std::wstring &src);
-#endif // _QT
-
 #ifdef WIN32
 
 #define strcasecmp stricmp
@@ -140,6 +135,12 @@ typedef std::vector<ucstring> ucstringVector;
 int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
 int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
+
+#ifdef _QT
+void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
+void wstringtoqstring(QString &dst, const std::wstring &src);
+void ucstringtoqstring(QString &dst, const ucstring &src);
+#endif // _QT
 
 
 #endif
