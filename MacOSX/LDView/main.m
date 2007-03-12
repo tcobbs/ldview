@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[OCUserDefaults setAppName:@"LDView"];
+	[OCUserDefaults setCommandLine:argv];
 	[pool release];
     return NSApplicationMain(argc,  (const char **) argv);
 }

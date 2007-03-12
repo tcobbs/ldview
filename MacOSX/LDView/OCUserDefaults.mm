@@ -17,6 +17,11 @@
 		NSASCIIStringEncoding]);
 }
 
++ (void)setCommandLine:(argvArray)argv
+{
+	TCUserDefaults::setCommandLine(argv);
+}
+
 + (NSString *)stringForKey:(NSString *)key
 {
 	return [self stringForKey:key defaultValue:nil sessionSpecific:YES];

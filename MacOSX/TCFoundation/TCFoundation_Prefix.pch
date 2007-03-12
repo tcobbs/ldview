@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'TCFoundation' target in the 'TCFoundation' project.
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

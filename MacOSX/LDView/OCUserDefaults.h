@@ -13,7 +13,10 @@
 
 }
 
+typedef char *argvArray[];
+
 + (void)setAppName:(NSString *)value;
++ (void)setCommandLine:(argvArray)argv;
 + (NSString *)stringForKey:(NSString *)key;
 + (NSString *)stringForKey:(NSString *)key
 			  defaultValue:(NSString *)defaultValue
