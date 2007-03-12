@@ -1254,7 +1254,7 @@ const char *TCLocalStrings::instGetUtf8LocalString(const char *key)
 	else
 	{
 #ifdef TC_NO_UNICODE
-		m_utf8Strings[key] = instGetLocalString(key);
+		m_utf8Strings[key] = (const char *)instGetLocalString(key);
 #else // TC_NO_UNICODE
 		std::wstring wKey;
 		const wchar_t *wValue;
