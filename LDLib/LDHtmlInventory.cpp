@@ -415,15 +415,17 @@ void LDHtmlInventory::writeHeaderCell(
 	LDPartListColumn column,
 	int colSpan)
 {
+	char *utf8ColumnName = ucstringtoutf8(getColumnNameUC(column));
 	if (colSpan == 1)
 	{
-		fprintf(file, "			<th>%s</th>\n", getColumnName(column));
+		fprintf(file, "			<th>%s</th>\n", utf8ColumnName);
 	}
 	else
 	{
 		fprintf(file, "			<th colspan=\"%d\">%s</th>\n", colSpan,
-			getColumnName(column));
+			utf8ColumnName);
 	}
+	delete utf8ColumnName;
 }
 
 void LDHtmlInventory::writeHeaderCell(FILE *file, LDPartListColumn column)
