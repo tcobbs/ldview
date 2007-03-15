@@ -164,36 +164,42 @@ ALINK="#0080D0">
 		</TH>
 	</TR>
 </TABLE>
-<I>Please note</I>: this help file documents the Windows version of LDView, with
-a few notes about the Linux/QT version.  For the most part, the Linux/QT version
-has the same functionality as the Windows version, and looks and acts the same.
-However, certain features (such as full screen support) are missing from the
-Linux/QT version.  If you are using that version, please don't expect 100% of
-the features documented here to be present (although a very high percentage
-are present).  Anywhere this document refers to the Linux/QT version, it is
+<I>Please note</I>: this help file mostly documents the Windows version of
+LDView, with a few notes about the QT (Linux and Mac) version, and some
+specific notes on different conventions in the Mac version.  For the most part,
+the QT version has the same functionality as the Windows version, and looks and
+acts the same (aside from having a mostly native UI look).  However, certain
+features (such as FSAA support) are missing from the QT version, and other
+features (such as full screen support) are present with less functionality.  If
+you are using a non-Windows version of LDView, please don't expect 100% of the
+features documented here to be present (although a very high percentage are
+present).  Anywhere this document refers to the QT version of LDView, it is
 referring to the version made using the QT user interface library.  The QT-based
-version of LDView is currently only available in binary form as a Linux binary.
-This version should work fine if compiled in other Unix-like operating systems,
-though.
+version of LDView is currently only available in binary form as a Linux binary
+and a (Universal) Mac binary.  This version should work fine if compiled in
+other Unix-like operating systems, though (as long QT will compile on them).
 <P>
 LDView displays LDraw models, and consequently requires that LDraw be
 installed.  LDraw can be downloaded from
 <A HREF="http://www.ldraw.org/">ldraw.org</A>, along with the up-to-date parts
 library.  If you install LDraw in any directory other than C:\LDRAW
-(/mnt/c/ldraw in the Linux/QT version), and don't already have an LDRAWDIR
-environment variable, you will be prompted the first time LDView loads to select
-the directory in which LDraw is installed.  Until you select the LDraw
-directory, you will be unable to load a model.
+(/usr/local/ldraw in the QT version), and don't already have an LDRAWDIR
+environment variable, you will be asked the first time LDView loads if you
+already have the LDraw library installed.  If you say that you do, you will be
+asked to select the directory in which LDraw is installed.  Until you select
+the LDraw directory, you will be unable to load a model.  If you respond that
+you don't already have LDraw installed, you will be asked if you want LDView to
+download it for you.
 </P>
 <P>
 When you run LDView, it will open its main window and immediately present you
-with an open panel (assuming you didn't specify a file as part of the launch
-process).  Select the LDraw .ldr, .dat, or .mpd file you want to view.  It will
-then display the file in the window.  Note that you can resize this window.
-Also note that if you open a large model, it could take a substantial amount of
-time to load.  During this time, the status bar will indicate the progress of
-the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
-from the File menu will cancel the load.
+with an open file dialog (assuming you didn't specify a file as part of the
+launch process).  Select the LDraw .ldr, .dat, or .mpd file you want to view.
+It will then display the file in the window.  Note that you can resize this
+window.  Also note that if you open a large model, it could take a substantial
+amount of time to load.  During this time, the status bar will indicate the
+progress of the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel
+Load</A> from the File menu, will cancel the load.
 </P>
 <P>
 <A NAME="MacNotes"></A><BR>
