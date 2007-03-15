@@ -36,6 +36,12 @@
 #endif
 #include <qprinter.h>
 #include <qfileinfo.h>
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreServices/CoreServices.h>
+#include <ApplicationServices/ApplicationServices.h>
+#endif // __APPLE__
+
 
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
@@ -1735,6 +1741,47 @@ void ModelViewerWidget::doHelpContents(void)
 		}
 		return;
 	}
+#ifdef __APPLE__
+	QString helpFilename = findPackageFile(TCLocalStrings::get("HelpHtml"));
+	QString qUrl = QString("file://") + helpFilename + "#MacNotes";
+	CFURLRef url;
+	CFStringRef urlString;
+	bool macSuccess = false;
+
+	urlString = CFStringCreateWithCString(NULL, qUrl.utf8(),
+		kCFStringEncodingUTF8);
+	if (urlString && (url = CFURLCreateWithString(NULL, urlString, NULL)) !=
+		NULL)
+	{
+		if (LSOpenCFURLRef(url, NULL) == 0)
+		{
+			macSuccess = true;
+		}
+	}
+	if (urlString)
+	{
+		CFRelease(urlString);
+	}
+	if (url)
+	{
+		CFRelease(url);
+	}
+	if (macSuccess)
+	{
+		return;
+	}
+	FSRef fsRef;
+	Boolean isDirectory;
+
+	if (FSPathMakeRef((const UInt8 *)(const char *)helpFilename, &fsRef,
+		&isDirectory) == 0 && !isDirectory)
+	{
+		if (LSOpenFSRef(&fsRef, NULL) == 0)
+		{
+			return;
+		}
+	}
+#endif // __APPLE__
 	if(!helpContents)
 	{
 		QString helpFilename = findPackageFile(TCLocalStrings::get("HelpHtml"));
