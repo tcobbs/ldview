@@ -6,6 +6,10 @@
 #include <TRE/TREGLExtensions.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 // WGL_EXT_pixel_format
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
 	LDVExtensionsSetup::wglGetPixelFormatAttribivARB = NULL;
@@ -347,6 +351,7 @@ void LDVExtensionsSetup::recordPixelFormats(void)
 				pfIntValues->addObject(valueArray);
 				valueArray->release();
 			}
+			delete values;
 		}
 	}
 }
