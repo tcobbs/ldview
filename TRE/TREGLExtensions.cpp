@@ -146,6 +146,18 @@ bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
 		// won't work inside a display list.
 		return false;
 	}
+#ifdef __APPLE__
+	int one = 1;
+	TCByte binary[] = {1,0,0,0};
+
+	if (one != *(int*)binary)
+	{
+		// Doesn't work on PPC Mac (at least in Rosetta).  The above checks to
+		// see if the current architecture is big endian or little endian.  If
+		// it's big endian (PPC), we'll get here.
+		return false;
+	}
+#endif
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
 		false) != 0;
 
