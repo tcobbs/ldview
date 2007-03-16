@@ -2,6 +2,10 @@
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 CUIPropertySheet *CUIPropertySheet::globalCUIPropertySheet = NULL;
 
 CUIPropertySheet::CUIPropertySheet(const char *windowTitle, HINSTANCE hInstance):

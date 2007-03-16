@@ -3,6 +3,10 @@
 #include <GL/glu.h>
 #include <TCFoundation/mystring.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 CUIOGLWindow::CUIOGLWindow(void)
 			 :CUIWindow()
 {

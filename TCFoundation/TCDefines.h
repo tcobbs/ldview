@@ -18,6 +18,10 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_NONSTDC_NO_DEPRECATE
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+   #define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#endif // _DEBUG
+
 #include <winsock2.h>
 #include <crtdbg.h>
 

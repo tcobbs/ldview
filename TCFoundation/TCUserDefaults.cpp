@@ -9,6 +9,12 @@
 #endif // __APPLE__ && !_QT
 #include <stdio.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+#endif // WIN32
+
 TCUserDefaults* TCUserDefaults::currentUserDefaults = NULL;
 
 TCUserDefaults::TCUserDefaultsCleanup TCUserDefaults::userDefaultsCleanup;
