@@ -6,9 +6,17 @@
 #include <ctype.h>
 #include <stdarg.h>
 
-#ifndef WIN32
+#ifdef WIN32
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
+#else // WIN32
+
 #include <stdlib.h>
 #include <wchar.h>
+
 #endif
 
 static int debugLevel = 0;

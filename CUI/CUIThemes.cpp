@@ -1,6 +1,10 @@
 #include "CUIThemes.h"
 #include <windows.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 bool CUIThemes::sm_initTried = false;
 bool CUIThemes::sm_themeLibLoaded = false;
 HMODULE CUIThemes::sm_hModThemes = NULL;

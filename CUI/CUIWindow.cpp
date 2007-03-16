@@ -5,6 +5,10 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <stdio.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 CUIExport int			CUIWindow::systemMaxWidth = -1;
 CUIExport int			CUIWindow::systemMaxHeight = -1;
 CUIExport int			CUIWindow::systemMinTrackWidth = -1;
