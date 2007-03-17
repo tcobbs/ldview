@@ -1799,7 +1799,13 @@ void ModelViewerWidget::doHelpContents(void)
 		    helpContents->HelpTextBrowser->setReadOnly(TRUE);
         }
 	}
-	helpContents->show();
+	QProcess *proc = new QProcess(this);
+	proc->addArgument("gnome-open");
+	proc->addArgument(findPackageFile(TCLocalStrings::get("HelpHtml")));
+	if (!proc->start())
+	{
+		helpContents->show();
+	}
 }
 
 void ModelViewerWidget::doHelpAbout(void)
