@@ -268,7 +268,7 @@ void TREMainModel::compile(void)
 					float progress = (float)i / (numSections * 2.0f);
 
 					TCProgressAlert::send("TREMainModel",
-						TCLocalStrings::get("TREMainModelCompiling"), progress,
+						TCLocalStrings::get(L"TREMainModelCompiling"), progress,
 						&m_abort);
 					if (!m_abort && isSectionPresent(section, false))
 					{
@@ -298,7 +298,7 @@ void TREMainModel::compile(void)
 /*
 			TREModel::compile(TREMStandard, false);
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.2f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.2f, &m_abort);
 */
 		}
 /*
@@ -309,19 +309,19 @@ void TREMainModel::compile(void)
 				TREModel::compile(TREMBFC, false);
 			}
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.3f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.3f, &m_abort);
 		}
 		if (!m_abort)
 		{
 			TREModel::compile(TREMLines, false);
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.35f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.35f, &m_abort);
 		}
 		if (!m_abort)
 		{
 			TREModel::compile(TREMEdgeLines, false);
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.45f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.45f, &m_abort);
 		}
 */
 		if (!m_abort)
@@ -335,7 +335,7 @@ void TREMainModel::compile(void)
 					float progress = (float)i / (numSections * 2.0f) + 0.5f;
 
 					TCProgressAlert::send("TREMainModel",
-						TCLocalStrings::get("TREMainModelCompiling"), progress,
+						TCLocalStrings::get(L"TREMainModelCompiling"), progress,
 						&m_abort);
 					if (!m_abort && isSectionPresent(section, true))
 					{
@@ -354,7 +354,7 @@ void TREMainModel::compile(void)
 /*
 			TREModel::compile(TREMStandard, true);
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.55f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.55f, &m_abort);
 */
 		}
 /*
@@ -365,19 +365,19 @@ void TREMainModel::compile(void)
 				TREModel::compile(TREMBFC, true);
 			}
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.65f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.65f, &m_abort);
 		}
 		if (!m_abort)
 		{
 			TREModel::compile(TREMBFC, true);
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.7f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.7f, &m_abort);
 		}
 		if (!m_abort)
 		{
 			TREModel::compile(TREMEdgeLines, true);
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.8f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.8f, &m_abort);
 		}
 		if (!m_abort)
 		{
@@ -390,7 +390,7 @@ void TREMainModel::compile(void)
 				TREModel::compile(TREMTransparent, true);
 			}
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 0.9f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 0.9f, &m_abort);
 		}
 */
 		if (!m_abort)
@@ -398,7 +398,7 @@ void TREMainModel::compile(void)
 			m_mainFlags.compiled = true;
 			m_mainFlags.compiling = false;
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get("TREMainModelCompiling"), 1.0f, &m_abort);
+				TCLocalStrings::get(L"TREMainModelCompiling"), 1.0f, &m_abort);
 //			TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
 		}
 	}
@@ -767,7 +767,7 @@ bool TREMainModel::postProcess(void)
 	float numSections = (float)(TREMTransparent - TREMStandard);
 
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.0f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.0f, &m_abort);
 	if (m_abort)
 	{
 		return false;
@@ -780,7 +780,7 @@ bool TREMainModel::postProcess(void)
 		float progress = (float)i / numSections * 0.8f + 0.2f;
 
 		TCProgressAlert::send("TREMainModel",
-			TCLocalStrings::get("TREMainModelProcessing"), progress, &m_abort);
+			TCLocalStrings::get(L"TREMainModelProcessing"), progress, &m_abort);
 		if (!m_abort)
 		{
 			checkSectionPresent((TREMSection)i);
@@ -794,70 +794,70 @@ bool TREMainModel::postProcess(void)
 /*
 	checkDefaultColorPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.3f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.3f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkStudsPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.3f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.3f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkBFCPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.4f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.4f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkDefaultColorLinesPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.45f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.45f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkEdgeLinesPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.55f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.55f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkConditionalLinesPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.65f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.65f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkColoredPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.7f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.7f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkColoredBFCPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.75f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.75f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkColoredLinesPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.8f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.8f, &m_abort);
 	if (m_abort)
 	{
 		return false;
 	}
 	checkColoredEdgeLinesPresent();
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 0.9f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 0.9f, &m_abort);
 	if (m_abort)
 	{
 		return false;
@@ -865,7 +865,7 @@ bool TREMainModel::postProcess(void)
 	checkColoredConditionalLinesPresent();
 */
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get("TREMainModelProcessing"), 1.0f, &m_abort);
+		TCLocalStrings::get(L"TREMainModelProcessing"), 1.0f, &m_abort);
 	if (m_abort)
 	{
 		return false;
