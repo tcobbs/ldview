@@ -3560,25 +3560,28 @@ bool ModelWindow::parseDevMode(HGLOBAL hDevMode)
 	DEVMODE *devMode = (DEVMODE *)GlobalLock(hDevMode);
 	bool retValue = true;
 
-	if (devMode->dmOrientation != printOrientation)
+	if (devMode)
 	{
-		printOrientation = devMode->dmOrientation;
-		TCUserDefaults::setLongForKey(printOrientation, ORIENTATION_KEY, false);
-	}
-	if (devMode->dmPaperSize != printPaperSize)
-	{
-		if (devMode->dmPaperSize < DMPAPER_USER)
+		if (devMode->dmOrientation != printOrientation)
 		{
-			printPaperSize = devMode->dmPaperSize;
-			TCUserDefaults::setLongForKey(printPaperSize, PAPER_SIZE_KEY,
-				false);
+			printOrientation = devMode->dmOrientation;
+			TCUserDefaults::setLongForKey(printOrientation, ORIENTATION_KEY, false);
 		}
-		else
+		if (devMode->dmPaperSize != printPaperSize)
 		{
-			retValue = false;
+			if (devMode->dmPaperSize < DMPAPER_USER)
+			{
+				printPaperSize = devMode->dmPaperSize;
+				TCUserDefaults::setLongForKey(printPaperSize, PAPER_SIZE_KEY,
+					false);
+			}
+			else
+			{
+				retValue = false;
+			}
 		}
+		GlobalUnlock(hDevMode);
 	}
-	GlobalUnlock(hDevMode);
 	return retValue;
 }
 
@@ -3669,6 +3672,8 @@ bool ModelWindow::print(void)
 	PRINTDLG pd;
 	bool retValue = false;
 
+	memset(&pd, 0, sizeof(pd));
+	pd.lStructSize = sizeof(pd);
 	if (selectPrinter(pd))
 	{
 		DOCINFO di;
