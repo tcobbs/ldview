@@ -899,7 +899,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				mainTREModel = modelParser->getMainTREModel();
 				mainTREModel->retain();
 				TCProgressAlert::send("LDrawModelViewer",
-					TCLocalStrings::get("CalculatingSizeStatus"), 0.0f, &abort);
+					TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.0f,
+					&abort);
 				if (!abort)
 				{
 					mainTREModel->getBoundingBox(boundingMin, boundingMax);
