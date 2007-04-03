@@ -3468,12 +3468,14 @@ void ModelViewerWidget::progressAlertCallback(TCProgressAlert *alert)
 		else
 		{
 			bool showErrors = true;
+			QString message;
 
 			if (strcmp(alert->getSource(), "TCImage") == 0)
 			{
 				showErrors = false;
 			}
-			if (!progressCallback(alert->getMessage(), alert->getProgress(),
+			wcstoqstring(message, alert->getWMessage());
+			if (!progressCallback(message, alert->getProgress(),
 				showErrors))
 			{
 				alert->abort();
