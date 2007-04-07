@@ -1216,5 +1216,12 @@ void TREMainModel::openGlWillEnd(void)
 void TREMainModel::finish(void)
 {
 	flattenNonUniform();
+	findLights();
 //	flattenNonUniform(0, false, 0, false);
+}
+
+void TREMainModel::addLight(const TCVector &location, TCULong color)
+{
+	m_lightLocations.push_back(location);
+	m_lightColors.push_back(color);
 }

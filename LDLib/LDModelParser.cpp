@@ -52,6 +52,7 @@ LDModelParser::LDModelParser(void)
 	m_flags.defaultColorSet = false;
 	m_flags.defaultColorNumberSet = false;
 	m_flags.studLogo = false;
+	m_flags.noLightGeom = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -215,6 +216,10 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 	if (treModel->isPart() && !treParentModel->isPart())
 	{
 		finishPart(treModel, treSubModel);
+		if (strcasecmp(treModel->getName(), "light.dat") == 0)
+		{
+			treSubModel->setLightFlag(true);
+		}
 	}
 	if (TCVector::determinant(treSubModel->getMatrix()) < 0.0f)
 	{
@@ -887,9 +892,10 @@ int LDModelParser::getNumCircleSegments(TCFloat fraction, bool is48)
 bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 												 TREModel *treModel, bool bfc)
 {
+	const char *modelName = ldlModel->getName();
+
 	if (getPrimitiveSubstitutionFlag())
 	{
-		const char *modelName = ldlModel->getName();
 		bool is48;
 
 		if (!modelName)
@@ -1041,6 +1047,14 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 		else if (isTorusQ(modelName, &is48))
 		{
 			return substituteTorusQ(treModel, bfc, is48);
+		}
+	}
+	if (getNoLightGeomFlag())
+	{
+		if (strcasecmp(modelName, "light.dat") == 0)
+		{
+			// Don't draw any geometry for light.dat.
+			return true;
 		}
 	}
 	return false;

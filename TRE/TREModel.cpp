@@ -3216,6 +3216,41 @@ bool TREModel::shouldLoadConditionalLines(void)
 	return m_mainModel->shouldLoadConditionalLines();
 }
 
+void TREModel::findLights(void)
+{
+	TCFloat matrix[16];
+
+	TCVector::initIdentityMatrix(matrix);
+	findLights(matrix);
+}
+
+void TREModel::findLights(float *matrix)
+{
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+		TCFloat newMatrix[16];
+		TCVector origin;
+
+		for (i = 0; i < count; i++)
+		{
+			TRESubModel *subModel = (*m_subModels)[i];
+
+			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
+			if (subModel->getLightFlag())
+			{
+				m_mainModel->addLight(origin.transformPoint(newMatrix),
+					subModel->getColor());
+			}
+			else
+			{
+				subModel->getModel()->findLights(newMatrix);
+			}
+		}
+	}
+}
+
 //void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
 //								 bool edgeColorSet)
 void TREModel::flattenNonUniform(void)

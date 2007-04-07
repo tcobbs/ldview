@@ -32,6 +32,8 @@ public:
 	{
 		return m_flags.primitiveSubstitution != false;
 	}
+	bool getNoLightGeomFlag(void) { return m_flags.noLightGeom != false; }
+	void setNoLightGeomFlag(bool value) { m_flags.noLightGeom = value; }
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_flags.edgeLines != false; }
@@ -244,6 +246,7 @@ protected:
 		bool defaultTrans:1;
 		bool redBackFaces:1;
 		bool greenFrontFaces:1;
+		bool noLightGeom:1;
 	} m_flags;
 };
 

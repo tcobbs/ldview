@@ -2508,7 +2508,17 @@ void LDViewWindow::updateLightingMenu(void)
 		prefs->getUsesSpecular());
 	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_ALTERNATESETUP,
 		prefs->getOneLight());
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_DRAWDATS,
+		prefs->getDrawLightDats());
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_OPTIONALMAIN,
+		prefs->getOptionalStandardLight());
 	setMenuItemsEnabled(hLightingToolbarMenu, lighting);
+	if (!prefs->getDrawLightDats())
+	{
+		setMenuEnabled(hLightingToolbarMenu, ID_LIGHTING_OPTIONALMAIN, false,
+			FALSE);
+		setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_OPTIONALMAIN, false);
+	}
 }
 
 void LDViewWindow::updateBFCMenu(void)
@@ -3451,6 +3461,12 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_LIGHTING_ALTERNATESETUP:
 			doAlternateLighting();
 			break;
+		case ID_LIGHTING_DRAWDATS:
+			doDrawLightDats();
+			break;
+		case ID_LIGHTING_OPTIONALMAIN:
+			doOptionalStandardLight();
+			break;
 		case ID_BFC_REDBACKFACES:
 			doRedBackFaces();
 			break;
@@ -3617,6 +3633,20 @@ void LDViewWindow::doAlternateLighting(void)
 	prefs->setOneLight(!prefs->getOneLight());
 	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_ALTERNATESETUP,
 		prefs->getOneLight());
+}
+
+void LDViewWindow::doDrawLightDats(void)
+{
+	prefs->setDrawLightDats(!prefs->getDrawLightDats());
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_DRAWDATS,
+		prefs->getDrawLightDats());
+}
+
+void LDViewWindow::doOptionalStandardLight(void)
+{
+	prefs->setOptionalStandardLight(!prefs->getOptionalStandardLight());
+	setMenuCheck(hLightingToolbarMenu, ID_LIGHTING_OPTIONALMAIN,
+		prefs->getOptionalStandardLight());
 }
 
 void LDViewWindow::doRedBackFaces(void)

@@ -641,6 +641,50 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 	}
 }
 
+/*
+static char *myFgets(char *buf, int bufSize, FILE *file)
+{
+	int i;
+
+	for (i = 0; i < bufSize - 1; i++)
+	{
+		int char1 = fgetc(file);
+
+		if (feof(file))
+		{
+			buf[i] = 0;
+			if (i > 0)
+			{
+				return buf;
+			}
+			else
+			{
+				return NULL;
+			}
+		}
+		if (char1 == '\r' || char1 == '\n')
+		{
+			int char2 = fgetc(file);
+
+			buf[i] = '\n';
+			buf[i + 1] = 0;
+			if (!feof(file))
+			{
+				if (!(char1 == '\r' && char2 == '\n' ||
+					char1 == '\n' && char2 == '\r'))
+				{
+					ungetc(char2, file);
+				}
+			}
+			return buf;
+		}
+		buf[i] = (char)char1;
+	}
+	buf[bufSize - 1] = 0;
+	return buf;
+}
+*/
+
 bool LDLModel::read(FILE *file)
 {
 	char buf[2048];

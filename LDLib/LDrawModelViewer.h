@@ -178,6 +178,15 @@ class LDrawModelViewer: public TCObject
 		{
 			return flags.checkPartTracker != false;
 		}
+		void setDrawLightDats(bool value);
+		bool getDrawLightDats(void) { return flags.drawLightDats != false; }
+		void setOptionalStandardLight(bool value);
+		bool getOptionalStandardLight(void)
+		{
+			return flags.optionalStandardLight != false;
+		}
+		bool getNoLightGeom(void) { return flags.noLightGeom != false; }
+		void setNoLightGeom(bool value);
 		void setMissingPartWait(int value) { missingPartWait = value; }
 		int getMissingPartWait(void) { return missingPartWait; }
 		void setUpdatedPartWait(int value) { updatedPartWait = value; }
@@ -334,12 +343,14 @@ class LDrawModelViewer: public TCObject
 		virtual void setFieldOfView(double, TCFloat, TCFloat);
 		virtual void setupRotationMatrix(void);
 		virtual void setupMaterial(void);
-		virtual void setupLight(GLenum);
+		virtual void setupLight(GLenum light,
+			const TCVector &color = TCVector(1.0, 1.0, 1.0));
 		virtual void orthoView(void);
 		void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 		virtual void setupLighting(void);
 		virtual void setupTextures(void);
 		void drawLights(void);
+		void drawLightDats(void);
 		virtual void drawToClipPlane(TCFloat eyeXOffset);
 		virtual void drawToClipPlaneUsingStencil(TCFloat eyeXOffset);
 //		virtual void drawToClipPlaneUsingAccum(TCFloat eyeXOffset);
@@ -367,6 +378,8 @@ class LDrawModelViewer: public TCObject
 		virtual TCFloat getClipRadius(void);
 		virtual TCFloat getZDistance(void);
 		virtual bool forceOneLight(void);
+		virtual bool haveLightDats(void);
+		virtual bool haveStandardLight(void);
 		void findFileAlertCallback(LDLFindFileAlert *alert);
 		virtual bool canCheckForUnofficialPart(const char *filename,
 			bool exists);
@@ -514,6 +527,9 @@ class LDrawModelViewer: public TCObject
 			bool overrideDefaultDistance:1;
 			bool checkPartTracker:1;
 			bool showLight:1;
+			bool drawLightDats:1;
+			bool optionalStandardLight:1;
+			bool noLightGeom:1;
 		} flags;
 		struct CameraData
 		{

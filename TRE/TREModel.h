@@ -303,6 +303,8 @@ protected:
 	void applyShapeNormals(TRENormalInfoArray *normalInfos);
 	void finishShapeNormals(TREConditionalMap &conditionalMap);
 	void flattenNonUniform(void);
+	void findLights(void);
+	void findLights(float *matrix);
 	void calcTangentControlPoint(TCVector &controlPoint, int index,
 		int numSegments);
 //	void flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,

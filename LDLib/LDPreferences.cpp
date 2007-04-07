@@ -160,6 +160,9 @@ void LDPreferences::applyEffectsSettings(void)
 		modelViewer->setUsesSpecular(m_useSpecular);
 		modelViewer->setOneLight(m_oneLight);
 		modelViewer->setLightVector(m_lightVector);
+		modelViewer->setDrawLightDats(m_drawLightDats);
+		modelViewer->setOptionalStandardLight(m_optionalStandardLight);
+		modelViewer->setNoLightGeom(m_noLightGeom);
 		modelViewer->setStereoMode(m_stereoMode);
 		modelViewer->setStereoEyeSpacing((GLfloat)m_stereoEyeSpacing);
 		modelViewer->setCutawayMode(m_cutawayMode);
@@ -318,6 +321,9 @@ void LDPreferences::loadDefaultEffectsSettings(void)
 	setUseSpecular(true);
 	setOneLight(false);
 	setLightVector(TCVector(0.0, 0.0, 1.0));
+	setDrawLightDats(true);
+	setOptionalStandardLight(true);
+	setNoLightGeom(false);
 	setStereoMode(LDVStereoNone);
 	setStereoEyeSpacing(50);
 	setCutawayMode(LDVCutawayNormal);
@@ -464,6 +470,10 @@ void LDPreferences::loadEffectsSettings(void)
 	m_useSpecular = getBoolSetting(SPECULAR_KEY, m_useSpecular);
 	m_oneLight = getBoolSetting(ONE_LIGHT_KEY, m_oneLight);
 	m_lightVector = getTCVectorSetting(LIGHT_VECTOR_KEY, m_lightVector);
+	m_drawLightDats = getBoolSetting(DRAW_LIGHT_DATS_KEY, m_drawLightDats);
+	m_optionalStandardLight = getBoolSetting(OPTIONAL_STANDARD_LIGHT_KEY,
+		m_optionalStandardLight);
+	m_noLightGeom = getBoolSetting(NO_LIGHT_GEOM_KEY, m_noLightGeom);
 	m_stereoMode = (LDVStereoMode)getLongSetting(STEREO_MODE_KEY, m_stereoMode);
 	m_stereoEyeSpacing = getIntSetting(STEREO_SPACING_KEY, m_stereoEyeSpacing);
 	m_cutawayMode = (LDVCutawayMode)getLongSetting(CUTAWAY_MODE_KEY,
@@ -607,7 +617,11 @@ void LDPreferences::commitEffectsSettings(bool flush /*= true*/)
 		setUseSpecular(m_useSpecular, true);
 		setOneLight(m_oneLight, true);
 		setLightVector(m_lightVector, true);
+		setDrawLightDats(m_drawLightDats, true);
+		setOptionalStandardLight(m_optionalStandardLight, true);
 	}
+	// NOTE: lighting doesn't have to be enabled for this one.
+	setNoLightGeom(m_noLightGeom, true);
 	setStereoMode(m_stereoMode, true);
 	setStereoEyeSpacing(m_stereoEyeSpacing, true);
 	setCutawayMode(m_cutawayMode, true);
@@ -1319,6 +1333,44 @@ void LDPreferences::setOneLight(bool value, bool commit, bool apply)
 		if (modelViewer)
 		{
 			modelViewer->setOneLight(m_oneLight);
+		}
+	}
+}
+
+void LDPreferences::setDrawLightDats(bool value, bool commit, bool apply)
+{
+	setSetting(m_drawLightDats, value, DRAW_LIGHT_DATS_KEY, commit);
+	if (apply)
+	{
+		if (modelViewer)
+		{
+			modelViewer->setDrawLightDats(m_drawLightDats);
+		}
+	}
+}
+
+void LDPreferences::setOptionalStandardLight(bool value, bool commit,
+	bool apply)
+{
+	setSetting(m_optionalStandardLight, value, OPTIONAL_STANDARD_LIGHT_KEY,
+		commit);
+	if (apply)
+	{
+		if (modelViewer)
+		{
+			modelViewer->setOptionalStandardLight(m_optionalStandardLight);
+		}
+	}
+}
+
+void LDPreferences::setNoLightGeom(bool value, bool commit, bool apply)
+{
+	setSetting(m_noLightGeom, value, NO_LIGHT_GEOM_KEY, commit);
+	if (apply)
+	{
+		if (modelViewer)
+		{
+			modelViewer->setNoLightGeom(m_noLightGeom);
 		}
 	}
 }

@@ -142,6 +142,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.overrideDefaultDistance = false;
 	flags.checkPartTracker = true;
 	flags.showLight = false;
+	flags.drawLightDats = true;
+	flags.optionalStandardLight = true;
+	flags.noLightGeom = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -805,10 +808,22 @@ void LDrawModelViewer::progressAlertCallback(TCProgressAlert *alert)
 }
 */
 
+bool LDrawModelViewer::haveLightDats(void)
+{
+	return flags.drawLightDats && mainTREModel &&
+		mainTREModel->getLightLocations().size() > 0;
+}
+
+bool LDrawModelViewer::haveStandardLight(void)
+{
+	return flags.useLighting && (!haveLightDats() || !flags.optionalStandardLight);
+}
+
 bool LDrawModelViewer::forceOneLight(void)
 {
 	return flags.oneLight || flags.usesSpecular || !flags.defaultLightVector ||
-			(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces));
+		(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces)) ||
+		haveLightDats();
 }
 
 int LDrawModelViewer::loadModel(bool resetViewpoint)
@@ -860,6 +875,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->setCurveQuality(curveQuality);
 			modelParser->setLightingFlag(flags.useLighting);
 			modelParser->setTwoSidedLightingFlag(forceOneLight());
+			modelParser->setNoLightGeomFlag(flags.noLightGeom);
 			modelParser->setAALinesFlag(flags.lineSmoothing);
 			modelParser->setSortTransparentFlag(flags.sortTransparent);
 			modelParser->setStippleFlag(flags.useStipple);
@@ -941,6 +957,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	// This shouldn't be necessary, but something is occasionally setting the
 	// needsReload flag during loading.
 	flags.needsReload = false;
+	flags.needsLightingSetup = true;
 	return retValue;
 }
 
@@ -1125,21 +1142,30 @@ void LDrawModelViewer::setupMaterial(void)
 	flags.needsMaterialSetup = false;
 }
 
-void LDrawModelViewer::setupLight(GLenum light)
+void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 {
 	GLfloat lAmbient[4];
 	GLfloat lDiffuse[4];
 	GLfloat lSpecular[4];
+	int i;
 
 	if (flags.subduedLighting)
 	{
 		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.5f;
-		lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 0.5f;
+		//lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 0.5f;
+		for (i = 0; i < 3; i++)
+		{
+			lDiffuse[i] = color.get(i) * 0.5f;
+		}
 	}
 	else
 	{
 		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.0f;
-		lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 1.0f;
+		//lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 1.0f;
+		for (i = 0; i < 3; i++)
+		{
+			lDiffuse[i] = color.get(i);
+		}
 	}
 	if (!flags.usesSpecular)
 	{
@@ -1147,12 +1173,16 @@ void LDrawModelViewer::setupLight(GLenum light)
 	}
 	else
 	{
-		lSpecular[0] = lSpecular[1] = lSpecular[2] = 1.0f;
+		for (i = 0; i < 3; i++)
+		{
+			lSpecular[i] = color.get(i);
+		}
+		//lSpecular[0] = lSpecular[1] = lSpecular[2] = 1.0f;
 	}
 	lAmbient[3] = 1.0f;
 	lDiffuse[3] = 1.0f;
 	lSpecular[3] = 1.0f;
-	if (light != GL_LIGHT0)
+	if (light != GL_LIGHT0 && !haveLightDats())
 	{
 		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.0f;
 	}
@@ -1167,17 +1197,60 @@ void LDrawModelViewer::setupLighting(void)
 	glDisable(GL_NORMALIZE);
 	if (flags.useLighting)
 	{
-		setupLight(GL_LIGHT0);
+		GLint maxLights;
+		int i;
+		bool lightDats = haveLightDats();
+
 		glEnable(GL_LIGHTING);
-		if (forceOneLight())
+		glGetIntegerv(GL_MAX_LIGHTS, &maxLights);
+		if (!lightDats || !flags.optionalStandardLight)
 		{
-			glDisable(GL_LIGHT1);
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+			setupLight(GL_LIGHT0);
+			glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
+			glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.0f);
+			glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
+		}
+		if (lightDats)
+		{
+			const TCULongList &lightColors = mainTREModel->getLightColors();
+			TCULongList::const_iterator itColor = lightColors.begin();
+			float scale = 1.0f / 255.0f;
+			float atten = (float)sqr(size);
+			int start = 0;
+
+			if (!flags.optionalStandardLight)
+			{
+				start = 1;
+			}
+			for (i = start; i < maxLights && itColor != lightColors.end(); i++)
+			{
+				TCByte rgb[4];
+				TCULong color = htonl(*itColor);
+
+				memcpy(rgb, &color, 4);
+				setupLight(GL_LIGHT0 + i, TCVector(rgb[0] * scale,
+					rgb[1] * scale, rgb[2] * scale));
+				glLightf(GL_LIGHT0 + i, GL_CONSTANT_ATTENUATION, 0.5f);
+				glLightf(GL_LIGHT0 + i, GL_LINEAR_ATTENUATION, 0.0f);//1.0f / size);
+				glLightf(GL_LIGHT0 + i, GL_QUADRATIC_ATTENUATION, 2.0f / atten);
+				itColor++;
+			}
 		}
 		else
 		{
-			setupLight(GL_LIGHT1);
-			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+			for (i = 1; i < maxLights; i++)
+			{
+				glDisable(GL_LIGHT0 + i);
+			}
+			if (forceOneLight())
+			{
+				glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+			}
+			else
+			{
+				setupLight(GL_LIGHT1);
+				glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
+			}
 		}
 		flags.needsLightingSetup = false;
 	}
@@ -1509,7 +1582,7 @@ void LDrawModelViewer::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
 	direction[2] = (GLfloat)-z;
 	direction[3] = 0.0f;
 	glLightfv(light, GL_POSITION, position);
-	glLightfv(light, GL_SPOT_DIRECTION, direction);
+	//glLightfv(light, GL_SPOT_DIRECTION, direction);
 //	glLightfv(light, GL_DIFFUSE, fullIntensity);
 //	glLightfv(light, GL_SPECULAR, fullIntensity);
 }
@@ -1518,7 +1591,10 @@ void LDrawModelViewer::drawLights(void)
 {
 //	drawLight(GL_LIGHT1, 0.0f, 0.0f, -10000.0f);
 	drawLight(GL_LIGHT0, lightVector[0], lightVector[1], lightVector[2]);
-	drawLight(GL_LIGHT1, -lightVector[0], -lightVector[1], -lightVector[2]);
+	if (!forceOneLight())
+	{
+		drawLight(GL_LIGHT1, -lightVector[0], -lightVector[1], -lightVector[2]);
+	}
 }
 
 void LDrawModelViewer::setLightVector(const TCVector &value)
@@ -1645,6 +1721,33 @@ void LDrawModelViewer::setDrawWireframe(bool value)
 void LDrawModelViewer::setUseWireframeFog(bool value)
 {
 	flags.useWireframeFog = value;
+}
+
+void LDrawModelViewer::setDrawLightDats(bool value)
+{
+	if (value != flags.drawLightDats)
+	{
+		flags.drawLightDats = value;
+		flags.needsLightingSetup = true;
+	}
+}
+
+void LDrawModelViewer::setOptionalStandardLight(bool value)
+{
+	if (value != flags.optionalStandardLight)
+	{
+		flags.optionalStandardLight = value;
+		flags.needsLightingSetup = true;
+	}
+}
+
+void LDrawModelViewer::setNoLightGeom(bool value)
+{
+	if (value != flags.noLightGeom)
+	{
+		flags.noLightGeom = value;
+		flags.needsReload = true;
+	}
 }
 
 void LDrawModelViewer::setRemoveHiddenLines(bool value)
@@ -2787,6 +2890,40 @@ void LDrawModelViewer::showLight(void)
 	}
 }
 
+void LDrawModelViewer::drawLightDats(void)
+{
+	if (haveLightDats())
+	{
+		const TCVectorList &lightLocs = mainTREModel->getLightLocations();
+		GLint maxLights;
+
+		glGetIntegerv(GL_MAX_LIGHTS, &maxLights);
+		if (lightLocs.size() > 0)
+		{
+			int i;
+			TCVectorList::const_iterator itLoc = lightLocs.begin();
+			GLfloat position[4];
+			int start = 0;
+
+			if (!flags.optionalStandardLight)
+			{
+				start = 1;
+			}
+			position[3] = 1.0f;
+			for (i = start; i < maxLights && itLoc != lightLocs.end(); i++)
+			{
+				const TCVector &lightLoc = *itLoc;
+
+				position[0] = (GLfloat)lightLoc.get(0);
+				position[1] = (GLfloat)lightLoc.get(1);
+				position[2] = (GLfloat)lightLoc.get(2);
+				glLightfv(GL_LIGHT0 + i, GL_POSITION, position);
+				itLoc++;
+			}
+		}
+	}
+}
+
 void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 {
 	drawSetup(eyeXOffset);
@@ -2798,6 +2935,7 @@ void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 	{
 		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
+	drawLightDats();
 //	drawBoundingBox();
 	glColor3ub(192, 192, 192);
 	if (mainTREModel)
@@ -3383,7 +3521,10 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 	switch (mouseMode)
 	{
 	case LDVMouseLight:
-		flags.showLight = true;
+		if (haveStandardLight())
+		{
+			flags.showLight = true;
+		}
 		break;
 	default:
 		break;
@@ -3406,9 +3547,12 @@ bool LDrawModelViewer::mouseUp(int x, int y)
 	switch (mouseMode)
 	{
 	case LDVMouseLight:
-		mouseMoveLight(deltaX, deltaY);
-		preferences->setLightVector(lightVector, true);
-		flags.showLight = false;
+		if (haveStandardLight())
+		{
+			mouseMoveLight(deltaX, deltaY);
+			preferences->setLightVector(lightVector, true);
+			flags.showLight = false;
+		}
 		break;
 	default:
 		break;

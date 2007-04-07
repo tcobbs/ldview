@@ -95,7 +95,10 @@
 #define IDC_ALTERNATE_LIGHTING          1007
 #define IDC_STIPPLE                     1008
 #define IDC_SEAMS                       1009
+#define IDC_DRAW_LIGHT_DATS             1009
+#define IDC_OPTIONAL_STANDARD_LIGHT     1010
 #define IDC_TEXTURE_STUDS               1011
+#define IDC_HIDE_LIGHT_DAT              1011
 #define IDC_STEREO                      1012
 #define IDC_ALWAYS_BLACK                1013
 #define IDC_CROSS_EYED_STEREO           1014
@@ -349,6 +352,8 @@
 #define ID_BFC_GREENFRONTFACES          40085
 #define ID_TOOLS_POV_CAMERA             40087
 #define ID_TOOLS_PARTSLIST              40088
+#define ID_LIGHTING_DRAWDATS            40089
+#define ID_LIGHTING_OPTIONALMAIN        40090
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -361,7 +366,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        183
-#define _APS_NEXT_COMMAND_VALUE         40089
+#define _APS_NEXT_COMMAND_VALUE         40091
 #define _APS_NEXT_CONTROL_VALUE         1233
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

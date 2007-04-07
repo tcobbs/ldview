@@ -34,6 +34,8 @@ public:
 		bool subModelsOnly = false, bool nonUniform = false);
 	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
 	void setNonUniformFlag(bool value) { m_flags.nonUniform = value; }
+	bool getLightFlag(void) { return m_flags.light != false; }
+	void setLightFlag(bool value) { m_flags.light = value; }
 /*
 	virtual void drawColored(void);
 	virtual void drawDefaultColor(void);
@@ -82,6 +84,7 @@ protected:
 		bool nonUniform:1;
 		bool specular:1;
 		bool shininess:1;
+		bool light:1;
 	} m_flags;
 };
 

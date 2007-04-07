@@ -105,6 +105,9 @@ public:
 	bool getOneLight(void) { return m_oneLight; }
 	LightDirection getLightDirection(void);
 	const TCVector &getLightVector(void) { return m_lightVector; }
+	bool getDrawLightDats(void) { return m_drawLightDats; }
+	bool getOptionalStandardLight(void) { return m_optionalStandardLight; }
+	bool getNoLightGeom(void) { return m_noLightGeom; }
 	LDVStereoMode getStereoMode(void) { return m_stereoMode; }
 	int getStereoEyeSpacing(void) { return m_stereoEyeSpacing; }
 	LDVCutawayMode getCutawayMode(void) { return m_cutawayMode; }
@@ -196,6 +199,10 @@ public:
 		bool apply = false);
 	void setLightVector(const TCVector &value, bool commit = false,
 		bool apply = false);
+	void setDrawLightDats(bool value, bool commit = false, bool apply = false);
+	void setOptionalStandardLight(bool value, bool commit = false,
+		bool apply = false);
+	void setNoLightGeom(bool value, bool commit = false, bool apply = false);
 	void setStereoMode(LDVStereoMode value, bool commit = false);
 	void setStereoEyeSpacing(int value, bool commit = false);
 	void setCutawayMode(LDVCutawayMode value, bool commit = false);
@@ -364,6 +371,9 @@ protected:
 	TCFloat m_defaultZoom;
 	TCFloat m_zoomMax;
 	TCVector m_lightVector;
+	bool m_drawLightDats;
+	bool m_optionalStandardLight;
+	bool m_noLightGeom;
 
 	StringBoolMap m_changedSettings;
 	StringBoolMap m_globalSettings;
