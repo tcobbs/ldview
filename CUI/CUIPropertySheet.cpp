@@ -6,7 +6,19 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
+extern void WillyMessage(const char *message);
+
 CUIPropertySheet *CUIPropertySheet::globalCUIPropertySheet = NULL;
+
+// Property sheet uses 8 extra bytes, instead of just 4.  The default of 4 is
+// for lParam.  Not sure what the other 4 are used for by the property sheet,
+// but they have to be there to avoid crashing.
+typedef struct tagPSITEM
+{
+	TCITEMHEADER tcih;
+	LPARAM lParam;
+	DWORD dwPSExtra;
+} PSITEM;
 
 CUIPropertySheet::CUIPropertySheet(const char *windowTitle, HINSTANCE hInstance):
 	CUIWindow(windowTitle, hInstance, 0, 0, 100, 100),
@@ -207,7 +219,7 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 	{
 	case PSN_SETACTIVE:
 		{
-			TCITEM *item;
+			PSITEM item;
 			HWND hTabControl = PropSheet_GetTabControl(hPropSheet);
 			int i;
 			int count = hwndArray->getCount();
@@ -217,25 +229,32 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 				SetWindowLong(hDlg, DWL_MSGRESULT, -1);
 				return TRUE;
 			}
-			item = (TCITEM*)malloc(sizeof(TCITEM) + 4);
-			item->mask = TCIF_PARAM;
+			item.tcih.mask = TCIF_PARAM;
+			WillyMessage("About to do initial prop sheet page setup.");
 			for (i = 0; i < count; i++)
 			{
 				if (!hwndArray->pointerAtIndex(i))
 				{
-					if (TabCtrl_GetItem(hTabControl, i, item))
+					if (TabCtrl_GetItem(hTabControl, i, &item))
 					{
-						HWND hWnd = (HWND)item->lParam;
+						HWND hWnd = (HWND)item.lParam;
 
 						if (hWnd)
 						{
-							hwndArray->replacePointer((HWND)item->lParam, i);
+							char preMessage[1024];
+							char postMessage[1024];
+
+							sprintf(preMessage, "pre setupPage(%d)", i);
+							sprintf(postMessage, "post setupPage(%d)", i);
+							hwndArray->replacePointer(hWnd, i);
+							WillyMessage(preMessage);
 							setupPage(i);
+							WillyMessage(postMessage);
 						}
 					}
 				}
 			}
-			free(item);
+			WillyMessage("Done with initial prop sheet page setup.");
 		}
 		return TRUE;
 		break;

@@ -1395,6 +1395,31 @@ Set the light direction to come from below.
 <I>Lower right</I></A> (Default?: <I>No</I>):<BR>
 Set the light direction to come from the lower right.
 </P>
+<P>
+<A><I>Use LIGHT.DAT lights</I></A> (Default: <I>On</I>):<BR>
+This option is only available if lighting is enabled.  Selecting this causes
+LDView to put point light sources in the scene in the locations where LIGHT.DAT
+is used as a part.  LDView uses the color assigned to the light part as the
+color for the light source.  Note that at most 8 lights will be shown by LDView
+(the first 8 in the file), and if the video card doesn't support 8, then less
+will be shown. 
+</P>
+<P>
+<A><I>Replace standard light</I></A> (Default: <I>On</I>):<BR>
+This option is only available if lighting is enabled and Use LIGHT.DAT lights is
+checked.  Selecting this causes LDView to not use its standard light source any
+time a model is loaded that contains one or more LIGHT.DAT parts.  Models that
+don't contain any LIGHT.DAT parts will still be illuminated using LDView's
+standard light source.  Note that using both LIGHT.DAT lights and the standard
+light source will often result in too much light, leading to a kind of
+overexposure effect. 
+</P>
+<P>
+<A><I>Hide LIGHT.DAT geometry</I></A> (Default: <I>Off</I>):<BR>
+Selecting this causes LDView to not display the geometry from LIGHT.DAT parts.
+Since the geometry is a small set of 3D coordinate axes, you often don't want to
+see it.
+</P>
 
 <P>
 <FONT SIZE="+1"><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR>

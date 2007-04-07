@@ -47,6 +47,10 @@ public:
 	void setUsesSpecular(bool value);
 	bool getOneLight(void);
 	void setOneLight(bool value);
+	bool getDrawLightDats(void);
+	void setDrawLightDats(bool value);
+	bool getOptionalStandardLight(void);
+	void setOptionalStandardLight(bool value);
 	COLORREF getBackgroundColor(void);
 	COLORREF getDefaultColor(void);
 	bool getUseSeams(void);
@@ -136,6 +140,7 @@ protected:
 	virtual void doWireframe(void);
 	virtual void doBfc(void);
 	virtual void doLighting(void);
+	virtual void doDrawLightDats(void);
 	virtual void doStereo(void);
 	virtual void doCutaway(void);
 	virtual void doDeletePrefSet(void);
@@ -234,7 +239,7 @@ protected:
 	virtual TCFloat getMinFov(void);
 	virtual TCFloat getMaxFov(void);
 	virtual void initThemesButton(HWND hButton);
-	virtual void initThemesTab(HWND hWnd);
+	//virtual void initThemesTab(HWND hWnd);
 	virtual void setupGroupCheckButton(HWND hPage, int buttonId, bool state);
 	virtual bool getCachedCheck(HWND hPage, int buttonId, bool action = false);
 	virtual bool getCheck(HWND hPage, int buttonId);
@@ -316,9 +321,11 @@ protected:
 	HWND hLightSubduedButton;
 	HWND hLightSpecularButton;
 	HWND hLightAlternateButton;
+	HWND hLightDrawLightDatsButton;
+	HWND hLightOptionalStandardButton;
 	//HWND hLightDirectionToolbar;
 	HWND hHardwareStereoButton;
-	HWND hLightDirStatic;
+	//HWND hLightDirStatic;
 	HWND hCrossEyedStereoButton;
 	HWND hParallelStereoButton;
 	HWND hStereoSpacingSlider;
@@ -362,7 +369,7 @@ protected:
 	bool checkAbandon;
 
 	HTHEME hButtonTheme;
-	HTHEME hTabTheme;
+	//HTHEME hTabTheme;
 
 	static char ldviewPath[MAX_PATH];
 	HwndBoolMap checkStates;
@@ -370,8 +377,8 @@ protected:
 	IntIntMap lightDirIdToIndex;
 	HwndIntMap buttonTypes;
 	HwndVector lightAngleButtons;
-	static LRESULT CALLBACK staticLightDirWindowProc(HWND hWnd,
-		UINT message, WPARAM wParam, LPARAM lParam);
+	//static LRESULT CALLBACK staticLightDirWindowProc(HWND hWnd,
+	//	UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 #endif // __LDVPREFERENCES_H__

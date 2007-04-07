@@ -22,6 +22,7 @@ TRESubModel::TRESubModel(void)
 	m_flags.inverted = false;
 	m_flags.specular = false;
 	m_flags.shininess = false;
+	m_flags.light = false;
 }
 
 TRESubModel::TRESubModel(const TRESubModel &other)

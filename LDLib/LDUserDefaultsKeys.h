@@ -136,6 +136,9 @@
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
 #define IGNORE_ANISO_KEY "IgnoreAniso"
 #define ANISO_LEVEL_KEY "AnisoLevel"
+#define DRAW_LIGHT_DATS_KEY "DrawLightDats"
+#define OPTIONAL_STANDARD_LIGHT_KEY "OptionalStandardLight"
+#define NO_LIGHT_GEOM_KEY "NoLightGeom"
 
 // The following are undocumented, but perhaps need to be documented.
 #define SS_SIZE_KEY "SSSize"

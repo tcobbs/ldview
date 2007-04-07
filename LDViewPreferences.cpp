@@ -22,6 +22,24 @@
 #include <tmschema.h>
 #include <TRE/TREGLExtensions.h>
 
+//#define WILLY_DEBUG
+
+#ifdef WILLY_DEBUG
+void WillyMessage(const char *message)
+{
+	FILE *debugFile = fopen("C:\\LDView-Debug.txt", "a");
+	if (debugFile)
+	{
+		fprintf(debugFile, "%s\n", message);
+		fclose(debugFile);
+	}
+}
+#else // WILLY_DEBUG
+void WillyMessage(const char *)
+{
+}
+#endif //WILLY_DEBUG
+
 #ifndef IDC_HARDWARE_STEREO
 #define IDC_HARDWARE_STEREO 1030
 #endif
@@ -63,9 +81,10 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	hPrefSetsPage(NULL),
 	setActiveWarned(false),
 	checkAbandon(true),
-	hButtonTheme(NULL),
-	hTabTheme(NULL)
+	hButtonTheme(NULL)
+//	hTabTheme(NULL)
 {
+	WillyMessage("\n\n\n");
 	CUIThemes::init();
 	loadSettings();
 	applySettings();
@@ -101,11 +120,13 @@ void LDViewPreferences::dealloc(void)
 		CUIThemes::closeThemeData(hButtonTheme);
 		hButtonTheme = NULL;
 	}
+/*
 	if (hTabTheme)
 	{
 		CUIThemes::closeThemeData(hTabTheme);
 		hTabTheme = NULL;
 	}
+*/
 	CUIPropertySheet::dealloc();
 }
 
@@ -254,6 +275,16 @@ bool LDViewPreferences::getUsesSpecular(void)
 bool LDViewPreferences::getOneLight(void)
 {
 	return ldPrefs->getOneLight();
+}
+
+bool LDViewPreferences::getDrawLightDats(void)
+{
+	return ldPrefs->getDrawLightDats();
+}
+
+bool LDViewPreferences::getOptionalStandardLight(void)
+{
+	return ldPrefs->getOptionalStandardLight();
 }
 
 bool LDViewPreferences::getPerformSmoothing(void)
@@ -574,6 +605,32 @@ void LDViewPreferences::setOneLight(bool value)
 	}
 }
 
+void LDViewPreferences::setDrawLightDats(bool value)
+{
+	if (value != ldPrefs->getDrawLightDats())
+	{
+		ldPrefs->setDrawLightDats(value, true, true);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_DRAW_LIGHT_DATS,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setOptionalStandardLight(bool value)
+{
+	if (value != ldPrefs->getOptionalStandardLight())
+	{
+		ldPrefs->setOptionalStandardLight(value, true, true);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
 void LDViewPreferences::setUseLighting(bool value)
 {
 	if (value != ldPrefs->getUseLighting())
@@ -882,11 +939,13 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 		CUIThemes::closeThemeData(hButtonTheme);
 		hButtonTheme = NULL;
 	}
+/*
 	if (hTabTheme)
 	{
 		CUIThemes::closeThemeData(hTabTheme);
 		hTabTheme = NULL;
 	}
+*/
 	if (CUIThemes::isThemeLibLoaded())
 	{
 		if (hBackgroundColorButton)
@@ -902,10 +961,12 @@ BOOL LDViewPreferences::doDialogThemeChanged(void)
 			setupGroupCheckButton(hGeometryPage, IDC_WIREFRAME,
 				ldPrefs->getDrawWireframe());
 		}
+/*
 		if (hLightDirStatic)
 		{
 			initThemesTab(hLightDirStatic);
 		}
+*/
 	}
 	return FALSE;
 }
@@ -1571,7 +1632,19 @@ void LDViewPreferences::applyEffectsChanges(void)
 			{
 				ldPrefs->setLightDirection(lightDirection);
 			}
+			if (getCheck(hEffectsPage, IDC_DRAW_LIGHT_DATS))
+			{
+				ldPrefs->setDrawLightDats(true);
+				ldPrefs->setOptionalStandardLight(getCheck(hEffectsPage,
+					IDC_OPTIONAL_STANDARD_LIGHT));
+			}
+			else
+			{
+				ldPrefs->setDrawLightDats(false);
+			}
 		}
+		// NOTE: the following setting doesn't require lighting to be enabled.
+		ldPrefs->setNoLightGeom(getCheck(hEffectsPage, IDC_HIDE_LIGHT_DAT));
 		ldPrefs->setStereoEyeSpacing(SendDlgItemMessage(hEffectsPage,
 			IDC_STEREO_SPACING, TBM_GETPOS, 0, 0));
 		ldPrefs->setCutawayAlpha(SendDlgItemMessage(hEffectsPage,
@@ -1800,6 +1873,9 @@ void LDViewPreferences::doEffectsClick(int controlId, HWND /*controlHWnd*/)
 	{
 		case IDC_LIGHTING:
 			doLighting();
+			break;
+		case IDC_DRAW_LIGHT_DATS:
+			doDrawLightDats();
 			break;
 		case IDC_STIPPLE:
 			doStipple();
@@ -2470,6 +2546,20 @@ void LDViewPreferences::doLighting(void)
 	}
 }
 
+void LDViewPreferences::doDrawLightDats(void)
+{
+	BOOL enabled = FALSE;
+	BOOL checked = FALSE;
+
+	if (getCachedCheck(hEffectsPage, IDC_DRAW_LIGHT_DATS, true))
+	{
+		enabled = TRUE;
+		checked = ldPrefs->getOptionalStandardLight() ? TRUE : FALSE;
+	}
+	EnableWindow(hLightOptionalStandardButton, enabled);
+	SendMessage(hLightOptionalStandardButton, BM_SETCHECK, checked, 0);
+}
+
 void LDViewPreferences::doStereo(void)
 {
 	if (getCachedCheck(hEffectsPage, IDC_STEREO, true))
@@ -2573,7 +2663,9 @@ void LDViewPreferences::setupPage(int pageNumber)
 {
 	if (pageNumber == generalPageNumber)
 	{
+		WillyMessage("About to call setupGeneralPage");
 		setupGeneralPage();
+		WillyMessage("Done with setupGeneralPage");
 	}
 	else if (pageNumber == geometryPageNumber)
 	{
@@ -2595,7 +2687,9 @@ void LDViewPreferences::setupPage(int pageNumber)
 	{
 		setupPrefSetsPage();
 	}
+	WillyMessage("About to call disableApply");
 	disableApply(hwndArray->pointerAtIndex(pageNumber));
+	WillyMessage("Done with disableApply");
 }
 
 void LDViewPreferences::setupFov(bool warn)
@@ -2691,6 +2785,8 @@ void LDViewPreferences::initThemesButton(HWND hButton)
 		hButtonTheme = CUIThemes::openThemeData(hButton, L"Button");
 	}
 }
+
+/*
 void LDViewPreferences::initThemesTab(HWND hStatic)
 {
 	if (CUIThemes::isThemeLibLoaded() && !hTabTheme)
@@ -2698,6 +2794,7 @@ void LDViewPreferences::initThemesTab(HWND hStatic)
 		hTabTheme = CUIThemes::openThemeData(hStatic, L"Tab");
 	}
 }
+*/
 
 void LDViewPreferences::setupGroupCheckButton(HWND hPage, int buttonId,
 											  bool state)
@@ -3082,11 +3179,18 @@ bool LDViewPreferences::getToolbarCheck(HWND hToolbar, int id)
 void LDViewPreferences::enableLighting(void)
 {
 	int lightDirButton = -1;
+	BOOL enabled = TRUE;
 
 	EnableWindow(hLightQualityButton, TRUE);
 	EnableWindow(hLightSubduedButton, TRUE);
 	EnableWindow(hLightSpecularButton, TRUE);
 	EnableWindow(hLightAlternateButton, TRUE);
+	EnableWindow(hLightDrawLightDatsButton, TRUE);
+	if (!ldPrefs->getDrawLightDats())
+	{
+		enabled = FALSE;
+	}
+	EnableWindow(hLightOptionalStandardButton, enabled);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), TRUE);
 	//EnableWindow(hLightDirectionToolbar, TRUE);
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_QUALITY, BM_SETCHECK,
@@ -3097,6 +3201,10 @@ void LDViewPreferences::enableLighting(void)
 		ldPrefs->getUseSpecular(), 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK,
 		ldPrefs->getOneLight(), 0);
+	SendDlgItemMessage(hEffectsPage, IDC_DRAW_LIGHT_DATS, BM_SETCHECK,
+		ldPrefs->getDrawLightDats(), 0);
+	SendDlgItemMessage(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT, BM_SETCHECK,
+		ldPrefs->getOptionalStandardLight(), 0);
 	lightDirButton = lightDirIndexToId[(int)ldPrefs->getLightDirection() - 1];
 	uncheckLightDirections();
 	if (lightDirButton != 0)
@@ -3115,7 +3223,10 @@ void LDViewPreferences::disableLighting(void)
 	EnableWindow(hLightSubduedButton, FALSE);
 	EnableWindow(hLightSpecularButton, FALSE);
 	EnableWindow(hLightAlternateButton, FALSE);
+	EnableWindow(hLightDrawLightDatsButton, FALSE);
+	EnableWindow(hLightOptionalStandardButton, FALSE);
 	EnableWindow(GetDlgItem(hEffectsPage, IDC_LIGHT_DIR), FALSE);
+	// Don't disable IDC_HIDE_LIGHT_DAT.
 	//EnableWindow(hLightDirectionToolbar, FALSE);
 	for (int i = 0; i < (int)lightAngleButtons.size(); i++)
 	{
@@ -3126,9 +3237,13 @@ void LDViewPreferences::disableLighting(void)
 	SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_SPECULAR, BM_SETCHECK, 0, 0);
 	SendDlgItemMessage(hEffectsPage, IDC_ALTERNATE_LIGHTING, BM_SETCHECK, 0, 0);
+	SendDlgItemMessage(hEffectsPage, IDC_DRAW_LIGHT_DATS, BM_SETCHECK, 0, 0);
+	SendDlgItemMessage(hEffectsPage, IDC_OPTIONAL_STANDARD_LIGHT, BM_SETCHECK, 0,
+		0);
 	uncheckLightDirections();
 }
 
+/*
 LRESULT CALLBACK LDViewPreferences::staticLightDirWindowProc(
 	HWND hWnd,
 	UINT message,
@@ -3177,7 +3292,6 @@ LRESULT CALLBACK LDViewPreferences::staticLightDirWindowProc(
 	return staticWindowProc(hWnd, message, wParam, lParam);
 }
 
-/*
 void LDViewPreferences::setupLightAngleToolbar(void)
 {
 	TBADDBITMAP addBitmap;
@@ -3293,6 +3407,10 @@ void LDViewPreferences::setupLighting(void)
 	hLightSubduedButton = GetDlgItem(hEffectsPage, IDC_LIGHTING_SUBDUED);
 	hLightSpecularButton = GetDlgItem(hEffectsPage, IDC_SPECULAR);
 	hLightAlternateButton = GetDlgItem(hEffectsPage, IDC_ALTERNATE_LIGHTING);
+	hLightDrawLightDatsButton = GetDlgItem(hEffectsPage, IDC_DRAW_LIGHT_DATS);
+	checkStates[hLightDrawLightDatsButton] = ldPrefs->getDrawLightDats();
+	hLightOptionalStandardButton = GetDlgItem(hEffectsPage,
+		IDC_OPTIONAL_STANDARD_LIGHT);
 	setupLightAngleButtons();
 	//setupLightAngleToolbar();
 	if (ldPrefs->getUseLighting())
@@ -3303,6 +3421,8 @@ void LDViewPreferences::setupLighting(void)
 	{
 		disableLighting();
 	}
+	SendDlgItemMessage(hEffectsPage, IDC_HIDE_LIGHT_DAT, BM_SETCHECK,
+		ldPrefs->getNoLightGeom(), 0);
 }
 
 void LDViewPreferences::setupEffectsPage(void)

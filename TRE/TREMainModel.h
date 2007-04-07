@@ -3,6 +3,7 @@
 
 #include <TRE/TREModel.h>
 #include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCStlIncludes.h>
 
 class TCDictionary;
 class TREVertexStore;
@@ -12,6 +13,9 @@ class TCImage;
 
 extern const GLfloat POLYGON_OFFSET_FACTOR;
 extern const GLfloat POLYGON_OFFSET_UNITS;
+
+typedef std::list<TCVector> TCVectorList;
+typedef std::list<TCULong> TCULongList;
 
 class TREMainModel : public TREModel
 {
@@ -191,6 +195,15 @@ public:
 	}
 	virtual void openGlWillEnd(void);
 	virtual void finish(void);
+	virtual void addLight(const TCVector &location, TCULong color);
+	virtual const TCVectorList &getLightLocations(void) const
+	{
+		return m_lightLocations;
+	}
+	virtual const TCULongList &getLightColors(void) const
+	{
+		return m_lightColors;
+	}
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -231,6 +244,8 @@ protected:
 					// into other functions, and that doesn't work with a bit
 					// field.
 	GLint m_studTextureFilter;
+	TCVectorList m_lightLocations;
+	TCULongList m_lightColors;
 	struct
 	{
 		// The following are temporal

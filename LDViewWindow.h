@@ -266,6 +266,8 @@ class LDViewWindow: public CUIWindow
 		virtual void doSubduedLighting(void);
 		virtual void doSpecularHighlight(void);
 		virtual void doAlternateLighting(void);
+		virtual void doDrawLightDats(void);
+		virtual void doOptionalStandardLight(void);
 		virtual void doRedBackFaces(void);
 		virtual void doGreenFrontFaces(void);
 		virtual bool doToolbarCheck(bool &value, LPARAM commandId);
