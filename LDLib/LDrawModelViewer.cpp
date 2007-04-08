@@ -921,7 +921,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				{
 					mainTREModel->getBoundingBox(boundingMin, boundingMax);
 					TCProgressAlert::send("LDrawModelViewer",
-						TCLocalStrings::get("CalculatingSizeStatus"), 0.5f,
+						TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.5f,
 						&abort);
 				}
 				if (!abort)
@@ -935,7 +935,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						size = mainTREModel->getMaxRadius(center) * 2.0f;
 					}
 					TCProgressAlert::send("LDrawModelViewer",
-						TCLocalStrings::get("CalculatingSizeStatus"), 1.0f,
+						TCLocalStrings::get(_UC("CalculatingSizeStatus")), 1.0f,
 						&abort);
 				}
 				if (!abort)
@@ -947,8 +947,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			modelParser->release();
 		}
 		initLightDirModel();
-		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
-			2.0f);
+		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
+			_UC("Done")), 2.0f);
 		if (resetViewpoint)
 		{
 			resetView();
@@ -1070,8 +1070,8 @@ bool LDrawModelViewer::recompile(void)
 		}
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
-		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get("Done"),
-			2.0f);
+		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
+			_UC("Done")), 2.0f);
 	}
 	return true;
 }
@@ -1546,6 +1546,7 @@ void LDrawModelViewer::drawFPS(TCFloat fps)
 		}
 		else
 		{
+			// NOTE: Unicode NOT supported for this string.
 			strcpy(fpsString, TCLocalStrings::get("FPSSpinPromptGL"));
 /*
 			for (int i = 0; i < 128; i++)
@@ -3111,19 +3112,22 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 	{
 		TCWebClient *webClient;
 		// FIX: dynamically allocate and use local string AND handle abort
-		char message[1024];
+		UCCHAR message[1024];
 		bool abort;
+		UCSTR ucFilename = mbstoucstring(filename);
 
 		sprintf(key, "UnofficialPartChecks/%s/LastModified", filename);
 		if (found)
 		{
-			sprintf(message, TCLocalStrings::get("CheckingForUpdates"),
-				filename);
+			sucprintf(message, COUNT_OF(message),
+				TCLocalStrings::get(_UC("CheckingForUpdates")), ucFilename);
 		}
 		else
 		{
-			sprintf(message, TCLocalStrings::get("TryingToDownload"), filename);
+			sucprintf(message, COUNT_OF(message),
+				TCLocalStrings::get(_UC("TryingToDownload")), ucFilename);
 		}
+		delete ucFilename;
 		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort);
 		strcat(url, filename);
 		webClient = new TCWebClient(url);
@@ -3165,7 +3169,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			// to connect again for now, and let the user know that auto part
 			// updates have been disabled.
 			TCAlert *alert = new TCAlert(alertClass(),
-				TCLocalStrings::get("PartCheckDisabled"));
+				TCLocalStrings::get(_UC("PartCheckDisabled")));
 
 			preferences->setCheckPartTracker(false, true);
 			flags.checkPartTracker = false;
@@ -3381,7 +3385,7 @@ void LDrawModelViewer::cleanupFloats(TCFloat *array, int count)
 	}
 }
 
-void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
+void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 {
 	TCFloat tmpMatrix[16];
 	TCFloat matrix[16];
@@ -3390,10 +3394,10 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	TCFloat positionMatrix[16];
 	TCFloat cameraMatrix[16];
 	TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-	char locationString[1024];
-	char lookAtString[1204];
-	char upString[1024];
-	char message[4096];
+	UCCHAR locationString[1024];
+	UCCHAR lookAtString[1204];
+	UCCHAR upString[1024];
+	UCCHAR message[4096];
 	TCVector directionVector = TCVector(0.0f, 0.0f, 1.0f);
 	TCVector locationVector;
 	TCVector lookAtVector;
@@ -3402,7 +3406,7 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	double up[3];
 	double location[3];
 	TREFacing facing;
-	char cameraString[4096];
+	UCCHAR cameraString[4096];
 	double lookAt[3];
 	double tempV[3];
 
@@ -3449,8 +3453,8 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	// Note that the location accuracy isn't nearly as important as the
 	// directional accuracy, so we don't have to re-do this string prior
 	// to putting it on the clipboard in the POV code copy.
-	sprintf(locationString, "%g,%g,%g", location[0], location[1],
-		location[2]);
+	sucprintf(locationString, COUNT_OF(locationString), _UC("%g,%g,%g"),
+		location[0], location[1], location[2]);
 
 	matrix[12] = matrix[13] = matrix[14] = 0.0f;
 	directionVector = directionVector.transformPoint(matrix);
@@ -3467,12 +3471,13 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	cleanupFloats(upVector, 3);
 	// The following 3 strings will get re-done later at higher accuracy
 	// for POV-Ray.
-	sprintf(lookAtString, "%g,%g,%g", lookAtVector[0],
-		lookAtVector[1], lookAtVector[2]);
-	sprintf(upString, "%g,%g,%g", upVector[0], upVector[1],
-		upVector[2]);
-	sprintf(message, TCLocalStrings::get("PovCameraMessage"),
-		locationString, lookAtString, upString);
+	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%g,%g,%g"),
+		lookAtVector[0], lookAtVector[1], lookAtVector[2]);
+	sucprintf(upString, COUNT_OF(upString), _UC("%g,%g,%g"), upVector[0],
+		upVector[1], upVector[2]);
+	sucprintf(message, COUNT_OF(message),
+		TCLocalStrings::get(_UC("PovCameraMessage")), locationString,
+		lookAtString, upString);
 	TCVector::doubleNormalize(up);
 	TCVector::doubleNormalize(direction);
 	TCVector::doubleMultiply(direction, tempV,
@@ -3480,22 +3485,23 @@ void LDrawModelViewer::getPovCameraInfo(char *&userMessage, char *&povCamera)
 	TCVector::doubleAdd(location, tempV, lookAt);
 	// Re-do the strings with higher accuracy, so they'll be
 	// accepted by POV-Ray.
-	sprintf(upString, "%.20g,%.20g,%.20g", up[0], up[1], up[2]);
-	sprintf(lookAtString, "%.20g,%.20g,%.20g", lookAt[0],
-		lookAt[1], lookAt[2]);
-	sprintf(cameraString,
-		"camera\n"
-		"{\n"
-		"\t#declare ASPECT = 4/3;\n"
-		"\tlocation < %s >\n"
-		"\tsky < %s >\n"
-		"\tright ASPECT * < -1,0,0 >\n"
-		"\tlook_at < %s >\n"
-		"\tangle %g\n"
-		"}\n",
+	sucprintf(upString, COUNT_OF(upString), _UC("%.20g,%.20g,%.20g"), up[0],
+		up[1], up[2]);
+	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%.20g,%.20g,%.20g"),
+		lookAt[0], lookAt[1], lookAt[2]);
+	sucprintf(cameraString, COUNT_OF(cameraString),
+		_UC("camera\n")
+		_UC("{\n")
+		_UC("\t#declare ASPECT = 4/3;\n")
+		_UC("\tlocation < %s >\n")
+		_UC("\tsky < %s >\n")
+		_UC("\tright ASPECT * < -1,0,0 >\n")
+		_UC("\tlook_at < %s >\n")
+		_UC("\tangle %g\n")
+		_UC("}\n"),
 		locationString, upString, lookAtString, getHFov());
 	userMessage = copyString(message);
-	povCamera = copyString(cameraString);
+	povCamera = ucstringtombs(cameraString);
 }
 
 bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
@@ -3608,42 +3614,51 @@ void LDrawModelViewer::mouseMoveLight(int deltaX, int deltaY)
 	setLightVector(newLightVector.transformPoint(matrix));
 }
 
-char *LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
+UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 {
-	const char *vendorString = (const char*)glGetString(GL_VENDOR);
-	const char *rendererString = (const char*)glGetString(GL_RENDERER);
-	const char *versionString = (const char*)glGetString(GL_VERSION);
+	UCSTR vendorString = mbstoucstring((const char*)glGetString(GL_VENDOR));
+	UCSTR rendererString = mbstoucstring((const char*)glGetString(GL_RENDERER));
+	UCSTR versionString = mbstoucstring((const char*)glGetString(GL_VERSION));
 	const char *extensionsString = (const char*)glGetString(GL_EXTENSIONS);
-	char *extensionsList;
+	UCSTR extensionsList;
 	int len;
-	char *message;
+	UCSTR message;
 
-	numExtensions = 1;
+	numExtensions = 0;
 	if (!vendorString)
 	{
-		vendorString = TCLocalStrings::get("*Unknown*");
+		vendorString = copyString(TCLocalStrings::get(_UC("*Unknown*")));
 	}
 	if (!rendererString)
 	{
-		rendererString = TCLocalStrings::get("*Unknown*");
+		rendererString = copyString(TCLocalStrings::get(_UC("*Unknown*")));
 	}
 	if (!versionString)
 	{
-		versionString = TCLocalStrings::get("*Unknown*");
+		versionString = copyString(TCLocalStrings::get(_UC("*Unknown*")));
 	}
-	if (!extensionsString)
+	if (extensionsString)
 	{
-		extensionsString = TCLocalStrings::get("*None*");
+		char *temp = stringByReplacingSubstring(extensionsString, " ",
+			"\r\n");
+
+		stripCRLF(temp);
+		numExtensions = countStringLines(temp);
+		extensionsList = mbstoucstring(temp);
+		delete temp;
 	}
-	extensionsList = stringByReplacingSubstring(extensionsString, " ",
-		"\r\n");
-	stripCRLF(extensionsList);
-	len = strlen(vendorString) + strlen(rendererString) +
-		strlen(versionString) + strlen(extensionsList) + 128;
-	message = new char[len];
-	sprintf(message, TCLocalStrings::get("OpenGlInfo"), vendorString,
-		rendererString, versionString, extensionsList);
-	numExtensions = countStringLines(extensionsList);
+	else
+	{
+		extensionsList = copyString(TCLocalStrings::get(_UC("*None*")));
+	}
+	len = ucstrlen(vendorString) + ucstrlen(rendererString) +
+		ucstrlen(versionString) + ucstrlen(extensionsList) + 128;
+	message = new UCCHAR[len];
+	sucprintf(message, len, TCLocalStrings::get(_UC("OpenGlInfo")),
+		vendorString, rendererString, versionString, extensionsList);
+	delete vendorString;
+	delete rendererString;
+	delete versionString;
 	delete extensionsList;
 	return message;
 }

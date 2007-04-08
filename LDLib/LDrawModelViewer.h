@@ -314,7 +314,7 @@ class LDrawModelViewer: public TCObject
 		virtual void openGlWillEnd(void);
 		virtual void setLightVector(const TCVector &value);
 		TCVector getLightVector(void) { return lightVector; }
-		virtual void getPovCameraInfo(char *&userMessage, char *&povCamera);
+		virtual void getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera);
 		virtual void setPreferences(LDPreferences *value)
 		{
 			// Don't retain; it retains us.
@@ -330,7 +330,7 @@ class LDrawModelViewer: public TCObject
 		virtual bool mouseMove(int x, int y);
 		virtual void showLight(void);
 
-		static char *getOpenGLDriverInfo(int &numExtensions);
+		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
 		static bool fileExists(char *filename);
 		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }

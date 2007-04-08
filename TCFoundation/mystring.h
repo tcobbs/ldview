@@ -118,6 +118,7 @@ long long longLongFromString(char*);
 #define ucstrcpy strcpy
 #define ucstrcat strcat
 #define ucstrncpy strncpy
+#define ucstrlen strlen
 #define sucscanf sscanf
 typedef std::string ucstring;
 #else // TC_NO_UNICODE
@@ -126,6 +127,7 @@ typedef std::string ucstring;
 #define ucstrcpy wcscpy
 #define ucstrcat wcscat
 #define ucstrncpy wcsncpy
+#define ucstrlen wcslen
 #define sucscanf swscanf
 typedef std::wstring ucstring;
 #endif // TC_NO_UNICODE
