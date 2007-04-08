@@ -709,7 +709,7 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 				filename);
 		}
 #else
-		strcpy(m_error, TCLocalStrings::get("LDLUpdateNoDos"));
+		ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateNoDos")));
 #endif
 	}
 	else
