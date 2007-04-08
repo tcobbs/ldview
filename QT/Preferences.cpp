@@ -349,6 +349,17 @@ void Preferences::doEffectsApply(void)
 		{
 			ldPrefs->setLightDirection(lightDirection);
 		}
+		if (panel->effectsUseLIGHTDATButton->state())
+		{
+			ldPrefs->setDrawLightDats(true);
+			ldPrefs->setOptionalStandardLight(
+				panel->effectsReplaceStandarLightButton->state());
+		}
+		else
+		{
+			ldPrefs->setDrawLightDats(false);
+		}
+		ldPrefs->setNoLightGeom(panel->effectsHideLIGHTButton->state());
 	}
 	if (!panel->stereoButton->isChecked())
 	{
@@ -593,140 +604,7 @@ void Preferences::loadSettings(void)
 {
 	ldPrefs->loadSettings();
 	loadOtherSettings();
-/*
-	loadGeneralSettings();
-	loadGeometrySettings();
-	loadEffectsSettings();
-	loadUpdatesSettings();
-	loadPrimitivesSettings();
-*/
 }
-
-/*
-void Preferences::loadGeneralSettings(void)
-{
-	loadDefaultGeneralSettings();
-	lineSmoothing = TCUserDefaults::longForKey(LINE_SMOOTHING_KEY,
-		lineSmoothing) != 0;
-	showFPS = TCUserDefaults::longForKey(SHOW_FPS_KEY, (long)showFPS) != 0;
-	showErrors = TCUserDefaults::longForKey(SHOW_ERRORS_KEY, (long)showErrors,
-		false) != 0;
-	processLdconfigLdr = TCUserDefaults::longForKey(PROCESS_LDCONFIG_KEY,
-		(long)processLdconfigLdr, false) != 0;
-	backgroundColor = (int)TCUserDefaults::longForKey(BACKGROUND_COLOR_KEY,
-		(long)backgroundColor);
-	defaultColor = (int)TCUserDefaults::longForKey(DEFAULT_COLOR_KEY,
-		(long)defaultColor);
-	defaultColorNumber =
-		(int)TCUserDefaults::longForKey(DEFAULT_COLOR_NUMBER_KEY,
-		defaultColorNumber);
-	fieldOfView = TCUserDefaults::longForKey(FOV_KEY, fieldOfView);
-	transDefaultColor = TCUserDefaults::longForKey(TRANS_DEFAULT_COLOR_KEY,
-        transDefaultColor) != 0;
-	memoryUsage = TCUserDefaults::longForKey(MEMORY_USAGE_KEY,
-		(long)memoryUsage);
-	if (memoryUsage < 0 || memoryUsage > 2)
-	{
-		memoryUsage = 2;
-		TCUserDefaults::setLongForKey(2, MEMORY_USAGE_KEY);
-	}
-}
-
-void Preferences::loadGeometrySettings(void)
-{
-	loadDefaultGeometrySettings();
-	seams = TCUserDefaults::longForKey(SEAMS_KEY, seams);
-	seamWidth = TCUserDefaults::longForKey(SEAM_WIDTH_KEY, seamWidth);
-	wireframe = TCUserDefaults::longForKey(WIREFRAME_KEY, (long)wireframe) != 0;
-	wireframeFog = TCUserDefaults::longForKey(WIREFRAME_FOG_KEY,
-		(long)wireframeFog) != 0;
-        wireframeRemoveHiddenLines=TCUserDefaults::longForKey(REMOVE_HIDDEN_LINES_KEY, 
-		(long)wireframeRemoveHiddenLines) !=0;
-	wireframeThickness = TCUserDefaults::longForKey(WIREFRAME_THICKNESS_KEY,
-		wireframeThickness);
-	bfc = TCUserDefaults::longForKey(BFC_KEY, (long)bfc) != 0;
-	bfcRedBackFace = TCUserDefaults::longForKey(RED_BACK_FACES_KEY, 
-		(long)bfcRedBackFace) !=0;
-        bfcGreenFrontFace = TCUserDefaults::longForKey(GREEN_FRONT_FACES_KEY,
-                (long)bfcGreenFrontFace) !=0;
-	edgeLines = TCUserDefaults::longForKey(SHOW_HIGHLIGHT_LINES_KEY,
-		(long)edgeLines) != 0;
-	conditionalLines =
-		TCUserDefaults::longForKey(CONDITIONAL_HIGHLIGHTS_KEY,
-		(long)conditionalLines) != 0;
-	conditionalShowAll =
-		TCUserDefaults::longForKey(SHOW_ALL_TYPE5_KEY,
-		(long)conditionalShowAll) != 0;
-	conditionalShowControlPts =
-		TCUserDefaults::longForKey(SHOW_TYPE5_CONTROL_POINTS_KEY,
-		(long)conditionalShowControlPts) != 0;
-	edgesOnly = TCUserDefaults::longForKey(EDGES_ONLY_KEY,
-		(long)edgesOnly) != 0;
-	polygonOffset = TCUserDefaults::longForKey(POLYGON_OFFSET_KEY,
-		(long)polygonOffset) != 0;
-	blackEdgeLines = TCUserDefaults::longForKey(BLACK_HIGHLIGHTS_KEY,
-		(long)blackEdgeLines) != 0;
-	edgeThickness = TCUserDefaults::longForKey(EDGE_THICKNESS_KEY,
-		edgeThickness);
-}
-
-void Preferences::loadEffectsSettings(void)
-{
-	loadDefaultEffectsSettings();
-	lighting = TCUserDefaults::longForKey(LIGHTING_KEY, (long)lighting)
-		!= 0;
-	qualityLighting = TCUserDefaults::longForKey(QUALITY_LIGHTING_KEY,
-		(long)qualityLighting) != 0;
-	subduedLighting = TCUserDefaults::longForKey(SUBDUED_LIGHTING_KEY,
-		(long)subduedLighting) != 0;
-	specular = TCUserDefaults::longForKey(SPECULAR_KEY, (long)specular)
-		!= 0;
-	alternateLighting = TCUserDefaults::longForKey(ONE_LIGHT_KEY,
-		(long)alternateLighting) != 0;
-	stereoMode = (LDVStereoMode)TCUserDefaults::longForKey(STEREO_MODE_KEY,
-		(long)stereoMode);
-	stereoEyeSpacing = TCUserDefaults::longForKey(STEREO_SPACING_KEY,
-		stereoEyeSpacing);
-	cutawayMode = (LDVCutawayMode)TCUserDefaults::longForKey(CUTAWAY_MODE_KEY,
-		(long)cutawayMode);
-	cutawayAlpha = TCUserDefaults::longForKey(CUTAWAY_ALPHA_KEY, cutawayAlpha);
-	cutawayThickness = TCUserDefaults::longForKey(CUTAWAY_THICKNESS_KEY,
-		cutawayThickness);
-	sortTransparent = TCUserDefaults::longForKey(SORT_KEY,
-		(long)sortTransparent) != 0;
-	stipple = TCUserDefaults::longForKey(STIPPLE_KEY, (long)stipple) != 0;
-	flatShading = TCUserDefaults::longForKey(FLAT_SHADING_KEY,
-		(long)flatShading) != 0;
-	smoothing = TCUserDefaults::longForKey(PERFORM_SMOOTHING_KEY,
-		(long)smoothing) != 0;
-}
-
-void Preferences::loadPrimitivesSettings(void)
-{
-	loadDefaultPrimitivesSettings();
-	allowPrimitiveSubstitution = TCUserDefaults::longForKey(
-		PRIMITIVE_SUBSTITUTION_KEY, (long)allowPrimitiveSubstitution) != 0;
-	textureStuds = TCUserDefaults::longForKey(TEXTURE_STUDS_KEY,
-		(long)textureStuds) != 0;
-	textureFilterType = TCUserDefaults::longForKey(TEXTURE_FILTER_TYPE_KEY,
-		textureFilterType);
-	curveQuality = TCUserDefaults::longForKey(CURVE_QUALITY_KEY, curveQuality);
-	qualityStuds = TCUserDefaults::longForKey(QUALITY_STUDS_KEY,
-		(long)qualityStuds) != 0;
-	hiresPrimitives = TCUserDefaults::longForKey(HI_RES_PRIMITIVES_KEY,
-		(long)hiresPrimitives) !=0;
-}
-
-void Preferences::loadUpdatesSettings(void)
-{
-	loadDefaultUpdatesSettings();
-	proxyType = TCUserDefaults::longForKey(PROXY_TYPE_KEY, proxyType, false);
-	proxyServer = TCUserDefaults::stringForKey(PROXY_SERVER_KEY, NULL, false);
-    proxyPort = TCUserDefaults::longForKey(PROXY_PORT_KEY, proxyPort, false);
-    checkPartTracker = TCUserDefaults::longForKey(CHECK_PART_TRACKER_KEY,
-        (long)checkPartTracker, false) != 0;
-}
-*/
 
 void Preferences::loadOtherSettings(void)
 {
@@ -738,81 +616,6 @@ void Preferences::loadOtherSettings(void)
 	windowWidth = TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, 640, false);
 	windowHeight = TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, 480, false);
 }
-
-/*
-void Preferences::loadDefaultGeneralSettings(void)
-{
-	lineSmoothing = false;
-	showFPS = false;
-	showErrors = true;
-	processLdconfigLdr = true;
-	backgroundColor = 0;
-	defaultColor = LDLPalette::colorForRGBA(0x99, 0x99, 0x99, 255);
-	defaultColorNumber = -1;
-	fieldOfView = 45;
-	memoryUsage = 2;
-	transDefaultColor = false;
-	// User colors?
-}
-
-void Preferences::loadDefaultGeometrySettings(void)
-{
-	seams = true;
-	seamWidth = 50;
-	wireframe = false;
-	wireframeFog = false;
-	wireframeRemoveHiddenLines=false;
-	wireframeThickness = 1;
-	bfc = false;
-	bfcRedBackFace = false;
-        bfcGreenFrontFace = false;
-	edgeLines = false;
-	conditionalLines = false;
-	conditionalShowAll = false;
-	conditionalShowControlPts = false;
-	edgesOnly = false;
-	polygonOffset = true;
-	blackEdgeLines = false;
-	edgeThickness = 1;
-}
-
-void Preferences::loadDefaultEffectsSettings(void)
-{
-	lighting = true;
-	qualityLighting = false;
-	subduedLighting = false;
-	specular = true;
-	alternateLighting = false;
-	stereoMode = LDVStereoNone;
-	stereoEyeSpacing = 50;
-	cutawayMode = LDVCutawayNormal;
-	cutawayAlpha = 100;
-	cutawayThickness = 1;
-	sortTransparent = true;
-	stipple = false;
-	flatShading = false;
-	smoothing = true;
-}
-
-void Preferences::loadDefaultPrimitivesSettings(void)
-{
-	allowPrimitiveSubstitution = true;
-	textureStuds = true;
-	textureFilterType = GL_LINEAR_MIPMAP_LINEAR;
-	curveQuality = 2;
-	qualityStuds = false;
-    hiresPrimitives = false;
-}
-
-void Preferences::loadDefaultUpdatesSettings(void)
-{
-	proxyType = 0;
-	if (proxyServer) delete proxyServer;
-	proxyServer = NULL;
-	proxyPort = 80;
-	checkPartTracker = true;
-}
-*/
 
 void Preferences::loadDefaultOtherSettings(void)
 {
@@ -1234,6 +1037,15 @@ void Preferences::doLighting(bool value)
 	{
 		disableLighting();
 	}
+}
+
+void Preferences::doDrawLightDats()
+{
+	bool checked = panel->effectsUseLIGHTDATButton->state();
+	panel->effectsReplaceStandarLightButton->setEnabled(checked);
+	bool enabled = ldPrefs->getOptionalStandardLight() ? TRUE : FALSE;
+	if (!checked) enabled = false;
+	setButtonState(panel->effectsReplaceStandarLightButton , enabled);
 }
 
 void Preferences::doStereo(bool value)
@@ -1722,6 +1534,8 @@ void Preferences::enableLighting(void)
 	panel->subduedLightingButton->setEnabled(true);
 	panel->specularLightingButton->setEnabled(true);
 	panel->alternateLightingButton->setEnabled(true);
+	panel->effectsUseLIGHTDATButton->setEnabled(true);
+	panel->effectsHideLIGHTButton->setEnabled(true);
 	panel->lightingDir11->setEnabled(true);
 	panel->lightingDir12->setEnabled(true);
 	panel->lightingDir13->setEnabled(true);
@@ -1735,7 +1549,10 @@ void Preferences::enableLighting(void)
 	setButtonState(panel->subduedLightingButton, ldPrefs->getSubduedLighting());
 	setButtonState(panel->specularLightingButton, ldPrefs->getUseSpecular());
 	setButtonState(panel->alternateLightingButton, ldPrefs->getOneLight());
+	setButtonState(panel->effectsUseLIGHTDATButton, ldPrefs->getDrawLightDats());
+	setButtonState(panel->effectsHideLIGHTButton, ldPrefs->getNoLightGeom());
 	selectLightDirection(ldPrefs->getLightDirection());
+	doDrawLightDats();
 }
 
 void Preferences::enableStereo(void)
@@ -1916,6 +1733,8 @@ void Preferences::disableLighting(void)
 	panel->subduedLightingButton->setEnabled(false);
 	panel->specularLightingButton->setEnabled(false);
 	panel->alternateLightingButton->setEnabled(false);
+    panel->effectsUseLIGHTDATButton->setEnabled(false);
+    panel->effectsHideLIGHTButton->setEnabled(false);
 	panel->lightingDir11->setEnabled(false);
 	panel->lightingDir12->setEnabled(false);
 	panel->lightingDir13->setEnabled(false);
@@ -1929,6 +1748,9 @@ void Preferences::disableLighting(void)
 	setButtonState(panel->subduedLightingButton, false);
 	setButtonState(panel->specularLightingButton, false);
 	setButtonState(panel->alternateLightingButton, false);
+    setButtonState(panel->effectsUseLIGHTDATButton, false);
+    setButtonState(panel->effectsHideLIGHTButton, false);
+
 	uncheckLightDirections();
 }
 
