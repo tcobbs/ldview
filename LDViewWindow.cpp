@@ -2055,22 +2055,23 @@ void LDViewWindow::showPovCamera(void)
 
 		if (modelViewer)
 		{
-			char *userMessage;
+			UCSTR userMessage;
 			char *povCamera;
 
 			modelViewer->getPovCameraInfo(userMessage, povCamera);
 			if (userMessage && povCamera)
 			{
-				if (MessageBox(hWindow, userMessage,
-					TCLocalStrings::get("PovCameraTitle"), MB_OKCANCEL) == IDOK)
+				if (messageBoxUC(hWindow, userMessage,
+					TCLocalStrings::get(_UC("PovCameraTitle")), MB_OKCANCEL) ==
+					IDOK)
 				{
 					copyToClipboard(povCamera);
 				}
 			}
 			else
 			{
-				MessageBox(hWindow, TCLocalStrings::get("NoModelLoaded"),
-					TCLocalStrings::get("Error"), MB_OK);
+				messageBoxUC(hWindow, TCLocalStrings::get(_UC("NoModelLoaded")),
+					TCLocalStrings::get(_UC("Error")), MB_OK);
 			}
 			delete userMessage;
 			delete povCamera;
@@ -2210,54 +2211,65 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 	{
 //		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
 		int numOpenGlExtensions;
-		char *openGlMessage = modelWindow->getModelViewer()->
+		UCSTR openGlMessage = modelWindow->getModelViewer()->
 			getOpenGLDriverInfo(numOpenGlExtensions);
 		const char *wglExtensionsString =
 			LDVExtensionsSetup::getWglExtensions();
-		char *wglExtensionsList;
+		UCSTR wglExtensionsList;
 		int len;
-		char *message;
+		UCSTR message;
 		int parts[2] = {100, -1};
-		char buf[128];
-		int count;
+		UCCHAR buf[128];
+		int count = 0;
 
-		if (!wglExtensionsString)
+		if (wglExtensionsString)
 		{
-			wglExtensionsString = TCLocalStrings::get("*None*");
+			char *temp = stringByReplacingSubstring(wglExtensionsString,
+				" ", "\r\n");
+
+			stripCRLF(temp);
+			count = countStringLines(temp);
+			wglExtensionsList = mbstoucstring(temp);
+			delete temp;
 		}
-		wglExtensionsList = stringByReplacingSubstring(wglExtensionsString,
-			" ", "\r\n");
-		stripCRLF(wglExtensionsList);
-		len = strlen(openGlMessage) + strlen(wglExtensionsList) + 128;
-		message = new char[len];
-		sprintf(message, TCLocalStrings::get("OpenGl+WglInfo"), openGlMessage,
-			wglExtensionsList);
+		else
+		{
+			wglExtensionsList =
+				copyString(TCLocalStrings::get(_UC("*None*")));
+		}
+		len = ucstrlen(openGlMessage) + ucstrlen(wglExtensionsList) + 128;
+		message = new UCCHAR[len];
+		sucprintf(message, len, TCLocalStrings::get(_UC("OpenGl+WglInfo")),
+			openGlMessage, wglExtensionsList);
 		hOpenGLInfoWindow = createDialog(IDD_OPENGL_INFO);
-		SendDlgItemMessage(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT, 0,
-			(LPARAM)message);
+		sendDlgItemMessageUC(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT,
+			WM_SETTEXT, 0, (LPARAM)message);
 		hOpenGLStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE |
 			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, ID_TOOLBAR);
 		SendMessage(hOpenGLStatusBar, SB_SETPARTS, 2, (LPARAM)parts);
 		if (numOpenGlExtensions == 1)
 		{
-			strcpy(buf, TCLocalStrings::get("OpenGl1Extension"));
+			ucstrcpy(buf, TCLocalStrings::get(_UC("OpenGl1Extension")));
 		}
 		else
 		{
-			sprintf(buf, TCLocalStrings::get("OpenGlnExtensions"),
+			sucprintf(buf, COUNT_OF(buf),
+				TCLocalStrings::get(_UC("OpenGlnExtensions")),
 				numOpenGlExtensions);
 		}
-		SendMessage(hOpenGLStatusBar, SB_SETTEXT, 0, (LPARAM)buf);
-		count = countStringLines(wglExtensionsList);
+		sendMessageUC(hOpenGLStatusBar, SB_SETTEXTA, SB_SETTEXTW, 0,
+			(LPARAM)buf);
 		if (count == 1)
 		{
-			strcpy(buf, TCLocalStrings::get("OpenGl1WglExtension"));
+			ucstrcpy(buf, TCLocalStrings::get(_UC("OpenGl1WglExtension")));
 		}
 		else
 		{
-			sprintf(buf, TCLocalStrings::get("OpenGlnWglExtensions"), count);
+			sucprintf(buf, COUNT_OF(buf),
+				TCLocalStrings::get(_UC("OpenGlnWglExtensions")), count);
 		}
-		SendMessage(hOpenGLStatusBar, SB_SETTEXT, 1, (LPARAM)buf);
+		sendMessageUC(hOpenGLStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1,
+			(LPARAM)buf);
 		calcSystemSizes();
 		if (openGLInfoWindoResizer)
 		{
@@ -2268,9 +2280,9 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		openGLInfoWindoResizer->addSubWindow(IDC_OPENGL_INFO,
 			CUISizeHorizontal | CUISizeVertical);
 		openGLInfoWindoResizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
+		delete openGlMessage;
 		delete message;
 		delete wglExtensionsList;
-		delete openGlMessage;
 	}
 	ShowWindow(hOpenGLInfoWindow, SW_SHOW);
 	return 0;
