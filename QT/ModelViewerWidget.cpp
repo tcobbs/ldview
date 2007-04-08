@@ -98,7 +98,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	extradir(NULL),
 	snapshotsettings(NULL),
 	extensionsPanel(NULL),
-	openGLDriverInfo(NULL),
 	aboutPanel(NULL),
 	helpContents(NULL),
 	mainWindow(NULL),
@@ -192,7 +191,6 @@ ModelViewerWidget::~ModelViewerWidget(void)
 	}
 	delete preferences;
 	delete extensionsPanel;
-	delete openGLDriverInfo;
 	delete errors;
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
@@ -1714,10 +1712,10 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 		QLabel *extensionsCountLabel;
 		QString countString;
 		int extensionCount;
+		UCSTR temp = LDrawModelViewer::getOpenGLDriverInfo(extensionCount);
 
 		extensionsPanel = new OpenGLExtensionsPanel;
-		openGLDriverInfo = LDrawModelViewer::getOpenGLDriverInfo(
-			extensionCount);
+		ucstringtoqstring(openGLDriverInfo, temp);
 		extensionsPanel->extensionsBox->setText(openGLDriverInfo);
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
 		countString.sprintf("%d", extensionCount);
@@ -3039,13 +3037,17 @@ void ModelViewerWidget::doShowPovCamera(void)
 {
 	if (modelViewer)
 	{
-		char *userMessage, *povCamera;
+		UCSTR userMessage;
+		char *povCamera;
 		modelViewer->getPovCameraInfo(userMessage, povCamera);
 		if (userMessage && povCamera)
 		{
-			if(QMessageBox::information(this, TCLocalStrings::get("PovCameraTitle"), 
-				QString(userMessage), QMessageBox::Ok, QMessageBox::Cancel)==
-				QMessageBox::Ok)
+			QString quserMessage;
+
+			ucstringtoqstring(quserMessage, userMessage);
+			if (QMessageBox::information(this,
+				TCLocalStrings::get("PovCameraTitle"), quserMessage,
+				QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Ok)
 			{
 				QApplication::clipboard()->setText(QString(povCamera));
 			};
