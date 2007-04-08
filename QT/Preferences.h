@@ -74,6 +74,7 @@ public:
 	void doAnisotropic();
 	void doAnisotropicSlider(int);
 	void setAniso(int);
+	void doDrawLightDats();
 
 	void setShowError(int errorNumber, bool value);
 	bool getShowError(int errorNumber);

@@ -1446,6 +1446,128 @@
                                             </widget>
                                         </vbox>
                                     </widget>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>Layout27</cstring>
+                                        </property>
+                                        <hbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <property name="margin">
+                                                <number>0</number>
+                                            </property>
+                                            <property name="spacing">
+                                                <number>0</number>
+                                            </property>
+                                            <spacer>
+                                                <property name="name">
+                                                    <cstring>Spacer16_4</cstring>
+                                                </property>
+                                                <property name="orientation">
+                                                    <enum>Horizontal</enum>
+                                                </property>
+                                                <property name="sizeType">
+                                                    <enum>Fixed</enum>
+                                                </property>
+                                                <property name="sizeHint">
+                                                    <size>
+                                                        <width>16</width>
+                                                        <height>20</height>
+                                                    </size>
+                                                </property>
+                                            </spacer>
+                                            <widget class="QLayoutWidget">
+                                                <property name="name">
+                                                    <cstring>Layout20</cstring>
+                                                </property>
+                                                <vbox>
+                                                    <property name="name">
+                                                        <cstring>unnamed</cstring>
+                                                    </property>
+                                                    <property name="margin">
+                                                        <number>0</number>
+                                                    </property>
+                                                    <property name="spacing">
+                                                        <number>4</number>
+                                                    </property>
+                                                    <widget class="QCheckBox">
+                                                        <property name="name">
+                                                            <cstring>effectsUseLIGHTDATButton</cstring>
+                                                       </property>
+                                                       <property name="text">
+                                                           <string>Use LIGHT.DAT lights</string>
+                                                       </property>
+                                                    </widget>
+                                                    <widget class="QLayoutWidget">
+                                                        <property name="name">
+                                                            <cstring>Layout27</cstring>
+                                                        </property>
+                                                        <hbox>
+                                                            <property name="name">
+                                                                <cstring>unnamed</cstring>
+                                                            </property>
+                                                            <property name="margin">
+                                                                <number>0</number>
+                                                            </property>
+                                                            <property name="spacing">
+                                                                <number>0</number>
+                                                            </property>
+                                                            <spacer>
+                                                                <property name="name">
+                                                                    <cstring>Spacer16_4</cstring>
+                                                                </property>
+                                                                <property name="orientation">
+                                                                    <enum>Horizontal</enum>
+                                                                </property>
+                                                                <property name="sizeType">
+                                                                    <enum>Fixed</enum>
+                                                                </property>
+                                                                <property name="sizeHint">
+                                                                    <size>
+                                                                        <width>16</width>
+                                                                        <height>20</height>
+                                                                    </size>
+                                                                </property>
+                                                            </spacer>
+                                                            <widget class="QLayoutWidget">
+                                                                <property name="name">
+                                                                    <cstring>Layout20</cstring>
+                                                                </property>
+                                                                <vbox>
+                                                                    <property name="name">
+                                                                        <cstring>unnamed</cstring>
+                                                                    </property>
+                                                                    <property name="margin">
+                                                                        <number>0</number>
+                                                                    </property>
+                                                                    <property name="spacing">
+                                                                        <number>4</number>
+                                                                    </property>
+                                                                    <widget class="QCheckBox">
+                                                                        <property name="name">
+                                                                            <cstring>effectsReplaceStandarLightButton</cstring>
+                                                                        </property>
+                                                                        <property name="text">
+                                                                            <string>Replace standard light</string>
+                                                                        </property>
+                                                                    </widget>
+                                                                </vbox>
+                                                            </widget>
+                                                        </hbox>
+                                                    </widget>
+                                                    <widget class="QCheckBox">
+                                                        <property name="name">
+                                                            <cstring>effectsHideLIGHTButton</cstring>
+                                                       </property>
+                                                       <property name="text">
+                                                           <string>Hide LIGHT.DAT geometry</string>
+                                                       </property>
+                                                    </widget>
+                                                </vbox>
+                                            </widget>
+                                        </hbox>
+                                    </widget>
                                 </vbox>
                             </widget>
                             <widget class="QLayoutWidget">
@@ -3574,6 +3696,30 @@ into effect until the next time a model is loaded.</string>
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>effectsUseLIGHTDATButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>effectsUseLIGHTDATButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>doDrawLightDats()</slot>
+    </connection>
+    <connection>
+        <sender>effectsReplaceStandarLightButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>effectsHideLIGHTButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
         <sender>stereoButton</sender>
         <signal>toggled(bool)</signal>
         <receiver>PreferencesPanel</receiver>
@@ -3790,6 +3936,7 @@ into effect until the next time a model is loaded.</string>
     <slot>doUpdateMissingparts(bool b)</slot>
     <slot>doAnisotropic(bool b)</slot>
     <slot>doAnisotropicSlider(int i)</slot>
+    <slot>doDrawLightDats()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

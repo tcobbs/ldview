@@ -263,3 +263,11 @@ void PreferencesPanel::doAnisotropicSlider(int i)
 		preferences->doAnisotropicSlider(i);
 	}
 }
+
+void PreferencesPanel::doDrawLightDats()
+{
+	if(preferences)
+	{
+		preferences->doDrawLightDats();
+	}
+}
