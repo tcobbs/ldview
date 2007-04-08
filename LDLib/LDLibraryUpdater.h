@@ -31,7 +31,7 @@ public:
 	void checkForUpdates(void);
 	void installLDraw(void);
 	bool canCheckForUpdates(char *&error);
-	const char *getError(void) { return m_error; }
+	CUCSTR getError(void) { return m_error; }
 protected:
 	virtual ~LDLibraryUpdater(void);
 	virtual void dealloc(void);
@@ -67,7 +67,7 @@ protected:
 	TCStringArray *m_updateUrlList;
 	TCStringArray *m_downloadList;
 	int m_initialQueueSize;
-	char m_error[1024];
+	UCCHAR m_error[1024];
 	bool m_aborting;
 	bool m_install;
 /*
