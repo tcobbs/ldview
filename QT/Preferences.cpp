@@ -359,8 +359,8 @@ void Preferences::doEffectsApply(void)
 		{
 			ldPrefs->setDrawLightDats(false);
 		}
-		ldPrefs->setNoLightGeom(panel->effectsHideLIGHTButton->state());
 	}
+	ldPrefs->setNoLightGeom(panel->effectsHideLIGHTButton->state());
 	if (!panel->stereoButton->isChecked())
 	{
 		smTemp = LDVStereoNone;
@@ -765,6 +765,7 @@ void Preferences::reflectEffectsSettings(void)
 	{
 		disableLighting();
 	}
+	setButtonState(panel->effectsHideLIGHTButton, ldPrefs->getNoLightGeom());
 	if (ldPrefs->getStereoMode() != LDVStereoNone)
 	{
 		panel->stereoButton->setChecked(true);
@@ -1535,7 +1536,6 @@ void Preferences::enableLighting(void)
 	panel->specularLightingButton->setEnabled(true);
 	panel->alternateLightingButton->setEnabled(true);
 	panel->effectsUseLIGHTDATButton->setEnabled(true);
-	panel->effectsHideLIGHTButton->setEnabled(true);
 	panel->lightingDir11->setEnabled(true);
 	panel->lightingDir12->setEnabled(true);
 	panel->lightingDir13->setEnabled(true);
@@ -1550,7 +1550,6 @@ void Preferences::enableLighting(void)
 	setButtonState(panel->specularLightingButton, ldPrefs->getUseSpecular());
 	setButtonState(panel->alternateLightingButton, ldPrefs->getOneLight());
 	setButtonState(panel->effectsUseLIGHTDATButton, ldPrefs->getDrawLightDats());
-	setButtonState(panel->effectsHideLIGHTButton, ldPrefs->getNoLightGeom());
 	selectLightDirection(ldPrefs->getLightDirection());
 	doDrawLightDats();
 }
@@ -1734,7 +1733,7 @@ void Preferences::disableLighting(void)
 	panel->specularLightingButton->setEnabled(false);
 	panel->alternateLightingButton->setEnabled(false);
     panel->effectsUseLIGHTDATButton->setEnabled(false);
-    panel->effectsHideLIGHTButton->setEnabled(false);
+    panel->effectsHideLIGHTButton->setEnabled(true);
 	panel->lightingDir11->setEnabled(false);
 	panel->lightingDir12->setEnabled(false);
 	panel->lightingDir13->setEnabled(false);
@@ -1749,7 +1748,6 @@ void Preferences::disableLighting(void)
 	setButtonState(panel->specularLightingButton, false);
 	setButtonState(panel->alternateLightingButton, false);
     setButtonState(panel->effectsUseLIGHTDATButton, false);
-    setButtonState(panel->effectsHideLIGHTButton, false);
 
 	uncheckLightDirections();
 }
