@@ -1045,13 +1045,17 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
     if (libraryUpdater)
     {
 		QString statusText;
+
 		libraryUpdateWindow->setCancelButtonText(TCLocalStrings::get("OK"));
 		setLibraryUpdateProgress(1.0f);
-        if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
+        if (libraryUpdater->getError() && ucstrlen(libraryUpdater->getError()))
         {
+			QString qError;
+
 			statusText = TCLocalStrings::get("LibraryUpdateError");
 			statusText += ":\n";
-			statusText += libraryUpdater->getError();
+			ucstringtoqstring(qError, libraryUpdater->getError());
+			statusText += qError;
         }
         switch (finishType)
         {
