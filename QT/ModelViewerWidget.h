@@ -246,7 +246,7 @@ protected:
 	ExtraDir *extradir;
 	SnapshotSettings *snapshotsettings;
 	OpenGLExtensionsPanel *extensionsPanel;
-	char *openGLDriverInfo;
+	QString openGLDriverInfo;
 	AboutPanel *aboutPanel;
 	HelpPanel *helpContents;
 	LDView *mainWindow;
