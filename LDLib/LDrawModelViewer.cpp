@@ -1144,15 +1144,12 @@ void LDrawModelViewer::setupMaterial(void)
 
 void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 {
-	GLfloat lAmbient[4];
 	GLfloat lDiffuse[4];
 	GLfloat lSpecular[4];
 	int i;
 
 	if (flags.subduedLighting)
 	{
-		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.5f;
-		//lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 0.5f;
 		for (i = 0; i < 3; i++)
 		{
 			lDiffuse[i] = color.get(i) * 0.5f;
@@ -1160,8 +1157,6 @@ void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 	}
 	else
 	{
-		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.0f;
-		//lDiffuse[0] = lDiffuse[1] = lDiffuse[2] = 1.0f;
 		for (i = 0; i < 3; i++)
 		{
 			lDiffuse[i] = color.get(i);
@@ -1177,16 +1172,9 @@ void LDrawModelViewer::setupLight(GLenum light, const TCVector &color)
 		{
 			lSpecular[i] = color.get(i);
 		}
-		//lSpecular[0] = lSpecular[1] = lSpecular[2] = 1.0f;
 	}
-	lAmbient[3] = 1.0f;
 	lDiffuse[3] = 1.0f;
 	lSpecular[3] = 1.0f;
-	if (light != GL_LIGHT0 && !haveLightDats())
-	{
-		lAmbient[0] = lAmbient[1] = lAmbient[2] = 0.0f;
-	}
-	glLightfv(light, GL_AMBIENT, lAmbient);
 	glLightfv(light, GL_SPECULAR, lSpecular);
 	glLightfv(light, GL_DIFFUSE, lDiffuse);
 	glEnable(light);
@@ -1200,9 +1188,19 @@ void LDrawModelViewer::setupLighting(void)
 		GLint maxLights;
 		int i;
 		bool lightDats = haveLightDats();
+		GLfloat ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
 
+		if (flags.subduedLighting)
+		{
+			ambient[0] = ambient[1] = ambient[2] = 0.7f;
+		}
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 		glEnable(GL_LIGHTING);
 		glGetIntegerv(GL_MAX_LIGHTS, &maxLights);
+		for (i = 0; i < maxLights; i++)
+		{
+			glDisable(GL_LIGHT0 + i);
+		}
 		if (!lightDats || !flags.optionalStandardLight)
 		{
 			setupLight(GL_LIGHT0);
@@ -1218,6 +1216,7 @@ void LDrawModelViewer::setupLighting(void)
 			float atten = (float)sqr(size);
 			int start = 0;
 
+			glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 			if (!flags.optionalStandardLight)
 			{
 				start = 1;
@@ -1238,10 +1237,6 @@ void LDrawModelViewer::setupLighting(void)
 		}
 		else
 		{
-			for (i = 1; i < maxLights; i++)
-			{
-				glDisable(GL_LIGHT0 + i);
-			}
 			if (forceOneLight())
 			{
 				glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
