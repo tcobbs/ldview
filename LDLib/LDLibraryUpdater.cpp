@@ -530,12 +530,12 @@ void LDLibraryUpdater::launchThread(void)
 		}
 		catch (...)
 		{
-			strcpy(m_error, TCLocalStrings::get("LDLUpdateCreateThreadError"));
+			ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateCreateThreadError")));
 		}
 	}
 	else
 	{
-		strcpy(m_error, TCLocalStrings::get("LDLUpdateNoLDrawDir"));
+		ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateNoLDrawDir")));
 	}
 }
 
@@ -550,13 +550,13 @@ void LDLibraryUpdater::threadStart(void)
 	TCWebClient *webClient = NULL;
 	int dataLength;
 	bool aborted;
-	TCStringArray *extraInfo = NULL;
+	ucstringVector extraInfo;
 
 	retain();	// We don't want to go away until our thread has finished.
 				// Note that the corresponding release() is in the threadFinish
 				// function.
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get("LDLUpdateDlList"), 0.01f, &aborted);
+		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted);
 	if (!aborted)
 	{
 		const char *url = "http://www.ldraw.org/cgi-bin/ptreleases.cgi?"
@@ -566,7 +566,7 @@ void LDLibraryUpdater::threadStart(void)
 		webClient->setOwner(this);
 		webClient->fetchURL();
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get("LDLUpdateParseList"), 0.09f, &aborted);
+			TCLocalStrings::get(_UC("LDLUpdateParseList")), 0.09f, &aborted);
 	}
 	if (!aborted)
 	{
@@ -581,14 +581,14 @@ void LDLibraryUpdater::threadStart(void)
 			debugPrintf("Got Page Data! (length = %d)\n", dataLength);
 			if (!parseUpdateList(string))
 			{
-				strcpy(m_error, TCLocalStrings::get("LDLUpdateDlParseError"));
+				ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateDlParseError")));
 				aborted = true;
 			}
 			delete string;
 		}
 		else
 		{
-			strcpy(m_error, TCLocalStrings::get("LDLUpdateDlListError"));
+			ucstrcpy(m_error, TCLocalStrings::get(_UC("LDLUpdateDlListError")));
 			aborted = true;
 			debugPrintf("No Page Data!\n");
 		}
@@ -602,39 +602,44 @@ void LDLibraryUpdater::threadStart(void)
 		if (m_updateQueue && m_updateQueue->getCount())
 		{
 			TCProgressAlert::send(LD_LIBRARY_UPDATER,
-				TCLocalStrings::get("LDLUpdateDlUpdates"), 0.1f, &aborted);
+				TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), 0.1f, &aborted);
 			downloadUpdates(&aborted);
 			if (!aborted)
 			{
 				extractUpdates(&aborted);
 				if (!aborted)
 				{
-					extraInfo = (TCStringArray *)m_updateUrlList->copy();
+					int i;
+					int count = m_updateUrlList->getCount();
+
+					extraInfo.resize(count);
+					for (i = 0; i < count; i++)
+					{
+						mbstowstring(extraInfo[i], (*m_updateUrlList)[i]);
+					}
 				}
 			}
 		}
 		else
 		{
-			extraInfo = new TCStringArray;
 			// DO NOT make the following a local string.
-			extraInfo->addString("None");
+			extraInfo.push_back(_UC("None"));
 		}
 	}
-	if (strlen(m_error))
+	if (ucstrlen(m_error))
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER, m_error, 2.0f);
 	}
 	else if (aborted)
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get("LibraryUpdateCanceled"), 1.0f);
+			TCLocalStrings::get(_UC("LibraryUpdateCanceled")), 1.0f);
 	}
 	else
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get("LDLUpdateDone"), 1.0f, extraInfo);
+			TCLocalStrings::get(_UC("LDLUpdateDone")), 1.0f, extraInfo);
 	}
-	TCObject::release(extraInfo);
 }
 
 void LDLibraryUpdater::extractUpdate(const char *filename)
@@ -645,7 +650,8 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 
 		if (unzip->unzip(filename, m_ldrawDirParent) != 0)
 		{
-			sprintf(m_error, TCLocalStrings::get("LDLUpdateUnzipError"),
+			sucprintf(m_error, COUNT_OF(m_error),
+				TCLocalStrings::get(_UC("LDLUpdateUnzipError")),
 				filename);
 		}
 		unzip->release();
@@ -698,7 +704,8 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 		}
 		else
 		{
-			sprintf(m_error, TCLocalStrings::get("LDLUpdateExecuteError"),
+			sucprintf(m_error, COUNT_OF(m_error),
+				TCLocalStrings::get(_UC("LDLUpdateExecuteError")),
 				filename);
 		}
 #else
@@ -707,7 +714,8 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 	}
 	else
 	{
-		sprintf(m_error, TCLocalStrings::get("LDLUpdateUnknownType"), filename);
+		sucprintf(m_error, COUNT_OF(m_error),
+			TCLocalStrings::get(_UC("LDLUpdateUnknownType")), filename);
 	}
 }
 
@@ -717,7 +725,7 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 	int count = m_updateUrlList->getCount();
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get("LDLUpdateExtracting"), 0.9f, aborted);
+		TCLocalStrings::get(_UC("LDLUpdateExtracting")), 0.9f, aborted);
 	for (i = 0; i < count && !*aborted; i++)
 	{
 		const char *url = (*m_updateUrlList)[i];
@@ -787,7 +795,8 @@ void LDLibraryUpdater::updateDlFinish(TCWebClient *webClient)
 		}
 		else
 		{
-			sprintf(m_error, TCLocalStrings::get("LDLUpdateDlError"),
+			sucprintf(m_error, COUNT_OF(m_error),
+				TCLocalStrings::get(_UC("LDLUpdateDlError")),
 				webClient->getURL());
 			webClient->abort();
 		}
@@ -855,7 +864,7 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 		}
 	}
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get("LDLUpdateDlUpdates"), progress, aborted);
+		TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), progress, aborted);
 }
 
 void LDLibraryUpdater::sendExtractProgress(bool *aborted)
@@ -866,7 +875,7 @@ void LDLibraryUpdater::sendExtractProgress(bool *aborted)
 	float progress = 0.9f + (float)finished * fileFraction;
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get("LDLUpdateExtracting"), progress, aborted);
+		TCLocalStrings::get(_UC("LDLUpdateExtracting")), progress, aborted);
 }
 
 void LDLibraryUpdater::downloadUpdates(bool *aborted)

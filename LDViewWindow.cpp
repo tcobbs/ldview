@@ -3020,34 +3020,38 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 {
 	if (libraryUpdater)
 	{
-		char statusText[1024] = "";
+		UCCHAR statusText[1024] = _UC("");
 
 		EnableWindow(hUpdateOkButton, TRUE);
 		EnableWindow(hUpdateCancelButton, FALSE);
-		if (libraryUpdater->getError() && strlen(libraryUpdater->getError()))
+		if (libraryUpdater->getError() && ucstrlen(libraryUpdater->getError()))
 		{
-			sprintf(statusText, "%s:\n%s",
-				TCLocalStrings::get("LibraryUpdateError"),
+			sucprintf(statusText, COUNT_OF(statusText), _UC("%s:\n%s"),
+				TCLocalStrings::get(_UC("LibraryUpdateError")),
 				libraryUpdater->getError());
 		}
 		switch (finishType)
 		{
 		case LIBRARY_UPDATE_FINISHED:
 			libraryUpdateFinished = true;
-			strcpy(statusText, TCLocalStrings::get("LibraryUpdateComplete"));
+			ucstrcpy(statusText,
+				TCLocalStrings::get(_UC("LibraryUpdateComplete")));
 			break;
 		case LIBRARY_UPDATE_CANCELED:
-			strcpy(statusText, TCLocalStrings::get("LibraryUpdateCanceled"));
+			ucstrcpy(statusText,
+				TCLocalStrings::get(_UC("LibraryUpdateCanceled")));
 			break;
 		case LIBRARY_UPDATE_NONE:
-			strcpy(statusText, TCLocalStrings::get("LibraryUpdateUnnecessary"));
+			ucstrcpy(statusText,
+				TCLocalStrings::get(_UC("LibraryUpdateUnnecessary")));
 			break;
 		}
 		libraryUpdater->release();
 		libraryUpdater = NULL;
-		if (strlen(statusText))
+		if (ucstrlen(statusText))
 		{
-			SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)statusText);
+			sendMessageUC(hUpdateStatus, WM_SETTEXT, WM_SETTEXT, 0,
+				(LPARAM)statusText);
 		}
 	}
 }
