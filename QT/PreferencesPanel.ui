@@ -1954,60 +1954,28 @@
                                             </widget>
                                         </vbox>
                                     </widget>
-                                </vbox>
-                            </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>Layout38</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>0</number>
-                            </property>
-                            <property name="spacing">
-                                <number>4</number>
-                            </property>
-                            <widget class="QGroupBox">
-                                <property name="name">
-                                    <cstring>effectsTransparencyBox</cstring>
-                                </property>
-                                <property name="title">
-                                    <string>&amp;Transparency</string>
-                                </property>
-                                <vbox>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <property name="margin">
-                                        <number>11</number>
-                                    </property>
-                                    <property name="spacing">
-                                        <number>4</number>
-                                    </property>
-                                    <widget class="QLayoutWidget">
+                                    <widget class="QGroupBox">
                                         <property name="name">
-                                            <cstring>Layout41</cstring>
+                                            <cstring>effectsTransparencyBox</cstring>
                                         </property>
-                                        <hbox>
+                                        <property name="title">
+                                            <string>&amp;Transparency</string>
+                                        </property>
+                                        <vbox>
                                             <property name="name">
                                                 <cstring>unnamed</cstring>
                                             </property>
                                             <property name="margin">
-                                                <number>0</number>
+                                                <number>11</number>
                                             </property>
                                             <property name="spacing">
                                                 <number>4</number>
                                             </property>
                                             <widget class="QLayoutWidget">
                                                 <property name="name">
-                                                    <cstring>Layout40</cstring>
+                                                    <cstring>Layout41</cstring>
                                                 </property>
-                                                <vbox>
+                                                <hbox>
                                                     <property name="name">
                                                         <cstring>unnamed</cstring>
                                                     </property>
@@ -2017,81 +1985,81 @@
                                                     <property name="spacing">
                                                         <number>4</number>
                                                     </property>
-                                                    <widget class="QCheckBox">
+                                                    <widget class="QLayoutWidget">
                                                         <property name="name">
-                                                            <cstring>sortTransparencyButton</cstring>
+                                                            <cstring>Layout40</cstring>
                                                         </property>
-                                                        <property name="text">
-                                                            <string>Sort</string>
-                                                        </property>
+                                                        <vbox>
+                                                            <property name="name">
+                                                                <cstring>unnamed</cstring>
+                                                            </property>
+                                                            <property name="margin">
+                                                                <number>0</number>
+                                                            </property>
+                                                            <property name="spacing">
+                                                                <number>4</number>
+                                                            </property>
+                                                            <widget class="QCheckBox">
+                                                                <property name="name">
+                                                                    <cstring>sortTransparencyButton</cstring>
+                                                                </property>
+                                                                <property name="text">
+                                                                    <string>Sort</string>
+                                                                </property>
+                                                            </widget>
+                                                            <widget class="QCheckBox">
+                                                                <property name="name">
+                                                                    <cstring>stippleTransparencyButton</cstring>
+                                                                </property>
+                                                                <property name="text">
+                                                                    <string>Stipple</string>
+                                                                </property>
+                                                            </widget>
+                                                        </vbox>
                                                     </widget>
-                                                    <widget class="QCheckBox">
+                                                    <spacer>
                                                         <property name="name">
-                                                            <cstring>stippleTransparencyButton</cstring>
+                                                            <cstring>Spacer28</cstring>
                                                         </property>
-                                                        <property name="text">
-                                                            <string>Stipple</string>
+                                                        <property name="orientation">
+                                                            <enum>Horizontal</enum>
                                                         </property>
-                                                    </widget>
-                                                </vbox>
+                                                        <property name="sizeType">
+                                                            <enum>Expanding</enum>
+                                                        </property>
+                                                        <property name="sizeHint">
+                                                            <size>
+                                                                <width>20</width>
+                                                                <height>20</height>
+                                                            </size>
+                                                        </property>
+                                                    </spacer>
+                                                </hbox>
                                             </widget>
-                                            <spacer>
-                                                <property name="name">
-                                                    <cstring>Spacer28</cstring>
-                                                </property>
-                                                <property name="orientation">
-                                                    <enum>Horizontal</enum>
-                                                </property>
-                                                <property name="sizeType">
-                                                    <enum>Expanding</enum>
-                                                </property>
-                                                <property name="sizeHint">
-                                                    <size>
-                                                        <width>20</width>
-                                                        <height>20</height>
-                                                    </size>
-                                                </property>
-                                            </spacer>
-                                        </hbox>
+                                        </vbox>
                                     </widget>
-                                </vbox>
-                            </widget>
-                            <widget class="QGroupBox">
-                                <property name="name">
-                                    <cstring>effectsMiscBox</cstring>
-                                </property>
-                                <property name="title">
-                                    <string>&amp;Miscellaneous</string>
-                                </property>
-                                <vbox>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <property name="margin">
-                                        <number>11</number>
-                                    </property>
-                                    <property name="spacing">
-                                        <number>4</number>
-                                    </property>
-                                    <widget class="QLayoutWidget">
+                                    <widget class="QGroupBox">
                                         <property name="name">
-                                            <cstring>Layout43</cstring>
+                                            <cstring>effectsMiscBox</cstring>
                                         </property>
-                                        <hbox>
+                                        <property name="title">
+                                            <string>&amp;Misc</string>
+                                        </property>
+                                        <vbox>
                                             <property name="name">
                                                 <cstring>unnamed</cstring>
                                             </property>
                                             <property name="margin">
-                                                <number>0</number>
+                                                <number>11</number>
                                             </property>
                                             <property name="spacing">
                                                 <number>4</number>
                                             </property>
                                             <widget class="QLayoutWidget">
                                                 <property name="name">
-                                                    <cstring>Layout42</cstring>
+                                                    <cstring>Layout43</cstring>
                                                 </property>
-                                                <vbox>
+                                                <hbox>
                                                     <property name="name">
                                                         <cstring>unnamed</cstring>
                                                     </property>
@@ -2101,42 +2069,58 @@
                                                     <property name="spacing">
                                                         <number>4</number>
                                                     </property>
-                                                    <widget class="QCheckBox">
+                                                    <widget class="QLayoutWidget">
                                                         <property name="name">
-                                                            <cstring>flatShadingButton</cstring>
+                                                            <cstring>Layout42</cstring>
                                                         </property>
-                                                        <property name="text">
-                                                            <string>Flat shading</string>
-                                                        </property>
+                                                        <vbox>
+                                                            <property name="name">
+                                                                <cstring>unnamed</cstring>
+                                                            </property>
+                                                            <property name="margin">
+                                                                <number>0</number>
+                                                            </property>
+                                                            <property name="spacing">
+                                                                <number>4</number>
+                                                            </property>
+                                                            <widget class="QCheckBox">
+                                                                <property name="name">
+                                                                    <cstring>flatShadingButton</cstring>
+                                                                </property>
+                                                                <property name="text">
+                                                                    <string>Flat shading</string>
+                                                                </property>
+                                                            </widget>
+                                                            <widget class="QCheckBox">
+                                                                <property name="name">
+                                                                    <cstring>smoothCurvesButton</cstring>
+                                                                </property>
+                                                                <property name="text">
+                                                                    <string>Smooth curves</string>
+                                                                </property>
+                                                            </widget>
+                                                        </vbox>
                                                     </widget>
-                                                    <widget class="QCheckBox">
+                                                    <spacer>
                                                         <property name="name">
-                                                            <cstring>smoothCurvesButton</cstring>
+                                                            <cstring>Spacer28_2</cstring>
                                                         </property>
-                                                        <property name="text">
-                                                            <string>Smooth curves</string>
+                                                        <property name="orientation">
+                                                            <enum>Horizontal</enum>
                                                         </property>
-                                                    </widget>
-                                                </vbox>
+                                                        <property name="sizeType">
+                                                            <enum>Expanding</enum>
+                                                        </property>
+                                                        <property name="sizeHint">
+                                                            <size>
+                                                                <width>20</width>
+                                                                <height>20</height>
+                                                            </size>
+                                                        </property>
+                                                    </spacer>
+                                                </hbox>
                                             </widget>
-                                            <spacer>
-                                                <property name="name">
-                                                    <cstring>Spacer28_2</cstring>
-                                                </property>
-                                                <property name="orientation">
-                                                    <enum>Horizontal</enum>
-                                                </property>
-                                                <property name="sizeType">
-                                                    <enum>Expanding</enum>
-                                                </property>
-                                                <property name="sizeHint">
-                                                    <size>
-                                                        <width>20</width>
-                                                        <height>20</height>
-                                                    </size>
-                                                </property>
-                                            </spacer>
-                                        </hbox>
+                                        </vbox>
                                     </widget>
                                 </vbox>
                             </widget>
