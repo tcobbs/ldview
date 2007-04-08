@@ -1746,7 +1746,7 @@ void ModelViewerWidget::doHelpContents(void)
 #ifdef __APPLE__
 	QString helpFilename = findPackageFile(TCLocalStrings::get("HelpHtml"));
 	QString qUrl = QString("file://") + helpFilename + "#MacNotes";
-	CFURLRef url;
+	CFURLRef url = NULL;
 	CFStringRef urlString;
 	bool macSuccess = false;
 
