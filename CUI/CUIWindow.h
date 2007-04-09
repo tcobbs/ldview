@@ -6,12 +6,15 @@
 //#include <windowsx.h>
 #include <CUI/CUIDefines.h>
 #include <TCFoundation/TCTypedPointerArray.h>
+#include <TCFoundation/TCStlIncludes.h>
 
 #ifndef WM_THEMECHANGED
 #define WM_THEMECHANGED                 0x031A
 #endif
 
 typedef TCTypedPointerArray<HWND> CUIHwndArray;
+
+typedef std::map<UINT, UINT> UIntUIntMap;
 
 #define CUI_MAX_CHILDREN 100
 #define NUM_SYSTEM_COLORS 25
@@ -20,7 +23,7 @@ class CUIExport CUIWindow : public TCObject
 {
 	public:
 		CUIWindow(void);
-		CUIWindow(const char* windowTitle, HINSTANCE hInstance, int x,
+		CUIWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 			int y, int width, int height);
 		CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 			int height);
@@ -34,13 +37,13 @@ class CUIExport CUIWindow : public TCObject
 		int getHeight(void) { return height; }
 		HINSTANCE getHInstance(void) { return hInstance; }
 		BOOL isInitialized(void) { return initialized; }
-		char* getWindowTitle(void) { return windowTitle; }
+		CUCSTR getWindowTitle(void) { return windowTitle; }
 		virtual void showWindow(int nCmdShow);
 		virtual BOOL initWindow(void);
 		virtual void resize(int newWidth, int newHeight);
 		virtual void setRBGFillColor(BYTE r, BYTE g, BYTE b);
 		virtual void setFillColor(DWORD newColor);
-		virtual void setTitle(char* value);
+		virtual void setTitle(CUCSTR value);
 		void setMinWidth(int value) { minWidth = value; }
 		void setMinHeight(int value) { minHeight = value; }
 		void setMaxWidth(int value) { maxWidth = value; }
@@ -73,10 +76,15 @@ class CUIExport CUIWindow : public TCObject
 		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,
 			int *index = NULL);
 		static HINSTANCE getLanguageModule(void);
-		static LRESULT sendMessageUC(HWND hWnd, UINT uMsg, UINT uMsgW,
-			WPARAM wParam, LPARAM lParam);
+		static HWND createWindowExUC(DWORD dwExStyle, CUCSTR lpClassName,
+			CUCSTR lpWindowName, DWORD dwStyle, int x, int y, int nWidth,
+			int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance,
+			LPVOID lpParam);
+		static BOOL setWindowTextUC(HWND hWnd, CUCSTR text);
+		static LRESULT sendMessageUC(HWND hWnd, UINT uMsg, WPARAM wParam,
+			LPARAM lParam);
 		static LRESULT sendDlgItemMessageUC(HWND hDlg, int nIDDlgItem,
-			UINT uMsg, UINT uMsgW, WPARAM wParam, LPARAM lParam);
+			UINT uMsg, WPARAM wParam, LPARAM lParam);
 		static HWND createStatusWindowUC(LONG style, CUCSTR lpszText,
 			HWND hwndParent, UINT wID);
 		static int messageBoxUC(HWND hWnd, CUCSTR lpText, CUCSTR lpCaption,
@@ -95,12 +103,13 @@ class CUIExport CUIWindow : public TCObject
 		virtual BOOL createWindow(void);
 		virtual BOOL createMainWindow(void);
 		virtual BOOL createSubWindow(void);
-		virtual char* windowClassName(void);
+		virtual const char* windowClassName(void);
 		virtual WNDCLASSEX getWindowClass(void);
 		virtual void addChild(CUIWindow* childWindow);
 		virtual void removeChild(CUIWindow* childWindow);
 		virtual void updateSystemColors(void);
-		virtual void initSystemColors(void);
+		void initSystemColors(void);
+		void initUcMessages(void);
 		virtual void deleteSystemColorPens(void);
 		virtual void redrawChildren(BOOL recurse);
 		virtual HBRUSH getBackgroundBrush(void);
@@ -194,7 +203,7 @@ class CUIExport CUIWindow : public TCObject
 		static void calcSystemSizes(void);
 		static void populateAppVersion(void);
 
-		char* windowTitle;
+		UCSTR windowTitle;
 		int x;
 		int y;
 		int width;
@@ -238,6 +247,7 @@ class CUIExport CUIWindow : public TCObject
 		static bool loadLanguageModule(LCID lcid, bool includeSub = true);
 
 		static HINSTANCE hLanguageModule;	// Always use getLanguageModule()
+		static UIntUIntMap ucMessages;
 };
 
 #endif

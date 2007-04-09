@@ -10,10 +10,16 @@
 
 typedef TCTypedPointerArray<HPROPSHEETPAGE> CUIHPropSheetPageArray;
 
+#ifdef TC_NO_UNICODE
+#define PROPSHEETHEADERUC PROPSHEETHEADERA
+#else // TC_NO_UNICODE
+#define PROPSHEETHEADERUC PROPSHEETHEADERW
+#endif // TC_NO_UNICODE
+
 class CUIExport CUIPropertySheet: public CUIWindow
 {
 public:
-	CUIPropertySheet(const char* windowTitle, HINSTANCE hInstance);
+	CUIPropertySheet(CUCSTR windowTitle, HINSTANCE hInstance);
 	virtual int run(void);
 	virtual int show(void);
 	virtual void addPage(int resourceId, char* title = NULL);
@@ -27,6 +33,11 @@ public:
 	HWND getHPropSheet(void) { return hPropSheet; }
 	virtual bool getApplyEnabled(void);
 
+#ifdef TC_NO_UNICODE
+	static int propertySheetUC(LPCPROPSHEETHEADERA lppsh);
+#else // TC_NO_UNICODE
+	static int propertySheetUC(LPCPROPSHEETHEADERW lppsh);
+#endif // TC_NO_UNICODE
 	static void clearGlobalCUIPropertySheet(void)
 	{
 		globalCUIPropertySheet = NULL;

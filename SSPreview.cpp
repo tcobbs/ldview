@@ -7,7 +7,7 @@ SSPreview::SSPreview(HWND hParentWindow, HINSTANCE hInstance)
 		   hBitmap(NULL),
 		   hBmpDc(NULL)
 {
-	setTitle("LDView SS Preview");
+	setTitle(_UC("LDView SS Preview"));
 }
 
 SSPreview::~SSPreview(void)
