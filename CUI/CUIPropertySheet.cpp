@@ -20,7 +20,7 @@ typedef struct tagPSITEM
 	DWORD dwPSExtra;
 } PSITEM;
 
-CUIPropertySheet::CUIPropertySheet(const char *windowTitle, HINSTANCE hInstance):
+CUIPropertySheet::CUIPropertySheet(CUCSTR windowTitle, HINSTANCE hInstance):
 	CUIWindow(windowTitle, hInstance, 0, 0, 100, 100),
 	hDlgParent(NULL),
 	hPropSheet(NULL),
@@ -121,7 +121,7 @@ void CUIPropertySheet::closePropertySheet(bool immediate)
 
 int CUIPropertySheet::createPropSheet(void)
 {
-	PROPSHEETHEADER psHeader;
+	PROPSHEETHEADERUC psHeader;
 	void *phPages = hpageArray->getItems();
 
 	memset(&psHeader, 0, sizeof(PROPSHEETHEADER));
@@ -145,7 +145,7 @@ int CUIPropertySheet::createPropSheet(void)
 	psHeader.nStartPage = 0;
 	psHeader.phpage = (HPROPSHEETPAGE*)phPages;
 	psHeader.pfnCallback = staticPropSheetProc;
-	return PropertySheet(&psHeader);
+	return propertySheetUC(&psHeader);
 }
 
 void CUIPropertySheet::addPage(int resourceId, char* title)
@@ -373,4 +373,17 @@ bool CUIPropertySheet::getApplyEnabled(void)
 bool CUIPropertySheet::shouldSetActive(int /*index*/)
 {
 	return true;
+}
+
+#ifdef TC_NO_UNICODE
+int CUIPropertySheet::propertySheetUC(LPCPROPSHEETHEADERA lppsh)
+#else // TC_NO_UNICODE
+int CUIPropertySheet::propertySheetUC(LPCPROPSHEETHEADERW lppsh)
+#endif // TC_NO_UNICODE
+{
+#ifdef TC_NO_UNICODE
+	return PropertySheetA(lppsh);
+#else // TC_NO_UNICODE
+	return PropertySheetW(lppsh);
+#endif // TC_NO_UNICODE
 }

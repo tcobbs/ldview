@@ -21,9 +21,10 @@ CUIExport HINSTANCE		CUIWindow::hLanguageModule = NULL;
 CUIExport bool			CUIWindow::appVersionPopulated = false;
 CUIExport DWORD			CUIWindow::appVersionMS;
 CUIExport DWORD			CUIWindow::appVersionLS;
+CUIExport UIntUIntMap	CUIWindow::ucMessages;
 
 CUIWindow::CUIWindow(void)
-		  :windowTitle(copyString("")),
+		  :windowTitle(copyString(_UC(""))),
 		   hInstance(NULL),
 		   x(0),
 		   y(0),
@@ -50,7 +51,7 @@ CUIWindow::CUIWindow(void)
 	init();
 }
 
-CUIWindow::CUIWindow(const char* windowTitle, HINSTANCE hInstance, int x, int y,
+CUIWindow::CUIWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x, int y,
 					 int width, int height)
 		  :windowTitle(copyString(windowTitle)),
 		   hInstance(hInstance),
@@ -82,7 +83,7 @@ CUIWindow::CUIWindow(const char* windowTitle, HINSTANCE hInstance, int x, int y,
 
 CUIWindow::CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 					 int height)
-		  :windowTitle(copyString("")),
+		  :windowTitle(copyString(_UC(""))),
 		   hInstance(parentWindow->getHInstance()/*(void*)GetWindowLong(parentWindow, GWL_HINSTANCE)*/),
 		   x(x),
 		   y(y),
@@ -112,7 +113,7 @@ CUIWindow::CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 
 CUIWindow::CUIWindow(HWND hParentWindow, HINSTANCE hInstance, int x, int y,
 					 int width, int height)
-		  :windowTitle(copyString("")),
+		  :windowTitle(copyString(_UC(""))),
 		   x(x),
 		   y(y),
 		   width(width),
@@ -154,7 +155,7 @@ BOOL CUIWindow::initWindow(void)
 	}
 }
 
-char* CUIWindow::windowClassName(void)
+const char* CUIWindow::windowClassName(void)
 {
 	if (parentWindow || hParentWindow)
 	{
@@ -242,6 +243,7 @@ void CUIWindow::init(void)
 #ifdef _LEAK_DEBUG
 	strcpy(className, "CUIWindow");
 #endif
+	initUcMessages();
 	initSystemColors();
 }
 
@@ -268,6 +270,26 @@ void CUIWindow::updateSystemColors(void)
 			systemColorPens[i] = CreatePen(PS_SOLID, 0, systemColors[i]);
 		}
 	}
+}
+
+void CUIWindow::initUcMessages(void)
+{
+	ucMessages[WM_SETTEXT] = WM_SETTEXT;
+	ucMessages[WM_GETTEXT] = WM_GETTEXT;
+	ucMessages[CB_DELETESTRING] = CB_DELETESTRING;
+	ucMessages[CB_ADDSTRING] = CB_ADDSTRING;
+	ucMessages[CB_SELECTSTRING] = CB_SELECTSTRING;
+#ifdef TC_NO_UNICODE
+	ucMessages[SB_SETTIPTEXT] = SB_SETTIPTEXTA;
+	ucMessages[SB_GETTIPTEXT] = SB_GETTIPTEXTA;
+	ucMessages[SB_SETTEXT] = SB_SETTEXTA;
+	ucMessages[SB_GETTEXT] = SB_GETTEXTA;
+#else // TC_NO_UNICODE
+	ucMessages[SB_SETTIPTEXT] = SB_SETTIPTEXTW;
+	ucMessages[SB_GETTIPTEXT] = SB_GETTIPTEXTW;
+	ucMessages[SB_SETTEXT] = SB_SETTEXTW;
+	ucMessages[SB_GETTEXT] = SB_GETTEXTW;
+#endif // TC_NO_UNICODE
 }
 
 void CUIWindow::initSystemColors(void)
@@ -2134,13 +2156,13 @@ void CUIWindow::registerWindowClass(void)
 	}
 }
 
-void CUIWindow::setTitle(char* value)
+void CUIWindow::setTitle(CUCSTR value)
 {
 	delete windowTitle;
 	windowTitle = copyString(value);
 	if (hWindow)
 	{
-		SetWindowText(hWindow, windowTitle);
+		setWindowTextUC(hWindow, windowTitle);
 	}
 }
 
@@ -2149,8 +2171,10 @@ BOOL CUIWindow::createMainWindow(void)
 	SIZE decorationSize = getDecorationSize();
 	int dx = decorationSize.cx;
 	int dy = decorationSize.cy;
+	std::wstring className;
 
-	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
+	mbstowstring(className, windowClassName());
+	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
 		windowStyle, x, y, width + dx, height + dy, NULL, hWindowMenu,
 		getLanguageModule(), this);
 	if (!hWindow)
@@ -2171,16 +2195,18 @@ BOOL CUIWindow::createSubWindow(void)
 	SIZE decorationSize = getDecorationSize();
 	int dx = decorationSize.cx;
 	int dy = decorationSize.cy;
+	std::wstring className;
 
+	mbstowstring(className, windowClassName());
 	dx = 0;
 	dy = 0;
 	if (!hParentWindow)
 	{
 		hParentWindow = parentWindow->hWindow;
 	}
-	hWindow = CreateWindowEx(exWindowStyle, windowClassName(), windowTitle,
-		windowStyle, x - dx / 2, y - dy / 2, width, height,
-		hParentWindow, hWindowMenu, getLanguageModule(), this);
+	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
+		windowStyle, x - dx / 2, y - dy / 2, width, height, hParentWindow,
+		hWindowMenu, getLanguageModule(), this);
 
 	if (!hWindow)
 	{
@@ -2315,25 +2341,44 @@ HMENU CUIWindow::findSubMenu(HMENU hParentMenu, int subMenuIndex, int *index)
 }
 
 // Note: static method.
+HWND CUIWindow::createWindowExUC(DWORD dwExStyle, CUCSTR lpClassName,
+	CUCSTR lpWindowName, DWORD dwStyle, int x, int y, int nWidth,
+	int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance,
+	LPVOID lpParam)
+{
+#ifdef TC_NO_UNICODE
+	return ::CreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, x,
+		y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+#else // TC_NO_UNICODE
+	return ::CreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle, x,
+		y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+BOOL CUIWindow::setWindowTextUC(HWND hWnd, CUCSTR text)
+{
+#ifdef TC_NO_UNICODE
+	return ::SetWindowTextA(hWnd, text);
+#else // TC_NO_UNICODE
+	return ::SetWindowTextW(hWnd, text);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
 LRESULT CUIWindow::sendMessageUC(
 	HWND hWnd,
-#ifdef TC_NO_UNICODE
 	UINT uMsg,
-#else // TC_NO_UNICODE
-	UINT /*uMsg*/,
-#endif // TC_NO_UNICODE
-#ifdef TC_NO_UNICODE
-	UINT /*uMsgW*/,
-#else // TC_NO_UNICODE
-	UINT uMsgW,
-#endif // TC_NO_UNICODE
 	WPARAM wParam,
 	LPARAM lParam)
 {
+	UINT actualMessage = ucMessages[uMsg];
+
+	assert(actualMessage);
 #ifdef TC_NO_UNICODE
-	return ::SendMessageA(hWnd, uMsg, wParam, lParam);
+	return ::SendMessageA(hWnd, actualMessage, wParam, lParam);
 #else // TC_NO_UNICODE
-	return ::SendMessageW(hWnd, uMsgW, wParam, lParam);
+	return ::SendMessageW(hWnd, actualMessage, wParam, lParam);
 #endif // TC_NO_UNICODE
 }
 
@@ -2341,23 +2386,19 @@ LRESULT CUIWindow::sendMessageUC(
 LRESULT CUIWindow::sendDlgItemMessageUC(
 	HWND hDlg,
 	int nIDDlgItem,
-#ifdef TC_NO_UNICODE
 	UINT uMsg,
-#else // TC_NO_UNICODE
-	UINT /*uMsg*/,
-#endif // TC_NO_UNICODE
-#ifdef TC_NO_UNICODE
-	UINT /*uMsgW*/,
-#else // TC_NO_UNICODE
-	UINT uMsgW,
-#endif // TC_NO_UNICODE
 	WPARAM wParam,
 	LPARAM lParam)
 {
+	UINT actualMessage = ucMessages[uMsg];
+
+	assert(actualMessage);
 #ifdef TC_NO_UNICODE
-	return ::SendDlgItemMessageA(hDlg, nIDDlgItem, uMsg, wParam, lParam);
+	return ::SendDlgItemMessageA(hDlg, nIDDlgItem, actualMessage, wParam,
+		lParam);
 #else // TC_NO_UNICODE
-	return ::SendDlgItemMessageW(hDlg, nIDDlgItem, uMsgW, wParam, lParam);
+	return ::SendDlgItemMessageW(hDlg, nIDDlgItem, actualMessage, wParam,
+		lParam);
 #endif // TC_NO_UNICODE
 }
 

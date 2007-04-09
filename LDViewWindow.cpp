@@ -106,7 +106,7 @@ LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 	LDViewWindow::extraSearchDirs = NULL;
 }
 
-LDViewWindow::LDViewWindow(const char* windowTitle, HINSTANCE hInstance, int x,
+LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 						   int y, int width, int height)
 			  :CUIWindow(windowTitle, hInstance, x, y, width, height),
 			   modelWindow(NULL),
@@ -278,7 +278,7 @@ void LDViewWindow::setScreenSaver(BOOL flag)
 	}
 }
 
-char* LDViewWindow::windowClassName(void)
+const char* LDViewWindow::windowClassName(void)
 {
 	if (fullScreen || screenSaver)
 	{
@@ -430,8 +430,7 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 			tipText = TCLocalStrings::get(_UC("FlyThroughMode"));
 		}
 		SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)hModeIcon);
-		sendMessageUC(hStatusBar, SB_SETTIPTEXTA, SB_SETTIPTEXTW, 2,
-			(LPARAM)tipText);
+		sendMessageUC(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)tipText);
 	}
 }
 
@@ -2242,8 +2241,8 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		sucprintf(message, len, TCLocalStrings::get(_UC("OpenGl+WglInfo")),
 			openGlMessage, wglExtensionsList);
 		hOpenGLInfoWindow = createDialog(IDD_OPENGL_INFO);
-		sendDlgItemMessageUC(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT,
-			WM_SETTEXT, 0, (LPARAM)message);
+		sendDlgItemMessageUC(hOpenGLInfoWindow, IDC_OPENGL_INFO, WM_SETTEXT, 0,
+			(LPARAM)message);
 		hOpenGLStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE |
 			SBARS_SIZEGRIP, "", hOpenGLInfoWindow, ID_TOOLBAR);
 		SendMessage(hOpenGLStatusBar, SB_SETPARTS, 2, (LPARAM)parts);
@@ -2257,8 +2256,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 				TCLocalStrings::get(_UC("OpenGlnExtensions")),
 				numOpenGlExtensions);
 		}
-		sendMessageUC(hOpenGLStatusBar, SB_SETTEXTA, SB_SETTEXTW, 0,
-			(LPARAM)buf);
+		sendMessageUC(hOpenGLStatusBar, SB_SETTEXT, 0, (LPARAM)buf);
 		if (count == 1)
 		{
 			ucstrcpy(buf, TCLocalStrings::get(_UC("OpenGl1WglExtension")));
@@ -2268,8 +2266,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 			sucprintf(buf, COUNT_OF(buf),
 				TCLocalStrings::get(_UC("OpenGlnWglExtensions")), count);
 		}
-		sendMessageUC(hOpenGLStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1,
-			(LPARAM)buf);
+		sendMessageUC(hOpenGLStatusBar, SB_SETTEXT, 1, (LPARAM)buf);
 		calcSystemSizes();
 		if (openGLInfoWindoResizer)
 		{
@@ -3050,8 +3047,7 @@ void LDViewWindow::doLibraryUpdateFinished(int finishType)
 		libraryUpdater = NULL;
 		if (ucstrlen(statusText))
 		{
-			sendMessageUC(hUpdateStatus, WM_SETTEXT, WM_SETTEXT, 0,
-				(LPARAM)statusText);
+			sendMessageUC(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)statusText);
 		}
 	}
 }

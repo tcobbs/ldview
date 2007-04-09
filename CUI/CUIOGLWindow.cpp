@@ -13,7 +13,7 @@ CUIOGLWindow::CUIOGLWindow(void)
 	init();
 }
 
-CUIOGLWindow::CUIOGLWindow(const char* windowTitle, HINSTANCE hInstance, int x,
+CUIOGLWindow::CUIOGLWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 						   int y, int width, int height)
 			 :initializedGL(FALSE),
 			  hasParent(FALSE),

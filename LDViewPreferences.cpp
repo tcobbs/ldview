@@ -56,7 +56,7 @@ char LDViewPreferences::ldviewPath[MAX_PATH] = "";
 LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 									 LDrawModelViewer* modelViewer)
 	// Todo: Unicode
-	:CUIPropertySheet(TCLocalStrings::get("LDViewPreferences"), hInstance),
+	:CUIPropertySheet(TCLocalStrings::get(_UC("LDViewPreferences")), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
 	ldPrefs(new LDPreferences(modelViewer)),
@@ -2225,7 +2225,7 @@ void LDViewPreferences::setAniso(int value)
 	{
 		label[0] = 0;
 	}
-	sendMessageUC(hAnisoLevelLabel, WM_SETTEXT, WM_SETTEXT, 0, (LPARAM)label);
+	sendMessageUC(hAnisoLevelLabel, WM_SETTEXT, 0, (LPARAM)label);
 }
 
 void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
@@ -2334,9 +2334,8 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 		UCCHAR selectedString[1024];
 		int fsaaMode;
 
-		sendDlgItemMessageUC(hPage, controlId, WM_GETTEXT, WM_GETTEXT,
-			sizeof(selectedString) / sizeof(selectedString[0]),
-			(LPARAM)selectedString);
+		sendDlgItemMessageUC(hPage, controlId, WM_GETTEXT,
+			COUNT_OF(selectedString), (LPARAM)selectedString);
 		if (ucstrcmp(selectedString, TCLocalStrings::get(_UC("FsaaNone"))) == 0)
 		{
 			fsaaMode = 0;
@@ -2720,15 +2719,15 @@ void LDViewPreferences::setupMemoryUsage(void)
 	while (SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_GETCOUNT, 0,
 		0))
 	{
-		sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_DELETESTRING,
-			CB_DELETESTRING, 0, 0);
+		sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_DELETESTRING, 0,
+			0);
 	}
-	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING,
-		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("Low")));
-	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING,
-		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("Medium")));
-	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING,
-		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("High")));
+	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)TCLocalStrings::get(_UC("Low")));
+	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)TCLocalStrings::get(_UC("Medium")));
+	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)TCLocalStrings::get(_UC("High")));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
 		(WPARAM)ldPrefs->getMemoryUsage(), 0);
 }
@@ -3660,8 +3659,8 @@ void LDViewPreferences::setupAntialiasing(void)
 	// Remove all items from FSAA combo box list.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_RESETCONTENT, 0, 0);
 	// Add "None" to FSAA combo box list as only item.
-	sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
-		CB_ADDSTRING, 0, (LPARAM)TCLocalStrings::get(_UC("FsaaNone")));
+	sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
+		(LPARAM)TCLocalStrings::get(_UC("FsaaNone")));
 	// Select "None", just in case something else doesn't get selected later.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SETCURSEL, 0, 0);
 	// The following array should always exist, even if it is empty, but check
@@ -3678,8 +3677,8 @@ void LDViewPreferences::setupAntialiasing(void)
 
 			sucprintf(modeString, COUNT_OF(modeString),
 				TCLocalStrings::get(_UC("FsaaNx")), value);
-			sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
-				CB_ADDSTRING, 0, (LPARAM)modeString);
+			sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
+				(LPARAM)modeString);
 			// nVidia hardare supports Quincunx and 9-box pattern, so add an
 			// "Enhanced" item to the list if the extension is supported and
 			// the current factor is 2 or 4.
@@ -3691,7 +3690,7 @@ void LDViewPreferences::setupAntialiasing(void)
 				ucstrcat(modeString, _UC(" "));
 				ucstrcat(modeString, TCLocalStrings::get(_UC("FsaaEnhanced")));
 				sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
-					CB_ADDSTRING, 0, (LPARAM)modeString);
+					0, (LPARAM)modeString);
 			}
 		}
 	}
@@ -3705,7 +3704,7 @@ void LDViewPreferences::setupAntialiasing(void)
 			ucstrcat(modeString, TCLocalStrings::get(_UC("FsaaEnhanced")));
 		}
 		if (sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_SELECTSTRING,
-			CB_SELECTSTRING, 0, (LPARAM)modeString) == CB_ERR)
+			0, (LPARAM)modeString) == CB_ERR)
 		{
 			// We didn't find the selected mode, so reset to none.
 			ldPrefs->setFsaaMode(0);
@@ -3768,15 +3767,15 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 	{
 		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)"???");
 	}
-	sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, CB_ADDSTRING, 0,
+	sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
 		(LPARAM)TCLocalStrings::get(_UC("<None>")));
 	for (i = 1; i <= 10; i++)
 	{
 		UCCHAR numString[5];
 
 		sucprintf(numString, COUNT_OF(numString), _UC("%d"), i % 10);
-		sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, CB_ADDSTRING,
-			0, (LPARAM)numString);
+		sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
+			(LPARAM)numString);
 	}
 	SendDlgItemMessage(hDlg, IDC_HOTKEY_COMBO, CB_SETCURSEL, hotKeyIndex, 0);
 	return TRUE;

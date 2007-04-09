@@ -9,7 +9,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCStringArray.h>
 
-#define TITLE "LDView"
+#define TITLE _UC("LDView")
 
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480

@@ -1915,14 +1915,16 @@ int ModelWindow::loadModel(void)
 	makeCurrent();
 	if (strlen(filename) < 900)
 	{
-		char title[1024];
+		UCCHAR title[1024];
+		UCSTR ucFilename = mbstoucstring(filename);
 
-		sprintf(title, "LDView: %s", filename);
+		sucprintf(title, COUNT_OF(title), _UC("LDView: %s"), ucFilename);
+		delete ucFilename;
 		parentWindow->setTitle(title);
 	}
 	else
 	{
-		parentWindow->setTitle("LDView");
+		parentWindow->setTitle(_UC("LDView"));
 	}
 	_CrtMemCheckpoint(&ms1);
 	if (modelViewer->loadModel())
@@ -1945,7 +1947,7 @@ int ModelWindow::loadModel(void)
 	}
 	else
 	{
-		parentWindow->setTitle("LDView");
+		parentWindow->setTitle(_UC("LDView"));
 		stopPolling();
 		modelViewer->setFilename(NULL);
 		return 0;
@@ -2103,12 +2105,10 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 	{
 		UCCHAR oldMessage[1024];
 
-		sendMessageUC(hStatusBar, SB_GETTEXTA, SB_GETTEXTW, 1,
-			(LPARAM)oldMessage);
+		sendMessageUC(hStatusBar, SB_GETTEXT, 1, (LPARAM)oldMessage);
 		if (ucstrcmp(message, oldMessage) != 0)
 		{
-			sendMessageUC(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1,
-				(LPARAM)message);
+			sendMessageUC(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
 		}
 //		SendDlgItemMessage(hProgressWindow, IDC_LOAD_PROGRESS_MSG, WM_SETTEXT,
 //			0, (LPARAM)message);
@@ -2309,10 +2309,10 @@ void ModelWindow::setStatusText(HWND hStatus, int part, CUCSTR text)
 {
 	UCCHAR oldText[1024];
 
-	sendMessageUC(hStatus, SB_GETTEXTA, SB_GETTEXTW, part, (LPARAM)oldText);
+	sendMessageUC(hStatus, SB_GETTEXT, part, (LPARAM)oldText);
 	if (ucstrcmp(text, oldText) != 0)
 	{
-		sendMessageUC(hStatus, SB_SETTEXTA, SB_SETTEXTW, part, (LPARAM)text);
+		sendMessageUC(hStatus, SB_SETTEXT, part, (LPARAM)text);
 		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
 	}
 }
@@ -3678,6 +3678,7 @@ bool ModelWindow::print(void)
 	{
 		DOCINFO di;
 		int printJobId;
+		char *docName = ucstringtombs(parentWindow->getWindowTitle());
 
 		parseDevMode(pd.hDevMode);
 		TCUserDefaults::setLongForKey(usePrinterDPI ? 1 : 0,
@@ -3687,7 +3688,7 @@ bool ModelWindow::print(void)
 			PRINT_BACKGROUND_KEY, false);
 			
 		di.cbSize = sizeof(DOCINFO);
-		di.lpszDocName = parentWindow->getWindowTitle();
+		di.lpszDocName = docName;
 		di.lpszOutput = NULL;
 		di.lpszDatatype = NULL;
 		di.fwType = 0;
@@ -3706,6 +3707,7 @@ bool ModelWindow::print(void)
 				AbortDoc(pd.hDC);
 			}
 		}
+		delete docName;
 	}
 	return retValue;
 }

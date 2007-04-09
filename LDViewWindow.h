@@ -60,8 +60,8 @@ typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
 class LDViewWindow: public CUIWindow
 {
 	public:
-		LDViewWindow(const char*, HINSTANCE, int, int, int, int);
-		virtual char* windowClassName(void);
+		LDViewWindow(CUCSTR, HINSTANCE, int, int, int, int);
+		virtual const char* windowClassName(void);
 //		virtual void setModelWindow(ModelWindow* value);
 //		virtual int getDecorationHeight(void);
 		virtual void openModel(const char* = NULL, bool skipLoad = false);

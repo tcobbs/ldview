@@ -183,7 +183,7 @@ LDVExtensionsSetup::LDVExtensionsSetupCleanup::~LDVExtensionsSetupCleanup(void)
 
 
 LDVExtensionsSetup::LDVExtensionsSetup(HINSTANCE hInstance):
-	CUIOGLWindow("", hInstance, 100, 100, 100, 100)
+	CUIOGLWindow(_UC(""), hInstance, 100, 100, 100, 100)
 {
 }
 
