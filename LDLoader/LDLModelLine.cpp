@@ -141,7 +141,14 @@ bool LDLModelLine::parse(void)
 		len = strlen(subModelName);
 		for (k = 0; k < len; k++)
 		{
-			if (isspace(subModelName[k]))
+			// Without the typecast to TCByte below, extended characters trigger
+			// an assert in debug mode in Visual Studio 2005.  The assert code
+			// line appears to have been written by someone who didn't know what
+			// they were doing.  They add one to the input (an int), then
+			// typecast to an unsigned, then check to see if that's less than or
+			// equal to 256.  A negagive input results in a huge number,
+			// (billions), triggering the assert.
+			if (isspace((TCByte)subModelName[k]))
 			{
 				UCSTR ucSubModelName = mbstoucstring(subModelName);
 
