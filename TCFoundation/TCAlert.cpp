@@ -57,6 +57,15 @@ const wchar_t *TCAlert::getWMessage(void)
 	return m_wMessage.c_str();
 }
 
+CUCSTR TCAlert::getMessageUC(void)
+{
+#ifdef TC_NO_UNICODE
+	return getMessage();
+#else TC_NO_UNICODE
+	return getWMessage();
+#endif TC_NO_UNICODE
+}
+
 TCStringArray *TCAlert::getExtraInfo(void)
 {
 	if (!m_extraInfo && m_ucExtraInfo.size() > 0)

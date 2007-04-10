@@ -55,7 +55,6 @@ char LDViewPreferences::ldviewPath[MAX_PATH] = "";
 
 LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 									 LDrawModelViewer* modelViewer)
-	// Todo: Unicode
 	:CUIPropertySheet(TCLocalStrings::get(_UC("LDViewPreferences")), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
@@ -813,7 +812,7 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 
 	if (dialogId)
 	{
-		// Todo: Unicode
+		// NOTE: help filename doesn't support Unicode.
 		char* helpPath = getLDViewPath(TCLocalStrings::get("LDView.hlp"));
 		DWORD helpId;
 

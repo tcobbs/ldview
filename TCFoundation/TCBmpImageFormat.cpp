@@ -1,4 +1,5 @@
 #include "TCBmpImageFormat.h"
+#include "TCLocalStrings.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -408,8 +409,8 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file,
 	int imageRowSize = image->getRowSize();
 	TCByte *rowData = new TCByte[rowSize];
 
-	callProgressCallback(progressCallback, "Saving BMP.", 0.0f,
-		progressUserData);
+	callProgressCallback(progressCallback,
+		TCLocalStrings::get(_UC("SavingBMP")), 0.0f, progressUserData);
 	memset(rowData, 0, rowSize);
 	for (i = 0; i < image->getHeight() && !failed; i++)
 	{

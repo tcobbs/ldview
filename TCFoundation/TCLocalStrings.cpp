@@ -655,7 +655,6 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 			bool bUnicode16 = false;
 			bool bBigEndian = true;
 
-			// Todo? 32-bit Unicode?
 			if (fileData[0] == 0xFF && fileData[1] == 0xFE)
 			{
 				// Little Endian Unicode

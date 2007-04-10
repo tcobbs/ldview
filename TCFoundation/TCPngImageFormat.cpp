@@ -1,4 +1,5 @@
 #include "TCPngImageFormat.h"
+#include "TCLocalStrings.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -351,7 +352,8 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 						pngColorType, PNG_INTERLACE_NONE,
 						PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 					png_write_info(pngPtr, infoPtr);
-					callProgressCallback(progressCallback, "Saving PNG.", 0.0f,
+					callProgressCallback(progressCallback,
+						TCLocalStrings::get(_UC("SavingPNG")), 0.0f,
 						progressUserData);
 					for (i = 0; i < height; i++)
 					{

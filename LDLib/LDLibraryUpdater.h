@@ -30,7 +30,7 @@ public:
 	void setLdrawDir(const char *ldrawDir);
 	void checkForUpdates(void);
 	void installLDraw(void);
-	bool canCheckForUpdates(char *&error);
+	bool canCheckForUpdates(UCSTR &error);
 	CUCSTR getError(void) { return m_error; }
 protected:
 	virtual ~LDLibraryUpdater(void);
@@ -53,7 +53,7 @@ protected:
 	void extractUpdate(const char *filename);
 	void extractUpdates(bool *aborted);
 	void launchThread();
-	bool caseSensitiveFileSystem(char *&error);
+	bool caseSensitiveFileSystem(UCSTR &error);
 
 	TCWebClientArray *m_webClients;
 	TCWebClientArray *m_finishedWebClients;

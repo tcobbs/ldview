@@ -25,7 +25,7 @@ class TCExport TCImageFormat : public TCObject
 		virtual ~TCImageFormat(void);
 		virtual void dealloc(void);
 		virtual bool callProgressCallback(
-			TCImageProgressCallback progressCallback, char *message,
+			TCImageProgressCallback progressCallback, CUCSTR message,
 			float progress, void *progressUserData);
 
 		char *name;

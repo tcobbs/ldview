@@ -24,6 +24,7 @@ public:
 	const char *getAlertClass(void) { return m_alertClass; }
 	const char *getMessage(void);
 	const wchar_t *getWMessage(void);
+	CUCSTR getMessageUC(void);
 	TCStringArray *getExtraInfo(void);
 	const ucstringVector &getUCExtraInfo(void);
 	static TCULong alertClass(void) { return 0; }
