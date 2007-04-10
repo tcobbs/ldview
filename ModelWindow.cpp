@@ -245,7 +245,7 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 			{
 				showErrors = false;
 			}
-			if (!progressCallback(alert->getMessage(), alert->getProgress(),
+			if (!progressCallback(alert->getMessageUC(), alert->getProgress(),
 				showErrors))
 			{
 				alert->abort();
@@ -2051,6 +2051,7 @@ LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
 
+/*
 #ifndef TC_NO_UNICODE
 int ModelWindow::progressCallback(const char* message, float progress,
 								  bool showErrors)
@@ -2064,6 +2065,7 @@ int ModelWindow::progressCallback(const char* message, float progress,
 	return progressCallback(temp.c_str(), progress, showErrors);
 }
 #endif // TC_NO_UNICODE
+*/
 
 int ModelWindow::progressCallback(CUCSTR message, float progress,
 								  bool showErrors)
@@ -2150,13 +2152,15 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 	}
 }
 
+/*
 int ModelWindow::staticProgressCallback(char* message, float progress,
 										void* userData)
 {
 	return ((ModelWindow*)userData)->progressCallback(message, progress, true);
 }
+*/
 
-bool ModelWindow::staticImageProgressCallback(char* message, float progress,
+bool ModelWindow::staticImageProgressCallback(CUCSTR message, float progress,
 											  void* userData)
 {
 	return ((ModelWindow*)userData)->progressCallback(message, progress) ? true
@@ -2507,6 +2511,7 @@ void ModelWindow::doPaint(void)
 	}
 	if (redrawCount > 0)
 	{
+		debugPrintf("Multi-forced redraw.\n");
 		forceRedraw();
 		redrawCount--;
 		return;
@@ -3020,7 +3025,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		{
 			modelViewer->setXTile(xTile);
 			renderOffscreenImage();
-			if (progressCallback(TCLocalStrings::get("RenderingSnapshot"),
+			if (progressCallback(TCLocalStrings::get(_UC("RenderingSnapshot")),
 				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles)))
 			{
 //				glFinish();
@@ -3451,12 +3456,13 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 				{
 					modelViewer->setYTile(yTile);
 				}
-				progressCallback(TCLocalStrings::get("PrintingModel"), 0.0f);
+				progressCallback(TCLocalStrings::get(_UC("PrintingModel")),
+					0.0f);
 				for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
 				{
 					int x, y;
 
-					if (progressCallback((char*)NULL, (float)(yTile *
+					if (progressCallback((CUCSTR)NULL, (float)(yTile *
 						numXTiles + xTile) / (numYTiles * numXTiles)))
 					{
 						if (landscape)
@@ -3525,7 +3531,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 					}
 				}
 			}
-			progressCallback((char*)NULL, 1.0f);
+			progressCallback((CUCSTR)NULL, 1.0f);
 			DeleteObject(hBitmap);
 			modelViewer->setHighlightLineWidth(oldHighlightLineWidth);
 			modelViewer->setWireframeLineWidth(oldWireframeLineWidth);
@@ -3534,7 +3540,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 			modelViewer->setNumXTiles(1);
 			modelViewer->setNumYTiles(1);
 			delete buffer;
-			progressCallback((char*)NULL, 2.0f);
+			progressCallback((CUCSTR)NULL, 2.0f);
 		}
 		if (hPBuffer)
 		{

@@ -14,7 +14,7 @@ typedef enum
 	TCRgba8
 } TCImageDataFormat;
 
-typedef bool (*TCImageProgressCallback)(char* message, float progress,
+typedef bool (*TCImageProgressCallback)(CUCSTR message, float progress,
 										void* userData);
 
 typedef TCTypedObjectArray<TCImageFormat> TCImageFormatArray;

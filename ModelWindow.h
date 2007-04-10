@@ -195,14 +195,16 @@ class ModelWindow: public CUIOGLWindow
 		virtual BOOL getFileTime(FILETIME*);
 		virtual void checkForPart(void);
 #ifndef TC_NO_UNICODE
-		virtual int progressCallback(const char* message, float progress,
-			bool showErrors = false);
+		//virtual int progressCallback(const char* message, float progress,
+		//	bool showErrors = false);
 #endif // TC_NO_UNICODE
 		virtual int progressCallback(CUCSTR message, float progress,
 			bool showErrors = false);
+/*
 		static int staticProgressCallback(char* message, float progress,
 			void* userData);
-		static bool staticImageProgressCallback(char* message, float progress,
+*/
+		static bool staticImageProgressCallback(CUCSTR message, float progress,
 			void* userData);
 //		virtual BOOL showProgress(void);
 		virtual void hideProgress(void);

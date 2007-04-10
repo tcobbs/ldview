@@ -74,7 +74,7 @@ void TbButtonInfo::dealloc(void)
 	TCObject::dealloc();
 }
 
-void TbButtonInfo::setTooltipText(const char *value)
+void TbButtonInfo::setTooltipText(CUCSTR value)
 {
 	if (value != tooltipText)
 	{
@@ -145,9 +145,7 @@ LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 			   stdBitmapStartId(-1),
 			   tbBitmapStartId(-1),
 			   prefs(NULL),
-			   drawWireframe(false),
-			   lastViewAngle(LDVAngleDefault)
-//			   modelWindowShown(false)
+			   drawWireframe(false)
 {
 	CUIThemes::init();
 	if (CUIThemes::isThemeLibLoaded())
@@ -434,7 +432,7 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 	}
 }
 
-void LDViewWindow::addTbButtonInfo(const char *tooltipText, int commandId,
+void LDViewWindow::addTbButtonInfo(CUCSTR tooltipText, int commandId,
 								   int stdBmpId, int tbBmpId, BYTE style,
 								   BYTE state)
 {
@@ -450,7 +448,7 @@ void LDViewWindow::addTbButtonInfo(const char *tooltipText, int commandId,
 	buttonInfo->release();
 }
 
-void LDViewWindow::addTbCheckButtonInfo(const char *tooltipText, int commandId,
+void LDViewWindow::addTbCheckButtonInfo(CUCSTR tooltipText, int commandId,
 										int stdBmpId, int tbBmpId, bool checked,
 										BYTE style, BYTE state)
 {
@@ -476,11 +474,12 @@ void LDViewWindow::populateTbButtonInfos(void)
 	if (!tbButtonInfos)
 	{
 		tbButtonInfos = new TbButtonInfoArray;
-		addTbButtonInfo(TCLocalStrings::get("OpenFile"), ID_FILE_OPEN,
+		addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
 			STD_FILEOPEN, -1);
-		addTbButtonInfo(TCLocalStrings::get("SaveSnapshot"), ID_FILE_SAVE, -1,
-			5);
-		addTbButtonInfo(TCLocalStrings::get("Reload"), ID_FILE_RELOAD, -1, 0);
+		addTbButtonInfo(TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE,
+			-1, 5);
+		addTbButtonInfo(TCLocalStrings::get(_UC("Reload")), ID_FILE_RELOAD, -1,
+			0);
 		addTbSeparatorInfo();
 		drawWireframe = prefs->getDrawWireframe();
 		seams = prefs->getUseSeams() != 0;
@@ -488,23 +487,24 @@ void LDViewWindow::populateTbButtonInfos(void)
 		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
 		lighting = prefs->getUseLighting();
 		bfc = prefs->getBfc();
-		addTbCheckButtonInfo(TCLocalStrings::get("Wireframe"), IDC_WIREFRAME,
-			-1, 1, drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(TCLocalStrings::get("Seams"), IDC_SEAMS, -1, 2,
-			seams);
-		addTbCheckButtonInfo(TCLocalStrings::get("EdgeLines"), IDC_HIGHLIGHTS,
-			-1, 3, edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(TCLocalStrings::get("PrimitiveSubstitution"),
+		addTbCheckButtonInfo(TCLocalStrings::get(_UC("Wireframe")),
+			IDC_WIREFRAME, -1, 1, drawWireframe,
+			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, -1,
+			2, seams);
+		addTbCheckButtonInfo(TCLocalStrings::get(_UC("EdgeLines")),
+			IDC_HIGHLIGHTS, -1, 3, edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(TCLocalStrings::get(_UC("PrimitiveSubstitution")),
 			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(TCLocalStrings::get("Lighting"), IDC_LIGHTING, -1,
-			7, lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(TCLocalStrings::get("BFC"), IDC_BFC, -1, 9, bfc,
-			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbButtonInfo(TCLocalStrings::get("ResetSelectView"), ID_VIEWANGLE,
-			-1, 6, TBSTYLE_DROPDOWN);
-		addTbButtonInfo(TCLocalStrings::get("Preferences"), ID_EDIT_PREFERENCES,
-			-1, 8);
+		addTbCheckButtonInfo(TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING,
+			-1, 7, lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(TCLocalStrings::get(_UC("BFC")), IDC_BFC, -1, 9,
+			bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbButtonInfo(TCLocalStrings::get(_UC("SelectView")),
+			ID_VIEWANGLE, -1, 6, TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
+		addTbButtonInfo(TCLocalStrings::get(_UC("Preferences")), 
+			ID_EDIT_PREFERENCES, -1, 8);
 	}
 }
 
@@ -530,7 +530,6 @@ void LDViewWindow::createToolbar(void)
 			0, 0, hWindow, (HMENU)ID_TOOLBAR, hInstance, NULL);
 		SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
 		memset(buttonTitle, 0, sizeof(buttonTitle));
-		strcpy(buttonTitle, "");
 		SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(25, 16));
@@ -543,6 +542,7 @@ void LDViewWindow::createToolbar(void)
 		// The 10 on the following line is the number of buttons in the bitmap.
 		tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 10,
 			(LPARAM)&addBitmap);
+		// Note: buttonTitle is an empty string.  No need for Unicode.
 		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 		count = tbButtonInfos->getCount();
 		buttons = new TBBUTTON[count];
@@ -1206,6 +1206,7 @@ BOOL LDViewWindow::doRemoveExtraDir(void)
 		}
 		if (index >= 0)
 		{
+			// ToDo: Unicode?  It's a filename, and I'm avoiding that.
 			SendMessage(hExtraDirsList, LB_SELECTSTRING, index,
 				(LPARAM)extraSearchDirs->stringAtIndex(index));
 		}
@@ -1266,6 +1267,7 @@ BOOL LDViewWindow::doMoveExtraDirUp(void)
 	extraSearchDirs->removeString(index);
 	SendMessage(hExtraDirsList, LB_DELETESTRING, index, 0);
 	extraSearchDirs->insertString(extraDir, index - 1);
+	// ToDo: Unicode ?Maybe: filename
 	SendMessage(hExtraDirsList, LB_INSERTSTRING, index - 1, (LPARAM)extraDir);
 	SendMessage(hExtraDirsList, LB_SETCURSEL, index - 1, (LPARAM)extraDir);
 	updateExtraDirsEnabled();
@@ -1287,7 +1289,9 @@ BOOL LDViewWindow::doMoveExtraDirDown(void)
 	extraSearchDirs->removeString(index);
 	SendMessage(hExtraDirsList, LB_DELETESTRING, index, 0);
 	extraSearchDirs->insertString(extraDir, index + 1);
+	// ToDo: Unicode ?Maybe: filename
 	SendMessage(hExtraDirsList, LB_INSERTSTRING, index + 1, (LPARAM)extraDir);
+	// ToDo: Unicode ?Maybe: filename
 	SendMessage(hExtraDirsList, LB_SETCURSEL, index + 1, (LPARAM)extraDir);
 	updateExtraDirsEnabled();
 	delete extraDir;
@@ -2577,8 +2581,25 @@ void LDViewWindow::doToolbarDropDown(LPNMTOOLBAR toolbarNot)
 	}
 	if (hMenu)
 	{
-		TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON |
-			TPM_VERTICAL, rect.left, rect.bottom, hWindow, &tpm);
+		BOOL fade;
+
+		// Note: selection fade causes a display glitch.  This is an obscenely
+		// ugly hack to get rid of that, but it does work.  The problem still
+		// exists when the menu item is selected from the main menu, though.
+		// Did I mention yet today that Microsoft sucks?
+		SystemParametersInfo(SPI_GETSELECTIONFADE, 0, &fade, 0);
+		if (fade)
+		{
+			// We better pray it doesn't crash between here and where we put
+			// things back below.
+			SystemParametersInfo(SPI_SETSELECTIONFADE, FALSE, NULL, 0);
+		}
+		TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+			rect.left, rect.bottom, hWindow, &tpm);
+		if (fade)
+		{
+			SystemParametersInfo(SPI_SETSELECTIONFADE, 0, &fade, 0);
+		}
 	}
 }
 
@@ -2588,9 +2609,9 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 //		notification->code);
 	switch (notification->code)
 	{
-	case TTN_GETDISPINFO:
+	case TTN_GETDISPINFOUC:
 		{
-			LPNMTTDISPINFO dispInfo = (LPNMTTDISPINFO)notification;
+			LPNMTTDISPINFOUC dispInfo = (LPNMTTDISPINFOUC)notification;
 			int i;
 			int count = tbButtonInfos->getCount();
 
@@ -2621,7 +2642,8 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 					}
 					else
 					{
-						strcpy(dispInfo->szText, buttonInfo->getTooltipText());
+						ucstrcpy(dispInfo->szText,
+							buttonInfo->getTooltipText());
 					}
 					break;
 				}
@@ -3062,8 +3084,8 @@ void LDViewWindow::createLibraryUpdateWindow(void)
 	hUpdateStatus = GetDlgItem(hLibraryUpdateWindow, IDC_UPDATE_STATUS_FIELD);
 	hUpdateCancelButton = GetDlgItem(hLibraryUpdateWindow, IDCANCEL);
 	hUpdateOkButton = GetDlgItem(hLibraryUpdateWindow, IDOK);
-	SendMessage(hUpdateStatus, WM_SETTEXT, 0,
-		(LPARAM)TCLocalStrings::get("CheckingForLibraryUpdates"));
+	sendMessageUC(hUpdateStatus, WM_SETTEXT, 0,
+		(LPARAM)TCLocalStrings::get(_UC("CheckingForLibraryUpdates")));
 	SendMessage(hUpdateProgressBar, PBM_SETPOS, 0, 0);
 	EnableWindow(hUpdateOkButton, FALSE);
 }
@@ -3144,7 +3166,7 @@ void LDViewWindow::checkForLibraryUpdates(void)
 	{
 		libraryUpdater = new LDLibraryUpdater;
 		char *ldrawDir = getLDrawDir();
-		char *updateCheckError = NULL;
+		UCSTR updateCheckError = NULL;
 
 		libraryUpdateCanceled = false;
 		libraryUpdater->setLibraryUpdateKey(LAST_LIBRARY_UPDATE_KEY);
@@ -3157,7 +3179,7 @@ void LDViewWindow::checkForLibraryUpdates(void)
 		}
 		else
 		{
-			MessageBox(hWindow, updateCheckError, "LDView",
+			messageBoxUC(hWindow, updateCheckError, _UC("LDView"),
 				MB_OK | MB_ICONWARNING);
 			delete updateCheckError;
 		}
@@ -3170,7 +3192,8 @@ void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 	{
 		debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
 			alert->getProgress());
-		SendMessage(hUpdateStatus, WM_SETTEXT, 0, (LPARAM)alert->getMessage());
+		sendMessageUC(hUpdateStatus, WM_SETTEXT, 0,
+			(LPARAM)alert->getMessageUC());
 		SendMessage(hUpdateProgressBar, PBM_SETPOS,
 			(int)(alert->getProgress() * 100), 0);
 		if (alert->getProgress() == 1.0f)
@@ -3437,9 +3460,11 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case IDC_BFC:
 			doBfc();
 			break;
+/*
 		case ID_VIEWANGLE:
 			doViewAngle();
 			break;
+*/
 		case ID_WIREFRAME_FOG:
 			doFog();
 			break;
@@ -3711,28 +3736,21 @@ bool LDViewWindow::doToolbarCheck(bool &value, LPARAM commandId)
 	}
 }
 
+/*
 void LDViewWindow::doViewAngle(void)
 {
-/*
-	int newViewAngle = lastViewAngle + 1;
-
-	if (newViewAngle > LDVAngleIso)
-	{
-		newViewAngle = LDVAngleDefault;
-	}
-	lastViewAngle = (LDVAngle)newViewAngle;
-*/
 	if (modelWindow)
 	{
 		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
 
 		if (modelViewer)
 		{
-			modelViewer->resetView(lastViewAngle);
+			modelViewer->resetView(LDVAngleDefault);
 			modelWindow->forceRedraw();
 		}
 	}
 }
+*/
 
 WNDCLASSEX LDViewWindow::getWindowClass(void)
 {
@@ -4266,7 +4284,6 @@ void LDViewWindow::resetDefaultView(void)
 
 void LDViewWindow::resetView(LDVAngle viewAngle)
 {
-//	lastViewAngle = viewAngle;
 	modelWindow->resetView(viewAngle);
 }
 
@@ -4485,9 +4502,10 @@ int CALLBACK LDViewWindow::pathBrowserCallback(HWND hwnd, UINT uMsg,
 	{
 		if (strcmp((const char *)lpData, "C:") == 0)
 		{
-			// LDLModel strips of the backslash.  We need to add it back.
+			// LDLModel strips off the backslash.  We need to add it back.
 			lpData = (LPARAM)"C:\\";
 		}
+		// ToDo: Unicode ?path
 		SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
 	}
 	return 0;

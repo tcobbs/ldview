@@ -413,7 +413,7 @@ TCStringArray *LDLibraryUpdater::getUpdateQueue(void)
 	return m_updateQueue;
 }
 
-bool LDLibraryUpdater::caseSensitiveFileSystem(char *&error)
+bool LDLibraryUpdater::caseSensitiveFileSystem(UCSTR &error)
 {
 	char *tempFilename = new char[strlen(m_ldrawDir) + 32];
 	bool retValue = false;
@@ -452,20 +452,21 @@ bool LDLibraryUpdater::caseSensitiveFileSystem(char *&error)
 			}
 			else
 			{
-				error = copyString(TCLocalStrings::get("LDLUpdateCantWrite"));
+				error = copyString(TCLocalStrings::get(
+					_UC("LDLUpdateCantWrite")));
 			}
 			break;
 		}
 	}
 	if (i == 100000)
 	{
-		error = copyString(TCLocalStrings::get("LDLUpdateTmpFileError"));
+		error = copyString(TCLocalStrings::get(_UC("LDLUpdateTmpFileError")));
 	}
 	delete tempFilename;
 	return retValue;
 }
 
-bool LDLibraryUpdater::canCheckForUpdates(char *&error)
+bool LDLibraryUpdater::canCheckForUpdates(UCSTR &error)
 {
 	bool caseSensitive;
 	bool goodSuffix = false;
@@ -498,7 +499,7 @@ bool LDLibraryUpdater::canCheckForUpdates(char *&error)
 		}
 		if (!goodSuffix)
 		{
-			error = copyString(TCLocalStrings::get("LDLUpdateNotLDraw"));
+			error = copyString(TCLocalStrings::get(_UC("LDLUpdateNotLDraw")));
 		}
 	}
 	return goodSuffix;

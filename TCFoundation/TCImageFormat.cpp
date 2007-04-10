@@ -72,7 +72,7 @@ bool TCImageFormat::saveFile(TCImage *image, const char *filename,
 
 bool TCImageFormat::callProgressCallback(TCImageProgressCallback
 										 progressCallback,
-										 char *message, float progress,
+										 CUCSTR message, float progress,
 										 void *progressUserData)
 {
 	if (progressCallback)

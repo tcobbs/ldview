@@ -20,8 +20,8 @@ class TbButtonInfo: public TCObject
 {
 public:
 	TbButtonInfo(void);
-	const char *getTooltipText(void) { return tooltipText; }
-	void setTooltipText(const char *value);
+	CUCSTR getTooltipText(void) { return tooltipText; }
+	void setTooltipText(CUCSTR value);
 	int getCommandId(void) { return commandId; }
 	void setCommandId(int value) { commandId = value; }
 	int getBmpId(int stdBitmapStartId, int tbBitmapStartId);
@@ -34,7 +34,7 @@ public:
 protected:
 	virtual void dealloc(void);
 
-	char *tooltipText;
+	UCSTR tooltipText;
 	int commandId;
 	int stdBmpId;
 	int tbBmpId;
@@ -240,10 +240,10 @@ class LDViewWindow: public CUIWindow
 		virtual void readVersionInfo(void);
 		virtual void createModelWindow(void);
 		virtual void populateTbButtonInfos(void);
-		virtual void addTbButtonInfo(const char *tooltipText, int commandId,
+		virtual void addTbButtonInfo(CUCSTR tooltipText, int commandId,
 			int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
 			BYTE state = TBSTATE_ENABLED);
-		virtual void addTbCheckButtonInfo(const char *tooltipText,
+		virtual void addTbCheckButtonInfo(CUCSTR tooltipText,
 			int commandId, int stdBmpId, int tbBmpId, bool checked,
 			BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
 		virtual void addTbSeparatorInfo(void);
@@ -254,7 +254,7 @@ class LDViewWindow: public CUIWindow
 		virtual void doLighting(void);
 		virtual void doBfc(void);
 		virtual void doToolbarDropDown(LPNMTOOLBAR toolbarNot);
-		virtual void doViewAngle(void);
+		//virtual void doViewAngle(void);
 		virtual void doFog(void);
 		virtual void doRemoveHiddenLines(void);
 		virtual void doShowEdgesOnly(void);
@@ -354,7 +354,6 @@ class LDViewWindow: public CUIWindow
 		bool lighting;
 		bool bfc;
 		bool libraryUpdateFinished;
-		LDVAngle lastViewAngle;
 		bool libraryUpdateCanceled;
 
 		static TCStringArray* recentFiles;
