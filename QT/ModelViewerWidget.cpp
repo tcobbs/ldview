@@ -155,17 +155,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		TREMainModel::setRawStudTextureData(studImage.bits(),
 			studImage.numBytes());
 	}
-/*
-	TCAlertManager::registerHandler(LDLError::alertClass(),
-		dynamic_cast<TCObject *>(this),
-		(TCAlertCallback)&ModelViewerWidget::ldlErrorCallback);
-	TCAlertManager::registerHandler(TCProgressAlert::alertClass(),
-		dynamic_cast<TCObject *>(this),
-		(TCAlertCallback)&ModelViewerWidget::progressAlertCallback);
-*/
-
-//	modelViewer->setProgressCallback(staticProgressCallback, this);
-//	modelViewer->setErrorCallback(staticErrorCallback, this);
 	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
 	{
 		mouseButtonsDown[i] = false;
@@ -1211,7 +1200,7 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
     {
         libraryUpdater = new LDLibraryUpdater;
         char *ldrawDir = getLDrawDir();
-		char *updateCheckError = NULL;
+		wchar_t *updateCheckError = NULL;
 
         libraryUpdateCanceled = false;
 		libraryUpdateFinishNotified = false;
@@ -1230,7 +1219,9 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 		}
 		else
 		{
-			QMessageBox::warning(this,"LDView", updateCheckError,
+			QString qs;
+			wcstoqstring(qs, updateCheckError);
+			QMessageBox::warning(this,"LDView", qs,
 				QMessageBox::Ok, QMessageBox::NoButton);
 			delete updateCheckError;
 		}
@@ -1556,15 +1547,6 @@ void ModelViewerWidget::doRecentFile(int index)
 	}
 	unlock();
 }
-
-/*
-int ModelViewerWidget::staticProgressCallback(char *message, float progress,
-	void *userData)
-{
-	return ((ModelViewerWidget *)userData)->progressCallback(message, progress,
-		true);
-}
-*/
 
 void ModelViewerWidget::setupProgress(void)
 {
@@ -2412,10 +2394,12 @@ void ModelViewerWidget::doZoomToFit(void)
     unlock();
 }
 
-bool ModelViewerWidget::staticImageProgressCallback(char* message, float progress,
-                                              void* userData)
+bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message, 
+							float progress, void* userData)
 {
-    return ((ModelViewerWidget*)userData)->progressCallback(message, progress, true);
+	QString qs="";
+	if (message) wcstoqstring(qs,message);
+    return ((ModelViewerWidget*)userData)->progressCallback(qs, progress, true);
 }
 
 bool ModelViewerWidget::writeImage(char *filename, int width, int height,

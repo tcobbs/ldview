@@ -95,8 +95,7 @@ public:
 	bool shouldOverwriteFile(char* filename);
 	bool doFileSave(char *saveFilename);
 	bool getSaveFilename(char* saveFilename, int len);
-	static bool staticImageProgressCallback(char* message, float progress,
-            void* userData);
+	static bool staticImageProgressCallback(const wchar_t* message, float progress, void* userData);
 	bool writeImage(char *filename, int width, int height,
                      TCByte *buffer, char *formatName, bool saveAlpha = false);
 	bool saveImage(char *filename, int imageWidth, int imageHeight);
