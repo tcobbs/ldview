@@ -1199,6 +1199,11 @@ void wcstoqstring(QString &dst, const wchar_t *src, int length /*= -1*/)
 	int i;
 	QChar *temp;
 
+	dst.truncate(0);
+	if (!src)
+	{
+		return;
+	}
 	if (length == -1)
 	{
 		length = wcslen(src);
@@ -1208,7 +1213,6 @@ void wcstoqstring(QString &dst, const wchar_t *src, int length /*= -1*/)
 	{
 		temp[i] = (QChar)src[i];
 	}
-	dst.truncate(0);
 	dst.insert(0, temp, length);
 	delete temp;
 }
