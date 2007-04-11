@@ -85,6 +85,8 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/local/share/ldview/LDViewMessages.ini
 /usr/local/share/ldview/LDViewMessages_de.ini
 /usr/local/share/ldview/LDViewMessages_it.ini
+/usr/local/share/ldview/LDViewMessages_cz.ini
+/usr/local/share/ldview/LDViewMessages_hu.ini
 /usr/local/share/ldview/todo.txt
 /usr/local/share/ldview/ldview_en.qm
 /usr/local/share/ldview/ldview_de.qm
