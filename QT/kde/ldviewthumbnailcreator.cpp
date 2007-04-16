@@ -4,6 +4,7 @@
 #include <qimage.h>
 #include <qfile.h>
 #include <qtextstream.h>
+#include <unistd.h>
 
 class LDViewCreator : public ThumbCreator
 {
@@ -16,7 +17,7 @@ public:
                 file.close();
 	}};
 	virtual bool create (const QString &path, int, int, QImage &img);
-	virtual Flags flags() const;
+	virtual Flags flags() { return (Flags)(DrawFrame | BlendIcon);}
 };
 
 bool LDViewCreator::create (const QString &path, int w, int h, QImage &img)
