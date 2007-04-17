@@ -188,7 +188,7 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 {
 	const char *string;
 	QListViewItem *parent;
-	QString buf;
+	QString buf, qstring;
 	if (!TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) && 
 		(error->getLevel() == LDLAWarning))
 	{
@@ -198,8 +198,8 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 	{
 		return false;
 	}
-	string = error->getMessage();
-	parent = addErrorLine(NULL, string, error);
+	wcstoqstring(qstring, error->getWMessage());
+	parent = addErrorLine(NULL, qstring, error);
 	if (parent)
 	{
 		TCStringArray *extraInfo;
@@ -258,7 +258,7 @@ bool LDViewErrors::showsErrorType(LDLErrorType errorType)
 }
 
 QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
-	const char *line, LDLError * error, int /*imageIndex*/)
+	QString line, LDLError * error, int /*imageIndex*/)
 {
 	QListViewItem *item;
 
