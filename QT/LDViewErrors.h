@@ -36,7 +36,7 @@ protected:
 	void clearListView(void);
 	bool addErrorToListView(LDLError *error);
 	bool showsErrorType(LDLErrorType errorType);
-	QListViewItem *addErrorLine(QListViewItem *parent, const char *line,
+	QListViewItem *addErrorLine(QListViewItem *parent, QString line,
 	LDLError *error, int imageIndex = -1);
 
 	ErrorPanel *panel;
