@@ -15,6 +15,7 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qstatusbar.h>
+#include <qregexp.h>
 
 LDViewErrors::LDViewErrors(Preferences *preferences)
 	:panel(new ErrorPanel),
@@ -129,7 +130,7 @@ int LDViewErrors::populateListView(void)
 {
 	int errorCount = 0;
 	int warningCount = 0;
-	char buf[128] = "";
+	QString buf;
 	
 	if (!listViewPopulated)
 	{
@@ -156,27 +157,28 @@ int LDViewErrors::populateListView(void)
     	{
         	if (errorCount == 1)
         	{
-            	sprintf(buf, TCLocalStrings::get("ErrorTreeOneError"));
+            	buf = TCLocalStrings::get("ErrorTreeOneError");
         	}
         	else
         	{
-            	sprintf(buf, TCLocalStrings::get("ErrorTreeNErrors"), errorCount);
+            	buf = TCLocalStrings::get("ErrorTreeNErrors");
+				buf.replace(QRegExp("%."), QString::number(errorCount));
         	}
         	if (warningCount > 0)
         	{
-            	strcat(buf, ", ");
+            	buf += ", ";
         	}
     	}
     	if (warningCount > 0)
     	{
         	if (warningCount == 1)
         	{
-            	strcat(buf, TCLocalStrings::get("ErrorTreeOneWarning"));
+            	buf += TCLocalStrings::get("ErrorTreeOneWarning");
         	}
         	else
         	{
-            	sprintf(buf + strlen(buf),
-               		TCLocalStrings::get("ErrorTreeNWarnings"), warningCount);
+               	buf += TCLocalStrings::get("ErrorTreeNWarnings");
+				buf.replace(QRegExp("%."), QString::number(warningCount));
         	}
     	}
 		messageText->setText(buf);
@@ -207,11 +209,11 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 		string = error->getFilename();
 		if (string)
 		{
-			buf.sprintf("File: %s", string);
+			buf = QString("File: ")+string;
 		}
 		else
 		{
-			buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownFile"));
+			buf = TCLocalStrings::get("ErrorTreeUnknownFile");
 		}
 		addErrorLine(parent, buf, error);
 		string = error->getFileLine();
@@ -221,21 +223,23 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			
 			if (lineNumber > 0)
 			{
-				buf.sprintf(TCLocalStrings::get("ErrorTreeLine#"), lineNumber);
+				buf = TCLocalStrings::get("ErrorTreeLine#");
+				buf.replace(QRegExp("%d"), QString::number(lineNumber));
 			}
 			else
 			{
-				buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownLine#"));
+				buf = TCLocalStrings::get("ErrorTreeUnknownLine#");
 			}
 			addErrorLine(parent, buf, error);
 			char *tempString = copyString(string);
 			stripCRLF(tempString);
-			buf.sprintf(TCLocalStrings::get("ErrorTreeLine"), tempString);
+			buf = TCLocalStrings::get("ErrorTreeLine");
+			buf.replace(QRegExp("%s"),QString(tempString));
 			delete tempString;
 		}
 		else
 		{
-			buf.sprintf(TCLocalStrings::get("ErrorTreeUnknownLine"));
+			buf = TCLocalStrings::get("ErrorTreeUnknownLine");
 		}
 		addErrorLine(parent, buf, error);
 		if ((extraInfo = error->getExtraInfo()) != NULL)
