@@ -1534,9 +1534,9 @@ void ModelViewerWidget::doRecentFile(int index)
 			QFile file (filename);
 			if(!file.exists())
 			{
-				char message[2048];
-				sprintf(message,TCLocalStrings::get("ErrorLoadingModel"),
-						filename);
+				QString message;
+				message = TCLocalStrings::get("ErrorLoadingModel");
+				message.replace(QRegExp("%s"),QString(filename));
 				QMessageBox::warning(this, "LDView", message, 
 					QMessageBox::Ok, QMessageBox::NoButton);
 
