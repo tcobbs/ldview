@@ -41,7 +41,7 @@
 #include <CoreServices/CoreServices.h>
 #include <ApplicationServices/ApplicationServices.h>
 #endif // __APPLE__
-
+#include "misc.h"
 
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>

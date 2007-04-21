@@ -138,11 +138,4 @@ int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
 int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
 
-#ifdef _QT
-void wcstoqstring(QString &dst, const wchar_t *src, int length = -1);
-void wstringtoqstring(QString &dst, const std::wstring &src);
-void ucstringtoqstring(QString &dst, const ucstring &src);
-#endif // _QT
-
-
 #endif
