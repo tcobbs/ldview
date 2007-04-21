@@ -204,8 +204,6 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 	parent = addErrorLine(NULL, qstring, error);
 	if (parent)
 	{
-		TCStringArray *extraInfo;
-
 		string = error->getFilename();
 		if (string)
 		{
@@ -242,14 +240,15 @@ bool LDViewErrors::addErrorToListView(LDLError *error)
 			buf = TCLocalStrings::get("ErrorTreeUnknownLine");
 		}
 		addErrorLine(parent, buf, error);
-		if ((extraInfo = error->getExtraInfo()) != NULL)
+		ucstringVector extraInfo = error->getUCExtraInfo();
+		if (extraInfo.size() > 0)
 		{
-			int i;
-			int count = extraInfo->getCount();
-			
-			for (i = 0; i < count; i++)
+			for (ucstringVector::iterator it = extraInfo.begin();
+				 it != extraInfo.end(); it++)
 			{
-				addErrorLine(parent, extraInfo->stringAtIndex(i), error);
+				QString tmp;
+				ucstringtoqstring(tmp, *it);
+				addErrorLine(parent, tmp, error);
 			}
 		}
 	}
