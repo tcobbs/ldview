@@ -16,6 +16,7 @@
 #include <qlabel.h>
 #include <qstatusbar.h>
 #include <qregexp.h>
+#include "misc.h"
 
 LDViewErrors::LDViewErrors(Preferences *preferences)
 	:panel(new ErrorPanel),

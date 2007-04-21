@@ -1192,6 +1192,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 }
 
 #if !defined(WIN32) && !defined(COCOA)
+#include <QT/misc.h>
 const QString &TCLocalStrings::instGetLocalString(const char *key)
 {
 	QStringQStringMap::iterator it = m_qStrings.find(key);
