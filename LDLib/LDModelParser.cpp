@@ -1051,7 +1051,7 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 	}
 	if (getNoLightGeomFlag())
 	{
-		if (strcasecmp(modelName, "light.dat") == 0)
+		if (modelName && strcasecmp(modelName, "light.dat") == 0)
 		{
 			// Don't draw any geometry for light.dat.
 			return true;
