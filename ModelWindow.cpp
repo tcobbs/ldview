@@ -290,6 +290,7 @@ void ModelWindow::loadSettings(void)
 	viewMode = (LDVViewMode)TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false);
 }
 
+// Note: static function
 int ModelWindow::roundUp(int value, int nearest)
 {
 	return (value + nearest - 1) / nearest * nearest;

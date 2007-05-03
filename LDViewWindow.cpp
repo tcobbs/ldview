@@ -475,7 +475,7 @@ void LDViewWindow::populateTbButtonInfos(void)
 	{
 		tbButtonInfos = new TbButtonInfoArray;
 		addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
-			STD_FILEOPEN, -1);
+			-1, 10);//STD_FILEOPEN, -1);
 		addTbButtonInfo(TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE,
 			-1, 5);
 		addTbButtonInfo(TCLocalStrings::get(_UC("Reload")), ID_FILE_RELOAD, -1,
@@ -513,16 +513,65 @@ void LDViewWindow::setHParentWindow(HWND hWnd)
 	hParentWindow = hWnd;
 }
 
+// Note: static function
+HBITMAP LDViewWindow::createMask(HBITMAP hBitmap, COLORREF maskColor)
+{
+	BITMAP bitmap;
+	TCByte *data;
+	int bytesPerLine;
+	int maskSize;
+	int x, y;
+	HDC hBmDc = CreateCompatibleDC(NULL);
+
+	::GetObject((HANDLE)hBitmap, sizeof(BITMAP), &bitmap);
+	bytesPerLine = ModelWindow::roundUp((bitmap.bmWidth + 7) / 8, 2);
+	maskSize = bytesPerLine * bitmap.bmHeight;
+	data = new TCByte[maskSize];
+	memset(data, 0, maskSize);
+	SelectObject(hBmDc, hBitmap);
+	for (y = 0; y < bitmap.bmHeight; y++)
+	{
+		int yOffset = bytesPerLine * y;
+
+		for (x = 0; x < bitmap.bmWidth; x++)
+		{
+			COLORREF pixelColor = GetPixel(hBmDc, x, y);
+
+			if (pixelColor == maskColor)
+			{
+				int byteOffset = yOffset + x / 8;
+				int bitOffset = 7 - (x % 8);
+
+				data[byteOffset] |= (1 << bitOffset);
+			}
+		}
+	}
+	DeleteDC(hBmDc);
+	return CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
+}
+
 void LDViewWindow::createToolbar(void)
 {
 	if (showToolbar)
 	{
-		TBADDBITMAP addBitmap;
+		//TBADDBITMAP addBitmap;
 		TBBUTTON *buttons;
 		char buttonTitle[128];
 		int i;
 		int count;
+		HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
+			10, 10);
+		HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
+			MAKEINTRESOURCE(IDB_TOOLBAR), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
 
+		// ImageList_AddMask works fine in XP, and avoids the necessity of
+		// creating the mask via the createMask function above, but according
+		// to the documentation, it isn't supposed to work on bitmaps whose
+		// color depth is greater than 8bpp.  Ours is 24bpp.
+		ImageList_Add(imageList, hBitmap, hMask);
+		DeleteObject(hBitmap);
+		DeleteObject(hMask);
 		populateTbButtonInfos();
 		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME,
@@ -533,6 +582,9 @@ void LDViewWindow::createToolbar(void)
 		SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(25, 16));
+		SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
+		stdBitmapStartId = tbBitmapStartId = 0;
+/*		
 		addBitmap.hInst = HINST_COMMCTRL;
 		addBitmap.nID = IDB_STD_SMALL_COLOR;
 		stdBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 0,
@@ -542,6 +594,7 @@ void LDViewWindow::createToolbar(void)
 		// The 10 on the following line is the number of buttons in the bitmap.
 		tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 10,
 			(LPARAM)&addBitmap);
+*/
 		// Note: buttonTitle is an empty string.  No need for Unicode.
 		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 		count = tbButtonInfos->getCount();

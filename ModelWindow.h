@@ -125,6 +125,7 @@ class ModelWindow: public CUIOGLWindow
 
 		static void initCommonControls(DWORD mask);
 		static bool chDirFromFilename(const char* filename, char* outFilename);
+		static int roundUp(int value, int nearest);
 	protected:
 		virtual ~ModelWindow(void);
 		virtual void dealloc(void);
@@ -310,7 +311,6 @@ class ModelWindow: public CUIOGLWindow
 			WPARAM wParam, LPARAM lParam);
 		static UINT CALLBACK staticSaveHook(HWND hDlg, UINT uiMsg,
 			WPARAM wParam, LPARAM lParam);
-		static int roundUp(int value, int nearest);
 		static void swap(int &left, int &right);
 		static bool altPressed(void);
 
