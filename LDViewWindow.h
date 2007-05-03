@@ -286,6 +286,7 @@ class LDViewWindow: public CUIWindow
 		static void recordRecentFiles(void);
 		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,
 			LPARAM lParam, LPARAM /*lpData*/);
+		static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
 
 		ModelWindow* modelWindow;
 		HWND hAboutWindow;
