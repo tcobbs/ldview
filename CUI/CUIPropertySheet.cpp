@@ -6,8 +6,6 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
-extern void WillyMessage(const char *message);
-
 CUIPropertySheet *CUIPropertySheet::globalCUIPropertySheet = NULL;
 
 // Property sheet uses 8 extra bytes, instead of just 4.  The default of 4 is
@@ -230,7 +228,6 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 				return TRUE;
 			}
 			item.tcih.mask = TCIF_PARAM;
-			WillyMessage("About to do initial prop sheet page setup.");
 			for (i = 0; i < count; i++)
 			{
 				if (!hwndArray->pointerAtIndex(i))
@@ -247,14 +244,11 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 							sprintf(preMessage, "pre setupPage(%d)", i);
 							sprintf(postMessage, "post setupPage(%d)", i);
 							hwndArray->replacePointer(hWnd, i);
-							WillyMessage(preMessage);
 							setupPage(i);
-							WillyMessage(postMessage);
 						}
 					}
 				}
 			}
-			WillyMessage("Done with initial prop sheet page setup.");
 		}
 		return TRUE;
 		break;
