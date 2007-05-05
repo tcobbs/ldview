@@ -2171,9 +2171,9 @@ BOOL CUIWindow::createMainWindow(void)
 	SIZE decorationSize = getDecorationSize();
 	int dx = decorationSize.cx;
 	int dy = decorationSize.cy;
-	std::wstring className;
+	ucstring className;
 
-	mbstowstring(className, windowClassName());
+	mbstoucstring(className, windowClassName());
 	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
 		windowStyle, x, y, width + dx, height + dy, NULL, hWindowMenu,
 		getLanguageModule(), this);
@@ -2195,9 +2195,9 @@ BOOL CUIWindow::createSubWindow(void)
 	SIZE decorationSize = getDecorationSize();
 	int dx = decorationSize.cx;
 	int dy = decorationSize.cy;
-	std::wstring className;
+	ucstring className;
 
-	mbstowstring(className, windowClassName());
+	mbstoucstring(className, windowClassName());
 	dx = 0;
 	dy = 0;
 	if (!hParentWindow)
@@ -2207,7 +2207,6 @@ BOOL CUIWindow::createSubWindow(void)
 	hWindow = createWindowExUC(exWindowStyle, className.c_str(), windowTitle,
 		windowStyle, x - dx / 2, y - dy / 2, width, height, hParentWindow,
 		hWindowMenu, getLanguageModule(), this);
-
 	if (!hWindow)
 	{
 		DWORD error = GetLastError();
@@ -2427,6 +2426,30 @@ HWND CUIWindow::createStatusWindowUC(
 	return ::CreateStatusWindowA(style, lpszText, hwndParent, wID);
 #else // TC_NO_UNICODE
 	return ::CreateStatusWindowW(style, lpszText, hwndParent, wID);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+BOOL CUIWindow::insertMenuItemUC(
+	HMENU hmenu,
+	UINT item,
+	BOOL fByPosition,
+	MENUITEMINFOUC *lpmi)
+{
+#ifdef TC_NO_UNICODE
+	return ::InsertMenuItemA(hmenu, item, fByPosition, lpmi);
+#else // TC_NO_UNICODE
+	return ::InsertMenuItemW(hmenu, item, fByPosition, lpmi);
+#endif // TC_NO_UNICODE
+}
+
+// Note: static method.
+BOOL CUIWindow::getOpenFileNameUC(OPENFILENAMEUC *lpofn)
+{
+#ifdef TC_NO_UNICODE
+	return ::GetOpenFileNameA(lpofn);
+#else // TC_NO_UNICODE
+	return ::GetOpenFileNameW(lpofn);
 #endif // TC_NO_UNICODE
 }
 

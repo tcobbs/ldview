@@ -15,6 +15,10 @@
 #endif
 #endif // WIN32
 
+#ifdef _QT
+#include "../QT/misc.h"
+#endif // _QT
+
 TCUserDefaults* TCUserDefaults::currentUserDefaults = NULL;
 
 TCUserDefaults::TCUserDefaultsCleanup TCUserDefaults::userDefaultsCleanup;
@@ -238,10 +242,25 @@ void TCUserDefaults::setStringForKey(const char* value, const char* key,
 	getCurrentUserDefaults()->defSetStringForKey(value, key, sessionSpecific);
 }
 
+#ifndef TC_NO_UNICODE
+void TCUserDefaults::setStringForKey(CUCSTR value, const char* key,
+									 bool sessionSpecific)
+{
+	getCurrentUserDefaults()->defSetStringForKey(value, key, sessionSpecific);
+}
+#endif TC_NO_UNICODE
+
 char* TCUserDefaults::stringForKey(const char* key, const char* defaultValue,
 								   bool sessionSpecific)
 {
 	return getCurrentUserDefaults()->defStringForKey(key, sessionSpecific,
+		defaultValue);
+}
+
+UCSTR TCUserDefaults::stringForKeyUC(const char* key, CUCSTR defaultValue,
+									 bool sessionSpecific)
+{
+	return getCurrentUserDefaults()->defStringForKeyUC(key, sessionSpecific,
 		defaultValue);
 }
 
@@ -410,6 +429,50 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	sendValueChangedAlert(key);
 }
 
+#ifndef TC_NO_UNICODE
+void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
+										bool sessionSpecific)
+{
+	char *valuea = ucstringtombs(value);
+	if (matchesCommandLine(key, valuea))
+	{
+		delete valuea;
+		// We're being asked to store a value that matches one provided on the
+		// command line.
+		return;
+	}
+	delete valuea;
+#ifdef _QT
+	QString qvalue;
+	ucstringtoqstring(qvalue, value);
+	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), qvalue);
+#endif // _QT
+#if defined(__APPLE__) && !defined(_QT)
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict)
+	{
+		[sessionDict setObject: [NSString stringWithCString: value encoding:
+			NSASCIIStringEncoding] forKey: nsKey];
+		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
+			forName: getSessionKey()];
+	}
+	else
+	{
+		[[NSUserDefaults standardUserDefaults] setObject:
+			[NSString stringWithCString: value encoding: NSASCIIStringEncoding]
+			forKey: nsKey];
+	}
+#endif // __APPLE__ && !_QT
+#ifdef WIN32
+	defSetValueForKey((LPBYTE)value, (ucstrlen(value) + 1) * sizeof(UCCHAR),
+		REG_SZ, key, sessionSpecific, true);
+#endif // WIN32
+	sendValueChangedAlert(key);
+}
+#endif TC_NO_UNICODE
+
 int TCUserDefaults::defCommandLineIndexForKey(const char *key)
 {
 	if (commandLine)
@@ -468,6 +531,79 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 		}
 	}
 	return NULL;
+}
+
+UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
+										CUCSTR defaultValue)
+{
+	char *commandLineValue = defCommandLineStringForKey(key);
+
+	if (commandLineValue)
+	{
+		UCSTR retValue = mbstoucstring(commandLineValue);
+
+		delete commandLineValue;
+		return retValue;
+	}
+#ifdef _QT
+	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
+		defaultValue);
+
+	if (string == QString::null)
+	{
+		return NULL;
+	}
+	else
+	{
+		UCSTR returnValue = new UCCHAR[string.length() + 1];
+
+		for (int i = 0; i < (int)string.length(); i++)
+		{
+			QChar qchar = string.at(i);
+
+			returnValue[i] = (wchar_t)qchar.unicode();
+		}
+		returnValue[i] = 0;
+		return returnValue;
+	}
+#endif // _QT
+#if defined(__APPLE__) && !defined(_QT)
+	NSString *returnString;
+	NSString *nsKey = [NSString stringWithCString: key encoding:
+		NSASCIIStringEncoding];
+
+	if (sessionDict)
+	{
+		returnString = [sessionDict objectForKey: nsKey];
+	}
+	else
+	{
+		returnString = [[NSUserDefaults standardUserDefaults] objectForKey:
+			nsKey];
+	}
+	if ([returnString isKindOfClass: [NSString class]])
+	{
+		return copyString([returnString cStringUsingEncoding:
+			NSASCIIStringEncoding]);
+	}
+	else
+	{
+		return copyString(defaultValue);
+	}
+#endif // __APPLE__ && !_QT
+#ifdef WIN32
+	DWORD size;
+	LPBYTE value = defValueForKey(size, REG_SZ, key, sessionSpecific, true);
+
+	if (value)
+	{
+		return (UCSTR)value;
+	}
+	else
+	{
+		return copyString(defaultValue);
+	}
+#endif // WIN32
 }
 
 char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
@@ -1122,7 +1258,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 
 void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 									   DWORD type, const char* key,
-									   bool sessionSpecific)
+									   bool sessionSpecific, bool unicode)
 {
 	int index = defCommandLineIndexForKey(key);
 	HKEY hParentKey;
@@ -1142,6 +1278,7 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 	if (hParentKey)
 	{
 		const char* spot;
+		UCSTR spotUC = NULL;
 
 		if ((spot = strrchr(key, '/')) != NULL)
 		{
@@ -1157,7 +1294,24 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 		{
 			spot = key;
 		}
-		RegSetValueEx(hParentKey, spot, 0, type, value, length);
+#ifdef TC_NO_UNICODE
+		unicode = false;
+#endif // TC_NO_UNICODE
+		if (unicode)
+		{
+			spotUC = mbstoucstring(spot);
+		}
+		if (unicode)
+		{
+#ifndef TC_NO_UNICODE
+			RegSetValueExW(hParentKey, spotUC, 0, type, value, length);
+#endif TC_NO_UNICODE
+		}
+		else
+		{
+			RegSetValueEx(hParentKey, spot, 0, type, value, length);
+		}
+		delete spotUC;
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);
@@ -1166,7 +1320,7 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 }
 
 LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
-									  bool sessionSpecific)
+									  bool sessionSpecific, bool unicode)
 {
 	HKEY hParentKey;
 
@@ -1182,6 +1336,7 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 	{
 		DWORD valueType;
 		const char* spot;
+		UCSTR spotUC = NULL;
 		LPBYTE value = NULL;
 
 		if ((spot = strrchr(key, '/')) != NULL)
@@ -1199,20 +1354,42 @@ LPBYTE TCUserDefaults::defValueForKey(DWORD& size, DWORD type, const char* key,
 			spot = key;
 		}
 		size = 0;
-		if (RegQueryValueEx(hParentKey, spot, 0, &valueType, NULL,
-			&size) == ERROR_SUCCESS)
+#ifdef TC_NO_UNICODE
+		unicode = false;
+#endif // TC_NO_UNICODE
+		if (unicode)
+		{
+			spotUC = mbstoucstring(spot);
+		}
+#ifdef TC_NO_UNICODE
+		if (RegQueryValueEx(hParentKey, spot, 0, &valueType, NULL, &size) ==
+			ERROR_SUCCESS)
+#else // TC_NO_UNICODE
+		if ((!unicode && RegQueryValueEx(hParentKey, spot, 0, &valueType, NULL,
+			&size) == ERROR_SUCCESS) ||
+			(unicode && RegQueryValueExW(hParentKey, spotUC, 0, &valueType,
+			NULL, &size) == ERROR_SUCCESS))
+#endif TC_NO_UNICODE
 		{
 			if (valueType == type)
 			{
 				value = new BYTE[size];
-				if (RegQueryValueEx(hParentKey, spot, 0, &valueType,
-					value, &size) != ERROR_SUCCESS)
+#ifdef TC_NO_UNICODE
+				if (RegQueryValueEx(hParentKey, spot, 0, &valueType, value,
+					&size) != ERROR_SUCCESS)
+#else // TC_NO_UNICODE
+				if ((!unicode && RegQueryValueEx(hParentKey, spot, 0,
+					&valueType, value, &size) != ERROR_SUCCESS) ||
+					(unicode && RegQueryValueExW(hParentKey, spotUC, 0,
+					&valueType, value, &size) != ERROR_SUCCESS))
+#endif TC_NO_UNICODE
 				{
 					delete value;
 					value = NULL;
 				}
 			}
 		}
+		delete spotUC;
 		if (hParentKey != hSessionKey && hParentKey != hAppDefaultsKey)
 		{
 			RegCloseKey(hParentKey);

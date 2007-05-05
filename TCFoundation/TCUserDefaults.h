@@ -29,8 +29,14 @@ class TCExport TCUserDefaults: public TCObject
 	public:
 		static void setStringForKey(const char* value,
 			const char* key, bool sessionSpecific = true);
+#ifndef TC_NO_UNICODE
+		static void setStringForKey(CUCSTR value, const char* key,
+			bool sessionSpecific = true);
+#endif TC_NO_UNICODE
 		static char* stringForKey(const char* key,
 			const char* defaultValue = NULL, bool sessionSpecific = true);
+		static UCSTR stringForKeyUC(const char* key, CUCSTR defaultValue = NULL,
+			bool sessionSpecific = true);
 		static void setLongForKey(long value, const char* key,
 			bool sessionSpecific = true);
 		static long longForKey(const char* key, long defaultValue = 0,
@@ -71,8 +77,14 @@ class TCExport TCUserDefaults: public TCObject
 		static TCUserDefaults* getCurrentUserDefaults(void);
 		void defSetStringForKey(const char* value, const char* key,
 			bool sessionSpecific);
+#ifndef TC_NO_UNICODE
+		void defSetStringForKey(CUCSTR value, const char* key,
+			bool sessionSpecific);
+#endif TC_NO_UNICODE
 		char* defStringForKey(const char* key, bool sessionSpecific,
 			const char* defaultValue = NULL);
+		UCSTR defStringForKeyUC(const char* key, bool sessionSpecific,
+			CUCSTR defaultValue = NULL);
 		void defSetLongForKey(long value, const char* key,
 			bool sessionSpecific);
 		long defLongForKey(const char* key, bool sessionSpecific,
@@ -109,9 +121,10 @@ class TCExport TCUserDefaults: public TCObject
 		HKEY openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 			bool create = false);
 		void defSetValueForKey(const LPBYTE value, int length,
-			DWORD type, const char* key, bool sessionSpecific);
+			DWORD type, const char* key, bool sessionSpecific,
+			bool unicode = false);
 		LPBYTE defValueForKey(DWORD& size, DWORD type,
-			const char* key, bool sessionSpecific);
+			const char* key, bool sessionSpecific, bool unicode = false);
 		void defGetAllKeysUnderKey(HKEY parentKey, const char* keyPath,
 			TCStringArray *allKeys);
 		bool defIsLongKey(const char* key, bool sessionSpecific);
