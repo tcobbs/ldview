@@ -1013,6 +1013,19 @@ void processEscapedString(wchar_t *string)
 	delete tmpString;
 }
 
+#ifdef TC_NO_UNICODE
+void mbstoucstring(ucstring &dst, const char *src, int /*length*/)
+#else
+void mbstoucstring(ucstring &dst, const char *src, int length /*= -1*/)
+#endif
+{
+#ifdef TC_NO_UNICODE
+	dst = src;
+#else
+	mbstowstring(dst, src, length);
+#endif
+}
+
 void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 {
 	dst.erase();

@@ -22,9 +22,13 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 #ifdef TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOA
 #define TTN_GETDISPINFOUC TTN_GETDISPINFOA
+#define MENUITEMINFOUC MENUITEMINFOA
+#define OPENFILENAMEUC OPENFILENAMEA
 #else // TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOW
 #define TTN_GETDISPINFOUC TTN_GETDISPINFOW
+#define MENUITEMINFOUC MENUITEMINFOW
+#define OPENFILENAMEUC OPENFILENAMEW
 #endif // TC_NO_UNICODE
 
 class CUIExport CUIWindow : public TCObject
@@ -97,6 +101,9 @@ class CUIExport CUIWindow : public TCObject
 			HWND hwndParent, UINT wID);
 		static int messageBoxUC(HWND hWnd, CUCSTR lpText, CUCSTR lpCaption,
 			UINT uType);
+		static BOOL insertMenuItemUC(HMENU hmenu, UINT item, BOOL fByPosition,
+			MENUITEMINFOUC *lpmi);
+		static BOOL getOpenFileNameUC(OPENFILENAMEUC *lpofn);
 		static BOOL screenToClient(HWND hWnd, RECT *rect);
 		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
 			UINT message, WPARAM wParam, LPARAM lParam);

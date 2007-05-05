@@ -134,6 +134,7 @@ typedef std::wstring ucstring;
 
 typedef std::vector<ucstring> ucstringVector;
 
+void mbstoucstring(ucstring &dst, const char *src, int length = -1);
 int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
 int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))

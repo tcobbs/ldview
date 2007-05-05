@@ -616,7 +616,7 @@ void LDLibraryUpdater::threadStart(void)
 					extraInfo.resize(count);
 					for (i = 0; i < count; i++)
 					{
-						mbstowstring(extraInfo[i], (*m_updateUrlList)[i]);
+						mbstoucstring(extraInfo[i], (*m_updateUrlList)[i]);
 					}
 				}
 			}
@@ -639,7 +639,7 @@ void LDLibraryUpdater::threadStart(void)
 	else
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get(_UC("LDLUpdateDone")), 1.0f, extraInfo);
+			TCLocalStrings::get(L"LDLUpdateDone"), 1.0f, extraInfo);
 	}
 }
 
