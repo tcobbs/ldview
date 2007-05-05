@@ -88,8 +88,13 @@ class LDViewWindow: public CUIWindow
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
-		static void addFileType(char*, const char*, char*);
+		UCSTR lastOpenPathUC(char* pathKey = NULL);
+#ifndef TC_NO_UNICODE
+		static void addFileType(char*, const char*, const char*);
+#endif // TC_NO_UNICODE
+		static void addFileType(UCSTR, CUCSTR, CUCSTR);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
+		static bool newToolbar(void);
 	protected:
 		virtual ~LDViewWindow(void);
 		static BOOL verifyLDrawDir(char*);

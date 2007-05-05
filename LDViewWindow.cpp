@@ -474,8 +474,16 @@ void LDViewWindow::populateTbButtonInfos(void)
 	if (!tbButtonInfos)
 	{
 		tbButtonInfos = new TbButtonInfoArray;
-		addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
-			-1, 10);//STD_FILEOPEN, -1);
+		if (newToolbar())
+		{
+			addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
+				-1, 10);
+		}
+		else
+		{
+			addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
+				STD_FILEOPEN, -1);
+		}
 		addTbButtonInfo(TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE,
 			-1, 5);
 		addTbButtonInfo(TCLocalStrings::get(_UC("Reload")), ID_FILE_RELOAD, -1,
@@ -550,28 +558,21 @@ HBITMAP LDViewWindow::createMask(HBITMAP hBitmap, COLORREF maskColor)
 	return CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
 }
 
+bool LDViewWindow::newToolbar(void)
+{
+	return true;
+}
+
 void LDViewWindow::createToolbar(void)
 {
 	if (showToolbar)
 	{
-		//TBADDBITMAP addBitmap;
+		TBADDBITMAP addBitmap;
 		TBBUTTON *buttons;
 		char buttonTitle[128];
 		int i;
 		int count;
-		HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-			10, 10);
-		HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
-			MAKEINTRESOURCE(IDB_TOOLBAR), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
 
-		// ImageList_AddMask works fine in XP, and avoids the necessity of
-		// creating the mask via the createMask function above, but according
-		// to the documentation, it isn't supposed to work on bitmaps whose
-		// color depth is greater than 8bpp.  Ours is 24bpp.
-		ImageList_Add(imageList, hBitmap, hMask);
-		DeleteObject(hBitmap);
-		DeleteObject(hMask);
 		populateTbButtonInfos();
 		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME,
@@ -582,19 +583,37 @@ void LDViewWindow::createToolbar(void)
 		SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(25, 16));
-		SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
-		stdBitmapStartId = tbBitmapStartId = 0;
-/*		
-		addBitmap.hInst = HINST_COMMCTRL;
-		addBitmap.nID = IDB_STD_SMALL_COLOR;
-		stdBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 0,
-			(LPARAM)&addBitmap);
-		addBitmap.hInst = getLanguageModule();
-		addBitmap.nID = IDB_TOOLBAR;
-		// The 10 on the following line is the number of buttons in the bitmap.
-		tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 10,
-			(LPARAM)&addBitmap);
-*/
+		if (newToolbar())
+		{
+			HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
+				10, 10);
+			HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
+				MAKEINTRESOURCE(IDB_TOOLBAR), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+			HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
+
+			// ImageList_AddMask works fine in XP, and avoids the necessity of
+			// creating the mask via the createMask function above, but according
+			// to the documentation, it isn't supposed to work on bitmaps whose
+			// color depth is greater than 8bpp.  Ours is 24bpp.
+			ImageList_Add(imageList, hBitmap, hMask);
+			DeleteObject(hBitmap);
+			DeleteObject(hMask);
+			SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
+			stdBitmapStartId = tbBitmapStartId = 0;
+		}
+		else
+		{
+			addBitmap.hInst = HINST_COMMCTRL;
+			addBitmap.nID = IDB_STD_SMALL_COLOR;
+			stdBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 0,
+				(LPARAM)&addBitmap);
+			addBitmap.hInst = getLanguageModule();
+			// This doesn't actually work!!!
+			addBitmap.nID = IDB_TOOLBAR;//256;
+			// The 10 on the following line is the number of buttons in the bitmap.
+			tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 10,
+				(LPARAM)&addBitmap);
+		}
 		// Note: buttonTitle is an empty string.  No need for Unicode.
 		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 		count = tbButtonInfos->getCount();
@@ -4148,42 +4167,32 @@ void LDViewWindow::populateDisplayModeMenuItems(void)
 		int count = GetMenuItemCount(viewMenu);
 		VideoModeT videoMode = videoModes[i];
 		HMENU bitDepthMenu = menuForBitDepth(hWindow, videoMode.depth);
-		char title[128];
-		MENUITEMINFO itemInfo;
+		UCCHAR title[128];
+		MENUITEMINFOUC itemInfo;
 
 		if (!bitDepthMenu)
 		{
-			memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-			sprintf(title, TCLocalStrings::get("NBitModes"), videoMode.depth);
+			memset(&itemInfo, 0, sizeof(itemInfo));
+			sucprintf(title, COUNT_OF(title),
+				TCLocalStrings::get(_UC("NBitModes")), videoMode.depth);
 			bitDepthMenu = CreatePopupMenu();
-			itemInfo.cbSize = sizeof(MENUITEMINFO);
+			itemInfo.cbSize = sizeof(itemInfo);
 			itemInfo.fMask = MIIM_TYPE | MIIM_SUBMENU | MIIM_DATA;
 			itemInfo.fType = MFT_STRING | MFT_RADIOCHECK;
 			itemInfo.dwTypeData = title;
 			itemInfo.dwItemData = videoMode.depth;
 			itemInfo.hSubMenu = bitDepthMenu;
-			InsertMenuItem(viewMenu, count, TRUE, &itemInfo);
+			insertMenuItemUC(viewMenu, count, TRUE, &itemInfo);
 		}
-		sprintf(title, "%dx%d", videoMode.width, videoMode.height);
-		memset(&itemInfo, 0, sizeof(MENUITEMINFO));
-		itemInfo.cbSize = sizeof(MENUITEMINFO);
+		sucprintf(title, COUNT_OF(title), _UC("%dx%d"), videoMode.width,
+			videoMode.height);
+		memset(&itemInfo, 0, sizeof(itemInfo));
+		itemInfo.cbSize = sizeof(itemInfo);
 		itemInfo.fMask = MIIM_TYPE /*| MIIM_STATE*/ | MIIM_ID;
 		itemInfo.fType = MFT_STRING | MFT_RADIOCHECK;
 		itemInfo.dwTypeData = title;
 		itemInfo.wID = 30000 + i;
-/*
-		if (currentVideoMode && videoMode.width == currentVideoMode->width &&
-			videoMode.height == currentVideoMode->height &&
-			videoMode.depth == currentVideoMode->depth)
-		{
-			itemInfo.fState = MFS_CHECKED;
-		}
-		else
-		{
-			itemInfo.fState = MFS_UNCHECKED;
-		}
-*/
-		InsertMenuItem(bitDepthMenu, GetMenuItemCount(bitDepthMenu), TRUE,
+		insertMenuItemUC(bitDepthMenu, GetMenuItemCount(bitDepthMenu), TRUE,
 			&itemInfo);
 	}
 }
@@ -4414,43 +4423,58 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 	}
 	else
 	{
-		OPENFILENAME openStruct;
-		char fileTypes[1024];
+		OPENFILENAMEUC openStruct;
+		UCCHAR fileTypes[1024];
 		//char openFilename[1024] = "";
-		char* initialDir = lastOpenPath();
+		UCSTR initialDir = lastOpenPathUC();
+		UCCHAR fullPathNameUC[1024] = _UC("");
 
 		if (initialDir)
 		{
-			memset(fileTypes, 0, 2);
-			addFileType(fileTypes, TCLocalStrings::get("LDrawFileTypes"),
-				"*.ldr;*.dat;*.mpd");
-			addFileType(fileTypes, TCLocalStrings::get("LDrawModelFileTypes"),
-				"*.ldr;*.dat");
-			addFileType(fileTypes, TCLocalStrings::get("LDrawMpdFileTypes"),
-				"*.mpd");
-			addFileType(fileTypes, TCLocalStrings::get("AllFilesTypes"), "*.*");
-			memset(&openStruct, 0, sizeof(OPENFILENAME));
-			openStruct.lStructSize = sizeof(OPENFILENAME);
+			// ToDo: Unicode: Actual filename isn't Unicode.
+			UCSTR tmpUC = mbstoucstring(fullPathName);
+			char *tmpA;
+
+			ucstrcpy(fullPathNameUC, tmpUC);
+			delete tmpUC;
+			memset(fileTypes, 0, 2 * sizeof(UCCHAR));
+			addFileType(fileTypes, TCLocalStrings::get(_UC("LDrawFileTypes")),
+				_UC("*.ldr;*.dat;*.mpd"));
+			addFileType(fileTypes,
+				TCLocalStrings::get(_UC("LDrawModelFileTypes")),
+				_UC("*.ldr;*.dat"));
+			addFileType(fileTypes, TCLocalStrings::get(_UC("LDrawMpdFileTypes")),
+				_UC("*.mpd"));
+			addFileType(fileTypes, TCLocalStrings::get(_UC("AllFilesTypes")),
+				_UC("*.*"));
+			memset(&openStruct, 0, sizeof(openStruct));
+			openStruct.lStructSize = sizeof(openStruct);
+#ifdef TC_NO_UNICODE
+			// ToDo: Unicode: test/fix the following.
 			if (openStruct.lStructSize > 76)
 			{
 				// Win98 doesn't like the new struct size.  Not sure why; it
 				// should just ignore the extra data.
 				openStruct.lStructSize = 76;
 			}
+#endif // TC_NO_UNICODE
 			openStruct.hwndOwner = hWindow;
 			openStruct.lpstrFilter = fileTypes;
 			openStruct.nFilterIndex = 1;
-			openStruct.lpstrFile = fullPathName;
+			openStruct.lpstrFile = fullPathNameUC;
 			openStruct.nMaxFile = 1024;
 			openStruct.lpstrInitialDir = initialDir;
-			openStruct.lpstrTitle = TCLocalStrings::get("SelectModelFile");
+			openStruct.lpstrTitle = TCLocalStrings::get(_UC("SelectModelFile"));
 			openStruct.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST |
 				OFN_HIDEREADONLY;
-			openStruct.lpstrDefExt = "ldr";
-			if (!GetOpenFileName(&openStruct))
+			openStruct.lpstrDefExt = _UC("ldr");
+			if (!getOpenFileNameUC(&openStruct))
 			{
 				skipLoad = true;
 			}
+			tmpA = ucstringtombs(fullPathNameUC);
+			strcpy(fullPathName, tmpA);
+			delete tmpA;
 			delete initialDir;
 		}
 	}
@@ -4470,11 +4494,13 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		}
 		else
 		{
-			char message[2048];
+			UCCHAR message[2048];
+			UCSTR fullPathNameUC = mbstoucstring(fullPathName);
 
-			sprintf(message, TCLocalStrings::get("ErrorLoadingModel"),
-				fullPathName);
-			MessageBox(hWindow, message, "LDView", MB_OK | MB_ICONWARNING);
+			sucprintf(message, COUNT_OF(message),
+				TCLocalStrings::get(_UC("ErrorLoadingModel")), fullPathNameUC);
+			delete fullPathNameUC;
+			messageBoxUC(hWindow, message, _UC("LDView"), MB_OK | MB_ICONWARNING);
 			modelWindow->setFilename(NULL);
 		}
 	}
@@ -4488,8 +4514,9 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 	}
 }
 
+#ifndef TC_NO_UNICODE
 void LDViewWindow::addFileType(char* fileTypes, const char* description,
-							   char* filter)
+							   const char* filter)
 {
 	char* spot = fileTypes;
 
@@ -4503,6 +4530,25 @@ void LDViewWindow::addFileType(char* fileTypes, const char* description,
 	spot += strlen(description) + 1;
 	strcpy(spot, filter);
 	spot += strlen(filter) + 1;
+	*spot = 0;
+}
+#endif // TC_NO_UNICODE
+
+void LDViewWindow::addFileType(UCSTR fileTypes, CUCSTR description,
+							   CUCSTR filter)
+{
+	UCSTR spot = fileTypes;
+
+	for (spot = fileTypes; spot[0] != 0 || spot[1] != 0; spot++)
+		;
+	if (spot != fileTypes)
+	{
+		spot++;
+	}
+	ucstrcpy(spot, description);
+	spot += ucstrlen(description) + 1;
+	ucstrcpy(spot, filter);
+	spot += ucstrlen(filter) + 1;
 	*spot = 0;
 }
 
@@ -4730,6 +4776,31 @@ char* LDViewWindow::lastOpenPath(char* pathKey)
 		if (!path)
 		{
 			path = getLDrawDir();
+		}
+		return path;
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+UCSTR LDViewWindow::lastOpenPathUC(char* pathKey)
+{
+	if (!pathKey)
+	{
+		pathKey = LAST_OPEN_PATH_KEY;
+	}
+	if (verifyLDrawDir())
+	{
+		UCCHAR* path = TCUserDefaults::stringForKeyUC(pathKey, NULL, false);
+
+		if (!path)
+		{
+			char *patha = getLDrawDir();
+
+			path = mbstoucstring(patha);
+			delete patha;
 		}
 		return path;
 	}
