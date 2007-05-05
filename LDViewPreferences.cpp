@@ -3143,6 +3143,10 @@ void LDViewPreferences::uncheckLightDirections(void)
 		; it != lightDirIndexToId.end(); it++)
 	{
 		checkStates[GetDlgItem(hEffectsPage, it->second)] = false;
+		if (!CUIThemes::isThemeLibLoaded())
+		{
+			setCheck(hEffectsPage, it->second, false);
+		}
 	}
 }
 
@@ -3204,6 +3208,10 @@ void LDViewPreferences::enableLighting(void)
 	if (lightDirButton != 0)
 	{
 		checkStates[GetDlgItem(hEffectsPage, lightDirButton)] = true;
+		if (!CUIThemes::isThemeLibLoaded())
+		{
+			setCheck(hEffectsPage, lightDirButton, true);
+		}
 	}
 	for (int i = 0; i < (int)lightAngleButtons.size(); i++)
 	{
