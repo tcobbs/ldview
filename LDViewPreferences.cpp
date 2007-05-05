@@ -2661,9 +2661,7 @@ void LDViewPreferences::setupPage(int pageNumber)
 {
 	if (pageNumber == generalPageNumber)
 	{
-		WillyMessage("About to call setupGeneralPage");
 		setupGeneralPage();
-		WillyMessage("Done with setupGeneralPage");
 	}
 	else if (pageNumber == geometryPageNumber)
 	{
@@ -2685,9 +2683,7 @@ void LDViewPreferences::setupPage(int pageNumber)
 	{
 		setupPrefSetsPage();
 	}
-	WillyMessage("About to call disableApply");
 	disableApply(hwndArray->pointerAtIndex(pageNumber));
-	WillyMessage("Done with disableApply");
 }
 
 void LDViewPreferences::setupFov(bool warn)
@@ -4328,8 +4324,8 @@ BOOL LDViewPreferences::dialogProc(HWND hDlg, UINT message, WPARAM wParam,
 				InvalidateRect(hMouseOverButton, NULL, TRUE);
 				hMouseOverButton = NULL;
 			}
-			break;
 		}
+		break;
 	case WM_DRAWITEM:
 		return doDrawItem(hDlg, wParam, (LPDRAWITEMSTRUCT)lParam);
 		break;
