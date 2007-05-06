@@ -218,7 +218,7 @@ END
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,246,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -231,7 +231,7 @@ BEGIN
     CONTROL         "Spin1",IDC_SEAM_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_GROUP,101,19,11,14,0,
                     HIDC_SEAM_SPIN
-    GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,121,54,WS_GROUP,0,
+    GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,121,59,WS_GROUP,0,
                     HIDC_WIREFRAME_BOX
     CONTROL         "&Wireframe",IDC_WIREFRAME,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,42,48,10,WS_EX_TRANSPARENT,
@@ -241,21 +241,21 @@ BEGIN
     CONTROL         "Remove hidden lines",IDC_REMOVE_HIDDEN_LINES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,79,10,0,
                     HIDC_REMOVE_HIDDEN_LINES
-    LTEXT           "Thickness:",IDC_WIREFRAME_THICKNESS_LABEL,16,78,36,8,0,
+    LTEXT           "Thickness:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,76,68,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,76,68,18,0,
                     HIDC_WIREFRAME_THICKNESS
-    GROUPBOX        "    ",IDC_BFC_BOX,7,98,121,40,WS_GROUP,0,HIDC_BFC_BOX
+    GROUPBOX        "    ",IDC_BFC_BOX,7,103,121,40,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,15,97,29,10,WS_EX_TRANSPARENT,HIDC_BFC
+                    WS_TABSTOP,15,102,29,10,WS_EX_TRANSPARENT,HIDC_BFC
     CONTROL         "Red back faces",IDC_RED_BACK_FACES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,109,81,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,114,81,10,0,
                     HIDC_RED_BACK_FACES
     CONTROL         "Green front faces",IDC_GREEN_FRONT_FACES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,120,81,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,
                     HIDC_GREEN_FRONT_FACES
-    GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,96,WS_GROUP,0,
+    GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,101,WS_GROUP,0,
                     HIDC_EDGES_BOX
     CONTROL         "&Edge Lines",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,42,51,10,
@@ -277,10 +277,10 @@ BEGIN
                     HIDC_QUALITY_LINES
     CONTROL         "Always black",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,144,109,61,10,0,HIDC_ALWAYS_BLACK
-    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,141,123,36,8,0,
+    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,141,125,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,18,0,
                     HIDC_EDGE_THICKNESS
     PUSHBUTTON      "&Reset",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_GEOMETRY_RESET
@@ -291,7 +291,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effects"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,203,WS_GROUP,0,
+    GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,180,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
     CONTROL         "&Lighting",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,7,41,10,WS_EX_TRANSPARENT,
@@ -338,7 +338,15 @@ BEGIN
     CONTROL         "Hide LIGHT.DAT geometry",IDC_HIDE_LIGHT_DAT,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     164,100,10,0,HIDC_HIDE_LIGHT_DAT
-    GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,52,WS_GROUP,0,
+    GROUPBOX        "&Misc",IDC_EFFECTS_MISC_BOX,7,189,121,39,WS_GROUP,
+                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
+    CONTROL         "Flat shading",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,201,60,10,0,
+                    HIDC_FLAT_SHADING
+    CONTROL         "Smooth curves",IDC_SMOOTH_CURVES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,212,63,10,0,
+                    HIDC_SMOOTH_CURVES
+    GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,58,WS_GROUP,0,
                     HIDC_STEREO_BOX
     CONTROL         "&Stereo",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,140,7,37,10,WS_EX_TRANSPARENT,HIDC_STEREO
@@ -347,46 +355,38 @@ BEGIN
                     0,HIDC_CROSS_EYED_STEREO
     CONTROL         "Parallel",IDC_PARALLEL_STEREO,"Button",
                     BS_AUTORADIOBUTTON,144,31,39,10,0,HIDC_PARALLEL_STEREO
-    RTEXT           "Amount:",IDC_STEREO_SPACING_LABEL,145,44,36,8,0,
+    RTEXT           "Amount:",IDC_STEREO_SPACING_LABEL,145,46,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,42,68,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,42,68,18,0,
                     HIDC_STEREO_SPACING
-    GROUPBOX        "      ",IDC_CUTAWAY_BOX,132,61,121,69,WS_GROUP,0,
+    GROUPBOX        "      ",IDC_CUTAWAY_BOX,132,67,121,79,WS_GROUP,0,
                     HIDC_CUTAWAY_BOX
     CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,61,77,10,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,67,77,10,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY
     CONTROL         "Color",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,144,74,32,10,0,HIDC_CUTAWAY_COLOR
+                    WS_GROUP | WS_TABSTOP,144,80,32,10,0,HIDC_CUTAWAY_COLOR
     CONTROL         "Monochrome",IDC_CUTAWAY_MONOCHROME,"Button",
-                    BS_AUTORADIOBUTTON,144,85,57,10,0,
+                    BS_AUTORADIOBUTTON,144,91,57,10,0,
                     HIDC_CUTAWAY_MONOCHROME
-    RTEXT           "Opacity:",IDC_CUTAWAY_OPACITY_LABEL,141,98,36,8,0,
+    RTEXT           "Opacity:",IDC_CUTAWAY_OPACITY_LABEL,141,106,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,96,68,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,102,68,18,0,
                     HIDC_CUTAWAY_OPACITY
-    RTEXT           "Thickness:",IDC_CUTAWAY_THICKNESS_LABEL,141,114,36,8,0,
+    RTEXT           "Thickness:",IDC_CUTAWAY_THICKNESS_LABEL,141,127,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,112,68,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,123,68,18,0,
                     HIDC_CUTAWAY_THICKNESS
-    GROUPBOX        "&Transparency",IDC_TRANSPARENCY_BOX,132,131,121,39,
+    GROUPBOX        "&Transparency",IDC_TRANSPARENCY_BOX,132,148,121,39,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,140,143,60,10,0,HIDC_SORT
+                    WS_TABSTOP,140,160,60,10,0,HIDC_SORT
     CONTROL         "Stipple",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,154,60,10,0,
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,171,60,10,0,
                     HIDC_STIPPLE
-    GROUPBOX        "&Misc",IDC_EFFECTS_MISC_BOX,132,171,121,39,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Flat shading",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,183,60,10,0,
-                    HIDC_FLAT_SHADING
-    CONTROL         "Smooth curves",IDC_SMOOTH_CURVES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,194,63,10,0,
-                    HIDC_SMOOTH_CURVES
     PUSHBUTTON      "&Reset",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_EFFECTS_RESET
 END
@@ -569,7 +569,7 @@ END
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Primitives"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,79,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
@@ -590,15 +590,15 @@ BEGIN
     CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",
                     BS_AUTORADIOBUTTON,23,63,75,10,0,HIDC_TEXTURE_ANISO
     CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,62,80,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,60,80,18,0,
                     HIDC_ANISO_LEVEL
     LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,64,26,8,0,0,
                     HIDC_ANISO_LEVEL_LABEL
-    LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,121,20,44,10,
+    LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,121,22,44,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,13,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,18,0,
                     HIDC_CURVE_QUALITY
     GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
