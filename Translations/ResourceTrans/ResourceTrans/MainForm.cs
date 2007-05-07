@@ -275,7 +275,7 @@ namespace ResourceTrans
 				{
 					message += "\n" + skippedDialogs[i];
 				}
-				MessageBox.Show(message, "Resource Translator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				MessageBox.Show(this, message, "Resource Translator", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
 		}
 
@@ -341,6 +341,7 @@ namespace ResourceTrans
 				action = "creating translation";
 				filename = dstTransFileTextBox.Text;
 				writeTransFile(transWriter, origStrings, transStrings, dstEncoding);
+				MessageBox.Show(this, "Translation file created successfully.");
 			}
 			catch
 			{
@@ -498,6 +499,7 @@ namespace ResourceTrans
 				filename = dstRcFileTextBox.Text;
 				dstRcWriter = new StreamWriter(filename, false, dstEncoding);
 				translateRc(transReader, srcRcReader, dstRcWriter, codePage);
+				MessageBox.Show(this, "RC file translated successfully.");
 			}
 			catch
 			{
