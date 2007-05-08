@@ -248,7 +248,7 @@ void TCUserDefaults::setStringForKey(CUCSTR value, const char* key,
 {
 	getCurrentUserDefaults()->defSetStringForKey(value, key, sessionSpecific);
 }
-#endif TC_NO_UNICODE
+#endif // TC_NO_UNICODE
 
 char* TCUserDefaults::stringForKey(const char* key, const char* defaultValue,
 								   bool sessionSpecific)
@@ -471,7 +471,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 #endif // WIN32
 	sendValueChangedAlert(key);
 }
-#endif TC_NO_UNICODE
+#endif // TC_NO_UNICODE
 
 int TCUserDefaults::defCommandLineIndexForKey(const char *key)
 {
@@ -534,7 +534,7 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 }
 
 UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
-										CUCSTR defaultValue)
+	CUCSTR defaultValue)
 {
 	char *commandLineValue = defCommandLineStringForKey(key);
 
@@ -546,8 +546,11 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 		return retValue;
 	}
 #ifdef _QT
+	QString qDefaultValue;
+
+	ucstringtoqstring(qDefaultValue, defaultValue);
 	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
-		defaultValue);
+		qDefaultValue);
 
 	if (string == QString::null)
 	{
@@ -556,8 +559,9 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	else
 	{
 		UCSTR returnValue = new UCCHAR[string.length() + 1];
+		int i;
 
-		for (int i = 0; i < (int)string.length(); i++)
+		for (i = 0; i < (int)string.length(); i++)
 		{
 			QChar qchar = string.at(i);
 
