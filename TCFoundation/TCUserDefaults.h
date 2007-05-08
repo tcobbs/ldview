@@ -32,7 +32,7 @@ class TCExport TCUserDefaults: public TCObject
 #ifndef TC_NO_UNICODE
 		static void setStringForKey(CUCSTR value, const char* key,
 			bool sessionSpecific = true);
-#endif TC_NO_UNICODE
+#endif //TC_NO_UNICODE
 		static char* stringForKey(const char* key,
 			const char* defaultValue = NULL, bool sessionSpecific = true);
 		static UCSTR stringForKeyUC(const char* key, CUCSTR defaultValue = NULL,
@@ -80,7 +80,7 @@ class TCExport TCUserDefaults: public TCObject
 #ifndef TC_NO_UNICODE
 		void defSetStringForKey(CUCSTR value, const char* key,
 			bool sessionSpecific);
-#endif TC_NO_UNICODE
+#endif //TC_NO_UNICODE
 		char* defStringForKey(const char* key, bool sessionSpecific,
 			const char* defaultValue = NULL);
 		UCSTR defStringForKeyUC(const char* key, bool sessionSpecific,
