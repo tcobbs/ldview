@@ -2693,6 +2693,7 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 
 				if ((DWORD)buttonInfo->getCommandId() == notification->idFrom)
 				{
+					dispInfo->szText[0] = 0;
 					if (CUIThemes::isThemeLibLoaded())
 					{
 						// Turning off theme support in the tooltip makes it
@@ -2700,7 +2701,7 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 						// by the OpenGL window immediately after being drawn.
 						// Haven't the foggiest why this happens, but turning
 						// off theme support solves the problem.  This has to
-						// be done ever time the tooltip is about to pop up.
+						// be done every time the tooltip is about to pop up.
 						// Not sure why that is either, but it is.
 						CUIThemes::setWindowTheme(notification->hwndFrom, NULL,
 							L"");
@@ -2710,12 +2711,15 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 						// Don't allow tooltips to pop up while loading; they
 						// prevent the loading from continuing until they go
 						// away.
-						dispInfo->szText[0] = 0;
+						dispInfo->lpszText = NULL;
 					}
 					else
 					{
-						ucstrcpy(dispInfo->szText,
-							buttonInfo->getTooltipText());
+						// dispInfo->lpszText isn't declared as const, but I
+						// really can't see the Tooltip control changing the
+						// text, and testing indicates that it doesn't.
+						dispInfo->lpszText =
+							(UCSTR)buttonInfo->getTooltipText();
 					}
 					break;
 				}
