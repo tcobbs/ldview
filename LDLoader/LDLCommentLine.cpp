@@ -164,6 +164,14 @@ bool LDLCommentLine::isPrimitiveMeta(void) const
 	int word = 0;
 	int numWords = m_words->getCount();
 
+	if (numWords == 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
+		(strcasecmp((*m_words)[1], "primitive") ||
+		strcasecmp((*m_words)[1], "48_primitive") ||
+		strcasecmp((*m_words)[1], "unofficial_primitive") ||
+		strcasecmp((*m_words)[1], "unofficial_48_primitive")))
+	{
+		return true;
+	}
 	if (numWords >= 2 && (strcasecmp((*m_words)[0], "unofficial") == 0 ||
 		strcasecmp((*m_words)[0], "un-official") == 0 ||
 		strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
@@ -195,7 +203,9 @@ bool LDLCommentLine::isOfficialPartMeta(bool partMeta) const
 {
 	if (partMeta)
 	{
-		if (strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
+		if ((strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
+			strcasecmp((*m_words)[1], "part") == 0) ||
+			strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
 			strcasecmp((*m_words)[0], "official") == 0 ||
 			strcasecmp((*m_words)[0], "original") == 0)
 		{
@@ -210,7 +220,13 @@ bool LDLCommentLine::isPartMeta(void) const
 	int word = 0;
 	int numWords = m_words->getCount();
 
-	if (numWords >= 2 && (strcasecmp((*m_words)[0], "unofficial") == 0 ||
+	if (numWords == 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
+		(strcasecmp((*m_words)[1], "part") ||
+		strcasecmp((*m_words)[1], "unofficial_part")))
+	{
+		return true;
+	}
+	else if (numWords >= 2 && (strcasecmp((*m_words)[0], "unofficial") == 0 ||
 		strcasecmp((*m_words)[0], "un-official") == 0 ||
 		strcasecmp((*m_words)[0], "ldraw_org") == 0 ||
 		strcasecmp((*m_words)[0], "custom") == 0))
