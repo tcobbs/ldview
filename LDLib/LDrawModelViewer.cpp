@@ -1225,13 +1225,19 @@ void LDrawModelViewer::setupLighting(void)
 			{
 				TCByte rgb[4];
 				TCULong color = htonl(*itColor);
+				float minBrightness = 0.5f;
+				float brightness;
 
 				memcpy(rgb, &color, 4);
+				brightness = std::max(std::max(rgb[0] * scale,
+					rgb[1] * scale), rgb[2] * scale) * (1.0f - minBrightness) +
+					minBrightness;
 				setupLight(GL_LIGHT0 + i, TCVector(rgb[0] * scale,
 					rgb[1] * scale, rgb[2] * scale));
 				glLightf(GL_LIGHT0 + i, GL_CONSTANT_ATTENUATION, 0.5f);
 				glLightf(GL_LIGHT0 + i, GL_LINEAR_ATTENUATION, 0.0f);//1.0f / size);
-				glLightf(GL_LIGHT0 + i, GL_QUADRATIC_ATTENUATION, 2.0f / atten);
+				glLightf(GL_LIGHT0 + i, GL_QUADRATIC_ATTENUATION, 2.0f / atten /
+					brightness);
 				itColor++;
 			}
 		}
