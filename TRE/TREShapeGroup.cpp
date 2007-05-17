@@ -270,16 +270,6 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 {
 	TCULongArray *indexArray = getIndices(shapeType);
 
-/*
-	if (glIsEnabled(GL_NORMALIZE))
-	{
-		debugPrintf("Normalized\n");
-	}
-	else
-	{
-		debugPrintf("Not Normalized\n");
-	}
-*/
 	if (indexArray)
 	{
 		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
@@ -289,7 +279,7 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 			glDrawElements(GL_POINTS, indexArray->getCount(), GL_UNSIGNED_INT,
 				indexArray->getValues());
 		}
-		if (m_mainModel->getDrawNormalsFlag())
+		if (m_mainModel->getDrawNormalsFlag() && shapeType != TRESLine)
 		{
 			drawNormals(indexArray);
 		}
