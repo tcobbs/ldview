@@ -310,7 +310,7 @@ protected:
 //	void flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
 //		bool edgeColorSet);
 
-//	static void setGlNormalize(bool value);
+	static void setGlNormalize(bool value);
 
 	char *m_name;
 	TREMainModel *m_mainModel;
@@ -335,8 +335,6 @@ protected:
 		bool inverted:1;
 		bool flattened:1;
 	} m_flags;
-
-	static bool sm_normalizeOn;
 };
 
 #endif // __TREMODEL_H__

@@ -10,8 +10,6 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCMacros.h>
 
-bool TREModel::sm_normalizeOn = false;
-
 TREModel::TREModel(void)
 	:m_name(NULL),
 	m_mainModel(NULL),
@@ -425,7 +423,6 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 			}
 			else
 			{
-/*
 				if (m_flags.part && isFlattened())
 				{
 					setGlNormalize(false | nonUniform);
@@ -434,7 +431,6 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 				{
 					setGlNormalize(true);
 				}
-*/
 				if (shapeGroup)
 				{
 					shapeGroup->draw();
@@ -1695,26 +1691,18 @@ void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
 }
 */
 
-/*
 void TREModel::setGlNormalize(bool value)
 {
-//	if (value != sm_normalizeOn)
+	if (value)
 	{
-		if (value)
-		{
-//			glEnable(GL_RESCALE_NORMAL);
-			glEnable(GL_NORMALIZE);
-//			sm_normalizeOn = true;
-		}
-		else
-		{
-//			glDisable(GL_RESCALE_NORMAL);
-			glDisable(GL_NORMALIZE);
-//			sm_normalizeOn = false;
-		}
+		// Note: GL_RESCALE_NORMAL doesn't seem to work.
+		glEnable(GL_NORMALIZE);
+	}
+	else
+	{
+		glDisable(GL_NORMALIZE);
 	}
 }
-*/
 
 void TREModel::addSlopedCylinder(const TCVector& center, TCFloat radius,
 								 TCFloat height, int numSegments,
