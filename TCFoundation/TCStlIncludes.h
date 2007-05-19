@@ -23,6 +23,15 @@
 #include <list>
 #include <algorithm>
 #ifdef WIN32
+
+#if defined(_MSC_VER) && _MSC_VER <= 1200
+
+// MS VC++ 6.0 doesn't have the min/max macros.  The following include from
+// Boost gets them defined.
+#include <boost/config.hpp>
+
+#endif
+
 #pragma warning(pop)
 #endif // WIN32
 
