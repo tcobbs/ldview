@@ -98,7 +98,8 @@ namespace ResourceTrans
 			int loc;
 
 			if ((loc = line.IndexOf(" DIALOG ")) != -1 ||
-				(loc = line.IndexOf(" DIALOGEX ")) != -1)
+				(loc = line.IndexOf(" DIALOGEX ")) != -1 ||
+				(loc = line.IndexOf(" MENU ")) != -1)
 			{
 				return line.Substring(0, loc);
 			}
