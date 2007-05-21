@@ -374,12 +374,23 @@ namespace ResourceTrans
 			}
 		}
 
-		private DlgDict readTrans(StreamReader transReader)
+		private void readTrans(StreamReader transReader, ref DlgDict dlgDict, ref StringDict globalDict, ref StringDict ambigDict)
 		{
 			String lineO;
 			String lineT;
-			DlgDict retValue = new DlgDict();
 
+			if (dlgDict == null)
+			{
+				dlgDict = new DlgDict();
+			}
+			if (globalDict == null)
+			{
+				globalDict = new StringDict();
+			}
+			if (ambigDict == null)
+			{
+				ambigDict = new StringDict();
+			}
 			while ((lineO = transReader.ReadLine()) != null)
 			{
 				lineT = transReader.ReadLine();
@@ -387,13 +398,14 @@ namespace ResourceTrans
 				{
 					String[] partsO = splitTransLine(lineO);
 					String[] partsT = splitTransLine(lineT);
+
 					if (partsO != null && partsT != null)
 					{
-						if (!retValue.ContainsKey(partsO[1]))
+						if (!dlgDict.ContainsKey(partsO[1]))
 						{
-							retValue.Add(partsO[1], new StringDict());
+							dlgDict.Add(partsO[1], new StringDict());
 						}
-						StringDict stringDict = retValue[partsO[1]];
+						StringDict stringDict = dlgDict[partsO[1]];
 						if (stringDict.ContainsKey(partsO[2]))
 						{
 							stringDict[partsO[2]] = partsT[2];
@@ -402,19 +414,35 @@ namespace ResourceTrans
 						{
 							stringDict.Add(partsO[2], partsT[2]);
 						}
+						if (globalDict.ContainsKey(partsO[2]))
+						{
+							if (globalDict[partsO[2]] != partsT[2])
+							{
+								if (!ambigDict.ContainsKey(partsO[2]))
+								{
+									ambigDict.Add(partsO[2], globalDict[partsO[2]]);
+								}
+							}
+						}
+						else
+						{
+							globalDict.Add(partsO[2], partsT[2]);
+						}
 					}
 				}
 			}
-			return retValue;
 		}
 
 		private void translateRc(StreamReader transReader, StreamReader srcRcReader, StreamWriter dstRcWriter, int codePage)
 		{
-			DlgDict dlgDict = readTrans(transReader);
+			DlgDict dlgDict = null;
+			StringDict globalDict = null;
+			StringDict ambigDict = null;
 			String srcLine;
 			String currentDlg = null;
 			StringDict dlgStrings = null;
 
+			readTrans(transReader, ref dlgDict, ref globalDict, ref ambigDict);
 			while ((srcLine = srcRcReader.ReadLine()) != null)
 			{
 				String dlgName = getDialogName(srcLine);
@@ -445,16 +473,32 @@ namespace ResourceTrans
 					}
 					else
 					{
-						if (currentDlg != null && dlgStrings != null)
+						if (currentDlg != null)
 						{
 							String foundString = findString(srcLine);
 							String transString = null;
 
-							if (foundString != null && foundString.Length > 0 &&
-								dlgStrings.TryGetValue(foundString, out transString))
+							if (foundString != null && foundString.Length > 0)
 							{
-								dstRcWriter.WriteLine(srcLine.Replace(foundString, transString));
-								wrote = true;
+								if (dlgStrings != null)
+								{
+									dlgStrings.TryGetValue(foundString, out transString);
+								}
+								else
+								{
+									globalDict.TryGetValue(foundString, out transString);
+									if (transString != null && ambigDict.ContainsKey(foundString))
+									{
+										MessageBox.Show(this, "Multiple translations for " + foundString + ".  " +
+											"Using " + transString + " in " + currentDlg + ".");
+									}
+
+								}
+								if (transString != null)
+								{
+									dstRcWriter.WriteLine(srcLine.Replace(foundString, transString));
+									wrote = true;
+								}
 							}
 						}
 					}
