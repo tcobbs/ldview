@@ -524,6 +524,24 @@ char* findExecutable(const char* executable)
 	return retValue;
 }
 
+bool isRelativePath(const char* path)
+{
+#ifdef WIN32
+	if (strlen(path) >= 3 && isalpha(path[0]) && path[1] == ':' &&
+		(path[2] == '\\' || path[2] == '/'))
+	{
+		return false;
+	}
+	return true;
+#else // WIN32
+	if (path[0] == '/')
+	{
+		return false;
+	}
+	return true;
+#endif // WIN32
+}
+
 char* directoryFromPath(const char* path)
 {
 	if (path)
@@ -890,6 +908,41 @@ long long longLongFromString(char* string)
 
 #endif // WIN32
 
+static const char *getEscapeString(char ch)
+{
+	switch (ch)
+	{
+	case '\a':
+		return "\\a";
+		break;
+	case '\b':
+		return "\\b";
+		break;
+	case '\f':
+		return "\\f";
+		break;
+	case '\n':
+		return "\\n";
+		break;
+	case '\r':
+		return "\\r";
+		break;
+	case '\t':
+		return "\\t";
+		break;
+	case '\v':
+		return "\\v";
+		break;
+	case '\?':
+		return "\\?";
+		break;
+	case '\\':
+		return "\\\\";
+		break;
+	}
+	return NULL;
+}
+
 static int escapeReplacement(char ch)
 {
 	switch (ch)
@@ -937,6 +990,56 @@ static int escapeReplacement(char ch)
 static int escapeReplacement(wchar_t wch)
 {
 	return escapeReplacement((char)wch);
+}
+
+char *createEscapedString(const char *string)
+{
+	int i;
+	int len = strlen(string);
+	int tmpLen = 0;
+	bool bFound = false;
+
+	for (i = 0; i < len; i++)
+	{
+		const char *escapeString = getEscapeString(string[i]);
+
+		if (escapeString)
+		{
+			tmpLen += strlen(escapeString);
+			bFound = true;
+		}
+		else
+		{
+			tmpLen += 1;
+		}
+	}
+	if (bFound)
+	{
+		char *retValue = new char[tmpLen + 1];
+
+		tmpLen = 0;
+		for (i = 0; i < len; i++)
+		{
+			const char *escapeString = getEscapeString(string[i]);
+
+			if (escapeString)
+			{
+				strcpy(&retValue[tmpLen], escapeString);
+				tmpLen += strlen(escapeString);
+			}
+			else
+			{
+				retValue[tmpLen] = string[i];
+				tmpLen += 1;
+			}
+		}
+		retValue[tmpLen] = 0;
+		return retValue;
+	}
+	else
+	{
+		return copyString(string);
+	}
 }
 
 void processEscapedString(char *string)
@@ -1158,6 +1261,86 @@ char *ucstringtoutf8(CUCSTR src, int length /*= -1*/)
 		if (src16 != (UTF16 *)src)
 		{
 			delete src16;
+		}
+		return retValue;
+#endif // TC_NO_UNICODE
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+#ifdef TC_NO_UNICODE
+UCSTR utf8toucstring(const char *src, int /*length*/ /*= -1*/)
+#else // TC_NO_UNICODE
+UCSTR utf8toucstring(const char *src, int length /*= -1*/)
+#endif // TC_NO_UNICODE
+{
+	if (src)
+	{
+#ifdef TC_NO_UNICODE
+		// This isn't 100% accurate, but we don't have much choice.
+		return copyString(src);
+#else // TC_NO_UNICODE
+		UTF16 *dst;
+		UTF16 *dstDup;
+		UTF8 *src8;
+		const UTF8 *src8Dup;
+		int utf16Length;
+		wchar_t *retValue = NULL;
+
+		if (length == -1)
+		{
+			length = strlen(src);
+		}
+		// I'm going to assume that the UTF-16 string has no more characters
+		// than the UTF-8 one.
+		utf16Length = length + 1;
+		dst = new UTF16[utf16Length];
+		if (sizeof(char) == sizeof(UTF8))
+		{
+			src8 = (UTF8 *)src;
+		}
+		else
+		{
+			int i;
+
+			src8 = new UTF8[length + 1];
+			for (i = 0; i < length; i++)
+			{
+				src8[i] = (UTF8)src[i];
+			}
+			src8[length] = 0;
+		}
+		src8Dup = src8;
+		dstDup = dst;
+		// Note: length really is correct for end below, not length - 1.
+		ConversionResult result = ConvertUTF8toUTF16(&src8Dup, &src8[length],
+			&dstDup, &dst[utf16Length], lenientConversion);
+		if (result == conversionOK)
+		{
+			utf16Length = dstDup - dst;
+			retValue = new wchar_t[utf16Length + 1];
+			if (sizeof(wchar_t) == sizeof(UTF16))
+			{
+				memcpy(retValue, dst, utf16Length * sizeof(wchar_t));
+			}
+			else
+			{
+				int i;
+
+				for (i = 0; i < utf16Length; i++)
+				{
+					retValue[i] = dst[i];
+				}
+			}
+			retValue[utf16Length] = 0;
+		}
+		delete dst;
+		if (src8 != (UTF8 *)src)
+		{
+			delete src8;
 		}
 		return retValue;
 #endif // TC_NO_UNICODE

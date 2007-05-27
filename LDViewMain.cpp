@@ -347,12 +347,23 @@ static void loadLanguageModule(void)
 	}
 }
 
-static void setupUserDefaults(LPSTR lpCmdLine, bool screenSaver)
+static bool setupUserDefaults(
+	LPSTR lpCmdLine,
+	bool screenSaver,
+	bool removableDrive)
 {
 	char *appName = "Travis Cobbs/LDView";
 	char *sessionName;
+	bool retValue = true;
 
 	TCUserDefaults::setCommandLine(lpCmdLine);
+	if (removableDrive)
+	{
+		if (!TCUserDefaults::setIniFile("LDView.ini"))
+		{
+			retValue = false;
+		}
+	}
 	TCUserDefaults::setAppName(appName);
 	// The language module needs to be loaded using LDView as the app name.  So
 	// if we're running in screensaver mode, we'll take care of changing our
@@ -372,6 +383,28 @@ static void setupUserDefaults(LPSTR lpCmdLine, bool screenSaver)
 		TCUserDefaults::setSessionName(sessionName, NULL, false);
 	}
 	delete sessionName;
+	return retValue;
+}
+
+static bool isRemovableDrive(HINSTANCE hInstance)
+{
+	char filename[2048];
+
+	if (GetModuleFileName(hInstance, filename, sizeof(filename)) > 0)
+	{
+		if (isalpha(filename[0]) && filename[1] == ':')
+		{
+			char driveRoot[4] = "";
+
+			strncpy(driveRoot, filename, 2);
+			driveRoot[2] = '\\';
+			if (GetDriveType(driveRoot) == DRIVE_REMOVABLE)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
@@ -390,8 +423,20 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	createConsole();
 //	MessageBox(NULL, "Attach a debugger now...", "Debug", MB_OK);
 #endif // _DEBUG
-	setupUserDefaults(lpCmdLine, screenSaver);
+	bool udok = setupUserDefaults(lpCmdLine, screenSaver,
+		isRemovableDrive(hInstance));
 	setupLocalStrings();
+	if (!udok && !TCUserDefaults::longForKey("IniFailureShown", 0, 0))
+	{
+		UCCHAR message[2048];
+		UCSTR iniPath = mbstoucstring(TCUserDefaults::getIniPath());
+
+		sucprintf(message, COUNT_OF(message),
+			TCLocalStrings::get(_UC("IniFailure")), iniPath);
+		CUIWindow::messageBoxUC(NULL, message, _UC("LDView"), MB_OK);
+		delete iniPath;
+		TCUserDefaults::setLongForKey(1, "IniFailureShown", false);
+	}
 	if (screenSaver)
 	{
 		if (strncasecmp(lpCmdLine, "/p", 2) == 0 ||

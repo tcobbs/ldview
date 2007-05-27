@@ -63,6 +63,7 @@ TCExport char* convertStringToLower(char*);
 
 TCExport char* filenameFromPath(const char*);
 TCExport char* directoryFromPath(const char*);
+TCExport bool isRelativePath(const char*);
 
 TCExport char* findExecutable(const char* executable);
 
@@ -88,6 +89,7 @@ TCExport void indentPrintf(int indent, const char *format, ...);
 
 TCExport void processEscapedString(char *string);
 TCExport void processEscapedString(wchar_t *string);
+TCExport char *createEscapedString(const char *string);
 
 void stringtowstring(std::wstring &dst, const std::string &src);
 void mbstowstring(std::wstring &dst, const char *src, int length = -1);
@@ -96,6 +98,7 @@ void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
 UCSTR mbstoucstring(const char *src, int length = -1);
 char *ucstringtombs(CUCSTR src, int length = -1);
 char *ucstringtoutf8(CUCSTR src, int length = -1);
+UCSTR utf8toucstring(const char *src, int length = -1);
 
 #ifdef WIN32
 
