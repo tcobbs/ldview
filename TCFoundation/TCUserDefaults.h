@@ -127,6 +127,12 @@ class TCExport TCUserDefaults: public TCObject
 		static void initAppPath(void);
 
 		std::string iniPath;
+		char* appName;
+		char* sessionName;
+		static TCUserDefaults* currentUserDefaults;
+		TCStringArray* commandLine;
+		bool useIni;
+
 #ifdef WIN32
 		HKEY openAppDefaultsKey(void);
 		HKEY openSessionKey(void);
@@ -162,8 +168,7 @@ class TCExport TCUserDefaults: public TCObject
 		UCSTR iniStringForKey(const char *key, bool sessionSpecific);
 		void iniSetStringForKey(CUCSTR value, const char *key,
 			bool sessionSpecific);
-		char *TCUserDefaults::iniKeyString(const char *key,
-			bool sessionSpecific);
+		char *iniKeyString(const char *key, bool sessionSpecific);
 		void iniFlush(void);
 		void iniWriteValues(FILE *iniFile, const IniKey &iniKey,
 			const char *keyPrefix);
@@ -186,12 +191,6 @@ class TCExport TCUserDefaults: public TCObject
 		void copyTree(const char *dstKey, const char *srcKey,
 			const char *skipKey);
 #endif // _QT
-		char* appName;
-		char* sessionName;
-		static TCUserDefaults* currentUserDefaults;
-		TCStringArray* commandLine;
-		bool useIni;
-
 #if defined(__APPLE__) && !defined(_QT)
 		NSMutableDictionary *sessionDict;
 

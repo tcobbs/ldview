@@ -48,13 +48,13 @@ void TCUserDefaults::TCUserDefaultsFlusher::dealloc(void)
 TCUserDefaults::TCUserDefaults(void)
 	:appName(NULL),
 	sessionName(NULL),
-	commandLine(NULL)
+	commandLine(NULL),
+	useIni(false)
 #ifdef WIN32
 	,hAppDefaultsKey(NULL),
 	hSessionKey(NULL)
 #endif // WIN32
 #ifdef TCUD_INI_SUPPORT
-	,useIni(false)
 	,iniChanges(false)
 #endif // TCUD_INI_SUPPORT
 #if defined(__APPLE__) && !defined(_QT)
