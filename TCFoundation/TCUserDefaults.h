@@ -4,9 +4,14 @@
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCStlIncludes.h>
 
-//#ifdef WIN32
-//#include <windows.h>
-//#endif // WIN32
+#if !defined(_MSC_VER) || (defined(_MSC_VER) && _MSC_VER > 1200)
+// VC++ 6 can't handle using a forward referenced type as one of the types in a
+// map.  I'm not going to go to the significant effort that would be required to
+// make this work without using that functionality, so INI support is just not
+// going to work if LDView is compiled with VS 6.
+#define TCUD_INI_SUPPORT
+#endif // MS VC++ > 6.0
+
 #ifdef _QT
 #include <qsettings.h>
 #include <stdlib.h>
@@ -52,6 +57,7 @@ class TCExport TCUserDefaults: public TCObject
 			bool sessionSpecific = true);
 		static void removeValue(const char* key, bool sessionSpecific = true);
 		static void setAppName(const char* value);
+		static bool setIniFile(const char* value);
 		static const char* getAppName(void);
 		static void setSessionName(const char* value,
 			const char* saveKey = NULL, bool copyCurrent = true);
@@ -70,6 +76,8 @@ class TCExport TCUserDefaults: public TCObject
 		static void removeSession(const char *value);
 		static const char *alertClass(void) { return "TCUserDefaultsChanged"; }
 		static void flush(void);
+		static const char* getIniPath(void);
+		static const char* getAppPath(void) { return appPath.c_str(); }
 	protected:
 		TCUserDefaults(void);
 		virtual void dealloc(void);
@@ -95,6 +103,7 @@ class TCExport TCUserDefaults: public TCObject
 			bool sessionSpecific,
 			const LongVector &defaultValue = LongVector());
 		void defRemoveValue(const char* key, bool sessionSpecific);
+		bool defSetIniFile(const char* value);
 		void defSetAppName(const char* value);
 		const char* defGetAppName(void) { return appName; }
 		void defSetSessionName(const char* value, const char* saveKey,
@@ -113,8 +122,11 @@ class TCExport TCUserDefaults: public TCObject
 		void sendValueChangedAlert(const char *key);
 		bool matchesCommandLine(const char *key, long value);
 		bool matchesCommandLine(const char *key, const char *value);
+		const char *defGetIniPath(void) const { return iniPath.c_str(); }
 		static std::string arrayKey(const char *key, int index);
+		static void initAppPath(void);
 
+		std::string iniPath;
 #ifdef WIN32
 		HKEY openAppDefaultsKey(void);
 		HKEY openSessionKey(void);
@@ -132,7 +144,38 @@ class TCExport TCUserDefaults: public TCObject
 
 		HKEY hAppDefaultsKey;
 		HKEY hSessionKey;
+
 #endif // WIN32
+#ifdef TCUD_INI_SUPPORT
+		struct IniKey;
+		typedef std::map<std::string, IniKey> IniKeyMap;
+		typedef std::map<std::string, std::string> StringStringMap;
+		struct IniKey
+		{
+			IniKeyMap children;
+			StringStringMap values;
+		};
+		IniKey rootIniKey;
+		bool iniChanges;
+
+		IniKey *findIniKey(IniKey *pKey, char *&pathPart);
+		UCSTR iniStringForKey(const char *key, bool sessionSpecific);
+		void iniSetStringForKey(CUCSTR value, const char *key,
+			bool sessionSpecific);
+		char *TCUserDefaults::iniKeyString(const char *key,
+			bool sessionSpecific);
+		void iniFlush(void);
+		void iniWriteValues(FILE *iniFile, const IniKey &iniKey,
+			const char *keyPrefix);
+		void iniWriteKey(FILE *iniFile, const IniKey &iniKey,
+			const char *keyPrefix);
+		void iniRemoveValue(const char *key, bool sessionSpecific);
+		void iniRemoveSession(const char *value);
+		void iniGetAllSessionNames(TCStringArray *allSessionNames);
+		void iniGetAllKeys(TCStringArray *allKeys);
+		void iniSetSessionName(const char *value, bool copyCurrent);
+		void iniChanged();
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 		QSettings *qSettings;
 		char qKey[1024];
@@ -147,6 +190,7 @@ class TCExport TCUserDefaults: public TCObject
 		char* sessionName;
 		static TCUserDefaults* currentUserDefaults;
 		TCStringArray* commandLine;
+		bool useIni;
 
 #if defined(__APPLE__) && !defined(_QT)
 		NSMutableDictionary *sessionDict;
@@ -159,7 +203,13 @@ class TCExport TCUserDefaults: public TCObject
 		public:
 			~TCUserDefaultsCleanup(void);
 		} userDefaultsCleanup;
+		class TCUserDefaultsFlusher : public TCObject
+		{
+		protected:
+			virtual void dealloc(void);
+		};
 		static char *argv0;
+		static std::string appPath;
 		friend class TCUserDefaultsCleanup;
 };
 

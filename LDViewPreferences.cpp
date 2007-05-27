@@ -1440,7 +1440,7 @@ void LDViewPreferences::applyPrefSetsChanges(void)
 			prefSetName = getPrefSet(i);
 			if (oldPrefSetNames->indexOfString(prefSetName) < 0)
 			{
-				TCUserDefaults::setSessionName(prefSetName);
+				TCUserDefaults::setSessionName(prefSetName, PREFERENCE_SET_KEY);
 			}
 			delete prefSetName;
 		}

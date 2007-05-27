@@ -9,10 +9,15 @@
 #endif // __APPLE__ && !_QT
 #include <stdio.h>
 
+#define MAX_INI_LINE_LEN 65536
+
 #ifdef WIN32
+#include <direct.h>
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif
+#else // WIN32
+#include <unistd.h>
 #endif // WIN32
 
 #ifdef _QT
@@ -23,6 +28,7 @@ TCUserDefaults* TCUserDefaults::currentUserDefaults = NULL;
 
 TCUserDefaults::TCUserDefaultsCleanup TCUserDefaults::userDefaultsCleanup;
 char *TCUserDefaults::argv0 = NULL;
+std::string TCUserDefaults::appPath;
 
 TCUserDefaults::TCUserDefaultsCleanup::~TCUserDefaultsCleanup(void)
 {
@@ -34,6 +40,11 @@ TCUserDefaults::TCUserDefaultsCleanup::~TCUserDefaultsCleanup(void)
 	}
 }
 
+void TCUserDefaults::TCUserDefaultsFlusher::dealloc(void)
+{
+	TCUserDefaults::flush();
+}
+
 TCUserDefaults::TCUserDefaults(void)
 	:appName(NULL),
 	sessionName(NULL),
@@ -42,6 +53,10 @@ TCUserDefaults::TCUserDefaults(void)
 	,hAppDefaultsKey(NULL),
 	hSessionKey(NULL)
 #endif // WIN32
+#ifdef TCUD_INI_SUPPORT
+	,useIni(false)
+	,iniChanges(false)
+#endif // TCUD_INI_SUPPORT
 #if defined(__APPLE__) && !defined(_QT)
 	,sessionDict(nil)
 #endif // __APPLE__ && !defined(_QT)
@@ -60,6 +75,12 @@ TCUserDefaults::TCUserDefaults(void)
 
 void TCUserDefaults::dealloc(void)
 {
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniFlush();
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	delete qSettings;
 #endif // _QT
@@ -135,6 +156,49 @@ void TCUserDefaults::removeSession(const char* value)
 	getCurrentUserDefaults()->defRemoveSession(value);
 }
 
+void TCUserDefaults::initAppPath(void)
+{
+#ifdef WIN32
+	// In Windows, there's an easy way to get the true path of the app.
+	// Use it.
+	HMODULE hModule = GetModuleHandle(NULL);
+	char programPath[2048];
+
+	if (GetModuleFileName(hModule, programPath, sizeof(programPath)) > 0)
+	{
+		char *spot = strrchr(programPath, '\\');
+
+		if (spot)
+		{
+			spot[1] = 0;
+			appPath = programPath;
+		}
+	}
+#else // WIN32
+	char currentDir[2048];
+	if (getcwd(currentDir, sizeof(currentDir)))
+	{
+		if (argv0)
+		{
+			char *dirPart = directoryFromPath(argv0);
+			const char *pathSeparator = "/";
+
+			if (isRelativePath(dirPart))
+			{
+				appPath = currentDir;
+				appPath += pathSeparator;
+				appPath += argv0;
+			}
+			else
+			{
+				appPath = dirPart;
+			}
+			appPath += pathSeparator;
+			delete dirPart;
+		}
+	}
+#endif // WIN32
+}
 
 void TCUserDefaults::setCommandLine(char *argv[])
 {
@@ -152,6 +216,7 @@ void TCUserDefaults::setCommandLine(char *argv[])
 	}
 	getCurrentUserDefaults()->defSetCommandLine(argArray);
 	argArray->release();
+	initAppPath();
 }
 
 void TCUserDefaults::setCommandLine(const char *args)
@@ -213,6 +278,17 @@ void TCUserDefaults::setCommandLine(const char *args)
 	}
 	getCurrentUserDefaults()->defSetCommandLine(argArray);
 	argArray->release();
+	initAppPath();
+}
+
+bool TCUserDefaults::setIniFile(const char* value)
+{
+	return getCurrentUserDefaults()->defSetIniFile(value);
+}
+
+const char *TCUserDefaults::getIniPath(void)
+{
+	return getCurrentUserDefaults()->defGetIniPath();
 }
 
 void TCUserDefaults::setAppName(const char* value)
@@ -360,6 +436,13 @@ char* TCUserDefaults::defGetSavedSessionNameFromKey(const char* key)
 
 void TCUserDefaults::defRemoveSession(const char *value)
 {
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniRemoveSession(value);
+		return;
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	char sessionKey[1024];
 
@@ -401,6 +484,17 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 		// command line.
 		return;
 	}
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		UCSTR valueUC = mbstoucstring(value);
+
+		iniSetStringForKey(valueUC, key, sessionSpecific);
+		delete valueUC;
+	}
+	else
+	{
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
 #endif // _QT
@@ -426,6 +520,9 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	defSetValueForKey((LPBYTE)value, strlen(value) + 1, REG_SZ, key,
 		sessionSpecific);
 #endif // WIN32
+#ifdef TCUD_INI_SUPPORT
+	}
+#endif // TCUD_INI_SUPPORT
 	sendValueChangedAlert(key);
 }
 
@@ -434,6 +531,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 										bool sessionSpecific)
 {
 	char *valuea = ucstringtombs(value);
+
 	if (matchesCommandLine(key, valuea))
 	{
 		delete valuea;
@@ -442,6 +540,14 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 		return;
 	}
 	delete valuea;
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniSetStringForKey(value, key, sessionSpecific);
+	}
+	else
+	{
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	QString qvalue;
 	ucstringtoqstring(qvalue, value);
@@ -469,6 +575,9 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	defSetValueForKey((LPBYTE)value, (ucstrlen(value) + 1) * sizeof(UCCHAR),
 		REG_SZ, key, sessionSpecific, true);
 #endif // WIN32
+#ifdef TCUD_INI_SUPPORT
+	}
+#endif // TCUD_INI_SUPPORT
 	sendValueChangedAlert(key);
 }
 #endif // TC_NO_UNICODE
@@ -545,6 +654,21 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 		delete commandLineValue;
 		return retValue;
 	}
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		UCSTR value = iniStringForKey(key, sessionSpecific);
+
+		if (value)
+		{
+			return value;
+		}
+		else
+		{
+			return copyString(defaultValue);
+		}
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	QString qDefaultValue;
 
@@ -619,6 +743,24 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	{
 		return commandLineValue;
 	}
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		UCSTR valueUC = iniStringForKey(key, sessionSpecific);
+
+		if (valueUC)
+		{
+			char *value = ucstringtombs(valueUC);
+
+			delete valueUC;
+			return value;
+		}
+		else
+		{
+			return copyString(defaultValue);
+		}
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	QString string = qSettings->readEntry(qKeyForKey(key, sessionSpecific),
 		defaultValue);
@@ -729,6 +871,17 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 		// command line.
 		return;
 	}
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		UCCHAR valueStr[128];
+
+		sucprintf(valueStr, sizeof(valueStr), _UC("%d"), value);
+		iniSetStringForKey(valueStr, key, sessionSpecific);
+	}
+	else
+	{
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
 #endif // _QT
@@ -753,6 +906,9 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 	defSetValueForKey((LPBYTE)&value, sizeof value, REG_DWORD, key,
 		sessionSpecific);
 #endif // WIN32
+#ifdef TCUD_INI_SUPPORT
+	}
+#endif // TCUD_INI_SUPPORT
 	sendValueChangedAlert(key);
 }
 
@@ -780,6 +936,32 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		}
 		delete commandLineValue;
 	}
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		UCSTR value = iniStringForKey(key, sessionSpecific);
+
+		if (value)
+		{
+			long returnValue;
+
+			if (sucscanf(value, _UC("%li"), &returnValue) == 1)
+			{
+				if (found)
+				{
+					*found = true;
+				}
+			}
+			else
+			{
+				returnValue = defaultValue;
+			}
+			delete value;
+			return returnValue;
+		}
+		return defaultValue;
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	return qSettings->readNumEntry(qKeyForKey(key, sessionSpecific),
 		defaultValue, found);
@@ -891,6 +1073,13 @@ LongVector TCUserDefaults::defLongVectorForKey(const char* key,
 
 void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 {
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniRemoveValue(key, sessionSpecific);
+		return;
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	qSettings->removeEntry(qKeyForKey(key, sessionSpecific));
 #endif // _QT
@@ -949,6 +1138,13 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 
 void TCUserDefaults::defFlush(void)
 {
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniFlush();
+		return;
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	// QSettings only writes to disk when the object is destroyed.  If LDView
 	// crashes, all settings that were set are lost.
@@ -966,6 +1162,13 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 {
 	TCStringArray *allKeys = new TCStringArray;
 
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniGetAllKeys(allKeys);
+		return allKeys;
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	defGetAllKeysUnderKey(qKeyForKey("", true), allKeys);
 #endif // _QT
@@ -1005,6 +1208,13 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 {
 	TCStringArray *allSessionNames = new TCStringArray;
 
+#ifdef TCUD_INI_SUPPORT
+	if (useIni)
+	{
+		iniGetAllSessionNames(allSessionNames);
+		return allSessionNames;
+	}
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	char key[1024];
 	QStringList subkeyList;
@@ -1102,6 +1312,328 @@ void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 	}
 }
 
+#ifdef TCUD_INI_SUPPORT
+
+void TCUserDefaults::iniSetSessionName(const char *value, bool copyCurrent)
+{
+	if (copyCurrent && value)
+	{
+		IniKey &sessionsKey = rootIniKey.children["Sessions"];
+		IniKeyMap::iterator it1 = sessionsKey.children.find(value);
+
+		if (it1 == sessionsKey.children.end())
+		{
+			if (sessionName)
+			{
+				sessionsKey.children[value] = sessionsKey.children[sessionName];
+			}
+			else
+			{
+				IniKey &newSession = sessionsKey.children[value];
+				newSession.values = rootIniKey.values;
+				for (IniKeyMap::iterator it2 = rootIniKey.children.begin();
+					it2 != rootIniKey.children.end(); it2++)
+				{
+					if (it2->first != "Sessions")
+					{
+						newSession.children[it2->first] = it2->second;
+					}
+				}
+			}
+			iniChanged();
+		}
+	}
+	delete sessionName;
+	sessionName = copyString(value);
+}
+
+void TCUserDefaults::iniGetAllKeys(TCStringArray *allKeys)
+{
+	char *newKey = iniKeyString("", true);
+	char *pathPart = newKey;
+	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
+
+	if (pKey)
+	{
+		for (StringStringMap::const_iterator it = pKey->values.begin();
+			it != pKey->values.end(); it++)
+		{
+			allKeys->addString(it->first.c_str());
+		}
+	}
+	delete newKey;
+}
+
+void TCUserDefaults::iniGetAllSessionNames(TCStringArray *allSessionNames)
+{
+	IniKeyMap::const_iterator it1 = rootIniKey.children.find("Sessions");
+
+	if (it1 != rootIniKey.children.end())
+	{
+		const IniKey &sessionsKey = it1->second;
+
+		for (IniKeyMap::const_iterator it2 = sessionsKey.children.begin();
+			it2 != sessionsKey.children.end(); it2++)
+		{
+			allSessionNames->addString(it2->first.c_str());
+		}
+	}
+}
+
+void TCUserDefaults::iniWriteValues(
+	FILE *iniFile,
+	const IniKey &iniKey,
+	const char *keyPrefix)
+{
+	for (StringStringMap::const_iterator it = iniKey.values.begin();
+		it != iniKey.values.end(); it++)
+	{
+		char *value = createEscapedString(it->second.c_str());
+
+		fprintf(iniFile, "%s%s=%s\n", keyPrefix, it->first.c_str(), value);
+		delete value;
+	}
+}
+
+void TCUserDefaults::iniWriteKey(
+	FILE *iniFile,
+	const IniKey &iniKey,
+	const char *keyPrefix)
+{
+	std::string keyPrefixStr(keyPrefix);
+
+	iniWriteValues(iniFile, iniKey, keyPrefix);
+	for (IniKeyMap::const_iterator it = iniKey.children.begin();
+		it != iniKey.children.end(); it++)
+	{
+		std::string newPrefix = keyPrefixStr + it->first + "/";
+		iniWriteKey(iniFile, it->second, newPrefix.c_str());
+	}
+}
+
+void TCUserDefaults::iniFlush(void)
+{
+	if (iniChanges)
+	{
+		FILE *iniFile = fopen(iniPath.c_str(), "w");
+
+		if (iniFile)
+		{
+			fprintf(iniFile, "[General]\n");
+			iniWriteValues(iniFile, rootIniKey, "");
+			fprintf(iniFile, "\n");
+			for (IniKeyMap::const_iterator it = rootIniKey.children.begin();
+				it != rootIniKey.children.end(); it++)
+			{
+				fprintf(iniFile, "[%s]\n", it->first.c_str());
+				iniWriteKey(iniFile, it->second, "");
+				fprintf(iniFile, "\n");
+			}
+			fclose(iniFile);
+		}
+		iniChanges = false;
+	}
+}
+
+char *TCUserDefaults::iniKeyString(const char *key, bool sessionSpecific)
+{
+	char *newKey;
+	int keyLen = strlen(key);
+
+	if (sessionSpecific && sessionName)
+	{
+		newKey = new char[keyLen + strlen(sessionName) + 20];
+
+		sprintf(newKey, "Sessions/%s/%s", sessionName, key);
+	}
+	else
+	{
+		newKey = copyString(key);
+	}
+	return newKey;
+}
+
+void TCUserDefaults::iniRemoveSession(const char *value)
+{
+	char *newKey = copyString("Sessions/", strlen(value));
+	char *pathPart = newKey;
+	IniKey *pKey;
+
+	strcat(newKey, value);
+	pKey = findIniKey(&rootIniKey, pathPart);
+	if (pKey)
+	{
+		pKey->children.erase(value);
+	}
+}
+
+void TCUserDefaults::iniRemoveValue(const char *key, bool sessionSpecific)
+{
+	char *newKey = iniKeyString(key, sessionSpecific);
+	char *pathPart = newKey;
+	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
+
+	pKey->values.erase(pathPart);
+	delete newKey;
+}
+
+void TCUserDefaults::iniSetStringForKey(
+	CUCSTR value,
+	const char *key,
+	bool sessionSpecific)
+{
+	char *newKey = iniKeyString(key, sessionSpecific);
+	char *pathPart = newKey;
+	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
+	char *utf8Value = ucstringtoutf8(value);
+
+	pKey->values[pathPart] = utf8Value;
+	delete utf8Value;
+	iniChanged();
+	delete newKey;
+}
+
+void TCUserDefaults::iniChanged(void)
+{
+	if (!iniChanges)
+	{
+		TCUserDefaultsFlusher *flusher = new TCUserDefaultsFlusher;
+
+		iniChanges = true;
+		// When the flusher gets released by the autorelease pool, it will
+		// trigger a flush, which will write our settings to disk.  This way we
+		// can make a bunch of settings changes, and only have to write to disk
+		// once.
+		flusher->autorelease();
+	}
+}
+
+UCSTR TCUserDefaults::iniStringForKey(const char *key, bool sessionSpecific)
+{
+	char *newKey = iniKeyString(key, sessionSpecific);
+	char *pathPart = newKey;
+	IniKey *pKey = findIniKey(&rootIniKey, pathPart);
+	StringStringMap::const_iterator it;
+
+	if ((it = pKey->values.find(pathPart)) != pKey->values.end())
+	{
+		delete newKey;
+		return utf8toucstring(it->second.c_str(), it->second.size());
+	}
+	else
+	{
+		delete newKey;
+		return NULL;
+	}
+}
+
+TCUserDefaults::IniKey *TCUserDefaults::findIniKey(IniKey *pKey, char *&pathPart)
+{
+	char *slashSpot;
+
+	while ((slashSpot = strchr(pathPart, '/')) != NULL)
+	{
+		slashSpot[0] = 0;
+		pKey = &pKey->children[pathPart];
+		pathPart = &slashSpot[1];
+	}
+	return pKey;
+}
+
+bool TCUserDefaults::defSetIniFile(const char* value)
+#else // TCUD_INI_SUPPORT
+bool TCUserDefaults::defSetIniFile(const char* /*value*/)
+#endif // TCUD_INI_SUPPORT
+{
+	bool retValue = false;
+
+#ifdef TCUD_INI_SUPPORT
+	iniPath.clear();
+	rootIniKey.children.clear();
+	rootIniKey.values.clear();
+	if (appPath.size() > 0)
+	{
+		iniPath = appPath + value;
+	}
+	if (iniPath.size() > 0)
+	{
+		FILE *iniFile = fopen(iniPath.c_str(), "r+b");
+
+		if (iniFile)
+		{
+			char *line = new char[MAX_INI_LINE_LEN];
+			bool haveGeneralSection = false;
+			std::string sectionName;
+
+			while (1)
+			{
+				if (fgets(line, MAX_INI_LINE_LEN, iniFile) == NULL)
+				{
+					break;
+				}
+				stripCRLF(line);
+				stripLeadingWhitespace(line);
+				int length = strlen(line);
+				char *equalsSpot;
+
+				if (line[0] == '[' && line[length - 1] == ']')
+				{
+					line[length - 1] = 0;
+					sectionName = &line[1];
+					if (!haveGeneralSection &&
+						strcasecmp(sectionName.c_str(), "General") == 0)
+					{
+						haveGeneralSection = true;
+						sectionName.clear();
+					}
+				}
+				else if (line[0] != ';' && (haveGeneralSection ||
+					sectionName.size() > 0) &&
+					(equalsSpot = strchr(line, '=')) != NULL)
+				{
+					IniKey *pKey;
+
+					if (sectionName.size() > 0)
+					{
+						pKey = &rootIniKey.children[sectionName];
+					}
+					else
+					{
+						pKey = &rootIniKey;
+					}
+					equalsSpot[0] = 0;
+					char *pathPart = line;
+					pKey = findIniKey(pKey, pathPart);
+					processEscapedString(&equalsSpot[1]);
+					pKey->values[pathPart] = &equalsSpot[1];
+				}
+			}
+			delete line;
+			fclose(iniFile);
+			retValue = true;
+		}
+		else
+		{
+			iniFile = fopen(iniPath.c_str(), "w");
+			if (iniFile)
+			{
+				if (fprintf(iniFile, "[General]\n") >= 10)
+				{
+					retValue = true;
+				}
+				fclose(iniFile);
+				unlink(iniPath.c_str());
+			}
+		}
+	}
+	if (retValue)
+	{
+		useIni = true;
+	}
+#endif // TCUD_INI_SUPPORT
+	return retValue;
+}
+
 void TCUserDefaults::defSetAppName(const char* value)
 {
 	if (appName != value)
@@ -1110,12 +1642,15 @@ void TCUserDefaults::defSetAppName(const char* value)
 		appName = copyString(value);
 		defSetSessionName(NULL, NULL, false);
 #ifdef WIN32
-		if (hAppDefaultsKey)
+		if (!useIni)
 		{
-			RegCloseKey(hAppDefaultsKey);
+			if (hAppDefaultsKey)
+			{
+				RegCloseKey(hAppDefaultsKey);
+			}
+			hAppDefaultsKey = openAppDefaultsKey();
+			hSessionKey = hAppDefaultsKey;
 		}
-		hAppDefaultsKey = openAppDefaultsKey();
-		hSessionKey = hAppDefaultsKey;
 #endif // WIN32
 #if defined(__APPLE__) && !defined(_QT)
 		initSessionDict();
@@ -1128,6 +1663,14 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 {
 	if (value != sessionName)
 	{
+#ifdef TCUD_INI_SUPPORT
+		if (useIni)
+		{
+			iniSetSessionName(value, copyCurrent);
+		}
+		else
+		{
+#endif // TCUD_INI_SUPPORT
 #ifdef _QT
 		char key[1024];
 		QStringList sessionNames;
@@ -1154,6 +1697,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 		sessionName = copyString(value);
 #endif // _QT
 #if defined(__APPLE__) && !defined(_QT)
+		delete sessionName;
 		sessionName = copyString(value);
 		if ([[NSUserDefaults standardUserDefaults]
 			persistentDomainForName: getSessionKey()] == nil)
@@ -1251,6 +1795,9 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 			RegCloseKey(hOldSessionKey);
 		}
 #endif // WIN32
+#ifdef TCUD_INI_SUPPORT
+		}
+#endif // TCUD_INI_SUPPORT
 	}
 	if (saveKey)
 	{

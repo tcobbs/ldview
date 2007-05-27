@@ -10,6 +10,7 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCUserDefaults.h>
 
 #ifdef WIN32
 #include <direct.h>
@@ -529,6 +530,37 @@ const char* LDLModel::lDrawDir(void)
 			setLDrawDir("/usr/local/ldraw");
 //			sm_systemLDrawDir = copyString("/usr/local/ldraw");
 #endif // WIN32
+		}
+		if (!verifyLDrawDir(sm_systemLDrawDir))
+		{
+			char *ldviewDir = copyString(TCUserDefaults::getAppPath(), 10);
+
+			if (ldviewDir && ldviewDir[0])
+			{
+				int len = strlen(ldviewDir);
+
+				strcpy(&ldviewDir[len], "LDRAW");
+				setLDrawDir(ldviewDir);
+				ldviewDir[len - 1] = 0;
+				if (!verifyLDrawDir(sm_systemLDrawDir))
+				{
+					char *slashSpot = strrchr(ldviewDir, '/');
+#ifdef WIN32
+					char *backslashSpot = strrchr(ldviewDir, '\\');
+
+					if (!slashSpot || backslashSpot > slashSpot)
+					{
+						slashSpot = backslashSpot;
+					}
+#endif // WIN32
+					if (slashSpot)
+					{
+						strcpy(&slashSpot[1], "LDRAW");
+						setLDrawDir(ldviewDir);
+					}
+				}
+			}
+			delete ldviewDir;
 		}
 		if (!verifyLDrawDir(sm_systemLDrawDir))
 		{
