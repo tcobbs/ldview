@@ -43,6 +43,7 @@
 #endif // __APPLE__
 #include "misc.h"
 
+#include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCAlertManager.h>
@@ -505,6 +506,7 @@ void ModelViewerWidget::timerEvent(QTimerEvent* event)
 		{
 			updateGL();
 		}
+		TCAutoreleasePool::processReleases();
 	}
 	else if (event->timerId() == pollTimer)
 	{
