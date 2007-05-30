@@ -244,8 +244,8 @@ BEGIN
     LTEXT           "Vastagság:",IDC_WIREFRAME_THICKNESS_LABEL,16,83,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,77,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_WIREFRAME_THICKNESS
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,77,68,21,0,
+                    HIDC_WIREFRAME_THICKNESS
     GROUPBOX        "    ",IDC_BFC_BOX,7,106,121,40,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,15,106,29,10,WS_EX_TRANSPARENT,HIDC_BFC
@@ -280,8 +280,8 @@ BEGIN
     LTEXT           "Vastagság:",IDC_EDGE_THICKNESS_LABEL,141,126,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_EDGE_THICKNESS
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,21,0,
+                    HIDC_EDGE_THICKNESS
     PUSHBUTTON      "Visszaállítás",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_GEOMETRY_RESET
 END
@@ -320,8 +320,8 @@ BEGIN
     LTEXT           "Amt:",IDC_STEREO_SPACING_LABEL,144,47,15,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,160,41,87,21,
-                    WS_EX_CLIENTEDGE,HIDC_STEREO_SPACING
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,160,41,87,21,0,
+                    HIDC_STEREO_SPACING
     GROUPBOX        "      ",IDC_CUTAWAY_BOX,7,69,121,83,WS_GROUP,0,
                     HIDC_CUTAWAY_BOX
     CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",
@@ -334,13 +334,13 @@ BEGIN
     RTEXT           "Fedés:",IDC_CUTAWAY_OPACITY_LABEL,16,110,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,104,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_CUTAWAY_OPACITY
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,104,68,21,0,
+                    HIDC_CUTAWAY_OPACITY
     LTEXT           "Vastagság:",IDC_CUTAWAY_THICKNESS_LABEL,16,133,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,127,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_CUTAWAY_THICKNESS
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,127,68,21,0,
+                    HIDC_CUTAWAY_THICKNESS
     GROUPBOX        "Á&tlátszóság",IDC_TRANSPARENCY_BOX,132,69,121,40,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
@@ -560,8 +560,8 @@ BEGIN
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,21,
-                    WS_EX_CLIENTEDGE,HIDC_CURVE_QUALITY
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,21,0,
+                    HIDC_CURVE_QUALITY
     GROUPBOX        "Egyéb",IDC_PRIMITIVES_MISC_BOX,7,78,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
     CONTROL         "Egyszerû pöttyök (gyorsabb)",IDC_STUD_QUALITY,"Button",
