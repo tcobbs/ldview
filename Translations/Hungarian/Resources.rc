@@ -17,6 +17,9 @@
 #ifndef IDC_STATIC
 #define IDC_STATIC      (-1)
 #endif
+#ifndef MANIFEST
+#define MANIFEST        24
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -39,6 +42,17 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 IDI_APP_ICON            ICON    DISCARDABLE     "Icons\\LDViewIcon.ico"
 IDI_EXAMINE             ICON    DISCARDABLE     "icons\\examine.ico"
 IDI_FLYTHROUGH          ICON    DISCARDABLE     "icons\\flythrou.ico"
+IDI_LDRAW               ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
+IDI_MPD                 ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
+IDR_LIGHT_ANGLE_UR      ICON    DISCARDABLE     "Icons\\LightAngleUR.ico"
+IDR_LIGHT_ANGLE_UL      ICON    DISCARDABLE     "Icons\\LightAngleUL.ico"
+IDR_LIGHT_ANGLE_UM      ICON    DISCARDABLE     "Icons\\LightAngleUM.ico"
+IDR_LIGHT_ANGLE_MR      ICON    DISCARDABLE     "Icons\\LightAngleMR.ico"
+IDR_LIGHT_ANGLE_LL      ICON    DISCARDABLE     "Icons\\LightAngleLL.ico"
+IDR_LIGHT_ANGLE_LM      ICON    DISCARDABLE     "Icons\\LightAngleLM.ico"
+IDR_LIGHT_ANGLE_LR      ICON    DISCARDABLE     "Icons\\LightAngleLR.ico"
+IDR_LIGHT_ANGLE_ML      ICON    DISCARDABLE     "Icons\\LightAngleML.ico"
+IDR_LIGHT_ANGLE_MM      ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -57,6 +71,9 @@ BEGIN
     "#include ""dlgs.h""\r\n"
     "#ifndef IDC_STATIC\r\n"
     "#define IDC_STATIC      (-1)\r\n"
+    "#endif\r\n"
+    "#ifndef MANIFEST\r\n"
+    "#define MANIFEST        24\r\n"
     "#endif\0"
 END
 
@@ -886,6 +903,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 228
     END
+
+    IDD_PARTS_LIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 190
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 164
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -994,6 +1019,8 @@ BEGIN
         MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
 
         MENUITEM "Alternate setup",             ID_LIGHTING_ALTERNATESETUP
+        MENUITEM "Use LIGHT.DAT lights",        ID_LIGHTING_DRAWDATS
+        MENUITEM "Replace main light",          ID_LIGHTING_OPTIONALMAIN
     END
     POPUP "BFC"
     BEGIN
@@ -1089,6 +1116,7 @@ IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
 IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
 IDB_VERTEX_ORDER        BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
 IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
+IDB_LIGHT_ANGLES        BITMAP  DISCARDABLE     "Icons\\LightAngles.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1097,8 +1125,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,3
- PRODUCTVERSION 3,1,0,3
+ FILEVERSION 3,2,0,3
+ PRODUCTVERSION 3,2,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1116,14 +1144,14 @@ BEGIN
             VALUE "Comments", "3D Lego modell megjelenitõ LDraw formátumban.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.1\0"
+            VALUE "FileVersion", "3.2 Alpha 3\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2000-2006 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.1\0"
+            VALUE "ProductVersion", "3.2 Alpha 3\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -1138,25 +1166,13 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// PNG
+
 //
 
-IDR_STUDLOGO_PNG        PNG     DISCARDABLE     "Textures\\StudLogo.png"
-IDR_SS_PREVIEW          PNG     DISCARDABLE     "Icons\\screen_saver_preview.png"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// TCFONT
-//
-
-IDR_SANS_FONT           TCFONT  DISCARDABLE     "Textures\\SansSerif.fnt"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// LOCALSTRINGS
-//
-
-IDR_LOCAL_STRINGS       LOCALSTRINGS DISCARDABLE "LDViewMessages.ini"
+IDR_STUDLOGO_PNG        RCDATA  DISCARDABLE     "Textures\\StudLogo.png"
+IDR_SS_PREVIEW          RCDATA  DISCARDABLE     "Icons\\screen_saver_preview.png"
+IDR_SANS_FONT           RCDATA  DISCARDABLE     "Textures\\SansSerif.fnt"
+IDR_LOCAL_STRINGS		RCDATA  DISCARDABLE		"LDViewMessages.ini"
 
 /////////////////////////////////////////////////////////////////////////////
 //
