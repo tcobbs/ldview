@@ -540,7 +540,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Primitívek"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,60,WS_GROUP,0,
+    GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,79,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
     CONTROL         "&Primitív behelyettesítés",IDC_PRIMITIVE_SUBSTITUTION,
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
@@ -556,20 +556,27 @@ BEGIN
                     BS_AUTORADIOBUTTON,23,41,75,10,0,HIDC_TEXTURE_BILINEAR
     CONTROL         "Trilinear szûrõ",IDC_TEXTURE_TRILINEAR,"Button",
                     BS_AUTORADIOBUTTON,23,52,75,10,0,HIDC_TEXTURE_TRILINEAR
+    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",
+                    BS_AUTORADIOBUTTON,23,63,75,10,0,HIDC_TEXTURE_ANISO
+    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,60,80,18,0,
+                    HIDC_ANISO_LEVEL
+    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,64,26,8,0,0,
+                    HIDC_ANISO_LEVEL_LABEL
     LTEXT           "Ívek minõsége:",IDC_CURVE_QUALITY_LABEL,111,25,54,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,21,0,
                     HIDC_CURVE_QUALITY
-    GROUPBOX        "Egyéb",IDC_PRIMITIVES_MISC_BOX,7,78,246,40,WS_GROUP,
+    GROUPBOX        "Egyéb",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
     CONTROL         "Egyszerû pöttyök (gyorsabb)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    90,133,10,0,HIDC_STUD_QUALITY
+                    99,133,10,0,HIDC_STUD_QUALITY
     CONTROL         "Nagyfelbontású primitívek használata ha lehet",IDC_HI_RES,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    101,167,10,0,HIDC_HI_RES
+                    110,167,10,0,HIDC_HI_RES
     PUSHBUTTON      "Visszaállítás",IDC_PRIMITIVES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_PRIMITIVES_RESET
 END
