@@ -363,7 +363,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Általános"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "Élsimitás",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -593,7 +593,7 @@ END
 IDD_PREFSETS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Beállítás-készletek"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     LTEXT           "A következõ beállítás-készlet használata:",IDC_PREFSETS_LABEL,7,
                     7,144,8,0,0,HIDC_PREFSETS_LABEL
@@ -690,7 +690,7 @@ END
 IDD_UPDATES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Frissítés"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Internet Proxy",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
                     HIDC_PROXY_BOX
@@ -1071,7 +1071,7 @@ BEGIN
                                                     NOINVERT
     "9",            ID_HOT_KEY_9,           VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
-    "E",            ID_TOOLS_ERRORS,         VIRTKEY, SHIFT, CONTROL, 
+    "E",            ID_TOOLS_ERRORS,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
@@ -1173,13 +1173,13 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-
+// Data
 //
 
 IDR_STUDLOGO_PNG        RCDATA  DISCARDABLE     "Textures\\StudLogo.png"
 IDR_SS_PREVIEW          RCDATA  DISCARDABLE     "Icons\\screen_saver_preview.png"
 IDR_SANS_FONT           RCDATA  DISCARDABLE     "Textures\\SansSerif.fnt"
-IDR_LOCAL_STRINGS		RCDATA  DISCARDABLE		"LDViewMessages.ini"
+IDR_LOCAL_STRINGS       RCDATA  DISCARDABLE     "LDViewMessages.ini"
 
 /////////////////////////////////////////////////////////////////////////////
 //
