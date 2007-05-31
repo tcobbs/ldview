@@ -291,7 +291,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effektek"
 FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,61,WS_GROUP,0,
+    GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,180,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
     CONTROL         "Vi&lágítás",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,7,41,10,WS_EX_TRANSPARENT,
@@ -308,6 +308,44 @@ BEGIN
     CONTROL         "Alternate setup",IDC_ALTERNATE_LIGHTING,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     52,77,10,0,HIDC_ALTERNATE_LIGHTING
+    GROUPBOX        "Light &direction",IDC_LIGHT_DIR,31,63,73,77,0,0,
+                    HIDC_LIGHT_DIR
+    CONTROL         "UL",IDR_LIGHT_ANGLE_UL,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP,35,74,20,
+                    19,0,HIDR_LIGHT_ANGLE_UL
+    CONTROL         "UM",IDR_LIGHT_ANGLE_UM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,74,20,19,0,HIDR_LIGHT_ANGLE_UM
+    CONTROL         "UR",IDR_LIGHT_ANGLE_UR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,74,20,19,0,HIDR_LIGHT_ANGLE_UR
+    CONTROL         "ML",IDR_LIGHT_ANGLE_ML,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,35,95,20,19,0,HIDR_LIGHT_ANGLE_ML
+    CONTROL         "MM",IDR_LIGHT_ANGLE_MM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,95,20,19,0,HIDR_LIGHT_ANGLE_MM
+    CONTROL         "MR",IDR_LIGHT_ANGLE_MR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,95,20,19,0,HIDR_LIGHT_ANGLE_MR
+    CONTROL         "LL",IDR_LIGHT_ANGLE_LL,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,35,116,20,19,0,HIDR_LIGHT_ANGLE_LL
+    CONTROL         "LM",IDR_LIGHT_ANGLE_LM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,116,20,19,0,HIDR_LIGHT_ANGLE_LM
+    CONTROL         "LR",IDR_LIGHT_ANGLE_LR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,116,20,19,0,HIDR_LIGHT_ANGLE_LR
+    CONTROL         "Use LIGHT.DAT lights",IDC_DRAW_LIGHT_DATS,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
+                    142,85,10,0,HIDC_DRAW_LIGHT_DATS
+    CONTROL         "Replace standard light",IDC_OPTIONAL_STANDARD_LIGHT,
+                    "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
+                    WS_TABSTOP,28,153,93,10,0,HIDC_OPTIONAL_STANDARD_LIGHT
+    CONTROL         "Hide LIGHT.DAT geometry",IDC_HIDE_LIGHT_DAT,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
+                    164,100,10,0,HIDC_HIDE_LIGHT_DAT
+    GROUPBOX        "Egyéb",IDC_EFFECTS_MISC_BOX,7,189,121,39,WS_GROUP,
+                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
+    CONTROL         "Egyszerû árnyalás",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,201,60,10,0,
+                    HIDC_FLAT_SHADING
+    CONTROL         "Egyenletes ívek",IDC_SMOOTH_CURVES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,212,63,10,0,
+                    HIDC_SMOOTH_CURVES
     GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,61,WS_GROUP,0,
                     HIDC_STEREO_BOX
     CONTROL         "&Sztereó",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
@@ -322,40 +360,32 @@ BEGIN
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,160,41,87,21,0,
                     HIDC_STEREO_SPACING
-    GROUPBOX        "      ",IDC_CUTAWAY_BOX,7,69,121,83,WS_GROUP,0,
+    GROUPBOX        "      ",IDC_CUTAWAY_BOX,132,67,121,79,WS_GROUP,0,
                     HIDC_CUTAWAY_BOX
     CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,69,77,10,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,67,77,10,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY
     CONTROL         "Szines",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,19,82,42,10,0,HIDC_CUTAWAY_COLOR
+                    WS_GROUP | WS_TABSTOP,144,80,42,10,0,HIDC_CUTAWAY_COLOR
     CONTROL         "Egyszínû",IDC_CUTAWAY_MONOCHROME,"Button",
-                    BS_AUTORADIOBUTTON,19,93,57,10,0,HIDC_CUTAWAY_MONOCHROME
-    RTEXT           "Fedés:",IDC_CUTAWAY_OPACITY_LABEL,16,110,36,8,0,
+                    BS_AUTORADIOBUTTON,144,91,57,10,0,HIDC_CUTAWAY_MONOCHROME
+    RTEXT           "Fedés:",IDC_CUTAWAY_OPACITY_LABEL,141,106,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,104,68,21,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,102,68,21,0,
                     HIDC_CUTAWAY_OPACITY
-    LTEXT           "Vastagság:",IDC_CUTAWAY_THICKNESS_LABEL,16,133,36,8,0,
+    LTEXT           "Vastagság:",IDC_CUTAWAY_THICKNESS_LABEL,141,127,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,127,68,21,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,123,68,21,0,
                     HIDC_CUTAWAY_THICKNESS
-    GROUPBOX        "Á&tlátszóság",IDC_TRANSPARENCY_BOX,132,69,121,40,
+    GROUPBOX        "Á&tlátszóság",IDC_TRANSPARENCY_BOX,132,148,121,39,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,140,81,60,10,0,HIDC_SORT
+                    WS_TABSTOP,140,160,60,10,0,HIDC_SORT
     CONTROL         "Stipple",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,92,60,10,0,
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,171,60,10,0,
                     HIDC_STIPPLE
-    GROUPBOX        "Egyéb",IDC_EFFECTS_MISC_BOX,132,111,121,41,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Egyszerû árnyalás",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,123,80,10,0,
-                    HIDC_FLAT_SHADING
-    CONTROL         "Egyenletes ívek",IDC_SMOOTH_CURVES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,134,63,10,0,
-                    HIDC_SMOOTH_CURVES
     PUSHBUTTON      "Visszaállítás",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_EFFECTS_RESET
 END
