@@ -41,7 +41,7 @@ Bundled binary libraries
 - libpng 1.2.12
 - unzip32
 
-Compilation of boost 1.33.1
+Compilation of boost 1.34.0
 ---------------------------
 
 0) If you use Visual C++ Toolkit 2003, make sure MSVCDir is set to 
@@ -52,12 +52,12 @@ Compilation of boost 1.33.1
 1) Extract the boost library
 2) cd <boost dir>
 
-   cd tools\build\jam_src
+   cd tools\jam\src
    call build
    cd bin.*
    copy /y bjam.exe ..\..\..\..
    cd ..\..\..\..
-   bjam --without-python --with-thread stage
+   bjam --with-thread stage
 
 3) Add boost directory to environment variable INCLUDE
 4) Add boost\stage\lib directory to environment variable LIB
