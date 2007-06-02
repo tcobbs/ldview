@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by Resources.rc
+// Used by LDView.rc
 //
 #define IDS_DESCRIPTION                 1
 #define IDS_STRING2                     100
@@ -66,6 +66,22 @@
 #define IDB_VERTEX_ORDER                167
 #define IDD_UPDATES_PREFS               167
 #define IDB_VERTEX_ORDER_MASK           168
+#define IDI_LDRAW                       169
+#define IDI_MPD                         170
+#define IDD_PARTS_LIST                  171
+#define IDB_LIGHT_ANGLES                173
+#define IDI_LIGHT_ANGLE_UR              174
+#define IDR_LIGHT_ANGLE_UR              174
+#define IDI_LIGHT_ANGLE_UL              175
+#define IDR_LIGHT_ANGLE_UL              175
+#define IDI_LIGHT_ANGLE_UM              176
+#define IDR_LIGHT_ANGLE_UM              176
+#define IDR_LIGHT_ANGLE_MR              177
+#define IDR_LIGHT_ANGLE_LL              178
+#define IDR_LIGHT_ANGLE_ML              179
+#define IDR_LIGHT_ANGLE_MM              180
+#define IDR_LIGHT_ANGLE_LM              181
+#define IDR_LIGHT_ANGLE_LR              182
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -79,12 +95,16 @@
 #define IDC_ALTERNATE_LIGHTING          1007
 #define IDC_STIPPLE                     1008
 #define IDC_SEAMS                       1009
+#define IDC_DRAW_LIGHT_DATS             1009
+#define IDC_OPTIONAL_STANDARD_LIGHT     1010
 #define IDC_TEXTURE_STUDS               1011
+#define IDC_HIDE_LIGHT_DAT              1011
 #define IDC_STEREO                      1012
 #define IDC_ALWAYS_BLACK                1013
 #define IDC_CROSS_EYED_STEREO           1014
 #define IDC_CURVE_QUALITY               1018
 #define IDC_OK                          1019
+#define IDC_ANISO_LEVEL                 1019
 #define IDC_CURVE_QUALITY_LABEL         1020
 #define IDC_BACKGROUND_COLOR            1021
 #define IDC_GENERAL_MISC_BOX            1022
@@ -169,6 +189,7 @@
 #define IDC_PRIMITIVES_MISC_BOX         1113
 #define IDC_MISSING_PARTS_BOX           1113
 #define IDC_AA_BOX                      1114
+#define IDC_TEXTURE_ANISO               1114
 #define IDC_WIREFRAME_BOX               1115
 #define IDC_EDGES_BOX                   1116
 #define IDC_LIGHTING_BOX                1117
@@ -206,7 +227,6 @@
 #define IDC_COLORS_BOX                  1156
 #define IDC_MEMORY_LABEL                1157
 #define IDC_SAVE_ZOOMTOFIT              1158
-#define IDC_FOV_RANGE_LABEL2            1158
 #define IDC_ESD_TOOLBAR                 1159
 #define IDC_ESD_LIST                    1163
 #define IDC_SS_SIZE_BOX                 1164
@@ -245,8 +265,28 @@
 #define IDC_UPDATES_NOTE                1208
 #define IDC_MISSING_DAYS_LABEL          1209
 #define IDC_UPDATED_DAYS_LABEL          1210
+#define IDC_COLUMN_ORDER_LIST           1210
 #define IDC_MISSING_DAYS                1211
 #define IDC_UPDATED_DAYS                1212
+#define IDC_SHOW_MODEL                  1213
+#define IDC_EXTERNAL_CSS                1214
+#define IDC_SHOW_PART_IMAGES            1215
+#define IDC_TOOLBAR                     1216
+#define IDC_SHOW_FILE                   1217
+#define IDC_LIGHT_UL                    1217
+#define IDC_LIGHT_UM                    1218
+#define IDC_LIGHT_UR                    1219
+#define IDC_LIGHT_ML                    1220
+#define IDC_LIGHT_MM                    1221
+#define IDC_LIGHT_MR                    1222
+#define IDC_LIGHT_LL                    1223
+#define IDC_LIGHT_LM                    1224
+#define IDC_LIGHT_LR                    1225
+#define IDC_LIGHT_DIR                   1226
+#define IDC_UL                          1231
+#define IDC_UM                          1232
+#define IDC_ANISO_LEVEL_LABEL           1232
+#define IDC_UR                          1233
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -263,7 +303,7 @@
 #define ID_FILE_RELOAD                  40021
 #define ID_HELP_CONTENTS                40023
 #define ID_VIEW_RESET                   40025
-#define ID_VIEW_ERRORS                  40026
+#define ID_TOOLS_ERRORS                 40026
 #define ID_FILE_PAGESETUP               40032
 #define ID_HELP_OPENGLINFO_WGLEXTENSIONS 40033
 #define ID_HELP_OPENGL_INFO             40035
@@ -290,7 +330,7 @@
 #define ID_VIEW_RIGHT                   40058
 #define ID_VIEW_TOP                     40059
 #define ID_VIEW_BOTTOM                  40060
-#define ID_VIEW_INFO                    40061
+#define ID_TOOLS_VIEW_INFO              40061
 #define ID_VIEW_ISO                     40063
 #define ID_VIEW_SAVE_DEFAULT            40064
 #define ID_VIEW_ZOOMTOFIT               40065
@@ -310,7 +350,10 @@
 #define ID_LIGHTING_ALTERNATESETUP      40083
 #define ID_BFC_REDBACKFACES             40084
 #define ID_BFC_GREENFRONTFACES          40085
-#define ID_VIEW_POV_CAMERA              40087
+#define ID_TOOLS_POV_CAMERA             40087
+#define ID_TOOLS_PARTSLIST              40088
+#define ID_LIGHTING_DRAWDATS            40089
+#define ID_LIGHTING_OPTIONALMAIN        40090
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -322,9 +365,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        168
-#define _APS_NEXT_COMMAND_VALUE         40088
-#define _APS_NEXT_CONTROL_VALUE         1210
+#define _APS_NEXT_RESOURCE_VALUE        183
+#define _APS_NEXT_COMMAND_VALUE         40091
+#define _APS_NEXT_CONTROL_VALUE         1233
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
