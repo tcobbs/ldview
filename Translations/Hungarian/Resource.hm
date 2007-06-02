@@ -1,5 +1,5 @@
 // Microsoft Developer Studio generated Help ID include file.
-// Used by Resources.rc
+// Used by LDView.rc
 //
 #define HIDC_AA_BOX                     0x808b045a    // IDD_GENERAL_PREFS
 #define HIDC_ALL_CONDITIONAL            0x8089040f    // IDD_GEOMETRY_PREFS
