@@ -48,7 +48,7 @@ RSC=rc.exe
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /i "..\.." /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -74,7 +74,7 @@ LINK32=link.exe
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /i "..\.." /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -107,7 +107,7 @@ SOURCE=.\Czech.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Resources.rc
+SOURCE=.\LDView.rc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -219,7 +219,51 @@ SOURCE=.\Icons\flythrou.ico
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\LDrawIcon.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\LDViewIcon.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleML.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleMM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleMR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\MPDIcon.ico
 # End Source File
 # Begin Source File
 
