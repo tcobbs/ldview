@@ -3,7 +3,7 @@
 #include "LDViewPreferences.h"
 #include "LDViewWindow.h"
 #include "LDVExtensionsSetup.h"
-#include "AppResources.h"
+#include "Resource.h"
 #include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/myString.h>

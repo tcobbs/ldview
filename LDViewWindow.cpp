@@ -7,7 +7,7 @@
 #include "LDVExtensionsSetup.h"
 #include "LDViewPreferences.h"
 #include "SSModelWindow.h"
-#include "AppResources.h"
+#include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -172,9 +172,9 @@ LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 		extraSearchDirs = new TCStringArray;
 		populateExtraSearchDirs();
 	}
-	hExamineIcon = (HICON)LoadImage(getLanguageModule(),
-		MAKEINTRESOURCE(IDI_EXAMINE), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
-	hFlythroughIcon = (HICON)LoadImage(getLanguageModule(),
+	hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
+		IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
+	hFlythroughIcon = (HICON)LoadImage(hInstance,
 		MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&LDViewWindow::progressAlertCallback);
@@ -587,6 +587,7 @@ void LDViewWindow::createToolbar(void)
 		{
 			HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
 				10, 10);
+			// Should the toolbar bitmap be language-specific?
 			HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
 				MAKEINTRESOURCE(IDB_TOOLBAR), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 			HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
@@ -607,6 +608,7 @@ void LDViewWindow::createToolbar(void)
 			addBitmap.nID = IDB_STD_SMALL_COLOR;
 			stdBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 0,
 				(LPARAM)&addBitmap);
+			// Should the toolbar bitmap be language-specific?
 			addBitmap.hInst = getLanguageModule();
 			// This doesn't actually work!!!
 			addBitmap.nID = IDB_TOOLBAR;//256;
@@ -2884,6 +2886,7 @@ void LDViewWindow::chooseExtraDirs(void)
 		GetClientRect(hExtraDirsToolbar, &tbRect);
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR,
 			TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0); 
+		// Should the toolbar bitmap be language specific?
 		addBitmap.hInst = getLanguageModule();
 		addBitmap.nID = IDB_EXTRA_DIRS;
 		SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_TOOLBAR, TB_SETINDENT,
@@ -3832,8 +3835,7 @@ WNDCLASSEX LDViewWindow::getWindowClass(void)
 {
 	WNDCLASSEX windowClass = CUIWindow::getWindowClass();
 
-	windowClass.hIcon = LoadIcon(getLanguageModule(),
-		MAKEINTRESOURCE(IDI_APP_ICON));
+	windowClass.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_APP_ICON));
 /*
 	if (fullScreen || screenSaver)
 	{

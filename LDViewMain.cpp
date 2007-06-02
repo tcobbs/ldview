@@ -11,7 +11,7 @@
 #include <TCFoundation/TCImage.h>
 #include <CUI/CUIWindow.h>
 #include "SSPreview.h"
-#include "AppResources.h"
+#include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <stdio.h>
 
