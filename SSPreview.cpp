@@ -1,5 +1,5 @@
 #include "SSPreview.h"
-#include "AppResources.h"
+#include "Resource.h"
 #include <TCFoundation/TCImage.h>
 
 SSPreview::SSPreview(HWND hParentWindow, HINSTANCE hInstance)

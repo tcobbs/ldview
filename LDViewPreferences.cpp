@@ -8,7 +8,7 @@
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCWebClient.h>
 #include "LDVExtensionsSetup.h"
-#include "AppResources.h"
+#include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include "ModelWindow.h"
 

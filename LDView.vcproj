@@ -52,7 +52,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP"
 				Culture="1033"
 			/>
 			<Tool
@@ -143,7 +143,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC"
+				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/LDView.pch"
 				BrowseInformation="1"
@@ -156,7 +156,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
+				PreprocessorDefinitions="_DEBUG;LDVIEW_APP"
 				Culture="1033"
 			/>
 			<Tool
@@ -235,7 +235,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -249,7 +249,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
+				PreprocessorDefinitions="NDEBUG;LDVIEW_APP"
 				Culture="1033"
 			/>
 			<Tool
@@ -301,7 +301,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
 			>
 			<File
-				RelativePath="AppResources.rc"
+				RelativePath="LDView.rc"
 				>
 				<FileConfiguration
 					Name="Release|Win32"
@@ -685,7 +685,7 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
-				RelativePath="AppResources.h"
+				RelativePath="Resource.h"
 				>
 			</File>
 			<File

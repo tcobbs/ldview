@@ -2136,12 +2136,12 @@ WNDCLASSEX CUIWindow::getWindowClass(void)
 	windowClass.cbClsExtra = 0;
 	windowClass.cbWndExtra = 0;
 	windowClass.hInstance = getLanguageModule();
-	windowClass.hIcon = LoadIcon(getLanguageModule(), IDI_APPLICATION);
+	windowClass.hIcon = LoadIcon(hInstance, IDI_APPLICATION);
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	windowClass.hbrBackground = getBackgroundBrush();
 	windowClass.lpszMenuName = NULL;
 	windowClass.lpszClassName = windowClassName();
-	windowClass.hIconSm = LoadIcon(getLanguageModule(), IDI_APPLICATION);
+	windowClass.hIconSm = LoadIcon(hInstance, IDI_APPLICATION);
 	return windowClass;
 }
 

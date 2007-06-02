@@ -43,12 +43,12 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ENGLISHUS_EXPORTS" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MT /W4 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ENGLISHUS_EXPORTS" /FD /c
+# ADD CPP /nologo /MT /W4 /GX /O2 /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ENGLISHUS_EXPORTS" /FD /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
-# ADD RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /i "..\.." /d "NDEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -70,11 +70,11 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ENGLISHUS_EXPORTS" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ENGLISHUS_EXPORTS" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "ENGLISHUS_EXPORTS" /FR /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /i "..\.." /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -107,7 +107,7 @@ SOURCE=.\EnglishUS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Resources.rc
+SOURCE=.\LDView.rc
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -127,7 +127,95 @@ SOURCE=.\Icons\flythrou.ico
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\Icons\LDrawIcon.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LDrawIcon.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\LDViewIcon.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleLL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleLM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleLR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleLR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleML.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleML.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleMM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleMM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleMR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleMR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleUL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUL.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleUM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUM.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\LightAngleUR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\LightAngleUR.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\Icons\MPDIcon.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\MPDIcon.ico
 # End Source File
 # End Group
 # Begin Source File

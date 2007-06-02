@@ -2,7 +2,7 @@
 #include <CUI/CUIWindow.h>
 #include <LDLib/LDHtmlInventory.h>
 #include <TCFoundation/mystring.h>
-#include "AppResources.h"
+#include "Resource.h"
 
 #ifndef ListView_SetCheckState
    #define ListView_SetCheckState(hwndLV, i, fCheck) \

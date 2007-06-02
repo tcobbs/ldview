@@ -14,7 +14,7 @@
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLModel.h>
 #include <LDLib/LDLibraryUpdater.h>
-#include "AppResources.h"
+#include "Resource.h"
 #include <Commctrl.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
@@ -1541,14 +1541,14 @@ void ModelWindow::setupErrorWindow(void)
 		return;
 
 	// Add the bitmaps.
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_INFO));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_INFO_MASK));
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_INFO));
+	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_INFO_MASK));
 	ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_PARSE_MASK));
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE));
+	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_PARSE_MASK));
 	errorImageIndices[LDLEParse] = ImageList_Add(himl, hbmp, hMask);
 	errorImageIndices[LDLEGeneral] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEBFCError] = errorImageIndices[LDLEParse];
@@ -1556,88 +1556,59 @@ void ModelWindow::setupErrorWindow(void)
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_FNF));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_FNF_MASK));
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF));
+	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_FNF_MASK));
 	errorImageIndices[LDLEFileNotFound] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_MATRIX));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_MATRIX_MASK));
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_MATRIX));
+	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_MATRIX_MASK));
 	errorImageIndices[LDLEMatrix] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_DETERMINANT));
-	hMask = LoadBitmap(getLanguageModule(),
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_DETERMINANT));
+	hMask = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_DETERMINANT_MASK));
 	errorImageIndices[LDLEPartDeterminant] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_NON_FLAT_QUAD));
-	hMask = LoadBitmap(getLanguageModule(),
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_NON_FLAT_QUAD));
+	hMask = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_NON_FLAT_QUAD_MASK));
 	errorImageIndices[LDLENonFlatQuad] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
-	hMask = LoadBitmap(getLanguageModule(),
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_CONCAVE_QUAD));
+	hMask = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_MASK));
 	errorImageIndices[LDLEConcaveQuad] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	// Not sure this error is possible.  I can't figure out how to make it
-	// happen.  It's now joined with the other one; an error if it ever happens,
-	// a warning for the lesser problem.
-/*
-	hbmp = LoadBitmap(getLanguageModule(),
-		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT));
-	hMask = LoadBitmap(getLanguageModule(),
-		MAKEINTRESOURCE(IDB_CONCAVE_QUAD_SPLIT_MASK));
-	errorImageIndices[LDLEConcaveQuadSplit] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-*/
-
-	hbmp = LoadBitmap(getLanguageModule(),
+	hbmp = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_MATCHING_POINTS));
-	hMask = LoadBitmap(getLanguageModule(),
+	hMask = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_MATCHING_POINTS_MASK));
 	errorImageIndices[LDLEMatchingPoints] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLINEAR));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLINEAR_MASK));
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLINEAR));
+	hMask = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_COLINEAR_MASK));
 	errorImageIndices[LDLEColinear] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_VERTEX_ORDER));
-	hMask = LoadBitmap(getLanguageModule(),
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_VERTEX_ORDER));
+	hMask = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_VERTEX_ORDER_MASK));
 	errorImageIndices[LDLEVertexOrder] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
-
-/*
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_OPENGL));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_OPENGL_MASK));
-	errorImageIndices[LDLEOpenGL] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-*/
-
-/*
-	hbmp = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLOR));
-	hMask = LoadBitmap(getLanguageModule(), MAKEINTRESOURCE(IDB_COLOR_MASK));
-	errorImageIndices[LDMEColor] = ImageList_Add(himl, hbmp, hMask);
-	DeleteObject(hbmp);
-	DeleteObject(hMask);
-*/
 
 	// Associate the image list with the tree view control.
 	TreeView_SetImageList(hErrorTree, himl, TVSIL_NORMAL);
