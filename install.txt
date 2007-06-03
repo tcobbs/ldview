@@ -78,10 +78,10 @@ copy /y contrib\masmx86\*.* .
 call mkasm
 nmake -f win32\makefile.msc CFLAGS="-MT -O2 -nologo -DASMV -DASMINF" AR="link -lib" OBJA="gvmat32c.obj gvmat32.obj inffas32.obj" clean zlib.lib
 
-libpng 1.2.12
+libpng 1.2.18
 -------------
 
-nmake -f scripts\makefile.vcawin32 AR="link -lib" CFLAGS="-DPNG_USE_PNGVCRD -nologo -MT -O2 -W3 -I..\zlib" clean all
+nmake -f scripts\makefile.vcawin32 AR="link -lib" CFLAGS="-nologo -MT -O2 -W3 -I..\zlib" clean all
 
 unzip32.lib 5.5.2
 -----------------
