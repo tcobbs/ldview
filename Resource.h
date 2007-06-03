@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by AppResources.rc
+// Used by LDView.rc
 //
 #define IDS_DESCRIPTION                 1
 #define IDS_STRING2                     100

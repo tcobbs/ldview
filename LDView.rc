@@ -1,10 +1,10 @@
 //Microsoft Developer Studio generated resource script.
 //
-#include "AppResources.h"
+#include "Resource.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "AppResources.hm"
+#include "Resource.hm"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -39,20 +39,104 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_APP_ICON$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LDViewIcon.ico"
+#else
 IDI_APP_ICON            ICON    DISCARDABLE     "Icons\\LDViewIcon.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_EXAMINE$(LDVIEW_APP) ICON    DISCARDABLE     "icons\\examine.ico"
+#else
 IDI_EXAMINE             ICON    DISCARDABLE     "icons\\examine.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_FLYTHROUGH$(LDVIEW_APP) ICON    DISCARDABLE     "icons\\flythrou.ico"
+#else
 IDI_FLYTHROUGH          ICON    DISCARDABLE     "icons\\flythrou.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_LDRAW$(LDVIEW_APP)  ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
+#else
 IDI_LDRAW               ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_MPD$(LDVIEW_APP)    ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
+#else
 IDI_MPD                 ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_UR$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleUR.ico"
+#else
 IDR_LIGHT_ANGLE_UR      ICON    DISCARDABLE     "Icons\\LightAngleUR.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_UL$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleUL.ico"
+#else
 IDR_LIGHT_ANGLE_UL      ICON    DISCARDABLE     "Icons\\LightAngleUL.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_UM$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleUM.ico"
+#else
 IDR_LIGHT_ANGLE_UM      ICON    DISCARDABLE     "Icons\\LightAngleUM.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_MR$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleMR.ico"
+#else
 IDR_LIGHT_ANGLE_MR      ICON    DISCARDABLE     "Icons\\LightAngleMR.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_LL$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleLL.ico"
+#else
 IDR_LIGHT_ANGLE_LL      ICON    DISCARDABLE     "Icons\\LightAngleLL.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_LM$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleLM.ico"
+#else
 IDR_LIGHT_ANGLE_LM      ICON    DISCARDABLE     "Icons\\LightAngleLM.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_LR$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleLR.ico"
+#else
 IDR_LIGHT_ANGLE_LR      ICON    DISCARDABLE     "Icons\\LightAngleLR.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_ML$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleML.ico"
+#else
 IDR_LIGHT_ANGLE_ML      ICON    DISCARDABLE     "Icons\\LightAngleML.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_MM$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
+#else
 IDR_LIGHT_ANGLE_MM      ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
+#endif
+#endif
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -62,7 +146,7 @@ IDR_LIGHT_ANGLE_MM      ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
 
 1 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "AppResources.h\0"
+    "Resource.h\0"
 END
 
 2 TEXTINCLUDE DISCARDABLE 
@@ -1130,31 +1214,148 @@ END
 // Bitmap
 //
 
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_PARSE$(LDVIEW_APP)  BITMAP  DISCARDABLE     "Icons\\error_parse.bmp"
+#else
 IDB_PARSE               BITMAP  DISCARDABLE     "Icons\\error_parse.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_FNF$(LDVIEW_APP)    BITMAP  DISCARDABLE     "Icons\\error_fnf.bmp"
+#else
 IDB_FNF                 BITMAP  DISCARDABLE     "Icons\\error_fnf.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATCHING_POINTS$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_matching_points.bmp"
+#else
 IDB_MATCHING_POINTS     BITMAP  DISCARDABLE     "Icons\\error_matching_points.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_CONCAVE_QUAD$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_concave_quad.bmp"
+#else
 IDB_CONCAVE_QUAD        BITMAP  DISCARDABLE     "Icons\\error_concave_quad.bmp"
-IDB_OPENGL              BITMAP  DISCARDABLE     "Icons\\error_opengl.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_DETERMINANT$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_determinant.bmp"
+#else
 IDB_DETERMINANT         BITMAP  DISCARDABLE     "Icons\\error_determinant.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_INFO$(LDVIEW_APP)   BITMAP  DISCARDABLE     "Icons\\error_info.bmp"
+#else
 IDB_INFO                BITMAP  DISCARDABLE     "Icons\\error_info.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_PARSE_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_parse_mask.bmp"
+#else
 IDB_PARSE_MASK          BITMAP  DISCARDABLE     "Icons\\error_parse_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_CONCAVE_QUAD_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_concave_quad_mask.bmp"
+#else
 IDB_CONCAVE_QUAD_MASK   BITMAP  DISCARDABLE     "Icons\\error_concave_quad_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATCHING_POINTS_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_matching_points_mask.bmp"
+#else
 IDB_MATCHING_POINTS_MASK BITMAP  DISCARDABLE     "Icons\\error_matching_points_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_DETERMINANT_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.bmp"
+#else
 IDB_DETERMINANT_MASK    BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_FNF_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
+#else
 IDB_FNF_MASK            BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_INFO_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_info_mask.bmp"
+#else
 IDB_INFO_MASK           BITMAP  DISCARDABLE     "Icons\\error_info_mask.bmp"
-IDB_OPENGL_MASK         BITMAP  DISCARDABLE     "Icons\\error_opengl_mask.bmp"
+#endif
+#endif
 IDB_EXTRA_DIRS          BITMAP  DISCARDABLE     "Icons\\extra_dirs_toolbar.bmp"
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATRIX$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_matrix.bmp"
+#else
 IDB_MATRIX              BITMAP  DISCARDABLE     "icons\\error_matrix.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATRIX_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_matrix_mask.bmp"
+#else
 IDB_MATRIX_MASK         BITMAP  DISCARDABLE     "icons\\error_matrix_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_NON_FLAT_QUAD$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_non_flat_quad.bmp"
+#else
 IDB_NON_FLAT_QUAD       BITMAP  DISCARDABLE     "icons\\error_non_flat_quad.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_NON_FLAT_QUAD_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask.bmp"
+#else
 IDB_NON_FLAT_QUAD_MASK  BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_COLINEAR$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
+#else
 IDB_COLINEAR            BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
+#else
 IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
+#endif
+#endif
 IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
+#else
 IDB_VERTEX_ORDER        BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_VERTEX_ORDER_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
+#else
 IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
-IDB_LIGHT_ANGLES        BITMAP  DISCARDABLE     "Icons\\LightAngles.bmp"
+#endif
+#endif
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
