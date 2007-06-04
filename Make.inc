@@ -27,10 +27,10 @@ all: $(OBJDIR) $(OBJDIR)\LDView-$(LANG).dll
 
 $(OBJDIR)\Resources.res:	LDViewMessages.ini
 
-$(OBJDIR)\LDView-$(LANG).dll:	$(CCOBJS) $(OBJDIR)\Resources.res 
+$(OBJDIR)\LDView-$(LANG).dll:	$(CCOBJS) $(OBJDIR)\LDView.res 
 	link version.lib /nologo /dll /incremental:no /pdb:$(OBJDIR)\LDView-$(LANG).pdb \
 	/machine:I386 /out:$(OBJDIR)\LDView-$(LANG).dll /implib:$(OBJDIR)\LDView-$(LANG).lib \
-	$(OBJDIR)\$(LANG).obj  $(OBJDIR)\Resources.res
+	$(OBJDIR)\$(LANG).obj  $(OBJDIR)\LDView.res
 
 !ENDIF
 
