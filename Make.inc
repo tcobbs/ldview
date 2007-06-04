@@ -25,7 +25,7 @@ CCOBJS = $(OBJDIR)\$(LANG).obj
 
 all: $(OBJDIR) $(OBJDIR)\LDView-$(LANG).dll
 
-$(OBJDIR)\Resources.res:	LDViewMessages.ini
+$(OBJDIR)\LDView.res:	LDViewMessages.ini
 
 $(OBJDIR)\LDView-$(LANG).dll:	$(CCOBJS) $(OBJDIR)\LDView.res 
 	link version.lib /nologo /dll /incremental:no /pdb:$(OBJDIR)\LDView-$(LANG).pdb \

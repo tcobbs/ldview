@@ -151,11 +151,11 @@ cd Release
 del /q *.pch *.obj *.idb *.exe *.res
 cd ..
 
-rc /l 0x409 /foRelease\AppResources.res /d NDEBUG AppResources.rc
+rc /l 0x409 /foRelease\LDView.res /d NDEBUG LDView.rc
 
-cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /c *.cpp
+cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /D LDVIEW_APP /c *.cpp
 
-link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\AppResources.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib %EXTRALFLAGS%
+link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\LDView.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib %EXTRALFLAGS%
 
 
 cd Translations\German
@@ -164,11 +164,11 @@ cd Release
 del /q *.pch *.obj *.idb  *.res *lib *.dll
 cd ..
 
-rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+rc /d NDEBUG /l 0x409 /foRelease\LDView.res LDView.rc
 
 cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D GERMAN_EXPORTS /c German.cpp
 
-link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\Resources.res
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-German.pdb /machine:I386 /out:Release\LDView-German.dll /implib:Release\LDView-German.lib Release\German.obj  Release\LDView.res
 
 cd ..\..
 
@@ -178,9 +178,9 @@ cd Release
 del /q *.pch *.obj *.idb  *.res *lib *.dll
 cd ..
 
-rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+rc /d NDEBUG /l 0x409 /foRelease\LDView.res LDView.rc
 cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D CZECH_EXPORTS /c Czech.cpp
-link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Czech.pdb /machine:I386 /out:Release\LDView-Czech.dll /implib:Release\LDView-Czech.lib Release\Czech.obj  Release\Resources.res
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Czech.pdb /machine:I386 /out:Release\LDView-Czech.dll /implib:Release\LDView-Czech.lib Release\Czech.obj  Release\LDView.res
 
 cd ..\..
 
@@ -190,9 +190,9 @@ cd Release
 del /q *.pch *.obj *.idb  *.res *lib *.dll
 cd ..
 
-rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+rc /d NDEBUG /l 0x409 /foRelease\LDView.res LDView.rc
 cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D ITALIAN_EXPORTS /c Italian.cpp
-link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Italian.pdb /machine:I386 /out:Release\LDView-Italian.dll /implib:Release\LDView-Italian.lib Release\Italian.obj  Release\Resources.res
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Italian.pdb /machine:I386 /out:Release\LDView-Italian.dll /implib:Release\LDView-Italian.lib Release\Italian.obj  Release\LDView.res
 
 cd ..\..
 
@@ -202,9 +202,9 @@ cd Release
 del /q *.pch *.obj *.idb  *.res *lib *.dll
 cd ..
 
-rc /d NDEBUG /l 0x409 /foRelease\Resources.res Resources.rc
+rc /d NDEBUG /l 0x409 /foRelease\LDView.res LDView.rc
 cl %CFLAGS% /D _WINDOWS /D _MBCS /D _USRDLL /D HUNGARIAN_EXPORTS /c Hungarian.cpp
-link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Hungarian.pdb /machine:I386 /out:Release\LDView-Hungarian.dll /implib:Release\LDView-Hungarian.lib Release\Hungarian.obj  Release\Resources.res
+link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Hungarian.pdb /machine:I386 /out:Release\LDView-Hungarian.dll /implib:Release\LDView-Hungarian.lib Release\Hungarian.obj  Release\LDView.res
 
 cd ..\..
 
