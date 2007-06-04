@@ -81,7 +81,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /I ../include/ /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /FpRelease\TCFoundation.pch /YX /c *.cpp
+cl %CFLAGS% /I .. /I ../include/ /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /FpRelease\TCFoundation.pch /YX /c *.cpp *.c
 
 link -lib /nologo /out:Release\TCFoundation.lib Release\*.obj
 
