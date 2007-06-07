@@ -5221,6 +5221,15 @@ LRESULT LDViewWindow::generatePartsList(void)
 						"*.html");
 					memset(&openStruct, 0, sizeof(OPENFILENAME));
 					openStruct.lStructSize = sizeof(OPENFILENAME);
+#ifdef TC_NO_UNICODE
+					// ToDo: Unicode: test/fix the following.
+					if (openStruct.lStructSize > 76)
+					{
+						// Win98 doesn't like the new struct size.  Not sure why; it
+						// should just ignore the extra data.
+						openStruct.lStructSize = 76;
+					}
+#endif // TC_NO_UNICODE
 					openStruct.hwndOwner = hWindow;
 					openStruct.lpstrFilter = fileTypes;
 					openStruct.nFilterIndex = 0;
