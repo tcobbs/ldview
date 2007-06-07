@@ -119,6 +119,86 @@ SOURCE=.\LDView.rc
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
+SOURCE=.\icons\error_colinear.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_colinear_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_concave_quad.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_concave_quad_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_determinant.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_determinant_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_fnf.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_fnf_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_info.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_info_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_matching_points.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_matching_points_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_matrix.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_matrix_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_non_flat_quad.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_non_flat_quad_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_parse.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\error_parse_mask.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_vertex_order.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\icons\error_vertex_order_mask.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\examine.ico
 # End Source File
 # Begin Source File

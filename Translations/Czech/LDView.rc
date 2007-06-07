@@ -29,7 +29,7 @@
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1250)
+#pragma code_page(1252)
 #endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
@@ -193,9 +193,9 @@ BEGIN
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
     LTEXT           "LDView %s (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,
                     SS_NOPREFIX
-    LTEXT           "Zvl·ötnÌ podÏkov·nÌ za pomoc p¯i v˝voji LDView pat¯Ì n·sledujÌcÌm osob·m (v abecednÌm po¯adÌ):",
+    LTEXT           "Zvl·ötnÌ podekov·nÌ za pomoc pri v˝voji LDView patrÌ n·sledujÌcÌm osob·m (v abecednÌm poradÌ):",
                     IDC_STATIC,15,40,215,20
-    LTEXT           "LEGOÆ a LEGO logo jsou registrovanÈ obchodnÌ zn·mky spoleË-\nnosti LEGO Group, kter· nesponzoruje,  neschvaluje ani neauto-\nrizuje tento program.",
+    LTEXT           "LEGOÆ a LEGO logo jsou registrovanÈ obchodnÌ zn·mky spolec-\nnosti LEGO Group, kter· nesponzoruje,  neschvaluje ani neauto-\nrizuje tento program.",
                     IDC_STATIC,15,162,215,20
     GROUPBOX        "",IDC_STATIC,0,155,245,30
     LTEXT           "",IDC_STATIC,0,152,8,36,0,WS_EX_TRANSPARENT
@@ -210,7 +210,8 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Sloûka LDraw"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "ProsÌm zadejte cestu k programu LDraw:",IDC_STATIC,8,4,111,8
+    LTEXT           "ProsÌm zadejte cestu k programu LDraw:",IDC_STATIC,8,4,
+                    111,8
     EDITTEXT        IDC_LDRAWDIR,7,18,208,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,110,43,50,14
     PUSHBUTTON      "Storno",IDCANCEL,165,43,50,14
@@ -238,11 +239,11 @@ BEGIN
     CONTROL         "Tree1",IDC_ERROR_TREE,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
                     WS_BORDER | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
-    CONTROL         "VËetnÏ varov·nÌ",IDC_SHOW_WARNINGS,"Button",
+    CONTROL         "Vcetne varov·nÌ",IDC_SHOW_WARNINGS,"Button",
                     BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
     PUSHBUTTON      "KopÌrovat do schr·nky",IDC_COPY_ERROR,84,179,91,14
-    GROUPBOX        "Zobrazit pouze n·sledujÌcÌ:",IDC_SHOW_ERRORS,180,2,140,191,
-                    0,WS_EX_TRANSPARENT
+    GROUPBOX        "Zobrazit pouze n·sledujÌcÌ:",IDC_SHOW_ERRORS,180,2,140,
+                    191,0,WS_EX_TRANSPARENT
     CONTROL         "List3",IDC_ERROR_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | 
                     WS_BORDER | WS_TABSTOP,185,12,129,160,WS_EX_CLIENTEDGE
@@ -252,7 +253,7 @@ END
 
 IDD_SS_SETTINGS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Spo¯iË obrazovky"
+CAPTION "Sporic obrazovky"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "Soubor: ",IDC_SS_FILENAME_RADIO,"Button",
@@ -283,8 +284,8 @@ BEGIN
                     TBS_AUTOTICKS | WS_TABSTOP,31,83,198,17,0,
                     HIDC_SS_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,232,86,14,8
-    GROUPBOX        "Rychlost ot·ËenÌ",IDC_SS_ROTATION_SPEED_BOX,7,107,246,32,
-                    0,0,HIDC_SS_ROTATION_SPEED_BOX
+    GROUPBOX        "Rychlost ot·cenÌ",IDC_SS_ROTATION_SPEED_BOX,7,107,246,
+                    32,0,0,HIDC_SS_ROTATION_SPEED_BOX
     LTEXT           "Min",IDC_STATIC,16,119,12,8
     CONTROL         "Slider1",IDC_SS_ROTATION_SPEED_SLIDER,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_TABSTOP,31,116,198,17,0,
@@ -296,17 +297,17 @@ BEGIN
     CONTROL         "Vynutit si reûim sp·nku",IDC_SS_SLEEP,"Button",
                     BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,
                     HIDC_SS_SLEEP
-    PUSHBUTTON      "&P˘vodnÌ",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
+    PUSHBUTTON      "&PuvodnÌ",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometrie"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,246,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
-    CONTROL         "äÌ¯ka sp·ry:",IDC_SEAMS,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "äÌrka sp·ry:",IDC_SEAMS,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,21,53,10,0,
                     HIDC_SEAMS
     EDITTEXT        IDC_SEAM_WIDTH_FIELD,70,19,30,14,ES_RIGHT | 
@@ -317,15 +318,15 @@ BEGIN
                     HIDC_SEAM_SPIN
     GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,121,59,WS_GROUP,0,
                     HIDC_WIREFRAME_BOX
-    CONTROL         "&Dr·tovÈ zobrazenÌ",IDC_WIREFRAME,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,15,42,48,10,WS_EX_TRANSPARENT,
-                    HIDC_WIREFRAME
+    CONTROL         "&Dr·tovÈ zobrazenÌ",IDC_WIREFRAME,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,42,48,10,
+                    WS_EX_TRANSPARENT,HIDC_WIREFRAME
     CONTROL         "Mlha",IDC_WIREFRAME_FOG,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,19,54,55,10,0,HIDC_WIREFRAME_FOG
     CONTROL         "Odstranit skrytÈ hrany",IDC_REMOVE_HIDDEN_LINES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,79,10,0,
                     HIDC_REMOVE_HIDDEN_LINES
-    LTEXT           "Tlouöùka:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,
+    LTEXT           "Tlouötka:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,76,68,18,0,
@@ -333,21 +334,20 @@ BEGIN
     GROUPBOX        "    ",IDC_BFC_BOX,7,103,121,40,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,15,102,29,10,WS_EX_TRANSPARENT,HIDC_BFC
-    CONTROL         "ZadnÌ stÏny ËervenÏ",IDC_RED_BACK_FACES,"Button",
+    CONTROL         "ZadnÌ steny cervene",IDC_RED_BACK_FACES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,114,81,10,0,
                     HIDC_RED_BACK_FACES
-    CONTROL         "P¯ednÌ stÏny zelenÏ",IDC_GREEN_FRONT_FACES,"Button",
+    CONTROL         "PrednÌ steny zelene",IDC_GREEN_FRONT_FACES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,
                     HIDC_GREEN_FRONT_FACES
     GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,101,WS_GROUP,0,
                     HIDC_EDGES_BOX
-    CONTROL         "&Zv˝raznÏnÌ hran",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,42,51,10,
-                    WS_EX_TRANSPARENT,HIDC_HIGHLIGHTS
-    CONTROL         "Pouze obrysy",IDC_EDGES_ONLY,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,54,81,10,0,
-                    HIDC_EDGES_ONLY
-    CONTROL         "PodmÌnÏnÈ Ë·ry",IDC_CONDITIONAL_HIGHLIGHTS,"Button",
+    CONTROL         "&Zv˝raznenÌ hran",IDC_HIGHLIGHTS,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,
+                    42,51,10,WS_EX_TRANSPARENT,HIDC_HIGHLIGHTS
+    CONTROL         "Pouze obrysy",IDC_EDGES_ONLY,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,144,54,81,10,0,HIDC_EDGES_ONLY
+    CONTROL         "PodmÌnenÈ c·ry",IDC_CONDITIONAL_HIGHLIGHTS,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,65,70,10,0,
                     HIDC_CONDITIONAL_HIGHLIGHTS
     CONTROL         "Vöechny",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | 
@@ -359,25 +359,25 @@ BEGIN
     CONTROL         "Vysok· kvalita",IDC_QUALITY_LINES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,98,51,10,0,
                     HIDC_QUALITY_LINES
-    CONTROL         "Vûdy ËernÏ",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Vûdy cerne",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,144,109,61,10,0,HIDC_ALWAYS_BLACK
-    LTEXT           "Tlouöùka:",IDC_EDGE_THICKNESS_LABEL,141,125,36,8,0,
+    LTEXT           "Tlouötka:",IDC_EDGE_THICKNESS_LABEL,141,125,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,18,0,
                     HIDC_EDGE_THICKNESS
-    PUSHBUTTON      "&P˘vodnÌ",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
+    PUSHBUTTON      "&PuvodnÌ",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_GEOMETRY_RESET
 END
 
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Efekty"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,180,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
-    CONTROL         "&OsvÏtlenÌ",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "&OsvetlenÌ",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,7,41,10,WS_EX_TRANSPARENT,
                     HIDC_LIGHTING
     CONTROL         "Vysok· kvalita",IDC_LIGHTING_QUALITY,"Button",
@@ -424,20 +424,21 @@ BEGIN
                     164,100,10,0,HIDC_HIDE_LIGHT_DAT
     GROUPBOX        "Os&tatnÌ",IDC_EFFECTS_MISC_BOX,7,189,121,39,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "PloönÈ stÌnov·nÌ",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,201,60,10,0,
-                    HIDC_FLAT_SHADING
-    CONTROL         "Vyhladit zak¯ivenÌ",IDC_SMOOTH_CURVES,"Button",
+    CONTROL         "PloönÈ stÌnov·nÌ",IDC_FLAT_SHADING,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
+                    201,60,10,0,HIDC_FLAT_SHADING
+    CONTROL         "Vyhladit zakrivenÌ",IDC_SMOOTH_CURVES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,212,63,10,0,
                     HIDC_SMOOTH_CURVES
     GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,58,WS_GROUP,0,
                     HIDC_STEREO_BOX
-    CONTROL         "&Stereo reûim",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,140,7,37,10,WS_EX_TRANSPARENT,HIDC_STEREO
+    CONTROL         "&Stereo reûim",IDC_STEREO,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,140,7,37,10,WS_EX_TRANSPARENT,
+                    HIDC_STEREO
     CONTROL         "äilhav˝",IDC_CROSS_EYED_STEREO,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,144,20,51,10,
                     0,HIDC_CROSS_EYED_STEREO
-    CONTROL         "RovnobÏûn˝",IDC_PARALLEL_STEREO,"Button",
+    CONTROL         "Rovnobeûn˝",IDC_PARALLEL_STEREO,"Button",
                     BS_AUTORADIOBUTTON,144,31,39,10,0,HIDC_PARALLEL_STEREO
     RTEXT           "Amount:",IDC_STEREO_SPACING_LABEL,145,46,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
@@ -446,10 +447,10 @@ BEGIN
                     HIDC_STEREO_SPACING
     GROUPBOX        "      ",IDC_CUTAWAY_BOX,132,67,121,79,WS_GROUP,0,
                     HIDC_CUTAWAY_BOX
-    CONTROL         "ÿez &dr·tovÏ",IDC_CUTAWAY,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,67,77,10,
-                    WS_EX_TRANSPARENT,HIDC_CUTAWAY
-    CONTROL         "BarevnÏ",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
+    CONTROL         "Rez &dr·tove",IDC_CUTAWAY,"Button",BS_AUTOCHECKBOX | 
+                    WS_GROUP | WS_TABSTOP,140,67,77,10,WS_EX_TRANSPARENT,
+                    HIDC_CUTAWAY
+    CONTROL         "Barevne",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
                     WS_GROUP | WS_TABSTOP,144,80,32,10,0,HIDC_CUTAWAY_COLOR
     CONTROL         "Monochromaticky",IDC_CUTAWAY_MONOCHROME,"Button",
                     BS_AUTORADIOBUTTON,144,91,57,10,0,
@@ -459,19 +460,19 @@ BEGIN
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,102,68,18,0,
                     HIDC_CUTAWAY_OPACITY
-    RTEXT           "Tlouöùka:",IDC_CUTAWAY_THICKNESS_LABEL,141,127,36,8,0,
+    RTEXT           "Tlouötka:",IDC_CUTAWAY_THICKNESS_LABEL,141,127,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,123,68,18,0,
                     HIDC_CUTAWAY_THICKNESS
-    GROUPBOX        "Pr˘&hlednost",IDC_TRANSPARENCY_BOX,132,148,121,39,
+    GROUPBOX        "Pru&hlednost",IDC_TRANSPARENCY_BOX,132,148,121,39,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
-    CONTROL         "T¯Ìdit",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
+    CONTROL         "TrÌdit",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,140,160,60,10,0,HIDC_SORT
-    CONTROL         "TeËkovat",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Teckovat",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,171,60,10,0,
                     HIDC_STIPPLE
-    PUSHBUTTON      "&P˘vodnÌ",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
+    PUSHBUTTON      "&PuvodnÌ",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_EFFECTS_RESET
 END
 
@@ -485,7 +486,7 @@ BEGIN
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
     COMBOBOX        IDC_FSAA_COMBO,41,18,80,148,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
-    CONTROL         "Vyhlazovat Ë·ry",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Vyhlazovat c·ry",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
     GROUPBOX        "&Barvy",IDC_COLORS_BOX,132,7,121,49,WS_GROUP,0,
                     HIDC_COLORS_BOX
@@ -499,7 +500,7 @@ BEGIN
                     HIDC_DEFAULT_COLOR
     LTEXT           "Z·kladnÌ",IDC_DEFAULT_COLOR_LABEL,166,39,27,8,0,0,
                     HIDC_DEFAULT_COLOR_LABEL
-    CONTROL         "Pr˘hledn·",IDC_TRANS_DEFAULT_COLOR,"Button",
+    CONTROL         "Pruhledn·",IDC_TRANS_DEFAULT_COLOR,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,195,
                     39,52,10,0,HIDC_TRANS_DEFAULT_COLOR
     GROUPBOX        "&OstatnÌ",IDC_GENERAL_MISC_BOX,7,57,246,96,WS_GROUP,
@@ -510,7 +511,7 @@ BEGIN
     CONTROL         "Zobrazit snÌmkovacÌ frekvenci",IDC_FRAME_RATE,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     80,90,10,0,HIDC_FRAME_RATE
-    CONTROL         "Po naËtenÌ uk·zat chyby",IDC_SHOW_ERRORS,"Button",
+    CONTROL         "Po nactenÌ uk·zat chyby",IDC_SHOW_ERRORS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     91,90,10,0,HIDC_SHOW_ERRORS
     CONTROL         "PouûÌt obnovovacÌ frekvenci:",IDC_FS_REFRESH,"Button",
@@ -522,13 +523,13 @@ BEGIN
                     HIDC_FOV_LABEL
     EDITTEXT        IDC_FOV,117,117,24,14,ES_AUTOHSCROLL | WS_GROUP,0,
                     HIDC_FOV
-    PUSHBUTTON      "&P˘vodnÌ",IDC_GENERAL_RESET,203,214,50,14,WS_GROUP,0,
+    PUSHBUTTON      "&PuvodnÌ",IDC_GENERAL_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_GENERAL_RESET
     LTEXT           "(0.1 - 90.0)",IDC_FOV_RANGE_LABEL,146,120,35,8,0,0,
                     HIDC_FOV_RANGE_LABEL
     COMBOBOX        IDC_MEMORY_COMBO,117,135,48,73,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_MEMORY_COMBO
-    RTEXT           "VyuûitÌ pamÏti:",IDC_MEMORY_LABEL,40,138,72,8,0,0,
+    RTEXT           "VyuûitÌ pameti:",IDC_MEMORY_LABEL,40,138,72,8,0,0,
                     HIDC_MEMORY_LABEL
 END
 
@@ -551,14 +552,14 @@ BEGIN
     GROUPBOX        "Orientace",1072,8,156,64,56,WS_GROUP
     CONTROL         "Na &v˝öku",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
-    CONTROL         "N&a öÌ¯ku",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
+    CONTROL         "N&a öÌrku",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
                     12
     GROUPBOX        "Okraje",1075,80,156,152,56,WS_GROUP
     LTEXT           "V&levo:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
     LTEXT           "V&pravo:",1103,164,172,32,8
     EDITTEXT        1157,196,170,28,12,WS_GROUP
-    LTEXT           "&Naho¯e:",1104,88,192,32,8
+    LTEXT           "&Nahore:",1104,88,192,32,8
     EDITTEXT        1156,120,190,28,12,WS_GROUP
     LTEXT           "&Dole:",1105,164,192,32,8
     EDITTEXT        1158,196,190,28,12,WS_GROUP
@@ -618,10 +619,10 @@ FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_SAVE_SERIES_BOX,4,0,132,27,0,0,
                     HIDC_SAVE_SERIES_BOX
-    CONTROL         "Doplnit po¯adov˝m ËÌslem",IDC_SAVE_SERIES,"Button",
+    CONTROL         "Doplnit poradov˝m cÌslem",IDC_SAVE_SERIES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,12,0,83,10,
                     WS_EX_TRANSPARENT,HIDC_SAVE_SERIES
-    RTEXT           "PoËet ËÌslic:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,0,
+    RTEXT           "Pocet cÌslic:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,0,
                     HIDC_SAVE_DIGITS_LABEL
     EDITTEXT        IDC_SAVE_DIGITS,86,11,22,12,ES_AUTOHSCROLL | ES_READONLY | 
                     ES_NUMBER,0,HIDC_SAVE_DIGITS
@@ -634,10 +635,10 @@ BEGIN
                     HIDC_IGNORE_PBUFFER
     GROUPBOX        "     ",IDC_SAVE_ACTUAL_SIZE_BOX,140,0,132,57,0,0,
                     HIDC_SAVE_ACTUAL_SIZE_BOX
-    CONTROL         "Uloûit obr·zek s tÏmito rozmÏry",IDC_SAVE_ACTUAL_SIZE,
+    CONTROL         "Uloûit obr·zek s temito rozmery",IDC_SAVE_ACTUAL_SIZE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,0,108,10,
                     WS_EX_TRANSPARENT,HIDC_SAVE_ACTUAL_SIZE
-    LTEXT           "äÌ¯ka:",IDC_SAVE_WIDTH_LABEL,168,14,24,8,WS_DISABLED,
+    LTEXT           "äÌrka:",IDC_SAVE_WIDTH_LABEL,168,14,24,8,WS_DISABLED,
                     WS_EX_RIGHT,HIDC_SAVE_WIDTH_LABEL
     EDITTEXT        IDC_SAVE_WIDTH,196,12,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_DISABLED,0,HIDC_SAVE_WIDTH
@@ -645,7 +646,7 @@ BEGIN
                     WS_EX_RIGHT,HIDC_SAVE_HEIGHT_LABEL
     EDITTEXT        IDC_SAVE_HEIGHT,196,28,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_DISABLED,0,HIDC_SAVE_HEIGHT
-    CONTROL         "P¯izp˘sobit zvÏtöenÌ",IDC_SAVE_ZOOMTOFIT,"Button",
+    CONTROL         "Prizpusobit zvetöenÌ",IDC_SAVE_ZOOMTOFIT,"Button",
                     BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,51,10,
                     0,HIDC_SAVE_ZOOMTOFIT
 END
@@ -653,7 +654,7 @@ END
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Primitiva"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,79,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
@@ -678,7 +679,7 @@ BEGIN
                     HIDC_ANISO_LEVEL
     LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,64,26,8,0,0,
                     HIDC_ANISO_LEVEL_LABEL
-    LTEXT           "Kvalita k¯ivek:",IDC_CURVE_QUALITY_LABEL,121,22,44,10,
+    LTEXT           "Kvalita krivek:",IDC_CURVE_QUALITY_LABEL,121,22,44,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
@@ -686,19 +687,19 @@ BEGIN
                     HIDC_CURVE_QUALITY
     GROUPBOX        "&OstatnÌ",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "V˝stupky nahradit polygonem (rychlejöÌ)",IDC_STUD_QUALITY,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    99,93,10,0,HIDC_STUD_QUALITY
-    CONTROL         "PouûÌt hi-res primitiva, jsou-li k dispozici",IDC_HI_RES,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    110,127,10,0,HIDC_HI_RES
-    PUSHBUTTON      "&P˘vodnÌ",IDC_PRIMITIVES_RESET,203,214,50,14,WS_GROUP,0,
+    CONTROL         "V˝stupky nahradit polygonem (rychlejöÌ)",
+                    IDC_STUD_QUALITY,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | 
+                    WS_GROUP | WS_TABSTOP,15,99,93,10,0,HIDC_STUD_QUALITY
+    CONTROL         "PouûÌt hi-res primitiva, jsou-li k dispozici",
+                    IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | 
+                    WS_GROUP | WS_TABSTOP,15,110,127,10,0,HIDC_HI_RES
+    PUSHBUTTON      "&PuvodnÌ",IDC_PRIMITIVES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_PRIMITIVES_RESET
 END
 
 IDD_OPENGL_INFO DIALOG DISCARDABLE  0, 0, 200, 201
 STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "Informace o ovladaËi OpenGL"
+CAPTION "Informace o ovladaci OpenGL"
 FONT 8, "MS Sans Serif"
 BEGIN
     EDITTEXT        IDC_OPENGL_INFO,0,0,200,189,ES_MULTILINE | ES_NOHIDESEL | 
@@ -710,8 +711,8 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "SchÈma nastavenÌ"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    LTEXT           "PouûÌt n·sledujÌcÌ schÈma nastavenÌ:",IDC_PREFSETS_LABEL,7,
-                    7,104,8,0,0,HIDC_PREFSETS_LABEL
+    LTEXT           "PouûÌt n·sledujÌcÌ schÈma nastavenÌ:",
+                    IDC_PREFSETS_LABEL,7,7,104,8,0,0,HIDC_PREFSETS_LABEL
     LISTBOX         IDC_PREFSETS_LIST,7,18,246,191,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP,0,HIDC_PREFSETS_LIST
@@ -729,8 +730,8 @@ EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "NovÈ schÈma nastavenÌ"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    LTEXT           "Zadejte n·zev novÈho schÈma nastavenÌ:",IDC_STATIC,7,
-                    11,134,8
+    LTEXT           "Zadejte n·zev novÈho schÈma nastavenÌ:",IDC_STATIC,7,11,
+                    134,8
     EDITTEXT        IDC_NEW_PREF_SET_FIELD,7,24,157,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDC_NEW_PREF_SET_OK,176,7,50,14
     PUSHBUTTON      "Storno",IDC_NEW_PREF_SET_CANCEL,176,24,50,14
@@ -742,9 +743,9 @@ CAPTION "Varov·nÌ"
 FONT 8, "MS Sans Serif"
 BEGIN
     PUSHBUTTON      "Storno",IDCANCEL,201,43,50,14
-    PUSHBUTTON      "PouûÌt zmÏny",IDC_APPLY,79,43,50,14
-    PUSHBUTTON      "Zruöit zmÏny",IDC_ABANDON,140,43,50,14
-    LTEXT           "V aktu·lnÌm schÈmatu nastavenÌ jste provedli zmÏny. BuÔ tyto zmÏny pouûijte, nebo se vraùte k p¯edchozÌmu nastavenÌ tlaËÌtkem Zruöit zmÏny. Teprve pak budete moci vybrat novÈ schÈma nastavenÌ.",
+    PUSHBUTTON      "PouûÌt zmeny",IDC_APPLY,79,43,50,14
+    PUSHBUTTON      "Zruöit zmeny",IDC_ABANDON,140,43,50,14
+    LTEXT           "V aktu·lnÌm schÈmatu nastavenÌ jste provedli zmeny. Bud tyto zmeny pouûijte, nebo se vratte k predchozÌmu nastavenÌ tlacÌtkem Zruöit zmeny. Teprve pak budete moci vybrat novÈ schÈma nastavenÌ.",
                     IDC_STATIC,36,7,269,22
     ICON            32515,IDC_STATIC,7,7,20,20
 END
@@ -780,7 +781,7 @@ END
 
 IDD_INVISIBLE_COMMANDS DIALOG DISCARDABLE  0, 0, 320, 228
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "NeviditelnÈ p¯Ìkazy"
+CAPTION "NeviditelnÈ prÌkazy"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "The controls in this dialog are place-holders to force command IDs to be generated.",
@@ -807,14 +808,14 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Aktualizace"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "NastavenÌ pro&xy serveru",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
-                    HIDC_PROXY_BOX
-    CONTROL         "&P¯ÌmÈ p¯ipojenÌ k Internetu",IDC_PROXY_NONE,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,15,
-                    19,118,10,0,HIDC_PROXY_NONE
-    CONTROL         "PouûÌt nastavenÌ proxy z &Windows",
-                    IDC_PROXY_WINDOWS,"Button",BS_AUTORADIOBUTTON,15,30,143,
-                    10,0,HIDC_PROXY_WINDOWS
+    GROUPBOX        "NastavenÌ pro&xy serveru",IDC_PROXY_BOX,7,7,246,66,
+                    WS_GROUP,0,HIDC_PROXY_BOX
+    CONTROL         "&PrÌmÈ pripojenÌ k Internetu",IDC_PROXY_NONE,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,15,19,118,10,
+                    0,HIDC_PROXY_NONE
+    CONTROL         "PouûÌt nastavenÌ proxy z &Windows",IDC_PROXY_WINDOWS,
+                    "Button",BS_AUTORADIOBUTTON,15,30,143,10,0,
+                    HIDC_PROXY_WINDOWS
     CONTROL         "&Manu·lnÌ nastavenÌ proxy",IDC_PROXY_MANUAL,"Button",
                     BS_AUTORADIOBUTTON,15,41,103,10,0,HIDC_PROXY_MANUAL
     LTEXT           "Pro&xy:",IDC_PROXY_SERVER_LABEL,15,56,20,8,0,0,
@@ -825,24 +826,24 @@ BEGIN
                     HIDC_PROXY_PORT_LABEL
     EDITTEXT        IDC_PROXY_PORT,216,53,30,14,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_GROUP,0,HIDC_PROXY_PORT
-    GROUPBOX        "ChybÏjÌcÌ &souË·stky",IDC_MISSING_PARTS_BOX,7,74,246,61,
+    GROUPBOX        "ChybejÌcÌ &souc·stky",IDC_MISSING_PARTS_BOX,7,74,246,61,
                     WS_GROUP,0,HIDC_MISSING_PARTS_BOX
-    CONTROL         "&Automaticky hledat chybÏjÌcÌ souË·stky na serveru ldraw.org",
+    CONTROL         "&Automaticky hledat chybejÌcÌ souc·stky na serveru ldraw.org",
                     IDC_CHECK_PART_TRACKER,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,15,85,166,10,0,HIDC_CHECK_PART_TRACKER
-    RTEXT           "PoËet dnÌ mezi kontrolami nenalezen˝ch dÌl˘:",
+    RTEXT           "Pocet dnÌ mezi kontrolami nenalezen˝ch dÌlu:",
                     IDC_MISSING_DAYS_LABEL,19,101,116,8,0,0,
                     HIDC_MISSING_DAYS_LABEL
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_GROUP,0,HIDC_MISSING_DAYS
-    RTEXT           "PoËet dnÌ mezi kontrolami aktualizacÌ dÌl˘:",
+    RTEXT           "Pocet dnÌ mezi kontrolami aktualizacÌ dÌlu:",
                     IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,
                     HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | 
                     ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
-    PUSHBUTTON      "&P˘vodnÌ",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,0,
+    PUSHBUTTON      "&PuvodnÌ",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_UPDATES_RESET
-    LTEXT           "Pozn·mka: zmÏny v nastavenÌ na tomto panelu vejdou v platnost aû p¯i\np¯ÌötÌm naËtenÌ modelu nebo aktualizaci knihovny souË·stek.",
+    LTEXT           "Pozn·mka: zmeny v nastavenÌ na tomto panelu vejdou v platnost aû pri\nprÌötÌm nactenÌ modelu nebo aktualizaci knihovny souc·stek.",
                     IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
 END
 
@@ -1046,56 +1047,58 @@ IDR_MAIN_MENU MENU DISCARDABLE
 BEGIN
     POPUP "&Soubor"
     BEGIN
-        MENUITEM "&Otev¯ÌtÖ\tCtrl+O",            ID_FILE_OPEN
-        MENUITEM "&Uloûit obr·zekÖ\tCtrl+S",   ID_FILE_SAVE
-        MENUITEM "Ob&novit\tF5",                 ID_FILE_RELOAD
-        MENUITEM "&Zruöit naËÌt·nÌ\tEsc",           ID_FILE_CANCELLOAD
+        MENUITEM "&OtevrÌtÖ\tCtrl+O",           ID_FILE_OPEN
+        MENUITEM "&Uloûit obr·zekÖ\tCtrl+S",    ID_FILE_SAVE
+        MENUITEM "Ob&novit\tF5",                ID_FILE_RELOAD
+        MENUITEM "&Zruöit nacÌt·nÌ\tEsc",       ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
         POPUP "&Aut. obnovov·nÌ"
         BEGIN
-            MENUITEM "&Vypnuto",                   ID_FILE_POLLING_DISABLED
-            MENUITEM "&Upozornit",                     ID_FILE_POLLING_PROMPT
-            MENUITEM "&Automaticky - p¯i aktivaci",    ID_FILE_POLLING_AUTO
-            MENUITEM "Automaticky - &okamûitÏ",    ID_FILE_POLLING_BACKGROUND
+            MENUITEM "&Vypnuto",                    ID_FILE_POLLING_DISABLED
+            MENUITEM "&Upozornit",                  ID_FILE_POLLING_PROMPT
+            MENUITEM "&Automaticky - pri aktivaci", ID_FILE_POLLING_AUTO
+            MENUITEM "Automaticky - &okamûite",     ID_FILE_POLLING_BACKGROUND
 
         END
-        MENUITEM "Sloûka s &LDrawÖ",               ID_FILE_LDRAWDIR
+        MENUITEM "Sloûka s &LDrawÖ",            ID_FILE_LDRAWDIR
         MENUITEM "&DalöÌ sloûkyÖ",              ID_FILE_EXTRADIRS
-        MENUITEM "Aktualizace knihovny LDraw",   ID_FILE_CHECKFORLIBUPDATES
+        MENUITEM "Aktualizace knihovny LDraw",  ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
-        MENUITEM "Vzhled str·nk&yÖ",              ID_FILE_PAGESETUP
-        MENUITEM "&TiskÖ\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM "Vzhled str·nk&yÖ",            ID_FILE_PAGESETUP
+        MENUITEM "&TiskÖ\tCtrl+P",              ID_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "&Konec\tCtrl+Q",               ID_FILE_EXIT
+        MENUITEM "&Konec\tCtrl+Q",              ID_FILE_EXIT
     END
     POPUP "⁄pr&avy"
     BEGIN
-        MENUITEM "&NastavenÌÖ\tCtrl+Shift+P", ID_EDIT_PREFERENCES
+        MENUITEM "&NastavenÌÖ\tCtrl+Shift+P",   ID_EDIT_PREFERENCES
     END
     POPUP "&ZobrazenÌ"
     BEGIN
-        MENUITEM "PouûÌt &motiv vzhledu (vyûaduje restart)", ID_VIEW_VISUALSTYLE
+        MENUITEM "PouûÌt &motiv vzhledu (vyûaduje restart)", 
+                                                ID_VIEW_VISUALSTYLE
         MENUITEM "Celo&obrazovkov˝ reûim\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "Panel &n·stroj˘\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
-        MENUITEM "&Stavov˝ ¯·dek\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
+        MENUITEM "Panel &n·stroju\tCtrl+Shift+T", ID_VIEW_TOOLBAR
+        MENUITEM "&Stavov˝ r·dek\tCtrl+Shift+S", ID_VIEW_STATUSBAR
         MENUITEM "&Vûdy na vrchu",              ID_VIEW_ALWAYSONTOP
-        MENUITEM "V˝chozÌ po&hled\tCtrl+R",         ID_VIEW_RESET
-        MENUITEM "P¯izp˘sobit &zvÏtöenÌ\tCtrl+F",        ID_VIEW_ZOOMTOFIT
+        MENUITEM "V˝chozÌ po&hled\tCtrl+R",     ID_VIEW_RESET
+        MENUITEM "Prizpusobit &zvetöenÌ\tCtrl+F", ID_VIEW_ZOOMTOFIT
         POPUP "&⁄hel pohledu"
         BEGIN
-            MENUITEM "Z&ep¯edu\tCtrl+1",              ID_VIEW_FRONT
-            MENUITEM "&Zezadu\tCtrl+2",               ID_VIEW_BACK
-            MENUITEM "Z&leva\tCtrl+3",               ID_VIEW_LEFT
-            MENUITEM "Z&prava\tCtrl+4",              ID_VIEW_RIGHT
-            MENUITEM "&Shora\tCtrl+5",                ID_VIEW_TOP
-            MENUITEM "Z&dola\tCtrl+6",             ID_VIEW_BOTTOM
-            MENUITEM "Dvout¯et&inov˝\tCtrl+0",         ID_VIEW_ISO
+            MENUITEM "Z&epredu\tCtrl+1",            ID_VIEW_FRONT
+            MENUITEM "&Zezadu\tCtrl+2",             ID_VIEW_BACK
+            MENUITEM "Z&leva\tCtrl+3",              ID_VIEW_LEFT
+            MENUITEM "Z&prava\tCtrl+4",             ID_VIEW_RIGHT
+            MENUITEM "&Shora\tCtrl+5",              ID_VIEW_TOP
+            MENUITEM "Z&dola\tCtrl+6",              ID_VIEW_BOTTOM
+            MENUITEM "Dvoutret&inov˝\tCtrl+0",      ID_VIEW_ISO
             MENUITEM SEPARATOR
-            MENUITEM "&Uloûit aktu·lnÌ pohled jako v˝chozÌ",    ID_VIEW_SAVE_DEFAULT
+            MENUITEM "&Uloûit aktu·lnÌ pohled jako v˝chozÌ", 
+                                                    ID_VIEW_SAVE_DEFAULT
         END
         MENUITEM SEPARATOR
         MENUITEM "P&rohlÌûecÌ reûim\tCtrl+Shift+X", ID_VIEW_EXAMINE
-        MENUITEM "Reûim &pr˘letu\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
+        MENUITEM "Reûim &pruletu\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
     END
     POPUP "&Tools"
@@ -1104,14 +1107,15 @@ BEGIN
         MENUITEM "Parts &List",                 ID_TOOLS_PARTSLIST
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
-        MENUITEM "Zobrazit nastavenÌ POV-Ray &kamery...", ID_TOOLS_POV_CAMERA
+        MENUITEM "Zobrazit nastavenÌ POV-Ray &kamery...", 
+                                                ID_TOOLS_POV_CAMERA
     END
-    POPUP "&N·povÏda"
+    POPUP "&N·poveda"
     BEGIN
-        MENUITEM "Informace o Open&GL driveruÖ",      ID_HELP_OPENGL_INFO
+        MENUITEM "Informace o Open&GL driveruÖ", ID_HELP_OPENGL_INFO
         MENUITEM SEPARATOR
-        MENUITEM "&TÈmata n·povÏdyÖ\tF1",            ID_HELP_CONTENTS
-        MENUITEM "&O programu LDViewÖ",            ID_HELP_ABOUT
+        MENUITEM "&TÈmata n·povedyÖ\tF1",       ID_HELP_CONTENTS
+        MENUITEM "&O programu LDViewÖ",         ID_HELP_ABOUT
     END
 END
 
@@ -1119,35 +1123,35 @@ IDR_TOOLBAR_MENU MENU DISCARDABLE
 BEGIN
     POPUP "Dr·tovÈ zobrazenÌ"
     BEGIN
-        MENUITEM "Mlha",                         ID_WIREFRAME_FOG
-        MENUITEM "Odstranit skrytÈ hrany",         ID_WIREFRAME_REMOVEHIDDENLINES
+        MENUITEM "Mlha",                        ID_WIREFRAME_FOG
+        MENUITEM "Odstranit skrytÈ hrany",      ID_WIREFRAME_REMOVEHIDDENLINES
 
     END
     POPUP "Hrany", CHECKED
     BEGIN
-        MENUITEM "Pouze obrysy",             ID_EDGES_SHOWEDGESONLY
-        MENUITEM "PodmÌnÏnÈ Ë·ry",           ID_EDGES_CONDITIONALLINES
-        MENUITEM "Vysok· kvalita",                ID_EDGES_HIGHQUALITY
-        MENUITEM "Vûdy ËernÏ",                ID_EDGES_ALWAYSBLACK
+        MENUITEM "Pouze obrysy",                ID_EDGES_SHOWEDGESONLY
+        MENUITEM "PodmÌnenÈ c·ry",              ID_EDGES_CONDITIONALLINES
+        MENUITEM "Vysok· kvalita",              ID_EDGES_HIGHQUALITY
+        MENUITEM "Vûdy cerne",                  ID_EDGES_ALWAYSBLACK
     END
     POPUP "Primitiva"
     BEGIN
-        MENUITEM "Texturovat v˝stupky",               ID_PRIMITIVES_TEXTURESTUDS
+        MENUITEM "Texturovat v˝stupky",         ID_PRIMITIVES_TEXTURESTUDS
     END
-    POPUP "OsvÏtlenÌ"
+    POPUP "OsvetlenÌ"
     BEGIN
-        MENUITEM "Vysok· kvalita",                ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Vysok· kvalita",              ID_LIGHTING_HIGHQUALITY
         MENUITEM "TlumenÈ",                     ID_LIGHTING_SUBDUED
-        MENUITEM "ZrcadlovÈ odlesky",          ID_LIGHTING_SPECULARHIGHLIGHT
+        MENUITEM "ZrcadlovÈ odlesky",           ID_LIGHTING_SPECULARHIGHLIGHT
 
-        MENUITEM "N·hradnÌ nastavenÌ",             ID_LIGHTING_ALTERNATESETUP
+        MENUITEM "N·hradnÌ nastavenÌ",          ID_LIGHTING_ALTERNATESETUP
         MENUITEM "Use LIGHT.DAT lights",        ID_LIGHTING_DRAWDATS
         MENUITEM "Replace main light",          ID_LIGHTING_OPTIONALMAIN
     END
     POPUP "BFC"
     BEGIN
-        MENUITEM "ZadnÌ stÏny ËervenÏ",              ID_BFC_REDBACKFACES
-        MENUITEM "P¯ednÌ stÏny zelenÏ",           ID_BFC_GREENFRONTFACES
+        MENUITEM "ZadnÌ steny cervene",         ID_BFC_REDBACKFACES
+        MENUITEM "PrednÌ steny zelene",         ID_BFC_GREENFRONTFACES
     END
 END
 
@@ -1364,8 +1368,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,0,3
- PRODUCTVERSION 3,2,0,3
+ FILEVERSION 3,2,0,4
+ PRODUCTVERSION 3,2,0,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1383,14 +1387,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.2 Alpha 3\0"
+            VALUE "FileVersion", "3.2 Beta 1\0"
             VALUE "InternalName", "LDView\0"
-            VALUE "LegalCopyright", "Copyright © 2000-2006 Travis Cobbs & Peter Bartfai\0"
+            VALUE "LegalCopyright", "Copyright © 2007 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.2 Alpha 3\0"
+            VALUE "ProductVersion", "3.2 Beta 1\0"
             VALUE "SpecialBuild", "\0"
         END
     END
