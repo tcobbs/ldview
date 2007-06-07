@@ -210,7 +210,8 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "LDraw Verzeichnis"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Bitte geben Sie den Pfad zu LDraw ein:",IDC_STATIC,8,4,111,8
+    LTEXT           "Bitte geben Sie den Pfad zu LDraw ein:",IDC_STATIC,8,4,
+                    111,8
     EDITTEXT        IDC_LDRAWDIR,7,18,208,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDOK,110,43,50,14
     PUSHBUTTON      "Abbrechen",IDCANCEL,165,43,50,14
@@ -240,9 +241,10 @@ BEGIN
                     WS_BORDER | WS_TABSTOP,2,2,173,174,WS_EX_CLIENTEDGE
     CONTROL         "Warnungen einbeziehen",IDC_SHOW_WARNINGS,"Button",
                     BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
-    PUSHBUTTON      "Fehler in Zwischenablage kopieren",IDC_COPY_ERROR,84,179,91,14
-    GROUPBOX        "Nur folgendes zeigen:",IDC_SHOW_ERRORS,180,2,140,191,
-                    0,WS_EX_TRANSPARENT
+    PUSHBUTTON      "Fehler in Zwischenablage kopieren",IDC_COPY_ERROR,84,
+                    179,91,14
+    GROUPBOX        "Nur folgendes zeigen:",IDC_SHOW_ERRORS,180,2,140,191,0,
+                    WS_EX_TRANSPARENT
     CONTROL         "List3",IDC_ERROR_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | 
                     WS_BORDER | WS_TABSTOP,185,12,129,160,WS_EX_CLIENTEDGE
@@ -263,12 +265,12 @@ BEGIN
     EDITTEXT        IDC_SS_FILENAME_FIELD,53,7,148,14,ES_AUTOHSCROLL | 
                     ES_READONLY | WS_GROUP | NOT WS_TABSTOP,0,
                     HIDC_SS_FILENAME_FIELD
-    PUSHBUTTON      "Durchsuchen...",IDC_SS_BROWSE_FILE_BUTTON,203,7,50,14,0,0,
-                    HIDC_SS_BROWSE_FILE_BUTTON
+    PUSHBUTTON      "Durchsuchen...",IDC_SS_BROWSE_FILE_BUTTON,203,7,50,14,0,
+                    0,HIDC_SS_BROWSE_FILE_BUTTON
     EDITTEXT        IDC_SS_DIRECTORY_FIELD,53,24,148,14,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_TABSTOP,0,HIDC_SS_DIRECTORY_FIELD
-    PUSHBUTTON      "Durchsuchen...",IDC_SS_BROWSE_DIR_BUTTON,203,24,50,14,0,0,
-                    HIDC_SS_BROWSE_DIR_BUTTON
+    PUSHBUTTON      "Durchsuchen...",IDC_SS_BROWSE_DIR_BUTTON,203,24,50,14,0,
+                    0,HIDC_SS_BROWSE_DIR_BUTTON
     GROUPBOX        "Größe",IDC_SS_SIZE_BOX,7,41,246,32,WS_GROUP,0,
                     HIDC_SS_SIZE_BOX
     LTEXT           "Min",IDC_STATIC,16,53,12,8
@@ -283,26 +285,27 @@ BEGIN
                     TBS_AUTOTICKS | WS_TABSTOP,31,83,198,17,0,
                     HIDC_SS_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,232,86,14,8
-    GROUPBOX        "Rotationsgeschwindigkeit",IDC_SS_ROTATION_SPEED_BOX,7,107,246,32,
-                    0,0,HIDC_SS_ROTATION_SPEED_BOX
+    GROUPBOX        "Rotationsgeschwindigkeit",IDC_SS_ROTATION_SPEED_BOX,7,
+                    107,246,32,0,0,HIDC_SS_ROTATION_SPEED_BOX
     LTEXT           "Min",IDC_STATIC,16,119,12,8
     CONTROL         "Slider1",IDC_SS_ROTATION_SPEED_SLIDER,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_TABSTOP,31,116,198,17,0,
                     HIDC_SS_ROTATION_SPEED_SLIDER
     LTEXT           "Max",IDC_STATIC,232,119,14,8
-    CONTROL         "Zufälliges Set mit Einstellungen",IDC_SS_RANDOM_PREF_SET,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,
-                    HIDC_SS_RANDOM_PREF_SET
+    CONTROL         "Zufälliges Set mit Einstellungen",
+                    IDC_SS_RANDOM_PREF_SET,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,142,92,10,0,HIDC_SS_RANDOM_PREF_SET
     CONTROL         "Ruhezustand Umgehungslösung",IDC_SS_SLEEP,"Button",
                     BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,
                     HIDC_SS_SLEEP
-    PUSHBUTTON      "&Zurücksetzen",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
+    PUSHBUTTON      "&Zurücksetzen",IDC_SS_RESET,203,214,50,14,0,0,
+                    HIDC_SS_RESET
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometrie"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Modell",IDC_MODEL_BOX,7,7,246,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -322,9 +325,9 @@ BEGIN
                     HIDC_WIREFRAME
     CONTROL         "Nebel",IDC_WIREFRAME_FOG,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,19,54,55,10,0,HIDC_WIREFRAME_FOG
-    CONTROL         "Verdeckte Linien verstecken",IDC_REMOVE_HIDDEN_LINES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,79,10,0,
-                    HIDC_REMOVE_HIDDEN_LINES
+    CONTROL         "Verdeckte Linien verstecken",IDC_REMOVE_HIDDEN_LINES,
+                    "Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,
+                    79,10,0,HIDC_REMOVE_HIDDEN_LINES
     LTEXT           "Stärke:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
@@ -350,8 +353,8 @@ BEGIN
     CONTROL         "Bedingte Linien",IDC_CONDITIONAL_HIGHLIGHTS,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,65,70,10,0,
                     HIDC_CONDITIONAL_HIGHLIGHTS
-    CONTROL         "Alles zeigen",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,153,76,45,10,0,
+    CONTROL         "Alles zeigen",IDC_ALL_CONDITIONAL,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,76,45,10,0,
                     HIDC_ALL_CONDITIONAL
     CONTROL         "Show control points",IDC_CONDITIONAL_CONTROLS,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,87,74,10,0,
@@ -359,21 +362,22 @@ BEGIN
     CONTROL         "Hohe Qualität",IDC_QUALITY_LINES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,98,51,10,0,
                     HIDC_QUALITY_LINES
-    CONTROL         "Immer schwarz",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,144,109,61,10,0,HIDC_ALWAYS_BLACK
+    CONTROL         "Immer schwarz",IDC_ALWAYS_BLACK,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,109,61,10,0,
+                    HIDC_ALWAYS_BLACK
     LTEXT           "Stärke:",IDC_EDGE_THICKNESS_LABEL,141,125,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,18,0,
                     HIDC_EDGE_THICKNESS
-    PUSHBUTTON      "&Zurücksetzen",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
-                    HIDC_GEOMETRY_RESET
+    PUSHBUTTON      "&Zurücksetzen",IDC_GEOMETRY_RESET,203,214,50,14,
+                    WS_GROUP,0,HIDC_GEOMETRY_RESET
 END
 
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effekte"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,180,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
@@ -386,9 +390,9 @@ BEGIN
     CONTROL         "Gedimmt",IDC_LIGHTING_SUBDUED,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,19,30,77,10,0,
                     HIDC_LIGHTING_SUBDUED
-    CONTROL         "Glanzlicht",IDC_SPECULAR,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
-                    41,77,10,0,HIDC_SPECULAR
+    CONTROL         "Glanzlicht",IDC_SPECULAR,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,41,77,10,0,
+                    HIDC_SPECULAR
     CONTROL         "Alternative Einstellung",IDC_ALTERNATE_LIGHTING,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     52,77,10,0,HIDC_ALTERNATE_LIGHTING
@@ -422,11 +426,11 @@ BEGIN
     CONTROL         "Hide LIGHT.DAT geometry",IDC_HIDE_LIGHT_DAT,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     164,100,10,0,HIDC_HIDE_LIGHT_DAT
-    GROUPBOX        "&Verschiedenes",IDC_EFFECTS_MISC_BOX,7,189,121,39,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Flache Schatten",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,201,60,10,0,
-                    HIDC_FLAT_SHADING
+    GROUPBOX        "&Verschiedenes",IDC_EFFECTS_MISC_BOX,7,189,121,39,
+                    WS_GROUP,WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
+    CONTROL         "Flache Schatten",IDC_FLAT_SHADING,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
+                    201,60,10,0,HIDC_FLAT_SHADING
     CONTROL         "Weiche Kurven",IDC_SMOOTH_CURVES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,212,63,10,0,
                     HIDC_SMOOTH_CURVES
@@ -471,8 +475,8 @@ BEGIN
     CONTROL         "Gepunktet",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,171,60,10,0,
                     HIDC_STIPPLE
-    PUSHBUTTON      "&Zurücksetzen",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
-                    HIDC_EFFECTS_RESET
+    PUSHBUTTON      "&Zurücksetzen",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,
+                    0,HIDC_EFFECTS_RESET
 END
 
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 260, 235
@@ -480,8 +484,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Allgemein"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "&Glättung",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,
-                    HIDC_AA_BOX
+    GROUPBOX        "&Glättung",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,HIDC_AA_BOX
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
     COMBOBOX        IDC_FSAA_COMBO,41,18,80,148,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
@@ -502,8 +505,8 @@ BEGIN
     CONTROL         "Transparent",IDC_TRANS_DEFAULT_COLOR,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,195,
                     39,52,10,0,HIDC_TRANS_DEFAULT_COLOR
-    GROUPBOX        "&Verschiedenes",IDC_GENERAL_MISC_BOX,7,57,246,96,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
+    GROUPBOX        "&Verschiedenes",IDC_GENERAL_MISC_BOX,7,57,246,96,
+                    WS_GROUP,WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
     CONTROL         "LDconfig.ldr verarbeiten",IDC_PROCESS_LDCONFIG,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     69,90,10,0,HIDC_PROCESS_LDCONFIG
@@ -522,8 +525,8 @@ BEGIN
                     HIDC_FOV_LABEL
     EDITTEXT        IDC_FOV,117,117,24,14,ES_AUTOHSCROLL | WS_GROUP,0,
                     HIDC_FOV
-    PUSHBUTTON      "&Zurücksetzen",IDC_GENERAL_RESET,203,214,50,14,WS_GROUP,0,
-                    HIDC_GENERAL_RESET
+    PUSHBUTTON      "&Zurücksetzen",IDC_GENERAL_RESET,203,214,50,14,WS_GROUP,
+                    0,HIDC_GENERAL_RESET
     LTEXT           "(0.1 - 90.0)",IDC_FOV_RANGE_LABEL,146,120,35,8,0,0,
                     HIDC_FOV_RANGE_LABEL
     COMBOBOX        IDC_MEMORY_COMBO,117,135,48,73,CBS_DROPDOWNLIST | 
@@ -549,8 +552,8 @@ BEGIN
     COMBOBOX        1138,64,130,160,160,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     GROUPBOX        "Ausrichtung",1072,8,156,64,56,WS_GROUP
-    CONTROL         "&Hochformat",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
-                    WS_TABSTOP,16,170,52,12
+    CONTROL         "&Hochformat",1056,"Button",BS_AUTORADIOBUTTON | 
+                    WS_GROUP | WS_TABSTOP,16,170,52,12
     CONTROL         "&Querformat",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,
                     12
     GROUPBOX        "Seitenränder",1075,80,156,152,56,WS_GROUP
@@ -621,22 +624,24 @@ BEGIN
     CONTROL         "Bilderserie speichern",IDC_SAVE_SERIES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,12,0,83,10,
                     WS_EX_TRANSPARENT,HIDC_SAVE_SERIES
-    RTEXT           "Anzahl der Ziffern:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,0,
-                    HIDC_SAVE_DIGITS_LABEL
+    RTEXT           "Anzahl der Ziffern:",IDC_SAVE_DIGITS_LABEL,26,13,55,8,0,
+                    0,HIDC_SAVE_DIGITS_LABEL
     EDITTEXT        IDC_SAVE_DIGITS,86,11,22,12,ES_AUTOHSCROLL | ES_READONLY | 
                     ES_NUMBER,0,HIDC_SAVE_DIGITS
     CONTROL         "Spin1",IDC_SAVE_DIGITS_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
                     UDS_ARROWKEYS,102,11,9,12,0,HIDC_SAVE_DIGITS_SPIN
-    GROUPBOX        "Verschiedenes",IDC_MISC_BOX,4,29,132,28,0,0,HIDC_MISC_BOX
-    CONTROL         "Pixelspeicher nicht verwenden",IDC_IGNORE_PBUFFER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,12,41,83,10,0,
+    GROUPBOX        "Verschiedenes",IDC_MISC_BOX,4,29,132,28,0,0,
+                    HIDC_MISC_BOX
+    CONTROL         "Pixelspeicher nicht verwenden",IDC_IGNORE_PBUFFER,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,41,83,10,0,
                     HIDC_IGNORE_PBUFFER
     GROUPBOX        "     ",IDC_SAVE_ACTUAL_SIZE_BOX,140,0,132,57,0,0,
                     HIDC_SAVE_ACTUAL_SIZE_BOX
-    CONTROL         "Bild mit bestimmter Größe speichern",IDC_SAVE_ACTUAL_SIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,148,0,108,10,
-                    WS_EX_TRANSPARENT,HIDC_SAVE_ACTUAL_SIZE
+    CONTROL         "Bild mit bestimmter Größe speichern",
+                    IDC_SAVE_ACTUAL_SIZE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,148,0,108,10,WS_EX_TRANSPARENT,
+                    HIDC_SAVE_ACTUAL_SIZE
     LTEXT           "Breite:",IDC_SAVE_WIDTH_LABEL,168,14,24,8,WS_DISABLED,
                     WS_EX_RIGHT,HIDC_SAVE_WIDTH_LABEL
     EDITTEXT        IDC_SAVE_WIDTH,196,12,40,12,ES_AUTOHSCROLL | ES_NUMBER | 
@@ -653,7 +658,7 @@ END
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Grundelemente"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,79,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
@@ -684,16 +689,16 @@ BEGIN
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,18,0,
                     HIDC_CURVE_QUALITY
-    GROUPBOX        "&Verschiedenes",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
+    GROUPBOX        "&Verschiedenes",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,
+                    WS_GROUP,WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
     CONTROL         "Grobe Knöpfe (schneller)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     99,93,10,0,HIDC_STUD_QUALITY
-    CONTROL         "Verwende hochauflösende Grund-\nelemente wenn vorhanden",IDC_HI_RES,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    110,127,10,0,HIDC_HI_RES
-    PUSHBUTTON      "&Zurücksetzen",IDC_PRIMITIVES_RESET,203,214,50,14,WS_GROUP,0,
-                    HIDC_PRIMITIVES_RESET
+    CONTROL         "Verwende hochauflösende Grund-\nelemente wenn vorhanden",
+                    IDC_HI_RES,"Button",BS_AUTOCHECKBOX | BS_NOTIFY | 
+                    WS_GROUP | WS_TABSTOP,15,110,127,10,0,HIDC_HI_RES
+    PUSHBUTTON      "&Zurücksetzen",IDC_PRIMITIVES_RESET,203,214,50,14,
+                    WS_GROUP,0,HIDC_PRIMITIVES_RESET
 END
 
 IDD_OPENGL_INFO DIALOG DISCARDABLE  0, 0, 200, 201
@@ -710,13 +715,13 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Sets mit Einstellung"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    LTEXT           "Folgendes Set mit Einstellungen verwenden:",IDC_PREFSETS_LABEL,7,
-                    7,104,8,0,0,HIDC_PREFSETS_LABEL
+    LTEXT           "Folgendes Set mit Einstellungen verwenden:",
+                    IDC_PREFSETS_LABEL,7,7,104,8,0,0,HIDC_PREFSETS_LABEL
     LISTBOX         IDC_PREFSETS_LIST,7,18,246,191,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP,0,HIDC_PREFSETS_LIST
-    PUSHBUTTON      "&Tastenkombination...",IDC_PREF_SET_HOT_KEY,93,214,50,14,0,0,
-                    HIDC_PREF_SET_HOT_KEY
+    PUSHBUTTON      "&Tastenkombination...",IDC_PREF_SET_HOT_KEY,93,214,50,
+                    14,0,0,HIDC_PREF_SET_HOT_KEY
     PUSHBUTTON      "&Löschen",IDC_DELETE_PREF_SET,148,214,50,14,0,0,
                     HIDC_DELETE_PREF_SET
     PUSHBUTTON      "&Neu",IDC_NEW_PREF_SET,203,214,50,14,0,0,
@@ -729,8 +734,8 @@ EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "Neues Set mit Einstellungen"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    LTEXT           "Geben Sie den Namen für das neue Set mit Einstellungen ein:",IDC_STATIC,7,
-                    11,134,8
+    LTEXT           "Geben Sie den Namen für das neue Set mit Einstellungen ein:",
+                    IDC_STATIC,7,11,134,8
     EDITTEXT        IDC_NEW_PREF_SET_FIELD,7,24,157,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "OK",IDC_NEW_PREF_SET_OK,176,7,50,14
     PUSHBUTTON      "Abbrechen",IDC_NEW_PREF_SET_CANCEL,176,24,50,14
@@ -809,9 +814,9 @@ FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Internet Proxy",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
                     HIDC_PROXY_BOX
-    CONTROL         "&Direkte Verbindung zum Internet",IDC_PROXY_NONE,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,15,
-                    19,118,10,0,HIDC_PROXY_NONE
+    CONTROL         "&Direkte Verbindung zum Internet",IDC_PROXY_NONE,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,15,19,118,10,
+                    0,HIDC_PROXY_NONE
     CONTROL         "Verwende einfache Windows Proxy-Konfiguration",
                     IDC_PROXY_WINDOWS,"Button",BS_AUTORADIOBUTTON,15,30,143,
                     10,0,HIDC_PROXY_WINDOWS
@@ -840,8 +845,8 @@ BEGIN
                     HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | 
                     ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
-    PUSHBUTTON      "&Zurücksetzen",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,0,
-                    HIDC_UPDATES_RESET
+    PUSHBUTTON      "&Zurücksetzen",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,
+                    0,HIDC_UPDATES_RESET
     LTEXT           "Anmerkung: Die Änderungen an den Einstellungen in diesem Reiter werden solange nicht aktiv, bis ein neues Modell geladen wird oder ein Update der LDraw Bauteile-Bibliothek ausgeführt wird.",
                     IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
 END
@@ -1046,27 +1051,29 @@ IDR_MAIN_MENU MENU DISCARDABLE
 BEGIN
     POPUP "&Datei"
     BEGIN
-        MENUITEM "&Öffnen...\tCtrl+O",            ID_FILE_OPEN
-        MENUITEM "Bild &speichern...\tCtrl+S",   ID_FILE_SAVE
-        MENUITEM "&Neu laden\tF5",                 ID_FILE_RELOAD
-        MENUITEM "&Laden abbrechen\tEsc",           ID_FILE_CANCELLOAD
+        MENUITEM "&Öffnen...\tCtrl+O",          ID_FILE_OPEN
+        MENUITEM "Bild &speichern...\tCtrl+S",  ID_FILE_SAVE
+        MENUITEM "&Neu laden\tF5",              ID_FILE_RELOAD
+        MENUITEM "&Laden abbrechen\tEsc",       ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
         POPUP "&Abfragen"
         BEGIN
-            MENUITEM "&Deaktiviert",                   ID_FILE_POLLING_DISABLED
-            MENUITEM "&Nachfragen",                     ID_FILE_POLLING_PROMPT
-            MENUITEM "&Automatisch aktualisieren wenn aktiv",    ID_FILE_POLLING_AUTO
-            MENUITEM "&Sofort automatisch aktualisieren",    ID_FILE_POLLING_BACKGROUND
+            MENUITEM "&Deaktiviert",                ID_FILE_POLLING_DISABLED
+            MENUITEM "&Nachfragen",                 ID_FILE_POLLING_PROMPT
+            MENUITEM "&Automatisch aktualisieren wenn aktiv", 
+                                                    ID_FILE_POLLING_AUTO
+            MENUITEM "&Sofort automatisch aktualisieren", 
+                                                    ID_FILE_POLLING_BACKGROUND
 
         END
-        MENUITEM "LDra&w Verzeichnis...",               ID_FILE_LDRAWDIR
-        MENUITEM "&Zusätzliche Verzeichnisse...",              ID_FILE_EXTRADIRS
-        MENUITEM "Nach Bauteile-&Updates suchen",   ID_FILE_CHECKFORLIBUPDATES
+        MENUITEM "LDra&w Verzeichnis...",       ID_FILE_LDRAWDIR
+        MENUITEM "&Zusätzliche Verzeichnisse...", ID_FILE_EXTRADIRS
+        MENUITEM "Nach Bauteile-&Updates suchen", ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
-        MENUITEM "Seite &einrichten...",              ID_FILE_PAGESETUP
-        MENUITEM "&Drucken...\tCtrl+P",           ID_FILE_PRINT
+        MENUITEM "Seite &einrichten...",        ID_FILE_PAGESETUP
+        MENUITEM "&Drucken...\tCtrl+P",         ID_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "&Beenden\tCtrl+Q",               ID_FILE_EXIT
+        MENUITEM "&Beenden\tCtrl+Q",            ID_FILE_EXIT
     END
     POPUP "&Bearbeiten"
     BEGIN
@@ -1074,24 +1081,26 @@ BEGIN
     END
     POPUP "&Ansicht"
     BEGIN
-        MENUITEM "V&erwende visuellen Stil (Erfordert Neustart)", ID_VIEW_VISUALSTYLE
-        MENUITEM "V&ollbild\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "Symbolleis&te\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
-        MENUITEM "&Statusleiste\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
-        MENUITEM "&Immer im &Vordergrund",              ID_VIEW_ALWAYSONTOP
-        MENUITEM "Ansicht zurüc&ksetzen\tCtrl+A",         ID_VIEW_RESET
-        MENUITEM "&Zoom anpassen\tCtrl+Z",        ID_VIEW_ZOOMTOFIT
+        MENUITEM "V&erwende visuellen Stil (Erfordert Neustart)", 
+                                                ID_VIEW_VISUALSTYLE
+        MENUITEM "V&ollbild\tCtrl+Enter",       ID_VIEW_FULLSCREEN
+        MENUITEM "Symbolleis&te\tCtrl+Shift+T", ID_VIEW_TOOLBAR
+        MENUITEM "&Statusleiste\tCtrl+Shift+S", ID_VIEW_STATUSBAR
+        MENUITEM "&Immer im &Vordergrund",      ID_VIEW_ALWAYSONTOP
+        MENUITEM "Ansicht zurüc&ksetzen\tCtrl+A", ID_VIEW_RESET
+        MENUITEM "&Zoom anpassen\tCtrl+Z",      ID_VIEW_ZOOMTOFIT
         POPUP "&Ansichtswinkel"
         BEGIN
             MENUITEM "&Vorne\tCtrl+1",              ID_VIEW_FRONT
-            MENUITEM "&Hinten\tCtrl+2",               ID_VIEW_BACK
-            MENUITEM "&Links\tCtrl+3",               ID_VIEW_LEFT
-            MENUITEM "&Rechts\tCtrl+4",              ID_VIEW_RIGHT
-            MENUITEM "&Oben\tCtrl+5",                ID_VIEW_TOP
-            MENUITEM "&Unten\tCtrl+6",             ID_VIEW_BOTTOM
-            MENUITEM "&Isometrisch\tCtrl+0",         ID_VIEW_ISO
+            MENUITEM "&Hinten\tCtrl+2",             ID_VIEW_BACK
+            MENUITEM "&Links\tCtrl+3",              ID_VIEW_LEFT
+            MENUITEM "&Rechts\tCtrl+4",             ID_VIEW_RIGHT
+            MENUITEM "&Oben\tCtrl+5",               ID_VIEW_TOP
+            MENUITEM "&Unten\tCtrl+6",              ID_VIEW_BOTTOM
+            MENUITEM "&Isometrisch\tCtrl+0",        ID_VIEW_ISO
             MENUITEM SEPARATOR
-            MENUITEM "&Akt. Ansicht als Standard speichern",    ID_VIEW_SAVE_DEFAULT
+            MENUITEM "&Akt. Ansicht als Standard speichern", 
+                                                    ID_VIEW_SAVE_DEFAULT
         END
         MENUITEM SEPARATOR
         MENUITEM "&Prüfungsmodus\tCtrl+Shift+P", ID_VIEW_EXAMINE
@@ -1108,10 +1117,10 @@ BEGIN
     END
     POPUP "&Hilfe"
     BEGIN
-        MENUITEM "&OpenGL-Treiber Information...",      ID_HELP_OPENGL_INFO
+        MENUITEM "&OpenGL-Treiber Information...", ID_HELP_OPENGL_INFO
         MENUITEM SEPARATOR
-        MENUITEM "&Inhalt...\tF1",            ID_HELP_CONTENTS
-        MENUITEM "&Über LDView...",            ID_HELP_ABOUT
+        MENUITEM "&Inhalt...\tF1",              ID_HELP_CONTENTS
+        MENUITEM "&Über LDView...",             ID_HELP_ABOUT
     END
 END
 
@@ -1119,35 +1128,35 @@ IDR_TOOLBAR_MENU MENU DISCARDABLE
 BEGIN
     POPUP "Drahtgitter"
     BEGIN
-        MENUITEM "Nebel",                         ID_WIREFRAME_FOG
-        MENUITEM "Verdeckte Linien verstecken",         ID_WIREFRAME_REMOVEHIDDENLINES
+        MENUITEM "Nebel",                       ID_WIREFRAME_FOG
+        MENUITEM "Verdeckte Linien verstecken", ID_WIREFRAME_REMOVEHIDDENLINES
 
     END
     POPUP "Kanten", CHECKED
     BEGIN
-        MENUITEM "Zeige nur Kanten",             ID_EDGES_SHOWEDGESONLY
-        MENUITEM "Bedingte Linien",           ID_EDGES_CONDITIONALLINES
-        MENUITEM "Hohe Qualität",                ID_EDGES_HIGHQUALITY
-        MENUITEM "Immer schwarz",                ID_EDGES_ALWAYSBLACK
+        MENUITEM "Zeige nur Kanten",            ID_EDGES_SHOWEDGESONLY
+        MENUITEM "Bedingte Linien",             ID_EDGES_CONDITIONALLINES
+        MENUITEM "Hohe Qualität",               ID_EDGES_HIGHQUALITY
+        MENUITEM "Immer schwarz",               ID_EDGES_ALWAYSBLACK
     END
     POPUP "Grundelemente"
     BEGIN
-        MENUITEM "Knopf mit Textur",               ID_PRIMITIVES_TEXTURESTUDS
+        MENUITEM "Knopf mit Textur",            ID_PRIMITIVES_TEXTURESTUDS
     END
     POPUP "Beleuchtung"
     BEGIN
-        MENUITEM "Hohe Qualität",                ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Hohe Qualität",               ID_LIGHTING_HIGHQUALITY
         MENUITEM "Gedimmt",                     ID_LIGHTING_SUBDUED
-        MENUITEM "Glanzlicht",          ID_LIGHTING_SPECULARHIGHLIGHT
+        MENUITEM "Glanzlicht",                  ID_LIGHTING_SPECULARHIGHLIGHT
 
-        MENUITEM "Alternative Beleuchtung",             ID_LIGHTING_ALTERNATESETUP
+        MENUITEM "Alternative Beleuchtung",     ID_LIGHTING_ALTERNATESETUP
         MENUITEM "Use LIGHT.DAT lights",        ID_LIGHTING_DRAWDATS
         MENUITEM "Replace main light",          ID_LIGHTING_OPTIONALMAIN
     END
     POPUP "BFC"
     BEGIN
-        MENUITEM "Rote Rückseiten",              ID_BFC_REDBACKFACES
-        MENUITEM "Grüne Vorderseiten",           ID_BFC_GREENFRONTFACES
+        MENUITEM "Rote Rückseiten",             ID_BFC_REDBACKFACES
+        MENUITEM "Grüne Vorderseiten",          ID_BFC_GREENFRONTFACES
     END
 END
 
@@ -1364,8 +1373,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,0,3
- PRODUCTVERSION 3,2,0,3
+ FILEVERSION 3,2,0,4
+ PRODUCTVERSION 3,2,0,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1383,14 +1392,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.2 Alpha 3\0"
+            VALUE "FileVersion", "3.2 Beta 1\0"
             VALUE "InternalName", "LDView\0"
-            VALUE "LegalCopyright", "Copyright © 2000-2006 Travis Cobbs & Peter Bartfai\0"
+            VALUE "LegalCopyright", "Copyright © 2007 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.2 Alpha 3\0"
+            VALUE "ProductVersion", "3.2 Beta 1\0"
             VALUE "SpecialBuild", "\0"
         END
     END
