@@ -159,3 +159,6 @@ Help\LDVIEW.HLP:	Help\*.rtf Help\LDView.hpj
 	cd Help
 	"$(HCW)" /c /e LDView.hpj
 	cd ..
+
+$(OBJDIR)\LDView.res:	LDView.rc LDViewMessages.ini
+	$(RC) $(RFLAGS) /d LDVIEW_APP /fo$(OBJDIR)\LDView.res LDView.rc
