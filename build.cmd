@@ -151,7 +151,7 @@ cd Release
 del /q *.pch *.obj *.idb *.exe *.res
 cd ..
 
-rc /l 0x409 /foRelease\LDView.res /d NDEBUG LDView.rc
+rc /l 0x409 /foRelease\LDView.res /d NDEBUG /d LDVIEW_APP LDView.rc
 
 cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /D LDVIEW_APP /c *.cpp
 
