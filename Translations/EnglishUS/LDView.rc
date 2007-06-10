@@ -1,10 +1,10 @@
 //Microsoft Developer Studio generated resource script.
 //
-#include "Resources.h"
+#include "Resource.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
-#include "Resources.hm"
+#include "Resource.hm"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -16,6 +16,9 @@
 #include "dlgs.h"
 #ifndef IDC_STATIC
 #define IDC_STATIC      (-1)
+#endif
+#ifndef MANIFEST
+#define MANIFEST        24
 #endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -36,9 +39,104 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_APP_ICON$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LDViewIcon.ico"
+#else
 IDI_APP_ICON            ICON    DISCARDABLE     "Icons\\LDViewIcon.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_EXAMINE$(LDVIEW_APP) ICON    DISCARDABLE     "icons\\examine.ico"
+#else
 IDI_EXAMINE             ICON    DISCARDABLE     "icons\\examine.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_FLYTHROUGH$(LDVIEW_APP) ICON    DISCARDABLE     "icons\\flythrou.ico"
+#else
 IDI_FLYTHROUGH          ICON    DISCARDABLE     "icons\\flythrou.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_LDRAW$(LDVIEW_APP)  ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
+#else
+IDI_LDRAW               ICON    DISCARDABLE     "Icons\\LDrawIcon.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDI_MPD$(LDVIEW_APP)    ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
+#else
+IDI_MPD                 ICON    DISCARDABLE     "Icons\\MPDIcon.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_UR$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleUR.ico"
+#else
+IDR_LIGHT_ANGLE_UR      ICON    DISCARDABLE     "Icons\\LightAngleUR.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_UL$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleUL.ico"
+#else
+IDR_LIGHT_ANGLE_UL      ICON    DISCARDABLE     "Icons\\LightAngleUL.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_UM$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleUM.ico"
+#else
+IDR_LIGHT_ANGLE_UM      ICON    DISCARDABLE     "Icons\\LightAngleUM.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_MR$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleMR.ico"
+#else
+IDR_LIGHT_ANGLE_MR      ICON    DISCARDABLE     "Icons\\LightAngleMR.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_LL$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleLL.ico"
+#else
+IDR_LIGHT_ANGLE_LL      ICON    DISCARDABLE     "Icons\\LightAngleLL.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_LM$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleLM.ico"
+#else
+IDR_LIGHT_ANGLE_LM      ICON    DISCARDABLE     "Icons\\LightAngleLM.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_LR$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleLR.ico"
+#else
+IDR_LIGHT_ANGLE_LR      ICON    DISCARDABLE     "Icons\\LightAngleLR.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_ML$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleML.ico"
+#else
+IDR_LIGHT_ANGLE_ML      ICON    DISCARDABLE     "Icons\\LightAngleML.ico"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDR_LIGHT_ANGLE_MM$(LDVIEW_APP) ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
+#else
+IDR_LIGHT_ANGLE_MM      ICON    DISCARDABLE     "Icons\\LightAngleMM.ico"
+#endif
+#endif
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -48,7 +146,7 @@ IDI_FLYTHROUGH          ICON    DISCARDABLE     "icons\\flythrou.ico"
 
 1 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "Resources.h\0"
+    "Resource.h\0"
 END
 
 2 TEXTINCLUDE DISCARDABLE 
@@ -57,6 +155,9 @@ BEGIN
     "#include ""dlgs.h""\r\n"
     "#ifndef IDC_STATIC\r\n"
     "#define IDC_STATIC      (-1)\r\n"
+    "#endif\r\n"
+    "#ifndef MANIFEST\r\n"
+    "#define MANIFEST        24\r\n"
     "#endif\0"
 END
 
@@ -149,7 +250,7 @@ BEGIN
     PUSHBUTTON      "Show None",IDC_ERROR_SHOW_NONE,264,175,50,14
 END
 
-IDD_SS_SETTINGS DIALOGEX 0, 0, 212, 177
+IDD_SS_SETTINGS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Screen Saver"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
@@ -159,49 +260,49 @@ BEGIN
                     HIDC_SS_FILENAME_RADIO
     CONTROL         "Directory:",IDC_SS_DIRECTORY_RADIO,"Button",
                     BS_AUTORADIOBUTTON,7,26,41,10,0,HIDC_SS_DIRECTORY_RADIO
-    EDITTEXT        IDC_SS_FILENAME_FIELD,53,7,100,14,ES_AUTOHSCROLL | 
+    EDITTEXT        IDC_SS_FILENAME_FIELD,53,7,148,14,ES_AUTOHSCROLL | 
                     ES_READONLY | WS_GROUP | NOT WS_TABSTOP,0,
                     HIDC_SS_FILENAME_FIELD
-    PUSHBUTTON      "Browse...",IDC_SS_BROWSE_FILE_BUTTON,155,7,50,14,0,0,
+    PUSHBUTTON      "Browse...",IDC_SS_BROWSE_FILE_BUTTON,203,7,50,14,0,0,
                     HIDC_SS_BROWSE_FILE_BUTTON
-    EDITTEXT        IDC_SS_DIRECTORY_FIELD,53,24,100,14,ES_AUTOHSCROLL | 
+    EDITTEXT        IDC_SS_DIRECTORY_FIELD,53,24,148,14,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_TABSTOP,0,HIDC_SS_DIRECTORY_FIELD
-    PUSHBUTTON      "Browse...",IDC_SS_BROWSE_DIR_BUTTON,155,24,50,14,0,0,
+    PUSHBUTTON      "Browse...",IDC_SS_BROWSE_DIR_BUTTON,203,24,50,14,0,0,
                     HIDC_SS_BROWSE_DIR_BUTTON
-    GROUPBOX        "Size",IDC_SS_SIZE_BOX,7,41,198,32,WS_GROUP,0,
+    GROUPBOX        "Size",IDC_SS_SIZE_BOX,7,41,246,32,WS_GROUP,0,
                     HIDC_SS_SIZE_BOX
     LTEXT           "Min",IDC_STATIC,16,53,12,8
     CONTROL         "Slider1",IDC_SS_SIZE_SLIDER,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,31,50,150,17,0,
+                    TBS_AUTOTICKS | WS_TABSTOP,31,50,198,17,0,
                     HIDC_SS_SIZE_SLIDER
-    LTEXT           "Max",IDC_STATIC,184,53,14,8
-    GROUPBOX        "Speed",IDC_SS_SPEED_BOX,7,74,198,32,0,0,
+    LTEXT           "Max",IDC_STATIC,232,53,14,8
+    GROUPBOX        "Speed",IDC_SS_SPEED_BOX,7,74,246,32,0,0,
                     HIDC_SS_SPEED_BOX
     LTEXT           "Min",IDC_STATIC,16,86,12,8
     CONTROL         "Slider1",IDC_SS_SPEED_SLIDER,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,31,83,150,17,0,
+                    TBS_AUTOTICKS | WS_TABSTOP,31,83,198,17,0,
                     HIDC_SS_SPEED_SLIDER
-    LTEXT           "Max",IDC_STATIC,184,86,14,8
-    GROUPBOX        "Rotation Speed",IDC_SS_ROTATION_SPEED_BOX,7,107,198,32,
+    LTEXT           "Max",IDC_STATIC,232,86,14,8
+    GROUPBOX        "Rotation Speed",IDC_SS_ROTATION_SPEED_BOX,7,107,246,32,
                     0,0,HIDC_SS_ROTATION_SPEED_BOX
     LTEXT           "Min",IDC_STATIC,16,119,12,8
     CONTROL         "Slider1",IDC_SS_ROTATION_SPEED_SLIDER,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_TABSTOP,31,116,150,17,0,
+                    TBS_AUTOTICKS | WS_TABSTOP,31,116,198,17,0,
                     HIDC_SS_ROTATION_SPEED_SLIDER
-    LTEXT           "Max",IDC_STATIC,184,119,14,8
+    LTEXT           "Max",IDC_STATIC,232,119,14,8
     CONTROL         "Random Preference Set",IDC_SS_RANDOM_PREF_SET,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,142,92,10,0,
                     HIDC_SS_RANDOM_PREF_SET
     CONTROL         "Sleep Mode work-around",IDC_SS_SLEEP,"Button",
-                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,110,142,95,10,
-                    0,HIDC_SS_SLEEP
-    PUSHBUTTON      "&Reset",IDC_SS_RESET,155,156,50,14,0,0,HIDC_SS_RESET
+                    BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,7,153,95,10,0,
+                    HIDC_SS_SLEEP
+    PUSHBUTTON      "&Reset",IDC_SS_RESET,203,214,50,14,0,0,HIDC_SS_RESET
 END
 
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,246,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -214,7 +315,7 @@ BEGIN
     CONTROL         "Spin1",IDC_SEAM_SPIN,"msctls_updown32",UDS_ALIGNRIGHT | 
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_GROUP,101,19,11,14,0,
                     HIDC_SEAM_SPIN
-    GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,121,62,WS_GROUP,0,
+    GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,121,59,WS_GROUP,0,
                     HIDC_WIREFRAME_BOX
     CONTROL         "&Wireframe",IDC_WIREFRAME,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,42,48,10,WS_EX_TRANSPARENT,
@@ -224,21 +325,21 @@ BEGIN
     CONTROL         "Remove hidden lines",IDC_REMOVE_HIDDEN_LINES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,65,79,10,0,
                     HIDC_REMOVE_HIDDEN_LINES
-    LTEXT           "Thickness:",IDC_WIREFRAME_THICKNESS_LABEL,16,83,36,8,0,
+    LTEXT           "Thickness:",IDC_WIREFRAME_THICKNESS_LABEL,16,80,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_WIREFRAME_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_WIREFRAME_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,77,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_WIREFRAME_THICKNESS
-    GROUPBOX        "    ",IDC_BFC_BOX,7,106,121,40,WS_GROUP,0,HIDC_BFC_BOX
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,76,68,18,0,
+                    HIDC_WIREFRAME_THICKNESS
+    GROUPBOX        "    ",IDC_BFC_BOX,7,103,121,40,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,15,106,29,10,WS_EX_TRANSPARENT,HIDC_BFC
+                    WS_TABSTOP,15,102,29,10,WS_EX_TRANSPARENT,HIDC_BFC
     CONTROL         "Red back faces",IDC_RED_BACK_FACES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,118,81,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,114,81,10,0,
                     HIDC_RED_BACK_FACES
     CONTROL         "Green front faces",IDC_GREEN_FRONT_FACES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,129,81,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,125,81,10,0,
                     HIDC_GREEN_FRONT_FACES
-    GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,104,WS_GROUP,0,
+    GROUPBOX        "      ",IDC_EDGES_BOX,132,42,121,101,WS_GROUP,0,
                     HIDC_EDGES_BOX
     CONTROL         "&Edge Lines",IDC_HIGHLIGHTS,"Button",BS_AUTOCHECKBOX | 
                     BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,42,51,10,
@@ -250,21 +351,21 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,65,70,10,0,
                     HIDC_CONDITIONAL_HIGHLIGHTS
     CONTROL         "Show all",IDC_ALL_CONDITIONAL,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,153,75,45,10,0,
+                    WS_GROUP | WS_TABSTOP,153,76,45,10,0,
                     HIDC_ALL_CONDITIONAL
-    CONTROL         "Show control pts",IDC_CONDITIONAL_CONTROLS,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,85,68,10,0,
+    CONTROL         "Show control points",IDC_CONDITIONAL_CONTROLS,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,87,74,10,0,
                     HIDC_CONDITIONAL_CONTROLS
     CONTROL         "High quality",IDC_QUALITY_LINES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,96,51,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,98,51,10,0,
                     HIDC_QUALITY_LINES
     CONTROL         "Always black",IDC_ALWAYS_BLACK,"Button",BS_AUTOCHECKBOX | 
-                    WS_GROUP | WS_TABSTOP,144,107,61,10,0,HIDC_ALWAYS_BLACK
-    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,141,126,36,8,0,
+                    WS_GROUP | WS_TABSTOP,144,109,61,10,0,HIDC_ALWAYS_BLACK
+    LTEXT           "Thickness:",IDC_EDGE_THICKNESS_LABEL,141,125,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_EDGE_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_EDGE_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_EDGE_THICKNESS
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,120,68,18,0,
+                    HIDC_EDGE_THICKNESS
     PUSHBUTTON      "&Reset",IDC_GEOMETRY_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_GEOMETRY_RESET
 END
@@ -272,9 +373,9 @@ END
 IDD_EFFECTS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Effects"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,61,WS_GROUP,0,
+    GROUPBOX        "     ",IDC_LIGHTING_BOX,7,7,121,180,WS_GROUP,0,
                     HIDC_LIGHTING_BOX
     CONTROL         "&Lighting",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,7,41,10,WS_EX_TRANSPARENT,
@@ -291,54 +392,85 @@ BEGIN
     CONTROL         "Alternate setup",IDC_ALTERNATE_LIGHTING,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     52,77,10,0,HIDC_ALTERNATE_LIGHTING
-    GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,61,WS_GROUP,0,
+    GROUPBOX        "Light &direction",IDC_LIGHT_DIR,31,63,73,77,0,0,
+                    HIDC_LIGHT_DIR
+    CONTROL         "UL",IDR_LIGHT_ANGLE_UL,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP,35,74,20,
+                    19,0,HIDR_LIGHT_ANGLE_UL
+    CONTROL         "UM",IDR_LIGHT_ANGLE_UM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,74,20,19,0,HIDR_LIGHT_ANGLE_UM
+    CONTROL         "UR",IDR_LIGHT_ANGLE_UR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,74,20,19,0,HIDR_LIGHT_ANGLE_UR
+    CONTROL         "ML",IDR_LIGHT_ANGLE_ML,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,35,95,20,19,0,HIDR_LIGHT_ANGLE_ML
+    CONTROL         "MM",IDR_LIGHT_ANGLE_MM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,95,20,19,0,HIDR_LIGHT_ANGLE_MM
+    CONTROL         "MR",IDR_LIGHT_ANGLE_MR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,95,20,19,0,HIDR_LIGHT_ANGLE_MR
+    CONTROL         "LL",IDR_LIGHT_ANGLE_LL,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,35,116,20,19,0,HIDR_LIGHT_ANGLE_LL
+    CONTROL         "LM",IDR_LIGHT_ANGLE_LM,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,57,116,20,19,0,HIDR_LIGHT_ANGLE_LM
+    CONTROL         "LR",IDR_LIGHT_ANGLE_LR,"Button",BS_AUTORADIOBUTTON | 
+                    BS_ICON | BS_PUSHLIKE,79,116,20,19,0,HIDR_LIGHT_ANGLE_LR
+    CONTROL         "Use LIGHT.DAT lights",IDC_DRAW_LIGHT_DATS,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
+                    142,85,10,0,HIDC_DRAW_LIGHT_DATS
+    CONTROL         "Replace standard light",IDC_OPTIONAL_STANDARD_LIGHT,
+                    "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
+                    WS_TABSTOP,28,153,93,10,0,HIDC_OPTIONAL_STANDARD_LIGHT
+    CONTROL         "Hide LIGHT.DAT geometry",IDC_HIDE_LIGHT_DAT,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
+                    164,100,10,0,HIDC_HIDE_LIGHT_DAT
+    GROUPBOX        "&Misc",IDC_EFFECTS_MISC_BOX,7,189,121,39,WS_GROUP,
+                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
+    CONTROL         "Flat shading",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,201,60,10,0,
+                    HIDC_FLAT_SHADING
+    CONTROL         "Smooth curves",IDC_SMOOTH_CURVES,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,212,63,10,0,
+                    HIDC_SMOOTH_CURVES
+    GROUPBOX        "      ",IDC_STEREO_BOX,132,7,121,58,WS_GROUP,0,
                     HIDC_STEREO_BOX
     CONTROL         "&Stereo",IDC_STEREO,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,140,7,37,10,WS_EX_TRANSPARENT,HIDC_STEREO
     CONTROL         "Cross-eyed",IDC_CROSS_EYED_STEREO,"Button",
-                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,144,19,51,10,
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,144,20,51,10,
                     0,HIDC_CROSS_EYED_STEREO
     CONTROL         "Parallel",IDC_PARALLEL_STEREO,"Button",
-                    BS_AUTORADIOBUTTON,144,30,39,10,0,HIDC_PARALLEL_STEREO
-    LTEXT           "Amt:",IDC_STEREO_SPACING_LABEL,144,47,15,8,0,
+                    BS_AUTORADIOBUTTON,144,31,39,10,0,HIDC_PARALLEL_STEREO
+    RTEXT           "Amount:",IDC_STEREO_SPACING_LABEL,145,46,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,160,41,87,21,
-                    WS_EX_CLIENTEDGE,HIDC_STEREO_SPACING
-    GROUPBOX        "      ",IDC_CUTAWAY_BOX,7,69,121,83,WS_GROUP,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,42,68,18,0,
+                    HIDC_STEREO_SPACING
+    GROUPBOX        "      ",IDC_CUTAWAY_BOX,132,67,121,79,WS_GROUP,0,
                     HIDC_CUTAWAY_BOX
     CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,69,77,10,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,67,77,10,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY
     CONTROL         "Color",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
-                    WS_GROUP | WS_TABSTOP,19,82,32,10,0,HIDC_CUTAWAY_COLOR
+                    WS_GROUP | WS_TABSTOP,144,80,32,10,0,HIDC_CUTAWAY_COLOR
     CONTROL         "Monochrome",IDC_CUTAWAY_MONOCHROME,"Button",
-                    BS_AUTORADIOBUTTON,19,93,57,10,0,HIDC_CUTAWAY_MONOCHROME
-    RTEXT           "Opacity:",IDC_CUTAWAY_OPACITY_LABEL,16,110,36,8,0,
+                    BS_AUTORADIOBUTTON,144,91,57,10,0,
+                    HIDC_CUTAWAY_MONOCHROME
+    RTEXT           "Opacity:",IDC_CUTAWAY_OPACITY_LABEL,141,106,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_OPACITY_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_OPACITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,104,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_CUTAWAY_OPACITY
-    LTEXT           "Thickness:",IDC_CUTAWAY_THICKNESS_LABEL,16,133,36,8,0,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,102,68,18,0,
+                    HIDC_CUTAWAY_OPACITY
+    RTEXT           "Thickness:",IDC_CUTAWAY_THICKNESS_LABEL,141,127,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY_THICKNESS_LABEL
     CONTROL         "Slider1",IDC_CUTAWAY_THICKNESS,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,54,127,68,21,
-                    WS_EX_CLIENTEDGE,HIDC_CUTAWAY_THICKNESS
-    GROUPBOX        "&Transparency",IDC_TRANSPARENCY_BOX,132,69,121,40,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,123,68,18,0,
+                    HIDC_CUTAWAY_THICKNESS
+    GROUPBOX        "&Transparency",IDC_TRANSPARENCY_BOX,132,148,121,39,
                     WS_GROUP,WS_EX_TRANSPARENT,HIDC_TRANSPARENCY_BOX
     CONTROL         "Sort",IDC_SORT,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
-                    WS_TABSTOP,140,81,60,10,0,HIDC_SORT
+                    WS_TABSTOP,140,160,60,10,0,HIDC_SORT
     CONTROL         "Stipple",IDC_STIPPLE,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,92,60,10,0,
+                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,171,60,10,0,
                     HIDC_STIPPLE
-    GROUPBOX        "&Misc",IDC_EFFECTS_MISC_BOX,132,111,121,41,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Flat shading",IDC_FLAT_SHADING,"Button",BS_AUTOCHECKBOX | 
-                    BS_NOTIFY | WS_GROUP | WS_TABSTOP,140,123,60,10,0,
-                    HIDC_FLAT_SHADING
-    CONTROL         "Smooth curves",IDC_SMOOTH_CURVES,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,134,63,10,0,
-                    HIDC_SMOOTH_CURVES
     PUSHBUTTON      "&Reset",IDC_EFFECTS_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_EFFECTS_RESET
 END
@@ -346,12 +478,12 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,
                     HIDC_AA_BOX
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
-    COMBOBOX        IDC_FSAA_COMBO,41,18,36,148,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_FSAA_COMBO,41,18,80,148,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
     CONTROL         "Antialiased lines",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
@@ -521,9 +653,9 @@ END
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Primitives"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,60,WS_GROUP,0,
+    GROUPBOX        "   ",IDC_PRIMITIVES_BOX,7,7,246,79,WS_GROUP,0,
                     HIDC_PRIMITIVES_BOX
     CONTROL         "&Primitive substitution",IDC_PRIMITIVE_SUBSTITUTION,
                     "Button",BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | 
@@ -539,20 +671,27 @@ BEGIN
                     BS_AUTORADIOBUTTON,23,41,75,10,0,HIDC_TEXTURE_BILINEAR
     CONTROL         "Trilinear filtering",IDC_TEXTURE_TRILINEAR,"Button",
                     BS_AUTORADIOBUTTON,23,52,75,10,0,HIDC_TEXTURE_TRILINEAR
-    LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,121,25,44,10,
+    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",
+                    BS_AUTORADIOBUTTON,23,63,75,10,0,HIDC_TEXTURE_ANISO
+    CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,60,80,18,0,
+                    HIDC_ANISO_LEVEL
+    LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,64,26,8,0,0,
+                    HIDC_ANISO_LEVEL_LABEL
+    LTEXT           "Curve quality:",IDC_CURVE_QUALITY_LABEL,121,22,44,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
-                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,21,
-                    WS_EX_CLIENTEDGE,HIDC_CURVE_QUALITY
-    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,78,246,40,WS_GROUP,
+                    TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,167,19,80,18,0,
+                    HIDC_CURVE_QUALITY
+    GROUPBOX        "&Misc",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
     CONTROL         "Low quality studs (faster)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    90,93,10,0,HIDC_STUD_QUALITY
+                    99,93,10,0,HIDC_STUD_QUALITY
     CONTROL         "Use hi-res primitives when available",IDC_HI_RES,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    101,127,10,0,HIDC_HI_RES
+                    110,127,10,0,HIDC_HI_RES
     PUSHBUTTON      "&Reset",IDC_PRIMITIVES_RESET,203,214,50,14,WS_GROUP,0,
                     HIDC_PRIMITIVES_RESET
 END
@@ -569,7 +708,7 @@ END
 IDD_PREFSETS_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Preference Sets"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     LTEXT           "Use the following preference set:",IDC_PREFSETS_LABEL,7,
                     7,104,8,0,0,HIDC_PREFSETS_LABEL
@@ -666,7 +805,7 @@ END
 IDD_UPDATES_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Updates"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Internet Proxy",IDC_PROXY_BOX,7,7,246,66,WS_GROUP,0,
                     HIDC_PROXY_BOX
@@ -705,6 +844,31 @@ BEGIN
                     HIDC_UPDATES_RESET
     LTEXT           "Note: changes to setting on this tab will not go into effect until the next time\na model is loaded or a library update is performed.",
                     IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
+END
+
+IDD_PARTS_LIST DIALOG DISCARDABLE  0, 0, 197, 171
+STYLE DS_MODALFRAME | WS_POPUP | WS_CLIPSIBLINGS | WS_CAPTION | WS_SYSMENU
+CAPTION "LDView Parts List"
+CLASS "LDViewPartsListWindow"
+FONT 8, "MS Sans Serif"
+BEGIN
+    GROUPBOX        "&Settings",IDC_STATIC,7,7,128,63
+    CONTROL         "Show &model",IDC_SHOW_MODEL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,15,21,55,10
+    CONTROL         "Generate &external style sheet",IDC_EXTERNAL_CSS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,32,107,10
+    CONTROL         "Show &part images",IDC_SHOW_PART_IMAGES,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,43,72,10
+    CONTROL         "Show &generated web page",IDC_SHOW_FILE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,15,55,101,10
+    GROUPBOX        "&Column Order",IDC_STATIC,7,72,128,92
+    CONTROL         "",IDC_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x904,15,
+                    147,111,15
+    CONTROL         "List1",IDC_COLUMN_ORDER_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | 
+                    WS_BORDER | WS_TABSTOP,15,86,111,62
+    DEFPUSHBUTTON   "OK",IDOK,140,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,140,24,50,14
 END
 
 
@@ -748,9 +912,9 @@ BEGIN
     IDD_SS_SETTINGS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 205
+        RIGHTMARGIN, 253
         TOPMARGIN, 7
-        BOTTOMMARGIN, 170
+        BOTTOMMARGIN, 228
     END
 
     IDD_GEOMETRY_PREFS, DIALOG
@@ -861,6 +1025,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 228
     END
+
+    IDD_PARTS_LIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 190
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 164
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -904,7 +1076,6 @@ BEGIN
     BEGIN
         MENUITEM "&Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
         MENUITEM "Switch to &Fullscreen\tCtrl+Enter", ID_VIEW_FULLSCREEN
-        MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_VIEW_ERRORS
         MENUITEM "&Toolbar\tCtrl+Shift+T",      ID_VIEW_TOOLBAR
         MENUITEM "&Status Bar\tCtrl+Shift+S",   ID_VIEW_STATUSBAR
         MENUITEM "&Always on Top",              ID_VIEW_ALWAYSONTOP
@@ -926,9 +1097,14 @@ BEGIN
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
-        MENUITEM "Show View &Info...",          ID_VIEW_INFO
-        MENUITEM "Show &POV-Ray Camera Info...", ID_VIEW_POV_CAMERA
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
+        MENUITEM "Parts &List",                 ID_TOOLS_PARTSLIST
         MENUITEM SEPARATOR
+        MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
+        MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
     END
     POPUP "&Help"
     BEGIN
@@ -965,6 +1141,8 @@ BEGIN
         MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
 
         MENUITEM "Alternate setup",             ID_LIGHTING_ALTERNATESETUP
+        MENUITEM "Use LIGHT.DAT lights",        ID_LIGHTING_DRAWDATS
+        MENUITEM "Replace main light",          ID_LIGHTING_OPTIONALMAIN
     END
     POPUP "BFC"
     BEGIN
@@ -1008,7 +1186,7 @@ BEGIN
                                                     NOINVERT
     "9",            ID_HOT_KEY_9,           VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
-    "E",            ID_VIEW_ERRORS,         VIRTKEY, SHIFT, CONTROL, 
+    "E",            ID_TOOLS_ERRORS,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
@@ -1036,30 +1214,148 @@ END
 // Bitmap
 //
 
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_PARSE$(LDVIEW_APP)  BITMAP  DISCARDABLE     "Icons\\error_parse.bmp"
+#else
 IDB_PARSE               BITMAP  DISCARDABLE     "Icons\\error_parse.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_FNF$(LDVIEW_APP)    BITMAP  DISCARDABLE     "Icons\\error_fnf.bmp"
+#else
 IDB_FNF                 BITMAP  DISCARDABLE     "Icons\\error_fnf.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATCHING_POINTS$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_matching_points.bmp"
+#else
 IDB_MATCHING_POINTS     BITMAP  DISCARDABLE     "Icons\\error_matching_points.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_CONCAVE_QUAD$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_concave_quad.bmp"
+#else
 IDB_CONCAVE_QUAD        BITMAP  DISCARDABLE     "Icons\\error_concave_quad.bmp"
-IDB_OPENGL              BITMAP  DISCARDABLE     "Icons\\error_opengl.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_DETERMINANT$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_determinant.bmp"
+#else
 IDB_DETERMINANT         BITMAP  DISCARDABLE     "Icons\\error_determinant.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_INFO$(LDVIEW_APP)   BITMAP  DISCARDABLE     "Icons\\error_info.bmp"
+#else
 IDB_INFO                BITMAP  DISCARDABLE     "Icons\\error_info.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_PARSE_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_parse_mask.bmp"
+#else
 IDB_PARSE_MASK          BITMAP  DISCARDABLE     "Icons\\error_parse_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_CONCAVE_QUAD_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_concave_quad_mask.bmp"
+#else
 IDB_CONCAVE_QUAD_MASK   BITMAP  DISCARDABLE     "Icons\\error_concave_quad_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATCHING_POINTS_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_matching_points_mask.bmp"
+#else
 IDB_MATCHING_POINTS_MASK BITMAP  DISCARDABLE     "Icons\\error_matching_points_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_DETERMINANT_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.bmp"
+#else
 IDB_DETERMINANT_MASK    BITMAP  DISCARDABLE     "Icons\\error_determinant_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_FNF_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
+#else
 IDB_FNF_MASK            BITMAP  DISCARDABLE     "Icons\\error_fnf_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_INFO_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "Icons\\error_info_mask.bmp"
+#else
 IDB_INFO_MASK           BITMAP  DISCARDABLE     "Icons\\error_info_mask.bmp"
-IDB_OPENGL_MASK         BITMAP  DISCARDABLE     "Icons\\error_opengl_mask.bmp"
+#endif
+#endif
 IDB_EXTRA_DIRS          BITMAP  DISCARDABLE     "Icons\\extra_dirs_toolbar.bmp"
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATRIX$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_matrix.bmp"
+#else
 IDB_MATRIX              BITMAP  DISCARDABLE     "icons\\error_matrix.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_MATRIX_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_matrix_mask.bmp"
+#else
 IDB_MATRIX_MASK         BITMAP  DISCARDABLE     "icons\\error_matrix_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_NON_FLAT_QUAD$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_non_flat_quad.bmp"
+#else
 IDB_NON_FLAT_QUAD       BITMAP  DISCARDABLE     "icons\\error_non_flat_quad.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_NON_FLAT_QUAD_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask.bmp"
+#else
 IDB_NON_FLAT_QUAD_MASK  BITMAP  DISCARDABLE     "icons\\error_non_flat_quad_mask.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_COLINEAR$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
+#else
 IDB_COLINEAR            BITMAP  DISCARDABLE     "icons\\error_colinear.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
+#else
 IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
+#endif
+#endif
 IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
+#else
 IDB_VERTEX_ORDER        BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
+#if defined(APSTUDIO_INVOKED)
+IDB_VERTEX_ORDER_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
+#else
 IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.bmp"
+#endif
+#endif
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1068,8 +1364,8 @@ IDB_VERTEX_ORDER_MASK   BITMAP  DISCARDABLE     "icons\\error_vertex_order_mask.
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,1
- PRODUCTVERSION 3,1,0,1
+ FILEVERSION 3,2,0,4
+ PRODUCTVERSION 3,2,0,4
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1087,14 +1383,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.1 Beta 1\0"
+            VALUE "FileVersion", "3.2 Beta 1\0"
             VALUE "InternalName", "LDView\0"
-            VALUE "LegalCopyright", "Copyright © 2000-2005 Travis Cobbs & Peter Bartfai\0"
+            VALUE "LegalCopyright", "Copyright © 2007 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.1 Beta 1\0"
+            VALUE "ProductVersion", "3.2 Beta 1\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -1109,25 +1405,13 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// PNG
+// Data
 //
 
-IDR_STUDLOGO_PNG        PNG     DISCARDABLE     "Textures\\StudLogo.png"
-IDR_SS_PREVIEW          PNG     DISCARDABLE     "Icons\\screen_saver_preview.png"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// TCFONT
-//
-
-IDR_SANS_FONT           TCFONT  DISCARDABLE     "Textures\\SansSerif.fnt"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// LOCALSTRINGS
-//
-
-IDR_LOCAL_STRINGS       LOCALSTRINGS DISCARDABLE "LDViewMessages.ini"
+IDR_STUDLOGO_PNG        RCDATA  DISCARDABLE     "Textures\\StudLogo.png"
+IDR_SS_PREVIEW          RCDATA  DISCARDABLE     "Icons\\screen_saver_preview.png"
+IDR_SANS_FONT           RCDATA  DISCARDABLE     "Textures\\SansSerif.fnt"
+IDR_LOCAL_STRINGS       RCDATA  DISCARDABLE     "LDViewMessages.ini"
 
 /////////////////////////////////////////////////////////////////////////////
 //

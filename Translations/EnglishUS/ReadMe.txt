@@ -64,7 +64,7 @@ translated all the RTF files, open LDView.hpj in Microsoft Help Workshop and
 click the "Save and Compile" button in the bottom right.  This will create the
 help file.
 
-You have two choices for output DLL name, the long name and the short name.  The
+You have two choices for output DLL name:  the long name or the short name.  The
 instructions above were for the short name.  If you want to use the long name
 instead, you can do so, but that makes the language module specific to a smaller
 region.  For example, the following are all valid names:
@@ -100,6 +100,13 @@ here; use the language name that your users will see in Windows.)  Also, unless
 you're doing a specific dialect, just use the short language name.  Rename
 install.txt to an appropriate filename for your language.
 
+Open Icons\screen_saver_preview.png in an image editor.  (Microsoft Paint works
+fine in Windows XP.)  Translate "Screen Saver" in the image.  If you can't match
+the font, redo "LDView" as well.  (The font in the original image is Gautami 9pt
+with font antialiasing turned off.)  If you provided a translated acronym for
+BFC, edit Icons\toolbar.bmp and change the BFC text to match whatever acronym
+you used.
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -108,10 +115,13 @@ Updating:
 Each time a new version of LDView is released, the language modules have to be
 updated in order to work.  LDView checks the version resource in the language
 module, and won't load the module if it doesn't match the LDView version.  Since
-you won't want to start from scratch each time there is a new release, it's best
-to copy all the changes from LDView's updated sample language module, then
-translate them and update the version by hand.  You do want to be extremely
-careful not to miss anything, though, and a good file comparison program will
-help out tremendously.
+you won't want to start from scratch each time there is a new release, I'll be
+sending you a new version of your own language module with all of your
+translated UI text merged into the new interface.  This means that any changes
+you made to the sizes of UI items will be lost, and you'll have to redo the
+resize.  Additionally, any new UI elements will be in English, and you'll of
+course have to translate them.  I'll also send you a list of all the changes
+made to the help files and LDViewMessages.ini, and you can go down the list and
+apply all the changes to your files.
 
 ////////////////////////////////////////////////////////////////////////////////
