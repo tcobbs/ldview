@@ -2,8 +2,8 @@
 <HTML>
 <HEAD>
 <TITLE>LDView Help</TITLE>
-<meta http-equiv = "content-language" content = "en">
-<meta http-equiv = "content-type" content = "text/html; charset=iso-8859-1">
+<META http-equiv = "content-language" content = "en">
+<META http-equiv = "content-type" content = "text/html; charset=iso-8859-1">
 <STYLE TYPE="text/css"><!--
 BODY
 {
@@ -64,7 +64,7 @@ TABLE.SettingsList TD
 </HEAD>
 <BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
 ALINK="#0080D0">
-<P></P>
+<A NAME="TopOfFile"><BR>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH CLASS="MainTitle">
@@ -86,6 +86,7 @@ ALINK="#0080D0">
 </TABLE>
 <UL>
 <LI><A HREF="#Intro">Introduction</A></LI>
+<LI><A HREF="#MacNotes">LDView on Mac OS X</A></LI>
 <LI><A HREF="#LDrawLibrary">LDraw Parts Library</A></LI>
 <LI><A HREF="#MouseControl">Mouse and Keyboard Control</A>
 <UL>
@@ -99,10 +100,10 @@ ALINK="#0080D0">
 <LI><A HREF="#ViewMenu">View Menu</A></LI>
 <LI><A HREF="#HelpMenu">Help Menu</A></LI>
 </UL></LI>
-<LI><A HREF="#Toolbar">Toolbar</A>
+<LI><A HREF="#Toolbar">Toolbar</A></LI>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
-<LI><A HREF="#ErrorWindow">Errors & Warnings Window</A></LI>
+<LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -137,6 +138,7 @@ ALINK="#0080D0">
 <LI><A HREF="#MissingPartsBox">Missing Parts Box</A></LI>
 </UL></LI>
 <LI><A HREF="#PreferenceSetsTab">Preference Sets Tab</A></LI>
+<LI><A HREF="#ScreenSaverTab">Screen Saver Tab</A></LI>
 </UL></LI>
 <LI><A HREF="#CommandLine">Command Line</A>
 <UL>
@@ -162,36 +164,79 @@ ALINK="#0080D0">
 		</TH>
 	</TR>
 </TABLE>
-<I>Please note</I>: this help file documents the Windows version of LDView, with
-a few notes about the Linux/QT version.  For the most part, the Linux/QT version
-has the same functionality as the Windows version, and looks and acts the same.
-However, certain features (such as full screen support) are missing from the
-Linux/QT version.  If you are using that version, please don't expect 100% of
-the features documented here to be present (although a very high percentage
-are present).  Anywhere this document refers to the Linux/QT version, it is
+<I>Please note</I>: this help file mostly documents the Windows version of
+LDView, with a few notes about the QT (Linux and Mac) version, and some
+specific notes on different conventions in the Mac version.  For the most part,
+the QT version has the same functionality as the Windows version, and looks and
+acts the same (aside from having a mostly native UI look).  However, certain
+features (such as FSAA support) are missing from the QT version, and other
+features (such as full screen support) are present with less functionality.  If
+you are using a non-Windows version of LDView, please don't expect 100% of the
+features documented here to be present (although a very high percentage are
+present).  Anywhere this document refers to the QT version of LDView, it is
 referring to the version made using the QT user interface library.  The QT-based
-version of LDView is currently only available in binary form as a Linux binary.
-This version should work fine if compiled in other Unix-like operating systems,
-though.
+version of LDView is currently only available in binary form as a Linux binary
+and a (Universal) Mac binary.  This version should work fine if compiled in
+other Unix-like operating systems, though (as long QT will compile on them).
 <P>
 LDView displays LDraw models, and consequently requires that LDraw be
 installed.  LDraw can be downloaded from
 <A HREF="http://www.ldraw.org/">ldraw.org</A>, along with the up-to-date parts
 library.  If you install LDraw in any directory other than C:\LDRAW
-(/mnt/c/ldraw in the Linux/QT version), and don't already have an LDRAWDIR
-environment variable, you will be prompted the first time LDView loads to select
-the directory in which LDraw is installed.  Until you select the LDraw
-directory, you will be unable to load a model.
+(/usr/local/ldraw in the QT version), and don't already have an LDRAWDIR
+environment variable, you will be asked the first time LDView loads if you
+already have the LDraw library installed.  If you say that you do, you will be
+asked to select the directory in which LDraw is installed.  Until you select
+the LDraw directory, you will be unable to load a model.  If you respond that
+you don't already have LDraw installed, you will be asked if you want LDView to
+download it for you.
 </P>
 <P>
 When you run LDView, it will open its main window and immediately present you
-with an open panel (assuming you didn't specify a file as part of the launch
-process).  Select the LDraw .ldr, .dat, or .mpd file you want to view.  It will
-then display the file in the window.  Note that you can resize this window.
-Also note that if you open a large model, it could take a substantial amount of
-time to load.  During this time, the status bar will indicate the progress of
-the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel Load</A>
-from the File menu will cancel the load.
+with an open file dialog (assuming you didn't specify a file as part of the
+launch process).  Select the LDraw .ldr, .dat, or .mpd file you want to view.
+It will then display the file in the window.  Note that you can resize this
+window.  Also note that if you open a large model, it could take a substantial
+amount of time to load.  During this time, the status bar will indicate the
+progress of the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel
+Load</A> from the File menu, will cancel the load.
+</P>
+<P>
+<A NAME="MacNotes"></A><BR>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			LDView on Mac OS X
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+<!-- Note: the # below isn't really right, but it works in both Safari and
+Firefox.  Using Help.html in its place (the correct thing) doesn't work in
+Safari until you click on the link a second time if you came into the page with
+a # link already (like #MacNotes).  I'd say that's a bug in Safari. -->
+<A HREF="#">Back to Top</A>
+</P>
+<P>
+LDView on Mac OS X uses the standard Mac convention of using the Command key
+instead of the Control key for common activities.  Anywhere in this document
+that you see the Control key mentioned, remember that the Command key should be
+used instead.
+</P>
+<P>
+The menu layout on Mac OS X is also somewhat different.  The Preferences, About
+LDView, and Exit menu items have been moved to their standard location in the
+application (LDView) menu (with Exit being renamed to the standard of Quit
+LDView).  The recent files list has been placed in a
+standard Open Recent sub-menu of the File menu.  And the Edit menu has been
+removed, since the only item normally found there in LDView is Preferences.
+</P>
+<P>
+If your mouse only has one button, holding down Control while clicking is
+equivalent to using the right mouse button (as is standard).  Additionally, if
+you have a laptop with a touch pad that supports two-finger dragging to scroll,
+this is equivalent to using the mouse wheel (also as is standard).
 </P>
 <P>
 </P>
@@ -272,11 +317,21 @@ go of the button while the mouse is in motion, the model will continue to
 rotate on its own.
 </P>
 <P>
-If you hold down the control key while dragging with the left mouse button down,
-you will pan the model instead of rotating it.  The model will be pulled in the
-direction you move the mouse.  If you accidentally lose the model completely,
-and can't find it, you can use the <A HREF="#ResetView">Reset View</A> option
-on the View menu to reset the view.
+If you hold down the control key prior to clicking and dragging with the left
+mouse button, or if you click the middle mouse button and drag, you will pan the
+model instead of rotating it.  The model will be pulled in the direction you
+move the mouse. If you accidentally lose the model completely, and can't find
+it, you can use the <A HREF="#ResetView">Reset View</A> option on the View menu
+to reset the view.
+</P>
+<P>
+If you <A NAME="MouseLightDirection">hold down the shift key</A> prior to
+clicking and dragging with the left mouse button, you will change the light
+direction.  An arrow will be drawn to indicate the currentl light direction, and
+moving the mouse will rotate the direction that the arrow points, as well as
+updating the light direction.  If you have problems getting it back to its
+default setting, you can choose one of the <A HREF="#LightDirection">preset
+light directions</A> in the Effects tab of the preferences.
 </P>
 <P>
 Click the right mouse button and move it up or down to zoom in or out.  The
@@ -546,7 +601,7 @@ where there is no visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
-		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors & Warnings
+		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
 		Window</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -650,7 +705,7 @@ where there is no visible menu.
 		not try to use this in Fly-through Mode or after having panned.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</A></TD>
+		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
 		<TD COLSPAN=2>This shows a panel that contains information about the
 		current camera position as is needed in POV-Ray.  Hitting OK copies a
 		POV-Ray-compatible camera declaration into the clipboard.  This can be
@@ -830,13 +885,13 @@ snapshot to produce the same result.
 	<TR>
 		<TH ALIGN="LEFT">
 			<FONT SIZE="+2" COLOR="#FFFFFF">
-			Errors & Warnings Window
+			Errors &amp; Warnings Window
 			</FONT>
 		</TH>
 	</TR>
 </TABLE>
-The error window displays errors and warnings that were encountered while
-loading an LDraw model.
+The Errors &amp; Warnings window displays errors and warnings that were
+encountered while loading an LDraw model.
 <P>
 On the left-hand side is a tree view which displays all of the errors. By
 default, there is one collapsed entry per error, with a brief description of the
@@ -947,13 +1002,29 @@ The model contains back-face culling (BFC) information that is invalid.
 The model contains multi-part DAT (MPD) information that is invalid.
 </P>
 <P>
+<I>Whitespace</I><BR>
+The model references a sub-model whose filename contains whitespace (spaces
+and/or tabs).  While this will work in some programs (including LDView), it
+won't work in others, and is discouraged.
+</P>
+<P>
+<I>Part renamed</I><BR>
+The model references a part that has been renamed to a new number (otherwise
+known as "moved to").
+</P>
+<P>
+<I>Unofficial part used</I><BR>
+The model references a part that isn't present in the main LDraw directory, but
+was found by LDView on the LDraw.org Parts Tracker and automatically downloaded.
+</P>
+<P>
 If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
-preferences dialog, the error window will automatically be displayed when a
-model is loaded that contains errors or warnings that are set to be shown.  It
-will not be shown if the only errors or warnings in the model have been
-unchecked in the error window, the model only contains warnings and warnings are
-disabled, the model contains no errors or warnings, or the error window isn't
-set to show automatically.
+preferences dialog, the Errors &amp; Warnings window will automatically be
+displayed when a model is loaded that contains errors or warnings that are set
+to be shown.  It will not be shown if the only errors or warnings in the model
+have been unchecked in the Errors &amp; Warnings window, the model only contains
+warnings and warnings are disabled, the model contains no errors or warnings, or
+the Errors &amp; Warnings window isn't set to show automatically.
 </P>
 <BR>
 <P>
@@ -1028,7 +1099,7 @@ Enabling this option causes default-colored items to be transparent.
 This controls whether or not LDView processes the ldconfig.ldr file that is now
 distributed as part of the LDraw parts library.  This file contains settings
 that can effect how LDraw models are displayed.  Currently the only settings it
-contains are color definitions.  Enabling this option will use the ldraw.org
+contains are color definitions.  Enabling this option will use the LDraw.org
 standard color definitions; disabling it will use LDView's default color
 definitions.</P>
 <P>
@@ -1041,9 +1112,9 @@ constant motion.  The easiest way to do this is to spin it (see
 <P>
 <A NAME="ShowErrors"><I>Show errors after loading</I></A> (Default:
 <I>On</I>):<BR>
-Enabling this option causes the <A HREF="#ErrorWindow">Error Window</A> to
-automatically be displayed after loading a model that contains any errors that
-have been selected for display in the error window.
+Enabling this option causes the <A HREF="#ErrorWindow">Errors &amp; Warnings
+window</A> to automatically be displayed after loading a model that contains any
+errors that have been selected for display in the Errors &amp; Warnings window.
 </P>
 <P>
 </P>
@@ -1280,6 +1351,75 @@ used automatically when <A HREF="#Specular">specular highlight</A> is enabled,
 whether or not this option is enabled, since specular highlight only works
 properly with the alternate setup.
 </P>
+<P>
+<A NAME="LightDirection"><I>Light direction</I></A><BR>
+Set the direction the light comes from to a pre-set angle.<BR>
+Please note: If you <A HREF="#MouseLightDirection">change the light direction
+with the mouse</A>, it is almost certain that none of the pre-set light
+direction buttons will be highlighted.
+</P>
+<P>
+<I>Upper left</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the upper left.
+</P>
+<P>
+<I>Above</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from above.
+</P>
+<P>
+<I>Upper right</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the upper right.
+</P>
+<P>
+<I>Left</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the left.
+</P>
+<P>
+<I>Middle</I></A> (Default?: <I>Yes</I>):<BR>
+Set the light direction to come from the middle (always pointing in exactly the
+same direction the camera is pointing).
+</P>
+<P>
+<I>Right</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the right.
+</P>
+<P>
+<I>Lower left</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the lower left.
+</P>
+<P>
+<I>Below</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from below.
+</P>
+<P>
+<I>Lower right</I></A> (Default?: <I>No</I>):<BR>
+Set the light direction to come from the lower right.
+</P>
+<P>
+<A><I>Use LIGHT.DAT lights</I></A> (Default: <I>On</I>):<BR>
+This option is only available if lighting is enabled.  Selecting this causes
+LDView to put point light sources in the scene in the locations where LIGHT.DAT
+is used as a part.  LDView uses the color assigned to the light part as the
+color for the light source.  Note that at most 8 lights will be shown by LDView
+(the first 8 in the file), and if the video card doesn't support 8, then less
+will be shown. 
+</P>
+<P>
+<A><I>Replace standard light</I></A> (Default: <I>On</I>):<BR>
+This option is only available if lighting is enabled and Use LIGHT.DAT lights is
+checked.  Selecting this causes LDView to not use its standard light source any
+time a model is loaded that contains one or more LIGHT.DAT parts.  Models that
+don't contain any LIGHT.DAT parts will still be illuminated using LDView's
+standard light source.  Note that using both LIGHT.DAT lights and the standard
+light source will often result in too much light, leading to a kind of
+overexposure effect. 
+</P>
+<P>
+<A><I>Hide LIGHT.DAT geometry</I></A> (Default: <I>Off</I>):<BR>
+Selecting this causes LDView to not display the geometry from LIGHT.DAT parts.
+Since the geometry is a small set of 3D coordinate axes, you often don't want to
+see it.
+</P>
 
 <P>
 <FONT SIZE="+1"><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR>
@@ -1438,6 +1578,21 @@ both enabled.  Selecting it causes trilinear texture filtering to be used.
 This is the highest quality texture filtering.
 </P>
 <P>
+<I>Anisotropic filtering</I> (Default?: <I>No</I>):<BR>
+This option is only available if primitive substitution and texture studs are
+both enabled, and your video card supports it.  Selecting it causes anisotropic
+texture filtering to be used.  When anisotropic filtering is selected, you can
+pick the filtering level on the slider to the right of the radio button.  This
+is the highest quality texture filtering.
+</P>
+<P>
+<I>Anisotropic filtering level</I> (Default: <I>Off</I>):<BR>
+This option is only available if primitive substitution and texture studs are
+both enabled, and anisotropic filtering is selected as the filtering type.  It
+adjusts the anisotropic filtering level.  Higher numbers produce higher quality
+filtering.
+</P>
+<P>
 <I>Curve quality</I> (Default: <I>9%</I>):<BR>
 This option is only available if primitive substitution is enabled.  It adjusts
 the quality of substituted primitives by changing the number of facets used to
@@ -1581,6 +1736,71 @@ reprocessed, or reloaded entirely.  If you change any of these options, there
 will be a pause after you hit OK or Apply while it either reprocesses or
 reloads the model.  During this pause the status bar will display progress.  If
 the status bar is not set to be visible, it will be made visible temporarily.
+</P>
+
+<P>
+<FONT SIZE="+2"><B><A NAME="ScreenSaverTab">Screen Saver Tab</A></B></FONT><BR>
+</P>
+<P>
+<B>Note:</B> This tab is only available when configuring the
+<A HREF="#ScreenSaver">LDView screen saver.</A>
+</P>
+<P>
+<I>File</I>:<BR>
+Select this to have the LDView Screen Saver always display a specific file.  Use
+the Browse button to the right to select the file.
+</P>
+<P>
+<I>Browse</I> (next to File):<BR>
+Use this to select the file that the LDView Screen Saver will display.
+</P>
+<P>
+<I>Directory</I>:<BR>
+Select this to have the LDView Screen Saver randomly select a model file from
+the specified directory each time it runs.  The file will be randomly selected
+from all the DAT, MPD, and LDR files in the directory.  Use the Browse button to
+the right to select the directory.
+</P>
+<P>
+<I>Browse</I> (next to Directory):<BR>
+Use this to select the directory that the LDView Screen Saver looks in for
+models.
+</P>
+<P>
+<I>Size</I>:<BR>
+Use this to control how large the model that is displayed by the LDView Screen
+Saver will be.
+</P>
+<P>
+<I>Speed</I>:<BR>
+Use this to control how fast the model that is displayed by the LDView Screen
+Saver moves.
+</P>
+<P>
+<I>Rotation Speed</I>:<BR>
+Use this to control how fast the model that is displayed by the LDView Screen
+Saver rotates.
+</P>
+<P>
+<I>Random Preference Set</I>:<BR>
+Causes the screen saver to randomly choose a preference set each time it runs.
+Since the file/directory choice is part of the preference set, this also allows
+you to have different models displayed with different settings.
+</P>
+<P>
+<I>Sleep Mode work-around</I>:<BR>
+This will only be enabled if it is supported by your operating system.  Check
+this if your system won't go into sleep mode when using the LDView Screen Saver,
+even though it is set to go into sleep mode.  It may solve the problem.<BR>
+Note that if you have a screen saver password set and use this, you will have a
+blank screen if you wake the computer up from sleep mode and then cancel the
+password prompt.
+</P>
+<P>
+<I>Reset</I>:<BR>
+This resets all the Screen Saver preferences to their default values.  As with
+all other preference changes, you must hit OK or Apply for the reset values to
+go into effect.
 </P>
 
 <BR>
@@ -1805,7 +2025,7 @@ set-specific, while others aren't.
 			Antialias
 		</TD>
 		<TD VALIGN="TOP">
-			Enumerant
+			Integer
 		</TD>
 		<TD VALIGN="TOP">
 			NO
@@ -1818,10 +2038,15 @@ set-specific, while others aren't.
 			3: 2x Enhanced<BR>
 			4: 4x<BR>
 			5: 4x Enhanced<BR>
+			16+: FSAA level * 8 (see below)<BR>
 			Note that while all but the first option request FSAA to be used, it
 			will only be used on graphics hardware that supports FSAA in
 			addition to supporting the OpenGL extension that allows it to be set
-			from a program other than the driver control panel.
+			from a program other than the driver control panel.<BR>
+			Any standard FSAA mode can be requested by taking the desired FSAA
+			level and multiplying by 8.  For example, 6x FSAA on ATI cards can
+			be requested by setting Antialias to 48.  If you request a mode that
+			isn't supported by your video card, you end up with no antialiasing.
 		</TD>
 	</TR>
 	<TR>
@@ -1902,6 +2127,20 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to 1000 times the value of the <I>Bottom</I> field in the
 			<I>Margins</I> box on the Page Setup dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			CameraGlobe
+		</TD>
+		<TD VALIGN="TOP" NOWRAP>
+			String<BR>
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Same as <A HREF="#CameraGlobe">-cg</A> L3P-compatible option.
 		</TD>
 	</TR>
 	<TR>
@@ -2133,10 +2372,10 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Sets the editor to use when you double click on the source file line
-			in the error window.  The program listed must either be in the path,
-			or the full path to the program must be given.  The default is
-			"notpad.exe".  Note that there is no way to set this value in the
-			LDView interface.
+			in the Errors &amp; Warnings window.  The program listed must either
+			be in the path, or the full path to the program must be given.  The
+			default is "notepad.exe".  Note that there is no way to set this
+			value in the LDView interface.
 		</TD>
 	</TR>
 	<TR>
@@ -2564,6 +2803,46 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			ModelCenter
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Set this to override the default camera placement algorithm.  If you
+			set this, the given value is used as the center of the model.  The
+			default camera placement algorithm uses this location to center the
+			model on the screen.  The value is specified as three
+			comma-separated decimal numbers.  Example:<BR>
+			-ModelCenter=0.0,0.0,0.0
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ModelSize
+		</TD>
+		<TD VALIGN="TOP">
+			Decimal<BR>
+			(Greater than 0.0)
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Set this to override the default camera positioning algorithm.  If
+			you set this, the given value is used as the diameter of the sphere
+			that is considered to fully enclose the model.  The automatic camera
+			distance algorithm positions the camera such that this entire sphere
+			is visible in the default view.  Note that if you provide a value
+			that is smaller than the actual calculated size, cropping of your
+			model may occur.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			OneLight
 		</TD>
 		<TD VALIGN="TOP">
@@ -2967,6 +3246,27 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			SaveZoomToFit
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Mostly equivalent to the <I>Zoom to Fit</I> check box in the <I>Save
+			Snapshot</I> dialog box.  In addition, if you use the
+			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting and set
+			this setting to 1 on the command line, the resulting image will be
+			zoomed to fit.  Note that you can use this in combination with the
+			<A HREF="#DefaultZoomSetting">DefaultZoom</A> setting on the command
+			line to zoom in or out.  Setting DefaultZoom to 0.95, for instance,
+			will provide a small margin all the way around the model.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			Seams
 		</TD>
 		<TD VALIGN="TOP">
@@ -2994,27 +3294,6 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to 100 times the value of the <I>Seam Width</I> field in
 			the <I>Geometry-&gt;Model</I> box.
-		</TD>
-	</TR>
-	<TR>
-		<TD VALIGN="TOP">
-			SaveZoomToFit
-		</TD>
-		<TD VALIGN="TOP">
-			Boolean
-		</TD>
-		<TD VALIGN="TOP">
-			YES
-		</TD>
-		<TD VALIGN="TOP">
-			Mostly equivalent to the <I>Zoom to Fit</I> check box in the <I>Save
-			Snapshot</I> dialog box.  In addition, if you use the
-			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting and set
-			this setting to 1 on the command line, the resulting image will be
-			zoomed to fit.  Note that you can use this in combination with the
-			<A HREF="#DefaultZoomSetting">DefaultZoom</A> setting on the command
-			line to zoom in or out.  Setting DefaultZoom to 0.95, for instance,
-			will provide a small margin all the way around the model.
 		</TD>
 	</TR>
 	<TR>
@@ -3058,8 +3337,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>General Error</I> check box in the Error
-			Window.
+			Equivalent to the <I>General Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3073,7 +3352,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Parse Error</I> check box in the Error Window.
+			Equivalent to the <I>Parse Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3087,8 +3367,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>File Not Found</I> check box in the Error
-			Window.
+			Equivalent to the <I>File Not Found</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3102,8 +3382,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Singular Matrix</I> check box in the Error
-			Window.
+			Equivalent to the <I>Singular Matrix</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3118,7 +3398,7 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Part transformed non-uniformly</I> check box in
-			the Error Window.
+			the Errors &amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3132,8 +3412,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Non-flat quad</I> check box in the Error
-			Window.
+			Equivalent to the <I>Non-flat quad</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3147,7 +3427,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Concave quad</I> check box in the Error Window.
+			Equivalent to the <I>Concave quad</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3161,8 +3442,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Bad vertex sequence</I> check box in the Error
-			Window.
+			Equivalent to the <I>Bad vertex sequence</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3176,8 +3457,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Identical vertices</I> check box in the Error
-			Window.
+			Equivalent to the <I>Identical vertices</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3191,8 +3472,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Co-linear points</I> check box in the Error
-			Window.
+			Equivalent to the <I>Co-linear points</I> check box in the Errors
+			&amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3206,7 +3487,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>BFC Warning</I> check box in the Error Window.
+			Equivalent to the <I>BFC Warning</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3220,7 +3502,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>BFC Error</I> check box in the Error Window.
+			Equivalent to the <I>BFC Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3234,8 +3517,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>MPD Error</I> check box in the Error
-			Window.
+			Equivalent to the <I>MPD Error</I> check box in the Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3249,7 +3532,38 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Whitespace</I> check box in the Error Window.
+			Equivalent to the <I>Whitespace</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError14
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Part renamed</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowErrors/LDLError15
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Unofficial part used</I> check box in the
+			Errors &amp; Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3292,7 +3606,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Include Warnings</I> check box Error Window.
+			Equivalent to the <I>Include Warnings</I> check box Errors &amp;
+			Warnings window.
 		</TD>
 	</TR>
 	<TR>
@@ -3309,6 +3624,28 @@ set-specific, while others aren't.
 			Equivalent to the <I>Show control pts</I> check box under the
 			<I>Conditional lines</I> check box in the <I>Geometry-&gt;Edge
 			Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			SnapshotSuffix
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Suffix to use when determining what file format to use for the
+			snapshot.  This is designed to be used in conjunction with the
+			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting so that you
+			can specify a temporary file on the command line without being
+			forced to give the temporary file a known suffix.  Currently, the
+			only values that are recognized are:<BR>
+			.bmp<BR>
+			.png<BR>
+			(Note that the dot preceding the extension is required.)
 		</TD>
 	</TR>
 	<TR>
@@ -3932,12 +4269,13 @@ difference, use the <A HREF="#CameraGlobe">-cg</A> option.
 		</TH>
 	</TR>
 </TABLE>
-When you install LDView, you are presented with an option near the end to
-install it as a screen saver.  If you select this option, you can use LDView
-as a screen saver.  Simply select it from the list of available screen savers,
-and then configure it as desired.  When using LDView as a screen saver, you can
-set most of the settings that are available in standard LDView, and you can
-additionally set screen saver-specific settings.
+When you use the Windows Installer to install LDView, you are presented with an
+option near the end to install it as a screen saver.  If you select this option,
+you can use LDView as a screen saver.  Simply select it from the list of
+available screen savers, and then configure it as desired.  When using LDView as
+a screen saver, you can set most of the settings that are available in standard
+LDView, and you can additionally set screen saver-specific settings.  At the
+moment, Screen Saver mode is only supported in Windows.
 <P>
 If you don't use the install program to install LDView, or you don't check the
 option to install it as a screen saver and later change your mind, you can
@@ -3974,7 +4312,7 @@ If you have any comments, questions, or suggestions, please e-mail me at
 <A NAME="EMail" HREF=
 "mailto:ldview@gmail.com">ldview@gmail.com</A>.
 <P>
-LDView is Copyright &copy; 2000-2005 Travis Cobbs and Peter Bartfai.
+LDView is Copyright &copy; 2000-2006 Travis Cobbs and Peter Bartfai.
 </P>
 <P>
 <FONT SIZE=-1>
