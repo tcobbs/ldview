@@ -747,8 +747,7 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doEraseBackground(RECT* updateRect)
 {
-	return 1;
-	CUIOGLWindow::doEraseBackground(updateRect);
+	created = TRUE;
 	return 1;
 }
 
