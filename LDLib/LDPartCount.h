@@ -17,7 +17,7 @@ public:
 	virtual ~LDPartCount(void);
 	void setModel(const char *filename, LDLModel *model);
 	const LDLModel *getModel(void) const { return m_model; };
-	void addPart(int color);
+	void addPart(int color, int defaultColor);
 	int getTotalCount(void) const { return m_totalCount; };
 	int getNumColors(void) const { return m_colorCounts.size(); }
 	const IntVector &getColors(void) const;

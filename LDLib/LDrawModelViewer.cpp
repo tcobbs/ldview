@@ -3239,7 +3239,7 @@ LDPartsList *LDrawModelViewer::getPartsList(void)
 	{
 		LDPartsList *partsList = new LDPartsList;
 
-		partsList->scanModel(mainModel);
+		partsList->scanModel(mainModel, defaultColorNumber);
 		return partsList;
 	}
 	else

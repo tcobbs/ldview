@@ -16,13 +16,13 @@ void LDPartsList::dealloc(void)
 	TCObject::dealloc();
 }
 
-void LDPartsList::scanModel(LDLModel *model)
+void LDPartsList::scanModel(LDLModel *model, int defaultColor)
 {
 	LDPartCountMap::iterator it;
 
 	m_partCountMap.clear();
 	m_totalParts = 0;
-	scanSubModel(model);
+	scanSubModel(model, defaultColor);
 	m_partCounts.clear();
 	m_partCounts.reserve(m_partCountMap.size());
 	for (it = m_partCountMap.begin(); it != m_partCountMap.end(); it++)
@@ -31,7 +31,7 @@ void LDPartsList::scanModel(LDLModel *model)
 	}
 }
 
-void LDPartsList::scanSubModel(LDLModel *subModel)
+void LDPartsList::scanSubModel(LDLModel *subModel, int defaultColor)
 {
 	LDLFileLineArray *fileLines = subModel->getFileLines();
 
@@ -61,13 +61,19 @@ void LDPartsList::scanSubModel(LDLModel *subModel)
 						{
 							partCount.setModel(filename, model);
 						}
-						partCount.addPart(modelLine->getColorNumber());
+						partCount.addPart(modelLine->getColorNumber(), defaultColor);
 						m_totalParts++;
 						delete filename;
 					}
 					else
 					{
-						scanSubModel(model);
+						int newColor = modelLine->getColorNumber();
+
+						if (newColor == 16)
+						{
+							newColor = defaultColor;
+						}
+						scanSubModel(model, newColor);
 					}
 				}
 			}
