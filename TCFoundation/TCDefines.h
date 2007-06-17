@@ -1,13 +1,6 @@
 #ifndef __TCDEFINES_H__
 #define __TCDEFINES_H__
 
-#ifndef NO
-#define NO 0
-#endif
-#ifndef YES
-#define YES (!NO)
-#endif
-
 #ifdef WIN32
 // The following shouldn't be necessary here, but due to bugs in Microsoft's
 // precompiled headers, it is.  The warning being disabled below is the one
