@@ -119,15 +119,15 @@ LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 			   hToolbar(NULL),
 			   hDeactivatedTooltip(NULL),
 			   userLDrawDir(NULL),
-			   fullScreen(NO),
-			   fullScreenActive(NO),
-			   switchingModes(NO),
+			   fullScreen(false),
+			   fullScreenActive(false),
+			   switchingModes(false),
 			   videoModes(NULL),
 			   numVideoModes(0),
 			   currentVideoModeIndex(-1),
 			   showStatusBarOverride(false),
-			   skipMinimize(NO),
-			   screenSaver(NO),
+			   skipMinimize(false),
+			   screenSaver(false),
 			   originalMouseX(-999999),
 			   originalMouseY(-999999),
 			   hFileMenu(NULL),
@@ -263,7 +263,7 @@ void LDViewWindow::showWindow(int nCmdShow)
 	modelWindow->finalSetup();
 }
 
-void LDViewWindow::setScreenSaver(BOOL flag)
+void LDViewWindow::setScreenSaver(bool flag)
 {
 	screenSaver = flag;
 	if (screenSaver)
@@ -946,11 +946,11 @@ LRESULT LDViewWindow::doMouseWheel(short keyFlags, short zDelta, int /*xPos*/,
 	{
 		if (keyFlags & MK_CONTROL)
 		{
-			modelWindow->setClipZoom(YES);
+			modelWindow->setClipZoom(true);
 		}
 		else
 		{
-			modelWindow->setClipZoom(NO);
+			modelWindow->setClipZoom(false);
 		}
 		modelWindow->zoom((TCFloat)zDelta * -0.5f);
 		return 0;
@@ -1019,14 +1019,14 @@ UINT CALLBACK lDrawDirBrowseHook(HWND /*hDlg*/, UINT message, WPARAM /*wParam*/,
 	return 0;
 }
 
-BOOL LDViewWindow::tryVideoMode(VideoModeT* videoMode, int refreshRate)
+bool LDViewWindow::tryVideoMode(VideoModeT* videoMode, int refreshRate)
 {
 	if (videoMode)
 	{
 		DEVMODE deviceMode;
 		long result;
 
-		fullScreenActive = YES;
+		fullScreenActive = true;
 
 		memset(&deviceMode, 0, sizeof DEVMODE);
 		deviceMode.dmSize = sizeof DEVMODE;
@@ -1043,36 +1043,36 @@ BOOL LDViewWindow::tryVideoMode(VideoModeT* videoMode, int refreshRate)
 		switch (result)
 		{
 			case DISP_CHANGE_SUCCESSFUL:
-				return YES;
+				return true;
 				break;
 			case DISP_CHANGE_RESTART:
-				fullScreenActive = NO;
-				return NO;
+				fullScreenActive = false;
+				return false;
 				break;
 			case DISP_CHANGE_BADFLAGS:
-				fullScreenActive = NO;
-				return NO;
+				fullScreenActive = false;
+				return false;
 				break;
 			case DISP_CHANGE_BADPARAM:
-				fullScreenActive = NO;
-				return NO;
+				fullScreenActive = false;
+				return false;
 				break;
 			case DISP_CHANGE_FAILED:
-				fullScreenActive = NO;
-				return NO;
+				fullScreenActive = false;
+				return false;
 				break;
 			case DISP_CHANGE_BADMODE:
-				fullScreenActive = NO;
-				return NO;
+				fullScreenActive = false;
+				return false;
 				break;
 			case DISP_CHANGE_NOTUPDATED:
-				fullScreenActive = NO;
-				return NO;
+				fullScreenActive = false;
+				return false;
 				break;
 		}
-		fullScreenActive = NO;
+		fullScreenActive = false;
 	}
-	return NO;
+	return false;
 }
 
 void LDViewWindow::setFullScreenDisplayMode(void)
@@ -1113,7 +1113,7 @@ void LDViewWindow::restoreDisplayMode(void)
 			case DISP_CHANGE_NOTUPDATED:
 				break;
 		}
-		fullScreenActive = NO;
+		fullScreenActive = false;
 	}
 }
 
@@ -1133,21 +1133,21 @@ void LDViewWindow::activateFullScreenMode(void)
 {
 	if (!fullScreenActive)
 	{
-		skipMinimize = YES;
+		skipMinimize = true;
 		if (!getCurrentVideoMode())
 		{
 			MessageBeep(MB_ICONEXCLAMATION);
 			return;
 		}
 //		modelWindow->uncompile();
-		switchingModes = YES;
+		switchingModes = true;
 		if (modelWindow)
 		{
 			modelWindow->closeWindow();
 //			modelWindowShown = false;
 		}
 		DestroyWindow(hWindow);
-		switchingModes = NO;
+		switchingModes = false;
 		setFullScreenDisplayMode();
 		if (initWindow())
 		{
@@ -1160,7 +1160,7 @@ void LDViewWindow::activateFullScreenMode(void)
 				modelWindow->forceRedraw(1);
 			}
 		}
-		skipMinimize = NO;
+		skipMinimize = false;
 	}
 }
 
@@ -1585,14 +1585,14 @@ void LDViewWindow::switchModes(void)
 	{
 		removeToolbar();
 	}
-	skipMinimize = YES;
+	skipMinimize = true;
 	if (!getCurrentVideoMode())
 	{
 		MessageBeep(MB_ICONEXCLAMATION);
 		return;
 	}
 	modelWindow->uncompile();
-	switchingModes = YES;
+	switchingModes = true;
 	if (modelWindow)
 	{
 		modelWindow->closeWindow();
@@ -1600,7 +1600,7 @@ void LDViewWindow::switchModes(void)
 	}
 	DestroyWindow(hWindow);
 //	modelWindow->forceRedraw(3);
-	switchingModes = NO;
+	switchingModes = false;
 	fullScreen = !fullScreen;
 	if (fullScreen)
 	{
@@ -1636,12 +1636,12 @@ void LDViewWindow::switchModes(void)
 //				debugPrintf("normal.\n");
 			}
 			modelWindow->setNeedsRecompile();
-			skipMinimize = NO;
+			skipMinimize = false;
 		}
 /*
 		else
 		{
-			skipMinimize = NO;
+			skipMinimize = false;
 			if (fullScreen)
 			{
 				switchModes();
@@ -1657,7 +1657,7 @@ void LDViewWindow::switchModes(void)
 	}
 	else
 	{
-		skipMinimize = NO;
+		skipMinimize = false;
 		if (fullScreen)
 		{
 			switchModes();
@@ -1676,7 +1676,7 @@ void LDViewWindow::switchModes(void)
 
 void LDViewWindow::shutdown(void)
 {
-	skipMinimize = YES;
+	skipMinimize = true;
 	if (modelWindow)
 	{
 		ModelWindow *tmpModelWindow = modelWindow;
@@ -3902,7 +3902,7 @@ LRESULT LDViewWindow::doClose(void)
 #ifdef _DEBUG
 //	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "doClose\n");
 #endif // _DEBUG
-	skipMinimize = YES;
+	skipMinimize = true;
 	if (modelWindow)
 	{
 		modelWindow->closeWindow();
@@ -4276,7 +4276,7 @@ void LDViewWindow::getAllDisplayModes(void)
 		if (deviceMode.dmBitsPerPel >= 15)
 		{
 			int j;
-			BOOL found = NO;
+			bool found = false;
 
 			for (j = 0; j < numVideoModes && !found; j++)
 			{
@@ -4286,7 +4286,7 @@ void LDViewWindow::getAllDisplayModes(void)
 					videoMode.height == (int)deviceMode.dmPelsHeight &&
 					videoMode.depth == (int)deviceMode.dmBitsPerPel)
 				{
-					found = YES;
+					found = true;
 				}
 			}
 			if (!found)

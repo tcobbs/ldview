@@ -18,7 +18,7 @@ TCAutoreleasePool::TCAutoreleasePoolCleanup::~TCAutoreleasePoolCleanup(void)
 }
 
 TCAutoreleasePool::TCAutoreleasePool(void)
-				  :haveReleases(NO)
+				  :haveReleases(false)
 #if defined WIN32 && defined _DEBUG && defined __THIS_IS_NOT_DEFINED
 				  ,deletions(new TCArray)
 #endif // WIN32 && _DEBUG
@@ -39,7 +39,7 @@ void TCAutoreleasePool::poolRegisterRelease(TCObject* theObject)
 //	int bucket = ((unsigned)theObject & 0xFF00) >> 8;
 	int bucket = 0;
 
-	haveReleases = YES;
+	haveReleases = true;
 	if (pool[bucket].value == NULL)
 	{
 		pool[bucket].value = theObject;
@@ -140,7 +140,7 @@ void TCAutoreleasePool::poolProcessReleases(void)
 				}
 			}
 		}
-		haveReleases = NO;
+		haveReleases = false;
 	}
 #if defined WIN32 && defined _DEBUG && defined __THIS_IS_NOT_DEFINED
 	if (deletions->getCount())

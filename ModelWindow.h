@@ -193,7 +193,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
 		virtual LRESULT doEraseBackground(RECT* updateRect);
 		virtual LRESULT doTimer(UINT);
-		virtual BOOL getFileTime(FILETIME*);
+		virtual bool getFileTime(FILETIME*);
 		virtual void checkForPart(void);
 #ifndef TC_NO_UNICODE
 		//virtual int progressCallback(const char* message, float progress,

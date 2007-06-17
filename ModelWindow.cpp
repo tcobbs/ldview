@@ -316,7 +316,7 @@ void ModelWindow::finalSetup(void)
 {
 }
 
-BOOL ModelWindow::getFileTime(FILETIME* fileTime)
+bool ModelWindow::getFileTime(FILETIME* fileTime)
 {
 	char* filename;
 
@@ -330,7 +330,7 @@ BOOL ModelWindow::getFileTime(FILETIME* fileTime)
 		{
 			*fileTime = findBuf.ftLastWriteTime;
 			FindClose(findHandle);
-			return YES;
+			return true;
 		}
 /*
 		WIN32_FILE_ATTRIBUTE_DATA fileAttributes;
@@ -339,11 +339,11 @@ BOOL ModelWindow::getFileTime(FILETIME* fileTime)
 			&fileAttributes))
 		{
 			*fileTime = fileAttributes.ftLastWriteTime;
-			return YES;
+			return true;
 		}
 */
 	}
-	return NO;
+	return false;
 }
 
 void ModelWindow::checkFileForUpdates(void)
@@ -358,7 +358,7 @@ void ModelWindow::checkFileForUpdates(void)
 			if (lastWriteTime.dwLowDateTime !=newWriteTime.dwLowDateTime ||
 				lastWriteTime.dwHighDateTime != newWriteTime.dwHighDateTime)
 			{
-				BOOL update = YES;
+				bool update = true;
 
 				lastWriteTime = newWriteTime;
 				if (pollSetting == POLL_PROMPT)
@@ -378,7 +378,7 @@ void ModelWindow::checkFileForUpdates(void)
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
 						IDOK)
 					{
-						update = NO;
+						update = false;
 					}
 				}
 				if (update)
@@ -726,11 +726,11 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 	{
 		if (keyFlags & MK_CONTROL)
 		{
-			modelViewer->setClipZoom(YES);
+			modelViewer->setClipZoom(true);
 		}
 		else
 		{
-			modelViewer->setClipZoom(NO);
+			modelViewer->setClipZoom(false);
 		}
 		updateZoom(yPos);
 		return 0;
@@ -745,7 +745,7 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 	return 1;
 }
 
-LRESULT ModelWindow::doEraseBackground(RECT* updateRect)
+LRESULT ModelWindow::doEraseBackground(RECT* /*updateRect*/)
 {
 	created = TRUE;
 	return 1;
