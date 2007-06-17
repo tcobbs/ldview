@@ -15,7 +15,7 @@ class LDPartsList : public TCObject
 {
 public:
 	LDPartsList(void);
-	virtual void scanModel(LDLModel *model);
+	virtual void scanModel(LDLModel *model, int defaultColor);
 	virtual const LDPartCountVector &getPartCounts(void)
 	{
 		return m_partCounts;
@@ -24,7 +24,7 @@ public:
 protected:
 	virtual ~LDPartsList(void);
 	virtual void dealloc(void);
-	virtual void scanSubModel(LDLModel *model);
+	virtual void scanSubModel(LDLModel *model, int defaultColor);
 
 	LDPartCountMap m_partCountMap;
 	LDPartCountVector m_partCounts;

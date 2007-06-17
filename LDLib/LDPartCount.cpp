@@ -35,8 +35,12 @@ void LDPartCount::setModel(const char *filename, LDLModel *model)
 	}
 }
 
-void LDPartCount::addPart(int color)
+void LDPartCount::addPart(int color, int defaultColor)
 {
+	if (color == 16)
+	{
+		color = defaultColor;
+	}
 	m_totalCount++;
 	m_colorCounts[color]++;
 	m_colorsCalculated = false;
