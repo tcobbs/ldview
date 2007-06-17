@@ -319,7 +319,7 @@ void CUIWindow::resize(int newWidth, int newHeight)
 			decorationSize = getDecorationSize();
 		}
 		MoveWindow(hWindow, x - decorationSize.cx / 2, y - decorationSize.cy / 2,
-			newWidth, newHeight, YES);
+			newWidth, newHeight, TRUE);
 	}
 	else
 	{
@@ -420,7 +420,7 @@ LRESULT CUIWindow::doMove(int newX, int newY)
 
 LRESULT CUIWindow::doEraseBackground(RECT *)
 {
-	created = YES;
+	created = TRUE;
 	return 0;
 }
 
@@ -609,7 +609,7 @@ void CUIWindow::redrawChildren(BOOL recurse)
 		children[i]->doPaint();
 		if (recurse)
 		{
-			children[i]->redrawChildren(YES);
+			children[i]->redrawChildren(TRUE);
 		}
 	}
 }
@@ -617,7 +617,7 @@ void CUIWindow::redrawChildren(BOOL recurse)
 void CUIWindow::doSystemColorChange(void)
 {
 	updateSystemColors();
-	redrawChildren(YES);
+	redrawChildren(TRUE);
 }
 
 void CUIWindow::calcSystemSizes(void)
