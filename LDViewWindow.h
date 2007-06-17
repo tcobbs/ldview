@@ -66,7 +66,7 @@ class LDViewWindow: public CUIWindow
 //		virtual int getDecorationHeight(void);
 		virtual void openModel(const char* = NULL, bool skipLoad = false);
 		virtual BOOL initWindow(void);
-		virtual void setScreenSaver(BOOL flag);
+		virtual void setScreenSaver(bool flag);
 		BOOL getScreenSaver(void) { return screenSaver; }
 		virtual void showWindow(int nCmdShow);
 		BOOL checkMouseMove(HWND hWnd, LPARAM lParam);
@@ -142,7 +142,7 @@ class LDViewWindow: public CUIWindow
 //		virtual BOOL doLDrawDirBrowse(HWND);
 		virtual LRESULT doInitMenuPopup(HMENU hPopupMenu, UINT uPos,
 			BOOL fSystemMenu);
-		virtual BOOL tryVideoMode(VideoModeT*, int);
+		virtual bool tryVideoMode(VideoModeT*, int);
 		virtual void setFullScreenDisplayMode(void);
 		virtual void restoreDisplayMode(void);
 		virtual void switchModes(void);
@@ -310,9 +310,9 @@ class LDViewWindow: public CUIWindow
 		HWND hUpdateCancelButton;
 		HWND hUpdateOkButton;
 		char* userLDrawDir;
-		BOOL fullScreen;
-		BOOL fullScreenActive;
-		BOOL switchingModes;
+		bool fullScreen;
+		bool fullScreenActive;
+		bool switchingModes;
 		DWORD standardWindowStyle;
 
 		VideoModeT* videoModes;
@@ -326,8 +326,8 @@ class LDViewWindow: public CUIWindow
 		bool showToolbar;
 		bool topmost;
 		bool visualStyleEnabled;
-		BOOL skipMinimize;
-		BOOL screenSaver;
+		bool skipMinimize;
+		bool screenSaver;
 		int originalMouseX;
 		int originalMouseY;
 		HMENU hFileMenu;

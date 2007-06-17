@@ -2020,7 +2020,7 @@ HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 	HKEY currentKey = parentKey;
 	DWORD disposition;
 	int i;
-	BOOL failed = NO;
+	bool failed = false;
 
 	for (i = 0; i < count && !failed; i++)
 	{
@@ -2036,7 +2036,7 @@ HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 					KEY_WRITE | KEY_READ, NULL, &newKey, &disposition) !=
 					ERROR_SUCCESS)
 				{
-					failed = YES;
+					failed = true;
 				}
 			}
 			else
@@ -2044,7 +2044,7 @@ HKEY TCUserDefaults::openKeyPathUnderKey(HKEY parentKey, const char* keyPath,
 				if (RegOpenKeyEx(currentKey, component, 0, KEY_WRITE | KEY_READ,
 					&newKey) != ERROR_SUCCESS)
 				{
-					failed = YES;
+					failed = true;
 				}
 			}
 			if (currentKey != parentKey)

@@ -27,7 +27,7 @@ class TCAutoreleasePool
 		TCExport void poolProcessReleases(void);
 
 		PoolEntry pool[256];
-		int haveReleases;
+		bool haveReleases;
 #if defined WIN32 && defined _DEBUG && defined __THIS_IS_NOT_DEFINED
 		TCExport void poolRegisterDelete(TCObject*);
 		TCArray* deletions;
