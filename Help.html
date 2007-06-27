@@ -3191,7 +3191,12 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Spefies the default image type for snapshot saves:<BR>
 			1: PNG<BR>
-			2: BMP
+			2: BMP<BR>
+			Note that this only affects the default image type selected in the
+			save dialog.  Command line snapshots use the file extension.  If
+			the <A HREF="#SnapshotSuffixSetting">SnapshotSuffix</A> setting is
+			specified, that overrides the extension in the actual snapshot
+			filename.
 		</TD>
 	</TR>
 	<TR>
@@ -3628,7 +3633,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			SnapshotSuffix
+			<A NAME="SnapshotSuffixSetting">SnapshotSuffix</A>
 		</TD>
 		<TD VALIGN="TOP">
 			String

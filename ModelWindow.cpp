@@ -4249,9 +4249,18 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine,
 
 		if (!snapshotSuffix)
 		{
-			snapshotSuffix = copyString(saveFilename);
+			char *suffixSpot = strrchr(saveFilename, '.');
+
+			if (suffixSpot)
+			{
+				snapshotSuffix = copyString(suffixSpot);
+			}
+			else
+			{
+				snapshotSuffix = copyString("");
+			}
 		}
-		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
+		if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
 		}
