@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib shlwapi.lib $(NoInherit)"
-				OutputFile="$(OutDir)\$(ProjectName).com"
+				OutputFile="$(OutDir)\$(SolutionName).com"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -138,7 +138,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib shlwapi.lib $(NoInherit)"
-				OutputFile="$(OutDir)\$(ProjectName).com"
+				OutputFile="$(OutDir)\$(SolutionName).com"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -222,7 +222,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib shlwapi.lib $(NoInherit)"
-				OutputFile="$(OutDir)\$(ProjectName)A.com"
+				OutputFile="$(OutDir)\$(SolutionName)A.com"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
