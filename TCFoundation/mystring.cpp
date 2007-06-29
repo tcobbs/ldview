@@ -12,6 +12,69 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
+// In Windows, we normally don't have a console.  However, we may have a
+// console.
+bool g_haveConsole = false;
+FILE *g_consoleFile = NULL;
+
+class ConsoleBuffer
+{
+public:
+	~ConsoleBuffer();
+	void vprintf(const char *format, va_list argPtr);
+	void vwprintf(const wchar_t *format, va_list argPtr);
+private:
+	ucstring m_buffer;
+};
+
+ConsoleBuffer g_consoleBuffer;
+
+ConsoleBuffer::~ConsoleBuffer()
+{
+	if (m_buffer.size() > 0)
+	{
+#ifdef TC_NO_UNICODE
+		MessageBoxA(NULL, m_buffer.c_str(), "LDView console output", MB_OK);
+#else // TC_NO_UNICODE
+		MessageBoxW(NULL, m_buffer.c_str(), L"LDView console output", MB_OK);
+#endif // TC_NO_UNICODE
+	}
+}
+
+void ConsoleBuffer::vprintf(const char *format, va_list argPtr)
+{
+	std::string temp;
+	int size;
+
+	temp.resize(65536);
+	size = vsprintf(&temp[0], format, argPtr);
+	temp.resize(size);
+#ifdef TC_NO_UNICODE
+	m_buffer += temp;
+#else // TC_NO_UNICODE
+	std::wstring wtemp;
+	stringtowstring(wtemp, temp);
+	m_buffer += wtemp;
+#endif // TC_NO_UNICODE
+}
+
+void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
+{
+	std::wstring wtemp;
+	int size;
+
+	wtemp.resize(65536);
+	size = vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
+	wtemp.resize(size);
+#ifdef TC_NO_UNICODE
+	std::string temp;
+	wstringtostring(temp, wtemp);
+	m_buffer += temp;
+#else // TC_NO_UNICODE
+	m_buffer += wtemp;
+#endif // TC_NO_UNICODE
+}
+
 #else // WIN32
 
 #include <stdlib.h>
@@ -814,6 +877,58 @@ void indentPrintf(int indent, const char *format, ...)
 	va_end(argPtr);
 }
 
+void consoleVPrintf(const char *format, va_list argPtr)
+{
+#ifdef WIN32
+	if (g_haveConsole)
+	{
+		vfprintf(g_consoleFile, format, argPtr);
+		fflush(g_consoleFile);
+	}
+	else
+	{
+		g_consoleBuffer.vprintf(format, argPtr);
+	}
+#else // WIN32
+	vprintf(format, argPtr);
+#endif
+}
+
+void consoleVPrintf(const wchar_t *format, va_list argPtr)
+{
+#ifdef WIN32
+	if (g_haveConsole)
+	{
+		vfwprintf(g_consoleFile, format, argPtr);
+		fflush(g_consoleFile);
+	}
+	else
+	{
+		g_consoleBuffer.vwprintf(format, argPtr);
+	}
+#else // WIN32
+	vwprintf(format, argPtr);
+#endif
+}
+
+void consolePrintf(const char *format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	consoleVPrintf(format, argPtr);
+	va_end(argPtr);
+}
+
+void consolePrintf(const wchar_t *format, ...)
+{
+	va_list argPtr;
+
+	va_start(argPtr, format);
+	consoleVPrintf(format, argPtr);
+	va_end(argPtr);
+}
+
 void debugVPrintf(int level, const char *format, va_list argPtr)
 {
 	if (debugLevel >= level)
@@ -1389,3 +1504,12 @@ void stringtowstring(std::wstring &dst, const std::string &src)
 	mbstowstring(dst, src.c_str(), src.length());
 }
 
+#ifdef WIN32
+
+void runningWithConsole(void)
+{
+	g_haveConsole = true;
+	g_consoleFile = fopen("CONOUT$", "w");
+}
+
+#endif // WIN32

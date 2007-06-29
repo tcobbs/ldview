@@ -86,6 +86,8 @@ TCExport int getDebugLevel(void);
 TCExport void debugPrintf(const char *format, ...);
 TCExport void debugPrintf(int level, const char *format, ...);
 TCExport void indentPrintf(int indent, const char *format, ...);
+TCExport void consolePrintf(const char *format, ...);
+TCExport void consolePrintf(const wchar_t *format, ...);
 
 TCExport void processEscapedString(char *string);
 TCExport void processEscapedString(wchar_t *string);
@@ -101,6 +103,8 @@ char *ucstringtoutf8(CUCSTR src, int length = -1);
 UCSTR utf8toucstring(const char *src, int length = -1);
 
 #ifdef WIN32
+
+void runningWithConsole(void);
 
 #define strcasecmp stricmp
 #define strncasecmp strnicmp

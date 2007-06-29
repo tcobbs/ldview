@@ -61,8 +61,8 @@ bool CLDViewThumbExtractor::processFile(
 		L"-PreferenceSet=Thumbnails -SnapshotSuffix=.bmp",
 		m_ldviewPath.c_str(), datPath, imageFilename, m_size.cx, m_size.cy,
 		windowWidth, windowHeight);
-	memset(&startupInfo, 0, sizeof(STARTUPINFO));
-	startupInfo.cb = sizeof(STARTUPINFO);
+	memset(&startupInfo, 0, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
 	startupInfo.dwFlags = STARTF_USEPOSITION;
 	startupInfo.dwX = 0;
 	startupInfo.dwY = 0;

@@ -4271,6 +4271,11 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine,
 		else
 		{
 			delete snapshotSuffix;
+			if (fromCommandLine)
+			{
+				consolePrintf(TCLocalStrings::get(
+					_UC("ConsoleSnapshotFailed")));
+			}
 			return false;
 		}
 		delete snapshotSuffix;
