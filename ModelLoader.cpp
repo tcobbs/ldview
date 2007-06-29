@@ -144,11 +144,12 @@ void ModelLoader::startup(void)
 			LDVExtensionsSetup::havePixelBufferExtension())
 		{
 			parentWindow->openModel(commandLineFilename, true);
-			if (modelWindow->saveSnapshot(snapshotFilename, true))
-			{
-				parentWindow->shutdown();
-				savedSnapshot = true;
-			}
+			// Note: even if the snapshot save fails, we don't want to continue.
+			// The user will get an error in the event of a snapshot save
+			// failure.
+			modelWindow->saveSnapshot(snapshotFilename, true);
+			parentWindow->shutdown();
+			savedSnapshot = true;
 		}
 		if (!savedSnapshot)
 		{
