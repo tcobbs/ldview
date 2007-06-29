@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x501
 #include <TCFoundation/TCDefines.h>
 #include <windows.h>
 #include <windowsx.h>
@@ -19,28 +20,32 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
+typedef BOOL (__stdcall *PFNATTACHCONSOLE)(DWORD dwProcessId);
+
 void createConsole(void)
 {
-	COORD size = {80, 1000};
-	SMALL_RECT rect = {0, 0, 79, 24};
-//	HANDLE hOrigStdOut;
-	HANDLE hStdOut;
-	SECURITY_ATTRIBUTES securityAttributes;
+	if (AllocConsole())
+	{
+		COORD size = {80, 1000};
+		SMALL_RECT rect = {0, 0, 79, 24};
+//		HANDLE hOrigStdOut;
+		HANDLE hStdOut;
+		SECURITY_ATTRIBUTES securityAttributes;
 
-	AllocConsole();
-	securityAttributes.nLength = sizeof SECURITY_ATTRIBUTES;
-	securityAttributes.lpSecurityDescriptor = NULL;
-	securityAttributes.bInheritHandle = TRUE;
-	hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-//	hStdOut = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
-//		FILE_SHARE_READ | FILE_SHARE_WRITE, &securityAttributes,
-//		CONSOLE_TEXTMODE_BUFFER, NULL);
-	SetConsoleScreenBufferSize(hStdOut, size);
-	SetConsoleWindowInfo(hStdOut, TRUE, &rect);
-	SetConsoleActiveScreenBuffer(hStdOut);
-//	SetStdHandle(STD_OUTPUT_HANDLE, hStdOut);
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONIN$", "r", stdin);
+		securityAttributes.nLength = sizeof SECURITY_ATTRIBUTES;
+		securityAttributes.lpSecurityDescriptor = NULL;
+		securityAttributes.bInheritHandle = TRUE;
+		hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+//		hStdOut = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
+//			FILE_SHARE_READ | FILE_SHARE_WRITE, &securityAttributes,
+//			CONSOLE_TEXTMODE_BUFFER, NULL);
+		SetConsoleScreenBufferSize(hStdOut, size);
+		SetConsoleWindowInfo(hStdOut, TRUE, &rect);
+		SetConsoleActiveScreenBuffer(hStdOut);
+//		SetStdHandle(STD_OUTPUT_HANDLE, hStdOut);
+		freopen("CONOUT$", "w", stdout);
+		freopen("CONIN$", "r", stdin);
+	}
 }
 
 bool isScreenSaver(void)
@@ -413,8 +418,48 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	ModelLoader* modelLoader;
 	bool screenSaver = isScreenSaver();
 	int retValue;
-//	TCDictionary* testDict = new TCDictionary;
+	HMODULE hKernel32 = LoadLibrary("kernel32.dll");
+	PFNATTACHCONSOLE pAttachConsole = NULL;
 
+	if (hKernel32 != NULL)
+	{
+		pAttachConsole =
+			(PFNATTACHCONSOLE)GetProcAddress(hKernel32, "AttachConsole");
+	}
+	if (pAttachConsole != NULL)
+	{
+		// The AttachConsole system call wasn't introduced until Windows XP.  So
+		// load it out of kernel32 dynamically (to prevent symbol not found
+		// errors at runtime), and verify that we actually get a function
+		// pointer out of the DLL before continuing.  Note that we could do a
+		// GetVersionEx call to verify Windows XP or later, but we'd still have
+		// to do the GetProcAddress, and not doing the NULL checks there would
+		// just be sloppy.
+		STARTUPINFO startupInfo;
+		memset(&startupInfo, 0, sizeof(startupInfo));
+		startupInfo.cb = sizeof(startupInfo);
+		GetStartupInfo(&startupInfo);
+		if (pAttachConsole != NULL && startupInfo.lpTitle != NULL &&
+			strcasecmp(startupInfo.lpTitle, "command line ldview") == 0)
+		{
+			// Attempt to attach to my parent process's console.  This will
+			// output to that console.  If we get here, the title in the
+			// STARTUPINFO matches the special one set by LDView.com.  That 
+			// makes it highly likely that we're running inside LDView.com,
+			// which will delay cmd.exe from regaining control until after
+			// we exit.  Therefore it's safe to output to the existing
+			// console.
+			if (pAttachConsole(ATTACH_PARENT_PROCESS))
+			{
+				// The below function causes subsequent calls to consolePrintf
+				// to go to the console that we just attached to.  Otherwise
+				// they get gathered up and shown in a message box at
+				// application shutdown.
+				runningWithConsole();
+			}
+		}
+	}
+	//printf(message);
 #ifdef _DEBUG
 	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;

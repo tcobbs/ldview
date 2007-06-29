@@ -99,7 +99,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	appName[len] = 0;
 	_tcsncpy_s(exeFilename, fullLen, argv[0], len);
 	_tcscpy_s(&exeFilename[len], fullLen - len, _T(".exe"));
-	_tprintf(_T("Launching %s\n"), exeFilename);
 	return launchExe(appName, exeFilename, argc, argv);
 }
 

@@ -37,6 +37,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDViewThumbs", "LDViewThumb
 		{29CAFA41-FC7A-4DF3-BC68-6E73B5308E26} = {29CAFA41-FC7A-4DF3-BC68-6E73B5308E26}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "Launcher\Launcher.vcproj", "{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug ANSI|Win32 = Debug ANSI|Win32
@@ -117,6 +119,16 @@ Global
 		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.PartialDebug|Win32.Build.0 = Debug|Win32
 		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.Release ANSI|Win32.ActiveCfg = Release ANSI|Win32
 		{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}.Release|Win32.ActiveCfg = Release|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Debug ANSI|Win32.ActiveCfg = Debug|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Debug ANSI|Win32.Build.0 = Debug|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Debug|Win32.Build.0 = Debug|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.PartialDebug|Win32.ActiveCfg = Debug|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.PartialDebug|Win32.Build.0 = Debug|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Release ANSI|Win32.ActiveCfg = Release ANSI|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Release ANSI|Win32.Build.0 = Release ANSI|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Release|Win32.ActiveCfg = Release|Win32
+		{BF98540E-AF21-49EA-9C6D-2A9ABA97E933}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
