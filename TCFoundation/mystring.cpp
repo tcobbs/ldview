@@ -15,7 +15,7 @@
 // In Windows, we normally don't have a console.  However, we may have a
 // console.
 bool g_haveConsole = false;
-FILE *g_consoleFile = NULL;
+HANDLE g_hStdOut = NULL;
 
 class ConsoleBuffer
 {
@@ -44,11 +44,16 @@ ConsoleBuffer::~ConsoleBuffer()
 void ConsoleBuffer::vprintf(const char *format, va_list argPtr)
 {
 	std::string temp;
-	int size;
 
+#if _MSC_VER < 1400	// VC < VC 2005
+	int size;
 	temp.resize(65536);
 	size = vsprintf(&temp[0], format, argPtr);
 	temp.resize(size);
+#else
+	temp.resize(_vscprintf(format, argPtr));
+	vsprintf(&temp[0], format, argPtr);
+#endif
 #ifdef TC_NO_UNICODE
 	m_buffer += temp;
 #else // TC_NO_UNICODE
@@ -61,11 +66,16 @@ void ConsoleBuffer::vprintf(const char *format, va_list argPtr)
 void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
 {
 	std::wstring wtemp;
-	int size;
 
+#if _MSC_VER < 1400	// VC < VC 2005
+	int size;
 	wtemp.resize(65536);
-	size = vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
+	size = vswprintf(&wtemp[0], format, argPtr);
 	wtemp.resize(size);
+#else
+	wtemp.resize(_vscwprintf(format, argPtr));
+	vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
+#endif
 #ifdef TC_NO_UNICODE
 	std::string temp;
 	wstringtostring(temp, wtemp);
@@ -882,8 +892,27 @@ void consoleVPrintf(const char *format, va_list argPtr)
 #ifdef WIN32
 	if (g_haveConsole)
 	{
-		vfprintf(g_consoleFile, format, argPtr);
-		fflush(g_consoleFile);
+#ifdef TC_NO_UNICODE
+		vprintf(format, argPtr);
+		fflush(stdout);
+#else // TC_NO_UNICODE
+		static std::string temp;
+		std::wstring wtemp;
+		DWORD bytesWritten;
+
+#if _MSC_VER < 1400	// VC < VC 2005
+		int size;
+		temp.resize(65536);
+		size = vsprintf(&temp[0], format, argPtr);
+		temp.resize(size);
+#else
+		temp.resize(_vscprintf(format, argPtr));
+		vsprintf(&temp[0], format, argPtr);
+#endif
+		stringtowstring(wtemp, temp);
+		WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
+		FlushFileBuffers(g_hStdOut);
+#endif // TC_NO_UNICODE
 	}
 	else
 	{
@@ -899,8 +928,25 @@ void consoleVPrintf(const wchar_t *format, va_list argPtr)
 #ifdef WIN32
 	if (g_haveConsole)
 	{
-		vfwprintf(g_consoleFile, format, argPtr);
-		fflush(g_consoleFile);
+#ifdef TC_NO_UNICODE
+		vwprintf(format, argPtr);
+		fflush(stdout);
+#else // TC_NO_UNICODE
+		std::wstring wtemp;
+		DWORD bytesWritten;
+
+#if _MSC_VER < 1400	// VC < VC 2005
+		int size;
+		wtemp.resize(65536);
+		size = vswprintf(&wtemp[0], format, argPtr);
+		wtemp.resize(size);
+#else
+		wtemp.resize(_vscwprintf(format, argPtr));
+		vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
+#endif
+		WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
+		FlushFileBuffers(g_hStdOut);
+#endif // TC_NO_UNICODE
 	}
 	else
 	{
@@ -933,6 +979,13 @@ void debugVPrintf(int level, const char *format, va_list argPtr)
 {
 	if (debugLevel >= level)
 	{
+#ifdef WIN32
+		if (g_haveConsole)
+		{
+			consoleVPrintf(format, argPtr);
+			return;
+		}
+#endif // WIN32
 		vprintf(format, argPtr);
 	}
 }
@@ -1509,7 +1562,7 @@ void stringtowstring(std::wstring &dst, const std::string &src)
 void runningWithConsole(void)
 {
 	g_haveConsole = true;
-	g_consoleFile = fopen("CONOUT$", "w");
+	g_hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 #endif // WIN32

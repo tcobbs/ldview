@@ -661,6 +661,7 @@ void LDVExtensionsSetup::printPixelFormat(HDC hdc, int index)
 		values);
 	for (i = 0; i < pfIntAttribCount; i++)
 	{
-		printf("%31s: 0x%08X %d\n", pfIntAttribNames[i], values[i], values[i]);
+		debugPrintf("%31s: 0x%08X %d\n", pfIntAttribNames[i], values[i],
+			values[i]);
 	}
 }

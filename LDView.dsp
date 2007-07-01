@@ -121,10 +121,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
 # Begin Source File
 
-SOURCE=.\LDView.rc
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDVExtensionsSetup.cpp
 # End Source File
 # Begin Source File
@@ -161,6 +157,10 @@ InputPath=.\Help\LDView.hpj
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDView.rc
 # End Source File
 # Begin Source File
 
@@ -208,10 +208,6 @@ SOURCE=.\SSPreview.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl;fi;fd"
 # Begin Source File
 
-SOURCE=.\Resource.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\LDVExtensionsSetup.h
 # End Source File
 # Begin Source File
@@ -233,6 +229,10 @@ SOURCE=.\ModelWindow.h
 # Begin Source File
 
 SOURCE=.\PartsListDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
 

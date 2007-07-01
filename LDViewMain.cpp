@@ -379,8 +379,10 @@ static bool setupUserDefaults(
 		appName = "Travis Cobbs/LDView Screen Saver";
 		TCUserDefaults::setAppName(appName);
 	}
+#ifdef _DEBUG
 	// Set the debug level before selecting a pref set.
 	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, false));
+#endif // _DEBUG
 	sessionName =
 		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
 	if (sessionName && sessionName[0])
@@ -418,54 +420,28 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	ModelLoader* modelLoader;
 	bool screenSaver = isScreenSaver();
 	int retValue;
-	HMODULE hKernel32 = LoadLibrary("kernel32.dll");
-	PFNATTACHCONSOLE pAttachConsole = NULL;
+	STARTUPINFO startupInfo;
+	bool fromConsole = false;
 
-	if (hKernel32 != NULL)
+	memset(&startupInfo, 0, sizeof(startupInfo));
+	startupInfo.cb = sizeof(startupInfo);
+	GetStartupInfo(&startupInfo);
+	if (startupInfo.lpTitle != NULL &&
+		stringHasCaseInsensitivePrefix(startupInfo.lpTitle, "command line ")
+		&& strcasestr(startupInfo.lpTitle, "ldview") != NULL)
 	{
-		pAttachConsole =
-			(PFNATTACHCONSOLE)GetProcAddress(hKernel32, "AttachConsole");
+		runningWithConsole();
+		fromConsole = true;
 	}
-	if (pAttachConsole != NULL)
-	{
-		// The AttachConsole system call wasn't introduced until Windows XP.  So
-		// load it out of kernel32 dynamically (to prevent symbol not found
-		// errors at runtime), and verify that we actually get a function
-		// pointer out of the DLL before continuing.  Note that we could do a
-		// GetVersionEx call to verify Windows XP or later, but we'd still have
-		// to do the GetProcAddress, and not doing the NULL checks there would
-		// just be sloppy.
-		STARTUPINFO startupInfo;
-		memset(&startupInfo, 0, sizeof(startupInfo));
-		startupInfo.cb = sizeof(startupInfo);
-		GetStartupInfo(&startupInfo);
-		if (pAttachConsole != NULL && startupInfo.lpTitle != NULL &&
-			strcasecmp(startupInfo.lpTitle, "command line ldview") == 0)
-		{
-			// Attempt to attach to my parent process's console.  This will
-			// output to that console.  If we get here, the title in the
-			// STARTUPINFO matches the special one set by LDView.com.  That 
-			// makes it highly likely that we're running inside LDView.com,
-			// which will delay cmd.exe from regaining control until after
-			// we exit.  Therefore it's safe to output to the existing
-			// console.
-			if (pAttachConsole(ATTACH_PARENT_PROCESS))
-			{
-				// The below function causes subsequent calls to consolePrintf
-				// to go to the console that we just attached to.  Otherwise
-				// they get gathered up and shown in a message box at
-				// application shutdown.
-				runningWithConsole();
-			}
-		}
-	}
-	//printf(message);
 #ifdef _DEBUG
 	int _debugFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	_debugFlag |= _CRTDBG_LEAK_CHECK_DF;
 	_CrtSetDbgFlag(_debugFlag);
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
-	createConsole();
+	if (!fromConsole)
+	{
+		createConsole();
+	}
 //	MessageBox(NULL, "Attach a debugger now...", "Debug", MB_OK);
 #endif // _DEBUG
 	bool udok = setupUserDefaults(lpCmdLine, screenSaver,
