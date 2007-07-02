@@ -20,7 +20,7 @@ OBJDIR = Debug
 OBJDIR = Release
 !ENDIF
 
-all: $(OBJDIR) $(OBJDIR)\LDView.exe
+all: $(OBJDIR) $(OBJDIR)\LDView.exe launcher thumbs
 
 distclean:
 	cd Help
@@ -55,6 +55,9 @@ distclean:
 	cd ..\..
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd LDViewThumbs
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..
+	cd Launcher
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 
@@ -130,6 +133,13 @@ installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss LDViewThumbs\Release\
 thumbs:		LDViewThumbs\Release\LDViewThumbs.dll
 LDViewThumbs\Release\LDViewThumbs.dll: LDViewThumbs\*.cpp TCFoundation\$(OBJDIR)\TCFoundation.lib
 	cd LDViewThumbs
+	$(MAKE) -nologo -f Makefile.vc all
+	cd ..
+
+launcher:	Launcher\$(OBJDIR)\LDView.com
+
+Launcher\$(OBJDIR)\LDView.com:
+	cd Launcher
 	$(MAKE) -nologo -f Makefile.vc all
 	cd ..
 		
