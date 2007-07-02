@@ -208,6 +208,16 @@ link version.lib /nologo /dll /incremental:no /pdb:Release\LDView-Hungarian.pdb 
 
 cd ..\..
 
+cd Launcher
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.idb  *.res *lib *.dll *.com
+cd ..
+cl %CFLAGS% /D _CONSOLE /D _UNICODE /D UNICODE /D _MBCS /FpRelease\Launcher.pch /FoRelease\ /Yc /Zi /GL /c *.cpp
+link kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib Release\Launcher.obj /nologo /subsystem:console /machine:I386 /incremental:no /pdb:Release\LDView.pdb /out:Release\LDView.com
+
+cd ..
+
 cd LDViewThumbs
 if not exist Release mkdir Release
 cd Release
