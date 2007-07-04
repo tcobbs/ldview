@@ -2730,6 +2730,36 @@ bool ModelViewerWidget::saveImage(char *filename, int imageWidth,
 				}
 			}
 		}
+		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
+			NULL, false);
+		if (!snapshotSuffix)
+		{
+			char *suffixSpot = strrchr(filename, '.');
+			if (suffixSpot)
+			{
+				snapshotSuffix = copyString(suffixSpot);
+			}
+			else
+			{
+				snapshotSuffix = copyString("");
+			}
+		}
+		if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
+		{
+			saveImageType = PNG_IMAGE_TYPE_INDEX;
+		}
+		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
+		{
+			saveImageType = BMP_IMAGE_TYPE_INDEX;
+		}
+		else
+		{
+			delete snapshotSuffix;
+			wprintf(L"%ls\n",TCLocalStrings::get(L"ConsoleSnapshotFailed"));
+			return false;
+		}
+		delete snapshotSuffix;
+
 		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 		{
 			retValue = writePng(filename, imageWidth, imageHeight, buffer,
