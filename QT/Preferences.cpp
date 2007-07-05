@@ -108,10 +108,11 @@ void Preferences::doPrefSetsApply(void)
 	}
 	else
 	{
-		if (!sessionName || strcmp(sessionName, getSelectedPrefSet()) != 0)
+		const char *selectedPrefSet = getSelectedPrefSet();
+		if (!sessionName || !selectedPrefSet ||
+			strcmp(sessionName, selectedPrefSet) != 0)
 		{
-			TCUserDefaults::setSessionName(getSelectedPrefSet(),
-				PREFERENCE_SET_KEY);
+			TCUserDefaults::setSessionName(selectedPrefSet, PREFERENCE_SET_KEY);
 			changed = true;
 		}
 	}
