@@ -1602,6 +1602,7 @@ void LDrawModelViewer::drawLights(void)
 void LDrawModelViewer::setLightVector(const TCVector &value)
 {
 	TCFloat length = value.length();
+	bool oldForce = forceOneLight();
 
 	if (length)
 	{
@@ -1614,6 +1615,10 @@ void LDrawModelViewer::setLightVector(const TCVector &value)
 	else
 	{
 		flags.defaultLightVector = false;
+	}
+	if (forceOneLight() != oldForce)
+	{
+		flags.needsLightingSetup = true;
 	}
 }
 
