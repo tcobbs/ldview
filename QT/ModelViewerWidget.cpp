@@ -2409,6 +2409,7 @@ bool ModelViewerWidget::writeImage(char *filename, int width, int height,
 {
     TCImage *image = new TCImage;
     bool retValue;
+	char comment[1024];
 
     if (saveAlpha)
     {
@@ -2419,6 +2420,21 @@ bool ModelViewerWidget::writeImage(char *filename, int width, int height,
     image->setImageData((TCByte*)buffer);
     image->setFormatName(formatName);
     image->setFlipped(true);
+	if (strcasecmp(formatName, "PNG") == 0)
+	{
+		strcpy(comment, "Software:!:!:LDView");
+	}
+	else
+	{
+		strcpy(comment, "Created by LDView");
+	}
+	image->setComment(comment);
+	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0, false))
+	{
+		image->autoCrop((TCByte)modelViewer->getBackgroundR(),
+			(TCByte)modelViewer->getBackgroundG(),
+			(TCByte)modelViewer->getBackgroundB());
+	}
     retValue = image->saveFile(filename, staticImageProgressCallback, this);
     image->release();
     return retValue;
