@@ -15,6 +15,7 @@
 // In Windows, we normally don't have a console.  However, we may have a
 // console.
 bool g_haveConsole = false;
+bool g_bRealConsole = false;
 HANDLE g_hStdOut = NULL;
 
 class ConsoleBuffer
@@ -73,8 +74,12 @@ void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
 	size = vswprintf(&wtemp[0], format, argPtr);
 	wtemp.resize(size);
 #else
-	wtemp.resize(_vscwprintf(format, argPtr));
+	// While std::wstring (and std::string) appear to always allocate space for
+	// a terminating NULL character, their documentation indicates that they
+	// might not.
+	wtemp.resize(_vscwprintf(format, argPtr) + 1);
 	vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
+	wtemp.resize(wtemp.size() - 1);
 #endif
 #ifdef TC_NO_UNICODE
 	std::string temp;
@@ -615,6 +620,82 @@ bool isRelativePath(const char* path)
 #endif // WIN32
 }
 
+char* findRelativePath(const char* cwd, const char* path)
+{
+	int lastSlash = 0;
+	int cwdLen = strlen(cwd);
+	int pathLen = strlen(path);
+	char *fixedCwd;
+	char *fixedPath;
+	char **cwdComponents;
+	int cwdCount;
+	int dotDotCount;
+	char *retValue;
+	const char *diffSection;
+	int i;
+
+	if (isRelativePath(cwd))
+	{
+		// cwd must be a full path.
+		return NULL;
+	}
+	if (isRelativePath(path))
+	{
+#ifdef WIN32
+		if (path[0] == '/' || path[0] == '\\')
+		{
+			// In Windows, it's not an absolute path if it doesn't start with a
+			// drive letter followed by a colon.  However, it's not truly a
+			// relative path either, since you can't tag it on to cwd and have
+			// it work.
+			return NULL;
+		}
+#endif // WIN32
+		// If path is already relative, it should be relative to cwd; return it.
+		return copyString(path);
+	}
+#ifdef WIN32
+	if (strncasecmp(cwd, path, 2) != 0)
+	{
+		// The two paths are on different drives; relative path is impossible.
+		return NULL;
+	}
+#endif // WIN32
+	fixedCwd = copyString(cwd);
+	fixedPath = copyString(path);
+#ifdef WIN32
+	replaceStringCharacter(fixedCwd, '\\', '/');
+	convertStringToLower(fixedCwd);
+	replaceStringCharacter(fixedPath, '\\', '/');
+	convertStringToLower(fixedPath);
+#endif // WIN32
+	for (i = 0; i < cwdLen && i < pathLen; i++)
+	{
+		if (fixedCwd[i] == '/' && fixedPath[i] == '/')
+		{
+			lastSlash = i;
+		}
+		else if (fixedCwd[i] != fixedPath[i])
+		{
+			break;
+		}
+	}
+	cwdComponents = componentsSeparatedByString(&fixedCwd[lastSlash], "/",
+		cwdCount);
+	dotDotCount = cwdCount - 2;	// There's a / at the beginning and end.
+	diffSection = &path[lastSlash + 1];
+	retValue = new char[dotDotCount * 3 + strlen(diffSection) + 1];
+	for (i = 0; i < dotDotCount; i++)
+	{
+		strcpy(&retValue[i * 3], "../");
+	}
+	strcpy(&retValue[i * 3], diffSection);
+	deleteStringArray(cwdComponents, cwdCount);
+	delete fixedCwd;
+	delete fixedPath;
+	return retValue;
+}
+
 char* directoryFromPath(const char* path)
 {
 	if (path)
@@ -646,6 +727,69 @@ char* directoryFromPath(const char* path)
 	{
 		return NULL;
 	}
+}
+
+char* cleanedUpPath(const char* path)
+{
+	char *newPath = copyString(path);
+
+#ifdef WIN32
+	replaceStringCharacter(newPath, '\\', '/');
+#endif // WIN32
+	if (strstr(newPath, "../"))
+	{
+		char **pathComponents;
+		int pathCount;
+		//int newCount;
+		std::stack<std::string> pathStack;
+		std::list<std::string> pathList;
+		std::list<std::string>::const_iterator it;
+		int len = 1;	// The terminating NULL.
+		int offset = 0;
+
+		pathComponents = componentsSeparatedByString(newPath, "/", pathCount);
+		// Note that we're intentionally skipping the first component.  That's
+		// either empty (for a Unix path), or the drive letter followed by a
+		// colon (for a Windows path).  We'll put it back later, though.
+		for (int i = 1; i < pathCount; i++)
+		{
+			if (strcmp(pathComponents[i], "..") == 0)
+			{
+				if (pathStack.size() > 0)
+				{
+					pathStack.pop();
+				}
+			}
+			else
+			{
+				pathStack.push(pathComponents[i]);
+			}
+		}
+		while (pathStack.size() > 0)
+		{
+			pathList.push_front(pathStack.top());
+			pathStack.pop();
+			len += pathList.front().size() + 1;
+		}
+		len += strlen(pathComponents[0]);
+		delete newPath;
+		newPath = new char[len];
+		strcpy(newPath, pathComponents[0]);
+		offset = strlen(newPath);
+		for (it = pathList.begin(); it != pathList.end(); it++)
+		{
+			// The following line leaves the string without a NULL terminator,
+			// but the line after that puts one back.
+			newPath[offset++] = '/';
+			strcpy(&newPath[offset], it->c_str());
+			offset += it->size();
+		}
+		deleteStringArray(pathComponents, pathCount);
+	}
+#ifdef WIN32
+	replaceStringCharacter(newPath, '/', '\\');
+#endif // WIN32
+	return newPath;
 }
 
 char* filenameFromPath(const char* path)
@@ -910,8 +1054,17 @@ void consoleVPrintf(const char *format, va_list argPtr)
 		vsprintf(&temp[0], format, argPtr);
 #endif
 		stringtowstring(wtemp, temp);
-		WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
-		FlushFileBuffers(g_hStdOut);
+		if (g_bRealConsole)
+		{
+			// g_bRealConsole means we're running from an actual console app,
+			// not a child process of the launcher app.
+			WriteConsoleW(g_hStdOut, wtemp.c_str(), wtemp.size(), &bytesWritten, NULL);
+		}
+		else
+		{
+			WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
+			FlushFileBuffers(g_hStdOut);
+		}
 #endif // TC_NO_UNICODE
 	}
 	else
@@ -942,10 +1095,21 @@ void consoleVPrintf(const wchar_t *format, va_list argPtr)
 		wtemp.resize(size);
 #else
 		wtemp.resize(_vscwprintf(format, argPtr));
-		vswprintf(&wtemp[0], wtemp.size(), format, argPtr);
+		// Note: second arg is size of buffer.  Buffer in std::string has one
+		// extra character for the terminating NULL.
+		vswprintf(&wtemp[0], wtemp.size() + 1, format, argPtr);
 #endif
-		WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
-		FlushFileBuffers(g_hStdOut);
+		if (g_bRealConsole)
+		{
+			// g_bRealConsole means we're running from an actual console app,
+			// not a child process of the launcher app.
+			WriteConsoleW(g_hStdOut, wtemp.c_str(), wtemp.size(), &bytesWritten, NULL);
+		}
+		else
+		{
+			WriteFile(g_hStdOut, wtemp.c_str(), wtemp.size() * 2, &bytesWritten, NULL);
+			FlushFileBuffers(g_hStdOut);
+		}
 #endif // TC_NO_UNICODE
 	}
 	else
@@ -1559,9 +1723,10 @@ void stringtowstring(std::wstring &dst, const std::string &src)
 
 #ifdef WIN32
 
-void runningWithConsole(void)
+void runningWithConsole(bool bRealConsole /*= false*/)
 {
 	g_haveConsole = true;
+	g_bRealConsole = bRealConsole;
 	g_hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
