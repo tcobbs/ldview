@@ -252,7 +252,7 @@ protected:
 	void setSetting(TCFloat &setting, TCFloat value, const char *key,
 		bool commit);
 	void setSetting(std::string &setting, const std::string &value,
-		const char *key, bool commit);
+		const char *key, bool commit, bool isPath = false);
 	void setSetting(LongVector &setting, const LongVector &value,
 		const char *key, bool commit);
 	void setSetting(TCVector &setting, const TCVector &value,
@@ -268,7 +268,7 @@ protected:
 	int getIntSetting(const char *key, int defaultValue = 0);
 	float getFloatSetting(const char *key, float defaultValue = 0.0f);
 	std::string getStringSetting(const char *key,
-		const char *defaultValue = NULL);
+		const char *defaultValue = NULL, bool isPath = false);
 	void getColorSetting(const char *key, int &r, int &g, int &b,
 		TCULong defaultColor = 0);
 
