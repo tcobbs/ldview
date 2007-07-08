@@ -39,6 +39,7 @@ public:
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const = 0;
 	virtual bool isActionLine(void) { return false; }
+	virtual bool isShapeLine(void) { return false; }
 	virtual LDLModel *getParentModel(void) { return m_parentModel; }
 	virtual LDLMainModel *getMainModel(void);
 	virtual bool isValid(void) const { return m_valid; }

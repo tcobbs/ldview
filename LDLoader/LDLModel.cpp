@@ -43,6 +43,7 @@ LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 LDLModel::LDLModel(void)
 	:m_filename(NULL),
 	m_name(NULL),
+	m_author(NULL),
 	m_description(NULL),
 	m_fileLines(NULL),
 	m_mainModel(NULL),
@@ -90,6 +91,7 @@ void LDLModel::dealloc(void)
 {
 	delete m_filename;
 	delete m_name;
+	delete m_author;
 	delete m_description;
 	TCObject::release(m_fileLines);
 	sm_modelCount--;
@@ -573,23 +575,23 @@ const char* LDLModel::lDrawDir(void)
 
 void LDLModel::readComment(LDLCommentLine *commentLine)
 {
-	char filename[1024];
+	char buf[1024];
 
-	if (commentLine->getMPDFilename(filename, sizeof(filename)))
+	if (commentLine->getMPDFilename(buf, sizeof(buf)))
 	{
-		replaceStringCharacter(filename, '\\', '/');
+		replaceStringCharacter(buf, '\\', '/');
 		if (m_flags.mainModelLoaded)
 		{
 			if (m_activeLineCount == 0)
 			{
 				m_activeLineCount = commentLine->getLineNumber() - 1;
 			}
-			if (!getLoadedModels()->objectForKey(filename))
+			if (!getLoadedModels()->objectForKey(buf))
 			{
 				LDLModel *subModel = new LDLModel;
 
 				subModel->setFilename(m_filename);
-				initializeNewSubModel(subModel, filename);
+				initializeNewSubModel(subModel, buf);
 				m_activeMPDModel = subModel;
 			}
 		}
@@ -670,6 +672,10 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 		{
 			m_flags.noShrink = true;
 		}
+	}
+	else if (commentLine->getAuthor(buf, sizeof(buf)))
+	{
+		m_author = copyString(buf);
 	}
 }
 
