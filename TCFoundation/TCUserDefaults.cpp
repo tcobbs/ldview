@@ -45,13 +45,15 @@ TCUserDefaults::TCUserDefaultsCleanup::~TCUserDefaultsCleanup(void)
 void TCUserDefaults::TCUserDefaultsFlusher::dealloc(void)
 {
 	TCUserDefaults::flush();
+	getCurrentUserDefaults()->flushRequested = false;
 }
 
 TCUserDefaults::TCUserDefaults(void)
 	:appName(NULL),
 	sessionName(NULL),
 	commandLine(NULL),
-	useIni(false)
+	useIni(false),
+	flushRequested(false)
 #ifdef WIN32
 	,hAppDefaultsKey(NULL),
 	hSessionKey(NULL)
@@ -198,8 +200,11 @@ void TCUserDefaults::initAppPath(void)
 			if (isRelativePath(dirPart))
 			{
 				appPath = currentDir;
-				appPath += pathSeparator;
-				appPath += argv0;
+				if (dirPart[0])
+				{
+					appPath += pathSeparator;
+					appPath += dirPart;
+				}
 			}
 			else
 			{
@@ -537,6 +542,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
+	requestFlush();
 #endif // _QT
 #if defined(__APPLE__) && !defined(_QT)
 	NSString *nsKey = [NSString stringWithCString: key encoding:
@@ -592,6 +598,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	QString qvalue;
 	ucstringtoqstring(qvalue, value);
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), qvalue);
+	requestFlush();
 #endif // _QT
 #if defined(__APPLE__) && !defined(_QT)
 	NSString *nsKey = [NSString stringWithCString: key encoding:
@@ -974,6 +981,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
+	requestFlush();
 #endif // _QT
 #if defined(__APPLE__) && !defined(_QT)
 	NSString *nsKey = [NSString stringWithCString: key encoding:
@@ -1232,7 +1240,6 @@ void TCUserDefaults::defFlush(void)
 	if (useIni)
 	{
 		iniFlush();
-		return;
 	}
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
@@ -1308,12 +1315,9 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 #ifdef _QT
 	char key[1024];
 	QStringList subkeyList;
-	int i;
-	int count;
 	
 	sprintf(key, "/%s/Sessions/", appName);
 	subkeyList = qSettings->subkeyList(key);
-	count = subkeyList.count();
 	for (QStringList::const_iterator it = subkeyList.begin();
 		it != subkeyList.end(); it++)
 	{
@@ -1588,19 +1592,25 @@ void TCUserDefaults::iniSetStringForKey(
 	delete newKey;
 }
 
-void TCUserDefaults::iniChanged(void)
+void TCUserDefaults::requestFlush(void)
 {
-	if (!iniChanges)
+	if (!flushRequested)
 	{
 		TCUserDefaultsFlusher *flusher = new TCUserDefaultsFlusher;
 
-		iniChanges = true;
 		// When the flusher gets released by the autorelease pool, it will
 		// trigger a flush, which will write our settings to disk.  This way we
 		// can make a bunch of settings changes, and only have to write to disk
 		// once.
 		flusher->autorelease();
+		flushRequested = true;
 	}
+}
+
+void TCUserDefaults::iniChanged(void)
+{
+	iniChanges = true;
+	requestFlush();
 }
 
 UCSTR TCUserDefaults::iniStringForKey(const char *key, bool sessionSpecific)
@@ -2309,6 +2319,7 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 		sprintf(dstSubKey, "%s/%s", dstKey, (const char *)*it);
 		qSettings->writeEntry(dstSubKey, qSettings->readEntry(srcSubKey));
 	}
+	requestFlush();
 }
 
 #endif // _QT
