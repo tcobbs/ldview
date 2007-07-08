@@ -24,6 +24,8 @@
 #include "../QT/misc.h"
 #endif // _QT
 
+#define APP_PATH_PREFIX "::AppDir::"
+
 TCUserDefaults* TCUserDefaults::currentUserDefaults = NULL;
 
 TCUserDefaults::TCUserDefaultsCleanup TCUserDefaults::userDefaultsCleanup;
@@ -168,6 +170,16 @@ void TCUserDefaults::initAppPath(void)
 	{
 		char *spot = strrchr(programPath, '\\');
 
+		if (islower(programPath[0]))
+		{
+			// Windows sucks: GetModuleFileName uses a lower case letter for the
+			// drive letter.  GetOpenFilename uses an upper case letter.  People
+			// expect this to be upper case.  When running in INI mode, the
+			// drive letter from appPath can show up in the recent files list,
+			// since any files loaded from that drive go into the INI file with
+			// a tag indicating that they're relative to the program path.
+			programPath[0] = (char)toupper(programPath[0]);
+		}
 		if (spot)
 		{
 			spot[1] = 0;
@@ -333,6 +345,19 @@ char* TCUserDefaults::stringForKey(const char* key, const char* defaultValue,
 		defaultValue);
 }
 
+void TCUserDefaults::setPathForKey(const char* value, const char* key,
+								   bool sessionSpecific)
+{
+	getCurrentUserDefaults()->defSetPathForKey(value, key, sessionSpecific);
+}
+
+char* TCUserDefaults::pathForKey(const char* key, const char* defaultValue,
+								 bool sessionSpecific)
+{
+	return getCurrentUserDefaults()->defPathForKey(key, sessionSpecific,
+		defaultValue);
+}
+
 UCSTR TCUserDefaults::stringForKeyUC(const char* key, CUCSTR defaultValue,
 									 bool sessionSpecific)
 {
@@ -352,6 +377,21 @@ long TCUserDefaults::longForKey(const char* key, long defaultValue,
 {
 	return getCurrentUserDefaults()->defLongForKey(key, sessionSpecific,
 		defaultValue);
+}
+
+void TCUserDefaults::setBoolForKey(bool value, const char* key,
+								   bool sessionSpecific)
+{
+	getCurrentUserDefaults()->defSetLongForKey(value ? 1 : 0, key,
+		sessionSpecific ? 1 : 0);
+}
+
+bool TCUserDefaults::boolForKey(const char* key, bool defaultValue,
+								bool sessionSpecific)
+{
+	long value = getCurrentUserDefaults()->defLongForKey(key, sessionSpecific,
+		defaultValue ? 1 : 0);
+	return value != 0;
 }
 
 void TCUserDefaults::setLongVectorForKey(const LongVector &value,
@@ -581,6 +621,56 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	sendValueChangedAlert(key);
 }
 #endif // TC_NO_UNICODE
+
+void TCUserDefaults::defSetPathForKey(const char* value, const char* key,
+									  bool sessionSpecific)
+{
+#ifdef TCUD_INI_SUPPORT
+	if (useIni && appPath.size() > 0)
+	{
+		char *relativePath = findRelativePath(appPath.c_str(), value);
+
+		if (relativePath)
+		{
+			char *pathValue = copyString(APP_PATH_PREFIX, strlen(relativePath));
+
+			strcat(pathValue, relativePath);
+			defSetStringForKey(pathValue, key, sessionSpecific);
+			delete pathValue;
+			delete relativePath;
+			return;
+		}
+	}
+#endif // TCUD_INI_SUPPORT
+	defSetStringForKey(value, key, sessionSpecific);
+}
+
+char* TCUserDefaults::defPathForKey(const char* key, bool sessionSpecific,
+									const char* defaultValue)
+{
+#ifdef TCUD_INI_SUPPORT
+	if (useIni && appPath.size() > 0)
+	{
+		char *stringValue = defStringForKey(key, sessionSpecific, defaultValue);
+
+		if (stringValue && stringHasPrefix(stringValue, APP_PATH_PREFIX))
+		{
+			int prefixLength = strlen(APP_PATH_PREFIX);
+			char *pathValue = copyString(appPath.c_str(),
+				strlen(stringValue) - prefixLength);
+			char *retValue;
+
+			strcat(pathValue, &stringValue[prefixLength]);
+			retValue = cleanedUpPath(pathValue);
+			delete stringValue;
+			delete pathValue;
+			return retValue;
+		}
+		return stringValue;
+	}
+#endif // TCUD_INI_SUPPORT
+	return defStringForKey(key, sessionSpecific, defaultValue);
+}
 
 int TCUserDefaults::defCommandLineIndexForKey(const char *key)
 {
@@ -1314,8 +1404,10 @@ void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 
 #ifdef TCUD_INI_SUPPORT
 
-void TCUserDefaults::iniSetSessionName(const char *value, bool copyCurrent)
+bool TCUserDefaults::iniSetSessionName(const char *value, bool copyCurrent)
 {
+	bool isNewSession = false;
+
 	if (copyCurrent && value)
 	{
 		IniKey &sessionsKey = rootIniKey.children["Sessions"];
@@ -1340,11 +1432,13 @@ void TCUserDefaults::iniSetSessionName(const char *value, bool copyCurrent)
 					}
 				}
 			}
+			isNewSession = true;
 			iniChanged();
 		}
 	}
 	delete sessionName;
 	sessionName = copyString(value);
+	return isNewSession;
 }
 
 void TCUserDefaults::iniGetAllKeys(TCStringArray *allKeys)
@@ -1663,10 +1757,12 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 {
 	if (value != sessionName)
 	{
+		bool isNewSession = false;
+
 #ifdef TCUD_INI_SUPPORT
 		if (useIni)
 		{
-			iniSetSessionName(value, copyCurrent);
+			isNewSession = iniSetSessionName(value, copyCurrent);
 		}
 		else
 		{
@@ -1692,6 +1788,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 				sprintf(srcKey, "/%s/", appName);
 			}
 			copyTree(dstKey, srcKey, key);
+			isNewSession = true;
 		}
 		delete sessionName;
 		sessionName = copyString(value);
@@ -1718,6 +1815,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 			}
 			[[NSUserDefaults standardUserDefaults] setPersistentDomain:
 				sessionDict forName: getSessionKey()];
+			isNewSession = true;
 		}
 		else
 		{
@@ -1783,6 +1881,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 					delete dummyKeyName;
 				}
 				hSessionKey = openSessionKey();
+				isNewSession = true;
 			}
 		}
 		else
@@ -1798,6 +1897,10 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 #ifdef TCUD_INI_SUPPORT
 		}
 #endif // TCUD_INI_SUPPORT
+		if (isNewSession)
+		{
+			defSetStringForKey("DO NOT DELETE.", "_SessionPlaceholder", true);
+		}
 	}
 	if (saveKey)
 	{
