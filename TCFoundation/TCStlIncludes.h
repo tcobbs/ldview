@@ -22,6 +22,7 @@
 #include <vector>
 #include <list>
 #include <algorithm>
+#include <stack>
 #ifdef WIN32
 
 #if defined(_MSC_VER) && _MSC_VER <= 1200
