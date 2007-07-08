@@ -93,7 +93,7 @@ void Preferences::doPrefSetsApply(void)
 	{
 		if (oldPrefSetNames->indexOfString(getPrefSet(i)) < 0)
 		{
-			TCUserDefaults::setSessionName(getPrefSet(i));
+			TCUserDefaults::setSessionName(getPrefSet(i), PREFERENCE_SET_KEY);
 		}
 	}
 	oldPrefSetNames->release();
