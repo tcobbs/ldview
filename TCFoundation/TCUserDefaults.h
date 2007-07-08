@@ -137,6 +137,7 @@ class TCExport TCUserDefaults: public TCObject
 		const char *defGetIniPath(void) const { return iniPath.c_str(); }
 		static std::string arrayKey(const char *key, int index);
 		static void initAppPath(void);
+		void requestFlush(void);
 
 		std::string iniPath;
 		char* appName;
@@ -144,6 +145,7 @@ class TCExport TCUserDefaults: public TCObject
 		static TCUserDefaults* currentUserDefaults;
 		TCStringArray* commandLine;
 		bool useIni;
+		bool flushRequested;
 
 #ifdef WIN32
 		HKEY openAppDefaultsKey(void);
@@ -221,6 +223,7 @@ class TCExport TCUserDefaults: public TCObject
 		};
 		static char *argv0;
 		static std::string appPath;
+		friend class TCUserDefaultsFlusher;
 		friend class TCUserDefaultsCleanup;
 };
 
