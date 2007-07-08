@@ -7,6 +7,7 @@
 class LDLShapeLine : public LDLActionLine
 {
 public:
+	virtual bool isShapeLine(void) { return true; }
 	virtual bool parse(void);
 	virtual int getNumPoints(void) const = 0;
 	virtual int getNumControlPoints(void) const { return 0; }

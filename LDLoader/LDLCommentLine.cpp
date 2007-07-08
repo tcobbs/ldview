@@ -282,6 +282,26 @@ bool LDLCommentLine::isMovedToMeta(void) const
 	return false;
 }
 
+bool LDLCommentLine::getAuthor(char *author, int maxLength) const
+{
+	const char *authorSpot = NULL;
+	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 author "))
+	{
+		authorSpot = &m_processedLine[strlen("0 author ")];
+	}
+	else if (stringHasCaseInsensitivePrefix(m_processedLine, "0 author: "))
+	{
+		authorSpot = &m_processedLine[strlen("0 author: ")];
+	}
+	if (authorSpot)
+	{
+		strncpy(author, authorSpot, maxLength);
+		author[maxLength - 1] = 0;
+		return true;
+	}
+	return false;
+}
+
 bool LDLCommentLine::containsBFCCommand(const char *command) const
 {
 	if (isBFCMeta())
