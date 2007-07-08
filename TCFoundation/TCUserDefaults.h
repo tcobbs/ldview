@@ -40,11 +40,19 @@ class TCExport TCUserDefaults: public TCObject
 #endif //TC_NO_UNICODE
 		static char* stringForKey(const char* key,
 			const char* defaultValue = NULL, bool sessionSpecific = true);
+		static void setPathForKey(const char* value,
+			const char* key, bool sessionSpecific = true);
+		static char* pathForKey(const char* key,
+			const char* defaultValue = NULL, bool sessionSpecific = true);
 		static UCSTR stringForKeyUC(const char* key, CUCSTR defaultValue = NULL,
 			bool sessionSpecific = true);
 		static void setLongForKey(long value, const char* key,
 			bool sessionSpecific = true);
 		static long longForKey(const char* key, long defaultValue = 0,
+			bool sessionSpecific = true);
+		static void setBoolForKey(bool value, const char *key,
+			bool sessionSpecific = true);
+		static bool boolForKey(const char *key, bool defaultValue = false,
 			bool sessionSpecific = true);
 		static void setLongVectorForKey(const LongVector &value,
 			const char* key, bool sessionSpecific = true);
@@ -90,6 +98,10 @@ class TCExport TCUserDefaults: public TCObject
 			bool sessionSpecific);
 #endif //TC_NO_UNICODE
 		char* defStringForKey(const char* key, bool sessionSpecific,
+			const char* defaultValue = NULL);
+		void defSetPathForKey(const char* value, const char* key,
+			bool sessionSpecific);
+		char* defPathForKey(const char* key, bool sessionSpecific,
 			const char* defaultValue = NULL);
 		UCSTR defStringForKeyUC(const char* key, bool sessionSpecific,
 			CUCSTR defaultValue = NULL);
@@ -178,7 +190,7 @@ class TCExport TCUserDefaults: public TCObject
 		void iniRemoveSession(const char *value);
 		void iniGetAllSessionNames(TCStringArray *allSessionNames);
 		void iniGetAllKeys(TCStringArray *allKeys);
-		void iniSetSessionName(const char *value, bool copyCurrent);
+		bool iniSetSessionName(const char *value, bool copyCurrent);
 		void iniChanged();
 #endif // TCUD_INI_SUPPORT
 #ifdef _QT
