@@ -164,7 +164,7 @@ LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 	standardWindowStyle = windowStyle;
 	if (!recentFiles)
 	{
-		recentFiles = new TCStringArray(10);
+		recentFiles = new TCStringArray(10, FALSE);
 		populateRecentFiles();
 	}
 	if (!extraSearchDirs)
@@ -2926,7 +2926,7 @@ void LDViewWindow::chooseNewLDrawDir(void)
 	{
 		if (oldDir)
 		{
-			TCUserDefaults::setStringForKey(oldDir, LDRAWDIR_KEY, false);
+			TCUserDefaults::setPathForKey(oldDir, LDRAWDIR_KEY, false);
 			LDLModel::setLDrawDir(oldDir);
 		}
 	}
@@ -4074,7 +4074,7 @@ void LDViewWindow::populateRecentFiles(void)
 		char *filename;
 
 		sprintf(key, "%s/File%02d", RECENT_FILES_KEY, i);
-		filename = TCUserDefaults::stringForKey(key, NULL, false);
+		filename = TCUserDefaults::pathForKey(key, NULL, false);
 		if (filename)
 		{
 			recentFiles->addString(filename);
@@ -4102,7 +4102,7 @@ void LDViewWindow::recordRecentFiles(void)
 		filename = recentFiles->stringAtIndex(i - 1);
 		if (filename)
 		{
-			TCUserDefaults::setStringForKey(filename, key, false);
+			TCUserDefaults::setPathForKey(filename, key, false);
 		}
 		else
 		{
@@ -4560,7 +4560,7 @@ void LDViewWindow::addFileType(UCSTR fileTypes, CUCSTR description,
 
 char* LDViewWindow::getLDrawDir(void)
 {
-	char* lDrawDir = TCUserDefaults::stringForKey(LDRAWDIR_KEY, NULL, false);
+	char* lDrawDir = TCUserDefaults::pathForKey(LDRAWDIR_KEY, NULL, false);
 
 	if (!lDrawDir)
 	{
@@ -4643,7 +4643,7 @@ BOOL LDViewWindow::promptForLDrawDir(const char *prompt)
 		if (SHGetPathFromIDList(itemIdList, path))
 		{
 			stripTrailingPathSeparators(path);
-			TCUserDefaults::setStringForKey(path, LDRAWDIR_KEY, false);
+			TCUserDefaults::setPathForKey(path, LDRAWDIR_KEY, false);
 			LDLModel::setLDrawDir(path);
 			return TRUE;
 		}
@@ -4663,7 +4663,7 @@ BOOL LDViewWindow::promptForLDrawDir(const char *prompt)
 		if (userLDrawDir)
 		{
 			stripTrailingPathSeparators(userLDrawDir);
-			TCUserDefaults::setStringForKey(userLDrawDir, LDRAWDIR_KEY, false);
+			TCUserDefaults::setPathForKey(userLDrawDir, LDRAWDIR_KEY, false);
 			LDLModel::setLDrawDir(userLDrawDir);
 			delete userLDrawDir;
 			userLDrawDir = NULL;
@@ -4777,7 +4777,7 @@ char* LDViewWindow::lastOpenPath(char* pathKey)
 	}
 	if (verifyLDrawDir())
 	{
-		char* path = TCUserDefaults::stringForKey(pathKey, NULL, false);
+		char* path = TCUserDefaults::pathForKey(pathKey, NULL, false);
 
 		if (!path)
 		{
@@ -4799,16 +4799,16 @@ UCSTR LDViewWindow::lastOpenPathUC(char* pathKey)
 	}
 	if (verifyLDrawDir())
 	{
-		UCCHAR* path = TCUserDefaults::stringForKeyUC(pathKey, NULL, false);
+		char* path = TCUserDefaults::pathForKey(pathKey, NULL, false);
+		UCCHAR* pathUC;
 
 		if (!path)
 		{
-			char *patha = getLDrawDir();
-
-			path = mbstoucstring(patha);
-			delete patha;
+			path = getLDrawDir();
 		}
-		return path;
+		pathUC = mbstoucstring(path);
+		delete path;
+		return pathUC;
 	}
 	else
 	{
@@ -4834,7 +4834,7 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 
 			strncpy(path, filename, length);
 			path[length] = 0;
-			TCUserDefaults::setStringForKey(path, pathKey, false);
+			TCUserDefaults::setPathForKey(path, pathKey, false);
 			delete path;
 		}
 		if (recentFiles && !stringHasCaseInsensitiveSuffix(filename, ".tmp"))
