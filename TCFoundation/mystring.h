@@ -64,6 +64,8 @@ TCExport char* convertStringToLower(char*);
 TCExport char* filenameFromPath(const char*);
 TCExport char* directoryFromPath(const char*);
 TCExport bool isRelativePath(const char*);
+TCExport char* findRelativePath(const char* cwd, const char* path);
+TCExport char* cleanedUpPath(const char* path);
 
 TCExport char* findExecutable(const char* executable);
 
@@ -104,12 +106,19 @@ UCSTR utf8toucstring(const char *src, int length = -1);
 
 #ifdef WIN32
 
-void runningWithConsole(void);
+void runningWithConsole(bool bRealConsole = false);
 
+#if _MSC_VER < 1400	// VC < VC 2005
 #define strcasecmp stricmp
 #define strncasecmp strnicmp
 #define wcscasecmp wcsicmp
 #define wcsncasecmp wcsnicmp
+#else //  VC < VC 2005
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#define wcscasecmp _wcsicmp
+#define wcsncasecmp _wcsnicmp
+#endif // VC < VC 2005
 
 #else // WIN32
 
