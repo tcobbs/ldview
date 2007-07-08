@@ -86,6 +86,15 @@ is set as the default project, and build.
 =============================== Visual Studio 6 ===============================
 ===============================================================================
 
+Note: If you build with Visual Studio 6, you won't get INI support in
+TCUserDefaults.  That means that it will still use the registry even when
+running off a removable drive, and paths will always be absolute.  I know that
+sucks, but the C++ compiler in Visual Studio 6 isn't good enough to do what I
+needed it to do for the easiest implementation, and I wasn't willing to spend
+the extra time needed to write code that would compile there.  (Specifically,
+a std::map in VS6 cannot have a value type that refers back to the map itself.
+Look at IniKeyMap in TCUserDefaults.h to see what doesn't work there.)
+
 Install the February 2003 Microsoft Platform SDK.  This should be available from
 the following location:
 
