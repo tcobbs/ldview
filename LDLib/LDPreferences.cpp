@@ -528,7 +528,7 @@ void LDPreferences::loadInventorySettings(void)
 	m_invColumnOrder = getLongVectorSetting(INV_COLUMN_ORDER_KEY,
 		m_invColumnOrder);
 	m_invLastSavePath = getStringSetting(INV_LAST_SAVE_PATH_KEY,
-		m_invLastSavePath.c_str());
+		m_invLastSavePath.c_str(), true);
 }
 
 void LDPreferences::commitSettings(void)
@@ -945,16 +945,28 @@ void LDPreferences::setSetting(TCFloat &setting, TCFloat value, const char *key,
 	}
 }
 
-void LDPreferences::setSetting(std::string &setting, const std::string &value,
-								const char *key, bool commit)
+void LDPreferences::setSetting(
+	std::string &setting,
+	const std::string &value,
+	const char *key,
+	bool commit,
+	bool isPath /*= false*/)
 {
 	if (setting != value || (m_changedSettings[key] && commit))
 	{
 		setting = value;
 		if (commit)
 		{
-			TCUserDefaults::setStringForKey(value.c_str(), key,
-				!m_globalSettings[key]);
+			if (isPath)
+			{
+				TCUserDefaults::setPathForKey(value.c_str(), key,
+					!m_globalSettings[key]);
+			}
+			else
+			{
+				TCUserDefaults::setStringForKey(value.c_str(), key,
+					!m_globalSettings[key]);
+			}
 			m_changedSettings.erase(key);
 		}
 		else if (!m_initializing)
@@ -1012,13 +1024,24 @@ float LDPreferences::getFloatSetting(const char *key, float defaultValue)
 	return TCUserDefaults::floatForKey(key, defaultValue, !m_globalSettings[key]);
 }
 
-std::string LDPreferences::getStringSetting(const char *key,
-											const char *defaultValue)
+std::string LDPreferences::getStringSetting(
+	const char *key,
+	const char *defaultValue /*= NULL*/,
+	bool isPath /*= false*/)
 {
-	char *tmpString = TCUserDefaults::stringForKey(key, defaultValue,
-		!m_globalSettings[key]);
+	char *tmpString;
 	std::string result;
 
+	if (isPath)
+	{
+		tmpString = TCUserDefaults::pathForKey(key, defaultValue,
+			!m_globalSettings[key]);
+	}
+	else
+	{
+		tmpString = TCUserDefaults::stringForKey(key, defaultValue,
+			!m_globalSettings[key]);
+	}
 	if (tmpString)
 	{
 		result = tmpString;
@@ -1595,7 +1618,7 @@ void LDPreferences::setInvColumnOrder(const LongVector &value, bool commit)
 
 void LDPreferences::setInvLastSavePath(const char *value, bool commit)
 {
-	setSetting(m_invLastSavePath, value, INV_LAST_SAVE_PATH_KEY, commit);
+	setSetting(m_invLastSavePath, value, INV_LAST_SAVE_PATH_KEY, commit, true);
 }
 
 void LDPreferences::setDefaultZoom(TCFloat value, bool commit)
