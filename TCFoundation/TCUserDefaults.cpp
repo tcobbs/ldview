@@ -1314,9 +1314,10 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 	sprintf(key, "/%s/Sessions/", appName);
 	subkeyList = qSettings->subkeyList(key);
 	count = subkeyList.count();
-	for (i = 0; i < count; i++)
+	for (QStringList::const_iterator it = subkeyList.begin();
+		it != subkeyList.end(); it++)
 	{
-		allSessionNames->addString(subkeyList[i]);
+		allSessionNames->addString(*it);
 	}
 #endif // _QT
 #if defined(__APPLE__) && !defined(_QT)
@@ -2284,30 +2285,28 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 {
 	QStringList subkeyList = qSettings->subkeyList(srcKey);
 	QStringList entryList = qSettings->entryList(srcKey);
-	int i;
-	int count = subkeyList.count();
+	QStringList::const_iterator it;
 
 	if (strcmp(dstKey, skipKey) == 0)
 	{
 		return;
 	}
-	for (i = 0; i < count; i++)
+	for (it = subkeyList.begin(); it != subkeyList.end(); it++)
 	{
 		char srcSubkey[1024];
 		char dstSubkey[1024];
 
-		sprintf(srcSubkey, "%s/%s", srcKey, (const char *)subkeyList[i]);
-		sprintf(dstSubkey, "%s/%s", dstKey, (const char *)subkeyList[i]);
+		sprintf(srcSubkey, "%s/%s", srcKey, (const char *)*it);
+		sprintf(dstSubkey, "%s/%s", dstKey, (const char *)*it);
 		copyTree(dstSubkey, srcSubkey, skipKey);
 	}
-	count = entryList.count();
-	for (i = 0; i < count; i++)
+	for (it = entryList.begin(); it != entryList.end(); it++)
 	{
 		char srcSubKey[1024];
 		char dstSubKey[1024];
 
-		sprintf(srcSubKey, "%s/%s", srcKey, (const char *)entryList[i]);
-		sprintf(dstSubKey, "%s/%s", dstKey, (const char *)entryList[i]);
+		sprintf(srcSubKey, "%s/%s", srcKey, (const char *)*it);
+		sprintf(dstSubKey, "%s/%s", dstKey, (const char *)*it);
 		qSettings->writeEntry(dstSubKey, qSettings->readEntry(srcSubKey));
 	}
 }
