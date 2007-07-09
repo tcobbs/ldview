@@ -2790,7 +2790,7 @@ bool ModelViewerWidget::saveImage(char *filename, int imageWidth,
 	return retValue;
 }
 
-bool ModelViewerWidget::fileExists(char* filename)
+bool ModelViewerWidget::fileExists(const char* filename)
 {
 	FILE* file = fopen(filename, "r");
 																				
@@ -3137,6 +3137,7 @@ void ModelViewerWidget::doPartList(void)
 			PartList *partlist = new PartList(this, htmlInventory);
 			if (partlist->exec() == QDialog::Accepted)
 			{
+				bool done = false;
 				QString filename = modelViewer->getFilename();
 				int findSpot = filename.findRev(QRegExp("/\\"));
 				if (findSpot < (int)filename.length())
@@ -3145,22 +3146,45 @@ void ModelViewerWidget::doPartList(void)
 				if (findSpot < (int)filename.length())
                     filename=filename.left(findSpot);
 				filename += ".html";
-            	QFileDialog *fileDialog = new QFileDialog(
-			    	htmlInventory->getLastSavePath(),
-                	QString(TCLocalStrings::get("HtmlFileType"))+" (*.html)",
-                	this,
-                	"open model dialog",
-                	true);
-            	fileDialog->setCaption(QString(
-							TCLocalStrings::get("GeneratePartsList")));
-            	fileDialog->setIcon(getimage("LDViewIcon16.png"));
-				fileDialog->setMode(QFileDialog::AnyFile);
-				fileDialog->setSelection(filename);
-        		if (fileDialog->exec() == QDialog::Accepted)
-        		{
-					QString filename = fileDialog->selectedFile();
-					doPartList(htmlInventory, partsList, filename.ascii());
-        		}
+				findSpot = filename.findRev('/');
+				if (findSpot < (int)filename.length())
+					filename = filename.mid(findSpot + 1);
+				QString startWith = QString(htmlInventory->getLastSavePath()) +
+					QString("/") + filename;
+				QString filter = QString(TCLocalStrings::get("HtmlFileType")) +
+					" (*.html)";
+				while (!done)
+				{
+					QString htmlFilename = QFileDialog::getSaveFileName(
+						startWith,
+						filter,
+						this,
+						"Generate Parts List dialog",
+						TCLocalStrings::get("GeneratePartsList"));
+					if (htmlFilename.isEmpty())
+					{
+						done = true;
+					}
+					else
+					{
+						if (fileExists(htmlFilename.ascii()))
+						{
+							QString prompt =
+								TCLocalStrings::get("OverwritePrompt");
+
+							prompt.replace("%s", htmlFilename);
+							if (QMessageBox::warning(this, "LDView", prompt,
+								QMessageBox::Yes, QMessageBox::No) ==
+								QMessageBox::No)
+							{
+								continue;
+							}
+						}
+						doPartList(htmlInventory, partsList,
+							htmlFilename.ascii());
+						done = true;
+					}
+				}
 			}
 			htmlInventory->release();
 			partsList->release();

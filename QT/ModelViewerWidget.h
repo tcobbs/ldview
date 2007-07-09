@@ -91,7 +91,7 @@ public:
 	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
-	bool fileExists(char* filename);
+	bool fileExists(const char* filename);
 	bool shouldOverwriteFile(char* filename);
 	bool doFileSave(char *saveFilename);
 	bool getSaveFilename(char* saveFilename, int len);
