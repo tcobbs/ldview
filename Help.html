@@ -56,6 +56,10 @@ TABLE.SettingsList TD
 	border-right: 1px solid #BFBFA5;
 	padding: 2px 8px;
 }
+TABLE.SampleData TD
+{
+	border-style: none;
+}
 .NoWrap
 {
 	white-space: nowrap;
@@ -2022,6 +2026,24 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<A NAME="AnisoLevelSetting">AnisoLevel</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Integer
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Anisotropic filtering</I> slider in the
+			<I>Primitives-&gt;Primitive substitution</I> box.  Note that this
+			value is ignored if the
+			<A HREF="#TextureFilterTypeSetting">TextureFilterType</A> setting
+			isn't set to trilinear/anisotropic.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			Antialias
 		</TD>
 		<TD VALIGN="TOP">
@@ -2362,6 +2384,21 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			DrawLightDats
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Use LIGHT.DAT lights</I> check box in the
+			<I>Effects-&gt;Lighting</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			Editor
 		</TD>
 		<TD VALIGN="TOP">
@@ -2573,6 +2610,21 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			IgnoreAniso
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_EXT_texture_filter_anisotropic OpenGL
+			extension, even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			IgnoreMultiDrawArrays
 		</TD>
 		<TD VALIGN="TOP">
@@ -2695,6 +2747,74 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			InventoryExternalCss
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Generate external style sheet</I> check box in
+			the <I>Parts List</I> dialog.  Since you can't currently generate a
+			Parts List HTML page from the command line, setting this setting
+			from the command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			InventoryPartImages
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show part images</I> check box in the <I>Parts
+			List</I> dialog.  Since you can't currently generate a Parts List
+			HTML page from the command line, setting this setting from the
+			command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			InventoryShowFile
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show generated web page</I> check box in the
+			<I>Parts List</I> dialog.  Since you can't currently generate a
+			Parts List HTML page from the command line, setting this setting
+			from the command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			InventoryShowModel
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show model</I> check box in the <I>Parts
+			List</I> dialog.  Since you can't currently generate a Parts List
+			HTML page from the command line, setting this setting from the
+			command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			LastOpenPath
 		</TD>
 		<TD VALIGN="TOP">
@@ -2751,6 +2871,43 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Effects-&gt;Lighting</I> check box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			LightVector
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Sets the direction for the main light source.  This must be three
+			decimal numbers, separated by commas.  Sample values:<BR>
+			<TABLE CLASS="SampleData">
+				<TR>
+					<TD ALIGN="RIGHT">0,0,1:</TD>
+					<TD>Straight ahead (default)</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">-1,1,1:</TD>
+					<TD>Upper left</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">1,1,1:</TD>
+					<TD>Upper right</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">-1,-1,1:</TD>
+					<TD>Lower left</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">1,-1,1:</TD>
+					<TD>Lower right</TD>
+				</TR>
+			</TABLE>
 		</TD>
 	</TR>
 	<TR>
@@ -2843,6 +3000,21 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			NoLightGeom
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Hide LIGHT.DAT geometry</I> check box in the
+			<I>Effects-&gt;Lighting</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			OneLight
 		</TD>
 		<TD VALIGN="TOP">
@@ -2853,6 +3025,21 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Alternate setup</I> check box in the
+			<I>Effects-&gt;Lighting</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			OptionalStandardLight
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Replace standard light</I> check box in the
 			<I>Effects-&gt;Lighting</I> box.
 		</TD>
 	</TR>
@@ -3735,7 +3922,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			TextureFilterType
+			<A NAME="TextureFilterTypeSetting">TextureFilterType</A>
 		</TD>
 		<TD VALIGN="TOP">
 			Enumerant
@@ -3745,12 +3932,27 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Nearest filtering</I>, <I>Bilinear
-			filtering</I>, and <I>Trilinear filtering</I> radio buttons in the
-			<I>Primitives-&gt;Primitive substitution</I> box.  Selects the texture
-			mode:<BR>
-			9984: Nearest filtering<BR>
-			9985: Bilinear filtering<BR>
-			9987: Trilinear filtering
+			filtering</I>, <I>Trilinear filtering</I>, and <I>Anisotropic
+			filtering</I> radio buttons in the <I>Primitives-&gt;Primitive
+			 substitution</I> box.  Selects the texture mode:<BR>
+			<TABLE CLASS="SampleData">
+				<TR>
+					<TD ALIGN="RIGHT">9984:</TD>
+					<TD>Nearest filtering</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">9985:</TD>
+					<TD>Bilinear filtering</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT" VALIGN="TOP">9987:</TD>
+					<TD>Trilinear filtering or Anisotropic filtering<BR>
+					If <A HREF="#AnisoLevelSetting">AnisoLevel</A> is set to 1,
+					this gives you trilinear filtering.  If it is set to a value
+					greater than 1, and your video card supports anisotropic
+					filtering, this gives you anisotropic filtering.</TD>
+				</TR>
+			</TABLE>
 		</TD>
 	</TR>
 	<TR>
