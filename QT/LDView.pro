@@ -88,7 +88,7 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
           ../Icons/LightAngleUR.png 
 
 TEMPLATE	=app
-CONFIG	+= qt opengl thread warn_on debug
+CONFIG	+= qt opengl thread warn_on release
 DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include
 exists($(QTDIR)/include/Qt3Support/q3button.h){
