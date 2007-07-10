@@ -102,12 +102,14 @@ ALINK="#0080D0">
 <LI><A HREF="#FileMenu">File Menu</A></LI>
 <LI><A HREF="#EditMenu">Edit Menu</A></LI>
 <LI><A HREF="#ViewMenu">View Menu</A></LI>
+<LI><A HREF="#ToolsMenu">Tools Menu</A></LI>
 <LI><A HREF="#HelpMenu">Help Menu</A></LI>
 </UL></LI>
 <LI><A HREF="#Toolbar">Toolbar</A></LI>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
 <LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
+<LI><A HREF="#PartsListDialog">Parts List Dialog</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -495,10 +497,10 @@ where there is no visible menu.
 	<TR VALIGN="TOP">
 		<TD></TD>
 		<TD ALIGN="RIGHT">Prompt:</TD>
-		<TD>Enables polling.  When a change is detected, a panel is displayed
+		<TD>Enables polling.  When a change is detected, a dialog is displayed
 		asking you if you want to reload the model file.  This option only
 		polls for changes when LDView is the foreground application.  The
-		panel will thus normally be presented to you when you switch to the
+		dialog will thus normally be presented to you when you switch to the
 		running LDView application after making changes to your model in some
 		other application.</TD>
 	</TR>
@@ -579,7 +581,7 @@ where there is no visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Preferences:</TD>
-		<TD COLSPAN=2>Display the <A HREF="#Prefs">Preferences</A> panel.</TD>
+		<TD COLSPAN=2>Display the <A HREF="#Prefs">Preferences</A> dialog.</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
@@ -602,11 +604,6 @@ where there is no visible menu.
 		<A HREF="#Fullscreen">fullscreen</A> video mode.
 		If you are already in fullscreen mode, Ctrl+Enter switches back to
 		windowed mode.</TD>
-	</TR>
-	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
-		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
-		Window</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Toolbar:</TD>
@@ -700,22 +697,6 @@ where there is no visible menu.
 		can use the W, A, S, D, Q, E, R, and F keys to move the camera.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP><A NAME="ShowViewInfo">Show View Info:</A></TD>
-		<TD COLSPAN=2>This shows a panel that contains the model's current
-		rotation matrix and zoom level (camera distance).  Hitting OK copies
-		this information to the clipboard in a format suitable for use with
-		LDView on the command line.  Note that the camera's position and viewing
-		angle aren't recorded at this time, so it's recommended that you
-		not try to use this in Fly-through Mode or after having panned.</TD>
-	</TR>
-	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
-		<TD COLSPAN=2>This shows a panel that contains information about the
-		current camera position as is needed in POV-Ray.  Hitting OK copies a
-		POV-Ray-compatible camera declaration into the clipboard.  This can be
-		directly pasted into a POV-Ray file to replace the existing camera.</TD>
-	</TR>
-	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>XX-Bit Modes:</TD>
 		<TD COLSPAN=2>Submenu containing all of the available fullscreen video
 		modes with a bit-depth of XX (where XX will usually be 15, 16, 24, or
@@ -729,12 +710,45 @@ where there is no visible menu.
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
 	</TR>
 	<TR>
+		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="ToolsMenu">Tools
+		Menu</A></B></FONT></TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
+		Window</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Parts List:</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#PartsListDialog">Parts List
+		Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP><A NAME="ShowViewInfo">Show View Info:</A></TD>
+		<TD COLSPAN=2>This shows a dialog that contains the model's current
+		rotation matrix and zoom level (camera distance).  Hitting OK copies
+		this information to the clipboard in a format suitable for use with
+		LDView on the command line.  Note that the camera's position and viewing
+		angle aren't recorded at this time, so it's recommended that you
+		not try to use this in Fly-through Mode or after having panned.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
+		<TD COLSPAN=2>This shows a dialog that contains information about the
+		current camera position as is needed in POV-Ray.  Hitting OK copies a
+		POV-Ray-compatible camera declaration into the clipboard.  This can be
+		directly pasted into a POV-Ray file to replace the existing camera.</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
+	</TR>
+	<TR>
 		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">OpenGL Driver Info:</TD>
-		<TD COLSPAN=2>This shows a panel containing information about your
+		<TD COLSPAN=2>This shows a dialog containing information about your
 		OpenGL driver.  I may request this information from you if you are
 		experiencing problems.  The text in the box can be selected, and then
 		copied to the clipboard by hitting Ctrl+C.</TD>
@@ -787,16 +801,16 @@ depth and resolution combination, and then select the <SPAN CLASS="NoWrap">View-
 Fullscreen menu option, or hit Ctrl+Enter.  To exit full screen mode, either
 hit Ctrl+Enter again or hit Escape.  Note that this feature does not work
 properly on all video cards.  If it doesn't work on your video card, you should
-get an error panel after the screen resolution is changed.  After you dismiss
-the error panel, it should automatically switch back to windowed mode.  While
+get an error dialog after the screen resolution is changed.  After you dismiss
+the error dialog, it should automatically switch back to windowed mode.  While
 in fullscreen mode you can spin the model around with the mouse, and zoom in
 and out the same way you did in windowed mode.
 <P>
 As long as your video card supports 2D Windows functionality while in fullscreen
-mode, the Open Panel and Preferences panel can be accessed from fullscreen mode
+mode, the Open dialog and Preferences dialog can be accessed from fullscreen mode
 via their keyboard shortcuts  (Ctrl+O for Open File; Ctrl+Shift+P for
 Preferences).  If you are unsure, try Ctrl+O first, and if you don't see an
-Open Panel, hit escape to dismiss the Open Panel that you can't see.  F5 for
+Open dialog, hit escape to dismiss the Open dialog that you can't see.  F5 for
 reload also works--whether or not your video card supports 2D Windows
 funtionality from fullscreen mode--but unless you are displaying a file that
 someone else on your network is modifying, it's not likely to be very useful.
@@ -1033,6 +1047,98 @@ the Errors &amp; Warnings window isn't set to show automatically.
 <BR>
 <P>
 </P>
+<A NAME="PartsListDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Parts List Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Parts List Dialog is used to generate an HTML file containing a parts list
+for the currently loaded LDraw model.
+<P>
+At the top, it contains a list of settings to use during parts list generation.
+At the bottom, it contains a list of columns to include in
+the parts list.  Check all the columns you want to include, uncheck all the
+columns you don't want to include, and use the <I>Up</I> and <I>Down</I> buttons
+to change the order of the columns.
+</P>
+<P>
+<FONT SIZE="+2"><B>Settings</B></FONT><BR>
+</P>
+<P>
+<I>Show model</I><BR>
+Check this to include a screenshot of the model at the top of the parts list.
+The screenshot will be saved in a file with the same name as the parts list HTML
+file, except that the .html extension will be replaced with .png.<BR>
+<TABLE>
+	<TR VALIGN="TOP">
+		<TD><I>Note:</I></TD>
+		<TD>If an image file already exists with the given name, that image will
+		be used in the parts list; a new image will not be generated.</TD>
+	</TR>
+</TABLE>
+</P>
+<P>
+<I>Generate external style sheet</I><BR>
+Check this to have LDView generate and use an external CSS style sheet, instead
+of including the style information inside the generated HTML file.  LDView will
+then generate a file named LDViewPartsList.css and use that as the style sheet
+for the file.
+<TABLE>
+	<TR VALIGN="TOP">
+		<TD><I>Note:</I></TD>
+		<TD>If a file named LDViewPartsList.css exists in the directory where
+		the parts list HTML is written, LDView will examine its contents.  If
+		the contents match the default LDViewPartsList.css, then the file will
+		be used.  Otherwise, LDView will fall back to putting the style
+		information inside the HTML file.  <B>If you modify LDViewPartsList.css
+		and then generate a new parts list, the new parts list will not use
+		LDViewPartsList.css, no matter what this setting is set to.</TD>
+	</TR>
+</TABLE>
+</P>
+<P>
+<I>Show part images</I><BR>
+Check this to include inline links to <A HREF="http://peeron.com">Peeron.com</A>
+part images in your generated HTML file.  If you check this, you must have an
+active Internet connection in order to generate the parts list, since LDView
+checks to make sure the images exist before linking to them.  LDView does
+<B>not</B> generate the part images.
+</P>
+<P>
+<FONT SIZE="+2"><B>Columns</B></FONT><BR>
+</P>
+<P>
+<I>Part</I><BR>
+This column has the part name and part image.  The image is only present if
+<I>Show part images</I> is checked in the <I>Settings</I> box.  If Peeron.com
+has a part image in the correct color, that will be used.  Otherwise, a generic
+gray part image will be used, and the background color of the image will be set
+to the part color.
+</P>
+<P>
+<I>Color</I><BR>
+This column shows the color of the part.  This includes the LDraw color number,
+the color name (if known), and a color sample.  Note that even if you don't
+include this column, parts are still separated by color in the list.  (If you're
+including the part images, this looks fine; otherwise, it's recommended that you
+don't disable this column.)
+</P>
+<P>
+<I>Quantity</I><BR>
+This column contains the quantity for each part in each color.  Note that the
+total part count for the model is in the header at the top of the file, and is
+not optional.
+</P>
+<P>
+<I>Description</I><BR>
+This column contains the part description (as found in the LDraw file for the
+part).  This is the only column that is disabled by default.
+</P>
 <A NAME="Prefs"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -1043,7 +1149,7 @@ the Errors &amp; Warnings window isn't set to show automatically.
 		</TH>
 	</TR>
 </TABLE>
-Here is a brief description of the items in the Preferences panel (accessed
+Here is a brief description of the items in the Preferences dialog (accessed
 through the Edit-&gt;Preferences menu item).
 
 <P>
@@ -1089,7 +1195,7 @@ This allows you to set the default color.  Normally this is only visible when
 you load a part directly.  Most models don't ever use this color.<BR>
 Note that edge lines on default-colored objects will be black unless you choose
 the exact RGB value used by one of the standard LDraw colors.  The default
-custom colors in the color panel correspond to the first 16 standard LDraw
+custom colors in the color dialog correspond to the first 16 standard LDraw
 colors.  Resetting the General preferences also resets these colors.
 </P>
 <P>
@@ -1835,7 +1941,7 @@ Filename</A></B></FONT><BR>
 </P>
 <P>
 You can specify a filename on the command line, and LDView will open that file
-(if it exists) instead of presenting you with the initial Open Panel.  You must
+(if it exists) instead of presenting you with the initial Open dialog.  You must
 either specify the complete pathname of the file, including the extension
 (e.g. .ldr, .dat, .mpd), or be in the directory that contains the file when you
 run LDView.  Note that if your filename contains spaces, the entire filename
@@ -1912,11 +2018,11 @@ Example:
 Preferences</A></B></FONT><BR>
 </P>
 <P>
-All of the options available in the Preferences Panel can be set from the
+All of the options available in the Preferences dialog can be set from the
 command line, if so desired.  These are all preceded with a - in order to
 indicate that an option is being specified.  Command line settings override
-settings in the Preferences Panel.  They may be saved as a persistent preference
-if you modify them or other preferences via the Preferences Panel.  Otherwise,
+settings in the Preferences dialog.  They may be saved as a persistent preference
+if you modify them or other preferences via the Preferences dialog.  Otherwise,
 the old values will be used the next time you run the program without specifying
 a value for those options on the command line.  Preferences are set on the
 command line in the following manner:
@@ -1930,8 +2036,8 @@ following:
 	LDView -WindowWidth=640 -WindowHeight=480
 </PRE>
 Below is a list of all the possible settings.  Note that while most of these
-settings correspond directly to the Preferences Panel interface, some may have
-inverted logic from the panel (as noted).  The Type column can be any one of the
+settings correspond directly to the Preferences dialog interface, some may have
+inverted logic from the dialog (as noted).  The Type column can be any one of the
 following:
 <P>
 </P>
@@ -1994,7 +2100,7 @@ following:
 The <I>Global?</I> column indicates whether the setting is a global setting, or
 one that is preference set-specific.  Global settings apply to all preference
 sets, while preference set-specific settings are saved with each preference set.
-In general, settings that show up in the Preferences panel are preference
+In general, settings that show up in the Preferences dialog are preference
 set-specific, while others aren't.
 </P>
 <P>
