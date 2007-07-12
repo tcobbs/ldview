@@ -70,6 +70,8 @@ void LDViewErrors::reflectSettings(void)
 		preferences->getShowError(LDLEMovedTo));
 	preferences->setButtonState(panel->unofficialPartButton,
 		preferences->getShowError(LDLEUnofficialPart));
+	preferences->setButtonState(panel->modelLoopButton,
+		preferences->getShowError(LDLEModelLoop));
 	preferences->setButtonState(panel->showWarningsButton,
 		TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 1 : 0);
 	preferences->setButtonState(panel->identicalVerticesButton,
@@ -334,6 +336,10 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 			case LDLEUnofficialPart:
 					item->setPixmap(0,
                         getimage( "error_info.png"));
+					break;
+			case LDLEModelLoop:
+					item->setPixmap(0,
+						getimage( "error_loop.png"));
 					break;
         }
 	}

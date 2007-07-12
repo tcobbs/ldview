@@ -325,6 +325,14 @@
                                         <string>Unofficial part used</string>
                                     </property>
                                 </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>modelLoopButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Model loop</string>
+                                    </property>
+                                </widget>
                             </vbox>
                         </widget>
                     </hbox>
@@ -502,6 +510,12 @@
         <slot>unofficialpart()</slot>
     </connection>
     <connection>
+        <sender>modelLoopButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>modelLoop()</slot>
+    </connection>
+    <connection>
         <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
@@ -573,6 +587,7 @@
     <slot>whitespace()</slot>
     <slot>partrenamed()</slot>
     <slot>unofficialpart()</slot>
+    <slot>modelLoop()</slot>
     <slot>identicalVertices()</slot>
     <slot>showAllError()</slot>
     <slot>showNoneError()</slot>
