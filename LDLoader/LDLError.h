@@ -26,8 +26,8 @@ typedef enum
 	LDLEWhitespace,
 	LDLEMovedTo,
 	LDLEUnofficialPart,
-	LDLERecursion,
-	LDLELastError = LDLERecursion
+	LDLEModelLoop,
+	LDLELastError = LDLEModelLoop
 } LDLErrorType;
 
 typedef std::map<LDLErrorType, std::string> LDLErrorTypeMap;
