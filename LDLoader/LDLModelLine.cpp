@@ -173,12 +173,21 @@ bool LDLModelLine::parse(void)
 		}
 		else
 		{
-			UCSTR ucSubModelName = mbstoucstring(subModelName);
-
 			m_valid = false;
-			setError(LDLEFileNotFound,
-				TCLocalStrings::get(_UC("LDLModelLineFNF")), ucSubModelName);
-			delete ucSubModelName;
+			if (getMainModel()->ancestorCheck(subModelName))
+			{
+				setError(LDLERecursion,
+					TCLocalStrings::get(_UC("LDLERecursion")));
+			}
+			else
+			{
+				UCSTR ucSubModelName = mbstoucstring(subModelName);
+
+				setError(LDLEFileNotFound,
+					TCLocalStrings::get(_UC("LDLModelLineFNF")),
+					ucSubModelName);
+				delete ucSubModelName;
+			}
 			return false;
 		}
 		m_lowResModel = m_parentModel->subModelNamed(subModelName, true, false,

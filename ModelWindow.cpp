@@ -1609,6 +1609,13 @@ void ModelWindow::setupErrorWindow(void)
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 
+	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_ERROR_LOOP));
+	hMask = LoadBitmap(hInstance,
+		MAKEINTRESOURCE(IDB_ERROR_LOOP_MASK));
+	errorImageIndices[LDLERecursion] = ImageList_Add(himl, hbmp, hMask);
+	DeleteObject(hbmp);
+	DeleteObject(hMask);
+
 	// Associate the image list with the tree view control.
 	TreeView_SetImageList(hErrorTree, himl, TVSIL_NORMAL);
 //	TreeView_SetItemHeight(hErrorTree, 18);

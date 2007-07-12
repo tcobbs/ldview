@@ -67,7 +67,9 @@
 #define IDD_UPDATES_PREFS               167
 #define IDB_VERTEX_ORDER_MASK           168
 #define IDI_LDRAW                       169
+#define IDB_ERROR_LOOP                  169
 #define IDI_MPD                         170
+#define IDB_ERROR_LOOP_MASK             170
 #define IDD_PARTS_LIST                  171
 #define IDB_LIGHT_ANGLES                173
 #define IDI_LIGHT_ANGLE_UR              174

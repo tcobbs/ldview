@@ -2,8 +2,11 @@
 #define __LDLMAINMODEL_H__
 
 #include <LDLoader/LDLModel.h>
+#include <TCFoundation/TCStlIncludes.h>
 
 class LDLPalette;
+
+typedef std::map<std::string, bool> StringBoolMap;
 
 class LDLMainModel : public LDLModel
 {
@@ -43,6 +46,8 @@ public:
 	{
 		return m_mainFlags.loadCanceled != false;
 	}
+	bool &ancestorCheck(const std::string &name) { return m_ancestorMap[name]; }
+	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
 protected:
 	virtual void dealloc(void);
 	virtual void processLDConfig(void);
@@ -60,6 +65,7 @@ protected:
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;
+	StringBoolMap m_ancestorMap;
 };
 
 #endif // __LDLMAINMODEL_H__

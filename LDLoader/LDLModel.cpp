@@ -166,7 +166,19 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	LDLModel* subModel;
 	char *dictName = NULL;
 	char *adjustedName;
+	bool &ancestorCheck = m_mainModel->ancestorCheck(subModelName);
 
+	if (ancestorCheck)
+	{
+		// Recursion: the model named subModelName is an ancestor of the current
+		// model.  Loading it will result in an infinite loop and crash after
+		// the stack overflows.
+		return NULL;
+	}
+	else
+	{
+		ancestorCheck = true;
+	}
 	adjustedName = copyString(subModelName);
 	replaceStringCharacter(adjustedName, '\\', '/');
 	if (lowRes)
@@ -178,6 +190,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		else
 		{
 			delete adjustedName;
+			ancestorCheck = false;
 			return NULL;
 		}
 		dictName = new char[strlen(LDL_LOWRES_PREFIX) + strlen(adjustedName) +
@@ -237,6 +250,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		}
 		alert->release();
 	}
+	ancestorCheck = false;
 	return subModel;
 }
 
