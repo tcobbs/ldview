@@ -107,6 +107,11 @@ void ErrorPanel::unofficialpart()
 	errors->doErrorClick(unofficialPartButton, LDLEUnofficialPart);
 }
 
+void ErrorPanel::modelLoop()
+{
+	errors->doErrorClick(modelLoopButton, LDLEModelLoop);
+}
+
 void ErrorPanel::identicalVertices()
 {
     errors->doErrorClick(identicalVerticesButton,LDLEMatchingPoints);

@@ -77,6 +77,7 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/error_matching_points.png images/error_matrix.png \
 		  images/error_non_flat_quad.png images/error_opengl.png \
 		  images/error_parse.png images/error_vertex_order.png \
+		  images/error_loop.png \
 		  ../Icons/LightAngleLL.png \
           ../Icons/LightAngleLM.png \
           ../Icons/LightAngleLR.png \
