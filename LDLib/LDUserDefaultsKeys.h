@@ -2,6 +2,7 @@
 #define __LDLUSERDEFAULTSKEYS_H__
 
 #define PRIMITIVE_SUBSTITUTION_KEY "AllowPrimitiveSubstitution"
+#define ANISO_LEVEL_KEY "AnisoLevel"
 #define FSAA_MODE_KEY "Antialias"
 #define AUTO_CROP_KEY "AutoCrop"
 #define BACKGROUND_COLOR_KEY "BackgroundColor3"
@@ -24,6 +25,7 @@
 #define MODEL_SIZE_KEY "ModelSize"								// NO UI
 #define DEFAULT_MATRIX_KEY "DefaultMatrix"
 #define DEFAULT_ZOOM_KEY "DefaultZoom"							// NO UI
+#define DRAW_LIGHT_DATS_KEY "DrawLightDats"
 #define EDITOR_KEY "Editor"
 #define EDGES_ONLY_KEY "EdgesOnly"
 #define EDGE_THICKNESS_KEY "EdgeThickness"
@@ -36,6 +38,7 @@
 #define GREEN_FRONT_FACES_KEY "GreenFrontFaces"
 #define HI_RES_PRIMITIVES_KEY "HiResPrimitives"
 #define IGNORE_ALL_OGL_EXTENSIONS "IgnoreAllOGLExtensions"
+#define IGNORE_ANISO_KEY "IgnoreAniso"
 #define IGNORE_MULTI_DRAW_ARRAYS_KEY "IgnoreMultiDrawArrays"
 #define IGNORE_MULTISAMPLE_KEY "IgnoreMultisample"
 #define IGNORE_MS_FILTER_HINT_KEY "IgnoreMultisampleFilterHint"
@@ -44,14 +47,21 @@
 #define IGNORE_VAR_KEY "IgnoreVAR"
 #define IGNORE_VBO_KEY "IgnoreVBO"
 #define INSTALL_PATH_KEY "InstallPath"							// NO UI
+#define INV_EXTERNAL_CSS_KEY "InventoryExternalCss"
+#define INV_PART_IMAGES_KEY "InventoryPartImages"
+#define INV_SHOW_FILE_KEY "InventoryShowFile"
+#define INV_SHOW_MODEL_KEY "InventoryShowModel"
 #define LAST_OPEN_PATH_KEY "LastOpenPath"
 #define LDRAWDIR_KEY "LDrawDir"
 #define LEFT_MARGIN_KEY "LeftMargin"
 #define LIGHTING_KEY "Lighting"
+#define LIGHT_VECTOR_KEY "LightVector"
 #define LINE_SMOOTHING_KEY "LineSmoothing"
 #define MAX_RECENT_FILES_KEY "MaxRecentFiles"
 #define MEMORY_USAGE_KEY "MemoryUsage"
+#define NO_LIGHT_GEOM_KEY "NoLightGeom"
 #define ONE_LIGHT_KEY "OneLight"
+#define OPTIONAL_STANDARD_LIGHT_KEY "OptionalStandardLight"
 #define ORIENTATION_KEY "Orientation"
 #define PAPER_SIZE_KEY "PaperSize"
 #define PERFORM_SMOOTHING_KEY "PerformSmoothing"
@@ -125,22 +135,16 @@
 // documented.
 #define SKIP_VALIDATION_KEY "SkipValidation"
 
-// The following are undocumented, but need to be documented.
-#define LIGHT_VECTOR_KEY "LightVector"
-#define INV_SHOW_MODEL_KEY "InventoryShowModel"
-#define INV_EXTERNAL_CSS_KEY "InventoryExternalCss"
-#define INV_PART_IMAGES_KEY "InventoryPartImages"
-#define INV_SHOW_FILE_KEY "InventoryShowFile"
+// The following is used to decide whether or not to show the part count total
+// in the parts list.  It was decided to always show this, so it's going to
+// remain undocumented.
 #define INV_SHOW_TOTAL_KEY "InventoryShowTotal"
-#define INV_COLUMN_ORDER_KEY "InventoryColumnOrder"
-#define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
-#define IGNORE_ANISO_KEY "IgnoreAniso"
-#define ANISO_LEVEL_KEY "AnisoLevel"
-#define DRAW_LIGHT_DATS_KEY "DrawLightDats"
-#define OPTIONAL_STANDARD_LIGHT_KEY "OptionalStandardLight"
-#define NO_LIGHT_GEOM_KEY "NoLightGeom"
+
+// The following are undocumented, but need to be documented.
 
 // The following are undocumented, but perhaps need to be documented.
+#define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
+#define INV_COLUMN_ORDER_KEY "InventoryColumnOrder"
 #define SS_SIZE_KEY "SSSize"
 #define SS_SPEED_KEY "SSSpeed"
 #define SS_ROTATION_SPEED_KEY "SSRotationSpeed"
