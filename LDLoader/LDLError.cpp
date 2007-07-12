@@ -78,6 +78,7 @@ void LDLError::initTypeMap(void)
 		sm_typeMap[LDLEWhitespace] = "LDLEWhitespace";
 		sm_typeMap[LDLEMovedTo] = "LDLEMovedTo";
 		sm_typeMap[LDLEUnofficialPart] = "LDLEUnofficialPart";
+		sm_typeMap[LDLERecursion] = "LDLERecursion";
 	}
 }
 
