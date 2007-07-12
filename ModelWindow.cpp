@@ -1612,7 +1612,7 @@ void ModelWindow::setupErrorWindow(void)
 	hbmp = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_ERROR_LOOP));
 	hMask = LoadBitmap(hInstance,
 		MAKEINTRESOURCE(IDB_ERROR_LOOP_MASK));
-	errorImageIndices[LDLERecursion] = ImageList_Add(himl, hbmp, hMask);
+	errorImageIndices[LDLEModelLoop] = ImageList_Add(himl, hbmp, hMask);
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 

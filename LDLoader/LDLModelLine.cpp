@@ -176,8 +176,8 @@ bool LDLModelLine::parse(void)
 			m_valid = false;
 			if (getMainModel()->ancestorCheck(subModelName))
 			{
-				setError(LDLERecursion,
-					TCLocalStrings::get(_UC("LDLERecursion")));
+				setError(LDLEModelLoop,
+					TCLocalStrings::get(_UC("LDLEModelLoop")));
 			}
 			else
 			{
