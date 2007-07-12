@@ -6,15 +6,25 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Collections.Specialized;
+//using System.Collections.Specialized;
 
 using StringDict = System.Collections.Generic.Dictionary<System.String, System.String>;
 using DlgDict = System.Collections.Generic.Dictionary<System.String, System.Collections.Generic.Dictionary<System.String, System.String>>;
+using AccelDict = System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, string[]>>;
+using StringList = System.Collections.Generic.List<string>;
 
 namespace ResourceTrans
 {
 	public partial class MainForm : Form
 	{
+		enum SectionType
+		{
+			Unknown,
+			Dialog,
+			Menu,
+			Accelerators
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -93,34 +103,44 @@ namespace ResourceTrans
 			}
 		}
 
-		private String getDialogName(String line)
+		private String getSectionName(String line, out SectionType sectionType)
 		{
 			int loc;
 
 			if ((loc = line.IndexOf(" DIALOG ")) != -1 ||
-				(loc = line.IndexOf(" DIALOGEX ")) != -1 ||
-				(loc = line.IndexOf(" MENU ")) != -1)
+				(loc = line.IndexOf(" DIALOGEX ")) != -1)
 			{
-				return line.Substring(0, loc);
+				sectionType = SectionType.Dialog;
+			}
+			else if ((loc = line.IndexOf(" MENU ")) != -1)
+			{
+				sectionType = SectionType.Menu;
+			}
+			else if ((loc = line.IndexOf(" ACCELERATORS ")) != -1)
+			{
+				sectionType = SectionType.Accelerators;
 			}
 			else
 			{
+				sectionType = SectionType.Unknown;
 				return null;
 			}
+			return line.Substring(0, loc);
 		}
 
-		private String findDialog(StreamReader reader)
+		private String findSection(StreamReader reader, out SectionType sectionType)
 		{
 			String line;
 
 			while ((line = reader.ReadLine()) != null)
 			{
-				String name = getDialogName(line);
+				String name = getSectionName(line, out sectionType);
 				if (name != null)
 				{
 					return name;
 				}
 			}
+			sectionType = SectionType.Unknown;
 			return null;
 		}
 
@@ -154,13 +174,32 @@ namespace ResourceTrans
 			return null;
 		}
 
-		private void scanStrings(StreamReader reader, String prefix, ref StringCollection strings)
+		private string findId(String input, ref int loc)
+		{
+			while (loc < input.Length && (input[loc] == ' ' || input[loc] == '\t'))
+			{
+				loc++;
+			}
+			if (loc < input.Length)
+			{
+				int startIndex = loc;
+
+				while (loc < input.Length && input[loc] != ' ' && input[loc] != '\t' && input[loc] != ',')
+				{
+					loc++;
+				}
+				return input.Substring(startIndex, loc - startIndex);
+			}
+			return null;
+		}
+
+		private void scanStrings(StreamReader reader, String prefix, ref StringList strings, SectionType sectionType)
 		{
 			String line;
 
 			if (strings == null)
 			{
-				strings = new StringCollection();
+				strings = new StringList();
 			}
 			while ((line = reader.ReadLine()) != null)
 			{
@@ -170,47 +209,188 @@ namespace ResourceTrans
 				{
 					return;
 				}
+				else if (sectionType == SectionType.Accelerators)
+				{
+					String accelChar;
+					int loc = 0;
+
+					if ((accelChar = findId(line, ref loc)) != null && loc < line.Length && line[loc] == ',')
+					{
+						int idLoc = loc + 1;
+						String accelId = findId(line, ref idLoc);
+
+						if (accelId != null)
+						{
+							int modsLoc = idLoc + 1;
+							String accelMods = line.Substring(modsLoc).Trim();
+
+							while (accelMods[accelMods.Length - 1] == ',')
+							{
+								accelMods += " ";
+								line = reader.ReadLine();
+								if (line == null)
+								{
+									return;
+								}
+								line = line.Trim();
+								accelMods += line;
+							}
+							strings.Add(prefix + accelId + ":" + accelMods + ":" + accelChar);
+						}
+					}
+				}
 				else if ((foundString = findString(line)) != null)
 				{
 					if (foundString != "Button")
 					{
-						strings.Add(prefix + ":" + foundString);
+						strings.Add(prefix + foundString);
 					}
 				}
 			}
 		}
 
-		private void scanRc(StreamReader reader, ref StringCollection strings)
+		private String SectionTypeChar(SectionType sectionType)
 		{
-			String dialogName;
-
-			while ((dialogName = findDialog(reader)) != null)
+			switch (sectionType)
 			{
-				scanStrings(reader, dialogName, ref strings);
+				case SectionType.Dialog:
+					return "D";
+				case SectionType.Menu:
+					return "M";
+				case SectionType.Accelerators:
+					return "A";
+				default:
+					return "U";
 			}
 		}
 
-		private void writeTransFile(StreamWriter writer, StringCollection origStrings, StringCollection transStrings, int dstEncoding)
+		private void scanRc(StreamReader reader, ref StringList strings, String sourceChar)
+		{
+			String sectionName;
+			SectionType sectionType;
+
+			while ((sectionName = findSection(reader, out sectionType)) != null)
+			{
+				scanStrings(reader, SectionTypeChar(sectionType) + sourceChar + ":" + sectionName + ":", ref strings, sectionType);
+			}
+		}
+
+		private void AddAccel(ref AccelDict accelDict, String[] parts)
+		{
+			int offset = 0;
+
+			if (parts.Length == 5)
+			{
+				offset = 1;
+			}
+			if (!accelDict.ContainsKey(parts[offset]))
+			{
+				accelDict.Add(parts[offset], new Dictionary<string, string[]>());
+			}
+			if (!accelDict[parts[offset]].ContainsKey(parts[1]))
+			{
+				accelDict[parts[offset]].Add(parts[offset + 1], parts);
+			}
+		}
+
+		private AccelDict buildAccelDict(StringList strings)
+		{
+			AccelDict retValue = new AccelDict();
+
+			for (int i = 0; i < strings.Count; i++)
+			{
+				String accel = strings[i];
+
+				if (accel.StartsWith("A"))
+				{
+					int lastColon = 2;
+					bool failed = false;
+					String[] parts = new String[4];
+
+					for (int j = 0; j < 3 && !failed; j++)
+					{
+						int colon = accel.IndexOf(':', lastColon + 1);
+
+						if (colon == -1)
+						{
+							failed = true;
+						}
+						else
+						{
+							parts[j] = accel.Substring(lastColon + 1, colon - lastColon - 1);
+							lastColon = colon;
+						}
+					}
+					if (!failed)
+					{
+						parts[3] = accel.Substring(lastColon + 1);
+						AddAccel(ref retValue, parts);
+					}
+				}
+			}
+			return retValue;
+		}
+
+		private void writeAccel(StreamWriter writer, AccelDict origAccelDict, AccelDict transAccelDict)
+		{
+			foreach (KeyValuePair<string, Dictionary<string, string[]>> pair1 in origAccelDict)
+			{
+				if (transAccelDict.ContainsKey(pair1.Key))
+				{
+					foreach (KeyValuePair<string, string[]> pair2 in pair1.Value)
+					{
+						if (transAccelDict[pair1.Key].ContainsKey(pair2.Key))
+						{
+							writer.WriteLine("AO:" + String.Join(":", pair2.Value));
+							writer.WriteLine("AT:" + String.Join(":", transAccelDict[pair1.Key][pair2.Key]));
+						}
+					}
+				}
+			}
+		}
+
+		private void writeTransFile(StreamWriter writer, StringList origStrings, StringList transStrings, int dstEncoding)
 		{
 			int origIndex = 0;
 			int transIndex = 0;
-			StringCollection skippedDialogs = new StringCollection();
+			StringList skippedDialogs = new StringList();
+			AccelDict origAccelDict = buildAccelDict(origStrings);
+			AccelDict transAccelDict = buildAccelDict(transStrings);
 
 			writer.WriteLine(dstEncoding);
+			writeAccel(writer, origAccelDict, transAccelDict);
 			while (origIndex < origStrings.Count && transIndex < transStrings.Count)
 			{
+				while (origIndex < origStrings.Count && origStrings[origIndex].StartsWith("A"))
+				{
+					origIndex++;
+				}
+				if (origIndex >= origStrings.Count)
+				{
+					break;
+				}
+				while (transIndex < transStrings.Count && transStrings[transIndex].StartsWith("A"))
+				{
+					transIndex++;
+				}
+				if (transIndex >= transStrings.Count)
+				{
+					break;
+				}
 				String origString = origStrings[origIndex];
-				String dialogName = origString.Substring(0, origString.IndexOf(':') + 1);
+				String dialogName = origString.Substring(3, origString.IndexOf(':', 3) - 3);
+				String startCheck = origString.Substring(0, 3) + dialogName;
 				int origDialogCount = 0;
 				int transDialogCount = 0;
 
 				while (origIndex + origDialogCount < origStrings.Count &&
-					origStrings[origIndex + origDialogCount].StartsWith(dialogName))
+					origStrings[origIndex + origDialogCount].StartsWith(startCheck))
 				{
 					origDialogCount++;
 				}
+				startCheck = transStrings[transIndex].Substring(0, 3) + dialogName;
 				while (transIndex + transDialogCount < transStrings.Count &&
-					transStrings[transIndex + transDialogCount].StartsWith(dialogName))
+					transStrings[transIndex + transDialogCount].StartsWith(startCheck))
 				{
 					transDialogCount++;
 				}
@@ -220,14 +400,14 @@ namespace ResourceTrans
 
 					for (i = 0; i < origDialogCount; i++)
 					{
-						writer.WriteLine("O:" + origStrings[origIndex + i]);
-						writer.WriteLine("T:" + transStrings[transIndex + i]);
+						writer.WriteLine(origStrings[origIndex + i]);
+						writer.WriteLine(transStrings[transIndex + i]);
 					}
 				}
 				else
 				{
-					StringCollection origDialogStrings = new StringCollection();
-					StringCollection transDialogStrings = new StringCollection();
+					StringList origDialogStrings = new StringList();
+					StringList transDialogStrings = new StringList();
 					int i;
 
 					for (i = 0; i < origDialogCount; i++)
@@ -242,15 +422,15 @@ namespace ResourceTrans
 					bool skippedDialog = true;
 					if (mismatchForm.ShowDialog() == DialogResult.OK)
 					{
-						StringCollection origDlgStrings;
-						StringCollection transDlgStrings;
+						StringList origDlgStrings;
+						StringList transDlgStrings;
 
 						if (mismatchForm.getStrings(out origDlgStrings, out transDlgStrings))
 						{
 							for (i = 0; i < origDlgStrings.Count; i++)
 							{
-								writer.WriteLine("O:" + origDlgStrings[i]);
-								writer.WriteLine("T:" + transDlgStrings[i]);
+								writer.WriteLine(origDlgStrings[i]);
+								writer.WriteLine(transDlgStrings[i]);
 							}
 							skippedDialog = false;
 						}
@@ -320,8 +500,8 @@ namespace ResourceTrans
 			StreamWriter transWriter = null;
 			String action = "reading";
 			String filename = "";
-			StringCollection origStrings = null;
-			StringCollection transStrings = null;
+			StringList origStrings = null;
+			StringList transStrings = null;
 
 			try
 			{
@@ -335,10 +515,10 @@ namespace ResourceTrans
 				action = "parsing";
 				filename = origRcFileTextBox.Text;
 				fixEncoding(ref origRcReader, filename);
-				scanRc(origRcReader, ref origStrings);
+				scanRc(origRcReader, ref origStrings, "O");
 				filename = transRcFileTextBox.Text;
 				int dstEncoding = fixEncoding(ref transRcReader, filename);
-				scanRc(transRcReader, ref transStrings);
+				scanRc(transRcReader, ref transStrings, "T");
 				action = "creating translation";
 				filename = dstTransFileTextBox.Text;
 				writeTransFile(transWriter, origStrings, transStrings, dstEncoding);
@@ -357,15 +537,32 @@ namespace ResourceTrans
 
 		private String[] splitTransLine(String line)
 		{
-			int colonIndex = line.IndexOf(':', 2);
+			int colonIndex = line.IndexOf(':', 3);
+			bool isAccel = false;
 
+			if (line.StartsWith("A"))
+			{
+				isAccel = true;
+			}
 			if (colonIndex > 1)
 			{
-				String[] retValue = new String[3];
+				String[] retValue = new String[isAccel ? 5 : 3];
 
-				retValue[0] = line.Substring(0, 1);
-				retValue[1] = line.Substring(2, colonIndex - 2);
-				retValue[2] = line.Substring(colonIndex + 1);
+				retValue[0] = line.Substring(0, 2);
+				retValue[1] = line.Substring(3, colonIndex - 3);
+				if (isAccel)
+				{
+					int colonIndex2 = line.IndexOf(':', colonIndex + 1);
+					retValue[2] = line.Substring(colonIndex + 1, colonIndex2 - colonIndex - 1);
+					colonIndex = colonIndex2;
+					colonIndex2 = line.IndexOf(':', colonIndex + 1);
+					retValue[3] = line.Substring(colonIndex + 1, colonIndex2 - colonIndex - 1);
+					retValue[4] = line.Substring(colonIndex2 + 1);
+				}
+				else
+				{
+					retValue[2] = line.Substring(colonIndex + 1);
+				}
 				return retValue;
 			}
 			else
@@ -374,23 +571,15 @@ namespace ResourceTrans
 			}
 		}
 
-		private void readTrans(StreamReader transReader, ref DlgDict dlgDict, ref StringDict globalDict, ref StringDict ambigDict)
+		private void readTrans(StreamReader transReader, out DlgDict dlgDict, out StringDict globalDict, out StringDict ambigDict, out AccelDict accelDict)
 		{
 			String lineO;
 			String lineT;
 
-			if (dlgDict == null)
-			{
-				dlgDict = new DlgDict();
-			}
-			if (globalDict == null)
-			{
-				globalDict = new StringDict();
-			}
-			if (ambigDict == null)
-			{
-				ambigDict = new StringDict();
-			}
+			dlgDict = new DlgDict();
+			globalDict = new StringDict();
+			ambigDict = new StringDict();
+			accelDict = new AccelDict();
 			while ((lineO = transReader.ReadLine()) != null)
 			{
 				lineT = transReader.ReadLine();
@@ -401,32 +590,39 @@ namespace ResourceTrans
 
 					if (partsO != null && partsT != null)
 					{
-						if (!dlgDict.ContainsKey(partsO[1]))
+						if (partsO[0].StartsWith("A"))
 						{
-							dlgDict.Add(partsO[1], new StringDict());
-						}
-						StringDict stringDict = dlgDict[partsO[1]];
-						if (stringDict.ContainsKey(partsO[2]))
-						{
-							stringDict[partsO[2]] = partsT[2];
+							AddAccel(ref accelDict, partsT);
 						}
 						else
 						{
-							stringDict.Add(partsO[2], partsT[2]);
-						}
-						if (globalDict.ContainsKey(partsO[2]))
-						{
-							if (globalDict[partsO[2]] != partsT[2])
+							if (!dlgDict.ContainsKey(partsO[1]))
 							{
-								if (!ambigDict.ContainsKey(partsO[2]))
+								dlgDict.Add(partsO[1], new StringDict());
+							}
+							StringDict stringDict = dlgDict[partsO[1]];
+							if (stringDict.ContainsKey(partsO[2]))
+							{
+								stringDict[partsO[2]] = partsT[2];
+							}
+							else
+							{
+								stringDict.Add(partsO[2], partsT[2]);
+							}
+							if (globalDict.ContainsKey(partsO[2]))
+							{
+								if (globalDict[partsO[2]] != partsT[2])
 								{
-									ambigDict.Add(partsO[2], globalDict[partsO[2]]);
+									if (!ambigDict.ContainsKey(partsO[2]))
+									{
+										ambigDict.Add(partsO[2], globalDict[partsO[2]]);
+									}
 								}
 							}
-						}
-						else
-						{
-							globalDict.Add(partsO[2], partsT[2]);
+							else
+							{
+								globalDict.Add(partsO[2], partsT[2]);
+							}
 						}
 					}
 				}
@@ -435,33 +631,49 @@ namespace ResourceTrans
 
 		private void translateRc(StreamReader transReader, StreamReader srcRcReader, StreamWriter dstRcWriter, int codePage)
 		{
-			DlgDict dlgDict = null;
-			StringDict globalDict = null;
-			StringDict ambigDict = null;
+			DlgDict dlgDict;
+			StringDict globalDict;
+			StringDict ambigDict;
+			AccelDict accelDict;
 			String srcLine;
-			String currentDlg = null;
+			String currentSection = null;
+			SectionType currentSectionType = SectionType.Unknown;
 			StringDict dlgStrings = null;
+			Dictionary<string, string[]> currentAccelDict = null;
 
-			readTrans(transReader, ref dlgDict, ref globalDict, ref ambigDict);
+			readTrans(transReader, out dlgDict, out globalDict, out ambigDict, out accelDict);
 			while ((srcLine = srcRcReader.ReadLine()) != null)
 			{
-				String dlgName = getDialogName(srcLine);
+				SectionType sectionType;
+				String sectionName = getSectionName(srcLine, out sectionType);
 				bool wrote = false;
 
-				if (dlgName != null)
+				if (sectionName != null)
 				{
-					currentDlg = dlgName;
-					if (!dlgDict.TryGetValue(dlgName, out dlgStrings))
+					currentSection = sectionName;
+					currentSectionType = sectionType;
+					if (currentSectionType == SectionType.Accelerators)
 					{
-						dlgStrings = null;
+						if (!accelDict.TryGetValue(sectionName, out currentAccelDict))
+						{
+							currentAccelDict = null;
+						}
+					}
+					else
+					{
+						if (!dlgDict.TryGetValue(sectionName, out dlgStrings))
+						{
+							dlgStrings = null;
+						}
 					}
 				}
 				else
 				{
 					if (srcLine == "END")
 					{
-						currentDlg = null;
+						currentSection = null;
 						dlgStrings = null;
+						currentAccelDict = null;
 					}
 					else if (srcLine.StartsWith("#pragma code_page("))
 					{
@@ -471,9 +683,47 @@ namespace ResourceTrans
 							wrote = true;
 						}
 					}
-					else
+					else if (currentSection != null)
 					{
-						if (currentDlg != null)
+						if (currentSectionType == SectionType.Accelerators)
+						{
+							String accelChar;
+							int loc = 0;
+
+							if ((accelChar = findId(srcLine, ref loc)) != null && loc < srcLine.Length && srcLine[loc] == ',')
+							{
+								int idLoc = loc + 1;
+								String accelId = findId(srcLine, ref idLoc);
+
+								if (accelId != null)
+								{
+									string[] value;
+
+									if (currentAccelDict.TryGetValue(accelId, out value))
+									{
+										String newLine = srcLine.Replace(accelChar, value[4]);
+										int modsLoc = idLoc + 1;
+										String accelMods = srcLine.Substring(modsLoc).Trim();
+
+										newLine = newLine.Replace(accelMods, value[3]);
+										dstRcWriter.WriteLine(newLine);
+										wrote = true;
+										while (accelMods[accelMods.Length - 1] == ',')
+										{
+											accelMods += " ";
+											srcLine = srcRcReader.ReadLine();
+											if (srcLine == null)
+											{
+												return;
+											}
+											srcLine = srcLine.Trim();
+											accelMods += srcLine;
+										}
+									}
+								}
+							}
+						}
+						else
 						{
 							String foundString = findString(srcLine);
 							String transString = null;
@@ -490,7 +740,7 @@ namespace ResourceTrans
 									if (transString != null && ambigDict.ContainsKey(foundString))
 									{
 										MessageBox.Show(this, "Multiple translations for " + foundString + ".  " +
-											"Using " + transString + " in " + currentDlg + ".");
+											"Using " + transString + " in " + currentSection + ".");
 									}
 
 								}

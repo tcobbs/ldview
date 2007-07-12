@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections.Specialized;
 
+using StringList = System.Collections.Generic.List<string>;
+
 namespace ResourceTrans
 {
     public partial class MismatchForm : Form
@@ -14,8 +16,8 @@ namespace ResourceTrans
         private int origCheckedCount;
         private int transCheckedCount;
         private bool doneInitializing = false;
-        private StringCollection newStrings = null;
-        private StringCollection newTransStrings = null;
+        private StringList newStrings = null;
+        private StringList newTransStrings = null;
 
         private void updateEnabled()
         {
@@ -28,7 +30,7 @@ namespace ResourceTrans
             okButton.Enabled = enabled;
         }
 
-        public MismatchForm(StringCollection origStrings, StringCollection transStrings)
+        public MismatchForm(StringList origStrings, StringList transStrings)
         {
             InitializeComponent();
             for (int i = 0; i < origStrings.Count; i++)
@@ -45,7 +47,7 @@ namespace ResourceTrans
             updateEnabled();
         }
 
-        public bool getStrings(out StringCollection orig, out StringCollection trans)
+        public bool getStrings(out StringList orig, out StringList trans)
         {
             if (newStrings != null && newTransStrings != null)
             {
@@ -61,7 +63,7 @@ namespace ResourceTrans
             }
         }
 
-        private void getStrings(CheckedListBox listBox, ref StringCollection strings)
+        private void getStrings(CheckedListBox listBox, ref StringList strings)
         {
             int i;
 
@@ -77,8 +79,8 @@ namespace ResourceTrans
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            newStrings = new StringCollection();
-            newTransStrings = new StringCollection();
+            newStrings = new StringList();
+            newTransStrings = new StringList();
             getStrings(origListBox, ref newStrings);
             getStrings(transListBox, ref newTransStrings);
         }
