@@ -356,7 +356,7 @@ BEGIN
     CONTROL         "Alles zeigen",IDC_ALL_CONDITIONAL,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,76,45,10,0,
                     HIDC_ALL_CONDITIONAL
-    CONTROL         "Show control points",IDC_CONDITIONAL_CONTROLS,"Button",
+    CONTROL         "Zeige Knotenpunkte",IDC_CONDITIONAL_CONTROLS,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,87,74,10,0,
                     HIDC_CONDITIONAL_CONTROLS
     CONTROL         "Hohe Qualität",IDC_QUALITY_LINES,"Button",
@@ -443,7 +443,7 @@ BEGIN
                     0,HIDC_CROSS_EYED_STEREO
     CONTROL         "Parallel",IDC_PARALLEL_STEREO,"Button",
                     BS_AUTORADIOBUTTON,144,31,39,10,0,HIDC_PARALLEL_STEREO
-    RTEXT           "Amount:",IDC_STEREO_SPACING_LABEL,145,46,36,8,0,
+    RTEXT           "Distanz:",IDC_STEREO_SPACING_LABEL,145,46,36,8,0,
                     WS_EX_TRANSPARENT,HIDC_STEREO_SPACING_LABEL
     CONTROL         "Slider1",IDC_STEREO_SPACING,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,179,42,68,18,0,
@@ -1197,15 +1197,15 @@ BEGIN
                                                     NOINVERT
     "E",            ID_TOOLS_ERRORS,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
-    "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
-    "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
+    "Z",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
+    "M",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
-    "P",            ID_EDIT_PREFERENCES,    VIRTKEY, SHIFT, CONTROL, 
+    "V",            ID_EDIT_PREFERENCES,    VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "Q",            ID_FILE_EXIT,           VIRTKEY, CONTROL, NOINVERT
-    "R",            ID_VIEW_RESET,          VIRTKEY, CONTROL, NOINVERT
+    "A",            ID_VIEW_RESET,          VIRTKEY, CONTROL, NOINVERT
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_VIEW_STATUSBAR,      VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
@@ -1213,7 +1213,7 @@ BEGIN
                                                     NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_FILE_RELOAD,         VIRTKEY, NOINVERT
-    "X",            ID_VIEW_EXAMINE,        VIRTKEY, SHIFT, CONTROL, 
+    "P",            ID_VIEW_EXAMINE,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
 END
 
