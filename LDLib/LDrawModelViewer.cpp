@@ -1496,6 +1496,11 @@ void LDrawModelViewer::drawString(TCFloat xPos, TCFloat yPos, char* string)
 	{
 		setupTextures();
 	}
+	if (!fontListBase)
+	{
+		// Font file wasn't found; bail.
+		return;
+	}
 	if ((backgroundR + backgroundG + backgroundB) / 3.0f > 0.5)
 	{
 		glColor3ub(0, 0, 0);
