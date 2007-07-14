@@ -1036,13 +1036,20 @@ The model references a part that isn't present in the main LDraw directory, but
 was found by LDView on the LDraw.org Parts Tracker and automatically downloaded.
 </P>
 <P>
+<I>Model loop</I><BR>
+One of the model's sub-models (or parts) contains a reference to one of its
+ancestors.  For example, if you load Test1.ldr, and it has Test2.ldr as a
+sub-model, and Test2.ldr has Test1.ldr as one of <B>its</B> sub-models, you will
+get this error.  Similarly, if Test2.ldr has Test3.ldr as a sub-model, and
+Test3.ldr has Test1.ldr as a sub-model, you will also get this error.
+</P>
+<P>
 If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
 preferences dialog, the Errors &amp; Warnings window will automatically be
-displayed when a model is loaded that contains errors or warnings that are set
-to be shown.  It will not be shown if the only errors or warnings in the model
-have been unchecked in the Errors &amp; Warnings window, the model only contains
-warnings and warnings are disabled, the model contains no errors or warnings, or
-the Errors &amp; Warnings window isn't set to show automatically.
+displayed when a model is loaded that contains errors that are set to be shown.
+It will not be shown if the only errors in the model have been unchecked in the
+Errors &amp; Warnings window, the model only contains warnings, or the Errors
+&amp; Warnings window isn't set to show automatically.
 </P>
 <BR>
 <P>
