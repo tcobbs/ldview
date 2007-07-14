@@ -120,7 +120,13 @@ macx {
 		$(MKDIR) LDView.app/Contents/MacOS/ ; cp ../LDViewMessages.ini \
 		LDView.app/Contents/MacOS
 	messagefile.depends = ../LDViewMessages.ini
-	QMAKE_EXTRA_UNIX_TARGETS += helpfile messagefile
+	fontfile.target = LDView.app/Contents/MacOS/SansSerif.fnt
+	fontfile.commands = @$(CHK_DIR_EXISTS) LDView.app/Contents/MacOS/ || \
+		$(MKDIR) LDView.app/Contents/MacOS/ ; cp ../Textures/SansSerif.fnt \
+		LDView.app/Contents/MacOS
+	fontfile.depends = ../Textures/SansSerif.fnt
+	QMAKE_EXTRA_UNIX_TARGETS += helpfile messagefile fontfile
 	POST_TARGETDEPS += LDView.app/Contents/MacOS/LDViewMessages.ini \
-		LDView.app/Contents/MacOS/Help.html
+		LDView.app/Contents/MacOS/Help.html \
+		LDView.app/Contents/MacOS/SansSerif.fnt
 }
