@@ -3138,16 +3138,26 @@ void ModelViewerWidget::doPartList(void)
 			if (partlist->exec() == QDialog::Accepted)
 			{
 				bool done = false;
-				QString filename = modelViewer->getFilename();
+				char *cFilename = modelViewer->getFilename();
+				QString filename;
+
+				if (cFilename)
+				{
+					filename = cFilename;
+				}
+				else
+				{
+					consolePrintf("No filename from modelViewer.\n");
+				}
 				int findSpot = filename.findRev(QRegExp("/\\"));
-				if (findSpot < (int)filename.length())
+				if (findSpot >= 0 && findSpot < (int)filename.length())
 					filename=filename.mid(findSpot+1);
 				findSpot = filename.findRev('.');
-				if (findSpot < (int)filename.length())
+				if (findSpot >= 0 && findSpot < (int)filename.length())
                     filename=filename.left(findSpot);
 				filename += ".html";
 				findSpot = filename.findRev('/');
-				if (findSpot < (int)filename.length())
+				if (findSpot >= 0 && findSpot < (int)filename.length())
 					filename = filename.mid(findSpot + 1);
 				QString startWith = QString(htmlInventory->getLastSavePath()) +
 					QString("/") + filename;
