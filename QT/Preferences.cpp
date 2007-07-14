@@ -839,31 +839,31 @@ void Preferences::reflectUpdatesSettings(void)
 
 void Preferences::doResetGeneral(void)
 {
-	ldPrefs->loadDefaultGeneralSettings();
+	ldPrefs->loadDefaultGeneralSettings(false);
 	reflectGeneralSettings();
 }
 
 void Preferences::doResetGeometry(void)
 {
-	ldPrefs->loadDefaultGeometrySettings();
+	ldPrefs->loadDefaultGeometrySettings(false);
 	reflectGeometrySettings();
 }
 
 void Preferences::doResetEffects(void)
 {
-	ldPrefs->loadDefaultEffectsSettings();
+	ldPrefs->loadDefaultEffectsSettings(false);
 	reflectEffectsSettings();
 }
 
 void Preferences::doResetPrimitives(void)
 {
-	ldPrefs->loadDefaultPrimitivesSettings();
+	ldPrefs->loadDefaultPrimitivesSettings(false);
 	reflectPrimitivesSettings();
 }
 
 void Preferences::doResetUpdates(void)
 {
-	ldPrefs->loadDefaultUpdatesSettings();
+	ldPrefs->loadDefaultUpdatesSettings(false);
 	reflectUpdatesSettings();
 }
 
