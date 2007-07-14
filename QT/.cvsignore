@@ -6,3 +6,6 @@ LDView3.tgz
 *.deb
 *.qm
 *.qph
+.gdb_history
+LDView.app
+distrib
