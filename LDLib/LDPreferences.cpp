@@ -262,11 +262,14 @@ void LDPreferences::loadSettings(void)
 	m_defaultZoom = getFloatSetting(DEFAULT_ZOOM_KEY, 1.0f);
 }
 
-void LDPreferences::loadDefaultGeneralSettings(void)
+void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 {
 	int i;
 
-	m_initializing = true;
+	if (initializing)
+	{
+		m_initializing = true;
+	}
 	setFsaaMode(0);
 	setLineSmoothing(false);
 	setBackgroundColor(0, 0, 0);
@@ -288,9 +291,12 @@ void LDPreferences::loadDefaultGeneralSettings(void)
 	m_initializing = false;
 }
 
-void LDPreferences::loadDefaultGeometrySettings(void)
+void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
 {
-	m_initializing = true;
+	if (initializing)
+	{
+		m_initializing = true;
+	}
 	setUseSeams(false);
 	setSeamWidth(50);
 	setDrawWireframe(false);
@@ -312,9 +318,12 @@ void LDPreferences::loadDefaultGeometrySettings(void)
 	m_initializing = false;
 }
 
-void LDPreferences::loadDefaultEffectsSettings(void)
+void LDPreferences::loadDefaultEffectsSettings(bool initializing /*= true*/)
 {
-	m_initializing = true;
+	if (initializing)
+	{
+		m_initializing = true;
+	}
 	setUseLighting(true);
 	setQualityLighting(false);
 	setSubduedLighting(false);
@@ -336,9 +345,12 @@ void LDPreferences::loadDefaultEffectsSettings(void)
 	m_initializing = false;
 }
 
-void LDPreferences::loadDefaultPrimitivesSettings(void)
+void LDPreferences::loadDefaultPrimitivesSettings(bool initializing /*= true*/)
 {
-	m_initializing = true;
+	if (initializing)
+	{
+		m_initializing = true;
+	}
 	setAllowPrimitiveSubstitution(true);
 	setTextureStuds(true);
 	setTextureFilterType(GL_LINEAR_MIPMAP_LINEAR);
@@ -349,9 +361,12 @@ void LDPreferences::loadDefaultPrimitivesSettings(void)
 	m_initializing = false;
 }
 
-void LDPreferences::loadDefaultUpdatesSettings(void)
+void LDPreferences::loadDefaultUpdatesSettings(bool initializing /*= true*/)
 {
-	m_initializing = true;
+	if (initializing)
+	{
+		m_initializing = true;
+	}
 	setProxyType(0);
 	setProxyServer("");
 	setProxyPort(80);
@@ -361,9 +376,12 @@ void LDPreferences::loadDefaultUpdatesSettings(void)
 	m_initializing = false;
 }
 
-void LDPreferences::loadDefaultInventorySettings(void)
+void LDPreferences::loadDefaultInventorySettings(bool initializing /*= true*/)
 {
-	m_initializing = true;
+	if (initializing)
+	{
+		m_initializing = true;
+	}
 	setInvShowModel(false);
 	setInvExternalCss(false);
 	setInvPartImages(true);

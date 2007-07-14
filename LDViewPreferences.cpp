@@ -1832,7 +1832,7 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 			chooseDefaultColor();
 			break;
 		case IDC_GENERAL_RESET:
-			ldPrefs->loadDefaultGeneralSettings();
+			ldPrefs->loadDefaultGeneralSettings(false);
 			setupGeneralPage();
 			break;
 	}
@@ -1859,7 +1859,7 @@ void LDViewPreferences::doGeometryClick(int controlId, HWND /*controlHWnd*/)
 			doSeams();
 			break;
 		case IDC_GEOMETRY_RESET:
-			ldPrefs->loadDefaultGeometrySettings();
+			ldPrefs->loadDefaultGeometrySettings(false);
 			setupGeometryPage();
 			break;
 	}
@@ -1912,7 +1912,7 @@ void LDViewPreferences::doEffectsClick(int controlId, HWND /*controlHWnd*/)
 			setupOpacitySlider();
 			break;
 		case IDC_EFFECTS_RESET:
-			ldPrefs->loadDefaultEffectsSettings();
+			ldPrefs->loadDefaultEffectsSettings(false);
 			setupEffectsPage();
 			break;
 	}
@@ -2259,7 +2259,7 @@ void LDViewPreferences::doPrimitivesClick(int controlId, HWND /*controlHWnd*/)
 			}
 			break;
 		case IDC_PRIMITIVES_RESET:
-			ldPrefs->loadDefaultPrimitivesSettings();
+			ldPrefs->loadDefaultPrimitivesSettings(false);
 			setupPrimitivesPage();
 			break;
 	}
@@ -2315,7 +2315,7 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 		enableProxyServer();
 		break;
 	case IDC_UPDATES_RESET:
-		ldPrefs->loadDefaultUpdatesSettings();
+		ldPrefs->loadDefaultUpdatesSettings(false);
 		setupUpdatesPage();
 		break;
 	case IDC_CHECK_PART_TRACKER:

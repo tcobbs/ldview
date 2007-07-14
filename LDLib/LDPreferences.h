@@ -37,12 +37,12 @@ public:
 	void applyPrimitivesSettings(void);
 	void applyUpdatesSettings();
 	void loadSettings(void);
-	void loadDefaultGeneralSettings(void);
-	void loadDefaultGeometrySettings(void);
-	void loadDefaultEffectsSettings(void);
-	void loadDefaultPrimitivesSettings(void);
-	void loadDefaultUpdatesSettings(void);
-	void loadDefaultInventorySettings(void);
+	void loadDefaultGeneralSettings(bool initializing = true);
+	void loadDefaultGeometrySettings(bool initializing = true);
+	void loadDefaultEffectsSettings(bool initializing = true);
+	void loadDefaultPrimitivesSettings(bool initializing = true);
+	void loadDefaultUpdatesSettings(bool initializing = true);
+	void loadDefaultInventorySettings(bool initializing = true);
 	void loadInventorySettings(void);
 	// *************************************************************************
 
