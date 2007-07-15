@@ -26,7 +26,8 @@
 #include <qprogressdialog.h>
 #include <qtimer.h>
 #include <qtoolbutton.h>
-#if (QT_VERSION >>16)>=4
+#if (QT_VERSION >> 16) >= 4
+#define HAVE_QT4
 #include <q3paintdevicemetrics.h>
 #include <q3popupmenu.h>
 #define QPaintDeviceMetrics Q3PaintDeviceMetrics
@@ -165,7 +166,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	snapshotsettings = new SnapshotSettings(this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode());
-#if (QT_VERSION >>16)>=4
+#ifdef HAVE_QT4
 	setFocusPolicy(Qt::StrongFocus);
 #else
 	setFocusPolicy(QWidget::StrongFocus);
@@ -205,7 +206,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	QString fullVersion;
 
 	int spot;
-#if QT_VERSION < 0x40000
+#ifndef HAVE_QT4
 	// Try to use the uname command to determine our OS name.
 	if (unamePath)
 	{
@@ -490,7 +491,7 @@ void ModelViewerWidget::unlock(void)
 
 void ModelViewerWidget::setLibraryUpdateProgress(float progress)
 {
-#if (QT_VERSION >= 0x40000)
+#ifdef HAVE_QT4
 	libraryUpdateWindow->setValue((int)(progress * 100));
 #else
 	libraryUpdateWindow->setProgress((int)(progress * 100));
@@ -553,7 +554,7 @@ void ModelViewerWidget::paintEvent(QPaintEvent *event)
 		int r, g, b;
 
 		preferences->getBackgroundColor(r, g, b);
-#if QT_VERSION < 0x40000
+#ifndef HAVE_QT4
 		QPainter painter(this);
 		painter.fillRect(event->rect(), QColor(r, g, b));
 #endif
@@ -1099,7 +1100,7 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 		libraryUpdateWindow = new QProgressDialog(
 						TCLocalStrings::get("CheckingForUpdates"),
 						TCLocalStrings::get("Cancel"),
-#if QT_VERSION >= 0x40000
+#ifdef HAVE_QT4
 						0,100,mainWindow);
 #else
 						100,mainWindow,"progress",TRUE);
@@ -1328,7 +1329,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 #ifdef __APPLE__
 	fileMenu->removeItemAt(fileSeparatorIndex);
 	fileSeparatorIndex = -1;
-#if (QT_VERSION >>16)>=4
+#ifdef HAVE_QT4
 	openRecentMenu = new Q3PopupMenu(this, "openRecentMenu");
 #else // QT3
 	openRecentMenu = new QPopupMenu(this, "openRecentMenu");
@@ -1378,7 +1379,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	}
 	connectMenuShows();
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-#if QT_VERSION < 0x400
+#ifndef HAVE_QT4
 	QObjectList *toolButtons = mainWindow->toolbar->queryList("QToolButton");
 	QObjectListIt it(*toolButtons);
 	QObject *object;
@@ -1642,7 +1643,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		size=mainWindow->size();
 		menuBar->hide();
 		statusBar->hide();
-#if (QT_VERSION >>16)==3
+#ifndef HAVE_QT4
 		mainWindow->GroupBox12->setFrameShape( QFrame::NoFrame );
 #endif
 		mainWindow->GroupBox12->layout()->setMargin( 0 );
@@ -1651,7 +1652,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		fullscreen=1;
 	} else
 	{
-#if (QT_VERSION >>16)==3
+#ifndef HAVE_QT4
 		mainWindow->GroupBox12->setFrameShape( QGroupBox::WinPanel );
 #endif
         mainWindow->GroupBox12->layout()->setMargin( 2 );
@@ -1785,7 +1786,7 @@ void ModelViewerWidget::doHelpContents(void)
 		    helpContents->HelpTextBrowser->setReadOnly(TRUE);
         }
 	}
-#if QT_VERSION < 0x40000
+#ifndef HAVE_QT4
 	QProcess *proc = new QProcess(this);
 	proc->addArgument("gnome-open");
 	proc->addArgument(findPackageFile(TCLocalStrings::get("HelpHtml")));
