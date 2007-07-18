@@ -51,6 +51,23 @@
 		};
 /* End PBXBuildStyle section */
 
+/* Begin PBXContainerItemProxy section */
+		1F6A74A40C4DEFED00DAF5C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F6A74A00C4DEFED00DAF5C8 /* TCFoundation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libTCFoundation.a */;
+			remoteInfo = TCFoundation;
+		};
+		1F6A74A80C4DEFF500DAF5C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F6A74A00C4DEFED00DAF5C8 /* TCFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* TCFoundation */;
+			remoteInfo = TCFoundation;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -79,6 +96,7 @@
 		1F240B6A0A588AFA00691116 /* TREVertexKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREVertexKey.h; path = ../../TRE/TREVertexKey.h; sourceTree = SOURCE_ROOT; };
 		1F240B6B0A588AFA00691116 /* TREVertexStore.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREVertexStore.cpp; path = ../../TRE/TREVertexStore.cpp; sourceTree = SOURCE_ROOT; };
 		1F240B6C0A588AFA00691116 /* TREVertexStore.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREVertexStore.h; path = ../../TRE/TREVertexStore.h; sourceTree = SOURCE_ROOT; };
+		1F6A74A00C4DEFED00DAF5C8 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1FD4D7A30BA4C41B00419677 /* TREGLExtensions.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TREGLExtensions.cpp; path = ../../TRE/TREGLExtensions.cpp; sourceTree = SOURCE_ROOT; };
 		1FD4D7A40BA4C41B00419677 /* TREGLExtensions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TREGLExtensions.h; path = ../../TRE/TREGLExtensions.h; sourceTree = SOURCE_ROOT; };
 		32DBCF5E0370ADEE00C91783 /* TRE_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TRE_Prefix.pch; sourceTree = "<group>"; };
@@ -109,6 +127,7 @@
 		0867D691FE84028FC02AAC07 /* TRE */ = {
 			isa = PBXGroup;
 			children = (
+				1F6A74A00C4DEFED00DAF5C8 /* TCFoundation.xcodeproj */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
@@ -177,6 +196,14 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
+		1F6A74A10C4DEFED00DAF5C8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F6A74A50C4DEFED00DAF5C8 /* libTCFoundation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -225,6 +252,7 @@
 			buildSettings = {
 			};
 			dependencies = (
+				1F6A74A90C4DEFF500DAF5C8 /* PBXTargetDependency */,
 			);
 			name = TRE;
 			productName = TRE;
@@ -247,11 +275,27 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* TRE */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1F6A74A10C4DEFED00DAF5C8 /* Products */;
+					ProjectRef = 1F6A74A00C4DEFED00DAF5C8 /* TCFoundation.xcodeproj */;
+				},
+			);
 			targets = (
 				D2AAC07D0554694100DB518D /* TRE */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1F6A74A50C4DEFED00DAF5C8 /* libTCFoundation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTCFoundation.a;
+			remoteRef = 1F6A74A40C4DEFED00DAF5C8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D2AAC07B0554694100DB518D /* Sources */ = {
@@ -274,6 +318,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1F6A74A90C4DEFF500DAF5C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TCFoundation;
+			targetProxy = 1F6A74A80C4DEFF500DAF5C8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1DEB921F08733DC00010E9CD /* Debug */ = {
