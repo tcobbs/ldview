@@ -94,6 +94,34 @@
 			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = TRE;
 		};
+		1F6A747E0C4DEEFF00DAF5C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240B960A588B9000691116 /* TCFoundation.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* TCFoundation */;
+			remoteInfo = TCFoundation;
+		};
+		1F6A74800C4DEF0800DAF5C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240BA60A588BB800691116 /* LDLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* LDLib */;
+			remoteInfo = LDLib;
+		};
+		1F6A74820C4DEF0C00DAF5C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* LDLoader */;
+			remoteInfo = LDLoader;
+		};
+		1F6A74840C4DEF1000DAF5C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F240BAD0A588BC600691116 /* TRE.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* TRE */;
+			remoteInfo = TRE;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -368,6 +396,10 @@
 			buildSettings = {
 			};
 			dependencies = (
+				1F6A747F0C4DEEFF00DAF5C8 /* PBXTargetDependency */,
+				1F6A74810C4DEF0800DAF5C8 /* PBXTargetDependency */,
+				1F6A74830C4DEF0C00DAF5C8 /* PBXTargetDependency */,
+				1F6A74850C4DEF1000DAF5C8 /* PBXTargetDependency */,
 			);
 			name = LDView;
 			productInstallPath = "$(HOME)/Applications";
@@ -496,6 +528,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1F6A747F0C4DEEFF00DAF5C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TCFoundation;
+			targetProxy = 1F6A747E0C4DEEFF00DAF5C8 /* PBXContainerItemProxy */;
+		};
+		1F6A74810C4DEF0800DAF5C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LDLib;
+			targetProxy = 1F6A74800C4DEF0800DAF5C8 /* PBXContainerItemProxy */;
+		};
+		1F6A74830C4DEF0C00DAF5C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LDLoader;
+			targetProxy = 1F6A74820C4DEF0C00DAF5C8 /* PBXContainerItemProxy */;
+		};
+		1F6A74850C4DEF1000DAF5C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TRE;
+			targetProxy = 1F6A74840C4DEF1000DAF5C8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
