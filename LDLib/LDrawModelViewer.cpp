@@ -145,6 +145,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.drawLightDats = true;
 	flags.optionalStandardLight = true;
 	flags.noLightGeom = false;
+	flags.updating = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -2642,6 +2643,7 @@ void LDrawModelViewer::update(void)
 	static bool stipplePatternSet = false;
 	TCFloat eyeXOffset = 0.0f;
 
+	flags.updating = true;
 	if (!stipplePatternSet)
 	{
 		int i;
@@ -2706,6 +2708,7 @@ void LDrawModelViewer::update(void)
 	clearBackground();
 	if (!mainTREModel)
 	{
+		flags.updating = false;
 		return;
 	}
 /*
@@ -2782,6 +2785,7 @@ void LDrawModelViewer::update(void)
 		}
 		glViewport(0, 0, width / 2, height);
 	}
+	flags.updating = false;
 }
 
 void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)

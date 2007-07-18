@@ -187,6 +187,7 @@ class LDrawModelViewer: public TCObject
 		}
 		bool getNoLightGeom(void) { return flags.noLightGeom != false; }
 		void setNoLightGeom(bool value);
+		bool getUpdating(void) { return flags.updating != false; }
 		void setMissingPartWait(int value) { missingPartWait = value; }
 		int getMissingPartWait(void) { return missingPartWait; }
 		void setUpdatedPartWait(int value) { updatedPartWait = value; }
@@ -530,6 +531,7 @@ class LDrawModelViewer: public TCObject
 			bool drawLightDats:1;
 			bool optionalStandardLight:1;
 			bool noLightGeom:1;
+			bool updating:1;
 		} flags;
 		struct CameraData
 		{
