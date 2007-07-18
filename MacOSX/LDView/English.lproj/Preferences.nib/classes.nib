@@ -1,4 +1,148 @@
 {
-    IBClasses = ({CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }); 
+    IBClasses = (
+        {
+            CLASS = EffectsPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                alternateLightingCheck = NSButton; 
+                flatShadingCheck = NSButton; 
+                hideLightDatGeom = NSButton; 
+                highQualityCheck = NSButton; 
+                lightDirMatrix = NSMatrix; 
+                lightingCheck = NSButton; 
+                opacitySlider = NSSlider; 
+                replaceStandardLightCheck = NSButton; 
+                smoothCurvesCheck = NSButton; 
+                sortTransCheck = NSButton; 
+                specularCheck = NSButton; 
+                stereoAmountSlider = NSSlider; 
+                stereoCheck = NSButton; 
+                stereoMatrix = NSMatrix; 
+                stippleTransCheck = NSButton; 
+                subduedCheck = NSButton; 
+                useLightDatCheck = NSButton; 
+                wcThicknessSlider = NSSlider; 
+                wireframeCutawayCheck = NSButton; 
+                wireframeCutawayMatrix = NSMatrix; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = GeneralPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                antialiasedLinesCheck = NSButton; 
+                backgroundColorWell = NSColorWell; 
+                defaultColorWell = NSColorWell; 
+                fovField = NSTextField; 
+                memoryUsagePopUp = NSPopUpButton; 
+                processLDConfigCheck = NSButton; 
+                showErrorsCheck = NSButton; 
+                showFrameRateCheck = NSButton; 
+                transparentDefaultCheck = NSButton; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }, 
+        {
+            ACTIONS = {
+                bfc = id; 
+                conditionalLines = id; 
+                edgeLines = id; 
+                seamWidth = id; 
+                wireframe = id; 
+            }; 
+            CLASS = GeometryPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                bfcCheck = NSButton; 
+                blackEdgesCheck = NSButton; 
+                conditionalLinesCheck = NSButton; 
+                edgeLinesCheck = NSButton; 
+                edgeThicknessLabel = NSTextField; 
+                edgeThicknessSlider = NSSlider; 
+                edgesOnlyCheck = NSButton; 
+                fogCheck = NSButton; 
+                greenFrontFacesCheck = NSButton; 
+                highQualityEdgesCheck = NSButton; 
+                redBackFacesCheck = NSButton; 
+                removeHiddenCheck = NSButton; 
+                seamWidthCheck = NSButton; 
+                seamWidthField = NSTextField; 
+                seamWidthStepper = NSStepper; 
+                showAllConditionalsCheck = NSButton; 
+                showControlPtsCheck = NSButton; 
+                wireframeCheck = NSButton; 
+                wireframeThicknessLabel = NSTextField; 
+                wireframeThicknessSlider = NSSlider; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }, 
+        {
+            ACTIONS = {delete = id; hotKey = id; new = id; }; 
+            CLASS = PrefSetsPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                deleteButton = NSButton; 
+                hotKeyButton = NSButton; 
+                newButton = NSButton; 
+                tableView = NSTableView; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }, 
+        {
+            ACTIONS = {resetPage = id; valueChanged = id; }; 
+            CLASS = PreferencePage; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {apply = id; cancel = id; ok = id; }; 
+            CLASS = Preferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                applyButton = NSButton; 
+                cancelButton = NSButton; 
+                effectsPage = EffectsPage; 
+                generalPage = GeneralPage; 
+                geometryPage = GeometryPage; 
+                okButton = NSButton; 
+                prefSetsPage = PrefSetsPage; 
+                primitivesPage = PrimitivesPage; 
+                tabView = NSTabView; 
+                updatesPage = UpdatesPage; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = PrimitivesPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                anisoLevelLabel = NSTextField; 
+                anisoSlider = NSSlider; 
+                curveQualitySlider = NSSlider; 
+                filteringMatrix = NSMatrix; 
+                hiResCheck = NSButton; 
+                lowQualityStudsCheck = NSButton; 
+                primitiveSubstitutionCheck = NSButton; 
+                textureStudsCheck = NSButton; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }, 
+        {
+            CLASS = UpdatesPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                automaticCheck = NSButton; 
+                missingDaysField = NSTextField; 
+                missingUpdatesField = NSTextField; 
+                portField = NSTextField; 
+                proxyField = NSTextField; 
+                proxyMatrix = NSMatrix; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }
+    ); 
     IBVersion = 1; 
 }

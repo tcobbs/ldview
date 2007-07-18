@@ -2,7 +2,7 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {newWindow = id; openModel = id; resetView = id; }; 
+            ACTIONS = {newWindow = id; openModel = id; preferences = id; resetView = id; }; 
             CLASS = LDViewController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 

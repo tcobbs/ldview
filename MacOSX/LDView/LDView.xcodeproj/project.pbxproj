@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */; };
+		1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031E80C49DF3B009B7720 /* Preferences.mm */; };
+		1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */; };
+		1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EE0C49DF58009B7720 /* PreferencePage.mm */; };
+		1F2031F30C49DF5D009B7720 /* GeneralPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031F20C49DF5D009B7720 /* GeneralPage.mm */; };
+		1F2031F60C49DF64009B7720 /* GeometryPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031F50C49DF64009B7720 /* GeometryPage.mm */; };
+		1F2031F90C49DF69009B7720 /* PrefSetsPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031F70C49DF69009B7720 /* PrefSetsPage.mm */; };
+		1F2031FC0C49DF6D009B7720 /* PrimitivesPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031FB0C49DF6D009B7720 /* PrimitivesPage.mm */; };
+		1F2031FF0C49DF72009B7720 /* UpdatesPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031FE0C49DF72009B7720 /* UpdatesPage.mm */; };
 		1F20D6520A5F6F8200F677AC /* StudLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F20D6510A5F6F8200F677AC /* StudLogo.png */; };
 		1F20D6F40A5F759C00F677AC /* SansSerif.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 1F20D6F30A5F759C00F677AC /* SansSerif.fnt */; };
 		1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */; };
@@ -94,6 +102,22 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		1F02B0DC0A69EBDC00678F51 /* AlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertHandler.h; sourceTree = "<group>"; };
 		1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AlertHandler.cpp; sourceTree = "<group>"; };
+		1F2031E80C49DF3B009B7720 /* Preferences.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Preferences.mm; sourceTree = "<group>"; };
+		1F2031E90C49DF3B009B7720 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
+		1F2031EB0C49DF4E009B7720 /* EffectsPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EffectsPage.h; sourceTree = "<group>"; };
+		1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = EffectsPage.mm; sourceTree = "<group>"; };
+		1F2031EE0C49DF58009B7720 /* PreferencePage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PreferencePage.mm; sourceTree = "<group>"; };
+		1F2031EF0C49DF58009B7720 /* PreferencePage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PreferencePage.h; sourceTree = "<group>"; };
+		1F2031F10C49DF5D009B7720 /* GeneralPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GeneralPage.h; sourceTree = "<group>"; };
+		1F2031F20C49DF5D009B7720 /* GeneralPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = GeneralPage.mm; sourceTree = "<group>"; };
+		1F2031F40C49DF64009B7720 /* GeometryPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GeometryPage.h; sourceTree = "<group>"; };
+		1F2031F50C49DF64009B7720 /* GeometryPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = GeometryPage.mm; sourceTree = "<group>"; };
+		1F2031F70C49DF69009B7720 /* PrefSetsPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrefSetsPage.mm; sourceTree = "<group>"; };
+		1F2031F80C49DF69009B7720 /* PrefSetsPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefSetsPage.h; sourceTree = "<group>"; };
+		1F2031FA0C49DF6D009B7720 /* PrimitivesPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrimitivesPage.h; sourceTree = "<group>"; };
+		1F2031FB0C49DF6D009B7720 /* PrimitivesPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrimitivesPage.mm; sourceTree = "<group>"; };
+		1F2031FD0C49DF72009B7720 /* UpdatesPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UpdatesPage.h; sourceTree = "<group>"; };
+		1F2031FE0C49DF72009B7720 /* UpdatesPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdatesPage.mm; sourceTree = "<group>"; };
 		1F20D6510A5F6F8200F677AC /* StudLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StudLogo.png; path = ../../Textures/StudLogo.png; sourceTree = SOURCE_ROOT; };
 		1F20D6F30A5F759C00F677AC /* SansSerif.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = SansSerif.fnt; path = ../../Textures/SansSerif.fnt; sourceTree = SOURCE_ROOT; };
 		1F20DAE40A60BE9600F677AC /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
@@ -171,6 +195,7 @@
 				1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */,
 				1F02B0DC0A69EBDC00678F51 /* AlertHandler.h */,
 				1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */,
+				1FE622C60C4AE12E009FA9FF /* Preferences */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -242,6 +267,29 @@
 				1F240BAD0A588BC600691116 /* TRE.xcodeproj */,
 			);
 			name = "Support Projects";
+			sourceTree = "<group>";
+		};
+		1FE622C60C4AE12E009FA9FF /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				1F2031E90C49DF3B009B7720 /* Preferences.h */,
+				1F2031E80C49DF3B009B7720 /* Preferences.mm */,
+				1F2031EF0C49DF58009B7720 /* PreferencePage.h */,
+				1F2031EE0C49DF58009B7720 /* PreferencePage.mm */,
+				1F2031F10C49DF5D009B7720 /* GeneralPage.h */,
+				1F2031F20C49DF5D009B7720 /* GeneralPage.mm */,
+				1F2031F40C49DF64009B7720 /* GeometryPage.h */,
+				1F2031F50C49DF64009B7720 /* GeometryPage.mm */,
+				1F2031EB0C49DF4E009B7720 /* EffectsPage.h */,
+				1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */,
+				1F2031F80C49DF69009B7720 /* PrefSetsPage.h */,
+				1F2031F70C49DF69009B7720 /* PrefSetsPage.mm */,
+				1F2031FA0C49DF6D009B7720 /* PrimitivesPage.h */,
+				1F2031FB0C49DF6D009B7720 /* PrimitivesPage.mm */,
+				1F2031FD0C49DF72009B7720 /* UpdatesPage.h */,
+				1F2031FE0C49DF72009B7720 /* UpdatesPage.mm */,
+			);
+			name = Preferences;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* LDView */ = {
@@ -436,6 +484,14 @@
 				1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */,
 				1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */,
 				1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */,
+				1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */,
+				1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */,
+				1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */,
+				1F2031F30C49DF5D009B7720 /* GeneralPage.mm in Sources */,
+				1F2031F60C49DF64009B7720 /* GeometryPage.mm in Sources */,
+				1F2031F90C49DF69009B7720 /* PrefSetsPage.mm in Sources */,
+				1F2031FC0C49DF6D009B7720 /* PrimitivesPage.mm in Sources */,
+				1F2031FF0C49DF72009B7720 /* UpdatesPage.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,10 +564,6 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
@@ -557,6 +609,14 @@
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(LIBRARY_SEARCH_PATHS)",
+					../TCFoundation/build/Release,
+					../LDLoader/build/Release,
+					../TRE/build/Release,
+					../LDLib/build/Release,
+					/usr/local/lib,
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
