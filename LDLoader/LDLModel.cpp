@@ -543,8 +543,31 @@ const char* LDLModel::lDrawDir(void)
 //				sm_systemLDrawDir = copyString("C:\\LDRAW");
 			}
 #else // WIN32
+#ifdef __APPLE__
+			const char *libDir = "/Library/ldraw";
+			const char *homeDir = getenv("HOME");
+
+			if (homeDir != NULL)
+			{
+			
+				char *homeLib = copyString(homeDir, strlen(libDir));
+				
+				stripTrailingPathSeparators(homeLib);
+				strcat(homeLib, libDir);
+				if (verifyLDrawDir(homeLib))
+				{
+					setLDrawDir(homeLib);
+				}
+				delete homeLib;
+			}
+			if (!sm_systemLDrawDir)
+			{
+				setLDrawDir(libDir);
+			}
+#else // __APPLE__
 			setLDrawDir("/usr/local/ldraw");
 //			sm_systemLDrawDir = copyString("/usr/local/ldraw");
+#endif // __APPLE__
 #endif // WIN32
 		}
 		if (!verifyLDrawDir(sm_systemLDrawDir))
