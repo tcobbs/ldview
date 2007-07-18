@@ -26,6 +26,8 @@ public:
 		LowerRight		= 9,
 	};
 	LDPreferences(LDrawModelViewer* modelViewer = NULL);
+	
+	void setModelViewer(LDrawModelViewer *value);
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.
