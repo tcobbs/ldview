@@ -28,5 +28,6 @@ typedef enum
 
 - (BOOL)openModel:(NSString *)filename;
 - (void)resetView:(id)sender;
+- (LDrawModelViewer *)modelViewer;
 
 @end

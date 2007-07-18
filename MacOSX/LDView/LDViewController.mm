@@ -4,6 +4,7 @@
 #import "OCLocalStrings.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
+#include "Preferences.h"
 
 @implementation LDViewController
 
@@ -15,7 +16,21 @@
 		nil];
 	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
 		@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
+	modelWindows = [[NSMutableArray alloc] init];
+	preferences = [[Preferences alloc] initWithController:self];
 	return [super init];
+}
+
+- (void)dealloc
+{
+	[modelWindows release];
+	[preferences release];
+	[super dealloc];
+}
+
+- (NSArray *)modelWindows
+{
+	return modelWindows;
 }
 
 - (ModelWindow *)currentModelWindow
@@ -32,7 +47,10 @@
 - (BOOL)createWindow:(NSString *)filename
 {
 	ModelWindow *modelWindow = [[ModelWindow alloc] init];
-	
+
+	[modelWindows addObject:modelWindow];
+	[modelWindow release];
+	[preferences initModelWindow:modelWindow];
 	if (filename)
 	{
 		return [modelWindow openModel:filename];
@@ -74,6 +92,11 @@
 - (IBAction)openModel:(id)sender
 {
 	return [self openModel];
+}
+
+- (IBAction)preferences:(id)sender
+{
+	[preferences show];
 }
 
 - (BOOL)application:(NSApplication *)theApplication

@@ -52,6 +52,11 @@
 	modelViewer->setHeight((int)frame.size.height);
 }
 
+- (LDrawModelViewer *)modelViewer
+{
+	return modelViewer;
+}
+
 - (BOOL)openModel:(NSString *)filename
 {
 	BOOL retValue = NO;
@@ -64,6 +69,10 @@
 		if (modelViewer->loadModel(true))
 		{
 			retValue = YES;
+		}
+		else
+		{
+			NSRunAlertPanel(@"Error", @"Error loading file", @"OK", nil, nil);
 		}
 		loading = NO;
 		[self setNeedsDisplay:YES];
@@ -248,7 +257,7 @@
 
 - (void)drawRect:(NSRect)rect
 {
-	if (loading || !modelViewer)
+	if (loading || !modelViewer || modelViewer->getUpdating())
 	{
 		[[NSColor blackColor]  set];
 		NSRectFill(rect);
