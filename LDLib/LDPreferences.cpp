@@ -57,6 +57,24 @@ void LDPreferences::dealloc(void)
 	TCObject::dealloc();
 }
 
+void LDPreferences::setModelViewer(LDrawModelViewer *value)
+{
+	if (value != modelViewer)
+	{
+		if (modelViewer)
+		{
+			modelViewer->setPreferences(NULL);
+		}
+		TCObject::release(modelViewer);
+		modelViewer = value;
+		modelViewer->retain();
+		if (modelViewer)
+		{
+			modelViewer->setPreferences(this);
+		}
+	}
+}
+
 int LDPreferences::getColor(int r, int g, int b)
 {
 	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
