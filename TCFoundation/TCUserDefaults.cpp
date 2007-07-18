@@ -603,19 +603,40 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 #if defined(__APPLE__) && !defined(_QT)
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
+	unichar *ucValue = NULL;
+	int valueLen = wcslen(value);
 
+	if (sizeof(wchar_t) == sizeof(unichar))
+	{
+		ucValue = (unichar *)value;
+		consolePrintf("sizeof(wchar_t) == sizeof(unichar)\n");
+	}
+	else
+	{
+		ucValue = new unichar[valueLen];
+		
+		for (int i = 0; i < valueLen; i++)
+		{
+			ucValue[i] = (unichar)value[i];
+		}
+		consolePrintf("sizeof(wchar_t) != sizeof(unichar)\n");
+	}
 	if (sessionDict)
 	{
-		[sessionDict setObject: [NSString stringWithCString: value encoding:
-			NSASCIIStringEncoding] forKey: nsKey];
+		[sessionDict setObject: [NSString stringWithCharacters: ucValue
+			length: valueLen] forKey: nsKey];
 		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
 			forName: getSessionKey()];
 	}
 	else
 	{
 		[[NSUserDefaults standardUserDefaults] setObject:
-			[NSString stringWithCString: value encoding: NSASCIIStringEncoding]
+			[NSString stringWithCharacters: ucValue length: valueLen]
 			forKey: nsKey];
+	}
+	if (ucValue != (unichar *)value)
+	{
+		delete ucValue;
 	}
 #endif // __APPLE__ && !_QT
 #ifdef WIN32
@@ -808,7 +829,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	}
 	if ([returnString isKindOfClass: [NSString class]])
 	{
-		return copyString([returnString cStringUsingEncoding:
+		return mbstoucstring([returnString cStringUsingEncoding:
 			NSASCIIStringEncoding]);
 	}
 	else
