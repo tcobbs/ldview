@@ -9,6 +9,10 @@ class LDPreferences;
 {
 	Preferences *preferences;
 	LDPreferences *ldPreferences;
+
+	IBOutlet NSTabViewItem *tabPage;
+	NSMutableDictionary *changedTextFields;
+	NSNumber *one;
 }
 - (void)apply;
 - (void)updateLdPreferences;
@@ -20,4 +24,6 @@ class LDPreferences;
 - (bool)getCheck:(NSButton *)check;
 - (void)enableLabel:(NSTextField *)label value:(BOOL)enabled;
 - (void)groupCheck:(id)sender name:(NSString *)groupName;
+- (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init;
+- (void)textDidEndEditing:(NSNotification *)aNotification;
 @end
