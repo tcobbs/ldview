@@ -27,4 +27,8 @@
     IBOutlet NSButton *wireframeCutawayCheck;
     IBOutlet NSMatrix *wireframeCutawayMatrix;
 }
+- (IBAction)lighting:(id)sender;
+- (IBAction)useLightDats:(id)sender;
+- (IBAction)stereo:(id)sender;
+- (IBAction)wireframeCutaway:(id)sender;
 @end

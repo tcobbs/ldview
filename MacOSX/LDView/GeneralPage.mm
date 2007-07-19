@@ -7,7 +7,6 @@
 - (void)setup
 {
 	[super setup];
-	ldPreferences = [preferences ldPreferences];
 	[self setCheck:antialiasedLinesCheck
 		value:ldPreferences->getLineSmoothing()];
 	[self setCheck:showFrameRateCheck value:ldPreferences->getShowFps()];
@@ -18,7 +17,7 @@
 	// Default color
 	[self setCheck:transparentDefaultCheck
 		value:ldPreferences->getTransDefaultColor()];
-	// FOV
+	[fovField setFloatValue:ldPreferences->getFov()];
 	// Memory Usage
 }
 
@@ -29,8 +28,12 @@
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
 	ldPreferences->setShowFps([self getCheck:showFrameRateCheck]);
+	// BG color
+	// Default color
 	ldPreferences->setTransDefaultColor(
 		[self getCheck:transparentDefaultCheck]);
+	ldPreferences->setFov([fovField floatValue]);
+	// Memory Usage
 }
 
 @end

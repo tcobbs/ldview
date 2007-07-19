@@ -1,6 +1,7 @@
 {
     IBClasses = (
         {
+            ACTIONS = {lighting = id; stereo = id; useLightDats = id; wireframeCutaway = id; }; 
             CLASS = EffectsPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -94,6 +95,7 @@
             ACTIONS = {resetPage = id; valueChanged = id; }; 
             CLASS = PreferencePage; 
             LANGUAGE = ObjC; 
+            OUTLETS = {tabPage = NSTabViewItem; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
