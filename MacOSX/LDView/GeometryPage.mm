@@ -5,7 +5,6 @@
 
 - (void)enableSeamsUI:(BOOL)enabled
 {
-	[self setCheck:seamWidthCheck value:enabled];
 	[seamWidthField setEnabled:enabled];
 	[seamWidthStepper setEnabled:enabled];
 }
@@ -25,19 +24,12 @@
 
 - (void)setupModelBox
 {
-	if (ldPreferences->getUseSeams())
-	{
-		[self enableSeams];
-	}
-	else
-	{
-		[self disableSeams];
-	}
+	[self setCheck:seamWidthCheck value:ldPreferences->getUseSeams()];
+	[self groupCheck:seamWidthCheck name:@"Seams" init:YES];
 }
 
 - (void)enableWireframeUI:(BOOL)enabled
 {
-	[self setCheck:wireframeCheck value:enabled];
 	[fogCheck setEnabled:enabled];
 	[removeHiddenCheck setEnabled:enabled];
 	[wireframeThicknessSlider setEnabled:enabled];
@@ -50,7 +42,7 @@
 	[self setCheck:fogCheck value:ldPreferences->getUseWireframeFog()];
 	[self setCheck:removeHiddenCheck
 			 value:ldPreferences->getRemoveHiddenLines()];
-	// Thickness
+	[wireframeThicknessSlider setIntValue:ldPreferences->getWireframeThickness()];
 }
 
 - (void)disableWireframe
@@ -58,23 +50,11 @@
 	[self enableWireframeUI:NO];
 	[self setCheck:fogCheck value:NO];
 	[self setCheck:removeHiddenCheck value:NO];
-}
-
-- (void)setupWireframeBox
-{
-	if (ldPreferences->getDrawWireframe())
-	{
-		[self enableWireframe];
-	}
-	else
-	{
-		[self disableWireframe];
-	}
+	[wireframeThicknessSlider setIntValue:1];
 }
 
 - (void)enableBfcUI:(BOOL)enabled
 {
-	[self setCheck:bfcCheck value:enabled];
 	[redBackFacesCheck setEnabled:enabled];
 	[greenFrontFacesCheck setEnabled:enabled];
 }
@@ -93,21 +73,8 @@
 	[self setCheck:greenFrontFacesCheck value:false];
 }
 
-- (void)setupBfcBox
-{
-	if (ldPreferences->getBfc())
-	{
-		[self enableBfc];
-	}
-	else
-	{
-		[self disableBfc];
-	}
-}
-
 - (void)enableEdgesUI:(BOOL)enabled
 {
-	[self setCheck:edgeLinesCheck value:enabled];
 	[edgesOnlyCheck setEnabled:enabled];
 	[conditionalLinesCheck setEnabled:enabled];
 	[showAllConditionalsCheck setEnabled:enabled];
@@ -120,7 +87,6 @@
 
 - (void)enableCondtionalsUI:(BOOL)enabled
 {
-	[self setCheck:conditionalLinesCheck value:enabled];
 	[showAllConditionalsCheck setEnabled:enabled];
 	[showControlPtsCheck setEnabled:enabled];
 }
@@ -143,43 +109,33 @@
 {
 	[self enableEdgesUI:YES];
 	[self setCheck:edgesOnlyCheck value:ldPreferences->getEdgesOnly()];
-	if (ldPreferences->getDrawConditionalHighlights())
-	{
-		[self enableConditionals];
-	}
-	else
-	{
-		[self disableConditionals];
-	}
+	[self setCheck:conditionalLinesCheck value:ldPreferences->getDrawConditionalHighlights()];
+	[self groupCheck:conditionalLinesCheck name:@"Conditionals" init:YES];
 	[self setCheck:highQualityEdgesCheck value:ldPreferences->getUsePolygonOffset()];
 	[self setCheck:blackEdgesCheck value:ldPreferences->getBlackHighlights()];
-	// @ToDo: Edge thickness.
+	[edgeThicknessSlider setIntValue:ldPreferences->getEdgeThickness()];
 }
 
 - (void)disableEdges
 {
 	[self enableEdgesUI:NO];
-}
-
-- (void)setupEdgesBox
-{
-	if (ldPreferences->getShowHighlightLines())
-	{
-		[self enableEdges];
-	}
-	else
-	{
-		[self disableEdges];
-	}
+	[self setCheck:edgesOnlyCheck value:NO];
+	[self setCheck:conditionalLinesCheck value:NO];
+	[self setCheck:highQualityEdgesCheck value:NO];
+	[self setCheck:blackEdgesCheck value:NO];
+	[edgeThicknessSlider setIntValue:1];
 }
 
 - (void)setup
 {
 	[super setup];
 	[self setupModelBox];
-	[self setupWireframeBox];
-	[self setupBfcBox];
-	[self setupEdgesBox];
+	[self setCheck:wireframeCheck value:ldPreferences->getDrawWireframe()];
+	[self setCheck:bfcCheck value:ldPreferences->getBfc()];
+	[self setCheck:edgeLinesCheck value:ldPreferences->getShowHighlightLines()];
+	[self groupCheck:wireframeCheck name:@"Wireframe" init:YES];
+	[self groupCheck:bfcCheck name:@"Bfc" init:YES];
+	[self groupCheck:edgeLinesCheck name:@"Edges" init:YES];
 }
 
 - (void)updateLdPreferences
@@ -199,6 +155,7 @@
 		ldPreferences->setDrawWireframe(true);
 		ldPreferences->setUseWireframeFog([self getCheck:fogCheck]);
 		ldPreferences->setRemoveHiddenLines([self getCheck:removeHiddenCheck]);
+		ldPreferences->setWireframeThickness([wireframeThicknessSlider intValue]);
 	}
 	else
 	{
@@ -223,7 +180,7 @@
 		ldPreferences->setShowConditionalControlPoints([self getCheck:showControlPtsCheck]);
 		ldPreferences->setUsePolygonOffset([self getCheck:highQualityEdgesCheck]);
 		ldPreferences->setBlackHighlights([self getCheck:blackEdgesCheck]);
-		// Edge thickness.
+		ldPreferences->setEdgeThickness([edgeThicknessSlider intValue]);
 	}
 	else
 	{

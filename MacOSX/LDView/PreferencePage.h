@@ -12,6 +12,9 @@ class LDPreferences;
 
 	IBOutlet NSTabViewItem *tabPage;
 	NSMutableDictionary *changedTextFields;
+	NSMutableDictionary *origColors;
+	NSMutableDictionary *origBoxTitles;
+	NSMutableDictionary *disabledBoxTitles;
 	NSNumber *one;
 }
 - (void)apply;
@@ -23,6 +26,7 @@ class LDPreferences;
 - (void)setCheck:(NSButton *)check value:(bool)value;
 - (bool)getCheck:(NSButton *)check;
 - (void)enableLabel:(NSTextField *)label value:(BOOL)enabled;
+- (void)enableBoxTitle:(NSBox *)box value:(BOOL)enabled;
 - (void)groupCheck:(id)sender name:(NSString *)groupName;
 - (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init;
 - (void)textDidEndEditing:(NSNotification *)aNotification;
