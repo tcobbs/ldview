@@ -1,7 +1,16 @@
 {
     IBClasses = (
         {
-            ACTIONS = {lighting = id; stereo = id; useLightDats = id; wireframeCutaway = id; }; 
+            ACTIONS = {
+                flatShading = id; 
+                lighting = id; 
+                smoothCurves = id; 
+                sort = id; 
+                stereo = id; 
+                stipple = id; 
+                useLightDats = id; 
+                wireframeCutaway = id; 
+            }; 
             CLASS = EffectsPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -9,19 +18,23 @@
                 flatShadingCheck = NSButton; 
                 hideLightDatGeom = NSButton; 
                 highQualityCheck = NSButton; 
+                lightDirBox = NSBox; 
                 lightDirMatrix = NSMatrix; 
                 lightingCheck = NSButton; 
+                opacityLabel = NSTextField; 
                 opacitySlider = NSSlider; 
                 replaceStandardLightCheck = NSButton; 
                 smoothCurvesCheck = NSButton; 
                 sortTransCheck = NSButton; 
                 specularCheck = NSButton; 
+                stereoAmountLabel = NSTextField; 
                 stereoAmountSlider = NSSlider; 
                 stereoCheck = NSButton; 
                 stereoMatrix = NSMatrix; 
                 stippleTransCheck = NSButton; 
                 subduedCheck = NSButton; 
                 useLightDatCheck = NSButton; 
+                wcThicknessLabel = NSTextField; 
                 wcThicknessSlider = NSSlider; 
                 wireframeCutawayCheck = NSButton; 
                 wireframeCutawayMatrix = NSMatrix; 

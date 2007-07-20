@@ -5,11 +5,11 @@
 
 - (void)enableLightingUI:(BOOL)enabled
 {
-	[self setCheck:lightingCheck value:enabled];
 	[highQualityCheck setEnabled:enabled];
 	[subduedCheck setEnabled:enabled];
 	[specularCheck setEnabled:enabled];
 	[alternateLightingCheck setEnabled:enabled];
+	[self enableBoxTitle:lightDirBox value:enabled];
 	[lightDirMatrix setEnabled:enabled];
 	[useLightDatCheck setEnabled:enabled];
 	[replaceStandardLightCheck setEnabled:enabled];
@@ -22,7 +22,15 @@
 	[self setCheck:highQualityCheck value:ldPreferences->getQualityLighting()];
 	[self setCheck:subduedCheck value:ldPreferences->getSubduedLighting()];
 	[self setCheck:specularCheck value:ldPreferences->getUseSpecular()];
-	[self setCheck:alternateLightingCheck value:ldPreferences->getOneLight()];	
+	[self setCheck:alternateLightingCheck value:ldPreferences->getOneLight()];
+	if (ldPreferences->getLightDirection() == LDPreferences::CustomDirection)
+	{
+		[lightDirMatrix deselectAllCells];
+	}
+	else
+	{
+		[lightDirMatrix selectCellWithTag:ldPreferences->getLightDirection()];
+	}
 	// Light dir
 	[self setCheck:useLightDatCheck value:ldPreferences->getDrawLightDats()];
 	[self groupCheck:useLightDatCheck name:@"LightDats" init:YES];
@@ -35,7 +43,8 @@
 	[self setCheck:highQualityCheck value:NO];
 	[self setCheck:subduedCheck value:NO];
 	[self setCheck:specularCheck value:NO];
-	[self setCheck:alternateLightingCheck value:NO];	
+	[self setCheck:alternateLightingCheck value:NO];
+	[lightDirMatrix deselectAllCells];
 	[self setCheck:useLightDatCheck value:NO];
 	[self setCheck:replaceStandardLightCheck value:NO];
 	[self setCheck:hideLightDatGeom value:NO];
@@ -43,7 +52,6 @@
 
 - (void)enableLightDatsUI:(BOOL)enabled
 {
-	[self setCheck:useLightDatCheck value:enabled];
 	[replaceStandardLightCheck setEnabled:enabled];
 }
 
@@ -61,37 +69,75 @@
 
 - (void)enableStereoUI:(BOOL)enabled
 {
-	[self setCheck:stereoCheck value:enabled];
 	[stereoMatrix setEnabled:enabled];
+	[self enableLabel:stereoAmountLabel value:enabled];
 	[stereoAmountSlider setEnabled:enabled];
 }
 
 - (void)enableStereo
 {
 	[self enableStereoUI:YES];
+	if (ldPreferences->getStereoMode() == LDVStereoNone)
+	{
+		[stereoMatrix selectCellWithTag:LDVStereoCrossEyed];		
+	}
+	else
+	{
+		[stereoMatrix selectCellWithTag:ldPreferences->getStereoMode()];
+	}
+	[stereoAmountSlider setIntValue:ldPreferences->getStereoEyeSpacing()];
 }
 
 - (void) disableStereo
 {
 	[self enableStereoUI:NO];
+	[stereoMatrix deselectAllCells];
+	[stereoAmountSlider setIntValue:0];
 }
 
 - (void)enableWireframeCutawayUI:(BOOL)enabled
 {
 	[self setCheck:wireframeCutawayCheck value:enabled];
 	[wireframeCutawayMatrix setEnabled:enabled];
+	[self enableLabel:opacityLabel value:enabled];
 	[opacitySlider setEnabled:enabled];
+	[self enableLabel:wcThicknessLabel value:enabled];
 	[wcThicknessSlider setEnabled:enabled];
 }
 
 - (void)enableWireframeCutaway
 {
 	[self enableWireframeCutawayUI:YES];
+	if (ldPreferences->getCutawayMode() == LDVCutawayNormal)
+	{
+		[wireframeCutawayMatrix selectCellWithTag:LDVCutawayWireframe];
+	}
+	else
+	{
+		[wireframeCutawayMatrix selectCellWithTag:ldPreferences->getCutawayMode()];
+	}
+	[opacitySlider setIntValue:ldPreferences->getCutawayAlpha()];
+	[wcThicknessSlider setIntValue:ldPreferences->getCutawayThickness()];
 }
 
 - (void) disableWireframeCutaway
 {
 	[self enableWireframeCutawayUI:NO];
+	[wireframeCutawayMatrix deselectAllCells];
+	[opacitySlider setIntValue:1];
+	[wcThicknessSlider setIntValue:1];
+}
+
+- (void)setupTransparencyBox
+{
+	[self setCheck:sortTransCheck value:ldPreferences->getSortTransparent()];
+	[self setCheck:stippleTransCheck value:ldPreferences->getUseStipple()];
+}
+
+- (void)setupMiscBox
+{
+	[self setCheck:flatShadingCheck value:ldPreferences->getUseFlatShading()];
+	[self setCheck:smoothCurvesCheck value:ldPreferences->getPerformSmoothing()];
 }
 
 - (void)setup
@@ -104,11 +150,62 @@
 	[self groupCheck:lightingCheck name:@"Lighting" init:YES];
 	[self groupCheck:stereoCheck name:@"Stereo" init:YES];
 	[self groupCheck:wireframeCutawayCheck name:@"WireframeCutaway" init:YES];
+	[self setupTransparencyBox];
+	[self setupMiscBox];
 }
 
 - (void)updateLdPreferences
 {
 	[super updateLdPreferences];
+	if ([self getCheck:lightingCheck])
+	{
+		ldPreferences->setUseLighting(true);
+		ldPreferences->setQualityLighting([self getCheck:highQualityCheck]);
+		ldPreferences->setSubduedLighting([self getCheck:subduedCheck]);
+		ldPreferences->setUseSpecular([self getCheck:specularCheck]);
+		ldPreferences->setOneLight([self getCheck:alternateLightingCheck]);
+		if ([lightDirMatrix selectedCell])
+		{
+			ldPreferences->setLightDirection((LDPreferences::LightDirection)[[lightDirMatrix selectedCell] tag]);
+		}
+		if ([self getCheck:useLightDatCheck])
+		{
+			ldPreferences->setDrawLightDats(true);
+			ldPreferences->setOptionalStandardLight([self getCheck:replaceStandardLightCheck]);
+		}
+		else
+		{
+			ldPreferences->setDrawLightDats(false);
+		}
+		ldPreferences->setNoLightGeom([self getCheck:hideLightDatGeom]);
+	}
+	else
+	{
+		ldPreferences->setUseLighting(false);
+	}
+	if ([self getCheck:stereoCheck])
+	{
+		ldPreferences->setStereoMode((LDVStereoMode)[[stereoMatrix selectedCell] tag]);
+		ldPreferences->setStereoEyeSpacing([stereoAmountSlider intValue]);
+	}
+	else
+	{
+		ldPreferences->setStereoMode(LDVStereoNone);
+	}
+	if ([self getCheck:wireframeCutawayCheck])
+	{
+		ldPreferences->setCutawayMode((LDVCutawayMode)[[wireframeCutawayMatrix selectedCell] tag]);
+		ldPreferences->setCutawayAlpha([opacitySlider intValue]);
+		ldPreferences->setCutawayThickness([wcThicknessSlider intValue]);
+	}
+	else
+	{
+		ldPreferences->setCutawayMode(LDVCutawayNormal);
+	}
+	ldPreferences->setSortTransparent([self getCheck:sortTransCheck]);
+	ldPreferences->setUseStipple([self getCheck:stippleTransCheck]);
+	ldPreferences->setUseFlatShading([self getCheck:flatShadingCheck]);
+	ldPreferences->setPerformSmoothing([self getCheck:smoothCurvesCheck]);
 }
 
 - (IBAction)lighting:(id)sender
@@ -129,6 +226,30 @@
 - (IBAction)wireframeCutaway:(id)sender
 {
 	[self groupCheck:wireframeCutawayCheck name:@"WireframeCutaway"];
+}
+
+- (IBAction)sort:(id)sender
+{
+	[self valueChanged:sender];
+	[self setCheck:stippleTransCheck value:false];
+}
+
+- (IBAction)stipple:(id)sender
+{
+	[self valueChanged:sender];
+	[self setCheck:sortTransCheck value:false];
+}
+
+- (IBAction)flatShading:(id)sender
+{
+	[self valueChanged:sender];
+	[self setCheck:smoothCurvesCheck value:false];
+}
+
+- (IBAction)smoothCurves:(id)sender
+{
+	[self valueChanged:sender];
+	[self setCheck:flatShadingCheck value:false];
 }
 
 @end

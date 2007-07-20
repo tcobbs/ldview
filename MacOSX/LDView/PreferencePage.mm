@@ -3,6 +3,11 @@
 
 @implementation PreferencePage
 
++ (NSNumber *)numberKey:(id)object
+{
+	return [NSNumber numberWithUnsignedInt:(unsigned int)object];
+}
+
 - (void)findTextFields:(NSView *)parentView
 {
 	NSArray *subviews = [parentView subviews];
@@ -38,6 +43,9 @@
 {
 	[one release];
 	[changedTextFields release];
+	[origColors release];
+	[origBoxTitles release];
+	[disabledBoxTitles release];
 	[super dealloc];
 }
 
@@ -45,6 +53,9 @@
 {
 	one = [[NSNumber alloc] initWithInt:1];
 	changedTextFields = [[NSMutableDictionary alloc] init];
+	origColors = [[NSMutableDictionary alloc] init];
+	origBoxTitles = [[NSMutableDictionary alloc] init];
+	disabledBoxTitles = [[NSMutableDictionary alloc] init];
 	[self findTextFields:[tabPage view]];
 }
 
@@ -83,12 +94,56 @@
 {
 	if (enabled)
 	{
-		[label setTextColor:[NSColor textColor]];
+		NSColor *color = [origColors objectForKey:[[self class] numberKey:label]];
+		
+		if (color)
+		{
+			[label setTextColor:color];
+		}
 	}
 	else
 	{
+		if (![origColors objectForKey:[[self class] numberKey:label]])
+		{
+			[origColors setObject:[label textColor] forKey:[[self class] numberKey:label]];
+		}
 		[label setTextColor:[NSColor disabledControlTextColor]];
 	}
+}
+
+- (void)enableBoxTitle:(NSBox *)box value:(BOOL)enabled
+{
+	NSCell *titleCell = [box titleCell];
+	NSNumber *numberKey = [[self class] numberKey:box];
+
+	if (enabled)
+	{
+		NSAttributedString *boxTitle = [origBoxTitles objectForKey:numberKey];
+			
+		if (boxTitle)
+		{
+			[titleCell setAttributedStringValue:boxTitle];
+		}
+	}
+	else
+	{
+		if (![origBoxTitles objectForKey:numberKey])
+		{
+			[origBoxTitles setObject:[titleCell attributedStringValue] forKey:numberKey];
+		}
+		if (![disabledBoxTitles objectForKey:numberKey])
+		{
+			NSMutableAttributedString *titleString = [[titleCell attributedStringValue] mutableCopy];
+			NSRange range;
+			NSMutableDictionary *attributes = [[titleString attributesAtIndex:0 effectiveRange:&range] mutableCopy];
+
+			[attributes setObject:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName];
+			[titleString setAttributes:[attributes autorelease] range:range];
+			[disabledBoxTitles setObject:[titleString autorelease] forKey:numberKey];
+		}
+		[titleCell setAttributedStringValue:[disabledBoxTitles objectForKey:numberKey]];
+	}
+	[box setNeedsDisplay:YES];
 }
 
 - (void)updateLdPreferences
@@ -123,11 +178,6 @@
 	}
 	// Try doing THIS in C++!
 	[self performSelector:NSSelectorFromString(selectorName)];
-}
-
-+ (NSNumber *)numberKey:(id)object
-{
-	return [NSNumber numberWithUnsignedInt:(unsigned int)object];
 }
 
 - (void)textDidChange:(NSNotification *)aNotification

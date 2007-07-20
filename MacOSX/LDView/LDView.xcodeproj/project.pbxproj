@@ -139,7 +139,7 @@
 		1F2031F10C49DF5D009B7720 /* GeneralPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GeneralPage.h; sourceTree = "<group>"; };
 		1F2031F20C49DF5D009B7720 /* GeneralPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = GeneralPage.mm; sourceTree = "<group>"; };
 		1F2031F40C49DF64009B7720 /* GeometryPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GeometryPage.h; sourceTree = "<group>"; };
-		1F2031F50C49DF64009B7720 /* GeometryPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = GeometryPage.mm; sourceTree = "<group>"; };
+		1F2031F50C49DF64009B7720 /* GeometryPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = GeometryPage.mm; sourceTree = "<group>"; wrapsLines = 1; };
 		1F2031F70C49DF69009B7720 /* PrefSetsPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrefSetsPage.mm; sourceTree = "<group>"; };
 		1F2031F80C49DF69009B7720 /* PrefSetsPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefSetsPage.h; sourceTree = "<group>"; };
 		1F2031FA0C49DF6D009B7720 /* PrimitivesPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrimitivesPage.h; sourceTree = "<group>"; };
