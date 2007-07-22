@@ -310,10 +310,10 @@
 				1F2031F50C49DF64009B7720 /* GeometryPage.mm */,
 				1F2031EB0C49DF4E009B7720 /* EffectsPage.h */,
 				1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */,
-				1F2031F80C49DF69009B7720 /* PrefSetsPage.h */,
-				1F2031F70C49DF69009B7720 /* PrefSetsPage.mm */,
 				1F2031FA0C49DF6D009B7720 /* PrimitivesPage.h */,
 				1F2031FB0C49DF6D009B7720 /* PrimitivesPage.mm */,
+				1F2031F80C49DF69009B7720 /* PrefSetsPage.h */,
+				1F2031F70C49DF69009B7720 /* PrefSetsPage.mm */,
 				1F2031FD0C49DF72009B7720 /* UpdatesPage.h */,
 				1F2031FE0C49DF72009B7720 /* UpdatesPage.mm */,
 			);

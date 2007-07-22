@@ -20,16 +20,9 @@
 		{
 			NSTextField *textField = (NSTextField *)subview;
 			
-			if ([textField drawsBackground])
+			if ([textField isEditable])
 			{
-				[[NSNotificationCenter defaultCenter] addObserver:self
-														 selector:@selector(textDidEndEditing:)
-															 name:NSControlTextDidEndEditingNotification
-														   object:subview];
-				[[NSNotificationCenter defaultCenter] addObserver:self
-														 selector:@selector(textDidChange:)
-															 name:NSControlTextDidChangeNotification
-														   object:subview];
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSControlTextDidChangeNotification object:subview];
 			}
 		}
 		else
@@ -42,7 +35,6 @@
 - (void)dealloc
 {
 	[one release];
-	[changedTextFields release];
 	[origColors release];
 	[origBoxTitles release];
 	[disabledBoxTitles release];
@@ -52,7 +44,6 @@
 - (void)awakeFromNib
 {
 	one = [[NSNumber alloc] initWithInt:1];
-	changedTextFields = [[NSMutableDictionary alloc] init];
 	origColors = [[NSMutableDictionary alloc] init];
 	origBoxTitles = [[NSMutableDictionary alloc] init];
 	disabledBoxTitles = [[NSMutableDictionary alloc] init];
@@ -88,6 +79,30 @@
 - (bool)getCheck:(NSButton *)check
 {
 	return [check state] == NSOnState;
+}
+
+- (void)setColorWell:(NSColorWell *)colorWell r:(int)r g:(int)g b:(int)b
+{
+	[colorWell setColor:[NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:1.0f]];
+}
+
+- (void)getColorWell:(NSColorWell *)colorWell r:(int *)r g:(int *)g b:(int *)b
+{
+	[self getColorWell:colorWell r:r g:g b:b a:nil];
+}
+
+- (void)getColorWell:(NSColorWell *)colorWell r:(int *)r g:(int *)g b:(int *)b a:(int *)a
+{
+	float rf, gf, bf, af;
+	
+	[[colorWell color] getRed:&rf green:&gf blue:&bf alpha:&af];
+	*r = (int)(rf * 255.0 + 0.5);
+	*g = (int)(gf * 255.0 + 0.5);
+	*b = (int)(bf * 255.0 + 0.5);
+	if (a)
+	{
+		*a = (int)(af * 255.0 + 0.5);
+	}
 }
 
 - (void)enableLabel:(NSTextField *)label value:(BOOL)enabled
@@ -156,6 +171,12 @@
 	[preferences enableApply:NO];
 }
 
+- (void)groupCheck:(id)sender name:(NSString *)groupName value:(bool)value
+{
+	[self setCheck:sender value:value];
+	[self groupCheck:sender name:groupName init:YES];
+}
+
 - (void)groupCheck:(id)sender name:(NSString *)groupName
 {
 	[self groupCheck:sender name:groupName init:NO];
@@ -182,17 +203,7 @@
 
 - (void)textDidChange:(NSNotification *)aNotification
 {
-	[changedTextFields setObject:one forKey:[[self class] numberKey:[aNotification object]]];
-}
-
-- (void)textDidEndEditing:(NSNotification *)aNotification
-{
-	NSNumber *numberKey = [[self class] numberKey:[aNotification object]];
-	if ([changedTextFields objectForKey:numberKey])
-	{
-		[self valueChanged:[aNotification object]];
-		[changedTextFields removeObjectForKey:numberKey];
-	}
+	[self valueChanged:[aNotification object]];
 }
 
 @end

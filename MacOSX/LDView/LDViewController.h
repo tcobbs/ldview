@@ -16,6 +16,7 @@
 - (IBAction)newWindow:(id)sender;
 - (IBAction)openModel:(id)sender;
 - (IBAction)preferences:(id)sender;
+- (Preferences *)preferences;
 - (IBAction)resetView:(id)sender;
 - (NSArray *)modelWindows;
 

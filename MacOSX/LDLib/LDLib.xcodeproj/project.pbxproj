@@ -49,42 +49,42 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A74B50C4DF05700DAF5C8 /* TCFoundation.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libTCFoundation.a */;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = TCFoundation;
 		};
 		1F6A74C10C4DF06400DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A74BD0C4DF06400DAF5C8 /* LDLoader.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libLDLoader.a */;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = LDLoader;
 		};
 		1F6A74C70C4DF06F00DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A74C30C4DF06F00DAF5C8 /* TRE.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libTRE.a */;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = TRE;
 		};
 		1F6A74CC0C4DF0AD00DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A74B50C4DF05700DAF5C8 /* TCFoundation.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* TCFoundation */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = TCFoundation;
 		};
 		1F6A74CE0C4DF0B600DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A74BD0C4DF06400DAF5C8 /* LDLoader.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* LDLoader */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = LDLoader;
 		};
 		1F6A74D00C4DF0BA00DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A74C30C4DF06F00DAF5C8 /* TRE.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* TRE */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = TRE;
 		};
 /* End PBXContainerItemProxy section */

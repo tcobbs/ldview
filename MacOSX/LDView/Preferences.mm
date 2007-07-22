@@ -78,6 +78,12 @@
 - (void)enableApply:(BOOL)enabled
 {
 	[applyButton setEnabled:enabled];
+	[window setDocumentEdited:enabled];
+}
+
+- (NSWindow *)window
+{
+	return window;
 }
 
 @end

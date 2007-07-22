@@ -6,6 +6,8 @@
 
 - (void)setup
 {
+	int r, g, b;
+	
 	[super setup];
 	[self setCheck:antialiasedLinesCheck
 		value:ldPreferences->getLineSmoothing()];
@@ -13,27 +15,33 @@
 	[self setCheck:showErrorsCheck value:ldPreferences->getShowErrors()];
 	[self setCheck:processLDConfigCheck
 		value:ldPreferences->getProcessLdConfig()];
-	// BG color
-	// Default color
+	ldPreferences->getBackgroundColor(r, g, b);
+	[self setColorWell:backgroundColorWell r:r g:g b:b];
+	ldPreferences->getDefaultColor(r, g, b);
+	[self setColorWell:defaultColorWell r:r g:g b:b];
 	[self setCheck:transparentDefaultCheck
 		value:ldPreferences->getTransDefaultColor()];
 	[fovField setFloatValue:ldPreferences->getFov()];
-	// Memory Usage
+	[memoryUsagePopUp selectItemWithTag:ldPreferences->getMemoryUsage()];
 }
 
 - (void)updateLdPreferences
 {
+	int r, g, b;
+	
 	[super updateLdPreferences];
 	ldPreferences->setLineSmoothing([self getCheck:antialiasedLinesCheck]);
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
 	ldPreferences->setShowFps([self getCheck:showFrameRateCheck]);
-	// BG color
-	// Default color
+	[self getColorWell:backgroundColorWell r:&r g:&g b:&b];
+	ldPreferences->setBackgroundColor(r,g,b);
+	[self getColorWell:defaultColorWell r:&r g:&g b:&b];
+	ldPreferences->setDefaultColor(r,g,b);
 	ldPreferences->setTransDefaultColor(
 		[self getCheck:transparentDefaultCheck]);
 	ldPreferences->setFov([fovField floatValue]);
-	// Memory Usage
+	ldPreferences->setMemoryUsage([[memoryUsagePopUp selectedItem] tag]);
 }
 
 @end
