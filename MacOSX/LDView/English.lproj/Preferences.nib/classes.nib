@@ -131,11 +131,18 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            ACTIONS = {
+                anisoLevel = id; 
+                filterType = id; 
+                primitiveSubstitution = id; 
+                textureStuds = id; 
+            }; 
             CLASS = PrimitivesPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 anisoLevelLabel = NSTextField; 
                 anisoSlider = NSSlider; 
+                curveQualityLabel = NSTextField; 
                 curveQualitySlider = NSSlider; 
                 filteringMatrix = NSMatrix; 
                 hiResCheck = NSButton; 

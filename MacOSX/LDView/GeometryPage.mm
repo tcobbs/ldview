@@ -24,8 +24,7 @@
 
 - (void)setupModelBox
 {
-	[self setCheck:seamWidthCheck value:ldPreferences->getUseSeams()];
-	[self groupCheck:seamWidthCheck name:@"Seams" init:YES];
+	[self groupCheck:seamWidthCheck name:@"Seams" value:ldPreferences->getUseSeams()];
 }
 
 - (void)enableWireframeUI:(BOOL)enabled
@@ -109,8 +108,7 @@
 {
 	[self enableEdgesUI:YES];
 	[self setCheck:edgesOnlyCheck value:ldPreferences->getEdgesOnly()];
-	[self setCheck:conditionalLinesCheck value:ldPreferences->getDrawConditionalHighlights()];
-	[self groupCheck:conditionalLinesCheck name:@"Conditionals" init:YES];
+	[self groupCheck:conditionalLinesCheck name:@"Conditionals" value:ldPreferences->getDrawConditionalHighlights()];
 	[self setCheck:highQualityEdgesCheck value:ldPreferences->getUsePolygonOffset()];
 	[self setCheck:blackEdgesCheck value:ldPreferences->getBlackHighlights()];
 	[edgeThicknessSlider setIntValue:ldPreferences->getEdgeThickness()];
@@ -130,12 +128,9 @@
 {
 	[super setup];
 	[self setupModelBox];
-	[self setCheck:wireframeCheck value:ldPreferences->getDrawWireframe()];
-	[self setCheck:bfcCheck value:ldPreferences->getBfc()];
-	[self setCheck:edgeLinesCheck value:ldPreferences->getShowHighlightLines()];
-	[self groupCheck:wireframeCheck name:@"Wireframe" init:YES];
-	[self groupCheck:bfcCheck name:@"Bfc" init:YES];
-	[self groupCheck:edgeLinesCheck name:@"Edges" init:YES];
+	[self groupCheck:wireframeCheck name:@"Wireframe" value:ldPreferences->getDrawWireframe()];
+	[self groupCheck:bfcCheck name:@"Bfc" value:ldPreferences->getBfc()];
+	[self groupCheck:edgeLinesCheck name:@"Edges" value:ldPreferences->getShowHighlightLines()];
 }
 
 - (void)updateLdPreferences

@@ -39,5 +39,6 @@ class LDPreferences;
 - (IBAction)ok:(id)sender;
 - (LDPreferences *)ldPreferences;
 - (void)enableApply:(BOOL)enabled;
+- (NSWindow *)window;
 
 @end

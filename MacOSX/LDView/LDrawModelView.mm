@@ -1,6 +1,8 @@
 #import "LDrawModelView.h"
+#import "ModelWindow.h"
 #import <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCMacros.h>
+#include <TRE/TREGLExtensions.h>
 
 @implementation LDrawModelView
 
@@ -255,8 +257,38 @@
 	modelViewer->zoom([event deltaY] * -10.0f);
 }
 
+- (void)reloadNeeded
+{
+	if (modelViewer)
+	{
+		[[self openGLContext] makeCurrentContext];
+		if (modelViewer->getNeedsReload())
+		{
+			modelViewer->reload();
+		}
+		[[self openGLContext] makeCurrentContext];
+		if (modelViewer->getNeedsRecompile())
+		{
+			modelViewer->recompile();
+		}
+		[self setNeedsDisplay:YES];
+	}
+	loading = NO;
+}
+
+- (void)awakeFromNib
+{
+	[[self openGLContext] makeCurrentContext];
+	TREGLExtensions::setup();
+}
+
 - (void)drawRect:(NSRect)rect
 {
+	if (modelViewer && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
+	{
+		[(ModelWindow *)[[self window] delegate] modelWillReload];
+		loading = YES;
+	}
 	if (loading || !modelViewer || modelViewer->getUpdating())
 	{
 		[[NSColor blackColor]  set];

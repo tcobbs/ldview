@@ -32,8 +32,7 @@
 		[lightDirMatrix selectCellWithTag:ldPreferences->getLightDirection()];
 	}
 	// Light dir
-	[self setCheck:useLightDatCheck value:ldPreferences->getDrawLightDats()];
-	[self groupCheck:useLightDatCheck name:@"LightDats" init:YES];
+	[self groupCheck:useLightDatCheck name:@"LightDats" value:ldPreferences->getDrawLightDats()];
 	[self setCheck:hideLightDatGeom value:ldPreferences->getNoLightGeom()];
 }
 
@@ -143,13 +142,9 @@
 - (void)setup
 {
 	[super setup];
-	[self setCheck:lightingCheck value:ldPreferences->getUseLighting()];
-	[self setCheck:stereoCheck value:ldPreferences->getStereoMode() != LDVStereoNone];
-	[self setCheck:wireframeCutawayCheck
-			 value:ldPreferences->getCutawayMode() != LDVCutawayNormal];
-	[self groupCheck:lightingCheck name:@"Lighting" init:YES];
-	[self groupCheck:stereoCheck name:@"Stereo" init:YES];
-	[self groupCheck:wireframeCutawayCheck name:@"WireframeCutaway" init:YES];
+	[self groupCheck:lightingCheck name:@"Lighting" value:ldPreferences->getUseLighting()];
+	[self groupCheck:stereoCheck name:@"Stereo" value:ldPreferences->getStereoMode() != LDVStereoNone];
+	[self groupCheck:wireframeCutawayCheck name:@"WireframeCutaway" value:ldPreferences->getCutawayMode() != LDVCutawayNormal];
 	[self setupTransparencyBox];
 	[self setupMiscBox];
 }

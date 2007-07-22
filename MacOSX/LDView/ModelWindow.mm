@@ -82,6 +82,11 @@
 
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
+	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
+	{
+		// This alert is coming from a different model viewer.
+		return;
+	}
 	static NSDate *lastProgressUpdate = NULL;
 	float alertProgress = alert->getProgress();
 	NSString *alertMessage = [NSString stringWithCString:alert->getMessage()
@@ -100,6 +105,7 @@
 		{
 			[window makeFirstResponder:progress];
 			[progress setDoubleValue:alertProgress];
+			//[statusBox display];
 			[window display];
 			[lastProgressUpdate release];
 			lastProgressUpdate = [[NSDate alloc] init];
@@ -110,6 +116,30 @@
 		}
 	}
 }
+
+- (void)reloadNeeded
+{
+	[window makeKeyWindow];
+	[modelView reloadNeeded];
+}
+
+- (void)modelWillReload
+{
+	[self performSelector:@selector(reloadNeeded) withObject:nil afterDelay:0.0];
+}
+
+/*
+- (void)displayNeeded
+{
+	[modelView setNeedsDisplay:YES];
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)aNotification
+{
+	[self performSelector:@selector(displayNeeded) withObject:nil afterDelay:0.0];
+	[modelView setNeedsDisplay:YES];
+}
+*/
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {

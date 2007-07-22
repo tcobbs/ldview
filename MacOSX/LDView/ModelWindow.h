@@ -14,6 +14,7 @@ class AlertHandler;
 	IBOutlet LDrawModelView *modelView;
 	IBOutlet NSProgressIndicator *progress;
 	IBOutlet NSTextField *progressMessage;
+	IBOutlet NSBox *statusBox;
 
 	AlertHandler *alertHandler;
 	NSToolbar *toolbar;
@@ -25,5 +26,6 @@ class AlertHandler;
 
 - (void)ldlErrorCallback:(LDLError *)error;
 - (void)progressAlertCallback:(TCProgressAlert *)alert;
+- (void)modelWillReload;
 
 @end

@@ -17,7 +17,6 @@
 	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
 		@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
 	modelWindows = [[NSMutableArray alloc] init];
-	preferences = [[Preferences alloc] initWithController:self];
 	return [super init];
 }
 
@@ -50,7 +49,7 @@
 
 	[modelWindows addObject:modelWindow];
 	[modelWindow release];
-	[preferences initModelWindow:modelWindow];
+	[[self preferences] initModelWindow:modelWindow];
 	if (filename)
 	{
 		return [modelWindow openModel:filename];
@@ -94,9 +93,18 @@
 	return [self openModel];
 }
 
+- (Preferences *)preferences
+{
+	if (!preferences)
+	{
+		preferences = [[Preferences alloc] initWithController:self];
+	}
+	return preferences;
+}
+
 - (IBAction)preferences:(id)sender
 {
-	[preferences show];
+	[[self preferences] show];
 }
 
 - (BOOL)application:(NSApplication *)theApplication
