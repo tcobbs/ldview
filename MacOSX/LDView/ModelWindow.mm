@@ -1,6 +1,10 @@
 #import "ModelWindow.h"
 #import "LDrawModelView.h"
+#import "LDViewController.h"
+#import "Preferences.h"
+#import "OCLocalStrings.h"
 #include <LDLoader/LDLError.h>
+#include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCProgressAlert.h>
 #import "AlertHandler.h"
 
@@ -57,8 +61,9 @@
 	[window setToolbar:toolbar];
 }
 
-- (id)init
+- (id)initWithController:(LDViewController *)value
 {
+	controller = value;
 	[NSBundle loadNibNamed:@"ModelWindow.nib" owner:self];
 	alertHandler = new AlertHandler(self);
 	return [super init];
@@ -91,10 +96,13 @@
 	float alertProgress = alert->getProgress();
 	NSString *alertMessage = [NSString stringWithCString:alert->getMessage()
 		encoding:NSASCIIStringEncoding];
+	BOOL forceUpdate = NO;
+	BOOL updated = NO;
 
 	if (![alertMessage isEqualToString:[progressMessage stringValue]])
 	{
 		[progressMessage setStringValue:alertMessage];
+		forceUpdate = YES;
 	}
 	if (alertProgress >= 0.0f && alertProgress <= 1.0f)
 	{
@@ -105,15 +113,19 @@
 		{
 			[window makeFirstResponder:progress];
 			[progress setDoubleValue:alertProgress];
-			//[statusBox display];
-			[window display];
+			[statusBox display];
+			updated = YES;
 			[lastProgressUpdate release];
 			lastProgressUpdate = [[NSDate alloc] init];
 		}
-		else
-		{
-			//printf("Undisplayed progress: %f\n", alertProgress);
-		}
+	}
+	else if (alertProgress == 2.0f)
+	{
+		[progress setDoubleValue:1.0];
+	}
+	if (forceUpdate && !updated)
+	{
+		[statusBox display];
 	}
 }
 
@@ -125,21 +137,8 @@
 
 - (void)modelWillReload
 {
-	[self performSelector:@selector(reloadNeeded) withObject:nil afterDelay:0.0];
+	[self performSelectorOnMainThread:@selector(reloadNeeded) withObject:nil waitUntilDone:NO];
 }
-
-/*
-- (void)displayNeeded
-{
-	[modelView setNeedsDisplay:YES];
-}
-
-- (void)windowDidBecomeMain:(NSNotification *)aNotification
-{
-	[self performSelector:@selector(displayNeeded) withObject:nil afterDelay:0.0];
-	[modelView setNeedsDisplay:YES];
-}
-*/
 
 - (void)windowWillClose:(NSNotification *)aNotification
 {
@@ -147,6 +146,59 @@
 	{
 		[self autorelease];
 	}
+}
+
+- (void)showFps
+{
+	if ([[controller preferences] ldPreferences]->getShowFps())
+	{
+		if (fps > 0.0)
+		{
+			[progressMessage setStringValue:[NSString stringWithFormat:[OCLocalStrings get:@"FPSFormat"], fps]];
+		}
+		else
+		{
+			[progressMessage setStringValue:[OCLocalStrings get:@"FPSSpinPrompt"]];
+		}
+	}
+	else
+	{
+		[progressMessage setStringValue:@""];
+	}
+}
+
+- (void)updateFps
+{
+	if (fpsReferenceDate)
+	{
+		NSTimeInterval interval = -[fpsReferenceDate timeIntervalSinceNow];
+		
+		if (interval >= 0.25)
+		{
+			[fpsReferenceDate release];
+			fpsReferenceDate = [[NSDate alloc] init];
+			fps = 1.0 / interval * fpsFrameCount;
+			fpsFrameCount = 1;
+		}
+		else
+		{
+			fpsFrameCount++;
+		}
+	}
+	else
+	{
+		fpsReferenceDate = [[NSDate alloc] init];
+	}
+	[self showFps];
+}
+
+- (void)clearFps
+{
+	[fpsReferenceDate release];
+	fpsReferenceDate = nil;
+	fps = 0.0f;
+	fpsFrameCount = 1;
+	[self showFps];
 }
 
 @end

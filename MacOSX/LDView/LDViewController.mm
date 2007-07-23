@@ -45,7 +45,7 @@
 
 - (BOOL)createWindow:(NSString *)filename
 {
-	ModelWindow *modelWindow = [[ModelWindow alloc] init];
+	ModelWindow *modelWindow = [[ModelWindow alloc] initWithController:self];
 
 	[modelWindows addObject:modelWindow];
 	[modelWindow release];
