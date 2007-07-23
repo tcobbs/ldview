@@ -16,6 +16,7 @@ typedef enum
 
 	float rotationSpeed;
 	NSPoint lastMouseLocation;
+	NSPoint lastFrameMouseLocation;
 	float originalZoomY;
 	BOOL lButtonDown;
 	BOOL rButtonDown;
@@ -24,6 +25,7 @@ typedef enum
 	NSDate *lastMoveTime;
 	LDVViewMode viewMode;
 	BOOL loading;
+	BOOL redisplayRequested;
 }
 
 - (BOOL)openModel:(NSString *)filename;
