@@ -12,6 +12,7 @@
 
 - (void)dealloc
 {
+	[statusBar release];
 	[window release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
@@ -59,6 +60,7 @@
 {
 	[self setupToolbar];
 	[window setToolbar:toolbar];
+	[statusBar retain];
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -85,8 +87,47 @@
 {
 }
 
+- (BOOL)showStatusBar:(BOOL)show
+{
+	BOOL changed = NO;
+	
+	if (show)
+	{
+		if (![statusBar superview])
+		{
+			NSRect modelViewFrame1 = [modelView frame];
+			float height = [statusBar frame].size.height;
+			
+			modelViewFrame1.size.height -= height;
+			modelViewFrame1.origin.y += height;
+			[modelView setFrame:modelViewFrame1];
+			[[window contentView] addSubview:statusBar];
+			changed = YES;
+		}
+	}
+	else
+	{
+		if ([statusBar superview])
+		{
+			NSRect modelViewFrame2 = [modelView frame];
+			float height = [statusBar frame].size.height;
+			
+			modelViewFrame2.size.height += height;
+			modelViewFrame2.origin.y -= height;
+			[statusBar removeFromSuperview];
+			[modelView setFrame:modelViewFrame2];
+			changed = YES;
+		}
+	}
+	return changed;
+}
+
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
+	if ([self showStatusBar:YES])
+	{
+		[window display];
+	}
 	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
 	{
 		// This alert is coming from a different model viewer.
@@ -112,8 +153,9 @@
 			[lastProgressUpdate timeIntervalSinceNow] < -0.2)
 		{
 			[window makeFirstResponder:progress];
+			[progress setHidden:NO];
 			[progress setDoubleValue:alertProgress];
-			[statusBox display];
+			[statusBar display];
 			updated = YES;
 			[lastProgressUpdate release];
 			lastProgressUpdate = [[NSDate alloc] init];
@@ -122,10 +164,12 @@
 	else if (alertProgress == 2.0f)
 	{
 		[progress setDoubleValue:1.0];
+		[progress setHidden:YES];
+		[self showStatusBar:showStatusBar];
 	}
 	if (forceUpdate && !updated)
 	{
-		[statusBox display];
+		[statusBar display];
 	}
 }
 
@@ -150,15 +194,23 @@
 
 - (void)showFps
 {
-	if ([[controller preferences] ldPreferences]->getShowFps())
+	[modelView setFps:0.0f];
+	if ([[controller preferences] ldPreferences]->getShowFps() && [modelView modelViewer]->getMainTREModel())
 	{
-		if (fps > 0.0)
+		if (showStatusBar)
 		{
-			[progressMessage setStringValue:[NSString stringWithFormat:[OCLocalStrings get:@"FPSFormat"], fps]];
+			if (fps > 0.0f)
+			{
+				[progressMessage setStringValue:[NSString stringWithFormat:[OCLocalStrings get:@"FPSFormat"], fps]];
+			}
+			else
+			{
+				[progressMessage setStringValue:[OCLocalStrings get:@"FPSSpinPrompt"]];
+			}
 		}
 		else
 		{
-			[progressMessage setStringValue:[OCLocalStrings get:@"FPSSpinPrompt"]];
+			[modelView setFps:fps];
 		}
 	}
 	else
@@ -199,6 +251,27 @@
 	fps = 0.0f;
 	fpsFrameCount = 1;
 	[self showFps];
+}
+
+- (void)setShowStatusBar:(BOOL)value
+{
+	showStatusBar = value;
+	[self showStatusBar:showStatusBar];
+}
+
+- (BOOL)showStatusBar
+{
+	return showStatusBar;
+}
+
+- (void)show
+{
+	[window makeKeyAndOrderFront:self];
+}
+
+- (NSWindow *)window
+{
+	return window;
 }
 
 @end

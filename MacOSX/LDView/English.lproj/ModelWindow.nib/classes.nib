@@ -9,7 +9,7 @@
                 modelView = LDrawModelView; 
                 progress = NSProgressIndicator; 
                 progressMessage = NSTextField; 
-                statusBox = NSBox; 
+                statusBar = NSView; 
                 window = NSWindow; 
             }; 
             SUPERCLASS = NSObject; 

@@ -26,11 +26,14 @@ typedef enum
 	LDVViewMode viewMode;
 	BOOL loading;
 	BOOL redisplayRequested;
+	float fps;
+	NSImage *resizeCornerImage;
 }
 
 - (BOOL)openModel:(NSString *)filename;
 - (void)resetView:(id)sender;
 - (LDrawModelViewer *)modelViewer;
 - (void)reloadNeeded;
+- (void)setFps:(float)value;
 
 @end

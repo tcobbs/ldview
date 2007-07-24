@@ -2,6 +2,7 @@
 #import "ModelWindow.h"
 #import "LDrawModelView.h"
 #import "OCLocalStrings.h"
+#import "OCUserDefaults.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
 #include "Preferences.h"
@@ -43,13 +44,30 @@
 	return [[self currentModelWindow] modelView];
 }
 
+- (void)updateStatusBarMenuItem
+{
+	if (showStatusBar)
+	{
+		[statusBarMenuItem setTitle:@"Hide Status Bar"];
+	}
+	else
+	{
+		[statusBarMenuItem setTitle:@"Show Status Bar"];
+	}
+}
+
 - (BOOL)createWindow:(NSString *)filename
 {
 	ModelWindow *modelWindow = [[ModelWindow alloc] initWithController:self];
 
+	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
+	[self updateStatusBarMenuItem];
+	[modelWindow setShowStatusBar:showStatusBar];
 	[modelWindows addObject:modelWindow];
 	[modelWindow release];
 	[[self preferences] initModelWindow:modelWindow];
+	[modelWindow show];
+	//[[[modelWindow window] contentView] setNeedsDisplay:YES];
 	if (filename)
 	{
 		return [modelWindow openModel:filename];
@@ -132,6 +150,17 @@
 - (IBAction)resetView:(id)sender
 {
 	[[self currentModelView] resetView:sender];
+}
+
+- (IBAction)toggleStatusBar:(id)sender
+{
+	showStatusBar = !showStatusBar;
+	[self updateStatusBarMenuItem];
+	[OCUserDefaults setLong:showStatusBar forKey:@"StatusBar" sessionSpecific:NO];
+	for (int i = 0; i < [modelWindows count]; i++)
+	{
+		[[modelWindows objectAtIndex:i] setShowStatusBar:showStatusBar];
+	}
 }
 
 @end
