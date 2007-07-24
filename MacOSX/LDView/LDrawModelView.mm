@@ -10,14 +10,26 @@
 {
 	TCObject::release(modelViewer);
 	[lastMoveTime release];
+	[resizeCornerImage release];
 	[super dealloc];
+}
+
+- (void)rotationUpdate
+{
+	if (!redisplayRequested)
+	{
+		redisplayRequested = YES;
+		[self performSelectorOnMainThread:@selector(redisplay) withObject:nil waitUntilDone:NO];
+	}
 }
 
 - (void)setupWithFrame:(NSRect)frame
 {
 	NSData *fontData = [NSData dataWithContentsOfFile:
 		[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
+	//[[NSBundle bundleForClass:[NSWindow class]] pathForResource:@"NSGrayResizeCorner" ofType:@"tiff"];
 
+	resizeCornerImage = [[NSImage imageNamed:@"NSGrayResizeCorner"] retain];
 	redisplayRequested = NO;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
@@ -58,15 +70,6 @@
 - (ModelWindow *)modelWindow
 {
 	return (ModelWindow *)[[self window] delegate];
-}
-
-- (void)rotationUpdate
-{
-	if (!redisplayRequested)
-	{
-		redisplayRequested = YES;
-		[self performSelectorOnMainThread:@selector(redisplay) withObject:nil waitUntilDone:NO];
-	}
 }
 
 - (void)redisplay
@@ -351,6 +354,10 @@
 	}
 	[[self openGLContext] makeCurrentContext];
 	modelViewer->update();
+	if (fps != 0.0f)
+	{
+		modelViewer->drawFPS(fps);
+	}
 	//glFinish();
 	[self updateSpinRate];
 	lastFrameMouseLocation = lastMouseLocation;
@@ -371,8 +378,13 @@
 
 - (void)resetView:(id)sender
 {
-	[self rotationUpdate];
 	modelViewer->resetView();
+	[self rotationUpdate];
+}
+
+- (void)setFps:(float)value
+{
+	fps = value;
 }
 
 @end

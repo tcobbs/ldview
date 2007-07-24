@@ -297,6 +297,16 @@
 			name = "Support Projects";
 			sourceTree = "<group>";
 		};
+		1FB355130C55C16400216FBE /* Nibs */ = {
+			isa = PBXGroup;
+			children = (
+				1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */,
+				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+				1FD4D8330BA4D00E00419677 /* Preferences.nib */,
+			);
+			name = Nibs;
+			sourceTree = "<group>";
+		};
 		1FE622C60C4AE12E009FA9FF /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -357,15 +367,13 @@
 				1FD4D8410BA4D52800419677 /* LightAngleUM.png */,
 				1FD4D8420BA4D52800419677 /* LightAngleUR.png */,
 				1FD4D8370BA4D3F400419677 /* LightAngleUL.png */,
-				1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */,
 				1F20DB360A60C4B700F677AC /* LDViewMessages.ini */,
 				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
 				1F20D6510A5F6F8200F677AC /* StudLogo.png */,
 				1F92F61D0A5A267C00AE8086 /* LDView.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
-				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
-				1FD4D8330BA4D00E00419677 /* Preferences.nib */,
+				1FB355130C55C16400216FBE /* Nibs */,
 			);
 			name = Resources;
 			sourceTree = "<group>";

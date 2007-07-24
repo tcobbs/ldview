@@ -15,7 +15,7 @@ class AlertHandler;
 	IBOutlet LDrawModelView *modelView;
 	IBOutlet NSProgressIndicator *progress;
 	IBOutlet NSTextField *progressMessage;
-	IBOutlet NSBox *statusBox;
+	IBOutlet NSView *statusBar;
 
 	LDViewController *controller;
 	AlertHandler *alertHandler;
@@ -23,6 +23,7 @@ class AlertHandler;
 	NSDate *fpsReferenceDate;
 	int fpsFrameCount;
 	float fps;
+	BOOL showStatusBar;
 }
 
 - (BOOL)openModel:(NSString *)filename;
@@ -34,5 +35,9 @@ class AlertHandler;
 - (void)modelWillReload;
 - (void)updateFps;
 - (void)clearFps;
+- (void)setShowStatusBar:(BOOL)value;
+- (BOOL)showStatusBar;
+- (void)show;
+- (NSWindow *)window;
 
 @end

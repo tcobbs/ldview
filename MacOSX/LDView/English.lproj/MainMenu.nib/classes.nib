@@ -2,9 +2,16 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {newWindow = id; openModel = id; preferences = id; resetView = id; }; 
+            ACTIONS = {
+                newWindow = id; 
+                openModel = id; 
+                preferences = id; 
+                resetView = id; 
+                toggleStatusBar = id; 
+            }; 
             CLASS = LDViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {statusBarMenuItem = NSMenuItem; }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = LDrawModelView; LANGUAGE = ObjC; SUPERCLASS = NSOpenGLView; }
