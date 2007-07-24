@@ -1343,7 +1343,10 @@ void LDrawModelViewer::loadVGAFont(char *fontFilename)
 void LDrawModelViewer::setupFont(char *fontFilename)
 {
 //	printf("LDrawModelViewer::setupFont\n");
-	loadVGAFont(fontFilename);
+	if (fontFilename)
+	{
+		loadVGAFont(fontFilename);
+	}
 	if (fontImage)
 	{
 		int i;
@@ -1405,6 +1408,10 @@ void LDrawModelViewer::setupTextures(void)
 //		sprintf(textureFilename, "%s/Font.png", programPath);
 		sprintf(textureFilename, "%s/SansSerif.fnt", programPath);
 		setupFont(textureFilename);
+	}
+	else if (fontImage)
+	{
+		setupFont(NULL);
 	}
 	flags.needsTextureSetup = false;
 }
