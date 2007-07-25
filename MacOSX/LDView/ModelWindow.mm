@@ -124,13 +124,10 @@
 
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
-	if ([self showStatusBar:YES])
-	{
-		[window display];
-	}
 	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
 	{
 		// This alert is coming from a different model viewer.
+		[self showStatusBar:showStatusBar];
 		return;
 	}
 	static NSDate *lastProgressUpdate = NULL;
@@ -140,6 +137,10 @@
 	BOOL forceUpdate = NO;
 	BOOL updated = NO;
 
+	if ([self showStatusBar:YES])
+	{
+		[window display];
+	}
 	if (![alertMessage isEqualToString:[progressMessage stringValue]])
 	{
 		[progressMessage setStringValue:alertMessage];
