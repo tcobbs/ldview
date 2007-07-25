@@ -3,14 +3,15 @@
 #import <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCMacros.h>
 #include <TRE/TREGLExtensions.h>
+#include <TCFoundation/TCImage.h>
 
 @implementation LDrawModelView
 
 - (void)dealloc
 {
 	TCObject::release(modelViewer);
+	TCObject::release(resizeCornerImage);
 	[lastMoveTime release];
-	[resizeCornerImage release];
 	[super dealloc];
 }
 
@@ -23,13 +24,59 @@
 	}
 }
 
+- (void)loadResizeCornerImage:(NSData *)pngImageData
+{
+	if (pngImageData)
+	{
+		TCImage *tcImage = new TCImage;
+		
+		tcImage->setFlipped(true);
+		tcImage->setLineAlignment(4);
+		tcImage->setDataFormat(TCRgba8);
+		if (tcImage->loadData((TCByte *)[pngImageData bytes], [pngImageData length]))
+		{
+			TCByte *srcData = tcImage->getImageData();
+			int srcRowSize = tcImage->getRowSize();
+			TCByte *dstData;
+			int dstRowSize;
+
+			resizeCornerImage = new TCImage;
+			resizeCornerImage->setDataFormat(TCRgba8);
+			resizeCornerImage->setFlipped(true);
+			resizeCornerImage->setLineAlignment(4);
+			resizeCornerImage->setSize(16, 16);
+			resizeCornerImage->allocateImageData();
+			dstData = resizeCornerImage->getImageData();
+			dstRowSize = resizeCornerImage->getRowSize();
+			memset(dstData, 0, dstRowSize * resizeCornerImage->getHeight());
+			for (int i = 0; i < 15; i++)
+			{
+				memcpy(&dstData[dstRowSize * i + 4], &srcData[srcRowSize * i], 4 * 15);
+			}
+		}
+		tcImage->release();
+	}
+}
+
 - (void)setupWithFrame:(NSRect)frame
 {
-	NSData *fontData = [NSData dataWithContentsOfFile:
-		[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
-	//[[NSBundle bundleForClass:[NSWindow class]] pathForResource:@"NSGrayResizeCorner" ofType:@"tiff"];
+	NSData *fontData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
+	NSImage *resizeCornerNSImage = [NSImage imageNamed:@"NSGrayResizeCorner"];
+	NSData *pngImageData = nil;
 
-	resizeCornerImage = [[NSImage imageNamed:@"NSGrayResizeCorner"] retain];
+	if (resizeCornerNSImage)
+	{
+		pngImageData = [[[resizeCornerNSImage representations] objectAtIndex:0] representationUsingType:NSPNGFileType properties:nil];
+	}
+	if (!pngImageData)
+	{
+		pngImageData = [NSData dataWithContentsOfFile:
+			[[NSBundle mainBundle] pathForResource:@"MyResizeCorner" ofType:@"png"]];
+	}
+	if (pngImageData)
+	{
+		[self loadResizeCornerImage:pngImageData];
+	}
 	redisplayRequested = NO;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
@@ -339,6 +386,26 @@
 	TREGLExtensions::setup();
 }
 
+- (void)prepResizeCornerTexture
+{
+	if (resizeCornerTextureId == 0)
+	{
+		glGenTextures(1, (GLuint *)&resizeCornerTextureId);
+		glBindTexture(GL_TEXTURE_2D, resizeCornerTextureId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, resizeCornerImage->getWidth(), resizeCornerImage->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, resizeCornerImage->getImageData());
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, resizeCornerTextureId);
+	}
+	if (resizeCornerTextureId != 0)
+	{
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	}
+}
+
 - (void)drawRect:(NSRect)rect
 {
 	if (modelViewer && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
@@ -357,6 +424,27 @@
 	if (fps != 0.0f)
 	{
 		modelViewer->drawFPS(fps);
+	}
+	if (resizeCornerImage && ![[self modelWindow] showStatusBar])
+	{
+		glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
+		[self prepResizeCornerTexture];
+		glEnable(GL_TEXTURE_2D);
+		modelViewer->orthoView();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glTranslatef(rect.size.width - 16.0, 0.0f, 0.0f);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(0.0f, 0.0f);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(16.0f, 0.0f);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(16.0f, 16.0f);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(0.0f, 16.0f);
+		glEnd();
+		glPopAttrib();
 	}
 	//glFinish();
 	[self updateSpinRate];

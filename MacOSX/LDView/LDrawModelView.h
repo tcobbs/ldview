@@ -3,6 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 class LDrawModelViewer;
+class TCImage;
 
 typedef enum
 {
@@ -27,7 +28,8 @@ typedef enum
 	BOOL loading;
 	BOOL redisplayRequested;
 	float fps;
-	NSImage *resizeCornerImage;
+	TCImage *resizeCornerImage;
+	int resizeCornerTextureId;
 }
 
 - (BOOL)openModel:(NSString *)filename;
