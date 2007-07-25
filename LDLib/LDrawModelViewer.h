@@ -330,6 +330,7 @@ class LDrawModelViewer: public TCObject
 		virtual bool mouseUp(int x, int y);
 		virtual bool mouseMove(int x, int y);
 		virtual void showLight(void);
+		virtual void orthoView(void);
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
@@ -346,7 +347,6 @@ class LDrawModelViewer: public TCObject
 		virtual void setupMaterial(void);
 		virtual void setupLight(GLenum light,
 			const TCVector &color = TCVector(1.0, 1.0, 1.0));
-		virtual void orthoView(void);
 		void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 		virtual void setupLighting(void);
 		virtual void setupTextures(void);

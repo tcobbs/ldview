@@ -32,6 +32,7 @@
 		1F240C220A58D5E900691116 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C210A58D5E900691116 /* libz.dylib */; };
 		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
 		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
+		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
 		1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */; };
 		1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8330BA4D00E00419677 /* Preferences.nib */; };
@@ -167,6 +168,7 @@
 		1F240C9F0A58D98400691116 /* LDrawModelView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawModelView.h; sourceTree = "<group>"; };
 		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
 		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
+		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MyResizeCorner.png; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
 		1FD4D8300BA4CF8900419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
 		1FD4D8340BA4D00E00419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */,
 				1FD4D83B0BA4D52800419677 /* LightAngleLL.png */,
 				1FD4D83C0BA4D52800419677 /* LightAngleLM.png */,
 				1FD4D83D0BA4D52800419677 /* LightAngleLR.png */,
@@ -507,6 +510,7 @@
 				1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */,
 				1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */,
 				1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */,
+				1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
