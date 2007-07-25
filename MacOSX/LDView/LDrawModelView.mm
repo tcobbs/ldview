@@ -7,6 +7,8 @@
 
 @implementation LDrawModelView
 
+static NSOpenGLContext *sharedContext = nil;
+
 - (void)dealloc
 {
 	TCObject::release(modelViewer);
@@ -381,7 +383,16 @@
 
 - (void)awakeFromNib
 {
-	[super setPixelFormat:[self customPixelFormat]];
+	if (sharedContext == nil)
+	{
+		[super setPixelFormat:[self customPixelFormat]];
+		sharedContext = [[super openGLContext] retain];
+	}
+	else
+	{
+		[super setOpenGLContext:[[[NSOpenGLContext alloc] initWithFormat:[self customPixelFormat] shareContext:sharedContext] autorelease]];
+		[[self openGLContext] setView:self];
+	}
 	[[self openGLContext] makeCurrentContext];
 	TREGLExtensions::setup();
 }
