@@ -61,6 +61,7 @@
 	[self setupToolbar];
 	[window setToolbar:toolbar];
 	[statusBar retain];
+	progressAdjust = [progressMessage frame].origin.x - [progress frame].origin.x;
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -122,6 +123,14 @@
 	return changed;
 }
 
+- (void)adjustProgressMessageSize:(float)amount
+{
+	NSRect frame = [progressMessage frame];
+	frame.origin.x -= amount;
+	frame.size.width += amount;
+	[progressMessage setFrame:frame];
+}
+
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
 	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
@@ -154,7 +163,11 @@
 			[lastProgressUpdate timeIntervalSinceNow] < -0.2)
 		{
 			[window makeFirstResponder:progress];
-			[progress setHidden:NO];
+			if ([progress isHidden])
+			{
+				[progress setHidden:NO];
+				[self adjustProgressMessageSize: -progressAdjust]; 
+			}
 			[progress setDoubleValue:alertProgress];
 			[statusBar display];
 			updated = YES;
@@ -165,7 +178,11 @@
 	else if (alertProgress == 2.0f)
 	{
 		[progress setDoubleValue:1.0];
-		[progress setHidden:YES];
+		if (![progress isHidden])
+		{
+			[progress setHidden:YES];
+			[self adjustProgressMessageSize: progressAdjust]; 
+		}
 		[self showStatusBar:showStatusBar];
 	}
 	if (forceUpdate && !updated)
