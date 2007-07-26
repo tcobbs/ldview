@@ -26,7 +26,7 @@ static NSOpenGLContext *sharedContext = nil;
 	}
 }
 
-- (void)loadResizeCornerImage:(NSData *)pngImageData
+- (TCImage *)tcImageFromPngData:(NSData *)pngImageData
 {
 	if (pngImageData)
 	{
@@ -37,26 +37,103 @@ static NSOpenGLContext *sharedContext = nil;
 		tcImage->setDataFormat(TCRgba8);
 		if (tcImage->loadData((TCByte *)[pngImageData bytes], [pngImageData length]))
 		{
-			TCByte *srcData = tcImage->getImageData();
-			int srcRowSize = tcImage->getRowSize();
-			TCByte *dstData;
-			int dstRowSize;
+			return tcImage;
+		}
+	}
+	return NULL;
+}
 
-			resizeCornerImage = new TCImage;
-			resizeCornerImage->setDataFormat(TCRgba8);
-			resizeCornerImage->setFlipped(true);
-			resizeCornerImage->setLineAlignment(4);
-			resizeCornerImage->setSize(16, 16);
-			resizeCornerImage->allocateImageData();
-			dstData = resizeCornerImage->getImageData();
-			dstRowSize = resizeCornerImage->getRowSize();
-			memset(dstData, 0, dstRowSize * resizeCornerImage->getHeight());
-			for (int i = 0; i < 15; i++)
+- (TCImage *)tcImageFromBitmapRep:(NSBitmapImageRep *)imageRep
+{
+	if ([imageRep bitsPerPixel] == 32 && ![imageRep isPlanar])
+	{
+		TCImage *tcImage = new TCImage;
+		TCByte *dstData;
+		int dstRowSize;
+		int width = [imageRep pixelsWide];
+		int height = [imageRep pixelsHigh];
+		int dstOfs;
+		int x, y;
+		float components[4];
+		float r, g, b, a;
+		BOOL useDeviceColor = NO;
+		int numComponents;
+		
+		tcImage->setFlipped(true);
+		tcImage->setLineAlignment(4);
+		tcImage->setDataFormat(TCRgba8);
+		tcImage->setSize(width, height);
+		tcImage->allocateImageData();
+		dstData = tcImage->getImageData();
+		dstRowSize = tcImage->getRowSize();
+		memset(dstData, 0, dstRowSize * height);
+		numComponents = [[[imageRep colorAtX:0 y:0] colorUsingColorSpace:[NSColorSpace deviceRGBColorSpace]] numberOfComponents];
+		if (numComponents == 4)
+		{
+			useDeviceColor = YES;
+		}
+		for (y = 0; y < height; y++)
+		{
+			dstOfs = 0;
+			TCByte *row = &dstData[(height - y - 1) * dstRowSize];
+			for (x = 0; x < width; x++)
 			{
-				memcpy(&dstData[dstRowSize * i + 4], &srcData[srcRowSize * i], 4 * 15);
+				NSColor *color = [imageRep colorAtX:x y:y];
+				if (useDeviceColor)
+				{
+					NSColor *devColor = [color colorUsingColorSpace:[NSColorSpace deviceRGBColorSpace]];
+
+					[devColor getComponents:components];
+					row[dstOfs++] = (TCByte)(components[0] * 255.0f + 0.5);
+					row[dstOfs++] = (TCByte)(components[1] * 255.0f + 0.5);
+					row[dstOfs++] = (TCByte)(components[2] * 255.0f + 0.5);
+					row[dstOfs++] = (TCByte)(components[3] * 255.0f + 0.5);
+				}
+				else
+				{
+					[color getRed:&r green:&g blue:&b alpha:&a];
+					row[dstOfs++] = (TCByte)(r * 255.0f + 0.5);
+					row[dstOfs++] = (TCByte)(g * 255.0f + 0.5);
+					row[dstOfs++] = (TCByte)(b * 255.0f + 0.5);
+					row[dstOfs++] = (TCByte)(a * 255.0f + 0.5);
+				}
 			}
 		}
-		tcImage->release();
+		return tcImage;
+	}
+	return NULL;
+}
+
+- (void)loadResizeCornerImage:(TCImage *)tcImage
+{
+	if (tcImage)
+	{
+		TCByte *srcData = tcImage->getImageData();
+		int srcRowSize = tcImage->getRowSize();
+		TCByte *dstData;
+		int dstRowSize;
+		int srcWidth = tcImage->getWidth();
+		int srcHeight = tcImage->getHeight();
+		int shiftBytes = (16 - srcWidth) * 4;
+
+		resizeCornerImage = new TCImage;
+		resizeCornerImage->setDataFormat(TCRgba8);
+		resizeCornerImage->setFlipped(true);
+		resizeCornerImage->setLineAlignment(4);
+		resizeCornerImage->setSize(16, 16);
+		resizeCornerImage->allocateImageData();
+		dstData = resizeCornerImage->getImageData();
+		dstRowSize = resizeCornerImage->getRowSize();
+		memset(dstData, 0, dstRowSize * resizeCornerImage->getHeight());
+		for (int i = 0; i < srcHeight; i++)
+		{
+			int rowOfs = dstRowSize * i;
+			memcpy(&dstData[rowOfs + shiftBytes], &srcData[srcRowSize * i], 4 * 15);
+			for (int x = 3; x < dstRowSize; x += 4)
+			{
+				dstData[rowOfs + x] = (TCByte)((double)dstData[rowOfs + x] * 0.667);
+			}
+		}
 	}
 }
 
@@ -64,20 +141,30 @@ static NSOpenGLContext *sharedContext = nil;
 {
 	NSData *fontData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
 	NSImage *resizeCornerNSImage = [NSImage imageNamed:@"NSGrayResizeCorner"];
-	NSData *pngImageData = nil;
+	TCImage *tcImage = NULL;
 
 	if (resizeCornerNSImage)
 	{
-		pngImageData = [[[resizeCornerNSImage representations] objectAtIndex:0] representationUsingType:NSPNGFileType properties:nil];
+		NSBitmapImageRep *imageRep = [[resizeCornerNSImage representations] objectAtIndex:0];
+		
+		if ([imageRep pixelsWide] <= 16 && [imageRep pixelsHigh] <= 16)
+		{
+			tcImage = [self tcImageFromBitmapRep:imageRep];
+			if (!tcImage)
+			{
+				tcImage = [self tcImageFromPngData:[imageRep representationUsingType:NSPNGFileType properties:nil]];
+			}
+		}
 	}
-	if (!pngImageData)
+	if (!tcImage)
 	{
-		pngImageData = [NSData dataWithContentsOfFile:
-			[[NSBundle mainBundle] pathForResource:@"MyResizeCorner" ofType:@"png"]];
+		tcImage = [self tcImageFromPngData:[NSData dataWithContentsOfFile:
+			[[NSBundle mainBundle] pathForResource:@"MyResizeCorner" ofType:@"png"]]];
 	}
-	if (pngImageData)
+	if (tcImage)
 	{
-		[self loadResizeCornerImage:pngImageData];
+		[self loadResizeCornerImage:tcImage];
+		tcImage->release();
 	}
 	redisplayRequested = NO;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
