@@ -8,11 +8,12 @@
 @implementation LDrawModelView
 
 static NSOpenGLContext *sharedContext = nil;
+static BOOL loadResizeCornerImageTried = NO;
+static TCImage *resizeCornerImage = NULL;
 
 - (void)dealloc
 {
 	TCObject::release(modelViewer);
-	TCObject::release(resizeCornerImage);
 	[lastMoveTime release];
 	[super dealloc];
 }
@@ -137,35 +138,44 @@ static NSOpenGLContext *sharedContext = nil;
 	}
 }
 
+- (void)loadResizeCornerImage
+{
+	if (!resizeCornerImage && !loadResizeCornerImageTried)
+	{
+		NSImage *resizeCornerNSImage = [NSImage imageNamed:@"NSGrayResizeCorner"];
+		TCImage *tcImage = NULL;
+
+		loadResizeCornerImageTried = YES;
+		if (resizeCornerNSImage)
+		{
+			NSBitmapImageRep *imageRep = [[resizeCornerNSImage representations] objectAtIndex:0];
+			
+			if ([imageRep pixelsWide] <= 16 && [imageRep pixelsHigh] <= 16)
+			{
+				tcImage = [self tcImageFromBitmapRep:imageRep];
+				if (!tcImage)
+				{
+					tcImage = [self tcImageFromPngData:[imageRep representationUsingType:NSPNGFileType properties:nil]];
+				}
+			}
+		}
+		if (!tcImage)
+		{
+			tcImage = [self tcImageFromPngData:[NSData dataWithContentsOfFile:
+				[[NSBundle mainBundle] pathForResource:@"MyResizeCorner" ofType:@"png"]]];
+		}
+		if (tcImage)
+		{
+			[self loadResizeCornerImage:tcImage];
+			tcImage->release();
+		}
+	}
+}
+
 - (void)setupWithFrame:(NSRect)frame
 {
 	NSData *fontData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"SansSerif" ofType:@"fnt"]];
-	NSImage *resizeCornerNSImage = [NSImage imageNamed:@"NSGrayResizeCorner"];
-	TCImage *tcImage = NULL;
-
-	if (resizeCornerNSImage)
-	{
-		NSBitmapImageRep *imageRep = [[resizeCornerNSImage representations] objectAtIndex:0];
-		
-		if ([imageRep pixelsWide] <= 16 && [imageRep pixelsHigh] <= 16)
-		{
-			tcImage = [self tcImageFromBitmapRep:imageRep];
-			if (!tcImage)
-			{
-				tcImage = [self tcImageFromPngData:[imageRep representationUsingType:NSPNGFileType properties:nil]];
-			}
-		}
-	}
-	if (!tcImage)
-	{
-		tcImage = [self tcImageFromPngData:[NSData dataWithContentsOfFile:
-			[[NSBundle mainBundle] pathForResource:@"MyResizeCorner" ofType:@"png"]]];
-	}
-	if (tcImage)
-	{
-		[self loadResizeCornerImage:tcImage];
-		tcImage->release();
-	}
+	[self loadResizeCornerImage];
 	redisplayRequested = NO;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
@@ -506,7 +516,7 @@ static NSOpenGLContext *sharedContext = nil;
 
 - (void)drawRect:(NSRect)rect
 {
-	if (modelViewer && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
+	if (modelViewer && modelViewer->getFilename() && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
 	{
 		[[self modelWindow] modelWillReload];
 		loading = YES;

@@ -23,6 +23,7 @@ class AlertHandler;
 	NSDate *fpsReferenceDate;
 	int fpsFrameCount;
 	float fps;
+	float progressAdjust;
 	BOOL showStatusBar;
 }
 

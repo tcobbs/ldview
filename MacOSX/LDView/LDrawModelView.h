@@ -28,7 +28,6 @@ typedef enum
 	BOOL loading;
 	BOOL redisplayRequested;
 	float fps;
-	TCImage *resizeCornerImage;
 	int resizeCornerTextureId;
 }
 
