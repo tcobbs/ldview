@@ -146,6 +146,12 @@
 	ldPreferences->setHiResPrimitives([self getCheck:hiResCheck]);
 }
 
+- (IBAction)resetPage:(id)sender
+{
+	ldPreferences->loadDefaultPrimitivesSettings(false);
+	[super resetPage:sender];
+}
+
 - (IBAction)anisoLevel:(id)sender
 {
 	[self valueChanged:sender];

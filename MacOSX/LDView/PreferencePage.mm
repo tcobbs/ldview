@@ -52,7 +52,14 @@
 
 - (IBAction)resetPage:(id)sender
 {
+	[self setup];
+	[preferences enableApply:YES];
 }
+
+ - (Preferences *)preferences
+ {
+	 return preferences;
+ }
 
 - (IBAction)valueChanged:(id)sender
 {
@@ -182,23 +189,29 @@
 	[self groupCheck:sender name:groupName init:NO];
 }
 
-- (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init
+- (void)setUISection:(NSString *)sectionName enabled:(BOOL)enabled
 {
 	NSString *selectorName;
+	
+	if (enabled)
+	{
+		selectorName = [@"enable" stringByAppendingString:sectionName];
+	}
+	else
+	{
+		selectorName = [@"disable" stringByAppendingString:sectionName];
+	}
+	// Try doing THIS in C++!
+	[self performSelector:NSSelectorFromString(selectorName)];
+}
+
+- (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init
+{
 	if (!init)
 	{
 		[self valueChanged:sender];
 	}
-	if ([self getCheck:sender])
-	{
-		selectorName = [@"enable" stringByAppendingString:groupName];
-	}
-	else
-	{
-		selectorName = [@"disable" stringByAppendingString:groupName];
-	}
-	// Try doing THIS in C++!
-	[self performSelector:NSSelectorFromString(selectorName)];
+	[self setUISection:groupName enabled:[self getCheck:sender]];
 }
 
 - (void)textDidChange:(NSNotification *)aNotification

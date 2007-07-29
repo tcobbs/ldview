@@ -183,6 +183,11 @@
 	}
 }
 
+- (IBAction)resetPage:(id)sender
+{
+	ldPreferences->loadDefaultGeometrySettings(false);
+	[super resetPage:sender];
+}
 
 - (IBAction)seamWidth:(id)sender
 {

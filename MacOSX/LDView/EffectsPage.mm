@@ -203,6 +203,12 @@
 	ldPreferences->setPerformSmoothing([self getCheck:smoothCurvesCheck]);
 }
 
+- (IBAction)resetPage:(id)sender
+{
+	ldPreferences->loadDefaultEffectsSettings(false);
+	[super resetPage:sender];
+}
+
 - (IBAction)lighting:(id)sender
 {
 	[self groupCheck:lightingCheck name:@"Lighting"];

@@ -5,12 +5,14 @@
 #import "OCUserDefaults.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
+#include <TCFoundation/TCWebClient.h>
 #include "Preferences.h"
 
 @implementation LDViewController
 
 - (id)init
 {
+	NSString *userAgent = [NSString stringWithFormat:@"LDView/%@ (Mac OSX; ldview@gmail.com; http://ldview.sf.net/)", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
 	[OCLocalStrings loadStringTable:[[NSBundle mainBundle]
 		pathForResource:@"LDViewMessages" ofType:@"ini"]];
 	ldrawFileTypes = [[NSArray alloc] initWithObjects: @"ldr", @"dat", @"mpd",
@@ -18,6 +20,7 @@
 	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
 		@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
 	modelWindows = [[NSMutableArray alloc] init];
+	TCWebClient::setUserAgent([userAgent cString]);
 	return [super init];
 }
 
