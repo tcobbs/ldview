@@ -16,6 +16,8 @@ class LDPreferences;
 	NSMutableDictionary *disabledBoxTitles;
 	NSNumber *one;
 }
+
+- (Preferences *)preferences;
 - (void)apply;
 - (void)updateLdPreferences;
 - (IBAction)resetPage:(id)sender;
@@ -29,7 +31,9 @@ class LDPreferences;
 - (void)getColorWell:(NSColorWell *)colorWell r:(int *)r g:(int *)g b:(int *)b;
 - (void)enableLabel:(NSTextField *)label value:(BOOL)enabled;
 - (void)enableBoxTitle:(NSBox *)box value:(BOOL)enabled;
+- (void)setUISection:(NSString *)sectionName enabled:(BOOL)enabled;
 - (void)groupCheck:(id)sender name:(NSString *)groupName;
 - (void)groupCheck:(id)sender name:(NSString *)groupName value:(bool)value;
 - (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init;
+
 @end

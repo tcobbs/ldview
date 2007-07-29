@@ -31,6 +31,7 @@
     IBOutlet NSButton *wireframeCutawayCheck;
     IBOutlet NSMatrix *wireframeCutawayMatrix;
 }
+
 - (IBAction)lighting:(id)sender;
 - (IBAction)useLightDats:(id)sender;
 - (IBAction)stereo:(id)sender;
@@ -39,4 +40,5 @@
 - (IBAction)stipple:(id)sender;
 - (IBAction)flatShading:(id)sender;
 - (IBAction)smoothCurves:(id)sender;
+
 @end

@@ -44,4 +44,10 @@
 	ldPreferences->setMemoryUsage([[memoryUsagePopUp selectedItem] tag]);
 }
 
+- (IBAction)resetPage:(id)sender
+{
+	ldPreferences->loadDefaultGeneralSettings(false);
+	[super resetPage:sender];
+}
+
 @end

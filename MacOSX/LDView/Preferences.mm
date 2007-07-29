@@ -69,10 +69,14 @@
 
 - (IBAction)cancel:(id)sender
 {
+	[window orderOut:sender];
+	[pages makeObjectsPerformSelector:@selector(setup)];
 }
 
 - (IBAction)ok:(id)sender
 {
+	[self apply:sender];
+	[window orderOut:sender];
 }
 
 - (void)enableApply:(BOOL)enabled

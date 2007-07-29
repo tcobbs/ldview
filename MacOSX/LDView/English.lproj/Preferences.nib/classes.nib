@@ -93,7 +93,7 @@
             SUPERCLASS = PreferencePage; 
         }, 
         {
-            ACTIONS = {delete = id; hotKey = id; new = id; }; 
+            ACTIONS = {delete = id; hotKey = id; new = id; prefSetSelected = id; }; 
             CLASS = PrefSetsPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -153,15 +153,20 @@
             SUPERCLASS = PreferencePage; 
         }, 
         {
+            ACTIONS = {proxyType = id; }; 
             CLASS = UpdatesPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 automaticCheck = NSButton; 
                 missingDaysField = NSTextField; 
-                missingUpdatesField = NSTextField; 
+                missingDaysLabel = NSTextField; 
                 portField = NSTextField; 
+                portLabel = NSTextField; 
                 proxyField = NSTextField; 
+                proxyLabel = NSTextField; 
                 proxyMatrix = NSMatrix; 
+                updatedDaysField = NSTextField; 
+                updatedDaysLabel = NSTextField; 
             }; 
             SUPERCLASS = PreferencePage; 
         }

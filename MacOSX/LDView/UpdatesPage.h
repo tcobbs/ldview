@@ -8,9 +8,19 @@
 {
     IBOutlet NSButton *automaticCheck;
     IBOutlet NSTextField *missingDaysField;
-    IBOutlet NSTextField *missingUpdatesField;
+    IBOutlet NSTextField *missingDaysLabel;
+    IBOutlet NSTextField *updatedDaysField;
+    IBOutlet NSTextField *updatedDaysLabel;
     IBOutlet NSTextField *portField;
+	IBOutlet NSTextField *portLabel;
     IBOutlet NSTextField *proxyField;
+	IBOutlet NSTextField *proxyLabel;
     IBOutlet NSMatrix *proxyMatrix;
 }
+
+- (IBAction)proxyType:(id)sender;
+
+- (void)setup;
+- (void)updateLdPreferences;
+
 @end

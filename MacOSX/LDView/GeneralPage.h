@@ -16,6 +16,8 @@
     IBOutlet NSButton *showFrameRateCheck;
     IBOutlet NSButton *transparentDefaultCheck;
 }
+
 - (void)setup;
 - (void)updateLdPreferences;
+
 @end
