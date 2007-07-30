@@ -1,5 +1,7 @@
 #import "PrefSetsPage.h"
-#import "PrefSetHotKeyPanel.h"
+#import "PrefSetHotKeySheet.h"
+#import "PrefSetNewSheet.h"
+#import "Preferences.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
 #include <LDLib/LDPreferences.h>
@@ -10,6 +12,7 @@
 
 - (void)awakeFromNib
 {
+	defaultString = [[OCLocalStrings get:@"DefaultPrefSet"] retain];
 	sessionNames = [[NSMutableArray alloc] init];
 	hotKeys = [[NSMutableDictionary alloc] init];
 	[super awakeFromNib];
@@ -17,9 +20,11 @@
 
 - (void)dealloc
 {
+	[defaultString release];
 	[sessionNames release];
 	[hotKeys release];
-	[hotKeyPanel release];
+	[hotKeySheet release];
+	[newSheet release];
 	[super dealloc];
 }
 
@@ -30,6 +35,7 @@
 
 - (NSString *)hotKeyLabel:(int)index
 {
+/*
 	// I don't want to make this source file Unicode, so I'm going to manually
 	// construct the string using the Unicode values for the glyphs I want.
 	static unichar uniString[] = {
@@ -37,8 +43,8 @@
 		0x2318	// Unicode value for Command glyph.
 	};
 	NSString *prefix = [NSString stringWithCharacters:uniString length:sizeof(uniString) / sizeof(uniString[0])];
-	
-	return [NSString stringWithFormat:@"%@%d", prefix, index];
+*/
+	return [NSString stringWithFormat:@"^%d", index];
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
@@ -68,17 +74,21 @@
 	
 	if (name)
 	{
-		index = [sessionNames indexOfObject:name] + 1;
+		index = [sessionNames indexOfObject:name];
 	}
 	[tableView selectRow:index byExtendingSelection:NO];
+}
+
+- (NSString *)hotKeyUDKey:(int)index
+{
+	return [NSString stringWithFormat:@"%s/Key%d", HOT_KEYS_KEY, index];
 }
 
 - (void)setupHotKeys
 {
 	for (int i = 0; i < 10; i++)
 	{
-		NSString *key = [NSString stringWithFormat:@"%s/Key%d", HOT_KEYS_KEY, i];
-		NSString *value = [OCUserDefaults stringForKey:key];
+		NSString *value = [OCUserDefaults stringForKey:[self hotKeyUDKey:i] defaultValue:nil sessionSpecific:NO];
 		
 		if (value)
 		{
@@ -96,7 +106,7 @@
 
 	[self setupHotKeys];
 	[sessionNames removeAllObjects];
-	[sessionNames addObject:[OCLocalStrings get:@"DefaultPrefSet"]];
+	[sessionNames addObject:defaultString];
 	for (i = 0; i < count; i++)
 	{
 		[sessionNames addObject:[NSString stringWithCString:tcSessionNames->stringAtIndex(i)]];
@@ -111,6 +121,7 @@
 	{
 		[self selectPrefSet:nil];
 	}
+	[self prefSetSelected:tableView];
 	delete savedSessionName;
 }
 
@@ -122,11 +133,103 @@
 
 - (void)updateLdPreferences
 {
+	TCStringArray *tcSessionNames = TCUserDefaults::getAllSessionNames();
+	int i;
+	NSMutableDictionary *oldDict = [NSMutableDictionary dictionary];
+	NSMutableDictionary *currentDict = [NSMutableDictionary dictionary];
+	NSNumber *object = [NSNumber numberWithInt:1];
+	NSArray *hotKeyNames = [hotKeys allKeys];
+	int selectedRow = [tableView selectedRow];
+	char *savedSessionName = TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+	NSString *oldSessionName = nil;
+	BOOL sessionChanged = NO;
+
+	if (savedSessionName)
+	{
+		oldSessionName = [NSString stringWithCString:savedSessionName encoding:NSASCIIStringEncoding];
+		delete savedSessionName;
+	}
 	[super updateLdPreferences];
+	// Skip first entry, which is default session.
+	for (i = 1; i < [sessionNames count]; i++)
+	{
+		[currentDict setObject:object forKey:[sessionNames objectAtIndex:i]];
+	}
+	for (i = 0; i < tcSessionNames->getCount(); i++)
+	{
+		char *tcSessionName = (*tcSessionNames)[i];
+		NSString *sessionName = [NSString stringWithCString:tcSessionName encoding:NSASCIIStringEncoding];
+
+		[oldDict setObject:object forKey:sessionName];
+		if (![currentDict objectForKey:sessionName])
+		{
+			TCUserDefaults::removeSession([sessionName cStringUsingEncoding:NSASCIIStringEncoding]);
+		}
+	}
+	tcSessionNames->release();
+	// Once again, skip default session.
+	for (i = 1; i < [sessionNames count]; i++)
+	{
+		NSString *sessionName = [sessionNames objectAtIndex:i];
+		
+		if (![oldDict objectForKey:sessionName])
+		{
+			TCUserDefaults::setSessionName([sessionName cStringUsingEncoding:NSASCIIStringEncoding], PREFERENCE_SET_KEY);
+		}
+	}
+	if (selectedRow > 0)
+	{
+		NSString *newSessionName = [sessionNames objectAtIndex:[tableView selectedRow]];
+
+		TCUserDefaults::setSessionName([newSessionName cStringUsingEncoding:NSASCIIStringEncoding], PREFERENCE_SET_KEY);
+		if (![newSessionName isEqualToString:oldSessionName])
+		{
+			sessionChanged = YES;
+		}
+	}
+	else
+	{
+		TCUserDefaults::setSessionName(NULL, PREFERENCE_SET_KEY);
+		if (oldSessionName)
+		{
+			sessionChanged = YES;
+		}
+	}
+	for (i = 0; i < 10; i++)
+	{
+		[OCUserDefaults removeValueForKey:[self hotKeyUDKey:i] sessionSpecific:NO];
+	}
+	for (i = 0; i < [hotKeyNames count]; i++)
+	{
+		NSString *hotKeyName = [hotKeyNames objectAtIndex:i];
+		[OCUserDefaults setString:hotKeyName forKey:[self hotKeyUDKey:[[hotKeys objectForKey:hotKeyName] intValue]] sessionSpecific:NO];
+	}
+	if (sessionChanged)
+	{
+		[[self preferences] loadSettings];
+		[[self preferences] ldPreferences]->applySettings();
+	}
+}
+
+- (void)hotKeyPressed:(int)index
+{
+	NSArray *names = [hotKeys allKeysForObject:[NSNumber numberWithInt:index]];
+
+	if ([names count])
+	{
+		[tableView selectRow:[sessionNames indexOfObject:[names objectAtIndex:0]] byExtendingSelection:NO];
+		[self updateLdPreferences];
+	}
 }
 
 - (IBAction)delete:(id)sender
 {
+	int selectedRow = [tableView selectedRow];
+
+	[hotKeys removeObjectForKey:[sessionNames objectAtIndex:selectedRow]];
+	[sessionNames removeObjectAtIndex:selectedRow];
+	[tableView reloadData];
+	[self valueChanged:sender];
 }
 
 - (IBAction)hotKey:(id)sender
@@ -134,11 +237,11 @@
 	NSNumber *hotKey;
 	NSString *currentPrefSet = [sessionNames objectAtIndex:[tableView selectedRow]];
 
-	if (!hotKeyPanel)
+	if (!hotKeySheet)
 	{
-		hotKeyPanel = [[PrefSetHotKeyPanel alloc] initWithParent:self];
+		hotKeySheet = [[PrefSetHotKeySheet alloc] initWithParent:self];
 	}
-	hotKey = [hotKeyPanel getHotKey:[hotKeys objectForKey:currentPrefSet]];
+	hotKey = [hotKeySheet getHotKey:[hotKeys objectForKey:currentPrefSet]];
 	if (hotKey)
 	{
 		if ([hotKey intValue] >= 0)
@@ -156,15 +259,55 @@
 			[hotKeys removeObjectForKey:currentPrefSet];
 		}
 		[tableView reloadData];
+		[self valueChanged:sender];
+	}
+}
+
+static int nameSortFunction(id left, id right, void *context)
+{
+	if ([left isEqualToString:(NSString *)context])
+	{
+		return NSOrderedAscending;
+	}
+	else if ([right isEqualToString:(NSString *)context])
+	{
+		return NSOrderedDescending;
+	}
+	else
+	{
+		return [left caseInsensitiveCompare:right];
 	}
 }
 
 - (IBAction)new:(id)sender
 {
+	NSString *name;
+
+	if (!newSheet)
+	{
+		newSheet = [[PrefSetNewSheet alloc] initWithParent:self];
+	}
+	name = [newSheet getName];
+	if (name != nil)
+	{
+		if ([name length] > 0)
+		{
+			[sessionNames addObject:name];
+			[sessionNames sortUsingFunction:nameSortFunction context:defaultString];
+			//[sessionNames sortUsingSelector:@selector(caseInsensitiveCompare:)];
+			[tableView reloadData];
+			[tableView selectRow:[sessionNames indexOfObject:name] byExtendingSelection:NO];
+			[self valueChanged:sender];
+		}
+	}
 }
 
 - (IBAction)prefSetSelected:(id)sender
 {
+	int selectedRow = [tableView selectedRow];
+
+	[deleteButton setEnabled:selectedRow > 0];
+	[hotKeyButton setEnabled:selectedRow >= 0];
 	[self valueChanged:sender];
 }
 

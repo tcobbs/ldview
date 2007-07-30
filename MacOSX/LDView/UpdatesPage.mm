@@ -74,7 +74,7 @@
 	if ([[proxyMatrix selectedCell] tag] == 2)
 	{
 		ldPreferences->setProxyType(2);
-		ldPreferences->setProxyServer([[proxyField stringValue] cString]);
+		ldPreferences->setProxyServer([[proxyField stringValue] cStringUsingEncoding:NSASCIIStringEncoding]);
 		ldPreferences->setProxyPort([portField intValue]);
 	}
 	else

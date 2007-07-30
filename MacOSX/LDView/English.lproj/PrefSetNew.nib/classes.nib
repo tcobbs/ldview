@@ -9,9 +9,9 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            CLASS = PrefSetHotKeySheet; 
+            CLASS = PrefSetNewSheet; 
             LANGUAGE = ObjC; 
-            OUTLETS = {popUp = NSPopUpButton; }; 
+            OUTLETS = {nameField = NSTextField; }; 
             SUPERCLASS = GenericSheet; 
         }
     ); 

@@ -12,7 +12,6 @@
 	controller = value;	// Don't retain: it's our parent.
 	pages = [[NSMutableArray alloc] initWithCapacity:[[tabView tabViewItems] count]];
 	ldPreferences = new LDPreferences;
-	ldPreferences->loadSettings();
 	[NSBundle loadNibNamed:@"Preferences.nib" owner:self];
 	return [super init];
 }
@@ -22,6 +21,12 @@
 	TCObject::release(ldPreferences);
 	[pages release];
 	[super dealloc];
+}
+
+- (void)loadSettings
+{
+	ldPreferences->loadSettings();
+	[pages makeObjectsPerformSelector:@selector(setup)];
 }
 
 - (void)show
@@ -37,8 +42,8 @@
 	[pages addObject:primitivesPage];
 	[pages addObject:updatesPage];
 	[pages addObject:prefSetsPage];
-	[pages makeObjectsPerformSelector:@selector(setPreferences:)
-		withObject:self];
+	[pages makeObjectsPerformSelector:@selector(setPreferences:) withObject:self];
+	[self loadSettings];
 }
 
 - (void)initModelWindow:(ModelWindow *)value
@@ -65,6 +70,11 @@
 		ldPreferences->commitSettings();
 		[modelView setNeedsDisplay:YES];
 	}
+}
+
+- (void)hotKeyPressed:(int)index
+{
+	[prefSetsPage hotKeyPressed:index];
 }
 
 - (IBAction)cancel:(id)sender

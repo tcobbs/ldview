@@ -4,7 +4,7 @@
 
 @class Preferences;
 
-@interface LDViewController : NSObject
+@interface LDViewController : NSResponder
 {
 	IBOutlet NSMenuItem *statusBarMenuItem;
 	

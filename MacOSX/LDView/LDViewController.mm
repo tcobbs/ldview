@@ -20,7 +20,7 @@
 	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
 		@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
 	modelWindows = [[NSMutableArray alloc] init];
-	TCWebClient::setUserAgent([userAgent cString]);
+	TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
 	return [super init];
 }
 
@@ -164,6 +164,37 @@
 	{
 		[[modelWindows objectAtIndex:i] setShowStatusBar:showStatusBar];
 	}
+}
+
+- (BOOL)acceptsFirstResponder
+{
+	return NO;
+}
+
+- (BOOL)becomeFirstResponder
+{
+	return NO;
+}
+
+- (void)keyUp:(NSEvent *)theEvent
+{
+	unichar character = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+	
+	if (character >= '0' && character <= '9')
+	{
+		if (([theEvent modifierFlags] & (NSShiftKeyMask | NSControlKeyMask | NSAlternateKeyMask | NSCommandKeyMask)) == NSControlKeyMask)
+		{
+			[preferences hotKeyPressed:character - '0'];
+			[modelWindows makeObjectsPerformSelector:@selector(reloadNeeded)];
+			//NSLog(@"Ctrl+%d pressed.\n", character - '0');
+		}
+	}
+	[super keyUp:theEvent];
+}
+
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent
+{
+	return [super performKeyEquivalent:theEvent];
 }
 
 @end
