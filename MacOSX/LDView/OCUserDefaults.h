@@ -15,6 +15,7 @@
 
 typedef char *argvArray[];
 
++ (void)initSession;
 + (void)setAppName:(NSString *)value;
 + (void)setCommandLine:(argvArray)argv;
 + (NSString *)stringForKey:(NSString *)key;
@@ -33,5 +34,7 @@ typedef char *argvArray[];
 + (void)setLong:(long)value
 		 forKey:(NSString *)key
 sessionSpecific:(BOOL)sessionSpecific;
++ (void)removeValueForKey:(NSString *)key
+		  sessionSpecific:(BOOL)sessionSpecific;
 
 @end

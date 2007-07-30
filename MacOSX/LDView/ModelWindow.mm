@@ -62,6 +62,7 @@
 	[window setToolbar:toolbar];
 	[statusBar retain];
 	progressAdjust = [progressMessage frame].origin.x - [progress frame].origin.x;
+	[window setNextResponder:controller];
 }
 
 - (id)initWithController:(LDViewController *)value

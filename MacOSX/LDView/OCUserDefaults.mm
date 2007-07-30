@@ -8,6 +8,7 @@
 
 #import "OCUserDefaults.h"
 #include <TCFoundation/TCUserDefaults.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 
 @implementation OCUserDefaults
 
@@ -89,5 +90,20 @@ sessionSpecific:(BOOL)sessionSpecific
 	 [key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
 }
 
++ (void)removeValueForKey:(NSString *)key
+		  sessionSpecific:(BOOL)sessionSpecific
+{
+	TCUserDefaults::removeValue([key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
+}
+
++ (void)initSession
+{
+	char *sessionName = TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
+	if (sessionName && sessionName[0])
+	{
+		TCUserDefaults::setSessionName(sessionName, NULL, false);
+	}
+	delete sessionName;
+}
 
 @end

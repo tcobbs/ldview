@@ -71,7 +71,6 @@
 	// Don't retain; it's our parent.
 	preferences = value;
 	ldPreferences = [preferences ldPreferences];
-	[self setup];
 }
 
 - (void)setup

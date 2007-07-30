@@ -4,7 +4,8 @@
 
 #import "PreferencePage.h"
 
-@class PrefSetHotKeyPanel;
+@class PrefSetHotKeySheet;
+@class PrefSetNewSheet;
 
 @interface PrefSetsPage : PreferencePage
 {
@@ -15,7 +16,9 @@
 	
 	NSMutableArray *sessionNames;
 	NSMutableDictionary *hotKeys;
-	PrefSetHotKeyPanel *hotKeyPanel;
+	PrefSetHotKeySheet *hotKeySheet;
+	PrefSetNewSheet *newSheet;
+	NSString *defaultString;
 }
 
 - (IBAction)delete:(id)sender;
@@ -26,5 +29,6 @@
 - (void)updateLdPreferences;
 - (void)setup;
 - (NSString *)hotKeyLabel:(int)index;
+- (void)hotKeyPressed:(int)index;
 
 @end
