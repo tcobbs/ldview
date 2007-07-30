@@ -548,7 +548,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		[sessionDict setObject: [NSString stringWithCString: value encoding:
 			NSASCIIStringEncoding] forKey: nsKey];
@@ -621,7 +621,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 		}
 		consolePrintf("sizeof(wchar_t) != sizeof(unichar)\n");
 	}
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		[sessionDict setObject: [NSString stringWithCharacters: ucValue
 			length: valueLen] forKey: nsKey];
@@ -818,7 +818,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		returnString = [sessionDict objectForKey: nsKey];
 	}
@@ -900,7 +900,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		returnString = [sessionDict objectForKey: nsKey];
 	}
@@ -1009,7 +1009,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 		NSASCIIStringEncoding];
 	NSNumber *numberValue = [NSNumber numberWithLong: value];
 
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		[sessionDict setObject: numberValue forKey: nsKey];
 		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
@@ -1090,7 +1090,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		returnNumber = [sessionDict objectForKey: nsKey];
 	}
@@ -1206,7 +1206,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
-	if (sessionDict)
+	if (sessionDict && sessionSpecific)
 	{
 		[sessionDict removeObjectForKey: nsKey];
 		[[NSUserDefaults standardUserDefaults] setPersistentDomain: sessionDict
