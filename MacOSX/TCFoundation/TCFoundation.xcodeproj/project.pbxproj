@@ -452,11 +452,13 @@
 				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					/usr/local/include,
 					../..,
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
 					/usr/local/lib,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
@@ -477,11 +479,13 @@
 				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					/usr/local/include,
 					../..,
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
 					/usr/local/lib,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);

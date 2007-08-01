@@ -71,7 +71,7 @@
 - (void)selectPrefSet:(NSString *)name
 {
 	int index = 0;
-	
+
 	if (name)
 	{
 		index = [sessionNames indexOfObject:name];

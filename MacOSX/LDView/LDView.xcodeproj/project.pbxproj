@@ -20,20 +20,17 @@
 		1F20D6F40A5F759C00F677AC /* SansSerif.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 1F20D6F30A5F759C00F677AC /* SansSerif.fnt */; };
 		1F20DAE90A60BEF900F677AC /* OCUserDefaults.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */; };
 		1F20DB190A60C39D00F677AC /* OCLocalStrings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */; };
-		1F20DB370A60C4B700F677AC /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F20DB360A60C4B700F677AC /* LDViewMessages.ini */; };
 		1F240BC00A58AFC300691116 /* LDViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240BBF0A58AFC300691116 /* LDViewController.mm */; };
 		1F240BE30A58D11D00691116 /* libLDLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240BAC0A588BB800691116 /* libLDLib.a */; };
 		1F240BE50A58D12C00691116 /* libLDLoader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240BA50A588BA700691116 /* libLDLoader.a */; };
 		1F240BE60A58D12E00691116 /* libTCFoundation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240B9C0A588B9000691116 /* libTCFoundation.a */; };
 		1F240BE70A58D13100691116 /* libTRE.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240BB30A588BC600691116 /* libTRE.a */; };
 		1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C020A58D1E400691116 /* OpenGL.framework */; };
-		1F240C060A58D35A00691116 /* libboost_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C050A58D35A00691116 /* libboost_thread.a */; };
-		1F240C1F0A58D3DB00691116 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C1E0A58D3DB00691116 /* libpng.a */; };
-		1F240C220A58D5E900691116 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C210A58D5E900691116 /* libz.dylib */; };
 		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
 		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		1FB813A10C6050DE00C82DD7 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1FB813A00C6050DE00C82DD7 /* LDViewMessages.ini */; };
 		1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */; };
 		1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8330BA4D00E00419677 /* Preferences.nib */; };
 		1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8370BA4D3F400419677 /* LightAngleUL.png */; };
@@ -154,7 +151,6 @@
 		1F2031FE0C49DF72009B7720 /* UpdatesPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdatesPage.mm; sourceTree = "<group>"; };
 		1F20D6510A5F6F8200F677AC /* StudLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = StudLogo.png; path = ../../Textures/StudLogo.png; sourceTree = SOURCE_ROOT; };
 		1F20D6F30A5F759C00F677AC /* SansSerif.fnt */ = {isa = PBXFileReference; lastKnownFileType = file; name = SansSerif.fnt; path = ../../Textures/SansSerif.fnt; sourceTree = SOURCE_ROOT; };
-		1F20DAE40A60BE9600F677AC /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUserDefaults.h; sourceTree = "<group>"; };
 		1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OCUserDefaults.mm; sourceTree = "<group>"; };
 		1F20DB170A60C39D00F677AC /* OCLocalStrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCLocalStrings.h; sourceTree = "<group>"; };
@@ -166,15 +162,13 @@
 		1F240BBE0A58AFC300691116 /* LDViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDViewController.h; sourceTree = "<group>"; };
 		1F240BBF0A58AFC300691116 /* LDViewController.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDViewController.mm; sourceTree = "<group>"; };
 		1F240C020A58D1E400691116 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
-		1F240C050A58D35A00691116 /* libboost_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libboost_thread.a; path = /opt/local/lib/libboost_thread.a; sourceTree = "<absolute>"; };
-		1F240C1E0A58D3DB00691116 /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = /usr/local/lib/libpng.a; sourceTree = "<absolute>"; };
-		1F240C210A58D5E900691116 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = /usr/lib/libz.dylib; sourceTree = "<absolute>"; };
 		1F240C9E0A58D98400691116 /* LDrawModelView.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawModelView.mm; sourceTree = "<group>"; };
 		1F240C9F0A58D98400691116 /* LDrawModelView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawModelView.h; sourceTree = "<group>"; };
 		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
 		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MyResizeCorner.png; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
+		1FB8139E0C6050D700C82DD7 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = English; path = ../../English.lproj/LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1FD4D8300BA4CF8900419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
 		1FD4D8340BA4D00E00419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
 		1FD4D8370BA4D3F400419677 /* LightAngleUL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUL.png; path = ../../Icons/LightAngleUL.png; sourceTree = SOURCE_ROOT; };
@@ -214,9 +208,6 @@
 				1F240BE60A58D12E00691116 /* libTCFoundation.a in Frameworks */,
 				1F240BE70A58D13100691116 /* libTRE.a in Frameworks */,
 				1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */,
-				1F240C060A58D35A00691116 /* libboost_thread.a in Frameworks */,
-				1F240C1F0A58D3DB00691116 /* libpng.a in Frameworks */,
-				1F240C220A58D5E900691116 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,9 +347,6 @@
 		29B97314FDCFA39411CA2CEA /* LDView */ = {
 			isa = PBXGroup;
 			children = (
-				1F240C210A58D5E900691116 /* libz.dylib */,
-				1F240C1E0A58D3DB00691116 /* libpng.a */,
-				1F240C050A58D35A00691116 /* libboost_thread.a */,
 				1F240BB40A588BCB00691116 /* Support Projects */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
@@ -381,6 +369,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1FB813A00C6050DE00C82DD7 /* LDViewMessages.ini */,
 				1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */,
 				1FD4D83B0BA4D52800419677 /* LightAngleLL.png */,
 				1FD4D83C0BA4D52800419677 /* LightAngleLM.png */,
@@ -391,7 +380,6 @@
 				1FD4D8410BA4D52800419677 /* LightAngleUM.png */,
 				1FD4D8420BA4D52800419677 /* LightAngleUR.png */,
 				1FD4D8370BA4D3F400419677 /* LightAngleUL.png */,
-				1F20DB360A60C4B700F677AC /* LDViewMessages.ini */,
 				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
 				1F20D6510A5F6F8200F677AC /* StudLogo.png */,
 				1F92F61D0A5A267C00AE8086 /* LDView.icns */,
@@ -519,7 +507,6 @@
 				1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */,
 				1F20D6520A5F6F8200F677AC /* StudLogo.png in Resources */,
 				1F20D6F40A5F759C00F677AC /* SansSerif.fnt in Resources */,
-				1F20DB370A60C4B700F677AC /* LDViewMessages.ini in Resources */,
 				1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */,
 				1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */,
 				1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */,
@@ -534,6 +521,7 @@
 				1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */,
 				1FFC7DC80C5C095F004B8A2F /* PrefSetHotKey.nib in Resources */,
 				1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */,
+				1FB813A10C6050DE00C82DD7 /* LDViewMessages.ini in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,10 +587,10 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		1F20DB360A60C4B700F677AC /* LDViewMessages.ini */ = {
+		1FB813A00C6050DE00C82DD7 /* LDViewMessages.ini */ = {
 			isa = PBXVariantGroup;
 			children = (
-				1F20DAE40A60BE9600F677AC /* LDViewMessages.ini */,
+				1FB8139E0C6050D700C82DD7 /* English */,
 			);
 			name = LDViewMessages.ini;
 			sourceTree = "<group>";
@@ -693,16 +681,24 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
 				);
 				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
 					"$(LIBRARY_SEARCH_PATHS)",
 					../TCFoundation/build/Debug,
 					../LDLoader/build/Debug,
 					../TRE/build/Debug,
 					../LDLib/build/Debug,
 					/usr/local/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lpng12u",
+					"-lboost_thread",
+					"$(OTHER_LDFLAGS)",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -716,16 +712,24 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
 				);
 				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
 					"$(LIBRARY_SEARCH_PATHS)",
 					../TCFoundation/build/Release,
 					../LDLoader/build/Release,
 					../TRE/build/Release,
 					../LDLib/build/Release,
 					/usr/local/lib,
+				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lpng12u",
+					"-lboost_thread",
+					"$(OTHER_LDFLAGS)",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
