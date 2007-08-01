@@ -429,9 +429,14 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../../,
 					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
+					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -446,9 +451,14 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../../,
 					/usr/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
+					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;

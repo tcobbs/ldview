@@ -66,14 +66,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A748D0C4DEF9700DAF5C8 /* TCFoundation.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libTCFoundation.a */;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = TCFoundation;
 		};
 		1F6A74930C4DEFAA00DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F6A748D0C4DEF9700DAF5C8 /* TCFoundation.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* TCFoundation */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = TCFoundation;
 		};
 /* End PBXContainerItemProxy section */
@@ -407,8 +407,13 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
+					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -426,8 +431,13 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
+					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
+					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
