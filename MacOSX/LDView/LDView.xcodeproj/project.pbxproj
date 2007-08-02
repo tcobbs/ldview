@@ -28,9 +28,9 @@
 		1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C020A58D1E400691116 /* OpenGL.framework */; };
 		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
 		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
+		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
-		1FB813A10C6050DE00C82DD7 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1FB813A00C6050DE00C82DD7 /* LDViewMessages.ini */; };
 		1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */; };
 		1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8330BA4D00E00419677 /* Preferences.nib */; };
 		1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8370BA4D3F400419677 /* LightAngleUL.png */; };
@@ -166,9 +166,9 @@
 		1F240C9F0A58D98400691116 /* LDrawModelView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawModelView.h; sourceTree = "<group>"; };
 		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
 		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
+		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MyResizeCorner.png; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
-		1FB8139E0C6050D700C82DD7 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = English; path = ../../English.lproj/LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1FD4D8300BA4CF8900419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
 		1FD4D8340BA4D00E00419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
 		1FD4D8370BA4D3F400419677 /* LightAngleUL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUL.png; path = ../../Icons/LightAngleUL.png; sourceTree = SOURCE_ROOT; };
@@ -369,7 +369,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1FB813A00C6050DE00C82DD7 /* LDViewMessages.ini */,
+				1F39B71E0C619E35004CE068 /* LDViewMessages.ini */,
 				1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */,
 				1FD4D83B0BA4D52800419677 /* LightAngleLL.png */,
 				1FD4D83C0BA4D52800419677 /* LightAngleLM.png */,
@@ -521,7 +521,7 @@
 				1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */,
 				1FFC7DC80C5C095F004B8A2F /* PrefSetHotKey.nib in Resources */,
 				1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */,
-				1FB813A10C6050DE00C82DD7 /* LDViewMessages.ini in Resources */,
+				1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,14 +585,6 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1FB813A00C6050DE00C82DD7 /* LDViewMessages.ini */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FB8139E0C6050D700C82DD7 /* English */,
-			);
-			name = LDViewMessages.ini;
 			sourceTree = "<group>";
 		};
 		1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */ = {
