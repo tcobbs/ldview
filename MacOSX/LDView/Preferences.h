@@ -39,6 +39,7 @@ class LDPreferences;
 - (IBAction)ok:(id)sender;
 - (LDPreferences *)ldPreferences;
 - (void)enableApply:(BOOL)enabled;
+- (BOOL)isApplyEnabled;
 - (NSWindow *)window;
 - (void)loadSettings;
 - (void)hotKeyPressed:(int)index;

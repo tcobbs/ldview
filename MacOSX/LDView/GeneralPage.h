@@ -11,6 +11,8 @@
     IBOutlet NSColorWell *defaultColorWell;
     IBOutlet NSTextField *fovField;
     IBOutlet NSPopUpButton *memoryUsagePopUp;
+	IBOutlet NSButton *newModelWindowsCheck;
+	IBOutlet NSButton *promptAtStartupCheck;
     IBOutlet NSButton *processLDConfigCheck;
     IBOutlet NSButton *showErrorsCheck;
     IBOutlet NSButton *showFrameRateCheck;

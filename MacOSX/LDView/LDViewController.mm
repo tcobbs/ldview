@@ -28,6 +28,8 @@
 {
 	[modelWindows release];
 	[preferences release];
+	[statusBarMenuFormat release];
+	[toolbarMenuFormat release];
 	[super dealloc];
 }
 
@@ -47,24 +49,89 @@
 	return [[self currentModelWindow] modelView];
 }
 
-- (void)updateStatusBarMenuItem
+- (void)updateShowHideMenuItem:(NSMenuItem *)menuItem show:(BOOL)show format:(NSString *)format
 {
-	if (showStatusBar)
+	NSString *showHide;
+
+	// Note: logic is backwards on purpose.  If show is set, then the menu needs
+	// to say Hide, since the current state has the item shown.
+	if (show)
 	{
-		[statusBarMenuItem setTitle:@"Hide Status Bar"];
+		showHide = @"Hide";
 	}
 	else
 	{
-		[statusBarMenuItem setTitle:@"Show Status Bar"];
+		showHide = @"Show";
 	}
+	[menuItem setTitle:[NSString stringWithFormat:format, showHide]];
+}
+
+- (void)updateStatusBarMenuItem
+{
+	[self updateShowHideMenuItem:statusBarMenuItem show:showStatusBar format:statusBarMenuFormat];
+}
+
+- (BOOL)showToolbar
+{
+	NSToolbar *toolbar = [[NSApp keyWindow] toolbar];
+
+	if (toolbar)
+	{
+		return [toolbar isVisible];
+	}
+	else
+	{
+		return NO;
+	}
+}
+
+- (void)updateToolbarMenuItem
+{
+	[self updateShowHideMenuItem:toolbarMenuItem show:[self showToolbar] format:toolbarMenuFormat];
+}
+
+- (int)numberOfItemsInMenu:(NSMenu *)menu
+{
+	return [menu numberOfItems];
+}
+
+- (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
+{
+	if (item == toolbarMenuItem)
+	{
+		[self updateToolbarMenuItem];
+	}
+	return YES;
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	if (menuItem == toolbarMenuItem || menuItem == custToolbarMenuItem)
+	{		
+		if ([[NSApp window] toolbar])
+		{
+			return YES;
+		}
+		else
+		{
+			return NO;
+		}
+	}
+	return YES;
+}
+
+- (void)awakeFromNib
+{
+	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
+	statusBarMenuFormat = [[statusBarMenuItem title] retain];
+	toolbarMenuFormat = [[toolbarMenuItem title] retain];
+	[self updateStatusBarMenuItem];
 }
 
 - (BOOL)createWindow:(NSString *)filename
 {
 	ModelWindow *modelWindow = [[ModelWindow alloc] initWithController:self];
 
-	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
-	[self updateStatusBarMenuItem];
 	[modelWindow setShowStatusBar:showStatusBar];
 	[modelWindows addObject:modelWindow];
 	[modelWindow release];
@@ -164,6 +231,18 @@
 	{
 		[[modelWindows objectAtIndex:i] setShowStatusBar:showStatusBar];
 	}
+}
+
+- (IBAction)toggleToolbar:(id)sender
+{
+	NSToolbar *toolbar = [[NSApp keyWindow] toolbar];
+	[toolbar setVisible: ![toolbar isVisible]];
+}
+
+- (IBAction)customizeToolbar:(id)sender
+{
+	NSToolbar *toolbar = [[NSApp keyWindow] toolbar];
+	[toolbar runCustomizationPalette:sender];
 }
 
 - (BOOL)acceptsFirstResponder

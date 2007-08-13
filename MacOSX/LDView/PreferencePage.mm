@@ -218,4 +218,9 @@
 	[self valueChanged:[aNotification object]];
 }
 
+- (BOOL)canSwitchPages
+{
+	return YES;
+}
+
 @end

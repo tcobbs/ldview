@@ -51,7 +51,9 @@
                 defaultColorWell = NSColorWell; 
                 fovField = NSTextField; 
                 memoryUsagePopUp = NSPopUpButton; 
+                newModelWindowsCheck = NSButton; 
                 processLDConfigCheck = NSButton; 
+                promptAtStartupCheck = NSButton; 
                 showErrorsCheck = NSButton; 
                 showFrameRateCheck = NSButton; 
                 transparentDefaultCheck = NSButton; 

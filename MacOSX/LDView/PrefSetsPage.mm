@@ -121,7 +121,7 @@
 	{
 		[self selectPrefSet:nil];
 	}
-	[self prefSetSelected:tableView];
+	[self prefSetSelected];
 	delete savedSessionName;
 }
 
@@ -282,33 +282,83 @@ static int nameSortFunction(id left, id right, void *context)
 - (IBAction)new:(id)sender
 {
 	NSString *name;
+	bool done = false;
 
 	if (!newSheet)
 	{
 		newSheet = [[PrefSetNewSheet alloc] initWithParent:self];
 	}
-	name = [newSheet getName];
-	if (name != nil)
+	while (!done)
 	{
-		if ([name length] > 0)
+		name = [newSheet getName];
+		if (name != nil)
 		{
-			[sessionNames addObject:name];
-			[sessionNames sortUsingFunction:nameSortFunction context:defaultString];
-			//[sessionNames sortUsingSelector:@selector(caseInsensitiveCompare:)];
-			[tableView reloadData];
-			[tableView selectRow:[sessionNames indexOfObject:name] byExtendingSelection:NO];
-			[self valueChanged:sender];
+			if ([name length] > 0)
+			{
+				NSEnumerator *enumerator = [sessionNames objectEnumerator];
+				NSString *sessionName;
+				bool found = false;
+				
+				while (!found && (sessionName = [enumerator nextObject]) != nil)
+				{
+					if ([sessionName caseInsensitiveCompare:name] == NSOrderedSame)
+					{
+						found = true;
+					}
+				}
+				if (found)
+				{
+					NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"PrefSetAlreadyExists"], [OCLocalStrings get:@"OK"], nil, nil);
+					continue;
+				}
+				if ([name rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\\/"]].length > 0)
+				{
+					NSRunAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"PrefSetNameBadChars"], [OCLocalStrings get:@"OK"], nil, nil);
+					continue;
+				}
+				[sessionNames addObject:name];
+				[sessionNames sortUsingFunction:nameSortFunction context:defaultString];
+				[tableView reloadData];
+				[tableView selectRow:[sessionNames indexOfObject:name] byExtendingSelection:NO];
+				[self valueChanged:sender];
+			}
 		}
+		done = true;
 	}
+}
+
+- (void)prefSetSelected
+{
+	int selectedRow = [tableView selectedRow];
+	
+	[deleteButton setEnabled:selectedRow > 0];
+	[hotKeyButton setEnabled:selectedRow >= 0];
 }
 
 - (IBAction)prefSetSelected:(id)sender
 {
-	int selectedRow = [tableView selectedRow];
-
-	[deleteButton setEnabled:selectedRow > 0];
-	[hotKeyButton setEnabled:selectedRow >= 0];
+	[self prefSetSelected];
 	[self valueChanged:sender];
+}
+
+- (BOOL)canSwitchPages
+{
+	if ([preferences isApplyEnabled])
+	{
+		// ToDo: Localize the following.
+		switch (NSRunAlertPanel(@"Warning", @"All Preference Sets changes will be lost if you switch to another tab before applying your changes.  What do you want to do?", [OCLocalStrings get:@"Cancel"], @"Abandon Changes", @"Apply Changes Now"))
+		{
+			case NSAlertAlternateReturn:
+				[self setup];
+				break;
+			case NSAlertOtherReturn:
+				[preferences apply:self];
+				break;
+			default:
+				return NO;
+		}
+	}
+	return YES;
 }
 
 @end
