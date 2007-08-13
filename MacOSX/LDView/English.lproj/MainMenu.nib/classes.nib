@@ -3,16 +3,22 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
+                customizeToolbar = id; 
                 newWindow = id; 
                 openModel = id; 
                 preferences = id; 
                 resetView = id; 
                 toggleStatusBar = id; 
+                toggleToolbar = id; 
             }; 
             CLASS = LDViewController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {statusBarMenuItem = NSMenuItem; }; 
-            SUPERCLASS = NSObject; 
+            OUTLETS = {
+                custToolbarMenuItem = NSMenuItem; 
+                statusBarMenuItem = NSMenuItem; 
+                toolbarMenuItem = NSMenuItem; 
+            }; 
+            SUPERCLASS = NSResponder; 
         }, 
         {CLASS = LDrawModelView; LANGUAGE = ObjC; SUPERCLASS = NSOpenGLView; }
     ); 

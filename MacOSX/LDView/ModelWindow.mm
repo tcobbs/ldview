@@ -2,6 +2,8 @@
 #import "LDrawModelView.h"
 #import "LDViewController.h"
 #import "Preferences.h"
+#import "ToolbarSegmentedControl.h"
+#import "ToolbarPopUpButton.h"
 #import "OCLocalStrings.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
@@ -14,6 +16,8 @@
 {
 	[statusBar release];
 	[window release];
+	[toolbarItems release];
+	[toolbarItemIdentifiers release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
 	[super dealloc];
@@ -23,35 +27,91 @@
       itemForItemIdentifier:(NSString *)itemIdentifier
   willBeInsertedIntoToolbar:(BOOL)flag
 {
-	return nil;
-//	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:
-//		itemIdentifier] autorelease];
-//	return toolbarItem;
+	return [toolbarItems objectForKey:itemIdentifier];
+}
+
+- (NSArray *)toolbarItemIdentifiers
+{
+	return [[toolbarItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers: (NSToolbar *)toolbar
 {
-	return [NSArray arrayWithObjects:
-		NSToolbarPrintItemIdentifier,
-		NSToolbarCustomizeToolbarItemIdentifier,
+	return [toolbarItemIdentifiers arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
 		NSToolbarSeparatorItemIdentifier,
-		nil];
+		nil]];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
 {
-	return [NSArray arrayWithObjects:
-//		NSToolbarPrintItemIdentifier,
-		NSToolbarCustomizeToolbarItemIdentifier,
-		nil];
+	return toolbarItemIdentifiers;
+}
+
+- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl *)control highPriority:(BOOL)highPriority
+{
+	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+	NSSize size = [control frame].size;
+
+	size.height += 1.0f;
+	[item setLabel:label];
+	[item setPaletteLabel:label];
+	[item setToolTip:label];
+	[item setTarget:self];
+	[item setMinSize:size];
+	[item setMaxSize:size];
+	[control retain];
+	[control removeFromSuperview];
+	[item setView:control];
+	[control release];
+	if (highPriority)
+	{
+		[item setVisibilityPriority:NSToolbarItemVisibilityPriorityHigh];
+	}
+	else
+	{
+		[item setVisibilityPriority:NSToolbarItemVisibilityPriorityStandard];
+	}
+	[toolbarItems setObject:item forKey:identifier];
+	[toolbarItemIdentifiers addObject:identifier];
+	[item release];
+	return item;
+}
+
+- (void)setupToolbarItems
+{
+	toolbarItems = [[NSMutableDictionary alloc] init];
+	toolbarItemIdentifiers = [[NSMutableArray alloc] init];
+
+	[[viewPopUp itemAtIndex:0] setImage:[NSImage imageNamed:@"toolbar_view"]];
+	// ToDo: Localize
+	NSLog(@"[actionsSegments cell]: %@\n", [actionsSegments cell]);
+	actionsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:actionsSegments];
+	featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
+	viewPopUp = [[ToolbarPopUpButton alloc] initWithTemplate:viewPopUp];
+	prefsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:prefsSegments];
+	[[actionsSegments cell] setToolTip: @"Save Snapshot" forSegment:0];
+	[[actionsSegments cell] setToolTip: @"Reload" forSegment:1];
+	[[featuresSegments cell] setToolTip: @"Enable/Disable Wireframe" forSegment:0];
+	[[featuresSegments cell] setToolTip: @"Enable/Disable Seams" forSegment:1];
+	[[featuresSegments cell] setToolTip: @"Enable/Disable Edges" forSegment:2];
+	[[featuresSegments cell] setToolTip: @"Enable/Disable Primitive Substitution" forSegment:3];
+	[[featuresSegments cell] setToolTip: @"Enable/Disable Lighting" forSegment:4];
+	[[featuresSegments cell] setToolTip: @"Enable/Disable BFC" forSegment:5];
+	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:actionsSegments highPriority:YES];
+	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:featuresSegments highPriority:NO];
+	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:viewPopUp highPriority:NO];
+	[self addToolbarItemWithIdentifier:@"Prefs" label:@"Preferences" control:prefsSegments highPriority:YES];
 }
 
 - (void)setupToolbar
 {
+	[self setupToolbarItems];
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"LDViewToolbar"];
 	[toolbar setDelegate:self];
+	[toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+	[toolbar setSizeMode:NSToolbarSizeModeRegular];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 }
@@ -291,6 +351,111 @@
 - (NSWindow *)window
 {
 	return window;
+}
+
+- (NSToolbar *)toolbar
+{
+	return toolbar;
+}
+
+- (IBAction)saveSnapshot:(id)sender
+{
+	NSLog(@"saveSnapshot.\n");
+}
+
+- (IBAction)reload:(id)sender
+{
+	NSLog(@"reload.\n");
+}
+
+- (IBAction)actions:(id)sender
+{
+	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
+	{
+		case 1:
+			[self saveSnapshot:sender];
+			break;
+		case 2:
+			[self reload:sender];
+			break;
+		default:
+			NSLog(@"Unknown action.\n");
+			break;
+	}
+}
+
+- (IBAction)toggleWireframe:(id)sender
+{
+	NSLog(@"toggleWireframe.\n");
+}
+
+- (IBAction)toggleSeams:(id)sender
+{
+	NSLog(@"toggleSeams.\n");
+}
+
+- (IBAction)toggleEdges:(id)sender
+{
+	NSLog(@"toggleEdges.\n");
+}
+
+- (IBAction)togglePrimSub:(id)sender
+{
+	NSLog(@"togglePrimSub.\n");
+}
+
+- (IBAction)toggleLighting:(id)sender
+{
+	NSLog(@"toggleLighting.\n");
+}
+
+- (IBAction)toggleBfc:(id)sender
+{
+	NSLog(@"toggleBfc.\n");
+}
+
+
+- (IBAction)features:(id)sender
+{
+	switch([[sender cell] tagForSegment:[sender selectedSegment]])
+	{
+		case 0:
+			[self toggleWireframe:sender];
+			break;
+		case 1:
+			[self toggleSeams:sender];
+			break;
+		case 2:
+			[self toggleEdges:sender];
+			break;
+		case 3:
+			[self togglePrimSub:sender];
+			break;
+		case 4:
+			[self toggleLighting:sender];
+			break;
+		case 5:
+			[self toggleBfc:sender];
+			break;
+		default:
+			NSLog(@"Unknown feature.\n");
+			break;
+	}
+}
+
+- (IBAction)viewingAngle:(id)sender
+{
+	NSLog(@"viewingAngle toolbar button : %d.\n", [sender tag]);
+}
+
+- (IBAction)saveViewingAngle:(id)sender
+{
+	NSLog(@"saveViewingAngle toolbar button.\n");
+}
+
+- (IBAction)preferences:(id)sender
+{
+	NSLog(@"preferences toolbar button.\n");
 }
 
 @end

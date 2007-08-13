@@ -25,10 +25,12 @@
 - (IBAction)hotKey:(id)sender;
 - (IBAction)new:(id)sender;
 - (IBAction)prefSetSelected:(id)sender;
+- (void)prefSetSelected;
 
 - (void)updateLdPreferences;
 - (void)setup;
 - (NSString *)hotKeyLabel:(int)index;
 - (void)hotKeyPressed:(int)index;
+- (BOOL)canSwitchPages;
 
 @end

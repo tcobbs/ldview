@@ -95,9 +95,19 @@
 	[window setDocumentEdited:enabled];
 }
 
+- (BOOL)isApplyEnabled
+{
+	return [applyButton isEnabled];
+}
+
 - (NSWindow *)window
 {
 	return window;
+}
+
+- (BOOL)tabView:(NSTabView *)aTabView shouldSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+	return [[pages objectAtIndex:[aTabView indexOfTabViewItem:[tabView selectedTabViewItem]]] canSwitchPages];
 }
 
 @end

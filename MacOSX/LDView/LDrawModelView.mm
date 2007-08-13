@@ -1,5 +1,6 @@
 #import "LDrawModelView.h"
 #import "ModelWindow.h"
+#import "OCLocalStrings.h"
 #import <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCMacros.h>
 #include <TRE/TREGLExtensions.h>
@@ -260,7 +261,7 @@ static TCImage *resizeCornerImage = NULL;
 		}
 		else
 		{
-			NSRunAlertPanel(@"Error", @"Error loading file", @"OK", nil, nil);
+			NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], [filename cStringUsingEncoding:NSASCIIStringEncoding]], [OCLocalStrings get:@"OK"], nil, nil);
 		}
 		loading = NO;
 		[self rotationUpdate];

@@ -17,6 +17,11 @@ class AlertHandler;
 	IBOutlet NSTextField *progressMessage;
 	IBOutlet NSView *statusBar;
 
+	IBOutlet NSSegmentedControl *actionsSegments;
+	IBOutlet NSSegmentedControl *featuresSegments;
+	IBOutlet NSPopUpButton *viewPopUp;
+	IBOutlet NSSegmentedControl *prefsSegments;
+
 	LDViewController *controller;
 	AlertHandler *alertHandler;
 	NSToolbar *toolbar;
@@ -25,6 +30,8 @@ class AlertHandler;
 	float fps;
 	float progressAdjust;
 	BOOL showStatusBar;
+	NSMutableDictionary *toolbarItems;
+	NSMutableArray *toolbarItemIdentifiers;
 }
 
 - (BOOL)openModel:(NSString *)filename;
@@ -40,5 +47,12 @@ class AlertHandler;
 - (BOOL)showStatusBar;
 - (void)show;
 - (NSWindow *)window;
+- (NSToolbar *)toolbar;
+
+- (IBAction)actions:(id)sender;
+- (IBAction)features:(id)sender;
+- (IBAction)viewingAngle:(id)sender;
+- (IBAction)saveViewingAngle:(id)sender;
+- (IBAction)preferences:(id)sender;
 
 @end

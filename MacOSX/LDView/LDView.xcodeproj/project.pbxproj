@@ -31,6 +31,16 @@
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		1FAEC8860C6EC12A0071B6D8 /* toolbar_snapshot.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC8850C6EC12A0071B6D8 /* toolbar_snapshot.png */; };
+		1FAEC95C0C6ECD8C0071B6D8 /* toolbar_preferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC9560C6ECD8C0071B6D8 /* toolbar_preferences.png */; };
+		1FAEC95D0C6ECD8C0071B6D8 /* toolbar_privsubs.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC9570C6ECD8C0071B6D8 /* toolbar_privsubs.png */; };
+		1FAEC95E0C6ECD8C0071B6D8 /* toolbar_reload.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC9580C6ECD8C0071B6D8 /* toolbar_reload.png */; };
+		1FAEC95F0C6ECD8C0071B6D8 /* toolbar_seams.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC9590C6ECD8C0071B6D8 /* toolbar_seams.png */; };
+		1FAEC9600C6ECD8C0071B6D8 /* toolbar_view.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC95A0C6ECD8C0071B6D8 /* toolbar_view.png */; };
+		1FAEC9610C6ECD8C0071B6D8 /* toolbar_wireframe.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC95B0C6ECD8C0071B6D8 /* toolbar_wireframe.png */; };
+		1FAEC9920C6ED0DD0071B6D8 /* toolbar_bfc.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC98F0C6ED0DD0071B6D8 /* toolbar_bfc.png */; };
+		1FAEC9930C6ED0DD0071B6D8 /* toolbar_edge.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC9900C6ED0DD0071B6D8 /* toolbar_edge.png */; };
+		1FAEC9940C6ED0DD0071B6D8 /* toolbar_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC9910C6ED0DD0071B6D8 /* toolbar_light.png */; };
 		1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */; };
 		1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8330BA4D00E00419677 /* Preferences.nib */; };
 		1FD4D8380BA4D3F400419677 /* LightAngleUL.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8370BA4D3F400419677 /* LightAngleUL.png */; };
@@ -42,6 +52,10 @@
 		1FD4D8480BA4D52800419677 /* LightAngleMR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8400BA4D52800419677 /* LightAngleMR.png */; };
 		1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8410BA4D52800419677 /* LightAngleUM.png */; };
 		1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8420BA4D52800419677 /* LightAngleUR.png */; };
+		1FE251FA0C6FD26800FAE201 /* ToolbarSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */; };
+		1FE252030C6FD2CF00FAE201 /* ToolbarSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252020C6FD2CF00FAE201 /* ToolbarSegmentedCell.m */; };
+		1FE252FB0C6FF97800FAE201 /* ToolbarPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252F80C6FF97800FAE201 /* ToolbarPopUpButton.m */; };
+		1FE252FC0C6FF97800FAE201 /* ToolbarPopUpButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252FA0C6FF97800FAE201 /* ToolbarPopUpButtonCell.m */; };
 		1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */; };
 		1FE965B40C5D596D00C80B59 /* PrefSetNewSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FE965B30C5D596D00C80B59 /* PrefSetNewSheet.mm */; };
 		1FE965BB0C5D59E700C80B59 /* GenericSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */; };
@@ -169,6 +183,16 @@
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MyResizeCorner.png; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
+		1FAEC8850C6EC12A0071B6D8 /* toolbar_snapshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_snapshot.png; path = ../../QT/images/toolbar_snapshot.png; sourceTree = SOURCE_ROOT; };
+		1FAEC9560C6ECD8C0071B6D8 /* toolbar_preferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_preferences.png; path = ../../QT/images/toolbar_preferences.png; sourceTree = SOURCE_ROOT; };
+		1FAEC9570C6ECD8C0071B6D8 /* toolbar_privsubs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_privsubs.png; path = ../../QT/images/toolbar_privsubs.png; sourceTree = SOURCE_ROOT; };
+		1FAEC9580C6ECD8C0071B6D8 /* toolbar_reload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_reload.png; path = ../../QT/images/toolbar_reload.png; sourceTree = SOURCE_ROOT; };
+		1FAEC9590C6ECD8C0071B6D8 /* toolbar_seams.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_seams.png; path = ../../QT/images/toolbar_seams.png; sourceTree = SOURCE_ROOT; };
+		1FAEC95A0C6ECD8C0071B6D8 /* toolbar_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_view.png; path = ../../QT/images/toolbar_view.png; sourceTree = SOURCE_ROOT; };
+		1FAEC95B0C6ECD8C0071B6D8 /* toolbar_wireframe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_wireframe.png; path = ../../QT/images/toolbar_wireframe.png; sourceTree = SOURCE_ROOT; };
+		1FAEC98F0C6ED0DD0071B6D8 /* toolbar_bfc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_bfc.png; path = ../../QT/images/toolbar_bfc.png; sourceTree = SOURCE_ROOT; };
+		1FAEC9900C6ED0DD0071B6D8 /* toolbar_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_edge.png; path = ../../QT/images/toolbar_edge.png; sourceTree = SOURCE_ROOT; };
+		1FAEC9910C6ED0DD0071B6D8 /* toolbar_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_light.png; path = ../../QT/images/toolbar_light.png; sourceTree = SOURCE_ROOT; };
 		1FD4D8300BA4CF8900419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
 		1FD4D8340BA4D00E00419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/Preferences.nib; sourceTree = "<group>"; };
 		1FD4D8370BA4D3F400419677 /* LightAngleUL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUL.png; path = ../../Icons/LightAngleUL.png; sourceTree = SOURCE_ROOT; };
@@ -180,6 +204,14 @@
 		1FD4D8400BA4D52800419677 /* LightAngleMR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleMR.png; path = ../../Icons/LightAngleMR.png; sourceTree = SOURCE_ROOT; };
 		1FD4D8410BA4D52800419677 /* LightAngleUM.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUM.png; path = ../../Icons/LightAngleUM.png; sourceTree = SOURCE_ROOT; };
 		1FD4D8420BA4D52800419677 /* LightAngleUR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUR.png; path = ../../Icons/LightAngleUR.png; sourceTree = SOURCE_ROOT; };
+		1FE251F80C6FD26800FAE201 /* ToolbarSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedControl.h; path = CustomControls/ToolbarSegmentedControl.h; sourceTree = "<group>"; };
+		1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbarSegmentedControl.m; path = CustomControls/ToolbarSegmentedControl.m; sourceTree = "<group>"; };
+		1FE252010C6FD2CF00FAE201 /* ToolbarSegmentedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedCell.h; path = CustomControls/ToolbarSegmentedCell.h; sourceTree = "<group>"; };
+		1FE252020C6FD2CF00FAE201 /* ToolbarSegmentedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbarSegmentedCell.m; path = CustomControls/ToolbarSegmentedCell.m; sourceTree = "<group>"; };
+		1FE252F70C6FF97800FAE201 /* ToolbarPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ToolbarPopUpButton.h; path = CustomControls/ToolbarPopUpButton.h; sourceTree = "<group>"; };
+		1FE252F80C6FF97800FAE201 /* ToolbarPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ToolbarPopUpButton.m; path = CustomControls/ToolbarPopUpButton.m; sourceTree = "<group>"; };
+		1FE252F90C6FF97800FAE201 /* ToolbarPopUpButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ToolbarPopUpButtonCell.h; path = CustomControls/ToolbarPopUpButtonCell.h; sourceTree = "<group>"; };
+		1FE252FA0C6FF97800FAE201 /* ToolbarPopUpButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ToolbarPopUpButtonCell.m; path = CustomControls/ToolbarPopUpButtonCell.m; sourceTree = "<group>"; };
 		1FE965B00C5D595A00C80B59 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/PrefSetNew.nib; sourceTree = "<group>"; };
 		1FE965B20C5D596D00C80B59 /* PrefSetNewSheet.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefSetNewSheet.h; sourceTree = "<group>"; };
 		1FE965B30C5D596D00C80B59 /* PrefSetNewSheet.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrefSetNewSheet.mm; sourceTree = "<group>"; };
@@ -232,6 +264,7 @@
 				1FE622C60C4AE12E009FA9FF /* Preferences */,
 				1FE965B90C5D59E700C80B59 /* GenericSheet.h */,
 				1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */,
+				1FE251FB0C6FD26F00FAE201 /* Custom Controls */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -317,6 +350,21 @@
 			name = Nibs;
 			sourceTree = "<group>";
 		};
+		1FE251FB0C6FD26F00FAE201 /* Custom Controls */ = {
+			isa = PBXGroup;
+			children = (
+				1FE252F70C6FF97800FAE201 /* ToolbarPopUpButton.h */,
+				1FE252F80C6FF97800FAE201 /* ToolbarPopUpButton.m */,
+				1FE252F90C6FF97800FAE201 /* ToolbarPopUpButtonCell.h */,
+				1FE252FA0C6FF97800FAE201 /* ToolbarPopUpButtonCell.m */,
+				1FE251F80C6FD26800FAE201 /* ToolbarSegmentedControl.h */,
+				1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */,
+				1FE252010C6FD2CF00FAE201 /* ToolbarSegmentedCell.h */,
+				1FE252020C6FD2CF00FAE201 /* ToolbarSegmentedCell.m */,
+			);
+			name = "Custom Controls";
+			sourceTree = "<group>";
+		};
 		1FE622C60C4AE12E009FA9FF /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,6 +417,16 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1FAEC98F0C6ED0DD0071B6D8 /* toolbar_bfc.png */,
+				1FAEC9900C6ED0DD0071B6D8 /* toolbar_edge.png */,
+				1FAEC9910C6ED0DD0071B6D8 /* toolbar_light.png */,
+				1FAEC9560C6ECD8C0071B6D8 /* toolbar_preferences.png */,
+				1FAEC9570C6ECD8C0071B6D8 /* toolbar_privsubs.png */,
+				1FAEC9580C6ECD8C0071B6D8 /* toolbar_reload.png */,
+				1FAEC9590C6ECD8C0071B6D8 /* toolbar_seams.png */,
+				1FAEC95A0C6ECD8C0071B6D8 /* toolbar_view.png */,
+				1FAEC95B0C6ECD8C0071B6D8 /* toolbar_wireframe.png */,
+				1FAEC8850C6EC12A0071B6D8 /* toolbar_snapshot.png */,
 				1F39B71E0C619E35004CE068 /* LDViewMessages.ini */,
 				1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */,
 				1FD4D83B0BA4D52800419677 /* LightAngleLL.png */,
@@ -522,6 +580,16 @@
 				1FFC7DC80C5C095F004B8A2F /* PrefSetHotKey.nib in Resources */,
 				1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */,
 				1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */,
+				1FAEC8860C6EC12A0071B6D8 /* toolbar_snapshot.png in Resources */,
+				1FAEC95C0C6ECD8C0071B6D8 /* toolbar_preferences.png in Resources */,
+				1FAEC95D0C6ECD8C0071B6D8 /* toolbar_privsubs.png in Resources */,
+				1FAEC95E0C6ECD8C0071B6D8 /* toolbar_reload.png in Resources */,
+				1FAEC95F0C6ECD8C0071B6D8 /* toolbar_seams.png in Resources */,
+				1FAEC9600C6ECD8C0071B6D8 /* toolbar_view.png in Resources */,
+				1FAEC9610C6ECD8C0071B6D8 /* toolbar_wireframe.png in Resources */,
+				1FAEC9920C6ED0DD0071B6D8 /* toolbar_bfc.png in Resources */,
+				1FAEC9930C6ED0DD0071B6D8 /* toolbar_edge.png in Resources */,
+				1FAEC9940C6ED0DD0071B6D8 /* toolbar_light.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,6 +618,10 @@
 				1FFC7DCC0C5C61C3004B8A2F /* PrefSetHotKeySheet.mm in Sources */,
 				1FE965B40C5D596D00C80B59 /* PrefSetNewSheet.mm in Sources */,
 				1FE965BB0C5D59E700C80B59 /* GenericSheet.mm in Sources */,
+				1FE251FA0C6FD26800FAE201 /* ToolbarSegmentedControl.m in Sources */,
+				1FE252030C6FD2CF00FAE201 /* ToolbarSegmentedCell.m in Sources */,
+				1FE252FB0C6FF97800FAE201 /* ToolbarPopUpButton.m in Sources */,
+				1FE252FC0C6FF97800FAE201 /* ToolbarPopUpButtonCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -630,6 +702,58 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		1F39B78E0C61A595004CE068 /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				PRODUCT_NAME = LDView;
+				STRIP_INSTALLED_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release_Universal;
+		};
+		1F39B78F0C61A595004CE068 /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../boost/include,
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
+					/usr/local/lib,
+					"../TCFoundation/build/$(CONFIGURATION)",
+					"../LDLoader/build/$(CONFIGURATION)",
+					"../TRE/build/$(CONFIGURATION)",
+					"../LDLib/build/$(CONFIGURATION)",
+					"$(LIBRARY_SEARCH_PATHS)",
+				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lpng12u",
+					"-lboost_thread-mt",
+					"$(OTHER_LDFLAGS)",
+				);
+				PREBINDING = NO;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SEPARATE_STRIP = YES;
+			};
+			name = Release_Universal;
+		};
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -640,10 +764,6 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(LIBRARY_SEARCH_PATHS)",
-					/opt/local/lib,
-				);
 				PRODUCT_NAME = LDView;
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -657,11 +777,8 @@
 				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(LIBRARY_SEARCH_PATHS)",
-					/opt/local/lib,
-				);
 				PRODUCT_NAME = LDView;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -679,12 +796,12 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					../../boost/lib,
-					"$(LIBRARY_SEARCH_PATHS)",
-					../TCFoundation/build/Debug,
-					../LDLoader/build/Debug,
-					../TRE/build/Debug,
-					../LDLib/build/Debug,
 					/usr/local/lib,
+					"../TCFoundation/build/$(CONFIGURATION)",
+					"../LDLoader/build/$(CONFIGURATION)",
+					"../TRE/build/$(CONFIGURATION)",
+					"../LDLib/build/$(CONFIGURATION)",
+					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -700,6 +817,8 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -710,12 +829,12 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					../../boost/lib,
-					"$(LIBRARY_SEARCH_PATHS)",
-					../TCFoundation/build/Release,
-					../LDLoader/build/Release,
-					../TRE/build/Release,
-					../LDLib/build/Release,
 					/usr/local/lib,
+					"../TCFoundation/build/$(CONFIGURATION)",
+					"../LDLoader/build/$(CONFIGURATION)",
+					"../TRE/build/$(CONFIGURATION)",
+					"../LDLib/build/$(CONFIGURATION)",
+					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
 					"-lz",
@@ -724,7 +843,9 @@
 					"$(OTHER_LDFLAGS)",
 				);
 				PREBINDING = NO;
+				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SEPARATE_STRIP = YES;
 			};
 			name = Release;
 		};
@@ -736,6 +857,7 @@
 			buildConfigurations = (
 				C01FCF4B08A954540054247B /* Debug */,
 				C01FCF4C08A954540054247B /* Release */,
+				1F39B78E0C61A595004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -745,6 +867,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				1F39B78F0C61A595004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

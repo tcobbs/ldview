@@ -35,5 +35,6 @@ class LDPreferences;
 - (void)groupCheck:(id)sender name:(NSString *)groupName;
 - (void)groupCheck:(id)sender name:(NSString *)groupName value:(bool)value;
 - (void)groupCheck:(id)sender name:(NSString *)groupName init:(BOOL)init;
+- (BOOL)canSwitchPages;
 
 @end
