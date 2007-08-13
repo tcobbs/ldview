@@ -41,12 +41,14 @@
 		NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
 		NSToolbarSeparatorItemIdentifier,
+		NSToolbarPrintItemIdentifier,
+		NSToolbarCustomizeToolbarItemIdentifier,
 		nil]];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
 {
-	return toolbarItemIdentifiers;
+	return [toolbarItemIdentifiers arrayByAddingObject:NSToolbarCustomizeToolbarItemIdentifier];
 }
 
 - (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl *)control highPriority:(BOOL)highPriority
@@ -111,7 +113,7 @@
 	toolbar = [[NSToolbar alloc] initWithIdentifier:@"LDViewToolbar"];
 	[toolbar setDelegate:self];
 	[toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
-	[toolbar setSizeMode:NSToolbarSizeModeRegular];
+	[toolbar setSizeMode:NSToolbarSizeModeSmall];
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 }
