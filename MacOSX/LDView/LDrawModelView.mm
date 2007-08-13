@@ -460,6 +460,17 @@ static TCImage *resizeCornerImage = NULL;
 	modelViewer->zoom([event deltaY] * -10.0f);
 }
 
+- (void)reload
+{
+	if (modelViewer)
+	{
+		[[self openGLContext] makeCurrentContext];
+		modelViewer->reload();
+		[self rotationUpdate];
+	}
+	loading = NO;
+}
+
 - (void)reloadNeeded
 {
 	if (modelViewer)

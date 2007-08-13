@@ -35,6 +35,7 @@ typedef enum
 - (void)resetView:(id)sender;
 - (LDrawModelViewer *)modelViewer;
 - (void)reloadNeeded;
+- (void)reload;
 - (void)setFps:(float)value;
 
 @end
