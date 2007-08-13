@@ -448,6 +448,50 @@
 			};
 			name = Release;
 		};
+		1F39B76E0C61A529004CE068 /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LDLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = LDLoader;
+			};
+			name = Release_Universal;
+		};
+		1F39B76F0C61A529004CE068 /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../../boost/include,
+					"$(HEADER_SEARCH_PATHS)",
+					../..,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../boost/lib,
+					"$(LIBRARY_SEARCH_PATHS)",
+				);
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				WARNING_CFLAGS = (
+					"$(WARNING_CFLAGS)",
+					"-Wall",
+				);
+			};
+			name = Release_Universal;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -456,6 +500,7 @@
 			buildConfigurations = (
 				1DEB921F08733DC00010E9CD /* Debug */,
 				1DEB922008733DC00010E9CD /* Release */,
+				1F39B76E0C61A529004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -465,6 +510,7 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
+				1F39B76F0C61A529004CE068 /* Release_Universal */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
