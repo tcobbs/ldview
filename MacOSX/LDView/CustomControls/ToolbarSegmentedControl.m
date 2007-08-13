@@ -33,6 +33,7 @@
 	[self setSegmentCount:segmentCount];
 	[self setTarget:[other target]];
 	[self setAction:[other action]];
+	[self setEnabled:[other isEnabled]];
 	for (i = 0; i < segmentCount; i++)
 	{
 		[self setWidth:[other widthForSegment:i] forSegment:i];
