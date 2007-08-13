@@ -31,6 +31,8 @@
 	[self setTarget:[other target]];
 	[self setAction:[other action]];
 	[self setMenu:[other menu]];
+	[self setEnabled:[other isEnabled]];
+	[self setPullsDown:[other pullsDown]];
 	return self;
 }
 

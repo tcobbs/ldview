@@ -13,6 +13,8 @@
 
 class LDPreferences;
 
+extern NSString *LDPreferencesDidUpdateNotification;
+
 @interface Preferences : NSObject
 {
     IBOutlet NSButton *applyButton;
@@ -29,6 +31,12 @@ class LDPreferences;
 	LDViewController *controller;
 	LDPreferences *ldPreferences;
 	NSMutableArray *pages;
+	int generalIndex;
+	int geometryIndex;
+	int effectsIndex;
+	int primitivesIndex;
+	int updatesIndex;
+	int prefSetsIndex;
 }
 - (id)initWithController:(LDViewController *)value;
 - (void)awakeFromNib;

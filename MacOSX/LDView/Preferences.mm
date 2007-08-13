@@ -7,6 +7,8 @@
 
 @implementation Preferences
 
+NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
+
 - (id)initWithController:(LDViewController *)value
 {
 	controller = value;	// Don't retain: it's our parent.
@@ -36,6 +38,12 @@
 
 - (void)awakeFromNib
 {
+	generalIndex = 0;
+	geometryIndex = 1;
+	effectsIndex = 2;
+	primitivesIndex = 3;
+	updatesIndex = 4;
+	prefSetsIndex = 5;
 	[pages addObject:generalPage];
 	[pages addObject:geometryPage];
 	[pages addObject:effectsPage];
@@ -70,6 +78,7 @@
 		ldPreferences->commitSettings();
 		[modelView setNeedsDisplay:YES];
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:LDPreferencesDidUpdateNotification object:self];
 }
 
 - (void)hotKeyPressed:(int)index
@@ -108,6 +117,57 @@
 - (BOOL)tabView:(NSTabView *)aTabView shouldSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	return [[pages objectAtIndex:[aTabView indexOfTabViewItem:[tabView selectedTabViewItem]]] canSwitchPages];
+}
+
+- (bool)getBoolFrom:(id)sender
+{
+	if ([sender isKindOfClass:[NSSegmentedControl class]])
+	{
+		return [[sender cell] isSelectedForSegment:[sender selectedSegment]] ? true : false;
+	}
+	return false;
+}
+
+- (void)takeWireframeFrom:(id)sender
+{
+	ldPreferences->setDrawWireframe([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeSeamsFrom:(id)sender
+{
+	ldPreferences->setUseSeams([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeEdgesFrom:(id)sender
+{
+	ldPreferences->setShowHighlightLines([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takePrimSubFrom:(id)sender
+{
+	ldPreferences->setAllowPrimitiveSubstitution([self getBoolFrom:sender]);
+	[[pages objectAtIndex:primitivesIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeLightingFrom:(id)sender
+{
+	ldPreferences->setUseLighting([self getBoolFrom:sender]);
+	[[pages objectAtIndex:effectsIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeBfcFrom:(id)sender
+{
+	ldPreferences->setBfc([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
 }
 
 @end

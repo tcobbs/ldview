@@ -14,6 +14,7 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[statusBar release];
 	[window release];
 	[toolbarItems release];
@@ -81,6 +82,66 @@
 	return item;
 }
 
+- (void)updateSegments:(NSSegmentedControl *)segments states:(NSArray *)states
+{
+	int i;
+	int count = [states count];
+	NSSegmentedCell *cell = [segments cell];
+	
+	for (i = 0; i < count; i++)
+	{
+		[cell setSelected:[[states objectAtIndex:i] boolValue] forSegment:i];
+	}
+}
+
+- (void)setupSegments:(NSSegmentedControl *)segments toolTips:(NSArray *)toolTips
+{
+	int i;
+	int count = [toolTips count];
+	NSSegmentedCell *cell = [segments cell];
+
+	for (i = 0; i < count; i++)
+	{
+		[cell setToolTip:[toolTips objectAtIndex:i] forSegment:i];
+	}
+}
+
+- (void)updateFeatureStates
+{
+	LDPreferences *ldPreferences = [[controller preferences] ldPreferences];
+	NSArray *states = [NSArray arrayWithObjects:
+		[NSNumber numberWithBool:ldPreferences->getDrawWireframe()],
+		[NSNumber numberWithBool:ldPreferences->getUseSeams()],
+		[NSNumber numberWithBool:ldPreferences->getShowHighlightLines()],
+		[NSNumber numberWithBool:ldPreferences->getAllowPrimitiveSubstitution()],
+		[NSNumber numberWithBool:ldPreferences->getUseLighting()],
+		[NSNumber numberWithBool:ldPreferences->getBfc()],
+		nil];
+
+	[self updateSegments:featuresSegments states:states];
+}
+
+- (void)preferencesDidUpdate:(NSNotification *)notification
+{
+	[self updateFeatureStates];
+}
+
+- (void)setupFeatures
+{
+	NSArray *toolTips = [NSArray arrayWithObjects:
+		@"Enable/Disable Wireframe",
+		@"Enable/Disable Seams",
+		@"Enable/Disable Edges",
+		@"Enable/Disable Primitive Substitution",
+		@"Enable/Disable Lighting",
+		@"Enable/Disable BFC",
+		nil];
+	featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
+	[self setupSegments:featuresSegments toolTips:toolTips];
+	[self updateFeatureStates];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
+}
+
 - (void)setupToolbarItems
 {
 	toolbarItems = [[NSMutableDictionary alloc] init];
@@ -90,17 +151,11 @@
 	// ToDo: Localize
 	NSLog(@"[actionsSegments cell]: %@\n", [actionsSegments cell]);
 	actionsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:actionsSegments];
-	featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
 	viewPopUp = [[ToolbarPopUpButton alloc] initWithTemplate:viewPopUp];
 	prefsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:prefsSegments];
 	[[actionsSegments cell] setToolTip: @"Save Snapshot" forSegment:0];
 	[[actionsSegments cell] setToolTip: @"Reload" forSegment:1];
-	[[featuresSegments cell] setToolTip: @"Enable/Disable Wireframe" forSegment:0];
-	[[featuresSegments cell] setToolTip: @"Enable/Disable Seams" forSegment:1];
-	[[featuresSegments cell] setToolTip: @"Enable/Disable Edges" forSegment:2];
-	[[featuresSegments cell] setToolTip: @"Enable/Disable Primitive Substitution" forSegment:3];
-	[[featuresSegments cell] setToolTip: @"Enable/Disable Lighting" forSegment:4];
-	[[featuresSegments cell] setToolTip: @"Enable/Disable BFC" forSegment:5];
+	[self setupFeatures];
 	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:actionsSegments highPriority:YES];
 	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:featuresSegments highPriority:NO];
 	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:viewPopUp highPriority:NO];
@@ -135,11 +190,35 @@
 	return [super init];
 }
 
+- (void)enableToolbarItems:(BOOL)enabled
+{
+	NSEnumerator *enumerator = [toolbarItemIdentifiers objectEnumerator];
+	
+	while (NSString *identifier = [enumerator nextObject])
+	{
+		NSToolbarItem *item = [toolbarItems objectForKey:identifier];
+		NSControl *control = (NSControl *)[item view];
+		
+		if ([control isKindOfClass:[NSControl class]])
+		{
+			[control setEnabled:enabled];
+		}
+	}
+}
+
 - (BOOL)openModel:(NSString *)filename
 {
 	[window setTitleWithRepresentedFilename:filename];
 	[window makeKeyAndOrderFront:self];
-	return [modelView openModel:filename];
+	if ([modelView openModel:filename])
+	{
+		[self enableToolbarItems:YES];
+		return YES;
+	}
+	else
+	{
+		return NO;
+	}
 }
 
 - (LDrawModelView *)modelView
@@ -386,58 +465,35 @@
 	}
 }
 
-- (IBAction)toggleWireframe:(id)sender
+- (void)toggleFeature:(SEL)selector sender:(id)sender
 {
-	NSLog(@"toggleWireframe.\n");
+	// I know it looks wrong that were asking if the selectedSegment
+	// is selected.  However, selectedSegment just returns the segment
+	// the user just clicked on.  It's not necessarily actually selected.
+	[[controller preferences] performSelector:selector withObject:sender];
 }
-
-- (IBAction)toggleSeams:(id)sender
-{
-	NSLog(@"toggleSeams.\n");
-}
-
-- (IBAction)toggleEdges:(id)sender
-{
-	NSLog(@"toggleEdges.\n");
-}
-
-- (IBAction)togglePrimSub:(id)sender
-{
-	NSLog(@"togglePrimSub.\n");
-}
-
-- (IBAction)toggleLighting:(id)sender
-{
-	NSLog(@"toggleLighting.\n");
-}
-
-- (IBAction)toggleBfc:(id)sender
-{
-	NSLog(@"toggleBfc.\n");
-}
-
 
 - (IBAction)features:(id)sender
 {
-	switch([[sender cell] tagForSegment:[sender selectedSegment]])
+	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
 		case 0:
-			[self toggleWireframe:sender];
+			[self toggleFeature:@selector(takeWireframeFrom:) sender:sender];
 			break;
 		case 1:
-			[self toggleSeams:sender];
+			[self toggleFeature:@selector(takeSeamsFrom:) sender:sender];
 			break;
 		case 2:
-			[self toggleEdges:sender];
+			[self toggleFeature:@selector(takeEdgesFrom:) sender:sender];
 			break;
 		case 3:
-			[self togglePrimSub:sender];
+			[self toggleFeature:@selector(takePrimSubFrom:) sender:sender];
 			break;
 		case 4:
-			[self toggleLighting:sender];
+			[self toggleFeature:@selector(takeLightingFrom:) sender:sender];
 			break;
 		case 5:
-			[self toggleBfc:sender];
+			[self toggleFeature:@selector(takeBfcFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown feature.\n");
@@ -457,7 +513,7 @@
 
 - (IBAction)preferences:(id)sender
 {
-	NSLog(@"preferences toolbar button.\n");
+	[controller preferences:sender];
 }
 
 @end
