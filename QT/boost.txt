@@ -15,7 +15,7 @@ To do this, do the following:
    shell.  This will configure boost, and compile bjam, the build tool used to
    build Boost.
 2. Once this has completed, you need to copy the bjam executable to a location
-   in your path.  The bjam executable is in tools/build/jam_src/bin.<arch>/bjam.
+   in your path.  The bjam executable is in tools/jam/src/bin.<arch>/bjam.
    (<arch> will match your architecture: for example linuxx86.)
 3. Run rehash after copying the file somewhere in your path if your shell
    requires this.
