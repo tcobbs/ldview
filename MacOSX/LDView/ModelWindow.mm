@@ -446,7 +446,7 @@
 
 - (IBAction)reload:(id)sender
 {
-	NSLog(@"reload.\n");
+	[modelView reload];
 }
 
 - (IBAction)actions:(id)sender

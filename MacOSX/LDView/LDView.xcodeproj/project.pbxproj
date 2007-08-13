@@ -188,7 +188,7 @@
 		1FAEC9570C6ECD8C0071B6D8 /* toolbar_privsubs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_privsubs.png; path = ../../QT/images/toolbar_privsubs.png; sourceTree = SOURCE_ROOT; };
 		1FAEC9580C6ECD8C0071B6D8 /* toolbar_reload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_reload.png; path = ../../QT/images/toolbar_reload.png; sourceTree = SOURCE_ROOT; };
 		1FAEC9590C6ECD8C0071B6D8 /* toolbar_seams.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_seams.png; path = ../../QT/images/toolbar_seams.png; sourceTree = SOURCE_ROOT; };
-		1FAEC95A0C6ECD8C0071B6D8 /* toolbar_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_view.png; path = ../../QT/images/toolbar_view.png; sourceTree = SOURCE_ROOT; };
+		1FAEC95A0C6ECD8C0071B6D8 /* toolbar_view.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_view.png; path = Images/toolbar_view.png; sourceTree = "<group>"; };
 		1FAEC95B0C6ECD8C0071B6D8 /* toolbar_wireframe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_wireframe.png; path = ../../QT/images/toolbar_wireframe.png; sourceTree = SOURCE_ROOT; };
 		1FAEC98F0C6ED0DD0071B6D8 /* toolbar_bfc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_bfc.png; path = ../../QT/images/toolbar_bfc.png; sourceTree = SOURCE_ROOT; };
 		1FAEC9900C6ED0DD0071B6D8 /* toolbar_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_edge.png; path = ../../QT/images/toolbar_edge.png; sourceTree = SOURCE_ROOT; };
