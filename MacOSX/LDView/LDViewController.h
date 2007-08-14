@@ -15,7 +15,7 @@
 	Preferences *preferences;
 
 	BOOL launchFileOpened;
-	BOOL showStatusBar;
+	//BOOL showStatusBar;
 	
 	NSString *statusBarMenuFormat;
 	NSString *toolbarMenuFormat;
@@ -26,9 +26,10 @@
 - (IBAction)preferences:(id)sender;
 - (Preferences *)preferences;
 - (IBAction)resetView:(id)sender;
-- (IBAction)toggleStatusBar:(id)sender;
-- (IBAction)toggleToolbar:(id)sender;
-- (IBAction)customizeToolbar:(id)sender;
+//- (IBAction)toggleStatusBar:(id)sender;
+//- (IBAction)toggleToolbar:(id)sender;
+//- (IBAction)customizeToolbar:(id)sender;
 - (NSArray *)modelWindows;
+- (void)updateStatusBarMenuItem:(BOOL)showStatusBar;
 
 @end

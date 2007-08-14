@@ -5,6 +5,7 @@
 #import "ToolbarSegmentedControl.h"
 #import "ToolbarPopUpButton.h"
 #import "OCLocalStrings.h"
+#import "OCUserDefaults.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCProgressAlert.h>
@@ -49,7 +50,7 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
 {
-	return [toolbarItemIdentifiers arrayByAddingObject:NSToolbarCustomizeToolbarItemIdentifier];
+	return toolbarItemIdentifiers;
 }
 
 - (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl *)control highPriority:(BOOL)highPriority
@@ -149,7 +150,6 @@
 
 	[[viewPopUp itemAtIndex:0] setImage:[NSImage imageNamed:@"toolbar_view"]];
 	// ToDo: Localize
-	NSLog(@"[actionsSegments cell]: %@\n", [actionsSegments cell]);
 	actionsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:actionsSegments];
 	viewPopUp = [[ToolbarPopUpButton alloc] initWithTemplate:viewPopUp];
 	prefsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:prefsSegments];
@@ -159,7 +159,9 @@
 	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:actionsSegments highPriority:YES];
 	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:featuresSegments highPriority:NO];
 	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:viewPopUp highPriority:NO];
+	[toolbarItemIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
 	[self addToolbarItemWithIdentifier:@"Prefs" label:@"Preferences" control:prefsSegments highPriority:YES];
+	//[toolbarItemIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
 }
 
 - (void)setupToolbar
@@ -173,8 +175,45 @@
 	[toolbar setAutosavesConfiguration:YES];
 }
 
+- (BOOL)showStatusBar:(BOOL)show
+{
+	BOOL changed = NO;
+	
+	if (show)
+	{
+		if (![statusBar superview])
+		{
+			NSRect modelViewFrame1 = [modelView frame];
+			float height = [statusBar frame].size.height;
+			
+			modelViewFrame1.size.height -= height;
+			modelViewFrame1.origin.y += height;
+			[modelView setFrame:modelViewFrame1];
+			[[window contentView] addSubview:statusBar];
+			changed = YES;
+		}
+	}
+	else
+	{
+		if ([statusBar superview])
+		{
+			NSRect modelViewFrame2 = [modelView frame];
+			float height = [statusBar frame].size.height;
+			
+			modelViewFrame2.size.height += height;
+			modelViewFrame2.origin.y -= height;
+			[statusBar removeFromSuperview];
+			[modelView setFrame:modelViewFrame2];
+			changed = YES;
+		}
+	}
+	return changed;
+}
+
 - (void)awakeFromNib
 {
+	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
+	[self showStatusBar:showStatusBar];
 	[self setupToolbar];
 	[window setToolbar:toolbar];
 	[statusBar retain];
@@ -228,41 +267,6 @@
 
 - (void)ldlErrorCallback:(LDLError *)error
 {
-}
-
-- (BOOL)showStatusBar:(BOOL)show
-{
-	BOOL changed = NO;
-	
-	if (show)
-	{
-		if (![statusBar superview])
-		{
-			NSRect modelViewFrame1 = [modelView frame];
-			float height = [statusBar frame].size.height;
-			
-			modelViewFrame1.size.height -= height;
-			modelViewFrame1.origin.y += height;
-			[modelView setFrame:modelViewFrame1];
-			[[window contentView] addSubview:statusBar];
-			changed = YES;
-		}
-	}
-	else
-	{
-		if ([statusBar superview])
-		{
-			NSRect modelViewFrame2 = [modelView frame];
-			float height = [statusBar frame].size.height;
-			
-			modelViewFrame2.size.height += height;
-			modelViewFrame2.origin.y -= height;
-			[statusBar removeFromSuperview];
-			[modelView setFrame:modelViewFrame2];
-			changed = YES;
-		}
-	}
-	return changed;
 }
 
 - (void)adjustProgressMessageSize:(float)amount
@@ -514,6 +518,32 @@
 - (IBAction)preferences:(id)sender
 {
 	[controller preferences:sender];
+}
+
+- (IBAction)viewAlwaysOnTop:(id)sender
+{
+	if ([sender state] == NSOffState)
+	{
+		[sender setState:NSOnState];
+		[window setLevel:NSPopUpMenuWindowLevel];
+	}
+	else
+	{
+		[sender setState:NSOffState];
+		[window setLevel:NSNormalWindowLevel];
+	}
+}
+
+- (IBAction)toggleStatusBar:(id)sender
+{
+	[self setShowStatusBar:!showStatusBar];
+	//[controller updateStatusBarMenuItem];
+	[OCUserDefaults setLong:showStatusBar forKey:@"StatusBar" sessionSpecific:NO];
+}
+
+- (IBAction)customizeToolbar:(id)sender
+{
+	[toolbar runCustomizationPalette:sender];
 }
 
 @end
