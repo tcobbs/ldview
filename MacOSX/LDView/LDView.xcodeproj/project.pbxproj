@@ -29,6 +29,7 @@
 		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
 		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
+		1F5CAA610C718C4E0085ACE5 /* toolbar_open.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5CAA600C718C4E0085ACE5 /* toolbar_open.png */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
 		1FAEC8860C6EC12A0071B6D8 /* toolbar_snapshot.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FAEC8850C6EC12A0071B6D8 /* toolbar_snapshot.png */; };
@@ -181,6 +182,7 @@
 		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
 		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
+		1F5CAA600C718C4E0085ACE5 /* toolbar_open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_open.png; path = Images/toolbar_open.png; sourceTree = "<group>"; };
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MyResizeCorner.png; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
 		1FAEC8850C6EC12A0071B6D8 /* toolbar_snapshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_snapshot.png; path = ../../QT/images/toolbar_snapshot.png; sourceTree = SOURCE_ROOT; };
@@ -417,6 +419,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1F5CAA600C718C4E0085ACE5 /* toolbar_open.png */,
 				1FAEC98F0C6ED0DD0071B6D8 /* toolbar_bfc.png */,
 				1FAEC9900C6ED0DD0071B6D8 /* toolbar_edge.png */,
 				1FAEC9910C6ED0DD0071B6D8 /* toolbar_light.png */,
@@ -590,6 +593,7 @@
 				1FAEC9920C6ED0DD0071B6D8 /* toolbar_bfc.png in Resources */,
 				1FAEC9930C6ED0DD0071B6D8 /* toolbar_edge.png in Resources */,
 				1FAEC9940C6ED0DD0071B6D8 /* toolbar_light.png in Resources */,
+				1F5CAA610C718C4E0085ACE5 /* toolbar_open.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

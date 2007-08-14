@@ -237,8 +237,13 @@
 	{
 		NSToolbarItem *item = [toolbarItems objectForKey:identifier];
 		NSControl *control = (NSControl *)[item view];
-		
-		if ([control isKindOfClass:[NSControl class]])
+
+		if (control == actionsSegments)
+		{
+			[actionsSegments setEnabled:enabled forSegment:1];
+			[actionsSegments setEnabled:enabled forSegment:2];
+		}
+		else if ([control isKindOfClass:[NSControl class]])
 		{
 			[control setEnabled:enabled];
 		}
@@ -457,6 +462,8 @@
 {
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
+		case 0:
+			[controller openModel:sender];
 		case 1:
 			[self saveSnapshot:sender];
 			break;
