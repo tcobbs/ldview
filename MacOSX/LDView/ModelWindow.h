@@ -43,7 +43,7 @@ class AlertHandler;
 - (void)modelWillReload;
 - (void)updateFps;
 - (void)clearFps;
-- (void)setShowStatusBar:(BOOL)value;
+//- (void)setShowStatusBar:(BOOL)value;
 - (BOOL)showStatusBar;
 - (void)show;
 - (NSWindow *)window;

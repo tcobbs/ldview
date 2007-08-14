@@ -29,7 +29,6 @@
 	[modelWindows release];
 	[preferences release];
 	[statusBarMenuFormat release];
-	[toolbarMenuFormat release];
 	[super dealloc];
 }
 
@@ -66,28 +65,9 @@
 	[menuItem setTitle:[NSString stringWithFormat:format, showHide]];
 }
 
-- (void)updateStatusBarMenuItem
+- (void)updateStatusBarMenuItem:(BOOL)showStatusBar
 {
 	[self updateShowHideMenuItem:statusBarMenuItem show:showStatusBar format:statusBarMenuFormat];
-}
-
-- (BOOL)showToolbar
-{
-	NSToolbar *toolbar = [[NSApp keyWindow] toolbar];
-
-	if (toolbar)
-	{
-		return [toolbar isVisible];
-	}
-	else
-	{
-		return NO;
-	}
-}
-
-- (void)updateToolbarMenuItem
-{
-	[self updateShowHideMenuItem:toolbarMenuItem show:[self showToolbar] format:toolbarMenuFormat];
 }
 
 - (int)numberOfItemsInMenu:(NSMenu *)menu
@@ -97,18 +77,21 @@
 
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
-	if (item == toolbarMenuItem)
+	ModelWindow *modelWindow = (ModelWindow *)[[NSApp mainWindow] delegate];
+
+	if (item == statusBarMenuItem && [modelWindow isKindOfClass:[ModelWindow class]])
 	{
-		[self updateToolbarMenuItem];
+		[self updateStatusBarMenuItem:[modelWindow showStatusBar]];
 	}
 	return YES;
 }
 
+/*
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if (menuItem == toolbarMenuItem || menuItem == custToolbarMenuItem)
-	{		
-		if ([[NSApp window] toolbar])
+	if (menuItem == statusBarMenuItem)
+	{
+		if ([[[NSApp mainWindow] delegate] isKindOfClass:[ModelWindow class]])
 		{
 			return YES;
 		}
@@ -119,25 +102,32 @@
 	}
 	return YES;
 }
+*/
 
 - (void)awakeFromNib
 {
-	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
+	//showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	statusBarMenuFormat = [[statusBarMenuItem title] retain];
-	toolbarMenuFormat = [[toolbarMenuItem title] retain];
-	[self updateStatusBarMenuItem];
+	[self updateStatusBarMenuItem:YES];
 }
 
 - (BOOL)createWindow:(NSString *)filename
 {
 	ModelWindow *modelWindow = [[ModelWindow alloc] initWithController:self];
 
-	[modelWindow setShowStatusBar:showStatusBar];
+	if ([modelWindows count] > 0)
+	{
+		NSWindow *lastWindow = [[modelWindows lastObject] window];
+		NSRect frame = [lastWindow frame];
+
+		frame.origin.y += frame.size.height;
+		frame.origin = [lastWindow cascadeTopLeftFromPoint:frame.origin];
+		[[modelWindow window] setFrameTopLeftPoint:frame.origin];
+	}
 	[modelWindows addObject:modelWindow];
 	[modelWindow release];
 	[[self preferences] initModelWindow:modelWindow];
 	[modelWindow show];
-	//[[[modelWindow window] contentView] setNeedsDisplay:YES];
 	if (filename)
 	{
 		return [modelWindow openModel:filename];
@@ -222,6 +212,7 @@
 	[[self currentModelView] resetView:sender];
 }
 
+/*
 - (IBAction)toggleStatusBar:(id)sender
 {
 	showStatusBar = !showStatusBar;
@@ -232,18 +223,7 @@
 		[[modelWindows objectAtIndex:i] setShowStatusBar:showStatusBar];
 	}
 }
-
-- (IBAction)toggleToolbar:(id)sender
-{
-	NSToolbar *toolbar = [[NSApp keyWindow] toolbar];
-	[toolbar setVisible: ![toolbar isVisible]];
-}
-
-- (IBAction)customizeToolbar:(id)sender
-{
-	NSToolbar *toolbar = [[NSApp keyWindow] toolbar];
-	[toolbar runCustomizationPalette:sender];
-}
+*/
 
 - (BOOL)acceptsFirstResponder
 {

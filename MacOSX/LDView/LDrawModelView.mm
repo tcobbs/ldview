@@ -500,7 +500,10 @@ static TCImage *resizeCornerImage = NULL;
 	else
 	{
 		[super setOpenGLContext:[[[NSOpenGLContext alloc] initWithFormat:[self customPixelFormat] shareContext:sharedContext] autorelease]];
-		[[self openGLContext] setView:self];
+		// We don't have to set the GL Context's view to ourself because we
+		// haven't been shown yet.  That will get done automatically when our
+		// window is initially shown (as far as I can tell).
+		//[[self openGLContext] setView:self];
 	}
 	[[self openGLContext] makeCurrentContext];
 	TREGLExtensions::setup();

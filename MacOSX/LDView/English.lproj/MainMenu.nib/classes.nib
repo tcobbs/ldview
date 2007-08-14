@@ -1,6 +1,16 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                customizeToolbar = id; 
+                toggleStatusBar = id; 
+                toggleToolbar = id; 
+                viewAlwaysOnTop = id; 
+            }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
         {
             ACTIONS = {
                 customizeToolbar = id; 
