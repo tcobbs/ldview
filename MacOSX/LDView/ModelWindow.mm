@@ -19,7 +19,8 @@
 	[statusBar release];
 	[window release];
 	[toolbarItems release];
-	[toolbarItemIdentifiers release];
+	[defaultIdentifiers release];
+	[otherIdentifiers release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
 	[super dealloc];
@@ -32,32 +33,27 @@
 	return [toolbarItems objectForKey:itemIdentifier];
 }
 
-- (NSArray *)toolbarItemIdentifiers
-{
-	return [[toolbarItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
-}
-
 - (NSArray *)toolbarAllowedItemIdentifiers: (NSToolbar *)toolbar
 {
-	return [toolbarItemIdentifiers arrayByAddingObjectsFromArray:[NSArray arrayWithObjects:
-		NSToolbarFlexibleSpaceItemIdentifier,
-		NSToolbarSpaceItemIdentifier,
-		NSToolbarSeparatorItemIdentifier,
-		NSToolbarPrintItemIdentifier,
-		NSToolbarCustomizeToolbarItemIdentifier,
-		nil]];
+	return allIdentifiers;
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers: (NSToolbar *)toolbar
 {
-	return toolbarItemIdentifiers;
+	return defaultIdentifiers;
 }
 
-- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl *)control highPriority:(BOOL)highPriority
+- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
 {
+	NSControl *&control = *pControl;
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
-	NSSize size = [control frame].size;
+	NSSize size;
 
+	if ([control isKindOfClass:[NSSegmentedControl class]] && ![control isKindOfClass:[ToolbarSegmentedControl class]])
+	{
+		*pControl = [[ToolbarSegmentedControl alloc] initWithTemplate:*pControl];
+	}
+	size = [control frame].size;
 	size.height += 1.0f;
 	[item setLabel:label];
 	[item setPaletteLabel:label];
@@ -78,7 +74,15 @@
 		[item setVisibilityPriority:NSToolbarItemVisibilityPriorityStandard];
 	}
 	[toolbarItems setObject:item forKey:identifier];
-	[toolbarItemIdentifiers addObject:identifier];
+	if (isDefault)
+	{
+		[defaultIdentifiers addObject:identifier];
+	}
+	else
+	{
+		[otherIdentifiers addObject:identifier];
+	}
+	[allIdentifiers addObject:identifier];
 	[item release];
 	return item;
 }
@@ -146,22 +150,34 @@
 - (void)setupToolbarItems
 {
 	toolbarItems = [[NSMutableDictionary alloc] init];
-	toolbarItemIdentifiers = [[NSMutableArray alloc] init];
+	defaultIdentifiers = [[NSMutableArray alloc] init];
+	otherIdentifiers = [[NSMutableArray alloc] init];
+	allIdentifiers = [[NSMutableArray alloc] init];
 
 	[[viewPopUp itemAtIndex:0] setImage:[NSImage imageNamed:@"toolbar_view"]];
 	// ToDo: Localize
-	actionsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:actionsSegments];
+	//actionsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:actionsSegments];
 	viewPopUp = [[ToolbarPopUpButton alloc] initWithTemplate:viewPopUp];
-	prefsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:prefsSegments];
+	//prefsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:prefsSegments];
 	[[actionsSegments cell] setToolTip: @"Save Snapshot" forSegment:0];
 	[[actionsSegments cell] setToolTip: @"Reload" forSegment:1];
 	[self setupFeatures];
-	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:actionsSegments highPriority:YES];
-	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:featuresSegments highPriority:NO];
-	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:viewPopUp highPriority:NO];
-	[toolbarItemIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
-	[self addToolbarItemWithIdentifier:@"Prefs" label:@"Preferences" control:prefsSegments highPriority:YES];
-	//[toolbarItemIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
+	[self addToolbarItemWithIdentifier:@"OpenModel" label:@"Open Model" control:&openButton highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:@"Save Snapshot" control:&snapshotButton highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Reload" label:@"Reload" control:&reloadButton highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:&viewPopUp highPriority:NO isDefault:YES];
+	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
+	[self addToolbarItemWithIdentifier:@"Prefs" label:@"Preferences" control:&prefsSegments highPriority:YES isDefault:YES];
+	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
+		NSToolbarFlexibleSpaceItemIdentifier,
+		NSToolbarSpaceItemIdentifier,
+		NSToolbarSeparatorItemIdentifier,
+		NSToolbarPrintItemIdentifier,
+		NSToolbarCustomizeToolbarItemIdentifier,
+		nil]];
+	//[defaultIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
 }
 
 - (void)setupToolbar
@@ -231,7 +247,7 @@
 
 - (void)enableToolbarItems:(BOOL)enabled
 {
-	NSEnumerator *enumerator = [toolbarItemIdentifiers objectEnumerator];
+	NSEnumerator *enumerator = [allIdentifiers objectEnumerator];
 	
 	while (NSString *identifier = [enumerator nextObject])
 	{
@@ -448,6 +464,11 @@
 	return toolbar;
 }
 
+- (IBAction)open:(id)sender
+{
+	[controller openModel:sender];
+}
+
 - (IBAction)saveSnapshot:(id)sender
 {
 	NSLog(@"saveSnapshot.\n");
@@ -463,7 +484,7 @@
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
 		case 0:
-			[controller openModel:sender];
+			[self open:sender];
 		case 1:
 			[self saveSnapshot:sender];
 			break;
