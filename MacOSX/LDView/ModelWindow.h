@@ -18,6 +18,9 @@ class AlertHandler;
 	IBOutlet NSView *statusBar;
 
 	IBOutlet NSSegmentedControl *actionsSegments;
+	IBOutlet NSSegmentedControl *openButton;
+	IBOutlet NSSegmentedControl *snapshotButton;
+	IBOutlet NSSegmentedControl *reloadButton;
 	IBOutlet NSSegmentedControl *featuresSegments;
 	IBOutlet NSPopUpButton *viewPopUp;
 	IBOutlet NSSegmentedControl *prefsSegments;
@@ -31,7 +34,9 @@ class AlertHandler;
 	float progressAdjust;
 	BOOL showStatusBar;
 	NSMutableDictionary *toolbarItems;
-	NSMutableArray *toolbarItemIdentifiers;
+	NSMutableArray *defaultIdentifiers;
+	NSMutableArray *otherIdentifiers;
+	NSMutableArray *allIdentifiers;
 }
 
 - (BOOL)openModel:(NSString *)filename;
@@ -50,6 +55,9 @@ class AlertHandler;
 - (NSToolbar *)toolbar;
 
 - (IBAction)actions:(id)sender;
+- (IBAction)open:(id)sender;
+- (IBAction)saveSnapshot:(id)sender;
+- (IBAction)reload:(id)sender;
 - (IBAction)features:(id)sender;
 - (IBAction)viewingAngle:(id)sender;
 - (IBAction)saveViewingAngle:(id)sender;

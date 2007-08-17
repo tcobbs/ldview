@@ -11,7 +11,10 @@
             ACTIONS = {
                 actions = id; 
                 features = id; 
+                open = id; 
                 preferences = id; 
+                reload = id; 
+                saveSnapshot = id; 
                 saveViewingAngle = id; 
                 viewingAngle = id; 
             }; 
@@ -21,9 +24,12 @@
                 actionsSegments = NSSegmentedControl; 
                 featuresSegments = NSSegmentedControl; 
                 modelView = LDrawModelView; 
+                openButton = NSSegmentedControl; 
                 prefsSegments = NSSegmentedControl; 
                 progress = NSProgressIndicator; 
                 progressMessage = NSTextField; 
+                reloadButton = NSSegmentedControl; 
+                snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
                 viewPopUp = NSPopUpButton; 
                 window = NSWindow; 
