@@ -8,6 +8,7 @@
 #import "OCUserDefaults.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCProgressAlert.h>
 #import "AlertHandler.h"
 
@@ -147,6 +148,17 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
 }
 
+- (void)setupViewMode
+{
+	NSArray *toolTips = [NSArray arrayWithObjects:
+		@"Examine Mode",
+		@"Fly-through Mode",
+		nil];
+	viewModeSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:viewModeSegments];
+	[self setupSegments:viewModeSegments toolTips:toolTips];
+	[viewModeSegments selectSegmentWithTag:TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false)];
+}
+
 - (void)setupToolbarItems
 {
 	toolbarItems = [[NSMutableDictionary alloc] init];
@@ -162,6 +174,7 @@
 	[[actionsSegments cell] setToolTip: @"Save Snapshot" forSegment:0];
 	[[actionsSegments cell] setToolTip: @"Reload" forSegment:1];
 	[self setupFeatures];
+	[self setupViewMode];
 	[self addToolbarItemWithIdentifier:@"OpenModel" label:@"Open Model" control:&openButton highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:@"Save Snapshot" control:&snapshotButton highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Reload" label:@"Reload" control:&reloadButton highPriority:NO isDefault:YES];
@@ -170,6 +183,7 @@
 	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:&viewPopUp highPriority:NO isDefault:YES];
 	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
 	[self addToolbarItemWithIdentifier:@"Prefs" label:@"Preferences" control:&prefsSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:NO isDefault:NO];
 	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
@@ -572,6 +586,11 @@
 - (IBAction)customizeToolbar:(id)sender
 {
 	[toolbar runCustomizationPalette:sender];
+}
+
+- (IBAction)viewMode:(id)sender
+{
+	NSLog(@"viewMode.\n");
 }
 
 @end

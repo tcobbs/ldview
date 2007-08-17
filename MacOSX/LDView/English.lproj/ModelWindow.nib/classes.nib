@@ -16,6 +16,7 @@
                 reload = id; 
                 saveSnapshot = id; 
                 saveViewingAngle = id; 
+                viewMode = id; 
                 viewingAngle = id; 
             }; 
             CLASS = ModelWindow; 
@@ -31,6 +32,7 @@
                 reloadButton = NSSegmentedControl; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
+                viewModeSegments = NSSegmentedControl; 
                 viewPopUp = NSPopUpButton; 
                 window = NSWindow; 
             }; 

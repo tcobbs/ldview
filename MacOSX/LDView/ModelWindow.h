@@ -24,6 +24,7 @@ class AlertHandler;
 	IBOutlet NSSegmentedControl *featuresSegments;
 	IBOutlet NSPopUpButton *viewPopUp;
 	IBOutlet NSSegmentedControl *prefsSegments;
+	IBOutlet NSSegmentedControl *viewModeSegments;
 
 	LDViewController *controller;
 	AlertHandler *alertHandler;
@@ -62,5 +63,6 @@ class AlertHandler;
 - (IBAction)viewingAngle:(id)sender;
 - (IBAction)saveViewingAngle:(id)sender;
 - (IBAction)preferences:(id)sender;
+- (IBAction)viewMode:(id)sender;
 
 @end
