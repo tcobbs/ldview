@@ -37,5 +37,6 @@ typedef enum
 - (void)reloadNeeded;
 - (void)reload;
 - (void)setFps:(float)value;
+- (void)setViewingAngle:(int)value;
 
 @end

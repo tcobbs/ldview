@@ -549,7 +549,7 @@
 
 - (IBAction)viewingAngle:(id)sender
 {
-	NSLog(@"viewingAngle toolbar button : %d.\n", [sender tag]);
+	[modelView setViewingAngle:[sender tag]];
 }
 
 - (IBAction)saveViewingAngle:(id)sender

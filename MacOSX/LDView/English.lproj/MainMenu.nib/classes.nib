@@ -3,9 +3,12 @@
         {
             ACTIONS = {
                 customizeToolbar = id; 
+                reload = id; 
+                saveViewingAngle = id; 
                 toggleStatusBar = id; 
                 toggleToolbar = id; 
                 viewAlwaysOnTop = id; 
+                viewingAngle = id; 
             }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 
