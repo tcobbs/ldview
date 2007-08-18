@@ -170,4 +170,10 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self apply:sender];
 }
 
+- (void)saveViewingAngle:(ModelWindow*)modelWindow
+{
+	ldPreferences->setModelViewer([[modelWindow modelView] modelViewer]);
+	ldPreferences->saveDefaultView();
+}
+
 @end

@@ -555,7 +555,7 @@
 
 - (IBAction)saveViewingAngle:(id)sender
 {
-	NSLog(@"saveViewingAngle toolbar button.\n");
+	[[controller preferences] saveViewingAngle:self];
 }
 
 - (IBAction)preferences:(id)sender
