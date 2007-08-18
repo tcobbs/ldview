@@ -3,12 +3,16 @@
         {
             ACTIONS = {
                 customizeToolbar = id; 
+                examineMode = id; 
+                flyThroughMode = id; 
                 reload = id; 
                 saveViewingAngle = id; 
+                toggleFullScreen = id; 
                 toggleStatusBar = id; 
                 toggleToolbar = id; 
                 viewAlwaysOnTop = id; 
                 viewingAngle = id; 
+                zoomToFit = id; 
             }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 

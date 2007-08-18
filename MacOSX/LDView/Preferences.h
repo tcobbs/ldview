@@ -51,5 +51,6 @@ extern NSString *LDPreferencesDidUpdateNotification;
 - (NSWindow *)window;
 - (void)loadSettings;
 - (void)hotKeyPressed:(int)index;
+- (void)saveViewingAngle:(ModelWindow*)modelWindow;
 
 @end
