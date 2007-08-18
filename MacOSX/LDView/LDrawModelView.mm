@@ -598,4 +598,17 @@ static TCImage *resizeCornerImage = NULL;
 	fps = value;
 }
 
+- (void)setViewingAngle:(int)value
+{
+	if (value >= LDVAngleDefault && value <= LDVAngleIso)
+	{
+		modelViewer->resetView((LDVAngle)value);
+		[self rotationUpdate];
+	}
+	else
+	{
+		NSLog(@"Invalid viewing angle.");
+	}
+}
+
 @end
