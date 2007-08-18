@@ -167,23 +167,24 @@
 	allIdentifiers = [[NSMutableArray alloc] init];
 
 	[[viewPopUp itemAtIndex:0] setImage:[NSImage imageNamed:@"toolbar_view"]];
-	// ToDo: Localize
-	//actionsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:actionsSegments];
 	viewPopUp = [[ToolbarPopUpButton alloc] initWithTemplate:viewPopUp];
-	//prefsSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:prefsSegments];
-	[[actionsSegments cell] setToolTip: @"Save Snapshot" forSegment:0];
-	[[actionsSegments cell] setToolTip: @"Reload" forSegment:1];
 	[self setupFeatures];
 	[self setupViewMode];
-	[self addToolbarItemWithIdentifier:@"OpenModel" label:@"Open Model" control:&openButton highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:@"Save Snapshot" control:&snapshotButton highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Reload" label:@"Reload" control:&reloadButton highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:YES];
+	// ToDo: Localize
 	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:NO isDefault:NO];
+	// ToDo: Localize
 	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"View" label:@"Viewing Angle" control:&viewPopUp highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewPopUp highPriority:NO isDefault:YES];
 	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
-	[self addToolbarItemWithIdentifier:@"Prefs" label:@"Preferences" control:&prefsSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments highPriority:YES isDefault:YES];
+	// ToDo: Localize
 	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:NO isDefault:NO];
+	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
+	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"SaveSnapshot"] forSegment:1];
+	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"Reload"] forSegment:2];
 	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
