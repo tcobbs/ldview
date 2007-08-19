@@ -1061,7 +1061,7 @@ BEGIN
         END
         MENUITEM "L&Draw Dir...",               ID_FILE_LDRAWDIR
         MENUITEM "&Extra Dirs...",              ID_FILE_EXTRADIRS
-        MENUITEM "Check for Library Updates",   ID_FILE_CHECKFORLIBUPDATES
+        MENUITEM "Check for Library Updates...", ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
         MENUITEM "P&age Setup...",              ID_FILE_PAGESETUP
         MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
@@ -1101,7 +1101,7 @@ BEGIN
     POPUP "&Tools"
     BEGIN
         MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
-        MENUITEM "Parts &List",                 ID_TOOLS_PARTSLIST
+        MENUITEM "Parts &List...",              ID_TOOLS_PARTSLIST
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
         MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
