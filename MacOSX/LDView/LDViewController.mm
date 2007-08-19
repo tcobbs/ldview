@@ -75,13 +75,32 @@
 	return [menu numberOfItems];
 }
 
+- (void)updateAlwaysOnTopMenuItem:(int)level
+{
+	if (level == NSNormalWindowLevel)
+	{
+		[alwaysOnTopMenuItem setState:NSOffState];
+	}
+	else
+	{
+		[alwaysOnTopMenuItem setState:NSOnState];
+	}
+}
+
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
 	ModelWindow *modelWindow = (ModelWindow *)[[NSApp mainWindow] delegate];
 
-	if (item == statusBarMenuItem && [modelWindow isKindOfClass:[ModelWindow class]])
+	if ([modelWindow isKindOfClass:[ModelWindow class]])
 	{
-		[self updateStatusBarMenuItem:[modelWindow showStatusBar]];
+		if (item == statusBarMenuItem)
+		{
+			[self updateStatusBarMenuItem:[modelWindow showStatusBar]];
+		}
+		else if (item == alwaysOnTopMenuItem)
+		{
+			[self updateAlwaysOnTopMenuItem:[[modelWindow window] level]];
+		}
 	}
 	return YES;
 }

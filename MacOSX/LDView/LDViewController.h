@@ -9,6 +9,7 @@
 	IBOutlet NSMenuItem *statusBarMenuItem;
 	IBOutlet NSMenuItem *toolbarMenuItem;
 	IBOutlet NSMenuItem *custToolbarMenuItem;
+	IBOutlet NSMenuItem *alwaysOnTopMenuItem;
 	
 	NSArray *ldrawFileTypes;
 	NSMutableArray *modelWindows;

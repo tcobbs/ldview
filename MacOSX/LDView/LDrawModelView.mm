@@ -582,8 +582,8 @@ static TCImage *resizeCornerImage = NULL;
 		[[self modelWindow] performSelectorOnMainThread:@selector(clearFps) withObject:nil waitUntilDone:NO];
 		//[[self modelWindow] clearFps];
 	}
-	long swapInterval;
-	[[self openGLContext] getValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
+	//long swapInterval;
+	//[[self openGLContext] getValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 	[[self openGLContext] flushBuffer];
 }
 
@@ -609,6 +609,12 @@ static TCImage *resizeCornerImage = NULL;
 	{
 		NSLog(@"Invalid viewing angle.");
 	}
+}
+
+- (IBAction)zoomToFit:(id)sender
+{
+	modelViewer->zoomToFit();
+	[self rotationUpdate];
 }
 
 @end

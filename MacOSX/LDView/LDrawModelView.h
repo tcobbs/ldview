@@ -38,5 +38,6 @@ typedef enum
 - (void)reload;
 - (void)setFps:(float)value;
 - (void)setViewingAngle:(int)value;
+- (IBAction)zoomToFit:(id)sender;
 
 @end
