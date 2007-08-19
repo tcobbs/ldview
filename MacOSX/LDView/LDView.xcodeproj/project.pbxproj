@@ -28,6 +28,8 @@
 		1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F240C020A58D1E400691116 /* OpenGL.framework */; };
 		1F240CA00A58D98400691116 /* LDrawModelView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240C9E0A58D98400691116 /* LDrawModelView.mm */; };
 		1F240DA50A58E28700691116 /* ModelWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F240DA40A58E28700691116 /* ModelWindow.mm */; };
+		1F29FE660C7811B200A907CC /* ErrorsAndWarnings.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */; };
+		1F29FE6A0C78242000A907CC /* ErrorsAndWarnings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F29FE690C78242000A907CC /* ErrorsAndWarnings.mm */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F47E7890C7575C9009B84BC /* toolbar_bfc.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F47E77E0C7575C9009B84BC /* toolbar_bfc.png */; };
 		1F47E78A0C7575C9009B84BC /* toolbar_edge.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F47E77F0C7575C9009B84BC /* toolbar_edge.png */; };
@@ -168,6 +170,9 @@
 		1F240C9F0A58D98400691116 /* LDrawModelView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawModelView.h; sourceTree = "<group>"; };
 		1F240DA30A58E28700691116 /* ModelWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ModelWindow.h; sourceTree = "<group>"; };
 		1F240DA40A58E28700691116 /* ModelWindow.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelWindow.mm; sourceTree = "<group>"; };
+		1F29FE650C7811B200A907CC /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ErrorsAndWarnings.nib; sourceTree = "<group>"; };
+		1F29FE680C78242000A907CC /* ErrorsAndWarnings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ErrorsAndWarnings.h; sourceTree = "<group>"; };
+		1F29FE690C78242000A907CC /* ErrorsAndWarnings.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = ErrorsAndWarnings.mm; sourceTree = "<group>"; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F47E77E0C7575C9009B84BC /* toolbar_bfc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_bfc.png; path = Images/toolbar_bfc.png; sourceTree = "<group>"; };
 		1F47E77F0C7575C9009B84BC /* toolbar_edge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_edge.png; path = Images/toolbar_edge.png; sourceTree = "<group>"; };
@@ -246,6 +251,8 @@
 				1F240BBF0A58AFC300691116 /* LDViewController.mm */,
 				1F240DA30A58E28700691116 /* ModelWindow.h */,
 				1F240DA40A58E28700691116 /* ModelWindow.mm */,
+				1F29FE680C78242000A907CC /* ErrorsAndWarnings.h */,
+				1F29FE690C78242000A907CC /* ErrorsAndWarnings.mm */,
 				1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */,
 				1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */,
 				1F20DB170A60C39D00F677AC /* OCLocalStrings.h */,
@@ -337,6 +344,7 @@
 				1FD4D8330BA4D00E00419677 /* Preferences.nib */,
 				1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */,
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
+				1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
@@ -579,6 +587,7 @@
 				1F47E7930C7575C9009B84BC /* toolbar_wireframe.png in Resources */,
 				1F47E7970C75768F009B84BC /* examine.png in Resources */,
 				1F47E7980C75768F009B84BC /* flythrough.png in Resources */,
+				1F29FE660C7811B200A907CC /* ErrorsAndWarnings.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,6 +620,7 @@
 				1FE252030C6FD2CF00FAE201 /* ToolbarSegmentedCell.m in Sources */,
 				1FE252FB0C6FF97800FAE201 /* ToolbarPopUpButton.m in Sources */,
 				1FE252FC0C6FF97800FAE201 /* ToolbarPopUpButtonCell.m in Sources */,
+				1F29FE6A0C78242000A907CC /* ErrorsAndWarnings.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,6 +656,14 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F29FE650C7811B200A907CC /* English */,
+			);
+			name = ErrorsAndWarnings.nib;
 			sourceTree = "<group>";
 		};
 		1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */ = {

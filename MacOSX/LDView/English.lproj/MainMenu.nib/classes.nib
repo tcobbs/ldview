@@ -2,15 +2,19 @@
     IBClasses = (
         {
             ACTIONS = {
+                alwaysOnTop = id; 
                 customizeToolbar = id; 
+                errorsAndWarnings = id; 
                 examineMode = id; 
                 flyThroughMode = id; 
+                partsList = id; 
                 reload = id; 
                 saveViewingAngle = id; 
+                showPovCameraInfo = id; 
+                showViewInfo = id; 
                 toggleFullScreen = id; 
                 toggleStatusBar = id; 
                 toggleToolbar = id; 
-                viewAlwaysOnTop = id; 
                 viewingAngle = id; 
                 zoomToFit = id; 
             }; 
@@ -19,18 +23,11 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {
-                customizeToolbar = id; 
-                newWindow = id; 
-                openModel = id; 
-                preferences = id; 
-                resetView = id; 
-                toggleStatusBar = id; 
-                toggleToolbar = id; 
-            }; 
+            ACTIONS = {newWindow = id; openModel = id; preferences = id; resetView = id; }; 
             CLASS = LDViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                alwaysOnTopMenuItem = NSMenuItem; 
                 custToolbarMenuItem = NSMenuItem; 
                 statusBarMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 

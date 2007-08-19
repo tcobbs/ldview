@@ -4,6 +4,7 @@
 #import "Preferences.h"
 #import "ToolbarSegmentedControl.h"
 #import "ToolbarPopUpButton.h"
+#import "ErrorsAndWarnings.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
 #include <LDLoader/LDLError.h>
@@ -22,6 +23,7 @@
 	[toolbarItems release];
 	[defaultIdentifiers release];
 	[otherIdentifiers release];
+	[errorsAndWarnings release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
 	[super dealloc];
@@ -563,16 +565,14 @@
 	[controller preferences:sender];
 }
 
-- (IBAction)viewAlwaysOnTop:(id)sender
+- (IBAction)alwaysOnTop:(id)sender
 {
-	if ([sender state] == NSOffState)
+	if ([window level] == NSNormalWindowLevel)
 	{
-		[sender setState:NSOnState];
 		[window setLevel:NSPopUpMenuWindowLevel];
 	}
 	else
 	{
-		[sender setState:NSOffState];
 		[window setLevel:NSNormalWindowLevel];
 	}
 }
@@ -592,6 +592,20 @@
 - (IBAction)viewMode:(id)sender
 {
 	NSLog(@"viewMode.\n");
+}
+
+- (IBAction)zoomToFit:(id)sender
+{
+	[modelView zoomToFit:sender];
+}
+
+- (IBAction)errorsAndWarnings:(id)sender
+{
+	if (!errorsAndWarnings)
+	{
+		errorsAndWarnings = [[ErrorsAndWarnings alloc] init];
+	}
+	[errorsAndWarnings show:self];
 }
 
 @end
