@@ -394,11 +394,14 @@ class LDrawModelViewer: public TCObject
 			const TCFloat b[L3ORDERM]);
 
 		void scanCameraPoint(const TCVector &point);
-		void initLightDirModel(void);
+		void initLightDirModel(TREMainModel *&lightDirModel, TCULong color);
+		TREMainModel *getContrastingLightDirModel();
+		void initLightDirModels(void);
 
 		TREMainModel *mainTREModel;
 		LDLMainModel *mainModel;
-		TREMainModel *lightDirModel;
+		TREMainModel *whiteLightDirModel;
+		TREMainModel *blueLightDirModel;
 		char* filename;
 		char* programPath;
 		int width;
