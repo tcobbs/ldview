@@ -7,12 +7,13 @@
 #define SetupFilename(str Filename) ParseVersion(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2]) + "-Legacy"
 
 #define AppVerName GetFileDescription(AppFilename) + ' ' + GetFileVersionString(AppFilename)
-#define IntallDescription  AppVerName + ' Setup'
+#define LegacyAppVerName  AppVerName + ' Legacy'
+#define IntallDescription  LegacyAppVerName + ' Setup'
 #define AppVersion GetFileVersion(AppFilename)
 
 [Setup]
 AppName=LDView
-AppVerName={#AppVerName}
+AppVerName={#LegacyAppVerName}
 AppVersion={#AppVersion}
 VersionInfoVersion={#AppVersion}
 VersionInfoDescription={#IntallDescription}
@@ -24,7 +25,7 @@ AppPublisherURL=http://ldview.sourceforge.net/
 AppSupportURL=http://ldview.sourceforge.net/
 AppUpdatesURL=http://ldview.sourceforge.net/
 Compression=lzma
-DefaultDirName={reg:HKCU\Software\Travis Cobbs\LDView,InstallPath|{pf}\LDView}
+DefaultDirName={pf}\LDViewLegacy
 DefaultGroupName=LDView
 OutputDir=Setup
 AllowNoIcons=yes
