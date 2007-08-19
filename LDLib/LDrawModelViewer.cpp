@@ -30,7 +30,8 @@
 LDrawModelViewer::LDrawModelViewer(int width, int height)
 			:mainTREModel(NULL),
 			 mainModel(NULL),
-			 lightDirModel(NULL),
+			 whiteLightDirModel(NULL),
+			 blueLightDirModel(NULL),
 			 filename(NULL),
 			 programPath(NULL),
 			 width(width),
@@ -165,7 +166,8 @@ void LDrawModelViewer::dealloc(void)
 	TCAlertManager::unregisterHandler(LDLFindFileAlert::alertClass(), this);
 	TCObject::release(mainTREModel);
 	TCObject::release(mainModel);
-	TCObject::release(lightDirModel);
+	TCObject::release(whiteLightDirModel);
+	TCObject::release(blueLightDirModel);
 	mainTREModel = NULL;
 	delete filename;
 	filename = NULL;
@@ -844,8 +846,10 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		// First, release the current TREModel, if it exists.
 		TCObject::release(mainTREModel);
 		mainTREModel = NULL;
-		TCObject::release(lightDirModel);
-		lightDirModel = NULL;
+		TCObject::release(whiteLightDirModel);
+		whiteLightDirModel = NULL;
+		TCObject::release(blueLightDirModel);
+		blueLightDirModel = NULL;
 		mainModel->setLowResStuds(!flags.qualityStuds);
 		mainModel->setBlackEdgeLines(flags.blackHighlights);
 		mainModel->setExtraSearchDirs(extraSearchDirs);
@@ -947,7 +951,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			}
 			modelParser->release();
 		}
-		initLightDirModel();
+		initLightDirModels();
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
 			_UC("Done")), 2.0f);
 		if (resetViewpoint)
@@ -1059,15 +1063,17 @@ bool LDrawModelViewer::recompile(void)
 {
 	if (mainTREModel)
 	{
-		if (lightDirModel)
+		if (whiteLightDirModel)
 		{
 			// It crashes after an FSAA change if we simply recompile here.
 			// I suspect it's related to the VBO/VAR extensions.  Deleting the
-			// lightDirModel object and recreating it causes the vertex buffers
-			// to be reloaded from scratch for both models.
-			lightDirModel->release();
-			lightDirModel = NULL;
-			initLightDirModel();
+			// lightDirModel objects and recreating them causes the vertex
+			// buffers to be reloaded from scratch.
+			whiteLightDirModel->release();
+			whiteLightDirModel = NULL;
+			blueLightDirModel->release();
+			blueLightDirModel = NULL;
+			initLightDirModels();
 		}
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
@@ -1088,9 +1094,13 @@ void LDrawModelViewer::uncompile(void)
 	{
 		mainTREModel->uncompile();
 	}
-	if (lightDirModel)
+	if (whiteLightDirModel)
 	{
-		lightDirModel->uncompile();
+		whiteLightDirModel->uncompile();
+	}
+	if (blueLightDirModel)
+	{
+		blueLightDirModel->uncompile();
 	}
 }
 
@@ -2844,31 +2854,58 @@ void LDrawModelViewer::setupRotationMatrix(void)
 */
 }
 
-void LDrawModelViewer::initLightDirModel(void)
+void LDrawModelViewer::initLightDirModel(
+	TREMainModel *&lightDirModel,
+	TCULong color)
 {
-	if (lightDirModel == NULL)
-	{
-		TREModel *subModel = new TREModel;
-		lightDirModel = new TREMainModel;
-		TCFloat identityMatrix[16];
-		TCULong color = LDLPalette::colorForRGBA(255, 255, 255, 255);
-		float length = size / 1.5f;
-		float radius = size / 100.0f;
-		int segments = 32;
-		float coneLength = radius * 4.0f;
-		float coneRadius = radius * 2.0f;
-		float offset = length / 3.0f;
+	TREModel *subModel = new TREModel;
+	lightDirModel = new TREMainModel;
+	TCFloat identityMatrix[16];
+	float length = size / 1.5f;
+	float radius = size / 100.0f;
+	int segments = 32;
+	float coneLength = radius * 4.0f;
+	float coneRadius = radius * 2.0f;
+	float offset = length / 3.0f;
 
-		lightDirModel->setLightingFlag(true);
-		TCVector::initIdentityMatrix(identityMatrix);
-		subModel->setMainModel(lightDirModel);
-		subModel->addCylinder(TCVector(0.0f, coneLength + offset, 0.0f), radius, length - coneLength - offset, segments);
-		subModel->addDisc(TCVector(0.0, coneLength + offset, 0.0), coneRadius, segments);
-		subModel->addDisc(TCVector(0.0, length, 0.0), radius, segments);
-		subModel->addCone(TCVector(0.0, coneLength + offset, 0.0), coneRadius, -coneLength, segments);
-		lightDirModel->addSubModel(color, color, identityMatrix, subModel, false);
-		subModel->release();
-		lightDirModel->postProcess();
+	lightDirModel->setLightingFlag(true);
+	TCVector::initIdentityMatrix(identityMatrix);
+	subModel->setMainModel(lightDirModel);
+	subModel->addCylinder(TCVector(0.0f, coneLength + offset, 0.0f), radius,
+		length - coneLength - offset, segments);
+	subModel->addDisc(TCVector(0.0, coneLength + offset, 0.0), coneRadius,
+		segments);
+	subModel->addDisc(TCVector(0.0, length, 0.0), radius, segments);
+	subModel->addCone(TCVector(0.0, coneLength + offset, 0.0), coneRadius,
+		-coneLength, segments);
+	lightDirModel->addSubModel(color, color, identityMatrix, subModel, false);
+	subModel->release();
+	lightDirModel->postProcess();
+}
+
+void LDrawModelViewer::initLightDirModels(void)
+{
+	if (whiteLightDirModel == NULL)
+	{
+		initLightDirModel(whiteLightDirModel,
+			LDLPalette::colorForRGBA(255, 255, 255, 255));
+	}
+	if (blueLightDirModel == NULL)
+	{
+		initLightDirModel(blueLightDirModel,
+			LDLPalette::colorForRGBA(128, 128, 255, 255));
+	}
+}
+
+TREMainModel *LDrawModelViewer::getContrastingLightDirModel()
+{
+	if ((backgroundR + backgroundG + backgroundB) / 3.0f > 0.9f)
+	{
+		return blueLightDirModel;
+	}
+	else
+	{
+		return whiteLightDirModel;
 	}
 }
 
@@ -2905,7 +2942,7 @@ void LDrawModelViewer::showLight(void)
 		glPopMatrix();
 		lightVector = oldLightVector;
 		treGlMultMatrixf(facing.getMatrix());
-		lightDirModel->draw();
+		getContrastingLightDirModel()->draw();
 		glPopAttrib();
 		glPopMatrix();
 		flags.usesSpecular = oldSpecular;
