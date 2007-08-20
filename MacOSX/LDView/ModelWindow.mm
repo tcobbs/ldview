@@ -258,10 +258,13 @@
 
 - (id)initWithController:(LDViewController *)value
 {
-	controller = value;
-	[NSBundle loadNibNamed:@"ModelWindow.nib" owner:self];
-	alertHandler = new AlertHandler(self);
-	return [super init];
+	if ((self = [super init]) != nil)
+	{
+		controller = value;
+		[NSBundle loadNibNamed:@"ModelWindow.nib" owner:self];
+		alertHandler = new AlertHandler(self);
+	}
+	return self;
 }
 
 - (void)enableToolbarItems:(BOOL)enabled

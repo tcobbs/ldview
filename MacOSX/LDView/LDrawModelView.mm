@@ -196,10 +196,13 @@ static TCImage *resizeCornerImage = NULL;
 	return [[[NSOpenGLPixelFormat alloc] initWithAttributes:attrs] autorelease];
 }
 
-- (void)initWithCoder:(NSCoder *)decoder
+- (id)initWithCoder:(NSCoder *)decoder
 {
-	[self setupWithFrame:[self frame]];
-	[super initWithCoder:decoder];
+	if ((self = [super initWithCoder:decoder]) != nil)
+	{
+		[self setupWithFrame:[self frame]];
+	}
+	return self;
 }
 
 - (void)initWithFrame:(NSRect)frame pixelFormat:(NSOpenGLPixelFormat *)format
@@ -208,10 +211,13 @@ static TCImage *resizeCornerImage = NULL;
 	[self initWithFrame:frame];
 }
 
-- (void)initWithFrame:(NSRect)frame
+- (id)initWithFrame:(NSRect)frame
 {
-	[self setupWithFrame:frame];
-	[super initWithFrame:frame pixelFormat:[self customPixelFormat]];
+	if ((self = [super initWithFrame:frame pixelFormat:[self customPixelFormat]]) != nil)
+	{
+		[self setupWithFrame:frame];
+	}
+	return self;
 }
 
 - (ModelWindow *)modelWindow

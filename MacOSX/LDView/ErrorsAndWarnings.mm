@@ -9,8 +9,11 @@
 
 - (id)init
 {
-	[NSBundle loadNibNamed:@"ErrorsAndWarnings.nib" owner:self];
-	return [super init];
+	if ((self = [super init]) != nil)
+	{
+		[NSBundle loadNibNamed:@"ErrorsAndWarnings.nib" owner:self];
+	}
+	return self;
 }
 
 - (void)dealloc

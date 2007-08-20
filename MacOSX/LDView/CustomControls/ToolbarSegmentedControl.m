@@ -23,27 +23,29 @@
 
 - (id)initWithTemplate:(id)other
 {
-	int segmentCount = [other segmentCount];
-	int i;
-	NSSegmentedCell *otherCell = [other cell];
-	ToolbarSegmentedCell *cell;
-
-	[super initWithFrame:[other frame]];
-	cell = [self cell];
-	[self setSegmentCount:segmentCount];
-	[self setTarget:[other target]];
-	[self setAction:[other action]];
-	[self setEnabled:[other isEnabled]];
-	for (i = 0; i < segmentCount; i++)
+	if ((self = [super initWithFrame:[other frame]]) != nil)
 	{
-		[self setWidth:[other widthForSegment:i] forSegment:i];
-		[self setImage:[other imageForSegment:i] forSegment:i];
-		[self setLabel:[other labelForSegment:i] forSegment:i];
-		[self setMenu:[other menuForSegment:i] forSegment:i];
-		[self setSelected:[other isSelectedForSegment:i] forSegment:i];
-		[self setEnabled:[other isEnabledForSegment:i] forSegment:i];
-		[cell setTag:[otherCell tagForSegment:i] forSegment:i];
-		[cell setTrackingMode:[otherCell trackingMode]];
+		int segmentCount = [other segmentCount];
+		int i;
+		NSSegmentedCell *otherCell = [other cell];
+		ToolbarSegmentedCell *cell;
+
+		cell = [self cell];
+		[self setSegmentCount:segmentCount];
+		[self setTarget:[other target]];
+		[self setAction:[other action]];
+		[self setEnabled:[other isEnabled]];
+		for (i = 0; i < segmentCount; i++)
+		{
+			[self setWidth:[other widthForSegment:i] forSegment:i];
+			[self setImage:[other imageForSegment:i] forSegment:i];
+			[self setLabel:[other labelForSegment:i] forSegment:i];
+			[self setMenu:[other menuForSegment:i] forSegment:i];
+			[self setSelected:[other isSelectedForSegment:i] forSegment:i];
+			[self setEnabled:[other isEnabledForSegment:i] forSegment:i];
+			[cell setTag:[otherCell tagForSegment:i] forSegment:i];
+			[cell setTrackingMode:[otherCell trackingMode]];
+		}
 	}
 	return self;
 }

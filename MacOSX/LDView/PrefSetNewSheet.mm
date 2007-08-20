@@ -5,8 +5,11 @@
 
 - (id)initWithParent:(PrefSetsPage *)value
 {
-	parent = value;	// Don't retain.
-	return [super initWithNibName:@"PrefSetNew.nib"];
+	if ((self = [super initWithNibName:@"PrefSetNew.nib"]) != nil)
+	{
+		parent = value;	// Don't retain.
+	}
+	return self;
 }
 
 - (NSString *)getName
