@@ -3,6 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class ModelWindow;
+@class ErrorItem;
 
 @interface ErrorsAndWarnings : NSObject
 {
@@ -16,6 +17,7 @@
 	ModelWindow *modelWindow;
 	NSMutableArray *errorNames;
 	NSMutableArray *enabledErrors;
+	ErrorItem *rootErrorItem;
 }
 
 - (id)init;
@@ -27,5 +29,7 @@
 - (IBAction)showNone:(id)sender;
 - (IBAction)show:(id)sender;
 - (IBAction)enabledErrorSelected:(id)sender;
+
+- (void)setRootErrorItem:(ErrorItem *)item;
 
 @end

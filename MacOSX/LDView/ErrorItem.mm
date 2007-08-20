@@ -1,0 +1,126 @@
+//
+//  ErrorItem.mm
+//  LDView
+//
+//  Created by Travis Cobbs on 8/19/07.
+//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//
+
+#import "ErrorItem.h"
+#include <LDLoader/LDLError.h>
+
+@implementation ErrorItem
+
+static NSMutableDictionary *templateDict = [[NSMutableDictionary alloc] init];
+static NSDictionary *iconDict = nil;
+
++ (void)initialize
+{
+	iconDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+		@"error_parse", [NSNumber numberWithInt:LDLEParse],
+		@"error_fnf", [NSNumber numberWithInt:LDLEFileNotFound],
+		@"error_matrix", [NSNumber numberWithInt:LDLEMatrix],
+		@"error_determinant", [NSNumber numberWithInt:LDLEPartDeterminant],
+		@"error_non_flat_quad", [NSNumber numberWithInt:LDLENonFlatQuad],
+		@"error_concave_quad", [NSNumber numberWithInt:LDLEConcaveQuad],
+		@"error_vertex_order", [NSNumber numberWithInt:LDLEVertexOrder],
+		@"error_matching_points", [NSNumber numberWithInt:LDLEMatchingPoints],
+		@"error_colinear", [NSNumber numberWithInt:LDLEColinear],
+		@"error_parse", [NSNumber numberWithInt:LDLEBFCWarning],
+		@"error_parse", [NSNumber numberWithInt:LDLEBFCError],
+		@"error_parse", [NSNumber numberWithInt:LDLEMPDError],
+		@"error_loop", [NSNumber numberWithInt:LDLEModelLoop],
+		nil];	
+}
+
+- (id)initWithString:(NSString *)value error:(LDLError *)theError includeIcon:(BOOL)includeIcon
+{
+	if ((self = [super init]) != nil)
+	{
+		string = [value retain];
+		theError->retain();
+		error = theError;
+		if (includeIcon)
+		{
+			NSNumber *errorTypeKey = [NSNumber numberWithInt:theError->getType()];
+			NSMutableAttributedString *templateString = [templateDict objectForKey:errorTypeKey];
+
+			if (!templateString)
+			{
+				NSString *iconName = [iconDict objectForKey:errorTypeKey];
+				
+				if (!iconName)
+				{
+					iconName = @"error_info";
+				}
+				NSString *imagePath = [[NSBundle mainBundle] pathForImageResource:iconName];
+				NSData *imageData = [[NSData alloc] initWithContentsOfFile:imagePath];
+				NSFileWrapper *fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents:imageData];
+				[imageData release];
+				[fileWrapper setPreferredFilename:[iconName stringByAppendingString:@".png"]];
+				NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
+				[fileWrapper release];
+				templateString = [[NSMutableAttributedString alloc] initWithString:@" "];
+				//[templateString addAttribute:NSAttachmentAttributeName value:attachment range:NSMakeRange(0, 1)];
+				[templateString insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
+				[attachment release];
+			}
+			objectValue = [templateString mutableCopy];
+			[objectValue appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
+			//[objectValue replaceCharactersInRange:NSMakeRange(2, 2) withString:string];
+		}
+		else
+		{
+			objectValue = [string retain];
+		}
+	}
+	return self;
+}
+
+- (void)dealloc
+{
+    [children release];
+    [string release];
+	[objectValue release];
+	TCObject::release(error);
+    [super dealloc];
+}
+
+- (ErrorItem *)addChild:(ErrorItem *)child
+{
+	if (!children)
+	{
+		children = [[NSMutableArray alloc] init];
+	}
+	[children addObject:child];
+	return child;
+}
+
+- (int)numberOfChildren
+{
+	if (children)
+	{
+		return [children count];
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+- (ErrorItem *)childAtIndex:(int)index
+{
+	return [children objectAtIndex:index];
+}
+
+- (id)objectValue
+{
+	return objectValue;
+}
+
+- (LDLError *)error
+{
+	return error;
+}
+
+@end

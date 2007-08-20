@@ -5,12 +5,14 @@
 #import "ToolbarSegmentedControl.h"
 #import "ToolbarPopUpButton.h"
 #import "ErrorsAndWarnings.h"
+#import "ErrorItem.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCStringArray.h>
 #import "AlertHandler.h"
 
 @implementation ModelWindow
@@ -285,6 +287,10 @@
 
 - (BOOL)openModel:(NSString *)filename
 {
+	[unfilteredRootErrorItem release];
+	unfilteredRootErrorItem = nil;
+	[filteredRootErrorItem release];
+	filteredRootErrorItem = nil;
 	[window setTitleWithRepresentedFilename:filename];
 	[window makeKeyAndOrderFront:self];
 	if ([modelView openModel:filename])
@@ -303,8 +309,55 @@
 	return modelView;
 }
 
+- (void)addErrorItem:(ErrorItem *)parent string:(NSString *)string error:(LDLError *)error
+{
+	[parent addChild:[[[ErrorItem alloc] initWithString:string error:error includeIcon:NO] autorelease]];
+}
+
 - (void)ldlErrorCallback:(LDLError *)error
 {
+	TCStringArray *extraInfo = error->getExtraInfo();
+	NSString *lineString;
+
+	if (!unfilteredRootErrorItem)
+	{
+		unfilteredRootErrorItem = [[ErrorItem alloc] init];
+	}
+	ErrorItem *errorItem = [unfilteredRootErrorItem addChild:[[[ErrorItem alloc] initWithString:[NSString stringWithCString:error->getMessage() encoding:NSASCIIStringEncoding] error:error includeIcon:YES] autorelease]];
+	if (error->getFilename())
+	{
+		lineString = [NSString stringWithFormat:@"%@%s", [OCLocalStrings get:@"ErrorTreeFilePrefix"], error->getFilename()];
+	}
+	else
+	{
+		lineString = [OCLocalStrings get:@"ErrorTreeUnknownFile"];
+	}
+	[self addErrorItem:errorItem string:lineString error:error];
+	if (error->getFileLine())
+	{
+		int lineNumber = error->getLineNumber();
+		
+		if (lineNumber > 0)
+		{
+			lineString = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeLine#"], lineNumber];
+		}
+		else
+		{
+			lineString = [OCLocalStrings get:@"ErrorTreeUnknownLine#"];
+		}
+	}
+	else
+	{
+		lineString = [OCLocalStrings get:@"ErrorTreeUnknownLine"];
+	}
+	[self addErrorItem:errorItem string:lineString error:error];
+	if (extraInfo)
+	{
+		for (int i = 0; i < extraInfo->getCount(); i++)
+		{
+			[self addErrorItem:errorItem string:[NSString stringWithCString:extraInfo->stringAtIndex(i) encoding:NSASCIIStringEncoding] error:error];
+		}
+	}
 }
 
 - (void)adjustProgressMessageSize:(float)amount
@@ -605,6 +658,7 @@
 	{
 		errorsAndWarnings = [[ErrorsAndWarnings alloc] init];
 	}
+	[errorsAndWarnings setRootErrorItem:unfilteredRootErrorItem];
 	[errorsAndWarnings show:self];
 }
 

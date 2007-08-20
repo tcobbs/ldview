@@ -1,5 +1,8 @@
 #import "ErrorsAndWarnings.h"
 #import "ModelWindow.h"
+#import "ErrorItem.h"
+#import "OCUserDefaults.h"
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLError.h>
 
 @implementation ErrorsAndWarnings
@@ -15,6 +18,22 @@
 	[errorNames release];
 	[enabledErrors release];
 	[super dealloc];
+}
+
+- (NSString *)getErrorKey:(int)errorType
+{
+	return [NSString stringWithFormat:@"%s/LDLError%02d", SHOW_ERRORS_KEY, errorType];
+}
+
+- (BOOL)showsErrorType:(int)errorType
+{
+	return [OCUserDefaults longForKey:[self getErrorKey:errorType] defaultValue:1 sessionSpecific:NO] != 0;
+}
+
+- (void)setShowsErrorType:(int)errorType value:(BOOL)value
+{
+	[OCUserDefaults setLong:value forKey:[self getErrorKey:errorType] sessionSpecific:false];
+	[enabledErrors replaceObjectAtIndex:errorType withObject:[NSNumber numberWithBool:value]];
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
@@ -80,7 +99,7 @@
 	{
 		// ToDo: Unicode fix
 		[errorNames addObject:[NSString stringWithCString:LDLError::getTypeName((LDLErrorType)i) encoding:NSASCIIStringEncoding]];
-		[enabledErrors addObject:[NSNumber numberWithBool:i % 2 == 0]];
+		[enabledErrors addObject:[NSNumber numberWithBool:[self showsErrorType:i]]];
 	}
 	[enabledErrorsTable reloadData];
 }
@@ -107,12 +126,23 @@
 {
 }
 
+- (void)setShowAll:(BOOL)show
+{
+	for (int i = LDLEFirstError; i < LDLELastError; i++)
+	{
+		[self setShowsErrorType:i value:show];
+	}
+	[enabledErrorsTable setNeedsDisplay:YES];
+}
+
 - (IBAction)showAll:(id)sender
 {
+	[self setShowAll:YES];
 }
 
 - (IBAction)showNone:(id)sender
 {
+	[self setShowAll:NO];
 }
 
 - (IBAction)enabledErrorSelected:(id)sender
@@ -120,10 +150,58 @@
 	if ([[[[enabledErrorsTable tableColumns] objectAtIndex:[enabledErrorsTable clickedColumn]] identifier] isEqualToString:@"Checks"])
 	{
 		int row = [enabledErrorsTable clickedRow];
-		BOOL checked = [[enabledErrors objectAtIndex:row] boolValue];
+		BOOL newChecked = ![[enabledErrors objectAtIndex:row] boolValue];
 
-		[enabledErrors replaceObjectAtIndex:row withObject:[NSNumber numberWithBool:!checked]];
+		[self setShowsErrorType:row value:newChecked];
 	}
+}
+
+- (void)setRootErrorItem:(ErrorItem *)item
+{
+	if (item != rootErrorItem)
+	{
+		[rootErrorItem release];
+		rootErrorItem = [item retain];
+		[errorsOutline reloadData];
+	}
+}
+
+// NSOutlineView Data Source methods
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+	if (item == nil)
+	{
+		item = rootErrorItem;
+	}
+	return [item numberOfChildren];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
+{
+	if (item == nil)
+	{
+		item = rootErrorItem;
+	}
+	return [item numberOfChildren] != -1;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+{
+	if (item == nil)
+	{
+		item = rootErrorItem;
+	}
+	return [item childAtIndex:index];
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
+{
+	if (item == nil)
+	{
+		item = rootErrorItem;
+	}
+	return [item objectValue];
 }
 
 @end
