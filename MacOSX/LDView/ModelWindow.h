@@ -5,6 +5,7 @@
 @class LDrawModelView;
 @class LDViewController;
 @class ErrorsAndWarnings;
+@class ErrorItem;
 
 class LDLError;
 class TCProgressAlert;
@@ -40,6 +41,8 @@ class AlertHandler;
 	NSMutableArray *otherIdentifiers;
 	NSMutableArray *allIdentifiers;
 	ErrorsAndWarnings *errorsAndWarnings;
+	ErrorItem *unfilteredRootErrorItem;
+	ErrorItem *filteredRootErrorItem;
 }
 
 - (BOOL)openModel:(NSString *)filename;
