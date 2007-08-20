@@ -23,16 +23,18 @@
 
 - (id)initWithTemplate:(id)other
 {
-	//NSPopUpButtonCell *otherCell = [other cell];
-	ToolbarPopUpButtonCell *cell;
+	if ((self = [super initWithFrame:[other frame]]) != nil)
+	{
+		//NSPopUpButtonCell *otherCell = [other cell];
+		ToolbarPopUpButtonCell *cell;
 
-	[super initWithFrame:[other frame]];
-	cell = [self cell];
-	[self setTarget:[other target]];
-	[self setAction:[other action]];
-	[self setMenu:[other menu]];
-	[self setEnabled:[other isEnabled]];
-	[self setPullsDown:[other pullsDown]];
+		cell = [self cell];
+		[self setTarget:[other target]];
+		[self setAction:[other action]];
+		[self setMenu:[other menu]];
+		[self setEnabled:[other isEnabled]];
+		[self setPullsDown:[other pullsDown]];
+	}
 	return self;
 }
 

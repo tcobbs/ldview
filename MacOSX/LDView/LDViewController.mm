@@ -12,16 +12,19 @@
 
 - (id)init
 {
-	NSString *userAgent = [NSString stringWithFormat:@"LDView/%@ (Mac OSX; ldview@gmail.com; http://ldview.sf.net/)", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-	[OCLocalStrings loadStringTable:[[NSBundle mainBundle]
-		pathForResource:@"LDViewMessages" ofType:@"ini"]];
-	ldrawFileTypes = [[NSArray alloc] initWithObjects: @"ldr", @"dat", @"mpd",
-		nil];
-	TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
-		@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
-	modelWindows = [[NSMutableArray alloc] init];
-	TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
-	return [super init];
+	if ((self = [super init]) != nil)
+	{
+		NSString *userAgent = [NSString stringWithFormat:@"LDView/%@ (Mac OSX; ldview@gmail.com; http://ldview.sf.net/)", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
+		[OCLocalStrings loadStringTable:[[NSBundle mainBundle]
+			pathForResource:@"LDViewMessages" ofType:@"ini"]];
+		ldrawFileTypes = [[NSArray alloc] initWithObjects: @"ldr", @"dat", @"mpd",
+			nil];
+		TREMainModel::loadStudTexture([[[NSBundle mainBundle] pathForResource:
+			@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
+		modelWindows = [[NSMutableArray alloc] init];
+		TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
+	}
+	return self;
 }
 
 - (void)dealloc

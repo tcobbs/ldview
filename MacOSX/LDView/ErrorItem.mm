@@ -61,13 +61,11 @@ static NSDictionary *iconDict = nil;
 				NSTextAttachment *attachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
 				[fileWrapper release];
 				templateString = [[NSMutableAttributedString alloc] initWithString:@" "];
-				//[templateString addAttribute:NSAttachmentAttributeName value:attachment range:NSMakeRange(0, 1)];
 				[templateString insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment] atIndex:0];
 				[attachment release];
 			}
 			objectValue = [templateString mutableCopy];
 			[objectValue appendAttributedString:[[[NSAttributedString alloc] initWithString:string] autorelease]];
-			//[objectValue replaceCharactersInRange:NSMakeRange(2, 2) withString:string];
 		}
 		else
 		{

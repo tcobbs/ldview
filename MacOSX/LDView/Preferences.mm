@@ -11,11 +11,14 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 
 - (id)initWithController:(LDViewController *)value
 {
-	controller = value;	// Don't retain: it's our parent.
-	pages = [[NSMutableArray alloc] initWithCapacity:[[tabView tabViewItems] count]];
-	ldPreferences = new LDPreferences;
-	[NSBundle loadNibNamed:@"Preferences.nib" owner:self];
-	return [super init];
+	if ((self = [super init]) != nil)
+	{
+		controller = value;	// Don't retain: it's our parent.
+		pages = [[NSMutableArray alloc] initWithCapacity:[[tabView tabViewItems] count]];
+		ldPreferences = new LDPreferences;
+		[NSBundle loadNibNamed:@"Preferences.nib" owner:self];
+	}
+	return self;
 }
 
 - (void)dealloc

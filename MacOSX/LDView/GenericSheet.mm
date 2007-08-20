@@ -13,8 +13,11 @@
 
 - (id)initWithNibName:(NSString *)nibName
 {
-	[NSBundle loadNibNamed:nibName owner:self];
-	return [super init];
+	if ((self = [super init]) != nil)
+	{
+		[NSBundle loadNibNamed:nibName owner:self];
+	}
+	return self;
 }
 
 - (int)runSheetInWindow:(NSWindow *)window;
