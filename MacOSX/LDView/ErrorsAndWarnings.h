@@ -5,6 +5,8 @@
 @class ModelWindow;
 @class ErrorItem;
 
+extern NSString *LDErrorFilterChange;
+
 @interface ErrorsAndWarnings : NSObject
 {
     IBOutlet NSButton *copyErrorButton;
@@ -14,13 +16,14 @@
 	IBOutlet NSPanel *panel;
     IBOutlet NSTextField *statusField;
 	
-	ModelWindow *modelWindow;
 	NSMutableArray *errorNames;
 	NSMutableArray *enabledErrors;
 	ErrorItem *rootErrorItem;
+	NSString *titleFormat;
 }
 
 - (id)init;
++ (id)sharedInstance;
 
 - (IBAction)copyError:(id)sender;
 - (IBAction)errorSelected:(id)sender;
@@ -31,5 +34,8 @@
 - (IBAction)enabledErrorSelected:(id)sender;
 
 - (void)setRootErrorItem:(ErrorItem *)item;
+- (ErrorItem *)filteredRootErrorItem:(ErrorItem *)unfilteredRoot;
+- (BOOL)isVisible;
+- (void)update:(ModelWindow *)modelWindow;
 
 @end

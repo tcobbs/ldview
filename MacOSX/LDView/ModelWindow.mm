@@ -25,7 +25,6 @@
 	[toolbarItems release];
 	[defaultIdentifiers release];
 	[otherIdentifiers release];
-	[errorsAndWarnings release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
 	[super dealloc];
@@ -254,6 +253,7 @@
 	[statusBar retain];
 	progressAdjust = [progressMessage frame].origin.x - [progress frame].origin.x;
 	[window setNextResponder:controller];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(errorFilterChange:) name:LDErrorFilterChange object:nil];
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -288,6 +288,15 @@
 	}
 }
 
+- (ErrorItem *)filteredRootErrorItem
+{
+	if (unfilteredRootErrorItem && !filteredRootErrorItem)
+	{
+		filteredRootErrorItem = [[[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem] retain];
+	}
+	return filteredRootErrorItem;
+}
+
 - (BOOL)openModel:(NSString *)filename
 {
 	[unfilteredRootErrorItem release];
@@ -299,6 +308,10 @@
 	if ([modelView openModel:filename])
 	{
 		[self enableToolbarItems:YES];
+		if ([[ErrorsAndWarnings sharedInstance] isVisible])
+		{
+			[[ErrorsAndWarnings sharedInstance] update:self];
+		}
 		return YES;
 	}
 	else
@@ -657,12 +670,23 @@
 
 - (IBAction)errorsAndWarnings:(id)sender
 {
-	if (!errorsAndWarnings)
+	[[ErrorsAndWarnings sharedInstance] update:self];
+	[[ErrorsAndWarnings sharedInstance] show:self];
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)aNotification
+{
+	if ([[ErrorsAndWarnings sharedInstance] isVisible])
 	{
-		errorsAndWarnings = [[ErrorsAndWarnings alloc] init];
+		[[ErrorsAndWarnings sharedInstance] update:self];
 	}
-	[errorsAndWarnings setRootErrorItem:unfilteredRootErrorItem];
-	[errorsAndWarnings show:self];
+}
+
+- (void)errorFilterChange:(NSNotification *)aNotification
+{
+	[filteredRootErrorItem release];
+	filteredRootErrorItem = nil;
+	[[ErrorsAndWarnings sharedInstance] update:self];
 }
 
 @end
