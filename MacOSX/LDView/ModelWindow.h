@@ -4,7 +4,7 @@
 
 @class LDrawModelView;
 @class LDViewController;
-@class ErrorsAndWarnings;
+//@class ErrorsAndWarnings;
 @class ErrorItem;
 
 class LDLError;
@@ -40,7 +40,6 @@ class AlertHandler;
 	NSMutableArray *defaultIdentifiers;
 	NSMutableArray *otherIdentifiers;
 	NSMutableArray *allIdentifiers;
-	ErrorsAndWarnings *errorsAndWarnings;
 	ErrorItem *unfilteredRootErrorItem;
 	ErrorItem *filteredRootErrorItem;
 }
@@ -59,6 +58,7 @@ class AlertHandler;
 - (void)show;
 - (NSWindow *)window;
 - (NSToolbar *)toolbar;
+- (ErrorItem *)filteredRootErrorItem;
 
 - (IBAction)actions:(id)sender;
 - (IBAction)open:(id)sender;

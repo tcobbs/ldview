@@ -7,6 +7,9 @@
 
 @implementation ErrorsAndWarnings
 
+NSString *LDErrorFilterChange = @"LDErrorFilterChange";
+static ErrorsAndWarnings *sharedInstance = nil;
+
 - (id)init
 {
 	if ((self = [super init]) != nil)
@@ -16,10 +19,20 @@
 	return self;
 }
 
++ (id)sharedInstance
+{
+	if (!sharedInstance)
+	{
+		sharedInstance = [[ErrorsAndWarnings alloc] init];
+	}
+	return sharedInstance;
+}
+
 - (void)dealloc
 {
 	[errorNames release];
 	[enabledErrors release];
+	[titleFormat release];
 	[super dealloc];
 }
 
@@ -110,6 +123,7 @@
 - (void)awakeFromNib
 {
 	[self initEnabledErrors];
+	titleFormat = [[panel title] retain];
 }
 
 - (IBAction)show:(id)sender
@@ -127,6 +141,7 @@
 
 - (IBAction)includeWarnings:(id)sender
 {
+	[[NSNotificationCenter defaultCenter] postNotificationName:LDErrorFilterChange object:self];
 }
 
 - (void)setShowAll:(BOOL)show
@@ -156,6 +171,7 @@
 		BOOL newChecked = ![[enabledErrors objectAtIndex:row] boolValue];
 
 		[self setShowsErrorType:row value:newChecked];
+		[[NSNotificationCenter defaultCenter] postNotificationName:LDErrorFilterChange object:self];
 	}
 }
 
@@ -205,6 +221,46 @@
 		item = rootErrorItem;
 	}
 	return [item objectValue];
+}
+
+- (BOOL)isVisible
+{
+	return [panel isVisible];
+}
+
+- (ErrorItem *)filteredRootErrorItem:(ErrorItem *)unfilteredRoot
+{
+	ErrorItem *filteredRoot = [[ErrorItem alloc] init];
+	int count = [unfilteredRoot numberOfChildren];
+	
+	for (int i = 0; i < count; i++)
+	{
+		ErrorItem *child = [unfilteredRoot childAtIndex:i];
+		LDLError *error = [child error];
+
+		if ([[enabledErrors objectAtIndex:error->getType()] boolValue] &&
+			([includeWarningsButton state] || error->getLevel() == LDLAError))
+		{			
+			[filteredRoot addChild:child];
+		}
+	}
+	return [filteredRoot autorelease];
+}
+
+- (void)update:(ModelWindow *)modelWindow
+{
+	NSWindow *window = [modelWindow window];
+	NSString *representedFilename = [window representedFilename];
+
+	[self setRootErrorItem: [modelWindow filteredRootErrorItem]];
+	if ([representedFilename length] > 0)
+	{
+		[panel setTitle:[NSString stringWithFormat:titleFormat, [representedFilename lastPathComponent]]];
+	}
+	else
+	{
+		[panel setTitle:[NSString stringWithFormat:titleFormat, [window title]]];
+	}
 }
 
 @end
