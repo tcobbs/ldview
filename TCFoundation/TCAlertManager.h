@@ -6,6 +6,7 @@
 #include <TCFoundation/TCTypedPointerArray.h>
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TCFoundation/TCStringArray.h>
+#include <string.h>
 
 class TCAlert;
 
@@ -20,8 +21,8 @@ class TCAlertManager : public TCObject
 {
 public:
 	static void sendAlert(TCAlert *alert, TCObject *sender = NULL);
-	static void TCAlertManager::sendAlert(const char *alertClass,
-		TCObject *sender = NULL, CUCSTR message = _UC(""));
+	static void sendAlert(const char *alertClass, TCObject *sender = NULL,
+		CUCSTR message = _UC(""));
 	static void registerHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback alertCallback);
 	static void unregisterHandler(const char *alertClass, TCObject *handler);
