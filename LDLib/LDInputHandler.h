@@ -58,7 +58,7 @@ protected:
 	bool updatePanXY(int xPos, int yPos);
 	bool updateZoom(int yPos);
 	void frameDone(TCAlert *alert);
-	double getTimeRef(void);
+	//double getTimeRef(void);
 
 	LDrawModelViewer *m_modelViewer;
 	ViewMode m_viewMode;
@@ -75,5 +75,5 @@ protected:
 	TCFloat m_rotationSpeed;
 	bool m_mouseUpPending;
 	bool m_mouseUpHandled;
-	double m_lastMoveTime;
+	//double m_lastMoveTime;
 };

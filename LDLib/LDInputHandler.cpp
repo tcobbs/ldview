@@ -237,24 +237,24 @@ bool LDInputHandler::mouseUp(MouseButton button, int x, int y)
 	return true;
 }
 
-double LDInputHandler::getTimeRef(void)
-{
-#ifdef WIN32
-	return (double)GetTickCount() / 1000.0;
-#else // WIN32
-#ifdef _QT
-	return -1.0;
-#else // _QT
-#ifdef __APPLE__
-	return -1.0;
-#else // __APPLE__
-	// If you get here, this isn't going to work.  The below line will generate
-	// an error.
-	Unknown GUI framework.
-#endif // __APPLE__
-#endif // _QT
-#endif // WIN32
-}
+//double LDInputHandler::getTimeRef(void)
+//{
+//#ifdef WIN32
+//	return (double)GetTickCount() / 1000.0;
+//#else // WIN32
+//#ifdef _QT
+//	return -1.0;
+//#else // _QT
+//#ifdef __APPLE__
+//	return -1.0;
+//#else // __APPLE__
+//	// If you get here, this isn't going to work.  The below line will generate
+//	// an error.
+//	Unknown GUI framework.
+//#endif // __APPLE__
+//#endif // _QT
+//#endif // WIN32
+//}
 
 bool LDInputHandler::mouseMove(int x, int y)
 {
@@ -265,7 +265,7 @@ bool LDInputHandler::mouseMove(int x, int y)
 	case MMNormal:
 		if (m_viewMode == VMExamine)
 		{
-			m_lastMoveTime = getTimeRef();
+			//m_lastMoveTime = getTimeRef();
 			return updateSpinRateXY(x, y);
 		}
 		else
