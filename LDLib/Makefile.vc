@@ -11,7 +11,8 @@ CCOBJS = \
 	$(OBJDIR)\LDHtmlInventory.obj \
 	$(OBJDIR)\LDPartCount.obj \
 	$(OBJDIR)\LDPartsList.obj \
-	$(OBJDIR)\LDViewPoint.obj
+	$(OBJDIR)\LDViewPoint.obj \
+	$(OBJDIR)\LDInputHandler.obj
 
 LIBT = LDLib.lib
 
