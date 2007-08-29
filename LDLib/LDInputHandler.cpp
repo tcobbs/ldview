@@ -18,6 +18,9 @@ enum {
 #endif
 };
 #endif // __APPLE__
+#ifdef _QT
+#include <qnamespace.h>
+#endif // _QT
 
 LDInputHandler::LDInputHandler(LDrawModelViewer *modelViewer):
 	m_modelViewer(modelViewer),
