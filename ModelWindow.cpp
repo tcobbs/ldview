@@ -636,9 +636,9 @@ LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 */
 }
 
-LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
+LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseUp(LDInputHandler::MBLeft, xPos, yPos);
+	inputHandler->mouseUp(keyFlags, LDInputHandler::MBLeft, xPos, yPos);
 	return 0;
 /*
 	if (modelViewer && modelViewer->mouseUp(xPos, yPos))
@@ -688,9 +688,9 @@ LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 */
 }
 
-LRESULT ModelWindow::doRButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
+LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseUp(LDInputHandler::MBRight, xPos, yPos);
+	inputHandler->mouseUp(keyFlags, LDInputHandler::MBRight, xPos, yPos);
 	return 0;
 /*
 	forceRedraw();
@@ -730,9 +730,9 @@ LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 */
 }
 
-LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
+LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseUp(LDInputHandler::MBMiddle, xPos, yPos);
+	inputHandler->mouseUp(keyFlags, LDInputHandler::MBMiddle, xPos, yPos);
 	return 0;
 /*
 	forceRedraw();
@@ -749,9 +749,10 @@ LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 */
 }
 
-LRESULT ModelWindow::doMouseMove(WPARAM /*keyFlags*/, int xPos, int yPos)
+LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseMove(xPos, yPos);
+	inputHandler->mouseMove(inputHandler->convertModifiers(keyFlags), xPos,
+		yPos);
 	return 0;
 /*
 	if (modelViewer && modelViewer->mouseMove(xPos, yPos))
@@ -2560,7 +2561,7 @@ void ModelWindow::doPaint(void)
 	}
 	if (redrawCount > 0)
 	{
-		debugPrintf("Multi-forced redraw.\n");
+		//debugPrintf("Multi-forced redraw.\n");
 		forceRedraw();
 		redrawCount--;
 		return;
