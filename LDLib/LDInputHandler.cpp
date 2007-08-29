@@ -123,6 +123,7 @@ bool LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 	//if (GetKeyState(VK_SHIFT) & 0x8000)
 	if (modifierKeys & MKShift)
 	{
+		debugPrintf("Faster.\n");
 		denom /= 2.0f;
 	}
 	m_modelViewer->setCameraXRotate(magnitude / denom);
