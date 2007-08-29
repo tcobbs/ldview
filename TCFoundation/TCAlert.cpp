@@ -8,7 +8,8 @@ TCAlert::TCAlert(
 		TCStringArray *extraInfo):
 	m_alertClass(copyString(alertClass)),
 	m_message(copyString(message)),
-	m_extraInfo((TCStringArray *)TCObject::retain(extraInfo))
+	m_extraInfo((TCStringArray *)TCObject::retain(extraInfo)),
+	m_sender(NULL)
 {
 }
 
@@ -20,7 +21,8 @@ TCAlert::TCAlert(
 	m_message(NULL),
 	m_wMessage(message),
 	m_extraInfo(NULL),
-	m_ucExtraInfo(extraInfo)
+	m_ucExtraInfo(extraInfo),
+	m_sender(NULL)
 {
 }
 

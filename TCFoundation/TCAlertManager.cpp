@@ -42,10 +42,23 @@ TCAlertManager *TCAlertManager::defaultAlertManager(void)
 	return sm_defaultAlertManager;
 }
 
-void TCAlertManager::sendAlert(TCAlert *alert)
+void TCAlertManager::sendAlert(TCAlert *alert, TCObject *sender /*= NULL*/)
 {
+	alert->setSender(sender);
 	defaultAlertManager()->defSendAlert(alert);
 }
+
+void TCAlertManager::sendAlert(
+	const char *alertClass,
+	TCObject *sender /*= NULL*/,
+	CUCSTR message /*= _UC("")*/)
+{
+	TCAlert *alert = new TCAlert(alertClass, message);
+
+	sendAlert(alert, sender);
+	alert->release();
+}
+
 
 void TCAlertManager::registerHandler(const char *alertClass, TCObject *handler,
 									 TCAlertCallback callback)
@@ -56,6 +69,11 @@ void TCAlertManager::registerHandler(const char *alertClass, TCObject *handler,
 void TCAlertManager::unregisterHandler(const char *alertClass, TCObject *handler)
 {
 	defaultAlertManager()->defUnregisterHandler(alertClass, handler);
+}
+
+void TCAlertManager::unregisterHandler(TCObject *handler)
+{
+	defaultAlertManager()->defUnregisterHandler(handler);
 }
 
 void TCAlertManager::defSendAlert(TCAlert *alert)
@@ -130,6 +148,35 @@ void TCAlertManager::defUnregisterHandler(const char *alertClass,
 				// that I would have performed here crashed.
 				free(callbackPointer);
 				done = true;
+			}
+		}
+	}
+}
+
+void TCAlertManager::defUnregisterHandler(TCObject *handler)
+{
+	int i, j;
+	int alertClassCount = m_alertClasses->getCount();
+
+	for (i = 0; i < alertClassCount; i++)
+	{
+		TCObjectPointerArray *handlers = (*m_handlers)[i];
+		TCAlertCallbackArray *callbacks = (*m_callbacks)[i];
+		int handlerCount = handlers->getCount();
+		bool found = false;
+
+		for (j = 0; j < handlerCount && !found; j++)
+		{
+			if ((*handlers)[j] == handler)
+			{
+				TCAlertCallback *callbackPointer = (*callbacks)[j];
+
+				handlers->removePointer(j);
+				callbacks->removePointer(j);
+				// As mentioned above, when I used new and delete, the delete
+				// that I would have performed here crashed.
+				free(callbackPointer);
+				found = true;
 			}
 		}
 	}

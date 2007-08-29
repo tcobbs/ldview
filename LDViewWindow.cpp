@@ -193,7 +193,7 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
-	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
+	TCAlertManager::unregisterHandler(this);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
 	delete videoModes;
@@ -429,6 +429,9 @@ void LDViewWindow::showStatusIcon(bool examineMode)
 		}
 		SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)hModeIcon);
 		sendMessageUC(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)tipText);
+		// For some reason, the status bar suddenly stopped redrawing
+		// itself after an icon change.
+		RedrawWindow(hWindow, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 	}
 }
 
@@ -682,8 +685,17 @@ void LDViewWindow::createStatusBar(void)
 			modelWindow->setStatusBar(hStatusBar);
 			modelWindow->setProgressBar(hProgressBar);
 		}
-		RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+		redrawStatusBar();
+		//RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 	}
+}
+
+void LDViewWindow::redrawStatusBar(void)
+{
+	RECT statusRect;
+
+	GetClientRect(hStatusBar, &statusRect);
+	RedrawWindow(hWindow, &statusRect, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
 void LDViewWindow::reflectViewMode(bool saveSetting)
@@ -944,15 +956,16 @@ LRESULT LDViewWindow::doMouseWheel(short keyFlags, short zDelta, int /*xPos*/,
 	//debugPrintf("doMouseWheel(%d, %d)\n", keyFlags, zDelta);
 	if (modelWindow)
 	{
-		if (keyFlags & MK_CONTROL)
-		{
-			modelWindow->setClipZoom(true);
-		}
-		else
-		{
-			modelWindow->setClipZoom(false);
-		}
-		modelWindow->zoom((TCFloat)zDelta * -0.5f);
+		modelWindow->mouseWheel(keyFlags, zDelta);
+		//if (keyFlags & MK_CONTROL)
+		//{
+		//	modelWindow->setClipZoom(true);
+		//}
+		//else
+		//{
+		//	modelWindow->setClipZoom(false);
+		//}
+		//modelWindow->zoom((TCFloat)zDelta * -0.5f);
 		return 0;
 	}
 	return 1;

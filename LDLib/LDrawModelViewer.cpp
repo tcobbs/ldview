@@ -12,6 +12,7 @@
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLFindFileAlert.h>
 #include <LDLoader/LDLPalette.h>
+#include "LDInputHandler.h"
 #include "LDModelParser.h"
 #include "LDPreferences.h"
 #include "LDPartsList.h"
@@ -28,68 +29,67 @@
 #define DEF_DISTANCE_MULT 1.0f
 
 LDrawModelViewer::LDrawModelViewer(int width, int height)
-			:mainTREModel(NULL),
-			 mainModel(NULL),
-			 whiteLightDirModel(NULL),
-			 blueLightDirModel(NULL),
-			 filename(NULL),
-			 programPath(NULL),
-			 width(width),
-			 height(height),
-			 pixelAspectRatio(1.0f),
-			 cullBackFaces(0),
-			 xRotate(1.0f),
-			 yRotate(1.0f),
-			 zRotate(0.0f),
-			 rotationSpeed(0.0f),
-			 cameraXRotate(0.0f),
-			 cameraYRotate(0.0f),
-			 cameraZRotate(0.0f),
-			 zoomSpeed(0.0f),
-			 xPan(0.0f),
-			 yPan(0.0f),
-			 rotationMatrix(NULL),
-			 defaultRotationMatrix(NULL),
-			 clipAmount(0.0f),
-			 nextClipAmount(-1.0f),
-			 nextDistance(-1.0f),
-			 highlightLineWidth(1.0f),
-			 wireframeLineWidth(1.0f),
-			 anisoLevel(1.0f),
-			 clipZoom(false),
-			 fontListBase(0),
-			 backgroundR(0.0f),
-			 backgroundG(0.0f),
-			 backgroundB(0.0f),
-			 defaultR(153),
-			 defaultG(153),
-			 defaultB(153),
-			 defaultColorNumber(-1),
-//			 progressCallback(NULL),
-//			 errorCallback(NULL),
-			 xTile(0),
-			 yTile(0),
-			 numXTiles(1),
-			 numYTiles(1),
-			 stereoMode(LDVStereoNone),
-			 stereoEyeSpacing(50.0f),
-			 cutawayMode(LDVCutawayNormal),
-			 cutawayAlpha(1.0f),
-			 cutawayLineWidth(1.0f),
-			 zoomMax(1.99f),
-			 curveQuality(2),
-			 textureFilterType(GL_LINEAR_MIPMAP_LINEAR),
-			 distanceMultiplier(DEF_DISTANCE_MULT),
-			 fontImage(NULL),
-			 aspectRatio(1.0f),
-			 currentFov(45.0f),
-			 fov(45.0f),
-			 extraSearchDirs(NULL),
-			 memoryUsage(2),
-			 lightVector(0.0f, 0.0f, 1.0f),
-			 preferences(NULL),
-			 mouseMode(LDVMouseNone),
-			 cameraData(NULL)
+	:mainTREModel(NULL),
+	mainModel(NULL),
+	whiteLightDirModel(NULL),
+	blueLightDirModel(NULL),
+	filename(NULL),
+	programPath(NULL),
+	width(width),
+	height(height),
+	pixelAspectRatio(1.0f),
+	cullBackFaces(0),
+	xRotate(1.0f),
+	yRotate(1.0f),
+	zRotate(0.0f),
+	rotationSpeed(0.0f),
+	cameraXRotate(0.0f),
+	cameraYRotate(0.0f),
+	cameraZRotate(0.0f),
+	zoomSpeed(0.0f),
+	xPan(0.0f),
+	yPan(0.0f),
+	rotationMatrix(NULL),
+	defaultRotationMatrix(NULL),
+	clipAmount(0.0f),
+	nextClipAmount(-1.0f),
+	nextDistance(-1.0f),
+	highlightLineWidth(1.0f),
+	wireframeLineWidth(1.0f),
+	anisoLevel(1.0f),
+	clipZoom(false),
+	fontListBase(0),
+	backgroundR(0.0f),
+	backgroundG(0.0f),
+	backgroundB(0.0f),
+	defaultR(153),
+	defaultG(153),
+	defaultB(153),
+	defaultColorNumber(-1),
+	xTile(0),
+	yTile(0),
+	numXTiles(1),
+	numYTiles(1),
+	stereoMode(LDVStereoNone),
+	stereoEyeSpacing(50.0f),
+	cutawayMode(LDVCutawayNormal),
+	cutawayAlpha(1.0f),
+	cutawayLineWidth(1.0f),
+	zoomMax(1.99f),
+	curveQuality(2),
+	textureFilterType(GL_LINEAR_MIPMAP_LINEAR),
+	distanceMultiplier(DEF_DISTANCE_MULT),
+	fontImage(NULL),
+	aspectRatio(1.0f),
+	currentFov(45.0f),
+	fov(45.0f),
+	extraSearchDirs(NULL),
+	memoryUsage(2),
+	lightVector(0.0f, 0.0f, 1.0f),
+	preferences(NULL),
+	mouseMode(LDVMouseNone),
+	inputHandler(NULL),
+	cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
@@ -161,9 +161,8 @@ LDrawModelViewer::~LDrawModelViewer(void)
 
 void LDrawModelViewer::dealloc(void)
 {
-//	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
-//	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
-	TCAlertManager::unregisterHandler(LDLFindFileAlert::alertClass(), this);
+	TCAlertManager::unregisterHandler(this);
+	TCObject::release(inputHandler);
 	TCObject::release(mainTREModel);
 	TCObject::release(mainModel);
 	TCObject::release(whiteLightDirModel);
@@ -184,6 +183,15 @@ void LDrawModelViewer::dealloc(void)
 	delete cameraData;
 	cameraData = NULL;
 	TCObject::dealloc();
+}
+
+LDInputHandler *LDrawModelViewer::getInputHandler(void)
+{
+	if (!inputHandler)
+	{
+		inputHandler = new LDInputHandler(this);
+	}
+	return inputHandler;
 }
 
 void LDrawModelViewer::setFilename(const char* value)
@@ -921,13 +929,13 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				mainTREModel->retain();
 				TCProgressAlert::send("LDrawModelViewer",
 					TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.0f,
-					&abort);
+					&abort, this);
 				if (!abort)
 				{
 					mainTREModel->getBoundingBox(boundingMin, boundingMax);
 					TCProgressAlert::send("LDrawModelViewer",
 						TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.5f,
-						&abort);
+						&abort, this);
 				}
 				if (!abort)
 				{
@@ -941,7 +949,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 					}
 					TCProgressAlert::send("LDrawModelViewer",
 						TCLocalStrings::get(_UC("CalculatingSizeStatus")), 1.0f,
-						&abort);
+						&abort, this);
 				}
 				if (!abort)
 				{
@@ -953,7 +961,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		}
 		initLightDirModels();
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
-			_UC("Done")), 2.0f);
+			_UC("Done")), 2.0f, this);
 		if (resetViewpoint)
 		{
 			resetView();
@@ -1078,7 +1086,7 @@ bool LDrawModelViewer::recompile(void)
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
-			_UC("Done")), 2.0f);
+			_UC("Done")), 2.0f, this);
 	}
 	return true;
 }
@@ -2121,6 +2129,15 @@ void LDrawModelViewer::zoom(TCFloat amount, bool apply)
 	{
 		applyZoom();
 	}
+	if (!fEq(amount, 0))
+	{
+		requestRedraw();
+	}
+}
+
+void LDrawModelViewer::requestRedraw(void)
+{
+	TCAlertManager::sendAlert(redrawAlertClass(), this);
 }
 
 void LDrawModelViewer::applyZoom(void)
@@ -2803,6 +2820,17 @@ void LDrawModelViewer::update(void)
 		glViewport(0, 0, width / 2, height);
 	}
 	flags.updating = false;
+	if ((!fEq(rotationSpeed, 0.0f) ||
+		!fEq(zoomSpeed, 0.0f) ||
+		!fEq(cameraXRotate, 0.0f) ||
+		!fEq(cameraYRotate, 0.0f) ||
+		!fEq(cameraZRotate, 0.0f) ||
+		!fEq(cameraMotion.length(), 0.0f))
+		&& !getPaused())
+	{
+		requestRedraw();
+	}
+	TCAlertManager::sendAlert(frameDoneAlertClass(), this);
 }
 
 void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)
@@ -3187,7 +3215,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 				TCLocalStrings::get(_UC("TryingToDownload")), ucFilename);
 		}
 		delete ucFilename;
-		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort);
+		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort, this);
 		strcat(url, filename);
 		webClient = new TCWebClient(url);
 		if (found)
@@ -3227,13 +3255,11 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			// internet connection, or our proxy is mis-configured.  Don't try
 			// to connect again for now, and let the user know that auto part
 			// updates have been disabled.
-			TCAlert *alert = new TCAlert(alertClass(),
-				TCLocalStrings::get(_UC("PartCheckDisabled")));
 
 			preferences->setCheckPartTracker(false, true);
 			flags.checkPartTracker = false;
-			TCAlertManager::sendAlert(alert);
-			alert->release();
+			TCAlertManager::sendAlert(alertClass(), this,
+				TCLocalStrings::get(_UC("PartCheckDisabled")));
 		}
 		else
 		{
@@ -3572,7 +3598,6 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 	}
 	if (mode != LDVMouseLight)
 	{
-		debugPrintf("LDVMouseLight is the only mode currently supported.\n");
 		return false;
 	}
 	if (mode == LDVMouseLight && !flags.useLighting)
@@ -3589,6 +3614,7 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 		if (haveStandardLight())
 		{
 			flags.showLight = true;
+			requestRedraw();
 		}
 		break;
 	default:
@@ -3617,6 +3643,7 @@ bool LDrawModelViewer::mouseUp(int x, int y)
 			mouseMoveLight(deltaX, deltaY);
 			preferences->setLightVector(lightVector, true);
 			flags.showLight = false;
+			requestRedraw();
 		}
 		break;
 	default:
@@ -3642,6 +3669,7 @@ bool LDrawModelViewer::mouseMove(int x, int y)
 	{
 	case LDVMouseLight:
 		mouseMoveLight(deltaX, deltaY);
+		requestRedraw();
 		break;
 	default:
 		break;

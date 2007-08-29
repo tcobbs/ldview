@@ -268,8 +268,8 @@ void TREMainModel::compile(void)
 					float progress = (float)i / (numSections * 2.0f);
 
 					TCProgressAlert::send("TREMainModel",
-						TCLocalStrings::get(L"TREMainModelCompiling"), progress,
-						&m_abort);
+						TCLocalStrings::get(_UC("TREMainModelCompiling")),
+						progress, &m_abort, this);
 					if (!m_abort && isSectionPresent(section, false))
 					{
 						if (isStudSection(section))
@@ -335,8 +335,8 @@ void TREMainModel::compile(void)
 					float progress = (float)i / (numSections * 2.0f) + 0.5f;
 
 					TCProgressAlert::send("TREMainModel",
-						TCLocalStrings::get(L"TREMainModelCompiling"), progress,
-						&m_abort);
+						TCLocalStrings::get(_UC("TREMainModelCompiling")),
+						progress, &m_abort, this);
 					if (!m_abort && isSectionPresent(section, true))
 					{
 						if (isStudSection(section))
@@ -398,7 +398,8 @@ void TREMainModel::compile(void)
 			m_mainFlags.compiled = true;
 			m_mainFlags.compiling = false;
 			TCProgressAlert::send("TREMainModel",
-				TCLocalStrings::get(L"TREMainModelCompiling"), 1.0f, &m_abort);
+				TCLocalStrings::get(_UC("TREMainModelCompiling")), 1.0f,
+				&m_abort, this);
 //			TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
 		}
 	}
@@ -767,7 +768,8 @@ bool TREMainModel::postProcess(void)
 	float numSections = (float)(TREMTransparent - TREMStandard);
 
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 0.0f, &m_abort);
+		TCLocalStrings::get(_UC("TREMainModelProcessing")), 0.0f, &m_abort,
+		this);
 	if (m_abort)
 	{
 		return false;
@@ -780,7 +782,8 @@ bool TREMainModel::postProcess(void)
 		float progress = (float)i / numSections * 0.8f + 0.2f;
 
 		TCProgressAlert::send("TREMainModel",
-			TCLocalStrings::get(L"TREMainModelProcessing"), progress, &m_abort);
+			TCLocalStrings::get(_UC("TREMainModelProcessing")), progress,
+			&m_abort, this);
 		if (!m_abort)
 		{
 			checkSectionPresent((TREMSection)i);
@@ -865,7 +868,8 @@ bool TREMainModel::postProcess(void)
 	checkColoredConditionalLinesPresent();
 */
 	TCProgressAlert::send("TREMainModel",
-		TCLocalStrings::get(L"TREMainModelProcessing"), 1.0f, &m_abort);
+		TCLocalStrings::get(_UC("TREMainModelProcessing")), 1.0f, &m_abort,
+		this);
 	if (m_abort)
 	{
 		return false;

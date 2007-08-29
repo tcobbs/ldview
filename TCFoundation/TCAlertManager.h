@@ -19,10 +19,13 @@ typedef TCTypedObjectArray<TCAlertCallbackArray> TCAlertCallbackArrayArray;
 class TCAlertManager : public TCObject
 {
 public:
-	static void sendAlert(TCAlert *alert);
+	static void sendAlert(TCAlert *alert, TCObject *sender = NULL);
+	static void TCAlertManager::sendAlert(const char *alertClass,
+		TCObject *sender = NULL, CUCSTR message = _UC(""));
 	static void registerHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback alertCallback);
 	static void unregisterHandler(const char *alertClass, TCObject *handler);
+	static void unregisterHandler(TCObject *handler);
 protected:
 	TCAlertManager(void);
 	virtual ~TCAlertManager(void);
@@ -33,6 +36,7 @@ protected:
 	void defRegisterHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback callback);
 	void defUnregisterHandler(const char *alertClass, TCObject *handler);
+	void defUnregisterHandler(TCObject *handler);
 
 	TCStringArray *m_alertClasses;
 	TCObjectPointerArrayArray *m_handlers;

@@ -111,7 +111,7 @@ LDViewPreferences::~LDViewPreferences(void)
 
 void LDViewPreferences::dealloc(void)
 {
-	TCAlertManager::unregisterHandler(TCUserDefaults::alertClass(), this);
+	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelViewer);
 	TCObject::release(ldPrefs);
 	if (hButtonTheme)

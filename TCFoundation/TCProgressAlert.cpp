@@ -32,26 +32,38 @@ void TCProgressAlert::dealloc(void)
 	TCAlert::dealloc();
 }
 
-void TCProgressAlert::send(const char *source, const char *message,
-						   float progress, TCStringArray *extraInfo)
+void TCProgressAlert::send(
+	const char *source,
+	const char *message,
+	float progress,
+	TCStringArray *extraInfo,
+	TCObject *sender)
 {
-	send(source, message, progress, NULL, extraInfo);
+	send(source, message, progress, NULL, extraInfo, sender);
 }
 
-void TCProgressAlert::send(const char *source, const wchar_t *message,
-						   float progress, const ucstringVector &extraInfo)
+void TCProgressAlert::send(
+	const char *source,
+	const wchar_t *message,
+	float progress,
+	const ucstringVector &extraInfo,
+	TCObject *sender)
 {
-	send(source, message, progress, NULL, extraInfo);
+	send(source, message, progress, NULL, extraInfo, sender);
 }
 
-void TCProgressAlert::send(const char *source, const char *message,
-						   float progress, bool *aborted,
-						   TCStringArray *extraInfo)
+void TCProgressAlert::send(
+	const char *source,
+	const char *message,
+	float progress,
+	bool *aborted,
+	TCStringArray *extraInfo,
+	TCObject *sender)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
 		extraInfo);
 
-	TCAlertManager::sendAlert(alert);
+	TCAlertManager::sendAlert(alert, sender);
 	if (aborted)
 	{
 		*aborted = alert->getAborted();
@@ -59,14 +71,66 @@ void TCProgressAlert::send(const char *source, const char *message,
 	alert->release();
 }
 
-void TCProgressAlert::send(const char *source, const wchar_t *message,
-						   float progress, bool *aborted,
-						   const ucstringVector &extraInfo)
+void TCProgressAlert::send(
+	const char *source,
+	const char *message,
+	float progress,
+	bool *aborted,
+	TCObject *sender)
+{
+	TCProgressAlert *alert = new TCProgressAlert(source, message, progress);
+
+	TCAlertManager::sendAlert(alert, sender);
+	if (aborted)
+	{
+		*aborted = alert->getAborted();
+	}
+	alert->release();
+}
+
+void TCProgressAlert::send(
+	const char *source,
+	const char *message,
+	float progress,
+	TCObject *sender)
+{
+	TCProgressAlert *alert = new TCProgressAlert(source, message, progress);
+
+	TCAlertManager::sendAlert(alert, sender);
+	alert->release();
+}
+
+void TCProgressAlert::send(
+	const char *source,
+	const wchar_t *message,
+	float progress,
+	bool *aborted,
+	TCObject *sender)
+{
+	send(source, message, progress, aborted, ucstringVector(), sender);
+}
+
+void TCProgressAlert::send(
+	const char *source,
+	const wchar_t *message,
+	float progress,
+	TCObject *sender)
+{
+	send(source, message, progress, NULL, ucstringVector(), sender);
+}
+
+void TCProgressAlert::send(
+	const char *source,
+	const wchar_t *message,
+	float progress,
+	bool *aborted,
+	const ucstringVector &extraInfo,
+	TCObject *sender)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
 		extraInfo);
 
-	TCAlertManager::sendAlert(alert);
+	TCAlertManager::sendAlert(alert, sender);
 	if (aborted)
 	{
 		*aborted = alert->getAborted();

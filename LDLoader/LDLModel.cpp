@@ -228,7 +228,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	{
 		LDLFindFileAlert *alert = new LDLFindFileAlert(subModelName);
 
-		TCAlertManager::sendAlert(alert);
+		TCAlertManager::sendAlert(alert, this);
 		if (alert->getFileFound())
 		{
 			subModel = subModelNamed(alert->getFilename(), lowRes, true,
@@ -808,7 +808,8 @@ void LDLModel::reportProgress(const char *message, float progress,
 	{
 		bool loadCanceled;
 
-		TCProgressAlert::send("LDLModel", message, progress, &loadCanceled);
+		TCProgressAlert::send("LDLModel", message, progress, &loadCanceled,
+			this);
 		if (loadCanceled)
 		{
 			cancelLoad();
@@ -823,7 +824,8 @@ void LDLModel::reportProgress(const wchar_t *message, float progress,
 	{
 		bool loadCanceled;
 
-		TCProgressAlert::send("LDLModel", message, progress, &loadCanceled);
+		TCProgressAlert::send("LDLModel", message, progress, &loadCanceled,
+			this);
 		if (loadCanceled)
 		{
 			cancelLoad();
@@ -1218,7 +1220,7 @@ void LDLModel::sendAlert(LDLError *alert)
 {
 	if (alert)
 	{
-		TCAlertManager::sendAlert(alert);
+		TCAlertManager::sendAlert(alert, this);
 		if (alert->getLoadCanceled())
 		{
 			cancelLoad();

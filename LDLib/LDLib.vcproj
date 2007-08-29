@@ -392,6 +392,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LDInputHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath="LDLibraryUpdateInfo.cpp"
 				>
 				<FileConfiguration
@@ -610,6 +614,10 @@
 			>
 			<File
 				RelativePath=".\LDHtmlInventory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDInputHandler.h"
 				>
 			</File>
 			<File
