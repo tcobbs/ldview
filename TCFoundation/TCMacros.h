@@ -1,6 +1,9 @@
 #ifndef __TCMACROS_H__
 #define __TCMACROS_H__
 
+#ifdef WIN32
+#define _USE_MATH_DEFINES
+#endif // WIN32
 #include <math.h>
 
 #ifndef M_PI

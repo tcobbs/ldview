@@ -55,11 +55,13 @@ class TCWebClient;
 class LDPreferences;
 class LDPartsList;
 class LDViewPoint;
+class LDInputHandler;
 
 class LDrawModelViewer: public TCObject
 {
 	public:
 		LDrawModelViewer(int, int);
+		LDInputHandler *getInputHandler(void);
 		virtual void update(void);
 		virtual void perspectiveView(void);
 		virtual void perspectiveView(bool resetViewport);
@@ -332,10 +334,14 @@ class LDrawModelViewer: public TCObject
 		virtual void showLight(void);
 		virtual void orthoView(void);
 
+		virtual void requestRedraw(void);
+
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
 		static bool fileExists(char *filename);
 		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }
+		static const char *redrawAlertClass(void) { return "LDRedrawNeeded"; }
+		static const char *frameDoneAlertClass(void) { return "LDFrameDone"; }
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
@@ -478,6 +484,7 @@ class LDrawModelViewer: public TCObject
 		LDVMouseMode mouseMode;
 		int lastMouseX;
 		int lastMouseY;
+		LDInputHandler *inputHandler;
 		struct
 		{
 			bool qualityLighting:1;

@@ -160,7 +160,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 		}
 		m_mainTREModel->finish();
 		TCProgressAlert::send("LDModelParser",
-			TCLocalStrings::get(_UC("ParsingStatus")), 1.0f, &m_abort);
+			TCLocalStrings::get(_UC("ParsingStatus")), 1.0f, &m_abort, this);
 		if (m_abort)
 		{
 			return false;
@@ -1110,7 +1110,7 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 				{
 					TCProgressAlert::send("LDLModelParser",
 						TCLocalStrings::get(_UC("ParsingStatus")),
-						(float)(i + 1) / (float)(count + 1), &m_abort);
+						(float)(i + 1) / (float)(count + 1), &m_abort, this);
 				}
 			}
 		}

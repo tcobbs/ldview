@@ -17,14 +17,24 @@ public:
 
 	static const char *alertClass(void) { return "TCProgressAlert"; }
 	static void send(const char *source, const char *message, float progress,
-		bool *aborted = NULL, TCStringArray *extraInfo = NULL);
+		bool *aborted = NULL, TCStringArray *extraInfo = NULL,
+		TCObject *sender = NULL);
 	static void send(const char *source, const char *message, float progress,
-		TCStringArray *extraInfo);
+		TCObject *sender);
+	static void send(const char *source, const char *message, float progress,
+		bool *aborted, TCObject *sender);
+	static void send(const char *source, const char *message, float progress,
+		TCStringArray *extraInfo, TCObject *sender = NULL);
 	static void send(const char *source, const wchar_t *message, float progress,
 		bool *aborted = NULL,
-		const ucstringVector &extraInfo = ucstringVector());
+		const ucstringVector &extraInfo = ucstringVector(),
+		TCObject *sender = NULL);
 	static void send(const char *source, const wchar_t *message, float progress,
-		const ucstringVector &extraInfo);
+		TCObject *sender);
+	static void send(const char *source, const wchar_t *message, float progress,
+		bool *aborted, TCObject *sender);
+	static void send(const char *source, const wchar_t *message, float progress,
+		const ucstringVector &extraInfo, TCObject *sender = NULL);
 protected:
 	virtual ~TCProgressAlert(void);
 	virtual void dealloc(void);

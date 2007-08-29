@@ -1,5 +1,6 @@
 #include "ModelWindow.h"
 #include <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDInputHandler.h>
 #include <TCFoundation/TCMacros.h>
 #include "LDVExtensionsSetup.h"
 #include "LDViewWindow.h"
@@ -159,12 +160,19 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		}
 	}
 	windowStyle = windowStyle & ~WS_VISIBLE;
+	inputHandler = modelViewer->getInputHandler();
 	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 		(TCAlertCallback)&ModelWindow::ldlErrorCallback);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&ModelWindow::progressAlertCallback);
 	TCAlertManager::registerHandler(LDrawModelViewer::alertClass(), this,
 		(TCAlertCallback)&ModelWindow::modelViewerAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::redrawAlertClass(), this,
+		(TCAlertCallback)&ModelWindow::redrawAlertCallback);
+	TCAlertManager::registerHandler(LDInputHandler::captureAlertClass(), this,
+		(TCAlertCallback)&ModelWindow::captureAlertCallback);
+	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this,
+		(TCAlertCallback)&ModelWindow::releaseAlertCallback);
 /*
 	modelViewer->setProgressCallback(staticProgressCallback, this);
 	modelViewer->setErrorCallback(staticErrorCallback, this);
@@ -183,9 +191,7 @@ ModelWindow::~ModelWindow(void)
 
 void ModelWindow::dealloc(void)
 {
-	TCAlertManager::unregisterHandler(LDLError::alertClass(), this);
-	TCAlertManager::unregisterHandler(TCProgressAlert::alertClass(), this);
-	TCAlertManager::unregisterHandler(LDrawModelViewer::alertClass(), this);
+	TCAlertManager::unregisterHandler(this);
 	TCObject::release(errorInfos);
 	errorInfos = NULL;
 	if (prefs)
@@ -221,6 +227,31 @@ void ModelWindow::ldlErrorCallback(LDLError *error)
 		{
 			error->cancelLoad();
 		}
+	}
+}
+
+void ModelWindow::redrawAlertCallback(TCAlert *alert)
+{
+	if (alert->getSender() == modelViewer)
+	{
+		redrawRequested = true;
+		forceRedraw();
+	}
+}
+
+void ModelWindow::captureAlertCallback(TCAlert *alert)
+{
+	if (alert->getSender() == inputHandler)
+	{
+		captureMouse();
+	}
+}
+
+void ModelWindow::releaseAlertCallback(TCAlert *alert)
+{
+	if (alert->getSender() == inputHandler)
+	{
+		releaseMouse();
 	}
 }
 
@@ -565,6 +596,10 @@ bool ModelWindow::altPressed(void)
 
 LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
+	inputHandler->mouseDown(inputHandler->convertModifiers(keyFlags),
+		LDInputHandler::MBLeft, xPos, yPos);
+	return 0;
+/*
 	if (keyFlags & MK_SHIFT)
 	{
 		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
@@ -598,10 +633,14 @@ LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 		captureMouse();
 		return 0;
 	}
+*/
 }
 
 LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
+	inputHandler->mouseUp(LDInputHandler::MBLeft, xPos, yPos);
+	return 0;
+/*
 	if (modelViewer && modelViewer->mouseUp(xPos, yPos))
 	{
 		forceRedraw();
@@ -622,10 +661,15 @@ LRESULT ModelWindow::doLButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 	{
 		return 1;
 	}
+*/
 }
 
-LRESULT ModelWindow::doRButtonDown(WPARAM /*keyFlags*/, int /*xPos*/, int yPos)
+LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
+	inputHandler->mouseDown(inputHandler->convertModifiers(keyFlags),
+		LDInputHandler::MBRight, xPos, yPos);
+	return 0;
+/*
 	forceRedraw();
 	if (lButtonDown || mButtonDown)
 	{
@@ -641,10 +685,14 @@ LRESULT ModelWindow::doRButtonDown(WPARAM /*keyFlags*/, int /*xPos*/, int yPos)
 		}
 		return 0;
 	}
+*/
 }
 
-LRESULT ModelWindow::doRButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/)
+LRESULT ModelWindow::doRButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
+	inputHandler->mouseUp(LDInputHandler::MBRight, xPos, yPos);
+	return 0;
+/*
 	forceRedraw();
 	if (rButtonDown)
 	{
@@ -657,10 +705,15 @@ LRESULT ModelWindow::doRButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 	{
 		return 1;
 	}
+*/
 }
 
-LRESULT ModelWindow::doMButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
+LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
+	inputHandler->mouseDown(inputHandler->convertModifiers(keyFlags),
+		LDInputHandler::MBMiddle, xPos, yPos);
+	return 0;
+/*
 	forceRedraw();
 	if (lButtonDown || rButtonDown)
 	{
@@ -674,10 +727,14 @@ LRESULT ModelWindow::doMButtonDown(WPARAM /*keyFlags*/, int xPos, int yPos)
 		captureMouse();
 		return 0;
 	}
+*/
 }
 
-LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/)
+LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
+	inputHandler->mouseUp(LDInputHandler::MBMiddle, xPos, yPos);
+	return 0;
+/*
 	forceRedraw();
 	if (mButtonDown)
 	{
@@ -689,10 +746,14 @@ LRESULT ModelWindow::doMButtonUp(WPARAM /*keyFlags*/, int /*xPos*/, int /*yPos*/
 	{
 		return 1;
 	}
+*/
 }
 
-LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
+LRESULT ModelWindow::doMouseMove(WPARAM /*keyFlags*/, int xPos, int yPos)
 {
+	inputHandler->mouseMove(xPos, yPos);
+	return 0;
+/*
 	if (modelViewer && modelViewer->mouseMove(xPos, yPos))
 	{
 		forceRedraw();
@@ -743,6 +804,13 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 		}
 	}
 	return 1;
+*/
+}
+
+void ModelWindow::mouseWheel(short keyFlags, short zDelta)
+{
+	inputHandler->mouseWheel(inputHandler->convertModifiers(keyFlags),
+		(TCFloat)zDelta);
 }
 
 LRESULT ModelWindow::doEraseBackground(RECT* /*updateRect*/)
@@ -1342,6 +1410,7 @@ void ModelWindow::hideProgress(void)
 	{
 		SendMessage(hProgressBar, PBM_SETPOS, 0, 0);
 		SendMessage(hStatusBar, SB_SETTEXT, 1, (LPARAM)"");
+		((LDViewWindow *)parentWindow)->redrawStatusBar();
 		EnumThreadWindows(GetWindowThreadProcessId(hParentWindow, NULL),
 			enableNonModalWindow, (LPARAM)hParentWindow);
 		((LDViewWindow*)parentWindow)->setLoading(false);
@@ -2083,15 +2152,16 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 //	debugPrintf("%s: %f\n", message, progress);
 	if (message)
 	{
-		UCCHAR oldMessage[1024];
+		setStatusText(hStatusBar, 1, message);
+		//UCCHAR oldMessage[1024];
 
-		sendMessageUC(hStatusBar, SB_GETTEXT, 1, (LPARAM)oldMessage);
-		if (ucstrcmp(message, oldMessage) != 0)
-		{
-			sendMessageUC(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
-		}
-//		SendDlgItemMessage(hProgressWindow, IDC_LOAD_PROGRESS_MSG, WM_SETTEXT,
-//			0, (LPARAM)message);
+		//sendMessageUC(hStatusBar, SB_GETTEXT, 1, (LPARAM)oldMessage);
+		//if (ucstrcmp(message, oldMessage) != 0)
+		//{
+		//	sendMessageUC(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
+		//}
+		//RedrawWindow(parentWindow->getHWindow(), NULL, NULL,
+		//	RDW_INVALIDATE | RDW_UPDATENOW);
 	}
 	if (progress >= 0.0f)
 	{
@@ -2295,6 +2365,7 @@ void ModelWindow::setStatusText(HWND hStatus, int part, CUCSTR text)
 	if (ucstrcmp(text, oldText) != 0)
 	{
 		sendMessageUC(hStatus, SB_SETTEXT, part, (LPARAM)text);
+		((LDViewWindow*)parentWindow)->redrawStatusBar();
 		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
 	}
 }
@@ -2507,16 +2578,18 @@ void ModelWindow::doPaint(void)
 		return;
 	}
 	forceRedraw();
+	redrawRequested = false;
 	modelViewer->update();
 
 	updateSpinRate();
 	updateFPS();
-	if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
-		&& fEq(modelViewer->getCameraXRotate(), 0.0f) &&
-		fEq(modelViewer->getCameraYRotate(), 0.0f) &&
-		fEq(modelViewer->getCameraZRotate(), 0.0f) &&
-		fEq(modelViewer->getCameraMotion().length(), 0.0f))
-		|| modelViewer->getPaused())
+	//if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
+	//	&& fEq(modelViewer->getCameraXRotate(), 0.0f) &&
+	//	fEq(modelViewer->getCameraYRotate(), 0.0f) &&
+	//	fEq(modelViewer->getCameraZRotate(), 0.0f) &&
+	//	fEq(modelViewer->getCameraMotion().length(), 0.0f))
+	//	|| modelViewer->getPaused())
+	if (!redrawRequested)
 	{
 		if (redrawCount == 0)
 		{
@@ -4403,6 +4476,14 @@ BOOL ModelWindow::setupPFD(void)
 
 void ModelWindow::setViewMode(LDVViewMode mode, bool saveSetting)
 {
+	if (mode == LDVViewExamine)
+	{
+		inputHandler->setViewMode(LDInputHandler::VMExamine);
+	}
+	else
+	{
+		inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
+	}
 	viewMode = mode;
 	if (saveSetting)
 	{

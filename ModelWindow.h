@@ -11,6 +11,7 @@
 #include <GL/wglext.h>
 
 class LDrawModelViewer;
+class LDInputHandler;
 class TCStringArray;
 class CUIWindowResizer;
 
@@ -66,6 +67,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual void setFilename(const char*);
 		virtual char* getFilename(void);
 		virtual int loadModel(void);
+		virtual void mouseWheel(short keyFlags, short zDelta);
 		virtual void setZoomSpeed(TCFloat);
 		virtual TCFloat getZoomSpeed(void);
 //		void setRotationSpeed(TCFloat value) { rotationSpeed = value; }
@@ -295,6 +297,9 @@ class ModelWindow: public CUIOGLWindow
 		void ldlErrorCallback(LDLError *error);
 		void progressAlertCallback(TCProgressAlert *alert);
 		void modelViewerAlertCallback(TCAlert *alert);
+		void redrawAlertCallback(TCAlert *alert);
+		void captureAlertCallback(TCAlert *alert);
+		void releaseAlertCallback(TCAlert *alert);
 		void populateErrorInfos(void);
 		BOOL setAllErrorsSelected(bool selected);
 		void setupMultisample(void);
@@ -315,6 +320,7 @@ class ModelWindow: public CUIOGLWindow
 		static bool altPressed(void);
 
 		LDrawModelViewer* modelViewer;
+		LDInputHandler *inputHandler;
 		DWORD referenceFrameTime;
 		int numFramesSinceReference;
 		TCFloat fps;
@@ -412,6 +418,7 @@ class ModelWindow: public CUIOGLWindow
 		CUIWindowResizer *errorWindowResizer;
 		bool savingFromCommandLine;
 		bool skipErrorUpdates;
+		bool redrawRequested;
 };
 
 #endif

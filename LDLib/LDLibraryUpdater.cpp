@@ -557,7 +557,7 @@ void LDLibraryUpdater::threadStart(void)
 				// Note that the corresponding release() is in the threadFinish
 				// function.
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted);
+		TCLocalStrings::get(_UC("LDLUpdateDlList")), 0.01f, &aborted, this);
 	if (!aborted)
 	{
 		const char *url = "http://www.ldraw.org/cgi-bin/ptreleases.cgi?"
@@ -567,7 +567,8 @@ void LDLibraryUpdater::threadStart(void)
 		webClient->setOwner(this);
 		webClient->fetchURL();
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get(_UC("LDLUpdateParseList")), 0.09f, &aborted);
+			TCLocalStrings::get(_UC("LDLUpdateParseList")), 0.09f, &aborted,
+			this);
 	}
 	if (!aborted)
 	{
@@ -603,7 +604,8 @@ void LDLibraryUpdater::threadStart(void)
 		if (m_updateQueue && m_updateQueue->getCount())
 		{
 			TCProgressAlert::send(LD_LIBRARY_UPDATER,
-				TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), 0.1f, &aborted);
+				TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), 0.1f, &aborted,
+				this);
 			downloadUpdates(&aborted);
 			if (!aborted)
 			{
@@ -629,17 +631,17 @@ void LDLibraryUpdater::threadStart(void)
 	}
 	if (ucstrlen(m_error))
 	{
-		TCProgressAlert::send(LD_LIBRARY_UPDATER, m_error, 2.0f);
+		TCProgressAlert::send(LD_LIBRARY_UPDATER, m_error, 2.0f, this);
 	}
 	else if (aborted)
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get(_UC("LibraryUpdateCanceled")), 1.0f);
+			TCLocalStrings::get(_UC("LibraryUpdateCanceled")), 1.0f, this);
 	}
 	else
 	{
 		TCProgressAlert::send(LD_LIBRARY_UPDATER,
-			TCLocalStrings::get(L"LDLUpdateDone"), 1.0f, extraInfo);
+			TCLocalStrings::get(L"LDLUpdateDone"), 1.0f, extraInfo, this);
 	}
 }
 
@@ -726,7 +728,7 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 	int count = m_updateUrlList->getCount();
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get(_UC("LDLUpdateExtracting")), 0.9f, aborted);
+		TCLocalStrings::get(_UC("LDLUpdateExtracting")), 0.9f, aborted, this);
 	for (i = 0; i < count && !*aborted; i++)
 	{
 		const char *url = (*m_updateUrlList)[i];
@@ -865,7 +867,8 @@ void LDLibraryUpdater::sendDlProgress(bool *aborted)
 		}
 	}
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), progress, aborted);
+		TCLocalStrings::get(_UC("LDLUpdateDlUpdates")), progress, aborted,
+		this);
 }
 
 void LDLibraryUpdater::sendExtractProgress(bool *aborted)
@@ -876,7 +879,8 @@ void LDLibraryUpdater::sendExtractProgress(bool *aborted)
 	float progress = 0.9f + (float)finished * fileFraction;
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
-		TCLocalStrings::get(_UC("LDLUpdateExtracting")), progress, aborted);
+		TCLocalStrings::get(_UC("LDLUpdateExtracting")), progress, aborted,
+		this);
 }
 
 void LDLibraryUpdater::downloadUpdates(bool *aborted)

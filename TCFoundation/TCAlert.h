@@ -20,8 +20,10 @@ public:
 		TCStringArray *extraInfo = NULL);
 	TCAlert(const char *alertClass, const wchar_t *message,
 		const ucstringVector &extraInfo = ucstringVector());
+	void setSender(TCObject *value) { m_sender = value; }
+	TCObject *getSender(void) { return m_sender; }
 	//TCULong getAlertClass(void) { return m_alertClass; }
-	const char *getAlertClass(void) { return m_alertClass; }
+	const char *getAlertClass(void) const { return m_alertClass; }
 	const char *getMessage(void);
 	const wchar_t *getWMessage(void);
 	CUCSTR getMessageUC(void);
@@ -38,6 +40,7 @@ protected:
 	std::wstring m_wMessage;
 	TCStringArray *m_extraInfo;
 	ucstringVector m_ucExtraInfo;
+	TCObject *m_sender;
 };
 
 #endif // __TCALERT_H__

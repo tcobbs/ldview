@@ -85,6 +85,7 @@ class LDViewWindow: public CUIWindow
 		virtual const char *getLegalCopyright(void);
 		virtual void setHParentWindow(HWND hWnd);
 		ModelWindow *getModelWindow(void) { return modelWindow; }
+		void redrawStatusBar(void);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
