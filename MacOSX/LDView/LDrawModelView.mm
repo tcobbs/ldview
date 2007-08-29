@@ -15,7 +15,7 @@ static TCImage *resizeCornerImage = NULL;
 - (void)dealloc
 {
 	TCObject::release(modelViewer);
-	[lastMoveTime release];
+	//[lastMoveTime release];
 	[super dealloc];
 }
 
@@ -404,25 +404,20 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)updateSpinRate
 {
-	//NSLog(@"Waiting for mouse up...\n");
 	NSEvent *mouseUpEvent = [[self window] nextEventMatchingMask:NSLeftMouseUpMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO];
-	if (mouseUpEvent)
-	{
-		//[self mouseUp:mouseUpEvent];
-	}
-	//NSLog(@"Found? %@\n", mouseUpEvent);
 	
-	// if mouseUpEvent has a value, then there's a mouse up in the queue, and we don't want
-	// to stop our spinning.
+	// if mouseUpEvent has a value, then there's a mouse up in the queue, and we
+	// don't want to stop our spinning.
 	if (lButtonDown && !mouseUpEvent)
 	{
-		if ([[NSDate date] timeIntervalSinceReferenceDate] -
-			[lastMoveTime timeIntervalSinceReferenceDate] > 0.1 ||
-			(lastFrameMouseLocation.x == lastMouseLocation.x &&
-			 lastFrameMouseLocation.y == lastMouseLocation.y))
-		{
-			[self updateSpinRateXY:lastMouseLocation];
-		}
+		[self updateSpinRateXY:lastMouseLocation];
+//		if ([[NSDate date] timeIntervalSinceReferenceDate] -
+//			[lastMoveTime timeIntervalSinceReferenceDate] > -0.1 ||
+//			(lastFrameMouseLocation.x == lastMouseLocation.x &&
+//			 lastFrameMouseLocation.y == lastMouseLocation.y))
+//		{
+//			[self updateSpinRateXY:lastMouseLocation];
+//		}
 	}
 }
 
@@ -435,8 +430,8 @@ static TCImage *resizeCornerImage = NULL;
 	else
 	{
 		[self rotationUpdate];
-		[lastMoveTime release];
-		lastMoveTime = [[NSDate alloc] init];
+		//[lastMoveTime release];
+		//lastMoveTime = [[NSDate alloc] init];
 		NSPoint mouseLocation = [event locationInWindow];
 		if (viewMode == LDVViewExamine)
 		{

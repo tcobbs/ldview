@@ -31,8 +31,8 @@ public:
 
 	void setViewMode(ViewMode value) { m_viewMode = value; }
 	bool mouseDown(TCULong modifierKeys, MouseButton button, int x, int y);
-	bool mouseUp(MouseButton button, int x, int y);
-	bool mouseMove(int x, int y);
+	bool mouseUp(TCULong modifierKeys, MouseButton button, int x, int y);
+	bool mouseMove(TCULong modifierKeys, int x, int y);
 	bool mouseWheel(TCULong modifierKeys, TCFloat amount);
 	void setMouseUpPending(bool value);
 
@@ -54,7 +54,7 @@ protected:
 	void dealloc(void);
 	bool lightMouseDown(int x, int y);
 	bool updateSpinRateXY(int xPos, int yPos);
-	bool updateHeadXY(int xPos, int yPos);
+	bool updateHeadXY(TCULong modifierKeys, int xPos, int yPos);
 	bool updatePanXY(int xPos, int yPos);
 	bool updateZoom(int yPos);
 	void frameDone(TCAlert *alert);

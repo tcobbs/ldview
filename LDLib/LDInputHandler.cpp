@@ -3,6 +3,21 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCMacros.h>
+#ifdef __APPLE__
+enum {
+	NSAlphaShiftKeyMask =		1 << 16,
+	NSShiftKeyMask =		1 << 17,
+	NSControlKeyMask =		1 << 18,
+	NSAlternateKeyMask =		1 << 19,
+	NSCommandKeyMask =		1 << 20,
+	NSNumericPadKeyMask =		1 << 21,
+	NSHelpKeyMask =			1 << 22,
+	NSFunctionKeyMask =		1 << 23,
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
+	NSDeviceIndependentModifierFlagsMask = 0xffff0000U
+#endif
+};
+#endif // __APPLE__
 
 LDInputHandler::LDInputHandler(LDrawModelViewer *modelViewer):
 	m_modelViewer(modelViewer),
@@ -98,14 +113,15 @@ bool LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 	return true;
 }
 
-bool LDInputHandler::updateHeadXY(int xPos, int yPos)
+bool LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 {
 	TCFloat magnitude = (TCFloat)(xPos - m_lastX);
 	TCFloat denom = 5000.0f;
 	TCFloat fov = m_modelViewer->getFov();
 
 	denom /= (TCFloat)tan(deg2rad(fov));
-	if (GetKeyState(VK_SHIFT) & 0x8000)
+	//if (GetKeyState(VK_SHIFT) & 0x8000)
+	if (modifierKeys & MKShift)
 	{
 		denom /= 2.0f;
 	}
@@ -193,7 +209,11 @@ bool LDInputHandler::mouseDown(
 	return true;
 }
 
-bool LDInputHandler::mouseUp(MouseButton button, int x, int y)
+bool LDInputHandler::mouseUp(
+	TCULong modifierKeys,
+	MouseButton button,
+	int x,
+	int y)
 {
 	if (button < MBFirst || button > MBLast)
 	{
@@ -210,7 +230,7 @@ bool LDInputHandler::mouseUp(MouseButton button, int x, int y)
 	}
 	if (x != m_lastX || y != m_lastY)
 	{
-		mouseMove(x, y);
+		mouseMove(modifierKeys, x, y);
 	}
 	switch (button)
 	{
@@ -256,7 +276,7 @@ bool LDInputHandler::mouseUp(MouseButton button, int x, int y)
 //#endif // WIN32
 //}
 
-bool LDInputHandler::mouseMove(int x, int y)
+bool LDInputHandler::mouseMove(TCULong modifierKeys, int x, int y)
 {
 	switch (m_mouseMode)
 	{
@@ -270,7 +290,7 @@ bool LDInputHandler::mouseMove(int x, int y)
 		}
 		else
 		{
-			return updateHeadXY(x, y);
+			return updateHeadXY(modifierKeys, x, y);
 		}
 	case MMZoom:
 		return updateZoom(y);
