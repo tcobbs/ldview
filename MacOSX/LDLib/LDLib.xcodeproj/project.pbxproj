@@ -26,6 +26,8 @@
 		1FD4D7BE0BA4C44C00419677 /* LDPartsList.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD4D7B60BA4C44C00419677 /* LDPartsList.h */; };
 		1FD4D7BF0BA4C44C00419677 /* LDViewPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4D7B70BA4C44C00419677 /* LDViewPoint.cpp */; };
 		1FD4D7C00BA4C44C00419677 /* LDViewPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD4D7B80BA4C44C00419677 /* LDViewPoint.h */; };
+		1FEC065B0C854A8400FB0A2A /* LDInputHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FEC06590C854A8400FB0A2A /* LDInputHandler.cpp */; };
+		1FEC065C0C854A8500FB0A2A /* LDInputHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FEC065A0C854A8400FB0A2A /* LDInputHandler.h */; };
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -100,6 +102,8 @@
 		1FD4D7B60BA4C44C00419677 /* LDPartsList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDPartsList.h; path = ../../LDLib/LDPartsList.h; sourceTree = SOURCE_ROOT; };
 		1FD4D7B70BA4C44C00419677 /* LDViewPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDViewPoint.cpp; path = ../../LDLib/LDViewPoint.cpp; sourceTree = SOURCE_ROOT; };
 		1FD4D7B80BA4C44C00419677 /* LDViewPoint.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDViewPoint.h; path = ../../LDLib/LDViewPoint.h; sourceTree = SOURCE_ROOT; };
+		1FEC06590C854A8400FB0A2A /* LDInputHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDInputHandler.cpp; path = ../../LDLib/LDInputHandler.cpp; sourceTree = SOURCE_ROOT; };
+		1FEC065A0C854A8400FB0A2A /* LDInputHandler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDInputHandler.h; path = ../../LDLib/LDInputHandler.h; sourceTree = SOURCE_ROOT; };
 		32DBCF5E0370ADEE00C91783 /* LDLib_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDLib_Prefix.pch; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libLDLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLDLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -149,6 +153,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1FEC06590C854A8400FB0A2A /* LDInputHandler.cpp */,
+				1FEC065A0C854A8400FB0A2A /* LDInputHandler.h */,
 				1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */,
 				1FD4D7B20BA4C44C00419677 /* LDHtmlInventory.h */,
 				1FD4D7B30BA4C44C00419677 /* LDPartCount.cpp */,
@@ -249,6 +255,7 @@
 				1FD4D7BC0BA4C44C00419677 /* LDPartCount.h in Headers */,
 				1FD4D7BE0BA4C44C00419677 /* LDPartsList.h in Headers */,
 				1FD4D7C00BA4C44C00419677 /* LDViewPoint.h in Headers */,
+				1FEC065C0C854A8500FB0A2A /* LDInputHandler.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,6 +350,7 @@
 				1FD4D7BB0BA4C44C00419677 /* LDPartCount.cpp in Sources */,
 				1FD4D7BD0BA4C44C00419677 /* LDPartsList.cpp in Sources */,
 				1FD4D7BF0BA4C44C00419677 /* LDViewPoint.cpp in Sources */,
+				1FEC065B0C854A8400FB0A2A /* LDInputHandler.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

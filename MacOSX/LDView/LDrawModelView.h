@@ -23,7 +23,7 @@ typedef enum
 	BOOL rButtonDown;
 	unsigned int mouseDownModifierFlags;
 	unsigned int rightMouseDownModifierFlags;
-	NSDate *lastMoveTime;
+	//NSDate *lastMoveTime;
 	LDVViewMode viewMode;
 	BOOL loading;
 	BOOL redisplayRequested;
