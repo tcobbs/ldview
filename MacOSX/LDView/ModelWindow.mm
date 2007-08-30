@@ -464,10 +464,10 @@
 	[modelView releaseAlertCallback:alert];
 }
 
-- (void)peekMouseUpAlertCallback:(TCAlert *)alert
-{
-	[modelView peekMouseUpAlertCallback:alert];
-}
+//- (void)peekMouseUpAlertCallback:(TCAlert *)alert
+//{
+//	[modelView peekMouseUpAlertCallback:alert];
+//}
 
 - (void)reloadNeeded
 {
@@ -685,7 +685,7 @@
 
 - (IBAction)viewMode:(id)sender
 {
-	NSLog(@"viewMode.\n");
+	[modelView viewMode:sender];
 }
 
 - (IBAction)zoomToFit:(id)sender
