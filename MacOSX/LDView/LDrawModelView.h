@@ -4,6 +4,8 @@
 
 class LDrawModelViewer;
 class TCImage;
+class LDInputHandler;
+class TCAlert;
 
 typedef enum
 {
@@ -29,6 +31,8 @@ typedef enum
 	BOOL redisplayRequested;
 	float fps;
 	int resizeCornerTextureId;
+	LDInputHandler *inputHandler;
+	bool redrawRequested;
 }
 
 - (BOOL)openModel:(NSString *)filename;
@@ -39,5 +43,10 @@ typedef enum
 - (void)setFps:(float)value;
 - (void)setViewingAngle:(int)value;
 - (IBAction)zoomToFit:(id)sender;
+
+- (void)redrawAlertCallback:(TCAlert *)alert;
+- (void)captureAlertCallback:(TCAlert *)alert;
+- (void)releaseAlertCallback:(TCAlert *)alert;
+- (void)modelViewerAlertCallback:(TCAlert *)alert;
 
 @end

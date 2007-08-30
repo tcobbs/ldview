@@ -2,11 +2,12 @@
 #import "ModelWindow.h"
 #import "OCLocalStrings.h"
 #import <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDInputHandler.h>
 #include <TCFoundation/TCMacros.h>
 #include <TRE/TREGLExtensions.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCDefines.h>
-#include <LDLib/LDInputHandler.h>
+#include <TCFoundation/TCAlert.h>
 
 @implementation LDrawModelView
 
@@ -202,6 +203,7 @@ static TCImage *resizeCornerImage = NULL;
 	modelViewer = new LDrawModelViewer((int)frame.size.width,
 		(int)frame.size.height);
 	modelViewer->setFontData((TCByte *)[fontData bytes], [fontData length]);
+	inputHandler = modelViewer->getInputHandler();
 }
 
 - (NSOpenGLPixelFormat *)customPixelFormat
@@ -637,6 +639,41 @@ static TCImage *resizeCornerImage = NULL;
 {
 	modelViewer->zoomToFit();
 	[self rotationUpdate];
+}
+
+- (void)redrawAlertCallback:(TCAlert *)alert
+{
+	if (alert->getSender() == modelViewer)
+	{
+		redrawRequested = true;
+		[self rotationUpdate];
+	}
+}
+
+- (void)captureAlertCallback:(TCAlert *)alert
+{
+	if (alert->getSender() == inputHandler)
+	{
+		// Unnecessary?
+		//captureMouse();
+	}
+}
+
+- (void)releaseAlertCallback:(TCAlert *)alert
+{
+	if (alert->getSender() == inputHandler)
+	{
+		// Unnecessary?
+		//releaseMouse();
+	}
+}
+
+- (void)modelViewerAlertCallback:(TCAlert *)alert
+{
+	if (alert)
+	{
+		//MessageBox(hWindow, alert->getMessage(), "LDView", MB_OK | MB_ICONWARNING);
+	}
 }
 
 @end
