@@ -444,6 +444,26 @@
 	}
 }
 
+- (void)redrawAlertCallback:(TCAlert *)alert
+{
+	[modelView redrawAlertCallback:alert];
+}
+
+- (void)captureAlertCallback:(TCAlert *)alert
+{
+	[modelView captureAlertCallback:alert];
+}
+
+- (void)releaseAlertCallback:(TCAlert *)alert
+{
+	[modelView releaseAlertCallback:alert];
+}
+
+- (void)modelViewerAlertCallback:(TCAlert *)alert
+{
+	[modelView modelViewerAlertCallback:alert];
+}
+
 - (void)reloadNeeded
 {
 	[window makeKeyWindow];

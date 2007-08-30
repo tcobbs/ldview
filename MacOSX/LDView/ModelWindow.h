@@ -9,6 +9,7 @@
 
 class LDLError;
 class TCProgressAlert;
+class TCAlert;
 class AlertHandler;
 
 @interface ModelWindow : NSObject
@@ -50,6 +51,10 @@ class AlertHandler;
 
 - (void)ldlErrorCallback:(LDLError *)error;
 - (void)progressAlertCallback:(TCProgressAlert *)alert;
+- (void)redrawAlertCallback:(TCAlert *)alert;
+- (void)captureAlertCallback:(TCAlert *)alert;
+- (void)releaseAlertCallback:(TCAlert *)alert;
+- (void)modelViewerAlertCallback:(TCAlert *)alert;
 - (void)modelWillReload;
 - (void)updateFps;
 - (void)clearFps;
