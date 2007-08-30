@@ -5,6 +5,8 @@
 #include <TCFoundation/TCMacros.h>
 #include <TRE/TREGLExtensions.h>
 #include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCDefines.h>
+#include <LDLib/LDInputHandler.h>
 
 @implementation LDrawModelView
 
@@ -19,6 +21,25 @@ static TCImage *resizeCornerImage = NULL;
 	[super dealloc];
 }
 
+- (TCULong)convertKeyModifiers:(TCULong)osModifiers
+{
+	TCULong retValue = 0;
+
+	if (osModifiers & NSShiftKeyMask)
+	{
+		retValue |= LDInputHandler::MKShift;
+	}
+	if (osModifiers & NSCommandKeyMask)
+	{
+		retValue |= LDInputHandler::MKControl;
+	}
+	if (osModifiers & NSControlKeyMask)
+	{
+		retValue |= LDInputHandler::MKAppleControl;
+	}
+	return retValue;
+}
+	
 - (void)rotationUpdate
 {
 	if (!redisplayRequested)
