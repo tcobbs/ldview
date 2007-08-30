@@ -55,6 +55,7 @@
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLModel.h>
 #include <LDLib/LDrawModelViewer.h>
+#include <LDLib/LDInputHandler.h>
 //#include <LDLib/ModelMacros.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGLExtensions.h>
@@ -3777,3 +3778,17 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 	return retValue;
 }
 
+// Note: static method.
+TCULong ModelViewerWidget::convertKeyModifiers(TCULong osModifiers)
+{
+	TCULong retValue = 0;
+	if (osModifiers & Qt::ShiftButton)
+	{
+		retValue |= LDInputHandler::MKShift;
+	}
+	if (osModifiers & Qt::ControlButton)
+	{
+		retValue |= LDInputHandler::MKControl;
+	}
+	return retValue;
+}

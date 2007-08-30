@@ -228,6 +228,7 @@ protected:
 //	static int staticErrorCallback(LDLError *error, void *userData);
 	static bool staticFileCaseCallback(char *filename);
 	static bool staticFileCaseLevel(QDir &dir, char *filename);
+	static TCULong convertKeyModifiers(TCULong osModifiers);
 
 	LDrawModelViewer *modelViewer;
 	bool mouseButtonsDown[MAX_MOUSE_BUTTONS];
