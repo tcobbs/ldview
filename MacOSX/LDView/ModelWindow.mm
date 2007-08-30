@@ -444,6 +444,11 @@
 	}
 }
 
+- (void)modelViewerAlertCallback:(TCAlert *)alert
+{
+	[modelView modelViewerAlertCallback:alert];
+}
+
 - (void)redrawAlertCallback:(TCAlert *)alert
 {
 	[modelView redrawAlertCallback:alert];
@@ -459,9 +464,9 @@
 	[modelView releaseAlertCallback:alert];
 }
 
-- (void)modelViewerAlertCallback:(TCAlert *)alert
+- (void)peekMouseUpAlertCallback:(TCAlert *)alert
 {
-	[modelView modelViewerAlertCallback:alert];
+	[modelView peekMouseUpAlertCallback:alert];
 }
 
 - (void)reloadNeeded

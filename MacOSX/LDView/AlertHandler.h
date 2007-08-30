@@ -20,10 +20,11 @@ protected:
 	void dealloc(void);
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);
+	void modelViewerAlertCallback(TCAlert *alert);
 	void redrawAlertCallback(TCAlert *alert);
 	void captureAlertCallback(TCAlert *alert);
 	void releaseAlertCallback(TCAlert *alert);
-	void modelViewerAlertCallback(TCAlert *alert);
+	void peekMouseUpAlertCallback(TCAlert *alert);
 
 	ModelWindow *modelWindow;
 };
