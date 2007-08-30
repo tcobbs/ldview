@@ -641,6 +641,14 @@ static TCImage *resizeCornerImage = NULL;
 	[self rotationUpdate];
 }
 
+- (void)modelViewerAlertCallback:(TCAlert *)alert
+{
+	if (alert)
+	{
+		//MessageBox(hWindow, alert->getMessage(), "LDView", MB_OK | MB_ICONWARNING);
+	}
+}
+
 - (void)redrawAlertCallback:(TCAlert *)alert
 {
 	if (alert->getSender() == modelViewer)
@@ -668,11 +676,18 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
-- (void)modelViewerAlertCallback:(TCAlert *)alert
+- (void)peekMouseUpAlertCallback:(TCAlert *)alert
 {
-	if (alert)
+	if (alert->getSender() == inputHandler)
 	{
-		//MessageBox(hWindow, alert->getMessage(), "LDView", MB_OK | MB_ICONWARNING);
+		if ([[self window] nextEventMatchingMask:NSLeftMouseUpMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO] != nil)
+		{
+			inputHandler->setMouseUpPending(true);
+		}
+		else
+		{
+			inputHandler->setMouseUpPending(false);
+		}
 	}
 }
 
