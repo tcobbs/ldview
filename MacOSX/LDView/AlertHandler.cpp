@@ -25,7 +25,7 @@ AlertHandler::AlertHandler(ModelWindow *modelWindow)
 	TCAlertManager::registerHandler(LDrawModelViewer::redrawAlertClass(), this, (TCAlertCallback)&AlertHandler::redrawAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::captureAlertClass(), this, (TCAlertCallback)&AlertHandler::captureAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this, (TCAlertCallback)&AlertHandler::releaseAlertCallback);
-	TCAlertManager::registerHandler(LDInputHandler::peekMouseUpAlertClass(), this, (TCAlertCallback)&AlertHandler::peekMouseUpAlertCallback);
+//	TCAlertManager::registerHandler(LDInputHandler::peekMouseUpAlertClass(), this, (TCAlertCallback)&AlertHandler::peekMouseUpAlertCallback);
 }
 
 AlertHandler::~AlertHandler(void)
@@ -68,8 +68,8 @@ void AlertHandler::releaseAlertCallback(TCAlert *alert)
 	[modelWindow releaseAlertCallback:alert];
 }
 
-void AlertHandler::peekMouseUpAlertCallback(TCAlert *alert)
-{
-	[modelWindow peekMouseUpAlertCallback:alert];
-}
+//void AlertHandler::peekMouseUpAlertCallback(TCAlert *alert)
+//{
+//	[modelWindow peekMouseUpAlertCallback:alert];
+//}
 

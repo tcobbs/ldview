@@ -43,11 +43,12 @@ typedef enum
 - (void)setFps:(float)value;
 - (void)setViewingAngle:(int)value;
 - (IBAction)zoomToFit:(id)sender;
+- (IBAction)viewMode:(id)sender;
 
 - (void)modelViewerAlertCallback:(TCAlert *)alert;
 - (void)redrawAlertCallback:(TCAlert *)alert;
 - (void)captureAlertCallback:(TCAlert *)alert;
 - (void)releaseAlertCallback:(TCAlert *)alert;
-- (void)peekMouseUpAlertCallback:(TCAlert *)alert;
+//- (void)peekMouseUpAlertCallback:(TCAlert *)alert;
 
 @end

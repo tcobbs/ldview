@@ -55,7 +55,7 @@ class AlertHandler;
 - (void)redrawAlertCallback:(TCAlert *)alert;
 - (void)captureAlertCallback:(TCAlert *)alert;
 - (void)releaseAlertCallback:(TCAlert *)alert;
-- (void)peekMouseUpAlertCallback:(TCAlert *)alert;
+//- (void)peekMouseUpAlertCallback:(TCAlert *)alert;
 
 - (void)modelWillReload;
 - (void)updateFps;
