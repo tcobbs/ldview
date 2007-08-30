@@ -3,24 +3,6 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCMacros.h>
-//#ifdef __APPLE__
-//enum {
-//	NSAlphaShiftKeyMask =		1 << 16,
-//	NSShiftKeyMask =		1 << 17,
-//	NSControlKeyMask =		1 << 18,
-//	NSAlternateKeyMask =		1 << 19,
-//	NSCommandKeyMask =		1 << 20,
-//	NSNumericPadKeyMask =		1 << 21,
-//	NSHelpKeyMask =			1 << 22,
-//	NSFunctionKeyMask =		1 << 23,
-//#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
-//	NSDeviceIndependentModifierFlagsMask = 0xffff0000U
-//#endif
-//};
-//#endif // __APPLE__
-//#ifdef _QT
-//#include <qnamespace.h>
-//#endif // _QT
 
 LDInputHandler::LDInputHandler(LDrawModelViewer *modelViewer):
 	m_modelViewer(modelViewer),
@@ -43,53 +25,6 @@ void LDInputHandler::dealloc(void)
 	TCAlertManager::unregisterHandler(this);
 	TCObject::dealloc();
 }
-
-//// Note: static method.
-//TCULong LDInputHandler::convertModifiers(TCULong osModifiers)
-//{
-//	TCULong retValue = 0;
-//#ifdef WIN32
-//	if (osModifiers & MK_SHIFT)
-//	{
-//		retValue |= MKShift;
-//	}
-//	if (osModifiers & MK_CONTROL)
-//	{
-//		retValue |= MKControl;
-//	}
-//#else // WIN32
-//#ifdef _QT
-//	if (osModifiers & Qt::ShiftButton)
-//	{
-//		retValue |= MKShift;
-//	}
-//	if (osModifiers & Qt::ControlButton)
-//	{
-//		retValue |= MKControl;
-//	}
-//#else // _QT
-//#ifdef __APPLE__
-//	if (osModifiers & NSShiftKeyMask)
-//	{
-//		retValue |= MKShift;
-//	}
-//	if (osModifiers & NSCommandKeyMask)
-//	{
-//		retValue |= MKControl;
-//	}
-//	if (osModifiers & NSControlKeyMask)
-//	{
-//		retValue |= MKAppleControl;
-//	}
-//#else // __APPLE__
-//	// If you get here, this isn't going to work.  The below line will generate
-//	// an error.
-//	Unknown GUI framework.
-//#endif // __APPLE__
-//#endif // _QT
-//#endif // WIN32
-//	return retValue;
-//}
 
 bool LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 {
