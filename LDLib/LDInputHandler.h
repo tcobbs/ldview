@@ -36,7 +36,6 @@ public:
 	bool mouseWheel(TCULong modifierKeys, TCFloat amount);
 	void setMouseUpPending(bool value);
 
-	//static TCULong convertModifiers(TCULong osModifiers);
 	static const char *captureAlertClass(void) { return "LDCaptureMouse"; }
 	static const char *releaseAlertClass(void) { return "LDReleaseMouse"; }
 	static const char *peekMouseUpAlertClass(void) { return "LDPeekMouseUp"; }
