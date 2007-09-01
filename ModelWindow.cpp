@@ -594,9 +594,25 @@ bool ModelWindow::altPressed(void)
 	return (GetKeyState(VK_MENU) & 0x8000) != 0;
 }
 
+// Note: static method.
+TCULong ModelWindow::convertKeyModifiers(TCULong osModifiers)
+{
+	TCULong retValue = 0;
+
+	if (osModifiers & MK_SHIFT)
+	{
+		retValue |= LDInputHandler::MKShift;
+	}
+	if (osModifiers & MK_CONTROL)
+	{
+		retValue |= LDInputHandler::MKControl;
+	}
+	return retValue;
+}
+
 LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseDown(inputHandler->convertModifiers(keyFlags),
+	inputHandler->mouseDown(convertKeyModifiers(keyFlags),
 		LDInputHandler::MBLeft, xPos, yPos);
 	return 0;
 /*
@@ -666,7 +682,7 @@ LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseDown(inputHandler->convertModifiers(keyFlags),
+	inputHandler->mouseDown(convertKeyModifiers(keyFlags),
 		LDInputHandler::MBRight, xPos, yPos);
 	return 0;
 /*
@@ -710,7 +726,7 @@ LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseDown(inputHandler->convertModifiers(keyFlags),
+	inputHandler->mouseDown(convertKeyModifiers(keyFlags),
 		LDInputHandler::MBMiddle, xPos, yPos);
 	return 0;
 /*
@@ -751,7 +767,7 @@ LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseMove(inputHandler->convertModifiers(keyFlags), xPos,
+	inputHandler->mouseMove(convertKeyModifiers(keyFlags), xPos,
 		yPos);
 	return 0;
 /*
@@ -810,7 +826,7 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 
 void ModelWindow::mouseWheel(short keyFlags, short zDelta)
 {
-	inputHandler->mouseWheel(inputHandler->convertModifiers(keyFlags),
+	inputHandler->mouseWheel(convertKeyModifiers(keyFlags),
 		(TCFloat)zDelta);
 }
 
