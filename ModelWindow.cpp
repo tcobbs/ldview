@@ -625,218 +625,290 @@ TCULong ModelWindow::convertKeyModifiers(TCULong osModifiers)
 	return retValue;
 }
 
-LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
+// Note: static method.
+TCULong ModelWindow::getCurrentKeyModifiers(void)
 {
-	inputHandler->mouseDown(convertKeyModifiers(keyFlags),
-		LDInputHandler::MBLeft, xPos, yPos);
-	return 0;
-/*
-	if (keyFlags & MK_SHIFT)
+	TCULong retValue = 0;
+
+	if (GetKeyState(VK_SHIFT) & 0x8000)
 	{
-		if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
-		{
-			captureMouse();
-			// At this point, the light hasn't moved, so there's no redraw
-			// required for light movement.  However, the light direction
-			// vector now needs to be drawn, so we need a redraw for that.
-			forceRedraw();
-			return 0;
-		}
-		else
-		{
-			return 1;
-		}
+		retValue |= LDInputHandler::MKShift;
 	}
-	forceRedraw();
-	if (rButtonDown || mButtonDown)
+	if (GetKeyState(VK_CONTROL) & 0x8000)
 	{
-		return 1;
+		retValue |= LDInputHandler::MKControl;
+	}
+	return retValue;
+}
+
+// Note: static method.
+LDInputHandler::KeyCode ModelWindow::convertKeyCode(TCULong osKeyCode)
+{
+	if (isalpha(osKeyCode))
+	{
+		return (LDInputHandler::KeyCode)(toupper(osKeyCode) - 'A' +
+			LDInputHandler::KCA);
 	}
 	else
 	{
-		lastX = xPos;
-		lastY = yPos;
-		if (viewMode == LDVViewExamine)
+		switch (osKeyCode)
 		{
-			updateSpinRateXY(xPos, yPos);
+		case VK_RETURN:
+			return LDInputHandler::KCReturn;
+		case VK_SHIFT:
+			return LDInputHandler::KCShift;
+		case VK_CONTROL:
+			return LDInputHandler::KCControl;
+		case VK_MENU:
+			return LDInputHandler::KCAlt;
+		case VK_SPACE:
+			return LDInputHandler::KCSpace;
+		case VK_PRIOR:
+			return LDInputHandler::KCPageUp;
+		case VK_NEXT:
+			return LDInputHandler::KCPageDown;
+		case VK_END:
+			return LDInputHandler::KCEnd;
+		case VK_HOME:
+			return LDInputHandler::KCHome;
+		case VK_ESCAPE:
+			return LDInputHandler::KCEscape;
+		case VK_LEFT:
+			return LDInputHandler::KCLeft;
+		case VK_UP:
+			return LDInputHandler::KCUp;
+		case VK_RIGHT:
+			return LDInputHandler::KCRight;
+		case VK_DOWN:
+			return LDInputHandler::KCDown;
+		case VK_INSERT:
+			return LDInputHandler::KCInsert;
+		case VK_DELETE:
+			return LDInputHandler::KCDelete;
+		default:
+			return LDInputHandler::KCUnknown;
 		}
-		lButtonDown = true;
-		captureMouse();
+	}
+}
+
+LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
+{
+	if (inputHandler->mouseDown(convertKeyModifiers(keyFlags),
+		LDInputHandler::MBLeft, xPos, yPos))
+	{
 		return 0;
 	}
-*/
+	return 1;
+	//if (keyFlags & MK_SHIFT)
+	//{
+	//	if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
+	//	{
+	//		captureMouse();
+	//		// At this point, the light hasn't moved, so there's no redraw
+	//		// required for light movement.  However, the light direction
+	//		// vector now needs to be drawn, so we need a redraw for that.
+	//		forceRedraw();
+	//		return 0;
+	//	}
+	//	else
+	//	{
+	//		return 1;
+	//	}
+	//}
+	//forceRedraw();
+	//if (rButtonDown || mButtonDown)
+	//{
+	//	return 1;
+	//}
+	//else
+	//{
+	//	lastX = xPos;
+	//	lastY = yPos;
+	//	if (viewMode == LDVViewExamine)
+	//	{
+	//		updateSpinRateXY(xPos, yPos);
+	//	}
+	//	lButtonDown = true;
+	//	captureMouse();
+	//	return 0;
+	//}
 }
 
 LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseUp(keyFlags, LDInputHandler::MBLeft, xPos, yPos);
-	return 0;
-/*
-	if (modelViewer && modelViewer->mouseUp(xPos, yPos))
+	if (inputHandler->mouseUp(keyFlags, LDInputHandler::MBLeft, xPos, yPos))
 	{
-		forceRedraw();
-		releaseMouse();
-		prefs->checkLightVector();
 		return 0;
 	}
-	forceRedraw();
-	if (lButtonDown)
-	{
-		lButtonDown = false;
-		releaseMouse();
-		modelViewer->setCameraXRotate(0.0f);
-		modelViewer->setCameraYRotate(0.0f);
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
-*/
+	return 1;
+	//if (modelViewer && modelViewer->mouseUp(xPos, yPos))
+	//{
+	//	forceRedraw();
+	//	releaseMouse();
+	//	prefs->checkLightVector();
+	//	return 0;
+	//}
+	//forceRedraw();
+	//if (lButtonDown)
+	//{
+	//	lButtonDown = false;
+	//	releaseMouse();
+	//	modelViewer->setCameraXRotate(0.0f);
+	//	modelViewer->setCameraYRotate(0.0f);
+	//	return 0;
+	//}
+	//else
+	//{
+	//	return 1;
+	//}
 }
 
 LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseDown(convertKeyModifiers(keyFlags),
-		LDInputHandler::MBRight, xPos, yPos);
-	return 0;
-/*
-	forceRedraw();
-	if (lButtonDown || mButtonDown)
+	if (inputHandler->mouseDown(convertKeyModifiers(keyFlags),
+		LDInputHandler::MBRight, xPos, yPos))
 	{
-		return 1;
-	}
-	else
-	{
-		if (viewMode == LDVViewExamine)
-		{
-			originalZoomY = yPos;
-			rButtonDown = true;
-			captureMouse();
-		}
 		return 0;
 	}
-*/
+	return 1;
+	//forceRedraw();
+	//if (lButtonDown || mButtonDown)
+	//{
+	//	return 1;
+	//}
+	//else
+	//{
+	//	if (viewMode == LDVViewExamine)
+	//	{
+	//		originalZoomY = yPos;
+	//		rButtonDown = true;
+	//		captureMouse();
+	//	}
+	//	return 0;
+	//}
 }
 
 LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseUp(keyFlags, LDInputHandler::MBRight, xPos, yPos);
-	return 0;
-/*
-	forceRedraw();
-	if (rButtonDown)
+	if (inputHandler->mouseUp(keyFlags, LDInputHandler::MBRight, xPos, yPos))
 	{
-		rButtonDown = false;
-		modelViewer->setZoomSpeed(0.0f);
-		releaseMouse();
 		return 0;
 	}
-	else
-	{
-		return 1;
-	}
-*/
+	return 1;
+	//forceRedraw();
+	//if (rButtonDown)
+	//{
+	//	rButtonDown = false;
+	//	modelViewer->setZoomSpeed(0.0f);
+	//	releaseMouse();
+	//	return 0;
+	//}
+	//else
+	//{
+	//	return 1;
+	//}
 }
 
 LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseDown(convertKeyModifiers(keyFlags),
-		LDInputHandler::MBMiddle, xPos, yPos);
-	return 0;
-/*
-	forceRedraw();
-	if (lButtonDown || rButtonDown)
+	if (inputHandler->mouseDown(convertKeyModifiers(keyFlags),
+		LDInputHandler::MBMiddle, xPos, yPos))
 	{
-		return 1;
-	}
-	else
-	{
-		lastX = xPos;
-		lastY = yPos;
-		mButtonDown = true;
-		captureMouse();
 		return 0;
 	}
-*/
+	return 1;
+	//forceRedraw();
+	//if (lButtonDown || rButtonDown)
+	//{
+	//	return 1;
+	//}
+	//else
+	//{
+	//	lastX = xPos;
+	//	lastY = yPos;
+	//	mButtonDown = true;
+	//	captureMouse();
+	//	return 0;
+	//}
 }
 
 LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseUp(keyFlags, LDInputHandler::MBMiddle, xPos, yPos);
-	return 0;
-/*
-	forceRedraw();
-	if (mButtonDown)
+	if (inputHandler->mouseUp(keyFlags, LDInputHandler::MBMiddle, xPos, yPos))
 	{
-		mButtonDown = false;
-		releaseMouse();
 		return 0;
 	}
-	else
-	{
-		return 1;
-	}
-*/
+	return 1;
+	//forceRedraw();
+	//if (mButtonDown)
+	//{
+	//	mButtonDown = false;
+	//	releaseMouse();
+	//	return 0;
+	//}
+	//else
+	//{
+	//	return 1;
+	//}
 }
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 {
-	inputHandler->mouseMove(convertKeyModifiers(keyFlags), xPos,
-		yPos);
-	return 0;
-/*
-	if (modelViewer && modelViewer->mouseMove(xPos, yPos))
+	if (inputHandler->mouseMove(convertKeyModifiers(keyFlags), xPos, yPos))
 	{
-		forceRedraw();
 		return 0;
-	}
-	forceRedraw();
-	if (lButtonDown || rButtonDown || mButtonDown)
-	{
-		lastMoveTime = timeGetTime();
-	}
-	if (lButtonDown)
-	{
-		if (viewMode == LDVViewExamine)
-		{
-			if (keyFlags & MK_CONTROL)
-			{
-				updatePanXY(xPos, yPos);
-			}
-			else
-			{
-				updateSpinRateXY(xPos, yPos);
-			}
-		}
-		else
-		{
-			updateHeadXY(xPos, yPos);
-		}
-		return 0;
-	}
-	if (rButtonDown)
-	{
-		if (keyFlags & MK_CONTROL)
-		{
-			modelViewer->setClipZoom(true);
-		}
-		else
-		{
-			modelViewer->setClipZoom(false);
-		}
-		updateZoom(yPos);
-		return 0;
-	}
-	if (mButtonDown)
-	{
-		if (viewMode == LDVViewExamine)
-		{
-			updatePanXY(xPos, yPos);
-		}
 	}
 	return 1;
-*/
+	//if (modelViewer && modelViewer->mouseMove(xPos, yPos))
+	//{
+	//	forceRedraw();
+	//	return 0;
+	//}
+	//forceRedraw();
+	//if (lButtonDown || rButtonDown || mButtonDown)
+	//{
+	//	lastMoveTime = timeGetTime();
+	//}
+	//if (lButtonDown)
+	//{
+	//	if (viewMode == LDVViewExamine)
+	//	{
+	//		if (keyFlags & MK_CONTROL)
+	//		{
+	//			updatePanXY(xPos, yPos);
+	//		}
+	//		else
+	//		{
+	//			updateSpinRateXY(xPos, yPos);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		updateHeadXY(xPos, yPos);
+	//	}
+	//	return 0;
+	//}
+	//if (rButtonDown)
+	//{
+	//	if (keyFlags & MK_CONTROL)
+	//	{
+	//		modelViewer->setClipZoom(true);
+	//	}
+	//	else
+	//	{
+	//		modelViewer->setClipZoom(false);
+	//	}
+	//	updateZoom(yPos);
+	//	return 0;
+	//}
+	//if (mButtonDown)
+	//{
+	//	if (viewMode == LDVViewExamine)
+	//	{
+	//		updatePanXY(xPos, yPos);
+	//	}
+	//}
+	//return 1;
 }
 
 void ModelWindow::mouseWheel(short keyFlags, short zDelta)
@@ -931,8 +1003,8 @@ void ModelWindow::resetView(LDVAngle viewAngle)
 {
 	modelViewer->resetView(viewAngle);
 	//rotationSpeed = 0.0f;
-	modelViewer->setXRotate(1.0f);
-	modelViewer->setYRotate(1.0f);
+	modelViewer->setXRotate(0.0f);
+	modelViewer->setYRotate(0.0f);
 	modelViewer->setRotationSpeed(0.0f);
 	modelViewer->setZoomSpeed(0.0f);
 	fps = 0.0f;
@@ -4540,156 +4612,168 @@ LRESULT ModelWindow::processKeyDown(int keyCode, long /*keyData*/)
 	{
 		cancelLoad = true;
 	}
-	if (modelViewer && viewMode == LDVViewFlythrough)
+	if (inputHandler->keyDown(getCurrentKeyModifiers(),
+		convertKeyCode(keyCode)))
 	{
-		TCVector cameraMotion = modelViewer->getCameraMotion();
-		TCFloat motionAmount = 1.0f;
-		TCFloat rotationAmount = 0.01f;
-		TCFloat strafeAmount = 1.0f;
-		int i;
-
-		if (modelViewer)
-		{
-			TCFloat fov = modelViewer->getFov();
-
-			motionAmount = modelViewer->getDefaultDistance() / 400.0f;
-			rotationAmount *= (TCFloat)tan(deg2rad(fov));
-			strafeAmount *= (TCFloat)sqrt(fov / 45.0f);
-		}
-		if (GetKeyState(VK_SHIFT) & 0x8000)
-		{
-			motionAmount *= 2.0f;
-			strafeAmount *= 2.0f;
-		}
-		switch (keyCode)
-		{
-		case 'W':
-			cameraMotion[2] = -motionAmount;
-			break;
-		case 'S':
-			cameraMotion[2] = motionAmount;
-			break;
-		case 'A':
-			cameraMotion[0] = -strafeAmount;
-			break;
-		case 'D':
-			cameraMotion[0] = strafeAmount;
-			break;
-		case 'R':
-			cameraMotion[1] = strafeAmount;
-			break;
-		case 'F':
-			cameraMotion[1] = -strafeAmount;
-			break;
-		case 'E':
-			modelViewer->setCameraZRotate(0.01f);
-			break;
-		case 'Q':
-			modelViewer->setCameraZRotate(-0.01f);
-			break;
-		case VK_UP:
-			modelViewer->setCameraYRotate(rotationAmount);
-			break;
-		case VK_DOWN:
-			modelViewer->setCameraYRotate(-rotationAmount);
-			break;
-		case VK_LEFT:
-			modelViewer->setCameraXRotate(-rotationAmount);
-			break;
-		case VK_RIGHT:
-			modelViewer->setCameraXRotate(rotationAmount);
-			break;
-		case VK_SHIFT:
-			for (i = 0; i < 3; i++)
-			{
-				if (cameraMotion[i] > 0.0f)
-				{
-					cameraMotion[i] = 2.0;
-				}
-				else if (cameraMotion[i] < 0.0f)
-				{
-					cameraMotion[i] = -2.0;
-				}
-			}
-			break;
-		default:
-			return 1;
-			break;
-		}
-		modelViewer->setCameraMotion(cameraMotion);
-		forceRedraw(2);
 		return 0;
 	}
 	return 1;
+	//if (modelViewer && viewMode == LDVViewFlythrough)
+	//{
+	//	TCVector cameraMotion = modelViewer->getCameraMotion();
+	//	TCFloat motionAmount = 1.0f;
+	//	TCFloat rotationAmount = 0.01f;
+	//	TCFloat strafeAmount = 1.0f;
+	//	int i;
+
+	//	if (modelViewer)
+	//	{
+	//		TCFloat fov = modelViewer->getFov();
+
+	//		motionAmount = modelViewer->getDefaultDistance() / 400.0f;
+	//		rotationAmount *= (TCFloat)tan(deg2rad(fov));
+	//		strafeAmount *= (TCFloat)sqrt(fov / 45.0f);
+	//	}
+	//	if (GetKeyState(VK_SHIFT) & 0x8000)
+	//	{
+	//		motionAmount *= 2.0f;
+	//		strafeAmount *= 2.0f;
+	//	}
+	//	switch (keyCode)
+	//	{
+	//	case 'W':
+	//		cameraMotion[2] = -motionAmount;
+	//		break;
+	//	case 'S':
+	//		cameraMotion[2] = motionAmount;
+	//		break;
+	//	case 'A':
+	//		cameraMotion[0] = -strafeAmount;
+	//		break;
+	//	case 'D':
+	//		cameraMotion[0] = strafeAmount;
+	//		break;
+	//	case 'R':
+	//		cameraMotion[1] = strafeAmount;
+	//		break;
+	//	case 'F':
+	//		cameraMotion[1] = -strafeAmount;
+	//		break;
+	//	case 'E':
+	//		modelViewer->setCameraZRotate(0.01f);
+	//		break;
+	//	case 'Q':
+	//		modelViewer->setCameraZRotate(-0.01f);
+	//		break;
+	//	case VK_UP:
+	//		modelViewer->setCameraYRotate(rotationAmount);
+	//		break;
+	//	case VK_DOWN:
+	//		modelViewer->setCameraYRotate(-rotationAmount);
+	//		break;
+	//	case VK_LEFT:
+	//		modelViewer->setCameraXRotate(-rotationAmount);
+	//		break;
+	//	case VK_RIGHT:
+	//		modelViewer->setCameraXRotate(rotationAmount);
+	//		break;
+	//	case VK_SHIFT:
+	//		for (i = 0; i < 3; i++)
+	//		{
+	//			if (cameraMotion[i] > 0.0f)
+	//			{
+	//				cameraMotion[i] = 2.0;
+	//			}
+	//			else if (cameraMotion[i] < 0.0f)
+	//			{
+	//				cameraMotion[i] = -2.0;
+	//			}
+	//		}
+	//		break;
+	//	default:
+	//		return 1;
+	//		break;
+	//	}
+	//	modelViewer->setCameraMotion(cameraMotion);
+	//	forceRedraw(2);
+	//	return 0;
+	//}
+	//return 1;
 }
 
 LRESULT ModelWindow::processKeyUp(int keyCode, long /*keyData*/)
 {
-	if (modelViewer && viewMode == LDVViewFlythrough)
+	if (inputHandler->keyUp(getCurrentKeyModifiers(),
+		convertKeyCode(keyCode)))
 	{
-		TCVector cameraMotion = modelViewer->getCameraMotion();
-		int i;
-
-		switch (keyCode)
-		{
-		case 'W':
-			cameraMotion[2] = 0.0f;
-			break;
-		case 'S':
-			cameraMotion[2] = 0.0f;
-			break;
-		case 'A':
-			cameraMotion[0] = 0.0f;
-			break;
-		case 'D':
-			cameraMotion[0] = 0.0f;
-			break;
-		case 'R':
-			cameraMotion[1] = 0.0f;
-			break;
-		case 'F':
-			cameraMotion[1] = 0.0f;
-			break;
-		case 'E':
-			modelViewer->setCameraZRotate(0.0f);
-			break;
-		case 'Q':
-			modelViewer->setCameraZRotate(0.0f);
-			break;
-		case VK_UP:
-			modelViewer->setCameraYRotate(0.0f);
-			break;
-		case VK_DOWN:
-			modelViewer->setCameraYRotate(0.0f);
-			break;
-		case VK_LEFT:
-			modelViewer->setCameraXRotate(0.0f);
-			break;
-		case VK_RIGHT:
-			modelViewer->setCameraXRotate(0.0f);
-			break;
-		case VK_SHIFT:
-			for (i = 0; i < 3; i++)
-			{
-				if (cameraMotion[i] > 0.0f)
-				{
-					cameraMotion[i] = 1.0;
-				}
-				else if (cameraMotion[i] < 0.0f)
-				{
-					cameraMotion[i] = -1.0;
-				}
-			}
-			break;
-		default:
-			return 1;
-			break;
-		}
-		modelViewer->setCameraMotion(cameraMotion);
-		forceRedraw(2);
 		return 0;
 	}
 	return 1;
+	//if (modelViewer && viewMode == LDVViewFlythrough)
+	//{
+	//	TCVector cameraMotion = modelViewer->getCameraMotion();
+	//	int i;
+
+	//	switch (keyCode)
+	//	{
+	//	case 'W':
+	//		cameraMotion[2] = 0.0f;
+	//		break;
+	//	case 'S':
+	//		cameraMotion[2] = 0.0f;
+	//		break;
+	//	case 'A':
+	//		cameraMotion[0] = 0.0f;
+	//		break;
+	//	case 'D':
+	//		cameraMotion[0] = 0.0f;
+	//		break;
+	//	case 'R':
+	//		cameraMotion[1] = 0.0f;
+	//		break;
+	//	case 'F':
+	//		cameraMotion[1] = 0.0f;
+	//		break;
+	//	case 'E':
+	//		modelViewer->setCameraZRotate(0.0f);
+	//		break;
+	//	case 'Q':
+	//		modelViewer->setCameraZRotate(0.0f);
+	//		break;
+	//	case VK_UP:
+	//		modelViewer->setCameraYRotate(0.0f);
+	//		break;
+	//	case VK_DOWN:
+	//		modelViewer->setCameraYRotate(0.0f);
+	//		break;
+	//	case VK_LEFT:
+	//		modelViewer->setCameraXRotate(0.0f);
+	//		break;
+	//	case VK_RIGHT:
+	//		modelViewer->setCameraXRotate(0.0f);
+	//		break;
+	//	case VK_SHIFT:
+	//		for (i = 0; i < 3; i++)
+	//		{
+	//			if (cameraMotion[i] > 0.0f)
+	//			{
+	//				cameraMotion[i] = 1.0;
+	//			}
+	//			else if (cameraMotion[i] < 0.0f)
+	//			{
+	//				cameraMotion[i] = -1.0;
+	//			}
+	//		}
+	//		break;
+	//	default:
+	//		return 1;
+	//		break;
+	//	}
+	//	modelViewer->setCameraMotion(cameraMotion);
+	//	forceRedraw(2);
+	//	return 0;
+	//}
+	//return 1;
 }
 
 LRESULT ModelWindow::doMove(int newX, int newY)

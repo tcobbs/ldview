@@ -4,8 +4,10 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCMacros.h>
 
-LDInputHandler::LDInputHandler(LDrawModelViewer *modelViewer):
-	m_modelViewer(modelViewer),
+TCFloat LDInputHandler::sm_keyRotationSpeed = 0.5f;
+
+LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
+	m_modelViewer(m_modelViewer),
 	m_viewMode(VMExamine),
 	m_mouseMode(MMNone),
 	m_appleRightClick(false),
@@ -47,8 +49,8 @@ bool LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 	if (fEq(m_rotationSpeed, 0.0f))
 	{
 		m_rotationSpeed = 0.0f;
-		m_modelViewer->setXRotate(1.0f);
-		m_modelViewer->setYRotate(1.0f);
+		m_modelViewer->setXRotate(0.0f);
+		m_modelViewer->setYRotate(0.0f);
 	}
 	else
 	{
@@ -296,4 +298,267 @@ void LDInputHandler::frameDone(TCAlert *alert)
 		m_lastFrameX = m_lastX;
 		m_lastFrameY = m_lastY;
 	}
+}
+
+void LDInputHandler::updateCameraMotion(
+	TCVector &cameraMotion,
+	TCFloat motionAmount,
+	TCFloat strafeAmount)
+{
+	for (int i = 0; i < 2; i++)
+	{
+		if (cameraMotion[i] > 0.0f)
+		{
+			cameraMotion[i] = strafeAmount;
+		}
+		else if (cameraMotion[i] < 0.0f)
+		{
+			cameraMotion[i] = -strafeAmount;
+		}
+	}
+	if (cameraMotion[2] > 0.0f)
+	{
+		cameraMotion[2] = motionAmount;
+	}
+	else if (cameraMotion[2] < 0.0f)
+	{
+		cameraMotion[2] = -motionAmount;
+	}
+}
+
+void LDInputHandler::updateCameraRotation(
+	TCFloat rotationAmount,
+	TCFloat rollAmount)
+{
+	TCFloat value = m_modelViewer->getCameraXRotate();
+
+	if (value > 0)
+	{
+		m_modelViewer->setCameraXRotate(rotationAmount);
+	}
+	else if (value < 0)
+	{
+		m_modelViewer->setCameraXRotate(-rotationAmount);
+	}
+	value = m_modelViewer->getCameraYRotate();
+	if (value > 0)
+	{
+		m_modelViewer->setCameraYRotate(rotationAmount);
+	}
+	else if (value < 0)
+	{
+		m_modelViewer->setCameraYRotate(-rotationAmount);
+	}
+	value = m_modelViewer->getCameraZRotate();
+	if (value > 0)
+	{
+		m_modelViewer->setCameraZRotate(rollAmount);
+	}
+	else if (value < 0)
+	{
+		m_modelViewer->setCameraZRotate(-rollAmount);
+	}
+}
+
+bool LDInputHandler::keyDown(TCULong modifierKeys, KeyCode keyCode)
+{
+	if (m_viewMode == VMExamine)
+	{
+		TCFloat rotationSpeed = sm_keyRotationSpeed;
+
+		if (modifierKeys & MKShift)
+		{
+			rotationSpeed *= 2.0f;
+		}
+		switch (keyCode)
+		{
+		case KCUp:
+			m_modelViewer->setXRotate(-1.0f);
+			m_rotationSpeed = rotationSpeed;
+			break;
+		case KCDown:
+			m_modelViewer->setXRotate(1.0f);
+			m_rotationSpeed = rotationSpeed;
+			break;
+		case KCLeft:
+			m_modelViewer->setYRotate(-1.0f);
+			m_rotationSpeed = rotationSpeed;
+			break;
+		case KCRight:
+			m_modelViewer->setYRotate(1.0f);
+			m_rotationSpeed = rotationSpeed;
+			break;
+		case KCShift:
+			m_rotationSpeed = rotationSpeed;
+			break;
+		default:
+			return false;
+		}
+		m_modelViewer->setRotationSpeed(m_rotationSpeed);
+		m_modelViewer->requestRedraw();
+		return true;
+	}
+	else if (m_viewMode == VMFlyThrough)
+	{
+		TCVector cameraMotion = m_modelViewer->getCameraMotion();
+		TCFloat fov = m_modelViewer->getFov();
+		TCFloat motionAmount = m_modelViewer->getDefaultDistance() / 400.0f;
+		TCFloat rotationAmount = 0.01f * (TCFloat)tan(deg2rad(fov));
+		TCFloat rollAmount = 0.01f;
+		TCFloat strafeAmount = 1.0f * (TCFloat)sqrt(fov / 45.0f);
+
+		if (modifierKeys & MKShift)
+		{
+			motionAmount *= 2.0f;
+			strafeAmount *= 2.0f;
+			rotationAmount *= 2.0f;
+			rollAmount *= 2.0f;
+		}
+		switch (keyCode)
+		{
+		case KCW:
+			cameraMotion[2] = -motionAmount;
+			break;
+		case KCS:
+			cameraMotion[2] = motionAmount;
+			break;
+		case KCA:
+			cameraMotion[0] = -strafeAmount;
+			break;
+		case KCD:
+			cameraMotion[0] = strafeAmount;
+			break;
+		case KCR:
+			cameraMotion[1] = strafeAmount;
+			break;
+		case KCF:
+			cameraMotion[1] = -strafeAmount;
+			break;
+		case KCE:
+			m_modelViewer->setCameraZRotate(rollAmount);
+			break;
+		case KCQ:
+			m_modelViewer->setCameraZRotate(-rollAmount);
+			break;
+		case KCUp:
+			m_modelViewer->setCameraYRotate(rotationAmount);
+			break;
+		case KCDown:
+			m_modelViewer->setCameraYRotate(-rotationAmount);
+			break;
+		case KCLeft:
+			m_modelViewer->setCameraXRotate(-rotationAmount);
+			break;
+		case KCRight:
+			m_modelViewer->setCameraXRotate(rotationAmount);
+			break;
+		case KCShift:
+			updateCameraMotion(cameraMotion, motionAmount, strafeAmount);
+			updateCameraRotation(rotationAmount, rollAmount);
+			break;
+		default:
+			return false;
+			break;
+		}
+		m_modelViewer->setCameraMotion(cameraMotion);
+		m_modelViewer->requestRedraw();
+		//forceRedraw(2);
+		return true;
+	}
+	return false;
+}
+
+bool LDInputHandler::keyUp(TCULong /*modifierKeys*/, KeyCode keyCode)
+{
+	if (m_viewMode == VMExamine)
+	{
+		switch (keyCode)
+		{
+		case KCUp:
+		case KCDown:
+			m_modelViewer->setXRotate(0.0f);
+			break;
+		case KCLeft:
+		case KCRight:
+			m_modelViewer->setYRotate(0.0f);
+			break;
+		case KCShift:
+			m_rotationSpeed = sm_keyRotationSpeed;
+			break;
+		default:
+			return false;
+		}
+		if (m_modelViewer->getXRotate() == 0.0f &&
+			m_modelViewer->getYRotate() == 0.0f)
+		{
+			m_rotationSpeed = 0.0f;
+		}
+		m_modelViewer->setRotationSpeed(m_rotationSpeed);
+		m_modelViewer->requestRedraw();
+		return true;
+	}
+	else if (m_viewMode == VMFlyThrough)
+	{
+		TCVector cameraMotion = m_modelViewer->getCameraMotion();
+
+		switch (keyCode)
+		{
+		case KCW:
+			cameraMotion[2] = 0.0f;
+			break;
+		case KCS:
+			cameraMotion[2] = 0.0f;
+			break;
+		case KCA:
+			cameraMotion[0] = 0.0f;
+			break;
+		case KCD:
+			cameraMotion[0] = 0.0f;
+			break;
+		case KCR:
+			cameraMotion[1] = 0.0f;
+			break;
+		case KCF:
+			cameraMotion[1] = 0.0f;
+			break;
+		case KCE:
+			m_modelViewer->setCameraZRotate(0.0f);
+			break;
+		case KCQ:
+			m_modelViewer->setCameraZRotate(0.0f);
+			break;
+		case KCUp:
+			m_modelViewer->setCameraYRotate(0.0f);
+			break;
+		case KCDown:
+			m_modelViewer->setCameraYRotate(0.0f);
+			break;
+		case KCLeft:
+			m_modelViewer->setCameraXRotate(0.0f);
+			break;
+		case KCRight:
+			m_modelViewer->setCameraXRotate(0.0f);
+			break;
+		case KCShift:
+			{
+				TCFloat fov = m_modelViewer->getFov();
+				TCFloat motionAmount = m_modelViewer->getDefaultDistance() /
+					400.0f;
+				TCFloat rotationAmount = 0.01f * (TCFloat)tan(deg2rad(fov));
+				TCFloat strafeAmount = 1.0f * (TCFloat)sqrt(fov / 45.0f);
+
+				updateCameraMotion(cameraMotion, motionAmount, strafeAmount);
+				updateCameraRotation(rotationAmount, 0.01f);
+			}
+			break;
+		default:
+			return 1;
+			break;
+		}
+		m_modelViewer->setCameraMotion(cameraMotion);
+		m_modelViewer->requestRedraw();
+		//forceRedraw(2);
+		return 0;
+	}
+	return false;
 }

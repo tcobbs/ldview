@@ -3,6 +3,7 @@
 
 class LDrawModelViewer;
 class TCAlert;
+class TCVector;
 
 class LDInputHandler : public TCObject
 {
@@ -26,6 +27,56 @@ public:
 		VMExamine,
 		VMFlyThrough,
 	};
+	// Note: the special key values happen to match Windows, but that's only
+	// because it made it easy to be sure there were no repeats.  Even the
+	// Windows code that relies on these should not assume that they will
+	// match.
+	enum KeyCode
+	{
+		KCUnknown,
+		KCReturn = 13,
+		KCShift = 16,
+		KCControl,
+		KCAlt,
+		KCSpace = ' ',
+		KCPageUp,
+		KCPageDown,
+		KCEnd,
+		KCHome,
+		KCEscape = 27,
+		KCLeft = 38,
+		KCUp,
+		KCRight,
+		KCDown,
+		KCInsert = 45,
+		KCDelete,
+		KCA = 'A',
+		KCB,
+		KCC,
+		KCD,
+		KCE,
+		KCF,
+		KCG,
+		KCH,
+		KCI,
+		KCJ,
+		KCK,
+		KCL,
+		KCM,
+		KCN,
+		KCO,
+		KCP,
+		KCQ,
+		KCR,
+		KCS,
+		KCT,
+		KCU,
+		KCV,
+		KCW,
+		KCX,
+		KCY,
+		KCZ,
+	};
 
 	LDInputHandler(LDrawModelViewer *modelViewer);
 
@@ -34,6 +85,8 @@ public:
 	bool mouseUp(TCULong modifierKeys, MouseButton button, int x, int y);
 	bool mouseMove(TCULong modifierKeys, int x, int y);
 	bool mouseWheel(TCULong modifierKeys, TCFloat amount);
+	bool keyDown(TCULong modifierKeys, KeyCode keyCode);
+	bool keyUp(TCULong modifierKeys, KeyCode keyCode);
 	void setMouseUpPending(bool value);
 	void cancelMouseDrag(void);
 
@@ -58,6 +111,10 @@ protected:
 	bool updatePanXY(int xPos, int yPos);
 	bool updateZoom(int yPos);
 	void frameDone(TCAlert *alert);
+	void updateCameraMotion(TCVector &cameraMotion, TCFloat motionAmount,
+		TCFloat strafeAmount);
+	void updateCameraRotation(TCFloat rotationAmount, TCFloat rollAmount);
+	void updateRotation(TCFloat rotationSpeed);
 	//double getTimeRef(void);
 
 	LDrawModelViewer *m_modelViewer;
@@ -76,4 +133,6 @@ protected:
 	bool m_mouseUpPending;
 	bool m_mouseUpHandled;
 	//double m_lastMoveTime;
+
+	static TCFloat sm_keyRotationSpeed;
 };
