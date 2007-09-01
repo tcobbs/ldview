@@ -152,11 +152,11 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doSize(WPARAM, int, int);
 		virtual LRESULT doMove(int newX, int newY);
 		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);
+		//virtual void updateSpinRate(void);
 		//virtual void updateSpinRateXY(int, int);
 		//virtual void updatePanXY(int xPos, int yPos);
 		//virtual void updateHeadXY(int xPos, int yPos);
 		//virtual void updateZoom(int);
-		//virtual void updateSpinRate(void);
 		virtual void captureMouse(void);
 		virtual void releaseMouse(void);
 //		virtual void createPreferences(void);

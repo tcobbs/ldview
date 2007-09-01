@@ -687,8 +687,8 @@ void LDViewWindow::createStatusBar(void)
 			modelWindow->setStatusBar(hStatusBar);
 			modelWindow->setProgressBar(hProgressBar);
 		}
-		redrawStatusBar();
-		//RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+		//redrawStatusBar();
+		RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 	}
 }
 
@@ -696,8 +696,10 @@ void LDViewWindow::redrawStatusBar(void)
 {
 	RECT statusRect;
 
-	GetClientRect(hStatusBar, &statusRect);
-	RedrawWindow(hWindow, &statusRect, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+	GetWindowRect(hStatusBar, &statusRect);
+	//screenToClient(hWindow, &statusRect);
+	//RedrawWindow(hWindow, &statusRect, NULL, RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW | RDW_ERASENOW | RDW_ALLCHILDREN);
+	RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
 void LDViewWindow::reflectViewMode(bool saveSetting)

@@ -484,6 +484,20 @@ LRESULT ModelWindow::doTimer(UINT timerID)
 	return 0;
 }
 
+//void ModelWindow::updateSpinRate(void)
+//{
+//	if (lButtonDown)
+//	{
+//		DWORD thisMoveTime = timeGetTime();
+//
+//		if (thisMoveTime - lastMoveTime >= 100)
+//		{
+//			updateSpinRateXY(lastX, lastY);
+//			lButtonDown = true;
+//		}
+//	}
+//}
+//
 //void ModelWindow::updateSpinRateXY(int xPos, int yPos)
 //{
 //	int deltaX = xPos - lastX;
@@ -558,20 +572,6 @@ LRESULT ModelWindow::doTimer(UINT timerID)
 //	modelViewer->setCameraXRotate(magnitude / denom);
 //	magnitude = (TCFloat)(yPos - lastY);
 //	modelViewer->setCameraYRotate(magnitude / -denom);
-//}
-
-//void ModelWindow::updateSpinRate(void)
-//{
-//	if (lButtonDown)
-//	{
-//		DWORD thisMoveTime = timeGetTime();
-//
-//		if (thisMoveTime - lastMoveTime >= 100)
-//		{
-//			updateSpinRateXY(lastX, lastY);
-//			lButtonDown = true;
-//		}
-//	}
 //}
 
 void ModelWindow::captureMouse(void)
