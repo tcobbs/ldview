@@ -5,13 +5,13 @@
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCVector.h>
 #include <LDLoader/LDLError.h>
+#include <LDLib/LDInputHandler.h>
 #include "LDViewPreferences.h"
 #include <Commctrl.h>
 #include <GL/glext.h>
 #include <GL/wglext.h>
 
 class LDrawModelViewer;
-class LDInputHandler;
 class TCStringArray;
 class CUIWindowResizer;
 
@@ -317,6 +317,8 @@ class ModelWindow: public CUIOGLWindow
 		static void swap(int &left, int &right);
 		static bool altPressed(void);
 		static TCULong convertKeyModifiers(TCULong osModifiers);
+		static TCULong getCurrentKeyModifiers(void);
+		static LDInputHandler::KeyCode convertKeyCode(TCULong osKeyCode);
 
 		LDrawModelViewer* modelViewer;
 		LDInputHandler *inputHandler;
