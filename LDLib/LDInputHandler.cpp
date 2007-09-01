@@ -26,6 +26,15 @@ void LDInputHandler::dealloc(void)
 	TCObject::dealloc();
 }
 
+void LDInputHandler::cancelMouseDrag(void)
+{
+	m_mouseMode = MMNone;
+	for (int i = 0; i < m_numButtons; i++)
+	{
+		m_buttonsDown[i] = false;
+	}
+}
+
 bool LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - m_lastX;

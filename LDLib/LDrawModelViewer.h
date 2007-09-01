@@ -275,6 +275,7 @@ class LDrawModelViewer: public TCObject
 		}
 		bool getNeedsReload(void) { return flags.needsReload != 0; }
 		bool getNeedsRecompile(void) { return flags.needsRecompile != 0; }
+		//void setNeedsRecompile(void) { flags.needsRecompile = true; }
 		void setCurveQuality(int value);
 		int getCurveQuality(void) { return curveQuality; }
 		void setTextureStuds(bool value);

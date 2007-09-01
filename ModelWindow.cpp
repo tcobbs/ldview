@@ -82,17 +82,17 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 modelViewer(new LDrawModelViewer(width, height)),
 			 numFramesSinceReference(0),
 			 firstFPSPass(true),
-			 rotationSpeed(0.0f),
-			 lButtonDown(false),
-			 rButtonDown(false),
-			 mButtonDown(false),
+			 //rotationSpeed(0.0f),
+			 //lButtonDown(false),
+			 //rButtonDown(false),
+			 //mButtonDown(false),
 			 hPrefsWindow(NULL),
 			 captureCount(0),
 			 redrawCount(0),
 			 hProgressWindow(NULL),
 			 lastProgressUpdate(0),
 			 loading(false),
-			 needsRecompile(false),
+			 //needsRecompile(false),
 			 hErrorWindow(NULL),
 			 errors(new LDLErrorArray),
 			 errorTreePopulated(false),
@@ -397,13 +397,17 @@ void ModelWindow::checkFileForUpdates(void)
 					char message[1024];
 
 					sprintf(message, TCLocalStrings::get("PollReloadCheck"));
-					while (captureCount)
+					if (captureCount)
 					{
-						releaseMouse();
+						while (captureCount)
+						{
+							releaseMouse();
+						}
+						inputHandler->cancelMouseDrag();
 					}
-					lButtonDown = false;
-					rButtonDown = false;
-					mButtonDown = false;
+					//lButtonDown = false;
+					//rButtonDown = false;
+					//mButtonDown = false;
 					if (MessageBox(hWindow, message,
 						TCLocalStrings::get("PollFileUpdate"),
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
@@ -445,7 +449,12 @@ void ModelWindow::updateFSAA()
 		height += 4;
 	}
 	initWindow();
-	setNeedsRecompile();
+	if (modelViewer)
+	{
+		modelViewer->uncompile();
+		//modelViewer->setNeedsRecompile();
+	}
+	//setNeedsRecompile();
 	showWindow(SW_SHOW);
 	applyingPrefs = false;
 	killTimer(FSAA_UPDATE_TIMER);
@@ -475,96 +484,95 @@ LRESULT ModelWindow::doTimer(UINT timerID)
 	return 0;
 }
 
-void ModelWindow::updateSpinRateXY(int xPos, int yPos)
-{
-	int deltaX = xPos - lastX;
-	int deltaY = yPos - lastY;
-	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
+//void ModelWindow::updateSpinRateXY(int xPos, int yPos)
+//{
+//	int deltaX = xPos - lastX;
+//	int deltaY = yPos - lastY;
+//	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
+//
+//	lastX = xPos;
+//	lastY = yPos;
+//	rotationSpeed = magnitude / 10.0f;
+//	if (fEq(rotationSpeed, 0.0f))
+//	{
+//		rotationSpeed = 0.0f;
+//		modelViewer->setXRotate(1.0f);
+//		modelViewer->setYRotate(1.0f);
+//	}
+//	else
+//	{
+//		modelViewer->setXRotate((TCFloat)deltaY);
+//		modelViewer->setYRotate((TCFloat)deltaX);
+//	}
+//	modelViewer->setRotationSpeed(rotationSpeed);
+//}
 
-	lastX = xPos;
-	lastY = yPos;
-	rotationSpeed = magnitude / 10.0f;
-	if (fEq(rotationSpeed, 0.0f))
-	{
-		rotationSpeed = 0.0f;
-		modelViewer->setXRotate(1.0f);
-		modelViewer->setYRotate(1.0f);
-	}
-	else
-	{
-		modelViewer->setXRotate((TCFloat)deltaY);
-		modelViewer->setYRotate((TCFloat)deltaX);
-	}
-	modelViewer->setRotationSpeed(rotationSpeed);
-}
+//void ModelWindow::updatePanXY(int xPos, int yPos)
+//{
+//	int deltaX = xPos - lastX;
+//	int deltaY = yPos - lastY;
+//
+//	lastX = xPos;
+//	lastY = yPos;
+//	modelViewer->panXY(deltaX, deltaY);
+//}
 
-void ModelWindow::updatePanXY(int xPos, int yPos)
-{
-	int deltaX = xPos - lastX;
-	int deltaY = yPos - lastY;
+//void ModelWindow::setXRotate(TCFloat value)
+//{
+//	modelViewer->setXRotate(value);
+//}
 
-	lastX = xPos;
-	lastY = yPos;
-	modelViewer->panXY(deltaX, deltaY);
-}
+//void ModelWindow::setYRotate(TCFloat value)
+//{
+//	modelViewer->setYRotate(value);
+//}
 
-void ModelWindow::setXRotate(TCFloat value)
-{
-	modelViewer->setXRotate(value);
-}
+//void ModelWindow::setRotationSpeed(TCFloat value)
+//{
+//	rotationSpeed = value;
+//	modelViewer->setRotationSpeed(rotationSpeed);
+//}
 
-void ModelWindow::setYRotate(TCFloat value)
-{
-	modelViewer->setYRotate(value);
-}
+//void ModelWindow::updateZoom(int yPos)
+//{
+//	TCFloat magnitude = (TCFloat)(yPos - originalZoomY);
+//
+//	modelViewer->setZoomSpeed(magnitude / 2.0f);
+//}
 
-void ModelWindow::setRotationSpeed(TCFloat value)
-{
-	rotationSpeed = value;
-	modelViewer->setRotationSpeed(rotationSpeed);
-}
+//void ModelWindow::updateHeadXY(int xPos, int yPos)
+//{
+//	TCFloat magnitude = (TCFloat)(xPos - lastX);
+//	TCFloat denom = 5000.0f;
+//
+//	if (modelViewer)
+//	{
+//		TCFloat fov = modelViewer->getFov();
+//
+//		denom /= (TCFloat)tan(deg2rad(fov));
+//	}
+//	if (GetKeyState(VK_SHIFT) & 0x8000)
+//	{
+//		denom /= 2.0f;
+//	}
+//	modelViewer->setCameraXRotate(magnitude / denom);
+//	magnitude = (TCFloat)(yPos - lastY);
+//	modelViewer->setCameraYRotate(magnitude / -denom);
+//}
 
-void ModelWindow::updateZoom(int yPos)
-{
-	TCFloat magnitude = (TCFloat)(yPos - originalZoomY);
-
-//	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "%d %d\n", originalZoomY, yPos);
-	modelViewer->setZoomSpeed(magnitude / 2.0f);
-}
-
-void ModelWindow::updateHeadXY(int xPos, int yPos)
-{
-	TCFloat magnitude = (TCFloat)(xPos - lastX);
-	TCFloat denom = 5000.0f;
-
-	if (modelViewer)
-	{
-		TCFloat fov = modelViewer->getFov();
-
-		denom /= (TCFloat)tan(deg2rad(fov));
-	}
-	if (GetKeyState(VK_SHIFT) & 0x8000)
-	{
-		denom /= 2.0f;
-	}
-	modelViewer->setCameraXRotate(magnitude / denom);
-	magnitude = (TCFloat)(yPos - lastY);
-	modelViewer->setCameraYRotate(magnitude / -denom);
-}
-
-void ModelWindow::updateSpinRate(void)
-{
-	if (lButtonDown)
-	{
-		DWORD thisMoveTime = timeGetTime();
-
-		if (thisMoveTime - lastMoveTime >= 100)
-		{
-			updateSpinRateXY(lastX, lastY);
-			lButtonDown = true;
-		}
-	}
-}
+//void ModelWindow::updateSpinRate(void)
+//{
+//	if (lButtonDown)
+//	{
+//		DWORD thisMoveTime = timeGetTime();
+//
+//		if (thisMoveTime - lastMoveTime >= 100)
+//		{
+//			updateSpinRateXY(lastX, lastY);
+//			lButtonDown = true;
+//		}
+//	}
+//}
 
 void ModelWindow::captureMouse(void)
 {
@@ -583,7 +591,14 @@ void ModelWindow::releaseMouse(void)
 		captureCount--;
 		if (!captureCount)
 		{
-			SetCapture(oldMouseWindow);
+			if (oldMouseWindow)
+			{
+				SetCapture(oldMouseWindow);
+			}
+			else
+			{
+				ReleaseCapture();
+			}
 		}
 	}
 }
@@ -915,7 +930,7 @@ BOOL ModelWindow::doDialogVScroll(HWND hDlg, int scrollCode, int position,
 void ModelWindow::resetView(LDVAngle viewAngle)
 {
 	modelViewer->resetView(viewAngle);
-	rotationSpeed = 0.0f;
+	//rotationSpeed = 0.0f;
 	modelViewer->setXRotate(1.0f);
 	modelViewer->setYRotate(1.0f);
 	modelViewer->setRotationSpeed(0.0f);
@@ -1297,7 +1312,7 @@ LRESULT ModelWindow::doCommand(int /*itemId*/, int notifyCode, HWND controlHWnd)
 		switch (notifyCode)
 		{
 		case CUI_OK:
-			rotationSpeed = 0.0f;
+			//rotationSpeed = 0.0f;
 			modelViewer->setRotationSpeed(0.0f);
 			modelViewer->setZoomSpeed(0.0f);
 			prefs->closePropertySheet();
@@ -1305,7 +1320,7 @@ LRESULT ModelWindow::doCommand(int /*itemId*/, int notifyCode, HWND controlHWnd)
 			applyPrefs();
 			break;
 		case CUI_CANCEL:
-			rotationSpeed = 0.0f;
+			//rotationSpeed = 0.0f;
 			modelViewer->setRotationSpeed(0.0f);
 			modelViewer->setZoomSpeed(0.0f);
 			prefs->closePropertySheet();
@@ -1997,7 +2012,7 @@ int ModelWindow::loadModel(void)
 		_CrtMemDifference(&ms3, &ms1, &ms2);
 		_CrtMemDumpStatistics(&ms3);
 		forceRedraw();
-		rotationSpeed = 0.0f;
+		//rotationSpeed = 0.0f;
 		modelViewer->setRotationSpeed(0.0f);
 		modelViewer->setZoomSpeed(0.0f);
 		if (pollSetting)
@@ -2583,11 +2598,11 @@ void ModelWindow::doPaint(void)
 		return;
 	}
 	makeCurrent();
-	if (needsRecompile)
-	{
-		needsRecompile = false;
-		recompile();
-	}
+	//if (needsRecompile)
+	//{
+	//	needsRecompile = false;
+	//	recompile();
+	//}
 	if (loading)
 	{
 		modelViewer->clear();
@@ -2598,8 +2613,7 @@ void ModelWindow::doPaint(void)
 	redrawRequested = false;
 	modelViewer->update();
 
-	updateSpinRate();
-	updateFPS();
+	//updateSpinRate();
 	//if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
 	//	&& fEq(modelViewer->getCameraXRotate(), 0.0f) &&
 	//	fEq(modelViewer->getCameraYRotate(), 0.0f) &&
@@ -2614,6 +2628,7 @@ void ModelWindow::doPaint(void)
 			firstFPSPass = true;
 		}
 	}
+	updateFPS();
 	if (redrawCount > 0)
 	{
 		redrawCount--;

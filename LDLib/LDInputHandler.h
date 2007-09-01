@@ -35,6 +35,7 @@ public:
 	bool mouseMove(TCULong modifierKeys, int x, int y);
 	bool mouseWheel(TCULong modifierKeys, TCFloat amount);
 	void setMouseUpPending(bool value);
+	void cancelMouseDrag(void);
 
 	static const char *captureAlertClass(void) { return "LDCaptureMouse"; }
 	static const char *releaseAlertClass(void) { return "LDReleaseMouse"; }
