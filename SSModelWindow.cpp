@@ -158,9 +158,9 @@ int SSModelWindow::loadModel(void)
 
 	if (retVal)
 	{
-		setXRotate(1.0f);
-		setYRotate(1.0f);
-		setRotationSpeed(ssRotationSpeed / 100.0f);
+		modelViewer->setXRotate(1.0f);
+		modelViewer->setYRotate(1.0f);
+		modelViewer->setRotationSpeed(ssRotationSpeed / 100.0f);
 	}
 	return retVal;
 }
@@ -227,8 +227,8 @@ void SSModelWindow::doPaint(void)
 //	rect.bottom = y + height;
 	newX = (sin(t * (ssSpeed + 3) / 15000.0) + 1.0) * xScale;
 	newY = (sin(t * (ssSpeed + 3) / 13456.0) + 1.0) * yScale;
-	setXRotate((GLfloat)sin(t / 1000.0) + 1.0f);
-	setYRotate((GLfloat)cos(t / 1000.0) + 1.0f);
+	modelViewer->setXRotate((GLfloat)sin(t / 1000.0) + 1.0f);
+	modelViewer->setYRotate((GLfloat)cos(t / 1000.0) + 1.0f);
 	MoveWindow(hWindow, (int)newX, (int)newY, width, height, FALSE);
 	ModelWindow::doPaint();
 	reallySwapBuffers();

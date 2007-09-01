@@ -70,11 +70,10 @@ class ModelWindow: public CUIOGLWindow
 		virtual void mouseWheel(short keyFlags, short zDelta);
 		virtual void setZoomSpeed(TCFloat);
 		virtual TCFloat getZoomSpeed(void);
-//		void setRotationSpeed(TCFloat value) { rotationSpeed = value; }
-		virtual void setRotationSpeed(TCFloat value);
-		virtual void setXRotate(TCFloat value);
-		virtual void setYRotate(TCFloat value);
-		TCFloat getRotationSpeed(void) { return rotationSpeed; }
+		//virtual void setRotationSpeed(TCFloat value);
+		//virtual void setXRotate(TCFloat value);
+		//virtual void setYRotate(TCFloat value);
+		//TCFloat getRotationSpeed(void) { return rotationSpeed; }
 		virtual void forceRedraw(int = 0);
 		virtual void recompile(void);
 		virtual void uncompile(void);
@@ -90,7 +89,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual void setPollSetting(int);
 		int getPollSetting(void) { return pollSetting; }
 		BOOL initWindow(void);
-		void setNeedsRecompile(void) { needsRecompile = true; }
+		//void setNeedsRecompile(void) { needsRecompile = true; }
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
 		virtual void saveDefaultView(void);
 		virtual void resetDefaultView(void);
@@ -149,16 +148,15 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doRButtonUp(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doMButtonDown(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doMButtonUp(WPARAM keyFlags, int xPos, int yPos);
-//		virtual LRESULT doMButtonUp(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doMouseMove(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doSize(WPARAM, int, int);
 		virtual LRESULT doMove(int newX, int newY);
 		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);
-		virtual void updateSpinRateXY(int, int);
-		virtual void updatePanXY(int xPos, int yPos);
-		virtual void updateHeadXY(int xPos, int yPos);
-		virtual void updateZoom(int);
-		virtual void updateSpinRate(void);
+		//virtual void updateSpinRateXY(int, int);
+		//virtual void updatePanXY(int xPos, int yPos);
+		//virtual void updateHeadXY(int xPos, int yPos);
+		//virtual void updateZoom(int);
+		//virtual void updateSpinRate(void);
 		virtual void captureMouse(void);
 		virtual void releaseMouse(void);
 //		virtual void createPreferences(void);
@@ -326,15 +324,15 @@ class ModelWindow: public CUIOGLWindow
 		int numFramesSinceReference;
 		TCFloat fps;
 		bool firstFPSPass;
-		DWORD lastMoveTime;
-		TCFloat rotationSpeed;
-		TCFloat distance;
-		int lastX;
-		int lastY;
-		int originalZoomY;
-		bool lButtonDown;
-		bool rButtonDown;
-		bool mButtonDown;
+		//DWORD lastMoveTime;
+		//TCFloat rotationSpeed;
+		//TCFloat distance;
+		//int lastX;
+		//int lastY;
+		//int originalZoomY;
+		//bool lButtonDown;
+		//bool rButtonDown;
+		//bool mButtonDown;
 		HWND oldMouseWindow;
 		HWND hPrefsWindow;
 		int captureCount;

@@ -122,6 +122,7 @@ LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 			   fullScreen(false),
 			   fullScreenActive(false),
 			   switchingModes(false),
+			   searchDirsInitialized(false),
 			   videoModes(NULL),
 			   numVideoModes(0),
 			   currentVideoModeIndex(-1),
@@ -256,9 +257,10 @@ void LDViewWindow::showWindow(int nCmdShow)
 		CUIWindow::showWindow(nCmdShow);
 	}
 	modelViewer = modelWindow->getModelViewer();
-	if (modelViewer)
+	if (modelViewer && !searchDirsInitialized)
 	{
 		modelViewer->setExtraSearchDirs(extraSearchDirs);
+		searchDirsInitialized = true;
 	}
 	modelWindow->finalSetup();
 }
@@ -1164,14 +1166,10 @@ void LDViewWindow::activateFullScreenMode(void)
 		setFullScreenDisplayMode();
 		if (initWindow())
 		{
-//			if (modelWindow->initWindow())
-			{
-//				modelWindow->showWindow(SW_SHOW);
-//				modelWindowShown = true;
-				showWindow(SW_SHOW);
-				modelWindow->setNeedsRecompile();
-				modelWindow->forceRedraw(1);
-			}
+			showWindow(SW_SHOW);
+			modelWindow->uncompile();
+			//modelWindow->setNeedsRecompile();
+			modelWindow->forceRedraw(1);
 		}
 		skipMinimize = false;
 	}
@@ -1609,17 +1607,13 @@ void LDViewWindow::switchModes(void)
 	if (modelWindow)
 	{
 		modelWindow->closeWindow();
-//		modelWindowShown = false;
 	}
 	DestroyWindow(hWindow);
-//	modelWindow->forceRedraw(3);
 	switchingModes = false;
 	fullScreen = !fullScreen;
 	if (fullScreen)
 	{
-//		debugPrintf("switching to fullscreen...\n");
 		setFullScreenDisplayMode();
-//		debugPrintf("done.\n");
 	}
 	else
 	{
@@ -1628,9 +1622,7 @@ void LDViewWindow::switchModes(void)
 		int dWidth = newWidth - width;
 		int dHeight = newHeight - height;
 
-//		debugPrintf("switching from fullscreen...\n");
 		restoreDisplayMode();
-//		debugPrintf("done\n");
 		width = newWidth;
 		height = newHeight;
 		newWidth = modelWindow->getWidth() + dWidth;
@@ -1639,34 +1631,11 @@ void LDViewWindow::switchModes(void)
 	}
 	if (initWindow())
 	{
-//		if (modelWindow->initWindow())
-		{
-			SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 0, 0,
-				width, height, 0);
-			showWindow(SW_SHOW);
-			if (!fullScreen)
-			{
-//				debugPrintf("normal.\n");
-			}
-			modelWindow->setNeedsRecompile();
-			skipMinimize = false;
-		}
-/*
-		else
-		{
-			skipMinimize = false;
-			if (fullScreen)
-			{
-				switchModes();
-			}
-			else
-			{
-				MessageBox(hWindow, "Error switching back.  Aborting.", "Error",
-					MB_OK);
-				shutdown();
-			}
-		}
-*/
+		SetWindowPos(modelWindow->getHWindow(), HWND_TOP, 0, 0,
+			width, height, 0);
+		showWindow(SW_SHOW);
+		modelWindow->uncompile();
+		skipMinimize = false;
 	}
 	else
 	{

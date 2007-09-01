@@ -314,6 +314,7 @@ class LDViewWindow: public CUIWindow
 		bool fullScreen;
 		bool fullScreenActive;
 		bool switchingModes;
+		bool searchDirsInitialized;
 		DWORD standardWindowStyle;
 
 		VideoModeT* videoModes;
