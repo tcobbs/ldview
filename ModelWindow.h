@@ -318,6 +318,7 @@ class ModelWindow: public CUIOGLWindow
 			WPARAM wParam, LPARAM lParam);
 		static void swap(int &left, int &right);
 		static bool altPressed(void);
+		static TCULong convertKeyModifiers(TCULong osModifiers);
 
 		LDrawModelViewer* modelViewer;
 		LDInputHandler *inputHandler;
