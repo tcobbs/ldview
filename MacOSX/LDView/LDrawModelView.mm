@@ -298,23 +298,6 @@ static TCImage *resizeCornerImage = NULL;
 	return retValue;
 }
 
-- (void)rightMouseDown:(NSEvent *)event
-{
-	NSPoint loc = [event locationInWindow];
-
-	inputHandler->mouseDown([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBRight, (int)loc.x, (int)-loc.y);
-//	[self rotationUpdate];
-//	rightMouseDownModifierFlags = [event modifierFlags];
-//	if (!lButtonDown)
-//	{
-//		if (viewMode == LDVViewExamine)
-//		{
-//			originalZoomY = [event locationInWindow].y;
-//			rButtonDown = YES;
-//		}
-//	}
-}
-
 - (void)mouseDown:(NSEvent *)event
 {
 	NSPoint loc = [event locationInWindow];
@@ -337,17 +320,28 @@ static TCImage *resizeCornerImage = NULL;
 //	}
 }
 
-- (void)rightMouseUp:(NSEvent *)event
+- (void)rightMouseDown:(NSEvent *)event
 {
 	NSPoint loc = [event locationInWindow];
 	
-	inputHandler->mouseUp([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBRight, (int)loc.x, (int)-loc.y);
-//	[self rotationUpdate];
-//	if (rButtonDown)
-//	{
-//		rButtonDown = NO;
-//		modelViewer->setZoomSpeed(0.0f);
-//	}
+	inputHandler->mouseDown([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBRight, (int)loc.x, (int)-loc.y);
+	//	[self rotationUpdate];
+	//	rightMouseDownModifierFlags = [event modifierFlags];
+	//	if (!lButtonDown)
+	//	{
+	//		if (viewMode == LDVViewExamine)
+	//		{
+	//			originalZoomY = [event locationInWindow].y;
+	//			rButtonDown = YES;
+	//		}
+	//	}
+}
+
+- (void)otherMouseDown:(NSEvent *)event
+{
+	NSPoint loc = [event locationInWindow];
+	
+	inputHandler->mouseDown([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBMiddle, (int)loc.x, (int)-loc.y);
 }
 
 - (void)mouseUp:(NSEvent *)event
@@ -369,79 +363,30 @@ static TCImage *resizeCornerImage = NULL;
 //	}
 }
 
-- (void)updateZoom:(float)yPos
-{
-	float magnitude = yPos - originalZoomY;
-
-	modelViewer->setZoomSpeed(-magnitude / 2.0f);
-}
-
-- (void)rightMouseDragged:(NSEvent *)event
+- (void)rightMouseUp:(NSEvent *)event
 {
 	NSPoint loc = [event locationInWindow];
 	
-	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
-//	[self rotationUpdate];
-//	if (rightMouseDownModifierFlags & NSAlternateKeyMask)
-//	{
-//		modelViewer->setClipZoom(true);
-//	}
-//	else
-//	{
-//		modelViewer->setClipZoom(false);
-//	}
-//	[self updateZoom:[event locationInWindow].y];
+	inputHandler->mouseUp([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBRight, (int)loc.x, (int)-loc.y);
+	//	[self rotationUpdate];
+	//	if (rButtonDown)
+	//	{
+	//		rButtonDown = NO;
+	//		modelViewer->setZoomSpeed(0.0f);
+	//	}
 }
 
-- (void)updatePanXY:(NSPoint)mouseLocation
+- (void)otherMouseUp:(NSEvent *)event
 {
-	float deltaX = mouseLocation.x - lastMouseLocation.x;
-	float deltaY = mouseLocation.y - lastMouseLocation.y;
+	NSPoint loc = [event locationInWindow];
 	
-	lastMouseLocation = mouseLocation;
-	modelViewer->panXY((int)deltaX, (int)-deltaY);
-}
-
-- (void)updateSpinRateXY:(NSPoint)mouseLocation
-{
-	float deltaX = mouseLocation.x - lastMouseLocation.x;
-	float deltaY = mouseLocation.y - lastMouseLocation.y;
-	float magnitude = (float)sqrt(deltaX * deltaX + deltaY * deltaY);
-
-	//NSLog(@"lastMouseLocation: (%g, %g); mouseLocation: (%g, %g)", lastMouseLocation.x, lastMouseLocation.y, mouseLocation.x, mouseLocation.y);
-	lastMouseLocation = mouseLocation;
-	rotationSpeed = magnitude / 10.0f;
-	if (fEq(rotationSpeed, 0.0f))
-	{
-		rotationSpeed = 0.0f;
-		modelViewer->setXRotate(1.0f);
-		modelViewer->setYRotate(1.0f);
-	}
-	else
-	{
-		modelViewer->setXRotate(-deltaY);
-		modelViewer->setYRotate(deltaX);
-	}
-	modelViewer->setRotationSpeed(rotationSpeed);
-}
-
-- (void)updateSpinRate
-{
-	NSEvent *mouseUpEvent = [[self window] nextEventMatchingMask:NSLeftMouseUpMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO];
-	
-	// if mouseUpEvent has a value, then there's a mouse up in the queue, and we
-	// don't want to stop our spinning.
-	if (lButtonDown && !mouseUpEvent)
-	{
-		[self updateSpinRateXY:lastMouseLocation];
-//		if ([[NSDate date] timeIntervalSinceReferenceDate] -
-//			[lastMoveTime timeIntervalSinceReferenceDate] > -0.1 ||
-//			(lastFrameMouseLocation.x == lastMouseLocation.x &&
-//			 lastFrameMouseLocation.y == lastMouseLocation.y))
-//		{
-//			[self updateSpinRateXY:lastMouseLocation];
-//		}
-	}
+	inputHandler->mouseUp([self convertKeyModifiers:[event modifierFlags]], LDInputHandler::MBMiddle, (int)loc.x, (int)-loc.y);
+	//	[self rotationUpdate];
+	//	if (rButtonDown)
+	//	{
+	//		rButtonDown = NO;
+	//		modelViewer->setZoomSpeed(0.0f);
+	//	}
 }
 
 - (void)mouseDragged:(NSEvent *)event
@@ -449,29 +394,197 @@ static TCImage *resizeCornerImage = NULL;
 	NSPoint loc = [event locationInWindow];
 	
 	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
-//	if (mouseDownModifierFlags & NSControlKeyMask)
+	//	if (mouseDownModifierFlags & NSControlKeyMask)
+	//	{
+	//		[self rightMouseDragged:event];
+	//	}
+	//	else
+	//	{
+	//		[self rotationUpdate];
+	//		//[lastMoveTime release];
+	//		//lastMoveTime = [[NSDate alloc] init];
+	//		NSPoint mouseLocation = [event locationInWindow];
+	//		if (viewMode == LDVViewExamine)
+	//		{
+	//			if (mouseDownModifierFlags & NSCommandKeyMask)
+	//			{
+	//				[self updatePanXY:mouseLocation];
+	//			}
+	//			else
+	//			{
+	//				[self updateSpinRateXY:mouseLocation];
+	//			}
+	//		}
+	//	}
+}
+
+- (void)rightMouseDragged:(NSEvent *)event
+{
+	NSPoint loc = [event locationInWindow];
+	
+	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
+	//	[self rotationUpdate];
+	//	if (rightMouseDownModifierFlags & NSAlternateKeyMask)
+	//	{
+	//		modelViewer->setClipZoom(true);
+	//	}
+	//	else
+	//	{
+	//		modelViewer->setClipZoom(false);
+	//	}
+	//	[self updateZoom:[event locationInWindow].y];
+}
+
+- (void)otherMouseDragged:(NSEvent *)event
+{
+	NSPoint loc = [event locationInWindow];
+	
+	inputHandler->mouseMove([self convertKeyModifiers:[event modifierFlags]], (int)loc.x, (int)-loc.y);
+	//	[self rotationUpdate];
+	//	if (rightMouseDownModifierFlags & NSAlternateKeyMask)
+	//	{
+	//		modelViewer->setClipZoom(true);
+	//	}
+	//	else
+	//	{
+	//		modelViewer->setClipZoom(false);
+	//	}
+	//	[self updateZoom:[event locationInWindow].y];
+}
+
+- (LDInputHandler::KeyCode)convertKeyCode:(NSEvent *)theEvent
+{
+	NSString *characters = [theEvent charactersIgnoringModifiers];
+	
+	if ([characters length] == 1)
+	{
+		unichar character = [characters characterAtIndex:0];
+		
+		if (isalpha(character))
+		{
+			return (LDInputHandler::KeyCode)(toupper(character) - 'A' + LDInputHandler::KCA);
+		}
+		else
+		{
+			switch (character)
+			{
+			case NSUpArrowFunctionKey:
+				return LDInputHandler::KCUp;
+			case NSDownArrowFunctionKey:
+				return LDInputHandler::KCDown;
+			case NSLeftArrowFunctionKey:
+				return LDInputHandler::KCLeft;
+			case NSRightArrowFunctionKey:
+				return LDInputHandler::KCRight;
+			case ' ':
+				return LDInputHandler::KCSpace;
+			case NSPageUpFunctionKey:
+				return LDInputHandler::KCPageUp;
+			case NSPageDownFunctionKey:
+				return LDInputHandler::KCPageDown;
+			case NSHomeFunctionKey:
+				return LDInputHandler::KCHome;
+			case NSEndFunctionKey:
+				return LDInputHandler::KCEnd;
+			case NSInsertFunctionKey:
+				return LDInputHandler::KCInsert;
+			case NSDeleteFunctionKey:
+				return LDInputHandler::KCDelete;
+			case 27:
+				return LDInputHandler::KCEscape;
+			}
+		}
+	}
+	return LDInputHandler::KCUnknown;
+}
+
+- (TCULong)currentKeyModifiers
+{
+	return 0;
+}
+
+- (BOOL)acceptsFirstResponder
+{
+	return YES;
+}
+
+- (BOOL)becomeFirstResponder
+{
+	return YES;
+}
+
+- (BOOL)resignFirstResponder
+{
+	return YES;
+}
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+	inputHandler->keyDown([self convertKeyModifiers:[theEvent modifierFlags]], [self convertKeyCode:theEvent]);
+}
+
+- (void)keyUp:(NSEvent *)theEvent
+{
+	inputHandler->keyUp([self convertKeyModifiers:[theEvent modifierFlags]], [self convertKeyCode:theEvent]);
+}
+
+//- (void)updateZoom:(float)yPos
+//{
+//	float magnitude = yPos - originalZoomY;
+//
+//	modelViewer->setZoomSpeed(-magnitude / 2.0f);
+//}
+
+//- (void)updatePanXY:(NSPoint)mouseLocation
+//{
+//	float deltaX = mouseLocation.x - lastMouseLocation.x;
+//	float deltaY = mouseLocation.y - lastMouseLocation.y;
+//	
+//	lastMouseLocation = mouseLocation;
+//	modelViewer->panXY((int)deltaX, (int)-deltaY);
+//}
+
+//- (void)updateSpinRateXY:(NSPoint)mouseLocation
+//{
+//	float deltaX = mouseLocation.x - lastMouseLocation.x;
+//	float deltaY = mouseLocation.y - lastMouseLocation.y;
+//	float magnitude = (float)sqrt(deltaX * deltaX + deltaY * deltaY);
+//
+//	//NSLog(@"lastMouseLocation: (%g, %g); mouseLocation: (%g, %g)", lastMouseLocation.x, lastMouseLocation.y, mouseLocation.x, mouseLocation.y);
+//	lastMouseLocation = mouseLocation;
+//	rotationSpeed = magnitude / 10.0f;
+//	if (fEq(rotationSpeed, 0.0f))
 //	{
-//		[self rightMouseDragged:event];
+//		rotationSpeed = 0.0f;
+//		modelViewer->setXRotate(1.0f);
+//		modelViewer->setYRotate(1.0f);
 //	}
 //	else
 //	{
-//		[self rotationUpdate];
-//		//[lastMoveTime release];
-//		//lastMoveTime = [[NSDate alloc] init];
-//		NSPoint mouseLocation = [event locationInWindow];
-//		if (viewMode == LDVViewExamine)
-//		{
-//			if (mouseDownModifierFlags & NSCommandKeyMask)
-//			{
-//				[self updatePanXY:mouseLocation];
-//			}
-//			else
-//			{
-//				[self updateSpinRateXY:mouseLocation];
-//			}
-//		}
+//		modelViewer->setXRotate(-deltaY);
+//		modelViewer->setYRotate(deltaX);
 //	}
-}
+//	modelViewer->setRotationSpeed(rotationSpeed);
+//}
+
+//- (void)updateSpinRate
+//{
+//	NSEvent *mouseUpEvent = [[self window] nextEventMatchingMask:NSLeftMouseUpMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:NO];
+//	
+//	// if mouseUpEvent has a value, then there's a mouse up in the queue, and we
+//	// don't want to stop our spinning.
+//	if (lButtonDown && !mouseUpEvent)
+//	{
+//		[self updateSpinRateXY:lastMouseLocation];
+////		if ([[NSDate date] timeIntervalSinceReferenceDate] -
+////			[lastMoveTime timeIntervalSinceReferenceDate] > -0.1 ||
+////			(lastFrameMouseLocation.x == lastMouseLocation.x &&
+////			 lastFrameMouseLocation.y == lastMouseLocation.y))
+////		{
+////			[self updateSpinRateXY:lastMouseLocation];
+////		}
+//	}
+//}
 
 - (void)scrollWheel:(NSEvent *)event
 {
