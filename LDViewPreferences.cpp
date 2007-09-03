@@ -89,6 +89,9 @@ LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 	applySettings();
 	TCAlertManager::registerHandler(TCUserDefaults::alertClass(), this,
 		(TCAlertCallback)&LDViewPreferences::userDefaultChangedAlertCallback);
+	TCAlertManager::registerHandler(
+		LDPreferences::lightVectorChangedAlertClass(), this,
+		(TCAlertCallback)&LDViewPreferences::lightVectorChangedCallback);
 	lightDirIndexToId[0] = IDR_LIGHT_ANGLE_UL;
 	lightDirIndexToId[1] = IDR_LIGHT_ANGLE_UM;
 	lightDirIndexToId[2] = IDR_LIGHT_ANGLE_UR;
@@ -127,6 +130,11 @@ void LDViewPreferences::dealloc(void)
 	}
 */
 	CUIPropertySheet::dealloc();
+}
+
+void LDViewPreferences::lightVectorChangedCallback(TCAlert * /*alert*/)
+{
+	checkLightVector();
 }
 
 void LDViewPreferences::userDefaultChangedAlertCallback(TCAlert *alert)

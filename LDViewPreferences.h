@@ -244,6 +244,7 @@ protected:
 	virtual bool getCachedCheck(HWND hPage, int buttonId, bool action = false);
 	virtual bool getCheck(HWND hPage, int buttonId);
 	virtual void setCheck(HWND hPage, int buttonId, bool value);
+	virtual void lightVectorChangedCallback(TCAlert *alert);
 	virtual void userDefaultChangedAlertCallback(TCAlert *alert);
 	virtual void setAniso(int value);
 	//virtual void setToolbarCheck(HWND hToolbar, int id, bool value);
