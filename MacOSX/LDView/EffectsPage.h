@@ -4,6 +4,8 @@
 
 #import "PreferencePage.h"
 
+class TCAlert;
+
 @interface EffectsPage : PreferencePage
 {
     IBOutlet NSButton *alternateLightingCheck;
@@ -40,5 +42,7 @@
 - (IBAction)stipple:(id)sender;
 - (IBAction)flatShading:(id)sender;
 - (IBAction)smoothCurves:(id)sender;
+
+- (void)lightVectorChanged:(TCAlert *)alert;
 
 @end

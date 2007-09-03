@@ -44,6 +44,7 @@ typedef enum
 - (void)setViewingAngle:(int)value;
 - (IBAction)zoomToFit:(id)sender;
 - (IBAction)viewMode:(id)sender;
+- (void)rotationUpdate;
 
 - (void)modelViewerAlertCallback:(TCAlert *)alert;
 - (void)redrawAlertCallback:(TCAlert *)alert;

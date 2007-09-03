@@ -8,13 +8,16 @@
  */
 
 #include <Carbon/Carbon.h>
+#include <Cocoa/Cocoa.h>
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDInputHandler.h>
+#include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCAlertManager.h>
 #include "AlertHandler.h"
 #include "ModelWindow.h"
+#include "LDViewController.h"
 
 AlertHandler::AlertHandler(ModelWindow *modelWindow)
 	:modelWindow(modelWindow)
@@ -25,6 +28,7 @@ AlertHandler::AlertHandler(ModelWindow *modelWindow)
 	TCAlertManager::registerHandler(LDrawModelViewer::redrawAlertClass(), this, (TCAlertCallback)&AlertHandler::redrawAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::captureAlertClass(), this, (TCAlertCallback)&AlertHandler::captureAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this, (TCAlertCallback)&AlertHandler::releaseAlertCallback);
+	TCAlertManager::registerHandler(LDPreferences::lightVectorChangedAlertClass(), this, (TCAlertCallback)&AlertHandler::lightVectorChangedAlertCallback);
 //	TCAlertManager::registerHandler(LDInputHandler::peekMouseUpAlertClass(), this, (TCAlertCallback)&AlertHandler::peekMouseUpAlertCallback);
 }
 
@@ -66,6 +70,11 @@ void AlertHandler::captureAlertCallback(TCAlert *alert)
 void AlertHandler::releaseAlertCallback(TCAlert *alert)
 {
 	[modelWindow releaseAlertCallback:alert];
+}
+
+void AlertHandler::lightVectorChangedAlertCallback(TCAlert *alert)
+{
+	[modelWindow lightVectorChanged:alert];
 }
 
 //void AlertHandler::peekMouseUpAlertCallback(TCAlert *alert)

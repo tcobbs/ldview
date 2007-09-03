@@ -208,7 +208,7 @@ class LDrawModelViewer: public TCObject
 		virtual void setUseLighting(bool);
 		bool getUseLighting(void) { return flags.useLighting; }
 		bool getShowLightDir(void) const { return flags.showLight; }
-		void setShowLightDir(bool value) { flags.showLight = value; }
+		void setShowLightDir(bool value);
 		virtual void setUseStipple(bool);
 		bool getUseStipple(void) { return flags.useStipple; }
 		virtual void setSortTransparent(bool);

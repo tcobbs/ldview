@@ -3623,6 +3623,18 @@ bool LDrawModelViewer::mouseDown(LDVMouseMode mode, int x, int y)
 	return true;
 }
 
+void LDrawModelViewer::setShowLightDir(bool value)
+{
+	if (value != flags.showLight)
+	{
+		flags.showLight = value;
+		if (!value)
+		{
+			preferences->setLightVector(lightVector, true);
+		}
+	}
+}
+
 bool LDrawModelViewer::mouseUp(int x, int y)
 {
 	int deltaX = x - lastMouseX;

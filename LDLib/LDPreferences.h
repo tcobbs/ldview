@@ -26,7 +26,11 @@ public:
 		LowerRight		= 9,
 	};
 	LDPreferences(LDrawModelViewer* modelViewer = NULL);
-	
+	static const char *lightVectorChangedAlertClass(void)
+	{
+		return "LDLightVectorChanged";
+	}
+
 	void setModelViewer(LDrawModelViewer *value);
 
 	// These are called from the constructor, and cannot be properly made into
@@ -257,7 +261,7 @@ protected:
 		const char *key, bool commit, bool isPath = false);
 	void setSetting(LongVector &setting, const LongVector &value,
 		const char *key, bool commit);
-	void setSetting(TCVector &setting, const TCVector &value,
+	bool setSetting(TCVector &setting, const TCVector &value,
 		const char *key, bool commit);
 	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
 		bool commit);

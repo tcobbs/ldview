@@ -24,6 +24,7 @@ protected:
 	void redrawAlertCallback(TCAlert *alert);
 	void captureAlertCallback(TCAlert *alert);
 	void releaseAlertCallback(TCAlert *alert);
+	void lightVectorChangedAlertCallback(TCAlert *alert);
 	//void peekMouseUpAlertCallback(TCAlert *alert);
 
 	ModelWindow *modelWindow;

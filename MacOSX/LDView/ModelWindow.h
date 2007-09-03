@@ -45,6 +45,7 @@ class AlertHandler;
 	ErrorItem *filteredRootErrorItem;
 }
 
+- (LDViewController *)controller;
 - (BOOL)openModel:(NSString *)filename;
 - (id)initWithController:(LDViewController *)value;
 - (LDrawModelView *)modelView;
@@ -55,6 +56,7 @@ class AlertHandler;
 - (void)redrawAlertCallback:(TCAlert *)alert;
 - (void)captureAlertCallback:(TCAlert *)alert;
 - (void)releaseAlertCallback:(TCAlert *)alert;
+- (void)lightVectorChanged:(TCAlert *)alert;
 //- (void)peekMouseUpAlertCallback:(TCAlert *)alert;
 
 - (void)modelWillReload;

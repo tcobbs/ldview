@@ -1,5 +1,6 @@
 #include "LDPreferences.h"
 #include "LDUserDefaultsKeys.h"
+#include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCWebClient.h>
@@ -61,10 +62,10 @@ void LDPreferences::setModelViewer(LDrawModelViewer *value)
 {
 	if (value != modelViewer)
 	{
-		if (modelViewer)
-		{
-			modelViewer->setPreferences(NULL);
-		}
+		//if (modelViewer)
+		//{
+		//	modelViewer->setPreferences(NULL);
+		//}
 		TCObject::release(modelViewer);
 		modelViewer = value;
 		modelViewer->retain();
@@ -884,7 +885,7 @@ void LDPreferences::setSetting(LongVector &setting, const LongVector &value,
 	}
 }
 
-void LDPreferences::setSetting(TCVector &setting, const TCVector &value,
+bool LDPreferences::setSetting(TCVector &setting, const TCVector &value,
 							   const char *key, bool commit)
 {
 	if (setting != value || (m_changedSettings[key] && commit))
@@ -904,7 +905,9 @@ void LDPreferences::setSetting(TCVector &setting, const TCVector &value,
 		{
 			m_changedSettings[key] = true;
 		}
+		return true;
 	}
+	return false;
 }
 
 void LDPreferences::setSetting(bool &setting, bool value, const char *key,
@@ -1475,7 +1478,10 @@ void LDPreferences::setLightDirection(LightDirection value, bool commit,
 void LDPreferences::setLightVector(const TCVector &value, bool commit,
 								   bool apply)
 {
-	setSetting(m_lightVector, value, LIGHT_VECTOR_KEY, commit);
+	if (setSetting(m_lightVector, value, LIGHT_VECTOR_KEY, commit))
+	{
+		TCAlertManager::sendAlert(lightVectorChangedAlertClass(), this);
+	}
 	if (apply)
 	{
 		if (modelViewer)

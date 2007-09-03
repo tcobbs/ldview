@@ -12,6 +12,7 @@
 @class ModelWindow;
 
 class LDPreferences;
+class TCAlert;
 
 extern NSString *LDPreferencesDidUpdateNotification;
 
@@ -52,5 +53,6 @@ extern NSString *LDPreferencesDidUpdateNotification;
 - (void)loadSettings;
 - (void)hotKeyPressed:(int)index;
 - (void)saveViewingAngle:(ModelWindow*)modelWindow;
+- (void)lightVectorChanged:(TCAlert *)alert;
 
 @end
