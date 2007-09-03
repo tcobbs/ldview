@@ -130,6 +130,7 @@ class LDrawModelViewer: public TCObject
 		TCFloat getYPan(void) { return yPan; }
 		void setXYPan(TCFloat xValue, TCFloat yValue);
 		void setRotationSpeed(TCFloat value);
+		TCFloat getRotationSpeed(void) const { return rotationSpeed; }
 		void setCameraXRotate(TCFloat value) { cameraXRotate = value; }
 		void setCameraYRotate(TCFloat value) { cameraYRotate = value; }
 		void setCameraZRotate(TCFloat value) { cameraZRotate = value; }
@@ -206,6 +207,8 @@ class LDrawModelViewer: public TCObject
 		bool getUsePolygonOffset(void) { return flags.usePolygonOffset; }
 		virtual void setUseLighting(bool);
 		bool getUseLighting(void) { return flags.useLighting; }
+		bool getShowLightDir(void) const { return flags.showLight; }
+		void setShowLightDir(bool value) { flags.showLight = value; }
 		virtual void setUseStipple(bool);
 		bool getUseStipple(void) { return flags.useStipple; }
 		virtual void setSortTransparent(bool);
@@ -336,6 +339,7 @@ class LDrawModelViewer: public TCObject
 		virtual void orthoView(void);
 
 		virtual void requestRedraw(void);
+		virtual void mouseMoveLight(int deltaX, int deltaY);
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
@@ -393,7 +397,6 @@ class LDrawModelViewer: public TCObject
 			bool exists);
 		virtual void unofficialPartNotFound(const char *filename);
 		virtual bool connectionFailure(TCWebClient *webClient);
-		virtual void mouseMoveLight(int deltaX, int deltaY);
 
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
