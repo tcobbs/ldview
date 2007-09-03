@@ -179,4 +179,9 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	ldPreferences->saveDefaultView();
 }
 
+- (void)lightVectorChanged:(TCAlert *)alert
+{
+	[effectsPage lightVectorChanged:alert];
+}
+
 @end

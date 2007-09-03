@@ -714,4 +714,16 @@
 	[[ErrorsAndWarnings sharedInstance] update:self];
 }
 
+- (LDViewController *)controller
+{
+	return controller;
+}
+
+- (void)lightVectorChanged:(TCAlert *)alert
+{
+	[modelView modelViewer]->setLightVector([[controller preferences] ldPreferences]->getLightVector());
+	[modelView rotationUpdate];
+	[[controller preferences] lightVectorChanged:alert];
+}
+
 @end

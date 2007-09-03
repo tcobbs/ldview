@@ -1,5 +1,6 @@
 #import "EffectsPage.h"
 #include <LDLib/LDPreferences.h>
+#include <TCFoundation/TCAlert.h>
 
 @implementation EffectsPage
 
@@ -16,13 +17,8 @@
 	[hideLightDatGeom setEnabled:enabled];
 }
 
-- (void)enableLighting
+- (void)updateLightDir
 {
-	[self enableLightingUI:YES];
-	[self setCheck:highQualityCheck value:ldPreferences->getQualityLighting()];
-	[self setCheck:subduedCheck value:ldPreferences->getSubduedLighting()];
-	[self setCheck:specularCheck value:ldPreferences->getUseSpecular()];
-	[self setCheck:alternateLightingCheck value:ldPreferences->getOneLight()];
 	if (ldPreferences->getLightDirection() == LDPreferences::CustomDirection)
 	{
 		[lightDirMatrix deselectAllCells];
@@ -31,7 +27,16 @@
 	{
 		[lightDirMatrix selectCellWithTag:ldPreferences->getLightDirection()];
 	}
-	// Light dir
+}
+
+- (void)enableLighting
+{
+	[self enableLightingUI:YES];
+	[self setCheck:highQualityCheck value:ldPreferences->getQualityLighting()];
+	[self setCheck:subduedCheck value:ldPreferences->getSubduedLighting()];
+	[self setCheck:specularCheck value:ldPreferences->getUseSpecular()];
+	[self setCheck:alternateLightingCheck value:ldPreferences->getOneLight()];
+	[self updateLightDir];
 	[self groupCheck:useLightDatCheck name:@"LightDats" value:ldPreferences->getDrawLightDats()];
 	[self setCheck:hideLightDatGeom value:ldPreferences->getNoLightGeom()];
 }
@@ -251,6 +256,13 @@
 {
 	[self valueChanged:sender];
 	[self setCheck:flatShadingCheck value:false];
+}
+
+- (void)lightVectorChanged:(TCAlert *)alert
+{
+	// Note: sender is ignored, because all windows get the same light
+	// vector.
+	[self updateLightDir];
 }
 
 @end
