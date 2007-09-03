@@ -37,14 +37,12 @@ void LDInputHandler::cancelMouseDrag(void)
 	}
 }
 
-bool LDInputHandler::updateSpinRateXY(int xPos, int yPos)
+void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - m_lastX;
 	int deltaY = yPos - m_lastY;
 	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
 
-	m_lastX = xPos;
-	m_lastY = yPos;
 	m_rotationSpeed = magnitude / 10.0f;
 	if (fEq(m_rotationSpeed, 0.0f))
 	{
@@ -59,17 +57,15 @@ bool LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 	}
 	m_modelViewer->setRotationSpeed(m_rotationSpeed);
 	m_modelViewer->requestRedraw();
-	return true;
 }
 
-bool LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
+void LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 {
 	TCFloat magnitude = (TCFloat)(xPos - m_lastX);
 	TCFloat denom = 5000.0f;
 	TCFloat fov = m_modelViewer->getFov();
 
 	denom /= (TCFloat)tan(deg2rad(fov));
-	//if (GetKeyState(VK_SHIFT) & 0x8000)
 	if (modifierKeys & MKShift)
 	{
 		debugPrintf("Faster.\n");
@@ -79,27 +75,50 @@ bool LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 	magnitude = (TCFloat)(yPos - m_lastY);
 	m_modelViewer->setCameraYRotate(magnitude / -denom);
 	m_modelViewer->requestRedraw();
-	return true;
 }
 
-bool LDInputHandler::updatePanXY(int xPos, int yPos)
+void LDInputHandler::updatePanXY(int xPos, int yPos)
 {
-	int deltaX = xPos - m_lastX;
-	int deltaY = yPos - m_lastY;
+	if (m_viewMode == VMExamine)
+	{
+		int deltaX = xPos - m_lastX;
+		int deltaY = yPos - m_lastY;
 
-	m_lastX = xPos;
-	m_lastY = yPos;
-	m_modelViewer->panXY(deltaX, deltaY);
-	m_modelViewer->requestRedraw();
-	return true;
+		m_modelViewer->panXY(deltaX, deltaY);
+		m_modelViewer->requestRedraw();
+	}
 }
 
-bool LDInputHandler::updateZoom(int yPos)
+void LDInputHandler::updateZoomY(int yPos)
 {
 	TCFloat magnitude = (TCFloat)(yPos - m_clickY);
 
 	m_modelViewer->setZoomSpeed(magnitude / 2.0f);
 	m_modelViewer->requestRedraw();
+}
+
+bool LDInputHandler::leftDown(TCULong modifierKeys, int xPos, int yPos)
+{
+	if (modifierKeys & MKShift)
+	{
+		if (!m_modelViewer->getUseLighting())
+		{
+			// Allowing this will likely just lead to confusion.
+			return false;
+		}
+		m_mouseMode = MMLight;
+		m_modelViewer->setShowLightDir(true);
+		m_modelViewer->requestRedraw();
+	}
+	else if (modifierKeys & MKControl)
+	{
+		m_mouseMode = MMPan;
+	}
+	else
+	{
+		m_mouseMode = MMNormal;
+		updateSpinRateXY(xPos, yPos);
+	}
 	return true;
 }
 
@@ -132,19 +151,9 @@ bool LDInputHandler::mouseDown(
 	switch (button)
 	{
 	case MBLeft:
-		if (modifierKeys & MKShift)
+		if (!leftDown(modifierKeys, x, y))
 		{
-			m_mouseMode = MMLight;
-			m_modelViewer->mouseDown(LDVMouseLight, x, y);
-		}
-		else if (modifierKeys & MKControl)
-		{
-			m_mouseMode = MMPan;
-		}
-		else
-		{
-			m_mouseMode = MMNormal;
-			updateSpinRateXY(x, y);
+			return false;
 		}
 		break;
 	case MBRight:
@@ -190,10 +199,7 @@ bool LDInputHandler::mouseUp(
 			m_modelViewer->setCameraXRotate(0.0f);
 			m_modelViewer->setCameraYRotate(0.0f);
 		}
-		if (m_mouseMode == MMLight)
-		{
-			m_modelViewer->mouseUp(x, y);
-		}
+		m_modelViewer->setShowLightDir(false);
 		break;
 	case MBRight:
 		m_modelViewer->setZoomSpeed(0.0f);
@@ -226,37 +232,50 @@ bool LDInputHandler::mouseUp(
 //#endif // WIN32
 //}
 
+void LDInputHandler::updateLightXY(int xPos, int yPos)
+{
+	m_modelViewer->mouseMoveLight(xPos - m_lastX, yPos - m_lastY);
+	m_modelViewer->requestRedraw();
+}
+
+void LDInputHandler::updateXY(TCULong modifierKeys, int xPos, int yPos)
+{
+	if (m_viewMode == VMExamine)
+	{
+		//m_lastMoveTime = getTimeRef();
+		updateSpinRateXY(xPos, yPos);
+	}
+	else
+	{
+		updateHeadXY(modifierKeys, xPos, yPos);
+	}
+}
+
 bool LDInputHandler::mouseMove(TCULong modifierKeys, int x, int y)
 {
+	bool retValue = true;
+
 	switch (m_mouseMode)
 	{
-	case MMNone:
-		return false;
 	case MMNormal:
-		if (m_viewMode == VMExamine)
-		{
-			//m_lastMoveTime = getTimeRef();
-			return updateSpinRateXY(x, y);
-		}
-		else
-		{
-			return updateHeadXY(modifierKeys, x, y);
-		}
+		updateXY(modifierKeys, x, y);
+		break;
 	case MMZoom:
-		return updateZoom(y);
+		updateZoomY(y);
+		break;
 	case MMPan:
-		if (m_viewMode == VMExamine)
-		{
-			return updatePanXY(x, y);
-		}
+		updatePanXY(x, y);
+		break;
 	case MMLight:
-		if (m_mouseMode == MMLight)
-		{
-			m_modelViewer->mouseMove(x, y);
-		}
+		updateLightXY(x, y);
+		break;
+	default:
+		retValue = false;
 		break;
 	}
-	return false;
+	m_lastX = x;
+	m_lastY = y;
+	return retValue;
 }
 
 bool LDInputHandler::mouseWheel(TCULong modifierKeys, TCFloat amount)
@@ -389,6 +408,10 @@ bool LDInputHandler::keyDown(TCULong modifierKeys, KeyCode keyCode)
 			m_rotationSpeed = rotationSpeed;
 			break;
 		case KCShift:
+			if (fEq(m_modelViewer->getRotationSpeed(), 0.0f))
+			{
+				return true;
+			}
 			m_rotationSpeed = rotationSpeed;
 			break;
 		default:

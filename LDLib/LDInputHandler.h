@@ -105,11 +105,13 @@ protected:
 
 	~LDInputHandler(void);
 	void dealloc(void);
-	bool lightMouseDown(int x, int y);
-	bool updateSpinRateXY(int xPos, int yPos);
-	bool updateHeadXY(TCULong modifierKeys, int xPos, int yPos);
-	bool updatePanXY(int xPos, int yPos);
-	bool updateZoom(int yPos);
+	bool leftDown(TCULong modifierKeys, int xPos, int yPos);
+	void updateSpinRateXY(int xPos, int yPos);
+	void updateXY(TCULong modifierKeys, int xPos, int yPos);
+	void updateHeadXY(TCULong modifierKeys, int xPos, int yPos);
+	void updatePanXY(int xPos, int yPos);
+	void updateLightXY(int xPos, int yPos);
+	void updateZoomY(int yPos);
 	void frameDone(TCAlert *alert);
 	void updateCameraMotion(TCVector &cameraMotion, TCFloat motionAmount,
 		TCFloat strafeAmount);
