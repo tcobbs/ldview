@@ -16,8 +16,9 @@ public:
 	};
 	enum MouseButton
 	{
+		MBUnknown,
 		MBLeft,
-		MBFirst = MBLeft,
+		MBFirst = MBLeft,	// This intentionally skips MBUnknown
 		MBRight,
 		MBMiddle,
 		MBLast = MBMiddle

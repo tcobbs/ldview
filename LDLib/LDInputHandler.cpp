@@ -163,6 +163,8 @@ bool LDInputHandler::mouseDown(
 	case MBMiddle:
 		m_mouseMode = MMPan;
 		break;
+	default:
+		return false;
 	}
 	TCAlertManager::sendAlert(captureAlertClass(), this);
 	return true;

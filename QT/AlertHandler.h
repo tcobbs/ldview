@@ -19,6 +19,10 @@ protected:
 	void progressAlertCallback(TCProgressAlert *alert);
 	void modelViewerAlertCallback(TCAlert *alert);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
+	void redrawAlertCallback(TCAlert *alert);
+	void captureAlertCallback(TCAlert *alert);
+	void releaseAlertCallback(TCAlert *alert);
+	void lightVectorChangedAlertCallback(TCAlert *alert);
 
 	ModelViewerWidget *m_mvw;
 };

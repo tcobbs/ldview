@@ -149,6 +149,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	const QMimeSource *mimeSource =
 		QMimeSourceFactory::defaultFactory()->data("StudLogo.png");
 
+	inputHandler = modelViewer->getInputHandler();
 	LDLModel::setFileCaseCallback(staticFileCaseCallback);
 	if (mimeSource)
 	{
@@ -446,15 +447,17 @@ void ModelViewerWidget::paintGL(void)
 	{
 		painting = true;
 		makeCurrent();
-		updateSpinRate();
+		//updateSpinRate();
+		redrawRequested = false;
 		modelViewer->update();
-		updateFPS();
-		if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
-			&& fEq(modelViewer->getCameraXRotate(), 0.0f)
-			&& fEq(modelViewer->getCameraYRotate(), 0.0f)
-			&& fEq(modelViewer->getCameraZRotate(), 0.0f)
-			&& fEq(modelViewer->getCameraMotion().length(), 0.0f))
-			|| modelViewer->getPaused())
+		//updateFPS();
+		//if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
+		//	&& fEq(modelViewer->getCameraXRotate(), 0.0f)
+		//	&& fEq(modelViewer->getCameraYRotate(), 0.0f)
+		//	&& fEq(modelViewer->getCameraZRotate(), 0.0f)
+		//	&& fEq(modelViewer->getCameraMotion().length(), 0.0f))
+		//	|| modelViewer->getPaused())
+		if (!redrawRequested)
 		{
 			killPaintTimer();
 			fps = -1.0f;
@@ -463,6 +466,7 @@ void ModelViewerWidget::paintGL(void)
 		{
 			startPaintTimer();
 		}
+		updateFPS();
 		if (!saving)
 		{
 			swap_Buffers();
@@ -771,19 +775,43 @@ void ModelViewerWidget::setLastOpenFile(const char *filename)
 	}
 }
 
+// Note: static method.
+LDInputHandler::MouseButton ModelViewerWidget::convertMouseButton(int button)
+{
+	switch (button)
+	{
+	case 1:
+		return LDInputHandler::MBLeft;
+	case 2:
+		return LDInputHandler::MBRight;
+	case 3:
+		return LDInputHandler::MBMiddle;
+	default:
+		// Don't even try to handle if the button number it too high.
+		return LDInputHandler::MBUnknown;
+	}
+}
+
 void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 {
-	int i;
-	int button;
-
 	lock();
-	button = event->button();
 	if (loading)
 	{
-//		event->ignore();
 		unlock();
 		return;
 	}
+	if (!inputHandler->mouseDown(convertKeyModifiers(event->state()),
+		convertMouseButton(event->button()), event->globalX(),
+		event->globalY()))
+	{
+		event->ignore();
+	}
+	unlock();
+/*
+	int i;
+	int button;
+
+	button = event->button();
 	startPaintTimer();
 	if (button >= MAX_MOUSE_BUTTONS)
 	{
@@ -811,6 +839,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 		zoomButtonPress(event);
 	}
 	unlock();
+*/
 }
 
 void ModelViewerWidget::spinButtonPress(QMouseEvent *event)
@@ -842,6 +871,20 @@ void ModelViewerWidget::zoomButtonPress(QMouseEvent *event)
 
 void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+	lock();
+	if (loading)
+	{
+		unlock();
+		return;
+	}
+	if (!inputHandler->mouseUp(convertKeyModifiers(event->state()),
+		convertMouseButton(event->button()), event->globalX(),
+		event->globalY()))
+	{
+		event->ignore();
+	}
+	unlock();
+/*
 	int button;
 
 	lock();
@@ -871,6 +914,7 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 		}
 	}
 	unlock();
+*/
 }
 
 void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
@@ -878,7 +922,7 @@ void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
 	if (modelViewer && modelViewer->mouseUp(event->globalX(), event->globalY()))
 	{
 		lightingSelection = 0;
-		preferences->checkLightVector();
+		//preferences->checkLightVector();
 		return;
 	}
 	if (viewMode != LDVViewExamine)
@@ -895,6 +939,19 @@ void ModelViewerWidget::zoomButtonRelease(QMouseEvent * /*event*/)
 
 void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 {
+	lock();
+	if (loading)
+	{
+		unlock();
+		return;
+	}
+	if (!inputHandler->mouseWheel(convertKeyModifiers(event->state()),
+		(TCFloat)event->delta() * -0.1f))
+	{
+		event->ignore();
+	}
+	unlock();
+/*
 	bool controlPressed;
 
 	lock();
@@ -915,10 +972,24 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 	}
 	modelViewer->zoom((TCFloat)event->delta() * -0.1f);
 	unlock();
+*/
 }
 
 void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 {
+	lock();
+	if (loading)
+	{
+		unlock();
+		return;
+	}
+	if (!inputHandler->mouseMove(convertKeyModifiers(event->state()),
+		event->globalX(), event->globalY()))
+	{
+		event->ignore();
+	}
+	unlock();
+/*
 	bool controlPressed;
 
 	lock();
@@ -971,6 +1042,7 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 		updateZoom(event->globalY());
 	}
 	unlock();
+*/
 }
 
 void ModelViewerWidget::updateSpinRateXY(int xPos, int yPos)
@@ -3469,6 +3541,30 @@ void ModelViewerWidget::modelViewerAlertCallback(TCAlert *alert)
 	}
 }
 
+void ModelViewerWidget::redrawAlertCallback(TCAlert * /*alert*/)
+{
+	lock();
+    startPaintTimer();
+	redrawRequested = true;
+	unlock();
+}
+
+void ModelViewerWidget::captureAlertCallback(TCAlert * /*alert*/)
+{
+}
+
+void ModelViewerWidget::releaseAlertCallback(TCAlert * /*alert*/)
+{
+}
+
+void ModelViewerWidget::lightVectorChangedAlertCallback(TCAlert * /*alert*/)
+{
+	if (preferences)
+	{
+		preferences->checkLightVector();
+	}
+}
+
 void ModelViewerWidget::libraryUpdateProgress(TCProgressAlert *alert)
 {
 	// NOTE: this gets called from inside one of the library update threads.  It
@@ -3779,7 +3875,7 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 }
 
 // Note: static method.
-TCULong ModelViewerWidget::convertKeyModifiers(TCULong osModifiers)
+TCULong ModelViewerWidget::convertKeyModifiers(ButtonState osModifiers)
 {
 	TCULong retValue = 0;
 	if (osModifiers & Qt::ShiftButton)

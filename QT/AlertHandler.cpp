@@ -16,6 +16,15 @@ AlertHandler::AlertHandler(ModelViewerWidget *mvw)
 		(TCAlertCallback)&AlertHandler::modelViewerAlertCallback);
 	TCAlertManager::registerHandler(TCUserDefaults::alertClass(), this,
 		(TCAlertCallback)&AlertHandler::userDefaultChangedAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::redrawAlertClass(), this,
+		(TCAlertCallback)&AlertHandler::redrawAlertCallback);
+	TCAlertManager::registerHandler(LDInputHandler::captureAlertClass(), this,
+		(TCAlertCallback)&AlertHandler::captureAlertCallback);
+	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this,
+		(TCAlertCallback)&AlertHandler::releaseAlertCallback);
+	TCAlertManager::registerHandler(
+		LDPreferences::lightVectorChangedAlertClass(), this,
+		(TCAlertCallback)&AlertHandler::lightVectorChangedAlertCallback);
 }
 
 AlertHandler::~AlertHandler(void)
@@ -60,5 +69,37 @@ void AlertHandler::userDefaultChangedAlertCallback(TCAlert *alert)
 	if (m_mvw)
 	{
 		m_mvw->userDefaultChangedAlertCallback(alert);
+	}
+}
+
+void AlertHandler::redrawAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->redrawAlertCallback(alert);
+	}
+}
+
+void AlertHandler::captureAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->captureAlertCallback(alert);
+	}
+}
+
+void AlertHandler::releaseAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->releaseAlertCallback(alert);
+	}
+}
+
+void AlertHandler::lightVectorChangedAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->lightVectorChangedAlertCallback(alert);
 	}
 }
