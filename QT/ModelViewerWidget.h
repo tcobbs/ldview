@@ -10,7 +10,8 @@
 #include "LDViewExtraDir.h"
 #include "LDViewSnapshotSettings.h"
 #include "LDViewPartList.h"
-#include "LDLib/LDLibraryUpdater.h"
+#include <LDLib/LDLibraryUpdater.h>
+#include <LDLib/LDInputHandler.h>
 
 class LDrawModelViewer;
 class LDView;
@@ -62,6 +63,10 @@ public:
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);
 	void modelViewerAlertCallback(TCAlert *alert);
+	void redrawAlertCallback(TCAlert *alert);
+	void captureAlertCallback(TCAlert *alert);
+	void releaseAlertCallback(TCAlert *alert);
+	void lightVectorChangedAlertCallback(TCAlert *alert);
 
 	void setShowFPS(bool value) { showFPS = value; }
 	void setApplication(QApplication *value);
@@ -228,9 +233,11 @@ protected:
 //	static int staticErrorCallback(LDLError *error, void *userData);
 	static bool staticFileCaseCallback(char *filename);
 	static bool staticFileCaseLevel(QDir &dir, char *filename);
-	static TCULong convertKeyModifiers(TCULong osModifiers);
+	static TCULong convertKeyModifiers(ButtonState osModifiers);
+	static LDInputHandler::MouseButton convertMouseButton(int button);
 
 	LDrawModelViewer *modelViewer;
+	LDInputHandler *inputHandler;
 	bool mouseButtonsDown[MAX_MOUSE_BUTTONS];
 	int lastX;
 	int lastY;
@@ -301,6 +308,7 @@ protected:
 	bool libraryUpdateProgressReady;
 	int libraryUpdateFinishCode;
 	QProgressDialog *libraryUpdateWindow;
+	bool redrawRequested;
 
 	int lightingSelection;
 	static TCStringArray* recentFiles;
