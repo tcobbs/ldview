@@ -1,5 +1,5 @@
 Per poter usare questo file di lingua bisogna copiare i file "LDView-Italian.dll",
-"LDVIEW-ITALIAN.HLP" e "Help-Italian.html" nella cartella, nella quale è stata
+"LDView-Italian.Hlp" e "Help-Italian.html" nella cartella, nella quale è stata
 installato LDView.
 
 Se la lingua del vostro sistema operativo non è impostato su "Italiano", potete
