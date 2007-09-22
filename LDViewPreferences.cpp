@@ -4095,6 +4095,8 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 	bool bDrawFocusRect = (drawItemStruct->itemState & ODS_NOFOCUSRECT) == 0;
 	bool bIsDisabled = (drawItemStruct->itemState & ODS_DISABLED) != 0;
 	bool bIsChecked = checkStates[hWnd];
+	bool bHidePrefix =
+		(SendMessage(hWnd, WM_QUERYUISTATE, 0, 0) & UISF_HIDEACCEL) != 0;
 	RECT itemRect = drawItemStruct->rcItem;
 	char title[1024];
 	WCHAR wtitle[1024];
@@ -4107,6 +4109,7 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 	if (CUIThemes::isThemeLibLoaded() && hTheme)
 	{
 		DWORD state;
+		DWORD textFlags = DT_LEFT;
 		SIZE boxSize;
 		RECT boxRect = itemRect;
 		RECT textRect;
@@ -4151,6 +4154,10 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		{
 			state = CBS_UNCHECKEDDISABLED;
 		}
+		if (bHidePrefix)
+		{
+			textFlags |= DT_HIDEPREFIX;
+		}
 		CUIThemes::getThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL,
 			TS_TRUE, &boxSize);
 		boxRect.right = itemRect.left + boxSize.cx;
@@ -4158,7 +4165,7 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		CUIThemes::drawThemeBackground(hTheme, hdc, BP_CHECKBOX, state,
 			&boxRect, NULL);
 		CUIThemes::getThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state, wtitle,
-			-1, DT_LEFT, &itemRect, &textRect);
+			-1, textFlags, &itemRect, &textRect);
 		OffsetRect(&textRect, boxSize.cx + 3, 1);
 		// Draw the focus rect
 		if (bIsFocused && bDrawFocusRect)
@@ -4174,12 +4181,12 @@ BOOL LDViewPreferences::doDrawGroupCheckBox(HWND hWnd, HTHEME hTheme,
 		if (bIsDisabled)
 		{
 			CUIThemes::drawThemeText(hTheme, hdc, BP_CHECKBOX, CBS_DISABLED,
-				wtitle, -1, DT_LEFT, NULL, &textRect);
+				wtitle, -1, textFlags, NULL, &textRect);
 		}
 		else
 		{
 			CUIThemes::drawThemeText(hTheme, hdc, BP_GROUPBOX, GBS_NORMAL,
-				wtitle, -1, DT_LEFT, NULL, &textRect);
+				wtitle, -1, textFlags, NULL, &textRect);
 		}
 	}
 	return TRUE;
