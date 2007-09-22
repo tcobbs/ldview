@@ -3105,51 +3105,22 @@ void ModelViewerWidget::cleanupFloats(TCFloat *array, int count)
 
 void ModelViewerWidget::doShowViewInfo(void)
 {
-	QString qmessage;
+	QString qmessage,qcl;
 	if (modelViewer)
 	{
-		TCFloat matrix[16];
-		TCFloat rotationMatrix[16];
-		TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-		char matrixString[1024];
-		char zoomString[128];
-		char message[4096];
-		TRECamera &camera = modelViewer->getCamera();
-		TCFloat defaultDistance = modelViewer->getDefaultDistance();
-		TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
-		TCFloat cameraDistance;
-																				
-		memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-			sizeof(rotationMatrix));
-		TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-		cleanupFloats(matrix);
-		sprintf(matrixString,
-			"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
-			matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
-			matrix[2], matrix[6], matrix[10]);
-		cameraDistance = camera.getPosition().length();
-		if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
+		ucstring message, commandLine;
+		if (modelViewer->getViewInfo(message, commandLine))
 		{
-			// If we don't have a model, we don't know the default zoom, so
-			// just say 1.
-			strcpy(zoomString, "1");
+			ucstringtoqstring(qmessage,message);
+			ucstringtoqstring(qcl,commandLine);
+			if(QMessageBox::information(this, 
+				TCLocalStrings::get("ViewInfoTitle"), 
+				qmessage, QMessageBox::Ok,
+				QMessageBox::Cancel)==QMessageBox::Ok)
+			{
+				QApplication::clipboard()->setText(qcl);
+			}
 		}
-		else
-		{
-			sprintf(zoomString, "%.6g", defaultDistance /
-			   distanceMultiplier / cameraDistance);
-		}
-		sprintf(message, "The following is the current rotation matrix:\n\n"                "%s\n\nThe following is the current zoom level:\n\n"
-			"%s\n\n",
-			matrixString, zoomString);
- 
-
-
-	qmessage.sprintf("%s",message);
-
-	QMessageBox::information(this, TCLocalStrings::get("ViewInfoTitle"), 
-			qmessage, QMessageBox::Ok,
-			QMessageBox::NoButton);
 	}
 }
 
