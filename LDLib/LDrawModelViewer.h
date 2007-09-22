@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCStringArray.h>
+#include <TCFoundation/mystring.h>
 #include <TRE/TRECamera.h>
 #include <TRE/TREGL.h>
 
@@ -340,6 +341,8 @@ class LDrawModelViewer: public TCObject
 
 		virtual void requestRedraw(void);
 		virtual void mouseMoveLight(int deltaX, int deltaY);
+
+		bool getViewInfo(ucstring &message, ucstring &commandLine);
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);

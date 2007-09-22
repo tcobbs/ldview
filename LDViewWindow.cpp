@@ -2148,48 +2148,59 @@ void LDViewWindow::showViewInfo(void)
 
 		if (modelViewer)
 		{
-			TCFloat matrix[16];
-			TCFloat rotationMatrix[16];
-			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-			char matrixString[1024];
-			char zoomString[128];
-			char message[4096];
-			TRECamera &camera = modelViewer->getCamera();
-			TCFloat defaultDistance = modelViewer->getDefaultDistance();
-			TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
-			TCFloat cameraDistance;
+			ucstring message;
+			ucstring commandLine;
+			
+			if (modelViewer->getViewInfo(message, commandLine))
+			{
+				if (messageBoxUC(hWindow, message.c_str(),
+					TCLocalStrings::get(_UC("ViewInfoTitle")), MB_OKCANCEL) == IDOK)
+				{
+					copyToClipboard(commandLine.c_str());
+				}
+			}
+			//TCFloat matrix[16];
+			//TCFloat rotationMatrix[16];
+			//TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+			//char matrixString[1024];
+			//char zoomString[128];
+			//char message[4096];
+			//TRECamera &camera = modelViewer->getCamera();
+			//TCFloat defaultDistance = modelViewer->getDefaultDistance();
+			//TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
+			//TCFloat cameraDistance;
 
-			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-				sizeof(rotationMatrix));
-			TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-			LDrawModelViewer::cleanupFloats(matrix);
-			sprintf(matrixString,
-				"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
-				matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
-				matrix[2], matrix[6], matrix[10]);
-			cameraDistance = camera.getPosition().length();
-			if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
-			{
-				// If we don't have a model, we don't know the default zoom, so
-				// just say 1.
-				strcpy(zoomString, "1");
-			}
-			else
-			{
-				sprintf(zoomString, "%.6g", defaultDistance /
-					distanceMultiplier / cameraDistance);
-			}
-			sprintf(message, TCLocalStrings::get("ViewInfoMessage"),
-				matrixString, zoomString);
-			if (MessageBox(hWindow, message,
-				TCLocalStrings::get("ViewInfoTitle"), MB_OKCANCEL) == IDOK)
-			{
-				char commandLine[1024];
+			//memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
+			//	sizeof(rotationMatrix));
+			//TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
+			//LDrawModelViewer::cleanupFloats(matrix);
+			//sprintf(matrixString,
+			//	"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
+			//	matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
+			//	matrix[2], matrix[6], matrix[10]);
+			//cameraDistance = camera.getPosition().length();
+			//if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
+			//{
+			//	// If we don't have a model, we don't know the default zoom, so
+			//	// just say 1.
+			//	strcpy(zoomString, "1");
+			//}
+			//else
+			//{
+			//	sprintf(zoomString, "%.6g", defaultDistance /
+			//		distanceMultiplier / cameraDistance);
+			//}
+			//sprintf(message, TCLocalStrings::get("ViewInfoMessage"),
+			//	matrixString, zoomString);
+			//if (MessageBox(hWindow, message,
+			//	TCLocalStrings::get("ViewInfoTitle"), MB_OKCANCEL) == IDOK)
+			//{
+			//	char commandLine[1024];
 
-				sprintf(commandLine, "-DefaultMatrix=%s -DefaultZoom=%s",
-					matrixString, zoomString);
-				copyToClipboard(commandLine);
-			}
+			//	sprintf(commandLine, "-DefaultMatrix=%s -DefaultZoom=%s",
+			//		matrixString, zoomString);
+			//	copyToClipboard(commandLine);
+			//}
 		}
 	}
 }
