@@ -209,6 +209,9 @@ class CUIExport CUIWindow : public TCObject
 		virtual void setupDialogSlider(HWND hDlg, int controlId, short min,
 			short max, WORD frequency, int value);
 		virtual bool copyToClipboard(const char *value);
+#ifndef TC_NO_UNICODE
+		virtual bool copyToClipboard(const wchar_t *value);
+#endif // TC_NO_UNICODE
 
 		static void printMessageName(UINT message);
 		static BOOL CALLBACK disableNonModalWindow(HWND hWnd,

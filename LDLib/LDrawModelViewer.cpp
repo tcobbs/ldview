@@ -3762,6 +3762,51 @@ UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	return message;
 }
 
+bool LDrawModelViewer::getViewInfo(ucstring &message, ucstring &commandLine)
+{
+	if (mainModel)
+	{
+		TCFloat matrix[16];
+		TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
+		UCCHAR matrixString[1024];
+		UCCHAR zoomString[128];
+		UCCHAR messageBuf[4096];
+		UCCHAR commandLineBuf[1024];
+		TCFloat cameraDistance;
+
+		TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
+		cleanupFloats(matrix);
+		sucprintf(matrixString, COUNT_OF(matrixString),
+			_UC("%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g"), matrix[0],
+			matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
+			matrix[2], matrix[6], matrix[10]);
+		cameraDistance = camera.getPosition().length();
+		if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
+		{
+			// If we don't have a model, we don't know the default zoom, so
+			// just say 1.
+			ucstrcpy(zoomString, _UC("1"));
+		}
+		else
+		{
+			sucprintf(zoomString, COUNT_OF(zoomString), _UC("%.6g"),
+				defaultDistance / distanceMultiplier / cameraDistance);
+		}
+		sucprintf(messageBuf, COUNT_OF(messageBuf),
+			TCLocalStrings::get(_UC("ViewInfoMessage")), matrixString,
+			zoomString);
+		sucprintf(commandLineBuf, COUNT_OF(commandLineBuf),
+			_UC("-DefaultMatrix=%s -DefaultZoom=%s"), matrixString, zoomString);
+		message = messageBuf;
+		commandLine = commandLineBuf;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 TCFloat LDrawModelViewer::getWideLineMargin(void)
 {
 	TCFloat margin = 0.0f;

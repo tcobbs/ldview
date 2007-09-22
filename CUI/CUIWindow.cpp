@@ -2303,12 +2303,44 @@ bool CUIWindow::copyToClipboard(const char *value)
 			EmptyClipboard();
 			SetClipboardData(CF_OEMTEXT, hBuf);
 			CloseClipboard();
-//			GlobalFree(hBuf);
 			return true;
+		}
+		else
+		{
+			GlobalFree(hBuf);
 		}
 	}
 	return false;
 }
+
+#ifndef TC_NO_UNICODE
+bool CUIWindow::copyToClipboard(const wchar_t *value)
+{
+	int len = wcslen(value) + 1;
+	HGLOBAL hBuf = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE,
+		len * sizeof(wchar_t));
+
+	if (hBuf)
+	{
+		wchar_t *buf = (wchar_t*)GlobalLock(hBuf);
+
+		wcscpy(buf, value);
+		GlobalUnlock(hBuf);
+		if (OpenClipboard(hWindow))
+		{
+			EmptyClipboard();
+			SetClipboardData(CF_UNICODETEXT, hBuf);
+			CloseClipboard();
+			return true;
+		}
+		else
+		{
+			GlobalFree(hBuf);
+		}
+	}
+	return false;
+}
+#endif // TC_NO_UNICODE
 
 HMENU CUIWindow::findSubMenu(HMENU hParentMenu, int subMenuIndex, int *index)
 {
