@@ -166,15 +166,15 @@ protected:
 	void swap_Buffers(void);
 	void paintGL(void);
 
-	void updateSpinRateXY(int xPos, int yPos);
-	void updatePanXY(int xPos, int yPos);
-	void updateHeadXY(int xPos, int yPos);
-	void updateZoom(int yPos);
-	void spinButtonPress(QMouseEvent *event);
-	void spinButtonRelease(QMouseEvent *event);
-	void zoomButtonPress(QMouseEvent *event);
-	void zoomButtonRelease(QMouseEvent *event);
-	void updateSpinRate(void);
+	//void updateSpinRateXY(int xPos, int yPos);
+	//void updatePanXY(int xPos, int yPos);
+	//void updateHeadXY(int xPos, int yPos);
+	//void updateZoom(int yPos);
+	//void spinButtonPress(QMouseEvent *event);
+	//void spinButtonRelease(QMouseEvent *event);
+	//void zoomButtonPress(QMouseEvent *event);
+	//void zoomButtonRelease(QMouseEvent *event);
+	//void updateSpinRate(void);
 
 	// Events
 	void mousePressEvent(QMouseEvent *event);
@@ -217,7 +217,7 @@ protected:
 	void lock(void);
 	void unlock(void);
 	void windowActivationChange(bool oldActive);
-	void processKey(QKeyEvent *event, bool press);
+	//void processKey(QKeyEvent *event, bool press);
 	void setViewMode(LDVViewMode value);
 	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
@@ -234,6 +234,7 @@ protected:
 	static bool staticFileCaseCallback(char *filename);
 	static bool staticFileCaseLevel(QDir &dir, char *filename);
 	static TCULong convertKeyModifiers(ButtonState osModifiers);
+	static LDInputHandler::KeyCode convertKeyCode(int osKey);
 	static LDInputHandler::MouseButton convertMouseButton(int button);
 
 	LDrawModelViewer *modelViewer;
