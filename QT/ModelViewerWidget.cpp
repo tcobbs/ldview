@@ -416,6 +416,7 @@ void ModelViewerWidget::resizeGL(int width, int height)
 	unlock();
 }
 
+/*
 void ModelViewerWidget::updateSpinRate(void)
 {
 	// If the mouse stops for more than a set time, stop the spinning.
@@ -427,6 +428,7 @@ void ModelViewerWidget::updateSpinRate(void)
 		}
 	}
 }
+*/
 
 void ModelViewerWidget::swap_Buffers(void)
 {
@@ -842,6 +844,7 @@ void ModelViewerWidget::mousePressEvent(QMouseEvent *event)
 */
 }
 
+/*
 void ModelViewerWidget::spinButtonPress(QMouseEvent *event)
 {
 	if (event->state() & Qt::ShiftButton)
@@ -868,6 +871,7 @@ void ModelViewerWidget::zoomButtonPress(QMouseEvent *event)
 		originalZoomY = event->globalY();
 	}
 }
+*/
 
 void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -917,6 +921,7 @@ void ModelViewerWidget::mouseReleaseEvent(QMouseEvent *event)
 */
 }
 
+/*
 void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
 {
 	if (modelViewer && modelViewer->mouseUp(event->globalX(), event->globalY()))
@@ -932,10 +937,11 @@ void ModelViewerWidget::spinButtonRelease(QMouseEvent *event)
 	}
 }
 
-void ModelViewerWidget::zoomButtonRelease(QMouseEvent * /*event*/)
+void ModelViewerWidget::zoomButtonRelease(QMouseEvent *event)
 {
 	modelViewer->setZoomSpeed(0.0f);
 }
+*/
 
 void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 {
@@ -1045,6 +1051,7 @@ void ModelViewerWidget::mouseMoveEvent(QMouseEvent *event)
 */
 }
 
+/*
 void ModelViewerWidget::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - lastX;
@@ -1094,6 +1101,7 @@ void ModelViewerWidget::updateZoom(int yPos)
 
 	modelViewer->setZoomSpeed(magnitude / 2.0f);
 }
+*/
 
 void ModelViewerWidget::showPreferences(void)
 {
@@ -2423,6 +2431,7 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 		viewMode = value;
 		if (viewMode == LDVViewExamine)
 		{
+			inputHandler->setViewMode(LDInputHandler::VMExamine);
 			modelViewer->setConstrainZoom(true);
 			if (progressMode)
 			{
@@ -2431,6 +2440,7 @@ void ModelViewerWidget::setViewMode(LDVViewMode value)
 		}
 		else
 		{
+			inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
 			modelViewer->setConstrainZoom(false);
 			if (progressMode)
 			{
@@ -3276,6 +3286,7 @@ void ModelViewerWidget::doPartList(void)
 	}
 }
 
+/*
 void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
 {
 	TCVector cameraMotion = modelViewer->getCameraMotion();
@@ -3394,9 +3405,72 @@ void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
 		startPaintTimer();
 	}
 }
+*/
+
+// Note: static method
+LDInputHandler::KeyCode ModelViewerWidget::convertKeyCode(int osKey)
+{
+	if (osKey >= Qt::Key_A && osKey <= Qt::Key_Z)
+	{
+		return (LDInputHandler::KeyCode)(osKey - Qt::Key_A +
+			LDInputHandler::KCA);
+	}
+	else
+	{
+		switch (osKey)
+		{
+		case Qt::Key_Up:
+			return LDInputHandler::KCUp;
+		case Qt::Key_Down:
+			return LDInputHandler::KCDown;
+		case Qt::Key_Left:
+			return LDInputHandler::KCLeft;
+		case Qt::Key_Right:
+			return LDInputHandler::KCRight;
+		case Qt::Key_Space:
+			return LDInputHandler::KCSpace;
+		case Qt::Key_Prior:
+			return LDInputHandler::KCPageUp;
+		case Qt::Key_Next:
+			return LDInputHandler::KCPageDown;
+		case Qt::Key_Home:
+			return LDInputHandler::KCHome;
+		case Qt::Key_End:
+			return LDInputHandler::KCEnd;
+		case Qt::Key_Insert:
+			return LDInputHandler::KCInsert;
+		case Qt::Key_Delete:
+			return LDInputHandler::KCDelete;
+		case Qt::Key_Escape:
+			return LDInputHandler::KCEscape;
+		default:
+			return LDInputHandler::KCUnknown;
+		}
+	}
+}
 
 void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 {
+	lock();
+	if (inputHandler->keyDown(convertKeyModifiers(event->state()),
+		convertKeyCode(event->key())))
+	{
+		event->accept();
+	}
+	else
+	{
+		event->ignore();
+	}
+	if((event->state() & Qt::AltButton) &&
+		(event->key() >= Qt::Key_0) &&
+		(event->key() <= Qt::Key_9) && preferences)
+	{
+		int i = event->key()-Qt::Key_0;
+		preferences->performHotKey(i);
+	}
+	unlock();
+	QGLWidget::keyPressEvent(event);
+/*
 	lock();
 	if((event->state() & Qt::AltButton) &&
 		(event->key() >= Qt::Key_0) &&
@@ -3411,10 +3485,24 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 	}
 	unlock();
 	QGLWidget::keyPressEvent(event);
+*/
 }
 
 void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 {
+	lock();
+	if (inputHandler->keyUp(convertKeyModifiers(event->state()),
+		convertKeyCode(event->key())))
+	{
+		event->accept();
+	}
+	else
+	{
+		event->ignore();
+	}
+	unlock();
+	QGLWidget::keyReleaseEvent(event);
+/*
 	lock();
 	if(fullscreen && (event->key()==Qt::Key_Escape))
 	{
@@ -3427,6 +3515,7 @@ void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 	}
 	unlock();
 	QGLWidget::keyReleaseEvent(event);
+*/
 }
 
 void ModelViewerWidget::setMenuItemsEnabled(QPopupMenu *menu, bool enabled)
