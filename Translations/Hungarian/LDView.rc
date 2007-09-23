@@ -193,9 +193,9 @@ BEGIN
     ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
     LTEXT           "LDView %s (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,
                     SS_NOPREFIX
-    LTEXT           "Köszönetet mondunk a következo személyeknek az LDView támogatásáért (ABC sorrendben):",
+    LTEXT           "Köszönetet mondunk a következõ személyeknek az LDView támogatásáért (ABC sorrendben):",
                     IDC_STATIC,15,40,215,20
-    LTEXT           "LEGO® and the LEGO logo a LEGO Group bejegyzett védjegye, amely semmilyen kapcsolatban nem áll ezen programmal.",
+    LTEXT           "LEGO®, LEGO logo a LEGO Group bejegyzett védjegye, amely semmilyen kapcsolatban nem áll ezen programmal.",
                     IDC_STATIC,15,162,215,20
     GROUPBOX        "",IDC_STATIC,0,155,245,30
     LTEXT           "",IDC_STATIC,0,152,8,36,0,WS_EX_TRANSPARENT
@@ -242,7 +242,7 @@ BEGIN
     CONTROL         "Figyelmeztetések",IDC_SHOW_WARNINGS,"Button",
                     BS_AUTOCHECKBOX | BS_VCENTER | WS_TABSTOP,4,179,68,14
     PUSHBUTTON      "Hibák másolása vágólapra",IDC_COPY_ERROR,84,179,91,14
-    GROUPBOX        "Csak a következoket mutassa:",IDC_SHOW_ERRORS,180,2,140,
+    GROUPBOX        "Csak a következõket mutassa:",IDC_SHOW_ERRORS,180,2,140,
                     191,0,WS_EX_TRANSPARENT
     CONTROL         "List3",IDC_ERROR_LIST,"SysListView32",LVS_REPORT | 
                     LVS_SINGLESEL | LVS_ALIGNLEFT | LVS_NOCOLUMNHEADER | 
@@ -253,7 +253,7 @@ END
 
 IDD_SS_SETTINGS DIALOGEX 0, 0, 212, 177
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Képernyovédo"
+CAPTION "Képernyõvédõ"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "Állomány:",IDC_SS_FILENAME_RADIO,"Button",
@@ -264,11 +264,11 @@ BEGIN
     EDITTEXT        IDC_SS_FILENAME_FIELD,53,7,100,14,ES_AUTOHSCROLL | 
                     ES_READONLY | WS_GROUP | NOT WS_TABSTOP,0,
                     HIDC_SS_FILENAME_FIELD
-    PUSHBUTTON      "Böngészo...",IDC_SS_BROWSE_FILE_BUTTON,155,7,50,14,0,0,
+    PUSHBUTTON      "Böngészõ...",IDC_SS_BROWSE_FILE_BUTTON,155,7,50,14,0,0,
                     HIDC_SS_BROWSE_FILE_BUTTON
     EDITTEXT        IDC_SS_DIRECTORY_FIELD,53,24,100,14,ES_AUTOHSCROLL | 
                     ES_READONLY | NOT WS_TABSTOP,0,HIDC_SS_DIRECTORY_FIELD
-    PUSHBUTTON      "Böngészo...",IDC_SS_BROWSE_DIR_BUTTON,155,24,50,14,0,0,
+    PUSHBUTTON      "Böngészõ...",IDC_SS_BROWSE_DIR_BUTTON,155,24,50,14,0,0,
                     HIDC_SS_BROWSE_DIR_BUTTON
     GROUPBOX        "Méret",IDC_SS_SIZE_BOX,7,41,198,32,WS_GROUP,0,
                     HIDC_SS_SIZE_BOX
@@ -335,7 +335,7 @@ BEGIN
     GROUPBOX        "    ",IDC_BFC_BOX,7,106,121,40,WS_GROUP,0,HIDC_BFC_BOX
     CONTROL         "&BFC",IDC_BFC,"Button",BS_AUTOCHECKBOX | WS_GROUP | 
                     WS_TABSTOP,15,106,29,10,WS_EX_TRANSPARENT,HIDC_BFC
-    CONTROL         "Piros elolapok",IDC_RED_BACK_FACES,"Button",
+    CONTROL         "Piros elõlapok",IDC_RED_BACK_FACES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,19,118,81,10,0,
                     HIDC_RED_BACK_FACES
     CONTROL         "Zöld hátlapok",IDC_GREEN_FRONT_FACES,"Button",
@@ -358,7 +358,7 @@ BEGIN
     CONTROL         "Csak a kontrolpontokat",IDC_CONDITIONAL_CONTROLS,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,153,85,88,10,0,
                     HIDC_CONDITIONAL_CONTROLS
-    CONTROL         "Kiválló minoség",IDC_QUALITY_LINES,"Button",
+    CONTROL         "Kiváló minõség",IDC_QUALITY_LINES,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,144,96,61,10,0,
                     HIDC_QUALITY_LINES
     CONTROL         "Mindig fekete",IDC_ALWAYS_BLACK,"Button",
@@ -383,7 +383,7 @@ BEGIN
     CONTROL         "Vi&lágítás",IDC_LIGHTING,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,7,41,10,WS_EX_TRANSPARENT,
                     HIDC_LIGHTING
-    CONTROL         "Kiválló minoságu",IDC_LIGHTING_QUALITY,"Button",
+    CONTROL         "Kiváló minõségû",IDC_LIGHTING_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     19,77,10,0,HIDC_LIGHTING_QUALITY
     CONTROL         "Tompított",IDC_LIGHTING_SUBDUED,"Button",
@@ -395,7 +395,7 @@ BEGIN
     CONTROL         "Alternate setup",IDC_ALTERNATE_LIGHTING,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,19,
                     52,77,10,0,HIDC_ALTERNATE_LIGHTING
-    GROUPBOX        "Light &direction",IDC_LIGHT_DIR,31,63,73,77,0,0,
+    GROUPBOX        "Megvilágítás iránya",IDC_LIGHT_DIR,31,63,73,77,0,0,
                     HIDC_LIGHT_DIR
     CONTROL         "UL",IDR_LIGHT_ANGLE_UL,"Button",BS_AUTORADIOBUTTON | 
                     BS_ICON | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP,35,74,20,
@@ -427,7 +427,7 @@ BEGIN
                     164,100,10,0,HIDC_HIDE_LIGHT_DAT
     GROUPBOX        "Egyéb",IDC_EFFECTS_MISC_BOX,7,189,121,39,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_EFFECTS_MISC_BOX
-    CONTROL         "Egyszeru árnyalás",IDC_FLAT_SHADING,"Button",
+    CONTROL         "Egyszerû árnyalás",IDC_FLAT_SHADING,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     201,60,10,0,HIDC_FLAT_SHADING
     CONTROL         "Egyenletes ívek",IDC_SMOOTH_CURVES,"Button",
@@ -453,9 +453,9 @@ BEGIN
     CONTROL         "&Wireframe cutaway",IDC_CUTAWAY,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,140,67,77,10,
                     WS_EX_TRANSPARENT,HIDC_CUTAWAY
-    CONTROL         "Szines",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
+    CONTROL         "Színes",IDC_CUTAWAY_COLOR,"Button",BS_AUTORADIOBUTTON | 
                     WS_GROUP | WS_TABSTOP,144,80,42,10,0,HIDC_CUTAWAY_COLOR
-    CONTROL         "Egyszínu",IDC_CUTAWAY_MONOCHROME,"Button",
+    CONTROL         "Egyszínû",IDC_CUTAWAY_MONOCHROME,"Button",
                     BS_AUTORADIOBUTTON,144,91,57,10,0,
                     HIDC_CUTAWAY_MONOCHROME
     RTEXT           "Fedés:",IDC_CUTAWAY_OPACITY_LABEL,141,106,36,8,0,
@@ -484,7 +484,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Általános"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Élsimitás",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,HIDC_AA_BOX
+    GROUPBOX        "Élsimítás",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,HIDC_AA_BOX
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
     COMBOBOX        IDC_FSAA_COMBO,41,18,36,148,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
@@ -516,7 +516,7 @@ BEGIN
     CONTROL         "Hibák listája betöltéskor",IDC_SHOW_ERRORS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     91,90,10,0,HIDC_SHOW_ERRORS
-    CONTROL         "Teljes képernyo frissírése:",IDC_FS_REFRESH,"Button",
+    CONTROL         "Teljes képernyõ frissítése:",IDC_FS_REFRESH,"Button",
                     BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,102,101,10,0,
                     HIDC_FS_REFRESH
     EDITTEXT        IDC_FS_RATE,117,99,24,14,ES_AUTOHSCROLL | ES_NUMBER | 
@@ -530,7 +530,7 @@ BEGIN
                     HIDC_FOV_RANGE_LABEL
     COMBOBOX        IDC_MEMORY_COMBO,117,135,48,73,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_MEMORY_COMBO
-    RTEXT           "Memoria használata:",IDC_MEMORY_LABEL,40,138,72,8,0,0,
+    RTEXT           "Memória használata:",IDC_MEMORY_LABEL,40,138,72,8,0,0,
                     HIDC_MEMORY_LABEL
 END
 
@@ -553,7 +553,7 @@ BEGIN
     GROUPBOX        "Irány",1072,8,156,64,56,WS_GROUP
     CONTROL         "Álló",1056,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
                     WS_TABSTOP,16,170,52,12
-    CONTROL         "Fekvo",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,12
+    CONTROL         "Fekvõ",1057,"Button",BS_AUTORADIOBUTTON,16,190,52,12
     GROUPBOX        "Margók",1075,80,156,152,56,WS_GROUP
     LTEXT           "Bal:",1102,88,172,32,8
     EDITTEXT        1155,120,170,28,12,WS_GROUP
@@ -577,7 +577,7 @@ CAPTION "Nyomtatás"
 FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "Nyomtató",1075,8,4,272,84,WS_GROUP
-    LTEXT           "&Name:",1093,16,20,36,8
+    LTEXT           "&Neve:",1093,16,20,36,8
     COMBOBOX        1139,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | 
                     WS_VSCROLL | WS_GROUP | WS_TABSTOP
     PUSHBUTTON      "Tulajdonságok",1025,212,17,60,14,WS_GROUP
@@ -668,18 +668,18 @@ BEGIN
     CONTROL         "Nearest filtering",IDC_TEXTURE_NEAREST,"Button",
                     BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,23,30,75,10,0,
                     HIDC_TEXTURE_NEAREST
-    CONTROL         "Bilinear szuro",IDC_TEXTURE_BILINEAR,"Button",
+    CONTROL         "Bilinear szûrõ",IDC_TEXTURE_BILINEAR,"Button",
                     BS_AUTORADIOBUTTON,23,41,75,10,0,HIDC_TEXTURE_BILINEAR
-    CONTROL         "Trilinear szuro",IDC_TEXTURE_TRILINEAR,"Button",
+    CONTROL         "Trilinear szûrõ",IDC_TEXTURE_TRILINEAR,"Button",
                     BS_AUTORADIOBUTTON,23,52,75,10,0,HIDC_TEXTURE_TRILINEAR
-    CONTROL         "Anisotropic filtering:",IDC_TEXTURE_ANISO,"Button",
+    CONTROL         "Anisotropic szûrõ:",IDC_TEXTURE_ANISO,"Button",
                     BS_AUTORADIOBUTTON,23,63,75,10,0,HIDC_TEXTURE_ANISO
     CONTROL         "Slider1",IDC_ANISO_LEVEL,"msctls_trackbar32",
                     TBS_AUTOTICKS | WS_GROUP | WS_TABSTOP,100,60,80,18,0,
                     HIDC_ANISO_LEVEL
     LTEXT           "nx",IDC_ANISO_LEVEL_LABEL,185,64,26,8,0,0,
                     HIDC_ANISO_LEVEL_LABEL
-    LTEXT           "Ívek minosége:",IDC_CURVE_QUALITY_LABEL,111,25,54,10,
+    LTEXT           "Ívek minõsége:",IDC_CURVE_QUALITY_LABEL,111,25,54,10,
                     SS_CENTERIMAGE,WS_EX_TRANSPARENT,
                     HIDC_CURVE_QUALITY_LABEL
     CONTROL         "Slider1",IDC_CURVE_QUALITY,"msctls_trackbar32",
@@ -687,7 +687,7 @@ BEGIN
                     HIDC_CURVE_QUALITY
     GROUPBOX        "Egyéb",IDC_PRIMITIVES_MISC_BOX,7,87,246,40,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_PRIMITIVES_MISC_BOX
-    CONTROL         "Egyszeru pöttyök (gyorsabb)",IDC_STUD_QUALITY,"Button",
+    CONTROL         "Egyszerû pöttyök (gyorsabb)",IDC_STUD_QUALITY,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
                     99,133,10,0,HIDC_STUD_QUALITY
     CONTROL         "Nagyfelbontású primitívek használata ha lehet",
@@ -711,14 +711,14 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Beállítás-készletek"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
-    LTEXT           "A következo beállítás-készlet használata:",
+    LTEXT           "A következõ beállítás-készlet használata:",
                     IDC_PREFSETS_LABEL,7,7,144,8,0,0,HIDC_PREFSETS_LABEL
     LISTBOX         IDC_PREFSETS_LIST,7,18,246,191,LBS_SORT | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | 
                     WS_TABSTOP,0,HIDC_PREFSETS_LIST
-    PUSHBUTTON      "Gyorsbillentyu...",IDC_PREF_SET_HOT_KEY,83,214,60,14,0,
+    PUSHBUTTON      "Gyorsbillentyû...",IDC_PREF_SET_HOT_KEY,83,214,60,14,0,
                     0,HIDC_PREF_SET_HOT_KEY
-    PUSHBUTTON      "Törtlés",IDC_DELETE_PREF_SET,148,214,50,14,0,0,
+    PUSHBUTTON      "Törlés",IDC_DELETE_PREF_SET,148,214,50,14,0,0,
                     HIDC_DELETE_PREF_SET
     PUSHBUTTON      "Új",IDC_NEW_PREF_SET,203,214,50,14,0,0,
                     HIDC_NEW_PREF_SET
@@ -739,11 +739,11 @@ END
 
 IDD_PREFSET_APPLY DIALOG DISCARDABLE  0, 0, 312, 65
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Warning"
+CAPTION "Figyelmeztetés"
 FONT 8, "MS Sans Serif"
 BEGIN
     PUSHBUTTON      "Mégsem",IDCANCEL,201,43,50,14
-    PUSHBUTTON      "Apply",IDC_APPLY,79,43,50,14
+    PUSHBUTTON      "Alkalmaz",IDC_APPLY,79,43,50,14
     PUSHBUTTON      "Abbahagy",IDC_ABANDON,140,43,50,14
     LTEXT           "Megváltoztatta az aktuális beállítás-készletet. You must either apply those changes or abandon them before you can select a new preference set.",
                     IDC_STATIC,36,7,269,22
@@ -755,7 +755,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Gyorsbillantyu"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Válasszon egy gyorsbillentyut a beállítás-készlet kiválasztásához:",
+    LTEXT           "Válasszon egy gyorsbillentyût a beállítás-készlet kiválasztásához:",
                     IDC_STATIC,7,7,107,20
     LTEXT           "Ctrl + Shift +",IDC_STATIC,27,29,38,8
     COMBOBOX        IDC_HOTKEY_COMBO,69,27,42,119,CBS_DROPDOWNLIST | 
@@ -828,22 +828,22 @@ BEGIN
                     WS_GROUP,0,HIDC_PROXY_PORT
     GROUPBOX        "Hiányzó részek",IDC_MISSING_PARTS_BOX,7,74,246,61,
                     WS_GROUP,0,HIDC_MISSING_PARTS_BOX
-    CONTROL         "&Automatikusan ellenorizze az LDraw.org-ot hiányzó részekért",
+    CONTROL         "&Automatikusan ellenõrizze az LDraw.org-ot hiányzó részekért",
                     IDC_CHECK_PART_TRACKER,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,15,85,206,10,0,HIDC_CHECK_PART_TRACKER
-    RTEXT           "Hiányzó alkatrészek ellenörzése (naponként):",
+    RTEXT           "Hiányzó alkatrészek ellenõrzése (naponként):",
                     IDC_MISSING_DAYS_LABEL,19,101,116,8,0,0,
                     HIDC_MISSING_DAYS_LABEL
     EDITTEXT        IDC_MISSING_DAYS,139,98,30,14,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_GROUP,0,HIDC_MISSING_DAYS
-    RTEXT           "Frissített alkatrészek ellenorzése (naponként):",
+    RTEXT           "Frissített alkatrészek ellenõrzése (naponként):",
                     IDC_UPDATED_DAYS_LABEL,19,119,116,8,0,0,
                     HIDC_UPDATED_DAYS_LABEL
     EDITTEXT        IDC_UPDATED_DAYS,139,116,30,14,ES_AUTOHSCROLL | 
                     ES_NUMBER | WS_GROUP,0,HIDC_UPDATED_DAYS
     PUSHBUTTON      "Visszaállítás",IDC_UPDATES_RESET,203,214,50,14,WS_GROUP,
                     0,HIDC_UPDATES_RESET
-    LTEXT           "A változások csak a következo modell betöltésénél\nvagy adatbázis frissítésénél jutnak érvényre.",
+    LTEXT           "A változások csak a következõ modell betöltésénél\nvagy adatbázis frissítésénél jutnak érvényre.",
                     IDC_UPDATES_NOTE,7,189,246,18,0,0,HIDC_UPDATES_NOTE
 END
 
@@ -856,7 +856,7 @@ BEGIN
     GROUPBOX        "Beállítások",IDC_STATIC,7,7,128,63
     CONTROL         "&Modell képe",IDC_SHOW_MODEL,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,15,21,55,10
-    CONTROL         "Külso stíluslap",IDC_EXTERNAL_CSS,"Button",
+    CONTROL         "Külsõ stíluslap",IDC_EXTERNAL_CSS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,15,32,107,10
     CONTROL         "Alkatrészek képei",IDC_SHOW_PART_IMAGES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,15,43,72,10
@@ -1076,19 +1076,19 @@ BEGIN
     POPUP "Nézet"
     BEGIN
         MENUITEM "&Use Visual Style (requires restart)", ID_VIEW_VISUALSTYLE
-        MENUITEM "Teljes képernyos nézet\tCtrl+Enter", ID_VIEW_FULLSCREEN
+        MENUITEM "Teljes képernyõs nézet\tCtrl+Enter", ID_VIEW_FULLSCREEN
         MENUITEM "Eszközsáv\tCtrl+Shift+T",     ID_VIEW_TOOLBAR
         MENUITEM "Állapotsáv\tCtrl+Shift+S",    ID_VIEW_STATUSBAR
         MENUITEM "Mindig legfelül",             ID_VIEW_ALWAYSONTOP
         MENUITEM "Visszaáll alapértelmezett nézetre\tCtrl+R", ID_VIEW_RESET
         MENUITEM "Teljes méretre nagyít\tCtrl+F", ID_VIEW_ZOOMTOFIT
-        POPUP "Nézopontok"
+        POPUP "Nézõpontok"
         BEGIN
-            MENUITEM "Eloröl\tCtrl+1",              ID_VIEW_FRONT
+            MENUITEM "Elõröl\tCtrl+1",              ID_VIEW_FRONT
             MENUITEM "Hátulról\tCtrl+2",            ID_VIEW_BACK
             MENUITEM "Ba&lról\tCtrl+3",             ID_VIEW_LEFT
             MENUITEM "Jobbról\tCtrl+4",             ID_VIEW_RIGHT
-            MENUITEM "Felülrol\tCtrl+5",            ID_VIEW_TOP
+            MENUITEM "Felülrõl\tCtrl+5",            ID_VIEW_TOP
             MENUITEM "Alulról\tCtrl+6",             ID_VIEW_BOTTOM
             MENUITEM "Kétharmados\tCtrl+0",         ID_VIEW_ISO
             MENUITEM SEPARATOR
@@ -1106,7 +1106,7 @@ BEGIN
                                                 ID_TOOLS_ERRORS
         MENUITEM "Elem&lista",                  ID_TOOLS_PARTSLIST
         MENUITEM SEPARATOR
-        MENUITEM "Nézopont &infó...",           ID_TOOLS_VIEW_INFO
+        MENUITEM "Nézõpont &infó...",           ID_TOOLS_VIEW_INFO
         MENUITEM "&POV-Ray kamera infó...",     ID_TOOLS_POV_CAMERA
     END
     POPUP "Sugó"
@@ -1129,8 +1129,8 @@ BEGIN
     POPUP "Élek", CHECKED
     BEGIN
         MENUITEM "Csak az éleket mutassa",      ID_EDGES_SHOWEDGESONLY
-        MENUITEM "Conditional lines",           ID_EDGES_CONDITIONALLINES
-        MENUITEM "Kiválló minoség",             ID_EDGES_HIGHQUALITY
+        MENUITEM "Feltételes lines",           ID_EDGES_CONDITIONALLINES
+        MENUITEM "Kiváló minõség",             ID_EDGES_HIGHQUALITY
         MENUITEM "Mindig fekete",               ID_EDGES_ALWAYSBLACK
     END
     POPUP "Primitívek"
@@ -1139,7 +1139,7 @@ BEGIN
     END
     POPUP "Világítás"
     BEGIN
-        MENUITEM "Kiválló minoség",             ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Kiváló minõség",             ID_LIGHTING_HIGHQUALITY
         MENUITEM "Subdued",                     ID_LIGHTING_SUBDUED
         MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
 
@@ -1150,7 +1150,7 @@ BEGIN
     POPUP "BFC"
     BEGIN
         MENUITEM "Piros hátlapok",              ID_BFC_REDBACKFACES
-        MENUITEM "Zöld elolapok",               ID_BFC_GREENFRONTFACES
+        MENUITEM "Zöld elõlapok",               ID_BFC_GREENFRONTFACES
     END
 END
 
@@ -1397,12 +1397,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "Comments", "3D Lego modell megjelenito LDraw formátumban.\0"
+            VALUE "Comments", "3D Lego modell megjelenitõ LDraw formátumban.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
             VALUE "FileVersion", "3.2\0"
             VALUE "InternalName", "LDView\0"
-            VALUE "LegalCopyright", "Copyright © 2007 Travis Cobbs & Peter Bartfai\0"
+            VALUE "LegalCopyright", "Copyright © 2007 Travis Cobbs & Péter Bártfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
