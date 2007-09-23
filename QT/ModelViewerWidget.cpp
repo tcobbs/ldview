@@ -952,7 +952,7 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseWheel(convertKeyModifiers(event->state()),
-		(TCFloat)event->delta() * -0.1f))
+		(TCFloat)event->delta() * 0.1f))
 	{
 		event->ignore();
 	}
