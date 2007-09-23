@@ -745,7 +745,7 @@ BEGIN
     PUSHBUTTON      "Mégsem",IDCANCEL,201,43,50,14
     PUSHBUTTON      "Alkalmaz",IDC_APPLY,79,43,50,14
     PUSHBUTTON      "Abbahagy",IDC_ABANDON,140,43,50,14
-    LTEXT           "Megváltoztatta az aktuális beállítás-készletet. You must either apply those changes or abandon them before you can select a new preference set.",
+    LTEXT           "Megváltoztatta az aktuális beállítás-készletet. A változásokat alkalmazni vagy abbahagyni kell mielõtt egy újat választ.",
                     IDC_STATIC,36,7,269,22
     ICON            32515,IDC_STATIC,7,7,20,20
 END
@@ -1109,7 +1109,7 @@ BEGIN
         MENUITEM "Nézõpont &infó...",           ID_TOOLS_VIEW_INFO
         MENUITEM "&POV-Ray kamera infó...",     ID_TOOLS_POV_CAMERA
     END
-    POPUP "Sugó"
+    POPUP "Súgó"
     BEGIN
         MENUITEM "&OpenGL meghajtó adatok...",  ID_HELP_OPENGL_INFO
         MENUITEM SEPARATOR
@@ -1129,8 +1129,8 @@ BEGIN
     POPUP "Élek", CHECKED
     BEGIN
         MENUITEM "Csak az éleket mutassa",      ID_EDGES_SHOWEDGESONLY
-        MENUITEM "Feltételes lines",           ID_EDGES_CONDITIONALLINES
-        MENUITEM "Kiváló minõség",             ID_EDGES_HIGHQUALITY
+        MENUITEM "Feltételes vonalak",            ID_EDGES_CONDITIONALLINES
+        MENUITEM "Kiváló minõség",              ID_EDGES_HIGHQUALITY
         MENUITEM "Mindig fekete",               ID_EDGES_ALWAYSBLACK
     END
     POPUP "Primitívek"
@@ -1139,7 +1139,7 @@ BEGIN
     END
     POPUP "Világítás"
     BEGIN
-        MENUITEM "Kiváló minõség",             ID_LIGHTING_HIGHQUALITY
+        MENUITEM "Kiváló minõség",              ID_LIGHTING_HIGHQUALITY
         MENUITEM "Subdued",                     ID_LIGHTING_SUBDUED
         MENUITEM "Specular highlight",          ID_LIGHTING_SPECULARHIGHLIGHT
 
