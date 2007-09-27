@@ -3935,7 +3935,7 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 }
 
 // Note: static method.
-TCULong ModelViewerWidget::convertKeyModifiers(ButtonState osModifiers)
+TCULong ModelViewerWidget::convertKeyModifiers(Qt::ButtonState osModifiers)
 {
 	TCULong retValue = 0;
 	if (osModifiers & Qt::ShiftButton)
