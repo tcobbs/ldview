@@ -36,35 +36,36 @@ protected:
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		bool bfc);
 	virtual TCFloat getTorusFraction(int size);
-	virtual bool substituteStud(int numSegments) = 0;
-	virtual bool substituteStud() = 0;
-	virtual bool substituteStu2() = 0;
-	virtual bool substituteStu22(bool isA, bool bfc) = 0;
-	virtual bool substituteStu23(bool isA, bool bfc) = 0;
-	virtual bool substituteStu24(bool isA, bool bfc) = 0;
-	virtual bool substituteTorusIO(bool inner, bool bfc, bool is48 = false) = 0;
-	virtual bool substituteTorusQ(bool bfc,
-		bool is48 = false) = 0;
-	virtual bool substituteEighthSphere(bool bfc,
-		bool is48 = false) = 0;
-	virtual bool substituteCylinder(TCFloat fraction,
-		bool bfc, bool is48 = false) = 0;
-	virtual bool substituteSlopedCylinder(TCFloat fraction,
-		bool bfc, bool is48 = false) = 0;
-	virtual bool substituteSlopedCylinder2(TCFloat fraction,
-		bool bfc, bool is48 = false) = 0;
-	virtual bool substituteChrd(TCFloat fraction, bool bfc,
-		bool is48 = false) = 0;
-	virtual bool substituteDisc(TCFloat fraction, bool bfc,
-		bool is48 = false) = 0;
-	virtual bool substituteNotDisc(TCFloat fraction,
-		bool bfc, bool is48 = false) = 0;
-	virtual bool substituteCircularEdge(TCFloat fraction,
-		bool is48 = false) = 0;
-	virtual bool substituteCone(TCFloat fraction, int size,
-		bool bfc, bool is48 = false) = 0;
-	virtual bool substituteRing(TCFloat fraction, int size,
-		bool bfc, bool is48 = false) = 0;
+	virtual bool substituteStud(int /*numSegments*/) { return false; }
+	virtual bool substituteStud() { return false; }
+	virtual bool substituteStu2() { return false; }
+	virtual bool substituteStu22(bool /*isA*/, bool /*bfc*/) { return false; }
+	virtual bool substituteStu23(bool /*isA*/, bool /*bfc*/) { return false; }
+	virtual bool substituteStu24(bool /*isA*/, bool /*bfc*/) { return false; }
+	virtual bool substituteTorusIO(bool /*inner*/, bool /*bfc*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteTorusQ(bool /*bfc*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteEighthSphere(bool /*bfc*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteCylinder(TCFloat /*fraction*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteSlopedCylinder(TCFloat /*fraction*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteSlopedCylinder2(TCFloat /*fraction*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteChrd(TCFloat /*fraction*/, bool /*bfc*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteDisc(TCFloat /*fraction*/, bool /*bfc*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteNotDisc(TCFloat /*fraction*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteCircularEdge(TCFloat /*fraction*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteCone(TCFloat /*fraction*/, int /*size*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteRing(TCFloat /*fraction*/, int /*size*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual TCFloat startingFraction(const char *filename);
 	virtual bool startsWithFraction(const char *filename);
 	virtual bool startsWithFraction2(const char *filename);
