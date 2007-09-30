@@ -35,7 +35,7 @@ bool LDLConditionalLineLine::parse(void)
 	float x4, y4, z4;
 	int lineType;
 
-	if (sscanf(m_line, "%d %li %f %f %f %f %f %f %f %f %f %f %f %f", &lineType,
+	if (sscanf(m_line, "%d %i %f %f %f %f %f %f %f %f %f %f %f %f", &lineType,
 		&m_colorNumber, &x1, &y1, &z1, &x2, &y2, &z2, &x3, &y3, &z3,
 		&x4, &y4, &z4) == 14)
 	{

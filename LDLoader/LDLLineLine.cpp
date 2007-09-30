@@ -19,7 +19,7 @@ bool LDLLineLine::parse(void)
 	float x2, y2, z2;
 	int lineType;
 
-	if (sscanf(m_line, "%d %li %f %f %f %f %f %f", &lineType, &m_colorNumber,
+	if (sscanf(m_line, "%d %i %f %f %f %f %f %f", &lineType, &m_colorNumber,
 		&x1, &y1, &z1, &x2, &y2, &z2) == 8)
 	{
 		m_points = new TCVector[2];
