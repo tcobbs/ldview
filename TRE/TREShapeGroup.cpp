@@ -750,21 +750,29 @@ void TREShapeGroup::drawConditionalLines(void)
 	}
 }
 
-int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
-							int count)
+int TREShapeGroup::addShape(
+	TREShapeType shapeType,
+	const TCVector *vertices,
+	int count)
 {
 	return addShape(shapeType, vertices, NULL, count);
 }
 
-int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
-							TCVector *normals, int count)
+int TREShapeGroup::addShape(
+	TREShapeType shapeType,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count)
 {
 	return addShape(shapeType, vertices, normals, NULL, count);
 }
 
-int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
-							TCVector *normals, TCVector *textureCoords,
-							int count)
+int TREShapeGroup::addShape(
+	TREShapeType shapeType,
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count)
 {
 	int index;
 
@@ -796,8 +804,9 @@ int TREShapeGroup::addShape(TREShapeType shapeType, TCVector *vertices,
 	return index;
 }
 
-int TREShapeGroup::addConditionalLine(TCVector *vertices,
-									  TCVector *controlPoints)
+int TREShapeGroup::addConditionalLine(
+	const TCVector *vertices,
+	const TCVector *controlPoints)
 {
 	int index;
 
@@ -834,70 +843,89 @@ int TREShapeGroup::addConditionalLine(TCVector *vertices,
 	return index;
 }
 
-int TREShapeGroup::addLine(TCVector *vertices)
+int TREShapeGroup::addLine(const TCVector *vertices)
 {
 	return addShape(TRESLine, vertices, 2);
 }
 
-int TREShapeGroup::addTriangle(TCVector *vertices)
+int TREShapeGroup::addTriangle(const TCVector *vertices)
 {
 	return addShape(TRESTriangle, vertices, 3);
 }
 
-int TREShapeGroup::addTriangle(TCVector *vertices, TCVector *normals)
+int TREShapeGroup::addTriangle(
+	const TCVector *vertices,
+	const TCVector *normals)
 {
 	return addShape(TRESTriangle, vertices, normals, 3);
 }
 
-int TREShapeGroup::addTriangle(TCVector *vertices, TCVector *normals,
-							   TCVector *textureCoords)
+int TREShapeGroup::addTriangle(
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords)
 {
 	return addShape(TRESTriangle, vertices, normals, textureCoords, 3);
 }
 
-int TREShapeGroup::addQuad(TCVector *vertices)
+int TREShapeGroup::addQuad(const TCVector *vertices)
 {
 	return addShape(TRESQuad, vertices, 4);
 }
 
-int TREShapeGroup::addQuad(TCVector *vertices, TCVector *normals)
+int TREShapeGroup::addQuad(const TCVector *vertices, const TCVector *normals)
 {
 	return addShape(TRESQuad, vertices, normals, 4);
 }
 
-int TREShapeGroup::addTriangleStrip(TCVector *vertices, TCVector *normals,
-									int count)
+int TREShapeGroup::addTriangleStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count)
 {
 	return addStrip(TRESTriangleStrip, vertices, normals, count);
 }
 
-int TREShapeGroup::addQuadStrip(TCVector *vertices, TCVector *normals,
-								int count)
+int TREShapeGroup::addQuadStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count)
 {
 	return addStrip(TRESQuadStrip, vertices, normals, count);
 }
 
-int TREShapeGroup::addTriangleFan(TCVector *vertices, TCVector *normals,
-								  int count)
+int TREShapeGroup::addTriangleFan(
+	const TCVector *vertices,
+	const  TCVector *normals,
+	int count)
 {
 	return addStrip(TRESTriangleFan, vertices, normals, count);
 }
 
-int TREShapeGroup::addTriangleFan(TCVector *vertices, TCVector *normals,
-								  TCVector *textureCoords, int count)
+int TREShapeGroup::addTriangleFan(
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count)
 {
 	return addStrip(TRESTriangleFan, vertices, normals, textureCoords, count);
 }
 
-int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
-							TCVector *normals, int count)
+int TREShapeGroup::addStrip(
+	TREShapeType shapeType,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count)
 {
 	return addStrip(shapeType, vertices, normals, NULL, count);
 }
 
-int TREShapeGroup::addStrip(TREShapeType shapeType, TCVector *vertices,
-							TCVector *normals, TCVector *textureCoords,
-							int count)
+int TREShapeGroup::addStrip(
+	TREShapeType shapeType,
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count)
 {
 	int index;
 

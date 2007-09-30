@@ -64,7 +64,8 @@ public:
 	int operator>(const TCVector& right) const;
 	int operator<=(const TCVector& right) const;
 	int operator>=(const TCVector& right) const;
-	TCFloat& operator[](int i) {return vector[i];}
+	TCFloat& operator[](int i) {return vector[i]; }
+	const TCFloat& operator[](int i) const { return vector[i]; }
 	operator GlPt(void) {return vector;}
 	operator ConstGlPt(void) const {return vector;}
 	TCVector mult(TCFloat* matrix) const;

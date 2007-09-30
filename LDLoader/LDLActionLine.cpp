@@ -13,7 +13,8 @@ LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
 
 LDLActionLine::LDLActionLine(const LDLActionLine &other)
 	:LDLFileLine(other),
-	m_actionFlags(other.m_actionFlags)
+	m_actionFlags(other.m_actionFlags),
+	m_colorNumber(other.m_colorNumber)
 {
 }
 

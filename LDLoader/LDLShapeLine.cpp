@@ -11,8 +11,7 @@ LDLShapeLine::LDLShapeLine(LDLModel *parentModel, const char *line,
 
 LDLShapeLine::LDLShapeLine(const LDLShapeLine &other)
 	:LDLActionLine(other),
-	m_points(NULL),
-	m_colorNumber(other.m_colorNumber)
+	m_points(NULL)
 {
 	if (other.m_points)
 	{

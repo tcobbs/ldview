@@ -7,14 +7,15 @@
 class LDLActionLine : public LDLFileLine
 {
 public:
-	virtual bool isActionLine(void) { return true; }
+	virtual bool isActionLine(void) const { return true; }
 	virtual void setBFCSettings(BFCState bfcCertify, bool bfcClip,
 		bool bfcWindingCCW, bool bfcInvert);
-	bool getBFCClip(void) { return m_actionFlags.bfcClip != false; }
-	bool getBFCWindingCCW(void) { return m_actionFlags.bfcWindingCCW != false; }
-	bool getBFCInvert(void) { return m_actionFlags.bfcInvert != false; }
-	BFCState getBFCState(void) { return m_actionFlags.bfcCertify; }
-	bool getBFCOn(void)
+	bool getBFCClip(void) const { return m_actionFlags.bfcClip != false; }
+	bool getBFCWindingCCW(void) const { return m_actionFlags.bfcWindingCCW != false; }
+	bool getBFCInvert(void) const { return m_actionFlags.bfcInvert != false; }
+	BFCState getBFCState(void) const { return m_actionFlags.bfcCertify; }
+	int getColorNumber(void) const { return m_colorNumber; }
+	bool getBFCOn(void) const
 	{
 		return (m_actionFlags.bfcCertify == BFCOnState ||
 			m_actionFlags.bfcCertify == BFCForcedOnState) &&
@@ -33,6 +34,7 @@ protected:
 		bool bfcWindingCCW:1;
 		bool bfcInvert:1;
 	} m_actionFlags;
+	int m_colorNumber;
 };
 
 #endif // __LDLACTIONLINE_H__

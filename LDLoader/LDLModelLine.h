@@ -10,8 +10,6 @@ public:
 	virtual bool parse(void);
 	virtual LDLModel *getModel(void) const;
 	TCFloat *getMatrix(void) { return m_matrix; }
-	TCULong getColor(void) { return m_color; }
-	int getColorNumber(void) { return m_colorNumber; }
 	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeModel; }
@@ -33,8 +31,6 @@ protected:
 	LDLModel *m_highResModel;
 	LDLModel *m_lowResModel;
 	TCFloat m_matrix[16];
-	TCULong m_color;
-	int m_colorNumber;
 	struct
 	{
 		// Private flags
