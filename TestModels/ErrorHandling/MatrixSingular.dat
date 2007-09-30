@@ -1,0 +1,10 @@
+0 Test model that contains various singular matrix situations.
+0
+0 Primitive with a singular matrix (fixable):
+1 1 0 0 0 1 0 0 0 0 0 0 0 1 4-4disc.dat
+0 Same primitive with a different singular matrix (not fixable, because the
+0 matrix is singular in a dimension other than Y):
+1 1 0 0 0 0 0 0 0 1 0 0 0 1 4-4disc.dat
+0 Part with a singular matrix (not fixable, because part isn't flat in Y):
+1 1 0 0 0 1 0 0 0 0 0 0 0 1 101.dat
+
