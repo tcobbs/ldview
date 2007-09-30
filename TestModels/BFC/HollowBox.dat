@@ -1,0 +1,9 @@
+0 BFC CERTIFY
+
+0 Inside of box
+0 BFC INVERTNEXT
+1 1 0 -0.1 0 1.9 0 0 0 2 0 0 0 1.9 box5.dat
+
+0 Outside of box
+1 4 0 0 0 2 0 0 0 2 0 0 0 2 box5.dat
+

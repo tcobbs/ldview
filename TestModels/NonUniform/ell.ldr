@@ -1,0 +1,10 @@
+0 Untitled
+0 Name: ell.ldr
+0 Author: MLCad
+0 Unofficial Model
+0 ROTATION CENTER 0 0 0 1 "Custom" 
+0 ROTATION CONFIG 0 0
+1 0 -180 0 50 1 0 0 0 1 0 0 0 1 3001.DAT
+1 0 -100 0 50 1 0 0 0 1 0 0 0 1 3001.DAT
+1 0 -40 0 70 0 0 1 0 1 0 -1 0 0 3001.DAT
+0

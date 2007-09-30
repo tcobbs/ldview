@@ -1,0 +1,30 @@
+0 FILE Untitled.ldr
+0 Untitled
+0 Name: Untitled.ldr
+0 Author: MLCad
+0 Unofficial Model
+0 ROTATION CENTER 0 0 0 1 "Custom" 
+0 ROTATION CONFIG 0 0
+1 0 -60 -40 0 1 0 0 0 1 0 0 0 1 level1.ldr
+1 0 -60 24 0 1 0 0 0 1 0 0 0 1 level1.ldr
+0
+0 FILE level1.ldr
+0 Level 1
+0 Name: level1.ldr
+0 Author: MLCad
+0 Unofficial Model
+0 ROTATION CENTER 0 0 0 1 "Custom" 
+0 ROTATION CONFIG 0 0
+1 0 10 -80 0 1 0 0 0 1 0 0 0 1 level2.ldr
+1 0 80 -80 0 1 0 0 0 1 0 0 0 1 level2.ldr
+0
+0 FILE level2.ldr
+0 Level 2
+0 Name: level2.ldr
+0 Author: MLCad
+0 Unofficial Model
+0 ROTATION CENTER 0 0 0 1 "Custom" 
+0 ROTATION CONFIG 0 0
+1 0 -60 -8 0 1 0 0 0 1 0 0 0 1 3005.DAT
+0
+0

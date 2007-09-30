@@ -1,0 +1,6 @@
+0 Test model that contains 3 triangles with 3 different sets of identical
+0 vertices.
+3 1 0 0 0 0 0 0 1 0 0
+3 1 0 1 0 1 1 0 0 1 0
+3 1 0 2 0 1 2 0 1 2 0
+
