@@ -114,6 +114,10 @@ SOURCE=.\LDHtmlInventory.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDInputHandler.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLibraryUpdateInfo.cpp
 # End Source File
 # Begin Source File
@@ -152,6 +156,10 @@ SOURCE=.\LDViewPoint.cpp
 # Begin Source File
 
 SOURCE=.\LDHtmlInventory.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDInputHandler.h
 # End Source File
 # Begin Source File
 

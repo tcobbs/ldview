@@ -24,7 +24,6 @@ static const int HI_NUM_SEGMENTS = 16;
 LDModelParser::LDModelParser(void)
 	:m_mainLDLModel(NULL),
 	m_mainTREModel(NULL),
-	m_curveQuality(2),
 	m_seamWidth(0.0f),
 	m_edgeLineWidth(0.0f),
 	m_abort(false),
@@ -32,7 +31,6 @@ LDModelParser::LDModelParser(void)
 {
 	m_flags.flattenParts = true;	// Supporting false here could take a lot
 									// of work.
-	m_flags.primitiveSubstitution = true;
 	m_flags.seams = false;
 	m_flags.edgeLines = false;
 	m_flags.edgesOnly = false;
@@ -52,7 +50,6 @@ LDModelParser::LDModelParser(void)
 	m_flags.defaultColorSet = false;
 	m_flags.defaultColorNumberSet = false;
 	m_flags.studLogo = false;
-	m_flags.noLightGeom = false;
 }
 
 LDModelParser::~LDModelParser(void)
@@ -271,413 +268,101 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 	}
 }
 
-TCFloat LDModelParser::startingFraction(const char *filename)
+bool LDModelParser::substituteStud(int numSegments)
 {
-	int top;
-	int bottom;
-
-	if (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\"))
-	{
-		filename += 3;
-	}
-	sscanf(filename, "%d", &top);
-	sscanf(filename + 2, "%d", &bottom);
-	return (TCFloat)top / (TCFloat)bottom;
-}
-
-bool LDModelParser::startsWithFraction(const char *filename)
-{
-	return isdigit(filename[0]) && filename[1] == '-' && isdigit(filename[2]) &&
-		!isdigit(filename[3]);
-}
-
-bool LDModelParser::startsWithFraction2(const char *filename)
-{
-	return isdigit(filename[0]) && filename[1] == '-' && isdigit(filename[2]) &&
-		isdigit(filename[3]) && !isdigit(filename[4]);
-}
-
-bool LDModelParser::isPrimitive(const char *filename, const char *suffix,
-								bool *is48)
-{
-	int fileLen = strlen(filename);
-	int suffixLen = strlen(suffix);
-
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (((fileLen == suffixLen + 3 && startsWithFraction(filename)) ||
-		(suffixLen <= 8 && fileLen == suffixLen + 4 &&
-		startsWithFraction2(filename))) &&
-		stringHasCaseInsensitiveSuffix(filename, suffix))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return isPrimitive(filename + 3, suffix, NULL);
-	}
-	return false;
-}
-
-bool LDModelParser::isCyli(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "cyli.dat", is48);
-}
-
-bool LDModelParser::isCyls(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "cyls.dat", is48);
-}
-
-bool LDModelParser::isCyls2(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "cyls2.dat", is48);
-}
-
-bool LDModelParser::isChrd(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "chrd.dat", is48);
-}
-
-bool LDModelParser::isDisc(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "disc.dat", is48);
-}
-
-bool LDModelParser::isNdis(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "ndis.dat", is48);
-}
-
-bool LDModelParser::isEdge(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "edge.dat", is48);
-}
-
-/*
-bool LDModelParser::isCcyli(const char *filename, bool *is48)
-{
-	return isPrimitive(filename, "ccyli.dat", is48);
-}
-*/
-
-bool LDModelParser::is1DigitCon(const char *filename, bool *is48)
-{
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (strlen(filename) == 11 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
-		isdigit(filename[6]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return is1DigitCon(filename + 3, NULL);
-	}
-	return false;
-}
-
-bool LDModelParser::is2DigitCon(const char *filename, bool *is48)
-{
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (strlen(filename) == 12 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "con") &&
-		isdigit(filename[6]) && isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return is1DigitCon(filename + 3, NULL);
-	}
-	return false;
-}
-
-bool LDModelParser::isCon(const char *filename, bool *is48)
-{
-	return is1DigitCon(filename, is48) || is2DigitCon(filename, is48);
-}
-
-bool LDModelParser::isOldRing(const char *filename, bool *is48)
-{
-	int len = strlen(filename);
-
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (len >= 9 && len <= 12 &&
-		stringHasCaseInsensitivePrefix(filename, "ring") &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		int i;
-
-		for (i = 4; i < len - 5; i++)
-		{
-			if (!isdigit(filename[i]))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return isOldRing(filename + 3, NULL);
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::isRing(const char *filename, bool *is48)
-{
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (strlen(filename) == 12 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "ring") &&
-		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return isRing(filename + 3, NULL);
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::isRin(const char *filename, bool *is48)
-{
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (strlen(filename) == 12 && startsWithFraction(filename) &&
-		stringHasCaseInsensitivePrefix(filename + 3, "rin") &&
-		isdigit(filename[6]) && isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return isRin(filename + 3, NULL);
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::isTorus(const char *filename, bool *is48)
-{
-	if (is48 != NULL)
-	{
-		*is48 = false;
-	}
-	if (strlen(filename) == 12 && toupper(filename[0]) == 'T' &&
-		isdigit(filename[1]) && isdigit(filename[2]) &&
-		isdigit(filename[4]) && isdigit(filename[7]) && isdigit(filename[6]) &&
-		isdigit(filename[7]) &&
-		stringHasCaseInsensitiveSuffix(filename, ".dat"))
-	{
-		return true;
-	}
-	else if (is48 != NULL && (stringHasCaseInsensitivePrefix(filename, "48/") ||
-		stringHasCaseInsensitivePrefix(filename, "48\\")))
-	{
-		*is48 = true;
-		return isTorus(filename + 3, NULL);
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::isTorusO(const char *filename, bool *is48)
-{
-	if (isTorus(filename, is48))
-	{
-		if (is48 != NULL && *is48)
-		{
-			return toupper(filename[6]) == 'O';
-		}
-		else
-		{
-			return toupper(filename[3]) == 'O';
-		}
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::isTorusI(const char *filename, bool *is48)
-{
-	if (isTorus(filename, is48))
-	{
-		if (is48 != NULL && *is48)
-		{
-			return toupper(filename[6]) == 'I';
-		}
-		else
-		{
-			return toupper(filename[3]) == 'I';
-		}
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::isTorusQ(const char *filename, bool *is48)
-{
-	if (isTorus(filename, is48))
-	{
-		if (is48 != NULL && *is48)
-		{
-			return toupper(filename[6]) == 'Q';
-		}
-		else
-		{
-			return toupper(filename[3]) == 'Q';
-		}
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool LDModelParser::substituteStud(TREModel *treModel, int numSegments)
-{
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
 		numSegments, getBFCFlag());
-	treModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
+	m_currentTREModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
 		numSegments, getBFCFlag());
 	if (getEdgeLinesFlag())
 	{
-		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments);
-		treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
 			numSegments);
 	}
 	return true;
 }
 
-bool LDModelParser::substituteStud(TREModel *treModel)
+bool LDModelParser::substituteStud(void)
 {
-	return substituteStud(treModel, getNumCircleSegments());
+	return substituteStud(getNumCircleSegments());
 }
 
-bool LDModelParser::substituteStu2(TREModel *treModel)
+bool LDModelParser::substituteStu2(void)
 {
-	return substituteStud(treModel, LO_NUM_SEGMENTS);
+	return substituteStud(LO_NUM_SEGMENTS);
 }
 
-bool LDModelParser::substituteStu22(TREModel *treModel, bool isA, bool bfc)
+bool LDModelParser::substituteStu22(bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 4.0f, -4.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 4.0f, -4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 6.0f, 0.0f,
+	m_currentTREModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 6.0f, 0.0f,
 		numSegments, numSegments, bfc);
 	if (getEdgeLinesFlag())
 	{
-		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
 			numSegments);
-		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments);
 		if (!isA)
 		{
-			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
 				numSegments);
-			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
 				numSegments);
 		}
 	}
 	return true;
 }
 
-bool LDModelParser::substituteStu23(TREModel *treModel, bool isA, bool bfc)
+bool LDModelParser::substituteStu23(bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 4.0f, 4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments,
+	m_currentTREModel->addDisc(TCVector(0.0f, -4.0f, 0.0f), 4.0f, numSegments,
 		numSegments, bfc);
 	if (getEdgeLinesFlag())
 	{
-		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 4.0f,
 			numSegments);
 		if (!isA)
 		{
-			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 4.0f,
 				numSegments);
 		}
 	}
 	return true;
 }
 
-bool LDModelParser::substituteStu24(TREModel *treModel, bool isA, bool bfc)
+bool LDModelParser::substituteStu24(bool isA, bool bfc)
 {
 	int numSegments = LO_NUM_SEGMENTS;
 
-	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 6.0f, -4.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 6.0f, -4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 8.0f, 4.0f, numSegments,
 		numSegments, bfc);
-	treModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 8.0f, 0.0f,
+	m_currentTREModel->addOpenCone(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 8.0f, 0.0f,
 		numSegments, numSegments, bfc);
 	if (getEdgeLinesFlag())
 	{
-		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 			numSegments);
-		treModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 8.0f,
 			numSegments);
 		if (!isA)
 		{
-			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
 				numSegments);
-			treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f,
+			m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 8.0f,
 				numSegments);
 		}
 	}
@@ -698,11 +383,11 @@ TCFloat LDModelParser::getTorusFraction(int size)
 	return (TCFloat)size / 10000.0f;
 }
 
-bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
+bool LDModelParser::substituteTorusQ(bool bfc, bool is48)
 {
 	int numSegments;
 	int size;
-	const char *modelName = treModel->getName();
+	const char *modelName = m_currentTREModel->getName();
 	TCFloat fraction;
 	int offset = 0;
 
@@ -714,27 +399,27 @@ bool LDModelParser::substituteTorusQ(TREModel *treModel, bool bfc, bool is48)
 	sscanf(modelName + 4 + offset, "%d", &size);
 	fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
-	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+	m_currentTREModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
-	treModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+	m_currentTREModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
-	treModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+	m_currentTREModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		-getTorusFraction(size), numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
-	treModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+	m_currentTREModel->addTorusIO(false, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		-getTorusFraction(size), numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
+bool LDModelParser::substituteTorusIO(bool inner, bool bfc,
 									  bool is48)
 {
 	int numSegments;
 	int size;
-	const char *modelName = treModel->getName();
+	const char *modelName = m_currentTREModel->getName();
 	TCFloat fraction;
 	int offset = 0;
 
@@ -746,318 +431,288 @@ bool LDModelParser::substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
 	sscanf(modelName + 4 + offset, "%d", &size);
 	fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
-	treModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
+	m_currentTREModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteEighthSphere(TREModel *treModel, bool bfc,
+bool LDModelParser::substituteEighthSphere(bool bfc,
 										   bool is48)
 {
 	int numSegments = getNumCircleSegments(1.0, is48);
 
-	treModel->addEighthSphere(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+	m_currentTREModel->addEighthSphere(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		bfc);
 	return true;
 }
 
-bool LDModelParser::substituteCylinder(TREModel *treModel, TCFloat fraction,
+bool LDModelParser::substituteCylinder(TCFloat fraction,
 									   bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
+	m_currentTREModel->addCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteSlopedCylinder(TREModel *treModel, TCFloat fraction,
+bool LDModelParser::substituteSlopedCylinder(TCFloat fraction,
 											 bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
+	m_currentTREModel->addSlopedCylinder(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
 		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteSlopedCylinder2(TREModel *treModel,
-											  TCFloat fraction, bool bfc,
+bool LDModelParser::substituteSlopedCylinder2(TCFloat fraction, bool bfc,
 											  bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
+	m_currentTREModel->addSlopedCylinder2(TCVector(0.0f, 0.0f, 0.0f), 1.0f, 1.0f,
 		numSegments, getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteChrd(TREModel *treModel, TCFloat fraction, bool bfc,
+bool LDModelParser::substituteChrd(TCFloat fraction, bool bfc,
 								   bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addChrd(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+	m_currentTREModel->addChrd(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteDisc(TREModel *treModel, TCFloat fraction, bool bfc,
+bool LDModelParser::substituteDisc(TCFloat fraction, bool bfc,
 								   bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+	m_currentTREModel->addDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteNotDisc(TREModel *treModel, TCFloat fraction,
+bool LDModelParser::substituteNotDisc(TCFloat fraction,
 									  bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+	m_currentTREModel->addNotDisc(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteCircularEdge(TREModel *treModel, TCFloat fraction,
+bool LDModelParser::substituteCircularEdge(TCFloat fraction,
 										   bool is48)
 {
 	if (getEdgeLinesFlag())
 	{
 		int numSegments = getNumCircleSegments(fraction, is48);
 
-		treModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
+		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 1.0f, numSegments,
 			getUsedCircleSegments(numSegments, fraction));
 	}
 	return true;
 }
 
-bool LDModelParser::substituteCone(TREModel *treModel, TCFloat fraction, int size,
+bool LDModelParser::substituteCone(TCFloat fraction, int size,
 								   bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (TCFloat)size + 1.0f,
+	m_currentTREModel->addOpenCone(TCVector(0.0f, 0.0f, 0.0f), (TCFloat)size + 1.0f,
 		(TCFloat)size, 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-bool LDModelParser::substituteRing(TREModel *treModel, TCFloat fraction, int size,
+bool LDModelParser::substituteRing(TCFloat fraction, int size,
 								   bool bfc, bool is48)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 
-	treModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (TCFloat)size,
+	m_currentTREModel->addRing(TCVector(0.0f, 0.0f, 0.0f), (TCFloat)size,
 		(TCFloat)size + 1.0f, numSegments,
 		getUsedCircleSegments(numSegments, fraction), bfc);
 	return true;
 }
 
-int LDModelParser::getUsedCircleSegments(int numSegments, TCFloat fraction)
-{
-	return (int)(numSegments * fraction + 0.000001);
-}
-
-int LDModelParser::getNumCircleSegments(TCFloat fraction, bool is48)
-{
-	int retValue = m_curveQuality * LO_NUM_SEGMENTS;
-
-	if (is48 && retValue < 48)
-	{
-		retValue = 48;
-	}
-	if (fraction != 0.0f)
-	{
-		int i;
-		
-		for (i = m_curveQuality; !fEq(fraction * retValue,
-			(TCFloat)getUsedCircleSegments(retValue, fraction)) && i < 12; i++)
-		{
-			int newValue = (i + 1) * LO_NUM_SEGMENTS;
-
-			if (newValue > retValue)
-			{
-				retValue = newValue;
-			}
-		}
-	}
-	return retValue;
-}
-
 bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 												 TREModel *treModel, bool bfc)
 {
-	const char *modelName = ldlModel->getName();
-
-	if (getPrimitiveSubstitutionFlag())
-	{
-		bool is48;
-
-		if (!modelName)
-		{
-			return false;
-		}
-		if (strcasecmp(modelName, "LDL-LOWRES:stu2.dat") == 0)
-		{
-			return substituteStu2(treModel);
-		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu22.dat") == 0)
-		{
-			return substituteStu22(treModel, false, bfc);
-		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu22a.dat") == 0)
-		{
-			return substituteStu22(treModel, true, bfc);
-		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu23.dat") == 0)
-		{
-			return substituteStu23(treModel, false, bfc);
-		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu23a.dat") == 0)
-		{
-			return substituteStu23(treModel, true, bfc);
-		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu24.dat") == 0)
-		{
-			return substituteStu24(treModel, false, bfc);
-		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu24a.dat") == 0)
-		{
-			return substituteStu24(treModel, true, bfc);
-		}
-		else if (strcasecmp(modelName, "stud.dat") == 0)
-		{
-			return substituteStud(treModel);
-		}
-		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
-		{
-			return substituteEighthSphere(treModel, bfc);
-		}
-		else if (strcasecmp(modelName, "48/1-8sphe.dat") == 0 ||
-			strcasecmp(modelName, "48\\1-8sphe.dat") == 0)
-		{
-			return substituteEighthSphere(treModel, bfc, true);
-		}
-		else if (isCyli(modelName, &is48))
-		{
-			return substituteCylinder(treModel, startingFraction(modelName),
-				bfc, is48);
-		}
-		else if (isCyls(modelName, &is48))
-		{
-			return substituteSlopedCylinder(treModel,
-				startingFraction(modelName), bfc, is48);
-		}
-		else if (isCyls2(modelName, &is48))
-		{
-			return substituteSlopedCylinder2(treModel,
-				startingFraction(modelName), bfc, is48);
-		}
-		else if (isChrd(modelName, &is48))
-		{
-			return substituteChrd(treModel, startingFraction(modelName), bfc,
-				is48);
-		}
-		else if (isDisc(modelName, &is48))
-		{
-			return substituteDisc(treModel, startingFraction(modelName), bfc,
-				is48);
-		}
-		else if (isNdis(modelName, &is48))
-		{
-			return substituteNotDisc(treModel, startingFraction(modelName),
-				bfc, is48);
-		}
-		else if (isEdge(modelName, &is48))
-		{
-			return substituteCircularEdge(treModel,
-				startingFraction(modelName), is48);
-		}
-/*
-		else if (isCcyli(modelName, &is48))
-		{
-			// The file now simply refers to a new torus.
-			// Need to do old-style torus substitution
-		}
-*/
-		else if (isCon(modelName, &is48))
-		{
-			int size;
-			int offset = 0;
-
-			if (is48)
-			{
-				offset = 3;
-			}
-			sscanf(modelName + 6 + offset, "%d", &size);
-			return substituteCone(treModel, startingFraction(modelName), size,
-				bfc, is48);
-		}
-		else if (isOldRing(modelName, &is48))
-		{
-			int size;
-			int offset = 0;
-
-			if (is48)
-			{
-				offset = 3;
-			}
-			sscanf(modelName + 4 + offset, "%d", &size);
-			return substituteRing(treModel, 1.0f, size, bfc, is48);
-		}
-		else if (isRing(modelName, &is48))
-		{
-			int size;
-			int offset = 0;
-
-			if (is48)
-			{
-				offset = 3;
-			}
-			sscanf(modelName + 7 + offset, "%d", &size);
-			return substituteRing(treModel, startingFraction(modelName), size,
-				bfc, is48);
-		}
-		else if (isRin(modelName, &is48))
-		{
-			int size;
-			int offset = 0;
-
-			if (is48)
-			{
-				offset = 3;
-			}
-			sscanf(modelName + 6 + offset, "%d", &size);
-			return substituteRing(treModel, startingFraction(modelName), size,
-				bfc, is48);
-		}
-		else if (isTorusO(modelName, &is48))
-		{
-			return substituteTorusIO(treModel, false, bfc, is48);
-		}
-		else if (isTorusI(modelName, &is48))
-		{
-			return substituteTorusIO(treModel, true, bfc, is48);
-		}
-		else if (isTorusQ(modelName, &is48))
-		{
-			return substituteTorusQ(treModel, bfc, is48);
-		}
-	}
-	if (getNoLightGeomFlag())
-	{
-		if (modelName && strcasecmp(modelName, "light.dat") == 0)
-		{
-			// Don't draw any geometry for light.dat.
-			return true;
-		}
-	}
-	return false;
+	m_currentTREModel = treModel;
+	return LDLPrimitiveCheck::performPrimitiveSubstitution(ldlModel, bfc);
+//	const char *modelName = ldlModel->getName();
+//
+//	if (getPrimitiveSubstitutionFlag())
+//	{
+//		bool is48;
+//
+//		if (!modelName)
+//		{
+//			return false;
+//		}
+//		if (strcasecmp(modelName, "LDL-LOWRES:stu2.dat") == 0)
+//		{
+//			return substituteStu2(treModel);
+//		}
+//		else if (strcasecmp(modelName, "LDL-LOWRES:stu22.dat") == 0)
+//		{
+//			return substituteStu22(treModel, false, bfc);
+//		}
+//		else if (strcasecmp(modelName, "LDL-LOWRES:stu22a.dat") == 0)
+//		{
+//			return substituteStu22(treModel, true, bfc);
+//		}
+//		else if (strcasecmp(modelName, "LDL-LOWRES:stu23.dat") == 0)
+//		{
+//			return substituteStu23(treModel, false, bfc);
+//		}
+//		else if (strcasecmp(modelName, "LDL-LOWRES:stu23a.dat") == 0)
+//		{
+//			return substituteStu23(treModel, true, bfc);
+//		}
+//		else if (strcasecmp(modelName, "LDL-LOWRES:stu24.dat") == 0)
+//		{
+//			return substituteStu24(treModel, false, bfc);
+//		}
+//		else if (strcasecmp(modelName, "LDL-LOWRES:stu24a.dat") == 0)
+//		{
+//			return substituteStu24(treModel, true, bfc);
+//		}
+//		else if (strcasecmp(modelName, "stud.dat") == 0)
+//		{
+//			return substituteStud(treModel);
+//		}
+//		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
+//		{
+//			return substituteEighthSphere(treModel, bfc);
+//		}
+//		else if (strcasecmp(modelName, "48/1-8sphe.dat") == 0 ||
+//			strcasecmp(modelName, "48\\1-8sphe.dat") == 0)
+//		{
+//			return substituteEighthSphere(treModel, bfc, true);
+//		}
+//		else if (isCyli(modelName, &is48))
+//		{
+//			return substituteCylinder(treModel, startingFraction(modelName),
+//				bfc, is48);
+//		}
+//		else if (isCyls(modelName, &is48))
+//		{
+//			return substituteSlopedCylinder(treModel,
+//				startingFraction(modelName), bfc, is48);
+//		}
+//		else if (isCyls2(modelName, &is48))
+//		{
+//			return substituteSlopedCylinder2(treModel,
+//				startingFraction(modelName), bfc, is48);
+//		}
+//		else if (isChrd(modelName, &is48))
+//		{
+//			return substituteChrd(treModel, startingFraction(modelName), bfc,
+//				is48);
+//		}
+//		else if (isDisc(modelName, &is48))
+//		{
+//			return substituteDisc(treModel, startingFraction(modelName), bfc,
+//				is48);
+//		}
+//		else if (isNdis(modelName, &is48))
+//		{
+//			return substituteNotDisc(treModel, startingFraction(modelName),
+//				bfc, is48);
+//		}
+//		else if (isEdge(modelName, &is48))
+//		{
+//			return substituteCircularEdge(treModel,
+//				startingFraction(modelName), is48);
+//		}
+///*
+//		else if (isCcyli(modelName, &is48))
+//		{
+//			// The file now simply refers to a new torus.
+//			// Need to do old-style torus substitution
+//		}
+//*/
+//		else if (isCon(modelName, &is48))
+//		{
+//			int size;
+//			int offset = 0;
+//
+//			if (is48)
+//			{
+//				offset = 3;
+//			}
+//			sscanf(modelName + 6 + offset, "%d", &size);
+//			return substituteCone(treModel, startingFraction(modelName), size,
+//				bfc, is48);
+//		}
+//		else if (isOldRing(modelName, &is48))
+//		{
+//			int size;
+//			int offset = 0;
+//
+//			if (is48)
+//			{
+//				offset = 3;
+//			}
+//			sscanf(modelName + 4 + offset, "%d", &size);
+//			return substituteRing(treModel, 1.0f, size, bfc, is48);
+//		}
+//		else if (isRing(modelName, &is48))
+//		{
+//			int size;
+//			int offset = 0;
+//
+//			if (is48)
+//			{
+//				offset = 3;
+//			}
+//			sscanf(modelName + 7 + offset, "%d", &size);
+//			return substituteRing(treModel, startingFraction(modelName), size,
+//				bfc, is48);
+//		}
+//		else if (isRin(modelName, &is48))
+//		{
+//			int size;
+//			int offset = 0;
+//
+//			if (is48)
+//			{
+//				offset = 3;
+//			}
+//			sscanf(modelName + 6 + offset, "%d", &size);
+//			return substituteRing(treModel, startingFraction(modelName), size,
+//				bfc, is48);
+//		}
+//		else if (isTorusO(modelName, &is48))
+//		{
+//			return substituteTorusIO(treModel, false, bfc, is48);
+//		}
+//		else if (isTorusI(modelName, &is48))
+//		{
+//			return substituteTorusIO(treModel, true, bfc, is48);
+//		}
+//		else if (isTorusQ(modelName, &is48))
+//		{
+//			return substituteTorusQ(treModel, bfc, is48);
+//		}
+//	}
+//	if (getNoLightGeomFlag())
+//	{
+//		if (modelName && strcasecmp(modelName, "light.dat") == 0)
+//		{
+//			// Don't draw any geometry for light.dat.
+//			return true;
+//		}
+//	}
+//	return false;
 }
 
 bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)

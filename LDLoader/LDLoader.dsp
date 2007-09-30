@@ -158,6 +158,10 @@ SOURCE=.\LDLPalette.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLPrimitiveCheck.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLQuadLine.cpp
 # End Source File
 # Begin Source File
@@ -231,6 +235,10 @@ SOURCE=.\LDLModelLine.h
 # Begin Source File
 
 SOURCE=.\LDLPalette.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLPrimitiveCheck.h
 # End Source File
 # Begin Source File
 

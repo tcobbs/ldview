@@ -2,6 +2,7 @@
 #define __LDMODELPARSER_H__
 
 #include <TCFoundation/TCObject.h>
+#include <LDLoader/LDLPrimitiveCheck.h>
 
 #include <string.h>
 
@@ -14,7 +15,7 @@ class LDLShapeLine;
 class LDLModelLine;
 class LDLConditionalLineLine;
 
-class LDModelParser : public TCObject
+class LDModelParser : public LDLPrimitiveCheck
 {
 public:
 	LDModelParser(void);
@@ -24,16 +25,6 @@ public:
 	bool getFileIsPartFlag(void) { return m_flags.fileIsPart != false; }
 	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
 	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
-	void setPrimitiveSubstitutionFlag(bool value)
-	{
-		m_flags.primitiveSubstitution = value;
-	}
-	bool getPrimitiveSubstitutionFlag(void)
-	{
-		return m_flags.primitiveSubstitution != false;
-	}
-	bool getNoLightGeomFlag(void) { return m_flags.noLightGeom != false; }
-	void setNoLightGeomFlag(bool value) { m_flags.noLightGeom = value; }
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	void setEdgeLinesFlag(bool value) { m_flags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_flags.edgeLines != false; }
@@ -103,8 +94,6 @@ public:
 	bool getPolygonOffsetFlag(void) { return m_flags.polygonOffset != false; }
 	void setStudLogoFlag(bool value) { m_flags.studLogo = value; }
 	bool getStudLogoFlag(void) { return m_flags.studLogo != false; }
-	void setCurveQuality(int value) { m_curveQuality = value; }
-	int getCurveQuality(void) { return m_curveQuality; }
 	void setEdgeLineWidth(TCFloat32 value) { m_edgeLineWidth = value; }
 	TCFloat32 getEdgeLineWidth(void) { return m_edgeLineWidth; }
 	void setStudAnisoLevel(TCFloat32 value) { m_studAnisoLevel = value; }
@@ -148,67 +137,42 @@ protected:
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel, bool bfc);
 	virtual TCFloat getTorusFraction(int size);
-	virtual bool substituteStud(TREModel *treModel, int numSegments);
-	virtual bool substituteStud(TREModel *treModel);
-	virtual bool substituteStu2(TREModel *treModel);
-	virtual bool substituteStu22(TREModel *treModel, bool isA, bool bfc);
-	virtual bool substituteStu23(TREModel *treModel, bool isA, bool bfc);
-	virtual bool substituteStu24(TREModel *treModel, bool isA, bool bfc);
-	virtual bool substituteTorusIO(TREModel *treModel, bool inner, bool bfc,
+	virtual bool substituteStud(int numSegments);
+	virtual bool substituteStud(void);
+	virtual bool substituteStu2(void);
+	virtual bool substituteStu22(bool isA, bool bfc);
+	virtual bool substituteStu23(bool isA, bool bfc);
+	virtual bool substituteStu24(bool isA, bool bfc);
+	virtual bool substituteTorusIO(bool inner, bool bfc,
 		bool is48 = false);
-	virtual bool substituteTorusQ(TREModel *treModel, bool bfc,
+	virtual bool substituteTorusQ(bool bfc,
 		bool is48 = false);
-	virtual bool substituteEighthSphere(TREModel *treModel, bool bfc,
+	virtual bool substituteEighthSphere(bool bfc,
 		bool is48 = false);
-	virtual bool substituteCylinder(TREModel *treModel, TCFloat fraction,
+	virtual bool substituteCylinder(TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteSlopedCylinder(TREModel *treModel, TCFloat fraction,
+	virtual bool substituteSlopedCylinder(TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteSlopedCylinder2(TREModel *treModel, TCFloat fraction,
+	virtual bool substituteSlopedCylinder2(TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteChrd(TREModel *treModel, TCFloat fraction, bool bfc,
+	virtual bool substituteChrd(TCFloat fraction, bool bfc,
 		bool is48 = false);
-	virtual bool substituteDisc(TREModel *treModel, TCFloat fraction, bool bfc,
+	virtual bool substituteDisc(TCFloat fraction, bool bfc,
 		bool is48 = false);
-	virtual bool substituteNotDisc(TREModel *treModel, TCFloat fraction,
+	virtual bool substituteNotDisc(TCFloat fraction,
 		bool bfc, bool is48 = false);
-	virtual bool substituteCircularEdge(TREModel *treModel, TCFloat fraction,
+	virtual bool substituteCircularEdge(TCFloat fraction,
 		bool is48 = false);
-	virtual bool substituteCone(TREModel *treModel, TCFloat fraction, int size,
+	virtual bool substituteCone(TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
-	virtual bool substituteRing(TREModel *treModel, TCFloat fraction, int size,
+	virtual bool substituteRing(TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
-	virtual TCFloat startingFraction(const char *filename);
-	virtual bool startsWithFraction(const char *filename);
-	virtual bool startsWithFraction2(const char *filename);
-	virtual bool isPrimitive(const char *filename, const char *suffix,
-		bool *is48 = NULL);
-	virtual bool isCyli(const char *filename, bool *is48 = NULL);
-	virtual bool isCyls(const char *filename, bool *is48 = NULL);
-	virtual bool isCyls2(const char *filename, bool *is48 = NULL);
-	virtual bool isChrd(const char *filename, bool *is48 = NULL);
-	virtual bool isDisc(const char *filename, bool *is48 = NULL);
-	virtual bool isNdis(const char *filename, bool *is48 = NULL);
-	virtual bool isEdge(const char *filename, bool *is48 = NULL);
-//	virtual bool isCcyli(const char *filename, bool *is48 = NULL);
-	virtual bool is1DigitCon(const char *filename, bool *is48 = NULL);
-	virtual bool is2DigitCon(const char *filename, bool *is48 = NULL);
-	virtual bool isCon(const char *filename, bool *is48 = NULL);
-	virtual bool isOldRing(const char *filename, bool *is48 = NULL);
-	virtual bool isRing(const char *filename, bool *is48 = NULL);
-	virtual bool isRin(const char *filename, bool *is48 = NULL);
-	virtual bool isTorus(const char *filename, bool *is48 = NULL);
-	virtual bool isTorusO(const char *filename, bool *is48 = NULL);
-	virtual bool isTorusI(const char *filename, bool *is48 = NULL);
-	virtual bool isTorusQ(const char *filename, bool *is48 = NULL);
-	virtual int getNumCircleSegments(TCFloat fraction = 0.0f, bool is48 = false);
-	virtual int getUsedCircleSegments(int numSegments, TCFloat fraction);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 
 	LDLMainModel *m_mainLDLModel;
 	TREMainModel *m_mainTREModel;
-	int m_curveQuality;
+	TREModel *m_currentTREModel;
 	TCFloat m_seamWidth;
 	TCFloat32 m_edgeLineWidth;
 	TCFloat32 m_studAnisoLevel;
@@ -222,7 +186,6 @@ protected:
 	{
 		bool fileIsPart:1;
 		bool flattenParts:1;
-		bool primitiveSubstitution:1;
 		bool seams:1;
 		bool edgeLines:1;
 		bool edgesOnly:1;
@@ -246,7 +209,6 @@ protected:
 		bool defaultTrans:1;
 		bool redBackFaces:1;
 		bool greenFrontFaces:1;
-		bool noLightGeom:1;
 	} m_flags;
 };
 

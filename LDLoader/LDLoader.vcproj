@@ -932,6 +932,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LDLPrimitiveCheck.cpp"
+				>
+			</File>
+			<File
 				RelativePath="LDLQuadLine.cpp"
 				>
 				<FileConfiguration
@@ -1231,6 +1235,10 @@
 			</File>
 			<File
 				RelativePath="LDLPalette.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDLPrimitiveCheck.h"
 				>
 			</File>
 			<File
