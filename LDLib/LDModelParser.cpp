@@ -60,7 +60,7 @@ void LDModelParser::dealloc(void)
 {
 	TCObject::release(m_mainLDLModel);
 	TCObject::release(m_mainTREModel);
-	TCObject::dealloc();
+	LDLPrimitiveCheck::dealloc();
 }
 
 bool LDModelParser::shouldLoadConditionalLines(void)
