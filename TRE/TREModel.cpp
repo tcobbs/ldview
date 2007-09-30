@@ -10,6 +10,9 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCMacros.h>
 
+//00000001111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000111111111122222222223333333333444444444455555555556
+//34567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+
 TREModel::TREModel(void)
 	:m_name(NULL),
 	m_mainModel(NULL),
@@ -569,94 +572,98 @@ void TREModel::setupColoredConditional(void)
 	setupColored(TREMConditionalLines);
 }
 
-void TREModel::addLine(TCULong color, TCVector *vertices)
+void TREModel::addLine(TCULong color, const TCVector *vertices)
 {
 	setupColoredLines();
 	m_coloredShapes[TREMLines]->addLine(color, vertices);
 }
 
-void TREModel::addLine(TCVector *vertices)
+void TREModel::addLine(const TCVector *vertices)
 {
 	setupLines();
 	m_shapes[TREMLines]->addLine(vertices);
 }
 
-void TREModel::addConditionalLine(TCVector *vertices, TCVector *controlPoints)
+void TREModel::addConditionalLine(
+	const TCVector *vertices,
+	const TCVector *controlPoints)
 {
 	setup(TREMConditionalLines);
 	m_shapes[TREMConditionalLines]->addConditionalLine(vertices, controlPoints);
 }
 
-void TREModel::addEdgeLine(TCVector *vertices)
+void TREModel::addEdgeLine(const TCVector *vertices)
 {
 	setupEdges();
 	m_shapes[TREMEdgeLines]->addLine(vertices);
 }
 
-void TREModel::addTriangle(TCULong color, TCVector *vertices)
+void TREModel::addTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes[TREMStandard]->addTriangle(color, vertices);
 }
 
-void TREModel::addTriangle(TCVector *vertices)
+void TREModel::addTriangle(const TCVector *vertices)
 {
 	setupStandard();
 	m_shapes[TREMStandard]->addTriangle(vertices);
 }
 
-void TREModel::addBFCTriangle(TCULong color, TCVector *vertices)
+void TREModel::addBFCTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addTriangle(color, vertices);
 }
 
-void TREModel::addBFCTriangle(TCVector *vertices)
+void TREModel::addBFCTriangle(const TCVector *vertices)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices);
 }
 
-void TREModel::addTriangle(TCVector *vertices, TCVector *normals)
+void TREModel::addTriangle(const TCVector *vertices, const TCVector *normals)
 {
 	setupStandard();
 	m_shapes[TREMStandard]->addTriangle(vertices, normals);
 }
 
-void TREModel::addBFCTriangle(TCVector *vertices, TCVector *normals)
+void TREModel::addBFCTriangle(const TCVector *vertices, const TCVector *normals)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices, normals);
 }
 
-void TREModel::addQuad(TCULong color, TCVector *vertices)
+void TREModel::addQuad(TCULong color, const TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes[TREMStandard]->addQuad(color, vertices);
 }
 
-void TREModel::addQuad(TCVector *vertices)
+void TREModel::addQuad(const TCVector *vertices)
 {
 	setupStandard();
 	m_shapes[TREMStandard]->addQuad(vertices);
 }
 
-void TREModel::addBFCQuad(TCVector *vertices)
+void TREModel::addBFCQuad(const TCVector *vertices)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addQuad(vertices);
 }
 
-void TREModel::addBFCQuad(TCULong color, TCVector *vertices)
+void TREModel::addBFCQuad(TCULong color, const TCVector *vertices)
 {
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addQuad(color, vertices);
 }
 
-void TREModel::triangleStripToTriangle(int index, TCVector *stripVertices,
-									   TCVector *stripNormals,
-									   TCVector *triangleVertices,
-									   TCVector *triangleNormals)
+void TREModel::triangleStripToTriangle(
+	int index,
+	const TCVector *stripVertices,
+	const TCVector *stripNormals,
+	TCVector *triangleVertices,
+	TCVector *triangleNormals)
 {
 	int ofs1 = 1;
 	int ofs2 = 2;
@@ -674,9 +681,12 @@ void TREModel::triangleStripToTriangle(int index, TCVector *stripVertices,
 	triangleNormals[2] = stripNormals[index + ofs2];
 }
 
-void TREModel::quadStripToQuad(int index, TCVector *stripVertices,
-							   TCVector *stripNormals, TCVector *quadVertices,
-							   TCVector *quadNormals)
+void TREModel::quadStripToQuad(
+	int index,
+	const TCVector *stripVertices,
+	const TCVector *stripNormals,
+	TCVector *quadVertices,
+	TCVector *quadNormals)
 {
 	quadVertices[0] = stripVertices[index];
 	quadVertices[1] = stripVertices[index + 1];
@@ -688,22 +698,28 @@ void TREModel::quadStripToQuad(int index, TCVector *stripVertices,
 	quadNormals[3] = stripNormals[index + 2];
 }
 
-void TREModel::addQuadStrip(TCVector *vertices, TCVector *normals, int count,
-							bool flat)
+void TREModel::addQuadStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	setupStandard();
 	addQuadStrip(m_shapes[TREMStandard], vertices, normals, count, flat);
 }
 
-void TREModel::addTriangleStrip(TCVector *vertices, TCVector *normals,
-								int count, bool flat)
+void TREModel::addTriangleStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	setupStandard();
 	addTriangleStrip(m_shapes[TREMStandard], vertices, normals, count, flat);
 }
 
-void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
-							TCVector *normals, int count, bool flat)
+void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, const TCVector *vertices,
+							const TCVector *normals, int count, bool flat)
 {
 	if (m_mainModel->getUseStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
@@ -724,23 +740,30 @@ void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
 	}
 }
 
-void TREModel::addBFCQuadStrip(TCVector *vertices, TCVector *normals, int count,
-							   bool flat)
+void TREModel::addBFCQuadStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	setupBFC();
 	addQuadStrip(m_shapes[TREMBFC], vertices, normals, count, flat);
 }
 
-void TREModel::addQuadStrip(TCULong color, TCVector *vertices,
-							TCVector *normals, int count, bool flat)
+void TREModel::addQuadStrip(TCULong color, const TCVector *vertices,
+							const TCVector *normals, int count, bool flat)
 {
 	setupColored();
 	addQuadStrip(m_coloredShapes[TREMStandard], color, vertices, normals,
 		count, flat);
 }
 
-void TREModel::addTriangleStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
-								TCVector *normals, int count, bool flat)
+void TREModel::addTriangleStrip(
+	TREShapeGroup *shapeGroup,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	if (m_mainModel->getUseStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
@@ -788,9 +811,13 @@ void TREModel::addTriangleStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
 }
 */
 
-void TREModel::addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
-							TCVector *vertices, TCVector *normals, int count,
-							bool flat)
+void TREModel::addQuadStrip(
+	TREColoredShapeGroup *shapeGroup,
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	if (m_mainModel->getUseStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
@@ -811,8 +838,8 @@ void TREModel::addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
 	}
 }
 
-void TREModel::addBFCQuadStrip(TCULong color, TCVector *vertices,
-							   TCVector *normals, int count, bool flat)
+void TREModel::addBFCQuadStrip(TCULong color, const TCVector *vertices,
+							   const TCVector *normals, int count, bool flat)
 {
 	setupColoredBFC();
 	addQuadStrip(m_coloredShapes[TREMBFC], color, vertices, normals, count,
@@ -829,36 +856,45 @@ void TREModel::addBFCTriangleStrip(TCULong color, TCVector *vertices,
 }
 */
 
-void TREModel::addBFCTriangleStrip(TCVector *vertices, TCVector *normals,
-								   int count, bool flat)
+void TREModel::addBFCTriangleStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	setupBFC();
 	addTriangleStrip(m_shapes[TREMBFC], vertices, normals, count, flat);
 }
 
-void TREModel::triangleFanToTriangle(int index, TCVector *stripVertices,
-									 TCVector *stripNormals,
-									 TCVector *stripTextureCoords,
-									 TCVector *triangleVertices,
-									 TCVector *triangleNormals,
-									 TCVector *triangleTextureCoords)
+void TREModel::triangleFanToTriangle(
+	int index,
+	const TCVector *fanVertices,
+	const TCVector *fanNormals,
+	const TCVector *fanTextureCoords,
+	TCVector *triangleVertices,
+	TCVector *triangleNormals,
+	TCVector *triangleTextureCoords)
 {
-	triangleVertices[0] = stripVertices[0];
-	triangleVertices[1] = stripVertices[index];
-	triangleVertices[2] = stripVertices[index + 1];
-	triangleNormals[0] = stripNormals[0];
-	triangleNormals[1] = stripNormals[index];
-	triangleNormals[2] = stripNormals[index + 1];
-	if (stripTextureCoords)
+	triangleVertices[0] = fanVertices[0];
+	triangleVertices[1] = fanVertices[index];
+	triangleVertices[2] = fanVertices[index + 1];
+	triangleNormals[0] = fanNormals[0];
+	triangleNormals[1] = fanNormals[index];
+	triangleNormals[2] = fanNormals[index + 1];
+	if (fanTextureCoords)
 	{
-		triangleTextureCoords[0] = stripTextureCoords[0];
-		triangleTextureCoords[1] = stripTextureCoords[index];
-		triangleTextureCoords[2] = stripTextureCoords[index + 1];
+		triangleTextureCoords[0] = fanTextureCoords[0];
+		triangleTextureCoords[1] = fanTextureCoords[index];
+		triangleTextureCoords[2] = fanTextureCoords[index + 1];
 	}
 }
 
-void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals,
-							  TCVector *textureCoords, int count, bool flat)
+void TREModel::addTriangleFan(
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	bool flat)
 {
 	TREShapeGroup *shapeGroup;
 
@@ -875,9 +911,13 @@ void TREModel::addTriangleFan(TCVector *vertices, TCVector *normals,
 	addTriangleFan(shapeGroup, vertices, normals, textureCoords, count, flat);
 }
 
-void TREModel::addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
-							  TCVector *normals, TCVector *textureCoords,
-							  int count, bool flat)
+void TREModel::addTriangleFan(
+	TREShapeGroup *shapeGroup,
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	bool flat)
 {
 	if (m_mainModel->getUseStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
@@ -915,8 +955,12 @@ void TREModel::addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
 	}
 }
 
-void TREModel::addBFCTriangleFan(TCVector *vertices, TCVector *normals,
-								 TCVector *textureCoords, int count, bool flat)
+void TREModel::addBFCTriangleFan(
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	bool flat)
 {
 	TREShapeGroup *shapeGroup;
 
@@ -933,17 +977,21 @@ void TREModel::addBFCTriangleFan(TCVector *vertices, TCVector *normals,
 	addTriangleFan(shapeGroup, vertices, normals, textureCoords, count, flat);
 }
 
-void TREModel::addTriangleFan(TCULong color, TCVector *vertices,
-							  TCVector *normals, int count, bool flat)
+void TREModel::addTriangleFan(TCULong color, const TCVector *vertices,
+							  const TCVector *normals, int count, bool flat)
 {
 	setupColored();
 	addTriangleFan(m_coloredShapes[TREMStandard], color, vertices, normals,
 		count, flat);
 }
 
-void TREModel::addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
-							  TCVector *vertices, TCVector *normals, int count,
-							  bool flat)
+void TREModel::addTriangleFan(
+	TREColoredShapeGroup *shapeGroup,
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
 {
 	if (m_mainModel->getUseStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
@@ -965,15 +1013,18 @@ void TREModel::addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
 	}
 }
 
-void TREModel::addBFCTriangleFan(TCULong color, TCVector *vertices,
-								 TCVector *normals, int count, bool flat)
+void TREModel::addBFCTriangleFan(TCULong color, const TCVector *vertices,
+								 const TCVector *normals, int count, bool flat)
 {
 	setupColoredBFC();
 	addTriangleFan(m_coloredShapes[TREMBFC], color, vertices, normals, count,
 		flat);
 }
 
-TRESubModel *TREModel::addSubModel(TCFloat *matrix, TREModel *model, bool invert)
+TRESubModel *TREModel::addSubModel(
+	TCFloat *matrix,
+	TREModel *model,
+	bool invert)
 {
 	TRESubModel *subModel = new TRESubModel;
 
@@ -989,8 +1040,12 @@ TRESubModel *TREModel::addSubModel(TCFloat *matrix, TREModel *model, bool invert
 	return subModel;
 }
 
-TRESubModel *TREModel::addSubModel(TCULong color, TCULong edgeColor,
-								   TCFloat *matrix, TREModel *model, bool invert)
+TRESubModel *TREModel::addSubModel(
+	TCULong color,
+	TCULong edgeColor,
+	TCFloat *matrix,
+	TREModel *model,
+	bool invert)
 {
 	TRESubModel *subModel = addSubModel(matrix, model, invert);
 
@@ -1248,8 +1303,8 @@ void TREModel::processSmoothEdge(TREConditionalMap &conditionalMap,
 				if (TRESmoother::shouldFlipNormal(smoother1->getNormal(
 					line1Index), normal1))
 				{
-					// Subtract shape's normal from the running total, since it is
-					// more than 90 degrees off.
+					// Subtract shape's normal from the running total, since it
+					// is more than 90 degrees off.
 					smoother1->getNormal(line1Index) -= normal1;
 				}
 				else
@@ -1813,8 +1868,13 @@ void TREModel::addSlopedCylinder2(const TCVector& center, TCFloat radius,
 	delete[] normals;
 }
 
-void TREModel::addCylinder(const TCVector& center, TCFloat radius, TCFloat height,
-						   int numSegments, int usedSegments, bool bfc)
+void TREModel::addCylinder(
+	const TCVector& center,
+	TCFloat radius,
+	TCFloat height,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
 {
 	addOpenCone(center, radius, radius, height, numSegments, usedSegments, bfc);
 }
@@ -1933,8 +1993,12 @@ void TREModel::addDisc(const TCVector &center, TCFloat radius, int numSegments,
 	delete[] textureCoords;
 }
 
-void TREModel::addNotDisc(const TCVector &center, TCFloat radius, int numSegments,
-						  int usedSegments, bool bfc)
+void TREModel::addNotDisc(
+	const TCVector &center,
+	TCFloat radius,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
 {
 	int quarter = numSegments / 4;
 	int numQuarters;
@@ -2005,8 +2069,11 @@ void TREModel::addNotDisc(const TCVector &center, TCFloat radius, int numSegment
 	}
 }
 
-void TREModel::setCirclePoint(TCFloat angle, TCFloat radius, const TCVector& center,
-							  TCVector& point)
+void TREModel::setCirclePoint(
+	TCFloat angle,
+	TCFloat radius,
+	const TCVector& center,
+	TCVector& point)
 {
 	TCFloat x1, z1;
 
@@ -2597,9 +2664,14 @@ int TREModel::sphereIndex(int i, int j, int usedSegments)
 	return retVal + i;
 }
 
-void TREModel::addOpenCone(const TCVector& center, TCFloat radius1, TCFloat radius2,
-						   TCFloat height, int numSegments, int usedSegments,
-						   bool bfc)
+void TREModel::addOpenCone(
+	const TCVector& center,
+	TCFloat radius1,
+	TCFloat radius2,
+	TCFloat height,
+	int numSegments,
+	int usedSegments,
+	bool bfc)
 {
 	if (usedSegments == -1)
 	{
@@ -2875,7 +2947,9 @@ void TREModel::scanPoints(TCObject *scanner,
 	}
 }
 
-void TREModel::unshrinkNormals(const TCFloat *matrix, const TCFloat *unshrinkMatrix)
+void TREModel::unshrinkNormals(
+	const TCFloat *matrix,
+	const TCFloat *unshrinkMatrix)
 {
 	int i;
 
@@ -3239,8 +3313,11 @@ void TREModel::findLights(float *matrix)
 	}
 }
 
-//void TREModel::flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
-//								 bool edgeColorSet)
+//void TREModel::flattenNonUniform(
+//	TCULong color,
+//	bool colorSet,
+//	TCULong edgeColor,
+//	bool edgeColorSet)
 void TREModel::flattenNonUniform(void)
 {
 	if (m_subModels)

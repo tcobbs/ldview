@@ -25,7 +25,7 @@ template <class Type> class TCTypedValueArray : public TCArray
 			{ TCArray::insertItem((void *)(long)value, index); }
 		int replaceValue(Type value, unsigned int index)
 			{ return TCArray::replaceItem((void *)(long)value, index); }
-		int indexOfValue(Type value)
+		int indexOfValue(Type value) const
 			{ return TCArray::indexOfItem((void *)(long)value); }
 		int removeValue(int index)
 			{ return TCArray::removeItem(index); }
@@ -33,8 +33,12 @@ template <class Type> class TCTypedValueArray : public TCArray
 			{ return TCArray::removeItems(index, numValues); }
 		Type valueAtIndex(unsigned int index)
 			{ return (Type)TCArray::itemAtIndex(index); }
+		const Type valueAtIndex(unsigned int index) const
+			{ return (const Type)TCArray::itemAtIndex(index); }
 		Type operator[](unsigned int index)
 			{ return (Type)TCArray::itemAtIndex(index); }
+		const Type operator[](unsigned int index) const
+			{ return (const Type)TCArray::itemAtIndex(index); }
 		Type *getValues(void)
 			{ return (Type *)TCArray::getItems(); }
 		void sort(void)

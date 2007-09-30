@@ -34,7 +34,7 @@ TCObject *TREColoredShapeGroup::copy(void)
 }
 
 int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
-								   TCVector *vertices, int count)
+								   const TCVector *vertices, int count)
 {
 	return addShape(shapeType, color, vertices, NULL, count);
 }
@@ -79,12 +79,12 @@ int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
 	return index;
 }
 
-int TREColoredShapeGroup::addLine(TCULong color, TCVector *vertices)
+int TREColoredShapeGroup::addLine(TCULong color, const TCVector *vertices)
 {
 	return addShape(TRESLine, color, vertices, 2);
 }
 
-int TREColoredShapeGroup::addTriangle(TCULong color, TCVector *vertices)
+int TREColoredShapeGroup::addTriangle(TCULong color, const TCVector *vertices)
 {
 	return addShape(TRESTriangle, color, vertices, 3);
 }
@@ -102,32 +102,33 @@ int TREColoredShapeGroup::addTriangle(TCULong color, const TCVector *vertices,
 	return addShape(TRESTriangle, color, vertices, normals, textureCoords, 3);
 }
 
-int TREColoredShapeGroup::addQuad(TCULong color, TCVector *vertices)
+int TREColoredShapeGroup::addQuad(TCULong color, const TCVector *vertices)
 {
 	return addShape(TRESQuad, color, vertices, 4);
 }
 
-int TREColoredShapeGroup::addQuad(TCULong color, TCVector *vertices,
-								  TCVector *normals)
+int TREColoredShapeGroup::addQuad(TCULong color, const TCVector *vertices,
+								  const TCVector *normals)
 {
 	return addShape(TRESQuad, color, vertices, normals, 4);
 }
 
-int TREColoredShapeGroup::addQuadStrip(TCULong color, TCVector *vertices,
-									   TCVector *normals, int count)
+int TREColoredShapeGroup::addQuadStrip(TCULong color, const TCVector *vertices,
+									   const TCVector *normals, int count)
 {
 	return addStrip(color, TRESQuadStrip, vertices, normals, count);
 }
 
-int TREColoredShapeGroup::addTriangleFan(TCULong color, TCVector *vertices,
-										 TCVector *normals, int count)
+int TREColoredShapeGroup::addTriangleFan(TCULong color,
+										 const TCVector *vertices,
+										 const TCVector *normals, int count)
 {
 	return addStrip(color, TRESTriangleFan, vertices, normals, count);
 }
 
 int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
-								   TCVector *vertices, TCVector *normals,
-								   int count)
+								   const TCVector *vertices,
+								   const TCVector *normals, int count)
 {
 	int index;
 

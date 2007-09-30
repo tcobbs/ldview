@@ -38,21 +38,23 @@ public:
 	TREShapeGroup(void);
 	TREShapeGroup(const TREShapeGroup &other);
 	virtual TCObject *copy(void);
-	virtual int addLine(TCVector *vertices);
-	virtual int addConditionalLine(TCVector *vertices, TCVector *controlPoints);
-	virtual int addTriangle(TCVector *vertices);
-	virtual int addTriangle(TCVector *vertices, TCVector *normals);
-	virtual int addTriangle(TCVector *vertices, TCVector *normals,
-		TCVector *textureCoords);
-	virtual int addQuad(TCVector *vertices);
-	virtual int addQuad(TCVector *vertices, TCVector *normals);
-	virtual int addTriangleStrip(TCVector *vertices, TCVector *normals,
+	virtual int addLine(const TCVector *vertices);
+	virtual int addConditionalLine(const TCVector *vertices,
+		const TCVector *controlPoints);
+	virtual int addTriangle(const TCVector *vertices);
+	virtual int addTriangle(const TCVector *vertices, const TCVector *normals);
+	virtual int addTriangle(const TCVector *vertices, const TCVector *normals,
+		const TCVector *textureCoords);
+	virtual int addQuad(const TCVector *vertices);
+	virtual int addQuad(const TCVector *vertices, const TCVector *normals);
+	virtual int addTriangleStrip(const TCVector *vertices,
+		const TCVector *normals, int count);
+	virtual int addQuadStrip(const TCVector *vertices, const TCVector *normals,
 		int count);
-	virtual int addQuadStrip(TCVector *vertices, TCVector *normals, int count);
-	virtual int addTriangleFan(TCVector *vertices, TCVector *normals,
-		int count);
-	virtual int addTriangleFan(TCVector *vertices, TCVector *normals,
-		TCVector *textureCoords, int count);
+	virtual int addTriangleFan(const TCVector *vertices,
+		const TCVector *normals, int count);
+	virtual int addTriangleFan(const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count);
 	virtual TCULongArray *getIndices(TREShapeType shapeType,
 		bool create = false);
 	virtual TCULongArray *getControlPointIndices(bool create = false);
@@ -88,12 +90,12 @@ protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
 	virtual TCULong getShapeTypeIndex(TREShapeType shapeType);
-	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
+	virtual int addShape(TREShapeType shapeType, const TCVector *vertices,
 		int count);
-	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
-		TCVector *normals, int count);
-	virtual int addShape(TREShapeType shapeType, TCVector *vertices,
-		TCVector *normals, TCVector *textureCoords, int count);
+	virtual int addShape(TREShapeType shapeType, const TCVector *vertices,
+		const TCVector *normals, int count);
+	virtual int addShape(TREShapeType shapeType, const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count);
 	virtual void addShapeIndices(TREShapeType shapeType, int firstIndex,
 		int count);
 	virtual void addIndices(TCULongArray *indices, int firstIndex, int count);
@@ -109,10 +111,10 @@ protected:
 	virtual void drawShapeType(TREShapeType shapeType);
 	virtual void drawNormals(TCULongArray *indexArray);
 	virtual void drawStripShapeType(TREShapeType shapeType);
-	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
-		TCVector *normals, int count);
-	virtual int addStrip(TREShapeType shapeType, TCVector *vertices,
-		TCVector *normals, TCVector *textureCoords, int count);
+	virtual int addStrip(TREShapeType shapeType, const TCVector *vertices,
+		const TCVector *normals, int count);
+	virtual int addStrip(TREShapeType shapeType, const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count);
 	virtual void initMultiDrawIndices(void);
 	virtual void deleteMultiDrawIndices(void);
 	virtual void invertShapes(TCULongArray *oldIndices,

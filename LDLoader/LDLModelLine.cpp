@@ -22,8 +22,6 @@ LDLModelLine::LDLModelLine(const LDLModelLine &other)
 	:LDLActionLine(other),
 	m_highResModel(NULL),
 	m_lowResModel(NULL),
-	m_color(other.m_color),
-	m_colorNumber(other.m_colorNumber),
 	m_flags(other.m_flags)
 {
 	if (other.m_highResModel)
@@ -197,7 +195,6 @@ bool LDLModelLine::parse(void)
 			m_lowResModel->retain();
 		}
 		m_parentModel->getRGBA(m_colorNumber, red, green, blue, alpha);
-		m_color = LDLPalette::colorForRGBA(red, green, blue, alpha);
 		setTransformation(x, y, z, a, b, c, d, e, f, g, h, i);
 		if (!getMainModel()->getSkipValidation())
 		{

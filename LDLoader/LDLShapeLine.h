@@ -7,13 +7,12 @@
 class LDLShapeLine : public LDLActionLine
 {
 public:
-	virtual bool isShapeLine(void) { return true; }
+	virtual bool isShapeLine(void) const { return true; }
 	virtual bool parse(void);
 	virtual int getNumPoints(void) const = 0;
 	virtual int getNumControlPoints(void) const { return 0; }
-	virtual TCVector *getPoints(void) { return m_points; }
-	virtual TCVector *getControlPoints(void) { return NULL; }
-	virtual TCULong getColorNumber(void) const { return m_colorNumber; }
+	virtual const TCVector *getPoints(void) const { return m_points; }
+	virtual const TCVector *getControlPoints(void) const { return NULL; }
 	virtual bool isXZPlanar(void) const;
 	virtual bool isXZPlanar(const TCFloat *matrix) const;
 protected:
@@ -29,7 +28,6 @@ protected:
 	void printPoint(int index, UCSTR buf);
 
 	TCVector *m_points;
-	TCULong m_colorNumber;
 };
 
 #endif // __LDLSHAPELINE_H__

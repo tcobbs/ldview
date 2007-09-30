@@ -123,7 +123,7 @@ int TCArray::replaceItem(void* newItem, unsigned int index)
 	}
 }
 
-int TCArray::indexOfItem(void* item)
+int TCArray::indexOfItem(void* item) const
 {
 	for (unsigned int i = 0; i < count; i++)
 	{
@@ -181,6 +181,18 @@ int TCArray::removeItems(int index, int numItems)
 }
 
 void* TCArray::itemAtIndex(unsigned int index)
+{
+	if (index < count)
+	{
+		return items[index];
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+const void* TCArray::itemAtIndex(unsigned int index) const
 {
 	if (index < count)
 	{

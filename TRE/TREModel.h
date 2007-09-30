@@ -72,59 +72,67 @@ public:
 		bool invert);
 	virtual TRESubModel *addSubModel(TCULong color, TCULong edgeColor,
 		TCFloat *matrix, TREModel *model, bool invert);
-	virtual void addLine(TCVector *vertices);
-	virtual void addEdgeLine(TCVector *vertices);
-	virtual void addConditionalLine(TCVector *vertices,
-		TCVector *controlPoints);
+	virtual void addLine(const TCVector *vertices);
+	virtual void addEdgeLine(const TCVector *vertices);
+	virtual void addConditionalLine(const TCVector *vertices,
+		const TCVector *controlPoints);
 	virtual void addConditionalLine(const TCVector &p1, const TCVector &p2,
 		const TCVector &c1, const TCVector &c2);
-	virtual void addLine(TCULong color, TCVector *vertices);
-	virtual void addTriangle(TCVector *vertices);
-	virtual void addTriangle(TCVector *vertices, TCVector *normals);
-	virtual void addTriangle(TCULong color, TCVector *vertices);
-	virtual void addBFCTriangle(TCVector *vertices);
-	virtual void addBFCTriangle(TCVector *vertices, TCVector *normals);
-	virtual void addBFCTriangle(TCULong color, TCVector *vertices);
-	virtual void addQuad(TCVector *vertices);
-	virtual void addQuad(TCULong color, TCVector *vertices);
-	virtual void addBFCQuad(TCVector *vertices);
-	virtual void addBFCQuad(TCULong color, TCVector *vertices);
-	virtual void addQuadStrip(TCVector *vertices, TCVector *normals, int count,
-		bool flat = false);
-	virtual void addTriangleStrip(TCVector *vertices, TCVector *normals,
+	virtual void addLine(TCULong color, const TCVector *vertices);
+	virtual void addTriangle(const TCVector *vertices);
+	virtual void addTriangle(const TCVector *vertices,
+		const TCVector *normals);
+	virtual void addTriangle(TCULong color, const TCVector *vertices);
+	virtual void addBFCTriangle(const TCVector *vertices);
+	virtual void addBFCTriangle(const TCVector *vertices,
+		const TCVector *normals);
+	virtual void addBFCTriangle(TCULong color, const TCVector *vertices);
+	virtual void addQuad(const TCVector *vertices);
+	virtual void addQuad(TCULong color, const TCVector *vertices);
+	virtual void addBFCQuad(const TCVector *vertices);
+	virtual void addBFCQuad(TCULong color, const TCVector *vertices);
+	virtual void addQuadStrip(const TCVector *vertices, const TCVector *normals,
 		int count, bool flat = false);
-	virtual void addQuadStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
-		TCVector *normals, int count, bool flat);
-	virtual void addBFCQuadStrip(TCVector *vertices, TCVector *normals,
-		int count, bool flat = false);
-	virtual void addQuadStrip(TCULong color, TCVector *vertices,
-		TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleStrip(const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addQuadStrip(TREShapeGroup *shapeGroup,
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat);
+	virtual void addBFCQuadStrip(const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addQuadStrip(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
 	virtual void addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
-		TCVector *vertices, TCVector *normals, int count, bool flat = false);
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat = false);
 //	virtual void addTriangleStrip(TREColoredShapeGroup *shapeGroup,
 //		TCULong color, TCVector *vertices, TCVector *normals, int count,
 //		bool flat = false);
-	virtual void addTriangleStrip(TREShapeGroup *shapeGroup, TCVector *vertices,
-		TCVector *normals, int count, bool flat = false);
-	virtual void addBFCQuadStrip(TCULong color, TCVector *vertices,
-		TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleStrip(TREShapeGroup *shapeGroup,
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat = false);
+	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
 //	virtual void addBFCTriangleStrip(TCULong color, TCVector *vertices,
 //		TCVector *normals, int count, bool flat = false);
-	virtual void addBFCTriangleStrip(TCVector *vertices, TCVector *normals,
-		int count, bool flat = false);
-	virtual void addTriangleFan(TCVector *vertices, TCVector *normals,
-		TCVector *textureCoords, int count, bool flat = false);
-	virtual void addTriangleFan(TREShapeGroup *shapeGroup, TCVector *vertices,
-		TCVector *normals, TCVector *textureCoords, int count,
+	virtual void addBFCTriangleStrip(const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleFan(const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count,
 		bool flat = false);
-	virtual void addBFCTriangleFan(TCVector *vertices, TCVector *normals,
-		TCVector *textureCoords, int count, bool flat = false);
-	virtual void addTriangleFan(TCULong color, TCVector *vertices,
-		TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleFan(TREShapeGroup *shapeGroup,
+		const TCVector *vertices, const TCVector *normals,
+		const TCVector *textureCoords, int count, bool flat = false);
+	virtual void addBFCTriangleFan(const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count,
+		bool flat = false);
+	virtual void addTriangleFan(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
 	virtual void addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
-		TCVector *vertices, TCVector *normals, int count, bool flat = false);
-	virtual void addBFCTriangleFan(TCULong color, TCVector *vertices,
-		TCVector *normals, int count, bool flat = false);
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat = false);
+	virtual void addBFCTriangleFan(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
 	virtual void compile(TREMSection section, bool colored,
 		bool nonUniform = false);
 	virtual void draw(TREMSection section);
@@ -247,13 +255,14 @@ protected:
 		TCVector& point);
 	void scanBoundingBoxPoint(const TCVector &point);
 	virtual void calculateBoundingBox(void);
-	virtual void quadStripToQuad(int index, TCVector *stripVertices,
-		TCVector *stripNormals, TCVector *quadVertices, TCVector *quadNormals);
-	virtual void triangleStripToTriangle(int index, TCVector *stripVertices,
-		TCVector *stripNormals, TCVector *triangleVertices,
-		TCVector *triangleNormals);
-	virtual void triangleFanToTriangle(int index, TCVector *stripVertices,
-		TCVector *stripNormals, TCVector *stripTextureCoords,
+	virtual void quadStripToQuad(int index, const TCVector *stripVertices,
+		const TCVector *stripNormals, TCVector *quadVertices,
+		TCVector *quadNormals);
+	virtual void triangleStripToTriangle(int index,
+		const TCVector *stripVertices, const TCVector *stripNormals,
+		TCVector *triangleVertices, TCVector *triangleNormals);
+	virtual void triangleFanToTriangle(int index, const TCVector *fanVertices,
+		const TCVector *fanNormals, const TCVector *fanTextureCoords,
 		TCVector *triangleVertices, TCVector *triangleNormals,
 		TCVector *triangleTextureCoords);
 	virtual void unMirror(TREModel *originalModel);
