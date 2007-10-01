@@ -45,6 +45,10 @@
 		1F240A8B0A58874300691116 /* LDrawInP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240A670A58874300691116 /* LDrawInP.h */; };
 		1F7470E00CB0651100D6DB68 /* LDLPrimitiveCheck.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7470DE0CB0651100D6DB68 /* LDLPrimitiveCheck.cpp */; };
 		1F7470E10CB0651100D6DB68 /* LDLPrimitiveCheck.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7470DF0CB0651100D6DB68 /* LDLPrimitiveCheck.h */; };
+		1F74713E0CB0BE4500D6DB68 /* LDLCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F74713A0CB0BE4500D6DB68 /* LDLCamera.cpp */; };
+		1F74713F0CB0BE4500D6DB68 /* LDLCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F74713B0CB0BE4500D6DB68 /* LDLCamera.h */; };
+		1F7471400CB0BE4500D6DB68 /* LDLFacing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F74713C0CB0BE4500D6DB68 /* LDLFacing.cpp */; };
+		1F7471410CB0BE4500D6DB68 /* LDLFacing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F74713D0CB0BE4500D6DB68 /* LDLFacing.h */; };
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +112,10 @@
 		1F6A748D0C4DEF9700DAF5C8 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F7470DE0CB0651100D6DB68 /* LDLPrimitiveCheck.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLPrimitiveCheck.cpp; path = ../../LDLoader/LDLPrimitiveCheck.cpp; sourceTree = SOURCE_ROOT; };
 		1F7470DF0CB0651100D6DB68 /* LDLPrimitiveCheck.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLPrimitiveCheck.h; path = ../../LDLoader/LDLPrimitiveCheck.h; sourceTree = SOURCE_ROOT; };
+		1F74713A0CB0BE4500D6DB68 /* LDLCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLCamera.cpp; path = ../../LDLoader/LDLCamera.cpp; sourceTree = SOURCE_ROOT; };
+		1F74713B0CB0BE4500D6DB68 /* LDLCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLCamera.h; path = ../../LDLoader/LDLCamera.h; sourceTree = SOURCE_ROOT; };
+		1F74713C0CB0BE4500D6DB68 /* LDLFacing.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLFacing.cpp; path = ../../LDLoader/LDLFacing.cpp; sourceTree = SOURCE_ROOT; };
+		1F74713D0CB0BE4500D6DB68 /* LDLFacing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLFacing.h; path = ../../LDLoader/LDLFacing.h; sourceTree = SOURCE_ROOT; };
 		32DBCF5E0370ADEE00C91783 /* LDLoader_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDLoader_Prefix.pch; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libLDLoader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLDLoader.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -157,6 +165,10 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1F74713A0CB0BE4500D6DB68 /* LDLCamera.cpp */,
+				1F74713B0CB0BE4500D6DB68 /* LDLCamera.h */,
+				1F74713C0CB0BE4500D6DB68 /* LDLFacing.cpp */,
+				1F74713D0CB0BE4500D6DB68 /* LDLFacing.h */,
 				1F7470DE0CB0651100D6DB68 /* LDLPrimitiveCheck.cpp */,
 				1F7470DF0CB0651100D6DB68 /* LDLPrimitiveCheck.h */,
 				1F240A440A58874300691116 /* LDLActionLine.cpp */,
@@ -260,6 +272,8 @@
 				1F240A8A0A58874300691116 /* LDrawIni.h in Headers */,
 				1F240A8B0A58874300691116 /* LDrawInP.h in Headers */,
 				1F7470E10CB0651100D6DB68 /* LDLPrimitiveCheck.h in Headers */,
+				1F74713F0CB0BE4500D6DB68 /* LDLCamera.h in Headers */,
+				1F7471410CB0BE4500D6DB68 /* LDLFacing.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +353,8 @@
 				1F240A870A58874300691116 /* LDLUnknownLine.cpp in Sources */,
 				1F240A890A58874300691116 /* LDrawIni.c in Sources */,
 				1F7470E00CB0651100D6DB68 /* LDLPrimitiveCheck.cpp in Sources */,
+				1F74713E0CB0BE4500D6DB68 /* LDLCamera.cpp in Sources */,
+				1F7471400CB0BE4500D6DB68 /* LDLFacing.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
