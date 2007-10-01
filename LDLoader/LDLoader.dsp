@@ -114,6 +114,10 @@ SOURCE=.\LDLActionLine.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLCamera.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLCommentLine.cpp
 # End Source File
 # Begin Source File
@@ -127,6 +131,10 @@ SOURCE=.\LDLEmptyLine.cpp
 # Begin Source File
 
 SOURCE=.\LDLError.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLFacing.cpp
 # End Source File
 # Begin Source File
 
@@ -190,6 +198,10 @@ SOURCE=.\LDLActionLine.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLCamera.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLCommentLine.h
 # End Source File
 # Begin Source File
@@ -203,6 +215,10 @@ SOURCE=.\LDLEmptyLine.h
 # Begin Source File
 
 SOURCE=.\LDLError.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLFacing.h
 # End Source File
 # Begin Source File
 
