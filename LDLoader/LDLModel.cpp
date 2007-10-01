@@ -712,7 +712,10 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 	}
 	else if (commentLine->getAuthor(buf, sizeof(buf)))
 	{
-		m_author = copyString(buf);
+		if (!m_author)
+		{
+			m_author = copyString(buf);
+		}
 	}
 }
 
