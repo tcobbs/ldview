@@ -551,7 +551,7 @@ void TCVector::initIdentityMatrix(TCFloat *matrix)
 */
 }
 
-void TCVector::transformPoint(const TCFloat *matrix, TCVector &newPoint)
+void TCVector::transformPoint(const TCFloat *matrix, TCVector &newPoint) const
 {
 	TCFloat x = vector[0];
 	TCFloat y = vector[1];
@@ -565,7 +565,7 @@ void TCVector::transformPoint(const TCFloat *matrix, TCVector &newPoint)
 	newPoint[2] = matrix[2]*x + matrix[6]*y + matrix[10]*z + matrix[14];
 }
 
-TCVector TCVector::transformPoint(const TCFloat *matrix)
+TCVector TCVector::transformPoint(const TCFloat *matrix) const
 {
 	TCVector newPoint;
 
@@ -574,7 +574,7 @@ TCVector TCVector::transformPoint(const TCFloat *matrix)
 }
 
 void TCVector::transformNormal(const TCFloat *matrix, TCVector& newNormal,
-							   bool shouldNormalize)
+							   bool shouldNormalize) const
 {
 	TCFloat inverseMatrix[16];
 	TCFloat x = vector[0];
@@ -598,7 +598,9 @@ void TCVector::transformNormal(const TCFloat *matrix, TCVector& newNormal,
 	}
 }
 
-TCVector TCVector::transformNormal(const TCFloat *matrix, bool shouldNormalize)
+TCVector TCVector::transformNormal(
+	const TCFloat *matrix,
+	bool shouldNormalize) const
 {
 	TCVector newNormal;
 

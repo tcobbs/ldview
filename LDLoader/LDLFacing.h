@@ -1,18 +1,18 @@
-#ifndef __TREFACING_H__
-#define __TREFACING_H__
+#ifndef __LDLFACING_H__
+#define __LDLFACING_H__
 
 #include <TCFoundation/TCVector.h>
 
 typedef enum Axis {XAxis, YAxis, ZAxis} SimAxis;
 
-class TREFacing: public TCVector
+class LDLFacing: public TCVector
 {
 	private:
 		static TCFloat glMatrix[16];
 	public:
-		TREFacing(void);
-		TREFacing(TCVector& a, TCFloat phi);
-		~TREFacing(void) {}
+		LDLFacing(void);
+		LDLFacing(TCVector& a, TCFloat phi);
+		~LDLFacing(void) {}
 
 		// this creates a gl-compatible 4x4 matrix that you can use to
 		// do rotations
@@ -27,12 +27,12 @@ class TREFacing: public TCVector
 		void setFacing(const TCVector& v, TCFloat phi);
 
 		// this multiplies two facings together.
-		TREFacing operator+(const TREFacing& otherFacing);
+		LDLFacing operator+(const LDLFacing& otherFacing);
 
 		// normalize a facing.  Facings should automatically be
 		//		normalized, but the user might want to call this every
 		//		so often to get rid of floating point round off.
-		TREFacing& normalize(void);
+		LDLFacing& normalize(void);
 
 		// getVector returns a vector pointing in the direction of the facing.
 		//		< 0, 0, 1 > is asumed to be a rotation of 0.
@@ -42,24 +42,24 @@ class TREFacing: public TCVector
 
 		// this gets the angle between two facings, ignoring the top of head.
 		//		Not fully tested at this time.
-		TCFloat angleBetween(TREFacing &f2);
+		TCFloat angleBetween(LDLFacing &f2);
 
 		// this returns the inverse facing.
-		TREFacing inverse(void);
+		LDLFacing inverse(void);
 
 		// mult multiplies two facings together.  You get the same
 		//		result as if you multiplied the two rotation matricies
 		//		together.
-		TREFacing mult(const TREFacing& f2);
+		LDLFacing mult(const LDLFacing& f2);
 
 		// I dont' know why dot returns a facing -- this was in 
 		//		the code I grabbed from graphicsGems.  Don't try this
 		//		before checking the answer.
-		TREFacing dot(TREFacing& f2);
+		LDLFacing dot(LDLFacing& f2);
 
 		// This negates a facing.  I don't know the difference geometrically
 		//		between a negate and an inverse -- but there is a difference.
-		TREFacing negate(void);
+		LDLFacing negate(void);
 
 		// this THEORETICALLY works.  Give it a vector, and this SHOULD
 		//		make the current rotation point at the vector, maintaining
@@ -68,7 +68,7 @@ class TREFacing: public TCVector
 		void pointAt(TCVector &v2);
 
 		// this function returns the difference between two facings
-		TCVector difference(TREFacing from);
+		TCVector difference(LDLFacing from);
 
 		// this prints a facing's data.  Use mostly for bug testing.
 		void print(FILE* = stdout);
@@ -81,4 +81,4 @@ class TREFacing: public TCVector
 		TCFloat rotation;
 };
 
-#endif // __TREFACING_H__
+#endif // __LDLFACING_H__

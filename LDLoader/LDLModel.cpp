@@ -1534,3 +1534,19 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, ...)
 	va_end(argPtr);
 	return retValue;
 }
+
+void LDLModel::scanPoints(
+	TCObject *scanner,
+	LDLScanPointCallback scanPointCallback,
+	const TCFloat *matrix)
+{
+	for (int i = 0; i < m_activeLineCount; i++)
+	{
+		LDLFileLine *fileLine = (*m_fileLines)[i];
+		if (fileLine->isActionLine())
+		{
+			((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
+				matrix);
+		}
+	}
+}

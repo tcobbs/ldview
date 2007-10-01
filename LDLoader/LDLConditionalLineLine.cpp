@@ -77,3 +77,13 @@ TCObject *LDLConditionalLineLine::copy(void)
 {
 	return new LDLConditionalLineLine(*this);
 }
+
+void LDLConditionalLineLine::scanPoints(
+	TCObject * /*scanner*/,
+	LDLScanPointCallback /*scanPointCallback*/,
+	const TCFloat * /*matrix*/)
+{
+	// Don't do anything.  If you have a conditional line hanging out in space,
+	// then it's wrong, and we're just going to ignore it anyway for the purpose
+	// of scanning all the points in the model.
+}

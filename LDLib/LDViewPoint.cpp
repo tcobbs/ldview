@@ -1,5 +1,5 @@
 #include "LDViewPoint.h"
-#include <TRE/TRECamera.h>
+#include <LDLoader/LDLCamera.h>
 #include <TCFoundation/mystring.h>
 
 LDViewPoint::LDViewPoint(void):
@@ -17,10 +17,10 @@ void LDViewPoint::dealloc(void)
 	TCObject::dealloc();
 }
 
-void LDViewPoint::setCamera(const TRECamera &value)
+void LDViewPoint::setCamera(const LDLCamera &value)
 {
 	delete m_camera;
-	m_camera = new TRECamera(value);
+	m_camera = new LDLCamera(value);
 }
 
 void LDViewPoint::setBackgroundColor(

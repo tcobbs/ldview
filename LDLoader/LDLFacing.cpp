@@ -1,9 +1,9 @@
-#include "TREFacing.h"
+#include "LDLFacing.h"
 #include <TCFoundation/TCMacros.h>
 #include <string.h>
 #include <TCFoundation/mystring.h>
 
-TCFloat TREFacing::glMatrix[16] =
+TCFloat LDLFacing::glMatrix[16] =
 {
 	(TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,
 	(TCFloat)0.0, (TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0,
@@ -27,7 +27,7 @@ static TCFloat identityMatrix[] =
 };
 */
 
-TREFacing::TREFacing(void)
+LDLFacing::LDLFacing(void)
 	:TCVector((TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0)
 {
 	//TCVector tempVec(1, 0, 0);
@@ -36,17 +36,17 @@ TREFacing::TREFacing(void)
 	rotation = (TCFloat)1.0;
 }
 
-TREFacing::TREFacing(TCVector &a, TCFloat phi)
+LDLFacing::LDLFacing(TCVector &a, TCFloat phi)
 {
 	setFacing(a, phi);
 }
 
-TREFacing TREFacing::operator+(const TREFacing& otherFacing) 
+LDLFacing LDLFacing::operator+(const LDLFacing& otherFacing) 
 {
 	return mult(otherFacing);
 }
 
-TCFloat TREFacing::angleBetween(TREFacing &f2)
+TCFloat LDLFacing::angleBetween(LDLFacing &f2)
 {
   //t = (q[0]*r[0])+(q[1]*r[1])+(q[2]*r[2])+(q[3]*r[3]);
   return (this->vector[0]*f2.vector[0]) +
@@ -55,9 +55,9 @@ TCFloat TREFacing::angleBetween(TREFacing &f2)
 	  (this->rotation*f2.rotation);
 }
 
-TREFacing TREFacing::inverse(void)
+LDLFacing LDLFacing::inverse(void)
 {
-	TREFacing newFacing;
+	LDLFacing newFacing;
 
 	newFacing.vector[0] = -vector[0];
 	newFacing.vector[1] = -vector[1];
@@ -67,9 +67,9 @@ TREFacing TREFacing::inverse(void)
 	return newFacing;
 }
 
-TREFacing TREFacing::negate(void)
+LDLFacing LDLFacing::negate(void)
 {
-	TREFacing newFacing;
+	LDLFacing newFacing;
 
 	newFacing.vector[0] = -vector[0];
 	newFacing.vector[1] = -vector[1];
@@ -79,9 +79,9 @@ TREFacing TREFacing::negate(void)
 	return newFacing;
 }
 
-TREFacing TREFacing::mult(const TREFacing& f2)
+LDLFacing LDLFacing::mult(const LDLFacing& f2)
 {
-	TREFacing temp;
+	LDLFacing temp;
 
 	temp.vector[0] = this->rotation*f2.vector[0] +
 		this->vector[0]*f2.rotation +
@@ -103,9 +103,9 @@ TREFacing TREFacing::mult(const TREFacing& f2)
 	return temp;
 }
 
-TREFacing TREFacing::dot(TREFacing& f2)
+LDLFacing LDLFacing::dot(LDLFacing& f2)
 {
-	TREFacing answer;
+	LDLFacing answer;
 	double temp;
 	int i;
 
@@ -138,7 +138,7 @@ TREFacing TREFacing::dot(TREFacing& f2)
 	return answer;
 }
 
-void TREFacing::setFacing(const TCVector &a, TCFloat phi)
+void LDLFacing::setFacing(const TCVector &a, TCFloat phi)
 {
 	double phiOver2 = phi / 2.0;
 
@@ -155,11 +155,11 @@ void TREFacing::setFacing(const TCVector &a, TCFloat phi)
 	(*this)[2] *= (TCFloat)sin(phiOver2);
 
 	this->rotation = (TCFloat)cos(phiOver2);
-	//printf("TREFacing set to %f, %f, %f, %f\n", (*this)[0], (*this)[1], 
+	//printf("LDLFacing set to %f, %f, %f, %f\n", (*this)[0], (*this)[1], 
 	// (*this)[2], this->rotation);
 }
 
-TREFacing& TREFacing::normalize(void)
+LDLFacing& LDLFacing::normalize(void)
 {
 	int which, i;
 	TCFloat gr;
@@ -191,7 +191,7 @@ TREFacing& TREFacing::normalize(void)
 
 }
 
-TCFloat* TREFacing::getMatrix(void)
+TCFloat* LDLFacing::getMatrix(void)
 {
 //	return glMatrix;
 
@@ -218,7 +218,7 @@ TCFloat* TREFacing::getMatrix(void)
 	return glMatrix;
 }
 
-void TREFacing::getInverseMatrix(TCFloat *inverseMatrix)
+void LDLFacing::getInverseMatrix(TCFloat *inverseMatrix)
 {
 	TCVector::invertMatrix(getMatrix(), inverseMatrix);
 
@@ -245,7 +245,7 @@ void TREFacing::getInverseMatrix(TCFloat *inverseMatrix)
 //	return glMatrix;
 }
 
-TCVector TREFacing::getVector(void)
+TCVector LDLFacing::getVector(void)
 {
 	return TCVector(
 	 (TCFloat)(2.0*((*this)[2] * (*this)[0] - (*this)[1] * this->rotation)),
@@ -258,7 +258,7 @@ TCVector TREFacing::getVector(void)
 	//return vec;
 }
 
-void TREFacing::pointAt(TCVector &v2)
+void LDLFacing::pointAt(TCVector &v2)
 {
 	TCVector tempVec = v2;
 	tempVec.normalize();
@@ -267,20 +267,20 @@ void TREFacing::pointAt(TCVector &v2)
 	this->setFacing(axis, radians);
 }
 
-void TREFacing::print(FILE* outFile)
+void LDLFacing::print(FILE* outFile)
 {
 	TCVector::print(outFile);
 	fprintf(outFile, " %f", rotation);
 }
 
-TCVector TREFacing::difference(TREFacing from)
+TCVector LDLFacing::difference(LDLFacing from)
 {
 	TCVector newVec(from.getVector());
 	newVec.mult(getMatrix());
 	return newVec;
 }
 
-void TREFacing::swapMatrixRows(TCFloat* m, int r1, int r2)
+void LDLFacing::swapMatrixRows(TCFloat* m, int r1, int r2)
 {
 	TCFloat tmpRow[4];
 
@@ -289,7 +289,7 @@ void TREFacing::swapMatrixRows(TCFloat* m, int r1, int r2)
 	memmove(m + r2*4, tmpRow, 4*sizeof(TCFloat));
 }
 
-TCFloat* TREFacing::invertMatrix(TCFloat* inM)
+TCFloat* LDLFacing::invertMatrix(TCFloat* inM)
 {
 	TCFloat* inv;
 	TCFloat m[16];

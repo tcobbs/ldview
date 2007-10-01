@@ -519,7 +519,7 @@ void LDrawModelViewer::resetView(LDVAngle viewAngle)
 		// then don't move the camera.
 		camera.setPosition(TCVector(0.0f, 0.0f, defaultDistance));
 	}
-	camera.setFacing(TREFacing());
+	camera.setFacing(LDLFacing());
 	if (!rotationMatrix)
 	{
 		rotationMatrix = new TCFloat[16];
@@ -2262,6 +2262,16 @@ void LDrawModelViewer::clearBackground(void)
 	}
 }
 
+void LDrawModelViewer::projectCamera(const TCVector &distance)
+{
+	TCFloat inverseMatrix[16];
+
+	camera.getFacing().getInverseMatrix(inverseMatrix);
+	TCVector center = -distance.mult(inverseMatrix) - camera.getPosition();
+	treGlMultMatrixf(inverseMatrix);
+	treGlTranslatef(center[0], center[1], center[2]);
+}
+
 void LDrawModelViewer::drawSetup(TCFloat eyeXOffset)
 {
 	glLoadIdentity();
@@ -2289,12 +2299,12 @@ void LDrawModelViewer::drawSetup(TCFloat eyeXOffset)
 //		camera.move(cameraMotion * size / 100.0f);
 		perspectiveView(false);
 //		camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
-		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+		projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
 //		treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	}
 	else
 	{
-		camera.project(TCVector(-eyeXOffset - xPan, -yPan, 10.0f));
+		projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 10.0f));
 //		treGlTranslatef(eyeXOffset + xPan, yPan, -10.0f);
 	}
 }
@@ -2314,7 +2324,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	glLineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
-	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
 //	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	if (rotationMatrix)
 	{
@@ -2433,7 +2443,7 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 	glLineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
-	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
 //	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	//treGlTranslatef(0.0f, 0.0f, -distance);
 	if (rotationMatrix)
@@ -2472,7 +2482,7 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 	glLineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
-	camera.project(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
+	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
 //	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
 	if (rotationMatrix)
 	{
@@ -2943,7 +2953,7 @@ void LDrawModelViewer::showLight(void)
 	{
 		TCVector oldLightVector = lightVector;
 		TCFloat rotInverse[16];
-		TREFacing facing;
+		LDLFacing facing;
 		bool oldSpecular = flags.usesSpecular;
 		bool oldSubdued = flags.subduedLighting;
 
@@ -3490,7 +3500,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	double direction[3];
 	double up[3];
 	double location[3];
-	TREFacing facing;
+	LDLFacing facing;
 	UCCHAR cameraString[4096];
 	double lookAt[3];
 	double tempV[3];
@@ -3501,7 +3511,6 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 		povCamera = NULL;
 		return;
 	}
-	TRECamera &camera = getCamera();
 	TCVector cameraPosition = camera.getPosition();
 	TCVector boundingMin, boundingMax, center;
 
@@ -3870,9 +3879,12 @@ void LDrawModelViewer::zoomToFit(void)
 		margin = getWideLineMargin() * 2.0f;
 		preCalcCamera();
 		_numPoints = 0;
-		mainTREModel->scanPoints(this,
-			(TREScanPointCallback)&LDrawModelViewer::scanCameraPoint,
+		mainModel->scanPoints(this,
+			(LDLScanPointCallback)&LDrawModelViewer::scanCameraPoint,
 			transformationMatrix);
+		//mainTREModel->scanPoints(this,
+		//	(TREScanPointCallback)&LDrawModelViewer::scanCameraPoint,
+		//	transformationMatrix);
 		debugPrintf("num points: %d\n", _numPoints);
 //		char message[1024];
 //		sprintf(message, "num points: %d", _numPoints);

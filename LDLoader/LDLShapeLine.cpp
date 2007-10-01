@@ -168,3 +168,19 @@ void LDLShapeLine::printPoint(int index, UCSTR buf)
 #endif // TC_NO_UNICODE
 	delete temp;
 }
+
+void LDLShapeLine::scanPoints(
+	TCObject *scanner,
+	LDLScanPointCallback scanPointCallback,
+	const TCFloat *matrix)
+{
+	int i;
+	int count = getNumPoints();
+	TCVector point;
+
+	for (i = 0; i < count; i++)
+	{
+		m_points[i].transformPoint(matrix, point);
+		((*scanner).*scanPointCallback)(point);
+	}
+}

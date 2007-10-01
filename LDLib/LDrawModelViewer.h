@@ -4,7 +4,7 @@
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/mystring.h>
-#include <TRE/TRECamera.h>
+#include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
 
 #define L3ORDERM 6
@@ -317,7 +317,7 @@ class LDrawModelViewer: public TCObject
 		void setExtraSearchDirs(TCStringArray *value);
 		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }
 		bool skipCameraPositioning(void);
-		virtual TRECamera &getCamera(void) { return camera; }
+		virtual LDLCamera &getCamera(void) { return camera; }
 		virtual void zoomToFit(void);
 		virtual void openGlWillEnd(void);
 		virtual void setLightVector(const TCVector &value);
@@ -410,6 +410,7 @@ class LDrawModelViewer: public TCObject
 		void initLightDirModel(TREMainModel *&lightDirModel, TCULong color);
 		TREMainModel *getContrastingLightDirModel();
 		void initLightDirModels(void);
+		void projectCamera(const TCVector &distance);
 
 		TREMainModel *mainTREModel;
 		LDLMainModel *mainModel;
@@ -474,7 +475,7 @@ class LDrawModelViewer: public TCObject
 		TCFloat distanceMultiplier;
 		TCImage *fontImage;
 		GLuint fontTextureID;
-		TRECamera camera;
+		LDLCamera camera;
 		TCFloat aspectRatio;
 		TCFloat currentFov;
 		TCFloat fov;
