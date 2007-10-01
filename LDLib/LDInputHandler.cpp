@@ -61,7 +61,7 @@ void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 
 void LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 {
-	TCFloat magnitude = (TCFloat)(xPos - m_lastX);
+	TCFloat magnitude = (TCFloat)(xPos - m_clickX);
 	TCFloat denom = 5000.0f;
 	TCFloat fov = m_modelViewer->getFov();
 
@@ -72,7 +72,7 @@ void LDInputHandler::updateHeadXY(TCULong modifierKeys, int xPos, int yPos)
 		denom /= 2.0f;
 	}
 	m_modelViewer->setCameraXRotate(magnitude / denom);
-	magnitude = (TCFloat)(yPos - m_lastY);
+	magnitude = (TCFloat)(yPos - m_clickY);
 	m_modelViewer->setCameraYRotate(magnitude / -denom);
 	m_modelViewer->requestRedraw();
 }
