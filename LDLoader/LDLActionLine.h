@@ -21,6 +21,8 @@ public:
 			m_actionFlags.bfcCertify == BFCForcedOnState) &&
 			m_actionFlags.bfcClip;
 	}
+	virtual void scanPoints(TCObject *scanner,
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) = 0;
 protected:
 	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

@@ -12,6 +12,8 @@ public:
 	virtual bool parse(void);
 	virtual int getNumPoints(void) const { return 2; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeLine; }
+	virtual void scanPoints(TCObject *scanner,
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix);
 protected:
 	LDLLineLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

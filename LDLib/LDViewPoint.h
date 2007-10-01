@@ -6,14 +6,14 @@
 #include <TRE/TREGL.h>
 #include <LDLib/LDrawModelViewer.h>
 
-class TRECamera;
+class LDLCamera;
 
 class LDViewPoint: public TCObject
 {
 public:
 	LDViewPoint(void);
-	void setCamera(const TRECamera &value);
-	const TRECamera &getCamera(void) const { return *m_camera; }
+	void setCamera(const LDLCamera &value);
+	const LDLCamera &getCamera(void) const { return *m_camera; }
 	void setRotation(const TCVector &value) { m_rotation = value; }
 	const TCVector &getRotation(void) const { return m_rotation; }
 	void setCameraRotation(const TCVector &value) { m_cameraRotation = value; }
@@ -39,7 +39,7 @@ protected:
 	virtual ~LDViewPoint(void);
 	virtual void dealloc(void);
 
-	TRECamera *m_camera;
+	LDLCamera *m_camera;
 	TCVector m_rotation;
 	TCVector m_cameraRotation;
 	TCVector m_pan;

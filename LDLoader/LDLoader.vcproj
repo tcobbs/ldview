@@ -438,6 +438,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LDLCamera.cpp"
+				>
+			</File>
+			<File
 				RelativePath="LDLCommentLine.cpp"
 				>
 				<FileConfiguration
@@ -632,6 +636,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\LDLFacing.cpp"
+				>
 			</File>
 			<File
 				RelativePath="LDLFileLine.cpp"
@@ -1190,6 +1198,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LDLCamera.h"
+				>
+			</File>
+			<File
 				RelativePath="LDLCommentLine.h"
 				>
 			</File>
@@ -1203,6 +1215,10 @@
 			</File>
 			<File
 				RelativePath="LDLError.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDLFacing.h"
 				>
 			</File>
 			<File

@@ -1,26 +1,25 @@
 #include <string.h>
-#include "TRECamera.h"
-#include "TREGL.h"
+#include "LDLCamera.h"
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/mystring.h>
 
-TRECamera::TRECamera(void)
+LDLCamera::LDLCamera(void)
 	:name(NULL)
 {
 }
 
-TRECamera::TRECamera(const TRECamera &other)
+LDLCamera::LDLCamera(const LDLCamera &other)
 	:name(NULL)
 {
 	duplicate(other);
 }
 
-TRECamera::~TRECamera(void)
+LDLCamera::~LDLCamera(void)
 {
 //	delete name;
 }
 
-TRECamera& TRECamera::duplicate(const TRECamera& copyFrom)
+LDLCamera& LDLCamera::duplicate(const LDLCamera& copyFrom)
 {
 	position = copyFrom.position;
 	facing = copyFrom.facing;
@@ -28,25 +27,13 @@ TRECamera& TRECamera::duplicate(const TRECamera& copyFrom)
 	return *this;
 }
 
-void TRECamera::setName(char* n)
+void LDLCamera::setName(char* n)
 {
 	delete name;
 	name = copyString(n);
 }
 
-
-void TRECamera::project(const TCVector &distance)
-{
-	TCFloat inverseMatrix[16];
-	TCVector center = -distance;
-
-	facing.getInverseMatrix(inverseMatrix);
-	center = -distance.mult(inverseMatrix) - position;
-	treGlMultMatrixf(inverseMatrix);
-	treGlTranslatef(center[0], center[1], center[2]);
-}
-
-void TRECamera::rotate(const TCVector &rotation)
+void LDLCamera::rotate(const TCVector &rotation)
 {
 	TCFloat inverseMatrix[16];
 
@@ -54,24 +41,24 @@ void TRECamera::rotate(const TCVector &rotation)
 	if (!fEq(rotation.get(1), 0.0))
 	{
 		facing = facing +
-			TREFacing(TCVector(-1,0,0).mult(inverseMatrix).normalize(),
+			LDLFacing(TCVector(-1,0,0).mult(inverseMatrix).normalize(),
 			rotation.get(1));
 	}
 	if (!fEq(rotation.get(0), 0.0))
 	{
 		facing = facing +
-			TREFacing(TCVector(0,1,0).mult(inverseMatrix).normalize(),
+			LDLFacing(TCVector(0,1,0).mult(inverseMatrix).normalize(),
 			rotation.get(0));
 	}
 	if (!fEq(rotation.get(2), 0.0))
 	{
 		facing = facing +
-			TREFacing(TCVector(0,0,1).mult(inverseMatrix).normalize(),
+			LDLFacing(TCVector(0,0,1).mult(inverseMatrix).normalize(),
 			rotation.get(2));
 	}
 }
 
-void TRECamera::move(const TCVector &distance)
+void LDLCamera::move(const TCVector &distance)
 {
 	TCFloat inverseMatrix[16];
 //	float *matrix;

@@ -70,12 +70,12 @@ public:
 	operator ConstGlPt(void) const {return vector;}
 	TCVector mult(TCFloat* matrix) const;
 	TCVector mult2(TCFloat* matrix) const;
-	void transformPoint(const TCFloat *matrix, TCVector &newPoint);
-	TCVector transformPoint(const TCFloat *matrix);
+	void transformPoint(const TCFloat *matrix, TCVector &newPoint) const;
+	TCVector transformPoint(const TCFloat *matrix) const;
 	void transformNormal(const TCFloat *matrix, TCVector& newNormal,
-		bool shouldNormalize = true);
+		bool shouldNormalize = true) const;
 	TCVector transformNormal(const TCFloat *matrix,
-		bool shouldNormalize = true);
+		bool shouldNormalize = true) const;
 	TCVector rearrange(int x, int y, int z) const;
 	void upConvert(double *doubleVector);
 

@@ -11,6 +11,7 @@ class TCDictionary;
 class LDLMainModel;
 class LDLCommentLine;
 class LDLModelLine;
+class TCVector;
 
 typedef enum
 {
@@ -25,6 +26,7 @@ typedef enum
 } BFCState;
 
 typedef bool (*LDLFileCaseCallback)(char *filename);
+typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point);
 struct LDrawIniS;
 
 class LDLModel : public TCObject
@@ -66,6 +68,8 @@ public:
 	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 	virtual bool isMainModel(void) const { return false; }
+	virtual void scanPoints(TCObject *scanner,
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix);
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,

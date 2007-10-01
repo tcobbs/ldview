@@ -409,3 +409,14 @@ TCFloat LDLModelLine::tryToFixPlanarMatrix(void)
 	}
 	return determinant;
 }
+
+void LDLModelLine::scanPoints(
+	TCObject *scanner,
+	LDLScanPointCallback scanPointCallback,
+	const TCFloat *matrix)
+{
+	TCFloat newMatrix[16];
+
+	TCVector::multMatrix(matrix, m_matrix, newMatrix);
+	getModel()->scanPoints(scanner, scanPointCallback, newMatrix);
+}

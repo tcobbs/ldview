@@ -2085,7 +2085,7 @@ void LDViewWindow::showTransformationMatrix(void)
 			TCFloat rotationMatrix[16];
 			TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 			char matrixString[1024];
-			TRECamera &camera = modelViewer->getCamera();
+			LDLCamera &camera = modelViewer->getCamera();
 			TCVector cameraPosition = camera.getPosition();
 
 			memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
@@ -2165,7 +2165,7 @@ void LDViewWindow::showViewInfo(void)
 			//char matrixString[1024];
 			//char zoomString[128];
 			//char message[4096];
-			//TRECamera &camera = modelViewer->getCamera();
+			//LDLCamera &camera = modelViewer->getCamera();
 			//TCFloat defaultDistance = modelViewer->getDefaultDistance();
 			//TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
 			//TCFloat cameraDistance;
