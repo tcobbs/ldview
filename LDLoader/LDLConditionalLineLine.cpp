@@ -81,7 +81,7 @@ TCObject *LDLConditionalLineLine::copy(void)
 void LDLConditionalLineLine::scanPoints(
 	TCObject * /*scanner*/,
 	LDLScanPointCallback /*scanPointCallback*/,
-	const TCFloat * /*matrix*/)
+	const TCFloat * /*matrix*/) const
 {
 	// Don't do anything.  If you have a conditional line hanging out in space,
 	// then it's wrong, and we're just going to ignore it anyway for the purpose

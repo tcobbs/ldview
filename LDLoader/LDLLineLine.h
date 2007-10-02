@@ -13,7 +13,7 @@ public:
 	virtual int getNumPoints(void) const { return 2; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeLine; }
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix);
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
 protected:
 	LDLLineLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
