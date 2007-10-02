@@ -49,6 +49,8 @@
 		1F74713F0CB0BE4500D6DB68 /* LDLCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F74713B0CB0BE4500D6DB68 /* LDLCamera.h */; };
 		1F7471400CB0BE4500D6DB68 /* LDLFacing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F74713C0CB0BE4500D6DB68 /* LDLFacing.cpp */; };
 		1F7471410CB0BE4500D6DB68 /* LDLFacing.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F74713D0CB0BE4500D6DB68 /* LDLFacing.h */; };
+		1F74714D0CB211F100D6DB68 /* LDLAutoCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F74714B0CB211F100D6DB68 /* LDLAutoCamera.cpp */; };
+		1F74714E0CB211F100D6DB68 /* LDLAutoCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F74714C0CB211F100D6DB68 /* LDLAutoCamera.h */; };
 		D2AAC088055469A000DB518D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +118,8 @@
 		1F74713B0CB0BE4500D6DB68 /* LDLCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLCamera.h; path = ../../LDLoader/LDLCamera.h; sourceTree = SOURCE_ROOT; };
 		1F74713C0CB0BE4500D6DB68 /* LDLFacing.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLFacing.cpp; path = ../../LDLoader/LDLFacing.cpp; sourceTree = SOURCE_ROOT; };
 		1F74713D0CB0BE4500D6DB68 /* LDLFacing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLFacing.h; path = ../../LDLoader/LDLFacing.h; sourceTree = SOURCE_ROOT; };
+		1F74714B0CB211F100D6DB68 /* LDLAutoCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLAutoCamera.cpp; path = ../../LDLoader/LDLAutoCamera.cpp; sourceTree = SOURCE_ROOT; };
+		1F74714C0CB211F100D6DB68 /* LDLAutoCamera.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLAutoCamera.h; path = ../../LDLoader/LDLAutoCamera.h; sourceTree = SOURCE_ROOT; };
 		32DBCF5E0370ADEE00C91783 /* LDLoader_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDLoader_Prefix.pch; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libLDLoader.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLDLoader.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F7E8BE07B2D77200F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -165,6 +169,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1F74714B0CB211F100D6DB68 /* LDLAutoCamera.cpp */,
+				1F74714C0CB211F100D6DB68 /* LDLAutoCamera.h */,
 				1F74713A0CB0BE4500D6DB68 /* LDLCamera.cpp */,
 				1F74713B0CB0BE4500D6DB68 /* LDLCamera.h */,
 				1F74713C0CB0BE4500D6DB68 /* LDLFacing.cpp */,
@@ -274,6 +280,7 @@
 				1F7470E10CB0651100D6DB68 /* LDLPrimitiveCheck.h in Headers */,
 				1F74713F0CB0BE4500D6DB68 /* LDLCamera.h in Headers */,
 				1F7471410CB0BE4500D6DB68 /* LDLFacing.h in Headers */,
+				1F74714E0CB211F100D6DB68 /* LDLAutoCamera.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +362,7 @@
 				1F7470E00CB0651100D6DB68 /* LDLPrimitiveCheck.cpp in Sources */,
 				1F74713E0CB0BE4500D6DB68 /* LDLCamera.cpp in Sources */,
 				1F7471400CB0BE4500D6DB68 /* LDLFacing.cpp in Sources */,
+				1F74714D0CB211F100D6DB68 /* LDLAutoCamera.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
