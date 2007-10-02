@@ -7,9 +7,6 @@
 #include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
 
-#define L3ORDERM 6
-#define L3ORDERN 6
-
 typedef enum
 {
 	LDVStereoNone,
@@ -385,7 +382,6 @@ class LDrawModelViewer: public TCObject
 //		void ldlErrorCallback(LDLError *error);
 //		void progressAlertCallback(TCProgressAlert *error);
 		virtual void setupIsoViewAngle(void);
-		virtual void preCalcCamera(void);
 		virtual TCFloat calcDefaultDistance(void);
 		virtual void updateCurrentFov(void);
 		virtual TCFloat getStereoWidthModifier(void);
@@ -403,10 +399,12 @@ class LDrawModelViewer: public TCObject
 
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
-		int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
-			const TCFloat b[L3ORDERM]);
 
-		void scanCameraPoint(const TCVector &point);
+		//int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
+		//	const TCFloat b[L3ORDERM]);
+		//void scanCameraPoint(const TCVector &point);
+		//virtual void preCalcCamera(void);
+
 		void initLightDirModel(TREMainModel *&lightDirModel, TCULong color);
 		TREMainModel *getContrastingLightDirModel();
 		void initLightDirModels(void);

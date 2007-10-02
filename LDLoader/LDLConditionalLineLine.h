@@ -15,7 +15,7 @@ public:
 		return LDLLineTypeConditionalLine;
 	}
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix);
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
 protected:
 	LDLConditionalLineLine(LDLModel *parentModel, const char *line,
 		int lineNumber, const char *originalLine = NULL);

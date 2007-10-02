@@ -1538,7 +1538,7 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, ...)
 void LDLModel::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix)
+	const TCFloat *matrix) const
 {
 	for (int i = 0; i < m_activeLineCount; i++)
 	{

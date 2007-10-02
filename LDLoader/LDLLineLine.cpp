@@ -47,7 +47,7 @@ TCObject *LDLLineLine::copy(void)
 void LDLLineLine::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix)
+	const TCFloat *matrix) const
 {
 	// Only scan points for lines if they have a color other than the highlight
 	// color.  Highlight lines should all have their endpoints be the same as

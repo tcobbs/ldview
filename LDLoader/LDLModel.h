@@ -69,7 +69,7 @@ public:
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix);
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,

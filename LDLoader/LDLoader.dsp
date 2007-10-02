@@ -114,6 +114,10 @@ SOURCE=.\LDLActionLine.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDLAutoCamera.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDLCamera.cpp
 # End Source File
 # Begin Source File
@@ -195,6 +199,10 @@ SOURCE=.\LDrawIni.c
 # Begin Source File
 
 SOURCE=.\LDLActionLine.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDLAutoCamera.h
 # End Source File
 # Begin Source File
 

@@ -10,11 +10,11 @@ class LDLCamera
 		LDLCamera(const LDLCamera& other);
 		~LDLCamera(void);
 
-		TCVector getPosition(void) {return position;}
-		void setPosition(const TCVector &pos) {position = pos;}
-		LDLFacing getFacing(void) {return facing;}
+		TCVector getPosition(void) const { return position; }
+		void setPosition(const TCVector &pos) { position = pos; }
+		LDLFacing getFacing(void) const { return facing; }
 		void setFacing(const LDLFacing &newFacing) { facing = newFacing; }
-		char* getName(void) {return name;}
+		const char* getName(void) const { return name; }
 		void setName(char* n);
 		LDLCamera& operator=(const LDLCamera& right) {return duplicate(right);}
 		void rotate(const TCVector &rotation);

@@ -413,7 +413,7 @@ TCFloat LDLModelLine::tryToFixPlanarMatrix(void)
 void LDLModelLine::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix)
+	const TCFloat *matrix) const
 {
 	TCFloat newMatrix[16];
 

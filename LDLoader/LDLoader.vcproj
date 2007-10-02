@@ -438,6 +438,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LDLAutoCamera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LDLCamera.cpp"
 				>
 			</File>
@@ -1195,6 +1199,10 @@
 			>
 			<File
 				RelativePath="LDLActionLine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDLAutoCamera.h"
 				>
 			</File>
 			<File
