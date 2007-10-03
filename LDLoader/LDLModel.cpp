@@ -60,6 +60,7 @@ LDLModel::LDLModel(void)
 	m_flags.bfcClip = false;
 	m_flags.bfcWindingCCW = true;
 	m_flags.bfcInvertNext = false;
+	m_flags.haveBoundingBox = false;
 	// Initialize Public flags
 	m_flags.part = false;
 	m_flags.subPart = false;
@@ -1548,5 +1549,50 @@ void LDLModel::scanPoints(
 			((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
 				matrix);
 		}
+	}
+}
+
+void LDLModel::getBoundingBox(TCVector &min, TCVector &max)
+{
+	calcBoundingBox();
+	min = m_boundingMin;
+	max = m_boundingMax;
+}
+
+void LDLModel::scanBoundingBoxPoint(const TCVector &point)
+{
+	if (m_flags.haveBoundingBox)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			if (point[i] < m_boundingMin[i])
+			{
+				m_boundingMin[i] = point[i];
+			}
+			else if (point[i] > m_boundingMax[i])
+			{
+				m_boundingMax[i] = point[i];
+			}
+		}
+	}
+	else
+	{
+		m_boundingMin = m_boundingMax = point;
+		m_flags.haveBoundingBox = true;
+	}
+}
+
+void LDLModel::calcBoundingBox(void)
+{
+	if (!m_flags.haveBoundingBox)
+	{
+		TCFloat matrix[16];
+
+		TCVector::initIdentityMatrix(matrix);
+		// NOTE: we cannot compute bounding boxes heirarchically due to rotation
+		// of child models.  With their rotation, their bounding boxes can
+		// easily stick out of the really minimum bounding box of their parent.
+		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint,
+			matrix);
 	}
 }
