@@ -92,6 +92,8 @@ protected:
 	virtual int getUsedCircleSegments(int numSegments, TCFloat fraction);
 
 	int m_curveQuality;
+	int m_filenameNumerator;
+	int m_filenameDenom;
 	struct
 	{
 		bool primitiveSubstitution:1;

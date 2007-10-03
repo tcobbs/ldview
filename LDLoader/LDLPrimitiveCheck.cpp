@@ -35,17 +35,14 @@ void LDLPrimitiveCheck::dealloc(void)
 
 TCFloat LDLPrimitiveCheck::startingFraction(const char *filename)
 {
-	int top;
-	int bottom;
-
 	if (stringHasCaseInsensitivePrefix(filename, "48/") ||
 		stringHasCaseInsensitivePrefix(filename, "48\\"))
 	{
 		filename += 3;
 	}
-	sscanf(filename, "%d", &top);
-	sscanf(filename + 2, "%d", &bottom);
-	return (TCFloat)top / (TCFloat)bottom;
+	sscanf(filename, "%d", &m_filenameNumerator);
+	sscanf(filename + 2, "%d", &m_filenameDenom);
+	return (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
 }
 
 bool LDLPrimitiveCheck::startsWithFraction(const char *filename)
