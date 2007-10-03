@@ -2,6 +2,7 @@
 #define __LDLMODEL_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCVector.h>
 #include <LDLoader/LDLFileLine.h>
 #include <LDLoader/LDLError.h>
 #include <stdio.h>
@@ -11,7 +12,6 @@ class TCDictionary;
 class LDLMainModel;
 class LDLCommentLine;
 class LDLModelLine;
-class TCVector;
 
 typedef enum
 {
@@ -70,6 +70,7 @@ public:
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
+	virtual void getBoundingBox(TCVector &min, TCVector &max);
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
@@ -131,6 +132,8 @@ protected:
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
+	virtual void calcBoundingBox(void);
+	void scanBoundingBoxPoint(const TCVector &point);
 
 	static bool verifyLDrawDir(const char *value);
 
@@ -142,6 +145,8 @@ protected:
 	LDLMainModel *m_mainModel;
 	int m_activeLineCount;
 	LDLModel *m_activeMPDModel;
+	TCVector m_boundingMin;
+	TCVector m_boundingMax;
 	struct
 	{
 		// Private flags
@@ -154,6 +159,7 @@ protected:
 		bool bfcClip:1;				// Temporal
 		bool bfcWindingCCW:1;		// Temporal
 		bool bfcInvertNext:1;		// Temporal
+		bool haveBoundingBox:1;		// Temporal
 		// Public flags
 		bool part:1;
 		bool subPart:1;
