@@ -61,6 +61,7 @@ LDLModel::LDLModel(void)
 	m_flags.bfcWindingCCW = true;
 	m_flags.bfcInvertNext = false;
 	m_flags.haveBoundingBox = false;
+	m_flags.haveMaxRadius = false;
 	// Initialize Public flags
 	m_flags.part = false;
 	m_flags.subPart = false;
@@ -1559,6 +1560,12 @@ void LDLModel::getBoundingBox(TCVector &min, TCVector &max)
 	max = m_boundingMax;
 }
 
+TCFloat LDLModel::getMaxRadius(const TCVector &center)
+{
+	calcMaxRadius(center);
+	return m_maxRadius;
+}
+
 void LDLModel::scanBoundingBoxPoint(const TCVector &point)
 {
 	if (m_flags.haveBoundingBox)
@@ -1593,6 +1600,30 @@ void LDLModel::calcBoundingBox(void)
 		// of child models.  With their rotation, their bounding boxes can
 		// easily stick out of the really minimum bounding box of their parent.
 		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint,
+			matrix);
+	}
+}
+
+void LDLModel::scanRadiusPoint(const TCVector &point)
+{
+	TCFloat radius = (m_center - point).length();
+
+	if (!m_flags.haveMaxRadius || radius > m_maxRadius)
+	{
+		m_flags.haveMaxRadius = true;
+		m_maxRadius = radius;
+	}
+}
+
+void LDLModel::calcMaxRadius(const TCVector &center)
+{
+	if (!m_flags.haveMaxRadius)
+	{
+		TCFloat matrix[16];
+
+		TCVector::initIdentityMatrix(matrix);
+		m_center = center;
+		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanRadiusPoint,
 			matrix);
 	}
 }
