@@ -71,6 +71,7 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max);
+	virtual TCFloat getMaxRadius(const TCVector &center);
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
@@ -133,7 +134,9 @@ protected:
 //	virtual void processModelLine(LDLModelLine *modelLine);
 	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
 	virtual void calcBoundingBox(void);
+	virtual void calcMaxRadius(const TCVector &center);
 	void scanBoundingBoxPoint(const TCVector &point);
+	void scanRadiusPoint(const TCVector &point);
 
 	static bool verifyLDrawDir(const char *value);
 
@@ -147,6 +150,8 @@ protected:
 	LDLModel *m_activeMPDModel;
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
+	TCVector m_center;
+	TCFloat m_maxRadius;
 	struct
 	{
 		// Private flags
@@ -160,6 +165,7 @@ protected:
 		bool bfcWindingCCW:1;		// Temporal
 		bool bfcInvertNext:1;		// Temporal
 		bool haveBoundingBox:1;		// Temporal
+		bool haveMaxRadius:1;		// Temporal
 		// Public flags
 		bool part:1;
 		bool subPart:1;
