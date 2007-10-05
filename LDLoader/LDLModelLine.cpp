@@ -415,8 +415,12 @@ void LDLModelLine::scanPoints(
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix) const
 {
-	TCFloat newMatrix[16];
+	LDLModel *model = getModel();
+	if (model)
+	{
+		TCFloat newMatrix[16];
 
-	TCVector::multMatrix(matrix, m_matrix, newMatrix);
-	getModel()->scanPoints(scanner, scanPointCallback, newMatrix);
+		TCVector::multMatrix(matrix, m_matrix, newMatrix);
+		model->scanPoints(scanner, scanPointCallback, newMatrix);
+	}
 }
