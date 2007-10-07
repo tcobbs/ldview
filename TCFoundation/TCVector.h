@@ -78,6 +78,8 @@ public:
 		bool shouldNormalize = true) const;
 	TCVector rearrange(int x, int y, int z) const;
 	void upConvert(double *doubleVector);
+	TCFloat distToLine(const TCVector &p1, const TCVector &p2,
+		bool bSegment = false);
 
 	static TCFloat determinant(const TCFloat *matrix);
 	static void multMatrix(const TCFloat *left, const TCFloat *right,

@@ -4,6 +4,7 @@
 #include "TCVector.h"
 #include "TCMacros.h"
 #include "mystring.h"
+#include <assert.h>
 
 //static int vectorCount = 0;
 
@@ -720,4 +721,24 @@ void TCVector::doubleMultiply(const double *v1, double *v2, double n)
 	v2[0] = v1[0] * n;
 	v2[1] = v1[1] * n;
 	v2[2] = v1[2] * n;
+}
+
+/*
+Let *this == p0:
+    |(p2 - p1) x (p2 - p0)|
+d = -----------------------
+          |p2 - p1|
+*/
+TCFloat TCVector::distToLine(
+	const TCVector &p1,
+	const TCVector &p2,
+	bool bSegment /*= true*/)
+{
+	TCFloat dist = ((p2 - p1) * (p2 - *this)).length() / (p2 - p1).length();
+	if (bSegment)
+	{
+		// Not supported
+		assert(false);
+	}
+	return dist;
 }
