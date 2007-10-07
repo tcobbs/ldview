@@ -369,35 +369,11 @@ bool LDModelParser::substituteStu24(bool isA, bool bfc)
 	return true;
 }
 
-TCFloat LDModelParser::getTorusFraction(int size)
-{
-	int i;
-
-	for (i = 0; i < 10; i++)
-	{
-		if (size == i + i * 10 + i * 100 + i * 1000)
-		{
-			return (TCFloat)i / 9.0f;
-		}
-	}
-	return (TCFloat)size / 10000.0f;
-}
-
-bool LDModelParser::substituteTorusQ(bool bfc, bool is48)
+bool LDModelParser::substituteTorusQ(TCFloat fraction, int size, bool bfc,
+									 bool is48)
 {
 	int numSegments;
-	int size;
-	const char *modelName = m_currentTREModel->getName();
-	TCFloat fraction;
-	int offset = 0;
 
-	if (is48)
-	{
-		offset = 3;
-	}
-	sscanf(modelName + 1 + offset, "%d", &numSegments);
-	sscanf(modelName + 4 + offset, "%d", &size);
-	fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
 	m_currentTREModel->addTorusIO(true, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
@@ -414,22 +390,22 @@ bool LDModelParser::substituteTorusQ(bool bfc, bool is48)
 	return true;
 }
 
-bool LDModelParser::substituteTorusIO(bool inner, bool bfc,
-									  bool is48)
+bool LDModelParser::substituteTorusIO(bool inner, TCFloat fraction, int size,
+									  bool bfc, bool is48)
 {
 	int numSegments;
-	int size;
-	const char *modelName = m_currentTREModel->getName();
-	TCFloat fraction;
-	int offset = 0;
+	//int size;
+	//const char *modelName = m_currentTREModel->getName();
+	//TCFloat fraction;
+	//int offset = 0;
 
-	if (is48)
-	{
-		offset = 3;
-	}
-	sscanf(modelName + 1 + offset, "%d", &numSegments);
-	sscanf(modelName + 4 + offset, "%d", &size);
-	fraction = (TCFloat)numSegments / 16.0f;
+	//if (is48)
+	//{
+	//	offset = 3;
+	//}
+	//sscanf(modelName + 1 + offset, "%d", &numSegments);
+	//sscanf(modelName + 4 + offset, "%d", &size);
+	//fraction = (TCFloat)numSegments / 16.0f;
 	numSegments = getNumCircleSegments(fraction, is48);
 	m_currentTREModel->addTorusIO(inner, TCVector(0.0f, 0.0f, 0.0f), 1.0f,
 		getTorusFraction(size), numSegments,
@@ -532,7 +508,7 @@ bool LDModelParser::substituteCone(TCFloat fraction, int size,
 }
 
 bool LDModelParser::substituteRing(TCFloat fraction, int size,
-								   bool bfc, bool is48)
+								   bool bfc, bool is48, bool /*isOld*/)
 {
 	int numSegments = getNumCircleSegments(fraction, is48);
 

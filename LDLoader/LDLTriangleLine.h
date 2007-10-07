@@ -24,6 +24,7 @@ protected:
 	LDLFileLineArray *removeMatchingPoint(void);
 	LDLFileLineArray *removeColinearPoint(void);
 	LDLLineLine *newLineLine(int p1, int p2);
+	virtual bool shouldScanPoints(LDLModel::ScanPointType types) const;
 
 	int m_colinearIndex;
 	int m_matchingIndex;

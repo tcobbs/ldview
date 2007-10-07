@@ -44,16 +44,21 @@ TCObject *LDLLineLine::copy(void)
 	return new LDLLineLine(*this);
 }
 
-void LDLLineLine::scanPoints(
-	TCObject *scanner,
-	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix) const
+bool LDLLineLine::shouldScanPoints(LDLModel::ScanPointType types) const
 {
-	// Only scan points for lines if they have a color other than the highlight
-	// color.  Highlight lines should all have their endpoints be the same as
-	// existing other geometry.
-	if (m_colorNumber != 24)
+	if (m_colorNumber == 24)
 	{
-		LDLShapeLine::scanPoints(scanner, scanPointCallback, matrix);
+		if (types & LDLModel::SPTEdgeLine)
+		{
+			return true;
+		}
 	}
+	else
+	{
+		if (types & LDLModel::SPTLine)
+		{
+			return true;
+		}
+	}
+	return false;
 }

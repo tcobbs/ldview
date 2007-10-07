@@ -42,10 +42,10 @@ protected:
 	virtual bool substituteStu22(bool /*isA*/, bool /*bfc*/) { return false; }
 	virtual bool substituteStu23(bool /*isA*/, bool /*bfc*/) { return false; }
 	virtual bool substituteStu24(bool /*isA*/, bool /*bfc*/) { return false; }
-	virtual bool substituteTorusIO(bool /*inner*/, bool /*bfc*/,
-		bool /*is48*/ = false) { return false; }
-	virtual bool substituteTorusQ(bool /*bfc*/,
-		bool /*is48*/ = false) { return false; }
+	virtual bool substituteTorusIO(bool /*inner*/, TCFloat /*fraction*/,
+		int /*size*/, bool /*bfc*/, bool /*is48*/ = false) { return false; }
+	virtual bool substituteTorusQ(TCFloat /*fraction*/, int /*size*/,
+		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteEighthSphere(bool /*bfc*/,
 		bool /*is48*/ = false) { return false; }
 	virtual bool substituteCylinder(TCFloat /*fraction*/,
@@ -65,7 +65,8 @@ protected:
 	virtual bool substituteCone(TCFloat /*fraction*/, int /*size*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteRing(TCFloat /*fraction*/, int /*size*/,
-		bool /*bfc*/, bool /*is48*/ = false) { return false; }
+		bool /*bfc*/, bool /*is48*/ = false, bool /*isOld*/ = false)
+		{ return false; }
 	virtual TCFloat startingFraction(const char *filename);
 	virtual bool startsWithFraction(const char *filename);
 	virtual bool startsWithFraction2(const char *filename);
@@ -94,6 +95,7 @@ protected:
 	int m_curveQuality;
 	int m_filenameNumerator;
 	int m_filenameDenom;
+	const char *m_modelName;
 	struct
 	{
 		bool primitiveSubstitution:1;

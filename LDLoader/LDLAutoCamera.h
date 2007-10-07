@@ -17,6 +17,7 @@
 #include <LDLoader/LDLCamera.h>
 
 class LDLModel;
+class LDLFileLine;
 
 #define L3ORDERM 6
 #define L3ORDERN 6
@@ -43,7 +44,7 @@ protected:
 	void dealloc(void);
 
 	void preCalcCamera(void);
-	void scanCameraPoint(const TCVector &point);
+	void scanCameraPoint(const TCVector &point, const LDLFileLine *pFileLine);
 	int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
 		const TCFloat b[L3ORDERM]);
 

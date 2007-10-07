@@ -21,6 +21,7 @@ protected:
 		int lineNumber, const char *originalLine = NULL);
 	LDLConditionalLineLine(const LDLConditionalLineLine &other);
 	virtual void dealloc(void);
+	virtual bool shouldScanPoints(LDLModel::ScanPointType types) const;
 
 	TCVector *m_controlPoints;
 

@@ -220,7 +220,9 @@ void LDLAutoCamera::zoomToFit(void)
 	}
 }
 
-void LDLAutoCamera::scanCameraPoint(const TCVector &point)
+void LDLAutoCamera::scanCameraPoint(
+	const TCVector &point,
+	const LDLFileLine * /*pFileLine*/)
 {
 	TCFloat d;
 	int i;
