@@ -26,12 +26,21 @@ typedef enum
 } BFCState;
 
 typedef bool (*LDLFileCaseCallback)(char *filename);
-typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point);
+typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point,
+	const LDLFileLine *pFileLine);
 struct LDrawIniS;
 
 class LDLModel : public TCObject
 {
 public:
+	enum ScanPointType
+	{
+		SPTLine				= 0x01,
+		SPTEdgeLine			= 0x02,
+		SPTConditionalLine	= 0x04,
+		SPTTriangle			= 0x08,
+		SPTQuad				= 0x10,
+	};
 	LDLModel(void);
 	LDLModel(const LDLModel &other);
 	virtual TCObject *copy(void);
@@ -69,7 +78,9 @@ public:
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
+		ScanPointType types = (ScanPointType)(SPTLine | SPTTriangle | SPTQuad))
+		const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max);
 	virtual TCFloat getMaxRadius(const TCVector &center);
 
@@ -135,8 +146,8 @@ protected:
 	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
 	virtual void calcBoundingBox(void);
 	virtual void calcMaxRadius(const TCVector &center);
-	void scanBoundingBoxPoint(const TCVector &point);
-	void scanRadiusPoint(const TCVector &point);
+	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
+	void scanRadiusPoint(const TCVector &point, LDLFileLine *pFileLine);
 
 	static bool verifyLDrawDir(const char *value);
 

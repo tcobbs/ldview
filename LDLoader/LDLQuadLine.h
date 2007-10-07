@@ -41,6 +41,7 @@ protected:
 */
 	void reportBadVertexOrder(int index1, int index2, int index3, int index4);
 	LDLTriangleLine *newTriangleLine(int p1, int p2, int p3);
+	virtual bool shouldScanPoints(LDLModel::ScanPointType types) const;
 
 	int m_colinearIndex;
 	int m_matchingIndex;

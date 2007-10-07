@@ -384,92 +384,92 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 	LDLModel *ldlModel,
 	bool bfc)
 {
-	const char *modelName = ldlModel->getName();
+	m_modelName = ldlModel->getName();
 
 	if (getPrimitiveSubstitutionFlag())
 	{
 		bool is48;
 
-		if (!modelName)
+		if (!m_modelName)
 		{
 			return false;
 		}
-		if (strcasecmp(modelName, "LDL-LOWRES:stu2.dat") == 0)
+		if (strcasecmp(m_modelName, "LDL-LOWRES:stu2.dat") == 0)
 		{
 			return substituteStu2();
 		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu22.dat") == 0)
+		else if (strcasecmp(m_modelName, "LDL-LOWRES:stu22.dat") == 0)
 		{
 			return substituteStu22(false, bfc);
 		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu22a.dat") == 0)
+		else if (strcasecmp(m_modelName, "LDL-LOWRES:stu22a.dat") == 0)
 		{
 			return substituteStu22(true, bfc);
 		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu23.dat") == 0)
+		else if (strcasecmp(m_modelName, "LDL-LOWRES:stu23.dat") == 0)
 		{
 			return substituteStu23(false, bfc);
 		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu23a.dat") == 0)
+		else if (strcasecmp(m_modelName, "LDL-LOWRES:stu23a.dat") == 0)
 		{
 			return substituteStu23(true, bfc);
 		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu24.dat") == 0)
+		else if (strcasecmp(m_modelName, "LDL-LOWRES:stu24.dat") == 0)
 		{
 			return substituteStu24(false, bfc);
 		}
-		else if (strcasecmp(modelName, "LDL-LOWRES:stu24a.dat") == 0)
+		else if (strcasecmp(m_modelName, "LDL-LOWRES:stu24a.dat") == 0)
 		{
 			return substituteStu24(true, bfc);
 		}
-		else if (strcasecmp(modelName, "stud.dat") == 0)
+		else if (strcasecmp(m_modelName, "stud.dat") == 0)
 		{
 			return substituteStud();
 		}
-		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
+		else if (strcasecmp(m_modelName, "1-8sphe.dat") == 0)
 		{
 			return substituteEighthSphere(bfc);
 		}
-		else if (strcasecmp(modelName, "48/1-8sphe.dat") == 0 ||
-			strcasecmp(modelName, "48\\1-8sphe.dat") == 0)
+		else if (strcasecmp(m_modelName, "48/1-8sphe.dat") == 0 ||
+			strcasecmp(m_modelName, "48\\1-8sphe.dat") == 0)
 		{
 			return substituteEighthSphere(bfc, true);
 		}
-		else if (isCyli(modelName, &is48))
+		else if (isCyli(m_modelName, &is48))
 		{
-			return substituteCylinder(startingFraction(modelName),
+			return substituteCylinder(startingFraction(m_modelName),
 				bfc, is48);
 		}
-		else if (isCyls(modelName, &is48))
+		else if (isCyls(m_modelName, &is48))
 		{
-			return substituteSlopedCylinder(startingFraction(modelName), bfc,
+			return substituteSlopedCylinder(startingFraction(m_modelName), bfc,
 				is48);
 		}
-		else if (isCyls2(modelName, &is48))
+		else if (isCyls2(m_modelName, &is48))
 		{
-			return substituteSlopedCylinder2(startingFraction(modelName), bfc,
+			return substituteSlopedCylinder2(startingFraction(m_modelName), bfc,
 				is48);
 		}
-		else if (isChrd(modelName, &is48))
+		else if (isChrd(m_modelName, &is48))
 		{
-			return substituteChrd(startingFraction(modelName), bfc,
+			return substituteChrd(startingFraction(m_modelName), bfc,
 				is48);
 		}
-		else if (isDisc(modelName, &is48))
+		else if (isDisc(m_modelName, &is48))
 		{
-			return substituteDisc(startingFraction(modelName), bfc,
+			return substituteDisc(startingFraction(m_modelName), bfc,
 				is48);
 		}
-		else if (isNdis(modelName, &is48))
+		else if (isNdis(m_modelName, &is48))
 		{
-			return substituteNotDisc(startingFraction(modelName),
+			return substituteNotDisc(startingFraction(m_modelName),
 				bfc, is48);
 		}
-		else if (isEdge(modelName, &is48))
+		else if (isEdge(m_modelName, &is48))
 		{
-			return substituteCircularEdge(startingFraction(modelName), is48);
+			return substituteCircularEdge(startingFraction(m_modelName), is48);
 		}
-		else if (isCon(modelName, &is48))
+		else if (isCon(m_modelName, &is48))
 		{
 			int size;
 			int offset = 0;
@@ -478,11 +478,11 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			sscanf(modelName + 6 + offset, "%d", &size);
-			return substituteCone(startingFraction(modelName), size,
+			sscanf(m_modelName + 6 + offset, "%d", &size);
+			return substituteCone(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
-		else if (isOldRing(modelName, &is48))
+		else if (isOldRing(m_modelName, &is48))
 		{
 			int size;
 			int offset = 0;
@@ -491,10 +491,10 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			sscanf(modelName + 4 + offset, "%d", &size);
-			return substituteRing(1.0f, size, bfc, is48);
+			sscanf(m_modelName + 4 + offset, "%d", &size);
+			return substituteRing(1.0f, size, bfc, is48, true);
 		}
-		else if (isRing(modelName, &is48))
+		else if (isRing(m_modelName, &is48))
 		{
 			int size;
 			int offset = 0;
@@ -503,11 +503,11 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			sscanf(modelName + 7 + offset, "%d", &size);
-			return substituteRing(startingFraction(modelName), size,
+			sscanf(m_modelName + 7 + offset, "%d", &size);
+			return substituteRing(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
-		else if (isRin(modelName, &is48))
+		else if (isRin(m_modelName, &is48))
 		{
 			int size;
 			int offset = 0;
@@ -516,26 +516,41 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			{
 				offset = 3;
 			}
-			sscanf(modelName + 6 + offset, "%d", &size);
-			return substituteRing(startingFraction(modelName), size,
+			sscanf(m_modelName + 6 + offset, "%d", &size);
+			return substituteRing(startingFraction(m_modelName), size,
 				bfc, is48);
 		}
-		else if (isTorusO(modelName, &is48))
+		else if (isTorus(m_modelName, &is48))
 		{
-			return substituteTorusIO(false, bfc, is48);
-		}
-		else if (isTorusI(modelName, &is48))
-		{
-			return substituteTorusIO(true, bfc, is48);
-		}
-		else if (isTorusQ(modelName, &is48))
-		{
-			return substituteTorusQ(bfc, is48);
+			int size;
+			TCFloat fraction;
+			int offset = 0;
+
+			if (is48)
+			{
+				offset = 3;
+			}
+			sscanf(m_modelName + 1 + offset, "%d", &m_filenameNumerator);
+			m_filenameDenom = 16;
+			sscanf(m_modelName + 4 + offset, "%d", &size);
+			fraction = (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
+			if (isTorusO(m_modelName, &is48))
+			{
+				return substituteTorusIO(false, fraction, size, bfc, is48);
+			}
+			else if (isTorusI(m_modelName, &is48))
+			{
+				return substituteTorusIO(true, fraction, size, bfc, is48);
+			}
+			else if (isTorusQ(m_modelName, &is48))
+			{
+				return substituteTorusQ(fraction, size, bfc, is48);
+			}
 		}
 	}
 	if (getNoLightGeomFlag())
 	{
-		if (modelName && strcasecmp(modelName, "light.dat") == 0)
+		if (m_modelName && strcasecmp(m_modelName, "light.dat") == 0)
 		{
 			// Don't draw any geometry for light.dat.
 			return true;

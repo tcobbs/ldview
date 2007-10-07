@@ -87,3 +87,9 @@ void LDLConditionalLineLine::scanPoints(
 	// then it's wrong, and we're just going to ignore it anyway for the purpose
 	// of scanning all the points in the model.
 }
+
+bool LDLConditionalLineLine::shouldScanPoints(
+	LDLModel::ScanPointType types) const
+{
+	return (types & LDLModel::SPTConditionalLine) != 0;
+}

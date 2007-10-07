@@ -136,16 +136,15 @@ protected:
 		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel, bool bfc);
-	virtual TCFloat getTorusFraction(int size);
 	virtual bool substituteStud(int numSegments);
 	virtual bool substituteStud(void);
 	virtual bool substituteStu2(void);
 	virtual bool substituteStu22(bool isA, bool bfc);
 	virtual bool substituteStu23(bool isA, bool bfc);
 	virtual bool substituteStu24(bool isA, bool bfc);
-	virtual bool substituteTorusIO(bool inner, bool bfc,
-		bool is48 = false);
-	virtual bool substituteTorusQ(bool bfc,
+	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
+		bool bfc, bool is48 = false);
+	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
 		bool is48 = false);
 	virtual bool substituteEighthSphere(bool bfc,
 		bool is48 = false);
@@ -166,7 +165,7 @@ protected:
 	virtual bool substituteCone(TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
 	virtual bool substituteRing(TCFloat fraction, int size,
-		bool bfc, bool is48 = false);
+		bool bfc, bool is48 = false, bool isOld = false);
 	virtual void finishPart(TREModel *treModel, TRESubModel *subModel = NULL);
 	virtual bool shouldFlipWinding(bool invert, bool windingCCW);
 

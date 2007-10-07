@@ -545,3 +545,8 @@ LDLTriangleLine *LDLQuadLine::newTriangleLine(int p1, int p2, int p3)
 	delete newLine;
 	return retValue;
 }
+
+bool LDLQuadLine::shouldScanPoints(LDLModel::ScanPointType types) const
+{
+	return (types & LDLModel::SPTQuad) != 0;
+}

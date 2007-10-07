@@ -1540,7 +1540,8 @@ LDLError *LDLModel::newError(LDLErrorType type, CUCSTR format, ...)
 void LDLModel::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix) const
+	const TCFloat *matrix,
+	LDLModel::ScanPointType types) const
 {
 	for (int i = 0; i < m_activeLineCount; i++)
 	{
@@ -1548,7 +1549,7 @@ void LDLModel::scanPoints(
 		if (fileLine->isActionLine())
 		{
 			((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
-				matrix);
+				matrix, types);
 		}
 	}
 }
@@ -1566,7 +1567,9 @@ TCFloat LDLModel::getMaxRadius(const TCVector &center)
 	return m_maxRadius;
 }
 
-void LDLModel::scanBoundingBoxPoint(const TCVector &point)
+void LDLModel::scanBoundingBoxPoint(
+	const TCVector &point,
+	LDLFileLine * /*pFileLine*/)
 {
 	if (m_flags.haveBoundingBox)
 	{
@@ -1604,7 +1607,7 @@ void LDLModel::calcBoundingBox(void)
 	}
 }
 
-void LDLModel::scanRadiusPoint(const TCVector &point)
+void LDLModel::scanRadiusPoint(const TCVector &point, LDLFileLine * /*pFileLine*/)
 {
 	TCFloat radius = (m_center - point).length();
 
