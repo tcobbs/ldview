@@ -624,7 +624,7 @@ void TREShapeGroup::drawConditionalLines(void)
 
 					activeIndices = new TCULongArray;
 					glPushAttrib(GL_ENABLE_BIT | GL_CURRENT_BIT |
-						GL_STENCIL_BUFFER_BIT);
+						GL_STENCIL_BUFFER_BIT | GL_POLYGON_BIT);
 					glEnable(GL_STENCIL_TEST);
 					glEnable(GL_CULL_FACE);
 					glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
