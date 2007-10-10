@@ -235,6 +235,14 @@ void TREMainModel::compileTransparent(void)
 }
 */
 
+bool TREMainModel::getStencilConditionalsFlag(void)
+{
+	// Save alpha requires the stencil buffer for another purpose; don't allow
+	// stencil conditionals when it's set.
+	return m_mainFlags.stencilConditionals != false &&
+		!getSaveAlphaFlag();
+}
+
 bool TREMainModel::shouldCompileSection(TREMSection section)
 {
 	if (getStencilConditionalsFlag())
@@ -441,10 +449,67 @@ void checkNormals(TREVertexStore *vertexStore)
 }
 */
 
+void TREMainModel::passOnePrep(void)
+{
+	glPushAttrib(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_ENABLE_BIT | GL_STENCIL_BUFFER_BIT);
+	// First pass: draw just the color of all the transparent polygons
+	// that are just in front of the background.  Don't draw anywhere
+	// that has already been drawn to.  This makes sure that subsequent
+	// color blend operations don't include the background color.  Also
+	// set the stencil to 1 for every pixel we update the alpha on.
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+	glStencilMask(0xFFFFFFFF);
+	glDisable(GL_BLEND);
+}
+
+void TREMainModel::passTwoPrep(void)
+{
+	// Second pass: update just the alpha channel on all transparent
+	// polygons that have the background visible through them (which
+	// is all the ones we set the stencil to 1 in on pass 1 above).
+	// Note that depth testing is disabled, and the blend function
+	// is set to allow the alpha channel to build up as transparent
+	// polygons overlap.
+	glStencilFunc(GL_EQUAL, 1, 0xFFFFFFFF);
+	glDisable(GL_DEPTH_TEST);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+}
+
+void TREMainModel::passThreePrep(void)
+{
+	// Third pass (actual drawing is outside this if statement):
+	// Now draw the color component of all the transparent polygons
+	// except for the ones drawn in step 1.  (Depth test is set to
+	// GL_LESS, so that those don't ge redrawn.)  Other than that
+	// depth test setting, everything is configure the same as for
+	// standard one-pass transparency.
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+}
+
 void TREMainModel::draw(void)
 {
 	GLfloat normalSpecular[4];
+	bool multiPass = false;
 
+	if (getSaveAlphaFlag() && (!getStippleFlag() || getAALinesFlag()))
+	{
+		GLint stencilBits;
+
+		multiPass = true;
+		glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+		glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_ENABLE_BIT | GL_STENCIL_BUFFER_BIT);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 2, 0xFFFFFFFF);
+		glStencilMask(0xFFFFFFFF);
+		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+	}
 	if (getThreadsFlag() && m_coloredShapes[TREMTransparent])
 	{
 		TRETransShapeGroup* transShapeGroup =
@@ -486,7 +551,20 @@ void TREMainModel::draw(void)
 	// Next, disable lighting and draw lines.  First draw default colored lines,
 	// which probably don't exist, since color number 16 doesn't often get used
 	// for lines.
-	drawLines();
+	if (getSaveAlphaFlag() && getAALinesFlag())
+	{
+		passOnePrep();
+		drawLines(1);
+		passTwoPrep();
+		drawLines(2);
+		passThreePrep();
+		drawLines(3);
+		glPopAttrib();
+	}
+	else
+	{
+		drawLines();
+	}
 	if (getAALinesFlag() && getWireframeFlag())
 	{
 		// We use glPushAttrib() when we enable line smoothing.
@@ -494,20 +572,47 @@ void TREMainModel::draw(void)
 	}
 	if (!getEdgesOnlyFlag() && !getRemovingHiddenLines())
 	{
-		drawTransparent();
+		if (getSaveAlphaFlag() && !getStippleFlag())
+		{
+			passOnePrep();
+			drawTransparent(1);
+			passTwoPrep();
+			drawTransparent(2);
+			passThreePrep();
+			drawTransparent(3);
+			glPopAttrib();
+		}
+		else
+		{
+			drawTransparent();
+		}
+	}
+	if (multiPass)
+	{
+		glPopAttrib();
 	}
 //	checkNormals(m_vertexStore);
 //	checkNormals(m_coloredVertexStore);
 }
 
-void TREMainModel::enableLineSmooth(void)
+void TREMainModel::enableLineSmooth(int pass /*= -1*/)
 {
 	if (getAALinesFlag())
 	{
 		glPushAttrib(GL_ENABLE_BIT);
 		glEnable(GL_LINE_SMOOTH);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		if (pass != 1)
+		{
+			glEnable(GL_BLEND);
+			if (pass == 2)
+			{
+				glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE_MINUS_SRC_ALPHA);
+			}
+			else
+			{
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			}
+		}
 	}
 }
 
@@ -589,7 +694,7 @@ void TREMainModel::drawSolid(void)
 	}
 }
 
-void TREMainModel::drawLines(void)
+void TREMainModel::drawLines(int pass /*= -1*/)
 {
 	if (getLightingFlag())
 	{
@@ -598,7 +703,7 @@ void TREMainModel::drawLines(void)
 	if (getAALinesFlag() && !getWireframeFlag())
 	{
 		// Note that if we're in wireframe mode, smoothing is already enabled.
-		enableLineSmooth();
+		enableLineSmooth(pass);
 		// Smooth lines produce odd effects on the edge of transparent surfaces
 		// when depth writing is enabled, so disable.
 		glDepthMask(GL_FALSE);
@@ -961,7 +1066,7 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 	}
 }
 
-void TREMainModel::drawTransparent(void)
+void TREMainModel::drawTransparent(int pass /*= -1*/)
 {
 	if (m_coloredShapes[TREMTransparent])
 	{
@@ -986,9 +1091,19 @@ void TREMainModel::drawTransparent(void)
 		}
 		else if (!getCutawayDrawFlag())
 		{
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDepthMask(GL_FALSE);
+			if (pass != 1)
+			{
+				glEnable(GL_BLEND);
+				if (pass == 2)
+				{
+					glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE_MINUS_SRC_ALPHA);
+				}
+				else
+				{
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				}
+				glDepthMask(GL_FALSE);
+			}
 		}
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128.0f);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
@@ -1012,7 +1127,8 @@ void TREMainModel::drawTransparent(void)
 		else
 		{
 			((TRETransShapeGroup *)m_coloredShapes[TREMTransparent])->
-				draw(getSortTransparentFlag() && !getCutawayDrawFlag());
+				draw(getSortTransparentFlag() && !getCutawayDrawFlag() &&
+				pass < 2);
 		}
 		if (getStudLogoFlag())
 		{
