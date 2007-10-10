@@ -225,6 +225,8 @@ class LDrawModelViewer: public TCObject
 		bool getAutoCenter(void) { return flags.autoCenter; }
 		virtual void setForceZoomToFit(bool value);
 		bool getForceZoomToFit(void) { return flags.forceZoomToFit; }
+		virtual void setSaveAlpha(bool value);
+		bool getSaveAlpha(void) { return flags.saveAlpha; }
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
@@ -548,6 +550,7 @@ class LDrawModelViewer: public TCObject
 			bool optionalStandardLight:1;
 			bool noLightGeom:1;
 			bool updating:1;
+			bool saveAlpha:1;
 		} flags;
 		struct CameraData
 		{

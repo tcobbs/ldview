@@ -79,10 +79,7 @@ public:
 	{
 		m_mainFlags.stencilConditionals = value;
 	}
-	bool getStencilConditionalsFlag(void)
-	{
-		return m_mainFlags.stencilConditionals != false;
-	}
+	bool getStencilConditionalsFlag(void);
 	void setVertexArrayEdgeFlagsFlag(bool value)
 	{
 		m_mainFlags.vertexArrayEdgeFlags = value;
@@ -91,14 +88,10 @@ public:
 	{
 		return m_mainFlags.vertexArrayEdgeFlags != false;
 	}
-	void setThreadsFlag(bool value)
-	{
-		m_mainFlags.threads = value;
-	}
-	bool getThreadsFlag(void)
-	{
-		return m_mainFlags.threads != false;
-	}
+	void setThreadsFlag(bool value) { m_mainFlags.threads = value; }
+	bool getThreadsFlag(void) { return m_mainFlags.threads != false; }
+	void setSaveAlphaFlag(bool value) { m_mainFlags.saveAlpha = value; }
+	bool getSaveAlphaFlag(void) { return m_mainFlags.saveAlpha != false; }
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
 	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
 	bool getActiveLineJoinsFlag(void)
@@ -217,13 +210,16 @@ protected:
 	virtual void activateBFC(void);
 	virtual void deactivateBFC(void);
 	void transferTransparent(void);
-	virtual void drawTransparent(void);
-	virtual void drawLines(void);
+	virtual void drawTransparent(int pass = -1);
+	virtual void drawLines(int pass = -1);
 	virtual void drawSolid(void);
-	virtual void enableLineSmooth(void);
+	virtual void enableLineSmooth(int pass = -1);
 	virtual void bindStudTexture(void);
 	virtual void configureStudTexture(bool allowMipMap = true);
 	virtual bool shouldCompileSection(TREMSection section);
+	virtual void passOnePrep(void);
+	virtual void passTwoPrep(void);
+	virtual void passThreePrep(void);
 
 	static void loadStudMipTextures(TCImage *mainImage);
 
@@ -281,6 +277,7 @@ protected:
 		bool stencilConditionals:1;
 		bool vertexArrayEdgeFlags:1;
 		bool threads:1;
+		bool saveAlpha:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

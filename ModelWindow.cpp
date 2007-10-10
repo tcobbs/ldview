@@ -2871,6 +2871,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 			WGL_GREEN_BITS_ARB, 8,
 			WGL_BLUE_BITS_ARB, 8,
 			WGL_ALPHA_BITS_ARB, 8,
+			WGL_STENCIL_BITS_ARB, 2,
 			0, 0,
 			0, 0,
 			0, 0
@@ -2981,46 +2982,26 @@ void ModelWindow::renderOffscreenImage(void)
 {
 	makeCurrent();
 	modelViewer->update();
-	if (canSaveAlpha())
-	{
-		glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |
-			GL_VIEWPORT_BIT);
-//		glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_DST_ALPHA);
-		CUIOGLWindow::orthoView();
-		glColor4ub(0, 0, 0, 255);
-//		glColor4ub(0, 0, 0, 255 - 28);	// 255 - (110 / 4), which equals 2 faces
-//										// worth of standard alpha blending.
-		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
-//		glEnable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-		glDisable(GL_POLYGON_OFFSET_FILL);
-		glDepthFunc(GL_GREATER);
-		glDepthRange(0.0f, 1.0f);
-		glBegin(GL_QUADS);
-			treGlVertex3f(0.0f, 0.0f, -1.0f);
-			treGlVertex3f((TCFloat)width, 0.0f, -1.0f);
-			treGlVertex3f((TCFloat)width, (TCFloat)height, -1.0f);
-			treGlVertex3f(0.0f, (TCFloat)height, -1.0f);
-		glEnd();
-/*
-		glColor4ub(0, 0, 0, 129);
-//		glColor4ub(0, 0, 0, 255 - 28);	// 255 - (110 / 4), which equals 2 faces
-										// worth of standard alpha blending.
-		glBlendFunc(GL_DST_ALPHA, GL_SRC_ALPHA);
-		glEnable(GL_BLEND);
-		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_LESS, 1.0);
-		glBegin(GL_QUADS);
-			treGlVertex3f(0.0f, 0.0f, -1.0f);
-			treGlVertex3f((TCFloat)width, 0.0f, -1.0f);
-			treGlVertex3f((TCFloat)width, (TCFloat)height, -1.0f);
-			treGlVertex3f(0.0f, (TCFloat)height, -1.0f);
-		glEnd();
-*/
-		glPopAttrib();
-	}
+	//if (canSaveAlpha())
+	//{
+	//	glPushAttrib(GL_ENABLE_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT |
+	//		GL_VIEWPORT_BIT);
+	//	CUIOGLWindow::orthoView();
+	//	glColor4ub(0, 0, 0, 255);
+	//	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+	//	glEnable(GL_DEPTH_TEST);
+	//	glDisable(GL_LIGHTING);
+	//	glDisable(GL_POLYGON_OFFSET_FILL);
+	//	glDepthFunc(GL_GREATER);
+	//	glDepthRange(0.0f, 1.0f);
+	//	glBegin(GL_QUADS);
+	//		treGlVertex3f(0.0f, 0.0f, -1.0f);
+	//		treGlVertex3f((TCFloat)width, 0.0f, -1.0f);
+	//		treGlVertex3f((TCFloat)width, (TCFloat)height, -1.0f);
+	//		treGlVertex3f(0.0f, (TCFloat)height, -1.0f);
+	//	glEnd();
+	//	glPopAttrib();
+	//}
 }
 
 void ModelWindow::cleanupPBuffer(void)
@@ -3145,6 +3126,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		if (saveAlpha)
 		{
 			*saveAlpha = true;
+			modelViewer->setSaveAlpha(true);
 		}
 	}
 	else
@@ -3213,6 +3195,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	modelViewer->setYTile(0);
 	modelViewer->setNumXTiles(1);
 	modelViewer->setNumYTiles(1);
+	modelViewer->setSaveAlpha(false);
 	if (canceled && bufferAllocated)
 	{
 		delete buffer;
@@ -3255,27 +3238,26 @@ bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 	delete cameraGlobe;
 	if (buffer)
 	{
+		//if (saveAlpha)
+		//{
+		//	int i;
+		//	int totalBytes = imageWidth * imageHeight * 4;
 
-		if (saveAlpha)
-		{
-			int i;
-			int totalBytes = imageWidth * imageHeight * 4;
-
-			for (i = 3; i < totalBytes; i += 4)
-			{
-				if (buffer[i] != 0 && buffer[i] != 255)
-				{
-					if (buffer[i] == 74)
-					{
-						buffer[i] = 255 - 28;
-					}
-					else
-					{
-						buffer[i] = 255;
-					}
-				}
-			}
-		}
+		//	for (i = 3; i < totalBytes; i += 4)
+		//	{
+		//		if (buffer[i] != 0 && buffer[i] != 255)
+		//		{
+		//			if (buffer[i] == 74)
+		//			{
+		//				buffer[i] = 255 - 28;
+		//			}
+		//			else
+		//			{
+		//				buffer[i] = 255;
+		//			}
+		//		}
+		//	}
+		//}
 		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 		{
 			retValue = writePng(filename, imageWidth, imageHeight, buffer,
@@ -4523,7 +4505,7 @@ BOOL ModelWindow::setupPFD(void)
 			WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
 			WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
 			WGL_ALPHA_BITS_ARB, 4,
-			WGL_STENCIL_BITS_ARB, 1,
+			WGL_STENCIL_BITS_ARB, 2,
 			0, 0
 		};
 		int numIntValues = sizeof(intValues) / sizeof(intValues[0]);

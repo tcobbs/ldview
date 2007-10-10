@@ -148,6 +148,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.optionalStandardLight = true;
 	flags.noLightGeom = false;
 	flags.updating = false;
+	flags.saveAlpha = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -1010,6 +1011,14 @@ void LDrawModelViewer::setForceZoomToFit(bool value)
 	if (flags.forceZoomToFit != value)
 	{
 		flags.forceZoomToFit = value;
+	}
+}
+
+void LDrawModelViewer::setSaveAlpha(bool value)
+{
+	if (flags.saveAlpha != value)
+	{
+		flags.saveAlpha = value;
 	}
 }
 
@@ -2756,6 +2765,7 @@ void LDrawModelViewer::update(void)
 		flags.updating = false;
 		return;
 	}
+	mainTREModel->setSaveAlphaFlag(flags.saveAlpha);
 /*
 	if (!mainTREModel->getCompiled() && (mainTREModel->getCompileAllFlag() ||
 		mainTREModel->getCompilePartsFlag()))
