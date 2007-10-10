@@ -18,6 +18,8 @@ typedef struct
 	float specular[4];
 	float shininess;
 	float luminance;
+	bool chrome;
+	bool rubber;
 } LDLColorInfo;
 
 class LDLPalette : public TCObject
@@ -51,6 +53,7 @@ protected:
 	void initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b, int a);
 	void initSpecular(int index, float sr, float sg, float sb, float sa,
 		float shininess);
+	void initRubber(int index);
 	void initSpecular(LDLColorInfo &colorInfo, float sr, float sg, float sb,
 		float sa, float shininess);
 	void initOtherColors(void);
