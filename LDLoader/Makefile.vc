@@ -4,10 +4,13 @@ COBJS = \
 	$(OBJDIR)\LDrawIni.obj
 CCOBJS = \
 	$(OBJDIR)\LDLActionLine.obj \
+	$(OBJDIR)\LDLAutoCamera.obj \
+	$(OBJDIR)\LDLCamera.obj \
 	$(OBJDIR)\LDLCommentLine.obj \
 	$(OBJDIR)\LDLConditionalLineLine.obj \
 	$(OBJDIR)\LDLEmptyLine.obj \
 	$(OBJDIR)\LDLError.obj \
+	$(OBJDIR)\LDLFacing.obj \
 	$(OBJDIR)\LDLFileLine.obj \
 	$(OBJDIR)\LDLFindFileAlert.obj \
 	$(OBJDIR)\LDLLineLine.obj \
@@ -16,6 +19,7 @@ CCOBJS = \
 	$(OBJDIR)\LDLModelLine.obj \
 	$(OBJDIR)\LDLPalette.obj \
 	$(OBJDIR)\LDLQuadLine.obj \
+	$(OBJDIR)\LDLPrimitiveCheck.obj \
 	$(OBJDIR)\LDLShapeLine.obj \
 	$(OBJDIR)\LDLTriangleLine.obj \
 	$(OBJDIR)\LDLUnknownLine.obj
