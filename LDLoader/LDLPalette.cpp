@@ -283,6 +283,12 @@ void LDLPalette::initSpecular(int index, float sr, float sg, float sb, float sa,
 	initSpecular(m_colors[index], sr, sg, sb, sa, shininess);
 }
 
+void LDLPalette::initRubber(int index)
+{
+	initSpecular(index, 0.075f, 0.075f, 0.075f, 1.0f, 15.0f);
+	m_colors[index].rubber = true;
+}
+
 void LDLPalette::initOtherColors(void)
 {
 	initOtherColor(382,	204,	170,	102);	// Tan
@@ -291,12 +297,17 @@ void LDLPalette::initOtherColors(void)
 	initOtherColor(494,	204,	204,	204);	// Electrical Contacts
 
 	// Black rubber
-	initSpecular(256, 0.075f, 0.075f, 0.075f, 1.0f, 15.0f);
+	initRubber(256);
 	m_colors[256].edgeColorNumber = 8;
-//	m_colors[256].edgeColorNumber = 0x4000000;
 
+	// Blue rubber
+	initRubber(273);
+	// Red rubber
+	initRubber(324);
 	// Gray rubber
-	initSpecular(375, 0.075f, 0.075f, 0.075f, 1.0f, 15.0f);
+	initRubber(375);
+	// White rubber
+	initRubber(511);
 
 	// Gold
 	initSpecular(334,
@@ -304,9 +315,11 @@ void LDLPalette::initOtherColors(void)
 		176.0f / 255.0f * GOLD_SCALE,
 		51.0f / 255.0f * GOLD_SCALE,
 		1.0f, 5.0f);
+	m_colors[334].chrome = true;
 
 	// Chrome
 	initSpecular(383, 0.9f, 1.2f, 1.5f, 1.0f, 5.0f);
+	m_colors[383].chrome = true;
 
 	// Electrical contacts
 	initSpecular(494, 0.9f, 0.9f, 1.5f, 1.0f, 5.0f);
@@ -403,6 +416,8 @@ void LDLPalette::initColorInfo(LDLColorInfo &colorInfo, int r, int g, int b,
 	colorInfo.ditherColor.a = (TCByte)a;
 	colorInfo.edgeColorNumber = 255;
 	colorInfo.luminance = -100.0f;
+	colorInfo.chrome = false;
+	colorInfo.rubber = false;
 	initSpecularAndShininess(colorInfo);
 }
 
@@ -674,10 +689,12 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 		if (rubber)
 		{
 			initSpecular(*colorInfo, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
+			colorInfo->rubber = true;
 		}
 		else if (chrome)
 		{
 			initSpecular(*colorInfo, 0.9f, 1.2f, 1.5f, -100.0f, 5.0f);
+			colorInfo->chrome = true;
 		}
 		else if (metal)
 		{
