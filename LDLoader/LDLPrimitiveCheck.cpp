@@ -435,6 +435,15 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 		{
 			return substituteEighthSphere(bfc, true);
 		}
+		else if (strcasecmp(m_modelName, "1-8sphc.dat") == 0)
+		{
+			return substituteEighthSphereCorner(bfc);
+		}
+		else if (strcasecmp(m_modelName, "48/1-8sphc.dat") == 0 ||
+			strcasecmp(m_modelName, "48\\1-8sphc.dat") == 0)
+		{
+			return substituteEighthSphereCorner(bfc, true);
+		}
 		else if (isCyli(m_modelName, &is48))
 		{
 			return substituteCylinder(startingFraction(m_modelName),
