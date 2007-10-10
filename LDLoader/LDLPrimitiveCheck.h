@@ -37,8 +37,8 @@ protected:
 		bool bfc);
 	virtual TCFloat getTorusFraction(int size);
 	virtual bool substituteStud(int /*numSegments*/) { return false; }
-	virtual bool substituteStud() { return false; }
-	virtual bool substituteStu2() { return false; }
+	virtual bool substituteStud(void) { return false; }
+	virtual bool substituteStu2(void) { return false; }
 	virtual bool substituteStu22(bool /*isA*/, bool /*bfc*/) { return false; }
 	virtual bool substituteStu23(bool /*isA*/, bool /*bfc*/) { return false; }
 	virtual bool substituteStu24(bool /*isA*/, bool /*bfc*/) { return false; }
@@ -47,6 +47,8 @@ protected:
 	virtual bool substituteTorusQ(TCFloat /*fraction*/, int /*size*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
 	virtual bool substituteEighthSphere(bool /*bfc*/,
+		bool /*is48*/ = false) { return false; }
+	virtual bool substituteEighthSphereCorner(bool /*bfc*/,
 		bool /*is48*/ = false) { return false; }
 	virtual bool substituteCylinder(TCFloat /*fraction*/,
 		bool /*bfc*/, bool /*is48*/ = false) { return false; }
