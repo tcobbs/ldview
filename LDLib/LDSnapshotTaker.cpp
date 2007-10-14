@@ -271,6 +271,7 @@ TCByte *LDSnapshotTaker::grabImage(
 				&canceled);
 			if (!canceled)
 			{
+				glFinish();
 				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
 					GL_UNSIGNED_BYTE, smallBuffer);
 				if (smallBuffer != buffer)
