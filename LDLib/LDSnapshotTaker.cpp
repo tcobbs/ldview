@@ -220,6 +220,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	newHeight = viewport[3];
 	calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
 		numYTiles);
+	m_modelViewer->setWidth(newWidth);
+	m_modelViewer->setHeight(newHeight);
 	if (canSaveAlpha())
 	{
 		bytesPerPixel = 4;
