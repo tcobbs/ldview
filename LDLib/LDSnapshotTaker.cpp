@@ -172,7 +172,7 @@ bool LDSnapshotTaker::canSaveAlpha(void)
 {
 	if (m_trySaveAlpha && m_imageType == ITPng)
 	{
-		int alphaBits;
+		GLint alphaBits;
 
 		glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
 		return alphaBits > 0;
