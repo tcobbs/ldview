@@ -1,6 +1,5 @@
 #include "ModelWindow.h"
 #include <LDLib/LDrawModelViewer.h>
-#include <LDLib/LDInputHandler.h>
 #include <TCFoundation/TCMacros.h>
 #include "LDVExtensionsSetup.h"
 #include "LDViewWindow.h"
@@ -80,6 +79,7 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 						 int width, int height)
 			:CUIOGLWindow(parentWindow, x, y, width, height),
 			 modelViewer(new LDrawModelViewer(width, height)),
+			 snapshotTaker(NULL),
 			 numFramesSinceReference(0),
 			 firstFPSPass(true),
 			 //rotationSpeed(0.0f),
@@ -173,6 +173,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		(TCAlertCallback)&ModelWindow::captureAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this,
 		(TCAlertCallback)&ModelWindow::releaseAlertCallback);
+	TCAlertManager::registerHandler(LDSnapshotTaker::makeCurrentAlertClass(),
+		this, (TCAlertCallback)&ModelWindow::makeCurrentAlertCallback);
 /*
 	modelViewer->setProgressCallback(staticProgressCallback, this);
 	modelViewer->setErrorCallback(staticErrorCallback, this);
@@ -193,6 +195,7 @@ void ModelWindow::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(errorInfos);
+	TCObject::release(snapshotTaker);
 	errorInfos = NULL;
 	if (prefs)
 	{
@@ -252,6 +255,14 @@ void ModelWindow::releaseAlertCallback(TCAlert *alert)
 	if (alert->getSender() == inputHandler)
 	{
 		releaseMouse();
+	}
+}
+
+void ModelWindow::makeCurrentAlertCallback(TCAlert *alert)
+{
+	if (alert->getSender() == snapshotTaker)
+	{
+		makeCurrent();
 	}
 }
 
@@ -2202,22 +2213,6 @@ LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
 
-/*
-#ifndef TC_NO_UNICODE
-int ModelWindow::progressCallback(const char* message, float progress,
-								  bool showErrors)
-{
-	std::wstring temp;
-
-	if (message)
-	{
-		mbstowstring(temp, message);
-	}
-	return progressCallback(temp.c_str(), progress, showErrors);
-}
-#endif // TC_NO_UNICODE
-*/
-
 int ModelWindow::progressCallback(CUCSTR message, float progress,
 								  bool showErrors)
 {
@@ -2252,20 +2247,9 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 		}
 		((LDViewWindow*)parentWindow)->setLoading(true);
 	}
-//	showProgress();
-//	debugPrintf("%s: %f\n", message, progress);
-	if (message)
+	if (message && message[0])
 	{
 		setStatusText(hStatusBar, 1, message);
-		//UCCHAR oldMessage[1024];
-
-		//sendMessageUC(hStatusBar, SB_GETTEXT, 1, (LPARAM)oldMessage);
-		//if (ucstrcmp(message, oldMessage) != 0)
-		//{
-		//	sendMessageUC(hStatusBar, SB_SETTEXT, 1, (LPARAM)message);
-		//}
-		//RedrawWindow(parentWindow->getHWindow(), NULL, NULL,
-		//	RDW_INVALIDATE | RDW_UPDATENOW);
 	}
 	if (progress >= 0.0f)
 	{
@@ -2277,8 +2261,6 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 		{
 			SendMessage(hProgressBar, PBM_SETPOS, newProgress, 0);
 		}
-//		SendDlgItemMessage(hProgressWindow, IDC_PROGRESS, PBM_SETPOS,
-//			(int)(progress * 100), 0);
 	}
 	if (thisProgressUpdate < lastProgressUpdate || thisProgressUpdate >
 		lastProgressUpdate + 100 || progress == 1.0f)
@@ -2288,7 +2270,6 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 			PostQuitMessage(0);
 			cancelLoad = true;
 		}
-//		flushDialogModal(hProgressWindow);
 		lastProgressUpdate = thisProgressUpdate;
 	}
 	if (cancelLoad)
@@ -2304,38 +2285,21 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 	}
 }
 
-/*
-int ModelWindow::staticProgressCallback(char* message, float progress,
-										void* userData)
-{
-	return ((ModelWindow*)userData)->progressCallback(message, progress, true);
-}
-*/
-
-bool ModelWindow::staticImageProgressCallback(CUCSTR message, float progress,
-											  void* userData)
-{
-	return ((ModelWindow*)userData)->progressCallback(message, progress) ? true
-		: false;
-}
+//bool ModelWindow::staticImageProgressCallback(CUCSTR message, float progress,
+//											  void* userData)
+//{
+//	return ((ModelWindow*)userData)->progressCallback(message, progress) ? true
+//		: false;
+//}
 
 int ModelWindow::errorCallback(LDLError* error)
 {
-//	debugPrintf("Error of type %d: %s\n", error->getType(),
-//		error->getMessage());
 	if (windowShown)
 	{
 		errors->addObject(error);
 	}
 	return 1;
 }
-
-/*
-int ModelWindow::staticErrorCallback(LDMError* error, void* userData)
-{
-	return ((ModelWindow*)userData)->errorCallback(error);
-}
-*/
 
 LRESULT ModelWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 {
@@ -2807,58 +2771,58 @@ void ModelWindow::setPollSetting(int value)
 	}
 }
 
-bool ModelWindow::writeImage(char *filename, int width, int height,
-							 BYTE *buffer, char *formatName, bool saveAlpha)
-{
-	TCImage *image = new TCImage;
-	bool retValue;
-	const char *version = ((LDViewWindow *)parentWindow)->getProductVersion();
-	char comment[1024];
+//bool ModelWindow::writeImage(char *filename, int width, int height,
+//							 BYTE *buffer, char *formatName, bool saveAlpha)
+//{
+//	TCImage *image = new TCImage;
+//	bool retValue;
+//	const char *version = ((LDViewWindow *)parentWindow)->getProductVersion();
+//	char comment[1024];
+//
+//	if (saveAlpha)
+//	{
+//		image->setDataFormat(TCRgba8);
+//	}
+//	image->setSize(width, height);
+//	image->setLineAlignment(4);
+//	image->setImageData(buffer);
+//	image->setFormatName(formatName);
+//	image->setFlipped(true);
+//	if (strcasecmp(formatName, "PNG") == 0)
+//	{
+//		strcpy(comment, "Software:!:!:LDView");
+//	}
+//	else
+//	{
+//		strcpy(comment, "Created by LDView");
+//	}
+//	if (version)
+//	{
+//		strcat(comment, " ");
+//		strcat(comment, version);
+//	}
+//	image->setComment(comment);
+//	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0, false))
+//	{
+//		image->autoCrop((BYTE)modelViewer->getBackgroundR(),
+//			(BYTE)modelViewer->getBackgroundG(),
+//			(BYTE)modelViewer->getBackgroundB());
+//	}
+//	retValue = image->saveFile(filename, staticImageProgressCallback, this);
+//	image->release();
+//	return retValue;
+//}
 
-	if (saveAlpha)
-	{
-		image->setDataFormat(TCRgba8);
-	}
-	image->setSize(width, height);
-	image->setLineAlignment(4);
-	image->setImageData(buffer);
-	image->setFormatName(formatName);
-	image->setFlipped(true);
-	if (strcasecmp(formatName, "PNG") == 0)
-	{
-		strcpy(comment, "Software:!:!:LDView");
-	}
-	else
-	{
-		strcpy(comment, "Created by LDView");
-	}
-	if (version)
-	{
-		strcat(comment, " ");
-		strcat(comment, version);
-	}
-	image->setComment(comment);
-	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0, false))
-	{
-		image->autoCrop((BYTE)modelViewer->getBackgroundR(),
-			(BYTE)modelViewer->getBackgroundG(),
-			(BYTE)modelViewer->getBackgroundB());
-	}
-	retValue = image->saveFile(filename, staticImageProgressCallback, this);
-	image->release();
-	return retValue;
-}
-
-bool ModelWindow::writeBmp(char *filename, int width, int height, BYTE *buffer)
-{
-	return writeImage(filename, width, height, buffer, "BMP");
-}
-
-bool ModelWindow::writePng(char *filename, int width, int height, BYTE *buffer,
-						   bool saveAlpha)
-{
-	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
-}
+//bool ModelWindow::writeBmp(char *filename, int width, int height, BYTE *buffer)
+//{
+//	return writeImage(filename, width, height, buffer, "BMP");
+//}
+//
+//bool ModelWindow::writePng(char *filename, int width, int height, BYTE *buffer,
+//						   bool saveAlpha)
+//{
+//	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
+//}
 
 bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 							   bool antialias)
@@ -3043,17 +3007,17 @@ void ModelWindow::cleanupPBuffer(void)
 	}
 }
 
-bool ModelWindow::canSaveAlpha(void)
-{
-	if (saveAlpha && saveImageType == PNG_IMAGE_TYPE_INDEX)
-	{
-		int alphaBits;
-
-		glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
-		return alphaBits > 0;
-	}
-	return false;
-}
+//bool ModelWindow::canSaveAlpha(void)
+//{
+//	if (saveAlpha && saveImageType == PNG_IMAGE_TYPE_INDEX)
+//	{
+//		int alphaBits;
+//
+//		glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
+//		return alphaBits > 0;
+//	}
+//	return false;
+//}
 
 void ModelWindow::setupSnapshotBackBuffer(int imageWidth, int imageHeight,
 										  RECT &rect)
@@ -3080,6 +3044,7 @@ void ModelWindow::cleanupSnapshotBackBuffer(RECT &rect)
 	modelViewer->setup();
 }
 
+/*
 BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 							 BYTE *buffer, bool *saveAlpha)
 {
@@ -3224,52 +3189,104 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	modelViewer->setSlowClear(oldSlowClear);
 	return buffer;
 }
+*/
+
+LDSnapshotTaker::ImageType ModelWindow::getSaveImageType(void)
+{
+	switch (saveImageType)
+	{
+	case PNG_IMAGE_TYPE_INDEX:
+		return LDSnapshotTaker::ITPng;
+	case BMP_IMAGE_TYPE_INDEX:
+		return LDSnapshotTaker::ITBmp;
+	default:
+		return LDSnapshotTaker::ITPng;
+	}
+}
+
+void ModelWindow::grabSetup(
+	int &imageWidth,
+	int &imageHeight,
+	RECT &origRect,
+	bool &origSlowClear)
+{
+	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
+	int newWidth = 1600;
+	int newHeight = 1200;
+	int numXTiles, numYTiles;
+
+	memset(&origRect, 0, sizeof(origRect));
+	origSlowClear = modelViewer->getSlowClear();
+	offscreenActive = true;
+	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
+		numXTiles, numYTiles);
+	if (!setupPBuffer(newWidth, newHeight, currentAntialiasType > 0))
+	{
+		newWidth = width;		// width is OpenGL window width
+		newHeight = height;		// height is OpenGL window height
+		snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
+			numXTiles, numYTiles);
+		setupSnapshotBackBuffer(newWidth, newHeight, origRect);
+	}
+}
+
+void ModelWindow::grabCleanup(RECT origRect, bool origSlowClear)
+{
+	if (hPBuffer)
+	{
+		cleanupPBuffer();
+	}
+	else
+	{
+		cleanupSnapshotBackBuffer(origRect);
+	}
+	offscreenActive = false;
+	modelViewer->setSlowClear(origSlowClear);
+}
 
 bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 							bool zoomToFit)
 {
-	char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
-		false);
-	bool saveAlpha = false;
-	BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit || cameraGlobe
-		!= NULL, NULL, &saveAlpha);
+	RECT origRect;
+	bool origSlowClear;
 	bool retValue = false;
 
-	delete cameraGlobe;
-	if (buffer)
+	if (!snapshotTaker)
 	{
-		//if (saveAlpha)
-		//{
-		//	int i;
-		//	int totalBytes = imageWidth * imageHeight * 4;
-
-		//	for (i = 3; i < totalBytes; i += 4)
-		//	{
-		//		if (buffer[i] != 0 && buffer[i] != 255)
-		//		{
-		//			if (buffer[i] == 74)
-		//			{
-		//				buffer[i] = 255 - 28;
-		//			}
-		//			else
-		//			{
-		//				buffer[i] = 255;
-		//			}
-		//		}
-		//	}
-		//}
-		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-		{
-			retValue = writePng(filename, imageWidth, imageHeight, buffer,
-				saveAlpha);
-		}
-		else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-		{
-			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
-		}
-		delete buffer;
+		snapshotTaker =  new LDSnapshotTaker(modelViewer);
 	}
+	snapshotTaker->setImageType(getSaveImageType());
+	snapshotTaker->setTrySaveAlpha(saveAlpha);
+	snapshotTaker->setProductVersion(
+		((LDViewWindow *)parentWindow)->getProductVersion());
+	grabSetup(imageWidth, imageHeight, origRect, origSlowClear);
+	retValue = snapshotTaker->saveImage(filename, imageWidth, imageHeight, zoomToFit);
+	grabCleanup(origRect, origSlowClear);
 	return retValue;
+
+
+	//char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
+	//	false);
+	//bool saveAlpha = false;
+	//BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit || cameraGlobe
+	//	!= NULL, NULL, &saveAlpha);
+	//bool retValue = false;
+
+	//delete cameraGlobe;
+	//if (buffer)
+	//{
+	//	if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+	//	{
+	//		retValue = writePng(filename, imageWidth, imageHeight, buffer,
+	//			saveAlpha);
+	//	}
+	//	else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+	//	{
+	//		retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
+	//	}
+	//	delete buffer;
+	//}
+	//return retValue;
 }
 
 BOOL ModelWindow::doDialogInit(HWND hDlg, HWND /*hFocusWindow*/,

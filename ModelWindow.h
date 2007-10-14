@@ -6,6 +6,7 @@
 #include <TCFoundation/TCVector.h>
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDInputHandler.h>
+#include <LDLib/LDSnapshotTaker.h>
 #include "LDViewPreferences.h"
 #include <Commctrl.h>
 #include <GL/glext.h>
@@ -195,25 +196,16 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doTimer(UINT);
 		virtual bool getFileTime(FILETIME*);
 		virtual void checkForPart(void);
-#ifndef TC_NO_UNICODE
-		//virtual int progressCallback(const char* message, float progress,
-		//	bool showErrors = false);
-#endif // TC_NO_UNICODE
+		LDSnapshotTaker::ImageType getSaveImageType(void);
 		virtual int progressCallback(CUCSTR message, float progress,
 			bool showErrors = false);
-/*
-		static int staticProgressCallback(char* message, float progress,
-			void* userData);
-*/
-		static bool staticImageProgressCallback(CUCSTR message, float progress,
-			void* userData);
-//		virtual BOOL showProgress(void);
+		//static bool staticImageProgressCallback(CUCSTR message, float progress,
+		//	void* userData);
 		virtual void hideProgress(void);
 		virtual void createProgress(void);
 		virtual void setupProgress(void);
 		virtual void doProgressCancel(void);
 		virtual int errorCallback(LDLError* error);
-//		static int staticErrorCallback(LDMError* error, void* userData);
 		virtual LRESULT windowProc(HWND, UINT, WPARAM, LPARAM);
 		static LRESULT CALLBACK staticErrorDlgProc(HWND, UINT, WPARAM, LPARAM);
 		virtual LRESULT errorDlgProc(HWND, UINT, WPARAM, LPARAM);
@@ -230,14 +222,17 @@ class ModelWindow: public CUIOGLWindow
 		virtual BOOL showsErrorType(LDLErrorType errorType);
 		virtual void swapBuffers(void);
 		virtual LRESULT doCommand(int itemId, int notifyCode, HWND controlHWnd);
-		virtual bool writePng(char *filename, int width, int height,
-			BYTE *buffer, bool saveAlpha);
-		virtual bool writeBmp(char *filename, int width, int height,
-			BYTE *buffer);
-		virtual bool writeImage(char *filename, int width, int height,
-			BYTE *buffer, char *formatName, bool saveAlpha = false);
-		virtual BYTE *grabImage(int &imageWidth, int &imageHeight,
-			bool zoomToFit, BYTE *buffer = NULL, bool *saveAlpha = NULL);
+		//virtual bool writePng(char *filename, int width, int height,
+		//	BYTE *buffer, bool saveAlpha);
+		//virtual bool writeBmp(char *filename, int width, int height,
+		//	BYTE *buffer);
+		//virtual bool writeImage(char *filename, int width, int height,
+		//	BYTE *buffer, char *formatName, bool saveAlpha = false);
+		//virtual BYTE *grabImage(int &imageWidth, int &imageHeight,
+		//	bool zoomToFit, BYTE *buffer = NULL, bool *saveAlpha = NULL);
+		virtual void grabSetup(int &imageWidth, int &imageHeight,
+			RECT &origRect, bool &origSlowClear);
+		virtual void grabCleanup(RECT origRect, bool origSlowClear);
 		virtual bool saveImage(char *filename, int imageWidth, int imageHeight,
 			bool zoomToFit);
 		virtual void renderOffscreenImage(void);
@@ -285,7 +280,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool parseDevMode(HGLOBAL hDevMode);
 		virtual void applyPrefs(void);
 		virtual bool frontBufferFPS(void);
-		virtual bool canSaveAlpha(void);
+		//virtual bool canSaveAlpha(void);
 		virtual void makeCurrent(void);
 #ifndef TC_NO_UNICODE
 		virtual void setStatusText(HWND hStatus, int part, const char *text);
@@ -298,6 +293,7 @@ class ModelWindow: public CUIOGLWindow
 		void redrawAlertCallback(TCAlert *alert);
 		void captureAlertCallback(TCAlert *alert);
 		void releaseAlertCallback(TCAlert *alert);
+		void makeCurrentAlertCallback(TCAlert *alert);
 		void populateErrorInfos(void);
 		BOOL setAllErrorsSelected(bool selected);
 		void setupMultisample(void);
@@ -322,6 +318,7 @@ class ModelWindow: public CUIOGLWindow
 
 		LDrawModelViewer* modelViewer;
 		LDInputHandler *inputHandler;
+		LDSnapshotTaker *snapshotTaker;
 		DWORD referenceFrameTime;
 		int numFramesSinceReference;
 		TCFloat fps;

@@ -10,7 +10,6 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCMacros.h>
 #include <TCFoundation/TCVector.h>
-#include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <ctype.h>
 
