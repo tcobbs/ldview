@@ -12,6 +12,7 @@
 #include "LDViewPartList.h"
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDInputHandler.h>
+#include <LDLib/LDSnapshotTaker.h>
 
 class LDrawModelViewer;
 class LDView;
@@ -239,6 +240,7 @@ protected:
 
 	LDrawModelViewer *modelViewer;
 	LDInputHandler *inputHandler;
+	LDSnapshotTaker *snapshotTaker;
 	bool mouseButtonsDown[MAX_MOUSE_BUTTONS];
 	int lastX;
 	int lastY;

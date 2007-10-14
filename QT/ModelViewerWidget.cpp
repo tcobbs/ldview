@@ -90,6 +90,7 @@ TCStringArray *ModelViewerWidget::recentFiles = NULL;
 ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	:QGLWidget(parent, name),
 	modelViewer(new LDrawModelViewer(100, 100)),
+	snapshotTaker(NULL),
 	lastX(-1),
 	lastY(-1),
 	originalZoomY(-1),
@@ -178,10 +179,8 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 
 ModelViewerWidget::~ModelViewerWidget(void)
 {
-	if (modelViewer)
-	{
-		modelViewer->release();
-	}
+	TCObject::release(snapshotTaker);
+	TCObject::release(modelViewer);
 	delete preferences;
 	delete extensionsPanel;
 	delete errors;
