@@ -204,7 +204,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	int numXTiles, numYTiles;
 	int xTile;
 	int yTile;
-	BYTE *smallBuffer;
+	TCByte *smallBuffer;
 	int bytesPerPixel = 3;
 	int bytesPerLine;
 	int smallBytesPerLine;
@@ -243,7 +243,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	bytesPerLine = TCImage::roundUp(imageWidth * bytesPerPixel, 4);
 	if (!buffer)
 	{
-		buffer = new BYTE[bytesPerLine * imageHeight];
+		buffer = new TCByte[bytesPerLine * imageHeight];
 		bufferAllocated = true;
 	}
 	if (numXTiles == 1 && numYTiles == 1)
@@ -252,7 +252,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	else
 	{
-		smallBuffer = new BYTE[smallBytesPerLine * newHeight];
+		smallBuffer = new TCByte[smallBytesPerLine * newHeight];
 	}
 	m_modelViewer->setNumXTiles(numXTiles);
 	m_modelViewer->setNumYTiles(numYTiles);
