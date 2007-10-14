@@ -604,6 +604,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LDSnapshotTaker.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LDViewPoint.cpp"
 				>
 			</File>
@@ -646,6 +650,10 @@
 			</File>
 			<File
 				RelativePath="LDrawModelViewer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDSnapshotTaker.h"
 				>
 			</File>
 			<File

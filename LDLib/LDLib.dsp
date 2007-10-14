@@ -147,6 +147,10 @@ SOURCE=.\LDrawModelViewer.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDSnapshotTaker.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDViewPoint.cpp
 # End Source File
 # End Group
@@ -188,6 +192,10 @@ SOURCE=.\LDPreferences.h
 # Begin Source File
 
 SOURCE=.\LDrawModelViewer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDSnapshotTaker.h
 # End Source File
 # Begin Source File
 
