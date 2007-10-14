@@ -3685,6 +3685,9 @@ void ModelViewerWidget::makeCurrentAlertCallback(TCAlert *alert)
 	if (alert->getSender() == snapshotTaker)
 	{
 		makeCurrent();
+		// I have no idea why the following is necessary, but without it, we
+		// get a blank image.
+		swap_Buffers();
 	}
 }
 
