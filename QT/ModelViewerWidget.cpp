@@ -448,28 +448,33 @@ void ModelViewerWidget::paintGL(void)
 	{
 		painting = true;
 		makeCurrent();
-		//updateSpinRate();
-		redrawRequested = false;
-		modelViewer->update();
-		//updateFPS();
-		//if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
-		//	&& fEq(modelViewer->getCameraXRotate(), 0.0f)
-		//	&& fEq(modelViewer->getCameraYRotate(), 0.0f)
-		//	&& fEq(modelViewer->getCameraZRotate(), 0.0f)
-		//	&& fEq(modelViewer->getCameraMotion().length(), 0.0f))
-		//	|| modelViewer->getPaused())
-		if (!redrawRequested)
+		if (saving)
 		{
-			killPaintTimer();
-			fps = -1.0f;
+			saveImageResult = snapshotTaker->saveImage(saveImageFilename,
+				saveImageWidth, saveImageHeight, saveImageZoomToFit);
 		}
 		else
 		{
-			startPaintTimer();
-		}
-		updateFPS();
-		if (!saving)
-		{
+			//updateSpinRate();
+			redrawRequested = false;
+			modelViewer->update();
+			//updateFPS();
+			//if ((fEq(rotationSpeed, 0.0f) && fEq(modelViewer->getZoomSpeed(), 0.0f)
+			//	&& fEq(modelViewer->getCameraXRotate(), 0.0f)
+			//	&& fEq(modelViewer->getCameraYRotate(), 0.0f)
+			//	&& fEq(modelViewer->getCameraZRotate(), 0.0f)
+			//	&& fEq(modelViewer->getCameraMotion().length(), 0.0f))
+			//	|| modelViewer->getPaused())
+			if (!redrawRequested)
+			{
+				killPaintTimer();
+				fps = -1.0f;
+			}
+			else
+			{
+				startPaintTimer();
+			}
+			updateFPS();
 			swap_Buffers();
 		}
 		painting = false;
@@ -2537,6 +2542,50 @@ void ModelViewerWidget::setupSnapshotBackBuffer(int imageWidth, int imageHeight)
     glReadBuffer(GL_BACK);
 }
 
+bool ModelViewerWidget::grabImage(
+	int &imageWidth,
+	int &imageHeight)
+{
+    int newWidth = 800;
+    int newHeight = 600;
+	int origWidth = mwidth;
+	int origHeight = mheight;
+    int numXTiles, numYTiles;
+	bool origSlowClear = modelViewer->getSlowClear();
+	int origMemoryUsage = modelViewer->getMemoryUsage();
+
+	saving = true;
+	modelViewer->setMemoryUsage(0);
+	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
+		numXTiles, numYTiles);
+    imageWidth = newWidth * numXTiles;
+    imageHeight = newHeight * numYTiles;
+//	if ((mwidth > 0) && (mheight > 0))
+//	{
+//        newWidth = mwidth;       // width is OpenGL window width
+//        newHeight = mheight;     // height is OpenGL window height
+//		snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
+//			numXTiles, numYTiles);
+//		setupSnapshotBackBuffer(newWidth, newHeight);
+//	}
+	saveImageWidth = imageWidth;
+	saveImageHeight = imageHeight;
+	renderPixmap(newWidth, newHeight);
+	makeCurrent();
+	saving = false;
+	mwidth = origWidth;
+	mheight = origHeight;
+	modelViewer->setWidth(mwidth);
+	modelViewer->setHeight(mheight);
+	modelViewer->setMemoryUsage(origMemoryUsage);
+	modelViewer->setSlowClear(origSlowClear);
+	modelViewer->setup();
+	doApply();
+	return saveImageResult;
+}
+									 
+									 
+
 TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight, 
 									TCByte *buffer, bool zoomToFit, 												bool * /*saveAlpha*/)
 {
@@ -2792,85 +2841,116 @@ bool ModelViewerWidget::writeBmp(char *filename, int width, int height,
 {
 	return writeImage(filename, width, height, buffer, "BMP");
 }
-																																							 
+
 bool ModelViewerWidget::writePng(char *filename, int width, int height, 
 								 TCByte *buffer, bool saveAlpha)
 {
 	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
 }
 
-bool ModelViewerWidget::saveImage(char *filename, int imageWidth, 
-									int imageHeight)
+LDSnapshotTaker::ImageType ModelViewerWidget::getSaveImageType(void)
 {
-	bool saveAlpha = false;
-	TCByte *buffer = grabImage(imageWidth, imageHeight, NULL, 
-				TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false),
-				&saveAlpha);
-	bool retValue = false;
-	if (buffer)
+	switch (saveImageType)
 	{
-		if (saveAlpha)
-		{
-			int i;
-			int totalBytes = imageWidth * imageHeight * 4;
-
-			for (i = 3; i < totalBytes; i += 4)
-			{
-				if (buffer[i] != 0 && buffer[i] != 255)
-				{
-					if (buffer[i] == 74)
-					{
-						buffer[i] = 255 - 28;
-					}
-					else
-					{
-						buffer[i] = 255;
-					}
-				}
-			}
-		}
-		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
-			NULL, false);
-		if (!snapshotSuffix)
-		{
-			char *suffixSpot = strrchr(filename, '.');
-			if (suffixSpot)
-			{
-				snapshotSuffix = copyString(suffixSpot);
-			}
-			else
-			{
-				snapshotSuffix = copyString("");
-			}
-		}
-		if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
-		{
-			saveImageType = PNG_IMAGE_TYPE_INDEX;
-		}
-		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
-		{
-			saveImageType = BMP_IMAGE_TYPE_INDEX;
-		}
-		else
-		{
-			delete snapshotSuffix;
-			wprintf(L"%ls\n",TCLocalStrings::get(L"ConsoleSnapshotFailed"));
-			return false;
-		}
-		delete snapshotSuffix;
-
-		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-		{
-			retValue = writePng(filename, imageWidth, imageHeight, buffer,
-								saveAlpha);
-		}
-		else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-		{
-			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
-		}
-		free(buffer);
+		case PNG_IMAGE_TYPE_INDEX:
+			return LDSnapshotTaker::ITPng;
+		case BMP_IMAGE_TYPE_INDEX:
+			return LDSnapshotTaker::ITBmp;
+		default:
+			return LDSnapshotTaker::ITPng;
 	}
+}
+
+bool ModelViewerWidget::saveImage(
+	char *filename,
+	int imageWidth, 
+	int imageHeight)
+{
+	bool retValue = false;
+
+	if (!snapshotTaker)
+	{
+		snapshotTaker =  new LDSnapshotTaker(modelViewer);
+	}
+	snapshotTaker->setImageType(getSaveImageType());
+	snapshotTaker->setTrySaveAlpha(saveAlpha);
+	saveImageFilename = filename;
+	//snapshotTaker->setProductVersion(
+	//	((LDViewWindow *)parentWindow)->getProductVersion());
+	saveImageZoomToFit = TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1,
+		false);
+	retValue = grabImage(imageWidth, imageHeight);
 	return retValue;
+
+//	bool saveAlpha = false;
+//	TCByte *buffer = grabImage(imageWidth, imageHeight, NULL, 
+//				TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false),
+//				&saveAlpha);
+//	bool retValue = false;
+//	if (buffer)
+//	{
+//		if (saveAlpha)
+//		{
+//			int i;
+//			int totalBytes = imageWidth * imageHeight * 4;
+//
+//			for (i = 3; i < totalBytes; i += 4)
+//			{
+//				if (buffer[i] != 0 && buffer[i] != 255)
+//				{
+//					if (buffer[i] == 74)
+//					{
+//						buffer[i] = 255 - 28;
+//					}
+//					else
+//					{
+//						buffer[i] = 255;
+//					}
+//				}
+//			}
+//		}
+//		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
+//			NULL, false);
+//		if (!snapshotSuffix)
+//		{
+//			char *suffixSpot = strrchr(filename, '.');
+//			if (suffixSpot)
+//			{
+//				snapshotSuffix = copyString(suffixSpot);
+//			}
+//			else
+//			{
+//				snapshotSuffix = copyString("");
+//			}
+//		}
+//		if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
+//		{
+//			saveImageType = PNG_IMAGE_TYPE_INDEX;
+//		}
+//		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
+//		{
+//			saveImageType = BMP_IMAGE_TYPE_INDEX;
+//		}
+//		else
+//		{
+//			delete snapshotSuffix;
+//			wprintf(L"%ls\n",TCLocalStrings::get(L"ConsoleSnapshotFailed"));
+//			return false;
+//		}
+//		delete snapshotSuffix;
+//
+//		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+//		{
+//			retValue = writePng(filename, imageWidth, imageHeight, buffer,
+//								saveAlpha);
+//		}
+//		else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+//		{
+//			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
+//		}
+//		free(buffer);
+//	}
+//	return retValue;
 }
 
 bool ModelViewerWidget::fileExists(const char* filename)
@@ -3597,6 +3677,14 @@ void ModelViewerWidget::modelViewerAlertCallback(TCAlert *alert)
 	{
 		QMessageBox::warning(this,"LDView",alert->getMessage(),
 			QMessageBox::Ok, QMessageBox::NoButton);
+	}
+}
+
+void ModelViewerWidget::makeCurrentAlertCallback(TCAlert *alert)
+{
+	if (alert->getSender() == snapshotTaker)
+	{
+		makeCurrent();
 	}
 }
 

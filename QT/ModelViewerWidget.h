@@ -68,6 +68,7 @@ public:
 	void captureAlertCallback(TCAlert *alert);
 	void releaseAlertCallback(TCAlert *alert);
 	void lightVectorChangedAlertCallback(TCAlert *alert);
+	void makeCurrentAlertCallback(TCAlert *alert);
 
 	void setShowFPS(bool value) { showFPS = value; }
 	void setApplication(QApplication *value);
@@ -101,17 +102,16 @@ public:
 	bool shouldOverwriteFile(char* filename);
 	bool doFileSave(char *saveFilename);
 	bool getSaveFilename(char* saveFilename, int len);
-	static bool staticImageProgressCallback(const wchar_t* message, float progress, void* userData);
-	bool writeImage(char *filename, int width, int height,
-                     TCByte *buffer, char *formatName, bool saveAlpha = false);
+	static bool staticImageProgressCallback(const wchar_t* message,
+		float progress, void* userData);
+	bool writeImage(char *filename, int width, int height, TCByte *buffer,
+		char *formatName, bool saveAlpha = false);
 	bool saveImage(char *filename, int imageWidth, int imageHeight);
-	bool writePng(char *filename, int width, int height,
-            TCByte *buffer, bool saveAlpha);
-    bool writeBmp(char *filename, int width, int height,
-            TCByte *buffer);
-	TCByte *grabImage(int &imageWidth, int &imageHeight,
-            TCByte *buffer = NULL, bool zoomToFit = true, 
-			bool *saveAlpha = NULL);
+	bool writePng(char *filename, int width, int height, TCByte *buffer,
+		bool saveAlpha);
+    bool writeBmp(char *filename, int width, int height, TCByte *buffer);
+	TCByte *grabImage(int &imageWidth, int &imageHeight, TCByte *buffer,
+		bool zoomToFit = true, bool *saveAlpha = NULL);
 	int roundUp(int value, int nearest);
 
 	void doFrontViewAngle(void);
@@ -226,6 +226,8 @@ protected:
 	void setLibraryUpdateProgress(float progress);
 	void setupUserAgent(void);
 	virtual bool calcSaveFilename(char* saveFilename, int len);
+	bool grabImage(int &imageWidth, int &imageHeight);
+	LDSnapshotTaker::ImageType getSaveImageType(void);
 
 	static void populateRecentFiles(void);
 	static void recordRecentFiles(void);
@@ -312,6 +314,11 @@ protected:
 	int libraryUpdateFinishCode;
 	QProgressDialog *libraryUpdateWindow;
 	bool redrawRequested;
+	int saveImageWidth;
+	int saveImageHeight;
+	const char *saveImageFilename;
+	bool saveImageZoomToFit;
+	bool saveImageResult;
 
 	int lightingSelection;
 	static TCStringArray* recentFiles;
