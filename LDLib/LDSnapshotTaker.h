@@ -43,8 +43,8 @@ protected:
 		bool saveAlpha);
 	bool writeImage(const char *filename, int width, int height, TCByte *buffer,
 		char *formatName, bool saveAlpha);
-	TCByte *LDSnapshotTaker::grabImage(int &imageWidth, int &imageHeight,
-		bool zoomToFit, TCByte *buffer, bool *saveAlpha);
+	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
+		TCByte *buffer, bool *saveAlpha);
 	bool canSaveAlpha(void);
 	void renderOffscreenImage(void);
 	bool imageProgressCallback(CUCSTR message, float progress);
@@ -52,8 +52,8 @@ protected:
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
 		void* userData);
 
-	ImageType m_imageType;
 	LDrawModelViewer *m_modelViewer;
+	ImageType m_imageType;
 	std::string m_productVersion;
 	bool m_trySaveAlpha;
 };
