@@ -595,7 +595,6 @@
 		[snapshotTaker setImageType:LDSnapshotTaker::ITPng];
 		[snapshotTaker setTrySaveAlpha:TCUserDefaults::boolForKey("SaveAlpha", 1, false)];
 		[snapshotTaker saveFile:[sheet filename] width:TCUserDefaults::longForKey("SaveWidth", 640, false) height:TCUserDefaults::longForKey("SaveHeight", 480, false) zoomToFit:true];
-		NSLog(@"saveSnapshot OK: %@.\n", [sheet filename]);
 	}
 }
 
