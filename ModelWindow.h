@@ -293,7 +293,7 @@ class ModelWindow: public CUIOGLWindow
 		void redrawAlertCallback(TCAlert *alert);
 		void captureAlertCallback(TCAlert *alert);
 		void releaseAlertCallback(TCAlert *alert);
-		void makeCurrentAlertCallback(TCAlert *alert);
+		void snapshotTakerAlertCallback(TCAlert *alert);
 		void populateErrorInfos(void);
 		BOOL setAllErrorsSelected(bool selected);
 		void setupMultisample(void);
