@@ -23,7 +23,7 @@ protected:
 	void captureAlertCallback(TCAlert *alert);
 	void releaseAlertCallback(TCAlert *alert);
 	void lightVectorChangedAlertCallback(TCAlert *alert);
-	void makeCurrentAlertCallback(TCAlert *alert);
+	void snapshotTakerAlertCallback(TCAlert *alert);
 
 	ModelViewerWidget *m_mvw;
 };

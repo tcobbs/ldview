@@ -182,7 +182,7 @@ bool LDSnapshotTaker::canSaveAlpha(void)
 
 void LDSnapshotTaker::renderOffscreenImage(void)
 {
-	TCAlertManager::sendAlert(makeCurrentAlertClass(), this);
+	TCAlertManager::sendAlert(alertClass(), this, _UC("MakeCurrent"));
 	m_modelViewer->update();
 }
 
@@ -258,6 +258,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	m_modelViewer->setNumXTiles(numXTiles);
 	m_modelViewer->setNumYTiles(numYTiles);
+	TCAlertManager::sendAlert(alertClass(), this, _UC("PreRender"));
 	for (yTile = 0; yTile < numYTiles; yTile++)
 	{
 		m_modelViewer->setYTile(yTile);
@@ -272,6 +273,8 @@ TCByte *LDSnapshotTaker::grabImage(
 			if (!canceled)
 			{
 				glFinish();
+				TCAlertManager::sendAlert(alertClass(), this,
+					_UC("RenderDone"));
 				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
 					GL_UNSIGNED_BYTE, smallBuffer);
 				if (smallBuffer != buffer)
@@ -284,7 +287,8 @@ TCByte *LDSnapshotTaker::grabImage(
 						int offset = (y + (numYTiles - yTile - 1) * newHeight) *
 							bytesPerLine + xTile * newWidth * bytesPerPixel;
 
-						memcpy(&buffer[offset], &smallBuffer[smallOffset], smallBytesPerLine);
+						memcpy(&buffer[offset], &smallBuffer[smallOffset],
+							smallBytesPerLine);
 					}
 					// We only need to zoom to fit on the first tile; the
 					// rest will already be correct.

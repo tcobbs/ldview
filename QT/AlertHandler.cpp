@@ -25,8 +25,8 @@ AlertHandler::AlertHandler(ModelViewerWidget *mvw)
 	TCAlertManager::registerHandler(
 		LDPreferences::lightVectorChangedAlertClass(), this,
 		(TCAlertCallback)&AlertHandler::lightVectorChangedAlertCallback);
-	TCAlertManager::registerHandler(LDSnapshotTaker::makeCurrentAlertClass(),
-		this, (TCAlertCallback)&AlertHandler::makeCurrentAlertCallback);
+	TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
+		(TCAlertCallback)&AlertHandler::snapshotTakerAlertCallback);
 }
 
 AlertHandler::~AlertHandler(void)
@@ -106,11 +106,11 @@ void AlertHandler::lightVectorChangedAlertCallback(TCAlert *alert)
 	}
 }
 
-void AlertHandler::makeCurrentAlertCallback(TCAlert *alert)
+void AlertHandler::snapshotTakerAlertCallback(TCAlert *alert)
 {
 	if (m_mvw)
 	{
-		m_mvw->makeCurrentAlertCallback(alert);
+		m_mvw->snapshotTakerAlertCallback(alert);
 	}
 }
 

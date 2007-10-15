@@ -447,14 +447,16 @@ void ModelViewerWidget::paintGL(void)
 	if (!painting && (saving || !loading))
 	{
 		painting = true;
-		makeCurrent();
 		if (saving)
 		{
+			glDrawBuffer(GL_BACK);
+			glReadBuffer(GL_BACK);
 			saveImageResult = snapshotTaker->saveImage(saveImageFilename,
 				saveImageWidth, saveImageHeight, saveImageZoomToFit);
 		}
 		else
 		{
+			makeCurrent();
 			//updateSpinRate();
 			redrawRequested = false;
 			modelViewer->update();
@@ -475,7 +477,7 @@ void ModelViewerWidget::paintGL(void)
 				startPaintTimer();
 			}
 			updateFPS();
-			swap_Buffers();
+			//swap_Buffers();
 		}
 		painting = false;
 	}
@@ -2560,14 +2562,6 @@ bool ModelViewerWidget::grabImage(
 		numXTiles, numYTiles);
     imageWidth = newWidth * numXTiles;
     imageHeight = newHeight * numYTiles;
-//	if ((mwidth > 0) && (mheight > 0))
-//	{
-//        newWidth = mwidth;       // width is OpenGL window width
-//        newHeight = mheight;     // height is OpenGL window height
-//		snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
-//			numXTiles, numYTiles);
-//		setupSnapshotBackBuffer(newWidth, newHeight);
-//	}
 	saveImageWidth = imageWidth;
 	saveImageHeight = imageHeight;
 	renderPixmap(newWidth, newHeight);
@@ -3680,14 +3674,14 @@ void ModelViewerWidget::modelViewerAlertCallback(TCAlert *alert)
 	}
 }
 
-void ModelViewerWidget::makeCurrentAlertCallback(TCAlert *alert)
+void ModelViewerWidget::snapshotTakerAlertCallback(TCAlert *alert)
 {
 	if (alert->getSender() == snapshotTaker)
 	{
-		makeCurrent();
-		// I have no idea why the following is necessary, but without it, we
-		// get a blank image.
-		swap_Buffers();
+		if (strcmp(alert->getMessage(), "MakeCurrent") == 0)
+		{
+			makeCurrent();
+		}
 	}
 }
 
