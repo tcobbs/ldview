@@ -34,7 +34,7 @@ public:
 	bool saveImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 
-	static const char *makeCurrentAlertClass(void) { return "LDMakeCurrent"; }
+	static const char *alertClass(void) { return "LDSnapshotTaker"; }
 protected:
 	virtual ~LDSnapshotTaker(void);
 	virtual void dealloc(void);

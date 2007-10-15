@@ -68,7 +68,7 @@ public:
 	void captureAlertCallback(TCAlert *alert);
 	void releaseAlertCallback(TCAlert *alert);
 	void lightVectorChangedAlertCallback(TCAlert *alert);
-	void makeCurrentAlertCallback(TCAlert *alert);
+	void snapshotTakerAlertCallback(TCAlert *alert);
 
 	void setShowFPS(bool value) { showFPS = value; }
 	void setApplication(QApplication *value);
