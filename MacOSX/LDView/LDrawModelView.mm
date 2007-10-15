@@ -211,7 +211,7 @@ static TCImage *resizeCornerImage = NULL;
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)1,
+		NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)24,
 		NSOpenGLPFABackingStore, (NSOpenGLPixelFormatAttribute)NO,
 		NSOpenGLPFAAccelerated, (NSOpenGLPixelFormatAttribute)NO,
 		(NSOpenGLPixelFormatAttribute)0

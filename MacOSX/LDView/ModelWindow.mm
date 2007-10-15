@@ -8,6 +8,7 @@
 #import "ErrorItem.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
+#import "SnapshotTaker.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -27,6 +28,8 @@
 	[otherIdentifiers release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
+	[imageFileTypes release];
+	[snapshotTaker release];
 	[super dealloc];
 }
 
@@ -254,6 +257,7 @@
 	progressAdjust = [progressMessage frame].origin.x - [progress frame].origin.x;
 	[window setNextResponder:controller];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(errorFilterChange:) name:LDErrorFilterChange object:nil];
+	imageFileTypes = [[NSArray alloc] initWithObjects:@"png", @"bmp", nil];
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -580,9 +584,31 @@
 	[controller openModel:sender];
 }
 
+- (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
+{
+	if (returnCode == NSOKButton)
+	{
+		if (!snapshotTaker)
+		{
+			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
+		}
+		[snapshotTaker setImageType:LDSnapshotTaker::ITPng];
+		[snapshotTaker setTrySaveAlpha:TCUserDefaults::boolForKey("SaveAlpha", 1, false)];
+		[snapshotTaker saveFile:[sheet filename] width:TCUserDefaults::longForKey("SaveWidth", 640, false) height:TCUserDefaults::longForKey("SaveHeight", 480, false) zoomToFit:true];
+		NSLog(@"saveSnapshot OK: %@.\n", [sheet filename]);
+	}
+}
+
 - (IBAction)saveSnapshot:(id)sender
 {
-	NSLog(@"saveSnapshot.\n");
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	NSString *modelFilename = [window representedFilename];
+	NSString *modelPath = [modelFilename stringByDeletingLastPathComponent];
+	NSString *defaultFilename = [[[modelFilename lastPathComponent] stringByDeletingPathExtension] stringByAppendingString: @".png"];
+
+	[savePanel setAllowedFileTypes:imageFileTypes];
+	[savePanel setCanSelectHiddenExtension:YES];
+	[savePanel beginSheetForDirectory:modelPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
 - (IBAction)reload:(id)sender

@@ -9,6 +9,7 @@
                 flyThroughMode = id; 
                 partsList = id; 
                 reload = id; 
+                saveSnapshot = id; 
                 saveViewingAngle = id; 
                 showPovCameraInfo = id; 
                 showViewInfo = id; 
