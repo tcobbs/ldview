@@ -198,6 +198,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	TCVector origCameraPosition = m_modelViewer->getCamera().getPosition();
 	TCFloat origXPan = m_modelViewer->getXPan();
 	TCFloat origYPan = m_modelViewer->getYPan();
+	int origWidth = m_modelViewer->getWidth();
+	int origHeight = m_modelViewer->getHeight();
 	bool origAutoCenter = m_modelViewer->getAutoCenter();
 	GLint viewport[4];
 	int newWidth, newHeight;
@@ -305,6 +307,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	m_modelViewer->setYTile(0);
 	m_modelViewer->setNumXTiles(1);
 	m_modelViewer->setNumYTiles(1);
+	m_modelViewer->setWidth(origWidth);
+	m_modelViewer->setHeight(origHeight);
 	m_modelViewer->setSaveAlpha(false);
 	if (canceled && bufferAllocated)
 	{

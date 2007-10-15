@@ -18,6 +18,8 @@
 		1F240B460A588A9900691116 /* LDrawModelViewer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B3C0A588A9900691116 /* LDrawModelViewer.cpp */; };
 		1F240B470A588A9900691116 /* LDrawModelViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B3D0A588A9900691116 /* LDrawModelViewer.h */; };
 		1F240B4A0A588AAA00691116 /* LDUserDefaultsKeys.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B490A588AAA00691116 /* LDUserDefaultsKeys.h */; };
+		1F7471A90CC2B0D200D6DB68 /* LDSnapshotTaker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F7471A70CC2B0D200D6DB68 /* LDSnapshotTaker.cpp */; };
+		1F7471AA0CC2B0D200D6DB68 /* LDSnapshotTaker.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F7471A80CC2B0D200D6DB68 /* LDSnapshotTaker.h */; };
 		1FD4D7B90BA4C44C00419677 /* LDHtmlInventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */; };
 		1FD4D7BA0BA4C44C00419677 /* LDHtmlInventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FD4D7B20BA4C44C00419677 /* LDHtmlInventory.h */; };
 		1FD4D7BB0BA4C44C00419677 /* LDPartCount.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1FD4D7B30BA4C44C00419677 /* LDPartCount.cpp */; };
@@ -94,6 +96,8 @@
 		1F6A74B50C4DF05700DAF5C8 /* TCFoundation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TCFoundation.xcodeproj; path = ../TCFoundation/TCFoundation.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F6A74BD0C4DF06400DAF5C8 /* LDLoader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDLoader.xcodeproj; path = ../LDLoader/LDLoader.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F6A74C30C4DF06F00DAF5C8 /* TRE.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TRE.xcodeproj; path = ../TRE/TRE.xcodeproj; sourceTree = SOURCE_ROOT; };
+		1F7471A70CC2B0D200D6DB68 /* LDSnapshotTaker.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDSnapshotTaker.cpp; path = ../../LDLib/LDSnapshotTaker.cpp; sourceTree = SOURCE_ROOT; };
+		1F7471A80CC2B0D200D6DB68 /* LDSnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDSnapshotTaker.h; path = ../../LDLib/LDSnapshotTaker.h; sourceTree = SOURCE_ROOT; };
 		1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDHtmlInventory.cpp; path = ../../LDLib/LDHtmlInventory.cpp; sourceTree = SOURCE_ROOT; };
 		1FD4D7B20BA4C44C00419677 /* LDHtmlInventory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDHtmlInventory.h; path = ../../LDLib/LDHtmlInventory.h; sourceTree = SOURCE_ROOT; };
 		1FD4D7B30BA4C44C00419677 /* LDPartCount.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDPartCount.cpp; path = ../../LDLib/LDPartCount.cpp; sourceTree = SOURCE_ROOT; };
@@ -153,6 +157,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				1F7471A70CC2B0D200D6DB68 /* LDSnapshotTaker.cpp */,
+				1F7471A80CC2B0D200D6DB68 /* LDSnapshotTaker.h */,
 				1FEC06590C854A8400FB0A2A /* LDInputHandler.cpp */,
 				1FEC065A0C854A8400FB0A2A /* LDInputHandler.h */,
 				1FD4D7B10BA4C44C00419677 /* LDHtmlInventory.cpp */,
@@ -256,6 +262,7 @@
 				1FD4D7BE0BA4C44C00419677 /* LDPartsList.h in Headers */,
 				1FD4D7C00BA4C44C00419677 /* LDViewPoint.h in Headers */,
 				1FEC065C0C854A8500FB0A2A /* LDInputHandler.h in Headers */,
+				1F7471AA0CC2B0D200D6DB68 /* LDSnapshotTaker.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +358,7 @@
 				1FD4D7BD0BA4C44C00419677 /* LDPartsList.cpp in Sources */,
 				1FD4D7BF0BA4C44C00419677 /* LDViewPoint.cpp in Sources */,
 				1FEC065B0C854A8400FB0A2A /* LDInputHandler.cpp in Sources */,
+				1F7471A90CC2B0D200D6DB68 /* LDSnapshotTaker.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

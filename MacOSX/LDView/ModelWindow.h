@@ -6,6 +6,7 @@
 @class LDViewController;
 //@class ErrorsAndWarnings;
 @class ErrorItem;
+@class SnapshotTaker;
 
 class LDLError;
 class TCProgressAlert;
@@ -43,6 +44,8 @@ class AlertHandler;
 	NSMutableArray *allIdentifiers;
 	ErrorItem *unfilteredRootErrorItem;
 	ErrorItem *filteredRootErrorItem;
+	NSArray *imageFileTypes;
+	SnapshotTaker *snapshotTaker;
 }
 
 - (LDViewController *)controller;
