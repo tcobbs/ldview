@@ -173,8 +173,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		(TCAlertCallback)&ModelWindow::captureAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this,
 		(TCAlertCallback)&ModelWindow::releaseAlertCallback);
-	TCAlertManager::registerHandler(LDSnapshotTaker::makeCurrentAlertClass(),
-		this, (TCAlertCallback)&ModelWindow::makeCurrentAlertCallback);
+	TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
+		(TCAlertCallback)&ModelWindow::snapshotTakerAlertCallback);
 /*
 	modelViewer->setProgressCallback(staticProgressCallback, this);
 	modelViewer->setErrorCallback(staticErrorCallback, this);
@@ -258,11 +258,14 @@ void ModelWindow::releaseAlertCallback(TCAlert *alert)
 	}
 }
 
-void ModelWindow::makeCurrentAlertCallback(TCAlert *alert)
+void ModelWindow::snapshotTakerAlertCallback(TCAlert *alert)
 {
 	if (alert->getSender() == snapshotTaker)
 	{
-		makeCurrent();
+		if (strcmp(alert->getMessage(), "MakeCurrent") == 0)
+		{
+			makeCurrent();
+		}
 	}
 }
 
