@@ -11,6 +11,7 @@ CCOBJS = \
 	$(OBJDIR)\LDHtmlInventory.obj \
 	$(OBJDIR)\LDPartCount.obj \
 	$(OBJDIR)\LDPartsList.obj \
+	$(OBJDIR)\LDSnapshotTaker.obj \
 	$(OBJDIR)\LDViewPoint.obj \
 	$(OBJDIR)\LDInputHandler.obj
 
