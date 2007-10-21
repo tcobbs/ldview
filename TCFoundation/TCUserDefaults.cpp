@@ -135,6 +135,11 @@ TCStringArray* TCUserDefaults::getProcessedCommandLine(void)
 	return getCurrentUserDefaults()->defGetProcessedCommandLine();
 }
 
+TCStringArray* TCUserDefaults::getUnhandledCommandLineArgs(void)
+{
+	return getCurrentUserDefaults()->defGetUnhandledCommandLineArgs();
+}
+
 TCStringArray* TCUserDefaults::getAllKeys(void)
 {
 	return getCurrentUserDefaults()->defGetAllKeys();
@@ -1269,6 +1274,34 @@ void TCUserDefaults::defFlush(void)
 	delete qSettings;
 	qSettings = new QSettings;
 #endif // _QT
+}
+
+TCStringArray* TCUserDefaults::defGetUnhandledCommandLineArgs(void)
+{
+	if (commandLine)
+	{
+		TCStringArray *unhandledArgs = new TCStringArray;
+		int count = commandLine->getCount();
+
+		for (int i = 0; i < count; i++)
+		{
+			char *arg = commandLine->stringAtIndex(i);
+			
+			if (arg[0] != '-')
+			{
+				unhandledArgs->addString(arg);
+			}
+		}
+		if (unhandledArgs->getCount() > 0)
+		{
+			return unhandledArgs;
+		}
+		else
+		{
+			unhandledArgs->release();
+		}
+	}
+	return NULL;
 }
 
 TCStringArray* TCUserDefaults::defGetProcessedCommandLine(void)

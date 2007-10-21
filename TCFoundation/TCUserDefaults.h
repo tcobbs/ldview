@@ -76,6 +76,7 @@ class TCExport TCUserDefaults: public TCObject
 		static void setCommandLine(char *argv[]);
 		static void setCommandLine(const char *args);
 		static TCStringArray* getProcessedCommandLine(void);
+		static TCStringArray* getUnhandledCommandLineArgs(void);
 		static const char* getArgv0(void) { return argv0; }
 		static TCStringArray* getAllKeys(void);
 		static TCStringArray* getAllSessionNames(void);
@@ -123,6 +124,7 @@ class TCExport TCUserDefaults: public TCObject
 		const char* defGetSessionName(void) { return sessionName; }
 		void defSetCommandLine(TCStringArray *argArray);
 		char* defCommandLineStringForKey(const char* key);
+		TCStringArray* defGetUnhandledCommandLineArgs(void);
 		TCStringArray* defGetProcessedCommandLine(void);
 		TCStringArray* defGetAllKeys(void);
 		TCStringArray* defGetAllSessionNames(void);
