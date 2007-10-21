@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#include <TRE/TREGL.h>
 
 #include <LDLib/LDSnapshotTaker.h>
 
@@ -15,8 +16,9 @@ class LDrawModelViewer;
 
 @interface SnapshotTaker : NSObject {
 	LDSnapshotTaker *ldSnapshotTaker;
-	NSOpenGLContext *glContext;
 	LDrawModelViewer *modelViewer;
+	CGLPBufferObj pbuffer;
+	CGLContextObj context;
 }
 
 - (id)initWithModelViewer:(LDrawModelViewer *)modelViewer;

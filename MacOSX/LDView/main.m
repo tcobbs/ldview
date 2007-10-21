@@ -8,13 +8,21 @@
 
 #import <Cocoa/Cocoa.h>
 #import "OCUserDefaults.h"
+#import "CommandLineSnapshot.h"
 
 int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	BOOL done = NO;
+
 	[OCUserDefaults setCommandLine:argv];
 	[OCUserDefaults setAppName:@"LDView"];
 	[OCUserDefaults initSession];
+	done = [CommandLineSnapshot takeSnapshot];
 	[pool release];
+	if (done)
+	{
+		return 0;
+	}
     return NSApplicationMain(argc,  (const char **) argv);
 }
