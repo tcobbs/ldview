@@ -2560,6 +2560,7 @@ bool ModelViewerWidget::grabImage(
 	modelViewer->setMemoryUsage(0);
 	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
 		numXTiles, numYTiles);
+	setupSnapshotBackBuffer(newWidth, newHeight);
     imageWidth = newWidth * numXTiles;
     imageHeight = newHeight * numYTiles;
 	saveImageWidth = imageWidth;
