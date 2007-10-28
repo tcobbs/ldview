@@ -60,6 +60,9 @@
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */; };
+		1FBE9E1D0CD3F66500334DA9 /* SaveSnapshotView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */; };
+		1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */; };
 		1FCD57250CCBFDCD005EDCE4 /* CommandLineSnapshot.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */; };
 		1FD4D8310BA4CF8900419677 /* ModelWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */; };
 		1FD4D8350BA4D00E00419677 /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8330BA4D00E00419677 /* Preferences.nib */; };
@@ -220,6 +223,11 @@
 		1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotTaker.h; sourceTree = "<group>"; };
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
+		1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveSnapshotViewOwner.h; sourceTree = "<group>"; };
+		1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSnapshotViewOwner.mm; sourceTree = "<group>"; };
+		1FBE9E1C0CD3F66500334DA9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/SaveSnapshotView.nib; sourceTree = "<group>"; };
+		1FBE9E370CD3FA2200334DA9 /* ViewOwnerBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewOwnerBase.h; sourceTree = "<group>"; };
+		1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewOwnerBase.mm; sourceTree = "<group>"; };
 		1FCD57230CCBFDCD005EDCE4 /* CommandLineSnapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandLineSnapshot.h; sourceTree = "<group>"; };
 		1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CommandLineSnapshot.mm; sourceTree = "<group>"; };
 		1FD4D8300BA4CF8900419677 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/ModelWindow.nib; sourceTree = "<group>"; };
@@ -284,6 +292,8 @@
 				1F240BBF0A58AFC300691116 /* LDViewController.mm */,
 				1F240DA30A58E28700691116 /* ModelWindow.h */,
 				1F240DA40A58E28700691116 /* ModelWindow.mm */,
+				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
+				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
 				1F29FE680C78242000A907CC /* ErrorsAndWarnings.h */,
 				1F29FE690C78242000A907CC /* ErrorsAndWarnings.mm */,
 				1F6122D20C78F68600548053 /* ErrorItem.h */,
@@ -300,6 +310,8 @@
 				1FCD57240CCBFDCD005EDCE4 /* CommandLineSnapshot.mm */,
 				1FE965B90C5D59E700C80B59 /* GenericSheet.h */,
 				1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */,
+				1FBE9E370CD3FA2200334DA9 /* ViewOwnerBase.h */,
+				1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */,
 				1FE622C60C4AE12E009FA9FF /* Preferences */,
 				1FE251FB0C6FD26F00FAE201 /* Custom Controls */,
 			);
@@ -384,6 +396,7 @@
 				1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */,
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
 				1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */,
+				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
@@ -651,6 +664,7 @@
 				1F6125760C793C0700548053 /* error_non_flat_quad.png in Resources */,
 				1F6125770C793C0700548053 /* error_parse.png in Resources */,
 				1F6125780C793C0700548053 /* error_vertex_order.png in Resources */,
+				1FBE9E1D0CD3F66500334DA9 /* SaveSnapshotView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +701,8 @@
 				1F6122D40C78F68600548053 /* ErrorItem.mm in Sources */,
 				1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */,
 				1FCD57250CCBFDCD005EDCE4 /* CommandLineSnapshot.mm in Sources */,
+				1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */,
+				1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,6 +746,14 @@
 				1F29FE650C7811B200A907CC /* English */,
 			);
 			name = ErrorsAndWarnings.nib;
+			sourceTree = "<group>";
+		};
+		1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FBE9E1C0CD3F66500334DA9 /* English */,
+			);
+			name = SaveSnapshotView.nib;
 			sourceTree = "<group>";
 		};
 		1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */ = {

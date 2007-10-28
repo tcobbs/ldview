@@ -1287,7 +1287,7 @@ TCStringArray* TCUserDefaults::defGetUnhandledCommandLineArgs(void)
 		{
 			char *arg = commandLine->stringAtIndex(i);
 			
-			if (arg[0] != '-')
+			if (arg[0] != '-' || strchr(arg, '=') == NULL)
 			{
 				unhandledArgs->addString(arg);
 			}

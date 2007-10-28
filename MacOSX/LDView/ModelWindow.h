@@ -7,6 +7,7 @@
 //@class ErrorsAndWarnings;
 @class ErrorItem;
 @class SnapshotTaker;
+@class SaveSnapshotViewOwner;
 
 class LDLError;
 class TCProgressAlert;
@@ -29,7 +30,7 @@ class AlertHandler;
 	IBOutlet NSPopUpButton *viewPopUp;
 	IBOutlet NSSegmentedControl *prefsSegments;
 	IBOutlet NSSegmentedControl *viewModeSegments;
-
+	
 	LDViewController *controller;
 	AlertHandler *alertHandler;
 	NSToolbar *toolbar;
@@ -46,6 +47,7 @@ class AlertHandler;
 	ErrorItem *filteredRootErrorItem;
 	NSArray *imageFileTypes;
 	SnapshotTaker *snapshotTaker;
+	SaveSnapshotViewOwner *saveSnapshotViewOwner;
 }
 
 - (LDViewController *)controller;

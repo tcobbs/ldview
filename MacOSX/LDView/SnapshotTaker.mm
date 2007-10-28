@@ -14,9 +14,9 @@
 
 @implementation SnapshotTaker
 
-- (id)initWithModelViewer:(LDrawModelViewer *)aModelViewer
+- (id)init
 {
-	return [self initWithModelViewer:aModelViewer sharedContext:nil];
+	return [self initWithModelViewer:nil sharedContext:nil];
 }
 
 - (BOOL)choosePixelFormat:(CGLPixelFormatObj *)pPixelFormat sharedContext:(NSOpenGLContext *)sharedContext;
@@ -45,13 +45,19 @@
 	return NO;
 }
 
-- (id)initWithModelViewer:(LDrawModelViewer *)aModelViewer sharedContext:(NSOpenGLContext *)sharedContext
+- (id)initWithModelViewer:(LDrawModelViewer *)modelViewer sharedContext:(NSOpenGLContext *)sharedContext
 {
 	self = [super init];
 	if (self)
 	{
-		modelViewer = aModelViewer;
-		ldSnapshotTaker = new LDSnapshotTaker(modelViewer);
+		if (modelViewer)
+		{
+			ldSnapshotTaker = new LDSnapshotTaker(modelViewer);
+		}
+		else
+		{
+			ldSnapshotTaker = new LDSnapshotTaker;
+		}
 		if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
 		{			
 			CGLPixelFormatObj pixelFormat;
@@ -101,12 +107,18 @@
 	ldSnapshotTaker->setTrySaveAlpha(value);
 }
 
-- (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit
+- (void)setAutoCrop:(bool)value
 {
-	bool retValue;
+	ldSnapshotTaker->setAutoCrop(value);
+}
 
+- (void)saveFileSetup
+{
+	LDrawModelViewer *modelViewer = ldSnapshotTaker->getModelViewer();
+	
 	CGLSetCurrentContext(context);
 	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
+	modelViewer->perspectiveView();
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glDrawBuffer(GL_FRONT);
@@ -115,9 +127,18 @@
 	{
 		modelViewer->loadModel(true);
 	}
-	modelViewer->setup();
-	retValue = ldSnapshotTaker->saveImage([filename cStringUsingEncoding:NSASCIIStringEncoding], width, height, zoomToFit);
-	return retValue;
+}
+
+- (bool)saveFile
+{
+	[self saveFileSetup];
+	return ldSnapshotTaker->saveImage();
+}
+
+- (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit
+{
+	[self saveFileSetup];
+	return ldSnapshotTaker->saveImage([filename cStringUsingEncoding:NSASCIIStringEncoding], width, height, zoomToFit);
 }
 
 @end
