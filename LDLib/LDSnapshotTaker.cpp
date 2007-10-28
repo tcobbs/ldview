@@ -7,11 +7,30 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCStringArray.h>
+#include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLib/LDPreferences.h>
+
+LDSnapshotTaker::LDSnapshotTaker(void):
+m_modelViewer(new LDrawModelViewer(100, 100)),
+m_imageType(ITPng),
+m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
+m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
+m_fromCommandLine(true)
+{
+	LDPreferences *prefs = new LDPreferences(m_modelViewer);
+	
+	prefs->loadSettings();
+	prefs->applySettings();
+	prefs->release();
+}
 
 LDSnapshotTaker::LDSnapshotTaker(LDrawModelViewer *m_modelViewer):
 m_modelViewer(m_modelViewer),
 m_imageType(ITPng),
-m_trySaveAlpha(false)
+m_trySaveAlpha(false),
+m_autoCrop(false),
+m_fromCommandLine(false)
 {
 }
 
@@ -21,7 +40,51 @@ LDSnapshotTaker::~LDSnapshotTaker(void)
 
 void LDSnapshotTaker::dealloc(void)
 {
+	if (m_fromCommandLine)
+	{
+		TCObject::release(m_modelViewer);
+	}
 	TCObject::dealloc();
+}
+
+bool LDSnapshotTaker::saveImage(void)
+{
+	TCStringArray *unhandledArgs =
+		TCUserDefaults::getUnhandledCommandLineArgs();
+
+	if (unhandledArgs)
+	{
+		int count = unhandledArgs->getCount();
+
+		for (int i = 0; i < count; i++)
+		{
+			char *arg = unhandledArgs->stringAtIndex(i);
+			
+			if (arg[0] != '-')
+			{
+				int width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640,
+					false);
+				int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
+				bool zoomToFit =
+					TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
+					false);
+				char *imageFilename = TCUserDefaults::stringForKey(
+					SAVE_SNAPSHOT_KEY, NULL, false);
+
+				if (imageFilename)
+				{
+					bool retValue;
+
+					m_modelViewer->setFilename(arg);
+					retValue = saveImage(imageFilename, width, height,
+						zoomToFit);
+					delete imageFilename;
+					return retValue;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 bool LDSnapshotTaker::saveImage(
@@ -110,7 +173,7 @@ bool LDSnapshotTaker::writeImage(
 		strcat(comment, m_productVersion.c_str());
 	}
 	image->setComment(comment);
-	if (TCUserDefaults::longForKey(AUTO_CROP_KEY, 0, false))
+	if (m_autoCrop)
 	{
 		image->autoCrop((TCByte)m_modelViewer->getBackgroundR(),
 			(TCByte)m_modelViewer->getBackgroundG(),
@@ -213,6 +276,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	bool canceled = false;
 	bool bufferAllocated = false;
 
+	m_modelViewer->setup();
 	if (zoomToFit)
 	{
 		m_modelViewer->setForceZoomToFit(true);
