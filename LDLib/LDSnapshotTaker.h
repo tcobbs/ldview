@@ -15,11 +15,15 @@ public:
 		ITPng = 1,
 		ITBmp = 2
 	};
+	LDSnapshotTaker(void);
 	LDSnapshotTaker(LDrawModelViewer *modelViewer);
+	LDrawModelViewer *getModelViewer(void) { return m_modelViewer; }
 	void setImageType(ImageType value) { m_imageType = value; }
 	ImageType getImageType(void) const { return m_imageType; }
 	void setTrySaveAlpha(bool value) { m_trySaveAlpha = value; }
 	bool getTrySaveAlpha(void) const { return m_trySaveAlpha; }
+	void setAutoCrop(bool value) { m_autoCrop = value; }
+	bool getAutoCrop(void) const { return m_autoCrop; }
 	void setProductVersion(const std::string &value)
 	{
 		m_productVersion = value;
@@ -33,6 +37,7 @@ public:
 
 	bool saveImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
+	bool saveImage(void);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }
 protected:
@@ -56,6 +61,8 @@ protected:
 	ImageType m_imageType;
 	std::string m_productVersion;
 	bool m_trySaveAlpha;
+	bool m_autoCrop;
+	bool m_fromCommandLine;
 };
 
 #endif // __LDSNAPSHOTTAKER_H__
