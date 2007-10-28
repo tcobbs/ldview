@@ -9,6 +9,7 @@
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
 #import "SnapshotTaker.h"
+#import "SaveSnapshotViewOwner.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -30,6 +31,7 @@
 	alertHandler = NULL;
 	[imageFileTypes release];
 	[snapshotTaker release];
+	[saveSnapshotViewOwner release];
 	[super dealloc];
 }
 
@@ -588,14 +590,22 @@
 {
 	if (returnCode == NSOKButton)
 	{
+		NSSize viewSize = [modelView frame].size;
+		int width = (int)viewSize.width;
+		int height = (int)viewSize.height;		
+		
 		if (!snapshotTaker)
 		{
 			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
 		}
-		[snapshotTaker setImageType:LDSnapshotTaker::ITPng];
-		[snapshotTaker setTrySaveAlpha:TCUserDefaults::boolForKey("SaveAlpha", 1, false)];
-		[snapshotTaker saveFile:[sheet filename] width:TCUserDefaults::longForKey("SaveWidth", 640, false) height:TCUserDefaults::longForKey("SaveHeight", 480, false) zoomToFit:true];
+		[snapshotTaker setImageType:[saveSnapshotViewOwner imageType]];
+		[snapshotTaker setTrySaveAlpha:[saveSnapshotViewOwner transparentBackground]];
+		[snapshotTaker setAutoCrop:[saveSnapshotViewOwner autocrop]];
+		[(NSSavePanel *)contextInfo orderOut:self];
+		[snapshotTaker saveFile:[sheet filename] width:[saveSnapshotViewOwner width:width] height:[saveSnapshotViewOwner height:height] zoomToFit:[saveSnapshotViewOwner zoomToFit]];
+		[saveSnapshotViewOwner saveSettings];
 	}
+	[saveSnapshotViewOwner setSavePanel:nil];
 }
 
 - (IBAction)saveSnapshot:(id)sender
@@ -603,11 +613,15 @@
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	NSString *modelFilename = [window representedFilename];
 	NSString *modelPath = [modelFilename stringByDeletingLastPathComponent];
-	NSString *defaultFilename = [[[modelFilename lastPathComponent] stringByDeletingPathExtension] stringByAppendingString: @".png"];
+	NSString *defaultFilename = [[modelFilename lastPathComponent] stringByDeletingPathExtension];
 
-	[savePanel setAllowedFileTypes:imageFileTypes];
+	if (!saveSnapshotViewOwner)
+	{
+		saveSnapshotViewOwner = [[SaveSnapshotViewOwner alloc] init];
+	}
+	[saveSnapshotViewOwner setSavePanel:savePanel];
 	[savePanel setCanSelectHiddenExtension:YES];
-	[savePanel beginSheetForDirectory:modelPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	[savePanel beginSheetForDirectory:modelPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
 }
 
 - (IBAction)reload:(id)sender
@@ -621,6 +635,7 @@
 	{
 		case 0:
 			[self open:sender];
+			break;
 		case 1:
 			[self saveSnapshot:sender];
 			break;

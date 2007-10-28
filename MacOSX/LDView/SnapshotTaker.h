@@ -16,16 +16,17 @@ class LDrawModelViewer;
 
 @interface SnapshotTaker : NSObject {
 	LDSnapshotTaker *ldSnapshotTaker;
-	LDrawModelViewer *modelViewer;
 	CGLPBufferObj pbuffer;
 	CGLContextObj context;
 }
 
-- (id)initWithModelViewer:(LDrawModelViewer *)modelViewer;
+- (id)init;
 - (id)initWithModelViewer:(LDrawModelViewer *)modelViewer sharedContext:(NSOpenGLContext *)sharedContext;
 
 - (void)setImageType:(LDSnapshotTaker::ImageType)value;
 - (void)setTrySaveAlpha:(bool)value;
+- (void)setAutoCrop:(bool)value;
+- (bool)saveFile;
 - (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit;
 
 @end

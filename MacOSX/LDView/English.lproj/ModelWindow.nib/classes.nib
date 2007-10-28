@@ -30,6 +30,7 @@
                 progress = NSProgressIndicator; 
                 progressMessage = NSTextField; 
                 reloadButton = NSSegmentedControl; 
+                saveAccessoryView = NSView; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
                 viewModeSegments = NSSegmentedControl; 

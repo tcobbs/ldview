@@ -111,7 +111,7 @@
             CLASS = PreferencePage; 
             LANGUAGE = ObjC; 
             OUTLETS = {tabPage = NSTabViewItem; }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = ViewOwnerBase; 
         }, 
         {
             ACTIONS = {apply = id; cancel = id; ok = id; }; 
@@ -171,6 +171,12 @@
                 updatedDaysLabel = NSTextField; 
             }; 
             SUPERCLASS = PreferencePage; 
+        }, 
+        {
+            ACTIONS = {valueChanged = id; }; 
+            CLASS = ViewOwnerBase; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
         }
     ); 
     IBVersion = 1; 

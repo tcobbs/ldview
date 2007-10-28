@@ -25,7 +25,7 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 	TREMainModel::sm_studTextures = NULL;
 	if (TREMainModel::sm_studTextureID)
 	{
-		glDeleteTextures(1, &TREMainModel::sm_studTextureID);
+		//glDeleteTextures(1, &TREMainModel::sm_studTextureID);
 	}
 }
 

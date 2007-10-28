@@ -1,0 +1,31 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {fileType = id; saveSeries = id; size = id; }; 
+            CLASS = SaveSnapshotViewOwner; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                accessoryView = NSView; 
+                autocropCheck = NSButton; 
+                digitsField = NSTextField; 
+                digitsLabel = NSTextField; 
+                digitsStepper = NSStepper; 
+                fileTypePopUp = NSPopUpButton; 
+                saveSeriesCheck = NSButton; 
+                sizeCheck = NSButton; 
+                sizeForm = NSForm; 
+                transparentCheck = NSButton; 
+                zoomToFitCheck = NSButton; 
+            }; 
+            SUPERCLASS = ViewOwnerBase; 
+        }, 
+        {
+            ACTIONS = {valueChanged = id; }; 
+            CLASS = ViewOwnerBase; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
