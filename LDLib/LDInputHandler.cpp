@@ -215,25 +215,6 @@ bool LDInputHandler::mouseUp(
 	return true;
 }
 
-//double LDInputHandler::getTimeRef(void)
-//{
-//#ifdef WIN32
-//	return (double)GetTickCount() / 1000.0;
-//#else // WIN32
-//#ifdef _QT
-//	return -1.0;
-//#else // _QT
-//#ifdef __APPLE__
-//	return -1.0;
-//#else // __APPLE__
-//	// If you get here, this isn't going to work.  The below line will generate
-//	// an error.
-//	Unknown GUI framework.
-//#endif // __APPLE__
-//#endif // _QT
-//#endif // WIN32
-//}
-
 void LDInputHandler::updateLightXY(int xPos, int yPos)
 {
 	m_modelViewer->mouseMoveLight(xPos - m_lastX, yPos - m_lastY);
