@@ -583,7 +583,7 @@ TCLocalStrings::TCLocalStringsCleanup::~TCLocalStringsCleanup(void)
 
 // Note: Code Page 1252 is Windows Latin I, which is the default.
 TCLocalStrings::TCLocalStrings(void):
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	m_textCodec(NULL),
 #endif // WIN32
 	m_codePage(1252)
@@ -617,7 +617,7 @@ bool TCLocalStrings::setStringTable(const wchar_t *stringTable, bool replace)
 	return getCurrentLocalStrings()->instSetStringTable(stringTable, replace);
 }
 
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 const QString &TCLocalStrings::get(const char *key)
 #else // WIN32
 const char *TCLocalStrings::get(const char *key)
@@ -930,7 +930,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 			break;
 		}
 	}
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	buildQStringMap();
 #endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
@@ -945,7 +945,7 @@ void TCLocalStrings::instSetCodePage(int codePage)
 	{
 		return;
 	}
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	QString name;
 
 	name.sprintf("CP%d", codePage);
@@ -1119,7 +1119,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 			break;
 		}
 	}
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	buildQStringMap();
 #endif // WIN32
 	// Note that the load is considered a success if the [StringTable] section
@@ -1171,7 +1171,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 			dst[i] = codePageTable[(TCByte)src[i]];
 		}
 	}
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	else if (m_textCodec)
 	{
 		QString unicodeString = m_textCodec->toUnicode(src);
@@ -1191,7 +1191,7 @@ void TCLocalStrings::mbstowstring(std::wstring &dst, const char *src,
 	}
 }
 
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 #include <QT/misc.h>
 const QString &TCLocalStrings::instGetLocalString(const char *key)
 {

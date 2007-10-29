@@ -22,7 +22,7 @@ public:
 	static bool setStringTable(const char *stringTable, bool replace = true);
 	static bool setStringTable(const wchar_t *stringTable, bool replace = true);
 	static bool loadStringTable(const char *filaname, bool replace = true);
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	static const QString &get(const char *key);
 #else // WIN32
 	static const char *get(const char *key);
@@ -36,7 +36,7 @@ protected:
 	virtual void dealloc(void);
 	bool instSetStringTable(const char *stringTable, bool replace);
 	bool instSetStringTable(const wchar_t *stringTable, bool replace);
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	const QString &instGetLocalString(const char *key);
 #else // WIN32
 	const char *instGetLocalString(const char *key);
@@ -50,7 +50,7 @@ protected:
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
 	StringStringMap m_utf8Strings;
-#if !defined(WIN32) && !defined(COCOA)
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
 	QStringQStringMap m_qStrings;
 	QString m_emptyQString;
 	QTextCodec *m_textCodec;

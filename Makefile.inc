@@ -3,7 +3,7 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -D_QT
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)
@@ -17,6 +17,14 @@ endif
 
 INCLUDE = -I.. -I../include -I../boost/include
 
+ifeq ("$(QTDIR)","")
+
+CFLAGS += -D_OSMESA
+
+else
+
+CFLAGS += -D_QT
+
 ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
 INCLUDE += -I$(QTDIR)/include
 endif
@@ -28,6 +36,8 @@ endif
 
 ifeq ($(shell if [ -d /usr/include/qt3 ]; then echo OK; fi),OK)
 INCLUDE += -I/usr/include/qt3
+endif
+
 endif
 
 OBJDIR = .obj

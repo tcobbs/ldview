@@ -16,14 +16,14 @@
 #include <qsettings.h>
 #include <stdlib.h>
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 #ifndef __OBJC__
 // We want to use Objective-C stuff, but this file will be included from
 // non-Objective-C files, so we need to make it work there too.
 #define NSString void
 #define NSMutableDictionary void
 #endif // __OBJC__
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 
 typedef std::vector<long> LongVector;
 
@@ -207,12 +207,12 @@ class TCExport TCUserDefaults: public TCObject
 		void copyTree(const char *dstKey, const char *srcKey,
 			const char *skipKey);
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 		NSMutableDictionary *sessionDict;
 
 		NSString *getSessionKey(const char *key = NULL);
 		void initSessionDict(void);
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 		static class TCUserDefaultsCleanup
 		{
 		public:

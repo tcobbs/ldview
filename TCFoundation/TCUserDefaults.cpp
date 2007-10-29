@@ -4,9 +4,9 @@
 #include "TCAlertManager.h"
 #include "mystring.h"
 
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 #import <Foundation/Foundation.h>
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #include <stdio.h>
 
 #define MAX_INI_LINE_LEN 65536
@@ -61,9 +61,9 @@ TCUserDefaults::TCUserDefaults(void)
 #ifdef TCUD_INI_SUPPORT
 	,iniChanges(false)
 #endif // TCUD_INI_SUPPORT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	,sessionDict(nil)
-#endif // __APPLE__ && !defined(_QT)
+#endif // COCOA
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TCUserDefaults");
@@ -71,10 +71,10 @@ TCUserDefaults::TCUserDefaults(void)
 #ifdef _QT
 	qSettings = new QSettings;
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	appName = copyString([[[NSBundle mainBundle] bundleIdentifier]
 		cStringUsingEncoding: NSASCIIStringEncoding]);
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 }
 
 void TCUserDefaults::dealloc(void)
@@ -88,9 +88,9 @@ void TCUserDefaults::dealloc(void)
 #ifdef _QT
 	delete qSettings;
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	[sessionDict release];
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 	delete appName;
 	delete sessionName;
 	appName = NULL;
@@ -499,14 +499,14 @@ void TCUserDefaults::defRemoveSession(const char *value)
 	sprintf(sessionKey, "/%s/Sessions/%s", appName, value);
 	deleteSubkeys(sessionKey);
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	[[NSUserDefaults standardUserDefaults] removePersistentDomainForName:
 		getSessionKey(value)];
 	if (strcmp(sessionName, value) == 0)
 	{
 		[sessionDict removeAllObjects];
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	HKEY hSessionsKey = openKeyPathUnderKey(hAppDefaultsKey, "Sessions");
 
@@ -549,7 +549,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), value);
 	requestFlush();
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
@@ -566,7 +566,7 @@ void TCUserDefaults::defSetStringForKey(const char* value, const char* key,
 			[NSString stringWithCString: value encoding: NSASCIIStringEncoding]
 			forKey: nsKey];
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	defSetValueForKey((LPBYTE)value, strlen(value) + 1, REG_SZ, key,
 		sessionSpecific);
@@ -605,7 +605,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), qvalue);
 	requestFlush();
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 	unichar *ucValue = NULL;
@@ -643,7 +643,7 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	{
 		delete ucValue;
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	defSetValueForKey((LPBYTE)value, (ucstrlen(value) + 1) * sizeof(UCCHAR),
 		REG_SZ, key, sessionSpecific, true);
@@ -818,7 +818,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 		return returnValue;
 	}
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSString *returnString;
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
@@ -841,7 +841,7 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	{
 		return copyString(defaultValue);
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	DWORD size;
 	LPBYTE value = defValueForKey(size, REG_SZ, key, sessionSpecific, true);
@@ -855,6 +855,10 @@ UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 		return copyString(defaultValue);
 	}
 #endif // WIN32
+#ifdef _OSMESA
+	// _OSMESA requires INI handling, so hopefully we won't get here.
+	return copyString(defaultValue);
+#endif // _OSMESA
 }
 
 char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
@@ -900,7 +904,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 		return returnValue;
 	}
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSString *returnString;
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
@@ -923,7 +927,7 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 	{
 		return copyString(defaultValue);
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	DWORD size;
 	LPBYTE value = defValueForKey(size, REG_SZ, key, sessionSpecific);
@@ -937,6 +941,10 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 		return copyString(defaultValue);
 	}
 #endif // WIN32
+#ifdef _OSMESA
+	// _OSMESA requires INI handling, so hopefully we won't get here.
+	return copyString(defaultValue);
+#endif // _OSMESA
 }
 
 void TCUserDefaults::sendValueChangedAlert(const char *key)
@@ -1009,7 +1017,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 	qSettings->writeEntry(qKeyForKey(key, sessionSpecific), (int)value);
 	requestFlush();
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 	NSNumber *numberValue = [NSNumber numberWithLong: value];
@@ -1025,7 +1033,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 		[[NSUserDefaults standardUserDefaults] setObject: numberValue forKey:
 			nsKey];
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	defSetValueForKey((LPBYTE)&value, sizeof value, REG_DWORD, key,
 		sessionSpecific);
@@ -1090,7 +1098,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 	return qSettings->readNumEntry(qKeyForKey(key, sessionSpecific),
 		defaultValue, found);
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSNumber *returnNumber;
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
@@ -1116,7 +1124,7 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 	{
 		return defaultValue;
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	DWORD size;
 	LPBYTE value = defValueForKey(size, REG_DWORD, key, sessionSpecific);
@@ -1138,6 +1146,10 @@ long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 		return defaultValue;
 	}
 #endif // WIN32
+#ifdef _OSMESA
+	// _OSMESA requires INI handling, so hopefully we won't get here.
+	return defaultValue;
+#endif // _OSMESA
 }
 
 // Note: static function
@@ -1207,7 +1219,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 #ifdef _QT
 	qSettings->removeEntry(qKeyForKey(key, sessionSpecific));
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSString *nsKey = [NSString stringWithCString: key encoding:
 		NSASCIIStringEncoding];
 
@@ -1221,7 +1233,7 @@ void TCUserDefaults::defRemoveValue(const char* key, bool sessionSpecific)
 	{
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey: nsKey];
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	HKEY hParentKey;
 
@@ -1323,7 +1335,7 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 #ifdef _QT
 	defGetAllKeysUnderKey(qKeyForKey("", true), allKeys);
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSArray *nsAllKeys;
 	int i;
 	int count;
@@ -1348,7 +1360,7 @@ TCStringArray* TCUserDefaults::defGetAllKeys(void)
 		allKeys->addString([[nsAllKeys objectAtIndex: i]
 			cStringUsingEncoding: NSASCIIStringEncoding]);
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	defGetAllKeysUnderKey(hSessionKey, "", allKeys);
 #endif // WIN32
@@ -1378,7 +1390,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 		allSessionNames->addString(*it);
 	}
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 	NSArray *domainNames = [[NSUserDefaults standardUserDefaults]
 		persistentDomainNames];
 	NSString *prefix = getSessionKey("");
@@ -1399,7 +1411,7 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 				NSASCIIStringEncoding]);
 		}
 	}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 	HKEY hSessionsKey = openKeyPathUnderKey(hAppDefaultsKey, "Sessions");
 	if (hSessionsKey)
@@ -1811,9 +1823,9 @@ void TCUserDefaults::defSetAppName(const char* value)
 			hSessionKey = hAppDefaultsKey;
 		}
 #endif // WIN32
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 		initSessionDict();
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 	}
 }
 
@@ -1858,7 +1870,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 		delete sessionName;
 		sessionName = copyString(value);
 #endif // _QT
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 		delete sessionName;
 		sessionName = copyString(value);
 		if ([[NSUserDefaults standardUserDefaults]
@@ -1886,7 +1898,7 @@ void TCUserDefaults::defSetSessionName(const char* value, const char *saveKey,
 		{
 			initSessionDict();
 		}
-#endif // __APPLE__ && !_QT
+#endif // COCOA
 #ifdef WIN32
 		HKEY hOldSessionKey = hSessionKey;
 
@@ -2378,7 +2390,7 @@ void TCUserDefaults::copyTree(const char *dstKey, const char *srcKey,
 
 #endif // _QT
 
-#if defined(__APPLE__) && !defined(_QT)
+#ifdef COCOA
 
 NSString *TCUserDefaults::getSessionKey(const char *key)
 {
@@ -2414,4 +2426,4 @@ void TCUserDefaults::initSessionDict(void)
 	}
 }
 
-#endif // __APPLE__ && !_QT
+#endif // COCOA
