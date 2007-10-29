@@ -119,6 +119,7 @@
 	CGLSetCurrentContext(context);
 	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
 	modelViewer->perspectiveView();
+	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glDrawBuffer(GL_FRONT);
