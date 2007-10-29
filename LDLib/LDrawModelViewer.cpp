@@ -1619,6 +1619,9 @@ void LDrawModelViewer::drawLight(GLenum light, TCFloat x, TCFloat y, TCFloat z)
 	position[0] = (GLfloat)x;
 	position[1] = (GLfloat)y;
 	position[2] = (GLfloat)z;
+	// 0.0 in the w component of the light "position" vector means that this is
+	// a directional light.  As such, the "position" provided is actually a
+	// direction (or maybe the inverse of the direction).
 	position[3] = 0.0f;
 	direction[0] = (GLfloat)-x;
 	direction[1] = (GLfloat)-y;
@@ -3018,6 +3021,9 @@ void LDrawModelViewer::drawLightDats(void)
 			{
 				start = 1;
 			}
+			// Point lights are distinguished from directional lights by the w
+			// component of their position vector.  Setting it to 0 yields a
+			// directional light.  Setting it to non-zero yields a point light.
 			position[3] = 1.0f;
 			for (i = start; i < maxLights && itLoc != lightLocs.end(); i++)
 			{
