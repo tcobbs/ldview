@@ -28,9 +28,9 @@
 #include <TCFoundation/TCUnzip.h>
 #include <TCFoundation/TCLocalStrings.h>
 
-#ifdef _QT
+#if defined(_QT) || defined(_OSMESA)
 #include <ctype.h>
-#endif // _QT
+#endif // _QT || _OSMESA
 
 #define MAX_DL_THREADS 2
 
