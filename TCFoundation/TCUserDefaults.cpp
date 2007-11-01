@@ -1722,9 +1722,16 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 	iniPath.clear();
 	rootIniKey.children.clear();
 	rootIniKey.values.clear();
-	if (appPath.size() > 0)
+	if (isRelativePath(value))
 	{
-		iniPath = appPath + value;
+		if (appPath.size() > 0)
+		{
+			iniPath = appPath + value;
+		}
+	}
+	else
+	{
+		iniPath = value;
 	}
 	if (iniPath.size() > 0)
 	{
