@@ -4,9 +4,11 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
-LIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../boost/lib
+LIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../boost/lib -L/usr/X11R6/lib
 LIBS = -lLDraw -lTRE -lLDLoader -lTCFoundation -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread
 STATIC =
+LDLIBS = ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a ../TRE/libTRE.a ../LDLib/libLDraw.a
+MAKEMODE =
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
 
@@ -74,6 +76,19 @@ OBJS = $(COBJS) $(CCOBJS)
 
 all:    $(OBJDIR) $(EXECS)
 
+../TCFoundation/libTCFoundation.a:
+	cd ../TCFoundation; make $(MAKEMODE)
+
+../LDLoader/libLDLoader.a:
+	cd ../LDLoader; make $(MAKEMODE)
+
+../TRE/libTRE.a:
+	cd ../TRE; make $(MAKEMODE)
+
+../LDLib/libLDraw.a:
+	cd ../LDLib; make $(MAKEMODE)
+
+
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
 		mkdir $(OBJDIR);                \
@@ -83,7 +98,7 @@ depend:
 	$(RM) .depend
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
-$(EXECS):   $(OBJS)
+$(EXECS):   $(OBJS) $(LDLIBS)
 	$(RM) $(EXECS)
 	cd $(OBJDIR); $(CC) $(STATIC) -o ../$(EXECS) $(OBJS) $(LIBDIRS) $(LIBS)
 
@@ -96,4 +111,5 @@ clean:
 	$(RM) $(EXECS) core
 
 debug: CFLAGSLOC = -g -DUNZIP_CMD
+debug: MAKEMODE = debug
 debug: all
