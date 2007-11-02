@@ -1719,7 +1719,11 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 	bool retValue = false;
 
 #ifdef TCUD_INI_SUPPORT
+#ifdef NO_WSTRING
+	iniPath.resize(0);
+#else // NO_WSTRING
 	iniPath.clear();
+#endif // NO_WSTRING
 	rootIniKey.children.clear();
 	rootIniKey.values.clear();
 	if (isRelativePath(value))
@@ -1762,7 +1766,11 @@ bool TCUserDefaults::defSetIniFile(const char* /*value*/)
 						strcasecmp(sectionName.c_str(), "General") == 0)
 					{
 						haveGeneralSection = true;
+#ifdef NO_WSTRING
+						sectionName.resize(0);
+#else // NO_WSTRING
 						sectionName.clear();
+#endif // NO_WSTRING
 					}
 				}
 				else if (line[0] != ';' && (haveGeneralSection ||

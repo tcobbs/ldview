@@ -12,13 +12,14 @@
 typedef __int64 int64;
 #define ZERO64 0i64
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
 #include <sys/time.h>
 #include <unistd.h>
+#include <ctype.h>
 
 typedef long long int64;
 #define ZERO64 0ll
-#endif // _QT || __APPLE__
+#endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 
 namespace boost

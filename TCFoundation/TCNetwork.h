@@ -9,7 +9,7 @@
 #define socketSend send
 #define socketRecv recv
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
 #define SOCKET int
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -19,13 +19,13 @@
 
 #define closesocket close
 #define WSAGetLastError() errno
-#endif // _QT || __APPLE__
-#ifdef _QT
+#endif // _QT || __APPLE__ || _OSMESA
+#if defined(_QT) || defined(_OSMESA)
 // I think it's a bug, but GCC is substituting this macro even when send is used
 // after being scoped to a class (specifically TCProgressAlert::send).
 #define socketSend(socket, buf, len, flags) write((socket), (buf), (len))
 #define socketRecv(socket, buf, len, flags) read((socket), (buf), (len))
-#endif // _QT
+#endif // _QT || _OSMESA
 #ifdef __APPLE__
 #include <sys/types.h>
 #include <sys/socket.h>

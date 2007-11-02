@@ -202,7 +202,7 @@ char *strnstr2(const char *s1, const char *s2, size_t n, int skipZero)
 	int len2 = strlen(s2);
 
 	for (spot = (char*)s1; (*spot != 0 || skipZero) &&
-	     (unsigned)(spot-s1) < n; spot++)
+		(unsigned)(spot-s1) < n; spot++)
 	{
 		if (strncmp(spot, s2, len2) == 0)
 		{
@@ -218,7 +218,7 @@ char *strncasestr(const char *s1, const char *s2, size_t n, int skipZero)
 	int len2 = strlen(s2);
 
 	for (spot = (char*)s1; (*spot != 0 || skipZero) &&
-	     (unsigned)(spot - s1) < n; spot++)
+		(unsigned)(spot - s1) < n; spot++)
 	{
 		if (strncasecmp(spot, s2, len2) == 0)
 		{
@@ -1117,7 +1117,11 @@ void consoleVPrintf(const wchar_t *format, va_list argPtr)
 		g_consoleBuffer.vwprintf(format, argPtr);
 	}
 #else // WIN32
+#ifdef NO_WSTRING
+	printf("wprintf attempted.\n");
+#else // NO_WSTRING
 	vwprintf(format, argPtr);
+#endif // NO_WSTRING
 #endif
 }
 
@@ -1466,7 +1470,9 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 	dst.erase();
 	if (src)
 	{
+#ifndef NO_WSTRING
 		mbstate_t state = { 0 };
+#endif // !NO_WSTRING
 		size_t newLength;
 
 		if (length == -1)
@@ -1478,7 +1484,11 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 			dst.resize(length);
 			// Even though we don't check, we can't pass NULL instead of &state
 			// and still be thread-safe.
+#ifdef NO_WSTRING
+			newLength = mbstowcs(&dst[0], src, length + 1);
+#else // NO_WSTRING
 			newLength = mbsrtowcs(&dst[0], &src, length + 1, &state);
+#endif // NO_WSTRING
 			if (newLength == (size_t)-1)
 			{
 				dst.resize(wcslen(&dst[0]));
@@ -1688,7 +1698,9 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 	dst.erase();
 	if (src)
 	{
+#ifndef NO_WSTRING
 		mbstate_t state = { 0 };
+#endif // !NO_WSTRING
 		size_t newLength;
 
 		if (length == -1)
@@ -1699,7 +1711,11 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 		dst.resize(length);
 		// Even though we don't check, we can't pass NULL instead of &state and
 		// still be thread-safe.
+#ifdef NO_WSTRING
+		newLength = wcstombs(&dst[0], src, length);
+#else // NO_WSTRING
 		newLength = wcsrtombs(&dst[0], &src, length, &state);
+#endif // NO_WSTRING
 		if (newLength == (size_t)-1)
 		{
 			dst.resize(strlen(&dst[0]));
@@ -1713,7 +1729,9 @@ void wcstostring(std::string &dst, const wchar_t *src, int length /*= -1*/)
 
 void wstringtostring(std::string &dst, const std::wstring &src)
 {
+#ifndef NO_WSTRING
 	wcstostring(dst, src.c_str(), src.length());
+#endif // NO_WSTRING
 }
 
 void stringtowstring(std::wstring &dst, const std::string &src)
@@ -1731,3 +1749,20 @@ void runningWithConsole(bool bRealConsole /*= false*/)
 }
 
 #endif // WIN32
+
+#ifdef NO_WSTRING
+
+unsigned long wcstoul(const wchar_t *start, wchar_t **end, int base)
+{
+	std::string temp;
+	char *tempEnd;
+	wcstostring(temp, start);
+	unsigned long retValue = strtoul(temp.c_str(), &tempEnd, base);
+	if (end != NULL)
+	{
+		*end = const_cast<wchar_t *>(&start[tempEnd - temp.c_str()]);
+	}
+	return retValue;
+}
+
+#endif // NO_WSTRING

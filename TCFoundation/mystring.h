@@ -13,6 +13,10 @@
 #include <qstring.h>
 #endif // _QT
 
+#ifdef _OSMESA
+#include <stdarg.h>
+#endif // _OSMESA
+
 TCExport char *copyString(const char *string, int pad = 0);
 TCExport wchar_t *copyString(const wchar_t *string, int pad = 0);
 
@@ -99,6 +103,9 @@ void stringtowstring(std::wstring &dst, const std::string &src);
 void mbstowstring(std::wstring &dst, const char *src, int length = -1);
 void wstringtostring(std::string &dst, const std::wstring &src);
 void wcstostring(std::string &dst, const wchar_t *src, int length = -1);
+#ifdef NO_WSTRING
+unsigned long wcstoul(const wchar_t *start, wchar_t **end, int base);
+#endif // NO_WSTRING
 UCSTR mbstoucstring(const char *src, int length = -1);
 char *ucstringtombs(CUCSTR src, int length = -1);
 char *ucstringtoutf8(CUCSTR src, int length = -1);
