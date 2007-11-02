@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __LDINPUTHANDLER_H__
+#define __LDINPUTHANDLER_H__
 #include <TCFoundation/TCObject.h>
 
 class LDrawModelViewer;
@@ -139,3 +140,5 @@ protected:
 
 	static TCFloat sm_keyRotationSpeed;
 };
+
+#endif // __LDINPUTHANDLER_H__
