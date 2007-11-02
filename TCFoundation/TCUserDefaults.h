@@ -12,6 +12,9 @@
 #define TCUD_INI_SUPPORT
 #endif // MS VC++ > 6.0
 
+#ifdef _OSMESA
+#include <stdio.h>
+#endif // _OSMESA
 #ifdef _QT
 #include <qsettings.h>
 #include <stdlib.h>

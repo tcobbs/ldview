@@ -693,7 +693,11 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 					wstringTable.append(&wc, 1);
 				}
 				// wstringTable now contains the string table.
+#ifdef NO_WSTRING
+                retValue = setStringTable(L"", replace);
+#else // NO_WSTRING
 				retValue = setStringTable(wstringTable.c_str(), replace);
+#endif // NO_WSTRING
 			}
 			else
 			{
@@ -747,7 +751,9 @@ void TCLocalStrings::instDumpTable(const char *filename, const char *header)
 		}
 		for (WStringWStringMap::iterator it = m_strings.begin(); it != m_strings.end(); it++)
 		{
+#ifndef NO_WSTRING
 			fprintf(file, "%S = %S\n", it->first.c_str(), it->second.c_str());
+#endif // NO_WSTRING
 		}
 		fclose(file);
 	}
@@ -890,7 +896,9 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 									// wstring copy constructor broken in VC++
 									// 2005?!?!?  The below doesn't work without
 									// the .c_str() calls.
+#ifndef NO_WSTRING
 									m_strings[wkey.c_str()] += wvalue.c_str();
+#endif // NO_WSTRING
 								}
 							}
 							if (!appended)
@@ -906,7 +914,9 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 								// wstring copy constructor broken in VC++
 								// 2005?!?!?  The below doesn't work without the
 								// .c_str() calls.
+#ifndef NO_WSTRING
 								m_strings[wkey.c_str()] = wvalue.c_str();
+#endif // NO_WSTRING
 							}
 							delete value;
 						}
@@ -1133,7 +1143,11 @@ const wchar_t *TCLocalStrings::instGetLocalString(const wchar_t *key)
 
 	if (it != m_strings.end())
 	{
+#ifdef NO_WSTRING
+		return L"";
+#else // NO_WSTRING
 		return it->second.c_str();
+#endif // NO_WSTRING
 	}
 	else
 	{

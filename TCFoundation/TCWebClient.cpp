@@ -102,11 +102,15 @@ static char dayShortNames[7][4] =
 
 void do_sleep(int sec)
 {
+#ifdef _OSMESA
+	sleep(sec);
+#else // _OSMESA
 	boost::xtime xt;
 
 	boost::xtime_get(&xt, boost::TIME_UTC);
 	xt.sec += sec;
 	boost::thread::sleep(xt);
+#endif // _OSMESA
 }
 
 char *TCWebClient::proxyServer = NULL;
@@ -1331,10 +1335,10 @@ int TCWebClient::setNonBlock(void)
 			1024, NULL);
 		debugPrintf("error: %s\n", buf);
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
 	if (fcntl(dataSocket, F_SETFL, O_NDELAY) == -1)
 	{
-#endif // _QT || __APPLE__
+#endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 		debugPrintf("Error setting non-blocking IO.\n");
 		setErrorNumber(WCE_NON_BLOCK);
@@ -1397,9 +1401,9 @@ int TCWebClient::waitForActivity(fd_set* readDescs, fd_set* writeDescs)
 #ifdef WIN32
 			WSAGetLastError() == WSAEINTR)
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined (_OSMESA)
 			WSAGetLastError() == EINTR)
-#endif // _QT
+#endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 		{
 			if (getAborted())
@@ -1916,9 +1920,9 @@ bool TCWebClient::checkBlockingError(void)
 #ifdef WIN32
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined (_OSMESA)
 	if (WSAGetLastError() == EAGAIN)
-#endif // _QT
+#endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 	{
 		return true;
@@ -2291,7 +2295,7 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 					result = 0;
 				}
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined (_OSMESA)
 				if (mkdir(directory, 0) == -1)
 				{
 					*errorNumber = WCE_DIR_CREATION;
@@ -2301,7 +2305,7 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 				{
 					chmod(directory, S_IRUSR | S_IWUSR | S_IXUSR);
 				}
-#endif // _QT
+#endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 			}
 			else
@@ -2315,9 +2319,9 @@ int TCWebClient::createDirectory(const char* directory, int *errorNumber)
 #ifdef WIN32
 			if (!(dirStat.st_mode & _S_IFDIR))
 #else // WIN32
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined (_OSMESA)
 			if (!S_ISDIR(dirStat.st_mode))
-#endif // _QT
+#endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 			{
 				*errorNumber = WCE_NOT_DIR;

@@ -56,7 +56,11 @@ const wchar_t *TCAlert::getWMessage(void)
 	{
 		mbstowstring(m_wMessage, m_message);
 	}
+#ifdef NO_WSTRING
+        return NULL;
+#else // NO_WSTRING
 	return m_wMessage.c_str();
+#endif // NO_WSTRING
 }
 
 CUCSTR TCAlert::getMessageUC(void)

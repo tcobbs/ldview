@@ -23,6 +23,7 @@
 #include <list>
 #include <algorithm>
 #include <stack>
+
 #ifdef WIN32
 
 #if defined(_MSC_VER) && _MSC_VER <= 1200
@@ -35,5 +36,10 @@
 
 #pragma warning(pop)
 #endif // WIN32
+
+#ifdef NO_WSTRING
+// NOTE: on system without wstring, the std namespace isn't used.
+typedef basic_string<wchar_t> wstring;
+#endif
 
 #endif //__TCSTLINCLUDES_H__

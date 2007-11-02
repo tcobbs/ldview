@@ -3,9 +3,9 @@
 
 #include <TCFoundation/TCObject.h>
 
-#if defined (_QT) || defined (__APPLE__)
+#if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
 #include <stdlib.h>
-#endif // _QT || __APPLE__
+#endif // _QT || __APPLE__ || _OSMESA
 
 class TCUnzip : public TCObject
 {
