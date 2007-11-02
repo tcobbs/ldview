@@ -107,7 +107,11 @@ const wchar_t *LDLError::getTypeNameW(LDLErrorType type)
 		std::wstring wkey;
 
 		stringtowstring(wkey, it->second);
+#ifdef NO_WSTRING
+		return L"";
+#else // NO_WSTRING
 		return TCLocalStrings::get(wkey.c_str());
+#endif // NO_WSTRING
 	}
 	else
 	{
