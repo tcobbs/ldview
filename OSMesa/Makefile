@@ -5,7 +5,8 @@ RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
 LIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../boost/lib
-LIBS = -lLDraw -lTRE -lLDLoader -lTCFoundation -lboost_thread-mt -lpng -lz -framework OpenGL
+LIBS = -lLDraw -lTRE -lLDLoader -lTCFoundation -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread
+STATIC =
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
 
@@ -20,6 +21,14 @@ AR = ar rcs
 endif
 
 INCLUDE = -I.. -I../include -I../boost/include
+
+ifeq ($(shell hostname | cut -d. -f2-), pair.com)
+CFLAGS += -DNO_WSTRING -DNO_WCSTOUL -DTC_NO_UNICODE -DNO_WPRINTF
+INCLUDE += -I../../Mesa-7.0.1/include
+LIBDIRS += -L../../../Mesa-7.0.1/lib -L/usr/local/lib/pth -L/usr/local/lib
+LIBS += -lpth
+STATIC = -static
+endif
 
 ifeq ("$(QTDIR)","")
 
@@ -76,7 +85,7 @@ depend:
 
 $(EXECS):   $(OBJS)
 	$(RM) $(EXECS)
-	cd $(OBJDIR); $(CC) -o ../$(EXECS) $(OBJS) $(LIBDIRS) $(LIBS)
+	cd $(OBJDIR); $(CC) $(STATIC) -o ../$(EXECS) $(OBJS) $(LIBDIRS) $(LIBS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
