@@ -1,4 +1,4 @@
-EXECS= libLDraw.a
+EXECS= libLDraw$(POSTFIX).a
 CFLAGSLOC = -O3
 LIBDIRS =
 HOSTLIBS =

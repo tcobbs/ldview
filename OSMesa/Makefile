@@ -1,14 +1,15 @@
 EXECS = ldview
+POSTFIX = -osmesa
 CC = g++
 RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
 LIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../boost/lib -L/usr/X11R6/lib
-LIBS = -lLDraw -lTRE -lLDLoader -lTCFoundation -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread
 STATIC =
-LDLIBS = ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a ../TRE/libTRE.a ../LDLib/libLDraw.a
-MAKEMODE =
+LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
+MAKEMODE = POSTFIX=-osmesa
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
 
@@ -55,7 +56,7 @@ endif
 
 endif
 
-OBJDIR = .obj
+OBJDIR = .obj$(POSTFIX)
 
 VPATH = $(OBJDIR)
 
@@ -76,16 +77,16 @@ OBJS = $(COBJS) $(CCOBJS)
 
 all:    $(OBJDIR) $(EXECS)
 
-../TCFoundation/libTCFoundation.a:
+../TCFoundation/libTCFoundation$(POSTFIX).a:
 	cd ../TCFoundation; make $(MAKEMODE)
 
-../LDLoader/libLDLoader.a:
+../LDLoader/libLDLoader$(POSTFIX).a:
 	cd ../LDLoader; make $(MAKEMODE)
 
-../TRE/libTRE.a:
+../TRE/libTRE$(POSTFIX).a:
 	cd ../TRE; make $(MAKEMODE)
 
-../LDLib/libLDraw.a:
+../LDLib/libLDraw$(POSTFIX).a:
 	cd ../LDLib; make $(MAKEMODE)
 
 
