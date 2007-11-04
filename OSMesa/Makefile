@@ -121,5 +121,5 @@ clean:
 	$(RM) $(EXECS) core Headerize StudLogo.h
 
 debug: CFLAGSLOC = -g -DUNZIP_CMD
-debug: MAKEMODE = debug
+debug: MAKEMODE = debug POSTFIX=-osmesa
 debug: all
