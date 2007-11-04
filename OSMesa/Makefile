@@ -99,13 +99,16 @@ depend:
 	$(RM) .depend
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
-Headerize: Headerize.o
+Headerize: Headerize.o $(LDLIBS)
 	cd $(OBJDIR); $(CC) $(STATIC) -o ../Headerize Headerize.o $(LIBDIRS) $(LIBS)
+
+LDViewMessages.h: Headerize ../LDViewMessages.ini
+	./Headerize ../LDViewMessages.ini
 
 StudLogo.h: Headerize ../Textures/StudLogo.png
 	./Headerize ../Textures/StudLogo.png
 
-$(EXECS):   StudLogo.h $(OBJS) $(LDLIBS)
+$(EXECS):   StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
 	$(RM) $(EXECS)
 	cd $(OBJDIR); $(CC) $(STATIC) -o ../$(EXECS) $(OBJS) $(LIBDIRS) $(LIBS)
 
