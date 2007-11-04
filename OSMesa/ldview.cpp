@@ -5,6 +5,7 @@
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <GL/osmesa.h>
 #include <TRE/TREMainModel.h>
+#include "StudLogo.h"
 
 #define BYTES_PER_PIXEL 5
 
@@ -61,11 +62,8 @@ int main(int argc, char *argv[])
 	setupDefaults(argv);
 	if ((buffer = setupContext(ctx)) != NULL)
 	{
-		char *logoFilename = copyString(TCUserDefaults::getAppPath(), 64);
-
-		strcat(logoFilename, "StudLogo.png");
-		TREMainModel::loadStudTexture(logoFilename);
-		delete logoFilename;
+		TREMainModel::setStudTextureData(StudLogo_bytes,
+			sizeof(StudLogo_bytes));
 		LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 		snapshotTaker->saveImage();
 		OSMesaDestroyContext(ctx);
