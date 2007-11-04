@@ -46,7 +46,7 @@ endif
 
 endif
 
-OBJDIR = .obj
+OBJDIR = .obj$(POSTFIX)
 
 VPATH = $(OBJDIR)
 

@@ -1,4 +1,4 @@
-EXECS= libLDLoader.a
+EXECS= libLDLoader$(POSTFIX).a
 CFLAGSLOC = -O3
 LIBDIRS =
 HOSTLIBS =
