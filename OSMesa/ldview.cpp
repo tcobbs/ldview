@@ -3,11 +3,42 @@
 #include <TCFoundation/mystring.h>
 #include <LDLib/LDSnapshotTaker.h>
 #include <TCFoundation/TCAutoreleasePool.h>
+#include <TCFoundation/TCAlertManager.h>
+#include <TCFoundation/TCProgressAlert.h>
+#include <TCFoundation/TCLocalStrings.h>
 #include <GL/osmesa.h>
 #include <TRE/TREMainModel.h>
 #include "StudLogo.h"
+#include "LDViewMessages.h"
 
-#define BYTES_PER_PIXEL 5
+#define BYTES_PER_PIXEL 8
+
+class ProgressHandler: public TCObject
+{
+public:
+	ProgressHandler(void)
+	{
+		TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
+			(TCAlertCallback)&ProgressHandler::alertCallback);
+	}
+protected:
+	~ProgressHandler(void)
+	{
+	}
+	void dealloc(void)
+	{
+		TCAlertManager::unregisterHandler(this);
+		TCObject::dealloc();
+	}
+	void alertCallback(TCProgressAlert *progress)
+	{
+		if (progress->getMessage() && strlen(progress->getMessage()))
+		{
+			printf("%s: %f%%\n", progress->getMessage(),
+				progress->getProgress() * 100.0f);
+		}
+	}
+};
 
 void setupDefaults(char *argv[])
 {
@@ -38,7 +69,7 @@ void *setupContext(OSMesaContext &ctx)
 	{
 		width = height = tileSize;
 	}
-	ctx = OSMesaCreateContextExt(OSMESA_RGBA, 23, 8, 0, NULL);
+	ctx = OSMesaCreateContextExt(OSMESA_RGBA, 24, 8, 0, NULL);
 	if (!ctx)
 	{
 		printf("Error creating OSMesa context.\n");
@@ -58,16 +89,24 @@ int main(int argc, char *argv[])
 {
 	void *buffer;
 	OSMesaContext ctx;
+	int stringTableSize = sizeof(LDViewMessages_bytes);
+	char *stringTable = new char[sizeof(LDViewMessages_bytes) + 1];
 
+	memcpy(stringTable, LDViewMessages_bytes, stringTableSize);
+	stringTable[stringTableSize] = 0;
+	TCLocalStrings::setStringTable(stringTable);
 	setupDefaults(argv);
 	if ((buffer = setupContext(ctx)) != NULL)
 	{
+		ProgressHandler *progressHandler = new ProgressHandler;
+
 		TREMainModel::setStudTextureData(StudLogo_bytes,
 			sizeof(StudLogo_bytes));
 		LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 		snapshotTaker->saveImage();
 		OSMesaDestroyContext(ctx);
 		free(buffer);
+		TCObject::release(progressHandler);
 	}
 	TCAutoreleasePool::processReleases();
 	return 0;
