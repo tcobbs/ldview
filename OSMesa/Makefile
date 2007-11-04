@@ -14,7 +14,7 @@ MAKEMODE = POSTFIX=-osmesa
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
 
 CSRCS = $(wildcard *.c)
-CCSRCS =  $(wildcard *.cpp)
+CCSRCS =  ldview.cpp
 
 ifeq ($(shell uname -s), Darwin)
 CFLAGS += -arch i386 -arch ppc
@@ -99,7 +99,13 @@ depend:
 	$(RM) .depend
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
-$(EXECS):   $(OBJS) $(LDLIBS)
+Headerize: Headerize.o
+	cd $(OBJDIR); $(CC) $(STATIC) -o ../Headerize Headerize.o $(LIBDIRS) $(LIBS)
+
+StudLogo.h: Headerize ../Textures/StudLogo.png
+	./Headerize ../Textures/StudLogo.png
+
+$(EXECS):   StudLogo.h $(OBJS) $(LDLIBS)
 	$(RM) $(EXECS)
 	cd $(OBJDIR); $(CC) $(STATIC) -o ../$(EXECS) $(OBJS) $(LIBDIRS) $(LIBS)
 
@@ -109,7 +115,7 @@ webgrabber:	$(OBJS)
 clean:
 	cd $(OBJDIR); $(RM) $(OBJS)
 	$(RMDIR) $(OBJDIR)
-	$(RM) $(EXECS) core
+	$(RM) $(EXECS) core Headerize StudLogo.h
 
 debug: CFLAGSLOC = -g -DUNZIP_CMD
 debug: MAKEMODE = debug
