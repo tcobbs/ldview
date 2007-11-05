@@ -453,3 +453,12 @@ TCByte *LDSnapshotTaker::grabImage(
 	}
 	return buffer;
 }
+
+bool LDSnapshotTaker::doCommandLine(void)
+{
+	LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
+	bool retValue = snapshotTaker->saveImage();
+
+	snapshotTaker->release();
+	return retValue;
+}

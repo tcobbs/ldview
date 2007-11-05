@@ -38,6 +38,7 @@ public:
 	bool saveImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 	bool saveImage(void);
+	static bool doCommandLine(void);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }
 protected:
