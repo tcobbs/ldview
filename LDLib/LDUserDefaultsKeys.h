@@ -141,6 +141,8 @@
 #define INV_SHOW_TOTAL_KEY "InventoryShowTotal"
 
 // The following are undocumented, but need to be documented.
+#define SAVE_SNAPSHOTS_KEY "SaveSnapshots"
+#define SAVE_DIR_KEY "SaveDir"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
