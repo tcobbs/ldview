@@ -59,6 +59,7 @@ bool LDLMainModel::load(const char *filename)
 	LDLError *error;
 
 	setFilename(filename);
+	lDrawDir();	// Initializes sm_lDrawIni
 	if (sm_lDrawIni)
 	{
 		LDrawIniComputeRealDirs(sm_lDrawIni, 1, 0, filename);
