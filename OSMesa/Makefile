@@ -1,17 +1,17 @@
-EXECS = ldview
 POSTFIX = -osmesa
 CC = g++
 RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
-LIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../boost/lib -L/usr/X11R6/lib
+LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib
+LIBDIRS = $(LDLIBDIRS) -L../../boost/lib -L/usr/X11R6/lib
 LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread
 STATIC =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  ldview.cpp
@@ -75,7 +75,7 @@ OBJS = $(COBJS) $(CCOBJS)
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDE) $(CFLAGSLOC) -c $<
 
-all:    $(OBJDIR) $(EXECS)
+all:    $(OBJDIR) ldview
 
 ../TCFoundation/libTCFoundation$(POSTFIX).a:
 	cd ../TCFoundation; make $(MAKEMODE)
@@ -108,17 +108,23 @@ LDViewMessages.h: Headerize ../LDViewMessages.ini
 StudLogo.h: Headerize ../Textures/StudLogo.png
 	./Headerize ../Textures/StudLogo.png
 
-$(EXECS):   StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
-	$(RM) $(EXECS)
-	cd $(OBJDIR); $(CC) $(STATIC) -o ../$(EXECS) $(OBJS) $(LIBDIRS) $(LIBS)
+BuildLibs:
+	for i in $(LDLIBDIRS); do				\
+		cd `echo $$i | sed "s/-L...//"`;	\
+		make $(MAKEMODE);					\
+	done
+
+ldview:   BuildLibs StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
+	cd $(OBJDIR); $(CC) $(STATIC) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
 
-clean:
+clean: MAKEMODE = clean POSTFIX=-osmesa
+clean: BuildLibs
 	cd $(OBJDIR); $(RM) $(OBJS)
 	$(RMDIR) $(OBJDIR)
-	$(RM) $(EXECS) core Headerize StudLogo.h
+	$(RM) ldview core Headerize StudLogo.h
 
 debug: CFLAGSLOC = -g -DUNZIP_CMD
 debug: MAKEMODE = debug POSTFIX=-osmesa
