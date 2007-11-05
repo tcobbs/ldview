@@ -118,8 +118,6 @@ bool LDSnapshotTaker::saveImage(void)
 				}
 				if (imageFilename)
 				{
-					debugPrintf(-1, "imageFilename: %s\n", imageFilename);
-					debugPrintf(-1, "arg: %s\n", arg);
 					if (m_modelViewer->getFilename())
 					{
 						m_modelViewer->setFilename(arg);
