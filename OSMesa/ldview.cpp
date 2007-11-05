@@ -2,6 +2,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/mystring.h>
 #include <LDLib/LDSnapshotTaker.h>
+#include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
@@ -85,6 +86,20 @@ void *setupContext(OSMesaContext &ctx)
 	return buffer;
 }
 
+bool fileCaseCallback(char *filename)
+{
+	FILE *file;
+
+	convertStringToLower(filename);
+	file = fopen(filename, "r");
+	if (file)
+	{
+		fclose(file);
+		return true;
+	}
+	return false;
+}
+
 int main(int argc, char *argv[])
 {
 	void *buffer;
@@ -98,15 +113,16 @@ int main(int argc, char *argv[])
 	setupDefaults(argv);
 	if ((buffer = setupContext(ctx)) != NULL)
 	{
-		ProgressHandler *progressHandler = new ProgressHandler;
+		//ProgressHandler *progressHandler = new ProgressHandler;
 
 		TREMainModel::setStudTextureData(StudLogo_bytes,
 			sizeof(StudLogo_bytes));
+		LDLModel::setFileCaseCallback(fileCaseCallback);
 		LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
 		snapshotTaker->saveImage();
 		OSMesaDestroyContext(ctx);
 		free(buffer);
-		TCObject::release(progressHandler);
+		//TCObject::release(progressHandler);
 	}
 	TCAutoreleasePool::processReleases();
 	return 0;
