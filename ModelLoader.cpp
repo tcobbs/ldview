@@ -3,6 +3,7 @@
 #include "SSModelWindow.h"
 #include "LDViewWindow.h"
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLib/LDSnapshotTaker.h>
 #include "LDVExtensionsSetup.h"
 
 #include <TCFoundation/mystring.h>
@@ -140,7 +141,13 @@ void ModelLoader::startup(void)
 			}
 		}
 //		modelWindow->initWindow();
-		if (!screenSaver && commandLineFilename && snapshotFilename &&
+		if (!screenSaver && LDVExtensionsSetup::havePixelBufferExtension() &&
+			LDSnapshotTaker::doCommandLine())
+		{
+			parentWindow->shutdown();
+			savedSnapshot = true;
+		}
+		else if (!screenSaver && commandLineFilename && snapshotFilename &&
 			LDVExtensionsSetup::havePixelBufferExtension())
 		{
 			parentWindow->openModel(commandLineFilename, true);
