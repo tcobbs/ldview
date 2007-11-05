@@ -23,10 +23,12 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 {
 	TCObject::release(TREMainModel::sm_studTextures);
 	TREMainModel::sm_studTextures = NULL;
-	if (TREMainModel::sm_studTextureID)
-	{
-		//glDeleteTextures(1, &TREMainModel::sm_studTextureID);
-	}
+	// We can't deletet the texture from GL, since there's not likely to be an
+	// OpenGL context active at this point in the app shutdown process.
+	//if (TREMainModel::sm_studTextureID)
+	//{
+	//	glDeleteTextures(1, &TREMainModel::sm_studTextureID);
+	//}
 }
 
 TREMainModel::TREMainModel(void)
