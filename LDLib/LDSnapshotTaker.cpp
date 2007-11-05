@@ -58,7 +58,7 @@ bool LDSnapshotTaker::saveImage(void)
 		int count = unhandledArgs->getCount();
 		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY,
 			false, false);
-		char *saveDir = TCUserDefaults::stringForKey(SAVE_DIR_KEY, NULL, false);
+		char *saveDir = NULL;
 		char *imageExt = NULL;
 
 		if (saveSnapshots)
@@ -71,6 +71,11 @@ bool LDSnapshotTaker::saveImage(void)
 			default:
 				imageExt = ".png";
 				break;
+			}
+			saveDir = TCUserDefaults::stringForKey(SAVE_DIR_KEY, NULL, false);
+			if (saveDir)
+			{
+				stripTrailingPathSeparators(saveDir);
 			}
 		}
 		for (int i = 0; i < count && (saveSnapshots || !retValue); i++)
@@ -90,21 +95,26 @@ bool LDSnapshotTaker::saveImage(void)
 
 				if (saveSnapshots)
 				{
-					char *dotSpot;
+					char *dotSpot = NULL;
+					char *baseFilename = filenameFromPath(arg);
 
 					if (saveDir)
 					{
-						char *baseFilename = filenameFromPath(arg);
-
-						imageFilename = copyString(baseFilename,
-							strlen(imageExt));
-						delete baseFilename;
+						imageFilename = new char[strlen(baseFilename) +
+							strlen(imageExt) + strlen(saveDir) + 2];
+						sprintf(imageFilename, "%s/%s", saveDir, baseFilename);
 					}
 					else
 					{
 						imageFilename = copyString(arg, strlen(imageExt));
 					}
-					dotSpot = strrchr(imageFilename, '.');
+					// Note: we need there to be a dot in the base filename,
+					// not the path before that.
+					if (strchr(baseFilename, '.'))
+					{
+						dotSpot = strrchr(imageFilename, '.');
+					}
+					delete baseFilename;
 					if (dotSpot)
 					{
 						*dotSpot = 0;
