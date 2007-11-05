@@ -49,14 +49,31 @@ void LDSnapshotTaker::dealloc(void)
 
 bool LDSnapshotTaker::saveImage(void)
 {
+	bool retValue = false;
 	TCStringArray *unhandledArgs =
 		TCUserDefaults::getUnhandledCommandLineArgs();
 
 	if (unhandledArgs)
 	{
 		int count = unhandledArgs->getCount();
+		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY,
+			false, false);
+		char *saveDir = TCUserDefaults::stringForKey(SAVE_DIR_KEY, NULL, false);
+		char *imageExt = NULL;
 
-		for (int i = 0; i < count; i++)
+		if (saveSnapshots)
+		{
+			switch (TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false))
+			{
+			case 2:
+				imageExt = ".bmp";
+				break;
+			default:
+				imageExt = ".png";
+				break;
+			}
+		}
+		for (int i = 0; i < count && (saveSnapshots || !retValue); i++)
 		{
 			char *arg = unhandledArgs->stringAtIndex(i);
 			
@@ -64,27 +81,63 @@ bool LDSnapshotTaker::saveImage(void)
 			{
 				int width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640,
 					false);
-				int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
+				int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480,
+					false);
 				bool zoomToFit =
 					TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
 					false);
-				char *imageFilename = TCUserDefaults::stringForKey(
-					SAVE_SNAPSHOT_KEY, NULL, false);
+				char *imageFilename = NULL;
 
+				if (saveSnapshots)
+				{
+					char *dotSpot;
+
+					if (saveDir)
+					{
+						char *baseFilename = filenameFromPath(arg);
+
+						imageFilename = copyString(baseFilename,
+							strlen(imageExt));
+						delete baseFilename;
+					}
+					else
+					{
+						imageFilename = copyString(arg, strlen(imageExt));
+					}
+					dotSpot = strrchr(imageFilename, '.');
+					if (dotSpot)
+					{
+						*dotSpot = 0;
+					}
+					strcat(imageFilename, imageExt);
+				}
+				else
+				{
+					imageFilename = TCUserDefaults::stringForKey(
+						SAVE_SNAPSHOT_KEY, NULL, false);
+				}
 				if (imageFilename)
 				{
-					bool retValue;
-
-					m_modelViewer->setFilename(arg);
+					debugPrintf(-1, "imageFilename: %s\n", imageFilename);
+					debugPrintf(-1, "arg: %s\n", arg);
+					if (m_modelViewer->getFilename())
+					{
+						m_modelViewer->setFilename(arg);
+						m_modelViewer->loadModel();
+					}
+					else
+					{
+						m_modelViewer->setFilename(arg);
+					}
 					retValue = saveImage(imageFilename, width, height,
-						zoomToFit);
+						zoomToFit) || retValue;
 					delete imageFilename;
-					return retValue;
 				}
 			}
 		}
+		delete saveDir;
 	}
-	return false;
+	return retValue;
 }
 
 bool LDSnapshotTaker::saveImage(
