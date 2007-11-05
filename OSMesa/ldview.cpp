@@ -12,7 +12,9 @@
 #include "StudLogo.h"
 #include "LDViewMessages.h"
 
-#define BYTES_PER_PIXEL 8
+#define DEPTH_BPP 24
+// Note: buffer contains only color buffer, not depth and stencil.
+#define BYTES_PER_PIXEL 4
 
 class ProgressHandler: public TCObject
 {
@@ -70,7 +72,7 @@ void *setupContext(OSMesaContext &ctx)
 	{
 		width = height = tileSize;
 	}
-	ctx = OSMesaCreateContextExt(OSMESA_RGBA, 24, 8, 0, NULL);
+	ctx = OSMesaCreateContextExt(OSMESA_RGBA, DEPTH_BPP, 8, 0, NULL);
 	if (!ctx)
 	{
 		printf("Error creating OSMesa context.\n");
@@ -118,8 +120,7 @@ int main(int argc, char *argv[])
 		TREMainModel::setStudTextureData(StudLogo_bytes,
 			sizeof(StudLogo_bytes));
 		LDLModel::setFileCaseCallback(fileCaseCallback);
-		LDSnapshotTaker *snapshotTaker = new LDSnapshotTaker;
-		snapshotTaker->saveImage();
+		LDSnapshotTaker::doCommandLine();
 		OSMesaDestroyContext(ctx);
 		free(buffer);
 		//TCObject::release(progressHandler);
