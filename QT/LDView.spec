@@ -24,6 +24,8 @@ cd $RPM_SOURCE_DIR/LDView/QT
 qmake
 make
 strip LDView
+cd ../OSMesa
+make
 
 %install
 cd $RPM_SOURCE_DIR/LDView/QT
@@ -31,6 +33,7 @@ mkdir -p $RPM_BUILD_ROOT/usr/local/share/ldview
 mkdir -p $RPM_BUILD_ROOT/usr/local/bin
 install -d $RPM_BUILD_ROOT/usr/local/share/ldview
 install -m 755 LDView $RPM_BUILD_ROOT/usr/local/bin/LDView
+install -m 755 ../OSMesa/ldview $RPM_BUILD_ROOT/usr/local/bin/ldview
 install -m 644 ../Textures/SansSerif.fnt \
 $RPM_BUILD_ROOT/usr/local/share/ldview/SansSerif.fnt
 install -m 644 ../Help.html $RPM_BUILD_ROOT/usr/local/share/ldview/Help.html
@@ -95,6 +98,15 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%package osmesa
+Summary: OSMesa port of LDView for servers without X11
+Group: Applications/Multimedia
+%description osmesa
+OSMesa port of LDView for servers without X11
+
+%files osmesa
+/usr/local/bin/ldview
 
 %package gnome
 Summary: Gnome integration for LDView
