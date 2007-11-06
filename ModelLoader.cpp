@@ -143,7 +143,7 @@ void ModelLoader::startup(void)
 //		modelWindow->initWindow();
 		if (!screenSaver && LDVExtensionsSetup::havePixelBufferExtension() &&
 			modelWindow->setupPBuffer(1600, 1200) &&
-			LDSnapshotTaker::doCommandLine(1600, 1200))
+			LDSnapshotTaker::doCommandLine())
 		{
 			modelWindow->cleanupPBuffer();
 			parentWindow->shutdown();
