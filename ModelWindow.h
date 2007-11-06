@@ -122,6 +122,9 @@ class ModelWindow: public CUIOGLWindow
 		int getSaveWidth(void) const { return saveWidth; }
 		void setSaveHeight(int value) { saveHeight = value; }
 		int getSaveHeight(void) const { return saveHeight; }
+		virtual bool setupPBuffer(int imageWidth, int imageHeight,
+			bool antialias = false);
+		virtual void cleanupPBuffer(void);
 
 		void orthoView(void);
 
@@ -236,9 +239,6 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool saveImage(char *filename, int imageWidth, int imageHeight,
 			bool zoomToFit);
 		virtual void renderOffscreenImage(void);
-		virtual bool setupPBuffer(int imageWidth, int imageHeight,
-			bool antialias = false);
-		virtual void cleanupPBuffer(void);
 		virtual void setupSnapshotBackBuffer(int imageWidth, int imageHeight,
 			RECT &rect);
 		virtual void cleanupSnapshotBackBuffer(RECT &rect);
