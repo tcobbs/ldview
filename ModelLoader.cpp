@@ -142,8 +142,10 @@ void ModelLoader::startup(void)
 		}
 //		modelWindow->initWindow();
 		if (!screenSaver && LDVExtensionsSetup::havePixelBufferExtension() &&
-			LDSnapshotTaker::doCommandLine())
+			modelWindow->setupPBuffer(1600, 1200) &&
+			LDSnapshotTaker::doCommandLine(1600, 1200))
 		{
+			modelWindow->cleanupPBuffer();
 			parentWindow->shutdown();
 			savedSnapshot = true;
 		}
