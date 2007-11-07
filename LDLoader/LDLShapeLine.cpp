@@ -175,7 +175,7 @@ void LDLShapeLine::scanPoints(
 	const TCFloat *matrix,
 	LDLModel::ScanPointType types) const
 {
-	if (shouldScanPoints(types))
+	if (shouldScanPoints(types) && m_valid)
 	{
 		int i;
 		int count = getNumPoints();
