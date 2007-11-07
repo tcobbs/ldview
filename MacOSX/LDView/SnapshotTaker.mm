@@ -54,10 +54,6 @@
 		{
 			ldSnapshotTaker = new LDSnapshotTaker(modelViewer);
 		}
-		else
-		{
-			ldSnapshotTaker = new LDSnapshotTaker;
-		}
 		if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
 		{			
 			CGLPixelFormatObj pixelFormat;
@@ -114,26 +110,40 @@
 
 - (void)saveFileSetup
 {
-	LDrawModelViewer *modelViewer = ldSnapshotTaker->getModelViewer();
+	LDrawModelViewer *modelViewer = NULL;
 	
 	CGLSetCurrentContext(context);
 	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
-	modelViewer->perspectiveView();
+	if (ldSnapshotTaker)
+	{
+		modelViewer = ldSnapshotTaker->getModelViewer();
+		modelViewer->perspectiveView();
+	}
 	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glDrawBuffer(GL_FRONT);
 	glReadBuffer(GL_FRONT);
-	if (modelViewer->getMainTREModel() == NULL && !modelViewer->getNeedsReload())
+	if (modelViewer)
 	{
-		modelViewer->loadModel(true);
+		if (modelViewer->getMainTREModel() == NULL && !modelViewer->getNeedsReload())
+		{
+			modelViewer->loadModel(true);
+		}
 	}
 }
 
 - (bool)saveFile
 {
 	[self saveFileSetup];
-	return ldSnapshotTaker->saveImage();
+	if (ldSnapshotTaker)
+	{
+		return ldSnapshotTaker->saveImage();
+	}
+	else
+	{
+		return LDSnapshotTaker::doCommandLine();
+	}
 }
 
 - (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit
