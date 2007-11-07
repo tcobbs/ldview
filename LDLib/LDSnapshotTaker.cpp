@@ -340,7 +340,6 @@ TCByte *LDSnapshotTaker::grabImage(
 	bool canceled = false;
 	bool bufferAllocated = false;
 
-	m_modelViewer->setup();
 	if (zoomToFit)
 	{
 		m_modelViewer->setForceZoomToFit(true);
@@ -352,6 +351,7 @@ TCByte *LDSnapshotTaker::grabImage(
 		numYTiles);
 	m_modelViewer->setWidth(newWidth);
 	m_modelViewer->setHeight(newHeight);
+	m_modelViewer->setup();
 	if (canSaveAlpha())
 	{
 		bytesPerPixel = 4;
