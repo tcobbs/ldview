@@ -18,6 +18,7 @@
 #include "LDPreferences.h"
 #include "LDPartsList.h"
 #include "LDViewPoint.h"
+#include "LDUserDefaultsKeys.h"
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
@@ -566,10 +567,9 @@ void LDrawModelViewer::setModelCenter(const TCFloat *value)
 		flags.overrideModelCenter = true;
 		center = TCVector(value[0],value[1],value[2]);
 		flags.needsSetup = true;
-				
 	}
-
 }
+
 void LDrawModelViewer::setModelSize(const TCFloat value)
 {
 	if (value)
@@ -577,9 +577,7 @@ void LDrawModelViewer::setModelSize(const TCFloat value)
 		flags.overrideModelSize = true;
 		size = value;
 		flags.needsSetup = true;
-				
 	}
-
 }
 
 void LDrawModelViewer::setDefaultDistance(TCFloat value)
@@ -3868,7 +3866,7 @@ void LDrawModelViewer::zoomToFit(void)
 	if (mainTREModel)
 	{
 		LDLAutoCamera *autoCamera = new LDLAutoCamera;
-		char *cameraGlobe = TCUserDefaults::stringForKey("CameraGlobe", NULL,
+		char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
 			false);
 
 		autoCamera->setModel(mainModel);
