@@ -122,8 +122,10 @@ void ModelLoader::startup(void)
 	{
 		char *commandLineFilename = getCommandLineFilename();
 		char *snapshotFilename =
-			TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY);
+			TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY, NULL, false);
 		bool savedSnapshot = false;
+		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY, 0,
+			false);
 
 		modelWindow = parentWindow->getModelWindow();
 		modelWindow->retain();
@@ -140,25 +142,29 @@ void ModelLoader::startup(void)
 				SetCurrentDirectory(originalDir);
 			}
 		}
-//		modelWindow->initWindow();
-		if (!screenSaver && LDVExtensionsSetup::havePixelBufferExtension() &&
-			modelWindow->setupPBuffer(1600, 1200) &&
-			LDSnapshotTaker::doCommandLine())
-		{
-			modelWindow->cleanupPBuffer();
-			parentWindow->shutdown();
-			savedSnapshot = true;
-		}
-		else if (!screenSaver && commandLineFilename && snapshotFilename &&
+		if (!screenSaver && commandLineFilename &&
+			(snapshotFilename || saveSnapshots) &&
 			LDVExtensionsSetup::havePixelBufferExtension())
 		{
-			parentWindow->openModel(commandLineFilename, true);
-			// Note: even if the snapshot save fails, we don't want to continue.
-			// The user will get an error in the event of a snapshot save
-			// failure.
-			modelWindow->saveSnapshot(snapshotFilename, true);
-			parentWindow->shutdown();
-			savedSnapshot = true;
+			if (modelWindow->setupPBuffer(1600, 1200))
+			{
+				if (LDSnapshotTaker::doCommandLine())
+				{
+					parentWindow->shutdown();
+					savedSnapshot = true;
+				}
+				modelWindow->cleanupPBuffer();
+			}
+			if (!savedSnapshot && snapshotFilename)
+			{
+				parentWindow->openModel(commandLineFilename, true);
+				// Note: even if the snapshot save fails, we don't want to continue.
+				// The user will get an error in the event of a snapshot save
+				// failure.
+				modelWindow->saveSnapshot(snapshotFilename, true);
+				parentWindow->shutdown();
+				savedSnapshot = true;
+			}
 		}
 		if (!savedSnapshot)
 		{
