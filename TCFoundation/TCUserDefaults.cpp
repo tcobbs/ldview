@@ -241,6 +241,11 @@ void TCUserDefaults::setCommandLine(char *argv[])
 	initAppPath();
 }
 
+void TCUserDefaults::addCommandLineArg(const char *arg)
+{
+	getCurrentUserDefaults()->defAddCommandLineArg(arg);
+}
+
 void TCUserDefaults::setCommandLine(const char *args)
 {
 	TCStringArray *argArray = new TCStringArray;
@@ -1442,9 +1447,28 @@ TCStringArray* TCUserDefaults::defGetAllSessionNames(void)
 	return allSessionNames;
 }
 
+void TCUserDefaults::defAddCommandLineArg(const char *arg)
+{
+	int count = commandLine->getCount();
+
+	if (count > 0 && strcmp(arg, "=") == 0)
+	{
+		commandLine->appendString("=", count - 1);
+	}
+	else if (count > 0 && stringHasSuffix(commandLine->stringAtIndex(count - 1),
+		"="))
+	{
+		commandLine->appendString(arg, count - 1);
+	}
+	else
+	{
+		commandLine->addString(arg);
+	}
+}
+
 void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 {
-	int i, j;
+	int i;
 	int count = argArray->getCount();
 
 	if (commandLine)
@@ -1452,24 +1476,9 @@ void TCUserDefaults::defSetCommandLine(TCStringArray *argArray)
 		commandLine->release();
 	}
 	commandLine = new TCStringArray;
-	for (i = 0, j = 0; i < count; i++)
+	for (i = 0; i < count; i++)
 	{
-		char *arg = argArray->stringAtIndex(i);
-
-		if (i > 0 && strcmp(arg, "=") == 0)
-		{
-			commandLine->appendString("=", j - 1);
-		}
-		else if (i > 0 && stringHasSuffix(commandLine->stringAtIndex(j - 1),
-			"="))
-		{
-			commandLine->appendString(arg, j - 1);
-		}
-		else
-		{
-			commandLine->addString(arg);
-			j++;
-		}
+		defAddCommandLineArg(argArray->stringAtIndex(i));
 	}
 }
 
