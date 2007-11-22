@@ -58,6 +58,7 @@ bool LDSnapshotTaker::saveImage(void)
 
 	if (unhandledArgs)
 	{
+		int i;
 		int count = unhandledArgs->getCount();
 		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY,
 			false, false);
@@ -79,6 +80,30 @@ bool LDSnapshotTaker::saveImage(void)
 			if (saveDir)
 			{
 				stripTrailingPathSeparators(saveDir);
+			}
+		}
+		// Note: the following two lines don't affect values passed on the
+		// command line, so -CameraGlobe= and -HFOV= will both work on the
+		// command line as aliases for -ca and -cg.
+		TCUserDefaults::removeValue(HFOV_KEY, false);
+		TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
+		for (i = 0; i < count; i++)
+		{
+			char *arg = unhandledArgs->stringAtIndex(i);
+
+			if (stringHasCaseInsensitivePrefix(arg, "-ca"))
+			{
+				float value;
+
+				if (sscanf(arg + 3, "%f", &value) == 1)
+				{
+					TCUserDefaults::setFloatForKey(value, HFOV_KEY, false);
+				}
+			}
+			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
+			{
+				TCUserDefaults::setStringForKey(arg + 3, CAMERA_GLOBE_KEY,
+					false);
 			}
 		}
 		for (int i = 0; i < count && (saveSnapshots || !retValue); i++)
