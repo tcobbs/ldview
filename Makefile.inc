@@ -84,7 +84,10 @@ webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
 
 clean:
-	cd $(OBJDIR); $(RM) $(OBJS)
+	if [ -d $(OBJDIR) ]; then 	\
+		cd $(OBJDIR);			\
+		$(RM) $(OBJS);			\
+	fi
 	$(RMDIR) $(OBJDIR)
 	$(RM) $(EXECS) core
 

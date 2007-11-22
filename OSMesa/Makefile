@@ -122,7 +122,10 @@ webgrabber:	$(OBJS)
 
 clean: MAKEMODE = clean POSTFIX=-osmesa
 clean: BuildLibs
-	cd $(OBJDIR); $(RM) $(OBJS)
+	if [ -d $(OBJDIR) ] ; then	\
+		cd $(OBJDIR);			\
+		$(RM) $(OBJS);			\
+	fi
 	$(RMDIR) $(OBJDIR)
 	$(RM) ldview core Headerize StudLogo.h
 
