@@ -54,6 +54,7 @@ protected:
 	bool canSaveAlpha(void);
 	void renderOffscreenImage(void);
 	bool imageProgressCallback(CUCSTR message, float progress);
+	bool shouldZoomToFit(bool zoomToFit);
 
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
 		void* userData);

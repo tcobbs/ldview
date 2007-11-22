@@ -64,7 +64,11 @@ bool LDSnapshotTaker::saveImage(void)
 			false, false);
 		char *saveDir = NULL;
 		char *imageExt = NULL;
-
+		int width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
+		int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
+		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
+			false);
+		
 		if (saveSnapshots)
 		{
 			switch (TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false))
@@ -82,14 +86,10 @@ bool LDSnapshotTaker::saveImage(void)
 				stripTrailingPathSeparators(saveDir);
 			}
 		}
-		// Note: the following two lines don't affect values passed on the
-		// command line, so -CameraGlobe= and -HFOV= will both work on the
-		// command line as aliases for -ca and -cg.
-		TCUserDefaults::removeValue(HFOV_KEY, false);
-		TCUserDefaults::removeValue(CAMERA_GLOBE_KEY, false);
 		for (i = 0; i < count; i++)
 		{
 			char *arg = unhandledArgs->stringAtIndex(i);
+			char newArg[1024];
 
 			if (stringHasCaseInsensitivePrefix(arg, "-ca"))
 			{
@@ -97,13 +97,15 @@ bool LDSnapshotTaker::saveImage(void)
 
 				if (sscanf(arg + 3, "%f", &value) == 1)
 				{
-					TCUserDefaults::setFloatForKey(value, HFOV_KEY, false);
+					sprintf(newArg, "%s=%f", HFOV_KEY, value);
+					TCUserDefaults::addCommandLineArg(newArg);
 				}
 			}
 			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
 			{
-				TCUserDefaults::setStringForKey(arg + 3, CAMERA_GLOBE_KEY,
-					false);
+				sprintf(newArg, "%s=%s", CAMERA_GLOBE_KEY, arg + 3);
+				TCUserDefaults::addCommandLineArg(newArg);
+				zoomToFit = true;
 			}
 		}
 		for (int i = 0; i < count && (saveSnapshots || !retValue); i++)
@@ -112,13 +114,6 @@ bool LDSnapshotTaker::saveImage(void)
 			
 			if (arg[0] != '-')
 			{
-				int width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640,
-					false);
-				int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480,
-					false);
-				bool zoomToFit =
-					TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
-					false);
 				char *imageFilename = NULL;
 
 				if (saveSnapshots)
@@ -176,20 +171,40 @@ bool LDSnapshotTaker::saveImage(void)
 	return retValue;
 }
 
+bool LDSnapshotTaker::shouldZoomToFit(bool zoomToFit)
+{
+	char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
+		false);
+	bool retValue = false;
+
+	if (zoomToFit)
+	{
+		retValue = true;
+	}
+	else if (cameraGlobe)
+	{
+		float globeRadius;
+
+		if (sscanf(cameraGlobe, "%*f,%*f,%f", &globeRadius) == 1)
+		{
+			retValue = true;
+		}
+	}
+	delete cameraGlobe;
+	return retValue;
+}
+
 bool LDSnapshotTaker::saveImage(
 	const char *filename,
 	int imageWidth,
 	int imageHeight,
 	bool zoomToFit)
 {
-	char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
-		false);
 	bool saveAlpha = false;
-	TCByte *buffer = grabImage(imageWidth, imageHeight, zoomToFit || cameraGlobe
-		!= NULL, NULL, &saveAlpha);
+	TCByte *buffer = grabImage(imageWidth, imageHeight,
+		shouldZoomToFit(zoomToFit), NULL, &saveAlpha);
 	bool retValue = false;
 
-	delete cameraGlobe;
 	if (buffer)
 	{
 		if (m_imageType == ITPng)
