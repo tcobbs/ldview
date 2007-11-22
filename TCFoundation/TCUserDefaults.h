@@ -78,6 +78,7 @@ class TCExport TCUserDefaults: public TCObject
 		// non-const argv in main can't be auto-converted to the const version.
 		static void setCommandLine(char *argv[]);
 		static void setCommandLine(const char *args);
+		static void addCommandLineArg(const char *arg);
 		static TCStringArray* getProcessedCommandLine(void);
 		static TCStringArray* getUnhandledCommandLineArgs(void);
 		static const char* getArgv0(void) { return argv0; }
@@ -126,6 +127,7 @@ class TCExport TCUserDefaults: public TCObject
 			bool copyCurrent);
 		const char* defGetSessionName(void) { return sessionName; }
 		void defSetCommandLine(TCStringArray *argArray);
+		void defAddCommandLineArg(const char *arg);
 		char* defCommandLineStringForKey(const char* key);
 		TCStringArray* defGetUnhandledCommandLineArgs(void);
 		TCStringArray* defGetProcessedCommandLine(void);
