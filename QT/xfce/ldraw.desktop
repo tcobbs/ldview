@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Type=X-Thumbnailer
+Name=LDraw Thumbnailer
+MimeType=application/x-ldraw;application/x-multipart-ldraw
+X-Thumbnailer-Exec=ldraw-thumbnailer %i %o %s
+
