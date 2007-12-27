@@ -742,7 +742,8 @@ BOOL LDViewWindow::initWindow(void)
 	}
 	else if (hParentWindow)
 	{
-		windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_SYSMENU;
+		//windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_THICKFRAME | WS_SYSMENU;
+		windowStyle = WS_CHILD;
 	}
 	else
 	{
