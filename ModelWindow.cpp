@@ -104,6 +104,9 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 hPBuffer(NULL),
 			 hPBufferDC(NULL),
 			 hPBufferGLRC(NULL),
+			 hBitmapRenderDC(NULL),
+			 hBitmapRenderGLRC(NULL),
+			 hRenderBitmap(NULL),
 			 hPrintDialog(NULL),
 			 hStatusBar(NULL),
 			 hProgressBar(NULL),
@@ -2827,6 +2830,82 @@ void ModelWindow::setPollSetting(int value)
 //	return writeImage(filename, width, height, buffer, "PNG", saveAlpha);
 //}
 
+bool ModelWindow::setupBitmapRender(int imageWidth, int imageHeight)
+{
+	hBitmapRenderDC = CreateCompatibleDC(NULL);
+	BYTE *bmBuffer;
+
+	if (!hBitmapRenderDC)
+	{
+		return false;
+	}
+	hRenderBitmap = createDIBSection(hBitmapRenderDC, imageWidth, imageHeight,
+		96, 96, &bmBuffer);
+	if (hRenderBitmap)
+	{
+		PIXELFORMATDESCRIPTOR pfd;
+		int pfIndex;
+
+		memset(&pfd, 0, sizeof(pfd));
+		pfd.nSize = sizeof(PIXELFORMATDESCRIPTOR);
+		pfd.nVersion = 1;
+		pfd.dwFlags = PFD_DRAW_TO_BITMAP | PFD_SUPPORT_OPENGL;
+		pfd.iPixelType = PFD_TYPE_RGBA;
+		pfd.cColorBits = 24;
+		pfd.cDepthBits = 32;
+		pfd.cStencilBits = 2;
+		pfd.cAlphaBits = 8;
+		SelectObject(hBitmapRenderDC, hRenderBitmap);
+		pfIndex = ChoosePixelFormat(hBitmapRenderDC, &pfd);
+		if (pfIndex)
+		{
+			if (SetPixelFormat(hBitmapRenderDC, pfIndex, &pfd))
+			{
+				hBitmapRenderGLRC = wglCreateContext(hBitmapRenderDC);
+				if (hBitmapRenderGLRC)
+				{
+					openGlWillEnd();
+					TREGLExtensions::disableAll(true);
+					hCurrentDC = hBitmapRenderDC;
+					hCurrentGLRC = hBitmapRenderGLRC;
+					wglMakeCurrent(hBitmapRenderDC, hBitmapRenderGLRC);
+					setupMaterial();
+					setupLighting();
+					glDepthFunc(GL_LEQUAL);
+					glEnable(GL_DEPTH_TEST);
+					glDrawBuffer(GL_FRONT);
+					glReadBuffer(GL_FRONT);
+					modelViewer->setWidth(imageWidth);
+					modelViewer->setHeight(imageHeight);
+					modelViewer->setup();
+					modelViewer->pause();
+					modelViewer->setNeedsRecompile();
+					return true;
+				}
+			}
+		}
+		DeleteObject(hRenderBitmap);
+	}
+	DeleteDC(hBitmapRenderDC);
+	hBitmapRenderDC = NULL;
+	return false;
+}
+
+bool ModelWindow::setupOffscreen(
+	int imageWidth,
+	int imageHeight,
+	bool antialias)
+{
+	if (setupPBuffer(imageWidth, imageHeight, antialias))
+	{
+		return true;
+	}
+	else
+	{
+		return setupBitmapRender(imageWidth, imageHeight);
+	}
+}
+
 bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 							   bool antialias)
 {
@@ -2936,7 +3015,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 				}
 			}
 		}
-		cleanupPBuffer();
+		cleanupOffscreen();
 		if (antialias)
 		{
 			return setupPBuffer(imageWidth, imageHeight, false);
@@ -2971,6 +3050,55 @@ void ModelWindow::renderOffscreenImage(void)
 	//}
 }
 
+void ModelWindow::cleanupOffscreen(void)
+{
+	hCurrentDC = hdc;
+	hCurrentGLRC = hglrc;
+	if (hPBuffer)
+	{
+		cleanupPBuffer();
+	}
+	else if (hBitmapRenderGLRC)
+	{
+		cleanupBitmapRender();
+	}
+	if (!savingFromCommandLine)
+	{
+		// If we're saving from the command line, there's no need to
+		// put things back for regular rendering (particularly
+		// recompiling the model, which takes quite a bit of extra
+		// time.
+		makeCurrent();
+		modelViewer->setWidth(width);
+		modelViewer->setHeight(height);
+		//modelViewer->recompile();
+		modelViewer->unpause();
+		modelViewer->setup();
+	}
+}
+
+void ModelWindow::cleanupBitmapRender(void)
+{
+	if (hBitmapRenderGLRC)
+	{
+		openGlWillEnd();
+		wglDeleteContext(hBitmapRenderGLRC);
+		hBitmapRenderGLRC = NULL;
+	}
+	if (hRenderBitmap)
+	{
+		DeleteObject(hRenderBitmap);
+		hRenderBitmap = NULL;
+	}
+	if (hBitmapRenderDC)
+	{
+		DeleteDC(hBitmapRenderDC);
+		hBitmapRenderDC = NULL;
+	}
+	TREGLExtensions::disableAll(false);
+	modelViewer->setNeedsRecompile();
+}
+
 void ModelWindow::cleanupPBuffer(void)
 {
 	if (hPBuffer)
@@ -2982,25 +3110,10 @@ void ModelWindow::cleanupPBuffer(void)
 
 		if (hPBufferDC)
 		{
-			hCurrentDC = hdc;
-			hCurrentGLRC = hglrc;
 			if (hPBufferGLRC)
 			{
 				wglDeleteContext(hPBufferGLRC);
 				hPBufferGLRC = NULL;
-				if (!savingFromCommandLine)
-				{
-					// If we're saving from the command line, there's no need to
-					// put things back for regular rendering (particularly
-					// recompiling the model, which takes quite a bit of extra
-					// time.
-					makeCurrent();
-					modelViewer->setWidth(width);
-					modelViewer->setHeight(height);
-					//modelViewer->recompile();
-					modelViewer->unpause();
-					modelViewer->setup();
-				}
 			}
 			wglReleasePbufferDCARB(hPBuffer, hPBufferDC);
 			hPBufferDC = NULL;
@@ -3175,7 +3288,7 @@ BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 	}
 	if (hPBuffer)
 	{
-		cleanupPBuffer();
+		cleanupOffscreen();
 	}
 	else
 	{
@@ -3223,7 +3336,7 @@ void ModelWindow::grabSetup(
 	offscreenActive = true;
 	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
 		numXTiles, numYTiles);
-	if (!setupPBuffer(newWidth, newHeight, currentAntialiasType > 0))
+	if (!setupOffscreen(newWidth, newHeight, currentAntialiasType > 0))
 	{
 		newWidth = width;		// width is OpenGL window width
 		newHeight = height;		// height is OpenGL window height
@@ -3235,9 +3348,9 @@ void ModelWindow::grabSetup(
 
 void ModelWindow::grabCleanup(RECT origRect, bool origSlowClear)
 {
-	if (hPBuffer)
+	if (hPBuffer || hBitmapRenderGLRC)
 	{
-		cleanupPBuffer();
+		cleanupOffscreen();
 	}
 	else
 	{
@@ -3540,7 +3653,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 			modelViewer->setBackgroundRGBA(255, 255, 255, 255);
 		}
 		modelViewer->setStereoMode(LDVStereoNone);
-		if (!setupPBuffer(renderWidth, renderHeight))
+		if (!setupOffscreen(renderWidth, renderHeight))
 		{
 			if (!modelViewer->getCompiled())
 			{
@@ -3701,7 +3814,7 @@ bool ModelWindow::printPage(const PRINTDLG &pd)
 		}
 		if (hPBuffer)
 		{
-			cleanupPBuffer();
+			cleanupOffscreen();
 		}
 		else
 		{

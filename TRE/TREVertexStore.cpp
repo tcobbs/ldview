@@ -467,7 +467,7 @@ bool TREVertexStore::activate(bool displayLists)
 			{
 				setupVBO();
 			}
-			if (!displayLists && m_vbo)
+			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
 				glVertexPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
@@ -475,11 +475,11 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			else
 			{
-				if (glBindBufferARB)
+				if (glBindBufferARB && TREGLExtensions::haveVBOExtension())
 				{
 					glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 				}
-				if (sm_varBuffer)
+				if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 				{
 					glVertexPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 						sm_varBuffer + m_verticesOffset);
@@ -498,12 +498,12 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_normals && getLightingFlag())
 		{
 			glEnableClientState(GL_NORMAL_ARRAY);
-			if (!displayLists && m_vbo)
+			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(m_normalsOffset));
 			}
-			else if (sm_varBuffer)
+			else if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 			{
 				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
 					sm_varBuffer + m_normalsOffset);
@@ -521,12 +521,12 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_textureCoords)
 		{
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			if (!displayLists && m_vbo)
+			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					BUFFER_OFFSET(m_textureCoordsOffset));
 			}
-			else if (sm_varBuffer)
+			else if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 			{
 				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					sm_varBuffer + m_textureCoordsOffset);
@@ -544,12 +544,12 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_colors)
 		{
 			glEnableClientState(GL_COLOR_ARRAY);
-			if (!displayLists && m_vbo)
+			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
 					BUFFER_OFFSET(m_colorsOffset));
 			}
-			else if (sm_varBuffer)
+			else if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 			{
 				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
 					sm_varBuffer + m_colorsOffset);
@@ -567,11 +567,11 @@ bool TREVertexStore::activate(bool displayLists)
 		if (m_edgeFlags)
 		{
 			glEnableClientState(GL_EDGE_FLAG_ARRAY);
-			if (!displayLists && m_vbo)
+			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glEdgeFlagPointer(4, BUFFER_OFFSET(m_edgeFlagsOffset));
 			}
-			else if (sm_varBuffer)
+			else if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 			{
 				glEdgeFlagPointer(4, sm_varBuffer + m_edgeFlagsOffset);
 			}

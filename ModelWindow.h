@@ -122,9 +122,14 @@ class ModelWindow: public CUIOGLWindow
 		int getSaveWidth(void) const { return saveWidth; }
 		void setSaveHeight(int value) { saveHeight = value; }
 		int getSaveHeight(void) const { return saveHeight; }
+		virtual bool setupBitmapRender(int imageWidth, int imageHeight);
+		virtual bool setupOffscreen(int imageWidth, int imageHeight,
+			bool antialias = false);
 		virtual bool setupPBuffer(int imageWidth, int imageHeight,
 			bool antialias = false);
+		virtual void cleanupOffscreen(void);
 		virtual void cleanupPBuffer(void);
+		virtual void cleanupBitmapRender(void);
 
 		void orthoView(void);
 
@@ -372,6 +377,9 @@ class ModelWindow: public CUIOGLWindow
 		HPBUFFERARB hPBuffer;
 		HDC hPBufferDC;
 		HGLRC hPBufferGLRC;
+		HDC hBitmapRenderDC;
+		HGLRC hBitmapRenderGLRC;
+		HBITMAP hRenderBitmap;
 		HWND hPrintDialog;
 		HWND hPageSetupDialog;
 		float printLeftMargin;

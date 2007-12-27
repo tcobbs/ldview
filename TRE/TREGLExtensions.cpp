@@ -31,6 +31,7 @@ PFNGLGETBUFFERPOINTERVARBPROC TREGLExtensions::sm_glGetBufferPointervARB = NULL;
 char *TREGLExtensions::sm_glExtensions = NULL;
 GLfloat TREGLExtensions::sm_maxAnisoLevel = 1.0f;
 bool TREGLExtensions::sm_rendererIsMesa = false;
+bool TREGLExtensions::sm_tempDisable = false;
 
 TREGLExtensions::TREGLExtensionsCleanup TREGLExtensions::sm_extensionsCleanup;
 
@@ -43,6 +44,11 @@ TREGLExtensions::TREGLExtensionsCleanup TREGLExtensions::sm_extensionsCleanup;
 TREGLExtensions::TREGLExtensionsCleanup::~TREGLExtensionsCleanup(void)
 {
 	TREGLExtensions::cleanup();
+}
+
+void TREGLExtensions::disableAll(bool disable)
+{
+	sm_tempDisable = disable;
 }
 
 void TREGLExtensions::cleanup(void)
@@ -184,7 +190,7 @@ bool TREGLExtensions::checkForExtension(char* extensionsString,
 										char* extension, bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
-		false) != 0;
+		false) != 0 || sm_tempDisable;
 
 	if ((!ignore || force) && extensionsString)
 	{

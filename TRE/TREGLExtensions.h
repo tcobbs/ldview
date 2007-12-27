@@ -75,6 +75,7 @@ public:
 	static bool haveVBOExtension(bool force = false);
 	static bool haveAnisoExtension(bool force = false);
 	static GLfloat getMaxAnisoLevel(void);
+	static void disableAll(bool disable);
 
 protected:
 	static void cleanup(void);
@@ -99,6 +100,7 @@ protected:
 	static char *sm_glExtensions;
 	static GLfloat sm_maxAnisoLevel;
 	static bool sm_rendererIsMesa;
+	static bool sm_tempDisable;
 
 	static class TREGLExtensionsCleanup
 	{

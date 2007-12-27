@@ -143,28 +143,28 @@ void ModelLoader::startup(void)
 			}
 		}
 		if (!screenSaver && commandLineFilename &&
-			(snapshotFilename || saveSnapshots) &&
-			LDVExtensionsSetup::havePixelBufferExtension())
+			(snapshotFilename || saveSnapshots))
 		{
-			if (modelWindow->setupPBuffer(1600, 1200))
+			if (modelWindow->setupOffscreen(1600, 1200))
 			{
-				if (LDSnapshotTaker::doCommandLine())
-				{
-					parentWindow->shutdown();
-					savedSnapshot = true;
-				}
-				modelWindow->cleanupPBuffer();
-			}
-			if (!savedSnapshot && snapshotFilename)
-			{
-				parentWindow->openModel(commandLineFilename, true);
 				// Note: even if the snapshot save fails, we don't want to continue.
 				// The user will get an error in the event of a snapshot save
 				// failure.
-				modelWindow->saveSnapshot(snapshotFilename, true);
+				LDSnapshotTaker::doCommandLine();
 				parentWindow->shutdown();
 				savedSnapshot = true;
+				modelWindow->cleanupOffscreen();
 			}
+			//if (!savedSnapshot && snapshotFilename)
+			//{
+			//	parentWindow->openModel(commandLineFilename, true);
+			//	// Note: even if the snapshot save fails, we don't want to continue.
+			//	// The user will get an error in the event of a snapshot save
+			//	// failure.
+			//	modelWindow->saveSnapshot(snapshotFilename, true);
+			//	parentWindow->shutdown();
+			//	savedSnapshot = true;
+			//}
 		}
 		if (!savedSnapshot)
 		{
