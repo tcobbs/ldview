@@ -335,7 +335,8 @@ void ModelWindow::loadSettings(void)
 		!= 0;
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
 	saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-	viewMode = (LDVViewMode)TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false);
+	viewMode = (LDInputHandler::ViewMode)TCUserDefaults::longForKey(
+		VIEW_MODE_KEY, 0, false);
 }
 
 // Note: static function
@@ -4693,16 +4694,12 @@ BOOL ModelWindow::setupPFD(void)
 	return CUIOGLWindow::setupPFD();
 }
 
-void ModelWindow::setViewMode(LDVViewMode mode, bool saveSetting)
+void ModelWindow::setViewMode(
+	LDInputHandler::ViewMode mode,
+	bool examineLatLong,
+	bool saveSetting)
 {
-	if (mode == LDVViewExamine)
-	{
-		inputHandler->setViewMode(LDInputHandler::VMExamine);
-	}
-	else
-	{
-		inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
-	}
+	inputHandler->setViewMode(mode);
 	viewMode = mode;
 	if (saveSetting)
 	{
@@ -4710,9 +4707,25 @@ void ModelWindow::setViewMode(LDVViewMode mode, bool saveSetting)
 	}
 	if (modelViewer)
 	{
-		if (viewMode == LDVViewExamine)
+		if (viewMode == LDInputHandler::VMExamine)
 		{
+			LDrawModelViewer::ExamineMode examineMode;
+
 			modelViewer->setConstrainZoom(true);
+			if (examineLatLong)
+			{
+				examineMode = LDrawModelViewer::EMLatLong;
+			}
+			else
+			{
+				examineMode = LDrawModelViewer::EMFree;
+			}
+			if (saveSetting)
+			{
+				TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY,
+					false);
+			}
+			modelViewer->setExamineMode(examineMode);
 		}
 		else
 		{

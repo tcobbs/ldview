@@ -21,12 +21,6 @@ class CUIWindowResizer;
 #define POLL_AUTO 2
 #define POLL_BACKGROUND 3
 
-typedef enum
-{
-	LDVViewExamine,
-	LDVViewFlythrough
-} LDVViewMode;
-
 class ErrorInfo: public TCObject
 {
 public:
@@ -101,8 +95,9 @@ class ModelWindow: public CUIOGLWindow
 		virtual bool saveSnapshot(void);
 		virtual bool saveSnapshot(char *saveFilename,
 			bool fromCommandLine = false, bool notReallyCommandLine = false);
-		virtual void setViewMode(LDVViewMode mode, bool saveSetting = true);
-		LDVViewMode getViewMode(void) { return viewMode; }
+		virtual void setViewMode(LDInputHandler::ViewMode mode,
+			bool examineLatLong, bool saveSetting = true);
+		LDInputHandler::ViewMode getViewMode(void) { return viewMode; }
 		LDrawModelViewer* getModelViewer(void) { return modelViewer; }
 		HWND getHPrefsWindow(void) { return hPrefsWindow; }
 		virtual LRESULT processKeyDown(int keyCode, long keyData);
@@ -418,7 +413,7 @@ class ModelWindow: public CUIOGLWindow
 		int saveImageType;
 		bool windowShown;
 		bool saveAlpha;
-		LDVViewMode viewMode;
+		LDInputHandler::ViewMode viewMode;
 		HDC hCurrentDC;
 		HGLRC hCurrentGLRC;
 		CUIWindowResizer *errorWindowResizer;

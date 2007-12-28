@@ -58,6 +58,16 @@ class LDInputHandler;
 class LDrawModelViewer: public TCObject
 {
 	public:
+		enum ViewMode
+		{
+			VMExamine,
+			VMFlyThrough,
+		};
+		enum ExamineMode
+		{
+			EMFree,
+			EMLatLong,
+		};
 		LDrawModelViewer(int, int);
 		LDInputHandler *getInputHandler(void);
 		virtual void update(void);
@@ -117,6 +127,9 @@ class LDrawModelViewer: public TCObject
 		virtual void setHeight(int value);
 		int getWidth(void) { return width; }
 		int getHeight(void) { return height; }
+		void setViewMode(ViewMode value);
+		void setExamineMode(ExamineMode value);
+		ExamineMode getExamineMode(void) const { return examineMode; }
 		void setXRotate(TCFloat value) { xRotate = value; }
 		void setYRotate(TCFloat value) { yRotate = value; }
 		void setZRotate(TCFloat value) { zRotate = value; }
@@ -398,6 +411,7 @@ class LDrawModelViewer: public TCObject
 			bool exists);
 		virtual void unofficialPartNotFound(const char *filename);
 		virtual bool connectionFailure(TCWebClient *webClient);
+		virtual void applyModelRotation(void);
 
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
@@ -427,6 +441,10 @@ class LDrawModelViewer: public TCObject
 		TCVector boundingMax;
 		int lastFrameTimeLength;
 		int cullBackFaces;
+		ExamineMode examineMode;
+		ViewMode viewMode;
+		TCFloat examineLat;
+		TCFloat examineLong;
 		TCFloat xRotate;
 		TCFloat yRotate;
 		TCFloat zRotate;

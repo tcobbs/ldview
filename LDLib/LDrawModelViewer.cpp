@@ -41,6 +41,10 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	height(height),
 	pixelAspectRatio(1.0f),
 	cullBackFaces(0),
+	viewMode(VMExamine),
+	examineMode(EMFree),
+	examineLat(30.0f),
+	examineLong(45.0f),
 	xRotate(0.0f),
 	yRotate(0.0f),
 	zRotate(0.0f),
@@ -612,7 +616,7 @@ void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 
 void LDrawModelViewer::setupDefaultViewAngle(void)
 {
-	if (defaultRotationMatrix)
+	if (defaultRotationMatrix && examineMode != EMLatLong)
 	{
 		memcpy(rotationMatrix, defaultRotationMatrix, 16 * sizeof(TCFloat));
 	}
@@ -640,6 +644,8 @@ void LDrawModelViewer::setupIsoViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = 30.0f;
+	examineLong = 45.0f;
 }
 
 void LDrawModelViewer::setupFrontViewAngle(void)
@@ -663,6 +669,8 @@ void LDrawModelViewer::setupFrontViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = 0.0f;
+	examineLong = 0.0f;
 }
 
 void LDrawModelViewer::setupBackViewAngle(void)
@@ -686,6 +694,8 @@ void LDrawModelViewer::setupBackViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = 0.0f;
+	examineLong = 180.0f;
 }
 
 void LDrawModelViewer::setupLeftViewAngle(void)
@@ -709,6 +719,8 @@ void LDrawModelViewer::setupLeftViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = 0.0f;
+	examineLong = 90.0f;
 }
 
 void LDrawModelViewer::setupRightViewAngle(void)
@@ -732,6 +744,8 @@ void LDrawModelViewer::setupRightViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = 0.0f;
+	examineLong = -90.0f;
 }
 
 void LDrawModelViewer::setupTopViewAngle(void)
@@ -755,6 +769,8 @@ void LDrawModelViewer::setupTopViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = 90.0f;
+	examineLong = 0.0f;
 }
 
 void LDrawModelViewer::setupBottomViewAngle(void)
@@ -778,6 +794,8 @@ void LDrawModelViewer::setupBottomViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
+	examineLat = -90.0f;
+	examineLong = 0.0f;
 }
 
 /*
@@ -2320,6 +2338,16 @@ void LDrawModelViewer::drawSetup(TCFloat eyeXOffset)
 	}
 }
 
+void LDrawModelViewer::setExamineMode(ExamineMode value)
+{
+	examineMode = value;
+}
+
+void LDrawModelViewer::setViewMode(ViewMode value)
+{
+	viewMode = value;
+}
+
 void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 {
 	glPushAttrib(GL_POLYGON_BIT | GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT |
@@ -2336,16 +2364,27 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
-//	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
-	if (rotationMatrix)
+	if (viewMode == VMFlyThrough || examineMode == EMFree)
 	{
-		glPushMatrix();
-		glLoadIdentity();
-		treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-		treGlMultMatrixf(rotationMatrix);
-		treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
-		glPopMatrix();
-		treGlMultMatrixf(rotationMatrix);
+		if (rotationMatrix)
+		{
+			glPushMatrix();
+			glLoadIdentity();
+			treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+			treGlMultMatrixf(rotationMatrix);
+			treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+			glPopMatrix();
+			treGlMultMatrixf(rotationMatrix);
+		}
+	}
+	else if (viewMode == VMExamine && examineMode == EMLatLong)
+	{
+		examineLong += rotationSpeed;
+		examineLat += rotationSpeed;
+		examineLong = fmod(examineLong, (float)(2.0 * M_PI));
+		examineLat = fmod(examineLat, (float)(2.0 * M_PI));
+		treGlRotatef(examineLong, 0.0f, 1.0f, 0.0f);
+		treGlRotatef(examineLat, 1.0f, 0.0f, 0.0f);
 	}
 	if (flags.autoCenter)
 	{
@@ -2692,6 +2731,53 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 	}
 }
 
+void LDrawModelViewer::applyModelRotation(void)
+{
+	if (rotationMatrix)
+	{
+		if (!flags.paused)
+		{
+			if (viewMode == VMFlyThrough || examineMode == EMFree)
+			{
+				TCFloat matrix[16];
+				TCVector rotation = TCVector(xRotate, yRotate, zRotate);
+
+				camera.getFacing().getInverseMatrix(matrix);
+				glPushMatrix();
+				glLoadIdentity();
+				rotation = rotation.mult(matrix);
+				treGlRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
+				treGlMultMatrixf(rotationMatrix);
+				treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+				glPopMatrix();
+			}
+			else if (viewMode == VMExamine && examineMode == EMLatLong)
+			{
+				if (rotationSpeed != 0)
+				{
+					examineLong += rotationSpeed * -yRotate * 0.1f;
+					examineLat += rotationSpeed * xRotate * 0.2f;
+					if (examineLat > 90.0f)
+					{
+						examineLat = 90.0f;
+					}
+					if (examineLat < -90.0f)
+					{
+						examineLat = -90.0f;
+					}
+					examineLong = fmod(examineLong, 360.0f);
+				}
+				glPushMatrix();
+				glLoadIdentity();
+				treGlRotatef(examineLat + 180.0f, 1.0f, 0.0f, 0.0f);
+				treGlRotatef(examineLong, 0.0f, 1.0f, 0.0f);
+				treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+				glPopMatrix();
+			}
+		}
+	}
+}
+
 void LDrawModelViewer::update(void)
 {
 	static GLubyte stipplePattern[128];
@@ -2792,23 +2878,24 @@ void LDrawModelViewer::update(void)
 	}
 	if (rotationMatrix)
 	{
-		if (!flags.paused)
-		{
-			TCFloat matrix[16];
-			TCVector rotation = TCVector(xRotate, yRotate, zRotate);
-
-			camera.getFacing().getInverseMatrix(matrix);
-			glPushMatrix();
-			glLoadIdentity();
-			rotation = rotation.mult(matrix);
-//			printf("[%f %f %f] [%f %f %f]\n", xRotate, yRotate, zRotate,
-//				rotation[0], rotation[1], rotation[2]);
-//			treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
-			treGlRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
-			treGlMultMatrixf(rotationMatrix);
-			treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
-			glPopMatrix();
-		}
+		applyModelRotation();
+//		if (!flags.paused)
+//		{
+//			TCFloat matrix[16];
+//			TCVector rotation = TCVector(xRotate, yRotate, zRotate);
+//
+//			camera.getFacing().getInverseMatrix(matrix);
+//			glPushMatrix();
+//			glLoadIdentity();
+//			rotation = rotation.mult(matrix);
+////			printf("[%f %f %f] [%f %f %f]\n", xRotate, yRotate, zRotate,
+////				rotation[0], rotation[1], rotation[2]);
+////			treGlRotatef(rotationSpeed, xRotate, yRotate, zRotate);
+//			treGlRotatef(rotationSpeed, rotation[0], rotation[1], rotation[2]);
+//			treGlMultMatrixf(rotationMatrix);
+//			treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
+//			glPopMatrix();
+//		}
 	}
 	updateCameraPosition();
 	zoom(zoomSpeed, false);
