@@ -78,6 +78,45 @@
 	return [menu numberOfItems];
 }
 
+- (void)updateLatLongRotationMenuItem:(ModelWindow *)modelWindow
+{
+	bool examineLatLong = [modelWindow examineLatLong];
+	bool flyThroughMode = [modelWindow flyThroughMode];
+
+	if (examineLatLong)
+	{
+		[latLongRotationMenuItem setState:NSOnState];
+	}
+	else
+	{
+		[latLongRotationMenuItem setState:NSOffState];
+	}
+	if (flyThroughMode)
+	{
+		[latLongRotationMenuItem setEnabled:NO];
+	}
+	else
+	{
+		[latLongRotationMenuItem setEnabled:YES];
+	}
+}
+
+- (void)updateViewModeMenuItems:(bool)flyThroughMode
+{
+	if (flyThroughMode)
+	{
+		[examineMenuItem setState:NSOffState];
+		[flyThroughMenuItem setState:NSOnState];
+		[latLongRotationMenuItem setEnabled:NO];
+	}
+	else
+	{
+		[examineMenuItem setState:NSOnState];
+		[flyThroughMenuItem setState:NSOffState];
+		[latLongRotationMenuItem setEnabled:YES];
+	}
+}
+
 - (void)updateAlwaysOnTopMenuItem:(int)level
 {
 	if (level == NSNormalWindowLevel)
@@ -104,16 +143,24 @@
 		{
 			[self updateAlwaysOnTopMenuItem:[[modelWindow window] level]];
 		}
+		else if (item == latLongRotationMenuItem)
+		{
+			[self updateLatLongRotationMenuItem:modelWindow];
+		}
+		else if (item == examineMenuItem)
+		{
+			[self updateViewModeMenuItems:[modelWindow flyThroughMode]];
+		}
 	}
 	return YES;
 }
 
-/*
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if (menuItem == statusBarMenuItem)
+	if (menuItem == latLongRotationMenuItem)
 	{
-		if ([[[NSApp mainWindow] delegate] isKindOfClass:[ModelWindow class]])
+		ModelWindow *modelWindow = [[NSApp mainWindow] delegate];
+		if ([modelWindow isKindOfClass:[ModelWindow class]] && ![modelWindow flyThroughMode])
 		{
 			return YES;
 		}
@@ -124,7 +171,6 @@
 	}
 	return YES;
 }
-*/
 
 - (void)awakeFromNib
 {

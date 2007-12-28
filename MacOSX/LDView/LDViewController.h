@@ -10,7 +10,10 @@
 	IBOutlet NSMenuItem *toolbarMenuItem;
 	IBOutlet NSMenuItem *custToolbarMenuItem;
 	IBOutlet NSMenuItem *alwaysOnTopMenuItem;
-	
+	IBOutlet NSMenuItem *examineMenuItem;
+	IBOutlet NSMenuItem *latLongRotationMenuItem;
+	IBOutlet NSMenuItem *flyThroughMenuItem;
+
 	NSArray *ldrawFileTypes;
 	NSMutableArray *modelWindows;
 	Preferences *preferences;

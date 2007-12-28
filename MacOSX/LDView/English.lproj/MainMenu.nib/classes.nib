@@ -7,6 +7,7 @@
                 errorsAndWarnings = id; 
                 examineMode = id; 
                 flyThroughMode = id; 
+                latLongRotation = id; 
                 partsList = id; 
                 reload = id; 
                 saveSnapshot = id; 
@@ -30,6 +31,9 @@
             OUTLETS = {
                 alwaysOnTopMenuItem = NSMenuItem; 
                 custToolbarMenuItem = NSMenuItem; 
+                examineMenuItem = NSMenuItem; 
+                flyThroughMenuItem = NSMenuItem; 
+                latLongRotationMenuItem = NSMenuItem; 
                 statusBarMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 
             }; 
