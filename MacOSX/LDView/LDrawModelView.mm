@@ -3,11 +3,13 @@
 #import "OCLocalStrings.h"
 #import <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDInputHandler.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCMacros.h>
 #include <TRE/TREGLExtensions.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCDefines.h>
 #include <TCFoundation/TCAlert.h>
+#include <TCFoundation/TCUserDefaults.h>
 
 @implementation LDrawModelView
 
@@ -17,6 +19,10 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)dealloc
 {
+	if (modelViewer)
+	{
+		modelViewer->openGlWillEnd();
+	}
 	TCObject::release(modelViewer);
 	//[lastMoveTime release];
 	[super dealloc];
@@ -816,7 +822,19 @@ static TCImage *resizeCornerImage = NULL;
 
 - (IBAction)viewMode:(id)sender
 {
-	inputHandler->setViewMode((LDInputHandler::ViewMode)[[sender cell] tagForSegment:[sender selectedSegment]]);
+	[self setFlyThroughMode:[[sender cell] tagForSegment:[sender selectedSegment]] == LDInputHandler::VMFlyThrough];
+}
+
+- (void)setFlyThroughMode:(bool)flyThroughMode
+{
+	LDInputHandler::ViewMode newViewMode = LDInputHandler::VMExamine;
+
+	if (flyThroughMode)
+	{
+		newViewMode = LDInputHandler::VMFlyThrough;
+	}
+	inputHandler->setViewMode(newViewMode);
+	TCUserDefaults::setLongForKey(newViewMode, VIEW_MODE_KEY, false);
 }
 
 @end

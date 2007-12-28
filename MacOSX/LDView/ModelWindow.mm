@@ -13,6 +13,7 @@
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLib/LDInputHandler.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCStringArray.h>
 #import "AlertHandler.h"
@@ -156,6 +157,32 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
 }
 
+- (void)setExamineLatLong:(bool)value
+{
+	LDrawModelViewer::ExamineMode examineMode = LDrawModelViewer::EMFree;
+	
+	if (value)
+	{
+		examineMode = LDrawModelViewer::EMLatLong;
+	}
+	[modelView modelViewer]->setExamineMode(examineMode);
+	TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
+}
+
+- (void)setFlyThroughMode:(bool)value
+{
+	flyThroughMode = value;
+	[modelView setFlyThroughMode:flyThroughMode];
+	if (flyThroughMode)
+	{
+		[viewModeSegments selectSegmentWithTag:LDInputHandler::VMFlyThrough];
+	}
+	else
+	{
+		[viewModeSegments selectSegmentWithTag:LDInputHandler::VMExamine];
+	}
+}
+
 - (void)setupViewMode
 {
 	NSArray *toolTips = [NSArray arrayWithObjects:
@@ -164,7 +191,10 @@
 		nil];
 	viewModeSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:viewModeSegments];
 	[self setupSegments:viewModeSegments toolTips:toolTips];
-	[viewModeSegments selectSegmentWithTag:TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false)];
+	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
+	[modelView setFlyThroughMode:flyThroughMode];
+	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
+	[self setExamineLatLong:examineLatLong];
 }
 
 - (void)setupToolbarItems
@@ -764,6 +794,37 @@
 	[modelView modelViewer]->setLightVector([[controller preferences] ldPreferences]->getLightVector());
 	[modelView rotationUpdate];
 	[[controller preferences] lightVectorChanged:alert];
+}
+
+- (IBAction)latLongRotation:(id)sender
+{
+	examineLatLong = !examineLatLong;
+	[self setExamineLatLong:examineLatLong];
+}
+
+- (IBAction)examineMode:(id)sender
+{
+	[self setFlyThroughMode:false];
+}
+
+- (IBAction)flyThroughMode:(id)sender
+{
+	[self setFlyThroughMode:true];
+}
+
+- (bool)examineLatLong
+{
+	return examineLatLong;
+}
+
+- (bool)flyThroughMode
+{
+	return flyThroughMode;
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return [controller validateMenuItem:menuItem];
 }
 
 @end

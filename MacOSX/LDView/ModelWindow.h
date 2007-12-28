@@ -36,6 +36,8 @@ class AlertHandler;
 	NSToolbar *toolbar;
 	NSDate *fpsReferenceDate;
 	int fpsFrameCount;
+	bool flyThroughMode;
+	bool examineLatLong;
 	float fps;
 	float progressAdjust;
 	BOOL showStatusBar;
@@ -54,6 +56,8 @@ class AlertHandler;
 - (BOOL)openModel:(NSString *)filename;
 - (id)initWithController:(LDViewController *)value;
 - (LDrawModelView *)modelView;
+- (bool)examineLatLong;
+- (bool)flyThroughMode;
 
 - (void)ldlErrorCallback:(LDLError *)error;
 - (void)progressAlertCallback:(TCProgressAlert *)alert;
@@ -83,5 +87,6 @@ class AlertHandler;
 - (IBAction)saveViewingAngle:(id)sender;
 - (IBAction)preferences:(id)sender;
 - (IBAction)viewMode:(id)sender;
+- (IBAction)latLongRotation:(id)sender;
 
 @end
