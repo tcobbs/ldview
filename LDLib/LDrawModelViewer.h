@@ -441,8 +441,8 @@ class LDrawModelViewer: public TCObject
 		TCVector boundingMax;
 		int lastFrameTimeLength;
 		int cullBackFaces;
-		ExamineMode examineMode;
 		ViewMode viewMode;
+		ExamineMode examineMode;
 		TCFloat examineLat;
 		TCFloat examineLong;
 		TCFloat xRotate;

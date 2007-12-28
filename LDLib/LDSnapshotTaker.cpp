@@ -387,6 +387,9 @@ TCByte *LDSnapshotTaker::grabImage(
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	newWidth = viewport[2];
 	newHeight = viewport[3];
+	m_modelViewer->setWidth(newWidth);
+	m_modelViewer->setHeight(newHeight);
+	m_modelViewer->perspectiveView();
 	calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
 		numYTiles);
 	m_modelViewer->setWidth(newWidth);
