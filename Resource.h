@@ -356,6 +356,7 @@
 #define ID_TOOLS_PARTSLIST              40088
 #define ID_LIGHTING_DRAWDATS            40089
 #define ID_LIGHTING_OPTIONALMAIN        40090
+#define ID_VIEW_EXAMINE_LAT_LONG        40091
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -368,7 +369,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        183
-#define _APS_NEXT_COMMAND_VALUE         40091
+#define _APS_NEXT_COMMAND_VALUE         40092
 #define _APS_NEXT_CONTROL_VALUE         1233
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

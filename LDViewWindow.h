@@ -193,6 +193,7 @@ class LDViewWindow: public CUIWindow
 		virtual void showLDrawCommandLine(void);
 		virtual bool modelWindowIsShown(void);
 		virtual LRESULT switchToExamineMode(bool saveSetting = true);
+		virtual LRESULT switchExamineLatLong(void);
 		virtual LRESULT switchToFlythroughMode(bool saveSetting = true);
 		virtual void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
 			bool checked);
@@ -363,6 +364,7 @@ class LDViewWindow: public CUIWindow
 		bool bfc;
 		bool libraryUpdateFinished;
 		bool libraryUpdateCanceled;
+		bool examineLatLong;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;

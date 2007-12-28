@@ -37,6 +37,15 @@ void LDInputHandler::cancelMouseDrag(void)
 	}
 }
 
+void LDInputHandler::setViewMode(LDInputHandler::ViewMode value)
+{
+	m_viewMode = value;
+	if (m_modelViewer)
+	{
+		m_modelViewer->setViewMode((LDrawModelViewer::ViewMode)value);
+	}
+}
+
 void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - m_lastX;
@@ -202,6 +211,28 @@ bool LDInputHandler::mouseUp(
 			m_modelViewer->setCameraYRotate(0.0f);
 		}
 		m_modelViewer->setShowLightDir(false);
+		if (m_modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
+		{
+			// In latitude/longitude mode, we don't want it to spin along both
+			// axes at once, because once the latitude gets to 90 or -90, it
+			// just stops.
+			if (fabs(m_modelViewer->getXRotate()) >
+				fabs(m_modelViewer->getYRotate()))
+			{
+				m_modelViewer->setYRotate(0.0f);
+			}
+			else if (fabs(m_modelViewer->getYRotate()) >
+				fabs(m_modelViewer->getXRotate()))
+			{
+				m_modelViewer->setXRotate(0.0f);
+			}
+			else if (fabs(m_modelViewer->getYRotate()) ==
+				fabs(m_modelViewer->getXRotate()) &&
+				m_modelViewer->getXRotate() != 0.0f)
+			{
+				m_modelViewer->setXRotate(0.0f);
+			}
+		}
 		break;
 	case MBRight:
 		m_modelViewer->setZoomSpeed(0.0f);

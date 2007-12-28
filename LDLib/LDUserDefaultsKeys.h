@@ -143,6 +143,7 @@
 // The following are undocumented, but need to be documented.
 #define SAVE_SNAPSHOTS_KEY "SaveSnapshots"
 #define SAVE_DIR_KEY "SaveDir"
+#define EXAMINE_MODE_KEY "ExamineMode"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

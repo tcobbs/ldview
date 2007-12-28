@@ -107,46 +107,48 @@ LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 }
 
 LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
-						   int y, int width, int height)
-			  :CUIWindow(windowTitle, hInstance, x, y, width, height),
-			   modelWindow(NULL),
-			   hAboutWindow(NULL),
-			   hLDrawDirWindow(NULL),
-			   hOpenGLInfoWindow(NULL),
-			   hExtraDirsWindow(NULL),
-			   hLibraryUpdateWindow(NULL),
-			   hStatusBar(NULL),
-			   hToolbar(NULL),
-			   hDeactivatedTooltip(NULL),
-			   userLDrawDir(NULL),
-			   fullScreen(false),
-			   fullScreenActive(false),
-			   switchingModes(false),
-			   searchDirsInitialized(false),
-			   videoModes(NULL),
-			   numVideoModes(0),
-			   currentVideoModeIndex(-1),
-			   showStatusBarOverride(false),
-			   skipMinimize(false),
-			   screenSaver(false),
-			   originalMouseX(-999999),
-			   originalMouseY(-999999),
-			   hFileMenu(NULL),
-			   hViewMenu(NULL),
-			   hToolsMenu(NULL),
-			   loading(FALSE),
-			   openGLInfoWindoResizer(NULL),
-			   hOpenGLStatusBar(NULL),
-			   hExamineIcon(NULL),
-			   hFlythroughIcon(NULL),
-			   libraryUpdater(NULL),
-			   productVersion(NULL),
-			   legalCopyright(NULL),
-			   tbButtonInfos(NULL),
-			   stdBitmapStartId(-1),
-			   tbBitmapStartId(-1),
-			   prefs(NULL),
-			   drawWireframe(false)
+						   int y, int width, int height):
+CUIWindow(windowTitle, hInstance, x, y, width, height),
+modelWindow(NULL),
+hAboutWindow(NULL),
+hLDrawDirWindow(NULL),
+hOpenGLInfoWindow(NULL),
+hExtraDirsWindow(NULL),
+hLibraryUpdateWindow(NULL),
+hStatusBar(NULL),
+hToolbar(NULL),
+hDeactivatedTooltip(NULL),
+userLDrawDir(NULL),
+fullScreen(false),
+fullScreenActive(false),
+switchingModes(false),
+searchDirsInitialized(false),
+videoModes(NULL),
+numVideoModes(0),
+currentVideoModeIndex(-1),
+showStatusBarOverride(false),
+skipMinimize(false),
+screenSaver(false),
+originalMouseX(-999999),
+originalMouseY(-999999),
+hFileMenu(NULL),
+hViewMenu(NULL),
+hToolsMenu(NULL),
+loading(FALSE),
+openGLInfoWindoResizer(NULL),
+hOpenGLStatusBar(NULL),
+hExamineIcon(NULL),
+hFlythroughIcon(NULL),
+libraryUpdater(NULL),
+productVersion(NULL),
+legalCopyright(NULL),
+tbButtonInfos(NULL),
+stdBitmapStartId(-1),
+tbBitmapStartId(-1),
+prefs(NULL),
+drawWireframe(false),
+examineLatLong(TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
+			   LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong)
 {
 	CUIThemes::init();
 	if (CUIThemes::isThemeLibLoaded())
@@ -673,7 +675,8 @@ void LDViewWindow::createStatusBar(void)
 		SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
 		parts[1] += rect.right - rect.left - 32;
 		SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
-		if (modelWindow && modelWindow->getViewMode() == LDVViewFlythrough)
+		if (modelWindow && modelWindow->getViewMode() ==
+			LDInputHandler::VMFlyThrough)
 		{
 			showStatusIcon(false);
 		}
@@ -706,10 +709,10 @@ void LDViewWindow::reflectViewMode(bool saveSetting)
 {
 	switch (TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false))
 	{
-	case LDVViewExamine:
+	case LDInputHandler::VMExamine:
 		switchToExamineMode(saveSetting);
 		break;
-	case LDVViewFlythrough:
+	case LDInputHandler::VMFlyThrough:
 		switchToFlythroughMode(saveSetting);
 		break;
 	default:
@@ -2538,8 +2541,10 @@ LRESULT LDViewWindow::switchToExamineMode(bool saveSetting)
 {
 	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, true);
 	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, false);
-	modelWindow->setViewMode(LDVViewExamine, saveSetting);
+	modelWindow->setViewMode(LDInputHandler::VMExamine, examineLatLong,
+		saveSetting);
 	showStatusIcon(true);
+	setMenuCheck(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG, examineLatLong);
 	return 0;
 }
 
@@ -2547,7 +2552,8 @@ LRESULT LDViewWindow::switchToFlythroughMode(bool saveSetting)
 {
 	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, false);
 	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, true);
-	modelWindow->setViewMode(LDVViewFlythrough, saveSetting);
+	modelWindow->setViewMode(LDInputHandler::VMFlyThrough, examineLatLong,
+		saveSetting);
 	showStatusIcon(false);
 	return 0;
 }
@@ -3110,6 +3116,19 @@ LRESULT LDViewWindow::switchVisualStyle(void)
 	return 0;
 }
 
+LRESULT LDViewWindow::switchExamineLatLong(void)
+{
+//	LDrawModelViewer::ExamineMode examineMode = LDrawModelViewer::EMFree;
+	examineLatLong = !examineLatLong;
+	//if (examineLatLong)
+	//{
+	//	examineMode = LDrawModelViewer::EMLatLong;
+	//}
+	//TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
+	reflectViewMode();
+	return 0;
+}
+
 void LDViewWindow::doLibraryUpdateFinished(int finishType)
 {
 	if (libraryUpdater)
@@ -3436,6 +3455,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_VIEW_EXAMINE:
 			return switchToExamineMode();
+			break;
+		case ID_VIEW_EXAMINE_LAT_LONG:
+			return switchExamineLatLong();
 			break;
 		case ID_VIEW_FLYTHROUGH:
 			return switchToFlythroughMode();
@@ -5000,6 +5022,11 @@ LRESULT LDViewWindow::doInitMenuPopup(HMENU hPopupMenu, UINT /*uPos*/,
 			if (hPopupMenu == hFileMenu)
 			{
 				setMenuEnabled(hFileMenu, ID_FILE_CANCELLOAD, false);
+			}
+			else if (hPopupMenu == hViewMenu)
+			{
+				setMenuEnabled(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG,
+					getMenuCheck(hViewMenu, ID_VIEW_EXAMINE));
 			}
 			updateModelMenuItems();
 		}
