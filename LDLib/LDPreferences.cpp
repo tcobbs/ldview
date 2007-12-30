@@ -727,6 +727,8 @@ void LDPreferences::commitInventorySettings(bool flush /*= true*/)
 void LDPreferences::setupDefaultRotationMatrix(void)
 {
 	std::string value = getStringSetting(CAMERA_GLOBE_KEY);
+	TCFloat latitude = getFloatSetting(DEFAULT_LATITUDE_KEY);
+	TCFloat longitude = getFloatSetting(DEFAULT_LONGITUDE_KEY);
 
 	if (!value.length())
 	{
@@ -808,6 +810,7 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 			}
 		}
 	}
+	modelViewer->setDefaultLatLong(latitude, longitude);
 }
 
 void LDPreferences::setupModelCenter(void)
@@ -1676,6 +1679,8 @@ void LDPreferences::saveDefaultView(void)
 		TCFloat rotationMatrix[16];
 		TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
 		char matrixString[1024];
+		TCFloat latitude = modelViewer->getExamineLatitude();
+		TCFloat longitude = modelViewer->getExamineLongitude();
 
 		memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
 			sizeof(rotationMatrix));
@@ -1688,16 +1693,22 @@ void LDPreferences::saveDefaultView(void)
 			matrix[1], matrix[5], matrix[9],
 			matrix[2], matrix[6], matrix[10]);
 		TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
+		TCUserDefaults::setFloatForKey(latitude, DEFAULT_LATITUDE_KEY);
+		TCUserDefaults::setFloatForKey(longitude, DEFAULT_LONGITUDE_KEY);
 		modelViewer->setDefaultRotationMatrix(matrix);
+		modelViewer->setDefaultLatLong(latitude, longitude);
 	}
 }
 
 void LDPreferences::resetDefaultView(void)
 {
 	TCUserDefaults::removeValue(DEFAULT_MATRIX_KEY);
+	TCUserDefaults::removeValue(DEFAULT_LATITUDE_KEY);
+	TCUserDefaults::removeValue(DEFAULT_LONGITUDE_KEY);
 	if (modelViewer)
 	{
 		modelViewer->setDefaultRotationMatrix(NULL);
+		modelViewer->setDefaultLatLong(30.0f, 45.0f);
 	}
 }
 

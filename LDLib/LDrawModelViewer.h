@@ -316,11 +316,14 @@ class LDrawModelViewer: public TCObject
 		virtual void setModelCenter(const TCFloat *value);
 		virtual void setModelSize(const TCFloat value);
 		virtual void setDefaultRotationMatrix(const TCFloat *value);
+		virtual void setDefaultLatLong(TCFloat latitude, TCFloat longitude);
 		const TCFloat *getDefaultRotationMatrix(void)
 		{
 			return defaultRotationMatrix;
 		}
 		const TCFloat *getRotationMatrix(void) { return rotationMatrix; }
+		TCFloat getExamineLatitude(void) { return examineLatitude; }
+		TCFloat getExamineLongitude(void) { return examineLongitude; }
 		virtual void setFov(TCFloat value);
 		TCFloat getFov(void) { return fov; }
 		TCFloat getHFov(void);
@@ -443,8 +446,6 @@ class LDrawModelViewer: public TCObject
 		int cullBackFaces;
 		ViewMode viewMode;
 		ExamineMode examineMode;
-		TCFloat examineLat;
-		TCFloat examineLong;
 		TCFloat xRotate;
 		TCFloat yRotate;
 		TCFloat zRotate;
@@ -458,6 +459,10 @@ class LDrawModelViewer: public TCObject
 		TCFloat yPan;
 		TCFloat* rotationMatrix;
 		TCFloat* defaultRotationMatrix;
+		TCFloat defaultLatitude;
+		TCFloat defaultLongitude;
+		TCFloat examineLatitude;
+		TCFloat examineLongitude;
 		TCFloat clipAmount;
 		TCFloat nextClipAmount;
 		TCFloat nextDistance;
