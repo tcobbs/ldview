@@ -43,8 +43,6 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	cullBackFaces(0),
 	viewMode(VMExamine),
 	examineMode(EMFree),
-	examineLat(30.0f),
-	examineLong(45.0f),
 	xRotate(0.0f),
 	yRotate(0.0f),
 	zRotate(0.0f),
@@ -57,6 +55,10 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	yPan(0.0f),
 	rotationMatrix(NULL),
 	defaultRotationMatrix(NULL),
+	defaultLatitude(30.0f),
+	defaultLongitude(45.0f),
+	examineLatitude(defaultLatitude),
+	examineLongitude(defaultLongitude),
 	clipAmount(0.0f),
 	nextClipAmount(-1.0f),
 	nextDistance(-1.0f),
@@ -614,9 +616,24 @@ void LDrawModelViewer::setDefaultRotationMatrix(const TCFloat *value)
 	}
 }
 
+void LDrawModelViewer::setDefaultLatLong(TCFloat latitude, TCFloat longitude)
+{
+	if (defaultLatitude != latitude || defaultLongitude != longitude)
+	{
+		defaultLatitude = latitude;
+		defaultLongitude = longitude;
+		flags.needsSetup = true;
+	}
+}
+
 void LDrawModelViewer::setupDefaultViewAngle(void)
 {
-	if (defaultRotationMatrix && examineMode != EMLatLong)
+	if (viewMode == LDInputHandler::VMExamine && examineMode == EMLatLong)
+	{
+		examineLatitude = defaultLatitude;
+		examineLongitude = defaultLongitude;
+	}
+	else if (defaultRotationMatrix)
 	{
 		memcpy(rotationMatrix, defaultRotationMatrix, 16 * sizeof(TCFloat));
 	}
@@ -644,8 +661,8 @@ void LDrawModelViewer::setupIsoViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = 30.0f;
-	examineLong = 45.0f;
+	examineLatitude = 30.0f;
+	examineLongitude = 45.0f;
 }
 
 void LDrawModelViewer::setupFrontViewAngle(void)
@@ -669,8 +686,8 @@ void LDrawModelViewer::setupFrontViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = 0.0f;
-	examineLong = 0.0f;
+	examineLatitude = 0.0f;
+	examineLongitude = 0.0f;
 }
 
 void LDrawModelViewer::setupBackViewAngle(void)
@@ -694,8 +711,8 @@ void LDrawModelViewer::setupBackViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = 0.0f;
-	examineLong = 180.0f;
+	examineLatitude = 0.0f;
+	examineLongitude = 180.0f;
 }
 
 void LDrawModelViewer::setupLeftViewAngle(void)
@@ -719,8 +736,8 @@ void LDrawModelViewer::setupLeftViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = 0.0f;
-	examineLong = 90.0f;
+	examineLatitude = 0.0f;
+	examineLongitude = 90.0f;
 }
 
 void LDrawModelViewer::setupRightViewAngle(void)
@@ -744,8 +761,8 @@ void LDrawModelViewer::setupRightViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = 0.0f;
-	examineLong = -90.0f;
+	examineLatitude = 0.0f;
+	examineLongitude = -90.0f;
 }
 
 void LDrawModelViewer::setupTopViewAngle(void)
@@ -769,8 +786,8 @@ void LDrawModelViewer::setupTopViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = 90.0f;
-	examineLong = 0.0f;
+	examineLatitude = 90.0f;
+	examineLongitude = 0.0f;
 }
 
 void LDrawModelViewer::setupBottomViewAngle(void)
@@ -794,8 +811,8 @@ void LDrawModelViewer::setupBottomViewAngle(void)
 	rotationMatrix[13] = 0.0f;
 	rotationMatrix[14] = 0.0f;
 	rotationMatrix[15] = 1.0f;
-	examineLat = -90.0f;
-	examineLong = 0.0f;
+	examineLatitude = -90.0f;
+	examineLongitude = 0.0f;
 }
 
 /*
@@ -2379,12 +2396,12 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	}
 	else if (viewMode == VMExamine && examineMode == EMLatLong)
 	{
-		examineLong += rotationSpeed;
-		examineLat += rotationSpeed;
-		examineLong = fmod(examineLong, (float)(2.0 * M_PI));
-		examineLat = fmod(examineLat, (float)(2.0 * M_PI));
-		treGlRotatef(examineLong, 0.0f, 1.0f, 0.0f);
-		treGlRotatef(examineLat, 1.0f, 0.0f, 0.0f);
+		examineLongitude += rotationSpeed;
+		examineLatitude += rotationSpeed;
+		examineLongitude = fmod(examineLongitude, (float)(2.0 * M_PI));
+		examineLatitude = fmod(examineLatitude, (float)(2.0 * M_PI));
+		treGlRotatef(examineLongitude, 0.0f, 1.0f, 0.0f);
+		treGlRotatef(examineLatitude, 1.0f, 0.0f, 0.0f);
 	}
 	if (flags.autoCenter)
 	{
@@ -2755,22 +2772,22 @@ void LDrawModelViewer::applyModelRotation(void)
 			{
 				if (rotationSpeed != 0)
 				{
-					examineLong += rotationSpeed * -yRotate * 0.1f;
-					examineLat += rotationSpeed * xRotate * 0.2f;
-					if (examineLat > 90.0f)
+					examineLongitude += rotationSpeed * -yRotate * 0.1f;
+					examineLatitude += rotationSpeed * xRotate * 0.2f;
+					if (examineLatitude > 90.0f)
 					{
-						examineLat = 90.0f;
+						examineLatitude = 90.0f;
 					}
-					if (examineLat < -90.0f)
+					if (examineLatitude < -90.0f)
 					{
-						examineLat = -90.0f;
+						examineLatitude = -90.0f;
 					}
-					examineLong = fmod(examineLong, 360.0f);
+					examineLongitude = fmod(examineLongitude, 360.0f);
 				}
 				glPushMatrix();
 				glLoadIdentity();
-				treGlRotatef(examineLat + 180.0f, 1.0f, 0.0f, 0.0f);
-				treGlRotatef(examineLong, 0.0f, 1.0f, 0.0f);
+				treGlRotatef(examineLatitude + 180.0f, 1.0f, 0.0f, 0.0f);
+				treGlRotatef(examineLongitude, 0.0f, 1.0f, 0.0f);
 				treGlGetFloatv(GL_MODELVIEW_MATRIX, rotationMatrix);
 				glPopMatrix();
 			}
