@@ -179,6 +179,35 @@ bool LDInputHandler::mouseDown(
 	return true;
 }
 
+bool LDInputHandler::mouseCaptureChanged(void)
+{
+	if (m_buttonsDown[MBLeft])
+	{
+		if (m_viewMode == VMFlyThrough)
+		{
+			m_modelViewer->setCameraXRotate(0.0f);
+			m_modelViewer->setCameraYRotate(0.0f);
+		}
+		else
+		{
+			m_modelViewer->setXRotate(0.0f);
+			m_modelViewer->setYRotate(0.0f);
+			m_modelViewer->setRotationSpeed(0.0f);
+		}
+		m_modelViewer->setShowLightDir(false);
+	}
+	if (m_buttonsDown[MBRight])
+	{
+		m_modelViewer->setZoomSpeed(0.0f);
+	}
+	m_mouseMode = MMNone;
+	for (int i = 0; i < m_numButtons; i++)
+	{
+		m_buttonsDown[i] = false;
+	}
+	return true;
+}
+
 bool LDInputHandler::mouseUp(
 	TCULong modifierKeys,
 	MouseButton button,

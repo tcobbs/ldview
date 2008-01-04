@@ -87,6 +87,7 @@ public:
 	bool mouseUp(TCULong modifierKeys, MouseButton button, int x, int y);
 	bool mouseMove(TCULong modifierKeys, int x, int y);
 	bool mouseWheel(TCULong modifierKeys, TCFloat amount);
+	bool mouseCaptureChanged(void);
 	bool keyDown(TCULong modifierKeys, KeyCode keyCode);
 	bool keyUp(TCULong modifierKeys, KeyCode keyCode);
 	void setMouseUpPending(bool value);
