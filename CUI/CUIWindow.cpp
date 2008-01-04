@@ -565,6 +565,11 @@ LRESULT CUIWindow::doMouseWheel(short, short, int, int)
 	return 1;
 }
 
+LRESULT CUIWindow::doCaptureChanged(HWND)
+{
+	return 1;
+}
+
 LRESULT CUIWindow::doKeyDown(int, long)
 {
 	return 1;
@@ -1510,6 +1515,12 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 		case WM_MOUSEWHEEL:
 			if (!doMouseWheel(LOWORD(wParam), HIWORD(wParam),
 				(int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam)))
+			{
+				return 0;
+			}
+			break;
+		case WM_CAPTURECHANGED:
+			if (!doCaptureChanged((HWND)lParam))
 			{
 				return 0;
 			}

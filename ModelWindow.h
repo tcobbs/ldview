@@ -153,6 +153,7 @@ class ModelWindow: public CUIOGLWindow
 		virtual LRESULT doMButtonDown(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doMButtonUp(WPARAM keyFlags, int xPos, int yPos);
 		virtual LRESULT doMouseMove(WPARAM keyFlags, int xPos, int yPos);
+		virtual LRESULT doCaptureChanged(HWND hNewWnd);
 		virtual LRESULT doSize(WPARAM, int, int);
 		virtual LRESULT doMove(int newX, int newY);
 		virtual LRESULT doShowWindow(BOOL showFlag, LPARAM status);
@@ -420,6 +421,7 @@ class ModelWindow: public CUIOGLWindow
 		bool savingFromCommandLine;
 		bool skipErrorUpdates;
 		bool redrawRequested;
+		bool releasingMouse;
 };
 
 #endif

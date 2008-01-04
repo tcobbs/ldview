@@ -163,6 +163,7 @@ class CUIExport CUIWindow : public TCObject
 			int yPos);
 		virtual LRESULT doMouseWheel(short keyFlags, short zDelta,
 			int xPos, int yPos);
+		virtual LRESULT doCaptureChanged(HWND hNewWnd);
 		virtual LRESULT doKeyDown(int keyCode, long keyData);
 		virtual LRESULT doKeyUp(int keyCode, long keyData);
 		virtual LRESULT doDropFiles(HDROP hDrop);

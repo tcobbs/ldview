@@ -115,7 +115,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 hCurrentGLRC(NULL),
 			 errorWindowResizer(NULL),
 			 savingFromCommandLine(false),
-			 skipErrorUpdates(false)
+			 skipErrorUpdates(false),
+			 releasingMouse(false)
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
@@ -594,31 +595,37 @@ LRESULT ModelWindow::doTimer(UINT timerID)
 
 void ModelWindow::captureMouse(void)
 {
-	oldMouseWindow = GetCapture();
-	if (oldMouseWindow != hWindow)
-	{
-		SetCapture(hWindow);
-	}
-	captureCount++;
+	SetCapture(hWindow);
+	//oldMouseWindow = GetCapture();
+	//if (oldMouseWindow != hWindow)
+	//{
+	//	SetCapture(hWindow);
+	//}
+	//captureCount++;
 }
 
 void ModelWindow::releaseMouse(void)
 {
-	if (captureCount)
-	{
-		captureCount--;
-		if (!captureCount)
-		{
-			if (oldMouseWindow)
-			{
-				SetCapture(oldMouseWindow);
-			}
-			else
-			{
-				ReleaseCapture();
-			}
-		}
-	}
+	releasingMouse = true;
+	ReleaseCapture();
+	releasingMouse = false;
+	//if (captureCount)
+	//{
+	//	captureCount--;
+	//	if (!captureCount)
+	//	{
+	//		releasingMouse = true;
+	//		if (false && oldMouseWindow)
+	//		{
+	//			SetCapture(oldMouseWindow);
+	//		}
+	//		else
+	//		{
+	//			ReleaseCapture();
+	//		}
+	//		releasingMouse = false;
+	//	}
+	//}
 }
 
 // NOTE: Static method.
@@ -868,6 +875,15 @@ LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 	//{
 	//	return 1;
 	//}
+}
+
+LRESULT ModelWindow::doCaptureChanged(HWND /*hNewWnd*/)
+{
+	if (!releasingMouse && inputHandler->mouseCaptureChanged())
+	{
+		return 0;
+	}
+	return 1;
 }
 
 LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
