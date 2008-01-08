@@ -53,8 +53,8 @@ TREModel::TREModel(const TREModel &other)
 	m_coloredSectionsPresent(other.m_coloredSectionsPresent),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
-	m_flags(other.m_flags),
-	m_curStepIndex(other.m_curStepIndex)
+	m_curStepIndex(other.m_curStepIndex),
+	m_flags(other.m_flags)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");
@@ -84,8 +84,8 @@ TREModel::TREModel(const TREModel &other, bool shallow)
 	m_coloredSectionsPresent(other.m_coloredSectionsPresent),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
-	m_flags(other.m_flags),
-	m_curStepIndex(other.m_curStepIndex)
+	m_curStepIndex(other.m_curStepIndex),
+	m_flags(other.m_flags)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");

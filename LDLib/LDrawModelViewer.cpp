@@ -628,7 +628,7 @@ void LDrawModelViewer::setDefaultLatLong(TCFloat latitude, TCFloat longitude)
 
 void LDrawModelViewer::setupDefaultViewAngle(void)
 {
-	if (viewMode == LDInputHandler::VMExamine && examineMode == EMLatLong)
+	if (viewMode == VMExamine && examineMode == EMLatLong)
 	{
 		examineLatitude = defaultLatitude;
 		examineLongitude = defaultLongitude;
