@@ -282,6 +282,15 @@ bool LDLCommentLine::isMovedToMeta(void) const
 	return false;
 }
 
+bool LDLCommentLine::isStepMeta(void) const
+{
+	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 step"))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool LDLCommentLine::getAuthor(char *author, int maxLength) const
 {
 	const char *authorSpot = NULL;

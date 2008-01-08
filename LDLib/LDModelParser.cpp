@@ -5,6 +5,7 @@
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLShapeLine.h>
 #include <LDLoader/LDLModelLine.h>
+#include <LDLoader/LDLCommentLine.h>
 #include <LDLoader/LDLConditionalLineLine.h>
 #include <LDLoader/LDLPalette.h>
 #include <TRE/TREMainModel.h>
@@ -706,7 +707,6 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 			int i;
 			int count = ldlModel->getActiveLineCount();
 
-			//treModel->setName(ldlModel->getName()); Already done.
 			for (i = 0; i < count && !m_abort; i++)
 			{
 				LDLFileLine *fileLine = (*fileLines)[i];
@@ -736,6 +736,11 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 					default:
 						break;
 					}
+				}
+				else if (fileLine->getLineType() == LDLLineTypeComment &&
+					((LDLCommentLine *)fileLine)->isStepMeta())
+				{
+					treModel->step();
 				}
 				if (ldlModel->isMainModel())
 				{

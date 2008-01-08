@@ -12,9 +12,7 @@ class TCExport TCBmpImageFormat : public TCImageFormat
 		virtual bool checkSignature(FILE *file);
 		virtual bool loadData(TCImage *image, TCByte *data, long length);
 		virtual bool loadFile(TCImage *image, FILE *file);
-		virtual bool saveFile(TCImage *image, FILE *file,
-			TCImageProgressCallback progressCallback,
-			void *progressUserData);
+		virtual bool saveFile(TCImage *image, FILE *file);
 	protected:
 		virtual ~TCBmpImageFormat(void);
 		virtual void dealloc(void);
@@ -29,9 +27,7 @@ class TCExport TCBmpImageFormat : public TCImageFormat
 		virtual bool writeValue(FILE *file, long value);
 		virtual bool writeFileHeader(TCImage *image, FILE *file);
 		virtual bool writeInfoHeader(TCImage *image, FILE *file);
-		virtual bool writeImageData(TCImage *image, FILE *file,
-			TCImageProgressCallback progressCallback,
-			void *progressUserData);
+		virtual bool writeImageData(TCImage *image, FILE *file);
 };
 
 #endif // __TCBMPIMAGEFORMAT_H__

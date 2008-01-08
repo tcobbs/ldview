@@ -17,17 +17,18 @@ public:
 	virtual bool checkSignature(FILE *file);
 	virtual bool loadData(TCImage *image, TCByte *data, long length);
 	virtual bool loadFile(TCImage *image, FILE *file);
-	virtual bool saveFile(TCImage *image, FILE *file,
-		TCImageProgressCallback progressCallback,
-		void *progressUserData);
+	virtual bool saveFile(TCImage *image, FILE *file);
 protected:
 	virtual ~TCPngImageFormat(void);
 	virtual void dealloc(void);
 	bool setup(void);
 	bool setupProgressive(void);
 	void infoCallback(void);
-	void rowCallback(png_bytep rowData, png_uint_32 rowNum);
+	void rowCallback(png_bytep rowData, png_uint_32 rowNum, int pass);
+	void errorCallback(png_const_charp msg);
+	float passToFraction(int pass);
 
+	static void staticErrorCallback(png_structp pngPtr, png_const_charp msg);
 	static void staticInfoCallback(png_structp pngPtr, png_infop infoPtr);
 	static void staticRowCallback(png_structp pngPtr, png_bytep newRow,
 		png_uint_32 rowNum, int pass);
@@ -40,6 +41,9 @@ protected:
 	int pngRowSize;
 	char **commentData;
 	int commentDataCount;
+	jmp_buf jumpBuf;
+	bool canceled;
+	int numPasses;
 };
 
 #endif // __TCPNGIMAGEFORMAT_H__

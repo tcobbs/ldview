@@ -108,7 +108,7 @@ bool LDSnapshotTaker::saveImage(void)
 				zoomToFit = true;
 			}
 		}
-		for (int i = 0; i < count && (saveSnapshots || !retValue); i++)
+		for (i = 0; i < count && (saveSnapshots || !retValue); i++)
 		{
 			char *arg = unhandledArgs->stringAtIndex(i);
 			
@@ -236,6 +236,10 @@ bool LDSnapshotTaker::imageProgressCallback(CUCSTR message, float progress)
 	if (message == NULL)
 	{
 		message = _UC("");
+	}
+	else
+	{
+		message = TCLocalStrings::get(message);
 	}
 
 	TCProgressAlert::send("LDSnapshotTaker", message, progress, &aborted);

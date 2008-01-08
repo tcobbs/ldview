@@ -1,6 +1,7 @@
 #include "TCImage.h"
 #include "TCPngImageFormat.h"
 #include "TCBmpImageFormat.h"
+#include "TCJpegImageFormat.h"
 #include "mystring.h"
 
 #include <stdio.h>
@@ -160,9 +161,15 @@ void TCImage::initStandardFormats(void)
 {
 	if (!imageFormats)
 	{
+		// Note: Due to what may or may not be a bug in the Microsoft linker,
+		// image formats CANNOT self-register.  In order for a class to be
+		// included from a library into an executable, it has to be referenced
+		// from other code that is used from the library directly.  Declaring a
+		// global variable that does this doesn't work.
 		imageFormats = new TCImageFormatArray;
 		addImageFormat(new TCPngImageFormat, true);
 		addImageFormat(new TCBmpImageFormat, true);
+		addImageFormat(new TCJpegImageFormat, true);
 	}
 }
 
@@ -172,12 +179,17 @@ void TCImage::setFormatName(const char *value)
 	formatName = copyString(value);
 }
 
-bool TCImage::loadData(TCByte *data, long length)
+bool TCImage::loadData(
+	TCByte *data,
+	long length,
+	TCImageProgressCallback progressCallback /*= NULL*/,
+	void *progressUserData /*= NULL*/)
 {
 	TCImageFormat *imageFormat = formatForData(data, length);
 
 	if (imageFormat)
 	{
+		imageFormat->setProgressCallback(progressCallback, progressUserData);
 		if (imageFormat->loadData(this, data, length))
 		{
 			setFormatName(imageFormat->getName());
@@ -187,12 +199,16 @@ bool TCImage::loadData(TCByte *data, long length)
 	return false;
 }
 
-bool TCImage::loadFile(const char *filename)
+bool TCImage::loadFile(
+	const char *filename,
+	TCImageProgressCallback progressCallback /*= NULL*/,
+	void *progressUserData /*= NULL*/)
 {
 	TCImageFormat *imageFormat = formatForFile(filename);
 
 	if (imageFormat)
 	{
+		imageFormat->setProgressCallback(progressCallback, progressUserData);
 		if (imageFormat->loadFile(this, filename))
 		{
 			setFormatName(imageFormat->getName());
@@ -202,16 +218,17 @@ bool TCImage::loadFile(const char *filename)
 	return false;
 }
 
-bool TCImage::saveFile(const char *filename,
-					   TCImageProgressCallback progressCallback,
-					   void *progressUserData)
+bool TCImage::saveFile(
+	const char *filename,
+	TCImageProgressCallback progressCallback /*= NULL*/,
+	void *progressUserData /*= NULL*/)
 {
 	TCImageFormat *imageFormat = formatWithName(formatName);
 
 	if (imageFormat)
 	{
-		return imageFormat->saveFile(this, filename, progressCallback,
-			progressUserData);
+		imageFormat->setProgressCallback(progressCallback, progressUserData);
+		return imageFormat->saveFile(this, filename);
 	}
 	return false;
 }

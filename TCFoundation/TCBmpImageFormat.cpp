@@ -1,5 +1,4 @@
 #include "TCBmpImageFormat.h"
-#include "TCLocalStrings.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -228,16 +227,17 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 {
 	int rowSize = image->roundUp(image->getWidth() * 3, 4);
 	bool failed = false;
+	bool canceled = false;
 	int i, j;
 	bool rgba = image->getDataFormat() == TCRgba8;
 	int imageRowSize = image->getRowSize();
 	TCByte *rowData = new TCByte[rowSize];
 
+	callProgressCallback(_UC("LoadingBMP"), 0.0f);
 	memset(rowData, 0, rowSize);
 	image->allocateImageData();
-	for (i = 0; i < image->getHeight() && !failed; i++)
+	for (i = 0; i < image->getHeight() && !failed && !canceled; i++)
 	{
-
 		if (fread(rowData, 1, rowSize, file) != (unsigned)rowSize)
 		{
 			failed = true;
@@ -289,9 +289,15 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 				}
 			}
 		}
+		if (!callProgressCallback(NULL,
+			(float)(i + 1) / (float)image->getHeight()))
+		{
+			canceled = true;
+		}
 	}
 	delete rowData;
-	return !failed;
+	callProgressCallback(NULL, 2.0f);
+	return !failed && !canceled;
 }
 
 bool TCBmpImageFormat::writeValue(FILE *file, unsigned short value)
@@ -398,23 +404,20 @@ bool TCBmpImageFormat::writeInfoHeader(TCImage *image, FILE *file)
 	return true;
 }
 
-bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file,
-									  TCImageProgressCallback progressCallback,
-									  void *progressUserData)
+bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
 {
 	int rowSize = image->roundUp(image->getWidth() * 3, 4);
 	bool failed = false;
+	bool canceled = false;
 	int i, j;
 	bool rgba = image->getDataFormat() == TCRgba8;
 	int imageRowSize = image->getRowSize();
 	TCByte *rowData = new TCByte[rowSize];
 
-	callProgressCallback(progressCallback,
-		TCLocalStrings::get(_UC("SavingBMP")), 0.0f, progressUserData);
+	callProgressCallback(_UC("SavingBMP"), 0.0f);
 	memset(rowData, 0, rowSize);
-	for (i = 0; i < image->getHeight() && !failed; i++)
+	for (i = 0; i < image->getHeight() && !failed && !canceled; i++)
 	{
-
 		if (rgba)
 		{
 			int lineOffset;
@@ -463,20 +466,18 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file,
 		{
 			failed = true;
 		}
-		if (!callProgressCallback(progressCallback, NULL,
-			(float)(i + 1) / (float)image->getHeight(), progressUserData))
+		if (!callProgressCallback(NULL,
+			(float)(i + 1) / (float)image->getHeight()))
 		{
-			failed = true;
+			canceled = true;
 		}
 	}
 	delete rowData;
-	callProgressCallback(progressCallback, NULL, 2.0f, progressUserData);
-	return !failed;
+	callProgressCallback(NULL, 2.0f);
+	return !failed && !canceled;
 }
 
-bool TCBmpImageFormat::saveFile(TCImage *image, FILE *file,
-								TCImageProgressCallback progressCallback,
-								void *progressUserData)
+bool TCBmpImageFormat::saveFile(TCImage *image, FILE *file)
 {
 	if (!writeFileHeader(image, file))
 	{
@@ -486,5 +487,5 @@ bool TCBmpImageFormat::saveFile(TCImage *image, FILE *file,
 	{
 		return false;
 	}
-	return writeImageData(image, file, progressCallback, progressUserData);
+	return writeImageData(image, file);
 }

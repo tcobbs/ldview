@@ -47,6 +47,8 @@ public:
 	virtual LDLFileLineArray *getReplacementLines(void);
 	virtual bool isXZPlanar(void) const;
 	virtual bool isXZPlanar(const TCFloat *matrix) const;
+	virtual void setStepIndex(int value) { m_stepIndex = value; }
+	virtual int getStepIndex(void) const { return m_stepIndex; }
 
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
 		int lineNumber);
@@ -70,6 +72,7 @@ protected:
 	int m_lineNumber;
 	LDLError *m_error;
 	bool m_valid;
+	int m_stepIndex;
 };
 
 #endif // __LDLFILELINE_H__

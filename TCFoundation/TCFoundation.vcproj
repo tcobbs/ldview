@@ -43,7 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../,../include/,../boost/include"
+				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -113,7 +113,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../,../include/,../boost/include"
+				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
 				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -189,7 +189,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../,../include/,../boost/include"
+				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -260,7 +260,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../,../include/,../boost/include"
+				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
 				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -336,7 +336,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories="../,../include/,../boost/include"
+				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -929,6 +929,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TCJpegImageFormat.cpp"
+				>
 			</File>
 			<File
 				RelativePath="TCLocalStrings.cpp"
@@ -1720,6 +1724,10 @@
 			</File>
 			<File
 				RelativePath="TCImageFormat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TCJpegImageFormat.h"
 				>
 			</File>
 			<File

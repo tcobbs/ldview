@@ -1,6 +1,7 @@
 #include "TREColoredShapeGroup.h"
 #include "TREVertexStore.h"
 #include "TREGL.h"
+#include "TREMainModel.h"
 
 TREColoredShapeGroup::TREColoredShapeGroup(void)
 	:m_transparentIndices(NULL),
@@ -63,17 +64,18 @@ int TREColoredShapeGroup::addShape(TREShapeType shapeType, TCULong color,
 		if (textureCoords)
 		{
 			index = m_vertexStore->addVertices(htonl(color), vertices, normals,
-				textureCoords, count);
+				textureCoords, count, m_mainModel->getCurStepIndex());
 		}
 		else
 		{
 			index = m_vertexStore->addVertices(htonl(color), vertices, normals,
-				count);
+				count, m_mainModel->getCurStepIndex());
 		}
 	}
 	else
 	{
-		index = m_vertexStore->addVertices(htonl(color), vertices, count);
+		index = m_vertexStore->addVertices(htonl(color), vertices, count,
+			m_mainModel->getCurStepIndex());
 	}
 	addShapeIndices(shapeType, index, count);
 	return index;
@@ -133,7 +135,8 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 	int index;
 
 	m_vertexStore->setup();
-	index = m_vertexStore->addVertices(htonl(color), vertices, normals, count);
+	index = m_vertexStore->addVertices(htonl(color), vertices, normals, count,
+		m_mainModel->getCurStepIndex());
 	addShapeStripCount(shapeType, count);
 	addShapeIndices(shapeType, index, count);
 	return index;

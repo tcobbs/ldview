@@ -15,20 +15,23 @@ class TCExport TCImageFormat : public TCObject
 		virtual bool loadData(TCImage *image, TCByte *data, long length) = 0;
 		virtual bool loadFile(TCImage *image, const char *filename);
 		virtual bool loadFile(TCImage *image, FILE *file) = 0;
-		virtual bool saveFile(TCImage *image, const char *filename,
-			TCImageProgressCallback progressCallback, void *progressUserData);
-		virtual bool saveFile(TCImage *image, FILE *file,
-			TCImageProgressCallback progressCallback, void *progressUserData) =
-			0;
+		virtual bool saveFile(TCImage *image, const char *filename);
+		virtual bool saveFile(TCImage *image, FILE *file) = 0;
 		char *getName(void) { return name; }
+		virtual void setProgressCallback(TCImageProgressCallback value,
+			void *userData)
+		{
+			progressCallback = value;
+			progressUserData = userData;
+		}
 	protected:
 		virtual ~TCImageFormat(void);
 		virtual void dealloc(void);
-		virtual bool callProgressCallback(
-			TCImageProgressCallback progressCallback, CUCSTR message,
-			float progress, void *progressUserData);
+		virtual bool callProgressCallback(CUCSTR message, float progress);
 
 		char *name;
+		TCImageProgressCallback progressCallback;
+		void *progressUserData;
 };
 
 #endif // __TCIMAGEFORMAT_H__

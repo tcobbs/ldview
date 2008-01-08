@@ -2398,8 +2398,8 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	{
 		examineLongitude += rotationSpeed;
 		examineLatitude += rotationSpeed;
-		examineLongitude = fmod(examineLongitude, (float)(2.0 * M_PI));
-		examineLatitude = fmod(examineLatitude, (float)(2.0 * M_PI));
+		examineLongitude = (float)fmod(examineLongitude, (float)(2.0 * M_PI));
+		examineLatitude = (float)fmod(examineLatitude, (float)(2.0 * M_PI));
 		treGlRotatef(examineLongitude, 0.0f, 1.0f, 0.0f);
 		treGlRotatef(examineLatitude, 1.0f, 0.0f, 0.0f);
 	}
@@ -2782,7 +2782,7 @@ void LDrawModelViewer::applyModelRotation(void)
 					{
 						examineLatitude = -90.0f;
 					}
-					examineLongitude = fmod(examineLongitude, 360.0f);
+					examineLongitude = (float)fmod(examineLongitude, 360.0f);
 				}
 				glPushMatrix();
 				glLoadIdentity();

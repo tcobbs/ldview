@@ -16,6 +16,7 @@ public:
 	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
 	virtual bool isMovedToMeta(void) const;
+	virtual bool isStepMeta(void) const;
 	virtual bool getAuthor(char *author, int maxLength) const;
 	virtual bool containsBFCCommand(const char *command) const;
 	virtual const char *getProcessedLine(void) const
