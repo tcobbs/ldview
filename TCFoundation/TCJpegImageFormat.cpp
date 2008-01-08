@@ -7,7 +7,10 @@
 #include "mystring.h"
 extern "C"
 {
+// jpeglib.h doesn't work if XMD_H isn't defined.
+#define XMD_H
 #include <jpeglib.h>
+#undef XMD_H
 }
 
 #define SIG_LENGTH 10
