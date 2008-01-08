@@ -109,8 +109,11 @@ TCObject *TREVertexStore::copy(void)
 	return new TREVertexStore(*this);
 }
 
-int TREVertexStore::addVertices(const TCVector *points, int count,
-								GLboolean edgeFlag)
+int TREVertexStore::addVertices(
+	const TCVector *points,
+	int count,
+	int step,
+	GLboolean edgeFlag)
 {
 	TCVector normal;
 	TREVertex normalVertex;
@@ -140,37 +143,35 @@ int TREVertexStore::addVertices(const TCVector *points, int count,
 			m_edgeFlags->addValue(edgeFlag);
 		}
 	}
-	return addVertices(m_vertices, points, count);
+	return addVertices(m_vertices, points, count, step);
 }
 
-int TREVertexStore::addVertices(const TCVector *points, const TCVector *normals,
-								int count)
+int TREVertexStore::addVertices(
+	const TCVector *points,
+	const TCVector *normals,
+	int count,
+	int step)
 {
-	addVertices(m_normals, normals, count);
-	return addVertices(m_vertices, points, count);
+	addVertices(m_normals, normals, count, step);
+	return addVertices(m_vertices, points, count, step);
 }
 
-int TREVertexStore::addVertices(const TCVector *points, const TCVector *normals,
-								const TCVector *textureCoords, int count)
+int TREVertexStore::addVertices(
+	const TCVector *points,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	int step)
 {
-	addVertices(m_textureCoords, textureCoords, count);
-	return addVertices(points, normals, count);
+	addVertices(m_textureCoords, textureCoords, count, step);
+	return addVertices(points, normals, count, step);
 }
 
-int TREVertexStore::addVertices(TCULong color, const TCVector *points,
-								int count)
-{
-	int i;
-
-	for (i = 0; i < count; i++)
-	{
-		m_colors->addValue(color);
-	}
-	return addVertices(points, count);
-}
-
-int TREVertexStore::addVertices(TCULong color, const TCVector *points,
-								const TCVector *normals, int count)
+int TREVertexStore::addVertices(
+	TCULong color,
+	const TCVector *points,
+	int count,
+	int step)
 {
 	int i;
 
@@ -178,12 +179,15 @@ int TREVertexStore::addVertices(TCULong color, const TCVector *points,
 	{
 		m_colors->addValue(color);
 	}
-	return addVertices(points, normals, count);
+	return addVertices(points, count, step);
 }
 
-int TREVertexStore::addVertices(TCULong color, const TCVector *points,
-								const TCVector *normals,
-								const TCVector *textureCoords, int count)
+int TREVertexStore::addVertices(
+	TCULong color,
+	const TCVector *points,
+	const TCVector *normals,
+	int count,
+	int step)
 {
 	int i;
 
@@ -191,7 +195,24 @@ int TREVertexStore::addVertices(TCULong color, const TCVector *points,
 	{
 		m_colors->addValue(color);
 	}
-	return addVertices(points, normals, textureCoords, count);
+	return addVertices(points, normals, count, step);
+}
+
+int TREVertexStore::addVertices(
+	TCULong color,
+	const TCVector *points,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	int step)
+{
+	int i;
+
+	for (i = 0; i < count; i++)
+	{
+		m_colors->addValue(color);
+	}
+	return addVertices(points, normals, textureCoords, count, step);
 }
 
 void TREVertexStore::initVertex(TREVertex &vertex, const TCVector &point)
@@ -199,8 +220,11 @@ void TREVertexStore::initVertex(TREVertex &vertex, const TCVector &point)
 	memcpy(vertex.v, (const TCFloat *)point, sizeof(vertex.v));
 }
 
-int TREVertexStore::addVertices(TREVertexArray *vertices,
-								const TCVector *points, int count)
+int TREVertexStore::addVertices(
+	TREVertexArray *vertices,
+	const TCVector *points,
+	int count,
+	int step)
 {
 	int i;
 	TREVertex vertex;
@@ -210,6 +234,11 @@ int TREVertexStore::addVertices(TREVertexArray *vertices,
 		initVertex(vertex, points[i]);
 		vertices->addVertex(vertex);
 	}
+	if (m_stepCounts.size() <= (size_t)step)
+	{
+		m_stepCounts.resize(step + 1);
+	}
+	m_stepCounts[step] = vertices->getCount();
 	return vertices->getCount() - count;
 }
 

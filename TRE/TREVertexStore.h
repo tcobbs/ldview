@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCTypedValueArray.h>
+#include <TCFoundation/TCStlIncludes.h>
 #include <TRE/TREGL.h>
 
 struct TREVertex;
@@ -10,6 +11,7 @@ class TREVertexArray;
 class TCVector;
 
 typedef TCTypedValueArray<GLboolean> GLbooleanArray;
+typedef std::vector<int> IntVector;
 
 class TREVertexStore : public TCObject
 {
@@ -19,17 +21,19 @@ public:
 	virtual TCObject *copy(void);
 	virtual bool activate(bool displayLists);
 	virtual void deactivate(void);
-	virtual int addVertices(const TCVector *points, int count,
+	virtual int addVertices(const TCVector *points, int count, int step,
 		GLboolean edgeFlag = GL_TRUE);
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
-		int count);
+		int count, int step);
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
-		const TCVector *textureCoords, int count);
-	virtual int addVertices(TCULong color, const TCVector *points, int count);
+		const TCVector *textureCoords, int count, int step);
+	virtual int addVertices(TCULong color, const TCVector *points, int count,
+		int step);
 	virtual int addVertices(TCULong color, const TCVector *points,
-		const TCVector *normals, int count);
+		const TCVector *normals, int count, int step);
 	virtual int addVertices(TCULong color, const TCVector *points,
-		const TCVector *normals, const TCVector *textureCoords, int count);
+		const TCVector *normals, const TCVector *textureCoords, int count,
+		int step);
 	virtual void setup(void);
 	virtual void setupColored(void);
 	virtual void setupTextured(void);
@@ -102,13 +106,14 @@ protected:
 	virtual ~TREVertexStore(void);
 	virtual void dealloc(void);
 	virtual int addVertices(TREVertexArray *vertices, const TCVector *points,
-		int count);
+		int count, int step);
 	virtual void setupVAR(void);
 	virtual void setupVBO(void);
 
 	TREVertexArray *m_vertices;
 	TREVertexArray *m_normals;
 	TREVertexArray *m_textureCoords;
+	IntVector m_stepCounts;
 	TCULongArray *m_colors;
 	GLbooleanArray *m_edgeFlags;
 	TCULong m_verticesOffset;

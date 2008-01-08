@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -65,7 +65,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -89,7 +89,7 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /O2 /I "../" /I "../include/" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
 # SUBTRACT BASE CPP /u
-# ADD CPP /nologo /W4 /GX /O2 /I "../" /I "../include/" /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
+# ADD CPP /nologo /W4 /GX /O2 /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
 # SUBTRACT CPP /u
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
@@ -157,6 +157,10 @@ SOURCE=.\TCImage.cpp
 # Begin Source File
 
 SOURCE=.\TCImageFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCJpegImageFormat.cpp
 # End Source File
 # Begin Source File
 
@@ -274,6 +278,10 @@ SOURCE=.\TCImage.h
 # Begin Source File
 
 SOURCE=.\TCImageFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCJpegImageFormat.h
 # End Source File
 # Begin Source File
 

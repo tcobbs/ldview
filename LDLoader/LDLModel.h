@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCVector.h>
+#include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLFileLine.h>
 #include <LDLoader/LDLError.h>
 #include <stdio.h>
@@ -24,6 +25,8 @@ typedef enum
 	BFCOnState,
 	BFCForcedOnState
 } BFCState;
+
+typedef std::list<int> IntList;
 
 typedef bool (*LDLFileCaseCallback)(char *filename);
 typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point,
@@ -74,6 +77,7 @@ public:
 		va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, CUCSTR format, ...);
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
+	virtual const IntList &getStepIndices(void) const { return m_stepIndices; }
 	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
 	virtual bool colorNumberIsTransparent(TCULong colorNumber);
 	virtual bool isMainModel(void) const { return false; }
@@ -157,6 +161,7 @@ protected:
 	char *m_description;
 	LDLFileLineArray *m_fileLines;
 	LDLMainModel *m_mainModel;
+	IntList m_stepIndices;
 	int m_activeLineCount;
 	LDLModel *m_activeMPDModel;
 	TCVector m_boundingMin;

@@ -20,7 +20,8 @@ TREModel::TREModel(void)
 	m_unMirroredModel(NULL),
 	m_invertedModel(NULL),
 	m_sectionsPresent(0),
-	m_coloredSectionsPresent(0)
+	m_coloredSectionsPresent(0),
+	m_curStepIndex(0)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");
@@ -52,7 +53,8 @@ TREModel::TREModel(const TREModel &other)
 	m_coloredSectionsPresent(other.m_coloredSectionsPresent),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
-	m_flags(other.m_flags)
+	m_flags(other.m_flags),
+	m_curStepIndex(other.m_curStepIndex)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");
@@ -82,7 +84,8 @@ TREModel::TREModel(const TREModel &other, bool shallow)
 	m_coloredSectionsPresent(other.m_coloredSectionsPresent),
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
-	m_flags(other.m_flags)
+	m_flags(other.m_flags),
+	m_curStepIndex(other.m_curStepIndex)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREModel");

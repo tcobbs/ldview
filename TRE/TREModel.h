@@ -191,6 +191,8 @@ public:
 	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
 	virtual void uncompile(void);
+	virtual void step(void) { m_curStepIndex++; }
+	virtual int getCurStepIndex(void) const { return m_curStepIndex; }
 	bool isLineSection(int section)
 	{
 		return isLineSection((TREMSection)section);
@@ -334,6 +336,7 @@ protected:
 	TCULong m_coloredSectionsPresent;
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
+	int m_curStepIndex;
 	struct
 	{
 		bool part:1;

@@ -789,16 +789,18 @@ int TREShapeGroup::addShape(
 		if (textureCoords)
 		{
 			index = m_vertexStore->addVertices(vertices, normals, textureCoords,
-				count);
+				count, m_mainModel->getCurStepIndex());
 		}
 		else
 		{
-			index = m_vertexStore->addVertices(vertices, normals, count);
+			index = m_vertexStore->addVertices(vertices, normals, count,
+				m_mainModel->getCurStepIndex());
 		}
 	}
 	else
 	{
-		index = m_vertexStore->addVertices(vertices, count);
+		index = m_vertexStore->addVertices(vertices, count,
+			m_mainModel->getCurStepIndex());
 	}
 	addShapeIndices(shapeType, index, count);
 	return index;
@@ -821,23 +823,29 @@ int TREShapeGroup::addConditionalLine(
 		m_vertexStore->setConditionalsFlag(true);
 	}
 	// The edge flag for control point vertices will always be GL_FALSE.
-	index = m_vertexStore->addVertices(controlPoints, 2, GL_FALSE);
+	index = m_vertexStore->addVertices(controlPoints, 2,
+		m_mainModel->getCurStepIndex(), GL_FALSE);
 	addIndices(m_controlPointIndices, index, 2);
 	if (m_mainModel->getStencilConditionalsFlag() &&
 		m_mainModel->getVertexArrayEdgeFlagsFlag())
 	{
-		index = m_vertexStore->addVertices(vertices, 1);
+		index = m_vertexStore->addVertices(vertices, 1,
+			m_mainModel->getCurStepIndex());
 		addShapeIndices(TRESConditionalLine, index, 1);
 		// We need a second copy, and this one needs to have the edge flag set
 		// to GL_FALSE.  Note that these will always be accessed as index + 1.
-		index = m_vertexStore->addVertices(vertices, 1, GL_FALSE);
-		index = m_vertexStore->addVertices(&vertices[1], 1);
+		index = m_vertexStore->addVertices(vertices, 1,
+			m_mainModel->getCurStepIndex(), GL_FALSE);
+		index = m_vertexStore->addVertices(&vertices[1], 1,
+			m_mainModel->getCurStepIndex());
 		addShapeIndices(TRESConditionalLine, index, 1);
-		index = m_vertexStore->addVertices(&vertices[1], 1, GL_FALSE);
+		index = m_vertexStore->addVertices(&vertices[1], 1,
+			m_mainModel->getCurStepIndex(), GL_FALSE);
 	}
 	else
 	{
-		index = m_vertexStore->addVertices(vertices, 2);
+		index = m_vertexStore->addVertices(vertices, 2,
+			m_mainModel->getCurStepIndex());
 		addShapeIndices(TRESConditionalLine, index, 2);
 	}
 	return index;
@@ -940,11 +948,12 @@ int TREShapeGroup::addStrip(
 	if (textureCoords)
 	{
 		index = m_vertexStore->addVertices(vertices, normals, textureCoords,
-			count);
+			count, m_mainModel->getCurStepIndex());
 	}
 	else
 	{
-		index = m_vertexStore->addVertices(vertices, normals, count);
+		index = m_vertexStore->addVertices(vertices, normals, count,
+			m_mainModel->getCurStepIndex());
 	}
 	addShapeStripCount(shapeType, count);
 	addShapeIndices(shapeType, index, count);

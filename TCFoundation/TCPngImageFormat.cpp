@@ -1,5 +1,4 @@
 #include "TCPngImageFormat.h"
-#include "TCLocalStrings.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,7 +64,7 @@ bool TCPngImageFormat::setupProgressive(void)
 #pragma warning( push )
 #pragma warning( disable : 4611 )
 #endif // WIN32
-	if (setjmp(png_jmpbuf(pngPtr)))
+	if (setjmp(jumpBuf))
 #ifdef WIN32
 #pragma warning( pop )
 #endif // WIN32
@@ -75,6 +74,7 @@ bool TCPngImageFormat::setupProgressive(void)
 	}
 	png_set_progressive_read_fn(pngPtr, this, staticInfoCallback,
 		staticRowCallback, NULL);
+	canceled = false;
 	return true;
 }
 
@@ -83,7 +83,6 @@ void TCPngImageFormat::infoCallback(void)
 	int bitDepth;
 	int colorType;
 
-	png_read_update_info(pngPtr, infoPtr);
 	png_get_IHDR(pngPtr, infoPtr, &imageWidth, &imageHeight, &bitDepth,
 		&colorType, NULL, NULL, NULL);
 	if (bitDepth != 8 || (colorType == PNG_COLOR_TYPE_RGB &&
@@ -103,26 +102,71 @@ void TCPngImageFormat::infoCallback(void)
 	}
 	image->setSize(imageWidth, imageHeight);
 	image->allocateImageData();
+	numPasses = png_set_interlace_handling(pngPtr);
+	png_read_update_info(pngPtr, infoPtr);
 }
 
-void TCPngImageFormat::rowCallback(png_bytep rowData, png_uint_32 rowNum)
+float TCPngImageFormat::passToFraction(int pass)
+{
+	if (numPasses == 1)
+	{
+		return 1.0f;
+	}
+	else
+	{
+		return (float)(1 << pass) / 64.0f;
+	}
+}
+
+void TCPngImageFormat::rowCallback(
+	png_bytep rowData,
+	png_uint_32 rowNum,
+	int pass)
 {
 	TCByte *imageData;
+	TCByte *rowSpot;
 	int imageRowSize;
 
+	if (!rowData)
+	{
+		return;
+	}
 	imageData = image->getImageData();
 	imageRowSize = image->getRowSize();
 	if (image->getFlipped())
 	{
-		memcpy(imageData + (imageHeight - rowNum - 1) * imageRowSize,
-			rowData, pngRowSize);
+		rowSpot = imageData + (imageHeight - rowNum - 1) * imageRowSize;
 	}
 	else
 	{
-		memcpy(imageData + rowNum * imageRowSize, rowData, pngRowSize);
+		rowSpot = imageData + rowNum * imageRowSize;
+	}
+	png_progressive_combine_row(pngPtr, rowSpot, rowData);
+	if (!callProgressCallback(NULL, ((float)rowNum + 1.0f) / imageHeight) *
+		passToFraction(pass))
+	{
+		canceled = true;
+		longjmp(jumpBuf, 1);
 	}
 }
 
+void TCPngImageFormat::errorCallback(png_const_charp /*msg*/)
+{
+	longjmp(jumpBuf, 1);
+}
+
+void TCPngImageFormat::staticErrorCallback(
+	png_structp pngPtr, 
+	png_const_charp msg)
+{
+	TCPngImageFormat *format = (TCPngImageFormat *)png_get_error_ptr(pngPtr);
+
+	if (format)
+	{
+		format->errorCallback(msg);
+	}
+}
+	
 void TCPngImageFormat::staticInfoCallback(png_structp pngPtr,
 										  png_infop /*infoPtr*/)
 {
@@ -136,14 +180,14 @@ void TCPngImageFormat::staticInfoCallback(png_structp pngPtr,
 }
 
 void TCPngImageFormat::staticRowCallback(png_structp pngPtr, png_bytep newRow,
-										 png_uint_32 rowNum, int /*pass*/)
+										 png_uint_32 rowNum, int pass)
 {
 	TCPngImageFormat *format =
 		(TCPngImageFormat *)png_get_progressive_ptr(pngPtr);
 
 	if (format)
 	{
-		format->rowCallback(newRow, rowNum);
+		format->rowCallback(newRow, rowNum, pass);
 	}
 }
 
@@ -156,7 +200,7 @@ bool TCPngImageFormat::loadData(TCImage *image, TCByte *data, long length)
 #pragma warning( push )
 #pragma warning( disable : 4611 )
 #endif // WIN32
-		if (setjmp(png_jmpbuf(pngPtr)))
+		if (setjmp(jumpBuf))
 #ifdef WIN32
 #pragma warning( pop )
 #endif // WIN32
@@ -164,8 +208,10 @@ bool TCPngImageFormat::loadData(TCImage *image, TCByte *data, long length)
 			png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
 			return false;
 		}
+		callProgressCallback(_UC("LoadingPNG"), 0.0f);
 		png_process_data(pngPtr, infoPtr, data, length);
 		png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
+		callProgressCallback(NULL, 2.0f);
 		return true;
 	}
 	return false;
@@ -173,7 +219,8 @@ bool TCPngImageFormat::loadData(TCImage *image, TCByte *data, long length)
 
 bool TCPngImageFormat::setup(void)
 {
-	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, this,
+		staticErrorCallback, NULL);
 	if (!pngPtr)
 	{
 		return false;
@@ -189,93 +236,135 @@ bool TCPngImageFormat::setup(void)
 
 bool TCPngImageFormat::loadFile(TCImage *image, FILE *file)
 {
-	bool retValue = false;
-
-	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-	if (pngPtr)
+	if (setupProgressive())
 	{
-		infoPtr = png_create_info_struct(pngPtr);
-		if (infoPtr)
-		{
+		TCByte buf[1024];
+
+		this->image = image;
 #ifdef WIN32
 #pragma warning( push )
 #pragma warning( disable : 4611 )
 #endif // WIN32
-			if (!setjmp(png_jmpbuf(pngPtr)))
+		if (setjmp(jumpBuf))
 #ifdef WIN32
 #pragma warning( pop )
 #endif // WIN32
-			{
-				int bitDepth;
-				int colorType;
-				unsigned int i;
-
-				png_init_io(pngPtr, file);
-				png_read_info(pngPtr, infoPtr);
-				png_get_IHDR(pngPtr, infoPtr, &imageWidth,
-					&imageHeight, &bitDepth, &colorType, NULL,
-					NULL, NULL);
-				if (bitDepth == 8 && (colorType == PNG_COLOR_TYPE_RGB ||
-					colorType == PNG_COLOR_TYPE_RGB_ALPHA))
-				{
-					png_bytep row_pointer;
-					TCByte *imageData;
-					int imageRowSize;
-					int pngRowSize;
-
-					if (colorType == PNG_COLOR_TYPE_RGB)
-					{
-						image->setDataFormat(TCRgb8);
-						pngRowSize = imageWidth * 3;
-					}
-					else
-					{
-						image->setDataFormat(TCRgba8);
-						pngRowSize = imageWidth * 4;
-					}
-					image->setSize(imageWidth, imageHeight);
-					image->allocateImageData();
-					imageData = image->getImageData();
-					imageRowSize = image->getRowSize();
-					row_pointer = new TCByte[pngRowSize];
-					for (i = 0; i < imageHeight; i++)
-					{
-						png_read_row(pngPtr, row_pointer, NULL);
-						if (image->getFlipped())
-						{
-							memcpy(imageData + (imageHeight - i - 1) *
-								imageRowSize, row_pointer, pngRowSize);
-						}
-						else
-						{
-							memcpy(imageData + i * imageRowSize,
-								row_pointer, pngRowSize);
-						}
-					}
-					delete row_pointer;
-					retValue = true;
-				}
-			}
-			png_read_end(pngPtr, NULL);
-			png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
-		}
-		else
 		{
-			png_destroy_read_struct(&pngPtr, NULL, NULL);
+			png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
+			return false;
 		}
+		callProgressCallback(_UC("LoadingPNG"), 0.0f);
+		while (true)
+		{
+			size_t bytesRead = fread(buf, 1, sizeof(buf), file);
+
+			if (bytesRead == 0)
+			{
+				break;
+			}
+			png_process_data(pngPtr, infoPtr, buf, bytesRead);
+		}
+		png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
+		callProgressCallback(NULL, 2.0f);
+		return true;
 	}
-	return retValue;
+	return false;
+//	bool retValue = false;
+//
+//	canceled = false;
+//	pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, this,
+//		staticErrorCallback, NULL);
+//	if (pngPtr)
+//	{
+//		infoPtr = png_create_info_struct(pngPtr);
+//		if (infoPtr)
+//		{
+//#ifdef WIN32
+//#pragma warning( push )
+//#pragma warning( disable : 4611 )
+//#endif // WIN32
+//			if (!setjmp(jumpBuf))
+//#ifdef WIN32
+//#pragma warning( pop )
+//#endif // WIN32
+//			{
+//				int bitDepth;
+//				int colorType;
+//				unsigned int i;
+//
+//				png_init_io(pngPtr, file);
+//				png_read_info(pngPtr, infoPtr);
+//				png_get_IHDR(pngPtr, infoPtr, &imageWidth,
+//					&imageHeight, &bitDepth, &colorType, NULL,
+//					NULL, NULL);
+//				if (bitDepth == 8 && (colorType == PNG_COLOR_TYPE_RGB ||
+//					colorType == PNG_COLOR_TYPE_RGB_ALPHA))
+//				{
+//					png_bytep row_pointer;
+//					TCByte *imageData;
+//					int imageRowSize;
+//					int pngRowSize;
+//
+//					callProgressCallback(_UC("LoadingPNG"), 0.0f);
+//					if (colorType == PNG_COLOR_TYPE_RGB)
+//					{
+//						image->setDataFormat(TCRgb8);
+//						pngRowSize = imageWidth * 3;
+//					}
+//					else
+//					{
+//						image->setDataFormat(TCRgba8);
+//						pngRowSize = imageWidth * 4;
+//					}
+//					image->setSize(imageWidth, imageHeight);
+//					image->allocateImageData();
+//					imageData = image->getImageData();
+//					imageRowSize = image->getRowSize();
+//					row_pointer = new TCByte[pngRowSize];
+//					for (i = 0; i < imageHeight; i++)
+//					{
+//						if (!callProgressCallback(NULL,
+//							(float)(i) / (float)imageHeight))
+//						{
+//							canceled = true;
+//							break;
+//						}
+//						png_read_row(pngPtr, row_pointer, NULL);
+//						if (image->getFlipped())
+//						{
+//							memcpy(imageData + (imageHeight - i - 1) *
+//								imageRowSize, row_pointer, pngRowSize);
+//						}
+//						else
+//						{
+//							memcpy(imageData + i * imageRowSize,
+//								row_pointer, pngRowSize);
+//						}
+//					}
+//					delete row_pointer;
+//					retValue = true;
+//				}
+//				png_read_end(pngPtr, NULL);
+//				callProgressCallback(NULL, 1.0f);
+//			}
+//			png_destroy_read_struct(&pngPtr, &infoPtr, NULL);
+//		}
+//		else
+//		{
+//			png_destroy_read_struct(&pngPtr, NULL, NULL);
+//		}
+//	}
+//	callProgressCallback(NULL, 2.0f);
+//	return retValue && !canceled;
 }
 
-bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
-								TCImageProgressCallback progressCallback,
-								void *progressUserData)
+bool TCPngImageFormat::saveFile(TCImage *image, FILE *file)
 {
 	bool retValue = false;
-	bool canceledSave = false;
 	png_structp pngPtr = png_create_write_struct(PNG_LIBPNG_VER_STRING,
-		NULL, NULL, NULL);
+		this, staticErrorCallback, NULL);
 
+	canceled = false;
 	if (pngPtr)
 	{
 		png_infop infoPtr = png_create_info_struct(pngPtr);
@@ -286,7 +375,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 #pragma warning( push )
 #pragma warning( disable : 4611 )
 #endif // WIN32
-			if (!setjmp(png_jmpbuf(pngPtr)))
+			if (!setjmp(jumpBuf))
 #ifdef WIN32
 #pragma warning( pop )
 #endif // WIN32
@@ -352,15 +441,13 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 						pngColorType, PNG_INTERLACE_NONE,
 						PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 					png_write_info(pngPtr, infoPtr);
-					callProgressCallback(progressCallback,
-						TCLocalStrings::get(_UC("SavingPNG")), 0.0f,
-						progressUserData);
+					callProgressCallback(_UC("SavingPNG"), 0.0f);
 					for (i = 0; i < height; i++)
 					{
-						if (!callProgressCallback(progressCallback, NULL,
-							(float)(i) / (float)height, progressUserData))
+						if (!callProgressCallback(NULL,
+							(float)(i) / (float)height))
 						{
-							canceledSave = true;
+							canceled = true;
 							break;
 						}
 						if (image->getFlipped())
@@ -374,8 +461,7 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 						}
 					}
 					png_write_end(pngPtr, infoPtr);
-					callProgressCallback(progressCallback, NULL, 1.0f,
-						progressUserData);
+					callProgressCallback(NULL, 1.0f);
 					retValue = true;
 				}
 			}
@@ -386,6 +472,6 @@ bool TCPngImageFormat::saveFile(TCImage *image, FILE *file,
 			png_destroy_write_struct(&pngPtr, (png_infopp)NULL);
 		}
 	}
-	callProgressCallback(progressCallback, NULL, 2.0f, progressUserData);
-	return retValue && !canceledSave;
+	callProgressCallback(NULL, 2.0f);
+	return retValue && !canceled;
 }

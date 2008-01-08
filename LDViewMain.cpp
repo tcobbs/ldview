@@ -504,6 +504,25 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 //	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "Debug test: %d\n", 10);
 //	testDict->release();
 	OleInitialize(NULL);
+
+	TCImage *testImage = new TCImage;
+	if (testImage->loadFile("G:/Pics/CAR.bmp"))
+	{
+		testImage->setFormatName("JPG");
+		testImage->saveFile("G:/Pics/CAR-test.jpg");
+	}
+	testImage->release();
+	//TCImage *jpegTest = new TCImage;
+	//jpegTest->loadFile("G:/Pics/3300_COMBO.jpg");
+	//jpegTest->setFlipped(true);
+	//if (jpegTest->loadFile("G:/Pics/Brothers1-Medium.jpg"))
+	//{
+	//	jpegTest->setFlipped(false);
+	//	jpegTest->setFormatName("PNG");
+	//	jpegTest->saveFile("G:/Pics/Brothers1-Medium.png");
+	//}
+	//jpegTest->release();
+
 	modelLoader = new ModelLoader(hInstance, nCmdShow, screenSaver);
 /*
 	if (screenSaver)

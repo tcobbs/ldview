@@ -22,7 +22,8 @@ LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
 	m_originalLine(copyString(originalLine)),
 	m_lineNumber(lineNumber),
 	m_error(NULL),
-	m_valid(true)
+	m_valid(true),
+	m_stepIndex(-1)
 {
 }
 
@@ -32,7 +33,8 @@ LDLFileLine::LDLFileLine(const LDLFileLine &other)
 	m_originalLine(copyString(other.m_originalLine)),
 	m_lineNumber(other.m_lineNumber),
 	m_error((LDLError *)TCObject::retain(other.m_error)),
-	m_valid(other.m_valid)
+	m_valid(other.m_valid),
+	m_stepIndex(other.m_stepIndex)
 {
 }
 

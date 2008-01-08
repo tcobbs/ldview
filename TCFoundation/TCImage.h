@@ -39,8 +39,12 @@ public:
 	TCByte *getImageData(void) { return imageData; }
 	virtual int getRowSize(void);
 //	virtual TCObject *copy(void);
-	virtual bool loadData(TCByte *data, long length);
-	virtual bool loadFile(const char *filename);
+	virtual bool loadData(TCByte *data, long length,
+		TCImageProgressCallback progressCallback = NULL,
+		void *progressUserData = NULL);
+	virtual bool loadFile(const char *filename,
+		TCImageProgressCallback progressCallback = NULL,
+		void *progressUserData = NULL);
 	virtual bool saveFile(const char *filename,
 		TCImageProgressCallback progressCallback = NULL,
 		void *progressUserData = NULL);
