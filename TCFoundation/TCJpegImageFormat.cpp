@@ -7,7 +7,6 @@
 #include "mystring.h"
 extern "C"
 {
-#include <jinclude.h>
 #include <jpeglib.h>
 }
 

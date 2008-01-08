@@ -31,9 +31,9 @@ protected:
 	bool setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr);
 
 
+	TCImage *image;
 	unsigned long imageWidth;
 	unsigned long imageHeight;
-	TCImage *image;
 	jmp_buf jumpBuf;
 };
 
