@@ -3,6 +3,7 @@
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCJpegOptions.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
@@ -162,6 +163,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 //		(TCAlertCallback)progressAlertCallback);
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
+	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
+	TCJpegOptions::setDefaultSubSampling(TCJpegOptions::SS444);
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)

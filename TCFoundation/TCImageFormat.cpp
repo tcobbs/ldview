@@ -1,5 +1,6 @@
 #include "TCImageFormat.h"
 #include "TCProgressAlert.h"
+#include "TCImageOptions.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,4 +90,9 @@ bool TCImageFormat::callProgressCallback(CUCSTR message, float progress)
 			this);
 		return !aborted;
 	}
+}
+
+TCImageOptions *TCImageFormat::newCompressionOptions(void)
+{
+	return new TCImageOptions;
 }

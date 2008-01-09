@@ -2,6 +2,7 @@
 #include "TCPngImageFormat.h"
 #include "TCBmpImageFormat.h"
 #include "TCJpegImageFormat.h"
+#include "TCImageOptions.h"
 #include "mystring.h"
 
 #include <stdio.h>
@@ -31,7 +32,8 @@ TCImage::TCImage(void)
 		 flipped(false),
 		 formatName(NULL),
 		 userImageData(false),
-		 comment(NULL)
+		 comment(NULL),
+		 compressionOptions(NULL)
 {
 	initStandardFormats();
 #ifdef _LEAK_DEBUG
@@ -51,6 +53,7 @@ void TCImage::dealloc(void)
 	}
 	delete formatName;
 	delete comment;
+	TCObject::release(compressionOptions);
 	TCObject::dealloc();
 }
 
@@ -175,8 +178,14 @@ void TCImage::initStandardFormats(void)
 
 void TCImage::setFormatName(const char *value)
 {
-	delete formatName;
-	formatName = copyString(value);
+	if (value != formatName && (value == NULL || formatName == NULL ||
+		strcmp(value, formatName) != 0))
+	{
+		delete formatName;
+		formatName = copyString(value);
+		TCObject::release(compressionOptions);
+		compressionOptions = NULL;
+	}
 }
 
 bool TCImage::loadData(
@@ -228,7 +237,10 @@ bool TCImage::saveFile(
 	if (imageFormat)
 	{
 		imageFormat->setProgressCallback(progressCallback, progressUserData);
-		return imageFormat->saveFile(this, filename);
+		if (imageFormat->saveFile(this, filename))
+		{
+			getCompressionOptions()->save();
+		}
 	}
 	return false;
 }
@@ -456,4 +468,18 @@ void TCImage::autoCrop(TCByte r, TCByte g, TCByte b)
 		width = newWidth;
 		height = newHeight;
 	}
+}
+
+TCImageOptions *TCImage::getCompressionOptions(void)
+{
+	if (!compressionOptions)
+	{
+		TCImageFormat *imageFormat = formatWithName(formatName);
+
+		if (imageFormat)
+		{
+			compressionOptions = imageFormat->newCompressionOptions();
+		}
+	}
+	return compressionOptions;
 }

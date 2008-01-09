@@ -24,6 +24,7 @@ class TCExport TCImageFormat : public TCObject
 			progressCallback = value;
 			progressUserData = userData;
 		}
+	virtual TCImageOptions *newCompressionOptions(void);
 	protected:
 		virtual ~TCImageFormat(void);
 		virtual void dealloc(void);
