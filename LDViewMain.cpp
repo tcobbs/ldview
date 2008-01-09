@@ -9,12 +9,14 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
-#include <TCFoundation/TCImage.h>
 #include <CUI/CUIWindow.h>
 #include "SSPreview.h"
 #include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <stdio.h>
+
+//#include <TCFoundation/TCImage.h>
+//#include <TCFoundation/TCJpegOptions.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -505,13 +507,16 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 //	testDict->release();
 	OleInitialize(NULL);
 
-	TCImage *testImage = new TCImage;
-	if (testImage->loadFile("G:/Pics/CAR.bmp"))
-	{
-		testImage->setFormatName("JPG");
-		testImage->saveFile("G:/Pics/CAR-test.jpg");
-	}
-	testImage->release();
+	//TCImage *testImage = new TCImage;
+	//if (testImage->loadFile("G:/Pics/CAR.bmp"))
+	//{
+	//	TCJpegOptions::setDefaultSubSampling(TCJpegOptions::SS444);
+	//	testImage->setFormatName("JPG");
+	//	//TCJpegOptions *options =
+	//	//	(TCJpegOptions *)testImage->getCompressionOptions();
+	//	testImage->saveFile("G:/Pics/CAR-test.jpg");
+	//}
+	//testImage->release();
 	//TCImage *jpegTest = new TCImage;
 	//jpegTest->loadFile("G:/Pics/3300_COMBO.jpg");
 	//jpegTest->setFlipped(true);

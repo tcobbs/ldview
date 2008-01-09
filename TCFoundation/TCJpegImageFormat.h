@@ -1,8 +1,5 @@
 #ifndef __TCJPEGIMAGEFORMAT_H__
 #define __TCJPEGIMAGEFORMAT_H__
-#ifdef _AIX
-#include <stdlib.h>
-#endif
 
 #include <TCFoundation/TCImageFormat.h>
 #include <setjmp.h>
@@ -22,14 +19,16 @@ public:
 	virtual bool loadData(TCImage *image, TCByte *data, long length);
 	virtual bool loadFile(TCImage *image, FILE *file);
 	virtual bool saveFile(TCImage *image, FILE *file);
+	virtual TCImageOptions *newCompressionOptions(void);
 
-	void errorExit(jpeg_common_struct &cinfo);
 protected:
 	virtual ~TCJpegImageFormat(void);
 	virtual void dealloc(void);
 	bool setup(jpeg_decompress_struct &cinfo, jpeg_error_mgr &jerr);
 	bool setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr);
+	void errorExit(jpeg_common_struct &cinfo);
 
+	static void staticErrorExit(jpeg_common_struct *cinfo);
 
 	TCImage *image;
 	unsigned long imageWidth;

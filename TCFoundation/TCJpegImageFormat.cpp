@@ -1,5 +1,5 @@
 #include "TCJpegImageFormat.h"
-#include "TCLocalStrings.h"
+#include "TCJpegOptions.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,7 +85,7 @@ bool TCJpegImageFormat::loadData(TCImage *image, TCByte * /*data*/, long /*lengt
 extern "C"
 {
 
-void error_exit(j_common_ptr cinfo)
+void TCJpegImageFormat::staticErrorExit(jpeg_common_struct *cinfo)
 {
 	((TCJpegImageFormat *)cinfo->client_data)->errorExit(*cinfo);
 }
@@ -101,7 +101,7 @@ bool TCJpegImageFormat::setup(jpeg_decompress_struct &cinfo, jpeg_error_mgr &jer
 {
 	cinfo.client_data = this;
 	cinfo.err = jpeg_std_error(&jerr);
-	jerr.error_exit = error_exit;
+	jerr.error_exit = staticErrorExit;
 	jpeg_create_decompress(&cinfo);
 	return true;
 }
@@ -110,7 +110,7 @@ bool TCJpegImageFormat::setup(jpeg_compress_struct &cinfo, jpeg_error_mgr &jerr)
 {
 	cinfo.client_data = this;
 	cinfo.err = jpeg_std_error(&jerr);
-	jerr.error_exit = error_exit;
+	jerr.error_exit = staticErrorExit;
 	jpeg_create_compress(&cinfo);
 	return true;
 }
@@ -251,6 +251,8 @@ bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
 		int dir = 1;
 		TCByte *rowBytes = NULL;
 		int imageWidth = image->getWidth();
+		TCJpegOptions *options =
+			(TCJpegOptions *)image->getCompressionOptions();
 
 		this->image = image;
 		// WARNING: Do NOT put any C++ objects that need destructors inside the
@@ -290,37 +292,41 @@ bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
 		}
 		jpeg_set_defaults(&cinfo);
 		jpeg_default_colorspace(&cinfo);
-		jpeg_set_quality(&cinfo, 90, FALSE);
-		//if (true)
-		//{
-		//	// 4:2:0
-		//	cinfo.comp_info[0].h_samp_factor = 2;
-		//	cinfo.comp_info[0].v_samp_factor = 2;
-		//	cinfo.comp_info[1].h_samp_factor = 1;
-		//	cinfo.comp_info[1].v_samp_factor = 1;
-		//	cinfo.comp_info[2].h_samp_factor = 1;
-		//	cinfo.comp_info[2].v_samp_factor = 1;
-		//}
-		//if (false)
-		//{
-		//	// 4:2:2
-		//	cinfo.comp_info[0].h_samp_factor = 2;
-		//	cinfo.comp_info[0].v_samp_factor = 1;
-		//	cinfo.comp_info[1].h_samp_factor = 1;
-		//	cinfo.comp_info[1].v_samp_factor = 1;
-		//	cinfo.comp_info[2].h_samp_factor = 1;
-		//	cinfo.comp_info[2].v_samp_factor = 1;
-		//}
-		//if (false)
-		//{
-		//	// 4:4:4
-		//	cinfo.comp_info[0].h_samp_factor = 1;
-		//	cinfo.comp_info[0].v_samp_factor = 1;
-		//	cinfo.comp_info[1].h_samp_factor = 1;
-		//	cinfo.comp_info[1].v_samp_factor = 1;
-		//	cinfo.comp_info[2].h_samp_factor = 1;
-		//	cinfo.comp_info[2].v_samp_factor = 1;
-		//}
+		jpeg_set_quality(&cinfo, options->getQuality(), FALSE);
+		switch (options->getSubSampling())
+		{
+		case TCJpegOptions::SS420:
+			// 4:2:0
+			cinfo.comp_info[0].h_samp_factor = 2;
+			cinfo.comp_info[0].v_samp_factor = 2;
+			cinfo.comp_info[1].h_samp_factor = 1;
+			cinfo.comp_info[1].v_samp_factor = 1;
+			cinfo.comp_info[2].h_samp_factor = 1;
+			cinfo.comp_info[2].v_samp_factor = 1;
+			break;
+		case TCJpegOptions::SS422:
+			// 4:2:2
+			cinfo.comp_info[0].h_samp_factor = 2;
+			cinfo.comp_info[0].v_samp_factor = 1;
+			cinfo.comp_info[1].h_samp_factor = 1;
+			cinfo.comp_info[1].v_samp_factor = 1;
+			cinfo.comp_info[2].h_samp_factor = 1;
+			cinfo.comp_info[2].v_samp_factor = 1;
+			break;
+		case TCJpegOptions::SS444:
+			// 4:4:4
+			cinfo.comp_info[0].h_samp_factor = 1;
+			cinfo.comp_info[0].v_samp_factor = 1;
+			cinfo.comp_info[1].h_samp_factor = 1;
+			cinfo.comp_info[1].v_samp_factor = 1;
+			cinfo.comp_info[2].h_samp_factor = 1;
+			cinfo.comp_info[2].v_samp_factor = 1;
+			break;
+		}
+		if (options->getProgressive())
+		{
+			jpeg_simple_progression(&cinfo);
+		}
 		jpeg_start_compress(&cinfo, TRUE);
 		while (cinfo.next_scanline < cinfo.image_height && !canceled)
 		{
@@ -365,4 +371,9 @@ bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
 	}
 	callProgressCallback(NULL, 2.0f);
 	return retValue && !canceled;
+}
+
+TCImageOptions *TCJpegImageFormat::newCompressionOptions(void)
+{
+	return new TCJpegOptions;
 }

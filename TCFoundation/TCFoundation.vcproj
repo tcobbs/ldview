@@ -931,7 +931,15 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TCImageOptions.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TCJpegImageFormat.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TCJpegOptions.cpp"
 				>
 			</File>
 			<File
@@ -1727,7 +1735,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TCImageOptions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TCJpegImageFormat.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TCJpegOptions.h"
 				>
 			</File>
 			<File

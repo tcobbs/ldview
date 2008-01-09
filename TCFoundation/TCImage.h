@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 class TCImageFormat;
+class TCImageOptions;
 
 typedef enum
 {
@@ -55,6 +56,7 @@ public:
 	virtual void autoCrop(TCByte r, TCByte g, TCByte b);
 	virtual void autoCrop(void);
 	const char *getComment(void) { return comment; }
+	virtual TCImageOptions *getCompressionOptions(void);
 
 	static int roundUp(int value, int nearest);
 	static void addImageFormat(TCImageFormat *imageFormat,
@@ -80,6 +82,7 @@ protected:
 	char *formatName;
 	bool userImageData;
 	char *comment;
+	TCImageOptions *compressionOptions;
 
 	static TCImageFormatArray *imageFormats;
 
