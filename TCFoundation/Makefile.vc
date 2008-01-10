@@ -13,7 +13,9 @@ CCOBJS = \
 	$(OBJDIR)\TCDictionary.obj \
 	$(OBJDIR)\TCImage.obj \
 	$(OBJDIR)\TCImageFormat.obj \
+	$(OBJDIR)\TCImageOptions.obj \
 	$(OBJDIR)\TCJpegImageFormat.obj \
+	$(OBJDIR)\TCJpegOptions.obj \
 	$(OBJDIR)\TCLocalStrings.obj \
 	$(OBJDIR)\TCNetwork.obj \
 	$(OBJDIR)\TCNetworkClient.obj \
