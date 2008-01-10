@@ -207,14 +207,18 @@ bool LDSnapshotTaker::saveImage(
 
 	if (buffer)
 	{
-		if (m_imageType == ITPng)
+		switch (m_imageType)
 		{
+		case ITPng:
 			retValue = writePng(filename, imageWidth, imageHeight, buffer,
-				saveAlpha);
-		}
-		else if (m_imageType == ITBmp)
-		{
+								saveAlpha);
+			break;
+		case ITBmp:
 			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
+			break;
+		case ITJpg:
+			retValue = writeJpg(filename, imageWidth, imageHeight, buffer);
+			break;
 		}
 		delete buffer;
 	}
@@ -290,6 +294,15 @@ bool LDSnapshotTaker::writeImage(
 	retValue = image->saveFile(filename, staticImageProgressCallback, this);
 	image->release();
 	return retValue;
+}
+
+bool LDSnapshotTaker::writeJpg(
+	const char *filename,
+	int width,
+	int height,
+	TCByte *buffer)
+{
+	return writeImage(filename, width, height, buffer, "JPG", false);
 }
 
 bool LDSnapshotTaker::writeBmp(

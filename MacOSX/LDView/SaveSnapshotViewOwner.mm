@@ -7,9 +7,9 @@
 //
 
 #import "SaveSnapshotViewOwner.h"
+#import "JpegOptions.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCUserDefaults.h>
-
 
 @implementation SaveSnapshotViewOwner
 
@@ -82,24 +82,34 @@
 {
 	if ([[fileTypePopUp selectedCell] tag] == 2)
 	{
-		return [NSArray arrayWithObjects:@"bmp", @"png", nil];
+		return [NSArray arrayWithObjects:@"bmp", @"png", @"jpg", nil];
 	}
 	else
 	{
-		return [NSArray arrayWithObjects:@"png", @"bmp", nil];
+		return [NSArray arrayWithObjects:@"png", @"bmp", @"jpg", nil];
 	}
 }
 
 - (NSString *)requiredFileType
 {
+	BOOL hasOptions = FALSE;
+	NSString *retValue = @"png";
+
 	switch ([[fileTypePopUp selectedCell] tag])
 	{
 		case 1:
-			return @"png";
+			retValue = @"png";
+			break;
 		case 2:
-			return @"bmp";
+			retValue = @"bmp";
+			break;
+		case 3:
+			hasOptions = TRUE;
+			retValue = @"jpg";
+			break;
 	}
-	return @"png";
+	[fileTypeOptionsButton setEnabled:hasOptions];
+	return retValue;
 }
 
 - (void)setSavePanel:(NSSavePanel *)aSavePanel
@@ -165,6 +175,24 @@
 	[savePanel validateVisibleColumns];
 }
 
+- (void)jpegOptions
+{
+	JpegOptions *options = [[JpegOptions alloc] init];
+
+	[options runModal];
+	[options release];
+}
+
+- (IBAction)fileTypeOptions:(id)sender
+{
+	switch ([[fileTypePopUp selectedItem] tag])
+	{
+	case 3:
+		[self jpegOptions];
+		break;
+	}
+}
+
 - (bool)transparentBackground
 {
 	return [self getCheck:transparentCheck];
@@ -177,14 +205,14 @@
 
 - (LDSnapshotTaker::ImageType)imageType
 {
-	if ([[fileTypePopUp selectedCell] tag] == 2)
+	switch ([[fileTypePopUp selectedCell] tag])
 	{
-		return LDSnapshotTaker::ITBmp;
+		case 2:
+			return LDSnapshotTaker::ITBmp;
+		case 3:
+			return LDSnapshotTaker::ITJpg;
 	}
-	else
-	{
-		return LDSnapshotTaker::ITPng;
-	}
+	return LDSnapshotTaker::ITPng;
 }
 
 - (int)width:(int)refWidth
