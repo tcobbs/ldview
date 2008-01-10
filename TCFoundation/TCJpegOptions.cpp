@@ -17,11 +17,11 @@ m_progressive(sm_defaultProgressive)
 	m_formatName = "JPG";
 	if (m_compress)
 	{
-		m_quality = TCUserDefaults::longForKey("CJPGQuality", m_quality);
+		m_quality = TCUserDefaults::longForKey("JPGQuality", m_quality);
 		m_subSampling =
-			(SubSampling)TCUserDefaults::longForKey("CJPGSubSampling",
+			(SubSampling)TCUserDefaults::longForKey("JPGSubSampling",
 			m_subSampling);
-		m_progressive = TCUserDefaults::boolForKey("CJPGProgressive",
+		m_progressive = TCUserDefaults::boolForKey("JPGProgressive",
 			m_progressive);
 	}
 }
