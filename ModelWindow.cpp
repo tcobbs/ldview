@@ -31,6 +31,7 @@
 
 #define PNG_IMAGE_TYPE_INDEX 1
 #define BMP_IMAGE_TYPE_INDEX 2
+#define JPG_IMAGE_TYPE_INDEX 3
 
 #define MAX_SNAPSHOT_WIDTH 10000
 #define MAX_SNAPSHOT_HEIGHT 10000
@@ -114,6 +115,7 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 hCurrentDC(NULL),
 			 hCurrentGLRC(NULL),
 			 errorWindowResizer(NULL),
+			 saveWindowResizer(NULL),
 			 savingFromCommandLine(false),
 			 skipErrorUpdates(false),
 			 releasingMouse(false)
@@ -1280,12 +1282,76 @@ BOOL ModelWindow::doDialogNotify(HWND hDlg, int controlId, LPNMHDR notification)
 
 BOOL ModelWindow::doErrorSize(WPARAM sizeType, int newWidth, int newHeight)
 {
-	RECT sizeRect;
+	//RECT sizeRect;
 
 	SendMessage(hErrorStatusWindow, WM_SIZE, sizeType,
 		MAKELPARAM(newWidth, newHeight));
-	GetClientRect(hErrorWindow, &sizeRect);
+	//GetClientRect(hErrorWindow, &sizeRect);
 	errorWindowResizer->resize(newWidth, newHeight);
+	return FALSE;
+}
+
+BOOL ModelWindow::doSaveSize(WPARAM sizeType, int newWidth, int newHeight)
+{
+	if (saveWindowResizer)
+	{
+		if (sizeType != SW_MINIMIZE)
+		{
+			saveWindowResizer->resize(newWidth, newHeight);
+		}
+	}
+	return FALSE;
+}
+
+BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
+{
+	RECT clientRect;
+	RECT parentWindowRect;
+
+	GetClientRect(hSaveDialog, &clientRect);
+	GetWindowRect(GetParent(hSaveDialog), &parentWindowRect);
+	// Resizing the client height to match the parent's window height is to
+	// work around what appears to be a bug in Microsoft's code.  The + 1 at the
+	// end is to bump my controls up one more pixel, so that my Options...
+	// button lines up nicely with the Save and Cancel buttons.
+	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top + 1;
+	MoveWindow(hSaveDialog, 0, 0, clientRect.right, clientRect.bottom, TRUE);
+	saveWindowResizer = new CUIWindowResizer;
+	saveWindowResizer->setHWindow(hSaveDialog);
+
+	saveWindowResizer->addSubWindow(IDC_SAVE_OPTIONS,
+		CUIFloatLeft | CUIFloatTop);
+
+	saveWindowResizer->addSubWindow(IDC_SAVE_SERIES_BOX,
+		CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_SERIES,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_LABEL,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_SPIN,
+		CUIFloatRight | CUIFloatTop);
+
+	saveWindowResizer->addSubWindow(IDC_MISC_BOX,
+		CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_IGNORE_PBUFFER,
+		CUIFloatRight | CUIFloatTop);
+
+	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE_BOX,
+		CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE,
+		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH_LABEL,
+		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH,
+		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT_LABEL,
+		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT,
+		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_ZOOMTOFIT,
+		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
 	return FALSE;
 }
 
@@ -1297,6 +1363,10 @@ BOOL ModelWindow::doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 	if (hDlg == hErrorWindow)
 	{
 		return doErrorSize(sizeType, newWidth, newHeight);
+	}
+	else if (hDlg == hSaveDialog)
+	{
+		return doSaveSize(sizeType, newWidth, newHeight);
 	}
 	return FALSE;
 }
@@ -3332,6 +3402,8 @@ LDSnapshotTaker::ImageType ModelWindow::getSaveImageType(void)
 		return LDSnapshotTaker::ITPng;
 	case BMP_IMAGE_TYPE_INDEX:
 		return LDSnapshotTaker::ITBmp;
+	case JPG_IMAGE_TYPE_INDEX:
+		return LDSnapshotTaker::ITJpg;
 	default:
 		return LDSnapshotTaker::ITPng;
 	}
@@ -4102,6 +4174,7 @@ void ModelWindow::setupPageSetupExtras(void)
 
 void ModelWindow::setupSaveExtras(void)
 {
+	hSaveOptionsButton = GetDlgItem(hSaveDialog, IDC_SAVE_OPTIONS);
 	hSaveWidthLabel = GetDlgItem(hSaveDialog, IDC_SAVE_WIDTH_LABEL);
 	hSaveWidth = GetDlgItem(hSaveDialog, IDC_SAVE_WIDTH);
 	hSaveHeightLabel = GetDlgItem(hSaveDialog, IDC_SAVE_HEIGHT_LABEL);
@@ -4110,6 +4183,7 @@ void ModelWindow::setupSaveExtras(void)
 	hSaveDigitsLabel = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS_LABEL);
 	hSaveDigitsField = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS);
 	hSaveDigitsSpin = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS_SPIN);
+	EnableWindow(hSaveOptionsButton, saveImageType == JPG_IMAGE_TYPE_INDEX);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_ACTUAL_SIZE, BM_SETCHECK,
 		saveActualSize ? 0 : 1, 0);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_SERIES, BM_SETCHECK,
@@ -4207,6 +4281,8 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 {
 	switch (controlId)
 	{
+	case IDC_SAVE_OPTIONS:
+		break;
 	case IDC_SAVE_ACTUAL_SIZE:
 		saveActualSize = SendDlgItemMessage(hSaveDialog,
 			IDC_SAVE_ACTUAL_SIZE, BM_GETCHECK, 0, 0) ? false : true;
@@ -4278,7 +4354,12 @@ BOOL ModelWindow::doSaveNotify(int /*controlId*/, LPOFNOTIFY notification)
 				SendMessage(GetParent(hSaveDialog), CDM_SETCONTROLTEXT, edt1,
 					(LPARAM)buf);
 			}
+			EnableWindow(hSaveOptionsButton,
+				saveImageType == JPG_IMAGE_TYPE_INDEX);
 		}
+		break;
+	case CDN_INITDONE:
+		return doSaveInitDone(notification);
 		break;
 	default:
 //		debugPrintf("%d\n", notification->hdr.code);
@@ -4440,6 +4521,10 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 				{
 					sprintf(saveFilename, format, baseFilename, i, "bmp");
 				}
+				else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+				{
+					sprintf(saveFilename, format, baseFilename, i, "jpg");
+				}
 				if (!LDrawModelViewer::fileExists(saveFilename))
 				{
 					return true;
@@ -4458,6 +4543,11 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
 				return true;
 			}
+			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+			{
+				sprintf(saveFilename, "%s.%s", baseFilename, "jpg");
+				return true;
+			}
 		}
 	}
 	return false;
@@ -4468,7 +4558,7 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 	OPENFILENAME openStruct;
 	char fileTypes[1024];
 	char* initialDir = ".";
-	int maxImageType = 2;
+	int maxImageType = 3;
 
 	if (!calcSaveFilename(saveFilename, len))
 	{
@@ -4483,6 +4573,8 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		"*.png");
 	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("BmpFileType"),
 		"*.bmp");
+	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("JpgFileType"),
+		"*.jpg");
 	memset(&openStruct, 0, sizeof(OPENFILENAME));
 	openStruct.lStructSize = sizeof(OPENFILENAME);
 	openStruct.hwndOwner = hWindow;
@@ -4493,7 +4585,7 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 	openStruct.lpstrInitialDir = initialDir;
 	openStruct.lpstrTitle = TCLocalStrings::get("SaveSnapshot");
 	openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_ENABLETEMPLATE
-		| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT;
+		| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING;
 	openStruct.lpstrDefExt = NULL;
 	openStruct.lCustData = (long)this;
 	openStruct.hInstance = getLanguageModule();
@@ -4519,10 +4611,17 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 			{
 				strcat(saveFilename, ".bmp");
 			}
-
+			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+			{
+				strcat(saveFilename, ".jpg");
+			}
 		}
+		TCObject::release(saveWindowResizer);
+		saveWindowResizer = NULL;
 		return true;
 	}
+	TCObject::release(saveWindowResizer);
+	saveWindowResizer = NULL;
 	return false;
 }
 
@@ -4583,6 +4682,10 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine,
 		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
 		{
 			saveImageType = BMP_IMAGE_TYPE_INDEX;
+		}
+		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".jpg"))
+		{
+			saveImageType = JPG_IMAGE_TYPE_INDEX;
 		}
 		else
 		{

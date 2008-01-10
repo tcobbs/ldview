@@ -194,7 +194,9 @@ class ModelWindow: public CUIOGLWindow
 		virtual BOOL doDialogCommand(HWND, int, int, HWND);
 		virtual BOOL doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 			int newHeight);
+		virtual BOOL doSaveInitDone(OFNOTIFY *ofNotify);
 		virtual BOOL doErrorSize(WPARAM sizeType, int newWidth, int newHeight);
+		virtual BOOL doSaveSize(WPARAM sizeType, int newWidth, int newHeight);
 		virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
 		virtual LRESULT doEraseBackground(RECT* updateRect);
 		virtual LRESULT doTimer(UINT);
@@ -396,6 +398,7 @@ class ModelWindow: public CUIOGLWindow
 		bool ignorePBuffer;
 		int saveDigits;
 		HWND hSaveDialog;
+		HWND hSaveOptionsButton;
 		HWND hSaveWidthLabel;
 		HWND hSaveWidth;
 		HWND hSaveHeightLabel;
@@ -418,6 +421,7 @@ class ModelWindow: public CUIOGLWindow
 		HDC hCurrentDC;
 		HGLRC hCurrentGLRC;
 		CUIWindowResizer *errorWindowResizer;
+		CUIWindowResizer *saveWindowResizer;
 		bool savingFromCommandLine;
 		bool skipErrorUpdates;
 		bool redrawRequested;
