@@ -160,7 +160,15 @@ SOURCE=.\TCImageFormat.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCImageOptions.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCJpegImageFormat.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCJpegOptions.cpp
 # End Source File
 # Begin Source File
 
@@ -281,7 +289,15 @@ SOURCE=.\TCImageFormat.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\TCImageOptions.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TCJpegImageFormat.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TCJpegOptions.h
 # End Source File
 # Begin Source File
 
