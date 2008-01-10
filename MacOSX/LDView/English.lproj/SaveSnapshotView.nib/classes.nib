@@ -2,7 +2,7 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {fileType = id; saveSeries = id; size = id; }; 
+            ACTIONS = {fileType = id; fileTypeOptions = id; saveSeries = id; size = id; }; 
             CLASS = SaveSnapshotViewOwner; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -11,6 +11,7 @@
                 digitsField = NSTextField; 
                 digitsLabel = NSTextField; 
                 digitsStepper = NSStepper; 
+                fileTypeOptionsButton = id; 
                 fileTypePopUp = NSPopUpButton; 
                 saveSeriesCheck = NSButton; 
                 sizeCheck = NSButton; 

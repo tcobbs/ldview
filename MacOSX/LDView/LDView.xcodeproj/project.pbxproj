@@ -59,6 +59,8 @@
 		1F6125780C793C0700548053 /* error_vertex_order.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F61256C0C793C0700548053 /* error_vertex_order.png */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */; };
+		1F8418E60D358B9900FAF665 /* JpegOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8418E40D358B9900FAF665 /* JpegOptions.nib */; };
+		1F8418EA0D35902600FAF665 /* JpegOptions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F8418E90D35902600FAF665 /* JpegOptions.mm */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
 		1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */; };
 		1FBE9E1D0CD3F66500334DA9 /* SaveSnapshotView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */; };
@@ -222,6 +224,9 @@
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MyResizeCorner.png; sourceTree = "<group>"; };
 		1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotTaker.h; sourceTree = "<group>"; };
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
+		1F8418E50D358B9900FAF665 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/JpegOptions.nib; sourceTree = "<group>"; };
+		1F8418E80D35902600FAF665 /* JpegOptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JpegOptions.h; sourceTree = "<group>"; };
+		1F8418E90D35902600FAF665 /* JpegOptions.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = JpegOptions.mm; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
 		1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveSnapshotViewOwner.h; sourceTree = "<group>"; };
 		1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSnapshotViewOwner.mm; sourceTree = "<group>"; };
@@ -294,6 +299,8 @@
 				1F240DA40A58E28700691116 /* ModelWindow.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
+				1F8418E80D35902600FAF665 /* JpegOptions.h */,
+				1F8418E90D35902600FAF665 /* JpegOptions.mm */,
 				1F29FE680C78242000A907CC /* ErrorsAndWarnings.h */,
 				1F29FE690C78242000A907CC /* ErrorsAndWarnings.mm */,
 				1F6122D20C78F68600548053 /* ErrorItem.h */,
@@ -397,6 +404,7 @@
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
 				1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
+				1F8418E40D358B9900FAF665 /* JpegOptions.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
@@ -665,6 +673,7 @@
 				1F6125770C793C0700548053 /* error_parse.png in Resources */,
 				1F6125780C793C0700548053 /* error_vertex_order.png in Resources */,
 				1FBE9E1D0CD3F66500334DA9 /* SaveSnapshotView.nib in Resources */,
+				1F8418E60D358B9900FAF665 /* JpegOptions.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +712,7 @@
 				1FCD57250CCBFDCD005EDCE4 /* CommandLineSnapshot.mm in Sources */,
 				1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */,
 				1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */,
+				1F8418EA0D35902600FAF665 /* JpegOptions.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -746,6 +756,14 @@
 				1F29FE650C7811B200A907CC /* English */,
 			);
 			name = ErrorsAndWarnings.nib;
+			sourceTree = "<group>";
+		};
+		1F8418E40D358B9900FAF665 /* JpegOptions.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F8418E50D358B9900FAF665 /* English */,
+			);
+			name = JpegOptions.nib;
 			sourceTree = "<group>";
 		};
 		1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */ = {
@@ -841,6 +859,7 @@
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng12u",
+					"-ljpeg",
 					"-lboost_thread-mt",
 					"$(OTHER_LDFLAGS)",
 				);
@@ -903,6 +922,7 @@
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng12u",
+					"-ljpeg",
 					"-lboost_thread-mt",
 					"$(OTHER_LDFLAGS)",
 				);
@@ -936,6 +956,7 @@
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-lpng12u",
+					"-ljpeg",
 					"-lboost_thread-mt",
 					"$(OTHER_LDFLAGS)",
 				);

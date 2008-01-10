@@ -250,10 +250,11 @@ bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
 		int offset = 0;
 		int dir = 1;
 		TCByte *rowBytes = NULL;
-		int imageWidth = image->getWidth();
 		TCJpegOptions *options =
 			(TCJpegOptions *)image->getCompressionOptions();
 
+		imageWidth = image->getWidth();
+		imageHeight = image->getHeight();
 		this->image = image;
 		// WARNING: Do NOT put any C++ objects that need destructors inside the
 		// following if statement.  Doing so will result in a memory leak if any
@@ -342,7 +343,7 @@ bool TCJpegImageFormat::saveFile(TCImage *image, FILE *file)
 				int srcIndex = offset;
 
 				// Convert RGBA to RGB.
-				for (int x = 0; x < imageWidth; x++)
+				for (unsigned int x = 0; x < imageWidth; x++)
 				{
 					rowBytes[dstIndex++] = imageData[srcIndex++];
 					rowBytes[dstIndex++] = imageData[srcIndex++];

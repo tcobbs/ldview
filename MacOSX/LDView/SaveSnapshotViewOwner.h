@@ -13,6 +13,7 @@
 @interface SaveSnapshotViewOwner : ViewOwnerBase
 {
 	IBOutlet NSView *accessoryView;
+	IBOutlet NSButton *fileTypeOptionsButton;
 	IBOutlet NSPopUpButton *fileTypePopUp;
 	IBOutlet NSButton *saveSeriesCheck;
 	IBOutlet NSTextField *digitsLabel;
@@ -34,6 +35,7 @@
 - (IBAction)saveSeries:(id)sender;
 - (IBAction)size:(id)sender;
 - (IBAction)fileType:(id)sender;
+- (IBAction)fileTypeOptions:(id)sender;
 
 - (bool)transparentBackground;
 - (bool)autocrop;

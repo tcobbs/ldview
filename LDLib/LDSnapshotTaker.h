@@ -13,7 +13,8 @@ public:
 	enum ImageType
 	{
 		ITPng = 1,
-		ITBmp = 2
+		ITBmp = 2,
+		ITJpg = 3
 	};
 	LDSnapshotTaker(void);
 	LDSnapshotTaker(LDrawModelViewer *modelViewer);
@@ -44,6 +45,7 @@ public:
 protected:
 	virtual ~LDSnapshotTaker(void);
 	virtual void dealloc(void);
+	bool writeJpg(const char *filename, int width, int height, TCByte *buffer);
 	bool writeBmp(const char *filename, int width, int height, TCByte *buffer);
 	bool writePng(const char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);
