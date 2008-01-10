@@ -6,7 +6,7 @@ MAKEDEPEND = gcc -MM
 QTDIR =
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib
 LIBDIRS = $(LDLIBDIRS) -L../../boost/lib -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread -ljpeg
 STATIC =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa

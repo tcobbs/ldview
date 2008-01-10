@@ -68,13 +68,34 @@ bool LDSnapshotTaker::saveImage(void)
 		int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
 		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
 			false);
-		
+		bool commandLineType = false;
+		TCStringArray *processed = TCUserDefaults::getProcessedCommandLine();
+
+		if (processed && processed->getCount() > 0)
+		{
+			char prefix1[128];
+			char prefix2[128];
+
+			sprintf(prefix1, "%s=", SAVE_IMAGE_TYPE_KEY);
+			sprintf(prefix1, "%s=", SNAPSHOT_SUFFIX_KEY);
+			for (i = 0; i < processed->getCount() && !commandLineType; i++)
+			{
+				if (stringHasCaseInsensitivePrefix((*processed)[i], prefix1) ||
+					stringHasCaseInsensitivePrefix((*processed)[i], prefix2))
+				{
+					commandLineType = true;
+				}
+			}
+		}
 		if (saveSnapshots)
 		{
 			switch (TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false))
 			{
 			case 2:
 				imageExt = ".bmp";
+				break;
+			case 3:
+				imageExt = ".jpg";
 				break;
 			default:
 				imageExt = ".png";
@@ -97,13 +118,13 @@ bool LDSnapshotTaker::saveImage(void)
 
 				if (sscanf(arg + 3, "%f", &value) == 1)
 				{
-					sprintf(newArg, "%s=%f", HFOV_KEY, value);
+					sprintf(newArg, "-%s=%f", HFOV_KEY, value);
 					TCUserDefaults::addCommandLineArg(newArg);
 				}
 			}
 			else if (stringHasCaseInsensitivePrefix(arg, "-cg"))
 			{
-				sprintf(newArg, "%s=%s", CAMERA_GLOBE_KEY, arg + 3);
+				sprintf(newArg, "-%s=%s", CAMERA_GLOBE_KEY, arg + 3);
 				TCUserDefaults::addCommandLineArg(newArg);
 				zoomToFit = true;
 			}
@@ -148,6 +169,24 @@ bool LDSnapshotTaker::saveImage(void)
 				{
 					imageFilename = TCUserDefaults::stringForKey(
 						SAVE_SNAPSHOT_KEY, NULL, false);
+					if (imageFilename && !commandLineType)
+					{
+						if (stringHasCaseInsensitiveSuffix(imageFilename,
+							".png"))
+						{
+							m_imageType = ITPng;
+						}
+						else if (stringHasCaseInsensitiveSuffix(imageFilename,
+							".bmp"))
+						{
+							m_imageType = ITBmp;
+						}
+						else if (stringHasCaseInsensitiveSuffix(imageFilename,
+							".jpg"))
+						{
+							m_imageType = ITJpg;
+						}
+					}
 				}
 				if (imageFilename)
 				{
