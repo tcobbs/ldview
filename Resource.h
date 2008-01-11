@@ -84,6 +84,7 @@
 #define IDR_LIGHT_ANGLE_MM              180
 #define IDR_LIGHT_ANGLE_LM              181
 #define IDR_LIGHT_ANGLE_LR              182
+#define IDD_JPEG_OPTIONS                183
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -290,6 +291,11 @@
 #define IDC_ANISO_LEVEL_LABEL           1232
 #define IDC_UR                          1233
 #define IDC_SAVE_OPTIONS                1233
+#define IDC_JPEG_QUAL_SLIDER            1234
+#define IDC_JPEG_QUAL_FIELD             1235
+#define IDC_JPEG_QUAL_SPIN              1236
+#define IDC_JPEG_SUBSAMPLING_COMBO      1237
+#define IDC_JPEG_PROGRESSIVE_CHECK      1238
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -369,9 +375,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        183
+#define _APS_NEXT_RESOURCE_VALUE        184
 #define _APS_NEXT_COMMAND_VALUE         40092
-#define _APS_NEXT_CONTROL_VALUE         1234
+#define _APS_NEXT_CONTROL_VALUE         1239
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

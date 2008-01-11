@@ -3,6 +3,7 @@
 #include <TCFoundation/TCMacros.h>
 #include "LDVExtensionsSetup.h"
 #include "LDViewWindow.h"
+#include "JpegOptionsDialog.h"
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCStringArray.h>
@@ -4282,6 +4283,12 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 	switch (controlId)
 	{
 	case IDC_SAVE_OPTIONS:
+		{
+			JpegOptionsDialog *dialog = new JpegOptionsDialog(hInstance,
+				hSaveDialog);
+
+			dialog->doModal(hSaveDialog);
+		}
 		break;
 	case IDC_SAVE_ACTUAL_SIZE:
 		saveActualSize = SendDlgItemMessage(hSaveDialog,
