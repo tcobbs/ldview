@@ -2294,7 +2294,10 @@ void CUIWindow::setupDialogSlider(HWND hDlg, int controlId, short min,
 {
 	SendDlgItemMessage(hDlg, controlId, TBM_SETRANGE, TRUE,
 		(LPARAM)MAKELONG(min, max));
-	SendDlgItemMessage(hDlg, controlId, TBM_SETTICFREQ, frequency, 0);
+	if (GetWindowLong(GetDlgItem(hDlg, controlId), GWL_STYLE) & TBS_AUTOTICKS)
+	{
+		SendDlgItemMessage(hDlg, controlId, TBM_SETTICFREQ, frequency, 0);
+	}
 	SendDlgItemMessage(hDlg, controlId, TBM_SETPOS, 1, value);
 }
 

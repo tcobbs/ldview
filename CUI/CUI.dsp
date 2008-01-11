@@ -85,6 +85,10 @@ LIB32=link.exe -lib
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\CUIDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CUIOGLWindow.cpp
 # End Source File
 # Begin Source File
@@ -114,6 +118,10 @@ SOURCE=.\CUIWindowResizer.cpp
 # Begin Source File
 
 SOURCE=.\CUIDefines.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CUIDialog.h
 # End Source File
 # Begin Source File
 
