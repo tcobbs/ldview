@@ -7,7 +7,12 @@
 #if WINVER >= 0x0501
 // XP specific stuff
 #include <uxtheme.h>
+// _MSC_VER 1500 = Visual Studio 2008.
+#if (defined(_MSC_VER) && _MSC_VER >= 1500)
+#include <vssym32.h>
+#else
 #include <tmschema.h>
+#endif
 #else
 typedef HANDLE HTHEME;          // handle to a section of theme data for class
 #endif
