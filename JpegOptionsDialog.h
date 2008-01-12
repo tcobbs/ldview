@@ -17,7 +17,8 @@ protected:
 	virtual BOOL doInitDialog(HWND /*hKbControl*/);
 	virtual LRESULT doVScroll(int scrollCode, int position, HWND hScrollBar);
 	virtual LRESULT doHScroll(int scrollCode, int position, HWND hScrollBar);
-	//virtual LRESULT doNotify(int controlId, LPNMHDR notification);
+	virtual LRESULT doTextFieldChange(int controlId, HWND control);
+	virtual void doOK(void);
 	void setQuality(int value);
 
 	TCJpegOptions *options;
