@@ -140,7 +140,7 @@ int UnMirrorStuds::run(int argc, char *argv[])
 
 	getcwd(initialPath, sizeof(initialPath));
 	TCAlertManager::registerHandler(LDLError::alertClass(), this,
-		(TCAlertCallback)ldlErrorCallback);
+		(TCAlertCallback)&UnMirrorStuds::ldlErrorCallback);
 	for (i = 1; i < argc; i++)
 	{
 		char newFilename[1024];
