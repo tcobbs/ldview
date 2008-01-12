@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include <TCFoundation/TCJpegOptions.h>
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 JpegOptionsDialog::JpegOptionsDialog(HINSTANCE hInstance, HWND hParentWindow):
 CUIDialog(hInstance, hParentWindow),
@@ -29,11 +30,10 @@ void JpegOptionsDialog::setQuality(int value)
 	char buf[128];
 
 	quality = value;
-	setSliderValue(IDC_JPEG_QUAL_SLIDER, quality);
-	setSpinValue(IDC_JPEG_QUAL_SPIN, quality);
+	sliderSetValue(IDC_JPEG_QUAL_SLIDER, quality);
+	spinSetValue(IDC_JPEG_QUAL_SPIN, quality);
 	sprintf(buf, "%d", quality);
-	SetWindowTextA(hQualityField, buf);
-
+	windowSetText(IDC_JPEG_QUAL_FIELD, buf);
 }
 
 BOOL JpegOptionsDialog::doInitDialog(HWND /*hKbControl*/)
@@ -45,16 +45,22 @@ BOOL JpegOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 	hQualityField = GetDlgItem(hWindow, IDC_JPEG_QUAL_FIELD);
 	hQualitySpin = GetDlgItem(hWindow, IDC_JPEG_QUAL_SPIN);
 	hQualitySlider = GetDlgItem(hWindow, IDC_JPEG_QUAL_SLIDER);
-	setupSlider(IDC_JPEG_QUAL_SLIDER, 1, 100, 10, quality);
+	sliderSetup(IDC_JPEG_QUAL_SLIDER, 1, 100, 10, quality);
 	for (i = 10; i < 100; i += 10)
 	{
-		setSliderTic(IDC_JPEG_QUAL_SLIDER, i);
+		sliderSetTic(IDC_JPEG_QUAL_SLIDER, i);
 	}
-	setupSpin(IDC_JPEG_QUAL_SPIN, 1, 100, quality);
+	textFieldSetLimitText(IDC_JPEG_QUAL_FIELD, 3);
+	spinSetup(IDC_JPEG_QUAL_SPIN, 1, 100, quality);
 	setQuality(quality);
+	comboAddString(IDC_JPEG_SUBSAMPLING_COMBO,
+		TCLocalStrings::get(_UC("Jpeg444ss")));
+	comboAddString(IDC_JPEG_SUBSAMPLING_COMBO,
+		TCLocalStrings::get(_UC("Jpeg422ss")));
+	comboAddString(IDC_JPEG_SUBSAMPLING_COMBO,
+		TCLocalStrings::get(_UC("Jpeg420ss")));
 	switch (options->getSubSampling())
 	{
-	case TCJpegOptions::SS444:
 	case TCJpegOptions::SS422:
 		index = 1;
 		break;
@@ -65,7 +71,8 @@ BOOL JpegOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 		index = 0;
 		break;
 	}
-	setCheck(IDC_JPEG_PROGRESSIVE_CHECK, options->getProgressive());
+	comboSelectItem(IDC_JPEG_SUBSAMPLING_COMBO, index);
+	checkSet(IDC_JPEG_PROGRESSIVE_CHECK, options->getProgressive());
 	return TRUE;
 }
 
@@ -99,16 +106,64 @@ LRESULT JpegOptionsDialog::doHScroll(
 	return CUIDialog::doHScroll(scrollCode, position, hScrollBar);
 }
 
-/*
-LRESULT JpegOptionsDialog::doNotify(int controlId, LPNMHDR notification)
+LRESULT JpegOptionsDialog::doTextFieldChange(int controlId, HWND control)
 {
-	if (controlId == IDC_JPEG_QUAL_SLIDER)
+	if (controlId == IDC_JPEG_QUAL_FIELD)
 	{
-		if (notification->code == NM_RELEASEDCAPTURE)
+		std::string text;
+		int value;
+
+		windowGetText(controlId, text);
+		if (sscanf(text.c_str(), "%d", &value) == 1)
 		{
-			setQuality(getSliderValue(IDC_JPEG_QUAL_SLIDER));
+			int start, end;
+
+			textFieldGetSelection(controlId, start, end);
+			if (value > 100)
+			{
+				while (value > 100)
+				{
+					value /= 10;
+				}
+			}
+			setQuality(value);
+			if (start > 2)
+			{
+				if (value == 100)
+				{
+					start = 3;
+				}
+				else
+				{
+					start = 2;
+				}
+			}
+			textFieldSetSelection(controlId, start, start);
 		}
+		return 0;
 	}
-	return CUIDialog::doNotify(controlId, notification);
+	return CUIDialog::doTextFieldChange(controlId, control);
 }
-*/
+
+void JpegOptionsDialog::doOK(void)
+{
+	TCJpegOptions::SubSampling subSampling = TCJpegOptions::SS444;
+
+	switch (comboGetSelectedItem(IDC_JPEG_SUBSAMPLING_COMBO))
+	{
+	case 0:
+		subSampling = TCJpegOptions::SS444;
+		break;
+	case 1:
+		subSampling = TCJpegOptions::SS422;
+		break;
+	case 2:
+		subSampling = TCJpegOptions::SS420;
+		break;
+	}
+	options->setQuality(sliderGetValue(IDC_JPEG_QUAL_SLIDER));
+	options->setSubSampling(subSampling);
+	options->setProgressive(checkGet(IDC_JPEG_PROGRESSIVE_CHECK));
+	options->save();
+	CUIDialog::doOK();
+}

@@ -39,8 +39,8 @@ void TCJpegOptions::save(void)
 {
 	if (m_compress)
 	{
-		TCUserDefaults::setLongForKey(m_quality, "CJPGQuality");
-		TCUserDefaults::setLongForKey(m_subSampling, "CJPGSubSampling");
-		TCUserDefaults::setBoolForKey(m_progressive, "CJPGProgressive");
+		TCUserDefaults::setLongForKey(m_quality, "JPGQuality");
+		TCUserDefaults::setLongForKey(m_subSampling, "JPGSubSampling");
+		TCUserDefaults::setBoolForKey(m_progressive, "JPGProgressive");
 	}
 }
