@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDPreferences.h>
+#include <LDLib/LDInputHandler.h>
 
 class PreferencesPanel;
 class ModelViewerWidget;
@@ -17,12 +18,6 @@ class QSlider;
 class QSpinBox;
 class LDPreferences;
 class TCAlert;
-
-typedef enum
-{
-	LDVViewExamine,
-	LDVViewFlythrough
-} LDVViewMode;
 
 typedef enum
 {
@@ -109,8 +104,10 @@ public:
 	static void setRecentFile(int index, char *filename);
 	static LDVPollMode getPollMode(void);
 	static void setPollMode(LDVPollMode value);
-	static LDVViewMode getViewMode(void);
-	static void setViewMode(LDVViewMode value);
+	static LDInputHandler::ViewMode getViewMode(void);
+	static void setViewMode(LDInputHandler::ViewMode value);
+	static bool getLatLongMode(void);
+	static void setLatLongMode(bool);
 	void performHotKey(int);
     void setupPrefSetsList(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);

@@ -158,6 +158,7 @@
         </item>
         <separator/>
         <action name="examineModeAction"/>
+        <action name="viewLatitudeRotationAction"/>
         <action name="flythroughModeAction"/>
     </item>
     <item text="&amp;Tools" name="toolsMenu">
@@ -886,6 +887,23 @@
             </property>
         </action>
     </actiongroup>
+        <action>
+        <property name="name">
+            <cstring>viewLatitudeRotationAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Latitude/Longitude Rotation</string>
+        </property>
+        <property name="menuText">
+            <string>Latitude/Longitude Rotation</string>
+        </property>
+        <property name="toolTip">
+            <string>Latitude/Longitude Rotation</string>
+        </property>
+    </action>
     <action>
         <property name="name">
             <cstring>fileCancelLoadAction</cstring>
@@ -1026,6 +1044,12 @@
         <signal>toggled(bool)</signal>
         <receiver>LDView</receiver>
         <slot>viewStatusBar(bool)</slot>
+    </connection>
+    <connection>
+        <sender>viewLatitudeRotationAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>latitudeRotation(bool)</slot>
     </connection>
     <connection>
         <sender>viewFullScreenAction</sender>
@@ -1212,6 +1236,7 @@
     <slot>showViewInfo()</slot>
     <slot>showPovCamera()</slot>
     <slot>toolsPartList()</slot>
+    <slot>latitudeRotation(bool)</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
