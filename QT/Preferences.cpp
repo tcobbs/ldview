@@ -967,14 +967,24 @@ void Preferences::setPollMode(LDVPollMode value)
 	TCUserDefaults::setLongForKey(value, POLL_KEY, false);
 }
 
-LDVViewMode Preferences::getViewMode(void)
+LDInputHandler::ViewMode Preferences::getViewMode(void)
 {
-	return (LDVViewMode)TCUserDefaults::longForKey(VIEW_MODE_KEY, 0 , false);
+	return (LDInputHandler::ViewMode)TCUserDefaults::longForKey(VIEW_MODE_KEY, 0 , false);
 }
 
-void Preferences::setViewMode(LDVViewMode value)
+void Preferences::setViewMode(LDInputHandler::ViewMode value)
 {
 	TCUserDefaults::setLongForKey(value, VIEW_MODE_KEY, false);
+}
+
+bool Preferences::getLatLongMode(void)
+{
+	return TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree ,false);
+}
+
+void Preferences::setLatLongMode(bool value)
+{
+	TCUserDefaults::setLongForKey(value, EXAMINE_MODE_KEY, false);
 }
 
 void Preferences::setWindowSize(int width, int height)

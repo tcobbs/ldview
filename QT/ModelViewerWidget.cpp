@@ -95,7 +95,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	lastY(-1),
 	originalZoomY(-1),
 	rotationSpeed(0.0f),
-	viewMode(LDVViewExamine),
+	viewMode(LDInputHandler::VMExamine),
 	spinButton(1),
 	zoomButton(2),
 	preferences(NULL),
@@ -168,7 +168,8 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	extradir = new ExtraDir(this);
 	snapshotsettings = new SnapshotSettings(this);
 	preferences->doApply();
-	setViewMode(Preferences::getViewMode());
+	setViewMode(Preferences::getViewMode(),
+				examineLatLong = Preferences::getLatLongMode());
 #ifdef HAVE_QT4
 	setFocusPolicy(Qt::StrongFocus);
 #else
@@ -1376,7 +1377,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		break;
 	}
 	pollAction->setOn(true);
-	if (viewMode == LDVViewExamine)
+	if (viewMode == LDInputHandler::VMExamine)
 	{
 		const wchar_t *message = TCLocalStrings::get(L"ExamineMode");
 		int len = wcslen(message);
@@ -1395,6 +1396,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		mainWindow->flythroughModeAction->setOn(true);
 		progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 	}
+	mainWindow->viewLatitudeRotationAction->setOn(Preferences::getLatLongMode());
 	menuBar = mainWindow->menuBar();
 	item = menuBar->findItem(menuBar->idAt(0));
 	if (item)
@@ -1769,6 +1771,17 @@ void ModelViewerWidget::doViewReset(void)
 	modelViewer->setZoomSpeed(0.0f);
 	modelViewer->resetView();
 	startPaintTimer();
+	unlock();
+}
+
+void ModelViewerWidget::switchExamineLatLong(bool b)
+{
+	lock();
+	if (examineLatLong != b)
+	{
+		preferences->setLatLongMode (examineLatLong = b);
+		setViewMode (viewMode, examineLatLong);
+	}
 	unlock();
 }
 
@@ -2430,43 +2443,44 @@ void ModelViewerWidget::doPollChanged(QAction *action)
 	unlock();
 }
 
-void ModelViewerWidget::setViewMode(LDVViewMode value)
+void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value, 
+									bool examine, bool saveSettings)
 {
-	if (value != viewMode)
+	viewMode = value;
+	if (viewMode == LDInputHandler::VMExamine)
 	{
-		viewMode = value;
-		if (viewMode == LDVViewExamine)
+		LDrawModelViewer::ExamineMode examineMode = ( examine ? 
+				LDrawModelViewer::EMLatLong : LDrawModelViewer::EMFree );
+		inputHandler->setViewMode(LDInputHandler::VMExamine);
+		modelViewer->setConstrainZoom(true);
+		if (progressMode)
 		{
-			inputHandler->setViewMode(LDInputHandler::VMExamine);
-			modelViewer->setConstrainZoom(true);
-			if (progressMode)
-			{
-				progressMode->setText(TCLocalStrings::get("ExamineMode"));
-			}
+			progressMode->setText(TCLocalStrings::get("ExamineMode"));
 		}
-		else
-		{
-			inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
-			modelViewer->setConstrainZoom(false);
-			if (progressMode)
-			{
-				progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
-			}
-		}
-		Preferences::setViewMode(viewMode);
+		modelViewer->setExamineMode(examineMode);
 	}
+	else
+	{
+		inputHandler->setViewMode(LDInputHandler::VMFlyThrough);
+		modelViewer->setConstrainZoom(false);
+		if (progressMode)
+		{
+			progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
+		}
+	}
+	Preferences::setViewMode(viewMode);
 }
 
 void ModelViewerWidget::doViewModeChanged(QAction *action)
 {
-	LDVViewMode newMode = LDVViewExamine;
+	LDInputHandler::ViewMode newMode = LDInputHandler::VMExamine;
 
 	lock();
 	if (action == mainWindow->flythroughModeAction)
 	{
-		newMode = LDVViewFlythrough;
+		newMode = LDInputHandler::VMFlyThrough;
 	}
-	setViewMode(newMode);
+	setViewMode(newMode,examineLatLong);
 	unlock();
 }
 
@@ -3622,7 +3636,10 @@ void ModelViewerWidget::doViewMenuAboutToShow(void)
 			viewMenu->setItemEnabled(viewMenu->idAt(2), true);
 		}
 		else
+		{
 			setMenuItemsEnabled(viewMenu, true);
+			viewMenu->setItemEnabled(viewMenu->idAt(8), viewMode == LDInputHandler::VMExamine);
+		}
 	}
 }
 

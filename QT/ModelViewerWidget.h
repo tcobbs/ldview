@@ -114,6 +114,7 @@ public:
 		bool zoomToFit = true, bool *saveAlpha = NULL);
 	int roundUp(int value, int nearest);
 
+	void switchExamineLatLong(bool b);
 	void doFrontViewAngle(void);
     void doBackViewAngle(void);
     void doLeftViewAngle(void);
@@ -219,7 +220,8 @@ protected:
 	void unlock(void);
 	void windowActivationChange(bool oldActive);
 	//void processKey(QKeyEvent *event, bool press);
-	void setViewMode(LDVViewMode value);
+	void setViewMode(LDInputHandler::ViewMode value, bool examineLatLong, 
+                     bool saveSettings=true);
 	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);
@@ -248,7 +250,8 @@ protected:
 	int lastY;
 	int originalZoomY;
 	TCFloat rotationSpeed;
-	LDVViewMode viewMode;
+	LDInputHandler::ViewMode viewMode;
+	bool examineLatLong;
 	int spinButton;
 	int zoomButton;
 	QTime lastMoveTime;
