@@ -4,9 +4,20 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
+
+ifeq ($(shell if [ -e /usr/lib/libboost_thread-mt.so  ]; then echo OK; fi),OK)
+BOOSTLIB = boost_thread-mt
+endif
+ifeq ($(shell if [ -e /usr/local/lib/libboost_thread-mt.so  ]; then echo OK; fi),OK)
+BOOSTLIB = boost_thread-mt
+endif
+ifndef BOOSTLIB
+BOOSTLIB = boost_thread
+endif
+
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib
 LIBDIRS = $(LDLIBDIRS) -L../../boost/lib -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -lboost_thread -lpthread -ljpeg
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -l$(BOOSTLIB) -lpthread -ljpeg
 STATIC =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa
