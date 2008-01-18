@@ -9,6 +9,14 @@ MOC_DIR = .moc
 OBJECTS_DIR = .obj
 
 unix {
+  BOOSTLIB = boost_thread
+  exists(/usr/lib/libboost_thread-mt.so){
+    BOOSTLIB = boost_thread-mt
+  }
+  exists(/usr/local/lib/libboost_thread-mt.so){
+    BOOSTLIB = boost_thread-mt
+  }
+
   documentation.path = /usr/local/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
 						../m6459.ldr ../LDViewMessages.ini \
@@ -18,7 +26,7 @@ unix {
   target.path = /usr/local/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw -lboost_thread
+          -lLDraw -l$$BOOSTLIB
   ldlib.target = ../LDLib/libLDraw.a
   ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
