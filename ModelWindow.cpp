@@ -4284,8 +4284,8 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 	{
 	case IDC_SAVE_OPTIONS:
 		{
-			JpegOptionsDialog *dialog = new JpegOptionsDialog(hInstance,
-				hSaveDialog);
+			JpegOptionsDialog *dialog = new JpegOptionsDialog(
+				getLanguageModule(), hSaveDialog);
 
 			dialog->doModal(hSaveDialog);
 		}
