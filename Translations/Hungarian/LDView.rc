@@ -649,6 +649,7 @@ BEGIN
     CONTROL         "Teljes méretre nagyít",IDC_SAVE_ZOOMTOFIT,"Button",
                     BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,181,44,81,10,
                     0,HIDC_SAVE_ZOOMTOFIT
+    PUSHBUTTON      "Opciók...",IDC_SAVE_OPTIONS,226,0,50,14
 END
 
 IDD_PRIMITIVES_PREFS DIALOGEX 0, 0, 260, 235
@@ -872,6 +873,28 @@ BEGIN
     PUSHBUTTON      "Mégsem",IDCANCEL,140,24,50,14
 END
 
+IDD_JPEG_OPTIONS DIALOG DISCARDABLE  0, 0, 196, 85
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "JPEG Tömörítési Opciók"
+FONT 8, "MS Sans Serif"
+BEGIN
+    RTEXT           "Minõség:",IDC_STATIC,7,10,62,8
+    CONTROL         "Slider1",IDC_JPEG_QUAL_SLIDER,"msctls_trackbar32",
+                    WS_GROUP | WS_TABSTOP,73,7,84,18
+    EDITTEXT        IDC_JPEG_QUAL_FIELD,158,7,31,14,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "Spin1",IDC_JPEG_QUAL_SPIN,"msctls_updown32",
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    WS_GROUP,184,7,11,14
+    DEFPUSHBUTTON   "OK",IDOK,83,64,50,14
+    PUSHBUTTON      "Mégsem",IDCANCEL,139,64,50,14
+    LTEXT           "Szín alul-mintavétel:",IDC_STATIC,7,32,62,8
+    COMBOBOX        IDC_JPEG_SUBSAMPLING_COMBO,71,30,118,82,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    CONTROL         "Progressive",IDC_JPEG_PROGRESSIVE_CHECK,"Button",
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,71,47,53,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1034,6 +1057,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 164
     END
+
+    IDD_JPEG_OPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 189
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 78
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1097,6 +1128,7 @@ BEGIN
         END
         MENUITEM SEPARATOR
         MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
+        MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
     END
@@ -1381,8 +1413,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,0,5
- PRODUCTVERSION 3,2,0,5
+ FILEVERSION 3,2,1,1 
+ PRODUCTVERSION 3,2,1,1 
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L

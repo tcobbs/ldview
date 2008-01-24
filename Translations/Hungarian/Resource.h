@@ -67,7 +67,9 @@
 #define IDD_UPDATES_PREFS               167
 #define IDB_VERTEX_ORDER_MASK           168
 #define IDI_LDRAW                       169
+#define IDB_ERROR_LOOP                  169
 #define IDI_MPD                         170
+#define IDB_ERROR_LOOP_MASK             170
 #define IDD_PARTS_LIST                  171
 #define IDB_LIGHT_ANGLES                173
 #define IDI_LIGHT_ANGLE_UR              174
@@ -82,6 +84,7 @@
 #define IDR_LIGHT_ANGLE_MM              180
 #define IDR_LIGHT_ANGLE_LM              181
 #define IDR_LIGHT_ANGLE_LR              182
+#define IDD_JPEG_OPTIONS                183
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -287,6 +290,12 @@
 #define IDC_UM                          1232
 #define IDC_ANISO_LEVEL_LABEL           1232
 #define IDC_UR                          1233
+#define IDC_SAVE_OPTIONS                1233
+#define IDC_JPEG_QUAL_SLIDER            1234
+#define IDC_JPEG_QUAL_FIELD             1235
+#define IDC_JPEG_QUAL_SPIN              1236
+#define IDC_JPEG_SUBSAMPLING_COMBO      1237
+#define IDC_JPEG_PROGRESSIVE_CHECK      1238
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -354,6 +363,7 @@
 #define ID_TOOLS_PARTSLIST              40088
 #define ID_LIGHTING_DRAWDATS            40089
 #define ID_LIGHTING_OPTIONALMAIN        40090
+#define ID_VIEW_EXAMINE_LAT_LONG        40091
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -365,9 +375,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        183
-#define _APS_NEXT_COMMAND_VALUE         40091
-#define _APS_NEXT_CONTROL_VALUE         1233
+#define _APS_NEXT_RESOURCE_VALUE        184
+#define _APS_NEXT_COMMAND_VALUE         40092
+#define _APS_NEXT_CONTROL_VALUE         1239
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
