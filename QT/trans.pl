@@ -74,11 +74,12 @@ sub dumptrans {
 	close(FILE);
 }
 
-zzz("../AppResources.rc","english","../LDViewMessages.ini");
-zzz("../Translations/German/Resources.rc","german","../Translations/German/LDViewMessages.ini");
-zzz("../Translations/Italian/Resources.rc","italian","../Translations/Italian/LDViewMessages.ini");
-zzz("../Translations/Czech/Resources.rc","czech","../Translations/Czech/LDViewMessages.ini");
-
+zzz("../LDView.rc","english","../LDViewMessages.ini");
+zzz("../Translations/German/LDView.rc","german","../Translations/German/LDViewMessages.ini");
+zzz("../Translations/Italian/LDView.rc","italian","../Translations/Italian/LDViewMessages.ini");
+zzz("../Translations/Czech/LDView.rc","czech","../Translations/Czech/LDViewMessages.ini");
+zzz("../Translations/Hungarian/LDView.rc","hungarian","../Translations/Hungarian/LDViewMessages.ini");
 dumptrans("czech","/tmp/czech.qph");
 dumptrans("german","/tmp/german.qph");
 dumptrans("italian","/tmp/italian.qph");
+dumptrans("hungarian","/tmp/hungarian.qph");
