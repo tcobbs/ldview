@@ -2863,9 +2863,6 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
             saveImageType = BMP_IMAGE_TYPE_INDEX;
         }
 		
-		saveImageType = (strcmp(saveDialog->selectedFilter().ascii(),
-			"Portable Network Graphics (*.png)")==0 ? PNG_IMAGE_TYPE_INDEX :
-			BMP_IMAGE_TYPE_INDEX);
 		TCUserDefaults::setLongForKey(saveImageType,
 				SAVE_IMAGE_TYPE_KEY, false);
 		if(strlen(saveFilename)>5 && saveFilename[strlen(saveFilename)-4]!='.')
