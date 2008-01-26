@@ -5,11 +5,6 @@
         <source>About LDView</source>
         <translation>LDView névjegy</translation>
     </message>
-    <message encoding="UTF-8">
-        <source>LDView Version 3.1 (9 Oct 2006)
-Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>OK</source>
         <translation>OK</translation>
@@ -35,6 +30,11 @@ Glen  Randers-Pehrson and the rest of the libpng team</source>
     <message encoding="UTF-8">
         <source>LEGO® and the LEGO logo are registered trademarks of the LEGO
 Group, which does not sponsor, endorse, or authorize this program.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message encoding="UTF-8">
+        <source>LDView Version 3.2 (__DATE__)
+Copyright © 2007 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -128,6 +128,10 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
         <source>Show None</source>
         <translation type="unfinished">Semmit sem mutat</translation>
     </message>
+    <message>
+        <source>Model loop</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ExtraDirPanel</name>
@@ -176,6 +180,53 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     <message>
         <source>Form1</source>
         <translation>Form1</translation>
+    </message>
+</context>
+<context>
+    <name>JpegOptionsPanel</name>
+    <message>
+        <source>Jpeg Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color sub-sampling:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None - Best Quality (4:4:4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2x1 - Medium Quality (4:2:2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2x2 - Worst Quality (4:1:0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>85</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Mégsem</translation>
+    </message>
+    <message>
+        <source>Esc</source>
+        <translation type="unfinished">Esc</translation>
     </message>
 </context>
 <context>
@@ -616,6 +667,18 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
         <source>Part List</source>
         <translation>Alkatrész lista</translation>
     </message>
+    <message>
+        <source>JPEG Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JPEG Options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latitude/Longitude Rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenGLExtensionsPanel</name>
@@ -759,7 +822,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message>
         <source>Enabled</source>
-        <translation>Engedélyezett</translation>
+        <translation type="obsolete">Engedélyezett</translation>
     </message>
     <message>
         <source>Fog</source>
@@ -1001,6 +1064,34 @@ into effect until the next time a model is loaded.</source>
     <message>
         <source>Apply</source>
         <translation>Alkalmaz</translation>
+    </message>
+    <message>
+        <source>Light Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use LIGHT.DAT lights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace standard light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide LIGHT.DAT geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Misc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Anisotropic filtering:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>128x</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -33,8 +33,8 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
         <translation type="unfinished"></translation>
     </message>
     <message encoding="UTF-8">
-        <source>LDView Version 3.1 (9 Oct 2006)
-Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
+        <source>LDView Version 3.2 (__DATE__)
+Copyright © 2007 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -132,6 +132,10 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
         <source>Unofficial part used</source>
         <translation>Nicht zertifiziertes Bauteil</translation>
     </message>
+    <message>
+        <source>Model loop</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ExtraDirPanel</name>
@@ -180,6 +184,53 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>Form1</source>
         <translation>Form1</translation>
+    </message>
+</context>
+<context>
+    <name>JpegOptionsPanel</name>
+    <message>
+        <source>Jpeg Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quality:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Color sub-sampling:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Progressive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>None - Best Quality (4:4:4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2x1 - Medium Quality (4:2:2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2x2 - Worst Quality (4:1:0)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>85</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+    <message>
+        <source>Esc</source>
+        <translation type="unfinished">Esc</translation>
     </message>
 </context>
 <context>
@@ -613,12 +664,87 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
         <source>Two-third</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>BFC</source>
+        <translation type="unfinished">BFC</translation>
+    </message>
+    <message>
+        <source>JPEG Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>JPEG Options...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Latitude/Longitude Rotation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Part List</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OpenGLExtensionsPanel</name>
     <message>
         <source>OpenGL Extensions</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PartListPanel</name>
+    <message>
+        <source>LDView Part List</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Generate external style sheet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show part images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Column Order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Field</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Abbrechen</translation>
+    </message>
+    <message>
+        <source>Esc</source>
+        <translation type="unfinished">Esc</translation>
     </message>
 </context>
 <context>
@@ -702,10 +828,6 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>&amp;Wireframe</source>
         <translation>&amp;Drahtgitter</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Fog</source>
@@ -946,6 +1068,34 @@ Copyright © 2000-2006 Travis Cobbs &amp; Peter Bartfai</source>
     <message>
         <source>Note: changes to setting on this tab will not go 
 into effect until the next time a model is loaded.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Light Direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use LIGHT.DAT lights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Replace standard light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hide LIGHT.DAT geometry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Misc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Anisotropic filtering:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>128x</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
