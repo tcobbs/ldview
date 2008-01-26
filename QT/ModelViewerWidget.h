@@ -9,6 +9,7 @@
 #include "Preferences.h"
 #include "LDViewExtraDir.h"
 #include "LDViewSnapshotSettings.h"
+#include "LDViewJpegOptions.h"
 #include "LDViewPartList.h"
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDInputHandler.h>
@@ -98,6 +99,7 @@ public:
 	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
+	void doFileJPEGOptions(void);
 	bool fileExists(const char* filename);
 	bool shouldOverwriteFile(char* filename);
 	bool doFileSave(char *saveFilename);
@@ -260,6 +262,7 @@ protected:
 	Preferences *preferences;
 	ExtraDir *extradir;
 	SnapshotSettings *snapshotsettings;
+	JpegOptions *jpegoptions;
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
 	AboutPanel *aboutPanel;

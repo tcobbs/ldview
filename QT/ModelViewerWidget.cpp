@@ -82,6 +82,7 @@
 
 #define PNG_IMAGE_TYPE_INDEX 1
 #define BMP_IMAGE_TYPE_INDEX 2
+#define JPG_IMAGE_TYPE_INDEX 3
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
@@ -101,6 +102,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	preferences(NULL),
 	extradir(NULL),
 	snapshotsettings(NULL),
+	jpegoptions(NULL),
 	extensionsPanel(NULL),
 	aboutPanel(NULL),
 	helpContents(NULL),
@@ -167,6 +169,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	preferences = new Preferences(this);
 	extradir = new ExtraDir(this);
 	snapshotsettings = new SnapshotSettings(this);
+	jpegoptions = new JpegOptions(this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),
 				examineLatLong = Preferences::getLatLongMode());
@@ -353,8 +356,20 @@ void ModelViewerWidget::setApplication(QApplication *value)
 		QFileInfo fi(snapshotFilename);
 		QString s(snapshotFilename);
 		char *s2=copyString(fi.absFilePath().ascii());
-		saveImageType = ( s.lower().right(4)==".png" ? 
-			PNG_IMAGE_TYPE_INDEX : BMP_IMAGE_TYPE_INDEX);
+		
+		QString ext = s.lower().right(4);
+		if (ext == ".png")
+		{
+			saveImageType = PNG_IMAGE_TYPE_INDEX;
+		}
+		else if (ext == ".bmp")
+		{
+			saveImageType = BMP_IMAGE_TYPE_INDEX;
+		}
+		else 
+		{
+			saveImageType = JPG_IMAGE_TYPE_INDEX;
+		}
 		saveImage(s2, 
 			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
 			TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false) :
@@ -1402,7 +1417,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	if (item)
 	{
 		fileMenu = mainWindow->fileMenu;
-		fileCancelLoadId = fileMenu->idAt(8);
+		fileCancelLoadId = fileMenu->idAt(9);
 		fileReloadId = fileMenu->idAt(1);
 	}
 	for ( cnt = i = 0; ; i++)
@@ -2772,6 +2787,10 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 				{
 					sprintf(saveFilename, format, baseFilename, i, "bmp");
 				}
+				else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+				{
+					sprintf(saveFilename, format, baseFilename, i, "jpg");
+				}
 				if (!fileExists(saveFilename))
 				{
 					return true;
@@ -2788,6 +2807,11 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 			{
 				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
+				return true;
+			}
+			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+			{
+				sprintf(saveFilename, "%s.%s", baseFilename, "jpg");
 				return true;
 			}
 		}
@@ -2814,6 +2838,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 			true);
 		saveDialog->setCaption(TCLocalStrings::get("SaveSnapshot"));
 		saveDialog->addFilter("Windows Bitmap (*.bmp)");
+		saveDialog->addFilter("Jpeg (*.jpg)");
 		saveDialog->setSelectedFilter(0);
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
@@ -2824,6 +2849,20 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		QString filename = saveDialog->selectedFile();
 		QDir::setCurrent(saveDialog->dirPath());
 		strncpy(saveFilename,filename,len);
+		QString filter = saveDialog->selectedFilter();
+		if (filter == "Portable Network Graphics (*.png)")
+		{
+			saveImageType = PNG_IMAGE_TYPE_INDEX;
+		}
+        if (filter == "Jpeg (*.jpg)")
+        {
+            saveImageType = JPG_IMAGE_TYPE_INDEX;
+        }
+        if (filter == "Windows Bitmap (*.bmp)")
+        {
+            saveImageType = BMP_IMAGE_TYPE_INDEX;
+        }
+		
 		saveImageType = (strcmp(saveDialog->selectedFilter().ascii(),
 			"Portable Network Graphics (*.png)")==0 ? PNG_IMAGE_TYPE_INDEX :
 			BMP_IMAGE_TYPE_INDEX);
@@ -2838,6 +2877,10 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 			{
 				strcat(saveFilename, ".bmp");
+			}
+			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+			{
+				strcat(saveFilename, ".jpg");
 			}
 		}
 		return true;
@@ -2865,6 +2908,8 @@ LDSnapshotTaker::ImageType ModelViewerWidget::getSaveImageType(void)
 			return LDSnapshotTaker::ITPng;
 		case BMP_IMAGE_TYPE_INDEX:
 			return LDSnapshotTaker::ITBmp;
+		case JPG_IMAGE_TYPE_INDEX:
+			return LDSnapshotTaker::ITJpg;
 		default:
 			return LDSnapshotTaker::ITPng;
 	}
@@ -3023,6 +3068,10 @@ void ModelViewerWidget::doFileSaveSettings(void)
 	snapshotsettings->show();
 }
 
+void ModelViewerWidget::doFileJPEGOptions(void)
+{
+	jpegoptions->show();
+}
 
 void ModelViewerWidget::doFrontViewAngle(void)
 {
