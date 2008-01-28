@@ -104,6 +104,7 @@ DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include
 exists($(QTDIR)/include/Qt3Support/q3button.h){
 	CONFIG 	+= uic3
+	LIBS += -ljpeg
 	DEFINES += QT3_SUPPORT
 	QT 	+= qt3support opengl
 	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
