@@ -290,6 +290,7 @@ class LDrawModelViewer: public TCObject
 			return flags.showConditionalControlPoints;
 		}
 		bool getNeedsReload(void) { return flags.needsReload != 0; }
+		void setNeedsReload(void) { flags.needsReload = true; }
 		bool getNeedsRecompile(void) { return flags.needsRecompile != 0; }
 		void setNeedsRecompile(void) { flags.needsRecompile = true; }
 		void setCurveQuality(int value);

@@ -2805,6 +2805,10 @@ void LDrawModelViewer::update(void)
 	TCFloat eyeXOffset = 0.0f;
 
 	flags.updating = true;
+	if (flags.needsReload)
+	{
+		reload();
+	}
 	if (!stipplePatternSet)
 	{
 		int i;
@@ -2843,10 +2847,6 @@ void LDrawModelViewer::update(void)
 	if (flags.needsMaterialSetup)
 	{
 		setupMaterial();
-	}
-	if (flags.needsReload)
-	{
-		reload();
 	}
 	else if (flags.needsRecompile)
 	{

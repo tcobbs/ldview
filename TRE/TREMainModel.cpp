@@ -10,6 +10,12 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 
+#ifdef _USE_BOOST
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+typedef boost::recursive_mutex::scoped_lock ScopedLock;
+#endif // _USE_BOOST
+
 //const GLfloat POLYGON_OFFSET_FACTOR = 0.85f;
 //const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
 const GLfloat POLYGON_OFFSET_FACTOR = 1.0f;
@@ -31,6 +37,34 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 	//}
 }
 
+//TREMainModel::TREMainModel(const TREMainModel &other)
+//	:TREModel(other),
+//	m_loadedModels((TCDictionary *)TCObject::copy(other.m_loadedModels)),
+//	m_loadedBFCModels((TCDictionary *)TCObject::copy(other.m_loadedBFCModels)),
+//	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
+//	m_studVertexStore((TREVertexStore *)TCObject::copy(
+//		other.m_studVertexStore)),
+//	m_coloredVertexStore((TREVertexStore *)TCObject::copy(
+//		other.m_coloredVertexStore)),
+//	m_coloredStudVertexStore((TREVertexStore *)TCObject::copy(
+//		other.m_coloredStudVertexStore)),
+//	m_transVertexStore((TREVertexStore *)TCObject::copy(
+//		other.m_transVertexStore)),
+//	m_color(other.m_color),
+//	m_edgeColor(other.m_edgeColor),
+//	m_maxRadiusSquared(other.m_maxRadiusSquared),
+//	m_edgeLineWidth(other.m_edgeLineWidth),
+//	m_studAnisoLevel(other.m_studAnisoLevel),
+//	m_abort(false),
+//	m_studTextureFilter(other.m_studTextureFilter),
+//	m_mainFlags(other.m_mainFlags)
+//{
+//#ifdef _LEAK_DEBUG
+//	strcpy(className, "TREMainModel");
+//#endif // _LEAK_DEBUG
+//	m_mainModel = this;
+//}
+
 TREMainModel::TREMainModel(void)
 	:m_loadedModels(NULL),
 	m_loadedBFCModels(NULL),
@@ -46,6 +80,13 @@ TREMainModel::TREMainModel(void)
 	m_studAnisoLevel(1.0f),
 	m_abort(false),
 	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
+#ifdef _USE_BOOST
+	, m_threadGroup(NULL)
+	, m_workerMutex(NULL)
+	, m_workerCondition(NULL)
+	, m_sortCondition(NULL)
+	, m_exiting(false)
+#endif // _USE_BOOST
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -56,6 +97,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.removingHiddenLines = false;
 	m_mainFlags.cutawayDraw = false;
 	m_mainFlags.activeLineJoins = false;
+	m_mainFlags.frameSorted = false;
 
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
@@ -81,35 +123,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.drawNormals = false;
 	m_mainFlags.stencilConditionals = false;
 	m_mainFlags.vertexArrayEdgeFlags = false;
-	m_mainFlags.threads = false;
-}
-
-TREMainModel::TREMainModel(const TREMainModel &other)
-	:TREModel(other),
-	m_loadedModels((TCDictionary *)TCObject::copy(other.m_loadedModels)),
-	m_loadedBFCModels((TCDictionary *)TCObject::copy(other.m_loadedBFCModels)),
-	m_vertexStore((TREVertexStore *)TCObject::copy(other.m_vertexStore)),
-	m_studVertexStore((TREVertexStore *)TCObject::copy(
-		other.m_studVertexStore)),
-	m_coloredVertexStore((TREVertexStore *)TCObject::copy(
-		other.m_coloredVertexStore)),
-	m_coloredStudVertexStore((TREVertexStore *)TCObject::copy(
-		other.m_coloredStudVertexStore)),
-	m_transVertexStore((TREVertexStore *)TCObject::copy(
-		other.m_transVertexStore)),
-	m_color(other.m_color),
-	m_edgeColor(other.m_edgeColor),
-	m_maxRadiusSquared(other.m_maxRadiusSquared),
-	m_edgeLineWidth(other.m_edgeLineWidth),
-	m_studAnisoLevel(other.m_studAnisoLevel),
-	m_abort(false),
-	m_studTextureFilter(other.m_studTextureFilter),
-	m_mainFlags(other.m_mainFlags)
-{
-#ifdef _LEAK_DEBUG
-	strcpy(className, "TREMainModel");
-#endif // _LEAK_DEBUG
-	m_mainModel = this;
+	m_mainFlags.threads = true;
 }
 
 TREMainModel::~TREMainModel(void)
@@ -118,6 +132,25 @@ TREMainModel::~TREMainModel(void)
 
 void TREMainModel::dealloc(void)
 {
+#ifdef _USE_BOOST
+	if (m_threadGroup)
+	{
+		ScopedLock lock(*m_workerMutex);
+
+		m_exiting = true;
+		m_workerCondition->notify_all();
+		lock.unlock();
+		m_threadGroup->join_all();
+		delete m_threadGroup;
+		m_threadGroup = NULL;
+		delete m_workerMutex;
+		m_workerMutex = NULL;
+		delete m_workerCondition;
+		m_workerCondition = NULL;
+		delete m_sortCondition;
+		m_sortCondition = NULL;
+	}
+#endif // _USE_BOOST
 	uncompile();
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
@@ -495,11 +528,197 @@ void TREMainModel::passThreePrep(void)
 	glDepthFunc(GL_LESS);
 }
 
+int TREMainModel::getNumBackgroundTasks(void)
+{
+	int numTasks = 0;
+
+	if (backgroundSortNeeded())
+	{
+		numTasks++;
+	}
+	return numTasks;
+}
+
+int TREMainModel::getNumWorkerThreads(void)
+{
+#ifdef _USE_BOOST
+	if (getThreadsFlag())
+	{
+		int numProcessors = 1;
+
+#ifdef WIN32
+		DWORD processAffinityMask;
+		DWORD systemAffinityMask;
+		
+		if (GetProcessAffinityMask(GetCurrentProcess(), &processAffinityMask,
+			&systemAffinityMask))
+		{
+			numProcessors = 0;
+
+			while (processAffinityMask)
+			{
+				if (processAffinityMask & 0x01)
+				{
+					numProcessors++;
+				}
+				processAffinityMask >>= 1;
+			}
+		}
+#endif // WIN32
+		if (numProcessors > 1)
+		{
+			return std::min(numProcessors - 1, getNumBackgroundTasks());
+		}
+	}
+#endif // _USE_BOOST
+	return 0;
+}
+
+//void TREMainModel::setFrameSortedFlag(bool value)
+//{
+//#ifdef _USE_BOOST
+//	if (m_workerMutex)
+//	{
+//		ScopedLock lock(*m_workerMutex);
+//		m_mainFlags.frameSorted = value;
+//		return;
+//	}
+//#endif // _USE_BOOST
+//	m_mainFlags.frameSorted = value;
+//}
+//
+//bool TREMainModel::getFrameSortedFlag(void)
+//{
+//#ifdef _USE_BOOST
+//	if (m_workerMutex)
+//	{
+//		ScopedLock lock(*m_workerMutex);
+//		return m_mainFlags.frameSorted != false;
+//	}
+//#endif // _USE_BOOST
+//	return m_mainFlags.frameSorted != false;
+//}
+
+bool TREMainModel::backgroundSortNeeded(void)
+{
+	TRETransShapeGroup* transShapeGroup =
+		(TRETransShapeGroup*)m_coloredShapes[TREMTransparent];
+
+	return (transShapeGroup && getSortTransparentFlag() &&
+		!getCutawayDrawFlag());
+}
+
+#ifdef _USE_BOOST
+
+template <class _ScopedLock>
+bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
+{
+	// lock is always locked here.
+	bool backgroundSort = backgroundSortNeeded();
+	bool frameSorted = m_mainFlags.frameSorted;
+
+	lock.unlock();
+	if (!frameSorted && backgroundSort)
+	{
+		TRETransShapeGroup* transShapeGroup =
+			(TRETransShapeGroup*)m_coloredShapes[TREMTransparent];
+
+		transShapeGroup->backgroundSort();
+		lock.lock();
+		m_mainFlags.frameSorted = true;
+		m_sortCondition->notify_one();
+		return true;
+	}
+	lock.lock();
+	return false;
+}
+
+void TREMainModel::workerThreadProc(void)
+{
+	ScopedLock lock(*m_workerMutex);
+
+	m_workerCondition->wait(lock);
+	while (1)
+	{
+		if (m_exiting)
+		{
+			break;
+		}
+		if (!workerThreadDoWork(lock))
+		{
+			m_workerCondition->wait(lock);
+		}
+	}
+}
+#endif // _USE_BOOST
+
+void TREMainModel::launchWorkerThreads()
+{
+#ifdef _USE_BOOST
+	if (m_threadGroup == NULL)
+	{
+		int workerThreadCount = getNumWorkerThreads();
+
+		if (workerThreadCount > 0)
+		{
+			m_threadGroup = new boost::thread_group;
+			m_workerMutex = new boost::recursive_mutex;
+			m_workerCondition = new boost::condition;
+			m_sortCondition = new boost::condition;
+			for (int i = 0; i < workerThreadCount; i++)
+			{
+				m_threadGroup->create_thread(
+					boost::bind(&TREMainModel::workerThreadProc, this));
+			}
+		}
+	}
+#endif // _USE_BOOST
+}
+
+void TREMainModel::triggerWorkerThreads(void)
+{
+#ifdef _USE_BOOST
+	if (m_workerMutex)
+	{
+		ScopedLock lock(*m_workerMutex);
+		m_workerCondition->notify_all();
+	}
+#endif // _USE_BOOST
+}
+
+bool TREMainModel::hasWorkerThreads(void)
+{
+#ifdef _USE_BOOST
+	if (m_workerMutex)
+	{
+		ScopedLock lock(*m_workerMutex);
+		return m_threadGroup != NULL;
+	}
+#endif // _USE_BOOST
+	return false;
+}
+
+void TREMainModel::waitForSort(void)
+{
+#ifdef _USE_BOOST
+	if (m_workerMutex)
+	{
+		ScopedLock lock(*m_workerMutex);
+		if (!m_mainFlags.frameSorted)
+		{
+			m_sortCondition->wait(lock);
+		}
+	}
+#endif // _USE_BOOST
+}
+
 void TREMainModel::draw(void)
 {
 	GLfloat normalSpecular[4];
 	bool multiPass = false;
 
+	treGlGetFloatv(GL_MODELVIEW_MATRIX, m_currentModelViewMatrix);
+	treGlGetFloatv(GL_PROJECTION_MATRIX, m_currentProjectionMatrix);
 	if (getSaveAlphaFlag() && (!getStippleFlag() || getAALinesFlag()))
 	{
 		GLint stencilBits;
@@ -512,19 +731,14 @@ void TREMainModel::draw(void)
 		glStencilMask(0xFFFFFFFF);
 		glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 	}
-	if (getThreadsFlag() && m_coloredShapes[TREMTransparent])
-	{
-		TRETransShapeGroup* transShapeGroup =
-			(TRETransShapeGroup*)m_coloredShapes[TREMTransparent];
-
-		transShapeGroup->sortInBackground(getSortTransparentFlag() &&
-			!getCutawayDrawFlag());
-	}
 	glGetLightfv(GL_LIGHT0, GL_SPECULAR, normalSpecular);
 	if (m_mainFlags.compileParts || m_mainFlags.compileAll)
 	{
 		compile();
 	}
+	launchWorkerThreads();
+	m_mainFlags.frameSorted = false;
+	triggerWorkerThreads();
 	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 	{
 		glEnable(GL_POLYGON_OFFSET_FILL);

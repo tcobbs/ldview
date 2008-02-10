@@ -441,7 +441,7 @@ void ModelWindow::checkFileForUpdates(void)
 				if (update)
 				{
 					reload();
-					forceRedraw();
+					//forceRedraw();
 				}
 			}
 		}
@@ -1061,7 +1061,8 @@ void ModelWindow::resetDefaultView(void)
 void ModelWindow::reload(void)
 {
 	clearErrors();
-	modelViewer->reload();
+	modelViewer->setNeedsReload();
+	forceRedraw();
 }
 
 void ModelWindow::recompile(void)

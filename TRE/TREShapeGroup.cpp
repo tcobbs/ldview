@@ -696,39 +696,7 @@ void TREShapeGroup::drawConditionalLines(void)
 				}
 				else
 				{
-					int i;
-					int count = indices->getCount();
-					TCFloat modelViewMatrix[16];
-					TCFloat projectionMatrix[16];
-					TCFloat matrix[16];
-
-					activeIndices = new TCULongArray;
-					treGlGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
-					treGlGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
-					TCVector::multMatrix(projectionMatrix, modelViewMatrix,
-						matrix);
-					for (i = 0; i < count; i += 2)
-					{
-						TCULong index1 = (*indices)[i];
-						TCULong index2 = (*indices)[i + 1];
-						TCULong cpIndex1 = (*m_controlPointIndices)[i];
-						TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
-
-						if (showAllConditional ||
-							shouldDrawConditional(index1, index2, cpIndex1,
-							cpIndex2, matrix))
-						{
-							activeIndices->addValue(index1);
-							activeIndices->addValue(index2);
-							if (showConditionalControlPoints)
-							{
-								activeIndices->addValue(index1);
-								activeIndices->addValue(cpIndex1);
-								activeIndices->addValue(index1);
-								activeIndices->addValue(cpIndex2);
-							}
-						}
-					}
+					activeIndices = getActiveConditionalIndices(indices);
 				}
 			}
 			if (activeIndices->getCount())
@@ -748,6 +716,61 @@ void TREShapeGroup::drawConditionalLines(void)
 			}
 		}
 	}
+}
+
+TCULongArray *TREShapeGroup::getActiveConditionalIndices(
+	TCULongArray *indices,
+	TCFloat *modelMatrix /*= NULL*/)
+{
+	int i;
+	int count = indices->getCount();
+	TCFloat modelViewMatrix[16];
+	//TCFloat projectionMatrix[16];
+	const TCFloat *projectionMatrix = m_mainModel->getCurrentProjectionMatrix();
+	TCFloat matrix[16];
+	TCULongArray *activeIndices = new TCULongArray;
+	bool showAllConditional =
+		m_vertexStore->getShowAllConditionalFlag();
+	bool showConditionalControlPoints =
+		m_vertexStore->getConditionalControlPointsFlag();
+
+	if (modelMatrix)
+	{
+		const TCFloat *mainModelViewMatrix =
+			m_mainModel->getCurrentModelViewMatrix();
+
+		TCVector::multMatrix(mainModelViewMatrix, modelMatrix, modelViewMatrix);
+	}
+	else
+	{
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
+		//treGlGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
+	}
+	TCVector::multMatrix(projectionMatrix, modelViewMatrix,
+		matrix);
+	for (i = 0; i < count; i += 2)
+	{
+		TCULong index1 = (*indices)[i];
+		TCULong index2 = (*indices)[i + 1];
+		TCULong cpIndex1 = (*m_controlPointIndices)[i];
+		TCULong cpIndex2 = (*m_controlPointIndices)[i + 1];
+
+		if (showAllConditional ||
+			shouldDrawConditional(index1, index2, cpIndex1,
+			cpIndex2, matrix))
+		{
+			activeIndices->addValue(index1);
+			activeIndices->addValue(index2);
+			if (showConditionalControlPoints)
+			{
+				activeIndices->addValue(index1);
+				activeIndices->addValue(cpIndex1);
+				activeIndices->addValue(index1);
+				activeIndices->addValue(cpIndex2);
+			}
+		}
+	}
+	return activeIndices;
 }
 
 int TREShapeGroup::addShape(

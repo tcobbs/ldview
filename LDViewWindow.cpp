@@ -3491,7 +3491,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 */
 		case ID_FILE_RELOAD:
 			modelWindow->reload();
-			modelWindow->update();
+			//modelWindow->update();
 			return 0;
 			break;
 		case ID_HELP_ABOUT:
