@@ -268,8 +268,10 @@ BOOL CUIPropertySheet::doDialogNotify(HWND hDlg, int controlId,
 			{
 				idButton = CUI_APPLY;
 			}
-			SendMessage(hDlgParent, WM_COMMAND, MAKELONG(BN_CLICKED, idButton),
+			PostMessage(hDlgParent, WM_COMMAND, MAKELONG(BN_CLICKED, idButton),
 				(LPARAM)hPropSheet);
+			//SendMessage(hDlgParent, WM_COMMAND, MAKELONG(BN_CLICKED, idButton),
+			//	(LPARAM)hPropSheet);
 			return TRUE;
 		}
 		else

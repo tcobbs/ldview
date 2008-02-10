@@ -175,6 +175,8 @@ protected:
 		TCULong color,
 		bool colorSet);
 	virtual void mirrorTextureCoords(TCULongArray *indices);
+	virtual TCULongArray *getActiveConditionalIndices(TCULongArray *indices,
+		TCFloat *modelMatrix = NULL);
 
 	virtual void unshrinkNormal(TCULong index, const TCFloat *matrix,
 		const TCFloat *unshrinkMatrix);

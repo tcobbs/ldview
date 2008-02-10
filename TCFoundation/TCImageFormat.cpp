@@ -10,6 +10,10 @@
 #include <unistd.h>
 #endif // WIN32
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 TCImageFormat::TCImageFormat(void):
 name(NULL),
 progressCallback(NULL),

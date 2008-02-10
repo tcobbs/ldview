@@ -44,7 +44,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB"
+				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_USE_BOOST"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -114,7 +114,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
-				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB"
+				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_USE_BOOST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -190,7 +190,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB"
+				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;_USE_BOOST"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -261,7 +261,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
-				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE"
+				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE;_USE_BOOST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -337,7 +337,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE"
+				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE;_USE_BOOST"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -1755,10 +1755,6 @@
 				>
 			</File>
 			<File
-				RelativePath="TCMutex.h"
-				>
-			</File>
-			<File
 				RelativePath="TCNetwork.h"
 				>
 			</File>
@@ -1800,18 +1796,6 @@
 			</File>
 			<File
 				RelativePath="TCStringObjectTree.h"
-				>
-			</File>
-			<File
-				RelativePath="TCThread.h"
-				>
-			</File>
-			<File
-				RelativePath="TCThreadCondition.h"
-				>
-			</File>
-			<File
-				RelativePath="TCThreadManager.h"
 				>
 			</File>
 			<File

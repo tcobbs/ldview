@@ -1,6 +1,7 @@
 #include "TRETransShapeGroup.h"
 #include "TREVertexArray.h"
 #include "TREVertexStore.h"
+#include "TREMainModel.h"
 #include <TCFoundation/TCMacros.h>
 #include <stdlib.h>
 
@@ -8,26 +9,21 @@
 #pragma warning(push, 3)
 #endif // WIN32
 
-#include <boost/thread/thread.hpp>
-#include <boost/bind.hpp>
-
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32
 
 TRETransShapeGroup::TRETransShapeGroup(void)
-	:m_sortedTriangles(NULL),
-	m_useSortThread(false),
-	m_sortThread(NULL)
+	:m_sortedTriangles(NULL)
+	//m_useSortThread(false),
+	//m_sortThread(NULL)
 {
 }
 
 TRETransShapeGroup::TRETransShapeGroup(const TRETransShapeGroup &other)
 	:TREColoredShapeGroup(other),
 	m_sortedTriangles((TRESortedTriangleArray *)TCObject::copy(
-		other.m_sortedTriangles)),
-	m_useSortThread(false),
-	m_sortThread(NULL)
+		other.m_sortedTriangles))
 {
 }
 
@@ -38,12 +34,6 @@ TRETransShapeGroup::~TRETransShapeGroup(void)
 void TRETransShapeGroup::dealloc(void)
 {
 	TCObject::release(m_sortedTriangles);
-	if (m_sortThread)
-	{
-		m_sortThread->join();
-		delete m_sortThread;
-		m_sortThread = NULL;
-	}
 	TREColoredShapeGroup::dealloc();
 }
 
@@ -51,11 +41,9 @@ void TRETransShapeGroup::draw(bool sort)
 {
 	if (sort)
 	{
-		if (m_useSortThread)
+		if (m_mainModel->hasWorkerThreads())
 		{
-			m_sortThread->join();
-			delete m_sortThread;
-			m_sortThread = NULL;
+			m_mainModel->waitForSort();
 		}
 		else
 		{
@@ -64,24 +52,13 @@ void TRETransShapeGroup::draw(bool sort)
 		}
 	}
 	drawShapeType(TRESTriangle);
-//	TREColoredShapeGroup::draw();
 }
 
 void TRETransShapeGroup::backgroundSort(void)
 {
+	memcpy(m_sortMatrix, m_mainModel->getCurrentModelViewMatrix(),
+		sizeof(m_sortMatrix));
 	sortShapes();
-}
-
-void TRETransShapeGroup::sortInBackground(bool sort)
-{
-	if (sort)
-	{
-		initSortedTriangles();
-		m_useSortThread = true;
-		treGlGetFloatv(GL_MODELVIEW_MATRIX, m_sortMatrix);
-		m_sortThread = new boost::thread(
-			boost::bind(&TRETransShapeGroup::backgroundSort, this));
-	}
 }
 
 static int triangleCompareFunc(const void *left, const void *right)

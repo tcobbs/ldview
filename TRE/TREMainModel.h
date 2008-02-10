@@ -4,6 +4,14 @@
 #include <TRE/TREModel.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCStlIncludes.h>
+#ifdef _USE_BOOST
+namespace boost
+{
+	class thread_group;
+	class recursive_mutex;
+	class condition;
+}
+#endif // _USE_BOOST
 
 class TCDictionary;
 class TREVertexStore;
@@ -21,7 +29,7 @@ class TREMainModel : public TREModel
 {
 public:
 	TREMainModel(void);
-	TREMainModel(const TREMainModel &other);
+	//TREMainModel(const TREMainModel &other);
 	virtual TCObject *copy(void);
 	virtual TCDictionary* getLoadedModels(bool bfc);
 	virtual void draw(void);
@@ -197,6 +205,16 @@ public:
 	{
 		return m_lightColors;
 	}
+	const TCFloat *getCurrentModelViewMatrix(void) const
+	{
+		return m_currentModelViewMatrix;
+	}
+	const TCFloat *getCurrentProjectionMatrix(void) const
+	{
+		return m_currentProjectionMatrix;
+	}
+	bool hasWorkerThreads(void);
+	void waitForSort(void);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -220,6 +238,17 @@ protected:
 	virtual void passOnePrep(void);
 	virtual void passTwoPrep(void);
 	virtual void passThreePrep(void);
+	//void setFrameSortedFlag(bool value);
+	//bool getFrameSortedFlag(void);
+#ifdef _USE_BOOST
+	template <class _ScopedLock> bool workerThreadDoWork(_ScopedLock &lock);
+	void workerThreadProc(void);
+#endif // _USE_BOOST
+	void launchWorkerThreads(void);
+	int getNumWorkerThreads(void);
+	int getNumBackgroundTasks(void);
+	void triggerWorkerThreads(void);
+	bool backgroundSortNeeded(void);
 
 	static void loadStudMipTextures(TCImage *mainImage);
 
@@ -242,6 +271,15 @@ protected:
 	GLint m_studTextureFilter;
 	TCVectorList m_lightLocations;
 	TCULongList m_lightColors;
+	TCFloat m_currentModelViewMatrix[16];
+	TCFloat m_currentProjectionMatrix[16];
+#ifdef _USE_BOOST
+	boost::thread_group *m_threadGroup;
+	boost::recursive_mutex *m_workerMutex;
+	boost::condition *m_workerCondition;
+	boost::condition *m_sortCondition;
+	bool m_exiting;
+#endif // _USE_BOOST
 	struct
 	{
 		// The following are temporal
@@ -250,6 +288,7 @@ protected:
 		bool removingHiddenLines:1;	// This one is changed externally
 		bool cutawayDraw:1;			// This one is changed externally
 		bool activeLineJoins:1;
+		bool frameSorted:1;
 		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;

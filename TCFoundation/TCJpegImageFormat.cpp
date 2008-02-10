@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mystring.h"
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif
+
 extern "C"
 {
 // jpeglib.h doesn't work if XMD_H isn't defined.
