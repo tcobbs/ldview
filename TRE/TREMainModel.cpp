@@ -645,19 +645,18 @@ bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
 	bool backgroundSort = backgroundSortNeeded();
 	bool frameSorted = m_mainFlags.frameSorted;
 
-	lock.unlock();
 	if (!frameSorted && backgroundSort)
 	{
 		TRETransShapeGroup* transShapeGroup =
 			(TRETransShapeGroup*)m_coloredShapes[TREMTransparent];
 
+		lock.unlock();
 		transShapeGroup->backgroundSort();
 		lock.lock();
 		m_mainFlags.frameSorted = true;
 		m_sortCondition->notify_all();
 		return true;
 	}
-	lock.lock();
 	return false;
 }
 
@@ -679,11 +678,12 @@ void TREMainModel::workerThreadProc(void)
 		{
 			if (!m_exiting)
 			{
+				//m_workerCondition->wait(lock);
 				boost::xtime xt;
 
 				boost::xtime_get(&xt, boost::TIME_UTC);
 				// 100,000,000 nsec == 100 msec
-				xt.nsec += 100000000;
+				xt.nsec += 100 * 1000000;
 				// HACK: I can't figure out why this has to be a timed wait.
 				// For some reason, shortly after reloading (usually immediately
 				// after reloading), it goes into deadlock, because this thread
