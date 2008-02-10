@@ -13,6 +13,7 @@
 #ifdef _USE_BOOST
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
+#include <boost/thread/xtime.hpp>
 typedef boost::MutexType::scoped_lock ScopedLock;
 
 #ifdef __APPLE__
@@ -102,6 +103,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.cutawayDraw = false;
 	m_mainFlags.activeLineJoins = false;
 	m_mainFlags.frameSorted = false;
+	m_mainFlags.frameStarted = false;
 
 	m_mainFlags.compileParts = false;
 	m_mainFlags.compileAll = false;
@@ -636,6 +638,10 @@ template <class _ScopedLock>
 bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
 {
 	// lock is always locked here.
+	if (!m_mainFlags.frameStarted)
+	{
+		return false;
+	}
 	bool backgroundSort = backgroundSortNeeded();
 	bool frameSorted = m_mainFlags.frameSorted;
 
@@ -648,7 +654,7 @@ bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
 		transShapeGroup->backgroundSort();
 		lock.lock();
 		m_mainFlags.frameSorted = true;
-		m_sortCondition->notify_one();
+		m_sortCondition->notify_all();
 		return true;
 	}
 	lock.lock();
@@ -671,7 +677,22 @@ void TREMainModel::workerThreadProc(void)
 		}
 		if (!workerThreadDoWork(lock))
 		{
-			m_workerCondition->wait(lock);
+			if (!m_exiting)
+			{
+				boost::xtime xt;
+
+				boost::xtime_get(&xt, boost::TIME_UTC);
+				// 100,000,000 nsec == 100 msec
+				xt.nsec += 100000000;
+				// HACK: I can't figure out why this has to be a timed wait.
+				// For some reason, shortly after reloading (usually immediately
+				// after reloading), it goes into deadlock, because this thread
+				// is convinced that there's nothing to do, and the main thread
+				// is waiting for this thread to sort.  The timed wait means
+				// that when that happens, there's a 100 msec delay, instead of
+				// deadlock.  Not the best, but not catastrophic.
+				m_workerCondition->timed_wait(lock, xt);
+			}
 		}
 	}
 }
@@ -686,6 +707,7 @@ void TREMainModel::launchWorkerThreads()
 
 		if (workerThreadCount > 0)
 		{
+			m_mainFlags.frameStarted = false;
 			m_threadGroup = new boost::thread_group;
 			m_workerMutex = new boost::MutexType;
 			m_workerCondition = new boost::condition;
@@ -752,7 +774,8 @@ void TREMainModel::draw(void)
 
 		multiPass = true;
 		glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
-		glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_ENABLE_BIT | GL_STENCIL_BUFFER_BIT);
+		glPushAttrib(GL_DEPTH_BUFFER_BIT | GL_ENABLE_BIT |
+			GL_STENCIL_BUFFER_BIT);
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 2, 0xFFFFFFFF);
 		glStencilMask(0xFFFFFFFF);
@@ -833,6 +856,7 @@ void TREMainModel::draw(void)
 	{
 		glPopAttrib();
 	}
+	m_mainFlags.frameStarted = false;
 //	checkNormals(m_vertexStore);
 //	checkNormals(m_coloredVertexStore);
 }
