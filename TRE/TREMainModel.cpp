@@ -13,7 +13,11 @@
 #ifdef _USE_BOOST
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
-typedef boost::recursive_mutex::scoped_lock ScopedLock;
+typedef boost::MutexType::scoped_lock ScopedLock;
+
+#ifdef __APPLE__
+#include <CoreServices/CoreServices.h>
+#endif // __APPLE__
 #endif // _USE_BOOST
 
 //const GLfloat POLYGON_OFFSET_FACTOR = 0.85f;
@@ -546,7 +550,7 @@ int TREMainModel::getNumWorkerThreads(void)
 	{
 		int numProcessors = 1;
 
-#ifdef WIN32
+#if defined(WIN32)
 		DWORD processAffinityMask;
 		DWORD systemAffinityMask;
 		
@@ -564,7 +568,9 @@ int TREMainModel::getNumWorkerThreads(void)
 				processAffinityMask >>= 1;
 			}
 		}
-#endif // WIN32
+#elif defined(__APPLE__)
+		numProcessors = (int)MPProcessorsScheduled();
+#endif // __APPLE__
 		if (numProcessors > 1)
 		{
 			return std::min(numProcessors - 1, getNumBackgroundTasks());
@@ -662,7 +668,7 @@ void TREMainModel::launchWorkerThreads()
 		if (workerThreadCount > 0)
 		{
 			m_threadGroup = new boost::thread_group;
-			m_workerMutex = new boost::recursive_mutex;
+			m_workerMutex = new boost::MutexType;
 			m_workerCondition = new boost::condition;
 			m_sortCondition = new boost::condition;
 			for (int i = 0; i < workerThreadCount; i++)

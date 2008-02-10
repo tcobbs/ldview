@@ -5,10 +5,15 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCStlIncludes.h>
 #ifdef _USE_BOOST
+#ifdef __APPLE__
+#define MutexType mutex
+#else
+#define MutexType recursive_mutex
+#endif // __APPLE__
 namespace boost
 {
 	class thread_group;
-	class recursive_mutex;
+	class MutexType;
 	class condition;
 }
 #endif // _USE_BOOST
@@ -275,7 +280,7 @@ protected:
 	TCFloat m_currentProjectionMatrix[16];
 #ifdef _USE_BOOST
 	boost::thread_group *m_threadGroup;
-	boost::recursive_mutex *m_workerMutex;
+	boost::MutexType *m_workerMutex;
 	boost::condition *m_workerCondition;
 	boost::condition *m_sortCondition;
 	bool m_exiting;

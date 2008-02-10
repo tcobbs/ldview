@@ -57,7 +57,7 @@ cp -f ../Translations/Italian/LDViewMessages.ini \
 }
 
 win32 {
-  DEFINES += _TC_STATIC
+  DEFINES += _TC_STATIC _USE_BOOST
   INCLUDE += -I../../boost_1_33_1
   LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
           -L../TRE/Release -lLDLib -L../lib -lunzip32 -llibboost_thread-vc71-mt-s
@@ -99,8 +99,8 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
           ../Icons/LightAngleUR.png 
 
 TEMPLATE	=app
-CONFIG	+= qt opengl thread warn_on release
-DEFINES	+= QT_THREAD_SUPPORT _QT
+CONFIG	+= qt opengl thread warn_on debug
+DEFINES	+= QT_THREAD_SUPPORT _QT _USE_BOOST
 INCLUDEPATH	+= . .. ../include
 exists($(QTDIR)/include/Qt3Support/q3button.h){
 	CONFIG 	+= uic3
