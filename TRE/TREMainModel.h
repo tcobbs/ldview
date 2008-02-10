@@ -294,6 +294,7 @@ protected:
 		bool cutawayDraw:1;			// This one is changed externally
 		bool activeLineJoins:1;
 		bool frameSorted:1;
+		bool frameStarted:1;
 		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;
