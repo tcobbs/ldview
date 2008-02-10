@@ -643,7 +643,10 @@ void TREMainModel::workerThreadProc(void)
 {
 	ScopedLock lock(*m_workerMutex);
 
-	m_workerCondition->wait(lock);
+	if (!m_mainFlags.frameStarted)
+	{
+		m_workerCondition->wait(lock);
+	}
 	while (1)
 	{
 		if (m_exiting)
@@ -687,6 +690,8 @@ void TREMainModel::triggerWorkerThreads(void)
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
+		m_mainFlags.frameSorted = false;
+		m_mainFlags.frameStarted = true;
 		m_workerCondition->notify_all();
 	}
 #endif // _USE_BOOST
@@ -743,7 +748,6 @@ void TREMainModel::draw(void)
 		compile();
 	}
 	launchWorkerThreads();
-	m_mainFlags.frameSorted = false;
 	triggerWorkerThreads();
 	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 	{
