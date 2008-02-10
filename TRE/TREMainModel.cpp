@@ -570,6 +570,22 @@ int TREMainModel::getNumWorkerThreads(void)
 		}
 #elif defined(__APPLE__)
 		numProcessors = (int)MPProcessorsScheduled();
+#elif defined(_QT)
+		int result = -1;
+#ifdef _SC_NPROCESSORS_CONF
+		result = (int)sysconf(_SC_NPROCESSORS_CONF);
+		if (result > 0)
+		{
+			numProcessors = result;
+		}
+#endif // _SC_NPROCESSORS_CONF
+#ifdef _SC_NPROCESSORS_ONLN
+		result = (int)sysconf(_SC_NPROCESSORS_ONLN);
+		if (result > 0)
+		{
+			numProcessors = result;
+		}
+#endif // _SC_NPROCESSORS_ONLN
 #endif // __APPLE__
 		if (numProcessors > 1)
 		{

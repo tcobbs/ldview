@@ -5,11 +5,11 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCStlIncludes.h>
 #ifdef _USE_BOOST
-#ifdef __APPLE__
-#define MutexType mutex
-#else
+#ifdef WIN32
 #define MutexType recursive_mutex
-#endif // __APPLE__
+#else
+#define MutexType mutex
+#endif // WIN32
 namespace boost
 {
 	class thread_group;
