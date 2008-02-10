@@ -1155,6 +1155,7 @@ void debugVPrintf(int level, const char *format, va_list argPtr)
 		}
 #endif // WIN32
 		vprintf(format, argPtr);
+		fflush(stdout);
 	}
 }
 
