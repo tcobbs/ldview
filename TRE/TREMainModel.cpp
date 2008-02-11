@@ -678,20 +678,20 @@ void TREMainModel::workerThreadProc(void)
 		{
 			if (!m_exiting)
 			{
-				//m_workerCondition->wait(lock);
-				boost::xtime xt;
-
-				boost::xtime_get(&xt, boost::TIME_UTC);
-				// 100,000,000 nsec == 100 msec
-				xt.nsec += 100 * 1000000;
-				// HACK: I can't figure out why this has to be a timed wait.
-				// For some reason, shortly after reloading (usually immediately
-				// after reloading), it goes into deadlock, because this thread
-				// is convinced that there's nothing to do, and the main thread
-				// is waiting for this thread to sort.  The timed wait means
-				// that when that happens, there's a 100 msec delay, instead of
-				// deadlock.  Not the best, but not catastrophic.
-				m_workerCondition->timed_wait(lock, xt);
+				m_workerCondition->wait(lock);
+//				boost::xtime xt;
+//
+//				boost::xtime_get(&xt, boost::TIME_UTC);
+//				// 100,000,000 nsec == 100 msec
+//				xt.nsec += 100 * 1000000;
+//				// HACK: I can't figure out why this has to be a timed wait.
+//				// For some reason, shortly after reloading (usually immediately
+//				// after reloading), it goes into deadlock, because this thread
+//				// is convinced that there's nothing to do, and the main thread
+//				// is waiting for this thread to sort.  The timed wait means
+//				// that when that happens, there's a 100 msec delay, instead of
+//				// deadlock.  Not the best, but not catastrophic.
+//				m_workerCondition->timed_wait(lock, xt);
 			}
 		}
 	}
