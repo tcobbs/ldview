@@ -13,7 +13,10 @@
 #ifdef _USE_BOOST
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
+//#define ANTI_DEADLOCK_HACK
+#ifdef ANTI_DEADLOCK_HACK
 #include <boost/thread/xtime.hpp>
+#endif // ANTI_DEADLOCK_HACK
 typedef boost::MutexType::scoped_lock ScopedLock;
 
 #ifdef __APPLE__
@@ -678,20 +681,19 @@ void TREMainModel::workerThreadProc(void)
 		{
 			if (!m_exiting)
 			{
+#ifdef ANTI_DEADLOCK_HACK
+				boost::xtime xt;
+
+				boost::xtime_get(&xt, boost::TIME_UTC);
+				// 100,000,000 nsec == 100 msec
+				xt.nsec += 100 * 1000000;
+				// HACK: If any deadlocks are encountered during testing,
+				// ANTI_DEADLOCK_HACK can be defined, and hopefully they'll go
+				// away.
+				m_workerCondition->timed_wait(lock, xt);
+#else // ANTI_DEADLOCK_HACK
 				m_workerCondition->wait(lock);
-//				boost::xtime xt;
-//
-//				boost::xtime_get(&xt, boost::TIME_UTC);
-//				// 100,000,000 nsec == 100 msec
-//				xt.nsec += 100 * 1000000;
-//				// HACK: I can't figure out why this has to be a timed wait.
-//				// For some reason, shortly after reloading (usually immediately
-//				// after reloading), it goes into deadlock, because this thread
-//				// is convinced that there's nothing to do, and the main thread
-//				// is waiting for this thread to sort.  The timed wait means
-//				// that when that happens, there's a 100 msec delay, instead of
-//				// deadlock.  Not the best, but not catastrophic.
-//				m_workerCondition->timed_wait(lock, xt);
+#endif // ANTI_DEADLOCK_HACK
 			}
 		}
 	}
