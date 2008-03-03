@@ -3372,3 +3372,97 @@ void TREModel::flattenNonUniform(void)
 		}
 	}
 }
+
+void TREModel::removeConditionals(void)
+{
+	if (this != m_mainModel)
+	{
+		TREShapeGroup *shapeGroup = m_shapes[TREMConditionalLines];
+		TREColoredShapeGroup *coloredShapeGroup =
+			m_coloredShapes[TREMConditionalLines];
+
+		if (shapeGroup)
+		{
+			shapeGroup->release();
+			m_shapes[TREMConditionalLines] = NULL;
+		}
+		if (coloredShapeGroup)
+		{
+			coloredShapeGroup->release();
+			m_coloredShapes[TREMConditionalLines] = NULL;
+		}
+	}
+	if (m_subModels)
+	{
+		int count = m_subModels->getCount();
+
+		for (int i = 0; i < count; i++)
+		{
+			TRESubModel *subModel = (*m_subModels)[i];
+
+			subModel->getEffectiveModel()->removeConditionals();
+		}
+	}
+}
+
+void TREModel::flattenConditionals(
+	const TCFloat *matrix,
+	TCULong edgeColor,
+	bool edgeColorSet)
+{
+	if (this != m_mainModel)
+	{
+		TREShapeGroup *shapeGroup = m_shapes[TREMConditionalLines];
+		TREColoredShapeGroup *coloredShapeGroup =
+			m_coloredShapes[TREMConditionalLines];
+
+		if (shapeGroup)
+		{
+			if (edgeColorSet)
+			{
+				TREShapeGroup *mainColoredShapeGroup =
+					m_mainModel->m_coloredShapes[TREMConditionalLines];
+
+				mainColoredShapeGroup->flatten(shapeGroup, matrix, edgeColor,
+					true);
+			}
+			else
+			{
+				TREShapeGroup *mainShapeGroup =
+					m_mainModel->m_shapes[TREMConditionalLines];
+
+				mainShapeGroup->flatten(shapeGroup, matrix, 0, false);
+			}
+		}
+		if (coloredShapeGroup)
+		{
+			TREShapeGroup *mainColoredShapeGroup =
+				m_mainModel->m_coloredShapes[TREMConditionalLines];
+
+			mainColoredShapeGroup->flatten(coloredShapeGroup, matrix, edgeColor,
+				edgeColorSet);
+		}
+	}
+	if (m_subModels)
+	{
+		int count = m_subModels->getCount();
+		TCFloat newMatrix[16];
+
+		for (int i = 0; i < count; i++)
+		{
+			TRESubModel *subModel = (*m_subModels)[i];
+
+			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
+			if (subModel->isColorSet())
+			{
+				subModel->getEffectiveModel()->flattenConditionals(newMatrix,
+					htonl(subModel->getEdgeColor()), true);
+			}
+			else
+			{
+				subModel->getEffectiveModel()->flattenConditionals(newMatrix,
+					edgeColor, edgeColorSet);
+			}
+		}
+	}
+}

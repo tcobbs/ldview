@@ -63,6 +63,7 @@ public:
 	virtual void draw(void);
 	virtual void drawLines(void);
 	virtual void drawConditionalLines(void);
+	virtual void drawConditionalLines(const TCULongArray *activeIndices);
 	virtual void setVertexStore(TREVertexStore *vertexStore);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }
 	virtual void scanPoints(TCObject *scanner,
@@ -76,6 +77,8 @@ public:
 		TCULong color, bool colorSet);
 	void setMainModel(TREMainModel *value) { m_mainModel = value; }
 	TREMainModel *getMainModel(void) { return m_mainModel; }
+	virtual TCULongArray *getActiveConditionalIndices(TCULongArray *indices,
+		const TCFloat *modelMatrix = NULL, int start = 0, int count = -1);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -175,8 +178,6 @@ protected:
 		TCULong color,
 		bool colorSet);
 	virtual void mirrorTextureCoords(TCULongArray *indices);
-	virtual TCULongArray *getActiveConditionalIndices(TCULongArray *indices,
-		TCFloat *modelMatrix = NULL);
 
 	virtual void unshrinkNormal(TCULong index, const TCFloat *matrix,
 		const TCFloat *unshrinkMatrix);

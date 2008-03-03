@@ -41,6 +41,8 @@ template <class Type> class TCTypedValueArray : public TCArray
 			{ return (const Type)TCArray::itemAtIndex(index); }
 		Type *getValues(void)
 			{ return (Type *)TCArray::getItems(); }
+		const Type *getValues(void) const
+			{ return (const Type *)TCArray::getItems(); }
 		void sort(void)
 			{ sortUsingFunction(valueSortFunction); }
 	protected:

@@ -93,6 +93,7 @@ TREMainModel::TREMainModel(void)
 	, m_workerMutex(NULL)
 	, m_workerCondition(NULL)
 	, m_sortCondition(NULL)
+	, m_conditionalsCondition(NULL)
 	, m_exiting(false)
 #endif // _USE_BOOST
 {
@@ -106,6 +107,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.cutawayDraw = false;
 	m_mainFlags.activeLineJoins = false;
 	m_mainFlags.frameSorted = false;
+	m_mainFlags.frameSortStarted = false;
 	m_mainFlags.frameStarted = false;
 
 	m_mainFlags.compileParts = false;
@@ -132,7 +134,11 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.drawNormals = false;
 	m_mainFlags.stencilConditionals = false;
 	m_mainFlags.vertexArrayEdgeFlags = false;
-	m_mainFlags.threads = true;
+	m_mainFlags.multiThreaded = true;
+
+	m_conditionalsDone = 0;
+	m_conditionalsStep = 0;
+	memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
 }
 
 TREMainModel::~TREMainModel(void)
@@ -158,6 +164,8 @@ void TREMainModel::dealloc(void)
 		m_workerCondition = NULL;
 		delete m_sortCondition;
 		m_sortCondition = NULL;
+		delete m_conditionalsCondition;
+		m_conditionalsCondition = NULL;
 	}
 #endif // _USE_BOOST
 	uncompile();
@@ -545,13 +553,17 @@ int TREMainModel::getNumBackgroundTasks(void)
 	{
 		numTasks++;
 	}
+	if (backgroundConditionalsNeeded())
+	{
+		numTasks += 32;
+	}
 	return numTasks;
 }
 
 int TREMainModel::getNumWorkerThreads(void)
 {
 #ifdef _USE_BOOST
-	if (getThreadsFlag())
+	if (getMultiThreadedFlag())
 	{
 		int numProcessors = 1;
 
@@ -591,7 +603,7 @@ int TREMainModel::getNumWorkerThreads(void)
 			numProcessors = result;
 		}
 #endif // _SC_NPROCESSORS_ONLN
-#endif // __APPLE__
+#endif // _QT
 		if (numProcessors > 1)
 		{
 			return std::min(numProcessors - 1, getNumBackgroundTasks());
@@ -600,31 +612,6 @@ int TREMainModel::getNumWorkerThreads(void)
 #endif // _USE_BOOST
 	return 0;
 }
-
-//void TREMainModel::setFrameSortedFlag(bool value)
-//{
-//#ifdef _USE_BOOST
-//	if (m_workerMutex)
-//	{
-//		ScopedLock lock(*m_workerMutex);
-//		m_mainFlags.frameSorted = value;
-//		return;
-//	}
-//#endif // _USE_BOOST
-//	m_mainFlags.frameSorted = value;
-//}
-//
-//bool TREMainModel::getFrameSortedFlag(void)
-//{
-//#ifdef _USE_BOOST
-//	if (m_workerMutex)
-//	{
-//		ScopedLock lock(*m_workerMutex);
-//		return m_mainFlags.frameSorted != false;
-//	}
-//#endif // _USE_BOOST
-//	return m_mainFlags.frameSorted != false;
-//}
 
 bool TREMainModel::backgroundSortNeeded(void)
 {
@@ -635,7 +622,56 @@ bool TREMainModel::backgroundSortNeeded(void)
 		!getCutawayDrawFlag());
 }
 
+bool TREMainModel::backgroundConditionalsNeeded(void)
+{
+	return getFlattenConditionalsFlag() && getConditionalLinesFlag();
+}
+
+bool TREMainModel::doingBackgroundConditionals(void)
+{
+	return backgroundConditionalsNeeded() && getMultiThreadedFlag() &&
+		getNumBackgroundTasks() > 0;
+}
+
+void TREMainModel::backgroundConditionals(int step)
+{
+	TREColoredShapeGroup *shapeGroup = m_coloredShapes[TREMConditionalLines];
+
+	if (shapeGroup)
+	{
+		TCULongArray *indices = shapeGroup->getIndices(TRESConditionalLine);
+
+		if (indices)
+		{
+			int subCount = indices->getCount() / 2;
+			int stepSize = subCount / 32 * 2;
+			int stepCount = stepSize;
+
+			if (step == 31)
+			{
+				stepCount += (subCount % 32) * 2;
+			}
+			m_activeConditionals[step] =
+				shapeGroup->getActiveConditionalIndices(indices,
+				TCVector::getIdentityMatrix(), stepSize * step, stepCount);
+		}
+	}
+}
+
 #ifdef _USE_BOOST
+
+template <class _ScopedLock>
+void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
+{
+	// lock is always locked here.
+	int step = m_conditionalsStep;
+
+	m_conditionalsStep++;
+	lock.unlock();
+	backgroundConditionals(step);
+	lock.lock();
+	m_conditionalsDone |= 1 << step;
+}
 
 template <class _ScopedLock>
 bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
@@ -645,14 +681,21 @@ bool TREMainModel::workerThreadDoWork(_ScopedLock &lock)
 	{
 		return false;
 	}
-	bool backgroundSort = backgroundSortNeeded();
-	bool frameSorted = m_mainFlags.frameSorted;
-
-	if (!frameSorted && backgroundSort)
+	if (backgroundConditionalsNeeded() && (m_conditionalsStep < 32))
+	{
+		nextConditionalsStep(lock);
+		if (m_conditionalsDone == 0xFFFFFFFF)
+		{
+			m_conditionalsCondition->notify_all();
+		}
+		return true;
+	}
+	if (!m_mainFlags.frameSortStarted && backgroundSortNeeded())
 	{
 		TRETransShapeGroup* transShapeGroup =
 			(TRETransShapeGroup*)m_coloredShapes[TREMTransparent];
 
+		m_mainFlags.frameSortStarted = true;
 		lock.unlock();
 		transShapeGroup->backgroundSort();
 		lock.lock();
@@ -714,6 +757,7 @@ void TREMainModel::launchWorkerThreads()
 			m_workerMutex = new boost::MutexType;
 			m_workerCondition = new boost::condition;
 			m_sortCondition = new boost::condition;
+			m_conditionalsCondition = new boost::condition;
 			for (int i = 0; i < workerThreadCount; i++)
 			{
 				m_threadGroup->create_thread(
@@ -731,8 +775,12 @@ void TREMainModel::triggerWorkerThreads(void)
 	{
 		ScopedLock lock(*m_workerMutex);
 		m_mainFlags.frameSorted = false;
+		m_mainFlags.frameSortStarted = false;
 		m_mainFlags.frameStarted = true;
+		m_conditionalsDone = 0;
+		m_conditionalsStep = 0;
 		m_workerCondition->notify_all();
+		memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
 	}
 #endif // _USE_BOOST
 }
@@ -758,6 +806,25 @@ void TREMainModel::waitForSort(void)
 		if (!m_mainFlags.frameSorted)
 		{
 			m_sortCondition->wait(lock);
+		}
+	}
+#endif // _USE_BOOST
+}
+
+void TREMainModel::waitForConditionals(void)
+{
+#ifdef _USE_BOOST
+	if (m_workerMutex)
+	{
+		ScopedLock lock(*m_workerMutex);
+
+		while (m_conditionalsStep < 32)
+		{
+			nextConditionalsStep(lock);
+		}
+		if (m_conditionalsDone != 0xFFFFFFFF)
+		{
+			m_conditionalsCondition->wait(lock);
 		}
 	}
 #endif // _USE_BOOST
@@ -857,6 +924,13 @@ void TREMainModel::draw(void)
 	if (multiPass)
 	{
 		glPopAttrib();
+	}
+	if (backgroundConditionalsNeeded())
+	{
+		for (int i = 0; i < 32; i++)
+		{
+			TCObject::release(m_activeConditionals[i]);
+		}
 	}
 	m_mainFlags.frameStarted = false;
 //	checkNormals(m_vertexStore);
@@ -1605,6 +1679,7 @@ void TREMainModel::finish(void)
 {
 	flattenNonUniform();
 	findLights();
+	flattenConditionals();
 //	flattenNonUniform(0, false, 0, false);
 }
 
@@ -1612,4 +1687,18 @@ void TREMainModel::addLight(const TCVector &location, TCULong color)
 {
 	m_lightLocations.push_back(location);
 	m_lightColors.push_back(color);
+}
+
+void TREMainModel::flattenConditionals(void)
+{
+	if (getFlattenConditionalsFlag() && getConditionalLinesFlag() &&
+		getMultiThreadedFlag())
+	{
+		setup(TREMConditionalLines);
+		m_shapes[TREMConditionalLines]->getVertexStore()->setup();
+		setupColored(TREMConditionalLines);
+		m_coloredShapes[TREMConditionalLines]->getVertexStore()->setupColored();
+		TREModel::flattenConditionals(TCVector::getIdentityMatrix(), 0, false);
+		removeConditionals();
+	}
 }

@@ -314,6 +314,9 @@ protected:
 	void applyShapeNormals(TRENormalInfoArray *normalInfos);
 	void finishShapeNormals(TREConditionalMap &conditionalMap);
 	void flattenNonUniform(void);
+	void flattenConditionals(const TCFloat *matrix, TCULong edgeColor,
+		bool edgeColorSet);
+	void removeConditionals(void);
 	void findLights(void);
 	void findLights(float *matrix);
 	void calcTangentControlPoint(TCVector &controlPoint, int index,

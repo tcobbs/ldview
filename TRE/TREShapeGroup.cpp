@@ -696,34 +696,52 @@ void TREShapeGroup::drawConditionalLines(void)
 				}
 				else
 				{
-					activeIndices = getActiveConditionalIndices(indices);
+					if (m_mainModel->doingBackgroundConditionals())
+					{
+						m_mainModel->waitForConditionals();
+						for (int i = 0; i < 32; i++)
+						{
+							drawConditionalLines(m_mainModel->getActiveConditionals(i));
+						}
+						return;
+					}
+					else
+					{
+						activeIndices = getActiveConditionalIndices(indices);
+					}
 				}
-			}
-			if (activeIndices->getCount())
-			{
-				glDrawElements(GL_LINES, activeIndices->getCount(),
-					GL_UNSIGNED_INT, activeIndices->getValues());
-				if (m_mainModel->getActiveLineJoinsFlag())
+				drawConditionalLines(activeIndices);
+				TCObject::release(activeIndices);
+				if (m_mainModel->getStencilConditionalsFlag())
 				{
-					glDrawElements(GL_POINTS, activeIndices->getCount(),
-						GL_UNSIGNED_INT, activeIndices->getValues());
+					glPopAttrib();
 				}
 			}
-			activeIndices->release();
-			if (m_mainModel->getStencilConditionalsFlag())
-			{
-				glPopAttrib();
-			}
+		}
+	}
+}
+
+void TREShapeGroup::drawConditionalLines(const TCULongArray *activeIndices)
+{
+	if (activeIndices && activeIndices->getCount())
+	{
+		glDrawElements(GL_LINES, activeIndices->getCount(),
+			GL_UNSIGNED_INT, activeIndices->getValues());
+		if (m_mainModel->getActiveLineJoinsFlag())
+		{
+			glDrawElements(GL_POINTS, activeIndices->getCount(),
+				GL_UNSIGNED_INT, activeIndices->getValues());
 		}
 	}
 }
 
 TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 	TCULongArray *indices,
-	TCFloat *modelMatrix /*= NULL*/)
+	const TCFloat *modelMatrix /*= NULL*/,
+	int start /*= 0*/,
+	int count /*= -1*/)
 {
 	int i;
-	int count = indices->getCount();
 	TCFloat modelViewMatrix[16];
 	//TCFloat projectionMatrix[16];
 	const TCFloat *projectionMatrix = m_mainModel->getCurrentProjectionMatrix();
@@ -734,6 +752,10 @@ TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 	bool showConditionalControlPoints =
 		m_vertexStore->getConditionalControlPointsFlag();
 
+	if (count == -1)
+	{
+		count = indices->getCount();
+	}
 	if (modelMatrix)
 	{
 		const TCFloat *mainModelViewMatrix =
@@ -748,7 +770,7 @@ TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 	}
 	TCVector::multMatrix(projectionMatrix, modelViewMatrix,
 		matrix);
-	for (i = 0; i < count; i += 2)
+	for (i = start; i < start + count; i += 2)
 	{
 		TCULong index1 = (*indices)[i];
 		TCULong index2 = (*indices)[i + 1];

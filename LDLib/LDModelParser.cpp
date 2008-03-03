@@ -1,4 +1,5 @@
 #include "LDModelParser.h"
+#include "LDrawModelViewer.h"
 
 #include <string.h>
 
@@ -22,35 +23,52 @@
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
 
-LDModelParser::LDModelParser(void)
-	:m_mainLDLModel(NULL),
+LDModelParser::LDModelParser(const LDrawModelViewer *modelViewer)
+	:m_modelViewer(modelViewer),
+	m_mainLDLModel(NULL),
 	m_mainTREModel(NULL),
 	m_seamWidth(0.0f),
-	m_edgeLineWidth(0.0f),
-	m_abort(false),
-	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
+	//m_edgeLineWidth(0.0f),
+	m_abort(false)
+	//m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 {
+	TCByte defaultR, defaultG, defaultB;
+	bool defaultTrans;
+	int defaultColorNumber;
+
 	m_flags.flattenParts = true;	// Supporting false here could take a lot
 									// of work.
 	m_flags.seams = false;
-	m_flags.edgeLines = false;
-	m_flags.edgesOnly = false;
-	m_flags.bfc = false;
-	m_flags.compileParts = true;
-	m_flags.compileAll = true;
-	m_flags.lighting = false;
-	m_flags.twoSidedLighting = false;
-	m_flags.aaLines = false;
-	m_flags.sortTransparent = false;
-	m_flags.stipple = false;
-	m_flags.wireframe = false;
-	m_flags.conditionalLines = false;
-	m_flags.smoothCurves = true;
-	m_flags.showAllConditional = false;
-	m_flags.conditionalControlPoints = false;
 	m_flags.defaultColorSet = false;
 	m_flags.defaultColorNumberSet = false;
-	m_flags.studLogo = false;
+	//m_flags.compileParts = true;
+	//m_flags.compileAll = true;
+	//m_flags.edgeLines = false;
+	//m_flags.edgesOnly = false;
+	//m_flags.bfc = false;
+	//m_flags.lighting = false;
+	//m_flags.twoSidedLighting = false;
+	//m_flags.aaLines = false;
+	//m_flags.sortTransparent = false;
+	//m_flags.stipple = false;
+	//m_flags.wireframe = false;
+	//m_flags.conditionalLines = false;
+	//m_flags.smoothCurves = true;
+	//m_flags.showAllConditional = false;
+	//m_flags.conditionalControlPoints = false;
+	//m_flags.studLogo = false;
+	setCurveQuality(m_modelViewer->getCurveQuality());
+	setNoLightGeomFlag(m_modelViewer->getNoLightGeom());
+	setPrimitiveSubstitutionFlag(
+		m_modelViewer->getAllowPrimitiveSubstitution());
+	setSeamWidth(m_modelViewer->getSeamWidth());
+	m_modelViewer->getDefaultRGB(defaultR, defaultG, defaultB, defaultTrans);
+	setDefaultRGB(defaultR, defaultG, defaultB, defaultTrans);
+	defaultColorNumber = m_modelViewer->getDefaultColorNumber();
+	if (defaultColorNumber != -1)
+	{
+		setDefaultColorNumber(defaultColorNumber);
+	}
 }
 
 LDModelParser::~LDModelParser(void)
@@ -113,6 +131,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
+	m_mainTREModel->setMultiThreadedFlag(getMultiThreadedFlag());
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
 	m_mainTREModel->setEdgesOnlyFlag(getEdgesOnlyFlag());
@@ -121,11 +140,27 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setBFCFlag(getBFCFlag());
 	m_mainTREModel->setRedBackFacesFlag(getRedBackFacesFlag());
 	m_mainTREModel->setGreenFrontFacesFlag(getGreenFrontFacesFlag());
-	m_mainTREModel->setCompilePartsFlag(getCompilePartsFlag());
-	m_mainTREModel->setCompileAllFlag(getCompileAllFlag());
+	switch (m_modelViewer->getMemoryUsage())
+	{
+	case 0:
+		m_mainTREModel->setCompilePartsFlag(false);
+		m_mainTREModel->setCompileAllFlag(false);
+		m_mainTREModel->setFlattenConditionalsFlag(false);
+		break;
+	case 1:
+		m_mainTREModel->setCompilePartsFlag(true);
+		m_mainTREModel->setCompileAllFlag(false);
+		m_mainTREModel->setFlattenConditionalsFlag(false);
+		break;
+	case 2:
+		m_mainTREModel->setCompilePartsFlag(true);
+		m_mainTREModel->setCompileAllFlag(true);
+		m_mainTREModel->setFlattenConditionalsFlag(true);
+		break;
+	}
 	m_mainTREModel->setPolygonOffsetFlag(getPolygonOffsetFlag());
-	m_mainTREModel->setEdgeLineWidth(m_edgeLineWidth);
-	m_mainTREModel->setStudAnisoLevel(m_studAnisoLevel);
+	m_mainTREModel->setEdgeLineWidth(m_modelViewer->getHighlightLineWidth());
+	m_mainTREModel->setStudAnisoLevel(m_modelViewer->getAnisoLevel());
 	m_mainTREModel->setAALinesFlag(getAALinesFlag());
 	m_mainTREModel->setSortTransparentFlag(getSortTransparentFlag());
 	m_mainTREModel->setStippleFlag(getStippleFlag());
@@ -136,7 +171,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setConditionalControlPointsFlag(
 		getConditionalControlPointsFlag());
 	m_mainTREModel->setStudLogoFlag(getStudLogoFlag());
-	m_mainTREModel->setStudTextureFilter(getStudTextureFilter());
+	m_mainTREModel->setStudTextureFilter(m_modelViewer->getTextureFilterType());
 	if (getDefaultColorNumberSetFlag())
 	{
 		colorNumber = m_defaultColorNumber;
@@ -172,6 +207,101 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	{
 		return false;
 	}
+}
+
+bool LDModelParser::getFileIsPartFlag(void) const
+{
+	return m_modelViewer->getFileIsPart();
+}
+
+bool LDModelParser::getEdgeLinesFlag(void) const
+{
+	return m_modelViewer->getShowsHighlightLines();
+}
+
+bool LDModelParser::getEdgesOnlyFlag(void) const
+{
+	return m_modelViewer->getEdgesOnly();
+}
+
+bool LDModelParser::getLightingFlag(void) const
+{
+	return m_modelViewer->getUseLighting();
+}
+
+bool LDModelParser::getTwoSidedLightingFlag(void) const
+{
+	return m_modelViewer->forceOneLight();
+}
+
+bool LDModelParser::getBFCFlag(void) const
+{
+	return m_modelViewer->getBfc();
+}
+
+bool LDModelParser::getAALinesFlag(void) const
+{
+	return m_modelViewer->getLineSmoothing();
+}
+
+bool LDModelParser::getSortTransparentFlag(void) const
+{
+	return m_modelViewer->getSortTransparent();
+}
+
+bool LDModelParser::getStippleFlag(void) const
+{
+	return m_modelViewer->getUseStipple();
+}
+
+bool LDModelParser::getWireframeFlag(void) const
+{
+	return m_modelViewer->getDrawWireframe();
+}
+
+bool LDModelParser::getConditionalLinesFlag(void) const
+{
+	return m_modelViewer->getDrawConditionalHighlights();
+}
+
+bool LDModelParser::getSmoothCurvesFlag(void) const
+{
+	return m_modelViewer->getPerformSmoothing();
+}
+
+bool LDModelParser::getShowAllConditionalFlag(void) const
+{
+	return m_modelViewer->getShowAllConditionalLines();
+}
+
+bool LDModelParser::getConditionalControlPointsFlag(void) const
+{
+	return m_modelViewer->getShowConditionalControlPoints();
+}
+
+bool LDModelParser::getPolygonOffsetFlag(void) const
+{
+	return m_modelViewer->getUsePolygonOffset();
+}
+
+bool LDModelParser::getStudLogoFlag(void) const
+{
+	return m_modelViewer->getTextureStuds();
+}
+
+bool LDModelParser::getRedBackFacesFlag(void) const
+{
+	return m_modelViewer->getRedBackFaces();
+}
+
+bool LDModelParser::getGreenFrontFacesFlag(void) const
+{
+	return m_modelViewer->getGreenFrontFaces();
+}
+
+bool LDModelParser::getMultiThreadedFlag(void) const
+{
+	return m_modelViewer->getMultiThreaded();
 }
 
 bool LDModelParser::addSubModel(LDLModelLine *modelLine,

@@ -153,6 +153,8 @@ public:
 	const LongVector &getInvColumnOrder(void) { return m_invColumnOrder; }
 	const char *getInvLastSavePath(void) { return m_invLastSavePath.c_str(); }
 
+	// No UI
+	bool getMultiThreaded(void) { return m_multiThreaded; }
 
 	// General settings
 	void setFsaaMode(int value, bool commit = false);
@@ -380,6 +382,7 @@ protected:
 	bool m_drawLightDats;
 	bool m_optionalStandardLight;
 	bool m_noLightGeom;
+	bool m_multiThreaded;
 
 	StringBoolMap m_changedSettings;
 	StringBoolMap m_globalSettings;

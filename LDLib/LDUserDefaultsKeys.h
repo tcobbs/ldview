@@ -146,6 +146,7 @@
 #define EXAMINE_MODE_KEY "ExamineMode"
 #define DEFAULT_LONGITUDE_KEY "DefaultLongitude"
 #define DEFAULT_LATITUDE_KEY "DefaultLatitude"
+#define MULTI_THREADED_KEY "MultiThreaded"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

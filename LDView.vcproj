@@ -1143,10 +1143,6 @@
 				RelativePath="SSPreview.h"
 				>
 			</File>
-			<File
-				RelativePath="UserDefaultsKeys.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
