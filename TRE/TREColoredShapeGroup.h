@@ -41,6 +41,7 @@ protected:
 		const TCFloat *matrix);
 	virtual TCULongArray *getTransparentIndices(TREShapeType shapeType);
 	virtual TCULongArray *getTransparentStripCounts(TREShapeType shapeType);
+	virtual bool isColored(void) { return true; }
 
 	TCULongArrayArray *m_transparentIndices;
 	TCULongArrayArray *m_transparentStripCounts;

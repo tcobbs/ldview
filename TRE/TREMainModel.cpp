@@ -139,6 +139,7 @@ TREMainModel::TREMainModel(void)
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
 	memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
+	memset(m_activeColorConditionals, 0, sizeof(m_activeColorConditionals));
 }
 
 TREMainModel::~TREMainModel(void)
@@ -633,13 +634,13 @@ bool TREMainModel::doingBackgroundConditionals(void)
 		getNumBackgroundTasks() > 0;
 }
 
-void TREMainModel::backgroundConditionals(int step)
+TCULongArray *TREMainModel::backgroundConditionals(
+	TREShapeGroup *shapes,
+	int step)
 {
-	TREColoredShapeGroup *shapeGroup = m_coloredShapes[TREMConditionalLines];
-
-	if (shapeGroup)
+	if (shapes)
 	{
-		TCULongArray *indices = shapeGroup->getIndices(TRESConditionalLine);
+		TCULongArray *indices = shapes->getIndices(TRESConditionalLine);
 
 		if (indices)
 		{
@@ -651,11 +652,19 @@ void TREMainModel::backgroundConditionals(int step)
 			{
 				stepCount += (subCount % 32) * 2;
 			}
-			m_activeConditionals[step] =
-				shapeGroup->getActiveConditionalIndices(indices,
+			return shapes->getActiveConditionalIndices(indices,
 				TCVector::getIdentityMatrix(), stepSize * step, stepCount);
 		}
 	}
+	return NULL;
+}
+
+void TREMainModel::backgroundConditionals(int step)
+{
+	m_activeConditionals[step] =
+		backgroundConditionals(m_shapes[TREMConditionalLines], step);
+	m_activeColorConditionals[step] = 
+		backgroundConditionals(m_coloredShapes[TREMConditionalLines], step);
 }
 
 #ifdef _USE_BOOST
@@ -781,6 +790,7 @@ void TREMainModel::triggerWorkerThreads(void)
 		m_conditionalsStep = 0;
 		m_workerCondition->notify_all();
 		memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
+		memset(m_activeColorConditionals, 0, sizeof(m_activeColorConditionals));
 	}
 #endif // _USE_BOOST
 }
@@ -930,6 +940,7 @@ void TREMainModel::draw(void)
 		for (int i = 0; i < 32; i++)
 		{
 			TCObject::release(m_activeConditionals[i]);
+			TCObject::release(m_activeColorConditionals[i]);
 		}
 	}
 	m_mainFlags.frameStarted = false;

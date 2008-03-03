@@ -245,6 +245,10 @@ public:
 	{
 		return m_activeConditionals[step];
 	}
+	const TCULongArray *getActiveColorConditionals(int step) const
+	{
+		return m_activeColorConditionals[step];
+	}
 	bool doingBackgroundConditionals(void);
 
 	static void loadStudTexture(const char *filename);
@@ -282,6 +286,7 @@ protected:
 	bool backgroundConditionalsNeeded(void);
 	void flattenConditionals(void);
 	void backgroundConditionals(int step);
+	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
 
 	static void loadStudMipTextures(TCImage *mainImage);
 
@@ -309,6 +314,7 @@ protected:
 	TCULong m_conditionalsDone;
 	int m_conditionalsStep;
 	TCULongArray *m_activeConditionals[32];
+	TCULongArray *m_activeColorConditionals[32];
 #ifdef _USE_BOOST
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;

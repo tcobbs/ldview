@@ -701,7 +701,16 @@ void TREShapeGroup::drawConditionalLines(void)
 						m_mainModel->waitForConditionals();
 						for (int i = 0; i < 32; i++)
 						{
-							drawConditionalLines(m_mainModel->getActiveConditionals(i));
+							if (isColored())
+							{
+								drawConditionalLines(
+									m_mainModel->getActiveColorConditionals(i));
+							}
+							else
+							{
+								drawConditionalLines(
+									m_mainModel->getActiveConditionals(i));
+							}
 						}
 						return;
 					}
@@ -723,14 +732,19 @@ void TREShapeGroup::drawConditionalLines(void)
 
 void TREShapeGroup::drawConditionalLines(const TCULongArray *activeIndices)
 {
-	if (activeIndices && activeIndices->getCount())
+	if (activeIndices)
 	{
-		glDrawElements(GL_LINES, activeIndices->getCount(),
-			GL_UNSIGNED_INT, activeIndices->getValues());
-		if (m_mainModel->getActiveLineJoinsFlag())
+		int count = activeIndices->getCount();
+
+		if (count > 0)
 		{
-			glDrawElements(GL_POINTS, activeIndices->getCount(),
+			glDrawElements(GL_LINES, activeIndices->getCount(),
 				GL_UNSIGNED_INT, activeIndices->getValues());
+			if (m_mainModel->getActiveLineJoinsFlag())
+			{
+				glDrawElements(GL_POINTS, activeIndices->getCount(),
+					GL_UNSIGNED_INT, activeIndices->getValues());
+			}
 		}
 	}
 }

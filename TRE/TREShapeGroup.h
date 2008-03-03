@@ -135,6 +135,7 @@ protected:
 		TCULongArray *indices, const TCFloat *matrix);
 	virtual bool shouldDrawConditional(TCULong index1, TCULong index2,
 		TCULong cpIndex1, TCULong cpIndex2, const TCFloat *matrix);
+	virtual bool isColored(void) { return false; }
 
 	virtual void scanPoints(TCULong index, TCObject *scanner,
 		TREScanPointCallback scanPointCallback, const TCFloat *matrix);
