@@ -34,6 +34,7 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	m_globalSettings[INV_SHOW_TOTAL_KEY] = true;
 	m_globalSettings[INV_COLUMN_ORDER_KEY] = true;
 	m_globalSettings[INV_LAST_SAVE_PATH_KEY] = true;
+	m_globalSettings[MULTI_THREADED_KEY] = true;
 	m_defaultColorNumber = -1;
 	for (i = 0; i < 16; i++)
 	{
@@ -108,6 +109,7 @@ void LDPreferences::applySettings(void)
 	{
 		modelViewer->setZoomMax(m_zoomMax);
 		modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
+		modelViewer->setMultiThreaded(m_multiThreaded);
 	}
 	setupDefaultRotationMatrix();
 	setupModelCenter();
@@ -279,6 +281,7 @@ void LDPreferences::loadSettings(void)
 	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
 	m_defaultZoom = getFloatSetting(DEFAULT_ZOOM_KEY, 1.0f);
+	m_multiThreaded = getBoolSetting(MULTI_THREADED_KEY, true);
 }
 
 void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)

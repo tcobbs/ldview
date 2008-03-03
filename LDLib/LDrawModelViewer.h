@@ -74,55 +74,62 @@ class LDrawModelViewer: public TCObject
 		virtual void perspectiveView(void);
 		virtual void perspectiveView(bool resetViewport);
 		void setQualityLighting(bool value) { flags.qualityLighting = value; }
-		bool getQualityLighting(void) { return flags.qualityLighting; }
-		virtual void setSubduedLighting(bool value);
-		bool getSubduedLighting(void) { return flags.subduedLighting; }
-		virtual void setShowsHighlightLines(bool value);
-		bool getShowsHighlightLines(void) { return flags.showsHighlightLines; }
-		virtual void setDrawConditionalHighlights(bool value);
-		bool getDrawConditionalHighlights(void)
+		bool getQualityLighting(void) const
 		{
-			return flags.drawConditionalHighlights;
+			return flags.qualityLighting != false;
+		}
+		virtual void setSubduedLighting(bool value);
+		bool getSubduedLighting(void) const
+		{
+			return flags.subduedLighting != false;
+		}
+		virtual void setShowsHighlightLines(bool value);
+		bool getShowsHighlightLines(void) const
+		{
+			return flags.showsHighlightLines != false;
+		}
+		virtual void setDrawConditionalHighlights(bool value);
+		bool getDrawConditionalHighlights(void) const
+		{
+			return flags.drawConditionalHighlights != false;
 		}
 		virtual void setPerformSmoothing(bool value);
-		bool getPerformSmoothing(void)
+		bool getPerformSmoothing(void) const
 		{
-			return flags.performSmoothing;
+			return flags.performSmoothing != false;
 		}
 		void setConstrainZoom(bool value) { flags.constrainZoom = value; }
-		bool getConstrainZoom(void) { return flags.constrainZoom; }
-		virtual void setLineSmoothing(bool value);
-		bool getLineSmoothing(void)
+		bool getConstrainZoom(void) const
 		{
-			return flags.lineSmoothing;
+			return flags.constrainZoom != false;
+		}
+		virtual void setLineSmoothing(bool value);
+		bool getLineSmoothing(void) const
+		{
+			return flags.lineSmoothing != false;
 		}
 		virtual void setMemoryUsage(int value);
-		int getMemoryUsage(void) { return memoryUsage; }
+		int getMemoryUsage(void) const { return memoryUsage; }
 		virtual void setQualityStuds(bool value);
-/*
+		bool getQualityStuds(void) const
 		{
-			flags.qualityStuds = value;
-			flags.needsReload = true;
+			return flags.qualityStuds != false;
 		}
-*/
-		bool getQualityStuds(void) { return flags.qualityStuds; }
 		virtual void setAllowPrimitiveSubstitution(bool value);
-/*
+		bool getAllowPrimitiveSubstitution(void) const
 		{
-			flags.allowPrimitiveSubstitution = value;
-			flags.needsReload = true;
-		}
-*/
-		bool getAllowPrimitiveSubstitution(void)
-		{
-			return flags.allowPrimitiveSubstitution;
+			return flags.allowPrimitiveSubstitution != false;
 		}
 		void setUsesFlatShading(bool value) { flags.usesFlatShading = value; }
-		bool getUsesFlatShading(void) { return flags.usesFlatShading; }
+		bool getUsesFlatShading(void) const
+		{
+			return flags.usesFlatShading != false;
+		}
 		virtual void setUsesSpecular(bool value);
-		bool getUsesSpecular(void) { return flags.usesSpecular; }
+		bool getUsesSpecular(void) const { return flags.usesSpecular != false; }
 		virtual void setOneLight(bool value);
-		bool getOneLight(void) { return flags.oneLight; }
+		bool getOneLight(void) const { return flags.oneLight != false; }
+		virtual bool forceOneLight(void) const;
 		virtual void setWidth(int value);
 		virtual void setHeight(int value);
 		int getWidth(void) { return width; }
@@ -156,10 +163,11 @@ class LDrawModelViewer: public TCObject
 		virtual void updateCameraPosition(void);
 		virtual void applyZoom(void);
 		void setClipZoom(bool value) { clipZoom = value; }
-		bool getClipZoom(void) { return clipZoom; }
+		bool getClipZoom(void) const { return clipZoom != false; }
 		virtual void setFilename(const char*);
 		virtual void setProgramPath(const char *value);
-		virtual void setFileIsPart(bool);
+		void setFileIsPart(bool);
+		bool getFileIsPart(void) const { return flags.fileIsPart != false; }
 		char* getFilename(void) { return filename; }
 		virtual int loadModel(bool = true);
 		virtual void drawFPS(TCFloat);
@@ -174,72 +182,116 @@ class LDrawModelViewer: public TCObject
 		virtual void setDefaultRGB(TCByte r, TCByte g, TCByte b,
 			bool transparent);
 		virtual void getDefaultRGB(TCByte &r, TCByte &g, TCByte &b,
-			bool &transparent);
+			bool &transparent) const;
 		virtual void setDefaultColorNumber(int value);
-		int getDefaultColorNumber(void) { return defaultColorNumber; }
+		int getDefaultColorNumber(void) const { return defaultColorNumber; }
 		virtual void setSeamWidth(TCFloat);
-		TCFloat getSeamWidth(void) { return seamWidth; }
+		TCFloat getSeamWidth(void) const { return seamWidth; }
 		virtual void setDrawWireframe(bool);
-		bool getDrawWireframe(void) { return flags.drawWireframe; }
+		bool getDrawWireframe(void) const
+		{
+			return flags.drawWireframe != false;
+		}
 		virtual void setBfc(bool value);
-		bool getBfc(void) { return flags.bfc != false; }
+		bool getBfc(void) const { return flags.bfc != false; }
 		virtual void setRedBackFaces(bool value);
-		bool getRedBackFaces(void) { return flags.redBackFaces != false; }
+		bool getRedBackFaces(void) const { return flags.redBackFaces != false; }
 		virtual void setGreenFrontFaces(bool value);
-		bool getGreenFrontFaces(void) { return flags.greenFrontFaces != false; }
+		bool getGreenFrontFaces(void) const
+		{
+			return flags.greenFrontFaces != false;
+		}
 		void setCheckPartTracker(bool value) { flags.checkPartTracker = value; }
-		bool getCheckPartTracker(void)
+		bool getCheckPartTracker(void) const
 		{
 			return flags.checkPartTracker != false;
 		}
 		void setDrawLightDats(bool value);
-		bool getDrawLightDats(void) { return flags.drawLightDats != false; }
+		bool getDrawLightDats(void) const
+		{
+			return flags.drawLightDats != false;
+		}
 		void setOptionalStandardLight(bool value);
-		bool getOptionalStandardLight(void)
+		bool getOptionalStandardLight(void) const
 		{
 			return flags.optionalStandardLight != false;
 		}
-		bool getNoLightGeom(void) { return flags.noLightGeom != false; }
+		bool getNoLightGeom(void) const { return flags.noLightGeom != false; }
 		void setNoLightGeom(bool value);
-		bool getUpdating(void) { return flags.updating != false; }
+		bool getUpdating(void) const { return flags.updating != false; }
 		void setMissingPartWait(int value) { missingPartWait = value; }
 		int getMissingPartWait(void) { return missingPartWait; }
 		void setUpdatedPartWait(int value) { updatedPartWait = value; }
 		int getUpdatedPartWait(void) { return updatedPartWait; }
 		virtual void setUseWireframeFog(bool);
-		bool getUseWireframeFog(void) { return flags.useWireframeFog; }
+		bool getUseWireframeFog(void) const
+		{
+			return flags.useWireframeFog != false;
+		}
 		virtual void setRemoveHiddenLines(bool value);
-		bool getRemoveHiddenLines(void) { return flags.removeHiddenLines; }
+		bool getRemoveHiddenLines(void) const
+		{
+			return flags.removeHiddenLines != false;
+		}
 		virtual void setEdgesOnly(bool value);
-		bool getEdgesOnly(void) { return flags.edgesOnly; }
+		bool getEdgesOnly(void) const { return flags.edgesOnly != false; }
 		virtual void setHiResPrimitives(bool value);
-		bool getHiResPrimitives(void) { return flags.hiResPrimitives; }
+		bool getHiResPrimitives(void) const
+		{
+			return flags.hiResPrimitives != false;
+		}
 		virtual void setUsePolygonOffset(bool);
-		bool getUsePolygonOffset(void) { return flags.usePolygonOffset; }
+		bool getUsePolygonOffset(void) const
+		{
+			return flags.usePolygonOffset != false;
+		}
 		virtual void setUseLighting(bool);
-		bool getUseLighting(void) { return flags.useLighting; }
-		bool getShowLightDir(void) const { return flags.showLight; }
+		bool getUseLighting(void) const { return flags.useLighting != false; }
+		bool getShowLightDir(void) const { return flags.showLight != false; }
 		void setShowLightDir(bool value);
 		virtual void setUseStipple(bool);
-		bool getUseStipple(void) { return flags.useStipple; }
+		bool getUseStipple(void) const { return flags.useStipple != false; }
 		virtual void setSortTransparent(bool);
-		bool getSortTransparent(void) { return flags.sortTransparent; }
+		bool getSortTransparent(void) const
+		{
+			return flags.sortTransparent != false;
+		}
 		virtual void setHighlightLineWidth(TCFloat32 value);
-		TCFloat32 getHighlightLineWidth(void) { return highlightLineWidth; }
+		TCFloat32 getHighlightLineWidth(void) const
+		{
+			return highlightLineWidth;
+		}
 		virtual void setWireframeLineWidth(TCFloat32 value);
-		TCFloat32 getWireframeLineWidth(void) { return wireframeLineWidth; }
+		TCFloat32 getWireframeLineWidth(void) const
+		{
+			return wireframeLineWidth;
+		}
 		virtual void setAnisoLevel(TCFloat32 value);
-		TCFloat32 getAnisoLevel(void) { return anisoLevel; }
+		TCFloat32 getAnisoLevel(void) const { return anisoLevel; }
 		virtual void setProcessLDConfig(bool value);
-		bool getProcessLDConfig(void) { return flags.processLDConfig; }
+		bool getProcessLDConfig(void) const
+		{
+			return flags.processLDConfig != false;
+		}
 		virtual void setSkipValidation(bool value);
-		bool getSkipValidation(void) { return flags.skipValidation != false; }
+		bool getSkipValidation(void) const
+		{
+			return flags.skipValidation != false;
+		}
 		void setAutoCenter(bool value) { flags.autoCenter = value; }
-		bool getAutoCenter(void) { return flags.autoCenter; }
+		bool getAutoCenter(void) const { return flags.autoCenter != false; }
 		virtual void setForceZoomToFit(bool value);
-		bool getForceZoomToFit(void) { return flags.forceZoomToFit; }
+		bool getForceZoomToFit(void) const
+		{
+			return flags.forceZoomToFit != false;
+		}
 		virtual void setSaveAlpha(bool value);
-		bool getSaveAlpha(void) { return flags.saveAlpha; }
+		bool getSaveAlpha(void) const { return flags.saveAlpha != false; }
+		virtual void setMultiThreaded(bool value) { flags.multiThreaded = value; }
+		bool getMultiThreaded(void) const
+		{
+			return flags.multiThreaded != false;
+		}
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
@@ -251,7 +303,7 @@ class LDrawModelViewer: public TCObject
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
 		virtual void pause(void);
 		virtual void unpause(void);
-		bool getPaused(void) { return flags.paused; }
+		bool getPaused(void) const { return flags.paused != false; }
 		virtual void setXTile(int value);
 		int getXTile(void) { return xTile; }
 		virtual void setYTile(int value);
@@ -274,33 +326,39 @@ class LDrawModelViewer: public TCObject
 		virtual void setCutawayLineWidth(TCFloat32 value);
 		TCFloat32 getCutawayLineWidth(void) { return cutawayLineWidth; }
 		void setSlowClear(bool value) { flags.slowClear = value; }
-		bool getSlowClear(void) { return flags.slowClear; }
+		bool getSlowClear(void) const { return flags.slowClear != false; }
 		virtual void setBlackHighlights(bool value);
-		bool getBlackHighlights(void) { return flags.blackHighlights; }
+		bool getBlackHighlights(void) const
+		{
+			return flags.blackHighlights != false;
+		}
 		void setZoomMax(TCFloat value) { zoomMax = value; }
 		TCFloat getZoomMax(void) { return zoomMax; }
 		virtual void setShowAllConditionalLines(bool value);
-		bool getShowAllConditionalLines(void)
+		bool getShowAllConditionalLines(void) const
 		{
-			return flags.showAllConditionalLines;
+			return flags.showAllConditionalLines != false;
 		}
 		virtual void setShowConditionalControlPoints(bool value);
-		bool getShowConditionalControlPoints(void)
+		bool getShowConditionalControlPoints(void) const
 		{
-			return flags.showConditionalControlPoints;
+			return flags.showConditionalControlPoints != false;
 		}
-		bool getNeedsReload(void) { return flags.needsReload != 0; }
+		bool getNeedsReload(void) const { return flags.needsReload != false; }
 		void setNeedsReload(void) { flags.needsReload = true; }
-		bool getNeedsRecompile(void) { return flags.needsRecompile != 0; }
+		bool getNeedsRecompile(void) const
+		{
+			return flags.needsRecompile != false;
+		}
 		void setNeedsRecompile(void) { flags.needsRecompile = true; }
 		void setCurveQuality(int value);
-		int getCurveQuality(void) { return curveQuality; }
+		int getCurveQuality(void) const { return curveQuality; }
 		void setTextureStuds(bool value);
-		bool getTextureStuds(void) { return flags.textureStuds; }
+		bool getTextureStuds(void) const { return flags.textureStuds != false; }
 		void setTextureFilterType(int value);
-		int getTextureFilterType(void) { return textureFilterType; }
+		int getTextureFilterType(void) const { return textureFilterType; }
 		TREMainModel *getMainTREModel(void) { return mainTREModel; }
-		bool getCompiled(void);
+		bool getCompiled(void) const;
 		void setPixelAspectRatio(TCFloat value) { pixelAspectRatio = value; }
 		TCFloat getPixelAspectRatio(void) { return pixelAspectRatio; }
 		bool getLDrawCommandLineMatrix(char *matrixString, int bufferLength);
@@ -407,8 +465,7 @@ class LDrawModelViewer: public TCObject
 		virtual TCFloat getWideLineMargin(void);
 		virtual TCFloat getClipRadius(void);
 		virtual TCFloat getZDistance(void);
-		virtual bool forceOneLight(void);
-		virtual bool haveLightDats(void);
+		virtual bool haveLightDats(void) const;
 		virtual bool haveStandardLight(void);
 		void findFileAlertCallback(LDLFindFileAlert *alert);
 		virtual bool canCheckForUnofficialPart(const char *filename,
@@ -575,6 +632,7 @@ class LDrawModelViewer: public TCObject
 			bool noLightGeom:1;
 			bool updating:1;
 			bool saveAlpha:1;
+			bool multiThreaded:1;
 		} flags;
 		struct CameraData
 		{

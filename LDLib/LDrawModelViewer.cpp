@@ -857,7 +857,7 @@ void LDrawModelViewer::progressAlertCallback(TCProgressAlert *alert)
 }
 */
 
-bool LDrawModelViewer::haveLightDats(void)
+bool LDrawModelViewer::haveLightDats(void) const
 {
 	return flags.drawLightDats && mainTREModel &&
 		mainTREModel->getLightLocations().size() > 0;
@@ -868,7 +868,7 @@ bool LDrawModelViewer::haveStandardLight(void)
 	return flags.useLighting && (!haveLightDats() || !flags.optionalStandardLight);
 }
 
-bool LDrawModelViewer::forceOneLight(void)
+bool LDrawModelViewer::forceOneLight(void) const
 {
 	return flags.oneLight || flags.usesSpecular || !flags.defaultLightVector ||
 		(flags.bfc && (flags.redBackFaces | flags.greenFrontFaces)) ||
@@ -903,62 +903,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		mainModel->setSkipValidation(flags.skipValidation);
 		if (mainModel->load(filename))
 		{
-			LDModelParser *modelParser = new LDModelParser;
+			LDModelParser *modelParser = new LDModelParser(this);
 
-			switch (memoryUsage)
-			{
-			case 0:
-				modelParser->setCompilePartsFlag(false);
-				modelParser->setCompileAllFlag(false);
-				break;
-			case 1:
-				modelParser->setCompilePartsFlag(true);
-				modelParser->setCompileAllFlag(false);
-				break;
-			case 2:
-				modelParser->setCompilePartsFlag(true);
-				modelParser->setCompileAllFlag(true);
-				break;
-			}
-			modelParser->setSeamWidth(seamWidth);
-			modelParser->setPrimitiveSubstitutionFlag(
-				flags.allowPrimitiveSubstitution);
-			modelParser->setCurveQuality(curveQuality);
-			modelParser->setLightingFlag(flags.useLighting);
-			modelParser->setTwoSidedLightingFlag(forceOneLight());
-			modelParser->setNoLightGeomFlag(flags.noLightGeom);
-			modelParser->setAALinesFlag(flags.lineSmoothing);
-			modelParser->setSortTransparentFlag(flags.sortTransparent);
-			modelParser->setStippleFlag(flags.useStipple);
-			modelParser->setWireframeFlag(flags.drawWireframe);
-			modelParser->setBFCFlag(flags.bfc);
-			modelParser->setRedBackFacesFlag(flags.redBackFaces);
-			modelParser->setGreenFrontFacesFlag(flags.greenFrontFaces);
-			if (flags.showsHighlightLines)
-			{
-				// Note that the default for all of these is false.
-				modelParser->setEdgeLinesFlag(true);
-				modelParser->setConditionalLinesFlag(
-					flags.drawConditionalHighlights);
-				modelParser->setShowAllConditionalFlag(
-					flags.showAllConditionalLines);
-				modelParser->setConditionalControlPointsFlag(
-					flags.showConditionalControlPoints);
-				modelParser->setEdgesOnlyFlag(flags.edgesOnly);
-			}
-			modelParser->setSmoothCurvesFlag(flags.performSmoothing);
-			modelParser->setFileIsPartFlag(flags.fileIsPart);
-			modelParser->setStudLogoFlag(flags.textureStuds);
-			modelParser->setDefaultRGB(defaultR, defaultG, defaultB,
-				flags.defaultTrans);
-			modelParser->setPolygonOffsetFlag(flags.usePolygonOffset);
-			modelParser->setEdgeLineWidth(highlightLineWidth);
-			modelParser->setStudTextureFilter(textureFilterType);
-			modelParser->setStudAnisoLevel(anisoLevel);
-			if (defaultColorNumber != -1)
-			{
-				modelParser->setDefaultColorNumber(defaultColorNumber);
-			}
 			if (modelParser->parseMainModel(mainModel))
 			{
 				bool abort;
@@ -1730,8 +1676,11 @@ void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b,
 	}
 }
 
-void LDrawModelViewer::getDefaultRGB(TCByte &r, TCByte &g, TCByte &b,
-									 bool &transparent)
+void LDrawModelViewer::getDefaultRGB(
+	TCByte &r,
+	TCByte &g,
+	TCByte &b,
+	bool &transparent) const
 {
 	r = defaultR;
 	g = defaultG;
@@ -3246,7 +3195,7 @@ void LDrawModelViewer::openGlWillEnd(void)
 	}
 }
 
-bool LDrawModelViewer::getCompiled(void)
+bool LDrawModelViewer::getCompiled(void) const
 {
 	if (mainTREModel)
 	{

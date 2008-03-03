@@ -50,9 +50,23 @@ public:
 	virtual TREModel *modelNamed(const char *name, bool bfc);
 	virtual void registerModel(TREModel *model, bool bfc);
 	void setCompilePartsFlag(bool value) { m_mainFlags.compileParts = value; }
-	bool getCompilePartsFlag(void) { return m_mainFlags.compileParts != false; }
+	bool getCompilePartsFlag(void) const
+	{
+		return m_mainFlags.compileParts != false;
+	}
 	void setCompileAllFlag(bool value) { m_mainFlags.compileAll = value; }
-	bool getCompileAllFlag(void) { return m_mainFlags.compileAll != false; }
+	bool getCompileAllFlag(void) const
+	{
+		return m_mainFlags.compileAll != false;
+	}
+	void setFlattenConditionalsFlag(bool value)
+	{
+		m_mainFlags.flattenConditionals = value;
+	}
+	bool getFlattenConditionalsFlag(void) const
+	{
+		return m_mainFlags.flattenConditionals != false;
+	}
 	void setEdgeLinesFlag(bool value) { m_mainFlags.edgeLines = value; }
 	bool getEdgeLinesFlag(void) { return m_mainFlags.edgeLines != false; }
 	void setEdgesOnlyFlag(bool value) { m_mainFlags.edgesOnly = value; }
@@ -101,8 +115,11 @@ public:
 	{
 		return m_mainFlags.vertexArrayEdgeFlags != false;
 	}
-	void setThreadsFlag(bool value) { m_mainFlags.threads = value; }
-	bool getThreadsFlag(void) { return m_mainFlags.threads != false; }
+	void setMultiThreadedFlag(bool value) { m_mainFlags.multiThreaded = value; }
+	bool getMultiThreadedFlag(void) const
+	{
+		return m_mainFlags.multiThreaded != false;
+	}
 	void setSaveAlphaFlag(bool value) { m_mainFlags.saveAlpha = value; }
 	bool getSaveAlphaFlag(void) { return m_mainFlags.saveAlpha != false; }
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
@@ -173,7 +190,10 @@ public:
 	TCFloat getStudAnisoLevel(void) { return m_studAnisoLevel; }
 	void setStudTextureFilter(int value) { m_studTextureFilter = value; }
 	int getStudTextureFilter(void) { return m_studTextureFilter; }
-	virtual bool getCompiled(void) { return m_mainFlags.compiled != false; }
+	virtual bool getCompiled(void) const
+	{
+		return m_mainFlags.compiled != false;
+	}
 	virtual bool getCompiling(void) { return m_mainFlags.compiling != false; }
 	virtual TCFloat getMaxRadiusSquared(const TCVector &center);
 	virtual TCFloat getMaxRadius(const TCVector &center);
@@ -220,6 +240,12 @@ public:
 	}
 	bool hasWorkerThreads(void);
 	void waitForSort(void);
+	void waitForConditionals(void);
+	const TCULongArray *getActiveConditionals(int step) const
+	{
+		return m_activeConditionals[step];
+	}
+	bool doingBackgroundConditionals(void);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -243,10 +269,9 @@ protected:
 	virtual void passOnePrep(void);
 	virtual void passTwoPrep(void);
 	virtual void passThreePrep(void);
-	//void setFrameSortedFlag(bool value);
-	//bool getFrameSortedFlag(void);
 #ifdef _USE_BOOST
 	template <class _ScopedLock> bool workerThreadDoWork(_ScopedLock &lock);
+	template <class _ScopedLock> void nextConditionalsStep(_ScopedLock &lock);
 	void workerThreadProc(void);
 #endif // _USE_BOOST
 	void launchWorkerThreads(void);
@@ -254,6 +279,9 @@ protected:
 	int getNumBackgroundTasks(void);
 	void triggerWorkerThreads(void);
 	bool backgroundSortNeeded(void);
+	bool backgroundConditionalsNeeded(void);
+	void flattenConditionals(void);
+	void backgroundConditionals(int step);
 
 	static void loadStudMipTextures(TCImage *mainImage);
 
@@ -278,11 +306,15 @@ protected:
 	TCULongList m_lightColors;
 	TCFloat m_currentModelViewMatrix[16];
 	TCFloat m_currentProjectionMatrix[16];
+	TCULong m_conditionalsDone;
+	int m_conditionalsStep;
+	TCULongArray *m_activeConditionals[32];
 #ifdef _USE_BOOST
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;
 	boost::condition *m_workerCondition;
 	boost::condition *m_sortCondition;
+	boost::condition *m_conditionalsCondition;
 	bool m_exiting;
 #endif // _USE_BOOST
 	struct
@@ -294,10 +326,12 @@ protected:
 		bool cutawayDraw:1;			// This one is changed externally
 		bool activeLineJoins:1;
 		bool frameSorted:1;
+		bool frameSortStarted:1;
 		bool frameStarted:1;
 		// The following aren't temporal
 		bool compileParts:1;
 		bool compileAll:1;
+		bool flattenConditionals:1;
 		bool edgeLines:1;
 		bool edgesOnly:1;
 		bool twoSidedLighting:1;
@@ -321,7 +355,7 @@ protected:
 		bool drawNormals:1;
 		bool stencilConditionals:1;
 		bool vertexArrayEdgeFlags:1;
-		bool threads:1;
+		bool multiThreaded:1;
 		bool saveAlpha:1;
 	} m_mainFlags;
 
