@@ -631,7 +631,7 @@ bool TREMainModel::backgroundConditionalsNeeded(void)
 bool TREMainModel::doingBackgroundConditionals(void)
 {
 	return backgroundConditionalsNeeded() && getMultiThreadedFlag() &&
-		getNumBackgroundTasks() > 0;
+		getNumBackgroundTasks() > 0 && getNumWorkerThreads() > 0;
 }
 
 TCULongArray *TREMainModel::backgroundConditionals(
@@ -1702,8 +1702,7 @@ void TREMainModel::addLight(const TCVector &location, TCULong color)
 
 void TREMainModel::flattenConditionals(void)
 {
-	if (getFlattenConditionalsFlag() && getConditionalLinesFlag() &&
-		getMultiThreadedFlag())
+	if (doingBackgroundConditionals())
 	{
 		setup(TREMConditionalLines);
 		m_shapes[TREMConditionalLines]->getVertexStore()->setup();
