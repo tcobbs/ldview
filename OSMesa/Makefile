@@ -4,24 +4,13 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
-USE_BOOST = NO
-
-ifeq ($(shell if [ -e /usr/lib/libboost_thread-mt.so  ]; then echo OK; fi),OK)
-BOOSTLIB = boost_thread-mt
-endif
-ifeq ($(shell if [ -e /usr/local/lib/libboost_thread-mt.so  ]; then echo OK; fi),OK)
-BOOSTLIB = boost_thread-mt
-endif
-ifndef BOOSTLIB
-BOOSTLIB = boost_thread
-endif
 
 LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib
-LIBDIRS = $(LDLIBDIRS) -L../../boost/lib -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -l$(BOOSTLIB) -lpthread -ljpeg
+LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -ljpeg
 STATIC =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
-MAKEMODE = POSTFIX=-osmesa USE_BOOST=$(USE_BOOST)
+MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
 
@@ -35,7 +24,7 @@ else
 AR = ar rcs
 endif
 
-INCLUDE = -I.. -I../include -I../boost/include
+INCLUDE = -I.. -I../include
 
 ifeq ($(shell hostname | cut -d. -f2-), pair.com)
 CFLAGS += -DNO_WSTRING -DNO_WCSTOUL -DTC_NO_UNICODE -DNO_WPRINTF
