@@ -248,7 +248,7 @@ void PreferencesPanel::doUpdateMissingparts(bool b)
 	}
 }
 
-void PreferencesPanel::doAnisotropic(bool b)
+void PreferencesPanel::doAnisotropic(bool /*b*/)
 {
 	if(preferences)
 	{
