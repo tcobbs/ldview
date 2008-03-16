@@ -240,7 +240,7 @@ public:
 	}
 	bool hasWorkerThreads(void);
 	void waitForSort(void);
-	void waitForConditionals(void);
+	void waitForConditionals(int step);
 	const TCULongArray *getActiveConditionals(int step) const
 	{
 		return m_activeConditionals[step];

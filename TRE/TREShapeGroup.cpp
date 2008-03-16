@@ -698,9 +698,9 @@ void TREShapeGroup::drawConditionalLines(void)
 				{
 					if (m_mainModel->doingBackgroundConditionals())
 					{
-						m_mainModel->waitForConditionals();
 						for (int i = 0; i < 32; i++)
 						{
+							m_mainModel->waitForConditionals(i);
 							if (isColored())
 							{
 								drawConditionalLines(

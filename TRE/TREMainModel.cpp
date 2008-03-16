@@ -821,20 +821,23 @@ void TREMainModel::waitForSort(void)
 #endif // _USE_BOOST
 }
 
-void TREMainModel::waitForConditionals(void)
+void TREMainModel::waitForConditionals(int step)
 {
 #ifdef _USE_BOOST
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
 
-		while (m_conditionalsStep < 32)
+		while ((m_conditionalsDone & (1 << step)) == 0)
 		{
-			nextConditionalsStep(lock);
-		}
-		if (m_conditionalsDone != 0xFFFFFFFF)
-		{
-			m_conditionalsCondition->wait(lock);
+			if (m_conditionalsStep < 32)
+			{
+				nextConditionalsStep(lock);
+			}
+			else
+			{
+				m_conditionalsCondition->wait(lock);
+			}
 		}
 	}
 #endif // _USE_BOOST
