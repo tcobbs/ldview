@@ -27,7 +27,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
-#endif _NO_BOOST
+#endif // !_NO_BOOST
 
 #ifdef WIN32
 #pragma warning(pop)
