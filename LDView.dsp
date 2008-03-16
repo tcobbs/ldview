@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=LDView - Win32 Release
+CFG=LDView - Win32 DebugNoBoost
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,13 +13,14 @@ CFG=LDView - Win32 Release
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "LDView.mak" CFG="LDView - Win32 Release"
+!MESSAGE NMAKE /f "LDView.mak" CFG="LDView - Win32 DebugNoBoost"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "LDView - Win32 Release" (based on "Win32 (x86) Application")
 !MESSAGE "LDView - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "LDView - Win32 PartialDebug" (based on "Win32 (x86) Application")
+!MESSAGE "LDView - Win32 DebugNoBoost" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -109,6 +110,33 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib wsock32.lib winmm.lib TCFoundation\Release\TCFoundation.lib /nologo /subsystem:windows /machine:I386
 # ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\TCFoundation\PartialDebug" /libpath:".\CUI\Release" /libpath:".\LDLib\PartialDebug" /libpath:".\LDLoader\PartialDebug" /libpath:".\lib" /libpath:".\boost\lib"
 
+!ELSEIF  "$(CFG)" == "LDView - Win32 DebugNoBoost"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "LDView___Win32_DebugNoBoost"
+# PROP BASE Intermediate_Dir "LDView___Win32_DebugNoBoost"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "LDView___Win32_DebugNoBoost"
+# PROP Intermediate_Dir "LDView___Win32_DebugNoBoost"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MTd /W4 /GX /ZI /Od /I "." /I "./include" /I "./boost/include" /D "_DEBUG" /D "_LOG_PERFORMANCE" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /D "LDVIEW_APP" /FR /FD /c
+# ADD CPP /nologo /MTd /W4 /GX /ZI /Od /I "." /I "./include" /I "./boost/include" /D "_DEBUG" /D "_LOG_PERFORMANCE" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /D "LDVIEW_APP" /D "_NO_BOOST" /FR /FD /c
+# ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "LDVIEW_APP"
+# ADD RSC /l 0x409 /d "_DEBUG" /d "LDVIEW_APP"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
+
 !ENDIF 
 
 # Begin Target
@@ -116,6 +144,7 @@ LINK32=link.exe
 # Name "LDView - Win32 Release"
 # Name "LDView - Win32 Debug"
 # Name "LDView - Win32 PartialDebug"
+# Name "LDView - Win32 DebugNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
@@ -158,6 +187,19 @@ InputPath=.\Help\LDView.hpj
 # End Custom Build
 
 !ELSEIF  "$(CFG)" == "LDView - Win32 PartialDebug"
+
+!ELSEIF  "$(CFG)" == "LDView - Win32 DebugNoBoost"
+
+USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
+# Begin Custom Build - Compiling help project $(InputPath)
+OutDir=.\LDView___Win32_DebugNoBoost
+InputPath=.\Help\LDView.hpj
+
+"$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	hcrtf /x $(InputPath) 
+	copy /y Help\LDView.hlp $(OutDir)\LDView.hlp > nul 
+	
+# End Custom Build
 
 !ENDIF 
 

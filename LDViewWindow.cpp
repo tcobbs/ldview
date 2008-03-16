@@ -114,7 +114,6 @@ hAboutWindow(NULL),
 hLDrawDirWindow(NULL),
 hOpenGLInfoWindow(NULL),
 hExtraDirsWindow(NULL),
-hLibraryUpdateWindow(NULL),
 hStatusBar(NULL),
 hToolbar(NULL),
 hDeactivatedTooltip(NULL),
@@ -139,7 +138,10 @@ openGLInfoWindoResizer(NULL),
 hOpenGLStatusBar(NULL),
 hExamineIcon(NULL),
 hFlythroughIcon(NULL),
+#ifndef _NO_BOOST
+hLibraryUpdateWindow(NULL),
 libraryUpdater(NULL),
+#endif // !_NO_BOOST
 productVersion(NULL),
 legalCopyright(NULL),
 tbButtonInfos(NULL),
@@ -213,10 +215,12 @@ void LDViewWindow::dealloc(void)
 	{
 		DestroyWindow(hExtraDirsWindow);
 	}
+#ifndef _NO_BOOST
 	if (hLibraryUpdateWindow)
 	{
 		DestroyWindow(hLibraryUpdateWindow);
 	}
+#endif // !_NO_BOOST
 	delete productVersion;
 	delete legalCopyright;
 	TCObject::release(tbButtonInfos);
@@ -1479,10 +1483,12 @@ void LDViewWindow::doDialogOK(HWND hDlg)
 
 void LDViewWindow::doDialogCancel(HWND hDlg)
 {
+#ifndef _NO_BOOST
 	if (hDlg == hLibraryUpdateWindow)
 	{
 		libraryUpdateCanceled = true;
 	}
+#endif // !_NO_BOOST
 	doDialogClose(hDlg);
 }
 
@@ -3129,6 +3135,8 @@ LRESULT LDViewWindow::switchExamineLatLong(void)
 	return 0;
 }
 
+#ifndef _NO_BOOST
+
 void LDViewWindow::doLibraryUpdateFinished(int finishType)
 {
 	if (libraryUpdater)
@@ -3280,8 +3288,11 @@ void LDViewWindow::checkForLibraryUpdates(void)
 	}
 }
 
+#endif // !_NO_BOOST
+
 void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 {
+#ifndef _NO_BOOST
 	if (alert && strcmp(alert->getSource(), LD_LIBRARY_UPDATER) == 0)
 	{
 		debugPrintf("Updater progress (%s): %f\n", alert->getMessage(),
@@ -3321,7 +3332,9 @@ void LDViewWindow::progressAlertCallback(TCProgressAlert *alert)
 			alert->abort();
 		}
 	}
-	else if (alert && strcmp(alert->getSource(), "TCImage") != 0)
+	else
+#endif // !_NO_BOOST
+	if (alert && strcmp(alert->getSource(), "TCImage") != 0)
 	{
 		if (alert->getProgress() == 2.0 && hDeactivatedTooltip != NULL)
 		{
@@ -3384,7 +3397,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			return 0;
 			break;
 		case ID_FILE_CHECKFORLIBUPDATES:
+#ifndef _NO_BOOST
 			checkForLibraryUpdates();
+#endif // !_NO_BOOST
 			return 0;
 			break;
 		case ID_VIEW_FULLSCREEN:
@@ -3529,6 +3544,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 */
 		case BN_CLICKED:
+#ifndef _NO_BOOST
 			switch (notifyCode)
 			{
 			case LIBRARY_UPDATE_FINISHED:
@@ -3539,6 +3555,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 				return 0;
 				break;
 			}
+#endif //_NO_BOOST
+			break;
 		case IDC_WIREFRAME:
 			doWireframe();
 			break;
@@ -4342,6 +4360,15 @@ LRESULT LDViewWindow::doCreate(HWND hWnd, LPCREATESTRUCT lpcs)
 	{
 		selectFSVideoModeMenuItem(currentVideoModeIndex, false);
 	}
+#ifdef _NO_BOOST
+	HMENU hMenu = getParentOfMenuItem(GetMenu(hWindow),
+		ID_FILE_CHECKFORLIBUPDATES);
+
+	if (hMenu)
+	{
+		DeleteMenu(hMenu, ID_FILE_CHECKFORLIBUPDATES, MF_BYCOMMAND);
+	}
+#endif // _NO_BOOST
 	return retVal;
 }
 
@@ -4767,6 +4794,7 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 				}
 			}
 		}
+#ifndef _NO_BOOST
 		else
 		{
 			if (MessageBox(NULL, TCLocalStrings::get("WillDownloadLDraw"),
@@ -4783,6 +4811,7 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 				}
 			}
 		}
+#endif // !_NO_BOOST
 	}
 	return found;
 }

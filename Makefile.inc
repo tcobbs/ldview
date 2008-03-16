@@ -3,7 +3,7 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -D_USE_BOOST
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)

@@ -22,10 +22,12 @@
 #pragma warning(push, 3)
 #endif // WIN32
 
+#ifndef _NO_BOOST
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
+#endif _NO_BOOST
 
 #ifdef WIN32
 #pragma warning(pop)
@@ -102,7 +104,13 @@ static char dayShortNames[7][4] =
 
 void do_sleep(int sec)
 {
-#ifdef _OSMESA
+#if defined(_NO_BOOST)
+#ifdef WIN32
+	Sleep(sec * 1000);
+#else // WIN32
+	sleep(sec);
+#endif // WIN32
+#elif defined(_OSMESA)
 	sleep(sec);
 #else // _OSMESA
 	boost::xtime xt;
@@ -156,8 +164,10 @@ TCWebClient::TCWebClient(const char* url)
 	 password(NULL),
 	 authorizationString(NULL),
 	 bytesRead(0),
+#ifndef _NO_BOOST
 	 fetchThread(NULL),
 	 mutex(new boost::mutex),
+#endif // _NO_BOOST
 	 totalBytesRead(ZERO64),
 	 doneFetching(0),
 	 owner(NULL),
@@ -200,28 +210,32 @@ void TCWebClient::dealloc(void)
 	delete username;
 	delete password;
 	delete authorizationString;
+#ifndef _NO_BOOST
 	if (fetchThread)
 	{
-//		fetchThread->release();
-//		fetchThread->join();
 		delete fetchThread;
 		fetchThread = NULL;
 	}
 	delete mutex;
+#endif // !_NO_BOOST
 	// Do NOT delete owner
 	TCNetworkClient::dealloc();
 }
 
 void TCWebClient::abort(void)
 {
+#ifndef _NO_BOOST
 	boost::mutex::scoped_lock lock(*mutex);
+#endif // _NO_BOOST
 
 	aborted = true;
 }
 
 bool TCWebClient::getAborted(void)
 {
+#ifndef _NO_BOOST
 	boost::mutex::scoped_lock lock(*mutex);
+#endif // _NO_BOOST
 
 	return aborted;
 }
@@ -1205,6 +1219,8 @@ int TCWebClient::fetchURL(void)
 	return 0;
 }
 
+#ifndef _NO_BOOST
+
 void TCWebClient::backgroundFetchURL(void)
 {
 	backgroundFetchURLStart();
@@ -1320,6 +1336,8 @@ int TCWebClient::fetchURLInBackground(void)
 {
 	return fetchInBackground(false);
 }
+
+#endif // !_NO_BOOST
 
 int TCWebClient::setNonBlock(void)
 {
