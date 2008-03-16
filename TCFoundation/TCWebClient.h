@@ -22,11 +22,13 @@ typedef long long int64;
 #endif // _QT || __APPLE__ || _OSMESA
 #endif // WIN32
 
+#ifndef _NO_BOOST
 namespace boost
 {
 class thread;
 class mutex;
 }
+#endif // !_NO_BOOST
 
 #define WCE_AUTH TCNC_MAX_ERROR + 1
 #define WCE_BAD_AUTH TCNC_MAX_ERROR + 2
@@ -69,11 +71,14 @@ public:
 	char* getServerPath(void) { return serverPath; }
 	char* getURL(void) { return url; }
 	virtual int fetchURL(void);
-	virtual int fetchURLInBackground(void);
 	virtual int fetchHeader(int recursionCount = 0);
+#ifndef _NO_BOOST
 	virtual int fetchInBackground(bool header);
+	boost::thread *getFetchThread(void) { return fetchThread; }
 	virtual int fetchHeaderInBackground(void);
 	virtual int retryFetchHeaderInBackground(void);
+	virtual int fetchURLInBackground(void);
+#endif // !_NO_BOOST
 	TCByte* getPageData(void) { return pageData; }
 	int getPageLength(void) { return pageLength; }
 	virtual void setUsername(const char* value);
@@ -107,7 +112,6 @@ public:
 	virtual int isJpeg(void);
 	virtual int isVideo(void);
 	virtual int isMpeg(void);
-	boost::thread *getFetchThread(void) { return fetchThread; }
 	virtual void setOwner(TCObject*);
 	TCObject* getOwner(void) { return owner; }
 	virtual void setFinishURLMemberFunction(WebClientFinishMemberFunction);
@@ -148,12 +152,14 @@ protected:
 	int waitForRead(void);
 	int waitForWrite(void);
 	virtual void dealloc(void);
+#ifndef _NO_BOOST
 	virtual void backgroundFetchURL(void);
 	virtual void backgroundFetchHeader(void);
 	virtual void backgroundFetchURLStart(void);
 	virtual void backgroundFetchHeaderStart(void);
 	virtual void backgroundFetchURLFinish(void);
 	virtual void backgroundFetchHeaderFinish(void);
+#endif // !_NO_BOOST
 	virtual void setErrorNumber(int);
 	virtual int createDirectory(const char*);
 	virtual int createDirectories(const char*);
@@ -200,8 +206,10 @@ protected:
 	char* password;
 	char* authorizationString;
 	int bytesRead;
+#ifndef _NO_BOOST
 	boost::thread *fetchThread;
 	boost::mutex *mutex;
+#endif // _NO_BOOST
 	int64 totalBytesRead;
 	int doneFetching;
 	TCObject* owner;
@@ -216,6 +224,7 @@ protected:
 	TCByte *gzHeader;
 	int gzHeaderLen;
 
+#ifndef _NO_BOOST
 	class ThreadHelper
 	{
 	public:
@@ -242,6 +251,7 @@ protected:
 		bool m_header;
 	};
 	friend class ThreadHelper;
+#endif // !_NO_BOOST
 
 	static char* proxyServer;
 	static int proxyPort;

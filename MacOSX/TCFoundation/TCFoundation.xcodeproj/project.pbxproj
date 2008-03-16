@@ -448,7 +448,6 @@
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
-					_USE_BOOST,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
@@ -477,7 +476,6 @@
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
-					_USE_BOOST,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;
@@ -521,7 +519,6 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
-					_USE_BOOST,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_PEDANTIC = NO;

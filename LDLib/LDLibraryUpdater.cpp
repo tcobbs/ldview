@@ -1,3 +1,5 @@
+#ifndef _NO_BOOST
+
 #include "LDLibraryUpdater.h"
 
 // One of the include files triggerred below the boost ones causes warnings to
@@ -993,3 +995,5 @@ bool LDLibraryUpdater::fileExists(const char *filename)
 		return false;
 	}
 }
+
+#endif // !_NO_BOOST

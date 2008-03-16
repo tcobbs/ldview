@@ -28,9 +28,30 @@
 
 #if defined(_MSC_VER) && _MSC_VER <= 1200
 
-// MS VC++ 6.0 doesn't have the min/max macros.  The following include from
+#ifdef _NO_BOOST
+
+// MS VC++ 6.0 doesn't have the min/max STL functions.  The following from
+// Boost gets them defined.
+#define TC_PREVENT_MACRO_SUBSTITUTION
+
+namespace std {
+  template <class _Typ>
+  inline const _Typ& min TC_PREVENT_MACRO_SUBSTITUTION (const _Typ& __a, const _Typ& __b) {
+    return __b < __a ? __b : __a;
+  }
+  template <class _Typ>
+  inline const _Typ& max TC_PREVENT_MACRO_SUBSTITUTION (const _Typ& __a, const _Typ& __b) {
+    return  __a < __b ? __b : __a;
+  }
+}
+
+#else // _NO_BOOST
+
+// MS VC++ 6.0 doesn't have the min/max STL functions.  The following include from
 // Boost gets them defined.
 #include <boost/config.hpp>
+
+#endif // !_NO_BOOST
 
 #endif
 

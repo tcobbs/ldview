@@ -1,3 +1,5 @@
+#ifndef _NO_BOOST
+
 #include "LDLibraryUpdateInfo.h"
 #include <TCFoundation/mystring.h>
 #include <stdio.h>
@@ -100,3 +102,5 @@ int LDLibraryUpdateInfo::compare(const TCObject *other) const
 
 	return strcmp(m_date, otherInfo->m_date);
 }
+
+#endif // !_NO_BOOST

@@ -46,8 +46,12 @@ class ModelWindow;
 class TCStringArray;
 class TCSortedStringArray;
 class CUIWindowResizer;
-class LDLibraryUpdater;
 class LDViewPreferences;
+
+#ifndef _NO_BOOST
+class LDLibraryUpdater;
+#endif // !_NO_BOOST
+
 template <class Type> class TCTypedObjectArray;
 
 typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
@@ -132,8 +136,13 @@ class LDViewWindow: public CUIWindow
 		virtual HBRUSH getBackgroundBrush(void);
 		virtual void createAboutBox(void);
 		virtual BOOL showAboutBox(void);
+#ifndef _NO_BOOST
 		virtual void createLibraryUpdateWindow(void);
 		virtual void showLibraryUpdateWindow(bool initialInstall);
+		void checkForLibraryUpdates();
+		virtual void doLibraryUpdateFinished(int finishType);
+		bool installLDraw();
+#endif // _NO_BOOST
 		virtual BOOL doDialogCommand(HWND hDlg, int controlId, int notifyCode,
 			HWND controlHWnd);
 		virtual void doDialogOK(HWND hDlg);
@@ -240,10 +249,7 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL doMoveExtraDirDown(void);
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
-		void checkForLibraryUpdates();
-		bool installLDraw();
 //		virtual LRESULT doTimer(UINT timerID);
-		virtual void doLibraryUpdateFinished(int finishType);
 		virtual void readVersionInfo(void);
 		virtual void createModelWindow(void);
 		virtual void populateTbButtonInfos(void);
@@ -306,7 +312,6 @@ class LDViewWindow: public CUIWindow
 		HWND hToolbar;
 		HWND hDeactivatedTooltip;
 		HWND hFrameWindow;
-		HWND hLibraryUpdateWindow;
 		HWND hUpdateProgressBar;
 		HWND hUpdateStatus;
 		HWND hUpdateCancelButton;
@@ -349,7 +354,12 @@ class LDViewWindow: public CUIWindow
 		HWND hOpenGLStatusBar;
 		HICON hExamineIcon;
 		HICON hFlythroughIcon;
+#ifndef _NO_BOOST
+		HWND hLibraryUpdateWindow;
 		LDLibraryUpdater *libraryUpdater;
+		bool libraryUpdateFinished;
+		bool libraryUpdateCanceled;
+#endif // !_NO_BOOST
 		char *productVersion;
 		char *legalCopyright;
 		TbButtonInfoArray *tbButtonInfos;
@@ -362,8 +372,6 @@ class LDViewWindow: public CUIWindow
 		bool primitiveSubstitution;
 		bool lighting;
 		bool bfc;
-		bool libraryUpdateFinished;
-		bool libraryUpdateCanceled;
 		bool examineLatLong;
 
 		static TCStringArray* recentFiles;

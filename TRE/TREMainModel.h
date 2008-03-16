@@ -4,7 +4,7 @@
 #include <TRE/TREModel.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCStlIncludes.h>
-#ifdef _USE_BOOST
+#ifndef _NO_BOOST
 #ifdef WIN32
 #define MutexType recursive_mutex
 #else
@@ -16,7 +16,7 @@ namespace boost
 	class MutexType;
 	class condition;
 }
-#endif // _USE_BOOST
+#endif // !_NO_BOOST
 
 class TCDictionary;
 class TREVertexStore;
@@ -273,11 +273,11 @@ protected:
 	virtual void passOnePrep(void);
 	virtual void passTwoPrep(void);
 	virtual void passThreePrep(void);
-#ifdef _USE_BOOST
+#ifndef _NO_BOOST
 	template <class _ScopedLock> bool workerThreadDoWork(_ScopedLock &lock);
 	template <class _ScopedLock> void nextConditionalsStep(_ScopedLock &lock);
 	void workerThreadProc(void);
-#endif // _USE_BOOST
+#endif // !_NO_BOOST
 	void launchWorkerThreads(void);
 	int getNumWorkerThreads(void);
 	int getNumBackgroundTasks(void);
@@ -315,14 +315,14 @@ protected:
 	int m_conditionalsStep;
 	TCULongArray *m_activeConditionals[32];
 	TCULongArray *m_activeColorConditionals[32];
-#ifdef _USE_BOOST
+#ifndef _NO_BOOST
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;
 	boost::condition *m_workerCondition;
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
 	bool m_exiting;
-#endif // _USE_BOOST
+#endif // !_NO_BOOST
 	struct
 	{
 		// The following are temporal

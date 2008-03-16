@@ -4,7 +4,7 @@
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=TCFoundation - Win32 Debug
+CFG=TCFoundation - Win32 DebugNoBoost
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
@@ -13,13 +13,14 @@ CFG=TCFoundation - Win32 Debug
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "TCFoundation.mak" CFG="TCFoundation - Win32 Debug"
+!MESSAGE NMAKE /f "TCFoundation.mak" CFG="TCFoundation - Win32 DebugNoBoost"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
 !MESSAGE "TCFoundation - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "TCFoundation - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "TCFoundation - Win32 PartialDebug" (based on "Win32 (x86) Static Library")
+!MESSAGE "TCFoundation - Win32 DebugNoBoost" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -100,6 +101,29 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
+!ELSEIF  "$(CFG)" == "TCFoundation - Win32 DebugNoBoost"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 1
+# PROP BASE Output_Dir "TCFoundation___Win32_DebugNoBoost"
+# PROP BASE Intermediate_Dir "TCFoundation___Win32_DebugNoBoost"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 1
+# PROP Output_Dir "DebugNoBoost-VC6"
+# PROP Intermediate_Dir "DebugNoBoost-VC6"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /D "_NO_BOOST" /FR /YX /FD /GZ /c
+# ADD BASE RSC /l 0x409 /d "_DEBUG"
+# ADD RSC /l 0x409 /d "_DEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
 !ENDIF 
 
 # Begin Target
@@ -107,6 +131,7 @@ LIB32=link.exe -lib
 # Name "TCFoundation - Win32 Release"
 # Name "TCFoundation - Win32 Debug"
 # Name "TCFoundation - Win32 PartialDebug"
+# Name "TCFoundation - Win32 DebugNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

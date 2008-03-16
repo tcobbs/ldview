@@ -1,3 +1,5 @@
+#ifndef _NO_BOOST
+
 #ifndef __LDLIBRARYUPDATER_H__
 #define __LDLIBRARYUPDATER_H__
 
@@ -101,3 +103,5 @@ protected:
 };
 
 #endif // __LDLIBRARYUPDATER_H__
+
+#endif // !_NO_BOOST

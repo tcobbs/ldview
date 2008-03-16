@@ -44,7 +44,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="..,../include,../boost/include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC;_USE_BOOST"
+				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -114,7 +114,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..,../include,../boost/include"
-				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC;_USE_BOOST"
+				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -189,7 +189,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..,../include,../boost/include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC;_USE_BOOST"
+				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -260,7 +260,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..,../include,../boost/include"
-				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC;TC_NO_UNICODE;_USE_BOOST"
+				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC;TC_NO_UNICODE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -335,7 +335,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..,../include,../boost/include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC;TC_NO_UNICODE;_USE_BOOST"
+				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC;TC_NO_UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -369,6 +369,78 @@
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
 				OutputFile=".\Release/TRE.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="DebugNoBoost|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..,../include,../boost/include"
+				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_TC_STATIC;_NO_BOOST"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				PrecompiledHeaderFile=".\Debug/TRE.pch"
+				BrowseInformation="1"
+				WarningLevel="4"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				SuppressStartupBanner="true"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile=".\Debug/TRE.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -433,6 +505,15 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\TREGLExtensions.cpp"
@@ -479,6 +560,15 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release ANSI|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -535,6 +625,15 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="TREShapeGroup.cpp"
@@ -577,6 +676,15 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release ANSI|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -633,6 +741,15 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="TRESubModel.cpp"
@@ -675,6 +792,15 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release ANSI|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -731,6 +857,15 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="TREVertexArray.cpp"
@@ -780,6 +915,15 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="TREVertexStore.cpp"
@@ -822,6 +966,15 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release ANSI|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DebugNoBoost|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"

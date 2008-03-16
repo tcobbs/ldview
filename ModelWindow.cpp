@@ -289,7 +289,9 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 {
 	if (alert)
 	{
+#ifndef _NO_BOOST
 		if (strcmp(alert->getSource(), LD_LIBRARY_UPDATER) != 0)
+#endif //_NO_BOOST
 		{
 			bool showErrors = true;
 
