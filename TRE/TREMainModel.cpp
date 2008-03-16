@@ -821,11 +821,13 @@ void TREMainModel::waitForSort(void)
 #endif // !_NO_BOOST
 }
 
-void TREMainModel::waitForConditionals(int step)
-{
 #ifdef _NO_BOOST
-	step;
+void TREMainModel::waitForConditionals(int /*step*/)
 #else // _NO_BOOST
+void TREMainModel::waitForConditionals(int step)
+#endif // !_NO_BOOST
+{
+#ifndef _NO_BOOST
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);

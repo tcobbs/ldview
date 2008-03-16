@@ -4,6 +4,7 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
+USE_BOOST = NO
 
 ifeq ($(shell if [ -e /usr/lib/libboost_thread-mt.so  ]; then echo OK; fi),OK)
 BOOSTLIB = boost_thread-mt
@@ -20,7 +21,7 @@ LIBDIRS = $(LDLIBDIRS) -L../../boost/lib -L/usr/X11R6/lib
 LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -l$(BOOSTLIB) -lpthread -ljpeg
 STATIC =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
-MAKEMODE = POSTFIX=-osmesa
+MAKEMODE = POSTFIX=-osmesa USE_BOOST=$(USE_BOOST)
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
 
@@ -44,27 +45,10 @@ LIBS += -lpth
 STATIC = -static
 endif
 
-ifeq ("$(QTDIR)","")
-
-CFLAGS += -D_OSMESA
-
-else
-
-CFLAGS += -D_QT
-
-ifeq ($(shell if [ -d $(QTDIR)/include ]; then echo OK; fi),OK)
-INCLUDE += -I$(QTDIR)/include
-endif
-
-ifeq ($(shell if [ -d $(QTDIR)/include/Qt3Support ]; then echo OK; fi),OK)
-INCLUDE += -I$(QTDIR)/include/Qt
-CFLAGS += -DQT3_SUPPORT
-endif
+CFLAGS += -D_OSMESA -D_NO_BOOST
 
 ifeq ($(shell if [ -d /usr/include/qt3 ]; then echo OK; fi),OK)
 INCLUDE += -I/usr/include/qt3
-endif
-
 endif
 
 OBJDIR = .obj$(POSTFIX)

@@ -2459,7 +2459,7 @@ void ModelViewerWidget::doPollChanged(QAction *action)
 }
 
 void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value, 
-									bool examine, bool saveSettings)
+									bool examine, bool /*saveSettings*/)
 {
 	viewMode = value;
 	if (viewMode == LDInputHandler::VMExamine)

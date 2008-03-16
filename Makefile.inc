@@ -23,6 +23,12 @@ INCLUDE += -I../../Mesa-7.0.1/include
 //INCLUDE += -nostdinc -Iinc -I../../Mesa-7.0.1/include -I/usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include/g++-v3 -I/usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include -I/usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include/g++-v3/i386-portbld-freebsd4.8
 endif
 
+ifeq ("$(USE_BOOST)","NO")
+
+CFLAGS += -D_NO_BOOST
+
+endif
+
 ifeq ("$(QTDIR)","")
 
 CFLAGS += -D_OSMESA
