@@ -6,6 +6,7 @@ CCOBJS = \
 	$(OBJDIR)\LDLibraryUpdateInfo.obj \
 	$(OBJDIR)\LDLibraryUpdater.obj \
 	$(OBJDIR)\LDModelParser.obj \
+	$(OBJDIR)\LDModelTree.obj \
 	$(OBJDIR)\LDrawModelViewer.obj \
 	$(OBJDIR)\LDPreferences.obj \
 	$(OBJDIR)\LDHtmlInventory.obj \
