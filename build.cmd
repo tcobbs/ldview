@@ -81,7 +81,7 @@ cd Release
 del /q *.pch *.obj *.lib *.idb
 cd ..
 
-cl %CFLAGS% /I .. /I ../include/ /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /FpRelease\TCFoundation.pch /YX /c *.cpp *.c
+cl %CFLAGS% /I .. /I ../include/ /I ../include/libjpegWindows /D _MBCS /D _LIB /D _BUILDING_TCFOUNDATION_LIB /FpRelease\TCFoundation.pch /YX /c *.cpp *.c
 
 link -lib /nologo /out:Release\TCFoundation.lib Release\*.obj
 
@@ -155,7 +155,7 @@ rc /l 0x409 /foRelease\LDView.res /d NDEBUG /d LDVIEW_APP LDView.rc
 
 cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /D LDVIEW_APP /c *.cpp
 
-link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\LDView.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib %EXTRALFLAGS%
+link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib libjpeg.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\LDView.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib %EXTRALFLAGS%
 
 
 cd Translations\German
@@ -226,7 +226,7 @@ cd ..
 midl   /tlb LDViewThumbs.tlb /h LDViewThumbs.h /iid LDViewThumbs_i.c /Oicf LDViewThumbs.idl
 cl %CFLAGS% /I .. /D _WINDOWS /D _WINDLL /D _AFXDLL /D _MBCS /D _USRDLL /D _TC_STATIC /FpRelease\LDViewThumbs.pch /Yc"stdafx.h" /c *.cpp
 rc /l 0x409 /d NDEBUG /foRelease\LDViewThumbs.res LDViewThumbs.rc
-link gdi32.lib libpng.lib zlib.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:Release\LDViewThumbs.dll /implib:Release\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release Release\LDViewThumbExtractor.obj  Release\LDViewThumbs.obj Release\StdAfx.obj  Release\LDViewThumbs.res
+link gdi32.lib libpng.lib zlib.lib TCFoundation.lib libjpeg.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:Release\LDViewThumbs.dll /implib:Release\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release Release\LDViewThumbExtractor.obj  Release\LDViewThumbs.obj Release\StdAfx.obj  Release\LDViewThumbs.res
 cd ..
 
 "%ProgramFiles%\Inno Setup 5\iscc.exe" LDView.iss
