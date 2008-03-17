@@ -104,7 +104,9 @@ void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 	m_text = fileLine->getLine();
 	if (m_text.size() == 0)
 	{
-		m_text = TCLocalStrings::get("EmptyLine");
+		// The typecast is needed below because the QT compile returns a QString
+		// from TCLocalStrings::get().
+		m_text = (const char *)TCLocalStrings::get("EmptyLine");
 	}
 	m_lineType = fileLine->getLineType();
 	m_defaultColor = defaultColor;
