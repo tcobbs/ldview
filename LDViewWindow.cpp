@@ -7,6 +7,7 @@
 #include "LDVExtensionsSetup.h"
 #include "LDViewPreferences.h"
 #include "SSModelWindow.h"
+#include "ModelTreeDialog.h"
 #include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
@@ -150,7 +151,8 @@ tbBitmapStartId(-1),
 prefs(NULL),
 drawWireframe(false),
 examineLatLong(TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
-			   LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong)
+			   LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong),
+modelTreeDialog(NULL)			   
 {
 	CUIThemes::init();
 	if (CUIThemes::isThemeLibLoaded())
@@ -198,6 +200,7 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
+	TCObject::release(modelTreeDialog);
 	TCAlertManager::unregisterHandler(this);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
@@ -2031,6 +2034,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hToolsMenu, ID_TOOLS_VIEW_INFO, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_POV_CAMERA, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_PARTSLIST, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_MODELTREE, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_FRONT, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BACK, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_LEFT, haveModel);
@@ -3491,6 +3495,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_TOOLS_PARTSLIST:
 			return generatePartsList();
+			break;
+		case ID_TOOLS_MODELTREE:
+			return showModelTree();
 			break;
 /*
 		case ID_VIEW_TRANS_MATRIX:
@@ -5233,6 +5240,20 @@ void LDViewWindow::generatePartsList(
 		MessageBox(hWindow, TCLocalStrings::get("PLGenerateError"),
 			TCLocalStrings::get("Error"), MB_OK | MB_ICONWARNING);
 	}
+}
+
+LRESULT LDViewWindow::showModelTree(void)
+{
+	if (modelWindow)
+	{
+		if (!modelTreeDialog)
+		{
+			modelTreeDialog = new ModelTreeDialog(getLanguageModule(), hWindow);
+		}
+		modelTreeDialog->show(modelWindow->getModelViewer()->getMainModel(),
+			hWindow);
+	}
+	return 0;
 }
 
 LRESULT LDViewWindow::generatePartsList(void)

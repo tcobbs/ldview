@@ -998,6 +998,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\ModelTreeDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ModelWindow.cpp"
 				>
 				<FileConfiguration
@@ -1314,6 +1318,10 @@
 			</File>
 			<File
 				RelativePath="ModelLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelTreeDialog.h"
 				>
 			</File>
 			<File

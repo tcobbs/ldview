@@ -120,8 +120,8 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "LDView___Win32_DebugNoBoost"
-# PROP Intermediate_Dir "LDView___Win32_DebugNoBoost"
+# PROP Output_Dir "DebugNoBoost-VC6"
+# PROP Intermediate_Dir "DebugNoBoost-VC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W4 /GX /ZI /Od /I "." /I "./include" /I "./boost/include" /D "_DEBUG" /D "_LOG_PERFORMANCE" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /D "LDVIEW_APP" /FR /FD /c
@@ -192,7 +192,7 @@ InputPath=.\Help\LDView.hpj
 
 USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
 # Begin Custom Build - Compiling help project $(InputPath)
-OutDir=.\LDView___Win32_DebugNoBoost
+OutDir=.\DebugNoBoost-VC6
 InputPath=.\Help\LDView.hpj
 
 "$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -223,6 +223,10 @@ SOURCE=.\LDViewWindow.cpp
 # Begin Source File
 
 SOURCE=.\ModelLoader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ModelTreeDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -271,6 +275,10 @@ SOURCE=.\LDViewWindow.h
 # Begin Source File
 
 SOURCE=.\ModelLoader.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ModelTreeDialog.h
 # End Source File
 # Begin Source File
 
