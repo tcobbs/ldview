@@ -6,9 +6,9 @@ CCOBJS = $(OBJDIR)\LDVExtensionsSetup.obj \
 	 $(OBJDIR)\LDViewMain.obj \
 	 $(OBJDIR)\LDViewPreferences.obj \
 	 $(OBJDIR)\LDViewWindow.obj \
-	 $(OBJDIR)\LDViewWindow.obj \
 	 $(OBJDIR)\JpegOptionsDialog.obj \
 	 $(OBJDIR)\ModelLoader.obj \
+	 $(OBJDIR)\ModelTreeDialog.obj \
 	 $(OBJDIR)\ModelWindow.obj \
 	 $(OBJDIR)\SSConfigure.obj \
 	 $(OBJDIR)\SSModelWindow.obj \
