@@ -642,6 +642,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LDModelTree.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LDPartCount.cpp"
 				>
 			</File>
@@ -742,6 +746,10 @@
 			</File>
 			<File
 				RelativePath="LDModelParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDModelTree.h"
 				>
 			</File>
 			<File

@@ -82,12 +82,12 @@ void TCObjectArray::insertObject(TCObject* newObject, unsigned int index)
 	insertItem(newObject, index);
 }
 
-int TCObjectArray::indexOfObjectIdenticalTo(TCObject* object)
+int TCObjectArray::indexOfObjectIdenticalTo(TCObject* object) const
 {
 	return indexOfItem(object);
 }
 
-int TCObjectArray::indexOfObject(TCObject* object)
+int TCObjectArray::indexOfObject(TCObject* object) const
 {
 	for (unsigned int i = 0; i < count; i++)
 	{
@@ -142,7 +142,17 @@ TCObject* TCObjectArray::objectAtIndex(unsigned int index)
 	return (TCObject*)itemAtIndex(index);
 }
 
+const TCObject* TCObjectArray::objectAtIndex(unsigned int index) const
+{
+	return (TCObject*)itemAtIndex(index);
+}
+
 TCObject* TCObjectArray::operator[](unsigned int index)
+{
+	return objectAtIndex(index);
+}
+
+const TCObject* TCObjectArray::operator[](unsigned int index) const
 {
 	return objectAtIndex(index);
 }
@@ -167,7 +177,7 @@ int TCObjectArray::replaceItem(void* newItem, unsigned int index)
 	return TCArray::replaceItem(newItem, index);
 }
 
-int TCObjectArray::indexOfItem(void* item)
+int TCObjectArray::indexOfItem(void* item) const
 {
 	return TCArray::indexOfItem(item);
 }
@@ -183,6 +193,11 @@ int TCObjectArray::removeItem(int index)
 }
 
 void* TCObjectArray::itemAtIndex(unsigned int index)
+{
+	return TCArray::itemAtIndex(index);
+}
+
+const void* TCObjectArray::itemAtIndex(unsigned int index) const
 {
 	return TCArray::itemAtIndex(index);
 }

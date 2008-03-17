@@ -108,8 +108,8 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "LDLib___Win32_DebugNoBoost"
-# PROP Intermediate_Dir "LDLib___Win32_DebugNoBoost"
+# PROP Output_Dir "DebugNoBoost-VC6"
+# PROP Intermediate_Dir "DebugNoBoost-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_LOG_PERFORMANCE" /FR /YX /FD /GZ /c
 # ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../boost/include" /I "../" /I "../include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_LOG_PERFORMANCE" /D "_NO_BOOST" /FR /YX /FD /GZ /c
@@ -153,6 +153,10 @@ SOURCE=.\LDLibraryUpdater.cpp
 # Begin Source File
 
 SOURCE=.\LDModelParser.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDModelTree.cpp
 # End Source File
 # Begin Source File
 
@@ -201,6 +205,10 @@ SOURCE=.\LDLibraryUpdater.h
 # Begin Source File
 
 SOURCE=.\LDModelParser.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDModelTree.h
 # End Source File
 # Begin Source File
 

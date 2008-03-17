@@ -358,6 +358,7 @@ class LDrawModelViewer: public TCObject
 		void setTextureFilterType(int value);
 		int getTextureFilterType(void) const { return textureFilterType; }
 		TREMainModel *getMainTREModel(void) { return mainTREModel; }
+		LDLMainModel *getMainModel(void) { return mainModel; }
 		bool getCompiled(void) const;
 		void setPixelAspectRatio(TCFloat value) { pixelAspectRatio = value; }
 		TCFloat getPixelAspectRatio(void) { return pixelAspectRatio; }

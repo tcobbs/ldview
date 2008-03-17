@@ -84,8 +84,8 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "CUI___Win32_DebugNoBoost"
-# PROP Intermediate_Dir "CUI___Win32_DebugNoBoost"
+# PROP Output_Dir "DebugNoBoost-VC6"
+# PROP Intermediate_Dir "DebugNoBoost-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../boost/include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D _WIN32_WINDOWS=0x0410 /D "_BUILDING_CUI_LIB" /D "_TC_STATIC" /FR /YX /FD /GZ /c
 # ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../boost/include" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D _WIN32_WINDOWS=0x0410 /D "_BUILDING_CUI_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /FR /YX /FD /GZ /c

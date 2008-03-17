@@ -91,6 +91,13 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_SIZE:
+		if (doSize(wParam, (int)(short)LOWORD(lParam),
+			(int)(short)HIWORD(lParam)) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	}
 	return (INT_PTR)FALSE;
 }
@@ -146,6 +153,17 @@ LRESULT CUIDialog::doCommand(
 		return doTextFieldChange(commandId, control);
 	}
 	return CUIWindow::doCommand(notifyCode, commandId, control);
+}
+
+void CUIDialog::createDialog(int templateNumber, HWND hParentWnd /*= NULL*/)
+{
+	createDialog(MAKEINTRESOURCE(templateNumber), hParentWnd);
+}
+
+void CUIDialog::createDialog(char* templateName, HWND hParentWnd /*= NULL*/)
+{
+	CreateDialogParam(hInstance, templateName, hParentWnd,
+		staticDialogProc, (LPARAM)this);
 }
 
 INT_PTR CUIDialog::doModal(UINT dialogId, HWND hWndParent /*= NULL*/)
@@ -318,4 +336,20 @@ void CUIDialog::textFieldSetSelection(int controlId, int start, int end)
 {
 	SendDlgItemMessage(hWindow, controlId, EM_SETSEL, (WPARAM)start,
 		(LPARAM)end);
+}
+
+void CUIDialog::setIcon(int templateNumber)
+{
+	setIcon(MAKEINTRESOURCE(templateNumber));
+}
+
+void CUIDialog::setIcon(char* templateName)
+{
+	HICON hBigIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON, 32,
+		32, LR_DEFAULTCOLOR);
+	HICON hSmallIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON, 16,
+		16, LR_DEFAULTCOLOR);
+
+	SendMessage(hWindow, WM_SETICON, ICON_BIG, (LPARAM)hBigIcon);
+	SendMessage(hWindow, WM_SETICON, ICON_SMALL, (LPARAM)hSmallIcon);
 }

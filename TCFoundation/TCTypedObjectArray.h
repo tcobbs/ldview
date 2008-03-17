@@ -25,9 +25,9 @@ template <class Type> class TCTypedObjectArray : public TCObjectArray
 			{ TCObjectArray::insertObject(object, index); }
 		int replaceObject(Type* object, unsigned int index)
 			{ return TCObjectArray::replaceObject(object, index); }
-		int indexOfObject(Type* object)
+		int indexOfObject(Type* object) const
 			{ return TCObjectArray::indexOfObject(object); }
-		int indexOfObjectIdenticalTo(Type* object)
+		int indexOfObjectIdenticalTo(Type* object) const
 			{ return TCObjectArray::indexOfObjectIdenticalTo(object); }
 		int removeObject(Type* object)
 			{ return TCObjectArray::removeObject(object); }
@@ -37,7 +37,11 @@ template <class Type> class TCTypedObjectArray : public TCObjectArray
 			{ return TCObjectArray::removeObject(index); }
 		Type* objectAtIndex(unsigned int index)
 			{ return (Type*)TCObjectArray::objectAtIndex(index); }
+		const Type* objectAtIndex(unsigned int index) const
+			{ return (Type*)TCObjectArray::objectAtIndex(index); }
 		Type* operator[](unsigned int index)
+			{ return (Type*)TCObjectArray::objectAtIndex(index); }
+		const Type* operator[](unsigned int index) const
 			{ return (Type*)TCObjectArray::objectAtIndex(index); }
 	protected:
 };
