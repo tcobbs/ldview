@@ -8,6 +8,7 @@
                 examineMode = id; 
                 flyThroughMode = id; 
                 latLongRotation = id; 
+                modelTree = id; 
                 partsList = id; 
                 reload = id; 
                 saveSnapshot = id; 
