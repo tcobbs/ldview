@@ -4,6 +4,8 @@
 class LDLMainModel;
 class LDModelTree;
 class CUIWindowResizer;
+class ModelWindow;
+class TCAlert;
 
 #include <CUI/CUIDialog.h>
 
@@ -11,7 +13,7 @@ class ModelTreeDialog: public CUIDialog
 {
 public:
 	ModelTreeDialog(HINSTANCE hInstance, HWND hParentWindow);
-	void show(LDLMainModel *model, HWND hParentWnd = NULL);
+	void show(ModelWindow *modelWindow, HWND hParentWnd = NULL);
 protected:
 	virtual LRESULT doClose(void);
 
@@ -20,6 +22,9 @@ protected:
 	HTREEITEM addLine(HTREEITEM parent, const LDModelTree *tree);
 	void addChildren(HTREEITEM parent, const LDModelTree *tree);
 	void fillTreeView(void);
+	void setModel(LDLMainModel *model);
+	void setModelWindow(ModelWindow *modelWindow);
+	void modelAlertCallback(TCAlert *alert);
 
 	virtual BOOL doInitDialog(HWND /*hKbControl*/);
 	virtual LRESULT doNotify(int controlId, LPNMHDR notification);
@@ -27,6 +32,7 @@ protected:
 
 	virtual LRESULT doItemExpanding(LPNMTREEVIEW notification);
 
+	ModelWindow *m_modelWindow;
 	LDLMainModel *m_model;
 	LDModelTree *m_modelTree;
 	HWND m_hTreeView;
