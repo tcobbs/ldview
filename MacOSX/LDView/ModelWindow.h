@@ -8,6 +8,7 @@
 @class ErrorItem;
 @class SnapshotTaker;
 @class SaveSnapshotViewOwner;
+@class ModelTree;
 
 class LDLError;
 class TCProgressAlert;
@@ -50,6 +51,7 @@ class AlertHandler;
 	NSArray *imageFileTypes;
 	SnapshotTaker *snapshotTaker;
 	SaveSnapshotViewOwner *saveSnapshotViewOwner;
+	ModelTree *modelTree;
 }
 
 - (LDViewController *)controller;
@@ -77,6 +79,7 @@ class AlertHandler;
 - (NSWindow *)window;
 - (NSToolbar *)toolbar;
 - (ErrorItem *)filteredRootErrorItem;
+- (LDrawModelView *)modelView;
 
 - (IBAction)actions:(id)sender;
 - (IBAction)open:(id)sender;

@@ -10,6 +10,7 @@
 #import "OCUserDefaults.h"
 #import "SnapshotTaker.h"
 #import "SaveSnapshotViewOwner.h"
+#import "ModelTree.h"
 #include <LDLoader/LDLError.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -33,6 +34,7 @@
 	[imageFileTypes release];
 	[snapshotTaker release];
 	[saveSnapshotViewOwner release];
+	[modelTree release];
 	[super dealloc];
 }
 
@@ -825,6 +827,15 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	return [controller validateMenuItem:menuItem];
+}
+
+- (IBAction)modelTree:(id)sender
+{
+	if (!modelTree)
+	{
+		modelTree = [[ModelTree alloc] initWithParent:self];
+	}
+	[modelTree show];
 }
 
 @end
