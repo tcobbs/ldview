@@ -36,6 +36,7 @@ protected:
 	LDLMainModel *m_model;
 	LDModelTree *m_modelTree;
 	HWND m_hTreeView;
+	HWND m_hStatus;
 	CUIWindowResizer *m_resizer;
 };
 

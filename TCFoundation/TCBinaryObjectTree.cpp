@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 TCBinaryObjectTree::TCBinaryObjectTree(bool caseSensitive)
 	:rootNode(NULL),
 	caseSensitive(caseSensitive),
