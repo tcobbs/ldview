@@ -110,7 +110,8 @@ bool LDInputHandler::leftDown(TCULong modifierKeys, int xPos, int yPos)
 {
 	if (modifierKeys & MKShift)
 	{
-		if (!m_modelViewer->getUseLighting())
+		if (!m_modelViewer->getUseLighting() ||
+			m_modelViewer->getContrastingLightDirModel() == NULL)
 		{
 			// Allowing this will likely just lead to confusion.
 			return false;

@@ -940,10 +940,10 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 					flags.needsRecompile = false;
 					retValue = 1;
 				}
+				initLightDirModels();
 			}
 			modelParser->release();
 		}
-		initLightDirModels();
 		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
 			_UC("Done")), 2.0f, this);
 		if (resetViewpoint)

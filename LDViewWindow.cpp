@@ -4552,13 +4552,16 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		}
 		else
 		{
-			UCCHAR message[2048];
-			UCSTR fullPathNameUC = mbstoucstring(fullPathName);
+			if (!modelWindow->getLoadCanceled())
+			{
+				UCCHAR message[2048];
+				UCSTR fullPathNameUC = mbstoucstring(fullPathName);
 
-			sucprintf(message, COUNT_OF(message),
-				TCLocalStrings::get(_UC("ErrorLoadingModel")), fullPathNameUC);
-			delete fullPathNameUC;
-			messageBoxUC(hWindow, message, _UC("LDView"), MB_OK | MB_ICONWARNING);
+				sucprintf(message, COUNT_OF(message),
+					TCLocalStrings::get(_UC("ErrorLoadingModel")), fullPathNameUC);
+				delete fullPathNameUC;
+				messageBoxUC(hWindow, message, _UC("LDView"), MB_OK | MB_ICONWARNING);
+			}
 			modelWindow->setFilename(NULL);
 		}
 	}
@@ -5250,8 +5253,7 @@ LRESULT LDViewWindow::showModelTree(void)
 		{
 			modelTreeDialog = new ModelTreeDialog(getLanguageModule(), hWindow);
 		}
-		modelTreeDialog->show(modelWindow->getModelViewer()->getMainModel(),
-			hWindow);
+		modelTreeDialog->show(modelWindow, hWindow);
 	}
 	return 0;
 }

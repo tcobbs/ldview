@@ -2169,6 +2169,7 @@ int ModelWindow::loadModel(void)
 	_CrtMemState ms1, ms2, ms3;
 #endif // _DEBUG
 
+	loadCanceled = false;
 	clearErrors();
 	stopPolling();
 	makeCurrent();
@@ -2202,6 +2203,7 @@ int ModelWindow::loadModel(void)
 				startPolling();
 			}
 		}
+		TCAlertManager::sendAlert(alertClass(), this, _UC("ModelLoaded"));
 		return 1;
 	}
 	else
@@ -2209,6 +2211,7 @@ int ModelWindow::loadModel(void)
 		parentWindow->setTitle(_UC("LDView"));
 		stopPolling();
 		modelViewer->setFilename(NULL);
+		TCAlertManager::sendAlert(alertClass(), this, _UC("ModelLoadCanceled"));
 		return 0;
 	}
 }
@@ -2342,6 +2345,10 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 			PostQuitMessage(0);
 			cancelLoad = true;
 		}
+		if (cancelLoad)
+		{
+			loadCanceled = true;
+		}
 		((LDViewWindow*)parentWindow)->setLoading(true);
 	}
 	if (message && message[0])
@@ -2366,6 +2373,10 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 		{
 			PostQuitMessage(0);
 			cancelLoad = true;
+		}
+		if (cancelLoad)
+		{
+			loadCanceled = true;
 		}
 		lastProgressUpdate = thisProgressUpdate;
 	}

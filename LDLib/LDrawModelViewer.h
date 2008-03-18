@@ -418,6 +418,7 @@ class LDrawModelViewer: public TCObject
 		virtual void mouseMoveLight(int deltaX, int deltaY);
 
 		bool getViewInfo(ucstring &message, ucstring &commandLine);
+		TREMainModel *getContrastingLightDirModel();
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
@@ -484,7 +485,6 @@ class LDrawModelViewer: public TCObject
 		//virtual void preCalcCamera(void);
 
 		void initLightDirModel(TREMainModel *&lightDirModel, TCULong color);
-		TREMainModel *getContrastingLightDirModel();
 		void initLightDirModels(void);
 		void projectCamera(const TCVector &distance);
 

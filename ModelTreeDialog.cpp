@@ -1,13 +1,16 @@
 #include "ModelTreeDialog.h"
+#include "ModelWindow.h"
 #include "Resource.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCAlertManager.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLib/LDModelTree.h>
 #include <CUI/CUIWindowResizer.h>
 
 ModelTreeDialog::ModelTreeDialog(HINSTANCE hInstance, HWND hParentWindow):
 CUIDialog(hInstance, hParentWindow),
+m_modelWindow(NULL),
 m_model(NULL),
 m_modelTree(NULL),
 m_resizer(NULL)
@@ -30,7 +33,7 @@ void ModelTreeDialog::dealloc(void)
 	CUIDialog::dealloc();
 }
 
-void ModelTreeDialog::show(LDLMainModel *model, HWND hParentWnd /*= NULL*/)
+void ModelTreeDialog::setModel(LDLMainModel *model)
 {
 	if (model != m_model)
 	{
@@ -38,8 +41,47 @@ void ModelTreeDialog::show(LDLMainModel *model, HWND hParentWnd /*= NULL*/)
 		TCObject::release(m_modelTree);
 		m_modelTree = NULL;
 		m_model = model;
-		m_model->retain();
+		TCObject::retain(m_model);
 	}
+}
+
+void ModelTreeDialog::modelAlertCallback(TCAlert *alert)
+{
+	if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
+	{
+		setModel(m_modelWindow->getModelViewer()->getMainModel());
+		fillTreeView();
+	}
+	else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
+	{
+		setModel(NULL);
+		fillTreeView();
+	}
+}
+
+void ModelTreeDialog::setModelWindow(ModelWindow *modelWindow)
+{
+	if (modelWindow != m_modelWindow)
+	{
+		if (m_modelWindow)
+		{
+			TCAlertManager::unregisterHandler(this);
+			m_modelWindow->release();
+		}
+		m_modelWindow = modelWindow;
+		TCObject::retain(m_modelWindow);
+		if (m_modelWindow)
+		{
+			TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
+				(TCAlertCallback)&ModelTreeDialog::modelAlertCallback);
+		}
+	}
+	setModel(m_modelWindow->getModelViewer()->getMainModel());
+}
+
+void ModelTreeDialog::show(ModelWindow *modelWindow, HWND hParentWnd /*= NULL*/)
+{
+	setModelWindow(modelWindow);
 	if (hWindow == NULL)
 	{
 		createDialog(IDD_MODELTREE, hParentWnd);
@@ -113,8 +155,11 @@ void ModelTreeDialog::fillTreeView(void)
 {
 	SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
 	TreeView_DeleteAllItems(m_hTreeView);
-	m_modelTree = new LDModelTree(m_model);
-	addChildren(NULL, m_modelTree);
+	if (m_model)
+	{
+		m_modelTree = new LDModelTree(m_model);
+		addChildren(NULL, m_modelTree);
+	}
 	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
 	RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
 }
