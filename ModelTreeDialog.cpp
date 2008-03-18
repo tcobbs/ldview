@@ -13,8 +13,11 @@ CUIDialog(hInstance, hParentWindow),
 m_modelWindow(NULL),
 m_model(NULL),
 m_modelTree(NULL),
-m_resizer(NULL)
+m_resizer(NULL),
+m_hStatus(NULL)
 {
+	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
+		(TCAlertCallback)&ModelTreeDialog::modelAlertCallback);
 }
 
 ModelTreeDialog::~ModelTreeDialog(void)
@@ -23,10 +26,12 @@ ModelTreeDialog::~ModelTreeDialog(void)
 
 void ModelTreeDialog::dealloc(void)
 {
+	TCAlertManager::unregisterHandler(this);
 	if (hWindow)
 	{
 		DestroyWindow(hWindow);
 	}
+	TCObject::release(m_modelWindow);
 	TCObject::release(m_modelTree);
 	TCObject::release(m_model);
 	TCObject::release(m_resizer);
@@ -47,15 +52,18 @@ void ModelTreeDialog::setModel(LDLMainModel *model)
 
 void ModelTreeDialog::modelAlertCallback(TCAlert *alert)
 {
-	if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
+	if (alert->getSender() == m_modelWindow)
 	{
-		setModel(m_modelWindow->getModelViewer()->getMainModel());
-		fillTreeView();
-	}
-	else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
-	{
-		setModel(NULL);
-		fillTreeView();
+		if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
+		{
+			setModel(m_modelWindow->getModelViewer()->getMainModel());
+			fillTreeView();
+		}
+		else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
+		{
+			setModel(NULL);
+			fillTreeView();
+		}
 	}
 }
 
@@ -65,16 +73,10 @@ void ModelTreeDialog::setModelWindow(ModelWindow *modelWindow)
 	{
 		if (m_modelWindow)
 		{
-			TCAlertManager::unregisterHandler(this);
 			m_modelWindow->release();
 		}
 		m_modelWindow = modelWindow;
 		TCObject::retain(m_modelWindow);
-		if (m_modelWindow)
-		{
-			TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
-				(TCAlertCallback)&ModelTreeDialog::modelAlertCallback);
-		}
 	}
 	setModel(m_modelWindow->getModelViewer()->getMainModel());
 }
@@ -86,8 +88,8 @@ void ModelTreeDialog::show(ModelWindow *modelWindow, HWND hParentWnd /*= NULL*/)
 	{
 		createDialog(IDD_MODELTREE, hParentWnd);
 	}
-	fillTreeView();
 	ShowWindow(hWindow, SW_SHOW);
+	fillTreeView();
 }
 
 LRESULT ModelTreeDialog::doItemExpanding(LPNMTREEVIEW notification)
@@ -153,21 +155,35 @@ HTREEITEM ModelTreeDialog::addLine(HTREEITEM parent, const LDModelTree *tree)
 
 void ModelTreeDialog::fillTreeView(void)
 {
-	SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
-	TreeView_DeleteAllItems(m_hTreeView);
-	if (m_model)
+	if (m_modelTree == NULL && IsWindowVisible(hWindow))
 	{
-		m_modelTree = new LDModelTree(m_model);
-		addChildren(NULL, m_modelTree);
+		SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
+		TreeView_DeleteAllItems(m_hTreeView);
+		if (m_model)
+		{
+			m_modelTree = new LDModelTree(m_model);
+			addChildren(NULL, m_modelTree);
+		}
+		SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
+		RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
 	}
-	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
-	RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
 }
 
 BOOL ModelTreeDialog::doInitDialog(HWND /*hKbControl*/)
 {
+	RECT clientRect;
+	RECT statusRect;
+
 	setIcon(IDI_APP_ICON);
 	m_hTreeView = GetDlgItem(hWindow, IDC_MODEL_TREE);
+	m_hStatus = CreateWindow(STATUSCLASSNAME, "",
+		WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT, hWindow, (HMENU)2001, hInstance, NULL);
+	GetClientRect(hWindow, &clientRect);
+	GetWindowRect(m_hStatus, &statusRect);
+	screenToClient(hWindow, &statusRect);
+	MoveWindow(m_hTreeView, 0, 0, clientRect.right - clientRect.left,
+		statusRect.top, TRUE);
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
 	m_resizer->addSubWindow(IDC_MODEL_TREE,
@@ -185,6 +201,8 @@ LRESULT ModelTreeDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 {
 	if (sizeType != SIZE_MINIMIZED)
 	{
+		SendMessage(m_hStatus, WM_SIZE, sizeType,
+			MAKELPARAM(newWidth, newHeight));
 		m_resizer->resize(newWidth, newHeight);
 	}
 	return 0;

@@ -200,8 +200,8 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
-	TCObject::release(modelTreeDialog);
 	TCAlertManager::unregisterHandler(this);
+	TCObject::release(modelTreeDialog);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
 	delete videoModes;

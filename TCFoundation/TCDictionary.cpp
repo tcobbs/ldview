@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 // Note: this REALLY needs to be made to be hash based.  I needed a dictionary,
 // though, and this does work, albeit slowly.
 

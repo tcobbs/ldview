@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-TCAlertManager *TCAlertManager::sm_defaultAlertManager = NULL;
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
 
+TCAlertManager *TCAlertManager::sm_defaultAlertManager = NULL;
 TCAlertManager::TCAlertManagerCleanup TCAlertManager::sm_alertManagerCleanup;
 
 TCAlertManager::TCAlertManagerCleanup::~TCAlertManagerCleanup(void)
