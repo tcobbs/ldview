@@ -1,7 +1,7 @@
 #ifndef __CUIWINDOW_H__
 #define __CUIWINDOW_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <windows.h>
 //#include <windowsx.h>
 #include <CUI/CUIDefines.h>
@@ -31,7 +31,7 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 #define OPENFILENAMEUC OPENFILENAMEW
 #endif // TC_NO_UNICODE
 
-class CUIExport CUIWindow : public TCObject
+class CUIExport CUIWindow : public TCAlertSender
 {
 	public:
 		CUIWindow(void);
