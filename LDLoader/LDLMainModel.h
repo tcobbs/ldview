@@ -48,10 +48,13 @@ public:
 	}
 	bool &ancestorCheck(const std::string &name) { return m_ancestorMap[name]; }
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
+	virtual TCObject *getAlertSender(void) { return m_alertSender; }
+	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 protected:
 	virtual void dealloc(void);
 	virtual void processLDConfig(void);
 
+	TCObject *m_alertSender;
 	TCDictionary *m_loadedModels;
 	LDLPalette *m_mainPalette;
 	TCStringArray *m_extraSearchDirs;

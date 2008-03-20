@@ -1,7 +1,7 @@
 #ifndef __LDRAWMODELVIEWER_H__
 #define __LDRAWMODELVIEWER_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/mystring.h>
 #include <LDLoader/LDLCamera.h>
@@ -55,7 +55,7 @@ class LDPartsList;
 class LDViewPoint;
 class LDInputHandler;
 
-class LDrawModelViewer: public TCObject
+class LDrawModelViewer: public TCAlertSender
 {
 	public:
 		enum ViewMode
@@ -419,6 +419,7 @@ class LDrawModelViewer: public TCObject
 
 		bool getViewInfo(ucstring &message, ucstring &commandLine);
 		TREMainModel *getContrastingLightDirModel();
+		virtual TCObject *getAlertSender(void) { return this; }
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);

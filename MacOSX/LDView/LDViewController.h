@@ -3,6 +3,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class Preferences;
+@class ModelWindow;
 
 @interface LDViewController : NSResponder
 {
@@ -13,6 +14,7 @@
 	IBOutlet NSMenuItem *examineMenuItem;
 	IBOutlet NSMenuItem *latLongRotationMenuItem;
 	IBOutlet NSMenuItem *flyThroughMenuItem;
+	IBOutlet NSMenuItem *cancelMenuItem;
 
 	NSArray *ldrawFileTypes;
 	NSMutableArray *modelWindows;
@@ -35,5 +37,6 @@
 //- (IBAction)customizeToolbar:(id)sender;
 - (NSArray *)modelWindows;
 - (void)updateStatusBarMenuItem:(BOOL)showStatusBar;
+- (ModelWindow *)currentModelWindow;
 
 @end

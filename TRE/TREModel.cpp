@@ -3466,3 +3466,8 @@ void TREModel::flattenConditionals(
 		}
 	}
 }
+
+TCObject *TREModel::getAlertSender(void)
+{
+	return m_mainModel->getAlertSender();
+}

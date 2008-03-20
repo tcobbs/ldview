@@ -1,12 +1,12 @@
 #ifndef __LDINPUTHANDLER_H__
 #define __LDINPUTHANDLER_H__
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 
 class LDrawModelViewer;
 class TCAlert;
 class TCVector;
 
-class LDInputHandler : public TCObject
+class LDInputHandler : public TCAlertSender
 {
 public:
 	enum ModifierKey
@@ -92,6 +92,7 @@ public:
 	bool keyUp(TCULong modifierKeys, KeyCode keyCode);
 	void setMouseUpPending(bool value);
 	void cancelMouseDrag(void);
+	virtual TCObject *getAlertSender(void);
 
 	static const char *captureAlertClass(void) { return "LDCaptureMouse"; }
 	static const char *releaseAlertClass(void) { return "LDReleaseMouse"; }

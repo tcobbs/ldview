@@ -12,6 +12,7 @@
 #import "SaveSnapshotViewOwner.h"
 #import "ModelTree.h"
 #include <LDLoader/LDLError.h>
+#include <LDLoader/LDLMainModel.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDInputHandler.h>
@@ -35,6 +36,7 @@
 	[snapshotTaker release];
 	[saveSnapshotViewOwner release];
 	[modelTree release];
+	[initialTitle release];
 	[super dealloc];
 }
 
@@ -283,6 +285,7 @@
 
 - (void)awakeFromNib
 {
+	initialTitle = [[window title] retain];
 	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	[self showStatusBar:showStatusBar];
 	[self setupToolbar];
@@ -343,7 +346,8 @@
 	filteredRootErrorItem = nil;
 	[window setTitleWithRepresentedFilename:filename];
 	[window makeKeyAndOrderFront:self];
-	cancelLoad = false;
+	loadCanceled = false;
+	loading = true;
 	if ([modelView openModel:filename])
 	{
 		[self enableToolbarItems:YES];
@@ -352,22 +356,31 @@
 			[[ErrorsAndWarnings sharedInstance] update:self];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoaded" object:self];
+		loading = false;
 		return YES;
 	}
 	else
 	{
-		if (!cancelLoad)
+		if (!loadCanceled)
 		{
 			NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], [filename cStringUsingEncoding:NSASCIIStringEncoding]], [OCLocalStrings get:@"OK"], nil, nil);
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoadCanceled" object:self];
+		[[self window] setTitleWithRepresentedFilename:@""];
+		[[self window] setTitle:initialTitle];
+		loading = false;
 		return NO;
 	}
 }
 
-- (bool)cancelLoad
+- (bool)loading
 {
-	return cancelLoad;
+	return loading;
+}
+
+- (bool)loadCanceled
+{
+	return loadCanceled;
 }
 
 - (LDrawModelView *)modelView
@@ -436,11 +449,43 @@
 
 - (void)cancelLoad:(id)sender
 {
-	cancelLoad = true;
+	loadCanceled = true;
+}
+
+- (bool)isMyAlert:(TCProgressAlert *)alert
+{
+	return alert->getSender()->getAlertSender() == [modelView modelViewer];
+//	if (alert->getSender() == [modelView modelViewer])
+//	{
+//		return true;
+//	}
+//	if (strcmp(alert->getAlertClass(), "LDLModel"))
+//	{
+//		LDLModel *sender = (LDLModel *)alert->getSender();
+//		
+//		if (sender->getMainModel() == [modelView modelViewer]->getMainModel())
+//		{
+//			return true;
+//		}
+//	}
+//	if (strcmp(alert->getAlertClass(), "TREMainModel") == 0)
+//	{
+//		TREMainModel *sender = (TREMainModel *)alert->getSender();
+//		
+//		if (sender == [modelView modelViewer]->getMainTREModel())
+//		{
+//			return true;
+//		}
+//	}
+//	return false;
 }
 
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
+	if (![self isMyAlert:alert])
+	{
+		return;
+	}
 	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
 	{
 		// This alert is coming from a different model viewer.
@@ -493,7 +538,7 @@
 					skip = true;
 					if ([[event characters] characterAtIndex:0] == 27)
 					{
-						cancelLoad = true;
+						[[controller currentModelWindow] cancelLoad:self];
 					}
 				}
 				[NSApp sendEvent:event];
@@ -514,7 +559,7 @@
 	{
 		[statusBar display];
 	}
-	if (cancelLoad)
+	if (loadCanceled)
 	{
 		alert->abort();
 	}

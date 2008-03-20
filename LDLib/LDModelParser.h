@@ -16,7 +16,7 @@ class LDLModelLine;
 class LDLConditionalLineLine;
 class LDrawModelViewer;
 
-class LDModelParser : protected LDLPrimitiveCheck
+class LDModelParser : public LDLPrimitiveCheck
 {
 public:
 	LDModelParser(const LDrawModelViewer *modelViewer);

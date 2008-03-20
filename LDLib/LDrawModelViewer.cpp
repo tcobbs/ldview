@@ -883,6 +883,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	{
 		TCObject::release(mainModel);
 		mainModel = new LDLMainModel;
+		mainModel->setAlertSender(this);
 		if (clipAmount != 0.0f && resetViewpoint)
 		{
 			clipAmount = 0.0f;
@@ -905,6 +906,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		{
 			LDModelParser *modelParser = new LDModelParser(this);
 
+			modelParser->setAlertSender(this);
 			if (modelParser->parseMainModel(mainModel))
 			{
 				bool abort;

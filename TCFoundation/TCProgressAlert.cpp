@@ -37,7 +37,7 @@ void TCProgressAlert::send(
 	const char *message,
 	float progress,
 	TCStringArray *extraInfo,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	send(source, message, progress, NULL, extraInfo, sender);
 }
@@ -47,7 +47,7 @@ void TCProgressAlert::send(
 	const wchar_t *message,
 	float progress,
 	const ucstringVector &extraInfo,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	send(source, message, progress, NULL, extraInfo, sender);
 }
@@ -58,7 +58,7 @@ void TCProgressAlert::send(
 	float progress,
 	bool *aborted,
 	TCStringArray *extraInfo,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
 		extraInfo);
@@ -76,7 +76,7 @@ void TCProgressAlert::send(
 	const char *message,
 	float progress,
 	bool *aborted,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress);
 
@@ -92,7 +92,7 @@ void TCProgressAlert::send(
 	const char *source,
 	const char *message,
 	float progress,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress);
 
@@ -105,7 +105,7 @@ void TCProgressAlert::send(
 	const wchar_t *message,
 	float progress,
 	bool *aborted,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	send(source, message, progress, aborted, ucstringVector(), sender);
 }
@@ -114,7 +114,7 @@ void TCProgressAlert::send(
 	const char *source,
 	const wchar_t *message,
 	float progress,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	send(source, message, progress, NULL, ucstringVector(), sender);
 }
@@ -125,7 +125,7 @@ void TCProgressAlert::send(
 	float progress,
 	bool *aborted,
 	const ucstringVector &extraInfo,
-	TCObject *sender)
+	TCAlertSender *sender)
 {
 	TCProgressAlert *alert = new TCProgressAlert(source, message, progress,
 		extraInfo);

@@ -250,6 +250,8 @@ public:
 		return m_activeColorConditionals[step];
 	}
 	bool doingBackgroundConditionals(void);
+	virtual TCObject *getAlertSender(void) { return m_alertSender; }
+	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -290,6 +292,7 @@ protected:
 
 	static void loadStudMipTextures(TCImage *mainImage);
 
+	TCObject *m_alertSender;
 	TCDictionary *m_loadedModels;
 	TCDictionary *m_loadedBFCModels;
 	TREVertexStore *m_vertexStore;
