@@ -32,6 +32,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 alwaysOnTopMenuItem = NSMenuItem; 
+                cancelMenuItem = NSMenuItem; 
                 custToolbarMenuItem = NSMenuItem; 
                 examineMenuItem = NSMenuItem; 
                 flyThroughMenuItem = NSMenuItem; 

@@ -9,7 +9,8 @@
 #include "LDrawIni.h"
 
 LDLMainModel::LDLMainModel(void)
-	:m_loadedModels(NULL),
+	:m_alertSender(NULL),
+	m_loadedModels(NULL),
 	m_mainPalette(new LDLPalette),
 	m_extraSearchDirs(NULL)
 {

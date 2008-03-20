@@ -131,6 +131,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
+	m_mainTREModel->setAlertSender(m_alertSender);
 	m_mainTREModel->setMultiThreadedFlag(getMultiThreadedFlag());
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());

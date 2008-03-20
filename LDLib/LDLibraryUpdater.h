@@ -3,7 +3,7 @@
 #ifndef __LDLIBRARYUPDATER_H__
 #define __LDLIBRARYUPDATER_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 //#include <TCFoundation/mystring.h>
 //#include <stdio.h>
 
@@ -24,7 +24,7 @@ typedef TCTypedObjectArray<LDLibraryUpdateInfo> LDLibraryUpdateInfoArray;
 
 #define LD_LIBRARY_UPDATER "LDLibraryUpdater"
 
-class LDLibraryUpdater : public TCObject
+class LDLibraryUpdater : public TCAlertSender
 {
 public:
 	LDLibraryUpdater(void);

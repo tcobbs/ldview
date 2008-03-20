@@ -18,23 +18,23 @@ public:
 	static const char *alertClass(void) { return "TCProgressAlert"; }
 	static void send(const char *source, const char *message, float progress,
 		bool *aborted = NULL, TCStringArray *extraInfo = NULL,
-		TCObject *sender = NULL);
+		TCAlertSender *sender = NULL);
 	static void send(const char *source, const char *message, float progress,
-		TCObject *sender);
+		TCAlertSender *sender);
 	static void send(const char *source, const char *message, float progress,
-		bool *aborted, TCObject *sender);
+		bool *aborted, TCAlertSender *sender);
 	static void send(const char *source, const char *message, float progress,
-		TCStringArray *extraInfo, TCObject *sender = NULL);
+		TCStringArray *extraInfo, TCAlertSender *sender = NULL);
 	static void send(const char *source, const wchar_t *message, float progress,
 		bool *aborted = NULL,
 		const ucstringVector &extraInfo = ucstringVector(),
-		TCObject *sender = NULL);
+		TCAlertSender *sender = NULL);
 	static void send(const char *source, const wchar_t *message, float progress,
-		TCObject *sender);
+		TCAlertSender *sender);
 	static void send(const char *source, const wchar_t *message, float progress,
-		bool *aborted, TCObject *sender);
+		bool *aborted, TCAlertSender *sender);
 	static void send(const char *source, const wchar_t *message, float progress,
-		const ucstringVector &extraInfo, TCObject *sender = NULL);
+		const ucstringVector &extraInfo, TCAlertSender *sender = NULL);
 protected:
 	virtual ~TCProgressAlert(void);
 	virtual void dealloc(void);

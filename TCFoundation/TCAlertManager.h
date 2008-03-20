@@ -9,6 +9,7 @@
 #include <string.h>
 
 class TCAlert;
+class TCAlertSender;
 
 typedef void (TCObject::*TCAlertCallback)(TCAlert* alert);
 
@@ -20,8 +21,8 @@ typedef TCTypedObjectArray<TCAlertCallbackArray> TCAlertCallbackArrayArray;
 class TCAlertManager : public TCObject
 {
 public:
-	static void sendAlert(TCAlert *alert, TCObject *sender = NULL);
-	static void sendAlert(const char *alertClass, TCObject *sender = NULL,
+	static void sendAlert(TCAlert *alert, TCAlertSender *sender = NULL);
+	static void sendAlert(const char *alertClass, TCAlertSender *sender = NULL,
 		CUCSTR message = _UC(""));
 	static void registerHandler(const char *alertClass, TCObject *handler,
 		TCAlertCallback alertCallback);

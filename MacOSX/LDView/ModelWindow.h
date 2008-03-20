@@ -52,10 +52,13 @@ class AlertHandler;
 	SnapshotTaker *snapshotTaker;
 	SaveSnapshotViewOwner *saveSnapshotViewOwner;
 	ModelTree *modelTree;
-	bool cancelLoad;
+	bool loadCanceled;
+	bool loading;
+	NSString *initialTitle;
 }
 
-- (bool)cancelLoad;
+- (bool)loading;
+- (bool)loadCanceled;
 - (LDViewController *)controller;
 - (BOOL)openModel:(NSString *)filename;
 - (id)initWithController:(LDViewController *)value;

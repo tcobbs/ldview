@@ -1,7 +1,7 @@
 #ifndef __TREMODEL_H__
 #define __TREMODEL_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TRE/TREShapeGroup.h>
@@ -17,7 +17,7 @@ class TREMainModel;
 class TREColoredShapeGroup;
 class TREVertexArray;
 
-class TRENormalInfo : public TCObject
+class TRENormalInfo : public TCAlertSender
 {
 public:
 	TRENormalInfo(void)
@@ -52,7 +52,7 @@ typedef enum
 	TREMLast = TREMTransparent
 } TREMSection;
 
-class TREModel : public TCObject
+class TREModel : public TCAlertSender
 {
 public:
 	TREModel(void);
@@ -206,6 +206,7 @@ public:
 	virtual void transferTransparent(TCULong color, TREMSection section,
 		const TCFloat *matrix);
 	virtual void cleanupTransparent(TREMSection section);
+	virtual TCObject *getAlertSender(void);
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);

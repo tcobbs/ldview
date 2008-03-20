@@ -1636,3 +1636,8 @@ void LDLModel::calcMaxRadius(const TCVector &center)
 			matrix);
 	}
 }
+
+TCObject *LDLModel::getAlertSender(void)
+{
+	return m_mainModel->getAlertSender();
+}

@@ -169,6 +169,17 @@
 			return NO;
 		}
 	}
+	else if (menuItem == cancelMenuItem)
+	{
+		if ([[self currentModelWindow] loading])
+		{
+			return YES;
+		}
+		else
+		{
+			return NO;
+		}
+	}
 	return YES;
 }
 

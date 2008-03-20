@@ -45,7 +45,7 @@ TCAlertManager *TCAlertManager::defaultAlertManager(void)
 	return sm_defaultAlertManager;
 }
 
-void TCAlertManager::sendAlert(TCAlert *alert, TCObject *sender /*= NULL*/)
+void TCAlertManager::sendAlert(TCAlert *alert, TCAlertSender *sender /*= NULL*/)
 {
 	alert->setSender(sender);
 	defaultAlertManager()->defSendAlert(alert);
@@ -53,7 +53,7 @@ void TCAlertManager::sendAlert(TCAlert *alert, TCObject *sender /*= NULL*/)
 
 void TCAlertManager::sendAlert(
 	const char *alertClass,
-	TCObject *sender /*= NULL*/,
+	TCAlertSender *sender /*= NULL*/,
 	CUCSTR message /*= _UC("")*/)
 {
 	TCAlert *alert = new TCAlert(alertClass, message);

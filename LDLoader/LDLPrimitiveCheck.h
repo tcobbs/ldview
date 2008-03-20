@@ -1,7 +1,7 @@
 #ifndef __LDLPRIMITIVECHECK_H__
 #define __LDLPRIMITIVECHECK_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 
 #include <string.h>
 
@@ -14,7 +14,7 @@ class LDLShapeLine;
 class LDLModelLine;
 class LDLConditionalLineLine;
 
-class LDLPrimitiveCheck : public TCObject
+class LDLPrimitiveCheck : public TCAlertSender
 {
 public:
 	LDLPrimitiveCheck(void);
@@ -30,6 +30,8 @@ public:
 	int getCurveQuality(void) { return m_curveQuality; }
 	bool getNoLightGeomFlag(void) { return m_flags.noLightGeom != false; }
 	void setNoLightGeomFlag(bool value) { m_flags.noLightGeom = value; }
+	virtual TCObject *getAlertSender(void) { return m_alertSender; }
+	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 protected:
 	virtual ~LDLPrimitiveCheck(void);
 	virtual void dealloc(void);
@@ -94,6 +96,7 @@ protected:
 	virtual int getNumCircleSegments(TCFloat fraction = 0.0f, bool is48 = false);
 	virtual int getUsedCircleSegments(int numSegments, TCFloat fraction);
 
+	TCObject *m_alertSender;
 	int m_curveQuality;
 	int m_filenameNumerator;
 	int m_filenameDenom;

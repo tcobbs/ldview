@@ -1,14 +1,14 @@
 #ifndef __LDPREFERENCES_H__
 #define __LDPREFERENCES_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCUserDefaults.h>
 
 typedef std::map<std::string, bool> StringBoolMap;
 
-class LDPreferences : public TCObject
+class LDPreferences : public TCAlertSender
 {
 public:
 	enum LightDirection

@@ -629,3 +629,8 @@ bool LDInputHandler::keyUp(TCULong /*modifierKeys*/, KeyCode keyCode)
 	}
 	return false;
 }
+
+TCObject *LDInputHandler::getAlertSender(void)
+{
+	return m_modelViewer;
+}

@@ -5,7 +5,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 
-#include "LDLModel.h"
+#include "LDLMainModel.h"
 #include "LDLCommentLine.h"
 #include "LDLModelLine.h"
 #include "LDLLineLine.h"
@@ -205,4 +205,9 @@ const char *LDLFileLine::findWord(int index) const
 		}
 	}
 	return &m_line[i];
+}
+
+TCObject *LDLFileLine::getAlertSender(void)
+{
+	return m_parentModel->getMainModel()->getAlertSender();
 }

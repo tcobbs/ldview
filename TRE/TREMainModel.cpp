@@ -74,7 +74,8 @@ TREMainModel::TREMainModelCleanup::~TREMainModelCleanup(void)
 //}
 
 TREMainModel::TREMainModel(void)
-	:m_loadedModels(NULL),
+	:m_alertSender(NULL),
+	m_loadedModels(NULL),
 	m_loadedBFCModels(NULL),
 	m_vertexStore(new TREVertexStore),
 	m_studVertexStore(new TREVertexStore),

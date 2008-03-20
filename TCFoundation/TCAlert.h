@@ -12,6 +12,7 @@
 #define USER_ALERTS 0x1000
 
 class TCStringArray;
+class TCAlertSender;
 
 class TCAlert : public TCObject
 {
@@ -20,8 +21,8 @@ public:
 		TCStringArray *extraInfo = NULL);
 	TCAlert(const char *alertClass, const wchar_t *message,
 		const ucstringVector &extraInfo = ucstringVector());
-	void setSender(TCObject *value) { m_sender = value; }
-	TCObject *getSender(void) { return m_sender; }
+	void setSender(TCAlertSender *value) { m_sender = value; }
+	TCAlertSender *getSender(void) { return m_sender; }
 	//TCULong getAlertClass(void) { return m_alertClass; }
 	const char *getAlertClass(void) const { return m_alertClass; }
 	const char *getMessage(void);
@@ -40,7 +41,7 @@ protected:
 	std::wstring m_wMessage;
 	TCStringArray *m_extraInfo;
 	ucstringVector m_ucExtraInfo;
-	TCObject *m_sender;
+	TCAlertSender *m_sender;
 };
 
 #endif // __TCALERT_H__

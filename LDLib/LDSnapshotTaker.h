@@ -1,13 +1,13 @@
 #ifndef __LDSNAPSHOTTAKER_H__
 #define __LDSNAPSHOTTAKER_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCImage.h>
 
 class LDrawModelViewer;
 
-class LDSnapshotTaker : public TCObject
+class LDSnapshotTaker : public TCAlertSender
 {
 public:
 	enum ImageType

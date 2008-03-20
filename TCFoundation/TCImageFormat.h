@@ -1,10 +1,10 @@
 #ifndef __TCIMAGEFORMAT_H__
 #define __TCIMAGEFORMAT_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCImage.h>
 
-class TCExport TCImageFormat : public TCObject
+class TCExport TCImageFormat : public TCAlertSender
 {
 	public:
 		TCImageFormat(void);

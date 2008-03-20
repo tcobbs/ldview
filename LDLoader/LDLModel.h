@@ -1,7 +1,7 @@
 #ifndef __LDLMODEL_H__
 #define __LDLMODEL_H__
 
-#include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLFileLine.h>
@@ -33,7 +33,7 @@ typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point,
 	const LDLFileLine *pFileLine);
 struct LDrawIniS;
 
-class LDLModel : public TCObject
+class LDLModel : public TCAlertSender
 {
 public:
 	enum ScanPointType
@@ -109,6 +109,7 @@ public:
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
 	LDLMainModel *getMainModel(void) { return m_mainModel; }
+	virtual TCObject *getAlertSender(void);
 
 	static const char *lDrawDir(void);
 	static void setLDrawDir(const char *value);
