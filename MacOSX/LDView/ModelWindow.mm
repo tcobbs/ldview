@@ -388,6 +388,11 @@
 	return modelView;
 }
 
+- (bool)isMyAlert:(TCAlert *)alert
+{
+	return alert->getSender()->getAlertSender() == [modelView modelViewer];
+}
+
 - (void)addErrorItem:(ErrorItem *)parent string:(NSString *)string error:(LDLError *)error
 {
 	[parent addChild:[[[ErrorItem alloc] initWithString:string error:error includeIcon:NO] autorelease]];
@@ -395,6 +400,10 @@
 
 - (void)ldlErrorCallback:(LDLError *)error
 {
+	if (![self isMyAlert:error])
+	{
+		return;
+	}
 	TCStringArray *extraInfo = error->getExtraInfo();
 	NSString *lineString;
 
@@ -450,34 +459,6 @@
 - (void)cancelLoad:(id)sender
 {
 	loadCanceled = true;
-}
-
-- (bool)isMyAlert:(TCProgressAlert *)alert
-{
-	return alert->getSender()->getAlertSender() == [modelView modelViewer];
-//	if (alert->getSender() == [modelView modelViewer])
-//	{
-//		return true;
-//	}
-//	if (strcmp(alert->getAlertClass(), "LDLModel"))
-//	{
-//		LDLModel *sender = (LDLModel *)alert->getSender();
-//		
-//		if (sender->getMainModel() == [modelView modelViewer]->getMainModel())
-//		{
-//			return true;
-//		}
-//	}
-//	if (strcmp(alert->getAlertClass(), "TREMainModel") == 0)
-//	{
-//		TREMainModel *sender = (TREMainModel *)alert->getSender();
-//		
-//		if (sender == [modelView modelViewer]->getMainTREModel())
-//		{
-//			return true;
-//		}
-//	}
-//	return false;
 }
 
 - (void)progressAlertCallback:(TCProgressAlert *)alert
@@ -866,7 +847,10 @@
 {
 	[filteredRootErrorItem release];
 	filteredRootErrorItem = nil;
-	[[ErrorsAndWarnings sharedInstance] update:self];
+	if ([controller currentModelWindow] == self)
+	{
+		[[ErrorsAndWarnings sharedInstance] update:self];
+	}
 }
 
 - (LDViewController *)controller
