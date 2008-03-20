@@ -12,6 +12,7 @@
 @class ModelTreeItem;
 
 class LDModelTree;
+class LDLMainModel;
 
 @interface ModelTree : NSObject
 {
@@ -20,8 +21,10 @@ class LDModelTree;
 	ModelWindow *modelWindow;
 	LDModelTree *modelTree;
 	ModelTreeItem *rootModelTreeItem;
+	LDLMainModel *model;
 }
 
+- (void)modelChanged:(NSNotification *)notification;
 - (id)initWithParent:(ModelWindow *)parent;
 - (void)show;
 - (void)hide;

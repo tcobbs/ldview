@@ -294,10 +294,6 @@ static TCImage *resizeCornerImage = NULL;
 		{
 			retValue = YES;
 		}
-		else
-		{
-			NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], [filename cStringUsingEncoding:NSASCIIStringEncoding]], [OCLocalStrings get:@"OK"], nil, nil);
-		}
 		loading = NO;
 		[self rotationUpdate];
 	}

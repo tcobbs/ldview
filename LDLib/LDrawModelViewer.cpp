@@ -955,6 +955,13 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	// needsReload flag during loading.
 	flags.needsReload = false;
 	flags.needsLightingSetup = true;
+	if (!retValue)
+	{
+		TCObject::release(mainModel);
+		mainModel = NULL;
+		TCObject::release(mainTREModel);
+		mainTREModel = NULL;
+	}
 	return retValue;
 }
 
