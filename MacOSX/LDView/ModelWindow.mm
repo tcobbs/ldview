@@ -343,6 +343,7 @@
 	filteredRootErrorItem = nil;
 	[window setTitleWithRepresentedFilename:filename];
 	[window makeKeyAndOrderFront:self];
+	cancelLoad = false;
 	if ([modelView openModel:filename])
 	{
 		[self enableToolbarItems:YES];
@@ -350,12 +351,23 @@
 		{
 			[[ErrorsAndWarnings sharedInstance] update:self];
 		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoaded" object:self];
 		return YES;
 	}
 	else
 	{
+		if (!cancelLoad)
+		{
+			NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], [filename cStringUsingEncoding:NSASCIIStringEncoding]], [OCLocalStrings get:@"OK"], nil, nil);
+		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoadCanceled" object:self];
 		return NO;
 	}
+}
+
+- (bool)cancelLoad
+{
+	return cancelLoad;
 }
 
 - (LDrawModelView *)modelView
@@ -422,6 +434,11 @@
 	[progressMessage setFrame:frame];
 }
 
+- (void)cancelLoad:(id)sender
+{
+	cancelLoad = true;
+}
+
 - (void)progressAlertCallback:(TCProgressAlert *)alert
 {
 	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
@@ -453,6 +470,8 @@
 		if (alertProgress == 1.0f || lastProgressUpdate == NULL ||
 			[lastProgressUpdate timeIntervalSinceNow] < -0.2)
 		{
+			NSEvent *event;
+
 			[window makeFirstResponder:progress];
 			if ([progress isHidden])
 			{
@@ -464,6 +483,21 @@
 			updated = YES;
 			[lastProgressUpdate release];
 			lastProgressUpdate = [[NSDate alloc] init];
+			// Flush the main event loop.
+			while ((event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:nil inMode:NSDefaultRunLoopMode dequeue:YES]) != NULL)
+			{
+				bool skip = false;
+				
+				if ([event type] == NSKeyDown || [event type] == NSKeyUp)
+				{
+					skip = true;
+					if ([[event characters] characterAtIndex:0] == 27)
+					{
+						cancelLoad = true;
+					}
+				}
+				[NSApp sendEvent:event];
+			}
 		}
 	}
 	else if (alertProgress == 2.0f)
@@ -479,6 +513,10 @@
 	if (forceUpdate && !updated)
 	{
 		[statusBar display];
+	}
+	if (cancelLoad)
+	{
+		alert->abort();
 	}
 }
 

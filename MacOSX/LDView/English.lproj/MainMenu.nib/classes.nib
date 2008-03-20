@@ -3,6 +3,7 @@
         {
             ACTIONS = {
                 alwaysOnTop = id; 
+                cancelLoad = id; 
                 customizeToolbar = id; 
                 errorsAndWarnings = id; 
                 examineMode = id; 
