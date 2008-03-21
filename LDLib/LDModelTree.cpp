@@ -9,13 +9,42 @@
 #include <LDLoader/LDLTriangleLine.h>
 #include <LDLoader/LDLUnknownLine.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/TCUserDefaults.h>
 
 LDModelTree::LDModelTree(LDLModel *model /*= NULL*/):
 m_model(model),
 m_children(NULL),
-m_childrenLoaded(false)
+m_filteredChildren(NULL),
+m_activeLineTypes(0),
+m_allLineTypes(0),
+m_viewPopulated(false)
 {
 	TCObject::retain(m_model);
+	for (int i = LDLLineTypeComment; i <= LDLLineTypeUnknown; i++)
+	{
+		bool defaultValue = true;
+
+		if (i == LDLLineTypeEmpty || i == LDLLineTypeUnknown)
+		{
+			defaultValue = false;
+		}
+		if (TCUserDefaults::boolForKey(lineTypeKey((LDLLineType)i).c_str(),
+			defaultValue, false))
+		{
+			m_activeLineTypes |= 1 << i;
+		}
+		m_allLineTypes |= 1 << i;
+	}
+}
+
+LDModelTree::LDModelTree(TCULong activeLineTypes, TCULong allLineTypes):
+m_model(NULL),
+m_children(NULL),
+m_filteredChildren(NULL),
+m_activeLineTypes(activeLineTypes),
+m_allLineTypes(allLineTypes),
+m_viewPopulated(false)
+{
 }
 
 LDModelTree::~LDModelTree(void)
@@ -26,14 +55,23 @@ void LDModelTree::dealloc(void)
 {
 	TCObject::release(m_model);
 	TCObject::release(m_children);
+	TCObject::release(m_filteredChildren);
 	TCObject::dealloc();
 }
 
-bool LDModelTree::hasChildren(void) const
+bool LDModelTree::hasChildren(bool filter) const
 {
 	if (m_model)
 	{
-		return m_model->getActiveLineCount() > 0;
+		if (filter && m_activeLineTypes != m_allLineTypes)
+		{
+			return m_model->getActiveLineCount() > 0 &&
+				getChildren(true)->getCount() > 0;
+		}
+		else
+		{
+			return m_model->getActiveLineCount() > 0;
+		}
 	}
 	else
 	{
@@ -41,11 +79,18 @@ bool LDModelTree::hasChildren(void) const
 	}
 }
 
-int LDModelTree::getNumChildren(void) const
+int LDModelTree::getNumChildren(bool filter) const
 {
 	if (m_model)
 	{
-		return m_model->getActiveLineCount();
+		if (filter && m_activeLineTypes != m_allLineTypes)
+		{
+			return getChildren(true)->getCount();
+		}
+		else
+		{
+			return m_model->getActiveLineCount();
+		}
 	}
 	else
 	{
@@ -53,17 +98,61 @@ int LDModelTree::getNumChildren(void) const
 	}
 }
 
-const LDModelTreeArray *LDModelTree::getChildren(void) const
+bool LDModelTree::childFilterCheck(const LDModelTree *child) const
 {
-	if (!m_childrenLoaded)
+	if (m_activeLineTypes & (1 << child->getLineType()))
 	{
-		if (hasChildren())
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+const LDModelTreeArray *LDModelTree::getChildren(bool filter) const
+{
+	if (m_children == NULL)
+	{
+		if (hasChildren(false))
 		{
 			scanModel(m_model, m_defaultColor);
 		}
-		m_childrenLoaded = true;
+		else
+		{
+			m_children = new LDModelTreeArray;
+		}
 	}
-	return m_children;
+	if (filter)
+	{
+		if (m_filteredChildren == NULL)
+		{
+			if (m_activeLineTypes == m_allLineTypes)
+			{
+				m_filteredChildren = m_children;
+				m_filteredChildren->retain();
+			}
+			else
+			{
+				m_filteredChildren = new LDModelTreeArray;
+
+				for (int i = 0; i < m_children->getCount(); i++)
+				{
+					LDModelTree *child = (*m_children)[i];
+
+					if (childFilterCheck(child))
+					{
+						m_filteredChildren->addObject(child);
+					}
+				}
+			}
+		}
+		return m_filteredChildren;
+	}
+	else
+	{
+		return m_children;
+	}
 }
 
 void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
@@ -79,7 +168,8 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 			m_children = new LDModelTreeArray(count);
 			for (int i = 0; i < count; i++)
 			{
-				LDModelTree *child = new LDModelTree;
+				LDModelTree *child = new LDModelTree(m_activeLineTypes,
+					m_allLineTypes);
 
 				m_children->addObject(child);
 				child->release();
@@ -129,5 +219,44 @@ void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 		break;
 	case LDLLineTypeUnknown:
 		break;
+	}
+}
+
+void LDModelTree::clearFilteredChildren(void)
+{
+	if (m_children)
+	{
+		TCObject::release(m_filteredChildren);
+		m_filteredChildren = NULL;
+		for (int i = 0; i < m_children->getCount(); i++)
+		{
+			(*m_children)[i]->clearFilteredChildren();
+		}
+	}
+}
+
+std::string LDModelTree::lineTypeKey(LDLLineType lineType) const
+{
+	char key[128];
+
+	sprintf(key, "ModelTreeShow%d", lineType);
+	return key;
+}
+
+void LDModelTree::setShowLineType(LDLLineType lineType, bool value)
+{
+	if (getShowLineType(lineType) != value)
+	{
+		if (value)
+		{
+			m_activeLineTypes |= 1 << lineType;
+		}
+		else
+		{
+			m_activeLineTypes &= ~(1 << lineType);
+		}
+		clearFilteredChildren();
+		TCUserDefaults::setBoolForKey(value, lineTypeKey(lineType).c_str(),
+			false);
 	}
 }
