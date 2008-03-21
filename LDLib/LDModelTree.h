@@ -16,27 +16,40 @@ class LDModelTree : public TCObject
 {
 public:
 	LDModelTree(LDLModel *model = NULL);
-	virtual void scanModel(LDLModel *model, int defaultColor) const;
+	void scanModel(LDLModel *model, int defaultColor) const;
 	const LDLModel *getModel(void) const { return m_model; }
-	const LDModelTreeArray *getChildren(void) const;
-	bool hasChildren(void) const;
-	int getNumChildren(void) const;
-	bool getChildrenLoaded(void) const { return m_childrenLoaded; }
+	const LDModelTreeArray *getChildren(bool filter) const;
+	bool hasChildren(bool filter) const;
+	int getNumChildren(bool filter) const;
 	const std::string &getText(void) const { return m_text; }
 	LDLLineType getLineType(void) const { return m_lineType; }
+	void setShowLineType(LDLLineType lineType, bool value);
+	bool getShowLineType(LDLLineType lineType) const
+	{
+		return (m_activeLineTypes & (1 << lineType)) != 0;
+	}
+	bool getViewPopulated(void) const { return m_viewPopulated; }
+	void setViewPopulated(bool value) { m_viewPopulated = value; }
 protected:
+	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
 	virtual ~LDModelTree(void);
 	virtual void dealloc(void);
-	virtual void scanLine(LDLFileLine *fileLine, int defaultColor);
-	virtual void setModel(LDLModel *model);
+	void scanLine(LDLFileLine *fileLine, int defaultColor);
+	void setModel(LDLModel *model);
+	bool childFilterCheck(const LDModelTree *child) const;
+	void clearFilteredChildren(void);
+	std::string lineTypeKey(LDLLineType lineType) const;
 	//virtual void scanModelLine(LDLModelLine *modelLine, int defaultColor);
 
 	LDLModel *m_model;
 	mutable LDModelTreeArray *m_children;
-	mutable bool m_childrenLoaded;
+	mutable LDModelTreeArray *m_filteredChildren;
 	std::string m_text;
 	LDLLineType m_lineType;
 	int m_defaultColor;
+	TCULong m_activeLineTypes;
+	TCULong m_allLineTypes;
+	bool m_viewPopulated;
 };
 
 #endif // __LDMODELTREE_H__

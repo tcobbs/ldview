@@ -1151,7 +1151,7 @@ BEGIN
     BEGIN
         MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
         MENUITEM "Parts &List...",              ID_TOOLS_PARTSLIST
-        MENUITEM "&Model Tree",                 ID_TOOLS_MODELTREE
+        MENUITEM "&Model Tree\tCtrl+T",         ID_TOOLS_MODELTREE
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
         MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
@@ -1250,6 +1250,7 @@ BEGIN
     "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
     "S",            ID_VIEW_STATUSBAR,      VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    "T",            ID_TOOLS_MODELTREE,     VIRTKEY, CONTROL, NOINVERT
     "T",            ID_VIEW_TOOLBAR,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT

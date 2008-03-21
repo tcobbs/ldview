@@ -98,9 +98,10 @@ LRESULT ModelTreeDialog::doItemExpanding(LPNMTREEVIEW notification)
 	{
 		LDModelTree *tree = (LDModelTree *)notification->itemNew.lParam;
 
-		if (!tree->getChildrenLoaded())
+		if (!tree->getViewPopulated())
 		{
 			addChildren(notification->itemNew.hItem, tree);
+			tree->setViewPopulated(true);
 		}
 	}
 	return 1;
@@ -121,9 +122,9 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 
 void ModelTreeDialog::addChildren(HTREEITEM parent, const LDModelTree *tree)
 {
-	if (tree->hasChildren())
+	if (tree->hasChildren(true))
 	{
-		const LDModelTreeArray *children = tree->getChildren();
+		const LDModelTreeArray *children = tree->getChildren(true);
 		int count = children->getCount();
 
 		for (int i = 0; i < count; i++)
@@ -142,7 +143,7 @@ HTREEITEM ModelTreeDialog::addLine(HTREEITEM parent, const LDModelTree *tree)
 
 	memset(&item, 0, sizeof(item));
 	item.mask = TVIF_TEXT | TVIF_PARAM | TVIF_CHILDREN;
-	item.cChildren = tree->getNumChildren();
+	item.cChildren = tree->getNumChildren(true);
 	item.pszText = copyString(tree->getText().c_str());
 	item.lParam = (LPARAM)tree;
 	insertStruct.hParent = parent;
