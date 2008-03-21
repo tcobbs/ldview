@@ -60,4 +60,9 @@
 	return modelTree;
 }
 
+- (NSString *)stringValue
+{
+	return string;
+}
+
 @end

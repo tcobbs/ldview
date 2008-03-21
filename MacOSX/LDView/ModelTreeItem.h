@@ -22,5 +22,6 @@ class LDModelTree;
 - (ModelTreeItem *)childAtIndex:(int)index;	// Invalid to call on leaf nodes
 - (id)objectValue;
 - (const LDModelTree *)modelTree;
+- (NSString *)stringValue;
 
 @end

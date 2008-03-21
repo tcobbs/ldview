@@ -60,10 +60,37 @@
 	}
 }
 
+- (void)resizeIfNeeded:(ModelTreeItem *)item
+{
+	int count = [item numberOfChildren];
+	NSTableColumn *column = [outlineView outlineTableColumn];
+	NSFont *font = [[column dataCell] font];
+	float width = [column width];
+	bool widthChanged = false;
+	float indent = [outlineView indentationPerLevel] * [outlineView levelForItem:item] + 24.0f;
+	
+	for (int i = 0; i < count; i++)
+	{
+		ModelTreeItem *child = [item childAtIndex:i];
+		float rowWidth = [font widthOfString:[child stringValue]] + indent;
+		if (rowWidth > width)
+		{
+			width = rowWidth;
+			widthChanged = true;
+		}
+	}
+	if (widthChanged)
+	{
+		[column setWidth:width];
+	}
+}
+
 - (void)modelChanged
 {
 	[self setModel:[[modelWindow modelView] modelViewer]->getMainModel()];
 	[outlineView reloadData];
+	[[outlineView outlineTableColumn] setWidth:100];
+	[self resizeIfNeeded:rootModelTreeItem];
 }
 
 - (void)awakeFromNib
@@ -126,6 +153,11 @@
 	{
 		[self modelChanged];
 	}
+}
+
+- (void)outlineViewItemDidExpand:(NSNotification *)notification
+{
+	[self resizeIfNeeded:[[notification userInfo] objectForKey:@"NSObject"]];
 }
 
 @end
