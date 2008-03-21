@@ -121,4 +121,9 @@ static NSDictionary *iconDict = nil;
 	return error;
 }
 
+- (NSString *)stringValue
+{
+	return string;
+}
+
 @end

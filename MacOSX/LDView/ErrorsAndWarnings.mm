@@ -2,6 +2,7 @@
 #import "ModelWindow.h"
 #import "ErrorItem.h"
 #import "OCUserDefaults.h"
+#import "OCLocalStrings.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLError.h>
 
@@ -107,6 +108,31 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	}
 }
 
+- (void)resizeIfNeeded:(ErrorItem *)item
+{
+	int count = [item numberOfChildren];
+	NSTableColumn *column = [errorsOutline outlineTableColumn];
+	NSFont *font = [[column dataCell] font];
+	float width = [column width];
+	bool widthChanged = false;
+	float indent = [errorsOutline indentationPerLevel] * [errorsOutline levelForItem:item] + 24.0f;
+	
+	for (int i = 0; i < count; i++)
+	{
+		ErrorItem *child = [item childAtIndex:i];
+		float rowWidth = [font widthOfString:[child stringValue]] + indent;
+		if (rowWidth > width)
+		{
+			width = rowWidth;
+			widthChanged = true;
+		}
+	}
+	if (widthChanged)
+	{
+		[column setWidth:width];
+	}
+}
+
 - (void)initEnabledErrors
 {
 	errorNames = [[NSMutableArray alloc] init];
@@ -182,6 +208,8 @@ static ErrorsAndWarnings *sharedInstance = nil;
 		[rootErrorItem release];
 		rootErrorItem = [item retain];
 		[errorsOutline reloadData];
+		[[errorsOutline outlineTableColumn] setWidth:100];
+		[self resizeIfNeeded:rootErrorItem];
 	}
 }
 
@@ -232,6 +260,11 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	ErrorItem *filteredRoot = [[ErrorItem alloc] init];
 	int count = [unfilteredRoot numberOfChildren];
+	int errors = 0;
+	int warnings = 0;
+	NSString *errorText = @"";
+	NSString *warningText = @"";
+	NSString *spaceText = @"";
 	
 	for (int i = 0; i < count; i++)
 	{
@@ -242,8 +275,43 @@ static ErrorsAndWarnings *sharedInstance = nil;
 			([includeWarningsButton state] || error->getLevel() == LDLAError))
 		{			
 			[filteredRoot addChild:child];
+			if (error->getLevel() == LDLAWarning)
+			{
+				warnings++;
+			}
+			else
+			{
+				errors++;
+			}
 		}
 	}
+	if (errors > 0)
+	{
+		if (errors == 1)
+		{
+			errorText = [OCLocalStrings get:@"ErrorTreeOneError"];
+		}
+		else
+		{
+			errorText = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeNErrors"], errors];
+		}
+		if (warnings > 0)
+		{
+			spaceText = @" ";
+		}
+	}
+	if (warnings > 0)
+	{
+		if (warnings == 1)
+		{
+			warningText = [OCLocalStrings get:@"ErrorTreeOneWarning"];
+		}
+		else
+		{
+			warningText = [NSString stringWithFormat:[OCLocalStrings get:@"ErrorTreeNWarnings"], warnings];
+		}
+	}
+	[statusField setStringValue:[NSString stringWithFormat:@"%@%@%@", errorText, spaceText, warningText]];
 	return [filteredRoot autorelease];
 }
 
@@ -261,6 +329,11 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	{
 		[panel setTitle:[NSString stringWithFormat:titleFormat, [window title]]];
 	}
+}
+
+- (void)outlineViewItemDidExpand:(NSNotification *)notification
+{
+	[self resizeIfNeeded:[[notification userInfo] objectForKey:@"NSObject"]];
 }
 
 @end

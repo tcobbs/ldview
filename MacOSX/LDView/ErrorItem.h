@@ -17,6 +17,7 @@ class LDLError;
 	LDLError *error;
 }
 
+- (NSString *)stringValue;
 - (id)initWithString:(NSString *)value error:(LDLError *)error includeIcon:(BOOL)includeIcon;
 - (int)numberOfChildren;				// Returns -1 for leaf nodes
 - (ErrorItem *)childAtIndex:(int)index;	// Invalid to call on leaf nodes
