@@ -34,6 +34,14 @@ typedef char *argvArray[];
 + (void)setLong:(long)value
 		 forKey:(NSString *)key
 sessionSpecific:(BOOL)sessionSpecific;
++ (float)floatForKey:(NSString *)key;
++ (float)floatForKey:(NSString *)key
+	  defaultValue:(float)defaultValue
+   sessionSpecific:(BOOL)sessionSpecific;
++ (void)setFloat:(float)value forKey:(NSString *)key;
++ (void)setFloat:(float)value
+		 forKey:(NSString *)key
+sessionSpecific:(BOOL)sessionSpecific;
 + (void)removeValueForKey:(NSString *)key
 		  sessionSpecific:(BOOL)sessionSpecific;
 

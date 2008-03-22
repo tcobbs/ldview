@@ -10,6 +10,7 @@
 #import "ModelWindow.h"
 #import "LDrawModelView.h"
 #import "ModelTreeItem.h"
+#import "OCUserDefaults.h"
 
 #include <LDLib/LDModelTree.h>
 #include <LDLib/LDrawModelViewer.h>
@@ -95,7 +96,13 @@
 
 - (void)awakeFromNib
 {
+	float width = [OCUserDefaults floatForKey:@"ModelTreeDrawerWidth" defaultValue:-1.0f sessionSpecific:NO];
+
 	[drawer setParentWindow:[modelWindow window]];
+	if (width != -1.0f)
+	{
+		[drawer setContentSize:NSMakeSize(width, [drawer contentSize].height)];
+	}
 	[self modelChanged];
 }
 
@@ -143,6 +150,7 @@
 	return [[self modelTreeItem:item] objectValue];
 }
 
+
 - (void)modelChanged:(NSNotification *)notification
 {
 	if ([[notification name] isEqualToString:@"ModelLoaded"])
@@ -154,10 +162,17 @@
 		[self modelChanged];
 	}
 }
-
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
 	[self resizeIfNeeded:[[notification userInfo] objectForKey:@"NSObject"]];
+}
+
+// NSDrawer delegate methods
+
+- (NSSize)drawerWillResizeContents:(NSDrawer *)sender toSize:(NSSize)contentSize
+{
+	[OCUserDefaults setFloat:contentSize.width forKey:@"ModelTreeDrawerWidth" sessionSpecific:NO];
+	return contentSize;
 }
 
 @end
