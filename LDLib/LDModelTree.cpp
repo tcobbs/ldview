@@ -230,7 +230,10 @@ void LDModelTree::clearFilteredChildren(void)
 		m_filteredChildren = NULL;
 		for (int i = 0; i < m_children->getCount(); i++)
 		{
-			(*m_children)[i]->clearFilteredChildren();
+			LDModelTree *child = (*m_children)[i];
+
+			child->m_activeLineTypes = m_activeLineTypes;
+			child->clearFilteredChildren();
 		}
 	}
 }

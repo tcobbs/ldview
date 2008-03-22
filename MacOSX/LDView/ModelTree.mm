@@ -15,6 +15,9 @@
 #include <LDLib/LDModelTree.h>
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLoader/LDLMainModel.h>
+#include <LDLoader/LDLFileLine.h>
+#include <TCFoundation/TCUserDefaults.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 
 @implementation ModelTree
 
@@ -86,24 +89,49 @@
 	}
 }
 
-- (void)modelChanged
+- (void)reloadOutlineView
 {
-	[self setModel:[[modelWindow modelView] modelViewer]->getMainModel()];
 	[outlineView reloadData];
 	[[outlineView outlineTableColumn] setWidth:100];
 	[self resizeIfNeeded:rootModelTreeItem];
+}
+
+- (void)modelChanged
+{
+	[self setModel:[[modelWindow modelView] modelViewer]->getMainModel()];
+	for (int i = LDLLineTypeComment; i <= LDLLineTypeUnknown; i++)
+	{
+		int row = i % 4;
+		int col = i / 4;
+		
+		if (modelTree->getShowLineType((LDLLineType)i))
+		{
+			[optionsMatrix setState:NSOnState atRow:row column:col];
+		}
+		else
+		{
+			[optionsMatrix setState:NSOffState atRow:row column:col];
+		}
+	}
+	[self reloadOutlineView];
 }
 
 - (void)awakeFromNib
 {
 	float width = [OCUserDefaults floatForKey:@"ModelTreeDrawerWidth" defaultValue:-1.0f sessionSpecific:NO];
 
+	showHideStartY = [showHideOptionsButton frame].origin.y;
 	[drawer setParentWindow:[modelWindow window]];
 	if (width != -1.0f)
 	{
 		[drawer setContentSize:NSMakeSize(width, [drawer contentSize].height)];
 	}
 	[self modelChanged];
+	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
+	{
+		[self hideOptions];
+		[showHideOptionsButton setState:NSOnState];
+	}
 }
 
 - (void)show
@@ -173,6 +201,103 @@
 {
 	[OCUserDefaults setFloat:contentSize.width forKey:@"ModelTreeDrawerWidth" sessionSpecific:NO];
 	return contentSize;
+}
+
+- (void)setupAnimationDict:(NSMutableDictionary *)dict view:(NSView *)view endRect:(NSRect)endRect showHide:(float)dir
+{
+	[dict setObject:view forKey:NSViewAnimationTargetKey];
+	[dict setObject:[NSValue valueWithRect:endRect] forKey:NSViewAnimationEndFrameKey];
+	if (dir != 0.0f)
+	{
+		NSString *effect;
+		
+		if (dir > 0.0f)
+		{
+			effect = NSViewAnimationFadeInEffect;
+		}
+		else
+		{
+			effect = NSViewAnimationFadeOutEffect;
+		}
+		[dict setObject:effect forKey:NSViewAnimationEffectKey];
+	}
+}
+
+- (void)doOptionsAnimationInDir:(float)dir
+{
+	NSScrollView *scrollView = [outlineView enclosingScrollView];
+	NSRect outlineStartFrame = [scrollView frame];
+	NSRect outlineEndFrame = outlineStartFrame;
+	NSRect buttonStartFrame = [showHideOptionsButton frame];
+	NSRect buttonEndFrame = buttonStartFrame;
+	NSRect boxLabelStartFrame = [optionsBoxLabel frame];
+	NSRect boxLabelEndFrame = boxLabelStartFrame;
+	NSRect boxStartFrame = [optionsBox frame];
+	NSRect boxEndFrame = boxStartFrame;
+	NSArray *viewDicts = [NSArray arrayWithObjects:[NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:3], [NSMutableDictionary dictionaryWithCapacity:3], nil];
+
+	outlineEndFrame.size.height -= showHideStartY * dir;
+	outlineEndFrame.origin.y += showHideStartY * dir;
+	buttonEndFrame.origin.y += showHideStartY * dir;
+	boxLabelEndFrame.origin.y += showHideStartY * dir;
+	boxEndFrame.origin.y += showHideStartY * dir;
+	[self setupAnimationDict:[viewDicts objectAtIndex:0] view:scrollView endRect:outlineEndFrame showHide:0];
+	[self setupAnimationDict:[viewDicts objectAtIndex:1] view:showHideOptionsButton endRect:buttonEndFrame showHide:0];
+	[self setupAnimationDict:[viewDicts objectAtIndex:2] view:optionsBoxLabel endRect:boxLabelEndFrame showHide:dir];
+	[self setupAnimationDict:[viewDicts objectAtIndex:3] view:optionsBox endRect:boxEndFrame showHide:dir];
+	[showHideOptionsButton setEnabled:NO];
+	optionsAnimation = [[NSViewAnimation alloc] initWithViewAnimations:viewDicts];
+	[optionsAnimation setDelegate:self];
+	[optionsAnimation setAnimationBlockingMode:NSAnimationNonblockingThreaded];
+	[optionsAnimation startAnimation];
+}
+
+- (void)animationDidEnd:(NSAnimation*)animation
+{
+	if (animation == optionsAnimation)
+	{
+		[showHideOptionsButton setEnabled:YES];
+		[animation release];
+		optionsAnimation = nil;
+	}
+}
+
+- (void)hideOptions
+{
+	[self doOptionsAnimationInDir:-1.0f];
+	TCUserDefaults::setBoolForKey(false, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
+}
+
+- (void)showOptions
+{
+	[self doOptionsAnimationInDir:1.0f];
+	TCUserDefaults::setBoolForKey(true, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
+}
+
+- (IBAction)showHideOptions:(id)sender
+{
+	if ([sender state] == NSOnState)
+	{
+		[self hideOptions];
+	}
+	else
+	{
+		[self showOptions];
+	}
+}
+
+- (IBAction)optionChanged:(id)sender
+{
+	if (modelTree)
+	{
+		LDLLineType lineType = (LDLLineType)[[optionsMatrix selectedCell] tag];
+		bool checked = [[optionsMatrix selectedCell] state] == NSOnState;
+		
+		modelTree->setShowLineType(lineType, checked);
+		[rootModelTreeItem release];
+		rootModelTreeItem = [[ModelTreeItem alloc] initWithModelTree:modelTree];
+		[self reloadOutlineView];
+	}
 }
 
 @end

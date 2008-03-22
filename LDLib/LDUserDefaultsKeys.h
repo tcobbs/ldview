@@ -147,6 +147,7 @@
 #define DEFAULT_LONGITUDE_KEY "DefaultLongitude"
 #define DEFAULT_LATITUDE_KEY "DefaultLatitude"
 #define MULTI_THREADED_KEY "MultiThreaded"
+#define MODEL_TREE_OPTIONS_SHOWN_KEY "ModelTreeOptionsShown"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
