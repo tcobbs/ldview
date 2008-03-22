@@ -754,14 +754,6 @@
 
 - (IBAction)features:(id)sender
 {
-	if ([[sender cell] trackingMode] != NSSegmentSwitchTrackingSelectAny)
-	{
-		debugPrintf(-1, "Wrong tracking mode for freatures segmented control: %d.\n", [[sender cell] trackingMode]);
-	}
-	else
-	{
-		debugPrintf(-1, "Right tracking mode for freatures segmented control: %d.\n", [[sender cell] trackingMode]);
-	}
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
 		case 0:
