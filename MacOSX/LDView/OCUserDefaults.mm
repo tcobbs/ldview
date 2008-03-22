@@ -33,8 +33,8 @@
 		   sessionSpecific:(BOOL)sessionSpecific
 {
 	char *string = TCUserDefaults::stringForKey([key cStringUsingEncoding:
-		NSASCIIStringEncoding], [defaultValue cStringUsingEncoding:
-		NSASCIIStringEncoding], sessionSpecific ? true : false);
+		NSASCIIStringEncoding], defaultValue ? [defaultValue cStringUsingEncoding:
+			NSASCIIStringEncoding] : NULL, sessionSpecific ? true : false);
 		
 	if (string)
 	{
@@ -88,6 +88,32 @@ sessionSpecific:(BOOL)sessionSpecific
 {
 	TCUserDefaults::setLongForKey(value,
 	 [key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
+}
+
++ (float)floatForKey:(NSString *)key
+{
+	return [self floatForKey:key defaultValue:0 sessionSpecific:YES];
+}
+
++ (float)floatForKey:(NSString *)key
+	  defaultValue:(float)defaultValue
+   sessionSpecific:(BOOL)sessionSpecific
+{
+	return TCUserDefaults::floatForKey([key cStringUsingEncoding:
+		NSASCIIStringEncoding], defaultValue, sessionSpecific ? true : false);
+}
+
++ (void)setFloat:(float)value forKey:(NSString *)key
+{
+	return [self setFloat:value forKey:key sessionSpecific:YES];
+}
+
++ (void)setFloat:(float)value
+		 forKey:(NSString *)key
+sessionSpecific:(BOOL)sessionSpecific
+{
+	TCUserDefaults::setFloatForKey(value,
+								  [key cStringUsingEncoding:NSASCIIStringEncoding], sessionSpecific);
 }
 
 + (void)removeValueForKey:(NSString *)key

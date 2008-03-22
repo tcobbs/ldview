@@ -32,9 +32,12 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 alwaysOnTopMenuItem = NSMenuItem; 
+                badOpenRecentMenuItem = NSMenuItem; 
                 cancelMenuItem = NSMenuItem; 
+                clearRecentMenuItem = NSMenuItem; 
                 custToolbarMenuItem = NSMenuItem; 
                 examineMenuItem = NSMenuItem; 
+                fileMenu = NSMenu; 
                 flyThroughMenuItem = NSMenuItem; 
                 latLongRotationMenuItem = NSMenuItem; 
                 statusBarMenuItem = NSMenuItem; 
