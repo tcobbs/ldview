@@ -95,6 +95,18 @@
             SUPERCLASS = PreferencePage; 
         }, 
         {
+            ACTIONS = {addRemoveExtraFolder = id; extraFolderSelected = id; ldrawFolderBrowse = id; }; 
+            CLASS = LDrawPage; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                addRemoveExtraFolder = NSSegmentedControl; 
+                extraFoldersTableView = NSTableView; 
+                ldrawDirField = id; 
+            }; 
+            SUPERCLASS = PreferencePage; 
+        }, 
+        {CLASS = NSSegmentedControl; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {
             ACTIONS = {delete = id; hotKey = id; new = id; prefSetSelected = id; }; 
             CLASS = PrefSetsPage; 
             LANGUAGE = ObjC; 
@@ -123,6 +135,7 @@
                 effectsPage = EffectsPage; 
                 generalPage = GeneralPage; 
                 geometryPage = GeometryPage; 
+                ldrawPage = LDrawPage; 
                 okButton = NSButton; 
                 prefSetsPage = PrefSetsPage; 
                 primitivesPage = PrimitivesPage; 

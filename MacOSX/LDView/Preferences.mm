@@ -42,12 +42,14 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 - (void)awakeFromNib
 {
 	generalIndex = 0;
-	geometryIndex = 1;
-	effectsIndex = 2;
-	primitivesIndex = 3;
-	updatesIndex = 4;
-	prefSetsIndex = 5;
+	ldrawIndex = 1;
+	geometryIndex = 2;
+	effectsIndex = 3;
+	primitivesIndex = 4;
+	updatesIndex = 5;
+	prefSetsIndex = 6;
 	[pages addObject:generalPage];
+	[pages addObject:ldrawPage];
 	[pages addObject:geometryPage];
 	[pages addObject:effectsPage];
 	[pages addObject:primitivesPage];
