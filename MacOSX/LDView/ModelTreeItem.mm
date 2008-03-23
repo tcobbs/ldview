@@ -32,7 +32,7 @@
 
 - (int)numberOfChildren
 {
-	return modelTree->getNumChildren(true);
+	return modelTree->getNumChildren();
 }
 
 - (ModelTreeItem *)childAtIndex:(int)index
@@ -40,9 +40,9 @@
 	if (!children)
 	{
 		children = [[NSMutableArray alloc] init];
-		for (int i = 0; i < modelTree->getNumChildren(true); i++)
+		for (int i = 0; i < modelTree->getNumChildren(); i++)
 		{
-			ModelTreeItem *child = [[ModelTreeItem alloc] initWithModelTree:(*modelTree->getChildren(true))[i]];
+			ModelTreeItem *child = [[ModelTreeItem alloc] initWithModelTree:(*modelTree->getChildren())[i]];
 			[children addObject:child];
 			[child release];
 		}

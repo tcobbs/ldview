@@ -34,7 +34,6 @@
 	[modelWindows release];
 	[preferences release];
 	[statusBarMenuFormat release];
-	[recentFiles release];
 	[super dealloc];
 }
 
@@ -183,68 +182,7 @@
 			return NO;
 		}
 	}
-	else if (menuItem == clearRecentMenuItem)
-	{
-		return [recentFiles count] > 0;
-	}
 	return YES;
-}
-
-- (NSString *)recentFileKey:(int)index
-{
-	return [NSString stringWithFormat:@"%s/File%02d", RECENT_FILES_KEY, index];
-}
-
-- (long)maxRecentFiles
-{
-	return TCUserDefaults::longForKey(MAX_RECENT_FILES_KEY, 10, false);
-}
-
-- (void)populateRecentFiles
-{
-	long maxRecentFiles = [self maxRecentFiles];
-
-	[recentFiles release];
-	recentFiles = [[NSMutableArray alloc] init];
-	for (int i = 0; i < maxRecentFiles; i++)
-	{
-		NSString *filename = [OCUserDefaults stringForKey:[self recentFileKey:i] defaultValue:nil sessionSpecific:NO];
-		
-		if (filename)
-		{
-			[recentFiles addObject:filename];
-		}
-		else
-		{
-			break;
-		}
-	}
-}
-
-- (IBAction)openRecentFile:(id)sender
-{
-	NSLog(@"openRecentFile:\n");
-}
-
-- (void)populateOpenRecentMenu
-{
-	NSMenu *openRecentMenu = [clearRecentMenuItem menu];
-
-	[self populateRecentFiles];
-	while ([openRecentMenu numberOfItems] > 1)
-	{
-		[openRecentMenu removeItemAtIndex:0];
-	}
-	if ([recentFiles count] > 0)
-	{
-		[openRecentMenu insertItem:[NSMenuItem separatorItem] atIndex:0];
-	}
-	for (int i = 0; i < [recentFiles count]; i++)
-	{
-		NSString *title = [[recentFiles objectAtIndex:i] lastPathComponent];
-		[openRecentMenu insertItemWithTitle:title action:@selector(openRecentFile:) keyEquivalent:@"" atIndex:0];
-		NSLog(@"Added %@ to Open Recent.\n", title);
-	}
 }
 
 - (void)awakeFromNib
@@ -252,7 +190,6 @@
 	//showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	statusBarMenuFormat = [[statusBarMenuItem title] retain];
 	[self updateStatusBarMenuItem:YES];
-	[self populateOpenRecentMenu];
 }
 
 - (BOOL)createWindow:(NSString *)filename
@@ -289,24 +226,7 @@
 
 - (void)recordRecentFile:(NSString *)filename
 {
-	unsigned index = [recentFiles indexOfObject:filename];
-	long maxRecentFiles = [self maxRecentFiles];
-
-	[recentFiles insertObject:filename atIndex:0];
-	if (index != NSNotFound)
-	{
-		// Add first, then delete, so that the release during the remove doesn't
-		// delete the string we're adding.
-		[recentFiles removeObjectAtIndex:index + 1];
-	}
-	if ([recentFiles count] > maxRecentFiles)
-	{
-		[recentFiles removeObjectsInRange:NSMakeRange(maxRecentFiles, [recentFiles count] - maxRecentFiles)];
-	}
-	for (int i = 0; i < [recentFiles count]; i++)
-	{
-		[OCUserDefaults setString:[recentFiles objectAtIndex:i] forKey:[self recentFileKey:i] sessionSpecific:NO];
-	}
+	[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
 }
 
 - (BOOL)openFile:(NSString *)filename
@@ -360,8 +280,7 @@
 	[[self preferences] show];
 }
 
-- (BOOL)application:(NSApplication *)theApplication
-		   openFile:(NSString *)filename
+- (BOOL)application:(NSApplication *)theApplication openFile:(NSString *)filename
 {
 	if ([self openFile:filename])
 	{
@@ -380,16 +299,11 @@
 	{
 		[self openModel];
 	}
-	[fileMenu removeItem:badOpenRecentMenuItem];
 }
 
 - (IBAction)resetView:(id)sender
 {
 	[[self currentModelView] resetView:sender];
-}
-
-- (IBAction)clearRecentDocuments:(id)sender
-{
 }
 
 /*

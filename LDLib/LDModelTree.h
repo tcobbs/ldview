@@ -18,9 +18,9 @@ public:
 	LDModelTree(LDLModel *model = NULL);
 	void scanModel(LDLModel *model, int defaultColor) const;
 	const LDLModel *getModel(void) const { return m_model; }
-	const LDModelTreeArray *getChildren(bool filter) const;
-	bool hasChildren(bool filter) const;
-	int getNumChildren(bool filter) const;
+	const LDModelTreeArray *getChildren(bool filter = true) const;
+	bool hasChildren(bool filter = true) const;
+	int getNumChildren(bool filter = true) const;
 	const std::string &getText(void) const { return m_text; }
 	LDLLineType getLineType(void) const { return m_lineType; }
 	void setShowLineType(LDLLineType lineType, bool value);

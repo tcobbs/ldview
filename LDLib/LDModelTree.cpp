@@ -59,7 +59,7 @@ void LDModelTree::dealloc(void)
 	TCObject::dealloc();
 }
 
-bool LDModelTree::hasChildren(bool filter) const
+bool LDModelTree::hasChildren(bool filter /*= true*/) const
 {
 	if (m_model)
 	{
@@ -79,7 +79,7 @@ bool LDModelTree::hasChildren(bool filter) const
 	}
 }
 
-int LDModelTree::getNumChildren(bool filter) const
+int LDModelTree::getNumChildren(bool filter /*= true*/) const
 {
 	if (m_model)
 	{
@@ -110,7 +110,7 @@ bool LDModelTree::childFilterCheck(const LDModelTree *child) const
 	}
 }
 
-const LDModelTreeArray *LDModelTree::getChildren(bool filter) const
+const LDModelTreeArray *LDModelTree::getChildren(bool filter /*= true*/) const
 {
 	if (m_children == NULL)
 	{
