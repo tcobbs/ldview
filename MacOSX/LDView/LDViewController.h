@@ -15,8 +15,6 @@
 	IBOutlet NSMenuItem *latLongRotationMenuItem;
 	IBOutlet NSMenuItem *flyThroughMenuItem;
 	IBOutlet NSMenuItem *cancelMenuItem;
-	IBOutlet NSMenuItem *clearRecentMenuItem;
-	IBOutlet NSMenuItem *badOpenRecentMenuItem;
 	IBOutlet NSMenu *fileMenu;
 
 	NSArray *ldrawFileTypes;
@@ -28,7 +26,6 @@
 	
 	NSString *statusBarMenuFormat;
 	NSString *toolbarMenuFormat;
-	NSMutableArray *recentFiles;
 }
 
 - (IBAction)newWindow:(id)sender;
