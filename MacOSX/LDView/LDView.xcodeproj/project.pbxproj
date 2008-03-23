@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */; };
+		1F1039A00D97064E00D01B28 /* LDrawPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10399E0D97064E00D01B28 /* LDrawPage.mm */; };
 		1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031E80C49DF3B009B7720 /* Preferences.mm */; };
 		1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */; };
 		1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EE0C49DF58009B7720 /* PreferencePage.mm */; };
@@ -163,6 +164,8 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		1F02B0DC0A69EBDC00678F51 /* AlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertHandler.h; sourceTree = "<group>"; };
 		1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AlertHandler.cpp; sourceTree = "<group>"; };
+		1F10399E0D97064E00D01B28 /* LDrawPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawPage.mm; sourceTree = "<group>"; };
+		1F10399F0D97064E00D01B28 /* LDrawPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawPage.h; sourceTree = "<group>"; };
 		1F2031E80C49DF3B009B7720 /* Preferences.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Preferences.mm; sourceTree = "<group>"; };
 		1F2031E90C49DF3B009B7720 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		1F2031EB0C49DF4E009B7720 /* EffectsPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EffectsPage.h; sourceTree = "<group>"; };
@@ -459,6 +462,8 @@
 				1F2031F20C49DF5D009B7720 /* GeneralPage.mm */,
 				1F2031F40C49DF64009B7720 /* GeometryPage.h */,
 				1F2031F50C49DF64009B7720 /* GeometryPage.mm */,
+				1F10399F0D97064E00D01B28 /* LDrawPage.h */,
+				1F10399E0D97064E00D01B28 /* LDrawPage.mm */,
 				1F2031EF0C49DF58009B7720 /* PreferencePage.h */,
 				1F2031EE0C49DF58009B7720 /* PreferencePage.mm */,
 				1F2031E90C49DF3B009B7720 /* Preferences.h */,
@@ -745,6 +750,7 @@
 				1F2CAD9A0D8F6EFB00A98C9A /* ModelTreeItem.mm in Sources */,
 				1F5A35670D9629220072BAE3 /* PartsList.mm in Sources */,
 				1F5A35AF0D962E410072BAE3 /* LDViewCategories.mm in Sources */,
+				1F1039A00D97064E00D01B28 /* LDrawPage.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
