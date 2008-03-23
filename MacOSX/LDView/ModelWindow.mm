@@ -10,15 +10,19 @@
 #import "OCUserDefaults.h"
 #import "SnapshotTaker.h"
 #import "SaveSnapshotViewOwner.h"
+#import "PartsList.h"
 #import "ModelTree.h"
+#import "AlertHandler.h"
+
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDInputHandler.h>
+#include <LDLib/LDPartsList.h>
+#include <LDLib/LDHtmlInventory.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCStringArray.h>
-#import "AlertHandler.h"
 
 @implementation ModelWindow
 
@@ -390,7 +394,9 @@
 
 - (bool)isMyAlert:(TCAlert *)alert
 {
-	return alert->getSender()->getAlertSender() == [modelView modelViewer];
+	TCAlertSender *sender = alert->getSender();
+
+	return sender != NULL && sender->getAlertSender() == [modelView modelViewer];
 }
 
 - (void)addErrorItem:(ErrorItem *)parent string:(NSString *)string error:(LDLError *)error
@@ -682,7 +688,37 @@
 	[controller openModel:sender];
 }
 
-- (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
+- (void)htmlSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode == NSOKButton)
+	{
+		if (htmlInventory->generateHtml([[sheet filename] cStringUsingEncoding:NSASCIIStringEncoding], partsList, [modelView modelViewer]->getFilename()))
+		{
+			if (htmlInventory->isSnapshotNeeded())
+			{
+				LDrawModelViewer *modelViewer = [modelView modelViewer];
+				
+				if (!snapshotTaker)
+				{
+					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
+				}
+				htmlInventory->prepForSnapshot(modelViewer);
+				[snapshotTaker saveFile:[NSString stringWithCString:htmlInventory->getSnapshotPath() encoding:NSASCIIStringEncoding] width:400 height:300 zoomToFit:YES];
+				htmlInventory->restoreAfterSnapshot(modelViewer);
+				[modelView rotationUpdate];
+			}
+			if (htmlInventory->getShowFileFlag())
+			{
+				[[NSWorkspace sharedWorkspace] openFile:[sheet filename]];
+			}
+		}
+	}
+	htmlInventory->release();
+	partsList->release();
+	sheetBusy = false;
+}
+
+- (void)snapshotSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSOKButton)
 	{
@@ -702,6 +738,12 @@
 		[saveSnapshotViewOwner saveSettings];
 	}
 	[saveSnapshotViewOwner setSavePanel:nil];
+	sheetBusy = false;
+}
+
+- (bool)sheetBusy
+{
+	return sheetBusy;
 }
 
 - (IBAction)saveSnapshot:(id)sender
@@ -717,7 +759,8 @@
 	}
 	[saveSnapshotViewOwner setSavePanel:savePanel];
 	[savePanel setCanSelectHiddenExtension:YES];
-	[savePanel beginSheetForDirectory:modelPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
+	sheetBusy = true;
+	[savePanel beginSheetForDirectory:modelPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(snapshotSavePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
 }
 
 - (IBAction)reload:(id)sender
@@ -903,6 +946,37 @@
 		modelTree = [[ModelTree alloc] initWithParent:self];
 	}
 	[modelTree show];
+}
+
+- (IBAction)partsList:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		partsList = modelViewer->getPartsList();
+		
+		if (partsList)
+		{
+			htmlInventory = new LDHtmlInventory;
+			PartsList *partsListSheet = [[PartsList alloc] initWithModelWindow:self htmlInventory:htmlInventory];
+
+			if ([partsListSheet runSheetInWindow:window] == NSOKButton)
+			{
+				NSString *htmlFilename = [NSString stringWithCString:htmlInventory->defaultFilename([modelView modelViewer]->getFilename()).c_str() encoding:NSASCIIStringEncoding];
+				NSSavePanel *savePanel = [NSSavePanel savePanel];
+				NSString *htmlPath = [htmlFilename stringByDeletingLastPathComponent];
+				NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
+
+				[savePanel setRequiredFileType:@"html"];
+				[savePanel setCanSelectHiddenExtension:YES];
+				sheetBusy = true;
+				[savePanel beginSheetForDirectory:htmlPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(htmlSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+			}
+			[partsListSheet release];
+		}
+	}
+
 }
 
 @end

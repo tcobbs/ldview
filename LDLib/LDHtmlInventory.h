@@ -52,6 +52,7 @@ public:
 	const char *getSnapshotPath(void) const;
 	bool isColumnEnabled(LDPartListColumn column);
 	bool isSnapshotNeeded(void) const;
+	std::string defaultFilename(const char *modelFilename);
 
 	bool generateHtml(const char *filename, LDPartsList *partsList,
 		const char *modelName);

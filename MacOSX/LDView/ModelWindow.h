@@ -14,6 +14,8 @@ class LDLError;
 class TCProgressAlert;
 class TCAlert;
 class AlertHandler;
+class LDHtmlInventory;
+class LDPartsList;
 
 @interface ModelWindow : NSObject
 {
@@ -55,8 +57,12 @@ class AlertHandler;
 	bool loadCanceled;
 	bool loading;
 	NSString *initialTitle;
+	bool sheetBusy;
+	LDHtmlInventory *htmlInventory;
+	LDPartsList *partsList;
 }
 
+- (bool)sheetBusy;
 - (bool)loading;
 - (bool)loadCanceled;
 - (LDViewController *)controller;
@@ -96,5 +102,6 @@ class AlertHandler;
 - (IBAction)preferences:(id)sender;
 - (IBAction)viewMode:(id)sender;
 - (IBAction)latLongRotation:(id)sender;
+- (IBAction)partsList:(id)sender;
 
 @end
