@@ -29,6 +29,7 @@ class LDLMainModel;
 	LDLMainModel *model;
 	float showHideStartY;
 	NSAnimation *optionsAnimation;
+	BOOL optionsShown;
 }
 
 - (void)modelChanged:(NSNotification *)notification;
