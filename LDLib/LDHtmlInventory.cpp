@@ -3,6 +3,7 @@
 #include "LDPartCount.h"
 #include <LDLoader/LDLMainModel.h>
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/mystring.h>
 #include "LDPreferences.h"
 #include "LDrawModelViewer.h"
 #include "LDViewPoint.h"
@@ -847,4 +848,30 @@ bool LDHtmlInventory::isSnapshotNeeded(void) const
 		}
 	}
 	return false;
+}
+
+std::string LDHtmlInventory::defaultFilename(const char *modelFilename)
+{
+	char *filePart = filenameFromPath(modelFilename);
+	char *dirPart = directoryFromPath(modelFilename);
+	std::string htmlFilename;
+	
+	if (dirPart)
+	{
+		htmlFilename = dirPart;
+		delete dirPart;
+		htmlFilename += '/';
+	}
+	char *findSpot = strrchr(filePart, '.');
+	if (findSpot)
+	{
+		findSpot[0] = 0;
+	}
+	htmlFilename += filePart;
+	delete filePart;
+	htmlFilename += ".html";
+	filePart = cleanedUpPath(htmlFilename.c_str());
+	htmlFilename = filePart;
+	delete filePart;
+	return htmlFilename;
 }
