@@ -111,7 +111,7 @@ public:
 	LDLMainModel *getMainModel(void) { return m_mainModel; }
 	virtual TCObject *getAlertSender(void);
 
-	static const char *lDrawDir(void);
+	static const char *lDrawDir(bool defaultValue = false);
 	static void setLDrawDir(const char *value);
 	static void setFileCaseCallback(LDLFileCaseCallback value);
 	static LDLFileCaseCallback getFileCaseCallback(void)
@@ -194,6 +194,7 @@ protected:
 	} m_flags;
 
 	static char *sm_systemLDrawDir;
+	static char *sm_defaultLDrawDir;
 	static LDrawIniS *sm_lDrawIni;
 	static int sm_modelCount;
 	static LDLFileCaseCallback fileCaseCallback;

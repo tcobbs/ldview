@@ -29,6 +29,7 @@
 #endif // COCOA
 
 typedef std::vector<long> LongVector;
+typedef std::vector<std::string> StringVector;
 
 class TCStringArray;
 
@@ -58,10 +59,17 @@ class TCExport TCUserDefaults: public TCObject
 		static bool boolForKey(const char *key, bool defaultValue = false,
 			bool sessionSpecific = true);
 		static void setLongVectorForKey(const LongVector &value,
-			const char* key, bool sessionSpecific = true);
+			const char* key, bool sessionSpecific = true, int keyDigits = 2);
 		static LongVector longVectorForKey(const char* key,
 			const LongVector &defaultValue = LongVector(),
-			bool sessionSpecific = true);
+			bool sessionSpecific = true, int keyDigits = 2);
+		static void setStringVectorForKey(const StringVector &value,
+			const char* key, bool sessionSpecific = true, bool isPath = false,
+			int keyDigits = 2);
+		static StringVector stringVectorForKey(const char* key,
+			const StringVector &defaultValue = StringVector(),
+			bool sessionSpecific = true, bool isPath = false,
+			int keyDigits = 2);
 		static void setFloatForKey(float value, const char* key,
 			bool sessionSpecific = true);
 		static float floatForKey(const char* key, float defaultValue = 0.0f,
@@ -115,10 +123,15 @@ class TCExport TCUserDefaults: public TCObject
 		long defLongForKey(const char* key, bool sessionSpecific,
 			long defaultValue = 0, bool *found = NULL);
 		void defSetLongVectorForKey(const LongVector &value,
-			const char* key, bool sessionSpecific = true);
+			const char* key, bool sessionSpecific, int keyDigits);
 		LongVector defLongVectorForKey(const char* key,
-			bool sessionSpecific,
-			const LongVector &defaultValue = LongVector());
+			bool sessionSpecific, const LongVector &defaultValue,
+			int keyDigits);
+		void defSetStringVectorForKey(const StringVector &value,
+			const char* key, bool sessionSpecific, bool isPath, int keyDigits);
+		StringVector defStringVectorForKey(const char* key,
+			bool sessionSpecific, const StringVector &defaultValue, bool isPath,
+			int keyDigits);
 		void defRemoveValue(const char* key, bool sessionSpecific);
 		bool defSetIniFile(const char* value);
 		void defSetAppName(const char* value);
@@ -142,7 +155,7 @@ class TCExport TCUserDefaults: public TCObject
 		bool matchesCommandLine(const char *key, long value);
 		bool matchesCommandLine(const char *key, const char *value);
 		const char *defGetIniPath(void) const { return iniPath.c_str(); }
-		static std::string arrayKey(const char *key, int index);
+		static std::string arrayKey(const char *key, int index, int digits);
 		static void initAppPath(void);
 		void requestFlush(void);
 
