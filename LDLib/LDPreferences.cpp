@@ -5,6 +5,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCWebClient.h>
 #include <LDLoader/LDLPalette.h>
+#include <LDLoader/LDLModel.h>
 
 LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	:modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
@@ -35,6 +36,8 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	m_globalSettings[INV_COLUMN_ORDER_KEY] = true;
 	m_globalSettings[INV_LAST_SAVE_PATH_KEY] = true;
 	m_globalSettings[MULTI_THREADED_KEY] = true;
+	m_globalSettings[LDRAWDIR_KEY] = true;
+	m_globalSettings[EXTRA_SEARCH_DIRS_KEY] = true;
 	m_defaultColorNumber = -1;
 	for (i = 0; i < 16; i++)
 	{
@@ -101,6 +104,7 @@ void LDPreferences::getColorSetting(const char *key, int &r, int &g, int &b,
 void LDPreferences::applySettings(void)
 {
 	applyGeneralSettings();
+	applyLDrawSettings();
 	applyGeometrySettings();
 	applyEffectsSettings();
 	applyPrimitivesSettings();
@@ -137,6 +141,14 @@ void LDPreferences::applyGeneralSettings(void)
 		modelViewer->setDefaultColorNumber(m_defaultColorNumber);
 		modelViewer->setLineSmoothing(m_lineSmoothing);
 		modelViewer->setMemoryUsage(m_memoryUsage);
+	}
+}
+
+void LDPreferences::applyLDrawSettings(void)
+{
+	if (m_ldrawDir.size() > 0)
+	{
+		LDLModel::setLDrawDir(m_ldrawDir.c_str());
 	}
 }
 
@@ -271,6 +283,7 @@ void LDPreferences::applyUpdatesSettings(void)
 void LDPreferences::loadSettings(void)
 {
 	loadGeneralSettings();
+	loadLDrawSettings();
 	loadGeometrySettings();
 	loadEffectsSettings();
 	loadPrimitivesSettings();
@@ -311,6 +324,12 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 		setCustomColor(i, r, g, b);
 	}
 	m_initializing = false;
+}
+
+void LDPreferences::loadDefaultLDrawSettings(bool initializing /*= true*/)
+{
+	m_ldrawDir = LDLModel::lDrawDir(true);
+	m_extraDirs.clear();
 }
 
 void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
@@ -454,6 +473,14 @@ void LDPreferences::loadGeneralSettings(void)
 	}
 }
 
+void LDPreferences::loadLDrawSettings(void)
+{
+	loadDefaultLDrawSettings();
+	m_ldrawDir = getStringSetting(LDRAWDIR_KEY, m_ldrawDir.c_str(), true);
+	m_extraDirs = getStringVectorSetting(EXTRA_SEARCH_DIRS_KEY, m_extraDirs,
+		true, 3);
+}
+
 void LDPreferences::loadGeometrySettings(void)
 {
 	int useSeams;
@@ -574,6 +601,7 @@ void LDPreferences::loadInventorySettings(void)
 void LDPreferences::commitSettings(void)
 {
 	commitGeneralSettings(false);
+	commitLDrawSettings(false);
 	commitGeometrySettings(false);
 	commitEffectsSettings(false);
 	commitPrimitivesSettings(false);
@@ -606,6 +634,16 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 	setFullScreenRefresh(m_fullScreenRefresh, true);
 	setFov(m_fov, true);
 	setMemoryUsage(m_memoryUsage, true);
+	if (flush)
+	{
+		TCUserDefaults::flush();
+	}
+}
+
+void LDPreferences::commitLDrawSettings(bool flush /*= true*/)
+{
+	setLDrawDir(m_ldrawDir.c_str(), true);
+	setExtraDirs(m_extraDirs, true);
 	if (flush)
 	{
 		TCUserDefaults::flush();
@@ -872,6 +910,30 @@ void LDPreferences::setColorSetting(TCULong &setting, int r, int g, int b,
 	}
 }
 
+void LDPreferences::setSetting(
+	StringVector &setting,
+	const StringVector &value,
+	const char *key,
+	bool commit,
+	bool isPath, /*= false*/
+	int keyDigits /*= 2*/)
+{
+	if (setting != value || (m_changedSettings[key] && commit))
+	{
+		setting = value;
+		if (commit)
+		{
+			TCUserDefaults::setStringVectorForKey(value, key,
+				!m_globalSettings[key], isPath, keyDigits);
+			m_changedSettings.erase(key);
+		}
+		else if (!m_initializing)
+		{
+			m_changedSettings[key] = true;
+		}
+	}
+}
+
 void LDPreferences::setSetting(LongVector &setting, const LongVector &value,
 							   const char *key, bool commit)
 {
@@ -1027,11 +1089,22 @@ bool LDPreferences::getBoolSetting(const char *key, bool defaultValue)
 		!m_globalSettings[key]) != 0;
 }
 
-LongVector LDPreferences::getLongVectorSetting(const char *key,
-										 const LongVector &defaultValue)
+LongVector LDPreferences::getLongVectorSetting(
+	const char *key,
+	const LongVector &defaultValue)
 {
 	return TCUserDefaults::longVectorForKey(key, defaultValue,
 		!m_globalSettings[key]);
+}
+
+StringVector LDPreferences::getStringVectorSetting(
+	const char *key,
+	const StringVector &defaultValue,
+	bool isPath, /*= false*/
+	int keyDigits /*= 2*/)
+{
+	return TCUserDefaults::stringVectorForKey(key, defaultValue,
+		!m_globalSettings[key], isPath, keyDigits);
 }
 
 TCVector LDPreferences::getTCVectorSetting(const char *key,
@@ -1157,6 +1230,19 @@ void LDPreferences::setCustomColor(int index, int r, int g, int b, bool commit)
 
 	sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, index);
 	setColorSetting(m_customColors[index], r, g, b, key, commit);
+}
+
+// LDraw settings
+void LDPreferences::setLDrawDir(const char *value, bool commit)
+{
+	setSetting(m_ldrawDir, value, LDRAWDIR_KEY, commit);
+}
+
+void LDPreferences::setExtraDirs(
+	const StringVector &value,
+	bool commit)
+{
+	setSetting(m_extraDirs, value, EXTRA_SEARCH_DIRS_KEY, commit, true, 3);
 }
 
 // Geometry settings

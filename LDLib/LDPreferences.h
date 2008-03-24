@@ -7,6 +7,7 @@
 #include <TCFoundation/TCUserDefaults.h>
 
 typedef std::map<std::string, bool> StringBoolMap;
+typedef std::vector<std::string> StringVector;
 
 class LDPreferences : public TCAlertSender
 {
@@ -38,12 +39,14 @@ public:
 	// *************************************************************************
 	void applySettings(void);
 	void applyGeneralSettings(void);
+	void applyLDrawSettings(void);
 	void applyGeometrySettings(void);
 	void applyEffectsSettings(void);
 	void applyPrimitivesSettings(void);
 	void applyUpdatesSettings();
 	void loadSettings(void);
 	void loadDefaultGeneralSettings(bool initializing = true);
+	void loadDefaultLDrawSettings(bool initializing = true);
 	void loadDefaultGeometrySettings(bool initializing = true);
 	void loadDefaultEffectsSettings(bool initializing = true);
 	void loadDefaultPrimitivesSettings(bool initializing = true);
@@ -54,6 +57,7 @@ public:
 
 	void commitSettings(void);
 	void commitGeneralSettings(bool flush = true);
+	void commitLDrawSettings(bool flush = true);
 	void commitGeometrySettings(bool flush = true);
 	void commitEffectsSettings(bool flush = true);
 	void commitPrimitivesSettings(bool flush = true);
@@ -77,6 +81,10 @@ public:
 	TCFloat getFov(void) { return m_fov; }
 	int getMemoryUsage(void) { return m_memoryUsage; }
 	void getCustomColor(int index, int &r, int &g, int &b);
+	
+	// LDraw settings
+	const char *getLDrawDir(void) { return m_ldrawDir.c_str(); }
+	const StringVector &getExtraDirs(void) { return m_extraDirs; }
 
 	// Geometry settings
 	bool getUseSeams(void) { return m_useSeams; }
@@ -170,6 +178,10 @@ public:
 	void setFov(TCFloat value, bool commit = false);
 	void setMemoryUsage(int value, bool commit = false);
 	void setCustomColor(int index, int r, int g, int b, bool commit = false);
+	
+	// LDraw settings
+	void setLDrawDir(const char *value, bool commit = false);
+	void setExtraDirs(const StringVector &value, bool commit = false);
 
 	// Geometry settings
 	void setUseSeams(bool value, bool commit = false, bool apply = false);
@@ -263,6 +275,8 @@ protected:
 		const char *key, bool commit, bool isPath = false);
 	void setSetting(LongVector &setting, const LongVector &value,
 		const char *key, bool commit);
+	void setSetting(StringVector &setting, const StringVector &value,
+		const char *key, bool commit, bool isPath = false, int keyDigits = 2);
 	bool setSetting(TCVector &setting, const TCVector &value,
 		const char *key, bool commit);
 	void setColorSetting(TCULong &setting, int r, int g, int b, const char *key,
@@ -270,6 +284,9 @@ protected:
 	bool getBoolSetting(const char *key, bool defaultValue = false);
 	LongVector getLongVectorSetting(const char *key,
 		const LongVector &defaultValue = LongVector());
+	StringVector getStringVectorSetting(const char *key,
+		const StringVector &defaultValue = StringVector(), bool isPath = false,
+		int keyDigits = 2);
 	TCVector getTCVectorSetting(const char *key,
 		const TCVector &defaultValue = TCVector());
 	long getLongSetting(const char *key, long defaultValue = 0);
@@ -290,6 +307,7 @@ protected:
 	void setupModelCenter(void);
 	void setupModelSize(void);
 	void loadGeneralSettings(void);
+	void loadLDrawSettings(void);
 	void loadGeometrySettings(void);
 	void loadEffectsSettings(void);
 	void loadPrimitivesSettings(void);
@@ -312,6 +330,10 @@ protected:
 	TCFloat m_fov;
 	int m_memoryUsage;
 	TCULong m_customColors[16];
+	
+	// LDraw settings
+	std::string m_ldrawDir;
+	StringVector m_extraDirs;
 
 	// Geometry settings
 	bool m_useSeams;

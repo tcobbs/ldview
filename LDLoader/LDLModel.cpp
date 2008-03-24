@@ -24,6 +24,7 @@
 #define MAIN_READ_FRACTION 0.1f
 
 char *LDLModel::sm_systemLDrawDir = NULL;
+char *LDLModel::sm_defaultLDrawDir = NULL;
 LDrawIniS *LDLModel::sm_lDrawIni = NULL;
 int LDLModel::sm_modelCount = 0;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
@@ -32,6 +33,7 @@ LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
 LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 {
 	delete LDLModel::sm_systemLDrawDir;
+	delete LDLModel::sm_defaultLDrawDir;
 	LDLModel::sm_systemLDrawDir = NULL;
 	if (LDLModel::sm_lDrawIni)
 	{
@@ -509,8 +511,22 @@ void LDLModel::setLDrawDir(const char *value)
 }
 
 // NOTE: static function.
-const char* LDLModel::lDrawDir(void)
+const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 {
+	char *origValue = NULL;
+
+	if (defaultValue)
+	{
+		if (sm_defaultLDrawDir)
+		{
+			return sm_defaultLDrawDir;
+		}
+		origValue = copyString(sm_systemLDrawDir);
+		if (sm_systemLDrawDir)
+		{
+			setLDrawDir(NULL);
+		}
+	}
 	if (!sm_systemLDrawDir)
 	{
 		setLDrawDir(getenv("LDRAWDIR"));
@@ -551,7 +567,6 @@ const char* LDLModel::lDrawDir(void)
 
 			if (homeDir != NULL)
 			{
-			
 				char *homeLib = copyString(homeDir, strlen(libDir));
 				
 				stripTrailingPathSeparators(homeLib);
@@ -609,7 +624,17 @@ const char* LDLModel::lDrawDir(void)
 			sm_systemLDrawDir = copyString("");
 		}
 	}
-	return sm_systemLDrawDir;
+	if (defaultValue)
+	{
+		sm_defaultLDrawDir = copyString(sm_systemLDrawDir);
+		setLDrawDir(origValue);
+		delete origValue;
+		return sm_defaultLDrawDir;
+	}
+	else
+	{
+		return sm_systemLDrawDir;
+	}
 }
 
 void LDLModel::readComment(LDLCommentLine *commentLine)
