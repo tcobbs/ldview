@@ -328,8 +328,13 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 
 void LDPreferences::loadDefaultLDrawSettings(bool initializing /*= true*/)
 {
-	m_ldrawDir = LDLModel::lDrawDir(true);
-	m_extraDirs.clear();
+	if (initializing)
+	{
+		m_initializing = true;
+	}
+	setLDrawDir(LDLModel::lDrawDir(true));
+	setExtraDirs(StringVector());
+	m_initializing = false;
 }
 
 void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
