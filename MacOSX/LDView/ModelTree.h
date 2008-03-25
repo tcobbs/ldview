@@ -36,6 +36,7 @@ class LDLMainModel;
 - (id)initWithParent:(ModelWindow *)parent;
 - (void)show;
 - (void)hide;
+- (void)hideOptionsInstantly:(BOOL)instantly;
 - (void)hideOptions;
 - (void)showOptions;
 
