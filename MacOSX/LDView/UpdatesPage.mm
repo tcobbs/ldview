@@ -68,9 +68,8 @@
 	[self groupCheck:automaticCheck name:@"AutoUpdate" value:ldPreferences->getCheckPartTracker()];
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
-	[super updateLdPreferences];
 	if ([[proxyMatrix selectedCell] tag] == 2)
 	{
 		ldPreferences->setProxyType(2);
@@ -91,6 +90,7 @@
 	{
 		ldPreferences->setCheckPartTracker(false);
 	}
+	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender

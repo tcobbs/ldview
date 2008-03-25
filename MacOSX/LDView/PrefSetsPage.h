@@ -27,7 +27,7 @@
 - (IBAction)prefSetSelected:(id)sender;
 - (void)prefSetSelected;
 
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
 - (void)setup;
 - (NSString *)hotKeyLabel:(int)index;
 - (void)hotKeyPressed:(int)index;

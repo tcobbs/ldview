@@ -11,6 +11,7 @@
 @class UpdatesPage;
 @class LDViewController;
 @class ModelWindow;
+@class PreferencePage;
 
 class LDPreferences;
 class TCAlert;
@@ -41,7 +42,11 @@ extern NSString *LDPreferencesDidUpdateNotification;
 	int primitivesIndex;
 	int updatesIndex;
 	int prefSetsIndex;
+	PreferencePage *applyFailedPage;
 }
+
+- (bool)applyFailed;
+- (void)setApplyFailed:(PreferencePage *)page;
 - (id)initWithController:(LDViewController *)value;
 - (void)awakeFromNib;
 - (void)show;

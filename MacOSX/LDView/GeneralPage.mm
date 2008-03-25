@@ -25,11 +25,10 @@
 	[memoryUsagePopUp selectItemWithTag:ldPreferences->getMemoryUsage()];
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
 	int r, g, b;
 	
-	[super updateLdPreferences];
 	ldPreferences->setLineSmoothing([self getCheck:antialiasedLinesCheck]);
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
@@ -42,6 +41,7 @@
 		[self getCheck:transparentDefaultCheck]);
 	ldPreferences->setFov([fovField floatValue]);
 	ldPreferences->setMemoryUsage([[memoryUsagePopUp selectedItem] tag]);
+	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender

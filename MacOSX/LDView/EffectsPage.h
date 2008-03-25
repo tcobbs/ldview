@@ -45,4 +45,7 @@ class TCAlert;
 
 - (void)lightVectorChanged:(TCAlert *)alert;
 
+- (void)setup;
+- (bool)updateLdPreferences;
+
 @end

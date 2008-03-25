@@ -114,9 +114,8 @@
 	[self setupMiscBox];
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
-	[super updateLdPreferences];
 	if ([self getCheck:primitiveSubstitutionCheck])
 	{
 		int tag = [[filteringMatrix selectedCell] tag];
@@ -144,6 +143,7 @@
 	}
 	ldPreferences->setQualityStuds(![self getCheck:lowQualityStudsCheck]);
 	ldPreferences->setHiResPrimitives([self getCheck:hiResCheck]);
+	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender

@@ -28,7 +28,7 @@
     IBOutlet NSSlider *wireframeThicknessSlider;
 }
 - (void)setup;
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
 - (IBAction)seamWidth:(id)sender;
 - (IBAction)wireframe:(id)sender;
 - (IBAction)bfc:(id)sender;

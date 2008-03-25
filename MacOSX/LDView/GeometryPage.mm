@@ -133,9 +133,8 @@
 	[self groupCheck:edgeLinesCheck name:@"Edges" value:ldPreferences->getShowHighlightLines()];
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
-	[super updateLdPreferences];
 	if ([self getCheck:seamWidthCheck])
 	{
 		ldPreferences->setUseSeams(true);
@@ -181,6 +180,7 @@
 	{
 		ldPreferences->setShowHighlightLines(false);
 	}
+	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender
