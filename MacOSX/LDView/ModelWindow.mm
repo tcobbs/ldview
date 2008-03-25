@@ -67,7 +67,7 @@
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 	NSSize size;
 
-	if ([control isKindOfClass:[NSSegmentedControl class]] && ![control isKindOfClass:[ToolbarSegmentedControl class]])
+	if (replaceSegments && [control isKindOfClass:[NSSegmentedControl class]] && ![control isKindOfClass:[ToolbarSegmentedControl class]])
 	{
 		*pControl = [[ToolbarSegmentedControl alloc] initWithTemplate:*pControl];
 	}
@@ -159,7 +159,10 @@
 		@"Enable/Disable Lighting",
 		@"Enable/Disable BFC",
 		nil];
-	featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
+	if (replaceSegments)
+	{
+		featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
+	}
 	[self setupSegments:featuresSegments toolTips:toolTips];
 	[self updateFeatureStates];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
@@ -289,6 +292,7 @@
 
 - (void)awakeFromNib
 {
+	replaceSegments = false;
 	initialTitle = [[window title] retain];
 	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	[self showStatusBar:showStatusBar];

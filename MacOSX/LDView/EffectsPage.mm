@@ -154,9 +154,8 @@
 	[self setupMiscBox];
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
-	[super updateLdPreferences];
 	if ([self getCheck:lightingCheck])
 	{
 		ldPreferences->setUseLighting(true);
@@ -206,6 +205,7 @@
 	ldPreferences->setUseStipple([self getCheck:stippleTransCheck]);
 	ldPreferences->setUseFlatShading([self getCheck:flatShadingCheck]);
 	ldPreferences->setPerformSmoothing([self getCheck:smoothCurvesCheck]);
+	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender

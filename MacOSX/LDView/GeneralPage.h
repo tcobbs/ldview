@@ -20,6 +20,6 @@
 }
 
 - (void)setup;
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
 
 @end

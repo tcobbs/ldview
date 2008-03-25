@@ -131,7 +131,7 @@
 	[self setupTable];
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
 	TCStringArray *tcSessionNames = TCUserDefaults::getAllSessionNames();
 	int i;
@@ -149,7 +149,6 @@
 		oldSessionName = [NSString stringWithCString:savedSessionName encoding:NSASCIIStringEncoding];
 		delete savedSessionName;
 	}
-	[super updateLdPreferences];
 	// Skip first entry, which is default session.
 	for (i = 1; i < [sessionNames count]; i++)
 	{
@@ -209,6 +208,7 @@
 		[[self preferences] loadSettings];
 		[[self preferences] ldPreferences]->applySettings();
 	}
+	return [super updateLdPreferences];
 }
 
 - (void)hotKeyPressed:(int)index

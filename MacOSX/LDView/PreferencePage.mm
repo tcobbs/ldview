@@ -67,14 +67,21 @@
 {
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
+	return true;
 }
 
 - (void)apply
 {
-	[self updateLdPreferences];
-	[preferences enableApply:NO];
+	if ([self updateLdPreferences])
+	{
+		[preferences enableApply:NO];
+	}
+	else
+	{
+		[preferences setApplyFailed:self];
+	}
 }
 
 - (void)textDidChange:(NSNotification *)aNotification

@@ -18,7 +18,7 @@
 }
 
 - (void)setup;
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
 - (IBAction)anisoLevel:(id)sender;
 - (IBAction)primitiveSubstitution:(id)sender;
 - (IBAction)textureStuds:(id)sender;

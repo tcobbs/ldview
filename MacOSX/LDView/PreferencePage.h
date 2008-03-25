@@ -17,7 +17,7 @@ class LDPreferences;
 
 - (Preferences *)preferences;
 - (void)apply;
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
 - (IBAction)resetPage:(id)sender;
 - (IBAction)valueChanged:(id)sender;
 - (void)setPreferences:(Preferences *)value;

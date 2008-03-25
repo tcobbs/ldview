@@ -2,6 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "PreferencePage.h"
+#import "Preferences.h"
 #import "TableViewReorder.h"
 
 @interface LDrawPage : PreferencePage <TableViewReorder>
@@ -15,7 +16,9 @@
 }
 
 - (void)setup;
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
+
++ (bool)verifyLDrawDir:(NSString *)ldrawDir;
 
 - (IBAction)addRemoveExtraFolder:(id)sender;
 - (IBAction)extraFolderSelected:(id)sender;

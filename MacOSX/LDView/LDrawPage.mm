@@ -1,4 +1,5 @@
 #import "LDrawPage.h"
+#import "OCLocalStrings.h"
 
 #include <LDLib/LDPreferences.h>
 
@@ -28,25 +29,45 @@
 	[super setup];
 }
 
-- (bool)validateLDrawDir
++ (bool)verifyLDrawDir:(NSString *)ldrawDir
 {
-	return true;
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	BOOL isDir;
+
+	if ([fileManager fileExistsAtPath:ldrawDir isDirectory:&isDir] && isDir)
+	{
+		NSString *partsDir = [ldrawDir stringByAppendingPathComponent:@"parts"];
+
+		if ([fileManager fileExistsAtPath:partsDir isDirectory:&isDir] && isDir)
+		{
+			NSString *pDir = [ldrawDir stringByAppendingPathComponent:@"p"];
+
+			if ([fileManager fileExistsAtPath:pDir isDirectory:&isDir] && isDir)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
-- (void)updateLdPreferences
+- (bool)updateLdPreferences
 {
 	StringVector extraDirs;
 
-	if ([self validateLDrawDir])
+	if (![[self class] verifyLDrawDir:[ldrawDirField stringValue]])
 	{
-		ldPreferences->setLDrawDir([[ldrawDirField stringValue] cStringUsingEncoding:NSASCIIStringEncoding]);
+		[preferences setApplyFailed:self];
+		NSRunCriticalAlertPanel([OCLocalStrings get:@"InvalidDir"], [OCLocalStrings get:@"LDrawNotInDir"], [OCLocalStrings get:@"OK"], nil, nil);
+		return false;
 	}
+	ldPreferences->setLDrawDir([[ldrawDirField stringValue] cStringUsingEncoding:NSASCIIStringEncoding]);
 	for (int i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] cStringUsingEncoding:NSASCIIStringEncoding]);
 	}
 	ldPreferences->setExtraDirs(extraDirs);
-	[super updateLdPreferences];
+	return [super updateLdPreferences];
 }
 
 - (IBAction)resetPage:(id)sender
@@ -63,21 +84,33 @@
 		
 		if (filename)
 		{
-			[extraFolders addObject:filename];
-			[extraFoldersTableView reloadData];
+			if (contextInfo == ldrawDirField)
+			{
+				[ldrawDirField setStringValue:filename];
+			}
+			else
+			{
+				[extraFolders addObject:filename];
+				[extraFoldersTableView reloadData];
+			}
 			[self valueChanged:self];
 		}
 	}
 }
 
-- (void)addExtraFolder
+- (void)browseForFolder:(void *)contextInfo
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setCanChooseFiles:NO];
 	[openPanel setCanChooseDirectories:YES];
-	[openPanel beginSheetForDirectory:nil file:nil modalForWindow:[preferences window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	[openPanel beginSheetForDirectory:nil file:nil modalForWindow:[preferences window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:contextInfo];
+}
+
+- (void)addExtraFolder
+{
+	[self browseForFolder:NULL];
 }
 
 - (void)removeExtraFolder
@@ -127,6 +160,7 @@
 
 - (IBAction)ldrawFolderBrowse:(id)sender
 {
+	[self browseForFolder:ldrawDirField];
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex

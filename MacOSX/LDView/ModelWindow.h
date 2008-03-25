@@ -60,6 +60,7 @@ class LDPartsList;
 	bool sheetBusy;
 	LDHtmlInventory *htmlInventory;
 	LDPartsList *partsList;
+	bool replaceSegments;
 }
 
 - (bool)sheetBusy;

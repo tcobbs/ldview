@@ -70,20 +70,38 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	return ldPreferences;
 }
 
+- (bool)applyFailed
+{
+	return applyFailedPage != nil;
+}
+
+- (void)setApplyFailed:(PreferencePage *)page
+{
+	applyFailedPage = page;
+	if (page)
+	{
+		[tabView selectTabViewItemAtIndex:[pages indexOfObject:applyFailedPage]];
+	}
+}
+
 - (IBAction)apply:(id)sender
 {
 	NSArray *modelWindows = [controller modelWindows];
 
+	applyFailedPage = nil;
 	[pages makeObjectsPerformSelector:@selector(apply)];
-	for (int i = 0; i < [modelWindows count]; i++)
+	if (applyFailedPage == nil)
 	{
-		LDrawModelView *modelView = [[modelWindows objectAtIndex:i] modelView];
-		ldPreferences->setModelViewer([modelView modelViewer]);
-		ldPreferences->applySettings();
-		ldPreferences->commitSettings();
-		[modelView setNeedsDisplay:YES];
+		for (int i = 0; i < [modelWindows count]; i++)
+		{
+			LDrawModelView *modelView = [[modelWindows objectAtIndex:i] modelView];
+			ldPreferences->setModelViewer([modelView modelViewer]);
+			ldPreferences->applySettings();
+			ldPreferences->commitSettings();
+			[modelView setNeedsDisplay:YES];
+		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:LDPreferencesDidUpdateNotification object:self];
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:LDPreferencesDidUpdateNotification object:self];
 }
 
 - (void)hotKeyPressed:(int)index
@@ -100,7 +118,10 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 - (IBAction)ok:(id)sender
 {
 	[self apply:sender];
-	[window orderOut:sender];
+	if (applyFailedPage == nil)
+	{
+		[window orderOut:sender];
+	}
 }
 
 - (void)enableApply:(BOOL)enabled

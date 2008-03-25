@@ -21,6 +21,6 @@
 - (IBAction)proxyType:(id)sender;
 
 - (void)setup;
-- (void)updateLdPreferences;
+- (bool)updateLdPreferences;
 
 @end
