@@ -131,13 +131,13 @@
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
 		optionsShown = YES;
-		[showHideOptionsButton setState:NSOnState];
-		[self hideOptions];
+		[self hideOptionsInstantly:YES];
 	}
 	else
 	{
 		optionsShown = NO;
-		[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
+		[showHideOptionsButton setState:NSOnState];
+		//[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
 	}
 }
 
@@ -230,7 +230,7 @@
 	}
 }
 
-- (void)doOptionsAnimationInDir:(float)dir
+- (void)doOptionsAnimationInDir:(float)dir instantly:(BOOL)instantly
 {
 	NSScrollView *scrollView = [outlineView enclosingScrollView];
 	NSRect outlineEndFrame = [scrollView frame];
@@ -246,31 +246,42 @@
 	boxEndFrame.origin.y += showHideStartY * dir;
 	[self setupAnimationDict:[viewDicts objectAtIndex:0] view:scrollView endRect:outlineEndFrame showHide:0];
 	[self setupAnimationDict:[viewDicts objectAtIndex:1] view:showHideOptionsButton endRect:buttonEndFrame showHide:0];
-	[self setupAnimationDict:[viewDicts objectAtIndex:2] view:optionsBoxLabel endRect:boxLabelEndFrame showHide:dir];
+	[self setupAnimationDict:[viewDicts objectAtIndex:2] view:optionsBoxLabel endRect:boxLabelEndFrame showHide:0];
 	[self setupAnimationDict:[viewDicts objectAtIndex:3] view:optionsBox endRect:boxEndFrame showHide:dir];
-	[showHideOptionsButton setEnabled:NO];
 	optionsAnimation = [[NSViewAnimation alloc] initWithViewAnimations:viewDicts];
+	if (instantly)
+	{
+		[optionsAnimation setDuration:0.0f];
+	}
 	[optionsAnimation setDelegate:self];
 	[optionsAnimation startAnimation];
+}
+
+- (void)doOptionsAnimationInDir:(float)dir
+{
+	[self doOptionsAnimationInDir:dir instantly:NO];
 }
 
 - (void)animationDidEnd:(NSAnimation*)animation
 {
 	if (animation == optionsAnimation)
 	{
-		[showHideOptionsButton setEnabled:YES];
 		[optionsAnimation release];
 		optionsAnimation = nil;
 		[contentView setNeedsDisplay:YES];
 	}
 }
 
-- (void)hideOptions
+- (void)hideOptionsInstantly:(BOOL)instantly
 {
 	optionsShown = NO;
-	[self doOptionsAnimationInDir:-1.0f];
+	[self doOptionsAnimationInDir:-1.0f instantly:instantly];
 	TCUserDefaults::setBoolForKey(false, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
-	[showHideOptionsButton setToolTip:[OCLocalStrings get:@"ShowOptions"]];
+}
+
+- (void)hideOptions
+{
+	[self hideOptionsInstantly:NO];
 }
 
 - (void)showOptions
@@ -278,12 +289,11 @@
 	optionsShown = YES;
 	[self doOptionsAnimationInDir:1.0f];
 	TCUserDefaults::setBoolForKey(true, MODEL_TREE_OPTIONS_SHOWN_KEY, false);
-	[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
 }
 
 - (IBAction)showHideOptions:(id)sender
 {
-	if ([sender state] == NSOnState)
+	if ([sender state] == NSOffState)
 	{
 		[self hideOptions];
 	}
