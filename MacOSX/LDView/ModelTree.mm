@@ -143,6 +143,19 @@
 
 - (void)show
 {
+	NSWindow *window = [modelWindow window];
+	NSRect windowFrame = [window frame];
+	NSSize windowSize = windowFrame.size;
+	NSRect visibleFrame = [[window screen] visibleFrame];
+	NSSize screenSize = visibleFrame.size;
+	float drawerWidth = [drawer contentSize].width + [drawer leadingOffset] + [drawer trailingOffset];
+
+	if (windowSize.width + drawerWidth > screenSize.width)
+	{
+		windowFrame.size.width = screenSize.width - drawerWidth;
+		windowFrame.origin.x = visibleFrame.origin.x;
+		[window setFrame:windowFrame display:YES];
+	}
 	[drawer open];
 }
 
