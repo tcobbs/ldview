@@ -244,6 +244,7 @@ bool TCImage::saveFile(
 		if (imageFormat->saveFile(this, filename))
 		{
 			getCompressionOptions()->save();
+			return true;
 		}
 	}
 	return false;
