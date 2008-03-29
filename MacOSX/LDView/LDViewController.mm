@@ -350,4 +350,9 @@
 	return [super performKeyEquivalent:theEvent];
 }
 
+- (NSMenu *)viewingAngleMenu
+{
+	return viewingAngleMenu;
+}
+
 @end

@@ -16,6 +16,7 @@
 	IBOutlet NSMenuItem *flyThroughMenuItem;
 	IBOutlet NSMenuItem *cancelMenuItem;
 	IBOutlet NSMenu *fileMenu;
+	IBOutlet NSMenu *viewingAngleMenu;
 
 	NSArray *ldrawFileTypes;
 	NSMutableArray *modelWindows;
@@ -28,6 +29,7 @@
 	NSString *toolbarMenuFormat;
 }
 
+- (NSMenu *)viewingAngleMenu;
 - (IBAction)newWindow:(id)sender;
 - (IBAction)openModel:(id)sender;
 - (IBAction)preferences:(id)sender;

@@ -3,7 +3,7 @@
 #import "LDViewController.h"
 #import "Preferences.h"
 #import "ToolbarSegmentedControl.h"
-#import "ToolbarPopUpButton.h"
+//#import "ToolbarPopUpButton.h"
 #import "ErrorsAndWarnings.h"
 #import "ErrorItem.h"
 #import "OCLocalStrings.h"
@@ -23,6 +23,27 @@
 #include <LDLib/LDHtmlInventory.h>
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCStringArray.h>
+
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+
+enum
+{
+	NSSegmentStyleAutomatic = 0,
+	NSSegmentStyleRounded = 1,
+	NSSegmentStyleTexturedRounded = 2,
+	NSSegmentStyleRoundRect = 3,
+	NSSegmentStyleTexturedSquare = 4,
+	NSSegmentStyleCapsule = 5,
+	NSSegmentStyleSmallSquare = 6
+};
+
+@interface NSSegmentedControl (SCLeopardOnly)
+
+- (void)setSegmentStyle:(int)style;
+
+@end
+
+#endif
 
 @implementation ModelWindow
 
@@ -61,15 +82,23 @@
 	return defaultIdentifiers;
 }
 
-- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
+- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSSegmentedControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
 {
-	NSControl *&control = *pControl;
+	NSSegmentedControl *&control = *pControl;
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 	NSSize size;
 
 	if (replaceSegments && [control isKindOfClass:[NSSegmentedControl class]] && ![control isKindOfClass:[ToolbarSegmentedControl class]])
 	{
 		*pControl = [[ToolbarSegmentedControl alloc] initWithTemplate:*pControl];
+	}
+	else
+	{
+		NSLog(@"%@\n", [control class]);
+	}
+	if ([control respondsToSelector:@selector(setSegmentStyle:)])
+	{
+		[control setSegmentStyle:NSSegmentStyleCapsule];
 	}
 	size = [control frame].size;
 	size.height += 1.0f;
@@ -159,10 +188,10 @@
 		@"Enable/Disable Lighting",
 		@"Enable/Disable BFC",
 		nil];
-	if (replaceSegments)
-	{
-		featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
-	}
+//	if (replaceSegments)
+//	{
+//		featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
+//	}
 	[self setupSegments:featuresSegments toolTips:toolTips];
 	[self updateFeatureStates];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
@@ -200,7 +229,11 @@
 		@"Examine Mode",
 		@"Fly-through Mode",
 		nil];
-	viewModeSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:viewModeSegments];
+	
+//	if (replaceSegments)
+//	{
+//		viewModeSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:viewModeSegments];
+//	}
 	[self setupSegments:viewModeSegments toolTips:toolTips];
 	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
 	[modelView setFlyThroughMode:flyThroughMode];
@@ -215,22 +248,16 @@
 	otherIdentifiers = [[NSMutableArray alloc] init];
 	allIdentifiers = [[NSMutableArray alloc] init];
 
-	[[viewPopUp itemAtIndex:0] setImage:[NSImage imageNamed:@"toolbar_view"]];
-	viewPopUp = [[ToolbarPopUpButton alloc] initWithTemplate:viewPopUp];
-	[self setupFeatures];
-	[self setupViewMode];
-	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:YES];
 	// ToDo: Localize
-	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:NO isDefault:NO];
-	// ToDo: Localize
+	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewPopUp highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:NO isDefault:YES];
 	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
 	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments highPriority:YES isDefault:YES];
-	// ToDo: Localize
-	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"SaveSnapshot"] forSegment:1];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"Reload"] forSegment:2];
@@ -241,6 +268,9 @@
 		NSToolbarPrintItemIdentifier,
 		NSToolbarCustomizeToolbarItemIdentifier,
 		nil]];
+	[viewingAngleSegments setMenu:[[[controller viewingAngleMenu] copy] autorelease] forSegment:0];
+	[self setupFeatures];
+	[self setupViewMode];
 	//[defaultIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
 }
 
@@ -292,7 +322,7 @@
 
 - (void)awakeFromNib
 {
-	replaceSegments = false;
+	replaceSegments = true;
 	initialTitle = [[window title] retain];
 	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	[self showStatusBar:showStatusBar];

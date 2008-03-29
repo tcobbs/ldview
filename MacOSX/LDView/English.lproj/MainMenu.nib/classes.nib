@@ -42,6 +42,7 @@
                 latLongRotationMenuItem = NSMenuItem; 
                 statusBarMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 
+                viewingAngleMenu = NSMenu; 
             }; 
             SUPERCLASS = NSResponder; 
         }, 

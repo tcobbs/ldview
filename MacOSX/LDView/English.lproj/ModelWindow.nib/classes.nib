@@ -35,6 +35,7 @@
                 statusBar = NSView; 
                 viewModeSegments = NSSegmentedControl; 
                 viewPopUp = NSPopUpButton; 
+                viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 
             }; 
             SUPERCLASS = NSObject; 

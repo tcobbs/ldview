@@ -30,10 +30,10 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *snapshotButton;
 	IBOutlet NSSegmentedControl *reloadButton;
 	IBOutlet NSSegmentedControl *featuresSegments;
-	IBOutlet NSPopUpButton *viewPopUp;
 	IBOutlet NSSegmentedControl *prefsSegments;
 	IBOutlet NSSegmentedControl *viewModeSegments;
-	
+	IBOutlet NSSegmentedControl *viewingAngleSegments;
+
 	LDViewController *controller;
 	AlertHandler *alertHandler;
 	NSToolbar *toolbar;
