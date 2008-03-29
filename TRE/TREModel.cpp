@@ -3471,3 +3471,71 @@ TCObject *TREModel::getAlertSender(void)
 {
 	return m_mainModel->getAlertSender();
 }
+
+int TREModel::printStlTriangle(
+	TREVertexArray *vertices,
+	TCULongArray *indices,
+	int ix,
+	int i0,
+	int i1,
+	int i2)
+{
+	printf ( "  facet normal %f %f %f\n", 0.0, 0.0, 0.0 );
+	printf ( "    outer loop\n" );
+	int ip[3];
+	ip[0]=i0; ip[1]=i1; ip[2]=i2;
+
+	for(int i=0; i<3; i++)
+	{
+		int index = (*indices)[ix+ip[i]];
+		const TREVertex &vertex = (*vertices)[index];
+
+		printf ( "      vertex %f %f %f\n",  vertex.v[0]*0.04, 
+			vertex.v[1]*0.04,vertex.v[2]*0.04);
+	}
+	printf ( "    endloop\n" );
+	printf ( "  endfacet\n" );
+	return 7;	// 7 lines of text.
+}
+
+int TREModel::saveSTL(void)
+{
+	int textNum = 1;
+
+	for (int i = 0; i <= TREMLast; i++)
+	{
+		TREShapeGroup *shape = m_shapes[i];
+
+		if (shape != NULL)
+		{
+			TCULongArray *indices = 
+				shape->getIndices(TRESTriangle, false);
+			TREVertexStore *vertexStore = shape->getVertexStore();
+
+			if (indices != NULL)
+			{
+				TREVertexArray *vertices = vertexStore->getVertices();
+				int count = indices->getCount();
+
+				for ( int p = 0;  p < count; p+=3 )
+				{
+					textNum += printStlTriangle(vertices, indices, p, 0, 1, 2);
+				}
+			}
+			indices = shape->getIndices(TRESQuad, false);
+			if (indices != NULL)
+			{
+				TREVertexArray *vertices = vertexStore->getVertices();
+				int count = indices->getCount();
+
+				for ( int p = 0;  p < count; p+=4 )
+				{
+					printStlTriangle(vertices, indices, p, 0, 1, 2);
+					textNum += printStlTriangle(vertices, indices, p, 0, 2, 3);
+				}
+			}
+		}
+	}
+	return textNum;
+}
+
