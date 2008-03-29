@@ -77,7 +77,7 @@ bool LDSnapshotTaker::saveImage(void)
 			char prefix2[128];
 
 			sprintf(prefix1, "%s=", SAVE_IMAGE_TYPE_KEY);
-			sprintf(prefix1, "%s=", SNAPSHOT_SUFFIX_KEY);
+			sprintf(prefix2, "%s=", SNAPSHOT_SUFFIX_KEY);
 			for (i = 0; i < processed->getCount() && !commandLineType; i++)
 			{
 				if (stringHasCaseInsensitivePrefix((*processed)[i], prefix1) ||
