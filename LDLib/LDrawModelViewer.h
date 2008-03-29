@@ -421,6 +421,8 @@ class LDrawModelViewer: public TCAlertSender
 		TREMainModel *getContrastingLightDirModel();
 		virtual TCObject *getAlertSender(void) { return this; }
 
+		void saveSTL(void);
+
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
 		static bool fileExists(char *filename);
