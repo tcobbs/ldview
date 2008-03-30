@@ -29,6 +29,8 @@
 	NSString *toolbarMenuFormat;
 }
 
+- (BOOL)verifyLDrawDir;
+- (BOOL)verifyLDrawDir:(NSString *)ldrawDir prompt:(BOOL)prompt;
 - (NSMenu *)viewingAngleMenu;
 - (IBAction)newWindow:(id)sender;
 - (IBAction)openModel:(id)sender;

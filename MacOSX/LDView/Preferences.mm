@@ -207,4 +207,9 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[effectsPage lightVectorChanged:alert];
 }
 
+- (LDrawPage *)ldrawPage
+{
+	return ldrawPage;
+}
+
 @end

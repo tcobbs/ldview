@@ -67,6 +67,7 @@ protected:
 	bool m_trySaveAlpha;
 	bool m_autoCrop;
 	bool m_fromCommandLine;
+	std::string m_modelFilename;
 };
 
 #endif // __LDSNAPSHOTTAKER_H__
