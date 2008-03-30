@@ -69,6 +69,7 @@
 		1F8418E60D358B9900FAF665 /* JpegOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8418E40D358B9900FAF665 /* JpegOptions.nib */; };
 		1F8418EA0D35902600FAF665 /* JpegOptions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F8418E90D35902600FAF665 /* JpegOptions.mm */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
+		1F9BB9060D9F351500B06DDE /* SnapshotAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */; };
 		1FBE9DD80CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */; };
 		1FBE9E1D0CD3F66500334DA9 /* SaveSnapshotView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */; };
 		1FBE9E390CD3FA2200334DA9 /* ViewOwnerBase.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FBE9E380CD3FA2200334DA9 /* ViewOwnerBase.mm */; };
@@ -248,6 +249,8 @@
 		1F8418E80D35902600FAF665 /* JpegOptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JpegOptions.h; sourceTree = "<group>"; };
 		1F8418E90D35902600FAF665 /* JpegOptions.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = JpegOptions.mm; sourceTree = "<group>"; };
 		1F92F61D0A5A267C00AE8086 /* LDView.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDView.icns; sourceTree = "<group>"; };
+		1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotAlertHandler.h; sourceTree = "<group>"; };
+		1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotAlertHandler.mm; sourceTree = "<group>"; };
 		1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SaveSnapshotViewOwner.h; sourceTree = "<group>"; };
 		1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveSnapshotViewOwner.mm; sourceTree = "<group>"; };
 		1FBE9E1C0CD3F66500334DA9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/SaveSnapshotView.nib; sourceTree = "<group>"; };
@@ -345,6 +348,8 @@
 				1F5A35660D9629220072BAE3 /* PartsList.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
+				1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */,
+				1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */,
 				1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */,
 				1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */,
 				1FD98B8C0D975813006DBC00 /* TableViewReorder.h */,
@@ -757,6 +762,7 @@
 				1F5A35AF0D962E410072BAE3 /* LDViewCategories.mm in Sources */,
 				1F1039A00D97064E00D01B28 /* LDrawPage.mm in Sources */,
 				1FD98B8E0D975813006DBC00 /* TableViewReorder.mm in Sources */,
+				1F9BB9060D9F351500B06DDE /* SnapshotAlertHandler.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

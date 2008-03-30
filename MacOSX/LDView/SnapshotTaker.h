@@ -13,16 +13,23 @@
 
 class LDSnapshotTaker;
 class LDrawModelViewer;
+class ModelViewer;
+class TCAlert;
+class SnapshotAlertHandler;
 
 @interface SnapshotTaker : NSObject {
 	LDSnapshotTaker *ldSnapshotTaker;
 	CGLPBufferObj pbuffer;
 	CGLContextObj context;
+	NSOpenGLContext *sharedContext;
+	LDrawModelViewer *modelViewer;
+	SnapshotAlertHandler *snapshotAlertHandler;
 }
 
 - (id)init;
 - (id)initWithModelViewer:(LDrawModelViewer *)modelViewer sharedContext:(NSOpenGLContext *)sharedContext;
 
+- (void)snapshotCallback:(TCAlert *)alert;
 - (void)setImageType:(LDSnapshotTaker::ImageType)value;
 - (void)setTrySaveAlpha:(bool)value;
 - (void)setAutoCrop:(bool)value;

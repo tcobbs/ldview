@@ -51,6 +51,11 @@
 	return false;
 }
 
+- (void)updateLDrawDir:(NSString *)ldrawDir
+{
+	ldPreferences->setLDrawDir([ldrawDir cStringUsingEncoding:NSASCIIStringEncoding]);
+}
+
 - (bool)updateLdPreferences
 {
 	StringVector extraDirs;
@@ -61,7 +66,7 @@
 		NSRunCriticalAlertPanel([OCLocalStrings get:@"InvalidDir"], [OCLocalStrings get:@"LDrawNotInDir"], [OCLocalStrings get:@"OK"], nil, nil);
 		return false;
 	}
-	ldPreferences->setLDrawDir([[ldrawDirField stringValue] cStringUsingEncoding:NSASCIIStringEncoding]);
+	[self updateLDrawDir:[ldrawDirField stringValue]];
 	for (int i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] cStringUsingEncoding:NSASCIIStringEncoding]);

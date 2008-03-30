@@ -12,20 +12,12 @@
 #include <LDLib/LDPreferences.h>
 
 LDSnapshotTaker::LDSnapshotTaker(void):
+m_modelViewer(NULL),
 m_imageType(ITPng),
 m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
 m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
 m_fromCommandLine(true)
 {
-	LDPreferences *prefs;
-	GLint viewport[4];
-
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
-	prefs = new LDPreferences(m_modelViewer);
-	prefs->loadSettings();
-	prefs->applySettings();
-	prefs->release();
 }
 
 LDSnapshotTaker::LDSnapshotTaker(LDrawModelViewer *m_modelViewer):
@@ -190,14 +182,18 @@ bool LDSnapshotTaker::saveImage(void)
 				}
 				if (imageFilename)
 				{
-					if (m_modelViewer->getFilename())
+					if (m_modelViewer && m_modelViewer->getFilename())
 					{
 						m_modelViewer->setFilename(arg);
 						m_modelViewer->loadModel();
 					}
-					else
+					else if (m_modelViewer)
 					{
 						m_modelViewer->setFilename(arg);
+					}
+					else
+					{
+						m_modelFilename = arg;
 					}
 					retValue = saveImage(imageFilename, width, height,
 						zoomToFit) || retValue;
@@ -239,6 +235,22 @@ bool LDSnapshotTaker::saveImage(
 	int imageHeight,
 	bool zoomToFit)
 {
+	TCAlertManager::sendAlert(alertClass(), this, _UC("PreSave"));
+	if (!m_modelViewer)
+	{
+		LDPreferences *prefs;
+		GLint viewport[4];
+		
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
+		m_modelViewer->setFilename(m_modelFilename.c_str());
+		m_modelFilename = "";
+		m_modelViewer->loadModel();
+		prefs = new LDPreferences(m_modelViewer);
+		prefs->loadSettings();
+		prefs->applySettings();
+		prefs->release();
+	}
 	bool saveAlpha = false;
 	TCByte *buffer = grabImage(imageWidth, imageHeight,
 		shouldZoomToFit(zoomToFit), NULL, &saveAlpha);

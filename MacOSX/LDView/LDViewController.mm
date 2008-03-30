@@ -3,11 +3,13 @@
 #import "LDrawModelView.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
+#import "LDrawPage.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
 #include <TCFoundation/TCWebClient.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLoader/LDLModel.h>
 #include "Preferences.h"
 
 @implementation LDViewController
@@ -61,11 +63,11 @@
 	// to say Hide, since the current state has the item shown.
 	if (show)
 	{
-		showHide = @"Hide";
+		showHide = [OCLocalStrings get:@"Hide"];
 	}
 	else
 	{
-		showHide = @"Show";
+		showHide = [OCLocalStrings get:@"Show"];
 	}
 	[menuItem setTitle:[NSString stringWithFormat:format, showHide]];
 }
@@ -229,8 +231,68 @@
 	[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
 }
 
+- (BOOL)browseForLDrawDir
+{
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+
+	[openPanel setAllowsMultipleSelection:NO];
+	[openPanel setCanChooseFiles:NO];
+	[openPanel setCanChooseDirectories:YES];
+	[openPanel setMessage:[OCLocalStrings get:@"SelectLDrawFolder"]];
+	if ([openPanel runModalForDirectory:nil file:nil] == NSOKButton)
+	{
+		if ([self verifyLDrawDir:[openPanel filename] prompt:NO])
+		{
+			[[preferences ldrawPage] updateLDrawDir:[openPanel filename]];
+			return YES;
+		}
+		else
+		{
+			if (NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawNotInFolder"], [OCLocalStrings get:@"Yes"], [OCLocalStrings get:@"No"], nil) == NSOKButton)
+			{
+				return [self browseForLDrawDir];
+			}
+		}
+	}
+	return NO;
+}
+
+- (BOOL)verifyLDrawDir
+{
+	return [self verifyLDrawDir:[NSString stringWithCString:LDLModel::lDrawDir() encoding:NSASCIIStringEncoding] prompt:YES];
+}
+
+- (BOOL)verifyLDrawDir:(NSString *)ldrawDir prompt:(BOOL)prompt
+{
+	if (![LDrawPage verifyLDrawDir:ldrawDir])
+	{
+		if (prompt)
+		{
+			switch (NSRunAlertPanel([OCLocalStrings get:@"LDrawFolderNotFoundHeader"], [OCLocalStrings get:@"LDrawFolderNotFound"], [OCLocalStrings get:@"BrowseToLDrawFolder"], [OCLocalStrings get:@"DownloadFromLDrawOrg"], [OCLocalStrings get:@"Cancel"]))
+			{
+				case NSAlertDefaultReturn:
+					return [self browseForLDrawDir];
+				case NSAlertAlternateReturn:
+					break;
+				case NSAlertOtherReturn:
+					NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
+					return NO;
+			}
+		}
+		else
+		{
+			return NO;
+		}
+	}
+	return YES;
+}
+
 - (BOOL)openFile:(NSString *)filename
 {
+	if (![self verifyLDrawDir])
+	{
+		return NO;
+	}
 	if (![[NSApplication sharedApplication] mainWindow])
 	{
 		if ([self createWindow:filename])

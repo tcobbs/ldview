@@ -45,6 +45,7 @@ extern NSString *LDPreferencesDidUpdateNotification;
 	PreferencePage *applyFailedPage;
 }
 
+- (LDrawPage *)ldrawPage;
 - (bool)applyFailed;
 - (void)setApplyFailed:(PreferencePage *)page;
 - (id)initWithController:(LDViewController *)value;

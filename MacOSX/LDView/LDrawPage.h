@@ -19,6 +19,7 @@
 - (bool)updateLdPreferences;
 
 + (bool)verifyLDrawDir:(NSString *)ldrawDir;
+- (void)updateLDrawDir:(NSString *)ldrawDir;
 
 - (IBAction)addRemoveExtraFolder:(id)sender;
 - (IBAction)extraFolderSelected:(id)sender;

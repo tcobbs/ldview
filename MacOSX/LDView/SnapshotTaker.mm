@@ -8,6 +8,8 @@
 
 #import "SnapshotTaker.h"
 #include <LDLib/LDrawModelViewer.h>
+#include <TCFoundation/TCAlert.h>
+#import "SnapshotAlertHandler.h"
 
 #define PB_WIDTH 1024
 #define PB_HEIGHT 1024
@@ -19,7 +21,7 @@
 	return [self initWithModelViewer:nil sharedContext:nil];
 }
 
-- (BOOL)choosePixelFormat:(CGLPixelFormatObj *)pPixelFormat sharedContext:(NSOpenGLContext *)sharedContext;
+- (BOOL)choosePixelFormat:(CGLPixelFormatObj *)pPixelFormat
 {
 	CGLPixelFormatAttribute attrs[] =
 	{
@@ -27,7 +29,7 @@
 		kCGLPFAColorSize, (CGLPixelFormatAttribute)24,
 		kCGLPFAAlphaSize, (CGLPixelFormatAttribute)8,
 		kCGLPFAStencilSize, (CGLPixelFormatAttribute)8,
-		kCGLPFAAccelerated, (CGLPixelFormatAttribute)NO,
+		kCGLPFAAccelerated,
 		kCGLPFAPBuffer,
 		(CGLPixelFormatAttribute)0,
 		(CGLPixelFormatAttribute)0
@@ -45,42 +47,48 @@
 	return NO;
 }
 
-- (id)initWithModelViewer:(LDrawModelViewer *)modelViewer sharedContext:(NSOpenGLContext *)sharedContext
+- (id)initWithModelViewer:(LDrawModelViewer *)theModelViewer sharedContext:(NSOpenGLContext *)theSharedContext
 {
 	self = [super init];
 	if (self)
 	{
+		sharedContext = theSharedContext;
+		modelViewer = theModelViewer;
+		snapshotAlertHandler = new SnapshotAlertHandler(self);
 		if (modelViewer)
 		{
 			ldSnapshotTaker = new LDSnapshotTaker(modelViewer);
 		}
-		if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
-		{			
-			CGLPixelFormatObj pixelFormat;
-
-			if ([self choosePixelFormat:&pixelFormat sharedContext:sharedContext])
-			{
-				if (CGLCreateContext(pixelFormat, (CGLContextObj)[sharedContext CGLContextObj], &context) == kCGLNoError)
-				{
-					long virtualScreen;
-
-					CGLDestroyPixelFormat(pixelFormat);
-					CGLSetCurrentContext(context);
-					CGLGetVirtualScreen(context, &virtualScreen);
-					CGLSetPBuffer(context, pbuffer, 0, 0, virtualScreen);
-					return self;
-				}
-				CGLDestroyPixelFormat(pixelFormat);
-			}
-		}
-		[self dealloc];
-		return nil;
 	}
 	return self;
 }
 
+- (void)setupContext
+{
+	if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
+	{			
+		CGLPixelFormatObj pixelFormat;
+
+		if ([self choosePixelFormat:&pixelFormat])
+		{
+			if (CGLCreateContext(pixelFormat, (CGLContextObj)[sharedContext CGLContextObj], &context) == kCGLNoError)
+			{
+				long virtualScreen;
+
+				CGLDestroyPixelFormat(pixelFormat);
+				CGLSetCurrentContext(context);
+				CGLGetVirtualScreen(context, &virtualScreen);
+				CGLSetPBuffer(context, pbuffer, 0, 0, virtualScreen);
+				return;
+			}
+			CGLDestroyPixelFormat(pixelFormat);
+		}
+	}
+}
+
 - (void)dealloc
 {
+	TCObject::release(snapshotAlertHandler);
 	TCObject::release(ldSnapshotTaker);
 	if (context)
 	{
@@ -110,13 +118,10 @@
 
 - (void)saveFileSetup
 {
-	LDrawModelViewer *modelViewer = NULL;
-	
 	CGLSetCurrentContext(context);
 	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
-	if (ldSnapshotTaker)
+	if (modelViewer)
 	{
-		modelViewer = ldSnapshotTaker->getModelViewer();
 		modelViewer->perspectiveView();
 	}
 	glViewport(0, 0, PB_WIDTH, PB_HEIGHT);
@@ -133,9 +138,20 @@
 	}
 }
 
+- (void)snapshotCallback:(TCAlert *)alert;
+{
+	if (strcmp(alert->getMessage(), "PreSave") == 0)
+	{
+		if (!context)
+		{
+			[self setupContext];
+		}
+		[self saveFileSetup];
+	}
+}
+
 - (bool)saveFile
 {
-	[self saveFileSetup];
 	if (ldSnapshotTaker)
 	{
 		return ldSnapshotTaker->saveImage();
