@@ -429,6 +429,7 @@ class LDrawModelViewer: public TCAlertSender
 		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }
 		static const char *redrawAlertClass(void) { return "LDRedrawNeeded"; }
 		static const char *frameDoneAlertClass(void) { return "LDFrameDone"; }
+		static const char *loadAlertClass(void) { return "LDrawModelViewerLoad"; }
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);

@@ -6,6 +6,7 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLib/LDModelTree.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
 
 ModelTreeDialog::ModelTreeDialog(HINSTANCE hInstance, HWND hParentWindow):
@@ -14,7 +15,8 @@ m_modelWindow(NULL),
 m_model(NULL),
 m_modelTree(NULL),
 m_resizer(NULL),
-m_hStatus(NULL)
+m_hStatus(NULL),
+m_optionsShown(true)
 {
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
 		(TCAlertCallback)&ModelTreeDialog::modelAlertCallback);
@@ -122,7 +124,7 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 
 void ModelTreeDialog::addChildren(HTREEITEM parent, const LDModelTree *tree)
 {
-	if (tree->hasChildren(true))
+	if (tree != NULL && tree->hasChildren(true))
 	{
 		const LDModelTreeArray *children = tree->getChildren(true);
 		int count = children->getCount();
@@ -154,41 +156,188 @@ HTREEITEM ModelTreeDialog::addLine(HTREEITEM parent, const LDModelTree *tree)
 	return hNewItem;
 }
 
+void ModelTreeDialog::updateLineChecks(void)
+{
+	for (int i = LDLLineTypeComment; i <= LDLLineTypeUnknown; i++)
+	{
+		LDLLineType lineType = (LDLLineType)i;
+		bool checked = false;
+		BOOL enabled = m_model != NULL;
+
+		if (m_modelTree)
+		{
+			checked = m_modelTree->getShowLineType(lineType);
+		}
+		checkSet(m_checkIds[lineType], checked);
+		EnableWindow(m_lineChecks[i], enabled);
+	}
+}
+
+LRESULT ModelTreeDialog::doLineCheck(UINT checkId, LDLLineType lineType)
+{
+	if (m_modelTree)
+	{
+		m_modelTree->setShowLineType(lineType, checkGet(checkId));
+		refreshTreeView();
+	}
+	return 0;
+}
+
+LRESULT ModelTreeDialog::doCommand(
+	int notifyCode,
+	int commandId,
+	HWND control)
+{
+	if (commandId == IDC_OPTIONS)
+	{
+		return doToggleOptions();
+	}
+	else
+	{
+		UIntLineTypeMap::const_iterator it = m_checkLineTypes.find(commandId);
+
+		if (it != m_checkLineTypes.end())
+		{
+			return doLineCheck(it->first, it->second);
+		}
+	}
+	return CUIDialog::doCommand(notifyCode, commandId, control);
+}
+
+void ModelTreeDialog::refreshTreeView(void)
+{
+	SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
+	TreeView_DeleteAllItems(m_hTreeView);
+	addChildren(NULL, m_modelTree);
+	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
+	RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
+}
+
 void ModelTreeDialog::fillTreeView(void)
 {
 	if (m_modelTree == NULL && IsWindowVisible(hWindow))
 	{
-		SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
-		TreeView_DeleteAllItems(m_hTreeView);
 		if (m_model)
 		{
 			m_modelTree = new LDModelTree(m_model);
-			addChildren(NULL, m_modelTree);
 		}
-		SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
-		RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
+		updateLineChecks();
+		refreshTreeView();
 	}
+}
+
+void ModelTreeDialog::setupLineCheck(UINT checkId, LDLLineType lineType)
+{
+	m_lineChecks[lineType] = GetDlgItem(hWindow, checkId);
+	m_checkLineTypes[checkId] = lineType;
+	m_checkIds[lineType] = checkId;
+	m_resizer->addSubWindow(checkId, CUIFloatLeft | CUIFloatBottom);
+}
+
+void ModelTreeDialog::adjustWindow(int widthDelta)
+{
+	WINDOWPLACEMENT wp;
+
+	GetWindowPlacement(hWindow, &wp);
+	m_resizer->setOriginalWidth(m_resizer->getOriginalWidth() + widthDelta);
+	if (wp.showCmd == SW_MAXIMIZE)
+	{
+		RECT clientRect;
+
+		GetClientRect(hWindow, &clientRect);
+		m_resizer->resize(clientRect.right - clientRect.left,
+			clientRect.bottom - clientRect.top);
+	}
+	else
+	{
+		RECT windowRect;
+
+		GetWindowRect(hWindow, &windowRect);
+		windowRect.right += widthDelta;
+		MoveWindow(hWindow, windowRect.left, windowRect.top,
+			windowRect.right - windowRect.left,
+			windowRect.bottom - windowRect.top, TRUE);
+	}
+}
+
+void ModelTreeDialog::swapWindowText(char oldChar, char newChar)
+{
+	std::string text;
+
+	windowGetText(IDC_OPTIONS, text);
+	replaceStringCharacter(&text[0], oldChar, newChar);
+	windowSetText(IDC_OPTIONS, text);
+}
+
+void ModelTreeDialog::hideOptions(void)
+{
+	adjustWindow(-m_optionsDelta);
+	swapWindowText('<', '>');
+	m_optionsShown = false;
+}
+
+void ModelTreeDialog::showOptions(void)
+{
+	adjustWindow(m_optionsDelta);
+	swapWindowText('>', '<');
+	m_optionsShown = true;
+}
+
+LRESULT ModelTreeDialog::doToggleOptions(void)
+{
+	if (m_optionsShown)
+	{
+		hideOptions();
+	}
+	else
+	{
+		showOptions();
+	}
+	TCUserDefaults::setBoolForKey(m_optionsShown, MODEL_TREE_OPTIONS_SHOWN_KEY,
+		false);
+	return 0;
 }
 
 BOOL ModelTreeDialog::doInitDialog(HWND /*hKbControl*/)
 {
+	RECT optionsRect;
 	RECT clientRect;
-	RECT statusRect;
+	//RECT clientRect;
+	//RECT statusRect;
 
 	setIcon(IDI_APP_ICON);
 	m_hTreeView = GetDlgItem(hWindow, IDC_MODEL_TREE);
 	m_hStatus = CreateWindow(STATUSCLASSNAME, "",
 		WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, hWindow, (HMENU)2001, hInstance, NULL);
-	GetClientRect(hWindow, &clientRect);
-	GetWindowRect(m_hStatus, &statusRect);
-	screenToClient(hWindow, &statusRect);
-	MoveWindow(m_hTreeView, 0, 0, clientRect.right - clientRect.left,
-		statusRect.top, TRUE);
+	//GetClientRect(hWindow, &clientRect);
+	//GetWindowRect(m_hStatus, &statusRect);
+	//screenToClient(hWindow, &statusRect);
+	//MoveWindow(m_hTreeView, 0, 0, clientRect.right - clientRect.left,
+	//	statusRect.top, TRUE);
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
 	m_resizer->addSubWindow(IDC_MODEL_TREE,
 		CUISizeHorizontal | CUISizeVertical);
+	m_resizer->addSubWindow(IDC_SHOW_BOX, CUIFloatLeft | CUIFloatBottom);
+	m_resizer->addSubWindow(IDC_OPTIONS, CUIFloatLeft | CUIFloatTop);
+	m_lineChecks.resize(LDLLineTypeUnknown + 1);
+	setupLineCheck(IDC_COMMENT, LDLLineTypeComment);
+	setupLineCheck(IDC_MODEL, LDLLineTypeModel);
+	setupLineCheck(IDC_LINE, LDLLineTypeLine);
+	setupLineCheck(IDC_TRIANGLE, LDLLineTypeTriangle);
+	setupLineCheck(IDC_QUAD, LDLLineTypeQuad);
+	setupLineCheck(IDC_CONDITIONAL, LDLLineTypeConditionalLine);
+	setupLineCheck(IDC_EMPTY, LDLLineTypeEmpty);
+	setupLineCheck(IDC_UNKNOWN, LDLLineTypeUnknown);
+	GetClientRect(hWindow, &clientRect);
+	GetWindowRect(GetDlgItem(hWindow, IDC_SHOW_BOX), &optionsRect);
+	screenToClient(hWindow, &optionsRect);
+	m_optionsDelta = clientRect.right - optionsRect.left;
+	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
+	{
+		hideOptions();
+	}
 	return TRUE;
 }
 

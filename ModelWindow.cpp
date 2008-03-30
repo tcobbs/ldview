@@ -176,6 +176,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		(TCAlertCallback)&ModelWindow::modelViewerAlertCallback);
 	TCAlertManager::registerHandler(LDrawModelViewer::redrawAlertClass(), this,
 		(TCAlertCallback)&ModelWindow::redrawAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(), this,
+		(TCAlertCallback)&ModelWindow::loadAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::captureAlertClass(), this,
 		(TCAlertCallback)&ModelWindow::captureAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this,
@@ -238,6 +240,16 @@ void ModelWindow::ldlErrorCallback(LDLError *error)
 			error->cancelLoad();
 		}
 	}
+}
+
+void ModelWindow::loadAlertCallback(TCAlert *alert)
+{
+	if (strcmp(alert->getMessage(), "ModelLoadCanceled") == 0)
+	{
+		parentWindow->setTitle(_UC("LDView"));
+		stopPolling();
+	}
+	TCAlertManager::sendAlert(alertClass(), this, alert->getMessageUC());
 }
 
 void ModelWindow::redrawAlertCallback(TCAlert *alert)
@@ -2203,15 +2215,11 @@ int ModelWindow::loadModel(void)
 				startPolling();
 			}
 		}
-		TCAlertManager::sendAlert(alertClass(), this, _UC("ModelLoaded"));
 		return 1;
 	}
 	else
 	{
-		parentWindow->setTitle(_UC("LDView"));
-		stopPolling();
 		modelViewer->setFilename(NULL);
-		TCAlertManager::sendAlert(alertClass(), this, _UC("ModelLoadCanceled"));
 		return 0;
 	}
 }
