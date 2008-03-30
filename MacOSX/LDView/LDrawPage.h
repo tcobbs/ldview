@@ -21,6 +21,8 @@
 + (bool)verifyLDrawDir:(NSString *)ldrawDir;
 - (void)updateLDrawDir:(NSString *)ldrawDir;
 
+- (NSString *)ldrawDir;
+
 - (IBAction)addRemoveExtraFolder:(id)sender;
 - (IBAction)extraFolderSelected:(id)sender;
 - (IBAction)ldrawFolderBrowse:(id)sender;

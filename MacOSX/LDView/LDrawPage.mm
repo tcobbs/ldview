@@ -51,9 +51,26 @@
 	return false;
 }
 
+- (void)updateLDrawDir:(NSString *)ldrawDir apply:(BOOL)apply
+{
+	const char *value = [ldrawDir cStringUsingEncoding:NSASCIIStringEncoding];
+	
+	ldPreferences->setLDrawDir(value);
+	if (apply)
+	{
+		ldPreferences->applyLDrawSettings();
+		ldPreferences->commitLDrawSettings();
+	}
+}
+
+- (NSString *)ldrawDir
+{
+	return [NSString stringWithCString:ldPreferences->getLDrawDir() encoding:NSASCIIStringEncoding];
+}
+
 - (void)updateLDrawDir:(NSString *)ldrawDir
 {
-	ldPreferences->setLDrawDir([ldrawDir cStringUsingEncoding:NSASCIIStringEncoding]);
+	[self updateLDrawDir:ldrawDir apply:YES];
 }
 
 - (bool)updateLdPreferences
@@ -66,7 +83,7 @@
 		NSRunCriticalAlertPanel([OCLocalStrings get:@"InvalidDir"], [OCLocalStrings get:@"LDrawNotInDir"], [OCLocalStrings get:@"OK"], nil, nil);
 		return false;
 	}
-	[self updateLDrawDir:[ldrawDirField stringValue]];
+	[self updateLDrawDir:[ldrawDirField stringValue] apply:NO];
 	for (int i = 0; i < [extraFolders count]; i++)
 	{
 		extraDirs.push_back([[extraFolders objectAtIndex:i] cStringUsingEncoding:NSASCIIStringEncoding]);
