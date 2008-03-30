@@ -243,7 +243,7 @@
 	{
 		if ([self verifyLDrawDir:[openPanel filename] prompt:NO])
 		{
-			[[preferences ldrawPage] updateLDrawDir:[openPanel filename]];
+			[[[self preferences] ldrawPage] updateLDrawDir:[openPanel filename]];
 			return YES;
 		}
 		else
@@ -254,12 +254,13 @@
 			}
 		}
 	}
+	NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
 	return NO;
 }
 
 - (BOOL)verifyLDrawDir
 {
-	return [self verifyLDrawDir:[NSString stringWithCString:LDLModel::lDrawDir() encoding:NSASCIIStringEncoding] prompt:YES];
+	return [self verifyLDrawDir:[[[self preferences] ldrawPage] ldrawDir] prompt:YES];
 }
 
 - (BOOL)verifyLDrawDir:(NSString *)ldrawDir prompt:(BOOL)prompt
@@ -314,18 +315,21 @@
 
 - (void)openModel
 {
-	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-
-	[openPanel setMessage:[OCLocalStrings get:@"SelectModelFile"]];
-	if ([openPanel runModalForTypes:ldrawFileTypes] == NSOKButton)
+	if ([self verifyLDrawDir])
 	{
-		[self openFile:[openPanel filename]];
+		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+
+		[openPanel setMessage:[OCLocalStrings get:@"SelectModelFile"]];
+		if ([openPanel runModalForTypes:ldrawFileTypes] == NSOKButton)
+		{
+			[self openFile:[openPanel filename]];
+		}
 	}
 }
 
 - (IBAction)openModel:(id)sender
 {
-	return [self openModel];
+	[self openModel];
 }
 
 - (Preferences *)preferences
