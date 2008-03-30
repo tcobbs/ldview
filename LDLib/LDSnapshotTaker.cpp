@@ -245,7 +245,6 @@ bool LDSnapshotTaker::saveImage(
 		m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
 		m_modelViewer->setFilename(m_modelFilename.c_str());
 		m_modelFilename = "";
-		m_modelViewer->loadModel();
 		prefs = new LDPreferences(m_modelViewer);
 		prefs->loadSettings();
 		prefs->applySettings();
