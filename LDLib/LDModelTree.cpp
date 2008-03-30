@@ -226,6 +226,7 @@ void LDModelTree::clearFilteredChildren(void)
 {
 	if (m_children)
 	{
+		m_viewPopulated = false;
 		TCObject::release(m_filteredChildren);
 		m_filteredChildren = NULL;
 		for (int i = 0; i < m_children->getCount(); i++)

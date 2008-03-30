@@ -298,6 +298,17 @@
 #define IDC_JPEG_SUBSAMPLING_COMBO      1237
 #define IDC_JPEG_PROGRESSIVE_CHECK      1238
 #define IDC_MODEL_TREE                  1239
+#define IDC_OPTIONS_BUTTON              1240
+#define IDC_OPTIONS                     1240
+#define IDC_COMMENT                     1241
+#define IDC_MODEL                       1242
+#define IDC_LINE                        1243
+#define IDC_TRIANGLE                    1244
+#define IDC_QUAD                        1245
+#define IDC_CONDITIONAL                 1246
+#define IDC_EMPTY                       1247
+#define IDC_UNKNOWN                     1248
+#define IDC_SHOW_BOX                    1249
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -380,7 +391,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        185
 #define _APS_NEXT_COMMAND_VALUE         40093
-#define _APS_NEXT_CONTROL_VALUE         1240
+#define _APS_NEXT_CONTROL_VALUE         1250
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

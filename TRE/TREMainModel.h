@@ -4,7 +4,15 @@
 #include <TRE/TREModel.h>
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCStlIncludes.h>
-#ifndef _NO_BOOST
+
+#if defined(_MSC_VER) && _MSC_VER <= 1200	// VS 6
+#define _NO_TRE_THREADS
+#else  // VS 6
+#ifdef _NO_BOOST
+#define _NO_TRE_THREADS
+#endif // _NO_BOOST
+#endif // VS 6
+#ifndef _NO_TRE_THREADS
 #ifdef WIN32
 #define MutexType recursive_mutex
 #else
@@ -16,7 +24,7 @@ namespace boost
 	class MutexType;
 	class condition;
 }
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 
 class TCDictionary;
 class TREVertexStore;
@@ -275,11 +283,11 @@ protected:
 	virtual void passOnePrep(void);
 	virtual void passTwoPrep(void);
 	virtual void passThreePrep(void);
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	template <class _ScopedLock> bool workerThreadDoWork(_ScopedLock &lock);
 	template <class _ScopedLock> void nextConditionalsStep(_ScopedLock &lock);
 	void workerThreadProc(void);
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 	void launchWorkerThreads(void);
 	int getNumWorkerThreads(void);
 	int getNumBackgroundTasks(void);
@@ -318,14 +326,14 @@ protected:
 	int m_conditionalsStep;
 	TCULongArray *m_activeConditionals[32];
 	TCULongArray *m_activeColorConditionals[32];
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;
 	boost::condition *m_workerCondition;
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
 	bool m_exiting;
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 	struct
 	{
 		// The following are temporal

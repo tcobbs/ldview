@@ -903,7 +903,25 @@ FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Tree1",IDC_MODEL_TREE,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
-                    WS_TABSTOP,0,0,291,206
+                    WS_BORDER | WS_TABSTOP,2,2,206,186,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Options <<<",IDC_OPTIONS,159,190,50,14
+    GROUPBOX        "Show Lines",IDC_SHOW_BOX,211,2,78,112
+    CONTROL         "Comment",IDC_COMMENT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,218,14,45,10
+    CONTROL         "Model",IDC_MODEL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    218,26,35,10
+    CONTROL         "Line",IDC_LINE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    218,38,29,10
+    CONTROL         "Triangle",IDC_TRIANGLE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,218,50,41,10
+    CONTROL         "Quad",IDC_QUAD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    218,62,33,10
+    CONTROL         "Conditional Line",IDC_CONDITIONAL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,218,74,66,10
+    CONTROL         "Empty",IDC_EMPTY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    218,86,35,10
+    CONTROL         "Unknown",IDC_UNKNOWN,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,218,98,47,10
 END
 
 
@@ -1079,6 +1097,9 @@ BEGIN
 
     IDD_MODELTREE, DIALOG
     BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 289
+        TOPMARGIN, 2
         BOTTOMMARGIN, 206
     END
 END

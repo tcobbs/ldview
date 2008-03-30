@@ -957,12 +957,18 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	// needsReload flag during loading.
 	flags.needsReload = false;
 	flags.needsLightingSetup = true;
-	if (!retValue)
+	if (retValue)
+	{
+		TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelLoaded"));
+	}
+	else
 	{
 		TCObject::release(mainModel);
 		mainModel = NULL;
 		TCObject::release(mainTREModel);
 		mainTREModel = NULL;
+		TCAlertManager::sendAlert(loadAlertClass(), this,
+			_UC("ModelLoadCanceled"));
 	}
 	return retValue;
 }

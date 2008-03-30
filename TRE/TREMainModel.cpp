@@ -10,7 +10,7 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 //#define ANTI_DEADLOCK_HACK
@@ -22,7 +22,7 @@ typedef boost::MutexType::scoped_lock ScopedLock;
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
 #endif // __APPLE__
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 
 //const GLfloat POLYGON_OFFSET_FACTOR = 0.85f;
 //const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
@@ -89,14 +89,14 @@ TREMainModel::TREMainModel(void)
 	m_studAnisoLevel(1.0f),
 	m_abort(false),
 	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	, m_threadGroup(NULL)
 	, m_workerMutex(NULL)
 	, m_workerCondition(NULL)
 	, m_sortCondition(NULL)
 	, m_conditionalsCondition(NULL)
 	, m_exiting(false)
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "TREMainModel");
@@ -149,7 +149,7 @@ TREMainModel::~TREMainModel(void)
 
 void TREMainModel::dealloc(void)
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (m_threadGroup)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -169,7 +169,7 @@ void TREMainModel::dealloc(void)
 		delete m_conditionalsCondition;
 		m_conditionalsCondition = NULL;
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 	uncompile();
 	TCObject::release(m_loadedModels);
 	TCObject::release(m_loadedBFCModels);
@@ -564,7 +564,7 @@ int TREMainModel::getNumBackgroundTasks(void)
 
 int TREMainModel::getNumWorkerThreads(void)
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (getMultiThreadedFlag())
 	{
 		int numProcessors = 1;
@@ -611,7 +611,7 @@ int TREMainModel::getNumWorkerThreads(void)
 			return std::min(numProcessors - 1, getNumBackgroundTasks());
 		}
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 	return 0;
 }
 
@@ -668,7 +668,7 @@ void TREMainModel::backgroundConditionals(int step)
 		backgroundConditionals(m_coloredShapes[TREMConditionalLines], step);
 }
 
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 
 template <class _ScopedLock>
 void TREMainModel::nextConditionalsStep(_ScopedLock &lock)
@@ -751,11 +751,11 @@ void TREMainModel::workerThreadProc(void)
 		}
 	}
 }
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 
 void TREMainModel::launchWorkerThreads()
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (m_threadGroup == NULL)
 	{
 		int workerThreadCount = getNumWorkerThreads();
@@ -775,12 +775,12 @@ void TREMainModel::launchWorkerThreads()
 			}
 		}
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 }
 
 void TREMainModel::triggerWorkerThreads(void)
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -793,24 +793,24 @@ void TREMainModel::triggerWorkerThreads(void)
 		memset(m_activeConditionals, 0, sizeof(m_activeConditionals));
 		memset(m_activeColorConditionals, 0, sizeof(m_activeColorConditionals));
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 }
 
 bool TREMainModel::hasWorkerThreads(void)
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
 		return m_threadGroup != NULL;
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 	return false;
 }
 
 void TREMainModel::waitForSort(void)
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -819,16 +819,16 @@ void TREMainModel::waitForSort(void)
 			m_sortCondition->wait(lock);
 		}
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 }
 
-#ifdef _NO_BOOST
+#ifdef _NO_TRE_THREADS
 void TREMainModel::waitForConditionals(int /*step*/)
-#else // _NO_BOOST
+#else // _NO_TRE_THREADS
 void TREMainModel::waitForConditionals(int step)
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 {
-#ifndef _NO_BOOST
+#ifndef _NO_TRE_THREADS
 	if (m_workerMutex)
 	{
 		ScopedLock lock(*m_workerMutex);
@@ -845,7 +845,7 @@ void TREMainModel::waitForConditionals(int step)
 			}
 		}
 	}
-#endif // !_NO_BOOST
+#endif // !_NO_TRE_THREADS
 }
 
 void TREMainModel::draw(void)
