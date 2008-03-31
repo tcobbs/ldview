@@ -175,7 +175,7 @@ bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
 		bool done = false;
 
 		updateName[0] = 0;
-		sprintf(buf, "%s\\models\\complete.txt", m_ldrawDir);
+		sprintf(buf, "%s/models/complete.txt", m_ldrawDir);
 		// LDLModel::openFile just opens a file, but it supports
 		// case-insensitive opening of a file on a case-sensitive file system.
 		completeTextFile = LDLModel::openFile(buf);
@@ -655,9 +655,11 @@ void LDLibraryUpdater::extractUpdate(const char *filename)
 
 		if (unzip->unzip(filename, m_ldrawDirParent) != 0)
 		{
-			sucprintf(m_error, COUNT_OF(m_error),
-				TCLocalStrings::get(_UC("LDLUpdateUnzipError")),
-				filename);
+			UCSTR ucFilename = mbstoucstring(filename);
+			CUCSTR errorFormat =
+				TCLocalStrings::get(_UC("LDLUpdateUnzipError"));
+			sucprintf(m_error, COUNT_OF(m_error), errorFormat, ucFilename);
+			delete ucFilename;
 		}
 		unzip->release();
 	}
@@ -731,7 +733,7 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 
 	TCProgressAlert::send(LD_LIBRARY_UPDATER,
 		TCLocalStrings::get(_UC("LDLUpdateExtracting")), 0.9f, aborted, this);
-	for (i = 0; i < count && !*aborted; i++)
+	for (i = 0; i < count && !*aborted && ucstrlen(m_error) == 0; i++)
 	{
 		const char *url = (*m_updateUrlList)[i];
 		const char *urlFile = strrchr(url, '\\');

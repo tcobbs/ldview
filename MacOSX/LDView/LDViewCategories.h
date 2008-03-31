@@ -8,10 +8,21 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include <TCFoundation/mystring.h>
+
 
 @interface NSButton(LDView)
 
 - (void)setCheck:(bool)value;
 - (bool)getCheck;
+
+@end
+
+@interface NSString(LDView)
+
++ (id)stringWithUCString:(const ucstring &)ucstring;
++ (id)stringWithASCIICString:(const char *)cString;
+- (const char *)asciiCString;
+- (id)initWithUCString:(const ucstring &)ucstring;
 
 @end
