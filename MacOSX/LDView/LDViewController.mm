@@ -4,6 +4,7 @@
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
 #import "LDrawPage.h"
+#import "Updater.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
 #include <TCFoundation/TCWebClient.h>
@@ -254,13 +255,64 @@
 			}
 		}
 	}
-	NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
+	//NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
 	return NO;
 }
 
 - (BOOL)verifyLDrawDir
 {
+	if (!TCUserDefaults::boolForKey(VERIFY_LDRAW_DIR_KEY, true, false))
+	{
+		return YES;
+	}
 	return [self verifyLDrawDir:[[[self preferences] ldrawPage] ldrawDir] prompt:YES];
+}
+
+- (BOOL)checkForUpdates:(NSString *)parentDir full:(bool)full
+{
+	Updater *updater = [[Updater alloc] init];
+
+	if ((full && [updater downloadLDraw:parentDir]) || (!full && [updater checkForUpdates:parentDir]))
+	{
+		[updater release];
+		return YES;
+	}
+	else
+	{
+		[updater release];
+		return NO;
+	}
+}
+
+- (BOOL)downloadLDraw
+{
+	NSString *parentDir = [NSHomeDirectory() stringByAppendingPathComponent:@"Library"];
+	
+	if ([self checkForUpdates:parentDir full:true])
+	{
+		NSString *ldrawDir = [parentDir stringByAppendingPathComponent:@"ldraw"];
+		[[[self preferences] ldrawPage] updateLDrawDir:ldrawDir];
+		NSRunAlertPanel([OCLocalStrings get:@"LDrawInstalled"], [NSString stringWithFormat:[OCLocalStrings get:@"LDrawInstalledFormat"], ldrawDir], [OCLocalStrings get:@"OK"], nil, nil);
+		return YES;
+	}
+	else
+	{
+		return NO;
+	}
+}
+
+- (IBAction)checkForLibraryUpdates:(id)sender
+{
+	NSString *ldrawDir = [[[self preferences] ldrawPage] ldrawDir];
+	
+	if ([self verifyLDrawDir:ldrawDir prompt:NO])
+	{
+		[self checkForUpdates:[ldrawDir stringByDeletingLastPathComponent] full:false];
+	}
+	else
+	{
+		[self downloadLDraw];
+	}
 }
 
 - (BOOL)verifyLDrawDir:(NSString *)ldrawDir prompt:(BOOL)prompt
@@ -269,16 +321,24 @@
 	{
 		if (prompt)
 		{
+			BOOL retValue = NO;
+
 			switch (NSRunAlertPanel([OCLocalStrings get:@"LDrawFolderNotFoundHeader"], [OCLocalStrings get:@"LDrawFolderNotFound"], [OCLocalStrings get:@"BrowseToLDrawFolder"], [OCLocalStrings get:@"DownloadFromLDrawOrg"], [OCLocalStrings get:@"Cancel"]))
 			{
 				case NSAlertDefaultReturn:
-					return [self browseForLDrawDir];
+					retValue = [self browseForLDrawDir];
+					break;
 				case NSAlertAlternateReturn:
+					retValue = [self downloadLDraw];
 					break;
 				case NSAlertOtherReturn:
-					NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
-					return NO;
+					break;
 			}
+			if (!retValue)
+			{
+				NSRunCriticalAlertPanel([OCLocalStrings get:@"Error"], [OCLocalStrings get:@"LDrawFolderRequired"], [OCLocalStrings get:@"OK"], nil, nil);
+			}
+			return retValue;
 		}
 		else
 		{

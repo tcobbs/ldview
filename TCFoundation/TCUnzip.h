@@ -3,6 +3,10 @@
 
 #include <TCFoundation/TCObject.h>
 
+#ifdef __APPLE__
+#define UNZIP_CMD
+#endif // __APPLE__
+
 #if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
 #include <stdlib.h>
 #endif // _QT || __APPLE__ || _OSMESA

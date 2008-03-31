@@ -4,6 +4,7 @@
             ACTIONS = {
                 alwaysOnTop = id; 
                 cancelLoad = id; 
+                checkForLibraryUpdates = id; 
                 customizeToolbar = id; 
                 errorsAndWarnings = id; 
                 examineMode = id; 

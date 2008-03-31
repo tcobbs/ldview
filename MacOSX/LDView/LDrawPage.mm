@@ -1,7 +1,9 @@
 #import "LDrawPage.h"
 #import "OCLocalStrings.h"
 
+#include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDPreferences.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 
 @implementation LDrawPage
 
@@ -34,6 +36,10 @@
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL isDir;
 
+	if ([ldrawDir length] == 0 && !TCUserDefaults::boolForKey(VERIFY_LDRAW_DIR_KEY, true, false))
+	{
+		return true;
+	}
 	if ([fileManager fileExistsAtPath:ldrawDir isDirectory:&isDir] && isDir)
 	{
 		NSString *partsDir = [ldrawDir stringByAppendingPathComponent:@"parts"];
