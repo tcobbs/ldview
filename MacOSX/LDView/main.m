@@ -14,7 +14,12 @@ int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	BOOL done = NO;
-
+//	int i;
+//
+//	for (i = 0; argv[i]; i++)
+//	{
+//		printf("arg%d: <<%s>>\n", i, argv[i]);
+//	}
 	[OCUserDefaults setCommandLine:argv];
 	[OCUserDefaults setAppName:@"LDView"];
 	[OCUserDefaults initSession];
