@@ -66,6 +66,7 @@
 	{
 		ldPreferences->applyLDrawSettings();
 		ldPreferences->commitLDrawSettings();
+		[ldrawDirField setStringValue:ldrawDir];
 	}
 }
 

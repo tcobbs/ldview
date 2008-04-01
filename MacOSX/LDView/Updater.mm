@@ -45,7 +45,7 @@
 			return NSCancelButton;
 		}
 	}
-	if (!isDir)
+	else if (!isDir)
 	{
 		NSRunCriticalAlertPanel([OCLocalStrings get:@"FileExists"], [NSString stringWithFormat:[OCLocalStrings get:@"FileExistsFormat"], ldrawDir], [OCLocalStrings get:@"OK"], nil, nil);
 		return NSCancelButton;
