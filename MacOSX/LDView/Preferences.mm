@@ -81,6 +81,7 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	if (page)
 	{
 		[tabView selectTabViewItemAtIndex:[pages indexOfObject:applyFailedPage]];
+		[window makeKeyAndOrderFront:self];
 	}
 }
 

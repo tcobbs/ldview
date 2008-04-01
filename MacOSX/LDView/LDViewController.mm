@@ -307,7 +307,15 @@
 	
 	if ([self verifyLDrawDir:ldrawDir prompt:NO])
 	{
-		[self checkForUpdates:[ldrawDir stringByDeletingLastPathComponent] full:false];
+		NSString *lastPathComponent = [ldrawDir lastPathComponent];
+		if ([lastPathComponent caseInsensitiveCompare:@"ldraw"] == NSOrderedSame)
+		{
+			[self checkForUpdates:[ldrawDir stringByDeletingLastPathComponent] full:false];
+		}
+		else
+		{
+			NSRunAlertPanel([OCLocalStrings get:@"CannotUpdate"], [NSString stringWithFormat:[OCLocalStrings get:@"AutoUpdatesBadFolder"], lastPathComponent], [OCLocalStrings get:@"OK"], nil, nil);
+		}
 	}
 	else
 	{
