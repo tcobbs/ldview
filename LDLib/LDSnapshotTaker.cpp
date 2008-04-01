@@ -125,7 +125,7 @@ bool LDSnapshotTaker::saveImage(void)
 		{
 			char *arg = unhandledArgs->stringAtIndex(i);
 			
-			if (arg[0] != '-')
+			if (arg[0] != '-' && arg[0] != 0)
 			{
 				char *imageFilename = NULL;
 
