@@ -11,6 +11,12 @@
 
 @implementation GenericSheet
 
+- (void)dealloc
+{
+	[panel release];
+	[super dealloc];
+}
+
 - (id)initWithNibName:(NSString *)nibName
 {
 	if ((self = [super init]) != nil)

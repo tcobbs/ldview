@@ -22,6 +22,7 @@
 
 - (void)dealloc
 {
+	[panel release];
 	TCObject::release(alertHandler);
 	[super dealloc];
 }

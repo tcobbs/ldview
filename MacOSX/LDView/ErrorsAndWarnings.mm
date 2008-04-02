@@ -31,6 +31,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 
 - (void)dealloc
 {
+	[panel release];
 	[errorNames release];
 	[enabledErrors release];
 	[titleFormat release];

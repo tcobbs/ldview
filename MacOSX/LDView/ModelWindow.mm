@@ -626,6 +626,7 @@ enum
 {
 	if ([aNotification object] == window)
 	{
+		[window setDelegate:nil];
 		[controller modelWindowWillClose:self];
 	}
 }

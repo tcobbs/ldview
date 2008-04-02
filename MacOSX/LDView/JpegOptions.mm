@@ -16,6 +16,7 @@
 
 - (void)dealloc
 {
+	[panel release];
 	TCObject::release(options);
 	[super dealloc];
 }
