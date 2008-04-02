@@ -9,7 +9,8 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface GenericSheet : NSObject {
+@interface GenericSheet : NSObject
+{
     IBOutlet NSPanel *panel;
 }
 

@@ -37,6 +37,8 @@
 
 - (void)dealloc
 {
+	[drawer release];
+	[contentView release];
 	[rootModelTreeItem release];
 	TCObject::release(modelTree);
 	[[NSNotificationCenter defaultCenter] removeObserver:self];

@@ -72,12 +72,6 @@
 	[self setCheck:zoomToFitCheck value:false];
 }
 
-- (void)awakeFromNib
-{
-	[super awakeFromNib];
-	[accessoryView retain];
-}
-
 - (NSArray *)allowedFileTypes
 {
 	if ([[fileTypePopUp selectedCell] tag] == 2)

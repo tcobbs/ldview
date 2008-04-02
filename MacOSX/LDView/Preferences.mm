@@ -25,6 +25,7 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 {
 	TCObject::release(ldPreferences);
 	[pages release];
+	[window release];
 	[super dealloc];
 }
 
@@ -39,6 +40,12 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[window makeKeyAndOrderFront:self];
 }
 
+- (void)addPage:(id)page
+{
+	[pages addObject:page];
+	[page release];
+}
+
 - (void)awakeFromNib
 {
 	generalIndex = 0;
@@ -48,13 +55,13 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	primitivesIndex = 4;
 	updatesIndex = 5;
 	prefSetsIndex = 6;
-	[pages addObject:generalPage];
-	[pages addObject:ldrawPage];
-	[pages addObject:geometryPage];
-	[pages addObject:effectsPage];
-	[pages addObject:primitivesPage];
-	[pages addObject:updatesPage];
-	[pages addObject:prefSetsPage];
+	[self addPage:generalPage];
+	[self addPage:ldrawPage];
+	[self addPage:geometryPage];
+	[self addPage:effectsPage];
+	[self addPage:primitivesPage];
+	[self addPage:updatesPage];
+	[self addPage:prefSetsPage];
 	[pages makeObjectsPerformSelector:@selector(setPreferences:) withObject:self];
 	[self loadSettings];
 }
