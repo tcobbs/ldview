@@ -760,6 +760,11 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return modelViewer != NULL && modelViewer->getFilename() != NULL;
+}
+
 - (IBAction)zoomToFit:(id)sender
 {
 	modelViewer->zoomToFit();

@@ -11,6 +11,7 @@
                 flyThroughMode = id; 
                 latLongRotation = id; 
                 modelTree = id; 
+                myAction = id; 
                 partsList = id; 
                 reload = id; 
                 saveSnapshot = id; 

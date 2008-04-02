@@ -13,6 +13,7 @@
 #import "PartsList.h"
 #import "ModelTree.h"
 #import "AlertHandler.h"
+#import "LDViewCategories.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -971,7 +972,16 @@ enum
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	return [controller validateMenuItem:menuItem];
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+
+	if (modelViewer != NULL && modelViewer->getFilename() != NULL)
+	{
+		return [controller validateMenuItem:menuItem];
+	}
+	else
+	{
+		return menuItem == [controller statusBarMenuItem];
+	}
 }
 
 - (IBAction)modelTree:(id)sender
@@ -1017,6 +1027,55 @@ enum
 - (bool)isModelTreeOpen
 {
 	return [modelTree isOpen];
+}
+
+- (void)copyStringToPasteboard:(NSString *)string
+{
+	NSPasteboard *pb = [NSPasteboard generalPasteboard];
+
+	[pb declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:self];
+	[pb setString:string forType:NSStringPboardType];
+}
+
+- (IBAction)showViewInfo:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		ucstring message;
+		ucstring commandLine;
+		
+		if (modelViewer->getViewInfo(message, commandLine))
+		{
+			if (NSRunAlertPanel([OCLocalStrings get:@"ViewInfoTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSOKButton)
+			{
+				[self copyStringToPasteboard:[NSString stringWithUCString:commandLine]];
+			}
+		}
+	}
+}
+
+- (IBAction)showPovCameraInfo:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		UCSTR message;
+		char *povCamera;
+
+		modelViewer->getPovCameraInfo(message, povCamera);
+		if (message && povCamera)
+		{
+			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSOKButton)
+			{
+				[self copyStringToPasteboard:[NSString stringWithASCIICString:povCamera]];
+			}
+		}
+		delete message;
+		delete povCamera;
+	}
 }
 
 @end
