@@ -44,6 +44,7 @@
 //- (IBAction)customizeToolbar:(id)sender;
 - (NSArray *)modelWindows;
 - (void)updateStatusBarMenuItem:(BOOL)showStatusBar;
+- (NSMenuItem *)statusBarMenuItem;
 - (ModelWindow *)currentModelWindow;
 
 @end

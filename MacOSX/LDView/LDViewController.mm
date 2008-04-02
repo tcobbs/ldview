@@ -498,4 +498,9 @@
 	return viewingAngleMenu;
 }
 
+- (NSMenuItem *)statusBarMenuItem
+{
+	return statusBarMenuItem;
+}
+
 @end
