@@ -141,7 +141,7 @@
 	}
 }
 
-- (void)show
+- (void)fixWindowSizeIfNecessary
 {
 	NSWindow *window = [modelWindow window];
 	NSRect windowFrame = [window frame];
@@ -149,19 +149,48 @@
 	NSRect visibleFrame = [[window screen] visibleFrame];
 	NSSize screenSize = visibleFrame.size;
 	float drawerWidth = [drawer contentSize].width + [drawer leadingOffset] + [drawer trailingOffset];
-
+	
 	if (windowSize.width + drawerWidth > screenSize.width)
 	{
 		windowFrame.size.width = screenSize.width - drawerWidth;
 		windowFrame.origin.x = visibleFrame.origin.x;
 		[window setFrame:windowFrame display:YES];
 	}
+}
+
+- (void)open
+{
+	[self fixWindowSizeIfNecessary];
 	[drawer open];
 }
 
-- (void)hide
+- (void)close
 {
 	[drawer close];
+}
+
+- (bool)isOpen
+{
+	switch ([drawer state])
+	{
+		case NSDrawerOpenState:
+		case NSDrawerOpeningState:
+			return true;
+		default:
+			return false;
+	}
+}
+
+- (void)toggle
+{
+	if ([self isOpen])
+	{
+		[self close];
+	}
+	else
+	{
+		[self open];
+	}
 }
 
 - (ModelTreeItem *)modelTreeItem:(id)item

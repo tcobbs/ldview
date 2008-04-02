@@ -34,8 +34,10 @@ class LDLMainModel;
 
 - (void)modelChanged:(NSNotification *)notification;
 - (id)initWithParent:(ModelWindow *)parent;
-- (void)show;
-- (void)hide;
+- (void)open;
+- (void)close;
+- (void)toggle;
+- (bool)isOpen;
 - (void)hideOptionsInstantly:(BOOL)instantly;
 - (void)hideOptions;
 - (void)showOptions;

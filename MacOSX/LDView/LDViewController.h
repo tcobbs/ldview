@@ -15,6 +15,7 @@
 	IBOutlet NSMenuItem *latLongRotationMenuItem;
 	IBOutlet NSMenuItem *flyThroughMenuItem;
 	IBOutlet NSMenuItem *cancelMenuItem;
+	IBOutlet NSMenuItem *modelTreeMenuItem;
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;
 
@@ -29,6 +30,7 @@
 	NSString *toolbarMenuFormat;
 }
 
+- (void)modelWindowWillClose:(ModelWindow *)modelWindow;
 - (BOOL)verifyLDrawDir;
 - (BOOL)verifyLDrawDir:(NSString *)ldrawDir prompt:(BOOL)prompt;
 - (NSMenu *)viewingAngleMenu;

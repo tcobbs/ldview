@@ -626,7 +626,7 @@ enum
 {
 	if ([aNotification object] == window)
 	{
-		[self autorelease];
+		[controller modelWindowWillClose:self];
 	}
 }
 
@@ -979,7 +979,7 @@ enum
 	{
 		modelTree = [[ModelTree alloc] initWithParent:self];
 	}
-	[modelTree show];
+	[modelTree toggle];
 }
 
 - (IBAction)partsList:(id)sender
@@ -1011,6 +1011,11 @@ enum
 		}
 	}
 
+}
+
+- (bool)isModelTreeOpen
+{
+	return [modelTree isOpen];
 }
 
 @end

@@ -156,6 +156,10 @@
 		{
 			[self updateViewModeMenuItems:[modelWindow flyThroughMode]];
 		}
+		else if (item == modelTreeMenuItem)
+		{
+			[item setState:[modelWindow isModelTreeOpen] ? NSOnState : NSOffState];
+		}
 	}
 	return YES;
 }
@@ -220,6 +224,11 @@
 	{
 		return NO;
 	}
+}
+
+- (void)modelWindowWillClose:(ModelWindow *)modelWindow
+{
+	[modelWindows removeObject:modelWindow];
 }
 
 - (IBAction)newWindow:(id)sender
