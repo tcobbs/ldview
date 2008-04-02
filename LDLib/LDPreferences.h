@@ -314,7 +314,7 @@ protected:
 	void loadUpdatesSettings(void);
 	// *************************************************************************
 
-	LDrawModelViewer* modelViewer;
+	LDrawModelViewer* m_modelViewer;
 
 	// General settings
 	int m_fsaaMode;
