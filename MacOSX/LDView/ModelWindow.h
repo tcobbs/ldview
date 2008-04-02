@@ -105,4 +105,6 @@ class LDPartsList;
 - (IBAction)latLongRotation:(id)sender;
 - (IBAction)partsList:(id)sender;
 
+- (bool)isModelTreeOpen;
+
 @end
