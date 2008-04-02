@@ -21,6 +21,10 @@
 		dragType = [theDragType retain];
 		[tableView registerForDraggedTypes:[NSArray arrayWithObject:dragType]];
 		tableViewDataSource = [tableView dataSource];
+		if (tableViewDataSource == nil)
+		{
+			tableViewDataSource = owner;
+		}
 		[tableView setDataSource:self];
 	}
 	return self;

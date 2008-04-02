@@ -98,7 +98,10 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 			LDrawModelView *modelView = [[modelWindows objectAtIndex:i] modelView];
 			ldPreferences->setModelViewer([modelView modelViewer]);
 			ldPreferences->applySettings();
-			ldPreferences->commitSettings();
+			if (i == 0)
+			{
+				ldPreferences->commitSettings();
+			}
 			[modelView setNeedsDisplay:YES];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:LDPreferencesDidUpdateNotification object:self];
