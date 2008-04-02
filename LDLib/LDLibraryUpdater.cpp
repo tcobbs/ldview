@@ -247,7 +247,7 @@ bool LDLibraryUpdater::determineLastUpdate(LDLibraryUpdateInfoArray
 
 				strcpy(tmpFilename, updateInfoName);
 				strncpy(tmpFilename, "note", 4);
-				sprintf(buf, "%s\\models\\%s.txt", m_ldrawDir, tmpFilename);
+				sprintf(buf, "%s/models/%s.txt", m_ldrawDir, tmpFilename);
 				if (fileExists(buf))
 				{
 					strcpy(updateName, updateInfoName);
