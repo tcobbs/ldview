@@ -619,9 +619,11 @@ static TCImage *resizeCornerImage = NULL;
 	if (modelViewer)
 	{
 		[[self openGLContext] makeCurrentContext];
-		if (modelViewer->getNeedsReload())
+		if (modelViewer->getNeedsReload() && !loading)
 		{
+			loading = YES;
 			modelViewer->reload();
+			loading = NO;
 		}
 		[[self openGLContext] makeCurrentContext];
 		if (modelViewer->getNeedsRecompile())
@@ -674,15 +676,35 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)drawRect:(NSRect)rect
 {
-	if (modelViewer && modelViewer->getFilename() && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
+	BOOL skip = NO;
+
+	if (loading)
+	{
+		skip = YES;
+	}
+	else if (modelViewer && modelViewer->getFilename() && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
 	{
 		[[self modelWindow] modelWillReload];
-		loading = YES;
+		skip = YES;
 	}
-	if (loading || !modelViewer || modelViewer->getUpdating())
+	if (skip || [[self modelWindow] loading] || !modelViewer || modelViewer->getUpdating())
 	{
-		[[NSColor blackColor]  set];
-		NSRectFill(rect);
+		if (modelViewer)
+		{
+			float r = (float)modelViewer->getBackgroundR() / 255.0f;
+			float g = (float)modelViewer->getBackgroundG() / 255.0f;
+			float b = (float)modelViewer->getBackgroundB() / 255.0f;
+
+			glClearColor(r, g, b, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			[[self openGLContext] flushBuffer];
+			//[[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f] set];
+		}
+		else
+		{
+			[[NSColor blackColor]  set];
+			NSRectFill(rect);
+		}
 		return;
 	}
 	[[self openGLContext] makeCurrentContext];
@@ -728,7 +750,10 @@ static TCImage *resizeCornerImage = NULL;
 	}
 	else
 	{
-		[[self modelWindow] performSelectorOnMainThread:@selector(clearFps) withObject:nil waitUntilDone:NO];
+		if ([[self modelWindow] fps] != 0.0)
+		{
+			[[self modelWindow] performSelectorOnMainThread:@selector(clearFps) withObject:nil waitUntilDone:NO];
+		}
 		//[[self modelWindow] clearFps];
 	}
 	//long swapInterval;

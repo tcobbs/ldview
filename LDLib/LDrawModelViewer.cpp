@@ -879,6 +879,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 {
 	int retValue = 0;
 
+	TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelLoading"));
 	if (filename && filename[0])
 	{
 		TCObject::release(mainModel);

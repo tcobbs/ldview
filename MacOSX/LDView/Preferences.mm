@@ -23,6 +23,7 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	TCObject::release(ldPreferences);
 	[pages release];
 	[window release];
@@ -46,8 +47,26 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[page release];
 }
 
+- (void)modelLoading:(NSNotification *)notification
+{
+	loading = YES;
+	[applyButton setEnabled:NO];
+	[okButton setEnabled:NO];
+}
+
+- (void)modelLoaded:(NSNotification *)notification
+{
+	loading = NO;
+	[applyButton setEnabled:applyEnabled];
+	[okButton setEnabled:YES];
+}
+
 - (void)awakeFromNib
 {
+	if ([[controller currentModelWindow] loading])
+	{
+		[self modelLoading:nil];
+	}
 	generalIndex = 0;
 	ldrawIndex = 1;
 	geometryIndex = 2;
@@ -64,6 +83,9 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self addPage:prefSetsPage];
 	[pages makeObjectsPerformSelector:@selector(setPreferences:) withObject:self];
 	[self loadSettings];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelLoading:) name:@"ModelLoading" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelLoaded:) name:@"ModelLoaded" object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelLoaded:) name:@"ModelLoadCanceled" object:nil];
 }
 
 - (void)initModelWindow:(ModelWindow *)value
@@ -137,7 +159,11 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 
 - (void)enableApply:(BOOL)enabled
 {
-	[applyButton setEnabled:enabled];
+	applyEnabled = enabled;
+	if (!loading || !enabled)
+	{
+		[applyButton setEnabled:enabled];
+	}
 	[window setDocumentEdited:enabled];
 }
 

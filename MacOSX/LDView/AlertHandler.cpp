@@ -26,6 +26,7 @@ AlertHandler::AlertHandler(ModelWindow *modelWindow)
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this, (TCAlertCallback)&AlertHandler::progressAlertCallback);
 	TCAlertManager::registerHandler(LDrawModelViewer::alertClass(), this, (TCAlertCallback)&AlertHandler::modelViewerAlertCallback);
 	TCAlertManager::registerHandler(LDrawModelViewer::redrawAlertClass(), this, (TCAlertCallback)&AlertHandler::redrawAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(), this, (TCAlertCallback)&AlertHandler::loadAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::captureAlertClass(), this, (TCAlertCallback)&AlertHandler::captureAlertCallback);
 	TCAlertManager::registerHandler(LDInputHandler::releaseAlertClass(), this, (TCAlertCallback)&AlertHandler::releaseAlertCallback);
 	TCAlertManager::registerHandler(LDPreferences::lightVectorChangedAlertClass(), this, (TCAlertCallback)&AlertHandler::lightVectorChangedAlertCallback);
@@ -60,6 +61,11 @@ void AlertHandler::progressAlertCallback(TCProgressAlert *alert)
 void AlertHandler::redrawAlertCallback(TCAlert *alert)
 {
 	[modelWindow redrawAlertCallback:alert];
+}
+
+void AlertHandler::loadAlertCallback(TCAlert *alert)
+{
+	[modelWindow loadAlertCallback:alert];
 }
 
 void AlertHandler::captureAlertCallback(TCAlert *alert)

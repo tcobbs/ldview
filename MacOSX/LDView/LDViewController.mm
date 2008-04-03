@@ -47,8 +47,16 @@
 
 - (ModelWindow *)currentModelWindow
 {
-	return (ModelWindow *)[[[NSApplication sharedApplication] mainWindow]
-		delegate];
+	id delegate = [[[NSApplication sharedApplication] mainWindow] delegate];
+	
+	if ([delegate isKindOfClass:[ModelWindow class]])
+	{
+		return delegate;
+	}
+	else
+	{
+		return nil;
+	}
 }
 
 - (LDrawModelView *)currentModelView
@@ -166,10 +174,9 @@
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if (menuItem == latLongRotationMenuItem)
+	if ([[self currentModelWindow] loading])
 	{
-		ModelWindow *modelWindow = [[NSApp mainWindow] delegate];
-		if ([modelWindow isKindOfClass:[ModelWindow class]] && ![modelWindow flyThroughMode])
+		if (menuItem == cancelMenuItem)
 		{
 			return YES;
 		}
@@ -178,15 +185,23 @@
 			return NO;
 		}
 	}
-	else if (menuItem == cancelMenuItem)
+	else
 	{
-		if ([[self currentModelWindow] loading])
-		{
-			return YES;
-		}
-		else
+		if (menuItem == cancelMenuItem)
 		{
 			return NO;
+		}
+		else if (menuItem == latLongRotationMenuItem)
+		{
+			ModelWindow *modelWindow = [[NSApp mainWindow] delegate];
+			if ([modelWindow isKindOfClass:[ModelWindow class]] && ![modelWindow flyThroughMode])
+			{
+				return YES;
+			}
+			else
+			{
+				return NO;
+			}
 		}
 	}
 	return YES;

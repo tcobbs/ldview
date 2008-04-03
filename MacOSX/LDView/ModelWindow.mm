@@ -386,29 +386,14 @@ enum
 	filteredRootErrorItem = nil;
 	[window setTitleWithRepresentedFilename:filename];
 	[window makeKeyAndOrderFront:self];
-	loadCanceled = false;
-	loading = true;
 	if ([modelView openModel:filename])
 	{
-		[self enableToolbarItems:YES];
-		if ([[ErrorsAndWarnings sharedInstance] isVisible])
-		{
-			[[ErrorsAndWarnings sharedInstance] update:self];
-		}
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoaded" object:self];
-		loading = false;
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoaded" object:self];
 		return YES;
 	}
 	else
 	{
-		if (!loadCanceled)
-		{
-			NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], [filename cStringUsingEncoding:NSASCIIStringEncoding]], [OCLocalStrings get:@"OK"], nil, nil);
-		}
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoadCanceled" object:self];
-		[[self window] setTitleWithRepresentedFilename:@""];
-		[[self window] setTitle:initialTitle];
-		loading = false;
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoadCanceled" object:self];
 		return NO;
 	}
 }
@@ -509,12 +494,6 @@ enum
 	{
 		return;
 	}
-	if ([NSOpenGLContext currentContext] != [modelView openGLContext])
-	{
-		// This alert is coming from a different model viewer.
-		[self showStatusBar:showStatusBar];
-		return;
-	}
 	static NSDate *lastProgressUpdate = NULL;
 	float alertProgress = alert->getProgress();
 	NSString *alertMessage = [NSString stringWithCString:alert->getMessage()
@@ -522,10 +501,10 @@ enum
 	BOOL forceUpdate = NO;
 	BOOL updated = NO;
 
-	if ([self showStatusBar:YES])
-	{
-		[window display];
-	}
+	//if ([self showStatusBar:YES])
+	//{
+	//	[window display];
+	//}
 	if (![alertMessage isEqualToString:[progressMessage stringValue]])
 	{
 		[progressMessage setStringValue:alertMessage];
@@ -564,7 +543,14 @@ enum
 						[[controller currentModelWindow] cancelLoad:self];
 					}
 				}
-				[NSApp sendEvent:event];
+				else if ([event window] == window)
+				{
+					skip = true;
+				}
+				if (!skip)
+				{
+					[NSApp sendEvent:event];
+				}
 			}
 		}
 	}
@@ -576,7 +562,7 @@ enum
 			[progress setHidden:YES];
 			[self adjustProgressMessageSize: progressAdjust]; 
 		}
-		[self showStatusBar:showStatusBar];
+		//[self showStatusBar:showStatusBar];
 	}
 	if (forceUpdate && !updated)
 	{
@@ -591,6 +577,56 @@ enum
 - (void)modelViewerAlertCallback:(TCAlert *)alert
 {
 	[modelView modelViewerAlertCallback:alert];
+}
+
+- (void)loadAlertCallback:(TCAlert *)alert
+{
+	LDrawModelViewer *modelViewer = (LDrawModelViewer *)alert->getSender();
+	
+	if (modelViewer == [modelView modelViewer])
+	{
+		NSString *message = [NSString stringWithASCIICString:alert->getMessage()];
+
+		if ([message isEqualToString:@"ModelLoading"])
+		{
+			loading = true;
+			loadCanceled = false;
+			if ([self showStatusBar:YES])
+			{
+				[window display];
+			}
+		}
+		else if ([message isEqualToString:@"ModelLoaded"])
+		{
+			if ([self showStatusBar:showStatusBar])
+			{
+				[window display];
+			}
+			[self enableToolbarItems:YES];
+			if ([[ErrorsAndWarnings sharedInstance] isVisible])
+			{
+				[[ErrorsAndWarnings sharedInstance] update:self];
+			}
+			loading = false;
+			[modelView rotationUpdate];
+		}
+		else if ([message isEqualToString:@"ModelLoadCanceled"])
+		{
+			if ([self showStatusBar:showStatusBar])
+			{
+				[window display];
+			}
+			if (!loadCanceled)
+			{
+				NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], modelViewer->getFilename()], [OCLocalStrings get:@"OK"], nil, nil);
+			}
+			loading = false;
+			[[self window] setTitleWithRepresentedFilename:@""];
+			[[self window] setTitle:initialTitle];
+			[modelView rotationUpdate];
+		}
+		[[NSNotificationCenter defaultCenter] postNotificationName:message object:self];
+	}
 }
 
 - (void)redrawAlertCallback:(TCAlert *)alert
@@ -631,6 +667,11 @@ enum
 		[window setDelegate:nil];
 		[controller modelWindowWillClose:self];
 	}
+}
+
+- (float)fps
+{
+	return fps;
 }
 
 - (void)showFps
@@ -692,6 +733,10 @@ enum
 	fps = 0.0f;
 	fpsFrameCount = 1;
 	[self showFps];
+	if (!showStatusBar)
+	{
+		[modelView rotationUpdate];
+	}
 }
 
 - (void)setShowStatusBar:(BOOL)value
