@@ -22,6 +22,7 @@ protected:
 	void progressAlertCallback(TCProgressAlert *alert);
 	void modelViewerAlertCallback(TCAlert *alert);
 	void redrawAlertCallback(TCAlert *alert);
+	void loadAlertCallback(TCAlert *alert);
 	void captureAlertCallback(TCAlert *alert);
 	void releaseAlertCallback(TCAlert *alert);
 	void lightVectorChangedAlertCallback(TCAlert *alert);

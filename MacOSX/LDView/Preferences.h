@@ -43,6 +43,8 @@ extern NSString *LDPreferencesDidUpdateNotification;
 	int updatesIndex;
 	int prefSetsIndex;
 	PreferencePage *applyFailedPage;
+	BOOL applyEnabled;
+	BOOL loading;
 }
 
 - (LDrawPage *)ldrawPage;
