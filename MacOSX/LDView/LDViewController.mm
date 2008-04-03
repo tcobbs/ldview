@@ -503,4 +503,15 @@
 	return statusBarMenuItem;
 }
 
+- (IBAction)showHelp:(id)sender
+{
+	NSString *helpPath = [[NSBundle mainBundle] pathForResource:@"Help" ofType:@"html"];
+	NSURL *helpURL = [NSURL URLWithString:[[[NSURL fileURLWithPath:helpPath] absoluteString] stringByAppendingString:@"#MacNotes"]];
+
+	// NSWorkspace strips off the #MacNotes when openURL: is used.  What a pain.
+	// Fortunately, all the system APIs that expect CFURLRefs will automatically
+	// work with an NSURL simply by type-casting, so the solution is trivial.
+	LSOpenCFURLRef((CFURLRef)helpURL, NULL);
+}
+
 @end

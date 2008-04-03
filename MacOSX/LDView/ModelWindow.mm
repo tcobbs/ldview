@@ -14,6 +14,7 @@
 #import "ModelTree.h"
 #import "AlertHandler.h"
 #import "LDViewCategories.h"
+#import "OpenGLDriverInfo.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -1075,6 +1076,26 @@ enum
 		}
 		delete message;
 		delete povCamera;
+	}
+}
+
+- (IBAction)openGLDriverInfo:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		int numExtensions;
+		UCSTR openGlMessage = modelViewer->getOpenGLDriverInfo(numExtensions);
+		
+		if (openGlMessage)
+		{
+			OpenGLDriverInfo *driverInfo = [[OpenGLDriverInfo alloc] init];
+			
+			[driverInfo showWithInfo:[NSString stringWithUCString:openGlMessage] numExtensions:numExtensions];
+			delete openGlMessage;
+			[driverInfo release];
+		}
 	}
 }
 
