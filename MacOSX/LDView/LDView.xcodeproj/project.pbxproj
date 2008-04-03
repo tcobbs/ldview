@@ -67,6 +67,9 @@
 		1F6125760C793C0700548053 /* error_non_flat_quad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F61256A0C793C0700548053 /* error_non_flat_quad.png */; };
 		1F6125770C793C0700548053 /* error_parse.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F61256B0C793C0700548053 /* error_parse.png */; };
 		1F6125780C793C0700548053 /* error_vertex_order.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F61256C0C793C0700548053 /* error_vertex_order.png */; };
+		1F6191620DA48458002A6192 /* Help.html in Resources */ = {isa = PBXBuildFile; fileRef = 1F6191610DA48458002A6192 /* Help.html */; };
+		1F6191AE0DA49680002A6192 /* OpenGLDriverInfo.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */; };
+		1F6191B10DA4968F002A6192 /* OpenGLDriverInfo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */; };
 		1F8418E60D358B9900FAF665 /* JpegOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8418E40D358B9900FAF665 /* JpegOptions.nib */; };
@@ -250,6 +253,10 @@
 		1F61256A0C793C0700548053 /* error_non_flat_quad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = error_non_flat_quad.png; path = Images/error_non_flat_quad.png; sourceTree = "<group>"; };
 		1F61256B0C793C0700548053 /* error_parse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = error_parse.png; path = Images/error_parse.png; sourceTree = "<group>"; };
 		1F61256C0C793C0700548053 /* error_vertex_order.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = error_vertex_order.png; path = Images/error_vertex_order.png; sourceTree = "<group>"; };
+		1F6191610DA48458002A6192 /* Help.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; name = Help.html; path = ../../Help.html; sourceTree = SOURCE_ROOT; };
+		1F6191AD0DA49680002A6192 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/OpenGLDriverInfo.nib; sourceTree = "<group>"; };
+		1F6191AF0DA4968F002A6192 /* OpenGLDriverInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OpenGLDriverInfo.h; sourceTree = "<group>"; };
+		1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLDriverInfo.mm; sourceTree = "<group>"; };
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MyResizeCorner.png; path = Images/MyResizeCorner.png; sourceTree = "<group>"; };
 		1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotTaker.h; sourceTree = "<group>"; };
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
@@ -352,6 +359,8 @@
 				1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */,
 				1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */,
 				1F20DAE80A60BEF900F677AC /* OCUserDefaults.mm */,
+				1F6191AF0DA4968F002A6192 /* OpenGLDriverInfo.h */,
+				1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */,
 				1F5A35650D9629220072BAE3 /* PartsList.h */,
 				1F5A35660D9629220072BAE3 /* PartsList.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
@@ -457,6 +466,7 @@
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
+				1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
@@ -530,6 +540,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1F6191610DA48458002A6192 /* Help.html */,
 				1F6125610C793C0700548053 /* error_colinear.png */,
 				1F6125620C793C0700548053 /* error_color.png */,
 				1F6125630C793C0700548053 /* error_concave_quad.png */,
@@ -731,6 +742,8 @@
 				1F2CAD490D8F63A600A98C9A /* ModelTree.nib in Resources */,
 				1F5A35620D9627E70072BAE3 /* PartsList.nib in Resources */,
 				1F3E59FE0DA03D1200D83112 /* Updater.nib in Resources */,
+				1F6191620DA48458002A6192 /* Help.html in Resources */,
+				1F6191AE0DA49680002A6192 /* OpenGLDriverInfo.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -779,6 +792,7 @@
 				1F9BB9060D9F351500B06DDE /* SnapshotAlertHandler.mm in Sources */,
 				1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */,
 				1F3E5A010DA03E0500D83112 /* Updater.mm in Sources */,
+				1F6191B10DA4968F002A6192 /* OpenGLDriverInfo.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -846,6 +860,14 @@
 				1F5A35610D9627E70072BAE3 /* English */,
 			);
 			name = PartsList.nib;
+			sourceTree = "<group>";
+		};
+		1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F6191AD0DA49680002A6192 /* English */,
+			);
+			name = OpenGLDriverInfo.nib;
 			sourceTree = "<group>";
 		};
 		1F8418E40D358B9900FAF665 /* JpegOptions.nib */ = {

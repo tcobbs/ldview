@@ -12,6 +12,7 @@
                 latLongRotation = id; 
                 modelTree = id; 
                 myAction = id; 
+                openGLDriverInfo = id; 
                 partsList = id; 
                 reload = id; 
                 saveSnapshot = id; 
@@ -29,7 +30,13 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {newWindow = id; openModel = id; preferences = id; resetView = id; }; 
+            ACTIONS = {
+                newWindow = id; 
+                openModel = id; 
+                preferences = id; 
+                resetView = id; 
+                showHelp = id; 
+            }; 
             CLASS = LDViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
