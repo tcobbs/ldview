@@ -176,7 +176,8 @@
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if ([[self currentModelWindow] loading])
+	ModelWindow *modelWindow = [self currentModelWindow];
+	if ([modelWindow loading])
 	{
 		if (menuItem == cancelMenuItem)
 		{
@@ -189,14 +190,13 @@
 	}
 	else
 	{
-		if (menuItem == cancelMenuItem)
+		if (menuItem == cancelMenuItem || [modelWindow sheetBusy])
 		{
 			return NO;
 		}
 		else if (menuItem == latLongRotationMenuItem)
 		{
-			ModelWindow *modelWindow = [[NSApp mainWindow] delegate];
-			if ([modelWindow isKindOfClass:[ModelWindow class]] && ![modelWindow flyThroughMode])
+			if (![modelWindow flyThroughMode])
 			{
 				return YES;
 			}
@@ -382,13 +382,18 @@
 	return YES;
 }
 
+- (BOOL)newWindowNeeded
+{
+	return [[[self preferences] generalPage] newModelWindows] || [[self currentModelWindow] sheetBusy];
+}
+
 - (BOOL)openFile:(NSString *)filename
 {
 	if (![self verifyLDrawDir])
 	{
 		return NO;
 	}
-	if (![[NSApplication sharedApplication] mainWindow] || [[[self preferences] generalPage] newModelWindows])
+	if (![[NSApplication sharedApplication] mainWindow] || [self newWindowNeeded])
 	{
 		if ([self createWindow:filename])
 		{
@@ -435,7 +440,7 @@
 
 - (IBAction)openModel:(id)sender
 {
-	[self openModelInNewWindow:[[[self preferences] generalPage] newModelWindows]];
+	[self openModelInNewWindow:[self newWindowNeeded]];
 }
 
 - (Preferences *)preferences
