@@ -20,6 +20,9 @@
 }
 
 - (bool)showErrorsIfNeeded;
+- (bool)promptAtStartup;
+- (bool)newModelWindows;
+
 - (void)setup;
 - (bool)updateLdPreferences;
 

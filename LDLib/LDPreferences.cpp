@@ -142,17 +142,41 @@ void LDPreferences::applyLDrawSettings(void)
 {
 	if (m_ldrawDir.size() > 0)
 	{
-		LDLModel::setLDrawDir(m_ldrawDir.c_str());
+		if (strcmp(m_ldrawDir.c_str(), LDLModel::lDrawDir()) != 0)
+		{
+			LDLModel::setLDrawDir(m_ldrawDir.c_str());
+			if (m_modelViewer)
+			{
+				m_modelViewer->setNeedsReload();
+			}
+		}
 	}
 	if (m_modelViewer)
 	{
+		TCStringArray *oldExtraDirs = m_modelViewer->getExtraSearchDirs();
 		TCStringArray *extraDirs = new TCStringArray;
-		
+		bool different = false;
+
+		if ((oldExtraDirs != NULL &&
+			(size_t)oldExtraDirs->getCount() != m_extraDirs.size()) ||
+			(oldExtraDirs == NULL && m_extraDirs.size() != 0))
+		{
+			different = true;
+		}
 		for (size_t i = 0; i < m_extraDirs.size(); i++)
 		{
-			extraDirs->addString(m_extraDirs[i].c_str());
+			const char *extraDir = m_extraDirs[i].c_str();
+
+			extraDirs->addString(extraDir);
+			if (!different && strcmp(extraDir, oldExtraDirs->stringAtIndex(i)))
+			{
+				different = true;
+			}
 		}
-		m_modelViewer->setExtraSearchDirs(extraDirs);
+		if (different)
+		{
+			m_modelViewer->setExtraSearchDirs(extraDirs);
+		}
 		extraDirs->release();
 	}
 }
