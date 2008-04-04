@@ -153,6 +153,14 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	titleFormat = [[panel title] retain];
 }
 
+- (IBAction)showIfNeeded
+{
+	if (errors > 0)
+	{
+		[self show:self];
+	}
+}
+
 - (IBAction)show:(id)sender
 {
 	[panel makeKeyAndOrderFront:sender];
@@ -261,12 +269,12 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	ErrorItem *filteredRoot = [[ErrorItem alloc] init];
 	int count = [unfilteredRoot numberOfChildren];
-	int errors = 0;
-	int warnings = 0;
 	NSString *errorText = @"";
 	NSString *warningText = @"";
 	NSString *spaceText = @"";
-	
+
+	errors = 0;
+	warnings = 0;
 	for (int i = 0; i < count; i++)
 	{
 		ErrorItem *child = [unfilteredRoot childAtIndex:i];

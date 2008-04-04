@@ -15,6 +15,7 @@
 #import "AlertHandler.h"
 #import "LDViewCategories.h"
 #import "OpenGLDriverInfo.h"
+#import "GeneralPage.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -598,17 +599,23 @@ enum
 		}
 		else if ([message isEqualToString:@"ModelLoaded"])
 		{
+			bool showErrorsIfNeeded = [[[controller preferences] generalPage] showErrorsIfNeeded];
+
 			if ([self showStatusBar:showStatusBar])
 			{
 				[window display];
 			}
 			[self enableToolbarItems:YES];
-			if ([[ErrorsAndWarnings sharedInstance] isVisible])
+			loading = false;
+			[modelView rotationUpdate];
+			if ([[ErrorsAndWarnings sharedInstance] isVisible] || showErrorsIfNeeded)
 			{
 				[[ErrorsAndWarnings sharedInstance] update:self];
 			}
-			loading = false;
-			[modelView rotationUpdate];
+			if (showErrorsIfNeeded)
+			{
+				[[ErrorsAndWarnings sharedInstance] showIfNeeded];
+			}
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
