@@ -19,6 +19,7 @@
     IBOutlet NSButton *transparentDefaultCheck;
 }
 
+- (bool)showErrorsIfNeeded;
 - (void)setup;
 - (bool)updateLdPreferences;
 

@@ -20,11 +20,14 @@ extern NSString *LDErrorFilterChange;
 	NSMutableArray *enabledErrors;
 	ErrorItem *rootErrorItem;
 	NSString *titleFormat;
+	int errors;
+	int warnings;
 }
 
 - (id)init;
 + (id)sharedInstance;
 
+- (IBAction)showIfNeeded;
 - (IBAction)copyError:(id)sender;
 - (IBAction)errorSelected:(id)sender;
 - (IBAction)includeWarnings:(id)sender;

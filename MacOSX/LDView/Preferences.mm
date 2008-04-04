@@ -249,4 +249,9 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	return ldrawPage;
 }
 
+- (GeneralPage *)generalPage
+{
+	return generalPage;
+}
+
 @end

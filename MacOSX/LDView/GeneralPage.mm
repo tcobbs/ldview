@@ -25,6 +25,11 @@
 	[memoryUsagePopUp selectItemWithTag:ldPreferences->getMemoryUsage()];
 }
 
+- (bool)showErrorsIfNeeded
+{
+	return ldPreferences->getShowErrors();
+}
+
 - (bool)updateLdPreferences
 {
 	int r, g, b;
