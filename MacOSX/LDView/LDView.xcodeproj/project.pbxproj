@@ -99,6 +99,7 @@
 		1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */; };
 		1FE965B40C5D596D00C80B59 /* PrefSetNewSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FE965B30C5D596D00C80B59 /* PrefSetNewSheet.mm */; };
 		1FE965BB0C5D59E700C80B59 /* GenericSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */; };
+		1FF905C20DA60DCE003A9AC0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1FF905C00DA60DCE003A9AC0 /* Credits.rtf */; };
 		1FFC7DC80C5C095F004B8A2F /* PrefSetHotKey.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */; };
 		1FFC7DCC0C5C61C3004B8A2F /* PrefSetHotKeySheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FFC7DCB0C5C61C3004B8A2F /* PrefSetHotKeySheet.mm */; };
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
@@ -299,6 +300,7 @@
 		1FE965B30C5D596D00C80B59 /* PrefSetNewSheet.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrefSetNewSheet.mm; sourceTree = "<group>"; };
 		1FE965B90C5D59E700C80B59 /* GenericSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericSheet.h; sourceTree = "<group>"; };
 		1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GenericSheet.mm; sourceTree = "<group>"; };
+		1FF905C10DA60DCE003A9AC0 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1FFC7DC70C5C095F004B8A2F /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/PrefSetHotKey.nib; sourceTree = "<group>"; };
 		1FFC7DCA0C5C61C3004B8A2F /* PrefSetHotKeySheet.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrefSetHotKeySheet.h; sourceTree = "<group>"; };
 		1FFC7DCB0C5C61C3004B8A2F /* PrefSetHotKeySheet.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrefSetHotKeySheet.mm; sourceTree = "<group>"; };
@@ -540,6 +542,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1FF905C00DA60DCE003A9AC0 /* Credits.rtf */,
 				1F6191610DA48458002A6192 /* Help.html */,
 				1F6125610C793C0700548053 /* error_colinear.png */,
 				1F6125620C793C0700548053 /* error_color.png */,
@@ -744,6 +747,7 @@
 				1F3E59FE0DA03D1200D83112 /* Updater.nib in Resources */,
 				1F6191620DA48458002A6192 /* Help.html in Resources */,
 				1F6191AE0DA49680002A6192 /* OpenGLDriverInfo.nib in Resources */,
+				1FF905C20DA60DCE003A9AC0 /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -908,6 +912,14 @@
 				1FE965B00C5D595A00C80B59 /* English */,
 			);
 			name = PrefSetNew.nib;
+			sourceTree = "<group>";
+		};
+		1FF905C00DA60DCE003A9AC0 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FF905C10DA60DCE003A9AC0 /* English */,
+			);
+			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
 		1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */ = {
