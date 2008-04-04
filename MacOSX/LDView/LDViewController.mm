@@ -5,13 +5,15 @@
 #import "OCUserDefaults.h"
 #import "LDrawPage.h"
 #import "Updater.h"
+#import "Preferences.h"
+#import "GeneralPage.h"
+
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
 #include <TCFoundation/TCWebClient.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
-#include "Preferences.h"
 
 @implementation LDViewController
 
@@ -386,7 +388,7 @@
 	{
 		return NO;
 	}
-	if (![[NSApplication sharedApplication] mainWindow])
+	if (![[NSApplication sharedApplication] mainWindow] || [[[self preferences] generalPage] newModelWindows])
 	{
 		if ([self createWindow:filename])
 		{
@@ -405,7 +407,7 @@
 	return NO;
 }
 
-- (void)openModel
+- (void)openModelInNewWindow:(BOOL)newWindow
 {
 	if ([self verifyLDrawDir])
 	{
@@ -414,14 +416,26 @@
 		[openPanel setMessage:[OCLocalStrings get:@"SelectModelFile"]];
 		if ([openPanel runModalForTypes:ldrawFileTypes] == NSOKButton)
 		{
-			[self openFile:[openPanel filename]];
+			if (newWindow)
+			{
+				[self createWindow:[openPanel filename]];
+			}
+			else
+			{
+				[self openFile:[openPanel filename]];
+			}
 		}
 	}
 }
 
+- (void)openModel
+{
+	[self openModelInNewWindow:NO];
+}
+
 - (IBAction)openModel:(id)sender
 {
-	[self openModel];
+	[self openModelInNewWindow:[[[self preferences] generalPage] newModelWindows]];
 }
 
 - (Preferences *)preferences
@@ -453,7 +467,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-	if (!launchFileOpened)
+	if (!launchFileOpened && [[[self preferences] generalPage] promptAtStartup])
 	{
 		[self openModel];
 	}

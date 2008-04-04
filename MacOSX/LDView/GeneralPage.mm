@@ -1,6 +1,7 @@
 #import "GeneralPage.h"
 #import "Preferences.h"
 #include <LDLib/LDPreferences.h>
+#include <TCFoundation/TCUserDefaults.h>
 
 @implementation GeneralPage
 
@@ -9,6 +10,8 @@
 	int r, g, b;
 	
 	[super setup];
+	[self setCheck:promptAtStartupCheck value:[self promptAtStartup]];
+	[self setCheck:newModelWindowsCheck value:[self newModelWindows]];
 	[self setCheck:antialiasedLinesCheck
 		value:ldPreferences->getLineSmoothing()];
 	[self setCheck:showFrameRateCheck value:ldPreferences->getShowFps()];
@@ -25,6 +28,16 @@
 	[memoryUsagePopUp selectItemWithTag:ldPreferences->getMemoryUsage()];
 }
 
+- (bool)promptAtStartup
+{
+	return TCUserDefaults::boolForKey("PromptForModelAtStartup", true, false);
+}
+
+- (bool)newModelWindows
+{
+	return TCUserDefaults::boolForKey("OpenModelsInNewWindows", false, false);
+}
+
 - (bool)showErrorsIfNeeded
 {
 	return ldPreferences->getShowErrors();
@@ -33,7 +46,9 @@
 - (bool)updateLdPreferences
 {
 	int r, g, b;
-	
+
+	TCUserDefaults::setBoolForKey([self getCheck:promptAtStartupCheck], "PromptForModelAtStartup", false);
+	TCUserDefaults::setBoolForKey([self getCheck:newModelWindowsCheck], "OpenModelsInNewWindows", false);	
 	ldPreferences->setLineSmoothing([self getCheck:antialiasedLinesCheck]);
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
