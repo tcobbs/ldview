@@ -39,6 +39,8 @@ public:
 	bool saveImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
 	bool saveImage(void);
+	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
+		TCByte *buffer, bool *saveAlpha);
 	static bool doCommandLine(void);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }
@@ -51,12 +53,11 @@ protected:
 		bool saveAlpha);
 	bool writeImage(const char *filename, int width, int height, TCByte *buffer,
 		char *formatName, bool saveAlpha);
-	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
-		TCByte *buffer, bool *saveAlpha);
 	bool canSaveAlpha(void);
 	void renderOffscreenImage(void);
 	bool imageProgressCallback(CUCSTR message, float progress);
 	bool shouldZoomToFit(bool zoomToFit);
+	void grabSetup(void);
 
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
 		void* userData);

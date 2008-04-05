@@ -235,21 +235,6 @@ bool LDSnapshotTaker::saveImage(
 	int imageHeight,
 	bool zoomToFit)
 {
-	TCAlertManager::sendAlert(alertClass(), this, _UC("PreSave"));
-	if (!m_modelViewer)
-	{
-		LDPreferences *prefs;
-		GLint viewport[4];
-		
-		glGetIntegerv(GL_VIEWPORT, viewport);
-		m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
-		m_modelViewer->setFilename(m_modelFilename.c_str());
-		m_modelFilename = "";
-		prefs = new LDPreferences(m_modelViewer);
-		prefs->loadSettings();
-		prefs->applySettings();
-		prefs->release();
-	}
 	bool saveAlpha = false;
 	TCByte *buffer = grabImage(imageWidth, imageHeight,
 		shouldZoomToFit(zoomToFit), NULL, &saveAlpha);
@@ -420,6 +405,25 @@ void LDSnapshotTaker::renderOffscreenImage(void)
 	m_modelViewer->update();
 }
 
+void LDSnapshotTaker::grabSetup(void)
+{
+	TCAlertManager::sendAlert(alertClass(), this, _UC("PreSave"));
+	if (!m_modelViewer)
+	{
+		LDPreferences *prefs;
+		GLint viewport[4];
+		
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		m_modelViewer = new LDrawModelViewer(viewport[2], viewport[3]);
+		m_modelViewer->setFilename(m_modelFilename.c_str());
+		m_modelFilename = "";
+		prefs = new LDPreferences(m_modelViewer);
+		prefs->loadSettings();
+		prefs->applySettings();
+		prefs->release();
+	}
+}
+
 TCByte *LDSnapshotTaker::grabImage(
 	int &imageWidth,
 	int &imageHeight,
@@ -427,6 +431,8 @@ TCByte *LDSnapshotTaker::grabImage(
 	TCByte *buffer,
 	bool *saveAlpha)
 {
+	grabSetup();
+
 	GLenum bufferFormat = GL_RGB;
 	bool origForceZoomToFit = m_modelViewer->getForceZoomToFit();
 	TCVector origCameraPosition = m_modelViewer->getCamera().getPosition();
@@ -444,6 +450,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	int bytesPerPixel = 3;
 	int bytesPerLine;
 	int smallBytesPerLine;
+	int reallySmallBytesPerLine;
 	bool canceled = false;
 	bool bufferAllocated = false;
 
@@ -482,6 +489,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	imageWidth = newWidth * numXTiles;
 	imageHeight = newHeight * numYTiles;
 	smallBytesPerLine = TCImage::roundUp(newWidth * bytesPerPixel, 4);
+	reallySmallBytesPerLine = newWidth * bytesPerPixel;
 	bytesPerLine = TCImage::roundUp(imageWidth * bytesPerPixel, 4);
 	if (!buffer)
 	{
@@ -528,7 +536,7 @@ TCByte *LDSnapshotTaker::grabImage(
 							bytesPerLine + xTile * newWidth * bytesPerPixel;
 
 						memcpy(&buffer[offset], &smallBuffer[smallOffset],
-							smallBytesPerLine);
+							reallySmallBytesPerLine);
 					}
 					// We only need to zoom to fit on the first tile; the
 					// rest will already be correct.
