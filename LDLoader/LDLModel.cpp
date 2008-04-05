@@ -29,6 +29,7 @@ LDrawIniS *LDLModel::sm_lDrawIni = NULL;
 int LDLModel::sm_modelCount = 0;
 LDLFileCaseCallback LDLModel::fileCaseCallback = NULL;
 LDLModel::LDLModelCleanup LDLModel::sm_cleanup;
+StringList LDLModel::sm_checkDirs;
 
 LDLModel::LDLModelCleanup::~LDLModelCleanup(void)
 {
@@ -510,6 +511,68 @@ void LDLModel::setLDrawDir(const char *value)
 	}
 }
 
+void LDLModel::initCheckDirs()
+{
+	const char *value = getenv("LDRAWDIR");
+
+	if (value)
+	{
+		sm_checkDirs.push_back(value);
+	}
+#ifdef WIN32
+	char buf[1024];
+	
+	if (GetPrivateProfileString("LDraw", "BaseDirectory", "", buf, 1024,
+		"ldraw.ini"))
+	{
+		buf[1023] = 0;
+	}
+	if (buf[0])
+	{
+		sm_checkDirs.push_back(envValue);
+	}
+	sm_checkDirs.push_back("C:\\ldraw");
+#else // WIN32
+#ifdef __APPLE__
+	const char *libDir = "/Library/ldraw";
+	const char *homeDir = getenv("HOME");
+
+	if (homeDir != NULL)
+	{
+		char *homeLib = copyString(homeDir, strlen(libDir));
+		
+		stripTrailingPathSeparators(homeLib);
+		strcat(homeLib, libDir);
+		sm_checkDirs.push_back(homeLib);
+		delete homeLib;
+	}
+	sm_checkDirs.push_back(libDir);
+	sm_checkDirs.push_back("/Applications/Bricksmith/LDraw");
+#else // __APPLE__
+	sm_checkDirs.push_back("/usr/local/ldraw");
+#endif // __APPLE__
+#endif // WIN32
+	char *ldviewDir = copyString(TCUserDefaults::getAppPath());
+	stripTrailingPathSeparators(ldviewDir);
+	char *ldviewLDrawDir = copyString(ldviewDir, 10);
+
+	// LDView Dir/ldraw
+	strcat(ldviewLDrawDir, "/ldraw");
+	sm_checkDirs.push_back(ldviewLDrawDir);
+#ifndef COCOA
+	delete ldviewLDrawDir;
+	char *ldviewParentDir = directoryFromPath(ldviewDir);
+	stripTrailingPathSeparators(ldviewParentDir);
+	ldviewLDrawDir = copyString(ldviewParentDir, 10);
+	// LDView Dir/../ldraw
+	strcat(ldviewLDrawDir, "/ldraw");
+	sm_checkDirs.push_back(ldviewLDrawDir);
+	delete ldviewParentDir;
+#endif // COCOA
+	delete ldviewDir;
+	delete ldviewLDrawDir;
+}
+
 // NOTE: static function.
 const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 {
@@ -529,98 +592,22 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 	}
 	if (!sm_systemLDrawDir)
 	{
-		setLDrawDir(getenv("LDRAWDIR"));
-//		sm_systemLDrawDir = copyString(getenv("LDRAWDIR"));
-		if (!verifyLDrawDir(sm_systemLDrawDir))
+		bool found = false;
+	
+		initCheckDirs();
+		for (StringList::const_iterator it = sm_checkDirs.begin(); !found &&
+			 it != sm_checkDirs.end(); it++)
 		{
-			delete sm_systemLDrawDir;
-			sm_systemLDrawDir = NULL;
+			const char *dir = it->c_str();
+
+			if (verifyLDrawDir(dir))
+			{
+				setLDrawDir(dir);
+				found = true;
+			}
 		}
-		if (!sm_systemLDrawDir)
+		if (!found)
 		{
-			setLDrawDir(NULL);
-		}
-		if (!sm_systemLDrawDir)
-		{
-#ifdef WIN32
-			char buf[1024];
-
-			if (GetPrivateProfileString("LDraw", "BaseDirectory",
-				"", buf, 1024, "ldraw.ini"))
-			{
-				buf[1023] = 0;
-				if (verifyLDrawDir(buf))
-				{
-					setLDrawDir(buf);
-//					sm_systemLDrawDir = copyString(buf);
-				}
-			}
-			if (!sm_systemLDrawDir)
-			{
-				setLDrawDir("C:\\LDRAW");
-//				sm_systemLDrawDir = copyString("C:\\LDRAW");
-			}
-#else // WIN32
-#ifdef __APPLE__
-			const char *libDir = "/Library/ldraw";
-			const char *homeDir = getenv("HOME");
-
-			if (homeDir != NULL)
-			{
-				char *homeLib = copyString(homeDir, strlen(libDir));
-				
-				stripTrailingPathSeparators(homeLib);
-				strcat(homeLib, libDir);
-				if (verifyLDrawDir(homeLib))
-				{
-					setLDrawDir(homeLib);
-				}
-				delete homeLib;
-			}
-			if (!sm_systemLDrawDir)
-			{
-				setLDrawDir(libDir);
-			}
-#else // __APPLE__
-			setLDrawDir("/usr/local/ldraw");
-//			sm_systemLDrawDir = copyString("/usr/local/ldraw");
-#endif // __APPLE__
-#endif // WIN32
-		}
-		if (!verifyLDrawDir(sm_systemLDrawDir))
-		{
-			char *ldviewDir = copyString(TCUserDefaults::getAppPath(), 10);
-
-			if (ldviewDir && ldviewDir[0])
-			{
-				int len = strlen(ldviewDir);
-
-				strcpy(&ldviewDir[len], "LDRAW");
-				setLDrawDir(ldviewDir);
-				ldviewDir[len - 1] = 0;
-				if (!verifyLDrawDir(sm_systemLDrawDir))
-				{
-					char *slashSpot = strrchr(ldviewDir, '/');
-#ifdef WIN32
-					char *backslashSpot = strrchr(ldviewDir, '\\');
-
-					if (!slashSpot || backslashSpot > slashSpot)
-					{
-						slashSpot = backslashSpot;
-					}
-#endif // WIN32
-					if (slashSpot)
-					{
-						strcpy(&slashSpot[1], "LDRAW");
-						setLDrawDir(ldviewDir);
-					}
-				}
-			}
-			delete ldviewDir;
-		}
-		if (!verifyLDrawDir(sm_systemLDrawDir))
-		{
-			delete sm_systemLDrawDir;
 			sm_systemLDrawDir = copyString("");
 		}
 	}

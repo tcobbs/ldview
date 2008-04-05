@@ -27,6 +27,7 @@ typedef enum
 } BFCState;
 
 typedef std::list<int> IntList;
+typedef std::list<std::string> StringList;
 
 typedef bool (*LDLFileCaseCallback)(char *filename);
 typedef void (TCObject::*LDLScanPointCallback)(const TCVector &point,
@@ -155,6 +156,7 @@ protected:
 	void scanRadiusPoint(const TCVector &point, LDLFileLine *pFileLine);
 
 	static bool verifyLDrawDir(const char *value);
+	static void initCheckDirs();
 
 	char *m_filename;
 	char *m_name;
@@ -193,6 +195,7 @@ protected:
 		BFCState bfcCertify:3;
 	} m_flags;
 
+	static StringList sm_checkDirs;
 	static char *sm_systemLDrawDir;
 	static char *sm_defaultLDrawDir;
 	static LDrawIniS *sm_lDrawIni;
