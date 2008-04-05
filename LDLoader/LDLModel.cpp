@@ -486,7 +486,14 @@ void LDLModel::setLDrawDir(const char *value)
 	if (value != sm_systemLDrawDir || !value)
 	{
 		delete sm_systemLDrawDir;
-		sm_systemLDrawDir = copyString(value);
+		if (value)
+		{
+			sm_systemLDrawDir = cleanedUpPath(value);
+		}
+		else
+		{
+			sm_systemLDrawDir = NULL;
+		}
 		if (sm_lDrawIni)
 		{
 			LDrawIniFree(sm_lDrawIni);
@@ -529,7 +536,7 @@ void LDLModel::initCheckDirs()
 	}
 	if (buf[0])
 	{
-		sm_checkDirs.push_back(envValue);
+		sm_checkDirs.push_back(buf);
 	}
 	sm_checkDirs.push_back("C:\\ldraw");
 #else // WIN32
@@ -567,7 +574,6 @@ void LDLModel::initCheckDirs()
 	// LDView Dir/../ldraw
 	strcat(ldviewLDrawDir, "/ldraw");
 	sm_checkDirs.push_back(ldviewLDrawDir);
-	delete ldviewParentDir;
 #endif // COCOA
 	delete ldviewDir;
 	delete ldviewLDrawDir;
@@ -593,8 +599,11 @@ const char* LDLModel::lDrawDir(bool defaultValue /*= false*/)
 	if (!sm_systemLDrawDir)
 	{
 		bool found = false;
-	
-		initCheckDirs();
+
+		if (sm_checkDirs.size() == 0)
+		{
+			initCheckDirs();
+		}
 		for (StringList::const_iterator it = sm_checkDirs.begin(); !found &&
 			 it != sm_checkDirs.end(); it++)
 		{
