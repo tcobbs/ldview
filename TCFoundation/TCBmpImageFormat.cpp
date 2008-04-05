@@ -7,9 +7,6 @@
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 
-#define BMP_FILE_HEADER_SIZE 14
-#define BMP_INFO_HEADER_SIZE 40
-
 TCBmpImageFormat::TCBmpImageFormat(void)
 {
 	name = "BMP";
