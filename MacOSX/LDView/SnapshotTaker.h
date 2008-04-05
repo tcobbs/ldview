@@ -35,5 +35,6 @@ class SnapshotAlertHandler;
 - (void)setAutoCrop:(bool)value;
 - (bool)saveFile;
 - (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit;
+- (NSImage *)imageWithWidth:(int)width height:(int)height zoomToFit:(bool)zoomToFit;
 
 @end

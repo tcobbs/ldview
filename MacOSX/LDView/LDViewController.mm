@@ -548,4 +548,9 @@
 	LSOpenCFURLRef((CFURLRef)helpURL, NULL);
 }
 
+- (IBAction)print:(id)sender
+{
+	[[self currentModelView] print:sender];
+}
+
 @end

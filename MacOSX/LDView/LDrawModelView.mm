@@ -1,6 +1,7 @@
 #import "LDrawModelView.h"
 #import "ModelWindow.h"
 #import "OCLocalStrings.h"
+#import "SnapshotTaker.h"
 #import <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -674,10 +675,57 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
+- (BOOL)knowsPageRange:(NSRangePointer)aRange
+{
+	aRange->location = 1;
+	aRange->length = 1;
+	return YES;
+}
+
+- (NSRect)rectForPage:(int)pageNumber
+{
+	return (NSRect)
+	{
+		{0, 0},
+		[[[NSPrintOperation currentOperation] printInfo] paperSize]
+	};
+}
+
+- (NSPoint)locationOfPrintRect:(NSRect)aRect
+{
+	return NSMakePoint(0.0f, 0.0f);
+}
+
+- (void)printRect:(NSRect)rect
+{
+	NSPrintInfo	*printInfo = [[NSPrintOperation currentOperation] printInfo];
+	SnapshotTaker *snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:modelViewer sharedContext:sharedContext];
+	NSImage *image;
+	int backgroundR = modelViewer->getBackgroundR();
+	int backgroundG = modelViewer->getBackgroundG();
+	int backgroundB = modelViewer->getBackgroundB();
+	int backgroundA = modelViewer->getBackgroundA();
+	float dpi = TCUserDefaults::floatForKey(PRINT_DPI_KEY, 300.0, false);
+	NSRect page = { {0.0f, 0.0f}, [printInfo paperSize] };
+	NSRect printRect = { { 72.0f, 72.0f }, { page.size.width - 144.0f, page.size.height - 144.0f } };
+
+	modelViewer->setBackgroundRGBA(255, 255, 255, 255);
+	image = [snapshotTaker imageWithWidth:(int)(printRect.size.width * dpi / 72.0f) height:(int)(printRect.size.height * dpi / 72.0f) zoomToFit:true];	
+	modelViewer->setBackgroundRGBA(backgroundR, backgroundG, backgroundB, backgroundA);
+	printRect = NSIntegralRect(printRect);
+	[image drawInRect:printRect fromRect:NSMakeRect(0.0f, 0.0f, [image size].width, [image size].height) operation:NSCompositeCopy fraction:1.0f];
+	//[(NSImageRep *)[[image representations] lastObject] drawInRect:printRect];
+}
+
 - (void)drawRect:(NSRect)rect
 {
 	BOOL skip = NO;
 
+	if (![NSGraphicsContext currentContextDrawingToScreen])
+	{
+		[self printRect:rect];
+		return;
+	}
 	if (loading)
 	{
 		skip = YES;
