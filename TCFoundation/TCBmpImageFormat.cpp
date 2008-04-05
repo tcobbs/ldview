@@ -297,108 +297,71 @@ bool TCBmpImageFormat::readImageData(TCImage *image, FILE *file)
 	return !failed && !canceled;
 }
 
-bool TCBmpImageFormat::writeValue(FILE *file, unsigned short value)
+int TCBmpImageFormat::writeValue(TCByte *buf, unsigned short value, int offset)
 {
-	TCByte buf[2];
-
 	// Write the value in little endian format
-	buf[0] = (TCByte)value;
-	buf[1] = (TCByte)(value >> 8);
-	return fwrite(buf, 1, 2, file) == 2;
+	buf[offset] = (TCByte)value;
+	buf[offset + 1] = (TCByte)(value >> 8);
+	return offset + 2;
 }
 
-bool TCBmpImageFormat::writeValue(FILE *file, unsigned long value)
+int TCBmpImageFormat::writeValue(TCByte *buf, unsigned long value, int offset)
 {
-	TCByte buf[4];
-
 	// Write the value in little endian format
-	buf[0] = (TCByte)value;
-	buf[1] = (TCByte)(value >> 8);
-	buf[2] = (TCByte)(value >> 16);
-	buf[3] = (TCByte)(value >> 24);
-	return fwrite(buf, 1, 4, file) == 4;
+	buf[offset] = (TCByte)value;
+	buf[offset + 1] = (TCByte)(value >> 8);
+	buf[offset + 2] = (TCByte)(value >> 16);
+	buf[offset + 3] = (TCByte)(value >> 24);
+	return offset + 4;
 }
 
-bool TCBmpImageFormat::writeValue(FILE *file, long value)
+int TCBmpImageFormat::writeValue(TCByte *buf, long value, int offset)
 {
-	return writeValue(file, (unsigned long)value);
+	return writeValue(buf, (unsigned long)value, offset);
 }
 
-bool TCBmpImageFormat::writeFileHeader(TCImage *image, FILE *file)
+int TCBmpImageFormat::writeHeader(int width, int height, TCByte *buf)
 {
-	int rowSize = image->roundUp(image->getWidth() * 3, 4);
-	DWORD imageSize = rowSize * image->getHeight();
+	int offset = writeFileHeader(width, height, buf);
 
-	if (!writeValue(file, (WORD)0x4D42)) // 'BM'
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE +
-		imageSize))
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)0)) // Reserved
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE))
-	{
-		return false;
-	}
-	return true;
+	return writeInfoHeader(width, height, buf, offset);
 }
 
-bool TCBmpImageFormat::writeInfoHeader(TCImage *image, FILE *file)
+int TCBmpImageFormat::writeFileHeader(int width, int height, TCByte *buf)
 {
-	int rowSize = image->roundUp(image->getWidth() * 3, 4);
-	DWORD imageSize = rowSize * image->getHeight();
+	int rowSize = TCImage::roundUp(width * 3, 4);
+	DWORD imageSize = rowSize * height;
+	int offset = 0;
 
-	if (!writeValue(file, (DWORD)BMP_INFO_HEADER_SIZE))
-	{
-		return false;
-	}
-	if (!writeValue(file, (long)image->getWidth()))
-	{
-		return false;
-	}
-	if (!writeValue(file, (long)image->getHeight()))
-	{
-		return false;
-	}
-	if (!writeValue(file, (WORD)1)) // # of planes
-	{
-		return false;
-	}
-	if (!writeValue(file, (WORD)24)) // BPP
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)0)) // Compression
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)imageSize))
-	{
-		return false;
-	}
-	if (!writeValue(file, (long)2835)) // X Pixels per meter: 72 DPI
-	{
-		return false;
-	}
-	if (!writeValue(file, (long)2835)) // Y Pixels per meter: 72 DPI
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)0)) // # of colors used
-	{
-		return false;
-	}
-	if (!writeValue(file, (DWORD)0)) // # of important colors: 0 == all
-	{
-		return false;
-	}
-	return true;
+	offset = writeValue(buf, (WORD)0x4D42, offset); // 'BM'
+	offset = writeValue(buf,
+		(DWORD)(BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE + imageSize),
+		offset);
+	offset = writeValue(buf, (DWORD)0, offset); // Reserved
+	return writeValue(buf, (DWORD)(BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE),
+		offset);
+}
+
+int TCBmpImageFormat::writeInfoHeader(
+	int width,
+	int height,
+	TCByte *buf,
+	int offset)
+{
+	int rowSize = TCImage::roundUp(width * 3, 4);
+	DWORD imageSize = rowSize * height;
+
+	offset = writeValue(buf, (DWORD)BMP_INFO_HEADER_SIZE, offset);
+	offset = writeValue(buf, (long)width, offset);
+	offset = writeValue(buf, (long)height, offset);
+	offset = writeValue(buf, (WORD)1, offset); // # of planes
+	offset = writeValue(buf, (WORD)24, offset); // BPP
+	offset = writeValue(buf, (DWORD)0, offset); // Compression
+	offset = writeValue(buf, (DWORD)imageSize, offset);
+	offset = writeValue(buf, (long)2835, offset); // X Pixels per meter: 72 DPI
+	offset = writeValue(buf, (long)2835, offset); // Y Pixels per meter: 72 DPI
+	offset = writeValue(buf, (DWORD)0, offset); // # of colors used
+	return writeValue(buf, (DWORD)0, offset); // # of important colors: 0 == all
 }
 
 bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
@@ -476,11 +439,10 @@ bool TCBmpImageFormat::writeImageData(TCImage *image, FILE *file)
 
 bool TCBmpImageFormat::saveFile(TCImage *image, FILE *file)
 {
-	if (!writeFileHeader(image, file))
-	{
-		return false;
-	}
-	if (!writeInfoHeader(image, file))
+	TCByte header[BMP_HEADER_SIZE];
+	int size = writeHeader(image->getWidth(), image->getHeight(), header);
+
+	if (fwrite(header, 1, size, file) != (size_t)size)
 	{
 		return false;
 	}
