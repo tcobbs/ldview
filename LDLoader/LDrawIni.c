@@ -788,7 +788,7 @@ c:\car.ldr   c:
       while (--i >= 0)
       {
          if (ModelPath[i] == '/' || ModelPath[i] == '\\')
-            break;  
+            break;
       }
       /* i is now reduced to only copy dir part of ModelPath */
       if (i < 0)
