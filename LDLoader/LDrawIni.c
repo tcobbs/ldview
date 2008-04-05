@@ -1,10 +1,31 @@
-/*
-Handle quotes in symbolic searchdirs
-< > check in sym dirs
+/* LDrawIni.c  Routines for finding LDrawDir and SearchDirs
+Read more on http://www.ldraw.org
+
+If you make any changes to this file, please contact me, and I'll probably
+adopt the changes for the benefit of other users.
+
+Copyright (c) 2004-2007  Lars C. Hassing (SP.lars@AM.hassings.dk)
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom
+the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/* LDrawIni.c */
-/*
+/*****************************************************************************
 If this code works, it was written by Lars C. Hassing.
 If not, I don't know who wrote it.
 040228 lch First version of LDrawIni handling routines
@@ -12,48 +33,34 @@ If not, I don't know who wrote it.
 040319 lch Added LDrawInP.h (Really LDrawIniP.h but 8+3 name...)
 040513 lch Added LDrawIniParseSymbolicSearchDir
 041202 lch Changed parameter ModelDir to ModelPath in LDrawIniComputeRealDirs
+041229 lch Removed LgeoDir
+050527 lch Added defines LDRAWINI_BEGIN_STDC/LDRAWINI_END_STDC for extern "C"
+050530 lch Added support for Mac OS X org.ldraw.plist
+071120 lch Added LDrawIniReadSectionKey
+071204 lch Fixed compiler warnings from Mac and Linux
+071205 lch Allow search for LDraw/LgeoDirectory in Mac .plist
+******************************************************************************/
+
+/*
+Handle quotes in symbolic searchdirs
+< > check in sym dirs
 */
-
-#ifdef WIN32
-#pragma warning(disable: 4305)
-#endif // WIN32
-
-#include <TCFoundation/TCDefines.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-/*
-#include "direct.h"
-#include <sys/types.h>
-*/
 #include <sys/stat.h>
+#ifdef __TURBOC__
+#include <alloc.h>
+#endif
 #include "LDrawIni.h"
 #include "LDrawInP.h"
 
-/*
-External references:
-malloc
-calloc
-realloc
-free
-strdup
-strlen
-strcpy
-strcat
-strcmp
-strncmp
-strncpy
-strchr
-fopen
-fclose
-getc
-ungetc
-ferror
-memcpy
-sprintf
-getenv
-stat
+LDRAWINI_BEGIN_STDC
+
+/* External references:
+calloc fclose ferror fopen free getc getenv malloc memcpy memmove realloc
+sprintf stat strcat strchr strcmp strcpy strdup strlen strncmp strncpy ungetc
 */
 
 /* Preprocessor flags:
@@ -69,6 +76,9 @@ stat
 */
 /* Naming refers to Windows platform */
 #if defined(_WIN32) || defined(__TURBOC__)
+// Disable warning message C4305: 'identifier' : truncation from 'type1' to 'type2'.
+// Disable warning message C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead.
+#pragma warning( disable : 4305 4996 )
 #define BACKSLASH_CHAR '\\'
 #define BACKSLASH_STRING "\\"
 #define SLASH_CHAR '/'
@@ -87,7 +97,7 @@ stat
 #define  realloc  farrealloc
 #define  free     farfree
 #define  strdup   Strdup
-static char *Strdup(const char *Str);
+static char *Strdup(const char *Str);     /* Uses farmalloc in TurboC        */
 #endif
 
 static void FreeSearchDirs(struct LDrawIniS * LDrawIni);
@@ -95,14 +105,16 @@ static void FreeSymbolicDirs(struct LDrawIniS * LDrawIni);
 static const char *GetDefaultLDrawSearch(void);
 static int SplitLDrawSearch(const char *LDrawSearchString,
                             int *nDirs, char ***Dirs);
-static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
-                             const char *Section, const char *Key,
-                             char *Str, int sizeofStr, char *IniFile);
-static void FixSlashes(register char *Path);
-static int IsDir(char *Path, LDrawFileCaseCallback FileCaseCallback);
-static char *L3fgets(char *Str, int n, FILE *fp);
-static void TrimRight(char *Str, int BlanksToo);
 
+static void L3FixSlashes(register char *Path);
+static int L3IsDir(char *Path, L3FileCaseCallback FileCaseCallback);
+static char *L3fgets(char *Str, int n, FILE *fp);
+static void L3TrimRight(char *Str, int BlanksToo);
+#ifdef __APPLE__
+static char *L3FirstNonBlank(register const char *s);
+#endif
+static char *strcpySafe(char *s, size_t Size, const char *t);
+static char *strcatSafe(char *s, size_t Size, const char *t);
 
 /*
 Initialize and read all settings.
@@ -147,7 +159,8 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
    if (!e)
    {
       /* Then try LDraw.ini files */
-      if (!ReadLDrawIniFiles(LDrawIni, "LDraw", "BaseDirectory", Str, sizeof(Str), NULL))
+      if (!LDrawIniReadSectionKey(LDrawIni, "LDraw", "BaseDirectory",
+                                  Str, sizeof(Str), NULL, 0))
       {
          if (ErrorCode)
             *ErrorCode = LDRAWINI_ERROR_LDRAWDIR_NOT_SET;
@@ -157,7 +170,7 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
       e = Str;
    }
    LDrawIni->LDrawDir = strdup(e);
-   FixSlashes(LDrawIni->LDrawDir);
+   L3FixSlashes(LDrawIni->LDrawDir);
 
    /* LDrawSearch, read symbolic dirs */
    pd = LDrawIni->PrivateData;
@@ -198,12 +211,13 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
       }
       else
       {
-         /* Then try LDraw.ini files (be sure to read all from same ini
-            file)                                                            */
-         IniFile[0] = '\0';
-         if (ReadLDrawIniFiles(LDrawIni, "LDrawSearch", "1", Str, sizeof(Str), IniFile))
+         /* Then try LDraw.ini files */
+         IniFile[0] = '\0';     /* Be sure to read all from same ini file    */
+         if (LDrawIniReadSectionKey(LDrawIni, "LDrawSearch", "1",
+                                    Str, sizeof(Str),
+                                    IniFile, sizeof(IniFile)))
          {
-            /* Key "1" found, alloc room for 99 dirs */
+            /* Key "1" found, allocate room for 99 dirs */
             pd->SymbolicSearchDirs = (char **) malloc(99 * sizeof(char *));
             if (!pd->SymbolicSearchDirs)
                return NULL;     /* No more memory, just give up              */
@@ -213,7 +227,9 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
                if (!pd->SymbolicSearchDirs[pd->nSymbolicSearchDirs++])
                   return NULL;  /* No more memory, just give up              */
                sprintf(Key, "%d", pd->nSymbolicSearchDirs + 1);
-               if (!ReadLDrawIniFiles(LDrawIni, "LDrawSearch", Key, Str, sizeof(Str), IniFile))
+               if (!LDrawIniReadSectionKey(LDrawIni, "LDrawSearch", Key,
+                                           Str, sizeof(Str),
+                                           IniFile, sizeof(IniFile)))
                   break;
             }
             /* Reduce memory to those found */
@@ -235,21 +251,6 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
       }
    }
 
-   /* LgeoDir */
-
-   e = getenv("LGEODIR");       /* Try environment variable                  */
-   if (!e)
-   {
-      /* Then try LDraw.ini files */
-      if (ReadLDrawIniFiles(LDrawIni, "LDraw", "LgeoDirectory", Str, sizeof(Str), NULL))
-         e = Str;               /* It was defined in an ini file             */
-   }
-   if (e)
-   {
-      LDrawIni->LgeoDir = strdup(e);
-      FixSlashes(LDrawIni->LgeoDir);
-   }
-
    if (ErrorCode)
       *ErrorCode = 0;
    return LDrawIni;
@@ -259,7 +260,7 @@ struct LDrawIniS *LDrawIniGet(const char *LDrawDir, int *ErrorCode)
 Set file case callback
 */
 int LDrawIniSetFileCaseCallback(struct LDrawIniS *LDrawIni,
-                                LDrawFileCaseCallback FileCaseCallback)
+                                L3FileCaseCallback FileCaseCallback)
 {
    if (LDrawIni->PrivateData)
    {
@@ -284,8 +285,6 @@ void LDrawIniFree(struct LDrawIniS * LDrawIni)
    FreeSearchDirs(LDrawIni);
    if (LDrawIni->ModelDir)
       free(LDrawIni->ModelDir);
-   if (LDrawIni->LgeoDir)
-      free(LDrawIni->LgeoDir);
 
    /* Free private data */
    FreeSymbolicDirs(LDrawIni);
@@ -293,7 +292,6 @@ void LDrawIniFree(struct LDrawIniS * LDrawIni)
 
    free(LDrawIni);
 }
-
 
 /*
 Reset search dirs to default if LDrawSearch is NULL
@@ -315,7 +313,6 @@ int LDrawIniResetSearchDirs(struct LDrawIniS * LDrawIni,
                            &pd->nSymbolicSearchDirs,
                            &pd->SymbolicSearchDirs);
 }
-
 
 static void FreeSearchDirs(struct LDrawIniS * LDrawIni)
 {
@@ -395,31 +392,165 @@ static int SplitLDrawSearch(const char *LDrawSearchString, int *nDirs, char ***D
 }
 
 #ifdef __APPLE__
+/* Ini format:
+[LDraw]
+BaseDirectory=d:\Lars\Lego\LDraw\LDRAW
+[LDrawSearch]
+1=<MODELDIR>
+2=<HIDE><DEFPRIM><LDRAWDIR>\P
+3=<DEFPART><LDRAWDIR>\PARTS
+4=<LDRAWDIR>\MODELS
+5=<DEFPART><LDRAWDIR>\UnOff\PARTS
+*/
 /* XML/plist format:
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Author</key>
-    <string>William Shakespeare</string>
-    <key>Lines</key>
-    <array>
-        <string>It is a tale told by an idiot,</string>
-        <string>Full of sound and fury, signifying nothing.</string>
-    </array>
-    <key>Birthdate</key>
-    <integer>1564</integer>
+        <key>LDRAWDIR</key>
+        <string>~/Library/ldraw</string>
+        <key>LDrawSearch</key>
+        <dict>
+                <key>1</key>
+                <string>&lt;MODELDIR&gt;</string>
+                <key>2</key>
+                <string>&lt;HIDE&gt;&lt;DEFPRIM&gt;&lt;LDRAWDIR&gt;/P</string>
+                <key>3</key>
+                <string>&lt;DEFPART&gt;&lt;LDRAWDIR&gt;/PARTS</string>
+                <key>4</key>
+                <string>&lt;LDRAWDIR&gt;/MODELS</string>
+                <key>5</key>
+                <string>&lt;DEFPART&gt;&lt;LDRAWDIR&gt;/UnOff/PARTS</string>
+        </dict>
 </dict>
 </plist>
 */
+
+static char *Entities[] = {
+   "<" "lt",
+   ">" "gt",
+   "\"" "quot",
+   "&" "amp",
+   "'" "apos",
+   NULL
+};
+/* Replaces "&lt;" with "<" etc. */
+void ReplaceEntities(register char *s)
+{
+   register char **e;
+   register int   l;
+
+   while (*s)
+   {
+      if (*s++ != '&')
+         continue;
+      for (e = Entities; *e; e++)
+      {
+         l = strlen(*e + 1);
+         if (strncmp(s, *e + 1, l) == 0 && s[l] == ';')
+         {
+            s[-1] = **e;
+            memmove(s, s + l + 1, strlen(s + l));  /* Not memcpy (overlap)   */
+            break;
+         }
+      }
+   }
+}
+
+/* Returns 1 if OK, 0 if Section/Key not found or error */
+int LDrawIniReadOpenPlistFile(FILE *fp, const char *PlistFile,
+                              const char *Section, const char *Key,
+                              char *Str, int sizeofStr)
+{
+   char           Buf[400];
+   char          *s;
+   char          *t;
+   int            InSection;
+   int            DictLevel;
+   int            KeyDictLevel;
+   int            GetNextString;
+
+   if (strcmp(Section, "LDraw") == 0)
+   {
+      Section = NULL;           /* "LDraw" is the default section            */
+      if (strcmp(Key, "BaseDirectory") == 0)
+         Key = "LDRAWDIR";      /* For backward compatibility                */
+   }
+   DictLevel = 0;
+   GetNextString = 0;
+   if (!Section || !*Section)
+   {
+      KeyDictLevel = 1;
+      InSection = 1;
+   }
+   else
+   {
+      KeyDictLevel = 2;
+      InSection = 0;
+   }
+   while (L3fgets(Buf, sizeof(Buf), fp))
+   {
+      s = L3FirstNonBlank(Buf);
+      if (strncmp(s, "<string>", 8) == 0)
+      {
+         if (!GetNextString)
+            continue;
+         s += 8;
+         t = strchr(s, '<');
+         if (!t || strncmp(t, "</string>", 9) != 0)
+            continue;           /* No matching "</string>"                   */
+         fclose(fp);
+         *t = '\0';
+         ReplaceEntities(s);    /* Replace "&lt;" with "<" etc.              */
+         strncpy(Str, s, sizeofStr);
+         Str[sizeofStr - 1] = '\0'; /* Be sure to terminate                  */
+         return 1;
+      }
+      if (strncmp(s, "<dict>", 6) == 0)
+      {
+         ++DictLevel;
+         continue;
+      }
+      if (strncmp(s, "</dict>", 7) == 0)
+      {
+         --DictLevel;
+         if (InSection && DictLevel < KeyDictLevel)
+            break;              /* end of KeyDictLevel                       */
+         continue;
+      }
+      if (strncmp(s, "<key>", 5) == 0)
+      {
+         s += 5;
+         t = strchr(s, '<');
+         if (!t || strncmp(t, "</key>", 6) != 0)
+            continue;           /* No matching "</key>"                      */
+         *t = '\0';
+         if (!InSection)
+         {
+            if (DictLevel == 1 && strcmp(s, Section) == 0)
+               InSection = 1;
+            continue;
+         }
+         if (DictLevel == KeyDictLevel && strcmp(s, Key) == 0)
+            GetNextString = 1;
+      }
+   }
+   fclose(fp);
+   return 0;                    /* Key not found                             */
+}                               /* LDrawIniReadOpenPlistFile                 */
 
 /* Returns 1 if OK, 0 if Section/Key not found or error */
 int LDrawIniReadPlistFile(const char *PlistFile,
                           const char *Section, const char *Key,
                           char *Str, int sizeofStr)
 {
-   return 0;                    /* Key not found                             */
-}                               /* LDrawPlistReadIniFile                     */
+   FILE          *fp;
+
+   fp = fopen(PlistFile, "rt");
+   if (!fp)
+      return 0;
+   return LDrawIniReadOpenPlistFile(fp, PlistFile, Section, Key, Str, sizeofStr);
+}                               /* LDrawIniReadPlistFile                     */
 #endif
 
 /* Returns 1 if OK, 0 if Section/Key not found or error */
@@ -455,8 +586,7 @@ int LDrawIniReadIniFile(const char *IniFile,
          if (Buf[0] == '<' && Buf[1] == '?')
          {
             /* Switch to parsing XML/plist format: <?xml version="1.0" ... */
-            fclose(fp);
-            return LDrawIniReadPlistFile(IniFile, Section, Key, Str, sizeofStr);
+            return LDrawIniReadOpenPlistFile(fp, IniFile, Section, Key, Str, sizeofStr);
          }
       }
 #endif
@@ -476,9 +606,9 @@ int LDrawIniReadIniFile(const char *IniFile,
          if (strncmp(Buf, Key, KeyLen) == 0 && Buf[KeyLen] == '=')
          {
             fclose(fp);
-            strncpy(Str, Buf + KeyLen + 1, sizeofStr - KeyLen - 1);
+            strncpy(Str, Buf + KeyLen + 1, sizeofStr);
             Str[sizeofStr - 1] = '\0'; /* Be sure to terminate               */
-            TrimRight(Str, 1);
+            L3TrimRight(Str, 1);
             return 1;
          }
       }
@@ -487,13 +617,19 @@ int LDrawIniReadIniFile(const char *IniFile,
    return 0;                    /* Key not found                             */
 }                               /* LDrawIniReadIniFile                       */
 
-/* Returns 1 if OK, 0 if Section/Key not found or error */
-/* If IniFile is specified then that files is read. If IniFile is an empty
-   string it is assumed to be a buffer of size MAX_PATH_LENGTH which will receive
-   the path of the inifile actually read.                                    */
-static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
-                             const char *Section, const char *Key,
-                             char *Str, int sizeofStr, char *IniFile)
+/*
+If IniFile is specified then that files is read. If IniFile is an empty
+string it is assumed to be a buffer of size sizeofIniFile which will receive
+the path of the inifile actually read.
+Returns 1 if OK, 0 if Section/Key not found or error
+*/
+#ifdef __APPLE__
+/* IniFile may be in either Windows Ini format or XML/plist format */
+#endif
+int LDrawIniReadSectionKey(struct LDrawIniS * LDrawIni,
+                           const char *Section, const char *Key,
+                           char *Str, int sizeofStr,
+                           char *IniFile, int sizeofIniFile)
 {
    char           TmpPath[MAX_PATH_LENGTH];
    const char    *e;
@@ -505,11 +641,14 @@ static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
 
    /* It wasn't, find out which ini file to use */
    if (!IniFile)
+   {
       IniFile = TmpPath;        /* Caller doesn't care, use our own buffer   */
+      sizeofIniFile = sizeof(TmpPath);
+   }
    e = getenv("LDRAWINI");
    if (e)
    {
-      strcpy(IniFile, e);
+      strcpySafe(IniFile, sizeofIniFile, e);
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
@@ -518,8 +657,8 @@ static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
    e = getenv("USERPROFILE");
    if (e)
    {
-      strcpy(IniFile, e);
-      strcat(IniFile, "\\LDraw.ini");
+      strcpySafe(IniFile, sizeofIniFile, e);
+      strcatSafe(IniFile, sizeofIniFile, "\\LDraw.ini");
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
@@ -527,16 +666,16 @@ static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
    e = getenv("ALLUSERSPROFILE");
    if (e)
    {
-      strcpy(IniFile, e);
-      strcat(IniFile, "\\LDraw.ini");
+      strcpySafe(IniFile, sizeofIniFile, e);
+      strcatSafe(IniFile, sizeofIniFile, "\\LDraw.ini");
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
    }
    if (LDrawIni->LDrawDir)
    {
-      strcpy(IniFile, LDrawIni->LDrawDir);
-      strcat(IniFile, "\\LDraw.ini");
+      strcpySafe(IniFile, sizeofIniFile, LDrawIni->LDrawDir);
+      strcatSafe(IniFile, sizeofIniFile, "\\LDraw.ini");
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
@@ -544,8 +683,8 @@ static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
    e = getenv("windir");
    if (!e)
       e = "C:\\Windows";
-   strcpy(IniFile, e);
-   strcat(IniFile, "\\LDraw.ini");
+   strcpySafe(IniFile, sizeofIniFile, e);
+   strcatSafe(IniFile, sizeofIniFile, "\\LDraw.ini");
    Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
    if (Res)
       return Res;
@@ -554,49 +693,49 @@ static int ReadLDrawIniFiles(struct LDrawIniS * LDrawIni,
    e = getenv("HOME");
    if (e)
    {
-      strcpy(IniFile, e);
-      strcat(IniFile, "/.ldrawrc");
+      strcpySafe(IniFile, sizeofIniFile, e);
+      strcatSafe(IniFile, sizeofIniFile, "/.ldrawrc");
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
-      strcpy(IniFile, e);
-      strcat(IniFile, "/ldraw.ini");
+      strcpySafe(IniFile, sizeofIniFile, e);
+      strcatSafe(IniFile, sizeofIniFile, "/ldraw.ini");
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
 #ifdef __APPLE__
       /* No need to read ~/.MacOSX/environment.plist, getenv() does that! */
       /* ~/Library/Preferences/org.ldraw.plist */
-      strcpy(IniFile, e);
-      strcat(IniFile, "/Library/Preferences/org.ldraw.plist");
-      Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
+      strcpySafe(IniFile, sizeofIniFile, e);
+      strcatSafe(IniFile, sizeofIniFile, "/Library/Preferences/org.ldraw.plist");
+      Res = LDrawIniReadPlistFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
 #endif
    }
 #ifdef __APPLE__
    /* /Library/Preferences/org.ldraw.plist */
-   strcpy(IniFile, "/Library/Preferences/org.ldraw.plist");
-   Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
+   strcpySafe(IniFile, sizeofIniFile, "/Library/Preferences/org.ldraw.plist");
+   Res = LDrawIniReadPlistFile(IniFile, Section, Key, Str, sizeofStr);
    if (Res)
       return Res;
 #endif
    if (LDrawIni->LDrawDir)
    {
-      strcpy(IniFile, LDrawIni->LDrawDir);
-      strcat(IniFile, "/ldraw.ini");
+      strcpySafe(IniFile, sizeofIniFile, LDrawIni->LDrawDir);
+      strcatSafe(IniFile, sizeofIniFile, "/ldraw.ini");
       Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
       if (Res)
          return Res;
    }
-   strcpy(IniFile, "/etc/ldraw.ini");
+   strcpySafe(IniFile, sizeofIniFile, "/etc/ldraw.ini");
    Res = LDrawIniReadIniFile(IniFile, Section, Key, Str, sizeofStr);
    if (Res)
       return Res;
 #endif
    IniFile[0] = '\0';
    return 0;                    /* Key not found                             */
-}                               /* ReadLDrawIniFiles                         */
+}                               /* LDrawIniReadSectionKey                    */
 
 /*
 Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
@@ -617,7 +756,6 @@ int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
    int            i;
    int            Res;
    struct LDrawSearchDirS SearchDir;
-
 
    if (!LDrawIni)
       return 0;
@@ -686,7 +824,7 @@ c:\car.ldr   c:
       /* ModelDir may be "" for current dir */
       /* NOTE: IsDir might change the case of the value in SearchDir.Dir to */
       /* match the case of the actual directory on the filesystem. */
-      if ((OnlyValidDirs && SearchDir.Dir[0] && !IsDir(SearchDir.Dir,
+      if ((OnlyValidDirs && SearchDir.Dir[0] && !L3IsDir(SearchDir.Dir,
           LDrawIni->PrivateData->FileCaseCallback)) ||
           (SearchDir.Flags & LDSDF_SKIP))
       {
@@ -720,7 +858,6 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    int            Len;
    char          *UnknownFlags;
    const char    *PrefixDir;
-
 
    if (!Result)
       return -1;
@@ -831,7 +968,7 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
    strcpy(Dir, PrefixDir);
    memcpy(Dir + OldLen, s, Len);
    Dir[OldLen + Len] = '\0';
-   FixSlashes(Dir);
+   L3FixSlashes(Dir);
    Result->Flags = Flags;
    Result->UnknownFlags = UnknownFlags;
    Result->Dir = Dir;
@@ -840,14 +977,14 @@ int LDrawIniParseSymbolicSearchDir(struct LDrawSearchDirS * Result,
 }                               /* LDrawIniParseSymbolicSearchDir            */
 
 /* Modifies the string: OS-correct slashes or backslashes */
-static void FixSlashes(register char *Path)
+static void L3FixSlashes(register char *Path)
 {
    for (; *Path; Path++)
       if (*Path == SLASH_CHAR)
          *Path = BACKSLASH_CHAR;
 }
 
-static int IsDir(char *Path, LDrawFileCaseCallback FileCaseCallback)
+static int L3IsDir(char *Path, L3FileCaseCallback FileCaseCallback)
 {
    struct stat    Stat;
 
@@ -898,7 +1035,7 @@ static char *L3fgets(char *Str, int n, FILE *fp)
             ungetc(nextc, fp);  /* CR-CR or LF-LF or ordinary character      */
          break;
       }
-      *s++ = (char)c;
+      *s++ = (char) c;
    }
    *s = 0;
 
@@ -910,7 +1047,7 @@ static char *L3fgets(char *Str, int n, FILE *fp)
    return Str;
 }
 
-static void TrimRight(char *Str, int BlanksToo)
+static void L3TrimRight(char *Str, int BlanksToo)
 {
    register char *s;
 
@@ -929,6 +1066,15 @@ static void TrimRight(char *Str, int BlanksToo)
    }
 }
 
+#ifdef __APPLE__
+static char *L3FirstNonBlank(register const char *s)
+{
+   while (*s == '\t' || *s == ' ')
+      s++;
+   return (char *) s;
+}
+#endif
+
 #ifdef __TURBOC__
 static char *Strdup(const char *Str)
 {
@@ -941,20 +1087,18 @@ static char *Strdup(const char *Str)
 }
 #endif
 
-#if (0)
-void DeleteTrailingBackslash(char *Str)
+static char *strcpySafe(char *s, size_t Size, const char *t)
 {
-   register char *s;
-
-   s = Str + strlen(Str) - 1;
-   while (s >= Str && *s == BACKSLASH_CHAR)
-      *s-- = '\0';
-}
-
-static char *FirstNonBlank(register char *s)
-{
-   while (*s == '\t' || *s == ' ')
-      s++;
+   strncpy(s, t, Size);
+   s[Size - 1] = '\0';          /* Be sure to terminate                      */
    return s;
 }
-#endif
+
+static char *strcatSafe(char *s, size_t Size, const char *t)
+{
+   if (strlen(s) + strlen(t) < Size)
+      strcat(s, t);
+   return s;
+}
+
+LDRAWINI_END_STDC

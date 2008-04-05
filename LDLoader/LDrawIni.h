@@ -1,26 +1,42 @@
-/* LDrawIni.h */
-/*
+/* LDrawIni.h  Include file for LDrawIni.c */
+
+/* Copyright (c) 2004-2005  Lars C. Hassing (SP.lars@AM.hassings.dk)
+If you make any changes to this file, please contact me, and I'll probably
+adopt the changes for the benefit of other users.                            */
+
+/*****************************************************************************
 040228 lch First version of LDrawIni handling routines
 040307 lch Added LgeoDir
 040319 lch Added LDrawInP.h (Really LDrawIniP.h but 8+3 name...)
 041202 lch Changed parameter ModelDir to ModelPath in LDrawIniComputeRealDirs
-*/
+041229 lch Removed LgeoDir
+050527 lch Added defines LDRAWINI_BEGIN_STDC/LDRAWINI_END_STDC for extern "C"
+071120 lch Added LDrawIniReadSectionKey
+******************************************************************************/
 
 #ifndef LDRAWINI_INCLUDED
 #define LDRAWINI_INCLUDED
 
+/* Hide curly brackets {} in defines to avoid Beautifier indenting whole file */
 #ifdef __cplusplus
-typedef bool LDRAW_BOOL;
+#define LDRAWINI_BEGIN_STDC extern "C" {
+#define LDRAWINI_END_STDC   }
+typedef bool L3_BOOL;
 #else
-typedef char LDRAW_BOOL;
+typedef char L3_BOOL;
 #ifndef false
 #define false 0
 #endif
 #ifndef true
-#define true !false
+#define true (!false)
 #endif
+#define LDRAWINI_BEGIN_STDC
+#define LDRAWINI_END_STDC
 #endif
-typedef LDRAW_BOOL (*LDrawFileCaseCallback)(char *filename);
+
+LDRAWINI_BEGIN_STDC
+
+typedef L3_BOOL (*L3FileCaseCallback)(char *filename);
 
 struct LDrawSearchDirS
 {
@@ -28,7 +44,7 @@ struct LDrawSearchDirS
    char          *UnknownFlags; /* Any unknown flags <XXX>                   */
    char          *Dir;          /* The full path of a search dir             */
 };
-struct LDrawIniPrivateDataS;
+struct LDrawIniPrivateDataS;    /* Defined in LDrawInP.h                     */
 
 struct LDrawIniS
 {
@@ -42,9 +58,6 @@ struct LDrawIniS
    /* The dir extracted from ModelPath in last LDrawIniComputeRealDirs call */
    char          *ModelDir;
 
-   /* The LGEODIR (named LGEO) containing the LGEO .inc files */
-   char          *LgeoDir;
-
    /* Private date for the LDrawIni routines */
    struct LDrawIniPrivateDataS *PrivateData;
 };
@@ -55,10 +68,6 @@ struct LDrawIniS
 #define LDSDF_DEFPART  0x0004   /* Default filetype: Part                    */
 #define LDSDF_DEFPRIM  0x0008   /* Default filetype: Primitive               */
 #define LDSDF_MODELDIR 0x0010   /* <MODELDIR>                                */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
 Initialize and read all settings.
@@ -82,7 +91,7 @@ successfully found.
 Returns 1 if OK, 0 on error
 */
 int LDrawIniSetFileCaseCallback(struct LDrawIniS *LDrawIni,
-                                LDrawFileCaseCallback func);
+                                L3FileCaseCallback func);
 /* 
 Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
 the Symbolic Dirs read from the env vars or ini files.
@@ -91,28 +100,40 @@ If AddTrailingSlash is true then the search dirs will have a slash/backslash app
 If ModelPath is NULL then search dir <MODELDIR> is skipped.
 Returns 1 if OK, 0 on error
 */
-int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni, 
+int LDrawIniComputeRealDirs(struct LDrawIniS * LDrawIni,
                             int OnlyValidDirs,
                             int AddTrailingSlash,
                             const char *ModelPath);
-/* 
+/*
 Reset search dirs to default if LDrawSearch is NULL
 or to the dirs specified in LDrawSearch delimited by |.
 Returns 1 if OK, 0 on error
 */
-int LDrawIniResetSearchDirs(struct LDrawIniS * LDrawIni, 
+int LDrawIniResetSearchDirs(struct LDrawIniS * LDrawIni,
                             const char *LDrawSearch);
 /*
 Free the LDrawIni data
 */
-   void LDrawIniFree(struct LDrawIniS * LDrawIni);
+void LDrawIniFree(struct LDrawIniS * LDrawIni);
 
-#ifdef __cplusplus
-}
+/*
+If IniFile is specified then that files is read. If IniFile is an empty
+string it is assumed to be a buffer of size sizeofIniFile which will receive
+the path of the inifile actually read.
+Returns 1 if OK, 0 if Section/Key not found or error
+*/
+#ifdef __APPLE__
+/* IniFile may be in either Windows Ini format or XML/plist format */
 #endif
+int LDrawIniReadSectionKey(struct LDrawIniS * LDrawIni,
+                           const char *Section, const char *Key,
+                           char *Str, int sizeofStr,
+                           char *IniFile, int sizeofIniFile);
 
 /* Error codes returned by LDrawIniGet */
 #define LDRAWINI_ERROR_OUT_OF_MEMORY     1
 #define LDRAWINI_ERROR_LDRAWDIR_NOT_SET  2
+
+LDRAWINI_END_STDC
 
 #endif
