@@ -9,7 +9,10 @@
 #import "SnapshotTaker.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCAlert.h>
+#include <TCFoundation/TCImage.h>
+#include <TCFoundation/TCBmpImageFormat.h>
 #import "SnapshotAlertHandler.h"
+#include <algorithm>
 
 #define PB_WIDTH 1024
 #define PB_HEIGHT 1024
@@ -160,6 +163,40 @@
 	{
 		return LDSnapshotTaker::doCommandLine();
 	}
+}
+
+- (NSImage *)imageWithWidth:(int)width height:(int)height zoomToFit:(bool)zoomToFit
+{
+	int actualWidth = width;
+	int actualHeight = height;
+	int rowSize = TCImage::roundUp(width * 3, 4);
+	int headerSize = BMP_HEADER_SIZE;
+	TCByte *imageData = (TCByte *)malloc(rowSize * height + headerSize);
+
+	ldSnapshotTaker->setTrySaveAlpha(false);
+	if (ldSnapshotTaker->grabImage(actualWidth, actualHeight, zoomToFit, &imageData[headerSize], NULL))
+	{
+		int newRowSize = TCImage::roundUp(actualWidth * 3, 4);
+		int newSize = newRowSize * actualHeight + headerSize;
+		TCBmpImageFormat::writeHeader(actualWidth, actualHeight, imageData);
+		int x, y;
+
+		// Swap the red and blue channels.
+		for (y = 0; y < actualHeight; y++)
+		{
+			TCByte *spot = &imageData[headerSize + y * newRowSize];
+
+			for (x = 0; x < actualWidth; x++)
+			{
+				std::swap(spot[0], spot[2]);
+				spot += 3;
+			}
+		}
+		// Note: imageData is owned by the NSData object after the below, which
+		// will free the memory.
+		return [[NSImage alloc] initWithData:[NSData dataWithBytesNoCopy:imageData length:newSize]];
+	}
+	return nil;
 }
 
 - (bool)saveFile:(NSString *)filename width:(int)width height:(int)height zoomToFit:(bool)zoomToFit
