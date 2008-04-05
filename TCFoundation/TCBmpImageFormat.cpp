@@ -334,12 +334,9 @@ int TCBmpImageFormat::writeFileHeader(int width, int height, TCByte *buf)
 	int offset = 0;
 
 	offset = writeValue(buf, (WORD)0x4D42, offset); // 'BM'
-	offset = writeValue(buf,
-		(DWORD)(BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE + imageSize),
-		offset);
+	offset = writeValue(buf, (DWORD)(BMP_HEADER_SIZE + imageSize), offset);
 	offset = writeValue(buf, (DWORD)0, offset); // Reserved
-	return writeValue(buf, (DWORD)(BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE),
-		offset);
+	return writeValue(buf, (DWORD)BMP_HEADER_SIZE, offset);
 }
 
 int TCBmpImageFormat::writeInfoHeader(
