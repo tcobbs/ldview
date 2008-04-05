@@ -10,9 +10,11 @@
         {
             ACTIONS = {
                 actions = id; 
+                customizeToolbar = id; 
                 features = id; 
                 open = id; 
                 preferences = id; 
+                print = id; 
                 reload = id; 
                 saveSnapshot = id; 
                 saveViewingAngle = id; 
@@ -23,18 +25,18 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 actionsSegments = NSSegmentedControl; 
+                customizeSegments = NSSegmentedControl; 
                 featuresSegments = NSSegmentedControl; 
                 modelView = LDrawModelView; 
                 openButton = NSSegmentedControl; 
                 prefsSegments = NSSegmentedControl; 
+                printSegments = NSSegmentedControl; 
                 progress = NSProgressIndicator; 
                 progressMessage = NSTextField; 
                 reloadButton = NSSegmentedControl; 
-                saveAccessoryView = NSView; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
                 viewModeSegments = NSSegmentedControl; 
-                viewPopUp = NSPopUpButton; 
                 viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 
             }; 

@@ -261,6 +261,8 @@ enum
 	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"SaveSnapshot"] forSegment:1];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"Reload"] forSegment:2];
@@ -268,8 +270,6 @@ enum
 		NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
 		NSToolbarSeparatorItemIdentifier,
-		NSToolbarPrintItemIdentifier,
-		NSToolbarCustomizeToolbarItemIdentifier,
 		nil]];
 	[viewingAngleSegments setMenu:[[[controller viewingAngleMenu] copy] autorelease] forSegment:0];
 	[self setupFeatures];
@@ -1149,6 +1149,11 @@ enum
 			[driverInfo release];
 		}
 	}
+}
+
+- (IBAction)print:(id)sender
+{
+	NSRunAlertPanel(@"Error", @"Print not yet implemented.", @"OK", nil, nil);
 }
 
 @end

@@ -33,6 +33,8 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *prefsSegments;
 	IBOutlet NSSegmentedControl *viewModeSegments;
 	IBOutlet NSSegmentedControl *viewingAngleSegments;
+	IBOutlet NSSegmentedControl *printSegments;
+	IBOutlet NSSegmentedControl *customizeSegments;
 
 	LDViewController *controller;
 	AlertHandler *alertHandler;
