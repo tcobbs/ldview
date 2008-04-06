@@ -372,7 +372,7 @@ enum
 
 - (ErrorItem *)filteredRootErrorItem
 {
-	if (unfilteredRootErrorItem && !filteredRootErrorItem)
+	if (!filteredRootErrorItem)
 	{
 		filteredRootErrorItem = [[[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem] retain];
 	}
@@ -616,6 +616,7 @@ enum
 			{
 				[[ErrorsAndWarnings sharedInstance] showIfNeeded];
 			}
+			[OCUserDefaults setString:[[NSString stringWithASCIICString:modelViewer->getFilename()] stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{

@@ -7,6 +7,7 @@
 #import "Updater.h"
 #import "Preferences.h"
 #import "GeneralPage.h"
+#import "LDViewCategories.h"
 
 #include <LDLib/LDrawModelViewer.h>
 #include <TRE/TREMainModel.h>
@@ -266,7 +267,7 @@
 	[openPanel setCanChooseFiles:NO];
 	[openPanel setCanChooseDirectories:YES];
 	[openPanel setMessage:[OCLocalStrings get:@"SelectLDrawFolder"]];
-	if ([openPanel runModalForDirectory:nil file:nil] == NSOKButton)
+	if ([openPanel runModalForDirectory:NSHomeDirectory() file:nil] == NSOKButton)
 	{
 		if ([self verifyLDrawDir:[openPanel filename] prompt:NO])
 		{
@@ -419,6 +420,7 @@
 		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 
 		[openPanel setMessage:[OCLocalStrings get:@"SelectModelFile"]];
+		[openPanel setDirectory:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] defaultValue:nil sessionSpecific:NO]];
 		if ([openPanel runModalForTypes:ldrawFileTypes] == NSOKButton)
 		{
 			if (newWindow)
