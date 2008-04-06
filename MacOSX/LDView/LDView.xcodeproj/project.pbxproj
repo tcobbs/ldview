@@ -471,13 +471,13 @@
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */,
 				1F2CAD470D8F63A600A98C9A /* ModelTree.nib */,
+				1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */,
 				1F5A35600D9627E70072BAE3 /* PartsList.nib */,
 				1FD4D8330BA4D00E00419677 /* Preferences.nib */,
 				1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */,
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
-				1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";

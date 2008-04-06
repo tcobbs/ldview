@@ -22,8 +22,11 @@
 	IBOutlet NSButton *transparentCheck;
 	IBOutlet NSButton *autocropCheck;
 	IBOutlet NSButton *sizeCheck;
-	IBOutlet NSForm *sizeForm;
 	IBOutlet NSButton *zoomToFitCheck;
+	IBOutlet NSTextField *widthLabel;
+	IBOutlet NSTextField *widthField;
+	IBOutlet NSTextField *heightLabel;
+	IBOutlet NSTextField *heightField;
 	
 	NSSavePanel *savePanel;
 }
