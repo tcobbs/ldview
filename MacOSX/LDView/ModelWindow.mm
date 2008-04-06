@@ -263,6 +263,7 @@ enum
 	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
+	[printSegments setTarget:controller];
 	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
@@ -1265,10 +1266,10 @@ enum
 	}
 }
 
-- (IBAction)print:(id)sender
-{
-	NSRunAlertPanel(@"Error", @"Print not yet implemented.", @"OK", nil, nil);
-}
+//- (IBAction)print:(id)sender
+//{
+//	NSRunAlertPanel(@"Error", @"Print not yet implemented.", @"OK", nil, nil);
+//}
 
 - (IBAction)pollingMode:(id)sender
 {
