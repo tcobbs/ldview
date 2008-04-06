@@ -45,6 +45,7 @@ typedef enum
 - (IBAction)zoomToFit:(id)sender;
 - (IBAction)viewMode:(id)sender;
 - (void)setFlyThroughMode:(bool)flyThroughMode;
+- (bool)flyThroughMode;
 - (void)rotationUpdate;
 
 - (void)modelViewerAlertCallback:(TCAlert *)alert;

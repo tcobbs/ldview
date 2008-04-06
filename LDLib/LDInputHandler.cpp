@@ -43,6 +43,14 @@ void LDInputHandler::setViewMode(LDInputHandler::ViewMode value)
 	if (m_modelViewer)
 	{
 		m_modelViewer->setViewMode((LDrawModelViewer::ViewMode)value);
+		if (value == VMExamine)
+		{
+			m_modelViewer->setConstrainZoom(true);
+		}
+		else
+		{
+			m_modelViewer->setConstrainZoom(false);
+		}
 	}
 }
 

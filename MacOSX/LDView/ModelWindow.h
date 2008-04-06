@@ -41,7 +41,6 @@ class LDPartsList;
 	NSToolbar *toolbar;
 	NSDate *fpsReferenceDate;
 	int fpsFrameCount;
-	bool flyThroughMode;
 	bool examineLatLong;
 	float fps;
 	float progressAdjust;

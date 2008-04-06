@@ -216,9 +216,8 @@ enum
 
 - (void)setFlyThroughMode:(bool)value
 {
-	flyThroughMode = value;
-	[modelView setFlyThroughMode:flyThroughMode];
-	if (flyThroughMode)
+	[modelView setFlyThroughMode:value];
+	if (value)
 	{
 		[viewModeSegments selectSegmentWithTag:LDInputHandler::VMFlyThrough];
 	}
@@ -241,7 +240,6 @@ enum
 //	}
 	[self setupSegments:viewModeSegments toolTips:toolTips];
 	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
-	[modelView setFlyThroughMode:flyThroughMode];
 	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
 	[self setExamineLatLong:examineLatLong];
 }
@@ -1135,7 +1133,7 @@ enum
 
 - (bool)flyThroughMode
 {
-	return flyThroughMode;
+	return [modelView flyThroughMode];
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
