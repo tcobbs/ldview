@@ -83,6 +83,7 @@ public:
 	LDInputHandler(LDrawModelViewer *modelViewer);
 
 	void setViewMode(ViewMode value);
+	ViewMode getViewMode(void) const { return m_viewMode; }
 	bool mouseDown(TCULong modifierKeys, MouseButton button, int x, int y);
 	bool mouseUp(TCULong modifierKeys, MouseButton button, int x, int y);
 	bool mouseMove(TCULong modifierKeys, int x, int y);

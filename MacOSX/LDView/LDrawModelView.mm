@@ -906,4 +906,9 @@ static TCImage *resizeCornerImage = NULL;
 	TCUserDefaults::setLongForKey(newViewMode, VIEW_MODE_KEY, false);
 }
 
+- (bool)flyThroughMode
+{
+	return inputHandler->getViewMode() == LDInputHandler::VMFlyThrough;
+}
+
 @end
