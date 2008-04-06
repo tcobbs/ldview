@@ -63,9 +63,9 @@ class LDPartsList;
 	LDHtmlInventory *htmlInventory;
 	LDPartsList *partsList;
 	bool replaceSegments;
-	long pollingMode;
 	NSTimer *pollingTimer;
 	NSDate *lastWriteTime;
+	bool pollingUpdateNeeded;
 }
 
 - (bool)sheetBusy;

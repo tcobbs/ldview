@@ -31,6 +31,7 @@
 			@"StudLogo" ofType:@"png"] cStringUsingEncoding:NSASCIIStringEncoding]);
 		modelWindows = [[NSMutableArray alloc] init];
 		TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
+		pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
 	}
 	return self;
 }
@@ -147,9 +148,9 @@
 
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
-	ModelWindow *modelWindow = (ModelWindow *)[[NSApp mainWindow] delegate];
+	ModelWindow *modelWindow = [self currentModelWindow];
 
-	if ([modelWindow isKindOfClass:[ModelWindow class]])
+	if (modelWindow != nil)
 	{
 		if (item == statusBarMenuItem)
 		{
@@ -171,6 +172,22 @@
 		{
 			[item setState:[modelWindow isModelTreeOpen] ? NSOnState : NSOffState];
 		}
+	}
+	if (item == pollingDisabledMenuItem)
+	{
+		[item setState:pollingMode == 0 ? NSOnState : NSOffState];
+	}
+	else if (item == pollingPromptMenuItem)
+	{
+		[item setState:pollingMode == 1 ? NSOnState : NSOffState];
+	}
+	else if (item == pollingAutoLaterMenuItem)
+	{
+		[item setState:pollingMode == 2 ? NSOnState : NSOffState];
+	}
+	else if (item == pollingAutoNowMenuItem)
+	{
+		[item setState:pollingMode == 3 ? NSOnState : NSOffState];
 	}
 	return YES;
 }
@@ -553,6 +570,18 @@
 - (IBAction)print:(id)sender
 {
 	[[self currentModelView] print:sender];
+}
+
+- (IBAction)pollingMode:(id)sender
+{
+	pollingMode = [sender tag];
+	TCUserDefaults::setLongForKey(pollingMode, POLL_KEY, false);
+	[modelWindows makeObjectsPerformSelector:@selector(pollingMode:) withObject:sender];
+}
+
+- (long)pollingMode
+{
+	return pollingMode;
 }
 
 @end

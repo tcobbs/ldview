@@ -16,6 +16,11 @@
 	IBOutlet NSMenuItem *flyThroughMenuItem;
 	IBOutlet NSMenuItem *cancelMenuItem;
 	IBOutlet NSMenuItem *modelTreeMenuItem;
+	IBOutlet NSMenuItem *pollingDisabledMenuItem;
+	IBOutlet NSMenuItem *pollingPromptMenuItem;
+	IBOutlet NSMenuItem *pollingAutoLaterMenuItem;
+	IBOutlet NSMenuItem *pollingAutoNowMenuItem;
+
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;
 
@@ -28,6 +33,8 @@
 	
 	NSString *statusBarMenuFormat;
 	NSString *toolbarMenuFormat;
+
+	long pollingMode;
 }
 
 - (void)modelWindowWillClose:(ModelWindow *)modelWindow;
@@ -46,5 +53,6 @@
 - (void)updateStatusBarMenuItem:(BOOL)showStatusBar;
 - (NSMenuItem *)statusBarMenuItem;
 - (ModelWindow *)currentModelWindow;
+- (long)pollingMode;
 
 @end

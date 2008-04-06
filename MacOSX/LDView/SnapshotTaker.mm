@@ -3,7 +3,7 @@
 //  LDView
 //
 //  Created by Travis Cobbs on 10/14/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Travis Cobbs. All rights reserved.
 //
 
 #import "SnapshotTaker.h"
