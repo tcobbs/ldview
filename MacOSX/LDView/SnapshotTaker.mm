@@ -12,6 +12,7 @@
 #include <TCFoundation/TCImage.h>
 #include <TCFoundation/TCBmpImageFormat.h>
 #import "SnapshotAlertHandler.h"
+#import "AutoDeleter.h"
 #include <algorithm>
 
 #define PB_WIDTH 1024
@@ -169,32 +170,38 @@
 {
 	int actualWidth = width;
 	int actualHeight = height;
-	int rowSize = TCImage::roundUp(width * 3, 4);
-	int headerSize = BMP_HEADER_SIZE;
-	TCByte *imageData = (TCByte *)malloc(rowSize * height + headerSize);
 
 	ldSnapshotTaker->setTrySaveAlpha(false);
-	if (ldSnapshotTaker->grabImage(actualWidth, actualHeight, zoomToFit, &imageData[headerSize], NULL))
+	TCByte *imageData = ldSnapshotTaker->grabImage(actualWidth, actualHeight, zoomToFit, NULL, NULL);
+	if (imageData)
 	{
-		int newRowSize = TCImage::roundUp(actualWidth * 3, 4);
-		int newSize = newRowSize * actualHeight + headerSize;
-		TCBmpImageFormat::writeHeader(actualWidth, actualHeight, imageData);
-		int x, y;
+		int rowSize = TCImage::roundUp(actualWidth * 3, 4);
+		TCByte *imageDataArray[5] = { imageData, NULL, NULL, NULL, NULL };
+		NSBitmapImageRep *imageRep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:imageDataArray pixelsWide:actualWidth pixelsHigh:actualHeight bitsPerSample:8 samplesPerPixel:3 hasAlpha:NO isPlanar:NO colorSpaceName:NSCalibratedRGBColorSpace bytesPerRow:rowSize bitsPerPixel:24];
+		NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize((float)actualWidth, (float)actualHeight)];
+		int y;
+		TCByte *tmpRow = new TCByte[rowSize];
 
-		// Swap the red and blue channels.
-		for (y = 0; y < actualHeight; y++)
+		// The good news is that drawing this image to the printer doesn't
+		// copy the image data.  The bad news is that means that we can't free
+		// the image data until we get back up to the main autorelease pool,
+		// so create an AutoDeleter class that will free the memory when it
+		// gets released during processing of the main autorelease pool.
+		[AutoDeleter autoDeleterWithBytePointer:imageData];
+		// Flip the image
+		for (y = 0; y < actualHeight / 2; y++)
 		{
-			TCByte *spot = &imageData[headerSize + y * newRowSize];
+			TCByte *botRow = &imageData[y * rowSize];
+			TCByte *topRow = &imageData[(actualHeight - y - 1) * rowSize];
 
-			for (x = 0; x < actualWidth; x++)
-			{
-				std::swap(spot[0], spot[2]);
-				spot += 3;
-			}
+			memcpy(tmpRow, botRow, rowSize);
+			memcpy(botRow, topRow, rowSize);
+			memcpy(topRow, tmpRow, rowSize);
 		}
-		// Note: imageData is owned by the NSData object after the below, which
-		// will free the memory.
-		return [[NSImage alloc] initWithData:[NSData dataWithBytesNoCopy:imageData length:newSize]];
+		delete tmpRow;
+		[image addRepresentation:imageRep];
+		[imageRep release];
+		return [image autorelease];
 	}
 	return nil;
 }

@@ -684,11 +684,7 @@ static TCImage *resizeCornerImage = NULL;
 
 - (NSRect)rectForPage:(int)pageNumber
 {
-	return (NSRect)
-	{
-		{0, 0},
-		[[[NSPrintOperation currentOperation] printInfo] paperSize]
-	};
+	return (NSRect) { {0, 0}, [[[NSPrintOperation currentOperation] printInfo] paperSize] };
 }
 
 - (NSPoint)locationOfPrintRect:(NSRect)aRect
@@ -710,11 +706,10 @@ static TCImage *resizeCornerImage = NULL;
 	NSRect printRect = { { 72.0f, 72.0f }, { page.size.width - 144.0f, page.size.height - 144.0f } };
 
 	modelViewer->setBackgroundRGBA(255, 255, 255, 255);
-	image = [snapshotTaker imageWithWidth:(int)(printRect.size.width * dpi / 72.0f) height:(int)(printRect.size.height * dpi / 72.0f) zoomToFit:true];	
+	image = [snapshotTaker imageWithWidth:(int)(printRect.size.width * dpi / 72.0f) height:(int)(printRect.size.height * dpi / 72.0f) zoomToFit:false];
 	modelViewer->setBackgroundRGBA(backgroundR, backgroundG, backgroundB, backgroundA);
 	printRect = NSIntegralRect(printRect);
-	[image drawInRect:printRect fromRect:NSMakeRect(0.0f, 0.0f, [image size].width, [image size].height) operation:NSCompositeCopy fraction:1.0f];
-	//[(NSImageRep *)[[image representations] lastObject] drawInRect:printRect];
+	[(NSImageRep *)[[image representations] lastObject] drawInRect:printRect];
 }
 
 - (void)drawRect:(NSRect)rect
