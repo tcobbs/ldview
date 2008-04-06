@@ -65,6 +65,7 @@ enum
 	[saveSnapshotViewOwner release];
 	[modelTree release];
 	[initialTitle release];
+	[pollingTimer release];
 	[super dealloc];
 }
 
@@ -336,6 +337,7 @@ enum
 	[window setNextResponder:controller];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(errorFilterChange:) name:LDErrorFilterChange object:nil];
 	imageFileTypes = [[NSArray alloc] initWithObjects:@"png", @"bmp", nil];
+	pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -389,12 +391,10 @@ enum
 	[window makeKeyAndOrderFront:self];
 	if ([modelView openModel:filename])
 	{
-		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoaded" object:self];
 		return YES;
 	}
 	else
 	{
-		//[[NSNotificationCenter defaultCenter] postNotificationName:@"ModelLoadCanceled" object:self];
 		return NO;
 	}
 }
@@ -580,6 +580,58 @@ enum
 	[modelView modelViewerAlertCallback:alert];
 }
 
+- (void)setLastWriteTime:(NSDate *)value
+{
+	if (value != lastWriteTime)
+	{
+		[lastWriteTime release];
+		lastWriteTime = [value retain];
+	}
+}
+
+- (void)pollingTimerFired:(NSTimer*)theTimer
+{
+	NSDate *thisWriteTime = [[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate];
+	
+	if (![lastWriteTime isEqualToDate:thisWriteTime])
+	{
+		[self setLastWriteTime:thisWriteTime];
+	}
+}
+
+- (NSString *)filename
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		return [NSString stringWithASCIICString:modelViewer->getFilename()];
+	}
+	else
+	{
+		return nil;
+	}
+}
+
+- (void)updatePolling
+{
+	NSString *filename = [self filename];
+
+	if (pollingMode && filename != nil)
+	{
+		if (!pollingTimer)
+		{
+			pollingTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(pollingTimerFired:) userInfo:nil repeats:YES] retain];
+			[lastWriteTime release];
+			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
+		}
+	}
+	else if (pollingTimer)
+	{
+		[pollingTimer release];
+	}
+}
+
 - (void)loadAlertCallback:(TCAlert *)alert
 {
 	LDrawModelViewer *modelViewer = (LDrawModelViewer *)alert->getSender();
@@ -617,6 +669,7 @@ enum
 				[[ErrorsAndWarnings sharedInstance] showIfNeeded];
 			}
 			[OCUserDefaults setString:[[NSString stringWithASCIICString:modelViewer->getFilename()] stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
+			[self updatePolling];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{

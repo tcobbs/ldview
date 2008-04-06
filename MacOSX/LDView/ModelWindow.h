@@ -63,6 +63,9 @@ class LDPartsList;
 	LDHtmlInventory *htmlInventory;
 	LDPartsList *partsList;
 	bool replaceSegments;
+	long pollingMode;
+	NSTimer *pollingTimer;
+	NSDate *lastWriteTime;
 }
 
 - (bool)sheetBusy;
@@ -96,6 +99,7 @@ class LDPartsList;
 - (NSToolbar *)toolbar;
 - (ErrorItem *)filteredRootErrorItem;
 - (LDrawModelView *)modelView;
+- (NSString *)filename;
 
 - (IBAction)actions:(id)sender;
 - (IBAction)open:(id)sender;
