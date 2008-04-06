@@ -9,8 +9,6 @@
 #import "SnapshotTaker.h"
 #include <LDLib/LDrawModelViewer.h>
 #include <TCFoundation/TCAlert.h>
-#include <TCFoundation/TCImage.h>
-#include <TCFoundation/TCBmpImageFormat.h>
 #import "SnapshotAlertHandler.h"
 #import "AutoDeleter.h"
 #include <algorithm>
