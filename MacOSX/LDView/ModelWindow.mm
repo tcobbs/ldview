@@ -65,6 +65,7 @@ enum
 	[saveSnapshotViewOwner release];
 	[modelTree release];
 	[initialTitle release];
+	[pollingTimer invalidate];
 	[pollingTimer release];
 	[super dealloc];
 }
@@ -337,7 +338,6 @@ enum
 	[window setNextResponder:controller];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(errorFilterChange:) name:LDErrorFilterChange object:nil];
 	imageFileTypes = [[NSArray alloc] initWithObjects:@"png", @"bmp", nil];
-	pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -374,11 +374,12 @@ enum
 
 - (ErrorItem *)filteredRootErrorItem
 {
-	if (!filteredRootErrorItem)
-	{
-		filteredRootErrorItem = [[[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem] retain];
-	}
-	return filteredRootErrorItem;
+	return [[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem];
+//	if (!filteredRootErrorItem)
+//	{
+//		filteredRootErrorItem = [[[ErrorsAndWarnings sharedInstance] filteredRootErrorItem:unfilteredRootErrorItem] retain];
+//	}
+//	return filteredRootErrorItem;
 }
 
 - (BOOL)openModel:(NSString *)filename
@@ -589,13 +590,54 @@ enum
 	}
 }
 
+- (void)pollingAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode == NSAlertDefaultReturn)
+	{
+		[[alert window] orderOut:self];
+		[self reload:self];
+	}
+}
+
+- (void)askForPollingUpdate
+{
+	NSAlert *alert = [NSAlert alertWithMessageText:[OCLocalStrings get:@"PollFileUpdate"] defaultButton:[OCLocalStrings get:@"Yes"] alternateButton:[OCLocalStrings get:@"No"] otherButton:nil informativeTextWithFormat:[OCLocalStrings get:@"PollReloadCheck"]];
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(pollingAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+}
+
 - (void)pollingTimerFired:(NSTimer*)theTimer
 {
-	NSDate *thisWriteTime = [[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate];
+	NSString *filename = [self filename];
 	
-	if (![lastWriteTime isEqualToDate:thisWriteTime])
+	if (filename)
 	{
-		[self setLastWriteTime:thisWriteTime];
+		NSDate *thisWriteTime = [[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate];
+		
+		if (![lastWriteTime isEqualToDate:thisWriteTime])
+		{
+			[self setLastWriteTime:thisWriteTime];
+			switch ([controller pollingMode])
+			{
+				case 1:
+					pollingUpdateNeeded = true;
+					break;
+				case 2:
+					if ([controller currentModelWindow] == self)
+					{
+						[self reload:self];
+					}
+					else
+					{
+						pollingUpdateNeeded = true;
+					}
+					break;
+				case 3:
+					[self reload:self];
+					break;
+				default:
+					break;
+			}
+		}
 	}
 }
 
@@ -616,19 +658,20 @@ enum
 - (void)updatePolling
 {
 	NSString *filename = [self filename];
+	long pollingMode = [controller pollingMode];
 
 	if (pollingMode && filename != nil)
 	{
 		if (!pollingTimer)
 		{
 			pollingTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5f target:self selector:@selector(pollingTimerFired:) userInfo:nil repeats:YES] retain];
-			[lastWriteTime release];
-			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
 		}
 	}
 	else if (pollingTimer)
 	{
+		[pollingTimer invalidate];
 		[pollingTimer release];
+		pollingTimer = nil;
 	}
 }
 
@@ -640,6 +683,7 @@ enum
 	{
 		NSString *message = [NSString stringWithASCIICString:alert->getMessage()];
 
+		pollingUpdateNeeded = false;
 		if ([message isEqualToString:@"ModelLoading"])
 		{
 			loading = true;
@@ -648,6 +692,8 @@ enum
 			{
 				[window display];
 			}
+			[unfilteredRootErrorItem release];
+			unfilteredRootErrorItem = nil;
 		}
 		else if ([message isEqualToString:@"ModelLoaded"])
 		{
@@ -668,7 +714,8 @@ enum
 			{
 				[[ErrorsAndWarnings sharedInstance] showIfNeeded];
 			}
-			[OCUserDefaults setString:[[NSString stringWithASCIICString:modelViewer->getFilename()] stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
+			[OCUserDefaults setString:[[self filename] stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
+			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate]];
 			[self updatePolling];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
@@ -1023,6 +1070,19 @@ enum
 
 - (void)windowDidBecomeMain:(NSNotification *)aNotification
 {
+	if (pollingUpdateNeeded)
+	{
+		pollingUpdateNeeded = false;
+		switch ([controller pollingMode])
+		{
+			case 1:
+				[self askForPollingUpdate];
+				break;
+			case 2:
+				[self reload:self];
+				break;
+		}
+	}
 	if ([[ErrorsAndWarnings sharedInstance] isVisible])
 	{
 		[[ErrorsAndWarnings sharedInstance] update:self];
@@ -1208,6 +1268,11 @@ enum
 - (IBAction)print:(id)sender
 {
 	NSRunAlertPanel(@"Error", @"Print not yet implemented.", @"OK", nil, nil);
+}
+
+- (IBAction)pollingMode:(id)sender
+{
+	[self updatePolling];
 }
 
 @end

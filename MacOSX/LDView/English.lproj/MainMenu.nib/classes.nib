@@ -33,6 +33,7 @@
             ACTIONS = {
                 newWindow = id; 
                 openModel = id; 
+                pollingMode = id; 
                 preferences = id; 
                 print = id; 
                 resetView = id; 
@@ -49,6 +50,10 @@
                 flyThroughMenuItem = NSMenuItem; 
                 latLongRotationMenuItem = NSMenuItem; 
                 modelTreeMenuItem = NSMenuItem; 
+                pollingAutoLaterMenuItem = NSMenuItem; 
+                pollingAutoNowMenuItem = NSMenuItem; 
+                pollingDisabledMenuItem = NSMenuItem; 
+                pollingPromptMenuItem = NSMenuItem; 
                 statusBarMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 
                 viewingAngleMenu = NSMenu; 
