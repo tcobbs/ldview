@@ -8,6 +8,7 @@
 
 #import "SaveSnapshotViewOwner.h"
 #import "JpegOptions.h"
+#import "LDViewCategories.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCUserDefaults.h>
 
@@ -51,25 +52,27 @@
 
 - (void)enableSizeUI:(BOOL)enabled
 {
-	[sizeForm setEnabled:enabled];
+	[self enableLabel:widthLabel value:enabled];
+	[widthField setEnabled:enabled];
+	[self enableLabel:heightLabel value:enabled];
+	[heightField setEnabled:enabled];
 	[zoomToFitCheck setEnabled:enabled];
 }
 
 - (void)enableSize
 {
 	[self enableSizeUI:YES];
-	[[sizeForm cellAtIndex:0] setIntValue:TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false)];
-	int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
-	[[sizeForm cellAtIndex:1] setIntValue:height];
-	[self setCheck:zoomToFitCheck value:TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, true, false)];
+	[widthField setIntValue:TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false)];
+	[heightField setIntValue:TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false)];
+	[zoomToFitCheck setCheck:TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, true, false)];
 }
 
 - (void)disableSize
 {
 	[self enableSizeUI:NO];
-	[[sizeForm cellAtIndex:0] setStringValue:@""];
-	[[sizeForm cellAtIndex:1] setStringValue:@""];
-	[self setCheck:zoomToFitCheck value:false];
+	[widthField setStringValue:@""];
+	[heightField setStringValue:@""];
+	[zoomToFitCheck setCheck:false];
 }
 
 - (NSArray *)allowedFileTypes
@@ -106,6 +109,29 @@
 	return retValue;
 }
 
+- (bool)alphaSupported:(NSString *)fileType
+{
+	return [fileType isEqualToString:@"png"];
+}
+
+- (void)updateRequiredFileType
+{
+	NSString *requiredFileType = [self requiredFileType];
+
+	[savePanel setRequiredFileType:requiredFileType];
+	[savePanel validateVisibleColumns];
+	if ([self alphaSupported:requiredFileType])
+	{
+		[transparentCheck setEnabled:YES];
+		[transparentCheck setCheck:TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, true, false)];
+	}
+	else
+	{
+		[transparentCheck setEnabled:NO];
+		[transparentCheck setCheck:false];
+	}
+}
+
 - (void)setSavePanel:(NSSavePanel *)aSavePanel
 {
 	if (aSavePanel != nil)
@@ -115,9 +141,7 @@
 		[fileTypePopUp selectItemWithTag:fileType];
 		[self groupCheck:saveSeriesCheck name:@"SaveSeries" value:TCUserDefaults::boolForKey(SAVE_SERIES_KEY, false, false)];
 		[self groupCheck:sizeCheck name:@"Size" value:!TCUserDefaults::boolForKey(SAVE_ACTUAL_SIZE_KEY, true, false)];
-		[self setCheck:transparentCheck value:TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, true, false)];
-		[self setCheck:autocropCheck value:TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)];
-		[aSavePanel setRequiredFileType:[self requiredFileType]];
+		[autocropCheck setCheck:TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)];
 	}
 	if (aSavePanel != savePanel)
 	{
@@ -128,6 +152,7 @@
 	{
 		[savePanel setAccessoryView:accessoryView];
 	}
+	[self updateRequiredFileType];
 }
 
 - (void)saveSettings
@@ -135,21 +160,21 @@
 	bool checked;
 
 	TCUserDefaults::setLongForKey([[fileTypePopUp selectedItem] tag], SAVE_IMAGE_TYPE_KEY, false);
-	checked = [self getCheck:saveSeriesCheck];
+	checked = [saveSeriesCheck getCheck];
 	TCUserDefaults::setBoolForKey(checked, SAVE_SERIES_KEY, false);
 	if (checked)
 	{
 		TCUserDefaults::setLongForKey([digitsField intValue], SAVE_DIGITS_KEY, false);
 	}
-	TCUserDefaults::setBoolForKey([self getCheck:transparentCheck], SAVE_ALPHA_KEY, false);
-	TCUserDefaults::setBoolForKey([self getCheck:autocropCheck], AUTO_CROP_KEY, false);
-	checked = [self getCheck:sizeCheck];
+	TCUserDefaults::setBoolForKey([transparentCheck getCheck], SAVE_ALPHA_KEY, false);
+	TCUserDefaults::setBoolForKey([autocropCheck getCheck], AUTO_CROP_KEY, false);
+	checked = [sizeCheck getCheck];
 	TCUserDefaults::setBoolForKey(!checked, SAVE_ACTUAL_SIZE_KEY, false);
 	if (checked)
 	{
-		TCUserDefaults::setLongForKey([[sizeForm cellAtIndex:0] intValue], SAVE_WIDTH_KEY, false);
-		TCUserDefaults::setLongForKey([[sizeForm cellAtIndex:1] intValue], SAVE_HEIGHT_KEY, false);
-		TCUserDefaults::setBoolForKey([self getCheck:zoomToFitCheck], SAVE_ZOOM_TO_FIT_KEY, false);
+		TCUserDefaults::setLongForKey([widthField intValue], SAVE_WIDTH_KEY, false);
+		TCUserDefaults::setLongForKey([heightField intValue], SAVE_HEIGHT_KEY, false);
+		TCUserDefaults::setBoolForKey([zoomToFitCheck getCheck], SAVE_ZOOM_TO_FIT_KEY, false);
 	}
 }
 
@@ -165,8 +190,7 @@
 
 - (IBAction)fileType:(id)sender
 {
-	[savePanel setRequiredFileType:[self requiredFileType]];
-	[savePanel validateVisibleColumns];
+	[self updateRequiredFileType];
 }
 
 - (void)jpegOptions
@@ -189,12 +213,12 @@
 
 - (bool)transparentBackground
 {
-	return [self getCheck:transparentCheck];
+	return [transparentCheck getCheck];
 }
 
 - (bool)autocrop
 {
-	return [self getCheck:autocropCheck];
+	return [autocropCheck getCheck];
 }
 
 - (LDSnapshotTaker::ImageType)imageType
@@ -211,9 +235,9 @@
 
 - (int)width:(int)refWidth
 {
-	if ([self getCheck:sizeCheck])
+	if ([sizeCheck getCheck])
 	{
-		return [[sizeForm cellAtIndex:0] intValue];
+		return [widthField intValue];
 	}
 	else
 	{
@@ -223,9 +247,9 @@
 
 - (int)height:(int)refHeight
 {
-	if ([self getCheck:sizeCheck])
+	if ([sizeCheck getCheck])
 	{
-		return [[sizeForm cellAtIndex:1] intValue];
+		return [heightField intValue];
 	}
 	else
 	{
@@ -235,9 +259,9 @@
 
 - (bool)zoomToFit
 {
-	if ([self getCheck:sizeCheck])
+	if ([sizeCheck getCheck])
 	{
-		return [self getCheck:zoomToFitCheck];
+		return [zoomToFitCheck getCheck];
 	}
 	else
 	{

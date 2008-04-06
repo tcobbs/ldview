@@ -11,12 +11,15 @@
                 digitsField = NSTextField; 
                 digitsLabel = NSTextField; 
                 digitsStepper = NSStepper; 
-                fileTypeOptionsButton = id; 
+                fileTypeOptionsButton = NSButton; 
                 fileTypePopUp = NSPopUpButton; 
+                heightField = NSTextField; 
+                heightLabel = NSTextField; 
                 saveSeriesCheck = NSButton; 
                 sizeCheck = NSButton; 
-                sizeForm = NSForm; 
                 transparentCheck = NSButton; 
+                widthField = NSTextField; 
+                widthLabel = NSTextField; 
                 zoomToFitCheck = NSButton; 
             }; 
             SUPERCLASS = ViewOwnerBase; 

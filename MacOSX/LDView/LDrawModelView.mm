@@ -704,9 +704,18 @@ static TCImage *resizeCornerImage = NULL;
 	float dpi = TCUserDefaults::floatForKey(PRINT_DPI_KEY, 300.0, false);
 	NSRect page = { {0.0f, 0.0f}, [printInfo paperSize] };
 	NSRect printRect = { { 72.0f, 72.0f }, { page.size.width - 144.0f, page.size.height - 144.0f } };
+	TCFloat32 origEdgeWidth = modelViewer->getHighlightLineWidth();
+	// Assume 100 DPI for screen
+	TCFloat32 newEdgeWidth = origEdgeWidth * dpi / 100.0f;
 
+	if (newEdgeWidth < 1.0f)
+	{
+		newEdgeWidth = 1.0f;
+	}
 	modelViewer->setBackgroundRGBA(255, 255, 255, 255);
+	modelViewer->setHighlightLineWidth(newEdgeWidth);
 	image = [snapshotTaker imageWithWidth:(int)(printRect.size.width * dpi / 72.0f) height:(int)(printRect.size.height * dpi / 72.0f) zoomToFit:false];
+	modelViewer->setHighlightLineWidth(origEdgeWidth);
 	modelViewer->setBackgroundRGBA(backgroundR, backgroundG, backgroundB, backgroundA);
 	printRect = NSIntegralRect(printRect);
 	[(NSImageRep *)[[image representations] lastObject] drawInRect:printRect];
