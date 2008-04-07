@@ -70,6 +70,7 @@
 		1F6191620DA48458002A6192 /* Help.html in Resources */ = {isa = PBXBuildFile; fileRef = 1F6191610DA48458002A6192 /* Help.html */; };
 		1F6191AE0DA49680002A6192 /* OpenGLDriverInfo.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F6191AC0DA49680002A6192 /* OpenGLDriverInfo.nib */; };
 		1F6191B10DA4968F002A6192 /* OpenGLDriverInfo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */; };
+		1F6383CC0DA9E50400897835 /* toolbar_refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F6383CB0DA9E50400897835 /* toolbar_refresh.png */; };
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */; };
 		1F7B4AE50DA898FA004EFA08 /* AutoDeleter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */; };
@@ -261,6 +262,7 @@
 		1F6191AD0DA49680002A6192 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/OpenGLDriverInfo.nib; sourceTree = "<group>"; };
 		1F6191AF0DA4968F002A6192 /* OpenGLDriverInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OpenGLDriverInfo.h; sourceTree = "<group>"; };
 		1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenGLDriverInfo.mm; sourceTree = "<group>"; };
+		1F6383CB0DA9E50400897835 /* toolbar_refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_refresh.png; path = Images/toolbar_refresh.png; sourceTree = "<group>"; };
 		1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MyResizeCorner.png; path = Images/MyResizeCorner.png; sourceTree = "<group>"; };
 		1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapshotTaker.h; sourceTree = "<group>"; };
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
@@ -539,6 +541,7 @@
 				1F47E7820C7575C9009B84BC /* toolbar_preferences.png */,
 				1F47E7830C7575C9009B84BC /* toolbar_primsubs.png */,
 				1FF906630DA73AB9003A9AC0 /* toolbar_print.png */,
+				1F6383CB0DA9E50400897835 /* toolbar_refresh.png */,
 				1F47E7840C7575C9009B84BC /* toolbar_reload.png */,
 				1F47E7850C7575C9009B84BC /* toolbar_seams.png */,
 				1F47E7860C7575C9009B84BC /* toolbar_snapshot.png */,
@@ -793,6 +796,7 @@
 				1FF905C20DA60DCE003A9AC0 /* Credits.rtf in Resources */,
 				1FF906640DA73AB9003A9AC0 /* toolbar_customize.png in Resources */,
 				1FF906650DA73AB9003A9AC0 /* toolbar_print.png in Resources */,
+				1F6383CC0DA9E50400897835 /* toolbar_refresh.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
