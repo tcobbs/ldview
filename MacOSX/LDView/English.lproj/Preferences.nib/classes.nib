@@ -43,6 +43,7 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {partsList = id; partsListBrowse = id; snapshot = id; snapshotBrowse = id; }; 
             CLASS = GeneralPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -52,10 +53,16 @@
                 fovField = NSTextField; 
                 memoryUsagePopUp = NSPopUpButton; 
                 newModelWindowsCheck = NSButton; 
+                partsListsBrowseButton = NSButton; 
+                partsListsDirField = NSTextField; 
+                partsListsDirPopUp = NSPopUpButton; 
                 processLDConfigCheck = NSButton; 
                 promptAtStartupCheck = NSButton; 
                 showErrorsCheck = NSButton; 
                 showFrameRateCheck = NSButton; 
+                snapshotsBrowseButton = NSButton; 
+                snapshotsDirField = NSTextField; 
+                snapshotsDirPopUp = NSPopUpButton; 
                 transparentDefaultCheck = NSButton; 
             }; 
             SUPERCLASS = PreferencePage; 

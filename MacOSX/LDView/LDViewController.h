@@ -54,5 +54,6 @@
 - (NSMenuItem *)statusBarMenuItem;
 - (ModelWindow *)currentModelWindow;
 - (long)pollingMode;
+- (void)recordRecentFile:(NSString *)filename;
 
 @end

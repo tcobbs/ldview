@@ -352,6 +352,10 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		setCustomColor(i, r, g, b);
 	}
+	setSnapshotsDirMode(DDMModelDir);
+	setSnapshotsDir("");
+	setPartsListsDirMode(DDMLastDir);
+	setPartsListsDir("");
 	m_initializing = false;
 }
 
@@ -505,6 +509,14 @@ void LDPreferences::loadGeneralSettings(void)
 		// Windows XP doesn't like the upper bits to be set, so mask those out.
 		m_customColors[i] = getLongSetting(key, m_customColors[i]) & 0xFFFFFF;
 	}
+	m_snapshotsDirMode = (DefaultDirMode)getIntSetting(SNAPSHOTS_DIR_MODE_KEY,
+		m_snapshotsDirMode);
+	m_snapshotsDir = getStringSetting(SNAPSHOTS_DIR_KEY, m_snapshotsDir.c_str(),
+		true);
+	m_partsListsDirMode = (DefaultDirMode)getIntSetting(
+		PARTS_LISTS_DIR_MODE_KEY, m_partsListsDirMode);
+	m_partsListsDir = getStringSetting(PARTS_LISTS_DIR_KEY,
+		m_partsListsDir.c_str(), true);
 }
 
 void LDPreferences::loadLDrawSettings(void)
@@ -668,6 +680,10 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 	setFullScreenRefresh(m_fullScreenRefresh, true);
 	setFov(m_fov, true);
 	setMemoryUsage(m_memoryUsage, true);
+	setSnapshotsDirMode(m_snapshotsDirMode, true);
+	setSnapshotsDir(m_snapshotsDir.c_str(), true);
+	setPartsListsDirMode(m_partsListsDirMode, true);
+	setPartsListsDir(m_partsListsDir.c_str(), true);
 	if (flush)
 	{
 		TCUserDefaults::flush();
@@ -1264,6 +1280,36 @@ void LDPreferences::setCustomColor(int index, int r, int g, int b, bool commit)
 
 	sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, index);
 	setColorSetting(m_customColors[index], r, g, b, key, commit);
+}
+
+void LDPreferences::setSnapshotsDirMode(
+	DefaultDirMode value,
+	bool commit /*= false*/)
+{
+	int intValue = m_snapshotsDirMode;
+	
+	setSetting(intValue, value, SNAPSHOTS_DIR_MODE_KEY, commit);
+	m_snapshotsDirMode = (DefaultDirMode)intValue;
+}
+
+void LDPreferences::setSnapshotsDir(const char *value, bool commit)
+{
+	setSetting(m_snapshotsDir, value, SNAPSHOTS_DIR_KEY, commit);
+}
+
+void LDPreferences::setPartsListsDirMode(
+	DefaultDirMode value,
+	bool commit /*= false*/)
+{
+	int intValue = m_partsListsDirMode;
+	
+	setSetting(intValue, value, PARTS_LISTS_DIR_MODE_KEY, commit);
+	m_partsListsDirMode = (DefaultDirMode)intValue;
+}
+
+void LDPreferences::setPartsListsDir(const char *value, bool commit)
+{
+	setSetting(m_partsListsDir, value, PARTS_LISTS_DIR_KEY, commit);
 }
 
 // LDraw settings

@@ -23,5 +23,6 @@ class LDPreferences;
 - (void)setPreferences:(Preferences *)value;
 - (void)setup;
 - (BOOL)canSwitchPages;
+- (void)browseForFolder:(void *)contextInfo;
 
 @end

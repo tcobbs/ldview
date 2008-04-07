@@ -26,6 +26,13 @@ public:
 		LowerMiddle		= 8,
 		LowerRight		= 9,
 	};
+	
+	enum DefaultDirMode
+	{
+		DDMModelDir		= 0,
+		DDMLastDir		= 1,
+		DDMSpecificDir	= 2,
+	};
 	LDPreferences(LDrawModelViewer* modelViewer = NULL);
 	static const char *lightVectorChangedAlertClass(void)
 	{
@@ -81,7 +88,11 @@ public:
 	TCFloat getFov(void) { return m_fov; }
 	int getMemoryUsage(void) { return m_memoryUsage; }
 	void getCustomColor(int index, int &r, int &g, int &b);
-	
+	DefaultDirMode getSnapshotsDirMode(void) { return m_snapshotsDirMode; }
+	std::string getSnapshotsDir(void) { return m_snapshotsDir; }
+	DefaultDirMode getPartsListsDirMode(void) { return m_partsListsDirMode; }
+	std::string getPartsListsDir(void) { return m_partsListsDir; }
+
 	// LDraw settings
 	const char *getLDrawDir(void) { return m_ldrawDir.c_str(); }
 	const StringVector &getExtraDirs(void) { return m_extraDirs; }
@@ -178,6 +189,10 @@ public:
 	void setFov(TCFloat value, bool commit = false);
 	void setMemoryUsage(int value, bool commit = false);
 	void setCustomColor(int index, int r, int g, int b, bool commit = false);
+	void setSnapshotsDirMode(DefaultDirMode value, bool commit = false);
+	void setSnapshotsDir(const char *value, bool commit = false);
+	void setPartsListsDirMode(DefaultDirMode value, bool commit = false);
+	void setPartsListsDir(const char *value, bool commit = false);
 	
 	// LDraw settings
 	void setLDrawDir(const char *value, bool commit = false);
@@ -330,7 +345,11 @@ protected:
 	TCFloat m_fov;
 	int m_memoryUsage;
 	TCULong m_customColors[16];
-	
+	DefaultDirMode m_snapshotsDirMode;
+	std::string m_snapshotsDir;
+	DefaultDirMode m_partsListsDirMode;
+	std::string m_partsListsDir;
+
 	// LDraw settings
 	std::string m_ldrawDir;
 	StringVector m_extraDirs;

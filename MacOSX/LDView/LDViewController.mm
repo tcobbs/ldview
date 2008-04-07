@@ -415,7 +415,6 @@
 	{
 		if ([self createWindow:filename])
 		{
-			[self recordRecentFile:filename];
 			return YES;
 		}
 	}
@@ -423,7 +422,6 @@
 	{
 		if ([[self currentModelWindow] openModel:filename])
 		{
-			[self recordRecentFile:filename];
 			return YES;
 		}
 	}

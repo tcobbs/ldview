@@ -17,6 +17,16 @@
     IBOutlet NSButton *showErrorsCheck;
     IBOutlet NSButton *showFrameRateCheck;
     IBOutlet NSButton *transparentDefaultCheck;
+	
+	IBOutlet NSPopUpButton *snapshotsDirPopUp;
+	IBOutlet NSPopUpButton *partsListsDirPopUp;
+	IBOutlet NSTextField *snapshotsDirField;
+	IBOutlet NSTextField *partsListsDirField;
+	IBOutlet NSButton *snapshotsBrowseButton;
+	IBOutlet NSButton *partsListsBrowseButton;
+
+	NSString *snapshotsDir;
+	NSString *partsListsDir;
 }
 
 - (bool)showErrorsIfNeeded;
@@ -25,5 +35,10 @@
 
 - (void)setup;
 - (bool)updateLdPreferences;
+
+- (int)snapshotsDirMode;
+- (NSString *)snapshotsDir;
+- (int)partsListsDirMode;
+- (NSString *)partsListsDir;
 
 @end
