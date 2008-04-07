@@ -1,9 +1,45 @@
 #import "GeneralPage.h"
 #import "Preferences.h"
+#import "LDViewCategories.h"
+
 #include <LDLib/LDPreferences.h>
 #include <TCFoundation/TCUserDefaults.h>
 
 @implementation GeneralPage
+
+- (void)setSnapshotsDir:(NSString *)value
+{
+	if (value != snapshotsDir)
+	{
+		[snapshotsDir release];
+		snapshotsDir = [value retain];
+	}
+}
+
+- (void)setPartsListsDir:(NSString *)value
+{
+	if (value != partsListsDir)
+	{
+		[partsListsDir release];
+		partsListsDir = [value retain];
+	}
+}
+
+- (void)updateDirField:(NSTextField *)field browseButton:(NSButton *)browseButton mode:(int)mode value:(NSString *)value
+{
+	if (mode == LDPreferences::DDMSpecificDir)
+	{
+		[field setStringValue:value];
+		[field setEnabled:YES];
+		[browseButton setEnabled:YES];
+	}
+	else
+	{
+		[field setStringValue:@""];
+		[field setEnabled:NO];
+		[browseButton setEnabled:NO];
+	}
+}
 
 - (void)setup
 {
@@ -26,6 +62,12 @@
 		value:ldPreferences->getTransDefaultColor()];
 	[fovField setFloatValue:ldPreferences->getFov()];
 	[memoryUsagePopUp selectItemWithTag:ldPreferences->getMemoryUsage()];
+	[snapshotsDirPopUp selectItemWithTag:ldPreferences->getSnapshotsDirMode()];
+	[self setSnapshotsDir:[self snapshotsDir]];
+	[self updateDirField:snapshotsDirField browseButton:snapshotsBrowseButton mode:ldPreferences->getSnapshotsDirMode() value:snapshotsDir];
+	[self setPartsListsDir:[self partsListsDir]];
+	[partsListsDirPopUp selectItemWithTag:ldPreferences->getPartsListsDirMode()];
+	[self updateDirField:partsListsDirField browseButton:partsListsBrowseButton mode:ldPreferences->getPartsListsDirMode() value:partsListsDir];
 }
 
 - (bool)promptAtStartup
@@ -61,6 +103,10 @@
 		[self getCheck:transparentDefaultCheck]);
 	ldPreferences->setFov([fovField floatValue]);
 	ldPreferences->setMemoryUsage([[memoryUsagePopUp selectedItem] tag]);
+	ldPreferences->setSnapshotsDirMode((LDPreferences::DefaultDirMode)[snapshotsDirPopUp selectedTag]);
+	ldPreferences->setSnapshotsDir([snapshotsDir asciiCString]);
+	ldPreferences->setPartsListsDirMode((LDPreferences::DefaultDirMode)[partsListsDirPopUp selectedTag]);
+	ldPreferences->setPartsListsDir([partsListsDir asciiCString]);
 	return [super updateLdPreferences];
 }
 
@@ -68,6 +114,69 @@
 {
 	ldPreferences->loadDefaultGeneralSettings(false);
 	[super resetPage:sender];
+}
+
+- (IBAction)snapshot:(id)sender
+{
+	[self updateDirField:snapshotsDirField browseButton:snapshotsBrowseButton mode:[sender selectedTag] value:snapshotsDir];
+}
+
+- (IBAction)partsList:(id)sender
+{
+	[self updateDirField:partsListsDirField browseButton:partsListsBrowseButton mode:[sender selectedTag] value:partsListsDir];
+}
+
+- (void)textDidChange:(NSNotification *)aNotification
+{
+	if ([aNotification object] == snapshotsDirField)
+	{
+		[self setSnapshotsDir:[snapshotsDirField stringValue]];
+	}
+	else if ([aNotification object] == partsListsDirField)
+	{
+		[self setPartsListsDir:[partsListsDirField stringValue]];
+	}
+	[super textDidChange:aNotification];
+}
+
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{
+	if (returnCode = NSOKButton)
+	{
+		NSTextField *textField = (NSTextField *)contextInfo;
+		[textField setStringValue:[openPanel filename]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:NSControlTextDidChangeNotification object:textField];
+	}
+}
+
+- (IBAction)snapshotBrowse:(id)sender
+{
+	[self browseForFolder:snapshotsDirField];
+}
+
+- (IBAction)partsListBrowse:(id)sender
+{
+	[self browseForFolder:partsListsDirField];
+}
+
+- (int)snapshotsDirMode
+{
+	return ldPreferences->getSnapshotsDirMode();
+}
+
+- (NSString *)snapshotsDir
+{
+	return [NSString stringWithASCIICString:ldPreferences->getSnapshotsDir().c_str()];
+}
+
+- (int)partsListsDirMode
+{
+	return ldPreferences->getPartsListsDirMode();
+}
+
+- (NSString *)partsListsDir
+{
+	return [NSString stringWithASCIICString:ldPreferences->getPartsListsDir().c_str()];
 }
 
 @end

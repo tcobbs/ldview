@@ -94,4 +94,14 @@
 	return YES;
 }
 
+- (void)browseForFolder:(void *)contextInfo
+{
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	
+	[openPanel setAllowsMultipleSelection:NO];
+	[openPanel setCanChooseFiles:NO];
+	[openPanel setCanChooseDirectories:YES];
+	[openPanel beginSheetForDirectory:nil file:nil modalForWindow:[preferences window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:contextInfo];
+}
+
 @end

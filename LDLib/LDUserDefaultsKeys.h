@@ -148,6 +148,11 @@
 #define DEFAULT_LATITUDE_KEY "DefaultLatitude"
 #define MULTI_THREADED_KEY "MultiThreaded"
 #define MODEL_TREE_OPTIONS_SHOWN_KEY "ModelTreeOptionsShown"
+#define SNAPSHOTS_DIR_MODE_KEY "SnapshotsDirMode"
+#define SNAPSHOTS_DIR_KEY "SnapshotsDir"
+#define PARTS_LISTS_DIR_MODE_KEY "PartsListsDirMode"
+#define PARTS_LISTS_DIR_KEY "PartsListsDir"
+#define LAST_SNAPSHOT_PATH_KEY "LastSnapshotPath"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

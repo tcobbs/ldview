@@ -697,6 +697,7 @@ enum
 		else if ([message isEqualToString:@"ModelLoaded"])
 		{
 			bool showErrorsIfNeeded = [[[controller preferences] generalPage] showErrorsIfNeeded];
+			NSString *filename = nil;
 
 			if ([self showStatusBar:showStatusBar])
 			{
@@ -713,9 +714,11 @@ enum
 			{
 				[[ErrorsAndWarnings sharedInstance] showIfNeeded];
 			}
-			[OCUserDefaults setString:[[self filename] stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
-			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:[self filename] traverseLink:YES] objectForKey:NSFileModificationDate]];
+			filename = [self filename];
+			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
+			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
 			[self updatePolling];
+			[[self controller] recordRecentFile:filename];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
@@ -907,6 +910,27 @@ enum
 	sheetBusy = false;
 }
 
+- (NSString *)defaultPathForMode:(int)mode lastPath:(NSString *)lastPath defaultPath:(NSString *)defaultPath
+{
+	switch (mode)
+	{
+		case LDPreferences::DDMModelDir:
+			return [[self filename] stringByDeletingLastPathComponent];
+		case LDPreferences::DDMLastDir:
+			if (lastPath)
+			{
+				return lastPath;
+			}
+			else
+			{
+				return [[self filename] stringByDeletingLastPathComponent];
+			}
+		case LDPreferences::DDMSpecificDir:
+			return defaultPath;
+	}
+	return nil;
+}
+
 - (void)snapshotSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode  contextInfo:(void  *)contextInfo
 {
 	if (returnCode == NSOKButton)
@@ -914,7 +938,8 @@ enum
 		NSSize viewSize = [modelView frame].size;
 		int width = (int)viewSize.width;
 		int height = (int)viewSize.height;		
-		
+
+		[OCUserDefaults setString:[sheet filename] forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_PATH_KEY] sessionSpecific:NO];
 		if (!snapshotTaker)
 		{
 			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
@@ -938,9 +963,9 @@ enum
 - (IBAction)saveSnapshot:(id)sender
 {
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
-	NSString *modelFilename = [window representedFilename];
-	NSString *modelPath = [modelFilename stringByDeletingLastPathComponent];
+	NSString *modelFilename = [self filename];
 	NSString *defaultFilename = [[modelFilename lastPathComponent] stringByDeletingPathExtension];
+	GeneralPage *generalPage = [[controller preferences] generalPage];
 
 	if (!saveSnapshotViewOwner)
 	{
@@ -949,7 +974,7 @@ enum
 	[saveSnapshotViewOwner setSavePanel:savePanel];
 	[savePanel setCanSelectHiddenExtension:YES];
 	sheetBusy = true;
-	[savePanel beginSheetForDirectory:modelPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(snapshotSavePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
+	[savePanel beginSheetForDirectory:[self defaultPathForMode:[generalPage snapshotsDirMode] lastPath:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_PATH_KEY] defaultValue:nil sessionSpecific:NO] defaultPath:[generalPage snapshotsDir]] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(snapshotSavePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
 }
 
 - (IBAction)reload:(id)sender
@@ -1176,13 +1201,14 @@ enum
 			{
 				NSString *htmlFilename = [NSString stringWithCString:htmlInventory->defaultFilename([modelView modelViewer]->getFilename()).c_str() encoding:NSASCIIStringEncoding];
 				NSSavePanel *savePanel = [NSSavePanel savePanel];
-				NSString *htmlPath = [htmlFilename stringByDeletingLastPathComponent];
+				//NSString *htmlPath = [htmlFilename stringByDeletingLastPathComponent];
 				NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
+				GeneralPage *generalPage = [[controller preferences] generalPage];
 
 				[savePanel setRequiredFileType:@"html"];
 				[savePanel setCanSelectHiddenExtension:YES];
 				sheetBusy = true;
-				[savePanel beginSheetForDirectory:htmlPath file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(htmlSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+				[savePanel beginSheetForDirectory:[self defaultPathForMode:[generalPage partsListsDirMode] lastPath:[NSString stringWithASCIICString:htmlInventory->getLastSavePath()] defaultPath:[generalPage partsListsDir]] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(htmlSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 			}
 			[partsListSheet release];
 		}
