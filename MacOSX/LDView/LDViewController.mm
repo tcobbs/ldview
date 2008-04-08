@@ -208,7 +208,11 @@
 	}
 	else
 	{
-		if (menuItem == cancelMenuItem || [modelWindow sheetBusy])
+		if (menuItem == copyMenuItem)
+		{
+			return [modelWindow canCopy];
+		}
+		else if (menuItem == cancelMenuItem || [modelWindow sheetBusy])
 		{
 			return NO;
 		}

@@ -136,4 +136,9 @@
 	return YES;
 }
 
+- (IBAction)copy:(id)sender
+{
+	NSLog(@"copy:\n");
+}
+
 @end

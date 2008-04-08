@@ -1300,4 +1300,24 @@ enum
 	[self updatePolling];
 }
 
+- (BOOL)canCopy
+{
+	if ([window firstResponder] == [modelTree outlineView])
+	{
+		return [modelTree canCopy];
+	}
+	else
+	{
+		return NO;
+	}
+}
+
+- (IBAction)copy:(id)sender
+{
+	if ([window firstResponder] == [modelTree outlineView])
+	{
+		return [modelTree copy:sender];
+	}
+}
+
 @end

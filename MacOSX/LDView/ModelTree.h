@@ -41,5 +41,8 @@ class LDLMainModel;
 - (void)hideOptionsInstantly:(BOOL)instantly;
 - (void)hideOptions;
 - (void)showOptions;
+- (NSOutlineView *)outlineView;
+- (BOOL)canCopy;
+- (IBAction)copy:(id)sender;
 
 @end
