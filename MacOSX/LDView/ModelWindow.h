@@ -99,7 +99,9 @@ class LDPartsList;
 - (ErrorItem *)filteredRootErrorItem;
 - (LDrawModelView *)modelView;
 - (NSString *)filename;
+- (BOOL)canCopy;
 
+- (void)copyStringToPasteboard:(NSString *)string;
 - (IBAction)actions:(id)sender;
 - (IBAction)open:(id)sender;
 - (IBAction)saveSnapshot:(id)sender;

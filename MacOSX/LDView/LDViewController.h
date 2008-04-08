@@ -20,6 +20,7 @@
 	IBOutlet NSMenuItem *pollingPromptMenuItem;
 	IBOutlet NSMenuItem *pollingAutoLaterMenuItem;
 	IBOutlet NSMenuItem *pollingAutoNowMenuItem;
+	IBOutlet NSMenuItem *copyMenuItem;
 
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;

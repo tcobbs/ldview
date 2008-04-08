@@ -44,6 +44,7 @@
             OUTLETS = {
                 alwaysOnTopMenuItem = NSMenuItem; 
                 cancelMenuItem = NSMenuItem; 
+                copyMenuItem = NSMenuItem; 
                 custToolbarMenuItem = NSMenuItem; 
                 examineMenuItem = NSMenuItem; 
                 fileMenu = NSMenu; 

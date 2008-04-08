@@ -361,4 +361,49 @@
 	}
 }
 
+- (NSOutlineView *)outlineView
+{
+	return outlineView;
+}
+
+- (BOOL)canCopy
+{
+	if ([[modelWindow window] firstResponder] == outlineView)
+	{
+		if ([outlineView numberOfSelectedRows] > 0)
+		{
+			return YES;
+		}
+	}
+	return NO;
+}
+
+- (IBAction)copy:(id)sender
+{
+	if ([[modelWindow window] firstResponder] == outlineView)
+	{
+		int count = [outlineView numberOfSelectedRows];
+		NSIndexSet *selectedRowIndices = [outlineView selectedRowIndexes];
+		NSMutableString *copyText = [[NSMutableString alloc] init];
+		NSTableColumn *column = [[outlineView tableColumns] objectAtIndex:0];
+		unsigned int currentIndex = [selectedRowIndices firstIndex];
+
+		for (int i = 0; i < count; i++)
+		{
+			ModelTreeItem *item = [outlineView itemAtRow:currentIndex];
+			NSString *rowValue = [self outlineView:outlineView objectValueForTableColumn:column byItem:item];
+			const LDModelTree *itemModelTree = [item modelTree];
+
+			if (itemModelTree && itemModelTree->getLineType() != LDLLineTypeEmpty)
+			{
+				[copyText appendString:rowValue];
+			}
+			[copyText appendString:@"\n"];
+			currentIndex = [selectedRowIndices indexGreaterThanIndex:currentIndex];
+		}
+		[modelWindow copyStringToPasteboard:copyText];
+		[copyText release];
+	}
+}
+
 @end
