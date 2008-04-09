@@ -4,6 +4,7 @@
 
 @class Preferences;
 @class ModelWindow;
+@class PrintAccessoryViewOwner;
 
 @interface LDViewController : NSResponder
 {

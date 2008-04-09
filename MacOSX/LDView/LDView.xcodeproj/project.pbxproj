@@ -101,6 +101,8 @@
 		1FE965B10C5D595A00C80B59 /* PrefSetNew.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */; };
 		1FE965B40C5D596D00C80B59 /* PrefSetNewSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FE965B30C5D596D00C80B59 /* PrefSetNewSheet.mm */; };
 		1FE965BB0C5D59E700C80B59 /* GenericSheet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */; };
+		1FF7118F0DAB50DE001ECA67 /* PrintAccessoryView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FF7118D0DAB50DE001ECA67 /* PrintAccessoryView.nib */; };
+		1FF711920DAB5164001ECA67 /* PrintAccessoryViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FF711910DAB5164001ECA67 /* PrintAccessoryViewOwner.mm */; };
 		1FF905C20DA60DCE003A9AC0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1FF905C00DA60DCE003A9AC0 /* Credits.rtf */; };
 		1FF906640DA73AB9003A9AC0 /* toolbar_customize.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FF906620DA73AB9003A9AC0 /* toolbar_customize.png */; };
 		1FF906650DA73AB9003A9AC0 /* toolbar_print.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FF906630DA73AB9003A9AC0 /* toolbar_print.png */; };
@@ -307,6 +309,9 @@
 		1FE965B30C5D596D00C80B59 /* PrefSetNewSheet.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrefSetNewSheet.mm; sourceTree = "<group>"; };
 		1FE965B90C5D59E700C80B59 /* GenericSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericSheet.h; sourceTree = "<group>"; };
 		1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GenericSheet.mm; sourceTree = "<group>"; };
+		1FF7118E0DAB50DE001ECA67 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/PrintAccessoryView.nib; sourceTree = "<group>"; };
+		1FF711900DAB5164001ECA67 /* PrintAccessoryViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PrintAccessoryViewOwner.h; sourceTree = "<group>"; };
+		1FF711910DAB5164001ECA67 /* PrintAccessoryViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PrintAccessoryViewOwner.mm; sourceTree = "<group>"; };
 		1FF905C10DA60DCE003A9AC0 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1FF906620DA73AB9003A9AC0 /* toolbar_customize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_customize.png; path = Images/toolbar_customize.png; sourceTree = "<group>"; };
 		1FF906630DA73AB9003A9AC0 /* toolbar_print.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_print.png; path = Images/toolbar_print.png; sourceTree = "<group>"; };
@@ -376,6 +381,8 @@
 				1F6191B00DA4968F002A6192 /* OpenGLDriverInfo.mm */,
 				1F5A35650D9629220072BAE3 /* PartsList.h */,
 				1F5A35660D9629220072BAE3 /* PartsList.mm */,
+				1FF711900DAB5164001ECA67 /* PrintAccessoryViewOwner.h */,
+				1FF711910DAB5164001ECA67 /* PrintAccessoryViewOwner.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
 				1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */,
@@ -478,6 +485,7 @@
 				1FD4D8330BA4D00E00419677 /* Preferences.nib */,
 				1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */,
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
+				1FF7118D0DAB50DE001ECA67 /* PrintAccessoryView.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
 			);
@@ -797,6 +805,7 @@
 				1FF906640DA73AB9003A9AC0 /* toolbar_customize.png in Resources */,
 				1FF906650DA73AB9003A9AC0 /* toolbar_print.png in Resources */,
 				1F6383CC0DA9E50400897835 /* toolbar_refresh.png in Resources */,
+				1FF7118F0DAB50DE001ECA67 /* PrintAccessoryView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -847,6 +856,7 @@
 				1F3E5A010DA03E0500D83112 /* Updater.mm in Sources */,
 				1F6191B10DA4968F002A6192 /* OpenGLDriverInfo.mm in Sources */,
 				1F7B4AE50DA898FA004EFA08 /* AutoDeleter.mm in Sources */,
+				1FF711920DAB5164001ECA67 /* PrintAccessoryViewOwner.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -962,6 +972,14 @@
 				1FE965B00C5D595A00C80B59 /* English */,
 			);
 			name = PrefSetNew.nib;
+			sourceTree = "<group>";
+		};
+		1FF7118D0DAB50DE001ECA67 /* PrintAccessoryView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FF7118E0DAB50DE001ECA67 /* English */,
+			);
+			name = PrintAccessoryView.nib;
 			sourceTree = "<group>";
 		};
 		1FF905C00DA60DCE003A9AC0 /* Credits.rtf */ = {

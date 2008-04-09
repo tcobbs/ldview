@@ -2,7 +2,9 @@
 #import "ModelWindow.h"
 #import "OCLocalStrings.h"
 #import "SnapshotTaker.h"
-#import <LDLib/LDrawModelViewer.h>
+#import "PrintAccessoryViewOwner.h"
+
+#include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCMacros.h>
@@ -701,22 +703,41 @@ static TCImage *resizeCornerImage = NULL;
 	int backgroundG = modelViewer->getBackgroundG();
 	int backgroundB = modelViewer->getBackgroundB();
 	int backgroundA = modelViewer->getBackgroundA();
-	float dpi = TCUserDefaults::floatForKey(PRINT_DPI_KEY, 300.0, false);
+	float dpi = (float)TCUserDefaults::longForKey(PRINT_DPI_KEY, 300, false);
 	NSRect page = { {0.0f, 0.0f}, [printInfo paperSize] };
-	NSRect printRect = { { 72.0f, 72.0f }, { page.size.width - 144.0f, page.size.height - 144.0f } };
+	float leftMargin = [printInfo leftMargin];
+	float topMargin = [printInfo topMargin];
+	float rightMargin = [printInfo rightMargin];
+	float bottomMargin = [printInfo bottomMargin];
+	NSRect printRect = { { leftMargin, bottomMargin }, { page.size.width - leftMargin - rightMargin, page.size.height - topMargin - bottomMargin } };
 	TCFloat32 origEdgeWidth = modelViewer->getHighlightLineWidth();
-	// Assume 100 DPI for screen
-	TCFloat32 newEdgeWidth = origEdgeWidth * dpi / 100.0f;
+	bool printBackground = TCUserDefaults::boolForKey(PRINT_BACKGROUND_KEY, false, false);
+	bool adjustEdges = TCUserDefaults::boolForKey(PRINT_ADJUST_EDGES_KEY, true, false);
 
-	if (newEdgeWidth < 1.0f)
+	if (!printBackground)
 	{
-		newEdgeWidth = 1.0f;
+		modelViewer->setBackgroundRGBA(255, 255, 255, 255);
 	}
-	modelViewer->setBackgroundRGBA(255, 255, 255, 255);
-	modelViewer->setHighlightLineWidth(newEdgeWidth);
+	if (adjustEdges)
+	{
+		// Assume 100 DPI for screen
+		TCFloat32 newEdgeWidth = origEdgeWidth * dpi / 100.0f;
+
+		if (newEdgeWidth < 1.0f)
+		{
+			newEdgeWidth = 1.0f;
+		}
+		modelViewer->setHighlightLineWidth(newEdgeWidth);
+	}
 	image = [snapshotTaker imageWithWidth:(int)(printRect.size.width * dpi / 72.0f) height:(int)(printRect.size.height * dpi / 72.0f) zoomToFit:false];
-	modelViewer->setHighlightLineWidth(origEdgeWidth);
-	modelViewer->setBackgroundRGBA(backgroundR, backgroundG, backgroundB, backgroundA);
+	if (adjustEdges)
+	{
+		modelViewer->setHighlightLineWidth(origEdgeWidth);
+	}
+	if (!printBackground)
+	{
+		modelViewer->setBackgroundRGBA(backgroundR, backgroundG, backgroundB, backgroundA);
+	}
 	printRect = NSIntegralRect(printRect);
 	[(NSImageRep *)[[image representations] lastObject] drawInRect:printRect];
 }
@@ -918,6 +939,15 @@ static TCImage *resizeCornerImage = NULL;
 - (bool)flyThroughMode
 {
 	return inputHandler->getViewMode() == LDInputHandler::VMFlyThrough;
+}
+
+- (IBAction)print:(id)sender
+{
+	NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self];
+	PrintAccessoryViewOwner *printAccessoryViewOwner = [[PrintAccessoryViewOwner alloc] initWithPrintOperation:printOperation];
+	
+	[printOperation runOperation];
+	[printAccessoryViewOwner release];
 }
 
 @end

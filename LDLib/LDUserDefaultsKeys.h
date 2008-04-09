@@ -153,6 +153,8 @@
 #define PARTS_LISTS_DIR_MODE_KEY "PartsListsDirMode"
 #define PARTS_LISTS_DIR_KEY "PartsListsDir"
 #define LAST_SNAPSHOT_PATH_KEY "LastSnapshotPath"
+#define PRINT_CUSTOM_DPI_KEY "PrintCustomDPI"
+#define PRINT_ADJUST_EDGES_KEY "PrintAdjustEdges"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
