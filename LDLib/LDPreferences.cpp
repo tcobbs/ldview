@@ -388,7 +388,7 @@ void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
 	setGreenFrontFaces(false);
 	setShowHighlightLines(false);
 	setEdgesOnly(false);
-	setDrawConditionalHighlights(false);
+	setDrawConditionalHighlights(true);
 	setShowAllConditionalLines(false);
 	setShowConditionalControlPoints(false);
 	setUsePolygonOffset(true);
