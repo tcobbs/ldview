@@ -219,10 +219,15 @@ static TCImage *resizeCornerImage = NULL;
 {
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
+		NSOpenGLPFAWindow,
 		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
+		NSOpenGLPFAAlphaSize, (NSOpenGLPixelFormatAttribute)8,
 		NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)24,
-		NSOpenGLPFABackingStore, (NSOpenGLPixelFormatAttribute)NO,
-		NSOpenGLPFAAccelerated, (NSOpenGLPixelFormatAttribute)NO,
+		// The documentation claims that the following isn't useful, but is MUST
+		// be set in order for the full screen context to share with this one.
+		// Go figure.
+		NSOpenGLPFANoRecovery,
 		(NSOpenGLPixelFormatAttribute)0
 	};
 	return [[[NSOpenGLPixelFormat alloc] initWithAttributes:attrs] autorelease];
@@ -497,6 +502,8 @@ static TCImage *resizeCornerImage = NULL;
 				return LDInputHandler::KCDelete;
 			case 27:
 				return LDInputHandler::KCEscape;
+			case '\r':
+				return LDInputHandler::KCReturn;
 			}
 		}
 	}
@@ -948,6 +955,247 @@ static TCImage *resizeCornerImage = NULL;
 	
 	[printOperation runOperation];
 	[printAccessoryViewOwner release];
+}
+
+- (NSOpenGLContext *)setupFullScreenContextForDisplay:(CGDirectDisplayID)displayID
+{
+	CGDisplayErr err;
+	NSOpenGLContext *fullScreenContext;
+	CGOpenGLDisplayMask displayMask = CGDisplayIDToOpenGLDisplayMask(displayID);
+	NSOpenGLPixelFormatAttribute attrs[] =
+	{
+		NSOpenGLPFAFullScreen,
+		NSOpenGLPFAScreenMask, (NSOpenGLPixelFormatAttribute)displayMask,
+		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
+		NSOpenGLPFAAlphaSize, (NSOpenGLPixelFormatAttribute)8,
+		NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)24,
+		NSOpenGLPFANoRecovery,
+		(NSOpenGLPixelFormatAttribute)0
+	};
+	NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+	
+	fullScreenContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:sharedContext];
+	[pixelFormat release];
+	pixelFormat = nil;
+	if (fullScreenContext == nil)
+	{
+        NSLog(@"Failed to create fullScreenContext");
+        return nil;
+	}
+	err = CGDisplayCapture(displayID);
+	if (err != CGDisplayNoErr)
+	{
+        [fullScreenContext release];
+        fullScreenContext = nil;
+        return nil;
+	}
+	[fullScreenContext setFullScreen];
+	[fullScreenContext makeCurrentContext];
+	return [fullScreenContext autorelease];
+}
+
+- (id <NSMenuItem>)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags inMenu:(NSMenu *)menu
+{
+	int count = [menu numberOfItems];
+	int i;
+
+	for (i = 0; i < count; i++)
+	{
+		id <NSMenuItem> item = [menu itemAtIndex:i];
+		
+		if ([item hasSubmenu])
+		{
+			id <NSMenuItem> found = [self searchForKeyEquivalent:keyEquivalent modifierFlags:modifierFlags inMenu:[item submenu]];
+			if (found != nil)
+			{
+				return found;
+			}
+		}
+		else
+		{
+			NSString *itemKeyEquivalent = [item keyEquivalent];
+
+			if ([itemKeyEquivalent length] > 0 && [itemKeyEquivalent characterAtIndex:0] == keyEquivalent && [item keyEquivalentModifierMask] == modifierFlags)
+			{
+				return item;
+			}
+		}
+	}
+	return nil;
+}
+
+- (id <NSMenuItem>)searchForKeyEquivalent:(unichar)keyEquivalent modifierFlags:(unsigned int)modifierFlags
+{
+	NSMenu *mainMenu = [NSApp mainMenu];
+
+	if (modifierFlags & NSShiftKeyMask)
+	{
+		keyEquivalent = toupper(keyEquivalent);
+		modifierFlags = modifierFlags & ~NSShiftKeyMask;
+	}
+	return [self searchForKeyEquivalent:keyEquivalent modifierFlags:modifierFlags inMenu:mainMenu];
+}
+
+- (void)fullScreenKeyDown:(NSEvent *)event
+{
+	unsigned int modifierFlags = [event modifierFlags] & 0xFFFF0000;
+
+	switch ([self convertKeyCode:event])
+	{
+		case LDInputHandler::KCEscape:
+			if (modifierFlags == 0)
+			{
+				fullScreen = false;
+			}
+			break;
+		case LDInputHandler::KCReturn:
+			if (modifierFlags == NSCommandKeyMask)
+			{
+				fullScreen = false;
+			}
+			break;
+		default:
+			id <NSMenuItem> item = [self searchForKeyEquivalent:[[event charactersIgnoringModifiers] characterAtIndex:0] modifierFlags:modifierFlags];
+
+			if (item != nil)
+			{
+				SEL action = [item action];
+
+				if (action == @selector(terminate:) || action == @selector(hide:))
+				{
+					fullScreen = false;
+					[NSApp performSelector:action withObject:self afterDelay:0.0f];
+				}
+				else if (action == @selector(zoomToFit:))
+				{
+					[self performSelector:action withObject:self];
+				}
+				else if (action == @selector(performClose:))
+				{
+					fullScreen = false;
+					[[self window] performSelector:action withObject:self afterDelay:0.0f];
+				}
+				else if (action == @selector(viewingAngle:))
+				{
+					[self setViewingAngle:[item tag]];
+				}
+				else if (action == @selector(examineMode:) || action == @selector(flyThroughMode:))
+				{
+					desiredFlyThrough = action == @selector(flyThroughMode:);
+				}
+			}
+			break;
+	}
+}
+
+- (bool)fullScreen
+{
+	return fullScreen;
+}
+
+- (void)fullScreenRunLoop:(NSOpenGLContext *)fullScreenContext
+{
+	NSRect screenRect = [[[self window] screen] frame];
+
+	while (fullScreen)
+	{
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		NSEvent *event;
+		int i;
+
+		// Check for and process input events.
+		for (i = 0; i < 2 && (event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate distantPast] inMode:NSDefaultRunLoopMode dequeue:YES]) != nil; i++)
+		{
+			switch ([event type])
+			{
+				case NSKeyDown:
+					[self fullScreenKeyDown:event];
+					if (!fullScreen)
+					{
+						[pool release];
+						return;
+					}
+						[self keyDown:event];
+					break;
+				case NSKeyUp:
+					[self keyUp:event];
+					if (desiredFlyThrough != [[[self window] delegate] flyThroughMode])
+					{
+						[[[self window] delegate] setFlyThroughMode:desiredFlyThrough];
+					}
+					break;
+			}
+			if (NSPointInRect([NSEvent mouseLocation], screenRect))
+			{
+				switch ([event type])
+				{
+					case NSLeftMouseDown:
+						[self mouseDown:event];
+						break;
+					case NSLeftMouseUp:
+						[self mouseUp:event];
+						break;
+					case NSLeftMouseDragged:
+						[self mouseDragged:event];
+						break;
+					case NSRightMouseDown:
+						[self rightMouseDown:event];
+						break;
+					case NSRightMouseUp:
+						[self rightMouseUp:event];
+						break;
+					case NSRightMouseDragged:
+						[self rightMouseDragged:event];
+						break;
+					case NSOtherMouseDown:
+						[self otherMouseDown:event];
+						break;
+					case NSOtherMouseUp:
+						[self otherMouseUp:event];
+						break;
+					case NSOtherMouseDragged:
+						[self otherMouseDragged:event];
+						break;
+					case NSScrollWheel:
+						[self scrollWheel:event];
+						break;
+				}
+			}
+		}
+		[fullScreenContext makeCurrentContext];
+		modelViewer->update();
+		[fullScreenContext flushBuffer];
+		[pool release];
+	}
+}
+
+- (IBAction)toggleFullScreen:(id)sender
+{
+	NSLog(@"toggleFullScreen:\n");
+	fullScreen = !fullScreen;
+	if (fullScreen)
+	{
+		CGDirectDisplayID displayID = (CGDirectDisplayID)[[[[[self window] screen] deviceDescription] objectForKey:@"NSScreenNumber"] pointerValue];
+		NSOpenGLContext *fullScreenContext = [self setupFullScreenContextForDisplay:displayID];
+		
+		if (fullScreenContext)
+		{
+			GLint viewport[4];
+
+			glGetIntegerv(GL_VIEWPORT, viewport);
+			modelViewer->setWidth(viewport[2]);
+			modelViewer->setHeight(viewport[3]);
+			modelViewer->setup();
+			[self fullScreenRunLoop:fullScreenContext];
+			[fullScreenContext clearDrawable];
+			CGDisplayRelease(displayID);
+			CGReleaseAllDisplays();
+			modelViewer->setWidth((int)[self frame].size.width);
+			modelViewer->setHeight((int)[self frame].size.height);
+			[self rotationUpdate];
+		}
+	}
 }
 
 @end
