@@ -33,6 +33,8 @@ typedef enum
 	int resizeCornerTextureId;
 	LDInputHandler *inputHandler;
 	bool redrawRequested;
+	bool fullScreen;
+	bool desiredFlyThrough;
 }
 
 - (BOOL)openModel:(NSString *)filename;
@@ -47,6 +49,9 @@ typedef enum
 - (void)setFlyThroughMode:(bool)flyThroughMode;
 - (bool)flyThroughMode;
 - (void)rotationUpdate;
+- (bool)fullScreen;
+
+- (IBAction)toggleFullScreen:(id)sender;
 
 - (void)modelViewerAlertCallback:(TCAlert *)alert;
 - (void)redrawAlertCallback:(TCAlert *)alert;

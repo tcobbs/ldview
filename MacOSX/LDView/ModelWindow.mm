@@ -1037,6 +1037,11 @@ enum
 	}
 }
 
+- (IBAction)resetView:(id)sender
+{
+	[modelView resetView:sender];
+}
+
 - (IBAction)viewingAngle:(id)sender
 {
 	[modelView setViewingAngle:[sender tag]];
@@ -1318,6 +1323,16 @@ enum
 	{
 		return [modelTree copy:sender];
 	}
+}
+
+- (IBAction)toggleFullScreen:(id)sender
+{
+	[modelView toggleFullScreen:sender];
+}
+
+- (bool)fullScreen
+{
+	return [modelView fullScreen];;
 }
 
 @end
