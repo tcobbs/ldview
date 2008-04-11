@@ -14,7 +14,8 @@
 #endif // WIN32
 
 TRETransShapeGroup::TRETransShapeGroup(void)
-	:m_sortedTriangles(NULL)
+	:m_sortedTriangles(NULL),
+	m_origIndices(NULL)
 	//m_useSortThread(false),
 	//m_sortThread(NULL)
 {
@@ -23,7 +24,8 @@ TRETransShapeGroup::TRETransShapeGroup(void)
 TRETransShapeGroup::TRETransShapeGroup(const TRETransShapeGroup &other)
 	:TREColoredShapeGroup(other),
 	m_sortedTriangles((TRESortedTriangleArray *)TCObject::copy(
-		other.m_sortedTriangles))
+		other.m_sortedTriangles)),
+		m_origIndices((TCULongArray *)TCObject::copy(other.m_origIndices))
 {
 }
 
@@ -33,6 +35,7 @@ TRETransShapeGroup::~TRETransShapeGroup(void)
 
 void TRETransShapeGroup::dealloc(void)
 {
+	TCObject::release(m_origIndices);
 	TCObject::release(m_sortedTriangles);
 	TREColoredShapeGroup::dealloc();
 }
@@ -90,9 +93,19 @@ void TRETransShapeGroup::initSortedTriangles(void)
 		{
 			int i, j;
 			int count = indices->getCount();
+			int step = m_mainModel->getStep();
 			TREVertexArray *vertices = m_vertexStore->getVertices();
 			const TCFloat oneThird = 1.0f / 3.0f;
 
+			if (step != -1)
+			{
+				IntVector &stepCounts = m_stepCounts[TRESTriangle];
+
+				if (stepCounts.size() > (size_t)step)
+				{
+					count = stepCounts[step];
+				}
+			}
 			m_sortedTriangles = new TRESortedTriangleArray;
 			for (i = 0; i < count; i += 3)
 			{
@@ -143,8 +156,8 @@ void TRETransShapeGroup::sortShapes(void)
 			sortedTriangle->center.transformPoint(m_sortMatrix).
 			lengthSquared();
 	}
-	qsort(m_sortedTriangles->getItems(), m_sortedTriangles->getCount(),
-		sizeof(void *), triangleCompareFunc);
+	qsort(m_sortedTriangles->getItems(), count, sizeof(void *),
+		triangleCompareFunc);
 	values = indices->getValues();
 	for (i = 0; i < count; i++, offset += 3)
 	{
@@ -154,4 +167,24 @@ void TRETransShapeGroup::sortShapes(void)
 		values[offset + 1] = sortedTriangle->indices[1];
 		values[offset + 2] = sortedTriangle->indices[2];
 	}
+}
+
+void TRETransShapeGroup::setStepCounts(const IntVector &value)
+{
+	TCULong index = getShapeTypeIndex(TRESTriangle);
+
+	m_stepCounts[TRESTriangle] = value;
+	TCObject::release(m_origIndices);
+	m_origIndices = (TCULongArray*)TCObject::copy((*m_indices)[index]);
+}
+
+void TRETransShapeGroup::stepChanged(void)
+{
+	TCULong index = getShapeTypeIndex(TRESTriangle);
+	TCULongArray *indicesCopy = (TCULongArray*)TCObject::copy(m_origIndices);
+
+	m_indices->replaceObject(indicesCopy, index);
+	TCObject::release(indicesCopy);
+	TCObject::release(m_sortedTriangles);
+	m_sortedTriangles = NULL;
 }

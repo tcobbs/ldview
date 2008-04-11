@@ -22,6 +22,8 @@ public:
 	TRETransShapeGroup(const TRETransShapeGroup &other);
 	virtual void draw(bool sort);
 	virtual void backgroundSort(void);
+	void setStepCounts(const IntVector &value);
+	void stepChanged(void);
 protected:
 	~TRETransShapeGroup(void);
 	virtual void dealloc(void);
@@ -29,6 +31,7 @@ protected:
 	virtual void initSortedTriangles(void);
 
 	TRESortedTriangleArray *m_sortedTriangles;
+	TCULongArray *m_origIndices;
 	TCFloat m_sortMatrix[16];
 };
 
