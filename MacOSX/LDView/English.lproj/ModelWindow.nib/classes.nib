@@ -18,6 +18,7 @@
                 reload = id; 
                 saveSnapshot = id; 
                 saveViewingAngle = id; 
+                takeStepFrom = id; 
                 viewMode = id; 
                 viewingAngle = id; 
             }; 
@@ -36,6 +37,8 @@
                 reloadButton = NSSegmentedControl; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
+                stepSegments = NSSegmentedControl; 
+                stepsMenu = NSMenu; 
                 viewModeSegments = NSSegmentedControl; 
                 viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 

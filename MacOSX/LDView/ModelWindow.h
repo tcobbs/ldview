@@ -35,6 +35,9 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *viewingAngleSegments;
 	IBOutlet NSSegmentedControl *printSegments;
 	IBOutlet NSSegmentedControl *customizeSegments;
+	IBOutlet NSSegmentedControl *stepSegments;
+	
+	IBOutlet NSMenu *stepsMenu;
 
 	LDViewController *controller;
 	AlertHandler *alertHandler;

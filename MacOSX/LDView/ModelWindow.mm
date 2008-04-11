@@ -262,6 +262,10 @@ enum
 	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
 	[printSegments setTarget:controller];
+	// The step selector isn't too useful if it's not visible, so if the user
+	// puts it in the toolbar, then it is high priority, despite the fact that
+	// it's not on by default.
+	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"Step"] control:&stepSegments highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
@@ -327,6 +331,8 @@ enum
 - (void)awakeFromNib
 {
 	replaceSegments = true;
+	[stepSegments setMenu:stepsMenu forSegment:1];
+	[stepsMenu release];
 	initialTitle = [[window title] retain];
 	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	[self showStatusBar:showStatusBar];
@@ -337,6 +343,33 @@ enum
 	[window setNextResponder:controller];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(errorFilterChange:) name:LDErrorFilterChange object:nil];
 	imageFileTypes = [[NSArray alloc] initWithObjects:@"png", @"bmp", nil];
+}
+
+- (IBAction)takeStepFrom:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		NSString *label;
+		int tag = [[sender cell] tagForSegment:[sender selectedSegment]];
+
+		if (tag != 0)
+		{
+			modelViewer->setStep(modelViewer->getStep() + tag);
+			if (modelViewer->getStep() <= -1)
+			{
+				modelViewer->setStep(-1);
+				label = [OCLocalStrings get:@"All"];
+			}
+			else
+			{
+				label = [NSString stringWithFormat:@"%d", modelViewer->getStep() + 1];
+			}
+			[sender setLabel:label forSegment:1];
+			[modelView rotationUpdate];
+		}
+	}
 }
 
 - (id)initWithController:(LDViewController *)value
