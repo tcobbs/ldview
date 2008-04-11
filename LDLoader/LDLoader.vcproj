@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="LDLoader"
 	ProjectGUID="{AF6422A6-7787-48C7-AF33-E7F76EF1E82A}"
 	RootNamespace="LDLoader"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
