@@ -37,6 +37,7 @@ typedef TCTypedObjectArray<TREShapeGroup> TREShapeGroupArray;
 typedef TCTypedObjectArray<TREColoredShapeGroup> TREColoredShapeGroupArray;
 typedef TCTypedObjectArray<TRENormalInfo> TRENormalInfoArray;
 typedef std::map<TREVertexKey, TRESmoother> TREConditionalMap;
+typedef std::vector<int> IntVector;
 
 typedef enum
 {
@@ -67,7 +68,6 @@ public:
 	virtual TREMainModel *getMainModel(void) const { return m_mainModel; }
 	virtual void setName(const char *name);
 	virtual const char *getName(void) const { return m_name; }
-//	virtual TREVertexArray *getVertices(void) { return m_vertices; }
 	virtual TRESubModel *addSubModel(TCFloat *matrix, TREModel *model,
 		bool invert);
 	virtual TRESubModel *addSubModel(TCULong color, TCULong edgeColor,
@@ -105,16 +105,11 @@ public:
 	virtual void addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
 		const TCVector *vertices, const TCVector *normals, int count,
 		bool flat = false);
-//	virtual void addTriangleStrip(TREColoredShapeGroup *shapeGroup,
-//		TCULong color, TCVector *vertices, TCVector *normals, int count,
-//		bool flat = false);
 	virtual void addTriangleStrip(TREShapeGroup *shapeGroup,
 		const TCVector *vertices, const TCVector *normals, int count,
 		bool flat = false);
 	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
-//	virtual void addBFCTriangleStrip(TCULong color, TCVector *vertices,
-//		TCVector *normals, int count, bool flat = false);
 	virtual void addBFCTriangleStrip(const TCVector *vertices,
 		const TCVector *normals, int count, bool flat = false);
 	virtual void addTriangleFan(const TCVector *vertices,
@@ -191,7 +186,7 @@ public:
 	TREModel *getUnMirroredModel(void);
 	TREModel *getInvertedModel(void);
 	virtual void uncompile(void);
-	virtual void step(void) { m_curStepIndex++; }
+	virtual void nextStep(void);
 	virtual int getCurStepIndex(void) const { return m_curStepIndex; }
 	bool isLineSection(int section)
 	{
@@ -231,30 +226,6 @@ protected:
 		bool colorSet, TCULong edgeColor, bool edgeColorSet,
 		bool includeShapes);
 	virtual void checkGLError(char *msg);
-/*
-	virtual void flattenShapes(TREShapeGroup *dstShapes,
-		TREShapeGroup *srcShapes, TCFloat *matrix, TCULong color, bool colorSet);
-	virtual void flattenShapes(TREVertexArray *dstVertices,
-		TREVertexArray *dstNormals,
-		TCULongArray *dstColors,
-		TCULongArray *dstIndices,
-		TCULongArray *dstCPIndices,
-		TREVertexArray *srcVertices,
-		TREVertexArray *srcNormals,
-		TCULongArray *srcColors,
-		TCULongArray *srcIndices,
-		TCULongArray *srcCPIndices,
-		TCFloat *matrix,
-		TCULong color,
-		bool colorSet);
-	virtual void flattenStrips(TREVertexArray *dstVertices,
-		TREVertexArray *dstNormals, TCULongArray *dstColors,
-		TCULongArray *dstIndices, TCULongArray *dstStripCounts,
-		TREVertexArray *srcVertices, TREVertexArray *srcNormals,
-		TCULongArray *srcColors, TCULongArray *srcIndices,
-		TCULongArray *srcStripCounts, TCFloat *matrix, TCULong color,
-		bool colorSet);
-*/
 	void setCirclePoint(TCFloat angle, TCFloat radius, const TCVector& center,
 		TCVector& point);
 	void scanBoundingBoxPoint(const TCVector &point);
@@ -277,19 +248,6 @@ protected:
 	virtual bool checkColoredSectionPresent(TREMSection section);
 	virtual bool checkSectionPresent(TREMSection section, bool colored);
 	virtual int sphereIndex(int i, int j, int usedSegments);
-/*
-	virtual bool checkDefaultColorPresent(void);
-	virtual bool checkStudsPresent(void);
-	virtual bool checkBFCPresent(void);
-	virtual bool checkDefaultColorLinesPresent(void);
-	virtual bool checkEdgeLinesPresent(void);
-	virtual bool checkConditionalLinesPresent(void);
-	virtual bool checkColoredPresent(void);
-	virtual bool checkColoredBFCPresent(void);
-	virtual bool checkColoredLinesPresent(void);
-	virtual bool checkColoredEdgeLinesPresent(void);
-	virtual bool checkColoredConditionalLinesPresent(void);
-*/
 	virtual void setSectionPresent(TREMSection section, bool colored);
 	virtual bool isSectionPresent(TREMSection section, bool colored);
 	virtual bool shouldLoadConditionalLines(void);
@@ -323,8 +281,6 @@ protected:
 	void findLights(float *matrix);
 	void calcTangentControlPoint(TCVector &controlPoint, int index,
 		int numSegments);
-//	void flattenNonUniform(TCULong color, bool colorSet, TCULong edgeColor,
-//		bool edgeColorSet);
 
 	static void setGlNormalize(bool value);
 	static int printStlTriangle(TREVertexArray *vertices,
@@ -344,6 +300,7 @@ protected:
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
 	int m_curStepIndex;
+	IntVector m_stepCounts;
 	struct
 	{
 		bool part:1;

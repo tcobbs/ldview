@@ -388,16 +388,15 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 	{
 		listID = m_listIDs[section];
 	}
-	if (listID && !subModelsOnly)
+	if (listID && !subModelsOnly &&
+		(this != m_mainModel || m_mainModel->getStep() == -1))
 	{
 		// Note that subModelsOnly gets set when the current color is
 		// transparent.  In that case, we don't want to draw our geometry,
 		// because transparent geometry gets drawn elsewhere.  However, we do
 		// want to draw any sub-models, because some of them not be
 		// transparent.
-//		checkGLError("Before glCallList");
 		glCallList(listID);
-//		checkGLError("After glCallList");
 	}
 	else if (isSectionPresent(section, colored))
 	{
@@ -447,7 +446,12 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 		{
 			int i;
 			int count = m_subModels->getCount();
+			int step = m_mainModel->getStep();
 
+			if (step != -1 && m_stepCounts.size() > (size_t)step)
+			{
+				count = m_stepCounts[step];
+			}
 			for (i = 0; i < count; i++)
 			{
 				(*m_subModels)[i]->draw(section, colored, subModelsOnly,
@@ -788,32 +792,6 @@ void TREModel::addTriangleStrip(
 	}
 }
 
-/*
-void TREModel::addTriangleStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
-								TCVector *vertices, TCVector *normals,
-								int count, bool flat)
-{
-	if (m_mainModel->getUseStripsFlag() && (!flat ||
-		m_mainModel->getUseFlatStripsFlag()))
-	{
-//		shapeGroup->addTriangleStrip(color, vertices, normals, count);
-	}
-	else
-	{
-		int i;
-		TCVector triangleVertices[3];
-		TCVector triangleNormals[3];
-
-		for (i = 0; i < count - 2; i++)
-		{
-			triangleStripToTriangle(i, vertices, normals, triangleVertices,
-				triangleNormals);
-			shapeGroup->addTriangle(color, triangleVertices, triangleNormals);
-		}
-	}
-}
-*/
-
 void TREModel::addQuadStrip(
 	TREColoredShapeGroup *shapeGroup,
 	TCULong color,
@@ -848,16 +826,6 @@ void TREModel::addBFCQuadStrip(TCULong color, const TCVector *vertices,
 	addQuadStrip(m_coloredShapes[TREMBFC], color, vertices, normals, count,
 		flat);
 }
-
-/*
-void TREModel::addBFCTriangleStrip(TCULong color, TCVector *vertices,
-								   TCVector *normals, int count, bool flat)
-{
-	setupColoredBFC();
-	addTriangleStrip(m_coloredShapes[TREMBFC], color, vertices, normals, count,
-		flat);
-}
-*/
 
 void TREModel::addBFCTriangleStrip(
 	const TCVector *vertices,
@@ -1078,43 +1046,6 @@ void TREModel::finishShapeNormals(TREConditionalMap &conditionalMap)
 		TRESmoother &smoother0 = it->second;
 
 		smoother0.finish();
-/*
-		int i, j;
-		int count0 = smoother0.getVertexCount();
-		const TREVertex &startVertex0 = smoother0.getStartVertex();
-
-		for (i = 0; i < count0; i++)
-		{
-			const TREVertex &vertex0 = smoother0.getVertex(i);
-			TRESmoother &smoother1 = conditionalMap[TREVertexKey(vertex0)];
-			int count1 = smoother1.getVertexCount();
-//			const TREVertex &startVertex1 = smoother1.getStartVertex();
-
-			for (j = 0; j < count1; j++)
-			{
-				const TREVertex &vertex1 = smoother1.getVertex(j);
-
-				if (vertex1.v[0] == startVertex0.v[0] &&
-					vertex1.v[1] == startVertex0.v[1] &&
-					vertex1.v[2] == startVertex0.v[2])
-				{
-					TCVector &normal0 = smoother0.getNormal(i);
-					TCVector &normal1 = smoother1.getNormal(j);
-
-					if (TRESmoother::shouldFlipNormal(normal0, normal1))
-					{
-						normal0 -= normal1;
-					}
-					else
-					{
-						normal0 += normal1;
-					}
-					normal1 = normal0.normalize();
-					break;
-				}
-			}
-		}
-*/
 		it++;
 	}
 }
@@ -1349,8 +1280,6 @@ int TREModel::getConditionalLine(TREConditionalMap &conditionalMap,
 		TREVertexKey pointKey(point0);
 		TREConditionalMap::iterator it = conditionalMap.find(pointKey);
 
-//		debugPrintf("%f %f %f -> ", point0.v[0], point0.v[1], point0.v[2]);
-//		debugPrintf("%f %f %f\n", point1.v[0], point1.v[1], point1.v[2]);
 		if (it == conditionalMap.end())
 		{
 			return -1;
@@ -1367,7 +1296,6 @@ int TREModel::getConditionalLine(TREConditionalMap &conditionalMap,
 		// smoother, so there's no need to check.
 		if (smoother->getVertex(i).approxEquals(point1, 0.01f))
 		{
-//			debugPrintf("*\n");
 			return i;
 		}
 	}
@@ -1440,7 +1368,6 @@ void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 								   const TREVertexArray *vertices, int index0,
 								   int index1, const TREVertexKey &vertexKey)
 {
-//	TREVertexKey vertexKey(vertices->constVertexAtIndex(index0));
 	TREConditionalMap::iterator it = conditionalMap.find(vertexKey);
 
 	if (it == conditionalMap.end())
@@ -1517,8 +1444,6 @@ void TREModel::flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 					}
 					coloredShapeGroup->flatten(otherShapeGroup, matrix,
 						actualColor, true);
-//					flattenShapes(coloredShapeGroup, otherShapeGroup,
-//						matrix, actualColor, true);
 				}
 				else
 				{
@@ -1531,8 +1456,6 @@ void TREModel::flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 						shapeGroup->getVertexStore()->setupTextured();
 					}
 					shapeGroup->flatten(otherShapeGroup, matrix, 0, false);
-//					flattenShapes(shapeGroup, otherShapeGroup, matrix, 0,
-//						false);
 				}
 			}
 			if (otherColoredShapeGroup)
@@ -1540,8 +1463,6 @@ void TREModel::flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 				setupColored((TREMSection)i);
 				m_coloredShapes[i]->flatten(otherColoredShapeGroup, matrix, 0,
 					false);
-//				flattenShapes(m_coloredShapes[i], otherColoredShapeGroup,
-//					matrix, 0, false);
 			}
 		}
 	}
@@ -1570,184 +1491,6 @@ void TREModel::flatten(TREModel *model, const TCFloat *matrix, TCULong color,
 		}
 	}
 }
-
-/*
-void TREModel::flattenShapes(TREVertexArray *dstVertices,
-							 TREVertexArray *dstNormals,
-							 TCULongArray *dstColors,
-							 TCULongArray *dstIndices,
-							 TCULongArray *dstCPIndices,
-							 TREVertexArray *srcVertices,
-							 TREVertexArray *srcNormals,
-							 TCULongArray *srcColors,
-							 TCULongArray *srcIndices,
-							 TCULongArray *srcCPIndices,
-							 TCFloat *matrix,
-							 TCULong color,
-							 bool colorSet)
-{
-	int i;
-	int count = srcIndices->getCount();
-
-	for (i = 0; i < count; i++)
-	{
-		int index = (*srcIndices)[i];
-		TREVertex vertex = (*srcVertices)[index];
-
-		dstIndices->addValue(dstVertices->getCount());
-		transformVertex(vertex, matrix);
-		dstVertices->addVertex(vertex);
-		if (srcNormals)
-		{
-			TREVertex normal = (*srcNormals)[index];
-
-			transformNormal(normal, matrix);
-			dstNormals->addVertex(normal);
-		}
-		if (colorSet)
-		{
-			dstColors->addValue(color);
-		}
-		else if (srcColors)
-		{
-			dstColors->addValue((*srcColors)[index]);
-		}
-		if (srcCPIndices && dstCPIndices)
-		{
-			index = (*srcCPIndices)[i];
-			vertex = (*srcVertices)[index];
-			dstCPIndices->addValue(dstVertices->getCount());
-			transformVertex(vertex, matrix);
-			dstVertices->addVertex(vertex);
-			if (srcNormals)
-			{
-				TREVertex normal = (*srcNormals)[index];
-
-				dstNormals->addVertex(normal);
-			}
-			if (colorSet)
-			{
-				dstColors->addValue(color);
-			}
-			else if (srcColors)
-			{
-				dstColors->addValue((*srcColors)[index]);
-			}
-		}
-	}
-}
-
-void TREModel::flattenStrips(TREVertexArray *dstVertices,
-							 TREVertexArray *dstNormals,
-							 TCULongArray *dstColors,
-							 TCULongArray *dstIndices,
-							 TCULongArray *dstStripCounts,
-							 TREVertexArray *srcVertices,
-							 TREVertexArray *srcNormals,
-							 TCULongArray *srcColors,
-							 TCULongArray *srcIndices,
-							 TCULongArray *srcStripCounts, TCFloat *matrix,
-							 TCULong color, bool colorSet)
-{
-	int i, j;
-	int numStrips = srcStripCounts->getCount();
-	int indexOffset = 0;
-
-	for (i = 0; i < numStrips; i++)
-	{
-		int stripCount = (*srcStripCounts)[i];
-
-		dstStripCounts->addValue(stripCount);
-		for (j = 0; j < stripCount; j++)
-		{
-			int index = (*srcIndices)[j + indexOffset];
-			TREVertex vertex = (*srcVertices)[index];
-
-			dstIndices->addValue(dstVertices->getCount());
-			transformVertex(vertex, matrix);
-			dstVertices->addVertex(vertex);
-			if (srcNormals)
-			{
-				TREVertex normal = (*srcNormals)[index];
-
-				transformNormal(normal, matrix);
-				dstNormals->addVertex(normal);
-			}
-			if (colorSet)
-			{
-				dstColors->addValue(color);
-			}
-			else if (srcColors)
-			{
-				dstColors->addValue((*srcColors)[index]);
-			}
-		}
-		indexOffset += stripCount;
-	}
-}
-
-void TREModel::flattenShapes(TREShapeGroup *dstShapes, TREShapeGroup *srcShapes,
-							 TCFloat *matrix, TCULong color, bool colorSet)
-{
-	TREVertexStore *srcVertexStore = NULL;
-	TREVertexStore *dstVertexStore = NULL;
-
-	if (srcShapes && (srcVertexStore = srcShapes->getVertexStore()) != NULL &&
-		dstShapes && (dstVertexStore = dstShapes->getVertexStore()) != NULL)
-	{
-		TCULong bit;
-
-		for (bit = TRESFirst; bit <= TRESLast; bit = bit << 1)
-		{
-			TCULongArray *srcIndices = srcShapes->getIndices((TREShapeType)bit);
-			
-			if (srcIndices)
-			{
-				TREVertexArray *srcVertices = srcVertexStore->getVertices();
-				TREVertexArray *srcNormals = srcVertexStore->getNormals();
-				TCULongArray *srcColors = srcVertexStore->getColors();
-				TCULongArray *dstIndices =
-					dstShapes->getIndices((TREShapeType)bit, true);
-				TCULongArray *srcCPIndices = NULL;
-				TCULongArray *dstCPIndices = NULL;
-
-				if ((TREShapeType)bit == TRESConditionalLine)
-				{
-					srcCPIndices = srcShapes->getControlPointIndices();
-					dstCPIndices = dstShapes->getControlPointIndices(true);
-				}
-				if (srcVertices)
-				{
-					TREVertexArray *dstVertices = dstVertexStore->getVertices();
-					TREVertexArray *dstNormals = dstVertexStore->getNormals();
-					TCULongArray *dstColors = dstVertexStore->getColors();
-					TREShapeType shapeType = (TREShapeType)bit;
-
-					if (shapeType < TRESFirstStrip)
-					{
-						flattenShapes(dstVertices, dstNormals, dstColors,
-							dstIndices, dstCPIndices, srcVertices, srcNormals,
-							srcColors, srcIndices, srcCPIndices, matrix, color,
-							colorSet);
-					}
-					else
-					{
-						TCULongArray *dstStripCounts =
-							dstShapes->getStripCounts((TREShapeType)bit, true);
-						TCULongArray *srcStripCounts =
-							srcShapes->getStripCounts((TREShapeType)bit);
-
-						flattenStrips(dstVertices, dstNormals, dstColors,
-							dstIndices, dstStripCounts, srcVertices, srcNormals,
-							srcColors, srcIndices, srcStripCounts, matrix,
-							color, colorSet);
-					}
-				}
-			}
-		}
-	}
-}
-*/
 
 void TREModel::setGlNormalize(bool value)
 {
@@ -1929,8 +1672,6 @@ void TREModel::addChrd(const TCVector &center, TCFloat radius, int numSegments,
 	vertexCount = usedSegments + 1;
 	points = new TCVector[vertexCount];
 	normals = new TCVector[vertexCount];
-//	points[0] = center + TCVector(1.0f, 0.0f, 0.0f);
-//	normals[0] = normal;
 	for (i = 0; i <= usedSegments; i++)
 	{
 		TCFloat angle;
@@ -2299,80 +2040,6 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 	delete[] points;
 }
 
-/*
-void TREModel::addTorusO(const TCVector& center, TCFloat yRadius,
-						 TCFloat xzRadius, int numSegments, int usedSegments,
-						 bool bfc)
-{
-	int i, j;
-	TCVector p1, p2;
-	TCVector top = center;
-	int ySegments = numSegments / 4;
-	TCVector *points;
-	TCVector *stripPoints;
-	TCVector *stripNormals;
-	int spot;
-	int stripSize = (ySegments + 1) * 2;
-
-	points = new TCVector[(ySegments + 1) * (usedSegments + 1)];
-	stripPoints = new TCVector[stripSize];
-	stripNormals = new TCVector[stripSize];
-	for (i = 0; i <= usedSegments; i++)
-	{
-		TCFloat xzAngle;	// Angle in the xz plane
-
-		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * i;
-		for (j = 0; j <= ySegments; j++)
-		{
-			TCFloat yAngle; // Angle above the xz plane
-			TCFloat currentRadius;
-
-			yAngle = 2.0f * (TCFloat)M_PI / numSegments * j;
-			top[1] = xzRadius * (TCFloat)sin(yAngle) + center.get(1);
-			currentRadius = xzRadius * (TCFloat)cos(yAngle) + yRadius;
-			setCirclePoint(xzAngle, currentRadius, top, p1);
-			points[i * (ySegments + 1) + j] = p1;
-		}
-	}
-	top = center;
-	for (i = 0; i < usedSegments; i++)
-	{
-		TCFloat xzAngle;	// Angle in the xz plane
-
-		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * i;
-		setCirclePoint(xzAngle, yRadius, top, p1);
-		xzAngle = 2.0f * (TCFloat)M_PI / numSegments * (i + 1);
-		setCirclePoint(xzAngle, yRadius, top, p2);
-		spot = 0;
-		for (j = 0; j <= ySegments; j++)
-		{
-			stripPoints[spot] = points[(i + 1) * (ySegments + 1) + j];
-			stripNormals[spot] = (stripPoints[spot] - p2).normalize();
-			spot++;
-			stripPoints[spot] = points[i * (ySegments + 1) + j];
-			stripNormals[spot] = (stripPoints[spot] - p1).normalize();
-			spot++;
-		}
-		if (bfc)
-		{
-			addBFCQuadStrip(stripPoints, stripNormals, stripSize);
-		}
-		else
-		{
-			addQuadStrip(stripPoints, stripNormals, stripSize);
-		}
-	}
-	if (shouldLoadConditionalLines())
-	{
-		addTorusQConditionals(points, numSegments, usedSegments, center,
-			yRadius - 0.1f, xzRadius);
-	}
-	delete[] stripPoints;
-	delete[] stripNormals;
-	delete[] points;
-}
-*/
-
 void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 									  int numSegments, int usedSegments,
 									  const TCVector& center, TCFloat radius,
@@ -2416,26 +2083,6 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 			{
 				p4 = p1;
 				calcTangentControlPoint(p4, i, numSegments);
-/*
-				if (usedSegments * 8 == numSegments)
-				{
-					p4[0] -= 0.1f;
-					p4[2] += 0.1f;
-				}
-				else if (usedSegments * 8 == numSegments * 3)
-				{
-					p4[0] -= 0.1f;
-					p4[2] -= 0.1f;
-				}
-				else if (usedSegments * 4 == numSegments * 3)
-				{
-					p4[0] += 0.1f;
-				}
-				else
-				{
-					p4[axis] -= 0.1f;
-				}
-*/
 			}
 			else
 			{
@@ -3125,63 +2772,6 @@ bool TREModel::checkColoredSectionPresent(TREMSection section)
 	return checkSectionPresent(section, true);
 }
 
-/*
-bool TREModel::checkDefaultColorPresent(void)
-{
-	return checkSectionPresent(TREMStandard);
-}
-
-bool TREModel::checkDefaultColorLinesPresent(void)
-{
-	return checkSectionPresent(TREMLines);
-}
-
-bool TREModel::checkEdgeLinesPresent(void)
-{
-	return checkSectionPresent(TREMEdgeLines);
-}
-
-bool TREModel::checkConditionalLinesPresent(void)
-{
-	return checkSectionPresent(TREMConditionalLines);
-}
-
-bool TREModel::checkStudsPresent(void)
-{
-	return checkSectionPresent(TREMStud);
-}
-
-bool TREModel::checkBFCPresent(void)
-{
-	return checkSectionPresent(TREMBFC);
-}
-
-bool TREModel::checkColoredPresent(void)
-{
-	return checkColoredSectionPresent(TREMStandard);
-}
-
-bool TREModel::checkColoredBFCPresent(void)
-{
-	return checkColoredSectionPresent(TREMBFC);
-}
-
-bool TREModel::checkColoredLinesPresent(void)
-{
-	return checkColoredSectionPresent(TREMLines);
-}
-
-bool TREModel::checkColoredEdgeLinesPresent(void)
-{
-	return checkColoredSectionPresent(TREMEdgeLines);
-}
-
-bool TREModel::checkColoredConditionalLinesPresent(void)
-{
-	return checkColoredSectionPresent(TREMConditionalLines);
-}
-*/
-
 void TREModel::uncompile(void)
 {
 	int i;
@@ -3316,11 +2906,6 @@ void TREModel::findLights(float *matrix)
 	}
 }
 
-//void TREModel::flattenNonUniform(
-//	TCULong color,
-//	bool colorSet,
-//	TCULong edgeColor,
-//	bool edgeColorSet)
 void TREModel::flattenNonUniform(void)
 {
 	if (m_subModels)
@@ -3347,8 +2932,6 @@ void TREModel::flattenNonUniform(void)
 				{
 					flatten(newModel, subModel->getMatrix(), 0, false,
 						0, false, true);
-//					flatten(newModel, subModel->getMatrix(), color, colorSet,
-//						edgeColor, edgeColorSet, true);
 				}
 				m_subModels->removeObject(i);
 				debugPrintf("Flattened non-uniform sub-model: %g.\n",
@@ -3359,14 +2942,10 @@ void TREModel::flattenNonUniform(void)
 				if (subModel->isColorSet())
 				{
 					newModel->flattenNonUniform();
-//					newModel->flattenNonUniform(htonl(subModel->getColor()),
-//						true, htonl(subModel->getEdgeColor()), true);
 				}
 				else
 				{
 					newModel->flattenNonUniform();
-//					newModel->flattenNonUniform(color, colorSet, edgeColor,
-//						edgeColorSet);
 				}
 			}
 		}
@@ -3539,3 +3118,29 @@ int TREModel::saveSTL(void)
 	return textNum;
 }
 
+void TREModel::nextStep(void)
+{
+	if (this == m_mainModel)
+	{
+		m_curStepIndex++;
+		for (int i = 0; i <= TREMLast; i++)
+		{
+			if (m_shapes[i])
+			{
+				m_shapes[i]->nextStep();
+			}
+			if (m_coloredShapes[i])
+			{
+				m_coloredShapes[i]->nextStep();
+			}
+		}
+		if (m_subModels)
+		{
+			m_stepCounts.push_back(m_subModels->getCount());
+		}
+		else
+		{
+			m_stepCounts.push_back(0);
+		}
+	}
+}

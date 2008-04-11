@@ -422,6 +422,8 @@ class LDrawModelViewer: public TCAlertSender
 		virtual TCObject *getAlertSender(void) { return this; }
 
 		void saveSTL(void);
+		void setStep(int value);
+		int getStep(void) const { return step; }
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
@@ -579,6 +581,7 @@ class LDrawModelViewer: public TCAlertSender
 		int lastMouseX;
 		int lastMouseY;
 		LDInputHandler *inputHandler;
+		int step;
 		struct
 		{
 			bool qualityLighting:1;

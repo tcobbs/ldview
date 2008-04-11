@@ -28,9 +28,7 @@ LDModelParser::LDModelParser(const LDrawModelViewer *modelViewer)
 	m_mainLDLModel(NULL),
 	m_mainTREModel(NULL),
 	m_seamWidth(0.0f),
-	//m_edgeLineWidth(0.0f),
 	m_abort(false)
-	//m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
 {
 	TCByte defaultR, defaultG, defaultB;
 	bool defaultTrans;
@@ -41,22 +39,6 @@ LDModelParser::LDModelParser(const LDrawModelViewer *modelViewer)
 	m_flags.seams = false;
 	m_flags.defaultColorSet = false;
 	m_flags.defaultColorNumberSet = false;
-	//m_flags.compileParts = true;
-	//m_flags.compileAll = true;
-	//m_flags.edgeLines = false;
-	//m_flags.edgesOnly = false;
-	//m_flags.bfc = false;
-	//m_flags.lighting = false;
-	//m_flags.twoSidedLighting = false;
-	//m_flags.aaLines = false;
-	//m_flags.sortTransparent = false;
-	//m_flags.stipple = false;
-	//m_flags.wireframe = false;
-	//m_flags.conditionalLines = false;
-	//m_flags.smoothCurves = true;
-	//m_flags.showAllConditional = false;
-	//m_flags.conditionalControlPoints = false;
-	//m_flags.studLogo = false;
 	setCurveQuality(m_modelViewer->getCurveQuality());
 	setNoLightGeomFlag(m_modelViewer->getNoLightGeom());
 	setPrimitiveSubstitutionFlag(
@@ -842,36 +824,38 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 			{
 				LDLFileLine *fileLine = (*fileLines)[i];
 
-				if (fileLine->isActionLine() && fileLine->isValid())
+				if (fileLine->isValid())
 				{
-					switch (fileLine->getLineType())
+					if (fileLine->isActionLine())
 					{
-					case LDLLineTypeModel:
-						parseModel((LDLModelLine *)fileLine, treModel, bfc);
-						break;
-					case LDLLineTypeLine:
-						parseLine((LDLShapeLine *)fileLine, treModel);
-						break;
-					case LDLLineTypeTriangle:
-						parseTriangle((LDLShapeLine *)fileLine, treModel,
-							bfc, false);
-						break;
-					case LDLLineTypeQuad:
-						parseQuad((LDLShapeLine *)fileLine, treModel, bfc,
-							false);
-						break;
-					case LDLLineTypeConditionalLine:
-						parseConditionalLine((LDLConditionalLineLine *)fileLine,
-							treModel);
-						break;
-					default:
-						break;
+						switch (fileLine->getLineType())
+						{
+						case LDLLineTypeModel:
+							parseModel((LDLModelLine *)fileLine, treModel, bfc);
+							break;
+						case LDLLineTypeLine:
+							parseLine((LDLShapeLine *)fileLine, treModel);
+							break;
+						case LDLLineTypeTriangle:
+							parseTriangle((LDLShapeLine *)fileLine, treModel,
+								bfc, false);
+							break;
+						case LDLLineTypeQuad:
+							parseQuad((LDLShapeLine *)fileLine, treModel, bfc,
+								false);
+							break;
+						case LDLLineTypeConditionalLine:
+							parseConditionalLine(
+								(LDLConditionalLineLine *)fileLine, treModel);
+							break;
+						default:
+							break;
+						}
 					}
-				}
-				else if (fileLine->getLineType() == LDLLineTypeComment &&
-					((LDLCommentLine *)fileLine)->isStepMeta())
-				{
-					treModel->step();
+					else if (fileLine->getLineType() == LDLLineTypeComment)
+					{
+						parseCommentLine((LDLCommentLine *)fileLine, treModel);
+					}
 				}
 				if (ldlModel->isMainModel())
 				{
@@ -883,6 +867,16 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 		}
 	}
 	return !m_abort;
+}
+
+void LDModelParser::parseCommentLine(
+	LDLCommentLine *commentLine,
+	TREModel *treModel)
+{
+	if (commentLine->isStepMeta())
+	{
+		treModel->nextStep();
+	}
 }
 
 void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)

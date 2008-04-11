@@ -98,6 +98,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	preferences(NULL),
 	mouseMode(LDVMouseNone),
 	inputHandler(NULL),
+	step(-1),
 	cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
@@ -3971,4 +3972,13 @@ void LDrawModelViewer::saveSTL(void)
 	printf ("endsolid MYSOLID\n");
 	//printf ( "\n" );
 	//printf ( "STLA_WRITE - Wrote %d text lines.\n", text_num );
+}
+
+void LDrawModelViewer::setStep(int value)
+{
+	step = value;
+	if (mainTREModel)
+	{
+		mainTREModel->setStep(step);
+	}
 }

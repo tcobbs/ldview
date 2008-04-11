@@ -260,6 +260,8 @@ public:
 	bool doingBackgroundConditionals(void);
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
+	int getStep(void) const { return m_step; }
+	void setStep(int value) { m_step = value; }
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -326,6 +328,7 @@ protected:
 	int m_conditionalsStep;
 	TCULongArray *m_activeConditionals[32];
 	TCULongArray *m_activeColorConditionals[32];
+	int m_step;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;
