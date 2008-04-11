@@ -88,7 +88,8 @@ TREMainModel::TREMainModel(void)
 	m_edgeLineWidth(1.0f),
 	m_studAnisoLevel(1.0f),
 	m_abort(false),
-	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR)
+	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR),
+	m_step(-1)
 #ifndef _NO_TRE_THREADS
 	, m_threadGroup(NULL)
 	, m_workerMutex(NULL)
@@ -1481,7 +1482,7 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 				glPolygonOffset(-POLYGON_OFFSET_FACTOR, -POLYGON_OFFSET_UNITS);
 			}
 		}
-		if (m_coloredListIDs[TREMTransparent])
+		if (m_step == -1 && m_coloredListIDs[TREMTransparent])
 		{
 			glCallList(m_coloredListIDs[TREMTransparent]);
 		}

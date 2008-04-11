@@ -7,10 +7,10 @@
 #include <string.h>
 
 class LDLMainModel;
-class LDLModel;
 class TREMainModel;
 class TREModel;
 class TRESubModel;
+class LDLCommentLine;
 class LDLShapeLine;
 class LDLModelLine;
 class LDLConditionalLineLine;
@@ -41,6 +41,7 @@ protected:
 	{
 		return m_flags.defaultColorNumberSet != false;
 	}
+	virtual void parseCommentLine(LDLCommentLine *commentLine, TREModel *treModel);
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
 		bool bfc);

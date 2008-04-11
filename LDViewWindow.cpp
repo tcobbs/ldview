@@ -3632,6 +3632,28 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_BFC_GREENFRONTFACES:
 			doGreenFrontFaces();
 			break;
+		case ID_NEXT_STEP:
+			if (modelWindow)
+			{
+				LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+				if (modelViewer)
+				{
+					modelViewer->setStep(modelViewer->getStep() + 1);
+				}
+			}
+			break;
+		case ID_PREV_STEP:
+			if (modelWindow)
+			{
+				LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+				if (modelViewer)
+				{
+					modelViewer->setStep(modelViewer->getStep() - 1);
+				}
+			}
+			break;
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
 	{

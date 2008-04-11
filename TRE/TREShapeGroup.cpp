@@ -272,21 +272,33 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 
 	if (indexArray)
 	{
-		glDrawElements(modeForShapeType(shapeType), indexArray->getCount(),
-			GL_UNSIGNED_INT, indexArray->getValues());
+		int count = indexArray->getCount();
+		int step = m_mainModel->getStep();
+
+		if (step != -1)
+		{
+			IntVector &stepCounts = m_stepCounts[shapeType];
+
+			if (stepCounts.size() > (size_t)step)
+			{
+				count = stepCounts[step];
+			}
+		}
+		glDrawElements(modeForShapeType(shapeType), count, GL_UNSIGNED_INT,
+			indexArray->getValues());
 		if (shapeType == TRESLine && m_mainModel->getActiveLineJoinsFlag())
 		{
-			glDrawElements(GL_POINTS, indexArray->getCount(), GL_UNSIGNED_INT,
+			glDrawElements(GL_POINTS, count, GL_UNSIGNED_INT,
 				indexArray->getValues());
 		}
 		if (m_mainModel->getDrawNormalsFlag() && shapeType != TRESLine)
 		{
-			drawNormals(indexArray);
+			drawNormals(indexArray, count);
 		}
 	}
 }
 
-void TREShapeGroup::drawNormals(TCULongArray *indexArray)
+void TREShapeGroup::drawNormals(TCULongArray *indexArray, int count)
 {
 	TREVertexArray *vertices = m_vertexStore->getVertices();
 	TREVertexArray *normals = m_vertexStore->getNormals();
@@ -297,7 +309,6 @@ void TREShapeGroup::drawNormals(TCULongArray *indexArray)
 	if (vertices && normals)
 	{
 		int i;
-		int count = indexArray->getCount();
 
 		glBegin(GL_LINES);
 		for (i = 0; i < count; i++)
@@ -418,7 +429,17 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 		if (indexArray && countArray)
 		{
 			int numStrips = countArray->getCount();
+			int step = m_mainModel->getStep();
 
+			if (step != -1)
+			{
+				IntVector &stepCounts = m_stepCounts[shapeType];
+
+				if (stepCounts.size() > (size_t)step)
+				{
+					numStrips = stepCounts[step];
+				}
+			}
 			if (numStrips)
 			{
 				GLenum glMode = modeForShapeType(shapeType);
@@ -455,7 +476,7 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 			}
 			if (m_mainModel->getDrawNormalsFlag())
 			{
-				drawNormals(indexArray);
+				drawNormals(indexArray, indexArray->getCount());
 			}
 		}
 	}
@@ -1942,3 +1963,33 @@ void TREShapeGroup::transformNormal(TREVertex &normal, const TCFloat *matrix)
 	TREVertexStore::initVertex(normal, newNormal);
 }
 
+void TREShapeGroup::nextStep(TREShapeType shapeType)
+{
+	TCULongArray *itemArray;
+	if (shapeType < TRESFirstStrip)
+	{
+		itemArray = getIndices(shapeType);
+	}
+	else
+	{
+		itemArray = getStripCounts(shapeType);
+	}
+	if (itemArray)
+	{
+		m_stepCounts[shapeType].push_back(itemArray->getCount());
+	}
+	else
+	{
+		m_stepCounts[shapeType].push_back(0);
+	}
+}
+
+void TREShapeGroup::nextStep(void)
+{
+	int bit;
+
+	for (bit = TRESFirst; (TREShapeType)bit < TRESLast; bit = bit << 1)
+	{
+		nextStep((TREShapeType)bit);
+	}
+}

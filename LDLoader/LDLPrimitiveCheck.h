@@ -5,14 +5,7 @@
 
 #include <string.h>
 
-class LDLMainModel;
 class LDLModel;
-class TREMainModel;
-class TREModel;
-class TRESubModel;
-class LDLShapeLine;
-class LDLModelLine;
-class LDLConditionalLineLine;
 
 class LDLPrimitiveCheck : public TCAlertSender
 {

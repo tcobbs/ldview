@@ -298,7 +298,6 @@
 #define IDC_JPEG_SUBSAMPLING_COMBO      1237
 #define IDC_JPEG_PROGRESSIVE_CHECK      1238
 #define IDC_MODEL_TREE                  1239
-#define IDC_OPTIONS_BUTTON              1240
 #define IDC_OPTIONS                     1240
 #define IDC_COMMENT                     1241
 #define IDC_MODEL                       1242
@@ -378,6 +377,8 @@
 #define ID_LIGHTING_OPTIONALMAIN        40090
 #define ID_VIEW_EXAMINE_LAT_LONG        40091
 #define ID_TOOLS_MODELTREE              40092
+#define ID_NEXT_STEP                    40093
+#define ID_PREV_STEP                    40094
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -390,7 +391,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        185
-#define _APS_NEXT_COMMAND_VALUE         40093
+#define _APS_NEXT_COMMAND_VALUE         40095
 #define _APS_NEXT_CONTROL_VALUE         1250
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

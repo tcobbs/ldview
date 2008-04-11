@@ -5,12 +5,14 @@
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCVector.h>
+#include <TCFoundation/TCStlIncludes.h>
 #include <TRE/TREGL.h>
 
 typedef void (TCObject::*TREScanPointCallback)(const TCVector &point);
 
 typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
 typedef TCTypedValueArray<GLboolean> GLbooleanArray;
+typedef std::vector<int> IntVector;
 
 struct TREVertex;
 class TREVertexStore;
@@ -31,6 +33,8 @@ typedef enum
 	TRESTriangleFan		= 0x0040,
 	TRESLast			= TRESTriangleFan
 } TREShapeType;
+
+typedef std::map<TREShapeType, IntVector> ShapeTypeIntVectorMap;
 
 class TREShapeGroup : public TCObject
 {
@@ -79,6 +83,7 @@ public:
 	TREMainModel *getMainModel(void) { return m_mainModel; }
 	virtual TCULongArray *getActiveConditionalIndices(TCULongArray *indices,
 		const TCFloat *modelMatrix = NULL, int start = 0, int count = -1);
+	virtual void nextStep(void);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
@@ -103,16 +108,9 @@ protected:
 		int count);
 	virtual void addIndices(TCULongArray *indices, int firstIndex, int count);
 	virtual void addShapeStripCount(TREShapeType shapeType, int count);
-/*
-	virtual void addShape(TREShapeType shapeType, int index1, int index2);
-	virtual void addShape(TREShapeType shapeType, int index1, int index2,
-		int index3);
-	virtual void addShape(TREShapeType shapeType, int index1, int index2,
-		int index3, int index4);
-*/
 	virtual void addShapeType(TREShapeType shapeType, int index);
 	virtual void drawShapeType(TREShapeType shapeType);
-	virtual void drawNormals(TCULongArray *indexArray);
+	virtual void drawNormals(TCULongArray *indexArray, int count);
 	virtual void drawStripShapeType(TREShapeType shapeType);
 	virtual int addStrip(TREShapeType shapeType, const TCVector *vertices,
 		const TCVector *normals, int count);
@@ -187,6 +185,7 @@ protected:
 	virtual void unshrinkStripNormals(TCULongArray *indices,
 		TCULongArray *stripCounts, const TCFloat *matrix,
 		const TCFloat *unshrinkMatrix);
+	virtual void nextStep(TREShapeType shapeType);
 
 	static void transformPoint(const TCVector &point, const TCFloat *matrix,
 		TCFloat *tx, TCFloat *ty);
@@ -199,6 +198,7 @@ protected:
 	TCULong ***m_multiDrawIndices;
 	TCULong m_shapesPresent;
 	TREMainModel *m_mainModel;
+	ShapeTypeIntVectorMap m_stepCounts;
 
 	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
 };
