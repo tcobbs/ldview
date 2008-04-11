@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="8.00"
 	Name="LDView"
 	ProjectGUID="{80775A55-FFF9-44F4-9B00-A911D030945C}"
 	RootNamespace="LDView"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -82,8 +81,6 @@
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
 				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -104,6 +101,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -173,8 +173,6 @@
 				IgnoreDefaultLibraryNames="libc.lib,libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -195,6 +193,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -264,8 +265,6 @@
 				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -286,6 +285,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -355,8 +357,6 @@
 				IgnoreDefaultLibraryNames="libc.lib,libcmt.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -377,6 +377,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -450,8 +453,6 @@
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
 				LinkTimeCodeGeneration="1"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -472,6 +473,9 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
