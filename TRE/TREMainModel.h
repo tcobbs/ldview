@@ -37,6 +37,7 @@ extern const GLfloat POLYGON_OFFSET_UNITS;
 
 typedef std::list<TCVector> TCVectorList;
 typedef std::list<TCULong> TCULongList;
+typedef std::list<TREMSection> SectionList;
 
 class TREMainModel : public TREModel
 {
@@ -261,7 +262,9 @@ public:
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 	int getStep(void) const { return m_step; }
-	void setStep(int value) { m_step = value; }
+	void setStep(int value);
+	void transferPrep(void);
+	void updateModelTransferStep(int subModelIndex);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -275,6 +278,7 @@ protected:
 	virtual void activateBFC(void);
 	virtual void deactivateBFC(void);
 	void transferTransparent(void);
+	virtual void transferTransparent(const SectionList &sectionList);
 	virtual void drawTransparent(int pass = -1);
 	virtual void drawLines(int pass = -1);
 	virtual void drawSolid(void);
@@ -329,6 +333,8 @@ protected:
 	TCULongArray *m_activeConditionals[32];
 	TCULongArray *m_activeColorConditionals[32];
 	int m_step;
+	int m_transferStep;
+	IntVector m_transStepCounts;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;

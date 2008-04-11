@@ -3,6 +3,7 @@
 #include "TRETransShapeGroup.h"
 #include "TREGL.h"
 #include "TREGLExtensions.h"
+#include "TRESubModel.h"
 #include <math.h>
 #include <string.h>
 
@@ -1367,24 +1368,71 @@ bool TREMainModel::postProcess(void)
 // transparent.
 void TREMainModel::transferTransparent(void)
 {
-	TREModel::transferTransparent(m_color, TREMStandard,
-		TCVector::getIdentityMatrix());
-	TREModel::transferTransparent(m_color, TREMStud,
-		TCVector::getIdentityMatrix());
-	transferColoredTransparent(TREMStandard, TCVector::getIdentityMatrix());
-	transferColoredTransparent(TREMStud, TCVector::getIdentityMatrix());
-	TREModel::cleanupTransparent(TREMStandard);
-	TREModel::cleanupTransparent(TREMStud);
+	SectionList sectionList;
+
+	sectionList.push_back(TREMStandard);
+	sectionList.push_back(TREMStud);
 	if (getBFCFlag())
 	{
-		TREModel::transferTransparent(m_color, TREMBFC,
-			TCVector::getIdentityMatrix());
-		TREModel::transferTransparent(m_color, TREMStudBFC,
-			TCVector::getIdentityMatrix());
-		transferColoredTransparent(TREMBFC, TCVector::getIdentityMatrix());
-		transferColoredTransparent(TREMStudBFC, TCVector::getIdentityMatrix());
-		TREModel::cleanupTransparent(TREMBFC);
-		TREModel::cleanupTransparent(TREMStudBFC);
+		sectionList.push_back(TREMBFC);
+		sectionList.push_back(TREMBFC);
+	}
+	transferTransparent(sectionList);
+	for (size_t i = 1; i < m_transStepCounts.size(); i++)
+	{
+		m_transStepCounts[i] += m_transStepCounts[i - 1];
+	}
+	TRETransShapeGroup *transShapes =
+		(TRETransShapeGroup *)m_coloredShapes[TREMTransparent];
+
+	if (transShapes)
+	{
+		transShapes->setStepCounts(m_transStepCounts);
+	}
+}
+
+void TREMainModel::transferTransparent(const SectionList &sectionList)
+{
+	const TCFloat *matrix = TCVector::getIdentityMatrix();
+
+	for (SectionList::const_iterator it = sectionList.begin();
+		it != sectionList.end(); it++)
+	{
+		TREShapeGroup *shapeGroup = m_shapes[*it];
+		TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[*it];
+
+		if (shapeGroup)
+		{
+			shapeGroup->transferTransparent(m_color, matrix);
+		}
+		if (coloredShapeGroup)
+		{
+			coloredShapeGroup->transferColoredTransparent(matrix);
+		}
+	}
+	if (m_subModels)
+	{
+		int i;
+		int count = m_subModels->getCount();
+
+		transferPrep();
+		for (i = 0; i < count; i++)
+		{
+			updateModelTransferStep(i);
+			for (SectionList::const_iterator it = sectionList.begin();
+				it != sectionList.end(); it++)
+			{
+				TRESubModel *subModel = (*m_subModels)[i];
+
+				subModel->transferTransparent(m_color, *it, matrix);
+				subModel->transferColoredTransparent(*it, matrix);
+			}
+		}
+	}
+	for (SectionList::const_iterator it = sectionList.begin();
+		it != sectionList.end(); it++)
+	{
+		TREModel::cleanupTransparent(*it);
 	}
 }
 
@@ -1426,6 +1474,11 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 	{
 		m_coloredShapes[TREMTransparent]->addTriangle(color, vertices, normals);
 	}
+	if (m_transStepCounts.size() <= (size_t)m_transferStep)
+	{
+		m_transStepCounts.resize(m_transferStep + 1);
+	}
+	m_transStepCounts[m_transferStep] += 3;
 }
 
 void TREMainModel::drawTransparent(int pass /*= -1*/)
@@ -1719,5 +1772,33 @@ void TREMainModel::flattenConditionals(void)
 		m_coloredShapes[TREMConditionalLines]->getVertexStore()->setupColored();
 		TREModel::flattenConditionals(TCVector::getIdentityMatrix(), 0, false);
 		removeConditionals();
+	}
+}
+
+void TREMainModel::transferPrep(void)
+{
+	m_transferStep = 0;
+}
+
+void TREMainModel::updateModelTransferStep(int subModelIndex)
+{
+	if (m_stepCounts.size() > (size_t)m_transferStep)
+	{
+		if (m_stepCounts[m_transferStep] <= subModelIndex)
+		{
+			m_transferStep++;
+		}
+	}
+}
+
+void TREMainModel::setStep(int value)
+{
+	m_step = value;
+	TRETransShapeGroup *transShapes =
+		(TRETransShapeGroup *)m_coloredShapes[TREMTransparent];
+
+	if (transShapes)
+	{
+		transShapes->stepChanged();
 	}
 }

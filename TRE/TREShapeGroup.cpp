@@ -778,7 +778,6 @@ TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 {
 	int i;
 	TCFloat modelViewMatrix[16];
-	//TCFloat projectionMatrix[16];
 	const TCFloat *projectionMatrix = m_mainModel->getCurrentProjectionMatrix();
 	TCFloat matrix[16];
 	TCULongArray *activeIndices = new TCULongArray;
@@ -801,7 +800,6 @@ TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 	else
 	{
 		treGlGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
-		//treGlGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
 	}
 	TCVector::multMatrix(projectionMatrix, modelViewMatrix,
 		matrix);
@@ -1551,13 +1549,6 @@ void TREShapeGroup::transferTriangleStrip(int shapeTypeIndex, TCULong color,
 			transferTriangle(color, (*indices)[i], (*indices)[i + 1],
 				(*indices)[i + 2], matrix);
 		}
-/*
-		if ((i - offset) % 2)
-		{
-			transferTriangle(color, (*indices)[i], (*indices)[i + 2],
-				(*indices)[i + 1], matrix);
-		}
-*/
 	}
 }
 
@@ -1626,8 +1617,6 @@ void TREShapeGroup::transferTransparent(TCULong color, TREShapeType shapeType,
 				for (i = count - shapeSize; i >= 0; i -= shapeSize)
 				{
 					TCULong index = (*indices)[i];
-//					TCVector vertices[3];
-//					TCVector normals[3];
 
 					transferTriangle(color, index, (*indices)[i + 1],
 						(*indices)[i + 2], matrix);
@@ -1797,7 +1786,6 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 			{
 				if (dstEdgeFlags)
 				{
-//					GLboolean value = (*srcEdgeFlags)[index];
 					int j;
 
 					for (j = dstEdgeFlags->getCount(); j <
@@ -1833,8 +1821,6 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 				}
 				if (dstEdgeFlags)
 				{
-//					GLboolean value = (*srcEdgeFlags)[index];
-
 					dstEdgeFlags->addValue(GL_FALSE);
 				}
 				else
@@ -1861,8 +1847,6 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 			}
 			if (dstEdgeFlags)
 			{
-//				GLboolean value = (*srcEdgeFlags)[index];
-
 				dstEdgeFlags->addValue(GL_FALSE);
 			}
 		}
