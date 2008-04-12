@@ -297,6 +297,7 @@ class LDViewWindow: public CUIWindow
 		void progressAlertCallback(TCProgressAlert *alert);
 
 		void loadSettings(void);
+		void changeStep(int amount);
 
 		static void recordRecentFiles(void);
 		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,

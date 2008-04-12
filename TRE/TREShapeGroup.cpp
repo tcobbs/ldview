@@ -273,10 +273,10 @@ void TREShapeGroup::drawShapeType(TREShapeType shapeType)
 	if (indexArray)
 	{
 		int count = indexArray->getCount();
-		int step = m_mainModel->getStep();
 
-		if (step != -1)
+		if (!m_mainModel->onLastStep())
 		{
+			int step = m_mainModel->getStep();
 			IntVector &stepCounts = m_stepCounts[shapeType];
 
 			if (stepCounts.size() > (size_t)step)
@@ -429,10 +429,10 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 		if (indexArray && countArray)
 		{
 			int numStrips = countArray->getCount();
-			int step = m_mainModel->getStep();
 
-			if (step != -1)
+			if (!m_mainModel->onLastStep())
 			{
+				int step = m_mainModel->getStep();
 				IntVector &stepCounts = m_stepCounts[shapeType];
 
 				if (stepCounts.size() > (size_t)step)
@@ -1999,9 +1999,9 @@ void TREShapeGroup::nextStep(void)
 
 int TREShapeGroup::getIndexCount(TREShapeType shapeType)
 {
-	int step = m_mainModel->getStep();
-	if (step >= 0)
+	if (!m_mainModel->onLastStep())
 	{
+		int step = m_mainModel->getStep();
 		IntVector &counts = m_stepCounts[shapeType];
 		
 		if ((size_t)step < counts.size())

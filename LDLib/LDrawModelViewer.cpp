@@ -3977,9 +3977,21 @@ void LDrawModelViewer::saveSTL(void)
 
 void LDrawModelViewer::setStep(int value)
 {
-	step = value;
+	step = value - 1;
 	if (mainTREModel)
 	{
 		mainTREModel->setStep(step);
+	}
+}
+
+int LDrawModelViewer::getNumSteps(void) const
+{
+	if (mainTREModel)
+	{
+		return mainTREModel->getNumSteps();
+	}
+	else
+	{
+		return 0;
 	}
 }

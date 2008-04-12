@@ -1276,8 +1276,8 @@ BEGIN
                                                     NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_FILE_RELOAD,         VIRTKEY, NOINVERT
-    VK_LEFT,        ID_PREV_STEP,           VIRTKEY, CONTROL, NOINVERT
-    VK_RIGHT,       ID_NEXT_STEP,           VIRTKEY, CONTROL, NOINVERT
+    VK_NEXT,        ID_NEXT_STEP,           VIRTKEY, NOINVERT
+    VK_PRIOR,       ID_PREV_STEP,           VIRTKEY, NOINVERT
     "X",            ID_VIEW_EXAMINE,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
 END
