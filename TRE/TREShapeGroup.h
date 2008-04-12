@@ -84,6 +84,8 @@ public:
 	virtual TCULongArray *getActiveConditionalIndices(TCULongArray *indices,
 		const TCFloat *modelMatrix = NULL, int start = 0, int count = -1);
 	virtual void nextStep(void);
+	virtual void updateConditionalsStepCount(int step);
+	virtual int getIndexCount(TREShapeType shapeType);
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);

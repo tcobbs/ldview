@@ -1947,6 +1947,25 @@ void TREShapeGroup::transformNormal(TREVertex &normal, const TCFloat *matrix)
 	TREVertexStore::initVertex(normal, newNormal);
 }
 
+void TREShapeGroup::updateConditionalsStepCount(int step)
+{
+	TCULongArray *itemArray = getIndices(TRESConditionalLine);
+	int count = 0;
+
+	if (itemArray)
+	{
+		count = itemArray->getCount();
+	}
+	if (m_stepCounts[TRESConditionalLine].size() < (size_t)step)
+	{
+		m_stepCounts[TRESConditionalLine][step] = count;
+	}
+	else
+	{
+		m_stepCounts[TRESConditionalLine].push_back(count);
+	}
+}
+
 void TREShapeGroup::nextStep(TREShapeType shapeType)
 {
 	TCULongArray *itemArray;
@@ -1975,5 +1994,29 @@ void TREShapeGroup::nextStep(void)
 	for (bit = TRESFirst; (TREShapeType)bit < TRESLast; bit = bit << 1)
 	{
 		nextStep((TREShapeType)bit);
+	}
+}
+
+int TREShapeGroup::getIndexCount(TREShapeType shapeType)
+{
+	int step = m_mainModel->getStep();
+	if (step >= 0)
+	{
+		IntVector &counts = m_stepCounts[shapeType];
+		
+		if ((size_t)step < counts.size())
+		{
+			return counts[step];
+		}
+	}
+	TCULongArray *indices = getIndices(shapeType);
+	
+	if (indices)
+	{
+		return indices->getCount();
+	}
+	else
+	{
+		return 0;
 	}
 }

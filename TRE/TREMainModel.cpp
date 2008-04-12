@@ -647,7 +647,7 @@ TCULongArray *TREMainModel::backgroundConditionals(
 
 		if (indices)
 		{
-			int subCount = indices->getCount() / 2;
+			int subCount = shapes->getIndexCount(TRESConditionalLine) / 2;
 			int stepSize = subCount / 32 * 2;
 			int stepCount = stepSize;
 
@@ -1770,6 +1770,7 @@ void TREMainModel::flattenConditionals(void)
 		m_shapes[TREMConditionalLines]->getVertexStore()->setup();
 		setupColored(TREMConditionalLines);
 		m_coloredShapes[TREMConditionalLines]->getVertexStore()->setupColored();
+		transferPrep();
 		TREModel::flattenConditionals(TCVector::getIdentityMatrix(), 0, false);
 		removeConditionals();
 	}
@@ -1780,12 +1781,20 @@ void TREMainModel::transferPrep(void)
 	m_transferStep = 0;
 }
 
-void TREMainModel::updateModelTransferStep(int subModelIndex)
+void TREMainModel::updateModelTransferStep(
+	int subModelIndex,
+	bool isConditionals /*= false*/)
 {
 	if (m_stepCounts.size() > (size_t)m_transferStep)
 	{
 		if (m_stepCounts[m_transferStep] <= subModelIndex)
 		{
+			if (isConditionals)
+			{
+				TREShapeGroup *coloredShapeGroup =
+					m_coloredShapes[TREMConditionalLines];
+				coloredShapeGroup->updateConditionalsStepCount(m_transferStep);
+			}
 			m_transferStep++;
 		}
 	}

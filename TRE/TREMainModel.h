@@ -264,7 +264,8 @@ public:
 	int getStep(void) const { return m_step; }
 	void setStep(int value);
 	void transferPrep(void);
-	void updateModelTransferStep(int subModelIndex);
+	void updateModelTransferStep(int subModelIndex,
+		bool isConditionals = false);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);

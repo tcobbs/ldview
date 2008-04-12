@@ -3018,8 +3018,7 @@ void TREModel::flattenConditionals(
 			TREShapeGroup *mainColoredShapeGroup =
 				m_mainModel->m_coloredShapes[TREMConditionalLines];
 
-			mainColoredShapeGroup->flatten(coloredShapeGroup, matrix, edgeColor,
-				edgeColorSet);
+			mainColoredShapeGroup->flatten(coloredShapeGroup, matrix, 0, false);
 		}
 	}
 	if (m_subModels)
@@ -3031,6 +3030,10 @@ void TREModel::flattenConditionals(
 		{
 			TRESubModel *subModel = (*m_subModels)[i];
 
+			if (this == m_mainModel)
+			{
+				m_mainModel->updateModelTransferStep(i, true);
+			}
 			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
 			if (subModel->isColorSet())
 			{
