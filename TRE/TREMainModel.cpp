@@ -1377,6 +1377,7 @@ void TREMainModel::transferTransparent(void)
 		sectionList.push_back(TREMBFC);
 		sectionList.push_back(TREMBFC);
 	}
+	transferPrep();
 	transferTransparent(sectionList);
 	for (size_t i = 1; i < m_transStepCounts.size(); i++)
 	{
@@ -1394,9 +1395,9 @@ void TREMainModel::transferTransparent(void)
 void TREMainModel::transferTransparent(const SectionList &sectionList)
 {
 	const TCFloat *matrix = TCVector::getIdentityMatrix();
+	SectionList::const_iterator it;
 
-	for (SectionList::const_iterator it = sectionList.begin();
-		it != sectionList.end(); it++)
+	for (it = sectionList.begin(); it != sectionList.end(); it++)
 	{
 		TREShapeGroup *shapeGroup = m_shapes[*it];
 		TREColoredShapeGroup *coloredShapeGroup = m_coloredShapes[*it];
@@ -1415,7 +1416,6 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 		int i;
 		int count = m_subModels->getCount();
 
-		transferPrep();
 		for (i = 0; i < count; i++)
 		{
 			updateModelTransferStep(i);
@@ -1429,8 +1429,7 @@ void TREMainModel::transferTransparent(const SectionList &sectionList)
 			}
 		}
 	}
-	for (SectionList::const_iterator it = sectionList.begin();
-		it != sectionList.end(); it++)
+	for (it = sectionList.begin(); it != sectionList.end(); it++)
 	{
 		TREModel::cleanupTransparent(*it);
 	}
@@ -1479,6 +1478,11 @@ void TREMainModel::addTransparentTriangle(TCULong color,
 		m_transStepCounts.resize(m_transferStep + 1);
 	}
 	m_transStepCounts[m_transferStep] += 3;
+}
+
+bool TREMainModel::onLastStep(void)
+{
+	return m_step == -1 || m_step == m_numSteps - 1;
 }
 
 void TREMainModel::drawTransparent(int pass /*= -1*/)
@@ -1535,7 +1539,7 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 				glPolygonOffset(-POLYGON_OFFSET_FACTOR, -POLYGON_OFFSET_UNITS);
 			}
 		}
-		if (m_step == -1 && m_coloredListIDs[TREMTransparent])
+		if (onLastStep() && m_coloredListIDs[TREMTransparent])
 		{
 			glCallList(m_coloredListIDs[TREMTransparent]);
 		}
@@ -1753,7 +1757,21 @@ void TREMainModel::finish(void)
 	flattenNonUniform();
 	findLights();
 	flattenConditionals();
-//	flattenNonUniform(0, false, 0, false);
+	if (m_stepCounts.size() > 0)
+	{
+		if (m_subModels->getCount() > m_stepCounts.back())
+		{
+			m_numSteps = (int)m_stepCounts.size() + 1;
+		}
+		else
+		{
+			m_numSteps = (int)m_stepCounts.size();
+		}
+	}
+	else
+	{
+		m_numSteps = 1;
+	}
 }
 
 void TREMainModel::addLight(const TCVector &location, TCULong color)

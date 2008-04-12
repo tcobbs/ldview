@@ -93,12 +93,12 @@ void TRETransShapeGroup::initSortedTriangles(void)
 		{
 			int i, j;
 			int count = indices->getCount();
-			int step = m_mainModel->getStep();
 			TREVertexArray *vertices = m_vertexStore->getVertices();
 			const TCFloat oneThird = 1.0f / 3.0f;
 
-			if (step != -1)
+			if (!m_mainModel->onLastStep())
 			{
+				int step = m_mainModel->getStep();
 				IntVector &stepCounts = m_stepCounts[TRESTriangle];
 
 				if (stepCounts.size() > (size_t)step)

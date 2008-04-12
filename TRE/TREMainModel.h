@@ -263,9 +263,11 @@ public:
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 	int getStep(void) const { return m_step; }
 	void setStep(int value);
+	int getNumSteps(void) const { return m_numSteps; }
 	void transferPrep(void);
 	void updateModelTransferStep(int subModelIndex,
 		bool isConditionals = false);
+	bool onLastStep(void);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -334,6 +336,7 @@ protected:
 	TCULongArray *m_activeConditionals[32];
 	TCULongArray *m_activeColorConditionals[32];
 	int m_step;
+	int m_numSteps;
 	int m_transferStep;
 	IntVector m_transStepCounts;
 #ifndef _NO_TRE_THREADS

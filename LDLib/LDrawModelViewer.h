@@ -423,7 +423,8 @@ class LDrawModelViewer: public TCAlertSender
 
 		void saveSTL(void);
 		void setStep(int value);
-		int getStep(void) const { return step; }
+		int getStep(void) const { return step + 1; }
+		int getNumSteps(void) const;
 
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);

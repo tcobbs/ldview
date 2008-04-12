@@ -389,7 +389,7 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 		listID = m_listIDs[section];
 	}
 	if (listID && !subModelsOnly &&
-		(this != m_mainModel || m_mainModel->getStep() == -1))
+		(this != m_mainModel || m_mainModel->onLastStep()))
 	{
 		// Note that subModelsOnly gets set when the current color is
 		// transparent.  In that case, we don't want to draw our geometry,
@@ -448,14 +448,19 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 			int count = m_subModels->getCount();
 			int step = m_mainModel->getStep();
 
-			if (step != -1 && m_stepCounts.size() > (size_t)step)
+			if (!m_mainModel->onLastStep() &&
+				m_stepCounts.size() > (size_t)step)
 			{
 				count = m_stepCounts[step];
 			}
 			for (i = 0; i < count; i++)
 			{
-				(*m_subModels)[i]->draw(section, colored, subModelsOnly,
-					nonUniform);
+				TRESubModel *subModel = (*m_subModels)[i];
+				if (subModel)
+				{
+					subModel->draw(section, colored, subModelsOnly,
+						nonUniform);
+				}
 			}
 		}
 	}

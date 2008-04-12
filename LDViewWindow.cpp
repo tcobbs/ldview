@@ -3633,26 +3633,10 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			doGreenFrontFaces();
 			break;
 		case ID_NEXT_STEP:
-			if (modelWindow)
-			{
-				LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
-
-				if (modelViewer)
-				{
-					modelViewer->setStep(modelViewer->getStep() + 1);
-				}
-			}
+			changeStep(1);
 			break;
 		case ID_PREV_STEP:
-			if (modelWindow)
-			{
-				LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
-
-				if (modelViewer)
-				{
-					modelViewer->setStep(modelViewer->getStep() - 1);
-				}
-			}
+			changeStep(-1);
 			break;
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
@@ -3676,22 +3660,31 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 	{
 		selectPollingMenuItem(itemId);
 	}
-/*
-	if (message)
-	{
-		TCFloat rotationSpeed = modelWindow->getRotationSpeed();
-		TCFloat zoomSpeed = modelWindow->getZoomSpeed();
-
-		modelWindow->setRotationSpeed(0.0f);
-		modelWindow->setZoomSpeed(0.0f);
-		MessageBox(NULL, message, "Open GL Info",
-			MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-		modelWindow->setRotationSpeed(rotationSpeed);
-		modelWindow->setZoomSpeed(zoomSpeed);
-		return 0;
-	}
-*/
 	return CUIWindow::doCommand(itemId, notifyCode, controlHWnd);
+}
+
+void LDViewWindow::changeStep(int amount)
+{
+	if (modelWindow)
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
+			int newStep = modelViewer->getStep() + amount;
+
+			if (newStep < 0)
+			{
+				newStep = 0;
+			}
+			else if (newStep >= modelViewer->getNumSteps())
+			{
+				newStep = modelViewer->getNumSteps();
+			}
+			modelViewer->setStep(newStep);
+			modelWindow->forceRedraw();
+		}
+	}
 }
 
 void LDViewWindow::doWireframe(void)
