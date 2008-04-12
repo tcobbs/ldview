@@ -54,6 +54,7 @@ TREModel::TREModel(const TREModel &other)
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
 	m_curStepIndex(other.m_curStepIndex),
+	m_stepCounts(other.m_stepCounts),
 	m_flags(other.m_flags)
 {
 #ifdef _LEAK_DEBUG
@@ -85,6 +86,7 @@ TREModel::TREModel(const TREModel &other, bool shallow)
 	m_boundingMin(other.m_boundingMin),
 	m_boundingMax(other.m_boundingMax),
 	m_curStepIndex(other.m_curStepIndex),
+	m_stepCounts(other.m_stepCounts),
 	m_flags(other.m_flags)
 {
 #ifdef _LEAK_DEBUG
@@ -452,6 +454,10 @@ void TREModel::draw(TREMSection section, bool colored, bool subModelsOnly,
 				m_stepCounts.size() > (size_t)step)
 			{
 				count = m_stepCounts[step];
+			}
+			if (count > m_subModels->getCount())
+			{
+				count = m_subModels->getCount();
 			}
 			for (i = 0; i < count; i++)
 			{
@@ -2941,6 +2947,20 @@ void TREModel::flattenNonUniform(void)
 				m_subModels->removeObject(i);
 				debugPrintf("Flattened non-uniform sub-model: %g.\n",
 					determinant);
+				if (this == m_mainModel)
+				{
+					for (int j = (int)m_stepCounts.size() - 1; j >= 0; j--)
+					{
+						if (m_stepCounts[j] > i)
+						{
+							m_stepCounts[j]--;
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
 			}
 			else
 			{
