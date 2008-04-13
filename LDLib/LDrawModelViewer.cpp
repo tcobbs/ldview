@@ -970,6 +970,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		mainModel = NULL;
 		TCObject::release(mainTREModel);
 		mainTREModel = NULL;
+		step = -1;
 		TCAlertManager::sendAlert(loadAlertClass(), this,
 			_UC("ModelLoadCanceled"));
 	}

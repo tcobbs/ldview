@@ -36,6 +36,7 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *printSegments;
 	IBOutlet NSSegmentedControl *customizeSegments;
 	IBOutlet NSSegmentedControl *stepSegments;
+	IBOutlet NSTextField *stepField;
 	
 	IBOutlet NSMenu *stepsMenu;
 
@@ -104,6 +105,7 @@ class LDPartsList;
 - (LDrawModelView *)modelView;
 - (NSString *)filename;
 - (BOOL)canCopy;
+- (void)changeStep:(int)delta;
 
 - (void)copyStringToPasteboard:(NSString *)string;
 - (IBAction)actions:(id)sender;

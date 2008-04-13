@@ -533,7 +533,30 @@ static TCImage *resizeCornerImage = NULL;
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-	inputHandler->keyDown([self convertKeyModifiers:[theEvent modifierFlags]], [self convertKeyCode:theEvent]);
+	TCULong modifiers = [self convertKeyModifiers:[theEvent modifierFlags]];
+	LDInputHandler::KeyCode keyCode = [self convertKeyCode:theEvent];
+	
+	if (modifiers == 0)
+	{
+		ModelWindow *modelWindow = [[self window] delegate];
+
+		switch (keyCode)
+		{
+			case LDInputHandler::KCPageUp:
+				[modelWindow changeStep:-1];
+				return;
+			case LDInputHandler::KCPageDown:
+				[modelWindow changeStep:1];
+				return;
+			case LDInputHandler::KCHome:
+				[modelWindow changeStep:0];
+				return;
+			case LDInputHandler::KCEnd:
+				[modelWindow changeStep:2];
+				return;
+		}
+	}
+	inputHandler->keyDown(modifiers, keyCode);
 }
 
 - (void)keyUp:(NSEvent *)theEvent
@@ -1039,6 +1062,11 @@ static TCImage *resizeCornerImage = NULL;
 	return [self searchForKeyEquivalent:keyEquivalent modifierFlags:modifierFlags inMenu:mainMenu];
 }
 
+- (void)applicationDidResignActive:(NSNotification *)aNotification
+{
+	fullScreen = false;
+}
+
 - (void)fullScreenKeyDown:(NSEvent *)event
 {
 	unsigned int modifierFlags = [event modifierFlags] & 0xFFFF0000;
@@ -1067,16 +1095,16 @@ static TCImage *resizeCornerImage = NULL;
 				if (action == @selector(terminate:) || action == @selector(hide:))
 				{
 					fullScreen = false;
-					[NSApp performSelector:action withObject:self afterDelay:0.0f];
+					[NSApp performSelector:action withObject:item afterDelay:0.0f];
 				}
 				else if (action == @selector(zoomToFit:))
 				{
-					[self performSelector:action withObject:self];
+					[self performSelector:action withObject:item];
 				}
-				else if (action == @selector(performClose:))
+				else if (action == @selector(performClose:) || action == @selector(performMiniaturize:))
 				{
 					fullScreen = false;
-					[[self window] performSelector:action withObject:self afterDelay:0.0f];
+					[[self window] performSelector:action withObject:item afterDelay:0.0f];
 				}
 				else if (action == @selector(viewingAngle:))
 				{
@@ -1184,6 +1212,7 @@ static TCImage *resizeCornerImage = NULL;
 		{
 			GLint viewport[4];
 
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
 			glGetIntegerv(GL_VIEWPORT, viewport);
 			modelViewer->setWidth(viewport[2]);
 			modelViewer->setHeight(viewport[3]);
@@ -1195,6 +1224,7 @@ static TCImage *resizeCornerImage = NULL;
 			modelViewer->setWidth((int)[self frame].size.width);
 			modelViewer->setHeight((int)[self frame].size.height);
 			[self rotationUpdate];
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
 		}
 	}
 }
