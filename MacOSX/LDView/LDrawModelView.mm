@@ -217,20 +217,21 @@ static TCImage *resizeCornerImage = NULL;
 
 - (NSOpenGLPixelFormat *)customPixelFormat
 {
-	NSOpenGLPixelFormatAttribute attrs[] =
+	int attrs[] =
 	{
 		NSOpenGLPFAWindow,
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
-		NSOpenGLPFAAlphaSize, (NSOpenGLPixelFormatAttribute)8,
-		NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)24,
+		NSOpenGLPFAColorSize, 16,
+		NSOpenGLPFAAlphaSize, 4,
+		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFAMaximumPolicy,
 		// The documentation claims that the following isn't useful, but is MUST
 		// be set in order for the full screen context to share with this one.
 		// Go figure.
 		NSOpenGLPFANoRecovery,
-		(NSOpenGLPixelFormatAttribute)0
+		0
 	};
-	return [[[NSOpenGLPixelFormat alloc] initWithAttributes:attrs] autorelease];
+	return [[[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute *)attrs] autorelease];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder
@@ -962,18 +963,19 @@ static TCImage *resizeCornerImage = NULL;
 	CGDisplayErr err;
 	NSOpenGLContext *fullScreenContext;
 	CGOpenGLDisplayMask displayMask = CGDisplayIDToOpenGLDisplayMask(displayID);
-	NSOpenGLPixelFormatAttribute attrs[] =
+	int attrs[] =
 	{
 		NSOpenGLPFAFullScreen,
-		NSOpenGLPFAScreenMask, (NSOpenGLPixelFormatAttribute)displayMask,
+		NSOpenGLPFAScreenMask, displayMask,
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, (NSOpenGLPixelFormatAttribute)24,
-		NSOpenGLPFAAlphaSize, (NSOpenGLPixelFormatAttribute)8,
-		NSOpenGLPFADepthSize, (NSOpenGLPixelFormatAttribute)24,
+		NSOpenGLPFAColorSize, 16,
+		NSOpenGLPFAAlphaSize, 4,
+		NSOpenGLPFADepthSize, 16,
+		NSOpenGLPFAMaximumPolicy,
 		NSOpenGLPFANoRecovery,
-		(NSOpenGLPixelFormatAttribute)0
+		0
 	};
-	NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
+	NSOpenGLPixelFormat *pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:(NSOpenGLPixelFormatAttribute *)attrs];
 	
 	fullScreenContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:sharedContext];
 	[pixelFormat release];
@@ -1172,7 +1174,6 @@ static TCImage *resizeCornerImage = NULL;
 
 - (IBAction)toggleFullScreen:(id)sender
 {
-	NSLog(@"toggleFullScreen:\n");
 	fullScreen = !fullScreen;
 	if (fullScreen)
 	{
