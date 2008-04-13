@@ -506,6 +506,10 @@ SOURCE=.\Icons\screen_saver_preview.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Icons\step_toolbar.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Icons\toolbar.bmp
 # End Source File
 # Begin Source File
