@@ -45,6 +45,7 @@ protected:
 	void initLayout(void);
 	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos, UINT bitmapId);
 	void modelAlertCallback(TCAlert *alert);
+	void stepChanged(void);
 
 	static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
 

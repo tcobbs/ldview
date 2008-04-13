@@ -173,10 +173,12 @@ void ToolbarStrip::initStepToolbar(void)
 void ToolbarStrip::autoSize(void)
 {
 	RECT rect;
+	RECT parentRect;
 
 	GetWindowRect(hWindow, &rect);
+	GetClientRect(m_ldviewWindow->getHWindow(), &parentRect);
 	screenToClient(m_ldviewWindow->getHWindow(), &rect);
-	MoveWindow(hWindow, rect.left, rect.top, m_ldviewWindow->getWidth(),
+	MoveWindow(hWindow, rect.left, rect.top, parentRect.right - parentRect.left,
 		m_stripHeight, TRUE);
 }
 
@@ -224,6 +226,39 @@ void ToolbarStrip::initLayout(void)
 	autoSize();
 }
 
+void ToolbarStrip::stepChanged(void)
+{
+	ModelWindow *modelWindow = m_ldviewWindow->getModelWindow();
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer)
+	{
+		std::string text;
+		int step;
+
+		windowGetText(IDC_STEP, text);
+		if (sscanf(text.c_str(), "%d", &step) == 1)
+		{
+			if (step < 1)
+			{
+				step = 1;
+			}
+			if (step > modelViewer->getNumSteps())
+			{
+				step = modelViewer->getNumSteps();
+			}
+			m_step = step;
+			modelViewer->setStep(step);
+			modelWindow->forceRedraw();
+			updateStep();
+		}
+	}
+	else
+	{
+		updateStep();
+	}
+}
+
 void ToolbarStrip::updateStep(void)
 {
 	LDrawModelViewer *modelViewer =
@@ -243,6 +278,10 @@ void ToolbarStrip::updateStep(void)
 
 		sucprintf(buf, COUNT_OF(buf), _UC("%d"), m_step);
 		windowSetText(IDC_STEP, buf);
+		if (GetFocus() == m_hStepField)
+		{
+			SendMessage(m_hStepField, EM_SETSEL, 0, (LPARAM)-1);
+		}
 	}
 	else
 	{
@@ -308,8 +347,9 @@ LRESULT ToolbarStrip::doCommand(
 	int commandId,
 	HWND control)
 {
-	if (commandId == IDOK || commandId == IDCANCEL)
+	if (commandId == IDOK || notifyCode == EN_KILLFOCUS)
 	{
+		stepChanged();
 		return 0;
 	}
 	return CUIDialog::doCommand(notifyCode, commandId, control);
