@@ -87,9 +87,9 @@ enum
 	return defaultIdentifiers;
 }
 
-- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSSegmentedControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
+- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
 {
-	NSSegmentedControl *&control = *pControl;
+	NSControl *&control = *pControl;
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 	NSSize size;
 
@@ -101,9 +101,9 @@ enum
 	{
 		NSLog(@"%@\n", [control class]);
 	}
-	if ([control respondsToSelector:@selector(setSegmentStyle:)])
+	if ([control isKindOfClass:[NSSegmentedControl class]] && [control respondsToSelector:@selector(setSegmentStyle:)])
 	{
-		[control setSegmentStyle:NSSegmentStyleCapsule];
+		[(NSSegmentedControl *)control setSegmentStyle:NSSegmentStyleCapsule];
 	}
 	size = [control frame].size;
 	size.height += 1.0f;
@@ -262,9 +262,10 @@ enum
 	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
 	[printSegments setTarget:controller];
-	// The step selector isn't too useful if it's not visible, so if the user
-	// puts it in the toolbar, then it is high priority, despite the fact that
-	// it's not on by default.
+	// The step selectors aren't too useful if they're not visible, so if the
+	// user puts them in the toolbar, then they are high priority, despite the
+	// fact that they're not on by default.
+	[self addToolbarItemWithIdentifier:@"StepField" label:[OCLocalStrings get:@"Step"] control:&stepField highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"Step"] control:&stepSegments highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
@@ -345,31 +346,60 @@ enum
 	imageFileTypes = [[NSArray alloc] initWithObjects:@"png", @"bmp", nil];
 }
 
-- (IBAction)takeStepFrom:(id)sender
+- (void)stepChanged
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	int newStep = 0;
+	
+	if (modelViewer && modelViewer->getFilename() && (newStep = modelViewer->getStep()) > 0)
+	{
+		[stepField setStringValue:[NSString stringWithFormat:@"%d", newStep]];
+	}
+	else
+	{
+		[stepField setStringValue:@"--"];
+	}
+	[stepSegments setEnabled:newStep > 1 forSegment:0];
+	[stepSegments setEnabled:newStep < modelViewer->getNumSteps() && newStep > 0 forSegment:1];
+}
+
+- (void)changeStep:(int)action
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 	
 	if (modelViewer)
 	{
-		NSString *label;
-		int tag = [[sender cell] tagForSegment:[sender selectedSegment]];
-
-		if (tag != 0)
+		int newStep;
+		
+		if (action == 0)
 		{
-			modelViewer->setStep(modelViewer->getStep() + tag);
-			if (modelViewer->getStep() <= -1)
-			{
-				modelViewer->setStep(-1);
-				label = [OCLocalStrings get:@"All"];
-			}
-			else
-			{
-				label = [NSString stringWithFormat:@"%d", modelViewer->getStep() + 1];
-			}
-			[sender setLabel:label forSegment:1];
-			[modelView rotationUpdate];
+			newStep = 1;
 		}
+		else if (action == 2)
+		{
+			newStep = modelViewer->getNumSteps();
+		}
+		else
+		{
+			newStep = modelViewer->getStep() + action;
+		}
+		if (newStep <  1)
+		{
+			newStep = 1;
+		}
+		else if (newStep > modelViewer->getNumSteps())
+		{
+			newStep = modelViewer->getNumSteps();
+		}
+		modelViewer->setStep(newStep);
+		[self stepChanged];
+		[modelView rotationUpdate];
 	}
+}
+
+- (IBAction)takeStepFrom:(id)sender
+{
+	[self changeStep:[[sender cell] tagForSegment:[sender selectedSegment]]];
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -752,6 +782,7 @@ enum
 			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
 			[self updatePolling];
 			[[self controller] recordRecentFile:filename];
+			[self stepChanged];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
@@ -767,6 +798,7 @@ enum
 			[[self window] setTitleWithRepresentedFilename:@""];
 			[[self window] setTitle:initialTitle];
 			[modelView rotationUpdate];
+			[self stepChanged];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:message object:self];
 	}

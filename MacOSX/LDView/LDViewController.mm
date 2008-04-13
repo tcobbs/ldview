@@ -537,10 +537,12 @@
 		{
 			[preferences hotKeyPressed:character - '0'];
 			[modelWindows makeObjectsPerformSelector:@selector(reloadNeeded)];
+			return;
 			//NSLog(@"Ctrl+%d pressed.\n", character - '0');
 		}
 	}
-	[super keyUp:theEvent];
+	[[self currentModelView] keyUp:theEvent];
+	//[super keyUp:theEvent];
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
@@ -584,6 +586,11 @@
 - (long)pollingMode
 {
 	return pollingMode;
+}
+
+- (void)keyDown:(NSEvent *)event
+{
+	[[self currentModelView] keyDown:event];
 }
 
 @end

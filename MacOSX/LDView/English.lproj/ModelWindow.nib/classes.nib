@@ -37,6 +37,7 @@
                 reloadButton = NSSegmentedControl; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
+                stepField = NSTextField; 
                 stepSegments = NSSegmentedControl; 
                 stepsMenu = NSMenu; 
                 viewModeSegments = NSSegmentedControl; 
