@@ -23,26 +23,28 @@
 	return [self initWithModelViewer:nil sharedContext:nil];
 }
 
-- (BOOL)choosePixelFormat:(CGLPixelFormatObj *)pPixelFormat
+- (BOOL)choosePixelFormat:(CGLPixelFormatObj *)pPixelFormat remote:(bool)remote
 {
-	CGLPixelFormatAttribute attrs[] =
+	int attrs[] =
 	{
-		kCGLPFADepthSize, (CGLPixelFormatAttribute)24,
-		kCGLPFAColorSize, (CGLPixelFormatAttribute)24,
-		kCGLPFAAlphaSize, (CGLPixelFormatAttribute)8,
-		kCGLPFAStencilSize, (CGLPixelFormatAttribute)8,
-		kCGLPFAAccelerated,
 		kCGLPFAPBuffer,
-		(CGLPixelFormatAttribute)0,
-		(CGLPixelFormatAttribute)0
+		kCGLPFAColorSize, 16,
+		kCGLPFAAlphaSize, 4,
+		kCGLPFADepthSize, 16,
+		kCGLPFAStencilSize, 8,
+		kCGLPFAMaximumPolicy,
+		kCGLPFAAccelerated,
+		kCGLPFANoRecovery,
+		0,	// Spot for kCGLPFARemotePBuffer if tryRemote is set
+		0
 	};
 	long num;
 
-	if (sharedContext == nil)
+	if (remote)
 	{
 		attrs[sizeof(attrs) / sizeof(attrs[0]) - 2] = kCGLPFARemotePBuffer;
 	}
-	if (CGLChoosePixelFormat(attrs, pPixelFormat, &num) == kCGLNoError)
+	if (CGLChoosePixelFormat((CGLPixelFormatAttribute *)attrs, pPixelFormat, &num) == kCGLNoError)
 	{
 		return YES;
 	}
@@ -65,25 +67,51 @@
 	return self;
 }
 
+- (void)contextCreatedWithPixelFormat:(CGLPixelFormatObj)pixelFormat
+{
+	long virtualScreen;
+
+	CGLDestroyPixelFormat(pixelFormat);
+	CGLSetCurrentContext(context);
+	CGLGetVirtualScreen(context, &virtualScreen);
+	CGLSetPBuffer(context, pbuffer, 0, 0, virtualScreen);
+}
+
 - (void)setupContext
 {
 	if (CGLCreatePBuffer(PB_WIDTH, PB_HEIGHT, GL_TEXTURE_2D, GL_RGBA, 0, &pbuffer) == kCGLNoError)
 	{			
 		CGLPixelFormatObj pixelFormat;
 
-		if ([self choosePixelFormat:&pixelFormat])
+		if ([self choosePixelFormat:&pixelFormat remote:sharedContext == nil])
 		{
 			if (CGLCreateContext(pixelFormat, (CGLContextObj)[sharedContext CGLContextObj], &context) == kCGLNoError)
 			{
-				long virtualScreen;
-
-				CGLDestroyPixelFormat(pixelFormat);
-				CGLSetCurrentContext(context);
-				CGLGetVirtualScreen(context, &virtualScreen);
-				CGLSetPBuffer(context, pbuffer, 0, 0, virtualScreen);
+				[self contextCreatedWithPixelFormat:pixelFormat];
 				return;
 			}
 			CGLDestroyPixelFormat(pixelFormat);
+		}
+		if (sharedContext == nil)
+		{
+			NSLog(@"Error creating remote OpenGL context; trying non-remote context.\n");
+		}
+		if ([self choosePixelFormat:&pixelFormat remote:false])
+		{
+			if (CGLCreateContext(pixelFormat, (CGLContextObj)[sharedContext CGLContextObj], &context) == kCGLNoError)
+			{
+				[self contextCreatedWithPixelFormat:pixelFormat];
+				return;
+			}
+			CGLDestroyPixelFormat(pixelFormat);
+		}
+		if (sharedContext == nil)
+		{
+			NSLog(@"Error creating OpenGL context for snapshot.\n");
+		}
+		else
+		{
+			NSRunAlertPanel(@"Error", @"Error creating OpenGL context for snapshot.", @"OK", nil, nil);
 		}
 	}
 }
