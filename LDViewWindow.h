@@ -6,9 +6,11 @@
 
 #include <LDLib/LDrawModelViewer.h>
 #include <shlobj.h>
+#include "TbButtonInfo.h"
 
 class LDHtmlInventory;
 class ModelTreeDialog;
+class ToolbarStrip;
 
 typedef struct
 {
@@ -17,31 +19,31 @@ typedef struct
 	int depth;
 } VideoModeT;
 
-class TbButtonInfo: public TCObject
-{
-public:
-	TbButtonInfo(void);
-	CUCSTR getTooltipText(void) { return tooltipText; }
-	void setTooltipText(CUCSTR value);
-	int getCommandId(void) { return commandId; }
-	void setCommandId(int value) { commandId = value; }
-	int getBmpId(int stdBitmapStartId, int tbBitmapStartId);
-	void setStdBmpId(int value) { stdBmpId = value; }
-	void setTbBmpId(int value) { tbBmpId = value; }
-	BYTE getState(void) { return state; }
-	void setState(BYTE value) { state = value; }
-	BYTE getStyle(void) { return style; }
-	void setStyle(BYTE value) { style = value; }
-protected:
-	virtual void dealloc(void);
-
-	UCSTR tooltipText;
-	int commandId;
-	int stdBmpId;
-	int tbBmpId;
-	BYTE state;
-	BYTE style;
-};
+//class TbButtonInfo: public TCObject
+//{
+//public:
+//	TbButtonInfo(void);
+//	CUCSTR getTooltipText(void) { return tooltipText; }
+//	void setTooltipText(CUCSTR value);
+//	int getCommandId(void) { return commandId; }
+//	void setCommandId(int value) { commandId = value; }
+//	int getBmpId(int stdBitmapStartId, int tbBitmapStartId);
+//	void setStdBmpId(int value) { stdBmpId = value; }
+//	void setTbBmpId(int value) { tbBmpId = value; }
+//	BYTE getState(void) { return state; }
+//	void setState(BYTE value) { state = value; }
+//	BYTE getStyle(void) { return style; }
+//	void setStyle(BYTE value) { style = value; }
+//protected:
+//	virtual void dealloc(void);
+//
+//	UCSTR tooltipText;
+//	int commandId;
+//	int stdBmpId;
+//	int tbBmpId;
+//	BYTE state;
+//	BYTE style;
+//};
 
 class ModelWindow;
 class TCStringArray;
@@ -55,7 +57,7 @@ class LDLibraryUpdater;
 
 template <class Type> class TCTypedObjectArray;
 
-typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
+//typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
 
 #define LIBRARY_UPDATE_FINISHED 1
 #define LIBRARY_UPDATE_CANCELED 2
@@ -305,6 +307,7 @@ class LDViewWindow: public CUIWindow
 		static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
 
 		ModelWindow* modelWindow;
+		ToolbarStrip *toolbarStrip;
 		HWND hAboutWindow;
 		HWND hLDrawDirWindow;
 		HWND hOpenGLInfoWindow;
@@ -365,7 +368,8 @@ class LDViewWindow: public CUIWindow
 #endif // !_NO_BOOST
 		char *productVersion;
 		char *legalCopyright;
-		TbButtonInfoArray *tbButtonInfos;
+		TbButtonInfoVector tbButtonInfos;
+		//TbButtonInfoArray *tbButtonInfos;
 		int stdBitmapStartId;
 		int tbBitmapStartId;
 		LDViewPreferences *prefs;

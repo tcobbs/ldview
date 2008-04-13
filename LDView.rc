@@ -771,7 +771,7 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,231,7,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,231,24,50,14
-    CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x904,
+    CONTROL         "",IDC_ESD_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x944,
                     7,167,219,15
     LISTBOX         IDC_ESD_LIST,7,21,219,145,LBS_NOINTEGRALHEIGHT | 
                     WS_VSCROLL | WS_TABSTOP
@@ -922,6 +922,20 @@ BEGIN
                     218,86,35,10
     CONTROL         "Unknown",IDC_UNKNOWN,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,218,98,47,10
+END
+
+IDD_TOOLBAR DIALOGEX 0, 0, 340, 18
+STYLE WS_CHILD
+EXSTYLE WS_EX_TRANSPARENT
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "",IDC_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x894c,2,2,
+                    219,14
+    CONTROL         "",IDC_STEP_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 
+                    0x894c,305,2,33,14
+    EDITTEXT        IDC_STEP,249,1,26,13,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "of %d",IDC_NUM_STEPS,280,2,18,10
+    LTEXT           "Step:",IDC_STEP_LABEL,227,2,18,10
 END
 
 
@@ -1101,6 +1115,14 @@ BEGIN
         RIGHTMARGIN, 289
         TOPMARGIN, 2
         BOTTOMMARGIN, 206
+    END
+
+    IDD_TOOLBAR, DIALOG
+    BEGIN
+        LEFTMARGIN, 2
+        RIGHTMARGIN, 338
+        TOPMARGIN, 2
+        BOTTOMMARGIN, 16
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1444,6 +1466,7 @@ IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_loop_mask
 IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 #endif
 #endif
+IDB_STEP_TOOLBAR        BITMAP  DISCARDABLE     "Icons\\step_toolbar.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////

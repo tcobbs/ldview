@@ -283,7 +283,7 @@ int CUIDialog::comboGetSelectedItem(int controlId)
 
 void CUIDialog::windowGetText(int controlId, ucstring &text)
 {
-	text.resize(sendDlgItemMessageUC(hWindow, controlId, WM_GETTEXTLENGTH, 0,
+	text.resize(SendDlgItemMessage(hWindow, controlId, WM_GETTEXTLENGTH, 0,
 		0));
 	sendDlgItemMessageUC(hWindow, controlId, WM_GETTEXT,
 		(WPARAM)text.size() + 1, (LPARAM)&text[0]);

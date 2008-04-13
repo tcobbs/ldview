@@ -86,6 +86,8 @@
 #define IDR_LIGHT_ANGLE_LR              182
 #define IDD_JPEG_OPTIONS                183
 #define IDD_MODELTREE                   184
+#define IDD_TOOLBAR                     185
+#define IDB_STEP_TOOLBAR                186
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -232,6 +234,7 @@
 #define IDC_MEMORY_LABEL                1157
 #define IDC_SAVE_ZOOMTOFIT              1158
 #define IDC_ESD_TOOLBAR                 1159
+#define IDC_STEP_TOOLBAR                1160
 #define IDC_ESD_LIST                    1163
 #define IDC_SS_SIZE_BOX                 1164
 #define IDC_SS_SPEED_BOX                1165
@@ -308,6 +311,9 @@
 #define IDC_EMPTY                       1247
 #define IDC_UNKNOWN                     1248
 #define IDC_SHOW_BOX                    1249
+#define IDC_STEP                        1250
+#define IDC_STEP_LABEL                  1251
+#define IDC_NUM_STEPS                   1252
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -390,9 +396,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        185
+#define _APS_NEXT_RESOURCE_VALUE        187
 #define _APS_NEXT_COMMAND_VALUE         40095
-#define _APS_NEXT_CONTROL_VALUE         1250
+#define _APS_NEXT_CONTROL_VALUE         1253
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

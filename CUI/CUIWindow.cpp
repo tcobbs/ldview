@@ -192,9 +192,11 @@ void CUIWindow::dealloc(void)
 		systemColors = NULL;
 		delete systemColorPens;
 		systemColorPens = NULL;
- 		DeleteObject(hBackgroundBrush);
+		if (hBackgroundBrush)
+		{
+ 			DeleteObject(hBackgroundBrush);
+		}
 	}
-
 	TCObject::dealloc();
 }
 

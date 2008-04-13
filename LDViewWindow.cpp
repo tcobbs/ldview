@@ -9,6 +9,7 @@
 #include "SSModelWindow.h"
 #include "ModelTreeDialog.h"
 #include "Resource.h"
+#include "ToolbarStrip.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -59,42 +60,42 @@ LDViewWindow::LDViewWindowCleanup LDViewWindow::ldViewWindowCleanup;
 
 void debugOut(char *fmt, ...);
 
-TbButtonInfo::TbButtonInfo(void)
-	:tooltipText(NULL),
-	commandId(-1),
-	stdBmpId(-1),
-	tbBmpId(-1),
-	state(TBSTATE_ENABLED),
-	style(TBSTYLE_BUTTON)
-{
-}
-
-void TbButtonInfo::dealloc(void)
-{
-	delete tooltipText;
-	TCObject::dealloc();
-}
-
-void TbButtonInfo::setTooltipText(CUCSTR value)
-{
-	if (value != tooltipText)
-	{
-		delete tooltipText;
-		tooltipText = copyString(value);
-	}
-}
-
-int TbButtonInfo::getBmpId(int stdBitmapStartId, int tbBitmapStartId)
-{
-	if (stdBmpId == -1)
-	{
-		return tbBitmapStartId + tbBmpId;
-	}
-	else
-	{
-		return stdBitmapStartId + stdBmpId;
-	}
-}
+//TbButtonInfo::TbButtonInfo(void)
+//	:tooltipText(NULL),
+//	commandId(-1),
+//	stdBmpId(-1),
+//	tbBmpId(-1),
+//	state(TBSTATE_ENABLED),
+//	style(TBSTYLE_BUTTON)
+//{
+//}
+//
+//void TbButtonInfo::dealloc(void)
+//{
+//	delete tooltipText;
+//	TCObject::dealloc();
+//}
+//
+//void TbButtonInfo::setTooltipText(CUCSTR value)
+//{
+//	if (value != tooltipText)
+//	{
+//		delete tooltipText;
+//		tooltipText = copyString(value);
+//	}
+//}
+//
+//int TbButtonInfo::getBmpId(int stdBitmapStartId, int tbBitmapStartId)
+//{
+//	if (stdBmpId == -1)
+//	{
+//		return tbBitmapStartId + tbBmpId;
+//	}
+//	else
+//	{
+//		return stdBitmapStartId + stdBmpId;
+//	}
+//}
 
 LDViewWindow::LDViewWindowCleanup::~LDViewWindowCleanup(void)
 {
@@ -111,6 +112,7 @@ LDViewWindow::LDViewWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x,
 						   int y, int width, int height):
 CUIWindow(windowTitle, hInstance, x, y, width, height),
 modelWindow(NULL),
+toolbarStrip(NULL),
 hAboutWindow(NULL),
 hLDrawDirWindow(NULL),
 hOpenGLInfoWindow(NULL),
@@ -145,7 +147,6 @@ libraryUpdater(NULL),
 #endif // !_NO_BOOST
 productVersion(NULL),
 legalCopyright(NULL),
-tbButtonInfos(NULL),
 stdBitmapStartId(-1),
 tbBitmapStartId(-1),
 prefs(NULL),
@@ -202,6 +203,7 @@ void LDViewWindow::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelTreeDialog);
+	TCObject::release(toolbarStrip);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
 	delete videoModes;
@@ -226,7 +228,6 @@ void LDViewWindow::dealloc(void)
 #endif // !_NO_BOOST
 	delete productVersion;
 	delete legalCopyright;
-	TCObject::release(tbButtonInfos);
 	TCObject::release(prefs);
 	CUIWindow::dealloc();
 }
@@ -450,16 +451,15 @@ void LDViewWindow::addTbButtonInfo(CUCSTR tooltipText, int commandId,
 								   int stdBmpId, int tbBmpId, BYTE style,
 								   BYTE state)
 {
-	TbButtonInfo *buttonInfo = new TbButtonInfo;
+	tbButtonInfos.resize(tbButtonInfos.size() + 1);
+	TbButtonInfo &buttonInfo = tbButtonInfos.back();
 
-	buttonInfo->setTooltipText(tooltipText);
-	buttonInfo->setCommandId(commandId);
-	buttonInfo->setStdBmpId(stdBmpId);
-	buttonInfo->setTbBmpId(tbBmpId);
-	buttonInfo->setStyle(style);
-	buttonInfo->setState(state);
-	tbButtonInfos->addObject(buttonInfo);
-	buttonInfo->release();
+	buttonInfo.setTooltipText(tooltipText);
+	buttonInfo.setCommandId(commandId);
+	buttonInfo.setStdBmpId(stdBmpId);
+	buttonInfo.setTbBmpId(tbBmpId);
+	buttonInfo.setStyle(style);
+	buttonInfo.setState(state);
 }
 
 void LDViewWindow::addTbCheckButtonInfo(CUCSTR tooltipText, int commandId,
@@ -476,18 +476,16 @@ void LDViewWindow::addTbCheckButtonInfo(CUCSTR tooltipText, int commandId,
 
 void LDViewWindow::addTbSeparatorInfo(void)
 {
-	TbButtonInfo *buttonInfo = new TbButtonInfo;
+	tbButtonInfos.resize(tbButtonInfos.size() + 1);
+	TbButtonInfo &buttonInfo = tbButtonInfos.back();
 
-	buttonInfo->setStyle(TBSTYLE_SEP);
-	tbButtonInfos->addObject(buttonInfo);
-	buttonInfo->release();
+	buttonInfo.setStyle(TBSTYLE_SEP);
 }
 
 void LDViewWindow::populateTbButtonInfos(void)
 {
-	if (!tbButtonInfos)
+	if (tbButtonInfos.size() == 0)
 	{
-		tbButtonInfos = new TbButtonInfoArray;
 		if (newToolbar())
 		{
 			addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
@@ -589,10 +587,11 @@ void LDViewWindow::createToolbar(void)
 
 		populateTbButtonInfos();
 		ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
-		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME,
-			NULL, WS_CHILD | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0,
-			0, 0, hWindow, (HMENU)ID_TOOLBAR, hInstance, NULL);
-		SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
+		hToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
+			WS_CHILD | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | TBSTYLE_TRANSPARENT,
+			0, 0, 0, 0, hWindow, (HMENU)ID_TOOLBAR, hInstance, NULL);
+		SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0,
+			TBSTYLE_EX_DRAWDDARROWS | WS_EX_TRANSPARENT);
 		memset(buttonTitle, 0, sizeof(buttonTitle));
 		SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(25, 25));
@@ -632,24 +631,28 @@ void LDViewWindow::createToolbar(void)
 		}
 		// Note: buttonTitle is an empty string.  No need for Unicode.
 		SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
-		count = tbButtonInfos->getCount();
+		count = (int)tbButtonInfos.size();
 		buttons = new TBBUTTON[count];
 		for (i = 0; i < count; i++)
 		{
-			TbButtonInfo *buttonInfo = (*tbButtonInfos)[i];
+			TbButtonInfo &buttonInfo = tbButtonInfos[i];
 
-			buttons[i].iBitmap = buttonInfo->getBmpId(stdBitmapStartId,
+			buttons[i].iBitmap = buttonInfo.getBmpId(stdBitmapStartId,
 				tbBitmapStartId);
-			buttons[i].idCommand = buttonInfo->getCommandId();
-			buttons[i].fsState = buttonInfo->getState();
-			buttons[i].fsStyle = buttonInfo->getStyle();
+			buttons[i].idCommand = buttonInfo.getCommandId();
+			buttons[i].fsState = buttonInfo.getState();
+			buttons[i].fsStyle = buttonInfo.getStyle();
 			buttons[i].dwData = (DWORD)this;
 			buttons[i].iString = -1;
 		}
 		SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
 		delete[] buttons;
-		ShowWindow(hToolbar, SW_SHOW);
-		SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
+		//ShowWindow(hToolbar, SW_SHOW);
+		//SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
+		//ShowWindow(hToolbar, SW_HIDE);
+		toolbarStrip = new ToolbarStrip(getLanguageModule());
+		toolbarStrip->create(this);
+		toolbarStrip->show();
 	}
 }
 
@@ -2007,15 +2010,15 @@ void LDViewWindow::setMenuEnabled(HMENU hParentMenu, int itemID, bool enabled,
 		int count;
 
 		populateTbButtonInfos();
-		count = tbButtonInfos->getCount();
+		count = (int)tbButtonInfos.size();
 		for (i = 0; i < count; i++)
 		{
-			TbButtonInfo *buttonInfo = (*tbButtonInfos)[i];
+			TbButtonInfo &buttonInfo = tbButtonInfos[i];
 
-			if (buttonInfo->getCommandId() == itemID)
+			if (buttonInfo.getCommandId() == itemID)
 			{
-				buttonInfo->setState((BYTE)(tbState |
-					(buttonInfo->getState() & ~TBSTATE_ENABLED)));
+				buttonInfo.setState((BYTE)(tbState |
+					(buttonInfo.getState() & ~TBSTATE_ENABLED)));
 				break;
 			}
 		}
@@ -2699,13 +2702,13 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 		{
 			LPNMTTDISPINFOUC dispInfo = (LPNMTTDISPINFOUC)notification;
 			int i;
-			int count = tbButtonInfos->getCount();
+			int count = (int)tbButtonInfos.size();
 
 			for (i = 0; i < count; i++)
 			{
-				TbButtonInfo *buttonInfo = (*tbButtonInfos)[i];
+				TbButtonInfo &buttonInfo = tbButtonInfos[i];
 
-				if ((DWORD)buttonInfo->getCommandId() == notification->idFrom)
+				if ((DWORD)buttonInfo.getCommandId() == notification->idFrom)
 				{
 					dispInfo->szText[0] = 0;
 					if (CUIThemes::isThemeLibLoaded())
@@ -2732,8 +2735,7 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 						// dispInfo->lpszText isn't declared as const, but I
 						// really can't see the Tooltip control changing the
 						// text, and testing indicates that it doesn't.
-						dispInfo->lpszText =
-							(UCSTR)buttonInfo->getTooltipText();
+						dispInfo->lpszText = (UCSTR)buttonInfo.getTooltipText();
 					}
 					break;
 				}
@@ -2742,7 +2744,8 @@ LRESULT LDViewWindow::doNotify(int /*controlId*/, LPNMHDR notification)
 		}
 		break;
 	case TBN_DROPDOWN:
-		if (notification->idFrom == ID_TOOLBAR)
+		if (notification->idFrom == ID_TOOLBAR ||
+			notification->idFrom == IDC_TOOLBAR)
 		{
 			doToolbarDropDown((LPNMTOOLBAR)notification);
 		}
@@ -3000,7 +3003,11 @@ int LDViewWindow::getModelWindowTop(void)
 
 int LDViewWindow::getToolbarHeight(void)
 {
-	if (hToolbar)
+	if (toolbarStrip)
+	{
+		return toolbarStrip->getHeight();
+	}
+	else if (hToolbar)
 	{
 		RECT rect;
 
@@ -3042,6 +3049,8 @@ void LDViewWindow::removeToolbar(void)
 */
 	DestroyWindow(hToolbar);
 	hToolbar = NULL;
+	TCObject::release(toolbarStrip);
+	toolbarStrip = NULL;
 	reshapeModelWindow();
 	if (needActive)
 	{
@@ -3683,6 +3692,10 @@ void LDViewWindow::changeStep(int amount)
 			}
 			modelViewer->setStep(newStep);
 			modelWindow->forceRedraw();
+			if (toolbarStrip)
+			{
+				toolbarStrip->updateStep();
+			}
 		}
 	}
 }
@@ -3848,7 +3861,9 @@ void LDViewWindow::doBfc(void)
 
 bool LDViewWindow::doToolbarCheck(bool &value, LPARAM commandId)
 {
-	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, commandId, 0);
+	HWND hRealToolbar = toolbarStrip ? toolbarStrip->getHToolbar() :
+		hToolbar;
+	BYTE state = (BYTE)SendMessage(hRealToolbar, TB_GETSTATE, commandId, 0);
 	bool newValue = false;
 
 	if (state & TBSTATE_CHECKED)
@@ -3861,7 +3876,7 @@ bool LDViewWindow::doToolbarCheck(bool &value, LPARAM commandId)
 		{
 			SendMessage(hDeactivatedTooltip, TTM_ACTIVATE, 1, 0);
 		}
-		hDeactivatedTooltip = (HWND)SendMessage(hToolbar, TB_GETTOOLTIPS, 0, 0);
+		hDeactivatedTooltip = (HWND)SendMessage(hRealToolbar, TB_GETTOOLTIPS, 0, 0);
 		SendMessage(hDeactivatedTooltip, TTM_POP, 0, 0);
 		SendMessage(hDeactivatedTooltip, TTM_ACTIVATE, 0, 0);
 		value = newValue;
@@ -3937,6 +3952,10 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 			SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
 			parts[1] += rect.right - rect.left - 32;
 			SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
+		}
+		if (showToolbar && toolbarStrip)
+		{
+			toolbarStrip->autoSize();
 		}
 		if (showToolbar && hToolbar)
 		{
