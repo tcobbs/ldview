@@ -914,8 +914,8 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				bool abort;
 
 				mainTREModel = modelParser->getMainTREModel();
-				mainTREModel->setStep(step);
 				mainTREModel->retain();
+				setStep(getNumSteps());
 				TCProgressAlert::send("LDrawModelViewer",
 					TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.0f,
 					&abort, this);

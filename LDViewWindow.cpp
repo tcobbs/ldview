@@ -3682,9 +3682,9 @@ void LDViewWindow::changeStep(int amount)
 		{
 			int newStep = modelViewer->getStep() + amount;
 
-			if (newStep < 0)
+			if (newStep < 1)
 			{
-				newStep = 0;
+				newStep = 1;
 			}
 			else if (newStep >= modelViewer->getNumSteps())
 			{
