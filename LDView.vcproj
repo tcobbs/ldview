@@ -1295,6 +1295,14 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\TbButtonInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ToolbarStrip.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -1350,6 +1358,14 @@
 			</File>
 			<File
 				RelativePath="SSPreview.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TbButtonInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ToolbarStrip.h"
 				>
 			</File>
 		</Filter>
@@ -1535,6 +1551,10 @@
 			</File>
 			<File
 				RelativePath="Icons\screen_saver_preview.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\step_toolbar.bmp"
 				>
 			</File>
 			<File
