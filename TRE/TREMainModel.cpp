@@ -1375,7 +1375,7 @@ void TREMainModel::transferTransparent(void)
 	if (getBFCFlag())
 	{
 		sectionList.push_back(TREMBFC);
-		sectionList.push_back(TREMBFC);
+		sectionList.push_back(TREMStudBFC);
 	}
 	transferPrep();
 	transferTransparent(sectionList);
