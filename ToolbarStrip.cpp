@@ -12,7 +12,8 @@ ToolbarStrip::ToolbarStrip(HINSTANCE hInstance):
 CUIDialog(hInstance),
 m_stdBitmapStartId(-1),
 m_tbBitmapStartId(-1),
-m_numSteps(0)
+m_numSteps(0),
+m_hDeactivatedTooltip(NULL)
 {
 	ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
@@ -62,12 +63,30 @@ void ToolbarStrip::hide(void)
 	::ShowWindow(hWindow, SW_HIDE);
 }
 
+void ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
+{
+	HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
+		10, 10);
+	// Should the toolbar bitmap be language-specific?
+	HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
+		MAKEINTRESOURCE(bitmapId), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+	HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
+
+	// ImageList_AddMask works fine in XP, and avoids the necessity of
+	// creating the mask via the createMask function above, but according
+	// to the documentation, it isn't supposed to work on bitmaps whose
+	// color depth is greater than 8bpp.  Ours is 24bpp.
+	ImageList_Add(imageList, hBitmap, hMask);
+	DeleteObject(hBitmap);
+	DeleteObject(hMask);
+	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
+}
+
 void ToolbarStrip::initToolbar(
 	HWND hToolbar,
 	TbButtonInfoVector &infos,
 	UINT bitmapId)
 {
-	TBADDBITMAP addBitmap;
 	TBBUTTON *buttons;
 	char buttonTitle[128];
 	int i;
@@ -77,6 +96,9 @@ void ToolbarStrip::initToolbar(
 	int width;
 	int height;
 
+#ifndef TC_NO_UNICODE
+	SendMessage(hToolbar, TB_SETUNICODEFORMAT, (WPARAM)TRUE, 0);
+#endif // !TC_NO_UNICODE
 	SendMessage(hToolbar, TB_SETEXTENDEDSTYLE, 0,
 		TBSTYLE_EX_DRAWDDARROWS | WS_EX_TRANSPARENT);
 	memset(buttonTitle, 0, sizeof(buttonTitle));
@@ -88,39 +110,8 @@ void ToolbarStrip::initToolbar(
 	// tell it to use 23 as the minimum width and 22 as the maximum width in
 	// order to get it to display like I want it to.  Go figure.
 	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(23, 22));
-	if (true/*newToolbar()*/)
-	{
-		HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-			10, 10);
-		// Should the toolbar bitmap be language-specific?
-		HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
-			MAKEINTRESOURCE(bitmapId), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
-
-		// ImageList_AddMask works fine in XP, and avoids the necessity of
-		// creating the mask via the createMask function above, but according
-		// to the documentation, it isn't supposed to work on bitmaps whose
-		// color depth is greater than 8bpp.  Ours is 24bpp.
-		ImageList_Add(imageList, hBitmap, hMask);
-		DeleteObject(hBitmap);
-		DeleteObject(hMask);
-		SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
-		m_stdBitmapStartId = m_tbBitmapStartId = 0;
-	}
-	else
-	{
-		addBitmap.hInst = HINST_COMMCTRL;
-		addBitmap.nID = IDB_STD_SMALL_COLOR;
-		m_stdBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 0,
-			(LPARAM)&addBitmap);
-		// Should the toolbar bitmap be language-specific?
-		addBitmap.hInst = getLanguageModule();
-		// This doesn't actually work!!!
-		addBitmap.nID = bitmapId;//256;
-		// The 10 on the following line is the number of buttons in the bitmap.
-		m_tbBitmapStartId = SendMessage(hToolbar, TB_ADDBITMAP, 10,
-			(LPARAM)&addBitmap);
-	}
+	initImageList(hToolbar, bitmapId);
+	m_stdBitmapStartId = m_tbBitmapStartId = 0;
 	// Note: buttonTitle is an empty string.  No need for Unicode.
 	SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
 	count = (int)infos.size();
@@ -148,8 +139,6 @@ void ToolbarStrip::initToolbar(
 		buttonRect.left -= rect.left;
 		buttonRect.right -= rect.right;
 	}
-	SendMessage(hToolbar, TB_SETPARENT, (WPARAM)m_ldviewWindow->getHWindow(),
-		0);
 	delete[] buttons;
 	width = buttonRect.right;
 	height = buttonRect.bottom - buttonRect.top;
@@ -158,8 +147,20 @@ void ToolbarStrip::initToolbar(
 	ShowWindow(hToolbar, SW_SHOW);
 }
 
+void ToolbarStrip::loadMainToolbarMenus(void)
+{
+	m_hMainToolbarMenu = LoadMenu(getLanguageModule(),
+		MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
+	m_hWireframeMenu = GetSubMenu(m_hMainToolbarMenu, 0);
+	m_hEdgesMenu = GetSubMenu(m_hMainToolbarMenu, 1);
+	m_hPrimitivesMenu = GetSubMenu(m_hMainToolbarMenu, 2);
+	m_hLightingMenu = GetSubMenu(m_hMainToolbarMenu, 3);
+	m_hBFCMenu = GetSubMenu(m_hMainToolbarMenu, 4);
+}
+
 void ToolbarStrip::initMainToolbar(void)
 {
+	loadMainToolbarMenus();
 	populateMainTbButtonInfos();
 	initToolbar(m_hToolbar, m_mainButtonInfos, IDB_TOOLBAR);
 }
@@ -249,7 +250,7 @@ void ToolbarStrip::stepChanged(void)
 			}
 			m_step = step;
 			modelViewer->setStep(step);
-			modelWindow->forceRedraw();
+			forceRedraw();
 			updateStep();
 		}
 	}
@@ -257,6 +258,28 @@ void ToolbarStrip::stepChanged(void)
 	{
 		updateStep();
 	}
+}
+
+void ToolbarStrip::enableToolbarButton(
+	HWND hToolbar,
+	UINT buttonId,
+	bool enable)
+{
+	BYTE state = (BYTE)SendMessage(hToolbar, TB_GETSTATE, (WPARAM)buttonId, 0);
+
+	if (state == -1)
+	{
+		state = 0;
+	}
+	if (enable)
+	{
+		state |= TBSTATE_ENABLED;
+	}
+	else
+	{
+		state &= ~TBSTATE_ENABLED;
+	}
+	SendMessage(hToolbar, TB_SETSTATE, (WPARAM)buttonId, MAKELONG(state, 0));
 }
 
 void ToolbarStrip::updateStep(void)
@@ -282,10 +305,15 @@ void ToolbarStrip::updateStep(void)
 		{
 			SendMessage(m_hStepField, EM_SETSEL, 0, (LPARAM)-1);
 		}
+		enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, m_step > 1);
+		enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP,
+			m_step < modelViewer->getNumSteps());
 	}
 	else
 	{
-		windowSetText(IDC_STEP, "");
+		windowSetText(IDC_STEP, "--");
+		enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, false);
+		enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP, false);
 	}
 }
 
@@ -312,6 +340,7 @@ void ToolbarStrip::updateNumSteps(void)
 	else
 	{
 		windowSetText(IDC_NUM_STEPS, "");
+		//updateStep();
 	}
 }
 
@@ -329,11 +358,11 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	m_controls.push_back(m_hStepToolbar);
 
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
-	updateStep();
-	updateNumSteps();
 	initMainToolbar();
 	initStepToolbar();
 	initLayout();
+	updateStep();
+	updateNumSteps();
 	return TRUE;
 }
 
@@ -347,12 +376,100 @@ LRESULT ToolbarStrip::doCommand(
 	int commandId,
 	HWND control)
 {
-	if (commandId == IDOK || notifyCode == EN_KILLFOCUS)
+	switch (commandId)
 	{
+	case IDOK:
+	case EN_KILLFOCUS:
 		stepChanged();
 		return 0;
+	case ID_EDIT_PREFERENCES:
+	case ID_FILE_OPEN:
+	case ID_FILE_SAVE:
+	case ID_FILE_RELOAD:
+	case ID_VIEW_RESET:
+	case ID_VIEW_DEFAULT:
+	case ID_VIEW_FRONT:
+	case ID_VIEW_BACK:
+	case ID_VIEW_LEFT:
+	case ID_VIEW_RIGHT:
+	case ID_VIEW_TOP:
+	case ID_VIEW_BOTTOM:
+	case ID_VIEW_ISO:
+	case ID_VIEW_SAVE_DEFAULT:
+	case ID_NEXT_STEP:
+	case ID_PREV_STEP:
+	case ID_FIRST_STEP:
+	case ID_LAST_STEP:
+		// Forward all these messages to LDViewWindow.
+		return SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
+			MAKEWPARAM(commandId, notifyCode), (LPARAM)control);
+	case IDC_WIREFRAME:
+		doWireframe();
+		break;
+	case IDC_SEAMS:
+		doSeams();
+		break;
+	case IDC_HIGHLIGHTS:
+		doEdges();
+		break;
+	case IDC_PRIMITIVE_SUBSTITUTION:
+		doPrimitiveSubstitution();
+		break;
+	case IDC_LIGHTING:
+		doLighting();
+		break;
+	case IDC_BFC:
+		doBfc();
+		break;
+	case ID_WIREFRAME_FOG:
+		doFog();
+		break;
+	case ID_WIREFRAME_REMOVEHIDDENLINES:
+		doRemoveHiddenLines();
+		break;
+	case ID_EDGES_SHOWEDGESONLY:
+		doShowEdgesOnly();
+		break;
+	case ID_EDGES_CONDITIONALLINES:
+		doConditionalLines();
+		break;
+	case ID_EDGES_HIGHQUALITY:
+		doHighQualityEdges();
+		break;
+	case ID_EDGES_ALWAYSBLACK:
+		doAlwaysBlack();
+		break;
+	case ID_PRIMITIVES_TEXTURESTUDS:
+		doTextureStuds();
+		break;
+	case ID_LIGHTING_HIGHQUALITY:
+		doQualityLighting();
+		break;
+	case ID_LIGHTING_SUBDUED:
+		doSubduedLighting();
+		break;
+	case ID_LIGHTING_SPECULARHIGHLIGHT:
+		doSpecularHighlight();
+		break;
+	case ID_LIGHTING_ALTERNATESETUP:
+		doAlternateLighting();
+		break;
+	case ID_LIGHTING_DRAWDATS:
+		doDrawLightDats();
+		break;
+	case ID_LIGHTING_OPTIONALMAIN:
+		doOptionalStandardLight();
+		break;
+	case ID_BFC_REDBACKFACES:
+		doRedBackFaces();
+		break;
+	case ID_BFC_GREENFRONTFACES:
+		doGreenFrontFaces();
+		break;
+	default:
+		return CUIDialog::doCommand(notifyCode, commandId, control);
 	}
-	return CUIDialog::doCommand(notifyCode, commandId, control);
+	return 0;
 }
 
 void ToolbarStrip::addTbButtonInfo(
@@ -488,19 +605,620 @@ HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
 	return CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
 }
 
+static const std::string notificationName(UINT code)
+{
+	static char buf[128];
+
+	switch (code)
+	{
+	case TBN_GETBUTTONINFOA:
+		return "TBN_GETBUTTONINFOA";
+	case TBN_BEGINDRAG:
+		return "TBN_BEGINDRAG";
+	case TBN_ENDDRAG:
+		return "TBN_ENDDRAG";
+	case TBN_BEGINADJUST:
+		return "TBN_BEGINADJUST";
+	case TBN_ENDADJUST:
+		return "TBN_ENDADJUST";
+	case TBN_RESET:
+		return "TBN_RESET";
+	case TBN_QUERYINSERT:
+		return "TBN_QUERYINSERT";
+	case TBN_QUERYDELETE:
+		return "TBN_QUERYDELETE";
+	case TBN_TOOLBARCHANGE:
+		return "TBN_TOOLBARCHANGE";
+	case TBN_CUSTHELP:
+		return "TBN_CUSTHELP";
+	case TBN_DROPDOWN:
+		return "TBN_DROPDOWN";
+	case TBN_GETOBJECT:
+		return "TBN_GETOBJECT";
+	case TBN_HOTITEMCHANGE:
+		return "TBN_HOTITEMCHANGE";
+	case TBN_DRAGOUT:
+		return "TBN_DRAGOUT";
+	case TBN_DELETINGBUTTON:
+		return "TBN_DELETINGBUTTON";
+	case TBN_GETDISPINFOA:
+		return "TBN_GETDISPINFOA";
+	case TBN_GETDISPINFOW:
+		return "TBN_GETDISPINFOW";
+	case TBN_GETINFOTIPA:
+		return "TBN_GETINFOTIPA";
+	case TBN_GETINFOTIPW:
+		return "TBN_GETINFOTIPW";
+	case TBN_GETBUTTONINFOW:
+		return "TBN_GETBUTTONINFOW";
+	case TBN_RESTORE:
+		return "TBN_RESTORE";
+	case TBN_SAVE:
+		return "TBN_SAVE";
+	case TBN_INITCUSTOMIZE:
+		return "TBN_INITCUSTOMIZE";
+
+	case TTN_GETDISPINFOA:
+		return "TTN_GETDISPINFOA";
+	case TTN_GETDISPINFOW:
+		return "TTN_GETDISPINFOW";
+	case TTN_SHOW:
+		return "TTN_SHOW";
+	case TTN_POP:
+		return "TTN_POP";
+	case TTN_LINKCLICK:
+		return "TTN_LINKCLICK";
+
+	case NM_TOOLTIPSCREATED:
+		return "NM_TOOLTIPSCREATED";
+	default:
+		sprintf(buf, "0x%08X", code);
+		return buf;
+	}
+}
+
+LRESULT ToolbarStrip::doToolbarGetInfotip(
+	TbButtonInfoVector &infos,
+	LPNMTBGETINFOTIPUC dispInfo)
+{
+	int i;
+	int count = (int)infos.size();
+
+	for (i = 0; i < count; i++)
+	{
+		TbButtonInfo &buttonInfo = infos[i];
+
+		if (buttonInfo.getCommandId() == dispInfo->iItem)
+		{
+			if (CUIThemes::isThemeLibLoaded())
+			{
+				//HWND hTooltip = (HWND)SendMessage(dispInfo->hdr.hwndFrom,
+				//	TB_GETTOOLTIPS, 0, 0);
+				//// Turning off theme support in the tooltip makes it
+				//// work properly.  With theme support on, it gets erased
+				//// by the OpenGL window immediately after being drawn.
+				//// Haven't the foggiest why this happens, but turning
+				//// off theme support solves the problem.  This has to
+				//// be done every time the tooltip is about to pop up.
+				//// Not sure why that is either, but it is.
+				//CUIThemes::setWindowTheme(hTooltip, NULL, L"");
+			}
+			if (m_ldviewWindow->getLoading())
+			{
+				// Don't allow tooltips to pop up while loading; they
+				// prevent the loading from continuing until they go
+				// away.
+				dispInfo->pszText = NULL;
+			}
+			else
+			{
+				ucstrncpy(dispInfo->pszText, buttonInfo.getTooltipText(),
+					dispInfo->cchTextMax);
+				dispInfo->pszText[dispInfo->cchTextMax - 1] = 0;
+			}
+			break;
+		}
+	}
+	return 0;
+}
+
+LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
+{
+	debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
+		notificationName(notification->code).c_str());
+	switch (notification->code)
+	{
+	case NM_TOOLTIPSCREATED:
+		{
+			// Turning off theme support in the tooltip makes it
+			// work properly.  With theme support on, it gets erased
+			// by the OpenGL window immediately after being drawn.
+			// Haven't the foggiest why this happens, but turning
+			// off theme support solves the problem.  This has to
+			// be done every time the tooltip is about to pop up.
+			// Not sure why that is either, but it is.
+			//CUIThemes::setWindowTheme(
+			//	((NMTOOLTIPSCREATED *)notification)->hwndToolTips, NULL, L"");
+		}
+		break;
+	case TBN_GETINFOTIPUC:
+		return doToolbarGetInfotip(m_mainButtonInfos,
+			(LPNMTBGETINFOTIPUC)notification);
+	case TBN_DROPDOWN:
+		if (notification->idFrom == ID_TOOLBAR ||
+			notification->idFrom == IDC_TOOLBAR)
+		{
+			doDropDown((LPNMTOOLBAR)notification);
+		}
+		break;
+	default:
+		return CUIWindow::doNotify(controlId, notification);
+	}
+	return 0;
+}
+
+LRESULT ToolbarStrip::doStepToolbarNotify(int controlId, LPNMHDR notification)
+{
+	debugPrintf("LDViewWindow::doStepToolbarNotify: 0x%04X, %s\n", controlId,
+		notificationName(notification->code).c_str());
+	switch (notification->code)
+	{
+	case NM_TOOLTIPSCREATED:
+		{
+			// Turning off theme support in the tooltip makes it
+			// work properly.  With theme support on, it gets erased
+			// by the OpenGL window immediately after being drawn.
+			// Haven't the foggiest why this happens, but turning
+			// off theme support solves the problem.  This has to
+			// be done every time the tooltip is about to pop up.
+			// Not sure why that is either, but it is.
+			//CUIThemes::setWindowTheme(
+			//	((NMTOOLTIPSCREATED *)notification)->hwndToolTips, NULL, L"");
+		}
+		break;
+	case TBN_GETINFOTIPUC:
+		return doToolbarGetInfotip(m_stepButtonInfos,
+			(LPNMTBGETINFOTIPUC)notification);
+	default:
+		return CUIWindow::doNotify(controlId, notification);
+	}
+	return 0;
+}
+
 LRESULT ToolbarStrip::doNotify(int controlId, LPNMHDR notification)
 {
-	//if (notification->code == TBN_DROPDOWN)
-	//{
-	//	debugPrintf("Hmm.\n");
-	//}
-	//if (notification->hwndFrom == m_hToolbar)
-	//{
-	//	return SendMessage(m_ldviewWindow->getHWindow(), WM_NOTIFY,
-	//		(WPARAM)controlId, (LPARAM)notification);
-	//}
-	//else
+	if (notification->hwndFrom == m_hToolbar)
+	{
+		return doMainToolbarNotify(controlId, notification);
+	}
+	else if (notification->hwndFrom == m_hStepToolbar)
+	{
+		return doStepToolbarNotify(controlId, notification);
+	}
+	else
 	{
 		return CUIDialog::doNotify(controlId, notification);
 	}
+}
+
+void ToolbarStrip::enableMainToolbarButton(UINT buttonId, bool enable)
+{
+	enableToolbarButton(m_hToolbar, buttonId, enable);
+}
+
+void ToolbarStrip::updateWireframeMenu(void)
+{
+	setMenuCheck(m_hWireframeMenu, ID_WIREFRAME_FOG,
+		m_prefs->getUseWireframeFog());
+	setMenuCheck(m_hWireframeMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
+		m_prefs->getRemoveHiddenLines());
+	setMenuItemsEnabled(m_hWireframeMenu, m_drawWireframe);
+}
+
+void ToolbarStrip::updateEdgesMenu(void)
+{
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_SHOWEDGESONLY,
+		m_prefs->getEdgesOnly());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_CONDITIONALLINES,
+		m_prefs->getDrawConditionalHighlights());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_HIGHQUALITY,
+		m_prefs->getUsePolygonOffset());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_ALWAYSBLACK,
+		m_prefs->getBlackHighlights());
+	setMenuItemsEnabled(m_hEdgesMenu, m_edges);
+}
+
+void ToolbarStrip::updatePrimitivesMenu(void)
+{
+	setMenuCheck(m_hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
+		m_prefs->getTextureStuds());
+	setMenuItemsEnabled(m_hPrimitivesMenu, m_primitiveSubstitution);
+}
+
+void ToolbarStrip::updateLightingMenu(void)
+{
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_HIGHQUALITY,
+		m_prefs->getQualityLighting());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_SUBDUED,
+		m_prefs->getSubduedLighting());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
+		m_prefs->getUsesSpecular());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_ALTERNATESETUP,
+		m_prefs->getOneLight());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_DRAWDATS,
+		m_prefs->getDrawLightDats());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_OPTIONALMAIN,
+		m_prefs->getOptionalStandardLight());
+	setMenuItemsEnabled(m_hLightingMenu, m_lighting);
+	if (!m_prefs->getDrawLightDats())
+	{
+		setMenuEnabled(m_hLightingMenu, ID_LIGHTING_OPTIONALMAIN, false,
+			FALSE);
+		setMenuCheck(m_hLightingMenu, ID_LIGHTING_OPTIONALMAIN, false);
+	}
+}
+
+void ToolbarStrip::updateBFCMenu(void)
+{
+	setMenuCheck(m_hBFCMenu, ID_BFC_REDBACKFACES,
+		m_prefs->getRedBackFaces());
+	setMenuCheck(m_hBFCMenu, ID_BFC_GREENFRONTFACES,
+		m_prefs->getGreenFrontFaces());
+	setMenuItemsEnabled(m_hBFCMenu, m_bfc);
+}
+
+void ToolbarStrip::doDropDown(LPNMTOOLBAR toolbarNot)
+{
+	RECT rect;
+	TPMPARAMS tpm;
+	HMENU hMenu = NULL;
+
+    SendMessage(toolbarNot->hdr.hwndFrom, TB_GETRECT, (WPARAM)toolbarNot->iItem,
+		(LPARAM)&rect);
+	MapWindowPoints(toolbarNot->hdr.hwndFrom, HWND_DESKTOP, (LPPOINT)&rect, 2);
+	tpm.cbSize = sizeof(TPMPARAMS);
+	tpm.rcExclude.top    = rect.top;
+	tpm.rcExclude.left   = rect.left;
+	tpm.rcExclude.bottom = rect.bottom;
+	tpm.rcExclude.right  = rect.right;
+	switch (toolbarNot->iItem)
+	{
+	case IDC_WIREFRAME:
+		hMenu = m_hWireframeMenu;
+		break;
+	case IDC_HIGHLIGHTS:
+		hMenu = m_hEdgesMenu;
+		break;
+	case IDC_PRIMITIVE_SUBSTITUTION:
+		hMenu = m_hPrimitivesMenu;
+		break;
+	case IDC_LIGHTING:
+		hMenu = m_hLightingMenu;
+		break;
+	case IDC_BFC:
+		hMenu = m_hBFCMenu;
+		break;
+	case ID_VIEWANGLE:
+		hMenu = m_ldviewWindow->getViewAngleMenu();
+		break;
+	}
+	if (hMenu)
+	{
+		BOOL fade;
+
+		// Note: selection fade causes a display glitch.  This is an obscenely
+		// ugly hack to get rid of that, but it does work.  The problem still
+		// exists when the menu item is selected from the main menu, though.
+		// Did I mention yet today that Microsoft sucks?
+		SystemParametersInfo(SPI_GETSELECTIONFADE, 0, &fade, 0);
+		if (fade)
+		{
+			// We better pray it doesn't crash between here and where we put
+			// things back below.
+			SystemParametersInfo(SPI_SETSELECTIONFADE, FALSE, NULL, 0);
+		}
+		TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+			rect.left, rect.bottom, hWindow, &tpm);
+		if (fade)
+		{
+			SystemParametersInfo(SPI_SETSELECTIONFADE, 0, &fade, 0);
+		}
+	}
+}
+
+void ToolbarStrip::forceRedraw(void)
+{
+	ModelWindow *modelWindow = m_ldviewWindow->getModelWindow();
+
+	if (modelWindow)
+	{
+		modelWindow->forceRedraw();
+	}
+}
+
+void ToolbarStrip::doWireframe(void)
+{
+	if (doCheck(m_drawWireframe, IDC_WIREFRAME))
+	{
+		m_prefs->setDrawWireframe(m_drawWireframe);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doSeams(void)
+{
+	if (doCheck(m_seams, IDC_SEAMS))
+	{
+		m_prefs->setUseSeams(m_seams);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doEdges(void)
+{
+	if (doCheck(m_edges, IDC_HIGHLIGHTS))
+	{
+		m_prefs->setShowsHighlightLines(m_edges);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doPrimitiveSubstitution(void)
+{
+	if (doCheck(m_primitiveSubstitution, IDC_PRIMITIVE_SUBSTITUTION))
+	{
+		m_prefs->setAllowPrimitiveSubstitution(m_primitiveSubstitution);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doLighting(void)
+{
+	if (doCheck(m_lighting, IDC_LIGHTING))
+	{
+		m_prefs->setUseLighting(m_lighting);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doFog(void)
+{
+	m_prefs->setUseWireframeFog(!m_prefs->getUseWireframeFog());
+	setMenuCheck(m_hWireframeMenu, ID_WIREFRAME_FOG,
+		m_prefs->getUseWireframeFog());
+}
+
+void ToolbarStrip::doRemoveHiddenLines(void)
+{
+	m_prefs->setRemoveHiddenLines(!m_prefs->getRemoveHiddenLines());
+	setMenuCheck(m_hWireframeMenu, ID_WIREFRAME_REMOVEHIDDENLINES,
+		m_prefs->getRemoveHiddenLines());
+}
+
+void ToolbarStrip::doShowEdgesOnly(void)
+{
+	m_prefs->setEdgesOnly(!m_prefs->getEdgesOnly());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_SHOWEDGESONLY,
+		m_prefs->getEdgesOnly());
+}
+
+void ToolbarStrip::doConditionalLines(void)
+{
+	m_prefs->setDrawConditionalHighlights(!m_prefs->getDrawConditionalHighlights());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_CONDITIONALLINES,
+		m_prefs->getDrawConditionalHighlights());
+}
+
+void ToolbarStrip::doHighQualityEdges(void)
+{
+	m_prefs->setUsePolygonOffset(!m_prefs->getUsePolygonOffset());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_HIGHQUALITY,
+		m_prefs->getUsePolygonOffset());
+}
+
+void ToolbarStrip::doAlwaysBlack(void)
+{
+	m_prefs->setBlackHighlights(!m_prefs->getBlackHighlights());
+	setMenuCheck(m_hEdgesMenu, ID_EDGES_ALWAYSBLACK,
+		m_prefs->getBlackHighlights());
+}
+
+void ToolbarStrip::doTextureStuds(void)
+{
+	m_prefs->setTextureStuds(!m_prefs->getTextureStuds());
+	setMenuCheck(m_hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
+		m_prefs->getTextureStuds());
+}
+
+void ToolbarStrip::doQualityLighting(void)
+{
+	m_prefs->setQualityLighting(!m_prefs->getQualityLighting());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_HIGHQUALITY,
+		m_prefs->getQualityLighting());
+}
+
+void ToolbarStrip::doSubduedLighting(void)
+{
+	m_prefs->setSubduedLighting(!m_prefs->getSubduedLighting());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_SUBDUED,
+		m_prefs->getSubduedLighting());
+}
+
+void ToolbarStrip::doSpecularHighlight(void)
+{
+	m_prefs->setUsesSpecular(!m_prefs->getUsesSpecular());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_SPECULARHIGHLIGHT,
+		m_prefs->getUsesSpecular());
+}
+
+void ToolbarStrip::doAlternateLighting(void)
+{
+	m_prefs->setOneLight(!m_prefs->getOneLight());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_ALTERNATESETUP,
+		m_prefs->getOneLight());
+}
+
+void ToolbarStrip::doDrawLightDats(void)
+{
+	m_prefs->setDrawLightDats(!m_prefs->getDrawLightDats());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_DRAWDATS,
+		m_prefs->getDrawLightDats());
+}
+
+void ToolbarStrip::doOptionalStandardLight(void)
+{
+	m_prefs->setOptionalStandardLight(!m_prefs->getOptionalStandardLight());
+	setMenuCheck(m_hLightingMenu, ID_LIGHTING_OPTIONALMAIN,
+		m_prefs->getOptionalStandardLight());
+}
+
+void ToolbarStrip::doRedBackFaces(void)
+{
+	m_prefs->setRedBackFaces(!m_prefs->getRedBackFaces());
+	setMenuCheck(m_hBFCMenu, ID_BFC_REDBACKFACES,
+		m_prefs->getRedBackFaces());
+}
+
+void ToolbarStrip::doGreenFrontFaces(void)
+{
+	m_prefs->setGreenFrontFaces(!m_prefs->getGreenFrontFaces());
+	setMenuCheck(m_hBFCMenu, ID_BFC_GREENFRONTFACES,
+		m_prefs->getGreenFrontFaces());
+}
+
+void ToolbarStrip::doBfc(void)
+{
+	if (doCheck(m_bfc, IDC_BFC))
+	{
+		m_prefs->setBfc(m_bfc);
+		forceRedraw();
+	}
+}
+
+bool ToolbarStrip::doCheck(bool &value, LPARAM commandId)
+{
+	BYTE state = (BYTE)SendMessage(m_hToolbar, TB_GETSTATE, commandId, 0);
+	bool newValue = false;
+
+	if (state & TBSTATE_CHECKED)
+	{
+		newValue = true;
+	}
+	if (newValue != value)
+	{
+		if (m_hDeactivatedTooltip)
+		{
+			SendMessage(m_hDeactivatedTooltip, TTM_ACTIVATE, 1, 0);
+		}
+		m_hDeactivatedTooltip = (HWND)SendMessage(m_hToolbar, TB_GETTOOLTIPS, 0,
+			0);
+		SendMessage(m_hDeactivatedTooltip, TTM_POP, 0, 0);
+		SendMessage(m_hDeactivatedTooltip, TTM_ACTIVATE, 0, 0);
+		value = newValue;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void ToolbarStrip::activateDeactivatedTooltip(void)
+{
+	if (m_hDeactivatedTooltip)
+	{
+		SendMessage(m_hDeactivatedTooltip, TTM_ACTIVATE, 1, 0);
+	}
+}
+
+LRESULT ToolbarStrip::doInitMenuPopup(
+	HMENU hPopupMenu,
+	UINT /*uPos*/,
+	BOOL /*fSystemMenu*/)
+{
+	if (hPopupMenu == m_hWireframeMenu)
+	{
+		updateWireframeMenu();
+	}
+	else if (hPopupMenu == m_hEdgesMenu)
+	{
+		updateEdgesMenu();
+	}
+	else if (hPopupMenu == m_hPrimitivesMenu)
+	{
+		updatePrimitivesMenu();
+	}
+	else if (hPopupMenu == m_hLightingMenu)
+	{
+		updateLightingMenu();
+	}
+	else if (hPopupMenu == m_hBFCMenu)
+	{
+		updateBFCMenu();
+	}
+	return 1;
+}
+
+void ToolbarStrip::checkReflect(bool &value, bool prefsValue, LPARAM commandID)
+{
+	if (value != prefsValue)
+	{
+		BYTE state = (BYTE)SendMessage(m_hToolbar, TB_GETSTATE, commandID, 0);
+
+		value = prefsValue;
+		state &= ~TBSTATE_CHECKED;
+		if (value)
+		{
+			state |= TBSTATE_CHECKED;
+		}
+		SendMessage(m_hToolbar, TB_SETSTATE, commandID, MAKELONG(state, 0));
+	}
+}
+
+void ToolbarStrip::checksReflect(void)
+{
+	checkReflect(m_drawWireframe, m_prefs->getDrawWireframe(), IDC_WIREFRAME);
+	checkReflect(m_seams, m_prefs->getUseSeams() != 0, IDC_SEAMS);
+	checkReflect(m_edges, m_prefs->getShowsHighlightLines(), IDC_HIGHLIGHTS);
+	checkReflect(m_primitiveSubstitution,
+		m_prefs->getAllowPrimitiveSubstitution(), IDC_PRIMITIVE_SUBSTITUTION);
+	checkReflect(m_lighting, m_prefs->getUseLighting(), IDC_LIGHTING);
+	checkReflect(m_bfc, m_prefs->getBfc(), IDC_BFC);
+}
+
+LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)
+{
+	ModelWindow *modelWindow = m_ldviewWindow->getModelWindow();
+
+	if (m_ldviewWindow->getLoading())
+	{
+		return 0;
+	}
+	if (modelWindow)
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
+			modelViewer->pause();
+		}
+	}
+	return 1;
+}
+
+LRESULT ToolbarStrip::doExitMenuLoop(bool /*isTrackPopupMenu*/)
+{
+	ModelWindow *modelWindow = m_ldviewWindow->getModelWindow();
+
+	if (modelWindow)
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
+			modelViewer->unpause();
+		}
+		modelWindow->forceRedraw();
+	}
+	return 1;
 }

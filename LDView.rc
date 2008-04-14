@@ -1296,8 +1296,10 @@ BEGIN
     "T",            ID_TOOLS_MODELTREE,     VIRTKEY, CONTROL, NOINVERT
     "T",            ID_VIEW_TOOLBAR,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    VK_END,         ID_LAST_STEP,           VIRTKEY, NOINVERT
     VK_F1,          ID_HELP_CONTENTS,       VIRTKEY, NOINVERT
     VK_F5,          ID_FILE_RELOAD,         VIRTKEY, NOINVERT
+    VK_HOME,        ID_FIRST_STEP,          VIRTKEY, NOINVERT
     VK_NEXT,        ID_NEXT_STEP,           VIRTKEY, NOINVERT
     VK_PRIOR,       ID_PREV_STEP,           VIRTKEY, NOINVERT
     "X",            ID_VIEW_EXAMINE,        VIRTKEY, SHIFT, CONTROL, 

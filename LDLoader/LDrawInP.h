@@ -2,7 +2,7 @@
 You can use this file if you really need to access the private data
 or if you find some of the internal functions useful.                        */
 
-/* Copyright (c) 2004-2005  Lars C. Hassing (SP.lars@AM.hassings.dk)
+/* Copyright (c) 2004-2008  Lars C. Hassing (SP.lars@AM.hassings.dk)
 If you make any changes to this file, please contact me, and I'll probably
 adopt the changes for the benefit of other users.                            */
 
@@ -10,6 +10,7 @@ adopt the changes for the benefit of other users.                            */
 040319 lch Added LDrawInP.h (Really LDrawIniP.h but 8+3 name...)
 040513 lch Added LDrawIniParseSymbolicSearchDir
 050527 lch Added defines LDRAWINI_BEGIN_STDC/LDRAWINI_END_STDC for extern "C"
+080412 lch Added LDrawIniSetFileCaseCallback from Travis Cobbs
 ******************************************************************************/
 
 #ifndef LDRAWINP_INCLUDED
@@ -22,7 +23,7 @@ struct LDrawIniPrivateDataS
    /* The LDrawSearch directories as read */
    int            nSymbolicSearchDirs;
    char         **SymbolicSearchDirs;
-   L3FileCaseCallback FileCaseCallback;
+   LDrawIniFileCaseCallbackF FileCaseCallback;
 };
 
 /* Returns 1 if OK, 0 if Section/Key not found or error */

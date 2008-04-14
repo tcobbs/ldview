@@ -98,6 +98,25 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_ENTERMENULOOP:
+		if (doEnterMenuLoop(wParam ? true : false))
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case WM_EXITMENULOOP:
+		if (doExitMenuLoop(wParam ? true : false))
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case WM_INITMENUPOPUP:
+		if (doInitMenuPopup((HMENU)wParam, (UINT)LOWORD(lParam),
+			(BOOL)HIWORD(lParam)))
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	}
 	return (INT_PTR)FALSE;
 }

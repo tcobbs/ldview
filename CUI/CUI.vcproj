@@ -117,7 +117,6 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_WIN32_WINDOWS=0x0410;_BUILDING_CUI_LIB;_TC_STATIC"
 				StringPooling="true"

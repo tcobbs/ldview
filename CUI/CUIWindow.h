@@ -21,12 +21,18 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 
 #ifdef TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOA
+#define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPA
 #define TTN_GETDISPINFOUC TTN_GETDISPINFOA
+#define TBN_GETDISPINFOUC TBN_GETDISPINFOA
+#define TBN_GETINFOTIPUC TBN_GETINFOTIPA
 #define MENUITEMINFOUC MENUITEMINFOA
 #define OPENFILENAMEUC OPENFILENAMEA
 #else // TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOW
+#define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPW
 #define TTN_GETDISPINFOUC TTN_GETDISPINFOW
+#define TBN_GETDISPINFOUC TBN_GETDISPINFOW
+#define TBN_GETINFOTIPUC TBN_GETINFOTIPW
 #define MENUITEMINFOUC MENUITEMINFOW
 #define OPENFILENAMEUC OPENFILENAMEW
 #endif // TC_NO_UNICODE
@@ -82,7 +88,15 @@ class CUIExport CUIWindow : public TCAlertSender
 			WPARAM wParam, LPARAM lParam);
 		virtual BOOL dialogProc(HWND hDlg, UINT message,
 			WPARAM wParam, LPARAM lParam);
+		virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
+		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
+			bool enabled, BOOL byPosition = FALSE);
 
+		static void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
+			bool radio = false);
+		static void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
+			bool checked);
+		static bool getMenuCheck(HMENU hParentMenu, UINT uItem);
 		static void setArrowCursor(void);
 		static void setWaitCursor(void);
 		static HMENU findSubMenu(HMENU hParentMenu, int subMenuIndex,

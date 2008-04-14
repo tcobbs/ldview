@@ -18,9 +18,12 @@ public:
 	void show(void);
 	void hide(void);
 	void autoSize(void);
-	HWND getHToolbar(void) { return m_hToolbar; }
+	HWND getMainToolbar(void) { return m_hToolbar; }
 	void updateNumSteps(void);
 	void updateStep(void);
+	void enableMainToolbarButton(UINT buttonId, bool enable);
+	void checksReflect(void);
+	void activateDeactivatedTooltip(void);
 protected:
 	virtual ~ToolbarStrip(void);
 	virtual void dealloc(void);
@@ -30,7 +33,16 @@ protected:
 	virtual LRESULT doCommand(int notifyCode, int commandId,
 		HWND control);
 	virtual LRESULT doNotify(int controlId, LPNMHDR notification);
+	virtual LRESULT doInitMenuPopup(HMENU hPopupMenu, UINT uPos,
+		BOOL fSystemMenu);
+	virtual LRESULT doEnterMenuLoop(bool isTrackPopupMenu);
+	virtual LRESULT doExitMenuLoop(bool isTrackPopupMenu);
 
+	LRESULT doToolbarGetInfotip(TbButtonInfoVector &infos,
+		LPNMTBGETINFOTIPUC dispInfo);
+	//LRESULT doMainToolbarGetInfotip(LPNMTBGETINFOTIPUC dispInfo);
+	LRESULT doMainToolbarNotify(int controlId, LPNMHDR notification);
+	LRESULT doStepToolbarNotify(int controlId, LPNMHDR notification);
 	void addTbButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
 		int commandId, int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
 		BYTE state = TBSTATE_ENABLED);
@@ -40,12 +52,48 @@ protected:
 	void addTbSeparatorInfo(TbButtonInfoVector &infos);
 	void populateMainTbButtonInfos(void);
 	void populateStepTbButtonInfos(void);
+	void loadMainToolbarMenus(void);
 	void initMainToolbar(void);
 	void initStepToolbar(void);
 	void initLayout(void);
+	void initImageList(HWND hToolbar, UINT bitmapId);
 	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos, UINT bitmapId);
 	void modelAlertCallback(TCAlert *alert);
 	void stepChanged(void);
+	void enableToolbarButton(HWND hToolbar, UINT buttonId, bool enable);
+	bool doCheck(bool &value, LPARAM commandId);
+	void updateWireframeMenu(void);
+	void updateEdgesMenu(void);
+	void updatePrimitivesMenu(void);
+	void updateLightingMenu(void);
+	void updateBFCMenu(void);
+
+	void forceRedraw(void);
+
+	void doWireframe(void);
+	void doSeams(void);
+	void doEdges(void);
+	void doPrimitiveSubstitution(void);
+	void doLighting(void);
+	void doBfc(void);
+	void doFog(void);
+	void doRemoveHiddenLines(void);
+	void doShowEdgesOnly(void);
+	void doConditionalLines(void);
+	void doHighQualityEdges(void);
+	void doAlwaysBlack(void);
+	void doTextureStuds(void);
+	void doQualityLighting(void);
+	void doSubduedLighting(void);
+	void doSpecularHighlight(void);
+	void doAlternateLighting(void);
+	void doDrawLightDats(void);
+	void doOptionalStandardLight(void);
+	void doRedBackFaces(void);
+	void doGreenFrontFaces(void);
+
+	void checkReflect(bool &value, bool prefsValue, LPARAM commandID);
+	void doDropDown(LPNMTOOLBAR toolbarNot);
 
 	static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
 
@@ -57,6 +105,14 @@ protected:
 	HWND m_hStepField;
 	HWND m_hNumStepsLabel;
 	HWND m_hStepToolbar;
+	HWND m_hDeactivatedTooltip;;
+
+	HMENU m_hMainToolbarMenu;
+	HMENU m_hWireframeMenu;
+	HMENU m_hEdgesMenu;
+	HMENU m_hPrimitivesMenu;
+	HMENU m_hLightingMenu;
+	HMENU m_hBFCMenu;
 
 	int m_numSteps;
 	int m_step;
