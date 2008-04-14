@@ -1,6 +1,6 @@
 /* LDrawIni.h  Include file for LDrawIni.c */
 
-/* Copyright (c) 2004-2005  Lars C. Hassing (SP.lars@AM.hassings.dk)
+/* Copyright (c) 2004-2008  Lars C. Hassing (SP.lars@AM.hassings.dk)
 If you make any changes to this file, please contact me, and I'll probably
 adopt the changes for the benefit of other users.                            */
 
@@ -12,6 +12,7 @@ adopt the changes for the benefit of other users.                            */
 041229 lch Removed LgeoDir
 050527 lch Added defines LDRAWINI_BEGIN_STDC/LDRAWINI_END_STDC for extern "C"
 071120 lch Added LDrawIniReadSectionKey
+080412 lch Added LDrawIniSetFileCaseCallback from Travis Cobbs
 ******************************************************************************/
 
 #ifndef LDRAWINI_INCLUDED
@@ -21,22 +22,22 @@ adopt the changes for the benefit of other users.                            */
 #ifdef __cplusplus
 #define LDRAWINI_BEGIN_STDC extern "C" {
 #define LDRAWINI_END_STDC   }
-typedef bool L3_BOOL;
+typedef bool LDrawIniBoolT;
 #else
-typedef char L3_BOOL;
+#define LDRAWINI_BEGIN_STDC
+#define LDRAWINI_END_STDC
+typedef char LDrawIniBoolT;
 #ifndef false
 #define false 0
 #endif
 #ifndef true
 #define true (!false)
 #endif
-#define LDRAWINI_BEGIN_STDC
-#define LDRAWINI_END_STDC
 #endif
 
 LDRAWINI_BEGIN_STDC
 
-typedef L3_BOOL (*L3FileCaseCallback)(char *filename);
+typedef LDrawIniBoolT(*LDrawIniFileCaseCallbackF) (char *Path);
 
 struct LDrawSearchDirS
 {
@@ -88,11 +89,16 @@ matches the case of the actual filesystem files.  This is needed on case
 sensitive file systems, since LDraw files aren't case sensitive.  The callback
 function must return false if no file could be found, and true if a file was
 successfully found.
+The function is called from LDrawIniComputeRealDirs when OnlyValidDirs
+is set to true.
+LCH note: If the user specifies search directories in the proper case,
+then the function is unnecessary. File case fixing is relevant later
+when finding parts.
 Returns 1 if OK, 0 on error
 */
-int LDrawIniSetFileCaseCallback(struct LDrawIniS *LDrawIni,
-                                L3FileCaseCallback func);
-/* 
+int LDrawIniSetFileCaseCallback(struct LDrawIniS * LDrawIni,
+                                LDrawIniFileCaseCallbackF FileCaseCallback);
+/*
 Compute Real Dirs by substituting <LDRAWDIR> and <MODELDIR> in
 the Symbolic Dirs read from the env vars or ini files.
 If OnlyValidDirs is true then non-existing search dirs is skipped
@@ -117,14 +123,14 @@ Free the LDrawIni data
 void LDrawIniFree(struct LDrawIniS * LDrawIni);
 
 /*
-If IniFile is specified then that files is read. If IniFile is an empty
-string it is assumed to be a buffer of size sizeofIniFile which will receive
-the path of the inifile actually read.
+Read Section/Key value.
+This functions is used internally, but has been made public so you can get
+other LDraw related values, like e.g. "LDraw"/"LgeoDirectory".
+If IniFile is specified then that file is read (Windows Ini format).
+If IniFile is an empty string it is assumed to be a buffer of size sizeofIniFile
+which will receive the path of the inifile actually read.
 Returns 1 if OK, 0 if Section/Key not found or error
 */
-#ifdef __APPLE__
-/* IniFile may be in either Windows Ini format or XML/plist format */
-#endif
 int LDrawIniReadSectionKey(struct LDrawIniS * LDrawIni,
                            const char *Section, const char *Key,
                            char *Str, int sizeofStr,

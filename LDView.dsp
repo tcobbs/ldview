@@ -252,6 +252,14 @@ SOURCE=.\SSPassword.cpp
 
 SOURCE=.\SSPreview.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\TbButtonInfo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ToolbarStrip.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -307,6 +315,14 @@ SOURCE=.\SSPassword.h
 # Begin Source File
 
 SOURCE=.\SSPreview.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TbButtonInfo.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ToolbarStrip.h
 # End Source File
 # Begin Source File
 

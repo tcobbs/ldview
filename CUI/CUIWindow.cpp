@@ -2520,3 +2520,92 @@ BOOL CUIWindow::screenToClient(HWND hWnd, RECT *rect)
 	}
 	return FALSE;
 }
+
+// Note: static method
+void CUIWindow::setMenuCheck(
+	HMENU hParentMenu,
+	UINT uItem,
+	bool checked,
+	bool radio)
+{
+	MENUITEMINFO itemInfo;
+	char title[256];
+
+	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+	itemInfo.cbSize = sizeof(MENUITEMINFO);
+	itemInfo.fMask = MIIM_STATE | MIIM_TYPE;
+	itemInfo.dwTypeData = title;
+	itemInfo.cch = 256;
+	GetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
+	if (checked)
+	{
+		itemInfo.fState |= MFS_CHECKED;
+		itemInfo.fState &= ~MFS_UNCHECKED;
+	}
+	else
+	{
+		itemInfo.fState &= ~MFS_CHECKED;
+		itemInfo.fState |= MFS_UNCHECKED;
+	}
+	itemInfo.fType = MFT_STRING;
+	if (radio)
+	{
+		itemInfo.fType |= MFT_RADIOCHECK;
+	}
+	SetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
+}
+
+// Note: static method
+void CUIWindow::setMenuRadioCheck(HMENU hParentMenu, UINT uItem, bool checked)
+{
+	setMenuCheck(hParentMenu, uItem, checked, true);
+}
+
+// Note: static method
+bool CUIWindow::getMenuCheck(HMENU hParentMenu, UINT uItem)
+{
+	MENUITEMINFO itemInfo;
+
+	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
+	itemInfo.cbSize = sizeof(MENUITEMINFO);
+	itemInfo.fMask = MIIM_STATE;
+	GetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
+	return (itemInfo.fState & MFS_CHECKED) != 0;
+}
+
+void CUIWindow::setMenuItemsEnabled(HMENU hMenu, bool enabled)
+{
+	int i;
+	int count = GetMenuItemCount(hMenu);
+
+	for (i = 0; i < count; i++)
+	{
+		setMenuEnabled(hMenu, i, enabled, TRUE);
+	}
+}
+
+void CUIWindow::setMenuEnabled(
+	HMENU hParentMenu,
+	int itemID,
+	bool enabled,
+	BOOL byPosition)
+{
+	MENUITEMINFO itemInfo;
+	//BYTE tbState = 0;
+
+	itemInfo.cbSize = sizeof(itemInfo);
+	itemInfo.fMask = MIIM_STATE;
+	if (GetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo))
+	{
+		if (enabled)
+		{
+			itemInfo.fState &= ~MFS_DISABLED;
+		}
+		else
+		{
+			itemInfo.fState |= MFS_DISABLED;
+		}
+		itemInfo.fMask = MIIM_STATE;
+		SetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo);
+	}
+}

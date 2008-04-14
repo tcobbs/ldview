@@ -6,7 +6,7 @@
 
 #include <LDLib/LDrawModelViewer.h>
 #include <shlobj.h>
-#include "TbButtonInfo.h"
+//#include "TbButtonInfo.h"
 
 class LDHtmlInventory;
 class ModelTreeDialog;
@@ -93,6 +93,9 @@ class LDViewWindow: public CUIWindow
 		virtual void setHParentWindow(HWND hWnd);
 		ModelWindow *getModelWindow(void) { return modelWindow; }
 		void redrawStatusBar(void);
+		bool getLoading(void) const { return loading; }
+		HMENU getViewAngleMenu(void) { return hViewAngleMenu; }
+		void changeStep(int action);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
@@ -102,7 +105,7 @@ class LDViewWindow: public CUIWindow
 #endif // TC_NO_UNICODE
 		static void addFileType(UCSTR, CUCSTR, CUCSTR);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
-		static bool newToolbar(void);
+		//static bool newToolbar(void);
 	protected:
 		virtual ~LDViewWindow(void);
 		static BOOL verifyLDrawDir(char*);
@@ -188,7 +191,7 @@ class LDViewWindow: public CUIWindow
 		virtual void populateRecentFileMenuItems(void);
 		virtual void populateRecentFiles(void);
 		virtual void openRecentFile(int index);
-		virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
+		//virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
 			bool enabled, BOOL byPosition = FALSE);
 		virtual bool modelIsLoaded(void);
@@ -207,11 +210,11 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT switchToExamineMode(bool saveSetting = true);
 		virtual LRESULT switchExamineLatLong(void);
 		virtual LRESULT switchToFlythroughMode(bool saveSetting = true);
-		virtual void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
-			bool checked);
-		virtual void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
-			bool radio = false);
-		virtual bool getMenuCheck(HMENU hParentMenu, UINT uItem);
+		//virtual void setMenuRadioCheck(HMENU hParentMenu, UINT uItem,
+		//	bool checked);
+		//virtual void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
+		//	bool radio = false);
+		//virtual bool getMenuCheck(HMENU hParentMenu, UINT uItem);
 		virtual void chooseExtraDirs(void);
 		virtual void chooseNewLDrawDir(void);
 		virtual void createStatusBar(void);
@@ -233,9 +236,9 @@ class LDViewWindow: public CUIWindow
 		virtual void reflectToolbar(void);
 		virtual void reflectPolling(void);
 		virtual void reflectVideoMode(void);
-		virtual void toolbarCheckReflect(bool &value, bool prefsValue,
-			LPARAM commandID);
-		virtual void toolbarChecksReflect(void);
+		//virtual void toolbarCheckReflect(bool &value, bool prefsValue,
+		//	LPARAM commandID);
+		//virtual void toolbarChecksReflect(void);
 		virtual int getStatusBarHeight(void);
 		virtual int getDockedHeight(void);
 		virtual int getToolbarHeight(void);
@@ -255,43 +258,43 @@ class LDViewWindow: public CUIWindow
 //		virtual LRESULT doTimer(UINT timerID);
 		virtual void readVersionInfo(void);
 		virtual void createModelWindow(void);
-		virtual void populateTbButtonInfos(void);
-		virtual void addTbButtonInfo(CUCSTR tooltipText, int commandId,
-			int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
-			BYTE state = TBSTATE_ENABLED);
-		virtual void addTbCheckButtonInfo(CUCSTR tooltipText,
-			int commandId, int stdBmpId, int tbBmpId, bool checked,
-			BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
-		virtual void addTbSeparatorInfo(void);
-		virtual void doWireframe(void);
-		virtual void doSeams(void);
-		virtual void doEdges(void);
-		virtual void doPrimitiveSubstitution(void);
-		virtual void doLighting(void);
-		virtual void doBfc(void);
-		virtual void doToolbarDropDown(LPNMTOOLBAR toolbarNot);
+		//virtual void populateTbButtonInfos(void);
+		//virtual void addTbButtonInfo(CUCSTR tooltipText, int commandId,
+		//	int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
+		//	BYTE state = TBSTATE_ENABLED);
+		//virtual void addTbCheckButtonInfo(CUCSTR tooltipText,
+		//	int commandId, int stdBmpId, int tbBmpId, bool checked,
+		//	BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
+		//virtual void addTbSeparatorInfo(void);
+		//virtual void doWireframe(void);
+		//virtual void doSeams(void);
+		//virtual void doEdges(void);
+		//virtual void doPrimitiveSubstitution(void);
+		//virtual void doLighting(void);
+		//virtual void doBfc(void);
+		//virtual void doToolbarDropDown(LPNMTOOLBAR toolbarNot);
 		//virtual void doViewAngle(void);
-		virtual void doFog(void);
-		virtual void doRemoveHiddenLines(void);
-		virtual void doShowEdgesOnly(void);
-		virtual void doConditionalLines(void);
-		virtual void doHighQualityEdges(void);
-		virtual void doAlwaysBlack(void);
-		virtual void doTextureStuds(void);
-		virtual void doQualityLighting(void);
-		virtual void doSubduedLighting(void);
-		virtual void doSpecularHighlight(void);
-		virtual void doAlternateLighting(void);
-		virtual void doDrawLightDats(void);
-		virtual void doOptionalStandardLight(void);
-		virtual void doRedBackFaces(void);
-		virtual void doGreenFrontFaces(void);
-		virtual bool doToolbarCheck(bool &value, LPARAM commandId);
-		virtual void updateWireframeMenu(void);
-		virtual void updateEdgesMenu(void);
-		virtual void updatePrimitivesMenu(void);
-		virtual void updateLightingMenu(void);
-		virtual void updateBFCMenu(void);
+		//virtual void doFog(void);
+		//virtual void doRemoveHiddenLines(void);
+		//virtual void doShowEdgesOnly(void);
+		//virtual void doConditionalLines(void);
+		//virtual void doHighQualityEdges(void);
+		//virtual void doAlwaysBlack(void);
+		//virtual void doTextureStuds(void);
+		//virtual void doQualityLighting(void);
+		//virtual void doSubduedLighting(void);
+		//virtual void doSpecularHighlight(void);
+		//virtual void doAlternateLighting(void);
+		//virtual void doDrawLightDats(void);
+		//virtual void doOptionalStandardLight(void);
+		//virtual void doRedBackFaces(void);
+		//virtual void doGreenFrontFaces(void);
+		//virtual bool doToolbarCheck(bool &value, LPARAM commandId);
+		//virtual void updateWireframeMenu(void);
+		//virtual void updateEdgesMenu(void);
+		//virtual void updatePrimitivesMenu(void);
+		//virtual void updateLightingMenu(void);
+		//virtual void updateBFCMenu(void);
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
@@ -299,7 +302,6 @@ class LDViewWindow: public CUIWindow
 		void progressAlertCallback(TCProgressAlert *alert);
 
 		void loadSettings(void);
-		void changeStep(int amount);
 
 		static void recordRecentFiles(void);
 		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,
@@ -315,8 +317,8 @@ class LDViewWindow: public CUIWindow
 		HWND hExtraDirsToolbar;
 		HWND hExtraDirsList;
 		HWND hStatusBar;
-		HWND hToolbar;
-		HWND hDeactivatedTooltip;
+		//HWND hToolbar;
+		//HWND hDeactivatedTooltip;
 		HWND hFrameWindow;
 		HWND hUpdateProgressBar;
 		HWND hUpdateStatus;
@@ -348,12 +350,12 @@ class LDViewWindow: public CUIWindow
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
 		HMENU hToolsMenu;
-		HMENU hToolbarMenu;
-		HMENU hWireframeToolbarMenu;
-		HMENU hEdgesToolbarMenu;
-		HMENU hPrimitivesToolbarMenu;
-		HMENU hLightingToolbarMenu;
-		HMENU hBFCToolbarMenu;
+		//HMENU hToolbarMenu;
+		//HMENU hWireframeToolbarMenu;
+		//HMENU hEdgesToolbarMenu;
+		//HMENU hPrimitivesToolbarMenu;
+		//HMENU hLightingToolbarMenu;
+		//HMENU hBFCToolbarMenu;
 		bool loading;
 //		bool modelWindowShown;
 		CUIWindowResizer *openGLInfoWindoResizer;
@@ -368,10 +370,10 @@ class LDViewWindow: public CUIWindow
 #endif // !_NO_BOOST
 		char *productVersion;
 		char *legalCopyright;
-		TbButtonInfoVector tbButtonInfos;
+		//TbButtonInfoVector tbButtonInfos;
 		//TbButtonInfoArray *tbButtonInfos;
-		int stdBitmapStartId;
-		int tbBitmapStartId;
+		//int stdBitmapStartId;
+		//int tbBitmapStartId;
 		LDViewPreferences *prefs;
 		bool drawWireframe;
 		bool seams;

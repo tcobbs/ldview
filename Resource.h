@@ -385,6 +385,8 @@
 #define ID_TOOLS_MODELTREE              40092
 #define ID_NEXT_STEP                    40093
 #define ID_PREV_STEP                    40094
+#define ID_FIRST_STEP                   40095
+#define ID_LAST_STEP                    40096
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -397,7 +399,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        187
-#define _APS_NEXT_COMMAND_VALUE         40095
+#define _APS_NEXT_COMMAND_VALUE         40097
 #define _APS_NEXT_CONTROL_VALUE         1253
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

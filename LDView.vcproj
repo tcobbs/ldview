@@ -50,7 +50,6 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".,./include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
 				StringPooling="true"
@@ -80,7 +79,6 @@
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
-				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
