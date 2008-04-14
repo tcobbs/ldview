@@ -17,6 +17,9 @@ LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
 	m_mouseMode(MMNone),
 	m_appleRightClick(false),
 	m_numButtons(sizeof(m_buttonsDown) / sizeof(m_buttonsDown[0]))
+#ifdef WIN32
+	, m_haveStopTicks(false)
+#endif // WIN32
 #ifdef __APPLE__
 	, m_stopTime(NULL)
 #endif // __APPLE__
@@ -266,7 +269,7 @@ bool LDInputHandler::mouseUp(
 		{
 			m_rotationSpeed =
 				(TCFloat)sqrt((TCFloat)(m_lastXRotate * m_lastXRotate +
-				m_lastYRotate * m_lastYRotate));
+				m_lastYRotate * m_lastYRotate)) / 10.0f;
 			m_modelViewer->setXRotate(m_lastXRotate);
 			m_modelViewer->setYRotate(m_lastYRotate);
 			m_modelViewer->setRotationSpeed(m_rotationSpeed);
@@ -674,6 +677,10 @@ void LDInputHandler::recordRotationStop(void)
 	{
 		m_lastXRotate = m_modelViewer->getXRotate();
 		m_lastYRotate = m_modelViewer->getYRotate();
+#ifdef WIN32
+		m_stopTicks = GetTickCount();
+		m_haveStopTicks = true;
+#endif // WIN32
 #ifdef __APPLE__
 		[STOP_TIME release];
 		STOP_TIME = [[NSDate alloc] init];
@@ -683,6 +690,9 @@ void LDInputHandler::recordRotationStop(void)
 
 void LDInputHandler::clearRotationStop(void)
 {
+#ifdef WIN32
+	m_haveStopTicks = false;
+#endif // WIN32
 #ifdef __APPLE__
 	[STOP_TIME release];
 	STOP_TIME = nil;
@@ -692,6 +702,13 @@ void LDInputHandler::clearRotationStop(void)
 bool LDInputHandler::checkSpin(void)
 {
 	bool retValue = false;
+#ifdef WIN32
+	if (m_haveStopTicks)
+	{
+		retValue = GetTickCount() - m_stopTicks < 50;
+		m_haveStopTicks = false;
+	}
+#endif // WIN32
 #ifdef __APPLE__
 	retValue = STOP_TIME != nil && [STOP_TIME timeIntervalSinceNow] > -0.1f;
 	[STOP_TIME release];
