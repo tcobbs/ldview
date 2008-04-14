@@ -4,6 +4,11 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCMacros.h>
 
+#ifdef __APPLE__
+#include <Foundation/Foundation.h>
+#define STOP_TIME ((NSDate *&)m_stopTime)
+#endif // __APPLE__
+
 TCFloat LDInputHandler::sm_keyRotationSpeed = 0.5f;
 
 LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
@@ -12,6 +17,9 @@ LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
 	m_mouseMode(MMNone),
 	m_appleRightClick(false),
 	m_numButtons(sizeof(m_buttonsDown) / sizeof(m_buttonsDown[0]))
+#ifdef __APPLE__
+	, m_stopTime(NULL)
+#endif // __APPLE__
 {
 	memset(&m_buttonsDown, 0, sizeof(m_buttonsDown));
 	TCAlertManager::registerHandler(LDrawModelViewer::frameDoneAlertClass(),
@@ -24,6 +32,9 @@ LDInputHandler::~LDInputHandler(void)
 
 void LDInputHandler::dealloc(void)
 {
+#ifdef __APPLE__
+	[STOP_TIME release];
+#endif // __APPLE__
 	TCAlertManager::unregisterHandler(this);
 	TCObject::dealloc();
 }
@@ -58,11 +69,13 @@ void LDInputHandler::updateSpinRateXY(int xPos, int yPos)
 {
 	int deltaX = xPos - m_lastX;
 	int deltaY = yPos - m_lastY;
-	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
+	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX +
+		deltaY * deltaY));
 
 	m_rotationSpeed = magnitude / 10.0f;
 	if (fEq(m_rotationSpeed, 0.0f))
 	{
+		recordRotationStop();
 		m_rotationSpeed = 0.0f;
 		m_modelViewer->setXRotate(0.0f);
 		m_modelViewer->setYRotate(0.0f);
@@ -137,6 +150,7 @@ bool LDInputHandler::leftDown(TCULong modifierKeys, int xPos, int yPos)
 		m_mouseMode = MMNormal;
 		updateSpinRateXY(xPos, yPos);
 	}
+	clearRotationStop();
 	return true;
 }
 
@@ -248,9 +262,19 @@ bool LDInputHandler::mouseUp(
 			m_modelViewer->setCameraXRotate(0.0f);
 			m_modelViewer->setCameraYRotate(0.0f);
 		}
+		else if (checkSpin())
+		{
+			m_rotationSpeed =
+				(TCFloat)sqrt((TCFloat)(m_lastXRotate * m_lastXRotate +
+				m_lastYRotate * m_lastYRotate));
+			m_modelViewer->setXRotate(m_lastXRotate);
+			m_modelViewer->setYRotate(m_lastYRotate);
+			m_modelViewer->setRotationSpeed(m_rotationSpeed);
+		}
 		m_modelViewer->setShowLightDir(false);
 		if (m_modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
 		{
+			if (checkSpin())
 			// In latitude/longitude mode, we don't want it to spin along both
 			// axes at once, because once the latitude gets to 90 or -90, it
 			// just stops.
@@ -641,4 +665,37 @@ bool LDInputHandler::keyUp(TCULong /*modifierKeys*/, KeyCode keyCode)
 TCObject *LDInputHandler::getAlertSender(void)
 {
 	return m_modelViewer;
+}
+
+void LDInputHandler::recordRotationStop(void)
+{
+	if (!fEq(m_modelViewer->getXRotate(), 0.0f) ||
+		!fEq(m_modelViewer->getYRotate(), 0.0f))
+	{
+		m_lastXRotate = m_modelViewer->getXRotate();
+		m_lastYRotate = m_modelViewer->getYRotate();
+#ifdef __APPLE__
+		[STOP_TIME release];
+		STOP_TIME = [[NSDate alloc] init];
+#endif // __APPLE__
+	}
+}
+
+void LDInputHandler::clearRotationStop(void)
+{
+#ifdef __APPLE__
+	[STOP_TIME release];
+	STOP_TIME = nil;
+#endif // __APPLE__
+}
+
+bool LDInputHandler::checkSpin(void)
+{
+	bool retValue = false;
+#ifdef __APPLE__
+	retValue = STOP_TIME != nil && [STOP_TIME timeIntervalSinceNow] > -0.1f;
+	[STOP_TIME release];
+	STOP_TIME = nil;
+#endif // __APPLE__
+	return retValue;
 }

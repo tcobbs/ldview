@@ -122,6 +122,9 @@ protected:
 		TCFloat strafeAmount);
 	void updateCameraRotation(TCFloat rotationAmount, TCFloat rollAmount);
 	void updateRotation(TCFloat rotationSpeed);
+	void recordRotationStop(void);
+	void clearRotationStop(void);
+	bool checkSpin(void);
 	//double getTimeRef(void);
 
 	LDrawModelViewer *m_modelViewer;
@@ -141,6 +144,11 @@ protected:
 	bool m_mouseUpHandled;
 	//double m_lastMoveTime;
 
+	float m_lastXRotate;
+	float m_lastYRotate;
+#ifdef __APPLE__
+	void *m_stopTime;
+#endif // __APPLE__
 	static TCFloat sm_keyRotationSpeed;
 };
 
