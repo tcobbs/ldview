@@ -59,6 +59,10 @@ Handle quotes in symbolic searchdirs
 #include "LDrawIni.h"
 #include "LDrawInP.h"
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif // __APPLE__
+
 LDRAWINI_BEGIN_STDC
 
 /* External references:
