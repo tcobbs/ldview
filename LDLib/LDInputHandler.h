@@ -146,6 +146,10 @@ protected:
 
 	float m_lastXRotate;
 	float m_lastYRotate;
+#ifdef WIN32
+	DWORD m_stopTicks;
+	bool m_haveStopTicks;
+#endif // WIN32
 #ifdef __APPLE__
 	void *m_stopTime;
 #endif // __APPLE__
