@@ -9,6 +9,8 @@
 #import "SaveSnapshotViewOwner.h"
 #import "JpegOptions.h"
 #import "LDViewCategories.h"
+#import "OCUserDefaults.h"
+
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCUserDefaults.h>
 
@@ -64,7 +66,7 @@
 	[self enableSizeUI:YES];
 	[widthField setIntValue:TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false)];
 	[heightField setIntValue:TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false)];
-	[zoomToFitCheck setCheck:TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, true, false)];
+	[zoomToFitCheck setCheck:TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true, false)];
 }
 
 - (void)disableSize
@@ -73,6 +75,27 @@
 	[widthField setStringValue:@""];
 	[heightField setStringValue:@""];
 	[zoomToFitCheck setCheck:false];
+}
+
+- (void)enableAllStepsUI:(BOOL)enabled
+{
+	[self enableLabel:suffixLabel value:enabled];
+	[suffixField setEnabled:enabled];
+	[sameScaleCheck setEnabled:enabled && [self zoomToFit]];
+}
+
+- (void)enableAllSteps
+{
+	[self enableAllStepsUI:YES];
+	[suffixField setStringValue:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:SAVE_STEPS_SUFFIX_KEY] defaultValue:@"" sessionSpecific:NO]];
+	[sameScaleCheck setCheck:TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)];
+}
+
+- (void)disableAllSteps
+{
+	[self enableAllStepsUI:NO];
+	[suffixField setStringValue:@""];
+	[sameScaleCheck setCheck:false];
 }
 
 - (NSArray *)allowedFileTypes
@@ -142,6 +165,7 @@
 		[self groupCheck:saveSeriesCheck name:@"SaveSeries" value:TCUserDefaults::boolForKey(SAVE_SERIES_KEY, false, false)];
 		[self groupCheck:sizeCheck name:@"Size" value:!TCUserDefaults::boolForKey(SAVE_ACTUAL_SIZE_KEY, true, false)];
 		[autocropCheck setCheck:TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)];
+		[self groupCheck:allStepsCheck name:@"AllSteps" value:TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false)];
 	}
 	if (aSavePanel != savePanel)
 	{
@@ -176,6 +200,13 @@
 		TCUserDefaults::setLongForKey([heightField intValue], SAVE_HEIGHT_KEY, false);
 		TCUserDefaults::setBoolForKey([zoomToFitCheck getCheck], SAVE_ZOOM_TO_FIT_KEY, false);
 	}
+	checked = [allStepsCheck getCheck];
+	TCUserDefaults::setBoolForKey(checked, SAVE_STEPS_KEY, false);
+	if (checked)
+	{
+		[OCUserDefaults setString:[suffixField stringValue] forKey:[NSString stringWithASCIICString:SAVE_STEPS_SUFFIX_KEY] sessionSpecific:NO];
+		TCUserDefaults::setBoolForKey([sameScaleCheck getCheck], SAVE_STEPS_SAME_SCALE_KEY, false);
+	}
 }
 
 - (IBAction)saveSeries:(id)sender
@@ -186,6 +217,7 @@
 - (IBAction)size:(id)sender
 {
 	[self groupCheck:sender name:@"Size"];
+	[self groupCheck:allStepsCheck name:@"AllSteps"];
 }
 
 - (IBAction)fileType:(id)sender
@@ -267,6 +299,16 @@
 	{
 		return false;
 	}
+}
+
+- (IBAction)zoomToFit:(id)sender
+{
+	[self groupCheck:allStepsCheck name:@"AllSteps"];
+}
+
+- (IBAction)allSteps:(id)sender
+{
+	[self groupCheck:sender name:@"AllSteps"];
 }
 
 @end

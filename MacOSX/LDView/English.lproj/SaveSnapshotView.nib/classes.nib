@@ -1,12 +1,25 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {fileType = id; fileTypeOptions = id; saveSeries = id; size = id; }; 
+            ACTIONS = {"" = id; }; 
+            CLASS = FirstResponder; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {
+                allSteps = id; 
+                fileType = id; 
+                fileTypeOptions = id; 
+                saveSeries = id; 
+                size = id; 
+                zoomToFit = id; 
+            }; 
             CLASS = SaveSnapshotViewOwner; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 accessoryView = NSView; 
+                allStepsCheck = NSButton; 
                 autocropCheck = NSButton; 
                 digitsField = NSTextField; 
                 digitsLabel = NSTextField; 
@@ -15,8 +28,11 @@
                 fileTypePopUp = NSPopUpButton; 
                 heightField = NSTextField; 
                 heightLabel = NSTextField; 
+                sameScaleCheck = NSButton; 
                 saveSeriesCheck = NSButton; 
                 sizeCheck = NSButton; 
+                suffixField = NSTextField; 
+                suffixLabel = NSTextField; 
                 transparentCheck = NSButton; 
                 widthField = NSTextField; 
                 widthLabel = NSTextField; 

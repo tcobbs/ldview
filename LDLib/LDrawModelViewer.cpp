@@ -3954,6 +3954,7 @@ void LDrawModelViewer::zoomToFit(void)
 		autoCamera->setHeight((TCFloat)(height * numYTiles));
 		autoCamera->setMargin(getWideLineMargin() * 2.0f);
 		autoCamera->setFov(fov);
+		autoCamera->setStep(step);
 
 		autoCamera->zoomToFit();
 		camera.setPosition(autoCamera->getCamera().getPosition());

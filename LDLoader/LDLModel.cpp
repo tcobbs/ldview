@@ -1568,11 +1568,26 @@ void LDLModel::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix,
-	LDLModel::ScanPointType types) const
+	LDLModel::ScanPointType types,
+	int step) const
 {
+	int curStep = 0;
+
 	for (int i = 0; i < m_activeLineCount; i++)
 	{
 		LDLFileLine *fileLine = (*m_fileLines)[i];
+		if (step >= 0 && fileLine->getLineType() == LDLLineTypeComment)
+		{
+			LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
+			
+			if (commentLine->isStepMeta())
+			{
+				if (++curStep > step)
+				{
+					break;
+				}
+			}
+		}
 		if (fileLine->isActionLine())
 		{
 			((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
