@@ -314,6 +314,13 @@
 #define IDC_STEP                        1250
 #define IDC_STEP_LABEL                  1251
 #define IDC_NUM_STEPS                   1252
+#define IDC_TRANSPARENT_BACKGROUND      1253
+#define IDC_AUTO_CROP                   1254
+#define IDC_ALL_STEPS                   1255
+#define IDC_STEP_SUFFIX                 1256
+#define IDC_SAME_SCALE                  1257
+#define IDC_STEP_SUFFIX_LABEL           1258
+#define IDC_ALL_STEPS_BOX               1259
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -400,7 +407,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        187
 #define _APS_NEXT_COMMAND_VALUE         40097
-#define _APS_NEXT_CONTROL_VALUE         1253
+#define _APS_NEXT_CONTROL_VALUE         1260
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -119,7 +119,8 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 saveWindowResizer(NULL),
 			 savingFromCommandLine(false),
 			 skipErrorUpdates(false),
-			 releasingMouse(false)
+			 releasingMouse(false),
+			 saveStepSuffix(NULL)
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
@@ -225,6 +226,7 @@ void ModelWindow::dealloc(void)
 	{
 		errorWindowResizer->release();
 	}
+	delete saveStepSuffix;
 	stopPolling();
 	CUIOGLWindow::dealloc();
 }
@@ -325,6 +327,14 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 void ModelWindow::loadSettings(void)
 {
 	pollSetting = TCUserDefaults::longForKey(POLL_KEY, 0, false);
+	viewMode = (LDInputHandler::ViewMode)TCUserDefaults::longForKey(
+		VIEW_MODE_KEY, 0, false);
+	loadPrintSettings();
+	loadSaveSettings();
+}
+
+void ModelWindow::loadPrintSettings(void)
+{
 	printLeftMargin = TCUserDefaults::longForKey(LEFT_MARGIN_KEY, 500, false) /
 		1000.0f;
 	printRightMargin = TCUserDefaults::longForKey(RIGHT_MARGIN_KEY, 500,
@@ -337,6 +347,14 @@ void ModelWindow::loadSettings(void)
 		DMORIENT_PORTRAIT, false);
 	printPaperSize = TCUserDefaults::longForKey(PAPER_SIZE_KEY, DMPAPER_LETTER,
 		false);
+	usePrinterDPI = TCUserDefaults::longForKey(USE_PRINTER_DPI_KEY, 1) != 0;
+	printDPI = TCUserDefaults::longForKey(PRINT_DPI_KEY, 300);
+	printBackground = TCUserDefaults::longForKey(PRINT_BACKGROUND_KEY, 0, false)
+		!= 0;
+}
+
+void ModelWindow::loadSaveSettings(void)
+{
 	saveActualSize = TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false)
 		!= 0;
 	saveWidth = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false);
@@ -347,14 +365,15 @@ void ModelWindow::loadSettings(void)
 	saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
 	ignorePBuffer = TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 0, false)
 		!= 0;
-	usePrinterDPI = TCUserDefaults::longForKey(USE_PRINTER_DPI_KEY, 1) != 0;
-	printDPI = TCUserDefaults::longForKey(PRINT_DPI_KEY, 300);
-	printBackground = TCUserDefaults::longForKey(PRINT_BACKGROUND_KEY, 0, false)
-		!= 0;
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
 	saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-	viewMode = (LDInputHandler::ViewMode)TCUserDefaults::longForKey(
-		VIEW_MODE_KEY, 0, false);
+	autoCrop = TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false);
+	saveAllSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
+	delete saveStepSuffix;
+	saveStepSuffix = TCUserDefaults::stringForKeyUC(SAVE_STEPS_SUFFIX_KEY,
+		TCLocalStrings::get(_UC("DefaultStepSuffix")), false);
+	saveStepsSameScale = TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY,
+		true, false);
 }
 
 // Note: static function
@@ -1349,25 +1368,41 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_SPIN,
 		CUIFloatRight | CUIFloatTop);
 
-	saveWindowResizer->addSubWindow(IDC_MISC_BOX,
+	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE_BOX,
 		CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_IGNORE_PBUFFER,
+	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH_LABEL,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT_LABEL,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT,
+		CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_SAVE_ZOOMTOFIT,
 		CUIFloatRight | CUIFloatTop);
 
-	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE_BOX,
+	saveWindowResizer->addSubWindow(IDC_ALL_STEPS_BOX,
 		CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE,
-		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH_LABEL,
-		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH,
-		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT_LABEL,
-		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT,
-		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_ZOOMTOFIT,
-		CUIFloatLeft | CUIFloatRight | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_STEP_SUFFIX_LABEL,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+	saveWindowResizer->addSubWindow(IDC_STEP_SUFFIX,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+	saveWindowResizer->addSubWindow(IDC_SAME_SCALE,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+
+	saveWindowResizer->addSubWindow(IDC_MISC_BOX,
+		CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
+	saveWindowResizer->addSubWindow(IDC_ALL_STEPS,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+	saveWindowResizer->addSubWindow(IDC_IGNORE_PBUFFER,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+	saveWindowResizer->addSubWindow(IDC_TRANSPARENT_BACKGROUND,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+	saveWindowResizer->addSubWindow(IDC_AUTO_CROP,
+		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+
 	return FALSE;
 }
 
@@ -3485,6 +3520,7 @@ bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 	}
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha);
+	snapshotTaker->setAutoCrop(autoCrop);
 	snapshotTaker->setProductVersion(
 		((LDViewWindow *)parentWindow)->getProductVersion());
 	grabSetup(imageWidth, imageHeight, origRect, origSlowClear);
@@ -4148,6 +4184,23 @@ void ModelWindow::enableSaveSeries(void)
 		MAKELONG(saveDigits, 0));
 }
 
+void ModelWindow::disableSaveAllSteps(void)
+{
+	EnableWindow(hSaveStepSuffixLabel, FALSE);
+	EnableWindow(hSaveStepSuffixField, FALSE);
+	EnableWindow(hSaveStepsSameScaleButton, FALSE);
+	SendDlgItemMessage(hSaveDialog, IDC_STEP_SUFFIX, WM_SETTEXT, 0, (LPARAM)"");
+}
+
+void ModelWindow::enableSaveAllSteps(void)
+{
+	EnableWindow(hSaveStepSuffixLabel, TRUE);
+	EnableWindow(hSaveStepSuffixField, TRUE);
+	EnableWindow(hSaveStepsSameScaleButton, TRUE);
+	sendDlgItemMessageUC(hSaveDialog, IDC_STEP_SUFFIX, WM_SETTEXT, 0,
+		(LPARAM)saveStepSuffix);
+}
+
 void ModelWindow::updatePrintDPIField(void)
 {
 	if (usePrinterDPI)
@@ -4206,6 +4259,9 @@ void ModelWindow::setupSaveExtras(void)
 	hSaveDigitsLabel = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS_LABEL);
 	hSaveDigitsField = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS);
 	hSaveDigitsSpin = GetDlgItem(hSaveDialog, IDC_SAVE_DIGITS_SPIN);
+	hSaveStepSuffixLabel = GetDlgItem(hSaveDialog, IDC_STEP_SUFFIX_LABEL);
+	hSaveStepSuffixField = GetDlgItem(hSaveDialog, IDC_STEP_SUFFIX);
+	hSaveStepsSameScaleButton = GetDlgItem(hSaveDialog, IDC_SAME_SCALE);
 	EnableWindow(hSaveOptionsButton, saveImageType == JPG_IMAGE_TYPE_INDEX);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_ACTUAL_SIZE, BM_SETCHECK,
 		saveActualSize ? 0 : 1, 0);
@@ -4216,6 +4272,10 @@ void ModelWindow::setupSaveExtras(void)
 		MAKELONG(saveDigits, 0));
 	SendDlgItemMessage(hSaveDialog, IDC_IGNORE_PBUFFER, BM_SETCHECK,
 		ignorePBuffer ? 1 : 0, 0);
+	SendDlgItemMessage(hSaveDialog, IDC_TRANSPARENT_BACKGROUND, BM_SETCHECK,
+		saveAlpha ? 1 : 0, 0);
+	SendDlgItemMessage(hSaveDialog, IDC_AUTO_CROP, BM_SETCHECK,
+		autoCrop ? 1 : 0, 0);
 	if (saveActualSize)
 	{
 		disableSaveSize();
@@ -4231,6 +4291,14 @@ void ModelWindow::setupSaveExtras(void)
 	else
 	{
 		disableSaveSeries();
+	}
+	if (saveAllSteps)
+	{
+		enableSaveAllSteps();
+	}
+	else
+	{
+		disableSaveAllSteps();
 	}
 }
 
@@ -4313,8 +4381,8 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 		}
 		break;
 	case IDC_SAVE_ACTUAL_SIZE:
-		saveActualSize = SendDlgItemMessage(hSaveDialog,
-			IDC_SAVE_ACTUAL_SIZE, BM_GETCHECK, 0, 0) ? false : true;
+		saveActualSize = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
+			0, 0) ? false : true;
 		if (saveActualSize)
 		{
 			disableSaveSize();
@@ -4325,8 +4393,8 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 		}
 		break;
 	case IDC_SAVE_SERIES:
-		saveSeries = SendDlgItemMessage(hSaveDialog, IDC_SAVE_SERIES,
-			BM_GETCHECK, 0, 0) ? true : false;
+		saveSeries = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK, 0,
+			0) ? true : false;
 		if (saveSeries)
 		{
 			enableSaveSeries();
@@ -4336,13 +4404,37 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 			disableSaveSeries();
 		}
 		break;
+	case IDC_ALL_STEPS:
+		saveAllSteps = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
+			0, 0) ? true : false;
+		if (saveAllSteps)
+		{
+			enableSaveAllSteps();
+		}
+		else
+		{
+			disableSaveAllSteps();
+		}
+		break;
 	case IDC_IGNORE_PBUFFER:
-		ignorePBuffer = SendDlgItemMessage(hSaveDialog, IDC_IGNORE_PBUFFER,
+		ignorePBuffer = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
+			0, 0) ? true : false;
+		break;
+	case IDC_TRANSPARENT_BACKGROUND:
+		saveAlpha = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK, 0,
+			0) ? true : false;
+		break;
+	case IDC_AUTO_CROP:
+		autoCrop = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK, 0,
+			0) ? true : false;
+		break;
+	case IDC_SAME_SCALE:
+		saveStepsSameScale = SendDlgItemMessage(hSaveDialog, controlId,
 			BM_GETCHECK, 0, 0) ? true : false;
 		break;
 	case IDC_SAVE_ZOOMTOFIT:
-		saveZoomToFit = SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT,
-			BM_GETCHECK, 0, 0) ? true : false;
+		saveZoomToFit = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
+			0, 0) ? true : false;
 		break;
 	default:
 		return FALSE;
@@ -4647,7 +4739,21 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		}
 		TCObject::release(saveWindowResizer);
 		saveWindowResizer = NULL;
+		TCUserDefaults::setBoolForKey(saveAlpha, SAVE_ALPHA_KEY, false);
+		TCUserDefaults::setBoolForKey(autoCrop, AUTO_CROP_KEY, false);
+		TCUserDefaults::setBoolForKey(saveAllSteps, SAVE_STEPS_KEY, false);
+		if (saveAllSteps)
+		{
+			TCUserDefaults::setStringForKey(saveStepSuffix,
+				SAVE_STEPS_SUFFIX_KEY, false);
+			TCUserDefaults::setBoolForKey(saveStepsSameScale,
+				SAVE_STEPS_SAME_SCALE_KEY, false);
+		}
 		return true;
+	}
+	else
+	{
+		loadSaveSettings();
 	}
 	TCObject::release(saveWindowResizer);
 	saveWindowResizer = NULL;

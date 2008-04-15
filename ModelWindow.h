@@ -264,6 +264,8 @@ protected:
 	virtual void enableSaveSize(void);
 	virtual void disableSaveSeries(void);
 	virtual void enableSaveSeries(void);
+	virtual void disableSaveAllSteps(void);
+	virtual void enableSaveAllSteps(void);
 	virtual void updateSaveWidth(void);
 	virtual void updateSaveHeight(void);
 	virtual void updateSaveDigits(void);
@@ -305,6 +307,8 @@ protected:
 	void setupMultisample(void);
 
 	void loadSettings(void);
+	void loadPrintSettings(void);
+	void loadSaveSettings(void);
 
 	virtual void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 	virtual void drawLights(void);
@@ -411,6 +415,9 @@ protected:
 	HWND hSaveDigitsLabel;
 	HWND hSaveDigitsField;
 	HWND hSaveDigitsSpin;
+	HWND hSaveStepSuffixLabel;
+	HWND hSaveStepSuffixField;
+	HWND hSaveStepsSameScaleButton;
 	HWND hStatusBar;
 	HWND hProgressBar;
 	bool usePrinterDPI;
@@ -421,6 +428,10 @@ protected:
 	int saveImageType;
 	bool windowShown;
 	bool saveAlpha;
+	bool autoCrop;
+	bool saveAllSteps;
+	UCSTR saveStepSuffix;
+	bool saveStepsSameScale;
 	LDInputHandler::ViewMode viewMode;
 	HDC hCurrentDC;
 	HGLRC hCurrentGLRC;
