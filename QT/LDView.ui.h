@@ -238,3 +238,14 @@ void LDView::latitudeRotation(bool b)
 {
 	modelViewer->switchExamineLatLong(b);
 }
+
+void LDView::prevStep()
+{
+	modelViewer->prevStep();
+}
+
+void LDView::nextStep()
+{
+	modelViewer->nextStep();
+}
+

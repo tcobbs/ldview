@@ -345,6 +345,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			    mainWindow->fileSaveAction->setEnabled(true);
     			mainWindow->fileReloadAction->setEnabled(true);
 				startPaintTimer();
+				updateStep();
     		}
         }
     }
@@ -610,7 +611,7 @@ void ModelViewerWidget::postLoad(void)
 	startPaintTimer();
     mainWindow->fileSaveAction->setEnabled(true);
     mainWindow->fileReloadAction->setEnabled(true);
-
+	updateStep();
 }
 
 void ModelViewerWidget::doFileReload(void)
@@ -1497,6 +1498,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		}
 	}
 #endif
+	updateStep();
 	unlock();
 }
 
@@ -3391,127 +3393,6 @@ void ModelViewerWidget::doPartList(void)
 	}
 }
 
-/*
-void ModelViewerWidget::processKey(QKeyEvent *event, bool press)
-{
-	TCVector cameraMotion = modelViewer->getCameraMotion();
-	TCFloat originalMotionAmount = 1.0f;
-	TCFloat originalRotationAmount = 0.01f;
-	TCFloat motionAmount;
-	TCFloat rotationAmount;
-	int i;
-
-	event->accept();
-	if (press)
-	{
-		bool shift = false;
-
-		motionAmount = originalMotionAmount;
-		rotationAmount = originalRotationAmount;
-		if (event->state() & Qt::ShiftButton)
-		{
-			shift = true;
-		}
-		else
-		{
-			QString text = event->text();
-			
-			if (text.length() > 0)
-			{
-				QChar qChar = text.at(0);
-				ushort unicharacter = qChar.unicode();
-				
-				if (unicharacter < 128)
-				{
-					char character = qChar.latin1();
-
-					if (character >= 'A' && character <= 'Z')
-					{
-						shift = true;
-					}
-				}
-			}
-		}
-		if (shift)
-		{
-			motionAmount *= 2.0f;
-			rotationAmount *= 2.0f;
-		}
-	}
-	else
-	{
-		motionAmount = 0.0f;
-		rotationAmount = 0.0f;
-	}
-	switch (event->key())
-	{
-	case Qt::Key_W:
-		cameraMotion[2] = -motionAmount;
-		break;
-	case Qt::Key_S:
-		cameraMotion[2] = motionAmount;
-		break;
-	case Qt::Key_A:
-		cameraMotion[0] = -motionAmount;
-		break;
-	case Qt::Key_D:
-		cameraMotion[0] = motionAmount;
-		break;
-	case Qt::Key_R:
-		cameraMotion[1] = motionAmount;
-		break;
-	case Qt::Key_F:
-		cameraMotion[1] = -motionAmount;
-		break;
-	case Qt::Key_E:
-		modelViewer->setCameraZRotate(rotationAmount);
-		break;
-	case Qt::Key_Q:
-		modelViewer->setCameraZRotate(-rotationAmount);
-		break;
-	case Qt::Key_Shift:
-		if (press)
-		{
-			motionAmount = originalMotionAmount * 2.0f;
-			rotationAmount = originalRotationAmount * 2.0f;
-		}
-		else
-		{
-			motionAmount = originalMotionAmount;
-			rotationAmount = originalRotationAmount;
-		}
-		for (i = 0; i < 3; i++)
-		{
-			if (cameraMotion[i] > 0.0f)
-			{
-				cameraMotion[i] = motionAmount;
-			}
-			else if (cameraMotion[i] < 0.0f)
-			{
-				cameraMotion[i] = -motionAmount;
-			}
-		}
-		if (modelViewer->getCameraZRotate() > 0.0f)
-		{
-			modelViewer->setCameraZRotate(rotationAmount);
-		}
-		else if (modelViewer->getCameraZRotate() < 0.0f)
-		{
-			modelViewer->setCameraZRotate(-rotationAmount);
-		}
-		break;
-	default:
-		event->ignore();
-		break;
-	}
-	if (event->isAccepted())
-	{
-		modelViewer->setCameraMotion(cameraMotion);
-		startPaintTimer();
-	}
-}
-*/
-
 // Note: static method
 LDInputHandler::KeyCode ModelViewerWidget::convertKeyCode(int osKey)
 {
@@ -3572,6 +3453,26 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 	{
 		int i = event->key()-Qt::Key_0;
 		preferences->performHotKey(i);
+	}
+	if(event->key() == Qt::Key_PageDown)
+	{
+		nextStep();
+	}
+	if(event->key() == Qt::Key_PageUp)
+	{
+		prevStep();
+	}
+	if(event->key() == Qt::Key_End)
+	{
+		modelViewer->setStep(modelViewer->getNumSteps());
+		updateStep();
+		doApply();
+	}
+	if(event->key() == Qt::Key_Home)
+	{
+        modelViewer->setStep(1);
+        updateStep();
+        doApply();
 	}
 	unlock();
 	QGLWidget::keyPressEvent(event);
@@ -4095,4 +3996,32 @@ TCULong ModelViewerWidget::convertKeyModifiers(Qt::ButtonState osModifiers)
 		retValue |= LDInputHandler::MKControl;
 	}
 	return retValue;
+}
+
+void ModelViewerWidget::nextStep()
+{
+	if (modelViewer->getStep()>=modelViewer->getNumSteps())
+		return;
+	modelViewer->setStep(modelViewer->getStep()+1);
+	updateStep();
+	doApply();
+}
+
+void ModelViewerWidget::prevStep()
+{
+	if (modelViewer->getStep()<=1)
+		return;
+	modelViewer->setStep(modelViewer->getStep()-1);
+	updateStep();
+	doApply();
+}
+
+void ModelViewerWidget::updateStep()
+{
+    int step = modelViewer->getStep();
+    QString max = QString::number(modelViewer->getNumSteps());
+    mainWindow->toolbarPrevStep->setEnabled(step>1);
+    mainWindow->toolbarNextStep->setEnabled(modelViewer->getNumSteps()>step);
+    mainWindow->toolbarMaxStep->setText(" / "+max);
+    mainWindow->toolbarCurrentStep->setText(QString::number(step));
 }

@@ -151,6 +151,9 @@ public:
 	void checkForLibraryUpdates(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
 	static QString findPackageFile(const QString &filename);
+	void nextStep();
+	void prevStep();
+	void updateStep();
 
 protected slots:
 	virtual void doAboutOK(void);

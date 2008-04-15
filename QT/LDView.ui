@@ -108,6 +108,24 @@
 		<action name="toolbarBFCAction"/>
 		<action name="toolbarViewAction"/>
 		<action name="editPreferencesAction"/>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>toolbarCurrentStep</cstring>
+            </property>
+            <property name="text">
+                <string>0</string>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>toolbarMaxStep</cstring>
+            </property>
+            <property name="text">
+                <string> / 0</string>
+            </property>
+        </widget>
+		<action name="toolbarPrevStep"/>
+		<action name="toolbarNextStep"/>
 	</toolbar>
 </toolbars>
 <menubar>
@@ -351,6 +369,22 @@
 			<string>Viewing Angle</string>
 		</property>
 	</action>
+    <action>
+        <property name="name">
+            <cstring>toolbarPrevStep</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_prev.png</iconset>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarNextStep</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_next.png</iconset>
+        </property>
+    </action>
     <action>
         <property name="name">
             <cstring>fileSaveSettingsAction</cstring>
@@ -1205,10 +1239,16 @@
         <slot>showPovCamera()</slot>
     </connection>
     <connection>
-        <sender>toolsPartListAction</sender>
+        <sender>toolbarPrevStep</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
-        <slot>toolsPartList()</slot>
+        <slot>prevStep()</slot>
+    </connection>
+    <connection>
+        <sender>toolbarNextStep</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>nextStep()</slot>
     </connection>
 </connections>
 <includes>
@@ -1259,6 +1299,8 @@
     <slot>showPovCamera()</slot>
     <slot>toolsPartList()</slot>
     <slot>latitudeRotation(bool)</slot>
+    <slot>prevStep()</slot>
+    <slot>nextStep()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
