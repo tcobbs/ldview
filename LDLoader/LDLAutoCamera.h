@@ -36,6 +36,7 @@ public:
 	void setHeight(TCFloat value);
 	void setMargin(TCFloat value);
 	void setFov(TCFloat value);
+	void setStep(int value) { m_step = value; }
 
 	void zoomToFit(void);
 	const LDLCamera &getCamera(void) const { return m_camera; }
@@ -59,6 +60,7 @@ protected:
 	TCFloat m_height;
 	TCFloat m_margin;
 	TCFloat m_fov;
+	int m_step;
 #ifdef _DEBUG
 	int m_numPoints;
 #endif // _DEBUG

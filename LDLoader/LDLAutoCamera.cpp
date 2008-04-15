@@ -9,6 +9,7 @@ m_distanceMultiplier(1.0f),
 m_width(0.0f),
 m_height(0.0f),
 m_margin(0.0f),
+m_step(-1),
 m_cameraData(NULL)
 {
 }
@@ -110,7 +111,7 @@ void LDLAutoCamera::zoomToFit(void)
 #endif // _DEBUG
 		m_model->scanPoints(this,
 			(LDLScanPointCallback)&LDLAutoCamera::scanCameraPoint,
-			transformationMatrix);
+			transformationMatrix, LDLModel::SPTScanDefault, m_step);
 #ifdef _DEBUG
 		debugPrintf("num points: %d\n", m_numPoints);
 #endif // _DEBUG

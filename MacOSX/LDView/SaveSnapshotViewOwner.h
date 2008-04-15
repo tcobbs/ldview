@@ -27,6 +27,10 @@
 	IBOutlet NSTextField *widthField;
 	IBOutlet NSTextField *heightLabel;
 	IBOutlet NSTextField *heightField;
+	IBOutlet NSButton *allStepsCheck;
+	IBOutlet NSTextField *suffixLabel;
+	IBOutlet NSTextField *suffixField;
+	IBOutlet NSButton *sameScaleCheck;
 	
 	NSSavePanel *savePanel;
 }

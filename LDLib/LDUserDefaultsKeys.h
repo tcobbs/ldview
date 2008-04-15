@@ -155,6 +155,9 @@
 #define LAST_SNAPSHOT_PATH_KEY "LastSnapshotPath"
 #define PRINT_CUSTOM_DPI_KEY "PrintCustomDPI"
 #define PRINT_ADJUST_EDGES_KEY "PrintAdjustEdges"
+#define SAVE_STEPS_SUFFIX_KEY "SaveStepsSuffix"
+#define SAVE_STEPS_KEY "SaveSteps"
+#define SAVE_STEPS_SAME_SCALE_KEY "SaveStepsSameScale"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

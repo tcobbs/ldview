@@ -44,6 +44,7 @@ public:
 		SPTConditionalLine	= 0x04,
 		SPTTriangle			= 0x08,
 		SPTQuad				= 0x10,
+		SPTScanDefault		= SPTLine | SPTTriangle | SPTQuad
 	};
 	LDLModel(void);
 	LDLModel(const LDLModel &other);
@@ -84,8 +85,7 @@ public:
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		ScanPointType types = (ScanPointType)(SPTLine | SPTTriangle | SPTQuad))
-		const;
+		ScanPointType types = SPTScanDefault, int step = -1) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max);
 	virtual TCFloat getMaxRadius(const TCVector &center);
 
