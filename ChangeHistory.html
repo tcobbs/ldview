@@ -30,6 +30,14 @@ ALINK="#FFFF80">
 <UL>
 <LI>Added support for rotation in examine mode with the arrow keys on the
 keyboard.</LI>
+<LI>Added support for steps.</LI>
+<LI>Addes support for multiple processors, and multi-core processors.
+Transparency sorting and conditional line calculations now happen in background
+threads when LDView is run on a computer with more than one processor core.</LI>
+<LI>New Cocoa-based LDView for the Mac.</LI>
+<LI>Added support for JPEG snapshots (with default JPEG settings that result in
+fairly good quality).</LI>
+<LI>Added steps to m6459.ldr sample model.</LI>
 </UL>
 <BR>
 <B>Updates</B><BR>
@@ -41,8 +49,11 @@ command line snapshot renders.</LI>
 <LI>Changed the default setting for conditional lines from off to on.  Note that
 since edge lines default to off, this won't be seen until the first time edge
 lines are enabled.</LI>
+<LI>Rotated 8464.mpd sample mode 180 degrees so that it faces forward in the
+default viewing angle.</LI>
 </UL>
 <B>Bug Fixes</B>
+<UL>
 <LI>Fixed Windows version so that switching to full screen doesn't trigger a
 full model reload.</LI>
 <LI>Fixed handling of shift key when moving via the keyboard in fly-through
@@ -57,7 +68,6 @@ mouse in LDView.</LI>
 load.</LI>
 <LI>Fixed bug that sometimes caused a verttical line to appear on the left edge
 of large snapshots.</LI>
-<UL>
 </UL>
 </TD></TR>
 
