@@ -110,6 +110,14 @@
 		<action name="editPreferencesAction"/>
         <widget class="QLabel">
             <property name="name">
+                <cstring>toolbarStepLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Step:</string>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
                 <cstring>toolbarCurrentStep</cstring>
             </property>
             <property name="text">
