@@ -191,6 +191,7 @@
     <item text="&amp;Tools" name="toolsMenu">
         <action name="viewShowErrorsAction"/>
         <action name="toolsPartListAction"/>
+        <action name="toolsModelTreeAction"/>
         <separator/>
         <action name="showViewInfoAction"/>
         <action name="showPovCameraAction"/>
@@ -996,6 +997,14 @@
             <string>Part List</string>
         </property>
     </action>
+    <action>
+        <property name="name">
+            <cstring>toolsModelTreeAction</cstring>
+        </property>
+        <property name="text">
+            <string>Model Tree</string>
+        </property>
+    </action>
 </actions>
 <images>
 </images>
@@ -1258,6 +1267,12 @@
         <receiver>LDView</receiver>
         <slot>nextStep()</slot>
     </connection>
+    <connection>
+        <sender>toolsModelTreeAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>toolsModelTree()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">LDView.ui.h</include>
@@ -1306,6 +1321,7 @@
     <slot>showViewInfo()</slot>
     <slot>showPovCamera()</slot>
     <slot>toolsPartList()</slot>
+    <slot>toolsModelTree()</slot>
     <slot>latitudeRotation(bool)</slot>
     <slot>prevStep()</slot>
     <slot>nextStep()</slot>

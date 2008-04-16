@@ -64,6 +64,7 @@
 #include "HelpPanel.h"
 #include "LDView.h"
 #include "LDViewErrors.h"
+#include "LDViewModelTree.h"
 #include "ExtraDirPanel.h"
 #include "LDViewExtraDir.h"
 #include "SnapshotSettingsPanel.h"
@@ -3391,6 +3392,13 @@ void ModelViewerWidget::doPartList(void)
 			partsList->release();
 		}
 	}
+}
+
+void ModelViewerWidget::doModelTree()
+{
+	LDViewModelTree *modeltree = new LDViewModelTree(preferences,modelViewer);
+	modeltree->show();
+	
 }
 
 // Note: static method

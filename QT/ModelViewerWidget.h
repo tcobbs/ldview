@@ -88,6 +88,7 @@ public:
 	void doPartList(LDHtmlInventory *htmlInventory,
 			LDPartsList *partsList, const char *filename);
 	void doPartList();
+	void doModelTree();
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
 	void doHelpAbout(void);
