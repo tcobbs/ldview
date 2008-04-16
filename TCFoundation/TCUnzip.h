@@ -3,9 +3,9 @@
 
 #include <TCFoundation/TCObject.h>
 
-#ifdef __APPLE__
+#ifdef COCOA
 #define UNZIP_CMD
-#endif // __APPLE__
+#endif // COCOA
 
 #if defined (_QT) || defined (__APPLE__) || defined(_OSMESA)
 #include <stdlib.h>

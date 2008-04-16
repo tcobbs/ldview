@@ -150,9 +150,9 @@ protected:
 	DWORD m_stopTicks;
 	bool m_haveStopTicks;
 #endif // WIN32
-#ifdef __APPLE__
+#ifdef COCOA
 	void *m_stopTime;
-#endif // __APPLE__
+#endif // COCOA
 	static TCFloat sm_keyRotationSpeed;
 };
 

@@ -73,10 +73,7 @@ bool LDModelTree::hasChildren(bool filter /*= true*/) const
 			return m_model->getActiveLineCount() > 0;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	return false;
 }
 
 int LDModelTree::getNumChildren(bool filter /*= true*/) const
