@@ -4,10 +4,10 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCMacros.h>
 
-#ifdef __APPLE__
+#ifdef COCOA
 #include <Foundation/Foundation.h>
 #define STOP_TIME ((NSDate *&)m_stopTime)
-#endif // __APPLE__
+#endif // COCOA
 
 TCFloat LDInputHandler::sm_keyRotationSpeed = 0.5f;
 
@@ -20,9 +20,9 @@ LDInputHandler::LDInputHandler(LDrawModelViewer *m_modelViewer):
 #ifdef WIN32
 	, m_haveStopTicks(false)
 #endif // WIN32
-#ifdef __APPLE__
+#ifdef COCOA
 	, m_stopTime(NULL)
-#endif // __APPLE__
+#endif // COCOA
 {
 	memset(&m_buttonsDown, 0, sizeof(m_buttonsDown));
 	TCAlertManager::registerHandler(LDrawModelViewer::frameDoneAlertClass(),
@@ -35,9 +35,9 @@ LDInputHandler::~LDInputHandler(void)
 
 void LDInputHandler::dealloc(void)
 {
-#ifdef __APPLE__
+#ifdef COCOA
 	[STOP_TIME release];
-#endif // __APPLE__
+#endif // COCOA
 	TCAlertManager::unregisterHandler(this);
 	TCObject::dealloc();
 }
@@ -681,10 +681,10 @@ void LDInputHandler::recordRotationStop(void)
 		m_stopTicks = GetTickCount();
 		m_haveStopTicks = true;
 #endif // WIN32
-#ifdef __APPLE__
+#ifdef COCOA
 		[STOP_TIME release];
 		STOP_TIME = [[NSDate alloc] init];
-#endif // __APPLE__
+#endif // COCOA
 	}
 }
 
@@ -693,10 +693,10 @@ void LDInputHandler::clearRotationStop(void)
 #ifdef WIN32
 	m_haveStopTicks = false;
 #endif // WIN32
-#ifdef __APPLE__
+#ifdef COCOA
 	[STOP_TIME release];
 	STOP_TIME = nil;
-#endif // __APPLE__
+#endif // COCOA
 }
 
 bool LDInputHandler::checkSpin(void)
@@ -709,10 +709,10 @@ bool LDInputHandler::checkSpin(void)
 		m_haveStopTicks = false;
 	}
 #endif // WIN32
-#ifdef __APPLE__
+#ifdef COCOA
 	retValue = STOP_TIME != nil && [STOP_TIME timeIntervalSinceNow] > -0.1f;
 	[STOP_TIME release];
 	STOP_TIME = nil;
-#endif // __APPLE__
+#endif // COCOA
 	return retValue;
 }
