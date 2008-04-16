@@ -38,8 +38,14 @@
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
                 stepField = NSTextField; 
+                stepFirstSegments = NSSegmentedControl; 
+                stepLastSegments = NSSegmentedControl; 
+                stepNextSegments = NSSegmentedControl; 
+                stepNextSegments2 = NSSegmentedControl; 
+                stepPrevSegments = NSSegmentedControl; 
+                stepPrevSegments2 = NSSegmentedControl; 
                 stepSegments = NSSegmentedControl; 
-                stepsMenu = NSMenu; 
+                stepSegments2 = NSSegmentedControl; 
                 viewModeSegments = NSSegmentedControl; 
                 viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 

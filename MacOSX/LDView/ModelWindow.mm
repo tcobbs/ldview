@@ -67,6 +67,7 @@ enum
 	[initialTitle release];
 	[pollingTimer invalidate];
 	[pollingTimer release];
+	[stepToolbarControls release];
 	[super dealloc];
 }
 
@@ -265,10 +266,18 @@ enum
 	// The step selectors aren't too useful if they're not visible, so if the
 	// user puts them in the toolbar, then they are high priority, despite the
 	// fact that they're not on by default.
+	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepFirst" label:[OCLocalStrings get:@"First"] control:&stepFirstSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"StepField" label:[OCLocalStrings get:@"Step"] control:&stepField highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"Step"] control:&stepSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepNext" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepLast" label:[OCLocalStrings get:@"Last"] control:&stepLastSegments highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
+	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"SaveSnapshot"] forSegment:1];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"Reload"] forSegment:2];
@@ -332,7 +341,6 @@ enum
 - (void)awakeFromNib
 {
 	replaceSegments = true;
-	[stepSegments setMenu:stepsMenu forSegment:1];
 	[stepsMenu release];
 	initialTitle = [[window title] retain];
 	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
@@ -350,6 +358,7 @@ enum
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
 	int newStep = 0;
+	int i, j;
 	
 	if (modelViewer && modelViewer->getFilename() && (newStep = modelViewer->getStep()) > 0)
 	{
@@ -359,8 +368,29 @@ enum
 	{
 		[stepField setStringValue:@"--"];
 	}
-	[stepSegments setEnabled:newStep > 1 forSegment:0];
-	[stepSegments setEnabled:newStep < modelViewer->getNumSteps() && newStep > 0 forSegment:1];
+	for (i = 0; i < [stepToolbarControls count]; i++)
+	{
+		NSSegmentedControl *control = [stepToolbarControls objectAtIndex:i];
+		NSSegmentedCell *cell = [control cell];
+		
+		for (j = 0; j < [cell segmentCount]; j++)
+		{
+			BOOL enabled = NO;
+		
+			switch ([cell tagForSegment:j])
+			{
+				case -1:
+				case 0:
+					enabled = newStep > 1;
+					break;
+				case 1:
+				case 2:
+					enabled = newStep < modelViewer->getNumSteps() && newStep > 0;
+					break;
+			}
+			[control setEnabled:enabled forSegment:j];
+		}
+	}
 }
 
 - (void)changeStep:(int)action

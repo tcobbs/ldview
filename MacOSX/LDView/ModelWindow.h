@@ -36,7 +36,16 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *printSegments;
 	IBOutlet NSSegmentedControl *customizeSegments;
 	IBOutlet NSSegmentedControl *stepSegments;
+	IBOutlet NSSegmentedControl *stepSegments2;
+	IBOutlet NSSegmentedControl *stepNextSegments;
+	IBOutlet NSSegmentedControl *stepNextSegments2;
+	IBOutlet NSSegmentedControl *stepPrevSegments;
+	IBOutlet NSSegmentedControl *stepPrevSegments2;
+	IBOutlet NSSegmentedControl *stepFirstSegments;
+	IBOutlet NSSegmentedControl *stepLastSegments;
 	IBOutlet NSTextField *stepField;
+	
+	NSArray *stepToolbarControls;
 	
 	IBOutlet NSMenu *stepsMenu;
 
