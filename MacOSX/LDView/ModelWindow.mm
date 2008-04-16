@@ -253,34 +253,35 @@ enum
 	allIdentifiers = [[NSMutableArray alloc] init];
 
 	// ToDo: Localize
+	// Most of these are set to high priority.  That's because they become
+	// useless when stuck in the menu.  Note that NONE of them work in the menu
+	// in Tiger.  I'm hoping that they work in the menu in Leopard when the
+	// segmented control only has one item.
 	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:NO isDefault:YES];
-	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
-	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
 	[printSegments setTarget:controller];
-	// The step selectors aren't too useful if they're not visible, so if the
-	// user puts them in the toolbar, then they are high priority, despite the
-	// fact that they're not on by default.
-	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepFirst" label:[OCLocalStrings get:@"First"] control:&stepFirstSegments highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepPrev" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepFirst" label:[OCLocalStrings get:@"First"] control:&stepFirstSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepField" label:[OCLocalStrings get:@"Step"] control:&stepField highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepField" label:[OCLocalStrings get:@"Step"] control:&stepField highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepNext" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepLast" label:[OCLocalStrings get:@"Last"] control:&stepLastSegments highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepNext" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepLast" label:[OCLocalStrings get:@"Last"] control:&stepLastSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments2 highPriority:YES isDefault:NO];
+	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
+	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
-	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"SaveSnapshot"] forSegment:1];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"Reload"] forSegment:2];
+	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];
 	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
 		NSToolbarSpaceItemIdentifier,
