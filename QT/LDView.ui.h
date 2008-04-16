@@ -234,6 +234,11 @@ void LDView::toolsPartList()
 	modelViewer->doPartList();
 }
 
+void LDView::toolsModelTree()
+{
+	modelViewer->doModelTree();
+}
+
 void LDView::latitudeRotation(bool b)
 {
 	modelViewer->switchExamineLatLong(b);
