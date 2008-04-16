@@ -260,12 +260,15 @@ protected:
 	virtual void setupSaveExtras(void);
 	virtual void setupPrintExtras(void);
 	virtual void setupPageSetupExtras(void);
+	virtual void updateSaveSizeEnabled(void);
 	virtual void disableSaveSize(void);
-	virtual void enableSaveSize(void);
+	virtual void enableSaveSize(BOOL enable = TRUE);
+	virtual void updateSaveSeriesEnabled(void);
 	virtual void disableSaveSeries(void);
-	virtual void enableSaveSeries(void);
+	virtual void enableSaveSeries(BOOL enable = TRUE);
+	virtual void updateSaveAllStepsEnabled(void);
 	virtual void disableSaveAllSteps(void);
-	virtual void enableSaveAllSteps(void);
+	virtual void enableSaveAllSteps(BOOL enable = TRUE);
 	virtual void updateSaveWidth(void);
 	virtual void updateSaveHeight(void);
 	virtual void updateSaveDigits(void);

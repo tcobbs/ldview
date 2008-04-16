@@ -3507,8 +3507,11 @@ void ModelWindow::grabCleanup(RECT origRect, bool origSlowClear)
 	modelViewer->setSlowClear(origSlowClear);
 }
 
-bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
-							bool zoomToFit)
+bool ModelWindow::saveImage(
+	char *filename,
+	int imageWidth,
+	int imageHeight,
+	bool zoomToFit)
 {
 	RECT origRect;
 	bool origSlowClear;
@@ -3524,33 +3527,10 @@ bool ModelWindow::saveImage(char *filename, int imageWidth, int imageHeight,
 	snapshotTaker->setProductVersion(
 		((LDViewWindow *)parentWindow)->getProductVersion());
 	grabSetup(imageWidth, imageHeight, origRect, origSlowClear);
-	retValue = snapshotTaker->saveImage(filename, imageWidth, imageHeight, zoomToFit);
+	retValue = snapshotTaker->saveImage(filename, imageWidth, imageHeight,
+		zoomToFit);
 	grabCleanup(origRect, origSlowClear);
 	return retValue;
-
-
-	//char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
-	//	false);
-	//bool saveAlpha = false;
-	//BYTE *buffer = grabImage(imageWidth, imageHeight, zoomToFit || cameraGlobe
-	//	!= NULL, NULL, &saveAlpha);
-	//bool retValue = false;
-
-	//delete cameraGlobe;
-	//if (buffer)
-	//{
-	//	if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-	//	{
-	//		retValue = writePng(filename, imageWidth, imageHeight, buffer,
-	//			saveAlpha);
-	//	}
-	//	else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-	//	{
-	//		retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
-	//	}
-	//	delete buffer;
-	//}
-	//return retValue;
 }
 
 BOOL ModelWindow::doDialogInit(HWND hDlg, HWND /*hFocusWindow*/,
@@ -4138,67 +4118,93 @@ bool ModelWindow::print(void)
 
 void ModelWindow::disableSaveSize(void)
 {
-	EnableWindow(hSaveWidthLabel, FALSE);
-	EnableWindow(hSaveWidth, FALSE);
-	EnableWindow(hSaveHeightLabel, FALSE);
-	EnableWindow(hSaveHeight, FALSE);
-	EnableWindow(hSaveZoomToFitButton, FALSE);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_SETTEXT, 0, (LPARAM)"");
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_SETTEXT, 0, (LPARAM)"");
+	enableSaveSize(FALSE);
 }
 
-void ModelWindow::enableSaveSize(void)
+void ModelWindow::enableSaveSize(BOOL enable /*= TRUE*/)
 {
 	char buf[128];
 
-	EnableWindow(hSaveWidthLabel, TRUE);
-	EnableWindow(hSaveWidth, TRUE);
-	EnableWindow(hSaveHeightLabel, TRUE);
-	EnableWindow(hSaveHeight, TRUE);
-	EnableWindow(hSaveZoomToFitButton, TRUE);
-	sprintf(buf, "%d", saveWidth);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_SETTEXT, 0, (LPARAM)buf);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, EM_LIMITTEXT, 4, 0);
-	sprintf(buf, "%d", saveHeight);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_SETTEXT, 0,
-		(LPARAM)buf);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, EM_LIMITTEXT, 4, 0);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT, BM_SETCHECK,
-		saveZoomToFit ? 1 : 0, 0);
+	EnableWindow(hSaveWidthLabel, enable);
+	EnableWindow(hSaveWidth, enable);
+	EnableWindow(hSaveHeightLabel, enable);
+	EnableWindow(hSaveHeight, enable);
+	EnableWindow(hSaveZoomToFitButton, enable);
+	if (enable)
+	{
+		sprintf(buf, "%d", saveWidth);
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_SETTEXT, 0, (LPARAM)buf);
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, EM_LIMITTEXT, 4, 0);
+		sprintf(buf, "%d", saveHeight);
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_SETTEXT, 0,
+			(LPARAM)buf);
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, EM_LIMITTEXT, 4, 0);
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT, BM_SETCHECK,
+			saveZoomToFit ? 1 : 0, 0);
+	}
+	else
+	{
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_WIDTH, WM_SETTEXT, 0,
+			(LPARAM)"");
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_HEIGHT, WM_SETTEXT, 0,
+			(LPARAM)"");
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_ZOOMTOFIT, BM_SETCHECK, 0, 0);
+	}
 }
 
 void ModelWindow::disableSaveSeries(void)
 {
-	EnableWindow(hSaveDigitsLabel, FALSE);
-	EnableWindow(hSaveDigitsField, FALSE);
-	EnableWindow(hSaveDigitsSpin, FALSE);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS, WM_SETTEXT, 0, (LPARAM)"");
+	enableSaveSeries(FALSE);
 }
 
-void ModelWindow::enableSaveSeries(void)
+void ModelWindow::enableSaveSeries(BOOL enable /*= TRUE*/)
 {
-	EnableWindow(hSaveDigitsLabel, TRUE);
-	EnableWindow(hSaveDigitsField, TRUE);
-	EnableWindow(hSaveDigitsSpin, TRUE);
-	SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS_SPIN, UDM_SETPOS, 0,
-		MAKELONG(saveDigits, 0));
+	EnableWindow(hSaveDigitsLabel, enable);
+	EnableWindow(hSaveDigitsField, enable);
+	EnableWindow(hSaveDigitsSpin, enable);
+	if (enable)
+	{
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS_SPIN, UDM_SETPOS, 0,
+			MAKELONG(saveDigits, 0));
+	}
+	else
+	{
+		SendDlgItemMessage(hSaveDialog, IDC_SAVE_DIGITS, WM_SETTEXT, 0,
+			(LPARAM)"");
+	}
 }
 
 void ModelWindow::disableSaveAllSteps(void)
 {
-	EnableWindow(hSaveStepSuffixLabel, FALSE);
-	EnableWindow(hSaveStepSuffixField, FALSE);
-	EnableWindow(hSaveStepsSameScaleButton, FALSE);
-	SendDlgItemMessage(hSaveDialog, IDC_STEP_SUFFIX, WM_SETTEXT, 0, (LPARAM)"");
+	enableSaveAllSteps(FALSE);
 }
 
-void ModelWindow::enableSaveAllSteps(void)
+void ModelWindow::enableSaveAllSteps(BOOL enable /*= TRUE*/)
 {
-	EnableWindow(hSaveStepSuffixLabel, TRUE);
-	EnableWindow(hSaveStepSuffixField, TRUE);
-	EnableWindow(hSaveStepsSameScaleButton, TRUE);
-	sendDlgItemMessageUC(hSaveDialog, IDC_STEP_SUFFIX, WM_SETTEXT, 0,
-		(LPARAM)saveStepSuffix);
+	BOOL sameScaleEnable = enable && !saveActualSize && saveZoomToFit;
+
+	EnableWindow(hSaveStepSuffixLabel, enable);
+	EnableWindow(hSaveStepSuffixField, enable);
+	EnableWindow(hSaveStepsSameScaleButton, sameScaleEnable);
+	if (enable)
+	{
+		sendDlgItemMessageUC(hSaveDialog, IDC_STEP_SUFFIX, WM_SETTEXT, 0,
+			(LPARAM)saveStepSuffix);
+	}
+	else
+	{
+		SendDlgItemMessage(hSaveDialog, IDC_STEP_SUFFIX, WM_SETTEXT, 0,
+			(LPARAM)"");
+	}
+	if (sameScaleEnable)
+	{
+		SendDlgItemMessage(hSaveDialog, IDC_SAME_SCALE, BM_SETCHECK,
+			saveStepsSameScale ? 1 : 0, 0);
+	}
+	else
+	{
+		SendDlgItemMessage(hSaveDialog, IDC_SAME_SCALE, BM_SETCHECK, 0, 0);
+	}
 }
 
 void ModelWindow::updatePrintDPIField(void)
@@ -4248,6 +4254,42 @@ void ModelWindow::setupPageSetupExtras(void)
 		printBackground ? 1 : 0, 0);
 }
 
+void ModelWindow::updateSaveSizeEnabled(void)
+{
+	if (saveActualSize)
+	{
+		disableSaveSize();
+	}
+	else
+	{
+		enableSaveSize();
+	}
+}
+
+void ModelWindow::updateSaveSeriesEnabled(void)
+{
+	if (saveSeries)
+	{
+		enableSaveSeries();
+	}
+	else
+	{
+		disableSaveSeries();
+	}
+}
+
+void ModelWindow::updateSaveAllStepsEnabled(void)
+{
+	if (saveAllSteps)
+	{
+		enableSaveAllSteps();
+	}
+	else
+	{
+		disableSaveAllSteps();
+	}
+}
+
 void ModelWindow::setupSaveExtras(void)
 {
 	hSaveOptionsButton = GetDlgItem(hSaveDialog, IDC_SAVE_OPTIONS);
@@ -4276,30 +4318,9 @@ void ModelWindow::setupSaveExtras(void)
 		saveAlpha ? 1 : 0, 0);
 	SendDlgItemMessage(hSaveDialog, IDC_AUTO_CROP, BM_SETCHECK,
 		autoCrop ? 1 : 0, 0);
-	if (saveActualSize)
-	{
-		disableSaveSize();
-	}
-	else
-	{
-		enableSaveSize();
-	}
-	if (saveSeries)
-	{
-		enableSaveSeries();
-	}
-	else
-	{
-		disableSaveSeries();
-	}
-	if (saveAllSteps)
-	{
-		enableSaveAllSteps();
-	}
-	else
-	{
-		disableSaveAllSteps();
-	}
+	updateSaveSizeEnabled();
+	updateSaveSeriesEnabled();
+	updateSaveAllStepsEnabled();
 }
 
 void ModelWindow::updateSaveWidth(void)
@@ -4383,38 +4404,18 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 	case IDC_SAVE_ACTUAL_SIZE:
 		saveActualSize = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
 			0, 0) ? false : true;
-		if (saveActualSize)
-		{
-			disableSaveSize();
-		}
-		else
-		{
-			enableSaveSize();
-		}
+		updateSaveSizeEnabled();
+		updateSaveAllStepsEnabled();
 		break;
 	case IDC_SAVE_SERIES:
 		saveSeries = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK, 0,
 			0) ? true : false;
-		if (saveSeries)
-		{
-			enableSaveSeries();
-		}
-		else
-		{
-			disableSaveSeries();
-		}
+		updateSaveSeriesEnabled();
 		break;
 	case IDC_ALL_STEPS:
 		saveAllSteps = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
 			0, 0) ? true : false;
-		if (saveAllSteps)
-		{
-			enableSaveAllSteps();
-		}
-		else
-		{
-			disableSaveAllSteps();
-		}
+		updateSaveAllStepsEnabled();
 		break;
 	case IDC_IGNORE_PBUFFER:
 		ignorePBuffer = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
@@ -4435,6 +4436,7 @@ BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
 	case IDC_SAVE_ZOOMTOFIT:
 		saveZoomToFit = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
 			0, 0) ? true : false;
+		updateSaveAllStepsEnabled();
 		break;
 	default:
 		return FALSE;
