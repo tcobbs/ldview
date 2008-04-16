@@ -56,12 +56,11 @@ Handle quotes in symbolic searchdirs
 #ifdef __TURBOC__
 #include <alloc.h>
 #endif
-#include "LDrawIni.h"
-#include "LDrawInP.h"
-
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
-#endif // __APPLE__
+#endif
+#include "LDrawIni.h"
+#include "LDrawInP.h"
 
 LDRAWINI_BEGIN_STDC
 
