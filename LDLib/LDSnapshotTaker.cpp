@@ -251,6 +251,10 @@ bool LDSnapshotTaker::saveImage(
 		{
 			m_modelViewer->setStep(numSteps);
 			viewPoint = m_modelViewer->saveViewPoint();
+			if (m_modelViewer->getMainTREModel() == NULL)
+			{
+				m_modelViewer->reload();
+			}
 			m_modelViewer->zoomToFit();
 			zoomToFit = false;
 		}
