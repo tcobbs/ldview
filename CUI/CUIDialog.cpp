@@ -300,34 +300,52 @@ int CUIDialog::comboGetSelectedItem(int controlId)
 	return (int)SendDlgItemMessage(hWindow, controlId, CB_GETCURSEL, 0, 0);
 }
 
+// Note: static method
+void CUIDialog::windowGetText(HWND hDlg, int controlId, ucstring &text)
+{
+	text.resize(SendDlgItemMessage(hDlg, controlId, WM_GETTEXTLENGTH, 0, 0));
+	sendDlgItemMessageUC(hDlg, controlId, WM_GETTEXT,
+		(WPARAM)text.size() + 1, (LPARAM)&text[0]);
+}
+
 void CUIDialog::windowGetText(int controlId, ucstring &text)
 {
-	text.resize(SendDlgItemMessage(hWindow, controlId, WM_GETTEXTLENGTH, 0,
-		0));
-	sendDlgItemMessageUC(hWindow, controlId, WM_GETTEXT,
-		(WPARAM)text.size() + 1, (LPARAM)&text[0]);
+	windowGetText(hWindow, controlId, text);
+}
+
+void CUIDialog::windowSetText(HWND hDlg, int controlId, const ucstring &text)
+{
+	sendDlgItemMessageUC(hDlg, controlId, WM_SETTEXT, 0, (LPARAM)text.c_str());
 }
 
 void CUIDialog::windowSetText(int controlId, const ucstring &text)
 {
-	sendDlgItemMessageUC(hWindow, controlId, WM_SETTEXT, 0,
-		(LPARAM)text.c_str());
+	windowSetText(hWindow, controlId, text);
 }
 
 #ifndef TC_NO_UNICODE
 
 void CUIDialog::windowGetText(int controlId, std::string &text)
 {
-	text.resize(SendDlgItemMessageA(hWindow, controlId, WM_GETTEXTLENGTH, 0,
+	windowGetText(hWindow, controlId, text);
+}
+
+void CUIDialog::windowGetText(HWND hDlg, int controlId, std::string &text)
+{
+	text.resize(SendDlgItemMessageA(hDlg, controlId, WM_GETTEXTLENGTH, 0,
 		0));
-	SendDlgItemMessageA(hWindow, controlId, WM_GETTEXT,
+	SendDlgItemMessageA(hDlg, controlId, WM_GETTEXT,
 		(WPARAM)text.size() + 1, (LPARAM)&text[0]);
 }
 
 void CUIDialog::windowSetText(int controlId, const std::string &text)
 {
-	SendDlgItemMessageA(hWindow, controlId, WM_SETTEXT, 0,
-		(LPARAM)text.c_str());
+	windowSetText(hWindow, controlId, text);
+}
+
+void CUIDialog::windowSetText(HWND hDlg, int controlId, const std::string &text)
+{
+	SendDlgItemMessageA(hDlg, controlId, WM_SETTEXT, 0, (LPARAM)text.c_str());
 }
 
 #endif // TC_NO_UNICODE

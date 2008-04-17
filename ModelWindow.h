@@ -272,6 +272,7 @@ protected:
 	virtual void updateSaveWidth(void);
 	virtual void updateSaveHeight(void);
 	virtual void updateSaveDigits(void);
+	virtual void updateStepSuffix(void);
 	virtual bool getSaveFilename(char* saveFilename, int len);
 	virtual bool shouldOverwriteFile(char* filename);
 	virtual bool calcSaveFilename(char* saveFilename, int len);

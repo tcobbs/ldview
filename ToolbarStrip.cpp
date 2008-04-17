@@ -605,77 +605,77 @@ HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
 	return CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
 }
 
-static const std::string notificationName(UINT code)
-{
-	static char buf[128];
-
-	switch (code)
-	{
-	case TBN_GETBUTTONINFOA:
-		return "TBN_GETBUTTONINFOA";
-	case TBN_BEGINDRAG:
-		return "TBN_BEGINDRAG";
-	case TBN_ENDDRAG:
-		return "TBN_ENDDRAG";
-	case TBN_BEGINADJUST:
-		return "TBN_BEGINADJUST";
-	case TBN_ENDADJUST:
-		return "TBN_ENDADJUST";
-	case TBN_RESET:
-		return "TBN_RESET";
-	case TBN_QUERYINSERT:
-		return "TBN_QUERYINSERT";
-	case TBN_QUERYDELETE:
-		return "TBN_QUERYDELETE";
-	case TBN_TOOLBARCHANGE:
-		return "TBN_TOOLBARCHANGE";
-	case TBN_CUSTHELP:
-		return "TBN_CUSTHELP";
-	case TBN_DROPDOWN:
-		return "TBN_DROPDOWN";
-	case TBN_GETOBJECT:
-		return "TBN_GETOBJECT";
-	case TBN_HOTITEMCHANGE:
-		return "TBN_HOTITEMCHANGE";
-	case TBN_DRAGOUT:
-		return "TBN_DRAGOUT";
-	case TBN_DELETINGBUTTON:
-		return "TBN_DELETINGBUTTON";
-	case TBN_GETDISPINFOA:
-		return "TBN_GETDISPINFOA";
-	case TBN_GETDISPINFOW:
-		return "TBN_GETDISPINFOW";
-	case TBN_GETINFOTIPA:
-		return "TBN_GETINFOTIPA";
-	case TBN_GETINFOTIPW:
-		return "TBN_GETINFOTIPW";
-	case TBN_GETBUTTONINFOW:
-		return "TBN_GETBUTTONINFOW";
-	case TBN_RESTORE:
-		return "TBN_RESTORE";
-	case TBN_SAVE:
-		return "TBN_SAVE";
-	case TBN_INITCUSTOMIZE:
-		return "TBN_INITCUSTOMIZE";
-
-	case TTN_GETDISPINFOA:
-		return "TTN_GETDISPINFOA";
-	case TTN_GETDISPINFOW:
-		return "TTN_GETDISPINFOW";
-	case TTN_SHOW:
-		return "TTN_SHOW";
-	case TTN_POP:
-		return "TTN_POP";
-	case TTN_LINKCLICK:
-		return "TTN_LINKCLICK";
-
-	case NM_TOOLTIPSCREATED:
-		return "NM_TOOLTIPSCREATED";
-	default:
-		sprintf(buf, "0x%08X", code);
-		return buf;
-	}
-}
+//static const std::string notificationName(UINT code)
+//{
+//	static char buf[128];
+//
+//	switch (code)
+//	{
+//	case TBN_GETBUTTONINFOA:
+//		return "TBN_GETBUTTONINFOA";
+//	case TBN_BEGINDRAG:
+//		return "TBN_BEGINDRAG";
+//	case TBN_ENDDRAG:
+//		return "TBN_ENDDRAG";
+//	case TBN_BEGINADJUST:
+//		return "TBN_BEGINADJUST";
+//	case TBN_ENDADJUST:
+//		return "TBN_ENDADJUST";
+//	case TBN_RESET:
+//		return "TBN_RESET";
+//	case TBN_QUERYINSERT:
+//		return "TBN_QUERYINSERT";
+//	case TBN_QUERYDELETE:
+//		return "TBN_QUERYDELETE";
+//	case TBN_TOOLBARCHANGE:
+//		return "TBN_TOOLBARCHANGE";
+//	case TBN_CUSTHELP:
+//		return "TBN_CUSTHELP";
+//	case TBN_DROPDOWN:
+//		return "TBN_DROPDOWN";
+//	case TBN_GETOBJECT:
+//		return "TBN_GETOBJECT";
+//	case TBN_HOTITEMCHANGE:
+//		return "TBN_HOTITEMCHANGE";
+//	case TBN_DRAGOUT:
+//		return "TBN_DRAGOUT";
+//	case TBN_DELETINGBUTTON:
+//		return "TBN_DELETINGBUTTON";
+//	case TBN_GETDISPINFOA:
+//		return "TBN_GETDISPINFOA";
+//	case TBN_GETDISPINFOW:
+//		return "TBN_GETDISPINFOW";
+//	case TBN_GETINFOTIPA:
+//		return "TBN_GETINFOTIPA";
+//	case TBN_GETINFOTIPW:
+//		return "TBN_GETINFOTIPW";
+//	case TBN_GETBUTTONINFOW:
+//		return "TBN_GETBUTTONINFOW";
+//	case TBN_RESTORE:
+//		return "TBN_RESTORE";
+//	case TBN_SAVE:
+//		return "TBN_SAVE";
+//	case TBN_INITCUSTOMIZE:
+//		return "TBN_INITCUSTOMIZE";
+//
+//	case TTN_GETDISPINFOA:
+//		return "TTN_GETDISPINFOA";
+//	case TTN_GETDISPINFOW:
+//		return "TTN_GETDISPINFOW";
+//	case TTN_SHOW:
+//		return "TTN_SHOW";
+//	case TTN_POP:
+//		return "TTN_POP";
+//	case TTN_LINKCLICK:
+//		return "TTN_LINKCLICK";
+//
+//	case NM_TOOLTIPSCREATED:
+//		return "NM_TOOLTIPSCREATED";
+//	default:
+//		sprintf(buf, "0x%08X", code);
+//		return buf;
+//	}
+//}
 
 LRESULT ToolbarStrip::doToolbarGetInfotip(
 	TbButtonInfoVector &infos,
@@ -724,8 +724,8 @@ LRESULT ToolbarStrip::doToolbarGetInfotip(
 
 LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 {
-	debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
-		notificationName(notification->code).c_str());
+	//debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
+	//	notificationName(notification->code).c_str());
 	switch (notification->code)
 	{
 	case NM_TOOLTIPSCREATED:
@@ -759,8 +759,8 @@ LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 
 LRESULT ToolbarStrip::doStepToolbarNotify(int controlId, LPNMHDR notification)
 {
-	debugPrintf("LDViewWindow::doStepToolbarNotify: 0x%04X, %s\n", controlId,
-		notificationName(notification->code).c_str());
+	//debugPrintf("LDViewWindow::doStepToolbarNotify: 0x%04X, %s\n", controlId,
+	//	notificationName(notification->code).c_str());
 	switch (notification->code)
 	{
 	case NM_TOOLTIPSCREATED:

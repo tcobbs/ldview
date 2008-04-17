@@ -41,7 +41,12 @@ public:
 	bool saveImage(void);
 	TCByte *grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
 		TCByte *buffer, bool *saveAlpha);
+
 	static bool doCommandLine(void);
+	static std::string removeStepSuffix(const std::string &filename,
+		const std::string &stepSuffix);
+	static std::string addStepSuffix(const std::string &filename,
+		const std::string &stepSuffix, int step, int numSteps);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }
 protected:
@@ -58,6 +63,8 @@ protected:
 	bool imageProgressCallback(CUCSTR message, float progress);
 	bool shouldZoomToFit(bool zoomToFit);
 	void grabSetup(void);
+	bool saveStepImage(const char *filename, int imageWidth, int imageHeight,
+		bool zoomToFit);
 
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
 		void* userData);
@@ -68,6 +75,7 @@ protected:
 	bool m_trySaveAlpha;
 	bool m_autoCrop;
 	bool m_fromCommandLine;
+	int m_step;
 	std::string m_modelFilename;
 };
 

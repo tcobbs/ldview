@@ -37,11 +37,16 @@ public:
 	virtual void spinSetValue(int controlId, int value);
 
 	virtual void windowGetText(int controlId, ucstring &text);
+	static void windowGetText(HWND hDlg, int controlId, ucstring &text);
 	virtual ucstring windowGetText(int controlId);
 	virtual void windowSetText(int controlId, const ucstring &text);
+	virtual void windowSetText(HWND hDlg, int controlId, const ucstring &text);
 #ifndef TC_NO_UNICODE
 	virtual void windowGetText(int controlId, std::string &text);
+	static void windowGetText(HWND hDlg, int controlId, std::string &text);
 	virtual void windowSetText(int controlId, const std::string &text);
+	static void windowSetText(HWND hDlg, int controlId,
+		const std::string &text);
 #endif // TC_NO_UNICODE
 
 	virtual void textFieldSetLimitText(int controlId, int value);

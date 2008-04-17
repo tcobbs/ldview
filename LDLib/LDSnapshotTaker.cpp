@@ -16,7 +16,8 @@ m_modelViewer(NULL),
 m_imageType(ITPng),
 m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
 m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
-m_fromCommandLine(true)
+m_fromCommandLine(true),
+m_step(-1)
 {
 }
 
@@ -25,7 +26,8 @@ m_modelViewer(m_modelViewer),
 m_imageType(ITPng),
 m_trySaveAlpha(false),
 m_autoCrop(false),
-m_fromCommandLine(false)
+m_fromCommandLine(false),
+m_step(-1)
 {
 }
 
@@ -230,6 +232,48 @@ bool LDSnapshotTaker::shouldZoomToFit(bool zoomToFit)
 }
 
 bool LDSnapshotTaker::saveImage(
+	const char *filename,
+	int imageWidth,
+	int imageHeight,
+	bool zoomToFit)
+{
+	if (TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false))
+	{
+		char *stepSuffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
+			"-Step", false);
+		bool retValue = true;
+		int numSteps = m_modelViewer->getNumSteps();
+		int origStep = m_modelViewer->getStep();
+
+		if (TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)
+			&& zoomToFit)
+		{
+			m_modelViewer->setStep(numSteps);
+			m_modelViewer->zoomToFit();
+			zoomToFit = false;
+		}
+		for (int step = 1; step <= numSteps && retValue; step++)
+		{
+			std::string stepFilename = removeStepSuffix(filename, stepSuffix);
+
+			stepFilename = addStepSuffix(stepFilename, stepSuffix, step,
+				numSteps);
+			m_step = step;
+			retValue = saveStepImage(stepFilename.c_str(), imageWidth,
+				imageHeight, zoomToFit);
+		}
+		delete stepSuffix;
+		m_modelViewer->setStep(origStep);
+		return retValue;
+	}
+	else
+	{
+		m_step = -1;
+		return saveStepImage(filename, imageWidth, imageHeight, zoomToFit);
+	}
+}
+
+bool LDSnapshotTaker::saveStepImage(
 	const char *filename,
 	int imageWidth,
 	int imageHeight,
@@ -454,6 +498,10 @@ TCByte *LDSnapshotTaker::grabImage(
 	bool canceled = false;
 	bool bufferAllocated = false;
 
+	if (m_step > 0)
+	{
+		m_modelViewer->setStep(m_step);
+	}
 	if (zoomToFit)
 	{
 		m_modelViewer->setForceZoomToFit(true);
@@ -582,4 +630,86 @@ bool LDSnapshotTaker::doCommandLine(void)
 
 	snapshotTaker->release();
 	return retValue;
+}
+
+// Note: static method
+std::string LDSnapshotTaker::removeStepSuffix(
+	const std::string &filename,
+	const std::string &stepSuffix)
+{
+	if (stepSuffix.size() == 0)
+	{
+		return filename;
+	}
+	char *dirPart = directoryFromPath(filename.c_str());
+	char *filePart = filenameFromPath(filename.c_str());
+	std::string fileString = filePart;
+	size_t suffixLoc;
+	std::string tempSuffix = stepSuffix;
+	std::string newString;
+
+	newString = dirPart;
+	delete dirPart;
+#if defined(WIN32) || defined(__APPLE__)
+	// case-insensitive file systems
+	convertStringToLower(&fileString[0]);
+	convertStringToLower(&tempSuffix[0]);
+#endif // WIN32 || __APPLE__
+	suffixLoc = fileString.rfind(tempSuffix);
+	if (suffixLoc < fileString.size())
+	{
+		size_t i;
+
+		for (i = suffixLoc + tempSuffix.size(); isdigit(fileString[i]); i++)
+		{
+			// Don't do anything
+		}
+#if defined(WIN32) || defined(__APPLE__)
+		// case-insensitive file systems
+		// Restore filename to original case
+		fileString = filePart;
+		delete filePart;
+#endif // WIN32 || __APPLE__
+		fileString.erase(suffixLoc, i - suffixLoc);
+	}
+	else
+	{
+		delete filePart;
+		return filename;
+	}
+	if (newString.size() > 0)
+	{
+		newString += "/";
+	}
+	newString += fileString;
+	filePart = cleanedUpPath(newString.c_str());
+	newString = filePart;
+	delete filePart;
+	return newString;
+}
+
+// Note: static method
+std::string LDSnapshotTaker::addStepSuffix(
+	const std::string &filename,
+	const std::string &stepSuffix,
+	int step,
+	int numSteps)
+{
+	size_t dotSpot = filename.rfind('.');
+	std::string newString;
+	char format[32];
+	char buf[32];
+	int digits = 1;
+
+	while ((numSteps = numSteps / 10) != 0)
+	{
+		digits++;
+	}
+	sprintf(format, "%%0%dd", digits);
+	sprintf(buf, format, step);
+	newString = filename.substr(0, dotSpot);
+	newString += stepSuffix;
+	newString += buf;
+	newString += filename.substr(dotSpot);
+	return newString;
 }
