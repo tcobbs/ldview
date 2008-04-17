@@ -4318,6 +4318,8 @@ void ModelWindow::setupSaveExtras(void)
 		saveAlpha ? 1 : 0, 0);
 	SendDlgItemMessage(hSaveDialog, IDC_AUTO_CROP, BM_SETCHECK,
 		autoCrop ? 1 : 0, 0);
+	SendDlgItemMessage(hSaveDialog, IDC_ALL_STEPS, BM_SETCHECK,
+		saveAllSteps ? 1 : 0, 0);
 	updateSaveSizeEnabled();
 	updateSaveSeriesEnabled();
 	updateSaveAllStepsEnabled();
@@ -4368,6 +4370,30 @@ void ModelWindow::updateSaveHeight(void)
 				(LPARAM)buf);
 			MessageBeep(MB_OK);
 		}
+	}
+}
+
+void ModelWindow::updateStepSuffix(void)
+{
+	std::string filename;
+	HWND hDlg = GetParent(hSaveDialog);
+
+	CUIDialog::windowGetText(hDlg, edt1, filename);
+	if (filename.size() > 0 && saveAllSteps)
+	{
+		char *oldSuffix = ucstringtombs(saveStepSuffix);
+		std::string newFilename;
+		std::string newSuffix;
+
+		newFilename = LDSnapshotTaker::removeStepSuffix(filename, oldSuffix);
+		delete oldSuffix;
+		CUIDialog::windowGetText(hSaveDialog, IDC_STEP_SUFFIX, newSuffix);
+		newFilename = LDSnapshotTaker::addStepSuffix(newFilename, newSuffix, 1,
+			modelViewer->getNumSteps());
+		SendMessage(hDlg, CDM_SETCONTROLTEXT, edt1,
+			(LPARAM)newFilename.c_str());
+		delete saveStepSuffix;
+		saveStepSuffix = mbstoucstring(newSuffix.c_str());
 	}
 }
 
@@ -4504,9 +4530,14 @@ BOOL ModelWindow::doSaveCommand(int controlId, int notifyCode, HWND hControlWnd)
 		return doSaveKillFocus(controlId, hControlWnd);
 		break;
 	case EN_CHANGE:
-		if (controlId == IDC_SAVE_DIGITS)
+		switch (controlId)
 		{
+		case IDC_SAVE_DIGITS:
 			updateSaveDigits();
+			break;
+		case IDC_STEP_SUFFIX:
+			updateStepSuffix();
+			break;
 		}
 		break;
 	}
@@ -4609,6 +4640,7 @@ UINT CALLBACK ModelWindow::staticSaveHook(HWND hDlg, UINT uiMsg, WPARAM wParam,
 bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 {
 	char* filename = modelViewer->getFilename();
+	bool found = false;
 
 	if (filename)
 	{
@@ -4634,7 +4666,7 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 			char format[32];
 
 			sprintf(format, "%%s%%0%dd.%%s", saveDigits);
-			for (i = 1; i < max; i++)
+			for (i = 1; i < max && !found; i++)
 			{
 				if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 				{
@@ -4650,7 +4682,7 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 				}
 				if (!LDrawModelViewer::fileExists(saveFilename))
 				{
-					return true;
+					found = true;
 				}
 			}
 		}
@@ -4659,21 +4691,38 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 			{
 				sprintf(saveFilename, "%s.%s", baseFilename, "png");
-				return true;
 			}
 			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 			{
 				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
-				return true;
 			}
 			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
 			{
 				sprintf(saveFilename, "%s.%s", baseFilename, "jpg");
-				return true;
 			}
+			else
+			{
+				return false;
+			}
+			found = true;
 		}
 	}
-	return false;
+	if (found)
+	{
+		if (saveAllSteps)
+		{
+			char *suffix = ucstringtombs(saveStepSuffix);
+			std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
+				suffix, 1, modelViewer->getNumSteps());
+			delete suffix;
+			strcpy(saveFilename, temp.c_str());
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool ModelWindow::getSaveFilename(char* saveFilename, int len)
