@@ -244,11 +244,13 @@ bool LDSnapshotTaker::saveImage(
 		bool retValue = true;
 		int numSteps = m_modelViewer->getNumSteps();
 		int origStep = m_modelViewer->getStep();
+		LDViewPoint *viewPoint = NULL;
 
 		if (TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)
 			&& zoomToFit)
 		{
 			m_modelViewer->setStep(numSteps);
+			viewPoint = m_modelViewer->saveViewPoint();
 			m_modelViewer->zoomToFit();
 			zoomToFit = false;
 		}
@@ -264,6 +266,10 @@ bool LDSnapshotTaker::saveImage(
 		}
 		delete stepSuffix;
 		m_modelViewer->setStep(origStep);
+		if (viewPoint)
+		{
+			m_modelViewer->restoreViewPoint(viewPoint);
+		}
 		return retValue;
 	}
 	else
