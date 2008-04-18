@@ -10,52 +10,28 @@
 #include <qlabel.h>
 #include "misc.h"
 
-LDViewModelTree::LDViewModelTree(Preferences *preferences, LDrawModelViewer *modelViewer)
-	:modeltree(NULL),
+LDViewModelTree::LDViewModelTree(Preferences *pref, LDrawModelViewer *modelViewer,
+								QWidget* parent , const char* name , WFlags fl )
+	:ModelTreePanel(parent, name, fl),
 	mainmodel(NULL),
-	panel(new ModelTreePanel),
-	preferences(preferences),
-	listViewPopulated(false)
+	preferences(preferences)
+	
 {
-	panel->setModelTree(this);
-	panel->modelTreeView->setColumnWidthMode(0, QListView::Maximum);
-	panel->modelTreeView->header()->hide();
-	panel->modelTreeView->setSorting(-1);
+	preferences = pref;
+	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
+	modelTreeView->header()->hide();
+	modelTreeView->setSorting(-1);
 	mainmodel=modelViewer->getMainModel();
 }
 
-void LDViewModelTree::reflectSettings(void)
-{ 
-}
-
-void LDViewModelTree::setValues(bool value)
-{
-}
-
-LDViewModelTree::~LDViewModelTree(void)
-{
-}
+LDViewModelTree::~LDViewModelTree() { }
 
 void LDViewModelTree::show(void)
 {
-	panel->show();
-	panel->raise();
-	panel->setActiveWindow();
+	raise();
+	setActiveWindow();
 	fillTreeView();
-}
-
-void LDViewModelTree::clear(void)
-{
-	clearListView();
-}
-
-void LDViewModelTree::clearListView(void)
-{
-	listViewPopulated = false;
-}
-
-int LDViewModelTree::populateListView(void)
-{
+	ModelTreePanel::show();
 }
 
 void LDViewModelTree::fillTreeView(void)
@@ -73,7 +49,7 @@ void LDViewModelTree::fillTreeView(void)
 
 void LDViewModelTree::refreshTreeView()
 {
-	panel->modelTreeView->clear();
+	modelTreeView->clear();
 	addChildren(NULL, modeltree);
 }
 
@@ -116,31 +92,31 @@ void LDViewModelTree::addLine(QListViewItem *parent, const LDModelTree *tree)
 	}
 	else
 	{
-		item = new QListViewItem(panel->modelTreeView, 
-								 panel->modelTreeView->lastItem(), line);
+		item = new QListViewItem(modelTreeView, 
+								 modelTreeView->lastItem(), line);
 	}
 	item->setExpandable(tree->getNumChildren(true)>0);
 }
 
 void LDViewModelTree::updateLineChecks(void)
 {
-	preferences->setButtonState(panel->unknownButton,
+	preferences->setButtonState(unknownButton,
 								modeltree->getShowLineType(LDLLineTypeUnknown));
-	preferences->setButtonState(panel->commentButton,
+	preferences->setButtonState(commentButton,
 								modeltree->getShowLineType(LDLLineTypeComment));
-	preferences->setButtonState(panel->modelButton,
+	preferences->setButtonState(modelButton,
 								modeltree->getShowLineType(LDLLineTypeModel));
-	preferences->setButtonState(panel->lineButton,
+	preferences->setButtonState(lineButton,
 								modeltree->getShowLineType(LDLLineTypeLine));
-	preferences->setButtonState(panel->quadButton,
+	preferences->setButtonState(quadButton,
 								modeltree->getShowLineType(LDLLineTypeQuad));
-	preferences->setButtonState(panel->triangleButton,
+	preferences->setButtonState(triangleButton,
 								modeltree->getShowLineType(LDLLineTypeTriangle));
-	preferences->setButtonState(panel->conditionalLineButton,
+	preferences->setButtonState(conditionalLineButton,
 								modeltree->getShowLineType(LDLLineTypeConditionalLine));
 }
 
-void LDViewModelTree::expanded(QListViewItem *item)
+void LDViewModelTree::itemexpanded(QListViewItem *item)
 {
 	LDModelTree *tree = findTree(item);
 	if (tree && !tree->getViewPopulated())
@@ -162,7 +138,7 @@ LDModelTree *LDViewModelTree::findTree(QListViewItem *item)
 	else
 	{
 		tparent = modeltree;
-		list = panel->modelTreeView->firstChild();
+		list = modelTreeView->firstChild();
 	}
 	const LDModelTreeArray *children = tparent->getChildren(true);
 	int i=0;
@@ -179,6 +155,9 @@ LDModelTree *LDViewModelTree::findTree(QListViewItem *item)
 
 void LDViewModelTree::doLineCheck(QCheckBox *button, LDLLineType lineType)
 {
-	modeltree->setShowLineType(lineType,button->state());
-	refreshTreeView();
+	if (modeltree) 
+	{
+		modeltree->setShowLineType(lineType,button->state());
+		refreshTreeView();
+	}
 }

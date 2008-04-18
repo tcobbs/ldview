@@ -65,7 +65,6 @@
 #include "LDView.h"
 #include "LDViewErrors.h"
 #include "LDViewModelTree.h"
-#include "ExtraDirPanel.h"
 #include "LDViewExtraDir.h"
 #include "SnapshotSettingsPanel.h"
 #include "PartList.h"

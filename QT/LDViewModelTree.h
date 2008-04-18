@@ -11,37 +11,30 @@
 
 class LDLMainModel;
 class LDModelTree;
-class ModelTreePanel;
 class Preferences;
-class QListViewItem;
-class QButton;
-class QLabel;
-class QCheckBox;
 class LDrawModelViewer;
-class LDViewModelTree
+class LDViewModelTree : public ModelTreePanel
 {
+//	Q_OBJECT
 public:
-	LDViewModelTree(Preferences *preferences, LDrawModelViewer *modelViewer);
-	~LDViewModelTree(void);
-
+	LDViewModelTree(Preferences *preferences, LDrawModelViewer *modelViewer,
+					QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel);
+	~LDViewModelTree();
 	void show(void);
-	void clear(void);
-	int populateListView(void);
-	void reflectSettings(void);
-	void setValues(bool);
-	void expanded(QListViewItem *item);
-	void quad(void) {doLineCheck(panel->quadButton,LDLLineTypeQuad);}
-	void unknown(void) {doLineCheck(panel->unknownButton,LDLLineTypeUnknown);}
-	void line(void) {doLineCheck(panel->lineButton,LDLLineTypeLine);}
-	void conditionalLine(void) {doLineCheck(panel->conditionalLineButton,LDLLineTypeConditionalLine);}
-	void triangle(void) {doLineCheck(panel->triangleButton,LDLLineTypeTriangle);}
-	void model(void) {doLineCheck(panel->modelButton,LDLLineTypeModel);}
-	void empty(void) {doLineCheck(panel->emptyButton,LDLLineTypeEmpty);}
-	void comment(void) {doLineCheck(panel->commentButton,LDLLineTypeComment);}
-	void doLineCheck(QCheckBox *button, LDLLineType lineType);
+
+public slots:
+	void itemexpanded(QListViewItem *item);
+	void quad(void) {doLineCheck(quadButton,LDLLineTypeQuad);}
+	void unknown(void) {doLineCheck(unknownButton,LDLLineTypeUnknown);}
+	void line(void) {doLineCheck(lineButton,LDLLineTypeLine);}
+	void conditionalLine(void) {doLineCheck(conditionalLineButton,LDLLineTypeConditionalLine);}
+	void triangle(void) {doLineCheck(triangleButton,LDLLineTypeTriangle);}
+	void model(void) {doLineCheck(modelButton,LDLLineTypeModel);}
+	void empty(void) {doLineCheck(emptyButton,LDLLineTypeEmpty);}
+	void comment(void) {doLineCheck(commentButton,LDLLineTypeComment);}
 
 protected:
-	void clearListView(void);
+    void doLineCheck(QCheckBox *button, LDLLineType lineType);
 	void fillTreeView(void);
 	void refreshTreeView(void);
 	void addChildren(QListViewItem *parent, const LDModelTree *tree);
@@ -51,9 +44,7 @@ protected:
 	LDModelTree *findTree(QListViewItem *item);
 	LDModelTree *modeltree;
 	LDLMainModel *mainmodel;
-	ModelTreePanel *panel;
 	Preferences *preferences;
-	bool listViewPopulated;
 	QLabel *messageText;
 };
 

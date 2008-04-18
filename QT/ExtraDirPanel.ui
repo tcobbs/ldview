@@ -277,19 +277,11 @@
     <tabstop>cancelButton</tabstop>
 </tabstops>
 <includes>
-    <include location="local" impldecl="in implementation">LDViewExtraDir.h</include>
     <include location="local" impldecl="in implementation">ExtraDirPanel.ui.h</include>
 </includes>
-<forwards>
-    <forward>class ExtraDir;</forward>
-</forwards>
-<variables>
-    <variable>ExtraDir *extradir;</variable>
-</variables>
 <slots>
     <slot>doCancel()</slot>
     <slot>doOk()</slot>
-    <slot>setExtraDir( ExtraDir * value)</slot>
     <slot>doAddExtraDir()</slot>
     <slot>doDelExtraDir()</slot>
     <slot>doUpExtraDir()</slot>
