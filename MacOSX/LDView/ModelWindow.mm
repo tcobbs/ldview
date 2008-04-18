@@ -1035,6 +1035,7 @@ enum
 		int width = (int)viewSize.width;
 		int height = (int)viewSize.height;		
 
+		[saveSnapshotViewOwner saveSettings];
 		[OCUserDefaults setString:[sheet filename] forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_PATH_KEY] sessionSpecific:NO];
 		if (!snapshotTaker)
 		{
