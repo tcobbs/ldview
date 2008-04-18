@@ -17,7 +17,9 @@ m_imageType(ITPng),
 m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
 m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
 m_fromCommandLine(true),
-m_step(-1)
+m_commandLineSaveSteps(false),
+m_step(-1),
+m_grabSetupDone(false)
 {
 }
 
@@ -27,7 +29,9 @@ m_imageType(ITPng),
 m_trySaveAlpha(false),
 m_autoCrop(false),
 m_fromCommandLine(false),
-m_step(-1)
+m_commandLineSaveSteps(false),
+m_step(-1),
+m_grabSetupDone(false)
 {
 }
 
@@ -69,15 +73,23 @@ bool LDSnapshotTaker::saveImage(void)
 		{
 			char prefix1[128];
 			char prefix2[128];
+			char prefix3[128];
 
-			sprintf(prefix1, "%s=", SAVE_IMAGE_TYPE_KEY);
-			sprintf(prefix2, "%s=", SNAPSHOT_SUFFIX_KEY);
+			sprintf(prefix1, "-%s=", SAVE_IMAGE_TYPE_KEY);
+			sprintf(prefix2, "-%s=", SNAPSHOT_SUFFIX_KEY);
+			sprintf(prefix3, "-%s=", SAVE_STEPS_KEY);
 			for (i = 0; i < processed->getCount() && !commandLineType; i++)
 			{
-				if (stringHasCaseInsensitivePrefix((*processed)[i], prefix1) ||
-					stringHasCaseInsensitivePrefix((*processed)[i], prefix2))
+				const char *arg = (*processed)[i];
+
+				if (stringHasCaseInsensitivePrefix(arg, prefix1) ||
+					stringHasCaseInsensitivePrefix(arg, prefix2))
 				{
 					commandLineType = true;
+				}
+				else if (stringHasCaseInsensitivePrefix(arg, prefix3))
+				{
+					m_commandLineSaveSteps = true;
 				}
 			}
 		}
@@ -237,27 +249,60 @@ bool LDSnapshotTaker::saveImage(
 	int imageHeight,
 	bool zoomToFit)
 {
-	if (TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false))
+	bool steps = false;
+
+	if (!m_fromCommandLine || m_commandLineSaveSteps)
+	{
+		steps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
+	}
+	if (steps)
 	{
 		char *stepSuffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 			"-Step", false);
 		bool retValue = true;
-		int numSteps = m_modelViewer->getNumSteps();
-		int origStep = m_modelViewer->getStep();
+		int numSteps;
+		int origStep;
 		LDViewPoint *viewPoint = NULL;
 
+		if (!m_modelViewer)
+		{
+			grabSetup();
+		}
 		if (TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)
 			&& zoomToFit)
 		{
-			m_modelViewer->setStep(numSteps);
-			viewPoint = m_modelViewer->saveViewPoint();
+			if (!m_fromCommandLine)
+			{
+				viewPoint = m_modelViewer->saveViewPoint();
+			}
 			if (m_modelViewer->getMainTREModel() == NULL)
 			{
-				m_modelViewer->reload();
+				// This isn't very efficient, but it gets the job done.  A
+				// number of things need to happen before we can do the initial
+				// zoomToFit.  We need to load the model, create the rotation
+				// matrix, and setup the camera.  Maybe other things need to be
+				// done too.  This update makes sure that things are OK for the
+				// zoomToFit to execute properly.
+				m_modelViewer->update();
+			}
+			else
+			{
+				numSteps = m_modelViewer->getNumSteps();
+				m_modelViewer->setStep(numSteps);
 			}
 			m_modelViewer->zoomToFit();
 			zoomToFit = false;
 		}
+		else
+		{
+			if (m_modelViewer->getMainModel() == NULL)
+			{
+				m_modelViewer->reload();
+			}
+		}
+		numSteps = m_modelViewer->getNumSteps();
+		origStep = m_modelViewer->getStep();
+		m_modelViewer->setStep(numSteps);
 		for (int step = 1; step <= numSteps && retValue; step++)
 		{
 			std::string stepFilename = removeStepSuffix(filename, stepSuffix);
@@ -461,7 +506,12 @@ void LDSnapshotTaker::renderOffscreenImage(void)
 
 void LDSnapshotTaker::grabSetup(void)
 {
+	if (m_grabSetupDone)
+	{
+		return;
+	}
 	TCAlertManager::sendAlert(alertClass(), this, _UC("PreSave"));
+	m_grabSetupDone = true;
 	if (!m_modelViewer)
 	{
 		LDPreferences *prefs;
