@@ -59,6 +59,11 @@ void setupDefaults(char *argv[])
 		}
 		delete rcFilename;
 	}
+	else
+	{
+		printf("HOME environment variable not defined: cannot use "
+			"~/.ldviewrc.\n");
+	}
 }
 
 void *setupContext(OSMesaContext &ctx)
