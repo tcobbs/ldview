@@ -75,7 +75,9 @@ protected:
 	bool m_trySaveAlpha;
 	bool m_autoCrop;
 	bool m_fromCommandLine;
+	bool m_commandLineSaveSteps;
 	int m_step;
+	bool m_grabSetupDone;
 	std::string m_modelFilename;
 };
 
