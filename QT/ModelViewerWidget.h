@@ -25,7 +25,6 @@ class QApplication;
 class OpenGLExtensionsPanel;
 class AboutPanel;
 class HelpPanel;
-class ExtraDirPanel;
 class SnapshotSettingsPanel;
 class QFileDialog;
 class LDViewErrors;

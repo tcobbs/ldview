@@ -1256,6 +1256,12 @@
         <slot>showPovCamera()</slot>
     </connection>
     <connection>
+        <sender>toolsPartListAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>toolsPartList()</slot>
+    </connection>
+    <connection>
         <sender>toolbarPrevStep</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>

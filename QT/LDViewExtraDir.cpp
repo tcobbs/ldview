@@ -15,12 +15,11 @@
 TCStringArray* ExtraDir::extraSearchDirs = NULL;
 
 ExtraDir::ExtraDir(ModelViewerWidget *modelWidget)
-	:modelWidget(modelWidget),
-	panel(new ExtraDirPanel),
+	:ExtraDirPanel(),
+	modelWidget(modelWidget),
 	fileDialog(NULL)
 {
     modelViewer = modelWidget->getModelViewer();
-    panel->setExtraDir(this);
     if (!extraSearchDirs)
     {
         extraSearchDirs = new TCStringArray;
@@ -36,20 +35,20 @@ void ExtraDir::show(void)
 {
 	populateExtraSearchDirs();
 	populateExtraDirsListBox();
-	panel->show();
-	panel->raise();
-	panel->setActiveWindow();
+	ExtraDirPanel::show();
+	raise();
+	setActiveWindow();
 }
 
 void ExtraDir::doAddExtraDir(void)
 {
-	int count=panel->ExtraDirListView->count();
+	int count=ExtraDirListView->count();
 	if (count>=MAX_EXTRA_DIR) { return;}
 	if (!fileDialog)
 	{
 		fileDialog = new QFileDialog(".",
                 "All Files (*)",
-                panel,
+                this,
                 "open model dialog",
                 true);
         fileDialog->setCaption("Choose a Directory");
@@ -58,12 +57,12 @@ void ExtraDir::doAddExtraDir(void)
 	}
 	if (fileDialog->exec() == QDialog::Accepted)
     {
-		panel->ExtraDirListView->insertItem(fileDialog->selectedFile());
+		ExtraDirListView->insertItem(fileDialog->selectedFile());
 		extraSearchDirs->addString(fileDialog->selectedFile().ascii());
-		panel->delExtraDirButton->setEnabled(true);
+		delExtraDirButton->setEnabled(true);
 		if (count==MAX_EXTRA_DIR-1)
 		{
-			panel->addExtraDirButton->setEnabled(false);
+			addExtraDirButton->setEnabled(false);
 		}
 	}
 	doExtraDirSelected();
@@ -71,42 +70,42 @@ void ExtraDir::doAddExtraDir(void)
 
 void ExtraDir::doDelExtraDir(void)
 {
-	int index=panel->ExtraDirListView->currentItem(),
-		count=panel->ExtraDirListView->count();
+	int index=ExtraDirListView->currentItem(),
+		count=ExtraDirListView->count();
 	if (index!=-1)
 	{
 		extraSearchDirs->removeString(index);
-		panel->ExtraDirListView->removeItem(index);
+		ExtraDirListView->removeItem(index);
 		if (count==1)
 		{
-			panel->delExtraDirButton->setEnabled(false);
+			delExtraDirButton->setEnabled(false);
 		}
 		if (count==MAX_EXTRA_DIR)
 		{
-			panel->addExtraDirButton->setEnabled(true);
+			addExtraDirButton->setEnabled(true);
 		}
 	}
 }
 void ExtraDir::doExtraDirSelected(void)
 {
-	int index=panel->ExtraDirListView->currentItem(),
-		count=panel->ExtraDirListView->count();
-	panel->upExtraDirButton->setEnabled(index>0 ? true : false);
-	panel->downExtraDirButton->setEnabled(index == count-1 ? false : true);
+	int index=ExtraDirListView->currentItem(),
+		count=ExtraDirListView->count();
+	upExtraDirButton->setEnabled(index>0 ? true : false);
+	downExtraDirButton->setEnabled(index == count-1 ? false : true);
 }
 
 void ExtraDir::doUpExtraDir(void)
 {
-	int index=panel->ExtraDirListView->currentItem(),
-		count=panel->ExtraDirListView->count();
+	int index=ExtraDirListView->currentItem(),
+		count=ExtraDirListView->count();
 	char *extraDir;
 
     if (index>0 && count >1)
     {
-		QString tmp=panel->ExtraDirListView->currentText();
-		panel->ExtraDirListView->removeItem(index);
-		panel->ExtraDirListView->insertItem(tmp,index-1);
-		panel->ExtraDirListView->setCurrentItem(index-1);
+		QString tmp=ExtraDirListView->currentText();
+		ExtraDirListView->removeItem(index);
+		ExtraDirListView->insertItem(tmp,index-1);
+		ExtraDirListView->setCurrentItem(index-1);
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
 		extraSearchDirs->removeString(index);
 		extraSearchDirs->insertString(extraDir,index-1);
@@ -116,15 +115,15 @@ void ExtraDir::doUpExtraDir(void)
 
 void ExtraDir::doDownExtraDir(void)
 {
-    int index=panel->ExtraDirListView->currentItem(),
-        count=panel->ExtraDirListView->count();
+    int index=ExtraDirListView->currentItem(),
+        count=ExtraDirListView->count();
 	char *extraDir;
     if (index<count-1 && count>0 && index!=-1)
 	{
-		QString tmp=panel->ExtraDirListView->currentText();
-        panel->ExtraDirListView->removeItem(index);
-		panel->ExtraDirListView->insertItem(tmp,index+1);
-		panel->ExtraDirListView->setCurrentItem(index+1);
+		QString tmp=ExtraDirListView->currentText();
+        ExtraDirListView->removeItem(index);
+		ExtraDirListView->insertItem(tmp,index+1);
+		ExtraDirListView->setCurrentItem(index+1);
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
 		extraSearchDirs->removeString(index);
         extraSearchDirs->insertString(extraDir,index+1);
@@ -135,28 +134,29 @@ void ExtraDir::doDownExtraDir(void)
 void ExtraDir::doOk()
 {
 	recordExtraSearchDirs();
+	close();
 }
 
 void ExtraDir::populateExtraDirsListBox(void)
 {
     int i;
-    int count=panel->ExtraDirListView->count();
+    int count=ExtraDirListView->count();
 	char *dir;
-	for (i=0;i<count;i++) { panel->ExtraDirListView->removeItem(0); }
+	for (i=0;i<count;i++) { ExtraDirListView->removeItem(0); }
 	count = extraSearchDirs->getCount();
 	for (i=0;i<count;i++) 
 	{
 		dir=extraSearchDirs->stringAtIndex(i);
 		if (dir && dir[0]) 
 		{
-			panel->ExtraDirListView->insertItem(extraSearchDirs->stringAtIndex(i));
+			ExtraDirListView->insertItem(extraSearchDirs->stringAtIndex(i));
 		}
 	}
 	if (count==MAX_EXTRA_DIR)
 	{
-		panel->addExtraDirButton->setEnabled(false);
+		addExtraDirButton->setEnabled(false);
 	}
-	panel->delExtraDirButton->setEnabled(count>0 ? true : false);
+	delExtraDirButton->setEnabled(count>0 ? true : false);
 }
 
 void ExtraDir::recordExtraSearchDirs(void)

@@ -2,14 +2,13 @@
 #define __LDVIEWEXTRADIR_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-#include "ModelViewerWidget.h"
-
+#include "ExtraDirPanel.h"
 class ExtraDirPanel;
 class QListViewItem;
 class QButton;
 class QFileDialog;
 
-class ExtraDir
+class ExtraDir : public ExtraDirPanel
 {
 public:
 	ExtraDir(ModelViewerWidget *modelWidget);
@@ -19,20 +18,23 @@ public:
 	void clear(void);
 	int populateListView(void);
 	void populateExtraDirsListBox(void);
+    void recordExtraSearchDirs(void);
+    void populateExtraSearchDirs(void);
+    static TCStringArray* extraSearchDirs;
+
+public slots:
 	void doAddExtraDir(void);
 	void doDelExtraDir(void);
 	void doUpExtraDir(void);
 	void doDownExtraDir(void);
 	void doExtraDirSelected(void);
 	void doOk(void);
-	void recordExtraSearchDirs(void);
-	void populateExtraSearchDirs(void);
-	static TCStringArray* extraSearchDirs;
+	void doCancel(void) {close();}
+
 protected:
 
 	LDrawModelViewer *modelViewer;
 	ModelViewerWidget *modelWidget;
-	ExtraDirPanel *panel;
 	bool listViewPopulated;
 	QFileDialog *fileDialog;
 };

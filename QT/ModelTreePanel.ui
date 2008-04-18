@@ -289,55 +289,55 @@
 <toolbars>
 </toolbars>
 <connections>
-    <connection>
+    <connection language="C++">
         <sender>commentButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>comment()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>modelButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>model()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>lineButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>line()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>triangleButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>triangle()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>quadButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>quad()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>conditionalLineButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>conditionalLine()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>emptyButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>empty()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>unknownButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>unknown()</slot>
     </connection>
-    <connection>
+    <connection language="C++">
         <sender>modelTreeView</sender>
         <signal>expanded(QListViewItem*)</signal>
         <receiver>ModelTreePanel</receiver>
@@ -345,26 +345,18 @@
     </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">LDViewModelTree.h</include>
-    <include location="local" impldecl="in implementation">ModelTreePanel.ui.h</include>
+    <include location="local" implDecl="in declaration">ModelTreePanel.ui.h</include>
 </includes>
-<forwards>
-    <forward>class LDViewModelTree;</forward>
-</forwards>
-<variables>
-    <variable>LDViewModelTree *modelTree;</variable>
-</variables>
 <slots>
-    <slot>setModelTree(LDViewModelTree *value)</slot>
-    <slot>model()</slot>
-    <slot>comment()</slot>
-    <slot>unknown()</slot>
-    <slot>empty()</slot>
-    <slot>quad()</slot>
-    <slot>line()</slot>
-    <slot>triangle()</slot>
-    <slot>conditionalLine()</slot>
-	<slot>itemexpanded(QListViewItem*)</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">model()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">comment()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">unknown()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">empty()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">quad()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">line()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">triangle()</slot>
+    <slot access="public" specifier="virtual" language="C++" returnType="void">conditionalLine()</slot>
+	<slot access="public" specifier="virtual" language="C++" returnType="void">itemexpanded(QListViewItem*)</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
