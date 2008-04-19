@@ -185,10 +185,6 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		(TCAlertCallback)&ModelWindow::releaseAlertCallback);
 	TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
 		(TCAlertCallback)&ModelWindow::snapshotTakerAlertCallback);
-/*
-	modelViewer->setProgressCallback(staticProgressCallback, this);
-	modelViewer->setErrorCallback(staticErrorCallback, this);
-*/
 	if (programPath)
 	{
 		modelViewer->setProgramPath(programPath);
@@ -309,7 +305,7 @@ void ModelWindow::progressAlertCallback(TCProgressAlert *alert)
 		{
 			bool showErrors = true;
 
-			if (strcmp(alert->getSource(), "TCImage") == 0)
+			if (strcmp(alert->getSource(), "LDSnapshotTaker") == 0)
 			{
 				showErrors = false;
 			}
@@ -418,16 +414,6 @@ bool ModelWindow::getFileTime(FILETIME* fileTime)
 			FindClose(findHandle);
 			return true;
 		}
-/*
-		WIN32_FILE_ATTRIBUTE_DATA fileAttributes;
-
-		if (GetFileAttributesEx(filename, GetFileExInfoStandard,
-			&fileAttributes))
-		{
-			*fileTime = fileAttributes.ftLastWriteTime;
-			return true;
-		}
-*/
 	}
 	return false;
 }
@@ -460,9 +446,6 @@ void ModelWindow::checkFileForUpdates(void)
 						}
 						inputHandler->cancelMouseDrag();
 					}
-					//lButtonDown = false;
-					//rButtonDown = false;
-					//mButtonDown = false;
 					if (MessageBox(hWindow, message,
 						TCLocalStrings::get("PollFileUpdate"),
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
@@ -474,7 +457,6 @@ void ModelWindow::checkFileForUpdates(void)
 				if (update)
 				{
 					reload();
-					//forceRedraw();
 				}
 			}
 		}
@@ -493,7 +475,6 @@ void ModelWindow::openGlWillEnd(void)
 void ModelWindow::updateFSAA()
 {
 	applyingPrefs = true;
-//	openGlWillEnd();
 	uncompile();
 	closeWindow();
 	if (!((LDViewWindow*)parentWindow)->getFullScreen())
@@ -507,9 +488,7 @@ void ModelWindow::updateFSAA()
 	if (modelViewer)
 	{
 		modelViewer->uncompile();
-		//modelViewer->setNeedsRecompile();
 	}
-	//setNeedsRecompile();
 	showWindow(SW_SHOW);
 	applyingPrefs = false;
 	killTimer(FSAA_UPDATE_TIMER);
@@ -539,105 +518,9 @@ LRESULT ModelWindow::doTimer(UINT timerID)
 	return 0;
 }
 
-//void ModelWindow::updateSpinRate(void)
-//{
-//	if (lButtonDown)
-//	{
-//		DWORD thisMoveTime = timeGetTime();
-//
-//		if (thisMoveTime - lastMoveTime >= 100)
-//		{
-//			updateSpinRateXY(lastX, lastY);
-//			lButtonDown = true;
-//		}
-//	}
-//}
-//
-//void ModelWindow::updateSpinRateXY(int xPos, int yPos)
-//{
-//	int deltaX = xPos - lastX;
-//	int deltaY = yPos - lastY;
-//	TCFloat magnitude = (TCFloat)sqrt((TCFloat)(deltaX * deltaX + deltaY * deltaY));
-//
-//	lastX = xPos;
-//	lastY = yPos;
-//	rotationSpeed = magnitude / 10.0f;
-//	if (fEq(rotationSpeed, 0.0f))
-//	{
-//		rotationSpeed = 0.0f;
-//		modelViewer->setXRotate(1.0f);
-//		modelViewer->setYRotate(1.0f);
-//	}
-//	else
-//	{
-//		modelViewer->setXRotate((TCFloat)deltaY);
-//		modelViewer->setYRotate((TCFloat)deltaX);
-//	}
-//	modelViewer->setRotationSpeed(rotationSpeed);
-//}
-
-//void ModelWindow::updatePanXY(int xPos, int yPos)
-//{
-//	int deltaX = xPos - lastX;
-//	int deltaY = yPos - lastY;
-//
-//	lastX = xPos;
-//	lastY = yPos;
-//	modelViewer->panXY(deltaX, deltaY);
-//}
-
-//void ModelWindow::setXRotate(TCFloat value)
-//{
-//	modelViewer->setXRotate(value);
-//}
-
-//void ModelWindow::setYRotate(TCFloat value)
-//{
-//	modelViewer->setYRotate(value);
-//}
-
-//void ModelWindow::setRotationSpeed(TCFloat value)
-//{
-//	rotationSpeed = value;
-//	modelViewer->setRotationSpeed(rotationSpeed);
-//}
-
-//void ModelWindow::updateZoom(int yPos)
-//{
-//	TCFloat magnitude = (TCFloat)(yPos - originalZoomY);
-//
-//	modelViewer->setZoomSpeed(magnitude / 2.0f);
-//}
-
-//void ModelWindow::updateHeadXY(int xPos, int yPos)
-//{
-//	TCFloat magnitude = (TCFloat)(xPos - lastX);
-//	TCFloat denom = 5000.0f;
-//
-//	if (modelViewer)
-//	{
-//		TCFloat fov = modelViewer->getFov();
-//
-//		denom /= (TCFloat)tan(deg2rad(fov));
-//	}
-//	if (GetKeyState(VK_SHIFT) & 0x8000)
-//	{
-//		denom /= 2.0f;
-//	}
-//	modelViewer->setCameraXRotate(magnitude / denom);
-//	magnitude = (TCFloat)(yPos - lastY);
-//	modelViewer->setCameraYRotate(magnitude / -denom);
-//}
-
 void ModelWindow::captureMouse(void)
 {
 	SetCapture(hWindow);
-	//oldMouseWindow = GetCapture();
-	//if (oldMouseWindow != hWindow)
-	//{
-	//	SetCapture(hWindow);
-	//}
-	//captureCount++;
 }
 
 void ModelWindow::releaseMouse(void)
@@ -645,23 +528,6 @@ void ModelWindow::releaseMouse(void)
 	releasingMouse = true;
 	ReleaseCapture();
 	releasingMouse = false;
-	//if (captureCount)
-	//{
-	//	captureCount--;
-	//	if (!captureCount)
-	//	{
-	//		releasingMouse = true;
-	//		if (false && oldMouseWindow)
-	//		{
-	//			SetCapture(oldMouseWindow);
-	//		}
-	//		else
-	//		{
-	//			ReleaseCapture();
-	//		}
-	//		releasingMouse = false;
-	//	}
-	//}
 }
 
 // NOTE: Static method.
@@ -760,39 +626,6 @@ LRESULT ModelWindow::doLButtonDown(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//if (keyFlags & MK_SHIFT)
-	//{
-	//	if (modelViewer && modelViewer->mouseDown(LDVMouseLight, xPos, yPos))
-	//	{
-	//		captureMouse();
-	//		// At this point, the light hasn't moved, so there's no redraw
-	//		// required for light movement.  However, the light direction
-	//		// vector now needs to be drawn, so we need a redraw for that.
-	//		forceRedraw();
-	//		return 0;
-	//	}
-	//	else
-	//	{
-	//		return 1;
-	//	}
-	//}
-	//forceRedraw();
-	//if (rButtonDown || mButtonDown)
-	//{
-	//	return 1;
-	//}
-	//else
-	//{
-	//	lastX = xPos;
-	//	lastY = yPos;
-	//	if (viewMode == LDVViewExamine)
-	//	{
-	//		updateSpinRateXY(xPos, yPos);
-	//	}
-	//	lButtonDown = true;
-	//	captureMouse();
-	//	return 0;
-	//}
 }
 
 LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
@@ -802,26 +635,6 @@ LRESULT ModelWindow::doLButtonUp(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//if (modelViewer && modelViewer->mouseUp(xPos, yPos))
-	//{
-	//	forceRedraw();
-	//	releaseMouse();
-	//	prefs->checkLightVector();
-	//	return 0;
-	//}
-	//forceRedraw();
-	//if (lButtonDown)
-	//{
-	//	lButtonDown = false;
-	//	releaseMouse();
-	//	modelViewer->setCameraXRotate(0.0f);
-	//	modelViewer->setCameraYRotate(0.0f);
-	//	return 0;
-	//}
-	//else
-	//{
-	//	return 1;
-	//}
 }
 
 LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
@@ -832,21 +645,6 @@ LRESULT ModelWindow::doRButtonDown(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//forceRedraw();
-	//if (lButtonDown || mButtonDown)
-	//{
-	//	return 1;
-	//}
-	//else
-	//{
-	//	if (viewMode == LDVViewExamine)
-	//	{
-	//		originalZoomY = yPos;
-	//		rButtonDown = true;
-	//		captureMouse();
-	//	}
-	//	return 0;
-	//}
 }
 
 LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
@@ -856,18 +654,6 @@ LRESULT ModelWindow::doRButtonUp(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//forceRedraw();
-	//if (rButtonDown)
-	//{
-	//	rButtonDown = false;
-	//	modelViewer->setZoomSpeed(0.0f);
-	//	releaseMouse();
-	//	return 0;
-	//}
-	//else
-	//{
-	//	return 1;
-	//}
 }
 
 LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
@@ -878,19 +664,6 @@ LRESULT ModelWindow::doMButtonDown(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//forceRedraw();
-	//if (lButtonDown || rButtonDown)
-	//{
-	//	return 1;
-	//}
-	//else
-	//{
-	//	lastX = xPos;
-	//	lastY = yPos;
-	//	mButtonDown = true;
-	//	captureMouse();
-	//	return 0;
-	//}
 }
 
 LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
@@ -900,17 +673,6 @@ LRESULT ModelWindow::doMButtonUp(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//forceRedraw();
-	//if (mButtonDown)
-	//{
-	//	mButtonDown = false;
-	//	releaseMouse();
-	//	return 0;
-	//}
-	//else
-	//{
-	//	return 1;
-	//}
 }
 
 LRESULT ModelWindow::doCaptureChanged(HWND /*hNewWnd*/)
@@ -929,56 +691,6 @@ LRESULT ModelWindow::doMouseMove(WPARAM keyFlags, int xPos, int yPos)
 		return 0;
 	}
 	return 1;
-	//if (modelViewer && modelViewer->mouseMove(xPos, yPos))
-	//{
-	//	forceRedraw();
-	//	return 0;
-	//}
-	//forceRedraw();
-	//if (lButtonDown || rButtonDown || mButtonDown)
-	//{
-	//	lastMoveTime = timeGetTime();
-	//}
-	//if (lButtonDown)
-	//{
-	//	if (viewMode == LDVViewExamine)
-	//	{
-	//		if (keyFlags & MK_CONTROL)
-	//		{
-	//			updatePanXY(xPos, yPos);
-	//		}
-	//		else
-	//		{
-	//			updateSpinRateXY(xPos, yPos);
-	//		}
-	//	}
-	//	else
-	//	{
-	//		updateHeadXY(xPos, yPos);
-	//	}
-	//	return 0;
-	//}
-	//if (rButtonDown)
-	//{
-	//	if (keyFlags & MK_CONTROL)
-	//	{
-	//		modelViewer->setClipZoom(true);
-	//	}
-	//	else
-	//	{
-	//		modelViewer->setClipZoom(false);
-	//	}
-	//	updateZoom(yPos);
-	//	return 0;
-	//}
-	//if (mButtonDown)
-	//{
-	//	if (viewMode == LDVViewExamine)
-	//	{
-	//		updatePanXY(xPos, yPos);
-	//	}
-	//}
-	//return 1;
 }
 
 void ModelWindow::mouseWheel(short keyFlags, short zDelta)
@@ -1038,15 +750,6 @@ void ModelWindow::forceRedraw(int count)
 	redrawCount += count;
 }
 
-/*
-void ModelWindow::getBackgroundRGB(int& r, int& g, int& b)
-{
-	r = backgroundColor & 0xFF;
-	g = (backgroundColor >> 8) & 0xFF;
-	b = (backgroundColor >> 16) & 0xFF;
-}
-*/
-
 void ModelWindow::setZoomSpeed(TCFloat value)
 {
 	modelViewer->setZoomSpeed(value);
@@ -1057,22 +760,9 @@ TCFloat ModelWindow::getZoomSpeed(void)
 	return modelViewer->getZoomSpeed();
 }
 
-/*
-BOOL ModelWindow::doDialogVScroll(HWND hDlg, int scrollCode, int position,
-								  HWND hScrollBar)
-{
-	if (hDlg == hPrefsWindow)
-	{
-//		return prefs->doVScroll(hDlg, scrollCode, position, hScrollBar);
-	}
-	return FALSE;
-}
-*/
-
 void ModelWindow::resetView(LDVAngle viewAngle)
 {
 	modelViewer->resetView(viewAngle);
-	//rotationSpeed = 0.0f;
 	modelViewer->setXRotate(0.0f);
 	modelViewer->setYRotate(0.0f);
 	modelViewer->setRotationSpeed(0.0f);
@@ -1108,7 +798,6 @@ void ModelWindow::uncompile(void)
 	if (modelViewer)
 	{
 		modelViewer->uncompile();
-//		glDeleteLists(modelViewer->getFontListBase(), 256);
 	}
 }
 
@@ -1628,41 +1317,6 @@ void ModelWindow::showErrors(void)
 	showErrorsIfNeeded(FALSE);
 }
 
-/*
-BOOL ModelWindow::showProgress(void)
-{
-	if (!loading)
-	{
-		clearErrors();
-		loading = true;
-		if (!hProgressWindow)
-		{
-			createProgress();
-		}
-		if (hProgressWindow)
-		{
-			RECT rect;
-			int newX, newY, progWidth, progHeight;
-
-			//debugPrintf("hProgressWindow: 0x%04X\n", hProgressWindow);
-			setupProgress();
-			GetWindowRect(hProgressWindow, &rect);
-			progWidth = rect.right - rect.left;
-			progHeight = rect.bottom - rect.top;
-			GetWindowRect(parentWindow->getHWindow(), &rect);
-			newX = rect.left + width / 2 - progWidth / 2;
-			newY = rect.top + height / 2 - progHeight / 2;
-			MoveWindow(hProgressWindow, newX, newY, progWidth, progHeight,
-				FALSE);
-			ShowWindow(hProgressWindow, SW_SHOWNORMAL);
-			flushDialogModal(hProgressWindow);
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-*/
-
 void ModelWindow::hideProgress(void)
 {
 	if (loading)
@@ -2027,7 +1681,7 @@ void ModelWindow::clearErrorTree(void)
 //	RECT rect;
 //	POINT topLeft;
 
-//	SetWindowRedraw(hErrorTree, FALSE);
+	SetWindowRedraw(hErrorTree, FALSE);
 	if (hErrorWindow)
 	{
 		HTREEITEM hItem;
@@ -2043,8 +1697,10 @@ void ModelWindow::clearErrorTree(void)
 		}
 		TreeView_DeleteItem(hErrorTree, TVI_ROOT);
 	}
-/*
 	SetWindowRedraw(hErrorTree, TRUE);
+	RedrawWindow(hErrorTree, NULL, NULL,
+		RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+/*
 	GetWindowRect(hErrorTree, &rect);
 	topLeft.x = rect.left;
 	topLeft.y = rect.top;
@@ -2115,7 +1771,7 @@ int ModelWindow::populateErrorTree(void)
 //	int width;
 //	int height;
 
-//	SetWindowRedraw(hErrorTree, FALSE);
+	SetWindowRedraw(hErrorTree, FALSE);
 	if (!windowShown)
 	{
 		return 0;
@@ -2140,8 +1796,10 @@ int ModelWindow::populateErrorTree(void)
 		}
 		errorTreePopulated = true;
 	}
-/*
 	SetWindowRedraw(hErrorTree, TRUE);
+	RedrawWindow(hErrorTree, NULL, NULL,
+		RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+/*
 	GetWindowRect(hErrorTree, &rect);
 	topLeft.x = rect.left;
 	topLeft.y = rect.top;
@@ -3304,153 +2962,6 @@ void ModelWindow::cleanupSnapshotBackBuffer(RECT &rect)
 	modelViewer->setHeight(height);
 	modelViewer->setup();
 }
-
-/*
-BYTE *ModelWindow::grabImage(int &imageWidth, int &imageHeight, bool zoomToFit,
-							 BYTE *buffer, bool *saveAlpha)
-{
-	RECT rect = {0, 0, 0, 0};
-	bool oldSlowClear = modelViewer->getSlowClear();
-	GLenum bufferFormat = GL_RGB;
-	currentAntialiasType = TCUserDefaults::longForKey(FSAA_MODE_KEY);
-	bool origForceZoomToFit = modelViewer->getForceZoomToFit();
-	TCVector origCameraPosition = modelViewer->getCamera().getPosition();
-	TCFloat origXPan = modelViewer->getXPan();
-	TCFloat origYPan = modelViewer->getYPan();
-	bool origAutoCenter = modelViewer->getAutoCenter();
-	int newWidth = 1600;
-	int newHeight = 1200;
-	int numXTiles, numYTiles;
-	int xTile;
-	int yTile;
-	BYTE *smallBuffer;
-	int bytesPerPixel = 3;
-	int bytesPerLine;
-	int smallBytesPerLine;
-	bool canceled = false;
-	bool bufferAllocated = false;
-
-	offscreenActive = true;
-	if (zoomToFit)
-	{
-		modelViewer->setForceZoomToFit(true);
-	}
-	calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
-		numYTiles);
-	if (!setupPBuffer(newWidth, newHeight, currentAntialiasType > 0))
-	{
-		newWidth = width;		// width is OpenGL window width
-		newHeight = height;		// height is OpenGL window height
-		calcTiling(imageWidth, imageHeight, newWidth, newHeight, numXTiles,
-			numYTiles);
-		setupSnapshotBackBuffer(newWidth, newHeight, rect);
-	}
-	if (canSaveAlpha())
-	{
-		bytesPerPixel = 4;
-		bufferFormat = GL_RGBA;
-		if (saveAlpha)
-		{
-			*saveAlpha = true;
-			modelViewer->setSaveAlpha(true);
-		}
-	}
-	else
-	{
-		if (saveAlpha)
-		{
-			*saveAlpha = false;
-		}
-	}
-	imageWidth = newWidth * numXTiles;
-	imageHeight = newHeight * numYTiles;
-	smallBytesPerLine = roundUp(newWidth * bytesPerPixel, 4);
-	bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
-	if (!buffer)
-	{
-		buffer = new BYTE[bytesPerLine * imageHeight];
-		bufferAllocated = true;
-	}
-	if (numXTiles == 1 && numYTiles == 1)
-	{
-		smallBuffer = buffer;
-	}
-	else
-	{
-		smallBuffer = new BYTE[smallBytesPerLine * newHeight];
-	}
-	modelViewer->setNumXTiles(numXTiles);
-	modelViewer->setNumYTiles(numYTiles);
-	for (yTile = 0; yTile < numYTiles; yTile++)
-	{
-		modelViewer->setYTile(yTile);
-		for (xTile = 0; xTile < numXTiles && !canceled; xTile++)
-		{
-			modelViewer->setXTile(xTile);
-			renderOffscreenImage();
-			if (progressCallback(TCLocalStrings::get(_UC("RenderingSnapshot")),
-				(float)(yTile * numXTiles + xTile) / (numYTiles * numXTiles)))
-			{
-//				glFinish();
-				glReadPixels(0, 0, newWidth, newHeight, bufferFormat,
-					GL_UNSIGNED_BYTE, smallBuffer);
-				if (smallBuffer != buffer)
-				{
-					int y;
-
-					for (y = 0; y < newHeight; y++)
-					{
-						int smallOffset = y * smallBytesPerLine;
-						int offset = (y + (numYTiles - yTile - 1) * newHeight) *
-							bytesPerLine + xTile * newWidth * bytesPerPixel;
-
-						memcpy(&buffer[offset], &smallBuffer[smallOffset], smallBytesPerLine);
-					}
-					// We only need to zoom to fit on the first tile; the
-					// rest will already be correct.
-					modelViewer->setForceZoomToFit(false);
-				}
-			}
-			else
-			{
-				canceled = true;
-			}
-		}
-	}
-	modelViewer->setXTile(0);
-	modelViewer->setYTile(0);
-	modelViewer->setNumXTiles(1);
-	modelViewer->setNumYTiles(1);
-	modelViewer->setSaveAlpha(false);
-	if (canceled && bufferAllocated)
-	{
-		delete buffer;
-		buffer = NULL;
-	}
-	if (smallBuffer != buffer)
-	{
-		delete smallBuffer;
-	}
-	if (hPBuffer)
-	{
-		cleanupOffscreen();
-	}
-	else
-	{
-		cleanupSnapshotBackBuffer(rect);
-	}
-	if (zoomToFit)
-	{
-		modelViewer->setForceZoomToFit(origForceZoomToFit);
-		modelViewer->getCamera().setPosition(origCameraPosition);
-		modelViewer->setXYPan(origXPan, origYPan);
-		modelViewer->setAutoCenter(origAutoCenter);
-	}
-	offscreenActive = false;
-	modelViewer->setSlowClear(oldSlowClear);
-	return buffer;
-}
-*/
 
 LDSnapshotTaker::ImageType ModelWindow::getSaveImageType(void)
 {

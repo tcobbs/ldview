@@ -79,6 +79,7 @@ protected:
 	int m_step;
 	bool m_grabSetupDone;
 	std::string m_modelFilename;
+	std::string m_currentImageFilename;
 };
 
 #endif // __LDSNAPSHOTTAKER_H__

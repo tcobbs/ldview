@@ -371,16 +371,28 @@ bool LDSnapshotTaker::staticImageProgressCallback(
 bool LDSnapshotTaker::imageProgressCallback(CUCSTR message, float progress)
 {
 	bool aborted;
-	if (message == NULL)
+	ucstring newMessage;
+
+	if (message != NULL)
 	{
-		message = _UC("");
-	}
-	else
-	{
-		message = TCLocalStrings::get(message);
+		char *filename = filenameFromPath(m_currentImageFilename.c_str());
+		UCSTR ucFilename = mbstoucstring(filename);
+
+		delete filename;
+		if (stringHasCaseInsensitivePrefix(message, _UC("Saving")))
+		{
+			newMessage = TCLocalStrings::get(_UC("SavingPrefix"));
+		}
+		else
+		{
+			newMessage = TCLocalStrings::get(_UC("LoadingPrefix"));
+		}
+		newMessage += ucFilename;
+		delete ucFilename;
 	}
 
-	TCProgressAlert::send("LDSnapshotTaker", message, progress, &aborted);
+	TCProgressAlert::send("LDSnapshotTaker", newMessage.c_str(), progress,
+		&aborted, this);
 	return !aborted;
 }
 
@@ -396,6 +408,7 @@ bool LDSnapshotTaker::writeImage(
 	bool retValue;
 	char comment[1024];
 
+	m_currentImageFilename = filename;
 	if (saveAlpha)
 	{
 		image->setDataFormat(TCRgba8);
