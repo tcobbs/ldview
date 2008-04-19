@@ -168,6 +168,11 @@
 	}
 }
 
+- (LDSnapshotTaker *)ldSnapshotTaker
+{
+	return ldSnapshotTaker;
+}
+
 - (void)snapshotCallback:(TCAlert *)alert;
 {
 	if (strcmp(alert->getMessage(), "PreSave") == 0)

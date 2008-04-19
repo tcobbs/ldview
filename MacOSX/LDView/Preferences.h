@@ -45,6 +45,7 @@ extern NSString *LDPreferencesDidUpdateNotification;
 	PreferencePage *applyFailedPage;
 	BOOL applyEnabled;
 	BOOL loading;
+	BOOL openGLInitialized;
 }
 
 - (LDrawPage *)ldrawPage;
@@ -66,5 +67,6 @@ extern NSString *LDPreferencesDidUpdateNotification;
 - (void)hotKeyPressed:(int)index;
 - (void)saveViewingAngle:(ModelWindow*)modelWindow;
 - (void)lightVectorChanged:(TCAlert *)alert;
+- (void)openGLInitialized;
 
 @end

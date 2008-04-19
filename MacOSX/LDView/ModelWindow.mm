@@ -530,7 +530,7 @@ enum
 {
 	TCAlertSender *sender = alert->getSender();
 
-	return sender != NULL && sender->getAlertSender() == [modelView modelViewer];
+	return sender != NULL && (sender->getAlertSender() == [modelView modelViewer] || sender->getAlertSender() == [snapshotTaker ldSnapshotTaker]);
 }
 
 - (void)addErrorItem:(ErrorItem *)parent string:(NSString *)string error:(LDLError *)error
@@ -614,11 +614,7 @@ enum
 	BOOL forceUpdate = NO;
 	BOOL updated = NO;
 
-	//if ([self showStatusBar:YES])
-	//{
-	//	[window display];
-	//}
-	if (![alertMessage isEqualToString:[progressMessage stringValue]])
+	if (![alertMessage isEqualToString:[progressMessage stringValue]] && (!forceProgress || [alertMessage length] > 0))
 	{
 		[progressMessage setStringValue:alertMessage];
 		forceUpdate = YES;
@@ -670,7 +666,7 @@ enum
 	else if (alertProgress == 2.0f)
 	{
 		[progress setDoubleValue:1.0];
-		if (![progress isHidden])
+		if (![progress isHidden] && !forceProgress)
 		{
 			[progress setHidden:YES];
 			[self adjustProgressMessageSize: progressAdjust]; 
@@ -832,6 +828,7 @@ enum
 			[self updatePolling];
 			[[self controller] recordRecentFile:filename];
 			[self stepChanged];
+			[self updateFps];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
@@ -848,6 +845,7 @@ enum
 			[[self window] setTitle:initialTitle];
 			[modelView rotationUpdate];
 			[self stepChanged];
+			[self updateFps];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:message object:self];
 	}
@@ -1063,8 +1061,24 @@ enum
 		[snapshotTaker setTrySaveAlpha:[saveSnapshotViewOwner transparentBackground]];
 		[snapshotTaker setAutoCrop:[saveSnapshotViewOwner autocrop]];
 		[(NSSavePanel *)contextInfo orderOut:self];
+		if ([self showStatusBar:YES])
+		{
+			[window display];
+		}
+		forceProgress = true;
 		[snapshotTaker saveFile:[sheet filename] width:[saveSnapshotViewOwner width:width] height:[saveSnapshotViewOwner height:height] zoomToFit:[saveSnapshotViewOwner zoomToFit]];
 		[saveSnapshotViewOwner saveSettings];
+		forceProgress = false;
+		if (![progress isHidden])
+		{
+			[progress setHidden:YES];
+			[self adjustProgressMessageSize: progressAdjust];
+		}
+		[self updateFps];
+		if ([self showStatusBar:showStatusBar])
+		{
+			[window display];
+		}
 	}
 	[saveSnapshotViewOwner setSavePanel:nil];
 	sheetBusy = false;

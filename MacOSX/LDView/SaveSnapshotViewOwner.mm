@@ -311,13 +311,14 @@
 	if (filenameField != nil)
 	{
 		NSString *baseFilename = [self baseFilename];
-		NSString *filename = baseFilename;
 		NSString *extension = [[savePanel filename] pathExtension];
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		int i;
 
 		for (i = 1; i <= 100; i++)
 		{
+			NSString *filename = baseFilename;
+
 			if ([saveSeriesCheck getCheck])
 			{
 				NSString *format = [NSString stringWithFormat:@"%%@-%%0%dd", [digitsField intValue]];

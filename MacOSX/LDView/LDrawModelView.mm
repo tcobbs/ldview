@@ -3,6 +3,8 @@
 #import "OCLocalStrings.h"
 #import "SnapshotTaker.h"
 #import "PrintAccessoryViewOwner.h"
+#import "LDViewController.h"
+#import "Preferences.h"
 
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDInputHandler.h>
@@ -686,6 +688,7 @@ static TCImage *resizeCornerImage = NULL;
 	}
 	[[self openGLContext] makeCurrentContext];
 	TREGLExtensions::setup();
+	[[[[[self window] delegate] controller] preferences] openGLInitialized];
 }
 
 - (void)prepResizeCornerTexture

@@ -54,7 +54,7 @@
 {
 	float rf, gf, bf, af;
 	
-	[[colorWell color] getRed:&rf green:&gf blue:&bf alpha:&af];
+	[[[colorWell color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&rf green:&gf blue:&bf alpha:&af];
 	*r = (int)(rf * 255.0 + 0.5);
 	*g = (int)(gf * 255.0 + 0.5);
 	*b = (int)(bf * 255.0 + 0.5);

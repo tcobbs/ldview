@@ -59,8 +59,12 @@
 
 - (void)enableTextureStuds
 {
+	long filterType = ldPreferences->getTextureFilterType();
+	bool haveAniso = TREGLExtensions::haveAnisoExtension();
+	float anisoLevel = ldPreferences->getAnisoLevel();
+
 	[self enableTextureStudsUI:YES];
-	if (TREGLExtensions::haveAnisoExtension() && ldPreferences->getTextureFilterType() == GL_LINEAR_MIPMAP_LINEAR && ldPreferences->getAnisoLevel() > 1.0f)
+	if (haveAniso && filterType == GL_LINEAR_MIPMAP_LINEAR && anisoLevel > 1.0f)
 	{
 		[filteringMatrix selectCellWithTag:1];
 	}
