@@ -88,7 +88,7 @@ enum
 	return defaultIdentifiers;
 }
 
-- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
+- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl menuItem:(NSMenuItem *)menuItem highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
 {
 	NSControl *&control = *pControl;
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
@@ -97,10 +97,6 @@ enum
 	if (replaceSegments && [control isKindOfClass:[NSSegmentedControl class]] && ![control isKindOfClass:[ToolbarSegmentedControl class]])
 	{
 		*pControl = [[ToolbarSegmentedControl alloc] initWithTemplate:*pControl];
-	}
-	else
-	{
-		NSLog(@"%@\n", [control class]);
 	}
 	if ([control isKindOfClass:[NSSegmentedControl class]] && [control respondsToSelector:@selector(setSegmentStyle:)])
 	{
@@ -136,8 +132,23 @@ enum
 		[otherIdentifiers addObject:identifier];
 	}
 	[allIdentifiers addObject:identifier];
+	if (!menuItem && [control isKindOfClass:[NSSegmentedControl class]] && [(NSSegmentedControl *)control segmentCount] == 1)
+	{
+		menuItem = [[[NSMenuItem alloc] initWithTitle:label action:[control action] keyEquivalent:@""] autorelease];
+		[menuItem setTag:[[(NSSegmentedControl *)control cell] tagForSegment:0]];
+	}
+	if (menuItem)
+	{
+		[menuItem setKeyEquivalent:@""];
+		[item setMenuFormRepresentation:menuItem];
+	}
 	[item release];
 	return item;
+}
+
+- (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
+{
+	return [self addToolbarItemWithIdentifier:identifier label:label control:pControl menuItem:nil highPriority:highPriority isDefault:isDefault];
 }
 
 - (void)updateSegments:(NSSegmentedControl *)segments states:(NSArray *)states
@@ -275,7 +286,7 @@ enum
 	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments2 highPriority:YES isDefault:NO];
 	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
-	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments menuItem:[[[controller prefsMenuItem] copy] autorelease] highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
 	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
@@ -430,7 +441,14 @@ enum
 
 - (IBAction)takeStepFrom:(id)sender
 {
-	[self changeStep:[[sender cell] tagForSegment:[sender selectedSegment]]];
+	if ([sender isKindOfClass:[NSSegmentedControl class]])
+	{
+		[self changeStep:[[sender cell] tagForSegment:[sender selectedSegment]]];
+	}
+	else
+	{
+		[self changeStep:[sender tag]];
+	}
 }
 
 - (id)initWithController:(LDViewController *)value
@@ -1068,6 +1086,7 @@ enum
 	{
 		saveSnapshotViewOwner = [[SaveSnapshotViewOwner alloc] init];
 	}
+	[saveSnapshotViewOwner setNumSteps:[modelView modelViewer]->getNumSteps()];
 	[saveSnapshotViewOwner setSavePanel:savePanel];
 	[savePanel setCanSelectHiddenExtension:YES];
 	sheetBusy = true;

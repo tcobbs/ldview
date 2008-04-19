@@ -22,6 +22,7 @@
 	IBOutlet NSMenuItem *pollingAutoLaterMenuItem;
 	IBOutlet NSMenuItem *pollingAutoNowMenuItem;
 	IBOutlet NSMenuItem *copyMenuItem;
+	IBOutlet NSMenuItem *prefsMenuItem;
 
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;
@@ -57,5 +58,6 @@
 - (ModelWindow *)currentModelWindow;
 - (long)pollingMode;
 - (void)recordRecentFile:(NSString *)filename;
+- (NSMenuItem *)prefsMenuItem;
 
 @end

@@ -594,4 +594,9 @@
 	[[self currentModelView] keyDown:event];
 }
 
+- (NSMenuItem *)prefsMenuItem
+{
+	return prefsMenuItem;
+}
+
 @end
