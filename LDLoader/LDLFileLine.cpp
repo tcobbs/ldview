@@ -15,6 +15,12 @@
 #include "LDLEmptyLine.h"
 #include "LDLUnknownLine.h"
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDLFileLine::LDLFileLine(LDLModel *parentModel, const char *line,
 						 int lineNumber, const char *originalLine)
 	:m_parentModel(parentModel),

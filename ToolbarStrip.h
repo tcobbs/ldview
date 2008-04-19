@@ -9,6 +9,7 @@ class LDViewPreferences;
 class TCAlert;
 
 typedef std::vector<HWND> HwndVector;
+typedef std::list<HIMAGELIST> HImageListList;
 
 class ToolbarStrip: public CUIDialog
 {
@@ -121,6 +122,7 @@ protected:
 	TbButtonInfoVector m_stepButtonInfos;
 	HwndVector m_controls;
 	int m_stripHeight;
+	HImageListList m_imageLists;
 
 	int m_stdBitmapStartId;
 	int m_tbBitmapStartId;

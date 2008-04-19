@@ -11,6 +11,12 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 #ifndef _NO_TRE_THREADS
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>

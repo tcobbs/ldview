@@ -1,6 +1,10 @@
 #include "CUIWindowResizer.h"
 #include "CUISubWindowInfo.h"
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 const DWORD CUIFloatLeft = 0x01;
 const DWORD CUIFloatRight = 0x02;
 const DWORD CUIFloatTop = 0x04;

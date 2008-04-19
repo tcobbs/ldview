@@ -7,6 +7,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 // The following map came from here:
 // http://www.microsoft.com/globaldev/reference/sbcs/1250.mspx
 // The <UNMAPPED> entries were added by hand based on the holes in the chart.

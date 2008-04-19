@@ -6,11 +6,9 @@
 #include <stdlib.h>
 
 #ifdef WIN32
-#pragma warning(push, 3)
-#endif // WIN32
-
-#ifdef WIN32
-#pragma warning(pop)
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
 #endif // WIN32
 
 TRETransShapeGroup::TRETransShapeGroup(void)

@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <TCFoundation/mystring.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 #define GOLD_SCALE (255.0f / 240.0f * 2.0f)
 
 LDLPalette *LDLPalette::sm_defaultPalette = NULL;

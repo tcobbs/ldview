@@ -2,6 +2,12 @@
 #include "LDLModel.h"
 #include <TCFoundation/TCMacros.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDLAutoCamera::LDLAutoCamera(void):
 m_model(NULL),
 m_haveGlobeRadius(false),

@@ -3,6 +3,12 @@
 #include "TREGL.h"
 #include "TREMainModel.h"
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 TREColoredShapeGroup::TREColoredShapeGroup(void)
 	:m_transparentIndices(NULL),
 	m_transparentStripCounts(NULL)

@@ -9,6 +9,12 @@
 #include "LDViewPoint.h"
 #include <string>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 const char *LDHtmlInventory::sm_style = "\
 body\n\
 {\n\

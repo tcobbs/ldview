@@ -3,6 +3,12 @@
 #include <string.h>
 #include <TCFoundation/mystring.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 TCFloat LDLFacing::glMatrix[16] =
 {
 	(TCFloat)1.0, (TCFloat)0.0, (TCFloat)0.0, (TCFloat)0.0,

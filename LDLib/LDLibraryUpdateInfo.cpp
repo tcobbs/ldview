@@ -4,6 +4,12 @@
 #include <TCFoundation/mystring.h>
 #include <stdio.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDLibraryUpdateInfo::LDLibraryUpdateInfo(void)
 	:m_updateType(LDLibraryUnknownUpdate),
 	m_format(LDLibraryUnknownFormat),

@@ -7,7 +7,13 @@
 #include <stdlib.h>
 #include <errno.h>
 
+
 #ifdef WIN32
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 TCNetwork::TCNetworkSetupCleanup TCNetwork::networkSetupCleanup;
 
 TCNetwork::TCNetworkSetupCleanup::TCNetworkSetupCleanup(void)

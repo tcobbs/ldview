@@ -20,6 +20,12 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <ctype.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
 

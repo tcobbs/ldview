@@ -33,6 +33,10 @@
 #include <LDLib/LDHtmlInventory.h>
 #include "PartsListDialog.h"
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 #define DOWNLOAD_TIMER 12
 #define DEFAULT_WIN_WIDTH 640
 #define DEFAULT_WIN_HEIGHT 480

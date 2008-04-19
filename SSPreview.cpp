@@ -2,6 +2,10 @@
 #include "Resource.h"
 #include <TCFoundation/TCImage.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 SSPreview::SSPreview(HWND hParentWindow, HINSTANCE hInstance)
 		  :CUIWindow(hParentWindow, hInstance, 0, 0, 0, 0),
 		   hBitmap(NULL),

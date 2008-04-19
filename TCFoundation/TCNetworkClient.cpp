@@ -3,6 +3,11 @@
 
 #ifdef WIN32
 #define ECONNREFUSED WSAECONNREFUSED
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 #else // WIN32
 #if defined (_QT) || defined (__APPLE__)
 #include <unistd.h>
