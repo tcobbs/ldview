@@ -1211,32 +1211,38 @@ static TCImage *resizeCornerImage = NULL;
 	}
 }
 
+- (void)doFullScreen
+{
+	CGDirectDisplayID displayID = (CGDirectDisplayID)[[[[[self window] screen] deviceDescription] objectForKey:@"NSScreenNumber"] pointerValue];
+	NSOpenGLContext *fullScreenContext = [self setupFullScreenContextForDisplay:displayID];
+	
+	if (fullScreenContext)
+	{
+		GLint viewport[4];
+		
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		modelViewer->setWidth(viewport[2]);
+		modelViewer->setHeight(viewport[3]);
+		modelViewer->setup();
+		[self fullScreenRunLoop:fullScreenContext];
+		[fullScreenContext clearDrawable];
+		CGDisplayRelease(displayID);
+		CGReleaseAllDisplays();
+		modelViewer->setWidth((int)[self frame].size.width);
+		modelViewer->setHeight((int)[self frame].size.height);
+		[self rotationUpdate];
+		//[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
+	}
+}
+
 - (IBAction)toggleFullScreen:(id)sender
 {
 	fullScreen = !fullScreen;
 	if (fullScreen)
 	{
-		CGDirectDisplayID displayID = (CGDirectDisplayID)[[[[[self window] screen] deviceDescription] objectForKey:@"NSScreenNumber"] pointerValue];
-		NSOpenGLContext *fullScreenContext = [self setupFullScreenContextForDisplay:displayID];
-		
-		if (fullScreenContext)
-		{
-			GLint viewport[4];
-
-			//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
-			glGetIntegerv(GL_VIEWPORT, viewport);
-			modelViewer->setWidth(viewport[2]);
-			modelViewer->setHeight(viewport[3]);
-			modelViewer->setup();
-			[self fullScreenRunLoop:fullScreenContext];
-			[fullScreenContext clearDrawable];
-			CGDisplayRelease(displayID);
-			CGReleaseAllDisplays();
-			modelViewer->setWidth((int)[self frame].size.width);
-			modelViewer->setHeight((int)[self frame].size.height);
-			[self rotationUpdate];
-			//[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
-		}
+		// If we go immediately, the menu is still left haning.
+		[self performSelector:@selector(doFullScreen) withObject:nil afterDelay:0.0f];
 	}
 }
 
