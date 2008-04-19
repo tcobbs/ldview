@@ -36,6 +36,15 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[pages makeObjectsPerformSelector:@selector(setup)];
 }
 
+- (void)openGLInitialized
+{
+	if (!openGLInitialized)
+	{
+		[primitivesPage setup];
+		openGLInitialized = YES;
+	}
+}
+
 - (void)show
 {
 	[window makeKeyAndOrderFront:self];

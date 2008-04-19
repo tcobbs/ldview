@@ -78,6 +78,7 @@ class LDPartsList;
 	NSTimer *pollingTimer;
 	NSDate *lastWriteTime;
 	bool pollingUpdateNeeded;
+	bool forceProgress;
 }
 
 - (bool)sheetBusy;

@@ -29,6 +29,7 @@ class SnapshotAlertHandler;
 - (id)init;
 - (id)initWithModelViewer:(LDrawModelViewer *)modelViewer sharedContext:(NSOpenGLContext *)sharedContext;
 
+- (LDSnapshotTaker *)ldSnapshotTaker;
 - (void)snapshotCallback:(TCAlert *)alert;
 - (void)setImageType:(LDSnapshotTaker::ImageType)value;
 - (void)setTrySaveAlpha:(bool)value;
