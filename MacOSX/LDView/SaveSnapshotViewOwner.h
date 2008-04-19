@@ -16,6 +16,7 @@
 	IBOutlet NSButton *fileTypeOptionsButton;
 	IBOutlet NSPopUpButton *fileTypePopUp;
 	IBOutlet NSButton *saveSeriesCheck;
+	IBOutlet NSBox *saveSeriesBox;
 	IBOutlet NSTextField *digitsLabel;
 	IBOutlet NSTextField *digitsField;
 	IBOutlet NSStepper *digitsStepper;
@@ -31,13 +32,21 @@
 	IBOutlet NSTextField *suffixLabel;
 	IBOutlet NSTextField *suffixField;
 	IBOutlet NSButton *sameScaleCheck;
-	
+
+	NSTextField *nameFieldLabel;
+	NSTextField *filenameField;
+
 	NSSavePanel *savePanel;
+
+	int numSteps;
+	int saveDigits;
+	NSString *stepSuffix;
 }
 
 - (id)init;
 - (void)setSavePanel:(NSSavePanel *)aSavePanel;
 - (void)saveSettings;
+- (void)setNumSteps:(int)value;
 
 - (IBAction)saveSeries:(id)sender;
 - (IBAction)size:(id)sender;

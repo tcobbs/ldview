@@ -43,7 +43,8 @@
 - (void)enableSaveSeries
 {
 	[self enableSaveSeriesUI:YES];
-	[digitsField setIntValue:TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false)];
+	[digitsField setIntValue:saveDigits];
+	[digitsStepper setIntValue:saveDigits];
 }
 
 - (void)disableSaveSeries
@@ -84,10 +85,20 @@
 	[sameScaleCheck setEnabled:enabled && [self zoomToFit]];
 }
 
+- (void)setStepSuffix:(NSString *)value
+{
+	if (value != stepSuffix)
+	{
+		[stepSuffix release];
+		stepSuffix = [value retain];
+	}
+}
+
 - (void)enableAllSteps
 {
 	[self enableAllStepsUI:YES];
-	[suffixField setStringValue:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:SAVE_STEPS_SUFFIX_KEY] defaultValue:@"" sessionSpecific:NO]];
+	[self setStepSuffix:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:SAVE_STEPS_SUFFIX_KEY] defaultValue:@"" sessionSpecific:NO]];
+	[suffixField setStringValue:stepSuffix];
 	[sameScaleCheck setCheck:TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)];
 }
 
@@ -155,12 +166,96 @@
 	}
 }
 
+- (id)isFilenameField:(NSTextField *)textField
+{
+	NSTextFieldCell *textFieldCell = [textField cell];
+	
+	if ([textFieldCell bezelStyle] == NSTextFieldSquareBezel && [textField isEditable] && [textField isEnabled])
+	{
+		NSRect textFieldFrame = [textField frame];
+		NSRect labelFrame = [nameFieldLabel frame];
+		float fy1 = textFieldFrame.origin.y;
+		float fy2 = fy1 + textFieldFrame.size.height;
+		float fx1 = textFieldFrame.origin.x;
+		float ly1 = labelFrame.origin.y;
+		float ly2 = ly1 + labelFrame.size.height;
+		float lx1 = labelFrame.origin.x;
+		float lx2 = lx1 + labelFrame.size.width;
+
+		if (fy1 <= ly1 && fy2 >= ly2 && fx1 >= lx2)
+		{
+			return textField;
+		}
+	}
+	return nil;
+}
+
+- (id)isNameFieldLabel:(NSTextField *)textField
+{
+	if ([textField isEnabled] && ![textField isEditable] && [[textField stringValue] isEqualToString:[savePanel nameFieldLabel]])
+	{
+		return textField;
+	}
+	else
+	{
+		return nil;
+	}
+}
+
+- (NSTextField *)findTextFieldInView:(NSView *)view selector:(SEL)selector
+{
+	NSArray *subViews = [view subviews];
+	int i;
+	int count = [subViews count];
+
+	if ([view isHidden])
+	{
+		return nil;
+	}
+	for (i = 0; i < count; i++)
+	{
+		NSView *subView = [subViews objectAtIndex:i];
+
+		if ([subView isKindOfClass:[NSTextField class]] && ![subView isHidden])
+		{
+			NSTextField *textField = [self performSelector:selector withObject:subView];
+			
+			if (textField)
+			{
+				return textField;
+			}
+		}
+	}
+	for (i = 0; i < count; i++)
+	{
+		NSTextField *textField = [self findTextFieldInView:[subViews objectAtIndex:i] selector:selector];
+		
+		if (textField)
+		{
+			return textField;
+		}
+	}
+	return nil;
+}
+
+- (void)findFilenameField
+{
+	NSView *saveContentView = [savePanel contentView];
+
+	nameFieldLabel = [self findTextFieldInView:saveContentView selector:@selector(isNameFieldLabel:)];
+	if (nameFieldLabel)
+	{
+		filenameField = [self findTextFieldInView:saveContentView selector:@selector(isFilenameField:)];
+	}
+}
+
 - (void)setSavePanel:(NSSavePanel *)aSavePanel
 {
 	if (aSavePanel != nil)
 	{
 		int fileType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
-		
+
+		saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
 		[fileTypePopUp selectItemWithTag:fileType];
 		[self groupCheck:saveSeriesCheck name:@"SaveSeries" value:TCUserDefaults::boolForKey(SAVE_SERIES_KEY, false, false)];
 		[self groupCheck:sizeCheck name:@"Size" value:!TCUserDefaults::boolForKey(SAVE_ACTUAL_SIZE_KEY, true, false)];
@@ -174,9 +269,82 @@
 	}
 	if (savePanel)
 	{
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidUpdate:) name:NSWindowDidUpdateNotification object:nil];
+		[self findFilenameField];
+		if (filenameField == nil)
+		{
+			[saveSeriesCheck setHidden:YES];
+			[saveSeriesBox setHidden:YES];
+		}
 		[savePanel setAccessoryView:accessoryView];
 	}
 	[self updateRequiredFileType];
+}
+
+- (NSString *)baseFilename
+{
+	NSString *filename = [[[savePanel filename] lastPathComponent] stringByDeletingPathExtension];
+
+	if ([[suffixField stringValue] length])
+	{
+		filename = [NSString stringWithASCIICString:LDSnapshotTaker::removeStepSuffix([filename asciiCString], [stepSuffix asciiCString]).c_str()];
+	}
+	if (saveDigits > 0)
+	{
+		int i;
+		int len = [filename length];
+
+		for (i = 0; i < saveDigits && isdigit([filename characterAtIndex:len - i - 1]); i++)
+		{
+			// Don't do anything;
+		}
+		if (i == saveDigits && [filename characterAtIndex:len - i - 1] == '-')
+		{
+			filename = [filename substringToIndex:len - i - 1];
+		}
+	}
+	return filename;
+}
+
+- (void)updateFilename
+{
+	if (filenameField != nil)
+	{
+		NSString *baseFilename = [self baseFilename];
+		NSString *filename = baseFilename;
+		NSString *extension = [[savePanel filename] pathExtension];
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		int i;
+
+		for (i = 1; i <= 100; i++)
+		{
+			if ([saveSeriesCheck getCheck])
+			{
+				NSString *format = [NSString stringWithFormat:@"%%@-%%0%dd", [digitsField intValue]];
+
+				filename = [NSString stringWithFormat:format, filename, i];
+				saveDigits = [digitsField intValue];
+			}
+			else
+			{
+				saveDigits = 0;
+			}
+			if ([allStepsCheck getCheck])
+			{
+				[self setStepSuffix:[suffixField stringValue]];
+				filename = [NSString stringWithASCIICString:LDSnapshotTaker::addStepSuffix([filename asciiCString], [stepSuffix asciiCString], 1, numSteps).c_str()];
+			}
+			if (![savePanel isExtensionHidden])
+			{
+				filename = [filename stringByAppendingPathExtension:extension];
+			}
+			[filenameField setStringValue:filename];
+			if (![saveSeriesCheck getCheck] || ![fileManager fileExistsAtPath:[savePanel filename]])
+			{
+				break;
+			}
+		}
+	}
 }
 
 - (void)saveSettings
@@ -211,7 +379,23 @@
 
 - (IBAction)saveSeries:(id)sender
 {
+	if ([sender getCheck])
+	{
+		saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
+	}
+	else
+	{
+		[self updateFilename];
+	}
 	[self groupCheck:sender name:@"SaveSeries"];
+	if ([sender getCheck])
+	{
+		[self updateFilename];
+	}
+	else
+	{
+		saveDigits = 0;
+	}
 }
 
 - (IBAction)size:(id)sender
@@ -308,7 +492,41 @@
 
 - (IBAction)allSteps:(id)sender
 {
+	if (![sender getCheck])
+	{
+		[self updateFilename];
+	}
 	[self groupCheck:sender name:@"AllSteps"];
+	if ([sender getCheck])
+	{
+		[self updateFilename];
+	}
+}
+
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+	[self updateFilename];
+	[self setStepSuffix:[suffixField stringValue]];
+}
+
+- (void)windowDidUpdate:(NSNotification *)notification
+{
+	if ([notification object] == savePanel)
+	{
+		[self updateFilename];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidUpdateNotification object:nil];
+	}
+}
+
+- (void)setNumSteps:(int)value
+{
+	numSteps = value;
+}
+
+- (void)saveDigits:(id)sender
+{
+	[digitsField takeIntValueFrom:sender];
+	[self updateFilename];
 }
 
 @end

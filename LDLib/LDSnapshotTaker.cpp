@@ -770,6 +770,9 @@ std::string LDSnapshotTaker::addStepSuffix(
 	newString = filename.substr(0, dotSpot);
 	newString += stepSuffix;
 	newString += buf;
-	newString += filename.substr(dotSpot);
+	if (dotSpot < filename.size())
+	{
+		newString += filename.substr(dotSpot);
+	}
 	return newString;
 }

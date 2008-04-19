@@ -19,6 +19,7 @@
                 saveViewingAngle = id; 
                 showPovCameraInfo = id; 
                 showViewInfo = id; 
+                takeStepFrom = id; 
                 toggleFullScreen = id; 
                 toggleStatusBar = id; 
                 toggleToolbar = id; 
@@ -49,12 +50,14 @@
                 examineMenuItem = NSMenuItem; 
                 fileMenu = NSMenu; 
                 flyThroughMenuItem = NSMenuItem; 
+                goMenu = NSMenu; 
                 latLongRotationMenuItem = NSMenuItem; 
                 modelTreeMenuItem = NSMenuItem; 
                 pollingAutoLaterMenuItem = NSMenuItem; 
                 pollingAutoNowMenuItem = NSMenuItem; 
                 pollingDisabledMenuItem = NSMenuItem; 
                 pollingPromptMenuItem = NSMenuItem; 
+                prefsMenuItem = NSMenuItem; 
                 statusBarMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 
                 viewingAngleMenu = NSMenu; 

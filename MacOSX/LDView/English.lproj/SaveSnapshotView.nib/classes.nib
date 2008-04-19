@@ -11,6 +11,7 @@
                 allSteps = id; 
                 fileType = id; 
                 fileTypeOptions = id; 
+                saveDigits = id; 
                 saveSeries = id; 
                 size = id; 
                 zoomToFit = id; 
@@ -29,6 +30,7 @@
                 heightField = NSTextField; 
                 heightLabel = NSTextField; 
                 sameScaleCheck = NSButton; 
+                saveSeriesBox = NSBox; 
                 saveSeriesCheck = NSButton; 
                 sizeCheck = NSButton; 
                 suffixField = NSTextField; 
