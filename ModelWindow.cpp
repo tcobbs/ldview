@@ -23,6 +23,10 @@
 #include <TRE/TREGLExtensions.h>
 #include <windowsx.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 #define DISTANCE_MULT 1.325f
 
 #define POLL_INTERVAL 500

@@ -8,6 +8,10 @@
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 ToolbarStrip::ToolbarStrip(HINSTANCE hInstance):
 CUIDialog(hInstance),
 m_stdBitmapStartId(-1),
@@ -26,6 +30,12 @@ ToolbarStrip::~ToolbarStrip(void)
 
 void ToolbarStrip::dealloc(void)
 {
+	HImageListList::iterator it;
+
+	for (it = m_imageLists.begin(); it != m_imageLists.end(); it++)
+	{
+		ImageList_Destroy(*it);
+	}
 	TCAlertManager::unregisterHandler(this);
 	m_prefs->release();
 	CUIDialog::dealloc();
@@ -80,6 +90,7 @@ void ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
 	DeleteObject(hBitmap);
 	DeleteObject(hMask);
 	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
+	m_imageLists.push_back(imageList);
 }
 
 void ToolbarStrip::initToolbar(
@@ -590,13 +601,15 @@ HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
 	int maskSize;
 	int x, y;
 	HDC hBmDc = CreateCompatibleDC(NULL);
+	HBITMAP hOldBitmap;
+	HBITMAP hNewBitmap;
 
 	::GetObject((HANDLE)hBitmap, sizeof(BITMAP), &bitmap);
 	bytesPerLine = ModelWindow::roundUp((bitmap.bmWidth + 7) / 8, 2);
 	maskSize = bytesPerLine * bitmap.bmHeight;
 	data = new TCByte[maskSize];
 	memset(data, 0, maskSize);
-	SelectObject(hBmDc, hBitmap);
+	hOldBitmap = (HBITMAP)SelectObject(hBmDc, hBitmap);
 	for (y = 0; y < bitmap.bmHeight; y++)
 	{
 		int yOffset = bytesPerLine * y;
@@ -614,8 +627,11 @@ HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
 			}
 		}
 	}
+	SelectObject(hBmDc, hOldBitmap);
 	DeleteDC(hBmDc);
-	return CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
+	hNewBitmap = CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
+	delete data;
+	return hNewBitmap;
 }
 
 //static const std::string notificationName(UINT code)

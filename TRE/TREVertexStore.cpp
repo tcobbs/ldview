@@ -5,6 +5,12 @@
 #include <TCFoundation/TCMacros.h>
 #include <string.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 TREVertexStore *TREVertexStore::sm_activeVertexStore = NULL;
 PFNWGLALLOCATEMEMORYNVPROC TREVertexStore::wglAllocateMemoryNV = NULL;
 PFNWGLFREEMEMORYNVPROC TREVertexStore::wglFreeMemoryNV = NULL;

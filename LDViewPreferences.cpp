@@ -22,6 +22,10 @@
 #include <tmschema.h>
 #include <TRE/TREGLExtensions.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 //#define WILLY_DEBUG
 
 #ifdef WILLY_DEBUG

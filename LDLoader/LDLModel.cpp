@@ -14,7 +14,11 @@
 
 #ifdef WIN32
 #include <direct.h>
-#include <windows.h>
+
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 #else // WIN32
 #include <unistd.h>
 #endif // WIN32
@@ -571,6 +575,7 @@ void LDLModel::initCheckDirs()
 	char *ldviewParentDir = directoryFromPath(ldviewDir);
 	stripTrailingPathSeparators(ldviewParentDir);
 	ldviewLDrawDir = copyString(ldviewParentDir, 10);
+	delete ldviewParentDir;
 	// LDView Dir/../ldraw
 	strcat(ldviewLDrawDir, "/ldraw");
 	sm_checkDirs.push_back(ldviewLDrawDir);

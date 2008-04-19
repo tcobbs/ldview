@@ -9,6 +9,10 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 ModelTreeDialog::ModelTreeDialog(HINSTANCE hInstance, HWND hParentWindow):
 CUIDialog(hInstance, hParentWindow),
 m_modelWindow(NULL),

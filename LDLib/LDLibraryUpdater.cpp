@@ -34,6 +34,12 @@
 #include <ctype.h>
 #endif // _QT || _OSMESA
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 #define MAX_DL_THREADS 2
 
 LDLibraryUpdater::LDLibraryUpdater(void)

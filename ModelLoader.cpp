@@ -10,6 +10,10 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCStringArray.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 #define TITLE _UC("LDView")
 
 #define WIN_WIDTH 640

@@ -7,6 +7,12 @@
 #include <LDLoader/LDLPalette.h>
 #include <LDLoader/LDLModel.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	:m_modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 	NULL)

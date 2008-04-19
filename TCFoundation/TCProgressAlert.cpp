@@ -3,6 +3,12 @@
 #include "TCAlertManager.h"
 #include "mystring.h"
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 TCProgressAlert::TCProgressAlert(const char *source, const char *message,
 								 float progress, TCStringArray *extraInfo)
 	:TCAlert(TCProgressAlert::alertClass(), message, extraInfo),

@@ -5,6 +5,10 @@
 #include <windll/structs.h>
 #include <windll/decs.h>
 
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
 int WINAPI passwordFunc(char *, int, const char *, const char *);
 int WINAPI printFunc(LPSTR, unsigned long);
 int WINAPI replaceFunc(char *);

@@ -11,6 +11,12 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDPreferences.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
 m_imageType(ITPng),

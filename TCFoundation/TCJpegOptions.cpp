@@ -1,6 +1,12 @@
 #include "TCJpegOptions.h"
 #include "TCUserDefaults.h"
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 int TCJpegOptions::sm_defaultQuality = 85;
 TCJpegOptions::SubSampling TCJpegOptions::sm_defaultSubSampling = SS420;
 bool TCJpegOptions::sm_defaultProgressive = false;

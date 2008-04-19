@@ -3,6 +3,12 @@
 #include "LDLMainModel.h"
 #include <TCFoundation/TCLocalStrings.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDLTriangleLine::LDLTriangleLine(LDLModel *parentModel, const char *line,
 							   int lineNumber, const char *originalLine)
 	:LDLShapeLine(parentModel, line, lineNumber, originalLine),

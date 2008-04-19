@@ -1,6 +1,12 @@
 #include "TRESmoother.h"
 #include "TREVertexArray.h"
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 TRESmoother::TRESmoother(void)
 	:m_vertices(new TREVertexArray),
 	m_normals(NULL),

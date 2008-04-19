@@ -24,6 +24,12 @@
 #include <TRE/TREGL.h>
 #include <time.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 #define FONT_CHAR_WIDTH 8
 #define FONT_CHAR_HEIGHT 16
 #define FONT_IMAGE_WIDTH 128

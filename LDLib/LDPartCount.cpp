@@ -1,6 +1,12 @@
 #include "LDPartCount.h"
 #include <LDLoader/LDLModel.h>
 
+#ifdef WIN32
+#if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
+#define new DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+#endif // WIN32
+
 LDPartCount::LDPartCount(void)
 	:m_model(NULL),
 	m_totalCount(0),
