@@ -103,13 +103,7 @@ void ToolbarStrip::initToolbar(
 		TBSTYLE_EX_DRAWDDARROWS | WS_EX_TRANSPARENT);
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-	// The toolbar behaves very strangely.  The following setting gives me
-	// buttons that are the same size as the buttons in WordPad.  Any other
-	// settings don't.  Additionally, increasing the second number to 23
-	// increases the size of toolbar buttons dramatically.  So, I have to
-	// tell it to use 23 as the minimum width and 22 as the maximum width in
-	// order to get it to display like I want it to.  Go figure.
-	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(23, 22));
+	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(22, 22));
 	initImageList(hToolbar, bitmapId);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
 	// Note: buttonTitle is an empty string.  No need for Unicode.
@@ -129,7 +123,11 @@ void ToolbarStrip::initToolbar(
 		buttons[i].iString = -1;
 	}
 	SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
-	SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(17, 16));
+	if (!CUIThemes::isThemeActive() ||
+		((CUIThemes::getThemeAppProperties() & STAP_ALLOW_CONTROLS) == 0))
+	{
+		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(22, 24));
+	}
 	GetWindowRect(hToolbar, &rect);
 	screenToClient(hWindow, &rect);
 	if (!SendMessage(hToolbar, TB_GETRECT, buttons[count - 1].idCommand,
@@ -286,6 +284,8 @@ void ToolbarStrip::updateStep(void)
 {
 	LDrawModelViewer *modelViewer =
 		m_ldviewWindow->getModelWindow()->getModelViewer();
+	bool prevEnabled = false;
+	bool nextEnabled = false;
 
 	if (modelViewer)
 	{
@@ -305,16 +305,17 @@ void ToolbarStrip::updateStep(void)
 		{
 			SendMessage(m_hStepField, EM_SETSEL, 0, (LPARAM)-1);
 		}
-		enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, m_step > 1);
-		enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP,
-			m_step < modelViewer->getNumSteps());
+		prevEnabled = m_step > 1;
+		nextEnabled = m_step < modelViewer->getNumSteps();
 	}
 	else
 	{
 		windowSetText(IDC_STEP, "--");
-		enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, false);
-		enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP, false);
 	}
+	enableToolbarButton(m_hStepToolbar, ID_FIRST_STEP, prevEnabled);
+	enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, prevEnabled);
+	enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP, nextEnabled);
+	enableToolbarButton(m_hStepToolbar, ID_LAST_STEP, nextEnabled);
 }
 
 void ToolbarStrip::updateNumSteps(void)
@@ -523,10 +524,17 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 {
 	if (m_stepButtonInfos.size() == 0)
 	{
-		addTbButtonInfo(m_stepButtonInfos, _UC("Previous Step"), ID_PREV_STEP,
+		addTbButtonInfo(m_stepButtonInfos,
+			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP, -1, 2);
+		addTbButtonInfo(m_stepButtonInfos,
+			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP,
 			-1, 0);
-		addTbButtonInfo(m_stepButtonInfos, _UC("Next Step"), ID_NEXT_STEP, -1,
+		addTbButtonInfo(m_stepButtonInfos,
+			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP, -1,
 			1);
+		addTbButtonInfo(m_stepButtonInfos,
+			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP, -1,
+			3);
 	}
 }
 
@@ -534,12 +542,12 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 {
 	if (m_mainButtonInfos.size() == 0)
 	{
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN, -1,
-			10);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE,
-			-1, 5);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Reload")), ID_FILE_RELOAD, -1,
-			0);
+		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
+			ID_FILE_OPEN, -1, 10);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE, -1, 5);
+		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Reload")),
+			ID_FILE_RELOAD, -1, 0);
 		addTbSeparatorInfo(m_mainButtonInfos);
 		m_drawWireframe = m_prefs->getDrawWireframe();
 		m_seams = m_prefs->getUseSeams() != 0;
@@ -547,24 +555,29 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_primitiveSubstitution = m_prefs->getAllowPrimitiveSubstitution();
 		m_lighting = m_prefs->getUseLighting();
 		m_bfc = m_prefs->getBfc();
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Wireframe")),
-			IDC_WIREFRAME, -1, 1, m_drawWireframe,
-			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, -1,
-			2, m_seams);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("EdgeLines")),
-			IDC_HIGHLIGHTS, -1, 3, m_edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("PrimitiveSubstitution")),
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME, -1, 1,
+			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, -1, 2, m_seams);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("EdgeLines")), IDC_HIGHLIGHTS, -1, 3,
+			m_edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("PrimitiveSubstitution")),
 			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, m_primitiveSubstitution,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING,
-			-1, 7, m_lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")), IDC_BFC, -1, 9,
-			m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("SelectView")),
-			ID_VIEWANGLE, -1, 6, TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
-		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Preferences")), 
-			ID_EDIT_PREFERENCES, -1, 8);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, -1, 7,
+			m_lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
+			IDC_BFC, -1, 9, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE, -1, 6,
+			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES, -1,
+			8);
 	}
 }
 

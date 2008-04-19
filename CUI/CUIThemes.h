@@ -36,6 +36,7 @@ typedef HTHEME (_stdcall *PFNGETWINDOWTHEME)(HWND hWnd);
 typedef HRESULT (_stdcall *PFNGETTHEMECOLOR)(HTHEME hTheme, int iPartId,
 	int iStateId, int iPropId, COLORREF *pColor);
 typedef void (_stdcall *PFNSETTHEMEAPPPROPERTIED)(DWORD dwFlags);
+typedef DWORD (_stdcall *PFNGETTHEMEAPPPROPERTIED)(void);
 typedef HRESULT (_stdcall *PFNGETTHEMERECT)(HTHEME hTheme, int iPartId,
 	int iStateId, int iPropId, RECT *pRect);
 typedef HRESULT (_stdcall *PFNGETTHEMETEXTEXTENT)(HTHEME hTheme, HDC hdc,
@@ -48,6 +49,7 @@ typedef HRESULT (_stdcall *PFNGETTHEMEPARTSIZE)(HTHEME hTheme, HDC hdc,
 typedef HRESULT (_stdcall *PFNENABLETHEMEDIALOGTEXTURE)(HWND hwnd,
 	DWORD dwFlags);
 typedef COLORREF (_stdcall *PFNGETTHEMESYSCOLOR)(HTHEME hTheme, int iColorID);
+typedef BOOL (_stdcall *PFNISTHEMEACTIVE)(void);
 
 class CUIExport CUIThemes
 {
@@ -75,6 +77,7 @@ public:
 	static HRESULT getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
 		int iPropId, RECT *pRect);
 	static void setThemeAppProperties(DWORD dwFlags);
+	static DWORD getThemeAppProperties(void);
 	static HRESULT getThemeTextExtent(HTHEME hTheme, HDC hdc, int iPartId,
 		int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags,
 		const RECT *pBoundingRect, RECT *pExtentRect);
@@ -83,6 +86,7 @@ public:
 		int iStateId, RECT *prc, enum THEMESIZE eSize, SIZE *psz);
 	static HRESULT enableThemeDialogTexture(HWND hwnd, DWORD dwFlags);
 	static COLORREF getThemeSysColor(HTHEME, int iColorID);
+	static BOOL isThemeActive(void);
 
 protected:
 	CUIThemes(void);
@@ -101,12 +105,14 @@ protected:
 	static PFNGETWINDOWTHEME sm_getWindowTheme;
 	static PFNGETTHEMECOLOR sm_getThemeColor;
 	static PFNSETTHEMEAPPPROPERTIED sm_setThemeAppProperties;
+	static PFNGETTHEMEAPPPROPERTIED sm_getThemeAppProperties;
 	static PFNGETTHEMERECT sm_getThemeRect;
 	static PFNGETTHEMETEXTEXTENT sm_getThemeTextExtent;
 	static PFNDDRAWTHEMEPARENTBACKGROUND sm_drawThemeParentBackground;
 	static PFNGETTHEMEPARTSIZE sm_getThemePartSize;
 	static PFNENABLETHEMEDIALOGTEXTURE sm_enableThemeDialogTexture;
 	static PFNGETTHEMESYSCOLOR sm_getThemeSysColor;
+	static PFNISTHEMEACTIVE sm_isThemeActive;
 	static void deinit(void);
 
 	static class CUIThemesCleanup

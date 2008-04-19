@@ -19,12 +19,14 @@ PFNSETWINDOWTHEME CUIThemes::sm_setWindowTheme = NULL;
 PFNGETWINDOWTHEME CUIThemes::sm_getWindowTheme = NULL;
 PFNGETTHEMECOLOR CUIThemes::sm_getThemeColor = NULL;
 PFNSETTHEMEAPPPROPERTIED CUIThemes::sm_setThemeAppProperties = NULL;
+PFNGETTHEMEAPPPROPERTIED CUIThemes::sm_getThemeAppProperties = NULL;
 PFNGETTHEMERECT CUIThemes::sm_getThemeRect = NULL;
 PFNGETTHEMETEXTEXTENT CUIThemes::sm_getThemeTextExtent = NULL;
 PFNDDRAWTHEMEPARENTBACKGROUND CUIThemes::sm_drawThemeParentBackground = NULL;
 PFNGETTHEMEPARTSIZE CUIThemes::sm_getThemePartSize = NULL;
 PFNENABLETHEMEDIALOGTEXTURE CUIThemes::sm_enableThemeDialogTexture = NULL;
 PFNGETTHEMESYSCOLOR CUIThemes::sm_getThemeSysColor = NULL;
+PFNISTHEMEACTIVE CUIThemes::sm_isThemeActive = NULL;
 
 CUIThemes::CUIThemesCleanup::~CUIThemesCleanup(void)
 {
@@ -72,6 +74,9 @@ void CUIThemes::init(void)
 			sm_setThemeAppProperties =
 				(PFNSETTHEMEAPPPROPERTIED)GetProcAddress(sm_hModThemes,
 				"SetThemeAppProperties");
+			sm_getThemeAppProperties =
+				(PFNGETTHEMEAPPPROPERTIED)GetProcAddress(sm_hModThemes,
+				"GetThemeAppProperties");
 			sm_getThemeRect = (PFNGETTHEMERECT)GetProcAddress(sm_hModThemes,
 				"GetThemeRect");
 			sm_getThemeTextExtent =
@@ -89,6 +94,9 @@ void CUIThemes::init(void)
 			sm_getThemeSysColor =
 				(PFNGETTHEMESYSCOLOR)GetProcAddress(sm_hModThemes,
 				"GetThemeSysColor");
+			sm_isThemeActive =
+				(PFNISTHEMEACTIVE)GetProcAddress(sm_hModThemes,
+				"IsThemeActive");
 
 
 			if (sm_openThemeData && sm_closeThemeData && sm_drawThemeBackground
@@ -97,7 +105,8 @@ void CUIThemes::init(void)
 				sm_getThemeColor && sm_setThemeAppProperties &&
 				sm_getThemeRect && sm_getThemeTextExtent &&
 				sm_drawThemeParentBackground && sm_getThemePartSize &&
-				sm_enableThemeDialogTexture && sm_getThemeSysColor)
+				sm_enableThemeDialogTexture && sm_getThemeSysColor &&
+				sm_isThemeActive && sm_getThemeAppProperties)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -250,6 +259,18 @@ void CUIThemes::setThemeAppProperties(DWORD dwFlags)
 	}
 }
 
+DWORD CUIThemes::getThemeAppProperties(void)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemeAppProperties();
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 HRESULT CUIThemes::getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
 								int iPropId, RECT *pRect)
 {
@@ -328,5 +349,17 @@ COLORREF CUIThemes::getThemeSysColor(HTHEME hTheme, int iColorID)
 	else
 	{
 		return GetSysColor(iColorID);
+	}
+}
+
+BOOL CUIThemes::isThemeActive(void)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_isThemeActive();
+	}
+	else
+	{
+		return FALSE;
 	}
 }
