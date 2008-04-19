@@ -1065,10 +1065,10 @@ static TCImage *resizeCornerImage = NULL;
 	return [self searchForKeyEquivalent:keyEquivalent modifierFlags:modifierFlags inMenu:mainMenu];
 }
 
-- (void)applicationDidResignActive:(NSNotification *)aNotification
-{
-	fullScreen = false;
-}
+//- (void)applicationDidResignActive:(NSNotification *)aNotification
+//{
+//	fullScreen = false;
+//}
 
 - (void)fullScreenKeyDown:(NSEvent *)event
 {
@@ -1130,6 +1130,8 @@ static TCImage *resizeCornerImage = NULL;
 - (void)fullScreenRunLoop:(NSOpenGLContext *)fullScreenContext
 {
 	NSRect screenRect = [[[self window] screen] frame];
+	NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+	NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
 
 	while (fullScreen)
 	{
@@ -1199,6 +1201,12 @@ static TCImage *resizeCornerImage = NULL;
 		[fullScreenContext makeCurrentContext];
 		modelViewer->update();
 		[fullScreenContext flushBuffer];
+		// Note: [NSApp isActive] doesn't work, probably due to the lack of
+		// system run loop processing.
+		if (![[[workspace activeApplication] objectForKey:@"NSApplicationBundleIdentifier"] isEqualToString:bundleIdentifier])
+		{
+			fullScreen = false;
+		}
 		[pool release];
 	}
 }
@@ -1215,7 +1223,7 @@ static TCImage *resizeCornerImage = NULL;
 		{
 			GLint viewport[4];
 
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
+			//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
 			glGetIntegerv(GL_VIEWPORT, viewport);
 			modelViewer->setWidth(viewport[2]);
 			modelViewer->setHeight(viewport[3]);
@@ -1227,7 +1235,7 @@ static TCImage *resizeCornerImage = NULL;
 			modelViewer->setWidth((int)[self frame].size.width);
 			modelViewer->setHeight((int)[self frame].size.height);
 			[self rotationUpdate];
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
+			//[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
 		}
 	}
 }
