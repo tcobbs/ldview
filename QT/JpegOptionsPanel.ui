@@ -365,19 +365,10 @@
     </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">LDViewJpegOptions.h</include>
     <include location="local" impldecl="in implementation">JpegOptionsPanel.h</include>
 </includes>
-<forwards>
-    <forward>class JpegOptions;</forward>
-</forwards>
-<variables>
-    <variable>JpegOptions *jpegoptions;</variable>
-</variables>
 <slots>
     <slot>doSliderMoved(int i)</slot>
-    <slot>setJpegOptions( JpegOptions * value )</slot>
-    <slot access="protected">init()</slot>
     <slot>doOk()</slot>
     <slot>doCancel()</slot>
 </slots>
