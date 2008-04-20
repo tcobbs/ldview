@@ -252,7 +252,7 @@ bool LDSnapshotTaker::saveImage(
 	{
 		steps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
 	}
-	if (steps)
+	if (steps || m_commandLineStep)
 	{
 		char *stepSuffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 			"-Step", false);
@@ -265,6 +265,17 @@ bool LDSnapshotTaker::saveImage(
 		{
 			grabSetup();
 		}
+		origStep = m_modelViewer->getStep();
+		if (m_modelViewer->getMainModel() == NULL)
+		{
+			// This isn't very efficient, but it gets the job done.  A
+			// number of things need to happen before we can do the initial
+			// zoomToFit.  We need to load the model, create the rotation
+			// matrix, and setup the camera.  Maybe other things need to be
+			// done too.  This update makes sure that things are OK for the
+			// zoomToFit to execute properly.
+			renderOffscreenImage();
+		}
 		if (TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY, true, false)
 			&& zoomToFit)
 		{
@@ -272,41 +283,35 @@ bool LDSnapshotTaker::saveImage(
 			{
 				viewPoint = m_modelViewer->saveViewPoint();
 			}
-			if (m_modelViewer->getMainTREModel() == NULL)
-			{
-				// This isn't very efficient, but it gets the job done.  A
-				// number of things need to happen before we can do the initial
-				// zoomToFit.  We need to load the model, create the rotation
-				// matrix, and setup the camera.  Maybe other things need to be
-				// done too.  This update makes sure that things are OK for the
-				// zoomToFit to execute properly.
-				m_modelViewer->update();
-			}
-			else
-			{
-				numSteps = m_modelViewer->getNumSteps();
-				m_modelViewer->setStep(numSteps);
-			}
+			numSteps = m_modelViewer->getNumSteps();
+			m_modelViewer->setStep(numSteps);
 			m_modelViewer->zoomToFit();
 			zoomToFit = false;
 		}
+		if (steps)
+		{
+			numSteps = m_modelViewer->getNumSteps();
+		}
 		else
 		{
-			if (m_modelViewer->getMainModel() == NULL)
-			{
-				m_modelViewer->reload();
-			}
+			numSteps = 1;
 		}
-		numSteps = m_modelViewer->getNumSteps();
-		origStep = m_modelViewer->getStep();
-		m_modelViewer->setStep(numSteps);
 		for (int step = 1; step <= numSteps && retValue; step++)
 		{
-			std::string stepFilename = removeStepSuffix(filename, stepSuffix);
+			std::string stepFilename;
 
-			stepFilename = addStepSuffix(stepFilename, stepSuffix, step,
-				numSteps);
-			m_step = step;
+			if (steps)
+			{
+				stepFilename = removeStepSuffix(filename, stepSuffix);
+				stepFilename = addStepSuffix(stepFilename, stepSuffix, step,
+					numSteps);
+				m_step = step;
+			}
+			else
+			{
+				stepFilename = filename;
+				m_step = TCUserDefaults::longForKey(STEP_KEY);
+			}
 			retValue = saveStepImage(stepFilename.c_str(), imageWidth,
 				imageHeight, zoomToFit);
 		}
@@ -320,14 +325,7 @@ bool LDSnapshotTaker::saveImage(
 	}
 	else
 	{
-		if (m_commandLineStep)
-		{
-			m_step = TCUserDefaults::longForKey(STEP_KEY, -1, false);
-		}
-		else
-		{
-			m_step = -1;
-		}
+		m_step = -1;
 		return saveStepImage(filename, imageWidth, imageHeight, zoomToFit);
 	}
 }
@@ -577,10 +575,6 @@ TCByte *LDSnapshotTaker::grabImage(
 
 	if (m_step > 0)
 	{
-		if (m_modelViewer->getMainModel() == NULL)
-		{
-			m_modelViewer->update();
-		}
 		m_modelViewer->setStep(m_step);
 	}
 	if (zoomToFit)
