@@ -321,6 +321,15 @@
 #define IDC_SAME_SCALE                  1257
 #define IDC_STEP_SUFFIX_LABEL           1258
 #define IDC_ALL_STEPS_BOX               1259
+#define IDC_SHOW_AXES                   1260
+#define IDC_SNAPSHOTS_DIR_COMBO         1261
+#define IDC_PARTS_LIST_DIR_COMBO        1262
+#define IDC_SNAPSHOTS_DIR               1263
+#define IDC_BROWSE_SNAPSHOTS_DIR        1264
+#define IDC_PARTS_LIST_DIR              1265
+#define IDC_BROWSE_PARTS_LIST_DIR       1266
+#define IDC_SNAPSHOTS_DIR_BOX           1267
+#define IDC_PARTS_LIST_DIR_BOX          1268
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -407,7 +416,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        187
 #define _APS_NEXT_COMMAND_VALUE         40097
-#define _APS_NEXT_CONTROL_VALUE         1260
+#define _APS_NEXT_CONTROL_VALUE         1269
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

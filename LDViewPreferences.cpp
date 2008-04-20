@@ -1518,6 +1518,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 		ldPrefs->setProcessLdConfig(getCheck(hGeneralPage,
 			IDC_PROCESS_LDCONFIG));
 		ldPrefs->setShowFps(getCheck(hGeneralPage, IDC_FRAME_RATE));
+		ldPrefs->setShowAxes(getCheck(hGeneralPage, IDC_SHOW_AXES));
 		ldPrefs->setShowErrors(getCheck(hGeneralPage, IDC_SHOW_ERRORS));
 		ldPrefs->setMemoryUsage((int)SendDlgItemMessage(hGeneralPage,
 			IDC_MEMORY_COMBO, CB_GETCURSEL, 0, 0));
@@ -2748,6 +2749,7 @@ void LDViewPreferences::setupGeneralPage(void)
 	setCheck(hGeneralPage, IDC_PROCESS_LDCONFIG,
 		ldPrefs->getProcessLdConfig());
 	setCheck(hGeneralPage, IDC_FRAME_RATE, ldPrefs->getShowFps());
+	setCheck(hGeneralPage, IDC_SHOW_AXES, ldPrefs->getShowAxes());
 	setCheck(hGeneralPage, IDC_SHOW_ERRORS, ldPrefs->getShowErrors());
 	setupFov();
 	setupFullScreenRefresh();

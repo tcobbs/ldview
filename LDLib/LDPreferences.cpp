@@ -133,6 +133,7 @@ void LDPreferences::applyGeneralSettings(void)
 		m_modelViewer->setProcessLDConfig(m_processLdConfig);
 		m_modelViewer->setSkipValidation(m_skipValidation);
 		// showFrameRate taken care of automatically.
+		m_modelViewer->setShowAxes(m_showAxes);
 		// showErrors taken care of automatically.
 		// fullScreenRefresh taken care of automatically.
 		m_modelViewer->setFov(m_fov);
@@ -347,6 +348,7 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 	setTransDefaultColor(false);
 	setProcessLdConfig(true);
 	setShowFps(false);
+	setShowAxes(false);
 	setShowErrors(true);
 	setFullScreenRefresh(0);
 	setFov(45.0f);
@@ -498,6 +500,7 @@ void LDPreferences::loadGeneralSettings(void)
 	m_processLdConfig = getBoolSetting(PROCESS_LDCONFIG_KEY, m_processLdConfig);
 	m_skipValidation = getBoolSetting(SKIP_VALIDATION_KEY, m_skipValidation);
 	m_showFps = getBoolSetting(SHOW_FPS_KEY, m_showFps);
+	m_showAxes = getBoolSetting(SHOW_AXES_KEY, m_showAxes);
 	m_showErrors = getBoolSetting(SHOW_ERRORS_KEY, m_showErrors);
 	m_fullScreenRefresh = getIntSetting(FULLSCREEN_REFRESH_KEY,
 		m_fullScreenRefresh);
@@ -682,6 +685,7 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 	}
 	setProcessLdConfig(m_processLdConfig, true);
 	setShowFps(m_showFps, true);
+	setShowAxes(m_showAxes, true);
 	setShowErrors(m_showErrors, true);
 	setFullScreenRefresh(m_fullScreenRefresh, true);
 	setFov(m_fov, true);
@@ -1258,6 +1262,11 @@ void LDPreferences::setProcessLdConfig(bool value, bool commit)
 void LDPreferences::setShowFps(bool value, bool commit)
 {
 	setSetting(m_showFps, value, SHOW_FPS_KEY, commit);
+}
+
+void LDPreferences::setShowAxes(bool value, bool commit)
+{
+	setSetting(m_showAxes, value, SHOW_AXES_KEY, commit);
 }
 
 void LDPreferences::setShowErrors(bool value, bool commit)

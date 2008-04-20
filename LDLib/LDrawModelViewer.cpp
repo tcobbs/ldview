@@ -164,6 +164,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.noLightGeom = false;
 	flags.updating = false;
 	flags.saveAlpha = false;
+	flags.showAxes = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -2902,6 +2903,7 @@ void LDrawModelViewer::update(void)
 	{
 		drawModel(eyeXOffset);
 	}
+	drawAxes();
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		eyeXOffset = -eyeXOffset;
@@ -2920,6 +2922,7 @@ void LDrawModelViewer::update(void)
 		{
 			drawModel(eyeXOffset);
 		}
+		drawAxes();
 		glViewport(0, 0, width / 2, height);
 	}
 	flags.updating = false;
@@ -3115,6 +3118,43 @@ void LDrawModelViewer::drawLightDats(void)
 				itLoc++;
 			}
 		}
+	}
+}
+
+void LDrawModelViewer::drawAxes(void)
+{
+	if (flags.showAxes)
+	{
+		int actualWidth = width;
+
+		if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+		{
+			actualWidth /= 2;
+		}
+		glPushAttrib(GL_LIGHTING_BIT | GL_VIEWPORT_BIT);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0.0f, actualWidth, 0.0f, height, -25.0f, 25.0f);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glTranslatef(30.0f, 30.0f, 0.0f);
+		if (rotationMatrix)
+		{
+			treGlMultMatrixf(rotationMatrix);
+		}
+		glDisable(GL_LIGHTING);
+		glBegin(GL_LINES);
+			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(25.0f, 0.0f, 0.0f);
+			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(0.0f, 25.0f, 0.0f);
+			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(0.0f, 0.0f, 25.0f);
+		glEnd();
+		glPopAttrib();
 	}
 }
 
