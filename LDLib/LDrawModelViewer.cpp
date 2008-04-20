@@ -3128,21 +3128,54 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 	{
 		if (flags.axesAtOrigin)
 		{
-			TCVector boundingSize = boundingMax - boundingMin;
+			TCFloat margin = size / 8.0f;
+			TCVector minPoint(boundingMin);
+			TCVector maxPoint(boundingMax);
+			//TCVector margin = (boundingMax - boundingMin) / 8.0f;
+			int i;
 
+			for (i = 0; i < 3; i++)
+			{
+				if (boundingMin[i] > 0.0f)
+				{
+					minPoint[i] = -margin;
+				}
+				else
+				{
+					minPoint[i] = boundingMin[i] - margin;
+				}
+				if (boundingMax[i] < 0.0f)
+				{
+					maxPoint[i] = margin;
+				}
+				else
+				{
+					maxPoint[i] = boundingMax[i] + margin;
+				}
+			}
 			glPushAttrib(GL_LIGHTING_BIT);
 			glDisable(GL_LIGHTING);
 			glBegin(GL_LINES);
-			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(boundingMax[0] + boundingSize[0] / 4.0f, 0.0f, 0.0f);
-			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, boundingMax[1] + boundingSize[1] / 4.0f, 0.0f);
-			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, 0.0f, boundingMax[2] + boundingSize[2] / 4.0f);
-			glEnd();
+				glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(maxPoint[0], 0.0f, 0.0f);
+				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, maxPoint[1], 0.0f);
+				glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, 0.0f, maxPoint[2]);
+
+				glColor4f(0.5f, 0.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(minPoint[0], 0.0f, 0.0f);
+				glColor4f(0.0f, 0.5f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, minPoint[1], 0.0f);
+				glColor4f(0.0f, 0.0f, 0.5f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, 0.0f, minPoint[2]);
+				glEnd();
 			glPopAttrib();
 		}
 		else
