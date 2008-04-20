@@ -242,6 +242,13 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self apply:sender];
 }
 
+- (void)takeShowAxesFrom:(id)sender
+{
+	ldPreferences->setShowAxes([self getBoolFrom:sender]);
+	[[pages objectAtIndex:generalIndex] setup];
+	[self apply:sender];
+}
+
 - (void)saveViewingAngle:(ModelWindow*)modelWindow
 {
 	ldPreferences->setModelViewer([[modelWindow modelView] modelViewer]);
