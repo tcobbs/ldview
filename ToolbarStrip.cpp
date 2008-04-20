@@ -433,6 +433,9 @@ LRESULT ToolbarStrip::doCommand(
 	case IDC_BFC:
 		doBfc();
 		break;
+	case IDC_SHOW_AXES:
+		doShowAxes();
+		break;
 	case ID_WIREFRAME_FOG:
 		doFog();
 		break;
@@ -566,6 +569,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_primitiveSubstitution = m_prefs->getAllowPrimitiveSubstitution();
 		m_lighting = m_prefs->getUseLighting();
 		m_bfc = m_prefs->getBfc();
+		m_showAxes = m_prefs->getShowAxes();
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME, -1, 1,
 			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
@@ -583,6 +587,9 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			m_lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
 			IDC_BFC, -1, 9, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, -1, 11,
+			m_showAxes);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE, -1, 6,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
@@ -757,19 +764,6 @@ LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 	//	notificationName(notification->code).c_str());
 	switch (notification->code)
 	{
-	case NM_TOOLTIPSCREATED:
-		{
-			// Turning off theme support in the tooltip makes it
-			// work properly.  With theme support on, it gets erased
-			// by the OpenGL window immediately after being drawn.
-			// Haven't the foggiest why this happens, but turning
-			// off theme support solves the problem.  This has to
-			// be done every time the tooltip is about to pop up.
-			// Not sure why that is either, but it is.
-			//CUIThemes::setWindowTheme(
-			//	((NMTOOLTIPSCREATED *)notification)->hwndToolTips, NULL, L"");
-		}
-		break;
 	case TBN_GETINFOTIPUC:
 		return doToolbarGetInfotip(m_mainButtonInfos,
 			(LPNMTBGETINFOTIPUC)notification);
@@ -792,19 +786,6 @@ LRESULT ToolbarStrip::doStepToolbarNotify(int controlId, LPNMHDR notification)
 	//	notificationName(notification->code).c_str());
 	switch (notification->code)
 	{
-	case NM_TOOLTIPSCREATED:
-		{
-			// Turning off theme support in the tooltip makes it
-			// work properly.  With theme support on, it gets erased
-			// by the OpenGL window immediately after being drawn.
-			// Haven't the foggiest why this happens, but turning
-			// off theme support solves the problem.  This has to
-			// be done every time the tooltip is about to pop up.
-			// Not sure why that is either, but it is.
-			//CUIThemes::setWindowTheme(
-			//	((NMTOOLTIPSCREATED *)notification)->hwndToolTips, NULL, L"");
-		}
-		break;
 	case TBN_GETINFOTIPUC:
 		return doToolbarGetInfotip(m_stepButtonInfos,
 			(LPNMTBGETINFOTIPUC)notification);
@@ -1124,6 +1105,15 @@ void ToolbarStrip::doBfc(void)
 	}
 }
 
+void ToolbarStrip::doShowAxes(void)
+{
+	if (doCheck(m_showAxes, IDC_SHOW_AXES))
+	{
+		m_prefs->setShowAxes(m_showAxes);
+		forceRedraw();
+	}
+}
+
 bool ToolbarStrip::doCheck(bool &value, LPARAM commandId)
 {
 	BYTE state = (BYTE)SendMessage(m_hToolbar, TB_GETSTATE, commandId, 0);
@@ -1213,6 +1203,7 @@ void ToolbarStrip::checksReflect(void)
 		m_prefs->getAllowPrimitiveSubstitution(), IDC_PRIMITIVE_SUBSTITUTION);
 	checkReflect(m_lighting, m_prefs->getUseLighting(), IDC_LIGHTING);
 	checkReflect(m_bfc, m_prefs->getBfc(), IDC_BFC);
+	checkReflect(m_showAxes, m_prefs->getShowAxes(), IDC_SHOW_AXES);
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)

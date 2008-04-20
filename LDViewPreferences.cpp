@@ -353,6 +353,11 @@ bool LDViewPreferences::getBfc(void)
 	return ldPrefs->getBfc();
 }
 
+bool LDViewPreferences::getShowAxes(void)
+{
+	return ldPrefs->getShowAxes();
+}
+
 bool LDViewPreferences::getRedBackFaces(void)
 {
 	return ldPrefs->getRedBackFaces();
@@ -559,6 +564,19 @@ void LDViewPreferences::setBfc(bool value)
 			{
 				disableBfc();
 			}
+		}
+	}
+}
+
+void LDViewPreferences::setShowAxes(bool value)
+{
+	if (value != ldPrefs->getShowAxes())
+	{
+		ldPrefs->setShowAxes(value, true, true);
+		if (hGeneralPage)
+		{
+			SendDlgItemMessage(hGeneralPage, IDC_SHOW_AXES, BM_SETCHECK, value,
+				0);
 		}
 	}
 }

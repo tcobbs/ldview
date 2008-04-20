@@ -185,7 +185,7 @@ public:
 	void setDefaultColorNumber(int value, bool commit = false);
 	void setProcessLdConfig(bool value, bool commit = false);
 	void setShowFps(bool value, bool commit = false);
-	void setShowAxes(bool value, bool commit = false);
+	void setShowAxes(bool value, bool commit = false, bool apply = false);
 	void setShowErrors(bool value, bool commit = false);
 	void setFullScreenRefresh(int value, bool commit = false);
 	void setFov(TCFloat value, bool commit = false);

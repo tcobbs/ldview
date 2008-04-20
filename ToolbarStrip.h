@@ -77,6 +77,7 @@ protected:
 	void doPrimitiveSubstitution(void);
 	void doLighting(void);
 	void doBfc(void);
+	void doShowAxes(void);
 	void doFog(void);
 	void doRemoveHiddenLines(void);
 	void doShowEdgesOnly(void);
@@ -132,6 +133,7 @@ protected:
 	bool m_primitiveSubstitution;
 	bool m_lighting;
 	bool m_bfc;
+	bool m_showAxes;
 };
 
 #endif // __TOOLBARSTRIP_H__
