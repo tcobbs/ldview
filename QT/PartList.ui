@@ -335,8 +335,6 @@
     <variable>PartList *partlist;</variable>
 </variables>
 <slots>
-    <slot>setPartList(PartList *value)</slot>
-    <slot access="protected">init()</slot>
     <slot>doOk()</slot>
     <slot>doCancel()</slot>
     <slot>doUp()</slot>

@@ -3,32 +3,32 @@
 
 #include "ModelViewerWidget.h"
 #include "LDLib/LDHtmlInventory.h"
+#include "PartList.h"
 
-class PartListPanel;
-class QButton;
+//class QButton;
 class LDHtmlInventory;
 class QCheckListItem;
 
-class PartList
+class PartList : public PartListPanel
 {
 public:
 	PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
 	~PartList(void);
+    void populateColumnList();
+    QCheckListItem *description;
+    int exec();
+    int result();
 
+public slots:
 	void doOk();
 	void doCancel();
 	void doUp();
 	void doDown();
-	int exec();
-	int result();
-	void controlDirectionButtons();
-	void populateColumnList();
-	QCheckListItem *description;
+	void doHighlighted();
 protected:
 	void doMoveColumn(int distance);
 	LDrawModelViewer *modelViewer;
 	ModelViewerWidget *modelWidget;
-	PartListPanel *panel;
 	LDHtmlInventory *m_htmlInventory;
 };
 #endif //__LDVIEWPARTLIST_H__

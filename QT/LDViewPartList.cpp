@@ -9,14 +9,13 @@
 #include <TCFoundation/mystring.h>
 
 PartList::PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory)
-        :modelWidget(modelWidget),
-		panel(new PartListPanel),
+        :PartListPanel(),
+		modelWidget(modelWidget),
 		m_htmlInventory(htmlInventory)
 {
     modelViewer = modelWidget->getModelViewer();
-    panel->setPartList(this);
-	panel->fieldOrderView->header()->hide();
-	panel->fieldOrderView->setSorting(-1);
+	fieldOrderView->header()->hide();
+	fieldOrderView->setSorting(-1);
 }
 
 PartList::~PartList(void)
@@ -28,14 +27,14 @@ void PartList::populateColumnList(void)
 	const LDPartListColumnVector &columnOrder =
         m_htmlInventory->getColumnOrder();
 	int count = 0, i;
-	panel->fieldOrderView->clear();
+	fieldOrderView->clear();
     for (i = LDPLCLast; i >= LDPLCFirst; i--)
     {
         LDPartListColumn column = (LDPartListColumn)i;
         if (!m_htmlInventory->isColumnEnabled(column))
         {
             const char *name = LDHtmlInventory::getColumnName(column);
-            QCheckListItem *item = new QCheckListItem(panel->fieldOrderView,
+            QCheckListItem *item = new QCheckListItem(fieldOrderView,
                 name, QCheckListItem::CheckBoxController );
             item->setOn(m_htmlInventory->isColumnEnabled(column));
 			item->setTristate(false);
@@ -46,7 +45,7 @@ void PartList::populateColumnList(void)
 	{
 		LDPartListColumn column = columnOrder[i];
 		const char *name = LDHtmlInventory::getColumnName(column);
-		QCheckListItem *item = new QCheckListItem(panel->fieldOrderView,
+		QCheckListItem *item = new QCheckListItem(fieldOrderView,
 								name, QCheckListItem::CheckBoxController );
 		item->setOn(m_htmlInventory->isColumnEnabled(column));
 		item->setTristate(false);
@@ -69,11 +68,11 @@ void PartList::doOk()
 	int i;
 	QListViewItem *item;
 	LDPartListColumnVector columnOrder;
-	m_htmlInventory->setExternalCssFlag(panel->generateExternalSSButton->isChecked());
-	m_htmlInventory->setPartImagesFlag(panel->showPartImageButton->isChecked());
-	m_htmlInventory->setShowModelFlag(panel->showModelButton->isChecked());
+	m_htmlInventory->setExternalCssFlag(generateExternalSSButton->isChecked());
+	m_htmlInventory->setPartImagesFlag(showPartImageButton->isChecked());
+	m_htmlInventory->setShowModelFlag(showModelButton->isChecked());
 
-	for (item = panel->fieldOrderView->firstChild() ; item ;
+	for (item = fieldOrderView->firstChild() ; item ;
 		 item = item->itemBelow())
 	{
 		const char * itemname = item->text(0).ascii();
@@ -92,15 +91,17 @@ void PartList::doOk()
 		}
 	}
 	m_htmlInventory->setColumnOrder(columnOrder);
+	accept();
 }
 
 void PartList::doCancel()
 {
+	reject();
 }
 
 void PartList::doMoveColumn(int distance)
 {
-	QListViewItem *item = panel->fieldOrderView->currentItem();
+	QListViewItem *item = fieldOrderView->currentItem();
 	QListViewItem *newitem = ( distance == 1 ? item->itemBelow() : item->itemAbove());
 	if (!newitem) return;
 	QString ttt=newitem->text(0);
@@ -109,37 +110,33 @@ void PartList::doMoveColumn(int distance)
 	((QCheckListItem*)newitem)->setOn(((QCheckListItem*)item)->isOn());
 	item->setText(0,ttt);
 	((QCheckListItem*)item)->setOn(s);
-	panel->fieldOrderView->setCurrentItem(newitem);
-	controlDirectionButtons();
+	fieldOrderView->setCurrentItem(newitem);
+	doHighlighted();
 }
 
-void PartList::controlDirectionButtons()
+void PartList::doHighlighted()
 {
-	QListViewItem *item = panel->fieldOrderView->currentItem();
+	QListViewItem *item = fieldOrderView->currentItem();
 	if (item)
 	{
-		panel->upButton->setEnabled(item->itemAbove() ? true : false);
-		panel->downButton->setEnabled(item->itemBelow() ? true : false);
+		upButton->setEnabled(item->itemAbove() ? true : false);
+		downButton->setEnabled(item->itemBelow() ? true : false);
 	}
 }
 
 int PartList::exec()
 {
-	if (panel)
-	{
-		populateColumnList();
-    	panel->generateExternalSSButton->setChecked(
-			m_htmlInventory->getExternalCssFlag());
-    	panel->showPartImageButton->setChecked(
-			m_htmlInventory->getPartImagesFlag());
-    	panel->showModelButton->setChecked(
-			m_htmlInventory->getShowModelFlag());
-		return panel->exec();
-	}
-	return 0;
+	populateColumnList();
+  	generateExternalSSButton->setChecked(
+		m_htmlInventory->getExternalCssFlag());
+   	showPartImageButton->setChecked(
+		m_htmlInventory->getPartImagesFlag());
+   	showModelButton->setChecked(
+		m_htmlInventory->getShowModelFlag());
+	return PartListPanel::exec();
 }
 
 int PartList::result()
 {
-	return panel->result();
+	return result();
 }
