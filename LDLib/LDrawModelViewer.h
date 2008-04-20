@@ -294,6 +294,8 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		virtual void setShowAxes(bool value) { flags.showAxes = value; }
 		bool getShowAxes(void) const { return flags.showAxes != false; }
+		virtual void setAxesAtOrigin(bool value) { flags.axesAtOrigin = value; }
+		bool getAxesAtOrigin(void) const { return flags.axesAtOrigin != false; }
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
@@ -646,6 +648,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool saveAlpha:1;
 			bool multiThreaded:1;
 			bool showAxes:1;
+			bool axesAtOrigin:1;
 		} flags;
 		struct CameraData
 		{
