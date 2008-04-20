@@ -185,6 +185,7 @@ enum
 		[NSNumber numberWithBool:ldPreferences->getAllowPrimitiveSubstitution()],
 		[NSNumber numberWithBool:ldPreferences->getUseLighting()],
 		[NSNumber numberWithBool:ldPreferences->getBfc()],
+		[NSNumber numberWithBool:ldPreferences->getShowAxes()],
 		nil];
 
 	[self updateSegments:featuresSegments states:states];
@@ -204,6 +205,7 @@ enum
 		@"Enable/Disable Primitive Substitution",
 		@"Enable/Disable Lighting",
 		@"Enable/Disable BFC",
+		@"Show/Hide Axes",
 		nil];
 //	if (replaceSegments)
 //	{
@@ -1160,6 +1162,9 @@ enum
 			break;
 		case 5:
 			[self toggleFeature:@selector(takeBfcFrom:) sender:sender];
+			break;
+		case 6:
+			[self toggleFeature:@selector(takeShowAxesFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown feature.\n");

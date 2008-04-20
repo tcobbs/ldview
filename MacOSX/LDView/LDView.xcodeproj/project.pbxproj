@@ -94,6 +94,7 @@
 		1FD4D8490BA4D52800419677 /* LightAngleUM.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8410BA4D52800419677 /* LightAngleUM.png */; };
 		1FD4D84A0BA4D52800419677 /* LightAngleUR.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD4D8420BA4D52800419677 /* LightAngleUR.png */; };
 		1FD98B8E0D975813006DBC00 /* TableViewReorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD98B8D0D975813006DBC00 /* TableViewReorder.mm */; };
+		1FD9C7CA0DBC01F500F10F45 /* toolbar_axes.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9C7C90DBC01F500F10F45 /* toolbar_axes.png */; };
 		1FE251FA0C6FD26800FAE201 /* ToolbarSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */; };
 		1FE252030C6FD2CF00FAE201 /* ToolbarSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252020C6FD2CF00FAE201 /* ToolbarSegmentedCell.m */; };
 		1FE252FB0C6FF97800FAE201 /* ToolbarPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252F80C6FF97800FAE201 /* ToolbarPopUpButton.m */; };
@@ -300,6 +301,7 @@
 		1FD4D8420BA4D52800419677 /* LightAngleUR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LightAngleUR.png; path = ../../Icons/LightAngleUR.png; sourceTree = "<group>"; };
 		1FD98B8C0D975813006DBC00 /* TableViewReorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewReorder.h; sourceTree = "<group>"; };
 		1FD98B8D0D975813006DBC00 /* TableViewReorder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TableViewReorder.mm; sourceTree = "<group>"; };
+		1FD9C7C90DBC01F500F10F45 /* toolbar_axes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_axes.png; path = Images/toolbar_axes.png; sourceTree = "<group>"; };
 		1FE251F80C6FD26800FAE201 /* ToolbarSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedControl.h; path = CustomControls/ToolbarSegmentedControl.h; sourceTree = "<group>"; };
 		1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbarSegmentedControl.m; path = CustomControls/ToolbarSegmentedControl.m; sourceTree = "<group>"; };
 		1FE252010C6FD2CF00FAE201 /* ToolbarSegmentedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedCell.h; path = CustomControls/ToolbarSegmentedCell.h; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 		1FF906660DA73AD4003A9AC0 /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
+				1FD9C7C90DBC01F500F10F45 /* toolbar_axes.png */,
 				1F47E7950C75768F009B84BC /* examine.png */,
 				1F47E7960C75768F009B84BC /* flythrough.png */,
 				1F47E77E0C7575C9009B84BC /* toolbar_bfc.png */,
@@ -822,6 +825,7 @@
 				1FFE79120DB5943C00A32EEF /* toolbar_step_last.png in Resources */,
 				1FFE79130DB5943C00A32EEF /* toolbar_step_next.png in Resources */,
 				1FFE79140DB5943C00A32EEF /* toolbar_step_prev.png in Resources */,
+				1FD9C7CA0DBC01F500F10F45 /* toolbar_axes.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
