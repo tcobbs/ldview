@@ -4152,27 +4152,38 @@ UINT CALLBACK ModelWindow::staticSaveHook(HWND hDlg, UINT uiMsg, WPARAM wParam,
 	}
 }
 
+const char *ModelWindow::saveExtension(int type /*= -1*/) const
+{
+	if (type == -1)
+	{
+		type = saveImageType;
+	}
+	switch (type)
+	{
+	case BMP_IMAGE_TYPE_INDEX:
+		return "bmp";
+	case JPG_IMAGE_TYPE_INDEX:
+		return "jpg";
+	default:
+		return "png";
+	}
+}
+
 bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 {
-	char* filename = modelViewer->getFilename();
+	char* filename = filenameFromPath(modelViewer->getFilename());
 	bool found = false;
 
 	if (filename)
 	{
-		char baseFilename[1024];
+		std::string baseFilename = filename;
+		size_t dotSpot;
 
-		if (strrchr(filename, '/'))
+		delete filename;
+		dotSpot = baseFilename.rfind('.');
+		if (dotSpot < baseFilename.size())
 		{
-			filename = strrchr(filename, '/') + 1;
-		}
-		if (strrchr(filename, '\\'))
-		{
-			filename = strrchr(filename, '\\') + 1;
-		}
-		strcpy(baseFilename, filename);
-		if (strchr(baseFilename, '.'))
-		{
-			*strchr(baseFilename, '.') = 0;
+			baseFilename.erase(dotSpot);
 		}
 		if (saveSeries)
 		{
@@ -4185,15 +4196,15 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 			{
 				if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 				{
-					sprintf(saveFilename, format, baseFilename, i, "png");
+					sprintf(saveFilename, format, baseFilename.c_str(), i, "png");
 				}
 				else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 				{
-					sprintf(saveFilename, format, baseFilename, i, "bmp");
+					sprintf(saveFilename, format, baseFilename.c_str(), i, "bmp");
 				}
 				else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
 				{
-					sprintf(saveFilename, format, baseFilename, i, "jpg");
+					sprintf(saveFilename, format, baseFilename.c_str(), i, "jpg");
 				}
 				if (!LDrawModelViewer::fileExists(saveFilename))
 				{
@@ -4205,15 +4216,15 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 		{
 			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 			{
-				sprintf(saveFilename, "%s.%s", baseFilename, "png");
+				sprintf(saveFilename, "%s.%s", baseFilename.c_str(), "png");
 			}
 			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 			{
-				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
+				sprintf(saveFilename, "%s.%s", baseFilename.c_str(), "bmp");
 			}
 			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
 			{
-				sprintf(saveFilename, "%s.%s", baseFilename, "jpg");
+				sprintf(saveFilename, "%s.%s", baseFilename.c_str(), "jpg");
 			}
 			else
 			{

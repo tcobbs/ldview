@@ -45,6 +45,8 @@ protected:
 	virtual LRESULT doCommand(int notifyCode, int commandId,
 		HWND control);
 
+	BOOL doTreeCopy(void);
+	BOOL doTreeKeyDown(LPNMTVKEYDOWN notification);
 	LRESULT doToggleOptions(void);
 	virtual LRESULT doItemExpanding(LPNMTREEVIEW notification);
 	LRESULT doLineCheck(UINT checkId, LDLLineType lineType);

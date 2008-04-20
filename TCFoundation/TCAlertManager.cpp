@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -32,6 +33,17 @@ void TCAlertManager::dealloc(void)
 {
 	TCObject::release(m_alertClasses);
 	TCObject::release(m_handlers);
+	//for (int i = 0; i < m_callbacks->getCount(); i++)
+	//{
+	//	TCAlertCallbackArray *callbacks = (*m_callbacks)[i];
+
+	//	for (int j = 0; j < callbacks->getCount(); j++)
+	//	{
+	//		free((*callbacks)[j]);
+	//		// If we get here, somebody forgot to unregister themself.
+	//		assert(false);
+	//	}
+	//}
 	TCObject::release(m_callbacks);
 	TCObject::dealloc();
 }
