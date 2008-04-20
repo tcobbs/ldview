@@ -2904,7 +2904,7 @@ void LDrawModelViewer::update(void)
 	{
 		drawModel(eyeXOffset);
 	}
-	drawAxes();
+	drawAxes(false);
 	if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
 	{
 		eyeXOffset = -eyeXOffset;
@@ -2923,7 +2923,7 @@ void LDrawModelViewer::update(void)
 		{
 			drawModel(eyeXOffset);
 		}
-		drawAxes();
+		drawAxes(false);
 		glViewport(0, 0, width / 2, height);
 	}
 	flags.updating = false;
@@ -3122,9 +3122,9 @@ void LDrawModelViewer::drawLightDats(void)
 	}
 }
 
-void LDrawModelViewer::drawAxes(void)
+void LDrawModelViewer::drawAxes(bool atOrigin)
 {
-	if (flags.showAxes)
+	if (flags.showAxes && flags.axesAtOrigin == atOrigin)
 	{
 		if (flags.axesAtOrigin)
 		{
@@ -3199,7 +3199,7 @@ void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 	{
 		showLight();
 		mainTREModel->draw();
-		drawAxes();
+		drawAxes(true);
 		if (clipAmount > 0.01)
 		{
 			drawToClipPlane(eyeXOffset);
