@@ -828,8 +828,8 @@ void LDPreferences::commitInventorySettings(bool flush /*= true*/)
 void LDPreferences::setupDefaultRotationMatrix(void)
 {
 	std::string value = getStringSetting(CAMERA_GLOBE_KEY);
-	TCFloat latitude = getFloatSetting(DEFAULT_LATITUDE_KEY);
-	TCFloat longitude = getFloatSetting(DEFAULT_LONGITUDE_KEY);
+	TCFloat latitude = getFloatSetting(DEFAULT_LATITUDE_KEY, 30.0f);
+	TCFloat longitude = getFloatSetting(DEFAULT_LONGITUDE_KEY, 45.0f);
 
 	if (!value.length())
 	{
@@ -1264,9 +1264,16 @@ void LDPreferences::setShowFps(bool value, bool commit)
 	setSetting(m_showFps, value, SHOW_FPS_KEY, commit);
 }
 
-void LDPreferences::setShowAxes(bool value, bool commit)
+void LDPreferences::setShowAxes(bool value, bool commit, bool apply)
 {
 	setSetting(m_showAxes, value, SHOW_AXES_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setShowAxes(value);
+		}
+	}
 }
 
 void LDPreferences::setShowErrors(bool value, bool commit)

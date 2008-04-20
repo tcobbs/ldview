@@ -64,6 +64,8 @@ public:
 	void setRedBackFaces(bool value);
 	bool getGreenFrontFaces(void);
 	void setGreenFrontFaces(bool value);
+	bool getShowAxes(void);
+	void setShowAxes(bool value);
 	bool getUseWireframeFog(void);
 	void setUseWireframeFog(bool value);
 	bool getRemoveHiddenLines(void);
