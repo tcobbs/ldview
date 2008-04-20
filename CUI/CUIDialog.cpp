@@ -99,20 +99,32 @@ INT_PTR CUIDialog::dialogProc(
 		}
 		break;
 	case WM_ENTERMENULOOP:
-		if (doEnterMenuLoop(wParam ? true : false))
+		if (doEnterMenuLoop(wParam ? true : false) == 0)
 		{
 			return (INT_PTR)TRUE;
 		}
 		break;
 	case WM_EXITMENULOOP:
-		if (doExitMenuLoop(wParam ? true : false))
+		if (doExitMenuLoop(wParam ? true : false) == 0)
 		{
 			return (INT_PTR)TRUE;
 		}
 		break;
 	case WM_INITMENUPOPUP:
 		if (doInitMenuPopup((HMENU)wParam, (UINT)LOWORD(lParam),
-			(BOOL)HIWORD(lParam)))
+			(BOOL)HIWORD(lParam)) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case WM_KEYDOWN:
+		if (doKeyDown((int)wParam, lParam) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case WM_KEYUP:
+		if (doKeyUp((int)wParam, lParam) == 0)
 		{
 			return (INT_PTR)TRUE;
 		}

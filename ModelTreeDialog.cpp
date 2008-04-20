@@ -121,6 +121,8 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 		{
 		case TVN_ITEMEXPANDING:
 			doItemExpanding((LPNMTREEVIEW)notification);
+		case TVN_KEYDOWN:
+			doTreeKeyDown((LPNMTVKEYDOWN)notification);
 		}
 	}
 	return 0;
@@ -360,4 +362,48 @@ LRESULT ModelTreeDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		m_resizer->resize(newWidth, newHeight);
 	}
 	return 0;
+}
+
+BOOL ModelTreeDialog::doTreeKeyDown(LPNMTVKEYDOWN notification)
+{
+	if (notification->wVKey == 'C' && (GetKeyState(VK_CONTROL) & 0x8000))
+	{
+		return doTreeCopy();
+	}
+	return FALSE;
+}
+
+BOOL ModelTreeDialog::doTreeCopy(void)
+{
+	HTREEITEM hItem = TreeView_GetSelection(m_hTreeView);
+
+	if (hItem)
+	{
+		TVITEMEX item;
+
+		memset(&item, 0, sizeof(item));
+		item.mask = TVIF_PARAM;
+		item.hItem = hItem;
+		if (TreeView_GetItem(m_hTreeView, &item))
+		{
+			LDModelTree *tree = (LDModelTree *)item.lParam;
+
+			if (tree)
+			{
+				std::string text = tree->getText();
+
+				if (tree->getLineType() == LDLLineTypeEmpty)
+				{
+					text = "";
+				}
+				text += "\r\n";
+				if (copyToClipboard(text.c_str()))
+				{
+					SetWindowLong(hWindow, DWL_MSGRESULT, TRUE);
+					return TRUE;
+				}
+			}
+		}
+	}
+	return FALSE;
 }
