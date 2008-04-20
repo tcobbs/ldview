@@ -24,6 +24,7 @@ m_trySaveAlpha(TCUserDefaults::boolForKey(SAVE_ALPHA_KEY, false, false)),
 m_autoCrop(TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)),
 m_fromCommandLine(true),
 m_commandLineSaveSteps(false),
+m_commandLineStep(false),
 m_step(-1),
 m_grabSetupDone(false)
 {
@@ -73,31 +74,21 @@ bool LDSnapshotTaker::saveImage(void)
 		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
 			false);
 		bool commandLineType = false;
-		TCStringArray *processed = TCUserDefaults::getProcessedCommandLine();
 
-		if (processed && processed->getCount() > 0)
+		if (TCUserDefaults::commandLineStringForKey(SAVE_IMAGE_TYPE_KEY).size()
+			> 0 ||
+			TCUserDefaults::commandLineStringForKey(SNAPSHOT_SUFFIX_KEY).size()
+			> 0)
 		{
-			char prefix1[128];
-			char prefix2[128];
-			char prefix3[128];
-
-			sprintf(prefix1, "-%s=", SAVE_IMAGE_TYPE_KEY);
-			sprintf(prefix2, "-%s=", SNAPSHOT_SUFFIX_KEY);
-			sprintf(prefix3, "-%s=", SAVE_STEPS_KEY);
-			for (i = 0; i < processed->getCount() && !commandLineType; i++)
-			{
-				const char *arg = (*processed)[i];
-
-				if (stringHasCaseInsensitivePrefix(arg, prefix1) ||
-					stringHasCaseInsensitivePrefix(arg, prefix2))
-				{
-					commandLineType = true;
-				}
-				else if (stringHasCaseInsensitivePrefix(arg, prefix3))
-				{
-					m_commandLineSaveSteps = true;
-				}
-			}
+			commandLineType = true;
+		}
+		if (TCUserDefaults::commandLineStringForKey(SAVE_STEPS_KEY).size() > 0)
+		{
+			m_commandLineSaveSteps = true;
+		}
+		if (TCUserDefaults::commandLineStringForKey(STEP_KEY).size() > 0)
+		{
+			m_commandLineStep = true;
 		}
 		if (saveSnapshots)
 		{
@@ -329,7 +320,14 @@ bool LDSnapshotTaker::saveImage(
 	}
 	else
 	{
-		m_step = -1;
+		if (m_commandLineStep)
+		{
+			m_step = TCUserDefaults::longForKey(STEP_KEY, -1, false);
+		}
+		else
+		{
+			m_step = -1;
+		}
 		return saveStepImage(filename, imageWidth, imageHeight, zoomToFit);
 	}
 }
@@ -579,6 +577,10 @@ TCByte *LDSnapshotTaker::grabImage(
 
 	if (m_step > 0)
 	{
+		if (m_modelViewer->getMainModel() == NULL)
+		{
+			m_modelViewer->update();
+		}
 		m_modelViewer->setStep(m_step);
 	}
 	if (zoomToFit)
