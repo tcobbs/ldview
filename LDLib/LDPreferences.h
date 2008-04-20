@@ -83,6 +83,7 @@ public:
 	int getDefaultColorNumber(void) { return m_defaultColorNumber; }
 	bool getProcessLdConfig(void) { return m_processLdConfig; }
 	bool getShowFps(void) { return m_showFps; }
+	bool getShowAxes(void) { return m_showAxes; }
 	bool getShowErrors(void) { return m_showErrors; }
 	int getFullScreenRefresh(void) { return m_fullScreenRefresh; }
 	TCFloat getFov(void) { return m_fov; }
@@ -184,6 +185,7 @@ public:
 	void setDefaultColorNumber(int value, bool commit = false);
 	void setProcessLdConfig(bool value, bool commit = false);
 	void setShowFps(bool value, bool commit = false);
+	void setShowAxes(bool value, bool commit = false);
 	void setShowErrors(bool value, bool commit = false);
 	void setFullScreenRefresh(int value, bool commit = false);
 	void setFov(TCFloat value, bool commit = false);
@@ -340,6 +342,7 @@ protected:
 	int m_defaultColorNumber;
 	bool m_processLdConfig;
 	bool m_showFps;
+	bool m_showAxes;
 	bool m_showErrors;
 	int m_fullScreenRefresh;
 	TCFloat m_fov;

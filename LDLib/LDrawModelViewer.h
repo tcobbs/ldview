@@ -292,6 +292,8 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.multiThreaded != false;
 		}
+		virtual void setShowAxes(bool value) { flags.showAxes = value; }
+		bool getShowAxes(void) const { return flags.showAxes != false; }
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
@@ -438,6 +440,7 @@ class LDrawModelViewer: public TCAlertSender
 		void dealloc(void);
 		virtual void drawSetup(TCFloat eyeXOffset = 0.0f);
 		virtual void drawModel(TCFloat eyeXOffset = 0.0f);
+		virtual void drawAxes(void);
 		virtual void removeHiddenLines(TCFloat eyeXOffset = 0.0f);
 		virtual void setFieldOfView(double, TCFloat, TCFloat);
 		virtual void setupRotationMatrix(void);
@@ -642,6 +645,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool updating:1;
 			bool saveAlpha:1;
 			bool multiThreaded:1;
+			bool showAxes:1;
 		} flags;
 		struct CameraData
 		{
