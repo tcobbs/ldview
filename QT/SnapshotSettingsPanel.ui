@@ -597,18 +597,9 @@
     <tabstop>cancelButton</tabstop>
 </tabstops>
 <includes>
-    <include location="local" impldecl="in implementation">LDViewSnapshotSettings.h</include>
     <include location="local" impldecl="in implementation">SnapshotSettingsPanel.ui.h</include>
 </includes>
-<forwards>
-    <forward>class SnapshotSettings;</forward>
-</forwards>
-<variables>
-    <variable>SnapshotSettings *snapshotsettings;</variable>
-</variables>
 <slots>
-    <slot>setSnapshotSettings( SnapshotSettings * value )</slot>
-    <slot access="protected">init()</slot>
     <slot>doOk()</slot>
     <slot>doCancel()</slot>
     <slot>doEnabledSeries()</slot>
