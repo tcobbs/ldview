@@ -276,6 +276,7 @@ protected:
 	virtual bool getSaveFilename(char* saveFilename, int len);
 	virtual bool shouldOverwriteFile(char* filename);
 	virtual bool calcSaveFilename(char* saveFilename, int len);
+	virtual void updateSaveFilename(void);
 	const char *saveExtension(int type = -1) const;
 	virtual BOOL doSaveCommand(int controlId, int notifyCode,
 		HWND hControlWnd);
