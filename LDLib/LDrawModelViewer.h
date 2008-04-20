@@ -442,7 +442,7 @@ class LDrawModelViewer: public TCAlertSender
 		void dealloc(void);
 		virtual void drawSetup(TCFloat eyeXOffset = 0.0f);
 		virtual void drawModel(TCFloat eyeXOffset = 0.0f);
-		virtual void drawAxes(void);
+		virtual void drawAxes(bool atOrigin);
 		virtual void removeHiddenLines(TCFloat eyeXOffset = 0.0f);
 		virtual void setFieldOfView(double, TCFloat, TCFloat);
 		virtual void setupRotationMatrix(void);
