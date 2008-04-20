@@ -11,12 +11,11 @@
 #include "LDViewJpegOptions.h"
 
 JpegOptions::JpegOptions(ModelViewerWidget *modelWidget)
-	:modelWidget(modelWidget),
-	panel(new JpegOptionsPanel),
+	:JpegOptionsPanel(),
+	modelWidget(modelWidget),
 	options(new TCJpegOptions)
 {
     modelViewer = modelWidget->getModelViewer();
-    panel->setJpegOptions(this);
 	reflectSettings();
 }
 
@@ -46,12 +45,12 @@ void JpegOptions::reflectSettings(void)
         index = 0;
         break;
     }
-	panel->colorSubsamplingBox->setCurrentItem(index);
+	colorSubsamplingBox->setCurrentItem(index);
 	quality = options->getQuality();
-	panel->qualitySlider->setValue(quality);
+	qualitySlider->setValue(quality);
 	sprintf(number,"%d",quality);
-	panel->qualityValueLabel->setText(number);
-	panel->progressiveCheckBox->setChecked(options->getProgressive());
+	qualityValueLabel->setText(number);
+	progressiveCheckBox->setChecked(options->getProgressive());
 }
 
 JpegOptions::~JpegOptions(void)
@@ -59,17 +58,10 @@ JpegOptions::~JpegOptions(void)
 	TCObject::release(options);
 }
 
-void JpegOptions::show(void)
-{
-	panel->show();
-	panel->raise();
-	panel->setActiveWindow();
-}
-
 void JpegOptions::doOk()
 {
 	TCJpegOptions::SubSampling subSampling = TCJpegOptions::SS444;
-	switch (panel->colorSubsamplingBox->currentItem())
+	switch (colorSubsamplingBox->currentItem())
     {
     case 0:
         subSampling = TCJpegOptions::SS444;
@@ -81,20 +73,21 @@ void JpegOptions::doOk()
         subSampling = TCJpegOptions::SS420;
         break;
     }
-    options->setQuality(panel->qualitySlider->value());
+    options->setQuality(qualitySlider->value());
     options->setSubSampling(subSampling);
-    options->setProgressive(panel->progressiveCheckBox->isChecked());
+    options->setProgressive(progressiveCheckBox->isChecked());
     options->save();
-
+	close();
 }
 
 void JpegOptions::doCancel()
 {
 	reflectSettings();
+	close();
 }
 void JpegOptions::doSliderMoved(int i)
 {
     char number[15];
     sprintf(number,"%d",i);
-    panel->qualityValueLabel->setText(number);
+    qualityValueLabel->setText(number);
 }
