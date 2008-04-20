@@ -51,6 +51,7 @@
 	[self setCheck:antialiasedLinesCheck
 		value:ldPreferences->getLineSmoothing()];
 	[self setCheck:showFrameRateCheck value:ldPreferences->getShowFps()];
+	[self setCheck:showAxesCheck value:ldPreferences->getShowAxes()];
 	[self setCheck:showErrorsCheck value:ldPreferences->getShowErrors()];
 	[self setCheck:processLDConfigCheck
 		value:ldPreferences->getProcessLdConfig()];
@@ -95,6 +96,7 @@
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
 	ldPreferences->setShowFps([self getCheck:showFrameRateCheck]);
+	ldPreferences->setShowAxes([self getCheck:showAxesCheck]);
 	[self getColorWell:backgroundColorWell r:&r g:&g b:&b];
 	ldPreferences->setBackgroundColor(r,g,b);
 	[self getColorWell:defaultColorWell r:&r g:&g b:&b];

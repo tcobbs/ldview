@@ -16,6 +16,7 @@
     IBOutlet NSButton *processLDConfigCheck;
     IBOutlet NSButton *showErrorsCheck;
     IBOutlet NSButton *showFrameRateCheck;
+	IBOutlet NSButton *showAxesCheck;
     IBOutlet NSButton *transparentDefaultCheck;
 	
 	IBOutlet NSPopUpButton *snapshotsDirPopUp;

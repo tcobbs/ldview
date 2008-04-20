@@ -165,6 +165,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.updating = false;
 	flags.saveAlpha = false;
 	flags.showAxes = false;
+	flags.axesAtOrigin = true;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -3125,36 +3126,58 @@ void LDrawModelViewer::drawAxes(void)
 {
 	if (flags.showAxes)
 	{
-		int actualWidth = width;
+		if (flags.axesAtOrigin)
+		{
+			TCVector boundingSize = boundingMax - boundingMin;
 
-		if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
-		{
-			actualWidth /= 2;
-		}
-		glPushAttrib(GL_LIGHTING_BIT | GL_VIEWPORT_BIT);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0.0f, actualWidth, 0.0f, height, -25.0f, 25.0f);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glTranslatef(30.0f, 30.0f, 0.0f);
-		if (rotationMatrix)
-		{
-			treGlMultMatrixf(rotationMatrix);
-		}
-		glDisable(GL_LIGHTING);
-		glBegin(GL_LINES);
+			glPushAttrib(GL_LIGHTING_BIT);
+			glDisable(GL_LIGHTING);
+			glBegin(GL_LINES);
 			glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(25.0f, 0.0f, 0.0f);
+			glVertex3f(boundingMax[0] + boundingSize[0] / 4.0f, 0.0f, 0.0f);
 			glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, 25.0f, 0.0f);
+			glVertex3f(0.0f, boundingMax[1] + boundingSize[1] / 4.0f, 0.0f);
 			glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3f(0.0f, 0.0f, 25.0f);
-		glEnd();
-		glPopAttrib();
+			glVertex3f(0.0f, 0.0f, boundingMax[2] + boundingSize[2] / 4.0f);
+			glEnd();
+			glPopAttrib();
+		}
+		else
+		{
+			int actualWidth = width;
+
+			if (stereoMode == LDVStereoCrossEyed || stereoMode == LDVStereoParallel)
+			{
+				actualWidth /= 2;
+			}
+			glPushAttrib(GL_LIGHTING_BIT | GL_VIEWPORT_BIT);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(0.0f, actualWidth, 0.0f, height, -25.0f, 25.0f);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef(30.0f, 30.0f, 0.0f);
+			if (rotationMatrix)
+			{
+				treGlMultMatrixf(rotationMatrix);
+			}
+			glDisable(GL_LIGHTING);
+			glBegin(GL_LINES);
+				glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(25.0f, 0.0f, 0.0f);
+				glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, 25.0f, 0.0f);
+				glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				glVertex3f(0.0f, 0.0f, 25.0f);
+			glEnd();
+			glPopAttrib();
+		}
 	}
 }
 
@@ -3176,6 +3199,7 @@ void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 	{
 		showLight();
 		mainTREModel->draw();
+		drawAxes();
 		if (clipAmount > 0.01)
 		{
 			drawToClipPlane(eyeXOffset);
