@@ -19,64 +19,62 @@
 #include "misc.h"
 
 LDViewErrors::LDViewErrors(Preferences *preferences)
-	:panel(new ErrorPanel),
+	:ErrorPanel(),
 	preferences(preferences),
 	errors(new LDLErrorArray),
 	listViewPopulated(false)
 {
-	panel->setErrors(this);
-	panel->errorListView->setColumnWidthMode(0, QListView::Maximum);
-	panel->errorListView->header()->hide();
-	panel->errorListView->setSorting(-1);
+	errorListView->setColumnWidthMode(0, QListView::Maximum);
+	errorListView->header()->hide();
+	errorListView->setSorting(-1);
 	reflectSettings();
-	statusBar = panel->statusBar();
-	messageText = new QLabel(statusBar);
-	statusBar->addWidget(messageText,1);
+	messageText = new QLabel(statusBar());
+	statusBar()->addWidget(messageText,1);
 }
 
 void LDViewErrors::reflectSettings(void)
 { 
-	preferences->setButtonState(panel->generalErrorButton,
+	preferences->setButtonState(generalErrorButton,
 		preferences->getShowError(LDLEGeneral));
-        preferences->setButtonState(panel->parseErrorButton,
+        preferences->setButtonState(parseErrorButton,
 		preferences->getShowError(LDLEParse));
-	preferences->setButtonState(panel->fileNotFoundButton,
+	preferences->setButtonState(fileNotFoundButton,
 		preferences->getShowError(LDLEFileNotFound));
-//	preferences->setButtonState(panel->colorErrorButton,
+//	preferences->setButtonState(colorErrorButton,
 //		preferences->getShowError(LDLEColor));
-	preferences->setButtonState(panel->singularMatrixButton,
+	preferences->setButtonState(singularMatrixButton,
 		preferences->getShowError(LDLEMatrix));
-	preferences->setButtonState(panel->partDeterminantButton,
+	preferences->setButtonState(partDeterminantButton,
 		preferences->getShowError(LDLEPartDeterminant));
-	preferences->setButtonState(panel->concaveQuadButton,
+	preferences->setButtonState(concaveQuadButton,
 		preferences->getShowError(LDLEConcaveQuad));
-	preferences->setButtonState(panel->badVertexOrderButton,
+	preferences->setButtonState(badVertexOrderButton,
 		preferences->getShowError(LDLEVertexOrder));
-//	preferences->setButtonState(panel->concaveQuadSplitButton,
+//	preferences->setButtonState(concaveQuadSplitButton,
 //		preferences->getShowError(LDLEConcaveQuadSplit));
-	preferences->setButtonState(panel->colinearPointsButton,
+	preferences->setButtonState(colinearPointsButton,
 		preferences->getShowError(LDLEColinear));
-//	preferences->setButtonState(panel->openGLErrorButton,
+//	preferences->setButtonState(openGLErrorButton,
 //		preferences->getShowError(LDLEOpenGL));
-	preferences->setButtonState(panel->BFCWarningButton,
+	preferences->setButtonState(BFCWarningButton,
 		preferences->getShowError(LDLEBFCWarning));
-	preferences->setButtonState(panel->BFCErrorButton,
+	preferences->setButtonState(BFCErrorButton,
 		preferences->getShowError(LDLEBFCError));
-	preferences->setButtonState(panel->MPDErrorButton,
+	preferences->setButtonState(MPDErrorButton,
 		preferences->getShowError(LDLEMPDError));
-	preferences->setButtonState(panel->whitespaceButton,
+	preferences->setButtonState(whitespaceButton,
 		preferences->getShowError(LDLEWhitespace));
-	preferences->setButtonState(panel->partrenamedButton,
+	preferences->setButtonState(partrenamedButton,
 		preferences->getShowError(LDLEMovedTo));
-	preferences->setButtonState(panel->unofficialPartButton,
+	preferences->setButtonState(unofficialPartButton,
 		preferences->getShowError(LDLEUnofficialPart));
-	preferences->setButtonState(panel->modelLoopButton,
+	preferences->setButtonState(modelLoopButton,
 		preferences->getShowError(LDLEModelLoop));
-	preferences->setButtonState(panel->showWarningsButton,
+	preferences->setButtonState(showWarningsButton,
 		TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 1 : 0);
-	preferences->setButtonState(panel->identicalVerticesButton,
+	preferences->setButtonState(identicalVerticesButton,
 		preferences->getShowError(LDLEMatchingPoints));
-	preferences->setButtonState(panel->nonFlatQuadButton,
+	preferences->setButtonState(nonFlatQuadButton,
 		preferences->getShowError(LDLENonFlatQuad));
 }
 
@@ -88,7 +86,7 @@ void LDViewErrors::setValues(bool value)
 	}
 }
 
-void LDViewErrors::doShowWarnings(void)
+void LDViewErrors::showWarnings(void)
 {
 	 TCUserDefaults::setLongForKey(TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 0 :1 ,
 		SHOW_WARNINGS_KEY);
@@ -102,14 +100,6 @@ LDViewErrors::~LDViewErrors(void)
 	{
 		errors->release();
 	}
-	delete panel;
-}
-
-void LDViewErrors::show(void)
-{
-	panel->show();
-	panel->raise();
-	panel->setActiveWindow();
 }
 
 void LDViewErrors::clear(void)
@@ -120,7 +110,7 @@ void LDViewErrors::clear(void)
 
 void LDViewErrors::clearListView(void)
 {
-	panel->errorListView->clear();
+	errorListView->clear();
 	listViewPopulated = false;
 }
 
@@ -288,7 +278,7 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 	}
 	else
 	{
-		item = new QListViewItem(panel->errorListView, line);
+		item = new QListViewItem(errorListView, line);
         switch (error->getType())
         {
             case LDLEGeneral:
@@ -353,7 +343,7 @@ void LDViewErrors::doErrorClick(QCheckBox *button, LDLErrorType errorType)
 	populateListView();
 }
 
-void LDViewErrors::doShowAllError()
+void LDViewErrors::showAllError()
 {
 	setValues(true);
 	reflectSettings();
@@ -361,7 +351,7 @@ void LDViewErrors::doShowAllError()
 	populateListView();
 }
 
-void LDViewErrors::doShowNoneError()
+void LDViewErrors::showNoneError()
 {
 	setValues(false);
 	reflectSettings();
