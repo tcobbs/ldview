@@ -353,6 +353,19 @@ void TCUserDefaults::setStringForKey(CUCSTR value, const char* key,
 }
 #endif // TC_NO_UNICODE
 
+std::string TCUserDefaults::commandLineStringForKey(const char *key)
+{
+	char *value = getCurrentUserDefaults()->defCommandLineStringForKey(key);
+	std::string retValue;
+
+	if (value)
+	{
+		retValue = value;
+		delete value;
+	}
+	return retValue;
+}
+
 char* TCUserDefaults::stringForKey(const char* key, const char* defaultValue,
 								   bool sessionSpecific)
 {

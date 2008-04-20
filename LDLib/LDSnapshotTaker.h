@@ -76,6 +76,7 @@ protected:
 	bool m_autoCrop;
 	bool m_fromCommandLine;
 	bool m_commandLineSaveSteps;
+	bool m_commandLineStep;
 	int m_step;
 	bool m_grabSetupDone;
 	std::string m_modelFilename;

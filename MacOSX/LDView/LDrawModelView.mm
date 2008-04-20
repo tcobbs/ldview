@@ -1220,7 +1220,6 @@ static TCImage *resizeCornerImage = NULL;
 	{
 		GLint viewport[4];
 		
-		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidResignActive:) name:NSApplicationDidResignActiveNotification object:nil];
 		glGetIntegerv(GL_VIEWPORT, viewport);
 		modelViewer->setWidth(viewport[2]);
 		modelViewer->setHeight(viewport[3]);
@@ -1232,7 +1231,6 @@ static TCImage *resizeCornerImage = NULL;
 		modelViewer->setWidth((int)[self frame].size.width);
 		modelViewer->setHeight((int)[self frame].size.height);
 		[self rotationUpdate];
-		//[[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
 	}
 }
 

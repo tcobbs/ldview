@@ -42,6 +42,7 @@ class TCExport TCUserDefaults: public TCObject
 		static void setStringForKey(CUCSTR value, const char* key,
 			bool sessionSpecific = true);
 #endif //TC_NO_UNICODE
+		static std::string commandLineStringForKey(const char* key);
 		static char* stringForKey(const char* key,
 			const char* defaultValue = NULL, bool sessionSpecific = true);
 		static void setPathForKey(const char* value,
