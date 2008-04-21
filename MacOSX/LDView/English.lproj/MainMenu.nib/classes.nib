@@ -3,6 +3,7 @@
         {
             ACTIONS = {
                 alwaysOnTop = id; 
+                boundingBox = id; 
                 cancelLoad = id; 
                 checkForLibraryUpdates = id; 
                 customizeToolbar = id; 

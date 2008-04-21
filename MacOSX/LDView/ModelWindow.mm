@@ -5,6 +5,7 @@
 #import "ToolbarSegmentedControl.h"
 //#import "ToolbarPopUpButton.h"
 #import "ErrorsAndWarnings.h"
+#import "BoundingBox.h"
 #import "ErrorItem.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
@@ -816,7 +817,7 @@ enum
 			[self enableToolbarItems:YES];
 			loading = false;
 			[modelView rotationUpdate];
-			if ([[ErrorsAndWarnings sharedInstance] isVisible] || showErrorsIfNeeded)
+			if ([ErrorsAndWarnings sharedInstanceIsVisible] || showErrorsIfNeeded)
 			{
 				[[ErrorsAndWarnings sharedInstance] update:self];
 			}
@@ -884,10 +885,23 @@ enum
 	[self performSelectorOnMainThread:@selector(reloadNeeded) withObject:nil waitUntilDone:NO];
 }
 
+- (void)updateUtilityWindows:(id)sender
+{
+	if ([ErrorsAndWarnings sharedInstanceIsVisible])
+	{
+		[[ErrorsAndWarnings sharedInstance] update:sender];
+	}
+	if ([BoundingBox sharedInstanceIsVisible])
+	{
+		[[BoundingBox sharedInstance] update:sender];
+	}
+}
+
 - (void)windowWillClose:(NSNotification *)aNotification
 {
 	if ([aNotification object] == window)
 	{
+		[self updateUtilityWindows:nil];
 		[window setDelegate:nil];
 		[controller modelWindowWillClose:self];
 	}
@@ -1232,6 +1246,12 @@ enum
 	[[ErrorsAndWarnings sharedInstance] show:self];
 }
 
+- (IBAction)boundingBox:(id)sender
+{
+	[[BoundingBox sharedInstance] update:self];
+	[[BoundingBox sharedInstance] show:self];
+}
+
 - (void)windowDidBecomeMain:(NSNotification *)aNotification
 {
 	if (pollingUpdateNeeded)
@@ -1247,10 +1267,7 @@ enum
 				break;
 		}
 	}
-	if ([[ErrorsAndWarnings sharedInstance] isVisible])
-	{
-		[[ErrorsAndWarnings sharedInstance] update:self];
-	}
+	[self updateUtilityWindows:self];
 }
 
 - (void)errorFilterChange:(NSNotification *)aNotification

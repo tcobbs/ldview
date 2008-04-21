@@ -26,6 +26,7 @@ extern NSString *LDErrorFilterChange;
 
 - (id)init;
 + (id)sharedInstance;
++ (BOOL)sharedInstanceIsVisible;
 
 - (IBAction)showIfNeeded;
 - (IBAction)copyError:(id)sender;
