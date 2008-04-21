@@ -209,9 +209,11 @@ void TCWebClient::dealloc(void)
 	}
 	delete dataFilePath;
 	delete contentType;
+	delete contentEncoding;
 	delete locationField;
 	delete readBuffer;
 	// Do NOT delete readBufferPosition
+	delete lastModifiedString;
 	delete pageData;
 	delete username;
 	delete password;
