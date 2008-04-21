@@ -3471,15 +3471,11 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 	}
 	if(event->key() == Qt::Key_End)
 	{
-		modelViewer->setStep(modelViewer->getNumSteps());
-		updateStep();
-		doApply();
+		lastStep();
 	}
 	if(event->key() == Qt::Key_Home)
 	{
-        modelViewer->setStep(1);
-        updateStep();
-        doApply();
+        firstStep();
 	}
 	unlock();
 	QGLWidget::keyPressEvent(event);
@@ -4023,12 +4019,29 @@ void ModelViewerWidget::prevStep()
 	doApply();
 }
 
+void ModelViewerWidget::firstStep()
+{
+	modelViewer->setStep(1);
+    updateStep();
+    doApply();
+}
+
+void ModelViewerWidget::lastStep()
+{
+    modelViewer->setStep(modelViewer->getNumSteps());
+    updateStep();
+    doApply();
+}
+
+
 void ModelViewerWidget::updateStep()
 {
     int step = modelViewer->getStep();
     QString max = QString::number(modelViewer->getNumSteps());
+	mainWindow->toolbarFirstStep->setEnabled(step>1);
     mainWindow->toolbarPrevStep->setEnabled(step>1);
     mainWindow->toolbarNextStep->setEnabled(modelViewer->getNumSteps()>step);
+	mainWindow->toolbarLastStep->setEnabled(modelViewer->getNumSteps()>step);
     mainWindow->toolbarMaxStep->setText(" / "+max);
     mainWindow->toolbarCurrentStep->setText(QString::number(step));
 }

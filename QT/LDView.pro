@@ -97,7 +97,8 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
           ../Icons/LightAngleUL.png \
           ../Icons/LightAngleUM.png \
           ../Icons/LightAngleUR.png \
-	 images/toolbar_prev.png images/toolbar_next.png
+	 images/toolbar_prev.png images/toolbar_next.png \
+	 images/toolbar_step_first.png images/toolbar_step_last.png
 
 TEMPLATE	=app
 CONFIG	+= qt opengl thread warn_on release

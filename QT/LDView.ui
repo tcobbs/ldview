@@ -132,8 +132,10 @@
                 <string> / 0</string>
             </property>
         </widget>
+        <action name="toolbarFirstStep"/>
 		<action name="toolbarPrevStep"/>
 		<action name="toolbarNextStep"/>
+        <action name="toolbarLastStep"/>
 	</toolbar>
 </toolbars>
 <menubar>
@@ -385,6 +387,9 @@
         <property name="iconSet">
             <iconset>toolbar_prev.png</iconset>
         </property>
+        <property name="toolTip">
+            <string>Previous Step</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -392,6 +397,31 @@
         </property>
         <property name="iconSet">
             <iconset>toolbar_next.png</iconset>
+        </property>
+        <property name="toolTip">
+            <string>Next Step</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarLastStep</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_step_last.png</iconset>
+        </property>
+        <property name="toolTip">
+            <string>Last Step</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarFirstStep</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_step_first.png</iconset>
+        </property>
+        <property name="toolTip">
+            <string>First Step</string>
         </property>
     </action>
     <action>
@@ -1274,6 +1304,18 @@
         <slot>nextStep()</slot>
     </connection>
     <connection>
+        <sender>toolbarFirstStep</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>firstStep()</slot>
+    </connection>
+    <connection>
+        <sender>toolbarLastStep</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>lastStep()</slot>
+    </connection>
+    <connection>
         <sender>toolsModelTreeAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1331,6 +1373,8 @@
     <slot>latitudeRotation(bool)</slot>
     <slot>prevStep()</slot>
     <slot>nextStep()</slot>
+    <slot>firstStep()</slot>
+    <slot>lastStep()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

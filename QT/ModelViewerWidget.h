@@ -153,6 +153,8 @@ public:
 	static QString findPackageFile(const QString &filename);
 	void nextStep();
 	void prevStep();
+	void firstStep();
+	void lastStep();
 	void updateStep();
 
 protected slots:
