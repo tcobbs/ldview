@@ -254,3 +254,14 @@ void LDView::nextStep()
 	modelViewer->nextStep();
 }
 
+void LDView::firstStep()
+{
+    modelViewer->firstStep();
+}
+
+void LDView::lastStep()
+{
+    modelViewer->lastStep();
+}
+
+
