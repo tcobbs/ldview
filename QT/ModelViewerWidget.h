@@ -133,6 +133,7 @@ public:
 	void doEdge(bool);
 	void doLighting(bool);
 	void doBFC(bool);
+	void doAxes(bool);
 	void doPrimitiveSubstitution(bool);
 	void doSeams(bool);
 	void reflectSettings(void);

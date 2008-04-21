@@ -129,6 +129,14 @@
                             </widget>
                             <widget class="QCheckBox">
                                 <property name="name">
+                                    <cstring>showAxesButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show Axes</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
                                     <cstring>showErrorsButton</cstring>
                                 </property>
                                 <property name="text">
@@ -3402,6 +3410,12 @@ into effect until the next time a model is loaded.</string>
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>showAxesButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
         <sender>aaLinesButton</sender>
         <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
@@ -3832,6 +3846,7 @@ into effect until the next time a model is loaded.</string>
     <tabstop>tabs</tabstop>
     <tabstop>aaLinesButton</tabstop>
     <tabstop>frameRateButton</tabstop>
+    <tabstop>showAxesButton</tabstop>
     <tabstop>showErrorsButton</tabstop>
     <tabstop>processLdconfigLdrButton</tabstop>
     <tabstop>backgroundColorButton</tabstop>

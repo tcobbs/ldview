@@ -1985,6 +1985,12 @@ void ModelViewerWidget::doBFC(bool value)
 	doApply();
 }
 
+void ModelViewerWidget::doAxes(bool value)
+{
+    preferences->setShowAxes(value);
+    doApply();
+}
+
 void ModelViewerWidget::doPrimitiveSubstitution(bool value)
 {
     preferences->setAllowPrimitiveSubstitution(value);
@@ -2005,6 +2011,7 @@ void ModelViewerWidget::reflectSettings(void)
 		mainWindow->toolbarEdgeAction->setOn(preferences->getShowsHighlightLines());
 		mainWindow->toolbarLightingAction->setOn(preferences->getUseLighting());
 		mainWindow->toolbarBFCAction->setOn(preferences->getUseBFC());
+		mainWindow->toolbarAxesAction->setOn(preferences->getShowAxes());
 		mainWindow->toolbarSeamsAction->setOn(preferences->getUseSeams());
 		mainWindow->toolbarPrimitiveSubstitutionAction->setOn(preferences->getAllowPrimitiveSubstitution());
     }
