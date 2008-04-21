@@ -51,6 +51,7 @@ TCNetwork::~TCNetwork(void)
 void TCNetwork::dealloc(void)
 {
 //	printf("TCNetwork::dealloc\n");
+	delete errorString;
 	closeConnection();
 	TCObject::dealloc();
 }
