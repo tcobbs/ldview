@@ -144,6 +144,7 @@ void Preferences::doGeneralApply(void)
 
 	ldPrefs->setLineSmoothing(panel->aaLinesButton->state());
 	ldPrefs->setShowFps(panel->frameRateButton->state());
+	ldPrefs->setShowAxes(panel->showAxesButton->state());
 	if (modelWidget)
 		modelWidget->setShowFPS(ldPrefs->getShowFps());
 	ldPrefs->setShowErrors(panel->showErrorsButton->state());
@@ -159,95 +160,6 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setTransDefaultColor(panel->transparentButton->state());
 	ldPrefs->applyGeneralSettings();
 	ldPrefs->commitGeneralSettings();
-
-/*
-	bool bTemp;
-
-	bTemp = panel->aaLinesButton->state();
-	if (bTemp != lineSmoothing)
-	{
-		lineSmoothing = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, LINE_SMOOTHING_KEY);
-	}
-	bTemp = panel->frameRateButton->state();
-	if (bTemp != showFPS)
-	{
-		showFPS = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SHOW_FPS_KEY);
-	}
-	bTemp = panel->showErrorsButton->state();
-	if (bTemp != showErrors)
-	{
-		showErrors = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, SHOW_ERRORS_KEY, false);
-	}
-	bTemp = panel->processLdconfigLdrButton->state();
-    if (bTemp !=  processLdconfigLdr)
-	{
-		processLdconfigLdr = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0, 
-				PROCESS_LDCONFIG_KEY, false);
-	}
-	cTemp = panel->backgroundColorButton->backgroundColor();
-	cTemp.rgb(&br, &bg, &bb);
-	iTemp = LDLPalette::colorForRGBA(br, bg, bb, 255);
-	if (iTemp != backgroundColor)
-	{
-		backgroundColor = iTemp;
-		TCUserDefaults::setLongForKey((long)backgroundColor,
-			BACKGROUND_COLOR_KEY);
-	}
-	else
-	{
-		getRGB(backgroundColor, br, bg, bb);
-	}
-	cTemp = panel->defaultColorButton->backgroundColor();
-	cTemp.rgb(&dr, &dg, &db);
-	iTemp = LDLPalette::colorForRGBA(dr, dg, db, 255);
-	if (iTemp != defaultColor)
-	{
-		defaultColor = iTemp;
-		TCUserDefaults::setLongForKey((long)defaultColor, DEFAULT_COLOR_KEY);
-	}
-	else
-	{
-		getRGB(defaultColor, dr, dg, db);
-	}
-	iTemp = panel->fieldOfViewSpin->value();
-	if (iTemp != fieldOfView)
-	{
-		fieldOfView = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, FOV_KEY);
-	}
-	iTemp = panel->memoryUsageBox->currentItem();
-	if (iTemp != memoryUsage)
-	{
-		memoryUsage = iTemp;
-		TCUserDefaults::setLongForKey(iTemp, MEMORY_USAGE_KEY);
-	}
-	bTemp = panel->transparentButton->state();
-	if (bTemp != transDefaultColor)
-	{
-		transDefaultColor = bTemp;
-		TCUserDefaults::setLongForKey(bTemp ? 1 : 0,
-			TRANS_DEFAULT_COLOR_KEY, false);
-	}
-	if (modelWidget)
-	{
-		modelWidget->setShowFPS(showFPS);
-	}
-	if (modelViewer)
-	{
-		modelViewer->setLineSmoothing(lineSmoothing);
-		modelViewer->setBackgroundRGB(br, bg, bb);
-		modelViewer->setDefaultRGB((TCByte)dr, (TCByte)dg, (TCByte)db,
-			transDefaultColor);
-		modelViewer->setDefaultColorNumber(defaultColorNumber);
-		modelViewer->setFov((TCFloat)fieldOfView);
-		modelViewer->setProcessLDConfig(processLdconfigLdr);
-		modelViewer->setMemoryUsage(memoryUsage);
-	}
-*/
 }
 
 void Preferences::doGeometryApply(void)
@@ -669,6 +581,15 @@ void Preferences::setUseBFC(bool value)
 	}
 }
 
+void Preferences::setShowAxes(bool value)
+{
+    if (value != ldPrefs->getShowAxes())
+    {
+        ldPrefs->setShowAxes(value, true, true);
+        reflectGeneralSettings();
+	}
+}
+
 void Preferences::setUseSeams(bool value)
 {
     if (value != ldPrefs->getUseSeams())
@@ -694,6 +615,7 @@ void Preferences::reflectGeneralSettings(void)
 
 	setButtonState(panel->aaLinesButton, ldPrefs->getLineSmoothing());
 	setButtonState(panel->frameRateButton, ldPrefs->getShowFps());
+	setButtonState(panel->showAxesButton, ldPrefs->getShowAxes());
 	setButtonState(panel->showErrorsButton, ldPrefs->getShowErrors());
 	setButtonState(panel->processLdconfigLdrButton,
 		ldPrefs->getProcessLdConfig());
@@ -1976,6 +1898,11 @@ bool Preferences::getUseLighting(void)
 bool Preferences::getUseBFC(void)
 {
 	return ldPrefs->getBfc();
+}
+
+bool Preferences::getShowAxes(void)
+{
+	return ldPrefs->getShowAxes();
 }
 
 bool Preferences::getUseSeams(void)

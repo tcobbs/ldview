@@ -108,6 +108,11 @@ void LDView::toolbarBFC(bool flag)
     modelViewer->doBFC(flag);
 }
 
+void LDView::toolbarAxes(bool flag)
+{
+    modelViewer->doAxes(flag);
+}
+
 void LDView::toolbarPrimitiveSubstitution(bool flag)
 {
     modelViewer->doPrimitiveSubstitution(flag);

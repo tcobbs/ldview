@@ -91,6 +91,8 @@ public:
 	bool getUseLighting(void);
 	bool getUseBFC(void);
 	void setUseBFC(bool);
+	bool getShowAxes(void);
+	void setShowAxes(bool);
 	void setAllowPrimitiveSubstitution(bool);
 	void setUseSeams(bool);
 	bool getUseSeams(void);

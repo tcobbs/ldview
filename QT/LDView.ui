@@ -106,6 +106,7 @@
 		<action name="toolbarPrimitiveSubstitutionAction"/>
 		<action name="toolbarLightingAction"/>
 		<action name="toolbarBFCAction"/>
+        <action name="toolbarAxesAction"/>
 		<action name="toolbarViewAction"/>
 		<action name="editPreferencesAction"/>
         <widget class="QLabel">
@@ -358,6 +359,20 @@
         </property>
         <property name="toolTip">
             <string>BFC</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolbarAxesAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset>toolbar_axes.png</iconset>
+        </property>
+        <property name="toolTip">
+            <string>Show Axes</string>
         </property>
         <property name="toggleAction">
             <bool>true</bool>
@@ -1136,6 +1151,12 @@
         <slot>toolbarBFC(bool)</slot>
     </connection>
     <connection>
+        <sender>toolbarAxesAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>toolbarAxes(bool)</slot>
+    </connection>
+    <connection>
         <sender>toolbarSeamsAction</sender>
         <signal>toggled(bool)</signal>
         <receiver>LDView</receiver>
@@ -1345,6 +1366,7 @@
     <slot>toolbarPrimitiveSubstitution( bool flag )</slot>
     <slot>toolbarLighting( bool flag )</slot>
 	<slot>toolbarBFC( bool flag )</slot>
+    <slot>toolbarAxes( bool flag )</slot>
     <slot>toolbarSeams( bool flag )</slot>
     <slot>viewFullScreen()</slot>
     <slot>viewResetView()</slot>
