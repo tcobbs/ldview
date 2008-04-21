@@ -29,6 +29,18 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	return sharedInstance;
 }
 
++ (BOOL)sharedInstanceIsVisible
+{
+	if (sharedInstance != nil)
+	{
+		return [sharedInstance isVisible];
+	}
+	else
+	{
+		return NO;
+	}
+}
+
 - (void)dealloc
 {
 	[panel release];
@@ -326,17 +338,26 @@ static ErrorsAndWarnings *sharedInstance = nil;
 
 - (void)update:(ModelWindow *)modelWindow
 {
-	NSWindow *window = [modelWindow window];
-	NSString *representedFilename = [window representedFilename];
-
-	[self setRootErrorItem: [modelWindow filteredRootErrorItem]];
-	if ([representedFilename length] > 0)
+	if (modelWindow)
 	{
-		[panel setTitle:[NSString stringWithFormat:titleFormat, [representedFilename lastPathComponent]]];
+		NSWindow *window = [modelWindow window];
+		NSString *representedFilename = [window representedFilename];
+
+		[self setRootErrorItem: [modelWindow filteredRootErrorItem]];
+		if ([representedFilename length] > 0)
+		{
+			[panel setTitle:[NSString stringWithFormat:titleFormat, [representedFilename lastPathComponent]]];
+		}
+		else
+		{
+			[panel setTitle:[NSString stringWithFormat:titleFormat, [window title]]];
+		}
 	}
 	else
 	{
-		[panel setTitle:[NSString stringWithFormat:titleFormat, [window title]]];
+		[self setRootErrorItem:nil];
+		[statusField setStringValue:@""];
+		[panel setTitle:@""];
 	}
 }
 
