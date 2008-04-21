@@ -10,6 +10,7 @@
 
 class LDHtmlInventory;
 class ModelTreeDialog;
+class BoundingBoxDialog;
 class ToolbarStrip;
 
 typedef struct
@@ -297,6 +298,7 @@ class LDViewWindow: public CUIWindow
 		//virtual void updateBFCMenu(void);
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
+		virtual LRESULT showBoundingBox(void);
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
 			LDPartsList *partsList, const char *filename);
 		void progressAlertCallback(TCProgressAlert *alert);
@@ -383,6 +385,7 @@ class LDViewWindow: public CUIWindow
 		bool bfc;
 		bool examineLatLong;
 		ModelTreeDialog *modelTreeDialog;
+		BoundingBoxDialog *boundingBoxDialog;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;

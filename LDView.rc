@@ -478,7 +478,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 260, 235
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,121,49,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -957,7 +957,7 @@ END
 IDD_TOOLBAR DIALOGEX 0, 0, 340, 18
 STYLE WS_CHILD
 EXSTYLE WS_EX_TRANSPARENT
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     CONTROL         "",IDC_TOOLBAR,"ToolbarWindow32",WS_TABSTOP | 0x894c,2,2,
                     219,14
@@ -966,6 +966,17 @@ BEGIN
     EDITTEXT        IDC_STEP,249,1,26,13,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "of %d",IDC_NUM_STEPS,280,2,18,10
     LTEXT           "Step:",IDC_STEP_LABEL,227,2,18,10
+END
+
+IDD_BOUNDING_BOX DIALOG DISCARDABLE  0, 0, 186, 46
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "LDView Bounding Box"
+FONT 8, "MS Sans Serif"
+BEGIN
+    RTEXT           "Minimum Point:",IDC_STATIC,7,10,50,8
+    EDITTEXT        IDC_MIN_POINT,64,7,115,14,ES_AUTOHSCROLL | ES_READONLY
+    RTEXT           "Maximum Point:",IDC_STATIC,7,27,50,8
+    EDITTEXT        IDC_MAX_POINT,64,24,115,14,ES_AUTOHSCROLL | ES_READONLY
 END
 
 
@@ -1155,6 +1166,14 @@ BEGIN
         TOPMARGIN, 2
         BOTTOMMARGIN, 16
     END
+
+    IDD_BOUNDING_BOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 39
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1224,8 +1243,9 @@ BEGIN
     POPUP "&Tools"
     BEGIN
         MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
-        MENUITEM "Parts &List...",              ID_TOOLS_PARTSLIST
-        MENUITEM "&Model Tree\tCtrl+T",         ID_TOOLS_MODELTREE
+        MENUITEM "Parts &List...\tCtrl+L",      ID_TOOLS_PARTSLIST
+        MENUITEM "&Model Tree...\tCtrl+T",      ID_TOOLS_MODELTREE
+        MENUITEM "Bounding Box...\tCtrl+B",     ID_TOOLS_BOUNDINGBOX
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
         MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
@@ -1310,11 +1330,13 @@ BEGIN
                                                     NOINVERT
     "9",            ID_HOT_KEY_9,           VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    "B",            ID_TOOLS_BOUNDINGBOX,   VIRTKEY, CONTROL, NOINVERT
     "E",            ID_TOOLS_ERRORS,        VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
     "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    "L",            ID_TOOLS_PARTSLIST,     VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
     "P",            ID_EDIT_PREFERENCES,    VIRTKEY, SHIFT, CONTROL, 

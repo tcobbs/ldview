@@ -166,6 +166,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.saveAlpha = false;
 	flags.showAxes = false;
 	flags.axesAtOrigin = true;
+	flags.showBoundingBox = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -981,6 +982,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		step = -1;
 		TCAlertManager::sendAlert(loadAlertClass(), this,
 			_UC("ModelLoadCanceled"));
+		requestRedraw();
 	}
 	return retValue;
 }
@@ -1470,7 +1472,14 @@ void LDrawModelViewer::drawBoundingBox(void)
 	{
 		glDisable(GL_LIGHTING);
 	}
-	glColor3ub(255, 255, 255);
+	if ((backgroundR + backgroundG + backgroundB) / 3.0 < 0.5)
+	{
+		glColor3ub(255, 255, 255);
+	}
+	else
+	{
+		glColor3ub(0, 0, 0);
+	}
 	glBegin(GL_LINE_STRIP);
 		treGlVertex3fv(boundingMin);
 		treGlVertex3f(boundingMax[0], boundingMin[1], boundingMin[2]);
@@ -2165,6 +2174,15 @@ void LDrawModelViewer::requestRedraw(void)
 	TCAlertManager::sendAlert(redrawAlertClass(), this);
 }
 
+void LDrawModelViewer::setShowBoundingBox(bool value)
+{
+	if (value != flags.showBoundingBox)
+	{
+		flags.showBoundingBox = value;
+		requestRedraw();
+	}
+}
+
 void LDrawModelViewer::applyZoom(void)
 {
 	if (flags.paused)
@@ -2344,6 +2362,16 @@ void LDrawModelViewer::setViewMode(ViewMode value)
 	viewMode = value;
 }
 
+void LDrawModelViewer::innerDrawModel(void)
+{
+	mainTREModel->draw();
+	drawAxes(true);
+	if (flags.showBoundingBox)
+	{
+		drawBoundingBox();
+	}
+}
+
 void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 {
 	glPushAttrib(GL_POLYGON_BIT | GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT |
@@ -2387,7 +2415,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
 	showLight();
-	mainTREModel->draw();
+	innerDrawModel();
 	glDisable(GL_LIGHTING);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -2508,7 +2536,7 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 	}
 	showLight();
 	mainTREModel->setCutawayDrawFlag(true);
-	mainTREModel->draw();
+	innerDrawModel();
 	mainTREModel->setCutawayDrawFlag(false);
 	perspectiveView();
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -2545,7 +2573,7 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 		treGlTranslatef(-center[0], -center[1], -center[2]);
 	}
 	showLight();
-	mainTREModel->draw();
+	innerDrawModel();
 	perspectiveView();
 	glPopAttrib();
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -3231,8 +3259,7 @@ void LDrawModelViewer::drawModel(TCFloat eyeXOffset)
 	if (mainTREModel)
 	{
 		showLight();
-		mainTREModel->draw();
-		drawAxes(true);
+		innerDrawModel();
 		if (clipAmount > 0.01)
 		{
 			drawToClipPlane(eyeXOffset);
