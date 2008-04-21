@@ -88,6 +88,7 @@
 #define IDD_MODELTREE                   184
 #define IDD_TOOLBAR                     185
 #define IDB_STEP_TOOLBAR                186
+#define IDD_BOUNDING_BOX                187
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -330,6 +331,8 @@
 #define IDC_BROWSE_PARTS_LIST_DIR       1266
 #define IDC_SNAPSHOTS_DIR_BOX           1267
 #define IDC_PARTS_LIST_DIR_BOX          1268
+#define IDC_MIN_POINT                   1269
+#define IDC_MAX_POINT                   1270
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -403,6 +406,7 @@
 #define ID_PREV_STEP                    40094
 #define ID_FIRST_STEP                   40095
 #define ID_LAST_STEP                    40096
+#define ID_TOOLS_BOUNDINGBOX            40097
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -414,9 +418,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        187
-#define _APS_NEXT_COMMAND_VALUE         40097
-#define _APS_NEXT_CONTROL_VALUE         1269
+#define _APS_NEXT_RESOURCE_VALUE        188
+#define _APS_NEXT_COMMAND_VALUE         40099
+#define _APS_NEXT_CONTROL_VALUE         1270
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

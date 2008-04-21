@@ -129,6 +129,12 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_CLOSE:
+		if (doClose() == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	}
 	return (INT_PTR)FALSE;
 }

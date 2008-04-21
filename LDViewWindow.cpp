@@ -8,6 +8,7 @@
 #include "LDViewPreferences.h"
 #include "SSModelWindow.h"
 #include "ModelTreeDialog.h"
+#include "BoundingBoxDialog.h"
 #include "Resource.h"
 #include "ToolbarStrip.h"
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -157,7 +158,8 @@ prefs(NULL),
 drawWireframe(false),
 examineLatLong(TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
 			   LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong),
-modelTreeDialog(NULL)			   
+modelTreeDialog(NULL),
+boundingBoxDialog(NULL)
 {
 	CUIThemes::init();
 	if (CUIThemes::isThemeLibLoaded())
@@ -207,6 +209,7 @@ void LDViewWindow::dealloc(void)
 {
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelTreeDialog);
+	TCObject::release(boundingBoxDialog);
 	TCObject::release(toolbarStrip);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
@@ -2046,6 +2049,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hToolsMenu, ID_TOOLS_POV_CAMERA, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_PARTSLIST, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_MODELTREE, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_BOUNDINGBOX, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_FRONT, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BACK, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_LEFT, haveModel);
@@ -3384,6 +3388,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_TOOLS_MODELTREE:
 			return showModelTree();
+			break;
+		case ID_TOOLS_BOUNDINGBOX:
+			return showBoundingBox();
 			break;
 /*
 		case ID_VIEW_TRANS_MATRIX:
@@ -5157,6 +5164,19 @@ LRESULT LDViewWindow::showModelTree(void)
 			modelTreeDialog = new ModelTreeDialog(getLanguageModule(), hWindow);
 		}
 		modelTreeDialog->show(modelWindow, hWindow);
+	}
+	return 0;
+}
+
+LRESULT LDViewWindow::showBoundingBox(void)
+{
+	if (modelWindow)
+	{
+		if (!boundingBoxDialog)
+		{
+			boundingBoxDialog = new BoundingBoxDialog(getLanguageModule());
+		}
+		boundingBoxDialog->show(modelWindow);
 	}
 	return 0;
 }
