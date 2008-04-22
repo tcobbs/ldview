@@ -13,6 +13,7 @@
 LDViewModelTree::LDViewModelTree(Preferences *pref, LDrawModelViewer *modelViewer,
 								QWidget* parent , const char* name , WFlags fl )
 	:ModelTreePanel(parent, name, fl),
+	modeltree(NULL),
 	mainmodel(NULL),
 	preferences(preferences)
 	
