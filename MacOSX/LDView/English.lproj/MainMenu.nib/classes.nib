@@ -10,6 +10,7 @@
                 errorsAndWarnings = id; 
                 examineMode = id; 
                 flyThroughMode = id; 
+                goToStep = id; 
                 latLongRotation = id; 
                 modelTree = id; 
                 myAction = id; 
