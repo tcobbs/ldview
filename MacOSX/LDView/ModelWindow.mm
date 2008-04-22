@@ -736,12 +736,17 @@ enum
 	}
 }
 
+- (void)pollingUpdate
+{
+	[self reload:self];
+}
+
 - (void)pollingAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	if (returnCode == NSAlertDefaultReturn)
 	{
 		[[alert window] orderOut:self];
-		[self reload:self];
+		[self pollingUpdate];
 	}
 }
 
@@ -770,7 +775,7 @@ enum
 				case 2:
 					if ([controller currentModelWindow] == self)
 					{
-						[self reload:self];
+						[self pollingUpdate];
 					}
 					else
 					{
@@ -778,7 +783,7 @@ enum
 					}
 					break;
 				case 3:
-					[self reload:self];
+					[self pollingUpdate];
 					break;
 				default:
 					break;
@@ -806,7 +811,7 @@ enum
 	NSString *filename = [self filename];
 	long pollingMode = [controller pollingMode];
 
-	if (pollingMode && filename != nil)
+	if (pollingMode && filename != nil && [modelView modelViewer]->getMainModel() != NULL)
 	{
 		if (!pollingTimer)
 		{
@@ -885,6 +890,7 @@ enum
 			[modelView rotationUpdate];
 			[self stepChanged];
 			[self updateFps];
+			[self updatePolling];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:message object:self];
 	}
@@ -1299,7 +1305,7 @@ enum
 				[self askForPollingUpdate];
 				break;
 			case 2:
-				[self reload:self];
+				[self pollingUpdate];
 				break;
 		}
 	}
