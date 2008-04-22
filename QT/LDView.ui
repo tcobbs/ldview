@@ -195,6 +195,7 @@
         <action name="viewShowErrorsAction"/>
         <action name="toolsPartListAction"/>
         <action name="toolsModelTreeAction"/>
+        <action name="toolsBoundingBoxAction"/>
         <separator/>
         <action name="showViewInfoAction"/>
         <action name="showPovCameraAction"/>
@@ -1039,7 +1040,7 @@
             <cstring>toolsPartListAction</cstring>
         </property>
         <property name="text">
-            <string>Part List</string>
+            <string>Part List...</string>
         </property>
     </action>
     <action>
@@ -1047,7 +1048,15 @@
             <cstring>toolsModelTreeAction</cstring>
         </property>
         <property name="text">
-            <string>Model Tree</string>
+            <string>Model Tree...</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>toolsBoundingBoxAction</cstring>
+        </property>
+        <property name="text">
+            <string>Bounding Box...</string>
         </property>
     </action>
 </actions>
@@ -1342,6 +1351,12 @@
         <receiver>LDView</receiver>
         <slot>toolsModelTree()</slot>
     </connection>
+    <connection>
+        <sender>toolsBoundingBoxAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>toolsBoundingBox()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">LDView.ui.h</include>
@@ -1392,6 +1407,7 @@
     <slot>showPovCamera()</slot>
     <slot>toolsPartList()</slot>
     <slot>toolsModelTree()</slot>
+    <slot>toolsBoundingBox()</slot>
     <slot>latitudeRotation(bool)</slot>
     <slot>prevStep()</slot>
     <slot>nextStep()</slot>

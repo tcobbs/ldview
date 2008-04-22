@@ -14,6 +14,7 @@
 #include <LDLib/LDLibraryUpdater.h>
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDSnapshotTaker.h>
+#include "LDViewBoundingBox.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -88,6 +89,7 @@ public:
 			LDPartsList *partsList, const char *filename);
 	void doPartList();
 	void doModelTree();
+	void doBoundingBox();
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
 	void doHelpAbout(void);
@@ -271,6 +273,7 @@ protected:
 	JpegOptions *jpegoptions;
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
+    BoundingBox *boundingbox;
 	AboutPanel *aboutPanel;
 	HelpPanel *helpContents;
 	LDView *mainWindow;
