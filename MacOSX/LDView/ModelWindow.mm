@@ -837,6 +837,27 @@ enum
 	}
 }
 
+- (void)updateUtilityWindows:(id)sender andShowErrorsIfNeeded:(BOOL)andShowErrorsIfNeeded
+{
+	if ([ErrorsAndWarnings sharedInstanceIsVisible] || andShowErrorsIfNeeded)
+	{
+		[[ErrorsAndWarnings sharedInstance] update:self];
+	}
+	if (andShowErrorsIfNeeded)
+	{
+		[[ErrorsAndWarnings sharedInstance] showIfNeeded];
+	}
+	if ([BoundingBox sharedInstanceIsVisible])
+	{
+		[[BoundingBox sharedInstance] update:sender];
+	}
+}
+
+- (void)updateUtilityWindows:(id)sender
+{
+	[self updateUtilityWindows:self andShowErrorsIfNeeded:NO];
+}
+
 - (void)loadAlertCallback:(TCAlert *)alert
 {
 	LDrawModelViewer *modelViewer = (LDrawModelViewer *)alert->getSender();
@@ -869,14 +890,6 @@ enum
 			[self enableToolbarItems:YES];
 			loading = false;
 			[modelView rotationUpdate];
-			if ([ErrorsAndWarnings sharedInstanceIsVisible] || showErrorsIfNeeded)
-			{
-				[[ErrorsAndWarnings sharedInstance] update:self];
-			}
-			if (showErrorsIfNeeded)
-			{
-				[[ErrorsAndWarnings sharedInstance] showIfNeeded];
-			}
 			filename = [self filename];
 			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
 			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
@@ -884,6 +897,7 @@ enum
 			[[self controller] recordRecentFile:filename];
 			[self stepChanged];
 			[self updateFps];
+			[self updateUtilityWindows:self andShowErrorsIfNeeded:showErrorsIfNeeded];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
@@ -902,6 +916,7 @@ enum
 			[self stepChanged];
 			[self updateFps];
 			[self updatePolling];
+			[self updateUtilityWindows:self];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:message object:self];
 	}
@@ -936,18 +951,6 @@ enum
 - (void)modelWillReload
 {
 	[self performSelectorOnMainThread:@selector(reloadNeeded) withObject:nil waitUntilDone:NO];
-}
-
-- (void)updateUtilityWindows:(id)sender
-{
-	if ([ErrorsAndWarnings sharedInstanceIsVisible])
-	{
-		[[ErrorsAndWarnings sharedInstance] update:sender];
-	}
-	if ([BoundingBox sharedInstanceIsVisible])
-	{
-		[[BoundingBox sharedInstance] update:sender];
-	}
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification

@@ -501,6 +501,7 @@
 			children = (
 				1FD9C82E0DBC4EEF00F10F45 /* BoundingBox.nib */,
 				1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */,
+				1FD9C8E20DBD880D00F10F45 /* GoToStep.nib */,
 				1F8418E40D358B9900FAF665 /* JpegOptions.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */,
@@ -513,7 +514,6 @@
 				1FF7118D0DAB50DE001ECA67 /* PrintAccessoryView.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
-				1FD9C8E20DBD880D00F10F45 /* GoToStep.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
