@@ -3214,23 +3214,7 @@ void ModelViewerWidget::doIsoViewAngle(void)
 																																							 
 void ModelViewerWidget::doSaveDefaultViewAngle(void)
 {
-	TCFloat matrix[16];
-	TCFloat rotationMatrix[16];
-	TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-	char matrixString[1024];
-																																							 
-	memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-		sizeof(rotationMatrix));
-	TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-	matrix[12] = 0.0f;
-	matrix[13] = 0.0f;
-	matrix[14] = 0.0f;
-	sprintf(matrixString, "%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g",
-		matrix[0], matrix[4], matrix[8],
-		matrix[1], matrix[5], matrix[9],
-		matrix[2], matrix[6], matrix[10]);
-	TCUserDefaults::setStringForKey(matrixString, DEFAULT_MATRIX_KEY);
-	modelViewer->setDefaultRotationMatrix(matrix);
+	preferences->doSaveDefaultViewAngle();
 }
 
 void ModelViewerWidget::cleanupFloats(TCFloat *array, int count)
