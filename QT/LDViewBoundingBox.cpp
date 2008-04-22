@@ -9,9 +9,11 @@
 
 BoundingBox::BoundingBox(ModelViewerWidget *modelWidget)
 	:BoundingBoxPanel(),
-	m_modelWindow(NULL),
+	m_modelWindow(modelWidget),
 	m_model(NULL)
 {
+	 TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),
+		 (TCObject*)this,(TCAlertCallback)&BoundingBox::modelAlertCallback);
 }
 
 
@@ -36,8 +38,7 @@ void BoundingBox::setModel(LDLMainModel *model)
 
 void BoundingBox::modelAlertCallback(TCAlert *alert)
 {
-	printf("%s\n",alert->getMessage());
-    if (alert->getSender() == (TCAlertSender*)m_modelWindow)
+    if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
     {
         if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
         {
@@ -105,8 +106,8 @@ void BoundingBox::updateData(void)
     }
 }
 
-void BoundingBox::close()
+void BoundingBox::hide()
 {
 	showBoundingBox(false);
-	BoundingBoxPanel::close();
+	BoundingBoxPanel::hide();
 }

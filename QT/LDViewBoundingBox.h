@@ -23,7 +23,7 @@ public:
 
 public slots:
 	void show(void);
-	void close();
+	void hide();
 protected:
 	LDrawModelViewer *modelViewer;
 	ModelViewerWidget *modelWidget;
