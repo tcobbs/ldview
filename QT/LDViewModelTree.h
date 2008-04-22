@@ -17,7 +17,7 @@ class LDViewModelTree : public ModelTreePanel
 {
 //	Q_OBJECT
 public:
-	LDViewModelTree(Preferences *preferences, LDrawModelViewer *modelViewer,
+	LDViewModelTree(Preferences *preferences, ModelViewerWidget *modelViewer,
 					QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel);
 	~LDViewModelTree();
 	void show(void);
@@ -40,9 +40,13 @@ protected:
 	void addChildren(QListViewItem *parent, const LDModelTree *tree);
 	void addLine(QListViewItem *parent, const LDModelTree *tree);
 	void updateLineChecks(void);
+    void modelAlertCallback(TCAlert *alert);
+    void setModel(LDLMainModel *model);
+    void setModelWindow(ModelViewerWidget *modelWindow);
 
 	LDModelTree *findTree(QListViewItem *item);
 	LDModelTree *modeltree;
+	ModelViewerWidget *m_modelWindow;
 	LDLMainModel *mainmodel;
 	Preferences *preferences;
 	QLabel *messageText;

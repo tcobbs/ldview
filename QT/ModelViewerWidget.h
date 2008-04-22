@@ -15,6 +15,7 @@
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDSnapshotTaker.h>
 #include "LDViewBoundingBox.h"
+#include "LDViewModelTree.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -274,6 +275,7 @@ protected:
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
     BoundingBox *boundingbox;
+	LDViewModelTree *modeltree;
 	AboutPanel *aboutPanel;
 	HelpPanel *helpContents;
 	LDView *mainWindow;
