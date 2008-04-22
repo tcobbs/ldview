@@ -17,6 +17,7 @@
 #import "LDViewCategories.h"
 #import "OpenGLDriverInfo.h"
 #import "GeneralPage.h"
+#import "GoToStep.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -452,6 +453,41 @@ enum
 	{
 		[self changeStep:[sender tag]];
 	}
+}
+
+- (void)setStep:(int)step
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+
+	if (step > 0 && step <= modelViewer->getNumSteps())
+	{
+		modelViewer->setStep(step);
+	}
+	else
+	{
+		NSBeep();
+	}
+	[self stepChanged];
+	[modelView rotationUpdate];
+}
+
+- (void)controlTextDidEndEditing:(NSNotification *)notification
+{
+	if ([notification object] == stepField)
+	{
+		[self setStep:[stepField intValue]];
+	}
+}
+
+- (IBAction)goToStep:(id)sender
+{
+	GoToStep *sheet = [[GoToStep alloc] init];
+	
+	if ([sheet runSheetInWindow:window] == NSOKButton)
+	{
+		[self setStep:[sheet step]];
+	}
+	[sheet release];
 }
 
 - (id)initWithController:(LDViewController *)value
