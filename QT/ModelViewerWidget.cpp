@@ -105,6 +105,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	jpegoptions(NULL),
 	extensionsPanel(NULL),
     boundingbox(new BoundingBox(this)),
+	modeltree(new LDViewModelTree(preferences,this)),
 	aboutPanel(NULL),
 	helpContents(NULL),
 	mainWindow(NULL),
@@ -3387,7 +3388,6 @@ void ModelViewerWidget::doPartList(void)
 
 void ModelViewerWidget::doModelTree()
 {
-	LDViewModelTree *modeltree = new LDViewModelTree(preferences,modelViewer);
 	modeltree->show();
 }
 

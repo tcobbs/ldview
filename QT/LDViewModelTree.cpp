@@ -9,12 +9,16 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include "misc.h"
+#include "ModelViewerWidget.h"
+#include <TCFoundation/TCAlert.h>
+#include <TCFoundation/TCAlertManager.h>
 
-LDViewModelTree::LDViewModelTree(Preferences *pref, LDrawModelViewer *modelViewer,
+LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelViewer,
 								QWidget* parent , const char* name , WFlags fl )
 	:ModelTreePanel(parent, name, fl),
 	modeltree(NULL),
-	mainmodel(NULL),
+	m_modelWindow(modelViewer),
+    mainmodel(NULL),
 	preferences(preferences)
 	
 {
@@ -22,7 +26,8 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, LDrawModelViewer *modelViewe
 	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
 	modelTreeView->header()->hide();
 	modelTreeView->setSorting(-1);
-	mainmodel=modelViewer->getMainModel();
+	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),
+		(TCObject*)this,(TCAlertCallback)&LDViewModelTree::modelAlertCallback);
 }
 
 LDViewModelTree::~LDViewModelTree() { }
@@ -101,6 +106,7 @@ void LDViewModelTree::addLine(QListViewItem *parent, const LDModelTree *tree)
 
 void LDViewModelTree::updateLineChecks(void)
 {
+	if (!modeltree) return;
 	preferences->setButtonState(unknownButton,
 								modeltree->getShowLineType(LDLLineTypeUnknown));
 	preferences->setButtonState(commentButton,
@@ -162,3 +168,39 @@ void LDViewModelTree::doLineCheck(QCheckBox *button, LDLLineType lineType)
 		refreshTreeView();
 	}
 }
+
+void LDViewModelTree::setModel(LDLMainModel *model)
+{
+    if (mainmodel != model)
+    {
+        modeltree = NULL;
+        mainmodel = model;
+    }
+}
+
+void LDViewModelTree::modelAlertCallback(TCAlert *alert)
+{
+    if (alert->getSender() == (TCAlertSender*)m_modelWindow->getModelViewer())
+    {
+        if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0)
+        {
+            setModel(m_modelWindow->getModelViewer()->getMainModel());
+            fillTreeView();
+        }
+        else if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
+        {
+            setModel(NULL);
+            fillTreeView();
+        }
+    }
+}
+
+void LDViewModelTree::setModelWindow(ModelViewerWidget *modelWindow)
+{
+    if (modelWindow != m_modelWindow)
+    {
+		m_modelWindow = modelWindow;
+    }
+    setModel(m_modelWindow->getModelViewer()->getMainModel());
+}
+
