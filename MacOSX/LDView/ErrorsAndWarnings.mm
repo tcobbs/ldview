@@ -118,6 +118,12 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	{
 		[aCell setTitle:[errorNames objectAtIndex:rowIndex]];
 		[aCell setState:[[enabledErrors objectAtIndex:rowIndex] intValue]];
+//		NSLog(@"%@\n", aCell);
+//		[aCell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:0.85f blue:0.85f alpha:1.0f]];
+//		if ([aCell respondsToSelector:@selector(setDrawsBackground:)])
+//		{
+//			[aCell setDrawsBackground:YES];
+//		}
 	}
 }
 
