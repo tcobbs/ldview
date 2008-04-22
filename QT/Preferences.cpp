@@ -982,6 +982,11 @@ void Preferences::doDrawLightDats()
 	setButtonState(panel->effectsReplaceStandarLightButton , enabled);
 }
 
+void Preferences::doSaveDefaultViewAngle()
+{
+	ldPrefs->saveDefaultView();
+}
+
 void Preferences::doStereo(bool value)
 {
 	if (value)
