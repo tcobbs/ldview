@@ -90,6 +90,17 @@ enum
 	return defaultIdentifiers;
 }
 
+- (void)ignoreAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+}
+
+- (void)runAlertSheetWithMessageText:(NSString *)messageTitle defaultButton:(NSString *)defaultButtonTitle alternateButton:(NSString *)alternateButtonTitle otherButton:(NSString *)otherButtonTitle informativeText:(NSString *)informativeText
+{
+	NSAlert *alert = [NSAlert alertWithMessageText:messageTitle defaultButton:defaultButtonTitle alternateButton:alternateButtonTitle otherButton:otherButtonTitle informativeTextWithFormat:informativeText];
+	
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(ignoreAlertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+}
+
 - (NSToolbarItem *)addToolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label control:(NSControl **)pControl menuItem:(NSMenuItem *)menuItem highPriority:(BOOL)highPriority isDefault:(BOOL)isDefault
 {
 	NSControl *&control = *pControl;
@@ -882,7 +893,7 @@ enum
 			}
 			if (!loadCanceled)
 			{
-				NSRunAlertPanel([OCLocalStrings get:@"Error"], [NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], modelViewer->getFilename()], [OCLocalStrings get:@"OK"], nil, nil);
+				[self runAlertSheetWithMessageText:[OCLocalStrings get:@"Error"] defaultButton:[OCLocalStrings get:@"OK"] alternateButton:nil otherButton:nil informativeText:[NSString stringWithFormat: [OCLocalStrings get:@"ErrorLoadingModel"], modelViewer->getFilename()]];
 			}
 			loading = false;
 			[[self window] setTitleWithRepresentedFilename:@""];
