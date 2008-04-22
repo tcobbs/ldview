@@ -104,6 +104,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	snapshotsettings(NULL),
 	jpegoptions(NULL),
 	extensionsPanel(NULL),
+    boundingbox(new BoundingBox(this)),
 	aboutPanel(NULL),
 	helpContents(NULL),
 	mainWindow(NULL),
@@ -3388,7 +3389,11 @@ void ModelViewerWidget::doModelTree()
 {
 	LDViewModelTree *modeltree = new LDViewModelTree(preferences,modelViewer);
 	modeltree->show();
-	
+}
+
+void ModelViewerWidget::doBoundingBox()
+{
+	boundingbox->show();
 }
 
 // Note: static method

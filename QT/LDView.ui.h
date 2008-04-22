@@ -244,6 +244,11 @@ void LDView::toolsModelTree()
 	modelViewer->doModelTree();
 }
 
+void LDView::toolsBoundingBox()
+{
+	modelViewer->doBoundingBox();
+}
+
 void LDView::latitudeRotation(bool b)
 {
 	modelViewer->switchExamineLatLong(b);
