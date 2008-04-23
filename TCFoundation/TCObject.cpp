@@ -1,5 +1,6 @@
 #include "TCObject.h"
 #include "TCAutoreleasePool.h"
+#include "TCLocalStrings.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -126,4 +127,23 @@ int TCObject::compare(const TCObject *other) const
 	{
 		return 0;
 	}
+}
+
+#if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)
+const QString &TCObject::ls(const char *key)
+#else
+const char *TCObject::ls(const char *key)
+#endif
+{
+	return TCLocalStrings::get(key);
+}
+
+const wchar_t *TCObject::ls(const wchar_t *key)
+{
+	return TCLocalStrings::get(key);
+}
+
+const char *TCObject::lsUtf8(const char *key)
+{
+	return TCLocalStrings::getUtf8(key);
 }
