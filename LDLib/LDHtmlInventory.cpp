@@ -381,18 +381,18 @@ void LDHtmlInventory::writeHeader(FILE *file)
 	fprintf(file, "<meta http-equiv=\"Content-Type\" "
 		"content=\"text/html; charset=UTF-8\">\n");
 	char title[1024];
-	sprintf(title, TCLocalStrings::getUtf8("PLTitle"), m_modelName.c_str());
+	sprintf(title, lsUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "<title>%s</title>\n", title);
 	if (writeExternalCss())
 	{
 		fprintf(file, "<link href=\"%s\" title=\"%s\" "
 			"rel=\"stylesheet\" type=\"text/css\">\n", sm_cssFilename,
-			TCLocalStrings::getUtf8("PLStyleSheetTitle"));
+			lsUtf8("PLStyleSheetTitle"));
 	}
 	else
 	{
 		fprintf(file, "<style type=\"text/css\" title=\"%s\"><!--\n",
-			TCLocalStrings::getUtf8("PLStyleSheetTitle"));
+			lsUtf8("PLStyleSheetTitle"));
 		fprintf(file, "%s", sm_style);
 		fprintf(file, "--></style>\n");
 	}
@@ -496,16 +496,13 @@ void LDHtmlInventory::writePartCell(
 		if (official)
 		{
 			fprintf(file, "<img %salt=\"%s\" title=\"%s\" "
-			"src=\"http://media.peeron.com/ldraw/images/%d/100/%s.png\">",
-			imgStyle.c_str(),
-			(const char *)TCLocalStrings::getUtf8("PLViewOnPeeron"),
-			(const char *)TCLocalStrings::getUtf8("PLViewOnPeeron"),
-			peeronColorNumber, partName.c_str());
+				"src=\"http://media.peeron.com/ldraw/images/%d/100/%s.png\">",
+				imgStyle.c_str(), lsUtf8("PLViewOnPeeron"),
+				lsUtf8("PLViewOnPeeron"), peeronColorNumber, partName.c_str());
 		}
 		else
 		{
-			fprintf(file, "%s",
-				(const char *)TCLocalStrings::getUtf8("PLViewOnPeeron"));
+			fprintf(file, "%s", lsUtf8("PLViewOnPeeron"));
 		}
 		fprintf(file, "</a></td>\n");
 	}
@@ -526,7 +523,7 @@ void LDHtmlInventory::writeDescriptionCell(
 		else
 		{
 			fprintf(file, "			<td>&lt;%s&gt;</td>\n",
-				(const char *)TCLocalStrings::getUtf8("PLNoDescription"));
+				lsUtf8("PLNoDescription"));
 		}
 	}
 }
@@ -654,11 +651,11 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "		<tr>\n");
 	fprintf(file, "			<th class=\"title\" colspan=\"%d\">\n", m_columns);
 	char title[1024];
-	sprintf(title, TCLocalStrings::getUtf8("PLTitle"), m_modelName.c_str());
+	sprintf(title, lsUtf8("PLTitle"), m_modelName.c_str());
 	fprintf(file, "				%s", title);
 	if (m_showTotal)
 	{
-		fprintf(file, TCLocalStrings::getUtf8("PLTotalParts"), totalParts);
+		fprintf(file, lsUtf8("PLTotalParts"), totalParts);
 	}
 	fprintf(file, "\n");
 	fprintf(file, "			</th>\n");
@@ -684,13 +681,13 @@ void LDHtmlInventory::writeTableHeader(FILE *file, int totalParts)
 	fprintf(file, "							<td align=\"%s\">\n",
 		ldviewCreditAlign);
 	fprintf(file, "								%s\n",
-		(const char *)TCLocalStrings::getUtf8("PLGeneratedBy"));
+		lsUtf8("PLGeneratedBy"));
 	fprintf(file, "							</td>\n");
 	if (m_partImages)
 	{
 		fprintf(file, "							<td align=\"right\">\n");
 		fprintf(file, "								%s\n",
-			(const char *)TCLocalStrings::getUtf8("PLProvidedBy"));
+			lsUtf8("PLProvidedBy"));
 		fprintf(file, "							</td>\n");
 	}
 	fprintf(file, "						</tr>\n");
@@ -782,16 +779,16 @@ CUCSTR LDHtmlInventory::getColumnNameUC(LDPartListColumn column)
 	switch (column)
 	{
 	case LDPLCPart:
-		return TCLocalStrings::get(_UC("PLPartColName"));
+		return ls(_UC("PLPartColName"));
 		break;
 	case LDPLCDescription:
-		return TCLocalStrings::get(_UC("PLDescriptionColName"));
+		return ls(_UC("PLDescriptionColName"));
 		break;
 	case LDPLCColor:
-		return TCLocalStrings::get(_UC("PLColorColName"));
+		return ls(_UC("PLColorColName"));
 		break;
 	case LDPLCQuantity:
-		return TCLocalStrings::get(_UC("PLQuantityColName"));
+		return ls(_UC("PLQuantityColName"));
 		break;
 	}
 	return _UC("<Unknown Column Name>");
@@ -802,16 +799,16 @@ const char *LDHtmlInventory::getColumnName(LDPartListColumn column)
 	switch (column)
 	{
 	case LDPLCPart:
-		return TCLocalStrings::get("PLPartColName");
+		return ls("PLPartColName");
 		break;
 	case LDPLCDescription:
-		return TCLocalStrings::get("PLDescriptionColName");
+		return ls("PLDescriptionColName");
 		break;
 	case LDPLCColor:
-		return TCLocalStrings::get("PLColorColName");
+		return ls("PLColorColName");
 		break;
 	case LDPLCQuantity:
-		return TCLocalStrings::get("PLQuantityColName");
+		return ls("PLQuantityColName");
 		break;
 	}
 	return "<Unknown Column Name>";
