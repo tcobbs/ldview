@@ -926,14 +926,12 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 				mainTREModel->retain();
 				setStep(getNumSteps());
 				TCProgressAlert::send("LDrawModelViewer",
-					TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.0f,
-					&abort, this);
+					ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
 				if (!abort)
 				{
 					mainTREModel->getBoundingBox(boundingMin, boundingMax);
 					TCProgressAlert::send("LDrawModelViewer",
-						TCLocalStrings::get(_UC("CalculatingSizeStatus")), 0.5f,
-						&abort, this);
+						ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
 				}
 				if (!abort)
 				{
@@ -946,8 +944,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 						size = mainTREModel->getMaxRadius(center) * 2.0f;
 					}
 					TCProgressAlert::send("LDrawModelViewer",
-						TCLocalStrings::get(_UC("CalculatingSizeStatus")), 1.0f,
-						&abort, this);
+						ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
 				}
 				if (!abort)
 				{
@@ -958,8 +955,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 			}
 			modelParser->release();
 		}
-		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
-			_UC("Done")), 2.0f, this);
+		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
 		if (resetViewpoint)
 		{
 			resetView();
@@ -1106,8 +1102,7 @@ bool LDrawModelViewer::recompile(void)
 		}
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
-		TCProgressAlert::send("LDrawModelViewer", TCLocalStrings::get(
-			_UC("Done")), 2.0f, this);
+		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
 	}
 	return true;
 }
@@ -1607,7 +1602,7 @@ void LDrawModelViewer::drawFPS(TCFloat fps)
 		else
 		{
 			// NOTE: Unicode NOT supported for this string.
-			strcpy(fpsString, TCLocalStrings::get("FPSSpinPromptGL"));
+			strcpy(fpsString, ls("FPSSpinPromptGL"));
 /*
 			for (int i = 0; i < 128; i++)
 			{
@@ -3181,7 +3176,8 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 					maxPoint[i] = boundingMax[i] + margin;
 				}
 			}
-			glPushAttrib(GL_LIGHTING_BIT);
+			glPushAttrib(GL_LIGHTING_BIT | GL_LINE_BIT);
+			glLineWidth(2.0f);
 			glDisable(GL_LIGHTING);
 			glBegin(GL_LINES);
 				glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
@@ -3436,13 +3432,13 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 		sprintf(key, "UnofficialPartChecks/%s/LastModified", filename);
 		if (found)
 		{
-			sucprintf(message, COUNT_OF(message),
-				TCLocalStrings::get(_UC("CheckingForUpdates")), ucFilename);
+			sucprintf(message, COUNT_OF(message), ls(_UC("CheckingForUpdates")),
+				ucFilename);
 		}
 		else
 		{
-			sucprintf(message, COUNT_OF(message),
-				TCLocalStrings::get(_UC("TryingToDownload")), ucFilename);
+			sucprintf(message, COUNT_OF(message), ls(_UC("TryingToDownload")),
+				ucFilename);
 		}
 		delete ucFilename;
 		TCProgressAlert::send("LDrawModelViewer", message, -1.0f, &abort, this);
@@ -3489,7 +3485,7 @@ void LDrawModelViewer::findFileAlertCallback(LDLFindFileAlert *alert)
 			preferences->setCheckPartTracker(false, true);
 			flags.checkPartTracker = false;
 			TCAlertManager::sendAlert(alertClass(), this,
-				TCLocalStrings::get(_UC("PartCheckDisabled")));
+				ls(_UC("PartCheckDisabled")));
 		}
 		else
 		{
@@ -3789,9 +3785,8 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 		lookAtVector[0], lookAtVector[1], lookAtVector[2]);
 	sucprintf(upString, COUNT_OF(upString), _UC("%g,%g,%g"), upVector[0],
 		upVector[1], upVector[2]);
-	sucprintf(message, COUNT_OF(message),
-		TCLocalStrings::get(_UC("PovCameraMessage")), locationString,
-		lookAtString, upString);
+	sucprintf(message, COUNT_OF(message), ls(_UC("PovCameraMessage")),
+		locationString, lookAtString, upString);
 	TCVector::doubleNormalize(up);
 	TCVector::doubleNormalize(direction);
 	TCVector::doubleMultiply(direction, tempV,
@@ -3955,15 +3950,15 @@ UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	numExtensions = 0;
 	if (!vendorString)
 	{
-		vendorString = copyString(TCLocalStrings::get(_UC("*Unknown*")));
+		vendorString = copyString(ls(_UC("*Unknown*")));
 	}
 	if (!rendererString)
 	{
-		rendererString = copyString(TCLocalStrings::get(_UC("*Unknown*")));
+		rendererString = copyString(ls(_UC("*Unknown*")));
 	}
 	if (!versionString)
 	{
-		versionString = copyString(TCLocalStrings::get(_UC("*Unknown*")));
+		versionString = copyString(ls(_UC("*Unknown*")));
 	}
 	if (extensionsString)
 	{
@@ -3977,13 +3972,13 @@ UCSTR LDrawModelViewer::getOpenGLDriverInfo(int &numExtensions)
 	}
 	else
 	{
-		extensionsList = copyString(TCLocalStrings::get(_UC("*None*")));
+		extensionsList = copyString(ls(_UC("*None*")));
 	}
 	len = ucstrlen(vendorString) + ucstrlen(rendererString) +
 		ucstrlen(versionString) + ucstrlen(extensionsList) + 128;
 	message = new UCCHAR[len];
-	sucprintf(message, len, TCLocalStrings::get(_UC("OpenGlInfo")),
-		vendorString, rendererString, versionString, extensionsList);
+	sucprintf(message, len, ls(_UC("OpenGlInfo")), vendorString, rendererString,
+		versionString, extensionsList);
 	delete vendorString;
 	delete rendererString;
 	delete versionString;
@@ -4021,9 +4016,8 @@ bool LDrawModelViewer::getViewInfo(ucstring &message, ucstring &commandLine)
 			sucprintf(zoomString, COUNT_OF(zoomString), _UC("%.6g"),
 				defaultDistance / distanceMultiplier / cameraDistance);
 		}
-		sucprintf(messageBuf, COUNT_OF(messageBuf),
-			TCLocalStrings::get(_UC("ViewInfoMessage")), matrixString,
-			zoomString);
+		sucprintf(messageBuf, COUNT_OF(messageBuf), ls(_UC("ViewInfoMessage")),
+			matrixString, zoomString);
 		sucprintf(commandLineBuf, COUNT_OF(commandLineBuf),
 			_UC("-DefaultMatrix=%s -DefaultZoom=%s"), matrixString, zoomString);
 		message = messageBuf;
