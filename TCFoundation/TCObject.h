@@ -3,6 +3,10 @@
 
 #include <TCFoundation/TCDefines.h>
 
+#ifdef _QT
+#include <qstring.h>
+#endif // _QT
+
 class TCAutoreleasePool;
 
 class TCExport TCObject
