@@ -978,7 +978,14 @@ bool LDrawModelViewer::parseModel(void)
 			ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
 		if (!abort)
 		{
-			mainTREModel->getBoundingBox(boundingMin, boundingMax);
+			if (flags.boundingBoxesOnly)
+			{
+				mainTREModel->getBoundingBox(boundingMin, boundingMax);
+			}
+			else
+			{
+				mainModel->getBoundingBox(boundingMin, boundingMax);
+			}
 			TCProgressAlert::send("LDrawModelViewer",
 				ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
 		}
@@ -990,7 +997,14 @@ bool LDrawModelViewer::parseModel(void)
 			}
 			if (!flags.overrideModelSize)
 			{
-				size = mainTREModel->getMaxRadius(center) * 2.0f;
+				if (flags.boundingBoxesOnly)
+				{
+					size = mainTREModel->getMaxRadius(center) * 2.0f;
+				}
+				else
+				{
+					size = mainModel->getMaxRadius(center) * 2.0f;
+				}
 			}
 			TCProgressAlert::send("LDrawModelViewer",
 				ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
