@@ -970,7 +970,7 @@ END
 
 IDD_BOUNDING_BOX DIALOG DISCARDABLE  0, 0, 186, 46
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "LDView Bounding Box"
+CAPTION "LDView Model Bounding Box"
 FONT 8, "MS Sans Serif"
 BEGIN
     RTEXT           "Minimum Point:",IDC_STATIC,7,10,50,8
@@ -1245,7 +1245,7 @@ BEGIN
         MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
         MENUITEM "Parts &List...\tCtrl+L",      ID_TOOLS_PARTSLIST
         MENUITEM "&Model Tree...\tCtrl+T",      ID_TOOLS_MODELTREE
-        MENUITEM "Bounding Box...\tCtrl+B",     ID_TOOLS_BOUNDINGBOX
+        MENUITEM "Model Bounding Box...\tCtrl+B", ID_TOOLS_BOUNDINGBOX
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
         MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA

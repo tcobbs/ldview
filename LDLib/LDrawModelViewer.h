@@ -297,9 +297,14 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setAxesAtOrigin(bool value) { flags.axesAtOrigin = value; }
 		bool getAxesAtOrigin(void) const { return flags.axesAtOrigin != false; }
 		virtual void setShowBoundingBox(bool value);
-		bool getShowBoundingBox(void)
+		bool getShowBoundingBox(void) const
 		{
 			return flags.showBoundingBox != false;
+		}
+		virtual void setBoundingBoxesOnly(bool value);
+		bool getBoundingBoxesOnly(void) const
+		{
+			return flags.boundingBoxesOnly != false;
 		}
 		const TCVector &getBoundingMin(void) const { return boundingMin; }
 		const TCVector &getBoundingMax(void) const { return boundingMax; }
@@ -664,6 +669,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool showAxes:1;
 			bool axesAtOrigin:1;
 			bool showBoundingBox:1;
+			bool boundingBoxesOnly:1;
 		} flags;
 		struct CameraData
 		{
