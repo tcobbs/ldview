@@ -1056,7 +1056,7 @@
             <cstring>toolsBoundingBoxAction</cstring>
         </property>
         <property name="text">
-            <string>Bounding Box...</string>
+            <string>Model Bounding Box...</string>
         </property>
     </action>
 </actions>
