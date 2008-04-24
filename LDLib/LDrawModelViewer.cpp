@@ -128,6 +128,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.needsMaterialSetup = true;
 	flags.needsLightingSetup = true;
 	flags.needsReload = false;
+	flags.needsReparse = false;
 	flags.needsRecompile = false;
 	flags.needsResize = true;
 	flags.paused = 0;
@@ -892,73 +893,18 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelLoading"));
 	if (filename && filename[0])
 	{
-		TCObject::release(mainModel);
-		mainModel = new LDLMainModel;
-		mainModel->setAlertSender(this);
 		if (clipAmount != 0.0f && resetViewpoint)
 		{
 			clipAmount = 0.0f;
 			perspectiveView();
 		}
-
-		// First, release the current TREModel, if it exists.
-		TCObject::release(mainTREModel);
-		mainTREModel = NULL;
-		TCObject::release(whiteLightDirModel);
-		whiteLightDirModel = NULL;
-		TCObject::release(blueLightDirModel);
-		blueLightDirModel = NULL;
-		mainModel->setLowResStuds(!flags.qualityStuds);
-		mainModel->setBlackEdgeLines(flags.blackHighlights);
-		mainModel->setExtraSearchDirs(extraSearchDirs);
-		mainModel->setProcessLDConfig(flags.processLDConfig);
-		mainModel->setSkipValidation(flags.skipValidation);
-		if (mainModel->load(filename))
+		if (loadLDLModel() && parseModel())
 		{
-			LDModelParser *modelParser = new LDModelParser(this);
-
-			modelParser->setAlertSender(this);
-			if (modelParser->parseMainModel(mainModel))
+			retValue = 1;
+			if (resetViewpoint)
 			{
-				bool abort;
-
-				mainTREModel = modelParser->getMainTREModel();
-				mainTREModel->retain();
-				setStep(getNumSteps());
-				TCProgressAlert::send("LDrawModelViewer",
-					ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
-				if (!abort)
-				{
-					mainTREModel->getBoundingBox(boundingMin, boundingMax);
-					TCProgressAlert::send("LDrawModelViewer",
-						ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
-				}
-				if (!abort)
-				{
-					if (!flags.overrideModelCenter)
-					{
-						center = (boundingMin + boundingMax) / 2.0f;
-					}
-					if (!flags.overrideModelSize)
-					{
-						size = mainTREModel->getMaxRadius(center) * 2.0f;
-					}
-					TCProgressAlert::send("LDrawModelViewer",
-						ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
-				}
-				if (!abort)
-				{
-					flags.needsRecompile = false;
-					retValue = 1;
-				}
-				initLightDirModels();
+				resetView();
 			}
-			modelParser->release();
-		}
-		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
-		if (resetViewpoint)
-		{
-			resetView();
 		}
 	}
 	// This shouldn't be necessary, but something is occasionally setting the
@@ -983,12 +929,90 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 	return retValue;
 }
 
+void LDrawModelViewer::releaseTREModels(void)
+{
+	TCObject::release(mainTREModel);
+	mainTREModel = NULL;
+	TCObject::release(whiteLightDirModel);
+	whiteLightDirModel = NULL;
+	TCObject::release(blueLightDirModel);
+	blueLightDirModel = NULL;
+}
+
+bool LDrawModelViewer::loadLDLModel(void)
+{
+	TCObject::release(mainModel);
+	mainModel = new LDLMainModel;
+	mainModel->setAlertSender(this);
+
+	// First, release the current TREModels, if they exist.
+	releaseTREModels();
+	mainModel->setLowResStuds(!flags.qualityStuds);
+	mainModel->setBlackEdgeLines(flags.blackHighlights);
+	mainModel->setExtraSearchDirs(extraSearchDirs);
+	mainModel->setProcessLDConfig(flags.processLDConfig);
+	mainModel->setSkipValidation(flags.skipValidation);
+	return mainModel->load(filename);
+}
+
+bool LDrawModelViewer::parseModel(void)
+{
+	LDModelParser *modelParser = new LDModelParser(this);
+	bool retValue = false;
+
+	if (!mainModel)
+	{
+		return false;
+	}
+	releaseTREModels();
+	modelParser->setAlertSender(this);
+	if (modelParser->parseMainModel(mainModel))
+	{
+		bool abort;
+
+		mainTREModel = modelParser->getMainTREModel();
+		mainTREModel->retain();
+		setStep(getNumSteps());
+		TCProgressAlert::send("LDrawModelViewer",
+			ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
+		if (!abort)
+		{
+			mainTREModel->getBoundingBox(boundingMin, boundingMax);
+			TCProgressAlert::send("LDrawModelViewer",
+				ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
+		}
+		if (!abort)
+		{
+			if (!flags.overrideModelCenter)
+			{
+				center = (boundingMin + boundingMax) / 2.0f;
+			}
+			if (!flags.overrideModelSize)
+			{
+				size = mainTREModel->getMaxRadius(center) * 2.0f;
+			}
+			TCProgressAlert::send("LDrawModelViewer",
+				ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
+		}
+		if (!abort)
+		{
+			flags.needsRecompile = false;
+			flags.needsReparse = false;
+			retValue = true;
+		}
+		initLightDirModels();
+		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
+	}
+	modelParser->release();
+	return retValue;
+}
+
 void LDrawModelViewer::setShowsHighlightLines(bool value)
 {
 	if (value != flags.showsHighlightLines)
 	{
 		flags.showsHighlightLines = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -999,7 +1023,7 @@ void LDrawModelViewer::setDrawConditionalHighlights(bool value)
 		flags.drawConditionalHighlights = value;
 		if (flags.showsHighlightLines)
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 		}
 	}
 }
@@ -1009,7 +1033,7 @@ void LDrawModelViewer::setPerformSmoothing(bool value)
 	if (flags.performSmoothing != value)
 	{
 		flags.performSmoothing = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1062,7 +1086,7 @@ void LDrawModelViewer::setMemoryUsage(int value)
 	if (value != memoryUsage)
 	{
 		memoryUsage = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1071,7 +1095,7 @@ void LDrawModelViewer::setLineSmoothing(bool value)
 	if (flags.lineSmoothing != value)
 	{
 		flags.lineSmoothing = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1535,7 +1559,7 @@ void LDrawModelViewer::setSeamWidth(TCFloat value)
 	if (!fEq(value, seamWidth))
 	{
 		seamWidth = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1702,7 +1726,7 @@ void LDrawModelViewer::setDefaultRGB(TCByte r, TCByte g, TCByte b,
 		flags.defaultTrans = transparent;
 		if (mainTREModel && defaultColorNumber == -1)
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 		}
 	}
 }
@@ -1724,7 +1748,7 @@ void LDrawModelViewer::setDefaultColorNumber(int value)
 	if (value != defaultColorNumber)
 	{
 		defaultColorNumber = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1743,7 +1767,7 @@ void LDrawModelViewer::setRedBackFaces(bool value)
 		flags.redBackFaces = value;
 		if (flags.bfc)
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 			flags.needsLightingSetup = true;
 		}
 	}
@@ -1756,7 +1780,7 @@ void LDrawModelViewer::setGreenFrontFaces(bool value)
 		flags.greenFrontFaces = value;
 		if (flags.bfc)
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 			flags.needsLightingSetup = true;
 		}
 	}
@@ -1767,7 +1791,7 @@ void LDrawModelViewer::setBfc(bool value)
 	if (value != flags.bfc)
 	{
 		flags.bfc = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 		if (flags.redBackFaces || flags.greenFrontFaces)
 		{
 			flags.needsMaterialSetup = true;
@@ -1781,7 +1805,7 @@ void LDrawModelViewer::setDrawWireframe(bool value)
 	if (value != flags.drawWireframe)
 	{
 		flags.drawWireframe = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1813,7 +1837,7 @@ void LDrawModelViewer::setNoLightGeom(bool value)
 	if (value != flags.noLightGeom)
 	{
 		flags.noLightGeom = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1822,7 +1846,7 @@ void LDrawModelViewer::setRemoveHiddenLines(bool value)
 	if (value != flags.removeHiddenLines)
 	{
 		flags.removeHiddenLines = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1838,7 +1862,7 @@ void LDrawModelViewer::setEdgesOnly(bool value)
 
 		if (realValue != mainTREModel->getEdgesOnlyFlag())
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 		}
 	}
 }
@@ -1848,7 +1872,7 @@ void LDrawModelViewer::setHiResPrimitives(bool value)
 	if (value != flags.hiResPrimitives)
 	{
 		flags.hiResPrimitives = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1885,7 +1909,7 @@ void LDrawModelViewer::setShowAllConditionalLines(bool value)
 	if (value != flags.showAllConditionalLines)
 	{
 		flags.showAllConditionalLines = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1894,7 +1918,7 @@ void LDrawModelViewer::setShowConditionalControlPoints(bool value)
 	if (value != flags.showConditionalControlPoints)
 	{
 		flags.showConditionalControlPoints = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -1905,7 +1929,7 @@ void LDrawModelViewer::setCurveQuality(int value)
 		curveQuality = value;
 		if (flags.allowPrimitiveSubstitution)
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 		}
 	}
 }
@@ -1916,7 +1940,7 @@ void LDrawModelViewer::setTextureStuds(bool value)
 	{
 		flags.textureStuds = value;
 //		TGLStudLogo::setTextureStuds(value);
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -2038,7 +2062,7 @@ void LDrawModelViewer::setUseStipple(bool value)
 		}
 		if (flags.sortTransparent)
 		{
-			flags.needsReload = true;
+			flags.needsReparse = true;
 		}
 		else
 		{
@@ -2052,7 +2076,7 @@ void LDrawModelViewer::setSortTransparent(bool value)
 	if (value != flags.sortTransparent)
 	{
 		flags.sortTransparent = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -2099,7 +2123,7 @@ void LDrawModelViewer::setAllowPrimitiveSubstitution(bool value)
 	if (value != flags.allowPrimitiveSubstitution)
 	{
 		flags.allowPrimitiveSubstitution = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
@@ -2807,6 +2831,10 @@ void LDrawModelViewer::update(void)
 	if (flags.needsReload)
 	{
 		reload();
+	}
+	if (flags.needsReparse)
+	{
+		parseModel();
 	}
 	if (!stipplePatternSet)
 	{

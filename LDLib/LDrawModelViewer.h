@@ -357,6 +357,8 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		bool getNeedsReload(void) const { return flags.needsReload != false; }
 		void setNeedsReload(void) { flags.needsReload = true; }
+		bool getNeedsReparse(void) const { return flags.needsReparse != false; }
+		void setNeedsReparse(void) { flags.needsReparse = true; }
 		bool getNeedsRecompile(void) const
 		{
 			return flags.needsRecompile != false;
@@ -495,6 +497,9 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void unofficialPartNotFound(const char *filename);
 		virtual bool connectionFailure(TCWebClient *webClient);
 		virtual void applyModelRotation(void);
+		virtual bool loadLDLModel(void);
+		virtual bool parseModel(void);
+		virtual void releaseTREModels(void);
 
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
@@ -618,6 +623,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool needsMaterialSetup:1;
 			bool needsLightingSetup:1;
 			bool needsReload:1;
+			bool needsReparse:1;
 			bool needsRecompile:1;
 			bool needsResize:1;
 			bool paused:1;
