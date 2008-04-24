@@ -168,6 +168,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.showAxes = false;
 	flags.axesAtOrigin = true;
 	flags.showBoundingBox = false;
+	flags.boundingBoxesOnly = false;
 //	TCAlertManager::registerHandler(LDLError::alertClass(), this,
 //		(TCAlertCallback)ldlErrorCallback);
 //	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
@@ -2199,6 +2200,15 @@ void LDrawModelViewer::setShowBoundingBox(bool value)
 	{
 		flags.showBoundingBox = value;
 		requestRedraw();
+	}
+}
+
+void LDrawModelViewer::setBoundingBoxesOnly(bool value)
+{
+	if (value != flags.boundingBoxesOnly)
+	{
+		flags.boundingBoxesOnly = value;
+		flags.needsReparse = true;
 	}
 }
 

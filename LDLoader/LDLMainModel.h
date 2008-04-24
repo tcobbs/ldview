@@ -33,14 +33,17 @@ public:
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }
 	bool getLowResStuds(void) const { return m_mainFlags.lowResStuds; }
 	void setBlackEdgeLines(bool value) { m_mainFlags.blackEdgeLines = value; }
-	bool getBlackEdgeLines(void) { return m_mainFlags.blackEdgeLines; }
+	bool getBlackEdgeLines(void) const { return m_mainFlags.blackEdgeLines; }
 	void setProcessLDConfig(bool value) { m_mainFlags.processLDConfig = value; }
-	bool getProcessLDConfig(void)
+	bool getProcessLDConfig(void) const
 	{
 		return m_mainFlags.processLDConfig != false;
 	}
 	void setSkipValidation(bool value) { m_mainFlags.skipValidation = value; }
-	bool getSkipValidation(void) { return m_mainFlags.skipValidation != false; }
+	bool getSkipValidation(void) const
+	{
+		return m_mainFlags.skipValidation != false;
+	}
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
 	virtual bool getLoadCanceled(void)
 	{

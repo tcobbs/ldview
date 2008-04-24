@@ -57,6 +57,7 @@ LDModelParser::LDModelParser(const LDrawModelViewer *modelViewer)
 	{
 		setDefaultColorNumber(defaultColorNumber);
 	}
+	m_flags.boundingBoxesOnly = m_modelViewer->getBoundingBoxesOnly();
 }
 
 LDModelParser::~LDModelParser(void)
@@ -347,6 +348,61 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 	return true;
 }
 
+void LDModelParser::addBoundingQuad(
+	TREModel *model,
+	const TCVector *minMax,
+	int face)
+{
+	TCVector quad[4];
+	int faceIndices[][4][3] =
+	{
+		{
+			{ 0, 0, 0 },
+			{ 0, 1, 0 },
+			{ 1, 1, 0 },
+			{ 1, 0, 0 }
+		},
+		{
+			{ 1, 1, 1 },
+			{ 0, 1, 1 },
+			{ 0, 0, 1 },
+			{ 1, 0, 1 }
+		},
+		{
+			{ 0, 0, 0 },
+			{ 0, 0, 1 },
+			{ 0, 1, 1 },
+			{ 0, 1, 0 }
+		},
+		{
+			{ 1, 1, 1 },
+			{ 1, 0, 1 },
+			{ 1, 0, 0 },
+			{ 1, 1, 0 }
+		},
+		{
+			{ 0, 0, 0 },
+			{ 1, 0, 0 },
+			{ 1, 0, 1 },
+			{ 0, 0, 1 }
+		},
+		{
+			{ 1, 1, 1 },
+			{ 1, 1, 0 },
+			{ 0, 1, 0 },
+			{ 0, 1, 1 }
+		},
+	};
+	for (int q = 0; q < 4; q++)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			quad[q][i] = minMax[faceIndices[face][q][i]][i];
+		}
+	}
+	model->addBFCQuad(quad);
+}
+
 bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 							   bool bfc)
 {
@@ -369,7 +425,20 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 			model->setName(name);
 			model->setPartFlag(ldlModel->isPart());
 			model->setNoShrinkFlag(ldlModel->getNoShrinkFlag());
-			if (parseModel(ldlModel, model, bfc))
+			if (m_flags.boundingBoxesOnly && ldlModel->isPart())
+			{
+				TCVector minMax[2];
+
+				m_mainTREModel->registerModel(model, bfc);
+				model->release();
+				ldlModel->getBoundingBox(minMax[0], minMax[1]);
+				for (int i = 0; i < 6; i++)
+				{
+					addBoundingQuad(model, minMax, i);
+				}
+				return addSubModel(modelLine, treModel, model, bfc && invert);
+			}
+			else if (parseModel(ldlModel, model, bfc))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();

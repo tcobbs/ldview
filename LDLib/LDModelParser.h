@@ -15,6 +15,7 @@ class LDLShapeLine;
 class LDLModelLine;
 class LDLConditionalLineLine;
 class LDrawModelViewer;
+class TCVector;
 
 class LDModelParser : public LDLPrimitiveCheck
 {
@@ -115,6 +116,7 @@ protected:
 	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	virtual bool shouldLoadConditionalLines(void);
+	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
 
 	const LDrawModelViewer *m_modelViewer;
 	LDLMainModel *m_mainLDLModel;
@@ -133,6 +135,7 @@ protected:
 		bool defaultColorSet:1;
 		bool defaultColorNumberSet:1;
 		bool defaultTrans:1;
+		bool boundingBoxesOnly:1;
 	} m_flags;
 };
 
