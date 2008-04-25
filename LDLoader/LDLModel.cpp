@@ -1576,27 +1576,59 @@ void LDLModel::scanPoints(
 	LDLModel::ScanPointType types,
 	int step) const
 {
-	int curStep = 0;
-
-	for (int i = 0; i < m_activeLineCount; i++)
+	if (this != m_mainModel && isPart() && m_mainModel->getBoundingBoxesOnly()
+		&& m_flags.haveBoundingBox)
 	{
-		LDLFileLine *fileLine = (*m_fileLines)[i];
-		if (step >= 0 && fileLine->getLineType() == LDLLineTypeComment)
+		TCVector boxPoints[8];
+		TCVector point;
+		int i;
+
+		boxPoints[0] = m_boundingMin;
+		boxPoints[4] = m_boundingMax;
+		// Bottom square
+		boxPoints[1] = boxPoints[0];
+		boxPoints[1][0] = boxPoints[4][0];
+		boxPoints[2] = boxPoints[0];
+		boxPoints[2][1] = boxPoints[4][1];
+		boxPoints[3] = boxPoints[4];
+		boxPoints[3][2] = boxPoints[0][2];
+		// Top square
+		boxPoints[5] = boxPoints[4];
+		boxPoints[5][0] = boxPoints[0][0];
+		boxPoints[6] = boxPoints[4];
+		boxPoints[6][1] = boxPoints[0][1];
+		boxPoints[7] = boxPoints[0];
+		boxPoints[7][2] = boxPoints[4][2];
+		for (i = 0; i < 8; i++)
 		{
-			LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
-			
-			if (commentLine->isStepMeta())
+			boxPoints[i].transformPoint(matrix, point);
+			((*scanner).*scanPointCallback)(point, NULL);
+		}
+	}
+	else
+	{
+		int curStep = 0;
+
+		for (int i = 0; i < m_activeLineCount; i++)
+		{
+			LDLFileLine *fileLine = (*m_fileLines)[i];
+			if (step >= 0 && fileLine->getLineType() == LDLLineTypeComment)
 			{
-				if (++curStep > step)
+				LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
+				
+				if (commentLine->isStepMeta())
 				{
-					break;
+					if (++curStep > step)
+					{
+						break;
+					}
 				}
 			}
-		}
-		if (fileLine->isActionLine())
-		{
-			((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
-				matrix, types);
+			if (fileLine->isActionLine())
+			{
+				((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
+					matrix, types);
+			}
 		}
 	}
 }
@@ -1645,12 +1677,29 @@ void LDLModel::calcBoundingBox(void)
 	{
 		TCFloat matrix[16];
 
+		if (this == m_mainModel && m_mainModel->getBoundingBoxesOnly())
+		{
+			int i;
+
+			for (i = 0; i < m_fileLines->getCount(); i++)
+			{
+				LDLFileLine *fileLine = (*m_fileLines)[i];
+
+				if (fileLine->getLineType() == LDLLineTypeModel)
+				{
+					LDLModelLine *modelLine = (LDLModelLine *)fileLine;
+
+					modelLine->getModel()->calcBoundingBox();
+				}
+			}
+		}
 		TCVector::initIdentityMatrix(matrix);
-		// NOTE: we cannot compute bounding boxes heirarchically due to rotation
-		// of child models.  With their rotation, their bounding boxes can
-		// easily stick out of the really minimum bounding box of their parent.
-		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint,
-			matrix);
+		// NOTE: we cannot compute bounding boxes heirarchically due to
+		// rotation of child models.  With their rotation, their bounding
+		// boxes can easily stick out of the really minimum bounding box of
+		// their parent.
+		scanPoints(this,
+			(LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint, matrix);
 	}
 }
 
