@@ -44,6 +44,14 @@ public:
 	{
 		return m_mainFlags.skipValidation != false;
 	}
+	void setBoundingBoxesOnly(bool value)
+	{
+		m_mainFlags.boundingBoxesOnly = value;
+	}
+	bool getBoundingBoxesOnly(void) const
+	{
+		return m_mainFlags.boundingBoxesOnly != false;
+	}
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
 	virtual bool getLoadCanceled(void)
 	{
@@ -68,6 +76,7 @@ protected:
 		bool blackEdgeLines:1;
 		bool processLDConfig:1;
 		bool skipValidation:1;
+		bool boundingBoxesOnly:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;
