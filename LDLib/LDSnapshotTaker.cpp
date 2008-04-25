@@ -10,6 +10,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDPreferences.h>
+#include <LDLib/LDViewPoint.h>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -320,6 +321,7 @@ bool LDSnapshotTaker::saveImage(
 		if (viewPoint)
 		{
 			m_modelViewer->restoreViewPoint(viewPoint);
+			viewPoint->release();
 		}
 		return retValue;
 	}

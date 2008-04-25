@@ -958,13 +958,14 @@ bool LDrawModelViewer::loadLDLModel(void)
 
 bool LDrawModelViewer::parseModel(void)
 {
-	LDModelParser *modelParser = new LDModelParser(this);
+	LDModelParser *modelParser = NULL;
 	bool retValue = false;
 
 	if (!mainModel)
 	{
 		return false;
 	}
+	modelParser = new LDModelParser(this);
 	releaseTREModels();
 	modelParser->setAlertSender(this);
 	if (modelParser->parseMainModel(mainModel))
