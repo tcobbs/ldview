@@ -911,7 +911,7 @@ void TREMainModel::draw(void)
 	// Next, disable lighting and draw lines.  First draw default colored lines,
 	// which probably don't exist, since color number 16 doesn't often get used
 	// for lines.
-	if (getSaveAlphaFlag() && getAALinesFlag())
+	if (getSaveAlphaFlag())
 	{
 		passOnePrep();
 		drawLines(1);
