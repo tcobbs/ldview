@@ -38,6 +38,7 @@ m_trySaveAlpha(false),
 m_autoCrop(false),
 m_fromCommandLine(false),
 m_commandLineSaveSteps(false),
+m_commandLineStep(false),
 m_step(-1),
 m_grabSetupDone(false)
 {
