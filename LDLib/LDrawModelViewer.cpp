@@ -169,10 +169,6 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.axesAtOrigin = true;
 	flags.showBoundingBox = false;
 	flags.boundingBoxesOnly = false;
-//	TCAlertManager::registerHandler(LDLError::alertClass(), this,
-//		(TCAlertCallback)ldlErrorCallback);
-//	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
-//		(TCAlertCallback)progressAlertCallback);
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -953,7 +949,38 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setExtraSearchDirs(extraSearchDirs);
 	mainModel->setProcessLDConfig(flags.processLDConfig);
 	mainModel->setSkipValidation(flags.skipValidation);
-	return mainModel->load(filename);
+	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
+	if (mainModel->load(filename))
+	{
+		bool abort = false;
+
+		TCProgressAlert::send("LDrawModelViewer",
+			ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
+		if (!abort)
+		{
+			mainModel->getBoundingBox(boundingMin, boundingMax);
+			TCProgressAlert::send("LDrawModelViewer",
+				ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
+		}
+		if (!abort)
+		{
+			if (!flags.overrideModelCenter)
+			{
+				center = (boundingMin + boundingMax) / 2.0f;
+			}
+			if (!flags.overrideModelSize)
+			{
+				size = mainModel->getMaxRadius(center) * 2.0f;
+			}
+			TCProgressAlert::send("LDrawModelViewer",
+				ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
+		}
+		return !abort;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool LDrawModelViewer::parseModel(void)
@@ -970,52 +997,12 @@ bool LDrawModelViewer::parseModel(void)
 	modelParser->setAlertSender(this);
 	if (modelParser->parseMainModel(mainModel))
 	{
-		bool abort;
-
 		mainTREModel = modelParser->getMainTREModel();
 		mainTREModel->retain();
 		setStep(getNumSteps());
-		TCProgressAlert::send("LDrawModelViewer",
-			ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
-		if (!abort)
-		{
-			if (flags.boundingBoxesOnly)
-			{
-				mainTREModel->getBoundingBox(boundingMin, boundingMax);
-			}
-			else
-			{
-				mainModel->getBoundingBox(boundingMin, boundingMax);
-			}
-			TCProgressAlert::send("LDrawModelViewer",
-				ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
-		}
-		if (!abort)
-		{
-			if (!flags.overrideModelCenter)
-			{
-				center = (boundingMin + boundingMax) / 2.0f;
-			}
-			if (!flags.overrideModelSize)
-			{
-				if (flags.boundingBoxesOnly)
-				{
-					size = mainTREModel->getMaxRadius(center) * 2.0f;
-				}
-				else
-				{
-					size = mainModel->getMaxRadius(center) * 2.0f;
-				}
-			}
-			TCProgressAlert::send("LDrawModelViewer",
-				ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
-		}
-		if (!abort)
-		{
-			flags.needsRecompile = false;
-			flags.needsReparse = false;
-			retValue = true;
-		}
+		flags.needsRecompile = false;
+		flags.needsReparse = false;
+		retValue = true;
 		initLightDirModels();
 		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
 	}
