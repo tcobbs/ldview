@@ -101,6 +101,7 @@ public:
 	// Geometry settings
 	bool getUseSeams(void) { return m_useSeams; }
 	int getSeamWidth(void) { return m_seamWidth; }
+	bool getBoundingBoxesOnly(void) { return m_boundingBoxesOnly; }
 	bool getDrawWireframe(void) { return m_drawWireframe; }
 	bool getUseWireframeFog(void) { return m_useWireframeFog; }
 	bool getRemoveHiddenLines(void) { return m_removeHiddenLines; }
@@ -203,6 +204,7 @@ public:
 	// Geometry settings
 	void setUseSeams(bool value, bool commit = false, bool apply = false);
 	void setSeamWidth(int value, bool commit = false);
+	void setBoundingBoxesOnly(bool value, bool commit = false);
 	void setDrawWireframe(bool value, bool commit = false, bool apply = false);
 	void setUseWireframeFog(bool value, bool commit = false,
 		bool apply = false);
@@ -360,6 +362,7 @@ protected:
 	// Geometry settings
 	bool m_useSeams;
 	int m_seamWidth;
+	bool m_boundingBoxesOnly;
 	bool m_drawWireframe;
 	bool m_useWireframeFog;
 	bool m_removeHiddenLines;

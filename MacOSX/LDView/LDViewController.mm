@@ -15,8 +15,15 @@
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLModel.h>
+#include <TCFoundation/TCAutoreleasePool.h>
 
 @implementation LDViewController
+
+- (void)processTCReleases:(NSTimer*)theTimer
+{
+	TCAutoreleasePool::processReleases();
+}
+
 
 - (id)init
 {
@@ -32,12 +39,15 @@
 		modelWindows = [[NSMutableArray alloc] init];
 		TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
 		pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
+		tcAutoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(processReleases:) userInfo:nil repeats:YES] retain];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	[tcAutoreleaseTimer invalidate];
+	[tcAutoreleaseTimer release];
 	[modelWindows release];
 	[preferences release];
 	[statusBarMenuFormat release];

@@ -81,6 +81,7 @@
             OUTLETS = {
                 bfcCheck = NSButton; 
                 blackEdgesCheck = NSButton; 
+                boundingBoxesOnlyCheck = NSButton; 
                 conditionalLinesCheck = NSButton; 
                 edgeLinesCheck = NSButton; 
                 edgeThicknessLabel = NSTextField; 

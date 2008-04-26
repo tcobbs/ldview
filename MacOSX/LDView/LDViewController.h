@@ -38,6 +38,7 @@
 	NSString *toolbarMenuFormat;
 
 	long pollingMode;
+	NSTimer *tcAutoreleaseTimer;
 }
 
 - (void)modelWindowWillClose:(ModelWindow *)modelWindow;
