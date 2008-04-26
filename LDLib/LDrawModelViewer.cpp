@@ -131,6 +131,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.needsReparse = false;
 	flags.needsRecompile = false;
 	flags.needsResize = true;
+	flags.needsCalcSize = false;
 	flags.paused = 0;
 	flags.slowClear = false;
 	flags.blackHighlights = false;
@@ -936,6 +937,35 @@ void LDrawModelViewer::releaseTREModels(void)
 	blueLightDirModel = NULL;
 }
 
+bool LDrawModelViewer::calcSize(void)
+{
+	bool abort = false;
+	
+	TCProgressAlert::send("LDrawModelViewer", ls(_UC("CalculatingSizeStatus")),
+		0.0f, &abort, this);
+	if (!abort)
+	{
+		mainModel->getBoundingBox(boundingMin, boundingMax);
+		TCProgressAlert::send("LDrawModelViewer",
+			ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
+	}
+	if (!abort)
+	{
+		if (!flags.overrideModelCenter)
+		{
+			center = (boundingMin + boundingMax) / 2.0f;
+		}
+		if (!flags.overrideModelSize)
+		{
+			size = mainModel->getMaxRadius(center) * 2.0f;
+		}
+		TCProgressAlert::send("LDrawModelViewer",
+			ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
+		flags.needsCalcSize = false;
+	}
+	return !abort;
+}
+
 bool LDrawModelViewer::loadLDLModel(void)
 {
 	TCObject::release(mainModel);
@@ -950,32 +980,10 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setProcessLDConfig(flags.processLDConfig);
 	mainModel->setSkipValidation(flags.skipValidation);
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
+	mainModel->setSeamWidth(seamWidth);
 	if (mainModel->load(filename))
 	{
-		bool abort = false;
-
-		TCProgressAlert::send("LDrawModelViewer",
-			ls(_UC("CalculatingSizeStatus")), 0.0f, &abort, this);
-		if (!abort)
-		{
-			mainModel->getBoundingBox(boundingMin, boundingMax);
-			TCProgressAlert::send("LDrawModelViewer",
-				ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
-		}
-		if (!abort)
-		{
-			if (!flags.overrideModelCenter)
-			{
-				center = (boundingMin + boundingMax) / 2.0f;
-			}
-			if (!flags.overrideModelSize)
-			{
-				size = mainModel->getMaxRadius(center) * 2.0f;
-			}
-			TCProgressAlert::send("LDrawModelViewer",
-				ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
-		}
-		return !abort;
+		return calcSize();
 	}
 	else
 	{
@@ -992,8 +1000,12 @@ bool LDrawModelViewer::parseModel(void)
 	{
 		return false;
 	}
-	modelParser = new LDModelParser(this);
 	releaseTREModels();
+	if (flags.needsCalcSize && !calcSize())
+	{
+		return false;
+	}
+	modelParser = new LDModelParser(this);
 	modelParser->setAlertSender(this);
 	if (modelParser->parseMainModel(mainModel))
 	{
@@ -1562,7 +1574,7 @@ void LDrawModelViewer::setSeamWidth(TCFloat value)
 	if (!fEq(value, seamWidth))
 	{
 		seamWidth = value;
-		flags.needsReparse = true;
+		flags.needsReload = true;
 	}
 }
 
@@ -2211,6 +2223,7 @@ void LDrawModelViewer::setBoundingBoxesOnly(bool value)
 	{
 		flags.boundingBoxesOnly = value;
 		flags.needsReparse = true;
+		flags.needsCalcSize = true;
 	}
 }
 

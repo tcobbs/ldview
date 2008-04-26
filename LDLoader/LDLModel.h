@@ -98,6 +98,8 @@ public:
 	bool isMPD(void) const { return m_flags.mpd != false; }
 	bool getNoShrinkFlag(void) const { return m_flags.noShrink != false; }
 	bool isOfficial(void) const { return m_flags.official != false; }
+	bool hasBoundingBox(void) const;
+	//bool hasBoundingBox(void) const { return m_flags.haveBoundingBox != false; }
 
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
 

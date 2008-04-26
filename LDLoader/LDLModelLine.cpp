@@ -426,8 +426,24 @@ void LDLModelLine::scanPoints(
 	if (model)
 	{
 		TCFloat newMatrix[16];
+		float seamWidth = model->getMainModel()->getSeamWidth();
 
-		TCVector::multMatrix(matrix, m_matrix, newMatrix);
+		if (seamWidth > 0.0f && model->hasBoundingBox())
+		{
+			TCFloat scaleMatrix[16];
+			TCFloat tempMatrix[16];
+			TCVector boundingMin, boundingMax;
+
+			model->getBoundingBox(boundingMin, boundingMax);
+			TCVector::calcScaleMatrix(seamWidth, scaleMatrix, boundingMin,
+				boundingMax);
+			TCVector::multMatrix(m_matrix, scaleMatrix, tempMatrix);
+			TCVector::multMatrix(matrix, tempMatrix, newMatrix);
+		}
+		else
+		{
+			TCVector::multMatrix(matrix, m_matrix, newMatrix);
+		}
 		model->scanPoints(scanner, scanPointCallback, newMatrix, types);
 	}
 }

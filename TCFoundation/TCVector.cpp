@@ -748,3 +748,32 @@ TCFloat TCVector::distToLine(
 	}
 	return dist;
 }
+
+// Thanks go to Lars again here for the simplified positioning-after-shrinkage
+// algorithm.
+// Note: static method
+void TCVector::calcScaleMatrix(
+	TCFloat amount,
+	TCFloat *scaleMatrix,
+	const TCVector &boundingMin,
+	const TCVector &boundingMax)
+{
+	TCVector center;
+	TCVector delta;
+	int i;
+	
+	TCVector::initIdentityMatrix(scaleMatrix);
+	delta = boundingMax - boundingMin;
+	center = (boundingMin + boundingMax) / 2.0f;
+	for (i = 0; i < 3; i++)
+	{
+		if (delta[i] > amount)
+		{
+			scaleMatrix[i * 4 + i] = 1.0f - amount / delta[i];
+			if (center[i])
+			{
+				scaleMatrix[12 + i] = amount / delta[i] * center[i];
+			}
+		}
+	}
+}
