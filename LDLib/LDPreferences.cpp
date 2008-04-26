@@ -200,6 +200,7 @@ void LDPreferences::applyGeometrySettings(void)
 		{
 			m_modelViewer->setSeamWidth(0.0f);
 		}
+		m_modelViewer->setBoundingBoxesOnly(m_boundingBoxesOnly);
 		m_modelViewer->setDrawWireframe(m_drawWireframe);
 		m_modelViewer->setUseWireframeFog(m_useWireframeFog);
 		m_modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
@@ -386,6 +387,7 @@ void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
 	}
 	setUseSeams(true);
 	setSeamWidth(50);
+	setBoundingBoxesOnly(false);
 	setDrawWireframe(false);
 	setUseWireframeFog(false);
 	setRemoveHiddenLines(false);
@@ -558,6 +560,8 @@ void LDPreferences::loadGeometrySettings(void)
 	{
 		m_useSeams = useSeams != 0;
 	}
+	m_boundingBoxesOnly = getBoolSetting(BOUNDING_BOXES_ONLY_KEY,
+		m_boundingBoxesOnly);
 	m_drawWireframe = getBoolSetting(WIREFRAME_KEY, m_drawWireframe);
 	m_useWireframeFog = getBoolSetting(WIREFRAME_FOG_KEY, m_useWireframeFog);
 	m_removeHiddenLines = getBoolSetting(REMOVE_HIDDEN_LINES_KEY,
@@ -717,6 +721,7 @@ void LDPreferences::commitGeometrySettings(bool flush /*= true*/)
 	{
 		setSeamWidth(m_seamWidth, true);
 	}
+	setBoundingBoxesOnly(m_boundingBoxesOnly, true);
 	setDrawWireframe(m_drawWireframe, true);
 	setUseWireframeFog(m_useWireframeFog, true);
 	setRemoveHiddenLines(m_removeHiddenLines, true);
@@ -1344,6 +1349,11 @@ void LDPreferences::setUseSeams(bool value, bool commit, bool apply)
 void LDPreferences::setSeamWidth(int value, bool commit)
 {
 	setSetting(m_seamWidth, value, SEAM_WIDTH_KEY, commit);
+}
+
+void LDPreferences::setBoundingBoxesOnly(bool value, bool commit)
+{
+	setSetting(m_boundingBoxesOnly, value, BOUNDING_BOXES_ONLY_KEY, commit);
 }
 
 void LDPreferences::setDrawWireframe(bool value, bool commit, bool apply)

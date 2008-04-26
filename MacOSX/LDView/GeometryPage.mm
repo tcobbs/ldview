@@ -1,4 +1,5 @@
 #import "GeometryPage.h"
+#import "LDViewCategories.h"
 #include <LDLib/LDPreferences.h>
 
 @implementation GeometryPage
@@ -25,6 +26,7 @@
 - (void)setupModelBox
 {
 	[self groupCheck:seamWidthCheck name:@"Seams" value:ldPreferences->getUseSeams()];
+	[boundingBoxesOnlyCheck setCheck:ldPreferences->getBoundingBoxesOnly()];
 }
 
 - (void)enableWireframeUI:(BOOL)enabled
@@ -144,6 +146,7 @@
 	{
 		ldPreferences->setUseSeams(false);
 	}
+	ldPreferences->setBoundingBoxesOnly([boundingBoxesOnlyCheck getCheck]);
 	if ([self getCheck:wireframeCheck])
 	{
 		ldPreferences->setDrawWireframe(true);

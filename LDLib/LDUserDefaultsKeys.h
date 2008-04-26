@@ -162,6 +162,7 @@
 #define SHOW_AXES_KEY "ShowAxes"
 #define LAST_LAT_KEY "LastLat"
 #define LAST_LON_KEY "LastLon"
+#define BOUNDING_BOXES_ONLY_KEY "BoundingBoxesOnly"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

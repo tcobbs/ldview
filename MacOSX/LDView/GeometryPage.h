@@ -8,6 +8,7 @@
 {
     IBOutlet NSButton *bfcCheck;
     IBOutlet NSButton *blackEdgesCheck;
+	IBOutlet NSButton *boundingBoxesOnlyCheck;
     IBOutlet NSButton *conditionalLinesCheck;
     IBOutlet NSButton *edgeLinesCheck;
     IBOutlet NSButton *edgesOnlyCheck;
