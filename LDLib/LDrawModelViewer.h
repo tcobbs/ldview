@@ -135,6 +135,7 @@ class LDrawModelViewer: public TCAlertSender
 		int getWidth(void) { return width; }
 		int getHeight(void) { return height; }
 		void setViewMode(ViewMode value);
+		ViewMode getViewMode(void) const { return viewMode; }
 		void setExamineMode(ExamineMode value);
 		ExamineMode getExamineMode(void) const { return examineMode; }
 		void setXRotate(TCFloat value) { xRotate = value; }

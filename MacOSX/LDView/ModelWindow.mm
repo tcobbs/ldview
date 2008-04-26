@@ -74,6 +74,39 @@ enum
 	[super dealloc];
 }
 
+- (BOOL)showStatusLatLon:(BOOL)show
+{
+	BOOL changed = NO;
+	
+	if (show)
+	{
+		if ([latLonBox isHidden])
+		{
+			NSRect frame = [progressMessage frame];
+			
+			[latLonBox setHidden:NO];
+			frame.size.width -= latLonDelta;
+			[progressMessage setFrame:frame];
+			changed = YES;
+		}
+	}
+	else
+	{
+		if (![latLonBox isHidden])
+		{
+			NSRect messageFrame = [progressMessage frame];
+			NSRect latLonFrame = [latLonBox frame];
+			
+			latLonDelta = latLonFrame.origin.x + latLonFrame.size.width - messageFrame.origin.x - messageFrame.size.width;
+			[latLonBox setHidden:YES];
+			messageFrame.size.width += latLonDelta;
+			[progressMessage setFrame:messageFrame];
+			changed = YES;
+		}
+	}
+	return changed;
+}
+
 - (NSToolbarItem *) toolbar:(NSToolbar *)toolbar
       itemForItemIdentifier:(NSString *)itemIdentifier
   willBeInsertedIntoToolbar:(BOOL)flag
@@ -230,6 +263,45 @@ enum
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
 }
 
+- (BOOL)haveLatLon
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		if (modelViewer->getViewMode() == LDrawModelViewer::VMExamine && modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
+		{
+			return YES;
+		}
+	}
+	return NO;
+}
+
+- (void)updateStatusLatLon
+{
+	if ([self haveLatLon])
+	{
+		LDrawModelViewer *modelViewer = [modelView modelViewer];
+
+		if (modelViewer != NULL)
+		{
+			int lon = (int)modelViewer->getExamineLongitude();
+
+			[latField setIntValue:(int)modelViewer->getExamineLatitude()];
+			if (lon < -179)
+			{
+				lon += 360;
+			}
+			if (lon > 180)
+			{
+				lon -= 360;
+			}
+			[lonField setIntValue:lon];
+			[latLonBox display];
+		}
+	}
+}
+
 - (void)setExamineLatLong:(bool)value
 {
 	LDrawModelViewer::ExamineMode examineMode = LDrawModelViewer::EMFree;
@@ -240,6 +312,7 @@ enum
 	}
 	[modelView modelViewer]->setExamineMode(examineMode);
 	TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
+	[self showStatusLatLon:[self haveLatLon]];
 }
 
 - (void)setFlyThroughMode:(bool)value
@@ -253,6 +326,7 @@ enum
 	{
 		[viewModeSegments selectSegmentWithTag:LDInputHandler::VMExamine];
 	}
+	[self showStatusLatLon:[self haveLatLon]];
 }
 
 - (void)setupViewMode
@@ -373,6 +447,7 @@ enum
 	initialTitle = [[window title] retain];
 	showStatusBar = [OCUserDefaults longForKey:@"StatusBar" defaultValue:1 sessionSpecific:NO];
 	[self showStatusBar:showStatusBar];
+	[self showStatusLatLon:[self haveLatLon]];
 	[self setupToolbar];
 	[window setToolbar:toolbar];
 	[statusBar retain];
@@ -872,7 +947,7 @@ enum
 		{
 			loading = true;
 			loadCanceled = false;
-			if ([self showStatusBar:YES])
+			if ([self showStatusBar:YES] || [self showStatusLatLon:NO])
 			{
 				[window display];
 			}
@@ -884,7 +959,7 @@ enum
 			bool showErrorsIfNeeded = [[[controller preferences] generalPage] showErrorsIfNeeded];
 			NSString *filename = nil;
 
-			if ([self showStatusBar:showStatusBar])
+			if ([self showStatusBar:showStatusBar] || [self showStatusLatLon:[self haveLatLon]])
 			{
 				[window display];
 			}
@@ -902,7 +977,7 @@ enum
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
 		{
-			if ([self showStatusBar:showStatusBar])
+			if ([self showStatusBar:showStatusBar] || [self showStatusLatLon:[self haveLatLon]])
 			{
 				[window display];
 			}
