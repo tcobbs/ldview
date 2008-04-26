@@ -1219,6 +1219,7 @@ bool LDLModel::parse(void)
 				}
 				break;
 			case LDLLineTypeModel:
+				((LDLModelLine *)fileLine)->getModel()->calcBoundingBox();
 				m_flags.bfcInvertNext = false;
 				break;
 			default:
@@ -1730,4 +1731,9 @@ void LDLModel::calcMaxRadius(const TCVector &center)
 TCObject *LDLModel::getAlertSender(void)
 {
 	return m_mainModel->getAlertSender();
+}
+
+bool LDLModel::hasBoundingBox(void) const
+{
+	return m_flags.haveBoundingBox != false;
 }

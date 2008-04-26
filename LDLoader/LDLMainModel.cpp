@@ -18,7 +18,8 @@ LDLMainModel::LDLMainModel(void)
 	:m_alertSender(NULL),
 	m_loadedModels(NULL),
 	m_mainPalette(new LDLPalette),
-	m_extraSearchDirs(NULL)
+	m_extraSearchDirs(NULL),
+	m_seamWidth(0.0f)
 {
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
@@ -27,20 +28,18 @@ LDLMainModel::LDLMainModel(void)
 	m_mainFlags.processLDConfig = true;
 }
 
-LDLMainModel::LDLMainModel(const LDLMainModel &other)
-	:LDLModel(other),
-	m_loadedModels(NULL),
-	m_mainFlags(other.m_mainFlags)
-{
-	if (other.m_loadedModels)
-	{
-		m_loadedModels = (TCDictionary *)other.m_loadedModels->retain();
-	}
-}
+//LDLMainModel::LDLMainModel(const LDLMainModel &other)
+//	:LDLModel(other),
+//	m_loadedModels((TCDictionary *)TCObject::retain(other.m_loadedModels)),
+//	m_seamWidth(other.m_seamWidth),
+//	m_mainFlags(other.m_mainFlags)
+//{
+//}
 
 TCObject *LDLMainModel::copy(void)
 {
-	return new LDLMainModel(*this);
+	return NULL;
+	//return new LDLMainModel(*this);
 }
 
 TCDictionary *LDLMainModel::getLoadedModels(void)

@@ -95,6 +95,8 @@ public:
 	static void doubleMultiply(const double *v1, double *v2, double n);
 	static double doubleLength(const double *v);
 	static void fixPerpendicular(const double *v1, double *v2);
+	static void calcScaleMatrix(TCFloat amount, TCFloat *scaleMatrix,
+		const TCVector &boundingMin, const TCVector &boundingMax);
 protected:
 #ifdef _LEAK_DEBUG
 	char className[4];

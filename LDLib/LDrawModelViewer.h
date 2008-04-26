@@ -369,6 +369,10 @@ class LDrawModelViewer: public TCAlertSender
 			return flags.needsRecompile != false;
 		}
 		void setNeedsRecompile(void) { flags.needsRecompile = true; }
+		bool getNeedsCalcSize(void) const
+		{
+			return flags.needsCalcSize != false;
+		}
 		void setCurveQuality(int value);
 		int getCurveQuality(void) const { return curveQuality; }
 		void setTextureStuds(bool value);
@@ -503,6 +507,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual bool connectionFailure(TCWebClient *webClient);
 		virtual void applyModelRotation(void);
 		virtual bool loadLDLModel(void);
+		virtual bool calcSize(void);
 		virtual bool parseModel(void);
 		virtual void releaseTREModels(void);
 
@@ -631,6 +636,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool needsReparse:1;
 			bool needsRecompile:1;
 			bool needsResize:1;
+			bool needsCalcSize:1;
 			bool paused:1;
 			bool slowClear:1;
 			bool blackHighlights:1;

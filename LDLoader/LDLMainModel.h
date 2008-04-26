@@ -12,8 +12,6 @@ class LDLMainModel : public LDLModel
 {
 public:
 	LDLMainModel(void);
-	LDLMainModel(const LDLMainModel &other);
-	TCObject *copy(void);
 	virtual bool load(const char *filename);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual void print(void);
@@ -52,6 +50,8 @@ public:
 	{
 		return m_mainFlags.boundingBoxesOnly != false;
 	}
+	void setSeamWidth(float value) { m_seamWidth = value; }
+	float getSeamWidth(void) const { return m_seamWidth; }
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
 	virtual bool getLoadCanceled(void)
 	{
@@ -61,6 +61,9 @@ public:
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
+private:
+	//LDLMainModel(const LDLMainModel &other);
+	TCObject *copy(void);
 protected:
 	virtual void dealloc(void);
 	virtual void processLDConfig(void);
@@ -69,6 +72,7 @@ protected:
 	TCDictionary *m_loadedModels;
 	LDLPalette *m_mainPalette;
 	TCStringArray *m_extraSearchDirs;
+	float m_seamWidth;
 	struct
 	{
 		// Public flags
