@@ -4179,3 +4179,18 @@ int LDrawModelViewer::getNumSteps(void) const
 		return 0;
 	}
 }
+
+void LDrawModelViewer::setLatLon(float lat, float lon)
+{
+	if (viewMode == VMExamine && examineMode == EMLatLong)
+	{
+		examineLatitude = lat;
+		examineLongitude = lon;
+	}
+	else if (rotationMatrix)
+	{
+		TCVector::calcRotationMatrix(lat, lon, rotationMatrix);
+		flags.needsRotationMatrixSetup = true;
+	}
+	requestRedraw();
+}

@@ -777,3 +777,41 @@ void TCVector::calcScaleMatrix(
 		}
 	}
 }
+
+// Note: static method
+void TCVector::calcRotationMatrix(
+	TCFloat latitude,
+	TCFloat longitude,
+	TCFloat *rotationMatrix)
+{
+	TCFloat leftMatrix[16];
+	TCFloat rightMatrix[16];
+	//TCFloat resultMatrix[16];
+	TCFloat cosTheta;
+	TCFloat sinTheta;
+	TCVector::initIdentityMatrix(leftMatrix);
+	TCVector::initIdentityMatrix(rightMatrix);
+	latitude = (TCFloat)deg2rad(latitude);
+	longitude = (TCFloat)deg2rad(longitude);
+
+	// First, apply latitude by rotating around X.
+	cosTheta = (TCFloat)cos(latitude);
+	sinTheta = (TCFloat)sin(latitude);
+	rightMatrix[5] = cosTheta;
+	rightMatrix[6] = sinTheta;
+	rightMatrix[9] = -sinTheta;
+	rightMatrix[10] = cosTheta;
+	TCVector::multMatrix(leftMatrix, rightMatrix, rotationMatrix);
+
+	memcpy(leftMatrix, rotationMatrix, sizeof(leftMatrix));
+	TCVector::initIdentityMatrix(rightMatrix);
+
+	// Next, apply longitude by rotating around Y.
+	cosTheta = (TCFloat)cos(longitude);
+	sinTheta = (TCFloat)sin(longitude);
+	rightMatrix[0] = cosTheta;
+	rightMatrix[2] = -sinTheta;
+	rightMatrix[8] = sinTheta;
+	rightMatrix[10] = cosTheta;
+	TCVector::multMatrix(leftMatrix, rightMatrix, rotationMatrix);
+}
