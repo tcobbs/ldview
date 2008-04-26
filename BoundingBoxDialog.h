@@ -2,8 +2,6 @@
 #define __BOUNDINGBOXDIALOG_H__
 
 class LDLMainModel;
-class LDModelTree;
-class CUIWindowResizer;
 class ModelWindow;
 class TCAlert;
 class LDrawModelViewer;

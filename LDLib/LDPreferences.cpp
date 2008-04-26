@@ -842,43 +842,14 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 
 		if (sscanf(value.c_str(), "%f,%f", &latitude, &longitude) == 2)
 		{
-			TCFloat radius = -1;;
-			TCFloat leftMatrix[16];
-			TCFloat rightMatrix[16];
+			TCFloat radius = -1;
 			TCFloat resultMatrix[16];
-			TCFloat cosTheta;
-			TCFloat sinTheta;
 
+			TCVector::calcRotationMatrix(latitude, longitude, resultMatrix);
 			if (sscanf(value.c_str(), "%*f,%*f,%f", &radius) != 1)
 			{
 				radius = -1;
 			}
-			TCVector::initIdentityMatrix(leftMatrix);
-			TCVector::initIdentityMatrix(rightMatrix);
-			latitude = (TCFloat)deg2rad(latitude);
-			longitude = (TCFloat)deg2rad(longitude);
-
-			// First, apply latitude by rotating around X.
-			cosTheta = (TCFloat)cos(latitude);
-			sinTheta = (TCFloat)sin(latitude);
-			rightMatrix[5] = cosTheta;
-			rightMatrix[6] = sinTheta;
-			rightMatrix[9] = -sinTheta;
-			rightMatrix[10] = cosTheta;
-			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
-
-			memcpy(leftMatrix, resultMatrix, sizeof(leftMatrix));
-			TCVector::initIdentityMatrix(rightMatrix);
-
-			// Next, apply longitude by rotating around Y.
-			cosTheta = (TCFloat)cos(longitude);
-			sinTheta = (TCFloat)sin(longitude);
-			rightMatrix[0] = cosTheta;
-			rightMatrix[2] = -sinTheta;
-			rightMatrix[8] = sinTheta;
-			rightMatrix[10] = cosTheta;
-			TCVector::multMatrix(leftMatrix, rightMatrix, resultMatrix);
-
 			if (m_modelViewer)
 			{
 				m_modelViewer->setDefaultRotationMatrix(resultMatrix);

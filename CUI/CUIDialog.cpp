@@ -368,6 +368,46 @@ void CUIDialog::windowSetText(HWND hDlg, int controlId, const std::string &text)
 
 #endif // TC_NO_UNICODE
 
+bool CUIDialog::windowGetValue(int controlId, long &value)
+{
+	std::string text;
+
+	windowGetText(controlId, text);
+	return sscanf(text.c_str(), "%d", &value) == 1;
+}
+
+bool CUIDialog::windowGetValue(int controlId, float &value)
+{
+	std::string text;
+
+	windowGetText(controlId, text);
+	return sscanf(text.c_str(), "%f", &value) == 1;
+}
+
+bool CUIDialog::windowGetValue(int controlId, double &value)
+{
+	std::string text;
+
+	windowGetText(controlId, text);
+	return sscanf(text.c_str(), "%lf", &value) == 1;
+}
+
+void CUIDialog::windowSetValue(int controlId, long value)
+{
+	char buf[32];
+
+	sprintf(buf, "%d", value);
+	windowSetText(controlId, buf);
+}
+
+void CUIDialog::windowSetValue(int controlId, double value)
+{
+	char buf[128];
+
+	sprintf(buf, "%g", value);
+	windowSetText(controlId, buf);
+}
+
 ucstring CUIDialog::windowGetText(int controlId)
 {
 	ucstring retValue;

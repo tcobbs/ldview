@@ -48,6 +48,11 @@ public:
 	static void windowSetText(HWND hDlg, int controlId,
 		const std::string &text);
 #endif // TC_NO_UNICODE
+	virtual bool windowGetValue(int controlId, long &value);
+	virtual bool windowGetValue(int controlId, float &value);
+	virtual bool windowGetValue(int controlId, double &value);
+	virtual void windowSetValue(int controlId, long value);
+	virtual void windowSetValue(int controlId, double value);
 
 	virtual void textFieldSetLimitText(int controlId, int value);
 	virtual void textFieldGetSelection(int controlId, int &start, int &end);

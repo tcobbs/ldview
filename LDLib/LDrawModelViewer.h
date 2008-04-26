@@ -317,6 +317,7 @@ class LDrawModelViewer: public TCAlertSender
 //			void* userData);
 		virtual void clear(void);
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
+		virtual void setLatLon(float lat, float lon);
 		virtual void pause(void);
 		virtual void unpause(void);
 		bool getPaused(void) const { return flags.paused != false; }

@@ -588,6 +588,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LatLonDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="LDVExtensionsSetup.cpp"
 				>
 				<FileConfiguration
@@ -1316,6 +1320,10 @@
 			</File>
 			<File
 				RelativePath=".\JpegOptionsDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LatLonDialog.h"
 				>
 			</File>
 			<File

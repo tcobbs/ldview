@@ -158,6 +158,10 @@ SOURCE=.\JpegOptionsDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LatLonDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDVExtensionsSetup.cpp
 # End Source File
 # Begin Source File
@@ -275,6 +279,10 @@ SOURCE=.\BoundingBoxDialog.h
 # Begin Source File
 
 SOURCE=.\JpegOptionsDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LatLonDialog.h
 # End Source File
 # Begin Source File
 

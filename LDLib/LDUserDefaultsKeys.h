@@ -160,6 +160,8 @@
 #define SAVE_STEPS_SAME_SCALE_KEY "SaveStepsSameScale"
 #define STEP_KEY "Step"
 #define SHOW_AXES_KEY "ShowAxes"
+#define LAST_LAT_KEY "LastLat"
+#define LAST_LON_KEY "LastLon"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

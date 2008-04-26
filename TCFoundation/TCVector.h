@@ -97,6 +97,8 @@ public:
 	static void fixPerpendicular(const double *v1, double *v2);
 	static void calcScaleMatrix(TCFloat amount, TCFloat *scaleMatrix,
 		const TCVector &boundingMin, const TCVector &boundingMax);
+	static void calcRotationMatrix(TCFloat latitude, TCFloat longitude,
+		TCFloat *rotationMatrix);
 protected:
 #ifdef _LEAK_DEBUG
 	char className[4];

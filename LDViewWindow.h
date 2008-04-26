@@ -143,6 +143,7 @@ class LDViewWindow: public CUIWindow
 		virtual HBRUSH getBackgroundBrush(void);
 		virtual void createAboutBox(void);
 		virtual BOOL showAboutBox(void);
+		virtual LRESULT specifyLatLon(void);
 #ifndef _NO_BOOST
 		virtual void createLibraryUpdateWindow(void);
 		virtual void showLibraryUpdateWindow(bool initialInstall);

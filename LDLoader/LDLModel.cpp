@@ -1219,8 +1219,15 @@ bool LDLModel::parse(void)
 				}
 				break;
 			case LDLLineTypeModel:
-				((LDLModelLine *)fileLine)->getModel()->calcBoundingBox();
-				m_flags.bfcInvertNext = false;
+				{
+					LDLModel *model = ((LDLModelLine *)fileLine)->getModel();
+
+					if (model)
+					{
+						model->calcBoundingBox();
+					}
+					m_flags.bfcInvertNext = false;
+				}
 				break;
 			default:
 				break;

@@ -33,6 +33,7 @@
 #include <TCFoundation/TCMacros.h>
 #include <LDLib/LDHtmlInventory.h>
 #include "PartsListDialog.h"
+#include "LatLonDialog.h"
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -2056,6 +2057,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_RIGHT, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_TOP, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BOTTOM, haveModel);
+	setMenuEnabled(hViewingAngleMenu, ID_VIEW_SPECIFYLATLON, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_ISO, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_SAVE_DEFAULT, haveModel);
 }
@@ -3332,6 +3334,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			resetView(LDVAngleBottom);
 			return 0;
 			break;
+		case ID_VIEW_SPECIFYLATLON:
+			return specifyLatLon();
 		case ID_VIEW_ISO:
 			resetView(LDVAngleIso);
 			return 0;
@@ -4304,6 +4308,23 @@ void LDViewWindow::zoomToFit(void)
 void LDViewWindow::resetDefaultView(void)
 {
 	modelWindow->resetDefaultView();
+}
+
+LRESULT LDViewWindow::specifyLatLon(void)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer)
+	{
+		LatLonDialog *dlg = new LatLonDialog(getLanguageModule());
+
+		if (dlg->doModal(modelWindow) == IDOK)
+		{
+			modelViewer->setLatLon(dlg->getLat(), dlg->getLon());
+		}
+		dlg->release();
+	}
+	return 0;
 }
 
 void LDViewWindow::resetView(LDVAngle viewAngle)
