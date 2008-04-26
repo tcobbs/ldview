@@ -29,7 +29,7 @@ ALINK="#FFFF80">
 <B>&nbsp;&nbsp;Additions</B><BR>
 <UL>
 <LI>New Cocoa-based LDView for the Mac.</LI>
-<LI>Added support for steps.</LI>
+<LI>Added basic support for steps.</LI>
 <LI>Added Model Tree dialog (drawer in Cocoa version) to show a tree with all
 the data from the model.</LI>
 <LI>Added new latitude/longitude rotation mode.</LI>
@@ -47,10 +47,17 @@ keyboard.</LI>
 <LI>Added steps to m6459.ldr sample model.</LI>
 <LI>Added -SaveSnapshots command line option to allow multiple snapshots to be
 saved at once from the command line.</LI>
+<LI>Added "Transparent background" and "Auto-crop" to the snapshot saving UI.
+(Previously, these options were only available via manual registry entries or
+command line parameters.</LI>
 </UL>
 <BR>
 <B>Updates</B><BR>
 <UL>
+<LI>Significantly decreased the amount of time need to make certain preference
+changes (for example, toggline edge lines).</LI>
+<LI>Greatly improved the output quality of "Transparent background" snapshots
+when antialiased lines are enabled.</LI>
 <LI>Changed snapshot rendering in Windows to do software rendering directly to
 an in-memory bitmap when the Pixel Buffer OpenGL extension is unavailable.
 Previously, it rendered into the window, which caused a window to appear for
@@ -58,7 +65,8 @@ command line snapshot renders.</LI>
 <LI>Changed the default setting for conditional lines from off to on.  Note that
 since edge lines default to off, this won't be seen until the first time edge
 lines are enabled.</LI>
-<LI>Rotated 8464.mpd sample mode 180 degrees so that it faces forward in the
+<LI>Changed the default setting for seams to on.</LI>
+<LI>Rotated 8464.mpd sample model 180 degrees so that it faces forward in the
 default viewing angle.</LI>
 <LI>Updated the toolbar to have smaller buttons in XP (and maybe Vista).</LI>
 </UL>

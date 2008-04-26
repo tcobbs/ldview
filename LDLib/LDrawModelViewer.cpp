@@ -1574,7 +1574,12 @@ void LDrawModelViewer::setSeamWidth(TCFloat value)
 	if (!fEq(value, seamWidth))
 	{
 		seamWidth = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
+		if (mainModel)
+		{
+			mainModel->setSeamWidth(seamWidth);
+		}
+		flags.needsCalcSize = true;
 	}
 }
 
