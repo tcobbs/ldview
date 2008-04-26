@@ -242,3 +242,12 @@ void LDLMainModel::setExtraSearchDirs(TCStringArray *value)
 		TCObject::retain(m_extraSearchDirs);
 	}
 }
+
+void LDLMainModel::setSeamWidth(float value)
+{
+	if (value != m_seamWidth)
+	{
+		m_seamWidth = value;
+		m_flags.haveBoundingBox = false;
+	}
+}

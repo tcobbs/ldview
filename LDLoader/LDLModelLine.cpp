@@ -428,7 +428,8 @@ void LDLModelLine::scanPoints(
 		TCFloat newMatrix[16];
 		float seamWidth = model->getMainModel()->getSeamWidth();
 
-		if (seamWidth > 0.0f && model->hasBoundingBox())
+		if (seamWidth > 0.0f && model->hasBoundingBox() && model->isPart() &&
+			(m_parentModel == NULL || !m_parentModel->isPart()))
 		{
 			TCFloat scaleMatrix[16];
 			TCFloat tempMatrix[16];

@@ -50,7 +50,7 @@ public:
 	{
 		return m_mainFlags.boundingBoxesOnly != false;
 	}
-	void setSeamWidth(float value) { m_seamWidth = value; }
+	void setSeamWidth(float value);
 	float getSeamWidth(void) const { return m_seamWidth; }
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
 	virtual bool getLoadCanceled(void)
