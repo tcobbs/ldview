@@ -384,7 +384,7 @@ void LDPreferences::loadDefaultGeometrySettings(bool initializing /*= true*/)
 	{
 		m_initializing = true;
 	}
-	setUseSeams(false);
+	setUseSeams(true);
 	setSeamWidth(50);
 	setDrawWireframe(false);
 	setUseWireframeFog(false);
