@@ -283,7 +283,6 @@ bool LDInputHandler::mouseUp(
 		m_modelViewer->setShowLightDir(false);
 		if (m_modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
 		{
-			if (checkSpin())
 			// In latitude/longitude mode, we don't want it to spin along both
 			// axes at once, because once the latitude gets to 90 or -90, it
 			// just stops.
