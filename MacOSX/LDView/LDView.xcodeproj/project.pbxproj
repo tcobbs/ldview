@@ -99,6 +99,8 @@
 		1FD9C8330DBC4F0400F10F45 /* BoundingBox.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9C8310DBC4F0400F10F45 /* BoundingBox.mm */; };
 		1FD9C8E40DBD880D00F10F45 /* GoToStep.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9C8E20DBD880D00F10F45 /* GoToStep.nib */; };
 		1FD9C8E70DBD881A00F10F45 /* GoToStep.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9C8E60DBD881A00F10F45 /* GoToStep.m */; };
+		1FD9CAEC0DC3945000F10F45 /* LatLon.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1FD9CAEA0DC3945000F10F45 /* LatLon.nib */; };
+		1FD9CAEF0DC3945D00F10F45 /* LatLon.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1FD9CAEE0DC3945D00F10F45 /* LatLon.mm */; };
 		1FE251FA0C6FD26800FAE201 /* ToolbarSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */; };
 		1FE252030C6FD2CF00FAE201 /* ToolbarSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252020C6FD2CF00FAE201 /* ToolbarSegmentedCell.m */; };
 		1FE252FB0C6FF97800FAE201 /* ToolbarPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FE252F80C6FF97800FAE201 /* ToolbarPopUpButton.m */; };
@@ -312,6 +314,9 @@
 		1FD9C8E30DBD880D00F10F45 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/GoToStep.nib; sourceTree = "<group>"; };
 		1FD9C8E50DBD881A00F10F45 /* GoToStep.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = GoToStep.h; sourceTree = "<group>"; };
 		1FD9C8E60DBD881A00F10F45 /* GoToStep.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = GoToStep.m; sourceTree = "<group>"; };
+		1FD9CAEB0DC3945000F10F45 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/LatLon.nib; sourceTree = "<group>"; };
+		1FD9CAED0DC3945D00F10F45 /* LatLon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LatLon.h; sourceTree = "<group>"; };
+		1FD9CAEE0DC3945D00F10F45 /* LatLon.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LatLon.mm; sourceTree = "<group>"; };
 		1FE251F80C6FD26800FAE201 /* ToolbarSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedControl.h; path = CustomControls/ToolbarSegmentedControl.h; sourceTree = "<group>"; };
 		1FE251F90C6FD26800FAE201 /* ToolbarSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToolbarSegmentedControl.m; path = CustomControls/ToolbarSegmentedControl.m; sourceTree = "<group>"; };
 		1FE252010C6FD2CF00FAE201 /* ToolbarSegmentedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolbarSegmentedCell.h; path = CustomControls/ToolbarSegmentedCell.h; sourceTree = "<group>"; };
@@ -385,6 +390,8 @@
 				1FD9C8E60DBD881A00F10F45 /* GoToStep.m */,
 				1F8418E80D35902600FAF665 /* JpegOptions.h */,
 				1F8418E90D35902600FAF665 /* JpegOptions.mm */,
+				1FD9CAED0DC3945D00F10F45 /* LatLon.h */,
+				1FD9CAEE0DC3945D00F10F45 /* LatLon.mm */,
 				1F240C9F0A58D98400691116 /* LDrawModelView.h */,
 				1F240C9E0A58D98400691116 /* LDrawModelView.mm */,
 				1F5A35AD0D962E410072BAE3 /* LDViewCategories.h */,
@@ -503,6 +510,7 @@
 				1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */,
 				1FD9C8E20DBD880D00F10F45 /* GoToStep.nib */,
 				1F8418E40D358B9900FAF665 /* JpegOptions.nib */,
+				1FD9CAEA0DC3945000F10F45 /* LatLon.nib */,
 				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
 				1FD4D82F0BA4CF8900419677 /* ModelWindow.nib */,
 				1F2CAD470D8F63A600A98C9A /* ModelTree.nib */,
@@ -844,6 +852,7 @@
 				1FD9C7CA0DBC01F500F10F45 /* toolbar_axes.png in Resources */,
 				1FD9C8300DBC4EEF00F10F45 /* BoundingBox.nib in Resources */,
 				1FD9C8E40DBD880D00F10F45 /* GoToStep.nib in Resources */,
+				1FD9CAEC0DC3945000F10F45 /* LatLon.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -897,6 +906,7 @@
 				1FF711920DAB5164001ECA67 /* PrintAccessoryViewOwner.mm in Sources */,
 				1FD9C8330DBC4F0400F10F45 /* BoundingBox.mm in Sources */,
 				1FD9C8E70DBD881A00F10F45 /* GoToStep.m in Sources */,
+				1FD9CAEF0DC3945D00F10F45 /* LatLon.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,6 +1030,14 @@
 				1FD9C8E30DBD880D00F10F45 /* English */,
 			);
 			name = GoToStep.nib;
+			sourceTree = "<group>";
+		};
+		1FD9CAEA0DC3945000F10F45 /* LatLon.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FD9CAEB0DC3945000F10F45 /* English */,
+			);
+			name = LatLon.nib;
 			sourceTree = "<group>";
 		};
 		1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */ = {

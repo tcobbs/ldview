@@ -21,6 +21,7 @@
                 saveViewingAngle = id; 
                 showPovCameraInfo = id; 
                 showViewInfo = id; 
+                specifyLatLon = id; 
                 takeStepFrom = id; 
                 toggleFullScreen = id; 
                 toggleStatusBar = id; 
