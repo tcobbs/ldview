@@ -18,6 +18,7 @@
 #import "OpenGLDriverInfo.h"
 #import "GeneralPage.h"
 #import "GoToStep.h"
+#import "LatLon.h"
 
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLMainModel.h>
@@ -1250,6 +1251,22 @@ enum
 - (IBAction)viewingAngle:(id)sender
 {
 	[modelView setViewingAngle:[sender tag]];
+}
+
+- (IBAction)specifyLatLon:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		LatLon *sheet = [[LatLon alloc] init];
+		
+		if ([sheet runSheetInWindow:window] == NSOKButton)
+		{
+			modelViewer->setLatLon([sheet lat], [sheet lon]);
+		}
+		[sheet release];
+	}
 }
 
 - (IBAction)saveViewingAngle:(id)sender
