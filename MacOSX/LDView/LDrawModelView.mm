@@ -540,7 +540,7 @@ static TCImage *resizeCornerImage = NULL;
 	
 	if (modifiers == 0)
 	{
-		ModelWindow *modelWindow = [[self window] delegate];
+		ModelWindow *modelWindow = [self modelWindow];
 
 		switch (keyCode)
 		{
@@ -688,7 +688,7 @@ static TCImage *resizeCornerImage = NULL;
 	}
 	[[self openGLContext] makeCurrentContext];
 	TREGLExtensions::setup();
-	[[[[[self window] delegate] controller] preferences] openGLInitialized];
+	[[[[self modelWindow] controller] preferences] openGLInitialized];
 }
 
 - (void)prepResizeCornerTexture
@@ -866,6 +866,7 @@ static TCImage *resizeCornerImage = NULL;
 	//long swapInterval;
 	//[[self openGLContext] getValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 	[[self openGLContext] flushBuffer];
+	[[self modelWindow] updateStatusLatLon];
 }
 
 - (void)resetView:(id)sender
@@ -1155,9 +1156,9 @@ static TCImage *resizeCornerImage = NULL;
 					break;
 				case NSKeyUp:
 					[self keyUp:event];
-					if (desiredFlyThrough != [[[self window] delegate] flyThroughMode])
+					if (desiredFlyThrough != [[self modelWindow] flyThroughMode])
 					{
-						[[[self window] delegate] setFlyThroughMode:desiredFlyThrough];
+						[[self modelWindow] setFlyThroughMode:desiredFlyThrough];
 					}
 					break;
 			}

@@ -28,6 +28,9 @@
                 actionsSegments = NSSegmentedControl; 
                 customizeSegments = NSSegmentedControl; 
                 featuresSegments = NSSegmentedControl; 
+                latField = NSTextField; 
+                latLonBox = NSBox; 
+                lonField = NSTextField; 
                 modelView = LDrawModelView; 
                 openButton = NSSegmentedControl; 
                 prefsSegments = NSSegmentedControl; 

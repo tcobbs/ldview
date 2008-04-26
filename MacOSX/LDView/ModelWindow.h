@@ -45,6 +45,10 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *stepLastSegments;
 	IBOutlet NSTextField *stepField;
 	
+	IBOutlet NSBox *latLonBox;
+	IBOutlet NSTextField *latField;
+	IBOutlet NSTextField *lonField;
+	
 	NSArray *stepToolbarControls;
 	
 	IBOutlet NSMenu *stepsMenu;
@@ -79,6 +83,7 @@ class LDPartsList;
 	NSDate *lastWriteTime;
 	bool pollingUpdateNeeded;
 	bool forceProgress;
+	float latLonDelta;
 }
 
 - (bool)sheetBusy;
@@ -92,6 +97,8 @@ class LDPartsList;
 - (bool)flyThroughMode;
 - (bool)fullScreen;
 
+- (void)setFlyThroughMode:(bool)value;
+- (void)updateStatusLatLon;
 - (void)ldlErrorCallback:(LDLError *)error;
 - (void)progressAlertCallback:(TCProgressAlert *)alert;
 - (void)modelViewerAlertCallback:(TCAlert *)alert;
