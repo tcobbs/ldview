@@ -30,6 +30,9 @@ public:
 	}
 	bool getViewPopulated(void) const { return m_viewPopulated; }
 	void setViewPopulated(bool value) { m_viewPopulated = value; }
+	bool getBackgroundRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
+	bool getBackgroundRGB(TCByte &r, TCByte &g, TCByte &b) const;
+	bool getBackgroundRGB(int &r, int &g, int &b) const;
 protected:
 	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
 	virtual ~LDModelTree(void);
