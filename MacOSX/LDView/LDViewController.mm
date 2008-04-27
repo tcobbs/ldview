@@ -39,7 +39,7 @@
 		modelWindows = [[NSMutableArray alloc] init];
 		TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
 		pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
-		tcAutoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(processReleases:) userInfo:nil repeats:YES] retain];
+		tcAutoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(processTCReleases:) userInfo:nil repeats:YES] retain];
 	}
 	return self;
 }

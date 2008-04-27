@@ -123,6 +123,7 @@
 {
 	float width = [OCUserDefaults floatForKey:@"ModelTreeDrawerWidth" defaultValue:-1.0f sessionSpecific:NO];
 
+	[outlineView setIntercellSpacing:NSMakeSize(0.0f, 0.0f)];
 	showHideStartY = [showHideOptionsButton frame].origin.y;
 	[drawer setParentWindow:[modelWindow window]];
 	if (width != -1.0f)
@@ -204,6 +205,49 @@
 	else
 	{
 		return item;
+	}
+}
+
+// NSOutlineView delegate methods
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+	const LDModelTree *itemTree = [item modelTree];
+	
+	if (itemTree != NULL)
+	{
+		float l = 0.85f;
+		float l2 = 1.0f - ((1.0f - l) * 0.5);
+		BOOL haveBackground = YES;
+
+		switch (itemTree->getLineType())
+		{
+			case LDLLineTypeComment:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:1.0f blue:l alpha:1.0f]];
+				break;
+			case LDLLineTypeLine:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:l blue:l alpha:1.0f]];
+				break;
+			case LDLLineTypeTriangle:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:l blue:1.0f alpha:1.0f]];
+				break;
+			case LDLLineTypeQuad:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:1.0f blue:1.0f alpha:1.0f]];
+				break;
+			case LDLLineTypeConditionalLine:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:l2 blue:l alpha:1.0f]];
+				break;
+			case LDLLineTypeEmpty:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:l blue:l alpha:1.0f]];
+				break;
+			case LDLLineTypeUnknown:
+				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:1.0f blue:l alpha:1.0f]];
+				break;
+			default:
+				haveBackground = NO;
+				break;
+		}
+		[cell setDrawsBackground:haveBackground];
 	}
 }
 
