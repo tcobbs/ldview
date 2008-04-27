@@ -46,7 +46,8 @@ protected:
 		HWND control);
 
 	BOOL doTreeCopy(void);
-	BOOL doTreeKeyDown(LPNMTVKEYDOWN notification);
+	LRESULT doTreeKeyDown(LPNMTVKEYDOWN notification);
+	LRESULT doTreeCustomDraw(LPNMTVCUSTOMDRAW notification);
 	LRESULT doToggleOptions(void);
 	virtual LRESULT doItemExpanding(LPNMTREEVIEW notification);
 	LRESULT doLineCheck(UINT checkId, LDLLineType lineType);

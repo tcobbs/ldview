@@ -270,34 +270,48 @@ void LDModelTree::setShowLineType(LDLLineType lineType, bool value)
 
 bool LDModelTree::getBackgroundRGB(TCFloat &r, TCFloat &g, TCFloat &b) const
 {
-	float l = 0.85f;
-	float l2 = 1.0f - ((1.0f - l) * 0.5);
-	
+	return getRGB(0.85f, 1.0f, r, g, b);
+}
+
+bool LDModelTree::getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const
+{
+	return getRGB(0.0f, 0.5f, r, g, b);
+}
+
+bool LDModelTree::getRGB(
+	TCFloat l,
+	TCFloat h,
+	TCFloat &r,
+	TCFloat &g,
+	TCFloat &b) const
+{
+	float l2 = h - ((h - l) * 0.5f);
+
 	r = g = b = l;
 	switch (m_lineType)
 	{
 	case LDLLineTypeComment:
-		g = 1.0f;
+		g = h;
 		break;
 	case LDLLineTypeLine:
-		r = 1.0f;
+		r = h;
 		break;
 	case LDLLineTypeTriangle:
-		b = 1.0f;
+		b = h;
 		break;
 	case LDLLineTypeQuad:
-		g = 1.0f;
-		b = 1.0f;
+		g = h;
+		b = h;
 		break;
 	case LDLLineTypeConditionalLine:
-		r = 1.0f;
+		r = h;
 		g = l2;
 		break;
 	case LDLLineTypeEmpty:
 		break;
 	case LDLLineTypeUnknown:
-		r = 1.0f;
-		g = 1.0f;
+		r = h;
+		g = h;
 		break;
 	default:
 		return false;
@@ -327,6 +341,40 @@ bool LDModelTree::getBackgroundRGB(int &r, int &g, int &b) const
 	TCByte rb, gb, bb;
 	
 	if (getBackgroundRGB(rb, gb, bb))
+	{
+		r = (int)rb;
+		g = (int)gb;
+		b = (int)bb;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDModelTree::getTextRGB(TCByte &r, TCByte &g, TCByte &b) const
+{
+	TCFloat rf, gf, bf;
+	
+	if (getTextRGB(rf, gf, bf))
+	{
+		r = (TCByte)(rf * 255.0 + 0.5);
+		g = (TCByte)(gf * 255.0 + 0.5);
+		b = (TCByte)(bf * 255.0 + 0.5);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDModelTree::getTextRGB(int &r, int &g, int &b) const
+{
+	TCByte rb, gb, bb;
+	
+	if (getTextRGB(rb, gb, bb))
 	{
 		r = (int)rb;
 		g = (int)gb;

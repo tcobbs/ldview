@@ -11,9 +11,9 @@
 #include "Resource.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include "ModelWindow.h"
+#include "LDViewWindow.h"
 
 #include <TCFoundation/TCUserDefaults.h>
-#include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/TCAlertManager.h>
@@ -53,13 +53,13 @@ void WillyMessage(const char *)
 #endif // (_WIN32_WINNT < 0x0500)
 
 // Todo: Unicode
-#define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
+#define DEFAULT_PREF_SET ls("DefaultPrefSet")
 
 char LDViewPreferences::ldviewPath[MAX_PATH] = "";
 
 LDViewPreferences::LDViewPreferences(HINSTANCE hInstance,
 									 LDrawModelViewer* modelViewer)
-	:CUIPropertySheet(TCLocalStrings::get(_UC("LDViewPreferences")), hInstance),
+	:CUIPropertySheet(ls(_UC("LDViewPreferences")), hInstance),
 	modelViewer(modelViewer ? ((LDrawModelViewer*)modelViewer->retain()) :
 		NULL),
 	ldPrefs(new LDPreferences(modelViewer)),
@@ -843,7 +843,7 @@ BOOL LDViewPreferences::doDialogHelp(HWND hDlg, LPHELPINFO helpInfo)
 	if (dialogId)
 	{
 		// NOTE: help filename doesn't support Unicode.
-		char* helpPath = getLDViewPath(TCLocalStrings::get("LDView.hlp"));
+		char* helpPath = getLDViewPath(ls("LDView.hlp"));
 		DWORD helpId;
 
 		helpId = 0x80000000 | (dialogId << 16) | (DWORD)helpInfo->iCtrlId;
@@ -1579,6 +1579,32 @@ void LDViewPreferences::applyGeneralChanges(void)
 		{
 			setupFov(true);
 		}
+		ldPrefs->setSnapshotsDirMode(snapshotDirMode);
+		if (snapshotDirMode == LDPreferences::DDMSpecificDir)
+		{
+			windowGetText(hSnapshotDirField, snapshotDir);
+			if (snapshotDir.length() > 0)
+			{
+				ldPrefs->setSnapshotsDir(snapshotDir.c_str());
+			}
+			else
+			{
+				ldPrefs->setSnapshotsDirMode(LDPreferences::DDMLastDir);
+			}
+		}
+		ldPrefs->setPartsListsDirMode(partsListDirMode);
+		if (partsListDirMode == LDPreferences::DDMSpecificDir)
+		{
+			windowGetText(hPartsListDirField, partsListDir);
+			if (partsListDir.length() > 0)
+			{
+				ldPrefs->setPartsListsDir(partsListDir.c_str());
+			}
+			else
+			{
+				ldPrefs->setPartsListsDirMode(LDPreferences::DDMLastDir);
+			}
+		}
 		ldPrefs->applyGeneralSettings();
 	}
 	ldPrefs->commitGeneralSettings();
@@ -1849,6 +1875,21 @@ void LDViewPreferences::chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 	EnableWindow(hPropSheet, TRUE);
 }
 
+void LDViewPreferences::browseForDir(
+	const char *prompt,
+	HWND hTextField,
+	std::string &dir)
+{
+	std::string newDir = LDViewWindow::browseForDir(prompt, dir.c_str());
+
+	if (newDir.size() > 0)
+	{
+		dir = newDir;
+		SetWindowText(hTextField, dir.c_str());
+		enableApply(GetParent(hTextField));
+	}
+}
+
 void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 {
 	switch (controlId)
@@ -1865,6 +1906,14 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 		case IDC_GENERAL_RESET:
 			ldPrefs->loadDefaultGeneralSettings(false);
 			setupGeneralPage();
+			break;
+		case IDC_BROWSE_SNAPSHOTS_DIR:
+			browseForDir(ls("BrowseForSnapshotDir"), hSnapshotDirField,
+				snapshotDir);
+			break;
+		case IDC_BROWSE_PARTS_LIST_DIR:
+			browseForDir(ls("BrowseForPartsListDir"), hPartsListDirField,
+				partsListDir);
 			break;
 	}
 	enableApply(hGeneralPage);
@@ -1978,8 +2027,8 @@ void LDViewPreferences::doDeletePrefSet(void)
 		if (checkAbandon && getApplyEnabled())
 		{
 			if (messageBoxUC(hWindow,
-				TCLocalStrings::get(_UC("PrefSetAbandonConfirm")),
-				TCLocalStrings::get(_UC("AbandonChanges")),
+				ls(_UC("PrefSetAbandonConfirm")),
+				ls(_UC("AbandonChanges")),
 				MB_YESNO | MB_ICONQUESTION) == IDYES)
 			{
 				abandonChanges();
@@ -2201,8 +2250,8 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 				if (strchr(editText, '/') || strchr(editText, '\\'))
 				{
 					messageBoxUC(hDlg,
-						TCLocalStrings::get(_UC("PrefSetNameBadChars")),
-						TCLocalStrings::get(_UC("InvalidName")),
+						ls(_UC("PrefSetNameBadChars")),
+						ls(_UC("InvalidName")),
 						MB_OK | MB_ICONWARNING);
 				}
 				else
@@ -2214,16 +2263,16 @@ void LDViewPreferences::doOtherClick(HWND hDlg, int controlId,
 			else
 			{
 				messageBoxUC(hDlg,
-					TCLocalStrings::get(_UC("PrefSetAlreadyExists")),
-					TCLocalStrings::get(_UC("DuplicateName")),
+					ls(_UC("PrefSetAlreadyExists")),
+					ls(_UC("DuplicateName")),
 					MB_OK | MB_ICONWARNING);
 			}
 		}
 		else
 		{
 			messageBoxUC(hDlg,
-				TCLocalStrings::get(_UC("PrefSetNameRequired")),
-				TCLocalStrings::get(_UC("EmptyName")), MB_OK | MB_ICONWARNING);
+				ls(_UC("PrefSetNameRequired")),
+				ls(_UC("EmptyName")), MB_OK | MB_ICONWARNING);
 		}
 	}
 	else if (controlId == IDC_HOTKEY_OK)
@@ -2249,7 +2298,7 @@ void LDViewPreferences::setAniso(int value)
 	if (intLevel >= 2)
 	{
 		sucprintf(label, sizeof(label) / sizeof(label[0]),
-			TCLocalStrings::get(_UC("AnisoNx")), intLevel);
+			ls(_UC("AnisoNx")), intLevel);
 	}
 	else
 	{
@@ -2359,14 +2408,15 @@ void LDViewPreferences::doUpdatesClick(int controlId, HWND /*controlHWnd*/)
 DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 										  HWND /*controlHWnd*/)
 {
-	if (controlId == IDC_FSAA_COMBO)
+	switch (controlId)
 	{
+	case IDC_FSAA_COMBO:
 		UCCHAR selectedString[1024];
 		int fsaaMode;
 
 		sendDlgItemMessageUC(hPage, controlId, WM_GETTEXT,
 			COUNT_OF(selectedString), (LPARAM)selectedString);
-		if (ucstrcmp(selectedString, TCLocalStrings::get(_UC("FsaaNone"))) == 0)
+		if (ucstrcmp(selectedString, ls(_UC("FsaaNone"))) == 0)
 		{
 			fsaaMode = 0;
 		}
@@ -2378,17 +2428,31 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 				fsaaMode = fsaaMode << 3;
 			}
 			else if (ucstrstr(selectedString,
-				TCLocalStrings::get(_UC("FsaaEnhanced"))))
+				ls(_UC("FsaaEnhanced"))))
 			{
 				fsaaMode |= 1;
 			}
 		}
 		ldPrefs->setFsaaMode(fsaaMode);
 		enableApply(hPage);
-	}
-	else if (controlId == IDC_MEMORY_COMBO)
-	{
+		break;
+	case IDC_MEMORY_COMBO:
 		enableApply(hPage);
+		break;
+	case IDC_SNAPSHOTS_DIR_COMBO:
+		snapshotDirMode = (LDPreferences::DefaultDirMode)SendMessage(
+			hSnapshotDirCombo, CB_GETCURSEL, 0, 0);
+		updateSaveDir(hSnapshotDirField, hSnapshotBrowseButton, snapshotDirMode,
+			snapshotDir);
+		enableApply(hPage);
+		break;
+	case IDC_PARTS_LIST_DIR_COMBO:
+		partsListDirMode = (LDPreferences::DefaultDirMode)SendMessage(
+			hPartsListDirCombo, CB_GETCURSEL, 0, 0);
+		updateSaveDir(hPartsListDirField, hPartsListBrowseButton,
+			partsListDirMode, partsListDir);
+		enableApply(hPage);
+		break;
 	}
 	return 0;
 }
@@ -2734,9 +2798,9 @@ void LDViewPreferences::setupFov(bool warn)
 		UCCHAR ucbuf[1024];
 
 		sucprintf(ucbuf, COUNT_OF(ucbuf),
-			TCLocalStrings::get(_UC("FovRangeError")), minFov, maxFov);
+			ls(_UC("FovRangeError")), minFov, maxFov);
 		messageBoxUC(hPropSheet, ucbuf,
-			TCLocalStrings::get(_UC("InvalidValue")), MB_OK | MB_ICONWARNING);
+			ls(_UC("InvalidValue")), MB_OK | MB_ICONWARNING);
 	}
 }
 
@@ -2749,13 +2813,72 @@ void LDViewPreferences::setupMemoryUsage(void)
 			0);
 	}
 	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get(_UC("Low")));
+		(LPARAM)ls(_UC("Low")));
 	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get(_UC("Medium")));
+		(LPARAM)ls(_UC("Medium")));
 	sendDlgItemMessageUC(hGeneralPage, IDC_MEMORY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get(_UC("High")));
+		(LPARAM)ls(_UC("High")));
 	SendDlgItemMessage(hGeneralPage, IDC_MEMORY_COMBO, CB_SETCURSEL,
 		(WPARAM)ldPrefs->getMemoryUsage(), 0);
+}
+
+void LDViewPreferences::updateSaveDir(
+	HWND hTextField,
+	HWND hBrowseButton,
+	LDPreferences::DefaultDirMode dirMode,
+	const std::string &filename)
+{
+	BOOL enable = FALSE;
+
+	if (dirMode == LDPreferences::DDMSpecificDir)
+	{
+		SetWindowText(hTextField, filename.c_str());
+		enable = TRUE;
+	}
+	else
+	{
+		SetWindowText(hTextField, "");
+	}
+	EnableWindow(hTextField, enable);
+	EnableWindow(hBrowseButton, enable);
+}
+
+void LDViewPreferences::setupSaveDir(
+	HWND hComboBox,
+	HWND hTextField,
+	HWND hBrowseButton,
+	LDPreferences::DefaultDirMode dirMode,
+	const std::string &filename,
+	CUCSTR nameKey)
+{
+	ucstring lastSaved = ls(_UC("LastSaved"));
+	
+	lastSaved += ls(nameKey);
+	SendMessage(hComboBox, CB_RESETCONTENT, 0, 0);
+	sendMessageUC(hComboBox, CB_ADDSTRING, 0, (LPARAM)ls(_UC("Model")));
+	sendMessageUC(hComboBox, CB_ADDSTRING, 0, (LPARAM)lastSaved.c_str());
+	sendMessageUC(hComboBox, CB_ADDSTRING, 0, (LPARAM)ls(_UC("Specified")));
+	SendMessage(hComboBox, CB_SETCURSEL, dirMode, 0);
+	updateSaveDir(hTextField, hBrowseButton, dirMode, filename);
+}
+
+void LDViewPreferences::setupSaveDirs(void)
+{
+	hSnapshotDirCombo = GetDlgItem(hGeneralPage, IDC_SNAPSHOTS_DIR_COMBO);
+	hSnapshotDirField = GetDlgItem(hGeneralPage, IDC_SNAPSHOTS_DIR);
+	hSnapshotBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_SNAPSHOTS_DIR);
+	snapshotDirMode = ldPrefs->getSnapshotsDirMode();
+	snapshotDir = ldPrefs->getSnapshotsDir();
+	setupSaveDir(hSnapshotDirCombo, hSnapshotDirField, hSnapshotBrowseButton,
+		snapshotDirMode, snapshotDir, _UC("Snapshot"));
+	hPartsListDirCombo = GetDlgItem(hGeneralPage, IDC_PARTS_LIST_DIR_COMBO);
+	hPartsListDirField = GetDlgItem(hGeneralPage, IDC_PARTS_LIST_DIR);
+	hPartsListBrowseButton = GetDlgItem(hGeneralPage,
+		IDC_BROWSE_PARTS_LIST_DIR);
+	partsListDirMode = ldPrefs->getPartsListsDirMode();
+	partsListDir = ldPrefs->getPartsListsDir();
+	setupSaveDir(hPartsListDirCombo, hPartsListDirField, hPartsListBrowseButton,
+		partsListDirMode, partsListDir, _UC("PartsList"));
 }
 
 void LDViewPreferences::setupGeneralPage(void)
@@ -2774,6 +2897,7 @@ void LDViewPreferences::setupGeneralPage(void)
 	setupBackgroundColorButton();
 	setupDefaultColorButton();
 	setupMemoryUsage();
+	setupSaveDirs();
 }
 
 void LDViewPreferences::enableWireframe(void)
@@ -3695,7 +3819,7 @@ void LDViewPreferences::setupAntialiasing(void)
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_RESETCONTENT, 0, 0);
 	// Add "None" to FSAA combo box list as only item.
 	sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get(_UC("FsaaNone")));
+		(LPARAM)ls(_UC("FsaaNone")));
 	// Select "None", just in case something else doesn't get selected later.
 	SendDlgItemMessage(hGeneralPage, IDC_FSAA_COMBO, CB_SETCURSEL, 0, 0);
 	// The following array should always exist, even if it is empty, but check
@@ -3711,7 +3835,7 @@ void LDViewPreferences::setupAntialiasing(void)
 			int value = (*fsaaModes)[i];
 
 			sucprintf(modeString, COUNT_OF(modeString),
-				TCLocalStrings::get(_UC("FsaaNx")), value);
+				ls(_UC("FsaaNx")), value);
 			sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING, 0,
 				(LPARAM)modeString);
 			// nVidia hardare supports Quincunx and 9-box pattern, so add an
@@ -3721,9 +3845,9 @@ void LDViewPreferences::setupAntialiasing(void)
 				TREGLExtensions::haveNvMultisampleFilterHintExtension())
 			{
 				sucprintf(modeString, COUNT_OF(modeString),
-					TCLocalStrings::get(_UC("FsaaNx")), value);
+					ls(_UC("FsaaNx")), value);
 				ucstrcat(modeString, _UC(" "));
-				ucstrcat(modeString, TCLocalStrings::get(_UC("FsaaEnhanced")));
+				ucstrcat(modeString, ls(_UC("FsaaEnhanced")));
 				sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_ADDSTRING,
 					0, (LPARAM)modeString);
 			}
@@ -3732,11 +3856,11 @@ void LDViewPreferences::setupAntialiasing(void)
 	if (ldPrefs->getFsaaMode())
 	{
 		sucprintf(modeString, COUNT_OF(modeString),
-			TCLocalStrings::get(_UC("FsaaNx")), getFSAAFactor());
+			ls(_UC("FsaaNx")), getFSAAFactor());
 		if (getUseNvMultisampleFilter())
 		{
 			ucstrcat(modeString, _UC(" "));
-			ucstrcat(modeString, TCLocalStrings::get(_UC("FsaaEnhanced")));
+			ucstrcat(modeString, ls(_UC("FsaaEnhanced")));
 		}
 		if (sendDlgItemMessageUC(hGeneralPage, IDC_FSAA_COMBO, CB_SELECTSTRING,
 			0, (LPARAM)modeString) == CB_ERR)
@@ -3803,7 +3927,7 @@ BOOL LDViewPreferences::doHotKeyInit(HWND hDlg, HWND /*hHotKeyCombo*/)
 		SendMessage(hDlg, WM_SETTEXT, 0, (LPARAM)"???");
 	}
 	sendDlgItemMessageUC(hDlg, IDC_HOTKEY_COMBO, CB_ADDSTRING, 0,
-		(LPARAM)TCLocalStrings::get(_UC("<None>")));
+		(LPARAM)ls(_UC("<None>")));
 	for (i = 1; i <= 10; i++)
 	{
 		UCCHAR numString[5];
@@ -3844,8 +3968,8 @@ bool LDViewPreferences::shouldSetActive(int index)
 		{
 			setActiveWarned = true;
 			messageBoxUC(hWindow,
-				TCLocalStrings::get(_UC("PrefSetApplyBeforeLeave")),
-				TCLocalStrings::get(_UC("Error")), MB_OK | MB_ICONWARNING);
+				ls(_UC("PrefSetApplyBeforeLeave")),
+				ls(_UC("Error")), MB_OK | MB_ICONWARNING);
 		}
 		return false;
 	}

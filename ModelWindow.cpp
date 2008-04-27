@@ -15,6 +15,7 @@
 #include <LDLoader/LDLError.h>
 #include <LDLoader/LDLModel.h>
 #include <LDLib/LDLibraryUpdater.h>
+#include <LDLib/LDHtmlInventory.h>
 #include "Resource.h"
 #include <Commctrl.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -4246,11 +4247,62 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 	}
 }
 
+// Note: static method
+std::string ModelWindow::defaultDir(
+	LDPreferences::DefaultDirMode mode,
+	const char *lastPath,
+	const char *defaultPath)
+{
+	switch (mode)
+	{
+	case LDPreferences::DDMLastDir:
+		{
+			return lastPath;
+		}
+	case LDPreferences::DDMSpecificDir:
+		return defaultPath;
+	}
+	return ".";
+}
+
+std::string ModelWindow::getSnapshotDir(void)
+{
+	LDPreferences *ldPrefs = prefs->getLDPrefs();
+	char *temp = directoryFromPath(modelViewer->getFilename());
+	std::string modelDir(temp);
+
+	delete temp;
+	if (ldPrefs != NULL)
+	{
+		temp = TCUserDefaults::pathForKey(LAST_SNAPSHOT_PATH_KEY,
+			modelDir.c_str(), false);
+		std::string dir(temp);
+		
+		delete temp;
+		return defaultDir(ldPrefs->getSnapshotsDirMode(), temp,
+			ldPrefs->getSnapshotsDir().c_str());
+	}
+	return modelDir;
+}
+
+std::string ModelWindow::getPartsListDir(LDHtmlInventory *htmlInventory)
+{
+	LDPreferences *ldPrefs = prefs->getLDPrefs();
+
+	if (ldPrefs != NULL)
+	{
+		return defaultDir(ldPrefs->getPartsListsDirMode(),
+			htmlInventory->getLastSavePath(),
+			ldPrefs->getPartsListsDir().c_str());
+	}
+	return ".";
+}
+
 bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 {
 	OPENFILENAME openStruct;
 	char fileTypes[1024];
-	char* initialDir = ".";
+	std::string initialDir = getSnapshotDir();
 	int maxImageType = 3;
 
 	if (!calcSaveFilename(saveFilename, len))
@@ -4275,7 +4327,7 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 	openStruct.nFilterIndex = saveImageType;
 	openStruct.lpstrFile = saveFilename;
 	openStruct.nMaxFile = len;
-	openStruct.lpstrInitialDir = initialDir;
+	openStruct.lpstrInitialDir = initialDir.c_str();
 	openStruct.lpstrTitle = TCLocalStrings::get("SaveSnapshot");
 	openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_ENABLETEMPLATE
 		| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING;
@@ -4287,7 +4339,10 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 	if (GetSaveFileName(&openStruct))
 	{
 		int index = (int)openStruct.nFilterIndex;
+		char *dir = directoryFromPath(saveFilename);
 
+		TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_PATH_KEY, false);
+		delete dir;
 		if (index > 0 && index <= maxImageType)
 		{
 			TCUserDefaults::setLongForKey(saveImageType,

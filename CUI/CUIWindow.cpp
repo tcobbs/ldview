@@ -2609,3 +2609,21 @@ void CUIWindow::setMenuEnabled(
 		SetMenuItemInfo(hParentMenu, itemID, byPosition, &itemInfo);
 	}
 }
+
+// Note: static method
+void CUIWindow::windowGetText(HWND hWnd, ucstring &text)
+{
+	text.resize(SendMessage(hWnd, WM_GETTEXTLENGTH, 0, 0));
+	sendMessageUC(hWnd, WM_GETTEXT, (WPARAM)text.size() + 1, (LPARAM)&text[0]);
+}
+
+#ifndef TC_NO_UNICODE
+
+// Note: static method
+void CUIWindow::windowGetText(HWND hWnd, std::string &text)
+{
+	text.resize(SendMessageA(hWnd, WM_GETTEXTLENGTH, 0, 0));
+	SendMessageA(hWnd, WM_GETTEXT, (WPARAM)text.size() + 1, (LPARAM)&text[0]);
+}
+
+#endif // TC_NO_UNICODE

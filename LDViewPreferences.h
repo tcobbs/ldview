@@ -85,6 +85,7 @@ public:
 	void setTextureStuds(bool value);
 	virtual void applyChanges(void);
 	virtual int run(void);
+	LDPreferences *getLDPrefs(void) { return ldPrefs; }
 
 	virtual BOOL doDialogThemeChanged(void);
 	virtual BOOL doDialogVScroll(HWND hDlg, int scrollCode, int position,
@@ -125,12 +126,20 @@ protected:
 	virtual void setupDefaultColorButton(void);
 	virtual void setupSeamWidth(void);
 	virtual void setupFullScreenRefresh(void);
+	virtual void setupSaveDirs(void);
+	virtual void updateSaveDir(HWND hTextField, HWND hBrowseButton,
+		LDPreferences::DefaultDirMode dirMode, const std::string &filename);
+	virtual void setupSaveDir(HWND hComboBox, HWND hTextField,
+		HWND hBrowseButton, LDPreferences::DefaultDirMode dirMode,
+		const std::string &filename, CUCSTR nameKey);
 	virtual void redrawColorBitmap(HWND hColorButton, HBITMAP hButtonBitmap,
 		COLORREF color);
 	virtual void getRGB(int color, int &r, int &g, int &b);
 	virtual void chooseColor(HWND hColorButton, HBITMAP hColorBitmap,
 		COLORREF &color);
 	virtual void chooseBackgroundColor(void);
+	virtual void browseForDir(const char *prompt, HWND hTextField,
+		std::string &dir);
 	virtual void chooseDefaultColor(void);
 	virtual void doFSRefresh(void);
 	virtual void doStipple(void);
@@ -298,6 +307,16 @@ protected:
 	HWND hBackgroundColorButton;
 	HBITMAP hDefaultColorBitmap;
 	HWND hDefaultColorButton;
+	HWND hSnapshotDirCombo;
+	HWND hSnapshotDirField;
+	HWND hSnapshotBrowseButton;
+	LDPreferences::DefaultDirMode snapshotDirMode;
+	std::string snapshotDir;
+	HWND hPartsListDirCombo;
+	HWND hPartsListDirField;
+	HWND hPartsListBrowseButton;
+	LDPreferences::DefaultDirMode partsListDirMode;
+	std::string partsListDir;
 	HDC hButtonColorDC;
 	HWND hMouseOverButton;
 	long origButtonWindowProc;
