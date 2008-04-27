@@ -33,7 +33,11 @@ public:
 	bool getBackgroundRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
 	bool getBackgroundRGB(TCByte &r, TCByte &g, TCByte &b) const;
 	bool getBackgroundRGB(int &r, int &g, int &b) const;
+	bool getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
+	bool getTextRGB(TCByte &r, TCByte &g, TCByte &b) const;
+	bool getTextRGB(int &r, int &g, int &b) const;
 protected:
+	bool getRGB(TCFloat l, TCFloat h, TCFloat &r, TCFloat &g, TCFloat &b) const;
 	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
 	virtual ~LDModelTree(void);
 	virtual void dealloc(void);

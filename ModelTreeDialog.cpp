@@ -8,6 +8,7 @@
 #include <LDLib/LDModelTree.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
+#include <CommCtrl.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -109,6 +110,7 @@ LRESULT ModelTreeDialog::doItemExpanding(LPNMTREEVIEW notification)
 			addChildren(notification->itemNew.hItem, tree);
 			tree->setViewPopulated(true);
 		}
+		return 0;
 	}
 	return 1;
 }
@@ -120,12 +122,14 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 		switch (notification->code)
 		{
 		case TVN_ITEMEXPANDING:
-			doItemExpanding((LPNMTREEVIEW)notification);
+			return doItemExpanding((LPNMTREEVIEW)notification);
 		case TVN_KEYDOWN:
-			doTreeKeyDown((LPNMTVKEYDOWN)notification);
+			return doTreeKeyDown((LPNMTVKEYDOWN)notification);
+		case NM_CUSTOMDRAW:
+			return doTreeCustomDraw((LPNMTVCUSTOMDRAW)notification);
 		}
 	}
-	return 0;
+	return 1;
 }
 
 void ModelTreeDialog::addChildren(HTREEITEM parent, const LDModelTree *tree)
@@ -364,13 +368,43 @@ LRESULT ModelTreeDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 	return 0;
 }
 
-BOOL ModelTreeDialog::doTreeKeyDown(LPNMTVKEYDOWN notification)
+LRESULT ModelTreeDialog::doTreeCustomDraw(LPNMTVCUSTOMDRAW notification)
+{
+	if (notification->nmcd.dwDrawStage == CDDS_PREPAINT)
+	{
+		SetWindowLong(hWindow, DWL_MSGRESULT, CDRF_NOTIFYITEMDRAW);
+		return 0;
+	}
+	else if (notification->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
+	{
+		LDModelTree *itemTree = (LDModelTree *)notification->nmcd.lItemlParam;
+
+		if (itemTree)
+		{
+			TCByte r, g, b;
+
+			if ((notification->nmcd.uItemState & CDIS_SELECTED) == 0 &&
+				itemTree->getTextRGB(r, g, b))
+			{
+				notification->clrText = RGB(r, g, b);
+			}
+			SetWindowLong(hWindow, DWL_MSGRESULT, CDRF_DODEFAULT);
+			return 0;
+		}
+	}
+	return 1;
+}
+
+LRESULT ModelTreeDialog::doTreeKeyDown(LPNMTVKEYDOWN notification)
 {
 	if (notification->wVKey == 'C' && (GetKeyState(VK_CONTROL) & 0x8000))
 	{
-		return doTreeCopy();
+		if (doTreeCopy())
+		{
+			return 0;
+		}
 	}
-	return FALSE;
+	return 1;
 }
 
 BOOL ModelTreeDialog::doTreeCopy(void)

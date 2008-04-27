@@ -7,6 +7,7 @@
 #include <CUI/CUIDefines.h>
 #include <TCFoundation/TCTypedPointerArray.h>
 #include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/mystring.h>
 
 #ifndef WM_THEMECHANGED
 #define WM_THEMECHANGED                 0x031A
@@ -123,6 +124,10 @@ class CUIExport CUIWindow : public TCAlertSender
 			UINT message, WPARAM wParam, LPARAM lParam);
 		static BOOL CALLBACK staticDialogProc(HWND hDlg,
 			UINT message, WPARAM wParam, LPARAM lParam);
+		static void windowGetText(HWND hWnd, ucstring &text);
+#ifndef TC_NO_UNICODE
+		static void windowGetText(HWND hWnd, std::string &text);
+#endif // TC_NO_UNICODE
 
 	protected:
 		~CUIWindow(void);

@@ -106,6 +106,8 @@ class LDViewWindow: public CUIWindow
 #endif // TC_NO_UNICODE
 		static void addFileType(UCSTR, CUCSTR, CUCSTR);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
+		static std::string browseForDir(const char *prompt,
+			const char *initialDir);
 		//static bool newToolbar(void);
 	protected:
 		virtual ~LDViewWindow(void);

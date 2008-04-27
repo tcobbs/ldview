@@ -1348,6 +1348,8 @@ BOOL LDViewWindow::doAddExtraDir(void)
 	if ((itemIdList = SHBrowseForFolder(&browseInfo)) != NULL)
 	{
 		char path[MAX_PATH+10];
+	    LPMALLOC pMalloc = NULL;
+		HRESULT hr;
 
 		if (SHGetPathFromIDList(itemIdList, path))
 		{
@@ -1358,6 +1360,12 @@ BOOL LDViewWindow::doAddExtraDir(void)
 			SendDlgItemMessage(hExtraDirsWindow, IDC_ESD_LIST, LB_SETCURSEL,
 				extraSearchDirs->getCount() - 1, (LPARAM)path);
 			updateExtraDirsEnabled();
+		}
+	    hr = SHGetMalloc(&pMalloc);
+		if (SUCCEEDED(hr))
+		{
+			pMalloc->Free(itemIdList);
+			pMalloc->Release();
 		}
 	}
 	return TRUE;
@@ -4596,62 +4604,57 @@ int CALLBACK LDViewWindow::pathBrowserCallback(HWND hwnd, UINT uMsg,
 	return 0;
 }
 
-BOOL LDViewWindow::promptForLDrawDir(const char *prompt)
+// Note: static method
+std::string LDViewWindow::browseForDir(
+	const char *prompt,
+	const char *initialDir)
 {
 	BROWSEINFO browseInfo;
 	char displayName[MAX_PATH];
 	ITEMIDLIST* itemIdList;
-	char *oldLDrawDir = getLDrawDir();
 
-	if (!prompt)
-	{
-		prompt = TCLocalStrings::get("LDrawDirPrompt");
-	}
 	browseInfo.hwndOwner = NULL; //hWindow;
 	browseInfo.pidlRoot = NULL;
 	browseInfo.pszDisplayName = displayName;
 	browseInfo.lpszTitle = prompt;
 	browseInfo.ulFlags = BIF_RETURNONLYFSDIRS;
 	browseInfo.lpfn = pathBrowserCallback;
-	browseInfo.lParam = (LPARAM)oldLDrawDir;
+	browseInfo.lParam = (LPARAM)initialDir;
 	browseInfo.iImage = 0;
 	if ((itemIdList = SHBrowseForFolder(&browseInfo)) != NULL)
 	{
 		char path[MAX_PATH+10];
 
-		delete oldLDrawDir;
 		if (SHGetPathFromIDList(itemIdList, path))
 		{
 			stripTrailingPathSeparators(path);
-			TCUserDefaults::setPathForKey(path, LDRAWDIR_KEY, false);
-			LDLModel::setLDrawDir(path);
-			return TRUE;
+			return path;
 		}
 		MessageBox(NULL/*hWindow*/, TCLocalStrings::get("InvalidDirSelected"),
 			TCLocalStrings::get("Error"), MB_OK);
 	}
+	return "";
+}
+
+// Note: static method
+BOOL LDViewWindow::promptForLDrawDir(const char *prompt)
+{
+	char *oldLDrawDir = getLDrawDir();
+	std::string dir;
+
+	if (!prompt)
+	{
+		prompt = TCLocalStrings::get("LDrawDirPrompt");
+	}
+	dir = browseForDir(prompt, oldLDrawDir);
 	delete oldLDrawDir;
-	return FALSE;
-/*
-	if (!hLDrawDirWindow)
+	if (dir.size() > 0)
 	{
-		createLDrawDirWindow();
-	}
-	if (hLDrawDirWindow)
-	{
-		runDialogModal(hLDrawDirWindow);
-		if (userLDrawDir)
-		{
-			stripTrailingPathSeparators(userLDrawDir);
-			TCUserDefaults::setPathForKey(userLDrawDir, LDRAWDIR_KEY, false);
-			LDLModel::setLDrawDir(userLDrawDir);
-			delete userLDrawDir;
-			userLDrawDir = NULL;
-			return TRUE;
-		}
+		TCUserDefaults::setPathForKey(dir.c_str(), LDRAWDIR_KEY, false);
+		LDLModel::setLDrawDir(dir.c_str());
+		return TRUE;
 	}
 	return FALSE;
-*/
 }
 
 /*
@@ -5255,7 +5258,8 @@ LRESULT LDViewWindow::generatePartsList(void)
 					openStruct.lpstrFile = &filename[0];
 					openStruct.nMaxFile = filename.capacity();
 					openStruct.lpstrInitialDir =
-						htmlInventory->getLastSavePath();
+						modelWindow->getPartsListDir(htmlInventory).c_str();
+						//htmlInventory->getLastSavePath();
 					openStruct.lpstrTitle =
 						TCLocalStrings::get("GeneratePartsList");
 					openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |

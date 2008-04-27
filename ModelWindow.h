@@ -15,6 +15,7 @@
 class LDrawModelViewer;
 class TCStringArray;
 class CUIWindowResizer;
+class LDHtmlInventory;
 
 #define POLL_NONE 0
 #define POLL_PROMPT 1
@@ -133,6 +134,7 @@ public:
 	static bool chDirFromFilename(const char* filename, char* outFilename);
 	static int roundUp(int value, int nearest);
 	static const char *alertClass(void) { return "ModelWindowAlert"; }
+	std::string getPartsListDir(LDHtmlInventory *htmlInventory);
 protected:
 	virtual ~ModelWindow(void);
 	virtual void dealloc(void);
@@ -273,6 +275,9 @@ protected:
 	virtual void updateSaveHeight(void);
 	virtual void updateSaveDigits(void);
 	virtual void updateStepSuffix(void);
+	virtual std::string getSnapshotDir(void);
+	static std::string defaultDir(LDPreferences::DefaultDirMode mode,
+		const char *lastPath, const char *defaultPath);
 	virtual bool getSaveFilename(char* saveFilename, int len);
 	virtual bool shouldOverwriteFile(char* filename);
 	virtual bool calcSaveFilename(char* saveFilename, int len);
