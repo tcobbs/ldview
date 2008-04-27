@@ -216,38 +216,17 @@
 	
 	if (itemTree != NULL)
 	{
-		float l = 0.85f;
-		float l2 = 1.0f - ((1.0f - l) * 0.5);
-		BOOL haveBackground = YES;
-
-		switch (itemTree->getLineType())
+		TCFloat r, g, b;
+		
+		if (itemTree->getBackgroundRGB(r, g, b))
 		{
-			case LDLLineTypeComment:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:1.0f blue:l alpha:1.0f]];
-				break;
-			case LDLLineTypeLine:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:l blue:l alpha:1.0f]];
-				break;
-			case LDLLineTypeTriangle:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:l blue:1.0f alpha:1.0f]];
-				break;
-			case LDLLineTypeQuad:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:1.0f blue:1.0f alpha:1.0f]];
-				break;
-			case LDLLineTypeConditionalLine:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:l2 blue:l alpha:1.0f]];
-				break;
-			case LDLLineTypeEmpty:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:l green:l blue:l alpha:1.0f]];
-				break;
-			case LDLLineTypeUnknown:
-				[cell setBackgroundColor:[NSColor colorWithCalibratedRed:1.0f green:1.0f blue:l alpha:1.0f]];
-				break;
-			default:
-				haveBackground = NO;
-				break;
+			[cell setBackgroundColor:[NSColor colorWithCalibratedRed:r green:g blue:b alpha:1.0f]];
+			[cell setDrawsBackground:YES];
 		}
-		[cell setDrawsBackground:haveBackground];
+		else
+		{
+			[cell setDrawsBackground:NO];
+		}
 	}
 }
 
