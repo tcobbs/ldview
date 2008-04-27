@@ -308,6 +308,9 @@ bool LDModelTree::getRGB(
 		g = l2;
 		break;
 	case LDLLineTypeEmpty:
+		r = l2;
+		g = l2;
+		b = l2;
 		break;
 	case LDLLineTypeUnknown:
 		r = h;
