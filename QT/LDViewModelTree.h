@@ -21,6 +21,8 @@ public:
 					QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel);
 	~LDViewModelTree();
 	void show(void);
+	void showOptions(),hideOptions();
+	void toggleOptions();
 
 public slots:
 	void itemexpanded(QListViewItem *item);
@@ -50,6 +52,7 @@ protected:
 	LDLMainModel *mainmodel;
 	Preferences *preferences;
 	QLabel *messageText;
+	bool optionsShown;
 };
 
 #endif // __LDVIEWMODELTREE_H__

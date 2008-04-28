@@ -8,6 +8,8 @@
 #include <qstring.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
+#include <qgroupbox.h>
+#include <qpushbutton.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
@@ -19,8 +21,8 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 	modeltree(NULL),
 	m_modelWindow(modelViewer),
     mainmodel(NULL),
-	preferences(preferences)
-	
+	preferences(preferences),
+	optionsShown(true)
 {
 	preferences = pref;
 	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
@@ -204,3 +206,29 @@ void LDViewModelTree::setModelWindow(ModelViewerWidget *modelWindow)
     setModel(m_modelWindow->getModelViewer()->getMainModel());
 }
 
+void LDViewModelTree::hideOptions()
+{
+//	resize(size()-QSize(showLinesBox->size().width(),0));
+	optionsShown = false;
+	showLinesBox->hide();
+	optionsButton->setText(optionsButton->text().replace(QChar('<'),
+														 QChar('>')));
+
+}
+
+void LDViewModelTree::showOptions()
+{
+    optionsShown = true;
+    showLinesBox->show();
+//	resize(size()+QSize(showLinesBox->size().width(),0));
+    optionsButton->setText(optionsButton->text().replace(QChar('>'),
+													  	 QChar('<')));
+}
+
+void LDViewModelTree::toggleOptions()
+{
+	if (optionsShown)
+		hideOptions();
+	else
+		showOptions();
+}
