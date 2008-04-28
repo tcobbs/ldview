@@ -15,6 +15,7 @@
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDSnapshotTaker.h>
 #include "LDViewBoundingBox.h"
+#include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
 
 class LDrawModelViewer;
@@ -126,6 +127,7 @@ public:
     void doRightViewAngle(void);
     void doTopViewAngle(void);
     void doBottomViewAngle(void);
+	void doLatLongViewAngle(void);
     void doIsoViewAngle(void);
     void doSaveDefaultViewAngle(void);
 	void doShowViewInfo(void);
@@ -275,6 +277,7 @@ protected:
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
     BoundingBox *boundingbox;
+	LatitudeLongitude *latitudelongitude;
 	LDViewModelTree *modeltree;
 	AboutPanel *aboutPanel;
 	HelpPanel *helpContents;
