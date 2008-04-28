@@ -17,7 +17,8 @@ CCOBJS = $(OBJDIR)\LDVExtensionsSetup.obj \
 	 $(OBJDIR)\TbButtonInfo.obj \
 	 $(OBJDIR)\ToolbarStrip.obj \
 	 $(OBJDIR)\PartsListDialog.obj \
-	 $(OBJDIR)\BoundingBoxDialog.obj
+	 $(OBJDIR)\BoundingBoxDialog.obj \
+	 $(OBJDIR)\LatLonDialog.obj
 
 !IF DEFINED(DEBUG)
 OBJDIR = Debug
