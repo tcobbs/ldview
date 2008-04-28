@@ -105,6 +105,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	jpegoptions(NULL),
 	extensionsPanel(NULL),
     boundingbox(new BoundingBox(this)),
+	latitudelongitude(new LatitudeLongitude(this)),
 	modeltree(new LDViewModelTree(preferences,this)),
 	aboutPanel(NULL),
 	helpContents(NULL),
@@ -3192,6 +3193,21 @@ void ModelViewerWidget::doBottomViewAngle(void)
 	modelViewer->setZoomSpeed(0.0f);
 	modelViewer->resetView(LDVAngleBottom);
 	startPaintTimer();
+	unlock();
+}
+
+void ModelViewerWidget::doLatLongViewAngle(void)
+{
+    lock();
+    if (loading)
+    {
+        if (app)
+        {
+            app->beep();
+        }
+        return;
+    }
+	latitudelongitude->exec();
 	unlock();
 }
 																																							 

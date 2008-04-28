@@ -209,6 +209,11 @@ void LDView::bottomViewAngle()
     modelViewer->doBottomViewAngle();
 }
 
+void LDView::latLongViewAngle()
+{
+    modelViewer->doLatLongViewAngle();
+}
+
 void LDView::isoViewAngle()
 {
     modelViewer->doIsoViewAngle();

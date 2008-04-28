@@ -182,6 +182,7 @@
             <action name="rightViewAngleAction"/>
             <action name="topViewAngleAction"/>
             <action name="bottomViewAngleAction"/>
+            <action name="latLongViewAngleAction"/>
             <action name="isoViewAngleAction"/>
             <separator/>
             <action name="saveDefaultViewAngleAction"/>
@@ -837,6 +838,17 @@
         </action>
         <action>
             <property name="name">
+                <cstring>latLongViewAngleAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>Specify latitude/longitude</string>
+            </property>
+            <property name="accel">
+                <string>Ctrl+9</string>
+            </property>
+        </action>
+        <action>
+            <property name="name">
                 <cstring>isoViewAngleAction</cstring>
             </property>
             <property name="menuText">
@@ -1286,6 +1298,12 @@
         <slot>bottomViewAngle()</slot>
     </connection>
     <connection>
+        <sender>latLongViewAngleAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>latLongViewAngle()</slot>
+    </connection>
+    <connection>
         <sender>isoViewAngleAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1400,6 +1418,7 @@
     <slot>rightViewAngle()</slot>
     <slot>topViewAngle()</slot>
     <slot>bottomViewAngle()</slot>
+    <slot>latLongViewAngle()</slot>
     <slot>isoViewAngle()</slot>
     <slot>saveDefaultViewAngle()</slot>
     <slot>fileCancelLoad()</slot>
