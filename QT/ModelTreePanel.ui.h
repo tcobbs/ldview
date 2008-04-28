@@ -41,3 +41,7 @@ void ModelTreePanel::itemexpanded(QListViewItem *item)
 {
 }
 
+void ModelTreePanel::toggleOptions()
+{
+}
+

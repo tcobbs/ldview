@@ -92,196 +92,92 @@
                         <cstring>optionsButton</cstring>
                     </property>
                     <property name="text">
-                        <string>Options</string>
+                        <string>Options &lt;&lt;</string>
                     </property>
                 </widget>
             </vbox>
         </widget>
-        <widget class="QLayoutWidget">
+        <widget class="QGroupBox">
             <property name="name">
-                <cstring>Layout7</cstring>
+                <cstring>showLinesBox</cstring>
+            </property>
+            <property name="title">
+                <string>Show lines</string>
             </property>
             <vbox>
                 <property name="name">
                     <cstring>unnamed</cstring>
                 </property>
                 <property name="margin">
-                    <number>0</number>
+                    <number>11</number>
                 </property>
                 <property name="spacing">
-                    <number>6</number>
+                    <number>4</number>
                 </property>
-                <widget class="QLayoutWidget">
+                <widget class="QCheckBox">
                     <property name="name">
-                        <cstring>Layout6</cstring>
+                        <cstring>commentButton</cstring>
                     </property>
-                    <hbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>0</number>
-                        </property>
-                        <property name="spacing">
-                            <number>0</number>
-                        </property>
-                        <widget class="QLabel">
-                            <property name="name">
-                                <cstring>TextLabel1</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Show lines</string>
-                            </property>
-                        </widget>
-                        <spacer>
-                            <property name="name">
-                                <cstring>Spacer1_2</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Horizontal</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Fixed</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>16</width>
-                                    <height>20</height>
-                                </size>
-                            </property>
-                        </spacer>
-                    </hbox>
+                    <property name="text">
+                        <string>Comment</string>
+                    </property>
                 </widget>
-                <widget class="QLayoutWidget">
+                <widget class="QCheckBox">
                     <property name="name">
-                        <cstring>Layout4</cstring>
+                        <cstring>modelButton</cstring>
                     </property>
-                    <hbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>0</number>
-                        </property>
-                        <property name="spacing">
-                            <number>0</number>
-                        </property>
-                        <spacer>
-                            <property name="name">
-                                <cstring>Spacer1</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Horizontal</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Fixed</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>16</width>
-                                    <height>20</height>
-                                </size>
-                            </property>
-                        </spacer>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout1</cstring>
-                            </property>
-                            <vbox>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>6</number>
-                                </property>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>commentButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Comment</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>modelButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Model</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>lineButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Line</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>triangleButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Triangle</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>quadButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Quad</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>conditionalLineButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Conditional line</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>emptyButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Empty</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>unknownButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Unknown</string>
-                                    </property>
-                                </widget>
-                            </vbox>
-                        </widget>
-                    </hbox>
+                    <property name="text">
+                        <string>Model</string>
+                    </property>
                 </widget>
-                <spacer>
+                <widget class="QCheckBox">
                     <property name="name">
-                        <cstring>Spacer3</cstring>
+                        <cstring>lineButton</cstring>
                     </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
+                    <property name="text">
+                        <string>Line</string>
                     </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>triangleButton</cstring>
                     </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
+                    <property name="text">
+                        <string>Triangle</string>
                     </property>
-                </spacer>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>quadButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Quad</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>conditionalLineButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Conditional line</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>emptyButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Empty</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>unknownButton</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Unknown</string>
+                    </property>
+                </widget>
             </vbox>
         </widget>
     </hbox>
@@ -343,20 +239,27 @@
         <receiver>ModelTreePanel</receiver>
         <slot>itemexpanded(QListViewItem*)</slot>
     </connection>
+    <connection>
+        <sender>optionsButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ModelTreePanel</receiver>
+        <slot>toggleOptions()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" implDecl="in declaration">ModelTreePanel.ui.h</include>
 </includes>
 <slots>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">model()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">comment()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">unknown()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">empty()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">quad()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">line()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">triangle()</slot>
-    <slot access="public" specifier="virtual" language="C++" returnType="void">conditionalLine()</slot>
-	<slot access="public" specifier="virtual" language="C++" returnType="void">itemexpanded(QListViewItem*)</slot>
+    <slot>model()</slot>
+    <slot>comment()</slot>
+    <slot>unknown()</slot>
+    <slot>empty()</slot>
+    <slot>quad()</slot>
+    <slot>line()</slot>
+    <slot>triangle()</slot>
+    <slot>conditionalLine()</slot>
+	<slot>itemexpanded(QListViewItem*)</slot>
+    <slot>toggleOptions()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
