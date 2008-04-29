@@ -80,7 +80,7 @@
                     <property name="name">
                         <cstring>Layout38</cstring>
                     </property>
-                    <hbox>
+                    <grid>
                         <property name="name">
                             <cstring>unnamed</cstring>
                         </property>
@@ -90,12 +90,15 @@
                         <property name="spacing">
                             <number>4</number>
                         </property>
-                        <widget class="QGroupBox">
+                        <widget class="QGroupBox" row="0" column="0">
                             <property name="name">
-                                <cstring>SeriesBox</cstring>
+                                <cstring>seriesEnabledButton</cstring>
                             </property>
                             <property name="title">
                                 <string>Save snapshot series</string>
+                            </property>
+                            <property name="checkable">
+                                <bool>true</bool>
                             </property>
                             <vbox>
                                 <property name="name">
@@ -107,14 +110,6 @@
                                 <property name="spacing">
                                     <number>4</number>
                                 </property>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>seriesEnabledButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Enabled</string>
-                                    </property>
-                                </widget>
                                 <widget class="QLayoutWidget">
                                     <property name="name">
                                         <cstring>Layout27</cstring>
@@ -189,12 +184,15 @@
                                 </widget>
                             </vbox>
                         </widget>
-                        <widget class="QGroupBox">
+                        <widget class="QGroupBox" row="1" column="0">
                             <property name="name">
-                                <cstring>sizeBox</cstring>
+                                <cstring>sizeEnabledButton</cstring>
                             </property>
                             <property name="title">
                                 <string>Save image with specific size</string>
+                            </property>
+                            <property name="checkable">
+                                <bool>true</bool>
                             </property>
                             <vbox>
                                 <property name="name">
@@ -206,14 +204,6 @@
                                 <property name="spacing">
                                     <number>4</number>
                                 </property>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>sizeEnabledButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Enabled</string>
-                                    </property>
-                                </widget>
                                 <widget class="QLayoutWidget">
                                     <property name="name">
                                         <cstring>Layout37</cstring>
@@ -342,30 +332,14 @@
                                 </widget>
                             </vbox>
                         </widget>
-                    </hbox>
-                </widget>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>Layout38</cstring>
-                    </property>
-                    <hbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>0</number>
-                        </property>
-                        <property name="spacing">
-                            <number>4</number>
-                        </property>
-                        <widget class="QGroupBox">
+                        <widget class="QGroupBox" row="0" column="1">
                             <property name="name">
                                 <cstring>pbufferBox</cstring>
                             </property>
                             <property name="title">
                                 <string>Misc</string>
                             </property>
-                            <hbox>
+                            <vbox>
                                 <property name="name">
                                     <cstring>unnamed</cstring>
                                 </property>
@@ -383,9 +357,52 @@
                                         <string>Don't use Pixel Buffer</string>
                                     </property>
                                 </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>transparentBackgroundButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Transparent Background</string>
+                                    </property>
+                                </widget>
+                               <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>autoCropButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Auto-crop</string>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                        <widget class="QGroupBox" row="1" column="1">
+                            <property name="name">
+                                <cstring>zoomtofitBox</cstring>
+                            </property>
+                            <property name="title">
+                                <string>Zoom to Fit</string>
+                            </property>
+                            <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>11</number>
+                                </property>
+                                <property name="spacing">
+                                    <number>4</number>
+                                </property>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>zoomtofitEnabledButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Enabled</string>
+                                    </property>
+                                </widget>
                                 <spacer>
                                     <property name="name">
-                                        <cstring>Spacer30</cstring>
+                                        <cstring>Spacer28</cstring>
                                     </property>
                                     <property name="orientation">
                                         <enum>Horizontal</enum>
@@ -402,67 +419,7 @@
                                 </spacer>
                             </hbox>
                         </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout44</cstring>
-                            </property>
-                            <vbox>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>4</number>
-                                </property>
-                                <widget class="QGroupBox">
-                                    <property name="name">
-                                        <cstring>zoomtofitBox</cstring>
-                                    </property>
-                                    <property name="title">
-                                        <string>Zoom to Fit</string>
-                                    </property>
-                                    <hbox>
-                                        <property name="name">
-                                            <cstring>unnamed</cstring>
-                                        </property>
-                                        <property name="margin">
-                                            <number>11</number>
-                                        </property>
-                                        <property name="spacing">
-                                            <number>4</number>
-                                        </property>
-                                        <widget class="QCheckBox">
-                                            <property name="name">
-                                                <cstring>zoomtofitEnabledButton</cstring>
-                                            </property>
-                                            <property name="text">
-                                                <string>Enabled</string>
-                                            </property>
-                                        </widget>
-                                        <spacer>
-                                            <property name="name">
-                                                <cstring>Spacer28</cstring>
-                                            </property>
-                                            <property name="orientation">
-                                                <enum>Horizontal</enum>
-                                            </property>
-                                            <property name="sizeType">
-                                                <enum>Expanding</enum>
-                                            </property>
-                                            <property name="sizeHint">
-                                                <size>
-                                                    <width>20</width>
-                                                    <height>20</height>
-                                                </size>
-                                            </property>
-                                        </spacer>
-                                    </hbox>
-                                </widget>
-                            </vbox>
-                        </widget>
-                    </hbox>
+                    </grid>
                 </widget>
                 <spacer>
                     <property name="name">
@@ -562,13 +519,13 @@
 <connections>
     <connection>
         <sender>sizeEnabledButton</sender>
-        <signal>clicked()</signal>
+        <signal>toggled(bool)</signal>
         <receiver>SnapshotSettingsPanel</receiver>
         <slot>doEnabledSize()</slot>
     </connection>
     <connection>
         <sender>seriesEnabledButton</sender>
-        <signal>clicked()</signal>
+        <signal>toggled(bool)</signal>
         <receiver>SnapshotSettingsPanel</receiver>
         <slot>doEnabledSeries()</slot>
     </connection>

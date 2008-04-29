@@ -6,6 +6,7 @@
 #include <TCFoundation/mystring.h>
 #include <qspinbox.h>
 #include <qcheckbox.h>
+#include <qgroupbox.h>
 #include <qpushbutton.h>
 #include <qstring.h>
 #include <qlabel.h>
@@ -37,9 +38,9 @@ void SnapshotSettings::reflectSettings(void)
     heightBox->setValue(TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false));
     setButtonState(zoomtofitEnabledButton,
 		TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false));
-	setButtonState(seriesEnabledButton,
+	seriesEnabledButton->setChecked(
 		TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0);
-	setButtonState(sizeEnabledButton,
+	sizeEnabledButton->setChecked(
 		TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
 	setButtonState(pbufferEnabledButton,
 		TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 1, false));
