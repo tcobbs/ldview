@@ -15,9 +15,8 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>
 
-LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelViewer,
-								QWidget* parent , const char* name , WFlags fl )
-	:ModelTreePanel(parent, name, fl),
+LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelViewer)
+	:ModelTreePanel(),
 	modeltree(NULL),
 	m_modelWindow(modelViewer),
     mainmodel(NULL),
