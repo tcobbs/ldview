@@ -14,6 +14,7 @@
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 
 LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelViewer)
 	:ModelTreePanel(),
@@ -29,6 +30,11 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 	modelTreeView->setSorting(-1);
 	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),
 		(TCObject*)this,(TCAlertCallback)&LDViewModelTree::modelAlertCallback);
+	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
+    {
+        hideOptions();
+    }
+
 }
 
 LDViewModelTree::~LDViewModelTree() { }
@@ -230,4 +236,6 @@ void LDViewModelTree::toggleOptions()
 		hideOptions();
 	else
 		showOptions();
+	TCUserDefaults::setBoolForKey(optionsShown, MODEL_TREE_OPTIONS_SHOWN_KEY,
+								  false);
 }
