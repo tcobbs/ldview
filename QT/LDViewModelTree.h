@@ -17,8 +17,7 @@ class LDViewModelTree : public ModelTreePanel
 {
 //	Q_OBJECT
 public:
-	LDViewModelTree(Preferences *preferences, ModelViewerWidget *modelViewer,
-					QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel);
+	LDViewModelTree(Preferences *preferences, ModelViewerWidget *modelViewer);
 	~LDViewModelTree();
 	void show(void);
 	void showOptions(),hideOptions();
