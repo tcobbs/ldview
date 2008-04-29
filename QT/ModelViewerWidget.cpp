@@ -978,7 +978,7 @@ void ModelViewerWidget::wheelEvent(QWheelEvent *event)
 		return;
 	}
 	if (!inputHandler->mouseWheel(convertKeyModifiers(event->state()),
-		(TCFloat)event->delta() * 0.1f))
+		(TCFloat)event->delta() * 0.5f))
 	{
 		event->ignore();
 	}
@@ -2536,7 +2536,8 @@ bool ModelViewerWidget::staticImageProgressCallback(const wchar_t* message,
 }
 
 bool ModelViewerWidget::writeImage(char *filename, int width, int height,
-                             TCByte *buffer, char *formatName, bool saveAlpha)
+                             TCByte *buffer, const char *formatName,
+							 bool saveAlpha)
 {
     TCImage *image = new TCImage;
     bool retValue;

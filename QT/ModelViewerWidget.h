@@ -111,7 +111,7 @@ public:
 	static bool staticImageProgressCallback(const wchar_t* message,
 		float progress, void* userData);
 	bool writeImage(char *filename, int width, int height, TCByte *buffer,
-		char *formatName, bool saveAlpha = false);
+		const char *formatName, bool saveAlpha = false);
 	bool saveImage(char *filename, int imageWidth, int imageHeight);
 	bool writePng(char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);

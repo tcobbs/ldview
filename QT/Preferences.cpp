@@ -817,26 +817,37 @@ void Preferences::setToolBar(bool value)
 char *Preferences::getLastOpenPath(char *pathKey)
 {
 	char *path;
+	const char *constPathKey;
 
-	if (!pathKey)
+	if (pathKey)
 	{
-		pathKey = LAST_OPEN_PATH_KEY;
+		constPathKey = pathKey;
 	}
-	path = TCUserDefaults::stringForKey(pathKey, NULL, false);
+	else
+	{
+		constPathKey = LAST_OPEN_PATH_KEY;
+	}
+	path = TCUserDefaults::stringForKey(constPathKey, NULL, false);
 	if (!path)
 	{
-		path = "/dos/c/ldraw";
+		path = copyString("/dos/c/ldraw");
 	}
 	return path;
 }
 
 void Preferences::setLastOpenPath(const char *path, char *pathKey)
 {
-	if (!pathKey)
+	const char *constPathKey;
+
+	if (pathKey)
 	{
-		pathKey = LAST_OPEN_PATH_KEY;
+		constPathKey = pathKey;
 	}
-	TCUserDefaults::setStringForKey(path, pathKey, false);
+	else
+	{
+		constPathKey = LAST_OPEN_PATH_KEY;
+	}
+	TCUserDefaults::setStringForKey(path, constPathKey, false);
 }
 
 char *Preferences::getLDrawDir(void)
