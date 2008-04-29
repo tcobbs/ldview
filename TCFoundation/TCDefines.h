@@ -5,8 +5,8 @@
 // The following shouldn't be necessary here, but due to bugs in Microsoft's
 // precompiled headers, it is.  The warning being disabled below is the one
 // that warns about identifiers longer than 255 characters being truncated to
-// 255 characters in the debug info.
-#pragma warning(disable : 4786 4702)
+// 255 characters in the debug info.  (Also, "not inlined", and one other.)
+#pragma warning(disable : 4786 4702 4710)
 
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_NONSTDC_NO_DEPRECATE
