@@ -3032,7 +3032,7 @@ extern void APIENTRY glGenOcclusionQueriesNV(GLsizei n, GLuint *ids);
 extern void APIENTRY glDeleteOcclusionQueriesNV(GLsizei n, const GLuint *ids);
 extern void APIENTRY glIsOcclusionQueryNV(GLuint id);
 extern void APIENTRY glBeginOcclusionQueryNV(GLuint id);
-extern void APIENTRY glEndOcclusionQueryNV(GLvoid);
+extern void APIENTRY glEndOcclusionQueryNV(/*GLvoid*/);
 extern void APIENTRY glGetOcclusionQueryivNV(GLuint id, GLenum pname, GLint *params);
 extern void APIENTRY glGetOcclusionQueryuivNV(GLuint id, GLenum pname, GLuint *params);
 #endif
@@ -3040,7 +3040,7 @@ typedef void (APIENTRY * PFNGLGENOCCLUSIONQUERIESNVPROC) (GLsizei n, GLuint *ids
 typedef void (APIENTRY * PFNGLDELETEOCCLUSIONQUERIESNVPROC) (GLsizei n, const GLuint *ids);
 typedef void (APIENTRY * PFNGLISOCCLUSIONQUERYNVPROC) (GLuint id);
 typedef void (APIENTRY * PFNGLBEGINOCCLUSIONQUERYNVPROC) (GLuint id);
-typedef void (APIENTRY * PFNGLENDOCCLUSIONQUERYNVPROC) (GLvoid);
+typedef void (APIENTRY * PFNGLENDOCCLUSIONQUERYNVPROC) (/*GLvoid*/);
 typedef void (APIENTRY * PFNGLGETOCCLUSIONQUERYIVNVPROC) (GLuint id, GLenum pname, GLint *params);
 typedef void (APIENTRY * PFNGLGETOCCLUSIONQUERYUIVNVPROC) (GLuint id, GLenum pname, GLuint *params);
 #endif
@@ -3072,10 +3072,10 @@ typedef void (APIENTRY * PFNGLPOINTPARAMETERIVNVPROC) (GLenum pname, const int *
 #ifndef GL_NV_primitive_restart
 #define GL_NV_primitive_restart 1
 #ifdef GL_GLEXT_PROTOTYPES
-extern void APIENTRY glPrimitiveRestartNV(GLvoid);
+extern void APIENTRY glPrimitiveRestartNV(/*GLvoid*/);
 extern void APIENTRY glPrimitiveRestartIndexNV(GLuint index);
 #endif
-typedef void (APIENTRY * PFNGLPRIMITIVERESTARTNVPROC) (GLvoid);
+typedef void (APIENTRY * PFNGLPRIMITIVERESTARTNVPROC) (/*GLvoid*/);
 typedef void (APIENTRY * PFNGLPRIMITIVERESTARTINDEXNVPROC) (GLuint index);
 #endif
 
