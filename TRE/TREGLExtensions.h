@@ -66,9 +66,10 @@ public:
 		return sm_glGetBufferPointervARB;
 	}
 
-	static bool checkForExtension(char* extension, bool force = false);
-	static bool checkForExtension(char* extensionsString, char* extension,
+	static bool checkForExtension(const char* extension,
 		bool force = false);
+	static bool checkForExtension(const char* extensionsString,
+		const char* extension, bool force = false);
 	static bool haveNvMultisampleFilterHintExtension(bool force = false);
 	static bool haveVARExtension(bool force = false);
 	static bool haveMultiDrawArraysExtension(bool force = false);

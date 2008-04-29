@@ -192,8 +192,8 @@ bool TREGLExtensions::haveVBOExtension(bool force)
 		checkForExtension("GL_ARB_vertex_buffer_object");
 }
 
-bool TREGLExtensions::checkForExtension(char* extensionsString,
-										char* extension, bool force)
+bool TREGLExtensions::checkForExtension(const char* extensionsString,
+										const char* extension, bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
 		false) != 0 || sm_tempDisable;
@@ -201,7 +201,7 @@ bool TREGLExtensions::checkForExtension(char* extensionsString,
 	if ((!ignore || force) && extensionsString)
 	{
 		int extensionLen = strlen(extension);
-		char* extensions = extensionsString;
+		const char* extensions = extensionsString;
 
 		while (extensions)
 		{
@@ -218,7 +218,7 @@ bool TREGLExtensions::checkForExtension(char* extensionsString,
 	return false;
 }
 
-bool TREGLExtensions::checkForExtension(char* extension, bool force)
+bool TREGLExtensions::checkForExtension(const char* extension, bool force)
 {
 	return checkForExtension(sm_glExtensions, extension, force);
 }
