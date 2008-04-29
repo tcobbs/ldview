@@ -116,7 +116,8 @@ void TCUnzip::unzipChildExec(const char *filename, const char *outputDir)
 
 		if (chdir(outputDir) == 0)
 		{
-			char *const argv[] = {unzipPath, "-o", zipFile, NULL};
+			char dashO[] = "-o";
+			char *const argv[] = {unzipPath, dashO, zipFile, NULL};
 
 			// Squash the console output from the unzip program.
 			freopen("/dev/null", "w", stdout);
