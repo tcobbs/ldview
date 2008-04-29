@@ -17,7 +17,7 @@ class TCExport TCImageFormat : public TCAlertSender
 		virtual bool loadFile(TCImage *image, FILE *file) = 0;
 		virtual bool saveFile(TCImage *image, const char *filename);
 		virtual bool saveFile(TCImage *image, FILE *file) = 0;
-		char *getName(void) { return name; }
+		const char *getName(void) const { return name; }
 		virtual void setProgressCallback(TCImageProgressCallback value,
 			void *userData)
 		{
@@ -30,7 +30,7 @@ class TCExport TCImageFormat : public TCAlertSender
 		virtual void dealloc(void);
 		virtual bool callProgressCallback(CUCSTR message, float progress);
 
-		char *name;
+		const char *name;
 		TCImageProgressCallback progressCallback;
 		void *progressUserData;
 };
