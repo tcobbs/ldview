@@ -561,6 +561,18 @@ void LDLModel::initCheckDirs()
 	sm_checkDirs.push_back("/Applications/Bricksmith/LDraw");
 #else // __APPLE__
 	sm_checkDirs.push_back("/usr/local/ldraw");
+	const char *homeDir = getenv("HOME");
+	if (homeDir != NULL)
+	{
+		char *cleanHome = cleanedUpPath(homeDir);
+		std::string homeLDraw;
+
+		stripTrailingPathSeparators(cleanHome);
+		homeLDraw = cleanHome;
+		delete cleanHome;
+		homeLDraw += "/ldraw";
+		sm_checkDirs.push_back(homeLDraw);
+	}
 #endif // __APPLE__
 #endif // WIN32
 	char *ldviewDir = copyString(TCUserDefaults::getAppPath());
