@@ -87,13 +87,40 @@
                         <enum>NoColumn</enum>
                     </property>
                 </widget>
-                <widget class="QPushButton">
+                <widget class="QLayoutWidget">
                     <property name="name">
-                        <cstring>optionsButton</cstring>
+                        <cstring>layout2</cstring>
                     </property>
-                    <property name="text">
-                        <string>Options &lt;&lt;</string>
-                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <spacer>
+                            <property name="name">
+                                <cstring>spacer1</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>40</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>optionsButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Options &lt;&lt;</string>
+                            </property>
+                        </widget>
+                    </hbox>
                 </widget>
             </vbox>
         </widget>
@@ -185,55 +212,55 @@
 <toolbars>
 </toolbars>
 <connections>
-    <connection language="C++">
+    <connection>
         <sender>commentButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>comment()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>modelButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>model()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>lineButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>line()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>triangleButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>triangle()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>quadButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>quad()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>conditionalLineButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>conditionalLine()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>emptyButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>empty()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>unknownButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
         <slot>unknown()</slot>
     </connection>
-    <connection language="C++">
+    <connection>
         <sender>modelTreeView</sender>
         <signal>expanded(QListViewItem*)</signal>
         <receiver>ModelTreePanel</receiver>
