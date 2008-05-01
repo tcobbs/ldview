@@ -481,6 +481,8 @@ LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
 	{
 		if (colorNumber >= 0x2000000 && colorNumber < 0x4000000)
 		{
+			// 0x2RRGGBB = opaque RGB
+			// 0x3RRGGBB = transparent RGB
 			r = (colorNumber & 0xFF0000) >> 16;
 			g = (colorNumber & 0xFF00) >> 8;
 			b = (colorNumber & 0xFF);
@@ -489,30 +491,40 @@ LDLColorInfo LDLPalette::getAnyColorInfo(int colorNumber)
 				a = transA;
 			}
 		}
-		else if ((colorNumber >= 0x4000000 && colorNumber < 0x5000000) |
-			(colorNumber >= 0x6000000 && colorNumber < 0x7000000))
+		else if (colorNumber >= 0x4000000 && colorNumber < 0x5000000)
 		{
+			// 0x4RGBRGB = opaque dither
 			r = (((colorNumber & 0xF00000) >> 20) * 17 +
 				((colorNumber & 0xF00) >> 8) * 17) / 2;
 			g = (((colorNumber & 0xF0000) >> 16) * 17 +
 				((colorNumber & 0xF0) >> 4) * 17) / 2;
 			b = (((colorNumber & 0xF000) >> 12) * 17 +
 				(colorNumber & 0xF) * 17) / 2;
+			a = transA;
+		}
+		else if (colorNumber >= 0x5000000 && colorNumber < 0x6000000)
+		{
+			// 0x5RGBxxx = transparent dither (xxx is ignored)
+			r = ((colorNumber & 0xF00000) >> 20) * 17;
+			g = ((colorNumber & 0xF0000) >> 16) * 17;
+			b = ((colorNumber & 0xF000) >> 12) * 17;
 			if (colorNumber >= 0x6000000 && colorNumber < 0x7000000)
 			{
 				a = transA;
 			}
 		}
-		else if ((colorNumber >= 0x5000000 && colorNumber < 0x6000000) ||
-			(colorNumber >= 0x7000000 && colorNumber < 0x8000000))
+		else if (colorNumber >= 0x6000000 && colorNumber < 0x7000000)
 		{
-			r = ((colorNumber & 0xF00000) >> 20) * 17;
-			g = ((colorNumber & 0xF0000) >> 16) * 17;
-			b = ((colorNumber & 0xF000) >> 12) * 17;
-			if (colorNumber >= 0x5000000 && colorNumber < 0x7000000)
-			{
-				a = transA;
-			}
+			// 0x6xxxRGB = transparent dither (xxx is ignored)
+			r = ((colorNumber & 0xF00) >> 8) * 17;
+			g = ((colorNumber & 0xF0) >> 4) * 17;
+			b = (colorNumber & 0xF) * 17;
+			a = transA;
+		}
+		else if (colorNumber >= 0x7000000 && colorNumber < 0x8000000)
+		{
+			// 0x7xxxxxx = invisible
+			r = g = b = a = 0;
 		}
 	}
 	initColorInfo(colorInfo, r, g, b, a);
