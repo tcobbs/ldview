@@ -29,11 +29,11 @@ class TCExport TCStringArray : public TCArray
 		virtual char* operator[](unsigned int);
 		virtual int readFile(const char*);
 		int isCaseSensitive(void) { return caseSensitive; }
-		virtual TCObject *copy(void);
+		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCStringArray(void);
 		virtual void dealloc(void);
-		virtual void copyContents(TCStringArray *otherStringArray);
+		virtual void copyContents(TCStringArray *otherStringArray) const;
 
 		int caseSensitive;
 };

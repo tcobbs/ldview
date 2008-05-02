@@ -10,7 +10,7 @@ class TCExport TCSortedStringArray : public TCStringArray
 
 		virtual int addString(const char*);
 		virtual int indexOfString(const char*);
-		virtual TCObject *copy(void);
+		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCSortedStringArray(void);
 		virtual void insertString(const char*, unsigned int = 0);

@@ -95,7 +95,7 @@ bool LDLCommentLine::parse(void)
 	return true;
 }
 
-TCObject *LDLCommentLine::copy(void)
+TCObject *LDLCommentLine::copy(void) const
 {
 	return new LDLCommentLine(*this);
 }
@@ -278,6 +278,159 @@ bool LDLCommentLine::isBFCMeta(void) const
 	}
 	return false;
 }
+
+bool LDLCommentLine::isBIMeta(void) const
+{
+	return(stringHasPrefix(m_processedLine, "0 BI "));
+}
+
+// BI
+
+// 0 BI SET <token>
+// 0 BI UNSET <token>
+// 0 BI NEXT <color> [IFSET <token>|IFNSET <token>] 
+// 0 BI START <color> [IFSET <token>|IFNSET <token>]
+// 0 BI END
+LDLCommentLine::BICommand LDLCommentLine::getBICommand(void) const
+{
+	BICommand result = BICERROR;
+
+	if (m_words->getCount() > 1)
+	{
+		if (strcasecmp((*m_words)[1], "set") == 0)
+		{
+			result = BICSet;
+		}
+		else if (strcasecmp((*m_words)[1], "unset") == 0)
+		{
+			result = BICUnset;
+		}
+		else if (strcasecmp((*m_words)[1], "next") == 0)
+		{
+			result = BICNext;
+		}
+		else if (strcasecmp((*m_words)[1], "start") == 0)
+		{
+			result = BICStart;
+		}
+		else if (strcasecmp((*m_words)[1], "end") == 0)
+		{
+			result = BICEnd;
+		}
+	}
+	return result;
+}
+
+bool LDLCommentLine::hasBIConditional(void) const
+{
+	BICommand cmd = getBICommand();
+
+	if (cmd == BICNext || cmd == BICStart)
+	{
+		// 0 BI NEXT <color> <IFcommand> <token>
+		// 0 BI START <color> <IFcommand> <token>
+		if (m_words->getCount() > 3)
+		{
+			return (strcasecmp((*m_words)[3], "ifset") == 0)
+				|| (strcasecmp((*m_words)[3], "ifnset") == 0);
+		}
+	}
+	return false;
+}
+
+bool LDLCommentLine::getBIConditional(void) const
+{
+	BICommand cmd = getBICommand();
+
+	if (cmd == BICNext || cmd == BICStart)
+	{
+		// 0 BI NEXT <color> <IFcommand>
+		// 0 BI START <color> <IFcommand>
+		if (m_words->getCount() > 3)
+		{
+			if (strcasecmp((*m_words)[3], "ifset") == 0)
+				return true;
+			else if (strcasecmp((*m_words)[3], "ifnset") == 0)
+				return false;
+		}
+	}
+	// error condition here
+	return true;
+}
+
+bool LDLCommentLine::hasBIToken(void) const
+{
+	BICommand cmd = getBICommand();
+
+	if ((cmd == BICSet || cmd == BICUnset) && m_words->getCount() > 2)
+	{
+		return true;
+	}
+	if ((cmd == BICNext || cmd == BICStart) && m_words->getCount() > 3)
+	{
+		return true;
+	}
+	return false;
+}
+
+const char *LDLCommentLine::getBIToken(void) const
+{
+	if (hasBIToken())
+	{
+		BICommand cmd = getBICommand();
+
+		// 0 BI SET <token>
+		if (cmd == BICSet || cmd == BICUnset)
+		{
+			return (*m_words)[2];
+		}
+		// 0 BI START <color> IFSET <token>
+		// 0 BI START <color> IFNSET <token>
+		// 0 BI NEXT <color> IFSET <token>
+		// 0 BI NEXT <color> IFNSET <token>
+		if (cmd == BICNext || cmd == BICStart)
+		{
+			return (*m_words)[4];
+		}
+	}
+	return 0;
+}
+
+int LDLCommentLine::getBIColorNumber(void) const
+{
+	int result = 0;
+
+	// 0 BI NEXT <color> [IF...]
+	if (m_words->getCount() > 2)
+	{
+		result = atoi((*m_words)[2]);
+	}
+	return result;
+}
+
+
+/* bool LDLCommentLine::isBICommandConditional(void) const
+{
+	bool result = false;
+
+	BICommand cmd = getBICommand();
+
+	if (BICommand == BICNext || BICommand == BICStart)
+	{
+		// 0 BI NEXT <color> <IFcommand>
+		// 0 BI START <color> <IFcommand>
+		if (m_words->getCount() > 3)
+		{
+			result = (strcasecmp((*m_words[3], "ifset") == 0)
+				|| (strcasecmp((*m_words[3], "ifnset") == 0));
+		}
+	}
+
+	return result;
+}
+*/
+
+// /BI
 
 bool LDLCommentLine::isMovedToMeta(void) const
 {

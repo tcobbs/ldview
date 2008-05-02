@@ -35,7 +35,7 @@ void TREColoredShapeGroup::dealloc(void)
 	TREShapeGroup::dealloc();
 }
 
-TCObject *TREColoredShapeGroup::copy(void)
+TCObject *TREColoredShapeGroup::copy(void) const
 {
 	return new TREColoredShapeGroup(*this);
 }

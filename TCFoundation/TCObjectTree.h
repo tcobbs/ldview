@@ -27,14 +27,14 @@ public:
 	TCObjectTree(TCTreeCompareKeyFunc compareKey, TCTreeCopyKeyFunc copyKey);
 	virtual int setObjectForKey(TCObject *object, const void *key);
 	TCObject* objectForKey(const void *key);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual void traverseTree(TCTreeTraversalFunc traversalFunc);
 protected:
 	virtual ~TCObjectTree(void);
 	virtual void dealloc(void);
 	virtual void deleteNode(TCObjectTreeNode*);
 	virtual void copyNode(TCBinaryObjectTreeNode *dstNode,
-		TCBinaryObjectTreeNode *srcNode);
+		const TCBinaryObjectTreeNode *srcNode) const;
 	virtual void traverseNode(TCBinaryObjectTreeNode *node,
 		TCTreeTraversalFunc traversalFunc);
 	virtual int removeObjectForKeyFromNode(TCBinaryObjectTreeNode *&node,

@@ -6,7 +6,7 @@
 class LDLConditionalLineLine : public LDLLineLine
 {
 public:
-	TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual int getNumControlPoints(void) const { return 2; }
 	virtual const TCVector *getControlPoints(void) const { return m_controlPoints; }

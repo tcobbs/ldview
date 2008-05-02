@@ -1176,6 +1176,15 @@ void LDrawModelViewer::reload(void)
 	flags.needsReload = false;
 }
 
+void LDrawModelViewer::setAltColor(bool value)
+{
+	if (value != flags.altColor)
+	{
+		flags.altColor = value;
+		flags.needsReparse = true;
+	}
+}
+
 void LDrawModelViewer::setUsesSpecular(bool value)
 {
 	if (value != flags.usesSpecular)

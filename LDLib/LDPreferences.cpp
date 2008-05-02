@@ -18,6 +18,7 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	NULL)
 {
 	int i;
+	SaveOpStringMap::const_iterator it;
 
 	m_globalSettings[ZOOM_MAX_KEY] = true;
 	m_globalSettings[SHOW_ERRORS_KEY] = true;
@@ -50,6 +51,10 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 	{
 		m_modelViewer->setPreferences(this);
 	}
+	setupSaveDir(SOSnapshot, SNAPSHOTS_DIR_MODE_KEY, SNAPSHOTS_DIR_KEY,
+		LAST_SNAPSHOT_DIR_KEY);
+	setupSaveDir(SOPartsList, PARTS_LISTS_DIR_MODE_KEY, PARTS_LISTS_DIR_KEY,
+		INV_LAST_SAVE_PATH_KEY);
 }
 
 LDPreferences::~LDPreferences(void)
@@ -60,6 +65,20 @@ void LDPreferences::dealloc(void)
 {
 	TCObject::release(m_modelViewer);
 	TCObject::dealloc();
+}
+
+void LDPreferences::setupSaveDir(
+	SaveOp op,
+	const std::string &dirModeKey,
+	const std::string &dirKey,
+	const std::string &lastDirKey)
+{
+	m_saveDirModeKeys[op] = dirModeKey;
+	m_saveDirKeys[op] = dirKey;
+	m_lastSaveDirKeys[op] = lastDirKey;
+	m_globalSettings[dirModeKey] = true;
+	m_globalSettings[dirKey] = true;
+	m_globalSettings[lastDirKey] = true;
 }
 
 void LDPreferences::setModelViewer(LDrawModelViewer *value)
@@ -241,6 +260,7 @@ void LDPreferences::applyEffectsSettings(void)
 		m_modelViewer->setSortTransparent(m_sortTransparent);
 		m_modelViewer->setUseStipple(m_useStipple);
 		m_modelViewer->setUsesFlatShading(m_useFlatShading);
+		m_modelViewer->setAltColor(m_altColor);
 		m_modelViewer->setPerformSmoothing(m_performSmoothing);
 	}
 }
@@ -361,10 +381,9 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 		LDLPalette::getDefaultRGBA(i, r, g, b, a);
 		setCustomColor(i, r, g, b);
 	}
-	setSnapshotsDirMode(DDMModelDir);
-	setSnapshotsDir("");
-	setPartsListsDirMode(DDMLastDir);
-	setPartsListsDir("");
+	setSaveDirDefault(SOSnapshot, DDMModelDir);
+	setSaveDirDefault(SOPartsList, DDMLastDir);
+	setSaveDirDefault(SOExport, DDMModelDir);
 	m_initializing = false;
 }
 
@@ -430,6 +449,7 @@ void LDPreferences::loadDefaultEffectsSettings(bool initializing /*= true*/)
 	setSortTransparent(true);
 	setUseStipple(false);
 	setUseFlatShading(false);
+	setAltColor(false);
 	setPerformSmoothing(true);
 	m_initializing = false;
 }
@@ -481,7 +501,7 @@ void LDPreferences::loadDefaultInventorySettings(bool initializing /*= true*/)
 	columnOrder.push_back(3);	// Color
 	columnOrder.push_back(4);	// Quantity
 	setInvColumnOrder(columnOrder);
-	setInvLastSavePath("");
+	setSaveDirDefault(SOPartsList, DDMLastDir);
 	m_initializing = false;
 }
 
@@ -520,14 +540,17 @@ void LDPreferences::loadGeneralSettings(void)
 		// Windows XP doesn't like the upper bits to be set, so mask those out.
 		m_customColors[i] = getLongSetting(key, m_customColors[i]) & 0xFFFFFF;
 	}
-	m_snapshotsDirMode = (DefaultDirMode)getIntSetting(SNAPSHOTS_DIR_MODE_KEY,
-		m_snapshotsDirMode);
-	m_snapshotsDir = getStringSetting(SNAPSHOTS_DIR_KEY, m_snapshotsDir.c_str(),
-		true);
-	m_partsListsDirMode = (DefaultDirMode)getIntSetting(
-		PARTS_LISTS_DIR_MODE_KEY, m_partsListsDirMode);
-	m_partsListsDir = getStringSetting(PARTS_LISTS_DIR_KEY,
-		m_partsListsDir.c_str(), true);
+	loadSaveDir(SOSnapshot);
+	loadSaveDir(SOPartsList);
+	loadSaveDir(SOExport);
+	//m_snapshotsDirMode = (DefaultDirMode)getIntSetting(SNAPSHOTS_DIR_MODE_KEY,
+	//	m_snapshotsDirMode);
+	//m_snapshotsDir = getStringSetting(SNAPSHOTS_DIR_KEY, m_snapshotsDir.c_str(),
+	//	true);
+	//m_partsListsDirMode = (DefaultDirMode)getIntSetting(
+	//	PARTS_LISTS_DIR_MODE_KEY, m_partsListsDirMode);
+	//m_partsListsDir = getStringSetting(PARTS_LISTS_DIR_KEY,
+	//	m_partsListsDir.c_str(), true);
 }
 
 void LDPreferences::loadLDrawSettings(void)
@@ -610,6 +633,7 @@ void LDPreferences::loadEffectsSettings(void)
 	m_sortTransparent = getBoolSetting(SORT_KEY, m_sortTransparent);
 	m_useStipple = getBoolSetting(STIPPLE_KEY, m_useStipple);
 	m_useFlatShading = getBoolSetting(FLAT_SHADING_KEY, m_useFlatShading);
+	m_altColor = getBoolSetting(ALT_COLOR_KEY, m_altColor);
 	m_performSmoothing = getBoolSetting(PERFORM_SMOOTHING_KEY,
 		m_performSmoothing);
 }
@@ -653,8 +677,9 @@ void LDPreferences::loadInventorySettings(void)
 	m_invShowTotal = getBoolSetting(INV_SHOW_TOTAL_KEY, m_invShowTotal);
 	m_invColumnOrder = getLongVectorSetting(INV_COLUMN_ORDER_KEY,
 		m_invColumnOrder);
-	m_invLastSavePath = getStringSetting(INV_LAST_SAVE_PATH_KEY,
-		m_invLastSavePath.c_str(), true);
+	loadSaveDir(SOPartsList);
+	//m_invLastSavePath = getStringSetting(INV_LAST_SAVE_PATH_KEY,
+	//	m_invLastSavePath.c_str(), true);
 }
 
 void LDPreferences::commitSettings(void)
@@ -694,10 +719,13 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 	setFullScreenRefresh(m_fullScreenRefresh, true);
 	setFov(m_fov, true);
 	setMemoryUsage(m_memoryUsage, true);
-	setSnapshotsDirMode(m_snapshotsDirMode, true);
-	setSnapshotsDir(m_snapshotsDir.c_str(), true);
-	setPartsListsDirMode(m_partsListsDirMode, true);
-	setPartsListsDir(m_partsListsDir.c_str(), true);
+	commitSaveDir(SOSnapshot);
+	commitSaveDir(SOPartsList);
+	commitSaveDir(SOExport);
+	//setSnapshotsDirMode(m_snapshotsDirMode, true);
+	//setSnapshotsDir(m_snapshotsDir.c_str(), true);
+	//setPartsListsDirMode(m_partsListsDirMode, true);
+	//setPartsListsDir(m_partsListsDir.c_str(), true);
 	if (flush)
 	{
 		TCUserDefaults::flush();
@@ -773,6 +801,7 @@ void LDPreferences::commitEffectsSettings(bool flush /*= true*/)
 	setUseStipple(m_useStipple, true);
 	setSortTransparent(m_sortTransparent, true);
 	setUseFlatShading(m_useFlatShading, true);
+	setAltColor(m_altColor, true);
 	setPerformSmoothing(m_performSmoothing, true);
 	if (flush)
 	{
@@ -823,7 +852,8 @@ void LDPreferences::commitInventorySettings(bool flush /*= true*/)
 	setInvShowFile(m_invShowFile, true);
 	setInvShowTotal(m_invShowTotal, true);
 	setInvColumnOrder(m_invColumnOrder, true);
-	setInvLastSavePath(m_invLastSavePath.c_str(), true);
+	//setInvLastSavePath(m_invLastSavePath.c_str(), true);
+	commitSaveDir(SOPartsList);
 	if (flush)
 	{
 		TCUserDefaults::flush();
@@ -1280,35 +1310,64 @@ void LDPreferences::setCustomColor(int index, int r, int g, int b, bool commit)
 	setColorSetting(m_customColors[index], r, g, b, key, commit);
 }
 
-void LDPreferences::setSnapshotsDirMode(
+void LDPreferences::setSaveDirMode(
+	SaveOp op,
 	DefaultDirMode value,
 	bool commit /*= false*/)
 {
-	int intValue = m_snapshotsDirMode;
-	
-	setSetting(intValue, value, SNAPSHOTS_DIR_MODE_KEY, commit);
-	m_snapshotsDirMode = (DefaultDirMode)intValue;
+	DefaultDirMode &mode = m_saveDirModes[op];
+	int intMode = mode;
+
+	setSetting(intMode, value, m_saveDirModeKeys[op].c_str(), commit);
+	mode = (DefaultDirMode)intMode;
 }
 
-void LDPreferences::setSnapshotsDir(const char *value, bool commit)
-{
-	setSetting(m_snapshotsDir, value, SNAPSHOTS_DIR_KEY, commit);
-}
-
-void LDPreferences::setPartsListsDirMode(
-	DefaultDirMode value,
+void LDPreferences::setSaveDir(
+	SaveOp op,
+	const char *value,
 	bool commit /*= false*/)
 {
-	int intValue = m_partsListsDirMode;
-	
-	setSetting(intValue, value, PARTS_LISTS_DIR_MODE_KEY, commit);
-	m_partsListsDirMode = (DefaultDirMode)intValue;
+	setSetting(m_saveDirs[op], value, m_saveDirKeys[op].c_str(), commit, true);
 }
 
-void LDPreferences::setPartsListsDir(const char *value, bool commit)
+void LDPreferences::setLastSaveDir(
+	SaveOp op,
+	const char *value,
+	bool commit /*= false*/)
 {
-	setSetting(m_partsListsDir, value, PARTS_LISTS_DIR_KEY, commit);
+	setSetting(m_lastSaveDirs[op], value, m_lastSaveDirKeys[op].c_str(), commit,
+		true);
 }
+
+//void LDPreferences::setSnapshotsDirMode(
+//	DefaultDirMode value,
+//	bool commit /*= false*/)
+//{
+//	int intValue = m_snapshotsDirMode;
+//	
+//	setSetting(intValue, value, SNAPSHOTS_DIR_MODE_KEY, commit);
+//	m_snapshotsDirMode = (DefaultDirMode)intValue;
+//}
+//
+//void LDPreferences::setSnapshotsDir(const char *value, bool commit)
+//{
+//	setSetting(m_snapshotsDir, value, SNAPSHOTS_DIR_KEY, commit);
+//}
+//
+//void LDPreferences::setPartsListsDirMode(
+//	DefaultDirMode value,
+//	bool commit /*= false*/)
+//{
+//	int intValue = m_partsListsDirMode;
+//	
+//	setSetting(intValue, value, PARTS_LISTS_DIR_MODE_KEY, commit);
+//	m_partsListsDirMode = (DefaultDirMode)intValue;
+//}
+//
+//void LDPreferences::setPartsListsDir(const char *value, bool commit)
+//{
+//	setSetting(m_partsListsDir, value, PARTS_LISTS_DIR_KEY, commit);
+//}
 
 // LDraw settings
 void LDPreferences::setLDrawDir(const char *value, bool commit)
@@ -1717,6 +1776,11 @@ void LDPreferences::setUseFlatShading(bool value, bool commit)
 	setSetting(m_useFlatShading, value, FLAT_SHADING_KEY, commit);
 }
 
+void LDPreferences::setAltColor(bool value, bool commit)
+{
+	setSetting(m_altColor, value, ALT_COLOR_KEY, commit);
+}
+
 
 // Primitives settings
 void LDPreferences::setAllowPrimitiveSubstitution(bool value, bool commit,
@@ -1833,10 +1897,10 @@ void LDPreferences::setInvColumnOrder(const LongVector &value, bool commit)
 	setSetting(m_invColumnOrder, value, INV_COLUMN_ORDER_KEY, commit);
 }
 
-void LDPreferences::setInvLastSavePath(const char *value, bool commit)
-{
-	setSetting(m_invLastSavePath, value, INV_LAST_SAVE_PATH_KEY, commit, true);
-}
+//void LDPreferences::setInvLastSavePath(const char *value, bool commit)
+//{
+//	setSetting(m_invLastSavePath, value, INV_LAST_SAVE_PATH_KEY, commit, true);
+//}
 
 void LDPreferences::setDefaultZoom(TCFloat value, bool commit)
 {
@@ -1938,4 +2002,93 @@ LDPreferences::LightDirection LDPreferences::getLightDirection(void)
 		return LowerRight;
 	}
 	return CustomDirection;
+}
+
+LDPreferences::DefaultDirMode LDPreferences::getSaveDirMode(SaveOp op) const
+{
+	DirModeMap::const_iterator it = m_saveDirModes.find(op);
+
+	if (it != m_saveDirModes.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		return DDMUnknown;
+	}
+}
+
+std::string LDPreferences::getSaveDir(SaveOp op) const
+{
+	SaveOpStringMap::const_iterator it = m_saveDirs.find(op);
+
+	if (it != m_saveDirs.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		return "";
+	}
+}
+
+std::string LDPreferences::getLastSaveDir(SaveOp op) const
+{
+	SaveOpStringMap::const_iterator it = m_lastSaveDirs.find(op);
+
+	if (it != m_lastSaveDirs.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		return "";
+	}
+}
+
+std::string LDPreferences::getDefaultSaveDir(
+	SaveOp op,
+	const std::string &modelFilename)
+{
+	switch (getSaveDirMode(op))
+	{
+	case DDMLastDir:
+		return getLastSaveDir(op);
+	case DDMSpecificDir:
+		return getSaveDir(op);
+	default:
+		{
+			char *temp = directoryFromPath(modelFilename.c_str());
+			std::string modelDir(temp);
+
+			delete temp;
+			return modelDir;
+		}
+	}
+}
+
+void LDPreferences::loadSaveDir(SaveOp op)
+{
+	DefaultDirMode &mode = m_saveDirModes[op];
+	std::string &dir = m_saveDirs[op];
+	std::string &lastDir = m_lastSaveDirs[op];
+
+	mode = (DefaultDirMode)getIntSetting(m_saveDirModeKeys[op].c_str(), mode);
+	dir = getStringSetting(m_saveDirKeys[op].c_str(), dir.c_str(), true);
+	lastDir = getStringSetting(m_lastSaveDirKeys[op].c_str(), lastDir.c_str(),
+		true);
+}
+
+void LDPreferences::commitSaveDir(SaveOp op)
+{
+	setSaveDirMode(op, m_saveDirModes[op], true);
+	setSaveDir(op, m_saveDirs[op].c_str(), true);
+	setLastSaveDir(op, m_lastSaveDirs[op].c_str(), true);
+}
+
+void LDPreferences::setSaveDirDefault(SaveOp op, DefaultDirMode mode)
+{
+	setSaveDirMode(op, mode);
+	setSaveDir(op, "");
+	setLastSaveDir(op, "");
 }

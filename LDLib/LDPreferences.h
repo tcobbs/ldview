@@ -29,10 +29,24 @@ public:
 	
 	enum DefaultDirMode
 	{
+		DDMUnknown		= -1,
 		DDMModelDir		= 0,
 		DDMLastDir		= 1,
 		DDMSpecificDir	= 2,
 	};
+
+	enum SaveOp
+	{
+		SOSnapshot	= 0,
+		SOFirst		= SOSnapshot,
+		SOPartsList	= 1,
+		SOExport	= 2,
+		SOLast		= SOExport
+	};
+
+	typedef std::map<SaveOp, DefaultDirMode> DirModeMap;
+	typedef std::map<SaveOp, std::string> SaveOpStringMap;
+
 	LDPreferences(LDrawModelViewer* modelViewer = NULL);
 	static const char *lightVectorChangedAlertClass(void)
 	{
@@ -89,10 +103,27 @@ public:
 	TCFloat getFov(void) { return m_fov; }
 	int getMemoryUsage(void) { return m_memoryUsage; }
 	void getCustomColor(int index, int &r, int &g, int &b);
-	DefaultDirMode getSnapshotsDirMode(void) { return m_snapshotsDirMode; }
-	std::string getSnapshotsDir(void) { return m_snapshotsDir; }
-	DefaultDirMode getPartsListsDirMode(void) { return m_partsListsDirMode; }
-	std::string getPartsListsDir(void) { return m_partsListsDir; }
+	DefaultDirMode getSaveDirMode(SaveOp op) const;
+	std::string getSaveDir(SaveOp op) const;
+	std::string getLastSaveDir(SaveOp op) const;
+	std::string getDefaultSaveDir(SaveOp op, const std::string &modelFilename);
+
+	DefaultDirMode getSnapshotsDirMode(void) const
+	{
+		return getSaveDirMode(SOSnapshot);
+	}
+	std::string getSnapshotsDir(void)
+	{
+		return getSaveDir(SOSnapshot);
+	}
+	DefaultDirMode getPartsListsDirMode(void) const
+	{
+		return getSaveDirMode(SOPartsList);
+	}
+	std::string getPartsListsDir(void) const
+	{
+		return getSaveDir(SOPartsList);
+	}
 
 	// LDraw settings
 	const char *getLDrawDir(void) { return m_ldrawDir.c_str(); }
@@ -144,6 +175,7 @@ public:
 	bool getPerformSmoothing(void) { return m_performSmoothing; }
 	bool getUseStipple(void) { return m_useStipple; }
 	bool getUseFlatShading(void) { return m_useFlatShading; }
+	bool getAltColor(void) { return m_altColor; }
 
 	// Primitives settings
 	bool getAllowPrimitiveSubstitution(void)
@@ -172,7 +204,10 @@ public:
 	bool getInvShowFile(void) { return m_invShowFile; }
 	bool getInvShowTotal(void) { return m_invShowTotal; }
 	const LongVector &getInvColumnOrder(void) { return m_invColumnOrder; }
-	const char *getInvLastSavePath(void) { return m_invLastSavePath.c_str(); }
+	const char *getInvLastSavePath(void) const
+	{
+		return getLastSaveDir(SOPartsList).c_str();
+	}
 
 	// No UI
 	bool getMultiThreaded(void) { return m_multiThreaded; }
@@ -192,10 +227,26 @@ public:
 	void setFov(TCFloat value, bool commit = false);
 	void setMemoryUsage(int value, bool commit = false);
 	void setCustomColor(int index, int r, int g, int b, bool commit = false);
-	void setSnapshotsDirMode(DefaultDirMode value, bool commit = false);
-	void setSnapshotsDir(const char *value, bool commit = false);
-	void setPartsListsDirMode(DefaultDirMode value, bool commit = false);
-	void setPartsListsDir(const char *value, bool commit = false);
+	void setSaveDirMode(SaveOp op, DefaultDirMode value, bool commit = false);
+	void setSaveDir(SaveOp op, const char *value, bool commit = false);
+	void setLastSaveDir(SaveOp op, const char *value, bool commit = false);
+
+	void setSnapshotsDirMode(DefaultDirMode value, bool commit = false)
+	{
+		setSaveDirMode(SOSnapshot, value, commit);
+	}
+	void setSnapshotsDir(const char *value, bool commit = false)
+	{
+		setSaveDir(SOSnapshot, value, commit);
+	}
+	void setPartsListsDirMode(DefaultDirMode value, bool commit = false)
+	{
+		setSaveDirMode(SOPartsList, value, commit);
+	}
+	void setPartsListsDir(const char *value, bool commit = false)
+	{
+		setSaveDir(SOPartsList, value, commit);
+	}
 	
 	// LDraw settings
 	void setLDrawDir(const char *value, bool commit = false);
@@ -251,6 +302,7 @@ public:
 	void setPerformSmoothing(bool value, bool commit = false);
 	void setUseStipple(bool value, bool commit = false);
 	void setUseFlatShading(bool value, bool commit = false);
+	void setAltColor(bool value, bool commit = false);
 
 	// Primitives settings
 	void setAllowPrimitiveSubstitution(bool value, bool commit = false,
@@ -277,7 +329,10 @@ public:
 	void setInvShowFile(bool value, bool commit = false);
 	void setInvShowTotal(bool value, bool commit = false);
 	void setInvColumnOrder(const LongVector &value, bool commit = false);
-	void setInvLastSavePath(const char *value, bool commit = false);
+	void setInvLastSavePath(const char *value, bool commit = false)
+	{
+		setLastSaveDir(SOPartsList, value, commit);
+	}
 
 	// No UI
 	void setDefaultZoom(TCFloat value, bool commit = false);
@@ -318,6 +373,7 @@ protected:
 
 	virtual void getRGB(int color, int &r, int &g, int &b);
 	virtual int getColor(int r, int g, int b);
+	virtual void commitSaveDir(SaveOp op);
 
 	// These are called from the constructor, and cannot be properly made into
 	// virtual functions.
@@ -331,6 +387,10 @@ protected:
 	void loadEffectsSettings(void);
 	void loadPrimitivesSettings(void);
 	void loadUpdatesSettings(void);
+	void setupSaveDir(SaveOp op, const std::string &dirModeKey,
+		const std::string &dirKey, const std::string &lastDirKey);
+	void loadSaveDir(SaveOp op);
+	void setSaveDirDefault(SaveOp op, DefaultDirMode mode);
 	// *************************************************************************
 
 	LDrawModelViewer* m_modelViewer;
@@ -350,10 +410,12 @@ protected:
 	TCFloat m_fov;
 	int m_memoryUsage;
 	TCULong m_customColors[16];
-	DefaultDirMode m_snapshotsDirMode;
-	std::string m_snapshotsDir;
-	DefaultDirMode m_partsListsDirMode;
-	std::string m_partsListsDir;
+	DirModeMap m_saveDirModes;
+	SaveOpStringMap m_saveDirs;
+	SaveOpStringMap m_lastSaveDirs;
+	SaveOpStringMap m_saveDirModeKeys;
+	SaveOpStringMap m_saveDirKeys;
+	SaveOpStringMap m_lastSaveDirKeys;
 
 	// LDraw settings
 	std::string m_ldrawDir;
@@ -394,6 +456,7 @@ protected:
 	bool m_performSmoothing;
 	bool m_useStipple;
 	bool m_useFlatShading;
+	bool m_altColor;
 
 	// Primitives settings
 	bool m_allowPrimitiveSubstitution;
@@ -419,7 +482,6 @@ protected:
 	bool m_invShowFile;
 	bool m_invShowTotal;
 	LongVector m_invColumnOrder;
-	std::string m_invLastSavePath;
 
 	// Settings with no UI
 	bool m_skipValidation;

@@ -191,7 +191,7 @@ int TCStringArray::readFile(const char* filename)
 	}
 }
 
-void TCStringArray::copyContents(TCStringArray *otherStringArray)
+void TCStringArray::copyContents(TCStringArray *otherStringArray) const
 {
 	unsigned int i;
 
@@ -202,7 +202,7 @@ void TCStringArray::copyContents(TCStringArray *otherStringArray)
 	}
 }
 
-TCObject *TCStringArray::copy(void)
+TCObject *TCStringArray::copy(void) const
 {
 	TCStringArray *newStringArray = new TCStringArray(count, caseSensitive);
 

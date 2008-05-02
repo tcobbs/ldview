@@ -40,7 +40,7 @@ void TREVertexArray::dealloc(void)
 	TCObject::dealloc();
 }
 
-TCObject *TREVertexArray::copy(void)
+TCObject *TREVertexArray::copy(void) const
 {
 	return new TREVertexArray(*this);
 }

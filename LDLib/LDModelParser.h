@@ -2,6 +2,7 @@
 #define __LDMODELPARSER_H__
 
 #include <TCFoundation/TCObject.h>
+#include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLPrimitiveCheck.h>
 
 #include <string.h>
@@ -17,10 +18,12 @@ class LDLConditionalLineLine;
 class LDrawModelViewer;
 class TCVector;
 
+typedef std::map<std::string, int> StringIntMap;
+
 class LDModelParser : public LDLPrimitiveCheck
 {
 public:
-	LDModelParser(const LDrawModelViewer *modelViewer);
+	LDModelParser(LDrawModelViewer *modelViewer);
 	virtual bool parseMainModel(LDLMainModel *mainLDLModel);
 	virtual void release(void) { LDLPrimitiveCheck::release(); }
 	TREMainModel *getMainTREModel(void) { return m_mainTREModel; }
@@ -30,6 +33,7 @@ protected:
 	virtual void dealloc(void);
 	void setSeamsFlag(bool value) { m_flags.seams = value; }
 	void setDefaultColorSetFlag(bool value) { m_flags.defaultColorSet = value; }
+	int getActiveColorNumber(LDLModelLine *modelLine, int activeColorNumber);
 	bool getDefaultColorSetFlag(void)
 	{
 		return m_flags.defaultColorSet != false;
@@ -42,10 +46,13 @@ protected:
 	{
 		return m_flags.defaultColorNumberSet != false;
 	}
-	virtual void parseCommentLine(LDLCommentLine *commentLine, TREModel *treModel);
-	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc);
+	virtual void parseCommentLine(LDLCommentLine *commentLine,
+		TREModel *treModel, StringIntMap &biAllTokens,
+		StringIntMap &biLocalTokens);
+	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
+		int activeColorNumber, StringIntMap &biTokens);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
-		bool bfc);
+		bool bfc, int activeColorNumber, StringIntMap &biTokens);
 	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel);
 	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
 		bool bfc, bool invert);
@@ -118,6 +125,8 @@ protected:
 	virtual bool shouldLoadConditionalLines(void);
 	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
 
+	static bool unsetToken(StringIntMap &tokens, const char *token,
+		int count = 1);
 	const LDrawModelViewer *m_modelViewer;
 	LDLMainModel *m_mainLDLModel;
 	TREMainModel *m_mainTREModel;
@@ -136,6 +145,7 @@ protected:
 		bool defaultColorNumberSet:1;
 		bool defaultTrans:1;
 		bool boundingBoxesOnly:1;
+		bool altColor:1;
 	} m_flags;
 };
 

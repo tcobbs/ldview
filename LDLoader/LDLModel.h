@@ -48,15 +48,15 @@ public:
 	};
 	LDLModel(void);
 	LDLModel(const LDLModel &other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	// Color numbers might become dynamic, so not static.
-	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
-	virtual TCULong getPackedRGBA(TCULong colorNumber);
-	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
-	virtual bool hasSpecular(TCULong colorNumber);
-	virtual bool hasShininess(TCULong colorNumber);
-	virtual void getSpecular(TCULong colorNumber, float *specular);
-	virtual void getShininess(TCULong colorNumber, float &shininess);
+	virtual void getRGBA(int colorNumber, int& r, int& g, int& b, int& a);
+	virtual TCULong getPackedRGBA(int colorNumber);
+	virtual int getEdgeColorNumber(int colorNumber);
+	virtual bool hasSpecular(int colorNumber);
+	virtual bool hasShininess(int colorNumber);
+	virtual void getSpecular(int colorNumber, float *specular);
+	virtual void getShininess(int colorNumber, float &shininess);
 	virtual LDLModel *subModelNamed(const char *subModelName,
 		bool lowRes = false, bool secondAttempt = false,
 		const LDLModelLine *fileLine = NULL, bool knownPart = false);
@@ -81,7 +81,7 @@ public:
 	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
 	virtual const IntList &getStepIndices(void) const { return m_stepIndices; }
 	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
-	virtual bool colorNumberIsTransparent(TCULong colorNumber);
+	virtual bool colorNumberIsTransparent(int colorNumber);
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
@@ -122,6 +122,7 @@ public:
 		return fileCaseCallback;
 	}
 	static FILE *openFile(const char *filename);
+	void setTokenTable(const TCStringArray* value);
 protected:
 	virtual void dealloc(void);
 	virtual FILE *openSubModelNamed(const char* subModelName,
@@ -132,6 +133,7 @@ protected:
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
+	virtual int parseBIMeta(LDLCommentLine *commentLine);			// BI
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
 	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
@@ -169,6 +171,16 @@ protected:
 	IntList m_stepIndices;
 	int m_activeLineCount;
 	LDLModel *m_activeMPDModel;
+
+	// BI
+	int m_biOverrideColorNumber;
+
+	TCStringArray* m_tokenTable;
+	bool checkConditional(bool type, const char *token);
+	// /BI
+
+	//friend class TCStringArray;
+
 	TCVector m_boundingMin;
 	TCVector m_boundingMax;
 	TCVector m_center;
@@ -194,6 +206,8 @@ protected:
 		bool mpd:1;
 		bool noShrink:1;
 		bool official:1;
+		bool biOverrideColor:1;
+		bool biOverrideColorSticky:1;
 		BFCState bfcCertify:3;
 	} m_flags;
 

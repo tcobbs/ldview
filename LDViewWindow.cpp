@@ -5225,6 +5225,7 @@ LRESULT LDViewWindow::generatePartsList(void)
 					OPENFILENAME openStruct;
 					char fileTypes[1024];
 					std::string filename = modelViewer->getFilename();
+					std::string initialDir = modelWindow->getPartsListDir();
 					size_t findSpot = filename.find_last_of("/\\");
 
 					if (findSpot < filename.size())
@@ -5257,9 +5258,7 @@ LRESULT LDViewWindow::generatePartsList(void)
 					openStruct.nFilterIndex = 0;
 					openStruct.lpstrFile = &filename[0];
 					openStruct.nMaxFile = filename.capacity();
-					openStruct.lpstrInitialDir =
-						modelWindow->getPartsListDir(htmlInventory).c_str();
-						//htmlInventory->getLastSavePath();
+					openStruct.lpstrInitialDir = initialDir.c_str();
 					openStruct.lpstrTitle =
 						TCLocalStrings::get("GeneratePartsList");
 					openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY |

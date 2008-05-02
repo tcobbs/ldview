@@ -134,7 +134,7 @@ public:
 	static bool chDirFromFilename(const char* filename, char* outFilename);
 	static int roundUp(int value, int nearest);
 	static const char *alertClass(void) { return "ModelWindowAlert"; }
-	std::string getPartsListDir(LDHtmlInventory *htmlInventory);
+	std::string getPartsListDir(void);
 protected:
 	virtual ~ModelWindow(void);
 	virtual void dealloc(void);

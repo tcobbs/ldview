@@ -67,7 +67,7 @@ bool LDLQuadLine::parse(void)
 	}
 }
 
-TCObject *LDLQuadLine::copy(void)
+TCObject *LDLQuadLine::copy(void) const
 {
 	return new LDLQuadLine(*this);
 }

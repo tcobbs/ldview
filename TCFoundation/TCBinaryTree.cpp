@@ -42,7 +42,7 @@ void TCBinaryTree::deleteNode(TCBinaryTreeNode* node)
 	}
 }
 
-TCBinaryTreeNode* TCBinaryTree::newNodeWithString(const char* string)
+TCBinaryTreeNode* TCBinaryTree::newNodeWithString(const char* string) const
 {
 	TCBinaryTreeNode* newNode = new TCBinaryTreeNode;
 
@@ -263,7 +263,9 @@ void TCBinaryTree::prettyPrint(void)
 	prettyPrintNode(rootNode, 0);
 }
 
-void TCBinaryTree::copyNode(TCBinaryTreeNode *dstNode, TCBinaryTreeNode *srcNode)
+void TCBinaryTree::copyNode(
+	TCBinaryTreeNode *dstNode,
+	const TCBinaryTreeNode *srcNode) const
 {
 	if (srcNode->left)
 	{
@@ -277,7 +279,7 @@ void TCBinaryTree::copyNode(TCBinaryTreeNode *dstNode, TCBinaryTreeNode *srcNode
 	}
 }
 
-TCObject *TCBinaryTree::copy(void)
+TCObject *TCBinaryTree::copy(void) const
 {
 	TCBinaryTree *newBinaryTree = new TCBinaryTree;
 

@@ -62,7 +62,7 @@ bool LDLTriangleLine::parse(void)
 	}
 }
 
-TCObject *LDLTriangleLine::copy(void)
+TCObject *LDLTriangleLine::copy(void) const
 {
 	return new LDLTriangleLine(*this);
 }

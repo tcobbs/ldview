@@ -96,7 +96,7 @@ void TRESubModel::dealloc(void)
 	TCObject::dealloc();
 }
 
-TCObject *TRESubModel::copy(void)
+TCObject *TRESubModel::copy(void) const
 {
 	return new TRESubModel(*this);
 }

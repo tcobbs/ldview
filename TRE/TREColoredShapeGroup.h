@@ -8,7 +8,7 @@ class TREColoredShapeGroup : public TREShapeGroup
 public:
 	TREColoredShapeGroup(void);
 	TREColoredShapeGroup(const TREColoredShapeGroup &other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual int addLine(TCULong color, const TCVector *vertices);
 	virtual int addTriangle(TCULong color, const TCVector *vertices,
 		const TCVector *normals);

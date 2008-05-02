@@ -94,7 +94,7 @@ int TCDictionary::indexOfKey(const char* key)
 	return keys->indexOfString(key);
 }
 
-TCObject *TCDictionary::copy(void)
+TCObject *TCDictionary::copy(void) const
 {
 	TCDictionary *newDictionary = new TCDictionary(true);
 

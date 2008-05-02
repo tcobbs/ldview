@@ -227,7 +227,7 @@ void* TCArray::operator[](unsigned int index)
 }
 */
 
-TCObject *TCArray::copy(void)
+TCObject *TCArray::copy(void) const
 {
 	return new TCArray(*this);
 }

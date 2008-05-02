@@ -18,7 +18,7 @@ class TREVertexStore : public TCObject
 public:
 	TREVertexStore(void);
 	TREVertexStore(const TREVertexStore &other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual bool activate(bool displayLists);
 	virtual void deactivate(void);
 	virtual int addVertices(const TCVector *points, int count, int step,

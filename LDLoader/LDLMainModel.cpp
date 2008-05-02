@@ -36,7 +36,7 @@ LDLMainModel::LDLMainModel(void)
 //{
 //}
 
-TCObject *LDLMainModel::copy(void)
+TCObject *LDLMainModel::copy(void) const
 {
 	return NULL;
 	//return new LDLMainModel(*this);
@@ -177,7 +177,7 @@ void LDLMainModel::print(void)
 	LDLModel::print(0);
 }
 
-bool LDLMainModel::colorNumberIsTransparent(TCULong colorNumber)
+bool LDLMainModel::colorNumberIsTransparent(int colorNumber)
 {
 	return (colorNumber >= 32 && colorNumber < 48) ||
 		(colorNumber >= 0x3000000 && colorNumber < 0x4000000) ||
@@ -186,33 +186,33 @@ bool LDLMainModel::colorNumberIsTransparent(TCULong colorNumber)
 		colorNumber == 57;
 }
 
-void LDLMainModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
+void LDLMainModel::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 {
 	m_mainPalette->getRGBA(colorNumber, r, g, b, a);
 }
 
-bool LDLMainModel::hasSpecular(TCULong colorNumber)
+bool LDLMainModel::hasSpecular(int colorNumber)
 {
 	return m_mainPalette->hasSpecular(colorNumber);
 }
 
-bool LDLMainModel::hasShininess(TCULong colorNumber)
+bool LDLMainModel::hasShininess(int colorNumber)
 {
 	return m_mainPalette->hasShininess(colorNumber);
 }
 
-void LDLMainModel::getSpecular(TCULong colorNumber, float *specular)
+void LDLMainModel::getSpecular(int colorNumber, float *specular)
 {
 	memcpy(specular, m_mainPalette->getAnyColorInfo(colorNumber).specular,
 		4 * sizeof(float));
 }
 
-void LDLMainModel::getShininess(TCULong colorNumber, float &shininess)
+void LDLMainModel::getShininess(int colorNumber, float &shininess)
 {
 	shininess = m_mainPalette->getAnyColorInfo(colorNumber).shininess;
 }
 
-TCULong LDLMainModel::getEdgeColorNumber(TCULong colorNumber)
+int LDLMainModel::getEdgeColorNumber(int colorNumber)
 {
 	if (getBlackEdgeLines())
 	{

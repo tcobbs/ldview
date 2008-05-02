@@ -81,7 +81,7 @@ TREShapeGroup::~TREShapeGroup(void)
 {
 }
 
-TCObject *TREShapeGroup::copy(void)
+TCObject *TREShapeGroup::copy(void) const
 {
 	return new TREShapeGroup(*this);
 }

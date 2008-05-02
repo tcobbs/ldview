@@ -74,9 +74,12 @@ LDLModel::LDLModel(void)
 	m_flags.subPart = false;
 	m_flags.primitive = false;
 	m_flags.mpd = false;
-	m_flags.official = false;
-	m_flags.bfcCertify = BFCUnknownState;
 	m_flags.noShrink = false;
+	m_flags.official = false;
+	m_flags.biOverrideColor = false;
+	m_flags.biOverrideColorSticky = false;
+	m_flags.bfcCertify = BFCUnknownState;
+	m_tokenTable = new TCStringArray;
 	sm_modelCount++;
 }
 
@@ -98,6 +101,7 @@ LDLModel::LDLModel(const LDLModel &other)
 
 void LDLModel::dealloc(void)
 {
+	TCObject::release(m_tokenTable);
 	delete m_filename;
 	delete m_name;
 	delete m_author;
@@ -107,7 +111,7 @@ void LDLModel::dealloc(void)
 	TCObject::dealloc();
 }
 
-TCObject *LDLModel::copy(void)
+TCObject *LDLModel::copy(void) const
 {
 	return new LDLModel(*this);
 }
@@ -124,7 +128,7 @@ void LDLModel::setName(const char *name)
 	m_name = copyString(name);
 }
 
-TCULong LDLModel::getPackedRGBA(TCULong colorNumber)
+TCULong LDLModel::getPackedRGBA(int colorNumber)
 {
 	int r, g, b, a;
 
@@ -132,37 +136,37 @@ TCULong LDLModel::getPackedRGBA(TCULong colorNumber)
 	return r << 24 | g << 16 | b << 8 | a;
 }
 
-bool LDLModel::hasSpecular(TCULong colorNumber)
+bool LDLModel::hasSpecular(int colorNumber)
 {
 	return m_mainModel->hasSpecular(colorNumber);
 }
 
-bool LDLModel::hasShininess(TCULong colorNumber)
+bool LDLModel::hasShininess(int colorNumber)
 {
 	return m_mainModel->hasShininess(colorNumber);
 }
 
-void LDLModel::getSpecular(TCULong colorNumber, float *specular)
+void LDLModel::getSpecular(int colorNumber, float *specular)
 {
 	m_mainModel->getSpecular(colorNumber, specular);
 }
 
-void LDLModel::getShininess(TCULong colorNumber, float &shininess)
+void LDLModel::getShininess(int colorNumber, float &shininess)
 {
 	m_mainModel->getShininess(colorNumber, shininess);
 }
 
-TCULong LDLModel::getEdgeColorNumber(TCULong colorNumber)
+int LDLModel::getEdgeColorNumber(int colorNumber)
 {
 	return m_mainModel->getEdgeColorNumber(colorNumber);
 }
 
-void LDLModel::getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a)
+void LDLModel::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
 {
 	m_mainModel->getRGBA(colorNumber, r, g, b, a);
 }
 
-bool LDLModel::colorNumberIsTransparent(TCULong colorNumber)
+bool LDLModel::colorNumberIsTransparent(int colorNumber)
 {
 	return m_mainModel->colorNumberIsTransparent(colorNumber);
 }
@@ -223,6 +227,15 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 			replaceStringCharacter(subModelPath, '\\', '/');
 			subModel = new LDLModel;
 			subModel->setFilename(subModelPath);
+
+			// BI
+			if (m_tokenTable)
+			{
+				// Note: setTokenTable below makes a copy.
+				subModel->setTokenTable(m_tokenTable);
+			}
+			// /BI
+
 			if (!initializeNewSubModel(subModel, dictName, subModelFile))
 			{
 				subModel = NULL;
@@ -1086,6 +1099,72 @@ int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 	return 0;
 }
 
+bool LDLModel::checkConditional(bool type, const char *token)
+{
+	bool tokenExists =
+		(m_tokenTable ? m_tokenTable->indexOfString(token) != -1 : false);
+
+	return (type ? tokenExists : !tokenExists);
+}
+
+// 0 BI SET <token>
+// 0 BI UNSET <token>
+// 0 BI NEXT <color> [IFSET <token>|IFNSET <token>] 
+// 0 BI START <color> [IFSET <token>|IFNSET <token>]
+// 0 BI END
+int LDLModel::parseBIMeta(LDLCommentLine *commentLine)
+{
+	switch (commentLine->getBICommand())
+	{
+	case LDLCommentLine::BICSet:			// add token to table here
+		if (commentLine->hasBIToken())
+		{
+			const char *token = commentLine->getBIToken();
+
+			m_tokenTable->addString(token);
+		}
+		break;
+	case LDLCommentLine::BICUnset:			// remove token from table here
+		if (m_tokenTable)
+		{
+			if (commentLine->hasBIToken())
+			{
+				m_tokenTable->removeString(commentLine->getBIToken());
+			}
+		}
+		break;
+	case LDLCommentLine::BICNext:
+		// parse color code, set it to be stored in next action line
+		if (!commentLine->hasBIConditional()
+			|| checkConditional(commentLine->getBIConditional(),
+			commentLine->getBIToken()))
+		{
+			m_flags.biOverrideColor = true;
+			m_flags.biOverrideColorSticky = false;
+			m_biOverrideColorNumber = commentLine->getBIColorNumber();
+		}
+		break;
+	case LDLCommentLine::BICStart:
+		// parse color code, set it to the "current" color to be set in
+		// following action lines
+		if (!commentLine->hasBIConditional()
+			|| checkConditional(commentLine->getBIConditional(),
+			commentLine->getBIToken()))
+		{
+			m_flags.biOverrideColor = true;
+			m_flags.biOverrideColorSticky = true;
+			m_biOverrideColorNumber = commentLine->getBIColorNumber();
+		}
+		break;
+	case LDLCommentLine::BICEnd:
+		// turn off overriding color status
+		m_flags.biOverrideColor = false;
+		m_flags.biOverrideColorSticky = false;	// for completeness
+		break;
+	}
+	return 0;	// number of lines to skip because of this command
+}
+
 int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 {
 	char filename[1024];
@@ -1103,6 +1182,10 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 	{
 		m_stepIndices.push_back(index);
 		return 0;
+	}
+	else if (commentLine->isBIMeta())
+	{
+		return parseBIMeta(commentLine);	// JJD
 	}
 	else if (index == 0)
 	{
@@ -1147,6 +1230,19 @@ bool LDLModel::parse(void)
 				((LDLActionLine *)fileLine)->setBFCSettings(m_flags.bfcCertify,
 					m_flags.bfcClip, m_flags.bfcWindingCCW,
 					m_flags.bfcInvertNext);
+
+				if (m_flags.biOverrideColor)
+				{
+					LDLActionLine *actionLine = (LDLActionLine*)fileLine;
+					actionLine->setBiOverrideColorNumber(
+						m_biOverrideColorNumber);
+					actionLine->setBiOverrideColor(true);
+
+					if (!m_flags.biOverrideColorSticky)
+					{
+						m_flags.biOverrideColor = false;
+					}
+				}
 			}
 			else
 			{
@@ -1755,4 +1851,13 @@ TCObject *LDLModel::getAlertSender(void)
 bool LDLModel::hasBoundingBox(void) const
 {
 	return m_flags.haveBoundingBox != false;
+}
+
+void LDLModel::setTokenTable(const TCStringArray *value)
+{
+	if (value != m_tokenTable)
+	{
+		TCObject::release(m_tokenTable);
+		m_tokenTable = (TCStringArray *)TCObject::copy(value);
+	}
 }

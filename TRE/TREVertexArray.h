@@ -21,7 +21,7 @@ class TREVertexArray : public TCObject
 public:
 	explicit TREVertexArray(unsigned int allocated = 0);
 	TREVertexArray(const TREVertexArray &other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 
 	virtual bool addVertex(const TREVertex &vertex);
 	virtual bool insertVertex(const TREVertex &vertex, unsigned int index = 0);

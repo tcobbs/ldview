@@ -22,7 +22,7 @@ class TCExport TCObjectArray : public TCArray
 		/*virtual*/ const TCObject* objectAtIndex(unsigned int) const;
 		/*virtual*/ TCObject* operator[](unsigned int);
 		/*virtual*/ const TCObject* operator[](unsigned int) const;
-		virtual TCObject *copy(void);
+		virtual TCObject *copy(void) const;
 		virtual void sort(void);
 	protected:
 		virtual ~TCObjectArray(void);

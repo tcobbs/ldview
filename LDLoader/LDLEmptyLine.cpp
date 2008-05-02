@@ -26,7 +26,7 @@ bool LDLEmptyLine::parse(void)
 	return true;
 }
 
-TCObject *LDLEmptyLine::copy(void)
+TCObject *LDLEmptyLine::copy(void) const
 {
 	return new LDLEmptyLine(*this);
 }

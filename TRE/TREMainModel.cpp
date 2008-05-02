@@ -189,7 +189,7 @@ void TREMainModel::dealloc(void)
 	TREModel::dealloc();
 }
 
-TCObject *TREMainModel::copy(void)
+TCObject *TREMainModel::copy(void) const
 {
 	return new TREMainModel(*this);
 }

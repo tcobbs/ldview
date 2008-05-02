@@ -6,7 +6,19 @@
 class LDLCommentLine : public LDLFileLine
 {
 public:
-	TCObject *copy(void);
+	// BI
+	enum BICommand
+	{
+		BICERROR,
+		BICSet,
+		BICUnset,
+		BICNext,
+		BICStart,
+		BICEnd,
+	};
+	// /BI
+
+	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeComment; }
 	virtual bool getMPDFilename(char *filename, int maxLength) const;
@@ -15,6 +27,17 @@ public:
 	virtual bool isPrimitiveMeta(void) const;
 	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
+
+	// BI
+	bool isBIMeta(void) const;
+	BICommand getBICommand(void) const;
+	bool hasBIConditional(void) const;
+	bool getBIConditional(void) const;
+	bool hasBIToken(void) const;
+	const char *getBIToken(void) const;
+	int getBIColorNumber(void) const;
+	// BI
+
 	virtual bool isMovedToMeta(void) const;
 	virtual bool isStepMeta(void) const;
 	virtual bool getAuthor(char *author, int maxLength) const;

@@ -13,7 +13,7 @@ public:
 	TRESubModel(void);
 	TRESubModel(const TRESubModel &other);
 	TRESubModel(const TRESubModel &other, bool shallow);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual TRESubModel *shallowCopy(void);
 	virtual void setModel(TREModel *model);
 	virtual TREModel *getModel(void) const { return m_model; }

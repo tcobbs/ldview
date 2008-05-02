@@ -23,6 +23,7 @@
 #include <list>
 #include <algorithm>
 #include <stack>
+#include <set>
 
 #ifdef WIN32
 
