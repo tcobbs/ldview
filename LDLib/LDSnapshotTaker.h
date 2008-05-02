@@ -57,7 +57,7 @@ protected:
 	bool writePng(const char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);
 	bool writeImage(const char *filename, int width, int height, TCByte *buffer,
-		char *formatName, bool saveAlpha);
+		const char *formatName, bool saveAlpha);
 	bool canSaveAlpha(void);
 	void renderOffscreenImage(void);
 	bool imageProgressCallback(CUCSTR message, float progress);

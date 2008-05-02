@@ -70,7 +70,7 @@ bool LDSnapshotTaker::saveImage(void)
 		bool saveSnapshots = TCUserDefaults::boolForKey(SAVE_SNAPSHOTS_KEY,
 			false, false);
 		char *saveDir = NULL;
-		char *imageExt = NULL;
+		const char *imageExt = NULL;
 		int width = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 640, false);
 		int height = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 480, false);
 		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
@@ -406,7 +406,7 @@ bool LDSnapshotTaker::writeImage(
 	int width,
 	int height,
 	TCByte *buffer,
-	char *formatName,
+	const char *formatName,
 	bool saveAlpha)
 {
 	TCImage *image = new TCImage;
