@@ -1084,6 +1084,9 @@ void LDModelParser::parseCommentLine(
 				}
 			}
 			break;
+		default:
+			// Gets rid of warning.
+			break;
 		}
 	}
 }

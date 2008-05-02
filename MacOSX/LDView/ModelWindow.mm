@@ -1200,7 +1200,7 @@ enum
 		int height = (int)viewSize.height;		
 
 		[saveSnapshotViewOwner saveSettings];
-		[OCUserDefaults setString:[sheet filename] forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_PATH_KEY] sessionSpecific:NO];
+		[OCUserDefaults setString:[sheet filename] forKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_DIR_KEY] sessionSpecific:NO];
 		if (!snapshotTaker)
 		{
 			snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
@@ -1252,7 +1252,7 @@ enum
 	[saveSnapshotViewOwner setSavePanel:savePanel];
 	[savePanel setCanSelectHiddenExtension:YES];
 	sheetBusy = true;
-	[savePanel beginSheetForDirectory:[self defaultPathForMode:[generalPage snapshotsDirMode] lastPath:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_PATH_KEY] defaultValue:nil sessionSpecific:NO] defaultPath:[generalPage snapshotsDir]] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(snapshotSavePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
+	[savePanel beginSheetForDirectory:[self defaultPathForMode:[generalPage snapshotsDirMode] lastPath:[OCUserDefaults stringForKey:[NSString stringWithASCIICString:LAST_SNAPSHOT_DIR_KEY] defaultValue:nil sessionSpecific:NO] defaultPath:[generalPage snapshotsDir]] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(snapshotSavePanelDidEnd:returnCode:contextInfo:) contextInfo:savePanel];
 }
 
 - (IBAction)reload:(id)sender
