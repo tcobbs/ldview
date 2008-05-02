@@ -6,7 +6,7 @@ void JpegOptionsPanel::doCancel()
 {
 }
 
-void JpegOptionsPanel::doSliderMoved(int i)
+void JpegOptionsPanel::doSliderMoved(int /*i*/)
 {
 }
 

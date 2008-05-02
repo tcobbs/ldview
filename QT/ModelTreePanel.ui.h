@@ -37,7 +37,7 @@ void ModelTreePanel::comment()
 {
 }
 
-void ModelTreePanel::itemexpanded(QListViewItem *item)
+void ModelTreePanel::itemexpanded(QListViewItem * /*item*/)
 {
 }
 
