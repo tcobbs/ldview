@@ -9,6 +9,7 @@ LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
 LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -ljpeg
 STATIC =
+ARCH32 =
 LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
@@ -25,6 +26,19 @@ AR = ar rcs
 endif
 
 INCLUDE = -I.. -I../include
+
+ifeq ($(shell uname -m), x86_64)
+CFLAGS += -m32
+ARCH32 = -m32
+LIBDIRS += -L/usr/lib32
+endif
+
+# slurm is media.peeron.com
+ifeq ($(shell hostname), slurm)
+INCLUDE += -I../../Mesa-7.0.2/include
+LIBDIRS += -L../../../Mesa-7.0.2/lib
+#STATIC = -static
+endif
 
 ifeq ($(shell hostname | cut -d. -f2-), pair.com)
 CFLAGS += -DNO_WSTRING -DNO_WCSTOUL -DTC_NO_UNICODE -DNO_WPRINTF
@@ -84,7 +98,7 @@ depend:
 	$(MAKEDEPEND) $(INCLUDE) $(SRCS) > .depend
 
 Headerize: Headerize.o $(LDLIBS)
-	cd $(OBJDIR); $(CC) $(STATIC) -o ../Headerize Headerize.o $(LIBDIRS) $(LIBS)
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) -o ../Headerize Headerize.o $(LIBDIRS) $(LIBS)
 
 LDViewMessages.h: Headerize ../LDViewMessages.ini
 	./Headerize ../LDViewMessages.ini
@@ -99,7 +113,7 @@ BuildLibs:
 	done
 
 ldview:   BuildLibs StudLogo.h LDViewMessages.h $(LDLIBS) $(OBJS)
-	cd $(OBJDIR); $(CC) $(STATIC) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
+	cd $(OBJDIR); $(CC) $(STATIC) $(ARCH32) -o ../ldview $(OBJS) $(LIBDIRS) $(LIBS)
 
 webgrabber:	$(OBJS)
 			$(CC) -o webgrabber $(OBJS) $(LIBDIRS) $(LIBS)
