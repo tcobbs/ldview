@@ -1161,6 +1161,9 @@ int LDLModel::parseBIMeta(LDLCommentLine *commentLine)
 		m_flags.biOverrideColor = false;
 		m_flags.biOverrideColorSticky = false;	// for completeness
 		break;
+	default:
+		// Gets rid of warning
+		break;
 	}
 	return 0;	// number of lines to skip because of this command
 }
