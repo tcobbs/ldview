@@ -74,7 +74,7 @@ LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 		setDefaultColorNumber(defaultColorNumber);
 	}
 	m_flags.boundingBoxesOnly = m_modelViewer->getBoundingBoxesOnly();
-	m_flags.altColor = m_modelViewer->getAltColor();
+	m_flags.obi = m_modelViewer->getObi();
 }
 
 LDModelParser::~LDModelParser(void)
@@ -973,9 +973,9 @@ bool LDModelParser::parseModel(
 				{
 					if (fileLine->isActionLine())
 					{
-						if (m_flags.altColor)
+						if (m_flags.obi)
 						{
-							((LDLActionLine *)fileLine)->setBiOverrideActive(
+							((LDLActionLine *)fileLine)->setObiOverrideActive(
 								!ldlModel->colorNumberIsTransparent(
 								activeColorNumber));
 						}
@@ -1057,23 +1057,23 @@ void LDModelParser::parseCommentLine(
 	{
 		treModel->nextStep();
 	}
-	else if (commentLine->isBIMeta())
+	else if (commentLine->isOBIMeta())
 	{
-		switch (commentLine->getBICommand())
+		switch (commentLine->getOBICommand())
 		{
-		case LDLCommentLine::BICSet:
-			if (commentLine->hasBIToken())
+		case LDLCommentLine::OBICSet:
+			if (commentLine->hasOBIToken())
 			{
-				const char *token = commentLine->getBIToken();
+				const char *token = commentLine->getOBIToken();
 
 				biAllTokens[token]++;
 				biLocalTokens[token]++;
 			}
 			break;
-		case LDLCommentLine::BICUnset:
-			if (commentLine->hasBIToken())
+		case LDLCommentLine::OBICUnset:
+			if (commentLine->hasOBIToken())
 			{
-				const char *token = commentLine->getBIToken();
+				const char *token = commentLine->getOBIToken();
 
 				if (unsetToken(biLocalTokens, token))
 				{

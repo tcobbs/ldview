@@ -145,7 +145,7 @@ protected:
 		bool defaultColorNumberSet:1;
 		bool defaultTrans:1;
 		bool boundingBoxesOnly:1;
-		bool altColor:1;
+		bool obi:1;
 	} m_flags;
 };
 

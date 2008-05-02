@@ -6,17 +6,17 @@
 class LDLCommentLine : public LDLFileLine
 {
 public:
-	// BI
-	enum BICommand
+	// OBI
+	enum OBICommand
 	{
-		BICERROR,
-		BICSet,
-		BICUnset,
-		BICNext,
-		BICStart,
-		BICEnd,
+		OBICERROR,
+		OBICSet,
+		OBICUnset,
+		OBICNext,
+		OBICStart,
+		OBICEnd,
 	};
-	// /BI
+	// /OBI
 
 	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
@@ -28,15 +28,15 @@ public:
 	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
 
-	// BI
-	bool isBIMeta(void) const;
-	BICommand getBICommand(void) const;
-	bool hasBIConditional(void) const;
-	bool getBIConditional(void) const;
-	bool hasBIToken(void) const;
-	const char *getBIToken(void) const;
-	int getBIColorNumber(void) const;
-	// BI
+	// OBI
+	bool isOBIMeta(void) const;
+	OBICommand getOBICommand(void) const;
+	bool hasOBIConditional(void) const;
+	bool getOBIConditional(void) const;
+	bool hasOBIToken(void) const;
+	const char *getOBIToken(void) const;
+	int getOBIColorNumber(void) const;
+	// /OBI
 
 	virtual bool isMovedToMeta(void) const;
 	virtual bool isStepMeta(void) const;

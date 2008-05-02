@@ -125,8 +125,8 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.usesFlatShading != false;
 		}
-		void setAltColor(bool value);
-		bool getAltColor(void) const { return flags.altColor != false; }
+		void setObi(bool value);
+		bool getObi(void) const { return flags.obi != false; }
 		virtual void setUsesSpecular(bool value);
 		bool getUsesSpecular(void) const { return flags.usesSpecular != false; }
 		virtual void setOneLight(bool value);
@@ -681,7 +681,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool axesAtOrigin:1;
 			bool showBoundingBox:1;
 			bool boundingBoxesOnly:1;
-			bool altColor:1;
+			bool obi:1;
 		} flags;
 		struct CameraData
 		{
