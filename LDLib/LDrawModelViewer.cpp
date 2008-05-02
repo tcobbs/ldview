@@ -1176,11 +1176,11 @@ void LDrawModelViewer::reload(void)
 	flags.needsReload = false;
 }
 
-void LDrawModelViewer::setAltColor(bool value)
+void LDrawModelViewer::setObi(bool value)
 {
-	if (value != flags.altColor)
+	if (value != flags.obi)
 	{
-		flags.altColor = value;
+		flags.obi = value;
 		flags.needsReparse = true;
 	}
 }

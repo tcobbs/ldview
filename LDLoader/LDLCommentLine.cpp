@@ -279,56 +279,56 @@ bool LDLCommentLine::isBFCMeta(void) const
 	return false;
 }
 
-bool LDLCommentLine::isBIMeta(void) const
+bool LDLCommentLine::isOBIMeta(void) const
 {
-	return(stringHasPrefix(m_processedLine, "0 BI "));
+	return(stringHasPrefix(m_processedLine, "0 !OBI "));
 }
 
-// BI
+// OBI
 
-// 0 BI SET <token>
-// 0 BI UNSET <token>
-// 0 BI NEXT <color> [IFSET <token>|IFNSET <token>] 
-// 0 BI START <color> [IFSET <token>|IFNSET <token>]
-// 0 BI END
-LDLCommentLine::BICommand LDLCommentLine::getBICommand(void) const
+// 0 !OBI SET <token>
+// 0 !OBI UNSET <token>
+// 0 !OBI NEXT <color> [IFSET <token>|IFNSET <token>] 
+// 0 !OBI START <color> [IFSET <token>|IFNSET <token>]
+// 0 !OBI END
+LDLCommentLine::OBICommand LDLCommentLine::getOBICommand(void) const
 {
-	BICommand result = BICERROR;
+	OBICommand result = OBICERROR;
 
 	if (m_words->getCount() > 1)
 	{
 		if (strcasecmp((*m_words)[1], "set") == 0)
 		{
-			result = BICSet;
+			result = OBICSet;
 		}
 		else if (strcasecmp((*m_words)[1], "unset") == 0)
 		{
-			result = BICUnset;
+			result = OBICUnset;
 		}
 		else if (strcasecmp((*m_words)[1], "next") == 0)
 		{
-			result = BICNext;
+			result = OBICNext;
 		}
 		else if (strcasecmp((*m_words)[1], "start") == 0)
 		{
-			result = BICStart;
+			result = OBICStart;
 		}
 		else if (strcasecmp((*m_words)[1], "end") == 0)
 		{
-			result = BICEnd;
+			result = OBICEnd;
 		}
 	}
 	return result;
 }
 
-bool LDLCommentLine::hasBIConditional(void) const
+bool LDLCommentLine::hasOBIConditional(void) const
 {
-	BICommand cmd = getBICommand();
+	OBICommand cmd = getOBICommand();
 
-	if (cmd == BICNext || cmd == BICStart)
+	if (cmd == OBICNext || cmd == OBICStart)
 	{
-		// 0 BI NEXT <color> <IFcommand> <token>
-		// 0 BI START <color> <IFcommand> <token>
+		// 0 !OBI NEXT <color> <IFcommand> <token>
+		// 0 !OBI START <color> <IFcommand> <token>
 		if (m_words->getCount() > 3)
 		{
 			return (strcasecmp((*m_words)[3], "ifset") == 0)
@@ -338,14 +338,14 @@ bool LDLCommentLine::hasBIConditional(void) const
 	return false;
 }
 
-bool LDLCommentLine::getBIConditional(void) const
+bool LDLCommentLine::getOBIConditional(void) const
 {
-	BICommand cmd = getBICommand();
+	OBICommand cmd = getOBICommand();
 
-	if (cmd == BICNext || cmd == BICStart)
+	if (cmd == OBICNext || cmd == OBICStart)
 	{
-		// 0 BI NEXT <color> <IFcommand>
-		// 0 BI START <color> <IFcommand>
+		// 0 !OBI NEXT <color> <IFcommand>
+		// 0 !OBI START <color> <IFcommand>
 		if (m_words->getCount() > 3)
 		{
 			if (strcasecmp((*m_words)[3], "ifset") == 0)
@@ -358,37 +358,37 @@ bool LDLCommentLine::getBIConditional(void) const
 	return true;
 }
 
-bool LDLCommentLine::hasBIToken(void) const
+bool LDLCommentLine::hasOBIToken(void) const
 {
-	BICommand cmd = getBICommand();
+	OBICommand cmd = getOBICommand();
 
-	if ((cmd == BICSet || cmd == BICUnset) && m_words->getCount() > 2)
+	if ((cmd == OBICSet || cmd == OBICUnset) && m_words->getCount() > 2)
 	{
 		return true;
 	}
-	if ((cmd == BICNext || cmd == BICStart) && m_words->getCount() > 3)
+	if ((cmd == OBICNext || cmd == OBICStart) && m_words->getCount() > 3)
 	{
 		return true;
 	}
 	return false;
 }
 
-const char *LDLCommentLine::getBIToken(void) const
+const char *LDLCommentLine::getOBIToken(void) const
 {
-	if (hasBIToken())
+	if (hasOBIToken())
 	{
-		BICommand cmd = getBICommand();
+		OBICommand cmd = getOBICommand();
 
-		// 0 BI SET <token>
-		if (cmd == BICSet || cmd == BICUnset)
+		// 0 !OBI SET <token>
+		if (cmd == OBICSet || cmd == OBICUnset)
 		{
 			return (*m_words)[2];
 		}
-		// 0 BI START <color> IFSET <token>
-		// 0 BI START <color> IFNSET <token>
-		// 0 BI NEXT <color> IFSET <token>
-		// 0 BI NEXT <color> IFNSET <token>
-		if (cmd == BICNext || cmd == BICStart)
+		// 0 !OBI START <color> IFSET <token>
+		// 0 !OBI START <color> IFNSET <token>
+		// 0 !OBI NEXT <color> IFSET <token>
+		// 0 !OBI NEXT <color> IFNSET <token>
+		if (cmd == OBICNext || cmd == OBICStart)
 		{
 			return (*m_words)[4];
 		}
@@ -396,11 +396,11 @@ const char *LDLCommentLine::getBIToken(void) const
 	return 0;
 }
 
-int LDLCommentLine::getBIColorNumber(void) const
+int LDLCommentLine::getOBIColorNumber(void) const
 {
 	int result = 0;
 
-	// 0 BI NEXT <color> [IF...]
+	// 0 !OBI NEXT <color> [IF...]
 	if (m_words->getCount() > 2)
 	{
 		result = atoi((*m_words)[2]);
@@ -409,16 +409,16 @@ int LDLCommentLine::getBIColorNumber(void) const
 }
 
 
-/* bool LDLCommentLine::isBICommandConditional(void) const
+/* bool LDLCommentLine::isOBICommandConditional(void) const
 {
 	bool result = false;
 
-	BICommand cmd = getBICommand();
+	OBICommand cmd = getOBICommand();
 
-	if (BICommand == BICNext || BICommand == BICStart)
+	if (OBICommand == OBICNext || OBICommand == OBICStart)
 	{
-		// 0 BI NEXT <color> <IFcommand>
-		// 0 BI START <color> <IFcommand>
+		// 0 !OBI NEXT <color> <IFcommand>
+		// 0 !OBI START <color> <IFcommand>
 		if (m_words->getCount() > 3)
 		{
 			result = (strcasecmp((*m_words[3], "ifset") == 0)
@@ -430,7 +430,7 @@ int LDLCommentLine::getBIColorNumber(void) const
 }
 */
 
-// /BI
+// /OBI
 
 bool LDLCommentLine::isMovedToMeta(void) const
 {

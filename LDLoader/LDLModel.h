@@ -133,7 +133,7 @@ protected:
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
-	virtual int parseBIMeta(LDLCommentLine *commentLine);			// BI
+	virtual int parseOBIMeta(LDLCommentLine *commentLine);			// OBI
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
 	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
@@ -172,12 +172,12 @@ protected:
 	int m_activeLineCount;
 	LDLModel *m_activeMPDModel;
 
-	// BI
-	int m_biOverrideColorNumber;
+	// OBI
+	int m_obiOverrideColorNumber;
 
 	TCStringArray* m_tokenTable;
 	bool checkConditional(bool type, const char *token);
-	// /BI
+	// /OBI
 
 	//friend class TCStringArray;
 
@@ -206,8 +206,8 @@ protected:
 		bool mpd:1;
 		bool noShrink:1;
 		bool official:1;
-		bool biOverrideColor:1;
-		bool biOverrideColorSticky:1;
+		bool obiOverrideColor:1;
+		bool obiOverrideColorSticky:1;
 		BFCState bfcCertify:3;
 	} m_flags;
 

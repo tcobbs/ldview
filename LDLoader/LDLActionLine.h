@@ -24,30 +24,33 @@ public:
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		LDLModel::ScanPointType types) const = 0;
-	// BI
-	bool getBiOverrideColor(void) const
+	// OBI
+	bool getObiOverrideColor(void) const
 	{
-		return m_actionFlags.biOverrideColor != false;
+		return m_actionFlags.obiOverrideColor != false;
 	}
-	void setBiOverrideColor(bool value)
+	void setObiOverrideColor(bool value)
 	{
-		m_actionFlags.biOverrideColor = value;
+		m_actionFlags.obiOverrideColor = value;
 	}
-	int getBiOverrideColorNumber(void) const { return m_biOverrideColorNumber; }
-	void setBiOverrideColorNumber(int value)
+	int getObiOverrideColorNumber(void) const
 	{
-		setBiOverrideColor(true);
-		m_biOverrideColorNumber = value;
+		return m_obiOverrideColorNumber;
 	}
-	bool getBiOverrideActive(void) const
+	void setObiOverrideColorNumber(int value)
 	{
-		return m_actionFlags.biOverrideActive != false;
+		setObiOverrideColor(true);
+		m_obiOverrideColorNumber = value;
 	}
-	void setBiOverrideActive(bool value)
+	bool getObiOverrideActive(void) const
 	{
-		m_actionFlags.biOverrideActive = value;
+		return m_actionFlags.obiOverrideActive != false;
 	}
-	// /BI
+	void setObiOverrideActive(bool value)
+	{
+		m_actionFlags.obiOverrideActive = value;
+	}
+	// /OBI
 protected:
 	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
@@ -60,15 +63,15 @@ protected:
 		bool bfcClip:1;
 		bool bfcWindingCCW:1;
 		bool bfcInvert:1;
-		bool biOverrideColor;		// in BI mode, whether color is currently
+		bool obiOverrideColor;		// in OBI mode, whether color is currently
 									// getting overridden
 		// Temporal flags
-		bool biOverrideActive;		// Whether or not to return the override
+		bool obiOverrideActive;		// Whether or not to return the override
 									// color or the original color
 	} m_actionFlags;
 	int m_colorNumber;
 
-	int m_biOverrideColorNumber;	// in BI mode, the color used to override
+	int m_obiOverrideColorNumber;	// in OBI mode, the color used to override
 									// either color "16" or "24"
 };
 

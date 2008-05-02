@@ -175,7 +175,7 @@ public:
 	bool getPerformSmoothing(void) { return m_performSmoothing; }
 	bool getUseStipple(void) { return m_useStipple; }
 	bool getUseFlatShading(void) { return m_useFlatShading; }
-	bool getAltColor(void) { return m_altColor; }
+	bool getObi(void) { return m_obi; }
 
 	// Primitives settings
 	bool getAllowPrimitiveSubstitution(void)
@@ -302,7 +302,7 @@ public:
 	void setPerformSmoothing(bool value, bool commit = false);
 	void setUseStipple(bool value, bool commit = false);
 	void setUseFlatShading(bool value, bool commit = false);
-	void setAltColor(bool value, bool commit = false);
+	void setObi(bool value, bool commit = false);
 
 	// Primitives settings
 	void setAllowPrimitiveSubstitution(bool value, bool commit = false,
@@ -456,7 +456,7 @@ protected:
 	bool m_performSmoothing;
 	bool m_useStipple;
 	bool m_useFlatShading;
-	bool m_altColor;
+	bool m_obi;
 
 	// Primitives settings
 	bool m_allowPrimitiveSubstitution;

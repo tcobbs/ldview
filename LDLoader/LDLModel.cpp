@@ -76,8 +76,8 @@ LDLModel::LDLModel(void)
 	m_flags.mpd = false;
 	m_flags.noShrink = false;
 	m_flags.official = false;
-	m_flags.biOverrideColor = false;
-	m_flags.biOverrideColorSticky = false;
+	m_flags.obiOverrideColor = false;
+	m_flags.obiOverrideColorSticky = false;
 	m_flags.bfcCertify = BFCUnknownState;
 	m_tokenTable = new TCStringArray;
 	sm_modelCount++;
@@ -228,13 +228,13 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 			subModel = new LDLModel;
 			subModel->setFilename(subModelPath);
 
-			// BI
+			// OBI
 			if (m_tokenTable)
 			{
 				// Note: setTokenTable below makes a copy.
 				subModel->setTokenTable(m_tokenTable);
 			}
-			// /BI
+			// /OBI
 
 			if (!initializeNewSubModel(subModel, dictName, subModelFile))
 			{
@@ -1107,59 +1107,59 @@ bool LDLModel::checkConditional(bool type, const char *token)
 	return (type ? tokenExists : !tokenExists);
 }
 
-// 0 BI SET <token>
-// 0 BI UNSET <token>
-// 0 BI NEXT <color> [IFSET <token>|IFNSET <token>] 
-// 0 BI START <color> [IFSET <token>|IFNSET <token>]
-// 0 BI END
-int LDLModel::parseBIMeta(LDLCommentLine *commentLine)
+// 0 !OBI SET <token>
+// 0 !OBI UNSET <token>
+// 0 !OBI NEXT <color> [IFSET <token>|IFNSET <token>] 
+// 0 !OBI START <color> [IFSET <token>|IFNSET <token>]
+// 0 !OBI END
+int LDLModel::parseOBIMeta(LDLCommentLine *commentLine)
 {
-	switch (commentLine->getBICommand())
+	switch (commentLine->getOBICommand())
 	{
-	case LDLCommentLine::BICSet:			// add token to table here
-		if (commentLine->hasBIToken())
+	case LDLCommentLine::OBICSet:			// add token to table here
+		if (commentLine->hasOBIToken())
 		{
-			const char *token = commentLine->getBIToken();
+			const char *token = commentLine->getOBIToken();
 
 			m_tokenTable->addString(token);
 		}
 		break;
-	case LDLCommentLine::BICUnset:			// remove token from table here
+	case LDLCommentLine::OBICUnset:			// remove token from table here
 		if (m_tokenTable)
 		{
-			if (commentLine->hasBIToken())
+			if (commentLine->hasOBIToken())
 			{
-				m_tokenTable->removeString(commentLine->getBIToken());
+				m_tokenTable->removeString(commentLine->getOBIToken());
 			}
 		}
 		break;
-	case LDLCommentLine::BICNext:
+	case LDLCommentLine::OBICNext:
 		// parse color code, set it to be stored in next action line
-		if (!commentLine->hasBIConditional()
-			|| checkConditional(commentLine->getBIConditional(),
-			commentLine->getBIToken()))
+		if (!commentLine->hasOBIConditional()
+			|| checkConditional(commentLine->getOBIConditional(),
+			commentLine->getOBIToken()))
 		{
-			m_flags.biOverrideColor = true;
-			m_flags.biOverrideColorSticky = false;
-			m_biOverrideColorNumber = commentLine->getBIColorNumber();
+			m_flags.obiOverrideColor = true;
+			m_flags.obiOverrideColorSticky = false;
+			m_obiOverrideColorNumber = commentLine->getOBIColorNumber();
 		}
 		break;
-	case LDLCommentLine::BICStart:
+	case LDLCommentLine::OBICStart:
 		// parse color code, set it to the "current" color to be set in
 		// following action lines
-		if (!commentLine->hasBIConditional()
-			|| checkConditional(commentLine->getBIConditional(),
-			commentLine->getBIToken()))
+		if (!commentLine->hasOBIConditional()
+			|| checkConditional(commentLine->getOBIConditional(),
+			commentLine->getOBIToken()))
 		{
-			m_flags.biOverrideColor = true;
-			m_flags.biOverrideColorSticky = true;
-			m_biOverrideColorNumber = commentLine->getBIColorNumber();
+			m_flags.obiOverrideColor = true;
+			m_flags.obiOverrideColorSticky = true;
+			m_obiOverrideColorNumber = commentLine->getOBIColorNumber();
 		}
 		break;
-	case LDLCommentLine::BICEnd:
+	case LDLCommentLine::OBICEnd:
 		// turn off overriding color status
-		m_flags.biOverrideColor = false;
-		m_flags.biOverrideColorSticky = false;	// for completeness
+		m_flags.obiOverrideColor = false;
+		m_flags.obiOverrideColorSticky = false;	// for completeness
 		break;
 	default:
 		// Gets rid of warning
@@ -1186,9 +1186,9 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 		m_stepIndices.push_back(index);
 		return 0;
 	}
-	else if (commentLine->isBIMeta())
+	else if (commentLine->isOBIMeta())
 	{
-		return parseBIMeta(commentLine);	// JJD
+		return parseOBIMeta(commentLine);	// JJD
 	}
 	else if (index == 0)
 	{
@@ -1234,16 +1234,16 @@ bool LDLModel::parse(void)
 					m_flags.bfcClip, m_flags.bfcWindingCCW,
 					m_flags.bfcInvertNext);
 
-				if (m_flags.biOverrideColor)
+				if (m_flags.obiOverrideColor)
 				{
 					LDLActionLine *actionLine = (LDLActionLine*)fileLine;
-					actionLine->setBiOverrideColorNumber(
-						m_biOverrideColorNumber);
-					actionLine->setBiOverrideColor(true);
+					actionLine->setObiOverrideColorNumber(
+						m_obiOverrideColorNumber);
+					actionLine->setObiOverrideColor(true);
 
-					if (!m_flags.biOverrideColorSticky)
+					if (!m_flags.obiOverrideColorSticky)
 					{
-						m_flags.biOverrideColor = false;
+						m_flags.obiOverrideColor = false;
 					}
 				}
 			}

@@ -260,7 +260,7 @@ void LDPreferences::applyEffectsSettings(void)
 		m_modelViewer->setSortTransparent(m_sortTransparent);
 		m_modelViewer->setUseStipple(m_useStipple);
 		m_modelViewer->setUsesFlatShading(m_useFlatShading);
-		m_modelViewer->setAltColor(m_altColor);
+		m_modelViewer->setObi(m_obi);
 		m_modelViewer->setPerformSmoothing(m_performSmoothing);
 	}
 }
@@ -449,7 +449,7 @@ void LDPreferences::loadDefaultEffectsSettings(bool initializing /*= true*/)
 	setSortTransparent(true);
 	setUseStipple(false);
 	setUseFlatShading(false);
-	setAltColor(false);
+	setObi(false);
 	setPerformSmoothing(true);
 	m_initializing = false;
 }
@@ -633,7 +633,7 @@ void LDPreferences::loadEffectsSettings(void)
 	m_sortTransparent = getBoolSetting(SORT_KEY, m_sortTransparent);
 	m_useStipple = getBoolSetting(STIPPLE_KEY, m_useStipple);
 	m_useFlatShading = getBoolSetting(FLAT_SHADING_KEY, m_useFlatShading);
-	m_altColor = getBoolSetting(ALT_COLOR_KEY, m_altColor);
+	m_obi = getBoolSetting(OBI_KEY, m_obi);
 	m_performSmoothing = getBoolSetting(PERFORM_SMOOTHING_KEY,
 		m_performSmoothing);
 }
@@ -801,7 +801,7 @@ void LDPreferences::commitEffectsSettings(bool flush /*= true*/)
 	setUseStipple(m_useStipple, true);
 	setSortTransparent(m_sortTransparent, true);
 	setUseFlatShading(m_useFlatShading, true);
-	setAltColor(m_altColor, true);
+	setObi(m_obi, true);
 	setPerformSmoothing(m_performSmoothing, true);
 	if (flush)
 	{
@@ -1776,9 +1776,9 @@ void LDPreferences::setUseFlatShading(bool value, bool commit)
 	setSetting(m_useFlatShading, value, FLAT_SHADING_KEY, commit);
 }
 
-void LDPreferences::setAltColor(bool value, bool commit)
+void LDPreferences::setObi(bool value, bool commit)
 {
-	setSetting(m_altColor, value, ALT_COLOR_KEY, commit);
+	setSetting(m_obi, value, OBI_KEY, commit);
 }
 
 
