@@ -17,6 +17,15 @@ endif
 
 INCLUDE = -I.. -I../include -I../boost/include
 
+ifeq ($(shell uname -m), x86_64)
+CFLAGS += -m32
+endif
+
+# slurm is media.peeron.com
+ifeq ($(shell hostname), slurm)
+INCLUDE += -I../../Mesa-7.0.2/include
+endif
+
 ifeq ($(shell hostname | cut -d. -f2-), pair.com)
 CFLAGS += -DNO_WSTRING -DTC_NO_UNICODE
 INCLUDE += -I../../Mesa-7.0.1/include
