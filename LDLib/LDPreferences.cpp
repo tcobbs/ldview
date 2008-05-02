@@ -55,6 +55,8 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 		LAST_SNAPSHOT_DIR_KEY);
 	setupSaveDir(SOPartsList, PARTS_LISTS_DIR_MODE_KEY, PARTS_LISTS_DIR_KEY,
 		INV_LAST_SAVE_PATH_KEY);
+	setupSaveDir(SOExport, EXPORTS_DIR_MODE_KEY, EXPORTS_DIR_KEY,
+		LAST_EXPORT_DIR_KEY);
 }
 
 LDPreferences::~LDPreferences(void)
