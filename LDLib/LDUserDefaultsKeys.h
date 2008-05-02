@@ -164,6 +164,9 @@
 #define LAST_LON_KEY "LastLon"
 #define BOUNDING_BOXES_ONLY_KEY "BoundingBoxesOnly"
 #define OBI_KEY "OBI"
+#define EXPORTS_DIR_MODE_KEY "ExportsDirMode"
+#define EXPORTS_DIR_KEY "ExportsDir"
+#define LAST_EXPORT_DIR_KEY "LastExportDir"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"
