@@ -41,7 +41,7 @@ class TREShapeGroup : public TCObject
 public:
 	TREShapeGroup(void);
 	TREShapeGroup(const TREShapeGroup &other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual int addLine(const TCVector *vertices);
 	virtual int addConditionalLine(const TCVector *vertices,
 		const TCVector *controlPoints);

@@ -161,7 +161,7 @@ const TCObject* TCObjectArray::operator[](unsigned int index) const
 	return objectAtIndex(index);
 }
 
-TCObject *TCObjectArray::copy(void)
+TCObject *TCObjectArray::copy(void) const
 {
 	return new TCObjectArray(*this);
 }

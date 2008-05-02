@@ -15,14 +15,15 @@ public:
 	virtual bool load(const char *filename);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual void print(void);
-	virtual TCULong getEdgeColorNumber(TCULong colorNumber);
-	virtual void getRGBA(TCULong colorNumber, int& r, int& g, int& b, int& a);
-	virtual bool hasSpecular(TCULong colorNumber);
-	virtual bool hasShininess(TCULong colorNumber);
-	virtual void getSpecular(TCULong colorNumber, float *specular);
-	virtual void getShininess(TCULong colorNumber, float &shininess);
-	virtual bool colorNumberIsTransparent(TCULong colorNumber);
+	virtual int getEdgeColorNumber(int colorNumber);
+	virtual void getRGBA(int colorNumber, int& r, int& g, int& b, int& a);
+	virtual bool hasSpecular(int colorNumber);
+	virtual bool hasShininess(int colorNumber);
+	virtual void getSpecular(int colorNumber, float *specular);
+	virtual void getShininess(int colorNumber, float &shininess);
+	virtual bool colorNumberIsTransparent(int colorNumber);
 	virtual LDLPalette *getPalette(void) { return m_mainPalette; }
+	virtual const LDLPalette *getPalette(void) const { return m_mainPalette; }
 	virtual void setExtraSearchDirs(TCStringArray *value);
 	TCStringArray *getExtraSearchDirs(void) { return m_extraSearchDirs; }
 	virtual bool isMainModel(void) const { return true; }
@@ -63,7 +64,7 @@ public:
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 private:
 	//LDLMainModel(const LDLMainModel &other);
-	TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 protected:
 	virtual void dealloc(void);
 	virtual void processLDConfig(void);

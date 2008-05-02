@@ -29,7 +29,7 @@
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
 
-LDModelParser::LDModelParser(const LDrawModelViewer *modelViewer)
+LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	:m_modelViewer(modelViewer),
 	m_mainLDLModel(NULL),
 	m_mainTREModel(NULL),
@@ -53,11 +53,28 @@ LDModelParser::LDModelParser(const LDrawModelViewer *modelViewer)
 	m_modelViewer->getDefaultRGB(defaultR, defaultG, defaultB, defaultTrans);
 	setDefaultRGB(defaultR, defaultG, defaultB, defaultTrans);
 	defaultColorNumber = m_modelViewer->getDefaultColorNumber();
-	if (defaultColorNumber != -1)
+	if (defaultColorNumber == -1)
+	{
+		TCByte r, g, b;
+		bool transparent;
+
+		modelViewer->getDefaultRGB(r, g, b, transparent);
+		LDLMainModel *mainModel = modelViewer->getMainModel();
+
+		if (mainModel)
+		{
+			LDLPalette *palette = mainModel->getPalette();
+
+			setDefaultColorNumber(palette->getColorNumberForRGB(r, g, b,
+				transparent));
+		}
+	}
+	else
 	{
 		setDefaultColorNumber(defaultColorNumber);
 	}
 	m_flags.boundingBoxesOnly = m_modelViewer->getBoundingBoxesOnly();
+	m_flags.altColor = m_modelViewer->getAltColor();
 }
 
 LDModelParser::~LDModelParser(void)
@@ -117,6 +134,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	TCULong colorNumber = 7;
 	TCULong edgeColorNumber;
 	LDLPalette *palette = mainLDLModel->getPalette();
+	StringIntMap biTokens;
 
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
@@ -174,7 +192,8 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
-	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag()))
+	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag(),
+		m_defaultColorNumber, biTokens))
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
@@ -403,17 +422,61 @@ void LDModelParser::addBoundingQuad(
 	model->addBFCQuad(quad);
 }
 
-bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
-							   bool bfc)
+int LDModelParser::getActiveColorNumber(
+	LDLModelLine *modelLine,
+	int activeColorNumber)
+{
+	if (modelLine)
+	{
+		int modelLineColorNumber = modelLine->getColorNumber();
+
+		if (modelLineColorNumber != 16)
+		{
+			if (modelLineColorNumber == 24)
+			{
+				LDLModel *ldlModel = modelLine->getModel();
+
+				if (ldlModel)
+				{
+					return ldlModel->getEdgeColorNumber(activeColorNumber);
+				}
+			}
+			else
+			{
+				return modelLineColorNumber;
+			}
+		}
+	}
+	return activeColorNumber;
+}
+
+bool LDModelParser::parseModel(
+	LDLModelLine *modelLine,
+	TREModel *treModel,
+	bool bfc,
+	int activeColorNumber,
+	StringIntMap &biTokens)
 {
 	LDLModel *ldlModel = modelLine->getModel();
 	bool invert = modelLine->getBFCInvert();
 
+	activeColorNumber = getActiveColorNumber(modelLine, activeColorNumber);
 	if (ldlModel)
 	{
+		TREModel *model;
 		const char *name = ldlModel->getName();
-		TREModel *model = m_mainTREModel->modelNamed(name, bfc);
+		std::string nameKey;
 
+		if (ldlModel->colorNumberIsTransparent(activeColorNumber))
+		{
+			nameKey = "Trans:";
+			nameKey += name;
+		}
+		else
+		{
+			nameKey = name;
+		}
+		model = m_mainTREModel->modelNamed(nameKey.c_str(), bfc);
 		if (model)
 		{
 			return addSubModel(modelLine, treModel, model, bfc && invert);
@@ -422,7 +485,7 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 		{
 			model = new TREModel;
 			model->setMainModel(treModel->getMainModel());
-			model->setName(name);
+			model->setName(nameKey.c_str());
 			model->setPartFlag(ldlModel->isPart());
 			model->setNoShrinkFlag(ldlModel->getNoShrinkFlag());
 			if (m_flags.boundingBoxesOnly && ldlModel->isPart())
@@ -438,7 +501,8 @@ bool LDModelParser::parseModel(LDLModelLine *modelLine, TREModel *treModel,
 				}
 				return addSubModel(modelLine, treModel, model, bfc && invert);
 			}
-			else if (parseModel(ldlModel, model, bfc))
+			else if (parseModel(ldlModel, model, bfc, activeColorNumber,
+				biTokens))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();
@@ -880,7 +944,12 @@ bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
 //	return false;
 }
 
-bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
+bool LDModelParser::parseModel(
+	LDLModel *ldlModel,
+	TREModel *treModel,
+	bool bfc,
+	int activeColorNumber,
+	StringIntMap &biTokens)
 {
 	BFCState newState = ldlModel->getBFCState();
 
@@ -894,6 +963,7 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 		{
 			int i;
 			int count = ldlModel->getActiveLineCount();
+			StringIntMap biLocalTokens;
 
 			for (i = 0; i < count && !m_abort; i++)
 			{
@@ -903,10 +973,17 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 				{
 					if (fileLine->isActionLine())
 					{
+						if (m_flags.altColor)
+						{
+							((LDLActionLine *)fileLine)->setBiOverrideActive(
+								!ldlModel->colorNumberIsTransparent(
+								activeColorNumber));
+						}
 						switch (fileLine->getLineType())
 						{
 						case LDLLineTypeModel:
-							parseModel((LDLModelLine *)fileLine, treModel, bfc);
+							parseModel((LDLModelLine *)fileLine, treModel, bfc,
+								activeColorNumber, biTokens);
 							break;
 						case LDLLineTypeLine:
 							parseLine((LDLShapeLine *)fileLine, treModel);
@@ -929,7 +1006,8 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 					}
 					else if (fileLine->getLineType() == LDLLineTypeComment)
 					{
-						parseCommentLine((LDLCommentLine *)fileLine, treModel);
+						parseCommentLine((LDLCommentLine *)fileLine, treModel,
+							biTokens, biLocalTokens);
 					}
 				}
 				if (ldlModel->isMainModel())
@@ -939,18 +1017,74 @@ bool LDModelParser::parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc)
 						(float)(i + 1) / (float)(count + 1), &m_abort, this);
 				}
 			}
+			for (StringIntMap::iterator it = biLocalTokens.begin();
+				it != biLocalTokens.end(); it++)
+			{
+				unsetToken(biTokens, it->first.c_str(), it->second);
+			}
 		}
 	}
 	return !m_abort;
 }
 
+// Note: static method
+bool LDModelParser::unsetToken(
+	StringIntMap &tokens,
+	const char *token,
+	int count /*= 1*/)
+{
+	StringIntMap::iterator it = tokens.find(token);
+
+	if (it != tokens.end())
+	{
+		it->second -= count;
+		if (it->second <= 0)
+		{
+			tokens.erase(it);
+		}
+		return true;
+	}
+	return false;
+}
+
 void LDModelParser::parseCommentLine(
 	LDLCommentLine *commentLine,
-	TREModel *treModel)
+	TREModel *treModel,
+	StringIntMap &biAllTokens,
+	StringIntMap &biLocalTokens)
 {
 	if (commentLine->isStepMeta())
 	{
 		treModel->nextStep();
+	}
+	else if (commentLine->isBIMeta())
+	{
+		switch (commentLine->getBICommand())
+		{
+		case LDLCommentLine::BICSet:
+			if (commentLine->hasBIToken())
+			{
+				const char *token = commentLine->getBIToken();
+
+				biAllTokens[token]++;
+				biLocalTokens[token]++;
+			}
+			break;
+		case LDLCommentLine::BICUnset:
+			if (commentLine->hasBIToken())
+			{
+				const char *token = commentLine->getBIToken();
+
+				if (unsetToken(biLocalTokens, token))
+				{
+					// Only unset from the all list if the token was found in
+					// the local list.  Models aren't allowed to unset tokens
+					// from their parent model.
+					unsetToken(biAllTokens, token);
+				}
+			}
+			break;
+		}
 	}
 }
 

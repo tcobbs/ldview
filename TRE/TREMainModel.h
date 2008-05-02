@@ -44,7 +44,7 @@ class TREMainModel : public TREModel
 public:
 	TREMainModel(void);
 	//TREMainModel(const TREMainModel &other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual TCDictionary* getLoadedModels(bool bfc);
 	virtual void draw(void);
 	virtual TREVertexStore *getVertexStore(void) { return m_vertexStore; }

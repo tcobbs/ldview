@@ -79,7 +79,7 @@ void LDLConditionalLineLine::dealloc(void)
 	LDLLineLine::dealloc();
 }
 
-TCObject *LDLConditionalLineLine::copy(void)
+TCObject *LDLConditionalLineLine::copy(void) const
 {
 	return new LDLConditionalLineLine(*this);
 }

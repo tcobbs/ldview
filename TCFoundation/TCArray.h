@@ -27,7 +27,7 @@ class TCExport TCArray : public TCObject
 		virtual void sortUsingFunction(TCArraySortFunction function);
 		void **getItems(void) { return items; }
 		const VoidStarStar getItems(void) const { return items; }
-		virtual TCObject *copy(void);
+		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCArray(void);
 		virtual void dealloc(void);

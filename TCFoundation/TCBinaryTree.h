@@ -23,19 +23,19 @@ class TCExport TCBinaryTree : public TCObject
 		virtual int writeFile(const char*);
 		virtual int readFile(const char*);
 		virtual void prettyPrint(void);
-		virtual TCObject *copy(void);
+		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCBinaryTree(void);
 		virtual void dealloc(void);
 		virtual void deleteNode(TCBinaryTreeNode*);
 		virtual int compare(const char*, const char*);
-		virtual TCBinaryTreeNode* newNodeWithString(const char*);
+		virtual TCBinaryTreeNode* newNodeWithString(const char*) const;
 		virtual int writeFileForTree(FILE*, TCBinaryTreeNode*);
 		virtual void addFromSortedArray(TCStringArray*, int, int);
 		virtual void prettyPrintNode(TCBinaryTreeNode*, int);
 		virtual void prettyPrintLine(const char*, int);
 		virtual void copyNode(TCBinaryTreeNode *dstNode,
-			TCBinaryTreeNode *srcNode);
+			const TCBinaryTreeNode *srcNode) const;
 
 		TCBinaryTreeNode* rootNode;
 };

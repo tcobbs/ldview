@@ -39,7 +39,7 @@ public:
 	virtual void setImageData(TCByte *value);
 	TCByte *getImageData(void) { return imageData; }
 	virtual int getRowSize(void);
-//	virtual TCObject *copy(void);
+//	virtual TCObject *copy(void) const;
 	virtual bool loadData(TCByte *data, long length,
 		TCImageProgressCallback progressCallback = NULL,
 		void *progressUserData = NULL);

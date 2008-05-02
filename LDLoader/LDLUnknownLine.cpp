@@ -28,7 +28,7 @@ bool LDLUnknownLine::parse(void)
 	return false;
 }
 
-TCObject *LDLUnknownLine::copy(void)
+TCObject *LDLUnknownLine::copy(void) const
 {
 	return new LDLUnknownLine(*this);
 }

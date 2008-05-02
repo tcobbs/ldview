@@ -162,7 +162,7 @@ void TREModel::dealloc(void)
 	TCObject::dealloc();
 }
 
-TCObject *TREModel::copy(void)
+TCObject *TREModel::copy(void) const
 {
 	return new TREModel(*this);
 }

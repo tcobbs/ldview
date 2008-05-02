@@ -17,14 +17,14 @@ public:
 	virtual void release(void);
 	virtual TCObject* autorelease(void);
 	virtual int isEqual(TCObject& other);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	int getRetainCount(void) { return retainCount; }
 	virtual int compare(const TCObject *other) const;
 
 	static TCObject *retain(TCObject *object);
 	static void release(TCObject *object);
 	static TCObject *autorelease(TCObject *object);
-	static TCObject *copy(TCObject *object);
+	static TCObject *copy(const TCObject *object);
 
 	// Local Strings
 #if !defined(WIN32) && !defined(COCOA) && !defined(_OSMESA)

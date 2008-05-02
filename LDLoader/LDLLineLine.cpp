@@ -45,7 +45,7 @@ bool LDLLineLine::parse(void)
 	}
 }
 
-TCObject *LDLLineLine::copy(void)
+TCObject *LDLLineLine::copy(void) const
 {
 	return new LDLLineLine(*this);
 }

@@ -6,7 +6,7 @@
 class LDLModelLine : public LDLActionLine
 {
 public:
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual LDLModel *getModel(void) const;
 	TCFloat *getMatrix(void) { return m_matrix; }

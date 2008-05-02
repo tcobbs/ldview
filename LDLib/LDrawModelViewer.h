@@ -125,6 +125,8 @@ class LDrawModelViewer: public TCAlertSender
 		{
 			return flags.usesFlatShading != false;
 		}
+		void setAltColor(bool value);
+		bool getAltColor(void) const { return flags.altColor != false; }
 		virtual void setUsesSpecular(bool value);
 		bool getUsesSpecular(void) const { return flags.usesSpecular != false; }
 		virtual void setOneLight(bool value);
@@ -383,6 +385,7 @@ class LDrawModelViewer: public TCAlertSender
 		int getTextureFilterType(void) const { return textureFilterType; }
 		TREMainModel *getMainTREModel(void) { return mainTREModel; }
 		LDLMainModel *getMainModel(void) { return mainModel; }
+		const LDLMainModel *getMainModel(void) const { return mainModel; }
 		bool getCompiled(void) const;
 		void setPixelAspectRatio(TCFloat value) { pixelAspectRatio = value; }
 		TCFloat getPixelAspectRatio(void) { return pixelAspectRatio; }
@@ -678,6 +681,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool axesAtOrigin:1;
 			bool showBoundingBox:1;
 			bool boundingBoxesOnly:1;
+			bool altColor:1;
 		} flags;
 		struct CameraData
 		{

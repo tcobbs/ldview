@@ -15,7 +15,7 @@ template <class Type> class TCTypedPointerArray : public TCArray
 		TCTypedPointerArray(const TCTypedPointerArray<Type> &other)
 			:TCArray(other) {}
 
-		virtual TCObject *copy(void)
+		virtual TCObject *copy(void) const
 		{
 			return new TCTypedPointerArray<Type>(*this);
 		}

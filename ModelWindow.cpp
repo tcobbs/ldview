@@ -4268,32 +4268,23 @@ std::string ModelWindow::defaultDir(
 std::string ModelWindow::getSnapshotDir(void)
 {
 	LDPreferences *ldPrefs = prefs->getLDPrefs();
-	char *temp = directoryFromPath(modelViewer->getFilename());
-	std::string modelDir(temp);
 
-	delete temp;
 	if (ldPrefs != NULL)
 	{
-		temp = TCUserDefaults::pathForKey(LAST_SNAPSHOT_PATH_KEY,
-			modelDir.c_str(), false);
-		std::string dir(temp);
-		
-		delete temp;
-		return defaultDir(ldPrefs->getSnapshotsDirMode(), temp,
-			ldPrefs->getSnapshotsDir().c_str());
+		return ldPrefs->getDefaultSaveDir(LDPreferences::SOSnapshot,
+			modelViewer->getFilename());
 	}
-	return modelDir;
+	return ".";
 }
 
-std::string ModelWindow::getPartsListDir(LDHtmlInventory *htmlInventory)
+std::string ModelWindow::getPartsListDir(void)
 {
 	LDPreferences *ldPrefs = prefs->getLDPrefs();
 
 	if (ldPrefs != NULL)
 	{
-		return defaultDir(ldPrefs->getPartsListsDirMode(),
-			htmlInventory->getLastSavePath(),
-			ldPrefs->getPartsListsDir().c_str());
+		return ldPrefs->getDefaultSaveDir(LDPreferences::SOPartsList,
+			modelViewer->getFilename());
 	}
 	return ".";
 }
@@ -4341,7 +4332,7 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		int index = (int)openStruct.nFilterIndex;
 		char *dir = directoryFromPath(saveFilename);
 
-		TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_PATH_KEY, false);
+		TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_DIR_KEY, false);
 		delete dir;
 		if (index > 0 && index <= maxImageType)
 		{

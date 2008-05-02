@@ -6,7 +6,7 @@
 class LDLUnknownLine : public LDLFileLine
 {
 public:
-	TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeUnknown; }
 protected:

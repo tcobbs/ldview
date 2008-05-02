@@ -142,8 +142,9 @@ TCObject *TCObjectTree::objectForKey(const void *key)
 	return NULL;
 }
 
-void TCObjectTree::copyNode(TCObjectTreeNode *dstNode,
-								  TCObjectTreeNode *srcNode)
+void TCObjectTree::copyNode(
+	TCObjectTreeNode *dstNode,
+	const TCObjectTreeNode *srcNode) const
 {
 	if (srcNode->left)
 	{
@@ -159,7 +160,7 @@ void TCObjectTree::copyNode(TCObjectTreeNode *dstNode,
 	}
 }
 
-TCObject *TCObjectTree::copy(void)
+TCObject *TCObjectTree::copy(void) const
 {
 	TCObjectTree *newBinaryTree = new TCObjectTree(compareKey, copyKey);
 

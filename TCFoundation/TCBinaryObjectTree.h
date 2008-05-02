@@ -24,7 +24,7 @@ public:
 	virtual int setObjectForKey(TCObject *object, const char *key);
 	TCObject* objectForKey(const char *key);
 	virtual int isCaseSensitve(void) { return caseSensitive; }
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual void traverseTree(TCTraversalFunc traversalFunc);
 	virtual void balance(void);
 protected:
@@ -33,7 +33,7 @@ protected:
 	virtual void deleteNode(TCBinaryObjectTreeNode*);
 	virtual int compare(const char*, const char*);
 	virtual void copyNode(TCBinaryObjectTreeNode *dstNode,
-		TCBinaryObjectTreeNode *srcNode);
+		const TCBinaryObjectTreeNode *srcNode) const;
 	virtual void traverseNode(TCBinaryObjectTreeNode *node,
 		TCTraversalFunc traversalFunc);
 	virtual int removeObjectForKeyFromNode(TCBinaryObjectTreeNode *&node,

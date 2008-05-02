@@ -8,7 +8,7 @@ class LDLTriangleLine;
 class LDLQuadLine : public LDLShapeLine
 {
 public:
-	TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual int getNumPoints(void) const { return 4; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeQuad; }

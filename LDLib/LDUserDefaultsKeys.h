@@ -152,7 +152,7 @@
 #define SNAPSHOTS_DIR_KEY "SnapshotsDir"
 #define PARTS_LISTS_DIR_MODE_KEY "PartsListsDirMode"
 #define PARTS_LISTS_DIR_KEY "PartsListsDir"
-#define LAST_SNAPSHOT_PATH_KEY "LastSnapshotPath"
+#define LAST_SNAPSHOT_DIR_KEY "LastSnapshotDir"
 #define PRINT_CUSTOM_DPI_KEY "PrintCustomDPI"
 #define PRINT_ADJUST_EDGES_KEY "PrintAdjustEdges"
 #define SAVE_STEPS_SUFFIX_KEY "SaveStepsSuffix"
@@ -163,6 +163,7 @@
 #define LAST_LAT_KEY "LastLat"
 #define LAST_LON_KEY "LastLon"
 #define BOUNDING_BOXES_ONLY_KEY "BoundingBoxesOnly"
+#define ALT_COLOR_KEY "AltColor"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

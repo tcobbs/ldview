@@ -110,7 +110,7 @@ void TREVertexStore::dealloc(void)
 	TCObject::dealloc();
 }
 
-TCObject *TREVertexStore::copy(void)
+TCObject *TREVertexStore::copy(void) const
 {
 	return new TREVertexStore(*this);
 }

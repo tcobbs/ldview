@@ -17,7 +17,7 @@ class TCExport TCDictionary: public TCObject
 		virtual int removeObjectForKey(const char*);
 		virtual void removeAll(void);
 		virtual int isCaseSensitve(void);
-		virtual TCObject *copy(void);
+		virtual TCObject *copy(void) const;
 	protected:
 		virtual ~TCDictionary(void);
 		virtual void dealloc(void);

@@ -52,7 +52,7 @@ void LDLModelLine::dealloc(void)
 	LDLActionLine::dealloc();
 }
 
-TCObject *LDLModelLine::copy(void)
+TCObject *LDLModelLine::copy(void) const
 {
 	return new LDLModelLine(*this);
 }

@@ -59,7 +59,7 @@ public:
 	TREModel(void);
 	TREModel(const TREModel &other);
 	TREModel(const TREModel &other, bool shallow);
-	virtual TCObject *copy(void);
+	virtual TCObject *copy(void) const;
 	virtual TREModel *shallowCopy(void);
 	virtual void setMainModel(TREMainModel *mainModel)
 	{

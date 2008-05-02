@@ -61,7 +61,7 @@ int TCObject::isEqual(TCObject& other)
 	return this == &other;
 }
 
-TCObject *TCObject::copy(void)
+TCObject *TCObject::copy(void) const
 {
 	return NULL;
 }
@@ -101,7 +101,7 @@ TCObject *TCObject::autorelease(TCObject *object)
 	}
 }
 
-TCObject *TCObject::copy(TCObject *object)
+TCObject *TCObject::copy(const TCObject *object)
 {
 	if (object)
 	{

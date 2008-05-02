@@ -270,7 +270,7 @@ int TCSortedStringArray::indexOfString(const char* string)
 */
 }
 
-TCObject *TCSortedStringArray::copy(void)
+TCObject *TCSortedStringArray::copy(void) const
 {
 	TCStringArray *newSortedStringArray =
 		new TCSortedStringArray(count, caseSensitive);
