@@ -15,9 +15,6 @@ LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
 	m_actionFlags.bfcClip = false;
 	m_actionFlags.bfcWindingCCW = true;
 	m_actionFlags.bfcInvert = false;
-	m_actionFlags.obiOverrideColor = false;
-	m_actionFlags.obiOverrideActive = false;
-	m_obiOverrideColorNumber = 0;	// default to black
 }
 
 LDLActionLine::LDLActionLine(const LDLActionLine &other)
@@ -38,16 +35,5 @@ void LDLActionLine::setBFCSettings(BFCState bfcCertify, bool bfcClip,
 
 int LDLActionLine::getColorNumber(void) const
 {
-	if (getObiOverrideColor() && getObiOverrideActive())
-	{
-		if (m_colorNumber == 24)
-		{
-			return 0;
-		}
-		else if (m_colorNumber == 16)
-		{
-			return m_obiOverrideColorNumber;
-		}
-	}
 	return m_colorNumber;
 }

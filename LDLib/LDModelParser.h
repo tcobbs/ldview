@@ -54,15 +54,16 @@ protected:
 		int activeColorNumber);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
 		bool bfc, int activeColorNumber);
-	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel);
+	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel,
+		int activeColorNumber);
 	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
-		bool bfc, bool invert);
+		bool bfc, bool invert, int activeColorNumber);
 	virtual void parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
-		bool bfc, bool invert);
+		bool bfc, bool invert, int activeColorNumber);
 	virtual void parseConditionalLine(LDLConditionalLineLine *conditionalLine,
-		TREModel *treModel);
+		TREModel *treModel, int activeColorNumber);
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
-		TREModel *treModel, bool invert);
+		TREModel *treModel, bool invert, int activeColorNumber);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
 		TREModel *treModel, int activeColorNumber, bool bfc);
 	virtual bool substituteStud(int numSegments);
@@ -125,7 +126,7 @@ protected:
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	virtual bool shouldLoadConditionalLines(void);
 	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
-	int actualColorNumber(LDLActionLine *actionLine);
+	int actualColorNumber(LDLActionLine *actionLine, int activeColorNumber);
 	std::string modelNameKey(LDLModel *model, int activeColorNumber);
 
 	static bool unsetToken(StringIntMap &tokens, const char *token,

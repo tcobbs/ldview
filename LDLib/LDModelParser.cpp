@@ -317,11 +317,14 @@ bool LDModelParser::getMultiThreadedFlag(void) const
 	return m_modelViewer->getMultiThreaded();
 }
 
-bool LDModelParser::addSubModel(LDLModelLine *modelLine,
-								TREModel *treParentModel,
-								TREModel *treModel, bool invert)
+bool LDModelParser::addSubModel(
+	LDLModelLine *modelLine,
+	TREModel *treParentModel,
+	TREModel *treModel,
+	bool invert,
+	int activeColorNumber)
 {
-	int colorNumber = actualColorNumber(modelLine);
+	int colorNumber = actualColorNumber(modelLine, activeColorNumber);
 	TRESubModel *treSubModel = NULL;
 
 	if (colorNumber == 16 || colorNumber == 24)
@@ -501,7 +504,8 @@ bool LDModelParser::parseModel(
 		model = m_mainTREModel->modelNamed(nameKey.c_str(), bfc);
 		if (model)
 		{
-			return addSubModel(modelLine, treModel, model, bfc && invert);
+			return addSubModel(modelLine, treModel, model, bfc && invert,
+				activeColorNumber);
 		}
 		else
 		{
@@ -521,13 +525,15 @@ bool LDModelParser::parseModel(
 				{
 					addBoundingQuad(model, minMax, i);
 				}
-				return addSubModel(modelLine, treModel, model, bfc && invert);
+				return addSubModel(modelLine, treModel, model, bfc && invert,
+					activeColorNumber);
 			}
 			else if (parseModel(ldlModel, model, bfc, activeColorNumber))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();
-				return addSubModel(modelLine, treModel, model, bfc && invert);
+				return addSubModel(modelLine, treModel, model, bfc && invert,
+					activeColorNumber);
 			}
 			else
 			{
@@ -1026,19 +1032,21 @@ bool LDModelParser::parseModel(
 								activeColorNumber);
 							break;
 						case LDLLineTypeLine:
-							parseLine((LDLShapeLine *)fileLine, treModel);
+							parseLine((LDLShapeLine *)fileLine, treModel,
+								activeColorNumber);
 							break;
 						case LDLLineTypeTriangle:
 							parseTriangle((LDLShapeLine *)fileLine, treModel,
-								bfc, false);
+								bfc, false, activeColorNumber);
 							break;
 						case LDLLineTypeQuad:
 							parseQuad((LDLShapeLine *)fileLine, treModel, bfc,
-								false);
+								false, activeColorNumber);
 							break;
 						case LDLLineTypeConditionalLine:
 							parseConditionalLine(
-								(LDLConditionalLineLine *)fileLine, treModel);
+								(LDLConditionalLineLine *)fileLine, treModel,
+								activeColorNumber);
 							break;
 						default:
 							break;
@@ -1100,6 +1108,11 @@ void LDModelParser::parseCommentLine(
 	}
 	else if (commentLine->isOBIMeta() && m_flags.obi)
 	{
+		// 0 !OBI SET <token>
+		// 0 !OBI UNSET <token>
+		// 0 !OBI NEXT <color> [IFSET <token>|IFNSET <token>] 
+		// 0 !OBI START <color> [IFSET <token>|IFNSET <token>]
+		// 0 !OBI END
 		switch (commentLine->getOBICommand())
 		{
 		case LDLCommentLine::OBICSet:
@@ -1141,9 +1154,12 @@ void LDModelParser::parseCommentLine(
 	}
 }
 
-void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
+void LDModelParser::parseLine(
+	LDLShapeLine *shapeLine,
+	TREModel *treModel,
+	int activeColorNumber)
 {
-	int colorNumber = actualColorNumber(shapeLine);
+	int colorNumber = actualColorNumber(shapeLine, activeColorNumber);
 	//TCULong colorNumber = shapeLine->getColorNumber();
 
 	if (colorNumber == 16)
@@ -1167,13 +1183,15 @@ void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
 	}
 }
 
-void LDModelParser::parseConditionalLine(LDLConditionalLineLine
-										 *conditionalLine,
-										 TREModel *treModel)
+void LDModelParser::parseConditionalLine(
+	LDLConditionalLineLine
+	*conditionalLine,
+	TREModel *treModel,
+	int activeColorNumber)
 {
 	if (shouldLoadConditionalLines())
 	{
-		int colorNumber = conditionalLine->getColorNumber();
+		int colorNumber = actualColorNumber(conditionalLine, activeColorNumber);
 		TCULong color = 0;
 
 		if (colorNumber != 24)
@@ -1191,10 +1209,14 @@ bool LDModelParser::shouldFlipWinding(bool invert, bool windingCCW)
 	return (invert && windingCCW) || (!invert && !windingCCW);
 }
 
-void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
-								  bool bfc, bool invert)
+void LDModelParser::parseTriangle(
+	LDLShapeLine *shapeLine,
+	TREModel *treModel,
+	bool bfc,
+	bool invert,
+	int activeColorNumber)
 {
-	int colorNumber = actualColorNumber(shapeLine);
+	int colorNumber = actualColorNumber(shapeLine, activeColorNumber);
 	//TCULong colorNumber = shapeLine->getColorNumber();
 
 	if (colorNumber == 16)
@@ -1251,37 +1273,45 @@ void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
 	}
 }
 
-int LDModelParser::actualColorNumber(LDLActionLine *actionLine)
+int LDModelParser::actualColorNumber(
+	LDLActionLine *actionLine,
+	int activeColorNumber)
 {
 	int colorNumber = actionLine->getColorNumber();
-	TCULong color;
+	LDLModel *model = actionLine->getParentModel();
 
-	switch (colorNumber)
+	if (model && !model->colorNumberIsTransparent(activeColorNumber))
 	{
-	case 16:
-		color = m_obiInfo->getColor();
-		break;
-	case 24:
-		color = m_obiInfo->getEdgeColor();
-		break;
-	default:
-		color = 0;
-		break;
+		TCULong color;
+
+		switch (colorNumber)
+		{
+		case 16:
+			color = m_obiInfo->getColor();
+			break;
+		case 24:
+			color = m_obiInfo->getEdgeColor();
+			break;
+		default:
+			color = 0;
+			break;
+		}
+		if (color != 0)
+		{
+			return LDLPalette::colorNumberForPackedRGBA(color);
+		}
 	}
-	if (color == 0)
-	{
-		return colorNumber;
-	}
-	else
-	{
-		return LDLPalette::colorNumberForPackedRGBA(color);
-	}
+	return colorNumber;
 }
 
-void LDModelParser::parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
-							  bool bfc, bool invert)
+void LDModelParser::parseQuad(
+	LDLShapeLine *shapeLine,
+	TREModel *treModel,
+	bool bfc,
+	bool invert,
+	int activeColorNumber)
 {
-	int colorNumber = actualColorNumber(shapeLine);
+	int colorNumber = actualColorNumber(shapeLine, activeColorNumber);
 
 	if (colorNumber == 16)
 	{
