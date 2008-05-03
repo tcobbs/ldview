@@ -610,22 +610,53 @@ void TREModel::addLine(const TCVector *vertices)
 
 void TREModel::addConditionalLine(
 	const TCVector *vertices,
-	const TCVector *controlPoints)
+	const TCVector *controlPoints,
+	TCULong color)
 {
-	setup(TREMConditionalLines);
-	m_shapes[TREMConditionalLines]->addConditionalLine(vertices, controlPoints);
+	// Note a color of 0 would have an alpha of 0, which would make it
+	// invisible.  LDModelParser needs to be smart enough to ignore geometry
+	// that's invisible.
+	if (color == 0)
+	{
+		setup(TREMConditionalLines);
+		m_shapes[TREMConditionalLines]->addConditionalLine(vertices,
+			controlPoints);
+	}
+	else
+	{
+		setupColored(TREMConditionalLines);
+		m_coloredShapes[TREMConditionalLines]->addConditionalLine(color,
+			vertices, controlPoints);
+	}
 }
 
-void TREModel::addEdgeLine(const TCVector *vertices)
+void TREModel::addEdgeLine(const TCVector *vertices, TCULong color)
 {
-	setupEdges();
-	m_shapes[TREMEdgeLines]->addLine(vertices);
+	if (color == 0)
+	{
+		setupEdges();
+		m_shapes[TREMEdgeLines]->addLine(vertices);
+	}
+	else
+	{
+		setupColoredEdges();
+		m_coloredShapes[TREMEdgeLines]->addLine(color, vertices);
+	}
 }
 
 void TREModel::addTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColored();
 	m_coloredShapes[TREMStandard]->addTriangle(color, vertices);
+}
+
+void TREModel::addTriangle(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals)
+{
+	setupColored();
+	m_coloredShapes[TREMStandard]->addTriangle(color, vertices, normals);
 }
 
 void TREModel::addTriangle(const TCVector *vertices)
@@ -638,6 +669,15 @@ void TREModel::addBFCTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColoredBFC();
 	m_coloredShapes[TREMBFC]->addTriangle(color, vertices);
+}
+
+void TREModel::addBFCTriangle(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals)
+{
+	setupColoredBFC();
+	m_coloredShapes[TREMBFC]->addTriangle(color, vertices, normals);
 }
 
 void TREModel::addBFCTriangle(const TCVector *vertices)
@@ -1637,9 +1677,12 @@ void TREModel::addCylinder(
 	TCFloat height,
 	int numSegments,
 	int usedSegments,
-	bool bfc)
+	bool bfc,
+	TCULong color,
+	TCULong edgeColor)
 {
-	addOpenCone(center, radius, radius, height, numSegments, usedSegments, bfc);
+	addOpenCone(center, radius, radius, height, numSegments, usedSegments, bfc,
+		color, edgeColor);
 }
 
 void TREModel::addStudDisc(const TCVector &center, TCFloat radius,
@@ -1845,8 +1888,15 @@ void TREModel::setCirclePoint(
 	point[2] = center.get(2) + z1;
 }
 
-void TREModel::addCone(const TCVector &center, TCFloat radius, TCFloat height,
-					   int numSegments, int usedSegments, bool bfc)
+void TREModel::addCone(
+	const TCVector &center,
+	TCFloat radius,
+	TCFloat height,
+	int numSegments,
+	int usedSegments,
+	bool bfc,
+	TCULong color,
+	TCULong edgeColor)
 {
 	int i;
 	TCVector top = center;
@@ -1895,7 +1945,7 @@ void TREModel::addCone(const TCVector &center, TCFloat radius, TCFloat height,
 				controlPoints[0] = p1;
 				controlPoints[0][axis1] -= 1.0f;
 				controlPoints[1] = p2;
-				addConditionalLine(linePoints, controlPoints);
+				addConditionalLine(linePoints, controlPoints, edgeColor);
 			}
 		}
 		else
@@ -1920,7 +1970,7 @@ void TREModel::addCone(const TCVector &center, TCFloat radius, TCFloat height,
 			{
 				controlPoints[1] = p3;
 			}
-			addConditionalLine(linePoints, controlPoints);
+			addConditionalLine(linePoints, controlPoints, edgeColor);
 		}
 		tri2Cross = (p2 - top) * (p2 - p3);
 		normals[0] = tri2Cross + tri1Cross;
@@ -1929,11 +1979,25 @@ void TREModel::addCone(const TCVector &center, TCFloat radius, TCFloat height,
 		normals[2].normalize();
 		if (bfc)
 		{
-			addBFCTriangle(points, normals);
+			if (color == 0)
+			{
+				addBFCTriangle(points, normals);
+			}
+			else
+			{
+				addBFCTriangle(color, points, normals);
+			}
 		}
 		else
 		{
-			addTriangle(points, normals);
+			if (color == 0)
+			{
+				addTriangle(points, normals);
+			}
+			else
+			{
+				addTriangle(color, points, normals);
+			}
 		}
 	}
 	delete[] points;
@@ -2338,7 +2402,9 @@ void TREModel::addOpenCone(
 	TCFloat height,
 	int numSegments,
 	int usedSegments,
-	bool bfc)
+	bool bfc,
+	TCULong color,
+	TCULong edgeColor)
 {
 	if (usedSegments == -1)
 	{
@@ -2399,15 +2465,32 @@ void TREModel::addOpenCone(
 		}
 		if (bfc)
 		{
-			addBFCQuadStrip(points, normals, vertexCount, height == 0.0f);
+			if (color == 0)
+			{
+				addBFCQuadStrip(points, normals, vertexCount, height == 0.0f);
+			}
+			else
+			{
+				addBFCQuadStrip(color, points, normals, vertexCount,
+					height == 0.0f);
+			}
 		}
 		else
 		{
-			addQuadStrip(points, normals, vertexCount, height == 0.0f);
+			if (color == 0)
+			{
+				addQuadStrip(points, normals, vertexCount, height == 0.0f);
+			}
+			else
+			{
+				addQuadStrip(color, points, normals, vertexCount,
+					height == 0.0f);
+			}
 		}
 		if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 		{
-			addOpenConeConditionals(points, numSegments, usedSegments);
+			addOpenConeConditionals(points, numSegments, usedSegments,
+				edgeColor);
 		}
 		delete[] points;
 		delete[] normals;
@@ -2430,8 +2513,11 @@ void TREModel::calcTangentControlPoint(TCVector &controlPoint, int index,
 	controlPoint[2] += (TCFloat)sin(angle);
 }
 
-void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
-									   int usedSegments)
+void TREModel::addOpenConeConditionals(
+	TCVector *points,
+	int numSegments,
+	int usedSegments,
+	TCULong color)
 {
 	int i;
 	TCVector controlPoints[2];
@@ -2479,7 +2565,7 @@ void TREModel::addOpenConeConditionals(TCVector *points, int numSegments,
 		{
 			controlPoints[1] = points[(i + 1) * 2];
 		}
-		addConditionalLine(p1, controlPoints);
+		addConditionalLine(p1, controlPoints, color);
 	}
 }
 
@@ -2523,8 +2609,12 @@ void TREModel::addSlopedCylinder2Conditionals(TCVector *points,
 	}
 }
 
-void TREModel::addCircularEdge(const TCVector& center, TCFloat radius,
-							   int numSegments, int usedSegments)
+void TREModel::addCircularEdge(
+	const TCVector& center,
+	TCFloat radius,
+	int numSegments,
+	int usedSegments,
+	TCULong color)
 {
 	int i;
 	TCVector p1;
@@ -2553,7 +2643,7 @@ void TREModel::addCircularEdge(const TCVector& center, TCFloat radius,
 	{
 		points[0] = allPoints[i];
 		points[1] = allPoints[i + 1];
-		addEdgeLine(points);
+		addEdgeLine(points, color);
 	}
 	delete[] allPoints;
 }

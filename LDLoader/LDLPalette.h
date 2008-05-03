@@ -44,6 +44,8 @@ public:
 	static void getDefaultRGBA(int colorNumber, int &r, int &g, int &b, int &a);
 	static LDLPalette *getDefaultPalette(void);
 	static TCULong colorForRGBA(int r, int g, int b, int a);
+	static int colorNumberForRGBA(int r, int g, int b, int a);
+	static int colorNumberForPackedRGBA(TCULong color);
 protected:
 	virtual ~LDLPalette(void);
 	virtual void dealloc(void);

@@ -645,6 +645,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LDObiInfo.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LDPartCount.cpp"
 				>
 			</File>
@@ -749,6 +753,10 @@
 			</File>
 			<File
 				RelativePath=".\LDModelTree.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDObiInfo.h"
 				>
 			</File>
 			<File

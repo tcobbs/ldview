@@ -177,7 +177,8 @@ int TREVertexStore::addVertices(
 	TCULong color,
 	const TCVector *points,
 	int count,
-	int step)
+	int step,
+	GLboolean edgeFlag)
 {
 	int i;
 
@@ -185,7 +186,7 @@ int TREVertexStore::addVertices(
 	{
 		m_colors->addValue(color);
 	}
-	return addVertices(points, count, step);
+	return addVertices(points, count, step, edgeFlag);
 }
 
 int TREVertexStore::addVertices(

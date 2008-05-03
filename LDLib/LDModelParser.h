@@ -12,11 +12,13 @@ class TREMainModel;
 class TREModel;
 class TRESubModel;
 class LDLCommentLine;
+class LDLActionLine;
 class LDLShapeLine;
 class LDLModelLine;
 class LDLConditionalLineLine;
 class LDrawModelViewer;
 class TCVector;
+class LDObiInfo;
 
 typedef std::map<std::string, int> StringIntMap;
 
@@ -47,12 +49,11 @@ protected:
 		return m_flags.defaultColorNumberSet != false;
 	}
 	virtual void parseCommentLine(LDLCommentLine *commentLine,
-		TREModel *treModel, StringIntMap &biAllTokens,
-		StringIntMap &biLocalTokens);
+		TREModel *treModel, StringIntMap &biLocalTokens);
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
-		int activeColorNumber, StringIntMap &biTokens);
+		int activeColorNumber);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
-		bool bfc, int activeColorNumber, StringIntMap &biTokens);
+		bool bfc, int activeColorNumber);
 	virtual void parseLine(LDLShapeLine *shapeLine, TREModel *treModel);
 	virtual void parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
 		bool bfc, bool invert);
@@ -63,7 +64,7 @@ protected:
 	virtual bool addSubModel(LDLModelLine *modelLine, TREModel *treParentModel,
 		TREModel *treModel, bool invert);
 	virtual bool performPrimitiveSubstitution(LDLModel *ldlModel,
-		TREModel *treModel, bool bfc);
+		TREModel *treModel, int activeColorNumber, bool bfc);
 	virtual bool substituteStud(int numSegments);
 	virtual bool substituteStud(void);
 	virtual bool substituteStu2(void);
@@ -124,6 +125,8 @@ protected:
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
 	virtual bool shouldLoadConditionalLines(void);
 	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
+	int actualColorNumber(LDLActionLine *actionLine);
+	std::string modelNameKey(LDLModel *model, int activeColorNumber);
 
 	static bool unsetToken(StringIntMap &tokens, const char *token,
 		int count = 1);
@@ -131,11 +134,15 @@ protected:
 	LDLMainModel *m_mainLDLModel;
 	TREMainModel *m_mainTREModel;
 	TREModel *m_currentTREModel;
+	int m_currentColorNumber;
 	TCFloat m_seamWidth;
 	TCByte m_defaultR;
 	TCByte m_defaultG;
 	TCByte m_defaultB;
 	int m_defaultColorNumber;
+	StringIntMap m_obiTokens;
+	LDObiInfo *m_obiInfo;
+	TCULong m_obiUniqueId;
 	bool m_abort;	// Easier to not be a bit field.
 	struct
 	{

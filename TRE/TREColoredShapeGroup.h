@@ -10,6 +10,8 @@ public:
 	TREColoredShapeGroup(const TREColoredShapeGroup &other);
 	virtual TCObject *copy(void) const;
 	virtual int addLine(TCULong color, const TCVector *vertices);
+	virtual int addConditionalLine(TCULong color, const TCVector *vertices,
+		const TCVector *controlPoints);
 	virtual int addTriangle(TCULong color, const TCVector *vertices,
 		const TCVector *normals);
 	virtual int addTriangle(TCULong color, const TCVector *vertices);
