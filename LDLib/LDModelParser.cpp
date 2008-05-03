@@ -552,8 +552,7 @@ bool LDModelParser::substituteStud(int numSegments)
 		blackColor = m_mainLDLModel->getPackedRGBA(0);
 	}
 	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f,
-		numSegments, numSegments, getBFCFlag(), blackColor,
-		m_obiInfo->getEdgeColor());
+		numSegments, numSegments, getBFCFlag(), blackColor, blackColor);
 	m_currentTREModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
 		numSegments, numSegments, getBFCFlag());
 	if (getEdgeLinesFlag())
