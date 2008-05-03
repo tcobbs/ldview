@@ -24,7 +24,7 @@ public:
 private:
 	// Make sure there's no accidental copying.
 	LDObiInfo(const LDObiInfo &) {}
-	LDObiInfo &operator=(const LDObiInfo &) {}
+	LDObiInfo &operator=(const LDObiInfo &) { return *this; }
 	bool checkConditional(LDLCommentLine *commentLine,
 		const StringIntMap &tokens);
 
