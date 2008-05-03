@@ -101,6 +101,7 @@ int TREColoredShapeGroup::addConditionalLine(
 {
 	int index;
 
+	color = htonl(color);
 	m_vertexStore->setupColored();
 	if (!m_controlPointIndices)
 	{
