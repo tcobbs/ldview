@@ -28,7 +28,7 @@ public:
 	virtual int addVertices(const TCVector *points, const TCVector *normals,
 		const TCVector *textureCoords, int count, int step);
 	virtual int addVertices(TCULong color, const TCVector *points, int count,
-		int step);
+		int step, GLboolean edgeFlag = GL_TRUE);
 	virtual int addVertices(TCULong color, const TCVector *points,
 		const TCVector *normals, int count, int step);
 	virtual int addVertices(TCULong color, const TCVector *points,

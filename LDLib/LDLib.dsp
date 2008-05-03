@@ -160,6 +160,10 @@ SOURCE=.\LDModelTree.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDObiInfo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDPartCount.cpp
 # End Source File
 # Begin Source File
@@ -209,6 +213,10 @@ SOURCE=.\LDModelParser.h
 # Begin Source File
 
 SOURCE=.\LDModelTree.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDObiInfo.h
 # End Source File
 # Begin Source File
 

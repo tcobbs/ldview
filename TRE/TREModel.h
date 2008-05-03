@@ -73,9 +73,9 @@ public:
 	virtual TRESubModel *addSubModel(TCULong color, TCULong edgeColor,
 		TCFloat *matrix, TREModel *model, bool invert);
 	virtual void addLine(const TCVector *vertices);
-	virtual void addEdgeLine(const TCVector *vertices);
+	virtual void addEdgeLine(const TCVector *vertices, TCULong color = 0);
 	virtual void addConditionalLine(const TCVector *vertices,
-		const TCVector *controlPoints);
+		const TCVector *controlPoints, TCULong color = 0);
 	virtual void addConditionalLine(const TCVector &p1, const TCVector &p2,
 		const TCVector &c1, const TCVector &c2);
 	virtual void addLine(TCULong color, const TCVector *vertices);
@@ -83,10 +83,14 @@ public:
 	virtual void addTriangle(const TCVector *vertices,
 		const TCVector *normals);
 	virtual void addTriangle(TCULong color, const TCVector *vertices);
+	virtual void addTriangle(TCULong color, const TCVector *vertices,
+		const TCVector *normals);
 	virtual void addBFCTriangle(const TCVector *vertices);
 	virtual void addBFCTriangle(const TCVector *vertices,
 		const TCVector *normals);
 	virtual void addBFCTriangle(TCULong color, const TCVector *vertices);
+	virtual void addBFCTriangle(TCULong color, const TCVector *vertices,
+		const TCVector *normals);
 	virtual void addQuad(const TCVector *vertices);
 	virtual void addQuad(TCULong color, const TCVector *vertices);
 	virtual void addBFCQuad(const TCVector *vertices);
@@ -141,8 +145,9 @@ public:
 	virtual bool isFlattened(void) { return m_flags.flattened != false; }
 	virtual void flatten(void);
 	virtual void smooth(void);
-	virtual void addCylinder(const TCVector &center, TCFloat radius, TCFloat height,
-		int numSegments, int usedSegments = -1, bool bfc = false);
+	virtual void addCylinder(const TCVector &center, TCFloat radius,
+		TCFloat height, int numSegments, int usedSegments = -1,
+		bool bfc = false, TCULong color = 0, TCULong edgeColor = 0);
 	virtual void addSlopedCylinder(const TCVector &center, TCFloat radius,
 		TCFloat height, int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addSlopedCylinder2(const TCVector &center, TCFloat radius,
@@ -156,20 +161,21 @@ public:
 	virtual void addNotDisc(const TCVector &center, TCFloat radius,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addCone(const TCVector &center, TCFloat radius, TCFloat height,
-		int numSegments, int usedSegments = -1, bool bfc = false);
+		int numSegments, int usedSegments = -1, bool bfc = false,
+		TCULong color = 0, TCULong edgeColor = 0);
 	virtual void addEighthSphere(const TCVector& center, TCFloat radius,
 		int numSegments, bool bfc);
 	virtual void addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 		TCFloat xzRadius, int numSegments, int usedSegments, bool bfc);
 	virtual void addOpenCone(const TCVector &center, TCFloat radius1,
 		TCFloat radius2, TCFloat height, int numSegments, int usedSegments = -1,
-		bool bfc = false);
+		bool bfc = false, TCULong color = 0, TCULong edgeColor = 0);
 	virtual void addCircularEdge(const TCVector &center, TCFloat radius,
-		int numSegments, int usedSegments = -1);
+		int numSegments, int usedSegments = -1, TCULong color = 0);
 	virtual void addRing(const TCVector &center, TCFloat radius1, TCFloat radius2,
 		int numSegments, int usedSegments = -1, bool bfc = false);
 	virtual void addOpenConeConditionals(TCVector *points, int numSegments,
-		int usedSegments);
+		int usedSegments, TCULong color = 0);
 	virtual void addSlopedCylinder2Conditionals(TCVector *points,
 		int numSegments, int usedSegments);
 	virtual void addTorusIOConditionals(bool innder, TCVector *points,

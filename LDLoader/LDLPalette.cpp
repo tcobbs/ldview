@@ -858,3 +858,26 @@ TCULong LDLPalette::colorForRGBA(int r, int g, int b, int a)
 {
 	return (r & 0xFF) << 24 | (g & 0xFF) << 16 | (b & 0xFF) << 8 | (a & 0xFF);
 }
+
+// NOTE: static function.
+int LDLPalette::colorNumberForPackedRGBA(TCULong color)
+{
+	return colorNumberForRGBA(color >> 24, (color >> 16) & 0xFF,
+		(color >> 8) & 0xFF, color & 0xFF);
+}
+
+// NOTE: static function.
+int LDLPalette::colorNumberForRGBA(int r, int g, int b, int a)
+{
+	TCULong color = ((unsigned long)r << 16) | ((unsigned long)g << 8) |
+		(unsigned long)b;
+
+	if (a == 255)
+	{
+		return 0x2000000 | color;
+	}
+	else
+	{
+		return 0x3000000 | color;
+	}
+}

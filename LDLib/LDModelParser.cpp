@@ -1,5 +1,6 @@
 #include "LDModelParser.h"
 #include "LDrawModelViewer.h"
+#include "LDObiInfo.h"
 
 #include <string.h>
 
@@ -29,11 +30,14 @@
 static const int LO_NUM_SEGMENTS = 8;
 static const int HI_NUM_SEGMENTS = 16;
 
+
 LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	:m_modelViewer(modelViewer),
 	m_mainLDLModel(NULL),
 	m_mainTREModel(NULL),
 	m_seamWidth(0.0f),
+	m_obiInfo(NULL),
+	m_obiUniqueId(0),
 	m_abort(false)
 {
 	TCByte defaultR, defaultG, defaultB;
@@ -131,10 +135,9 @@ void LDModelParser::setDefaultColorNumber(int colorNumber)
 
 bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 {
-	TCULong colorNumber = 7;
-	TCULong edgeColorNumber;
+	int colorNumber = 7;
+	int edgeColorNumber;
 	LDLPalette *palette = mainLDLModel->getPalette();
-	StringIntMap biTokens;
 
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
@@ -192,8 +195,9 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	edgeColorNumber = mainLDLModel->getEdgeColorNumber(colorNumber);
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
+	m_obiTokens.clear();
 	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag(),
-		m_defaultColorNumber, biTokens))
+		m_defaultColorNumber))
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
 		{
@@ -317,7 +321,7 @@ bool LDModelParser::addSubModel(LDLModelLine *modelLine,
 								TREModel *treParentModel,
 								TREModel *treModel, bool invert)
 {
-	TCULong colorNumber = modelLine->getColorNumber();
+	int colorNumber = actualColorNumber(modelLine);
 	TRESubModel *treSubModel = NULL;
 
 	if (colorNumber == 16 || colorNumber == 24)
@@ -450,12 +454,40 @@ int LDModelParser::getActiveColorNumber(
 	return activeColorNumber;
 }
 
+std::string LDModelParser::modelNameKey(LDLModel *model, int activeColorNumber)
+{
+	const char *name = model->getName();
+
+	if (model->colorNumberIsTransparent(activeColorNumber))
+	{
+		std::string nameKey;
+
+		m_obiInfo->end();
+		nameKey = "Trans:";
+		nameKey += name;
+		return nameKey;
+	}
+	else if (m_obiTokens.size() > 0)
+	{
+		std::string nameKey;
+		char num[32];
+
+		sprintf(num, "%X:", m_obiUniqueId++);
+		nameKey = num;
+		nameKey += name;
+		return nameKey;
+	}
+	else
+	{
+		return name;
+	}
+}
+
 bool LDModelParser::parseModel(
 	LDLModelLine *modelLine,
 	TREModel *treModel,
 	bool bfc,
-	int activeColorNumber,
-	StringIntMap &biTokens)
+	int activeColorNumber)
 {
 	LDLModel *ldlModel = modelLine->getModel();
 	bool invert = modelLine->getBFCInvert();
@@ -463,19 +495,9 @@ bool LDModelParser::parseModel(
 	activeColorNumber = getActiveColorNumber(modelLine, activeColorNumber);
 	if (ldlModel)
 	{
-		TREModel *model;
-		const char *name = ldlModel->getName();
-		std::string nameKey;
+		TREModel *model = NULL;
+		std::string nameKey = modelNameKey(ldlModel, activeColorNumber);
 
-		if (ldlModel->colorNumberIsTransparent(activeColorNumber))
-		{
-			nameKey = "Trans:";
-			nameKey += name;
-		}
-		else
-		{
-			nameKey = name;
-		}
 		model = m_mainTREModel->modelNamed(nameKey.c_str(), bfc);
 		if (model)
 		{
@@ -501,8 +523,7 @@ bool LDModelParser::parseModel(
 				}
 				return addSubModel(modelLine, treModel, model, bfc && invert);
 			}
-			else if (parseModel(ldlModel, model, bfc, activeColorNumber,
-				biTokens))
+			else if (parseModel(ldlModel, model, bfc, activeColorNumber))
 			{
 				m_mainTREModel->registerModel(model, bfc);
 				model->release();
@@ -523,16 +544,24 @@ bool LDModelParser::parseModel(
 
 bool LDModelParser::substituteStud(int numSegments)
 {
-	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f, numSegments,
-		numSegments, getBFCFlag());
-	m_currentTREModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f, numSegments,
-		numSegments, getBFCFlag());
+	TCULong blackColor = 0;
+
+	if (m_flags.obi &&
+		!m_mainLDLModel->colorNumberIsTransparent(m_currentColorNumber))
+	{
+		blackColor = m_mainLDLModel->getPackedRGBA(0);
+	}
+	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f,
+		numSegments, numSegments, getBFCFlag(), blackColor,
+		m_obiInfo->getEdgeColor());
+	m_currentTREModel->addStudDisc(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
+		numSegments, numSegments, getBFCFlag());
 	if (getEdgeLinesFlag())
 	{
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, -4.0f, 0.0f), 6.0f,
-			numSegments);
+			numSegments, -1, blackColor);
 		m_currentTREModel->addCircularEdge(TCVector(0.0f, 0.0f, 0.0f), 6.0f,
-			numSegments);
+			numSegments, -1, blackColor);
 	}
 	return true;
 }
@@ -771,10 +800,14 @@ bool LDModelParser::substituteRing(TCFloat fraction, int size,
 	return true;
 }
 
-bool LDModelParser::performPrimitiveSubstitution(LDLModel *ldlModel,
-												 TREModel *treModel, bool bfc)
+bool LDModelParser::performPrimitiveSubstitution(
+	LDLModel *ldlModel,
+	TREModel *treModel,
+	int activeColorNumber,
+	bool bfc)
 {
 	m_currentTREModel = treModel;
+	m_currentColorNumber = activeColorNumber;
 	return LDLPrimitiveCheck::performPrimitiveSubstitution(ldlModel, bfc);
 //	const char *modelName = ldlModel->getName();
 //
@@ -948,14 +981,22 @@ bool LDModelParser::parseModel(
 	LDLModel *ldlModel,
 	TREModel *treModel,
 	bool bfc,
-	int activeColorNumber,
-	StringIntMap &biTokens)
+	int activeColorNumber)
 {
 	BFCState newState = ldlModel->getBFCState();
+	LDObiInfo obiInfo;
+	LDObiInfo *origObiInfo = m_obiInfo;
 
+	if (m_obiInfo != NULL && m_obiInfo->isActive() &&
+		!ldlModel->colorNumberIsTransparent(activeColorNumber))
+	{
+		obiInfo.start(m_obiInfo->getColor(), m_obiInfo->getEdgeColor(), true);
+	}
+	m_obiInfo = &obiInfo;
 	bfc = ((bfc && (newState == BFCOnState)) || newState == BFCForcedOnState)
 		&& getBFCFlag();
-	if (ldlModel && !performPrimitiveSubstitution(ldlModel, treModel, bfc))
+	if (ldlModel && !performPrimitiveSubstitution(ldlModel, treModel,
+		activeColorNumber, bfc))
 	{
 		LDLFileLineArray *fileLines = ldlModel->getFileLines();
 
@@ -973,17 +1014,17 @@ bool LDModelParser::parseModel(
 				{
 					if (fileLine->isActionLine())
 					{
-						if (m_flags.obi)
-						{
-							((LDLActionLine *)fileLine)->setObiOverrideActive(
-								!ldlModel->colorNumberIsTransparent(
-								activeColorNumber));
-						}
+						//if (m_flags.obi)
+						//{
+						//	((LDLActionLine *)fileLine)->setObiOverrideActive(
+						//		!ldlModel->colorNumberIsTransparent(
+						//		activeColorNumber));
+						//}
 						switch (fileLine->getLineType())
 						{
 						case LDLLineTypeModel:
 							parseModel((LDLModelLine *)fileLine, treModel, bfc,
-								activeColorNumber, biTokens);
+								activeColorNumber);
 							break;
 						case LDLLineTypeLine:
 							parseLine((LDLShapeLine *)fileLine, treModel);
@@ -1003,11 +1044,12 @@ bool LDModelParser::parseModel(
 						default:
 							break;
 						}
+						m_obiInfo->actionHappened();
 					}
 					else if (fileLine->getLineType() == LDLLineTypeComment)
 					{
 						parseCommentLine((LDLCommentLine *)fileLine, treModel,
-							biTokens, biLocalTokens);
+							biLocalTokens);
 					}
 				}
 				if (ldlModel->isMainModel())
@@ -1020,10 +1062,11 @@ bool LDModelParser::parseModel(
 			for (StringIntMap::iterator it = biLocalTokens.begin();
 				it != biLocalTokens.end(); it++)
 			{
-				unsetToken(biTokens, it->first.c_str(), it->second);
+				unsetToken(m_obiTokens, it->first.c_str(), it->second);
 			}
 		}
 	}
+	m_obiInfo = origObiInfo;
 	return !m_abort;
 }
 
@@ -1050,39 +1093,47 @@ bool LDModelParser::unsetToken(
 void LDModelParser::parseCommentLine(
 	LDLCommentLine *commentLine,
 	TREModel *treModel,
-	StringIntMap &biAllTokens,
 	StringIntMap &biLocalTokens)
 {
 	if (commentLine->isStepMeta())
 	{
 		treModel->nextStep();
 	}
-	else if (commentLine->isOBIMeta())
+	else if (commentLine->isOBIMeta() && m_flags.obi)
 	{
 		switch (commentLine->getOBICommand())
 		{
 		case LDLCommentLine::OBICSet:
 			if (commentLine->hasOBIToken())
 			{
-				const char *token = commentLine->getOBIToken();
+				std::string token = commentLine->getOBIToken();
 
-				biAllTokens[token]++;
+				convertStringToLower(&token[0]);
+				m_obiTokens[token]++;
 				biLocalTokens[token]++;
 			}
 			break;
 		case LDLCommentLine::OBICUnset:
 			if (commentLine->hasOBIToken())
 			{
-				const char *token = commentLine->getOBIToken();
+				std::string token = commentLine->getOBIToken();
 
-				if (unsetToken(biLocalTokens, token))
+				convertStringToLower(&token[0]);
+				if (unsetToken(biLocalTokens, token.c_str()))
 				{
 					// Only unset from the all list if the token was found in
 					// the local list.  Models aren't allowed to unset tokens
 					// from their parent model.
-					unsetToken(biAllTokens, token);
+					unsetToken(m_obiTokens, token.c_str());
 				}
 			}
+			break;
+		case LDLCommentLine::OBICNext:
+		case LDLCommentLine::OBICStart:
+			m_obiInfo->start(commentLine, m_obiTokens);
+			break;
+		case LDLCommentLine::OBICEnd:
+			m_obiInfo->end();
 			break;
 		default:
 			// Gets rid of warning.
@@ -1093,7 +1144,8 @@ void LDModelParser::parseCommentLine(
 
 void LDModelParser::parseLine(LDLShapeLine *shapeLine, TREModel *treModel)
 {
-	TCULong colorNumber = shapeLine->getColorNumber();
+	int colorNumber = actualColorNumber(shapeLine);
+	//TCULong colorNumber = shapeLine->getColorNumber();
 
 	if (colorNumber == 16)
 	{
@@ -1122,8 +1174,16 @@ void LDModelParser::parseConditionalLine(LDLConditionalLineLine
 {
 	if (shouldLoadConditionalLines())
 	{
+		int colorNumber = conditionalLine->getColorNumber();
+		TCULong color = 0;
+
+		if (colorNumber != 24)
+		{
+			color = conditionalLine->getParentModel()->getPackedRGBA(
+				colorNumber);
+		}
 		treModel->addConditionalLine(conditionalLine->getPoints(),
-			conditionalLine->getControlPoints());
+			conditionalLine->getControlPoints(), color);
 	}
 }
 
@@ -1135,7 +1195,8 @@ bool LDModelParser::shouldFlipWinding(bool invert, bool windingCCW)
 void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
 								  bool bfc, bool invert)
 {
-	TCULong colorNumber = shapeLine->getColorNumber();
+	int colorNumber = actualColorNumber(shapeLine);
+	//TCULong colorNumber = shapeLine->getColorNumber();
 
 	if (colorNumber == 16)
 	{
@@ -1191,10 +1252,37 @@ void LDModelParser::parseTriangle(LDLShapeLine *shapeLine, TREModel *treModel,
 	}
 }
 
+int LDModelParser::actualColorNumber(LDLActionLine *actionLine)
+{
+	int colorNumber = actionLine->getColorNumber();
+	TCULong color;
+
+	switch (colorNumber)
+	{
+	case 16:
+		color = m_obiInfo->getColor();
+		break;
+	case 24:
+		color = m_obiInfo->getEdgeColor();
+		break;
+	default:
+		color = 0;
+		break;
+	}
+	if (color == 0)
+	{
+		return colorNumber;
+	}
+	else
+	{
+		return LDLPalette::colorNumberForPackedRGBA(color);
+	}
+}
+
 void LDModelParser::parseQuad(LDLShapeLine *shapeLine, TREModel *treModel,
 							  bool bfc, bool invert)
 {
-	TCULong colorNumber = shapeLine->getColorNumber();
+	int colorNumber = actualColorNumber(shapeLine);
 
 	if (colorNumber == 16)
 	{

@@ -92,6 +92,54 @@ int TREColoredShapeGroup::addLine(TCULong color, const TCVector *vertices)
 	return addShape(TRESLine, color, vertices, 2);
 }
 
+// I really hate to have some much code copied from TREShapeGroup, but there's
+// really no easy way to get the color in.
+int TREColoredShapeGroup::addConditionalLine(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *controlPoints)
+{
+	int index;
+
+	m_vertexStore->setupColored();
+	if (!m_controlPointIndices)
+	{
+		m_controlPointIndices = new TCULongArray;
+	}
+	if (m_mainModel->getStencilConditionalsFlag() &&
+		m_mainModel->getVertexArrayEdgeFlagsFlag())
+	{
+		m_vertexStore->setConditionalsFlag(true);
+	}
+	// The edge flag for control point vertices will always be GL_FALSE.
+	index = m_vertexStore->addVertices(color, controlPoints, 2,
+		m_mainModel->getCurStepIndex(), GL_FALSE);
+	addIndices(m_controlPointIndices, index, 2);
+	if (m_mainModel->getStencilConditionalsFlag() &&
+		m_mainModel->getVertexArrayEdgeFlagsFlag())
+	{
+		index = m_vertexStore->addVertices(color, vertices, 1,
+			m_mainModel->getCurStepIndex());
+		addShapeIndices(TRESConditionalLine, index, 1);
+		// We need a second copy, and this one needs to have the edge flag set
+		// to GL_FALSE.  Note that these will always be accessed as index + 1.
+		index = m_vertexStore->addVertices(color, vertices, 1,
+			m_mainModel->getCurStepIndex(), GL_FALSE);
+		index = m_vertexStore->addVertices(color, &vertices[1], 1,
+			m_mainModel->getCurStepIndex());
+		addShapeIndices(TRESConditionalLine, index, 1);
+		index = m_vertexStore->addVertices(color, &vertices[1], 1,
+			m_mainModel->getCurStepIndex(), GL_FALSE);
+	}
+	else
+	{
+		index = m_vertexStore->addVertices(color, vertices, 2,
+			m_mainModel->getCurStepIndex());
+		addShapeIndices(TRESConditionalLine, index, 2);
+	}
+	return index;
+}
+
 int TREColoredShapeGroup::addTriangle(TCULong color, const TCVector *vertices)
 {
 	return addShape(TRESTriangle, color, vertices, 3);
@@ -140,7 +188,7 @@ int TREColoredShapeGroup::addStrip(TCULong color, TREShapeType shapeType,
 {
 	int index;
 
-	m_vertexStore->setup();
+	m_vertexStore->setupColored();
 	index = m_vertexStore->addVertices(htonl(color), vertices, normals, count,
 		m_mainModel->getCurStepIndex());
 	addShapeStripCount(shapeType, count);
