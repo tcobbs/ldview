@@ -14,7 +14,8 @@ CCOBJS = \
 	$(OBJDIR)\LDPartsList.obj \
 	$(OBJDIR)\LDSnapshotTaker.obj \
 	$(OBJDIR)\LDViewPoint.obj \
-	$(OBJDIR)\LDInputHandler.obj
+	$(OBJDIR)\LDInputHandler.obj \
+	$(OBJDIR)\LDObiInfo.obj
 
 LIBT = LDLib.lib
 
