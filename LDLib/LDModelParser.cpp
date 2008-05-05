@@ -1009,7 +1009,8 @@ bool LDModelParser::parseModel(
 		{
 			int i;
 			int count = ldlModel->getActiveLineCount();
-			StringIntMap biLocalTokens;
+			StringSet obiOrigTokens = m_obiTokens;
+			StringSet obiLocalTokens;
 
 			for (i = 0; i < count && !m_abort; i++)
 			{
@@ -1056,7 +1057,7 @@ bool LDModelParser::parseModel(
 					else if (fileLine->getLineType() == LDLLineTypeComment)
 					{
 						parseCommentLine((LDLCommentLine *)fileLine, treModel,
-							biLocalTokens);
+							obiLocalTokens);
 					}
 				}
 				if (ldlModel->isMainModel())
@@ -1066,11 +1067,7 @@ bool LDModelParser::parseModel(
 						(float)(i + 1) / (float)(count + 1), &m_abort, this);
 				}
 			}
-			for (StringIntMap::iterator it = biLocalTokens.begin();
-				it != biLocalTokens.end(); it++)
-			{
-				unsetToken(m_obiTokens, it->first.c_str(), it->second);
-			}
+			m_obiTokens = obiOrigTokens;
 		}
 	}
 	m_obiInfo = origObiInfo;
@@ -1078,20 +1075,13 @@ bool LDModelParser::parseModel(
 }
 
 // Note: static method
-bool LDModelParser::unsetToken(
-	StringIntMap &tokens,
-	const char *token,
-	int count /*= 1*/)
+bool LDModelParser::unsetToken(StringSet &tokens, const char *token)
 {
-	StringIntMap::iterator it = tokens.find(token);
+	StringSet::iterator it = tokens.find(token);
 
 	if (it != tokens.end())
 	{
-		it->second -= count;
-		if (it->second <= 0)
-		{
-			tokens.erase(it);
-		}
+		tokens.erase(it);
 		return true;
 	}
 	return false;
@@ -1100,7 +1090,7 @@ bool LDModelParser::unsetToken(
 void LDModelParser::parseCommentLine(
 	LDLCommentLine *commentLine,
 	TREModel *treModel,
-	StringIntMap &biLocalTokens)
+	StringSet &obiLocalTokens)
 {
 	if (commentLine->isStepMeta())
 	{
@@ -1121,8 +1111,8 @@ void LDModelParser::parseCommentLine(
 				std::string token = commentLine->getOBIToken();
 
 				convertStringToLower(&token[0]);
-				m_obiTokens[token]++;
-				biLocalTokens[token]++;
+				m_obiTokens.insert(token);
+				obiLocalTokens.insert(token);
 			}
 			break;
 		case LDLCommentLine::OBICUnset:
@@ -1131,13 +1121,8 @@ void LDModelParser::parseCommentLine(
 				std::string token = commentLine->getOBIToken();
 
 				convertStringToLower(&token[0]);
-				if (unsetToken(biLocalTokens, token.c_str()))
-				{
-					// Only unset from the all list if the token was found in
-					// the local list.  Models aren't allowed to unset tokens
-					// from their parent model.
-					unsetToken(m_obiTokens, token.c_str());
-				}
+				unsetToken(obiLocalTokens, token.c_str());
+				unsetToken(m_obiTokens, token.c_str());
 			}
 			break;
 		case LDLCommentLine::OBICNext:
