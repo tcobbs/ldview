@@ -11,7 +11,7 @@
 typedef void (TCObject::*TREScanPointCallback)(const TCVector &point);
 
 typedef TCTypedObjectArray<TCULongArray> TCULongArrayArray;
-typedef TCTypedValueArray<GLboolean> GLbooleanArray;
+typedef std::vector<GLboolean> GLbooleanVector;
 typedef std::vector<int> IntVector;
 
 struct TREVertex;
@@ -152,14 +152,14 @@ protected:
 		TCULongArray *dstColors,
 		TCULongArray *dstIndices,
 		TCULongArray *dstCPIndices,
-		GLbooleanArray *dstEdgeFlags,
+		GLbooleanVector &dstEdgeFlags,
 		TREVertexArray *srcVertices,
 		TREVertexArray *srcNormals,
 		TREVertexArray *srcTextureCoords,
 		TCULongArray *srcColors,
 		TCULongArray *srcIndices,
 		TCULongArray *srcCPIndices,
-		GLbooleanArray *srcEdgeFlags,
+		GLbooleanVector &srcEdgeFlags,
 		const TCFloat *matrix,
 		TCULong color,
 		bool colorSet);

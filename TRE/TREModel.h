@@ -3,7 +3,6 @@
 
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCTypedObjectArray.h>
-#include <TCFoundation/TCTypedValueArray.h>
 #include <TRE/TREShapeGroup.h>
 #include <TRE/TREColoredShapeGroup.h>
 #include <TRE/TREVertexKey.h>

@@ -23,8 +23,6 @@ typedef enum
 	LDPLCLast = LDPLCQuantity
 } LDPartListColumn;
 
-#include <TCFoundation/TCTypedValueArray.h>
-
 typedef std::vector<LDPartListColumn> LDPartListColumnVector;
 typedef std::map<LDPartListColumn, bool> LDPartListColumnBoolMap;
 

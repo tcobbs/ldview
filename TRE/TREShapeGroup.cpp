@@ -1691,7 +1691,7 @@ void TREShapeGroup::flatten(TREShapeGroup *srcShapes, const TCFloat *matrix,
 				TREVertexArray *srcTextureCoords =
 					srcVertexStore->getTextureCoords();
 				TCULongArray *srcColors = srcVertexStore->getColors();
-				GLbooleanArray *srcEdgeFlags = srcVertexStore->getEdgeFlags();
+				GLbooleanVector &srcEdgeFlags = srcVertexStore->getEdgeFlags();
 				TCULongArray *dstIndices = getIndices((TREShapeType)bit, true);
 				TCULongArray *srcCPIndices = NULL;
 				TCULongArray *dstCPIndices = NULL;
@@ -1708,7 +1708,7 @@ void TREShapeGroup::flatten(TREShapeGroup *srcShapes, const TCFloat *matrix,
 					TREVertexArray *dstTextureCoords =
 						m_vertexStore->getTextureCoords();
 					TCULongArray *dstColors = m_vertexStore->getColors();
-					GLbooleanArray *dstEdgeFlags =
+					GLbooleanVector &dstEdgeFlags =
 						m_vertexStore->getEdgeFlags();
 					TREShapeType shapeType = (TREShapeType)bit;
 
@@ -1744,14 +1744,14 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 								  TCULongArray *dstColors,
 								  TCULongArray *dstIndices,
 								  TCULongArray *dstCPIndices,
-								  GLbooleanArray *dstEdgeFlags,
+								  GLbooleanVector &dstEdgeFlags,
 								  TREVertexArray *srcVertices,
 								  TREVertexArray *srcNormals,
 								  TREVertexArray *srcTextureCoords,
 								  TCULongArray *srcColors,
 								  TCULongArray *srcIndices,
 								  TCULongArray *srcCPIndices,
-								  GLbooleanArray *srcEdgeFlags,
+								  GLbooleanVector &srcEdgeFlags,
 								  const TCFloat *matrix,
 								  TCULong color,
 								  bool colorSet)
@@ -1788,18 +1788,18 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 		}
 		if (srcCPIndices && dstCPIndices)
 		{
-			if (srcEdgeFlags)
+			if (srcEdgeFlags.size() > 0)
 			{
-				if (dstEdgeFlags)
+				if (dstEdgeFlags.size() > 0)
 				{
 					int j;
 
-					for (j = dstEdgeFlags->getCount(); j <
+					for (j = (int)dstEdgeFlags.size(); j <
 						dstVertices->getCount() - 1; j++)
 					{
-						dstEdgeFlags->addValue(GL_TRUE);
+						dstEdgeFlags.push_back(GL_TRUE);
 					}
-					dstEdgeFlags->addValue(GL_TRUE);
+					dstEdgeFlags.push_back(GL_TRUE);
 				}
 				index++;
 				// If we have control point indices, that means this is a
@@ -1825,9 +1825,9 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 				{
 					dstColors->addValue((*srcColors)[index]);
 				}
-				if (dstEdgeFlags)
+				if (dstEdgeFlags.size() > 0)
 				{
-					dstEdgeFlags->addValue(GL_FALSE);
+					dstEdgeFlags.push_back(GL_FALSE);
 				}
 				else
 				{
@@ -1851,9 +1851,9 @@ void TREShapeGroup::flattenShapes(TREVertexArray *dstVertices,
 			{
 				dstColors->addValue((*srcColors)[index]);
 			}
-			if (dstEdgeFlags)
+			if (dstEdgeFlags.size() > 0)
 			{
-				dstEdgeFlags->addValue(GL_FALSE);
+				dstEdgeFlags.push_back(GL_FALSE);
 			}
 		}
 	}

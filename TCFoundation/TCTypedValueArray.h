@@ -36,7 +36,7 @@ template <class Type> class TCTypedValueArray : public TCArray
 		const Type valueAtIndex(unsigned int index) const
 			{ return (const Type)TCArray::itemAtIndex(index); }
 		Type operator[](unsigned int index)
-			{ return (Type)TCArray::itemAtIndex(index); }
+			{ return (Type)(long)TCArray::itemAtIndex(index); }
 		const Type operator[](unsigned int index) const
 			{ return (const Type)TCArray::itemAtIndex(index); }
 		Type *getValues(void)

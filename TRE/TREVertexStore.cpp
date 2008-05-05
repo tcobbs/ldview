@@ -29,7 +29,6 @@ TREVertexStore::TREVertexStore(void)
 	m_normals(NULL),
 	m_textureCoords(NULL),
 	m_colors(NULL),
-	m_edgeFlags(NULL),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
 	m_textureCoordsOffset(0),
@@ -53,7 +52,7 @@ TREVertexStore::TREVertexStore(const TREVertexStore &other)
 	m_normals((TREVertexArray *)TCObject::copy(other.m_normals)),
 	m_textureCoords((TREVertexArray *)TCObject::copy(other.m_textureCoords)),
 	m_colors((TCULongArray *)TCObject::copy(other.m_colors)),
-	m_edgeFlags((GLbooleanArray *)TCObject::copy(other.m_edgeFlags)),
+	m_edgeFlags(other.m_edgeFlags),
 	m_verticesOffset(0),
 	m_normalsOffset(0),
 	m_textureCoordsOffset(0),
@@ -82,7 +81,6 @@ void TREVertexStore::dealloc(void)
 	TCObject::release(m_normals);
 	TCObject::release(m_textureCoords);
 	TCObject::release(m_colors);
-	TCObject::release(m_edgeFlags);
 	if (sm_varBuffer && wglFreeMemoryNV)
 	{
 		wglFreeMemoryNV(sm_varBuffer);
@@ -136,17 +134,13 @@ int TREVertexStore::addVertices(
 	}
 	if (getConditionalsFlag())
 	{
-		if (!m_edgeFlags)
+		for (i = (int)m_edgeFlags.size(); i < m_vertices->getCount(); i++)
 		{
-			m_edgeFlags = new GLbooleanArray;
-		}
-		for (i = m_edgeFlags->getCount(); i < m_vertices->getCount(); i++)
-		{
-			m_edgeFlags->addValue(GL_TRUE);
+			m_edgeFlags.push_back(GL_TRUE);
 		}
 		for (i = 0; i < count; i++)
 		{
-			m_edgeFlags->addValue(edgeFlag);
+			m_edgeFlags.push_back(edgeFlag);
 		}
 	}
 	return addVertices(m_vertices, points, count, step);
@@ -290,9 +284,9 @@ void TREVertexStore::setupVAR(void)
 			colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
 			sm_varSize += colorsAllocatedSize;
 		}
-		if (m_edgeFlags)
+		if (m_edgeFlags.size() > 0)
 		{
-			edgeFlagsSize = m_edgeFlags->getCount() * 4;
+			edgeFlagsSize = (int)m_edgeFlags.size() * 4;
 			edgeFlagsAllocatedSize = (edgeFlagsSize + 31) / 32 * 32;
 			sm_varSize += edgeFlagsAllocatedSize;
 		}
@@ -333,13 +327,13 @@ void TREVertexStore::setupVAR(void)
 				memcpy(sm_varBuffer + m_colorsOffset, m_colors->getItems(),
 					colorsSize);
 			}
-			if (m_edgeFlags)
+			if (m_edgeFlags.size() > 0)
 			{
 				m_edgeFlagsOffset = offset + verticesAllocatedSize +
 					normalsAllocatedSize + textureCoordsAllocatedSize +
 					colorsAllocatedSize;
-				memcpy(sm_varBuffer + m_edgeFlagsOffset,
-					m_edgeFlags->getItems(), edgeFlagsSize);
+				memcpy(sm_varBuffer + m_edgeFlagsOffset, &m_edgeFlags[0],
+					edgeFlagsSize);
 			}
 			glVertexArrayRangeNV(sm_varSize, sm_varBuffer);
 			glEnableClientState(GL_VERTEX_ARRAY_RANGE_NV);
@@ -403,9 +397,9 @@ void TREVertexStore::setupVBO(void)
 				colorsAllocatedSize = (colorsSize + 31) / 32 * 32;
 				vboSize += colorsAllocatedSize;
 			}
-			if (m_edgeFlags)
+			if (m_edgeFlags.size() > 0)
 			{
-				edgeFlagsSize = m_edgeFlags->getCount() * 4;
+				edgeFlagsSize = (int)m_edgeFlags.size() * 4;
 				edgeFlagsAllocatedSize = (edgeFlagsSize + 31) / 32 * 32;
 				vboSize += edgeFlagsAllocatedSize;
 			}
@@ -433,13 +427,13 @@ void TREVertexStore::setupVBO(void)
 					memcpy(vboBuffer + m_colorsOffset,
 						m_colors->getItems(), colorsSize);
 				}
-				if (m_edgeFlags)
+				if (m_edgeFlags.size() > 0)
 				{
 					m_edgeFlagsOffset = verticesAllocatedSize +
 						normalsAllocatedSize + textureCoordsAllocatedSize +
 						colorsAllocatedSize;
-					memcpy(vboBuffer + m_edgeFlagsOffset,
-						m_edgeFlags->getItems(), edgeFlagsSize);
+					memcpy(vboBuffer + m_edgeFlagsOffset, &m_edgeFlags[0],
+						edgeFlagsSize);
 				}
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
 				glBufferDataARB(GL_ARRAY_BUFFER_ARB, vboSize, vboBuffer,
@@ -600,7 +594,7 @@ bool TREVertexStore::activate(bool displayLists)
 		{
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
-		if (m_edgeFlags)
+		if (m_edgeFlags.size() > 0)
 		{
 			glEnableClientState(GL_EDGE_FLAG_ARRAY);
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
@@ -613,7 +607,7 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			else
 			{
-				glEdgeFlagPointer(4, m_edgeFlags->getValues());
+				glEdgeFlagPointer(4, &m_edgeFlags[0]);
 			}
 		}
 		else

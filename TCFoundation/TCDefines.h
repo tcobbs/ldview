@@ -53,11 +53,17 @@ typedef unsigned char TCByte;
 typedef unsigned char TCUChar;
 typedef unsigned short TCUShort;
 typedef unsigned int TCUInt;
-typedef unsigned long TCULong;
+#ifdef __U32_TYPE
+typedef __U32_TYPE TCULong;
+#else // __U32_TYPE
+// I know the following seems wrong, but int should always be 32-bit.
+typedef unsigned int TCULong;
+#endif // __U32_TYPE
 typedef char TCChar;
 typedef short TCShort;
 typedef int TCInt;
-typedef long TCLong;
+// I know the following seems wrong, but int should always be 32-bit.
+typedef int TCLong;
 
 // Define LDVIEW_DOUBLES to have LDView use doubles instead of floats.  Comment
 // out the definition for floats.

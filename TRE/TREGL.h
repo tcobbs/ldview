@@ -40,6 +40,12 @@
 #include <GL/wglext.h>
 #else // WIN32
 
+#ifndef __APPLE__
+#ifndef GL_ARB_vertex_buffer_object
+typedef int GLsizeiptrARB;
+#endif // !GL_ARB_vertex_buffer_object
+#endif // !APPLE
+
 //	WGL ext stuff
 typedef void * (APIENTRY * PFNWGLALLOCATEMEMORYNVPROC) (int size, float readfreq, float writefreq, float priority);
 typedef void (APIENTRY * PFNWGLFREEMEMORYNVPROC) (void *pointer);
@@ -50,7 +56,7 @@ typedef void (APIENTRY * PFNGLVERTEXARRAYRANGENVPROC) (GLsizei size, const GLvoi
 typedef void (APIENTRY * PFNGLBINDBUFFERARBPROC) (GLenum target, GLuint buffer);
 typedef void (APIENTRY * PFNGLDELETEBUFFERSARBPROC) (GLsizei n, const GLuint *buffers);
 typedef void (APIENTRY * PFNGLGENBUFFERSARBPROC) (GLsizei n, GLuint *buffers);
-typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, int size, const GLvoid *data, GLenum usage);
+typedef void (APIENTRY * PFNGLBUFFERDATAARBPROC) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
 
 //Solaris
 #if (defined (__SVR4) && defined (__sun)) || defined (_AIX)
@@ -59,9 +65,6 @@ typedef GLvoid (APIENTRY * PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, GLsizei 
 
 #define GL_ARRAY_BUFFER_ARB 0x8892
 #define GL_STATIC_DRAW_ARB 0x88E4
-#ifndef __APPLE__
-typedef int GLsizeiptrARB;
-#endif // APPLE
 
 #ifndef GL_VERTEX_ARRAY_RANGE_NV
 #define GL_VERTEX_ARRAY_RANGE_NV 0x851D
