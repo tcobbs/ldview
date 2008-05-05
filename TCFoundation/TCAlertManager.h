@@ -4,7 +4,6 @@
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <TCFoundation/TCTypedPointerArray.h>
-#include <TCFoundation/TCTypedValueArray.h>
 #include <TCFoundation/TCStringArray.h>
 #include <string.h>
 

@@ -18,7 +18,9 @@ endif
 INCLUDE = -I.. -I../include -I../boost/include
 
 ifeq ($(shell uname -m), x86_64)
+ifneq ($(LDVDEV64), YES)
 CFLAGS += -m32
+endif
 endif
 
 # slurm is media.peeron.com

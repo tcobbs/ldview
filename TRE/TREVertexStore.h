@@ -10,7 +10,7 @@ struct TREVertex;
 class TREVertexArray;
 class TCVector;
 
-typedef TCTypedValueArray<GLboolean> GLbooleanArray;
+typedef std::vector<GLboolean> GLbooleanVector;
 typedef std::vector<int> IntVector;
 
 class TREVertexStore : public TCObject
@@ -41,7 +41,7 @@ public:
 	TREVertexArray *getNormals(void) { return m_normals; }
 	TREVertexArray *getTextureCoords(void) { return m_textureCoords; }
 	TCULongArray *getColors(void) { return m_colors; }
-	GLbooleanArray *getEdgeFlags(void) { return m_edgeFlags; }
+	GLbooleanVector &getEdgeFlags(void) { return m_edgeFlags; }
 	void setLightingFlag(bool value);
 	bool getLightingFlag(void) { return m_flags.lighting != false; }
 	void setTwoSidedLightingFlag(bool value)
@@ -115,7 +115,7 @@ protected:
 	TREVertexArray *m_textureCoords;
 	IntVector m_stepCounts;
 	TCULongArray *m_colors;
-	GLbooleanArray *m_edgeFlags;
+	GLbooleanVector m_edgeFlags;
 	TCULong m_verticesOffset;
 	TCULong m_normalsOffset;
 	TCULong m_textureCoordsOffset;

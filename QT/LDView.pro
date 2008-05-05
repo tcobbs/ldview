@@ -12,6 +12,20 @@ MOC_DIR = .moc
 OBJECTS_DIR = .obj
 
 unix {
+  UNAME = $$system(uname -m)
+  LDVDEV64 = $$(LDVDEV64)
+  contains(UNAME, x86_64) {
+    contains(LDVDEV64, YES) {
+    }
+    else {
+      QMAKE_CFLAGS_RELEASE += -m32
+      QMAKE_CFLAGS_DEBUG += -m32
+      QMAKE_CXXFLAGS_RELEASE += -m32
+      QMAKE_CXXFLAGS_DEBUG += -m32
+      QMAKE_LFLAGS_RELEASE += -m32
+      QMAKE_LFLAGS_DEBUG += -m32
+    }
+  }
   BOOSTLIB = boost_thread
   exists(/usr/lib/libboost_thread-mt.so){
     BOOSTLIB = boost_thread-mt
