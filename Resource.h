@@ -331,6 +331,7 @@
 #define IDC_PARTS_LIST_DIR              1265
 #define IDC_BROWSE_PARTS_LIST_DIR       1266
 #define IDC_SNAPSHOTS_DIR_BOX           1267
+#define IDC_SAVE_DIRS_BOX               1267
 #define IDC_PARTS_LIST_DIR_BOX          1268
 #define IDC_MIN_POINT                   1269
 #define IDC_MAX_POINT                   1270
