@@ -475,7 +475,7 @@ std::string LDModelParser::modelNameKey(LDLModel *model, int activeColorNumber)
 		std::string nameKey;
 		char num[32];
 
-		sprintf(num, "%lX:", m_obiUniqueId++);
+		sprintf(num, "%X:", m_obiUniqueId++);
 		nameKey = num;
 		nameKey += name;
 		return nameKey;
