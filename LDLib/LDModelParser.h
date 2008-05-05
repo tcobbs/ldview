@@ -20,7 +20,7 @@ class LDrawModelViewer;
 class TCVector;
 class LDObiInfo;
 
-typedef std::map<std::string, int> StringIntMap;
+typedef std::set<std::string> StringSet;
 
 class LDModelParser : public LDLPrimitiveCheck
 {
@@ -49,7 +49,7 @@ protected:
 		return m_flags.defaultColorNumberSet != false;
 	}
 	virtual void parseCommentLine(LDLCommentLine *commentLine,
-		TREModel *treModel, StringIntMap &biLocalTokens);
+		TREModel *treModel, StringSet &biLocalTokens);
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
 		int activeColorNumber);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
@@ -129,8 +129,7 @@ protected:
 	int actualColorNumber(LDLActionLine *actionLine, int activeColorNumber);
 	std::string modelNameKey(LDLModel *model, int activeColorNumber);
 
-	static bool unsetToken(StringIntMap &tokens, const char *token,
-		int count = 1);
+	static bool unsetToken(StringSet &tokens, const char *token);
 	const LDrawModelViewer *m_modelViewer;
 	LDLMainModel *m_mainLDLModel;
 	TREMainModel *m_mainTREModel;
@@ -141,7 +140,7 @@ protected:
 	TCByte m_defaultG;
 	TCByte m_defaultB;
 	int m_defaultColorNumber;
-	StringIntMap m_obiTokens;
+	StringSet m_obiTokens;
 	LDObiInfo *m_obiInfo;
 	TCULong m_obiUniqueId;
 	bool m_abort;	// Easier to not be a bit field.

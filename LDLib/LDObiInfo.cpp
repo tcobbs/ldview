@@ -28,13 +28,13 @@ TCULong LDObiInfo::getEdgeColor(int defaultColor) const
 
 bool LDObiInfo::checkConditional(
 	LDLCommentLine *commentLine,
-	const StringIntMap &tokens)
+	const StringSet &tokens)
 {
 	if (commentLine->hasOBIConditional())
 	{
 		bool set = commentLine->getOBIConditional();
 		std::string token = commentLine->getOBIToken();
-		StringIntMap::const_iterator it;
+		StringSet::const_iterator it;
 
 		convertStringToLower(&token[0]);
 		it = tokens.find(token);
@@ -44,20 +44,13 @@ bool LDObiInfo::checkConditional(
 		}
 		else
 		{
-			if (it->second > 0)
-			{
-				return set;
-			}
-			else
-			{
-				return !set;
-			}
+			return set;
 		}
 	}
 	return true;
 }
 
-void LDObiInfo::start(LDLCommentLine *commentLine, const StringIntMap &tokens)
+void LDObiInfo::start(LDLCommentLine *commentLine, const StringSet &tokens)
 {
 	LDLModel *model = commentLine->getParentModel();
 

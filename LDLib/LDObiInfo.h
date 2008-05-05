@@ -4,7 +4,7 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/TCDefines.h>
 
-typedef std::map<std::string, int> StringIntMap;
+typedef std::set<std::string> StringSet;
 typedef std::stack<TCULong> ULongStack;
 typedef std::stack<bool> BoolStack;
 
@@ -17,7 +17,7 @@ public:
 	bool isActive(void) { return m_colors.size() > 0; }
 	TCULong getColor(int defaultColor = 0) const;
 	TCULong getEdgeColor(int defaultColor = 0) const;
-	void start(LDLCommentLine *commentLine, const StringIntMap &tokens);
+	void start(LDLCommentLine *commentLine, const StringSet &tokens);
 	void start(TCULong color, TCULong edgeColor, bool sticky);
 	void end(void);
 	void actionHappened(void);
@@ -25,8 +25,7 @@ private:
 	// Make sure there's no accidental copying.
 	LDObiInfo(const LDObiInfo &) {}
 	LDObiInfo &operator=(const LDObiInfo &) { return *this; }
-	bool checkConditional(LDLCommentLine *commentLine,
-		const StringIntMap &tokens);
+	bool checkConditional(LDLCommentLine *commentLine, const StringSet &tokens);
 
 	ULongStack m_colors;
 	ULongStack m_edgeColors;
