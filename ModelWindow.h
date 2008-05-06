@@ -452,6 +452,9 @@ protected:
 	bool skipErrorUpdates;
 	bool redrawRequested;
 	bool releasingMouse;
+	bool userLoad;
+	int errorCount;
+	int warningCount;
 };
 
 #endif

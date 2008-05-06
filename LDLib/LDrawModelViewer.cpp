@@ -23,6 +23,7 @@
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGL.h>
 #include <time.h>
+#include <gl2ps/gl2ps.h>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -170,6 +171,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.axesAtOrigin = true;
 	flags.showBoundingBox = false;
 	flags.boundingBoxesOnly = false;
+	flags.obi = false;
+	flags.gl2ps = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -1204,6 +1207,18 @@ void LDrawModelViewer::setObi(bool value)
 	}
 }
 
+void LDrawModelViewer::setGl2ps(bool value)
+{
+	if (value != flags.gl2ps)
+	{
+		flags.gl2ps = value;
+		if (mainTREModel)
+		{
+			mainTREModel->setGl2psFlag(value);
+		}
+	}
+}
+
 void LDrawModelViewer::setUsesSpecular(bool value)
 {
 	if (value != flags.usesSpecular)
@@ -1635,8 +1650,8 @@ void LDrawModelViewer::drawString(TCFloat xPos, TCFloat yPos, char* string)
 	glPushAttrib(GL_ENABLE_BIT | GL_POLYGON_BIT | GL_TEXTURE_BIT);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	enable(GL_BLEND);
+	blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBindTexture(GL_TEXTURE_2D, fontTextureID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -1934,7 +1949,7 @@ void LDrawModelViewer::setUsePolygonOffset(bool value)
 			mainTREModel->setPolygonOffsetFlag(flags.usePolygonOffset);
 			if (!flags.usePolygonOffset)
 			{
-				glDisable(GL_POLYGON_OFFSET_FILL);
+				disable(GL_POLYGON_OFFSET_FILL);
 			}
 		}
 	}
@@ -2306,7 +2321,7 @@ void LDrawModelViewer::clearBackground(void)
 	backgroundColor[1] = (GLfloat)backgroundG;
 	backgroundColor[2] = (GLfloat)backgroundB;
 	glFogfv(GL_FOG_COLOR, backgroundColor);
-	if (flags.slowClear)
+	if (flags.slowClear && !getGl2ps())
 	{
 		GLint oldDepthFunc;
 		bool oldBlendEnabled = false;
@@ -2325,7 +2340,7 @@ void LDrawModelViewer::clearBackground(void)
 		}
 		if (glIsEnabled(GL_POLYGON_OFFSET_FILL))
 		{
-			glDisable(GL_POLYGON_OFFSET_FILL);
+			disable(GL_POLYGON_OFFSET_FILL);
 			oldPolygonOffsetEnabled = true;
 		}
 		if (glIsEnabled(GL_LIGHTING))
@@ -2347,7 +2362,7 @@ void LDrawModelViewer::clearBackground(void)
 		}
 		if (oldPolygonOffsetEnabled)
 		{
-			glEnable(GL_POLYGON_OFFSET_FILL);
+			enable(GL_POLYGON_OFFSET_FILL);
 		}
 		if (oldLightingEnabled)
 		{
@@ -2364,7 +2379,7 @@ void LDrawModelViewer::clearBackground(void)
 	if (flags.drawWireframe)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glLineWidth(wireframeLineWidth);
+		lineWidth(wireframeLineWidth);
 		if (flags.useWireframeFog)
 		{
 			glEnable(GL_FOG);
@@ -2376,7 +2391,7 @@ void LDrawModelViewer::clearBackground(void)
 	}
 	else
 	{
-		glLineWidth(highlightLineWidth);
+		lineWidth(highlightLineWidth);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glDisable(GL_FOG);
 	}
@@ -2461,7 +2476,7 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	glStencilFunc(GL_ALWAYS, 1, ~0u);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(cutawayLineWidth);
+	lineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
@@ -2509,15 +2524,15 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	{
 		glColor4f(1.0f, 1.0f, 1.0f, cutawayAlpha);
 	}
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	enable(GL_BLEND);
+	blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glStencilFunc(GL_EQUAL, 1, ~0u);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	glRectf(0.0, 0.0, 1.0, 1.0);
 	perspectiveView();
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_STENCIL_TEST);
-	glDisable(GL_BLEND);
+	disable(GL_BLEND);
 	glEnable(GL_LIGHTING);
 	glPopAttrib();
 }
@@ -2555,7 +2570,7 @@ void LDrawModelViewer::drawToClipPlaneUsingAccum(GLfloat eyeXOffset)
 	perspectiveViewToClipPlane();
 	glClearDepth(1.0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(cutawayLineWidth);
+	lineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	treGlTranslatef(eyeXOffset + xPan, yPan, -distance);
@@ -2588,10 +2603,10 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA);
+	enable(GL_BLEND);
+	blendFunc(GL_DST_ALPHA, GL_ONE_MINUS_DST_ALPHA);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(cutawayLineWidth);
+	lineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
@@ -2617,7 +2632,7 @@ void LDrawModelViewer::drawToClipPlaneUsingDestinationAlpha(TCFloat eyeXOffset)
 	mainTREModel->setCutawayDrawFlag(false);
 	perspectiveView();
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDisable(GL_BLEND);
+	disable(GL_BLEND);
 	glPopAttrib();
 }
 
@@ -2630,7 +2645,7 @@ void LDrawModelViewer::drawToClipPlaneUsingNoEffect(TCFloat eyeXOffset)
 	glClear(GL_DEPTH_BUFFER_BIT);
 //	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(cutawayLineWidth);
+	lineWidth(cutawayLineWidth);
 	glDisable(GL_FOG);
 	glLoadIdentity();
 	projectCamera(TCVector(-eyeXOffset - xPan, -yPan, 0.0f));
@@ -3057,15 +3072,15 @@ void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)
 	mainTREModel->setRemovingHiddenLines(true);
 	if (flags.usePolygonOffset)
 	{
-		glEnable(GL_POLYGON_OFFSET_FILL);
+		enable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
 	}
 	drawModel(eyeXOffset);
 	// Not sure why the following is necessary.
-	glLineWidth(wireframeLineWidth);
+	lineWidth(wireframeLineWidth);
 	if (flags.usePolygonOffset)
 	{
-		glEnable(GL_POLYGON_OFFSET_FILL);
+		enable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(0.0f, 0.0f);
 	}
 	mainTREModel->setRemovingHiddenLines(false);
@@ -3263,7 +3278,7 @@ void LDrawModelViewer::drawAxes(bool atOrigin)
 				}
 			}
 			glPushAttrib(GL_LIGHTING_BIT | GL_LINE_BIT);
-			glLineWidth(2.0f);
+			lineWidth(2.0f);
 			glDisable(GL_LIGHTING);
 			glBegin(GL_LINES);
 				glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
@@ -4221,4 +4236,40 @@ void LDrawModelViewer::setLatLon(float lat, float lon)
 		flags.needsRotationMatrixSetup = true;
 	}
 	requestRedraw();
+}
+
+void LDrawModelViewer::enable(GLenum cap)
+{
+	if (getGl2ps())
+	{
+		gl2psEnable(cap);
+	}
+	glEnable(cap);
+}
+
+void LDrawModelViewer::disable(GLenum cap)
+{
+	if (getGl2ps())
+	{
+		gl2psDisable(cap);
+	}
+	glDisable(cap);
+}
+
+void LDrawModelViewer::blendFunc(GLenum sfactor, GLenum dfactor)
+{
+	if (getGl2ps())
+	{
+		gl2psBlendFunc(sfactor, dfactor);
+	}
+	glBlendFunc(sfactor, dfactor);
+}
+
+void LDrawModelViewer::lineWidth(GLfloat width)
+{
+	if (getGl2ps())
+	{
+		gl2psLineWidth(width);
+	}
+	glLineWidth(width);
 }

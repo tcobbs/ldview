@@ -38,6 +38,9 @@
 #define PNG_IMAGE_TYPE_INDEX 1
 #define BMP_IMAGE_TYPE_INDEX 2
 #define JPG_IMAGE_TYPE_INDEX 3
+#define SVG_IMAGE_TYPE_INDEX 4
+#define EPS_IMAGE_TYPE_INDEX 5
+#define PDF_IMAGE_TYPE_INDEX 6
 
 #define MAX_SNAPSHOT_WIDTH 10000
 #define MAX_SNAPSHOT_HEIGHT 10000
@@ -125,7 +128,10 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 			 savingFromCommandLine(false),
 			 skipErrorUpdates(false),
 			 releasingMouse(false),
-			 saveStepSuffix(NULL)
+			 saveStepSuffix(NULL),
+			 userLoad(false),
+			 errorCount(0),
+			 warningCount(0)
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
@@ -234,9 +240,7 @@ void ModelWindow::dealloc(void)
 
 void ModelWindow::ldlErrorCallback(LDLError *error)
 {
-	static int errorCount = 0;
-
-	if (error)
+	if (error && userLoad)
 	{
 		if (!errorCallback(error))
 		{
@@ -1720,6 +1724,7 @@ void ModelWindow::clearErrorTree(void)
 
 void ModelWindow::clearErrors(void)
 {
+	userLoad = true;
 	errors->removeAll();
 /*
 	while (errors->getCount())
@@ -1768,8 +1773,6 @@ void ModelWindow::populateErrorList(void)
 
 int ModelWindow::populateErrorTree(void)
 {
-	int errorCount = 0;
-	int warningCount = 0;
 	char buf[128] = "";
 //	RECT rect;
 //	POINT topLeft;
@@ -1783,6 +1786,8 @@ int ModelWindow::populateErrorTree(void)
 	}
 	if (hErrorWindow && !errorTreePopulated)
 	{
+		errorCount = 0;
+		warningCount = 0;
 		for (int i = 0, count = errors->getCount(); i < count; i++)
 		{
 			LDLError *error = (*errors)[i];
@@ -1860,9 +1865,7 @@ void ModelWindow::showErrorsIfNeeded(BOOL onlyIfNeeded)
 		}
 		if (hErrorWindow)
 		{
-			int errorCount;
-
-			errorCount = populateErrorTree();
+			populateErrorTree();
 			if (!onlyIfNeeded || (errorCount &&
 				TCUserDefaults::longForKey(SHOW_ERRORS_KEY, 1, false)))
 			{
@@ -2033,16 +2036,17 @@ int ModelWindow::progressCallback(CUCSTR message, float progress,
 		// done
 		hideProgress();
 		// If the window is closed during load, we will no longer be initialized.
-		if (showErrors && initialized && !cancelLoad)
+		if (showErrors && initialized && !cancelLoad && userLoad)
 		{
 			showErrorsIfNeeded();
 		}
+		userLoad = false;
 		makeCurrent();
 		return 1;
 	}
 	if (!loading)
 	{
-		clearErrors();
+		//clearErrors();
 		loading = true;
 		setupProgress();
 		((LDViewWindow*)parentWindow)->forceShowStatusBar(true);
@@ -2978,6 +2982,12 @@ LDSnapshotTaker::ImageType ModelWindow::getSaveImageType(void)
 		return LDSnapshotTaker::ITBmp;
 	case JPG_IMAGE_TYPE_INDEX:
 		return LDSnapshotTaker::ITJpg;
+	case SVG_IMAGE_TYPE_INDEX:
+		return LDSnapshotTaker::ITSvg;
+	case EPS_IMAGE_TYPE_INDEX:
+		return LDSnapshotTaker::ITEps;
+	case PDF_IMAGE_TYPE_INDEX:
+		return LDSnapshotTaker::ITPdf;
 	default:
 		return LDSnapshotTaker::ITPng;
 	}
@@ -4181,6 +4191,12 @@ const char *ModelWindow::saveExtension(int type /*= -1*/) const
 		return "bmp";
 	case JPG_IMAGE_TYPE_INDEX:
 		return "jpg";
+	case SVG_IMAGE_TYPE_INDEX:
+		return "svg";
+	case EPS_IMAGE_TYPE_INDEX:
+		return "eps";
+	case PDF_IMAGE_TYPE_INDEX:
+		return "pdf";
 	default:
 		return "png";
 	}
@@ -4305,12 +4321,15 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		saveImageType = 1;
 	}
 	memset(fileTypes, 0, 2);
-	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("PngFileType"),
-		"*.png");
-	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("BmpFileType"),
-		"*.bmp");
-	LDViewWindow::addFileType(fileTypes, TCLocalStrings::get("JpgFileType"),
-		"*.jpg");
+	LDViewWindow::addFileType(fileTypes, ls("PngFileType"), "*.png");
+	LDViewWindow::addFileType(fileTypes, ls("BmpFileType"), "*.bmp");
+	LDViewWindow::addFileType(fileTypes, ls("JpgFileType"), "*.jpg");
+	if (TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
+	{
+		LDViewWindow::addFileType(fileTypes, ls("SvgFileType"), "*.svg");
+		LDViewWindow::addFileType(fileTypes, ls("EpsFileType"), "*.eps");
+		LDViewWindow::addFileType(fileTypes, ls("PdfFileType"), "*.pdf");
+	}
 	memset(&openStruct, 0, sizeof(OPENFILENAME));
 	openStruct.lStructSize = sizeof(OPENFILENAME);
 	openStruct.hwndOwner = hWindow;

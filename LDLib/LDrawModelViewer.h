@@ -127,6 +127,8 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		void setObi(bool value);
 		bool getObi(void) const { return flags.obi != false; }
+		void setGl2ps(bool value);
+		bool getGl2ps(void) const { return flags.gl2ps; }
 		virtual void setUsesSpecular(bool value);
 		bool getUsesSpecular(void) const { return flags.usesSpecular != false; }
 		virtual void setOneLight(bool value);
@@ -454,6 +456,11 @@ class LDrawModelViewer: public TCAlertSender
 		int getStep(void) const { return step + 1; }
 		int getNumSteps(void) const;
 
+		void enable(GLenum cap);
+		void disable(GLenum cap);
+		void blendFunc(GLenum sfactor, GLenum dfactor);
+		void lineWidth(GLfloat width);
+
 		static UCSTR getOpenGLDriverInfo(int &numExtensions);
 		static void cleanupFloats(TCFloat *array, int count = 16);
 		static bool fileExists(char *filename);
@@ -683,6 +690,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool showBoundingBox:1;
 			bool boundingBoxesOnly:1;
 			bool obi:1;
+			bool gl2ps:1;
 		} flags;
 		struct CameraData
 		{

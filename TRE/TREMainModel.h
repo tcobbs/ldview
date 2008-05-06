@@ -131,6 +131,8 @@ public:
 	}
 	void setSaveAlphaFlag(bool value) { m_mainFlags.saveAlpha = value; }
 	bool getSaveAlphaFlag(void) { return m_mainFlags.saveAlpha != false; }
+	void setGl2psFlag(bool value) { m_mainFlags.gl2ps = value; }
+	bool getGl2psFlag(void) const { return m_mainFlags.gl2ps != false; }
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
 	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
 	bool getActiveLineJoinsFlag(void)
@@ -307,6 +309,12 @@ protected:
 	void backgroundConditionals(int step);
 	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
 
+	void enable(GLenum cap);
+	void disable(GLenum cap);
+	void blendFunc(GLenum sfactor, GLenum dfactor);
+	void lineWidth(GLfloat width);
+	void pointSize(GLfloat size);
+
 	static void loadStudMipTextures(TCImage *mainImage);
 
 	TCObject *m_alertSender;
@@ -387,6 +395,7 @@ protected:
 		bool vertexArrayEdgeFlags:1;
 		bool multiThreaded:1;
 		bool saveAlpha:1;
+		bool gl2ps:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

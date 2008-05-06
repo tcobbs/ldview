@@ -181,5 +181,6 @@
 #define SS_SLEEP_WORKAROUND_KEY "SSSleepWorkaround"
 #define SS_RANDOM_PREF_SET_KEY "SSRandomPrefSet"
 #define HFOV_KEY "HFOV"
+#define GL2PS_ALLOWED_KEY "GL2PSAllowed"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__

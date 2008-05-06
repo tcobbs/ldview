@@ -6,6 +6,7 @@
 #include "TRESubModel.h"
 #include <math.h>
 #include <string.h>
+#include <gl2ps/gl2ps.h>
 
 #include <TCFoundation/TCDictionary.h>
 #include <TCFoundation/TCProgressAlert.h>
@@ -144,6 +145,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.stencilConditionals = false;
 	m_mainFlags.vertexArrayEdgeFlags = false;
 	m_mainFlags.multiThreaded = true;
+	m_mainFlags.gl2ps = false;
 
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
@@ -354,7 +356,7 @@ void TREMainModel::compile(void)
 						{
 							if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
 							{
-//								glPointSize(m_edgeLineWidth);
+//								pointSize(m_edgeLineWidth);
 								m_mainFlags.activeLineJoins = true;
 //								glEnable(GL_POINT_SMOOTH);
 //								glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
@@ -524,7 +526,7 @@ void TREMainModel::passOnePrep(void)
 	glStencilFunc(GL_EQUAL, 0, 0xFFFFFFFF);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 	glStencilMask(0xFFFFFFFF);
-	glDisable(GL_BLEND);
+	disable(GL_BLEND);
 }
 
 void TREMainModel::passTwoPrep(void)
@@ -885,12 +887,12 @@ void TREMainModel::draw(void)
 	triggerWorkerThreads();
 	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 	{
-		glEnable(GL_POLYGON_OFFSET_FILL);
+		enable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
 	}
 	else
 	{
-		glDisable(GL_POLYGON_OFFSET_FILL);
+		disable(GL_POLYGON_OFFSET_FILL);
 	}
 	if (getWireframeFlag())
 	{
@@ -964,6 +966,51 @@ void TREMainModel::draw(void)
 //	checkNormals(m_coloredVertexStore);
 }
 
+void TREMainModel::enable(GLenum cap)
+{
+	if (getGl2psFlag())
+	{
+		gl2psEnable(cap);
+	}
+	glEnable(cap);
+}
+
+void TREMainModel::disable(GLenum cap)
+{
+	if (getGl2psFlag())
+	{
+		gl2psDisable(cap);
+	}
+	glDisable(cap);
+}
+
+void TREMainModel::blendFunc(GLenum sfactor, GLenum dfactor)
+{
+	if (getGl2psFlag())
+	{
+		gl2psBlendFunc(sfactor, dfactor);
+	}
+	glBlendFunc(sfactor, dfactor);
+}
+
+void TREMainModel::lineWidth(GLfloat width)
+{
+	if (getGl2psFlag())
+	{
+		gl2psLineWidth(width);
+	}
+	glLineWidth(width);
+}
+
+void TREMainModel::pointSize(GLfloat size)
+{
+	if (getGl2psFlag())
+	{
+		gl2psPointSize(size);
+	}
+	glPointSize(size);
+}
+
 void TREMainModel::enableLineSmooth(int pass /*= -1*/)
 {
 	if (getAALinesFlag())
@@ -972,14 +1019,14 @@ void TREMainModel::enableLineSmooth(int pass /*= -1*/)
 		glEnable(GL_LINE_SMOOTH);
 		if (pass != 1)
 		{
-			glEnable(GL_BLEND);
+			enable(GL_BLEND);
 			if (pass == 2)
 			{
-				glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE_MINUS_SRC_ALPHA);
+				blendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE_MINUS_SRC_ALPHA);
 			}
 			else
 			{
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}
 		}
 	}
@@ -1085,10 +1132,10 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	// However, if parts are flattened, they can contain sub-models of a
 	// different color, which can lead to non-default colored edge lines.
 	glColor4ubv((GLubyte*)&m_edgeColor);
-	glLineWidth(m_edgeLineWidth);
+	lineWidth(m_edgeLineWidth);
 	if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
 	{
-		glPointSize(m_edgeLineWidth);
+		pointSize(m_edgeLineWidth);
 		m_mainFlags.activeLineJoins = true;
 		glEnable(GL_POINT_SMOOTH);
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
@@ -1105,7 +1152,7 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	}
 	if (getLineJoinsFlag() && m_edgeLineWidth > 1.0f)
 	{
-		glPointSize(1.0f);
+		pointSize(1.0f);
 		m_mainFlags.activeLineJoins = false;
 	}
 	// Next, draw the specific colored lines.  As with the specific colored
@@ -1518,14 +1565,14 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 		{
 			if (pass != 1)
 			{
-				glEnable(GL_BLEND);
+				enable(GL_BLEND);
 				if (pass == 2)
 				{
-					glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE_MINUS_SRC_ALPHA);
+					blendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE_MINUS_SRC_ALPHA);
 				}
 				else
 				{
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				}
 				glDepthMask(GL_FALSE);
 			}
@@ -1536,12 +1583,12 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 		{
 			if (getEdgeLinesFlag())
 			{
-				glDisable(GL_POLYGON_OFFSET_FILL);
+				disable(GL_POLYGON_OFFSET_FILL);
 //				glPolygonOffset(0.0f, 0.0f);
 			}
 			else
 			{
-				glEnable(GL_POLYGON_OFFSET_FILL);
+				enable(GL_POLYGON_OFFSET_FILL);
 				glPolygonOffset(-POLYGON_OFFSET_FACTOR, -POLYGON_OFFSET_UNITS);
 			}
 		}
@@ -1559,7 +1606,7 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 		{
 			glDisable(GL_TEXTURE_2D);
 		}
-		glDisable(GL_POLYGON_OFFSET_FILL);
+		disable(GL_POLYGON_OFFSET_FILL);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, oldSpecular);
 		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, oldShininess);
 		if (getStippleFlag())
@@ -1568,7 +1615,7 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 		}
 		else if (!getCutawayDrawFlag())
 		{
-			glDisable(GL_BLEND);
+			disable(GL_BLEND);
 			glDepthMask(GL_TRUE);
 		}
 	}
