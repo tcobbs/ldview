@@ -47,6 +47,9 @@ distclean:
 	cd LDLoader
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
+	cd gl2ps
+	$(MAKE) -nologo -f Makefile.vc clean
+	cd ..
 	cd Translations\Hungarian
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..\..
@@ -92,10 +95,16 @@ TCFoundation\$(OBJDIR)\TCFoundation.lib: TCFoundation\*.cpp TCFoundation\*.h
 	$(MAKE) -nologo -f Makefile.vc 
 	cd ..
 
+gl2ps\$(OBJDIR)\gl2ps.lib: gl2ps\*.c gl2ps\*.h
+	cd gl2ps
+	$(MAKE) -nologo -f Makefile.vc 
+	cd ..
+
 
 $(OBJDIR)\LDView.exe:	CUI\$(OBJDIR)\CUI.lib TRE\$(OBJDIR)\TRE.lib 
 $(OBJDIR)\LDView.exe:	LDLib\$(OBJDIR)\LDLib.lib LDLoader\$(OBJDIR)\LDLoader.lib 
 $(OBJDIR)\LDView.exe:	TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS) 
+$(OBJDIR)\LDView.exe:	gl2ps\$(OBJDIR)\gl2ps.lib
 $(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res lib\zlib.lib lib\unzip32.lib
 $(OBJDIR)\LDView.exe:	lib\libpng.lib
 	link -nologo -out:$(OBJDIR)\LDView.exe $** \
