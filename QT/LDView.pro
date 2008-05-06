@@ -43,7 +43,7 @@ unix {
   target.path = /usr/local/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw -l$$BOOSTLIB
+          -lLDraw -l$$BOOSTLIB -L../gl2ps
   ldlib.target = ../LDLib/libLDraw.a
   ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
@@ -56,9 +56,13 @@ unix {
   ldloader.target = ../LDLoader/libLDLoader.a
   ldloader.commands = cd ../LDLoader ; make all
   ldloader.depends = ../LDLoader/*.cpp ../LDLoader/*.h
-  QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader
+  gl2ps.target = ../gl2ps/libgl2ps.a
+  gl2ps.commands = cd ../gl2ps ; make all
+  gl2ps.depends = ../gl2ps/*.c ../gl2ps/*.h
+  QMAKE_EXTRA_UNIX_TARGETS += ldlib tre tcfoundation ldloader gl2ps
   PRE_TARGETDEPS += ../LDLib/libLDraw.a ../TRE/libTRE.a \
-                    ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a
+                    ../TCFoundation/libTCFoundation.a ../LDLoader/libLDLoader.a \
+					../gl2ps/libgl2ps.a
   QMAKE_CLEAN += ../[TL]*/.obj/*.o ../[TL]*/lib*.a
   initrans.path = /usr/local/share/ldview
   initrans.extra = cp ../Translations/Hungarian/LDViewMessages.ini \
@@ -129,7 +133,7 @@ exists($(QTDIR)/include/Qt3Support/q3button.h){
 	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
 message(QT4)
 }
-LIBS	+= -lLDLoader -lTRE -lTCFoundation
+LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
