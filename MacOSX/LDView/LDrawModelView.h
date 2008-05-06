@@ -28,6 +28,7 @@ typedef enum
 	//NSDate *lastMoveTime;
 	LDVViewMode viewMode;
 	BOOL loading;
+	BOOL parsing;
 	BOOL redisplayRequested;
 	float fps;
 	int resizeCornerTextureId;

@@ -53,6 +53,13 @@ enum
 
 @implementation ModelWindow
 
+- (void)killPolling
+{
+	[pollingTimer invalidate];
+	[pollingTimer release];
+	pollingTimer = nil;
+}
+
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -68,9 +75,8 @@ enum
 	[saveSnapshotViewOwner release];
 	[modelTree release];
 	[initialTitle release];
-	[pollingTimer invalidate];
-	[pollingTimer release];
 	[stepToolbarControls release];
+	[self killPolling];
 	[super dealloc];
 }
 
@@ -642,6 +648,11 @@ enum
 	return loading;
 }
 
+- (bool)parsing
+{
+	return parsing;
+}
+
 - (bool)loadCanceled
 {
 	return loadCanceled;
@@ -666,7 +677,7 @@ enum
 
 - (void)ldlErrorCallback:(LDLError *)error
 {
-	if (![self isMyAlert:error])
+	if (![self isMyAlert:error] || !loading)
 	{
 		return;
 	}
@@ -754,12 +765,12 @@ enum
 		{
 			NSEvent *event;
 
-			[window makeFirstResponder:progress];
 			if ([progress isHidden])
 			{
 				[progress setHidden:NO];
 				[self adjustProgressMessageSize: -progressAdjust]; 
 			}
+			[window makeFirstResponder:progress];
 			[progress setDoubleValue:alertProgress];
 			[statusBar display];
 			updated = YES;
@@ -907,9 +918,7 @@ enum
 	}
 	else if (pollingTimer)
 	{
-		[pollingTimer invalidate];
-		[pollingTimer release];
-		pollingTimer = nil;
+		[self killPolling];
 	}
 }
 
@@ -934,6 +943,18 @@ enum
 	[self updateUtilityWindows:self andShowErrorsIfNeeded:NO];
 }
 
+- (void)postLoad
+{
+	if ([self showStatusBar:showStatusBar] || [self showStatusLatLon:[self haveLatLon]])
+	{
+		[window display];
+	}
+	[modelView rotationUpdate];
+	[self stepChanged];
+	[self updateFps];
+	[self updatePolling];
+}
+
 - (void)loadAlertCallback:(TCAlert *)alert
 {
 	LDrawModelViewer *modelViewer = (LDrawModelViewer *)alert->getSender();
@@ -945,6 +966,7 @@ enum
 		pollingUpdateNeeded = false;
 		if ([message isEqualToString:@"ModelLoading"])
 		{
+			[self killPolling];
 			loading = true;
 			loadCanceled = false;
 			if ([self showStatusBar:YES] || [self showStatusLatLon:NO])
@@ -954,25 +976,39 @@ enum
 			[unfilteredRootErrorItem release];
 			unfilteredRootErrorItem = nil;
 		}
+		else if ([message isEqualToString:@"ModelParsing"])
+		{
+			[self killPolling];
+			parsing = true;
+			if (!loading)
+			{
+				loadCanceled = false;
+				if ([self showStatusBar:YES] || [self showStatusLatLon:NO])
+				{
+					[window display];
+				}
+			}
+		}
+		else if ([message isEqualToString:@"ModelParsed"] || [message isEqualToString:@"ModelParseCanceled"])
+		{
+			if (!loading)
+			{
+				[self postLoad];
+			}
+			parsing = false;
+		}
 		else if ([message isEqualToString:@"ModelLoaded"])
 		{
 			bool showErrorsIfNeeded = [[[controller preferences] generalPage] showErrorsIfNeeded];
 			NSString *filename = nil;
 
-			if ([self showStatusBar:showStatusBar] || [self showStatusLatLon:[self haveLatLon]])
-			{
-				[window display];
-			}
 			[self enableToolbarItems:YES];
 			loading = false;
-			[modelView rotationUpdate];
 			filename = [self filename];
 			[OCUserDefaults setString:[filename stringByDeletingLastPathComponent] forKey:[NSString stringWithASCIICString:LAST_OPEN_PATH_KEY] sessionSpecific:NO];
 			[self setLastWriteTime:[[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileModificationDate]];
-			[self updatePolling];
 			[[self controller] recordRecentFile:filename];
-			[self stepChanged];
-			[self updateFps];
+			[self postLoad];
 			[self updateUtilityWindows:self andShowErrorsIfNeeded:showErrorsIfNeeded];
 		}
 		else if ([message isEqualToString:@"ModelLoadCanceled"])
@@ -988,10 +1024,7 @@ enum
 			loading = false;
 			[[self window] setTitleWithRepresentedFilename:@""];
 			[[self window] setTitle:initialTitle];
-			[modelView rotationUpdate];
-			[self stepChanged];
-			[self updateFps];
-			[self updatePolling];
+			[self postLoad];
 			[self updateUtilityWindows:self];
 		}
 		[[NSNotificationCenter defaultCenter] postNotificationName:message object:self];

@@ -314,6 +314,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual bool recompile(void);
 		virtual void uncompile(void);
 		virtual void reload(void);
+		virtual void reparse(void);
 //		virtual void setProgressCallback(LDMProgressCallback callback,
 //			void* userData);
 //		virtual void setErrorCallback(LDMErrorCallback callback,

@@ -1000,6 +1000,7 @@ bool LDrawModelViewer::parseModel(void)
 	{
 		return false;
 	}
+	TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelParsing"));
 	releaseTREModels();
 	if (flags.needsCalcSize && !calcSize())
 	{
@@ -1019,6 +1020,15 @@ bool LDrawModelViewer::parseModel(void)
 		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
 	}
 	modelParser->release();
+	if (retValue)
+	{
+		TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelParsed"));
+	}
+	else
+	{
+		TCAlertManager::sendAlert(loadAlertClass(), this,
+			_UC("ModelParseCanceled"));
+	}
 	return retValue;
 }
 
@@ -1165,6 +1175,15 @@ void LDrawModelViewer::uncompile(void)
 	{
 		blueLightDirModel->uncompile();
 	}
+}
+
+void LDrawModelViewer::reparse(void)
+{
+	if (mainModel)
+	{
+		parseModel();
+	}
+	flags.needsReparse = false;
 }
 
 void LDrawModelViewer::reload(void)
