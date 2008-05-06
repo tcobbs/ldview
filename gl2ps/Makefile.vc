@@ -1,0 +1,9 @@
+CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\gl2ps.pch /YX /c
+
+COBJS = $(OBJDIR)\gl2ps.obj
+CCOBJS = 
+
+LIBT = gl2ps.lib
+
+!include "..\Make.inc"
+
