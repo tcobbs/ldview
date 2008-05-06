@@ -1,8 +1,9 @@
 /* GeneralPage */
 
 #import <Cocoa/Cocoa.h>
-
 #import "PreferencePage.h"
+
+#include <LDLib/LDPreferences.h>
 
 @interface GeneralPage : PreferencePage
 {
@@ -26,8 +27,12 @@
 	IBOutlet NSButton *snapshotsBrowseButton;
 	IBOutlet NSButton *partsListsBrowseButton;
 
-	NSString *snapshotsDir;
-	NSString *partsListsDir;
+	//NSString *snapshotsDir;
+	//NSString *partsListsDir;
+	NSArray *saveDirPopUps;
+	NSArray *saveDirFields;
+	NSArray *saveDirButtons;
+	NSMutableArray *saveDirs;
 }
 
 - (bool)showErrorsIfNeeded;
@@ -37,9 +42,8 @@
 - (void)setup;
 - (bool)updateLdPreferences;
 
-- (int)snapshotsDirMode;
-- (NSString *)snapshotsDir;
-- (int)partsListsDirMode;
-- (NSString *)partsListsDir;
+- (int)saveDirModeForOp:(LDPreferences::SaveOp)op;
+- (NSString *)saveDirForOp:(LDPreferences::SaveOp)op;
+- (NSString *)defaultSaveDirForOp:(LDPreferences::SaveOp)op modelFilename:(NSString *)filename;
 
 @end

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F0D14C90DCD26D4008756BC /* LDObiInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F0D14C70DCD26D4008756BC /* LDObiInfo.cpp */; };
+		1F0D14CA0DCD26D4008756BC /* LDObiInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F0D14C80DCD26D4008756BC /* LDObiInfo.h */; };
 		1F240B3E0A588A9900691116 /* LDLibraryUpdateInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B340A588A9900691116 /* LDLibraryUpdateInfo.cpp */; };
 		1F240B3F0A588A9900691116 /* LDLibraryUpdateInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F240B350A588A9900691116 /* LDLibraryUpdateInfo.h */; };
 		1F240B400A588A9900691116 /* LDLibraryUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F240B360A588A9900691116 /* LDLibraryUpdater.cpp */; };
@@ -84,6 +86,8 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1F0D14C70DCD26D4008756BC /* LDObiInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDObiInfo.cpp; path = ../../LDLib/LDObiInfo.cpp; sourceTree = SOURCE_ROOT; };
+		1F0D14C80DCD26D4008756BC /* LDObiInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDObiInfo.h; path = ../../LDLib/LDObiInfo.h; sourceTree = SOURCE_ROOT; };
 		1F240B340A588A9900691116 /* LDLibraryUpdateInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLibraryUpdateInfo.cpp; path = ../../LDLib/LDLibraryUpdateInfo.cpp; sourceTree = SOURCE_ROOT; };
 		1F240B350A588A9900691116 /* LDLibraryUpdateInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDLibraryUpdateInfo.h; path = ../../LDLib/LDLibraryUpdateInfo.h; sourceTree = SOURCE_ROOT; };
 		1F240B360A588A9900691116 /* LDLibraryUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDLibraryUpdater.cpp; path = ../../LDLib/LDLibraryUpdater.cpp; sourceTree = SOURCE_ROOT; };
@@ -173,6 +177,8 @@
 				1F240B390A588A9900691116 /* LDModelParser.h */,
 				1F2CAD3C0D8E466400A98C9A /* LDModelTree.cpp */,
 				1F2CAD3D0D8E466400A98C9A /* LDModelTree.h */,
+				1F0D14C70DCD26D4008756BC /* LDObiInfo.cpp */,
+				1F0D14C80DCD26D4008756BC /* LDObiInfo.h */,
 				1FD4D7B30BA4C44C00419677 /* LDPartCount.cpp */,
 				1FD4D7B40BA4C44C00419677 /* LDPartCount.h */,
 				1FD4D7B50BA4C44C00419677 /* LDPartsList.cpp */,
@@ -270,6 +276,7 @@
 				1FEC065C0C854A8500FB0A2A /* LDInputHandler.h in Headers */,
 				1F7471AA0CC2B0D200D6DB68 /* LDSnapshotTaker.h in Headers */,
 				1F2CAD3F0D8E466400A98C9A /* LDModelTree.h in Headers */,
+				1F0D14CA0DCD26D4008756BC /* LDObiInfo.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +374,7 @@
 				1FEC065B0C854A8400FB0A2A /* LDInputHandler.cpp in Sources */,
 				1F7471A90CC2B0D200D6DB68 /* LDSnapshotTaker.cpp in Sources */,
 				1F2CAD3E0D8E466400A98C9A /* LDModelTree.cpp in Sources */,
+				1F0D14C90DCD26D4008756BC /* LDObiInfo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

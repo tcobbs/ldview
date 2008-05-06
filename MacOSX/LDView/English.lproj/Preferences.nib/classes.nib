@@ -43,7 +43,7 @@
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {partsList = id; partsListBrowse = id; snapshot = id; snapshotBrowse = id; }; 
+            ACTIONS = {saveDirBrowse = id; saveDirMode = id; }; 
             CLASS = GeneralPage; 
             LANGUAGE = ObjC; 
             OUTLETS = {

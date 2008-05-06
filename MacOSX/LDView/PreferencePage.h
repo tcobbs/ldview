@@ -24,5 +24,6 @@ class LDPreferences;
 - (void)setup;
 - (BOOL)canSwitchPages;
 - (void)browseForFolder:(void *)contextInfo;
+- (void)browseForFolder:(void *)contextInfo initialDir:(NSString *)dir;
 
 @end

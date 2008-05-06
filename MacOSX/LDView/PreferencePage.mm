@@ -96,12 +96,17 @@
 
 - (void)browseForFolder:(void *)contextInfo
 {
+	[self browseForFolder:contextInfo initialDir:nil];
+}
+
+- (void)browseForFolder:(void *)contextInfo initialDir:(NSString *)dir
+{
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	
 	[openPanel setAllowsMultipleSelection:NO];
 	[openPanel setCanChooseFiles:NO];
 	[openPanel setCanChooseDirectories:YES];
-	[openPanel beginSheetForDirectory:nil file:nil modalForWindow:[preferences window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:contextInfo];
+	[openPanel beginSheetForDirectory:dir file:nil modalForWindow:[preferences window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:contextInfo];
 }
 
 @end
