@@ -65,6 +65,9 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name LDLib
     End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name gl2ps
+    End Project Dependency
 }}}
 
 ###############################################################################
@@ -131,6 +134,18 @@ Package=<4>
     Begin Project Dependency
     Project_Dep_Name LDLoader
     End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "gl2ps"=.\gl2ps\gl2ps.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
 }}}
 
 ###############################################################################

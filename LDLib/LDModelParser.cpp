@@ -151,6 +151,7 @@ bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
 	m_mainTREModel->setBFCFlag(getBFCFlag());
 	m_mainTREModel->setRedBackFacesFlag(getRedBackFacesFlag());
 	m_mainTREModel->setGreenFrontFacesFlag(getGreenFrontFacesFlag());
+	m_mainTREModel->setGl2psFlag(m_modelViewer->getGl2ps());
 	switch (m_modelViewer->getMemoryUsage())
 	{
 	case 0:

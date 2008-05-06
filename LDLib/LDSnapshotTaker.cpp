@@ -11,6 +11,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDViewPoint.h>
+#include <gl2ps/gl2ps.h>
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -27,7 +28,8 @@ m_fromCommandLine(true),
 m_commandLineSaveSteps(false),
 m_commandLineStep(false),
 m_step(-1),
-m_grabSetupDone(false)
+m_grabSetupDone(false),
+m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
 {
 }
 
@@ -40,7 +42,8 @@ m_fromCommandLine(false),
 m_commandLineSaveSteps(false),
 m_commandLineStep(false),
 m_step(-1),
-m_grabSetupDone(false)
+m_grabSetupDone(false),
+m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
 {
 }
 
@@ -96,12 +99,33 @@ bool LDSnapshotTaker::saveImage(void)
 		{
 			switch (TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false))
 			{
-			case 2:
+			case ITBmp:
 				imageExt = ".bmp";
 				break;
-			case 3:
+			case ITJpg:
 				imageExt = ".jpg";
 				break;
+			case ITSvg:
+				if (m_gl2psAllowed)
+				{
+					imageExt = ".svg";
+					// NOTE: break is INTENTIONALLY inside the if statement.
+					break;
+				}
+			case ITEps:
+				if (m_gl2psAllowed)
+				{
+					imageExt = ".eps";
+					// NOTE: break is INTENTIONALLY inside the if statement.
+					break;
+				}
+			case ITPdf:
+				if (m_gl2psAllowed)
+				{
+					imageExt = ".pdf";
+					// NOTE: break is INTENTIONALLY inside the if statement.
+					break;
+				}
 			default:
 				imageExt = ".png";
 				break;
@@ -190,6 +214,21 @@ bool LDSnapshotTaker::saveImage(void)
 							".jpg"))
 						{
 							m_imageType = ITJpg;
+						}
+						else if (stringHasCaseInsensitivePrefix(imageFilename,
+							".svg") && m_gl2psAllowed)
+						{
+							m_imageType = ITSvg;
+						}
+						else if (stringHasCaseInsensitivePrefix(imageFilename,
+							".eps") && m_gl2psAllowed)
+						{
+							m_imageType = ITEps;
+						}
+						else if (stringHasCaseInsensitivePrefix(imageFilename,
+							".pdf") && m_gl2psAllowed)
+						{
+							m_imageType = ITPdf;
 						}
 					}
 				}
@@ -333,33 +372,122 @@ bool LDSnapshotTaker::saveImage(
 	}
 }
 
+bool LDSnapshotTaker::saveGl2psStepImage(
+	const char *filename,
+	int /*imageWidth*/,
+	int /*imageHeight*/,
+	bool zoomToFit)
+{
+	int bufSize;
+	int state = GL2PS_OVERFLOW;
+	FILE *file = fopen(filename, "wb");
+	bool retValue = false;
+
+	if (file != NULL)
+	{
+		bool origForceZoomToFit;
+		LDViewPoint *viewPoint = NULL;
+
+		grabSetup();
+		origForceZoomToFit = m_modelViewer->getForceZoomToFit();
+		if (zoomToFit)
+		{
+			viewPoint = m_modelViewer->saveViewPoint();
+			m_modelViewer->setForceZoomToFit(true);
+		}
+		m_modelViewer->setGl2ps(true);
+		m_modelViewer->setGl2ps(false);
+		for (bufSize = 1024 * 1024; state == GL2PS_OVERFLOW; bufSize *= 2)
+		{
+			GLint format;
+			GLint options = GL2PS_USE_CURRENT_VIEWPORT
+					| GL2PS_OCCLUSION_CULL
+					| GL2PS_BEST_ROOT
+					| GL2PS_NO_PS3_SHADING;
+
+			switch (m_imageType)
+			{
+			case ITEps:
+				format = GL2PS_EPS;
+				options |= GL2PS_TIGHT_BOUNDING_BOX;
+				break;
+			case ITPdf:
+				format = GL2PS_PDF;
+				break;
+			default:
+				format = GL2PS_SVG;
+				break;
+			}
+
+			state = gl2psBeginPage(filename, "LDView", NULL, format,
+				GL2PS_BSP_SORT,	options, GL_RGBA, 0, NULL, 0, 0, 0, bufSize,
+				file, filename);
+
+			if (state == GL2PS_ERROR)
+			{
+				debugPrintf("ERROR in gl2ps routine!");
+			}
+			else
+			{
+				m_modelViewer->setup();
+				m_modelViewer->update();
+				state = gl2psEndPage();
+				if (state == GL2PS_ERROR)
+				{
+					debugPrintf("ERROR in gl2ps routine!");
+				}
+				else
+				{
+					retValue = true;
+				}
+			}
+		}
+		if (zoomToFit)
+		{
+			m_modelViewer->setForceZoomToFit(origForceZoomToFit);
+			m_modelViewer->restoreViewPoint(viewPoint);
+		}
+		fclose(file);
+	}
+	return retValue;
+}
+
 bool LDSnapshotTaker::saveStepImage(
 	const char *filename,
 	int imageWidth,
 	int imageHeight,
 	bool zoomToFit)
 {
-	bool saveAlpha = false;
-	TCByte *buffer = grabImage(imageWidth, imageHeight,
-		shouldZoomToFit(zoomToFit), NULL, &saveAlpha);
 	bool retValue = false;
 
-	if (buffer)
+	if (m_imageType >= ITSvg && m_imageType <= ITPdf)
 	{
-		switch (m_imageType)
+		retValue = saveGl2psStepImage(filename, imageWidth, imageHeight,
+			zoomToFit);
+	}
+	else
+	{
+		bool saveAlpha = false;
+		TCByte *buffer = grabImage(imageWidth, imageHeight,
+			shouldZoomToFit(zoomToFit), NULL, &saveAlpha);
+
+		if (buffer)
 		{
-		case ITPng:
-			retValue = writePng(filename, imageWidth, imageHeight, buffer,
-								saveAlpha);
-			break;
-		case ITBmp:
-			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
-			break;
-		case ITJpg:
-			retValue = writeJpg(filename, imageWidth, imageHeight, buffer);
-			break;
+			switch (m_imageType)
+			{
+			case ITPng:
+				retValue = writePng(filename, imageWidth, imageHeight, buffer,
+									saveAlpha);
+				break;
+			case ITBmp:
+				retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
+				break;
+			case ITJpg:
+				retValue = writeJpg(filename, imageWidth, imageHeight, buffer);
+				break;
+			}
+			delete buffer;
 		}
-		delete buffer;
 	}
 	return retValue;
 }

@@ -14,7 +14,10 @@ public:
 	{
 		ITPng = 1,
 		ITBmp = 2,
-		ITJpg = 3
+		ITJpg = 3,
+		ITSvg = 4,
+		ITEps = 5,
+		ITPdf = 6,
 	};
 	LDSnapshotTaker(void);
 	LDSnapshotTaker(LDrawModelViewer *modelViewer);
@@ -65,6 +68,8 @@ protected:
 	void grabSetup(void);
 	bool saveStepImage(const char *filename, int imageWidth, int imageHeight,
 		bool zoomToFit);
+	bool saveGl2psStepImage(const char *filename, int imageWidth,
+		int imageHeight, bool zoomToFit);
 
 	static bool staticImageProgressCallback(CUCSTR message, float progress,
 		void* userData);
@@ -79,6 +84,7 @@ protected:
 	bool m_commandLineStep;
 	int m_step;
 	bool m_grabSetupDone;
+	bool m_gl2psAllowed;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
 };
