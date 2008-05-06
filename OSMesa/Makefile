@@ -5,12 +5,12 @@ RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 QTDIR =
 
-LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib
+LDLIBDIRS = -L../../TCFoundation -L../../TRE -L../../LDLoader -L../../LDLib -L../../gl2ps
 LIBDIRS = $(LDLIBDIRS) -L/usr/X11R6/lib
-LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lpng -lz -lOSMesa -lGLU -ljpeg
+LIBS = -lLDraw$(POSTFIX) -lTRE$(POSTFIX) -lLDLoader$(POSTFIX) -lTCFoundation$(POSTFIX) -lgl2ps$(POSTFIX) -lpng -lz -lOSMesa -lGLU -ljpeg
 STATIC =
 ARCH32 =
-LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a
+LDLIBS = ../TCFoundation/libTCFoundation$(POSTFIX).a ../LDLoader/libLDLoader$(POSTFIX).a ../TRE/libTRE$(POSTFIX).a ../LDLib/libLDraw$(POSTFIX).a ../gl2ps/libgl2ps$(POSTFIX).a
 MAKEMODE = POSTFIX=-osmesa USE_BOOST=NO
 
 CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE -O3
@@ -87,6 +87,8 @@ all:    $(OBJDIR) ldview
 ../LDLib/libLDraw$(POSTFIX).a:
 	cd ../LDLib; make $(MAKEMODE)
 
+../gl2ps/libgl2ps$(POSTFIX).a:
+	cd ../gl2ps; make $(MAKEMODE)
 
 $(OBJDIR):
 	if [ ! -d $(OBJDIR) ]; then \
