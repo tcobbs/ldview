@@ -3072,16 +3072,16 @@ void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)
 	mainTREModel->setRemovingHiddenLines(true);
 	if (flags.usePolygonOffset)
 	{
-		enable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+		enable(GL_POLYGON_OFFSET_FILL);
 	}
 	drawModel(eyeXOffset);
 	// Not sure why the following is necessary.
 	lineWidth(wireframeLineWidth);
 	if (flags.usePolygonOffset)
 	{
-		enable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(0.0f, 0.0f);
+		enable(GL_POLYGON_OFFSET_FILL);
 	}
 	mainTREModel->setRemovingHiddenLines(false);
 	mainTREModel->setLightingFlag(flags.useLighting);
@@ -4242,7 +4242,13 @@ void LDrawModelViewer::enable(GLenum cap)
 {
 	if (getGl2ps())
 	{
-		gl2psEnable(cap);
+		GLint mode = GL2PS_BLEND;
+
+		if (cap == GL_POLYGON_OFFSET_FILL)
+		{
+			mode = GL2PS_POLYGON_OFFSET_FILL;
+		}
+		gl2psEnable(mode);
 	}
 	glEnable(cap);
 }
@@ -4251,7 +4257,13 @@ void LDrawModelViewer::disable(GLenum cap)
 {
 	if (getGl2ps())
 	{
-		gl2psDisable(cap);
+		GLint mode = GL2PS_BLEND;
+
+		if (cap == GL_POLYGON_OFFSET_FILL)
+		{
+			mode = GL2PS_POLYGON_OFFSET_FILL;
+		}
+		gl2psDisable(mode);
 	}
 	glDisable(cap);
 }
