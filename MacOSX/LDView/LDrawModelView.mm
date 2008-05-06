@@ -661,6 +661,12 @@ static TCImage *resizeCornerImage = NULL;
 			modelViewer->reload();
 			loading = NO;
 		}
+		else if (modelViewer->getNeedsReparse() && !parsing)
+		{
+			parsing = YES;
+			modelViewer->reparse();
+			parsing = NO;
+		}
 		[[self openGLContext] makeCurrentContext];
 		if (modelViewer->getNeedsRecompile())
 		{
@@ -779,6 +785,7 @@ static TCImage *resizeCornerImage = NULL;
 - (void)drawRect:(NSRect)rect
 {
 	BOOL skip = NO;
+	ModelWindow *modelWindow = [self modelWindow];
 
 	if (![NSGraphicsContext currentContextDrawingToScreen])
 	{
@@ -789,12 +796,12 @@ static TCImage *resizeCornerImage = NULL;
 	{
 		skip = YES;
 	}
-	else if (modelViewer && modelViewer->getFilename() && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile()))
+	else if (modelViewer && modelViewer->getFilename() && (modelViewer->getNeedsReload() || modelViewer->getNeedsRecompile() || modelViewer->getNeedsReparse()))
 	{
-		[[self modelWindow] modelWillReload];
+		[modelWindow modelWillReload];
 		skip = YES;
 	}
-	if (skip || [[self modelWindow] loading] || !modelViewer || modelViewer->getUpdating())
+	if (skip || [modelWindow loading] || [modelWindow parsing] || !modelViewer || modelViewer->getUpdating())
 	{
 		if (modelViewer)
 		{
@@ -821,7 +828,7 @@ static TCImage *resizeCornerImage = NULL;
 	{
 		modelViewer->drawFPS(fps);
 	}
-	if (resizeCornerImage && ![[self modelWindow] showStatusBar])
+	if (resizeCornerImage && ![modelWindow showStatusBar])
 	{
 		glPushAttrib(GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
 		[self prepResizeCornerTexture];
@@ -848,25 +855,25 @@ static TCImage *resizeCornerImage = NULL;
 //	if (rotationSpeed > 0.0f || !fEq(modelViewer->getZoomSpeed(), 0.0f))
 //	{
 //		[self rotationUpdate];
-//		[[self modelWindow] performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
+//		[modelWindow performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
 //	}
 //	else
 	if (redrawRequested)
 	{
-		[[self modelWindow] performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
+		[modelWindow performSelectorOnMainThread:@selector(updateFps) withObject:nil waitUntilDone:NO];
 	}
 	else
 	{
-		if ([[self modelWindow] fps] != 0.0)
+		if ([modelWindow fps] != 0.0)
 		{
-			[[self modelWindow] performSelectorOnMainThread:@selector(clearFps) withObject:nil waitUntilDone:NO];
+			[modelWindow performSelectorOnMainThread:@selector(clearFps) withObject:nil waitUntilDone:NO];
 		}
-		//[[self modelWindow] clearFps];
+		//[modelWindow clearFps];
 	}
 	//long swapInterval;
 	//[[self openGLContext] getValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
 	[[self openGLContext] flushBuffer];
-	[[self modelWindow] updateStatusLatLon];
+	[modelWindow updateStatusLatLon];
 }
 
 - (void)resetView:(id)sender

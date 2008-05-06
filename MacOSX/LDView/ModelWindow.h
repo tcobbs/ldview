@@ -74,6 +74,7 @@ class LDPartsList;
 	ModelTree *modelTree;
 	bool loadCanceled;
 	bool loading;
+	bool parsing;
 	NSString *initialTitle;
 	bool sheetBusy;
 	LDHtmlInventory *htmlInventory;
@@ -88,6 +89,7 @@ class LDPartsList;
 
 - (bool)sheetBusy;
 - (bool)loading;
+- (bool)parsing;
 - (bool)loadCanceled;
 - (LDViewController *)controller;
 - (BOOL)openModel:(NSString *)filename;
