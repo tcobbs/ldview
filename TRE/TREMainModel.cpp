@@ -887,8 +887,8 @@ void TREMainModel::draw(void)
 	triggerWorkerThreads();
 	if (getEdgeLinesFlag() && !getWireframeFlag() && getPolygonOffsetFlag())
 	{
-		enable(GL_POLYGON_OFFSET_FILL);
 		glPolygonOffset(POLYGON_OFFSET_FACTOR, POLYGON_OFFSET_UNITS);
+		enable(GL_POLYGON_OFFSET_FILL);
 	}
 	else
 	{
@@ -970,7 +970,13 @@ void TREMainModel::enable(GLenum cap)
 {
 	if (getGl2psFlag())
 	{
-		gl2psEnable(cap);
+		GLint mode = GL2PS_BLEND;
+
+		if (cap == GL_POLYGON_OFFSET_FILL)
+		{
+			mode = GL2PS_POLYGON_OFFSET_FILL;
+		}
+		gl2psEnable(mode);
 	}
 	glEnable(cap);
 }
@@ -979,7 +985,13 @@ void TREMainModel::disable(GLenum cap)
 {
 	if (getGl2psFlag())
 	{
-		gl2psDisable(cap);
+		GLint mode = GL2PS_BLEND;
+
+		if (cap == GL_POLYGON_OFFSET_FILL)
+		{
+			mode = GL2PS_POLYGON_OFFSET_FILL;
+		}
+		gl2psDisable(mode);
 	}
 	glDisable(cap);
 }
@@ -1588,8 +1600,8 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 			}
 			else
 			{
-				enable(GL_POLYGON_OFFSET_FILL);
 				glPolygonOffset(-POLYGON_OFFSET_FACTOR, -POLYGON_OFFSET_UNITS);
+				enable(GL_POLYGON_OFFSET_FILL);
 			}
 		}
 		if (onLastStep() && m_coloredListIDs[TREMTransparent])
