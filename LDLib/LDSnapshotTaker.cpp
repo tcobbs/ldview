@@ -477,13 +477,16 @@ bool LDSnapshotTaker::saveStepImage(
 			{
 			case ITPng:
 				retValue = writePng(filename, imageWidth, imageHeight, buffer,
-									saveAlpha);
+					saveAlpha);
 				break;
 			case ITBmp:
 				retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
 				break;
 			case ITJpg:
 				retValue = writeJpg(filename, imageWidth, imageHeight, buffer);
+				break;
+			default:
+				// Get rid of warning
 				break;
 			}
 			delete buffer;
