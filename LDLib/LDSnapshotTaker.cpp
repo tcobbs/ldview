@@ -396,20 +396,22 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 			m_modelViewer->setForceZoomToFit(true);
 		}
 		m_modelViewer->setGl2ps(true);
-		m_modelViewer->setGl2ps(false);
 		for (bufSize = 1024 * 1024; state == GL2PS_OVERFLOW; bufSize *= 2)
 		{
 			GLint format;
 			GLint options = GL2PS_USE_CURRENT_VIEWPORT
-					| GL2PS_OCCLUSION_CULL
-					| GL2PS_BEST_ROOT
-					| GL2PS_NO_PS3_SHADING;
+				| GL2PS_OCCLUSION_CULL
+				| GL2PS_BEST_ROOT
+				| GL2PS_NO_PS3_SHADING;
 
+			if (m_autoCrop)
+			{
+				options |= GL2PS_TIGHT_BOUNDING_BOX;
+			}
 			switch (m_imageType)
 			{
 			case ITEps:
 				format = GL2PS_EPS;
-				options |= GL2PS_TIGHT_BOUNDING_BOX;
 				break;
 			case ITPdf:
 				format = GL2PS_PDF;
@@ -442,6 +444,7 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 				}
 			}
 		}
+		m_modelViewer->setGl2ps(false);
 		if (zoomToFit)
 		{
 			m_modelViewer->setForceZoomToFit(origForceZoomToFit);
