@@ -1,7 +1,7 @@
 /* $Id$ */
 /*
  * GL2PS, an OpenGL to PostScript Printing Library
- * Copyright (C) 1999-2006 Christophe Geuzaine <geuz@geuz.org>
+ * Copyright (C) 1999-2007 Christophe Geuzaine <geuz@geuz.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of either:
@@ -1375,7 +1375,7 @@ static void gl2psDivideQuad(GL2PSprimitive *quad,
   (*t2)->verts[0] = quad->verts[0];
   (*t2)->verts[1] = quad->verts[2];
   (*t2)->verts[2] = quad->verts[3];
-  (*t1)->boundary = ((quad->boundary & 4) ? 2 : 0) | ((quad->boundary & 4) ? 2 : 0);
+  (*t2)->boundary = ((quad->boundary & 4) ? 2 : 0) | ((quad->boundary & 4) ? 2 : 0);
 }
 
 static int gl2psCompareDepth(const void *a, const void *b)
@@ -4729,6 +4729,7 @@ static void gl2psPrintPDFFooter(void)
   
   /* Free auxiliary lists and arrays */    
   gl2psFree(gl2ps->xreflist);
+  gl2psListAction(gl2ps->pdfprimlist, gl2psFreePrimitive);
   gl2psListDelete(gl2ps->pdfprimlist);
   gl2psPDFgroupListDelete();
   
@@ -4892,7 +4893,8 @@ static void gl2psPrintSVGHeader(void)
                 (int)gl2ps->viewport[0], (int)gl2ps->viewport[3]);
   }
 
-  gl2psPrintf("<g>\n");
+  /* group all the primitives and disable antialiasing */
+  gl2psPrintf("<g shape-rendering=\"crispEdges\">\n");
 }
 
 static void gl2psPrintSVGSmoothTriangle(GL2PSxyz xyz[3], GL2PSrgba rgba[3])
@@ -5742,6 +5744,9 @@ GL2PSDLL_API GLint gl2psEndViewport(void)
 
   res = (gl2psbackends[gl2ps->format]->endViewport)();
 
+  /* reset last used colors, line widths */
+  gl2ps->lastlinewidth = -1.0F;
+
   return res;
 }
 
@@ -5965,6 +5970,18 @@ GL2PSDLL_API GLint gl2psSetOptions(GLint options)
   if(!gl2ps) return GL2PS_UNINITIALIZED;
 
   gl2ps->options = options;
+
+  return GL2PS_SUCCESS;
+}
+
+GL2PSDLL_API GLint gl2psGetOptions(GLint *options)
+{
+  if(!gl2ps) {
+    *options = 0;
+    return GL2PS_UNINITIALIZED;
+  }
+
+  *options = gl2ps->options;
 
   return GL2PS_SUCCESS;
 }
