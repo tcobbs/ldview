@@ -12,6 +12,7 @@
 #import "OCUserDefaults.h"
 
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDLib/LDSnapshotTaker.h>
 #include <TCFoundation/TCUserDefaults.h>
 
 @implementation SaveSnapshotViewOwner
@@ -21,6 +22,17 @@
 	self = [super init];
 	if (self)
 	{
+		int i;
+
+		firstType = LDSnapshotTaker::ITFirst;
+		lastType = LDSnapshotTaker::lastImageType();
+		fileTypes = [[NSMutableArray alloc] initWithCapacity:lastType];
+		for (i = firstType; i <= lastType; i++)
+		{
+			LDSnapshotTaker::ImageType type = (LDSnapshotTaker::ImageType)i;
+
+			[fileTypes addObject:[NSString stringWithASCIICString:LDSnapshotTaker::extensionForType(type).c_str()]];
+		}
 		[NSBundle loadNibNamed:@"SaveSnapshotView" owner:self];
 	}
 	return self;
@@ -30,6 +42,7 @@
 {
 	[savePanel release];
 	[accessoryView release];
+	[fileTypes release];
 	[super dealloc];
 }
 
@@ -111,34 +124,15 @@
 
 - (NSArray *)allowedFileTypes
 {
-	if ([[fileTypePopUp selectedCell] tag] == 2)
-	{
-		return [NSArray arrayWithObjects:@"bmp", @"png", @"jpg", nil];
-	}
-	else
-	{
-		return [NSArray arrayWithObjects:@"png", @"bmp", @"jpg", nil];
-	}
+	return fileTypes;
 }
 
 - (NSString *)requiredFileType
 {
-	BOOL hasOptions = FALSE;
-	NSString *retValue = @"png";
+	LDSnapshotTaker::ImageType type = (LDSnapshotTaker::ImageType)[[fileTypePopUp selectedCell] tag];
+	BOOL hasOptions = type == LDSnapshotTaker::ITJpg;
+	NSString *retValue = [NSString stringWithASCIICString:LDSnapshotTaker::extensionForType(type).c_str()];
 
-	switch ([[fileTypePopUp selectedCell] tag])
-	{
-		case 1:
-			retValue = @"png";
-			break;
-		case 2:
-			retValue = @"bmp";
-			break;
-		case 3:
-			hasOptions = TRUE;
-			retValue = @"jpg";
-			break;
-	}
 	[fileTypeOptionsButton setEnabled:hasOptions];
 	return retValue;
 }
@@ -254,6 +248,7 @@
 	if (aSavePanel != nil)
 	{
 		int fileType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
+		int i;
 
 		saveDigits = TCUserDefaults::longForKey(SAVE_DIGITS_KEY, 1, false);
 		[fileTypePopUp selectItemWithTag:fileType];
@@ -261,6 +256,13 @@
 		[self groupCheck:sizeCheck name:@"Size" value:!TCUserDefaults::boolForKey(SAVE_ACTUAL_SIZE_KEY, true, false)];
 		[autocropCheck setCheck:TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false)];
 		[self groupCheck:allStepsCheck name:@"AllSteps" value:TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false)];
+		for (i = [fileTypePopUp numberOfItems] - 1; i >= 0; i--)
+		{
+			if ([[fileTypePopUp itemAtIndex:i] tag] > lastType)
+			{
+				[fileTypePopUp removeItemAtIndex:i];
+			}
+		}
 	}
 	if (aSavePanel != savePanel)
 	{
@@ -440,12 +442,11 @@
 
 - (LDSnapshotTaker::ImageType)imageType
 {
-	switch ([[fileTypePopUp selectedCell] tag])
+	LDSnapshotTaker::ImageType type = (LDSnapshotTaker::ImageType)[[fileTypePopUp selectedCell] tag];
+
+	if (type >= firstType && type <= lastType)
 	{
-		case 2:
-			return LDSnapshotTaker::ITBmp;
-		case 3:
-			return LDSnapshotTaker::ITJpg;
+		return type;
 	}
 	return LDSnapshotTaker::ITPng;
 }

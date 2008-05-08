@@ -41,6 +41,9 @@
 	int numSteps;
 	int saveDigits;
 	NSString *stepSuffix;
+	NSMutableArray *fileTypes;
+	int firstType;
+	int lastType;
 }
 
 - (id)init;

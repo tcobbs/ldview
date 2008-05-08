@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */; };
 		1F1039A00D97064E00D01B28 /* LDrawPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10399E0D97064E00D01B28 /* LDrawPage.mm */; };
+		1F170F1B0DD03B3B0024E40E /* gl2ps.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F170F190DD03B3B0024E40E /* gl2ps.c */; };
 		1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031E80C49DF3B009B7720 /* Preferences.mm */; };
 		1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */; };
 		1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EE0C49DF58009B7720 /* PreferencePage.mm */; };
@@ -192,6 +193,8 @@
 		1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AlertHandler.cpp; sourceTree = "<group>"; };
 		1F10399E0D97064E00D01B28 /* LDrawPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawPage.mm; sourceTree = "<group>"; };
 		1F10399F0D97064E00D01B28 /* LDrawPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawPage.h; sourceTree = "<group>"; };
+		1F170F190DD03B3B0024E40E /* gl2ps.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = gl2ps.c; path = ../../gl2ps/gl2ps.c; sourceTree = SOURCE_ROOT; };
+		1F170F1A0DD03B3B0024E40E /* gl2ps.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = gl2ps.h; path = ../../gl2ps/gl2ps.h; sourceTree = SOURCE_ROOT; };
 		1F2031E80C49DF3B009B7720 /* Preferences.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Preferences.mm; sourceTree = "<group>"; };
 		1F2031E90C49DF3B009B7720 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		1F2031EB0C49DF4E009B7720 /* EffectsPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EffectsPage.h; sourceTree = "<group>"; };
@@ -662,6 +665,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1F170F190DD03B3B0024E40E /* gl2ps.c */,
+				1F170F1A0DD03B3B0024E40E /* gl2ps.h */,
 				32CA4F630368D1EE00C91783 /* LDView_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -907,6 +912,7 @@
 				1FD9C8330DBC4F0400F10F45 /* BoundingBox.mm in Sources */,
 				1FD9C8E70DBD881A00F10F45 /* GoToStep.m in Sources */,
 				1FD9CAEF0DC3945D00F10F45 /* LatLon.mm in Sources */,
+				1F170F1B0DD03B3B0024E40E /* gl2ps.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1168,7 +1174,10 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					GL2PS_HAVE_ZLIB,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
