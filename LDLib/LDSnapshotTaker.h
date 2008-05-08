@@ -12,12 +12,14 @@ class LDSnapshotTaker : public TCAlertSender
 public:
 	enum ImageType
 	{
+		ITFirst = 1,
 		ITPng = 1,
 		ITBmp = 2,
 		ITJpg = 3,
 		ITSvg = 4,
 		ITEps = 5,
 		ITPdf = 6,
+		ITLast = 6
 	};
 	LDSnapshotTaker(void);
 	LDSnapshotTaker(LDrawModelViewer *modelViewer);
@@ -50,6 +52,9 @@ public:
 		const std::string &stepSuffix);
 	static std::string addStepSuffix(const std::string &filename,
 		const std::string &stepSuffix, int step, int numSteps);
+	static std::string extensionForType(ImageType type,
+		bool includeDot = false);
+	static ImageType lastImageType(void);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }
 protected:

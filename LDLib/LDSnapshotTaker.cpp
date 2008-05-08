@@ -395,7 +395,13 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 			viewPoint = m_modelViewer->saveViewPoint();
 			m_modelViewer->setForceZoomToFit(true);
 		}
+#ifdef COCOA
+		// For some reason, we get nothing in the feedback buffer on the Mac if
+		// we don't reparse the model.  No idea why that is.
+		m_modelViewer->reparse();
+#endif // COCOA
 		m_modelViewer->setGl2ps(true);
+		m_modelViewer->setup();
 		for (bufSize = 1024 * 1024; state == GL2PS_OVERFLOW; bufSize *= 2)
 		{
 			GLint format;
@@ -420,19 +426,17 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 				format = GL2PS_SVG;
 				break;
 			}
-
 			state = gl2psBeginPage(filename, "LDView", NULL, format,
 				GL2PS_BSP_SORT,	options, GL_RGBA, 0, NULL, 0, 0, 0, bufSize,
 				file, filename);
-
 			if (state == GL2PS_ERROR)
 			{
 				debugPrintf("ERROR in gl2ps routine!");
 			}
 			else
 			{
-				m_modelViewer->setup();
 				m_modelViewer->update();
+				glFinish();
 				state = gl2psEndPage();
 				if (state == GL2PS_ERROR)
 				{
@@ -928,3 +932,48 @@ std::string LDSnapshotTaker::addStepSuffix(
 	}
 	return newString;
 }
+
+// Note: static method
+std::string LDSnapshotTaker::extensionForType(
+	ImageType type,
+	bool includeDot /*= false*/)
+{
+	if (includeDot)
+	{
+		std::string retValue(".");
+		
+		retValue += extensionForType(type, false);
+		return retValue;
+	}
+	switch (type)
+	{
+	case ITPng:
+		return "png";
+	case ITBmp:
+		return "bmp";
+	case ITJpg:
+		return "jpg";
+	case ITSvg:
+		return "svg";
+	case ITEps:
+		return "eps";
+	case ITPdf:
+		return "pdf";
+	default:
+		return "png";
+	}
+}
+
+// Note: static method
+LDSnapshotTaker::ImageType LDSnapshotTaker::lastImageType(void)
+{
+	if (TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
+	{
+		return ITLast;
+	}
+	else
+	{
+		return ITJpg;
+	}
+}
+
