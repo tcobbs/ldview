@@ -1763,6 +1763,7 @@ static void gl2psAddPlanesInBspTreeImage(GL2PSprimitive *prim,
   GL2PSbsptree2d *head = NULL, *cur = NULL;
 
   if((*tree == NULL) && (prim->numverts > 2)){
+	if (prim->verts[0].rgba[3]<1.0F) return;
     head = (GL2PSbsptree2d*)gl2psMalloc(sizeof(GL2PSbsptree2d));
     for(i = 0; i < prim->numverts-1; i++){
       if(!gl2psGetPlaneFromPoints(prim->verts[i].xyz,
