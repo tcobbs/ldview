@@ -421,6 +421,7 @@ bool LDSnapshotTaker::saveGl2psStepImage(
 				break;
 			case ITPdf:
 				format = GL2PS_PDF;
+				options |= GL2PS_COMPRESS;
 				break;
 			default:
 				format = GL2PS_SVG;
