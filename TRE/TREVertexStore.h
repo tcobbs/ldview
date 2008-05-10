@@ -74,34 +74,6 @@ public:
 
 	static void initVertex(TREVertex &vertex, const TCVector &point);
 	static TCVector calcNormal(const TCVector *points, bool normalize = true);
-	static void setWglAllocateMemoryNV(PFNWGLALLOCATEMEMORYNVPROC value)
-	{
-		wglAllocateMemoryNV = value;
-	}
-	static void setWglFreeMemoryNV(PFNWGLFREEMEMORYNVPROC value)
-	{
-		wglFreeMemoryNV = value;
-	}
-	static void setGlVertexArrayRangeNV(PFNGLVERTEXARRAYRANGENVPROC value)
-	{
-		glVertexArrayRangeNV = value;
-	}
-	static void setGlBindBufferARB(PFNGLBINDBUFFERARBPROC value)
-	{
-		glBindBufferARB = value;
-	}
-	static void setGlDeleteBuffersARB(PFNGLDELETEBUFFERSARBPROC value)
-	{
-		glDeleteBuffersARB = value;
-	}
-	static void setGlGenBuffersARB(PFNGLGENBUFFERSARBPROC value)
-	{
-		glGenBuffersARB = value;
-	}
-	static void setGlBufferDataARB(PFNGLBUFFERDATAARBPROC value)
-	{
-		glBufferDataARB = value;
-	}
 protected:
 	virtual ~TREVertexStore(void);
 	virtual void dealloc(void);
@@ -136,15 +108,6 @@ protected:
 	} m_flags;
 
 	static TREVertexStore *sm_activeVertexStore;
-
-	static PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;
-	static PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV;
-	static PFNGLVERTEXARRAYRANGENVPROC glVertexArrayRangeNV;
-
-	static PFNGLBINDBUFFERARBPROC glBindBufferARB;
-	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
-	static PFNGLGENBUFFERSARBPROC glGenBuffersARB;
-	static PFNGLBUFFERDATAARBPROC glBufferDataARB;
 
 	static TCByte *sm_varBuffer;
 	static int sm_varSize;

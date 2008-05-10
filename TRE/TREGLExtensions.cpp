@@ -1,6 +1,4 @@
 #include "TREGLExtensions.h"
-#include "TREVertexStore.h"
-#include "TREShapeGroup.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
 // !!!WARNING!!!
@@ -15,6 +13,55 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 #endif // WIN32
+
+namespace TREGLExtensionsNS
+{
+#ifndef GL_GLEXT_PROTOTYPES
+	// GL_NV_vertex_array_range
+	PFNGLVERTEXARRAYRANGENVPROC glVertexArrayRangeNV = NULL;
+	// GL_EXT_multi_draw_arrays
+	PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT = NULL;
+	// GL_ARB_vertex_buffer_object
+	PFNGLBINDBUFFERARBPROC glBindBufferARB = NULL;
+	PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB = NULL;
+	PFNGLGENBUFFERSARBPROC glGenBuffersARB = NULL;
+	PFNGLISBUFFERARBPROC glIsBufferARB = NULL;
+	PFNGLBUFFERDATAARBPROC glBufferDataARB = NULL;
+	PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB = NULL;
+	PFNGLGETBUFFERSUBDATAARBPROC glGetBufferSubDataARB = NULL;
+	PFNGLMAPBUFFERARBPROC glMapBufferARB = NULL;
+	PFNGLUNMAPBUFFERARBPROC glUnmapBufferARB = NULL;
+	PFNGLGETBUFFERPARAMETERIVARBPROC glGetBufferParameterivARB = NULL;
+	PFNGLGETBUFFERPOINTERVARBPROC glGetBufferPointervARB = NULL;
+	// GL_ARB_occlusion_query
+    PFNGLGENQUERIESARBPROC glGenQueriesARB = NULL;
+    PFNGLDELETEQUERIESARBPROC glDeleteQueriesARB = NULL;
+    PFNGLISQUERYARBPROC glIsQueryARB = NULL;
+    PFNGLBEGINQUERYARBPROC glBeginQueryARB = NULL;
+    PFNGLENDQUERYARBPROC glEndQueryARB = NULL;
+    PFNGLGETQUERYIVARBPROC glGetQueryivARB = NULL;
+    PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB = NULL;
+    PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB = NULL;
+
+#ifdef WIN32
+	// WGL_EXT_pixel_format
+	PFNWGLGETPIXELFORMATATTRIBIVEXTPROC wglGetPixelFormatAttribivARB = NULL;
+	PFNWGLGETPIXELFORMATATTRIBFVEXTPROC wglGetPixelFormatAttribfvARB = NULL;
+	PFNWGLCHOOSEPIXELFORMATEXTPROC wglChoosePixelFormatARB = NULL;
+	// WGL_ARB_extensions_string
+	PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB = NULL;
+	// WGL_ARB_pbuffer
+	PFNWGLCREATEPBUFFERARBPROC wglCreatePbufferARB = NULL;
+	PFNWGLGETPBUFFERDCARBPROC wglGetPbufferDCARB = NULL;
+	PFNWGLRELEASEPBUFFERDCARBPROC wglReleasePbufferDCARB = NULL;
+	PFNWGLDESTROYPBUFFERARBPROC wglDestroyPbufferARB = NULL;
+	PFNWGLQUERYPBUFFERARBPROC wglQueryPbufferARB = NULL;
+	// WGL_NV_allocate_memory
+	PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV = NULL;
+	PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV = NULL;
+#endif WIN32
+#endif // GL_GLEXT_PROTOTYPES
+}
 
 // GL_NV_vertex_array_range
 PFNGLVERTEXARRAYRANGENVPROC TREGLExtensions::sm_glVertexArrayRangeNV = NULL;
@@ -33,8 +80,17 @@ PFNGLUNMAPBUFFERARBPROC TREGLExtensions::sm_glUnmapBufferARB = NULL;
 PFNGLGETBUFFERPARAMETERIVARBPROC TREGLExtensions::sm_glGetBufferParameterivARB =
 	NULL;
 PFNGLGETBUFFERPOINTERVARBPROC TREGLExtensions::sm_glGetBufferPointervARB = NULL;
+// GL_ARB_occlusion_query
+PFNGLGENQUERIESARBPROC TREGLExtensions::sm_glGenQueriesARB = NULL;
+PFNGLDELETEQUERIESARBPROC TREGLExtensions::sm_glDeleteQueriesARB = NULL;
+PFNGLISQUERYARBPROC TREGLExtensions::sm_glIsQueryARB = NULL;
+PFNGLBEGINQUERYARBPROC TREGLExtensions::sm_glBeginQueryARB = NULL;
+PFNGLENDQUERYARBPROC TREGLExtensions::sm_glEndQueryARB = NULL;
+PFNGLGETQUERYIVARBPROC TREGLExtensions::sm_glGetQueryivARB = NULL;
+PFNGLGETQUERYOBJECTIVARBPROC TREGLExtensions::sm_glGetQueryObjectivARB = NULL;
+PFNGLGETQUERYOBJECTUIVARBPROC TREGLExtensions::sm_glGetQueryObjectuivARB = NULL;
 
-char *TREGLExtensions::sm_glExtensions = NULL;
+StringSet TREGLExtensions::sm_glExtensions;
 GLfloat TREGLExtensions::sm_maxAnisoLevel = 1.0f;
 bool TREGLExtensions::sm_rendererIsMesa = false;
 bool TREGLExtensions::sm_tempDisable = false;
@@ -59,14 +115,28 @@ void TREGLExtensions::disableAll(bool disable)
 
 void TREGLExtensions::cleanup(void)
 {
-	delete sm_glExtensions;
-	sm_glExtensions = NULL;
+	sm_glExtensions.clear();
+}
+
+void TREGLExtensions::initExtensions(
+	StringSet &extensions,
+	const char *extensionsString)
+{
+	int count;
+	char **components = componentsSeparatedByString(extensionsString, " ",
+		count);
+
+	for (int i = 0; i < count; i++)
+	{
+		extensions.insert(components[i]);
+	}
+	deleteStringArray(components, count);
 }
 
 void TREGLExtensions::setup(void)
 {
 	cleanup();
-	sm_glExtensions = copyString((char*)glGetString(GL_EXTENSIONS));
+	initExtensions(sm_glExtensions, (const char*)glGetString(GL_EXTENSIONS));
 	// Note that when we load the function pointers, don't want to pay
 	// attention to any ignore flags in the registry, so all the checks for
 	// extensions have the force flag set to true.  Otherwise, if the
@@ -82,7 +152,6 @@ void TREGLExtensions::setup(void)
 		sm_glVertexArrayRangeNV = (PFNGLVERTEXARRAYRANGENVPROC)
 			GET_EXTENSION(glVertexArrayRangeNV);
 #endif // __APPLE__
-		TREVertexStore::setGlVertexArrayRangeNV(sm_glVertexArrayRangeNV);
 	}
 	const char *renderer = (const char *)glGetString(GL_RENDERER);
 	if (stringHasCaseInsensitivePrefix(renderer, "Mesa "))
@@ -93,7 +162,6 @@ void TREGLExtensions::setup(void)
 	{
 		sm_glMultiDrawElementsEXT = (PFNGLMULTIDRAWELEMENTSEXTPROC)
 			GET_EXTENSION(glMultiDrawElementsEXT);
-		TREShapeGroup::setGlMultiDrawElementsEXT(sm_glMultiDrawElementsEXT);
 	}
 	if (haveVBOExtension(true))
 	{
@@ -119,10 +187,25 @@ void TREGLExtensions::setup(void)
 			GET_EXTENSION(glGetBufferParameterivARB);
 		sm_glGetBufferPointervARB = (PFNGLGETBUFFERPOINTERVARBPROC)
 			GET_EXTENSION(glGetBufferPointervARB);
-		TREVertexStore::setGlBindBufferARB(sm_glBindBufferARB);
-		TREVertexStore::setGlDeleteBuffersARB(sm_glDeleteBuffersARB);
-		TREVertexStore::setGlGenBuffersARB(sm_glGenBuffersARB);
-		TREVertexStore::setGlBufferDataARB(sm_glBufferDataARB);
+	}
+	if (haveOcclusionQueryExtension(true))
+	{
+		sm_glGenQueriesARB = (PFNGLGENQUERIESARBPROC)
+			GET_EXTENSION(glGenQueriesARB);
+    	sm_glDeleteQueriesARB = (PFNGLDELETEQUERIESARBPROC)
+			GET_EXTENSION(glDeleteQueriesARB);
+    	sm_glIsQueryARB = (PFNGLISQUERYARBPROC)
+			GET_EXTENSION(glIsQueryARB);
+    	sm_glBeginQueryARB = (PFNGLBEGINQUERYARBPROC)
+			GET_EXTENSION(glBeginQueryARB);
+    	sm_glEndQueryARB = (PFNGLENDQUERYARBPROC)
+			GET_EXTENSION(glEndQueryARB);
+    	sm_glGetQueryivARB = (PFNGLGETQUERYIVARBPROC)
+			GET_EXTENSION(glGetQueryivARB);
+    	sm_glGetQueryObjectivARB = (PFNGLGETQUERYOBJECTIVARBPROC)
+			GET_EXTENSION(glGetQueryObjectivARB);
+    	sm_glGetQueryObjectuivARB = (PFNGLGETQUERYOBJECTUIVARBPROC)
+			GET_EXTENSION(glGetQueryObjectuivARB);
 	}
 	if (haveAnisoExtension(true))
 	{
@@ -132,6 +215,33 @@ void TREGLExtensions::setup(void)
 	{
 		sm_maxAnisoLevel = 1.0f;
 	}
+#ifndef GL_GLEXT_PROTOTYPES
+	using namespace TREGLExtensionsNS;
+	glVertexArrayRangeNV = sm_glVertexArrayRangeNV;
+	// GL_EXT_multi_draw_arrays
+	glMultiDrawElementsEXT = sm_glMultiDrawElementsEXT;
+	// GL_ARB_vertex_buffer_object
+	glBindBufferARB = sm_glBindBufferARB;
+	glDeleteBuffersARB = sm_glDeleteBuffersARB;
+	glGenBuffersARB = sm_glGenBuffersARB;
+	glIsBufferARB = sm_glIsBufferARB;
+	glBufferDataARB = sm_glBufferDataARB;
+	glBufferSubDataARB = sm_glBufferSubDataARB;
+	glGetBufferSubDataARB = sm_glGetBufferSubDataARB;
+	glMapBufferARB = sm_glMapBufferARB;
+	glUnmapBufferARB = sm_glUnmapBufferARB;
+	glGetBufferParameterivARB = sm_glGetBufferParameterivARB;
+	glGetBufferPointervARB = sm_glGetBufferPointervARB;
+	// GL_ARB_occlusion_query
+    glGenQueriesARB = sm_glGenQueriesARB;
+    glDeleteQueriesARB = sm_glDeleteQueriesARB;
+    glIsQueryARB = sm_glIsQueryARB;
+    glBeginQueryARB = sm_glBeginQueryARB;
+    glEndQueryARB = sm_glEndQueryARB;
+    glGetQueryivARB = sm_glGetQueryivARB;
+    glGetQueryObjectivARB = sm_glGetQueryObjectivARB;
+    glGetQueryObjectuivARB = sm_glGetQueryObjectuivARB;
+#endif GL_GLEXT_PROTOTYPES
 }
 
 bool TREGLExtensions::haveNvMultisampleFilterHintExtension(bool force)
@@ -140,14 +250,15 @@ bool TREGLExtensions::haveNvMultisampleFilterHintExtension(bool force)
 		false) != 0;
 
 	return (!ignore || force) &&
-		checkForExtension("GL_NV_multisample_filter_hint");
+		checkForExtension("GL_NV_multisample_filter_hint", force);
 }
 
 bool TREGLExtensions::haveVARExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_VAR_KEY, 0, false) != 0;
 
-	return (!ignore || force) && checkForExtension("GL_NV_vertex_array_range");
+	return (!ignore || force) && checkForExtension("GL_NV_vertex_array_range",
+		force);
 }
 
 bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
@@ -173,7 +284,17 @@ bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)
 	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
 		false) != 0;
 
-	return (!ignore || force) && checkForExtension("GL_EXT_multi_draw_arrays");
+	return (!ignore || force) && checkForExtension("GL_EXT_multi_draw_arrays",
+		force);
+}
+
+bool TREGLExtensions::haveOcclusionQueryExtension(bool force)
+{
+	bool ignore = TCUserDefaults::longForKey(IGNORE_OCCLUSION_QUERY_KEY, 0,
+		false) != 0;
+
+	return (!ignore || force) && checkForExtension("GL_ARB_occlusion_query",
+		force);
 }
 
 bool TREGLExtensions::haveAnisoExtension(bool force)
@@ -181,7 +302,7 @@ bool TREGLExtensions::haveAnisoExtension(bool force)
 	bool ignore = TCUserDefaults::longForKey(IGNORE_ANISO_KEY, 0, false) != 0;
 
 	return (!ignore || force) &&
-		checkForExtension("GL_EXT_texture_filter_anisotropic");
+		checkForExtension("GL_EXT_texture_filter_anisotropic", force);
 }
 
 bool TREGLExtensions::haveVBOExtension(bool force)
@@ -189,31 +310,20 @@ bool TREGLExtensions::haveVBOExtension(bool force)
 	bool ignore = TCUserDefaults::longForKey(IGNORE_VBO_KEY, 0, false) != 0;
 
 	return (!ignore || force) &&
-		checkForExtension("GL_ARB_vertex_buffer_object");
+		checkForExtension("GL_ARB_vertex_buffer_object", force);
 }
 
-bool TREGLExtensions::checkForExtension(const char* extensionsString,
-										const char* extension, bool force)
+bool TREGLExtensions::checkForExtension(
+	const StringSet &extensions,
+	const char* extension,
+	bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
 		false) != 0 || sm_tempDisable;
 
-	if ((!ignore || force) && extensionsString)
+	if (!ignore || force)
 	{
-		int extensionLen = strlen(extension);
-		const char* extensions = extensionsString;
-
-		while (extensions)
-		{
-			if (strcmp(extensions, extension) == 0 ||
-				(strncmp(extensions, extension, extensionLen) == 0 &&
-				extensions[extensionLen] == ' ') &&
-				(extensions == extensionsString || extensions[-1] == ' '))
-			{
-				return true;
-			}
-			extensions = strstr(extensions, extension);
-		}
+		return extensions.find(extension) != extensions.end();
 	}
 	return false;
 }

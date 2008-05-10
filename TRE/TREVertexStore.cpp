@@ -11,14 +11,9 @@
 #endif // _DEBUG
 #endif // WIN32
 
+using namespace TREGLExtensionsNS;
+
 TREVertexStore *TREVertexStore::sm_activeVertexStore = NULL;
-PFNWGLALLOCATEMEMORYNVPROC TREVertexStore::wglAllocateMemoryNV = NULL;
-PFNWGLFREEMEMORYNVPROC TREVertexStore::wglFreeMemoryNV = NULL;
-PFNGLVERTEXARRAYRANGENVPROC TREVertexStore::glVertexArrayRangeNV = NULL;
-PFNGLBINDBUFFERARBPROC TREVertexStore::glBindBufferARB = NULL;
-PFNGLDELETEBUFFERSARBPROC TREVertexStore::glDeleteBuffersARB = NULL;
-PFNGLGENBUFFERSARBPROC TREVertexStore::glGenBuffersARB = NULL;
-PFNGLBUFFERDATAARBPROC TREVertexStore::glBufferDataARB = NULL;
 TCByte *TREVertexStore::sm_varBuffer = NULL;
 int TREVertexStore::sm_varSize = 0;
 

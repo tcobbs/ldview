@@ -2325,7 +2325,7 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 		UCSTR openGlMessage = modelWindow->getModelViewer()->
 			getOpenGLDriverInfo(numOpenGlExtensions);
 		const char *wglExtensionsString =
-			LDVExtensionsSetup::getWglExtensions();
+			LDVExtensionsSetup::getWglExtensionsString();
 		UCSTR wglExtensionsList;
 		int len;
 		UCSTR message;

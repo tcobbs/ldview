@@ -1,7 +1,6 @@
 #include "LDVExtensionsSetup.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
-#include <TRE/TREVertexStore.h>
 #include <TRE/TREShapeGroup.h>
 #include <TRE/TREGLExtensions.h>
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -16,54 +15,35 @@
 
 // WGL_EXT_pixel_format
 PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
-	LDVExtensionsSetup::wglGetPixelFormatAttribivARB = NULL;
+	LDVExtensionsSetup::sm_wglGetPixelFormatAttribivARB = NULL;
 PFNWGLGETPIXELFORMATATTRIBFVEXTPROC
-	LDVExtensionsSetup::wglGetPixelFormatAttribfvARB = NULL;
+	LDVExtensionsSetup::sm_wglGetPixelFormatAttribfvARB = NULL;
 PFNWGLCHOOSEPIXELFORMATEXTPROC
-	LDVExtensionsSetup::wglChoosePixelFormatARB = NULL;
+	LDVExtensionsSetup::sm_wglChoosePixelFormatARB = NULL;
 // WGL_ARB_extensions_string
 PFNWGLGETEXTENSIONSSTRINGARBPROC
-	LDVExtensionsSetup::wglGetExtensionsStringARB = NULL;
+	LDVExtensionsSetup::sm_wglGetExtensionsStringARB = NULL;
 // WGL_ARB_pbuffer
-PFNWGLCREATEPBUFFERARBPROC LDVExtensionsSetup::wglCreatePbufferARB = NULL;
-PFNWGLGETPBUFFERDCARBPROC LDVExtensionsSetup::wglGetPbufferDCARB = NULL;
-PFNWGLRELEASEPBUFFERDCARBPROC LDVExtensionsSetup::wglReleasePbufferDCARB = NULL;
-PFNWGLDESTROYPBUFFERARBPROC LDVExtensionsSetup::wglDestroyPbufferARB = NULL;
-PFNWGLQUERYPBUFFERARBPROC LDVExtensionsSetup::wglQueryPbufferARB = NULL;
+PFNWGLCREATEPBUFFERARBPROC LDVExtensionsSetup::sm_wglCreatePbufferARB = NULL;
+PFNWGLGETPBUFFERDCARBPROC LDVExtensionsSetup::sm_wglGetPbufferDCARB = NULL;
+PFNWGLRELEASEPBUFFERDCARBPROC LDVExtensionsSetup::sm_wglReleasePbufferDCARB = NULL;
+PFNWGLDESTROYPBUFFERARBPROC LDVExtensionsSetup::sm_wglDestroyPbufferARB = NULL;
+PFNWGLQUERYPBUFFERARBPROC LDVExtensionsSetup::sm_wglQueryPbufferARB = NULL;
 // WGL_NV_allocate_memory
-PFNWGLALLOCATEMEMORYNVPROC LDVExtensionsSetup::wglAllocateMemoryNV = NULL;
-PFNWGLFREEMEMORYNVPROC LDVExtensionsSetup::wglFreeMemoryNV = NULL;
-/*
-// GL_NV_vertex_array_range
-PFNGLVERTEXARRAYRANGENVPROC LDVExtensionsSetup::glVertexArrayRangeNV = NULL;
-// GL_EXT_multi_draw_arrays
-PFNGLMULTIDRAWELEMENTSEXTPROC LDVExtensionsSetup::glMultiDrawElementsEXT = NULL;
-// GL_ARB_vertex_buffer_object
-PFNGLBINDBUFFERARBPROC LDVExtensionsSetup::glBindBufferARB = NULL;
-PFNGLDELETEBUFFERSARBPROC LDVExtensionsSetup::glDeleteBuffersARB = NULL;
-PFNGLGENBUFFERSARBPROC LDVExtensionsSetup::glGenBuffersARB = NULL;
-PFNGLISBUFFERARBPROC LDVExtensionsSetup::glIsBufferARB = NULL;
-PFNGLBUFFERDATAARBPROC LDVExtensionsSetup::glBufferDataARB = NULL;
-PFNGLBUFFERSUBDATAARBPROC LDVExtensionsSetup::glBufferSubDataARB = NULL;
-PFNGLGETBUFFERSUBDATAARBPROC LDVExtensionsSetup::glGetBufferSubDataARB = NULL;
-PFNGLMAPBUFFERARBPROC LDVExtensionsSetup::glMapBufferARB = NULL;
-PFNGLUNMAPBUFFERARBPROC LDVExtensionsSetup::glUnmapBufferARB = NULL;
-PFNGLGETBUFFERPARAMETERIVARBPROC LDVExtensionsSetup::glGetBufferParameterivARB =
-	NULL;
-PFNGLGETBUFFERPOINTERVARBPROC LDVExtensionsSetup::glGetBufferPointervARB = NULL;
-*/
+PFNWGLALLOCATEMEMORYNVPROC LDVExtensionsSetup::sm_wglAllocateMemoryNV = NULL;
+PFNWGLFREEMEMORYNVPROC LDVExtensionsSetup::sm_wglFreeMemoryNV = NULL;
 
-char *LDVExtensionsSetup::wglExtensions = NULL;
-//char *LDVExtensionsSetup::glExtensions = NULL;
-bool LDVExtensionsSetup::performedInitialSetup = false;
-bool LDVExtensionsSetup::stencilPresent = false;
-bool LDVExtensionsSetup::alphaPresent = false;
-TCIntArray *LDVExtensionsSetup::fsaaModes = NULL;
-TCIntArrayArray *LDVExtensionsSetup::pfIntValues = NULL;
-LDVExtensionsSetup *LDVExtensionsSetup::extensionsSetup = NULL;
+StringSet LDVExtensionsSetup::sm_wglExtensions;
+char *LDVExtensionsSetup::sm_wglExtensionsString = NULL;
+bool LDVExtensionsSetup::sm_performedInitialSetup = false;
+bool LDVExtensionsSetup::sm_stencilPresent = false;
+bool LDVExtensionsSetup::sm_alphaPresent = false;
+TCIntArray *LDVExtensionsSetup::sm_fsaaModes = NULL;
+TCIntArrayArray *LDVExtensionsSetup::sm_pfIntValues = NULL;
+LDVExtensionsSetup *LDVExtensionsSetup::sm_extensionsSetup = NULL;
 
 LDVExtensionsSetup::LDVExtensionsSetupCleanup
-	LDVExtensionsSetup::extensionsSetupCleanup;
+	LDVExtensionsSetup::sm_extensionsSetupCleanup;
 
 
 static char *pfIntAttribNames[] =
@@ -164,24 +144,23 @@ static int pfIntAttribCount = sizeof(pfIntAttribs) / sizeof(pfIntAttribs[0]);
 
 LDVExtensionsSetup::LDVExtensionsSetupCleanup::~LDVExtensionsSetupCleanup(void)
 {
-	delete LDVExtensionsSetup::wglExtensions;
-	LDVExtensionsSetup::wglExtensions = NULL;
-	//delete LDVExtensionsSetup::glExtensions;
-	//LDVExtensionsSetup::glExtensions = NULL;
-	if (LDVExtensionsSetup::fsaaModes)
+	LDVExtensionsSetup::sm_wglExtensions.clear();
+	delete LDVExtensionsSetup::sm_wglExtensionsString;
+	LDVExtensionsSetup::sm_wglExtensionsString = NULL;
+	if (LDVExtensionsSetup::sm_fsaaModes)
 	{
-		LDVExtensionsSetup::fsaaModes->release();
+		LDVExtensionsSetup::sm_fsaaModes->release();
 	}
-	if (LDVExtensionsSetup::extensionsSetup)
+	if (LDVExtensionsSetup::sm_extensionsSetup)
 	{
-		LDVExtensionsSetup::extensionsSetup->closeWindow();
-		LDVExtensionsSetup::extensionsSetup->release();
-		LDVExtensionsSetup::extensionsSetup = NULL;
+		LDVExtensionsSetup::sm_extensionsSetup->closeWindow();
+		LDVExtensionsSetup::sm_extensionsSetup->release();
+		LDVExtensionsSetup::sm_extensionsSetup = NULL;
 	}
-	if (LDVExtensionsSetup::pfIntValues)
+	if (LDVExtensionsSetup::sm_pfIntValues)
 	{
-		LDVExtensionsSetup::pfIntValues->release();
-		LDVExtensionsSetup::pfIntValues = NULL;
+		LDVExtensionsSetup::sm_pfIntValues->release();
+		LDVExtensionsSetup::sm_pfIntValues = NULL;
 	}
 }
 
@@ -202,27 +181,24 @@ BOOL LDVExtensionsSetup::initWindow(void)
 		GLint intValue;
 
 		TREGLExtensions::setup();
-		if (!wglExtensions)
+		if (!sm_wglExtensionsString)
 		{
-			wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
+			sm_wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
 				wglGetProcAddress("wglGetExtensionsStringARB");
 
-			if (!wglGetExtensionsStringARB)
+			if (!sm_wglGetExtensionsStringARB)
 			{
-				wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
+				sm_wglGetExtensionsStringARB = (PFNWGLGETEXTENSIONSSTRINGARBPROC)
 					wglGetProcAddress("wglGetExtensionsStringEXT");
 			}
-			if (wglGetExtensionsStringARB)
+			if (sm_wglGetExtensionsStringARB)
 			{
-				wglExtensions = copyString(wglGetExtensionsStringARB(hdc));
+				sm_wglExtensionsString = copyString(
+					sm_wglGetExtensionsStringARB(hdc));
+				TREGLExtensions::initExtensions(sm_wglExtensions,
+					sm_wglExtensionsString);
 			}
 		}
-/*
-		if (!glExtensions)
-		{
-			glExtensions = copyString((char*)glGetString(GL_EXTENSIONS));
-		}
-*/
 		// Note that when we load the function pointers, don't want to pay
 		// attention to any ignore flags in the registry, so all the checks for
 		// extensions have the force flag set to true.  Otherwise, if the
@@ -230,84 +206,62 @@ BOOL LDVExtensionsSetup::initWindow(void)
 		// the function pointers won't be loaded.
 		if (checkForWGLExtension("WGL_ARB_pixel_format", true))
 		{
-			wglGetPixelFormatAttribivARB = (PFNWGLGETPIXELFORMATATTRIBIVEXTPROC)
+			sm_wglGetPixelFormatAttribivARB = (PFNWGLGETPIXELFORMATATTRIBIVEXTPROC)
 				wglGetProcAddress("wglGetPixelFormatAttribivARB");
-			wglGetPixelFormatAttribfvARB = (PFNWGLGETPIXELFORMATATTRIBFVEXTPROC)
+			sm_wglGetPixelFormatAttribfvARB = (PFNWGLGETPIXELFORMATATTRIBFVEXTPROC)
 				wglGetProcAddress("wglGetPixelFormatAttribfvARB");
-			wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATEXTPROC)
+			sm_wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATEXTPROC)
 				wglGetProcAddress("wglChoosePixelFormatARB");
 		}
 		if (havePixelBufferExtension(true))
 		{
-			wglCreatePbufferARB = (PFNWGLCREATEPBUFFERARBPROC)
+			sm_wglCreatePbufferARB = (PFNWGLCREATEPBUFFERARBPROC)
 				wglGetProcAddress("wglCreatePbufferARB");
-			wglGetPbufferDCARB = (PFNWGLGETPBUFFERDCARBPROC)
+			sm_wglGetPbufferDCARB = (PFNWGLGETPBUFFERDCARBPROC)
 				wglGetProcAddress("wglGetPbufferDCARB");
-			wglReleasePbufferDCARB = (PFNWGLRELEASEPBUFFERDCARBPROC)
+			sm_wglReleasePbufferDCARB = (PFNWGLRELEASEPBUFFERDCARBPROC)
 				wglGetProcAddress("wglReleasePbufferDCARB");
-			wglDestroyPbufferARB = (PFNWGLDESTROYPBUFFERARBPROC)
+			sm_wglDestroyPbufferARB = (PFNWGLDESTROYPBUFFERARBPROC)
 				wglGetProcAddress("wglDestroyPbufferARB");
-			wglQueryPbufferARB = (PFNWGLQUERYPBUFFERARBPROC)
+			sm_wglQueryPbufferARB = (PFNWGLQUERYPBUFFERARBPROC)
 				wglGetProcAddress("wglQueryPbufferARB");
 		}
 		if (haveVARExtension(true))
 		{
-			wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
+			sm_wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
 				wglGetProcAddress("wglAllocateMemoryNV");
-			wglFreeMemoryNV = (PFNWGLFREEMEMORYNVPROC)
+			sm_wglFreeMemoryNV = (PFNWGLFREEMEMORYNVPROC)
 				wglGetProcAddress("wglFreeMemoryNV");
-			TREVertexStore::setWglAllocateMemoryNV(wglAllocateMemoryNV);
-			TREVertexStore::setWglFreeMemoryNV(wglFreeMemoryNV);
 		}
-/*
-		if (haveMultiDrawArraysExtension(true))
-		{
-			glMultiDrawElementsEXT = (PFNGLMULTIDRAWELEMENTSEXTPROC)
-				wglGetProcAddress("glMultiDrawElementsEXT");
-			TREShapeGroup::setGlMultiDrawElementsEXT(glMultiDrawElementsEXT);
-		}
-		if (haveVBOExtension(true))
-		{
-			glBindBufferARB = (PFNGLBINDBUFFERARBPROC)
-				wglGetProcAddress("glBindBufferARB");
-			glDeleteBuffersARB = (PFNGLDELETEBUFFERSARBPROC)
-				wglGetProcAddress("glDeleteBuffersARB");
-			glGenBuffersARB = (PFNGLGENBUFFERSARBPROC)
-				wglGetProcAddress("glGenBuffersARB");
-			glIsBufferARB = (PFNGLISBUFFERARBPROC)
-				wglGetProcAddress("glIsBufferARB");
-			glBufferDataARB = (PFNGLBUFFERDATAARBPROC)
-				wglGetProcAddress("glBufferDataARB");
-			glBufferSubDataARB = (PFNGLBUFFERSUBDATAARBPROC)
-				wglGetProcAddress("glBufferSubDataARB");
-			glGetBufferSubDataARB = (PFNGLGETBUFFERSUBDATAARBPROC)
-				wglGetProcAddress("glGetBufferSubDataARB");
-			glMapBufferARB = (PFNGLMAPBUFFERARBPROC)
-				wglGetProcAddress("glMapBufferARB");
-			glUnmapBufferARB = (PFNGLUNMAPBUFFERARBPROC)
-				wglGetProcAddress("glUnmapBufferARB");
-			glGetBufferParameterivARB = (PFNGLGETBUFFERPARAMETERIVARBPROC)
-				wglGetProcAddress("glGetBufferParameterivARB");
-			glGetBufferPointervARB = (PFNGLGETBUFFERPOINTERVARBPROC)
-				wglGetProcAddress("glGetBufferPointervARB");
-			TREVertexStore::setGlBindBufferARB(glBindBufferARB);
-			TREVertexStore::setGlDeleteBuffersARB(glDeleteBuffersARB);
-			TREVertexStore::setGlGenBuffersARB(glGenBuffersARB);
-			TREVertexStore::setGlBufferDataARB(glBufferDataARB);
-		}
-*/
 		glGetIntegerv(GL_STENCIL_BITS, &intValue);
 		if (intValue)
 		{
-			stencilPresent = true;
+			sm_stencilPresent = true;
 		}
 		glGetIntegerv(GL_ALPHA_BITS, &intValue);
 		if (intValue)
 		{
-			alphaPresent = true;
+			sm_alphaPresent = true;
 		}
 		recordPixelFormats();
 		scanFSAAModes();
+
+		using namespace TREGLExtensionsNS;
+		// WGL_EXT_pixel_format
+		wglGetPixelFormatAttribivARB = sm_wglGetPixelFormatAttribivARB;
+		wglGetPixelFormatAttribfvARB = sm_wglGetPixelFormatAttribfvARB;
+		wglChoosePixelFormatARB = NULL;
+		// WGL_ARB_extensions_string
+		wglGetExtensionsStringARB = sm_wglGetExtensionsStringARB;
+		// WGL_ARB_pbuffer
+		wglCreatePbufferARB = sm_wglCreatePbufferARB;
+		wglGetPbufferDCARB = sm_wglGetPbufferDCARB;
+		wglReleasePbufferDCARB = sm_wglReleasePbufferDCARB;
+		wglDestroyPbufferARB = sm_wglDestroyPbufferARB;
+		wglQueryPbufferARB = sm_wglQueryPbufferARB;
+		// WGL_NV_allocate_memory
+		wglAllocateMemoryNV = sm_wglAllocateMemoryNV;
+		wglFreeMemoryNV = sm_wglFreeMemoryNV;
 		return TRUE;
 	}
 	return FALSE;
@@ -315,7 +269,7 @@ BOOL LDVExtensionsSetup::initWindow(void)
 
 void LDVExtensionsSetup::recordPixelFormats(void)
 {
-	if (havePixelFormatExtension() && !pfIntValues)
+	if (havePixelFormatExtension() && !sm_pfIntValues)
 	{
 		GLint intValues[] = {
 			WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
@@ -329,9 +283,9 @@ void LDVExtensionsSetup::recordPixelFormats(void)
 		GLint indexes[1024];
 		GLuint count;
 
-		pfIntValues = new TCIntArrayArray;
+		sm_pfIntValues = new TCIntArrayArray;
 		// Get a list of all acceptable pixel formats.
-		if (wglChoosePixelFormatARB(hdc, intValues,
+		if (sm_wglChoosePixelFormatARB(hdc, intValues,
 			floatValues, sizeof(indexes) / sizeof(indexes[0]), indexes, &count)
 			&& count)
 		{
@@ -345,14 +299,14 @@ void LDVExtensionsSetup::recordPixelFormats(void)
 				int j;
 
 				memset(values, -1, pfIntAttribCount * sizeof(GLint));
-				wglGetPixelFormatAttribivARB(hdc, indexes[i], 0,
+				sm_wglGetPixelFormatAttribivARB(hdc, indexes[i], 0,
 					pfIntAttribCount, pfIntAttribs, values);
 				for (j = 0; j < pfIntAttribCount; j++)
 				{
 					valueArray->addValue(values[j]);
 				}
 				valueArray->addValue(indexes[i]);
-				pfIntValues->addObject(valueArray);
+				sm_pfIntValues->addObject(valueArray);
 				valueArray->release();
 			}
 			delete values;
@@ -362,13 +316,13 @@ void LDVExtensionsSetup::recordPixelFormats(void)
 
 void LDVExtensionsSetup::scanFSAAModes(void)
 {
-	if (fsaaModes)
+	if (sm_fsaaModes)
 	{
-		fsaaModes->removeAll();
+		sm_fsaaModes->removeAll();
 	}
 	else
 	{
-		fsaaModes = new TCIntArray;
+		sm_fsaaModes = new TCIntArray;
 	}
 	if (haveMultisampleExtension())
 	{
@@ -385,7 +339,7 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 		GLuint count;
 
 		// Get a list of all acceptable pixel formats.
-		if (wglChoosePixelFormatARB(hdc, intValues,
+		if (sm_wglChoosePixelFormatARB(hdc, intValues,
 			floatValues, sizeof(indexes) / sizeof(indexes[0]), indexes, &count)
 			&& count)
 		{
@@ -396,20 +350,20 @@ void LDVExtensionsSetup::scanFSAAModes(void)
 			// Scan the list for multisample pixel formats.
 			for (i = 0; i < count; i++)
 			{
-				wglGetPixelFormatAttribivARB(hdc, indexes[i], 0, 2, attributes,
+				sm_wglGetPixelFormatAttribivARB(hdc, indexes[i], 0, 2, attributes,
 					values);
 				if (values[0] && values[1] > 1)
 				{
 					int value = values[1];
 
-					if (fsaaModes->indexOfValue(value) == -1)
+					if (sm_fsaaModes->indexOfValue(value) == -1)
 					{
-						fsaaModes->addValue(value);
+						sm_fsaaModes->addValue(value);
 					}
 				}
 			}
 		}
-		fsaaModes->sort();
+		sm_fsaaModes->sort();
 	}
 }
 
@@ -434,41 +388,6 @@ bool LDVExtensionsSetup::haveVARExtension(bool force)
 		checkForWGLExtension("WGL_NV_allocate_memory");
 }
 
-/*
-bool LDVExtensionsSetup::haveNvMultisampleFilterHintExtension(bool force)
-{
-	bool ignore = TCUserDefaults::longForKey(IGNORE_MS_FILTER_HINT_KEY, 0,
-		false) != 0;
-
-	return (!ignore || force) &&
-		checkForExtension("GL_NV_multisample_filter_hint");
-}
-
-bool LDVExtensionsSetup::haveVARExtension(bool force)
-{
-	bool ignore = TCUserDefaults::longForKey(IGNORE_VAR_KEY, 0, false) != 0;
-
-	return (!ignore || force) && checkForExtension("GL_NV_vertex_array_range")
-		&& checkForWGLExtension("WGL_NV_allocate_memory");
-}
-
-bool LDVExtensionsSetup::haveMultiDrawArraysExtension(bool force)
-{
-	bool ignore = TCUserDefaults::longForKey(IGNORE_MULTI_DRAW_ARRAYS_KEY, 0,
-		false) != 0;
-
-	return (!ignore || force) && checkForExtension("GL_EXT_multi_draw_arrays");
-}
-
-bool LDVExtensionsSetup::haveVBOExtension(bool force)
-{
-	bool ignore = TCUserDefaults::longForKey(IGNORE_VBO_KEY, 0, false) != 0;
-
-	return (!ignore || force) &&
-		checkForExtension("GL_ARB_vertex_buffer_object");
-}
-*/
-
 bool LDVExtensionsSetup::havePixelFormatExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_PIXEL_FORMAT_KEY, 0, false)
@@ -477,42 +396,9 @@ bool LDVExtensionsSetup::havePixelFormatExtension(bool force)
 	return (!ignore || force) && checkForWGLExtension("WGL_ARB_pixel_format");
 }
 
-/*
-bool LDVExtensionsSetup::checkForExtension(char* extensionsString,
-										   char* extension, bool force)
-{
-	bool ignore = TCUserDefaults::longForKey(IGNORE_ALL_OGL_EXTENSIONS, 0,
-		false) != 0;
-
-	if ((!ignore || force) && extensionsString)
-	{
-		int extensionLen = strlen(extension);
-		char* extensions = extensionsString;
-
-		while (extensions)
-		{
-			if (strcmp(extensions, extension) == 0 ||
-				(strncmp(extensions, extension, extensionLen) == 0 &&
-				extensions[extensionLen] == ' ') &&
-				(extensions == extensionsString || extensions[-1] == ' '))
-			{
-				return true;
-			}
-			extensions = strstr(extensions, extension);
-		}
-	}
-	return false;
-}
-
-bool LDVExtensionsSetup::checkForExtension(char* extension, bool force)
-{
-	return checkForExtension(glExtensions, extension, force);
-}
-*/
-
 bool LDVExtensionsSetup::checkForWGLExtension(char* extension, bool force)
 {
-	return TREGLExtensions::checkForExtension(wglExtensions, extension, force);
+	return TREGLExtensions::checkForExtension(sm_wglExtensions, extension, force);
 }
 
 void LDVExtensionsSetup::closeWindow(void)
@@ -526,17 +412,17 @@ void LDVExtensionsSetup::closeWindow(void)
 
 void LDVExtensionsSetup::setup(HINSTANCE hInstance)
 {
-	if (!performedInitialSetup)
+	if (!sm_performedInitialSetup)
 	{
-		extensionsSetup = new LDVExtensionsSetup(hInstance);
-		extensionsSetup->initWindow();
-		performedInitialSetup = true;
+		sm_extensionsSetup = new LDVExtensionsSetup(hInstance);
+		sm_extensionsSetup->initWindow();
+		sm_performedInitialSetup = true;
 	}
 }
 
 int LDVExtensionsSetup::matchPixelFormat(int *intValues)
 {
-	int count = pfIntValues->getCount();
+	int count = sm_pfIntValues->getCount();
 	int i;
 
 	for (i = 0; i < count; i++)
@@ -553,10 +439,10 @@ int LDVExtensionsSetup::matchPixelFormat(int *intValues)
 
 int LDVExtensionsSetup::pixelFormatMatches(int index, int *intValues)
 {
-	if (pfIntValues)
+	if (sm_pfIntValues)
 	{
 		int i, j;
-		TCIntArray *pfValues = (*pfIntValues)[index];
+		TCIntArray *pfValues = (*sm_pfIntValues)[index];
 
 		for (i = 0; intValues[i]; i += 2)
 		{
@@ -622,7 +508,7 @@ int LDVExtensionsSetup::choosePixelFormat(HDC hdc, GLint customValues[])
 		debugPrintf("%g %g\n", floatValues[i], floatValues[i + 1]);
 	}
 	debugPrintf("%g %g\n", floatValues[i], floatValues[i + 1]);
-	if (wglChoosePixelFormatARB(hdc, intValues,
+	if (sm_wglChoosePixelFormatARB(hdc, intValues,
 		floatValues, 100, indexes, &count))
 	{
 		if (count)
@@ -634,7 +520,7 @@ int LDVExtensionsSetup::choosePixelFormat(HDC hdc, GLint customValues[])
 		else
 		{
 			// There seems to be a bug in my ATI drivers that causes
-			// wglChoosePixelFormatARB to stop working, so use my own matching
+			// sm_wglChoosePixelFormatARB to stop working, so use my own matching
 			// code if the standard matching code fails.
 			retValue = matchPixelFormat(intValues);
 			debugPrintf("matchPixelFormat returned: %d\n", retValue);
@@ -661,7 +547,7 @@ void LDVExtensionsSetup::printPixelFormat(HDC hdc, int index)
 	int values[1024];
 
 	memset(values, -1, sizeof(values));
-	wglGetPixelFormatAttribivARB(hdc, index, 0, pfIntAttribCount, pfIntAttribs,
+	sm_wglGetPixelFormatAttribivARB(hdc, index, 0, pfIntAttribCount, pfIntAttribs,
 		values);
 	for (i = 0; i < pfIntAttribCount; i++)
 	{

@@ -2748,12 +2748,7 @@ bool ModelWindow::setupPBuffer(int imageWidth, int imageHeight,
 		index = LDVExtensionsSetup::choosePixelFormat(hdc, intValues);
 		if (index >= 0)
 		{
-			PFNWGLCREATEPBUFFERARBPROC wglCreatePbufferARB =
-				LDVExtensionsSetup::getWglCreatePbufferARB();
-			PFNWGLGETPBUFFERDCARBPROC wglGetPbufferDCARB =
-				LDVExtensionsSetup::getWglGetPbufferDCARB();
-			PFNWGLGETPIXELFORMATATTRIBIVEXTPROC wglGetPixelFormatAttribivARB =
-				LDVExtensionsSetup::getWglGetPixelFormatAttribivARB();
+			using namespace TREGLExtensionsNS;
 
 			if (wglCreatePbufferARB && wglGetPbufferDCARB &&
 				wglGetPixelFormatAttribivARB)
@@ -2915,10 +2910,7 @@ void ModelWindow::cleanupPBuffer(void)
 {
 	if (hPBuffer)
 	{
-		PFNWGLRELEASEPBUFFERDCARBPROC wglReleasePbufferDCARB =
-			LDVExtensionsSetup::getWglReleasePbufferDCARB();
-		PFNWGLDESTROYPBUFFERARBPROC wglDestroyPbufferARB =
-			LDVExtensionsSetup::getWglDestroyPbufferARB();
+		using namespace TREGLExtensionsNS;
 
 		if (hPBufferDC)
 		{
