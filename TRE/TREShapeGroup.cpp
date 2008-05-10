@@ -15,7 +15,7 @@
 #endif // _DEBUG
 #endif // WIN32
 
-PFNGLMULTIDRAWELEMENTSEXTPROC TREShapeGroup::glMultiDrawElementsEXT = NULL;
+using namespace TREGLExtensionsNS;
 
 TREShapeGroup::TREShapeGroup(void)
 	:m_vertexStore(NULL),

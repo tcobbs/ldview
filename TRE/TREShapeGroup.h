@@ -89,10 +89,6 @@ public:
 
 	static GLenum modeForShapeType(TREShapeType shapeType);
 	static int numPointsForShapeType(TREShapeType shapeType);
-	static void setGlMultiDrawElementsEXT(PFNGLMULTIDRAWELEMENTSEXTPROC value)
-	{
-		glMultiDrawElementsEXT = value;
-	}
 	static bool isTransparent(TCULong color, bool hostFormat);
 	static void transformVertex(TREVertex &vertex, const TCFloat *matrix);
 	static void transformNormal(TREVertex &normal, const TCFloat *matrix);
@@ -201,8 +197,6 @@ protected:
 	TCULong m_shapesPresent;
 	TREMainModel *m_mainModel;
 	ShapeTypeIntVectorMap m_stepCounts;
-
-	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
 };
 
 #endif // __TRESHAPEGROUP_H__

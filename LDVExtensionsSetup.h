@@ -6,8 +6,11 @@
 #include <GL/wglext.h>
 #include <TCFoundation/TCTypedValueArray.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCStlIncludes.h>
 
 typedef TCTypedObjectArray<TCIntArray> TCIntArrayArray;
+
+typedef std::set<std::string> StringSet;
 
 #ifndef GL_MULTISAMPLE_FILTER_HINT_NV
 /* NV_multisample_filter_hint */
@@ -18,127 +21,64 @@ class LDVExtensionsSetup : public CUIOGLWindow
 {
 public:
 	static void setup(HINSTANCE hInstance);
-	static PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
-		getWglGetPixelFormatAttribivARB(void)
-	{
-		return wglGetPixelFormatAttribivARB;
-	}
-	static PFNWGLGETPIXELFORMATATTRIBFVEXTPROC
-		getWglGetPixelFormatAttribfvARB(void)
-	{
-		return wglGetPixelFormatAttribfvARB;
-	}
-	static PFNWGLCHOOSEPIXELFORMATEXTPROC getWglChoosePixelFormatARB(void)
-	{
-		return wglChoosePixelFormatARB;
-	}
-	static PFNWGLCREATEPBUFFERARBPROC getWglCreatePbufferARB(void)
-	{
-		return wglCreatePbufferARB;
-	}
-	static PFNWGLGETPBUFFERDCARBPROC getWglGetPbufferDCARB(void)
-	{
-		return wglGetPbufferDCARB;
-	}
-	static PFNWGLRELEASEPBUFFERDCARBPROC getWglReleasePbufferDCARB(void)
-	{
-		return wglReleasePbufferDCARB;
-	}
-	static PFNWGLDESTROYPBUFFERARBPROC getWglDestroyPbufferARB(void)
-	{
-		return wglDestroyPbufferARB;
-	}
-	static PFNWGLQUERYPBUFFERARBPROC getWglQueryPbufferARB(void)
-	{
-		return wglQueryPbufferARB;
-	}
-	static PFNWGLALLOCATEMEMORYNVPROC getWglAllocateMemoryNV(void)
-	{
-		return wglAllocateMemoryNV;
-	}
-	static PFNWGLFREEMEMORYNVPROC getWglFreeMemoryNV(void)
-	{
-		return wglFreeMemoryNV;
-	}
-/*
-	static PFNGLVERTEXARRAYRANGENVPROC getGlVertexArrayRangeNV(void)
-	{
-		return glVertexArrayRangeNV;
-	}
-	static PFNGLMULTIDRAWELEMENTSEXTPROC getGlMultiDrawElementsEXT(void)
-	{
-		return glMultiDrawElementsEXT;
-	}
-	static PFNGLBINDBUFFERARBPROC getGlBindBufferARB(void)
-	{
-		return glBindBufferARB;
-	}
-	static PFNGLDELETEBUFFERSARBPROC getGlDeleteBuffersARB(void)
-	{
-		return glDeleteBuffersARB;
-	}
-	static PFNGLGENBUFFERSARBPROC getGlGenBuffersARB(void)
-	{
-		return glGenBuffersARB;
-	}
-	static PFNGLISBUFFERARBPROC getGlIsBufferARB(void)
-	{
-		return glIsBufferARB;
-	}
-	static PFNGLBUFFERDATAARBPROC getGlBufferDataARB(void)
-	{
-		return glBufferDataARB;
-	}
-	static PFNGLBUFFERSUBDATAARBPROC getGlBufferSubDataARB(void)
-	{
-		return glBufferSubDataARB;
-	}
-	static PFNGLGETBUFFERSUBDATAARBPROC getGlGetBufferSubDataARB(void)
-	{
-		return glGetBufferSubDataARB;
-	}
-	static PFNGLMAPBUFFERARBPROC getGlMapBufferARB(void)
-	{
-		return glMapBufferARB;
-	}
-	static PFNGLUNMAPBUFFERARBPROC getGlUnmapBufferARB(void)
-	{
-		return glUnmapBufferARB;
-	}
-	static PFNGLGETBUFFERPARAMETERIVARBPROC getGlGetBufferParameterivARB(void)
-	{
-		return glGetBufferParameterivARB;
-	}
-	static PFNGLGETBUFFERPOINTERVARBPROC getGlGetBufferPointervARB(void)
-	{
-		return glGetBufferPointervARB;
-	}
-*/
-
+	//static PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
+	//	getWglGetPixelFormatAttribivARB(void)
+	//{
+	//	return sm_wglGetPixelFormatAttribivARB;
+	//}
+	//static PFNWGLGETPIXELFORMATATTRIBFVEXTPROC
+	//	getWglGetPixelFormatAttribfvARB(void)
+	//{
+	//	return sm_wglGetPixelFormatAttribfvARB;
+	//}
+	//static PFNWGLCHOOSEPIXELFORMATEXTPROC getWglChoosePixelFormatARB(void)
+	//{
+	//	return sm_wglChoosePixelFormatARB;
+	//}
+	//static PFNWGLCREATEPBUFFERARBPROC getWglCreatePbufferARB(void)
+	//{
+	//	return sm_wglCreatePbufferARB;
+	//}
+	//static PFNWGLGETPBUFFERDCARBPROC getWglGetPbufferDCARB(void)
+	//{
+	//	return sm_wglGetPbufferDCARB;
+	//}
+	//static PFNWGLRELEASEPBUFFERDCARBPROC getWglReleasePbufferDCARB(void)
+	//{
+	//	return sm_wglReleasePbufferDCARB;
+	//}
+	//static PFNWGLDESTROYPBUFFERARBPROC getWglDestroyPbufferARB(void)
+	//{
+	//	return sm_wglDestroyPbufferARB;
+	//}
+	//static PFNWGLQUERYPBUFFERARBPROC getWglQueryPbufferARB(void)
+	//{
+	//	return sm_wglQueryPbufferARB;
+	//}
+	//static PFNWGLALLOCATEMEMORYNVPROC getWglAllocateMemoryNV(void)
+	//{
+	//	return sm_wglAllocateMemoryNV;
+	//}
+	//static PFNWGLFREEMEMORYNVPROC getWglFreeMemoryNV(void)
+	//{
+	//	return sm_wglFreeMemoryNV;
+	//}
 	static bool checkForWGLExtension(char* extension, bool force = false);
-/*
-	static bool checkForExtension(char* extension, bool force = false);
-	static bool checkForExtension(char* extensionsString, char* extension,
-		bool force = false);
-*/
 	static bool haveMultisampleExtension(bool force = false);
 	static bool havePixelBufferExtension(bool force = false);
-/*
-	static bool haveNvMultisampleFilterHintExtension(bool force = false);
-*/
 	static bool havePixelFormatExtension(bool force = false);
 	static bool haveVARExtension(bool force = false);
-/*
-	static bool haveMultiDrawArraysExtension(bool force = false);
-	static bool haveVBOExtension(bool force = false);
-*/
-	static char *getWglExtensions(void) { return wglExtensions; }
-	static bool haveStencil(void) { return stencilPresent; }
-	static bool haveAlpha(void) { return alphaPresent; }
+	static StringSet &getWglExtensions(void) { return sm_wglExtensions; }
+	static const char *getWglExtensionsString(void)
+	{
+		return sm_wglExtensionsString;
+	}
+	static bool haveStencil(void) { return sm_stencilPresent; }
+	static bool haveAlpha(void) { return sm_alphaPresent; }
 	static int choosePixelFormat(HDC hdc, GLint customValues[]);
 	static void printPixelFormats(int *indexes, GLuint count);
 	static void printPixelFormat(HDC hdc, int index);
-	static TCIntArray *getFSAAModes(void) { return fsaaModes; }
+	static TCIntArray *getFSAAModes(void) { return sm_fsaaModes; }
 protected:
 	LDVExtensionsSetup(HINSTANCE hInstance);
 	virtual ~LDVExtensionsSetup(void);
@@ -151,53 +91,35 @@ protected:
 	static int pixelFormatMatches(int index, int *intValues);
 
 	// WGL_EXT_pixel_format
-	static PFNWGLGETPIXELFORMATATTRIBIVEXTPROC wglGetPixelFormatAttribivARB;
-	static PFNWGLGETPIXELFORMATATTRIBFVEXTPROC wglGetPixelFormatAttribfvARB;
-	static PFNWGLCHOOSEPIXELFORMATEXTPROC wglChoosePixelFormatARB;
+	static PFNWGLGETPIXELFORMATATTRIBIVEXTPROC sm_wglGetPixelFormatAttribivARB;
+	static PFNWGLGETPIXELFORMATATTRIBFVEXTPROC sm_wglGetPixelFormatAttribfvARB;
+	static PFNWGLCHOOSEPIXELFORMATEXTPROC sm_wglChoosePixelFormatARB;
 	// WGL_ARB_extensions_string
-	static PFNWGLGETEXTENSIONSSTRINGARBPROC wglGetExtensionsStringARB;
+	static PFNWGLGETEXTENSIONSSTRINGARBPROC sm_wglGetExtensionsStringARB;
 	// WGL_ARB_pbuffer
-	static PFNWGLCREATEPBUFFERARBPROC wglCreatePbufferARB;
-	static PFNWGLGETPBUFFERDCARBPROC wglGetPbufferDCARB;
-	static PFNWGLRELEASEPBUFFERDCARBPROC wglReleasePbufferDCARB;
-	static PFNWGLDESTROYPBUFFERARBPROC wglDestroyPbufferARB;
-	static PFNWGLQUERYPBUFFERARBPROC wglQueryPbufferARB;
+	static PFNWGLCREATEPBUFFERARBPROC sm_wglCreatePbufferARB;
+	static PFNWGLGETPBUFFERDCARBPROC sm_wglGetPbufferDCARB;
+	static PFNWGLRELEASEPBUFFERDCARBPROC sm_wglReleasePbufferDCARB;
+	static PFNWGLDESTROYPBUFFERARBPROC sm_wglDestroyPbufferARB;
+	static PFNWGLQUERYPBUFFERARBPROC sm_wglQueryPbufferARB;
 	// WGL_NV_allocate_memory
-	static PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;
-	static PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV;
-/*
-	// GL_NV_vertex_array_range
-	static PFNGLVERTEXARRAYRANGENVPROC glVertexArrayRangeNV;
-	// GL_EXT_multi_draw_arrays
-	static PFNGLMULTIDRAWELEMENTSEXTPROC glMultiDrawElementsEXT;
-	// GL_ARB_vertex_buffer_object
-	static PFNGLBINDBUFFERARBPROC glBindBufferARB;
-	static PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB;
-	static PFNGLGENBUFFERSARBPROC glGenBuffersARB;
-	static PFNGLISBUFFERARBPROC glIsBufferARB;
-	static PFNGLBUFFERDATAARBPROC glBufferDataARB;
-	static PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB;
-	static PFNGLGETBUFFERSUBDATAARBPROC glGetBufferSubDataARB;
-	static PFNGLMAPBUFFERARBPROC glMapBufferARB;
-	static PFNGLUNMAPBUFFERARBPROC glUnmapBufferARB;
-	static PFNGLGETBUFFERPARAMETERIVARBPROC glGetBufferParameterivARB;
-	static PFNGLGETBUFFERPOINTERVARBPROC glGetBufferPointervARB;
-*/
+	static PFNWGLALLOCATEMEMORYNVPROC sm_wglAllocateMemoryNV;
+	static PFNWGLFREEMEMORYNVPROC sm_wglFreeMemoryNV;
 
-	static char *wglExtensions;
-	//static char *glExtensions;
-	static bool performedInitialSetup;
-	static bool stencilPresent;
-	static bool alphaPresent;
-	static TCIntArray *fsaaModes;
-	static TCIntArrayArray *pfIntValues;
-	static LDVExtensionsSetup *extensionsSetup;
+	static StringSet sm_wglExtensions;
+	static char *sm_wglExtensionsString;
+	static bool sm_performedInitialSetup;
+	static bool sm_stencilPresent;
+	static bool sm_alphaPresent;
+	static TCIntArray *sm_fsaaModes;
+	static TCIntArrayArray *sm_pfIntValues;
+	static LDVExtensionsSetup *sm_extensionsSetup;
 
 	static class LDVExtensionsSetupCleanup
 	{
 	public:
 		~LDVExtensionsSetupCleanup(void);
-	} extensionsSetupCleanup;
+	} sm_extensionsSetupCleanup;
 	friend class LDVExtensionsSetupCleanup;
 };
 
