@@ -2938,7 +2938,8 @@ static void gl2psParseStipplePattern(GLushort pattern, GLint factor,
   }
 }
 
-static int gl2psPrintPostScriptDash(GLushort pattern, GLint factor, char *str)
+static int gl2psPrintPostScriptDash(GLushort pattern, GLint factor,
+									const char *str)
 {
   int len = 0, i, n, array[10];
 
