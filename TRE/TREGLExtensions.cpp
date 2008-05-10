@@ -42,6 +42,7 @@ namespace TREGLExtensionsNS
     PFNGLGETQUERYIVARBPROC glGetQueryivARB = NULL;
     PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB = NULL;
     PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB = NULL;
+#endif // GL_GLEXT_PROTOTYPES
 
 #ifdef WIN32
 	// WGL_EXT_pixel_format
@@ -56,11 +57,10 @@ namespace TREGLExtensionsNS
 	PFNWGLRELEASEPBUFFERDCARBPROC wglReleasePbufferDCARB = NULL;
 	PFNWGLDESTROYPBUFFERARBPROC wglDestroyPbufferARB = NULL;
 	PFNWGLQUERYPBUFFERARBPROC wglQueryPbufferARB = NULL;
+#endif // WIN32
 	// WGL_NV_allocate_memory
 	PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV = NULL;
 	PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV = NULL;
-#endif WIN32
-#endif // GL_GLEXT_PROTOTYPES
 }
 
 // GL_NV_vertex_array_range
@@ -241,7 +241,7 @@ void TREGLExtensions::setup(void)
     glGetQueryivARB = sm_glGetQueryivARB;
     glGetQueryObjectivARB = sm_glGetQueryObjectivARB;
     glGetQueryObjectuivARB = sm_glGetQueryObjectuivARB;
-#endif GL_GLEXT_PROTOTYPES
+#endif // GL_GLEXT_PROTOTYPES
 }
 
 bool TREGLExtensions::haveNvMultisampleFilterHintExtension(bool force)
