@@ -450,8 +450,7 @@ void TREShapeGroup::drawStripShapeType(TREShapeType shapeType)
 			{
 				GLenum glMode = modeForShapeType(shapeType);
 
-				if (glMultiDrawElementsEXT &&
-					TREGLExtensions::haveMultiDrawArraysExtension())
+				if (TREGLExtensions::haveMultiDrawArraysExtension())
 				{
 					int shapeTypeIndex = getShapeTypeIndex(shapeType);
 

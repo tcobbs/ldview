@@ -76,30 +76,16 @@ void TREVertexStore::dealloc(void)
 	TCObject::release(m_normals);
 	TCObject::release(m_textureCoords);
 	TCObject::release(m_colors);
-	if (sm_varBuffer && wglFreeMemoryNV)
+	if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 	{
 		wglFreeMemoryNV(sm_varBuffer);
 		sm_varBuffer = NULL;
 		sm_varSize = 0;
 	}
-	if (m_vbo && glDeleteBuffersARB)
+	if (m_vbo && TREGLExtensions::haveVBOExtension())
 	{
 		glDeleteBuffersARB(1, &m_vbo);
 	}
-/*
-	if (m_varVertices)
-	{
-		wglFreeMemoryNV(m_varVertices);
-		if (m_varNormals)
-		{
-			wglFreeMemoryNV(m_varNormals);
-		}
-		if (m_varColors)
-		{
-			wglFreeMemoryNV(m_varColors);
-		}
-	}
-*/
 	TCObject::dealloc();
 }
 
@@ -240,8 +226,7 @@ int TREVertexStore::addVertices(
 
 void TREVertexStore::setupVAR(void)
 {
-	if (m_vertices && wglAllocateMemoryNV && wglFreeMemoryNV &&
-		glVertexArrayRangeNV && TREGLExtensions::haveVARExtension())
+	if (m_vertices && TREGLExtensions::haveVARExtension())
 	{
 		int count = m_vertices->getCount();
 //		GLfloat priority = 1.0f;
@@ -351,9 +336,7 @@ void TREVertexStore::setupVAR(void)
 
 void TREVertexStore::setupVBO(void)
 {
-	if (m_vertices && glBindBufferARB && glDeleteBuffersARB &&
-		glGenBuffersARB && glBufferDataARB &&
-		TREGLExtensions::haveVBOExtension())
+	if (m_vertices && TREGLExtensions::haveVBOExtension())
 	{
 		m_flags.vboTried = true;
 		glGenBuffersARB(1, &m_vbo);
@@ -500,7 +483,7 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			else
 			{
-				if (glBindBufferARB && TREGLExtensions::haveVBOExtension())
+				if (TREGLExtensions::haveVBOExtension())
 				{
 					glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 				}
@@ -665,14 +648,14 @@ void TREVertexStore::setLightingFlag(bool value)
 void TREVertexStore::openGlWillEnd(void)
 {
 	deactivate();
-	if (sm_varBuffer && wglFreeMemoryNV)
+	if (sm_varBuffer && TREGLExtensions::haveVARExtension())
 	{
 		wglFreeMemoryNV(sm_varBuffer);
 		sm_varBuffer = NULL;
 		sm_varSize = 0;
 		m_flags.varTried = false;
 	}
-	if (m_vbo && glDeleteBuffersARB)
+	if (m_vbo && TREGLExtensions::haveVBOExtension())
 	{
 		glDeleteBuffersARB(1, &m_vbo);
 		m_vbo = 0;

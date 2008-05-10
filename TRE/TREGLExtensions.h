@@ -39,6 +39,7 @@ namespace TREGLExtensionsNS
     extern PFNGLGETQUERYIVARBPROC glGetQueryivARB;
     extern PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB;
     extern PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB;
+#endif // GL_GLEXT_PROTOTYPES
 
 #ifdef WIN32
 	// WGL_EXT_pixel_format
@@ -53,11 +54,12 @@ namespace TREGLExtensionsNS
 	extern PFNWGLRELEASEPBUFFERDCARBPROC wglReleasePbufferDCARB;
 	extern PFNWGLDESTROYPBUFFERARBPROC wglDestroyPbufferARB;
 	extern PFNWGLQUERYPBUFFERARBPROC wglQueryPbufferARB;
+#endif // WIN32
+	// Windows doesn't define GL_GLEXT_PROTOTYPES, and none of the WGL function
+	// pointers will exist outside Windows, so always define.
 	// WGL_NV_allocate_memory
 	extern PFNWGLALLOCATEMEMORYNVPROC wglAllocateMemoryNV;
 	extern PFNWGLFREEMEMORYNVPROC wglFreeMemoryNV;
-#endif WIN32
-#endif // GL_GLEXT_PROTOTYPES
 }
 
 class TREGLExtensions
