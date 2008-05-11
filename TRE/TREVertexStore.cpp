@@ -226,6 +226,7 @@ int TREVertexStore::addVertices(
 
 void TREVertexStore::setupVAR(void)
 {
+#ifdef WIN32
 	if (m_vertices && TREGLExtensions::haveVARExtension())
 	{
 		int count = m_vertices->getCount();
@@ -332,6 +333,7 @@ void TREVertexStore::setupVAR(void)
 	{
 		m_flags.varFailed = true;
 	}
+#endif // WIN32
 }
 
 void TREVertexStore::setupVBO(void)
