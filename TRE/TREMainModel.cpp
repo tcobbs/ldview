@@ -1911,6 +1911,13 @@ TREModel *TREMainModel::getCurGeomModel(void)
 
 void TREMainModel::nextStep(void)
 {
+	if ((m_stepCounts.size() > 0 &&
+		m_subModels->getCount() == m_stepCounts.back()) ||
+		(m_stepCounts.size() == 0 && m_subModels->getCount() == 0))
+	{
+		// Empty step; ignore.
+		return;
+	}
 	m_curStepIndex++;
 	for (int i = 0; i <= TREMLast; i++)
 	{
