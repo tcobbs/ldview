@@ -671,12 +671,24 @@ void LDLModel::readComment(LDLCommentLine *commentLine)
 				subModel->setFilename(m_filename);
 				initializeNewSubModel(subModel, buf);
 				m_activeMPDModel = subModel;
+				if (this == getMainModel())
+				{
+					getMainModel()->addMpdModel(subModel);
+				}
 			}
 		}
 		else
 		{
 			m_flags.mainModelLoaded = true;
 			m_flags.mpd = true;
+			if (this == getMainModel())
+			{
+				getMainModel()->addMpdModel(this);
+				if (m_name == NULL)
+				{
+					setName(buf);
+				}
+			}
 		}
 	}
 	else if (commentLine->isPartMeta())

@@ -28,18 +28,9 @@ LDLMainModel::LDLMainModel(void)
 	m_mainFlags.processLDConfig = true;
 }
 
-//LDLMainModel::LDLMainModel(const LDLMainModel &other)
-//	:LDLModel(other),
-//	m_loadedModels((TCDictionary *)TCObject::retain(other.m_loadedModels)),
-//	m_seamWidth(other.m_seamWidth),
-//	m_mainFlags(other.m_mainFlags)
-//{
-//}
-
 TCObject *LDLMainModel::copy(void) const
 {
 	return NULL;
-	//return new LDLMainModel(*this);
 }
 
 TCDictionary *LDLMainModel::getLoadedModels(void)
@@ -133,12 +124,6 @@ bool LDLMainModel::load(const char *filename)
 				}
 			}
 		}
-		// Note: the following just clears the loaded model cache.  All the
-		// models are still loaded after it, since they are also all retained
-		// by either us or one of our children (with the possible exception of
-		// unused subfiles in an MPD).
-		TCObject::release(m_loadedModels);
-		m_loadedModels = NULL;
 		// The ancestor map has done its job; may as well free up the memory it
 		// was using.
 		m_ancestorMap.clear();

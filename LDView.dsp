@@ -242,6 +242,10 @@ SOURCE=.\ModelWindow.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\MpdDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PartsListDialog.cpp
 # End Source File
 # Begin Source File
@@ -307,6 +311,10 @@ SOURCE=.\ModelTreeDialog.h
 # Begin Source File
 
 SOURCE=.\ModelWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MpdDialog.h
 # End Source File
 # Begin Source File
 

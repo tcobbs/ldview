@@ -48,6 +48,7 @@ class LDLError;
 class TCProgressAlert;
 class TREMainModel;
 class LDLMainModel;
+class LDLModel;
 class LDLFindFileAlert;
 class TCWebClient;
 class LDPreferences;
@@ -387,6 +388,10 @@ class LDrawModelViewer: public TCAlertSender
 		void setTextureFilterType(int value);
 		int getTextureFilterType(void) const { return textureFilterType; }
 		TREMainModel *getMainTREModel(void) { return mainTREModel; }
+		void setMpdChildIndex(int index);
+		int getMpdChildIndex(void) const { return mpdChildIndex; }
+		LDLModel *getMpdChild(void);
+		const LDLModel *getMpdChild(void) const;
 		LDLMainModel *getMainModel(void) { return mainModel; }
 		const LDLMainModel *getMainModel(void) const { return mainModel; }
 		bool getCompiled(void) const;
@@ -624,6 +629,7 @@ class LDrawModelViewer: public TCAlertSender
 		int lastMouseY;
 		LDInputHandler *inputHandler;
 		int step;
+		int mpdChildIndex;
 		struct
 		{
 			bool qualityLighting:1;

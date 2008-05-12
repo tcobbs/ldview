@@ -7,6 +7,7 @@
 class LDLPalette;
 
 typedef std::map<std::string, bool> StringBoolMap;
+typedef std::vector<LDLModel *> LDLModelVector;
 
 class LDLMainModel : public LDLModel
 {
@@ -62,6 +63,8 @@ public:
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
+	virtual void addMpdModel(LDLModel *model) { m_mpdModels.push_back(model); }
+	virtual LDLModelVector &getMpdModels(void) { return m_mpdModels; }
 private:
 	//LDLMainModel(const LDLMainModel &other);
 	virtual TCObject *copy(void) const;
@@ -73,6 +76,9 @@ protected:
 	TCDictionary *m_loadedModels;
 	LDLPalette *m_mainPalette;
 	TCStringArray *m_extraSearchDirs;
+	// This needs to not retain its children; hence, the std::vector, instead of
+	// TCTypedObjectArray.
+	LDLModelVector m_mpdModels;
 	float m_seamWidth;
 	struct
 	{

@@ -26,7 +26,7 @@ class LDModelParser : public LDLPrimitiveCheck
 {
 public:
 	LDModelParser(LDrawModelViewer *modelViewer);
-	virtual bool parseMainModel(LDLMainModel *mainLDLModel);
+	virtual bool parseMainModel(LDLModel *mainLDLModel);
 	virtual void release(void) { LDLPrimitiveCheck::release(); }
 	TREMainModel *getMainTREModel(void) { return m_mainTREModel; }
 

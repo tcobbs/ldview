@@ -1066,6 +1066,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MpdDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PartsListDialog.cpp"
 				>
 			</File>
@@ -1348,6 +1352,10 @@
 			</File>
 			<File
 				RelativePath="ModelWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MpdDialog.h"
 				>
 			</File>
 			<File
