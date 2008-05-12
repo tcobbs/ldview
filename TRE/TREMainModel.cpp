@@ -1820,7 +1820,7 @@ void TREMainModel::openGlWillEnd(void)
 
 void TREMainModel::finish(void)
 {
-	flattenNonUniform();
+	//flattenNonUniform();
 	findLights();
 	flattenConditionals();
 	if (m_stepCounts.size() > 0)
