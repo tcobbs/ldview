@@ -226,7 +226,7 @@ BOOL LDVExtensionsSetup::initWindow(void)
 			sm_wglQueryPbufferARB = (PFNWGLQUERYPBUFFERARBPROC)
 				wglGetProcAddress("wglQueryPbufferARB");
 		}
-		if (haveVARExtension(true))
+		if (TREGLExtensions::haveVARExtension(true))
 		{
 			sm_wglAllocateMemoryNV = (PFNWGLALLOCATEMEMORYNVPROC)
 				wglGetProcAddress("wglAllocateMemoryNV");
@@ -382,11 +382,11 @@ bool LDVExtensionsSetup::havePixelBufferExtension(bool force)
 	return (!ignore || force) && checkForWGLExtension("WGL_ARB_pbuffer", force);
 }
 
-bool LDVExtensionsSetup::haveVARExtension(bool force)
-{
-	return TREGLExtensions::haveVARExtension(force) &&
-		checkForWGLExtension("WGL_NV_allocate_memory");
-}
+//bool LDVExtensionsSetup::haveVARExtension(bool force)
+//{
+//	return TREGLExtensions::haveVARExtension(force) &&
+//		checkForWGLExtension("WGL_NV_allocate_memory", force);
+//}
 
 bool LDVExtensionsSetup::havePixelFormatExtension(bool force)
 {

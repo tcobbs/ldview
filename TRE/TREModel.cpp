@@ -665,6 +665,12 @@ void TREModel::addTriangle(const TCVector *vertices)
 	m_shapes[TREMStandard]->addTriangle(vertices);
 }
 
+void TREModel::addTriangle(const TCVector *vertices, const TCVector *normals)
+{
+	setupStandard();
+	m_shapes[TREMStandard]->addTriangle(vertices, normals);
+}
+
 void TREModel::addBFCTriangle(TCULong color, const TCVector *vertices)
 {
 	setupColoredBFC();
@@ -684,12 +690,6 @@ void TREModel::addBFCTriangle(const TCVector *vertices)
 {
 	setupBFC();
 	m_shapes[TREMBFC]->addTriangle(vertices);
-}
-
-void TREModel::addTriangle(const TCVector *vertices, const TCVector *normals)
-{
-	setupStandard();
-	m_shapes[TREMStandard]->addTriangle(vertices, normals);
 }
 
 void TREModel::addBFCTriangle(const TCVector *vertices, const TCVector *normals)
@@ -1050,7 +1050,7 @@ void TREModel::addBFCTriangleFan(TCULong color, const TCVector *vertices,
 }
 
 TRESubModel *TREModel::addSubModel(
-	TCFloat *matrix,
+	const TCFloat *matrix,
 	TREModel *model,
 	bool invert)
 {
@@ -1071,7 +1071,7 @@ TRESubModel *TREModel::addSubModel(
 TRESubModel *TREModel::addSubModel(
 	TCULong color,
 	TCULong edgeColor,
-	TCFloat *matrix,
+	const TCFloat *matrix,
 	TREModel *model,
 	bool invert)
 {
@@ -3244,27 +3244,5 @@ int TREModel::saveSTL(void)
 
 void TREModel::nextStep(void)
 {
-	if (this == m_mainModel)
-	{
-		m_curStepIndex++;
-		for (int i = 0; i <= TREMLast; i++)
-		{
-			if (m_shapes[i])
-			{
-				m_shapes[i]->nextStep();
-			}
-			if (m_coloredShapes[i])
-			{
-				m_coloredShapes[i]->nextStep();
-			}
-		}
-		if (m_subModels)
-		{
-			m_stepCounts.push_back(m_subModels->getCount());
-		}
-		else
-		{
-			m_stepCounts.push_back(0);
-		}
-	}
+	// Don't do anything.
 }

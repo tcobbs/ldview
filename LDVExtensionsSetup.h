@@ -21,53 +21,11 @@ class LDVExtensionsSetup : public CUIOGLWindow
 {
 public:
 	static void setup(HINSTANCE hInstance);
-	//static PFNWGLGETPIXELFORMATATTRIBIVEXTPROC
-	//	getWglGetPixelFormatAttribivARB(void)
-	//{
-	//	return sm_wglGetPixelFormatAttribivARB;
-	//}
-	//static PFNWGLGETPIXELFORMATATTRIBFVEXTPROC
-	//	getWglGetPixelFormatAttribfvARB(void)
-	//{
-	//	return sm_wglGetPixelFormatAttribfvARB;
-	//}
-	//static PFNWGLCHOOSEPIXELFORMATEXTPROC getWglChoosePixelFormatARB(void)
-	//{
-	//	return sm_wglChoosePixelFormatARB;
-	//}
-	//static PFNWGLCREATEPBUFFERARBPROC getWglCreatePbufferARB(void)
-	//{
-	//	return sm_wglCreatePbufferARB;
-	//}
-	//static PFNWGLGETPBUFFERDCARBPROC getWglGetPbufferDCARB(void)
-	//{
-	//	return sm_wglGetPbufferDCARB;
-	//}
-	//static PFNWGLRELEASEPBUFFERDCARBPROC getWglReleasePbufferDCARB(void)
-	//{
-	//	return sm_wglReleasePbufferDCARB;
-	//}
-	//static PFNWGLDESTROYPBUFFERARBPROC getWglDestroyPbufferARB(void)
-	//{
-	//	return sm_wglDestroyPbufferARB;
-	//}
-	//static PFNWGLQUERYPBUFFERARBPROC getWglQueryPbufferARB(void)
-	//{
-	//	return sm_wglQueryPbufferARB;
-	//}
-	//static PFNWGLALLOCATEMEMORYNVPROC getWglAllocateMemoryNV(void)
-	//{
-	//	return sm_wglAllocateMemoryNV;
-	//}
-	//static PFNWGLFREEMEMORYNVPROC getWglFreeMemoryNV(void)
-	//{
-	//	return sm_wglFreeMemoryNV;
-	//}
 	static bool checkForWGLExtension(char* extension, bool force = false);
 	static bool haveMultisampleExtension(bool force = false);
 	static bool havePixelBufferExtension(bool force = false);
 	static bool havePixelFormatExtension(bool force = false);
-	static bool haveVARExtension(bool force = false);
+	//static bool haveVARExtension(bool force = false);
 	static StringSet &getWglExtensions(void) { return sm_wglExtensions; }
 	static const char *getWglExtensionsString(void)
 	{
