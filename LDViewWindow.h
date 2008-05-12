@@ -11,6 +11,7 @@
 class LDHtmlInventory;
 class ModelTreeDialog;
 class BoundingBoxDialog;
+class MpdDialog;
 class ToolbarStrip;
 
 typedef struct
@@ -302,6 +303,7 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
 		virtual LRESULT showBoundingBox(void);
+		virtual LRESULT showMpd(void);
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
 			LDPartsList *partsList, const char *filename);
 		void progressAlertCallback(TCProgressAlert *alert);
@@ -389,6 +391,7 @@ class LDViewWindow: public CUIWindow
 		bool examineLatLong;
 		ModelTreeDialog *modelTreeDialog;
 		BoundingBoxDialog *boundingBoxDialog;
+		MpdDialog *mpdDialog;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;

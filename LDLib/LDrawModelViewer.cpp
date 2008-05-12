@@ -106,6 +106,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	mouseMode(LDVMouseNone),
 	inputHandler(NULL),
 	step(-1),
+	mpdChildIndex(0),
 	cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
@@ -901,6 +902,7 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		}
 		if (loadLDLModel() && parseModel())
 		{
+			setStep(getNumSteps());
 			retValue = 1;
 			if (resetViewpoint)
 			{
@@ -984,6 +986,7 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setSkipValidation(flags.skipValidation);
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
 	mainModel->setSeamWidth(seamWidth);
+	mpdChildIndex = 0;
 	if (mainModel->load(filename))
 	{
 		return calcSize();
@@ -998,6 +1001,7 @@ bool LDrawModelViewer::parseModel(void)
 {
 	LDModelParser *modelParser = NULL;
 	bool retValue = false;
+	LDLModel *model = NULL;
 
 	if (!mainModel)
 	{
@@ -1011,11 +1015,15 @@ bool LDrawModelViewer::parseModel(void)
 	}
 	modelParser = new LDModelParser(this);
 	modelParser->setAlertSender(this);
-	if (modelParser->parseMainModel(mainModel))
+	model = getMpdChild();
+	if (!model)
+	{
+		model = mainModel;
+	}
+	if (modelParser->parseMainModel(model))
 	{
 		mainTREModel = modelParser->getMainTREModel();
 		mainTREModel->retain();
-		setStep(getNumSteps());
 		flags.needsRecompile = false;
 		flags.needsReparse = false;
 		retValue = true;
@@ -4284,4 +4292,33 @@ void LDrawModelViewer::lineWidth(GLfloat width)
 		gl2psLineWidth(width);
 	}
 	glLineWidth(width);
+}
+
+void LDrawModelViewer::setMpdChildIndex(int index)
+{
+	if (index != mpdChildIndex)
+	{
+		mpdChildIndex = index;
+		flags.needsReparse = true;
+		requestRedraw();
+	}
+}
+
+LDLModel *LDrawModelViewer::getMpdChild(void)
+{
+	LDLModelVector &mpdModels = mainModel->getMpdModels();
+
+	if ((int)mpdModels.size() > mpdChildIndex)
+	{
+		return mpdModels[mpdChildIndex];
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+const LDLModel *LDrawModelViewer::getMpdChild(void) const
+{
+	return const_cast<LDrawModelViewer *>(this)->getMpdChild();
 }

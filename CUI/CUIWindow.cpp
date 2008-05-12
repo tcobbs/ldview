@@ -280,6 +280,7 @@ void CUIWindow::initUcMessages(void)
 	ucMessages[WM_GETTEXT] = WM_GETTEXT;
 	ucMessages[CB_DELETESTRING] = CB_DELETESTRING;
 	ucMessages[CB_ADDSTRING] = CB_ADDSTRING;
+	ucMessages[LB_ADDSTRING] = LB_ADDSTRING;
 	ucMessages[CB_SELECTSTRING] = CB_SELECTSTRING;
 #ifdef TC_NO_UNICODE
 	ucMessages[SB_SETTIPTEXT] = SB_SETTIPTEXTA;

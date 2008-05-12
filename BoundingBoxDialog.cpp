@@ -1,12 +1,8 @@
 #include "BoundingBoxDialog.h"
 #include "ModelWindow.h"
 #include "Resource.h"
-#include <TCFoundation/mystring.h>
-#include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLoader/LDLMainModel.h>
-#include <LDLib/LDModelTree.h>
-#include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)

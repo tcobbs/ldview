@@ -36,6 +36,14 @@ public:
 		UDACCEL *accels = NULL, int numAccels = 0);
 	virtual void spinSetValue(int controlId, int value);
 
+	virtual void listBoxResetContent(int controlId);
+	virtual void listBoxAddString(int controlId, CUCSTR string);
+#ifndef TC_NO_UNICODE
+	virtual void listBoxAddString(int controlId, LPCTSTR string);
+#endif // TC_NO_UNICODE
+	virtual LRESULT listBoxSelectItem(int controlId, int index);
+	virtual int listBoxGetSelectedItem(int controlId);
+
 	virtual void windowGetText(int controlId, ucstring &text);
 	static void windowGetText(HWND hDlg, int controlId, ucstring &text);
 	virtual ucstring windowGetText(int controlId);

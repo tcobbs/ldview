@@ -63,11 +63,11 @@ LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 		bool transparent;
 
 		modelViewer->getDefaultRGB(r, g, b, transparent);
-		LDLMainModel *mainModel = modelViewer->getMainModel();
+		LDLModel *mainModel = modelViewer->getMainModel();
 
 		if (mainModel)
 		{
-			LDLPalette *palette = mainModel->getPalette();
+			LDLPalette *palette = mainModel->getMainModel()->getPalette();
 
 			setDefaultColorNumber(palette->getColorNumberForRGB(r, g, b,
 				transparent));
@@ -133,11 +133,11 @@ void LDModelParser::setDefaultColorNumber(int colorNumber)
 	setDefaultColorNumberSetFlag(true);
 }
 
-bool LDModelParser::parseMainModel(LDLMainModel *mainLDLModel)
+bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 {
 	int colorNumber = 7;
 	int edgeColorNumber;
-	LDLPalette *palette = mainLDLModel->getPalette();
+	LDLPalette *palette = mainLDLModel->getMainModel()->getPalette();
 
 	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
@@ -815,172 +815,6 @@ bool LDModelParser::performPrimitiveSubstitution(
 	m_currentTREModel = treModel;
 	m_currentColorNumber = activeColorNumber;
 	return LDLPrimitiveCheck::performPrimitiveSubstitution(ldlModel, bfc);
-//	const char *modelName = ldlModel->getName();
-//
-//	if (getPrimitiveSubstitutionFlag())
-//	{
-//		bool is48;
-//
-//		if (!modelName)
-//		{
-//			return false;
-//		}
-//		if (strcasecmp(modelName, "LDL-LOWRES:stu2.dat") == 0)
-//		{
-//			return substituteStu2(treModel);
-//		}
-//		else if (strcasecmp(modelName, "LDL-LOWRES:stu22.dat") == 0)
-//		{
-//			return substituteStu22(treModel, false, bfc);
-//		}
-//		else if (strcasecmp(modelName, "LDL-LOWRES:stu22a.dat") == 0)
-//		{
-//			return substituteStu22(treModel, true, bfc);
-//		}
-//		else if (strcasecmp(modelName, "LDL-LOWRES:stu23.dat") == 0)
-//		{
-//			return substituteStu23(treModel, false, bfc);
-//		}
-//		else if (strcasecmp(modelName, "LDL-LOWRES:stu23a.dat") == 0)
-//		{
-//			return substituteStu23(treModel, true, bfc);
-//		}
-//		else if (strcasecmp(modelName, "LDL-LOWRES:stu24.dat") == 0)
-//		{
-//			return substituteStu24(treModel, false, bfc);
-//		}
-//		else if (strcasecmp(modelName, "LDL-LOWRES:stu24a.dat") == 0)
-//		{
-//			return substituteStu24(treModel, true, bfc);
-//		}
-//		else if (strcasecmp(modelName, "stud.dat") == 0)
-//		{
-//			return substituteStud(treModel);
-//		}
-//		else if (strcasecmp(modelName, "1-8sphe.dat") == 0)
-//		{
-//			return substituteEighthSphere(treModel, bfc);
-//		}
-//		else if (strcasecmp(modelName, "48/1-8sphe.dat") == 0 ||
-//			strcasecmp(modelName, "48\\1-8sphe.dat") == 0)
-//		{
-//			return substituteEighthSphere(treModel, bfc, true);
-//		}
-//		else if (isCyli(modelName, &is48))
-//		{
-//			return substituteCylinder(treModel, startingFraction(modelName),
-//				bfc, is48);
-//		}
-//		else if (isCyls(modelName, &is48))
-//		{
-//			return substituteSlopedCylinder(treModel,
-//				startingFraction(modelName), bfc, is48);
-//		}
-//		else if (isCyls2(modelName, &is48))
-//		{
-//			return substituteSlopedCylinder2(treModel,
-//				startingFraction(modelName), bfc, is48);
-//		}
-//		else if (isChrd(modelName, &is48))
-//		{
-//			return substituteChrd(treModel, startingFraction(modelName), bfc,
-//				is48);
-//		}
-//		else if (isDisc(modelName, &is48))
-//		{
-//			return substituteDisc(treModel, startingFraction(modelName), bfc,
-//				is48);
-//		}
-//		else if (isNdis(modelName, &is48))
-//		{
-//			return substituteNotDisc(treModel, startingFraction(modelName),
-//				bfc, is48);
-//		}
-//		else if (isEdge(modelName, &is48))
-//		{
-//			return substituteCircularEdge(treModel,
-//				startingFraction(modelName), is48);
-//		}
-///*
-//		else if (isCcyli(modelName, &is48))
-//		{
-//			// The file now simply refers to a new torus.
-//			// Need to do old-style torus substitution
-//		}
-//*/
-//		else if (isCon(modelName, &is48))
-//		{
-//			int size;
-//			int offset = 0;
-//
-//			if (is48)
-//			{
-//				offset = 3;
-//			}
-//			sscanf(modelName + 6 + offset, "%d", &size);
-//			return substituteCone(treModel, startingFraction(modelName), size,
-//				bfc, is48);
-//		}
-//		else if (isOldRing(modelName, &is48))
-//		{
-//			int size;
-//			int offset = 0;
-//
-//			if (is48)
-//			{
-//				offset = 3;
-//			}
-//			sscanf(modelName + 4 + offset, "%d", &size);
-//			return substituteRing(treModel, 1.0f, size, bfc, is48);
-//		}
-//		else if (isRing(modelName, &is48))
-//		{
-//			int size;
-//			int offset = 0;
-//
-//			if (is48)
-//			{
-//				offset = 3;
-//			}
-//			sscanf(modelName + 7 + offset, "%d", &size);
-//			return substituteRing(treModel, startingFraction(modelName), size,
-//				bfc, is48);
-//		}
-//		else if (isRin(modelName, &is48))
-//		{
-//			int size;
-//			int offset = 0;
-//
-//			if (is48)
-//			{
-//				offset = 3;
-//			}
-//			sscanf(modelName + 6 + offset, "%d", &size);
-//			return substituteRing(treModel, startingFraction(modelName), size,
-//				bfc, is48);
-//		}
-//		else if (isTorusO(modelName, &is48))
-//		{
-//			return substituteTorusIO(treModel, false, bfc, is48);
-//		}
-//		else if (isTorusI(modelName, &is48))
-//		{
-//			return substituteTorusIO(treModel, true, bfc, is48);
-//		}
-//		else if (isTorusQ(modelName, &is48))
-//		{
-//			return substituteTorusQ(treModel, bfc, is48);
-//		}
-//	}
-//	if (getNoLightGeomFlag())
-//	{
-//		if (modelName && strcasecmp(modelName, "light.dat") == 0)
-//		{
-//			// Don't draw any geometry for light.dat.
-//			return true;
-//		}
-//	}
-//	return false;
 }
 
 bool LDModelParser::parseModel(

@@ -135,6 +135,12 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_TIMER:
+		if (doTimer(wParam) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	}
 	return (INT_PTR)FALSE;
 }
@@ -300,6 +306,34 @@ void CUIDialog::spinSetValue(
 	int value)
 {
 	SendDlgItemMessage(hWindow, controlId, UDM_SETPOS, 0, value);
+}
+
+void CUIDialog::listBoxResetContent(int controlId)
+{
+	SendDlgItemMessage(hWindow, controlId, LB_RESETCONTENT, 0, 0);
+}
+
+void CUIDialog::listBoxAddString(int controlId, CUCSTR string)
+{
+	sendDlgItemMessageUC(hWindow, controlId, LB_ADDSTRING, 0, (LPARAM)string);
+}
+
+#ifndef TC_NO_UNICODE
+void CUIDialog::listBoxAddString(int controlId, LPCTSTR string)
+{
+	SendDlgItemMessageA(hWindow, controlId, LB_ADDSTRING, 0, (LPARAM)string);
+}
+#endif // TC_NO_UNICODE
+
+LRESULT CUIDialog::listBoxSelectItem(int controlId, int index)
+{
+	return SendDlgItemMessage(hWindow, controlId, LB_SETCURSEL,
+		(WPARAM)index, 0);
+}
+
+int CUIDialog::listBoxGetSelectedItem(int controlId)
+{
+	return (int)SendDlgItemMessage(hWindow, controlId, LB_GETCURSEL, 0, 0);
 }
 
 void CUIDialog::comboAddString(int controlId, CUCSTR string)

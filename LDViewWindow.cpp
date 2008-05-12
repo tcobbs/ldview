@@ -9,6 +9,7 @@
 #include "SSModelWindow.h"
 #include "ModelTreeDialog.h"
 #include "BoundingBoxDialog.h"
+#include "MpdDialog.h"
 #include "Resource.h"
 #include "ToolbarStrip.h"
 #include <LDLib/LDUserDefaultsKeys.h>
@@ -160,7 +161,8 @@ drawWireframe(false),
 examineLatLong(TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
 			   LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong),
 modelTreeDialog(NULL),
-boundingBoxDialog(NULL)
+boundingBoxDialog(NULL),
+mpdDialog(NULL)
 {
 	CUIThemes::init();
 	if (CUIThemes::isThemeLibLoaded())
@@ -211,6 +213,7 @@ void LDViewWindow::dealloc(void)
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelTreeDialog);
 	TCObject::release(boundingBoxDialog);
+	TCObject::release(mpdDialog);
 	TCObject::release(toolbarStrip);
 	delete userLDrawDir;
 	userLDrawDir = NULL;
@@ -2059,6 +2062,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hToolsMenu, ID_TOOLS_PARTSLIST, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_MODELTREE, haveModel);
 	setMenuEnabled(hToolsMenu, ID_TOOLS_BOUNDINGBOX, haveModel);
+	setMenuEnabled(hToolsMenu, ID_TOOLS_MPD, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_FRONT, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_BACK, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_LEFT, haveModel);
@@ -3264,98 +3268,76 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_EDIT_PREFERENCES:
 			modelWindow->showPreferences();
 			return 0;
-			break;
 		case ID_FILE_OPEN:
 			openModel();
 			return 0;
-			break;
 		case ID_FILE_PRINT:
 			printModel();
 			return 0;
-			break;
 		case ID_FILE_PAGESETUP:
 			pageSetup();
 			return 0;
-			break;
 		case ID_FILE_SAVE:
 			saveSnapshot();
 			return 0;
-			break;
 		case ID_FILE_LDRAWDIR:
 			chooseNewLDrawDir();
 			return 0;
-			break;
 		case ID_FILE_EXTRADIRS:
 			chooseExtraDirs();
 			return 0;
-			break;
 		case ID_FILE_CANCELLOAD:
 			if (modelWindow)
 			{
 				modelWindow->setCancelLoad();
 			}
 			return 0;
-			break;
 		case ID_FILE_EXIT:
 			shutdown();
 			return 0;
-			break;
 		case ID_FILE_CHECKFORLIBUPDATES:
 #ifndef _NO_BOOST
 			checkForLibraryUpdates();
 #endif // !_NO_BOOST
 			return 0;
-			break;
 		case ID_VIEW_FULLSCREEN:
 			switchModes();
 			return 0;
-			break;
 		case ID_VIEW_RESET:
 			resetView();
 			return 0;
-			break;
 		case ID_VIEW_DEFAULT:
 			resetView();
 			return 0;
-			break;
 		case ID_VIEW_FRONT:
 			resetView(LDVAngleFront);
 			return 0;
-			break;
 		case ID_VIEW_BACK:
 			resetView(LDVAngleBack);
 			return 0;
-			break;
 		case ID_VIEW_LEFT:
 			resetView(LDVAngleLeft);
 			return 0;
-			break;
 		case ID_VIEW_RIGHT:
 			resetView(LDVAngleRight);
 			return 0;
-			break;
 		case ID_VIEW_TOP:
 			resetView(LDVAngleTop);
 			return 0;
-			break;
 		case ID_VIEW_BOTTOM:
 			resetView(LDVAngleBottom);
 			return 0;
-			break;
 		case ID_VIEW_SPECIFYLATLON:
 			return specifyLatLon();
 		case ID_VIEW_ISO:
 			resetView(LDVAngleIso);
 			return 0;
-			break;
 		case ID_VIEW_SAVE_DEFAULT:
 			saveDefaultView();
 			return 0;
-			break;
 		case ID_VIEW_ZOOMTOFIT:
 			zoomToFit();
 			return 0;
-			break;
 /*
 		case ID_VIEW_RESET_DEFAULT:
 			resetDefaultView();
@@ -3364,63 +3346,49 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 */
 		case ID_VIEW_STATUSBAR:
 			return switchStatusBar();
-			break;
 		case ID_VIEW_TOOLBAR:
 			return switchToolbar();
-			break;
 		case ID_VIEW_ALWAYSONTOP:
 			return switchTopmost();
-			break;
 		case ID_VIEW_VISUALSTYLE:
 			return switchVisualStyle();
-			break;
 		case ID_VIEW_EXAMINE:
 			return switchToExamineMode();
-			break;
 		case ID_VIEW_EXAMINE_LAT_LONG:
 			return switchExamineLatLong();
-			break;
 		case ID_VIEW_FLYTHROUGH:
 			return switchToFlythroughMode();
-			break;
 		case ID_TOOLS_ERRORS:
 			modelWindow->showErrors();
 			return 0;
-			break;
 		case ID_TOOLS_VIEW_INFO:
 			showViewInfo();
 			return 0;
-			break;
 		case ID_TOOLS_POV_CAMERA:
 			showPovCamera();
 			return 0;
-			break;
 		case ID_TOOLS_PARTSLIST:
 			return generatePartsList();
-			break;
 		case ID_TOOLS_MODELTREE:
 			return showModelTree();
-			break;
 		case ID_TOOLS_BOUNDINGBOX:
 			return showBoundingBox();
-			break;
+		case ID_TOOLS_MPD:
+			return showMpd();
 /*
 		case ID_VIEW_TRANS_MATRIX:
 			showTransformationMatrix();
 			return 0;
-			break;
 */
 /*
 		case ID_VIEW_LDRAWCOMMANDLINE:
 			showLDrawCommandLine();
 			return 0;
-			break;
 */
 		case ID_FILE_RELOAD:
 			modelWindow->reload();
 			//modelWindow->update();
 			return 0;
-			break;
 		case ID_HELP_ABOUT:
 			showAboutBox();
 			return 0;
@@ -3433,7 +3401,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			break;
 		case ID_HELP_OPENGL_INFO:
 			return showOpenGLDriverInfo();
-			break;
 /*
 		case ID_HELP_OPENGLINFO_VENDOR:
 			message = (char*)glGetString(GL_VENDOR);
@@ -3465,7 +3432,6 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 			case LIBRARY_UPDATE_ERROR:
 				doLibraryUpdateFinished(notifyCode);
 				return 0;
-				break;
 			}
 #endif //_NO_BOOST
 			break;
@@ -5201,6 +5167,19 @@ LRESULT LDViewWindow::showBoundingBox(void)
 			boundingBoxDialog = new BoundingBoxDialog(getLanguageModule());
 		}
 		boundingBoxDialog->show(modelWindow);
+	}
+	return 0;
+}
+
+LRESULT LDViewWindow::showMpd(void)
+{
+	if (modelWindow)
+	{
+		if (!mpdDialog)
+		{
+			mpdDialog = new MpdDialog(getLanguageModule());
+		}
+		mpdDialog->show(modelWindow);
 	}
 	return 0;
 }

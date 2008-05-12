@@ -1,35 +1,40 @@
-#ifndef __BOUNDINGBOXDIALOG_H__
-#define __BOUNDINGBOXDIALOG_H__
+#ifndef __MPDDIALOG_H__
+#define __MPDDIALOG_H__
 
 class LDLMainModel;
 class ModelWindow;
 class TCAlert;
 class LDrawModelViewer;
+class CUIWindowResizer;
 
 #include <CUI/CUIDialog.h>
 
-class BoundingBoxDialog: public CUIDialog
+class MpdDialog: public CUIDialog
 {
 public:
-	BoundingBoxDialog(HINSTANCE hInstance);
+	MpdDialog(HINSTANCE hInstance);
 	void show(ModelWindow *modelWindow);
 protected:
 	virtual LRESULT doClose(void);
 
-	virtual ~BoundingBoxDialog(void);
+	virtual ~MpdDialog(void);
 	virtual void dealloc(void);
 
 	virtual BOOL doInitDialog(HWND /*hKbControl*/);
+	virtual LRESULT doSize(WPARAM sizeType, int newWidth, int newHeight);
+	virtual LRESULT doCommand(int notifyCode, int commandId,
+		HWND control);
 
 	void modelAlertCallback(TCAlert *alert);
 	void setModel(LDLMainModel *model);
 	void setModelWindow(ModelWindow *modelWindow);
 	void updateData(void);
-	void showBoundingBox(bool value);
+	void showMpdModel(int index);
 	LDrawModelViewer *getModelViewer(void);
 
 	ModelWindow *m_modelWindow;
 	LDLMainModel *m_model;
+	CUIWindowResizer *m_resizer;
 };
 
-#endif // __BOUNDINGBOXDIALOG_H__
+#endif // __MPDDIALOG_H__
