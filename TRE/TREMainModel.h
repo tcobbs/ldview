@@ -270,6 +270,66 @@ public:
 	void updateModelTransferStep(int subModelIndex,
 		bool isConditionals = false);
 	bool onLastStep(void);
+	virtual void nextStep(void);
+
+	virtual void addLine(const TCVector *vertices);
+	virtual void addLine(TCULong color, const TCVector *vertices);
+	virtual void addEdgeLine(const TCVector *vertices, TCULong color = 0);
+	virtual void addTriangle(const TCVector *vertices);
+	virtual void addTriangle(const TCVector *vertices,
+		const TCVector *normals);
+	virtual void addTriangle(TCULong color, const TCVector *vertices);
+	virtual void addTriangle(TCULong color, const TCVector *vertices,
+		const TCVector *normals);
+	virtual void addBFCTriangle(const TCVector *vertices);
+	virtual void addBFCTriangle(const TCVector *vertices,
+		const TCVector *normals);
+	virtual void addBFCTriangle(TCULong color, const TCVector *vertices);
+	virtual void addBFCTriangle(TCULong color, const TCVector *vertices,
+		const TCVector *normals);
+	virtual void addQuad(const TCVector *vertices);
+	virtual void addQuad(TCULong color, const TCVector *vertices);
+	virtual void addBFCQuad(const TCVector *vertices);
+	virtual void addBFCQuad(TCULong color, const TCVector *vertices);
+	virtual void addConditionalLine(const TCVector *vertices,
+		const TCVector *controlPoints, TCULong color = 0);
+	virtual void addTriangleStrip(const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleStrip(TREShapeGroup *shapeGroup,
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat = false);
+	virtual void addBFCTriangleStrip(const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleFan(const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count,
+		bool flat = false);
+	virtual void addTriangleFan(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addTriangleFan(TREShapeGroup *shapeGroup,
+		const TCVector *vertices, const TCVector *normals,
+		const TCVector *textureCoords, int count, bool flat = false);
+	virtual void addTriangleFan(TREColoredShapeGroup *shapeGroup, TCULong color,
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat = false);
+	virtual void addBFCTriangleFan(const TCVector *vertices,
+		const TCVector *normals, const TCVector *textureCoords, int count,
+		bool flat = false);
+	virtual void addBFCTriangleFan(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addQuadStrip(const TCVector *vertices, const TCVector *normals,
+		int count, bool flat = false);
+	virtual void addQuadStrip(TREShapeGroup *shapeGroup,
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat);
+	virtual void addQuadStrip(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addQuadStrip(TREColoredShapeGroup *shapeGroup, TCULong color,
+		const TCVector *vertices, const TCVector *normals, int count,
+		bool flat = false);
+	virtual void addBFCQuadStrip(const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
+	virtual void addBFCQuadStrip(TCULong color, const TCVector *vertices,
+		const TCVector *normals, int count, bool flat = false);
 
 	static void loadStudTexture(const char *filename);
 	static void setStudTextureData(TCByte *data, long length);
@@ -315,6 +375,8 @@ protected:
 	void lineWidth(GLfloat width);
 	void pointSize(GLfloat size);
 
+	TREModel *getCurGeomModel(void);
+
 	static void loadStudMipTextures(TCImage *mainImage);
 
 	TCObject *m_alertSender;
@@ -347,6 +409,7 @@ protected:
 	int m_numSteps;
 	int m_transferStep;
 	IntVector m_transStepCounts;
+	TREModel *m_curGeomModel;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
 	boost::MutexType *m_workerMutex;

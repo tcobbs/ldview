@@ -257,8 +257,9 @@ bool TREGLExtensions::haveVARExtension(bool force)
 {
 	bool ignore = TCUserDefaults::longForKey(IGNORE_VAR_KEY, 0, false) != 0;
 
+	using namespace TREGLExtensionsNS;
 	return (!ignore || force) && checkForExtension("GL_NV_vertex_array_range",
-		force);
+		force);// && wglAllocateMemoryNV != NULL && wglFreeMemoryNV != NULL;
 }
 
 bool TREGLExtensions::haveMultiDrawArraysExtension(bool force)

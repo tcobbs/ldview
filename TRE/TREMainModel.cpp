@@ -97,7 +97,8 @@ TREMainModel::TREMainModel(void)
 	m_studAnisoLevel(1.0f),
 	m_abort(false),
 	m_studTextureFilter(GL_LINEAR_MIPMAP_LINEAR),
-	m_step(-1)
+	m_step(-1),
+	m_curGeomModel(NULL)
 #ifndef _NO_TRE_THREADS
 	, m_threadGroup(NULL)
 	, m_workerMutex(NULL)
@@ -1893,4 +1894,290 @@ void TREMainModel::setStep(int value)
 	{
 		transShapes->stepChanged();
 	}
+}
+
+TREModel *TREMainModel::getCurGeomModel(void)
+{
+	if (m_curGeomModel == NULL)
+	{
+		m_curGeomModel = new TREModel;
+
+		m_curGeomModel->setMainModel(this);
+		addSubModel(TCVector::getIdentityMatrix(), m_curGeomModel, false);
+		m_curGeomModel->release();
+	}
+	return m_curGeomModel;
+}
+
+void TREMainModel::nextStep(void)
+{
+	m_curStepIndex++;
+	for (int i = 0; i <= TREMLast; i++)
+	{
+		if (m_shapes[i])
+		{
+			m_shapes[i]->nextStep();
+		}
+		if (m_coloredShapes[i])
+		{
+			m_coloredShapes[i]->nextStep();
+		}
+	}
+	if (m_subModels)
+	{
+		m_stepCounts.push_back(m_subModels->getCount());
+	}
+	else
+	{
+		m_stepCounts.push_back(0);
+	}
+	m_curGeomModel = NULL;
+}
+
+void TREMainModel::addLine(TCULong color, const TCVector *vertices)
+{
+	getCurGeomModel()->addLine(color, vertices);
+}
+
+void TREMainModel::addLine(const TCVector *vertices)
+{
+	getCurGeomModel()->addLine(vertices);
+}
+
+void TREMainModel::addEdgeLine(const TCVector *vertices, TCULong color)
+{
+	getCurGeomModel()->addEdgeLine(vertices, color);
+}
+
+void TREMainModel::addTriangle(TCULong color, const TCVector *vertices)
+{
+	getCurGeomModel()->addTriangle(color, vertices);
+}
+
+void TREMainModel::addTriangle(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals)
+{
+	getCurGeomModel()->addTriangle(color, vertices, normals);
+}
+
+void TREMainModel::addTriangle(const TCVector *vertices)
+{
+	getCurGeomModel()->addTriangle(vertices);
+}
+
+void TREMainModel::addTriangle(
+	const TCVector *vertices,
+	const TCVector *normals)
+{
+	getCurGeomModel()->addTriangle(vertices, normals);
+}
+
+void TREMainModel::addBFCTriangle(TCULong color, const TCVector *vertices)
+{
+	getCurGeomModel()->addBFCTriangle(color, vertices);
+}
+
+void TREMainModel::addBFCTriangle(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals)
+{
+	getCurGeomModel()->addBFCTriangle(color, vertices, normals);
+}
+
+void TREMainModel::addBFCTriangle(const TCVector *vertices)
+{
+	getCurGeomModel()->addBFCTriangle(vertices);
+}
+
+void TREMainModel::addBFCTriangle(
+	const TCVector *vertices,
+	const TCVector *normals)
+{
+	getCurGeomModel()->addBFCTriangle(vertices, normals);
+}
+
+void TREMainModel::addQuad(TCULong color, const TCVector *vertices)
+{
+	getCurGeomModel()->addQuad(color, vertices);
+}
+
+void TREMainModel::addQuad(const TCVector *vertices)
+{
+	getCurGeomModel()->addQuad(vertices);
+}
+
+void TREMainModel::addBFCQuad(TCULong color, const TCVector *vertices)
+{
+	getCurGeomModel()->addBFCQuad(color, vertices);
+}
+
+void TREMainModel::addBFCQuad(const TCVector *vertices)
+{
+	getCurGeomModel()->addBFCQuad(vertices);
+}
+
+void TREMainModel::addConditionalLine(
+	const TCVector *vertices,
+	const TCVector *controlPoints,
+	TCULong color)
+{
+	getCurGeomModel()->addConditionalLine(vertices, controlPoints, color);
+}
+
+void TREMainModel::addTriangleStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addTriangleStrip(vertices, normals, count, flat);
+}
+
+void TREMainModel::addTriangleStrip(
+	TREShapeGroup *shapeGroup,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addTriangleStrip(shapeGroup, vertices, normals, count,
+		flat);
+}
+
+void TREMainModel::addBFCTriangleStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addBFCTriangleStrip(vertices, normals, count, flat);
+}
+
+void TREMainModel::addTriangleFan(
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addTriangleFan(vertices, normals, textureCoords, count,
+		flat);
+}
+
+void TREMainModel::addTriangleFan(
+	TREShapeGroup *shapeGroup,
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addTriangleFan(shapeGroup, vertices, normals,
+		textureCoords, count, flat);
+}
+
+void TREMainModel::addTriangleFan(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addTriangleFan(color, vertices, normals, count, flat);
+}
+
+void TREMainModel::addTriangleFan(
+	TREColoredShapeGroup *shapeGroup,
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addTriangleFan(shapeGroup, color, vertices, normals,
+		count, flat);
+}
+
+void TREMainModel::addBFCTriangleFan(
+	const TCVector *vertices,
+	const TCVector *normals,
+	const TCVector *textureCoords,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addBFCTriangleFan(vertices, normals, textureCoords,
+		count, flat);
+}
+
+void TREMainModel::addBFCTriangleFan(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addBFCTriangleFan(color, vertices, normals, count, flat);
+}
+
+void TREMainModel::addQuadStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addQuadStrip(vertices, normals, count, flat);
+}
+
+void TREMainModel::addQuadStrip(
+	TREShapeGroup *shapeGroup,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addQuadStrip(shapeGroup, vertices, normals, count, flat);
+}
+
+void TREMainModel::addQuadStrip(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addQuadStrip(color, vertices, normals, count, flat);
+}
+
+void TREMainModel::addQuadStrip(
+	TREColoredShapeGroup *shapeGroup,
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addQuadStrip(shapeGroup, color, vertices, normals, count,
+		flat);
+}
+
+void TREMainModel::addBFCQuadStrip(
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addBFCQuadStrip(vertices, normals, count, flat);
+}
+
+void TREMainModel::addBFCQuadStrip(
+	TCULong color,
+	const TCVector *vertices,
+	const TCVector *normals,
+	int count,
+	bool flat)
+{
+	getCurGeomModel()->addBFCQuadStrip(color, vertices, normals, count, flat);
 }
