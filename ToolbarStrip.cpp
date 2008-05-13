@@ -46,7 +46,9 @@ void ToolbarStrip::modelAlertCallback(TCAlert *alert)
 	if (alert->getSender() == m_ldviewWindow->getModelWindow())
 	{
 		if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0 ||
-			ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0)
+			ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCanceled")) == 0 ||
+			ucstrcmp(alert->getMessageUC(), _UC("ModelParsed")) == 0 ||
+			ucstrcmp(alert->getMessageUC(), _UC("ModelParseCanceled")) == 0)
 		{
 			updateStep();
 			updateNumSteps();

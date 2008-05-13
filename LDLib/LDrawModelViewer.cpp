@@ -134,6 +134,10 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.needsRecompile = false;
 	flags.needsResize = true;
 	flags.needsCalcSize = false;
+	flags.needsRotationMatrixSetup = true;
+	flags.needsViewReset = true;
+	flags.needsResetStep = false;
+	flags.needsResetMpd = false;
 	flags.paused = 0;
 	flags.slowClear = false;
 	flags.blackHighlights = false;
@@ -145,10 +149,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.performSmoothing = true;
 	flags.lineSmoothing = false;
 	flags.constrainZoom = true;
-	flags.needsRotationMatrixSetup = true;
 	flags.edgesOnly = false;
 	flags.hiResPrimitives = false;
-	flags.needsViewReset = true;
 	flags.processLDConfig = true;
 	flags.skipValidation = false;
 	flags.autoCenter = true;
@@ -223,6 +225,8 @@ void LDrawModelViewer::setFilename(const char* value)
 {
 	delete filename;
 	filename = copyString(value);
+	flags.needsResetStep = true;
+	flags.needsResetMpd = true;
 }
 
 void LDrawModelViewer::setProgramPath(const char *value)
@@ -902,7 +906,6 @@ int LDrawModelViewer::loadModel(bool resetViewpoint)
 		}
 		if (loadLDLModel() && parseModel())
 		{
-			setStep(getNumSteps());
 			retValue = 1;
 			if (resetViewpoint)
 			{
@@ -987,7 +990,11 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setSkipValidation(flags.skipValidation);
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
 	mainModel->setSeamWidth(seamWidth);
-	mpdChildIndex = 0;
+	if (flags.needsResetMpd)
+	{
+		mpdChildIndex = 0;
+		flags.needsResetMpd = false;
+	}
 	if (mainModel->load(filename))
 	{
 		return calcSize();
@@ -1026,6 +1033,15 @@ bool LDrawModelViewer::parseModel(void)
 		retValue = true;
 		initLightDirModels();
 		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
+		if (flags.needsResetStep)
+		{
+			setStep(getNumSteps());
+			flags.needsResetStep = false;
+		}
+		else
+		{
+			mainTREModel->setStep(step);
+		}
 	}
 	modelParser->release();
 	if (retValue)
@@ -4299,6 +4315,7 @@ void LDrawModelViewer::setMpdChildIndex(int index)
 		flags.needsReparse = true;
 		flags.needsCalcSize = true;
 		flags.needsViewReset = true;
+		flags.needsResetStep = true;
 		requestRedraw();
 	}
 }
