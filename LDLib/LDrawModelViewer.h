@@ -658,6 +658,10 @@ class LDrawModelViewer: public TCAlertSender
 			bool needsRecompile:1;
 			bool needsResize:1;
 			bool needsCalcSize:1;
+			bool needsRotationMatrixSetup:1;
+			bool needsViewReset:1;
+			bool needsResetStep:1;
+			bool needsResetMpd:1;
 			bool paused:1;
 			bool slowClear:1;
 			bool blackHighlights:1;
@@ -669,10 +673,8 @@ class LDrawModelViewer: public TCAlertSender
 			bool performSmoothing:1;
 			bool lineSmoothing:1;
 			bool constrainZoom:1;
-			bool needsRotationMatrixSetup:1;
 			bool edgesOnly:1;
 			bool hiResPrimitives:1;
-			bool needsViewReset:1;
 			bool processLDConfig:1;
 			bool skipValidation:1;
 			bool autoCenter:1;
