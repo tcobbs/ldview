@@ -131,7 +131,7 @@ protected:
 
 	static bool unsetToken(StringSet &tokens, const char *token);
 	const LDrawModelViewer *m_modelViewer;
-	LDLMainModel *m_mainLDLModel;
+	LDLModel *m_topLDLModel;
 	TREMainModel *m_mainTREModel;
 	TREModel *m_currentTREModel;
 	int m_currentColorNumber;

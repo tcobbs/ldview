@@ -392,6 +392,8 @@ class LDrawModelViewer: public TCAlertSender
 		int getMpdChildIndex(void) const { return mpdChildIndex; }
 		LDLModel *getMpdChild(void);
 		const LDLModel *getMpdChild(void) const;
+		LDLModel *getCurModel(void);
+		const LDLModel *getCurModel(void) const;
 		LDLMainModel *getMainModel(void) { return mainModel; }
 		const LDLMainModel *getMainModel(void) const { return mainModel; }
 		bool getCompiled(void) const;

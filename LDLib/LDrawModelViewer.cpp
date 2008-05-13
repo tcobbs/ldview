@@ -945,12 +945,13 @@ void LDrawModelViewer::releaseTREModels(void)
 bool LDrawModelViewer::calcSize(void)
 {
 	bool abort = false;
-	
+	LDLModel *curModel = getCurModel();
+
 	TCProgressAlert::send("LDrawModelViewer", ls(_UC("CalculatingSizeStatus")),
 		0.0f, &abort, this);
 	if (!abort)
 	{
-		mainModel->getBoundingBox(boundingMin, boundingMax);
+		curModel->getBoundingBox(boundingMin, boundingMax);
 		TCProgressAlert::send("LDrawModelViewer",
 			ls(_UC("CalculatingSizeStatus")), 0.5f, &abort, this);
 	}
@@ -962,7 +963,7 @@ bool LDrawModelViewer::calcSize(void)
 		}
 		if (!flags.overrideModelSize)
 		{
-			size = mainModel->getMaxRadius(center) * 2.0f;
+			size = curModel->getMaxRadius(center) * 2.0f;
 		}
 		TCProgressAlert::send("LDrawModelViewer",
 			ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
@@ -1015,11 +1016,7 @@ bool LDrawModelViewer::parseModel(void)
 	}
 	modelParser = new LDModelParser(this);
 	modelParser->setAlertSender(this);
-	model = getMpdChild();
-	if (!model)
-	{
-		model = mainModel;
-	}
+	model = getCurModel();
 	if (modelParser->parseMainModel(model))
 	{
 		mainTREModel = modelParser->getMainTREModel();
@@ -4177,7 +4174,7 @@ void LDrawModelViewer::zoomToFit(void)
 		char *cameraGlobe = TCUserDefaults::stringForKey(CAMERA_GLOBE_KEY, NULL,
 			false);
 
-		autoCamera->setModel(mainModel);
+		autoCamera->setModel(getCurModel());
 		autoCamera->setModelCenter(center);
 		autoCamera->setRotationMatrix(rotationMatrix);
 		autoCamera->setCamera(camera);
@@ -4300,6 +4297,8 @@ void LDrawModelViewer::setMpdChildIndex(int index)
 	{
 		mpdChildIndex = index;
 		flags.needsReparse = true;
+		flags.needsCalcSize = true;
+		flags.needsViewReset = true;
 		requestRedraw();
 	}
 }
@@ -4322,3 +4321,20 @@ const LDLModel *LDrawModelViewer::getMpdChild(void) const
 {
 	return const_cast<LDrawModelViewer *>(this)->getMpdChild();
 }
+
+LDLModel *LDrawModelViewer::getCurModel(void)
+{
+	LDLModel *curModel = getMpdChild();
+
+	if (curModel == NULL)
+	{
+		curModel = mainModel;
+	}
+	return curModel;
+}
+
+const LDLModel *LDrawModelViewer::getCurModel(void) const
+{
+	return const_cast<LDrawModelViewer *>(this)->getCurModel();
+}
+
