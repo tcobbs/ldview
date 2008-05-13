@@ -33,7 +33,7 @@ static const int HI_NUM_SEGMENTS = 16;
 
 LDModelParser::LDModelParser(LDrawModelViewer *modelViewer)
 	:m_modelViewer(modelViewer),
-	m_mainLDLModel(NULL),
+	m_topLDLModel(NULL),
 	m_mainTREModel(NULL),
 	m_seamWidth(0.0f),
 	m_obiInfo(NULL),
@@ -87,7 +87,7 @@ LDModelParser::~LDModelParser(void)
 
 void LDModelParser::dealloc(void)
 {
-	TCObject::release(m_mainLDLModel);
+	TCObject::release(m_topLDLModel);
 	TCObject::release(m_mainTREModel);
 	LDLPrimitiveCheck::dealloc();
 }
@@ -139,7 +139,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	int edgeColorNumber;
 	LDLPalette *palette = mainLDLModel->getMainModel()->getPalette();
 
-	m_mainLDLModel = (LDLMainModel *)mainLDLModel->retain();
+	m_topLDLModel = (LDLModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
 	m_mainTREModel->setAlertSender(m_alertSender);
 	m_mainTREModel->setMultiThreadedFlag(getMultiThreadedFlag());
@@ -197,7 +197,7 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	m_mainTREModel->setColor(mainLDLModel->getPackedRGBA(colorNumber),
 		mainLDLModel->getPackedRGBA(edgeColorNumber));
 	m_obiTokens.clear();
-	if (parseModel(m_mainLDLModel, m_mainTREModel, getBFCFlag(),
+	if (parseModel(m_topLDLModel, m_mainTREModel, getBFCFlag(),
 		m_defaultColorNumber))
 	{
 		if (m_mainTREModel->isPart() || getFileIsPartFlag())
@@ -554,9 +554,9 @@ bool LDModelParser::substituteStud(int numSegments)
 	TCULong blackColor = 0;
 
 	if (m_flags.obi &&
-		!m_mainLDLModel->colorNumberIsTransparent(m_currentColorNumber))
+		!m_topLDLModel->colorNumberIsTransparent(m_currentColorNumber))
 	{
-		blackColor = m_mainLDLModel->getPackedRGBA(0);
+		blackColor = m_topLDLModel->getPackedRGBA(0);
 	}
 	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f,
 		numSegments, numSegments, getBFCFlag(), blackColor, blackColor);
@@ -895,7 +895,7 @@ bool LDModelParser::parseModel(
 							obiLocalTokens);
 					}
 				}
-				if (ldlModel->isMainModel())
+				if (ldlModel == m_topLDLModel)
 				{
 					TCProgressAlert::send("LDLModelParser",
 						TCLocalStrings::get(_UC("ParsingStatus")),
