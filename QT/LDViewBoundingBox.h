@@ -25,8 +25,8 @@ public slots:
 	void show(void);
 	void hide();
 protected:
-	LDrawModelViewer *modelViewer;
-	ModelViewerWidget *modelWidget;
+//	LDrawModelViewer *modelViewer;
+//	ModelViewerWidget *modelWidget;
 };
 
 #endif

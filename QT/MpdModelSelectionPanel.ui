@@ -1,0 +1,85 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>MpdModelSelectionPanel</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>MpdModelSelectionPanel</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>300</width>
+            <height>200</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>300</width>
+            <height>200</height>
+        </size>
+    </property>
+    <property name="baseSize">
+        <size>
+            <width>300</width>
+            <height>200</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>LDView Mpd Model Selection</string>
+    </property>
+    <property name="sizeGripEnabled">
+        <bool>false</bool>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>4</number>
+        </property>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>selectLabel</cstring>
+            </property>
+            <property name="text">
+                <string>Select the model to display</string>
+            </property>
+            <property name="alignment">
+                <set>AlignVCenter|AlignLeft</set>
+            </property>
+        </widget>
+        <widget class="QListBox">
+            <property name="name">
+                <cstring>modelList</cstring>
+            </property>
+        </widget>
+    </vbox>
+</widget>
+<includes>
+    <include location="local" impldecl="in implementation">MpdModelSelectionPanel.ui.h</include>
+</includes>
+<connections>
+    <connection>
+        <sender>modelList</sender>
+        <signal>highlighted(int)</signal>
+        <receiver>MpdModelSelectionPanel</receiver>
+        <slot>doMpdSelected(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>doMpdSelected(int)</slot>
+</slots>
+<pixmapinproject/>
+<layoutdefaults spacing="4" margin="11"/>
+</UI>

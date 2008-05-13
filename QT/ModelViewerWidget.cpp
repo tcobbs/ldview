@@ -105,6 +105,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	jpegoptions(NULL),
 	extensionsPanel(NULL),
     boundingbox(new BoundingBox(this)),
+	mpdmodel(new MpdModel(this)),
 	latitudelongitude(new LatitudeLongitude(this)),
 	modeltree(new LDViewModelTree(preferences,this)),
 	aboutPanel(NULL),
@@ -3411,6 +3412,11 @@ void ModelViewerWidget::doModelTree()
 void ModelViewerWidget::doBoundingBox()
 {
 	boundingbox->show();
+}
+
+void ModelViewerWidget::doMpdModel()
+{
+	mpdmodel->show();
 }
 
 // Note: static method
