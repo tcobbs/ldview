@@ -28,8 +28,6 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
 	modelTreeView->header()->hide();
 	modelTreeView->setSorting(-1);
-	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),
-		(TCObject*)this,(TCAlertCallback)&LDViewModelTree::modelAlertCallback);
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
     {
         hideOptions();

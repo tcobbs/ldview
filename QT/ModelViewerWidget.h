@@ -164,6 +164,9 @@ public:
 	void firstStep();
 	void lastStep();
 	void updateStep();
+	LDViewModelTree *modeltree;
+    BoundingBox *boundingbox;
+	MpdModel *mpdmodel;
 
 protected slots:
 	virtual void doAboutOK(void);
@@ -278,10 +281,7 @@ protected:
 	JpegOptions *jpegoptions;
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
-    BoundingBox *boundingbox;
-	MpdModel *mpdmodel;
 	LatitudeLongitude *latitudelongitude;
-	LDViewModelTree *modeltree;
 	AboutPanel *aboutPanel;
 	HelpPanel *helpContents;
 	LDView *mainWindow;

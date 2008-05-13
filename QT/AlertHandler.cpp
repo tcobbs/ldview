@@ -27,6 +27,8 @@ AlertHandler::AlertHandler(ModelViewerWidget *mvw)
 		(TCAlertCallback)&AlertHandler::lightVectorChangedAlertCallback);
 	TCAlertManager::registerHandler(LDSnapshotTaker::alertClass(), this,
 		(TCAlertCallback)&AlertHandler::snapshotTakerAlertCallback);
+	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),this,
+		(TCAlertCallback)&AlertHandler::modelAlertCallback);
 }
 
 AlertHandler::~AlertHandler(void)
@@ -114,3 +116,11 @@ void AlertHandler::snapshotTakerAlertCallback(TCAlert *alert)
 	}
 }
 
+void AlertHandler::modelAlertCallback(TCAlert *alert)
+{
+	if (m_mvw)
+	{
+		m_mvw->modeltree->modelAlertCallback(alert);
+		m_mvw->boundingbox->modelAlertCallback(alert);
+		m_mvw->mpdmodel->modelAlertCallback(alert);	}
+}

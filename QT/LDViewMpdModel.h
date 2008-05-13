@@ -25,13 +25,13 @@ public:
 	void updateData();
 	void showMpdModel(int);
 	LDrawModelViewer *getModelViewer(void);
+    void modelAlertCallback(TCAlert *alert);
 
 
 public slots:
 	void doMpdSelected(int i) { showMpdModel(i);}
 
 protected:
-    void modelAlertCallback(TCAlert *alert);
     void setModel(LDLMainModel *model);
     void setModelWindow(ModelViewerWidget *modelWindow);
 
