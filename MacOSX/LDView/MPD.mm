@@ -97,13 +97,28 @@
 	return [modelNames objectAtIndex:rowIndex];
 }
 
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+- (void)setMpdChildIndex:(int)index
 {
 	LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
 	
 	if (modelViewer)
 	{
-		modelViewer->setMpdChildIndex([tableView selectedRow]);
+		modelViewer->setMpdChildIndex(index);
+	}
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+	[self setMpdChildIndex:[tableView selectedRow]];
+}
+
+- (void)close
+{
+	[super close];
+	[self setMpdChildIndex:0];
+	if ([modelNames count] > 0)
+	{
+		[tableView selectRow:0 byExtendingSelection:NO];
 	}
 }
 
