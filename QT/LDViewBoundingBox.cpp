@@ -12,8 +12,6 @@ BoundingBox::BoundingBox(ModelViewerWidget *modelWidget)
 	m_modelWindow(modelWidget),
 	m_model(NULL)
 {
-	 TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),
-		 (TCObject*)this,(TCAlertCallback)&BoundingBox::modelAlertCallback);
 }
 
 

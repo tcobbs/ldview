@@ -19,8 +19,6 @@ MpdModel::MpdModel(ModelViewerWidget *modelViewer)
 	m_modelWindow(modelViewer),
     mainmodel(NULL)
 {
-	TCAlertManager::registerHandler(LDrawModelViewer::loadAlertClass(),
-		(TCObject*)this,(TCAlertCallback)&MpdModel::modelAlertCallback);
 }
 
 MpdModel::~MpdModel() { }

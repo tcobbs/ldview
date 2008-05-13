@@ -33,6 +33,7 @@ public slots:
 	void model(void) {doLineCheck(modelButton,LDLLineTypeModel);}
 	void empty(void) {doLineCheck(emptyButton,LDLLineTypeEmpty);}
 	void comment(void) {doLineCheck(commentButton,LDLLineTypeComment);}
+    void modelAlertCallback(TCAlert *alert);
 
 protected:
     void doLineCheck(QCheckBox *button, LDLLineType lineType);
@@ -41,7 +42,6 @@ protected:
 	void addChildren(QListViewItem *parent, const LDModelTree *tree);
 	void addLine(QListViewItem *parent, const LDModelTree *tree);
 	void updateLineChecks(void);
-    void modelAlertCallback(TCAlert *alert);
     void setModel(LDLMainModel *model);
     void setModelWindow(ModelViewerWidget *modelWindow);
 
