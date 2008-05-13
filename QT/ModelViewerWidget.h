@@ -15,6 +15,7 @@
 #include <LDLib/LDInputHandler.h>
 #include <LDLib/LDSnapshotTaker.h>
 #include "LDViewBoundingBox.h"
+#include "LDViewMpdModel.h"
 #include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
 
@@ -92,6 +93,7 @@ public:
 	void doPartList();
 	void doModelTree();
 	void doBoundingBox();
+	void doMpdModel();
 	void doHelpOpenGLDriverInfo(void);
 	void doHelpContents(void);
 	void doHelpAbout(void);
@@ -277,6 +279,7 @@ protected:
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
     BoundingBox *boundingbox;
+	MpdModel *mpdmodel;
 	LatitudeLongitude *latitudelongitude;
 	LDViewModelTree *modeltree;
 	AboutPanel *aboutPanel;

@@ -197,6 +197,7 @@
         <action name="toolsPartListAction"/>
         <action name="toolsModelTreeAction"/>
         <action name="toolsBoundingBoxAction"/>
+        <action name="toolsMpdModelSelectionAction"/>
         <separator/>
         <action name="showViewInfoAction"/>
         <action name="showPovCameraAction"/>
@@ -1071,6 +1072,14 @@
             <string>Model Bounding Box...</string>
         </property>
     </action>
+    <action>
+        <property name="name">
+            <cstring>toolsMpdModelSelectionAction</cstring>
+        </property>
+        <property name="text">
+            <string>MPD Model Selection...</string>
+        </property>
+    </action>
 </actions>
 <images>
 </images>
@@ -1375,6 +1384,12 @@
         <receiver>LDView</receiver>
         <slot>toolsBoundingBox()</slot>
     </connection>
+    <connection>
+        <sender>toolsMpdModelSelectionAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>toolsMpdModelSelection()</slot>
+    </connection>
 </connections>
 <includes>
     <include location="local" impldecl="in implementation">LDView.ui.h</include>
@@ -1427,6 +1442,7 @@
     <slot>toolsPartList()</slot>
     <slot>toolsModelTree()</slot>
     <slot>toolsBoundingBox()</slot>
+    <slot>toolsMpdModelSelection()</slot>
     <slot>latitudeRotation(bool)</slot>
     <slot>prevStep()</slot>
     <slot>nextStep()</slot>

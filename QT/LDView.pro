@@ -1,11 +1,12 @@
 SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
-		   LDViewModelTree.cpp LDViewBoundingBox.cpp LDViewLatitudeLongitude.cpp
+		   LDViewModelTree.cpp LDViewBoundingBox.cpp \
+		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h qt4wrapper.h \
-		   LDViewBoundingBox.h LDViewLatitudeLongitude.h
+		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h
 
 UI_DIR = .ui
 MOC_DIR = .moc
@@ -94,7 +95,7 @@ FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui \
 		  AboutPanel.ui ErrorPanel.ui ImageHolder.ui ExtraDirPanel.ui \
 		  HelpPanel.ui SnapshotSettingsPanel.ui PartList.ui \
 		  JpegOptionsPanel.ui ModelTreePanel.ui BoundingBoxPanel.ui \
-		  LatitudeLongitude.ui
+		  LatitudeLongitude.ui MpdModelSelectionPanel.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png \
 		  images/toolbar_reload.png images/toolbar_wireframe.png \
