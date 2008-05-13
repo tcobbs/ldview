@@ -35,6 +35,9 @@
 		1F2CAD490D8F63A600A98C9A /* ModelTree.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2CAD470D8F63A600A98C9A /* ModelTree.nib */; };
 		1F2CAD4C0D8F63D900A98C9A /* ModelTree.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CAD4B0D8F63D900A98C9A /* ModelTree.mm */; };
 		1F2CAD9A0D8F6EFB00A98C9A /* ModelTreeItem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CAD990D8F6EFB00A98C9A /* ModelTreeItem.mm */; };
+		1F2DD09F0DD933CD00C675D7 /* MPD.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD09D0DD933CD00C675D7 /* MPD.nib */; };
+		1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD0A20DD9368F00C675D7 /* MPD.mm */; };
+		1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E59FE0DA03D1200D83112 /* Updater.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F3E59FC0DA03D1200D83112 /* Updater.nib */; };
@@ -236,6 +239,11 @@
 		1F2CAD4B0D8F63D900A98C9A /* ModelTree.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelTree.mm; sourceTree = "<group>"; };
 		1F2CAD980D8F6EFB00A98C9A /* ModelTreeItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelTreeItem.h; sourceTree = "<group>"; };
 		1F2CAD990D8F6EFB00A98C9A /* ModelTreeItem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ModelTreeItem.mm; sourceTree = "<group>"; };
+		1F2DD09E0DD933CD00C675D7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MPD.nib; sourceTree = "<group>"; };
+		1F2DD0A10DD9368F00C675D7 /* MPD.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MPD.h; sourceTree = "<group>"; };
+		1F2DD0A20DD9368F00C675D7 /* MPD.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = MPD.mm; sourceTree = "<group>"; };
+		1F2DD1740DD9531A00C675D7 /* SideDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawer.h; sourceTree = "<group>"; };
+		1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SideDrawer.mm; sourceTree = "<group>"; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F3E59EB0DA03AA200D83112 /* UpdaterAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdaterAlertHandler.h; sourceTree = "<group>"; };
 		1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdaterAlertHandler.mm; sourceTree = "<group>"; };
@@ -407,6 +415,8 @@
 				1F2CAD990D8F6EFB00A98C9A /* ModelTreeItem.mm */,
 				1F240DA30A58E28700691116 /* ModelWindow.h */,
 				1F240DA40A58E28700691116 /* ModelWindow.mm */,
+				1F2DD0A10DD9368F00C675D7 /* MPD.h */,
+				1F2DD0A20DD9368F00C675D7 /* MPD.mm */,
 				1F20DB170A60C39D00F677AC /* OCLocalStrings.h */,
 				1F20DB180A60C39D00F677AC /* OCLocalStrings.mm */,
 				1F20DAE70A60BEF900F677AC /* OCUserDefaults.h */,
@@ -419,6 +429,8 @@
 				1FF711910DAB5164001ECA67 /* PrintAccessoryViewOwner.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
+				1F2DD1740DD9531A00C675D7 /* SideDrawer.h */,
+				1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */,
 				1F9BB9040D9F351500B06DDE /* SnapshotAlertHandler.h */,
 				1F9BB9050D9F351500B06DDE /* SnapshotAlertHandler.mm */,
 				1F7472150CC32ABA00D6DB68 /* SnapshotTaker.h */,
@@ -525,6 +537,7 @@
 				1FF7118D0DAB50DE001ECA67 /* PrintAccessoryView.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
+				1F2DD09D0DD933CD00C675D7 /* MPD.nib */,
 			);
 			name = Nibs;
 			sourceTree = "<group>";
@@ -858,6 +871,7 @@
 				1FD9C8300DBC4EEF00F10F45 /* BoundingBox.nib in Resources */,
 				1FD9C8E40DBD880D00F10F45 /* GoToStep.nib in Resources */,
 				1FD9CAEC0DC3945000F10F45 /* LatLon.nib in Resources */,
+				1F2DD09F0DD933CD00C675D7 /* MPD.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -913,6 +927,8 @@
 				1FD9C8E70DBD881A00F10F45 /* GoToStep.m in Sources */,
 				1FD9CAEF0DC3945D00F10F45 /* LatLon.mm in Sources */,
 				1F170F1B0DD03B3B0024E40E /* gl2ps.c in Sources */,
+				1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */,
+				1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,6 +980,14 @@
 				1F2CAD480D8F63A600A98C9A /* English */,
 			);
 			name = ModelTree.nib;
+			sourceTree = "<group>";
+		};
+		1F2DD09D0DD933CD00C675D7 /* MPD.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F2DD09E0DD933CD00C675D7 /* English */,
+			);
+			name = MPD.nib;
 			sourceTree = "<group>";
 		};
 		1F3E59FC0DA03D1200D83112 /* Updater.nib */ = {

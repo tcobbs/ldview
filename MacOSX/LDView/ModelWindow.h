@@ -9,6 +9,7 @@
 @class SnapshotTaker;
 @class SaveSnapshotViewOwner;
 @class ModelTree;
+@class MPD;
 
 class LDLError;
 class TCProgressAlert;
@@ -72,6 +73,7 @@ class LDPartsList;
 	SnapshotTaker *snapshotTaker;
 	SaveSnapshotViewOwner *saveSnapshotViewOwner;
 	ModelTree *modelTree;
+	MPD *mpd;
 	bool loadCanceled;
 	bool loading;
 	bool parsing;
@@ -140,5 +142,6 @@ class LDPartsList;
 - (IBAction)partsList:(id)sender;
 
 - (bool)isModelTreeOpen;
+- (bool)isMPDOpen;
 
 @end

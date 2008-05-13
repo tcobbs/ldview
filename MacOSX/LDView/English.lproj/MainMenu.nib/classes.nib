@@ -13,7 +13,7 @@
                 goToStep = id; 
                 latLongRotation = id; 
                 modelTree = id; 
-                myAction = id; 
+                mpd = id; 
                 openGLDriverInfo = id; 
                 partsList = id; 
                 reload = id; 
