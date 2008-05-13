@@ -13,6 +13,7 @@
 #import "SaveSnapshotViewOwner.h"
 #import "PartsList.h"
 #import "ModelTree.h"
+#import "MPD.h"
 #import "AlertHandler.h"
 #import "LDViewCategories.h"
 #import "OpenGLDriverInfo.h"
@@ -74,6 +75,7 @@ enum
 	[snapshotTaker release];
 	[saveSnapshotViewOwner release];
 	[modelTree release];
+	[mpd release];
 	[initialTitle release];
 	[stepToolbarControls release];
 	[self killPolling];
@@ -1505,6 +1507,15 @@ enum
 	[modelTree toggle];
 }
 
+- (IBAction)mpd:(id)sender
+{
+	if (!mpd)
+	{
+		mpd = [[MPD alloc] initWithParent:self];
+	}
+	[mpd toggle];
+}
+
 - (IBAction)partsList:(id)sender
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
@@ -1538,6 +1549,11 @@ enum
 - (bool)isModelTreeOpen
 {
 	return [modelTree isOpen];
+}
+
+- (bool)isMPDOpen
+{
+	return [mpd isOpen];
 }
 
 - (void)copyStringToPasteboard:(NSString *)string

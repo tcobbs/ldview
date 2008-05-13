@@ -4308,7 +4308,7 @@ LDLModel *LDrawModelViewer::getMpdChild(void)
 {
 	LDLModelVector &mpdModels = mainModel->getMpdModels();
 
-	if ((int)mpdModels.size() > mpdChildIndex)
+	if ((int)mpdModels.size() > mpdChildIndex && mpdChildIndex >= 0)
 	{
 		return mpdModels[mpdChildIndex];
 	}

@@ -22,26 +22,10 @@
 
 @implementation ModelTree
 
-- (id) initWithParent:(ModelWindow *)parent
-{
-	self = [super init];
-	if (self != nil)
-	{
-		modelWindow = parent;	// Don't retain; we're a child.
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"ModelLoaded" object:modelWindow];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(modelChanged:) name:@"ModelLoadCanceled" object:modelWindow];
-		[NSBundle loadNibNamed:@"ModelTree.nib" owner:self];
-	}
-	return self;
-}
-
 - (void)dealloc
 {
-	[drawer release];
-	[contentView release];
 	[rootModelTreeItem release];
 	TCObject::release(modelTree);
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super dealloc];
 }
 
@@ -121,7 +105,7 @@
 
 - (void)awakeFromNib
 {
-	float width = [OCUserDefaults floatForKey:@"ModelTreeDrawerWidth" defaultValue:-1.0f sessionSpecific:NO];
+	float width = [OCUserDefaults floatForKey:[self widthKey] defaultValue:-1.0f sessionSpecific:NO];
 
 	[outlineView setIntercellSpacing:NSMakeSize(0.0f, 0.0f)];
 	showHideStartY = [showHideOptionsButton frame].origin.y;
@@ -141,58 +125,6 @@
 		optionsShown = NO;
 		[showHideOptionsButton setState:NSOnState];
 		//[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
-	}
-}
-
-- (void)fixWindowSizeIfNecessary
-{
-	NSWindow *window = [modelWindow window];
-	NSRect windowFrame = [window frame];
-	NSSize windowSize = windowFrame.size;
-	NSRect visibleFrame = [[window screen] visibleFrame];
-	NSSize screenSize = visibleFrame.size;
-	float drawerWidth = [drawer contentSize].width + [drawer leadingOffset] + [drawer trailingOffset];
-	
-	if (windowSize.width + drawerWidth > screenSize.width)
-	{
-		windowFrame.size.width = screenSize.width - drawerWidth;
-		windowFrame.origin.x = visibleFrame.origin.x;
-		[window setFrame:windowFrame display:YES];
-	}
-}
-
-- (void)open
-{
-	[self fixWindowSizeIfNecessary];
-	[drawer open];
-}
-
-- (void)close
-{
-	[drawer close];
-}
-
-- (bool)isOpen
-{
-	switch ([drawer state])
-	{
-		case NSDrawerOpenState:
-		case NSDrawerOpeningState:
-			return true;
-		default:
-			return false;
-	}
-}
-
-- (void)toggle
-{
-	if ([self isOpen])
-	{
-		[self close];
-	}
-	else
-	{
-		[self open];
 	}
 }
 
@@ -264,17 +196,10 @@
 		[self modelChanged];
 	}
 }
+
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
 	[self resizeIfNeeded:[[notification userInfo] objectForKey:@"NSObject"]];
-}
-
-// NSDrawer delegate methods
-
-- (NSSize)drawerWillResizeContents:(NSDrawer *)sender toSize:(NSSize)contentSize
-{
-	[OCUserDefaults setFloat:contentSize.width forKey:@"ModelTreeDrawerWidth" sessionSpecific:NO];
-	return contentSize;
 }
 
 - (void)setupAnimationDict:(NSMutableDictionary *)dict view:(NSView *)view endRect:(NSRect)endRect showHide:(float)dir
