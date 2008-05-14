@@ -1055,6 +1055,9 @@
         <property name="text">
             <string>Part List...</string>
         </property>
+        <property name="accel">
+            <string>Ctrl+L</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -1062,6 +1065,9 @@
         </property>
         <property name="text">
             <string>Model Tree...</string>
+        </property>
+        <property name="accel">
+            <string>Ctrl+T</string>
         </property>
     </action>
     <action>
@@ -1071,6 +1077,9 @@
         <property name="text">
             <string>Model Bounding Box...</string>
         </property>
+        <property name="accel">
+            <string>Ctrl+B</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -1078,6 +1087,9 @@
         </property>
         <property name="text">
             <string>MPD Model Selection...</string>
+        </property>
+        <property name="accel">
+            <string>Ctrl+M</string>
         </property>
     </action>
 </actions>
