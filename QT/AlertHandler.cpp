@@ -122,5 +122,17 @@ void AlertHandler::modelAlertCallback(TCAlert *alert)
 	{
 		m_mvw->modeltree->modelAlertCallback(alert);
 		m_mvw->boundingbox->modelAlertCallback(alert);
-		m_mvw->mpdmodel->modelAlertCallback(alert);	}
+		m_mvw->mpdmodel->modelAlertCallback(alert);
+		if (alert->getSender() == (TCAlertSender*)m_mvw->getModelViewer())
+		{
+			if (ucstrcmp(alert->getMessageUC(), _UC("ModelLoaded")) == 0||
+				ucstrcmp(alert->getMessageUC(), _UC("ModelLoadCenceled")) == 0||
+				ucstrcmp(alert->getMessageUC(), _UC("ModelParsed")) == 0||
+				ucstrcmp(alert->getMessageUC(), _UC("ModelParseCanceled")) == 0)
+			{
+				m_mvw->updateStep();
+			}
+		}
+	}
 }
+
