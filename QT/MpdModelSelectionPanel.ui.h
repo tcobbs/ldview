@@ -1,4 +1,4 @@
-void MpdModelSelectionPanel::doMpdSelected(int  i )
+void MpdModelSelectionPanel::doMpdSelected(int  /*i*/ )
 {
 }
 
