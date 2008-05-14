@@ -761,6 +761,7 @@ void ModelViewerWidget::doFileOpen(void)
 		char *initialDir = Preferences::getLastOpenPath();
 
 		QDir::setCurrent(initialDir);
+		delete initialDir;
 		if (!fileDialog)
 		{
 			fileDialog = new QFileDialog(".",
@@ -2610,6 +2611,8 @@ bool ModelViewerWidget::grabImage(
 	saveImageHeight = imageHeight;
 	renderPixmap(newWidth, newHeight);
 	makeCurrent();
+	TREGLExtensions::setup();
+	modelViewer->openGlWillEnd();
 	saving = false;
 	mwidth = origWidth;
 	mheight = origHeight;
