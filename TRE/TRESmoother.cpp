@@ -200,7 +200,8 @@ void TRESmoother::finish(void)
 									}
 									// !!! TODO: Fix this. It's broken, and I'm
 									// not sure why.  Part 45708 breaks it.
-									otherList->removeValue((*otherList)[l]);
+									otherList->removeValueAtIndex(
+										(*otherList)[l]);
 								}
 							}
 						}

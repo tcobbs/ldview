@@ -2142,7 +2142,7 @@ void TCUserDefaults::defSetValueForKey(const LPBYTE value, int length,
 
 	if (index >= 0)
 	{
-		commandLine->removeString(index);
+		commandLine->removeStringAtIndex(index);
 	}
 	if (sessionSpecific)
 	{

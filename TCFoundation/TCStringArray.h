@@ -9,7 +9,7 @@
 
 typedef char ** TCCharStarStar;
 
-class TCExport TCStringArray : public TCArray
+class TCExport TCStringArray : public TCArray<>
 {
 	public:
 		explicit TCStringArray(unsigned int = 0, int = 1);
@@ -22,7 +22,7 @@ class TCExport TCStringArray : public TCArray
 		virtual int appendString(const char*, unsigned int);
 		virtual int indexOfString(const char*);
 		virtual int removeString(const char*);
-		virtual int removeString(int);
+		virtual int removeStringAtIndex(int);
 		virtual void removeAll(void);
 		virtual const char* constStringAtIndex(unsigned int) const;
 		virtual char* stringAtIndex(unsigned int);

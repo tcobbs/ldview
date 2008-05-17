@@ -398,7 +398,7 @@ void TREColoredShapeGroup::cleanupTransparent(void)
 
 			for (j = 0; j < indexCount; j++)
 			{
-				indices->removeValue((*transparentIndices)[j]);
+				indices->removeValueAtIndex((*transparentIndices)[j]);
 			}
 		}
 		m_transparentIndices->release();
@@ -417,7 +417,7 @@ void TREColoredShapeGroup::cleanupTransparent(void)
 
 			for (j = 0; j < stripCountCount; j++)
 			{
-				stripCounts->removeValue((*transparentStripCounts)[j]);
+				stripCounts->removeValueAtIndex((*transparentStripCounts)[j]);
 			}
 		}
 		m_transparentStripCounts->release();

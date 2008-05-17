@@ -11,7 +11,7 @@
 #endif // WIN32
 
 TCStringArray::TCStringArray(unsigned int allocated, int caseSensitive)
-			  :TCArray(allocated),
+			  :TCArray<>(allocated),
 			   caseSensitive(caseSensitive)
 {
 #ifdef _LEAK_DEBUG
@@ -21,7 +21,7 @@ TCStringArray::TCStringArray(unsigned int allocated, int caseSensitive)
 
 TCStringArray::TCStringArray(const TCCharStarStar items, int numItems,
 							 int caseSensitive)
-			  :TCArray(numItems),
+			  :TCArray<>(numItems),
 			   caseSensitive(caseSensitive)
 {
 #ifdef _LEAK_DEBUG
@@ -45,7 +45,7 @@ void TCStringArray::dealloc(void)
 	{
 		delete (char*)(items[i]);
 	}
-	TCArray::dealloc();
+	TCArray<>::dealloc();
 }
 
 int TCStringArray::addString(const char* newString)
@@ -115,15 +115,15 @@ int TCStringArray::indexOfString(const char* string)
 
 int TCStringArray::removeString(const char* string)
 {
-	return removeString(indexOfString(string));
+	return removeStringAtIndex(indexOfString(string));
 }
 
-int TCStringArray::removeString(int index)
+int TCStringArray::removeStringAtIndex(int index)
 {
 	if (index >= 0 && (unsigned)index < count)
 	{
 		delete stringAtIndex(index);
-		return removeItem(index);
+		return removeItemAtIndex(index);
 	}
 	else
 	{
@@ -135,7 +135,7 @@ void TCStringArray::removeAll(void)
 {
 	while (count)
 	{
-		removeString(count - 1);
+		removeStringAtIndex(count - 1);
 	}
 }
 

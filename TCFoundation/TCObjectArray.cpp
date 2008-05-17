@@ -9,7 +9,7 @@
 #endif // _DEBUG
 
 TCObjectArray::TCObjectArray(unsigned int allocated)
-				  :TCArray(allocated)
+				  :TCArray<>(allocated)
 {
 	if (allocated)
 	{
@@ -21,7 +21,7 @@ TCObjectArray::TCObjectArray(unsigned int allocated)
 }
 
 TCObjectArray::TCObjectArray(const TCObjectArray &other)
-	:TCArray(other.count)
+	:TCArray<>(other.count)
 {
 	unsigned int i;
 
@@ -52,7 +52,7 @@ void TCObjectArray::dealloc(void)
 	{
 		TCObject::release(objectAtIndex(i));
 	}
-	TCArray::dealloc();
+	TCArray<>::dealloc();
 }
 
 void TCObjectArray::addObject(TCObject* newObject)
@@ -112,20 +112,20 @@ int TCObjectArray::indexOfObject(TCObject* object) const
 
 int TCObjectArray::removeObject(TCObject* object)
 {
-	return removeObject(indexOfObject(object));
+	return removeObjectAtIndex(indexOfObject(object));
 }
 
 int TCObjectArray::removeObjectIdenticalTo(TCObject* object)
 {
-	return removeObject(indexOfObjectIdenticalTo(object));
+	return removeObjectAtIndex(indexOfObjectIdenticalTo(object));
 }
 
-int TCObjectArray::removeObject(int index)
+int TCObjectArray::removeObjectAtIndex(int index)
 {
 	if (index >= 0 && (unsigned)index < count)
 	{
 		TCObject::release(objectAtIndex(index));
-		return removeItem(index);
+		return removeItemAtIndex(index);
 	}
 	else
 	{
@@ -137,7 +137,7 @@ void TCObjectArray::removeAll(void)
 {
 	while (count)
 	{
-		removeObject(count - 1);
+		removeObjectAtIndex(count - 1);
 	}
 }
 
@@ -166,45 +166,45 @@ TCObject *TCObjectArray::copy(void) const
 	return new TCObjectArray(*this);
 }
 
-void TCObjectArray::addItem(void* newItem)
-{
-	TCArray::addItem(newItem);
-}
-
-void TCObjectArray::insertItem(void* newItem, unsigned int index)
-{
-	TCArray::insertItem(newItem, index);
-}
-
-int TCObjectArray::replaceItem(void* newItem, unsigned int index)
-{
-	return TCArray::replaceItem(newItem, index);
-}
-
-int TCObjectArray::indexOfItem(void* item) const
-{
-	return TCArray::indexOfItem(item);
-}
-
-int TCObjectArray::removeItem(void* item)
-{
-	return TCArray::removeItem(item);
-}
-
-int TCObjectArray::removeItem(int index)
-{
-	return TCArray::removeItem(index);
-}
-
-void* TCObjectArray::itemAtIndex(unsigned int index)
-{
-	return TCArray::itemAtIndex(index);
-}
-
-const void* TCObjectArray::itemAtIndex(unsigned int index) const
-{
-	return TCArray::itemAtIndex(index);
-}
+//void TCObjectArray::addItem(void* newItem)
+//{
+//	TCArray::addItem(newItem);
+//}
+//
+//void TCObjectArray::insertItem(void* newItem, unsigned int index)
+//{
+//	TCArray::insertItem(newItem, index);
+//}
+//
+//int TCObjectArray::replaceItem(void* newItem, unsigned int index)
+//{
+//	return TCArray::replaceItem(newItem, index);
+//}
+//
+//int TCObjectArray::indexOfItem(void* item) const
+//{
+//	return TCArray::indexOfItem(item);
+//}
+//
+//int TCObjectArray::removeItem(void* item)
+//{
+//	return TCArray::removeItem(item);
+//}
+//
+//int TCObjectArray::removeItem(int index)
+//{
+//	return TCArray::removeItem(index);
+//}
+//
+//void* TCObjectArray::itemAtIndex(unsigned int index)
+//{
+//	return TCArray::itemAtIndex(index);
+//}
+//
+//const void* TCObjectArray::itemAtIndex(unsigned int index) const
+//{
+//	return TCArray::itemAtIndex(index);
+//}
 
 void TCObjectArray::sort(void)
 {

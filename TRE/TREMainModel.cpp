@@ -1911,7 +1911,7 @@ TREModel *TREMainModel::getCurGeomModel(void)
 
 void TREMainModel::nextStep(void)
 {
-	if ((m_stepCounts.size() > 0 &&
+	if (m_subModels == NULL || (m_stepCounts.size() > 0 &&
 		m_subModels->getCount() == m_stepCounts.back()) ||
 		(m_stepCounts.size() == 0 && m_subModels->getCount() == 0))
 	{

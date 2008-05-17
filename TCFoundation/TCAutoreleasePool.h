@@ -3,7 +3,7 @@
 
 #include <TCFoundation/TCObject.h>
 
-class TCArray;
+template <class Type> class TCArray;
 
 class TCAutoreleasePool
 {

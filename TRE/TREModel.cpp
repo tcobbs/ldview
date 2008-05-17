@@ -3040,7 +3040,7 @@ void TREModel::flattenNonUniform(void)
 					flatten(newModel, subModel->getMatrix(), 0, false,
 						0, false, true);
 				}
-				m_subModels->removeObject(i);
+				m_subModels->removeObjectAtIndex(i);
 				debugPrintf("Flattened non-uniform sub-model: %g.\n",
 					determinant);
 				if (this == m_mainModel)
