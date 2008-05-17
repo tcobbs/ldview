@@ -1729,7 +1729,7 @@ void ModelWindow::clearErrors(void)
 /*
 	while (errors->getCount())
 	{
-		errors->removeObject(0);
+		errors->removeObjectAtIndex(0);
 	}
 */
 	clearErrorTree();

@@ -157,8 +157,8 @@ void TCAlertManager::defUnregisterHandler(const char *alertClass,
 			{
 				TCAlertCallback *callbackPointer = (*callbacks)[i];
 
-				handlers->removePointer(i);
-				callbacks->removePointer(i);
+				handlers->removePointerAtIndex(i);
+				callbacks->removePointerAtIndex(i);
 				// As mentioned above, when I used new and delete, the delete
 				// that I would have performed here crashed.
 				free(callbackPointer);
@@ -186,8 +186,8 @@ void TCAlertManager::defUnregisterHandler(TCObject *handler)
 			{
 				TCAlertCallback *callbackPointer = (*callbacks)[j];
 
-				handlers->removePointer(j);
-				callbacks->removePointer(j);
+				handlers->removePointerAtIndex(j);
+				callbacks->removePointerAtIndex(j);
 				// As mentioned above, when I used new and delete, the delete
 				// that I would have performed here crashed.
 				free(callbackPointer);

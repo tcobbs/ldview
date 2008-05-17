@@ -24,7 +24,7 @@ CUIPropertySheet::CUIPropertySheet(CUCSTR windowTitle, HINSTANCE hInstance):
 	hPropSheet(NULL),
 	hwndArray(new CUIHwndArray),
 	hpageArray(new CUIHPropSheetPageArray),
-	applyEnabledArray(new TCArray),
+	applyEnabledArray(new TCArray<>),
 	isModeless(false)
 {
 #ifdef _LEAK_DEBUG

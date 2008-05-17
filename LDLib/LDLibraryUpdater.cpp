@@ -780,7 +780,7 @@ void LDLibraryUpdater::extractUpdates(bool *aborted)
 			if (strcasecmp(urlFile, downloadFile) == 0)
 			{
 				extractUpdate(filename);
-				m_downloadList->removeString(j);
+				m_downloadList->removeStringAtIndex(j);
 				sendExtractProgress(aborted);
 				break;
 			}
@@ -830,7 +830,7 @@ void LDLibraryUpdater::processUpdateQueue(void)
 	{
 		TCWebClient *webClient = new TCWebClient((*m_updateQueue)[0]);
 
-		m_updateQueue->removeString(0);
+		m_updateQueue->removeStringAtIndex(0);
 		webClient->setOwner(this);
 		webClient->setFinishURLMemberFunction(
 			(WebClientFinishMemberFunction)(&LDLibraryUpdater::updateDlFinish));
@@ -913,7 +913,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 		{
 			finishedWebClient = (*m_finishedWebClients)[0];
 			finishedWebClient->retain();
-			m_finishedWebClients->removeObject(0);
+			m_finishedWebClients->removeObjectAtIndex(0);
 			if (finishedWebClient->getAborted())
 			{
 				*aborted = true;
@@ -979,7 +979,7 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 			lock.unlock();
 			webClient->getFetchThread()->join();
 			lock.lock();
-			m_webClients->removeObject(index);
+			m_webClients->removeObjectAtIndex(index);
 		}
 	}
 }

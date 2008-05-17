@@ -33,8 +33,8 @@ template <class Type> class TCTypedObjectArray : public TCObjectArray
 			{ return TCObjectArray::removeObject(object); }
 		int removeObjectIdenticalTo(Type* object)
 			{ return TCObjectArray::removeObjectIdenticalTo(object); }
-		int removeObject(int index)
-			{ return TCObjectArray::removeObject(index); }
+		int removeObjectAtIndex(int index)
+			{ return TCObjectArray::removeObjectAtIndex(index); }
 		Type* objectAtIndex(unsigned int index)
 			{ return (Type*)TCObjectArray::objectAtIndex(index); }
 		const Type* objectAtIndex(unsigned int index) const

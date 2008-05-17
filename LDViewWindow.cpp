@@ -1311,7 +1311,7 @@ BOOL LDViewWindow::doRemoveExtraDir(void)
 
 	if (index != LB_ERR)
 	{
-		extraSearchDirs->removeString(index);
+		extraSearchDirs->removeStringAtIndex(index);
 		SendMessage(hExtraDirsList, LB_DELETESTRING, index, 0);
 		if (index >= extraSearchDirs->getCount())
 		{
@@ -1385,7 +1385,7 @@ BOOL LDViewWindow::doMoveExtraDirUp(void)
 		return TRUE;
 	}
 	extraDir = copyString((*extraSearchDirs)[index]);
-	extraSearchDirs->removeString(index);
+	extraSearchDirs->removeStringAtIndex(index);
 	SendMessage(hExtraDirsList, LB_DELETESTRING, index, 0);
 	extraSearchDirs->insertString(extraDir, index - 1);
 	// ToDo: Unicode ?Maybe: filename
@@ -1407,7 +1407,7 @@ BOOL LDViewWindow::doMoveExtraDirDown(void)
 		return TRUE;
 	}
 	extraDir = copyString((*extraSearchDirs)[index]);
-	extraSearchDirs->removeString(index);
+	extraSearchDirs->removeStringAtIndex(index);
 	SendMessage(hExtraDirsList, LB_DELETESTRING, index, 0);
 	extraSearchDirs->insertString(extraDir, index + 1);
 	// ToDo: Unicode ?Maybe: filename
@@ -4797,7 +4797,7 @@ void LDViewWindow::setLastOpenFile(const char* filename, char* pathKey)
 				// Insert before removal.  Since the one being removed could
 				// have the same pointer value as the string in the array, we
 				// could otherwise access a pointer after it had been deleted.
-				recentFiles->removeString(index + 1);
+				recentFiles->removeStringAtIndex(index + 1);
 			}
 			recordRecentFiles();
 		}

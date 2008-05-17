@@ -83,8 +83,8 @@ int TCDictionary::removeObjectForKey(const char* key)
 	}
 	else
 	{
-		keys->removeString(index);
-		objects->removeObject(index);
+		keys->removeStringAtIndex(index);
+		objects->removeObjectAtIndex(index);
 		return 1;
 	}
 }

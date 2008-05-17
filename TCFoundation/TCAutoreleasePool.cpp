@@ -158,7 +158,7 @@ void TCAutoreleasePool::poolProcessReleases(void)
 			TCObject* theObject = (TCObject*)deletions->itemAtIndex(i);
 
 			delete theObject;
-			deletions->removeItem(i);
+			deletions->removeItemAtIndex(i);
 		}
 	}
 #endif // WIN32 && _DEBUG

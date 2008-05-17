@@ -64,7 +64,7 @@ protected:
 	HWND hPropSheet;
 	CUIHwndArray *hwndArray;
 	CUIHPropSheetPageArray *hpageArray;
-	TCArray *applyEnabledArray;
+	TCArray<> *applyEnabledArray;
 	bool isModeless;
 
 	static CUIPropertySheet *globalCUIPropertySheet;

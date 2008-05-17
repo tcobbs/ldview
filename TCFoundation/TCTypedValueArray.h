@@ -7,42 +7,42 @@
 #pragma warning ( disable: 4710 )
 #endif // WIN32
 
-template <class Type> class TCTypedValueArray : public TCArray
+template <class Type> class TCTypedValueArray : public TCArray<Type>
 {
 	public:
 		explicit TCTypedValueArray(unsigned int count = 0)
-			:TCArray(count) {}
+			:TCArray<Type>(count) {}
 		TCTypedValueArray(const TCTypedValueArray<Type> &other)
-			:TCArray(other) {}
+			:TCArray<Type>(other) {}
 
 		virtual TCObject *copy(void) const
 		{
 			return new TCTypedValueArray<Type>(*this);
 		}
 		void addValue(Type value)
-			{ TCArray::addItem((void *)(long)value); }
+			{ TCArray<Type>::addItem(value); }
 		void insertValue(Type value, unsigned int index = 0)
-			{ TCArray::insertItem((void *)(long)value, index); }
+			{ TCArray<Type>::insertItem(value, index); }
 		int replaceValue(Type value, unsigned int index)
-			{ return TCArray::replaceItem((void *)(long)value, index); }
+			{ return TCArray<Type>::replaceItem(value, index); }
 		int indexOfValue(Type value) const
-			{ return TCArray::indexOfItem((void *)(long)value); }
-		int removeValue(int index)
-			{ return TCArray::removeItem(index); }
+			{ return TCArray<Type>::indexOfItem(value); }
+		int removeValueAtIndex(int index)
+			{ return TCArray<Type>::removeItemAtIndex(index); }
 		int removeValues(int index, int numValues)
-			{ return TCArray::removeItems(index, numValues); }
+			{ return TCArray<Type>::removeItems(index, numValues); }
 		Type valueAtIndex(unsigned int index)
-			{ return (Type)TCArray::itemAtIndex(index); }
+			{ return (Type)TCArray<Type>::itemAtIndex(index); }
 		const Type valueAtIndex(unsigned int index) const
-			{ return (const Type)TCArray::itemAtIndex(index); }
+			{ return (const Type)TCArray<Type>::itemAtIndex(index); }
 		Type operator[](unsigned int index)
-			{ return (Type)(long)TCArray::itemAtIndex(index); }
+			{ return TCArray<Type>::itemAtIndex(index); }
 		const Type operator[](unsigned int index) const
-			{ return (const Type)TCArray::itemAtIndex(index); }
+			{ return (const Type)TCArray<Type>::itemAtIndex(index); }
 		Type *getValues(void)
-			{ return (Type *)TCArray::getItems(); }
+			{ return (Type *)TCArray<Type>::getItems(); }
 		const Type *getValues(void) const
-			{ return (const Type *)TCArray::getItems(); }
+			{ return (const Type *)TCArray<Type>::getItems(); }
 		void sort(void)
 			{ sortUsingFunction(valueSortFunction); }
 	protected:

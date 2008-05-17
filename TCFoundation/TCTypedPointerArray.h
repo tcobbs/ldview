@@ -7,34 +7,34 @@
 #pragma warning ( disable: 4710 )
 #endif // WIN32
 
-template <class Type> class TCTypedPointerArray : public TCArray
+template <class Type> class TCTypedPointerArray : public TCArray<>
 {
 	public:
 		explicit TCTypedPointerArray(unsigned int count = 0)
-			:TCArray(count) {}
+			:TCArray<>(count) {}
 		TCTypedPointerArray(const TCTypedPointerArray<Type> &other)
-			:TCArray(other) {}
+			:TCArray<>(other) {}
 
 		virtual TCObject *copy(void) const
 		{
 			return new TCTypedPointerArray<Type>(*this);
 		}
 		void addPointer(Type pointer)
-			{ TCArray::addItem(pointer); }
+			{ TCArray<>::addItem(pointer); }
 		void insertPointer(Type pointer, unsigned int index = 0)
-			{ TCArray::insertItem(pointer, index); }
+			{ TCArray<>::insertItem(pointer, index); }
 		int replacePointer(Type pointer, unsigned int index)
-			{ return TCArray::replaceItem(pointer, index); }
+			{ return TCArray<>::replaceItem(pointer, index); }
 		int indexOfPointer(Type pointer)
-			{ return TCArray::indexOfItem(pointer); }
+			{ return TCArray<>::indexOfItem(pointer); }
 		int removePointer(Type pointer)
-			{ return TCArray::removeItem(pointer); }
-		int removePointer(int index)
-			{ return TCArray::removeItem(index); }
+			{ return TCArray<>::removeItem(pointer); }
+		int removePointerAtIndex(int index)
+			{ return TCArray<>::removeItemAtIndex(index); }
 		Type pointerAtIndex(unsigned int index)
-			{ return (Type)TCArray::itemAtIndex(index); }
+			{ return (Type)TCArray<>::itemAtIndex(index); }
 		Type operator[](unsigned int index)
-			{ return (Type)TCArray::itemAtIndex(index); }
+			{ return (Type)TCArray<>::itemAtIndex(index); }
 	protected:
 };
 
