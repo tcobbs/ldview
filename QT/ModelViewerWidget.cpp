@@ -799,7 +799,7 @@ void ModelViewerWidget::setLastOpenFile(const char *filename)
 			// Insert before removal.  Since the one being removed could have the same
 			// pointer value as the string in the array, we could otherwise access a
 			// pointer after it had been deleted.
-			recentFiles->removeString(index + 1);
+			recentFiles->removeStringAtIndex(index + 1);
 		}
 		recordRecentFiles();
 	}
