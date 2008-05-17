@@ -74,7 +74,7 @@ void ExtraDir::doDelExtraDir(void)
 		count=ExtraDirListView->count();
 	if (index!=-1)
 	{
-		extraSearchDirs->removeString(index);
+		extraSearchDirs->removeStringAtIndex(index);
 		ExtraDirListView->removeItem(index);
 		if (count==1)
 		{
@@ -107,7 +107,7 @@ void ExtraDir::doUpExtraDir(void)
 		ExtraDirListView->insertItem(tmp,index-1);
 		ExtraDirListView->setCurrentItem(index-1);
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
-		extraSearchDirs->removeString(index);
+		extraSearchDirs->removeStringAtIndex(index);
 		extraSearchDirs->insertString(extraDir,index-1);
 		delete extraDir;
 	}
@@ -125,7 +125,7 @@ void ExtraDir::doDownExtraDir(void)
 		ExtraDirListView->insertItem(tmp,index+1);
 		ExtraDirListView->setCurrentItem(index+1);
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
-		extraSearchDirs->removeString(index);
+		extraSearchDirs->removeStringAtIndex(index);
         extraSearchDirs->insertString(extraDir,index+1);
 		delete extraDir;
 	}
