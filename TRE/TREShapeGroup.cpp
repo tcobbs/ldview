@@ -637,8 +637,7 @@ void TREShapeGroup::drawConditionalLines(void)
 
 			if (showAllConditional && !showConditionalControlPoints)
 			{
-				activeIndices = indices;
-				indices->retain();
+				drawConditionalLines(indices);
 			}
 			else
 			{
