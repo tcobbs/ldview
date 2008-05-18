@@ -161,7 +161,10 @@ public:
 		}
 		else
 		{
-			return NULL;
+			Type retValue;
+
+			memset(&retValue, 0, sizeof(retValue));
+			return retValue;
 		}
 	}
 
@@ -173,7 +176,10 @@ public:
 		}
 		else
 		{
-			return NULL;
+			Type retValue;
+
+			memset(&retValue, 0, sizeof(retValue));
+			return retValue;
 		}
 	}
 
