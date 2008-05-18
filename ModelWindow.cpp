@@ -2264,27 +2264,13 @@ void ModelWindow::setupLighting(void)
 #ifndef TC_NO_UNICODE
 void ModelWindow::setStatusText(HWND hStatus, int part, const char *text)
 {
-	std::wstring temp;
-
-	if (text)
-	{
-		mbstowstring(temp, text);
-	}
-	setStatusText(hStatus, part, temp.c_str());
+	((LDViewWindow*)parentWindow)->setStatusText(hStatus, part, text);
 }
 #endif // TC_NO_UNICODE
 
 void ModelWindow::setStatusText(HWND hStatus, int part, CUCSTR text)
 {
-	UCCHAR oldText[1024];
-
-	sendMessageUC(hStatus, SB_GETTEXT, part, (LPARAM)oldText);
-	if (ucstrcmp(text, oldText) != 0)
-	{
-		sendMessageUC(hStatus, SB_SETTEXT, part, (LPARAM)text);
-		((LDViewWindow*)parentWindow)->redrawStatusBar();
-		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
-	}
+	((LDViewWindow*)parentWindow)->setStatusText(hStatus, part, text);
 }
 
 void ModelWindow::drawFPS(void)
@@ -2523,6 +2509,7 @@ void ModelWindow::doPaint(void)
 	{
 		forceRedraw();
 	}
+	((LDViewWindow *)parentWindow)->showStatusLatLon();
 }
 
 LRESULT ModelWindow::doNCDestroy(void)

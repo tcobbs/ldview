@@ -439,23 +439,31 @@ void LDViewWindow::forceShowStatusBar(bool value)
 	}
 }
 
-void LDViewWindow::showStatusIcon(bool examineMode)
+void LDViewWindow::showStatusIcon(bool examineMode, bool redraw /*= true*/)
 {
 	if ((showStatusBar || showStatusBarOverride) && hStatusBar)
 	{
 		HICON hModeIcon = hExamineIcon;
 		CUCSTR tipText = TCLocalStrings::get(_UC("ExamineMode"));
+		int iconPart = 2;
 
+		if (inLatLonMode())
+		{
+			iconPart = 3;
+			SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)NULL);
+			SendMessage(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)"");
+		}
 		if (!examineMode)
 		{
 			hModeIcon = hFlythroughIcon;
 			tipText = TCLocalStrings::get(_UC("FlyThroughMode"));
 		}
-		SendMessage(hStatusBar, SB_SETICON, 2, (LPARAM)hModeIcon);
-		sendMessageUC(hStatusBar, SB_SETTIPTEXT, 2, (LPARAM)tipText);
-		// For some reason, the status bar suddenly stopped redrawing
-		// itself after an icon change.
-		RedrawWindow(hWindow, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+		SendMessage(hStatusBar, SB_SETICON, iconPart, (LPARAM)hModeIcon);
+		sendMessageUC(hStatusBar, SB_SETTIPTEXT, iconPart, (LPARAM)tipText);
+		if (redraw)
+		{
+			redrawStatusBar();
+		}
 	}
 }
 
@@ -668,13 +676,142 @@ void LDViewWindow::createToolbar(void)
 	}
 }
 
-#include <tchar.h>
+bool LDViewWindow::inExamineMode(void)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer &&
+		modelViewer->getViewMode() == LDrawModelViewer::VMExamine)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool LDViewWindow::inLatLonMode(void)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (inExamineMode() && modelViewer &&
+		modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
+	{
+		return true;
+	}
+	return false;
+}
+
+// Note: static method
+int LDViewWindow::intRound(TCFloat value)
+{
+	if (value >= 0)
+	{
+		return (int)(value + 0.5f);
+	}
+	else
+	{
+		return (int)(value - 0.5f);
+	}
+}
+
+void LDViewWindow::showStatusLatLon(bool redraw /*= true*/)
+{
+	if (hStatusBar)
+	{
+		if (inLatLonMode())
+		{
+			LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+			int lat = intRound(modelViewer->getExamineLatitude());
+			int lon = intRound(modelViewer->getExamineLongitude());
+			UCCHAR buf[1024];
+
+			// Rounding can give us -180, even though LDrawModelViewer won't
+			// allow that as an actual value.
+			if (lon == -180)
+			{
+				lon = 180;
+			}
+			sucprintf(buf, COUNT_OF(buf), ls(_UC("LatLonFormat")), lat, lon);
+			setStatusText(hStatusBar, 2, buf, redraw);
+		}
+		else
+		{
+			setStatusText(hStatusBar, 2, "", redraw);
+		}
+	}
+}
+
+#ifndef TC_NO_UNICODE
+void LDViewWindow::setStatusText(
+	HWND hStatus,
+	int part,
+	const char *text,
+	bool redraw /*= true*/)
+{
+	std::wstring temp;
+
+	if (text)
+	{
+		mbstowstring(temp, text);
+	}
+	setStatusText(hStatus, part, temp.c_str(), redraw);
+}
+#endif // TC_NO_UNICODE
+
+void LDViewWindow::setStatusText(
+	HWND hStatus,
+	int part,
+	CUCSTR text,
+	bool redraw /*= true*/)
+{
+	UCCHAR oldText[1024];
+
+	sendMessageUC(hStatus, SB_GETTEXT, part, (LPARAM)oldText);
+	if (ucstrcmp(text, oldText) != 0)
+	{
+		sendMessageUC(hStatus, SB_SETTEXT, part, (LPARAM)text);
+		if (redraw)
+		{
+			redrawStatusBar();
+		}
+		debugPrintf(2, "0x%08X: %s\n", hStatus, text);
+	}
+}
+
+void LDViewWindow::updateStatusParts(void)
+{
+	if (hStatusBar)
+	{
+		int parts[] = {100, 100, -1, -1};
+		RECT rect;
+		int numParts = 3;
+		bool latLon = inLatLonMode();
+		int rightMargin = 32;
+		int latLonWidth = 100;
+
+		if (latLon)
+		{
+			numParts = 4;
+			parts[2] = 100;
+			rightMargin += latLonWidth;
+		}
+		SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts);
+		SendMessage(hStatusBar, SB_GETRECT, numParts - 1, (LPARAM)&rect);
+		parts[1] += rect.right - rect.left - rightMargin;
+		if (latLon)
+		{
+			parts[2] = parts[1] + latLonWidth;
+		}
+		SendMessage(hStatusBar, SB_SETPARTS, numParts, (LPARAM)parts);
+		showStatusIcon(inExamineMode(), false);
+		showStatusLatLon();
+	}
+}
 
 void LDViewWindow::createStatusBar(void)
 {
 	if (showStatusBar || showStatusBarOverride)
 	{
-		int parts[] = {100, 100, -1};
+		//int parts[] = {100, 100, -1};
 		HWND hProgressBar;
 		RECT rect;
 
@@ -682,21 +819,15 @@ void LDViewWindow::createStatusBar(void)
 		hStatusBar = CreateStatusWindow(WS_CHILD | WS_VISIBLE | 
 			SBARS_SIZEGRIP | SBT_TOOLTIPS, "", hWindow, ID_STATUS_BAR);
 		SetWindowLongW(hStatusBar, GWL_EXSTYLE, WS_EX_TRANSPARENT);
-		SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
-//		SendMessage(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 1, (LPARAM)"");
-//		SendMessage(hStatusBar, SB_SETTEXTA, SB_SETTEXTW, 0 | SBT_OWNERDRAW,
-//			(LPARAM)"");
+		updateStatusParts();
+		//SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		SendMessage(hStatusBar, SB_SETTEXT, 0 | SBT_NOBORDERS, (LPARAM)"");
 		SendMessage(hStatusBar, SB_GETRECT, 0, (LPARAM)&rect);
 		InflateRect(&rect, -4, -3);
-//		OffsetRect(&rect, -2, 0);
 		hProgressBar = CreateWindowEx(0, PROGRESS_CLASS, "",
 			WS_CHILD | WS_VISIBLE | PBS_SMOOTH, rect.left,
 			rect.top, rect.right - rect.left, rect.bottom - rect.top,
 			hStatusBar, NULL, hInstance, NULL);
-		SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
-		parts[1] += rect.right - rect.left - 32;
-		SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		if (modelWindow && modelWindow->getViewMode() ==
 			LDInputHandler::VMFlyThrough)
 		{
@@ -706,25 +837,25 @@ void LDViewWindow::createStatusBar(void)
 		{
 			showStatusIcon(true);
 		}
-//		SendMessage(hProgressBar, PBM_SETPOS, 50, 0);
 		if (modelWindow)
 		{
 			modelWindow->setStatusBar(hStatusBar);
 			modelWindow->setProgressBar(hProgressBar);
 		}
-		//redrawStatusBar();
-		RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+		redrawStatusBar();
+		//RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 	}
 }
 
 void LDViewWindow::redrawStatusBar(void)
 {
-	RECT statusRect;
+	//RECT statusRect;
 
-	GetWindowRect(hStatusBar, &statusRect);
+	//GetWindowRect(hStatusBar, &statusRect);
 	//screenToClient(hWindow, &statusRect);
 	//RedrawWindow(hWindow, &statusRect, NULL, RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW | RDW_ERASENOW | RDW_ALLCHILDREN);
-	RedrawWindow(hStatusBar, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+	RedrawWindow(hStatusBar, NULL, NULL,
+		RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW);
 }
 
 void LDViewWindow::reflectViewMode(bool saveSetting)
@@ -3038,6 +3169,7 @@ LRESULT LDViewWindow::switchExamineLatLong(void)
 	//}
 	//TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
 	reflectViewMode();
+	updateStatusParts();
 	return 0;
 }
 
@@ -3791,15 +3923,16 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		}
 		if ((showStatusBar || showStatusBarOverride) && hStatusBar)
 		{
-			int parts[] = {100, 150, -1};
-			RECT rect;
-
 			SendMessage(hStatusBar, WM_SIZE, SIZE_RESTORED,
 				MAKELPARAM(newWidth, newHeight));
-			SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
-			SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
-			parts[1] += rect.right - rect.left - 32;
-			SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
+			updateStatusParts();
+			//int parts[] = {100, 150, -1};
+			//RECT rect;
+
+			//SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
+			//SendMessage(hStatusBar, SB_GETRECT, 2, (LPARAM)&rect);
+			//parts[1] += rect.right - rect.left - 32;
+			//SendMessage(hStatusBar, SB_SETPARTS, 3, (LPARAM)parts);
 		}
 		if (showToolbar && toolbarStrip)
 		{

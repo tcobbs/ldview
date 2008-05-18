@@ -2516,10 +2516,10 @@ void LDrawModelViewer::drawToClipPlaneUsingStencil(TCFloat eyeXOffset)
 	}
 	else if (viewMode == VMExamine && examineMode == EMLatLong)
 	{
-		examineLongitude += rotationSpeed;
-		examineLatitude += rotationSpeed;
-		examineLongitude = (float)fmod(examineLongitude, (float)(2.0 * M_PI));
-		examineLatitude = (float)fmod(examineLatitude, (float)(2.0 * M_PI));
+		//examineLongitude += rotationSpeed;
+		//examineLatitude += rotationSpeed;
+		//examineLongitude = fmodf(examineLongitude, 360.0f);
+		//examineLatitude = fmodf(examineLatitude, 360.0f);
 		treGlRotatef(examineLongitude, 0.0f, 1.0f, 0.0f);
 		treGlRotatef(examineLatitude, 1.0f, 0.0f, 0.0f);
 	}
@@ -2868,6 +2868,20 @@ bool LDrawModelViewer::getLDrawCommandLine(char *shortFilename,
 	}
 }
 
+// Note: static method
+void LDrawModelViewer::fixLongitude(TCFloat &lon)
+{
+	lon = fmodf(lon, 360.0f);
+	if (lon > 180.0f)
+	{
+		lon -= 360.0f;
+	}
+	if (lon <= -180.0f)
+	{
+		lon += 360.0f;
+	}
+}
+
 void LDrawModelViewer::applyModelRotation(void)
 {
 	if (rotationMatrix)
@@ -2893,6 +2907,7 @@ void LDrawModelViewer::applyModelRotation(void)
 				if (rotationSpeed != 0)
 				{
 					examineLongitude += rotationSpeed * -yRotate * 0.1f;
+					fixLongitude(examineLongitude);
 					examineLatitude += rotationSpeed * xRotate * 0.2f;
 					if (examineLatitude > 90.0f)
 					{
@@ -2902,7 +2917,6 @@ void LDrawModelViewer::applyModelRotation(void)
 					{
 						examineLatitude = -90.0f;
 					}
-					examineLongitude = (float)fmod(examineLongitude, 360.0f);
 				}
 				glPushMatrix();
 				glLoadIdentity();
@@ -4246,6 +4260,7 @@ int LDrawModelViewer::getNumSteps(void) const
 
 void LDrawModelViewer::setLatLon(float lat, float lon)
 {
+	fixLongitude(lon);
 	if (viewMode == VMExamine && examineMode == EMLatLong)
 	{
 		examineLatitude = lat;

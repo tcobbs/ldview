@@ -95,9 +95,19 @@ class LDViewWindow: public CUIWindow
 		virtual void setHParentWindow(HWND hWnd);
 		ModelWindow *getModelWindow(void) { return modelWindow; }
 		void redrawStatusBar(void);
+		void updateStatusParts(void);
+		bool inExamineMode(void);
+		bool inLatLonMode(void);
+		void showStatusLatLon(bool redraw = true);
 		bool getLoading(void) const { return loading; }
 		HMENU getViewAngleMenu(void) { return hViewAngleMenu; }
 		void changeStep(int action);
+#ifndef TC_NO_UNICODE
+		virtual void setStatusText(HWND hStatus, int part, const char *text,
+			bool redraw = true);
+#endif // TC_NO_UNICODE
+		virtual void setStatusText(HWND hStatus, int part, CUCSTR text,
+			bool redraw = true);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
@@ -233,7 +243,7 @@ class LDViewWindow: public CUIWindow
 		virtual void reshapeModelWindow(void);
 		virtual void startLoading(void);
 		virtual void stopLoading(void);
-		virtual void showStatusIcon(bool examineMode);
+		virtual void showStatusIcon(bool examineMode, bool redraw = true);
 		virtual void reflectViewMode(bool saveSetting = true);
 		virtual void reflectTopmost(void);
 		virtual void reflectVisualStyle(void);
@@ -310,6 +320,7 @@ class LDViewWindow: public CUIWindow
 
 		void loadSettings(void);
 
+		int intRound(TCFloat value);
 		static void recordRecentFiles(void);
 		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,
 			LPARAM lParam, LPARAM /*lpData*/);
