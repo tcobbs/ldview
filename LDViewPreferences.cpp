@@ -1615,6 +1615,8 @@ void LDViewPreferences::applyGeometryChanges(void)
 	if (hGeometryPage)
 	{
 		ldPrefs->setUseSeams(getCheck(hGeometryPage, IDC_SEAMS));
+		ldPrefs->setBoundingBoxesOnly(getCheck(hGeometryPage,
+			IDC_PART_BOUNDING_BOXES));
 		ldPrefs->setDrawWireframe(getCachedCheck(hGeometryPage, IDC_WIREFRAME));
 		ldPrefs->setUseWireframeFog(getCheck(hGeometryPage, IDC_WIREFRAME_FOG));
 		ldPrefs->setRemoveHiddenLines(getCheck(hGeometryPage,
@@ -3135,6 +3137,8 @@ void LDViewPreferences::setupEdgeLines(void)
 void LDViewPreferences::setupGeometryPage(void)
 {
 	hGeometryPage = hwndArray->pointerAtIndex(geometryPageNumber);
+	SendDlgItemMessage(hGeometryPage, IDC_PART_BOUNDING_BOXES, BM_SETCHECK,
+		ldPrefs->getBoundingBoxesOnly(), 0);
 	setupSeamWidth();
 	setupWireframe();
 	setupBfc();

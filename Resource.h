@@ -339,6 +339,7 @@
 #define IDC_LATITUDE                    1270
 #define IDC_LONGITUDE                   1271
 #define IDC_MPD_LIST                    1272
+#define IDC_PART_BOUNDING_BOXES         1273
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -428,7 +429,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        190
 #define _APS_NEXT_COMMAND_VALUE         40101
-#define _APS_NEXT_CONTROL_VALUE         1273
+#define _APS_NEXT_CONTROL_VALUE         1274
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
