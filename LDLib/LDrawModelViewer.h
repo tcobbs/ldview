@@ -531,6 +531,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual bool parseModel(void);
 		virtual void releaseTREModels(void);
 
+		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
 

@@ -408,6 +408,7 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_VIEW_RIGHT:
 	case ID_VIEW_TOP:
 	case ID_VIEW_BOTTOM:
+	case ID_VIEW_SPECIFYLATLON:
 	case ID_VIEW_ISO:
 	case ID_VIEW_SAVE_DEFAULT:
 	case ID_NEXT_STEP:
