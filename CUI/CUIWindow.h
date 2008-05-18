@@ -120,6 +120,7 @@ class CUIExport CUIWindow : public TCAlertSender
 			MENUITEMINFOUC *lpmi);
 		static BOOL getOpenFileNameUC(OPENFILENAMEUC *lpofn);
 		static BOOL screenToClient(HWND hWnd, RECT *rect);
+		static BOOL clientToScreen(HWND hWnd, RECT *rect);
 		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
 			UINT message, WPARAM wParam, LPARAM lParam);
 		static BOOL CALLBACK staticDialogProc(HWND hDlg,

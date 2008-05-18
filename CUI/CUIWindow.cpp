@@ -2522,6 +2522,26 @@ BOOL CUIWindow::screenToClient(HWND hWnd, RECT *rect)
 	return FALSE;
 }
 
+// Note: static method.
+BOOL CUIWindow::clientToScreen(HWND hWnd, RECT *rect)
+{
+	POINT tempPoint = {rect->left, rect->top};
+	if (::ClientToScreen(hWnd, &tempPoint))
+	{
+		rect->left = tempPoint.x;
+		rect->top = tempPoint.y;
+		tempPoint.x = rect->right;
+		tempPoint.y = rect->bottom;
+		if (::ClientToScreen(hWnd, &tempPoint))
+		{
+			rect->right = tempPoint.x;
+			rect->bottom = tempPoint.y;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
 // Note: static method
 void CUIWindow::setMenuCheck(
 	HMENU hParentMenu,

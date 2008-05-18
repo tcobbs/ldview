@@ -1040,15 +1040,46 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 {
 	RECT clientRect;
 	RECT parentWindowRect;
+	RECT typeComboRect;
+	RECT optionsButtonRect;
+	RECT cancelButtonRect;
+	HWND hParent = GetParent(hSaveDialog);
+	HWND hTypeCombo = GetDlgItem(hParent, cmb1);
+	HWND hCancelButton = GetDlgItem(hParent, IDCANCEL);
+	int typeComboWidth;
+	int typeComboHeight;
+	int optionsButtonWidth;
+	int optionsButtonHeight;
 
 	GetClientRect(hSaveDialog, &clientRect);
-	GetWindowRect(GetParent(hSaveDialog), &parentWindowRect);
+	GetWindowRect(hParent, &parentWindowRect);
 	// Resizing the client height to match the parent's window height is to
-	// work around what appears to be a bug in Microsoft's code.  The + 1 at the
-	// end is to bump my controls up one more pixel, so that my Options...
-	// button lines up nicely with the Save and Cancel buttons.
-	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top + 1;
+	// work around what appears to be a bug in Microsoft's code.
+	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top;// + 1;
 	MoveWindow(hSaveDialog, 0, 0, clientRect.right, clientRect.bottom, TRUE);
+
+	// Move the Options button so that it is to the right of the file type
+	// combo box, and make the file type combo box narrower so that it will fit.
+	GetWindowRect(hTypeCombo, &typeComboRect);
+	GetWindowRect(hCancelButton, &cancelButtonRect);
+	GetWindowRect(hSaveOptionsButton, &optionsButtonRect);
+	screenToClient(hParent, &typeComboRect);
+	optionsButtonWidth = optionsButtonRect.right - optionsButtonRect.left;
+	optionsButtonHeight = optionsButtonRect.bottom - optionsButtonRect.top;
+	typeComboWidth = typeComboRect.right - typeComboRect.left
+		- optionsButtonWidth - 6;
+	typeComboHeight = typeComboRect.bottom - typeComboRect.top;
+	MoveWindow(hTypeCombo, typeComboRect.left, typeComboRect.top,
+		typeComboWidth, typeComboHeight, TRUE);
+	clientToScreen(hParent, &typeComboRect);
+	screenToClient(hSaveDialog, &typeComboRect);
+	screenToClient(hSaveDialog, &cancelButtonRect);
+
+	// I have no idea why the + 6 is necessary below.  It really doesn't make
+	// any sense, but it is required to get the options button into the right
+	// location.
+	MoveWindow(hSaveOptionsButton, typeComboRect.right - optionsButtonWidth + 6,
+		cancelButtonRect.top, optionsButtonWidth, optionsButtonHeight, TRUE);
 	saveWindowResizer = new CUIWindowResizer;
 	saveWindowResizer->setHWindow(hSaveDialog);
 
