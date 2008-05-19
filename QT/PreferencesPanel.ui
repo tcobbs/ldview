@@ -661,6 +661,32 @@
                                             </size>
                                         </property>
                                     </spacer>
+                                   <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>partBoundingBoxOnlyBox</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Part bounding boxes only</string>
+                                        </property>
+                                   </widget>
+                                   <spacer>
+                                        <property name="name">
+                                            <cstring>Spacer10</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>20</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+
                                 </hbox>
                             </widget>
                         </vbox>
@@ -3573,6 +3599,12 @@ into effect until the next time a model is loaded.</string>
     </connection>
     <connection>
         <sender>showAxesButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
+        <sender>partBoundingBoxOnlyBox</sender>
         <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
         <slot>enableApply()</slot>
