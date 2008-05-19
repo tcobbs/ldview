@@ -165,6 +165,7 @@ void Preferences::doGeneralApply(void)
 void Preferences::doGeometryApply(void)
 {
 	ldPrefs->setUseSeams(panel->seamWidthButton->state());
+	ldPrefs->setBoundingBoxesOnly(panel->partBoundingBoxOnlyBox->state());
 	ldPrefs->setSeamWidth(panel->seamWidthSpin->value());
 	ldPrefs->setDrawWireframe(panel->wireframeButton->isChecked());
 	if (ldPrefs->getDrawWireframe())
@@ -632,6 +633,7 @@ void Preferences::reflectGeometrySettings(void)
 {
 	setButtonState(panel->seamWidthButton, ldPrefs->getUseSeams());
 	setRangeValue(panel->seamWidthSpin, ldPrefs->getSeamWidth());
+	panel->partBoundingBoxOnlyBox->setChecked(ldPrefs->getBoundingBoxesOnly());
 //	panel->seamWidthSpin->setValue(seamWidth);
 	reflectWireframeSettings();
 	reflectBFCSettings();
