@@ -69,6 +69,10 @@ class LDrawModelViewer: public TCAlertSender
 			EMFree,
 			EMLatLong,
 		};
+		enum ExportType
+		{
+			ETPov,
+		};
 		LDrawModelViewer(int, int);
 		LDInputHandler *getInputHandler(void);
 		virtual void update(void);
@@ -444,6 +448,7 @@ class LDrawModelViewer: public TCAlertSender
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 		virtual void setupFont(char *fontFilename);
+		virtual void exportCurModel(ExportType type, const char *filename);
 
 		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
 		virtual bool mouseUp(int x, int y);

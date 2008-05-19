@@ -14,6 +14,7 @@
 #include <LDLoader/LDLFindFileAlert.h>
 #include <LDLoader/LDLPalette.h>
 #include <LDLoader/LDLAutoCamera.h>
+#include <LDExporter/LDPovExporter.h>
 #include "LDInputHandler.h"
 #include "LDModelParser.h"
 #include "LDPreferences.h"
@@ -3864,11 +3865,8 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 		return;
 	}
 	TCVector cameraPosition = camera.getPosition();
-	TCVector boundingMin, boundingMax, center;
 
 	memcpy(rotationMatrix, getRotationMatrix(), sizeof(rotationMatrix));
-	getMainTREModel()->getBoundingBox(boundingMin, boundingMax);
-	center = (boundingMin + boundingMax) / 2.0f;
 	TCVector::initIdentityMatrix(positionMatrix);
 	positionMatrix[12] = cameraPosition[0] - getXPan();
 	positionMatrix[13] = -cameraPosition[1] + getYPan();
@@ -4370,3 +4368,38 @@ const LDLModel *LDrawModelViewer::getCurModel(void) const
 	return const_cast<LDrawModelViewer *>(this)->getCurModel();
 }
 
+void LDrawModelViewer::exportCurModel(ExportType type, const char *filename)
+{
+	LDLModel *model = getCurModel();
+
+	if (model != NULL)
+	{
+		LDExporter *exporter;
+
+		switch (type)
+		{
+		case ETPov:
+			exporter = new LDPovExporter;
+			break;
+		default:
+			exporter = NULL;
+			break;
+		}
+		if (exporter)
+		{
+			exporter->setBoundingBox(boundingMin, boundingMax);
+			exporter->setCenter(center);
+			exporter->setRadius(size / 2.0f);
+			exporter->setCamera(camera);
+			exporter->setRotationMatrix(rotationMatrix);
+			exporter->setFov(fov);
+			exporter->setXPan(xPan);
+			exporter->setYPan(yPan);
+			if (filename != NULL)
+			{
+				exporter->setFilename(filename);
+			}
+			exporter->doExport(model);
+		}
+	}
+}

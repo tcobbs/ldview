@@ -18,6 +18,27 @@ Package=<4>
 
 ###############################################################################
 
+Project: "LDExporter"=.\LDExporter\LDExporter.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LDLoader
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name TCFoundation
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name TRE
+    End Project Dependency
+}}}
+
+###############################################################################
+
 Project: "LDLib"=.\LDLib\LDLib.dsp - Package Owner=<4>
 
 Package=<5>
@@ -67,6 +88,9 @@ Package=<4>
     End Project Dependency
     Begin Project Dependency
     Project_Dep_Name gl2ps
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name LDExporter
     End Project Dependency
 }}}
 

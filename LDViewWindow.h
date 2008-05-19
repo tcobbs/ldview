@@ -213,6 +213,7 @@ class LDViewWindow: public CUIWindow
 		virtual void updateModelMenuItems(void);
 		virtual void printModel(void);
 		virtual void saveSnapshot(void);
+		virtual void exportModel(void);
 		virtual void pageSetup(void);
 //		virtual void showDefaultMatrix(const char *matrixString,
 //			const char *title);

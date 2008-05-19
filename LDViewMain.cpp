@@ -279,11 +279,11 @@ int doPreview(HINSTANCE hInstance, LPSTR lpCmdLine)
 	return 1;
 }
 
-static void setupLocalStrings(void)
+static void loadLocalStrings(const char *filename, UINT resourceId, bool replace)
 {
 	HMODULE hModule = (HMODULE)CUIWindow::getLanguageModule();
 	HRSRC hLocalStringsResource = FindResource(hModule,
-		MAKEINTRESOURCE(IDR_LOCAL_STRINGS),
+		MAKEINTRESOURCE(resourceId),
 		RT_RCDATA);
 	bool done = false;
 
@@ -305,7 +305,7 @@ static void setupLocalStrings(void)
 
 					memcpy(localStrings, data, length);
 					localStrings[length] = 0;
-					TCLocalStrings::setStringTable(localStrings);
+					TCLocalStrings::setStringTable(localStrings, replace);
 					delete localStrings;
 					done = true;
 				}
@@ -315,8 +315,14 @@ static void setupLocalStrings(void)
 	}
 	if (!done)
 	{
-		TCLocalStrings::loadStringTable("LDViewMessages.ini");
+		TCLocalStrings::loadStringTable(filename, replace);
 	}
+}
+
+static void setupLocalStrings(void)
+{
+	loadLocalStrings("LDViewMessages.ini", IDR_LOCAL_STRINGS, true);
+	loadLocalStrings("LDExportMessages.ini", IDR_EXPORTER_STRINGS, false);
 	//TCLocalStrings::dumpTable("C:\\Temp\\ST-ASCII.txt", "ASCII");
 }
 
