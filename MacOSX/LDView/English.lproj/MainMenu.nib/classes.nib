@@ -9,6 +9,7 @@
                 customizeToolbar = id; 
                 errorsAndWarnings = id; 
                 examineMode = id; 
+                exportModel = id; 
                 flyThroughMode = id; 
                 goToStep = id; 
                 latLongRotation = id; 
