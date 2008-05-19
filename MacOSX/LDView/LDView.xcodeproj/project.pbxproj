@@ -38,6 +38,7 @@
 		1F2DD09F0DD933CD00C675D7 /* MPD.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD09D0DD933CD00C675D7 /* MPD.nib */; };
 		1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD0A20DD9368F00C675D7 /* MPD.mm */; };
 		1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */; };
+		1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E59FE0DA03D1200D83112 /* Updater.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F3E59FC0DA03D1200D83112 /* Updater.nib */; };
@@ -158,6 +159,13 @@
 			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = TRE;
 		};
+		1F2DD26D0DE15E6900C675D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libLDExporter.a */;
+			remoteInfo = LDExporter;
+		};
 		1F6A747E0C4DEEFF00DAF5C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F240B960A588B9000691116 /* TCFoundation.xcodeproj */;
@@ -244,6 +252,7 @@
 		1F2DD0A20DD9368F00C675D7 /* MPD.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = MPD.mm; sourceTree = "<group>"; };
 		1F2DD1740DD9531A00C675D7 /* SideDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SideDrawer.h; sourceTree = "<group>"; };
 		1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SideDrawer.mm; sourceTree = "<group>"; };
+		1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDExporter.xcodeproj; path = ../LDExporter/LDExporter.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F3E59EB0DA03AA200D83112 /* UpdaterAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdaterAlertHandler.h; sourceTree = "<group>"; };
 		1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdaterAlertHandler.mm; sourceTree = "<group>"; };
@@ -374,6 +383,7 @@
 				1F240BE60A58D12E00691116 /* libTCFoundation.a in Frameworks */,
 				1F240BE70A58D13100691116 /* libTRE.a in Frameworks */,
 				1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */,
+				1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,12 +520,21 @@
 		1F240BB40A588BCB00691116 /* Support Projects */ = {
 			isa = PBXGroup;
 			children = (
+				1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */,
+				1F240B960A588B9000691116 /* TCFoundation.xcodeproj */,
 				1F240BA60A588BB800691116 /* LDLib.xcodeproj */,
 				1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */,
-				1F240B960A588B9000691116 /* TCFoundation.xcodeproj */,
 				1F240BAD0A588BC600691116 /* TRE.xcodeproj */,
 			);
 			name = "Support Projects";
+			sourceTree = "<group>";
+		};
+		1F2DD2670DE15E6900C675D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1FB355130C55C16400216FBE /* Nibs */ = {
@@ -747,6 +766,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 1F2DD2670DE15E6900C675D7 /* Products */;
+					ProjectRef = 1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */;
+				},
+				{
 					ProductGroup = 1F240BA70A588BB800691116 /* Products */;
 					ProjectRef = 1F240BA60A588BB800691116 /* LDLib.xcodeproj */;
 				},
@@ -796,6 +819,13 @@
 			fileType = archive.ar;
 			path = libTRE.a;
 			remoteRef = 1F240BB20A588BC600691116 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLDExporter.a;
+			remoteRef = 1F2DD26D0DE15E6900C675D7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1149,6 +1179,7 @@
 					"../TCFoundation/build/$(CONFIGURATION)",
 					"../LDLoader/build/$(CONFIGURATION)",
 					"../TRE/build/$(CONFIGURATION)",
+					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
@@ -1215,6 +1246,7 @@
 					"../TCFoundation/build/$(CONFIGURATION)",
 					"../LDLoader/build/$(CONFIGURATION)",
 					"../TRE/build/$(CONFIGURATION)",
+					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
@@ -1249,6 +1281,7 @@
 					"../TCFoundation/build/$(CONFIGURATION)",
 					"../LDLoader/build/$(CONFIGURATION)",
 					"../TRE/build/$(CONFIGURATION)",
+					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
 					"$(LIBRARY_SEARCH_PATHS)",
 				);

@@ -1665,4 +1665,14 @@ enum
 	return [modelView fullScreen];;
 }
 
+- (IBAction)exportModel:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		modelViewer->exportCurModel(LDrawModelViewer::ETPov, NULL);
+	}
+}
+
 @end

@@ -10,25 +10,6 @@
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string>ldr</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>LDraw.icns</string>
-			<key>CFBundleTypeMIMETypes</key>
-			<array>
-				<string>x-application/ldraw</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>LDraw Model File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
 				<string>dat</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
@@ -36,6 +17,7 @@
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>x-application/ldraw</string>
+				<string>application/x-ldraw</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>LDraw Model File</string>
@@ -56,6 +38,7 @@
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>x-application/ldraw</string>
+				<string>application/x-ldraw</string>
 			</array>
 			<key>CFBundleTypeName</key>
 			<string>LDraw Multi-Part File</string>
