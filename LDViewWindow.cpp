@@ -2185,6 +2185,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	HMENU hViewingAngleMenu = getParentOfMenuItem(hViewMenu, ID_VIEW_FRONT);
 
 	setMenuEnabled(hFileMenu, ID_FILE_SAVE, haveModel);
+	setMenuEnabled(hFileMenu, ID_FILE_EXPORT, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_RELOAD, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PRINT, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PAGESETUP, haveModel);
@@ -3412,6 +3413,9 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_FILE_SAVE:
 			saveSnapshot();
 			return 0;
+		case ID_FILE_EXPORT:
+			exportModel();
+			return 0;
 		case ID_FILE_LDRAWDIR:
 			chooseNewLDrawDir();
 			return 0;
@@ -4452,6 +4456,15 @@ void LDViewWindow::pageSetup(void)
 	if (modelIsLoaded())
 	{
 		modelWindow->pageSetup();
+	}
+}
+
+void LDViewWindow::exportModel(void)
+{
+	if (modelIsLoaded())
+	{
+		modelWindow->getModelViewer()->exportCurModel(LDrawModelViewer::ETPov,
+			NULL);
 	}
 }
 
