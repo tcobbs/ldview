@@ -335,9 +335,12 @@
 #define IDC_SNAPSHOTS_DIR_BOX           1267
 #define IDC_SAVE_DIRS_BOX               1267
 #define IDC_PARTS_LIST_DIR_BOX          1268
+#define IDC_EXPORT_DIR_COMBO            1268
 #define IDC_MIN_POINT                   1269
+#define IDC_EXPORT_DIR                  1269
 #define IDC_MAX_POINT                   1270
 #define IDC_LATITUDE                    1270
+#define IDC_BROWSE_EXPORT_DIR           1270
 #define IDC_LONGITUDE                   1271
 #define IDC_MPD_LIST                    1272
 #define IDC_PART_BOUNDING_BOXES         1273

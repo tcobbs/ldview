@@ -317,6 +317,11 @@ protected:
 	HWND hPartsListBrowseButton;
 	LDPreferences::DefaultDirMode partsListDirMode;
 	std::string partsListDir;
+	HWND hExportDirCombo;
+	HWND hExportDirField;
+	HWND hExportBrowseButton;
+	LDPreferences::DefaultDirMode exportDirMode;
+	std::string exportDir;
 	HDC hButtonColorDC;
 	HWND hMouseOverButton;
 	long origButtonWindowProc;

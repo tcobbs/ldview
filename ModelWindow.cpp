@@ -4388,7 +4388,16 @@ bool ModelWindow::getSaveFilename(
 		int index = (int)openStruct.nFilterIndex;
 		char *dir = directoryFromPath(saveFilename);
 
-		TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_DIR_KEY, false);
+		switch (curSaveOp)
+		{
+		case LDPreferences::SOExport:
+			TCUserDefaults::setPathForKey(dir, LAST_EXPORT_DIR_KEY, false);
+			break;
+		case LDPreferences::SOSnapshot:
+		default:
+			TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_DIR_KEY, false);
+			break;
+		}
 		delete dir;
 		if (index > 0 && index <= maxImageType)
 		{

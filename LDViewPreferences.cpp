@@ -1605,6 +1605,20 @@ void LDViewPreferences::applyGeneralChanges(void)
 				ldPrefs->setPartsListsDirMode(LDPreferences::DDMLastDir);
 			}
 		}
+		ldPrefs->setSaveDirMode(LDPreferences::SOExport, exportDirMode);
+		if (exportDirMode == LDPreferences::DDMSpecificDir)
+		{
+			windowGetText(hExportDirField, exportDir);
+			if (exportDir.length() > 0)
+			{
+				ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.c_str());
+			}
+			else
+			{
+				ldPrefs->setSaveDirMode(LDPreferences::SOExport,
+					LDPreferences::DDMLastDir);
+			}
+		}
 		ldPrefs->applyGeneralSettings();
 	}
 	ldPrefs->commitGeneralSettings();
@@ -1916,6 +1930,10 @@ void LDViewPreferences::doGeneralClick(int controlId, HWND /*controlHWnd*/)
 		case IDC_BROWSE_PARTS_LIST_DIR:
 			browseForDir(ls("BrowseForPartsListDir"), hPartsListDirField,
 				partsListDir);
+			break;
+		case IDC_BROWSE_EXPORT_DIR:
+			browseForDir(ls("BrowseForExportListDir"), hExportDirField,
+				exportDir);
 			break;
 	}
 	enableApply(hGeneralPage);
@@ -2455,6 +2473,13 @@ DWORD LDViewPreferences::doComboSelChange(HWND hPage, int controlId,
 			partsListDirMode, partsListDir);
 		enableApply(hPage);
 		break;
+	case IDC_EXPORT_DIR_COMBO:
+		exportDirMode = (LDPreferences::DefaultDirMode)SendMessage(
+			hExportDirCombo, CB_GETCURSEL, 0, 0);
+		updateSaveDir(hExportDirField, hExportBrowseButton, exportDirMode,
+			exportDir);
+		enableApply(hPage);
+		break;
 	}
 	return 0;
 }
@@ -2869,18 +2894,27 @@ void LDViewPreferences::setupSaveDirs(void)
 	hSnapshotDirCombo = GetDlgItem(hGeneralPage, IDC_SNAPSHOTS_DIR_COMBO);
 	hSnapshotDirField = GetDlgItem(hGeneralPage, IDC_SNAPSHOTS_DIR);
 	hSnapshotBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_SNAPSHOTS_DIR);
-	snapshotDirMode = ldPrefs->getSnapshotsDirMode();
-	snapshotDir = ldPrefs->getSnapshotsDir();
+	snapshotDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot);
+	snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot);
 	setupSaveDir(hSnapshotDirCombo, hSnapshotDirField, hSnapshotBrowseButton,
 		snapshotDirMode, snapshotDir, _UC("Snapshot"));
+
 	hPartsListDirCombo = GetDlgItem(hGeneralPage, IDC_PARTS_LIST_DIR_COMBO);
 	hPartsListDirField = GetDlgItem(hGeneralPage, IDC_PARTS_LIST_DIR);
 	hPartsListBrowseButton = GetDlgItem(hGeneralPage,
 		IDC_BROWSE_PARTS_LIST_DIR);
-	partsListDirMode = ldPrefs->getPartsListsDirMode();
-	partsListDir = ldPrefs->getPartsListsDir();
+	partsListDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOPartsList);
+	partsListDir = ldPrefs->getSaveDir(LDPreferences::SOPartsList);
 	setupSaveDir(hPartsListDirCombo, hPartsListDirField, hPartsListBrowseButton,
 		partsListDirMode, partsListDir, _UC("PartsList"));
+
+	hExportDirCombo = GetDlgItem(hGeneralPage, IDC_EXPORT_DIR_COMBO);
+	hExportDirField = GetDlgItem(hGeneralPage, IDC_EXPORT_DIR);
+	hExportBrowseButton = GetDlgItem(hGeneralPage, IDC_BROWSE_EXPORT_DIR);
+	exportDirMode = ldPrefs->getSaveDirMode(LDPreferences::SOExport);
+	exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport);
+	setupSaveDir(hExportDirCombo, hExportDirField, hExportBrowseButton,
+		exportDirMode, exportDir, _UC("Export"));
 }
 
 void LDViewPreferences::setupGeneralPage(void)
