@@ -99,6 +99,14 @@ public:
 	}
 	void setBFCFlag(bool value) { m_mainFlags.bfc = value; }
 	bool getBFCFlag(void) { return m_mainFlags.bfc != false; }
+	void setBoundingBoxesOnlyFlag(bool value)
+	{
+		m_mainFlags.boundingBoxesOnly = value;
+	}
+	bool getBoundingBoxesOnlyFlag(void) const
+	{
+		return m_mainFlags.boundingBoxesOnly != false;
+	}
 	void setRedBackFacesFlag(bool value) { m_mainFlags.redBackFaces = value; }
 	bool getRedBackFacesFlag(void) { return m_mainFlags.redBackFaces != false; }
 	void setGreenFrontFacesFlag(bool value)
@@ -368,6 +376,7 @@ protected:
 	void flattenConditionals(void);
 	void backgroundConditionals(int step);
 	TCULongArray *backgroundConditionals(TREShapeGroup *shapes, int step);
+	bool haveBFC(void);
 
 	void enable(GLenum cap);
 	void disable(GLenum cap);
@@ -459,6 +468,7 @@ protected:
 		bool multiThreaded:1;
 		bool saveAlpha:1;
 		bool gl2ps:1;
+		bool boundingBoxesOnly:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

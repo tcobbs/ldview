@@ -124,6 +124,10 @@ protected:
 	void setFlattenPartsFlag(bool value) { m_flags.flattenParts = value; }
 	bool getFlattenPartsFlag(void) { return m_flags.flattenParts != false; }
 	bool getSeamsFlag(void) { return m_flags.seams != false; }
+	bool getBoundingBoxesOnlyFlag(void) const
+	{
+		return m_flags.boundingBoxesOnly != false;
+	}
 	virtual bool shouldLoadConditionalLines(void);
 	void addBoundingQuad(TREModel *model, const TCVector *minMax, int face);
 	int actualColorNumber(LDLActionLine *actionLine, int activeColorNumber);
