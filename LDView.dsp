@@ -591,6 +591,10 @@ SOURCE=.\Build.txt
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDExporter\LDExportMessages.ini
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDView.exe.manifest
 # End Source File
 # Begin Source File
