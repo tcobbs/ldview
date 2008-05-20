@@ -4463,8 +4463,7 @@ void LDViewWindow::exportModel(void)
 {
 	if (modelIsLoaded())
 	{
-		modelWindow->getModelViewer()->exportCurModel(LDrawModelViewer::ETPov,
-			NULL);
+		modelWindow->exportModel();
 	}
 }
 
@@ -5350,7 +5349,8 @@ LRESULT LDViewWindow::generatePartsList(void)
 					OPENFILENAME openStruct;
 					char fileTypes[1024];
 					std::string filename = modelViewer->getFilename();
-					std::string initialDir = modelWindow->getPartsListDir();
+					std::string initialDir =
+						modelWindow->getSaveDir(LDPreferences::SOPartsList);
 					size_t findSpot = filename.find_last_of("/\\");
 
 					if (findSpot < filename.size())

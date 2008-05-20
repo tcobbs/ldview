@@ -4212,7 +4212,9 @@ const char *ModelWindow::saveExtension(int type /*= -1*/) const
 	}
 }
 
-bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
+bool ModelWindow::calcSaveFilename(
+	char* saveFilename,
+	int /*len*/)
 {
 	char* filename = filenameFromPath(modelViewer->getFilename());
 
@@ -4221,10 +4223,6 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 		bool found = false;
 		std::string baseFilename = filename;
 		size_t dotSpot;
-		const char *extension = saveExtension();
-		char format[32] = "%s.%s";
-		int max;
-		int i;
 
 		delete filename;
 		dotSpot = baseFilename.rfind('.');
@@ -4232,40 +4230,53 @@ bool ModelWindow::calcSaveFilename(char* saveFilename, int /*len*/)
 		{
 			baseFilename.erase(dotSpot);
 		}
-		if (saveSeries)
+		if (curSaveOp == LDPreferences::SOExport)
 		{
-			sprintf(format, "%%s%%0%dd.%%s", saveDigits);
-			max = (int)(pow(10.0, saveDigits) + 0.1);
+			sprintf(saveFilename, "%s.pov", baseFilename.c_str());
+			return true;
 		}
 		else
 		{
-			max = 2;
-		}
-		for (i = 1; i < max && !found; i++)
-		{
+			const char *extension = saveExtension();
+			char format[32] = "%s.%s";
+			int max;
+			int i;
+
 			if (saveSeries)
 			{
-				sprintf(saveFilename, format, baseFilename.c_str(), i,
-					extension);
+				sprintf(format, "%%s%%0%dd.%%s", saveDigits);
+				max = (int)(pow(10.0, saveDigits) + 0.1);
 			}
 			else
 			{
-				sprintf(saveFilename, format, baseFilename.c_str(), extension);
+				max = 2;
 			}
-			if (saveAllSteps)
+			for (i = 1; i < max && !found; i++)
 			{
-				char *suffix = ucstringtombs(saveStepSuffix);
-				std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-					suffix, 1, modelViewer->getNumSteps());
-				delete suffix;
-				strcpy(saveFilename, temp.c_str());
+				if (saveSeries)
+				{
+					sprintf(saveFilename, format, baseFilename.c_str(), i,
+						extension);
+				}
+				else
+				{
+					sprintf(saveFilename, format, baseFilename.c_str(), extension);
+				}
+				if (saveAllSteps)
+				{
+					char *suffix = ucstringtombs(saveStepSuffix);
+					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
+						suffix, 1, modelViewer->getNumSteps());
+					delete suffix;
+					strcpy(saveFilename, temp.c_str());
+				}
+				if (!LDrawModelViewer::fileExists(saveFilename))
+				{
+					found = true;
+				}
 			}
-			if (!LDrawModelViewer::fileExists(saveFilename))
-			{
-				found = true;
-			}
+			return true;
 		}
-		return true;
 	}
 	else
 	{
@@ -4291,45 +4302,24 @@ std::string ModelWindow::defaultDir(
 	return ".";
 }
 
-std::string ModelWindow::getSnapshotDir(void)
+std::string ModelWindow::getSaveDir(LDPreferences::SaveOp saveOp)
 {
 	LDPreferences *ldPrefs = prefs->getLDPrefs();
 
 	if (ldPrefs != NULL)
 	{
-		return ldPrefs->getDefaultSaveDir(LDPreferences::SOSnapshot,
-			modelViewer->getFilename());
+		return ldPrefs->getDefaultSaveDir(saveOp, modelViewer->getFilename());
 	}
 	return ".";
 }
 
-std::string ModelWindow::getPartsListDir(void)
+std::string ModelWindow::getSaveDir(void)
 {
-	LDPreferences *ldPrefs = prefs->getLDPrefs();
-
-	if (ldPrefs != NULL)
-	{
-		return ldPrefs->getDefaultSaveDir(LDPreferences::SOPartsList,
-			modelViewer->getFilename());
-	}
-	return ".";
+	return getSaveDir(curSaveOp);
 }
 
-bool ModelWindow::getSaveFilename(char* saveFilename, int len)
+void ModelWindow::fillSnapshotFileTypes(char *fileTypes)
 {
-	OPENFILENAME openStruct;
-	char fileTypes[1024];
-	std::string initialDir = getSnapshotDir();
-	int maxImageType = 3;
-
-	if (!calcSaveFilename(saveFilename, len))
-	{
-		saveFilename[0] = 0;
-	}
-	if (saveImageType < 1 || saveImageType > maxImageType)
-	{
-		saveImageType = 1;
-	}
 	memset(fileTypes, 0, 2);
 	LDViewWindow::addFileType(fileTypes, ls("PngFileType"), "*.png");
 	LDViewWindow::addFileType(fileTypes, ls("BmpFileType"), "*.bmp");
@@ -4340,7 +4330,50 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 		LDViewWindow::addFileType(fileTypes, ls("EpsFileType"), "*.eps");
 		LDViewWindow::addFileType(fileTypes, ls("PdfFileType"), "*.pdf");
 	}
+}
+
+void ModelWindow::fillExportFileTypes(char *fileTypes)
+{
+	memset(fileTypes, 0, 2);
+	LDViewWindow::addFileType(fileTypes, ls("PovFileType"), "*.pov");
+}
+
+bool ModelWindow::getSaveFilename(
+	char* saveFilename,
+	int len)
+{
+	OPENFILENAME openStruct;
+	char fileTypes[1024];
+	std::string initialDir = getSaveDir();
+	int maxImageType = 3;
+
 	memset(&openStruct, 0, sizeof(OPENFILENAME));
+	if (!calcSaveFilename(saveFilename, len))
+	{
+		saveFilename[0] = 0;
+	}
+	openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT |
+		OFN_ENABLESIZING;
+	switch (curSaveOp)
+	{
+	case LDPreferences::SOExport:
+		fillExportFileTypes(fileTypes);
+		openStruct.lpstrTitle = ls("ExportModel");
+		break;
+	case LDPreferences::SOSnapshot:
+	default:
+		fillSnapshotFileTypes(fileTypes);
+		if (saveImageType < 1 || saveImageType > maxImageType)
+		{
+			saveImageType = 1;
+		}
+		openStruct.lpstrTitle = ls("SaveSnapshot");
+		openStruct.Flags |= OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
+		openStruct.hInstance = getLanguageModule();
+		openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_SAVE_OPTIONS);
+		openStruct.lpfnHook = staticSaveHook;
+		break;
+	}
 	openStruct.lStructSize = sizeof(OPENFILENAME);
 	openStruct.hwndOwner = hWindow;
 	openStruct.lpstrFilter = fileTypes;
@@ -4348,14 +4381,8 @@ bool ModelWindow::getSaveFilename(char* saveFilename, int len)
 	openStruct.lpstrFile = saveFilename;
 	openStruct.nMaxFile = len;
 	openStruct.lpstrInitialDir = initialDir.c_str();
-	openStruct.lpstrTitle = TCLocalStrings::get("SaveSnapshot");
-	openStruct.Flags = OFN_EXPLORER | OFN_HIDEREADONLY | OFN_ENABLETEMPLATE
-		| OFN_ENABLEHOOK | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING;
 	openStruct.lpstrDefExt = NULL;
 	openStruct.lCustData = (long)this;
-	openStruct.hInstance = getLanguageModule();
-	openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_SAVE_OPTIONS);
-	openStruct.lpfnHook = staticSaveHook;
 	if (GetSaveFileName(&openStruct))
 	{
 		int index = (int)openStruct.nFilterIndex;
@@ -4424,6 +4451,17 @@ bool ModelWindow::shouldOverwriteFile(char* filename)
 	}
 }
 
+void ModelWindow::exportModel(void)
+{
+	char filename[1024];
+
+	curSaveOp = LDPreferences::SOExport;
+	if (getSaveFilename(filename, COUNT_OF(filename)))
+	{
+		modelViewer->exportCurModel(LDrawModelViewer::ETPov, filename);
+	}
+}
+
 bool ModelWindow::saveSnapshot(void)
 {
 	char saveFilename[1024] = "";
@@ -4438,6 +4476,7 @@ bool ModelWindow::saveSnapshot(char *saveFilename, bool fromCommandLine,
 {
 	bool externalFilename = saveFilename[0] != 0;
 
+	curSaveOp = LDPreferences::SOSnapshot;
 	savingFromCommandLine = fromCommandLine && !notReallyCommandLine;
 	if (saveFilename[0])
 	{
