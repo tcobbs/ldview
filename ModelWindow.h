@@ -94,6 +94,7 @@ public:
 	virtual bool print(void);
 	virtual bool pageSetup(void);
 	virtual bool saveSnapshot(void);
+	void exportModel(void);
 	virtual bool saveSnapshot(char *saveFilename,
 		bool fromCommandLine = false, bool notReallyCommandLine = false);
 	virtual void setViewMode(LDInputHandler::ViewMode mode,
@@ -134,7 +135,7 @@ public:
 	static bool chDirFromFilename(const char* filename, char* outFilename);
 	static int roundUp(int value, int nearest);
 	static const char *alertClass(void) { return "ModelWindowAlert"; }
-	std::string getPartsListDir(void);
+	virtual std::string getSaveDir(LDPreferences::SaveOp saveOp);
 protected:
 	virtual ~ModelWindow(void);
 	virtual void dealloc(void);
@@ -275,9 +276,11 @@ protected:
 	virtual void updateSaveHeight(void);
 	virtual void updateSaveDigits(void);
 	virtual void updateStepSuffix(void);
-	virtual std::string getSnapshotDir(void);
+	virtual std::string getSaveDir(void);
 	static std::string defaultDir(LDPreferences::DefaultDirMode mode,
 		const char *lastPath, const char *defaultPath);
+	virtual void fillSnapshotFileTypes(char *fileTypes);
+	virtual void fillExportFileTypes(char *fileTypes);
 	virtual bool getSaveFilename(char* saveFilename, int len);
 	virtual bool shouldOverwriteFile(char* filename);
 	virtual bool calcSaveFilename(char* saveFilename, int len);
@@ -455,6 +458,7 @@ protected:
 	bool userLoad;
 	int errorCount;
 	int warningCount;
+	LDPreferences::SaveOp curSaveOp;
 };
 
 #endif
