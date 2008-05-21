@@ -48,7 +48,7 @@ distclean:
 	cd LDLoader
 	$(MAKE) -nologo -f Makefile.vc clean
 	cd ..
-	cd LDExplorer
+	cd LDExporter
 	$(MAKE) -nologo -f Makefile.vc clean
     cd ..
 	cd gl2ps
