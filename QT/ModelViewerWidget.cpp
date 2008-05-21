@@ -125,6 +125,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	toolBar(NULL),
 	progressBar(NULL),
 	progressLabel(NULL),
+	progressLatlong(NULL),
 	progressMode(NULL),
 	loading(false),
 	saving(false),
@@ -498,6 +499,7 @@ void ModelViewerWidget::paintGL(void)
 				startPaintTimer();
 			}
 			updateFPS();
+			updateLatlong();
 			//swap_Buffers();
 		}
 		painting = false;
@@ -1376,10 +1378,12 @@ void ModelViewerWidget::setMainWindow(LDView *value)
     mainWindow->fileReloadAction->setEnabled(false);
 	progressBar = new QProgressBar(statusBar);
 	progressLabel = new QLabel(statusBar);
+	progressLatlong = new QLabel(statusBar);
 	progressMode = new QLabel(statusBar);
 	progressBar->setPercentageVisible(false);
 	statusBar->addWidget(progressBar);
 	statusBar->addWidget(progressLabel, 1);
+	statusBar->addWidget(progressLatlong);
 	statusBar->addWidget(progressMode);
 	mainWindow->viewStatusBarAction->setOn(preferences->getStatusBar());
 	mainWindow->viewToolBarAction->setOn(preferences->getToolBar());
@@ -1803,6 +1807,10 @@ void ModelViewerWidget::switchExamineLatLong(bool b)
 	{
 		preferences->setLatLongMode (examineLatLong = b);
 		setViewMode (viewMode, examineLatLong);
+		if (b && Preferences::getViewMode() == LDInputHandler::VMExamine) 
+			progressLatlong->setHidden(false); 
+		else 
+			progressLatlong->setHidden(true);
 	}
 	unlock();
 }
@@ -2068,6 +2076,23 @@ void ModelViewerWidget::drawFPS(void)
 			progressLabel->setText(fpsString);
 		}
 	}
+}
+
+void ModelViewerWidget::updateLatlong(void)
+{
+	if (modelViewer && 
+		modelViewer->getViewMode() == LDrawModelViewer::VMExamine &&
+		modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
+	{
+		int lat = (int)(modelViewer->getExamineLatitude()+.5);
+		int lon = (int)(modelViewer->getExamineLongitude()+.5);
+		if (lon == -180) lon = 180;
+		QString latlongstring;
+		latlongstring.sprintf(TCLocalStrings::get("LatLonFormat"),lat,lon);
+		progressLatlong->setText(latlongstring);
+	}
+	else progressLatlong->setText("");
+	
 }
 
 void ModelViewerWidget::startPaintTimer(void)
@@ -2486,6 +2511,10 @@ void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value,
 		{
 			progressMode->setText(TCLocalStrings::get("ExamineMode"));
 		}
+		if (progressLatlong)
+		{
+			progressLatlong->setHidden(!examine);
+		}
 		modelViewer->setExamineMode(examineMode);
 	}
 	else
@@ -2496,6 +2525,7 @@ void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value,
 		{
 			progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 		}
+		if (progressLatlong) progressLatlong->setHidden(true);
 	}
 	Preferences::setViewMode(viewMode);
 }
