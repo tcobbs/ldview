@@ -1721,8 +1721,12 @@ void LDLModel::calcBoundingBox(void)
 				if (fileLine->getLineType() == LDLLineTypeModel)
 				{
 					LDLModelLine *modelLine = (LDLModelLine *)fileLine;
+					LDLModel *model = modelLine->getModel();
 
-					modelLine->getModel()->calcBoundingBox();
+					if (model != NULL)
+					{
+						model->calcBoundingBox();
+					}
 				}
 			}
 		}
