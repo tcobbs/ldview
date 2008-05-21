@@ -212,6 +212,7 @@ protected:
 	void endLoad(void);
 	void updateFPS(void);
 	void drawFPS(void);
+	void updateLatlong(void);
 	void startPaintTimer(void);
 	void killPaintTimer(void);
 	void startPollTimer(bool immediate=false);
@@ -298,7 +299,7 @@ protected:
 	QStatusBar *statusBar;
 	QToolBar *toolBar;
 	QProgressBar *progressBar;
-	QLabel *progressLabel, *progressMode;
+	QLabel *progressLabel, *progressLatlong, *progressMode;
 	bool loading,saving;
 	bool cancelLoad;
 	QApplication *app;
