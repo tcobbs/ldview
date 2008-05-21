@@ -38,8 +38,8 @@ public:
 	// Member Functions
 	void print(FILE* = stdout) const;
 	void print(char* buffer, int precision = 3) const;
-	std::string TCVector::string(int precision = 6) const;
-	::ucstring TCVector::ucstring(int precision = 6) const;
+	std::string string(int precision = 6) const;
+	::ucstring ucstring(int precision = 6) const;
 	TCFloat length(void) const;
 	TCFloat lengthSquared(void) const;
 	TCFloat dot(const TCVector&) const;
