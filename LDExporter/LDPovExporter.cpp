@@ -121,7 +121,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 	}
 	else
 	{
-		consolePrintf(ls(_UC("ErrorCreatingPov")));
+		consolePrintf(_UC("%s"), (const char *)ls(_UC("ErrorCreatingPov")));
 	}
 	return 0;
 }
@@ -132,21 +132,24 @@ bool LDPovExporter::writeHeader(void)
 	const char *author = m_pTopModel->getAuthor();
 	char *filename = filenameFromPath(m_pTopModel->getFilename());
 
-	fprintf(m_pPovFile, "// %s %s\n", ls("PovGeneratedBy"),
+	fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovGeneratedBy"),
 		"LDExport 1.0 (C) 2007 Travis Cobbs");
-	fprintf(m_pPovFile, "// %s %s\n", ls("PovSee"),
+	fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovSee"),
 		"http://ldview.sourceforge.net/");
-	fprintf(m_pPovFile, "// %s %s", ls("PovDate"), ctime(&genTime));
+	fprintf(m_pPovFile, "// %s %s", (const char *)ls("PovDate"),
+		ctime(&genTime));
 	if (filename != NULL)
 	{
-		fprintf(m_pPovFile, "// %s %s\n", ls("PovLDrawFile"), filename);
+		fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovLDrawFile"),
+			filename);
 		delete filename;
 	}
 	if (author != NULL)
 	{
-		fprintf(m_pPovFile, "// %s %s\n", ls("PovLDrawAuthor"), author);
+		fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovLDrawAuthor"),
+			author);
 	}
-	fprintf(m_pPovFile, ls("PovNote"));
+	fprintf(m_pPovFile, "%s", (const char *)ls("PovNote"));
 	fprintf(m_pPovFile, "#declare AMB = 0.4;\n");
 	fprintf(m_pPovFile, "#declare DIF = 0.4;\n");
 	fprintf(m_pPovFile, "#declare REFL = 0.08;\n");
@@ -163,15 +166,17 @@ bool LDPovExporter::writeHeader(void)
 	fprintf(m_pPovFile, "#declare CHROME_SPEC = 0.8;\n");
 	fprintf(m_pPovFile, "#declare CHROME_ROUGH = 1/100;\n");
 	fprintf(m_pPovFile, "#declare SW = %s;\t// %s\n",
-		ftostr(m_seamWidth).c_str(), ls("PovSeamWidthDesc"));
+		ftostr(m_seamWidth).c_str(), (const char *)ls("PovSeamWidthDesc"));
 	fprintf(m_pPovFile, "#declare STUDS = %d;\t// %s\n", m_hideStuds ? 0 : 1,
-		ls("PovStudsDesc"));
+		(const char *)ls("PovStudsDesc"));
 	fprintf(m_pPovFile, "#declare IPOV = %d;\t// %s\n", m_inlinePov ? 1 : 0,
-		ls("PovInlinePovDesc"));
-	fprintf(m_pPovFile, "#declare QUAL = %d;\t// %s\n", m_quality,
-		ls("PovQualDesc"));
-	fprintf(m_pPovFile, "#declare REFLS = 1;\t// %s\n", ls("PovReflDesc"));
-	fprintf(m_pPovFile, "#declare SHADS = 1;\t// %s\n", ls("PovShadDesc"));
+		(const char *)ls("PovInlinePovDesc"));
+	fprintf(m_pPovFile, "#declare QUAL = %ld;\t// %s\n", m_quality,
+		(const char *)ls("PovQualDesc"));
+	fprintf(m_pPovFile, "#declare REFLS = 1;\t// %s\n",
+		(const char *)ls("PovReflDesc"));
+	fprintf(m_pPovFile, "#declare SHADS = 1;\t// %s\n",
+		(const char *)ls("PovShadDesc"));
 	if (m_edges)
 	{
 		fprintf(m_pPovFile, "#declare EDGERAD = %s;\n",
@@ -1386,7 +1391,7 @@ bool LDPovExporter::substituteEighthSphere(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_1_dash_8sphe_dot_dat = sphere // Sphere %.125\n"
+		"#declare %s_1_dash_8sphe_dot_dat = sphere // Sphere .125\n"
 		"{\n"
 		"	<0,0,0>,1\n"
 		"	clipped_by\n"
@@ -1407,7 +1412,7 @@ bool LDPovExporter::substituteEighthSphereCorner(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_1_dash_8sphc_dot_dat = sphere // Sphere Corner %.125\n"
+		"#declare %s_1_dash_8sphc_dot_dat = sphere // Sphere Corner .125\n"
 		"{\n"
 		"	<0,0,0>,sqrt(2)\n"
 		"	clipped_by\n"
