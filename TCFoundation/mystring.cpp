@@ -1767,3 +1767,36 @@ unsigned long wcstoul(const wchar_t *start, wchar_t **end, int base)
 }
 
 #endif // NO_WSTRING
+
+ucstring ftoucstr(double value, int precision /*= 6*/)
+{
+#ifdef TC_NO_UNICODE
+	return ftostr(value, precision);
+#else // TC_NO_UNICODE
+	std::string string = ftostr(value, precision);
+	std::wstring wstring;
+
+	stringtowstring(wstring, string);
+	return wstring;
+#endif // TC_NO_UNICODE
+}
+
+std::string ftostr(double value, int precision /*= 6*/)
+{
+	char buf[128];
+	char format[128];
+	int len;
+
+	sprintf(format, "%%.%df", precision);
+	sprintf(buf, format, value);
+	len = strlen(buf);
+	while (buf[len - 1] == '0')
+	{
+		buf[--len] = 0;
+	}
+	if (buf[len - 1] == '.')
+	{
+		buf[--len] = 0;
+	}
+	return buf;
+}

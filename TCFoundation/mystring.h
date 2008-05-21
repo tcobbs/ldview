@@ -160,6 +160,9 @@ typedef std::vector<ucstring> ucstringVector;
 void mbstoucstring(ucstring &dst, const char *src, int length = -1);
 int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
 int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
+std::string ftostr(double value, int precision = 6);
+ucstring ftoucstr(double value, int precision = 6);
+
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
 
 #endif

@@ -360,11 +360,35 @@ void TCVector::print(FILE* outFile) const
 
 void TCVector::print(char* buffer, int precision) const
 {
-	char formatString[128];
+	//char formatString[128];
 
-	sprintf(formatString, "%%.%dg %%.%dg %%.%dg", precision, precision,
-		precision);
-	sprintf(buffer, formatString, vector[0], vector[1], vector[2]);
+	//sprintf(formatString, "%%.%df %%.%df %%.%df", precision, precision,
+	//	precision);
+	//sprintf(buffer, formatString, vector[0], vector[1], vector[2]);
+	sprintf(buffer, "%s %s %s", ftostr(vector[0], precision).c_str(),
+		ftostr(vector[1], precision).c_str(),
+		ftostr(vector[2], precision).c_str());
+}
+
+std::string TCVector::string(int precision) const
+{
+	char buf[1024];
+
+	print(buf, precision);
+	return buf;
+}
+
+::ucstring TCVector::ucstring(int precision) const
+{
+#ifdef TC_NO_UNICODE
+	return string(precision);
+#else // TC_NO_UNICODE
+	std::string astring = string(precision);
+	std::wstring wstring;
+
+	stringtowstring(wstring, astring);
+	return wstring;
+#endif // TC_NO_UNICODE
 }
 
 // operator*(TCFloat, TCVector&) -- Overloaded Non-Member Operator

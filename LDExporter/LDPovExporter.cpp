@@ -162,8 +162,8 @@ bool LDPovExporter::writeHeader(void)
 	fprintf(m_pPovFile, "#declare CHROME_BRIL = 5;\n");
 	fprintf(m_pPovFile, "#declare CHROME_SPEC = 0.8;\n");
 	fprintf(m_pPovFile, "#declare CHROME_ROUGH = 1/100;\n");
-	fprintf(m_pPovFile, "#declare SW = %g;\t// %s\n", m_seamWidth,
-		ls("PovSeamWidthDesc"));
+	fprintf(m_pPovFile, "#declare SW = %s;\t// %s\n",
+		ftostr(m_seamWidth).c_str(), ls("PovSeamWidthDesc"));
 	fprintf(m_pPovFile, "#declare STUDS = %d;\t// %s\n", m_hideStuds ? 0 : 1,
 		ls("PovStudsDesc"));
 	fprintf(m_pPovFile, "#declare IPOV = %d;\t// %s\n", m_inlinePov ? 1 : 0,
@@ -174,7 +174,8 @@ bool LDPovExporter::writeHeader(void)
 	fprintf(m_pPovFile, "#declare SHADS = 1;\t// %s\n", ls("PovShadDesc"));
 	if (m_edges)
 	{
-		fprintf(m_pPovFile, "#declare EDGERAD = %g;\n", m_edgeRadius);
+		fprintf(m_pPovFile, "#declare EDGERAD = %s;\n",
+			ftostr(m_edgeRadius).c_str());
 	}
 	//fprintf(m_pPovFile, "#declare O7071 = sqrt(0.5);\n");
 	fprintf(m_pPovFile, "\n");
@@ -451,7 +452,8 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	// Note that the location accuracy isn't nearly as important as the
 	// directional accuracy, so we don't have to re-do this string prior
 	// to putting it on the clipboard in the POV code copy.
-	sprintf(locationString, "%g,%g,%g", location[0], location[1], location[2]);
+	sprintf(locationString, "%s,%s,%s", ftostr(location[0]).c_str(),
+		ftostr(location[1]).c_str(), ftostr(location[2]).c_str());
 
 	matrix[12] = matrix[13] = matrix[14] = 0.0f;
 	directionVector = directionVector.transformPoint(matrix);
@@ -473,8 +475,10 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	TCVector::doubleAdd(location, tempV, lookAt);
 	// Re-do the strings with higher accuracy, so they'll be
 	// accepted by POV-Ray.
-	sprintf(upString, "%.20g,%.20g,%.20g", up[0], up[1], up[2]);
-	sprintf(lookAtString, "%.20g,%.20g,%.20g", lookAt[0], lookAt[1], lookAt[2]);
+	sprintf(upString, "%s,%s,%s", ftostr(up[0], 20).c_str(),
+		ftostr(up[1], 20).c_str(), ftostr(up[2], 20).c_str());
+	sprintf(lookAtString, "%s,%s,%s", ftostr(lookAt[0], 20).c_str(),
+		ftostr(lookAt[1], 20).c_str(), ftostr(lookAt[2], 20).c_str());
 	sprintf(cameraString,
 		"camera\n"
 		"{\n"
@@ -483,9 +487,9 @@ void LDPovExporter::getCameraString(char *&povCamera)
 		"\tsky < %s >\n"
 		"\tright ASPECT * < -1,0,0 >\n"
 		"\tlook_at < %s >\n"
-		"\tangle %g\n"
+		"\tangle %s\n"
 		"}\n",
-		locationString, upString, lookAtString, getHFov());
+		locationString, upString, lookAtString, ftostr(getHFov()).c_str());
 	povCamera = copyString(cameraString);
 }
 
@@ -820,7 +824,7 @@ std::string LDPovExporter::getSizeSeamString(TCFloat size)
 	{
 		char buf[1024];
 
-		sprintf(buf, "1-SW/%g", size);
+		sprintf(buf, "1-SW/%s", ftostr(size).c_str());
 		return buf;
 	}
 }
@@ -835,7 +839,7 @@ std::string LDPovExporter::getOfsSeamString(TCFloat ofs, TCFloat size)
 	{
 		char buf[1024];
 
-		sprintf(buf, "SW/%g", size / ofs);
+		sprintf(buf, "SW/%s", ftostr(size / ofs).c_str());
 		return buf;
 	}
 }
@@ -872,11 +876,11 @@ void LDPovExporter::writeMatrix(TCFloat *matrix)
 
 			if (row == 0 && col == 0)
 			{
-				fprintf(m_pPovFile, "%g", value);
+				fprintf(m_pPovFile, "%s", ftostr(value).c_str());
 			}
 			else
 			{
-				fprintf(m_pPovFile, ",%g", value);
+				fprintf(m_pPovFile, ",%s", ftostr(value).c_str());
 			}
 		}
 	}
@@ -995,7 +999,8 @@ void LDPovExporter::writeRGBA(int r, int g, int b, int a)
 		dg = g / 255.0;
 		db = b / 255.0;
 	}
-	fprintf(m_pPovFile, "rgbf <%g,%g,%g,%s>", dr, dg, db, filter);
+	fprintf(m_pPovFile, "rgbf <%s,%s,%s,%s>", ftostr(dr).c_str(),
+		ftostr(dg).c_str(), ftostr(db).c_str(), filter);
 }
 
 void LDPovExporter::writeCommentLine(
@@ -1247,7 +1252,8 @@ void LDPovExporter::writePoints(
 
 void LDPovExporter::writePoint(const TCVector &point)
 {
-	fprintf(m_pPovFile, "<%g,%g,%g>", point[0], point[1], point[2]);
+	fprintf(m_pPovFile, "<%s,%s,%s>", ftostr(point[0]).c_str(),
+		ftostr(point[1]).c_str(), ftostr(point[2]).c_str());
 }
 
 void LDPovExporter::scanEdgePoint(
@@ -1341,8 +1347,8 @@ bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 				"		}\n"
 				"		plane\n"
 				"		{\n"
-				"			<%.20g,0,%.20g>,0\n"
-				"		}\n", x, z);
+				"			<%s,0,%s>,0\n"
+				"		}\n", ftostr(x, 20).c_str(), ftostr(z, 20).c_str());
 		}
 		else
 		{
@@ -1361,9 +1367,9 @@ bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 				"			}\n"
 				"			plane\n"
 				"			{\n"
-				"				<%.20g,0,%.20g>,0\n"
+				"				<%s,0,%s>,0\n"
 				"			}\n"
-				"		}\n", x, z);
+				"		}\n", ftostr(x, 20).c_str(), ftostr(z, 20).c_str());
 		}
 		if (closeOff)
 		{
@@ -1423,10 +1429,10 @@ bool LDPovExporter::substituteCylinder(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcyli_dot_dat = cylinder // Cylinder %g\n"
+		"#declare %s_%d_dash_%dcyli_dot_dat = cylinder // Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, fraction);
+		m_filenameDenom, ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -1440,17 +1446,17 @@ bool LDPovExporter::substituteSlopedCylinder(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcyls_dot_dat = cylinder // Sloped Cylinder %g\n"
+		"#declare %s_%d_dash_%dcyls_dot_dat = cylinder // Sloped Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,2,0>,1 open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, fraction);
+		m_filenameDenom, ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction, false);
 	fprintf(m_pPovFile,
 		"		plane\n"
 		"		{\n"
-		"			<1,1,0>,%.20g\n"
+		"			<1,1,0>,%s\n"
 		"		}\n"
-		"	}\n", sqrt(2.0) / 2.0);
+		"	}\n", ftostr(sqrt(2.0) / 2.0, 20).c_str());
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
 }
@@ -1472,10 +1478,10 @@ bool LDPovExporter::substituteSlopedCylinder2(
 		return false;
 	}
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcyls2_dot_dat = cylinder // Sloped Cylinder2 %g\n"
+		"#declare %s_%d_dash_%dcyls2_dot_dat = cylinder // Sloped Cylinder2 %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, fraction);
+		m_filenameDenom, ftostr(fraction).c_str());
 	fprintf(m_pPovFile,
 		"	clipped_by\n"
 		"	{\n"
@@ -1485,13 +1491,13 @@ bool LDPovExporter::substituteSlopedCylinder2(
 		"		}\n"
 		"		plane\n"
 		"		{\n"
-		"			<%.20g,0,%.20g>,0\n"
+		"			<%s,0,%s>,0\n"
 		"		}\n"
 		"		plane\n"
 		"		{\n"
 		"			<1,1,0>,0\n"
 		"		}\n"
-		"	}\n", x, z);
+		"	}\n", ftostr(x, 20).c_str(), ftostr(z, 20).c_str());
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
 }
@@ -1504,10 +1510,10 @@ bool LDPovExporter::substituteDisc(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%ddisc_dot_dat = disc // Disc %g\n"
+		"#declare %s_%d_dash_%ddisc_dot_dat = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, fraction);
+		m_filenameDenom, ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -1530,18 +1536,19 @@ bool LDPovExporter::substituteChrd(
 	double ofs = -p0.distToLine(p1, p2);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dchrd_dot_dat = disc // Disc %g\n"
+		"#declare %s_%d_dash_%dchrd_dot_dat = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n"
 		"	clipped_by\n"
 		"	{\n"
 		"		plane\n"
 		"		{\n"
-		"			<%.20g,0,%.20g>,%.20g\n"
+		"			<%s,0,%s>,%s\n"
 		"		}\n"
 		"	}\n"
-		"}\n\n", prefix48, m_filenameNumerator, m_filenameDenom, fraction, x,
-		z, ofs);
+		"}\n\n", prefix48, m_filenameNumerator, m_filenameDenom,
+		ftostr(fraction).c_str(), ftostr(x, 20).c_str(), ftostr(z, 20).c_str(),
+		ftostr(ofs, 20).c_str());
 	return true;
 }
 
@@ -1553,10 +1560,10 @@ bool LDPovExporter::substituteNotDisc(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dndis_dot_dat = disc // Not-Disc %g\n"
+		"#declare %s_%d_dash_%dndis_dot_dat = disc // Not-Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,2,1\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, fraction);
+		m_filenameDenom, ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction, false);
 	fprintf(m_pPovFile,
 		"		box\n"
@@ -1577,10 +1584,10 @@ bool LDPovExporter::substituteCone(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcon%d_dot_dat = cone // Cone %g\n"
+		"#declare %s_%d_dash_%dcon%d_dot_dat = cone // Cone %s\n"
 		"{\n"
 		"	<0,0,0>,%d,<0,1,0>,%d open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, size, fraction, size + 1, size);
+		m_filenameDenom, size, ftostr(fraction).c_str(), size + 1, size);
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -1598,15 +1605,15 @@ bool LDPovExporter::substituteRing(
 	if (isOld)
 	{
 		fprintf(m_pPovFile,
-			"#declare %sring%d_dot_dat = disc // Ring %g\n",
-			prefix48, size, fraction);
+			"#declare %sring%d_dot_dat = disc // Ring %s\n",
+			prefix48, size, ftostr(fraction).c_str());
 	}
 	else
 	{
 		fprintf(m_pPovFile,
-			"#declare %s_%d_dash_%drin%s%d_dot_dat = disc // Ring %g\n",
+			"#declare %s_%d_dash_%drin%s%d_dot_dat = disc // Ring %s\n",
 			prefix48, m_filenameNumerator, m_filenameDenom,
-			size >= 10 ? "" : "g", size, fraction);
+			size >= 10 ? "" : "g", size, ftostr(fraction).c_str());
 	}
 	fprintf(m_pPovFile,
 		"{\n"
@@ -1626,10 +1633,10 @@ bool LDPovExporter::substituteTorusIO(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s%s = torus // Torus %g\n"
+		"#declare %s%s = torus // Torus %s\n"
 		"{\n"
-		"	1,%.20g\n", prefix48, getDeclareName(m_modelName).c_str(), fraction,
-		getTorusFraction(size));
+		"	1,%s\n", prefix48, getDeclareName(m_modelName).c_str(),
+		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction, false);
 	if (inner)
 	{
@@ -1669,10 +1676,10 @@ bool LDPovExporter::substituteTorusQ(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s%s = torus // Torus %g\n"
+		"#declare %s%s = torus // Torus %s\n"
 		"{\n"
-		"	1,%.20g\n", prefix48, getDeclareName(m_modelName).c_str(), fraction,
-		getTorusFraction(size));
+		"	1,%s\n", prefix48, getDeclareName(m_modelName).c_str(),
+		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;

@@ -3897,8 +3897,9 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	// Note that the location accuracy isn't nearly as important as the
 	// directional accuracy, so we don't have to re-do this string prior
 	// to putting it on the clipboard in the POV code copy.
-	sucprintf(locationString, COUNT_OF(locationString), _UC("%g,%g,%g"),
-		location[0], location[1], location[2]);
+	sucprintf(locationString, COUNT_OF(locationString), _UC("%s,%s,%s"),
+		ftoucstr(location[0]).c_str(), ftoucstr(location[1]).c_str(),
+		ftoucstr(location[2]).c_str());
 
 	matrix[12] = matrix[13] = matrix[14] = 0.0f;
 	directionVector = directionVector.transformPoint(matrix);
@@ -3915,10 +3916,10 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	cleanupFloats(upVector, 3);
 	// The following 3 strings will get re-done later at higher accuracy
 	// for POV-Ray.
-	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%g,%g,%g"),
-		lookAtVector[0], lookAtVector[1], lookAtVector[2]);
-	sucprintf(upString, COUNT_OF(upString), _UC("%g,%g,%g"), upVector[0],
-		upVector[1], upVector[2]);
+	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%s"),
+		lookAtVector.ucstring().c_str());
+	sucprintf(upString, COUNT_OF(upString), _UC("%s"),
+		upVector.ucstring().c_str());
 	sucprintf(message, COUNT_OF(message), ls(_UC("PovCameraMessage")),
 		locationString, lookAtString, upString);
 	TCVector::doubleNormalize(up);
@@ -3928,10 +3929,12 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	TCVector::doubleAdd(location, tempV, lookAt);
 	// Re-do the strings with higher accuracy, so they'll be
 	// accepted by POV-Ray.
-	sucprintf(upString, COUNT_OF(upString), _UC("%.20g,%.20g,%.20g"), up[0],
-		up[1], up[2]);
-	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%.20g,%.20g,%.20g"),
-		lookAt[0], lookAt[1], lookAt[2]);
+	sucprintf(upString, COUNT_OF(upString), _UC("%s,%s,%s"),
+		ftoucstr(up[0], 20).c_str(), ftoucstr(up[1], 20).c_str(),
+		ftoucstr(up[2], 20).c_str());
+	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%s,%s,%s"),
+		ftoucstr(lookAt[0], 20).c_str(), ftoucstr(lookAt[1], 20).c_str(),
+		ftoucstr(lookAt[2], 20).c_str());
 	sucprintf(cameraString, COUNT_OF(cameraString),
 		_UC("camera\n")
 		_UC("{\n")
