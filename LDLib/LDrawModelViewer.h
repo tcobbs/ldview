@@ -179,6 +179,8 @@ class LDrawModelViewer: public TCAlertSender
 		void setFileIsPart(bool);
 		bool getFileIsPart(void) const { return flags.fileIsPart != false; }
 		char* getFilename(void) { return filename; }
+		const char *getFilename(void) const { return filename; }
+		std::string getCurFilename(void) const;
 		virtual int loadModel(bool = true);
 		virtual void drawFPS(TCFloat);
 		virtual void drawBoundingBox(void);

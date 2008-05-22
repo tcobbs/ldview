@@ -1179,19 +1179,22 @@ enum
 {
 	if (returnCode == NSOKButton)
 	{
-		if (htmlInventory->generateHtml([[sheet filename] cStringUsingEncoding:NSASCIIStringEncoding], partsList, [modelView modelViewer]->getFilename()))
+		LDrawModelViewer *modelViewer = [modelView modelViewer];
+		if (htmlInventory->generateHtml([[sheet filename] cStringUsingEncoding:NSASCIIStringEncoding], partsList, modelViewer->getCurFilename().c_str()))
 		{
 			if (htmlInventory->isSnapshotNeeded())
 			{
 				LDrawModelViewer *modelViewer = [modelView modelViewer];
-				
+				bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
+
 				if (!snapshotTaker)
 				{
-					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:[modelView modelViewer] sharedContext:[modelView openGLContext]];
+					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:modelViewer sharedContext:[modelView openGLContext]];
 				}
 				htmlInventory->prepForSnapshot(modelViewer);
 				[snapshotTaker saveFile:[NSString stringWithCString:htmlInventory->getSnapshotPath() encoding:NSASCIIStringEncoding] width:400 height:300 zoomToFit:YES];
 				htmlInventory->restoreAfterSnapshot(modelViewer);
+				TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
 				[modelView rotationUpdate];
 			}
 			if (htmlInventory->getShowFileFlag())
@@ -1531,7 +1534,7 @@ enum
 
 			if ([partsListSheet runSheetInWindow:window] == NSOKButton)
 			{
-				NSString *htmlFilename = [NSString stringWithCString:htmlInventory->defaultFilename([modelView modelViewer]->getFilename()).c_str() encoding:NSASCIIStringEncoding];
+				NSString *htmlFilename = [NSString stringWithCString:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str() encoding:NSASCIIStringEncoding];
 				NSSavePanel *savePanel = [NSSavePanel savePanel];
 				NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
 

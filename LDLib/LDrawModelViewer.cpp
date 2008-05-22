@@ -3686,7 +3686,7 @@ LDPartsList *LDrawModelViewer::getPartsList(void)
 	{
 		LDPartsList *partsList = new LDPartsList;
 
-		partsList->scanModel(mainModel, defaultColorNumber);
+		partsList->scanModel(getCurModel(), defaultColorNumber);
 		return partsList;
 	}
 	else
@@ -4404,5 +4404,29 @@ void LDrawModelViewer::exportCurModel(ExportType type, const char *filename)
 			}
 			exporter->doExport(model);
 		}
+	}
+}
+
+std::string LDrawModelViewer::getCurFilename(void) const
+{
+	const LDLModel *curModel = getCurModel();
+	const char *filename = getFilename();
+	
+	if (curModel == mainModel)
+	{
+		return filename;
+	}
+	else
+	{
+		const char *modelName = curModel->getName();
+		std::string retValue = directoryFromPath(filename);
+		char *temp;
+
+		retValue += '/';
+		retValue += modelName;
+		temp = cleanedUpPath(retValue.c_str());
+		retValue = temp;
+		delete temp;
+		return retValue;
 	}
 }
