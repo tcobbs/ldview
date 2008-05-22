@@ -5249,7 +5249,7 @@ void LDViewWindow::generatePartsList(
 	// Note: if we get here, modelViewer is guaranteed to be non-NULL, so
 	// there's no need to check it.
 	if (htmlInventory->generateHtml(filename, partsList,
-		modelViewer->getFilename()))
+		modelViewer->getCurFilename().c_str()))
 	{
 		if (htmlInventory->isSnapshotNeeded())
 		{
@@ -5258,7 +5258,12 @@ void LDViewWindow::generatePartsList(
 			bool saveActualSize = modelWindow->getSaveActualSize();
 			int saveWidth = modelWindow->getSaveWidth();
 			int saveHeight = modelWindow->getSaveHeight();
+			bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false,
+				false);
+			int origStep = modelViewer->getStep();
 
+			TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);
+			modelViewer->setStep(modelViewer->getNumSteps());
 			htmlInventory->prepForSnapshot(modelViewer);
 			modelWindow->setSaveZoomToFit(true);
 			modelWindow->setSaveActualSize(false);
@@ -5276,6 +5281,8 @@ void LDViewWindow::generatePartsList(
 			modelWindow->setSaveActualSize(saveActualSize);
 			modelWindow->setSaveWidth(saveWidth);
 			modelWindow->setSaveHeight(saveHeight);
+			modelViewer->setStep(origStep);
+			TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
 			modelWindow->forceRedraw();
 		}
 		if (htmlInventory->getShowFileFlag())
@@ -5348,7 +5355,7 @@ LRESULT LDViewWindow::generatePartsList(void)
 				{
 					OPENFILENAME openStruct;
 					char fileTypes[1024];
-					std::string filename = modelViewer->getFilename();
+					std::string filename = modelViewer->getCurFilename();
 					std::string initialDir =
 						modelWindow->getSaveDir(LDPreferences::SOPartsList);
 					size_t findSpot = filename.find_last_of("/\\");
