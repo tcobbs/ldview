@@ -1186,7 +1186,10 @@ enum
 			{
 				LDrawModelViewer *modelViewer = [modelView modelViewer];
 				bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
+				int origStep = modelViewer->getStep();
 
+				modelViewer->setStep(modelViewer->getNumSteps());
+				TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);
 				if (!snapshotTaker)
 				{
 					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:modelViewer sharedContext:[modelView openGLContext]];
@@ -1194,6 +1197,7 @@ enum
 				htmlInventory->prepForSnapshot(modelViewer);
 				[snapshotTaker saveFile:[NSString stringWithCString:htmlInventory->getSnapshotPath() encoding:NSASCIIStringEncoding] width:400 height:300 zoomToFit:YES];
 				htmlInventory->restoreAfterSnapshot(modelViewer);
+				modelViewer->setStep(origStep);
 				TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
 				[modelView rotationUpdate];
 			}
