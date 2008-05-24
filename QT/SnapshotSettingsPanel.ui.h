@@ -13,3 +13,8 @@ void SnapshotSettingsPanel::doEnabledSeries()
 void SnapshotSettingsPanel::doEnabledSize()
 {
 }
+
+void SnapshotSettingsPanel::zoomToggled(bool)
+{
+}
+

@@ -22,6 +22,7 @@ public slots:
 	void clear(void);
 	void doOk(void);
 	void doCancel(void);
+	void zoomToggled(bool);
 protected:
 
 	LDrawModelViewer *modelViewer;

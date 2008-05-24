@@ -8,10 +8,12 @@
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <qpushbutton.h>
+#include <qlineedit.h>
 #include <qstring.h>
 #include <qlabel.h>
 #include "ModelViewerWidget.h"
 #include "LDViewSnapshotSettings.h"
+#include <TCFoundation/TCLocalStrings.h>
 
 SnapshotSettings::SnapshotSettings(ModelViewerWidget *modelWidget)
 	:SnapshotSettingsPanel(),
@@ -44,8 +46,21 @@ void SnapshotSettings::reflectSettings(void)
 		TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
 	setButtonState(pbufferEnabledButton,
 		TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 1, false));
+	autoCropButton->setChecked(
+		TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
+	transparentBackgroundButton->setChecked(
+		TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
+	allStepsBox->setChecked(
+		TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false));
+	suffixEdit->setText(
+		TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
+        TCLocalStrings::get("DefaultStepSuffix"), false));
+	sameScaleCheck->setChecked(
+		TCUserDefaults::boolForKey(SAVE_STEPS_SAME_SCALE_KEY,
+        true, false));
 	doEnabledSize();
 	doEnabledSeries();
+    zoomToggled(true);
 }
 
 SnapshotSettings::~SnapshotSettings(void)
@@ -75,6 +90,19 @@ void SnapshotSettings::doOk()
 		SAVE_ACTUAL_SIZE_KEY, false);
 	TCUserDefaults::setLongForKey(pbufferEnabledButton->isChecked(),
 		IGNORE_PBUFFER_KEY, false);
+	bool saveAllSteps = allStepsBox->isChecked();
+	TCUserDefaults::setBoolForKey(saveAllSteps, SAVE_STEPS_KEY, false);
+	TCUserDefaults::setBoolForKey(autoCropButton->isChecked(), 
+								  AUTO_CROP_KEY, false);
+	TCUserDefaults::setBoolForKey(transparentBackgroundButton->isChecked(),
+				SAVE_ALPHA_KEY, false);
+	if (saveAllSteps)
+	{
+		TCUserDefaults::setStringForKey(suffixEdit->text(),
+			SAVE_STEPS_SUFFIX_KEY, false);
+		TCUserDefaults::setBoolForKey(sameScaleCheck->isChecked(),
+			SAVE_STEPS_SAME_SCALE_KEY, false);
+	}
 	close();
 }
 
@@ -96,5 +124,13 @@ void SnapshotSettings::doEnabledSize()
     heightBox->setEnabled(sizeEnabledButton->isChecked());
     widthLabel->setEnabled(sizeEnabledButton->isChecked());
     heightLabel->setEnabled(sizeEnabledButton->isChecked());
+	zoomToggled(true);
+}
+
+void SnapshotSettings::zoomToggled(bool)
+{
+	sameScaleCheck->setEnabled(sizeEnabledButton->isChecked() &
+        allStepsBox->isChecked() &
+        zoomtofitEnabledButton->isChecked());
 }
 
