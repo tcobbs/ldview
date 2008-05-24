@@ -2817,48 +2817,49 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 		{
 			*strchr(baseFilename, '.') = 0;
 		}
+		char format[32] = "%s.%s";
+		char *extension = NULL;
+		int max;
 		if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
 		{
-			int max = (int)(pow(10.0, saveDigits + 0.1));
-			int i;
-			char format[32];
-
-			sprintf(format, "%%s%%0%dd.%%s", saveDigits);
-			for (i = 1; i < max; i++)
-			{
-				if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-				{
-					sprintf(saveFilename, format, baseFilename, i, "png");
-				}
-				else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-				{
-					sprintf(saveFilename, format, baseFilename, i, "bmp");
-				}
-				else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
-				{
-					sprintf(saveFilename, format, baseFilename, i, "jpg");
-				}
-				if (!fileExists(saveFilename))
-				{
-					return true;
-				}
-			}
+			max = (int)(pow(10.0, saveDigits + 0.1));
+			sprintf(format, "%%s%%0%dd.%%s", saveDigits);	
 		}
-		else
+		else max = 2;
+		int i;
+		for (i = 1; i < max; i++)
 		{
 			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
 			{
-				sprintf(saveFilename, "%s.%s", baseFilename, "png");
-				return true;
+				extension = "png";
 			}
 			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
 			{
-				sprintf(saveFilename, "%s.%s", baseFilename, "bmp");
-				return true;
+				extension = "bmp";
 			}
 			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
 			{
-				sprintf(saveFilename, "%s.%s", baseFilename, "jpg");
+				extension = "jpg";
+			}
+			if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
+			{
+				sprintf(saveFilename, format, baseFilename, i , extension);
+			}
+			else
+			{
+				sprintf(saveFilename, format, baseFilename, extension);
+			}
+			if (TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false))
+			{
+				QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
+						TCLocalStrings::get("DefaultStepSuffix"), false);
+				std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
+                        suffix, 1, modelViewer->getNumSteps());
+                strcpy(saveFilename, temp.c_str());
+
+			}
+			if (!fileExists(saveFilename))
+			{
 				return true;
 			}
 		}

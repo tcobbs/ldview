@@ -520,6 +520,18 @@
         <slot>doEnabledSeries()</slot>
     </connection>
     <connection>
+        <sender>zoomtofitEnabledButton</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SnapshotSettingsPanel</receiver>
+        <slot>zoomToggled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>allStepsBox</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SnapshotSettingsPanel</receiver>
+        <slot>zoomToggled(bool)</slot>
+    </connection>
+    <connection>
         <sender>okButton</sender>
         <signal>clicked()</signal>
         <receiver>SnapshotSettingsPanel</receiver>
@@ -551,6 +563,7 @@
     <slot>doCancel()</slot>
     <slot>doEnabledSeries()</slot>
     <slot>doEnabledSize()</slot>
+    <slot>zoomToggled(bool)</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
