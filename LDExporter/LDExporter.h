@@ -30,6 +30,10 @@ public:
 	virtual void setFov(TCFloat value) { m_fov = value; }
 	virtual void setXPan(TCFloat value) { m_xPan = value; }
 	virtual void setYPan(TCFloat value) { m_yPan = value; }
+	virtual void setAppName(const char *value) { m_appName = value; }
+	virtual void setAppVersion(const char *value) { m_appVersion = value; }
+	virtual void setAppUrl(const char *value) { m_appUrl = value; }
+	virtual void setAppCopyright(const char *value) { m_appCopyright = value; }
 protected:
 	LDLCamera m_camera;
 	TCFloat m_rotationMatrix[16];
@@ -49,6 +53,10 @@ protected:
 	bool m_conditionalEdges;
 	std::string m_udPrefix;
 	std::string m_filename;
+	std::string m_appName;
+	std::string m_appVersion;
+	std::string m_appUrl;
+	std::string m_appCopyright;
 
 	LDExporter(const char *udPrefix = "");
 	virtual ~LDExporter(void);

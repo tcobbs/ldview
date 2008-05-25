@@ -4371,7 +4371,11 @@ const LDLModel *LDrawModelViewer::getCurModel(void) const
 	return const_cast<LDrawModelViewer *>(this)->getCurModel();
 }
 
-void LDrawModelViewer::exportCurModel(ExportType type, const char *filename)
+void LDrawModelViewer::exportCurModel(
+	ExportType type,
+	const char *filename,
+	const char *version /*= NULL*/,
+	const char *copyright /*= NULL*/)
 {
 	LDLModel *model = getCurModel();
 
@@ -4398,11 +4402,26 @@ void LDrawModelViewer::exportCurModel(ExportType type, const char *filename)
 			exporter->setFov(fov);
 			exporter->setXPan(xPan);
 			exporter->setYPan(yPan);
+			exporter->setAppUrl("http://ldview.sourceforge.net/");
+			exporter->setAppName("LDView");
+			if (version != NULL)
+			{
+				exporter->setAppVersion(version);
+			}
+			if (copyright)
+			{
+				exporter->setAppCopyright(copyright);
+			}
+			else
+			{
+				exporter->setAppCopyright("Copyright (C) 2008 Travis Cobbs & Peter Bartfai");
+			}
 			if (filename != NULL)
 			{
 				exporter->setFilename(filename);
 			}
 			exporter->doExport(model);
+			exporter->release();
 		}
 	}
 }
