@@ -690,7 +690,7 @@ enum
 	{
 		unfilteredRootErrorItem = [[ErrorItem alloc] init];
 	}
-	ErrorItem *errorItem = [unfilteredRootErrorItem addChild:[[[ErrorItem alloc] initWithString:[NSString stringWithCString:error->getMessage() encoding:NSASCIIStringEncoding] error:error includeIcon:YES] autorelease]];
+	ErrorItem *errorItem = [unfilteredRootErrorItem addChild:[[[ErrorItem alloc] initWithString:[NSString stringWithASCIICString:error->getMessage()] error:error includeIcon:YES] autorelease]];
 	if (error->getFilename())
 	{
 		lineString = [NSString stringWithFormat:@"%@%s", [OCLocalStrings get:@"ErrorTreeFilePrefix"], error->getFilename()];
@@ -722,7 +722,7 @@ enum
 	{
 		for (int i = 0; i < extraInfo->getCount(); i++)
 		{
-			[self addErrorItem:errorItem string:[NSString stringWithCString:extraInfo->stringAtIndex(i) encoding:NSASCIIStringEncoding] error:error];
+			[self addErrorItem:errorItem string:[NSString stringWithASCIICString:extraInfo->stringAtIndex(i)] error:error];
 		}
 	}
 }
@@ -748,8 +748,7 @@ enum
 	}
 	static NSDate *lastProgressUpdate = NULL;
 	float alertProgress = alert->getProgress();
-	NSString *alertMessage = [NSString stringWithCString:alert->getMessage()
-		encoding:NSASCIIStringEncoding];
+	NSString *alertMessage = [NSString stringWithASCIICString:alert->getMessage()];
 	BOOL forceUpdate = NO;
 	BOOL updated = NO;
 
@@ -1175,12 +1174,24 @@ enum
 	[controller openModel:sender];
 }
 
+- (void)exportSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode == NSOKButton)
+	{
+		LDrawModelViewer *modelViewer = [modelView modelViewer];
+		NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+
+		modelViewer->exportCurModel(LDrawModelViewer::ETPov, [[sheet filename] asciiCString], [[infoDict objectForKey:@"CFBundleVersion"] asciiCString]);
+	}
+	sheetBusy = false;
+}
+
 - (void)htmlSavePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	if (returnCode == NSOKButton)
 	{
 		LDrawModelViewer *modelViewer = [modelView modelViewer];
-		if (htmlInventory->generateHtml([[sheet filename] cStringUsingEncoding:NSASCIIStringEncoding], partsList, modelViewer->getCurFilename().c_str()))
+		if (htmlInventory->generateHtml([[sheet filename] asciiCString], partsList, modelViewer->getCurFilename().c_str()))
 		{
 			if (htmlInventory->isSnapshotNeeded())
 			{
@@ -1195,7 +1206,7 @@ enum
 					snapshotTaker = [[SnapshotTaker alloc] initWithModelViewer:modelViewer sharedContext:[modelView openGLContext]];
 				}
 				htmlInventory->prepForSnapshot(modelViewer);
-				[snapshotTaker saveFile:[NSString stringWithCString:htmlInventory->getSnapshotPath() encoding:NSASCIIStringEncoding] width:400 height:300 zoomToFit:YES];
+				[snapshotTaker saveFile:[NSString stringWithASCIICString:htmlInventory->getSnapshotPath()] width:400 height:300 zoomToFit:YES];
 				htmlInventory->restoreAfterSnapshot(modelViewer);
 				modelViewer->setStep(origStep);
 				TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
@@ -1538,7 +1549,7 @@ enum
 
 			if ([partsListSheet runSheetInWindow:window] == NSOKButton)
 			{
-				NSString *htmlFilename = [NSString stringWithCString:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str() encoding:NSASCIIStringEncoding];
+				NSString *htmlFilename = [NSString stringWithASCIICString:htmlInventory->defaultFilename([modelView modelViewer]->getCurFilename().c_str()).c_str()];
 				NSSavePanel *savePanel = [NSSavePanel savePanel];
 				NSString *defaultFilename = [[htmlFilename lastPathComponent] stringByDeletingPathExtension];
 
@@ -1675,10 +1686,16 @@ enum
 - (IBAction)exportModel:(id)sender
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
-	
+
 	if (modelViewer)
 	{
-		modelViewer->exportCurModel(LDrawModelViewer::ETPov, NULL);
+		NSSavePanel *savePanel = [NSSavePanel savePanel];
+		NSString *defaultFilename = [[[[NSString stringWithASCIICString:modelViewer->getCurFilename().c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pov"];
+
+		[savePanel setRequiredFileType:@"pov"];
+		[savePanel setCanSelectHiddenExtension:YES];
+		sheetBusy = true;
+		[savePanel beginSheetForDirectory:[self defaultSaveDirForOp:LDPreferences::SOExport] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(exportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 	}
 }
 

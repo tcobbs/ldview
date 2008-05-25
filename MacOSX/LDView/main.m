@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "OCUserDefaults.h"
+#import "OCLocalStrings.h"
 #import "CommandLineSnapshot.h"
 
 int main(int argc, char *argv[])
@@ -23,6 +24,8 @@ int main(int argc, char *argv[])
 	[OCUserDefaults setCommandLine:argv];
 	[OCUserDefaults setAppName:@"LDView"];
 	[OCUserDefaults initSession];
+	[OCLocalStrings loadStringTable:[[NSBundle mainBundle] pathForResource:@"LDViewMessages" ofType:@"ini"]];
+	[OCLocalStrings loadStringTable:[[NSBundle mainBundle] pathForResource:@"LDExportMessages" ofType:@"ini"]];
 	done = [CommandLineSnapshot takeSnapshot];
 	[pool release];
 	if (done)
