@@ -450,7 +450,8 @@ class LDrawModelViewer: public TCAlertSender
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 		virtual void setupFont(char *fontFilename);
-		virtual void exportCurModel(ExportType type, const char *filename);
+		virtual void exportCurModel(ExportType type, const char *filename,
+			const char *version = NULL, const char *copyright = NULL);
 
 		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
 		virtual bool mouseUp(int x, int y);

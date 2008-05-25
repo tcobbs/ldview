@@ -41,6 +41,7 @@ LDExporter("PovExporter/")
 	m_findReplacements = boolForKey("FindReplacements", false);
 	m_inlinePov = boolForKey("InlinePov", true);
 	m_hideStuds = boolForKey("HideStuds", false);
+	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
 	m_edgeRadius = floatForKey("EdgeRadius", 0.15f);
 	m_quality = longForKey("Quality", 2);
 }
@@ -101,11 +102,12 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		if (!writeModel(m_pTopModel))
+		if (!writeModel(m_pTopModel, TCVector::getIdentityMatrix()))
 		{
 			return 1;
 		}
-		fprintf(m_pPovFile, "object { %s", getDeclareName(m_pTopModel).c_str());
+		fprintf(m_pPovFile, "object { %s",
+			getDeclareName(m_pTopModel, false).c_str());
 		writeColor(7);
 		fprintf(m_pPovFile, " }\n\n");
 		fprintf(m_pPovFile, "background { color rgb <0, 0, 0> }\n\n");
@@ -121,7 +123,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 	}
 	else
 	{
-		consolePrintf(_UC("%s"), (const char *)ls(_UC("ErrorCreatingPov")));
+		consolePrintf(_UC("%s"), (const char *)ls(_UC("PovErrorCreatingPov")));
 	}
 	return 0;
 }
@@ -132,10 +134,11 @@ bool LDPovExporter::writeHeader(void)
 	const char *author = m_pTopModel->getAuthor();
 	char *filename = filenameFromPath(m_pTopModel->getFilename());
 
-	fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovGeneratedBy"),
-		"LDExport 1.0 (C) 2007 Travis Cobbs");
+	fprintf(m_pPovFile, "// %s %s%s%s %s\n", (const char *)ls("PovGeneratedBy"),
+		m_appName.c_str(), m_appVersion.size() > 0 ? " " : "",
+		m_appVersion.c_str(), m_appCopyright.c_str());
 	fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovSee"),
-		"http://ldview.sourceforge.net/");
+		m_appUrl.c_str());
 	fprintf(m_pPovFile, "// %s %s", (const char *)ls("PovDate"),
 		ctime(&genTime));
 	if (filename != NULL)
@@ -149,7 +152,7 @@ bool LDPovExporter::writeHeader(void)
 		fprintf(m_pPovFile, "// %s %s\n", (const char *)ls("PovLDrawAuthor"),
 			author);
 	}
-	fprintf(m_pPovFile, "%s", (const char *)ls("PovNote"));
+	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
 	fprintf(m_pPovFile, "#declare AMB = 0.4;\n");
 	fprintf(m_pPovFile, "#declare DIF = 0.4;\n");
 	fprintf(m_pPovFile, "#declare REFL = 0.08;\n");
@@ -210,15 +213,29 @@ std::string LDPovExporter::getModelFilename(LDLModel *pModel)
 	return buf;
 }
 
-std::string LDPovExporter::getDeclareName(LDLModel *pModel)
+std::string LDPovExporter::getDeclareName(
+	LDLModel *pModel,
+	bool mirrored)
 {
-	return getDeclareName(getModelFilename(pModel));
+	return getDeclareName(getModelFilename(pModel), mirrored);
 }
 
-std::string LDPovExporter::getDeclareName(const std::string &modelFilename)
+std::string LDPovExporter::getDeclareName(
+	const std::string &modelFilename,
+	bool mirrored)
 {
-	StringStringMap::const_iterator it = m_declareNames.find(modelFilename);
+	StringStringMap::const_iterator it;
+	std::string key;
 
+	if (mirrored)
+	{
+		key = modelFilename + ":mirror";
+	}
+	else
+	{
+		key = modelFilename;
+	}
+	it = m_declareNames.find(key);
 	if (it != m_declareNames.end())
 	{
 		return it->second;
@@ -241,19 +258,23 @@ std::string LDPovExporter::getDeclareName(const std::string &modelFilename)
 	{
 		retValue = replaced;
 	}
+	if (mirrored)
+	{
+		retValue += "_mirror";
+	}
 	delete temp1;
 	delete temp2;
 	delete temp3;
 	delete temp4;
 	delete replaced;
-	m_declareNames[modelFilename] = retValue;
+	m_declareNames[key] = retValue;
 	return retValue;
 }
 
 bool LDPovExporter::scanModelColors(LDLModel *pModel)
 {
 	LDLFileLineArray *fileLines = pModel->getFileLines();
-	std::string declareName = getDeclareName(pModel);
+	std::string declareName = getDeclareName(pModel, false);
 
 	if (m_processedModels[declareName])
 	{
@@ -336,10 +357,12 @@ bool LDPovExporter::writeEdges(void)
 	return true;
 }
 
-bool LDPovExporter::writeModel(LDLModel *pModel)
+bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
 {
 	LDLFileLineArray *fileLines = pModel->getFileLines();
-	std::string declareName = getDeclareName(pModel);
+	bool mirrored = m_unmirrorStuds &&
+		TCVector::determinant(matrix) < 0.0f && pModel->hasStuds();
+	std::string declareName = getDeclareName(pModel, mirrored);
 
 	if (m_processedModels[declareName] || m_emptyModels[declareName])
 	{
@@ -367,11 +390,15 @@ bool LDPovExporter::writeModel(LDLModel *pModel)
 
 					if (pModel)
 					{
-						writeModel(pModel);
+						TCFloat newMatrix[16];
+
+						TCVector::multMatrix(matrix, pModelLine->getMatrix(),
+							newMatrix);
+						writeModel(pModel, newMatrix);
 					}
 				}
 			}
-			return writeModelObject(pModel);
+			return writeModelObject(pModel, mirrored, matrix);
 		}
 	}
 	return true;
@@ -652,7 +679,8 @@ void LDPovExporter::writeDescriptionComment(LDLModel *pModel)
 
 bool LDPovExporter::findModelGeometry(
 	LDLModel *pModel,
-	IntShapeLineListMap &colorGeometryMap)
+	IntShapeLineListMap &colorGeometryMap,
+	bool mirrored)
 {
 	if (pModel == m_pTopModel)
 	{
@@ -673,7 +701,7 @@ bool LDPovExporter::findModelGeometry(
 		{
 			LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
 
-			if (!m_emptyModels[getDeclareName(pModelLine->getModel())])
+			if (!m_emptyModels[getDeclareName(pModelLine->getModel(), mirrored)])
 			{
 				retValue = true;
 			}
@@ -691,7 +719,10 @@ bool LDPovExporter::findModelGeometry(
 	return retValue;
 }
 
-bool LDPovExporter::writeModelObject(LDLModel *pModel)
+bool LDPovExporter::writeModelObject(
+	LDLModel *pModel,
+	bool mirrored,
+	const TCFloat *matrix)
 {
 	if (!m_primSub || !performPrimitiveSubstitution(pModel, false))
 	{
@@ -699,10 +730,10 @@ bool LDPovExporter::writeModelObject(LDLModel *pModel)
 		LDLFileLineArray *fileLines = pModel->getFileLines();
 		int i;
 		int count = pModel->getActiveLineCount();
-		std::string declareName = getDeclareName(pModel);
+		std::string declareName = getDeclareName(pModel, mirrored);
 		IntShapeLineListMap colorGeometryMap;
 
-		if (findModelGeometry(pModel, colorGeometryMap))
+		if (findModelGeometry(pModel, colorGeometryMap, mirrored))
 		{
 			bool ifStarted = false;
 			bool elseStarted = false;
@@ -739,7 +770,8 @@ bool LDPovExporter::writeModelObject(LDLModel *pModel)
 
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
-					writeModelLine((LDLModelLine *)pFileLine, studsStarted);
+					writeModelLine((LDLModelLine *)pFileLine, studsStarted,
+						mirrored, matrix);
 				}
 				else if (pFileLine->getLineType() == LDLLineTypeComment)
 				{
@@ -1114,13 +1146,35 @@ bool LDPovExporter::isStud(LDLModel *pModel)
 	return false;
 }
 
-bool LDPovExporter::writeModelLine(LDLModelLine *pModelLine, bool &studsStarted)
+bool LDPovExporter::writeModelLine(
+	LDLModelLine *pModelLine,
+	bool &studsStarted,
+	bool mirrored,
+	const TCFloat *matrix)
 {
 	LDLModel *pModel = pModelLine->getModel();
+	bool origMirrored = mirrored;
+	TCFloat newModelMatrix[16] = { 0.0f };
 
+	if (m_unmirrorStuds && pModelLine->getModel()->hasStuds())
+	{
+		TCVector::multMatrix(matrix, pModelLine->getMatrix(), newModelMatrix);
+		if (TCVector::determinant(newModelMatrix) < 0.0f)
+		{
+			mirrored = true;
+		}
+		else
+		{
+			mirrored = false;
+		}
+	}
+	else
+	{
+		mirrored = false;
+	}
 	if (pModel)
 	{
-		std::string declareName = getDeclareName(pModel);
+		std::string declareName = getDeclareName(pModel, mirrored);
 
 		if (m_emptyModels[declareName])
 		{
@@ -1137,7 +1191,25 @@ bool LDPovExporter::writeModelLine(LDLModelLine *pModelLine, bool &studsStarted)
 		}
 		fprintf(m_pPovFile, "\tobject { %s ", declareName.c_str());
 		writeSeamMatrix(pModelLine);
-		writeMatrix(pModelLine->getMatrix());
+		if (origMirrored &&
+			stringHasCaseInsensitiveSuffix(pModel->getFilename(), "stud.dat"))
+		{
+			float mirrorMatrix[] = {
+				1.0f, 0.0f, 0.0f, 0.0f,
+				0.0f, 1.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, -1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f,
+			};
+			TCFloat newStudMatrix[16];
+
+			TCVector::multMatrix(pModelLine->getMatrix(), mirrorMatrix,
+				newStudMatrix);
+			writeMatrix(newStudMatrix);
+		}
+		else
+		{
+			writeMatrix(pModelLine->getMatrix());
+		}
 		writeColor(pModelLine->getColorNumber());
 		fprintf(m_pPovFile, " }\n");
 	}
@@ -1640,7 +1712,7 @@ bool LDPovExporter::substituteTorusIO(
 	fprintf(m_pPovFile,
 		"#declare %s%s = torus // Torus %s\n"
 		"{\n"
-		"	1,%s\n", prefix48, getDeclareName(m_modelName).c_str(),
+		"	1,%s\n", prefix48, getDeclareName(m_modelName, false).c_str(),
 		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction, false);
 	if (inner)
@@ -1683,7 +1755,7 @@ bool LDPovExporter::substituteTorusQ(
 	fprintf(m_pPovFile,
 		"#declare %s%s = torus // Torus %s\n"
 		"{\n"
-		"	1,%s\n", prefix48, getDeclareName(m_modelName).c_str(),
+		"	1,%s\n", prefix48, getDeclareName(m_modelName, false).c_str(),
 		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");

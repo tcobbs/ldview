@@ -33,11 +33,12 @@ protected:
 	~LDPovExporter(void);
 	void dealloc(void);
 	bool writeHeader(void);
-	bool writeModel(LDLModel *pModel);
+	bool writeModel(LDLModel *pModel, const TCFloat *matrix);
 	bool writeCamera(void);
 	bool writeLights(void);
 	void writeLight(TCFloat lat, TCFloat lon, TCFloat radius);
-	bool writeModelObject(LDLModel *pModel);
+	bool writeModelObject(LDLModel *pModel, bool mirrored,
+		const TCFloat *matrix);
 	void writeGeometry(const IntShapeLineListMap &colorGeometryMap);
 	bool scanModelColors(LDLModel *pModel);
 	bool writeModelColors(void);
@@ -47,7 +48,8 @@ protected:
 	void writeColor(int colorNumber, bool preSpace = true);
 	void writeColorDeclaration(int colorNumber);
 	void writeRGBA(int r, int g, int b, int a);
-	bool writeModelLine(LDLModelLine *pModelLine, bool &studsStarted);
+	bool writeModelLine(LDLModelLine *pModelLine, bool &studsStarted,
+		bool mirrored, const TCFloat *matrix);
 	void writeCommentLine(LDLCommentLine *pCommentLine, bool &ifStarted,
 		bool &elseStarted, bool &povMode);
 	void writeTriangleLine(LDLTriangleLine *pTriangleLine);
@@ -62,13 +64,13 @@ protected:
 		int start = 0);
 	void writeTriangle(const TCVector *points, int size = -1, int start = 0);
 	void writePoint(const TCVector &point);
-	std::string getDeclareName(LDLModel *pModel);
-	std::string getDeclareName(const std::string &modelFilename);
+	std::string getDeclareName(LDLModel *pModel, bool mirrored);
+	std::string getDeclareName(const std::string &modelFilename, bool mirrored);
 	std::string getModelFilename(LDLModel *pModel);
 	bool findInclude(const std::string &modelFilename);
 	void writeDescriptionComment(LDLModel *pModel);
 	bool findModelGeometry(LDLModel *pModel,
-		IntShapeLineListMap &colorGeometryMap);
+		IntShapeLineListMap &colorGeometryMap, bool mirrored);
 	bool isStud(LDLModel *pModel);
 	void getCameraString(char *&povCamera);
 	void scanEdgePoint(const TCVector &point, const LDLFileLine *pFileLine);
@@ -113,6 +115,7 @@ protected:
 	bool m_findReplacements;
 	bool m_inlinePov;
 	bool m_hideStuds;
+	bool m_unmirrorStuds;
 	long m_quality;
 	TCFloat m_edgeRadius;
 	VectorList m_edgePoints;

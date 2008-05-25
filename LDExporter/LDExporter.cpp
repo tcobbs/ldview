@@ -14,7 +14,9 @@ m_height(3.0f),
 m_fov(25.0f),
 m_xPan(0.0f),
 m_yPan(0.0f),
-m_udPrefix(udPrefix)
+m_udPrefix(udPrefix),
+m_appName("LDExporter"),
+m_appCopyright("Copyright (C) 2008 Travis Cobbs")
 {
 	TCFloat flipMatrix[16];
 	TCFloat tempMatrix[16];
@@ -143,7 +145,7 @@ int LDExporter::runInternal(LDExporter *pExporter)
 #else // TC_NO_UNICODE
 				std::wstring wfilename;
 				stringtowstring(wfilename, filename);
-				consolePrintf(ls(_UC("ErrorLoadingModel")), wfilename.c_str());
+				consolePrintf(ls(_UC("LDEErrorLoadingModel")), wfilename.c_str());
 #endif // TC_NO_UNICODE
 				retValue = 1;
 			}
@@ -151,13 +153,13 @@ int LDExporter::runInternal(LDExporter *pExporter)
 		}
 		else
 		{
-			consolePrintf(ls(_UC("NoFilename")));
+			consolePrintf(ls(_UC("LDENoFilename")));
 			retValue = 1;
 		}
 	}
 	else
 	{
-		consolePrintf(ls(_UC("UnknownOutputType")));
+		consolePrintf(ls(_UC("LDEUnknownOutputType")));
 		retValue = 1;
 	}
 	return retValue;

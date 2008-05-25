@@ -4467,7 +4467,17 @@ void ModelWindow::exportModel(void)
 	curSaveOp = LDPreferences::SOExport;
 	if (getSaveFilename(filename, COUNT_OF(filename)))
 	{
-		modelViewer->exportCurModel(LDrawModelViewer::ETPov, filename);
+		LDViewWindow *ldviewWindow = ((LDViewWindow *)parentWindow);
+		std::string copyright = ldviewWindow->getLegalCopyright();
+		unsigned char copyrightSym = 169;
+		size_t index = copyright.find((char)copyrightSym);
+
+		if (index < copyright.size())
+		{
+			copyright = copyright.substr(0, index) + "(C)" + copyright.substr(index + 1);
+		}
+		modelViewer->exportCurModel(LDrawModelViewer::ETPov, filename,
+			ldviewWindow->getProductVersion());
 	}
 }
 

@@ -76,6 +76,7 @@ LDLModel::LDLModel(void)
 	m_flags.mpd = false;
 	m_flags.noShrink = false;
 	m_flags.official = false;
+	m_flags.hasStuds = false;
 	m_flags.bfcCertify = BFCUnknownState;
 	sm_modelCount++;
 }
@@ -187,6 +188,10 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 	else
 	{
 		ancestorCheck = true;
+	}
+	if (strcasecmp(subModelName, "stud.dat") == 0)
+	{
+		m_flags.hasStuds = true;
 	}
 	adjustedName = copyString(subModelName);
 	replaceStringCharacter(adjustedName, '\\', '/');
@@ -1250,6 +1255,10 @@ bool LDLModel::parse(void)
 					if (model)
 					{
 						model->calcBoundingBox();
+					}
+					if (model->hasStuds())
+					{
+						m_flags.hasStuds = true;
 					}
 					m_flags.bfcInvertNext = false;
 				}
