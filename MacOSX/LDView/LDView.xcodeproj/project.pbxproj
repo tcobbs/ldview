@@ -40,6 +40,7 @@
 		1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */; };
 		1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F2DD26E0DE15E6900C675D7 /* libLDExporter.a */; };
 		1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3080DE7C3D100C675D7 /* LDraw.icns */; };
+		1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */; };
 		1F39B71F0C619E35004CE068 /* LDViewMessages.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1F39B71E0C619E35004CE068 /* LDViewMessages.ini */; };
 		1F3E59ED0DA03AA200D83112 /* UpdaterAlertHandler.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */; };
 		1F3E59FE0DA03D1200D83112 /* Updater.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F3E59FC0DA03D1200D83112 /* Updater.nib */; };
@@ -255,6 +256,7 @@
 		1F2DD1750DD9531A00C675D7 /* SideDrawer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SideDrawer.mm; sourceTree = "<group>"; };
 		1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LDExporter.xcodeproj; path = ../LDExporter/LDExporter.xcodeproj; sourceTree = SOURCE_ROOT; };
 		1F2DD3080DE7C3D100C675D7 /* LDraw.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = LDraw.icns; sourceTree = "<group>"; };
+		1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDExportMessages.ini; path = ../../LDExporter/LDExportMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F39B71E0C619E35004CE068 /* LDViewMessages.ini */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LDViewMessages.ini; path = ../../LDViewMessages.ini; sourceTree = SOURCE_ROOT; };
 		1F3E59EB0DA03AA200D83112 /* UpdaterAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdaterAlertHandler.h; sourceTree = "<group>"; };
 		1F3E59EC0DA03AA200D83112 /* UpdaterAlertHandler.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdaterAlertHandler.mm; sourceTree = "<group>"; };
@@ -714,6 +716,7 @@
 				1FF906680DA73B1D003A9AC0 /* Images */,
 				1FF905C00DA60DCE003A9AC0 /* Credits.rtf */,
 				1F6191610DA48458002A6192 /* Help.html */,
+				1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */,
 				1F39B71E0C619E35004CE068 /* LDViewMessages.ini */,
 				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -906,6 +909,7 @@
 				1FD9CAEC0DC3945000F10F45 /* LatLon.nib in Resources */,
 				1F2DD09F0DD933CD00C675D7 /* MPD.nib in Resources */,
 				1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */,
+				1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
