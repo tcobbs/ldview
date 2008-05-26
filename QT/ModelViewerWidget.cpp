@@ -1145,6 +1145,7 @@ void ModelViewerWidget::showFileExtraDir(void)
 
 void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 {
+#ifndef _NO_BOOST
     if (libraryUpdater)
     {
 		QString statusText;
@@ -1182,10 +1183,12 @@ void ModelViewerWidget::doLibraryUpdateFinished(int finishType)
 			libraryUpdateWindow->setLabelText(statusText);
 		}
 	}
+#endif // _NO_BOOST
 }
 
 void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 {
+#ifndef _NO_BOOST
 	if (!libraryUpdateWindow)
 	{
 		createLibraryUpdateWindow();
@@ -1202,6 +1205,7 @@ void ModelViewerWidget::showLibraryUpdateWindow(bool initialInstall)
 		connect(libraryUpdateWindow, SIGNAL(canceled()), this,
 			SLOT(doLibraryUpdateCanceled()));
 	}
+#endif // _NO_BOOST
 }
 
 void ModelViewerWidget::createLibraryUpdateWindow(void)
@@ -1223,6 +1227,7 @@ void ModelViewerWidget::createLibraryUpdateWindow(void)
 
 bool ModelViewerWidget::installLDraw(void)
 {
+#ifndef _NO_BOOST
 	// Don't lock here unless you're REALLY careful.  In particular, you
 	// DEFINITELY have to unlock prior to doing the event processing.
     if (libraryUpdater)
@@ -1302,10 +1307,12 @@ bool ModelViewerWidget::installLDraw(void)
         delete ldrawDir;
         return libraryUpdateFinished;
 	}
+#endif // _NO_BOOST
 }
 
 void ModelViewerWidget::checkForLibraryUpdates(void)
 {
+#ifndef _NO_BOOST
     if (libraryUpdater)
     {
         showLibraryUpdateWindow(false);
@@ -1340,6 +1347,7 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 			delete updateCheckError;
 		}
     }
+#endif // _NO_BOOST
 }
 
 void ModelViewerWidget::connectMenuShows(void)
