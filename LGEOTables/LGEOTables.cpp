@@ -273,6 +273,8 @@ void addXmlColors(TiXmlElement *rootElement, const ColorMap &colors)
 		TiXmlText *ldrawNumberText;
 		TiXmlElement *povNameElement = new TiXmlElement("POVName");
 		TiXmlText *povNameText = new TiXmlText(color.lgeoName);
+		TiXmlElement *povVersionElement = new TiXmlElement("POVVersion");
+		TiXmlText *povVersionText = new TiXmlText("3.0");
 		TiXmlElement *povFilenameElement = new TiXmlElement("POVFilename");
 		TiXmlText *povFilenameText = new TiXmlText("lg_color.inc");
 		char numberBuf[128];
@@ -281,9 +283,11 @@ void addXmlColors(TiXmlElement *rootElement, const ColorMap &colors)
 		ldrawNumberText = new TiXmlText(numberBuf);
 		ldrawNumberElement->LinkEndChild(ldrawNumberText);
 		povNameElement->LinkEndChild(povNameText);
+		povVersionElement->LinkEndChild(povVersionText);
 		povFilenameElement->LinkEndChild(povFilenameText);
 		colorElement->LinkEndChild(ldrawNumberElement);
 		colorElement->LinkEndChild(povNameElement);
+		colorElement->LinkEndChild(povVersionElement);
 		colorElement->LinkEndChild(povFilenameElement);
 		colorsElement->LinkEndChild(colorElement);
 	}
@@ -294,7 +298,7 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 {
 	TiXmlElement *matricesElement = new TiXmlElement("Matrices");
 	TiXmlElement *matrixElement = new TiXmlElement("LGEOTransform");
-	TiXmlText *matrixText = new TiXmlText("1,0,0,0,0,0,-1,0,0,1,0,0,0,0,0,1");
+	TiXmlText *matrixText = new TiXmlText("0,0,-25,0,-25,0,0,0,0,-25,0,0,0,0,0,1");
 	TiXmlElement *elementsElement = new TiXmlElement("Elements");
 
 	matrixElement->LinkEndChild(matrixText);
@@ -310,6 +314,8 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 		TiXmlText *ldrawText = new TiXmlText(ldrawFilename);
 		TiXmlElement *povNameElement = new TiXmlElement("POVName");
 		TiXmlText *povNameText = new TiXmlText(element.lgeoName);
+		TiXmlElement *povVersionElement = new TiXmlElement("POVVersion");
+		TiXmlText *povVersionText = new TiXmlText("3.0");
 		TiXmlElement *povFilenameElement = new TiXmlElement("POVFilename");
 		TiXmlText *povFilenameText = new TiXmlText("lg_defs.inc");
 		TiXmlElement *povFilename2Element = new TiXmlElement("POVFilename");
@@ -319,11 +325,13 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 
 		ldrawElement->LinkEndChild(ldrawText);
 		povNameElement->LinkEndChild(povNameText);
+		povVersionElement->LinkEndChild(povVersionText);
 		povFilenameElement->LinkEndChild(povFilenameText);
 		povFilename2Element->LinkEndChild(povFilename2Text);
 		matrixElement->LinkEndChild(matrixText);
 		elementElement->LinkEndChild(ldrawElement);
 		elementElement->LinkEndChild(povNameElement);
+		elementElement->LinkEndChild(povVersionElement);
 		elementElement->LinkEndChild(povFilenameElement);
 		elementElement->LinkEndChild(povFilename2Element);
 		elementElement->LinkEndChild(matrixElement);
