@@ -459,57 +459,117 @@
                                             <set>AlignVCenter|AlignLeft</set>
                                         </property>
                                     </widget>
-                                <widget class="QComboBox" row="1" column="1">
-                                    <item>
-                                        <property name="text">
-                                            <string>Model</string>
+                                    <widget class="QComboBox" row="1" column="1">
+                                        <item>
+                                            <property name="text">
+                                                <string>Model</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Last Saved Parts Lists</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Specified</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>partsListsSaveDirBox</cstring>
                                         </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Last Saved Parts Lists</string>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
                                         </property>
-                                    </item>
-                                    <item>
-                                        <property name="text">
-                                            <string>Specified</string>
+                                    </widget>
+                                    <widget class="QLineEdit" row="1" column="2">
+                                        <property name="name">
+                                            <cstring>partsListsSaveDirEdit</cstring>
                                         </property>
-                                    </item>
-                                    <property name="name">
-                                        <cstring>partsListsSaveDirBox</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                </widget>
-                                <widget class="QLineEdit" row="1" column="2">
-                                    <property name="name">
-                                        <cstring>partsListsSaveDirEdit</cstring>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton" row="1" column="3">
-                                    <property name="name">
-                                        <cstring>partsListsSaveDirButton</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="text">
-                                        <string>Browse...</string>
-                                    </property>
-                                </widget>
-                            </grid>
-                        </widget>
+                                    </widget>
+                                    <widget class="QPushButton" row="1" column="3">
+                                        <property name="name">
+                                            <cstring>partsListsSaveDirButton</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="text">
+                                            <string>Browse...</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel" row="2" column="0">
+                                        <property name="name">
+                                            <cstring>exportsDirLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Exports:</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter|AlignLeft</set>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox" row="2" column="1">
+                                        <item>
+                                            <property name="text">
+                                                <string>Model</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Last Saved Exports</string>
+                                            </property>
+                                        </item>
+                                        <item>
+                                            <property name="text">
+                                                <string>Specified</string>
+                                            </property>
+                                        </item>
+                                        <property name="name">
+                                            <cstring>exportsListsSaveDirBox</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLineEdit" row="2" column="2">
+                                        <property name="name">
+                                            <cstring>exportsSaveDirEdit</cstring>
+                                        </property>
+                                    </widget>
+                                    <widget class="QPushButton" row="2" column="3">
+                                        <property name="name">
+                                            <cstring>exportsSaveDirButton</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="text">
+                                            <string>Browse...</string>
+                                        </property>
+                                    </widget>
+                                </grid>
+                            </widget>
                         </vbox>
                     </widget>
                     <spacer>
