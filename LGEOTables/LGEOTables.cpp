@@ -331,6 +331,13 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 		matrixElement->LinkEndChild(matrixText);
 		elementElement->LinkEndChild(ldrawElement);
 		elementElement->LinkEndChild(povNameElement);
+		if (element.flags & 0x01)
+		{
+			povNameElement = new TiXmlElement("POVName");
+			povNameText = new TiXmlText(element.lgeoName + "_slope");
+			povNameElement->LinkEndChild(povNameText);
+			elementElement->LinkEndChild(povNameElement);
+		}
 		elementElement->LinkEndChild(povVersionElement);
 		elementElement->LinkEndChild(povFilenameElement);
 		elementElement->LinkEndChild(povFilename2Element);

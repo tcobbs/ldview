@@ -257,10 +257,10 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		fprintf(m_pPovFile, "object { %s",
+		fprintf(m_pPovFile, "object {\n\t%s\n\t",
 			getDeclareName(m_pTopModel, false).c_str());
 		writeColor(7);
-		fprintf(m_pPovFile, " }\n\n");
+		fprintf(m_pPovFile, "\n}\n\n");
 		fprintf(m_pPovFile, "background { color rgb <0, 0, 0> }\n\n");
 		if (!writeCamera())
 		{
@@ -350,7 +350,7 @@ bool LDPovExporter::writeHeader(void)
 	return true;
 }
 
-std::string LDPovExporter::getModelFilename(LDLModel *pModel)
+std::string LDPovExporter::getModelFilename(const LDLModel *pModel)
 {
 	std::string buf;
 	const char *modelFilename = pModel->getName();
@@ -524,11 +524,7 @@ bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
 		return true;
 	}
 	m_processedModels[declareName] = true;
-	if (findModelInclude(getModelFilename(pModel)))
-	{
-		writeDescriptionComment(pModel);
-	}
-	else
+	if (!findModelInclude(pModel))
 	{
 		if (fileLines)
 		{
@@ -719,22 +715,12 @@ void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, TCFloat radius)
 bool LDPovExporter::writeLights(void)
 {
 	fprintf(m_pPovFile, "// Lights\n");
-	writeLight(45.0, -45.0, m_radius * 2.0f);
+	writeLight(45.0, 0.0, m_radius * 2.0f);
+	writeLight(30.0, 120.0, m_radius * 2.0f);
+	writeLight(60.0, -120.0, m_radius * 2.0f);
 	//writeLight(45.0, 0.0, m_radius * 2.0f);
 	//writeLight(30.0, 120.0, m_radius * 2.0f);
 	//writeLight(60.0, -120.0, m_radius * 2.0f);
-	//fprintf(m_pPovFile, "light_source {\n"
-	//	"	<69,-178.853,-203.853>  // Latitude,Longitude,Radius: 45,0,245.865\n"
-	//	"	color rgb <1,1,1>\n"
-	//	"}\n"
-	//	"light_source {\n"
-	//	"	<253.399,-127.933,76.4629>  // Latitude,Longitude,Radius: 30,120,245.865\n"
-	//	"	color rgb <1,1,1>\n"
-	//	"}\n"
-	//	"light_source {\n"
-	//	"	<-37.4629,-217.926,31.4664>  // Latitude,Longitude,Radius: 60,-120,245.865\n"
-	//	"	color rgb <1,1,1>\n"
-	//	"}\n");
 	return true;
 }
 
@@ -770,7 +756,8 @@ std::string LDPovExporter::findInclude(const std::string &filename)
 
 bool LDPovExporter::writeInclude(
 	const std::string &filename,
-	bool lineFeed /*= true*/)
+	bool lineFeed /*= true*/,
+	const LDLModel *pModel /*= NULL*/)
 {
 	if (m_includes.find(filename) == m_includes.end())
 	{
@@ -787,9 +774,17 @@ bool LDPovExporter::writeInclude(
 				version.c_str(), version.c_str());
 		}
 		fprintf(m_pPovFile, "#include \"%s\"", filename.c_str());
+		if (pModel)
+		{
+			writeDescriptionComment(pModel);
+		}
+		else
+		{
+			fprintf(m_pPovFile, "\n");
+		}
 		if (version.size() > 0)
 		{
-			fprintf(m_pPovFile, "\n#if (version < ORIGVER) #version ORIGVER; #end");
+			fprintf(m_pPovFile, "#if (version < ORIGVER) #version ORIGVER; #end");
 		}
 		if (lineFeed)
 		{
@@ -801,8 +796,9 @@ bool LDPovExporter::writeInclude(
 	return false;
 }
 
-bool LDPovExporter::findXmlModelInclude(const std::string &modelFilename)
+bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 {
+	const std::string modelFilename = getModelFilename(pModel);
 	std::string key = modelFilename;
 
 	convertStringToLower(&key[0]);
@@ -811,19 +807,23 @@ bool LDPovExporter::findXmlModelInclude(const std::string &modelFilename)
 	{
 		const PovElement &element = it->second;
 		StringList::const_iterator itFilename;
-		bool firstFile = true;
+		bool wrote = false;
+		size_t i = 0;
 
 		for (itFilename = element.povFilenames.begin();
 			itFilename != element.povFilenames.end(); itFilename++)
 		{
-			if (!firstFile)
+			const LDLModel *pDescModel = NULL;
+
+			if (i == element.povFilenames.size() - 1)
 			{
-				fprintf(m_pPovFile, "\n");
+				pDescModel = pModel;
 			}
-			if (writeInclude(*itFilename, false))
+			if (writeInclude(*itFilename, true, pDescModel))
 			{
-				firstFile = false;
+				wrote = true;
 			}
+			i++;
 		}
 		m_declareNames[modelFilename] = element.povName;
 		m_matrices[key] = element.matrix;
@@ -832,9 +832,10 @@ bool LDPovExporter::findXmlModelInclude(const std::string &modelFilename)
 	return false;
 }
 
-bool LDPovExporter::findModelInclude(const std::string &modelFilename)
+bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 {
-	if (m_xmlMap && findXmlModelInclude(modelFilename))
+	const std::string &modelFilename = getModelFilename(pModel);
+	if (m_xmlMap && findXmlModelInclude(pModel))
 	{
 		return true;
 	}
@@ -899,7 +900,7 @@ bool LDPovExporter::findModelInclude(const std::string &modelFilename)
 			fclose(pIncFile);
 			if (found)
 			{
-				writeInclude(incFilename, false);
+				writeInclude(incFilename, true, pModel);
 				return true;
 			}
 		}
@@ -907,7 +908,7 @@ bool LDPovExporter::findModelInclude(const std::string &modelFilename)
 	return false;
 }
 
-void LDPovExporter::writeDescriptionComment(LDLModel *pModel)
+void LDPovExporter::writeDescriptionComment(const LDLModel *pModel)
 {
 		if (pModel->getDescription() != NULL)
 		{
@@ -1086,7 +1087,7 @@ void LDPovExporter::writeGeometry(const IntShapeLineListMap &colorGeometryMap)
 		if (itMap->first != 16)
 		{
 			fprintf(m_pPovFile, "\t\t");
-			writeColor(itMap->first, false);
+			writeColor(itMap->first);
 			fprintf(m_pPovFile, "\n");
 		}
 		endMesh();
@@ -1134,7 +1135,7 @@ void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 		pModel->getBoundingBox(min, max);
 		size = max - min;
 		center = (min + max) / 2.0f;
-		fprintf(m_pPovFile, "matrix <%s,0,0,0,%s,0,0,0,%s,%s,%s,%s> ",
+		fprintf(m_pPovFile, "matrix <%s,0,0,0,%s,0,0,0,%s,%s,%s,%s>\n\t\t",
 			getSizeSeamString(size[0]).c_str(),
 			getSizeSeamString(size[1]).c_str(),
 			getSizeSeamString(size[2]).c_str(),
@@ -1184,11 +1185,12 @@ void LDPovExporter::writeMatrix(
 	fprintf(m_pPovFile, ">");
 }
 
-void LDPovExporter::writeColor(int colorNumber, bool preSpace /*= true*/)
+void LDPovExporter::writeColor(int colorNumber)
 {
 	if (colorNumber != 16)
 	{
-		fprintf(m_pPovFile, "%s#if (version >= 3.1) material #else texture #end { Color%d }", preSpace ? " " : "",
+		fprintf(m_pPovFile,
+			"#if (version >= 3.1) material #else texture #end { Color%d }",
 			colorNumber);
 	}
 }
@@ -1200,8 +1202,22 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 		int r, g, b, a;
 		LDLPalette *pPalette = m_pTopModel->getMainModel()->getPalette();
 		LDLColorInfo colorInfo;
+		PovColorMap::const_iterator it = m_xmlColors.end();
 
 		pPalette->getRGBA(colorNumber, r, g, b, a);
+		if (m_xmlMap)
+		{
+			it = m_xmlColors.find(colorNumber);
+			if (it != m_xmlColors.end())
+			{
+				PovMapping color = it->second;
+				for (StringList::const_iterator it2 = color.povFilenames.begin();
+					it2 != color.povFilenames.end(); it2++)
+				{
+					writeInclude(*it2);
+				}
+			}
+		}
 		fprintf(m_pPovFile, "#ifndef (Color%d)", colorNumber);
 		colorInfo = pPalette->getAnyColorInfo(colorNumber);
 		if (colorInfo.name[0])
@@ -1212,56 +1228,63 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 			"\n#declare Color%d = #if (version >= 3.1) material { #end\n\ttexture\n",
 			colorNumber);
 		fprintf(m_pPovFile, "\t{\n");
-		fprintf(m_pPovFile, "\t\tpigment { ");
-		if (a != 255)
+		if (it != m_xmlColors.end())
 		{
-			fprintf(m_pPovFile, "#if (QUAL > 1) ");
-		}
-		writeRGBA(r, g, b, a);
-		if (a != 255)
-		{
-			fprintf(m_pPovFile, " #else ");
-			writeRGBA(r, g, b, 255);
-			fprintf(m_pPovFile, " #end");
-		}
-		fprintf(m_pPovFile, " }\n");
-		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
-		fprintf(m_pPovFile, "\t\tfinish { ambient AMB diffuse DIF }\n");
-		if (a == 255)
-		{
-			if (colorInfo.rubber)
-			{
-				fprintf(m_pPovFile, "\t\tfinish { phong RUBBER_PHONG phong_size RUBBER_PHONGS reflection RUBBER_REFL ");
-			}
-			else
-			{
-				fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection ");
-				if (colorInfo.chrome)
-				{
-					fprintf(m_pPovFile, "CHROME_REFL brilliance CHROME_BRIL metallic specular CHROME_SPEC roughness CHROME_ROUGH");
-				}
-				else
-				{
-					fprintf(m_pPovFile, "REFL ");
-				}
-			}
-			fprintf(m_pPovFile, "}\n");
+			fprintf(m_pPovFile, "\t\t%s\n\t}\n", it->second.povName.c_str());
 		}
 		else
 		{
-			fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection TREFL }\n");
-		}
-		if (a != 255)
-		{
-			fprintf(m_pPovFile, "\t\t#if (version >= 3.1) #else finish { refraction 1 ior IOR } #end\n");
-		}
-		fprintf(m_pPovFile, "#end\n");
-		fprintf(m_pPovFile, "\t}\n");
-		if (a != 255)
-		{
-			fprintf(m_pPovFile, "#if (version >= 3.1) #if (QUAL > 1)\n");
-			fprintf(m_pPovFile, "\tinterior { ior IOR }\n");
-			fprintf(m_pPovFile, "#end #end\n");
+			fprintf(m_pPovFile, "\t\tpigment { ");
+			if (a != 255)
+			{
+				fprintf(m_pPovFile, "#if (QUAL > 1) ");
+			}
+			writeRGBA(r, g, b, a);
+			if (a != 255)
+			{
+				fprintf(m_pPovFile, " #else ");
+				writeRGBA(r, g, b, 255);
+				fprintf(m_pPovFile, " #end");
+			}
+			fprintf(m_pPovFile, " }\n");
+			fprintf(m_pPovFile, "#if (QUAL > 1)\n");
+			fprintf(m_pPovFile, "\t\tfinish { ambient AMB diffuse DIF }\n");
+			if (a == 255)
+			{
+				if (colorInfo.rubber)
+				{
+					fprintf(m_pPovFile, "\t\tfinish { phong RUBBER_PHONG phong_size RUBBER_PHONGS reflection RUBBER_REFL ");
+				}
+				else
+				{
+					fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection ");
+					if (colorInfo.chrome)
+					{
+						fprintf(m_pPovFile, "CHROME_REFL brilliance CHROME_BRIL metallic specular CHROME_SPEC roughness CHROME_ROUGH");
+					}
+					else
+					{
+						fprintf(m_pPovFile, "REFL ");
+					}
+				}
+				fprintf(m_pPovFile, "}\n");
+			}
+			else
+			{
+				fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection TREFL }\n");
+			}
+			if (a != 255)
+			{
+				fprintf(m_pPovFile, "\t\t#if (version >= 3.1) #else finish { refraction 1 ior IOR } #end\n");
+			}
+			fprintf(m_pPovFile, "#end\n");
+			fprintf(m_pPovFile, "\t}\n");
+			if (a != 255)
+			{
+				fprintf(m_pPovFile, "#if (version >= 3.1) #if (QUAL > 1)\n");
+				fprintf(m_pPovFile, "\tinterior { ior IOR }\n");
+				fprintf(m_pPovFile, "#end #end\n");
+			}
 		}
 		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
 		fprintf(m_pPovFile, "#end\n\n");
@@ -1453,7 +1476,7 @@ bool LDPovExporter::writeModelLine(
 		{
 			endStuds(studsStarted);
 		}
-		fprintf(m_pPovFile, "\tobject { %s ", declareName.c_str());
+		fprintf(m_pPovFile, "\tobject {\n\t\t%s\n\t\t", declareName.c_str());
 		writeSeamMatrix(pModelLine);
 		if (origMirrored &&
 			stringHasCaseInsensitiveSuffix(pModel->getFilename(), "stud.dat"))
@@ -1475,8 +1498,9 @@ bool LDPovExporter::writeModelLine(
 			writeMatrix(pModelLine->getMatrix(),
 				getModelFilename(pModel).c_str());
 		}
+		fprintf(m_pPovFile, "\n\t\t");
 		writeColor(pModelLine->getColorNumber());
-		fprintf(m_pPovFile, " }\n");
+		fprintf(m_pPovFile, "\n\t}\n");
 	}
 	return true;
 }

@@ -62,7 +62,7 @@ protected:
 	bool writeEdges(void);
 	void writeMatrix(TCFloat *matrix, const char *filename = NULL);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
-	void writeColor(int colorNumber, bool preSpace = true);
+	void writeColor(int colorNumber);
 	void writeColorDeclaration(int colorNumber);
 	void writeRGBA(int r, int g, int b, int a);
 	bool writeModelLine(LDLModelLine *pModelLine, bool &studsStarted,
@@ -83,11 +83,11 @@ protected:
 	void writePoint(const TCVector &point);
 	std::string getDeclareName(LDLModel *pModel, bool mirrored);
 	std::string getDeclareName(const std::string &modelFilename, bool mirrored);
-	std::string getModelFilename(LDLModel *pModel);
+	std::string getModelFilename(const LDLModel *pModel);
 	std::string findInclude(const std::string &filename);
-	bool findModelInclude(const std::string &modelFilename);
-	bool findXmlModelInclude(const std::string &modelFilename);
-	void writeDescriptionComment(LDLModel *pModel);
+	bool findModelInclude(const LDLModel *pModel);
+	bool findXmlModelInclude(const LDLModel *pModel);
+	void writeDescriptionComment(const LDLModel *pModel);
 	bool findModelGeometry(LDLModel *pModel,
 		IntShapeLineListMap &colorGeometryMap, bool mirrored);
 	bool isStud(LDLModel *pModel);
@@ -99,7 +99,8 @@ protected:
 		const char *ldrawElementName, PovMapping &mapping);
 	void loadXmlMatrices(TiXmlElement *matrices);
 	void loadXmlElements(TiXmlElement *elements);
-	bool writeInclude(const std::string &filename, bool lineFeed = true);
+	bool writeInclude(const std::string &filename, bool lineFeed = true,
+		const LDLModel *pModel = NULL);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
