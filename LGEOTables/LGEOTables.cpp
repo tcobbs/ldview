@@ -294,6 +294,30 @@ void addXmlColors(TiXmlElement *rootElement, const ColorMap &colors)
 	rootElement->LinkEndChild(colorsElement);
 }
 
+TiXmlElement *addElement(
+	TiXmlElement *parent,
+	const char *name,
+	const char *value = NULL)
+{
+	TiXmlElement *child = new TiXmlElement(name);
+
+	if (value)
+	{
+		TiXmlText *text = new TiXmlText(value);
+		child->LinkEndChild(text);
+	}
+	parent->LinkEndChild(child);
+	return child;
+}
+
+TiXmlElement *addElement(
+	TiXmlElement *parent,
+	const char *name,
+	const std::string &value)
+{
+	return addElement(parent, name, value.c_str());
+}
+
 void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 {
 	TiXmlElement *matricesElement = new TiXmlElement("Matrices");
@@ -309,40 +333,22 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 	{
 		const std::string &ldrawFilename = it->first;
 		const Element &element = it->second;
-		TiXmlElement *elementElement = new TiXmlElement("Element");
-		TiXmlElement *ldrawElement = new TiXmlElement("LDrawFilename");
-		TiXmlText *ldrawText = new TiXmlText(ldrawFilename);
-		TiXmlElement *povNameElement = new TiXmlElement("POVName");
-		TiXmlText *povNameText = new TiXmlText(element.lgeoName);
-		TiXmlElement *povVersionElement = new TiXmlElement("POVVersion");
-		TiXmlText *povVersionText = new TiXmlText("3.0");
-		TiXmlElement *povFilenameElement = new TiXmlElement("POVFilename");
-		TiXmlText *povFilenameText = new TiXmlText("lg_defs.inc");
-		TiXmlElement *povFilename2Element = new TiXmlElement("POVFilename");
-		TiXmlText *povFilename2Text = new TiXmlText(element.lgeoFilename);
-		TiXmlElement *matrixElement = new TiXmlElement("MatrixRef");
-		TiXmlText *matrixText = new TiXmlText("LGEOTransform");
-
-		ldrawElement->LinkEndChild(ldrawText);
-		povNameElement->LinkEndChild(povNameText);
-		povVersionElement->LinkEndChild(povVersionText);
-		povFilenameElement->LinkEndChild(povFilenameText);
-		povFilename2Element->LinkEndChild(povFilename2Text);
-		matrixElement->LinkEndChild(matrixText);
-		elementElement->LinkEndChild(ldrawElement);
-		elementElement->LinkEndChild(povNameElement);
+		TiXmlElement *elementElement = addElement(elementsElement, "Element");
+		addElement(elementElement, "LDrawFilename", ldrawFilename);
+		addElement(elementElement, "POVName", element.lgeoName);
+		TiXmlElement *nameElement = addElement(elementElement, "POVName",
+			element.lgeoName + "_clear");
+		nameElement->SetAttribute("Alternate", "Clear");
 		if (element.flags & 0x01)
 		{
-			povNameElement = new TiXmlElement("POVName");
-			povNameText = new TiXmlText(element.lgeoName + "_slope");
-			povNameElement->LinkEndChild(povNameText);
-			elementElement->LinkEndChild(povNameElement);
+			nameElement = addElement(elementElement, "POVName",
+				element.lgeoName + "_slope");
+			nameElement->SetAttribute("Texture", "Slope");
 		}
-		elementElement->LinkEndChild(povVersionElement);
-		elementElement->LinkEndChild(povFilenameElement);
-		elementElement->LinkEndChild(povFilename2Element);
-		elementElement->LinkEndChild(matrixElement);
-		elementsElement->LinkEndChild(elementElement);
+		addElement(elementElement, "POVVersion", "3.0");
+		addElement(elementElement, "POVFilename", "lg_defs.inc");
+		addElement(elementElement, "POVFilename", element.lgeoFilename);
+		addElement(elementElement, "MatrixRef", "LGEOTransform");
 	}
 	rootElement->LinkEndChild(elementsElement);
 }
