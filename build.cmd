@@ -128,7 +128,35 @@ cl %CFLAGS% /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\TRE.pc
 link -lib /nologo /out:Release\TRE.lib Release\*.obj
 
 
+cd ..\LDExporter
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.lib *.idb
+cd ..
 
+cl %CFLAGS% /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LDExporter.pch /YX /c *.cpp
+
+link -lib /nologo /out:Release\LDExporter.lib Release\*.obj
+
+cd ..\LGEOTables
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.lib *.idb
+cd ..
+
+cl %CFLAGS% /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LGEOTables.pch /YX /c *.cpp
+
+link -lib /nologo /out:Release\LGEOTables.lib Release\*.obj
+
+cd ..\gl2ps
+if not exist Release mkdir Release
+cd Release
+del /q *.pch *.obj *.lib *.idb
+cd ..
+
+cl %CFLAGS% /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\gl2ps.pch /YX /c *.c
+
+link -lib /nologo /out:Release\gl2ps.lib Release\*.obj
 
 
 cd ..\CUI
@@ -155,7 +183,7 @@ rc /l 0x409 /foRelease\LDView.res /d NDEBUG /d LDVIEW_APP LDView.rc
 
 cl %CFLAGS% /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /D _TC_STATIC /D LDVIEW_APP /c *.cpp
 
-link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib libjpeg.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\LDView.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib %EXTRALFLAGS%
+link user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib libjpeg.lib version.lib unzip32.lib /nologo /subsystem:windows /incremental:no /pdb:Release\LDView.pdb /machine:I386 /nodefaultlib:"libc.lib" /out:Release\LDView.exe /libpath:lib Release\*.obj Release\LDView.res CUI\Release\CUI.lib TRE\Release\TRE.lib LDLib\Release\LDLib.lib LDLoader\Release\LDLoader.lib TCFoundation\Release\TCFoundation.lib LDExporter\Release\LDExporter.lib gl2ps\Release\gl2ps.lib %EXTRALFLAGS%
 
 
 cd Translations\German
