@@ -12,6 +12,8 @@ UI_DIR = .ui
 MOC_DIR = .moc
 OBJECTS_DIR = .obj
 
+#DEFINES += _NO_BOOST
+
 unix {
   UNAME = $$system(uname -m)
   LDVDEV64 = $$(LDVDEV64)
