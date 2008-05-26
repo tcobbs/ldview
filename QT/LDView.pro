@@ -86,7 +86,7 @@ win32 {
   DEFINES += _TC_STATIC
   INCLUDE += -I../../boost_1_33_1
   LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
-          -L../TRE/Release -lLDLib -L../lib -lunzip32 \
+          -L../TRE/Release -lLDLib -L../LDExporter/Release -L../lib -lunzip32 \
 		-llibboost_thread-vc71-mt-s -L../gl2ps/Release
 }
 
