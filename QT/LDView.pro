@@ -154,6 +154,8 @@ TRANSLATIONS   =  	ldview_en.ts \
 					ldview_hu.ts
 VERSION = 3.1
 macx {
+# This has to be down here, because -ltinyxml has to come after -lLDExporter.
+	LIBS	+= -ltinyxml
 	RC_FILE = images/LDView.icns
 	helpfile.target = LDView.app/Contents/MacOS/Help.html
 	helpfile.commands = @$(CHK_DIR_EXISTS) LDView.app/Contents/MacOS/ || \
