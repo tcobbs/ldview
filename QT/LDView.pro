@@ -141,6 +141,10 @@ exists($(QTDIR)/include/Qt3Support/q3button.h){
 message(QT4)
 }
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
+unix {
+# This has to be down here, because -ltinyxml has to come after -lLDExporter.
+	LIBS	+= -ltinyxml
+}
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
