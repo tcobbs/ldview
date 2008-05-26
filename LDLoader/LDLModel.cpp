@@ -1256,7 +1256,7 @@ bool LDLModel::parse(void)
 					{
 						model->calcBoundingBox();
 					}
-					if (model->hasStuds())
+					if (model != NULL && model->hasStuds())
 					{
 						m_flags.hasStuds = true;
 					}
