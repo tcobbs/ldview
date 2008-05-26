@@ -294,7 +294,7 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 {
 	TiXmlElement *matricesElement = new TiXmlElement("Matrices");
 	TiXmlElement *matrixElement = new TiXmlElement("LGEOTransform");
-	TiXmlText *matrixText = new TiXmlText("1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1");
+	TiXmlText *matrixText = new TiXmlText("1,0,0,0,0,0,-1,0,0,1,0,0,0,0,0,1");
 	TiXmlElement *elementsElement = new TiXmlElement("Elements");
 
 	matrixElement->LinkEndChild(matrixText);
@@ -311,17 +311,21 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 		TiXmlElement *povNameElement = new TiXmlElement("POVName");
 		TiXmlText *povNameText = new TiXmlText(element.lgeoName);
 		TiXmlElement *povFilenameElement = new TiXmlElement("POVFilename");
-		TiXmlText *povFilenameText = new TiXmlText(element.lgeoFilename);
+		TiXmlText *povFilenameText = new TiXmlText("lg_defs.inc");
+		TiXmlElement *povFilename2Element = new TiXmlElement("POVFilename");
+		TiXmlText *povFilename2Text = new TiXmlText(element.lgeoFilename);
 		TiXmlElement *matrixElement = new TiXmlElement("MatrixRef");
 		TiXmlText *matrixText = new TiXmlText("LGEOTransform");
 
 		ldrawElement->LinkEndChild(ldrawText);
 		povNameElement->LinkEndChild(povNameText);
 		povFilenameElement->LinkEndChild(povFilenameText);
+		povFilename2Element->LinkEndChild(povFilename2Text);
 		matrixElement->LinkEndChild(matrixText);
 		elementElement->LinkEndChild(ldrawElement);
 		elementElement->LinkEndChild(povNameElement);
 		elementElement->LinkEndChild(povFilenameElement);
+		elementElement->LinkEndChild(povFilename2Element);
 		elementElement->LinkEndChild(matrixElement);
 		elementsElement->LinkEndChild(elementElement);
 	}
