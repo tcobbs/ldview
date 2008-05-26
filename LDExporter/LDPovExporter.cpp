@@ -11,6 +11,8 @@
 #include <LDLoader/LDLPalette.h>
 #include <LDLoader/LDLAutoCamera.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <tinyxml.h>
 
 #if defined WIN32 && defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -24,21 +26,21 @@ LDExporter("PovExporter/")
 	if (ldrawDir)
 	{
 		StringList subDirectories;
-		std::string base;
 
 		subDirectories.push_back("/pov/p/");
 		subDirectories.push_back("/pov/parts/");
 		replaceStringCharacter(ldrawDir, '\\', '/');
 		stripTrailingPathSeparators(ldrawDir);
-		base = ldrawDir;
+		m_ldrawDir = ldrawDir;
 		delete ldrawDir;
 		for (StringList::const_iterator it = subDirectories.begin();
 			it != subDirectories.end(); it++)
 		{
-			m_searchPath.push_back(base + *it);
+			m_searchPath.push_back(m_ldrawDir + *it);
 		}
 	}
 	m_findReplacements = boolForKey("FindReplacements", false);
+	m_xmlMap = boolForKey("XmlMap", true);
 	m_inlinePov = boolForKey("InlinePov", true);
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
@@ -53,6 +55,151 @@ LDPovExporter::~LDPovExporter(void)
 void LDPovExporter::dealloc(void)
 {
 	LDExporter::dealloc();
+}
+
+void LDPovExporter::loadXmlMatrices(TiXmlElement *matrices)
+{
+	TiXmlElement *element;
+
+	for (element = matrices->FirstChildElement(); element != NULL;
+		element = element->NextSiblingElement())
+	{
+		m_xmlMatrices[element->Value()] = element->GetText();
+	}
+}
+
+std::string LDPovExporter::loadPovMapping(
+	TiXmlElement *element,
+	const char *ldrawElementName,
+	PovMapping &mapping)
+{
+	TiXmlElement *child = element->FirstChildElement("POVName");
+	std::string ldrawValue;
+	std::string povVersion;
+
+	if (child == NULL)
+	{
+		return "";
+	}
+	mapping.povName = child->GetText();
+	child = element->FirstChildElement(ldrawElementName);
+	if (child == NULL)
+	{
+		return "";
+	}
+	ldrawValue = child->GetText();
+	child = element->FirstChildElement("POVVersion");
+	if (child)
+	{
+		povVersion = child->GetText();
+	}
+	for (child = element->FirstChildElement("POVFilename"); child != NULL;
+		child = child->NextSiblingElement("POVFilename"))
+	{
+		std::string filename = child->GetText();
+
+		mapping.povFilenames.push_back(filename);
+		if (povVersion.size() > 0)
+		{
+			m_includeVersions[filename] = povVersion;
+		}
+	}
+	return ldrawValue;
+}
+
+void LDPovExporter::loadXmlColors(TiXmlElement *colors)
+{
+	TiXmlElement *element;
+
+	for (element = colors->FirstChildElement(); element != NULL;
+		element = element->NextSiblingElement())
+	{
+		PovMapping colorMapping;
+		std::string ldrawValue = loadPovMapping(element, "LDrawNumber",
+			colorMapping);
+
+		if (ldrawValue.size() > 0)
+		{
+			m_xmlColors[(TCULong)atoi(ldrawValue.c_str())] = colorMapping;
+		}
+	}
+}
+
+void LDPovExporter::loadXmlElements(TiXmlElement *elements)
+{
+	TiXmlElement *element;
+
+	for (element = elements->FirstChildElement(); element != NULL;
+		element = element->NextSiblingElement())
+	{
+		PovElement povElement;
+		std::string ldrawFilename = loadPovMapping(element, "LDrawFilename",
+			povElement);
+
+		if (ldrawFilename.size() > 0)
+		{
+			TiXmlElement *child = element->FirstChildElement("MatrixRef");
+			std::string matrixString;
+			TCFloat *m;
+
+			if (child)
+			{
+				matrixString = m_xmlMatrices[child->GetText()];
+			}
+			if (matrixString.size() == 0)
+			{
+				child = element->FirstChildElement("Matrix");
+
+				if (child)
+				{
+					matrixString = child->GetText();
+				}
+			}
+			m = povElement.matrix;
+			if (sscanf(matrixString.c_str(),
+				"%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,", &m[0],
+				&m[1], &m[2], &m[3], &m[4], &m[5], &m[6], &m[7], &m[8], &m[9],
+				&m[10], &m[11], &m[12], &m[13], &m[14], &m[15]) != 16)
+			{
+				TCVector::initIdentityMatrix(m);
+			}
+			m_xmlElements[ldrawFilename] = povElement;
+		}
+
+	}
+}
+
+void LDPovExporter::loadLDrawPovXml(void)
+{
+	TiXmlDocument doc(m_ldrawDir + "/pov/LDrawPOV.xml");
+
+	if (doc.LoadFile())
+	{
+		TiXmlHandle hDoc(&doc);
+		TiXmlElement *root =
+			hDoc.FirstChildElement("LDrawPOV").Element();
+		TiXmlElement *element;
+
+		if (root == NULL)
+		{
+			return;
+		}
+		element = root->FirstChildElement("Colors");
+		if (element != NULL)
+		{
+			loadXmlColors(element);
+		}
+		element = root->FirstChildElement("Matrices");
+		if (element != NULL)
+		{
+			loadXmlMatrices(element);
+		}
+		element = root->FirstChildElement("Elements");
+		if (element != NULL)
+		{
+			loadXmlElements(element);
+		}
+	}
 }
 
 int LDPovExporter::doExport(LDLModel *pTopModel)
@@ -73,6 +220,10 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 	}
 	if ((m_pPovFile = fopen(filename.c_str(), "w")) != NULL)
 	{
+		if (m_xmlMap)
+		{
+			loadLDrawPovXml();
+		}
 		if (!writeHeader())
 		{
 			return 1;
@@ -185,12 +336,16 @@ bool LDPovExporter::writeHeader(void)
 		fprintf(m_pPovFile, "#declare EDGERAD = %s;\n",
 			ftostr(m_edgeRadius).c_str());
 	}
+	if (m_xmlMap)
+	{
+		fprintf(m_pPovFile, "#declare ORIGVER = version;\n");
+	}
 	//fprintf(m_pPovFile, "#declare O7071 = sqrt(0.5);\n");
 	fprintf(m_pPovFile, "\n");
 
 	if (m_findReplacements)
 	{
-		fprintf(m_pPovFile, "#include \"lpovcolordefs.inc\"\n\n");
+		writeInclude("lpovcolordefs.inc");
 	}
 	return true;
 }
@@ -369,7 +524,7 @@ bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
 		return true;
 	}
 	m_processedModels[declareName] = true;
-	if (findInclude(getModelFilename(pModel)))
+	if (findModelInclude(getModelFilename(pModel)))
 	{
 		writeDescriptionComment(pModel);
 	}
@@ -594,8 +749,95 @@ bool LDPovExporter::writeCamera(void)
 	return true;
 }
 
-bool LDPovExporter::findInclude(const std::string &modelFilename)
+std::string LDPovExporter::findInclude(const std::string &filename)
 {
+	for (StringList::const_iterator it = m_searchPath.begin();
+		it != m_searchPath.end(); it++)
+	{
+		std::string path = *it + filename;
+		struct stat statData;
+
+		if (stat(path.c_str(), &statData) == 0)
+		{
+			if ((statData.st_mode & S_IFDIR) == 0)
+			{
+				return path;
+			}
+		}
+	}
+	return "";
+}
+
+bool LDPovExporter::writeInclude(
+	const std::string &filename,
+	bool lineFeed /*= true*/)
+{
+	if (m_includes.find(filename) == m_includes.end())
+	{
+		StringStringMap::iterator it = m_includeVersions.find(filename);
+		std::string version;
+
+		if (it != m_includeVersions.end())
+		{
+			version = it->second;
+		}
+		if (version.size() > 0)
+		{
+			fprintf(m_pPovFile, "#if (version > %s) #version %s; #end\n",
+				version.c_str(), version.c_str());
+		}
+		fprintf(m_pPovFile, "#include \"%s\"", filename.c_str());
+		if (version.size() > 0)
+		{
+			fprintf(m_pPovFile, "\n#if (version < ORIGVER) #version ORIGVER; #end");
+		}
+		if (lineFeed)
+		{
+			fprintf(m_pPovFile, "\n");
+		}
+		m_includes.insert(filename);
+		return true;
+	}
+	return false;
+}
+
+bool LDPovExporter::findXmlModelInclude(const std::string &modelFilename)
+{
+	std::string key = modelFilename;
+
+	convertStringToLower(&key[0]);
+	PovElementMap::const_iterator it = m_xmlElements.find(key);
+	if (it != m_xmlElements.end())
+	{
+		const PovElement &element = it->second;
+		StringList::const_iterator itFilename;
+		bool firstFile = true;
+
+		for (itFilename = element.povFilenames.begin();
+			itFilename != element.povFilenames.end(); itFilename++)
+		{
+			if (!firstFile)
+			{
+				fprintf(m_pPovFile, "\n");
+			}
+			if (writeInclude(*itFilename, false))
+			{
+				firstFile = false;
+			}
+		}
+		m_declareNames[modelFilename] = element.povName;
+		m_matrices[key] = element.matrix;
+		return true;
+	}
+	return false;
+}
+
+bool LDPovExporter::findModelInclude(const std::string &modelFilename)
+{
+	if (m_xmlMap && findXmlModelInclude(modelFilename))
+	{
+		return true;
+	}
 	if (!m_findReplacements)
 	{
 		return false;
@@ -657,7 +899,7 @@ bool LDPovExporter::findInclude(const std::string &modelFilename)
 			fclose(pIncFile);
 			if (found)
 			{
-				fprintf(m_pPovFile, "#include \"%s\"", incFilename);
+				writeInclude(incFilename, false);
 				return true;
 			}
 		}
@@ -902,8 +1144,26 @@ void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 	}
 }
 
-void LDPovExporter::writeMatrix(TCFloat *matrix)
+void LDPovExporter::writeMatrix(
+	TCFloat *matrix,
+	const char *filename /*= NULL*/)
 {
+	if (filename != NULL)
+	{
+		std::string key = filename;
+		convertStringToLower(&key[0]);
+		MatrixMap::const_iterator it = m_matrices.find(key);
+
+		if (it != m_matrices.end())
+		{
+			const TCFloat *mapMatrix = it->second;
+			TCFloat newMatrix[16];
+
+			TCVector::multMatrix(matrix, mapMatrix, newMatrix);
+			writeMatrix(newMatrix);
+			return;
+		}
+	}
 	fprintf(m_pPovFile, "matrix <");
 	for (int col = 0; col < 4; col++)
 	{
@@ -928,7 +1188,7 @@ void LDPovExporter::writeColor(int colorNumber, bool preSpace /*= true*/)
 {
 	if (colorNumber != 16)
 	{
-		fprintf(m_pPovFile, "%smaterial { Color%d }", preSpace ? " " : "",
+		fprintf(m_pPovFile, "%s#if (version >= 3.1) material #else texture #end { Color%d }", preSpace ? " " : "",
 			colorNumber);
 	}
 }
@@ -949,7 +1209,7 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 			fprintf(m_pPovFile, " // %s", colorInfo.name);
 		}
 		fprintf(m_pPovFile,
-			"\n#declare Color%d = material\n{\n\ttexture\n",
+			"\n#declare Color%d = #if (version >= 3.1) material { #end\n\ttexture\n",
 			colorNumber);
 		fprintf(m_pPovFile, "\t{\n");
 		fprintf(m_pPovFile, "\t\tpigment { ");
@@ -991,15 +1251,19 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 		{
 			fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection TREFL }\n");
 		}
+		if (a != 255)
+		{
+			fprintf(m_pPovFile, "\t\t#if (version >= 3.1) #else finish { refraction 1 ior IOR } #end\n");
+		}
 		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "\t}\n");
 		if (a != 255)
 		{
-			fprintf(m_pPovFile, "#if (QUAL > 1)\n");
+			fprintf(m_pPovFile, "#if (version >= 3.1) #if (QUAL > 1)\n");
 			fprintf(m_pPovFile, "\tinterior { ior IOR }\n");
-			fprintf(m_pPovFile, "#end\n");
+			fprintf(m_pPovFile, "#end #end\n");
 		}
-		fprintf(m_pPovFile, "}\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
 		fprintf(m_pPovFile, "#end\n\n");
 	}
 }
@@ -1204,11 +1468,12 @@ bool LDPovExporter::writeModelLine(
 
 			TCVector::multMatrix(pModelLine->getMatrix(), mirrorMatrix,
 				newStudMatrix);
-			writeMatrix(newStudMatrix);
+			writeMatrix(newStudMatrix, getModelFilename(pModel).c_str());
 		}
 		else
 		{
-			writeMatrix(pModelLine->getMatrix());
+			writeMatrix(pModelLine->getMatrix(),
+				getModelFilename(pModel).c_str());
 		}
 		writeColor(pModelLine->getColorNumber());
 		fprintf(m_pPovFile, " }\n");

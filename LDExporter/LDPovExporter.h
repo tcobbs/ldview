@@ -15,6 +15,7 @@ class LDLQuadLine;
 class LDLLineLine;
 class LDLCommentLine;
 class LDLShapeLine;
+class TiXmlElement;
 
 typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, std::string> StringStringMap;
@@ -23,6 +24,22 @@ typedef std::map<int, ShapeLineList> IntShapeLineListMap;
 typedef std::map<int, bool> IntBoolMap;
 typedef std::list<std::string> StringList;
 typedef std::list<TCVector> VectorList;
+typedef std::set<std::string> StringSet;
+typedef std::map<std::string, const TCFloat *> MatrixMap;
+
+struct PovMapping
+{
+	std::string povName;
+	StringList povFilenames;
+};
+
+struct PovElement : public PovMapping
+{
+	float matrix[16];
+};
+
+typedef std::map<TCULong, PovMapping> PovColorMap;
+typedef std::map<std::string, PovElement> PovElementMap;
 
 class LDPovExporter : public LDExporter
 {
@@ -43,7 +60,7 @@ protected:
 	bool scanModelColors(LDLModel *pModel);
 	bool writeModelColors(void);
 	bool writeEdges(void);
-	void writeMatrix(TCFloat *matrix);
+	void writeMatrix(TCFloat *matrix, const char *filename = NULL);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
 	void writeColor(int colorNumber, bool preSpace = true);
 	void writeColorDeclaration(int colorNumber);
@@ -67,13 +84,22 @@ protected:
 	std::string getDeclareName(LDLModel *pModel, bool mirrored);
 	std::string getDeclareName(const std::string &modelFilename, bool mirrored);
 	std::string getModelFilename(LDLModel *pModel);
-	bool findInclude(const std::string &modelFilename);
+	std::string findInclude(const std::string &filename);
+	bool findModelInclude(const std::string &modelFilename);
+	bool findXmlModelInclude(const std::string &modelFilename);
 	void writeDescriptionComment(LDLModel *pModel);
 	bool findModelGeometry(LDLModel *pModel,
 		IntShapeLineListMap &colorGeometryMap, bool mirrored);
 	bool isStud(LDLModel *pModel);
 	void getCameraString(char *&povCamera);
 	void scanEdgePoint(const TCVector &point, const LDLFileLine *pFileLine);
+	void loadLDrawPovXml(void);
+	void loadXmlColors(TiXmlElement *matrices);
+	std::string loadPovMapping(TiXmlElement *element,
+		const char *ldrawElementName, PovMapping &mapping);
+	void loadXmlMatrices(TiXmlElement *matrices);
+	void loadXmlElements(TiXmlElement *elements);
+	bool writeInclude(const std::string &filename, bool lineFeed = true);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -113,12 +139,20 @@ protected:
 	FILE *m_pPovFile;
 	StringList m_searchPath;
 	bool m_findReplacements;
+	bool m_xmlMap;
 	bool m_inlinePov;
 	bool m_hideStuds;
 	bool m_unmirrorStuds;
 	long m_quality;
 	TCFloat m_edgeRadius;
 	VectorList m_edgePoints;
+	PovColorMap m_xmlColors;
+	PovElementMap m_xmlElements;
+	StringStringMap m_includeVersions;
+	StringStringMap m_xmlMatrices;
+	MatrixMap m_matrices;
+	std::string m_ldrawDir;
+	StringSet m_includes;
 };
 
 #endif // __LDPOVEXPORTER_H__
