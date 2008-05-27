@@ -145,6 +145,9 @@ unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
 }
+win32 {
+	LIBS    += -ltinyxml_STL-vc2003
+}
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
