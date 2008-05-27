@@ -1197,6 +1197,7 @@
 					"-ljpeg",
 					"-lboost_thread-mt",
 					"$(OTHER_LDFLAGS)",
+					"-ltinyxml",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
@@ -1264,6 +1265,7 @@
 					"-ljpeg",
 					"-lboost_thread-mt",
 					"$(OTHER_LDFLAGS)",
+					"-ltinyxml",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -1299,6 +1301,7 @@
 					"-ljpeg",
 					"-lboost_thread-mt",
 					"$(OTHER_LDFLAGS)",
+					"-ltinyxml",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
