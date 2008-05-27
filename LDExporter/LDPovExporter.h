@@ -27,9 +27,17 @@ typedef std::list<TCVector> VectorList;
 typedef std::set<std::string> StringSet;
 typedef std::map<std::string, const TCFloat *> MatrixMap;
 
+struct PovName
+{
+	std::string name;
+	StringStringMap attributes;
+};
+
+typedef std::list<PovName> PovNameList;
+
 struct PovMapping
 {
-	std::string povName;
+	PovNameList names;
 	StringList povFilenames;
 };
 
@@ -62,11 +70,14 @@ protected:
 	bool writeEdges(void);
 	void writeMatrix(TCFloat *matrix, const char *filename = NULL);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
-	void writeColor(int colorNumber);
+	void writeColor(int colorNumber, bool slope = false);
 	void writeColorDeclaration(int colorNumber);
+	void writeInnerColorDeclaration(int colorNumber, bool slope);
 	void writeRGBA(int r, int g, int b, int a);
 	bool writeModelLine(LDLModelLine *pModelLine, bool &studsStarted,
 		bool mirrored, const TCFloat *matrix);
+	void writeInnerModelLine(const std::string &declareName,
+		LDLModelLine *pModelLine, bool mirrored, bool slope);
 	void writeCommentLine(LDLCommentLine *pCommentLine, bool &ifStarted,
 		bool &elseStarted, bool &povMode);
 	void writeTriangleLine(LDLTriangleLine *pTriangleLine);
@@ -86,6 +97,9 @@ protected:
 	std::string getModelFilename(const LDLModel *pModel);
 	std::string findInclude(const std::string &filename);
 	bool findModelInclude(const LDLModel *pModel);
+	std::string findMainPovName(const PovMapping &mapping);
+	const PovName *findPovName(const PovMapping &mapping, const char *attrName,
+		const char *attrValue);
 	bool findXmlModelInclude(const LDLModel *pModel);
 	void writeDescriptionComment(const LDLModel *pModel);
 	bool findModelGeometry(LDLModel *pModel,
