@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="gl2ps"
 	ProjectGUID="{0964B5FE-C040-42A6-9370-FC6708197185}"
+	RootNamespace="gl2ps"
 	>
 	<Platforms>
 		<Platform
@@ -52,7 +53,7 @@
 				ProgramDataBaseFileName=".\Debug-VC6/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
