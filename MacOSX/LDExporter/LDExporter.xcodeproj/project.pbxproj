@@ -211,6 +211,7 @@
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
+					../../include,
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -227,6 +228,7 @@
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
+					../../include,
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -263,6 +265,7 @@
 					../../boost/include,
 					"$(HEADER_SEARCH_PATHS)",
 					../..,
+					../../include,
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
