@@ -122,7 +122,7 @@ $(OBJDIR)\LDView.exe:	lib\libpng.lib
 	opengl32.lib glu32.lib ws2_32.lib \
 	winmm.lib shlwapi.lib comctl32.lib version.lib libjpeg.lib \
 	/subsystem:windows /incremental:no /machine:I386 /nodefaultlib:"libc.lib" \
-	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib $(EXTRALFLAGS) 
+	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib tinyxml_STL-vc2003.lib $(EXTRALFLAGS) 
 
 all:			translations
 translations:	hungarian german czech italian
