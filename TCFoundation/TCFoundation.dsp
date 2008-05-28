@@ -39,8 +39,8 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release-VC6"
-# PROP Intermediate_Dir "Release-VC6"
+# PROP Output_Dir "..\Build\Release-VC6"
+# PROP Intermediate_Dir "..\Build\TCFoundation\Release-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
 # ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /G7 /c
@@ -62,8 +62,8 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug-VC6"
-# PROP Intermediate_Dir "Debug-VC6"
+# PROP Output_Dir "..\Build\Debug-VC6"
+# PROP Intermediate_Dir "..\Build\TCFoundation\Debug-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
 # ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
@@ -85,8 +85,8 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "PartialDebug-VC6"
-# PROP Intermediate_Dir "PartialDebug-VC6"
+# PROP Output_Dir "..\Build\PartialDebug-VC6"
+# PROP Intermediate_Dir "..\Build\TCFoundation\PartialDebug-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W4 /O2 /I "../" /I "../include/" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /YX /FD /c
 # SUBTRACT BASE CPP /u
@@ -110,8 +110,8 @@ LIB32=link.exe -lib
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "DebugNoBoost-VC6"
-# PROP Intermediate_Dir "DebugNoBoost-VC6"
+# PROP Output_Dir "..\Build\DebugNoBoost-VC6"
+# PROP Intermediate_Dir "..\Build\TCFoundation\DebugNoBoost-VC6"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /FR /YX /FD /GZ /c
 # ADD CPP /nologo /MTd /W4 /Gm /GX /ZI /Od /I "../" /I "../include/" /I "../boost/include" /I "../include/libjpegWindows" /D "_DEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_BUILDING_TCFOUNDATION_LIB" /D "_NO_BOOST" /FR /YX /FD /GZ /c

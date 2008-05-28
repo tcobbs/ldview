@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -47,10 +47,6 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\Debug-VC6/gl2ps.pch"
-				AssemblerListingLocation=".\Debug-VC6/"
-				ObjectFile=".\Debug-VC6/"
-				ProgramDataBaseFileName=".\Debug-VC6/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -68,7 +64,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Debug-VC6\gl2ps.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -80,7 +75,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug-VC6/gl2ps.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -91,8 +85,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -123,10 +117,6 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release-VC6/gl2ps.pch"
-				AssemblerListingLocation=".\Release-VC6/"
-				ObjectFile=".\Release-VC6/"
-				ProgramDataBaseFileName=".\Release-VC6/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -143,7 +133,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\Release-VC6\gl2ps.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -155,7 +144,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Release-VC6/gl2ps.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
