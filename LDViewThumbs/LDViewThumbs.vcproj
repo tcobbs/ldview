@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -98,7 +98,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\ReleaseMinDependency-VC6/LDViewThumbs.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -115,8 +114,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -199,7 +198,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug-VC6/LDViewThumbs.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -216,8 +214,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug ANSI|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -301,7 +299,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\Debug-VC6/LDViewThumbs.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -318,8 +315,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release ANSI|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -401,7 +398,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\ReleaseMinDependency-VC6/LDViewThumbs.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

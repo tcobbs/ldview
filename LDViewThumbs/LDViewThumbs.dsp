@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug-VC6"
+# PROP Output_Dir "..\Build\Debug-VC6"
 # PROP Intermediate_Dir "Debug-VC6"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
@@ -57,9 +57,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /debug /machine:I386 /nodefaultlib:"libcmt.lib" /pdbtype:sept /libpath:"..\lib"
 # Begin Custom Build - Performing registration
-OutDir=.\Debug-VC6
-TargetPath=.\Debug-VC6\LDViewThumbs.dll
-InputPath=.\Debug-VC6\LDViewThumbs.dll
+OutDir=.\..\Build\Debug-VC6
+TargetPath=\Dev\LDView\Build\Debug-VC6\LDViewThumbs.dll
+InputPath=\Dev\LDView\Build\Debug-VC6\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -77,8 +77,8 @@ SOURCE="$(InputPath)"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "DebugU"
-# PROP Intermediate_Dir "DebugU"
+# PROP Output_Dir "..\Build\DebugU"
+# PROP Intermediate_Dir "..\Build\LDViewThumbs\DebugU"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MTd /W3 /Gm /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /Yu"stdafx.h" /FD /GZ /c
@@ -92,9 +92,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"..\lib"
 # Begin Custom Build - Performing registration
-OutDir=.\DebugU
-TargetPath=.\DebugU\LDViewThumbs.dll
-InputPath=.\DebugU\LDViewThumbs.dll
+OutDir=.\..\Build\DebugU
+TargetPath=\Dev\LDView\Build\DebugU\LDViewThumbs.dll
+InputPath=\Dev\LDView\Build\DebugU\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -118,8 +118,8 @@ SOURCE="$(InputPath)"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "ReleaseMinSize"
-# PROP Intermediate_Dir "ReleaseMinSize"
+# PROP Output_Dir "..\Build\ReleaseMinSize"
+# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseMinSize"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
@@ -133,9 +133,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
 # ADD LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
 # Begin Custom Build - Performing registration
-OutDir=.\ReleaseMinSize
-TargetPath=.\ReleaseMinSize\LDViewThumbs.dll
-InputPath=.\ReleaseMinSize\LDViewThumbs.dll
+OutDir=.\..\Build\ReleaseMinSize
+TargetPath=\Dev\LDView\Build\ReleaseMinSize\LDViewThumbs.dll
+InputPath=\Dev\LDView\Build\ReleaseMinSize\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -153,8 +153,8 @@ SOURCE="$(InputPath)"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "ReleaseMinDependency-VC6"
-# PROP Intermediate_Dir "ReleaseMinDependency-VC6"
+# PROP Output_Dir "..\Build\ReleaseMinDependency-VC6"
+# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseMinDependency-VC6"
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
@@ -168,9 +168,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
 # ADD LINK32 TCFoundation.lib gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib" /libpath:"..\TCFoundation\Release"
 # Begin Custom Build - Performing registration
-OutDir=.\ReleaseMinDependency-VC6
-TargetPath=.\ReleaseMinDependency-VC6\LDViewThumbs.dll
-InputPath=.\ReleaseMinDependency-VC6\LDViewThumbs.dll
+OutDir=.\..\Build\ReleaseMinDependency-VC6
+TargetPath=\Dev\LDView\Build\ReleaseMinDependency-VC6\LDViewThumbs.dll
+InputPath=\Dev\LDView\Build\ReleaseMinDependency-VC6\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -188,8 +188,8 @@ SOURCE="$(InputPath)"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "ReleaseUMinSize"
-# PROP Intermediate_Dir "ReleaseUMinSize"
+# PROP Output_Dir "..\Build\ReleaseUMinSize"
+# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseUMinSize"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /D "_ATL_DLL" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
@@ -203,9 +203,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
 # ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib"
 # Begin Custom Build - Performing registration
-OutDir=.\ReleaseUMinSize
-TargetPath=.\ReleaseUMinSize\LDViewThumbs.dll
-InputPath=.\ReleaseUMinSize\LDViewThumbs.dll
+OutDir=.\..\Build\ReleaseUMinSize
+TargetPath=\Dev\LDView\Build\ReleaseUMinSize\LDViewThumbs.dll
+InputPath=\Dev\LDView\Build\ReleaseUMinSize\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -229,8 +229,8 @@ SOURCE="$(InputPath)"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "ReleaseUMinDependency"
-# PROP Intermediate_Dir "ReleaseUMinDependency"
+# PROP Output_Dir "..\Build\ReleaseUMinDependency"
+# PROP Intermediate_Dir "..\Build\LDViewThumbs\ReleaseUMinDependency"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MT /W3 /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "_UNICODE" /D "_ATL_STATIC_REGISTRY" /D "_ATL_MIN_CRT" /Yu"stdafx.h" /FD /c
@@ -244,9 +244,9 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /machine:I386
 # ADD LINK32 gdi32.lib libpng.lib zlib.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"..\lib"
 # Begin Custom Build - Performing registration
-OutDir=.\ReleaseUMinDependency
-TargetPath=.\ReleaseUMinDependency\LDViewThumbs.dll
-InputPath=.\ReleaseUMinDependency\LDViewThumbs.dll
+OutDir=.\..\Build\ReleaseUMinDependency
+TargetPath=\Dev\LDView\Build\ReleaseUMinDependency\LDViewThumbs.dll
+InputPath=\Dev\LDView\Build\ReleaseUMinDependency\LDViewThumbs.dll
 SOURCE="$(InputPath)"
 
 "$(OutDir)\regsvr32.trg" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"

@@ -40,7 +40,7 @@ RSC=rc.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "Release-VC6"
+# PROP Output_Dir "Build\Release-VC6"
 # PROP Intermediate_Dir "Release-VC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
@@ -55,7 +55,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxml_STL-vc6.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:".\lib" /libpath:".\boost\lib"
+# ADD LINK32 libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxml_STL-VC6.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ELSEIF  "$(CFG)" == "LDView - Win32 Debug"
 
@@ -66,7 +66,7 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug-VC6"
+# PROP Output_Dir "Build\Debug-VC6"
 # PROP Intermediate_Dir "Debug-VC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib tinyxml_STL-vc6.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib tinyxmld_STL-VC6.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ELSEIF  "$(CFG)" == "LDView - Win32 PartialDebug"
 
@@ -93,7 +93,7 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 0
-# PROP Output_Dir "PartialDebug-VC6"
+# PROP Output_Dir "Build\PartialDebug-VC6"
 # PROP Intermediate_Dir "PartialDebug-VC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
@@ -108,7 +108,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib wsock32.lib winmm.lib TCFoundation\Release\TCFoundation.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxml_STL-vc6.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\TCFoundation\PartialDebug" /libpath:".\CUI\Release" /libpath:".\LDLib\PartialDebug" /libpath:".\LDLoader\PartialDebug" /libpath:".\lib" /libpath:".\boost\lib"
+# ADD LINK32 CUI.lib LDLib.lib TCFoundation.lib UxTheme.lib libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxmld_STL-VC6.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:".\TCFoundation\PartialDebug" /libpath:".\CUI\Release" /libpath:".\LDLib\PartialDebug" /libpath:".\LDLoader\PartialDebug" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ELSEIF  "$(CFG)" == "LDView - Win32 DebugNoBoost"
 
@@ -120,7 +120,7 @@ LINK32=link.exe
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "DebugNoBoost-VC6"
+# PROP Output_Dir "Build\DebugNoBoost-VC6"
 # PROP Intermediate_Dir "DebugNoBoost-VC6"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
@@ -135,7 +135,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib tinyxml_STL-vc6.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib tinyxmld_STL-VC6.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
 
 !ENDIF 
 
@@ -172,7 +172,7 @@ SOURCE=.\Help\LDView.hpj
 
 USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
 # Begin Custom Build - Compiling help project $(InputPath)
-OutDir=.\Release-VC6
+OutDir=.\Build\Release-VC6
 InputPath=.\Help\LDView.hpj
 
 "$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -185,7 +185,7 @@ InputPath=.\Help\LDView.hpj
 
 USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
 # Begin Custom Build - Compiling help project $(InputPath)
-OutDir=.\Debug-VC6
+OutDir=.\Build\Debug-VC6
 InputPath=.\Help\LDView.hpj
 
 "$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
@@ -200,7 +200,7 @@ InputPath=.\Help\LDView.hpj
 
 USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
 # Begin Custom Build - Compiling help project $(InputPath)
-OutDir=.\DebugNoBoost-VC6
+OutDir=.\Build\DebugNoBoost-VC6
 InputPath=.\Help\LDView.hpj
 
 "$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"

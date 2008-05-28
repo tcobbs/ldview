@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)-inter"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -109,8 +109,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)-inter"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -201,8 +201,8 @@
 		</Configuration>
 		<Configuration
 			Name="PartialDebug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)-inter"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -294,8 +294,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug ANSI|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -386,8 +386,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release ANSI|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -482,8 +482,8 @@
 		</Configuration>
 		<Configuration
 			Name="DebugNoBoost|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)Build\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)Build\$(ProjectName)\$(ConfigurationName)-inter"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -659,7 +659,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /x &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)\LDView.hlp&quot; &quot;$(OutDir)\LDView.hlp&quot; &gt; nul&#x0D;&#x0A;"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -670,7 +670,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /x &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)\LDView.hlp&quot; &quot;$(OutDir)\LDView.hlp&quot; &gt; nul&#x0D;&#x0A;"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -681,7 +681,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /x &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)\LDView.hlp&quot; &quot;$(OutDir)\LDView.hlp&quot; &gt; nul&#x0D;&#x0A;"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -692,7 +692,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /x &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)\LDView.hlp&quot; &quot;$(OutDir)\LDView.hlp&quot; &gt; nul&#x0D;&#x0A;"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -703,7 +703,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /x &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)\LDView.hlp&quot; &quot;$(OutDir)\LDView.hlp&quot; &gt; nul&#x0D;&#x0A;"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -714,7 +714,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /x &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)\LDView.hlp&quot; &quot;$(OutDir)\LDView.hlp&quot; &gt; nul&#x0D;&#x0A;"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
