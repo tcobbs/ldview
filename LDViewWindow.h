@@ -108,6 +108,7 @@ class LDViewWindow: public CUIWindow
 #endif // TC_NO_UNICODE
 		virtual void setStatusText(HWND hStatus, int part, CUCSTR text,
 			bool redraw = true);
+		virtual void stopAnimation(void);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);

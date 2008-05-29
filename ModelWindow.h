@@ -128,6 +128,7 @@ public:
 	virtual void cleanupOffscreen(void);
 	virtual void cleanupPBuffer(void);
 	virtual void cleanupBitmapRender(void);
+	virtual void stopAnimation(void);
 
 	void orthoView(void);
 
