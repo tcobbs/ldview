@@ -299,6 +299,7 @@ void ModelWindow::modelViewerAlertCallback(TCAlert *alert)
 {
 	if (alert)
 	{
+		stopAnimation();
 		MessageBox(hWindow, alert->getMessage(), "LDView",
 			MB_OK | MB_ICONWARNING);
 	}
@@ -455,6 +456,7 @@ void ModelWindow::checkFileForUpdates(void)
 						}
 						inputHandler->cancelMouseDrag();
 					}
+					stopAnimation();
 					if (MessageBox(hWindow, message,
 						TCLocalStrings::get("PollFileUpdate"),
 						MB_OKCANCEL | MB_APPLMODAL | MB_ICONQUESTION) !=
@@ -774,8 +776,7 @@ void ModelWindow::resetView(LDVAngle viewAngle)
 	modelViewer->resetView(viewAngle);
 	modelViewer->setXRotate(0.0f);
 	modelViewer->setYRotate(0.0f);
-	modelViewer->setRotationSpeed(0.0f);
-	modelViewer->setZoomSpeed(0.0f);
+	stopAnimation();
 	fps = 0.0f;
 	forceRedraw();
 }
@@ -1268,17 +1269,13 @@ LRESULT ModelWindow::doCommand(int /*itemId*/, int notifyCode, HWND controlHWnd)
 		switch (notifyCode)
 		{
 		case CUI_OK:
-			//rotationSpeed = 0.0f;
-			modelViewer->setRotationSpeed(0.0f);
-			modelViewer->setZoomSpeed(0.0f);
+			stopAnimation();
 			prefs->closePropertySheet();
 			hPrefsWindow = NULL;
 			applyPrefs();
 			break;
 		case CUI_CANCEL:
-			//rotationSpeed = 0.0f;
-			modelViewer->setRotationSpeed(0.0f);
-			modelViewer->setZoomSpeed(0.0f);
+			stopAnimation();
 			prefs->closePropertySheet();
 			hPrefsWindow = NULL;
 			break;
@@ -1906,6 +1903,15 @@ void ModelWindow::showErrorsIfNeeded(BOOL onlyIfNeeded)
 	}
 }
 
+void ModelWindow::stopAnimation(void)
+{
+	if (modelViewer)
+	{
+		modelViewer->setRotationSpeed(0.0f);
+		modelViewer->setZoomSpeed(0.0f);
+	}
+}
+
 int ModelWindow::loadModel(void)
 {
 	char* filename = modelViewer->getFilename();
@@ -1937,9 +1943,7 @@ int ModelWindow::loadModel(void)
 		_CrtMemDifference(&ms3, &ms1, &ms2);
 		_CrtMemDumpStatistics(&ms3);
 		forceRedraw();
-		//rotationSpeed = 0.0f;
-		modelViewer->setRotationSpeed(0.0f);
-		modelViewer->setZoomSpeed(0.0f);
+		stopAnimation();
 		if (pollSetting)
 		{
 			if (getFileTime(&lastWriteTime))
@@ -3575,6 +3579,7 @@ bool ModelWindow::pageSetup(void)
 	psd.lpfnPageSetupHook = staticPageSetupHook;
 	psd.lpPageSetupTemplateName = MAKEINTRESOURCE(PAGESETUPDLGORD);
 
+	stopAnimation();
 	if (PageSetupDlg(&psd))
 	{
 		printLeftMargin = psd.rtMargin.left / 1000.0f;
@@ -3612,6 +3617,7 @@ bool ModelWindow::print(void)
 	PRINTDLG pd;
 	bool retValue = false;
 
+	stopAnimation();
 	memset(&pd, 0, sizeof(pd));
 	pd.lStructSize = sizeof(pd);
 	if (selectPrinter(pd))
@@ -4360,6 +4366,7 @@ bool ModelWindow::getSaveFilename(
 	std::string initialDir = getSaveDir();
 	int maxImageType = 3;
 
+	stopAnimation();
 	memset(&openStruct, 0, sizeof(OPENFILENAME));
 	if (!calcSaveFilename(saveFilename, len))
 	{

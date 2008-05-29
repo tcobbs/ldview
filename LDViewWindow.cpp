@@ -1815,6 +1815,7 @@ void LDViewWindow::switchModes(void)
 		}
 		else
 		{
+			stopAnimation();
 			MessageBox(hWindow, TCLocalStrings::get("SwitchBackError"),
 				TCLocalStrings::get("Error"), MB_OK);
 			shutdown();
@@ -2110,6 +2111,7 @@ void LDViewWindow::shellExecute(const char *filename)
 					filename);
 				break;
 		}
+		stopAnimation();
 		MessageBox(hWindow, errorString, TCLocalStrings::get("Error"),
 			MB_OK | MB_ICONEXCLAMATION);
 	}
@@ -2294,6 +2296,7 @@ void LDViewWindow::showPovCamera(void)
 			UCSTR userMessage;
 			char *povCamera;
 
+			stopAnimation();
 			modelViewer->getPovCameraInfo(userMessage, povCamera);
 			if (userMessage && povCamera)
 			{
@@ -2328,54 +2331,13 @@ void LDViewWindow::showViewInfo(void)
 			
 			if (modelViewer->getViewInfo(message, commandLine))
 			{
+				stopAnimation();
 				if (messageBoxUC(hWindow, message.c_str(),
 					TCLocalStrings::get(_UC("ViewInfoTitle")), MB_OKCANCEL) == IDOK)
 				{
 					copyToClipboard(commandLine.c_str());
 				}
 			}
-			//TCFloat matrix[16];
-			//TCFloat rotationMatrix[16];
-			//TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-			//char matrixString[1024];
-			//char zoomString[128];
-			//char message[4096];
-			//LDLCamera &camera = modelViewer->getCamera();
-			//TCFloat defaultDistance = modelViewer->getDefaultDistance();
-			//TCFloat distanceMultiplier = modelViewer->getDistanceMultiplier();
-			//TCFloat cameraDistance;
-
-			//memcpy(rotationMatrix, modelViewer->getRotationMatrix(),
-			//	sizeof(rotationMatrix));
-			//TCVector::multMatrix(otherMatrix, rotationMatrix, matrix);
-			//LDrawModelViewer::cleanupFloats(matrix);
-			//sprintf(matrixString,
-			//	"%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g,%.6g", matrix[0],
-			//	matrix[4], matrix[8], matrix[1], matrix[5], matrix[9],
-			//	matrix[2], matrix[6], matrix[10]);
-			//cameraDistance = camera.getPosition().length();
-			//if (distanceMultiplier == 0.0f || cameraDistance == 0.0f)
-			//{
-			//	// If we don't have a model, we don't know the default zoom, so
-			//	// just say 1.
-			//	strcpy(zoomString, "1");
-			//}
-			//else
-			//{
-			//	sprintf(zoomString, "%.6g", defaultDistance /
-			//		distanceMultiplier / cameraDistance);
-			//}
-			//sprintf(message, TCLocalStrings::get("ViewInfoMessage"),
-			//	matrixString, zoomString);
-			//if (MessageBox(hWindow, message,
-			//	TCLocalStrings::get("ViewInfoTitle"), MB_OKCANCEL) == IDOK)
-			//{
-			//	char commandLine[1024];
-
-			//	sprintf(commandLine, "-DefaultMatrix=%s -DefaultZoom=%s",
-			//		matrixString, zoomString);
-			//	copyToClipboard(commandLine);
-			//}
 		}
 	}
 }
@@ -2416,24 +2378,13 @@ void LDViewWindow::showLDrawCommandLine(void)
 
 		if (modelViewer)
 		{
-			HGLOBAL hBuf = GlobalAlloc(GMEM_DDESHARE, 1024);
-			char *buf = (char*)GlobalLock(hBuf);
-//			char shortFilename[1024];
+			char buf[1024];
 
-//			GetShortPathName(modelViewer->getFilename(), shortFilename, 1024);
-//			modelViewer->getLDrawCommandLine(shortFilename, buf, 1024);
-			modelViewer->getLDGLiteCommandLine(buf, 1024);
+			stopAnimation();
+			modelViewer->getLDGLiteCommandLine(buf, sizeof(buf));
 			MessageBox(hWindow, buf, TCLocalStrings::get("LDrawCommandLine"),
 				MB_OK);
-//			debugPrintf("%s\n", buf);
-			GlobalUnlock(hBuf);
-			if (OpenClipboard(hWindow))
-			{
-				EmptyClipboard();
-				SetClipboardData(CF_TEXT, hBuf);
-				CloseClipboard();
-//				GlobalFree(hBuf);
-			}
+			copyToClipboard(buf);
 		}
 	}
 }
@@ -3297,6 +3248,7 @@ bool LDViewWindow::installLDraw(void)
 
 void LDViewWindow::checkForLibraryUpdates(void)
 {
+	stopAnimation();
 	if (libraryUpdater)
 	{
 		showLibraryUpdateWindow(false);
@@ -4495,6 +4447,7 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 {
 	char fullPathName[1024] = "";
 
+	stopAnimation();
 	if (filename && strlen(filename) > 0)
 	{
 		char* newFilename = NULL;
@@ -4817,6 +4770,8 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 	else
 	{
 		delete lDrawDir;
+
+		stopAnimation();
 		if (MessageBox(NULL, TCLocalStrings::get("LDrawDirExistsPrompt"),
 			"LDView", MB_YESNO | MB_ICONQUESTION) == IDYES)
 		{
@@ -5341,10 +5296,12 @@ LRESULT LDViewWindow::generatePartsList(void)
 	if (modelWindow)
 	{
 		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
 		if (modelViewer)
 		{
 			LDPartsList *partsList = modelViewer->getPartsList();
 
+			stopAnimation();
 			if (partsList)
 			{
 				LDHtmlInventory *htmlInventory = new LDHtmlInventory;
@@ -5410,4 +5367,12 @@ LRESULT LDViewWindow::generatePartsList(void)
 		}
 	}
 	return 0;
+}
+
+void LDViewWindow::stopAnimation(void)
+{
+	if (modelWindow)
+	{
+		modelWindow->stopAnimation();
+	}
 }
