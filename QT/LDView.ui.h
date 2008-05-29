@@ -32,6 +32,11 @@ void LDView::fileSaveSettings()
 	modelViewer->doFileSaveSettings();
 }
 
+void LDView::fileExport()
+{
+    modelViewer->fileExport();
+}
+
 void LDView::fileJPEGOptions()
 {
     modelViewer->doFileJPEGOptions();

@@ -155,6 +155,7 @@
         </item>
         <action name="fileSaveAction"/>
 		<action name="fileSaveSettingsAction"/>
+        <action name="fileExportAction"/>
         <action name="fileJPEGOptionsAction"/>
         <action name="fileLDrawDirAction"/>
         <action name="fileExtraDirAction"/>
@@ -454,6 +455,17 @@
         </property>
         <property name="toolTip">
             <string>Snapshot Settings</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileExportAction</cstring>
+        </property>
+        <property name="text">
+            <string>Export...</string>
+        </property>
+        <property name="menuText">
+            <string>Export...</string>
         </property>
     </action>
     <action>
@@ -1109,6 +1121,12 @@
         <slot>fileSaveSettings()</slot>
     </connection>
     <connection>
+        <sender>fileExportAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>fileExport()</slot>
+    </connection>
+    <connection>
         <sender>fileJPEGOptionsAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1411,6 +1429,7 @@
     <slot>fileOpen()</slot>
     <slot>fileSave()</slot>
 	<slot>fileSaveSettings()</slot>
+    <slot>fileExport()</slot>
     <slot>fileJPEGOptions()</slot>
     <slot>filePrint()</slot>
     <slot>fileExit()</slot>
