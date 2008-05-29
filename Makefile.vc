@@ -34,44 +34,44 @@ distclean:
 	-del LDView.hlp
 	cd ..
 	cd TRE 
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd CUI
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd TCFoundation
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd LDLib 
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd LDLoader
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd LDExporter
-	$(MAKE) -nologo -f Makefile.vc clean
-    cd ..
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
+      cd ..
 	cd gl2ps
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd Translations\Hungarian
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..\..
 	cd Translations\German
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..\..
 	cd Translations\Italian
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..\..
 	cd Translations\Czech
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..\..
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd LDViewThumbs
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 	cd Launcher
-	$(MAKE) -nologo -f Makefile.vc clean
+	if exist $(OBJDIR) $(MAKE) -nologo -f Makefile.vc clean
 	cd ..
 
 CUI\$(OBJDIR)\CUI.lib: CUI\*.cpp CUI\*.h
