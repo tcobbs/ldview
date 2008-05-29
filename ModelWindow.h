@@ -261,6 +261,7 @@ protected:
 		int &numYTiles);
 	virtual void sizeView(void);
 	virtual void setupSaveExtras(void);
+	virtual void saveImageTypeUpdated(void);
 	virtual void setupPrintExtras(void);
 	virtual void setupPageSetupExtras(void);
 	virtual void updateSaveSizeEnabled(void);
@@ -421,6 +422,7 @@ protected:
 	int saveDigits;
 	HWND hSaveDialog;
 	HWND hSaveOptionsButton;
+	HWND hSaveTransBgButton;
 	HWND hSaveWidthLabel;
 	HWND hSaveWidth;
 	HWND hSaveHeightLabel;
