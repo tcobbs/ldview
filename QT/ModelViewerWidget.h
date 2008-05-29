@@ -105,6 +105,7 @@ public:
 	void doFilePrint(void);
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
+	void fileExport(void);
 	void doFileJPEGOptions(void);
 	bool fileExists(const char* filename);
 	bool shouldOverwriteFile(char* filename);
@@ -295,7 +296,7 @@ protected:
 	int fileSeparatorIndex;
 	int fileCancelLoadId;
 	int fileReloadId;
-	int fileSaveSnapshotId;
+	int fileSaveSnapshotId,fileExportId;
 	QStatusBar *statusBar;
 	QToolBar *toolBar;
 	QProgressBar *progressBar;

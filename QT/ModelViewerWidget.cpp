@@ -121,6 +121,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	fileCancelLoadId(-1),
 	fileReloadId(-1),
 	fileSaveSnapshotId(-1),
+	fileExportId(-1),
 	statusBar(NULL),
 	toolBar(NULL),
 	progressBar(NULL),
@@ -1435,7 +1436,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 	if (item)
 	{
 		fileMenu = mainWindow->fileMenu;
-		fileCancelLoadId = fileMenu->idAt(9);
+		fileCancelLoadId = fileMenu->idAt(10);
 		fileReloadId = fileMenu->idAt(1);
 	}
 	for ( cnt = i = 0; ; i++)
@@ -3010,6 +3011,10 @@ bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 		return false;
 }
 
+void ModelViewerWidget::fileExport()
+{
+}
+
 bool ModelViewerWidget::doFileSave(void)
 {
 	char saveFilename[1024] = "";
@@ -3533,6 +3538,7 @@ void ModelViewerWidget::doFileMenuAboutToShow(void)
 			fileMenu->setItemEnabled(fileReloadId, false);
 			fileMenu->setItemEnabled(fileSaveSnapshotId, false);
 			fileMenu->setItemEnabled(fileMenu->idAt(3), false);
+			fileMenu->setItemEnabled(fileMenu->idAt(5), false);
 			fileMenu->setItemEnabled(fileMenu->idAt(10), false);
 		}
 	}
