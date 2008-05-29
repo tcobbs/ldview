@@ -3826,9 +3826,25 @@ void ModelWindow::updateSaveAllStepsEnabled(void)
 	}
 }
 
+void ModelWindow::saveImageTypeUpdated(void)
+{
+	BOOL enable = FALSE;
+	WPARAM transBg = 0;
+
+	EnableWindow(hSaveOptionsButton, saveImageType == JPG_IMAGE_TYPE_INDEX);
+	if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+	{
+		enable = TRUE;
+		transBg = saveAlpha ? 1 : 0;
+	}
+	SendMessage(hSaveTransBgButton, BM_SETCHECK, transBg, 0);
+	EnableWindow(hSaveTransBgButton, enable);
+}
+
 void ModelWindow::setupSaveExtras(void)
 {
 	hSaveOptionsButton = GetDlgItem(hSaveDialog, IDC_SAVE_OPTIONS);
+	hSaveTransBgButton = GetDlgItem(hSaveDialog, IDC_TRANSPARENT_BACKGROUND);
 	hSaveWidthLabel = GetDlgItem(hSaveDialog, IDC_SAVE_WIDTH_LABEL);
 	hSaveWidth = GetDlgItem(hSaveDialog, IDC_SAVE_WIDTH);
 	hSaveHeightLabel = GetDlgItem(hSaveDialog, IDC_SAVE_HEIGHT_LABEL);
@@ -3840,7 +3856,6 @@ void ModelWindow::setupSaveExtras(void)
 	hSaveStepSuffixLabel = GetDlgItem(hSaveDialog, IDC_STEP_SUFFIX_LABEL);
 	hSaveStepSuffixField = GetDlgItem(hSaveDialog, IDC_STEP_SUFFIX);
 	hSaveStepsSameScaleButton = GetDlgItem(hSaveDialog, IDC_SAME_SCALE);
-	EnableWindow(hSaveOptionsButton, saveImageType == JPG_IMAGE_TYPE_INDEX);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_ACTUAL_SIZE, BM_SETCHECK,
 		saveActualSize ? 0 : 1, 0);
 	SendDlgItemMessage(hSaveDialog, IDC_SAVE_SERIES, BM_SETCHECK,
@@ -3850,8 +3865,6 @@ void ModelWindow::setupSaveExtras(void)
 		MAKELONG(saveDigits, 0));
 	SendDlgItemMessage(hSaveDialog, IDC_IGNORE_PBUFFER, BM_SETCHECK,
 		ignorePBuffer ? 1 : 0, 0);
-	SendDlgItemMessage(hSaveDialog, IDC_TRANSPARENT_BACKGROUND, BM_SETCHECK,
-		saveAlpha ? 1 : 0, 0);
 	SendDlgItemMessage(hSaveDialog, IDC_AUTO_CROP, BM_SETCHECK,
 		autoCrop ? 1 : 0, 0);
 	SendDlgItemMessage(hSaveDialog, IDC_ALL_STEPS, BM_SETCHECK,
@@ -3859,6 +3872,7 @@ void ModelWindow::setupSaveExtras(void)
 	updateSaveSizeEnabled();
 	updateSaveSeriesEnabled();
 	updateSaveAllStepsEnabled();
+	saveImageTypeUpdated();
 }
 
 void ModelWindow::updateSaveWidth(void)
@@ -4055,8 +4069,7 @@ BOOL ModelWindow::doSaveNotify(int /*controlId*/, LPOFNOTIFY notification)
 				SendMessage(GetParent(hSaveDialog), CDM_SETCONTROLTEXT, edt1,
 					(LPARAM)buf);
 			}
-			EnableWindow(hSaveOptionsButton,
-				saveImageType == JPG_IMAGE_TYPE_INDEX);
+			saveImageTypeUpdated();
 		}
 		break;
 	case CDN_INITDONE:
