@@ -55,5 +55,6 @@ HCW=$(PROGRAMFILES)\Help Workshop\hcw.exe
 
 clean:
 	cd $(OBJDIR)
-	-del *.obj *.lib *.exe *.pch *.idb *.res *.dll *.exp
+	-del *.obj *.lib *.exe *.pch *.idb *.res *.dll *.exp *.pdb
 	cd ..
+	-rmdir $(OBJDIR)
