@@ -149,7 +149,6 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 	m_mainTREModel->setLightingFlag(getLightingFlag());
 	m_mainTREModel->setTwoSidedLightingFlag(getTwoSidedLightingFlag());
 	m_mainTREModel->setBFCFlag(getBFCFlag());
-	m_mainTREModel->setBoundingBoxesOnlyFlag(getBoundingBoxesOnlyFlag());
 	m_mainTREModel->setRedBackFacesFlag(getRedBackFacesFlag());
 	m_mainTREModel->setGreenFrontFacesFlag(getGreenFrontFacesFlag());
 	m_mainTREModel->setGl2psFlag(m_modelViewer->getGl2ps());
@@ -428,7 +427,14 @@ void LDModelParser::addBoundingQuad(
 			quad[q][i] = minMax[faceIndices[face][q][i]][i];
 		}
 	}
-	model->addBFCQuad(quad);
+	if (getBFCFlag())
+	{
+		model->addBFCQuad(quad);
+	}
+	else
+	{
+		model->addQuad(quad);
+	}
 }
 
 int LDModelParser::getActiveColorNumber(
