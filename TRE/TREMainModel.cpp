@@ -377,7 +377,7 @@ void TREMainModel::compile(void)
 /*
 		if (!m_abort)
 		{
-			if (haveBFC())
+			if (getBFCFlag())
 			{
 				TREModel::compile(TREMBFC, false);
 			}
@@ -433,7 +433,7 @@ void TREMainModel::compile(void)
 /*
 		if (!m_abort)
 		{
-			if (haveBFC())
+			if (getBFCFlag())
 			{
 				TREModel::compile(TREMBFC, true);
 			}
@@ -1045,11 +1045,6 @@ void TREMainModel::enableLineSmooth(int pass /*= -1*/)
 	}
 }
 
-bool TREMainModel::haveBFC(void)
-{
-	return getBFCFlag() || getBoundingBoxesOnlyFlag();
-}
-
 void TREMainModel::drawSolid(void)
 {
 	bool subModelsOnly = false;
@@ -1080,7 +1075,7 @@ void TREMainModel::drawSolid(void)
 		TREModel::draw(TREMStud, false, subModelsOnly);
 		glDisable(GL_TEXTURE_2D);
 	}
-	if (haveBFC())
+	if (getBFCFlag())
 	{
 		activateBFC();
 		m_vertexStore->activate(m_mainFlags.compileAll ||
@@ -1110,7 +1105,7 @@ void TREMainModel::drawSolid(void)
 		drawColored(TREMStud);
 		glDisable(GL_TEXTURE_2D);
 	}
-	if (haveBFC())
+	if (getBFCFlag())
 	{
 		activateBFC();
 		m_coloredVertexStore->activate(m_mainFlags.compileAll ||
@@ -1443,7 +1438,7 @@ void TREMainModel::transferTransparent(void)
 
 	sectionList.push_back(TREMStandard);
 	sectionList.push_back(TREMStud);
-	if (haveBFC())
+	if (getBFCFlag())
 	{
 		sectionList.push_back(TREMBFC);
 		sectionList.push_back(TREMStudBFC);
