@@ -2705,22 +2705,6 @@ TCByte *ModelViewerWidget::grabImage(int &imageWidth, int &imageHeight,
             numYTiles);
 		setupSnapshotBackBuffer(newWidth, newHeight);
 	}
-/*    if (canSaveAlpha())
-    {
-        bytesPerPixel = 4;
-        bufferFormat = GL_RGBA;
-        if (saveAlpha)
-        {
-            *saveAlpha = true;
-        }
-    }
-    else
-    {
-        if (saveAlpha)
-        {
-            *saveAlpha = false;
-        }
-    } */
     bytesPerLine = roundUp(imageWidth * bytesPerPixel, 4);
     if (!buffer)
     {
@@ -2980,7 +2964,10 @@ bool ModelViewerWidget::saveImage(
 		snapshotTaker =  new LDSnapshotTaker(modelViewer);
 	}
 	snapshotTaker->setImageType(getSaveImageType());
-	snapshotTaker->setTrySaveAlpha(saveAlpha);
+	snapshotTaker->setTrySaveAlpha(saveAlpha =
+				TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
+	snapshotTaker->setAutoCrop(
+					TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
 	saveImageFilename = filename;
 	//snapshotTaker->setProductVersion(
 	//	((LDViewWindow *)parentWindow)->getProductVersion());
@@ -2989,75 +2976,6 @@ bool ModelViewerWidget::saveImage(
 	retValue = grabImage(imageWidth, imageHeight);
 	return retValue;
 
-//	bool saveAlpha = false;
-//	TCByte *buffer = grabImage(imageWidth, imageHeight, NULL, 
-//				TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1, false),
-//				&saveAlpha);
-//	bool retValue = false;
-//	if (buffer)
-//	{
-//		if (saveAlpha)
-//		{
-//			int i;
-//			int totalBytes = imageWidth * imageHeight * 4;
-//
-//			for (i = 3; i < totalBytes; i += 4)
-//			{
-//				if (buffer[i] != 0 && buffer[i] != 255)
-//				{
-//					if (buffer[i] == 74)
-//					{
-//						buffer[i] = 255 - 28;
-//					}
-//					else
-//					{
-//						buffer[i] = 255;
-//					}
-//				}
-//			}
-//		}
-//		char *snapshotSuffix = TCUserDefaults::stringForKey(SNAPSHOT_SUFFIX_KEY,
-//			NULL, false);
-//		if (!snapshotSuffix)
-//		{
-//			char *suffixSpot = strrchr(filename, '.');
-//			if (suffixSpot)
-//			{
-//				snapshotSuffix = copyString(suffixSpot);
-//			}
-//			else
-//			{
-//				snapshotSuffix = copyString("");
-//			}
-//		}
-//		if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".png"))
-//		{
-//			saveImageType = PNG_IMAGE_TYPE_INDEX;
-//		}
-//		else if (stringHasCaseInsensitiveSuffix(snapshotSuffix, ".bmp"))
-//		{
-//			saveImageType = BMP_IMAGE_TYPE_INDEX;
-//		}
-//		else
-//		{
-//			delete snapshotSuffix;
-//			wprintf(L"%ls\n",TCLocalStrings::get(L"ConsoleSnapshotFailed"));
-//			return false;
-//		}
-//		delete snapshotSuffix;
-//
-//		if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-//		{
-//			retValue = writePng(filename, imageWidth, imageHeight, buffer,
-//								saveAlpha);
-//		}
-//		else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-//		{
-//			retValue = writeBmp(filename, imageWidth, imageHeight, buffer);
-//		}
-//		free(buffer);
-//	}
-//	return retValue;
 }
 
 bool ModelViewerWidget::fileExists(const char* filename)
