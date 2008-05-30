@@ -18,6 +18,9 @@ class QSlider;
 class QSpinBox;
 class LDPreferences;
 class TCAlert;
+class QLineEdit;
+class QPushButton;
+class QComboBox;
 
 typedef enum
 {
@@ -115,6 +118,13 @@ public:
     void setupPrefSetsList(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
 	void checkLightVector(void);
+    void snapshotSaveDirBoxChanged();
+    void partsListsSaveDirBoxChanged();
+	void exportsListsSaveDirBoxChanged();
+	void snapshotSaveDirBrowse();
+	void partsListsSaveDirBrowse();
+	void exportsSaveDirBrowse();
+	void browseForDir(QString prompt, QLineEdit *textField, QString dir);
 
 protected:
 	void doGeneralApply(void);
@@ -165,7 +175,13 @@ protected:
 	void uncheckLightDirections(void);
 	LDPreferences::LightDirection getSelectedLightDirection(void);
 	void selectLightDirection(LDPreferences::LightDirection);
-
+	void updateSaveDir(QLineEdit *textField, QPushButton *button,
+                       LDPreferences::DefaultDirMode dirMode,
+                       const std::string &filename);
+	void setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
+                      QPushButton *button, LDPreferences::DefaultDirMode dirMode,
+                      const std::string &filename);
+	void setupSaveDirs(void);
 	const char *getPrefSet(int);
 	const char *getSelectedPrefSet(void);
 	void selectPrefSet(const char *prefSet = NULL, bool force = false);	

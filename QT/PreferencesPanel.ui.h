@@ -271,3 +271,52 @@ void PreferencesPanel::doDrawLightDats()
 		preferences->doDrawLightDats();
 	}
 }
+
+void PreferencesPanel::snapshotSaveDirBoxChanged()
+{
+	if(preferences)
+    {
+        preferences->snapshotSaveDirBoxChanged();
+	}
+}
+
+void PreferencesPanel::partsListsSaveDirBoxChanged()
+{
+    if(preferences)
+    {
+		preferences->partsListsSaveDirBoxChanged();
+	}
+}
+
+void PreferencesPanel::exportsListsSaveDirBoxChanged()
+{
+    if(preferences)
+    {
+		preferences->exportsListsSaveDirBoxChanged();
+    }
+}
+
+void PreferencesPanel::snapshotSaveDirBrowse()
+{
+    if(preferences)
+    {
+		preferences->snapshotSaveDirBrowse();
+	}
+}
+
+void PreferencesPanel::partsListsSaveDirBrowse()
+{
+    if(preferences)
+    {
+		preferences->partsListsSaveDirBrowse();
+	}
+}
+
+void PreferencesPanel::exportsSaveDirBrowse()
+{
+    if(preferences)
+    {
+		preferences->exportsSaveDirBrowse();
+	}
+}
+

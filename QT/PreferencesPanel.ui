@@ -3568,6 +3568,42 @@ into effect until the next time a model is loaded.</string>
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>snapshotSaveDirBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>snapshotSaveDirBoxChanged()</slot>
+    </connection>
+    <connection>
+        <sender>partsListsSaveDirBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>partsListsSaveDirBoxChanged()</slot>
+    </connection>
+    <connection>
+        <sender>exportsListsSaveDirBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>exportsListsSaveDirBoxChanged()</slot>
+    </connection>
+    <connection>
+        <sender>snapshotSaveDirButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>snapshotSaveDirBrowse()</slot>
+    </connection>
+    <connection>
+        <sender>partsListsSaveDirButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>partsListsSaveDirBrowse()</slot>
+    </connection>
+    <connection>
+        <sender>exportsSaveDirButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>exportsSaveDirBrowse()</slot>
+    </connection>
+    <connection>
         <sender>transparentButton</sender>
         <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
@@ -4206,6 +4242,12 @@ into effect until the next time a model is loaded.</string>
     <slot>doAnisotropic(bool b)</slot>
     <slot>doAnisotropicSlider(int i)</slot>
     <slot>doDrawLightDats()</slot>
+    <slot>snapshotSaveDirBoxChanged()</slot>
+    <slot>partsListsSaveDirBoxChanged()</slot>
+    <slot>exportsListsSaveDirBoxChanged()</slot>
+    <slot>snapshotSaveDirBrowse()</slot>
+    <slot>partsListsSaveDirBrowse()</slot>
+    <slot>exportsSaveDirBrowse()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
