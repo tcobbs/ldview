@@ -87,7 +87,7 @@ void MpdModel::updateData()
 				LDLModel *mpdModel = mpdModels[i];
 				item = new QListBoxText(modelList,
 										 mpdModel->getName());
-				if ( i == modelViewer->getMpdChildIndex())
+				if ( i == (unsigned int) modelViewer->getMpdChildIndex())
 					current = item;
 			}
 			modelList->setCurrentItem(current);
