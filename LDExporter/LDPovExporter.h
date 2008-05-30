@@ -116,6 +116,7 @@ protected:
 	void loadXmlElements(TiXmlElement *elements);
 	bool writeInclude(const std::string &filename, bool lineFeed = true,
 		const LDLModel *pModel = NULL);
+	void writeLogo(void);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
