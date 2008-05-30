@@ -25,6 +25,7 @@
 #include <TCFoundation/TCLocalStrings.h>
 //#include <netinet/in.h>
 #include <qtextedit.h>
+#include <qfiledialog.h>
 #include "ModelViewerWidget.h"
 #include "Preferences.h"
 #include "PreferencesPanel.h"
@@ -158,6 +159,51 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setFov(panel->fieldOfViewSpin->value());
 	ldPrefs->setMemoryUsage(panel->memoryUsageBox->currentItem());
 	ldPrefs->setTransDefaultColor(panel->transparentButton->state());
+	LDPreferences::DefaultDirMode snapshotDirMode, partsListDirMode, exportDirMode;
+	QString snapshotDir, partsListDir, exportDir;
+	ldPrefs->setSnapshotsDirMode(snapshotDirMode = 
+				(LDPreferences::DefaultDirMode)panel->snapshotSaveDirBox->currentItem()); 
+	if (snapshotDirMode == LDPreferences::DDMSpecificDir)
+	{
+		snapshotDir = panel->snapshotSaveDirEdit->text();
+		if(snapshotDir.length()>0)
+		{
+			ldPrefs->setSnapshotsDir(snapshotDir.ascii());
+		}
+		else
+		{
+			ldPrefs->setSnapshotsDirMode(LDPreferences::DDMLastDir);
+		}
+	}
+	ldPrefs->setPartsListsDirMode(partsListDirMode =
+			(LDPreferences::DefaultDirMode)panel->partsListsSaveDirBox->currentItem());
+	if (partsListDirMode == LDPreferences::DDMSpecificDir)
+	{
+		partsListDir = panel->partsListsSaveDirEdit->text();
+		if (partsListDir.length() > 0)
+		{
+			ldPrefs->setPartsListsDir(partsListDir.ascii());
+		}
+		else
+		{
+			ldPrefs->setPartsListsDirMode(LDPreferences::DDMLastDir);
+		}
+	}
+	ldPrefs->setSaveDirMode(LDPreferences::SOExport, exportDirMode =
+			(LDPreferences::DefaultDirMode)panel->exportsListsSaveDirBox->currentItem());
+	if (exportDirMode == LDPreferences::DDMSpecificDir)
+	{
+		exportDir = panel->exportsSaveDirEdit->text();
+		if (exportDir.length() > 0)
+		{
+			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.ascii());
+		}
+		else
+		{
+			ldPrefs->setSaveDirMode(LDPreferences::SOExport,
+                    LDPreferences::DDMLastDir);
+		}
+	}
 	ldPrefs->applyGeneralSettings();
 	ldPrefs->commitGeneralSettings();
 }
@@ -627,6 +673,7 @@ void Preferences::reflectGeneralSettings(void)
 	setRangeValue(panel->fieldOfViewSpin, (int)ldPrefs->getFov());
 	setButtonState(panel->transparentButton, ldPrefs->getTransDefaultColor());
 	panel->memoryUsageBox->setCurrentItem(ldPrefs->getMemoryUsage());
+	setupSaveDirs();
 }
 
 void Preferences::reflectGeometrySettings(void)
@@ -1956,3 +2003,105 @@ void Preferences::checkLightVector(void)
 		selectLightDirection(lightDirection);
 	}
 }
+
+void Preferences::updateSaveDir(QLineEdit *textField, QPushButton *button,
+								LDPreferences::DefaultDirMode dirMode,
+								const std::string &filename)
+{
+	bool enable = FALSE;
+
+	if (dirMode == LDPreferences::DDMSpecificDir)
+	{
+		textField->setText(filename.c_str());
+		enable = TRUE;
+	}
+	else
+	{
+		textField->setText("");
+	}
+	button->setEnabled(enable);
+	textField->setEnabled(enable);
+}
+
+void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
+							   QPushButton *button, LDPreferences::DefaultDirMode dirMode,
+							   const std::string &filename)
+{
+	comboBox->setCurrentItem(dirMode);
+	updateSaveDir(textField, button, dirMode, filename);
+}
+
+void Preferences::setupSaveDirs()
+{
+	setupSaveDir(panel->snapshotSaveDirBox, panel->snapshotSaveDirEdit, 
+				 panel->snapshotSaveDirButton, 
+				 ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot), 
+				 ldPrefs->getSaveDir(LDPreferences::SOSnapshot));
+	setupSaveDir(panel->partsListsSaveDirBox, panel->partsListsSaveDirEdit,
+				 panel->partsListsSaveDirButton, 
+				 ldPrefs->getSaveDirMode(LDPreferences::SOPartsList),
+				 ldPrefs->getSaveDir(LDPreferences::SOPartsList));
+	setupSaveDir(panel->exportsListsSaveDirBox, panel->exportsSaveDirEdit,
+				 panel->exportsSaveDirButton,
+				 ldPrefs->getSaveDirMode(LDPreferences::SOExport),
+				 ldPrefs->getSaveDir(LDPreferences::SOExport));
+}
+
+void Preferences::snapshotSaveDirBoxChanged()
+{
+	panel->applyButton->setEnabled(true);
+	updateSaveDir(panel->snapshotSaveDirEdit,panel->snapshotSaveDirButton,
+		(LDPreferences::DefaultDirMode)panel->snapshotSaveDirBox->currentItem(),
+		panel->snapshotSaveDirEdit->text());
+}
+
+void Preferences::partsListsSaveDirBoxChanged()
+{
+	updateSaveDir(panel->partsListsSaveDirEdit,panel->partsListsSaveDirButton,
+		(LDPreferences::DefaultDirMode)panel->partsListsSaveDirBox->currentItem(),
+		panel->partsListsSaveDirEdit->text());
+	panel->applyButton->setEnabled(true);
+}
+
+void Preferences::exportsListsSaveDirBoxChanged()
+{
+	updateSaveDir(panel->exportsSaveDirEdit,panel->exportsSaveDirButton,
+			(LDPreferences::DefaultDirMode)panel->exportsListsSaveDirBox->currentItem(),
+			panel->exportsSaveDirEdit->text());
+	panel->applyButton->setEnabled(true);
+}
+
+void Preferences::snapshotSaveDirBrowse()
+{
+	browseForDir(TCLocalStrings::get("BrowseForSnapshotDir"),panel->snapshotSaveDirEdit,
+				 panel->snapshotSaveDirEdit->text());
+}
+
+void Preferences::partsListsSaveDirBrowse()
+{
+	browseForDir(TCLocalStrings::get("BrowseForPartsListDir"),
+		panel->partsListsSaveDirEdit, panel->partsListsSaveDirEdit->text());
+}
+
+void Preferences::exportsSaveDirBrowse()
+{
+	browseForDir(TCLocalStrings::get("BrowseForExportListDir"),
+		panel->exportsSaveDirEdit,panel->exportsSaveDirEdit->text());
+}
+
+void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString dir)
+{
+	QFileDialog *dirDialog;
+    dirDialog = new QFileDialog(dir);
+    dirDialog->setCaption(prompt);
+    dirDialog->setIcon(getimage("LDViewIcon16.png"));
+    dirDialog->setMode(QFileDialog::DirectoryOnly);
+    if (dirDialog->exec() == QDialog::Accepted)
+    {
+        QString choosenDir = dirDialog->selectedFile();
+		textField->setText(choosenDir);
+		panel->applyButton->setEnabled(true);
+    }
+    delete dirDialog;
+}
+
