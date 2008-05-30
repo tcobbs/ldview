@@ -239,6 +239,15 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
+		if (!writeCamera())
+		{
+			return 1;
+		}
+		if (!writeLights())
+		{
+			return 1;
+		}
+		fprintf(m_pPovFile, "\nbackground { color rgb <0, 0, 0> }\n\n");
 		if (m_edges)
 		{
 			TCFloat matrix[16];
@@ -268,19 +277,10 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		fprintf(m_pPovFile, "object {\n\t%s\n\t",
+		fprintf(m_pPovFile, "object {\n\t%s\n",
 			getDeclareName(m_pTopModel, false).c_str());
 		writeColor(7);
-		fprintf(m_pPovFile, "\n}\n\n");
-		fprintf(m_pPovFile, "background { color rgb <0, 0, 0> }\n\n");
-		if (!writeCamera())
-		{
-			return 1;
-		}
-		if (!writeLights())
-		{
-			return 1;
-		}
+		fprintf(m_pPovFile, "\n}\n");
 		fclose(m_pPovFile);
 	}
 	else
@@ -674,8 +674,7 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	sprintf(lookAtString, "%s,%s,%s", ftostr(lookAt[0], 20).c_str(),
 		ftostr(lookAt[1], 20).c_str(), ftostr(lookAt[2], 20).c_str());
 	sprintf(cameraString,
-		"camera\n"
-		"{\n"
+		"camera {\n"
 		"\t#declare ASPECT = 4/3;\n"
 		"\tlocation < %s >\n"
 		"\tsky < %s >\n"
@@ -1037,21 +1036,20 @@ bool LDPovExporter::writeModelObject(
 				writeDescriptionComment(pModel);
 				fprintf(m_pPovFile,
 					"#if (QUAL = 0)\n"
-					"box {\n");
+					"box {\n\t");
 				writePoint(min);
 				fprintf(m_pPovFile, ",");
 				writePoint(max);
 				fprintf(m_pPovFile, "\n"
 					"}\n"
 					"#else\n"
-					"union ");
+					"union {\n");
 			}
 			else
 			{
-				fprintf(m_pPovFile, "#declare %s = union", declareName.c_str());
+				fprintf(m_pPovFile, "#declare %s = union {", declareName.c_str());
 				writeDescriptionComment(pModel);
 			}
-			fprintf(m_pPovFile, "{\n");
 			for (i = 0; i < count; i++)
 			{
 				LDLFileLine *pFileLine = (*fileLines)[i];
@@ -1230,14 +1228,16 @@ void LDPovExporter::writeMatrix(
 	fprintf(m_pPovFile, ">");
 }
 
-void LDPovExporter::writeColor(int colorNumber, bool slope)
+bool LDPovExporter::writeColor(int colorNumber, bool slope)
 {
 	if (colorNumber != 16)
 	{
 		fprintf(m_pPovFile,
-			"#if (version >= 3.1) material #else texture #end { Color%d%s }",
+			"\t#if (version >= 3.1) material #else texture #end { Color%d%s }",
 			colorNumber, slope ? "_slope" : "");
+		return true;
 	}
+	return false;
 }
 
 void LDPovExporter::writeInnerColorDeclaration(
@@ -1262,9 +1262,8 @@ void LDPovExporter::writeInnerColorDeclaration(
 			fprintf(m_pPovFile, "\n");
 		}
 		fprintf(m_pPovFile,
-			"#declare Color%d%s = #if (version >= 3.1) material { #end\n\ttexture\n",
+			"#declare Color%d%s = #if (version >= 3.1) material { #end\n\ttexture {\n",
 			colorNumber, slope ? "_slope" : "");
-		fprintf(m_pPovFile, "\t{\n");
 		if (it != m_xmlColors.end())
 		{
 			fprintf(m_pPovFile, "\t\t%s\n",
@@ -1550,7 +1549,6 @@ bool LDPovExporter::writeModelLine(
 		if (isStud(pModel))
 		{
 			startStuds(studsStarted);
-			fprintf(m_pPovFile, "\t");
 		}
 		else
 		{
@@ -1574,30 +1572,46 @@ bool LDPovExporter::writeModelLine(
 				}
 			}
 		}
-		writeInnerModelLine(declareName, pModelLine, mirrored, false);
+		writeInnerModelLine(declareName, pModelLine, mirrored, false,
+			studsStarted);
 		if (it != m_xmlElements.end())
 		{
 			const PovName *name = findPovName(it->second, "Texture", "Slope");
 
 			if (name != NULL)
 			{
-				writeInnerModelLine(name->name, pModelLine, mirrored, true);
+				writeInnerModelLine(name->name, pModelLine, mirrored, true,
+					studsStarted);
 			}
 		}
 	}
 	return true;
 }
 
+void LDPovExporter::indentStud(bool studsStarted)
+{
+	if (studsStarted)
+	{
+		fprintf(m_pPovFile, "\t");
+	}
+}
+
 void LDPovExporter::writeInnerModelLine(
 	const std::string &declareName,
 	LDLModelLine *pModelLine,
 	bool mirrored,
-	bool slope)
+	bool slope,
+	bool studsStarted)
 {
 	LDLModel *pModel = pModelLine->getModel();
 	bool origMirrored = mirrored;
 
-	fprintf(m_pPovFile, "\tobject {\n\t\t%s\n\t\t", declareName.c_str());
+	indentStud(studsStarted);
+	fprintf(m_pPovFile, "\tobject {\n");
+	indentStud(studsStarted);
+	fprintf(m_pPovFile, "\t\t%s\n", declareName.c_str());
+	indentStud(studsStarted);
+	fprintf(m_pPovFile, "\t\t");
 	writeSeamMatrix(pModelLine);
 	if (origMirrored &&
 		stringHasCaseInsensitiveSuffix(pModel->getFilename(), "stud.dat"))
@@ -1619,9 +1633,15 @@ void LDPovExporter::writeInnerModelLine(
 		writeMatrix(pModelLine->getMatrix(),
 			getModelFilename(pModel).c_str());
 	}
-	fprintf(m_pPovFile, "\n\t\t");
-	writeColor(pModelLine->getColorNumber(), slope);
-	fprintf(m_pPovFile, "\n\t}\n");
+	fprintf(m_pPovFile, "\n\t");
+	indentStud(studsStarted);
+	if (writeColor(pModelLine->getColorNumber(), slope))
+	{
+		fprintf(m_pPovFile, "\n");
+		indentStud(studsStarted);
+		fprintf(m_pPovFile, "\t");
+	}
+	fprintf(m_pPovFile, "}\n");
 }
 
 void LDPovExporter::endMesh()
@@ -1649,7 +1669,7 @@ void LDPovExporter::endStuds(bool &started)
 
 void LDPovExporter::startMesh(void)
 {
-	fprintf(m_pPovFile, "\tmesh\n\t{\n");
+	fprintf(m_pPovFile, "\tmesh {\n");
 }
 
 void LDPovExporter::writeTriangleLine(LDLTriangleLine *pTriangleLine)
