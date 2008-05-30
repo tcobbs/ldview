@@ -70,14 +70,15 @@ protected:
 	bool writeEdges(void);
 	void writeMatrix(TCFloat *matrix, const char *filename = NULL);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
-	void writeColor(int colorNumber, bool slope = false);
+	bool writeColor(int colorNumber, bool slope = false);
 	void writeColorDeclaration(int colorNumber);
 	void writeInnerColorDeclaration(int colorNumber, bool slope);
 	void writeRGBA(int r, int g, int b, int a);
 	bool writeModelLine(LDLModelLine *pModelLine, bool &studsStarted,
 		bool mirrored, const TCFloat *matrix);
+	void indentStud(bool studsStarted);
 	void writeInnerModelLine(const std::string &declareName,
-		LDLModelLine *pModelLine, bool mirrored, bool slope);
+		LDLModelLine *pModelLine, bool mirrored, bool slope, bool studsStarted);
 	void writeCommentLine(LDLCommentLine *pCommentLine, bool &ifStarted,
 		bool &elseStarted, bool &povMode);
 	void writeTriangleLine(LDLTriangleLine *pTriangleLine);
