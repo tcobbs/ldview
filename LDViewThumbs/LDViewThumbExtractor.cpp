@@ -4,8 +4,14 @@
 #include "LDViewThumbExtractor.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCImage.h>
+#include <TCFoundation/mystring.h>
 
 #define INSTALL_PATH_KEY "InstallPath"
+
+//#define DEBUG_LOG
+#ifdef DEBUG_LOG
+FILE *g_logFile = NULL;
+#endif // DEBUG_LOG
 
 /////////////////////////////////////////////////////////////////////////////
 // CLDViewThumbExtractor
@@ -67,6 +73,13 @@ bool CLDViewThumbExtractor::processFile(
 	startupInfo.dwX = 0;
 	startupInfo.dwY = 0;
 	USES_CONVERSION;
+#ifdef DEBUG_LOG
+	if (g_logFile != NULL)
+	{
+		fwrite(commandLine, wcslen(commandLine) * 2, 1, g_logFile);
+		fwrite(L"\r\n", 4, 1, g_logFile);
+	}
+#endif // DEBUG_LOG
 	if (CreateProcessW(A2W(m_ldviewPath.c_str()), commandLine, NULL, NULL, FALSE,
 		DETACHED_PROCESS | priority, NULL, NULL, &startupInfo, &processInfo))
 	{
@@ -150,11 +163,58 @@ STDMETHODIMP CLDViewThumbExtractor::GetLocation(
 	}
 }
 
+bool CLDViewThumbExtractor::isLDrawFile(void)
+{
+	std::string filename;
+	FILE *file;
+	bool retValue = false;
+
+	wstringtostring(filename, m_path);
+	file = fopen(filename.c_str(), "rb");
+	if (file != NULL)
+	{
+		while (!retValue)
+		{
+			char buf[1024];
+			char *spot = buf;
+
+			if (fgets(buf, sizeof(buf), file) == NULL)
+			{
+				break;
+			}
+			buf[sizeof(buf) - 1] = 0;
+			replaceStringCharacter(buf, '\t', ' ');
+			stripCRLF(buf);
+			while (spot[0] == ' ' || spot[0] == '\r' || spot[0] == '\n')
+			{
+				spot++;
+			}
+			if (spot[0] >= '0' && spot[0] <= '5' && spot[1] == ' ')
+			{
+				if (spot[0] != '0')
+				{
+					retValue = true;
+				}
+			}
+			else if (spot[0])
+			{
+				break;
+			}
+		}
+		fclose(file);
+	}
+	return retValue;
+}
+
 STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 {
 	HRESULT hr = E_FAIL;
 
-	if (findLDView())
+#ifdef DEBUG_LOG
+	g_logFile = fopen("C:\\temp\\LDViewThumbs.log", "ab");
+#endif // DEBUG_LOG
+	*phBmpThumbnail = NULL;
+	if (findLDView() && isLDrawFile())
 	{
 		TCHAR szTempPath[1024];
 		TCHAR szTempFilename[MAX_PATH + 16];
@@ -178,7 +238,8 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 					TCByte *imageData;
 					int imageWidth;
 					int imageHeight;
-					int rowSize;
+					int srcRowSize;
+					int dstRowSize;
 					int row;
 					int col;
 					HBITMAP hbm;
@@ -201,16 +262,18 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 					imageData = image->getImageData();
 					imageWidth = image->getWidth();
 					imageHeight = image->getHeight();
-					rowSize = image->getRowSize();
+					srcRowSize = image->getRowSize();
+					dstRowSize = TCImage::roundUp(imageWidth * 3, 4);
 					for (row = 0; row < imageHeight; row++)
 					{
 						for (col = 0; col < imageWidth; col++)
 						{
-							int offset = row * rowSize + col * 3;
+							int srcOffset = row * srcRowSize + col * 3;
+							int dstOffset = row * dstRowSize + col * 3;
 
-							bmData[offset] = imageData[offset + 2];
-							bmData[offset + 1] = imageData[offset + 1];
-							bmData[offset + 2] = imageData[offset];
+							bmData[dstOffset] = imageData[srcOffset + 2];
+							bmData[dstOffset + 1] = imageData[srcOffset + 1];
+							bmData[dstOffset + 2] = imageData[srcOffset];
 						}
 					}
 					*phBmpThumbnail = hbm;
@@ -221,10 +284,13 @@ STDMETHODIMP CLDViewThumbExtractor::Extract(/* [out] */ HBITMAP *phBmpThumbnail)
 			DeleteFile(szTempFilename);
 		}
 	}
-	else
+#ifdef DEBUG_LOG
+	if (g_logFile != NULL)
 	{
-		*phBmpThumbnail = NULL;
+		fclose(g_logFile);
+		g_logFile = NULL;
 	}
+#endif // DEBUG_LOG
 	return hr;
 }
 
