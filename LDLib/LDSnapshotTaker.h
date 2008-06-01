@@ -54,6 +54,7 @@ public:
 		const std::string &stepSuffix, int step, int numSteps);
 	static std::string extensionForType(ImageType type,
 		bool includeDot = false);
+	static ImageType typeForFilename(const char *filename, bool gl2psAllowed);
 	static ImageType lastImageType(void);
 
 	static const char *alertClass(void) { return "LDSnapshotTaker"; }

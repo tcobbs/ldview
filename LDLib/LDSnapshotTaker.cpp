@@ -79,12 +79,20 @@ bool LDSnapshotTaker::saveImage(void)
 		bool zoomToFit = TCUserDefaults::boolForKey(SAVE_ZOOM_TO_FIT_KEY, true,
 			false);
 		bool commandLineType = false;
+		std::string snapshotSuffix =
+			TCUserDefaults::commandLineStringForKey(SNAPSHOT_SUFFIX_KEY);
 
 		if (TCUserDefaults::commandLineStringForKey(SAVE_IMAGE_TYPE_KEY).size()
-			> 0 ||
-			TCUserDefaults::commandLineStringForKey(SNAPSHOT_SUFFIX_KEY).size()
 			> 0)
 		{
+			m_imageType =
+				(ImageType)TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY);
+			commandLineType = true;
+		}
+		if (snapshotSuffix.size()
+			> 0)
+		{
+			m_imageType = typeForFilename(snapshotSuffix.c_str(), m_gl2psAllowed);
 			commandLineType = true;
 		}
 		if (TCUserDefaults::commandLineStringForKey(SAVE_STEPS_KEY).size() > 0)
@@ -200,36 +208,8 @@ bool LDSnapshotTaker::saveImage(void)
 						SAVE_SNAPSHOT_KEY, NULL, false);
 					if (imageFilename && !commandLineType)
 					{
-						if (stringHasCaseInsensitiveSuffix(imageFilename,
-							".png"))
-						{
-							m_imageType = ITPng;
-						}
-						else if (stringHasCaseInsensitiveSuffix(imageFilename,
-							".bmp"))
-						{
-							m_imageType = ITBmp;
-						}
-						else if (stringHasCaseInsensitiveSuffix(imageFilename,
-							".jpg"))
-						{
-							m_imageType = ITJpg;
-						}
-						else if (stringHasCaseInsensitivePrefix(imageFilename,
-							".svg") && m_gl2psAllowed)
-						{
-							m_imageType = ITSvg;
-						}
-						else if (stringHasCaseInsensitivePrefix(imageFilename,
-							".eps") && m_gl2psAllowed)
-						{
-							m_imageType = ITEps;
-						}
-						else if (stringHasCaseInsensitivePrefix(imageFilename,
-							".pdf") && m_gl2psAllowed)
-						{
-							m_imageType = ITPdf;
-						}
+						m_imageType = typeForFilename(imageFilename,
+							m_gl2psAllowed);
 					}
 				}
 				if (imageFilename)
@@ -658,6 +638,10 @@ bool LDSnapshotTaker::canSaveAlpha(void)
 void LDSnapshotTaker::renderOffscreenImage(void)
 {
 	TCAlertManager::sendAlert(alertClass(), this, _UC("MakeCurrent"));
+	if (m_modelViewer->getMainModel() == NULL)
+	{
+		m_modelViewer->loadModel();
+	}
 	m_modelViewer->update();
 }
 
@@ -719,10 +703,6 @@ TCByte *LDSnapshotTaker::grabImage(
 	{
 		m_modelViewer->setStep(m_step);
 	}
-	if (zoomToFit)
-	{
-		m_modelViewer->setForceZoomToFit(true);
-	}
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	newWidth = viewport[2];
 	newHeight = viewport[3];
@@ -733,6 +713,10 @@ TCByte *LDSnapshotTaker::grabImage(
 		numYTiles);
 	m_modelViewer->setWidth(newWidth);
 	m_modelViewer->setHeight(newHeight);
+	if (zoomToFit)
+	{
+		m_modelViewer->setForceZoomToFit(true);
+	}
 	m_modelViewer->setup();
 	if (canSaveAlpha())
 	{
@@ -932,6 +916,42 @@ std::string LDSnapshotTaker::addStepSuffix(
 		newString += filename.substr(dotSpot);
 	}
 	return newString;
+}
+
+// Note: static method
+LDSnapshotTaker::ImageType LDSnapshotTaker::typeForFilename(
+	const char *filename,
+	bool gl2psAllowed)
+{
+	if (stringHasCaseInsensitiveSuffix(filename, ".png"))
+	{
+		return ITPng;
+	}
+	else if (stringHasCaseInsensitiveSuffix(filename, ".bmp"))
+	{
+		return ITBmp;
+	}
+	else if (stringHasCaseInsensitiveSuffix(filename, ".jpg"))
+	{
+		return ITJpg;
+	}
+	else if (stringHasCaseInsensitivePrefix(filename, ".svg") && gl2psAllowed)
+	{
+		return ITSvg;
+	}
+	else if (stringHasCaseInsensitivePrefix(filename, ".eps") && gl2psAllowed)
+	{
+		return ITEps;
+	}
+	else if (stringHasCaseInsensitivePrefix(filename, ".pdf") && gl2psAllowed)
+	{
+		return ITPdf;
+	}
+	else
+	{
+		// PNG is the default;
+		return ITPng;
+	}
 }
 
 // Note: static method

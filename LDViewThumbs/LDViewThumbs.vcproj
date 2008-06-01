@@ -76,14 +76,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="gdi32.lib libpng.lib zlib.lib"
+				AdditionalDependencies="gdi32.lib libpng.lib zlib.lib libjpeg.lib"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\lib"
 				ModuleDefinitionFile=".\LDViewThumbs.def"
 				ProgramDatabaseFile=".\ReleaseMinDependency-VC6/LDViewThumbs.pdb"
 				SubSystem="2"
-				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
