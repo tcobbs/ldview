@@ -2810,51 +2810,58 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 		{
 			*strchr(baseFilename, '.') = 0;
 		}
-		char format[32] = "%s.%s";
-		char *extension = NULL;
-		int max;
-		if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
+		if (curSaveOp == LDPreferences::SOExport)
 		{
-			max = (int)(pow(10.0, saveDigits + 0.1));
-			sprintf(format, "%%s%%0%dd.%%s", saveDigits);	
+			sprintf(saveFilename, "%s.pov", baseFilename);
 		}
-		else max = 2;
-		int i;
-		for (i = 1; i < max; i++)
+		else
 		{
-			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-			{
-				extension = "png";
-			}
-			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-			{
-				extension = "bmp";
-			}
-			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
-			{
-				extension = "jpg";
-			}
+			char format[32] = "%s.%s";
+			char *extension = NULL;
+			int max;
 			if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
 			{
-				sprintf(saveFilename, format, baseFilename, i , extension);
+				max = (int)(pow(10.0, saveDigits + 0.1));
+				sprintf(format, "%%s%%0%dd.%%s", saveDigits);	
 			}
-			else
+			else max = 2;
+			int i;
+			for (i = 1; i < max; i++)
 			{
-				sprintf(saveFilename, format, baseFilename, extension);
+				if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+				{
+					extension = "png";
+				}
+				else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+				{
+					extension = "bmp";
+				}
+				else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+				{
+					extension = "jpg";
+				}
+				if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
+				{
+					sprintf(saveFilename, format, baseFilename, i , extension);
+				}
+				else
+				{
+					sprintf(saveFilename, format, baseFilename, extension);
+				}
+				if (TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false))
+				{
+					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
+							TCLocalStrings::get("DefaultStepSuffix"), false);
+					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
+                    	    suffix, 1, modelViewer->getNumSteps());
+	                strcpy(saveFilename, temp.c_str());
+	
+				}
 			}
-			if (TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false))
-			{
-				QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
-						TCLocalStrings::get("DefaultStepSuffix"), false);
-				std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                        suffix, 1, modelViewer->getNumSteps());
-                strcpy(saveFilename, temp.c_str());
-
-			}
-			if (!fileExists(saveFilename))
-			{
-				return true;
-			}
+		}
+		if (!fileExists(saveFilename))
+		{
+			return true;
 		}
 	}
 	return false;
@@ -2862,7 +2869,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 
 bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 {
-	char *initialDir = Preferences::getLastOpenPath();
+	QString initialDir = preferences->getSaveDir(curSaveOp, modelViewer->getFilename());
 
 	QDir::setCurrent(initialDir);
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
@@ -2870,8 +2877,16 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	{
 		saveFilename[0] = 0;
 	}
-	if (!saveDialog)
+	switch (curSaveOp)
 	{
+	case LDPreferences::SOExport:
+		saveDialog = new QFileDialog(".","POV: POV-Ray Scene File (*.pov)",this,"",true);
+		saveDialog->setIcon(getimage("LDViewIcon16.png"));
+		saveDialog->setMode(QFileDialog::AnyFile);
+		saveDialog->setCaption(TCLocalStrings::get("ExportModel"));
+		break;
+	case LDPreferences::SOSnapshot:
+	default:
 		saveDialog = new QFileDialog(".",
 			"Portable Network Graphics (*.png)",
 			this,
@@ -2883,23 +2898,34 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setSelectedFilter(0);
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
+		break;
 	}
 	saveDialog->setSelection(saveFilename);
 	if (saveDialog->exec() == QDialog::Accepted)
 	{
-		QString filename = saveDialog->selectedFile();
-		QDir::setCurrent(saveDialog->dirPath());
+		QString filename = saveDialog->selectedFile(), dir = saveDialog->dirPath();
+        switch (curSaveOp)
+        {
+        case LDPreferences::SOExport:
+            TCUserDefaults::setPathForKey(dir, LAST_EXPORT_DIR_KEY, false);
+            break;
+        case LDPreferences::SOSnapshot:
+        default:
+            TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_DIR_KEY, false);
+            break;
+        }
+		QDir::setCurrent(dir);
 		strncpy(saveFilename,filename,len);
 		QString filter = saveDialog->selectedFilter();
-		if (filter == "Portable Network Graphics (*.png)")
+		if (filter.find(".png") != -1)
 		{
 			saveImageType = PNG_IMAGE_TYPE_INDEX;
 		}
-        if (filter == "Jpeg (*.jpg)")
+        if (filter.find(".jpg") != -1)
         {
             saveImageType = JPG_IMAGE_TYPE_INDEX;
         }
-        if (filter == "Windows Bitmap (*.bmp)")
+        if (filter.find(".bmp") != -1)
         {
             saveImageType = BMP_IMAGE_TYPE_INDEX;
         }
@@ -2921,8 +2947,10 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 				strcat(saveFilename, ".jpg");
 			}
 		}
+		delete saveDialog;
 		return true;
 	}
+	delete saveDialog;
 	return false;
 }
 
@@ -3013,6 +3041,13 @@ bool ModelViewerWidget::shouldOverwriteFile(char* filename)
 
 void ModelViewerWidget::fileExport()
 {
+	curSaveOp = LDPreferences::SOExport;
+	char saveFilename[1024] = "";
+	if (getSaveFilename(saveFilename, 1024)&&
+		(!fileExists(saveFilename)||shouldOverwriteFile(saveFilename)))
+	{
+		modelViewer->exportCurModel(LDrawModelViewer::ETPov, saveFilename);
+	}
 }
 
 bool ModelViewerWidget::doFileSave(void)
@@ -3024,6 +3059,7 @@ bool ModelViewerWidget::doFileSave(void)
 
 bool ModelViewerWidget::doFileSave(char *saveFilename)
 {
+	curSaveOp = LDPreferences::SOSnapshot;
 	if (getSaveFilename(saveFilename, 1024))
 	{
 		if(fileExists(saveFilename)&&!shouldOverwriteFile(saveFilename))
@@ -3304,6 +3340,10 @@ void ModelViewerWidget::doPartList(void)
 			PartList *partlist = new PartList(this, htmlInventory);
 			if (partlist->exec() == QDialog::Accepted)
 			{
+			    QString initialDir = preferences->getSaveDir(LDPreferences::SOPartsList, 
+				modelViewer->getFilename());
+				QDir::setCurrent(initialDir);
+
 				bool done = false;
 				char *cFilename = modelViewer->getFilename();
 				QString filename;
@@ -3333,7 +3373,7 @@ void ModelViewerWidget::doPartList(void)
 				while (!done)
 				{
 					QString htmlFilename = QFileDialog::getSaveFileName(
-						startWith,
+						initialDir + "/" + filename,
 						filter,
 						this,
 						"Generate Parts List dialog",

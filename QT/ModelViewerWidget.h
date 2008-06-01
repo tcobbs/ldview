@@ -347,6 +347,7 @@ protected:
 
 	int lightingSelection;
 	static TCStringArray* recentFiles;
+	LDPreferences::SaveOp curSaveOp;
 };
 
 #endif // __MODELVIEWERWIDGET_H__
