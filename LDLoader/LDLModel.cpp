@@ -1650,6 +1650,7 @@ void LDLModel::scanPoints(
 	else
 	{
 		int curStep = 0;
+		bool emptyStep = true;
 
 		for (int i = 0; i < m_activeLineCount; i++)
 		{
@@ -1658,8 +1659,9 @@ void LDLModel::scanPoints(
 			{
 				LDLCommentLine *commentLine = (LDLCommentLine *)fileLine;
 				
-				if (commentLine->isStepMeta())
+				if (commentLine->isStepMeta() && !emptyStep)
 				{
+					emptyStep = true;
 					if (++curStep > step)
 					{
 						break;
@@ -1668,6 +1670,7 @@ void LDLModel::scanPoints(
 			}
 			if (fileLine->isActionLine())
 			{
+				emptyStep = false;
 				((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
 					matrix, types);
 			}
