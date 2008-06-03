@@ -3308,9 +3308,21 @@ void ModelViewerWidget::doPartList(
 		{
 			char *snapshotPath = copyString(htmlInventory->getSnapshotPath());
 			bool saveZoomToFit = modelViewer->getForceZoomToFit();
+            bool saveActualSize = TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false);
+            int saveWidth = TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false);
+            int saveHeight = TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false);
+            bool origSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false,
+                false);
+            int origStep = modelViewer->getStep();
 
+            TCUserDefaults::setBoolForKey(false, SAVE_STEPS_KEY, false);
+            modelViewer->setStep(modelViewer->getNumSteps());
 			htmlInventory->prepForSnapshot(modelViewer);
 			modelViewer->setForceZoomToFit(true);
+			TCUserDefaults::setLongForKey(false, SAVE_ACTUAL_SIZE_KEY, false);
+			TCUserDefaults::setLongForKey(400, SAVE_WIDTH_KEY, false);
+			TCUserDefaults::setLongForKey(300, SAVE_HEIGHT_KEY, false);
+
 			// By saying it's from the command line, none of the above settings
 			// will be written to TCUserDefaults.  I know it's not really from
 			// the command line, but it produces the behavior we want.
@@ -3319,6 +3331,11 @@ void ModelViewerWidget::doPartList(
 			delete snapshotPath;
 			htmlInventory->restoreAfterSnapshot(modelViewer);
 			modelViewer->setForceZoomToFit(saveZoomToFit);
+			TCUserDefaults::setLongForKey(saveActualSize, SAVE_ACTUAL_SIZE_KEY, false);
+            TCUserDefaults::setLongForKey(saveWidth, SAVE_WIDTH_KEY, false);
+            TCUserDefaults::setLongForKey(saveHeight, SAVE_HEIGHT_KEY, false);
+            modelViewer->setStep(origStep);
+            TCUserDefaults::setBoolForKey(origSteps, SAVE_STEPS_KEY, false);
 			doApply();
 		}
 	}
