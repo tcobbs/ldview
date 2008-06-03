@@ -3320,7 +3320,7 @@ into effect until the next time a model is loaded.</string>
                 <attribute name="title">
                     <string>Preference set</string>
                 </attribute>
-                <hbox>
+                <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
@@ -3339,7 +3339,7 @@ into effect until the next time a model is loaded.</string>
                         <property name="name">
                             <cstring>Layout71</cstring>
                         </property>
-                        <vbox>
+                        <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
@@ -3349,20 +3349,37 @@ into effect until the next time a model is loaded.</string>
                             <property name="spacing">
                                 <number>4</number>
                             </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>Spacer3</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
                             <widget class="QPushButton">
                                 <property name="name">
-                                    <cstring>newPreferenceSetButton</cstring>
+                                    <cstring>hotkeyPreferenceSetButton</cstring>
                                 </property>
                                 <property name="sizePolicy">
                                     <sizepolicy>
-                                        <hsizetype>0</hsizetype>
+                                        <hsizetype>5</hsizetype>
                                         <vsizetype>0</vsizetype>
                                         <horstretch>0</horstretch>
                                         <verstretch>0</verstretch>
                                     </sizepolicy>
                                 </property>
                                 <property name="text">
-                                    <string>New</string>
+                                    <string>Hot Key</string>
                                 </property>
                             </widget>
                             <widget class="QPushButton">
@@ -3383,40 +3400,23 @@ into effect until the next time a model is loaded.</string>
                             </widget>
                             <widget class="QPushButton">
                                 <property name="name">
-                                    <cstring>hotkeyPreferenceSetButton</cstring>
+                                    <cstring>newPreferenceSetButton</cstring>
                                 </property>
                                 <property name="sizePolicy">
                                     <sizepolicy>
-                                        <hsizetype>5</hsizetype>
+                                        <hsizetype>0</hsizetype>
                                         <vsizetype>0</vsizetype>
                                         <horstretch>0</horstretch>
                                         <verstretch>0</verstretch>
                                     </sizepolicy>
                                 </property>
                                 <property name="text">
-                                    <string>Hot Key</string>
+                                    <string>New</string>
                                 </property>
                             </widget>
-                            <spacer>
-                                <property name="name">
-                                    <cstring>Spacer3</cstring>
-                                </property>
-                                <property name="orientation">
-                                    <enum>Vertical</enum>
-                                </property>
-                                <property name="sizeType">
-                                    <enum>Expanding</enum>
-                                </property>
-                                <property name="sizeHint">
-                                    <size>
-                                        <width>20</width>
-                                        <height>20</height>
-                                    </size>
-                                </property>
-                            </spacer>
-                        </vbox>
+                        </hbox>
                     </widget>
-                </hbox>
+                </vbox>
             </widget>
         </widget>
         <widget class="QLayoutWidget">
