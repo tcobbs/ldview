@@ -160,7 +160,6 @@ void Preferences::doGeneralApply(void)
 	ldPrefs->setMemoryUsage(panel->memoryUsageBox->currentItem());
 	ldPrefs->setTransDefaultColor(panel->transparentButton->state());
 	LDPreferences::DefaultDirMode snapshotDirMode, partsListDirMode, exportDirMode;
-	QString snapshotDir, partsListDir, exportDir;
 	ldPrefs->setSnapshotsDirMode(snapshotDirMode = 
 				(LDPreferences::DefaultDirMode)panel->snapshotSaveDirBox->currentItem()); 
 	if (snapshotDirMode == LDPreferences::DDMSpecificDir)
@@ -2024,7 +2023,8 @@ void Preferences::updateSaveDir(QLineEdit *textField, QPushButton *button,
 }
 
 void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
-							   QPushButton *button, LDPreferences::DefaultDirMode dirMode,
+							   QPushButton *button, 
+							   LDPreferences::DefaultDirMode dirMode,
 							   const std::string &filename)
 {
 	comboBox->setCurrentItem(dirMode);
@@ -2036,15 +2036,15 @@ void Preferences::setupSaveDirs()
 	setupSaveDir(panel->snapshotSaveDirBox, panel->snapshotSaveDirEdit, 
 				 panel->snapshotSaveDirButton, 
 				 ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot), 
-				 ldPrefs->getSaveDir(LDPreferences::SOSnapshot));
+				 snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot));
 	setupSaveDir(panel->partsListsSaveDirBox, panel->partsListsSaveDirEdit,
 				 panel->partsListsSaveDirButton, 
 				 ldPrefs->getSaveDirMode(LDPreferences::SOPartsList),
-				 ldPrefs->getSaveDir(LDPreferences::SOPartsList));
+				 partsListDir =ldPrefs->getSaveDir(LDPreferences::SOPartsList));
 	setupSaveDir(panel->exportsListsSaveDirBox, panel->exportsSaveDirEdit,
 				 panel->exportsSaveDirButton,
 				 ldPrefs->getSaveDirMode(LDPreferences::SOExport),
-				 ldPrefs->getSaveDir(LDPreferences::SOExport));
+				 exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport));
 }
 
 void Preferences::snapshotSaveDirBoxChanged()
@@ -2052,14 +2052,14 @@ void Preferences::snapshotSaveDirBoxChanged()
 	panel->applyButton->setEnabled(true);
 	updateSaveDir(panel->snapshotSaveDirEdit,panel->snapshotSaveDirButton,
 		(LDPreferences::DefaultDirMode)panel->snapshotSaveDirBox->currentItem(),
-		panel->snapshotSaveDirEdit->text());
+		snapshotDir);
 }
 
 void Preferences::partsListsSaveDirBoxChanged()
 {
 	updateSaveDir(panel->partsListsSaveDirEdit,panel->partsListsSaveDirButton,
 		(LDPreferences::DefaultDirMode)panel->partsListsSaveDirBox->currentItem(),
-		panel->partsListsSaveDirEdit->text());
+		partsListDir);
 	panel->applyButton->setEnabled(true);
 }
 
@@ -2067,29 +2067,29 @@ void Preferences::exportsListsSaveDirBoxChanged()
 {
 	updateSaveDir(panel->exportsSaveDirEdit,panel->exportsSaveDirButton,
 			(LDPreferences::DefaultDirMode)panel->exportsListsSaveDirBox->currentItem(),
-			panel->exportsSaveDirEdit->text());
+			exportDir);
 	panel->applyButton->setEnabled(true);
 }
 
 void Preferences::snapshotSaveDirBrowse()
 {
-	browseForDir(TCLocalStrings::get("BrowseForSnapshotDir"),panel->snapshotSaveDirEdit,
-				 panel->snapshotSaveDirEdit->text());
+	browseForDir(TCLocalStrings::get("BrowseForSnapshotDir"),
+		panel->snapshotSaveDirEdit, snapshotDir);
 }
 
 void Preferences::partsListsSaveDirBrowse()
 {
 	browseForDir(TCLocalStrings::get("BrowseForPartsListDir"),
-		panel->partsListsSaveDirEdit, panel->partsListsSaveDirEdit->text());
+		panel->partsListsSaveDirEdit, partsListDir);
 }
 
 void Preferences::exportsSaveDirBrowse()
 {
 	browseForDir(TCLocalStrings::get("BrowseForExportListDir"),
-		panel->exportsSaveDirEdit,panel->exportsSaveDirEdit->text());
+		panel->exportsSaveDirEdit, exportDir);
 }
 
-void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString dir)
+void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &dir)
 {
 	QFileDialog *dirDialog;
     dirDialog = new QFileDialog(dir);
@@ -2099,7 +2099,7 @@ void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString dir
     if (dirDialog->exec() == QDialog::Accepted)
     {
         QString choosenDir = dirDialog->selectedFile();
-		textField->setText(choosenDir);
+		textField->setText(dir = choosenDir);
 		panel->applyButton->setEnabled(true);
     }
     delete dirDialog;

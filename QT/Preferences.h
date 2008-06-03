@@ -124,7 +124,7 @@ public:
 	void snapshotSaveDirBrowse();
 	void partsListsSaveDirBrowse();
 	void exportsSaveDirBrowse();
-	void browseForDir(QString prompt, QLineEdit *textField, QString dir);
+	void browseForDir(QString prompt, QLineEdit *textField, QString &dir);
 	std::string getSaveDir(LDPreferences::SaveOp saveOp,const std::string &filename) { return ldPrefs->getDefaultSaveDir(saveOp, filename); }
 protected:
 	void doGeneralApply(void);
@@ -206,6 +206,7 @@ protected:
 	bool toolBar;
 	int windowWidth;
 	int windowHeight;
+	QString snapshotDir, partsListDir, exportDir;
 };
 
 #endif // __PREFERENCES_H__

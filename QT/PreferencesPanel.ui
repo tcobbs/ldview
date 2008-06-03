@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>506</width>
-            <height>501</height>
+            <width>600</width>
+            <height>650</height>
         </rect>
     </property>
     <property name="sizePolicy">
@@ -420,7 +420,7 @@
                                         </property>
                                         <property name="sizePolicy">
                                             <sizepolicy>
-                                                <hsizetype>0</hsizetype>
+                                                <hsizetype>5</hsizetype>
                                                 <vsizetype>0</vsizetype>
                                                 <horstretch>0</horstretch>
                                                 <verstretch>0</verstretch>
@@ -480,7 +480,7 @@
                                         </property>
                                         <property name="sizePolicy">
                                             <sizepolicy>
-                                                <hsizetype>0</hsizetype>
+                                                <hsizetype>5</hsizetype>
                                                 <vsizetype>0</vsizetype>
                                                 <horstretch>0</horstretch>
                                                 <verstretch>0</verstretch>
@@ -540,7 +540,7 @@
                                         </property>
                                         <property name="sizePolicy">
                                             <sizepolicy>
-                                                <hsizetype>0</hsizetype>
+                                                <hsizetype>5</hsizetype>
                                                 <vsizetype>0</vsizetype>
                                                 <horstretch>0</horstretch>
                                                 <verstretch>0</verstretch>
