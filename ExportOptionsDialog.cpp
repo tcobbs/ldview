@@ -187,9 +187,13 @@ BOOL ExportOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 	std::string extension = m_exporter->getExtension();
 	std::string title;
 	RECT rect;
-	GetClientRect(hWindow, &rect);
 	HWND hScroller;
+	HWND hSizer = GetDlgItem(hWindow, IDC_RESIZETRIANGLE);
+	int sbSize = GetSystemMetrics(SM_CXVSCROLL);
 
+	GetClientRect(hWindow, &rect);
+	MoveWindow(hSizer, rect.right - sbSize, rect.bottom - sbSize, sbSize,
+		sbSize, FALSE);
 	minWidth = rect.right / 2;
 	minHeight = rect.bottom / 2;
 	setIcon(IDI_APP_ICON);
@@ -206,6 +210,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 	m_resizer->addSubWindow(hScroller, CUISizeHorizontal | CUISizeVertical);
 	m_resizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
 	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
+	m_resizer->addSubWindow(IDC_RESIZETRIANGLE, CUIFloatLeft | CUIFloatTop);
 	initialized = TRUE;
 	//if (m_scroller->scrolls())
 	//{
