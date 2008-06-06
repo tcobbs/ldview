@@ -4,6 +4,7 @@
 #include "LDVExtensionsSetup.h"
 #include "LDViewWindow.h"
 #include "JpegOptionsDialog.h"
+#include "ExportOptionsDialog.h"
 #include <TCFoundation/TCAutoreleasePool.h>
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCStringArray.h>
@@ -372,6 +373,8 @@ void ModelWindow::loadSaveSettings(void)
 	ignorePBuffer = TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 0, false)
 		!= 0;
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
+	saveExportType = TCUserDefaults::longForKey(SAVE_EXPORT_TYPE_KEY,
+		LDrawModelViewer::ETPov, false);
 	saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
 	autoCrop = TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false);
 	saveAllSteps = TCUserDefaults::boolForKey(SAVE_STEPS_KEY, false, false);
@@ -1054,9 +1057,8 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 
 	GetClientRect(hSaveDialog, &clientRect);
 	GetWindowRect(hParent, &parentWindowRect);
-	// Resizing the client height to match the parent's window height is to
-	// work around what appears to be a bug in Microsoft's code.
-	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top;// + 1;
+	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top;
+	clientRect.right = parentWindowRect.right - parentWindowRect.left;
 	MoveWindow(hSaveDialog, 0, 0, clientRect.right, clientRect.bottom, TRUE);
 
 	// Move the Options button so that it is to the right of the file type
@@ -1076,10 +1078,7 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 	screenToClient(hSaveDialog, &typeComboRect);
 	screenToClient(hSaveDialog, &cancelButtonRect);
 
-	// I have no idea why the + 6 is necessary below.  It really doesn't make
-	// any sense, but it is required to get the options button into the right
-	// location.
-	MoveWindow(hSaveOptionsButton, typeComboRect.right - optionsButtonWidth + 6,
+	MoveWindow(hSaveOptionsButton, typeComboRect.right - optionsButtonWidth,
 		cancelButtonRect.top, optionsButtonWidth, optionsButtonHeight, TRUE);
 	saveWindowResizer = new CUIWindowResizer;
 	saveWindowResizer->setHWindow(hSaveDialog);
@@ -1087,51 +1086,54 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 	saveWindowResizer->addSubWindow(IDC_SAVE_OPTIONS,
 		CUIFloatLeft | CUIFloatTop);
 
-	saveWindowResizer->addSubWindow(IDC_SAVE_SERIES_BOX,
-		CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_SERIES,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_LABEL,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_SPIN,
-		CUIFloatRight | CUIFloatTop);
+	if (curSaveOp == LDPreferences::SOSnapshot)
+	{
+		saveWindowResizer->addSubWindow(IDC_SAVE_SERIES_BOX,
+			CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_SERIES,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_LABEL,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_DIGITS_SPIN,
+			CUIFloatRight | CUIFloatTop);
 
-	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE_BOX,
-		CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH_LABEL,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT_LABEL,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT,
-		CUIFloatRight | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_SAVE_ZOOMTOFIT,
-		CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE_BOX,
+			CUISizeHorizontal | CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_ACTUAL_SIZE,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH_LABEL,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_WIDTH,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT_LABEL,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_HEIGHT,
+			CUIFloatRight | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_SAVE_ZOOMTOFIT,
+			CUIFloatRight | CUIFloatTop);
 
-	saveWindowResizer->addSubWindow(IDC_ALL_STEPS_BOX,
-		CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_STEP_SUFFIX_LABEL,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
-	saveWindowResizer->addSubWindow(IDC_STEP_SUFFIX,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
-	saveWindowResizer->addSubWindow(IDC_SAME_SCALE,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_ALL_STEPS_BOX,
+			CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_STEP_SUFFIX_LABEL,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_STEP_SUFFIX,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_SAME_SCALE,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
 
-	saveWindowResizer->addSubWindow(IDC_MISC_BOX,
-		CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
-	saveWindowResizer->addSubWindow(IDC_ALL_STEPS,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
-	saveWindowResizer->addSubWindow(IDC_IGNORE_PBUFFER,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
-	saveWindowResizer->addSubWindow(IDC_TRANSPARENT_BACKGROUND,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
-	saveWindowResizer->addSubWindow(IDC_AUTO_CROP,
-		CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_MISC_BOX,
+			CUIFloatLeft | CUISizeHorizontal | CUIFloatTop);
+		saveWindowResizer->addSubWindow(IDC_ALL_STEPS,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_IGNORE_PBUFFER,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_TRANSPARENT_BACKGROUND,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+		saveWindowResizer->addSubWindow(IDC_AUTO_CROP,
+			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
+	}
 
 	return FALSE;
 }
@@ -3832,6 +3834,20 @@ void ModelWindow::updateSaveAllStepsEnabled(void)
 	}
 }
 
+void ModelWindow::saveTypeUpdated(void)
+{
+	switch (curSaveOp)
+	{
+	case LDPreferences::SOExport:
+		saveExportTypeUpdated();
+		break;
+	case LDPreferences::SOSnapshot:
+	default:
+		saveImageTypeUpdated();
+		break;
+	}
+}
+
 void ModelWindow::saveImageTypeUpdated(void)
 {
 	BOOL enable = FALSE;
@@ -3845,6 +3861,20 @@ void ModelWindow::saveImageTypeUpdated(void)
 	}
 	SendMessage(hSaveTransBgButton, BM_SETCHECK, transBg, 0);
 	EnableWindow(hSaveTransBgButton, enable);
+}
+
+void ModelWindow::saveExportTypeUpdated(void)
+{
+	BOOL enable = FALSE;
+	const LDExporter *exporter;
+
+	exporter = modelViewer->getExporter(
+		(LDrawModelViewer::ExportType)saveExportType);
+	if (exporter != NULL && exporter->getSettings().size() > 0)
+	{
+		enable = TRUE;
+	}
+	EnableWindow(hSaveOptionsButton, enable);
 }
 
 void ModelWindow::setupSaveExtras(void)
@@ -3878,7 +3908,7 @@ void ModelWindow::setupSaveExtras(void)
 	updateSaveSizeEnabled();
 	updateSaveSeriesEnabled();
 	updateSaveAllStepsEnabled();
-	saveImageTypeUpdated();
+	saveTypeUpdated();
 }
 
 void ModelWindow::updateSaveWidth(void)
@@ -3987,17 +4017,45 @@ void ModelWindow::updateSaveDigits(void)
 	updateSaveFilename();
 }
 
-BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
+void ModelWindow::doSaveOptionsClick(void)
 {
-	switch (controlId)
+	switch (curSaveOp)
 	{
-	case IDC_SAVE_OPTIONS:
+	case LDPreferences::SOExport:
+		{
+			LDExporter *exporter = modelViewer->getExporter();
+
+			if (exporter != NULL)
+			{
+				ExportOptionsDialog *dialog = new ExportOptionsDialog(
+					getLanguageModule(), exporter);
+
+				if (dialog->doModal(hSaveDialog) == IDOK)
+				{
+				}
+				dialog->release();
+			}
+		}
+		break;
+	case LDPreferences::SOSnapshot:
+	default:
 		{
 			JpegOptionsDialog *dialog = new JpegOptionsDialog(
 				getLanguageModule(), hSaveDialog);
 
 			dialog->doModal(hSaveDialog);
+			dialog->release();
 		}
+		break;
+	}
+}
+
+BOOL ModelWindow::doSaveClick(int controlId, HWND /*hControlWnd*/)
+{
+	switch (controlId)
+	{
+	case IDC_SAVE_OPTIONS:
+		doSaveOptionsClick();
 		break;
 	case IDC_SAVE_ACTUAL_SIZE:
 		saveActualSize = SendDlgItemMessage(hSaveDialog, controlId, BM_GETCHECK,
@@ -4069,13 +4127,23 @@ BOOL ModelWindow::doSaveNotify(int /*controlId*/, LPOFNOTIFY notification)
 		{
 			char buf[1024];
 
-			saveImageType = notification->lpOFN->nFilterIndex;
+			saveType = notification->lpOFN->nFilterIndex;
+			switch (curSaveOp)
+			{
+			case LDPreferences::SOExport:
+				saveExportType = saveType;
+				break;
+			case LDPreferences::SOSnapshot:
+			default:
+				saveImageType = saveType;
+				break;
+			}
 			if (calcSaveFilename(buf, 1024))
 			{
 				SendMessage(GetParent(hSaveDialog), CDM_SETCONTROLTEXT, edt1,
 					(LPARAM)buf);
 			}
-			saveImageTypeUpdated();
+			saveTypeUpdated();
 		}
 		break;
 	case CDN_INITDONE:
@@ -4251,7 +4319,20 @@ bool ModelWindow::calcSaveFilename(
 		}
 		if (curSaveOp == LDPreferences::SOExport)
 		{
-			sprintf(saveFilename, "%s.pov", baseFilename.c_str());
+			LDExporter *exporter = modelViewer->getExporter(
+				(LDrawModelViewer::ExportType)saveExportType);
+			std::string extension;
+
+			if (exporter)
+			{
+				extension = exporter->getExtension();
+			}
+			else
+			{
+				extension = "pov";
+			}
+			sprintf(saveFilename, "%s.%s", baseFilename.c_str(),
+				extension.c_str());
 			return true;
 		}
 		else
@@ -4353,8 +4434,23 @@ void ModelWindow::fillSnapshotFileTypes(char *fileTypes)
 
 void ModelWindow::fillExportFileTypes(char *fileTypes)
 {
-	memset(fileTypes, 0, 2);
-	LDViewWindow::addFileType(fileTypes, ls("PovFileType"), "*.pov");
+	memset(fileTypes, 0, 2 * sizeof(fileTypes[0]));
+	for (int i = LDrawModelViewer::ETFirst; i <= LDrawModelViewer::ETLast; i++)
+	{
+		const LDExporter *exporter = modelViewer->getExporter(
+			(LDrawModelViewer::ExportType)i);
+
+		if (exporter != NULL)
+		{
+			ucstring fileType = exporter->getTypeDescription();
+			char *aFileType = ucstringtombs(fileType.c_str(), fileType.size());
+			std::string extension = "*.";
+
+			extension += exporter->getExtension();
+			LDViewWindow::addFileType(fileTypes, aFileType, extension.c_str());
+			delete aFileType;
+		}
+	}
 }
 
 bool ModelWindow::getSaveFilename(
@@ -4378,7 +4474,14 @@ bool ModelWindow::getSaveFilename(
 	{
 	case LDPreferences::SOExport:
 		fillExportFileTypes(fileTypes);
+		modelViewer->setExportType(
+			(LDrawModelViewer::ExportType)saveExportType);
+		saveType = saveExportType;
 		openStruct.lpstrTitle = ls("ExportModel");
+		openStruct.Flags |= OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
+		openStruct.hInstance = getLanguageModule();
+		openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_EXPORT_SAVE_OPTIONS);
+		openStruct.lpfnHook = staticSaveHook;
 		break;
 	case LDPreferences::SOSnapshot:
 	default:
@@ -4387,6 +4490,7 @@ bool ModelWindow::getSaveFilename(
 		{
 			saveImageType = 1;
 		}
+		saveType = saveImageType;
 		openStruct.lpstrTitle = ls("SaveSnapshot");
 		openStruct.Flags |= OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
 		openStruct.hInstance = getLanguageModule();
@@ -4397,7 +4501,7 @@ bool ModelWindow::getSaveFilename(
 	openStruct.lStructSize = sizeof(OPENFILENAME);
 	openStruct.hwndOwner = hWindow;
 	openStruct.lpstrFilter = fileTypes;
-	openStruct.nFilterIndex = saveImageType;
+	openStruct.nFilterIndex = saveType;
 	openStruct.lpstrFile = saveFilename;
 	openStruct.nMaxFile = len;
 	openStruct.lpstrInitialDir = initialDir.c_str();
@@ -4419,25 +4523,36 @@ bool ModelWindow::getSaveFilename(
 			break;
 		}
 		delete dir;
-		if (index > 0 && index <= maxImageType)
+		switch (curSaveOp)
 		{
-			TCUserDefaults::setLongForKey(saveImageType,
-				SAVE_IMAGE_TYPE_KEY, false);
-		}
-		if (!strchr(saveFilename, '.') &&
-			(int)strlen(saveFilename) < len - 5)
-		{
-			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+		case LDPreferences::SOExport:
+			TCUserDefaults::setLongForKey(saveExportType,
+				SAVE_EXPORT_TYPE_KEY, false);
+			break;
+		case LDPreferences::SOSnapshot:
+		default:
+			if (index > 0 && index <= maxImageType)
 			{
-				strcat(saveFilename, ".png");
+				TCUserDefaults::setLongForKey(saveImageType,
+					SAVE_IMAGE_TYPE_KEY, false);
 			}
-			else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+			break;
+			if (!strchr(saveFilename, '.') &&
+				(int)strlen(saveFilename) < len - 5)
 			{
-				strcat(saveFilename, ".bmp");
-			}
-			else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
-			{
-				strcat(saveFilename, ".jpg");
+				strcat(saveFilename, saveExtension());
+				//if (saveImageType == PNG_IMAGE_TYPE_INDEX)
+				//{
+				//	strcat(saveFilename, ".png");
+				//}
+				//else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
+				//{
+				//	strcat(saveFilename, ".bmp");
+				//}
+				//else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
+				//{
+				//	strcat(saveFilename, ".jpg");
+				//}
 			}
 		}
 		TCObject::release(saveWindowResizer);
@@ -4494,9 +4609,12 @@ void ModelWindow::exportModel(void)
 
 		if (index < copyright.size())
 		{
-			copyright = copyright.substr(0, index) + "(C)" + copyright.substr(index + 1);
+			copyright = copyright.substr(0, index) + "(C)" +
+				copyright.substr(index + 1);
 		}
-		modelViewer->exportCurModel(LDrawModelViewer::ETPov, filename,
+		modelViewer->setExportType(
+			(LDrawModelViewer::ExportType)saveExportType);
+		modelViewer->exportCurModel(filename,
 			ldviewWindow->getProductVersion());
 	}
 }

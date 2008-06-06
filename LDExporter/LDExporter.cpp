@@ -16,7 +16,8 @@ m_xPan(0.0f),
 m_yPan(0.0f),
 m_udPrefix(udPrefix),
 m_appName("LDExporter"),
-m_appCopyright("Copyright (C) 2008 Travis Cobbs")
+m_appCopyright("Copyright (C) 2008 Travis Cobbs"),
+m_settingsInitialized(false)
 {
 	TCFloat flipMatrix[16];
 	TCFloat tempMatrix[16];
@@ -43,15 +44,69 @@ m_appCopyright("Copyright (C) 2008 Travis Cobbs")
 	tempMatrix[14] = 0.0f;
 	tempMatrix[15] = 1.0f;
 	TCVector::multMatrix(flipMatrix, tempMatrix, m_rotationMatrix);
+	loadDefaults();
+}
 
+LDExporter::~LDExporter(void)
+{
+}
+
+void LDExporter::loadDefaults(void)
+{
 	m_primSub = boolForKey("PrimitiveSubstitution", true);
 	m_seamWidth = floatForKey("SeamWidth", 0.5);
 	m_edges = boolForKey("Edges", false);
 	m_conditionalEdges = boolForKey("ConditionalEdges", false);
 }
 
-LDExporter::~LDExporter(void)
+std::string LDExporter::getExtension(void) const
 {
+	consolePrintf("Programmer error: LDExporter::getExtension called.\n");
+	return "";
+}
+
+ucstring LDExporter::getTypeDescription(void) const
+{
+	consolePrintf("Programmer error: LDExporter::getTypeDescription called.\n");
+	return _UC("");
+}
+
+const LDExporterSettingList &LDExporter::getSettings(void) const
+{
+	return const_cast<LDExporter *>(this)->getSettings();
+}
+
+LDExporterSettingList &LDExporter::getSettings(void)
+{
+	if (!m_settingsInitialized)
+	{
+		initSettings();
+		m_settingsInitialized = true;
+	}
+	return m_settings;
+}
+
+void LDExporter::initSettings(void) const
+{
+	addSetting(LDExporterSetting(ls(_UC("LDXPrimSub")), m_primSub,
+		udKey("PrimitiveSubstitution").c_str()));
+	if (addSetting(LDExporterSetting(ls(_UC("LDXSeamWidth")), m_seamWidth,
+		udKey("SeamWidth").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+		setting.setMinFloatValue(0.0f);
+		setting.setMaxFloatValue(5.0f);
+	}
+	addSetting(LDExporterSetting(ls(_UC("LDXEdges")), m_edges,
+		udKey("Edges").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("LDXConditionalEdges")),
+		m_conditionalEdges, udKey("ConditionalEdges").c_str()));
+}
+
+bool LDExporter::addSetting(const LDExporterSetting &setting) const
+{
+	m_settings.push_back(setting);
+	return true;
 }
 
 void LDExporter::dealloc(void)
@@ -67,6 +122,20 @@ int LDExporter::run(void)
 }
 
 int LDExporter::doExport(LDLModel * /*pTopModel*/)
+{
+	consolePrintf("Programmer error: LDExporter::doExport called.\n");
+	return 1;
+}
+
+int LDExporter::doExport(TREModel * /*pTopModel*/)
+{
+	consolePrintf("Programmer error: LDExporter::doExport called.\n");
+	return 1;
+}
+
+int LDExporter::doExport(
+	LDLModel * /*pTopLdlModel*/,
+	TREModel * /*pTopTreModel*/)
 {
 	consolePrintf("Programmer error: LDExporter::doExport called.\n");
 	return 1;
@@ -145,7 +214,7 @@ int LDExporter::runInternal(LDExporter *pExporter)
 #else // TC_NO_UNICODE
 				std::wstring wfilename;
 				stringtowstring(wfilename, filename);
-				consolePrintf(ls(_UC("LDEErrorLoadingModel")), wfilename.c_str());
+				consolePrintf(ls(_UC("LDXErrorLoadingModel")), wfilename.c_str());
 #endif // TC_NO_UNICODE
 				retValue = 1;
 			}
@@ -153,13 +222,13 @@ int LDExporter::runInternal(LDExporter *pExporter)
 		}
 		else
 		{
-			consolePrintf(ls(_UC("LDENoFilename")));
+			consolePrintf(ls(_UC("LDXNoFilename")));
 			retValue = 1;
 		}
 	}
 	else
 	{
-		consolePrintf(ls(_UC("LDEUnknownOutputType")));
+		consolePrintf(ls(_UC("LDXUnknownOutputType")));
 		retValue = 1;
 	}
 	return retValue;
@@ -188,7 +257,7 @@ std::string LDExporter::getFilename(void)
 	return retValue;
 }
 
-std::string LDExporter::udKey(const char *key)
+std::string LDExporter::udKey(const char *key) const
 {
 	return m_udPrefix + key;
 }

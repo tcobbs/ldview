@@ -15,6 +15,7 @@
 #include <LDLoader/LDLPalette.h>
 #include <LDLoader/LDLAutoCamera.h>
 #include <LDExporter/LDPovExporter.h>
+#include <LDExporter/LDStlExporter.h>
 #include "LDInputHandler.h"
 #include "LDModelParser.h"
 #include "LDPreferences.h"
@@ -108,7 +109,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	inputHandler(NULL),
 	step(-1),
 	mpdChildIndex(0),
-	cameraData(NULL)
+	cameraData(NULL),
+	exporter(NULL),
+	exportType(ETPov)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
@@ -195,6 +198,7 @@ void LDrawModelViewer::dealloc(void)
 	TCObject::release(mainModel);
 	TCObject::release(whiteLightDirModel);
 	TCObject::release(blueLightDirModel);
+	TCObject::release(exporter);
 	mainTREModel = NULL;
 	delete filename;
 	filename = NULL;
@@ -4225,19 +4229,6 @@ void LDrawModelViewer::zoomToFit(void)
 	}
 }
 
-void LDrawModelViewer::saveSTL(void)
-{
-	//printf("Save as STL xxxx\n");
-	int text_num;
-
-	printf ("solid MYSOLID created by IVCON, original data in %s\n",
-		getFilename());
-	text_num = mainTREModel->saveSTL();
-	printf ("endsolid MYSOLID\n");
-	//printf ( "\n" );
-	//printf ( "STLA_WRITE - Wrote %d text lines.\n", text_num );
-}
-
 void LDrawModelViewer::setStep(int value)
 {
 	step = value - 1;
@@ -4371,28 +4362,57 @@ const LDLModel *LDrawModelViewer::getCurModel(void) const
 	return const_cast<LDrawModelViewer *>(this)->getCurModel();
 }
 
-void LDrawModelViewer::exportCurModel(
-	ExportType type,
-	const char *filename,
-	const char *version /*= NULL*/,
-	const char *copyright /*= NULL*/)
+LDExporter *LDrawModelViewer::initExporter(void)
 {
-	LDLModel *model = getCurModel();
-
-	if (model != NULL)
+	if (exporter == NULL)
 	{
-		LDExporter *exporter;
-
-		switch (type)
+		switch (exportType)
 		{
 		case ETPov:
 			exporter = new LDPovExporter;
+			break;
+		case ETStl:
+			exporter = new LDStlExporter;
 			break;
 		default:
 			exporter = NULL;
 			break;
 		}
-		if (exporter)
+	}
+	return exporter;
+}
+
+void LDrawModelViewer::setExportType(ExportType type)
+{
+	if (type != exportType && type != (ExportType)0)
+	{
+		exportType = type;
+		TCObject::release(exporter);
+		exporter = NULL;
+	}
+	initExporter();
+}
+
+LDExporter *LDrawModelViewer::getExporter(ExportType type /*= (ExportType)0*/)
+{
+	setExportType(type);
+	return initExporter();
+}
+
+void LDrawModelViewer::exportCurModel(
+	const char *filename,
+	const char *version /*= NULL*/,
+	const char *copyright /*= NULL*/,
+	ExportType type /*= (ExportType)0*/)
+{
+	LDLModel *model = getCurModel();
+
+	if (model != NULL)
+	{
+		setExportType(type);
+		TCObject::release(exporter);
+		exporter = NULL;
+		if (initExporter() != NULL)
 		{
 			exporter->setBoundingBox(boundingMin, boundingMax);
 			exporter->setCenter(center);
@@ -4420,8 +4440,23 @@ void LDrawModelViewer::exportCurModel(
 			{
 				exporter->setFilename(filename);
 			}
-			exporter->doExport(model);
+			if (exporter->usesLDLModel())
+			{
+				if (exporter->usesTREModel())
+				{
+					exporter->doExport(model, mainTREModel);
+				}
+				else
+				{
+					exporter->doExport(model);
+				}
+			}
+			else
+			{
+				exporter->doExport(mainTREModel);
+			}
 			exporter->release();
+			exporter = NULL;
 		}
 	}
 }

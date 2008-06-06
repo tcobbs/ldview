@@ -48,7 +48,7 @@ BOOL CUIDialog::doInitDialog(HWND /*hKbControl*/)
 }
 
 INT_PTR CUIDialog::dialogProc(
-	HWND /*hDlg*/,
+	HWND hDlg,
 	UINT message,
 	WPARAM wParam,
 	LPARAM lParam)
@@ -137,6 +137,12 @@ INT_PTR CUIDialog::dialogProc(
 		break;
 	case WM_TIMER:
 		if (doTimer(wParam) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
+	case WM_GETMINMAXINFO:
+		if (doGetMinMaxInfo(hDlg, (LPMINMAXINFO)lParam) == 0)
 		{
 			return (INT_PTR)TRUE;
 		}

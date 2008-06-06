@@ -5,9 +5,13 @@
 #include <LDLoader/LDLCamera.h>
 #include <TCFoundation/TCVector.h>
 #include <TCFoundation/TCStlIncludes.h>
+#include <LDExporter/LDExporterSetting.h>
+#include <TCFoundation/mystring.h>
 
-class LDLMainModel;
 class LDLAutoCamera;
+class TREModel;
+
+typedef std::list<LDExporterSetting> LDExporterSettingList;
 
 class LDExporter: public LDLPrimitiveCheck
 {
@@ -22,6 +26,8 @@ public:
 	virtual void setRadius(TCFloat radius) { m_radius = radius; }
 	virtual void setCamera(const LDLCamera &camera) { m_camera = camera; }
 	virtual int doExport(LDLModel *pTopModel);
+	virtual int doExport(TREModel *pTopModel);
+	virtual int doExport(LDLModel *pTopLDLModel, TREModel *pTopTREModel);
 	virtual void setFilename(const char *filename) { m_filename = filename; }
 	virtual void setRotationMatrix(const float *matrix)
 	{
@@ -34,6 +40,12 @@ public:
 	virtual void setAppVersion(const char *value) { m_appVersion = value; }
 	virtual void setAppUrl(const char *value) { m_appUrl = value; }
 	virtual void setAppCopyright(const char *value) { m_appCopyright = value; }
+	virtual const LDExporterSettingList &getSettings(void) const;
+	virtual LDExporterSettingList &getSettings(void);
+	virtual std::string getExtension(void) const;
+	virtual ucstring getTypeDescription(void) const;
+	virtual bool usesLDLModel(void) const { return true; }
+	virtual bool usesTREModel(void) const { return false; }
 protected:
 	LDLCamera m_camera;
 	TCFloat m_rotationMatrix[16];
@@ -58,6 +70,9 @@ protected:
 	std::string m_appUrl;
 	std::string m_appCopyright;
 
+	mutable LDExporterSettingList m_settings;
+	mutable bool m_settingsInitialized;
+
 	LDExporter(const char *udPrefix = "");
 	virtual ~LDExporter(void);
 	void dealloc(void);
@@ -65,8 +80,13 @@ protected:
 	virtual int runInternal(LDExporter *pExporter);
 	static std::string getFilename(void);
 	TCFloat getHFov(void);
+	virtual bool addSetting(const LDExporterSetting &setting) const;
+	virtual void initSettings(void) const;
 
-	std::string udKey(const char *key);
+	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
+	void loadDefaults(void);
+
+	std::string udKey(const char *key) const;
 	void setStringForKey(const char* value, const char* key,
 		bool sessionSpecific = true);
 	char* stringForKey(const char* key, const char* defaultValue = NULL,

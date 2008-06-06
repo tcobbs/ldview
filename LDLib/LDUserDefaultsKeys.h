@@ -168,6 +168,7 @@
 #define EXPORTS_DIR_KEY "ExportsDir"
 #define LAST_EXPORT_DIR_KEY "LastExportDir"
 #define IGNORE_OCCLUSION_QUERY_KEY "IgnoreOcclusionQuery"
+#define SAVE_EXPORT_TYPE_KEY "SaveExportType"
 
 // The following are undocumented, but perhaps need to be documented.
 #define INV_LAST_SAVE_PATH_KEY "InventoryLastSavePath"

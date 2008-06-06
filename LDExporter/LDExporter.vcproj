@@ -184,6 +184,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LDExporterSetting.cpp"
+				>
+			</File>
+			<File
 				RelativePath="LDPovExporter.cpp"
 				>
 				<FileConfiguration
@@ -205,6 +209,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\LDStlExporter.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -215,11 +223,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LDExporterSetting.h"
+				>
+			</File>
+			<File
 				RelativePath="LDPovExporter.h"
 				>
 			</File>
 			<File
 				RelativePath="LDPovExportUDKeys.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LDStlExporter.h"
 				>
 			</File>
 		</Filter>

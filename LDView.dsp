@@ -150,7 +150,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
 # Begin Source File
 
+SOURCE=.\BoolOptionUI.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\BoundingBoxDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ExportOptionsDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FloatOptionUI.cpp
 # End Source File
 # Begin Source File
 
@@ -230,6 +242,10 @@ SOURCE=.\LDViewWindow.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LongOptionUI.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ModelLoader.cpp
 # End Source File
 # Begin Source File
@@ -243,6 +259,22 @@ SOURCE=.\ModelWindow.cpp
 # Begin Source File
 
 SOURCE=.\MpdDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\NumberOptionUI.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\OptionsCanvas.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\OptionsScroller.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\OptionUI.cpp
 # End Source File
 # Begin Source File
 
@@ -278,7 +310,19 @@ SOURCE=.\ToolbarStrip.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl;fi;fd"
 # Begin Source File
 
+SOURCE=.\BoolOptionUI.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\BoundingBoxDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ExportOptionsDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\FloatOptionUI.h
 # End Source File
 # Begin Source File
 
@@ -302,6 +346,10 @@ SOURCE=.\LDViewWindow.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\LongOptionUI.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ModelLoader.h
 # End Source File
 # Begin Source File
@@ -315,6 +363,22 @@ SOURCE=.\ModelWindow.h
 # Begin Source File
 
 SOURCE=.\MpdDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\NumberOptionUI.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\OptionsCanvas.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\OptionsScroller.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\OptionUI.h
 # End Source File
 # Begin Source File
 

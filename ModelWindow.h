@@ -263,6 +263,8 @@ protected:
 	virtual void sizeView(void);
 	virtual void setupSaveExtras(void);
 	virtual void saveImageTypeUpdated(void);
+	virtual void saveExportTypeUpdated(void);
+	virtual void saveTypeUpdated(void);
 	virtual void setupPrintExtras(void);
 	virtual void setupPageSetupExtras(void);
 	virtual void updateSaveSizeEnabled(void);
@@ -292,6 +294,7 @@ protected:
 		HWND hControlWnd);
 	virtual BOOL doSaveNotify(int controlId, LPOFNOTIFY notification);
 	virtual BOOL doSaveClick(int controlId, HWND hControlWnd);
+	virtual void doSaveOptionsClick(void);
 	virtual BOOL doSaveKillFocus(int controlId, HWND hControlWnd);
 	virtual BOOL doPrintCommand(int controlId, int notifyCode,
 		HWND hControlWnd);
@@ -443,6 +446,8 @@ protected:
 	HWND hPrintDPI;
 	int currentAntialiasType;
 	int saveImageType;
+	int saveType;
+	int saveExportType;
 	bool windowShown;
 	bool saveAlpha;
 	bool autoCrop;

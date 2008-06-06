@@ -39,6 +39,21 @@ LDExporter("PovExporter/")
 			m_searchPath.push_back(m_ldrawDir + *it);
 		}
 	}
+	loadDefaults();
+}
+
+LDPovExporter::~LDPovExporter(void)
+{
+}
+
+ucstring LDPovExporter::getTypeDescription(void) const
+{
+	return ls(_UC("PovTypeDescription"));
+}
+
+void LDPovExporter::loadDefaults(void)
+{
+	LDExporter::loadDefaults();
 	m_findReplacements = boolForKey("FindReplacements", false);
 	m_xmlMap = boolForKey("XmlMap", true);
 	m_inlinePov = boolForKey("InlinePov", true);
@@ -48,8 +63,35 @@ LDExporter("PovExporter/")
 	m_quality = longForKey("Quality", 2);
 }
 
-LDPovExporter::~LDPovExporter(void)
+void LDPovExporter::initSettings(void) const
 {
+	LDExporter::initSettings();
+	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),
+		m_findReplacements, udKey("FindReplacements").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
+		udKey("XmlMap").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
+		udKey("InlinePov").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovHideStuds")), m_hideStuds,
+		udKey("HideStuds").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
+		udKey("UnmirrorStuds").c_str()));
+	if (addSetting(LDExporterSetting(ls(_UC("PovEdgeRadius")), m_edgeRadius,
+		udKey("EdgeRadius").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.setMinFloatValue(0.0001f);
+		setting.setMaxFloatValue(1000.0f);
+	}
+	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")), m_quality,
+		udKey("Quality").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.setMinLongValue(0);
+		setting.setMaxLongValue(3);
+	}
 }
 
 void LDPovExporter::dealloc(void)
@@ -217,6 +259,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 {
 	std::string filename = m_filename;
 
+	loadDefaults();
 	m_pTopModel = pTopModel;
 	if (filename.size() == 0)
 	{

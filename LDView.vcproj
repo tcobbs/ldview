@@ -581,7 +581,19 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
 			>
 			<File
+				RelativePath=".\BoolOptionUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\BoundingBoxDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ExportOptionsDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FloatOptionUI.cpp"
 				>
 			</File>
 			<File
@@ -659,7 +671,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -670,7 +682,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -681,7 +693,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -692,7 +704,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -703,7 +715,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -714,7 +726,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Compiling Help Project $(InputFileName)"
-						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul"
+						CommandLine="hcrtf /xn &quot;$(InputPath)&quot;&#x0D;&#x0A;copy /y &quot;$(InputDir)LDView.hlp&quot; $(OutDir) &gt; nul&#x0D;&#x0A;"
 						AdditionalDependencies="$(InputDir)\EffectsPrefs.rtf;$(InputDir)\GeneralPrefs.rtf;$(InputDir)\GeometryPrefs.rtf;$(InputDir)\PrefSetsPrefs.rtf;$(InputDir)\PrimitivesPrefs.rtf;$(InputDir)\SaveSnapshot.rtf;$(InputDir)\ScreenSaverPrefs.rtf;$(InputDir)\UpdatesPrefs.rtf"
 						Outputs="$(OutDir)\LDView.hlp"
 					/>
@@ -947,6 +959,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LongOptionUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath="ModelLoader.cpp"
 				>
 				<FileConfiguration
@@ -1068,6 +1084,22 @@
 			</File>
 			<File
 				RelativePath=".\MpdDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\NumberOptionUI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OptionsCanvas.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OptionsScroller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OptionUI.cpp"
 				>
 			</File>
 			<File
@@ -1320,7 +1352,19 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
+				RelativePath=".\BoolOptionUI.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BoundingBoxDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ExportOptionsDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FloatOptionUI.h"
 				>
 			</File>
 			<File
@@ -1344,6 +1388,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LongOptionUI.h"
+				>
+			</File>
+			<File
 				RelativePath="ModelLoader.h"
 				>
 			</File>
@@ -1357,6 +1405,22 @@
 			</File>
 			<File
 				RelativePath=".\MpdDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NumberOptionUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OptionsCanvas.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OptionsScroller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OptionUI.h"
 				>
 			</File>
 			<File

@@ -89,7 +89,15 @@ SOURCE=.\LDExporter.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDExporterSetting.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDPovExporter.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDStlExporter.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -101,11 +109,19 @@ SOURCE=.\LDExporter.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\LDExporterSetting.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\LDPovExporter.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\LDPovExportUDKeys.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\LDStlExporter.h
 # End Source File
 # End Group
 # End Target
