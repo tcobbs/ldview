@@ -8,8 +8,8 @@ class LDStlExporter : public LDExporter
 public:
 	LDStlExporter(void);
 	int doExport(TREModel *pTopModel);
-	virtual bool usesLDLModel(void) { return false; }
-	virtual bool usesTREModel(void) { return true; }
+	virtual bool usesLDLModel(void) const { return false; }
+	virtual bool usesTREModel(void) const { return true; }
 	virtual std::string getExtension(void) const { return "stl"; }
 	virtual ucstring getTypeDescription(void) const;
 protected:

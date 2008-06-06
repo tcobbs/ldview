@@ -206,6 +206,17 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 			finishPart(m_mainTREModel);
 		}
 		m_mainTREModel->finish();
+		if (m_topLDLModel->getName())
+		{
+			m_mainTREModel->setName(m_topLDLModel->getName());
+		}
+		else
+		{
+			char *name = filenameFromPath(m_topLDLModel->getFilename());
+
+			m_mainTREModel->setName(name);
+			delete name;
+		}
 		TCProgressAlert::send("LDModelParser",
 			TCLocalStrings::get(_UC("ParsingStatus")), 1.0f, &m_abort, this);
 		if (m_abort)
