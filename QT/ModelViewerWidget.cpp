@@ -2817,7 +2817,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 		else
 		{
 			char format[32] = "%s.%s";
-			char *extension = NULL;
+			const char *extension = NULL;
 			int max;
 			if (TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0)
 			{
@@ -3046,7 +3046,8 @@ void ModelViewerWidget::fileExport()
 	if (getSaveFilename(saveFilename, 1024)&&
 		(!fileExists(saveFilename)||shouldOverwriteFile(saveFilename)))
 	{
-		modelViewer->exportCurModel(LDrawModelViewer::ETPov, saveFilename);
+		modelViewer->setExportType(LDrawModelViewer::ETPov);
+		modelViewer->exportCurModel(saveFilename);
 	}
 }
 
