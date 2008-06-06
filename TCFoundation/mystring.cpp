@@ -1818,6 +1818,6 @@ std::string ltostr(long value)
 {
 	char buf[32];
 
-	sprintf(buf, "%d", value);
+	sprintf(buf, "%ld", value);
 	return buf;
 }

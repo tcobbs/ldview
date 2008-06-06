@@ -109,9 +109,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	inputHandler(NULL),
 	step(-1),
 	mpdChildIndex(0),
-	cameraData(NULL),
 	exporter(NULL),
-	exportType(ETPov)
+	exportType(ETPov),
+	cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
 	strcpy(className, "LDrawModelViewer");
