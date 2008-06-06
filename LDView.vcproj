@@ -1525,6 +1525,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Icons\error_loop.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Icons\error_loop_mask.bmp"
+				>
+			</File>
+			<File
 				RelativePath="Icons\error_matching_points.bmp"
 				>
 			</File>
@@ -1668,6 +1676,10 @@
 		</Filter>
 		<File
 			RelativePath=".\Build.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\LDExporter\LDExportMessages.ini"
 			>
 		</File>
 		<File
