@@ -344,11 +344,16 @@
 #define IDC_LONGITUDE                   1271
 #define IDC_MPD_LIST                    1272
 #define IDC_PART_BOUNDING_BOXES         1273
+#define IDC_OPTIONS_CANVAS              1278
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
 #define IDD_PREFSETS_PREFS              1548
+#define IDD_EXPORT_SAVE_OPTIONS         1549
+#define IDD_EXPORT_OPTIONS              1550
+#define IDD_OPTIONS_CANVAS              1551
+#define IDD_OPTIONS_SCROLLER            1552
 #define ID_HELP_ABOUT                   40003
 #define ID_FILE_EXIT                    40004
 #define ID_EDIT_PREFERENCES             40005
@@ -434,7 +439,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        190
 #define _APS_NEXT_COMMAND_VALUE         40102
-#define _APS_NEXT_CONTROL_VALUE         1274
+#define _APS_NEXT_CONTROL_VALUE         1279
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

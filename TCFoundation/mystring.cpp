@@ -1800,3 +1800,24 @@ std::string ftostr(double value, int precision /*= 6*/)
 	}
 	return buf;
 }
+
+ucstring ltoucstr(long value)
+{
+#ifdef TC_NO_UNICODE
+	return ltostr(value);
+#else // TC_NO_UNICODE
+	std::string string = ltostr(value);
+	std::wstring wstring;
+
+	stringtowstring(wstring, string);
+	return wstring;
+#endif // TC_NO_UNICODE
+}
+
+std::string ltostr(long value)
+{
+	char buf[32];
+
+	sprintf(buf, "%d", value);
+	return buf;
+}

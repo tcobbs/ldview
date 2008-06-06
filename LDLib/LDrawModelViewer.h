@@ -6,6 +6,7 @@
 #include <TCFoundation/mystring.h>
 #include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
+#include <LDExporter/LDExporter.h>
 
 typedef enum
 {
@@ -71,7 +72,10 @@ class LDrawModelViewer: public TCAlertSender
 		};
 		enum ExportType
 		{
-			ETPov,
+			ETFirst = 1,
+			ETPov = ETFirst,
+			ETStl,
+			ETLast = ETStl
 		};
 		LDrawModelViewer(int, int);
 		LDInputHandler *getInputHandler(void);
@@ -450,8 +454,11 @@ class LDrawModelViewer: public TCAlertSender
 		LDViewPoint *saveViewPoint(void) const;
 		void restoreViewPoint(const LDViewPoint *viewPoint);
 		virtual void setupFont(char *fontFilename);
-		virtual void exportCurModel(ExportType type, const char *filename,
-			const char *version = NULL, const char *copyright = NULL);
+		virtual void exportCurModel(const char *filename,
+			const char *version = NULL, const char *copyright = NULL,
+			ExportType type = (ExportType)0);
+		virtual void setExportType(ExportType type);
+		virtual LDExporter *getExporter(ExportType type = (ExportType)0);
 
 		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
 		virtual bool mouseUp(int x, int y);
@@ -466,7 +473,6 @@ class LDrawModelViewer: public TCAlertSender
 		TREMainModel *getContrastingLightDirModel();
 		virtual TCObject *getAlertSender(void) { return this; }
 
-		void saveSTL(void);
 		void setStep(int value);
 		int getStep(void) const { return step + 1; }
 		int getNumSteps(void) const;
@@ -538,6 +544,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual bool calcSize(void);
 		virtual bool parseModel(void);
 		virtual void releaseTREModels(void);
+		virtual LDExporter *initExporter(void);
 
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
@@ -641,6 +648,8 @@ class LDrawModelViewer: public TCAlertSender
 		LDInputHandler *inputHandler;
 		int step;
 		int mpdChildIndex;
+		LDExporter *exporter;
+		ExportType exportType;
 		struct
 		{
 			bool qualityLighting:1;

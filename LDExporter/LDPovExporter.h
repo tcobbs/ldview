@@ -54,6 +54,8 @@ class LDPovExporter : public LDExporter
 public:
 	LDPovExporter(void);
 	int doExport(LDLModel *pTopModel);
+	virtual std::string getExtension(void) const { return "pov"; }
+	virtual ucstring getTypeDescription(void) const;
 protected:
 	~LDPovExporter(void);
 	void dealloc(void);
@@ -117,6 +119,7 @@ protected:
 	bool writeInclude(const std::string &filename, bool lineFeed = true,
 		const LDLModel *pModel = NULL);
 	void writeLogo(void);
+	virtual void initSettings(void) const;
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -140,6 +143,9 @@ protected:
 		bool bfc, bool is48 = false);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
 	virtual bool substituteStud(void);
+
+	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
+	void loadDefaults(void);
 
 	static double alphaMod(int color);
 	static void cleanupFloats(TCFloat *array, int count = 16);

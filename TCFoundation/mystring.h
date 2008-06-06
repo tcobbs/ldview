@@ -162,6 +162,8 @@ int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...);
 int vsucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, va_list argPtr);
 std::string ftostr(double value, int precision = 6);
 ucstring ftoucstr(double value, int precision = 6);
+std::string ltostr(long value);
+ucstring ltoucstr(long value);
 
 #define COUNT_OF(ar) (sizeof(ar) / sizeof(ar[0]))
 

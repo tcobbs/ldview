@@ -3,6 +3,7 @@
 
 #include <TCFoundation/TCAlertSender.h>
 #include <windows.h>
+#include <CommCtrl.h>
 //#include <windowsx.h>
 #include <CUI/CUIDefines.h>
 #include <TCFoundation/TCTypedPointerArray.h>
@@ -28,6 +29,9 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 #define TBN_GETINFOTIPUC TBN_GETINFOTIPA
 #define MENUITEMINFOUC MENUITEMINFOA
 #define OPENFILENAMEUC OPENFILENAMEA
+#define WC_BUTTONUC WC_BUTTONA
+#define WC_STATICUC WC_STATICA
+#define WC_EDITUC WC_EDITA
 #else // TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOW
 #define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPW
@@ -36,6 +40,9 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 #define TBN_GETINFOTIPUC TBN_GETINFOTIPW
 #define MENUITEMINFOUC MENUITEMINFOW
 #define OPENFILENAMEUC OPENFILENAMEW
+#define WC_BUTTONUC WC_BUTTONW
+#define WC_STATICUC WC_STATICW
+#define WC_EDITUC WC_EDITW
 #endif // TC_NO_UNICODE
 
 class CUIExport CUIWindow : public TCAlertSender
@@ -119,16 +126,21 @@ class CUIExport CUIWindow : public TCAlertSender
 		static BOOL insertMenuItemUC(HMENU hmenu, UINT item, BOOL fByPosition,
 			MENUITEMINFOUC *lpmi);
 		static BOOL getOpenFileNameUC(OPENFILENAMEUC *lpofn);
+		static BOOL getTextExtentPoint32UC(HDC hdc, CUCSTR lpString,
+			int cbString, LPSIZE lpSize);
 		static BOOL screenToClient(HWND hWnd, RECT *rect);
 		static BOOL clientToScreen(HWND hWnd, RECT *rect);
 		static LRESULT CALLBACK staticWindowProc(HWND hWnd,
 			UINT message, WPARAM wParam, LPARAM lParam);
 		static BOOL CALLBACK staticDialogProc(HWND hDlg,
 			UINT message, WPARAM wParam, LPARAM lParam);
+
 		static void windowGetText(HWND hWnd, ucstring &text);
 #ifndef TC_NO_UNICODE
 		static void windowGetText(HWND hWnd, std::string &text);
 #endif // TC_NO_UNICODE
+		static bool checkGet(HWND hWnd);
+		static void checkSet(HWND hWnd, bool value);
 
 	protected:
 		~CUIWindow(void);

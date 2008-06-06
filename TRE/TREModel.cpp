@@ -3175,37 +3175,48 @@ TCObject *TREModel::getAlertSender(void)
 	return m_mainModel->getAlertSender();
 }
 
-int TREModel::printStlTriangle(
+void TREModel::printStlTriangle(
+	FILE *file,
 	TREVertexArray *vertices,
 	TCULongArray *indices,
 	int ix,
 	int i0,
 	int i1,
-	int i2)
+	int i2,
+	const TCFloat *matrix)
 {
-	printf ( "  facet normal %f %f %f\n", 0.0, 0.0, 0.0 );
-	printf ( "    outer loop\n" );
 	int ip[3];
 	ip[0]=i0; ip[1]=i1; ip[2]=i2;
 
-	for(int i=0; i<3; i++)
+	fprintf(file, "  facet normal %f %f %f\n", 0.0, 0.0, 0.0);
+	fprintf(file, "    outer loop\n");
+	for (int i = 0; i < 3; i++)
 	{
-		int index = (*indices)[ix+ip[i]];
-		const TREVertex &vertex = (*vertices)[index];
+		int index = (*indices)[ix + ip[i]];
+		const TREVertex &treVertex = (*vertices)[index];
+		TCVector vector(treVertex.v[0], treVertex.v[1], treVertex.v[2]);
 
-		printf ( "      vertex %f %f %f\n",  vertex.v[0]*0.04, 
-			vertex.v[1]*0.04,vertex.v[2]*0.04);
+		vector = vector.transformPoint(matrix);
+		fprintf(file, "      vertex %f %f %f\n",  vector[0] * 0.04, 
+			vector[1] * 0.04, vector[2] * 0.04);
 	}
-	printf ( "    endloop\n" );
-	printf ( "  endfacet\n" );
-	return 7;	// 7 lines of text.
+	fprintf(file, "    endloop\n");
+	fprintf(file, "  endfacet\n");
 }
 
-int TREModel::saveSTL(void)
+void TREModel::saveSTL(FILE *file)
 {
-	int textNum = 1;
+	fprintf(file, "solid MYSOLID created by LDView, original data in %s\n",
+		m_name);
+	saveSTL(file, TCVector::getIdentityMatrix());
+	fprintf(file, "endsolid MYSOLID\n");
+}
 
-	for (int i = 0; i <= TREMLast; i++)
+void TREModel::saveSTL(FILE *file, const TCFloat *matrix)
+{
+	int i;
+
+	for (i = 0; i <= TREMLast; i++)
 	{
 		TREShapeGroup *shape = m_shapes[i];
 
@@ -3222,7 +3233,8 @@ int TREModel::saveSTL(void)
 
 				for ( int p = 0;  p < count; p+=3 )
 				{
-					textNum += printStlTriangle(vertices, indices, p, 0, 1, 2);
+					printStlTriangle(file, vertices, indices, p, 0, 1, 2,
+						matrix);
 				}
 			}
 			indices = shape->getIndices(TRESQuad, false);
@@ -3233,13 +3245,22 @@ int TREModel::saveSTL(void)
 
 				for ( int p = 0;  p < count; p+=4 )
 				{
-					printStlTriangle(vertices, indices, p, 0, 1, 2);
-					textNum += printStlTriangle(vertices, indices, p, 0, 2, 3);
+					printStlTriangle(file, vertices, indices, p, 0, 1, 2,
+						matrix);
+					printStlTriangle(file, vertices, indices, p, 0, 2, 3,
+						matrix);
 				}
 			}
 		}
 	}
-	return textNum;
+	for (i = 0; i < m_subModels->getCount(); i++)
+	{
+		TRESubModel *subModel = (*m_subModels)[i];
+		TCFloat newMatrix[16];
+
+		TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
+		subModel->getEffectiveModel()->saveSTL(file, newMatrix);
+	}
 }
 
 void TREModel::nextStep(void)

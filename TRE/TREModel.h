@@ -207,7 +207,7 @@ public:
 		const TCFloat *matrix);
 	virtual void cleanupTransparent(TREMSection section);
 	virtual TCObject *getAlertSender(void);
-	virtual int saveSTL(void);
+	virtual void saveSTL(FILE *file);
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
@@ -286,10 +286,12 @@ protected:
 	void findLights(float *matrix);
 	void calcTangentControlPoint(TCVector &controlPoint, int index,
 		int numSegments);
+	void saveSTL(FILE *file, const TCFloat *matrix);
 
 	static void setGlNormalize(bool value);
-	static int printStlTriangle(TREVertexArray *vertices,
-		TCULongArray *indices, int ix, int i0, int i1, int i2);
+	static void printStlTriangle(FILE *file, TREVertexArray *vertices,
+		TCULongArray *indices, int ix, int i0, int i1, int i2,
+		const TCFloat *matrix);
 
 	char *m_name;
 	TREMainModel *m_mainModel;

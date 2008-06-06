@@ -2502,6 +2502,21 @@ BOOL CUIWindow::getOpenFileNameUC(OPENFILENAMEUC *lpofn)
 #endif // TC_NO_UNICODE
 }
 
+
+// Note: static method
+BOOL CUIWindow::getTextExtentPoint32UC(
+	HDC hdc,
+	CUCSTR lpString,
+	int cbString,
+	LPSIZE lpSize)
+{
+#ifdef TC_NO_UNICODE
+	return ::GetTextExtentPoint32A(hdc, lpString, cbString, lpSize);
+#else // TC_NO_UNICODE
+	return ::GetTextExtentPoint32W(hdc, lpString, cbString, lpSize);
+#endif // TC_NO_UNICODE
+}
+
 // Note: static method.
 BOOL CUIWindow::screenToClient(HWND hWnd, RECT *rect)
 {
@@ -2646,5 +2661,17 @@ void CUIWindow::windowGetText(HWND hWnd, std::string &text)
 	text.resize(SendMessageA(hWnd, WM_GETTEXTLENGTH, 0, 0));
 	SendMessageA(hWnd, WM_GETTEXT, (WPARAM)text.size() + 1, (LPARAM)&text[0]);
 }
-
 #endif // TC_NO_UNICODE
+
+// Note: static method
+bool CUIWindow::checkGet(HWND hWnd)
+{
+	return SendMessage(hWnd, BM_GETCHECK, 0, 0) != 0;
+}
+
+// Note: static method
+void CUIWindow::checkSet(HWND hWnd, bool value)
+{
+	SendMessage(hWnd, BM_SETCHECK, value, 0);
+}
+
