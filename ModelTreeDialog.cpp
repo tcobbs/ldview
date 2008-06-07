@@ -342,6 +342,7 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	{
 		hideOptions();
 	}
+	setAutosaveName("ModelTreeDialog");
 	return CUIDialog::doInitDialog(hKbControl);
 }
 
@@ -358,7 +359,7 @@ LRESULT ModelTreeDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		m_resizer->resize(newWidth, newHeight);
 		positionResizeGrip(m_hResizeGrip, newWidth, newHeight);
 	}
-	return 0;
+	return CUIDialog::doSize(sizeType, newWidth, newHeight);
 }
 
 LRESULT ModelTreeDialog::doTreeCustomDraw(LPNMTVCUSTOMDRAW notification)

@@ -47,7 +47,8 @@ CUIWindow::CUIWindow(void)
 		   created(FALSE),
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
-		   paintStruct(NULL)
+		   paintStruct(NULL),
+		   autosaveName(NULL)
 {
 	init();
 }
@@ -77,7 +78,8 @@ CUIWindow::CUIWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x, int y,
 		   created(FALSE),
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
-		   paintStruct(NULL)
+		   paintStruct(NULL),
+		   autosaveName(NULL)
 {
 	init();
 }
@@ -106,7 +108,8 @@ CUIWindow::CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 		   created(FALSE),
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
-		   paintStruct(NULL)
+		   paintStruct(NULL),
+		   autosaveName(NULL)
 {
 	parentWindow->addChild(this);
 	init();
@@ -136,7 +139,8 @@ CUIWindow::CUIWindow(HWND hParentWindow, HINSTANCE hInstance, int x, int y,
 		   created(FALSE),
 		   numChildren(0),
 		   hBackgroundBrush(NULL),
-		   paintStruct(NULL)
+		   paintStruct(NULL),
+		   autosaveName(NULL)
 {
 //	parentWindow->addChild(this);
 	init();
@@ -198,6 +202,7 @@ void CUIWindow::dealloc(void)
  			DeleteObject(hBackgroundBrush);
 		}
 	}
+	delete autosaveName;
 	TCObject::dealloc();
 }
 
@@ -411,6 +416,28 @@ LRESULT CUIWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		}
 		width = newWidth;
 		height = newHeight;
+		if (autosaveName != NULL)
+		{
+			int saveX, saveY, saveWidth, saveHeight, saveMaximized;
+
+			if (sizeType != SIZE_MAXIMIZED || !readAutosaveInfo(saveX, saveY,
+				saveWidth, saveHeight, saveMaximized))
+			{
+				RECT rect;
+
+				GetWindowRect(hWindow, &rect);
+				saveX = rect.left;
+				saveY = rect.top;
+				saveWidth = rect.right - rect.left;
+				saveHeight = rect.bottom - rect.top;
+			}
+			saveMaximized = sizeType == SIZE_MAXIMIZED;
+			writeAutosaveInfo(saveX, saveY, saveWidth, saveHeight,
+				saveMaximized);
+		}
+		if (autosaveName != NULL)
+		{
+		}
 		return 0;
 	}
 }
@@ -419,6 +446,17 @@ LRESULT CUIWindow::doMove(int newX, int newY)
 {
 	x = newX;
 	y = newY;
+	if (autosaveName != NULL)
+	{
+		if ((GetWindowLong(hWindow, GWL_STYLE) & WS_MAXIMIZE) == 0)
+		{
+			RECT rect;
+			GetWindowRect(hWindow, &rect);
+
+			writeAutosaveInfo(rect.left, rect.top, rect.right - rect.left,
+				rect.bottom - rect.top, 0);
+		}
+	}
 	return 1;
 }
 
@@ -2699,4 +2737,65 @@ HWND CUIWindow::attachResizeGrip(UINT gripID, CUIWindowResizer *resizer)
 		resizer->addSubWindow(hSizeGrip, CUIFloatLeft | CUIFloatTop);
 	}
 	return hSizeGrip;
+}
+
+void CUIWindow::writeAutosaveInfo(
+	int saveX,
+	int saveY,
+	int saveWidth,
+	int saveHeight,
+	int saveMaximized)
+{
+	if (autosaveName != NULL)
+	{
+		char info[1024];
+
+		sprintf(info, "%d %d %d %d %d", saveX, saveY, saveWidth, saveHeight,
+			saveMaximized);
+		TCUserDefaults::setStringForKey(info, autosaveName, false);
+	}
+}
+
+bool CUIWindow::readAutosaveInfo(
+	int &saveX,
+	int &saveY,
+	int &saveWidth,
+	int &saveHeight,
+	int &saveMaximized)
+{
+	bool retValue = false;
+
+	if (autosaveName != NULL)
+	{
+		char *info = TCUserDefaults::stringForKey(autosaveName, NULL, false);
+
+		if (info != NULL)
+		{
+			if (sscanf(info, "%d %d %d %d %d", &saveX, &saveY, &saveWidth,
+				&saveHeight, &saveMaximized) == 5)
+			{
+				retValue = true;
+			}
+			delete info;
+		}
+	}
+	return retValue;
+}
+
+void CUIWindow::setAutosaveName(const char *value)
+{
+	int saveX, saveY, saveWidth, saveHeight, saveMaximized;
+
+	autosaveName = new char[strlen(value) + 32];
+	sprintf(autosaveName, "WindowAutosave/%s", value);
+	if (readAutosaveInfo(saveX, saveY, saveWidth, saveHeight,
+		saveMaximized))
+	{
+		MoveWindow(hWindow, saveX, saveY, saveWidth, saveHeight,
+			saveMaximized == 0);
+		if (saveMaximized)
+		{
+			ShowWindow(hWindow, SW_MAXIMIZE);
+		}
+	}
 }

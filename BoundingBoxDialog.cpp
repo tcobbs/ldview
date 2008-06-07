@@ -135,6 +135,7 @@ void BoundingBoxDialog::updateData(void)
 BOOL BoundingBoxDialog::doInitDialog(HWND /*hKbControl*/)
 {
 	updateData();
+	setAutosaveName("BoundingBoxDialog");
 	return TRUE;
 }
 

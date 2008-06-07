@@ -252,6 +252,12 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void positionResizeGrip(HWND hSizeGrip, int parentWidth,
 			int parentHeight);
 
+		virtual void setAutosaveName(const char *value);
+		virtual bool readAutosaveInfo(int &saveX, int &saveY, int &saveWidth,
+			int &saveHeight, int &saveMaximized);
+		virtual void writeAutosaveInfo(int saveX, int saveY, int saveWidth,
+			int saveHeight, int saveMaximized);
+
 		static void printMessageName(UINT message);
 		static BOOL CALLBACK disableNonModalWindow(HWND hWnd,
 			LPARAM hModalDialog);
@@ -287,6 +293,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		HPEN* systemColorPens;
 		HBRUSH hBackgroundBrush;
 		PAINTSTRUCT* paintStruct;
+		char *autosaveName;
 
 		static int systemMaxWidth;
 		static int systemMaxHeight;
