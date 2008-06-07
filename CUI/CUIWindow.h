@@ -21,6 +21,8 @@ typedef std::map<UINT, UINT> UIntUIntMap;
 #define CUI_MAX_CHILDREN 100
 #define NUM_SYSTEM_COLORS 25
 
+class CUIWindowResizer;
+
 #ifdef TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOA
 #define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPA
@@ -245,6 +247,10 @@ class CUIExport CUIWindow : public TCAlertSender
 #ifndef TC_NO_UNICODE
 		virtual bool copyToClipboard(const wchar_t *value);
 #endif // TC_NO_UNICODE
+
+		virtual HWND attachResizeGrip(UINT gripID, CUIWindowResizer *resizer);
+		virtual void positionResizeGrip(HWND hSizeGrip, int parentWidth,
+			int parentHeight);
 
 		static void printMessageName(UINT message);
 		static BOOL CALLBACK disableNonModalWindow(HWND hWnd,

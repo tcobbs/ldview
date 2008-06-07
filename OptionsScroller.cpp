@@ -50,6 +50,10 @@ void OptionsScroller::moveCanvas(int width, int height, int myHeight)
 	if (m_y + myHeight > height && m_y > 0)
 	{
 		m_y = height - myHeight;
+		if (m_y < 0)
+		{
+			m_y = 0;
+		}
 	}
 	MoveWindow(m_canvas->getHWindow(), 0, -m_y, width, height, TRUE);
 }
@@ -62,12 +66,13 @@ LRESULT OptionsScroller::doSize(
 	int width = newWidth;
 	int height;
 	bool scrollNeeded;
+	int optimalWidth = 0;
 
 	if (m_scrolls)
 	{
 		width += m_scrollBarWidth;
 	}
-	height = m_canvas->calcHeight(width);
+	height = m_canvas->calcHeight(width, optimalWidth);
 	if (height > newHeight)
 	{
 		width -= m_scrollBarWidth;
@@ -135,7 +140,9 @@ LRESULT OptionsScroller::doVScroll(
 		}
 		if (m_y != origY)
 		{
-			height = m_canvas->calcHeight(rect.right);
+			int optimalWidth = 0;
+
+			height = m_canvas->calcHeight(rect.right, optimalWidth);
 			moveCanvas(rect.right, height, rect.bottom);
 		}
 		SetScrollPos(hWindow, SB_VERT, m_y, TRUE);

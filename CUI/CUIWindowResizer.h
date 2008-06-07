@@ -27,6 +27,8 @@ public:
 	virtual void resize(int newWidth, int newHeight);
 	virtual void addSubWindow(HWND hSubWindow, DWORD resizeMask);
 	virtual void addSubWindow(int controlID, DWORD resizeMask);
+	virtual void removeSubWindow(HWND hSubWindow);
+	virtual void removeSubWindow(int controlID);
 	virtual void setOriginalWidth(int value) { originalWidth = value; }
 	virtual int getOriginalWidth(void) const { return originalWidth; }
 	virtual void setOriginalHeight(int value) { originalHeight = value; }

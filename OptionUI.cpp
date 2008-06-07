@@ -7,12 +7,16 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-int OptionUI::calcTextHeight(HDC hdc, int width)
+int OptionUI::calcTextHeight(HDC hdc, int width, int &optimalWidth)
 {
-	return calcTextHeight(hdc, m_setting->getName(), width);
+	return calcTextHeight(hdc, m_setting->getName(), width, optimalWidth);
 }
 
-int OptionUI::calcTextHeight(HDC hdc, const ucstring &text, int width)
+int OptionUI::calcTextHeight(
+	HDC hdc,
+	const ucstring &text,
+	int width,
+	int &optimalWidth)
 {
 	ucstring remaining = text;
 	int height = 0;
@@ -39,6 +43,10 @@ int OptionUI::calcTextHeight(HDC hdc, const ucstring &text, int width)
 		}
 		remaining = remaining.substr(line.size());
 		height += size.cy;
+		if (size.cx > optimalWidth)
+		{
+			optimalWidth = size.cx;
+		}
 	}
 	return height;
 }

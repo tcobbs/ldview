@@ -143,3 +143,25 @@ void CUIWindowResizer::addSubWindow(int controlID, DWORD resizeMask)
 {
 	addSubWindow(GetDlgItem(hWindow, controlID), resizeMask);
 }
+
+void CUIWindowResizer::removeSubWindow(HWND hSubWindow)
+{
+	if (hSubWindow)
+	{
+		for (int i = 0; i < subWindowInfos->getCount(); i++)
+		{
+			CUISubWindowInfo *info = (*subWindowInfos)[i];
+
+			if (info->getHWindow() == hSubWindow)
+			{
+				subWindowInfos->removeItemAtIndex(i);
+				break;
+			}
+		}
+	}
+}
+
+void CUIWindowResizer::removeSubWindow(int controlID)
+{
+	removeSubWindow(GetDlgItem(hWindow, controlID));
+}

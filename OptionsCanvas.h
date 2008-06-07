@@ -14,7 +14,7 @@ class OptionsCanvas: public CUIDialog
 public:
 	OptionsCanvas(HINSTANCE hInstance);
 	void create(CUIWindow *parent);
-	int calcHeight(int newWidth, bool update = false);
+	int calcHeight(int newWidth, int &optimalWidth, bool update = false);
 	void addBoolSetting(LDExporterSetting &setting);
 	void addFloatSetting(LDExporterSetting &setting);
 	void addLongSetting(LDExporterSetting &setting);

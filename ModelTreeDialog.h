@@ -56,13 +56,13 @@ protected:
 	LDLMainModel *m_model;
 	LDModelTree *m_modelTree;
 	HWND m_hTreeView;
-	HWND m_hStatus;
 	CUIWindowResizer *m_resizer;
 	HWndVector m_lineChecks;
 	UIntLineTypeMap m_checkLineTypes;
 	LineTypeUIntMap m_checkIds;
 	bool m_optionsShown;
 	int m_optionsDelta;
+	HWND m_hResizeGrip;
 };
 
 #endif // __MODELTREEDIALOG_H__

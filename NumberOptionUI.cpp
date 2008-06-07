@@ -14,7 +14,7 @@ NumberOptionUI::NumberOptionUI(
 	CUCSTR value):
 OptionUI(hParentWnd, setting)
 {
-	RECT editRect = { 0, 0, 50, 14 };
+	RECT editRect = { 3, 0, 50, 14 };
 
 	m_hLabel = CUIWindow::createWindowExUC(0, WC_STATICUC,
 		setting.getName().c_str(), SS_RIGHT | WS_CHILD, 0, 0, 100, 100,
@@ -29,13 +29,26 @@ OptionUI(hParentWnd, setting)
 	MapDialogRect(hParentWnd, &editRect);
 	m_editWidth = editRect.right;
 	m_editHeight = editRect.bottom;
+	m_spacing = editRect.left;
 }
 
-int NumberOptionUI::updateLayout(HDC hdc, int x, int y, int width, bool update)
+int NumberOptionUI::updateLayout(
+	HDC hdc,
+	int x,
+	int y,
+	int width,
+	bool update,
+	int &optimalWidth)
 {
-	int textWidth = width - m_editWidth - 4;
-	int height = calcTextHeight(hdc, textWidth);
+	int textWidth = width - m_editWidth - m_spacing;
+	int newWidth = 0;
+	int height = calcTextHeight(hdc, textWidth, newWidth);
 
+	newWidth += m_editWidth + m_spacing;
+	if (newWidth > optimalWidth)
+	{
+		optimalWidth = newWidth;
+	}
 	if (update)
 	{
 		int textY = y;
