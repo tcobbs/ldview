@@ -20,7 +20,6 @@ m_modelWindow(NULL),
 m_model(NULL),
 m_modelTree(NULL),
 m_resizer(NULL),
-m_hStatus(NULL),
 m_optionsShown(true)
 {
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
@@ -248,6 +247,7 @@ void ModelTreeDialog::adjustWindow(int widthDelta)
 {
 	WINDOWPLACEMENT wp;
 
+	minWidth += widthDelta;
 	GetWindowPlacement(hWindow, &wp);
 	m_resizer->setOriginalWidth(m_resizer->getOriginalWidth() + widthDelta);
 	if (wp.showCmd == SW_MAXIMIZE)
@@ -308,23 +308,13 @@ LRESULT ModelTreeDialog::doToggleOptions(void)
 	return 0;
 }
 
-BOOL ModelTreeDialog::doInitDialog(HWND /*hKbControl*/)
+BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 {
 	RECT optionsRect;
 	RECT clientRect;
-	//RECT clientRect;
-	//RECT statusRect;
 
 	setIcon(IDI_APP_ICON);
 	m_hTreeView = GetDlgItem(hWindow, IDC_MODEL_TREE);
-	m_hStatus = CreateWindow(STATUSCLASSNAME, "",
-		WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT, hWindow, (HMENU)2001, hInstance, NULL);
-	//GetClientRect(hWindow, &clientRect);
-	//GetWindowRect(m_hStatus, &statusRect);
-	//screenToClient(hWindow, &statusRect);
-	//MoveWindow(m_hTreeView, 0, 0, clientRect.right - clientRect.left,
-	//	statusRect.top, TRUE);
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
 	m_resizer->addSubWindow(IDC_MODEL_TREE,
@@ -341,14 +331,18 @@ BOOL ModelTreeDialog::doInitDialog(HWND /*hKbControl*/)
 	setupLineCheck(IDC_EMPTY, LDLLineTypeEmpty);
 	setupLineCheck(IDC_UNKNOWN, LDLLineTypeUnknown);
 	GetClientRect(hWindow, &clientRect);
+	m_hResizeGrip = GetDlgItem(hWindow, IDC_RESIZEGRIP);
+	positionResizeGrip(m_hResizeGrip, clientRect.right, clientRect.bottom);
 	GetWindowRect(GetDlgItem(hWindow, IDC_SHOW_BOX), &optionsRect);
 	screenToClient(hWindow, &optionsRect);
 	m_optionsDelta = clientRect.right - optionsRect.left;
+	minWidth = clientRect.right;
+	minHeight = clientRect.bottom;
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
 	{
 		hideOptions();
 	}
-	return TRUE;
+	return CUIDialog::doInitDialog(hKbControl);
 }
 
 LRESULT ModelTreeDialog::doClose(void)
@@ -361,9 +355,8 @@ LRESULT ModelTreeDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 {
 	if (sizeType != SIZE_MINIMIZED)
 	{
-		SendMessage(m_hStatus, WM_SIZE, sizeType,
-			MAKELPARAM(newWidth, newHeight));
 		m_resizer->resize(newWidth, newHeight);
+		positionResizeGrip(m_hResizeGrip, newWidth, newHeight);
 	}
 	return 0;
 }

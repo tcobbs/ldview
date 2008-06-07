@@ -44,6 +44,9 @@ INT_PTR CUIDialog::privateDialogProc(
 
 BOOL CUIDialog::doInitDialog(HWND /*hKbControl*/)
 {
+	windowStyle = GetWindowLong(hWindow, GWL_STYLE);
+	exWindowStyle = GetWindowLong(hWindow, GWL_EXSTYLE);
+	initialized = TRUE;
 	return TRUE;
 }
 

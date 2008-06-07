@@ -1,4 +1,5 @@
 #include "CUIWindow.h"
+#include "CUIWindowResizer.h"
 #include <assert.h>
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
@@ -648,7 +649,7 @@ LRESULT CUIWindow::doNotify(int /*controlId*/, LPNMHDR /*notification*/)
 
 LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 {
-	if (initialized && !parentWindow && !hParentWindow)
+	if (initialized && (windowStyle & WS_CHILD) == 0)
 	{
 		if (minWidth >= 0 || minHeight >= 0)
 		{
@@ -2675,3 +2676,27 @@ void CUIWindow::checkSet(HWND hWnd, bool value)
 	SendMessage(hWnd, BM_SETCHECK, value, 0);
 }
 
+void CUIWindow::positionResizeGrip(
+	HWND hSizeGrip,
+	int parentWidth,
+	int parentHeight)
+{
+	int sbSize = GetSystemMetrics(SM_CXVSCROLL);
+
+	MoveWindow(hSizeGrip, parentWidth - sbSize, parentHeight - sbSize, sbSize,
+		sbSize, FALSE);
+}
+
+HWND CUIWindow::attachResizeGrip(UINT gripID, CUIWindowResizer *resizer)
+{
+	HWND hSizeGrip = GetDlgItem(hWindow, gripID);
+	RECT rect;
+
+	GetClientRect(hWindow, &rect);
+	positionResizeGrip(hSizeGrip, rect.right, rect.bottom);
+	if (resizer != NULL)
+	{
+		resizer->addSubWindow(hSizeGrip, CUIFloatLeft | CUIFloatTop);
+	}
+	return hSizeGrip;
+}

@@ -345,7 +345,7 @@
 #define IDC_MPD_LIST                    1272
 #define IDC_PART_BOUNDING_BOXES         1273
 #define IDC_OPTIONS_CANVAS              1278
-#define IDC_RESIZETRIANGLE              1279
+#define IDC_RESIZEGRIP                  1279
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546

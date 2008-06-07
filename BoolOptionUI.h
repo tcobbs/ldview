@@ -10,7 +10,8 @@ public:
 	BoolOptionUI(HWND hParentWnd, LDExporterSetting &setting);
 	virtual ~BoolOptionUI(void) {}
 
-	virtual int updateLayout(HDC hdc, int x, int y, int width, bool update);
+	virtual int updateLayout(HDC hdc, int x, int y, int width, bool update,
+		int &optimalWidth);
 	virtual bool validate(ucstring &/*error*/) { return true; }
 	virtual void commit(void);
 

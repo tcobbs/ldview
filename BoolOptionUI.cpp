@@ -22,11 +22,23 @@ OptionUI(hParentWnd, setting)
 	}
 }
 
-int BoolOptionUI::updateLayout(HDC hdc, int x, int y, int width, bool update)
+int BoolOptionUI::updateLayout(
+	HDC hdc,
+	int x,
+	int y,
+	int width,
+	bool update,
+	int &optimalWidth)
 {
 	int textWidth = width - 16;
-	int height = calcTextHeight(hdc, textWidth);
+	int newWidth = 0;
+	int height = calcTextHeight(hdc, textWidth, newWidth);
 
+	newWidth += 32;
+	if (newWidth > optimalWidth)
+	{
+		optimalWidth = newWidth;
+	}
 	if (update)
 	{
 		MoveWindow(m_hCheck, x, y, width, height, FALSE);

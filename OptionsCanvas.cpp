@@ -56,7 +56,10 @@ BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
 	return TRUE;
 }
 
-int OptionsCanvas::calcHeight(int newWidth, bool update /*= false*/)
+int OptionsCanvas::calcHeight(
+	int newWidth,
+	int &optimalWidth,
+	bool update /*= false*/)
 {
 	int margin = 6;
 	int spacing = 4;
@@ -65,13 +68,30 @@ int OptionsCanvas::calcHeight(int newWidth, bool update /*= false*/)
 	int width = newWidth - margin * 2;
 	HFONT hNewFont = (HFONT)SendMessage(hWindow, WM_GETFONT, 0, 0);
 	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
+	int otherWidth = 0;
+	int numberWidth = width;
 
+	if (update)
+	{
+		numberWidth = optimalWidth;
+	}
 	for (OptionUIList::iterator it = m_optionUIs.begin();
 		it != m_optionUIs.end(); it++)
 	{
 		OptionUI *optionUI = *it;
+		LDExporterSetting::Type type = optionUI->getSetting()->getType();
 
-		y += optionUI->updateLayout(hdc, margin, y, width, update) + spacing;
+		if (type == LDExporterSetting::TLong ||
+			type == LDExporterSetting::TFloat)
+		{
+			y += optionUI->updateLayout(hdc, margin, y, numberWidth, update,
+				optimalWidth) + spacing;
+		}
+		else
+		{
+			y += optionUI->updateLayout(hdc, margin, y, width, update,
+				otherWidth) + spacing;
+		}
 	}
 	SelectObject(hdc, hOldFont);
 	ReleaseDC(hWindow, hdc);
@@ -83,7 +103,9 @@ LRESULT OptionsCanvas::doSize(
 	int newWidth,
 	int /*newHeight*/)
 {
-	calcHeight(newWidth, true);
+	int optimalWidth = 0;
+	calcHeight(newWidth, optimalWidth, false);
+	calcHeight(newWidth, optimalWidth, true);
 	return 0;
 }
 
