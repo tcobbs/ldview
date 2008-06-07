@@ -94,6 +94,12 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_MOVE:
+		if (doMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam)) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	case WM_SIZE:
 		if (doSize(wParam, (int)(short)LOWORD(lParam),
 			(int)(short)HIWORD(lParam)) == 0)

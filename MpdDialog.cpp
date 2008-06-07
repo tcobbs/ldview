@@ -133,14 +133,21 @@ void MpdDialog::updateData(void)
 	}
 }
 
-BOOL MpdDialog::doInitDialog(HWND /*hKbControl*/)
+BOOL MpdDialog::doInitDialog(HWND hKbControl)
 {
+	RECT rect;
+
+	GetClientRect(hWindow, &rect);
+	minWidth = rect.right;
+	minHeight = rect.bottom;
 	setIcon(IDI_APP_ICON);
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
 	m_resizer->addSubWindow(IDC_MPD_LIST, CUISizeHorizontal | CUISizeVertical);
+	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
 	updateData();
-	return TRUE;
+	setAutosaveName("MpdDialog");
+	return CUIDialog::doInitDialog(hKbControl);
 }
 
 LRESULT MpdDialog::doClose(void)
@@ -156,7 +163,7 @@ LRESULT MpdDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 	{
 		m_resizer->resize(newWidth, newHeight);
 	}
-	return 0;
+	return CUIDialog::doSize(sizeType, newWidth, newHeight);
 }
 
 LRESULT MpdDialog::doCommand(

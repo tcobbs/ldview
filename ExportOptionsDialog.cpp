@@ -208,16 +208,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
 	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
 	initialized = TRUE;
-	//if (m_scroller->scrolls())
-	//{
-	//	// If I don't do this, the scroll bar doesn't display; don't ask me why.
-	//	GetWindowRect(hScroller, &rect);
-	//	screenToClient(hWindow, &rect);
-	//	MoveWindow(hScroller, rect.left, rect.top + 1, rect.right - rect.left,
-	//		rect.bottom - rect.top, TRUE);
-	//	MoveWindow(hScroller, rect.left, rect.top, rect.right - rect.left,
-	//		rect.bottom - rect.top, TRUE);
-	//}
+	setAutosaveName((extension + "ExportOptions").c_str());
 	return TRUE;
 }
 
@@ -235,7 +226,7 @@ LRESULT ExportOptionsDialog::doSize(WPARAM sizeType, int newWidth, int newHeight
 	{
 		m_resizer->resize(newWidth, newHeight);
 	}
-	return 0;
+	return CUIDialog::doSize(sizeType, newWidth, newHeight);
 }
 
 LRESULT ExportOptionsDialog::doBeginLabelEdit(NMLVDISPINFO * /*notification*/)

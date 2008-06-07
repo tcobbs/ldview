@@ -40,6 +40,7 @@ BOOL LatLonDialog::doInitDialog(HWND /*hKbControl*/)
 	windowSetValue(IDC_LONGITUDE,
 		TCUserDefaults::floatForKey(LAST_LON_KEY, 45.0f, false));
 	updateEnabled();
+	setAutosaveName("LatLonDialog");
 	return TRUE;
 }
 
