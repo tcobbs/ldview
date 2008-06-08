@@ -143,19 +143,26 @@ void ExportOptionsDialog::initCanvasOptions(void)
 
 	for (it = settings.begin(); it != settings.end(); it++)
 	{
-		switch (it->getType())
+		if (it->getGroupSize() > 0)
 		{
-		case LDExporterSetting::TBool:
-			m_canvas->addBoolSetting(*it);
-			break;
-		case LDExporterSetting::TFloat:
-			m_canvas->addFloatSetting(*it);
-			break;
-		case LDExporterSetting::TLong:
-			m_canvas->addLongSetting(*it);
-			break;
-		default:
-			throw "not implemented";
+			m_canvas->addGroup(*it);
+		}
+		else
+		{
+			switch (it->getType())
+			{
+			case LDExporterSetting::TBool:
+				m_canvas->addBoolSetting(*it);
+				break;
+			case LDExporterSetting::TFloat:
+				m_canvas->addFloatSetting(*it);
+				break;
+			case LDExporterSetting::TLong:
+				m_canvas->addLongSetting(*it);
+				break;
+			default:
+				throw "not implemented";
+			}
 		}
 	}
 }
@@ -181,7 +188,7 @@ void ExportOptionsDialog::initCanvas(void)
 	ShowWindow(hScroller, SW_SHOW);
 }
 
-BOOL ExportOptionsDialog::doInitDialog(HWND /*hKbControl*/)
+BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 {
 	std::string titleBase;
 	std::string extension = m_exporter->getExtension();
@@ -209,7 +216,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND /*hKbControl*/)
 	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
 	initialized = TRUE;
 	setAutosaveName((extension + "ExportOptions").c_str());
-	return TRUE;
+	return CUIDialog::doInitDialog(hKbControl);
 }
 
 void ExportOptionsDialog::doOK(void)
@@ -253,3 +260,20 @@ LRESULT ExportOptionsDialog::doEndLabelEdit(NMLVDISPINFO * /*notification*/)
 //	}
 //	return 1;
 //}
+
+LRESULT ExportOptionsDialog::doMouseWheel(
+	short keyFlags,
+	short zDelta,
+	int xPos,
+	int yPos)
+{
+	RECT rect;
+	POINT point = { xPos, yPos };
+
+	GetWindowRect(m_scroller->getHWindow(), &rect);
+	if (PtInRect(&rect, point))
+	{
+		m_scroller->doMouseWheel(keyFlags, zDelta, xPos, yPos);
+	}
+	return 0;
+}

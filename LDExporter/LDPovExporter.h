@@ -120,6 +120,10 @@ protected:
 		const LDLModel *pModel = NULL);
 	void writeLogo(void);
 	virtual void initSettings(void) const;
+	virtual void addEdgesSettings(void) const;
+	virtual void addGeometrySettings(void) const;
+	virtual int getNumEdgesSettings(void) const { return 2; }
+	virtual int getNumGeometrySettings(void) const { return 13; }
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -168,6 +172,17 @@ protected:
 	bool m_unmirrorStuds;
 	long m_quality;
 	TCFloat m_edgeRadius;
+	TCFloat m_ambient;
+	TCFloat m_diffuse;
+	TCFloat m_refl;
+	TCFloat m_phong;
+	TCFloat m_phongSize;
+	TCFloat m_transRefl;
+	TCFloat m_transFilter;
+	TCFloat m_transIoR;
+	TCFloat m_rubberRefl;
+	TCFloat m_rubberPhong;
+	TCFloat m_rubberPhongSize;
 	VectorList m_edgePoints;
 	PovColorMap m_xmlColors;
 	PovElementMap m_xmlElements;

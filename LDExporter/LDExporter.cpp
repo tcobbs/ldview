@@ -86,21 +86,92 @@ LDExporterSettingList &LDExporter::getSettings(void)
 	return m_settings;
 }
 
-void LDExporter::initSettings(void) const
+void LDExporter::addPrimSubSetting(void) const
 {
 	addSetting(LDExporterSetting(ls(_UC("LDXPrimSub")), m_primSub,
 		udKey("PrimitiveSubstitution").c_str()));
-	if (addSetting(LDExporterSetting(ls(_UC("LDXSeamWidth")), m_seamWidth,
-		udKey("SeamWidth").c_str())))
+}
+
+void LDExporter::addSeamWidthSetting(void) const
+{
+	addSetting(ls(_UC("LDXSeamWidth")), m_seamWidth, udKey("SeamWidth").c_str(),
+		0.0f, 5.0f);
+}
+
+void LDExporter::addEdgesSettings(void) const
+{
+	addEdgesSetting();
+	addConditionalEdgesSetting();
+}
+
+void LDExporter::addEdgesSetting(void) const
+{
+	if (addSetting(LDExporterSetting(ls(_UC("LDXEdges")), m_edges,
+		udKey("Edges").c_str())))
 	{
-		LDExporterSetting &setting = m_settings.back();
-		setting.setMinFloatValue(0.0f);
-		setting.setMaxFloatValue(5.0f);
+		m_settings.back().setGroupSize(getNumEdgesSettings());
 	}
-	addSetting(LDExporterSetting(ls(_UC("LDXEdges")), m_edges,
-		udKey("Edges").c_str()));
+}
+
+void LDExporter::addConditionalEdgesSetting(void) const
+{
 	addSetting(LDExporterSetting(ls(_UC("LDXConditionalEdges")),
 		m_conditionalEdges, udKey("ConditionalEdges").c_str()));
+}
+
+void LDExporter::addGeometrySetting(void) const
+{
+	addSetting(LDExporterSetting(ls(_UC("LDXGeometry")),
+		getNumGeometrySettings()));
+}
+
+void LDExporter::addGeometrySettings(void) const
+{
+	addGeometrySetting();
+	addPrimSubSetting();
+	addSeamWidthSetting();
+}
+
+void LDExporter::initSettings(void) const
+{
+	addGeometrySettings();
+	addEdgesSettings();
+}
+
+bool LDExporter::addSetting(
+	CUCSTR name,
+	TCFloat value,
+	const char *key,
+	TCFloat min,
+	TCFloat max) const
+{
+	if (addSetting(LDExporterSetting(name, value, key)))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.setMinValue(min);
+		setting.setMaxValue(max);
+		return true;
+	}
+	return false;
+}
+
+bool LDExporter::addSetting(
+	CUCSTR name,
+	long value,
+	const char *key,
+	long min,
+	long max) const
+{
+	if (addSetting(LDExporterSetting(name, value, key)))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.setMinValue(min);
+		setting.setMaxValue(max);
+		return true;
+	}
+	return false;
 }
 
 bool LDExporter::addSetting(const LDExporterSetting &setting) const

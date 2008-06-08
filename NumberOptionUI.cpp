@@ -8,25 +8,28 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
+int controlId = 1000;
+
 NumberOptionUI::NumberOptionUI(
-	HWND hParentWnd,
+	OptionsCanvas *parent,
 	LDExporterSetting &setting,
 	CUCSTR value):
-OptionUI(hParentWnd, setting)
+OptionUI(parent, setting)
 {
 	RECT editRect = { 3, 0, 50, 14 };
 
 	m_hLabel = CUIWindow::createWindowExUC(0, WC_STATICUC,
 		setting.getName().c_str(), SS_RIGHT | WS_CHILD, 0, 0, 100, 100,
-		hParentWnd, NULL, GetWindowInstance(hParentWnd), NULL);
+		m_hParentWnd, NULL, GetWindowInstance(m_hParentWnd), NULL);
 	m_hEdit = CUIWindow::createWindowExUC(WS_EX_CLIENTEDGE, WC_EDITUC, value,
-		ES_AUTOHSCROLL | WS_CHILD | WS_TABSTOP, 0, 0, 100, 100,
-		hParentWnd, NULL, GetWindowInstance(hParentWnd), NULL);
-	SendMessage(m_hLabel, WM_SETFONT, (WPARAM)SendMessage(hParentWnd,
+		ES_AUTOHSCROLL | WS_CHILD | WS_TABSTOP, 0, 0, 100, 100, m_hParentWnd,
+		NULL, GetWindowInstance(m_hParentWnd), NULL);
+	SetWindowLongPtr(m_hEdit, GWLP_USERDATA, (LONG_PTR)this);
+	SendMessage(m_hLabel, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
 		WM_GETFONT, 0, 0), 0);
-	SendMessage(m_hEdit, WM_SETFONT, (WPARAM)SendMessage(hParentWnd,
+	SendMessage(m_hEdit, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
 		WM_GETFONT, 0, 0), 0);
-	MapDialogRect(hParentWnd, &editRect);
+	MapDialogRect(m_hParentWnd, &editRect);
 	m_editWidth = editRect.right;
 	m_editHeight = editRect.bottom;
 	m_spacing = editRect.left;
@@ -73,4 +76,24 @@ int NumberOptionUI::updateLayout(
 		}
 	}
 	return std::max(height, m_editHeight);
+}
+
+void NumberOptionUI::setEnabled(bool value)
+{
+	BOOL enabled = value ? TRUE : FALSE;
+
+	EnableWindow(m_hLabel, enabled);
+	EnableWindow(m_hEdit, enabled);
+}
+
+void NumberOptionUI::getRect(RECT *rect)
+{
+	RECT labelRect;
+	RECT editRect;
+
+	GetWindowRect(m_hLabel, &labelRect);
+	GetWindowRect(m_hEdit, &editRect);
+	CUIWindow::screenToClient(m_hParentWnd, &labelRect);
+	CUIWindow::screenToClient(m_hParentWnd, &editRect);
+	UnionRect(rect, &labelRect, &editRect);
 }

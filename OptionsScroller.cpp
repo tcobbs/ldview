@@ -104,6 +104,33 @@ LRESULT OptionsScroller::doSize(
 	return 0;
 }
 
+void OptionsScroller::setY(int value)
+{
+	RECT rect;
+	RECT canvasRect;
+
+	GetClientRect(hWindow, &rect);
+	GetClientRect(m_canvas->getHWindow(), &canvasRect);
+	if (canvasRect.bottom - value < rect.bottom)
+	{
+		value = canvasRect.bottom - rect.bottom;
+	}
+	if (value < 0)
+	{
+		value = 0;
+	}
+	if (value != m_y)
+	{
+		int optimalWidth = 0;
+		int height;
+
+		m_y = value;
+		height = m_canvas->calcHeight(rect.right, optimalWidth);
+		moveCanvas(rect.right, height, rect.bottom);
+	}
+	SetScrollPos(hWindow, SB_VERT, m_y, TRUE);
+}
+
 LRESULT OptionsScroller::doVScroll(
 	int scrollCode,
 	int position,
@@ -112,41 +139,65 @@ LRESULT OptionsScroller::doVScroll(
 	if (hScrollBar == NULL)
 	{
 		RECT rect;
-		int height;
-		int origY = m_y;
+		int newY = m_y;
 
 		GetClientRect(hWindow, &rect);
 		switch (scrollCode)
 		{
 		case SB_THUMBTRACK:
-			m_y = position;
+			newY = position;
 			break;
 		case SB_PAGEUP:
-			m_y -= rect.bottom;
+			newY -= rect.bottom;
 			break;
 		case SB_PAGEDOWN:
-			m_y += rect.bottom;
+			newY += rect.bottom;
 			break;
 		case SB_LINEUP:
-			m_y--;
+			newY--;
 			break;
 		case SB_LINEDOWN:
-			m_y++;
+			newY++;
 			break;
 		}
-		if (m_y < 0)
-		{
-			m_y = 0;
-		}
-		if (m_y != origY)
-		{
-			int optimalWidth = 0;
-
-			height = m_canvas->calcHeight(rect.right, optimalWidth);
-			moveCanvas(rect.right, height, rect.bottom);
-		}
-		SetScrollPos(hWindow, SB_VERT, m_y, TRUE);
+		setY(newY);
 		return 0;
 	}
 	return 1;
+}
+
+void OptionsScroller::scrollControlToVisible(HWND hControl)
+{
+	RECT clientRect;
+	RECT controlRect;
+	OptionUI *optionUI = (OptionUI *)GetWindowLongPtr(hControl, GWLP_USERDATA);
+
+	GetClientRect(hWindow, &clientRect);
+	if (optionUI != NULL)
+	{
+		optionUI->getRect(&controlRect);
+	}
+	else
+	{
+		GetWindowRect(hControl, &controlRect);
+		screenToClient(GetParent(hControl), &controlRect);
+	}
+	if (controlRect.bottom > clientRect.bottom + m_y)
+	{
+		doVScroll(SB_THUMBTRACK, controlRect.bottom - clientRect.bottom, NULL);
+	}
+	else if (controlRect.top < clientRect.top + m_y)
+	{
+		doVScroll(SB_THUMBTRACK, controlRect.top - clientRect.top, NULL);
+	}
+}
+
+LRESULT OptionsScroller::doMouseWheel(
+	short /*keyFlags*/,
+	short zDelta,
+	int /*xPos*/,
+	int /*yPos*/)
+{
+	setY(m_y - zDelta);
+	return 0;
 }

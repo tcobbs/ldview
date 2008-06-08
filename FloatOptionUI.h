@@ -7,7 +7,7 @@
 class FloatOptionUI: public NumberOptionUI
 {
 public:
-	FloatOptionUI(HWND hParentWnd, LDExporterSetting &setting);
+	FloatOptionUI(OptionsCanvas *parent, LDExporterSetting &setting);
 	virtual ~FloatOptionUI(void) {}
 	virtual bool validate(ucstring &error);
 	virtual void commit(void);

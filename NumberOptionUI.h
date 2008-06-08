@@ -7,11 +7,15 @@
 class NumberOptionUI: public OptionUI
 {
 public:
-	NumberOptionUI(HWND hParentWnd, LDExporterSetting &setting, CUCSTR value);
+	NumberOptionUI(OptionsCanvas *parent, LDExporterSetting &setting,
+		CUCSTR value);
 	virtual ~NumberOptionUI(void) {}
 
 	virtual int updateLayout(HDC hdc, int x, int y, int width, bool update,
 		int &optimalWidth);
+	virtual void setEnabled(bool value);
+	virtual void getRect(RECT *rect);
+
 protected:
 	HWND m_hLabel;
 	HWND m_hEdit;
