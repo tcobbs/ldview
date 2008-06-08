@@ -2,14 +2,23 @@ CPPFLAGS = $(CPPGLOBAL) /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /
 
 
 COBJS = 
-CCOBJS = $(OBJDIR)\LDVExtensionsSetup.obj \
+CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
+	 $(OBJDIR)\BoundingBoxDialog.obj \
+	 $(OBJDIR)\ExportOptionsDialog.obj \
+	 $(OBJDIR)\FloatOptionUI.obj \
+	 $(OBJDIR)\LDVExtensionsSetup.obj \
 	 $(OBJDIR)\LDViewMain.obj \
 	 $(OBJDIR)\LDViewPreferences.obj \
 	 $(OBJDIR)\LDViewWindow.obj \
+	 $(OBJDIR)\LongOptionUI.obj \
 	 $(OBJDIR)\JpegOptionsDialog.obj \
 	 $(OBJDIR)\ModelLoader.obj \
 	 $(OBJDIR)\ModelTreeDialog.obj \
 	 $(OBJDIR)\ModelWindow.obj \
+	 $(OBJDIR)\NumberOptionUI.obj \
+	 $(OBJDIR)\OptionsCanvas.obj \
+	 $(OBJDIR)\OptionsScroller.obj \
+	 $(OBJDIR)\OptionUI.obj \
 	 $(OBJDIR)\SSConfigure.obj \
 	 $(OBJDIR)\SSModelWindow.obj \
 	 $(OBJDIR)\SSPassword.obj \
