@@ -60,38 +60,75 @@ void LDPovExporter::loadDefaults(void)
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
 	m_edgeRadius = floatForKey("EdgeRadius", 0.15f);
+	m_ambient = floatForKey("Ambient", 0.4f);
+	m_diffuse = floatForKey("Diffuse", 0.4f);
+	m_refl = floatForKey("Refl", 0.08f);
+	m_phong = floatForKey("Phong", 0.5f);
+	m_phongSize = floatForKey("PhongSize", 40.0f);
+	m_transRefl = floatForKey("TransRefl", 0.2f);
+	m_transFilter = floatForKey("TransFilter", 0.85f);
+	m_transIoR = floatForKey("TransIoR", 1.25f);
+	m_rubberRefl = floatForKey("RubberRefl", 0.0f);
+	m_rubberPhong = floatForKey("RubberPhong", 0.1f);
+	m_rubberPhongSize = floatForKey("RubberPhongSize", 10.0f);
 	m_quality = longForKey("Quality", 2);
+}
+
+void LDPovExporter::addEdgesSettings(void) const
+{
+	LDExporter::addEdgesSettings();
+	addSetting(ls(_UC("PovEdgeRadius")), m_edgeRadius,
+		udKey("EdgeRadius").c_str(), 0.001f, 1000.0f);
+}
+
+void LDPovExporter::addGeometrySettings(void) const
+{
+	LDExporter::addGeometrySettings();
+	addSetting(LDExporterSetting(ls(_UC("PovHideStuds")), m_hideStuds,
+		udKey("HideStuds").c_str()));
 }
 
 void LDPovExporter::initSettings(void) const
 {
 	LDExporter::initSettings();
+	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
+		3));
 	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),
 		m_findReplacements, udKey("FindReplacements").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
 		udKey("XmlMap").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
 		udKey("InlinePov").c_str()));
-	addSetting(LDExporterSetting(ls(_UC("PovHideStuds")), m_hideStuds,
-		udKey("HideStuds").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
 		udKey("UnmirrorStuds").c_str()));
-	if (addSetting(LDExporterSetting(ls(_UC("PovEdgeRadius")), m_edgeRadius,
-		udKey("EdgeRadius").c_str())))
-	{
-		LDExporterSetting &setting = m_settings.back();
-
-		setting.setMinFloatValue(0.0001f);
-		setting.setMaxFloatValue(1000.0f);
-	}
-	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")), m_quality,
-		udKey("Quality").c_str())))
-	{
-		LDExporterSetting &setting = m_settings.back();
-
-		setting.setMinLongValue(0);
-		setting.setMaxLongValue(3);
-	}
+	addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
+		3);
+	addSetting(LDExporterSetting(ls(_UC("PovLighting")), 2));
+	addSetting(ls(_UC("PovAmbient")), m_ambient, udKey("Ambient").c_str(), 0.0f,
+		1.0f);
+	addSetting(ls(_UC("PovDiffuse")), m_diffuse, udKey("Diffuse").c_str(), 0.0f,
+		1.0f);
+	addSetting(LDExporterSetting(ls(_UC("PovMaterialProps")), 3));
+	addSetting(ls(_UC("PovRefl")), m_refl, udKey("Refl").c_str(), 0.0f,
+		1.0f);
+	addSetting(ls(_UC("PovPhong")), m_phong, udKey("Phong").c_str(), 0.0f,
+		10.0f);
+	addSetting(ls(_UC("PovPhongSize")), m_phongSize, udKey("PhongSize").c_str(),
+		0.0f, 10000.0f);
+	addSetting(LDExporterSetting(ls(_UC("PovTransMaterialProps")), 3));
+	addSetting(ls(_UC("PovRefl")), m_transRefl, udKey("TransRefl").c_str(),
+		0.0f, 1.0f);
+	addSetting(ls(_UC("PovFilter")), m_transFilter,
+		udKey("TransFilter").c_str(), 0.0f, 1.0f);
+	addSetting(ls(_UC("PovIoR")), m_transIoR, udKey("TransIoR").c_str(),
+		1.0f, 1000.0f);
+	addSetting(LDExporterSetting(ls(_UC("PovRubberMaterialProps")), 3));
+	addSetting(ls(_UC("PovRefl")), m_rubberRefl, udKey("RubberRefl").c_str(),
+		0.0f, 1.0f);
+	addSetting(ls(_UC("PovPhong")), m_rubberPhong, udKey("RubberPhong").c_str(),
+		0.0f, 10.0f);
+	addSetting(ls(_UC("PovPhongSize")), m_rubberPhongSize,
+		udKey("RubberPhongSize").c_str(), 0.0f, 10000.0f);
 }
 
 void LDPovExporter::dealloc(void)
@@ -358,17 +395,21 @@ bool LDPovExporter::writeHeader(void)
 			author);
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
-	fprintf(m_pPovFile, "#declare AMB = 0.4;\n");
-	fprintf(m_pPovFile, "#declare DIF = 0.4;\n");
-	fprintf(m_pPovFile, "#declare REFL = 0.08;\n");
-	fprintf(m_pPovFile, "#declare PHONG = 0.5;\n");
-	fprintf(m_pPovFile, "#declare PHONGS = 40;\n");
-	fprintf(m_pPovFile, "#declare TREFL = 0.2;\n");
-	fprintf(m_pPovFile, "#declare REFRF = 0.85;\n");
-	fprintf(m_pPovFile, "#declare IOR = 1.25;\n");
-	fprintf(m_pPovFile, "#declare RUBBER_PHONG = 0.1;\n");
-	fprintf(m_pPovFile, "#declare RUBBER_PHONGS = 10;\n");
-	fprintf(m_pPovFile, "#declare RUBBER_REFL = 0;\n");
+	fprintf(m_pPovFile, "#declare AMB = %s;\n", ftostr(m_ambient).c_str());
+	fprintf(m_pPovFile, "#declare DIF = %s;\n", ftostr(m_diffuse).c_str());
+	fprintf(m_pPovFile, "#declare REFL = %s;\n", ftostr(m_refl).c_str());
+	fprintf(m_pPovFile, "#declare PHONG = %s;\n", ftostr(m_phong).c_str());
+	fprintf(m_pPovFile, "#declare PHONGS = %s;\n", ftostr(m_phongSize).c_str());
+	fprintf(m_pPovFile, "#declare TREFL = %s;\n", ftostr(m_transRefl).c_str());
+	fprintf(m_pPovFile, "#declare TFILT = %s;\n",
+		ftostr(m_transFilter).c_str());
+	fprintf(m_pPovFile, "#declare IOR = %s;\n", ftostr(m_transIoR).c_str());
+	fprintf(m_pPovFile, "#declare RUBBER_REFL = %s;\n",
+		ftostr(m_rubberRefl).c_str());
+	fprintf(m_pPovFile, "#declare RUBBER_PHONG = %s;\n",
+		ftostr(m_rubberPhong).c_str());
+	fprintf(m_pPovFile, "#declare RUBBER_PHONGS = %s;\n",
+		ftostr(m_rubberPhongSize).c_str());
 	fprintf(m_pPovFile, "#declare CHROME_REFL = 0.85;\n");
 	fprintf(m_pPovFile, "#declare CHROME_BRIL = 5;\n");
 	fprintf(m_pPovFile, "#declare CHROME_SPEC = 0.8;\n");
@@ -1434,7 +1475,7 @@ void LDPovExporter::writeRGBA(int r, int g, int b, int a)
 
 	if (a != 255)
 	{
-		filter = "REFRF";
+		filter = "TFILT";
 		dr = alphaMod(r);
 		dg = alphaMod(g);
 		db = alphaMod(b);

@@ -13,6 +13,9 @@ public:
 	void create(CUIWindow *parent);
 	OptionsCanvas *getCanvas(void) { return m_canvas; }
 	bool scrolls(void) { return m_scrolls; }
+	void scrollControlToVisible(HWND hControl);
+	virtual LRESULT doMouseWheel(short keyFlags, short zDelta, int xPos,
+		int yPos);
 protected:
 	virtual ~OptionsScroller(void);
 	virtual void dealloc(void);
@@ -22,6 +25,7 @@ protected:
 	virtual LRESULT doVScroll(int scrollCode, int position, HWND hScrollBar);
 
 	void moveCanvas(int width, int height, int myHeight);
+	void setY(int value);
 
 	OptionsCanvas *m_canvas;
 	LONG m_style;

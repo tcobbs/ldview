@@ -166,6 +166,10 @@ SOURCE=.\FloatOptionUI.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\GroupOptionUI.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\JpegOptionsDialog.cpp
 # End Source File
 # Begin Source File
@@ -323,6 +327,10 @@ SOURCE=.\ExportOptionsDialog.h
 # Begin Source File
 
 SOURCE=.\FloatOptionUI.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\GroupOptionUI.h
 # End Source File
 # Begin Source File
 

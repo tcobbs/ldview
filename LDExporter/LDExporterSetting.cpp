@@ -192,7 +192,7 @@ long LDExporterSetting::getMaxLongValue(void)
 	}
 }
 
-void LDExporterSetting::setMinLongValue(long value)
+void LDExporterSetting::setMinValue(long value)
 {
 	if (m_type == TLong)
 	{
@@ -205,7 +205,7 @@ void LDExporterSetting::setMinLongValue(long value)
 	}
 }
 
-void LDExporterSetting::setMaxLongValue(long value)
+void LDExporterSetting::setMaxValue(long value)
 {
 	if (m_type == TLong)
 	{
@@ -256,7 +256,7 @@ TCFloat LDExporterSetting::getMaxFloatValue(void)
 	}
 }
 
-void LDExporterSetting::setMinFloatValue(TCFloat value)
+void LDExporterSetting::setMinValue(TCFloat value)
 {
 	if (m_type == TFloat)
 	{
@@ -269,7 +269,7 @@ void LDExporterSetting::setMinFloatValue(TCFloat value)
 	}
 }
 
-void LDExporterSetting::setMaxFloatValue(TCFloat value)
+void LDExporterSetting::setMaxValue(TCFloat value)
 {
 	if (m_type == TFloat)
 	{

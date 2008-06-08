@@ -7,13 +7,15 @@
 class BoolOptionUI: public OptionUI
 {
 public:
-	BoolOptionUI(HWND hParentWnd, LDExporterSetting &setting);
+	BoolOptionUI(OptionsCanvas *parent, LDExporterSetting &setting);
 	virtual ~BoolOptionUI(void) {}
 
 	virtual int updateLayout(HDC hdc, int x, int y, int width, bool update,
 		int &optimalWidth);
 	virtual bool validate(ucstring &/*error*/) { return true; }
 	virtual void commit(void);
+	virtual void setEnabled(bool value);
+	virtual void getRect(RECT *rect);
 
 protected:
 	HWND m_hCheck;

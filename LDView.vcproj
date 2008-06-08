@@ -597,6 +597,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GroupOptionUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\JpegOptionsDialog.cpp"
 				>
 			</File>
@@ -1365,6 +1369,10 @@
 			</File>
 			<File
 				RelativePath=".\FloatOptionUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GroupOptionUI.h"
 				>
 			</File>
 			<File

@@ -1,7 +1,9 @@
 #include "OptionsCanvas.h"
+#include "OptionsScroller.h"
 #include "ExportOptionsDialog.h"
 #include "Resource.h"
 #include "BoolOptionUI.h"
+#include "GroupOptionUI.h"
 #include "LongOptionUI.h"
 #include "FloatOptionUI.h"
 #include <TCFoundation/TCLocalStrings.h>
@@ -30,30 +32,60 @@ void OptionsCanvas::dealloc(void)
 	CUIDialog::dealloc();
 }
 
-void OptionsCanvas::create(CUIWindow *parent)
+void OptionsCanvas::create(OptionsScroller *parent)
 {
+	m_parent = parent;
 	::CreateDialogParam(hInstance, MAKEINTRESOURCE(IDD_OPTIONS_CANVAS),
 		parent->getHWindow(), staticDialogProc, (LPARAM)this);
 }
 
+void OptionsCanvas::addGroup(LDExporterSetting &setting)
+{
+	m_optionUIs.push_back(new GroupOptionUI(this, setting));
+}
+
 void OptionsCanvas::addBoolSetting(LDExporterSetting &setting)
 {
-	m_optionUIs.push_back(new BoolOptionUI(hWindow, setting));
+	m_optionUIs.push_back(new BoolOptionUI(this, setting));
 }
 
 void OptionsCanvas::addFloatSetting(LDExporterSetting &setting)
 {
-	m_optionUIs.push_back(new FloatOptionUI(hWindow, setting));
+	m_optionUIs.push_back(new FloatOptionUI(this, setting));
 }
 
 void OptionsCanvas::addLongSetting(LDExporterSetting &setting)
 {
-	m_optionUIs.push_back(new LongOptionUI(hWindow, setting));
+	m_optionUIs.push_back(new LongOptionUI(this, setting));
 }
 
 BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
 {
 	return TRUE;
+}
+
+void OptionsCanvas::closeGroup(
+	GroupOptionUI *&currentGroup,
+	int &y,
+	int &optimalWidth,
+	int &leftMargin,
+	int &rightMargin,
+	int &numberWidth,
+	int spacing,
+	bool &enabled,
+	bool update)
+{
+	if (update)
+	{
+		currentGroup->close(y - spacing);
+	}
+	y += currentGroup->getBottomMargin();
+	optimalWidth += leftMargin;
+	numberWidth -= leftMargin;
+	leftMargin = 0;
+	rightMargin = 0;
+	enabled = true;
+	currentGroup = NULL;
 }
 
 int OptionsCanvas::calcHeight(
@@ -70,6 +102,11 @@ int OptionsCanvas::calcHeight(
 	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
 	int otherWidth = 0;
 	int numberWidth = width;
+	GroupOptionUI *currentGroup = NULL;
+	int groupCount = 0;
+	int leftMargin = 0;
+	int rightMargin = 0;
+	bool enabled = true;
 
 	if (update)
 	{
@@ -79,18 +116,48 @@ int OptionsCanvas::calcHeight(
 		it != m_optionUIs.end(); it++)
 	{
 		OptionUI *optionUI = *it;
-		LDExporterSetting::Type type = optionUI->getSetting()->getType();
+		LDExporterSetting *setting = optionUI->getSetting();
+		LDExporterSetting::Type type = setting->getType();
 
+		if (groupCount > 0 && setting->getGroupSize() > 0)
+		{
+			// Groups can't be nested, so if we see a group when we're not done
+			// with a previous group, just finish the previous one anyway.
+			closeGroup(currentGroup, y, optimalWidth, leftMargin,
+				rightMargin, numberWidth, spacing, enabled, update);
+			groupCount = 0;
+		}
 		if (type == LDExporterSetting::TLong ||
 			type == LDExporterSetting::TFloat)
 		{
-			y += optionUI->updateLayout(hdc, margin, y, numberWidth, update,
-				optimalWidth) + spacing;
+			y += optionUI->updateLayout(hdc, margin + leftMargin, y,
+				numberWidth - leftMargin - rightMargin, update, optimalWidth) +
+				spacing;
 		}
 		else
 		{
-			y += optionUI->updateLayout(hdc, margin, y, width, update,
-				otherWidth) + spacing;
+			y += optionUI->updateLayout(hdc, margin + leftMargin, y,
+				width - leftMargin - rightMargin, update, otherWidth) + spacing;
+		}
+		optionUI->setEnabled(enabled);
+		if (currentGroup)
+		{
+			groupCount--;
+			if (groupCount == 0)
+			{
+				closeGroup(currentGroup, y, optimalWidth, leftMargin,
+					rightMargin, numberWidth, spacing, enabled, update);
+			}
+		}
+		if (setting->getGroupSize() > 0)
+		{
+			currentGroup = (GroupOptionUI *)optionUI;
+			groupCount = setting->getGroupSize();
+			leftMargin = currentGroup->getLeftMargin();
+			rightMargin = currentGroup->getRightMargin();
+			optimalWidth -= leftMargin;
+			numberWidth += leftMargin;
+			enabled = currentGroup->getEnabled();
 		}
 	}
 	SelectObject(hdc, hOldFont);
@@ -136,4 +203,39 @@ bool OptionsCanvas::commitSettings(void)
 		optionUI->commit();
 	}
 	return true;
+}
+
+void OptionsCanvas::updateEnabled(void)
+{
+	RECT rect;
+
+	GetClientRect(hWindow, &rect);
+	doSize(SIZE_RESTORED, rect.right, rect.bottom);
+	RedrawWindow(hWindow, NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+}
+
+LRESULT OptionsCanvas::doCommand(
+	int notifyCode,
+	int commandId,
+	HWND control)
+{
+	switch (notifyCode)
+	{
+	case EN_SETFOCUS:
+	case BN_SETFOCUS:
+		m_parent->scrollControlToVisible(control);
+		break;
+	case BN_CLICKED:
+		{
+			OptionUI *optionUI =
+				(OptionUI *)GetWindowLongPtr(control, GWLP_USERDATA);
+
+			if (optionUI != NULL)
+			{
+				optionUI->doClick(control);
+			}
+		}
+		break;
+	}
+	return CUIDialog::doCommand(notifyCode, commandId, control);
 }

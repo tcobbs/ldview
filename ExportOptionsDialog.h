@@ -20,6 +20,8 @@ protected:
 
 	virtual BOOL doInitDialog(HWND /*hKbControl*/);
 	virtual LRESULT doSize(WPARAM sizeType, int newWidth, int newHeight);
+	virtual LRESULT doMouseWheel(short keyFlags, short zDelta, int xPos,
+		int yPos);
 	//virtual LRESULT doNotify(int controlId, LPNMHDR notification);
 
 	virtual void doOK(void);

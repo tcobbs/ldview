@@ -81,6 +81,19 @@ protected:
 	static std::string getFilename(void);
 	TCFloat getHFov(void);
 	virtual bool addSetting(const LDExporterSetting &setting) const;
+	virtual bool addSetting(CUCSTR name, TCFloat value, const char *key,
+		TCFloat min, TCFloat max) const;
+	virtual bool addSetting(CUCSTR name, long value, const char *key,
+		long min, long max) const;
+	virtual void addPrimSubSetting(void) const;
+	virtual void addSeamWidthSetting(void) const;
+	virtual int getNumEdgesSettings(void) const { return 1; }
+	virtual void addEdgesSettings(void) const;
+	virtual void addEdgesSetting(void) const;
+	virtual void addGeometrySetting(void) const;
+	virtual void addGeometrySettings(void) const;
+	virtual void addConditionalEdgesSetting(void) const;
+	virtual int getNumGeometrySettings(void) const { return 2; }
 	virtual void initSettings(void) const;
 
 	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.

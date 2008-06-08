@@ -7,14 +7,17 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-BoolOptionUI::BoolOptionUI(HWND hParentWnd, LDExporterSetting &setting):
-OptionUI(hParentWnd, setting)
+extern int controlId;
+
+BoolOptionUI::BoolOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
+OptionUI(parent, setting)
 {
 	m_hCheck = CUIWindow::createWindowExUC(0, WC_BUTTONUC,
 		setting.getName().c_str(),
-		BS_AUTOCHECKBOX | BS_MULTILINE | WS_CHILD | WS_TABSTOP, 0, 0, 100, 100,
-		hParentWnd, NULL, GetWindowInstance(hParentWnd), NULL);
-	SendMessage(m_hCheck, WM_SETFONT, (WPARAM)SendMessage(hParentWnd,
+		BS_NOTIFY | BS_AUTOCHECKBOX | BS_MULTILINE | WS_CHILD | WS_TABSTOP, 0,
+		0, 100, 100,
+		m_hParentWnd, NULL, GetWindowInstance(m_hParentWnd), NULL);
+	SendMessage(m_hCheck, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
 		WM_GETFONT, 0, 0), 0);
 	if (setting.getBoolValue())
 	{
@@ -54,4 +57,17 @@ int BoolOptionUI::updateLayout(
 void BoolOptionUI::commit(void)
 {
 	m_setting->setValue(CUIWindow::checkGet(m_hCheck), true);
+}
+
+void BoolOptionUI::setEnabled(bool value)
+{
+	BOOL enabled = value ? TRUE : FALSE;
+
+	EnableWindow(m_hCheck, enabled);
+}
+
+void BoolOptionUI::getRect(RECT *rect)
+{
+	GetWindowRect(m_hCheck, rect);
+	CUIWindow::screenToClient(m_hParentWnd, rect);
 }

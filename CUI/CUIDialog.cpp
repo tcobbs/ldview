@@ -156,6 +156,13 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_MOUSEWHEEL:
+		if (doMouseWheel(LOWORD(wParam), HIWORD(wParam),
+			(int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam)) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	}
 	return (INT_PTR)FALSE;
 }
