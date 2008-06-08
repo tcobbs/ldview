@@ -184,12 +184,14 @@ void OptionsScroller::scrollControlToVisible(HWND hControl)
 	}
 	if (controlRect.bottom > clientRect.bottom + m_y)
 	{
-		doVScroll(SB_THUMBTRACK, controlRect.bottom - clientRect.bottom, NULL);
+		setY(controlRect.bottom - clientRect.bottom);
 	}
 	else if (controlRect.top < clientRect.top + m_y)
 	{
-		doVScroll(SB_THUMBTRACK, controlRect.top - clientRect.top, NULL);
+		setY(controlRect.top - clientRect.top);
 	}
+	RedrawWindow(m_canvas->getHWindow(), NULL, NULL,
+		RDW_INVALIDATE | RDW_ALLCHILDREN);
 }
 
 LRESULT OptionsScroller::doMouseWheel(
