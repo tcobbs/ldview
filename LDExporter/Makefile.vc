@@ -1,7 +1,9 @@
 CPPFLAGS=$(CPPGLOBAL) /I .. /I ..\include /D _MBCS /D _LIB /D _TC_STATIC /FpRelease\LDExporter.pch /YX /c
 
 COBJS = $(OBJDIR)\LDExporter.obj \
-        $(OBJDIR)\LDPovExporter.obj
+	  $(OBJDIR)\LDExporterSetting.obj \
+        $(OBJDIR)\LDPovExporter.obj \
+	  $(OBJDIR)\LDStlExporter.obj
 CCOBJS = 
 
 LIBT = LDExporter.lib
