@@ -171,6 +171,8 @@ protected:
 	bool m_hideStuds;
 	bool m_unmirrorStuds;
 	long m_quality;
+	bool m_refls;
+	bool m_shads;
 	TCFloat m_edgeRadius;
 	TCFloat m_ambient;
 	TCFloat m_diffuse;
@@ -183,6 +185,10 @@ protected:
 	TCFloat m_rubberRefl;
 	TCFloat m_rubberPhong;
 	TCFloat m_rubberPhongSize;
+	TCFloat m_chromeRefl;
+	TCFloat m_chromeBril;
+	TCFloat m_chromeSpec;
+	TCFloat m_chromeRough;
 	VectorList m_edgePoints;
 	PovColorMap m_xmlColors;
 	PovElementMap m_xmlElements;

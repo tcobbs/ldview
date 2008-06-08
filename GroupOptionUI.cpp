@@ -22,7 +22,10 @@ m_hLabel(NULL)
 	if (!hasCheck)
 	{
 		text = setting.getName().c_str();
+		m_label = _UC(" ");
 	}
+	m_label += setting.getName();
+	m_label += _UC(" ");
 	m_hBox = CUIWindow::createWindowExUC(0, WC_BUTTONUC,
 		_UC(""), BS_GROUPBOX | WS_CHILD, 0, 0, 100, 100,
 		m_hParentWnd, NULL, GetWindowInstance(m_hParentWnd), NULL);
@@ -31,7 +34,7 @@ m_hLabel(NULL)
 	if (hasCheck)
 	{
 		m_hCheck = CUIWindow::createWindowExUC(WS_EX_TRANSPARENT, WC_BUTTONUC,
-			setting.getName().c_str(),
+			m_label.c_str(),
 			BS_NOTIFY | BS_AUTOCHECKBOX | BS_MULTILINE | WS_CHILD | WS_TABSTOP,
 			0, 0, 100, 100, m_hParentWnd, NULL, GetWindowInstance(m_hParentWnd), NULL);
 		SendMessage(m_hCheck, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
@@ -45,7 +48,7 @@ m_hLabel(NULL)
 	else
 	{
 		m_hLabel = CUIWindow::createWindowExUC(WS_EX_TRANSPARENT, WC_STATICUC,
-			setting.getName().c_str(), SS_LEFT | WS_CHILD, 0, 0, 100, 100,
+			m_label.c_str(), SS_LEFT | WS_CHILD, 0, 0, 100, 100,
 			m_hParentWnd, NULL, GetWindowInstance(m_hParentWnd), NULL);
 		SendMessage(m_hLabel, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
 			WM_GETFONT, 0, 0), 0);
@@ -73,16 +76,16 @@ int GroupOptionUI::updateLayout(
 	int boxY = y;
 	int height;
 
-	boxHeight = calcTextHeight(hdc, 1920, newWidth);
+	boxHeight = calcTextHeight(hdc, m_label, 1920, newWidth);
 	height = boxHeight;
 	if (m_hLabel != NULL)
 	{
-		labelHeight = calcTextHeight(hdc, textWidth, labelWidth);
+		labelHeight = calcTextHeight(hdc, m_label, textWidth, labelWidth);
 	}
 	if (m_hCheck != NULL)
 	{
 		textWidth -= 16;
-		labelHeight = calcTextHeight(hdc, textWidth, labelWidth);
+		labelHeight = calcTextHeight(hdc, m_label, textWidth, labelWidth);
 		labelWidth += 16;
 	}
 	if (labelWidth > optimalWidth)
@@ -117,7 +120,10 @@ int GroupOptionUI::updateLayout(
 
 void GroupOptionUI::commit(void)
 {
-	m_setting->setValue(CUIWindow::checkGet(m_hCheck), true);
+	if (m_setting->getType() == LDExporterSetting::TBool)
+	{
+		m_setting->setValue(CUIWindow::checkGet(m_hCheck), true);
+	}
 }
 
 void GroupOptionUI::close(int y)

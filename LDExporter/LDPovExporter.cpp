@@ -54,6 +54,9 @@ ucstring LDPovExporter::getTypeDescription(void) const
 void LDPovExporter::loadDefaults(void)
 {
 	LDExporter::loadDefaults();
+	m_quality = longForKey("Quality", 2);
+	m_refls = boolForKey("Reflections", true);
+	m_shads = boolForKey("Shadows", true);
 	m_findReplacements = boolForKey("FindReplacements", false);
 	m_xmlMap = boolForKey("XmlMap", true);
 	m_inlinePov = boolForKey("InlinePov", true);
@@ -71,7 +74,10 @@ void LDPovExporter::loadDefaults(void)
 	m_rubberRefl = floatForKey("RubberRefl", 0.0f);
 	m_rubberPhong = floatForKey("RubberPhong", 0.1f);
 	m_rubberPhongSize = floatForKey("RubberPhongSize", 10.0f);
-	m_quality = longForKey("Quality", 2);
+	m_chromeRefl = floatForKey("ChromeRefl", 0.85f);
+	m_chromeBril = floatForKey("ChromeBril", 5.0f);
+	m_chromeSpec = floatForKey("ChromeSpecular", 0.8f);
+	m_chromeRough = floatForKey("ChromeRoughness", 0.01f);
 }
 
 void LDPovExporter::addEdgesSettings(void) const
@@ -90,6 +96,16 @@ void LDPovExporter::addGeometrySettings(void) const
 
 void LDPovExporter::initSettings(void) const
 {
+	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
+		4));
+	addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
+		3);
+	addSetting(LDExporterSetting(ls(_UC("PovReflections")), m_refls,
+		udKey("Reflections").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovShadows")), m_shads,
+		udKey("Shadows").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
+		udKey("UnmirrorStuds").c_str()));
 	LDExporter::initSettings();
 	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
 		3));
@@ -99,10 +115,6 @@ void LDPovExporter::initSettings(void) const
 		udKey("XmlMap").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
 		udKey("InlinePov").c_str()));
-	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
-		udKey("UnmirrorStuds").c_str()));
-	addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
-		3);
 	addSetting(LDExporterSetting(ls(_UC("PovLighting")), 2));
 	addSetting(ls(_UC("PovAmbient")), m_ambient, udKey("Ambient").c_str(), 0.0f,
 		1.0f);
@@ -129,6 +141,15 @@ void LDPovExporter::initSettings(void) const
 		0.0f, 10.0f);
 	addSetting(ls(_UC("PovPhongSize")), m_rubberPhongSize,
 		udKey("RubberPhongSize").c_str(), 0.0f, 10000.0f);
+	addSetting(LDExporterSetting(ls(_UC("PovChromeMaterialProps")), 4));
+	addSetting(ls(_UC("PovRefl")), m_chromeRefl, udKey("ChromeRefl").c_str(),
+		0.0f, 1.0f);
+	addSetting(ls(_UC("PovBril")), m_chromeBril, udKey("ChromeBril").c_str(),
+		0.0f, 10000.0f);
+	addSetting(ls(_UC("PovSpec")), m_chromeSpec, udKey("ChromeSpecular").c_str(),
+		0.0f, 1.0f);
+	addSetting(ls(_UC("PovRough")), m_chromeRough, udKey("ChromeRoughness").c_str(),
+		0.0f, 1.0f);
 }
 
 void LDPovExporter::dealloc(void)
@@ -395,6 +416,12 @@ bool LDPovExporter::writeHeader(void)
 			author);
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
+	fprintf(m_pPovFile, "#declare QUAL = %ld;\t// %s\n", m_quality,
+		(const char *)ls("PovQualDesc"));
+	fprintf(m_pPovFile, "#declare REFLS = %d;\t// %s\n", m_refls ? 1 : 0,
+		(const char *)ls("PovReflsDesc"));
+	fprintf(m_pPovFile, "#declare SHADS = %d;\t// %s\n", m_shads ? 1 : 0,
+		(const char *)ls("PovShadsDesc"));
 	fprintf(m_pPovFile, "#declare AMB = %s;\n", ftostr(m_ambient).c_str());
 	fprintf(m_pPovFile, "#declare DIF = %s;\n", ftostr(m_diffuse).c_str());
 	fprintf(m_pPovFile, "#declare REFL = %s;\n", ftostr(m_refl).c_str());
@@ -410,22 +437,20 @@ bool LDPovExporter::writeHeader(void)
 		ftostr(m_rubberPhong).c_str());
 	fprintf(m_pPovFile, "#declare RUBBER_PHONGS = %s;\n",
 		ftostr(m_rubberPhongSize).c_str());
-	fprintf(m_pPovFile, "#declare CHROME_REFL = 0.85;\n");
-	fprintf(m_pPovFile, "#declare CHROME_BRIL = 5;\n");
-	fprintf(m_pPovFile, "#declare CHROME_SPEC = 0.8;\n");
-	fprintf(m_pPovFile, "#declare CHROME_ROUGH = 1/100;\n");
+	fprintf(m_pPovFile, "#declare CHROME_REFL = %s;\n",
+		ftostr(m_chromeRefl).c_str());
+	fprintf(m_pPovFile, "#declare CHROME_BRIL = %s;\n",
+		ftostr(m_chromeBril).c_str());
+	fprintf(m_pPovFile, "#declare CHROME_SPEC = %s;\n",
+		ftostr(m_chromeSpec).c_str());
+	fprintf(m_pPovFile, "#declare CHROME_ROUGH = %s;\n",
+		ftostr(m_chromeRough).c_str());
 	fprintf(m_pPovFile, "#declare SW = %s;\t// %s\n",
 		ftostr(m_seamWidth).c_str(), (const char *)ls("PovSeamWidthDesc"));
 	fprintf(m_pPovFile, "#declare STUDS = %d;\t// %s\n", m_hideStuds ? 0 : 1,
 		(const char *)ls("PovStudsDesc"));
 	fprintf(m_pPovFile, "#declare IPOV = %d;\t// %s\n", m_inlinePov ? 1 : 0,
 		(const char *)ls("PovInlinePovDesc"));
-	fprintf(m_pPovFile, "#declare QUAL = %ld;\t// %s\n", m_quality,
-		(const char *)ls("PovQualDesc"));
-	fprintf(m_pPovFile, "#declare REFLS = 1;\t// %s\n",
-		(const char *)ls("PovReflDesc"));
-	fprintf(m_pPovFile, "#declare SHADS = 1;\t// %s\n",
-		(const char *)ls("PovShadDesc"));
 	if (m_edges)
 	{
 		fprintf(m_pPovFile, "#declare EDGERAD = %s;\n",

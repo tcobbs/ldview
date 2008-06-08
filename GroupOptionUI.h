@@ -30,6 +30,7 @@ protected:
 	int m_leftMargin;
 	int m_rightMargin;
 	int m_bottomMargin;
+	ucstring m_label;
 };
 
 #endif // __GroupOptionUI_H__
