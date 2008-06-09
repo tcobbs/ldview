@@ -11,6 +11,17 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define _CRT_NONSTDC_NO_DEPRECATE
 
+#ifdef _WIN32_WINDOWS
+#undef _WIN32_WINDOWS
+#endif
+
+#ifdef _WIN32_WINNT
+#undef _WIN32_WINNT
+#endif
+
+#define _WIN32_WINDOWS 0x0501
+#define _WIN32_WINNT 0x0501
+
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
    #define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
 #endif // _DEBUG

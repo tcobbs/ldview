@@ -167,6 +167,7 @@ protected:
 	StringList m_searchPath;
 	bool m_findReplacements;
 	bool m_xmlMap;
+	std::string m_xmlMapPath;
 	bool m_inlinePov;
 	bool m_hideStuds;
 	bool m_unmirrorStuds;

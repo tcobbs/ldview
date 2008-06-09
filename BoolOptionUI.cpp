@@ -7,8 +7,6 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-extern int controlId;
-
 BoolOptionUI::BoolOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 OptionUI(parent, setting)
 {

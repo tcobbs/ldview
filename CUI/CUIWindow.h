@@ -31,6 +31,7 @@ class CUIWindowResizer;
 #define TBN_GETINFOTIPUC TBN_GETINFOTIPA
 #define MENUITEMINFOUC MENUITEMINFOA
 #define OPENFILENAMEUC OPENFILENAMEA
+#define OPENFILENAME_NT4UC OPENFILENAME_NT4A
 #define WC_BUTTONUC WC_BUTTONA
 #define WC_STATICUC WC_STATICA
 #define WC_EDITUC WC_EDITA
@@ -42,6 +43,7 @@ class CUIWindowResizer;
 #define TBN_GETINFOTIPUC TBN_GETINFOTIPW
 #define MENUITEMINFOUC MENUITEMINFOW
 #define OPENFILENAMEUC OPENFILENAMEW
+#define OPENFILENAME_NT4UC OPENFILENAME_NT4W
 #define WC_BUTTONUC WC_BUTTONW
 #define WC_STATICUC WC_STATICW
 #define WC_EDITUC WC_EDITW
@@ -143,6 +145,14 @@ class CUIExport CUIWindow : public TCAlertSender
 #endif // TC_NO_UNICODE
 		static bool checkGet(HWND hWnd);
 		static void checkSet(HWND hWnd, bool value);
+
+#ifndef TC_NO_UNICODE
+		static void addFileType(char *fileTypes, const char *description,
+			const char *filter);
+#endif // TC_NO_UNICODE
+		static void addFileType(UCSTR fileTypes, CUCSTR description,
+			CUCSTR filter);
+		static int getOpenFilenameSize(bool uc);
 
 	protected:
 		~CUIWindow(void);

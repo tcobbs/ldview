@@ -38,104 +38,6 @@ INT_PTR ExportOptionsDialog::doModal(HWND hWndParent)
 	return CUIDialog::doModal(IDD_EXPORT_OPTIONS, hWndParent);
 }
 
-//void ExportOptionsDialog::addRow(LDExporterSetting &setting, LVITEM &item)
-//{
-//	const ucstring &ucname = setting.getName();
-//
-//	memset(&item, 0, sizeof(item));
-//	item.mask = TVIF_TEXT;
-//	item.pszText = ucstringtombs(ucname.c_str(), ucname.size());
-//	item.iItem = ListView_GetItemCount(hOptionsList);
-//	item.iSubItem = 0;
-//	ListView_InsertItem(hOptionsList, &item);
-//	delete item.pszText;
-//	item.iSubItem = 0;
-//	item.mask = TVIF_IMAGE;
-//	item.iImage = -1;
-//	ListView_SetItem(hOptionsList, &item);
-//}
-//
-//void ExportOptionsDialog::addBoolSetting(LDExporterSetting &setting)
-//{
-//	LVITEM item;
-//
-//	addRow(setting, item);
-//	item.iSubItem = 1;
-//	item.mask = TVIF_IMAGE;
-//	item.iImage = setting.getBoolValue() ? 2 : 1;
-//	ListView_SetItem(hOptionsList, &item);
-//	ListView_SetCheckState(hOptionsList, item.iItem,
-//		setting.getBoolValue() ? TRUE : FALSE);
-//}
-//
-//void ExportOptionsDialog::addFloatSetting(LDExporterSetting &setting)
-//{
-//	LVITEM item;
-//
-//	addRow(setting, item);
-//	ListView_SetItemState(hOptionsList, item.iItem, 0, LVIS_STATEIMAGEMASK);
-//}
-//
-//void ExportOptionsDialog::addLongSetting(LDExporterSetting &setting)
-//{
-//	LVITEM item;
-//
-//	addRow(setting, item);
-//}
-//
-//void ExportOptionsDialog::initOptionsList(void)
-//{
-//	LDExporterSettingList::iterator it;
-//	LDExporterSettingList &settings = m_exporter->getSettings();
-//	LVCOLUMN column;
-//	DWORD exStyle = LVS_EX_SUBITEMIMAGES | LVS_EX_GRIDLINES;
-//	RECT rect;
-//	int valueWidth = 100;
-//	HIMAGELIST hStateImageList = ImageList_LoadImage(getLanguageModule(),
-//		MAKEINTRESOURCE(IDB_TOOLBAR), 16, 0, RGB(255, 0, 254), IMAGE_BITMAP,
-//		LR_DEFAULTCOLOR);
-//
-//	SendMessage(hOptionsList, LVM_SETEXTENDEDLISTVIEWSTYLE, exStyle, exStyle);
-//	ListView_SetImageList(hOptionsList, hStateImageList, LVSIL_SMALL);
-//	GetClientRect(hOptionsList, &rect);
-//	memset(&column, 0, sizeof(LVCOLUMN));
-//	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT;
-//	column.fmt = LVCFMT_RIGHT | LVCFMT_BITMAP_ON_RIGHT;
-//	column.cx = rect.right - valueWidth;
-//	column.pszText = copyString(ls("Option"));
-//	// Columns inserted at index 0 are always left-aligned.  So, as per the
-//	// help file, insert a dummy column here, then delete it after inserting
-//	// all columns.
-//	ListView_InsertColumn(hOptionsList, 0, &column);
-//	//ListView_InsertColumn(hOptionsList, 1, &column);
-//	//ListView_DeleteColumn(hOptionsList, 0);
-//	delete column.pszText;
-//	column.mask |= LVCF_SUBITEM;
-//	column.fmt = LVCFMT_LEFT;
-//	column.cx = valueWidth;
-//	column.iSubItem = 1;
-//	column.pszText = copyString(ls("Value"));
-//	ListView_InsertColumn(hOptionsList, 1, &column);
-//	delete column.pszText;
-//	for (it = settings.begin(); it != settings.end(); it++)
-//	{
-//		switch (it->getType())
-//		{
-//		case LDExporterSetting::TBool:
-//			addBoolSetting(*it);
-//			break;
-//		case LDExporterSetting::TFloat:
-//			addFloatSetting(*it);
-//			break;
-//		case LDExporterSetting::TLong:
-//			addLongSetting(*it);
-//			break;
-//		default:
-//			throw "not implemented";
-//		}
-//	}
-//}
-
 void ExportOptionsDialog::initCanvasOptions(void)
 {
 	LDExporterSettingList &settings = m_exporter->getSettings();
@@ -159,6 +61,9 @@ void ExportOptionsDialog::initCanvasOptions(void)
 				break;
 			case LDExporterSetting::TLong:
 				m_canvas->addLongSetting(*it);
+				break;
+			case LDExporterSetting::TString:
+				m_canvas->addStringSetting(*it);
 				break;
 			default:
 				throw "not implemented";
@@ -200,9 +105,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 	minWidth = rect.right / 2;
 	minHeight = rect.bottom / 2;
 	setIcon(IDI_APP_ICON);
-	titleBase.resize(SendMessageA(hWindow, WM_GETTEXTLENGTH, 0, 0));
-	SendMessageA(hWindow, WM_GETTEXT, (WPARAM)titleBase.size() + 1,
-		(LPARAM)&titleBase[0]);
+	CUIWindow::windowGetText(hWindow, titleBase);
 	convertStringToUpper(&extension[0]);
 	title = extension + " " + titleBase;
 	SendMessageA(hWindow, WM_SETTEXT, 0, (LPARAM)&title[0]);

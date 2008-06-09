@@ -8,8 +8,6 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-extern int controlId;
-
 GroupOptionUI::GroupOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 OptionUI(parent, setting),
 m_hCheck(NULL),

@@ -22,7 +22,8 @@ public:
 		m_type(TGroup),
 		m_hasMin(false),
 		m_hasMax(false),
-		m_groupSize(groupSize) {}
+		m_groupSize(groupSize),
+		m_isPath(false) {}
 	LDExporterSetting(CUCSTR name, bool value, const char *key):
 		m_name(name),
 		m_key(key),
@@ -30,7 +31,8 @@ public:
 		m_bool(value),
 		m_hasMin(false),
 		m_hasMax(false),
-		m_groupSize(0) {}
+		m_groupSize(0),
+		m_isPath(false) {}
 	LDExporterSetting(CUCSTR name, long value, const char *key):
 		m_name(name),
 		m_key(key),
@@ -38,7 +40,8 @@ public:
 		m_long(value),
 		m_hasMin(false),
 		m_hasMax(false),
-		m_groupSize(0) {}
+		m_groupSize(0),
+		m_isPath(false) {}
 	LDExporterSetting(CUCSTR name, TCFloat value, const char *key):
 		m_name(name),
 		m_key(key),
@@ -46,15 +49,22 @@ public:
 		m_float(value),
 		m_hasMin(false),
 		m_hasMax(false),
-		m_groupSize(0) {}
-	LDExporterSetting(CUCSTR name, CUCSTR value, const char *key):
+		m_groupSize(0),
+		m_isPath(false) {}
+	LDExporterSetting(CUCSTR name, CUCSTR value, const char *key,
+		bool isPath = false):
 		m_name(name),
 		m_key(key),
 		m_type(TString),
 		m_string(value),
 		m_hasMin(false),
 		m_hasMax(false),
-		m_groupSize(0) {}
+		m_groupSize(0),
+		m_isPath(isPath) {}
+#ifndef TC_NO_UNICODE
+	LDExporterSetting(CUCSTR name, const char *value, const char *key,
+		bool isPath = false);
+#endif TC_NO_UNICODE
 
 	Type getType(void) { return m_type; }
 
@@ -62,6 +72,9 @@ public:
 	void setName(CUCSTR value);
 	int getGroupSize(void) const { return m_groupSize; }
 	void setGroupSize(int value) { m_groupSize = value; }
+
+	bool isPath(void) const { return m_isPath; }
+	void setIsPath(bool value);
 
 	void setValue(bool value, bool commit = false);
 	void setValue(long value, bool commit = false);
@@ -99,6 +112,7 @@ protected:
 	bool m_hasMax;
 	long m_minLong;
 	long m_maxLong;
+	bool m_isPath;
 	TCFloat m_minFloat;
 	TCFloat m_maxFloat;
 	int m_groupSize;

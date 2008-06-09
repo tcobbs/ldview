@@ -2799,3 +2799,78 @@ void CUIWindow::setAutosaveName(const char *value)
 		}
 	}
 }
+
+#ifndef TC_NO_UNICODE
+// Note: static method
+void CUIWindow::addFileType(
+	char *fileTypes,
+	const char *description,
+	const char *filter)
+{
+	char* spot = fileTypes;
+
+	for (spot = fileTypes; spot[0] != 0 || spot[1] != 0; spot++)
+		;
+	if (spot != fileTypes)
+	{
+		spot++;
+	}
+	strcpy(spot, description);
+	spot += strlen(description) + 1;
+	strcpy(spot, filter);
+	spot += strlen(filter) + 1;
+	*spot = 0;
+}
+#endif // TC_NO_UNICODE
+
+// Note: static method
+void CUIWindow::addFileType(
+	UCSTR fileTypes,
+	CUCSTR description,
+	CUCSTR filter)
+{
+	UCSTR spot = fileTypes;
+
+	for (spot = fileTypes; spot[0] != 0 || spot[1] != 0; spot++)
+		;
+	if (spot != fileTypes)
+	{
+		spot++;
+	}
+	ucstrcpy(spot, description);
+	spot += ucstrlen(description) + 1;
+	ucstrcpy(spot, filter);
+	spot += ucstrlen(filter) + 1;
+	*spot = 0;
+}
+
+// Note: static method
+int CUIWindow::getOpenFilenameSize(bool uc)
+{
+	OSVERSIONINFO osvi;
+
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	GetVersionEx(&osvi);
+	if (osvi.dwMajorVersion < 5)
+	{
+		if (uc)
+		{
+			return sizeof(OPENFILENAME_NT4UC);
+		}
+		else
+		{
+			return sizeof(OPENFILENAME_NT4A);
+		}
+	}
+	else
+	{
+		if (uc)
+		{
+			return sizeof(OPENFILENAME);
+		}
+		else
+		{
+			return sizeof(OPENFILENAMEA);
+		}
+	}
+}

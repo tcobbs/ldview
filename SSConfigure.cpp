@@ -226,16 +226,12 @@ bool SSConfigure::doBrowseFilename(void)
 	if (initialDir)
 	{
 		memset(fileTypes, 0, 2);
-		LDViewWindow::addFileType(fileTypes,
-			TCLocalStrings::get("LDrawFileTypes"), "*.ldr;*.dat;*.mpd");
-		LDViewWindow::addFileType(fileTypes,
-			TCLocalStrings::get("LDrawModelFileTypes"), "*.ldr;*.dat");
-		LDViewWindow::addFileType(fileTypes,
-			TCLocalStrings::get("LDrawMpdFileTypes"), "*.mpd");
-		LDViewWindow::addFileType(fileTypes,
-			TCLocalStrings::get("AllFilesTypes"), "*.*");
+		addFileType(fileTypes, ls("LDrawFileTypes"), "*.ldr;*.dat;*.mpd");
+		addFileType(fileTypes, ls("LDrawModelFileTypes"), "*.ldr;*.dat");
+		addFileType(fileTypes, ls("LDrawMpdFileTypes"), "*.mpd");
+		addFileType(fileTypes, ls("AllFilesTypes"), "*.*");
 		memset(&openStruct, 0, sizeof(OPENFILENAME));
-		openStruct.lStructSize = sizeof(OPENFILENAME);
+		openStruct.lStructSize = getOpenFilenameSize(false);
 		openStruct.hwndOwner = hWindow;
 		openStruct.lpstrFilter = fileTypes;
 		openStruct.nFilterIndex = 1;

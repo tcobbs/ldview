@@ -51,7 +51,7 @@
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -141,7 +141,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
+				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/LDView.pch"
@@ -234,7 +234,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -326,7 +326,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP;TC_NO_UNICODE"
+				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;TC_NO_UNICODE"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/LDView.pch"
 				BrowseInformation="1"
@@ -422,7 +422,7 @@
 				FavorSizeOrSpeed="1"
 				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP;TC_NO_UNICODE"
+				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;TC_NO_UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -514,7 +514,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".,./include"
-				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0410;_TC_STATIC;LDVIEW_APP;_NO_BOOST"
+				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;_NO_BOOST"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\Debug/LDView.pch"
@@ -1111,6 +1111,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PathOptionUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SSConfigure.cpp"
 				>
 				<FileConfiguration
@@ -1343,6 +1347,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\StringOptionUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TbButtonInfo.cpp"
 				>
 			</File>
@@ -1436,6 +1444,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PathOptionUI.h"
+				>
+			</File>
+			<File
 				RelativePath="Resource.h"
 				>
 			</File>
@@ -1453,6 +1465,10 @@
 			</File>
 			<File
 				RelativePath="SSPreview.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StringOptionUI.h"
 				>
 			</File>
 			<File
