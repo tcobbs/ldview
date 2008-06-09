@@ -73,6 +73,12 @@ class LDLFacing: public TCVector
 		// this prints a facing's data.  Use mostly for bug testing.
 		void print(FILE* = stdout);
 
+		// Note: NOT virtual.  TCVector doesn't have any virtual member
+		// functions, and adding one would create a vtable, which we don't
+		// want.  Right now, TCVector looks the same in memory as an array of
+		// 3 floats.
+		TCFloat& operator[](int i);
+
 	protected:
 		TCFloat* invertMatrix(TCFloat*);
 		void swapMatrixRows(TCFloat*, int, int);
