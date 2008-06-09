@@ -139,7 +139,7 @@ LDLFacing LDLFacing::dot(LDLFacing& f2)
 		answer.rotation*answer.rotation));
 	for (i=0; i<4; i++) 
 	{
-		answer.vector[i] = (TCFloat)(answer.vector[i]/temp);
+		answer[i] = (TCFloat)(answer[i]/temp);
 	}
 	return answer;
 }
@@ -163,6 +163,18 @@ void LDLFacing::setFacing(const TCVector &a, TCFloat phi)
 	this->rotation = (TCFloat)cos(phiOver2);
 	//printf("LDLFacing set to %f, %f, %f, %f\n", (*this)[0], (*this)[1], 
 	// (*this)[2], this->rotation);
+}
+
+TCFloat& LDLFacing::operator[](int i)
+{
+	if (i == 3)
+	{
+		return rotation;
+	}
+	else
+	{
+		return vector[i];
+	}
 }
 
 LDLFacing& LDLFacing::normalize(void)
