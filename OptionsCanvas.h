@@ -21,6 +21,7 @@ public:
 	void addBoolSetting(LDExporterSetting &setting);
 	void addFloatSetting(LDExporterSetting &setting);
 	void addLongSetting(LDExporterSetting &setting);
+	void addStringSetting(LDExporterSetting &setting);
 	bool commitSettings(void);
 	void updateEnabled(void);
 protected:
@@ -37,6 +38,8 @@ protected:
 
 	OptionUIList m_optionUIs;
 	OptionsScroller *m_parent;
+	int m_spacing;
+	int m_margin;
 };
 
 #endif // __OptionsCanvas_H__

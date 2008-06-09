@@ -113,10 +113,6 @@ class LDViewWindow: public CUIWindow
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
 		UCSTR lastOpenPathUC(char* pathKey = NULL);
-#ifndef TC_NO_UNICODE
-		static void addFileType(char*, const char*, const char*);
-#endif // TC_NO_UNICODE
-		static void addFileType(UCSTR, CUCSTR, CUCSTR);
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 		static std::string browseForDir(const char *prompt,
 			const char *initialDir);

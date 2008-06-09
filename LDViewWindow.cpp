@@ -1,4 +1,3 @@
-#define _WIN32_WINNT 0x501
 #ifdef _DEBUG
 #define DEBUG_SIMSTAR 1
 #endif
@@ -4493,26 +4492,23 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 			ucstrcpy(fullPathNameUC, tmpUC);
 			delete tmpUC;
 			memset(fileTypes, 0, 2 * sizeof(UCCHAR));
-			addFileType(fileTypes, TCLocalStrings::get(_UC("LDrawFileTypes")),
+			addFileType(fileTypes, ls(_UC("LDrawFileTypes")),
 				_UC("*.ldr;*.dat;*.mpd"));
-			addFileType(fileTypes,
-				TCLocalStrings::get(_UC("LDrawModelFileTypes")),
+			addFileType(fileTypes, ls(_UC("LDrawModelFileTypes")),
 				_UC("*.ldr;*.dat"));
-			addFileType(fileTypes, TCLocalStrings::get(_UC("LDrawMpdFileTypes")),
-				_UC("*.mpd"));
-			addFileType(fileTypes, TCLocalStrings::get(_UC("AllFilesTypes")),
-				_UC("*.*"));
+			addFileType(fileTypes, ls(_UC("LDrawMpdFileTypes")), _UC("*.mpd"));
+			addFileType(fileTypes, ls(_UC("AllFilesTypes")), _UC("*.*"));
 			memset(&openStruct, 0, sizeof(openStruct));
-			openStruct.lStructSize = sizeof(openStruct);
-#ifdef TC_NO_UNICODE
-			// ToDo: Unicode: test/fix the following.
-			if (openStruct.lStructSize > 76)
-			{
-				// Win98 doesn't like the new struct size.  Not sure why; it
-				// should just ignore the extra data.
-				openStruct.lStructSize = 76;
-			}
-#endif // TC_NO_UNICODE
+			openStruct.lStructSize = getOpenFilenameSize(true);
+//#ifdef TC_NO_UNICODE
+//			// ToDo: Unicode: test/fix the following.
+//			if (openStruct.lStructSize > 76)
+//			{
+//				// Win98 doesn't like the new struct size.  Not sure why; it
+//				// should just ignore the extra data.
+//				openStruct.lStructSize = 76;
+//			}
+//#endif // TC_NO_UNICODE
 			openStruct.hwndOwner = hWindow;
 			openStruct.lpstrFilter = fileTypes;
 			openStruct.nFilterIndex = 1;
@@ -4570,44 +4566,6 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 		// generation.
 		SetActiveWindow(hWindow);
 	}
-}
-
-#ifndef TC_NO_UNICODE
-void LDViewWindow::addFileType(char* fileTypes, const char* description,
-							   const char* filter)
-{
-	char* spot = fileTypes;
-
-	for (spot = fileTypes; spot[0] != 0 || spot[1] != 0; spot++)
-		;
-	if (spot != fileTypes)
-	{
-		spot++;
-	}
-	strcpy(spot, description);
-	spot += strlen(description) + 1;
-	strcpy(spot, filter);
-	spot += strlen(filter) + 1;
-	*spot = 0;
-}
-#endif // TC_NO_UNICODE
-
-void LDViewWindow::addFileType(UCSTR fileTypes, CUCSTR description,
-							   CUCSTR filter)
-{
-	UCSTR spot = fileTypes;
-
-	for (spot = fileTypes; spot[0] != 0 || spot[1] != 0; spot++)
-		;
-	if (spot != fileTypes)
-	{
-		spot++;
-	}
-	ucstrcpy(spot, description);
-	spot += ucstrlen(description) + 1;
-	ucstrcpy(spot, filter);
-	spot += ucstrlen(filter) + 1;
-	*spot = 0;
 }
 
 char* LDViewWindow::getLDrawDir(void)
@@ -5332,16 +5290,17 @@ LRESULT LDViewWindow::generatePartsList(void)
 					addFileType(fileTypes, TCLocalStrings::get("HtmlFileType"),
 						"*.html");
 					memset(&openStruct, 0, sizeof(OPENFILENAME));
-					openStruct.lStructSize = sizeof(OPENFILENAME);
-#ifdef TC_NO_UNICODE
-					// ToDo: Unicode: test/fix the following.
-					if (openStruct.lStructSize > 76)
-					{
-						// Win98 doesn't like the new struct size.  Not sure why; it
-						// should just ignore the extra data.
-						openStruct.lStructSize = 76;
-					}
-#endif // TC_NO_UNICODE
+					openStruct.lStructSize = getOpenFilenameSize(false);
+//					openStruct.lStructSize = sizeof(OPENFILENAME);
+//#ifdef TC_NO_UNICODE
+//					// ToDo: Unicode: test/fix the following.
+//					if (openStruct.lStructSize > 76)
+//					{
+//						// Win98 doesn't like the new struct size.  Not sure why; it
+//						// should just ignore the extra data.
+//						openStruct.lStructSize = 76;
+//					}
+//#endif // TC_NO_UNICODE
 					openStruct.hwndOwner = hWindow;
 					openStruct.lpstrFilter = fileTypes;
 					openStruct.nFilterIndex = 0;

@@ -792,6 +792,47 @@ char* cleanedUpPath(const char* path)
 	return newPath;
 }
 
+static size_t lastSlashIndex(const ucstring &path)
+{
+	size_t slashSpot = path.rfind('/');
+#ifdef WIN32
+	size_t backslashSpot = path.rfind('\\');
+
+	if (slashSpot >= path.size() ||
+		(backslashSpot < path.size() && backslashSpot > slashSpot))
+	{
+		slashSpot = backslashSpot;
+	}
+#endif // WIN32
+	return slashSpot;
+}
+
+TCExport ucstring filenameFromPath(const ucstring &path)
+{
+	size_t slashSpot = lastSlashIndex(path);
+	if (slashSpot < path.size())
+	{
+		return path.substr(slashSpot + 1);
+	}
+	else
+	{
+		return path;
+	}
+}
+
+TCExport ucstring directoryFromPath(const ucstring &path)
+{
+	size_t slashSpot = lastSlashIndex(path);
+	if (slashSpot < path.size())
+	{
+		return path.substr(0, slashSpot);
+	}
+	else
+	{
+		return _UC("");
+	}
+}
+
 char* filenameFromPath(const char* path)
 {
 	if (path)

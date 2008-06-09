@@ -1,4 +1,3 @@
-#define _WIN32_WINNT 0x501
 #include "LDViewPreferences.h"
 #include <shlobj.h>
 #include <shlwapi.h>

@@ -1054,12 +1054,46 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 	int typeComboHeight;
 	int optionsButtonWidth;
 	int optionsButtonHeight;
+	int xOrigin = 0;
 
+	if (curSaveOp == LDPreferences::SOSnapshot)
+	{
+		RECT filenameLabelRect;
+		HWND hFilenameLabel = GetDlgItem(hParent, stc3);
+		HWND hToolbar = GetDlgItem(hParent, ctl1);
+		RECT boxRect;
+
+		GetWindowRect(GetDlgItem(hSaveDialog, IDC_SAVE_ACTUAL_SIZE_BOX),
+			&boxRect);
+		screenToClient(hSaveDialog, &boxRect);
+		GetWindowRect(hFilenameLabel, &filenameLabelRect);
+		screenToClient(hParent, &filenameLabelRect);
+		xOrigin = filenameLabelRect.left - boxRect.left;
+		if (hToolbar)
+		{
+			char classname[128];
+
+			GetClassName(hToolbar, classname, COUNT_OF(classname));
+			if (strcmp(classname, TOOLBARCLASSNAME) == 0)
+			{
+				RECT tbRect;
+
+				GetWindowRect(hToolbar, &tbRect);
+				clientToScreen(hSaveDialog, &boxRect);
+				tbRect.bottom = boxRect.bottom;
+				screenToClient(hParent, &tbRect);
+				MoveWindow(hToolbar, tbRect.left, tbRect.top,
+					tbRect.right - tbRect.left, tbRect.bottom - tbRect.top,
+					TRUE);
+			}
+		}
+	}
 	GetClientRect(hSaveDialog, &clientRect);
 	GetWindowRect(hParent, &parentWindowRect);
 	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top;
 	clientRect.right = parentWindowRect.right - parentWindowRect.left;
-	MoveWindow(hSaveDialog, 0, 0, clientRect.right, clientRect.bottom, TRUE);
+	MoveWindow(hSaveDialog, xOrigin, 0, clientRect.right/* - xOrigin*/,
+		clientRect.bottom, TRUE);
 
 	// Move the Options button so that it is to the right of the file type
 	// combo box, and make the file type combo box narrower so that it will fit.
@@ -4421,14 +4455,14 @@ std::string ModelWindow::getSaveDir(void)
 void ModelWindow::fillSnapshotFileTypes(char *fileTypes)
 {
 	memset(fileTypes, 0, 2);
-	LDViewWindow::addFileType(fileTypes, ls("PngFileType"), "*.png");
-	LDViewWindow::addFileType(fileTypes, ls("BmpFileType"), "*.bmp");
-	LDViewWindow::addFileType(fileTypes, ls("JpgFileType"), "*.jpg");
+	addFileType(fileTypes, ls("PngFileType"), "*.png");
+	addFileType(fileTypes, ls("BmpFileType"), "*.bmp");
+	addFileType(fileTypes, ls("JpgFileType"), "*.jpg");
 	if (TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
 	{
-		LDViewWindow::addFileType(fileTypes, ls("SvgFileType"), "*.svg");
-		LDViewWindow::addFileType(fileTypes, ls("EpsFileType"), "*.eps");
-		LDViewWindow::addFileType(fileTypes, ls("PdfFileType"), "*.pdf");
+		addFileType(fileTypes, ls("SvgFileType"), "*.svg");
+		addFileType(fileTypes, ls("EpsFileType"), "*.eps");
+		addFileType(fileTypes, ls("PdfFileType"), "*.pdf");
 	}
 }
 
@@ -4447,7 +4481,7 @@ void ModelWindow::fillExportFileTypes(char *fileTypes)
 			std::string extension = "*.";
 
 			extension += exporter->getExtension();
-			LDViewWindow::addFileType(fileTypes, aFileType, extension.c_str());
+			addFileType(fileTypes, aFileType, extension.c_str());
 			delete aFileType;
 		}
 	}
@@ -4498,7 +4532,7 @@ bool ModelWindow::getSaveFilename(
 		openStruct.lpfnHook = staticSaveHook;
 		break;
 	}
-	openStruct.lStructSize = sizeof(OPENFILENAME);
+	openStruct.lStructSize = getOpenFilenameSize(false);
 	openStruct.hwndOwner = hWindow;
 	openStruct.lpstrFilter = fileTypes;
 	openStruct.nFilterIndex = saveType;

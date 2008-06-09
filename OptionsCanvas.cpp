@@ -6,6 +6,8 @@
 #include "GroupOptionUI.h"
 #include "LongOptionUI.h"
 #include "FloatOptionUI.h"
+#include "StringOptionUI.h"
+#include "PathOptionUI.h"
 #include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 
@@ -59,8 +61,25 @@ void OptionsCanvas::addLongSetting(LDExporterSetting &setting)
 	m_optionUIs.push_back(new LongOptionUI(this, setting));
 }
 
+void OptionsCanvas::addStringSetting(LDExporterSetting &setting)
+{
+	if (setting.isPath())
+	{
+		m_optionUIs.push_back(new PathOptionUI(this, setting));
+	}
+	else
+	{
+		m_optionUIs.push_back(new StringOptionUI(this, setting));
+	}
+}
+
 BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
 {
+	RECT spacingRect = { 4, 3, 0, 0 };
+
+	MapDialogRect(hWindow, &spacingRect);
+	m_spacing = spacingRect.top;
+	m_margin = spacingRect.left;
 	return TRUE;
 }
 
@@ -93,11 +112,9 @@ int OptionsCanvas::calcHeight(
 	int &optimalWidth,
 	bool update /*= false*/)
 {
-	int margin = 6;
-	int spacing = 4;
-	int y = margin;
+	int y = m_margin;
 	HDC hdc = GetDC(hWindow);
-	int width = newWidth - margin * 2;
+	int width = newWidth - m_margin * 2;
 	HFONT hNewFont = (HFONT)SendMessage(hWindow, WM_GETFONT, 0, 0);
 	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
 	int otherWidth = 0;
@@ -124,20 +141,21 @@ int OptionsCanvas::calcHeight(
 			// Groups can't be nested, so if we see a group when we're not done
 			// with a previous group, just finish the previous one anyway.
 			closeGroup(currentGroup, y, optimalWidth, leftMargin,
-				rightMargin, numberWidth, spacing, enabled, update);
+				rightMargin, numberWidth, m_spacing, enabled, update);
 			groupCount = 0;
 		}
 		if (type == LDExporterSetting::TLong ||
 			type == LDExporterSetting::TFloat)
 		{
-			y += optionUI->updateLayout(hdc, margin + leftMargin, y,
+			y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
 				numberWidth - leftMargin - rightMargin, update, optimalWidth) +
-				spacing;
+				m_spacing;
 		}
 		else
 		{
-			y += optionUI->updateLayout(hdc, margin + leftMargin, y,
-				width - leftMargin - rightMargin, update, otherWidth) + spacing;
+			y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
+				width - leftMargin - rightMargin, update, otherWidth) +
+				m_spacing;
 		}
 		optionUI->setEnabled(enabled);
 		if (currentGroup)
@@ -146,7 +164,7 @@ int OptionsCanvas::calcHeight(
 			if (groupCount == 0)
 			{
 				closeGroup(currentGroup, y, optimalWidth, leftMargin,
-					rightMargin, numberWidth, spacing, enabled, update);
+					rightMargin, numberWidth, m_spacing, enabled, update);
 			}
 		}
 		if (setting->getGroupSize() > 0)

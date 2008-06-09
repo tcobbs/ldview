@@ -15,7 +15,7 @@ public:
 
 	virtual int updateLayout(HDC hdc, int x, int y, int width, bool update,
 		int &optimalWidth) = 0;
-	virtual bool validate(ucstring &error) = 0;
+	virtual bool validate(ucstring & /*error*/) { return true; }
 	virtual void commit(void) = 0;
 	LDExporterSetting *getSetting(void) { return m_setting; }
 	virtual void setEnabled(bool value) = 0;

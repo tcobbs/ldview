@@ -384,6 +384,23 @@ bool LDExporter::boolForKey(
 		sessionSpecific);
 }
 
+std::string LDExporter::pathForKey(
+	const char *key,
+	const char *defaultValue /*= NULL*/,
+	bool sessionSpecific /*= true*/)
+{
+	char *value = TCUserDefaults::pathForKey(udKey(key).c_str(), defaultValue,
+		sessionSpecific);
+	std::string retValue;
+
+	if (value != NULL)
+	{
+		retValue = value;
+		delete value;
+	}
+	return retValue;
+}
+
 void LDExporter::setFloatForKey(
 	float value,
 	const char* key,

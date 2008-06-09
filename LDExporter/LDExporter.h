@@ -112,6 +112,8 @@ protected:
 		bool sessionSpecific = true);
 	bool boolForKey(const char *key, bool defaultValue = false,
 		bool sessionSpecific = true);
+	std::string pathForKey(const char *key, const char *defaultValue = NULL,
+		bool sessionSpecific = true);
 	void setFloatForKey(float value, const char* key,
 		bool sessionSpecific = true);
 	float floatForKey(const char* key, float defaultValue = 0.0f,

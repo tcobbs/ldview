@@ -17,6 +17,27 @@
 #include <stdarg.h>
 #endif // _OSMESA
 
+#ifdef TC_NO_UNICODE
+#define ucsprintf sprintf
+#define ucstrcmp strcmp
+#define ucstrstr strstr
+#define ucstrcpy strcpy
+#define ucstrcat strcat
+#define ucstrncpy strncpy
+#define ucstrlen strlen
+#define sucscanf sscanf
+typedef std::string ucstring;
+#else // TC_NO_UNICODE
+#define ucstrcmp wcscmp
+#define ucstrstr wcsstr
+#define ucstrcpy wcscpy
+#define ucstrcat wcscat
+#define ucstrncpy wcsncpy
+#define ucstrlen wcslen
+#define sucscanf swscanf
+typedef std::wstring ucstring;
+#endif // TC_NO_UNICODE
+
 TCExport char *copyString(const char *string, int pad = 0);
 TCExport wchar_t *copyString(const wchar_t *string, int pad = 0);
 
@@ -66,7 +87,9 @@ TCExport char* convertStringToUpper(char*);
 TCExport char* convertStringToLower(char*);
 
 TCExport char* filenameFromPath(const char*);
+TCExport ucstring filenameFromPath(const ucstring &path);
 TCExport char* directoryFromPath(const char*);
+TCExport ucstring directoryFromPath(const ucstring &path);
 TCExport bool isRelativePath(const char*);
 TCExport char* findRelativePath(const char* cwd, const char* path);
 TCExport char* cleanedUpPath(const char* path);
@@ -133,27 +156,6 @@ char *prettyLongLongString(long long);
 long long longLongFromString(char*);
 
 #endif // WIN32
-
-#ifdef TC_NO_UNICODE
-#define ucsprintf sprintf
-#define ucstrcmp strcmp
-#define ucstrstr strstr
-#define ucstrcpy strcpy
-#define ucstrcat strcat
-#define ucstrncpy strncpy
-#define ucstrlen strlen
-#define sucscanf sscanf
-typedef std::string ucstring;
-#else // TC_NO_UNICODE
-#define ucstrcmp wcscmp
-#define ucstrstr wcsstr
-#define ucstrcpy wcscpy
-#define ucstrcat wcscat
-#define ucstrncpy wcsncpy
-#define ucstrlen wcslen
-#define sucscanf swscanf
-typedef std::wstring ucstring;
-#endif // TC_NO_UNICODE
 
 typedef std::vector<ucstring> ucstringVector;
 

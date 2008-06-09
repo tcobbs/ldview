@@ -2,6 +2,24 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
 
+#ifndef TC_NO_UNICODE
+LDExporterSetting::LDExporterSetting(
+	CUCSTR name,
+	const char *value,
+	const char *key,
+	bool isPath /*= false*/):
+m_name(name),
+m_key(key),
+m_type(TString),
+m_hasMin(false),
+m_hasMax(false),
+m_groupSize(0),
+m_isPath(isPath)
+{
+	stringtowstring(m_string, value);
+}
+#endif TC_NO_UNICODE
+
 void LDExporterSetting::setName(CUCSTR value)
 {
 	if (m_type == TUnknown)
@@ -92,7 +110,21 @@ void LDExporterSetting::setValue(CUCSTR value, bool commit /*= false*/)
 		m_string = value;
 		if (commit)
 		{
-			TCUserDefaults::setStringForKey(value, m_key.c_str());
+			if (m_isPath)
+			{
+#ifdef TC_NO_UNICODE
+				std::string &path = m_string;
+#else // TC_NO_UNICODE
+				std::string path;
+
+				wstringtostring(path, m_string);
+#endif //
+				TCUserDefaults::setPathForKey(path.c_str(), m_key.c_str());
+			}
+			else
+			{
+				TCUserDefaults::setStringForKey(value, m_key.c_str());
+			}
 		}
 		break;
 	default:
@@ -275,6 +307,18 @@ void LDExporterSetting::setMaxValue(TCFloat value)
 	{
 		m_maxFloat = value;
 		m_hasMax = true;
+	}
+	else
+	{
+		throw "Invalid type";
+	}
+}
+
+void LDExporterSetting::setIsPath(bool value)
+{
+	if (m_type == TString)
+	{
+		m_isPath = value;
 	}
 	else
 	{

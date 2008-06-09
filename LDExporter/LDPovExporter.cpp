@@ -59,6 +59,7 @@ void LDPovExporter::loadDefaults(void)
 	m_shads = boolForKey("Shadows", true);
 	m_findReplacements = boolForKey("FindReplacements", false);
 	m_xmlMap = boolForKey("XmlMap", true);
+	m_xmlMapPath = pathForKey("XmlMapPath");
 	m_inlinePov = boolForKey("InlinePov", true);
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
@@ -108,13 +109,21 @@ void LDPovExporter::initSettings(void) const
 		udKey("UnmirrorStuds").c_str()));
 	LDExporter::initSettings();
 	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
-		3));
-	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),
-		m_findReplacements, udKey("FindReplacements").c_str()));
-	addSetting(LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
-		udKey("XmlMap").c_str()));
+		2));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
 		udKey("InlinePov").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),
+		m_findReplacements, udKey("FindReplacements").c_str()));
+	if (addSetting(LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
+		udKey("XmlMap").c_str())))
+	{
+		m_settings.back().setGroupSize(1);
+	}
+	if (addSetting(LDExporterSetting(ls(_UC("PovXmlMapPath")),
+		m_xmlMapPath.c_str(), udKey("XmlMapPath").c_str())))
+	{
+		m_settings.back().setIsPath(true);
+	}
 	addSetting(LDExporterSetting(ls(_UC("PovLighting")), 2));
 	addSetting(ls(_UC("PovAmbient")), m_ambient, udKey("Ambient").c_str(), 0.0f,
 		1.0f);
