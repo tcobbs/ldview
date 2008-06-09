@@ -64,7 +64,7 @@ public:
 #ifndef TC_NO_UNICODE
 	LDExporterSetting(CUCSTR name, const char *value, const char *key,
 		bool isPath = false);
-#endif TC_NO_UNICODE
+#endif // TC_NO_UNICODE
 
 	Type getType(void) { return m_type; }
 
@@ -112,10 +112,10 @@ protected:
 	bool m_hasMax;
 	long m_minLong;
 	long m_maxLong;
-	bool m_isPath;
 	TCFloat m_minFloat;
 	TCFloat m_maxFloat;
 	int m_groupSize;
+	bool m_isPath;
 };
 
 #endif // __LDEXPORTERSETTING_H__

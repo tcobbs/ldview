@@ -18,7 +18,7 @@ m_isPath(isPath)
 {
 	stringtowstring(m_string, value);
 }
-#endif TC_NO_UNICODE
+#endif // TC_NO_UNICODE
 
 void LDExporterSetting::setName(CUCSTR value)
 {
@@ -118,7 +118,7 @@ void LDExporterSetting::setValue(CUCSTR value, bool commit /*= false*/)
 				std::string path;
 
 				wstringtostring(path, m_string);
-#endif //
+#endif // TC_NO_UNICODE
 				TCUserDefaults::setPathForKey(path.c_str(), m_key.c_str());
 			}
 			else
