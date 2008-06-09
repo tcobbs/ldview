@@ -1092,7 +1092,7 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 	GetWindowRect(hParent, &parentWindowRect);
 	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top;
 	clientRect.right = parentWindowRect.right - parentWindowRect.left;
-	MoveWindow(hSaveDialog, xOrigin, 0, clientRect.right/* - xOrigin*/,
+	MoveWindow(hSaveDialog, xOrigin, 0, clientRect.right,
 		clientRect.bottom, TRUE);
 
 	// Move the Options button so that it is to the right of the file type

@@ -291,7 +291,17 @@ void LDPovExporter::loadXmlElements(TiXmlElement *elements)
 
 void LDPovExporter::loadLDrawPovXml(void)
 {
-	TiXmlDocument doc(m_ldrawDir + "/pov/LDrawPOV.xml");
+	std::string filename;
+
+	if (m_xmlMapPath.size() > 0)
+	{
+		filename = m_xmlMapPath;
+	}
+	else
+	{
+		filename = m_ldrawDir + "/pov/LDrawPOV.xml";
+	}
+	TiXmlDocument doc(filename);
 
 	if (doc.LoadFile())
 	{
