@@ -86,10 +86,8 @@ BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
 void OptionsCanvas::closeGroup(
 	GroupOptionUI *currentGroup,
 	int &y,
-	int &optimalWidth,
 	int &leftMargin,
 	int &rightMargin,
-	int &numberWidth,
 	int spacing,
 	bool &enabled,
 	bool update)
@@ -99,8 +97,6 @@ void OptionsCanvas::closeGroup(
 		currentGroup->close(y - spacing);
 	}
 	y += currentGroup->getBottomGroupMargin();
-	optimalWidth += leftMargin;
-	numberWidth -= leftMargin;
 	leftMargin = 0;
 	rightMargin = 0;
 	enabled = true;
@@ -139,18 +135,22 @@ void OptionsCanvas::calcOptionHeight(
 	optionUI->setEnabled(enabled);
 	if (setting->getGroupSize() > 0)
 	{
+		int groupLeftMargin;
+		int groupRightMargin = optionUI->getRightGroupMargin();
+
 		enabled = optionUI->getEnabled();
-		if (leftMargin == 0)
+		if (groupRightMargin == 0)
 		{
-			leftMargin += optionUI->getLeftGroupMargin();
+			groupLeftMargin = optionUI->getLeftGroupMargin() * 2;
 		}
 		else
 		{
-			leftMargin += optionUI->getLeftGroupMargin() * 2;
+			groupLeftMargin = optionUI->getLeftGroupMargin();
 		}
-		rightMargin += optionUI->getRightGroupMargin();
-		optimalWidth -= leftMargin;
-		numberWidth += leftMargin;
+		leftMargin += groupLeftMargin;
+		rightMargin += groupRightMargin;
+		optimalWidth -= groupLeftMargin;
+		numberWidth += groupRightMargin;
 		for (int i = 0; i < setting->getGroupSize(); i++)
 		{
 			it++;
@@ -163,9 +163,10 @@ void OptionsCanvas::calcOptionHeight(
 		}
 		if (optionUI->getBottomGroupMargin() > 0)
 		{
-			closeGroup((GroupOptionUI *)optionUI, y, optimalWidth, leftMargin,
-				rightMargin, numberWidth, m_spacing, enabled, update);
+			closeGroup((GroupOptionUI *)optionUI, y, leftMargin, rightMargin,
+				m_spacing, enabled, update);
 		}
+		optimalWidth += groupLeftMargin;
 	}
 }
 

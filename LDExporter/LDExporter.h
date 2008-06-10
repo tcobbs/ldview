@@ -93,7 +93,7 @@ protected:
 	virtual void addGeometrySetting(void) const;
 	virtual void addGeometrySettings(void) const;
 	virtual void addConditionalEdgesSetting(void) const;
-	virtual int getNumGeometrySettings(void) const { return 2; }
+	virtual int getNumGeometrySettings(void) const { return 3; }
 	virtual void initSettings(void) const;
 
 	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
