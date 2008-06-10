@@ -22,7 +22,8 @@ protected:
 	virtual LRESULT doSize(WPARAM sizeType, int newWidth, int newHeight);
 	virtual LRESULT doMouseWheel(short keyFlags, short zDelta, int xPos,
 		int yPos);
-	//virtual LRESULT doNotify(int controlId, LPNMHDR notification);
+	virtual LRESULT doCommand(int notifyCode, int commandId,
+		HWND control);
 
 	virtual void doOK(void);
 	virtual LRESULT doBeginLabelEdit(NMLVDISPINFO *notification);
@@ -31,15 +32,9 @@ protected:
 	void initCanvas(void);
 	void initCanvasOptions(void);
 	void canvasSizeChanged(void);
-	//void addRow(LDExporterSetting &setting, LVITEM &item);
-	//void initOptionsList(void);
-	//void addBoolSetting(LDExporterSetting &setting);
-	//void addFloatSetting(LDExporterSetting &setting);
-	//void addLongSetting(LDExporterSetting &setting);
 
 	LDExporter *m_exporter;
 	CUIWindowResizer *m_resizer;
-	//HWND hOptionsList;
 	OptionsScroller *m_scroller;
 	OptionsCanvas *m_canvas;
 };
