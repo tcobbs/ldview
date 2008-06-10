@@ -130,12 +130,12 @@ void LDExporter::addGeometrySettings(void) const
 	addGeometrySetting();
 	addPrimSubSetting();
 	addSeamWidthSetting();
+	addEdgesSettings();
 }
 
 void LDExporter::initSettings(void) const
 {
 	addGeometrySettings();
-	addEdgesSettings();
 }
 
 bool LDExporter::addSetting(

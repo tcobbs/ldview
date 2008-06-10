@@ -28,11 +28,11 @@ protected:
 	virtual ~OptionsCanvas(void);
 	virtual void dealloc(void);
 	virtual void closeGroup(GroupOptionUI *currentGroup, int &y,
-		int &optimalWidth, int &leftMargin, int &rightMargin, int &numberWidth,
-		int spacing, bool &enabled, bool update);
-	void calcOptionHeight(HDC hdc, OptionUIList::iterator &it, int &y, int width, int leftMargin,
-		int rightMargin, int numberWidth, int &optimalWidth, bool update,
-		bool enabled);
+		int &leftMargin, int &rightMargin, int spacing, bool &enabled,
+		bool update);
+	void calcOptionHeight(HDC hdc, OptionUIList::iterator &it, int &y,
+		int width, int leftMargin, int rightMargin, int numberWidth,
+		int &optimalWidth, bool update, bool enabled);
 
 
 	virtual BOOL doInitDialog(HWND /*hKbControl*/);
