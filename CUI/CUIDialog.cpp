@@ -203,15 +203,18 @@ LRESULT CUIDialog::doCommand(
 	int commandId,
 	HWND control)
 {
-	if (commandId == IDOK)
+	if (notifyCode == BN_CLICKED)
 	{
-		doOK();
-		return 0;
-	}
-	else if (commandId == IDCANCEL)
-	{
-		doCancel();
-		return 0;
+		if (commandId == IDOK)
+		{
+			doOK();
+			return 0;
+		}
+		else if (commandId == IDCANCEL)
+		{
+			doCancel();
+			return 0;
+		}
 	}
 	else if (notifyCode == EN_CHANGE)
 	{

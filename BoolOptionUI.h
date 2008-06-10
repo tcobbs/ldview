@@ -15,6 +15,8 @@ public:
 	virtual void commit(void);
 	virtual void setEnabled(bool value);
 	virtual void getRect(RECT *rect);
+	virtual bool getEnabled(void);
+	virtual void doClick(HWND control);
 
 protected:
 	HWND m_hCheck;

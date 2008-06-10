@@ -42,12 +42,34 @@ void ExportOptionsDialog::initCanvasOptions(void)
 {
 	LDExporterSettingList &settings = m_exporter->getSettings();
 	LDExporterSettingList::iterator it;
+	std::stack<int> groupSizes;
+	int groupSize = 0;
 
 	for (it = settings.begin(); it != settings.end(); it++)
 	{
+		bool inGroup = groupSize > 0;
+
+		if (groupSize > 0)
+		{
+			groupSize--;
+			if (groupSize == 0)
+			{
+				groupSize = groupSizes.top();
+				groupSizes.pop();
+			}
+		}
 		if (it->getGroupSize() > 0)
 		{
-			m_canvas->addGroup(*it);
+			if (inGroup)
+			{
+				m_canvas->addBoolSetting(*it);
+			}
+			else
+			{
+				m_canvas->addGroup(*it);
+			}
+			groupSizes.push(groupSize);
+			groupSize = it->getGroupSize();
 		}
 		else
 		{
@@ -149,21 +171,6 @@ LRESULT ExportOptionsDialog::doEndLabelEdit(NMLVDISPINFO * /*notification*/)
 	return FALSE;
 }
 
-//LRESULT ExportOptionsDialog::doNotify(int controlId, LPNMHDR notification)
-//{
-//	if (controlId == IDC_OPTIONS_LIST)
-//	{
-//		switch (notification->code)
-//		{
-//		case LVN_BEGINLABELEDIT:
-//			return doBeginLabelEdit((NMLVDISPINFO *)notification);
-//		case LVN_ENDLABELEDIT:
-//			return doEndLabelEdit((NMLVDISPINFO *)notification);
-//		}
-//	}
-//	return 1;
-//}
-
 LRESULT ExportOptionsDialog::doMouseWheel(
 	short keyFlags,
 	short zDelta,
@@ -179,4 +186,23 @@ LRESULT ExportOptionsDialog::doMouseWheel(
 		m_scroller->doMouseWheel(keyFlags, zDelta, xPos, yPos);
 	}
 	return 0;
+}
+
+LRESULT ExportOptionsDialog::doCommand(
+	int notifyCode,
+	int commandId,
+	HWND control)
+{
+	if (notifyCode == BN_SETFOCUS)
+	{
+		char className[128];
+
+		GetClassName(control, className, COUNT_OF(className));
+		if (strcmp(className, WC_BUTTON) == 0)
+		{
+			RedrawWindow(m_canvas->getHWindow(), NULL, NULL,
+				RDW_INVALIDATE | RDW_ALLCHILDREN);
+		}
+	}
+	return CUIDialog::doCommand(notifyCode, commandId, control);
 }

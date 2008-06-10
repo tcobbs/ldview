@@ -123,7 +123,7 @@ protected:
 	virtual void addEdgesSettings(void) const;
 	virtual void addGeometrySettings(void) const;
 	virtual int getNumEdgesSettings(void) const { return 2; }
-	virtual int getNumGeometrySettings(void) const { return 13; }
+	virtual int getNumGeometrySettings(void) const { return 3; }
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);

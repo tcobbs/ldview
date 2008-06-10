@@ -1,4 +1,5 @@
 #include "BoolOptionUI.h"
+#include "OptionsCanvas.h"
 #include <CUI/CUIWindow.h>
 #include <windowsx.h>
 #include <LDExporter/LDExporterSetting.h>
@@ -10,6 +11,8 @@
 BoolOptionUI::BoolOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 OptionUI(parent, setting)
 {
+	RECT marginRect = { 5, 0, 0, 0 };
+
 	m_hCheck = CUIWindow::createWindowExUC(0, WC_BUTTONUC,
 		setting.getName().c_str(),
 		BS_NOTIFY | BS_AUTOCHECKBOX | BS_MULTILINE | WS_CHILD | WS_TABSTOP, 0,
@@ -21,6 +24,9 @@ OptionUI(parent, setting)
 	{
 		SendMessage(m_hCheck, BM_SETCHECK, TRUE, 0);
 	}
+	SetWindowLongPtr(m_hCheck, GWLP_USERDATA, (LONG_PTR)this);
+	MapDialogRect(m_hParentWnd, &marginRect);
+	m_leftGroupMargin = marginRect.left;
 }
 
 int BoolOptionUI::updateLayout(
@@ -68,4 +74,24 @@ void BoolOptionUI::getRect(RECT *rect)
 {
 	GetWindowRect(m_hCheck, rect);
 	CUIWindow::screenToClient(m_hParentWnd, rect);
+}
+
+bool BoolOptionUI::getEnabled(void)
+{
+	if (m_setting->getGroupSize() > 0)
+	{
+		return CUIWindow::checkGet(m_hCheck);
+	}
+	else
+	{
+		return true;
+	}
+}
+
+void BoolOptionUI::doClick(HWND control)
+{
+	if (m_setting->getGroupSize() > 0 && control == m_hCheck)
+	{
+		m_canvas->updateEnabled();
+	}
 }

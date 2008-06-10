@@ -52,9 +52,9 @@ m_hLabel(NULL)
 			WM_GETFONT, 0, 0), 0);
 	}
 	MapDialogRect(m_hParentWnd, &marginRect);
-	m_leftMargin = marginRect.left;
-	m_rightMargin = marginRect.right;
-	m_bottomMargin = marginRect.bottom;
+	m_leftGroupMargin = marginRect.left;
+	m_rightGroupMargin = marginRect.right;
+	m_bottomGroupMargin = marginRect.bottom;
 }
 
 int GroupOptionUI::updateLayout(
@@ -130,7 +130,7 @@ void GroupOptionUI::close(int y)
 
 	GetWindowRect(m_hBox, &rect);
 	CUIWindow::screenToClient(GetParent(m_hBox), &rect);
-	rect.bottom = y + m_bottomMargin;
+	rect.bottom = y + m_bottomGroupMargin;
 	MoveWindow(m_hBox, rect.left, rect.top, rect.right - rect.left,
 		rect.bottom - rect.top, FALSE);
 }
@@ -146,7 +146,6 @@ bool GroupOptionUI::getEnabled(void)
 		return true;
 	}
 }
-
 
 void GroupOptionUI::setEnabled(bool value)
 {

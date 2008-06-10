@@ -14,9 +14,6 @@ public:
 		int &optimalWidth);
 	virtual bool validate(ucstring &/*error*/) { return true; }
 	virtual void commit(void);
-	virtual int getLeftMargin(void) const { return m_leftMargin; }
-	virtual int getRightMargin(void) const { return m_rightMargin; }
-	virtual int getBottomMargin(void) const { return m_bottomMargin; }
 	virtual void close(int y);
 	virtual bool getEnabled(void);
 	virtual void setEnabled(bool value);
@@ -27,9 +24,6 @@ protected:
 	HWND m_hBox;
 	HWND m_hCheck;
 	HWND m_hLabel;
-	int m_leftMargin;
-	int m_rightMargin;
-	int m_bottomMargin;
 	ucstring m_label;
 };
 

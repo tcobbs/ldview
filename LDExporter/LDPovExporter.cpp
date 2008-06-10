@@ -109,7 +109,7 @@ void LDPovExporter::initSettings(void) const
 		udKey("UnmirrorStuds").c_str()));
 	LDExporter::initSettings();
 	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
-		2));
+		3));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
 		udKey("InlinePov").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),

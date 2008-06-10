@@ -21,6 +21,10 @@ public:
 	virtual void setEnabled(bool value) = 0;
 	virtual void getRect(RECT *rect) = 0;
 	virtual void doClick(HWND /*control*/) {}
+	virtual int getLeftGroupMargin(void) const { return m_leftGroupMargin; }
+	virtual int getRightGroupMargin(void) const { return m_rightGroupMargin; }
+	virtual int getBottomGroupMargin(void) const { return m_bottomGroupMargin; }
+	virtual bool getEnabled(void) { return true; }
 
 protected:
 	virtual int calcTextHeight(HDC hdc, int width, int &optimalWidth);
@@ -32,6 +36,9 @@ protected:
 	HWND m_hParentWnd;
 	bool m_shown;
 	LDExporterSetting *m_setting;
+	int m_leftGroupMargin;
+	int m_rightGroupMargin;
+	int m_bottomGroupMargin;
 };
 
 #endif // __OptionUI_H__

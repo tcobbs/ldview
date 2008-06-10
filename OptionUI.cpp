@@ -12,7 +12,10 @@ OptionUI::OptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 m_canvas(parent),
 m_hParentWnd(parent->getHWindow()),
 m_shown(false),
-m_setting(&setting)
+m_setting(&setting),
+m_leftGroupMargin(0),
+m_rightGroupMargin(0),
+m_bottomGroupMargin(0)
 {
 }
 

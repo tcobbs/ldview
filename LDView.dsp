@@ -286,6 +286,10 @@ SOURCE=.\PartsListDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PathOptionUI.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SSConfigure.cpp
 # End Source File
 # Begin Source File
@@ -299,6 +303,10 @@ SOURCE=.\SSPassword.cpp
 # Begin Source File
 
 SOURCE=.\SSPreview.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\StringOptionUI.cpp
 # End Source File
 # Begin Source File
 
@@ -394,6 +402,10 @@ SOURCE=.\PartsListDialog.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\PathOptionUI.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
@@ -411,6 +423,10 @@ SOURCE=.\SSPassword.h
 # Begin Source File
 
 SOURCE=.\SSPreview.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\StringOptionUI.h
 # End Source File
 # Begin Source File
 

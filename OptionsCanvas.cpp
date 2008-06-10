@@ -84,7 +84,7 @@ BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
 }
 
 void OptionsCanvas::closeGroup(
-	GroupOptionUI *&currentGroup,
+	GroupOptionUI *currentGroup,
 	int &y,
 	int &optimalWidth,
 	int &leftMargin,
@@ -98,13 +98,75 @@ void OptionsCanvas::closeGroup(
 	{
 		currentGroup->close(y - spacing);
 	}
-	y += currentGroup->getBottomMargin();
+	y += currentGroup->getBottomGroupMargin();
 	optimalWidth += leftMargin;
 	numberWidth -= leftMargin;
 	leftMargin = 0;
 	rightMargin = 0;
 	enabled = true;
-	currentGroup = NULL;
+}
+
+void OptionsCanvas::calcOptionHeight(
+	HDC hdc,
+	OptionUIList::iterator &it,
+	int &y,
+	int width,
+	int leftMargin,
+	int rightMargin,
+	int numberWidth,
+	int &optimalWidth,
+	bool update,
+	bool enabled)
+{
+	OptionUI *optionUI = *it;
+	LDExporterSetting *setting = optionUI->getSetting();
+	LDExporterSetting::Type type = setting->getType();
+	int otherWidth = 0;
+
+	if (type == LDExporterSetting::TLong ||
+		type == LDExporterSetting::TFloat)
+	{
+		y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
+			numberWidth - leftMargin - rightMargin, update, optimalWidth) +
+			m_spacing;
+	}
+	else
+	{
+		y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
+			width - leftMargin - rightMargin, update, otherWidth) +
+			m_spacing;
+	}
+	optionUI->setEnabled(enabled);
+	if (setting->getGroupSize() > 0)
+	{
+		enabled = optionUI->getEnabled();
+		if (leftMargin == 0)
+		{
+			leftMargin += optionUI->getLeftGroupMargin();
+		}
+		else
+		{
+			leftMargin += optionUI->getLeftGroupMargin() * 2;
+		}
+		rightMargin += optionUI->getRightGroupMargin();
+		optimalWidth -= leftMargin;
+		numberWidth += leftMargin;
+		for (int i = 0; i < setting->getGroupSize(); i++)
+		{
+			it++;
+			if (it == m_optionUIs.end())
+			{
+				throw "Group size bigger than total number of settings left.";
+			}
+			calcOptionHeight(hdc, it, y, width, leftMargin, rightMargin, numberWidth,
+				optimalWidth, update, enabled);
+		}
+		if (optionUI->getBottomGroupMargin() > 0)
+		{
+			closeGroup((GroupOptionUI *)optionUI, y, optimalWidth, leftMargin,
+				rightMargin, numberWidth, m_spacing, enabled, update);
+		}
+	}
 }
 
 int OptionsCanvas::calcHeight(
@@ -113,17 +175,11 @@ int OptionsCanvas::calcHeight(
 	bool update /*= false*/)
 {
 	int y = m_margin;
-	HDC hdc = GetDC(hWindow);
 	int width = newWidth - m_margin * 2;
+	int numberWidth = width;
+	HDC hdc = GetDC(hWindow);
 	HFONT hNewFont = (HFONT)SendMessage(hWindow, WM_GETFONT, 0, 0);
 	HFONT hOldFont = (HFONT)SelectObject(hdc, hNewFont);
-	int otherWidth = 0;
-	int numberWidth = width;
-	GroupOptionUI *currentGroup = NULL;
-	int groupCount = 0;
-	int leftMargin = 0;
-	int rightMargin = 0;
-	bool enabled = true;
 
 	if (update)
 	{
@@ -132,51 +188,8 @@ int OptionsCanvas::calcHeight(
 	for (OptionUIList::iterator it = m_optionUIs.begin();
 		it != m_optionUIs.end(); it++)
 	{
-		OptionUI *optionUI = *it;
-		LDExporterSetting *setting = optionUI->getSetting();
-		LDExporterSetting::Type type = setting->getType();
-
-		if (groupCount > 0 && setting->getGroupSize() > 0)
-		{
-			// Groups can't be nested, so if we see a group when we're not done
-			// with a previous group, just finish the previous one anyway.
-			closeGroup(currentGroup, y, optimalWidth, leftMargin,
-				rightMargin, numberWidth, m_spacing, enabled, update);
-			groupCount = 0;
-		}
-		if (type == LDExporterSetting::TLong ||
-			type == LDExporterSetting::TFloat)
-		{
-			y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
-				numberWidth - leftMargin - rightMargin, update, optimalWidth) +
-				m_spacing;
-		}
-		else
-		{
-			y += optionUI->updateLayout(hdc, m_margin + leftMargin, y,
-				width - leftMargin - rightMargin, update, otherWidth) +
-				m_spacing;
-		}
-		optionUI->setEnabled(enabled);
-		if (currentGroup)
-		{
-			groupCount--;
-			if (groupCount == 0)
-			{
-				closeGroup(currentGroup, y, optimalWidth, leftMargin,
-					rightMargin, numberWidth, m_spacing, enabled, update);
-			}
-		}
-		if (setting->getGroupSize() > 0)
-		{
-			currentGroup = (GroupOptionUI *)optionUI;
-			groupCount = setting->getGroupSize();
-			leftMargin = currentGroup->getLeftMargin();
-			rightMargin = currentGroup->getRightMargin();
-			optimalWidth -= leftMargin;
-			numberWidth += leftMargin;
-			enabled = currentGroup->getEnabled();
-		}
+		calcOptionHeight(hdc, it, y, width, 0, 0, numberWidth, optimalWidth,
+			update, true);
 	}
 	SelectObject(hdc, hOldFont);
 	ReleaseDC(hWindow, hdc);
