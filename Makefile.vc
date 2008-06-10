@@ -6,6 +6,7 @@ CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\BoundingBoxDialog.obj \
 	 $(OBJDIR)\ExportOptionsDialog.obj \
 	 $(OBJDIR)\FloatOptionUI.obj \
+	 $(OBJDIR)\GroupOptionUI.obj \
 	 $(OBJDIR)\LDVExtensionsSetup.obj \
 	 $(OBJDIR)\LDViewMain.obj \
 	 $(OBJDIR)\LDViewPreferences.obj \
@@ -19,14 +20,15 @@ CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\OptionsCanvas.obj \
 	 $(OBJDIR)\OptionsScroller.obj \
 	 $(OBJDIR)\OptionUI.obj \
+	 $(OBJDIR)\PathOptionUI.obj \
 	 $(OBJDIR)\SSConfigure.obj \
+	 $(OBJDIR)\StringOptionUI.obj \
 	 $(OBJDIR)\SSModelWindow.obj \
 	 $(OBJDIR)\SSPassword.obj \
 	 $(OBJDIR)\SSPreview.obj \
 	 $(OBJDIR)\TbButtonInfo.obj \
 	 $(OBJDIR)\ToolbarStrip.obj \
 	 $(OBJDIR)\PartsListDialog.obj \
-	 $(OBJDIR)\BoundingBoxDialog.obj \
 	 $(OBJDIR)\LatLonDialog.obj \
        $(OBJDIR)\MpdDialog.obj
 
