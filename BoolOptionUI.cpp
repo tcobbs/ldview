@@ -11,7 +11,7 @@
 BoolOptionUI::BoolOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 OptionUI(parent, setting)
 {
-	RECT marginRect = { 5, 0, 0, 0 };
+	RECT marginRect = { 10, 0, 0, 0 };
 
 	m_hCheck = CUIWindow::createWindowExUC(0, WC_BUTTONUC,
 		setting.getName().c_str(),
