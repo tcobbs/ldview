@@ -11,6 +11,15 @@ class OptionsScroller;
 
 typedef std::list<OptionUI *> OptionUIList;
 
+/*
+OptionsCanvas
+
+Window that is designed to be like a form for options.  The window is sized to
+be tall enough to hold all options, so it needs to be inside another window that
+scrolls.  Note that this uses a dialog box in order to get the standard dialog
+box backround painting and keyboard navigation.  The dialog resource is
+completely empty.
+*/
 class OptionsCanvas: public CUIDialog
 {
 public:
@@ -27,9 +36,6 @@ public:
 protected:
 	virtual ~OptionsCanvas(void);
 	virtual void dealloc(void);
-	virtual void closeGroup(GroupOptionUI *currentGroup, int &y,
-		int &leftMargin, int &rightMargin, int spacing, bool &enabled,
-		bool update);
 	void calcOptionHeight(HDC hdc, OptionUIList::iterator &it, int &y,
 		int width, int leftMargin, int rightMargin, int numberWidth,
 		int &optimalWidth, bool update, bool enabled);
