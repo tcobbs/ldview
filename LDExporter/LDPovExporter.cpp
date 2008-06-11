@@ -108,6 +108,10 @@ void LDPovExporter::initSettings(void) const
 	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
 		udKey("UnmirrorStuds").c_str()));
 	LDExporter::initSettings();
+	// Uncomment the below to test top-level number settings to verify
+	// alignment.
+	//addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
+	//	3);
 	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
 		3));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
