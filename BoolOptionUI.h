@@ -4,6 +4,11 @@
 #include "OptionUI.h"
 #include <TCFoundation/mystring.h>
 
+/*
+BoolOptionUI
+
+This class is used for a boolean setting.  It displays a check box.
+*/
 class BoolOptionUI: public OptionUI
 {
 public:

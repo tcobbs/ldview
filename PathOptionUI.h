@@ -4,6 +4,13 @@
 #include "StringOptionUI.h"
 #include <TCFoundation/mystring.h>
 
+/*
+StringOptionUI
+
+This class is used for a path setting.  It is identical to a string setting,
+except that the edit box is made narrower in order to accomodate a browse
+button on its right.
+*/
 class PathOptionUI: public StringOptionUI
 {
 public:
@@ -19,6 +26,7 @@ public:
 protected:
 	virtual int getEditWidth(int width)
 	{
+		// Leave space for the browse button to the right of the edit control.
 		return width - m_spacing - m_browseWidth;
 	}
 

@@ -6,6 +6,13 @@
 
 class OptionsCanvas;
 
+/*
+OptionsScroller
+
+Window that holds OptionsCanvas, which can have an arbitrary height, and
+provides a vertical scroll bar when the height of the OptionsCanvas is larger
+than the client rect of this window.
+*/
 class OptionsScroller: public CUIDialog
 {
 public:
