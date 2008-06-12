@@ -42,11 +42,15 @@ void ExportOptionsDialog::initCanvasOptions(void)
 {
 	LDExporterSettingList &settings = m_exporter->getSettings();
 	LDExporterSettingList::iterator it;
+	// All the groupSize stuff here is done to prevent group settings from
+	// being nested.  Nested groups get bool settings.
 	std::stack<int> groupSizes;
 	int groupSize = 0;
 
 	for (it = settings.begin(); it != settings.end(); it++)
 	{
+		// Track whether we were inside a group at the beginning of this
+		// iteration of the loop.
 		bool inGroup = groupSize > 0;
 
 		if (groupSize > 0)
@@ -54,25 +58,36 @@ void ExportOptionsDialog::initCanvasOptions(void)
 			groupSize--;
 			if (groupSize == 0)
 			{
+				// We just got to the end of a group, so pop the previous
+				// groupSize value off the groupSizes stack.
 				groupSize = groupSizes.top();
 				groupSizes.pop();
 			}
 		}
 		if (it->getGroupSize() > 0)
 		{
+			// This item is the start of a group.
 			if (inGroup)
 			{
+				// At the beginning of this iteration we were in a group, so
+				// use a bool setting instead of a group setting.
 				m_canvas->addBoolSetting(*it);
 			}
 			else
 			{
+				// Top level group; use a group setting.
 				m_canvas->addGroup(*it);
 			}
+			// We're now in a new group, so push the current groupSize onto
+			// the groupSizes stack.
 			groupSizes.push(groupSize);
+			// Update groupSize based on the new group's size.
 			groupSize = it->getGroupSize();
 		}
 		else
 		{
+			// This setting isn't the start of a group; add the appropriate type
+			// of option UI to the canvas.
 			switch (it->getType())
 			{
 			case LDExporterSetting::TBool:
@@ -140,12 +155,15 @@ BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
 	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
 	initialized = TRUE;
+	// Keep a different autosave setting for each export file type.
 	setAutosaveName((extension + "ExportOptions").c_str());
 	return CUIDialog::doInitDialog(hKbControl);
 }
 
 void ExportOptionsDialog::doOK(void)
 {
+	// If there is a validation error, commitSettings will show the error to the
+	// user and return false.
 	if (m_canvas->commitSettings())
 	{
 		CUIDialog::doOK();
@@ -161,16 +179,6 @@ LRESULT ExportOptionsDialog::doSize(WPARAM sizeType, int newWidth, int newHeight
 	return CUIDialog::doSize(sizeType, newWidth, newHeight);
 }
 
-LRESULT ExportOptionsDialog::doBeginLabelEdit(NMLVDISPINFO * /*notification*/)
-{
-	return FALSE;
-}
-
-LRESULT ExportOptionsDialog::doEndLabelEdit(NMLVDISPINFO * /*notification*/)
-{
-	return FALSE;
-}
-
 LRESULT ExportOptionsDialog::doMouseWheel(
 	short keyFlags,
 	short zDelta,
@@ -183,6 +191,9 @@ LRESULT ExportOptionsDialog::doMouseWheel(
 	GetWindowRect(m_scroller->getHWindow(), &rect);
 	if (PtInRect(&rect, point))
 	{
+		// I don't know WHY we get the mouse wheel event istead of the scroller
+		// window (which is set up to handle it), but we do.  It's probably
+		// related to the dialog event forwarding for keyboard navigation.
 		m_scroller->doMouseWheel(keyFlags, zDelta, xPos, yPos);
 	}
 	return 0;
@@ -200,6 +211,12 @@ LRESULT ExportOptionsDialog::doCommand(
 		GetClassName(control, className, COUNT_OF(className));
 		if (strcmp(className, WC_BUTTON) == 0)
 		{
+			// For some reason, when the focus changes betwen the OK and Cancel
+			// buttons, the group box borders in the canvas get redrawn without
+			// redrawing the labels or check boxes that are over the top of
+			// them.  This causes there to be a line through their titles.  I
+			// don't have any idea why this happens, but redrawing the canvas
+			// and all its children fixes the problem.
 			RedrawWindow(m_canvas->getHWindow(), NULL, NULL,
 				RDW_INVALIDATE | RDW_ALLCHILDREN);
 		}

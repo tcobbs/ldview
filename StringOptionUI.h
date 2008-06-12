@@ -4,6 +4,12 @@
 #include "OptionUI.h"
 #include <TCFoundation/mystring.h>
 
+/*
+StringOptionUI
+
+This class is used for a string setting.  It displays the name of the setting on
+one or more lines, followed by an edit control that fills the following line.
+*/
 class StringOptionUI: public OptionUI
 {
 public:

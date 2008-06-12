@@ -7,6 +7,12 @@
 class LDExporterSetting;
 class OptionsCanvas;
 
+/*
+OptionUI
+
+This is the base class for all the type-specific option UI classes.  Note that
+many of its functions are pure virtuals.
+*/
 class OptionUI
 {
 public:

@@ -4,6 +4,14 @@
 #include "OptionUI.h"
 #include <TCFoundation/mystring.h>
 
+/*
+GroupOptionUI
+
+This class is used for a grouping of settings.  It displays a group box.  It
+will display a check box in place of the label at the top of the group box if
+the given setting is a boolean setting.  If it does this, unchecking the check
+disables all the contents of the group.
+*/
 class GroupOptionUI: public OptionUI
 {
 public:

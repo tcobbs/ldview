@@ -4,6 +4,12 @@
 #include "NumberOptionUI.h"
 #include <TCFoundation/mystring.h>
 
+/*
+LongOptionUI
+
+This class is used for a long setting.  It displays the name of the setting on
+the left and an edit control on the right.
+*/
 class LongOptionUI: public NumberOptionUI
 {
 public:

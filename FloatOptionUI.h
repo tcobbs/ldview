@@ -4,6 +4,12 @@
 #include "NumberOptionUI.h"
 #include <TCFoundation/mystring.h>
 
+/*
+FloatOptionUI
+
+This class is used for a float setting.  It displays the name of the setting on
+the left and an edit control on the right.
+*/
 class FloatOptionUI: public NumberOptionUI
 {
 public:

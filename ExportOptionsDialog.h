@@ -26,8 +26,6 @@ protected:
 		HWND control);
 
 	virtual void doOK(void);
-	virtual LRESULT doBeginLabelEdit(NMLVDISPINFO *notification);
-	virtual LRESULT doEndLabelEdit(NMLVDISPINFO *notification);
 
 	void initCanvas(void);
 	void initCanvasOptions(void);
