@@ -39,6 +39,10 @@ typedef void (_stdcall *PFNSETTHEMEAPPPROPERTIED)(DWORD dwFlags);
 typedef DWORD (_stdcall *PFNGETTHEMEAPPPROPERTIED)(void);
 typedef HRESULT (_stdcall *PFNGETTHEMERECT)(HTHEME hTheme, int iPartId,
 	int iStateId, int iPropId, RECT *pRect);
+typedef HRESULT (_stdcall *PFNGETTHEMEPOSITION)(HTHEME hTheme, int iPartId,
+	int iStateId, int iPropId, POINT *pPoint);
+typedef HRESULT (_stdcall *PFNGETTHEMEMARGINS)(HTHEME hTheme, HDC hdc,
+	int iPartId, int iStateId, int iPropId, RECT *pRect, MARGINS *pMargins);
 typedef HRESULT (_stdcall *PFNGETTHEMETEXTEXTENT)(HTHEME hTheme, HDC hdc,
     int iPartId, int iStateId, LPCWSTR pszText, int iCharCount,
 	DWORD dwTextFlags, const RECT *pBoundingRect, RECT *pExtentRect);
@@ -76,6 +80,10 @@ public:
 		int iPropId, COLORREF *pColor);
 	static HRESULT getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
 		int iPropId, RECT *pRect);
+	static HRESULT getThemePosition(HTHEME hTheme, int iPartId, int iStateId,
+		int iPropId, POINT *pPoint);
+	static HRESULT getThemeMargins(HTHEME hTheme, HDC hdc, int iPartId,
+		int iStateId, int iPropId, RECT *pRect, MARGINS *pMargins);
 	static void setThemeAppProperties(DWORD dwFlags);
 	static DWORD getThemeAppProperties(void);
 	static HRESULT getThemeTextExtent(HTHEME hTheme, HDC hdc, int iPartId,
@@ -107,6 +115,8 @@ protected:
 	static PFNSETTHEMEAPPPROPERTIED sm_setThemeAppProperties;
 	static PFNGETTHEMEAPPPROPERTIED sm_getThemeAppProperties;
 	static PFNGETTHEMERECT sm_getThemeRect;
+	static PFNGETTHEMEPOSITION sm_getThemePosition;
+	static PFNGETTHEMEMARGINS sm_getThemeMargins;
 	static PFNGETTHEMETEXTEXTENT sm_getThemeTextExtent;
 	static PFNDDRAWTHEMEPARENTBACKGROUND sm_drawThemeParentBackground;
 	static PFNGETTHEMEPARTSIZE sm_getThemePartSize;

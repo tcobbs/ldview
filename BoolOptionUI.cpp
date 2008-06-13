@@ -11,7 +11,7 @@
 BoolOptionUI::BoolOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 OptionUI(parent, setting)
 {
-	RECT marginRect = { 10, 0, 0, 0 };
+	RECT mapRect = { 10, 0, 0, 0 };
 
 	// Note that the window location in this constructor is just a placeholder.
 	// The window will never be visible at that locations and size.
@@ -32,9 +32,11 @@ OptionUI(parent, setting)
 	SetWindowLongPtr(m_hCheck, GWLP_USERDATA, (LONG_PTR)this);
 	// Convert our desired left margin into dialog box units.  This margin is
 	// used if this setting has group members under it.  The given margin is
-	// applied to those controls, not this one.
-	MapDialogRect(m_hParentWnd, &marginRect);
-	m_leftGroupMargin = marginRect.left;
+	// applied to those controls, not this one.  The check box width is used
+	// when calculating the size of a check box when themes are disabled or
+	// don't exist.
+	MapDialogRect(m_hParentWnd, &mapRect);
+	m_leftGroupMargin = mapRect.left;
 }
 
 // This does all the work of calculating the location and size of the check box
@@ -47,21 +49,22 @@ int BoolOptionUI::updateLayout(
 	bool update,
 	int &optimalWidth)
 {
-	// The check box is 16 pixels wide.  (Need to check with large fonts.)
-	int textWidth = width - 16;
-	int newWidth = 0;
-	int height = calcTextHeight(hdc, textWidth, newWidth);
+	//int textWidth = width;
+	//int newWidth = 0;
+	int height = calcCheckHeight(m_hCheck, hdc, m_checkBoxWidth, width,
+		optimalWidth);
+	//int height = calcTextHeight(hdc, textWidth, newWidth);
 
 	// I have absolutely no idea why the following needs to be 32 instead of 16,
 	// but if it is 16, the calculated widths come out wrong.
-	newWidth += 32;
-	if (newWidth > optimalWidth)
-	{
-		// Technically, we don't need to bother with this, since this particular
-		// width is never used, but do it anyway for consistency, and in case it
-		// does get used in the future.
-		optimalWidth = newWidth;
-	}
+	//newWidth += m_checkBoxWidth;
+	//if (newWidth > optimalWidth)
+	//{
+	//	// Technically, we don't need to bother with this, since this particular
+	//	// width is never used, but do it anyway for consistency, and in case it
+	//	// does get used in the future.
+	//	optimalWidth = newWidth;
+	//}
 	if (update)
 	{
 		// Note that the window gets sized and placed before is is shown for the

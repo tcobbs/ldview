@@ -107,13 +107,15 @@ int GroupOptionUI::updateLayout(
 	}
 	if (m_hCheck != NULL)
 	{
-		// The check is 16 pixels wide (need to check if this needs to be
-		// another number that gets converted into dialog units).
-		textWidth -= 16;
-		// The check box is acting as the label, so just use the same height
-		// variable.  The two are mutually exclusive.
-		labelHeight = calcTextHeight(hdc, m_label, textWidth, labelWidth);
-		labelWidth += 16;
+		labelHeight = calcCheckHeight(m_hCheck, hdc, m_checkBoxWidth, textWidth,
+			labelWidth);
+		//// The check is 16 pixels wide (need to check if this needs to be
+		//// another number that gets converted into dialog units).
+		//textWidth -= 16;
+		//// The check box is acting as the label, so just use the same height
+		//// variable.  The two are mutually exclusive.
+		//labelHeight = calcTextHeight(hdc, m_label, textWidth, labelWidth);
+		//labelWidth += 16;
 	}
 	if (labelWidth > optimalWidth)
 	{

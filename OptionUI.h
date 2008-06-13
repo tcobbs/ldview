@@ -37,6 +37,8 @@ protected:
 
 	static int calcTextHeight(HDC hdc, const ucstring &text, int width,
 		int &optimalWidth);
+	static int calcCheckHeight(HWND hCheck, HDC hdc, int checkBoxWidth,
+		int width, int &optimalWidth);
 
 	OptionsCanvas *m_canvas;
 	HWND m_hParentWnd;
@@ -45,6 +47,7 @@ protected:
 	int m_leftGroupMargin;
 	int m_rightGroupMargin;
 	int m_bottomGroupMargin;
+	int m_checkBoxWidth;
 };
 
 #endif // __OptionUI_H__
