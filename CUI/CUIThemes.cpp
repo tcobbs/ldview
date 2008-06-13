@@ -21,6 +21,8 @@ PFNGETTHEMECOLOR CUIThemes::sm_getThemeColor = NULL;
 PFNSETTHEMEAPPPROPERTIED CUIThemes::sm_setThemeAppProperties = NULL;
 PFNGETTHEMEAPPPROPERTIED CUIThemes::sm_getThemeAppProperties = NULL;
 PFNGETTHEMERECT CUIThemes::sm_getThemeRect = NULL;
+PFNGETTHEMEPOSITION CUIThemes::sm_getThemePosition = NULL;
+PFNGETTHEMEMARGINS CUIThemes::sm_getThemeMargins = NULL;
 PFNGETTHEMETEXTEXTENT CUIThemes::sm_getThemeTextExtent = NULL;
 PFNDDRAWTHEMEPARENTBACKGROUND CUIThemes::sm_drawThemeParentBackground = NULL;
 PFNGETTHEMEPARTSIZE CUIThemes::sm_getThemePartSize = NULL;
@@ -79,6 +81,12 @@ void CUIThemes::init(void)
 				"GetThemeAppProperties");
 			sm_getThemeRect = (PFNGETTHEMERECT)GetProcAddress(sm_hModThemes,
 				"GetThemeRect");
+			sm_getThemePosition =
+				(PFNGETTHEMEPOSITION)GetProcAddress(sm_hModThemes,
+				"GetThemePosition");
+			sm_getThemeMargins =
+				(PFNGETTHEMEMARGINS)GetProcAddress(sm_hModThemes,
+				"GetThemeMargins");
 			sm_getThemeTextExtent =
 				(PFNGETTHEMETEXTEXTENT)GetProcAddress(sm_hModThemes,
 				"GetThemeTextExtent");
@@ -103,10 +111,11 @@ void CUIThemes::init(void)
 				&& sm_drawThemeText && sm_getThemeBackgroundContentRect &&
 				sm_drawThemeEdge && sm_setWindowTheme && sm_getWindowTheme &&
 				sm_getThemeColor && sm_setThemeAppProperties &&
-				sm_getThemeRect && sm_getThemeTextExtent &&
-				sm_drawThemeParentBackground && sm_getThemePartSize &&
-				sm_enableThemeDialogTexture && sm_getThemeSysColor &&
-				sm_isThemeActive && sm_getThemeAppProperties)
+				sm_getThemeRect && sm_getThemePosition && sm_getThemeMargins &&
+				sm_getThemeTextExtent && sm_drawThemeParentBackground &&
+				sm_getThemePartSize && sm_enableThemeDialogTexture &&
+				sm_getThemeSysColor && sm_isThemeActive &&
+				sm_getThemeAppProperties)
 			{
 				sm_themeLibLoaded = true;			
 			}
@@ -277,6 +286,43 @@ HRESULT CUIThemes::getThemeRect(HTHEME hTheme, int iPartId, int iStateId,
 	if (sm_themeLibLoaded)
 	{
 		return sm_getThemeRect(hTheme, iPartId, iStateId, iPropId, pRect);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+HRESULT CUIThemes::getThemePosition(
+	HTHEME hTheme,
+	int iPartId,
+	int iStateId,
+	int iPropId,
+	POINT *pPoint)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemePosition(hTheme, iPartId, iStateId, iPropId, pPoint);
+	}
+	else
+	{
+		return E_NOTIMPL;
+	}
+}
+
+HRESULT CUIThemes::getThemeMargins(
+	HTHEME hTheme,
+	HDC hdc,
+	int iPartId,
+	int iStateId,
+	int iPropId,
+	RECT *pRect,
+	MARGINS *pMargins)
+{
+	if (sm_themeLibLoaded)
+	{
+		return sm_getThemeMargins(hTheme, hdc, iPartId, iStateId, iPropId,
+			pRect, pMargins);
 	}
 	else
 	{

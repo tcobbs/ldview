@@ -499,10 +499,12 @@ void CUIDialog::setIcon(int templateNumber)
 
 void CUIDialog::setIcon(char* templateName)
 {
-	HICON hBigIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON, 32,
-		32, LR_DEFAULTCOLOR);
-	HICON hSmallIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON, 16,
-		16, LR_DEFAULTCOLOR);
+	HICON hBigIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON,
+		GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON),
+		LR_DEFAULTCOLOR);
+	HICON hSmallIcon = (HICON)LoadImage(hInstance, templateName, IMAGE_ICON,
+		GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON),
+		LR_DEFAULTCOLOR);
 
 	SendMessage(hWindow, WM_SETICON, ICON_BIG, (LPARAM)hBigIcon);
 	SendMessage(hWindow, WM_SETICON, ICON_SMALL, (LPARAM)hSmallIcon);

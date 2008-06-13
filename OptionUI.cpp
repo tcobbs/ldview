@@ -1,6 +1,7 @@
 #include "OptionUI.h"
 #include "OptionsCanvas.h"
 #include <CUI/CUIWindow.h>
+#include <CUI/CUIThemes.h>
 #include <windowsx.h>
 #include <LDExporter/LDExporterSetting.h>
 
@@ -17,6 +18,14 @@ m_leftGroupMargin(0),
 m_rightGroupMargin(0),
 m_bottomGroupMargin(0)
 {
+	HDC hdc = GetDC(m_hParentWnd);
+	SIZE size;
+
+	GetTextExtentPoint32A(hdc, "X", 1, &size);
+	ReleaseDC(m_hParentWnd, hdc);
+	// The check box size is calculated based on the font height.  The + 4 is
+	// for the space between the box and the text.
+	m_checkBoxWidth = size.cy + 4;
 }
 
 // Just call calcTextHeight using the setting's name, which is the most common
@@ -24,6 +33,68 @@ m_bottomGroupMargin(0)
 int OptionUI::calcTextHeight(HDC hdc, int width, int &optimalWidth)
 {
 	return calcTextHeight(hdc, m_setting->getName(), width, optimalWidth);
+}
+
+// This calculates the height necessary in order to display a string of text in
+// a check button of a given width.  If the button has a theme, the theme system
+// is used for the calculation.  Otherwise, it's done manually.
+int OptionUI::calcCheckHeight(
+	HWND hCheck,
+	HDC hdc,
+	int checkBoxWidth,
+	int width,
+	int &optimalWidth)
+{
+	HTHEME hTheme = CUIThemes::getWindowTheme(hCheck);
+	ucstring text;
+	int height;
+	int newWidth = 0;
+
+	CUIWindow::windowGetText(hCheck, text);
+	if (hTheme == NULL)
+	{
+		// Do the calculation manually using the width available in the check
+		// button for the text.
+		height = calcTextHeight(hdc, text, width - checkBoxWidth, newWidth);
+		// The actual total width of the button is the width of the text plus
+		// the width of the check box.
+		newWidth += checkBoxWidth;
+	}
+	else
+	{
+		// Give it plenty of vertical space for the text.
+		RECT boundingRect = { 0, 0, width, 1024 };
+		RECT textRect;
+		SIZE boxSize;
+		int state = CBS_CHECKEDNORMAL;
+#ifdef TC_NO_UNICODE
+		std::wstring wText;
+
+		stringtowstring(wText, text);
+#else // TC_NO_UNICODE
+		std::wstring &wText = text;
+#endif // TC_NO_UNICODE
+		// Get the size of the check box.
+		CUIThemes::getThemePartSize(hTheme, hdc, BP_CHECKBOX, state, NULL,
+			TS_TRUE, &boxSize);
+		// The + 3 is for the space between the check box and the text.  (This
+		// was determined empirically, but works at both the standard font DPI
+		// of 96 and the "large fonts" DPI of 120.
+		boundingRect.left += boxSize.cx + 3;
+		// The following basically does exactly what we are trying to do in this
+		// method.  It calculates the width and height needed for the text
+		// string to fit into the given bounding box, wrapping as needed.
+		CUIThemes::getThemeTextExtent(hTheme, hdc, BP_CHECKBOX, state,
+			wText.c_str(), -1, DT_LEFT | DT_WORDBREAK | DT_CALCRECT,
+			&boundingRect, &textRect);
+		height = textRect.bottom - textRect.top;
+		newWidth = textRect.right;
+	}
+	if (newWidth > optimalWidth)
+	{
+		optimalWidth = newWidth;
+	}
+	return height;
 }
 
 // This calculates the height necessary in order to display a string of text in

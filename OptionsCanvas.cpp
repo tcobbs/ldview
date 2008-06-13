@@ -155,12 +155,7 @@ void OptionsCanvas::calcOptionHeight(
 		rightMargin += groupRightMargin;
 		// Since we've indented, we now have less space available for the label
 		// text.
-		optimalWidth -= groupLeftMargin;
-		// When numberWidth is used, leftMargin and rightMargin are subtracted
-		// from it.  However, leftMargin is added to the left x coordinate.  We
-		// need to adjust numberWidth by groupRightMargin to deal with it.  Note
-		// that for nested groups, groupRigthMargin is going to be 0.
-		numberWidth += groupRightMargin;
+		optimalWidth -= groupLeftMargin + groupRightMargin;
 		for (int i = 0; i < setting->getGroupSize(); i++)
 		{
 			// Note: the it parameter is a ref to an iterator, so we're actually
@@ -197,9 +192,8 @@ void OptionsCanvas::calcOptionHeight(
 			y += optionUI->getBottomGroupMargin();
 		}
 		// We're done with this indent level, so adjust optimalWidth to be
-		// appropriate for the calling indent level.  Note that we don't have to
-		// adjust numberWidth, because it's not passed by reference.
-		optimalWidth += groupLeftMargin;
+		// appropriate for the calling indent level.
+		optimalWidth += groupLeftMargin + groupRightMargin;
 	}
 }
 
