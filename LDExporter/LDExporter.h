@@ -24,6 +24,8 @@ public:
 	}
 	virtual void setCenter(const TCVector &center) { m_center = center; }
 	virtual void setRadius(TCFloat radius) { m_radius = radius; }
+	virtual void setBackgroundColor(TCFloat r, TCFloat g, TCFloat b,
+		TCFloat a = 1.0f);
 	virtual void setCamera(const LDLCamera &camera) { m_camera = camera; }
 	virtual int doExport(LDLModel *pTopModel);
 	virtual int doExport(TREModel *pTopModel);
@@ -58,6 +60,10 @@ protected:
 	TCVector m_boundingMax;
 	TCVector m_center;
 	TCFloat m_radius;
+	TCFloat m_backgroundR;
+	TCFloat m_backgroundG;
+	TCFloat m_backgroundB;
+	TCFloat m_backgroundA;
 
 	bool m_primSub;
 	float m_seamWidth;

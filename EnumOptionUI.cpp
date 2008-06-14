@@ -78,9 +78,9 @@ int EnumOptionUI::updateLayout(
 		// For some unknown reason, the height you provide for a combo box is
 		// the height when the drop-down list is visible.  The height of the
 		// actual box is auto-computed by the combo box based on its item height
-		// (I think).  So make one with enough space for 20 items.  Note that if
-		// there are less than 20 items, the height will automatically be made
-		// shorter.
+		// (I think).  So make one with enough vertical space for 20 items.
+		// Note that if there are less than 20 items, the height will
+		// automatically be made shorter.
 		MoveWindow(m_hCombo, x, comboY, width, m_comboHeight * 20, FALSE);
 		if (!m_shown)
 		{
@@ -114,6 +114,8 @@ void EnumOptionUI::getRect(RECT *rect)
 	GetWindowRect(m_hLabel, &labelRect);
 	GetWindowRect(m_hCombo, &comboRect);
 	CUIWindow::screenToClient(m_hParentWnd, &labelRect);
+	// Note that even though we set the combo box height to m_comboHeight * 20,
+	// the window rect we get back when asked is the shorter size.
 	CUIWindow::screenToClient(m_hParentWnd, &comboRect);
 	UnionRect(rect, &labelRect, &comboRect);
 }
