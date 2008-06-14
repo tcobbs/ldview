@@ -389,7 +389,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		fprintf(m_pPovFile, "\nbackground { color rgb <0, 0, 0> }\n\n");
+		fprintf(m_pPovFile, "\nbackground { color rgb <BG_R,BG_G,BG_B> }\n\n");
 		if (m_edges)
 		{
 			TCFloat matrix[16];
@@ -497,11 +497,17 @@ bool LDPovExporter::writeHeader(void)
 		fprintf(m_pPovFile, "#declare EDGERAD = %s;\n",
 			ftostr(m_edgeRadius).c_str());
 	}
+	fprintf(m_pPovFile, "#declare BG_R = %s;\t// %s\n",
+		ftostr(m_backgroundR).c_str(), (const char *)ls("PovBG_RDesc"));
+	fprintf(m_pPovFile, "#declare BG_G = %s;\t// %s\n",
+		ftostr(m_backgroundG).c_str(), (const char *)ls("PovBG_GDesc"));
+	fprintf(m_pPovFile, "#declare BG_B = %s;\t// %s\n",
+		ftostr(m_backgroundB).c_str(), (const char *)ls("PovBG_BDesc"));
 	if (m_xmlMap)
 	{
-		fprintf(m_pPovFile, "#declare ORIGVER = version;\n");
+		fprintf(m_pPovFile, "#declare ORIGVER = version;\t// %s\n",
+			(const char *)ls("OrigVerDesc"));
 	}
-	//fprintf(m_pPovFile, "#declare O7071 = sqrt(0.5);\n");
 	fprintf(m_pPovFile, "\n");
 
 	if (m_findReplacements)

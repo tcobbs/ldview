@@ -4417,6 +4417,7 @@ void LDrawModelViewer::exportCurModel(
 			exporter->setBoundingBox(boundingMin, boundingMax);
 			exporter->setCenter(center);
 			exporter->setRadius(size / 2.0f);
+			exporter->setBackgroundColor(backgroundR, backgroundG, backgroundB);
 			exporter->setCamera(camera);
 			exporter->setRotationMatrix(rotationMatrix);
 			exporter->setFov(fov);

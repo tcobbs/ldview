@@ -14,6 +14,11 @@ m_height(3.0f),
 m_fov(25.0f),
 m_xPan(0.0f),
 m_yPan(0.0f),
+m_radius(0.0f),
+m_backgroundR(0.0f),
+m_backgroundG(0.0f),
+m_backgroundB(0.0f),
+m_backgroundA(1.0f),
 m_udPrefix(udPrefix),
 m_appName("LDExporter"),
 m_appCopyright("Copyright (C) 2008 Travis Cobbs"),
@@ -49,6 +54,18 @@ m_settingsInitialized(false)
 
 LDExporter::~LDExporter(void)
 {
+}
+
+void LDExporter::setBackgroundColor(
+	TCFloat r,
+	TCFloat g,
+	TCFloat b,
+	TCFloat a /*= 1.0f*/)
+{
+	m_backgroundR = r;
+	m_backgroundG = g;
+	m_backgroundB = b;
+	m_backgroundA = a;
 }
 
 void LDExporter::loadDefaults(void)
