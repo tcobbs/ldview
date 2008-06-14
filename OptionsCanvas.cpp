@@ -8,6 +8,7 @@
 #include "FloatOptionUI.h"
 #include "StringOptionUI.h"
 #include "PathOptionUI.h"
+#include "EnumOptionUI.h"
 #include <TCFoundation/TCLocalStrings.h>
 #include <CUI/CUIWindowResizer.h>
 
@@ -77,6 +78,11 @@ void OptionsCanvas::addStringSetting(LDExporterSetting &setting)
 	{
 		m_optionUIs.push_back(new StringOptionUI(this, setting));
 	}
+}
+
+void OptionsCanvas::addEnumSetting(LDExporterSetting &setting)
+{
+	m_optionUIs.push_back(new EnumOptionUI(this, setting));
 }
 
 BOOL OptionsCanvas::doInitDialog(HWND /*hKbControl*/)
@@ -304,6 +310,7 @@ LRESULT OptionsCanvas::doCommand(
 	{
 	case EN_SETFOCUS:
 	case BN_SETFOCUS:
+	case CBN_SETFOCUS:
 		m_parent->scrollControlToVisible(control);
 		break;
 	case BN_CLICKED:

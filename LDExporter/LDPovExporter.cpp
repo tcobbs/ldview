@@ -99,8 +99,26 @@ void LDPovExporter::initSettings(void) const
 {
 	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
 		4));
-	addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
-		3);
+	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")),
+		udKey("Quality").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.addOption(0, ls(_UC("Pov0Quality")));
+		setting.addOption(1, ls(_UC("Pov1Quality")));
+		setting.addOption(2, ls(_UC("Pov2Quality")));
+		setting.addOption(3, ls(_UC("Pov3Quality")));
+		try
+		{
+			setting.selectOption(m_quality);
+		}
+		catch (...)
+		{
+			setting.selectOption(2);
+		}
+	}
+	//addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
+	//	3);
 	addSetting(LDExporterSetting(ls(_UC("PovReflections")), m_refls,
 		udKey("Reflections").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovShadows")), m_shads,

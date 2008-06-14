@@ -31,6 +31,7 @@ public:
 	void addFloatSetting(LDExporterSetting &setting);
 	void addLongSetting(LDExporterSetting &setting);
 	void addStringSetting(LDExporterSetting &setting);
+	void addEnumSetting(LDExporterSetting &setting);
 	bool commitSettings(void);
 	void updateEnabled(void);
 protected:

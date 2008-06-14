@@ -2874,3 +2874,21 @@ int CUIWindow::getOpenFilenameSize(bool uc)
 		}
 	}
 }
+
+// Note: static method
+void CUIWindow::comboAddString(HWND hWnd, CUCSTR string)
+{
+	sendMessageUC(hWnd, CB_ADDSTRING, 0, (LPARAM)string);
+}
+
+// Note: static method
+LRESULT CUIWindow::comboSelectItem(HWND hWnd, int index)
+{
+	return SendMessage(hWnd, CB_SETCURSEL, (WPARAM)index, 0);
+}
+
+// Note: static method
+int CUIWindow::comboGetSelectedItem(HWND hWnd)
+{
+	return (int)SendMessage(hWnd, CB_GETCURSEL, 0, 0);
+}
