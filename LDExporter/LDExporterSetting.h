@@ -4,6 +4,10 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <TCFoundation/mystring.h>
 
+typedef std::vector<ucstring> UCStringVector;
+typedef std::map<size_t, long> SizeTLongMap;
+typedef std::map<long, size_t> LongSizeTMap;
+
 class LDExporterSetting
 {
 public:
@@ -15,6 +19,7 @@ public:
 		TLong,
 		TFloat,
 		TString,
+		TEnum,
 	};
 	LDExporterSetting(void) : m_type(TUnknown) {}
 	LDExporterSetting(CUCSTR name, int groupSize):
@@ -23,6 +28,15 @@ public:
 		m_hasMin(false),
 		m_hasMax(false),
 		m_groupSize(groupSize),
+		m_isPath(false) {}
+	LDExporterSetting(CUCSTR name, const char *key):
+		m_name(name),
+		m_key(key),
+		m_type(TUnknown),
+		m_long(-1),
+		m_hasMin(false),
+		m_hasMax(false),
+		m_groupSize(0),
 		m_isPath(false) {}
 	LDExporterSetting(CUCSTR name, bool value, const char *key):
 		m_name(name),
@@ -95,6 +109,11 @@ public:
 	void setMinValue(TCFloat value);
 	void setMaxValue(TCFloat value);
 	const ucstring &getStringValue(void);
+
+	const UCStringVector &getOptions(void) const { return m_options; }
+	void addOption(long lValue, const ucstring &name);
+	void selectOption(size_t index, bool commit = false);
+	size_t getSelectedOption(void) const;
 protected:
 	ucstring m_name;
 	std::string m_key;
@@ -108,6 +127,9 @@ protected:
 	// Classes with constructors can't go into unions; also, you can ask for the
 	// string value of any type, and m_string is used for that.
 	ucstring m_string;
+	UCStringVector m_options;
+	SizeTLongMap m_optionValues;
+	LongSizeTMap m_optionIndices;
 	bool m_hasMin;
 	bool m_hasMax;
 	long m_minLong;

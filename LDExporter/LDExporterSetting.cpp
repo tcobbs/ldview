@@ -178,6 +178,9 @@ const ucstring &LDExporterSetting::getStringValue(void)
 	case TFloat:
 		m_string = ftoucstr(m_float);
 		break;
+	case TEnum:
+		m_string = m_options[getSelectedOption()];
+		break;
 	case TString:
 		break;
 	default:
@@ -325,3 +328,58 @@ void LDExporterSetting::setIsPath(bool value)
 		throw "Invalid type";
 	}
 }
+
+void LDExporterSetting::addOption(long lValue, const ucstring &name)
+{
+	if (m_type == TUnknown || m_type == TEnum)
+	{
+		m_type = TEnum;
+		m_optionValues[m_options.size()] = lValue;
+		m_optionIndices[lValue] = m_options.size();
+		m_options.push_back(name);
+	}
+	else
+	{
+		throw "Invalid type";
+	}
+}
+
+void LDExporterSetting::selectOption(size_t index, bool commit /*= false*/)
+{
+	if (m_type == TEnum)
+	{
+		SizeTLongMap::const_iterator it = m_optionValues.find(index);
+
+		if (it == m_optionValues.end())
+		{
+			throw "Invalid index";
+		}
+		else
+		{
+			m_long = it->second;
+			if (commit)
+			{
+				TCUserDefaults::setLongForKey(m_long, m_key.c_str());
+			}
+		}
+	}
+	else
+	{
+		throw "Invalid type";
+	}
+}
+
+size_t LDExporterSetting::getSelectedOption(void) const
+{
+	LongSizeTMap::const_iterator it = m_optionIndices.find(m_long);
+
+	if (it == m_optionIndices.end())
+	{
+		throw "No option selected";
+	}
+	else
+	{
+		return it->second;
+	}
+}
+

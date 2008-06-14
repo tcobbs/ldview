@@ -35,6 +35,7 @@ class CUIWindowResizer;
 #define WC_BUTTONUC WC_BUTTONA
 #define WC_STATICUC WC_STATICA
 #define WC_EDITUC WC_EDITA
+#define WC_COMBOBOXUC WC_COMBOBOXA
 #else // TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOW
 #define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPW
@@ -47,6 +48,7 @@ class CUIWindowResizer;
 #define WC_BUTTONUC WC_BUTTONW
 #define WC_STATICUC WC_STATICW
 #define WC_EDITUC WC_EDITW
+#define WC_COMBOBOXUC WC_COMBOBOXW
 #endif // TC_NO_UNICODE
 
 class CUIExport CUIWindow : public TCAlertSender
@@ -145,6 +147,10 @@ class CUIExport CUIWindow : public TCAlertSender
 #endif // TC_NO_UNICODE
 		static bool checkGet(HWND hWnd);
 		static void checkSet(HWND hWnd, bool value);
+
+		static void comboAddString(HWND hWnd, CUCSTR string);
+		static LRESULT comboSelectItem(HWND hWnd, int index);
+		static int comboGetSelectedItem(HWND hWnd);
 
 #ifndef TC_NO_UNICODE
 		static void addFileType(char *fileTypes, const char *description,

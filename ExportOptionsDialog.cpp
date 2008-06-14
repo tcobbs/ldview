@@ -102,6 +102,9 @@ void ExportOptionsDialog::initCanvasOptions(void)
 			case LDExporterSetting::TString:
 				m_canvas->addStringSetting(*it);
 				break;
+			case LDExporterSetting::TEnum:
+				m_canvas->addEnumSetting(*it);
+				break;
 			default:
 				throw "not implemented";
 			}

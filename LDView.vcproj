@@ -589,6 +589,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EnumOptionUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ExportOptionsDialog.cpp"
 				>
 			</File>
@@ -1369,6 +1373,10 @@
 			</File>
 			<File
 				RelativePath=".\BoundingBoxDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EnumOptionUI.h"
 				>
 			</File>
 			<File
