@@ -123,6 +123,7 @@
 
 // The following are undocumented, and should stay that way.
 #define DEBUG_LEVEL_KEY "DebugLevel"
+#define DEBUG_COMMAND_LINE_KEY "DebugCommandLine"
 #define DEFAULT_COLOR_NUMBER_KEY "DefaultColorNumber"
 #define HOT_KEYS_KEY "HotKeys"
 #define PREFERENCE_SET_KEY "PreferenceSet"
