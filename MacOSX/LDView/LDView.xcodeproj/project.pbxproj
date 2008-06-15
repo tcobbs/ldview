@@ -58,6 +58,7 @@
 		1F47E7930C7575C9009B84BC /* toolbar_wireframe.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F47E7880C7575C9009B84BC /* toolbar_wireframe.png */; };
 		1F47E7970C75768F009B84BC /* examine.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F47E7950C75768F009B84BC /* examine.png */; };
 		1F47E7980C75768F009B84BC /* flythrough.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F47E7960C75768F009B84BC /* flythrough.png */; };
+		1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */; };
 		1F5A35620D9627E70072BAE3 /* PartsList.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F5A35600D9627E70072BAE3 /* PartsList.nib */; };
 		1F5A35670D9629220072BAE3 /* PartsList.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35660D9629220072BAE3 /* PartsList.mm */; };
 		1F5A35AF0D962E410072BAE3 /* LDViewCategories.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F5A35AE0D962E410072BAE3 /* LDViewCategories.mm */; };
@@ -165,7 +166,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D /* libLDExporter.a */;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
 			remoteInfo = LDExporter;
 		};
 		1F6A747E0C4DEEFF00DAF5C8 /* PBXContainerItemProxy */ = {
@@ -276,6 +277,8 @@
 		1F47E7880C7575C9009B84BC /* toolbar_wireframe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = toolbar_wireframe.png; path = Images/toolbar_wireframe.png; sourceTree = "<group>"; };
 		1F47E7950C75768F009B84BC /* examine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = examine.png; path = Images/examine.png; sourceTree = "<group>"; };
 		1F47E7960C75768F009B84BC /* flythrough.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = flythrough.png; path = Images/flythrough.png; sourceTree = "<group>"; };
+		1F5936790DF4EE390063A712 /* FileTypeViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileTypeViewOwner.h; sourceTree = "<group>"; };
+		1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = FileTypeViewOwner.mm; sourceTree = "<group>"; };
 		1F5A35610D9627E70072BAE3 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/PartsList.nib; sourceTree = "<group>"; };
 		1F5A35650D9629220072BAE3 /* PartsList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PartsList.h; sourceTree = "<group>"; };
 		1F5A35660D9629220072BAE3 /* PartsList.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = PartsList.mm; sourceTree = "<group>"; };
@@ -409,6 +412,8 @@
 				1F6122D30C78F68600548053 /* ErrorItem.mm */,
 				1F29FE680C78242000A907CC /* ErrorsAndWarnings.h */,
 				1F29FE690C78242000A907CC /* ErrorsAndWarnings.mm */,
+				1F5936790DF4EE390063A712 /* FileTypeViewOwner.h */,
+				1F59367A0DF4EE390063A712 /* FileTypeViewOwner.mm */,
 				1FE965B90C5D59E700C80B59 /* GenericSheet.h */,
 				1FE965BA0C5D59E700C80B59 /* GenericSheet.mm */,
 				1FD9C8E50DBD881A00F10F45 /* GoToStep.h */,
@@ -967,6 +972,7 @@
 				1F170F1B0DD03B3B0024E40E /* gl2ps.c in Sources */,
 				1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */,
 				1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */,
+				1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
