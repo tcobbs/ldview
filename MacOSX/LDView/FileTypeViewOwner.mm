@@ -74,8 +74,9 @@
 {
 	if (aSavePanel != nil)
 	{
+		// IB won't let you remove all items, so there's one dummy item.
+		[fileTypePopUp removeAllItems];
 		[fileTypePopUp addItemsWithTitles:fileTypes];
-		[fileTypePopUp removeItemAtIndex:0];
 		if (udTypeKey != nil)
 		{
 			NSString *extension = [OCUserDefaults stringForKey:udTypeKey defaultValue:nil sessionSpecific:NO];
