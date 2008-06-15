@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1F02B0DE0A69EBDC00678F51 /* AlertHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */; };
 		1F1039A00D97064E00D01B28 /* LDrawPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10399E0D97064E00D01B28 /* LDrawPage.mm */; };
+		1F10E62B0E04D70700E227DD /* SaveExportView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F10E6290E04D70700E227DD /* SaveExportView.nib */; };
+		1F10E62E0E04D7D900E227DD /* SaveExportViewOwner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10E62C0E04D7D900E227DD /* SaveExportViewOwner.mm */; };
 		1F170F1B0DD03B3B0024E40E /* gl2ps.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F170F190DD03B3B0024E40E /* gl2ps.c */; };
 		1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031E80C49DF3B009B7720 /* Preferences.mm */; };
 		1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */; };
@@ -207,6 +209,9 @@
 		1F02B0DD0A69EBDC00678F51 /* AlertHandler.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AlertHandler.cpp; sourceTree = "<group>"; };
 		1F10399E0D97064E00D01B28 /* LDrawPage.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = LDrawPage.mm; sourceTree = "<group>"; };
 		1F10399F0D97064E00D01B28 /* LDrawPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = LDrawPage.h; sourceTree = "<group>"; };
+		1F10E62A0E04D70700E227DD /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/SaveExportView.nib; sourceTree = "<group>"; };
+		1F10E62C0E04D7D900E227DD /* SaveExportViewOwner.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = SaveExportViewOwner.mm; sourceTree = "<group>"; };
+		1F10E62D0E04D7D900E227DD /* SaveExportViewOwner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SaveExportViewOwner.h; sourceTree = "<group>"; };
 		1F170F190DD03B3B0024E40E /* gl2ps.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = gl2ps.c; path = ../../gl2ps/gl2ps.c; sourceTree = SOURCE_ROOT; };
 		1F170F1A0DD03B3B0024E40E /* gl2ps.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = gl2ps.h; path = ../../gl2ps/gl2ps.h; sourceTree = SOURCE_ROOT; };
 		1F2031E80C49DF3B009B7720 /* Preferences.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Preferences.mm; sourceTree = "<group>"; };
@@ -446,6 +451,8 @@
 				1F5A35660D9629220072BAE3 /* PartsList.mm */,
 				1FF711900DAB5164001ECA67 /* PrintAccessoryViewOwner.h */,
 				1FF711910DAB5164001ECA67 /* PrintAccessoryViewOwner.mm */,
+				1F10E62D0E04D7D900E227DD /* SaveExportViewOwner.h */,
+				1F10E62C0E04D7D900E227DD /* SaveExportViewOwner.mm */,
 				1FBE9DD60CD3F3D200334DA9 /* SaveSnapshotViewOwner.h */,
 				1FBE9DD70CD3F3D200334DA9 /* SaveSnapshotViewOwner.mm */,
 				1F2DD1740DD9531A00C675D7 /* SideDrawer.h */,
@@ -563,6 +570,7 @@
 				1FFC7DC60C5C095F004B8A2F /* PrefSetHotKey.nib */,
 				1FE965AF0C5D595A00C80B59 /* PrefSetNew.nib */,
 				1FF7118D0DAB50DE001ECA67 /* PrintAccessoryView.nib */,
+				1F10E6290E04D70700E227DD /* SaveExportView.nib */,
 				1FBE9E1B0CD3F66500334DA9 /* SaveSnapshotView.nib */,
 				1F3E59FC0DA03D1200D83112 /* Updater.nib */,
 				1F2DD09D0DD933CD00C675D7 /* MPD.nib */,
@@ -915,6 +923,7 @@
 				1F2DD09F0DD933CD00C675D7 /* MPD.nib in Resources */,
 				1F2DD3090DE7C3D100C675D7 /* LDraw.icns in Resources */,
 				1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */,
+				1F10E62B0E04D70700E227DD /* SaveExportView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -973,6 +982,7 @@
 				1F2DD0A30DD9368F00C675D7 /* MPD.mm in Sources */,
 				1F2DD1760DD9531A00C675D7 /* SideDrawer.mm in Sources */,
 				1F59367B0DF4EE390063A712 /* FileTypeViewOwner.mm in Sources */,
+				1F10E62E0E04D7D900E227DD /* SaveExportViewOwner.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1008,6 +1018,14 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1F10E6290E04D70700E227DD /* SaveExportView.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F10E62A0E04D70700E227DD /* English */,
+			);
+			name = SaveExportView.nib;
 			sourceTree = "<group>";
 		};
 		1F29FE640C7811B200A907CC /* ErrorsAndWarnings.nib */ = {

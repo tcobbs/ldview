@@ -8,6 +8,7 @@
 @class ErrorItem;
 @class SnapshotTaker;
 @class SaveSnapshotViewOwner;
+@class SaveExportViewOwner;
 @class ModelTree;
 @class MPD;
 
@@ -72,6 +73,7 @@ class LDPartsList;
 	NSArray *imageFileTypes;
 	SnapshotTaker *snapshotTaker;
 	SaveSnapshotViewOwner *saveSnapshotViewOwner;
+	SaveExportViewOwner *saveExportViewOwner;
 	ModelTree *modelTree;
 	MPD *mpd;
 	bool loadCanceled;

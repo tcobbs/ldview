@@ -63,4 +63,9 @@
 	return [self stringWithCString:cString encoding:NSASCIIStringEncoding];
 }
 
+- (id)initWithASCIICString:(const char *)cString
+{
+	return [self initWithCString:cString encoding:NSASCIIStringEncoding];
+}
+
 @end
