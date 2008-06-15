@@ -23,8 +23,6 @@
 
 	NSMutableArray *fileTypes;
 	NSMutableArray *extensions;
-	int firstType;
-	int lastType;
 	NSString *udTypeKey;
 }
 

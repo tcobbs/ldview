@@ -11,6 +11,7 @@
 #import "OCUserDefaults.h"
 #import "SnapshotTaker.h"
 #import "SaveSnapshotViewOwner.h"
+#import "SaveExportViewOwner.h"
 #import "PartsList.h"
 #import "ModelTree.h"
 #import "MPD.h"
@@ -74,6 +75,7 @@ enum
 	[imageFileTypes release];
 	[snapshotTaker release];
 	[saveSnapshotViewOwner release];
+	[saveExportViewOwner release];
 	[modelTree release];
 	[mpd release];
 	[initialTitle release];
@@ -1186,13 +1188,16 @@ enum
 		NSCharacterSet *charSet = [NSCharacterSet characterSetWithRange:NSMakeRange(169, 1)];
 		NSRange range = [copyrightString rangeOfCharacterFromSet:charSet];
 
+		[saveExportViewOwner saveSettings];
 		if (range.location >= 0 && range.length > 0)
 		{
 			[copyrightString replaceCharactersInRange:range withString:@"(C)"];
 		}
-		modelViewer->exportCurModel(LDrawModelViewer::ETPov, [[sheet filename] asciiCString], [[infoDict objectForKey:@"CFBundleVersion"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
+		modelViewer->setExportType([saveExportViewOwner exportType]);
+		modelViewer->exportCurModel([[sheet filename] asciiCString], [[infoDict objectForKey:@"CFBundleVersion"] asciiCString], [copyrightString cStringUsingEncoding:NSUTF8StringEncoding]);
 		[copyrightString release];
 	}
+	[saveExportViewOwner setSavePanel:nil];
 	sheetBusy = false;
 }
 
@@ -1700,9 +1705,14 @@ enum
 	if (modelViewer)
 	{
 		NSSavePanel *savePanel = [NSSavePanel savePanel];
-		NSString *defaultFilename = [[[[NSString stringWithASCIICString:modelViewer->getCurFilename().c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"pov"];
+		NSString *defaultFilename;
 
-		[savePanel setRequiredFileType:@"pov"];
+		if (!saveExportViewOwner)
+		{
+			saveExportViewOwner = [[SaveExportViewOwner alloc] initWithModelViewer:modelViewer];
+		}
+		[saveExportViewOwner setSavePanel:savePanel];
+		defaultFilename = [[[[NSString stringWithASCIICString:modelViewer->getCurFilename().c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
 		[savePanel setCanSelectHiddenExtension:YES];
 		sheetBusy = true;
 		[savePanel beginSheetForDirectory:[self defaultSaveDirForOp:LDPreferences::SOExport] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(exportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];

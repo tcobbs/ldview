@@ -74,19 +74,23 @@
 {
 	if (aSavePanel != nil)
 	{
+		[fileTypePopUp addItemsWithTitles:fileTypes];
+		[fileTypePopUp removeItemAtIndex:0];
 		if (udTypeKey != nil)
 		{
 			NSString *extension = [OCUserDefaults stringForKey:udTypeKey defaultValue:nil sessionSpecific:NO];
 			
 			[self setFileTypeExtension:extension];
 		}
-
-		[fileTypePopUp addItemsWithTitles:fileTypes];
 	}
 	if (aSavePanel != savePanel)
 	{
 		[savePanel release];
 		savePanel = [aSavePanel retain];
+	}
+	if (savePanel != nil)
+	{
+		[savePanel setAccessoryView:accessoryView];
 	}
 	[self updateRequiredFileType];
 }
@@ -95,7 +99,7 @@
 {
 	if (udTypeKey)
 	{
-		[OCUserDefaults setString:[extensions objectAtIndex:[fileTypePopUp indexOfSelectedItem]] forKey:udTypeKey sessionSpecific:NO];
+		[OCUserDefaults setString:[self requiredFileType] forKey:udTypeKey sessionSpecific:NO];
 	}
 }
 

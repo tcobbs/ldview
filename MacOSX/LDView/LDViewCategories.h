@@ -24,5 +24,6 @@
 + (id)stringWithASCIICString:(const char *)cString;
 - (const char *)asciiCString;
 - (id)initWithUCString:(const ucstring &)ucstring;
+- (id)initWithASCIICString:(const char *)cString;
 
 @end
