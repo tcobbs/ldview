@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F10E65D0E04DAF900E227DD /* LDExporterSetting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F10E6590E04DAF900E227DD /* LDExporterSetting.cpp */; };
+		1F10E65E0E04DAF900E227DD /* LDExporterSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F10E65A0E04DAF900E227DD /* LDExporterSetting.h */; };
+		1F10E65F0E04DAF900E227DD /* LDStlExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F10E65B0E04DAF900E227DD /* LDStlExporter.cpp */; };
+		1F10E6600E04DAF900E227DD /* LDStlExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F10E65C0E04DAF900E227DD /* LDStlExporter.h */; };
 		1F2DD23D0DE15D0D00C675D7 /* LDExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD2390DE15D0D00C675D7 /* LDExporter.cpp */; };
 		1F2DD23E0DE15D0D00C675D7 /* LDExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */; };
 		1F2DD23F0DE15D0D00C675D7 /* LDPovExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */; };
@@ -19,6 +23,10 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1F10E6590E04DAF900E227DD /* LDExporterSetting.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDExporterSetting.cpp; path = ../../LDExporter/LDExporterSetting.cpp; sourceTree = SOURCE_ROOT; };
+		1F10E65A0E04DAF900E227DD /* LDExporterSetting.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDExporterSetting.h; path = ../../LDExporter/LDExporterSetting.h; sourceTree = SOURCE_ROOT; };
+		1F10E65B0E04DAF900E227DD /* LDStlExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDStlExporter.cpp; path = ../../LDExporter/LDStlExporter.cpp; sourceTree = SOURCE_ROOT; };
+		1F10E65C0E04DAF900E227DD /* LDStlExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDStlExporter.h; path = ../../LDExporter/LDStlExporter.h; sourceTree = SOURCE_ROOT; };
 		1F2DD2390DE15D0D00C675D7 /* LDExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDExporter.cpp; path = ../../LDExporter/LDExporter.cpp; sourceTree = SOURCE_ROOT; };
 		1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LDExporter.h; path = ../../LDExporter/LDExporter.h; sourceTree = SOURCE_ROOT; };
 		1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = LDPovExporter.cpp; path = ../../LDExporter/LDPovExporter.cpp; sourceTree = SOURCE_ROOT; };
@@ -74,8 +82,12 @@
 			children = (
 				1F2DD2390DE15D0D00C675D7 /* LDExporter.cpp */,
 				1F2DD23A0DE15D0D00C675D7 /* LDExporter.h */,
+				1F10E6590E04DAF900E227DD /* LDExporterSetting.cpp */,
+				1F10E65A0E04DAF900E227DD /* LDExporterSetting.h */,
 				1F2DD23B0DE15D0D00C675D7 /* LDPovExporter.cpp */,
 				1F2DD23C0DE15D0D00C675D7 /* LDPovExporter.h */,
+				1F10E65B0E04DAF900E227DD /* LDStlExporter.cpp */,
+				1F10E65C0E04DAF900E227DD /* LDStlExporter.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -117,6 +129,8 @@
 				1F2DD23E0DE15D0D00C675D7 /* LDExporter.h in Headers */,
 				1F2DD2400DE15D0D00C675D7 /* LDPovExporter.h in Headers */,
 				1F2DD2420DE15D2800C675D7 /* LDPovExportUDKeys.h in Headers */,
+				1F10E65E0E04DAF900E227DD /* LDExporterSetting.h in Headers */,
+				1F10E6600E04DAF900E227DD /* LDStlExporter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,6 +177,8 @@
 			files = (
 				1F2DD23D0DE15D0D00C675D7 /* LDExporter.cpp in Sources */,
 				1F2DD23F0DE15D0D00C675D7 /* LDPovExporter.cpp in Sources */,
+				1F10E65D0E04DAF900E227DD /* LDExporterSetting.cpp in Sources */,
+				1F10E65F0E04DAF900E227DD /* LDStlExporter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
