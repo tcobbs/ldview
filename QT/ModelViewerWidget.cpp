@@ -2813,6 +2813,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 		if (curSaveOp == LDPreferences::SOExport)
 		{
 			sprintf(saveFilename, "%s.pov", baseFilename);
+			return true;
 		}
 		else
 		{
@@ -2857,10 +2858,11 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 	                strcpy(saveFilename, temp.c_str());
 	
 				}
+				if (!fileExists(saveFilename))
+				{
+					return true;
+				}
 			}
-		}
-		if (!fileExists(saveFilename))
-		{
 			return true;
 		}
 	}
@@ -2895,7 +2897,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog->setCaption(TCLocalStrings::get("SaveSnapshot"));
 		saveDialog->addFilter("Windows Bitmap (*.bmp)");
 		saveDialog->addFilter("Jpeg (*.jpg)");
-		saveDialog->setSelectedFilter(0);
+		saveDialog->setSelectedFilter(saveImageType-1);
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
 		break;
