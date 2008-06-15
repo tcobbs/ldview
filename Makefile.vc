@@ -4,6 +4,7 @@ CPPFLAGS = $(CPPGLOBAL) /I . /I ./include /D _WINDOWS /D _WIN32_WINDOWS=0x0410 /
 COBJS = 
 CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\BoundingBoxDialog.obj \
+	 $(OBJDIR)\EnumOptionUI.obj \
 	 $(OBJDIR)\ExportOptionsDialog.obj \
 	 $(OBJDIR)\FloatOptionUI.obj \
 	 $(OBJDIR)\GroupOptionUI.obj \
