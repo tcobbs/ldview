@@ -454,6 +454,13 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 	bool udok = setupUserDefaults(lpCmdLine, screenSaver,
 		isRemovableDrive(hInstance));
 	setupLocalStrings();
+	if (TCUserDefaults::boolForKey(DEBUG_COMMAND_LINE_KEY, false, false))
+	{
+		std::string message = "Command Line:\n";
+
+		message += lpCmdLine;
+		MessageBox(NULL, message.c_str(), "LDView", MB_OK);
+	}
 	if (!udok && !TCUserDefaults::longForKey("IniFailureShown", 0, 0))
 	{
 		UCCHAR message[2048];
