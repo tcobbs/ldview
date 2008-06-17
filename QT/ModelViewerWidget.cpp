@@ -3053,6 +3053,12 @@ void ModelViewerWidget::fileExport()
 	}
 }
 
+void ModelViewerWidget::fileExportOption()
+{
+	exportoption = new LDViewExportOption(modelViewer->getExporter(LDrawModelViewer::ETPov));
+	exportoption->show();
+}
+
 bool ModelViewerWidget::doFileSave(void)
 {
 	char saveFilename[1024] = "";
@@ -3598,8 +3604,8 @@ void ModelViewerWidget::doFileMenuAboutToShow(void)
 			fileMenu->setItemEnabled(fileReloadId, false);
 			fileMenu->setItemEnabled(fileSaveSnapshotId, false);
 			fileMenu->setItemEnabled(fileMenu->idAt(3), false);
-			fileMenu->setItemEnabled(fileMenu->idAt(5), false);
-			fileMenu->setItemEnabled(fileMenu->idAt(10), false);
+			fileMenu->setItemEnabled(fileMenu->idAt(6), false);
+			fileMenu->setItemEnabled(fileMenu->idAt(11), false);
 		}
 	}
 }
@@ -3996,8 +4002,8 @@ QString ModelViewerWidget::findPackageFile(const QString &filename)
 	QFile file(filename);
 	QString retValue;
 
-	if (!file.exists())
-		QDir::setCurrent("..");
+//	if (!file.exists())
+//		QDir::setCurrent("..");
 	if (!file.exists())
 		QDir::setCurrent("Textures");
 	if (!file.exists())

@@ -155,8 +155,9 @@
         </item>
         <action name="fileSaveAction"/>
 		<action name="fileSaveSettingsAction"/>
-        <action name="fileExportAction"/>
         <action name="fileJPEGOptionsAction"/>
+        <action name="fileExportAction"/>
+        <action name="fileExportOptionAction"/>
         <action name="fileLDrawDirAction"/>
         <action name="fileExtraDirAction"/>
         <action name="fileCheckForUpdatesAction"/>
@@ -466,6 +467,17 @@
         </property>
         <property name="menuText">
             <string>Export...</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileExportOptionAction</cstring>
+        </property>
+        <property name="text">
+            <string>Export Option...</string>
+        </property>
+        <property name="menuText">
+            <string>Export Option...</string>
         </property>
     </action>
     <action>
@@ -1127,6 +1139,12 @@
         <slot>fileExport()</slot>
     </connection>
     <connection>
+        <sender>fileExportOptionAction</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>fileExportOption()</slot>
+    </connection>
+    <connection>
         <sender>fileJPEGOptionsAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1430,6 +1448,7 @@
     <slot>fileSave()</slot>
 	<slot>fileSaveSettings()</slot>
     <slot>fileExport()</slot>
+    <slot>fileExportOption()</slot>
     <slot>fileJPEGOptions()</slot>
     <slot>filePrint()</slot>
     <slot>fileExit()</slot>
