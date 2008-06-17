@@ -140,4 +140,6 @@ protected:
 	bool m_isPath;
 };
 
+typedef std::list<LDExporterSetting> LDExporterSettingList;
+
 #endif // __LDEXPORTERSETTING_H__

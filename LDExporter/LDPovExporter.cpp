@@ -97,6 +97,15 @@ void LDPovExporter::addGeometrySettings(void) const
 
 void LDPovExporter::initSettings(void) const
 {
+	// Uncomment the following lines to test a top-level boolean group setting.
+	//addSetting(LDExporterSetting(_UC("Top Level Test Group"), m_shads,
+	//	udKey("Shadows").c_str()));
+	//m_settings.back().setGroupSize(2);
+	//addSetting(LDExporterSetting(_UC("Top Level Test Group Item 1"), m_shads,
+	//	udKey("Shadows").c_str()));
+	//addSetting(LDExporterSetting(_UC("Top Level Test Group Item 2"), m_shads,
+	//	udKey("Shadows").c_str()));
+	// End of top-level boolean group test.
 	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
 		4));
 	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")),
@@ -117,8 +126,6 @@ void LDPovExporter::initSettings(void) const
 			setting.selectOption(2);
 		}
 	}
-	//addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
-	//	3);
 	addSetting(LDExporterSetting(ls(_UC("PovReflections")), m_refls,
 		udKey("Reflections").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovShadows")), m_shads,
