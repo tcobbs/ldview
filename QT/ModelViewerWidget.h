@@ -18,6 +18,7 @@
 #include "LDViewMpdModel.h"
 #include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
+#include "LDViewExportOption.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -106,6 +107,7 @@ public:
 	bool doFileSave(void);
 	void doFileSaveSettings(void);
 	void fileExport(void);
+	void fileExportOption(void);
 	void doFileJPEGOptions(void);
 	bool fileExists(const char* filename);
 	bool shouldOverwriteFile(char* filename);
@@ -166,6 +168,7 @@ public:
 	void lastStep();
 	void updateStep();
 	LDViewModelTree *modeltree;
+	LDViewExportOption *exportoption;
     BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
 

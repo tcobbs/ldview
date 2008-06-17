@@ -2,11 +2,12 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
 		   LDViewModelTree.cpp LDViewBoundingBox.cpp \
-		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp
+		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp LDViewExportOption.cpp
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h qt4wrapper.h \
-		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h
+		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
+		   LDViewExportOption.h
 
 UI_DIR = .ui
 MOC_DIR = .moc
@@ -39,7 +40,7 @@ unix {
 
   documentation.path = /usr/local/share/ldview
   documentation.files = ../Readme.txt ../Help.html ../license.txt \
-						../m6459.ldr ../LDViewMessages.ini \
+						../m6459.ldr \
 						../ChangeHistory.html ../8464.mpd todo.txt \
 						../Textures/SansSerif.fnt \
 						ldview_de.qm ldview_cz.qm ldview_it.qm ldview_en.qm
@@ -78,7 +79,9 @@ cp ../Translations/Czech/LDViewMessages.ini \
 cp ../Translations/German/LDViewMessages.ini \
 /usr/local/share/ldview/LDViewMessages_de.ini ; \
 cp -f ../Translations/Italian/LDViewMessages.ini \
-/usr/local/share/ldview/LDViewMessages_it.ini ;
+/usr/local/share/ldview/LDViewMessages_it.ini ;\
+cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
+>/usr/local/share/ldview/LDViewMessages.ini
   INSTALLS += initrans
 }
 
@@ -101,7 +104,7 @@ FORMS	= LDView.ui PreferencesPanel.ui OpenGLExtensionsPanel.ui \
 		  AboutPanel.ui ErrorPanel.ui ImageHolder.ui ExtraDirPanel.ui \
 		  HelpPanel.ui SnapshotSettingsPanel.ui PartList.ui \
 		  JpegOptionsPanel.ui ModelTreePanel.ui BoundingBoxPanel.ui \
-		  LatitudeLongitude.ui MpdModelSelectionPanel.ui
+		  LatitudeLongitude.ui MpdModelSelectionPanel.ui ExportOptionPanel.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png \
 		  images/toolbar_reload.png images/toolbar_wireframe.png \
