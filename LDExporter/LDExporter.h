@@ -11,8 +11,6 @@
 class LDLAutoCamera;
 class TREModel;
 
-typedef std::list<LDExporterSetting> LDExporterSettingList;
-
 class LDExporter: public LDLPrimitiveCheck
 {
 public:
