@@ -144,7 +144,7 @@ int OptionUI::calcTextHeight(
 			CUIWindow::getTextExtentPoint32UC(hdc, line.c_str(), line.size(),
 				&size);
 		}
-		// When we get hear, whatever is in line fits in the given width.
+		// When we get here, whatever is in line fits in the given width.
 		if (line.size() > 0)
 		{
 			size_t j;
