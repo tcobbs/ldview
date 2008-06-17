@@ -1,5 +1,6 @@
 #import "SaveExportViewOwner.h"
 #import "LDViewCategories.h"
+#import "Options.h"
 
 #include <LDLib/LDUserDefaultsKeys.h>
 
@@ -37,7 +38,7 @@
 	[super dealloc];
 }
 
-- (const LDExporter *)currentExporter
+- (LDExporter *)currentExporter
 {
 	LDrawModelViewer::ExportType type = [self exportType];
 
@@ -57,10 +58,14 @@
 
 - (IBAction)fileTypeOptions:(id)sender
 {
-	const LDExporter *exporter = [self currentExporter];
+	LDExporter *exporter = [self currentExporter];
 
 	if (exporter != NULL)
 	{
+		Options *options = [[Options alloc] init];
+
+		[options runModalWithSettings:exporter->getSettings()];
+		[options release];
 	}
 }
 
