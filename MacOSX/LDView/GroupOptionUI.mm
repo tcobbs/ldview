@@ -151,4 +151,16 @@
 	[box setFrame:boxRect];
 }
 
+- (NSView *)firstKeyView
+{
+	if (check != nil)
+	{
+		return check;
+	}
+	else
+	{
+		return label;
+	}
+}
+
 @end

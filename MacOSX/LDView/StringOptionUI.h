@@ -1,5 +1,5 @@
 //
-//  EnumOptionUI.h
+//  StringOptionUI.h
 //  LDView
 //
 //  Created by Travis Cobbs on 6/16/08.
@@ -10,10 +10,10 @@
 #import "OptionUI.h"
 
 
-@interface EnumOptionUI : OptionUI
+@interface StringOptionUI : OptionUI
 {
 	NSTextField *label;
-	NSPopUpButton *popUpButton;
+	NSTextField *textField;
 }
 
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting;
@@ -21,6 +21,8 @@
 - (void)commit;
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
+- (float)textFieldWidthForWidth:(float)width;
+- (float)row2Height;
 - (NSView *)firstKeyView;
 
 @end

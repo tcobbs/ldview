@@ -2,6 +2,10 @@
 #import "BoolOptionUI.h"
 #import "GroupOptionUI.h"
 #import "EnumOptionUI.h"
+#import "StringOptionUI.h"
+#import "PathOptionUI.h"
+#import "LongOptionUI.h"
+#import "FloatOptionUI.h"
 
 @implementation Options
 
@@ -155,14 +159,26 @@
 
 - (void)addFloatSetting:(LDExporterSetting &)setting
 {
+	[optionUIs addObject:[[[FloatOptionUI alloc] initWithOptions:self setting:setting] autorelease]];
 }
 
 - (void)addLongSetting:(LDExporterSetting &)setting
 {
+	[optionUIs addObject:[[[LongOptionUI alloc] initWithOptions:self setting:setting] autorelease]];
 }
 
 - (void)addStringSetting:(LDExporterSetting &)setting
 {
+	if (setting.isPath())
+	{
+		// Paths go to TCUserDefault via different functions, and they also have
+		// a browse button, which strings lack.
+		[optionUIs addObject:[[[PathOptionUI alloc] initWithOptions:self setting:setting] autorelease]];
+	}
+	else
+	{
+		[optionUIs addObject:[[[StringOptionUI alloc] initWithOptions:self setting:setting] autorelease]];
+	}
 }
 
 - (void)addEnumSetting:(LDExporterSetting &)setting
@@ -175,6 +191,9 @@
 	LDExporterSettingList::iterator it;
 	std::stack<int> groupSizes;
 	int groupSize = 0;
+	NSEnumerator *enumerator;
+	OptionUI *optionUI;
+	NSView *lastKeyView = okButton;
 
 	optionUIs = [[NSMutableArray alloc] initWithCapacity:settings->size()];
 	while ([[docView subviews] count] > 0)
@@ -229,6 +248,14 @@
 			}
 		}
 	}
+	enumerator = [optionUIs objectEnumerator];
+	while ((optionUI = [enumerator nextObject]) != nil)
+	{
+		[lastKeyView setNextKeyView:[optionUI firstKeyView]];
+		lastKeyView = [optionUI lastKeyView];
+	}
+	[lastKeyView setNextKeyView:cancelButton];
+	[panel setInitialFirstResponder:[okButton nextKeyView]];
 }
 
 - (int)runModalWithSettings:(LDExporterSettingList &)theSettings

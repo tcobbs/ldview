@@ -1,26 +1,26 @@
 //
-//  EnumOptionUI.h
+//  PathOptionUI.h
 //  LDView
 //
-//  Created by Travis Cobbs on 6/16/08.
+//  Created by Travis Cobbs on 6/17/08.
 //  Copyright 2008 Travis Cobbs. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
-#import "OptionUI.h"
+#import <StringOptionUI.h>
 
 
-@interface EnumOptionUI : OptionUI
+@interface PathOptionUI : StringOptionUI
 {
-	NSTextField *label;
-	NSPopUpButton *popUpButton;
+	NSButton *browseButton;
 }
 
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting;
 - (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth;
-- (void)commit;
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
-- (NSView *)firstKeyView;
+- (float)textFieldWidthForWidth:(float)width;
+- (float)row2Height;
+- (NSView *)lastKeyView;
 
 @end

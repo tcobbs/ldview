@@ -221,4 +221,16 @@
 	return label;
 }
 
+- (NSView *)firstKeyView
+{
+	// Must be implemented by subclasses.
+	return nil;
+}
+
+- (NSView *)lastKeyView
+{
+	// Most of these only have one key view.
+	return [self firstKeyView];
+}
+
 @end

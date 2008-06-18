@@ -3,7 +3,7 @@
 //  LDView
 //
 //  Created by Travis Cobbs on 6/16/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 Travis Cobbs. All rights reserved.
 //
 
 #import "EnumOptionUI.h"
@@ -28,6 +28,7 @@
 		{
 			[popUpButton addItemWithTitle:[NSString stringWithUCString:values[i]]];
 		}
+		[popUpButton selectItemAtIndex:setting->getSelectedOption()];
 	}
 	return self;
 }
@@ -71,15 +72,23 @@
 
 - (void)commit
 {
+	setting->selectOption([popUpButton indexOfSelectedItem], true);
 }
 
 - (void)setEnabled:(BOOL)enabled
 {
+	[label setEnabled:enabled];
+	[popUpButton setEnabled:enabled];
 }
 
 - (NSRect)frame
 {
-	return NSMakeRect(0, 0, 0, 0);
+	return NSUnionRect([label frame], [popUpButton frame]);
+}
+
+- (NSView *)firstKeyView
+{
+	return popUpButton;
 }
 
 @end

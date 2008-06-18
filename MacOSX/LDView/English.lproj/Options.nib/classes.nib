@@ -5,7 +5,13 @@
             ACTIONS = {cancel = id; ok = id; }; 
             CLASS = Options; 
             LANGUAGE = ObjC; 
-            OUTLETS = {docView = NSView; panel = NSPanel; scrollView = NSScrollView; }; 
+            OUTLETS = {
+                cancelButton = NSButton; 
+                docView = OptionsDocView; 
+                okButton = NSButton; 
+                panel = NSPanel; 
+                scrollView = NSScrollView; 
+            }; 
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = OptionsDocView; LANGUAGE = ObjC; SUPERCLASS = NSView; }

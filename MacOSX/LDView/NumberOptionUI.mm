@@ -1,24 +1,25 @@
 //
-//  BoolOptionUI.mm
+//  NumberOptionUI.mm
 //  LDView
 //
-//  Created by Travis Cobbs on 6/15/08.
+//  Created by Travis Cobbs on 6/17/08.
 //  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
-#import "BoolOptionUI.h"
+#import "NumberOptionUI.h"
 #import "LDViewCategories.h"
 
 #include <LDExporter/LDExporterSetting.h>
 
-@implementation BoolOptionUI
+
+@implementation NumberOptionUI
 
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting
 {
 	self = [super initWithOptions:theOptions setting:theSetting];
 	if (self != nil)
 	{
-		check = [self createCheck];
+		label = [self createLabel];
 	}
 	return self;
 }
@@ -27,7 +28,7 @@
 {
 	if (!shown)
 	{
-		[check release];
+		[label release];
 	}
 	[super dealloc];
 }
@@ -35,17 +36,17 @@
 - (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth
 {
 	NSRect bounds = { { x, y }, { width, 1024.0f } };
-
-	bounds = [self calcCheckLayout:check inRect:bounds optimalWidth:optimalWidth];
+	
+	bounds = [self calcLabelLayout:label inRect:bounds optimalWidth:optimalWidth];
 	if (update)
 	{
-		[check setFrame:bounds];
+		[label setFrame:bounds];
 		if (!shown)
 		{
 			shown = true;
-			[docView addSubview:check];
+			[docView addSubview:label];
 			[docView setNeedsDisplay:YES];
-			[check release];
+			[label release];
 		}
 	}
 	return bounds.size.height;
@@ -53,22 +54,21 @@
 
 - (void)commit
 {
-	setting->setValue([check getCheck], true);
 }
 
 - (void)setEnabled:(BOOL)enabled
 {
-	[check setEnabled:enabled];
+	[label setEnabled:enabled];
 }
 
 - (NSRect)frame
 {
-	return [check frame];
+	return [label frame];
 }
 
 - (NSView *)firstKeyView
 {
-	return check;
+	return label;
 }
 
 @end

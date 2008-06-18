@@ -17,8 +17,13 @@
 		1F10E7BF0E05D12900E227DD /* BoolOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10E7BE0E05D12900E227DD /* BoolOptionUI.mm */; };
 		1F10E7D30E05D2F000E227DD /* GroupOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10E7D20E05D2F000E227DD /* GroupOptionUI.mm */; };
 		1F10E9360E0640C900E227DD /* OptionsDocView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10E9350E0640C900E227DD /* OptionsDocView.mm */; };
-		1F10EA5F0E07818600E227DD /* EnumOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10EA5E0E07818600E227DD /* EnumOptionUI.mm */; };
+		1F10EA5F0E07818600E227DD /* StringOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F10EA5E0E07818600E227DD /* StringOptionUI.mm */; };
 		1F170F1B0DD03B3B0024E40E /* gl2ps.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F170F190DD03B3B0024E40E /* gl2ps.c */; };
+		1F1A16FD0E08CD1900C52EFF /* EnumOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A16FC0E08CD1900C52EFF /* EnumOptionUI.mm */; };
+		1F1A17340E08D0E200C52EFF /* PathOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A17330E08D0E200C52EFF /* PathOptionUI.mm */; };
+		1F1A18A90E08E40A00C52EFF /* NumberOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A18A80E08E40A00C52EFF /* NumberOptionUI.mm */; };
+		1F1A18AF0E08E4B400C52EFF /* LongOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A18AE0E08E4B400C52EFF /* LongOptionUI.mm */; };
+		1F1A18B40E08E4D900C52EFF /* FloatOptionUI.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F1A18B30E08E4D900C52EFF /* FloatOptionUI.mm */; };
 		1F2031EA0C49DF3B009B7720 /* Preferences.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031E80C49DF3B009B7720 /* Preferences.mm */; };
 		1F2031ED0C49DF4E009B7720 /* EffectsPage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EC0C49DF4E009B7720 /* EffectsPage.mm */; };
 		1F2031F00C49DF58009B7720 /* PreferencePage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F2031EE0C49DF58009B7720 /* PreferencePage.mm */; };
@@ -230,10 +235,20 @@
 		1F10E7D20E05D2F000E227DD /* GroupOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GroupOptionUI.mm; sourceTree = "<group>"; };
 		1F10E9340E0640C900E227DD /* OptionsDocView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsDocView.h; sourceTree = "<group>"; };
 		1F10E9350E0640C900E227DD /* OptionsDocView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OptionsDocView.mm; sourceTree = "<group>"; };
-		1F10EA5D0E07818600E227DD /* EnumOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnumOptionUI.h; sourceTree = "<group>"; };
-		1F10EA5E0E07818600E227DD /* EnumOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EnumOptionUI.mm; sourceTree = "<group>"; };
+		1F10EA5D0E07818600E227DD /* StringOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringOptionUI.h; sourceTree = "<group>"; };
+		1F10EA5E0E07818600E227DD /* StringOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StringOptionUI.mm; sourceTree = "<group>"; };
 		1F170F190DD03B3B0024E40E /* gl2ps.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = gl2ps.c; path = ../../gl2ps/gl2ps.c; sourceTree = SOURCE_ROOT; };
 		1F170F1A0DD03B3B0024E40E /* gl2ps.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = gl2ps.h; path = ../../gl2ps/gl2ps.h; sourceTree = SOURCE_ROOT; };
+		1F1A16FB0E08CD1900C52EFF /* EnumOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EnumOptionUI.h; sourceTree = "<group>"; };
+		1F1A16FC0E08CD1900C52EFF /* EnumOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = EnumOptionUI.mm; sourceTree = "<group>"; };
+		1F1A17320E08D0E200C52EFF /* PathOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathOptionUI.h; sourceTree = "<group>"; };
+		1F1A17330E08D0E200C52EFF /* PathOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PathOptionUI.mm; sourceTree = "<group>"; };
+		1F1A18A70E08E40A00C52EFF /* NumberOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NumberOptionUI.h; sourceTree = "<group>"; };
+		1F1A18A80E08E40A00C52EFF /* NumberOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NumberOptionUI.mm; sourceTree = "<group>"; };
+		1F1A18AD0E08E4B400C52EFF /* LongOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LongOptionUI.h; sourceTree = "<group>"; };
+		1F1A18AE0E08E4B400C52EFF /* LongOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LongOptionUI.mm; sourceTree = "<group>"; };
+		1F1A18B20E08E4D900C52EFF /* FloatOptionUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloatOptionUI.h; sourceTree = "<group>"; };
+		1F1A18B30E08E4D900C52EFF /* FloatOptionUI.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FloatOptionUI.mm; sourceTree = "<group>"; };
 		1F2031E80C49DF3B009B7720 /* Preferences.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Preferences.mm; sourceTree = "<group>"; };
 		1F2031E90C49DF3B009B7720 /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		1F2031EB0C49DF4E009B7720 /* EffectsPage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EffectsPage.h; sourceTree = "<group>"; };
@@ -527,16 +542,26 @@
 			children = (
 				1F10E7BD0E05D12900E227DD /* BoolOptionUI.h */,
 				1F10E7BE0E05D12900E227DD /* BoolOptionUI.mm */,
-				1F10EA5D0E07818600E227DD /* EnumOptionUI.h */,
-				1F10EA5E0E07818600E227DD /* EnumOptionUI.mm */,
+				1F1A16FB0E08CD1900C52EFF /* EnumOptionUI.h */,
+				1F1A16FC0E08CD1900C52EFF /* EnumOptionUI.mm */,
+				1F1A18B20E08E4D900C52EFF /* FloatOptionUI.h */,
+				1F1A18B30E08E4D900C52EFF /* FloatOptionUI.mm */,
 				1F10E7D10E05D2F000E227DD /* GroupOptionUI.h */,
 				1F10E7D20E05D2F000E227DD /* GroupOptionUI.mm */,
+				1F1A18AD0E08E4B400C52EFF /* LongOptionUI.h */,
+				1F1A18AE0E08E4B400C52EFF /* LongOptionUI.mm */,
+				1F1A18A70E08E40A00C52EFF /* NumberOptionUI.h */,
+				1F1A18A80E08E40A00C52EFF /* NumberOptionUI.mm */,
 				1F10E7390E05BEB900E227DD /* Options.h */,
 				1F10E73A0E05BEB900E227DD /* Options.mm */,
 				1F10E9340E0640C900E227DD /* OptionsDocView.h */,
 				1F10E9350E0640C900E227DD /* OptionsDocView.mm */,
 				1F10E7A80E05C72900E227DD /* OptionUI.h */,
 				1F10E7A90E05C72900E227DD /* OptionUI.mm */,
+				1F1A17320E08D0E200C52EFF /* PathOptionUI.h */,
+				1F1A17330E08D0E200C52EFF /* PathOptionUI.mm */,
+				1F10EA5D0E07818600E227DD /* StringOptionUI.h */,
+				1F10EA5E0E07818600E227DD /* StringOptionUI.mm */,
 			);
 			name = OptionsUI;
 			sourceTree = "<group>";
@@ -577,9 +602,9 @@
 			isa = PBXGroup;
 			children = (
 				1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */,
-				1F240B960A588B9000691116 /* TCFoundation.xcodeproj */,
 				1F240BA60A588BB800691116 /* LDLib.xcodeproj */,
 				1F240B9F0A588BA700691116 /* LDLoader.xcodeproj */,
+				1F240B960A588B9000691116 /* TCFoundation.xcodeproj */,
 				1F240BAD0A588BC600691116 /* TRE.xcodeproj */,
 			);
 			name = "Support Projects";
@@ -1030,7 +1055,12 @@
 				1F10E7BF0E05D12900E227DD /* BoolOptionUI.mm in Sources */,
 				1F10E7D30E05D2F000E227DD /* GroupOptionUI.mm in Sources */,
 				1F10E9360E0640C900E227DD /* OptionsDocView.mm in Sources */,
-				1F10EA5F0E07818600E227DD /* EnumOptionUI.mm in Sources */,
+				1F10EA5F0E07818600E227DD /* StringOptionUI.mm in Sources */,
+				1F1A16FD0E08CD1900C52EFF /* EnumOptionUI.mm in Sources */,
+				1F1A17340E08D0E200C52EFF /* PathOptionUI.mm in Sources */,
+				1F1A18A90E08E40A00C52EFF /* NumberOptionUI.mm in Sources */,
+				1F1A18AF0E08E4B400C52EFF /* LongOptionUI.mm in Sources */,
+				1F1A18B40E08E4D900C52EFF /* FloatOptionUI.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

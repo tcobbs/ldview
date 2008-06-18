@@ -20,5 +20,6 @@
 - (void)commit;
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
+- (NSView *)firstKeyView;
 
 @end

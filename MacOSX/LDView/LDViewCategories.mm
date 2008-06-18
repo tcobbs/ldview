@@ -58,6 +58,27 @@
 	return [self cStringUsingEncoding:NSASCIIStringEncoding];
 }
 
+- (ucstring)ucString
+{
+#ifdef TC_NO_UNICODE
+	return [self asciiCString];
+#else // TC_NO_UNICODE
+	int i;
+	size_t len = [self length];
+	unichar *characters = new unichar[len];
+	std::wstring retValue;
+
+	[self getCharacters:characters];
+	retValue.resize(len);
+	for (i = 0; i < len; i++)
+	{
+		retValue[i] = (wchar_t)characters[i];
+	}
+	delete characters;
+	return retValue;
+#endif // TC_NO_UNICODE
+}
+
 + (id)stringWithASCIICString:(const char *)cString
 {
 	return [self stringWithCString:cString encoding:NSASCIIStringEncoding];
