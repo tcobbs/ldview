@@ -19,6 +19,9 @@ protected:
 
 	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
 	void loadDefaults(void);
+
+	bool m_binary;
+	long m_colorFormat;
 };
 
 #endif // __LDSTLEXPORTER_H__
