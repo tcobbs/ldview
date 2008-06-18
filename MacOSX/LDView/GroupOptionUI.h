@@ -25,5 +25,6 @@
 - (void)closeGroupAtY:(float)y;
 
 - (BOOL)groupEnabled;
+- (NSView *)firstKeyView;
 
 @end

@@ -8,8 +8,10 @@
 {
     IBOutlet NSPanel *panel;
     IBOutlet NSScrollView *scrollView;
-	LDExporterSettingList *settings;
+	IBOutlet NSButton *okButton;
+	IBOutlet NSButton *cancelButton;
 	NSView *docView;
+	LDExporterSettingList *settings;
 	NSMutableArray *optionUIs;
 	float margin;
 	float spacing;

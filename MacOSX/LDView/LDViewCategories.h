@@ -23,6 +23,7 @@
 + (id)stringWithUCString:(const ucstring &)ucstring;
 + (id)stringWithASCIICString:(const char *)cString;
 - (const char *)asciiCString;
+- (ucstring)ucString;
 - (id)initWithUCString:(const ucstring &)ucstring;
 - (id)initWithASCIICString:(const char *)cString;
 
