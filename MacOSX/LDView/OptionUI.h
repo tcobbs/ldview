@@ -37,6 +37,7 @@ class LDExporterSetting;
 - (NSString *)wrappedStringForString:(NSString *)string width:(float &)width height:(float &)height font:(NSFont *)font;
 - (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth;
 - (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth;
+- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth delta:(float)delta;
 - (NSButton *)createCheck;
 - (NSTextField *)createLabel;
 - (NSView *)firstKeyView;

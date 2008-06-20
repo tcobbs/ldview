@@ -12,7 +12,10 @@
 
 @interface FloatOptionUI : NumberOptionUI
 {
-
+	float value;
 }
+
+- (bool)validate:(NSString *&)error;
+- (void)commit;
 
 @end

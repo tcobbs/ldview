@@ -157,12 +157,13 @@
 	return string;
 }
 
-- (NSRect)calcControlLayout:(NSControl *)control value:(NSString *)value inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector
+- (NSRect)calcControlLayout:(NSControl *)control value:(NSString *)value inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector delta:(float)delta
 {
 	NSRect titleRect;
 	float rightBorder;
 	float leftBorder;
-	
+
+	bounds.size.width -= delta;
 	[control performSelector:selector withObject:value];
 	// Oddly enough, even though wrapped text doesn't work on button cells, the
 	// following call returns a rect that behaves as if they do.  That's a good
@@ -174,7 +175,7 @@
 	// title that has line feeds embedded in it.  That works.
 	[control performSelector:selector withObject:[self wrappedStringForString:value width:titleRect.size.width height:titleRect.size.height font:[control font]]];
 	bounds.size.height = titleRect.size.height;
-	bounds.size.width = titleRect.size.width + leftBorder + rightBorder;
+	bounds.size.width = titleRect.size.width + leftBorder + rightBorder + delta;
 	if (bounds.size.width > optimalWidth)
 	{
 		optimalWidth = bounds.size.width;
@@ -182,19 +183,24 @@
 	return bounds;
 }
 
-- (NSRect)calcControlLayout:(NSControl *)control inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector
+- (NSRect)calcControlLayout:(NSControl *)control inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector delta:(float)delta
 {
-	return [self calcControlLayout:control value:[NSString stringWithUCString:setting->getName()] inRect:bounds optimalWidth:optimalWidth selector:selector];
+	return [self calcControlLayout:control value:[NSString stringWithUCString:setting->getName()] inRect:bounds optimalWidth:optimalWidth selector:selector delta:delta];
 }
 
 - (NSRect)calcCheckLayout:(NSButton *)check inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth
 {
-	return [self calcControlLayout:check inRect:bounds optimalWidth:optimalWidth selector:@selector(setTitle:)];
+	return [self calcControlLayout:check inRect:bounds optimalWidth:optimalWidth selector:@selector(setTitle:) delta:0];
 }
 
 - (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth
 {
-	bounds = [self calcControlLayout:textField inRect:bounds optimalWidth:optimalWidth selector:@selector(setStringValue:)];
+	return [self calcLabelLayout:textField inRect:bounds optimalWidth:optimalWidth delta:0.0f];
+}
+
+- (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth delta:(float)delta
+{
+	bounds = [self calcControlLayout:textField inRect:bounds optimalWidth:optimalWidth selector:@selector(setStringValue:) delta:delta];
 	// Don't ask me why, but it doesn't work without the following.
 	bounds.size.width += 2.0f;
 	return bounds;

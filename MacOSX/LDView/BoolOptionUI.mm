@@ -44,7 +44,6 @@
 		{
 			shown = true;
 			[docView addSubview:check];
-			[docView setNeedsDisplay:YES];
 			[check release];
 		}
 	}

@@ -6,6 +6,7 @@
 #import "PathOptionUI.h"
 #import "LongOptionUI.h"
 #import "FloatOptionUI.h"
+#import "OCLocalStrings.h"
 
 @implementation Options
 
@@ -139,6 +140,31 @@
 
 - (IBAction)ok:(id)sender
 {
+	NSString *error = nil;
+	NSEnumerator *enumerator = [optionUIs objectEnumerator];
+	OptionUI *optionUI;
+
+	// First, walk through all settings and validate them.  If any of the
+	// validations fails, stop and return false.  That means that if there are
+	// any validation failures, the settings before the failure won't have their
+	// values updated.
+	while ((optionUI = [enumerator nextObject]) != nil)
+	{
+		if (![optionUI validate:error])
+		{
+			if (error != nil)
+			{
+				NSRunAlertPanel([OCLocalStrings get:@"Error"], error, [OCLocalStrings get:@"OK"], nil, nil);
+			}
+			return;
+		}
+	}
+	enumerator = [optionUIs objectEnumerator];
+	// If we get here, validation succeeded, so save all the option values.
+	while ((optionUI = [enumerator nextObject]) != nil)
+	{
+		[optionUI commit];
+	}
 	[NSApp stopModalWithCode:NSOKButton];
 }
 

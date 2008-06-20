@@ -137,6 +137,9 @@ void LDPovExporter::initSettings(void) const
 	// alignment.
 	//addSetting(ls(_UC("PovQuality")), m_quality, udKey("Quality").c_str(), 0,
 	//	3);
+	// Uncomment the below to test a long setting.
+	//addSetting(_UC("Long Setting"), 42l, udKey("TestLongSetting").c_str(), -10l,
+	//	100l);
 	addSetting(LDExporterSetting(ls(_UC("PovNativeGeometry")),
 		3));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
