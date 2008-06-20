@@ -7,20 +7,21 @@
 //
 
 #import "OCLocalStrings.h"
+#import "LDViewCategories.h"
+
 #include <TCFoundation/TCLocalStrings.h>
+#include <TCFoundation/mystring.h>
 
 
 @implementation OCLocalStrings
 
 + (NSString *)get:(NSString *)key
 {
-	const char *string = TCLocalStrings::get([key cStringUsingEncoding:
-		NSASCIIStringEncoding]);
+	CUCSTR string = TCLocalStrings::get([key ucString].c_str());
 
 	if (string)
 	{
-		return [NSString stringWithCString:string
-			encoding:NSASCIIStringEncoding];
+		return [NSString stringWithUCString:string];
 	}
 	else
 	{

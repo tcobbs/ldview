@@ -12,7 +12,10 @@
 
 @interface LongOptionUI : NumberOptionUI
 {
-
+	long value;
 }
+
+- (bool)validate:(NSString *&)error;
+- (void)commit;
 
 @end
