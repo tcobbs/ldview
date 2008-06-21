@@ -1,6 +1,7 @@
 #import "SaveExportViewOwner.h"
 #import "LDViewCategories.h"
 #import "Options.h"
+#import "OCLocalStrings.h"
 
 #include <LDLib/LDUserDefaultsKeys.h>
 
@@ -63,8 +64,13 @@
 	if (exporter != NULL)
 	{
 		Options *options = [[Options alloc] init];
-
-		[options runModalWithSettings:exporter->getSettings()];
+		NSString *prefixFormat = [OCLocalStrings get:@"ExtExportFormat"];
+		NSString *titlePrefix;
+		std::string extension = exporter->getExtension();
+		
+		convertStringToUpper(&extension[0]);
+		titlePrefix = [NSString stringWithFormat:prefixFormat, [NSString stringWithASCIICString:extension.c_str()]];
+		[options runModalWithSettings:exporter->getSettings() titlePrefix:titlePrefix];
 		[options release];
 	}
 }

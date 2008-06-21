@@ -14,7 +14,8 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = OptionsDocView; LANGUAGE = ObjC; SUPERCLASS = NSView; }
+        {CLASS = OptionsDocView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = OptionsPanel; LANGUAGE = ObjC; SUPERCLASS = NSPanel; }
     ); 
     IBVersion = 1; 
 }

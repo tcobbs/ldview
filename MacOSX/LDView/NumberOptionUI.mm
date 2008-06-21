@@ -30,6 +30,7 @@
 		frame = [textField frame];
 		frame.size.width = textFieldWidth;
 		[textField setFrame:frame];
+		[[textField cell] setRepresentedObject:self];
 	}
 	return self;
 }
@@ -77,12 +78,16 @@
 
 - (NSRect)frame
 {
-	return [label frame];
+	NSRect frame = [label frame];
+
+	frame.origin.y -= 7.0f;
+	frame.size.height += 14.0f;
+	return frame;
 }
 
 - (NSView *)firstKeyView
 {
-	return label;
+	return textField;
 }
 
 @end

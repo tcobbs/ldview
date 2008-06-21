@@ -7,6 +7,7 @@
 #import "LongOptionUI.h"
 #import "FloatOptionUI.h"
 #import "OCLocalStrings.h"
+#import "OptionsPanel.h"
 
 @implementation Options
 
@@ -126,16 +127,6 @@
 
 - (void)awakeFromNib
 {
-//	if ([scrollView documentView] == nil)
-//	{
-//		NSRect frame = [[scrollView contentView] frame];
-//
-//		frame.origin.x = frame.origin.y = 0.0f;
-//		docView = [[NSView alloc] initWithFrame:frame];
-//		[docView setAutoresizingMask:NSViewWidthSizable];
-//		[scrollView setDocumentView:docView];
-//		[docView release];
-//	}
 }
 
 - (IBAction)ok:(id)sender
@@ -284,17 +275,62 @@
 	[panel setInitialFirstResponder:[okButton nextKeyView]];
 }
 
-- (int)runModalWithSettings:(LDExporterSettingList &)theSettings
+- (void)newFirstResponder:(NSNotification *)notification
+{
+	id responder = [[notification userInfo] objectForKey:@"Responder"];
+
+	if ([responder respondsToSelector:@selector(cell)])
+	{
+		OptionUI *optionUI = [[responder cell] representedObject];
+
+		if (optionUI == nil && [responder isKindOfClass:[NSPopUpButton class]])
+		{
+			// For some reason NSPopUpButtonCell always returns nil from
+			// -representedObject.
+			optionUI = [[responder itemAtIndex:0] representedObject];
+		}
+		if (optionUI != nil)
+		{
+			NSRect optionRect = [optionUI frame];
+			NSClipView *clipView = [scrollView contentView];
+			NSRect docVisibleRect = [scrollView documentVisibleRect];
+			float optionBottom = optionRect.origin.y + optionRect.size.height;
+			float docVisibleBottom = docVisibleRect.origin.y + docVisibleRect.size.height;
+			float delta = optionBottom - docVisibleBottom;
+
+			if (delta > 0.0f)
+			{
+				// Why does the clip view have a different coordinate system?
+				NSPoint scrollPoint = [docView convertPoint:NSMakePoint(0.0f, docVisibleRect.origin.y + delta) toView:clipView];
+
+				[clipView scrollToPoint:scrollPoint];
+				[scrollView reflectScrolledClipView:clipView];
+			}
+			delta = optionRect.origin.y - docVisibleRect.origin.y;
+			if (delta < 0.0f)
+			{
+				// Why does the clip view have a different coordinate system?
+				NSPoint scrollPoint = [docView convertPoint:NSMakePoint(0.0f, docVisibleRect.origin.y + delta) toView:clipView];
+
+				[clipView scrollToPoint:scrollPoint];
+				[scrollView reflectScrolledClipView:clipView];
+			}
+		}
+	}
+}
+
+- (int)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix
 {
 	int retValue;
+	NSString *titleFormat = [panel title];
 
+	[panel setTitle:[NSString stringWithFormat:titleFormat, titlePrefix]];
 	settings = &theSettings;
 	[self populate];
 	[self calcSize];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newFirstResponder:) name:OPDidChangeFirstResponderNotification object:panel];
 	retValue = [NSApp runModalForWindow:panel];
-	if (retValue == NSOKButton)
-	{
-	}
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:OPDidChangeFirstResponderNotification object:panel];
 	settings = NULL;
 	return retValue;
 }

@@ -29,6 +29,7 @@
 			[popUpButton addItemWithTitle:[NSString stringWithUCString:values[i]]];
 		}
 		[popUpButton selectItemAtIndex:setting->getSelectedOption()];
+		[[popUpButton itemAtIndex:0] setRepresentedObject:self];
 	}
 	return self;
 }

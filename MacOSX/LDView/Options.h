@@ -4,9 +4,11 @@
 
 #include <LDExporter/LDExporterSetting.h>
 
+@class OptionsPanel;
+
 @interface Options : NSObject
 {
-    IBOutlet NSPanel *panel;
+    IBOutlet OptionsPanel *panel;
     IBOutlet NSScrollView *scrollView;
 	IBOutlet NSButton *okButton;
 	IBOutlet NSButton *cancelButton;
@@ -17,7 +19,7 @@
 	float spacing;
 }
 
-- (int)runModalWithSettings:(LDExporterSettingList &)theSettings;
+- (int)runModalWithSettings:(LDExporterSettingList &)theSettings titlePrefix:(NSString *)titlePrefix;
 
 - (IBAction)ok:(id)sender;
 - (IBAction)cancel:(id)sender;
