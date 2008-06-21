@@ -53,6 +53,8 @@ ucstring LDPovExporter::getTypeDescription(void) const
 
 void LDPovExporter::loadDefaults(void)
 {
+	char *temp;
+
 	LDExporter::loadDefaults();
 	m_quality = longForKey("Quality", 2);
 	m_refls = boolForKey("Reflections", true);
@@ -63,6 +65,8 @@ void LDPovExporter::loadDefaults(void)
 	m_inlinePov = boolForKey("InlinePov", true);
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
+	m_floor = boolForKey("Floor", true);
+	m_floorAxis = longForKey("FloorAxis", 1);
 	m_edgeRadius = floatForKey("EdgeRadius", 0.15f);
 	m_ambient = floatForKey("Ambient", 0.4f);
 	m_diffuse = floatForKey("Diffuse", 0.4f);
@@ -79,6 +83,26 @@ void LDPovExporter::loadDefaults(void)
 	m_chromeBril = floatForKey("ChromeBril", 5.0f);
 	m_chromeSpec = floatForKey("ChromeSpecular", 0.8f);
 	m_chromeRough = floatForKey("ChromeRoughness", 0.01f);
+	temp = stringForKey("TopInclude");
+	if (temp != NULL)
+	{
+		m_topInclude = temp;
+		delete temp;
+	}
+	else
+	{
+		m_topInclude = "";
+	}
+	temp = stringForKey("BottomInclude");
+	if (temp != NULL)
+	{
+		m_bottomInclude = temp;
+		delete temp;
+	}
+	else
+	{
+		m_bottomInclude = "";
+	}
 }
 
 void LDPovExporter::addEdgesSettings(void) const
@@ -107,7 +131,7 @@ void LDPovExporter::initSettings(void) const
 	//	udKey("Shadows").c_str()));
 	// End of top-level boolean group test.
 	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
-		4));
+		7));
 	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")),
 		udKey("Quality").c_str())))
 	{
@@ -126,12 +150,36 @@ void LDPovExporter::initSettings(void) const
 			setting.selectOption(2);
 		}
 	}
+	addSetting(LDExporterSetting(ls(_UC("PovFloor")), m_floor,
+		udKey("Floor").c_str()));
+	m_settings.back().setGroupSize(1);
+	if (addSetting(LDExporterSetting(ls(_UC("PovFloorAxis")),
+		udKey("FloorAxis").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.addOption(0, ls(_UC("PovFloorAxisX")));
+		setting.addOption(1, ls(_UC("PovFloorAxisY")));
+		setting.addOption(2, ls(_UC("PovFloorAxisZ")));
+		try
+		{
+			setting.selectOption(m_floorAxis);
+		}
+		catch (...)
+		{
+			setting.selectOption(1);
+		}
+	}
 	addSetting(LDExporterSetting(ls(_UC("PovReflections")), m_refls,
 		udKey("Reflections").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovShadows")), m_shads,
 		udKey("Shadows").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
 		udKey("UnmirrorStuds").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovTopInclude")), m_topInclude.c_str(),
+		udKey("TopInclude").c_str()));
+	addSetting(LDExporterSetting(ls(_UC("PovBottomInclude")),
+		m_bottomInclude.c_str(), udKey("BottomInclude").c_str()));
 	LDExporter::initSettings();
 	// Uncomment the below to test top-level number settings to verify
 	// alignment.
@@ -391,6 +439,10 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
+		if (m_topInclude.size() > 0)
+		{
+			fprintf(m_pPovFile, "#include \"%s\"\n\n", m_topInclude.c_str());
+		}
 		if (!writeCamera())
 		{
 			return 1;
@@ -429,10 +481,12 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		fprintf(m_pPovFile, "object {\n\t%s\n",
-			getDeclareName(m_pTopModel, false).c_str());
-		writeColor(7);
-		fprintf(m_pPovFile, "\n}\n");
+		writeMainModel();
+		writeFloor();
+		if (m_bottomInclude.size() > 0)
+		{
+			fprintf(m_pPovFile, "#include \"%s\"\n\n", m_bottomInclude.c_str());
+		}
 		fclose(m_pPovFile);
 	}
 	else
@@ -442,11 +496,49 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 	return 0;
 }
 
+void LDPovExporter::writeMainModel(void)
+{
+	fprintf(m_pPovFile, "// ", m_pTopModel->getName());
+	if (m_pTopModel->getName())
+	{
+		fprintf(m_pPovFile, "%s\n", m_pTopModel->getName());
+	}
+	else
+	{
+		char *name = filenameFromPath(m_pTopModel->getFilename());
+
+		fprintf(m_pPovFile, "%s\n", name);
+		delete name;
+	}
+	fprintf(m_pPovFile, "object {\n\t%s\n",
+		getDeclareName(m_pTopModel, false).c_str());
+	writeColor(7);
+	fprintf(m_pPovFile, "\n}\n\n");
+}
+
+void LDPovExporter::writeFloor(void)
+{
+	fprintf(m_pPovFile, "// Floor\n");
+	fprintf(m_pPovFile, "#if (FLOOR != 0)\n");
+	fprintf(m_pPovFile, "object {\n");
+	fprintf(m_pPovFile, "\tplane { FLOOR_AXIS, FLOOR_LOC hollow }\n");
+	fprintf(m_pPovFile, "\ttexture {\n");
+	fprintf(m_pPovFile,
+		"\t\tpigment { color rgb <FLOOR_R,FLOOR_G,FLOOR_B> }\n");
+	fprintf(m_pPovFile,
+		"\t\tfinish { ambient FLOOR_AMB diffuse FLOOR_DIFF }\n");
+	fprintf(m_pPovFile, "\t}\n");
+	fprintf(m_pPovFile, "}\n");
+	fprintf(m_pPovFile, "#end\n\n");
+}
+
 bool LDPovExporter::writeHeader(void)
 {
 	time_t genTime = time(NULL);
 	const char *author = m_pTopModel->getAuthor();
 	char *filename = filenameFromPath(m_pTopModel->getFilename());
+	std::string floorAxis;
+	std::string floorLoc;
 
 	fprintf(m_pPovFile, "// %s %s%s%s %s\n", (const char *)ls("PovGeneratedBy"),
 		m_appName.c_str(), m_appVersion.size() > 0 ? " " : "",
@@ -467,8 +559,51 @@ bool LDPovExporter::writeHeader(void)
 			author);
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
+	fprintf(m_pPovFile, "#declare MIN_X = %s;\n",
+		ftostr(m_boundingMin[0]).c_str());
+	fprintf(m_pPovFile, "#declare MAX_X = %s;\n",
+		ftostr(m_boundingMax[0]).c_str());
+	fprintf(m_pPovFile, "#declare MIN_Y = %s;\n",
+		ftostr(m_boundingMin[1]).c_str());
+	fprintf(m_pPovFile, "#declare MAX_Y = %s;\n",
+		ftostr(m_boundingMax[1]).c_str());
+	fprintf(m_pPovFile, "#declare MIN_Z = %s;\n",
+		ftostr(m_boundingMin[2]).c_str());
+	fprintf(m_pPovFile, "#declare MAX_Z = %s;\n",
+		ftostr(m_boundingMax[2]).c_str());
 	fprintf(m_pPovFile, "#declare QUAL = %ld;\t// %s\n", m_quality,
 		(const char *)ls("PovQualDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR = %d;\t// %s\n", m_floor ? 1 : 0,
+		(const char *)ls("PovFloorDesc"));
+	switch (m_floorAxis)
+	{
+	case 0:
+		floorAxis = "x";
+		floorLoc = "MIN_X";
+		break;
+	case 2:
+		floorAxis = "z";
+		floorLoc = "MAX_Z";
+		break;
+	default:
+		floorAxis = "y";
+		floorLoc = "MAX_Y";
+		break;
+	}
+	fprintf(m_pPovFile, "#declare FLOOR_LOC = %s;\t// %s\n", floorLoc.c_str(),
+		(const char *)ls("PovFloorLocDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR_AXIS = %s;\t// %s\n", floorAxis.c_str(),
+		(const char *)ls("PovFloorAxisDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR_R = 0.8;\t// %s\n",
+		(const char *)ls("PovFLOOR_RDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR_G = 0.8;\t// %s\n",
+		(const char *)ls("PovFLOOR_GDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR_B = 0.8;\t// %s\n",
+		(const char *)ls("PovFLOOR_BDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR_AMB = 0.4;\t// %s\n",
+		(const char *)ls("PovFLOOR_AMBDesc"));
+	fprintf(m_pPovFile, "#declare FLOOR_DIFF = 0.4;\t// %s\n",
+		(const char *)ls("PovFLOOR_DIFFDesc"));
 	fprintf(m_pPovFile, "#declare REFLS = %d;\t// %s\n", m_refls ? 1 : 0,
 		(const char *)ls("PovReflsDesc"));
 	fprintf(m_pPovFile, "#declare SHADS = %d;\t// %s\n", m_shads ? 1 : 0,
