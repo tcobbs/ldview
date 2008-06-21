@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="TRE"
 	ProjectGUID="{3E28D374-AA9A-4B02-A865-8C369EC4FA1F}"
 	RootNamespace="TRE"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
