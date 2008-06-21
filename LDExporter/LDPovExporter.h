@@ -60,6 +60,8 @@ protected:
 	~LDPovExporter(void);
 	void dealloc(void);
 	bool writeHeader(void);
+	void writeMainModel(void);
+	void writeFloor(void);
 	bool writeModel(LDLModel *pModel, const TCFloat *matrix);
 	bool writeCamera(void);
 	bool writeLights(void);
@@ -168,10 +170,14 @@ protected:
 	bool m_findReplacements;
 	bool m_xmlMap;
 	std::string m_xmlMapPath;
+	std::string m_topInclude;
+	std::string m_bottomInclude;
 	bool m_inlinePov;
 	bool m_hideStuds;
 	bool m_unmirrorStuds;
 	long m_quality;
+	bool m_floor;
+	long m_floorAxis;
 	bool m_refls;
 	bool m_shads;
 	TCFloat m_edgeRadius;
