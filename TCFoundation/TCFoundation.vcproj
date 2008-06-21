@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="8.00"
 	Name="TCFoundation"
 	ProjectGUID="{29CAFA41-FC7A-4DF3-BC68-6E73B5308E26}"
 	RootNamespace="TCFoundation"
-	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
