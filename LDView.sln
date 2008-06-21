@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CUI", "CUI\CUI.vcproj", "{37143396-D8F0-42BF-BDD9-BB9812F71814}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LDLib", "LDLib\LDLib.vcproj", "{1A43372B-2255-4A11-BB31-EF0C2473BB10}"
