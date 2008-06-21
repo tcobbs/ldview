@@ -24,6 +24,7 @@
 		[browseButton setTitle:[OCLocalStrings get:@"LDXBrowse..."]];
 		[browseButton setBezelStyle:NSRoundedBezelStyle];
 		[textField setNextKeyView:browseButton];
+		[[browseButton cell] setRepresentedObject:self];
 	}
 	return self;
 }

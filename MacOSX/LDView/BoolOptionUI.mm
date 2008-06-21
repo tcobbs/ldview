@@ -62,7 +62,11 @@
 
 - (NSRect)frame
 {
-	return [check frame];
+	NSRect frame = [check frame];
+	
+	frame.origin.y -= 3.0f;
+	frame.size.height += 6.0f;
+	return frame;
 }
 
 - (NSView *)firstKeyView

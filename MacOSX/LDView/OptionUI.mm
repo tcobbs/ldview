@@ -180,7 +180,7 @@
 	{
 		optimalWidth = bounds.size.width;
 	}
-	return bounds;
+	return NSIntegralRect(bounds);
 }
 
 - (NSRect)calcControlLayout:(NSControl *)control inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth selector:(SEL)selector delta:(float)delta
@@ -212,6 +212,7 @@
 	[check setButtonType:NSSwitchButton];
 	[check setCheck:setting->getBoolValue()];
 	[[check cell] setWraps:NO];
+	[[check cell] setRepresentedObject:self];
 	return check;
 }
 
@@ -224,6 +225,7 @@
 	[label setBezeled:NO];
 	[label setBordered:NO];
 	[[label cell] setWraps:NO];
+	[[label cell] setRepresentedObject:self];
 	return label;
 }
 
