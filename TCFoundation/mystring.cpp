@@ -548,6 +548,22 @@ bool stringHasSuffix(const wchar_t* string, const wchar_t* suffix)
 	return i == len2;
 }
 
+std::string lowerCaseString(const std::string &src)
+{
+	std::string retValue = src;
+
+	convertStringToLower(&retValue[0]);
+	return retValue;
+}
+
+std::string upperCaseString(const std::string &src)
+{
+	std::string retValue = src;
+
+	convertStringToUpper(&retValue[0]);
+	return retValue;
+}
+
 char* convertStringToUpper(char* string)
 {
 	int length = strlen(string);

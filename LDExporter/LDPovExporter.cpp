@@ -702,7 +702,7 @@ std::string LDPovExporter::getDeclareName(
 	{
 		key = modelFilename;
 	}
-	it = m_declareNames.find(key);
+	it = m_declareNames.find(lowerCaseString(key));
 	if (it != m_declareNames.end())
 	{
 		return it->second;
@@ -734,7 +734,7 @@ std::string LDPovExporter::getDeclareName(
 	delete temp3;
 	delete temp4;
 	delete replaced;
-	m_declareNames[key] = retValue;
+	m_declareNames[lowerCaseString(key)] = retValue;
 	return retValue;
 }
 
@@ -851,7 +851,7 @@ bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
 					LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
 					LDLModel *pModel = pModelLine->getModel();
 
-					if (pModel)
+					if (pModel != NULL)
 					{
 						TCFloat newMatrix[16];
 
@@ -1144,9 +1144,8 @@ const PovName *LDPovExporter::findPovName(
 bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 {
 	const std::string modelFilename = getModelFilename(pModel);
-	std::string key = modelFilename;
+	std::string key = lowerCaseString(modelFilename);
 
-	convertStringToLower(&key[0]);
 	PovElementMap::const_iterator it = m_xmlElements.find(key);
 	if (it != m_xmlElements.end())
 	{
@@ -1154,6 +1153,7 @@ bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 		StringList::const_iterator itFilename;
 		bool wrote = false;
 		size_t i = 0;
+		std::string declareFilename;
 
 		for (itFilename = element.povFilenames.begin();
 			itFilename != element.povFilenames.end(); itFilename++)
@@ -1170,7 +1170,11 @@ bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 			}
 			i++;
 		}
-		m_declareNames[modelFilename] = findMainPovName(element);
+		declareFilename = modelFilename;
+		convertStringToLower(&declareFilename[0]);
+		m_declareNames[declareFilename] = findMainPovName(element);
+		m_declareNames[declareFilename + ":mirror"] =
+			m_declareNames[declareFilename];
 		m_matrices[key] = element.matrix;
 		return true;
 	}
@@ -1236,7 +1240,8 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 
 						if (sscanf(buf, " %s", declareName) == 1)
 						{
-							m_declareNames[modelFilename] = declareName;
+							m_declareNames[lowerCaseString(modelFilename)] =
+								declareName;
 							break;
 						}
 					}
@@ -1288,10 +1293,14 @@ bool LDPovExporter::findModelGeometry(
 		if (pFileLine->getLineType() == LDLLineTypeModel)
 		{
 			LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
+			LDLModel *pModel = pModelLine->getModel();
 
-			if (!m_emptyModels[getDeclareName(pModelLine->getModel(), mirrored)])
+			if (pModel != NULL)
 			{
-				retValue = true;
+				if (!m_emptyModels[getDeclareName(pModel, mirrored)])
+				{
+					retValue = true;
+				}
 			}
 		}
 		else if (pFileLine->getLineType() == LDLLineTypeTriangle ||
@@ -1357,8 +1366,11 @@ bool LDPovExporter::writeModelObject(
 
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
-					writeModelLine((LDLModelLine *)pFileLine, studsStarted,
-						mirrored, matrix);
+					if (((LDLModelLine *)pFileLine)->getModel() != NULL)
+					{
+						writeModelLine((LDLModelLine *)pFileLine, studsStarted,
+							mirrored, matrix);
+					}
 				}
 				else if (pFileLine->getLineType() == LDLLineTypeComment)
 				{
@@ -1495,8 +1507,7 @@ void LDPovExporter::writeMatrix(
 {
 	if (filename != NULL)
 	{
-		std::string key = filename;
-		convertStringToLower(&key[0]);
+		std::string key = lowerCaseString(filename);
 		MatrixMap::const_iterator it = m_matrices.find(key);
 
 		if (it != m_matrices.end())
@@ -1860,7 +1871,7 @@ bool LDPovExporter::writeModelLine(
 			const std::string modelFilename = getModelFilename(pModel);
 			std::string key = modelFilename;
 
-			it = m_xmlElements.find(key);
+			it = m_xmlElements.find(lowerCaseString(key));
 			if (it != m_xmlElements.end() &&
 				pModel->colorNumberIsTransparent(pModelLine->getColorNumber()))
 			{
