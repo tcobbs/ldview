@@ -2563,19 +2563,29 @@ void LDPovExporter::writeLogo(void)
 		"}\n\n");
 }
 
+bool LDPovExporter::substituteStu2(void)
+{
+	return substituteStud("ldl_dash_lowres_colon_stu2_dot_dat");
+}
+
 bool LDPovExporter::substituteStud(void)
+{
+	return substituteStud("stud_dot_dat");
+}
+
+bool LDPovExporter::substituteStud(const char *declareName)
 {
 	writeLogo();
 	fprintf(m_pPovFile,
-		"#declare stud_dot_dat =\n"
-		"#if (QUAL <= 2)\n"
-		"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
-		"#else\n"
-		"union {\n"
-		"	cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
-		"	object { ldx_stud_logo }\n"
-		"}\n"
-		"#end\n"
-		"\n");
+			"#declare %s =\n"
+			"#if (QUAL <= 2)\n"
+			"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
+			"#else\n"
+			"union {\n"
+			"	cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
+			"	object { ldx_stud_logo }\n"
+			"}\n"
+			"#end\n"
+			"\n", declareName);
 	return true;
 }
