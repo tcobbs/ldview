@@ -8,6 +8,7 @@
 
 #import "BoolOptionUI.h"
 #import "LDViewCategories.h"
+#import "Options.h"
 
 #include <LDExporter/LDExporterSetting.h>
 
@@ -19,8 +20,22 @@
 	if (self != nil)
 	{
 		check = [self createCheck];
+		[check setTarget:self];
+		[check setAction:@selector(checked:)];
+		if (setting->getGroupSize() > 0)
+		{
+			leftGroupMargin = 6.0f;
+		}
 	}
 	return self;
+}
+
+- (void)checked:(id)sender
+{
+	if (setting->getGroupSize() > 0)
+	{
+		[options updateEnabled];
+	}
 }
 
 - (void)dealloc
@@ -72,6 +87,18 @@
 - (NSView *)firstKeyView
 {
 	return check;
+}
+
+- (BOOL)groupEnabled
+{
+	if (setting->getGroupSize() > 0)
+	{
+		return [check getCheck];
+	}
+	else
+	{
+		return true;
+	}
 }
 
 @end
