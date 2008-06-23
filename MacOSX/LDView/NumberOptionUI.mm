@@ -56,7 +56,14 @@
 		
 		textFieldBounds.origin.x = x + optimalWidth - textFieldWidth;
 		textFieldBounds.origin.y = y;
-		labelBounds.origin.y += (float)(int)((textFieldBounds.size.height - labelBounds.size.height) / 2.0f);
+		if (textFieldBounds.size.height > labelBounds.size.height)
+		{
+			labelBounds.origin.y += (float)(int)((textFieldBounds.size.height - labelBounds.size.height) / 2.0f);
+		}
+		else
+		{
+			textFieldBounds.origin.y += (float)(int)((labelBounds.size.height - textFieldBounds.size.height) / 2.0f);
+		}
 		labelBounds.size.width = optimalWidth - textFieldWidth - 6.0f;
 		[label setFrame:labelBounds];
 		[textField setFrame:textFieldBounds];
@@ -68,7 +75,7 @@
 			[label release];
 		}
 	}
-	return textFieldBounds.size.height;
+	return std::max(textFieldBounds.size.height, labelBounds.size.height);
 }
 
 - (void)setEnabled:(BOOL)enabled

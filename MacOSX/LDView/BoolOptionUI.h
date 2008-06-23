@@ -15,11 +15,13 @@
 	NSButton *check;
 }
 
+- (void)checked:(id)sender;
 - (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting;
 - (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth;
 - (void)commit;
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
 - (NSView *)firstKeyView;
+- (BOOL)groupEnabled;
 
 @end

@@ -86,10 +86,13 @@
 	OptionUI *optionUI;
 
 	width -= margin * 2.0f;
-	numberWidth = width;
 	if (update)
 	{
 		numberWidth = optimalWidth;
+	}
+	else
+	{
+		numberWidth = width;
 	}
 	while ((optionUI = [enumerator nextObject]) != nil)
 	{
@@ -118,6 +121,7 @@
 		[scrollView setHasVerticalScroller:YES];
 		size = [scrollView contentSize];
 		width = size.width;
+		optimalWidth = 0;
 		height = [self calcHeightForWidth:width optimalWidth:optimalWidth update:false];
 		size.height = height;
 		[docView setFrameSize:size];
@@ -329,6 +333,8 @@
 	[self populate];
 	[self calcSize];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newFirstResponder:) name:OPDidChangeFirstResponderNotification object:panel];
+	[panel setFrameUsingName:titlePrefix];
+	[panel setFrameAutosaveName:titlePrefix];
 	retValue = [NSApp runModalForWindow:panel];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:OPDidChangeFirstResponderNotification object:panel];
 	settings = NULL;
