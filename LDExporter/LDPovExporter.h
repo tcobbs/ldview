@@ -148,7 +148,9 @@ protected:
 	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
+	virtual bool substituteStu2(void);
 	virtual bool substituteStud(void);
+	virtual bool substituteStud(const char *declareName);
 
 	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
 	void loadDefaults(void);
