@@ -760,7 +760,7 @@ bool LDPovExporter::scanModelColors(LDLModel *pModel)
 			if (pFileLine->getLineType() == LDLLineTypeModel)
 			{
 				LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
-				LDLModel *pModel = pModelLine->getModel();
+				LDLModel *pModel = pModelLine->getModel(true);
 
 				if (pModel)
 				{
@@ -849,7 +849,7 @@ bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
 					LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
-					LDLModel *pModel = pModelLine->getModel();
+					LDLModel *pModel = pModelLine->getModel(true);
 
 					if (pModel != NULL)
 					{
@@ -1293,7 +1293,7 @@ bool LDPovExporter::findModelGeometry(
 		if (pFileLine->getLineType() == LDLLineTypeModel)
 		{
 			LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
-			LDLModel *pModel = pModelLine->getModel();
+			LDLModel *pModel = pModelLine->getModel(true);
 
 			if (pModel != NULL)
 			{
@@ -1366,7 +1366,7 @@ bool LDPovExporter::writeModelObject(
 
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
-					if (((LDLModelLine *)pFileLine)->getModel() != NULL)
+					if (((LDLModelLine *)pFileLine)->getModel(true) != NULL)
 					{
 						writeModelLine((LDLModelLine *)pFileLine, studsStarted,
 							mirrored, matrix);
@@ -1482,7 +1482,7 @@ std::string LDPovExporter::getOfsSeamString(TCFloat ofs, TCFloat size)
 
 void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 {
-	LDLModel *pModel = pModelLine->getModel();
+	LDLModel *pModel = pModelLine->getModel(true);
 
 	if (pModel && pModel->isPart())
 	{
@@ -1841,10 +1841,10 @@ bool LDPovExporter::writeModelLine(
 	bool mirrored,
 	const TCFloat *matrix)
 {
-	LDLModel *pModel = pModelLine->getModel();
+	LDLModel *pModel = pModelLine->getModel(true);
 	TCFloat newModelMatrix[16] = { 0.0f };
 
-	if (m_unmirrorStuds && pModelLine->getModel()->hasStuds())
+	if (m_unmirrorStuds && pModelLine->getModel(true)->hasStuds())
 	{
 		TCVector::multMatrix(matrix, pModelLine->getMatrix(), newModelMatrix);
 		if (TCVector::determinant(newModelMatrix) < 0.0f)
@@ -1926,7 +1926,7 @@ void LDPovExporter::writeInnerModelLine(
 	bool slope,
 	bool studsStarted)
 {
-	LDLModel *pModel = pModelLine->getModel();
+	LDLModel *pModel = pModelLine->getModel(true);
 	bool origMirrored = mirrored;
 
 	indentStud(studsStarted);
@@ -2574,21 +2574,11 @@ void LDPovExporter::writeLogo(void)
 		"}\n\n");
 }
 
-bool LDPovExporter::substituteStu2(void)
-{
-	return substituteStud("ldl_dash_lowres_colon_stu2_dot_dat");
-}
-
 bool LDPovExporter::substituteStud(void)
-{
-	return substituteStud("stud_dot_dat");
-}
-
-bool LDPovExporter::substituteStud(const char *declareName)
 {
 	writeLogo();
 	fprintf(m_pPovFile,
-			"#declare %s =\n"
+			"#declare stud_dot_dat =\n"
 			"#if (QUAL <= 2)\n"
 			"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
 			"#else\n"
@@ -2597,6 +2587,6 @@ bool LDPovExporter::substituteStud(const char *declareName)
 			"	object { ldx_stud_logo }\n"
 			"}\n"
 			"#end\n"
-			"\n", declareName);
+			"\n");
 	return true;
 }

@@ -8,7 +8,7 @@ class LDLModelLine : public LDLActionLine
 public:
 	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
-	virtual LDLModel *getModel(void) const;
+	virtual LDLModel *getModel(bool forceHighRes = false) const;
 	TCFloat *getMatrix(void) { return m_matrix; }
 	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
 	virtual void print(int indent) const;
