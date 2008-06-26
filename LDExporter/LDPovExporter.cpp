@@ -1342,8 +1342,8 @@ bool LDPovExporter::writeModelObject(
 				TCVector min, max;
 
 				pModel->getBoundingBox(min, max);
-				fprintf(m_pPovFile, "#declare %s =", declareName.c_str());
-				writeDescriptionComment(pModel);
+				fprintf(m_pPovFile, "#declare %s =\n", declareName.c_str());
+				//writeDescriptionComment(pModel);
 				fprintf(m_pPovFile,
 					"#if (QUAL = 0)\n"
 					"box {\n\t");
@@ -1357,8 +1357,8 @@ bool LDPovExporter::writeModelObject(
 			}
 			else
 			{
-				fprintf(m_pPovFile, "#declare %s = union {", declareName.c_str());
-				writeDescriptionComment(pModel);
+				fprintf(m_pPovFile, "#declare %s = union {\n", declareName.c_str());
+				//writeDescriptionComment(pModel);
 			}
 			for (i = 0; i < count; i++)
 			{
@@ -1803,6 +1803,17 @@ void LDPovExporter::writeCommentLine(
 			fprintf(m_pPovFile, "%s\n", povLine);
 			delete povLine;
 		}
+	}
+	else if (strlen(comment) > 1)
+	{
+		// Note the processed line will always have a length of 1 on empty
+		// comments.  No point outputting them.
+		char *line = copyString(strchr(pCommentLine->getLine(), '0') + 1);
+
+		stripLeadingWhitespace(line);
+		stripTrailingWhitespace(line);
+		fprintf(m_pPovFile, "// %s\n", line);
+		delete line;
 	}
 }
 
