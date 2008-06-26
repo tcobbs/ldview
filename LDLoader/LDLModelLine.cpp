@@ -296,11 +296,11 @@ void LDLModelLine::print(int indent) const
 	}
 }
 
-LDLModel *LDLModelLine::getModel(void) const
+LDLModel *LDLModelLine::getModel(bool forceHighRes /*= false*/) const
 {
 	if (m_parentModel)
 	{
-		if (m_lowResModel && m_parentModel->getLowResStuds())
+		if (m_lowResModel && m_parentModel->getLowResStuds() && !forceHighRes)
 		{
 			return m_lowResModel;
 		}
