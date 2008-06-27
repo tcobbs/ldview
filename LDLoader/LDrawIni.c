@@ -327,8 +327,9 @@ static void FreeSearchDirs(struct LDrawIniS * LDrawIni)
             free(LDrawIni->SearchDirs[i].UnknownFlags);
          free(LDrawIni->SearchDirs[i].Dir);
       }
-      free(LDrawIni->SearchDirs);
    }
+   if (LDrawIni->SearchDirs)
+      free(LDrawIni->SearchDirs);
    LDrawIni->nSearchDirs = 0;
    LDrawIni->SearchDirs = NULL;
 }
