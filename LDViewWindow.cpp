@@ -920,6 +920,7 @@ BOOL LDViewWindow::initWindow(void)
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
 		hToolsMenu = GetSubMenu(GetMenu(hWindow), 3);
 		hViewAngleMenu = findSubMenu(hViewMenu, 0);
+		hStandardSizesMenu = findSubMenu(hViewMenu, 1);
 		if (!CUIThemes::isThemeLibLoaded())
 		{
 			RemoveMenu(hViewMenu, ID_VIEW_VISUALSTYLE, MF_BYCOMMAND);
@@ -3044,6 +3045,7 @@ LRESULT LDViewWindow::switchToolbar(void)
 	showToolbar = !showToolbar;
 	TCUserDefaults::setLongForKey(showToolbar ? 1 : 0, TOOLBAR_KEY, false);
 	reflectToolbar();
+	setupStandardSizes();
 	return 0;
 }
 
@@ -3058,6 +3060,7 @@ LRESULT LDViewWindow::switchStatusBar(void)
 	showStatusBar = !showStatusBar;
 	TCUserDefaults::setLongForKey(showStatusBar ? 1 : 0, STATUS_BAR_KEY, false);
 	reflectStatusBar();
+	setupStandardSizes();
 	return 0;
 }
 
@@ -3604,6 +3607,10 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		{
 			return 0;
 		}
+	}
+	if (itemId >= 20000 && itemId < 20000 + (int)standardSizes.size())
+	{
+		selectStandardSize(itemId - 20000);
 	}
 	if (itemId >= 30000 && itemId < 30000 + numVideoModes)
 	{
@@ -4877,6 +4884,7 @@ LRESULT LDViewWindow::doShowWindow(BOOL showFlag, LPARAM status)
 		reflectStatusBar();
 		reflectToolbar();
 	}
+	setupStandardSizes();
 	return CUIWindow::doShowWindow(showFlag, status);
 }
 
@@ -5333,5 +5341,114 @@ void LDViewWindow::stopAnimation(void)
 	if (modelWindow)
 	{
 		modelWindow->stopAnimation();
+	}
+}
+
+RECT LDViewWindow::getWorkArea(void)
+{
+	HMONITOR hMonitor = ::MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
+	RECT workAreaRect = { 0, 0, 0, 0};
+	bool fromMonitor = false;
+
+	if (hMonitor)
+	{
+		MONITORINFO mi;
+
+		mi.cbSize = sizeof(mi);
+		if (::GetMonitorInfo(hMonitor, &mi))
+		{
+			workAreaRect = mi.rcWork;
+			fromMonitor = true;
+		}
+	}
+	if (!fromMonitor)
+	{
+		if (!::SystemParametersInfo(SPI_GETWORKAREA, 0, &workAreaRect, 0))
+		{
+			::GetWindowRect(::GetDesktopWindow(), &workAreaRect);
+		}
+	}
+	return workAreaRect;
+}
+
+void LDViewWindow::selectStandardSize(int index)
+{
+	const LDrawModelViewer::StandardSize &size = standardSizes[index];
+	RECT windowRect;
+	RECT clientRect;
+	RECT workAreaRect = getWorkArea();
+
+	::GetWindowRect(hWindow, &windowRect);
+	::GetClientRect(modelWindow->getHWindow(), &clientRect);
+	windowRect.right += size.width - (clientRect.right - clientRect.left);
+	windowRect.bottom += size.height - (clientRect.bottom - clientRect.top);
+	if (windowRect.right > workAreaRect.right)
+	{
+		int delta = windowRect.right - workAreaRect.right;
+
+		windowRect.left -= delta;
+		windowRect.right -= delta;
+	}
+	if (windowRect.bottom > workAreaRect.bottom)
+	{
+		int delta = windowRect.bottom - workAreaRect.bottom;
+
+		windowRect.top -= delta;
+		windowRect.bottom -= delta;
+	}
+	MoveWindow(hWindow, windowRect.left, windowRect.top,
+		windowRect.right - windowRect.left, windowRect.bottom - windowRect.top,
+		TRUE);
+	::GetClientRect(modelWindow->getHWindow(), &clientRect);
+	debugPrintf(-1, "New client size: %d x %d\n",
+		clientRect.right - clientRect.left,
+		clientRect.bottom - clientRect.top);
+}
+
+void LDViewWindow::setupStandardSizes(void)
+{
+	RECT windowRect;
+	RECT clientRect;
+	RECT workAreaRect = getWorkArea();
+	SIZE workAreaSize;
+	SIZE windowSize;
+	SIZE clientSize;
+	SIZE size;
+
+	::GetWindowRect(hWindow, &windowRect);
+	::GetClientRect(modelWindow->getHWindow(), &clientRect);
+	workAreaSize.cx = workAreaRect.right - workAreaRect.left;
+	workAreaSize.cy = workAreaRect.bottom - workAreaRect.top;
+	windowSize.cx = windowRect.right - windowRect.left;
+	windowSize.cy = windowRect.bottom - windowRect.top;
+	if (::IsZoomed(hWindow))
+	{
+		LONG borderSize = ::GetSystemMetrics(SM_CXSIZEFRAME) * 2;
+
+		// GetWindowRect lies for maximized windows.
+		windowSize.cx -= borderSize;
+		windowSize.cy -= borderSize;
+	}
+	clientSize.cx = clientRect.right - clientRect.left;
+	clientSize.cy = clientRect.bottom - clientRect.top;
+	size.cx = workAreaSize.cx - windowSize.cx + clientSize.cx;
+	size.cy = workAreaSize.cy - windowSize.cy + clientSize.cy;
+	LDrawModelViewer::getStandardSizes(size.cx, size.cy, standardSizes);
+	while (GetMenuItemCount(hStandardSizesMenu) > 0)
+	{
+		DeleteMenu(hStandardSizesMenu, 0, MF_BYPOSITION);
+	}
+	for (size_t i = 0; i < standardSizes.size(); i++)
+	{
+		MENUITEMINFOUC itemInfo;
+		ucstring name = standardSizes[i].name;
+
+		memset(&itemInfo, 0, sizeof(itemInfo));
+		itemInfo.cbSize = sizeof(itemInfo);
+		itemInfo.fMask = MIIM_TYPE | MIIM_ID;
+		itemInfo.fType = MFT_STRING;
+		itemInfo.dwTypeData = &name[0];
+		itemInfo.wID = 20000 + i;
+		insertMenuItemUC(hStandardSizesMenu, i, TRUE, &itemInfo);
 	}
 }

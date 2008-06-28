@@ -183,6 +183,7 @@ class LDViewWindow: public CUIWindow
 		virtual void populateDisplayModeMenuItems(void);
 		virtual void selectFSVideoModeMenuItem(int index,
 			bool saveSetting = true);
+		virtual void selectStandardSize(int index);
 		virtual HMENU menuForBitDepth(HWND, int, int* = NULL);
 		virtual void selectPollingMenuItem(int);
 		virtual HMENU getParentOfMenuItem(HMENU hParentMenu, int itemId);
@@ -317,6 +318,8 @@ class LDViewWindow: public CUIWindow
 		void progressAlertCallback(TCProgressAlert *alert);
 
 		void loadSettings(void);
+		RECT getWorkArea(void);
+		void setupStandardSizes(void);
 
 		int intRound(TCFloat value);
 		static void recordRecentFiles(void);
@@ -365,6 +368,7 @@ class LDViewWindow: public CUIWindow
 		HMENU hFileMenu;
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
+		HMENU hStandardSizesMenu;
 		HMENU hToolsMenu;
 		//HMENU hToolbarMenu;
 		//HMENU hWireframeToolbarMenu;
@@ -401,6 +405,7 @@ class LDViewWindow: public CUIWindow
 		ModelTreeDialog *modelTreeDialog;
 		BoundingBoxDialog *boundingBoxDialog;
 		MpdDialog *mpdDialog;
+		LDrawModelViewer::StandardSizeVector standardSizes;
 
 		static TCStringArray* recentFiles;
 		static TCStringArray* extraSearchDirs;
