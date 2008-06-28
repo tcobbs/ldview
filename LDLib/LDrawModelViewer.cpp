@@ -40,6 +40,8 @@
 #define FONT_NUM_CHARACTERS 256
 #define DEF_DISTANCE_MULT 1.0f
 
+LDrawModelViewer::StandardSizeList LDrawModelViewer::standardSizes;
+
 LDrawModelViewer::LDrawModelViewer(int width, int height)
 	:mainTREModel(NULL),
 	mainModel(NULL),
@@ -4485,3 +4487,83 @@ std::string LDrawModelViewer::getCurFilename(void) const
 		return retValue;
 	}
 }
+
+// Note: static method
+void LDrawModelViewer::addStandardSize(int width, int height)
+{
+	StandardSize size = { width, height, _UC("") };
+	UCCHAR buf[1024];
+
+	standardSizes.push_back(size);
+	sucprintf(buf, COUNT_OF(buf), _UC("%d x %d"), width, height);
+	if (width * 2 / 3 == height)
+	{
+		ucstrcat(buf, _UC(" (3:2)"));
+	}
+	else if (width * 3 / 4 == height)
+	{
+		ucstrcat(buf, _UC(" (4:3)"));
+	}
+	else if (width * 3 / 5 == height)
+	{
+		ucstrcat(buf, _UC(" (5:3)"));
+	}
+	else if (width * 4 / 5 == height)
+	{
+		ucstrcat(buf, _UC(" (5:4)"));
+	}
+	else if (width * 9 / 16 == height)
+	{
+		ucstrcat(buf, _UC(" (16:9)"));
+	}
+	else if (width * 10 / 16 == height)
+	{
+		ucstrcat(buf, _UC(" (16:10)"));
+	}
+	standardSizes.back().name = buf;
+}
+
+// Note: static method
+void LDrawModelViewer::initStandardSizes(void)
+{
+	if (standardSizes.size() == 0)
+	{
+		addStandardSize(640, 480);
+		addStandardSize(720, 480);
+		addStandardSize(800, 450);
+		addStandardSize(800, 600);
+		addStandardSize(1024, 576);
+		addStandardSize(1024, 768);
+		addStandardSize(1152, 864);
+		addStandardSize(1280, 720);
+		addStandardSize(1280, 768);
+		addStandardSize(1280, 960);
+		addStandardSize(1280, 1024);
+		addStandardSize(1600, 1200);
+		//addStandardSize(1600, 1075);
+		addStandardSize(1680, 1050);
+		addStandardSize(1920, 1080);
+		addStandardSize(1920, 1200);
+	}
+}
+
+// Note: static method
+void LDrawModelViewer::getStandardSizes(
+	int maxWidth,
+	int maxHeight,
+	StandardSizeVector &sizes)
+{
+	initStandardSizes();
+	sizes.clear();
+	for (StandardSizeList::const_iterator it = standardSizes.begin();
+		it != standardSizes.end(); it++)
+	{
+		const StandardSize &size = *it;
+
+		if (size.width <= maxWidth && size.height <= maxHeight)
+		{
+			sizes.push_back(size);
+		}
+	}
+}
+

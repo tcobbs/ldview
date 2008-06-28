@@ -4,6 +4,7 @@
 #include <TCFoundation/TCAlertSender.h>
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
 #include <LDExporter/LDExporter.h>
@@ -77,6 +78,15 @@ class LDrawModelViewer: public TCAlertSender
 			ETStl,
 			ETLast = ETStl
 		};
+		struct StandardSize
+		{
+			int width;
+			int height;
+			ucstring name;
+		};
+		typedef std::list<StandardSize> StandardSizeList;
+		typedef std::vector<StandardSize> StandardSizeVector;
+
 		LDrawModelViewer(int, int);
 		LDInputHandler *getInputHandler(void);
 		virtual void update(void);
@@ -488,7 +498,12 @@ class LDrawModelViewer: public TCAlertSender
 		static const char *alertClass(void) { return "LDrawModelViewerAlert"; }
 		static const char *redrawAlertClass(void) { return "LDRedrawNeeded"; }
 		static const char *frameDoneAlertClass(void) { return "LDFrameDone"; }
-		static const char *loadAlertClass(void) { return "LDrawModelViewerLoad"; }
+		static const char *loadAlertClass(void)
+		{
+			return "LDrawModelViewerLoad";
+		}
+		static void getStandardSizes(int maxWidth, int maxHeight,
+			StandardSizeVector &sizes);
 	protected:
 		~LDrawModelViewer(void);
 		void dealloc(void);
@@ -549,6 +564,8 @@ class LDrawModelViewer: public TCAlertSender
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
+		static void initStandardSizes(void);
+		static void addStandardSize(int width, int height);
 
 		//int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
 		//	const TCFloat b[L3ORDERM]);
@@ -752,6 +769,7 @@ class LDrawModelViewer: public TCAlertSender
 			TCFloat verMax;
 			TCFloat fov;
 		} *cameraData;
+		static StandardSizeList standardSizes;
 };
 
 #endif // __LDRAWMODELVIEWER_H__
