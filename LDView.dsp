@@ -158,6 +158,10 @@ SOURCE=.\BoundingBoxDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\EnumOptionUI.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ExportOptionsDialog.cpp
 # End Source File
 # Begin Source File
@@ -327,6 +331,10 @@ SOURCE=.\BoolOptionUI.h
 # Begin Source File
 
 SOURCE=.\BoundingBoxDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\EnumOptionUI.h
 # End Source File
 # Begin Source File
 
