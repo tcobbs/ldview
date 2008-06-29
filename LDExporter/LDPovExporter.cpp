@@ -67,6 +67,7 @@ void LDPovExporter::loadDefaults(void)
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
 	m_floor = boolForKey("Floor", true);
 	m_floorAxis = longForKey("FloorAxis", 1);
+	m_selectedAspectRatio = longForKey("SelectedAspectRatio", 1);
 	m_edgeRadius = floatForKey("EdgeRadius", 0.15f);
 	m_ambient = floatForKey("Ambient", 0.4f);
 	m_diffuse = floatForKey("Diffuse", 0.4f);
@@ -131,7 +132,7 @@ void LDPovExporter::initSettings(void) const
 	//	udKey("Shadows").c_str()));
 	// End of top-level boolean group test.
 	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
-		7));
+		8));
 	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")),
 		udKey("Quality").c_str())))
 	{
@@ -148,6 +149,26 @@ void LDPovExporter::initSettings(void) const
 		catch (...)
 		{
 			setting.selectOption(2);
+		}
+	}
+	if (addSetting(LDExporterSetting(ls(_UC("PovAspectRatio")),
+		udKey("SelectedAspectRatio").c_str())))
+	{
+		LDExporterSetting &setting = m_settings.back();
+
+		setting.addOption(0, _UC("5:4"));
+		setting.addOption(1, _UC("4:3"));
+		setting.addOption(2, _UC("3:2"));
+		setting.addOption(3, _UC("5:3"));
+		setting.addOption(4, _UC("16:9"));
+		setting.addOption(5, _UC("2.35:1"));
+		try
+		{
+			setting.selectOption(m_selectedAspectRatio);
+		}
+		catch (...)
+		{
+			setting.selectOption(1);
 		}
 	}
 	addSetting(LDExporterSetting(ls(_UC("PovFloor")), m_floor,
@@ -530,6 +551,25 @@ void LDPovExporter::writeFloor(void)
 	fprintf(m_pPovFile, "\t}\n");
 	fprintf(m_pPovFile, "}\n");
 	fprintf(m_pPovFile, "#end\n\n");
+}
+
+std::string LDPovExporter::getAspectRatio(void)
+{
+	switch (m_selectedAspectRatio)
+	{
+	case 0:
+		return "5/4";
+	case 2:
+		return "3/2";
+	case 3:
+		return "5/3";
+	case 4:
+		return "16/9";
+	case 5:
+		return "2.35";
+	default:
+		return "4/3";
+	}
 }
 
 bool LDPovExporter::writeHeader(void)
@@ -976,14 +1016,15 @@ void LDPovExporter::getCameraString(char *&povCamera)
 		ftostr(lookAt[1], 20).c_str(), ftostr(lookAt[2], 20).c_str());
 	sprintf(cameraString,
 		"camera {\n"
-		"\t#declare ASPECT = 4/3;\n"
+		"\t#declare ASPECT = %s;\n"
 		"\tlocation < %s >\n"
 		"\tsky < %s >\n"
 		"\tright ASPECT * < -1,0,0 >\n"
 		"\tlook_at < %s >\n"
 		"\tangle %s\n"
 		"}\n",
-		locationString, upString, lookAtString, ftostr(getHFov()).c_str());
+		getAspectRatio().c_str(), locationString, upString, lookAtString,
+		ftostr(getHFov()).c_str());
 	povCamera = copyString(cameraString);
 }
 
