@@ -1346,16 +1346,16 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "&Save Current as Default",    ID_VIEW_SAVE_DEFAULT
         END
-        MENUITEM SEPARATOR
-        MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
-        MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
-        MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
-        MENUITEM SEPARATOR
         POPUP "Standard Sizes"
         BEGIN
             MENUITEM "Dummy item",                  ID_VIEW_STANDARDSIZES_DUMMYITEM
 
         END
+        MENUITEM SEPARATOR
+        MENUITEM "E&xamine Mode\tCtrl+Shift+X", ID_VIEW_EXAMINE
+        MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
+        MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
+        MENUITEM SEPARATOR
     END
     POPUP "&Tools"
     BEGIN
