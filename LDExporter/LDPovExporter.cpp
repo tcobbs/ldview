@@ -558,16 +558,28 @@ std::string LDPovExporter::getAspectRatio(void)
 	switch (m_selectedAspectRatio)
 	{
 	case 0:
+		m_width = 5;
+		m_height = 4;
 		return "5/4";
 	case 2:
+		m_width = 3;
+		m_height = 2;
 		return "3/2";
 	case 3:
+		m_width = 5;
+		m_height = 3;
 		return "5/3";
 	case 4:
+		m_width = 16;
+		m_height = 9;
 		return "16/9";
 	case 5:
+		m_width = 235;
+		m_height = 100;
 		return "2.35";
 	default:
+		m_width = 4;
+		m_height = 3;
 		return "4/3";
 	}
 }
@@ -957,6 +969,7 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	char cameraString[4096];
 	double lookAt[3];
 	double tempV[3];
+	std::string aspectRatio = getAspectRatio();
 
 	TCVector cameraPosition = m_camera.getPosition();
 
@@ -1023,7 +1036,7 @@ void LDPovExporter::getCameraString(char *&povCamera)
 		"\tlook_at < %s >\n"
 		"\tangle %s\n"
 		"}\n",
-		getAspectRatio().c_str(), locationString, upString, lookAtString,
+		aspectRatio.c_str(), locationString, upString, lookAtString,
 		ftostr(getHFov()).c_str());
 	povCamera = copyString(cameraString);
 }
