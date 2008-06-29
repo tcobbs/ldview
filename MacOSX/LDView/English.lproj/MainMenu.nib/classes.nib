@@ -62,6 +62,7 @@
                 pollingDisabledMenuItem = NSMenuItem; 
                 pollingPromptMenuItem = NSMenuItem; 
                 prefsMenuItem = NSMenuItem; 
+                standardSizesMenu = NSMenu; 
                 statusBarMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 
                 viewingAngleMenu = NSMenu; 

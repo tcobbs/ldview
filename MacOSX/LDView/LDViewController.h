@@ -26,19 +26,22 @@
 
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;
+	IBOutlet NSMenu *standardSizesMenu;
 
 	NSArray *ldrawFileTypes;
 	NSMutableArray *modelWindows;
 	Preferences *preferences;
+	NSMutableArray *standardSizes;
 
 	BOOL launchFileOpened;
-	//BOOL showStatusBar;
 	
 	NSString *statusBarMenuFormat;
 	NSString *toolbarMenuFormat;
 
 	long pollingMode;
 	NSTimer *tcAutoreleaseTimer;
+	NSString *noWindowText;
+	NSSize maxSize;
 }
 
 - (void)modelWindowWillClose:(ModelWindow *)modelWindow;
@@ -50,9 +53,6 @@
 - (IBAction)preferences:(id)sender;
 - (Preferences *)preferences;
 - (IBAction)resetView:(id)sender;
-//- (IBAction)toggleStatusBar:(id)sender;
-//- (IBAction)toggleToolbar:(id)sender;
-//- (IBAction)customizeToolbar:(id)sender;
 - (NSArray *)modelWindows;
 - (void)updateStatusBarMenuItem:(BOOL)showStatusBar;
 - (NSMenuItem *)statusBarMenuItem;
