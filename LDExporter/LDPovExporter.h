@@ -126,6 +126,7 @@ protected:
 	virtual void addGeometrySettings(void) const;
 	virtual int getNumEdgesSettings(void) const { return 2; }
 	virtual int getNumGeometrySettings(void) const { return 4; }
+	std::string getAspectRatio(void);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -180,6 +181,7 @@ protected:
 	long m_floorAxis;
 	bool m_refls;
 	bool m_shads;
+	long m_selectedAspectRatio;
 	TCFloat m_edgeRadius;
 	TCFloat m_ambient;
 	TCFloat m_diffuse;
