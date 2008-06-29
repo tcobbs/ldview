@@ -4491,9 +4491,11 @@ std::string LDrawModelViewer::getCurFilename(void) const
 // Note: static method
 void LDrawModelViewer::addStandardSize(int width, int height)
 {
-	StandardSize size = { width, height, _UC("") };
+	StandardSize size;
 	UCCHAR buf[1024];
 
+	size.width = width;
+	size.height = height;
 	standardSizes.push_back(size);
 	sucprintf(buf, COUNT_OF(buf), _UC("%d x %d"), width, height);
 	if (width * 2 / 3 == height)
