@@ -1420,7 +1420,6 @@ enum
 - (IBAction)toggleStatusBar:(id)sender
 {
 	[self setShowStatusBar:!showStatusBar];
-	//[controller updateStatusBarMenuItem];
 	[OCUserDefaults setLong:showStatusBar forKey:@"StatusBar" sessionSpecific:NO];
 }
 
@@ -1717,6 +1716,35 @@ enum
 		sheetBusy = true;
 		[savePanel beginSheetForDirectory:[self defaultSaveDirForOp:LDPreferences::SOExport] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(exportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 	}
+}
+
+- (NSSize)mainMarginSize
+{
+	NSSize contentSize = [modelView frame].size;
+	NSSize windowSize = [window frame].size;
+
+	return NSMakeSize(windowSize.width - contentSize.width, windowSize.height - contentSize.height);
+}
+
+- (void)setMainViewWidth:(int)width height:(int)height
+{
+	NSRect screenRect = [[window screen] visibleFrame];
+	NSSize contentSize = [modelView frame].size;
+	NSRect windowFrame = [window frame];
+	float deltaHeight = (float)height - contentSize.height;
+
+	windowFrame.size.width += (float)width - contentSize.width;
+	windowFrame.size.height += deltaHeight;
+	windowFrame.origin.y -= deltaHeight;
+	if (windowFrame.origin.x + windowFrame.size.width > screenRect.origin.x + screenRect.size.width)
+	{
+		windowFrame.origin.x = screenRect.origin.x + screenRect.size.width - windowFrame.size.width;
+	}
+	if (windowFrame.origin.y < screenRect.origin.y)
+	{
+		windowFrame.origin.y = screenRect.origin.y;
+	}
+	[window setFrame:windowFrame display:YES];
 }
 
 @end

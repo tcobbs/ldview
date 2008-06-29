@@ -38,6 +38,7 @@
 		TCWebClient::setUserAgent([userAgent cStringUsingEncoding:NSASCIIStringEncoding]);
 		pollingMode = TCUserDefaults::longForKey(POLL_KEY, 0, false);
 		tcAutoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(processTCReleases:) userInfo:nil repeats:YES] retain];
+		standardSizes = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
@@ -49,6 +50,8 @@
 	[modelWindows release];
 	[preferences release];
 	[statusBarMenuFormat release];
+	[standardSizes release];
+	[noWindowText release];
 	[super dealloc];
 }
 
@@ -154,6 +157,76 @@
 	}
 }
 
+- (NSSize)calcMaxSize:(ModelWindow *)modelWindow
+{
+	NSSize screenSize = [[[modelWindow window] screen] visibleFrame].size;
+	NSSize marginSize = [modelWindow mainMarginSize];
+	
+	return NSMakeSize(screenSize.width - marginSize.width, screenSize.height - marginSize.height);
+}
+
+- (IBAction)standardSize:(id)sender
+{
+	int index = [sender tag];
+	
+	if (index >= 0 && index < [standardSizes count])
+	{
+		NSDictionary *size = [standardSizes objectAtIndex:index];
+		int width = [[size objectForKey:@"Width"] intValue];
+		int height = [[size objectForKey:@"Height"] intValue];
+		
+		[[self currentModelWindow] setMainViewWidth:width height:height];
+	}
+}
+
+- (void)setupStandardSizes
+{
+	ModelWindow *modelWindow = [self currentModelWindow];
+	NSSize newMaxSize;
+
+	if (noWindowText == nil)
+	{
+		noWindowText = [[[standardSizesMenu itemAtIndex:0] title] retain];
+	}
+	if (modelWindow != nil)
+	{
+		newMaxSize = [self calcMaxSize:modelWindow];
+	}
+	else
+	{
+		newMaxSize.width = newMaxSize.height = 0.0f;
+	}
+	if (newMaxSize.width != maxSize.width || newMaxSize.height != maxSize.height)
+	{
+		LDrawModelViewer::StandardSizeVector sizes;
+		size_t i;
+
+		maxSize = newMaxSize;
+		while ([standardSizesMenu numberOfItems] > 0)
+		{
+			[standardSizesMenu removeItemAtIndex:[standardSizesMenu numberOfItems] - 1];
+		}
+		LDrawModelViewer::getStandardSizes((int)maxSize.width, (int)maxSize.height, sizes);
+		[standardSizes removeAllObjects];
+		if (sizes.size() > 0)
+		{
+			for (i = 0; i < sizes.size(); i++)
+			{
+				const LDrawModelViewer::StandardSize &size = sizes[i];
+				NSString *name = [NSString stringWithUCString:size.name];
+				
+				[standardSizes addObject:[NSDictionary dictionaryWithObjectsAndKeys:name, @"Name", [NSNumber numberWithInt:size.width], @"Width", [NSNumber numberWithInt:size.height], @"Height", nil]];
+				[standardSizesMenu addItemWithTitle:name action:@selector(standardSize:) keyEquivalent:@""];
+				[[standardSizesMenu itemAtIndex:i] setTag:i];
+			}
+		}
+		else
+		{
+			[standardSizesMenu addItemWithTitle:noWindowText action:NULL keyEquivalent:@""];
+		}
+	}
+}
+
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
 	ModelWindow *modelWindow = [self currentModelWindow];
@@ -196,6 +269,10 @@
 	else if (item == pollingAutoNowMenuItem)
 	{
 		[item setState:pollingMode == 3 ? NSOnState : NSOffState];
+	}
+	else if ([item submenu] == standardSizesMenu)
+	{
+		[self setupStandardSizes];
 	}
 	return YES;
 }

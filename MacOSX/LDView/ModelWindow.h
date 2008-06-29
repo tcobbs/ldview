@@ -129,6 +129,8 @@ class LDPartsList;
 - (NSString *)filename;
 - (BOOL)canCopy;
 - (void)changeStep:(int)delta;
+- (void)setMainViewWidth:(int)width height:(int)height;
+- (NSSize)mainMarginSize;
 
 - (void)copyStringToPasteboard:(NSString *)string;
 - (IBAction)actions:(id)sender;

@@ -4520,6 +4520,10 @@ void LDrawModelViewer::addStandardSize(int width, int height)
 	{
 		ucstrcat(buf, _UC(" (16:10)"));
 	}
+	else if (width * 100 / 235 == height)
+	{
+		ucstrcat(buf, _UC(" (2.35:1)"));
+	}
 	standardSizes.back().name = buf;
 }
 
@@ -4532,13 +4536,17 @@ void LDrawModelViewer::initStandardSizes(void)
 		addStandardSize(720, 480);
 		addStandardSize(800, 450);
 		addStandardSize(800, 600);
+		addStandardSize(846, 360);
 		addStandardSize(1024, 576);
+		//addStandardSize(1024, 756);
 		addStandardSize(1024, 768);
+		addStandardSize(1128, 480);
 		addStandardSize(1152, 864);
 		addStandardSize(1280, 720);
 		addStandardSize(1280, 768);
 		addStandardSize(1280, 960);
 		addStandardSize(1280, 1024);
+		addStandardSize(1410, 600);
 		addStandardSize(1600, 1200);
 		//addStandardSize(1600, 1075);
 		addStandardSize(1680, 1050);
