@@ -81,6 +81,7 @@
 - (void)setEnabled:(BOOL)enabled
 {
 	[label setEnabled:enabled];
+	[textField setEnabled:enabled];
 }
 
 - (NSRect)frame
