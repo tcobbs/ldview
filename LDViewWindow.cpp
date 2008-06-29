@@ -5378,6 +5378,10 @@ void LDViewWindow::selectStandardSize(int index)
 	RECT clientRect;
 	RECT workAreaRect = getWorkArea();
 
+	if (IsZoomed(hWindow))
+	{
+		ShowWindow(hWindow, SW_RESTORE);
+	}
 	::GetWindowRect(hWindow, &windowRect);
 	::GetClientRect(modelWindow->getHWindow(), &clientRect);
 	windowRect.right += size.width - (clientRect.right - clientRect.left);
