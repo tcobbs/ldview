@@ -68,6 +68,7 @@ void LDPovExporter::loadDefaults(void)
 	m_floor = boolForKey("Floor", true);
 	m_floorAxis = longForKey("FloorAxis", 1);
 	m_selectedAspectRatio = longForKey("SelectedAspectRatio", 1);
+	m_customAspectRatio = floatForKey("CustomAspectRatio", 1.5f);
 	m_edgeRadius = floatForKey("EdgeRadius", 0.15f);
 	m_ambient = floatForKey("Ambient", 0.4f);
 	m_diffuse = floatForKey("Diffuse", 0.4f);
@@ -132,7 +133,7 @@ void LDPovExporter::initSettings(void) const
 	//	udKey("Shadows").c_str()));
 	// End of top-level boolean group test.
 	addSetting(LDExporterSetting(ls(_UC("PovGeneral")),
-		8));
+		9));
 	if (addSetting(LDExporterSetting(ls(_UC("PovQuality")),
 		udKey("Quality").c_str())))
 	{
@@ -163,6 +164,7 @@ void LDPovExporter::initSettings(void) const
 		setting.addOption(4, _UC("16:9"));
 		setting.addOption(5, _UC("2.35:1"));
 		setting.addOption(6, ls(_UC("PovCurAspectRatio")));
+		setting.addOption(7, ls(_UC("PovCustom")));
 		try
 		{
 			setting.selectOption(m_selectedAspectRatio);
@@ -172,6 +174,8 @@ void LDPovExporter::initSettings(void) const
 			setting.selectOption(1);
 		}
 	}
+	addSetting(LDExporterSetting(ls(_UC("PovCustomAspectRatio")),
+		m_customAspectRatio, udKey("CustomAspectRatio").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovFloor")), m_floor,
 		udKey("Floor").c_str()));
 	m_settings.back().setGroupSize(1);
@@ -586,6 +590,9 @@ std::string LDPovExporter::getAspectRatio(void)
 			aspect += ftostr(m_height);
 			return aspect;
 		}
+	case 7:
+		m_width = m_customAspectRatio;
+		m_height = 1.0f;
 		return ftostr(m_width / m_height);
 	default:
 		m_width = 4;

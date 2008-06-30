@@ -182,6 +182,7 @@ protected:
 	bool m_refls;
 	bool m_shads;
 	long m_selectedAspectRatio;
+	float m_customAspectRatio;
 	TCFloat m_edgeRadius;
 	TCFloat m_ambient;
 	TCFloat m_diffuse;
