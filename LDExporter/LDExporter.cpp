@@ -231,8 +231,15 @@ int LDExporter::doExport(
 
 TCFloat LDExporter::getHFov(void)
 {
-	return (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(m_fov / 2.0)) *
-		(double)m_width / (double)m_height)));
+	if (m_width > m_height)
+	{
+		return (TCFloat)(2.0 * rad2deg(atan(tan(deg2rad(m_fov / 2.0)) *
+			(double)m_width / (double)m_height)));
+	}
+	else
+	{
+		return m_fov;
+	}
 }
 
 int LDExporter::runInternal(void)

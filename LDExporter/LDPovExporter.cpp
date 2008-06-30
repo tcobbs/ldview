@@ -162,6 +162,7 @@ void LDPovExporter::initSettings(void) const
 		setting.addOption(3, _UC("5:3"));
 		setting.addOption(4, _UC("16:9"));
 		setting.addOption(5, _UC("2.35:1"));
+		setting.addOption(6, ls(_UC("PovCurAspectRatio")));
 		try
 		{
 			setting.selectOption(m_selectedAspectRatio);
@@ -577,6 +578,15 @@ std::string LDPovExporter::getAspectRatio(void)
 		m_width = 235;
 		m_height = 100;
 		return "2.35";
+	case 6:
+		{
+			std::string aspect = ftostr(m_width);
+
+			aspect += "/";
+			aspect += ftostr(m_height);
+			return aspect;
+		}
+		return ftostr(m_width / m_height);
 	default:
 		m_width = 4;
 		m_height = 3;
