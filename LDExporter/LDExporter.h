@@ -20,18 +20,20 @@ public:
 		m_boundingMin = min;
 		m_boundingMax = max;
 	}
-	virtual void setCenter(const TCVector &center) { m_center = center; }
-	virtual void setRadius(TCFloat radius) { m_radius = radius; }
+	virtual void setCenter(const TCVector &value) { m_center = value; }
+	virtual void setRadius(TCFloat value) { m_radius = value; }
+	virtual void setWidth(TCFloat value) { m_width = value; }
+	virtual void setHeight(TCFloat value) { m_height = value; }
 	virtual void setBackgroundColor(TCFloat r, TCFloat g, TCFloat b,
 		TCFloat a = 1.0f);
-	virtual void setCamera(const LDLCamera &camera) { m_camera = camera; }
+	virtual void setCamera(const LDLCamera &value) { m_camera = value; }
 	virtual int doExport(LDLModel *pTopModel);
 	virtual int doExport(TREModel *pTopModel);
 	virtual int doExport(LDLModel *pTopLDLModel, TREModel *pTopTREModel);
-	virtual void setFilename(const char *filename) { m_filename = filename; }
-	virtual void setRotationMatrix(const float *matrix)
+	virtual void setFilename(const char *value) { m_filename = value; }
+	virtual void setRotationMatrix(const float *value)
 	{
-		memcpy(m_rotationMatrix, matrix, sizeof(m_rotationMatrix));
+		memcpy(m_rotationMatrix, value, sizeof(m_rotationMatrix));
 	}
 	virtual void setFov(TCFloat value) { m_fov = value; }
 	virtual void setXPan(TCFloat value) { m_xPan = value; }
