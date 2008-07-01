@@ -162,6 +162,8 @@ public:
 	void checkForLibraryUpdates(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
 	static QString findPackageFile(const QString &filename);
+	void setupStandardSizes();
+
 	void nextStep();
 	void prevStep();
 	void firstStep();
@@ -182,6 +184,7 @@ protected slots:
 	virtual void doHelpMenuAboutToShow(void);
 	virtual void doLibraryUpdateCanceled(void);
 	virtual void doPreferences(void);
+	virtual void standardSizeSelected(int index);
 
 protected:
 	// GL Widget overrides
@@ -351,6 +354,7 @@ protected:
 	int lightingSelection;
 	static TCStringArray* recentFiles;
 	LDPreferences::SaveOp curSaveOp;
+	LDrawModelViewer::StandardSizeVector standardSizes;
 };
 
 #endif // __MODELVIEWERWIDGET_H__

@@ -189,6 +189,10 @@
             <separator/>
             <action name="saveDefaultViewAngleAction"/>
         </item>
+        <actiongroup name="viewStandardSizeGroup"/>
+        <item text="Standard Sizes" name="standardSizesPopupMenu" accel="">
+            <action name="dumyStandardSizeAction"/>
+        </item>
         <separator/>
         <action name="examineModeAction"/>
         <action name="viewLatitudeRotationAction"/>
@@ -889,6 +893,28 @@
             </property>
             <property name="menuText">
                 <string>Save Current as Default</string>
+            </property>
+        </action>
+    </actiongroup>
+    <actiongroup>
+        <property name="name">
+            <cstring>viewStandardSizeGroup</cstring>
+        </property>
+        <property name="text">
+            <string>Standard Sizes</string>
+        </property>
+        <property name="menuText">
+            <string>Standard Sizes</string>
+        </property>
+        <property name="usesDropDown">
+            <bool>true</bool>
+        </property>
+        <action>
+            <property name="name">
+                <cstring>dumyStandardSizeAction</cstring>
+            </property>
+            <property name="menuText">
+                <string>dumy</string>
             </property>
         </action>
     </actiongroup>
