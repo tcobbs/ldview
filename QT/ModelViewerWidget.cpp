@@ -26,6 +26,7 @@
 #include <qprogressdialog.h>
 #include <qtimer.h>
 #include <qtoolbutton.h>
+#include <qdesktopwidget.h>
 #if (QT_VERSION >> 16) >= 4
 #define HAVE_QT4
 #include <q3paintdevicemetrics.h>
@@ -348,6 +349,7 @@ void ModelViewerWidget::setApplication(QApplication *value)
         		}
         		setLastOpenFile(commandLineFilename);
         		populateRecentFileMenuItems();
+				setupStandardSizes();
 			    mainWindow->fileSaveAction->setEnabled(true);
     			mainWindow->fileReloadAction->setEnabled(true);
 				startPaintTimer();
@@ -724,6 +726,7 @@ void ModelViewerWidget::finishLoadModel(void)
 		}
 		setLastOpenFile(filename);
 		populateRecentFileMenuItems();
+		setupStandardSizes();
 	}
 	postLoad();
 }
@@ -1465,6 +1468,7 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		populateRecentFiles();
 	}
 	populateRecentFileMenuItems();
+	setupStandardSizes();
 	item = menuBar->findItem(menuBar->idAt(1));
 	if (item)
 	{
@@ -1740,6 +1744,7 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 	}
 	preferences->setStatusBar(flag);
 	unlock();
+	setupStandardSizes();
 }
 
 void ModelViewerWidget::doViewToolBar(bool flag)
@@ -1755,6 +1760,7 @@ void ModelViewerWidget::doViewToolBar(bool flag)
 	}
 	preferences->setToolBar(flag);
 	unlock();
+	setupStandardSizes();
 }
 
 void ModelViewerWidget::doViewFullScreen(void)
@@ -4096,3 +4102,41 @@ void ModelViewerWidget::updateStep()
     mainWindow->toolbarMaxStep->setText(" / "+max);
     mainWindow->toolbarCurrentStep->setText(QString::number(step));
 }
+
+void ModelViewerWidget::setupStandardSizes()
+{
+	QSize workArea = QApplication::desktop()->availableGeometry(mainWindow).size();
+	QSize windowSize = mainWindow->frameSize();
+	LDrawModelViewer::getStandardSizes(workArea.width() - windowSize.width() +
+									   modelViewer->getWidth(),
+									   workArea.height() - windowSize.height() +
+									   modelViewer->getHeight(),
+									   standardSizes);
+	mainWindow->standardSizesPopupMenu->clear();
+	for (size_t i = 0; i < standardSizes.size(); i++)
+	{
+		QString qs;
+		ucstringtoqstring(qs, standardSizes[i].name);
+		mainWindow->standardSizesPopupMenu->insertItem(qs, this, 
+								SLOT(standardSizeSelected(int)), 0, i );
+	}
+}
+
+void ModelViewerWidget::standardSizeSelected(int i)
+{
+	QString text;
+	QRegExp sep( "\\s+" );
+	text = mainWindow->standardSizesPopupMenu->text(i);
+	if (text != QString::null)
+	{
+		int w,h;
+		bool ok;
+		w = text.section(sep,0,0).toInt(&ok);
+		h = text.section(sep,2,2).toInt(&ok);
+		mainWindow->resize(w + mainWindow->frameSize().width() - 
+							   modelViewer->getWidth(),
+						   h + mainWindow->frameSize().height() - 
+							   modelViewer->getHeight());
+	}
+}
+
