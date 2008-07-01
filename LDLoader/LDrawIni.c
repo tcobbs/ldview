@@ -42,6 +42,7 @@ If not, I don't know who wrote it.
 080410 lch Added Windows fix for stat of "C:\" rather than "C:" by Travis Cobbs
 080412 lch Added LDrawIniSetFileCaseCallback from Travis Cobbs
 080414 lch Support for binary property lists (preferences) on Mac
+080701 lch Travis Cobbs found leak when LDrawIniComputeRealDirs gives 0 dirs
 ******************************************************************************/
 
 /*
