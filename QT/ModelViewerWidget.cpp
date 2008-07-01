@@ -4133,9 +4133,9 @@ void ModelViewerWidget::standardSizeSelected(int i)
 		bool ok;
 		w = text.section(sep,0,0).toInt(&ok);
 		h = text.section(sep,2,2).toInt(&ok);
-		mainWindow->resize(w + mainWindow->frameSize().width() - 
+		mainWindow->resize(w + mainWindow->size().width() - 
 							   modelViewer->getWidth(),
-						   h + mainWindow->frameSize().height() - 
+						   h + mainWindow->size().height() - 
 							   modelViewer->getHeight());
 	}
 }
