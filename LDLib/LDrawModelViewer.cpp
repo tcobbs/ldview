@@ -4557,8 +4557,8 @@ void LDrawModelViewer::initStandardSizes(void)
 		addStandardSize(1280, 768);
 		addStandardSize(1280, 960);
 		addStandardSize(1280, 1024);
+		//addStandardSize(1280, 1075);
 		addStandardSize(1600, 1200);
-		//addStandardSize(1600, 1075);
 		addStandardSize(1680, 1050);
 		addStandardSize(1920, 817);
 		addStandardSize(1920, 1080);
