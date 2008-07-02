@@ -2860,7 +2860,7 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 					QString suffix = TCUserDefaults::stringForKey(SAVE_STEPS_SUFFIX_KEY,
 							TCLocalStrings::get("DefaultStepSuffix"), false);
 					std::string temp = LDSnapshotTaker::addStepSuffix(saveFilename,
-                    	    suffix, 1, modelViewer->getNumSteps());
+                    	    suffix.ascii(), 1, modelViewer->getNumSteps());
 	                strcpy(saveFilename, temp.c_str());
 	
 				}

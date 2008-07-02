@@ -7,7 +7,6 @@
 
 #include <qstring.h>
 #include <qlabel.h>
-#include <qlistbox.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>

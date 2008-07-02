@@ -5,6 +5,8 @@
 #define QPopupMenu	QMenu
 #include <q3popupmenu.h>
 #define QListBox	Q3ListBox
+#define QListBoxItem Q3ListBoxItem
+#define QListBoxText Q3ListBoxText
 #include <q3listbox.h>
 #define QListView	Q3ListView
 #define QListViewItem	Q3ListViewItem
@@ -25,6 +27,16 @@
 #define  getimage(x)    QPixmap(qPixmapFromMimeSource(x))
 #include <Q3CheckListItem>
 #define QCheckListItem  Q3CheckListItem
+#include <Q3ScrollView>
+#define QScrollView Q3ScrollView
+#include <Q3HBox>
+#define QHBox Q3HBox
+#include <Q3VBox>
+#define QVBox Q3VBox
+#include <Q3VGroupBox>
+#define QVGroupBox Q3VGroupBox
+#include <Q3GroupBox>
+#define QGroupBox Q3GroupBox
 #else
 #include <qfiledialog.h>
 #include <qpopupmenu.h>
@@ -35,5 +47,10 @@
 #include <qprogressbar.h>
 #include <qrangecontrol.h>
 #include <qbutton.h>
+#include <qscrollview.h>
+#include <qvbox.h>
+#include <qhbox.h>
+#include <qvgroupbox.h>
+#include <qgroupbox.h>
 #define getimage(x)     QPixmap::fromMimeSource(x)
 #endif

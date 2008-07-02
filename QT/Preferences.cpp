@@ -25,7 +25,6 @@
 #include <TCFoundation/TCLocalStrings.h>
 //#include <netinet/in.h>
 #include <qtextedit.h>
-#include <qfiledialog.h>
 #include "ModelViewerWidget.h"
 #include "Preferences.h"
 #include "PreferencesPanel.h"
@@ -2005,13 +2004,13 @@ void Preferences::checkLightVector(void)
 
 void Preferences::updateSaveDir(QLineEdit *textField, QPushButton *button,
 								LDPreferences::DefaultDirMode dirMode,
-								const std::string &filename)
+								QString &filename)
 {
 	bool enable = FALSE;
 
 	if (dirMode == LDPreferences::DDMSpecificDir)
 	{
-		textField->setText(filename.c_str());
+		textField->setText(filename);
 		enable = TRUE;
 	}
 	else
@@ -2025,7 +2024,7 @@ void Preferences::updateSaveDir(QLineEdit *textField, QPushButton *button,
 void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
 							   QPushButton *button, 
 							   LDPreferences::DefaultDirMode dirMode,
-							   const std::string &filename)
+							   QString &filename)
 {
 	comboBox->setCurrentItem(dirMode);
 	updateSaveDir(textField, button, dirMode, filename);
@@ -2033,18 +2032,21 @@ void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
 
 void Preferences::setupSaveDirs()
 {
+	snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot).c_str();
 	setupSaveDir(panel->snapshotSaveDirBox, panel->snapshotSaveDirEdit, 
 				 panel->snapshotSaveDirButton, 
 				 ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot), 
-				 snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot));
+				 snapshotDir);
+	partsListDir =ldPrefs->getSaveDir(LDPreferences::SOPartsList).c_str();
 	setupSaveDir(panel->partsListsSaveDirBox, panel->partsListsSaveDirEdit,
 				 panel->partsListsSaveDirButton, 
 				 ldPrefs->getSaveDirMode(LDPreferences::SOPartsList),
-				 partsListDir =ldPrefs->getSaveDir(LDPreferences::SOPartsList));
+				 partsListDir);
+	exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport).c_str();
 	setupSaveDir(panel->exportsListsSaveDirBox, panel->exportsSaveDirEdit,
 				 panel->exportsSaveDirButton,
 				 ldPrefs->getSaveDirMode(LDPreferences::SOExport),
-				 exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport));
+				 exportDir);
 }
 
 void Preferences::snapshotSaveDirBoxChanged()

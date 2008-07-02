@@ -6,15 +6,12 @@
 #include <qlabel.h>
 #include <qgroupbox.h>
 #include <qpushbutton.h>
-#include <qscrollview.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <qlayout.h>
-#include <qvbox.h>
 #include <qlabel.h>
 #include <qlineedit.h>
-#include <qvgroupbox.h>
 #include <qcombobox.h>
 
 LDViewExportOption::LDViewExportOption(LDExporter *exporter)
@@ -23,7 +20,9 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 {
 	QWidget *parent;
 	sv = new QScrollView(centralWidget(),"scrollview");
+#if (QT_VERSION >>16)==3
 	layouttop->addWidget(sv);
+#endif
 	box = new QVBox(sv->viewport());
 	box->setMargin(11);
 	sv->addChild(box);
