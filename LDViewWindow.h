@@ -145,6 +145,7 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT doKeyUp(int keyCode, long keyData);
 		virtual LRESULT doDrawItem(HWND hControlWnd,
 			LPDRAWITEMSTRUCT drawItemStruct);
+		virtual LRESULT doMove(int newX, int newY);
 		virtual LRESULT doNotify(int controlId, LPNMHDR notification);
 		virtual BOOL doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 			int newHeight);
@@ -349,6 +350,7 @@ class LDViewWindow: public CUIWindow
 		bool switchingModes;
 		bool searchDirsInitialized;
 		DWORD standardWindowStyle;
+		SIZE maxStandardSize;
 
 		VideoModeT* videoModes;
 		int numVideoModes;
