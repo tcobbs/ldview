@@ -198,6 +198,8 @@ mpdDialog(NULL)
 	sprintf(userAgent, "LDView/%s  (Windows; ldview@gmail.com; "
 		"http://ldview.sf.net/)", getProductVersion());
 	TCWebClient::setUserAgent(userAgent);
+	maxStandardSize.cx = 0;
+	maxStandardSize.cy = 0;
 //	DeleteObject(hBackgroundBrush);
 // 	hBackgroundBrush = CreateSolidBrush(RGB(backgroundColor & 0xFF,
 //		(backgroundColor >> 8) & 0xFF, (backgroundColor >> 16) & 0xFF));
@@ -1525,6 +1527,14 @@ BOOL LDViewWindow::doMoveExtraDirUp(void)
 	updateExtraDirsEnabled();
 	delete extraDir;
 	return TRUE;
+}
+
+LRESULT LDViewWindow::doMove(int newX, int newY)
+{
+	LRESULT retVal = CUIWindow::doMove(newX, newY);
+
+	setupStandardSizes();
+	return retVal;
 }
 
 BOOL LDViewWindow::doMoveExtraDirDown(void)
@@ -5437,6 +5447,12 @@ void LDViewWindow::setupStandardSizes(void)
 	clientSize.cy = clientRect.bottom - clientRect.top;
 	size.cx = workAreaSize.cx - windowSize.cx + clientSize.cx;
 	size.cy = workAreaSize.cy - windowSize.cy + clientSize.cy;
+	if (size.cx == maxStandardSize.cx && size.cy == maxStandardSize.cy)
+	{
+		// No change
+		return;
+	}
+	maxStandardSize = size;
 	LDrawModelViewer::getStandardSizes(size.cx, size.cy, standardSizes);
 	while (GetMenuItemCount(hStandardSizesMenu) > 0)
 	{
