@@ -125,7 +125,7 @@ public:
 	void partsListsSaveDirBrowse();
 	void exportsSaveDirBrowse();
 	void browseForDir(QString prompt, QLineEdit *textField, QString &dir);
-	std::string getSaveDir(LDPreferences::SaveOp saveOp,const std::string &filename) { return ldPrefs->getDefaultSaveDir(saveOp, filename); }
+	QString getSaveDir(LDPreferences::SaveOp saveOp,const std::string &filename) { return QString(ldPrefs->getDefaultSaveDir(saveOp, filename).c_str()); }
 protected:
 	void doGeneralApply(void);
 	void doGeometryApply(void);
@@ -177,10 +177,10 @@ protected:
 	void selectLightDirection(LDPreferences::LightDirection);
 	void updateSaveDir(QLineEdit *textField, QPushButton *button,
                        LDPreferences::DefaultDirMode dirMode,
-                       const std::string &filename);
+                       QString &filename);
 	void setupSaveDir(QComboBox *comboBox, QLineEdit *textField, 
                       QPushButton *button, LDPreferences::DefaultDirMode dirMode,
-                      const std::string &filename);
+                      QString &filename);
 	void setupSaveDirs(void);
 	const char *getPrefSet(int);
 	const char *getSelectedPrefSet(void);

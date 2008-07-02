@@ -81,7 +81,7 @@ void LDViewModelTree::addChildren(QListViewItem *parent, const LDModelTree *tree
 
 void LDViewModelTree::addLine(QListViewItem *parent, const LDModelTree *tree)
 {
-	QString line = tree->getText();
+	QString line = QString(tree->getText().c_str());
     QListViewItem *item;
 
     if (parent)
