@@ -18,6 +18,8 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
+CharStringMap LDPovExporter::sm_replacementChars;
+
 LDPovExporter::LDPovExporter(void):
 LDExporter("PovExporter/")
 {
@@ -40,6 +42,16 @@ LDExporter("PovExporter/")
 		}
 	}
 	loadDefaults();
+	if (sm_replacementChars.size() == 0)
+	{
+		sm_replacementChars['.'] = "_dot_";
+		sm_replacementChars['-'] = "_dash_";
+		sm_replacementChars['/'] = "_slash_";
+		sm_replacementChars['\\'] = "_slash_";
+		sm_replacementChars['#'] = "_hash_";
+		sm_replacementChars[':'] = "_colon_";
+		sm_replacementChars['!'] = "_bang_";
+	}
 }
 
 LDPovExporter::~LDPovExporter(void)
@@ -756,6 +768,42 @@ std::string LDPovExporter::getDeclareName(
 	return getDeclareName(getModelFilename(pModel), mirrored);
 }
 
+std::string LDPovExporter::replaceSpecialChacters(const char *string)
+{
+	size_t newLen = 0;
+	size_t i;
+	std::string retVal;
+
+	for (i = 0; string[i]; i++)
+	{
+		CharStringMap::const_iterator it = sm_replacementChars.find(string[i]);
+
+		if (it != sm_replacementChars.end())
+		{
+			newLen += it->second.size();
+		}
+		else
+		{
+			newLen++;
+		}
+	}
+	retVal.reserve(newLen);
+	for (i = 0; string[i]; i++)
+	{
+		CharStringMap::const_iterator it = sm_replacementChars.find(string[i]);
+
+		if (it != sm_replacementChars.end())
+		{
+			retVal += it->second;
+		}
+		else
+		{
+			retVal += string[i];
+		}
+	}
+	return retVal;
+}
+
 std::string LDPovExporter::getDeclareName(
 	const std::string &modelFilename,
 	bool mirrored)
@@ -776,15 +824,10 @@ std::string LDPovExporter::getDeclareName(
 	{
 		return it->second;
 	}
-	char *temp1 = stringByReplacingSubstring(modelFilename.c_str(), ".",
-		"_dot_");
-	char *temp2 = stringByReplacingSubstring(temp1, "-", "_dash_");
-	char *temp3 = stringByReplacingSubstring(temp2, "/", "_slash_");
-	char *temp4 = stringByReplacingSubstring(temp3, "\\", "_slash_");
-	char *replaced = stringByReplacingSubstring(temp4, ":", "_colon_");
+	std::string replaced = replaceSpecialChacters(modelFilename.c_str());
 	std::string retValue;
 
-	convertStringToLower(replaced);
+	convertStringToLower(&replaced[0]);
 	if (isdigit(replaced[0]))
 	{
 		retValue = "_";
@@ -798,11 +841,6 @@ std::string LDPovExporter::getDeclareName(
 	{
 		retValue += "_mirror";
 	}
-	delete temp1;
-	delete temp2;
-	delete temp3;
-	delete temp4;
-	delete replaced;
 	m_declareNames[lowerCaseString(key)] = retValue;
 	return retValue;
 }

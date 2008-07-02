@@ -19,6 +19,7 @@ class TiXmlElement;
 
 typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, std::string> StringStringMap;
+typedef std::map<char, std::string> CharStringMap;
 typedef std::list<LDLShapeLine *> ShapeLineList;
 typedef std::map<int, ShapeLineList> IntShapeLineListMap;
 typedef std::map<int, bool> IntBoolMap;
@@ -127,6 +128,7 @@ protected:
 	virtual int getNumEdgesSettings(void) const { return 2; }
 	virtual int getNumGeometrySettings(void) const { return 4; }
 	std::string getAspectRatio(void);
+	std::string replaceSpecialChacters(const char *string);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -207,6 +209,8 @@ protected:
 	MatrixMap m_matrices;
 	std::string m_ldrawDir;
 	StringSet m_includes;
+
+	static CharStringMap sm_replacementChars;
 };
 
 #endif // __LDPOVEXPORTER_H__
