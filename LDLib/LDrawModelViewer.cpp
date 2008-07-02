@@ -4500,7 +4500,23 @@ void LDrawModelViewer::addStandardSize(int width, int height)
 	size.height = height;
 	standardSizes.push_back(size);
 	sucprintf(buf, COUNT_OF(buf), _UC("%d x %d"), width, height);
-	if (width * 2 / 3 == height)
+	if (width * 100 / 235 == height)
+	{
+		ucstrcat(buf, _UC(" (2.35:1)"));
+	}
+	else if (width * 9 / 16 == height)
+	{
+		ucstrcat(buf, _UC(" (16:9)"));
+	}
+	else if (width * 3 / 5 == height)
+	{
+		ucstrcat(buf, _UC(" (5:3)"));
+	}
+	else if (width * 10 / 16 == height)
+	{
+		ucstrcat(buf, _UC(" (16:10)"));
+	}
+	else if (width * 2 / 3 == height)
 	{
 		ucstrcat(buf, _UC(" (3:2)"));
 	}
@@ -4508,25 +4524,9 @@ void LDrawModelViewer::addStandardSize(int width, int height)
 	{
 		ucstrcat(buf, _UC(" (4:3)"));
 	}
-	else if (width * 3 / 5 == height)
-	{
-		ucstrcat(buf, _UC(" (5:3)"));
-	}
 	else if (width * 4 / 5 == height)
 	{
 		ucstrcat(buf, _UC(" (5:4)"));
-	}
-	else if (width * 9 / 16 == height)
-	{
-		ucstrcat(buf, _UC(" (16:9)"));
-	}
-	else if (width * 10 / 16 == height)
-	{
-		ucstrcat(buf, _UC(" (16:10)"));
-	}
-	else if (width * 100 / 235 == height)
-	{
-		ucstrcat(buf, _UC(" (2.35:1)"));
 	}
 	standardSizes.back().name = buf;
 }
@@ -4537,9 +4537,14 @@ void LDrawModelViewer::initStandardSizes(void)
 	if (standardSizes.size() == 0)
 	{
 		addStandardSize(640, 480);
-		addStandardSize(720, 306);
-		addStandardSize(720, 405);
-		addStandardSize(720, 480);
+		// Note: 720 width has all heights for "standard" aspect ratios.
+		addStandardSize(720, 306);	// 2.35:1
+		addStandardSize(720, 405);	// 16:9
+		addStandardSize(720, 432);	// 5:3
+		addStandardSize(720, 450);	// 16:10
+		addStandardSize(720, 480);	// 3:2
+		addStandardSize(720, 540);	// 4:3
+		addStandardSize(720, 576);	// 5:4
 		addStandardSize(800, 450);
 		addStandardSize(800, 480);
 		addStandardSize(800, 600);
