@@ -1092,6 +1092,7 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	sprintf(lookAtString, "%s,%s,%s", ftostr(lookAt[0], 20).c_str(),
 		ftostr(lookAt[1], 20).c_str(), ftostr(lookAt[2], 20).c_str());
 	sprintf(cameraString,
+		"#ifndef (LDXSkipCamera)\n"
 		"camera {\n"
 		"\t#declare ASPECT = %s;\n"
 		"\tlocation < %s >\n"
@@ -1099,7 +1100,8 @@ void LDPovExporter::getCameraString(char *&povCamera)
 		"\tright ASPECT * < -1,0,0 >\n"
 		"\tlook_at < %s >\n"
 		"\tangle %s\n"
-		"}\n",
+		"}\n"
+		"#end\n",
 		aspectRatio.c_str(), locationString, upString, lookAtString,
 		ftostr(getHFov()).c_str());
 	povCamera = copyString(cameraString);
