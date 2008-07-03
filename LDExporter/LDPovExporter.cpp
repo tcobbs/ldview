@@ -642,16 +642,25 @@ bool LDPovExporter::writeHeader(void)
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
 	fprintf(m_pPovFile, "#declare MIN_X = %s;\n",
 		ftostr(m_boundingMin[0]).c_str());
-	fprintf(m_pPovFile, "#declare MAX_X = %s;\n",
-		ftostr(m_boundingMax[0]).c_str());
 	fprintf(m_pPovFile, "#declare MIN_Y = %s;\n",
 		ftostr(m_boundingMin[1]).c_str());
-	fprintf(m_pPovFile, "#declare MAX_Y = %s;\n",
-		ftostr(m_boundingMax[1]).c_str());
 	fprintf(m_pPovFile, "#declare MIN_Z = %s;\n",
 		ftostr(m_boundingMin[2]).c_str());
+	fprintf(m_pPovFile, "#declare MAX_X = %s;\n",
+		ftostr(m_boundingMax[0]).c_str());
+	fprintf(m_pPovFile, "#declare MAX_Y = %s;\n",
+		ftostr(m_boundingMax[1]).c_str());
 	fprintf(m_pPovFile, "#declare MAX_Z = %s;\n",
 		ftostr(m_boundingMax[2]).c_str());
+	fprintf(m_pPovFile, "#declare CENTER_X = %s;\n",
+		ftostr(m_center[0]).c_str());
+	fprintf(m_pPovFile, "#declare CENTER_Y = %s;\n",
+		ftostr(m_center[1]).c_str());
+	fprintf(m_pPovFile, "#declare CENTER_Z = %s;\n",
+		ftostr(m_center[2]).c_str());
+	fprintf(m_pPovFile, "#declare CENTER = <CENTER_X,CENTER_Y,CENTER_Z>;\n");
+	
+	fprintf(m_pPovFile, "#declare RADIUS = %s;\n", ftostr(m_radius).c_str());
 	fprintf(m_pPovFile, "#declare QUAL = %ld;\t// %s\n", m_quality,
 		(const char *)ls("PovQualDesc"));
 	fprintf(m_pPovFile, "#declare FLOOR = %d;\t// %s\n", m_floor ? 1 : 0,
@@ -1096,9 +1105,9 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	povCamera = copyString(cameraString);
 }
 
-void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, TCFloat radius)
+void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, int num)
 {
-	TCVector lightVector(0.0f, 0.0f, radius);
+	TCVector lightVector(0.0f, 0.0f, 2.0f);
 	TCVector lightLoc;
 	TCFloat latMatrix[16];
 	TCFloat lonMatrix[16];
@@ -1124,20 +1133,23 @@ void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, TCFloat radius)
 	TCVector::multMatrix(lonMatrix, latMatrix, tempMatrix);
 	TCVector::multMatrix(flipMatrix, tempMatrix, lightMatrix);
 	lightVector.transformPoint(lightMatrix, lightLoc);
-	lightLoc += m_center;
 	fprintf(m_pPovFile,
-		"light_source {\n"
-		"	<%.6g,%.6g,%.6g>	// Latitude,Longitude,Radius: %.6g,%.6g,%.6g\n"
+		"#ifndef (LDXSkipLight%d)\n"
+		"light_source {\t// %s: %s,%s,RADIUS*2\n"
+		"	<%s*RADIUS,%s*RADIUS,%s*RADIUS> + CENTER\n"
 		"	color rgb <1,1,1>\n"
-		"}\n", lightLoc[0], lightLoc[1], lightLoc[2], lat, lon, radius);
+		"}\n"
+		"#end\n", num, ls("PovLatLon"), ftostr(lat).c_str(),
+		ftostr(lon).c_str(), ftostr(lightLoc[0]).c_str(),
+		ftostr(lightLoc[1]).c_str(), ftostr(lightLoc[2]).c_str());
 }
 
 bool LDPovExporter::writeLights(void)
 {
 	fprintf(m_pPovFile, "// Lights\n");
-	writeLight(45.0, 0.0, m_radius * 2.0f);
-	writeLight(30.0, 120.0, m_radius * 2.0f);
-	writeLight(60.0, -120.0, m_radius * 2.0f);
+	writeLight(45.0, 0.0, 1);
+	writeLight(30.0, 120.0, 2);
+	writeLight(60.0, -120.0, 3);
 	//writeLight(45.0, 0.0, m_radius * 2.0f);
 	//writeLight(30.0, 120.0, m_radius * 2.0f);
 	//writeLight(60.0, -120.0, m_radius * 2.0f);
