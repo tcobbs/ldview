@@ -81,6 +81,7 @@ protected:
 		int count, int step);
 	virtual void setupVAR(void);
 	virtual void setupVBO(void);
+	virtual void disableClientStates(void);
 
 	TREVertexArray *m_vertices;
 	TREVertexArray *m_normals;

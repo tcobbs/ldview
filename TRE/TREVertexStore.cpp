@@ -281,7 +281,6 @@ void TREVertexStore::setupVAR(void)
 			priority);
 		if (sm_varBuffer)
 		{
-			glDisableClientState(GL_VERTEX_ARRAY_RANGE_NV);
 			if (oldBuffer)
 			{
 				memcpy(sm_varBuffer, oldBuffer, offset);
@@ -318,7 +317,6 @@ void TREVertexStore::setupVAR(void)
 					edgeFlagsSize);
 			}
 			glVertexArrayRangeNV(sm_varSize, sm_varBuffer);
-			glEnableClientState(GL_VERTEX_ARRAY_RANGE_NV);
 		}
 		else
 		{
@@ -449,19 +447,24 @@ void TREVertexStore::setupVBO(void)
 	}
 }
 
+void TREVertexStore::disableClientStates(void)
+{
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_EDGE_FLAG_ARRAY);
+	if (sm_varBuffer)
+	{
+		glDisableClientState(GL_VERTEX_ARRAY_RANGE_NV);
+	}
+}
+
 void TREVertexStore::deactivate(void)
 {
 	if (sm_activeVertexStore == this)
 	{
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-		glDisableClientState(GL_EDGE_FLAG_ARRAY);
-		if (sm_varBuffer)
-		{
-			glDisableClientState(GL_VERTEX_ARRAY_RANGE_NV);
-		}
+		disableClientStates();
 		sm_activeVertexStore = NULL;
 	}
 }
@@ -475,12 +478,16 @@ bool TREVertexStore::activate(bool displayLists)
 	}
 	else
 	{
-		glDisableClientState(GL_VERTEX_ARRAY);
+		disableClientStates();
 		if (m_vertices)
 		{
 			if (!m_flags.varTried && !m_flags.varFailed)
 			{
 				setupVAR();
+			}
+			if (sm_varBuffer)
+			{
+				glEnableClientState(GL_VERTEX_ARRAY_RANGE_NV);
 			}
 			if (!displayLists && !m_flags.vboTried && !m_flags.vboFailed &&
 				!sm_varBuffer)
@@ -512,7 +519,6 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			glEnableClientState(GL_VERTEX_ARRAY);
 		}
-		glDisableClientState(GL_NORMAL_ARRAY);
 		if (m_normals && getLightingFlag())
 		{
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
@@ -532,7 +538,6 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			glEnableClientState(GL_NORMAL_ARRAY);
 		}
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		if (m_textureCoords)
 		{
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
@@ -552,7 +557,6 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		glDisableClientState(GL_COLOR_ARRAY);
 		if (m_colors)
 		{
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
@@ -572,7 +576,6 @@ bool TREVertexStore::activate(bool displayLists)
 			}
 			glEnableClientState(GL_COLOR_ARRAY);
 		}
-		glDisableClientState(GL_EDGE_FLAG_ARRAY);
 		if (m_edgeFlags.size() > 0)
 		{
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
