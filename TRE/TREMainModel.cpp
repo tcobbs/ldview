@@ -475,6 +475,16 @@ void TREMainModel::compile(void)
 				&m_abort, this);
 //			TCProgressAlert::send("LDrawModelViewer", "Done.", 2.0f);
 		}
+		m_vertexStore->deactivate();
+		m_coloredVertexStore->deactivate();
+		if (m_studVertexStore != NULL)
+		{
+			m_studVertexStore->deactivate();
+		}
+		if (m_coloredStudVertexStore != NULL)
+		{
+			m_coloredStudVertexStore->deactivate();
+		}
 	}
 }
 
@@ -1121,6 +1131,16 @@ void TREMainModel::drawSolid(void)
 		}
 		deactivateBFC();
 	}
+	m_vertexStore->deactivate();
+	m_coloredVertexStore->deactivate();
+	if (m_studVertexStore != NULL)
+	{
+		m_studVertexStore->deactivate();
+	}
+	if (m_coloredStudVertexStore != NULL)
+	{
+		m_coloredStudVertexStore->deactivate();
+	}
 }
 
 void TREMainModel::drawLines(int pass /*= -1*/)
@@ -1198,6 +1218,8 @@ void TREMainModel::drawLines(int pass /*= -1*/)
 	{
 		glEnable(GL_LIGHTING);
 	}
+	m_vertexStore->deactivate();
+	m_coloredVertexStore->deactivate();
 }
 
 TREModel *TREMainModel::modelNamed(const char *name, bool bfc)
@@ -1631,6 +1653,7 @@ void TREMainModel::drawTransparent(int pass /*= -1*/)
 			disable(GL_BLEND);
 			glDepthMask(GL_TRUE);
 		}
+		m_transVertexStore->deactivate();
 	}
 }
 
