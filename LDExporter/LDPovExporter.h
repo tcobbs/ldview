@@ -66,7 +66,7 @@ protected:
 	bool writeModel(LDLModel *pModel, const TCFloat *matrix);
 	bool writeCamera(void);
 	bool writeLights(void);
-	void writeLight(TCFloat lat, TCFloat lon, TCFloat radius);
+	void writeLight(TCFloat lat, TCFloat lon, int num);
 	bool writeModelObject(LDLModel *pModel, bool mirrored,
 		const TCFloat *matrix);
 	void writeGeometry(const IntShapeLineListMap &colorGeometryMap);
