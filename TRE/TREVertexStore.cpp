@@ -281,6 +281,7 @@ void TREVertexStore::setupVAR(void)
 			priority);
 		if (sm_varBuffer)
 		{
+			glDisableClientState(GL_VERTEX_ARRAY_RANGE_NV);
 			if (oldBuffer)
 			{
 				memcpy(sm_varBuffer, oldBuffer, offset);
@@ -415,13 +416,13 @@ void TREVertexStore::setupVBO(void)
 					memcpy(vboBuffer + m_edgeFlagsOffset, &m_edgeFlags[0],
 						edgeFlagsSize);
 				}
+				glGetError();	// Clear any preexisting error.
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_vbo);
 				glBufferDataARB(GL_ARRAY_BUFFER_ARB, vboSize, vboBuffer,
 					GL_STATIC_DRAW_ARB);
-				if (glGetError())
+				if (glGetError() != GL_NO_ERROR)
 				{
 					m_flags.vboFailed = true;
-					vboBuffer = NULL;
 				}
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, 0);
 				if (m_flags.vboFailed)
@@ -452,6 +453,15 @@ void TREVertexStore::deactivate(void)
 {
 	if (sm_activeVertexStore == this)
 	{
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_EDGE_FLAG_ARRAY);
+		if (sm_varBuffer)
+		{
+			glDisableClientState(GL_VERTEX_ARRAY_RANGE_NV);
+		}
 		sm_activeVertexStore = NULL;
 	}
 }
@@ -465,9 +475,9 @@ bool TREVertexStore::activate(bool displayLists)
 	}
 	else
 	{
+		glDisableClientState(GL_VERTEX_ARRAY);
 		if (m_vertices)
 		{
-			glEnableClientState(GL_VERTEX_ARRAY);
 			if (!m_flags.varTried && !m_flags.varFailed)
 			{
 				setupVAR();
@@ -500,14 +510,11 @@ bool TREVertexStore::activate(bool displayLists)
 						m_vertices->getVertices());
 				}
 			}
+			glEnableClientState(GL_VERTEX_ARRAY);
 		}
-		else
-		{
-			glDisableClientState(GL_VERTEX_ARRAY);
-		}
+		glDisableClientState(GL_NORMAL_ARRAY);
 		if (m_normals && getLightingFlag())
 		{
-			glEnableClientState(GL_NORMAL_ARRAY);
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
@@ -523,14 +530,11 @@ bool TREVertexStore::activate(bool displayLists)
 				glNormalPointer(TRE_GL_FLOAT, sizeof(TREVertex),
 					m_normals->getVertices());
 			}
+			glEnableClientState(GL_NORMAL_ARRAY);
 		}
-		else
-		{
-			glDisableClientState(GL_NORMAL_ARRAY);
-		}
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		if (m_textureCoords)
 		{
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
@@ -546,14 +550,11 @@ bool TREVertexStore::activate(bool displayLists)
 				glTexCoordPointer(3, TRE_GL_FLOAT, sizeof(TREVertex),
 					m_textureCoords->getVertices());
 			}
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		}
-		else
-		{
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		}
+		glDisableClientState(GL_COLOR_ARRAY);
 		if (m_colors)
 		{
-			glEnableClientState(GL_COLOR_ARRAY);
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
@@ -569,14 +570,11 @@ bool TREVertexStore::activate(bool displayLists)
 				glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(TCULong),
 					m_colors->getValues());
 			}
+			glEnableClientState(GL_COLOR_ARRAY);
 		}
-		else
-		{
-			glDisableClientState(GL_COLOR_ARRAY);
-		}
+		glDisableClientState(GL_EDGE_FLAG_ARRAY);
 		if (m_edgeFlags.size() > 0)
 		{
-			glEnableClientState(GL_EDGE_FLAG_ARRAY);
 			if (!displayLists && m_vbo && TREGLExtensions::haveVBOExtension())
 			{
 				glEdgeFlagPointer(4, BUFFER_OFFSET(m_edgeFlagsOffset));
@@ -589,10 +587,7 @@ bool TREVertexStore::activate(bool displayLists)
 			{
 				glEdgeFlagPointer(4, &m_edgeFlags[0]);
 			}
-		}
-		else
-		{
-			glDisableClientState(GL_EDGE_FLAG_ARRAY);
+			glEnableClientState(GL_EDGE_FLAG_ARRAY);
 		}
 		sm_activeVertexStore = this;
 		return true;
