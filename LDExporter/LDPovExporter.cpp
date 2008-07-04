@@ -536,7 +536,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 
 void LDPovExporter::writeMainModel(void)
 {
-	fprintf(m_pPovFile, "// ", m_pTopModel->getName());
+	fprintf(m_pPovFile, "// ");
 	if (m_pTopModel->getName())
 	{
 		fprintf(m_pPovFile, "%s\n", m_pTopModel->getName());
@@ -1141,7 +1141,7 @@ void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, int num)
 		"	<%s*RADIUS,%s*RADIUS,%s*RADIUS> + CENTER\n"
 		"	color rgb <1,1,1>\n"
 		"}\n"
-		"#end\n", num, ls("PovLatLon"), ftostr(lat).c_str(),
+		"#end\n", num, (const char *)ls("PovLatLon"), ftostr(lat).c_str(),
 		ftostr(lon).c_str(), ftostr(lightLoc[0]).c_str(),
 		ftostr(lightLoc[1]).c_str(), ftostr(lightLoc[2]).c_str());
 }
