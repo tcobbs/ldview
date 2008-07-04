@@ -5,19 +5,19 @@ all: Makefile
 	for DIR in $(DIRECTORIES); do	\
 		cd $$DIR; $(MAKE) -k all; cd ../QT;	\
 	done;
-	make
+	$(MAKE)
 
 debug: Makefile
 	for DIR in $(DIRECTORIES); do	\
 		cd $$DIR; $(MAKE) debug; cd ../QT;	\
 	done;
-	make
+	$(MAKE)
 
 clean:
 	for DIR in $(DIRECTORIES); do		\
 		cd $$DIR; $(MAKE) clean; cd ../QT;	\
 	done;
-	make clean
+	$(MAKE) clean
 
 depend:
 	for DIR in $(DIRECTORIES); do		\
