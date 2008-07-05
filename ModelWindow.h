@@ -332,6 +332,8 @@ protected:
 	virtual void drawLight(GLenum, TCFloat, TCFloat, TCFloat);
 	virtual void drawLights(void);
 	virtual void setupLight(GLenum);
+	void positionSaveAddOn(void);
+	void positionSaveOptionsButton(void);
 
 	static UINT CALLBACK staticPrintHook(HWND hDlg, UINT uiMsg,
 		WPARAM wParam, LPARAM lParam);
