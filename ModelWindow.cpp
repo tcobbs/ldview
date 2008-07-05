@@ -1035,90 +1035,107 @@ BOOL ModelWindow::doSaveSize(WPARAM sizeType, int newWidth, int newHeight)
 		if (sizeType != SW_MINIMIZE)
 		{
 			saveWindowResizer->resize(newWidth, newHeight);
+			positionSaveAddOn();
 		}
 	}
 	return FALSE;
 }
 
-BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
+void ModelWindow::positionSaveOptionsButton(void)
 {
-	RECT clientRect;
-	RECT parentWindowRect;
-	RECT typeComboRect;
 	RECT optionsButtonRect;
-	RECT cancelButtonRect;
+	RECT typeComboRect;
 	HWND hParent = GetParent(hSaveDialog);
 	HWND hTypeCombo = GetDlgItem(hParent, cmb1);
-	HWND hCancelButton = GetDlgItem(hParent, IDCANCEL);
 	int typeComboWidth;
 	int typeComboHeight;
 	int optionsButtonWidth;
 	int optionsButtonHeight;
-	int xOrigin = 0;
-
-	if (curSaveOp == LDPreferences::SOSnapshot)
-	{
-		RECT filenameLabelRect;
-		HWND hFilenameLabel = GetDlgItem(hParent, stc3);
-		HWND hToolbar = GetDlgItem(hParent, ctl1);
-		RECT boxRect;
-
-		GetWindowRect(GetDlgItem(hSaveDialog, IDC_SAVE_ACTUAL_SIZE_BOX),
-			&boxRect);
-		screenToClient(hSaveDialog, &boxRect);
-		GetWindowRect(hFilenameLabel, &filenameLabelRect);
-		screenToClient(hParent, &filenameLabelRect);
-		xOrigin = filenameLabelRect.left - boxRect.left;
-		if (hToolbar)
-		{
-			char classname[128];
-
-			GetClassName(hToolbar, classname, COUNT_OF(classname));
-			if (strcmp(classname, TOOLBARCLASSNAME) == 0)
-			{
-				RECT tbRect;
-
-				GetWindowRect(hToolbar, &tbRect);
-				clientToScreen(hSaveDialog, &boxRect);
-				tbRect.bottom = boxRect.bottom;
-				screenToClient(hParent, &tbRect);
-				MoveWindow(hToolbar, tbRect.left, tbRect.top,
-					tbRect.right - tbRect.left, tbRect.bottom - tbRect.top,
-					TRUE);
-			}
-		}
-	}
-	GetClientRect(hSaveDialog, &clientRect);
-	GetWindowRect(hParent, &parentWindowRect);
-	clientRect.bottom = parentWindowRect.bottom - parentWindowRect.top;
-	clientRect.right = parentWindowRect.right - parentWindowRect.left;
-	MoveWindow(hSaveDialog, xOrigin, 0, clientRect.right,
-		clientRect.bottom, TRUE);
 
 	// Move the Options button so that it is to the right of the file type
-	// combo box, and make the file type combo box narrower so that it will fit.
+	// combo box.
 	GetWindowRect(hTypeCombo, &typeComboRect);
-	GetWindowRect(hCancelButton, &cancelButtonRect);
+	screenToClient(hParent, &typeComboRect);
+	GetWindowRect(hSaveOptionsButton, &optionsButtonRect);
+	optionsButtonWidth = optionsButtonRect.right - optionsButtonRect.left;
+	optionsButtonHeight = optionsButtonRect.bottom - optionsButtonRect.top;
+	typeComboWidth = typeComboRect.right - typeComboRect.left;
+	typeComboHeight = typeComboRect.bottom - typeComboRect.top;
+	clientToScreen(hParent, &typeComboRect);
+	screenToClient(hSaveDialog, &typeComboRect);
+
+	MoveWindow(hSaveOptionsButton, typeComboRect.right + 6,
+		typeComboRect.top + typeComboHeight / 2 - optionsButtonHeight / 2,
+		optionsButtonWidth, optionsButtonHeight, TRUE);
+}
+
+void ModelWindow::positionSaveAddOn(void)
+{
+	HWND hParent = GetParent(hSaveDialog);
+	RECT parentClientRect;
+	RECT addOnRect;
+	int windowWidth;
+	int windowHeight;
+
+	GetClientRect(hParent, &parentClientRect);
+	GetWindowRect(hSaveDialog, &addOnRect);
+	screenToClient(hParent, &addOnRect);
+	windowWidth = parentClientRect.right - parentClientRect.left;
+	windowHeight = parentClientRect.bottom - parentClientRect.top;
+	if (addOnRect.left != 0 || addOnRect.top != 0 ||
+		addOnRect.right != windowWidth || addOnRect.bottom != windowHeight)
+	{
+		// Only move it if it has actually changed position.  That's because
+		// this function is called from doSaveSize, and we don't want to go
+		// into an infinite loop.
+		MoveWindow(hSaveDialog, 0, 0, windowWidth, windowHeight, TRUE);
+	}
+	positionSaveOptionsButton();
+}
+
+BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
+{
+	RECT optionsButtonRect;
+	RECT typeComboRect;
+	RECT miscRect;
+	RECT parentRect;
+	RECT cancelRect;
+	RECT windowRect;
+	HWND hParent = GetParent(hSaveDialog);
+	HWND hMiscBox = GetDlgItem(hSaveDialog, IDC_MISC_BOX);
+	HWND hCancelButton = GetDlgItem(hParent, IDCANCEL);
+	HWND hTypeCombo = GetDlgItem(hParent, cmb1);
+	int typeComboWidth;
+	int typeComboHeight;
+	int optionsButtonWidth;
+
+	// Shrink the type combo to make space for the options button.
+	GetWindowRect(hTypeCombo, &typeComboRect);
 	GetWindowRect(hSaveOptionsButton, &optionsButtonRect);
 	screenToClient(hParent, &typeComboRect);
 	optionsButtonWidth = optionsButtonRect.right - optionsButtonRect.left;
-	optionsButtonHeight = optionsButtonRect.bottom - optionsButtonRect.top;
 	typeComboWidth = typeComboRect.right - typeComboRect.left
 		- optionsButtonWidth - 6;
 	typeComboHeight = typeComboRect.bottom - typeComboRect.top;
 	MoveWindow(hTypeCombo, typeComboRect.left, typeComboRect.top,
 		typeComboWidth, typeComboHeight, TRUE);
-	clientToScreen(hParent, &typeComboRect);
-	screenToClient(hSaveDialog, &typeComboRect);
-	screenToClient(hSaveDialog, &cancelButtonRect);
 
-	MoveWindow(hSaveOptionsButton, typeComboRect.right - optionsButtonWidth,
-		cancelButtonRect.top, optionsButtonWidth, optionsButtonHeight, TRUE);
+	// Resize the add-on window so that the right margin between the misc box
+	// and the add-on window is the same as the right margin between the save
+	// dialog's cancel button and the save dialog.  That way, the resizer will
+	// consider that to be the "proper" right margin, and when we resize the
+	// add-on to fill the available space, everything will size properly.
+	GetClientRect(hParent, &parentRect);
+	GetWindowRect(hCancelButton, &cancelRect);
+	screenToClient(hParent, &cancelRect);
+	GetWindowRect(hMiscBox, &miscRect);
+	screenToClient(hSaveDialog, &miscRect);
+	GetClientRect(hParent, &windowRect);
+	windowRect.right = miscRect.right + parentRect.right - cancelRect.right;
+	MoveWindow(hSaveDialog, 0, 0, windowRect.right, windowRect.bottom, TRUE);
+
 	saveWindowResizer = new CUIWindowResizer;
 	saveWindowResizer->setHWindow(hSaveDialog);
-
-	saveWindowResizer->addSubWindow(IDC_SAVE_OPTIONS,
-		CUIFloatLeft | CUIFloatTop);
 
 	if (curSaveOp == LDPreferences::SOSnapshot)
 	{
@@ -1168,6 +1185,7 @@ BOOL ModelWindow::doSaveInitDone(OFNOTIFY * /*ofNotify*/)
 		saveWindowResizer->addSubWindow(IDC_AUTO_CROP,
 			CUIFloatLeft | CUIFloatTop | CUIFloatRight);
 	}
+	positionSaveAddOn();
 
 	return FALSE;
 }
