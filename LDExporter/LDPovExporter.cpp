@@ -742,11 +742,6 @@ bool LDPovExporter::writeHeader(void)
 			(const char *)ls("OrigVerDesc"));
 	}
 	fprintf(m_pPovFile, "\n");
-
-	if (m_findReplacements)
-	{
-		writeInclude("lpovcolordefs.inc");
-	}
 	return true;
 }
 
