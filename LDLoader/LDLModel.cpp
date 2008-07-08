@@ -1615,7 +1615,6 @@ void LDLModel::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix,
-	LDLModel::ScanPointType types,
 	int step) const
 {
 	if (this != m_mainModel && isPart() && m_mainModel->getBoundingBoxesOnly()
@@ -1672,7 +1671,7 @@ void LDLModel::scanPoints(
 			{
 				emptyStep = false;
 				((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
-					matrix, types);
+					matrix);
 			}
 		}
 	}

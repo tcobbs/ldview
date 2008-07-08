@@ -203,8 +203,3 @@ LDLLineLine *LDLTriangleLine::newLineLine(int p1, int p2)
 	delete newLine;
 	return retValue;
 }
-
-bool LDLTriangleLine::shouldScanPoints(LDLModel::ScanPointType types) const
-{
-	return (types & LDLModel::SPTTriangle) != 0;
-}

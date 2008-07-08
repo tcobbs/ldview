@@ -37,15 +37,6 @@ struct LDrawIniS;
 class LDLModel : public TCAlertSender
 {
 public:
-	enum ScanPointType
-	{
-		SPTLine				= 0x01,
-		SPTEdgeLine			= 0x02,
-		SPTConditionalLine	= 0x04,
-		SPTTriangle			= 0x08,
-		SPTQuad				= 0x10,
-		SPTScanDefault		= SPTLine | SPTTriangle | SPTQuad
-	};
 	LDLModel(void);
 	LDLModel(const LDLModel &other);
 	virtual TCObject *copy(void) const;
@@ -85,7 +76,7 @@ public:
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		ScanPointType types = SPTScanDefault, int step = -1) const;
+		int step = -1) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max);
 	virtual TCFloat getMaxRadius(const TCVector &center);
 

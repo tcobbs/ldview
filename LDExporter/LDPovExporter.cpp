@@ -496,9 +496,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 
 			TCVector::initIdentityMatrix(matrix);
 			m_pTopModel->scanPoints(this,
-				(LDLScanPointCallback)&LDPovExporter::scanEdgePoint, matrix,
-				(LDLModel::ScanPointType)(LDLModel::SPTEdgeLine |
-				LDLModel::SPTConditionalLine));
+				(LDLScanPointCallback)&LDPovExporter::scanEdgePoint, matrix);
 			writeEdgeLineMacro();
 			writeEdgeColor();
 		}
@@ -2215,7 +2213,7 @@ void LDPovExporter::scanEdgePoint(
 	{
 		m_edgePoints.push_back(point);
 	}
-	else
+	else if (pFileLine->getLineType() == LDLLineTypeConditionalLine)
 	{
 	}
 }
