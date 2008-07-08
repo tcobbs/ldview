@@ -117,7 +117,7 @@ void LDLAutoCamera::zoomToFit(void)
 #endif // _DEBUG
 		m_model->scanPoints(this,
 			(LDLScanPointCallback)&LDLAutoCamera::scanCameraPoint,
-			transformationMatrix, LDLModel::SPTScanDefault, m_step);
+			transformationMatrix, m_step);
 #ifdef _DEBUG
 		debugPrintf("num points: %d\n", m_numPoints);
 #endif // _DEBUG

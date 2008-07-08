@@ -178,10 +178,9 @@ void LDLShapeLine::printPoint(int index, UCSTR buf)
 void LDLShapeLine::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix,
-	LDLModel::ScanPointType types) const
+	const TCFloat *matrix) const
 {
-	if (shouldScanPoints(types) && m_valid)
+	if (m_valid)
 	{
 		int i;
 		int count = getNumPoints();

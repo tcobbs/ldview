@@ -16,8 +16,7 @@ public:
 	virtual bool isXZPlanar(void) const;
 	virtual bool isXZPlanar(const TCFloat *matrix) const;
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		LDLModel::ScanPointType types) const;
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
 protected:
 	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

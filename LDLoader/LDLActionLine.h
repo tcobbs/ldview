@@ -22,8 +22,8 @@ public:
 			m_actionFlags.bfcClip;
 	}
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		LDLModel::ScanPointType types) const = 0;
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix)
+		const = 0;
 protected:
 	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);

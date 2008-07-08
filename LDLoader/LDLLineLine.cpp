@@ -49,22 +49,3 @@ TCObject *LDLLineLine::copy(void) const
 {
 	return new LDLLineLine(*this);
 }
-
-bool LDLLineLine::shouldScanPoints(LDLModel::ScanPointType types) const
-{
-	if (m_colorNumber == 24)
-	{
-		if (types & LDLModel::SPTEdgeLine)
-		{
-			return true;
-		}
-	}
-	else
-	{
-		if (types & LDLModel::SPTLine)
-		{
-			return true;
-		}
-	}
-	return false;
-}
