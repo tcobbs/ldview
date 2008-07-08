@@ -1533,7 +1533,6 @@ LRESULT LDViewWindow::doMove(int newX, int newY)
 {
 	LRESULT retVal = CUIWindow::doMove(newX, newY);
 
-	setupStandardSizes();
 	return retVal;
 }
 
@@ -2240,6 +2239,11 @@ LRESULT LDViewWindow::doMenuSelect(UINT menuID, UINT /*flags*/, HMENU hMenu)
 	{
 		// This shouldn't ever be necessary, but it can't hurt.
 		updateModelMenuItems();
+		if (menuID == 2)
+		{
+			// User selected the View menu; update standard sizes list.
+			setupStandardSizes();
+		}
 	}
 	return 1;
 }
@@ -3055,7 +3059,6 @@ LRESULT LDViewWindow::switchToolbar(void)
 	showToolbar = !showToolbar;
 	TCUserDefaults::setLongForKey(showToolbar ? 1 : 0, TOOLBAR_KEY, false);
 	reflectToolbar();
-	setupStandardSizes();
 	return 0;
 }
 
@@ -3070,7 +3073,6 @@ LRESULT LDViewWindow::switchStatusBar(void)
 	showStatusBar = !showStatusBar;
 	TCUserDefaults::setLongForKey(showStatusBar ? 1 : 0, STATUS_BAR_KEY, false);
 	reflectStatusBar();
-	setupStandardSizes();
 	return 0;
 }
 
@@ -4894,7 +4896,6 @@ LRESULT LDViewWindow::doShowWindow(BOOL showFlag, LPARAM status)
 		reflectStatusBar();
 		reflectToolbar();
 	}
-	setupStandardSizes();
 	return CUIWindow::doShowWindow(showFlag, status);
 }
 
