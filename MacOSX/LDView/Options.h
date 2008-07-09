@@ -5,6 +5,7 @@
 #include <LDExporter/LDExporterSetting.h>
 
 @class OptionsPanel;
+@class OptionUI;
 
 @interface Options : NSObject
 {
@@ -25,5 +26,6 @@
 - (IBAction)cancel:(id)sender;
 - (id)docView;
 - (void)updateEnabled;
+- (void)makeOptionUIVisible:(OptionUI *)optionUI;
 
 @end

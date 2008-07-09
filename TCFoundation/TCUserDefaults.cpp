@@ -659,7 +659,6 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 	if (sizeof(wchar_t) == sizeof(unichar))
 	{
 		ucValue = (unichar *)value;
-		consolePrintf("sizeof(wchar_t) == sizeof(unichar)\n");
 	}
 	else
 	{
@@ -669,7 +668,6 @@ void TCUserDefaults::defSetStringForKey(CUCSTR value, const char* key,
 		{
 			ucValue[i] = (unichar)value[i];
 		}
-		consolePrintf("sizeof(wchar_t) != sizeof(unichar)\n");
 	}
 	if (sessionDict && sessionSpecific)
 	{

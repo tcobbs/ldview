@@ -8,6 +8,7 @@
 
 #import "EnumOptionUI.h"
 #import "LDViewCategories.h"
+#import "Options.h"
 
 #include <LDExporter/LDExporterSetting.h>
 
@@ -30,18 +31,25 @@
 		}
 		[popUpButton selectItemAtIndex:setting->getSelectedOption()];
 		[[popUpButton itemAtIndex:0] setRepresentedObject:self];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willPopUp:) name:NSPopUpButtonWillPopUpNotification object:popUpButton];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if (!shown)
 	{
 		[label release];
 		[popUpButton release];
 	}
 	[super dealloc];
+}
+
+- (void)willPopUp:(NSNotification *)notification
+{
+	[options makeOptionUIVisible:self];
 }
 
 - (float)updateLayoutX:(float)x y:(float)y width:(float)width update:(bool)update optimalWidth:(float &)optimalWidth

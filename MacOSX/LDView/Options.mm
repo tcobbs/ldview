@@ -127,6 +127,7 @@
 		[docView setFrameSize:size];
 	}
 	[self calcHeightForWidth:width optimalWidth:optimalWidth update:true];
+	[scrollView setNeedsDisplay:YES];
 }
 
 - (void)awakeFromNib
@@ -279,6 +280,34 @@
 	[panel setInitialFirstResponder:[okButton nextKeyView]];
 }
 
+- (void)makeOptionUIVisible:(OptionUI *)optionUI
+{
+	NSRect optionRect = [optionUI frame];
+	NSClipView *clipView = [scrollView contentView];
+	NSRect docVisibleRect = [scrollView documentVisibleRect];
+	float optionBottom = optionRect.origin.y + optionRect.size.height;
+	float docVisibleBottom = docVisibleRect.origin.y + docVisibleRect.size.height;
+	float delta = optionBottom - docVisibleBottom;
+	
+	if (delta > 0.0f)
+	{
+		// Why does the clip view have a different coordinate system?
+		NSPoint scrollPoint = [docView convertPoint:NSMakePoint(0.0f, docVisibleRect.origin.y + delta) toView:clipView];
+		
+		[clipView scrollToPoint:scrollPoint];
+		[scrollView reflectScrolledClipView:clipView];
+	}
+	delta = optionRect.origin.y - docVisibleRect.origin.y;
+	if (delta < 0.0f)
+	{
+		// Why does the clip view have a different coordinate system?
+		NSPoint scrollPoint = [docView convertPoint:NSMakePoint(0.0f, docVisibleRect.origin.y + delta) toView:clipView];
+		
+		[clipView scrollToPoint:scrollPoint];
+		[scrollView reflectScrolledClipView:clipView];
+	}
+}
+
 - (void)newFirstResponder:(NSNotification *)notification
 {
 	id responder = [[notification userInfo] objectForKey:@"Responder"];
@@ -295,30 +324,7 @@
 		}
 		if (optionUI != nil)
 		{
-			NSRect optionRect = [optionUI frame];
-			NSClipView *clipView = [scrollView contentView];
-			NSRect docVisibleRect = [scrollView documentVisibleRect];
-			float optionBottom = optionRect.origin.y + optionRect.size.height;
-			float docVisibleBottom = docVisibleRect.origin.y + docVisibleRect.size.height;
-			float delta = optionBottom - docVisibleBottom;
-
-			if (delta > 0.0f)
-			{
-				// Why does the clip view have a different coordinate system?
-				NSPoint scrollPoint = [docView convertPoint:NSMakePoint(0.0f, docVisibleRect.origin.y + delta) toView:clipView];
-
-				[clipView scrollToPoint:scrollPoint];
-				[scrollView reflectScrolledClipView:clipView];
-			}
-			delta = optionRect.origin.y - docVisibleRect.origin.y;
-			if (delta < 0.0f)
-			{
-				// Why does the clip view have a different coordinate system?
-				NSPoint scrollPoint = [docView convertPoint:NSMakePoint(0.0f, docVisibleRect.origin.y + delta) toView:clipView];
-
-				[clipView scrollToPoint:scrollPoint];
-				[scrollView reflectScrolledClipView:clipView];
-			}
+			[self makeOptionUIVisible:optionUI];
 		}
 	}
 }
