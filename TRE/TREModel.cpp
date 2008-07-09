@@ -3212,6 +3212,69 @@ void TREModel::saveSTL(FILE *file)
 	fprintf(file, "endsolid MYSOLID\n");
 }
 
+void TREModel::printStlStrips(
+	FILE *file,
+	TREShapeGroup *shapeGroup,
+	TREShapeType shapeType,
+	const TCFloat *matrix)
+{
+	TCULongArray *indices = shapeGroup->getIndices(shapeType, false);
+	TCULongArray *stripCounts = shapeGroup->getStripCounts(shapeType, false);
+	TREVertexArray *vertices = shapeGroup->getVertexStore()->getVertices();
+	int stripMargin = 2;
+	int stripInc = 1;
+
+	if (shapeType == TRESQuadStrip)
+	{
+		stripMargin = 3;
+		stripInc = 2;
+	}
+	if (indices != NULL && stripCounts != NULL)
+	{
+		int numStrips = stripCounts->getCount();
+
+		if (numStrips > 0)
+		{
+			int ofs = 0;
+
+			for (int j = 0; j < numStrips; j++)
+			{
+				int stripCount = (*stripCounts)[j];
+
+				for (int k = 0; k < stripCount - stripMargin; k += stripInc)
+				{
+					switch (shapeType)
+					{
+					case TRESTriangleStrip:
+						if (k % 2 == 0)
+						{
+							printStlTriangle(file, vertices, indices,
+								ofs + k, 0, 1, 2, matrix);
+						}
+						else
+						{
+							printStlTriangle(file, vertices, indices,
+								ofs + k, 0, 2, 1, matrix);
+						}
+						break;
+					case TRESTriangleFan:
+						printStlTriangle(file, vertices, indices,
+							ofs, 0, k + 1, k + 2, matrix);
+						break;
+					case TRESQuadStrip:
+						printStlTriangle(file, vertices, indices,
+							ofs + k, 0, 1, 2, matrix);
+						printStlTriangle(file, vertices, indices,
+							ofs + k, 1, 2, 3, matrix);
+						break;
+					}
+				}
+				ofs += stripCount;
+			}
+		}
+	}
+}
+
 void TREModel::saveSTL(FILE *file, const TCFloat *matrix)
 {
 	int i;
@@ -3251,15 +3314,21 @@ void TREModel::saveSTL(FILE *file, const TCFloat *matrix)
 						matrix);
 				}
 			}
+			printStlStrips(file, shape, TRESTriangleStrip, matrix);
+			printStlStrips(file, shape, TRESTriangleFan, matrix);
+			printStlStrips(file, shape, TRESQuadStrip, matrix);
 		}
 	}
-	for (i = 0; i < m_subModels->getCount(); i++)
+	if (m_subModels != NULL)
 	{
-		TRESubModel *subModel = (*m_subModels)[i];
-		TCFloat newMatrix[16];
+		for (i = 0; i < m_subModels->getCount(); i++)
+		{
+			TRESubModel *subModel = (*m_subModels)[i];
+			TCFloat newMatrix[16];
 
-		TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
-		subModel->getEffectiveModel()->saveSTL(file, newMatrix);
+			TCVector::multMatrix(matrix, subModel->getMatrix(), newMatrix);
+			subModel->getEffectiveModel()->saveSTL(file, newMatrix);
+		}
 	}
 }
 
