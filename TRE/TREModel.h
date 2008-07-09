@@ -292,6 +292,8 @@ protected:
 	static void printStlTriangle(FILE *file, TREVertexArray *vertices,
 		TCULongArray *indices, int ix, int i0, int i1, int i2,
 		const TCFloat *matrix);
+	static void printStlStrips(FILE *file, TREShapeGroup *shapeGroup,
+		TREShapeType shapeType, const TCFloat *matrix);
 
 	char *m_name;
 	TREMainModel *m_mainModel;
