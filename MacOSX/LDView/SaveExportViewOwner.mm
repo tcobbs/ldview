@@ -22,8 +22,14 @@
 			
 			if (exporter != NULL)
 			{
+				// There seems to be a GCC objc++ bug: if the following is put
+				// directly into the call that uses it below (without the local
+				// variable, the ucstring gets destroyed before it gets into
+				// the stringWithUCString method.
+				ucstring desc = exporter->getTypeDescription();
+
 				[typeDict setObject:[NSNumber numberWithInt:i] forKey:[NSNumber numberWithInt:[fileTypes count]]];
-				[fileTypes addObject:[NSString stringWithUCString:exporter->getTypeDescription()]];
+				[fileTypes addObject:[NSString stringWithUCString:desc]];
 				[extensions addObject:[NSString stringWithASCIICString:exporter->getExtension().c_str()]];
 			}
 		}
