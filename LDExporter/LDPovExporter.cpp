@@ -1325,7 +1325,8 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 		if (pIncFile)
 		{
 			char buf[1024];
-			bool found = true;
+			bool found = false;
+			std::string declareName;
 
 			for ( ; ; )
 			{
@@ -1333,7 +1334,6 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 
 				if (fgets(buf, sizeof(buf), pIncFile) == NULL)
 				{
-					found = false;
 					break;
 				}
 				buf[sizeof(buf) - 1] = 0;
@@ -1352,13 +1352,15 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 					}
 					if (buf[0] == ' ')
 					{
-						char declareName[1024];
+						char declareBuf[1024];
 
-						if (sscanf(buf, " %s", declareName) == 1)
+						if (sscanf(buf, " %s", declareBuf) == 1)
 						{
-							m_declareNames[lowerCaseString(modelFilename)] =
-								declareName;
-							break;
+							if (declareBuf[0])
+							{
+								declareName = declareBuf;
+								found = true;
+							}
 						}
 					}
 				}
@@ -1366,6 +1368,7 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 			fclose(pIncFile);
 			if (found)
 			{
+				m_declareNames[lowerCaseString(modelFilename)] = declareName;
 				writeInclude(incFilename, true, pModel);
 				return true;
 			}
@@ -1668,6 +1671,35 @@ bool LDPovExporter::writeColor(int colorNumber, bool slope)
 	return false;
 }
 
+LDPovExporter::ColorType LDPovExporter::getColorType(int colorNumber)
+{
+	int r, g, b, a;
+	LDLPalette *pPalette = m_pTopModel->getMainModel()->getPalette();
+	LDLColorInfo colorInfo;
+
+	pPalette->getRGBA(colorNumber, r, g, b, a);
+	colorInfo = pPalette->getAnyColorInfo(colorNumber);
+	if (a == 255)
+	{
+		if (colorInfo.rubber)
+		{
+			return CTRubber;
+		}
+		else if (colorInfo.chrome)
+		{
+			return CTChrome;
+		}
+		else
+		{
+			return CTOpaque;
+		}
+	}
+	else
+	{
+		return CTTransparent;
+	}
+}
+
 void LDPovExporter::writeInnerColorDeclaration(
 	int colorNumber,
 	bool slope)
@@ -1688,6 +1720,39 @@ void LDPovExporter::writeInnerColorDeclaration(
 		if (!slope)
 		{
 			fprintf(m_pPovFile, "\n");
+		}
+		if (it == m_xmlColors.end())
+		{
+			const char *macroName = NULL;
+			double dr = r / 255.0;
+			double dg = g / 255.0;
+			double db = b / 255.0;
+
+			switch (getColorType(colorNumber))
+			{
+			case CTOpaque:
+				macroName = "LDXOpaqueColor";
+				break;
+			case CTTransparent:
+				macroName = "LDXTransColor";
+				dr = alphaMod(r);
+				dg = alphaMod(g);
+				db = alphaMod(b);
+				break;
+			case CTChrome:
+				macroName = "LDXChromeColor";
+				break;
+			case CTRubber:
+				macroName = "LDXRubberColor";
+				break;
+			}
+			if (macroName != NULL)
+			{
+				fprintf(m_pPovFile, "#declare Color%d = %s(%s,%s,%s)\n",
+					colorNumber, macroName, ftostr(dr).c_str(),
+					ftostr(dg).c_str(), ftostr(db).c_str());
+				return;
+			}
 		}
 		fprintf(m_pPovFile,
 			"#declare Color%d%s = #if (version >= 3.1) material { #end\n\ttexture {\n",
@@ -1760,6 +1825,101 @@ void LDPovExporter::writeInnerColorDeclaration(
 	}
 }
 
+void LDPovExporter::writeLDXOpaqueColor(void)
+{
+	if (m_macros.find("LDXOpaqueColor") == m_macros.end())
+	{
+		fprintf(m_pPovFile, "#ifndef (LDXSkipOpaqueColorMacro)\n");
+		fprintf(m_pPovFile, "#macro LDXOpaqueColor(r, g, b)\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
+		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
+		fprintf(m_pPovFile, "		finish { phong PHONG phong_size PHONGS "
+			"reflection REFL }\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "	}\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "#end\n\n");
+		m_macros.insert("LDXOpaqueColor");
+	}
+}
+
+void LDPovExporter::writeLDXTransColor(void)
+{
+	if (m_macros.find("LDXTransColor") == m_macros.end())
+	{
+		fprintf(m_pPovFile, "#ifndef (LDXSkipTransColorMacro)\n");
+		fprintf(m_pPovFile, "#macro LDXTransColor(r, g, b)\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
+		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "		pigment { #if (QUAL > 1) rgbf <r,g,b,TFILT>"
+			" #else rgbf <0.6,0.6,0.6,0> #end }\n");
+		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
+		fprintf(m_pPovFile, "		finish { phong PHONG phong_size PHONGS "
+			"reflection TREFL }\n");
+		fprintf(m_pPovFile, "		#if (version >= 3.1) #else finish { "
+			"refraction 1 ior IOR } #end\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "	}\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) #if (QUAL > 1)\n");
+		fprintf(m_pPovFile, "	interior { ior IOR }\n");
+		fprintf(m_pPovFile, "#end #end\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "#end\n\n");
+		m_macros.insert("LDXTransColor");
+	}
+}
+
+void LDPovExporter::writeLDXChromeColor(void)
+{
+	if (m_macros.find("LDXChromeColor") == m_macros.end())
+	{
+		fprintf(m_pPovFile, "#ifndef (LDXSkipChromeColorMacro)\n");
+		fprintf(m_pPovFile, "#macro LDXChromeColor(r, g, b)\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
+		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
+		fprintf(m_pPovFile, "		finish { phong PHONG phong_size PHONGS "
+			"reflection CHROME_REFL brilliance CHROME_BRIL metallic specular "
+			"CHROME_SPEC roughness CHROME_ROUGH}\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "	}\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "#end\n\n");
+		m_macros.insert("LDXChromeColor");
+	}
+}
+
+void LDPovExporter::writeLDXRubberColor(void)
+{
+	if (m_macros.find("LDXRubberColor") == m_macros.end())
+	{
+		fprintf(m_pPovFile, "#ifndef (LDXSkipRubberColorMacro)\n");
+		fprintf(m_pPovFile, "#macro LDXRubberColor(r, g, b)\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
+		fprintf(m_pPovFile, "	texture {\n");
+		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
+		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
+		fprintf(m_pPovFile, "		finish { phong RUBBER_PHONG phong_size "
+			"RUBBER_PHONGS reflection RUBBER_REFL }\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "	}\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
+		fprintf(m_pPovFile, "#end\n");
+		fprintf(m_pPovFile, "#end\n\n");
+		m_macros.insert("LDXRubberColor");
+	}
+}
+
 void LDPovExporter::writeColorDeclaration(int colorNumber)
 {
 	if (colorNumber != 16)
@@ -1768,6 +1928,7 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 		LDLPalette *pPalette = m_pTopModel->getMainModel()->getPalette();
 		LDLColorInfo colorInfo;
 		PovColorMap::const_iterator it = m_xmlColors.end();
+		bool wroteXml = false;
 
 		pPalette->getRGBA(colorNumber, r, g, b, a);
 		if (m_xmlMap)
@@ -1780,7 +1941,26 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 					it2 != color.povFilenames.end(); it2++)
 				{
 					writeInclude(*it2);
+					wroteXml = true;
 				}
+			}
+		}
+		if (!wroteXml)
+		{
+			switch (getColorType(colorNumber))
+			{
+			case CTOpaque:
+				writeLDXOpaqueColor();
+				break;
+			case CTTransparent:
+				writeLDXTransColor();
+				break;
+			case CTChrome:
+				writeLDXChromeColor();
+				break;
+			case CTRubber:
+				writeLDXRubberColor();
+				break;
 			}
 		}
 		fprintf(m_pPovFile, "#ifndef (Color%d)", colorNumber);
@@ -2126,10 +2306,8 @@ void LDPovExporter::writeEdgeColor(void)
 {
 	fprintf(m_pPovFile,
 		"#ifndef (EdgeColor)\n"
-		"#declare EdgeColor = material\n"
-		"{\n"
-		"	texture\n"
-		"	{\n"
+		"#declare EdgeColor = material {\n"
+		"	texture {\n"
 		"		pigment { rgbf <.1,.1,.1,0> }\n"
 		"		finish { ambient 1 diffuse 0 }\n"
 		"	}\n"
@@ -2141,26 +2319,21 @@ void LDPovExporter::writeEdgeLineMacro(void)
 {
 	fprintf(m_pPovFile,
 		"#macro EdgeLine(Point1, Point2, Color)\n"
-		"	object\n"
-		"	{\n"
-		"		merge\n"
-		"		{\n"
-		"			cylinder\n"
-		"			{\n"
-		"				Point1,Point2,EDGERAD\n"
-		"			}\n"
-		"			sphere\n"
-		"			{\n"
-		"				Point1,EDGERAD\n"
-		"			}\n"
-		"			sphere\n"
-		"			{\n"
-		"				Point2,EDGERAD\n"
-		"			}\n"
+		"object {\n"
+		"	merge {\n"
+		"		cylinder {\n"
+		"			Point1,Point2,EDGERAD\n"
 		"		}\n"
-		"		material { Color }\n"
-		"		no_shadow\n"
+		"		sphere {\n"
+		"			Point1,EDGERAD\n"
+		"		}\n"
+		"		sphere {\n"
+		"			Point2,EDGERAD\n"
+		"		}\n"
 		"	}\n"
+		"	material { Color }\n"
+		"	no_shadow\n"
+		"}\n"
 		"#end\n\n");
 }
 

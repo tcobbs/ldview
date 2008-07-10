@@ -52,6 +52,13 @@ typedef std::map<std::string, PovElement> PovElementMap;
 
 class LDPovExporter : public LDExporter
 {
+	enum ColorType
+	{
+		CTOpaque,
+		CTTransparent,
+		CTRubber,
+		CTChrome,
+	};
 public:
 	LDPovExporter(void);
 	int doExport(LDLModel *pTopModel);
@@ -129,6 +136,11 @@ protected:
 	virtual int getNumGeometrySettings(void) const { return 4; }
 	std::string getAspectRatio(void);
 	std::string replaceSpecialChacters(const char *string);
+	void writeLDXOpaqueColor(void);
+	void writeLDXTransColor(void);
+	void writeLDXChromeColor(void);
+	void writeLDXRubberColor(void);
+	ColorType getColorType(int colorNumber);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -209,6 +221,7 @@ protected:
 	MatrixMap m_matrices;
 	std::string m_ldrawDir;
 	StringSet m_includes;
+	StringSet m_macros;
 
 	static CharStringMap sm_replacementChars;
 };
