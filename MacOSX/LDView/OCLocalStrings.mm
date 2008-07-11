@@ -29,10 +29,10 @@
 	}
 }
 
-+ (BOOL)loadStringTable:(NSString *)filename
++ (BOOL)loadStringTable:(NSString *)filename replace:(bool)replace
 {
 	if (TCLocalStrings::loadStringTable([filename cStringUsingEncoding:
-		NSASCIIStringEncoding]))
+		NSASCIIStringEncoding], replace))
 	{
 		return YES;
 	}

@@ -8,7 +8,7 @@
 
 - (NSMutableDictionary *)columnDictWithID:(LDPartListColumn)theId state:(BOOL)state
 {
-	return [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString  stringWithCString:LDHtmlInventory::getColumnName(theId) encoding:NSASCIIStringEncoding], @"Name", [NSNumber numberWithBool:state], @"State", [NSNumber numberWithInt:theId], @"ID", nil];
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUCString:LDHtmlInventory::getColumnNameUC(theId)], @"Name", [NSNumber numberWithBool:state], @"State", [NSNumber numberWithInt:theId], @"ID", nil];
 }
 
 - (id)initWithModelWindow:(ModelWindow *)theModelWindow htmlInventory:(LDHtmlInventory *)theHtmlInventory

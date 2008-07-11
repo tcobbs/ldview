@@ -1,5 +1,6 @@
 #import "LDrawPage.h"
 #import "OCLocalStrings.h"
+#import "LDViewCategories.h"
 
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDPreferences.h>
@@ -19,14 +20,14 @@
 	extraFolders = [[NSMutableArray alloc] initWithCapacity:extraDirs.size()];
 	for (size_t i = 0; i < extraDirs.size(); i++)
 	{
-		[extraFolders addObject:[NSString stringWithCString:extraDirs[i].c_str() encoding:NSASCIIStringEncoding]];
+		[extraFolders addObject:[NSString stringWithASCIICString:extraDirs[i].c_str()]];
 	}
 	[extraFoldersTableView reloadData];
 }
 
 - (void)setup
 {
-	[ldrawDirField setStringValue:[NSString stringWithCString:ldPreferences->getLDrawDir() encoding:NSASCIIStringEncoding]];
+	[ldrawDirField setStringValue:[NSString stringWithASCIICString:ldPreferences->getLDrawDir()]];
 	[self setupExtraFolders:ldPreferences->getExtraDirs()];
 	[super setup];
 }
@@ -72,7 +73,7 @@
 
 - (NSString *)ldrawDir
 {
-	return [NSString stringWithCString:ldPreferences->getLDrawDir() encoding:NSASCIIStringEncoding];
+	return [NSString stringWithASCIICString:ldPreferences->getLDrawDir()];
 }
 
 - (void)updateLDrawDir:(NSString *)ldrawDir

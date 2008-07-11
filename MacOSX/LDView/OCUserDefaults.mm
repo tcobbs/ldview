@@ -7,6 +7,7 @@
 //
 
 #import "OCUserDefaults.h"
+#import "LDViewCategories.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
@@ -38,8 +39,7 @@
 		
 	if (string)
 	{
-		NSString *retValue = [NSString stringWithCString:string encoding:
-			NSASCIIStringEncoding];
+		NSString *retValue = [NSString stringWithASCIICString:string];
 
 		delete string;
 		return retValue;
