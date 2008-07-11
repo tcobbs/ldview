@@ -45,6 +45,7 @@ protected:
 	void instDumpTable(const char *filename, const char *header);
 	void instSetCodePage(int codePage);
 	void mbstowstring(std::wstring &dst, const char *src, int length = -1);
+	void clear(void);
 
 	TCDictionary *stringDict;
 	WStringWStringMap m_strings;
