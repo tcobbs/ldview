@@ -765,6 +765,13 @@ void TCLocalStrings::instDumpTable(const char *filename, const char *header)
 	}
 }
 
+void TCLocalStrings::clear(void)
+{
+	stringDict->removeAll();
+	m_strings.clear();
+	m_utf8Strings.clear();
+}
+
 bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 {
 	bool sectionFound = false;
@@ -773,7 +780,7 @@ bool TCLocalStrings::instSetStringTable(const char *stringTable, bool replace)
 
 	if (replace)
 	{
-		stringDict->removeAll();
+		clear();
 	}
 	while (1)
 	{
@@ -978,7 +985,7 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 
 	if (replace)
 	{
-		stringDict->removeAll();
+		clear();
 	}
 	while (1)
 	{
