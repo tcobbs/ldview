@@ -13,6 +13,6 @@
 }
 
 + (NSString *)get:(NSString *)key;
-+ (BOOL)loadStringTable:(NSString *)filename;
++ (BOOL)loadStringTable:(NSString *)filename replace:(bool)replace;
 
 @end

@@ -1,4 +1,6 @@
 #import "UpdatesPage.h"
+#import "LDViewCategories.h"
+
 #include <LDLib/LDPreferences.h>
 
 @implementation UpdatesPage
@@ -14,7 +16,7 @@
 - (void)enableProxy
 {
 	[self enableProxyUI:YES];
-	[proxyField setStringValue:[NSString stringWithCString:ldPreferences->getProxyServer()]];
+	[proxyField setStringValue:[NSString stringWithASCIICString:ldPreferences->getProxyServer()]];
 	[portField setIntValue:ldPreferences->getProxyPort()];
 }
 

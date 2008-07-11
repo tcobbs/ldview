@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
 	[OCUserDefaults setCommandLine:argv];
 	[OCUserDefaults setAppName:@"LDView"];
 	[OCUserDefaults initSession];
-	[OCLocalStrings loadStringTable:[[NSBundle mainBundle] pathForResource:@"LDViewMessages" ofType:@"ini"]];
-	[OCLocalStrings loadStringTable:[[NSBundle mainBundle] pathForResource:@"LDExportMessages" ofType:@"ini"]];
+	[OCLocalStrings loadStringTable:[[NSBundle mainBundle] pathForResource:@"LDViewMessages" ofType:@"ini"] replace:true];
+	[OCLocalStrings loadStringTable:[[NSBundle mainBundle] pathForResource:@"LDExportMessages" ofType:@"ini"] replace:false];
 	done = [CommandLineSnapshot takeSnapshot];
 	[pool release];
 	if (done)

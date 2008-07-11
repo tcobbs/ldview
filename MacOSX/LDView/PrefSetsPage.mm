@@ -4,6 +4,8 @@
 #import "Preferences.h"
 #import "OCLocalStrings.h"
 #import "OCUserDefaults.h"
+#import "LDViewCategories.h"
+
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -109,13 +111,13 @@
 	[sessionNames addObject:defaultString];
 	for (i = 0; i < count; i++)
 	{
-		[sessionNames addObject:[NSString stringWithCString:tcSessionNames->stringAtIndex(i)]];
+		[sessionNames addObject:[NSString stringWithASCIICString:tcSessionNames->stringAtIndex(i)]];
 	}
 	tcSessionNames->release();
 	[tableView reloadData];
 	if (savedSessionName && savedSessionName[0])
 	{
-		[self selectPrefSet:[NSString stringWithCString:savedSessionName]];
+		[self selectPrefSet:[NSString stringWithASCIICString:savedSessionName]];
 	}
 	else
 	{
@@ -146,7 +148,7 @@
 
 	if (savedSessionName)
 	{
-		oldSessionName = [NSString stringWithCString:savedSessionName encoding:NSASCIIStringEncoding];
+		oldSessionName = [NSString stringWithASCIICString:savedSessionName];
 		delete savedSessionName;
 	}
 	// Skip first entry, which is default session.
@@ -157,7 +159,7 @@
 	for (i = 0; i < tcSessionNames->getCount(); i++)
 	{
 		char *tcSessionName = (*tcSessionNames)[i];
-		NSString *sessionName = [NSString stringWithCString:tcSessionName encoding:NSASCIIStringEncoding];
+		NSString *sessionName = [NSString stringWithASCIICString:tcSessionName];
 
 		[oldDict setObject:object forKey:sessionName];
 		if (![currentDict objectForKey:sessionName])

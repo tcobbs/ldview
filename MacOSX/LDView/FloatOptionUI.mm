@@ -37,7 +37,7 @@
 		}
 		// If we get here, the value was either too small or too large.  Set
 		// error to contain an error listing the valid range.
-		error = [NSString stringWithFormat:[OCLocalStrings get:@"CocoaValueOutOfRange"], [NSString stringWithCString:ftostr(setting->getMinFloatValue()).c_str()], [NSString stringWithCString:ftostr(setting->getMaxFloatValue()).c_str()]];
+		error = [NSString stringWithFormat:[OCLocalStrings get:@"CocoaValueOutOfRange"], [NSString stringWithASCIICString:ftostr(setting->getMinFloatValue()).c_str()], [NSString stringWithASCIICString:ftostr(setting->getMaxFloatValue()).c_str()]];
 	}
 	else
 	{

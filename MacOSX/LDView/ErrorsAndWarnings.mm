@@ -3,6 +3,7 @@
 #import "ErrorItem.h"
 #import "OCUserDefaults.h"
 #import "OCLocalStrings.h"
+#import "LDViewCategories.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLError.h>
 
@@ -158,8 +159,11 @@ static ErrorsAndWarnings *sharedInstance = nil;
 	enabledErrors = [[NSMutableArray alloc] init];
 	for (int i = LDLEFirstError; i < LDLELastError; i++)
 	{
-		// ToDo: Unicode fix
-		[errorNames addObject:[NSString stringWithCString:LDLError::getTypeName((LDLErrorType)i) encoding:NSASCIIStringEncoding]];
+#ifdef TC_NO_UNICODE
+		[errorNames addObject:[NSString stringWithASCIICString:LDLError::getTypeName((LDLErrorType)i)]];
+#else // TC_NO_UNICODE
+		[errorNames addObject:[NSString stringWithUCString:LDLError::getTypeNameW((LDLErrorType)i)]];
+#endif // TC_NO_UNICODE
 		[enabledErrors addObject:[NSNumber numberWithBool:[self showsErrorType:i]]];
 	}
 	[enabledErrorsTable reloadData];
