@@ -1312,6 +1312,7 @@
 					"-lpng12u",
 					"-ljpeg",
 					"-lboost_thread-mt",
+					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
 					"-ltinyxml",
 				);
@@ -1380,6 +1381,7 @@
 					"-lpng12u",
 					"-ljpeg",
 					"-lboost_thread-mt",
+					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
 					"-ltinyxml",
 				);
@@ -1416,6 +1418,7 @@
 					"-lpng12u",
 					"-ljpeg",
 					"-lboost_thread-mt",
+					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
 					"-ltinyxml",
 				);

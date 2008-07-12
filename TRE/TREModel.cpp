@@ -3267,6 +3267,9 @@ void TREModel::printStlStrips(
 						printStlTriangle(file, vertices, indices,
 							ofs + k, 1, 2, 3, matrix);
 						break;
+					default:
+						// Get rid of gcc warnings.
+						break;
 					}
 				}
 				ofs += stripCount;
