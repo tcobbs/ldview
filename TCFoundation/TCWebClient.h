@@ -23,11 +23,7 @@ typedef long long int64;
 #endif // WIN32
 
 #ifndef _NO_BOOST
-namespace boost
-{
-class thread;
-class mutex;
-}
+#include <boost/thread.hpp>
 #endif // !_NO_BOOST
 
 #define WCE_AUTH TCNC_MAX_ERROR + 1

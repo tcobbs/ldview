@@ -19,13 +19,12 @@
 #endif // WIN32
 
 #ifndef _NO_TRE_THREADS
-#include <boost/thread.hpp>
 #include <boost/bind.hpp>
 //#define ANTI_DEADLOCK_HACK
 #ifdef ANTI_DEADLOCK_HACK
 #include <boost/thread/xtime.hpp>
 #endif // ANTI_DEADLOCK_HACK
-typedef boost::MutexType::scoped_lock ScopedLock;
+typedef boost::mutex::scoped_lock ScopedLock;
 
 #ifdef __APPLE__
 #include <CoreServices/CoreServices.h>
@@ -785,7 +784,7 @@ void TREMainModel::launchWorkerThreads()
 		{
 			m_mainFlags.frameStarted = false;
 			m_threadGroup = new boost::thread_group;
-			m_workerMutex = new boost::MutexType;
+			m_workerMutex = new boost::mutex;
 			m_workerCondition = new boost::condition;
 			m_sortCondition = new boost::condition;
 			m_conditionalsCondition = new boost::condition;

@@ -13,17 +13,7 @@
 #endif // _NO_BOOST
 #endif // VS 6
 #ifndef _NO_TRE_THREADS
-#ifdef WIN32
-#define MutexType recursive_mutex
-#else
-#define MutexType mutex
-#endif // WIN32
-namespace boost
-{
-	class thread_group;
-	class MutexType;
-	class condition;
-}
+#include <boost/thread.hpp>
 #endif // !_NO_TRE_THREADS
 
 class TCDictionary;
@@ -412,7 +402,7 @@ protected:
 	TREModel *m_curGeomModel;
 #ifndef _NO_TRE_THREADS
 	boost::thread_group *m_threadGroup;
-	boost::MutexType *m_workerMutex;
+	boost::mutex *m_workerMutex;
 	boost::condition *m_workerCondition;
 	boost::condition *m_sortCondition;
 	boost::condition *m_conditionalsCondition;
