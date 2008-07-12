@@ -20,6 +20,7 @@ CFG=CUI - Win32 DebugNoBoost
 !MESSAGE "CUI - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "CUI - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "CUI - Win32 DebugNoBoost" (based on "Win32 (x86) Static Library")
+!MESSAGE "CUI - Win32 ReleaseNoBoost" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -98,6 +99,29 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
+!ELSEIF  "$(CFG)" == "CUI - Win32 ReleaseNoBoost"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "CUI___Win32_ReleaseNoBoost"
+# PROP BASE Intermediate_Dir "CUI___Win32_ReleaseNoBoost"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "CUI___Win32_ReleaseNoBoost"
+# PROP Intermediate_Dir "CUI___Win32_ReleaseNoBoost"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D _WIN32_WINDOWS=0x0410 /D "_BUILDING_CUI_LIB" /D "_TC_STATIC" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "../" /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D _WIN32_WINDOWS=0x0410 /D "_BUILDING_CUI_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /YX /FD /G7 /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
 !ENDIF 
 
 # Begin Target
@@ -105,6 +129,7 @@ LIB32=link.exe -lib
 # Name "CUI - Win32 Release"
 # Name "CUI - Win32 Debug"
 # Name "CUI - Win32 DebugNoBoost"
+# Name "CUI - Win32 ReleaseNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

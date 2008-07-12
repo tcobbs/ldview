@@ -23,7 +23,14 @@ typedef long long int64;
 #endif // WIN32
 
 #ifndef _NO_BOOST
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable:4244 4512)
+#endif // WIN32
 #include <boost/thread.hpp>
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 #endif // !_NO_BOOST
 
 #define WCE_AUTH TCNC_MAX_ERROR + 1

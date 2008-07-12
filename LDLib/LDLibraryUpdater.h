@@ -4,7 +4,14 @@
 #define __LDLIBRARYUPDATER_H__
 
 #include <TCFoundation/TCAlertSender.h>
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable:4244 4512)
+#endif // WIN32
 #include <boost/thread.hpp>
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
 //#include <TCFoundation/mystring.h>
 //#include <stdio.h>
 
