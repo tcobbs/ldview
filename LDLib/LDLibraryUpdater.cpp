@@ -10,6 +10,7 @@
 #pragma warning(push, 3)
 #endif // WIN32
 
+#include <boost/version.hpp>
 #include <boost/bind.hpp>
 
 #ifdef WIN32
