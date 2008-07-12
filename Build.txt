@@ -48,31 +48,35 @@ Download the Boost library from http://www.boost.org.  After extracting it to
 a directory somewhere, open a command window and go into the following directory
 inside the location you extracted the library to:
 
-boost_1_33_1\tools\build\jam_src
+boost_1_35_0\tools\build\jam_src
 
 
-(Change boost_1_33_1 to match whatever version of boost you downloaded.)  Run
+(Change boost_1_35_0 to match whatever version of boost you downloaded.)  Run
 the following (include the quotes):
 
 "C:\Program Files\Microsoft Visual Studio 8\VC\vcvarsall.bat"
+"C:\Program Files\Microsoft Platform SDK for Windows Server 2003 R2\SetEnv.Cmd"
 
 (Note that the above assumes that you installed Visual C++ 2005 Express into the
 default location.  If not, adjust accordingly.  Make sure to include quotes
-around the entire command line if any part of the path contains spaces.)  Next,
-run the following command:
+around the entire command line if any part of the path contains spaces.)  Also,
+if you have the Pro version of Visual Studio 2005, the second command isn't
+necessary.
+
+Next, run the following command:
 
 build.bat
 
 The above will create bjam.exe.  This should be located in the bin.ntx86 under
 the current directory.  Copy that file to the main boost directory
-(boost_1_33_1 in my case).  Next, run the following commands:
+(boost_1_35_0 in my case).  Next, run the following commands:
 
 cd ..\..\..
-bjam --without-python --with-thread -sTOOLS=vc-8_0 stage
+bjam --with-thread --with-date_time --toolset=msvc-8.0 link=static runtime-link=static stage release debug
 
 When the above command complete, you should have the boost thread library built.
 Now you need to copy files to the LDView source tree.  Copy the boost directory
-inside the boost_1_33_1 directory into the boost\include directory in the LDView
+inside the boost_1_35_0 directory into the boost\include directory in the LDView
 source directory (so you end up with boost\include\boost).  Next, copy the
 stage\lib directory into the boost directory in the LDView source tree (so that
 you end up with boost\lib).
@@ -125,6 +129,11 @@ following directory to the top of the list:
 C:\Program Files\Microsoft SDK\lib
 
 (Once again, the base path will depend on where you installed the Platform SDK.)
+
+Boost no longer supports Visual Studio 6.0.  To build the VS6 project, use the
+NoBoost build targets (DebugNoBoost and ReleaseNoBoost).  You can hopefully
+follow these instructions to use Boost 1.33.1 instead, but I won't be testing
+that configuration, so it might not work right.
 
 Download the Boost library from http://www.boost.org.  After extracting it to
 a directory somewhere, open a command window and go into the following directory
@@ -179,10 +188,10 @@ Download the Boost library from http://www.boost.org.  After extracting it to
 a directory somewhere, open a command window and go into the following directory
 inside the location you extracted the library to:
 
-boost_1_33_1\tools\build\jam_src
+boost_1_35_0\tools\build\jam_src
 
 
-(Change boost_1_33_1 to match whatever version of boost you downloaded.)  Run
+(Change boost_1_35_0 to match whatever version of boost you downloaded.)  Run
 the following (include the quotes):
 
 "C:\Program Files\Microsoft Visual C++ Toolkit 2003\vcvars32.bat"
@@ -196,14 +205,14 @@ build.bat
 
 The above will create bjam.exe.  This should be located in the bin.ntx86
 directory under the current directory.  Copy that file to the main boost
-directory (boost_1_33_1 in my case).  Next, run the following commands:
+directory (boost_1_35_0 in my case).  Next, run the following commands:
 
 cd ..\..\..
-bjam --without-python --with-thread -sTOOLS=vc-7_1 stage
+bjam --with-thread --with-date_time --toolset=msvc-7.1 link=static runtime-link=static stage release debug
 
 When the above command completes, you should have the boost thread library
 built.  Now you need to copy files to the LDView source tree.  Copy the boost
-directory inside the boost_1_33_1 directory into the boost\include directory in
+directory inside the boost_1_35_0 directory into the boost\include directory in
 the LDView source directory (so you end up with boost\include\boost).  Next,
 copy the stage\lib directory into the boost directory in the LDView source tree
 (so that you end up with boost\lib).

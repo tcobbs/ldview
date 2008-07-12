@@ -21,6 +21,7 @@ CFG=TRE - Win32 DebugNoBoost
 !MESSAGE "TRE - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE "TRE - Win32 PartialDebug" (based on "Win32 (x86) Static Library")
 !MESSAGE "TRE - Win32 DebugNoBoost" (based on "Win32 (x86) Static Library")
+!MESSAGE "TRE - Win32 ReleaseNoBoost" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -122,6 +123,29 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
+!ELSEIF  "$(CFG)" == "TRE - Win32 ReleaseNoBoost"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "TRE___Win32_ReleaseNoBoost"
+# PROP BASE Intermediate_Dir "TRE___Win32_ReleaseNoBoost"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "TRE___Win32_ReleaseNoBoost"
+# PROP Intermediate_Dir "TRE___Win32_ReleaseNoBoost"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /YX /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "..\include" /I ".." /I "../boost/include" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "_TC_STATIC" /D "_NO_BOOST" /YX /FD /G7 /c
+# ADD BASE RSC /l 0x409 /d "NDEBUG"
+# ADD RSC /l 0x409 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
 !ENDIF 
 
 # Begin Target
@@ -130,6 +154,7 @@ LIB32=link.exe -lib
 # Name "TRE - Win32 Debug"
 # Name "TRE - Win32 PartialDebug"
 # Name "TRE - Win32 DebugNoBoost"
+# Name "TRE - Win32 ReleaseNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"

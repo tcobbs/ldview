@@ -21,6 +21,7 @@ CFG=LDView - Win32 DebugNoBoost
 !MESSAGE "LDView - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "LDView - Win32 PartialDebug" (based on "Win32 (x86) Application")
 !MESSAGE "LDView - Win32 DebugNoBoost" (based on "Win32 (x86) Application")
+!MESSAGE "LDView - Win32 ReleaseNoBoost" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -137,6 +138,33 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg.lib tinyxmld_STL-VC6.lib /nologo /subsystem:windows /debug /machine:I386 /nodefaultlib:"libc.lib" /nodefaultlib:"libcmt.lib" /libpath:".\lib" /libpath:".\boost\lib"
 
+!ELSEIF  "$(CFG)" == "LDView - Win32 ReleaseNoBoost"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "LDView___Win32_ReleaseNoBoost"
+# PROP BASE Intermediate_Dir "LDView___Win32_ReleaseNoBoost"
+# PROP BASE Ignore_Export_Lib 0
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "LDView___Win32_ReleaseNoBoost"
+# PROP Intermediate_Dir "LDView___Win32_ReleaseNoBoost"
+# PROP Ignore_Export_Lib 0
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MT /W4 /GX /Ox /I "." /I "./include" /I "./boost/include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /D "LDVIEW_APP" /FD /G7 /c
+# ADD CPP /nologo /MT /W4 /GX /Ox /I "." /I "./include" /I "./boost/include" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D _WIN32_WINDOWS=0x0410 /D "_TC_STATIC" /D "LDVIEW_APP" /D "_NO_BOOST" /FD /G7 /c
+# ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
+# ADD BASE RSC /l 0x409 /d "NDEBUG" /d "LDVIEW_APP"
+# ADD RSC /l 0x409 /d "NDEBUG" /d "LDVIEW_APP"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LINK32=link.exe
+# ADD BASE LINK32 libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxml_STL-VC6.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:".\lib" /libpath:".\boost\lib"
+# ADD LINK32 libjpeg.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib tinyxml_STL-VC6.lib /nologo /subsystem:windows /machine:I386 /nodefaultlib:"libc.lib" /libpath:".\lib" /libpath:".\boost\lib"
+
 !ENDIF 
 
 # Begin Target
@@ -145,6 +173,7 @@ LINK32=link.exe
 # Name "LDView - Win32 Debug"
 # Name "LDView - Win32 PartialDebug"
 # Name "LDView - Win32 DebugNoBoost"
+# Name "LDView - Win32 ReleaseNoBoost"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;for;f90"
@@ -221,6 +250,19 @@ InputPath=.\Help\LDView.hpj
 USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
 # Begin Custom Build - Compiling help project $(InputPath)
 OutDir=.\Build\DebugNoBoost-VC6
+InputPath=.\Help\LDView.hpj
+
+"$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	hcrtf /x $(InputPath) 
+	copy /y Help\LDView.hlp $(OutDir)\LDView.hlp > nul 
+	
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "LDView - Win32 ReleaseNoBoost"
+
+USERDEP__LDVIE="Help\EffectsPrefs.rtf"	"Help\GeneralPrefs.rtf"	"Help\GeometryPrefs.rtf"	"Help\PrefSetsPrefs.rtf"	"Help\PrimitivesPrefs.rtf"	"Help\SaveSnapshot.rtf"	"Help\ScreenSaverPrefs.rtf"	"Help\UpdatesPrefs.rtf"	"Help\LDView.hpj"	
+# Begin Custom Build - Compiling help project $(InputPath)
+OutDir=.\LDView___Win32_ReleaseNoBoost
 InputPath=.\Help\LDView.hpj
 
 "$(OutDir)\LDView.hlp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
