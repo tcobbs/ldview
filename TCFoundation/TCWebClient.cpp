@@ -23,9 +23,6 @@
 #endif // WIN32
 
 #ifndef _NO_BOOST
-#include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
 #endif // !_NO_BOOST
 

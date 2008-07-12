@@ -4,6 +4,7 @@
 #define __LDLIBRARYUPDATER_H__
 
 #include <TCFoundation/TCAlertSender.h>
+#include <boost/thread.hpp>
 //#include <TCFoundation/mystring.h>
 //#include <stdio.h>
 
@@ -11,13 +12,6 @@ template <class Type> class TCTypedObjectArray;
 class TCWebClient;
 class LDLibraryUpdateInfo;
 class TCStringArray;
-
-namespace boost
-{
-class thread;
-class mutex;
-class condition;
-}
 
 typedef TCTypedObjectArray<TCWebClient> TCWebClientArray;
 typedef TCTypedObjectArray<LDLibraryUpdateInfo> LDLibraryUpdateInfoArray;

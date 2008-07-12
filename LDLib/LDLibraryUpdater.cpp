@@ -10,9 +10,6 @@
 #pragma warning(push, 3)
 #endif // WIN32
 
-#include <boost/thread/thread.hpp>
-#include <boost/thread/condition.hpp>
-#include <boost/thread/xtime.hpp>
 #include <boost/bind.hpp>
 
 #ifdef WIN32
@@ -905,7 +902,11 @@ void LDLibraryUpdater::downloadUpdates(bool *aborted)
 	while (!done && !*aborted)
 	{
 		TCWebClient *finishedWebClient = NULL;
+#if BOOST_VERSION >= 103500
+		boost::mutex::scoped_lock lock(*m_mutex, boost::defer_lock);
+#else	// BOOST version >= 1.35.0 above, < 1.35.0 below
 		boost::mutex::scoped_lock lock(*m_mutex, false);
+#endif // BOOST version < 1.35.0
 
 		processUpdateQueue();
 		lock.lock();
