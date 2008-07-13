@@ -101,8 +101,24 @@ LRESULT JpegOptionsDialog::doHScroll(
 	if (hScrollBar == hQualitySlider)
 	{
 		if (scrollCode != SB_ENDSCROLL)
-		//if (scrollCode == SB_THUMBTRACK || scrollCode == SB_THUMBPOSITION)
 		{
+			switch (scrollCode)
+			{
+			case SB_PAGEUP:
+				position = quality - 10;
+				break;
+			case SB_PAGEDOWN:
+				position = quality + 10;
+				break;
+			}
+			if (position < 1)
+			{
+				position = 1;
+			}
+			if (position > 100)
+			{
+				position = 100;
+			}
 			setQuality(position);
 			return 0;
 		}
