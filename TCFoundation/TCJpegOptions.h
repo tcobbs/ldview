@@ -18,12 +18,17 @@ public:
 	void setQuality(int value) { m_quality = value; }
 	int getQuality(void) const { return m_quality; }
 	static void setDefaultQuality(int value) { sm_defaultQuality = value; }
+	static int getDefaultQuality(void) { return sm_defaultQuality; }
 
 	void setSubSampling(SubSampling value) { m_subSampling = value; }
 	SubSampling getSubSampling(void) const { return m_subSampling; }
 	static void setDefaultSubSampling(SubSampling value)
 	{
 		sm_defaultSubSampling = value;
+	}
+	static SubSampling getDefaultSubSampling(void)
+	{
+		return sm_defaultSubSampling;
 	}
 
 	void setProgressive(bool value) { m_progressive = value; }
@@ -32,6 +37,7 @@ public:
 	{
 		sm_defaultProgressive = value;
 	}
+	static bool getDefaultProgressive(void) { return sm_defaultProgressive; }
 
 	virtual void save(void);
 
