@@ -46,7 +46,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\Debug/LDLoader.pch"
 				BrowseInformation="1"
 				WarningLevel="4"

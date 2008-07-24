@@ -20,6 +20,9 @@
 #ifndef MANIFEST
 #define MANIFEST        24
 #endif
+#ifndef SKIP_MANIFEST
+1                       24      MOVEABLE PURE   "LDView.exe.manifest"
+#endif
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -158,6 +161,9 @@ BEGIN
     "#endif\r\n"
     "#ifndef MANIFEST\r\n"
     "#define MANIFEST        24\r\n"
+    "#endif\r\n"
+    "#ifndef SKIP_MANIFEST\r\n"
+    "1                       24      MOVEABLE PURE   ""LDView.exe.manifest""\r\n"
     "#endif\0"
 END
 
@@ -175,7 +181,7 @@ END
 // 24
 //
 
-1                       24      MOVEABLE PURE   "LDView.exe.manifest"
+//1                       24      MOVEABLE PURE   "LDView.exe.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //

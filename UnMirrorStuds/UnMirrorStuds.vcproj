@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="UnMirrorStuds"
 	ProjectGUID="{B55F1717-EB83-4C1E-8CB7-B9E847070AA5}"
+	RootNamespace="UnMirrorStuds"
 	>
 	<Platforms>
 		<Platform
@@ -47,7 +48,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_CONSOLE;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\Debug/UnMirrorStuds.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
