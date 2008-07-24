@@ -143,7 +143,7 @@
 				AdditionalIncludeDirectories=".;./include;./boost/include"
 				PreprocessorDefinitions="_DEBUG;_LOG_PERFORMANCE;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\Debug/LDView.pch"
 				BrowseInformation="1"
 				WarningLevel="4"
@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG;LDVIEW_APP"
+				PreprocessorDefinitions="_DEBUG;LDVIEW_APP;SKIP_MANIFEST"
 				Culture="1033"
 			/>
 			<Tool
@@ -163,7 +163,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpng.lib zlib.lib version.lib unzip32.lib libjpeg-vc2005.lib tinyxmld_STL.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib opengl32.lib glu32.lib ws2_32.lib winmm.lib shlwapi.lib comctl32.lib libpngd.lib zlibd.lib version.lib unzip32d.lib libjpeg-vc2005.lib tinyxmld_STL.lib"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=".\lib;.\boost\lib"
@@ -178,6 +178,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="LDView.exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"

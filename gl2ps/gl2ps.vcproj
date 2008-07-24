@@ -46,7 +46,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;GL2PS_HAVE_ZLIB;GL2PS_HAVE_LIBPNG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"

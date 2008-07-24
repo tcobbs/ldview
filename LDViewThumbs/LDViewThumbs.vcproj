@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="LDViewThumbs"
 	ProjectGUID="{39981559-7DDE-4F6C-A3E3-AB5F7D8FA99F}"
+	RootNamespace="LDViewThumbs"
 	Keyword="AtlProj"
 	>
 	<Platforms>
@@ -148,7 +149,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;_USRDLL;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\Debug-VC6/LDViewThumbs.pch"

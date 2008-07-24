@@ -46,7 +46,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_LIB;_WIN32_WINDOWS=0x0410;_BUILDING_CUI_LIB;_TC_STATIC"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				PrecompiledHeaderFile=".\Debug/CUI.pch"
 				BrowseInformation="1"
 				WarningLevel="4"
