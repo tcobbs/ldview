@@ -118,7 +118,8 @@ protected:
 	bool findModelGeometry(LDLModel *pModel,
 		IntShapeLineListMap &colorGeometryMap, bool mirrored);
 	bool isStud(LDLModel *pModel);
-	void getCameraString(char *&povCamera);
+	void getCameraStrings(std::string &locationString,
+		std::string &lookAtString, std::string &skyString);
 	void scanEdgePoint(const TCVector &point, const LDLFileLine *pFileLine);
 	void loadLDrawPovXml(void);
 	void loadXmlColors(TiXmlElement *matrices);
@@ -141,6 +142,18 @@ protected:
 	void writeLDXChromeColor(void);
 	void writeLDXRubberColor(void);
 	ColorType getColorType(int colorNumber);
+	void writeDeclare(const char *name, const std::string &value,
+		const char *commentName = NULL);
+	void writeDeclare(const char *name, const char *value,
+		const char *commentName = NULL);
+	void writeDeclare(const char *name, double value,
+		const char *commentName = NULL);
+	void writeDeclare(const char *name, float value,
+		const char *commentName = NULL);
+	void writeDeclare(const char *name, long value,
+		const char *commentName = NULL);
+	void writeDeclare(const char *name, bool value,
+		const char *commentName = NULL);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);

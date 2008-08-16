@@ -51,6 +51,12 @@ LDExporter("PovExporter/")
 		sm_replacementChars['#'] = "_hash_";
 		sm_replacementChars[':'] = "_colon_";
 		sm_replacementChars['!'] = "_bang_";
+		sm_replacementChars['('] = "_openparen_";
+		sm_replacementChars[')'] = "_closeparen_";
+		sm_replacementChars['['] = "_openbracket_";
+		sm_replacementChars[']'] = "_closebracket_";
+		sm_replacementChars['{'] = "_openbrace_";
+		sm_replacementChars['}'] = "_closebrace_";
 	}
 }
 
@@ -611,6 +617,62 @@ std::string LDPovExporter::getAspectRatio(void)
 	}
 }
 
+void LDPovExporter::writeDeclare(
+	const char *name,
+	const std::string &value,
+	const char *commentName /*= NULL*/)
+{
+	if (commentName != NULL)
+	{
+		fprintf(m_pPovFile, "#declare %s = %s;\t// %s\n", name, value.c_str(),
+			(const char *)ls(commentName));
+	}
+	else
+	{
+		fprintf(m_pPovFile, "#declare %s = %s;\n",  name, value.c_str());
+	}
+}
+
+void LDPovExporter::writeDeclare(
+	const char *name,
+	const char *value,
+	const char *commentName /*= NULL*/)
+{
+	writeDeclare(name, std::string(value), commentName);
+}
+
+void LDPovExporter::writeDeclare(
+	const char *name,
+	double value,
+	const char *commentName /*= NULL*/)
+{
+	writeDeclare(name, ftostr(value), commentName);
+}
+
+void LDPovExporter::writeDeclare(
+	const char *name,
+	float value,
+	const char *commentName /*= NULL*/)
+{
+	writeDeclare(name, ftostr(value), commentName);
+}
+
+void LDPovExporter::writeDeclare(
+	const char *name,
+	long value,
+	const char *commentName /*= NULL*/)
+{
+	writeDeclare(name, ltostr(value), commentName);
+}
+
+void LDPovExporter::writeDeclare(
+	const char *name,
+	bool value,
+	const char *commentName /*= NULL*/)
+{
+	writeDeclare(name, value ? 1l : 0l, commentName);
+}
+
 bool LDPovExporter::writeHeader(void)
 {
 	time_t genTime = time(NULL);
@@ -618,6 +680,9 @@ bool LDPovExporter::writeHeader(void)
 	char *filename = filenameFromPath(m_pTopModel->getFilename());
 	std::string floorAxis;
 	std::string floorLoc;
+	std::string cameraLocString;
+	std::string cameraLookAtString;
+	std::string cameraSkyString;
 
 	fprintf(m_pPovFile, "// %s %s%s%s %s\n", (const char *)ls("PovGeneratedBy"),
 		m_appName.c_str(), m_appVersion.size() > 0 ? " " : "",
@@ -638,31 +703,23 @@ bool LDPovExporter::writeHeader(void)
 			author);
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
-	fprintf(m_pPovFile, "#declare MIN_X = %s;\n",
-		ftostr(m_boundingMin[0]).c_str());
-	fprintf(m_pPovFile, "#declare MIN_Y = %s;\n",
-		ftostr(m_boundingMin[1]).c_str());
-	fprintf(m_pPovFile, "#declare MIN_Z = %s;\n",
-		ftostr(m_boundingMin[2]).c_str());
-	fprintf(m_pPovFile, "#declare MAX_X = %s;\n",
-		ftostr(m_boundingMax[0]).c_str());
-	fprintf(m_pPovFile, "#declare MAX_Y = %s;\n",
-		ftostr(m_boundingMax[1]).c_str());
-	fprintf(m_pPovFile, "#declare MAX_Z = %s;\n",
-		ftostr(m_boundingMax[2]).c_str());
-	fprintf(m_pPovFile, "#declare CENTER_X = %s;\n",
-		ftostr(m_center[0]).c_str());
-	fprintf(m_pPovFile, "#declare CENTER_Y = %s;\n",
-		ftostr(m_center[1]).c_str());
-	fprintf(m_pPovFile, "#declare CENTER_Z = %s;\n",
-		ftostr(m_center[2]).c_str());
-	fprintf(m_pPovFile, "#declare CENTER = <CENTER_X,CENTER_Y,CENTER_Z>;\n");
-	
-	fprintf(m_pPovFile, "#declare RADIUS = %s;\n", ftostr(m_radius).c_str());
-	fprintf(m_pPovFile, "#declare QUAL = %ld;\t// %s\n", m_quality,
-		(const char *)ls("PovQualDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR = %d;\t// %s\n", m_floor ? 1 : 0,
-		(const char *)ls("PovFloorDesc"));
+	writeDeclare("MIN_X", m_boundingMin[0]);
+	writeDeclare("MIN_Y", m_boundingMin[1]);
+	writeDeclare("MIN_Z", m_boundingMin[2]);
+	writeDeclare("MAX_X", m_boundingMax[0]);
+	writeDeclare("MAX_Y", m_boundingMax[1]);
+	writeDeclare("MAX_Z", m_boundingMax[2]);
+	writeDeclare("CENTER_X", m_center[0]);
+	writeDeclare("CENTER_Y", m_center[1]);
+	writeDeclare("CENTER_Z", m_center[2]);
+	writeDeclare("CENTER", "<CENTER_X,CENTER_Y,CENTER_Z>");
+	getCameraStrings(cameraLocString, cameraLookAtString, cameraSkyString);
+	writeDeclare("CAMERA_LOC", cameraLocString, "CameraLocDesc");
+	writeDeclare("CAMERA_LOOK_AT", cameraLookAtString, "CameraLookAtDesc");
+	writeDeclare("CAMERA_SKY", cameraSkyString, "CameraSkyDesc");
+	writeDeclare("RADIUS", m_radius);
+	writeDeclare("QUAL", m_quality, "PovQualDesc");
+	writeDeclare("FLOOR", m_floor, "PovFloorDesc");
 	switch (m_floorAxis)
 	{
 	case 0:
@@ -678,68 +735,43 @@ bool LDPovExporter::writeHeader(void)
 		floorLoc = "MAX_Y";
 		break;
 	}
-	fprintf(m_pPovFile, "#declare FLOOR_LOC = %s;\t// %s\n", floorLoc.c_str(),
-		(const char *)ls("PovFloorLocDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR_AXIS = %s;\t// %s\n", floorAxis.c_str(),
-		(const char *)ls("PovFloorAxisDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR_R = 0.8;\t// %s\n",
-		(const char *)ls("PovFLOOR_RDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR_G = 0.8;\t// %s\n",
-		(const char *)ls("PovFLOOR_GDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR_B = 0.8;\t// %s\n",
-		(const char *)ls("PovFLOOR_BDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR_AMB = 0.4;\t// %s\n",
-		(const char *)ls("PovFLOOR_AMBDesc"));
-	fprintf(m_pPovFile, "#declare FLOOR_DIFF = 0.4;\t// %s\n",
-		(const char *)ls("PovFLOOR_DIFFDesc"));
-	fprintf(m_pPovFile, "#declare REFLS = %d;\t// %s\n", m_refls ? 1 : 0,
-		(const char *)ls("PovReflsDesc"));
-	fprintf(m_pPovFile, "#declare SHADS = %d;\t// %s\n", m_shads ? 1 : 0,
-		(const char *)ls("PovShadsDesc"));
-	fprintf(m_pPovFile, "#declare AMB = %s;\n", ftostr(m_ambient).c_str());
-	fprintf(m_pPovFile, "#declare DIF = %s;\n", ftostr(m_diffuse).c_str());
-	fprintf(m_pPovFile, "#declare REFL = %s;\n", ftostr(m_refl).c_str());
-	fprintf(m_pPovFile, "#declare PHONG = %s;\n", ftostr(m_phong).c_str());
-	fprintf(m_pPovFile, "#declare PHONGS = %s;\n", ftostr(m_phongSize).c_str());
-	fprintf(m_pPovFile, "#declare TREFL = %s;\n", ftostr(m_transRefl).c_str());
-	fprintf(m_pPovFile, "#declare TFILT = %s;\n",
-		ftostr(m_transFilter).c_str());
-	fprintf(m_pPovFile, "#declare IOR = %s;\n", ftostr(m_transIoR).c_str());
-	fprintf(m_pPovFile, "#declare RUBBER_REFL = %s;\n",
-		ftostr(m_rubberRefl).c_str());
-	fprintf(m_pPovFile, "#declare RUBBER_PHONG = %s;\n",
-		ftostr(m_rubberPhong).c_str());
-	fprintf(m_pPovFile, "#declare RUBBER_PHONGS = %s;\n",
-		ftostr(m_rubberPhongSize).c_str());
-	fprintf(m_pPovFile, "#declare CHROME_REFL = %s;\n",
-		ftostr(m_chromeRefl).c_str());
-	fprintf(m_pPovFile, "#declare CHROME_BRIL = %s;\n",
-		ftostr(m_chromeBril).c_str());
-	fprintf(m_pPovFile, "#declare CHROME_SPEC = %s;\n",
-		ftostr(m_chromeSpec).c_str());
-	fprintf(m_pPovFile, "#declare CHROME_ROUGH = %s;\n",
-		ftostr(m_chromeRough).c_str());
-	fprintf(m_pPovFile, "#declare SW = %s;\t// %s\n",
-		ftostr(m_seamWidth).c_str(), (const char *)ls("PovSeamWidthDesc"));
-	fprintf(m_pPovFile, "#declare STUDS = %d;\t// %s\n", m_hideStuds ? 0 : 1,
-		(const char *)ls("PovStudsDesc"));
-	fprintf(m_pPovFile, "#declare IPOV = %d;\t// %s\n", m_inlinePov ? 1 : 0,
-		(const char *)ls("PovInlinePovDesc"));
+	writeDeclare("FLOOR_LOC", floorLoc, "PovFloorLocDesc");
+	writeDeclare("FLOOR_AXIS", floorAxis, "PovFloorAxisDesc");
+	writeDeclare("FLOOR_R", 0.8, "PovFLOOR_RDesc");
+	writeDeclare("FLOOR_G", 0.8, "PovFLOOR_GDesc");
+	writeDeclare("FLOOR_B", 0.8, "PovFLOOR_BDesc");
+	writeDeclare("FLOOR_AMB", 0.4, "PovFLOOR_AMBDesc");
+	writeDeclare("FLOOR_DIFF", 0.4, "PovFLOOR_DIFFDesc");
+	writeDeclare("REFLS", m_refls, "PovReflsDesc");
+	writeDeclare("SHADS", m_shads, "PovShadsDesc");
+	writeDeclare("AMB", m_ambient);
+	writeDeclare("DIF", m_diffuse);
+	writeDeclare("REFL", m_refl);
+	writeDeclare("PHONG", m_phong);
+	writeDeclare("PHONGS", m_phongSize);
+	writeDeclare("TREFL", m_transRefl);
+	writeDeclare("TFILT", m_transFilter);
+	writeDeclare("IOR", m_transIoR);
+	writeDeclare("RUBBER_REFL", m_rubberRefl);
+	writeDeclare("RUBBER_PHONG", m_rubberPhong);
+	writeDeclare("RUBBER_PHONGS", m_rubberPhongSize);
+	writeDeclare("CHROME_REFL", m_chromeRefl);
+	writeDeclare("CHROME_BRIL", m_chromeBril);
+	writeDeclare("CHROME_SPEC", m_chromeSpec);
+	writeDeclare("CHROME_ROUGH", m_chromeRough);
+	writeDeclare("SW", m_seamWidth, "PovSeamWidthDesc");
+	writeDeclare("STUDS", !m_hideStuds, "PovStudsDesc");
+	writeDeclare("IPOV", m_inlinePov, "PovInlinePovDesc");
 	if (m_edges)
 	{
-		fprintf(m_pPovFile, "#declare EDGERAD = %s;\n",
-			ftostr(m_edgeRadius).c_str());
+		writeDeclare("EDGERAD", m_edgeRadius);
 	}
-	fprintf(m_pPovFile, "#declare BG_R = %s;\t// %s\n",
-		ftostr(m_backgroundR).c_str(), (const char *)ls("PovBG_RDesc"));
-	fprintf(m_pPovFile, "#declare BG_G = %s;\t// %s\n",
-		ftostr(m_backgroundG).c_str(), (const char *)ls("PovBG_GDesc"));
-	fprintf(m_pPovFile, "#declare BG_B = %s;\t// %s\n",
-		ftostr(m_backgroundB).c_str(), (const char *)ls("PovBG_BDesc"));
+	writeDeclare("BG_R", m_backgroundR, "PovBG_RDesc");
+	writeDeclare("BG_G", m_backgroundG, "PovBG_GDesc");
+	writeDeclare("BG_B", m_backgroundB, "PovBG_BDesc");
 	if (m_xmlMap)
 	{
-		fprintf(m_pPovFile, "#declare ORIGVER = version;\t// %s\n",
-			(const char *)ls("OrigVerDesc"));
+		writeDeclare("ORIGVER", "version", "OrigVerDesc");
 	}
 	fprintf(m_pPovFile, "\n");
 	return true;
@@ -1004,7 +1036,10 @@ void LDPovExporter::cleanupDoubles(double *array, int count /*= 16*/)
 	}
 }
 
-void LDPovExporter::getCameraString(char *&povCamera)
+void LDPovExporter::getCameraStrings(
+	std::string &locationString,
+	std::string &lookAtString,
+	std::string &skyString)
 {
 	TCFloat tmpMatrix[16];
 	TCFloat matrix[16];
@@ -1012,9 +1047,7 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	TCFloat positionMatrix[16];
 	TCFloat cameraMatrix[16];
 	TCFloat otherMatrix[16] = {1,0,0,0,0,-1,0,0,0,0,-1,0,0,0,0,1};
-	char locationString[1024];
-	char lookAtString[1204];
-	char upString[1024];
+	char tmpString[1024];
 	TCVector directionVector = TCVector(0.0f, 0.0f, 1.0f);
 	TCVector locationVector;
 	TCVector lookAtVector;
@@ -1023,7 +1056,6 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	double up[3];
 	double location[3];
 	LDLFacing facing;
-	char cameraString[4096];
 	double lookAt[3];
 	double tempV[3];
 	std::string aspectRatio = getAspectRatio();
@@ -1057,8 +1089,9 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	// Note that the location accuracy isn't nearly as important as the
 	// directional accuracy, so we don't have to re-do this string prior
 	// to putting it on the clipboard in the POV code copy.
-	sprintf(locationString, "%s,%s,%s", ftostr(location[0]).c_str(),
+	sprintf(tmpString, "< %s,%s,%s >", ftostr(location[0]).c_str(),
 		ftostr(location[1]).c_str(), ftostr(location[2]).c_str());
+	locationString = tmpString;
 
 	matrix[12] = matrix[13] = matrix[14] = 0.0f;
 	directionVector = directionVector.transformPoint(matrix);
@@ -1080,24 +1113,12 @@ void LDPovExporter::getCameraString(char *&povCamera)
 	TCVector::doubleAdd(location, tempV, lookAt);
 	// Re-do the strings with higher accuracy, so they'll be
 	// accepted by POV-Ray.
-	sprintf(upString, "%s,%s,%s", ftostr(up[0], 20).c_str(),
+	sprintf(tmpString, "< %s,%s,%s >", ftostr(up[0], 20).c_str(),
 		ftostr(up[1], 20).c_str(), ftostr(up[2], 20).c_str());
-	sprintf(lookAtString, "%s,%s,%s", ftostr(lookAt[0], 20).c_str(),
+	skyString = tmpString;
+	sprintf(tmpString, "< %s,%s,%s >", ftostr(lookAt[0], 20).c_str(),
 		ftostr(lookAt[1], 20).c_str(), ftostr(lookAt[2], 20).c_str());
-	sprintf(cameraString,
-		"#ifndef (LDXSkipCamera)\n"
-		"camera {\n"
-		"\t#declare ASPECT = %s;\n"
-		"\tlocation < %s >\n"
-		"\tsky < %s >\n"
-		"\tright ASPECT * < -1,0,0 >\n"
-		"\tlook_at < %s >\n"
-		"\tangle %s\n"
-		"}\n"
-		"#end\n",
-		aspectRatio.c_str(), locationString, upString, lookAtString,
-		ftostr(getHFov()).c_str());
-	povCamera = copyString(cameraString);
+	lookAtString = tmpString;
 }
 
 void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, int num)
@@ -1153,12 +1174,20 @@ bool LDPovExporter::writeLights(void)
 
 bool LDPovExporter::writeCamera(void)
 {
-	char *cameraString;
 
-	getCameraString(cameraString);
 	fprintf(m_pPovFile, "// Camera\n");
-	fprintf(m_pPovFile, "%s\n", cameraString);
-	delete cameraString;
+	fprintf(m_pPovFile,
+		"#ifndef (LDXSkipCamera)\n"
+		"camera {\n"
+		"\t#declare ASPECT = %s;\n"
+		"\tlocation CAMERA_LOC\n"
+		"\tsky CAMERA_SKY\n"
+		"\tright ASPECT * < -1,0,0 >\n"
+		"\tlook_at CAMERA_LOOK_AT\n"
+		"\tangle %s\n"
+		"}\n"
+		"#end\n\n",
+		getAspectRatio().c_str(), ftostr(getHFov()).c_str());
 	return true;
 }
 
@@ -1462,7 +1491,6 @@ bool LDPovExporter::writeModelObject(
 
 				pModel->getBoundingBox(min, max);
 				fprintf(m_pPovFile, "#declare %s =\n", declareName.c_str());
-				//writeDescriptionComment(pModel);
 				fprintf(m_pPovFile,
 					"#if (QUAL = 0)\n"
 					"box {\n\t");
@@ -1477,7 +1505,6 @@ bool LDPovExporter::writeModelObject(
 			else
 			{
 				fprintf(m_pPovFile, "#declare %s = union {\n", declareName.c_str());
-				//writeDescriptionComment(pModel);
 			}
 			for (i = 0; i < count; i++)
 			{
