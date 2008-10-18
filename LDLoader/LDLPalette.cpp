@@ -339,7 +339,16 @@ int LDLPalette::getEdgeColorNumber(int colorNumber)
 	}
 	else
 	{
-		return 0;
+		LDLColorInfo colorInfo;
+
+		if (getCustomColorInfo(colorNumber, colorInfo))
+		{
+			return colorInfo.edgeColorNumber;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 }
 
