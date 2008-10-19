@@ -4571,16 +4571,11 @@ bool ModelWindow::getSaveFilename(
 	{
 		int index = (int)openStruct.nFilterIndex;
 		char *dir = directoryFromPath(saveFilename);
+		LDPreferences *ldPrefs = prefs->getLDPrefs();
 
-		switch (curSaveOp)
+		if (ldPrefs != NULL)
 		{
-		case LDPreferences::SOExport:
-			TCUserDefaults::setPathForKey(dir, LAST_EXPORT_DIR_KEY, false);
-			break;
-		case LDPreferences::SOSnapshot:
-		default:
-			TCUserDefaults::setPathForKey(dir, LAST_SNAPSHOT_DIR_KEY, false);
-			break;
+			ldPrefs->setLastSaveDir(curSaveOp, dir, true);
 		}
 		delete dir;
 		switch (curSaveOp)
