@@ -292,7 +292,7 @@ bool LDSnapshotTaker::saveImage(
 			// This isn't very efficient, but it gets the job done.  A
 			// number of things need to happen before we can do the initial
 			// zoomToFit.  We need to load the model, create the rotation
-			// matrix, and setup the camera.  Maybe other things need to be
+			// matrix, and set up the camera.  Maybe other things need to be
 			// done too.  This update makes sure that things are OK for the
 			// zoomToFit to execute properly.
 			renderOffscreenImage();
@@ -716,6 +716,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	if (zoomToFit)
 	{
 		m_modelViewer->setForceZoomToFit(true);
+		m_modelViewer->perspectiveView();
 	}
 	m_modelViewer->setup();
 	if (canSaveAlpha())
