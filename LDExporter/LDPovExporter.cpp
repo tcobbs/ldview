@@ -1337,14 +1337,14 @@ bool LDPovExporter::findModelInclude(const LDLModel *pModel)
 	{
 		return false;
 	}
-	char *incFilename = copyString(modelFilename.c_str(), 20);
-	char *dotSpot = strrchr(incFilename, '.');
+	std::string incFilename = modelFilename;
+	size_t dotSpot = incFilename.find('.');
 
-	if (dotSpot)
+	if (dotSpot < incFilename.size())
 	{
-		*dotSpot = 0;
+		incFilename.resize(dotSpot);
 	}
-	strcat(incFilename, ".inc");
+	incFilename += ".inc";
 	for (StringList::const_iterator it = m_searchPath.begin();
 		it != m_searchPath.end(); it++)
 	{
