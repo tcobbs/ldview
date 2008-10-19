@@ -44,6 +44,7 @@ OptionUI(parent, setting)
 		CUIWindow::comboAddString(m_hCombo, options[i].c_str());
 	}
 	CUIWindow::comboSelectItem(m_hCombo, (int)setting.getSelectedOption());
+	addTooltip(m_hCombo);
 }
 
 // This does all the work of calculating the location and size of the controls
@@ -91,6 +92,7 @@ int EnumOptionUI::updateLayout(
 			m_shown = true;
 		}
 	}
+	updateTooltip();
 	// Return the overall height of this option UI.
 	return height;
 }

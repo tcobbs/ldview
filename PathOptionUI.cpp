@@ -84,6 +84,7 @@ int PathOptionUI::updateLayout(
 			ShowWindow(m_hBrowseButton, SW_SHOW);
 		}
 	}
+	updateTooltip();
 	return height;
 }
 

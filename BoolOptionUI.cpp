@@ -37,6 +37,7 @@ OptionUI(parent, setting)
 	// don't exist.
 	MapDialogRect(m_hParentWnd, &mapRect);
 	m_leftGroupMargin = mapRect.left;
+	addTooltip(m_hCheck);
 }
 
 // This does all the work of calculating the location and size of the check box
@@ -78,6 +79,7 @@ int BoolOptionUI::updateLayout(
 			m_shown = true;
 		}
 	}
+	updateTooltip();
 	// Return the overall height of this option UI for the given width.
 	return height;
 }

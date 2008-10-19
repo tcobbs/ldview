@@ -2,6 +2,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCMacros.h>
+#include <TCFoundation/TCUserDefaults.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLModelLine.h>
 #include <LDLoader/LDLTriangleLine.h>
@@ -194,6 +195,7 @@ void LDPovExporter::initSettings(void) const
 	}
 	addSetting(LDExporterSetting(ls(_UC("PovCustomAspectRatio")),
 		m_customAspectRatio, udKey("CustomAspectRatio").c_str()));
+	m_settings.back().setTooltip("PovCustomAspectRatioTT");
 	addSetting(LDExporterSetting(ls(_UC("PovFloor")), m_floor,
 		udKey("Floor").c_str()));
 	m_settings.back().setGroupSize(1);
@@ -213,6 +215,7 @@ void LDPovExporter::initSettings(void) const
 		{
 			setting.selectOption(1);
 		}
+		setting.setTooltip("PovFloorAxisTT");
 	}
 	addSetting(LDExporterSetting(ls(_UC("PovReflections")), m_refls,
 		udKey("Reflections").c_str()));
@@ -220,10 +223,13 @@ void LDPovExporter::initSettings(void) const
 		udKey("Shadows").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovUnmirrorStuds")), m_unmirrorStuds,
 		udKey("UnmirrorStuds").c_str()));
+	m_settings.back().setTooltip("PovUnmirrorStudsTT");
 	addSetting(LDExporterSetting(ls(_UC("PovTopInclude")), m_topInclude.c_str(),
 		udKey("TopInclude").c_str()));
+	m_settings.back().setTooltip("PovTopIncludeTT");
 	addSetting(LDExporterSetting(ls(_UC("PovBottomInclude")),
 		m_bottomInclude.c_str(), udKey("BottomInclude").c_str()));
+	m_settings.back().setTooltip("PovBottomIncludeTT");
 	LDExporter::initSettings();
 	// Uncomment the below to test top-level number settings to verify
 	// alignment.
@@ -236,17 +242,21 @@ void LDPovExporter::initSettings(void) const
 		3));
 	addSetting(LDExporterSetting(ls(_UC("PovInlinePov")), m_inlinePov,
 		udKey("InlinePov").c_str()));
+	m_settings.back().setTooltip("PovInlinePovTT");
 	addSetting(LDExporterSetting(ls(_UC("PovFindReplacements")),
 		m_findReplacements, udKey("FindReplacements").c_str()));
+	m_settings.back().setTooltip("PovFindReplacementsTT");
 	if (addSetting(LDExporterSetting(ls(_UC("PovXmlMap")), m_xmlMap,
 		udKey("XmlMap").c_str())))
 	{
 		m_settings.back().setGroupSize(1);
+		m_settings.back().setTooltip("PovXmlMapTT");
 	}
 	if (addSetting(LDExporterSetting(ls(_UC("PovXmlMapPath")),
 		m_xmlMapPath.c_str(), udKey("XmlMapPath").c_str())))
 	{
 		m_settings.back().setIsPath(true);
+		m_settings.back().setTooltip("PovXmlMapPathTT");
 	}
 	addSetting(LDExporterSetting(ls(_UC("PovLighting")), 2));
 	addSetting(ls(_UC("PovAmbient")), m_ambient, udKey("Ambient").c_str(), 0.0f,
@@ -423,7 +433,8 @@ void LDPovExporter::loadLDrawPovXml(void)
 	}
 	else
 	{
-		filename = m_ldrawDir + "/pov/LDrawPOV.xml";
+		filename = TCUserDefaults::getAppPath();
+		filename += "LGEO.xml";
 	}
 	TiXmlDocument doc(filename);
 

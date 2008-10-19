@@ -38,6 +38,7 @@ OptionUI(parent, setting)
 	MapDialogRect(m_hParentWnd, &spacingRect);
 	m_spacing = spacingRect.top;
 	m_editHeight = spacingRect.bottom;
+	addTooltip(m_hEdit);
 }
 
 // This does all the work of calculating the location and size of the controls
@@ -82,6 +83,7 @@ int StringOptionUI::updateLayout(
 			m_shown = true;
 		}
 	}
+	updateTooltip();
 	// Return the overall height of this option UI.
 	return height;
 }
