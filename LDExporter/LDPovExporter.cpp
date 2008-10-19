@@ -859,6 +859,12 @@ std::string LDPovExporter::getDeclareName(
 		return it->second;
 	}
 	std::string replaced = replaceSpecialChacters(modelFilename.c_str());
+	if (replaced.size() == modelFilename.size())
+	{
+		// No replacements, so it could be a POV reserved word.  Append _ldx to
+		// the end to guarantee that isn't the case.
+		replaced += "_ldx";
+	}
 	std::string retValue;
 
 	convertStringToLower(&replaced[0]);
