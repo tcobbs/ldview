@@ -293,11 +293,13 @@ void CUIWindow::initUcMessages(void)
 	ucMessages[SB_GETTIPTEXT] = SB_GETTIPTEXTA;
 	ucMessages[SB_SETTEXT] = SB_SETTEXTA;
 	ucMessages[SB_GETTEXT] = SB_GETTEXTA;
+	ucMessages[TTM_ADDTOOL] = TTM_ADDTOOLA;
 #else // TC_NO_UNICODE
 	ucMessages[SB_SETTIPTEXT] = SB_SETTIPTEXTW;
 	ucMessages[SB_GETTIPTEXT] = SB_GETTIPTEXTW;
 	ucMessages[SB_SETTEXT] = SB_SETTEXTW;
 	ucMessages[SB_GETTEXT] = SB_GETTEXTW;
+	ucMessages[TTM_ADDTOOL] = TTM_ADDTOOLW;
 #endif // TC_NO_UNICODE
 }
 

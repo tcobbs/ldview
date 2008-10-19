@@ -12,6 +12,7 @@
 OptionUI::OptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 m_canvas(parent),
 m_hParentWnd(parent->getHWindow()),
+m_hTooltip(NULL),
 m_shown(false),
 m_setting(&setting),
 m_leftGroupMargin(0),
@@ -179,4 +180,42 @@ int OptionUI::calcTextHeight(
 	}
 	// Return the calculated height for the text string.
 	return height;
+}
+
+void OptionUI::addTooltip(HWND hControl)
+{
+	m_tooltipText = m_setting->getTooltip();
+	if (m_tooltipText.size() > 0)
+	{
+		m_hTooltip = CUIWindow::createWindowExUC(0, TOOLTIPS_CLASSUC,
+			NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON ,
+			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+			hControl, NULL, GetWindowInstance(hControl), NULL);
+		m_hTooltipControl = hControl;
+	}
+}
+
+void OptionUI::updateTooltip(void)
+{
+	if (m_hTooltip != NULL)
+	{
+		TOOLINFOUC ti;
+		RECT rect;
+
+		::GetClientRect(m_hTooltipControl, &rect);
+		memset(&ti, 0, sizeof(ti));
+		ti.cbSize = sizeof(ti);
+		ti.uFlags = TTF_SUBCLASS;
+		ti.hwnd = m_hTooltipControl;
+		ti.hinst = GetWindowInstance(m_hTooltipControl);
+		ti.lpszText = &m_tooltipText[0];
+		ti.rect = rect;
+		// If you don't set the maximum width, multi-line messages aren't
+		// displayed, so set the maximum width to a somewhat reasonable value.
+		::SendMessage(m_hTooltip, TTM_SETMAXTIPWIDTH, 0, 800);
+		CUIWindow::sendMessageUC(m_hTooltip, TTM_ADDTOOL, 0, (LPARAM)&ti);
+		// Since the text might be long, leave the tooltip visible for about 32
+		// seconds.  It's treated as a short, so 32,767 is the max.
+		::SendMessage(m_hTooltip, TTM_SETDELAYTIME, TTDT_AUTOPOP, 32767);
+	}
 }

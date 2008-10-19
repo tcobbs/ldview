@@ -41,6 +41,7 @@ OptionUI(parent, setting)
 	m_editWidth = editRect.right;
 	m_editHeight = editRect.bottom;
 	m_spacing = editRect.left;
+	addTooltip(m_hEdit);
 }
 
 // This does all the work of calculating the location and size of the controls
@@ -103,6 +104,7 @@ int NumberOptionUI::updateLayout(
 			m_shown = true;
 		}
 	}
+	updateTooltip();
 	// Our overall height is either the height of the edit control, or the
 	// height of the label text, whichever is greater.
 	return std::max(height, m_editHeight);

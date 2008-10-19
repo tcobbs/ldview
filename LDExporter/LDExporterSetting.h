@@ -110,6 +110,9 @@ public:
 	void setMaxValue(TCFloat value);
 	const ucstring &getStringValue(void);
 
+	void setTooltip(const char *localStringKey);
+	const ucstring &getTooltip(void) const { return m_tooltip; }
+
 	const UCStringVector &getOptions(void) const { return m_options; }
 	void addOption(long lValue, const ucstring &name);
 	void selectOption(size_t index, bool commit = false);
@@ -138,6 +141,7 @@ protected:
 	TCFloat m_maxFloat;
 	int m_groupSize;
 	bool m_isPath;
+	ucstring m_tooltip;
 };
 
 typedef std::list<LDExporterSetting> LDExporterSettingList;

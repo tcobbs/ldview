@@ -1,6 +1,7 @@
 #include "LDExporterSetting.h"
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <TCFoundation/TCLocalStrings.h>
 
 #ifndef TC_NO_UNICODE
 LDExporterSetting::LDExporterSetting(
@@ -383,3 +384,10 @@ size_t LDExporterSetting::getSelectedOption(void) const
 	}
 }
 
+void LDExporterSetting::setTooltip(const char *localStringName)
+{
+	ucstring key;
+	
+	mbstoucstring(key, localStringName);
+	m_tooltip = TCLocalStrings::get(key.c_str());
+}

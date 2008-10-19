@@ -31,9 +31,11 @@ public:
 	virtual int getRightGroupMargin(void) const { return m_rightGroupMargin; }
 	virtual int getBottomGroupMargin(void) const { return m_bottomGroupMargin; }
 	virtual bool getEnabled(void) { return true; }
+	virtual void addTooltip(HWND hControl);
 
 protected:
 	virtual int calcTextHeight(HDC hdc, int width, int &optimalWidth);
+	virtual void updateTooltip(void);
 
 	static int calcTextHeight(HDC hdc, const ucstring &text, int width,
 		int &optimalWidth);
@@ -42,6 +44,9 @@ protected:
 
 	OptionsCanvas *m_canvas;
 	HWND m_hParentWnd;
+	HWND m_hTooltip;
+	HWND m_hTooltipControl;
+	ucstring m_tooltipText;
 	bool m_shown;
 	LDExporterSetting *m_setting;
 	int m_leftGroupMargin;
