@@ -4513,6 +4513,7 @@ bool ModelWindow::getSaveFilename(
 	char fileTypes[1024];
 	std::string initialDir = getSaveDir();
 	int maxImageType = 3;
+	char defaultExt[32];
 
 	stopAnimation();
 	memset(&openStruct, 0, sizeof(OPENFILENAME));
@@ -4525,15 +4526,21 @@ bool ModelWindow::getSaveFilename(
 	switch (curSaveOp)
 	{
 	case LDPreferences::SOExport:
-		fillExportFileTypes(fileTypes);
-		modelViewer->setExportType(
-			(LDrawModelViewer::ExportType)saveExportType);
-		saveType = saveExportType;
-		openStruct.lpstrTitle = ls("ExportModel");
-		openStruct.Flags |= OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
-		openStruct.hInstance = getLanguageModule();
-		openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_EXPORT_SAVE_OPTIONS);
-		openStruct.lpfnHook = staticSaveHook;
+		{
+			const LDExporter *exporter = modelViewer->getExporter();
+			std::string extension = exporter->getExtension();
+
+			fillExportFileTypes(fileTypes);
+			modelViewer->setExportType(
+				(LDrawModelViewer::ExportType)saveExportType);
+			saveType = saveExportType;
+			openStruct.lpstrTitle = ls("ExportModel");
+			openStruct.Flags |= OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
+			openStruct.hInstance = getLanguageModule();
+			openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_EXPORT_SAVE_OPTIONS);
+			openStruct.lpfnHook = staticSaveHook;
+			strcpy(defaultExt, extension.c_str());
+		}
 		break;
 	case LDPreferences::SOSnapshot:
 	default:
@@ -4548,6 +4555,7 @@ bool ModelWindow::getSaveFilename(
 		openStruct.hInstance = getLanguageModule();
 		openStruct.lpTemplateName = MAKEINTRESOURCE(IDD_SAVE_OPTIONS);
 		openStruct.lpfnHook = staticSaveHook;
+		strcpy(defaultExt, saveExtension());
 		break;
 	}
 	openStruct.lStructSize = getOpenFilenameSize(false);
@@ -4555,9 +4563,9 @@ bool ModelWindow::getSaveFilename(
 	openStruct.lpstrFilter = fileTypes;
 	openStruct.nFilterIndex = saveType;
 	openStruct.lpstrFile = saveFilename;
+	openStruct.lpstrDefExt = defaultExt;
 	openStruct.nMaxFile = len;
 	openStruct.lpstrInitialDir = initialDir.c_str();
-	openStruct.lpstrDefExt = NULL;
 	openStruct.lCustData = (long)this;
 	if (GetSaveFileName(&openStruct))
 	{
@@ -4589,23 +4597,6 @@ bool ModelWindow::getSaveFilename(
 					SAVE_IMAGE_TYPE_KEY, false);
 			}
 			break;
-			if (!strchr(saveFilename, '.') &&
-				(int)strlen(saveFilename) < len - 5)
-			{
-				strcat(saveFilename, saveExtension());
-				//if (saveImageType == PNG_IMAGE_TYPE_INDEX)
-				//{
-				//	strcat(saveFilename, ".png");
-				//}
-				//else if (saveImageType == BMP_IMAGE_TYPE_INDEX)
-				//{
-				//	strcat(saveFilename, ".bmp");
-				//}
-				//else if (saveImageType == JPG_IMAGE_TYPE_INDEX)
-				//{
-				//	strcat(saveFilename, ".jpg");
-				//}
-			}
 		}
 		TCObject::release(saveWindowResizer);
 		saveWindowResizer = NULL;
