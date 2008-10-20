@@ -188,7 +188,7 @@ void OptionUI::addTooltip(HWND hControl)
 	if (m_tooltipText.size() > 0)
 	{
 		m_hTooltip = CUIWindow::createWindowExUC(0, TOOLTIPS_CLASSUC,
-			NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP | TTS_BALLOON ,
+			NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP /*| TTS_BALLOON*/,
 			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 			hControl, NULL, GetWindowInstance(hControl), NULL);
 		m_hTooltipControl = hControl;
