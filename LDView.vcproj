@@ -1717,6 +1717,14 @@
 			RelativePath=".\LDView.exe.manifest"
 			>
 			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
 				Name="Debug|Win32"
 				ExcludedFromBuild="true"
 				>
@@ -1725,7 +1733,23 @@
 				/>
 			</FileConfiguration>
 			<FileConfiguration
+				Name="PartialDebug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
 				Name="Debug ANSI|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release ANSI|Win32"
 				ExcludedFromBuild="true"
 				>
 				<Tool
