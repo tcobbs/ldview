@@ -42,5 +42,6 @@ class LDExporterSetting;
 - (NSTextField *)createLabel;
 - (NSView *)firstKeyView;
 - (NSView *)lastKeyView;
+- (void)addTooltip:(NSView *)view;
 
 @end

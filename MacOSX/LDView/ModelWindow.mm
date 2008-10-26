@@ -70,6 +70,7 @@ enum
 	[toolbarItems release];
 	[defaultIdentifiers release];
 	[otherIdentifiers release];
+	[allIdentifiers release];
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
 	[imageFileTypes release];
@@ -1705,13 +1706,15 @@ enum
 	{
 		NSSavePanel *savePanel = [NSSavePanel savePanel];
 		NSString *defaultFilename;
+		std::string curFilename;
 
 		if (!saveExportViewOwner)
 		{
 			saveExportViewOwner = [[SaveExportViewOwner alloc] initWithModelViewer:modelViewer];
 		}
 		[saveExportViewOwner setSavePanel:savePanel];
-		defaultFilename = [[[[NSString stringWithASCIICString:modelViewer->getCurFilename().c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
+		curFilename = modelViewer->getCurFilename();
+		defaultFilename = [[[[NSString stringWithASCIICString:curFilename.c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
 		[savePanel setCanSelectHiddenExtension:YES];
 		sheetBusy = true;
 		[savePanel beginSheetForDirectory:[self defaultSaveDirForOp:LDPreferences::SOExport] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(exportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];

@@ -26,6 +26,7 @@
 		{
 			leftGroupMargin = 6.0f;
 		}
+		[self addTooltip:check];
 	}
 	return self;
 }

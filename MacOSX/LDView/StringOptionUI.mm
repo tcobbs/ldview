@@ -23,6 +23,7 @@
 		textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
 		[textField setStringValue:[NSString stringWithUCString:setting->getStringValue()]];
 		[[textField cell] setRepresentedObject:self];
+		[self addTooltip:textField];
 	}
 	return self;
 }

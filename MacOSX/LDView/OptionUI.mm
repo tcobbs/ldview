@@ -242,4 +242,13 @@
 	return [self firstKeyView];
 }
 
+- (void)addTooltip:(NSView *)view
+{
+	const ucstring &tooltip = setting->getTooltip();
+	if (tooltip.size() > 0)
+	{
+		[view setToolTip:[NSString stringWithUCString:tooltip.c_str()]];
+	}
+}
+
 @end

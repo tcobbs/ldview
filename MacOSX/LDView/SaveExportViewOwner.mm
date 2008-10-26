@@ -27,10 +27,11 @@
 				// variable, the ucstring gets destroyed before it gets into
 				// the stringWithUCString method.
 				ucstring desc = exporter->getTypeDescription();
+				std::string extension = exporter->getExtension();
 
 				[typeDict setObject:[NSNumber numberWithInt:i] forKey:[NSNumber numberWithInt:[fileTypes count]]];
 				[fileTypes addObject:[NSString stringWithUCString:desc]];
-				[extensions addObject:[NSString stringWithASCIICString:exporter->getExtension().c_str()]];
+				[extensions addObject:[NSString stringWithASCIICString:extension.c_str()]];
 			}
 		}
 		udTypeKey = [[NSString alloc] initWithASCIICString:SAVE_EXPORT_TYPE_KEY];
