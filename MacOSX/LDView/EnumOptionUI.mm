@@ -32,6 +32,7 @@
 		[popUpButton selectItemAtIndex:setting->getSelectedOption()];
 		[[popUpButton itemAtIndex:0] setRepresentedObject:self];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willPopUp:) name:NSPopUpButtonWillPopUpNotification object:popUpButton];
+		[self addTooltip:popUpButton];
 	}
 	return self;
 }

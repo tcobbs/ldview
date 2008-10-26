@@ -74,6 +74,7 @@
 			[docView addSubview:textField];
 			[label release];
 		}
+		[self addTooltip:textField];
 	}
 	return std::max(textFieldBounds.size.height, labelBounds.size.height);
 }
