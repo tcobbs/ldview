@@ -415,7 +415,7 @@ void ModelViewerWidget::initializeGL(void)
 	preferences->doCancel();
 	doViewStatusBar(preferences->getStatusBar());
 	doViewToolBar(preferences->getToolBar());
-	if(saving)
+	if (saving)
 	{
 		modelViewer->setup();
 		modelViewer->openGlWillEnd();
@@ -474,8 +474,11 @@ void ModelViewerWidget::paintGL(void)
 		painting = true;
 		if (saving)
 		{
-			glDrawBuffer(GL_BACK);
-			glReadBuffer(GL_BACK);
+			if (!TREGLExtensions::haveFramebufferObjectExtension())
+			{
+				glDrawBuffer(GL_BACK);
+				glReadBuffer(GL_BACK);
+			}
 			saveImageResult = snapshotTaker->saveImage(saveImageFilename,
 				saveImageWidth, saveImageHeight, saveImageZoomToFit);
 		}
@@ -2649,15 +2652,30 @@ bool ModelViewerWidget::grabImage(
 	modelViewer->setMemoryUsage(0);
 	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
 		numXTiles, numYTiles);
-	setupSnapshotBackBuffer(newWidth, newHeight);
+	if (!snapshotTaker->getUseFBO())
+	{
+		setupSnapshotBackBuffer(newWidth, newHeight);
+	}
     imageWidth = newWidth * numXTiles;
     imageHeight = newHeight * numYTiles;
 	saveImageWidth = imageWidth;
 	saveImageHeight = imageHeight;
-	renderPixmap(newWidth, newHeight);
+	if (snapshotTaker->getUseFBO())
+	{
+		makeCurrent();
+		saveImageResult = snapshotTaker->saveImage(saveImageFilename,
+			saveImageWidth, saveImageHeight, saveImageZoomToFit);
+	}
+	else
+	{
+		renderPixmap(newWidth, newHeight);
+	}
 	makeCurrent();
 	TREGLExtensions::setup();
-	modelViewer->openGlWillEnd();
+	if (!snapshotTaker->getUseFBO())
+	{
+		modelViewer->openGlWillEnd();
+	}
 	saving = false;
 	mwidth = origWidth;
 	mheight = origHeight;
@@ -3002,9 +3020,13 @@ bool ModelViewerWidget::saveImage(
 	}
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha =
-				TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
+		TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
 	snapshotTaker->setAutoCrop(
-					TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
+		TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
+	if (TREGLExtensions::haveFramebufferObjectExtension())
+	{
+		snapshotTaker->setUseFBO(true);
+	}
 	saveImageFilename = filename;
 	//snapshotTaker->setProductVersion(
 	//	((LDViewWindow *)parentWindow)->getProductVersion());
