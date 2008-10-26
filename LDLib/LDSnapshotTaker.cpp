@@ -20,6 +20,8 @@
 #endif // _DEBUG
 #endif // WIN32
 
+using namespace TREGLExtensionsNS;
+
 #define FBO_SIZE 1024
 
 
