@@ -34,14 +34,14 @@ namespace TREGLExtensionsNS
 	PFNGLGETBUFFERPARAMETERIVARBPROC glGetBufferParameterivARB = NULL;
 	PFNGLGETBUFFERPOINTERVARBPROC glGetBufferPointervARB = NULL;
 	// GL_ARB_occlusion_query
-    PFNGLGENQUERIESARBPROC glGenQueriesARB = NULL;
-    PFNGLDELETEQUERIESARBPROC glDeleteQueriesARB = NULL;
-    PFNGLISQUERYARBPROC glIsQueryARB = NULL;
-    PFNGLBEGINQUERYARBPROC glBeginQueryARB = NULL;
-    PFNGLENDQUERYARBPROC glEndQueryARB = NULL;
-    PFNGLGETQUERYIVARBPROC glGetQueryivARB = NULL;
-    PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB = NULL;
-    PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB = NULL;
+	PFNGLGENQUERIESARBPROC glGenQueriesARB = NULL;
+	PFNGLDELETEQUERIESARBPROC glDeleteQueriesARB = NULL;
+	PFNGLISQUERYARBPROC glIsQueryARB = NULL;
+	PFNGLBEGINQUERYARBPROC glBeginQueryARB = NULL;
+	PFNGLENDQUERYARBPROC glEndQueryARB = NULL;
+	PFNGLGETQUERYIVARBPROC glGetQueryivARB = NULL;
+	PFNGLGETQUERYOBJECTIVARBPROC glGetQueryObjectivARB = NULL;
+	PFNGLGETQUERYOBJECTUIVARBPROC glGetQueryObjectuivARB = NULL;
 #endif // GL_GLEXT_PROTOTYPES
 
 #ifdef WIN32
@@ -89,6 +89,35 @@ PFNGLENDQUERYARBPROC TREGLExtensions::sm_glEndQueryARB = NULL;
 PFNGLGETQUERYIVARBPROC TREGLExtensions::sm_glGetQueryivARB = NULL;
 PFNGLGETQUERYOBJECTIVARBPROC TREGLExtensions::sm_glGetQueryObjectivARB = NULL;
 PFNGLGETQUERYOBJECTUIVARBPROC TREGLExtensions::sm_glGetQueryObjectuivARB = NULL;
+// GL_EXT_framebuffer_object
+PFNGLISRENDERBUFFEREXTPROC TREGLExtensions::sm_glIsRenderbufferEXT = NULL;
+PFNGLBINDRENDERBUFFEREXTPROC TREGLExtensions::sm_glBindRenderbufferEXT = NULL;
+PFNGLDELETERENDERBUFFERSEXTPROC TREGLExtensions::sm_glDeleteRenderbuffersEXT =
+	NULL;
+PFNGLGENRENDERBUFFERSEXTPROC TREGLExtensions::sm_glGenRenderbuffersEXT = NULL;
+PFNGLRENDERBUFFERSTORAGEEXTPROC TREGLExtensions::sm_glRenderbufferStorageEXT =
+	NULL;
+PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC
+	TREGLExtensions::sm_glGetRenderbufferParameterivEXT = NULL;
+PFNGLISFRAMEBUFFEREXTPROC TREGLExtensions::sm_glIsFramebufferEXT = NULL;
+PFNGLBINDFRAMEBUFFEREXTPROC TREGLExtensions::sm_glBindFramebufferEXT = NULL;
+PFNGLDELETEFRAMEBUFFERSEXTPROC TREGLExtensions::sm_glDeleteFramebuffersEXT =
+	NULL;
+PFNGLGENFRAMEBUFFERSEXTPROC TREGLExtensions::sm_glGenFramebuffersEXT = NULL;
+PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC
+	TREGLExtensions::sm_glCheckFramebufferStatusEXT = NULL;
+PFNGLFRAMEBUFFERTEXTURE1DEXTPROC TREGLExtensions::sm_glFramebufferTexture1DEXT =
+	NULL;
+PFNGLFRAMEBUFFERTEXTURE2DEXTPROC TREGLExtensions::sm_glFramebufferTexture2DEXT =
+	NULL;
+PFNGLFRAMEBUFFERTEXTURE3DEXTPROC TREGLExtensions::sm_glFramebufferTexture3DEXT =
+	NULL;
+PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC
+	TREGLExtensions::sm_glFramebufferRenderbufferEXT = NULL;
+PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC
+	TREGLExtensions::sm_glGetFramebufferAttachmentParameterivEXT = NULL;
+PFNGLGENERATEMIPMAPEXTPROC TREGLExtensions::sm_glGenerateMipmapEXT = NULL;
+
 
 StringSet TREGLExtensions::sm_glExtensions;
 GLfloat TREGLExtensions::sm_maxAnisoLevel = 1.0f;
@@ -192,19 +221,19 @@ void TREGLExtensions::setup(void)
 	{
 		sm_glGenQueriesARB = (PFNGLGENQUERIESARBPROC)
 			GET_EXTENSION(glGenQueriesARB);
-    	sm_glDeleteQueriesARB = (PFNGLDELETEQUERIESARBPROC)
+		sm_glDeleteQueriesARB = (PFNGLDELETEQUERIESARBPROC)
 			GET_EXTENSION(glDeleteQueriesARB);
-    	sm_glIsQueryARB = (PFNGLISQUERYARBPROC)
+		sm_glIsQueryARB = (PFNGLISQUERYARBPROC)
 			GET_EXTENSION(glIsQueryARB);
-    	sm_glBeginQueryARB = (PFNGLBEGINQUERYARBPROC)
+		sm_glBeginQueryARB = (PFNGLBEGINQUERYARBPROC)
 			GET_EXTENSION(glBeginQueryARB);
-    	sm_glEndQueryARB = (PFNGLENDQUERYARBPROC)
+		sm_glEndQueryARB = (PFNGLENDQUERYARBPROC)
 			GET_EXTENSION(glEndQueryARB);
-    	sm_glGetQueryivARB = (PFNGLGETQUERYIVARBPROC)
+		sm_glGetQueryivARB = (PFNGLGETQUERYIVARBPROC)
 			GET_EXTENSION(glGetQueryivARB);
-    	sm_glGetQueryObjectivARB = (PFNGLGETQUERYOBJECTIVARBPROC)
+		sm_glGetQueryObjectivARB = (PFNGLGETQUERYOBJECTIVARBPROC)
 			GET_EXTENSION(glGetQueryObjectivARB);
-    	sm_glGetQueryObjectuivARB = (PFNGLGETQUERYOBJECTUIVARBPROC)
+		sm_glGetQueryObjectuivARB = (PFNGLGETQUERYOBJECTUIVARBPROC)
 			GET_EXTENSION(glGetQueryObjectuivARB);
 	}
 	if (haveAnisoExtension(true))
@@ -214,6 +243,44 @@ void TREGLExtensions::setup(void)
 	else
 	{
 		sm_maxAnisoLevel = 1.0f;
+	}
+	if (haveFramebufferObjectExtension(true))
+	{
+		sm_glIsRenderbufferEXT = (PFNGLISRENDERBUFFEREXTPROC)
+			GET_EXTENSION(glIsRenderbufferEXT);
+		sm_glBindRenderbufferEXT = (PFNGLBINDRENDERBUFFEREXTPROC)
+			GET_EXTENSION(glBindRenderbufferEXT);
+		sm_glDeleteRenderbuffersEXT = (PFNGLDELETERENDERBUFFERSEXTPROC)
+			GET_EXTENSION(glDeleteRenderbuffersEXT);
+		sm_glGenRenderbuffersEXT = (PFNGLGENRENDERBUFFERSEXTPROC)
+			GET_EXTENSION(glGenRenderbuffersEXT);
+		sm_glRenderbufferStorageEXT = (PFNGLRENDERBUFFERSTORAGEEXTPROC)
+			GET_EXTENSION(glRenderbufferStorageEXT);
+		sm_glGetRenderbufferParameterivEXT = (PFNGLGETRENDERBUFFERPARAMETERIVEXTPROC)
+			GET_EXTENSION(glGetRenderbufferParameterivEXT);
+		sm_glIsFramebufferEXT = (PFNGLISFRAMEBUFFEREXTPROC)
+			GET_EXTENSION(glIsFramebufferEXT);
+		sm_glBindFramebufferEXT = (PFNGLBINDFRAMEBUFFEREXTPROC)
+			GET_EXTENSION(glBindFramebufferEXT);
+		sm_glDeleteFramebuffersEXT = (PFNGLDELETEFRAMEBUFFERSEXTPROC)
+			GET_EXTENSION(glDeleteFramebuffersEXT);
+		sm_glGenFramebuffersEXT = (PFNGLGENFRAMEBUFFERSEXTPROC)
+			GET_EXTENSION(glGenFramebuffersEXT);
+		sm_glCheckFramebufferStatusEXT = (PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC)
+			GET_EXTENSION(glCheckFramebufferStatusEXT);
+		sm_glFramebufferTexture1DEXT = (PFNGLFRAMEBUFFERTEXTURE1DEXTPROC)
+			GET_EXTENSION(glFramebufferTexture1DEXT);
+		sm_glFramebufferTexture2DEXT = (PFNGLFRAMEBUFFERTEXTURE2DEXTPROC)
+			GET_EXTENSION(glFramebufferTexture2DEXT);
+		sm_glFramebufferTexture3DEXT = (PFNGLFRAMEBUFFERTEXTURE3DEXTPROC)
+			GET_EXTENSION(glFramebufferTexture3DEXT);
+		sm_glFramebufferRenderbufferEXT = (PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)
+			GET_EXTENSION(glFramebufferRenderbufferEXT);
+		sm_glGetFramebufferAttachmentParameterivEXT =
+			(PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)
+			GET_EXTENSION(glGetFramebufferAttachmentParameterivEXT);
+		sm_glGenerateMipmapEXT = (PFNGLGENERATEMIPMAPEXTPROC)
+			GET_EXTENSION(glGenerateMipmapEXT);
 	}
 #ifndef GL_GLEXT_PROTOTYPES
 	using namespace TREGLExtensionsNS;
@@ -233,14 +300,33 @@ void TREGLExtensions::setup(void)
 	glGetBufferParameterivARB = sm_glGetBufferParameterivARB;
 	glGetBufferPointervARB = sm_glGetBufferPointervARB;
 	// GL_ARB_occlusion_query
-    glGenQueriesARB = sm_glGenQueriesARB;
-    glDeleteQueriesARB = sm_glDeleteQueriesARB;
-    glIsQueryARB = sm_glIsQueryARB;
-    glBeginQueryARB = sm_glBeginQueryARB;
-    glEndQueryARB = sm_glEndQueryARB;
-    glGetQueryivARB = sm_glGetQueryivARB;
-    glGetQueryObjectivARB = sm_glGetQueryObjectivARB;
-    glGetQueryObjectuivARB = sm_glGetQueryObjectuivARB;
+	glGenQueriesARB = sm_glGenQueriesARB;
+	glDeleteQueriesARB = sm_glDeleteQueriesARB;
+	glIsQueryARB = sm_glIsQueryARB;
+	glBeginQueryARB = sm_glBeginQueryARB;
+	glEndQueryARB = sm_glEndQueryARB;
+	glGetQueryivARB = sm_glGetQueryivARB;
+	glGetQueryObjectivARB = sm_glGetQueryObjectivARB;
+	glGetQueryObjectuivARB = sm_glGetQueryObjectuivARB;
+	// GL_EXT_framebuffer_object
+	glIsRenderbufferEXT = sm_glIsRenderbufferEXT;
+	glBindRenderbufferEXT = sm_glBindRenderbufferEXT;
+	glDeleteRenderbuffersEXT = sm_glDeleteRenderbuffersEXT;
+	glGenRenderbuffersEXT = sm_glGenRenderbuffersEXT;
+	glRenderbufferStorageEXT = sm_glRenderbufferStorageEXT;
+	glGetRenderbufferParameterivEXT = sm_glGetRenderbufferParameterivEXT;
+	glIsFramebufferEXT = sm_glIsFramebufferEXT;
+	glBindFramebufferEXT = sm_glBindFramebufferEXT;
+	glDeleteFramebuffersEXT = sm_glDeleteFramebuffersEXT;
+	glGenFramebuffersEXT = sm_glGenFramebuffersEXT;
+	glCheckFramebufferStatusEXT = sm_glCheckFramebufferStatusEXT;
+	glFramebufferTexture1DEXT = sm_glFramebufferTexture1DEXT;
+	glFramebufferTexture2DEXT = sm_glFramebufferTexture2DEXT;
+	glFramebufferTexture3DEXT = sm_glFramebufferTexture3DEXT;
+	glFramebufferRenderbufferEXT = sm_glFramebufferRenderbufferEXT;
+	glGetFramebufferAttachmentParameterivEXT =
+		sm_glGetFramebufferAttachmentParameterivEXT;
+	glGenerateMipmapEXT = sm_glGenerateMipmapEXT;
 #endif // GL_GLEXT_PROTOTYPES
 }
 
@@ -295,6 +381,15 @@ bool TREGLExtensions::haveOcclusionQueryExtension(bool force)
 		false) != 0;
 
 	return (!ignore || force) && checkForExtension("GL_ARB_occlusion_query",
+		force);
+}
+
+bool TREGLExtensions::haveFramebufferObjectExtension(bool force)
+{
+	bool ignore = TCUserDefaults::longForKey(IGNORE_FRAMEBUFFER_OBJECT_KEY, 0,
+		false) != 0;
+
+	return (!ignore || force) && checkForExtension("GL_EXT_framebuffer_object",
 		force);
 }
 

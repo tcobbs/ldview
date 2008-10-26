@@ -30,6 +30,8 @@ public:
 	bool getTrySaveAlpha(void) const { return m_trySaveAlpha; }
 	void setAutoCrop(bool value) { m_autoCrop = value; }
 	bool getAutoCrop(void) const { return m_autoCrop; }
+	void setUseFBO(bool value) { m_useFBO = value; }
+	bool getUseFBO(void) const { return m_useFBO; }
 	void setProductVersion(const std::string &value)
 	{
 		m_productVersion = value;
@@ -91,6 +93,7 @@ protected:
 	int m_step;
 	bool m_grabSetupDone;
 	bool m_gl2psAllowed;
+	bool m_useFBO;
 	std::string m_modelFilename;
 	std::string m_currentImageFilename;
 };

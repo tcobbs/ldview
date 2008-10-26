@@ -11,6 +11,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDViewPoint.h>
+#include <TRE/TREGLExtensions.h>
 #include <gl2ps/gl2ps.h>
 
 #ifdef WIN32
@@ -18,6 +19,55 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 #endif // WIN32
+
+
+class FBOHelper
+{
+public:
+	FBOHelper(bool useFBO) : m_useFBO(useFBO)
+	{
+		if (m_useFBO)
+		{
+			glGenFramebuffersEXT(1, &m_fbo);
+			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
+
+			// Depth buffer
+			glGenRenderbuffersEXT(1, &m_depthBuffer);
+			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
+			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24,
+				1024, 1024);
+			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+				GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depthBuffer);
+
+			// Color buffer
+			glGenRenderbuffersEXT(1, &m_colorBuffer);
+			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_colorBuffer);
+			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA8, 1024, 1024);
+			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+				GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, m_colorBuffer);
+			glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+			if (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) !=
+				GL_FRAMEBUFFER_COMPLETE_EXT)
+			{
+				debugPrintf("FBO Failed!\n");
+			}
+		}
+	}
+	~FBOHelper()
+	{
+		if (m_useFBO)
+		{
+			glDeleteFramebuffersEXT(1, &m_fbo);
+			glDeleteRenderbuffersEXT(1, &m_depthBuffer);
+			glDeleteRenderbuffersEXT(1, &m_colorBuffer);
+			glReadBuffer(GL_BACK);
+		}
+	}
+	bool m_useFBO;
+	GLuint m_fbo;
+	GLuint m_depthBuffer;
+	GLuint m_colorBuffer;
+};
 
 LDSnapshotTaker::LDSnapshotTaker(void):
 m_modelViewer(NULL),
@@ -29,7 +79,8 @@ m_commandLineSaveSteps(false),
 m_commandLineStep(false),
 m_step(-1),
 m_grabSetupDone(false),
-m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
+m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
+m_useFBO(false)
 {
 }
 
@@ -43,7 +94,8 @@ m_commandLineSaveSteps(false),
 m_commandLineStep(false),
 m_step(-1),
 m_grabSetupDone(false),
-m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false))
+m_gl2psAllowed(TCUserDefaults::boolForKey(GL2PS_ALLOWED_KEY, false, false)),
+m_useFBO(false)
 {
 }
 
@@ -268,6 +320,7 @@ bool LDSnapshotTaker::saveImage(
 	bool zoomToFit)
 {
 	bool steps = false;
+	FBOHelper fboHelper(m_useFBO);
 
 	if (!m_fromCommandLine || m_commandLineSaveSteps)
 	{
