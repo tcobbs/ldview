@@ -32,6 +32,7 @@ public:
 	bool getAutoCrop(void) const { return m_autoCrop; }
 	void setUseFBO(bool value) { m_useFBO = value; }
 	bool getUseFBO(void) const { return m_useFBO; }
+	int getFBOSize(void) const;
 	void setProductVersion(const std::string &value)
 	{
 		m_productVersion = value;

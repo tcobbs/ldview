@@ -20,6 +20,8 @@
 #endif // _DEBUG
 #endif // WIN32
 
+#define FBO_SIZE 1024
+
 
 class FBOHelper
 {
@@ -35,14 +37,15 @@ public:
 			glGenRenderbuffersEXT(1, &m_depthBuffer);
 			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
 			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24,
-				1024, 1024);
+				FBO_SIZE, FBO_SIZE);
 			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 				GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depthBuffer);
 
 			// Color buffer
 			glGenRenderbuffersEXT(1, &m_colorBuffer);
 			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_colorBuffer);
-			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA8, 1024, 1024);
+			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_RGBA8, FBO_SIZE,
+				FBO_SIZE);
 			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 				GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, m_colorBuffer);
 			glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
@@ -101,6 +104,11 @@ m_useFBO(false)
 
 LDSnapshotTaker::~LDSnapshotTaker(void)
 {
+}
+
+int LDSnapshotTaker::getFBOSize(void) const
+{
+	return FBO_SIZE;
 }
 
 void LDSnapshotTaker::dealloc(void)
@@ -756,9 +764,17 @@ TCByte *LDSnapshotTaker::grabImage(
 	{
 		m_modelViewer->setStep(m_step);
 	}
-	glGetIntegerv(GL_VIEWPORT, viewport);
-	newWidth = viewport[2];
-	newHeight = viewport[3];
+	if (m_useFBO)
+	{
+		newWidth = FBO_SIZE;
+		newHeight = FBO_SIZE;
+	}
+	else
+	{
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		newWidth = viewport[2];
+		newHeight = viewport[3];
+	}
 	m_modelViewer->setWidth(newWidth);
 	m_modelViewer->setHeight(newHeight);
 	m_modelViewer->perspectiveView();

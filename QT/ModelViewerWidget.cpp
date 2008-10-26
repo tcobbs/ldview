@@ -2650,6 +2650,11 @@ bool ModelViewerWidget::grabImage(
 
 	saving = true;
 	modelViewer->setMemoryUsage(0);
+	if (snapshotTaker->getUseFBO())
+	{
+		newWidth = snapshotTaker->getFBOSize();
+		newHeight = snapshotTaker->getFBOSize();
+	}
 	snapshotTaker->calcTiling(imageWidth, imageHeight, newWidth, newHeight,
 		numXTiles, numYTiles);
 	if (!snapshotTaker->getUseFBO())
@@ -3018,15 +3023,15 @@ bool ModelViewerWidget::saveImage(
 	{
 		snapshotTaker =  new LDSnapshotTaker(modelViewer);
 	}
+	if (TREGLExtensions::haveFramebufferObjectExtension())
+	{
+		snapshotTaker->setUseFBO(true);
+	}
 	snapshotTaker->setImageType(getSaveImageType());
 	snapshotTaker->setTrySaveAlpha(saveAlpha =
 		TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0);
 	snapshotTaker->setAutoCrop(
 		TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
-	if (TREGLExtensions::haveFramebufferObjectExtension())
-	{
-		snapshotTaker->setUseFBO(true);
-	}
 	saveImageFilename = filename;
 	//snapshotTaker->setProductVersion(
 	//	((LDViewWindow *)parentWindow)->getProductVersion());
