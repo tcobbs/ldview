@@ -86,6 +86,12 @@ cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
 }
 
 win32 {
+  ini.commands = copy /y /a ..\LDViewMessages.ini+..\LDExporter\LDExportMessages.ini LDViewMessages.ini
+  ini.target = LDViewMessages.ini 
+  ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
+  QMAKE_EXTRA_WIN_TARGETS += ini
+  PRE_TARGETDEPS += LDViewMessages.ini
+
   DEFINES += _TC_STATIC
   INCLUDE += -I../../boost_1_33_1
   LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
