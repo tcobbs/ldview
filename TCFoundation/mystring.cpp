@@ -97,7 +97,11 @@ void ConsoleBuffer::vwprintf(const wchar_t *format, va_list argPtr)
 
 #endif
 
+#ifdef DEBUG
+static int debugLevel = 1;
+#else // DEBUG
 static int debugLevel = 0;
+#endif // DEBUG
 
 int sucprintf(UCSTR buffer, size_t maxLen, CUCSTR format, ...)
 {

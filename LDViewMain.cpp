@@ -388,7 +388,7 @@ static bool setupUserDefaults(
 	}
 #ifdef _DEBUG
 	// Set the debug level before selecting a pref set.
-	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, false));
+	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 1, false));
 #endif // _DEBUG
 	sessionName =
 		TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
