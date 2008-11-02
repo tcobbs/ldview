@@ -46,7 +46,11 @@ Preferences::Preferences(ModelViewerWidget *modelWidget)
 	loadSettings();
 	ldPrefs->applySettings();
 	reflectSettings();
-	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY));
+#ifdef DEBUG
+	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 1, false));
+#else // DEBUG
+	setDebugLevel((int)TCUserDefaults::longForKey(DEBUG_LEVEL_KEY, 0, false));
+#endif DEBUG
 }
 
 Preferences::~Preferences(void)
