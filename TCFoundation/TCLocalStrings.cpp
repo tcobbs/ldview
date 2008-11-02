@@ -1167,7 +1167,7 @@ const wchar_t *TCLocalStrings::instGetLocalString(const wchar_t *key)
 		std::string temp;
 
 		wstringtostring(temp, key);
-		debugPrintf(-1, "LocalString %s not found!!!!!!\n", temp.c_str());
+		debugPrintf("LocalString %s not found!!!!!!\n", temp.c_str());
 		// It should really be NULL, but that means a mistake will likely cause
 		// a crash.  At least with an empty string it's less likely to crash.
 		return L"";
@@ -1262,7 +1262,7 @@ const char *TCLocalStrings::instGetLocalString(const char *key)
 	}
 	else
 	{
-		debugPrintf(-1, "LocalString %s not found!!!!!!\n", key);
+		debugPrintf("LocalString %s not found!!!!!!\n", key);
 		// It should really be NULL, but that means a mistake will likely cause
 		// a crash.  At least with an empty string it's less likely to crash.
 		return "";
