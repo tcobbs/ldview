@@ -165,7 +165,8 @@ Translations\Italian\$(OBJDIR)\LDView-Italian.dll: Translations\Italian\*.cpp Tr
 
 
 installer:	Help\LDVIEW.HLP $(OBJDIR)\LDView.exe LDView.iss LDViewThumbs\Release\LDViewThumbs.dll
-	"$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
+	if exist "$(PROGRAMFILES)\Inno Setup 5\iscc.exe" "$(PROGRAMFILES)\Inno Setup 5\iscc.exe" LDView.iss
+	if exist "..\Inno Setup 5\iscc.exe" "..\Inno Setup 5\iscc.exe" LDView.iss
 
 thumbs:		LDViewThumbs\Release\LDViewThumbs.dll
 LDViewThumbs\Release\LDViewThumbs.dll: LDViewThumbs\*.cpp TCFoundation\$(OBJDIR)\TCFoundation.lib
@@ -202,9 +203,12 @@ clean: qtclean
 
 !include "Make.inc"
 
+help:		Help\LDVIEW.HLP
+
 Help\LDVIEW.HLP:	Help\*.rtf Help\LDView.hpj
 	cd Help
-	"$(HCW)" /c /e LDView.hpj
+	if exist "$(HCW)" "$(HCW)" /c /e LDView.hpj
+	if exist "..\..\Help Workshop\hcw.exe" "..\..\Help Workshop\hcw.exe"  /c /e LDView.hpj
 	cd ..
 
 $(OBJDIR)\LDView.res:	LDView.rc LDViewMessages.ini
