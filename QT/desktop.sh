@@ -68,3 +68,7 @@ else
 	echo You may have to log out and back in before thumbnail generation starts.
 fi
 
+if [ ! -x /usr/local/bin/LDView ]; then
+	make install
+fi
+
