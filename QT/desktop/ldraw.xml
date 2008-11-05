@@ -11,6 +11,18 @@
         <match type="string" value="0\ LDRAW_ORG\ Part\ UPDATE" offset="0:1000"/>
     </magic>
     <magic priority="60">
+        <match type="string" value="0\ LDRAW_ORG\ Primitive" offset="0:1000"/>
+    </magic>
+    <magic priority="60">
+        <match type="string" value="0\ !LDRAW_ORG\ Part" offset="0:1000"/>
+    </magic>
+    <magic priority="60">
+        <match type="string" value="0\ !LDRAW_ORG\ Primitive" offset="0:1000"/>
+    </magic>
+    <magic priority="60">
+        <match type="string" value="0\ !LDRAW_ORG\ Shortcut" offset="0:1000"/>
+    </magic>
+    <magic priority="60">
         <match type="string" value="0\ LDRAW_ORG\ Shortcut" offset="0:1000"/>
     </magic>
 
