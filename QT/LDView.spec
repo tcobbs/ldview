@@ -44,6 +44,8 @@ install -m 644 ../m6459.ldr $RPM_BUILD_ROOT/usr/local/share/ldview/m6459.ldr
 install -m 644 ../8464.mpd $RPM_BUILD_ROOT/usr/local/share/ldview/8464.mpd 
 install -m 644 ../LDViewMessages.ini \
 				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages.ini
+cat ../LDExporter/LDExportMessages.ini >> \
+				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages.ini
 install -m 644 ../Translations/German/LDViewMessages.ini \
 				$RPM_BUILD_ROOT/usr/local/share/ldview/LDViewMessages_de.ini
 install -m 644 ../Translations/Italian/LDViewMessages.ini \
