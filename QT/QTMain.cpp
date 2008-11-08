@@ -18,6 +18,7 @@
 #include <locale.h>
 #ifdef __linux__
 #include <signal.h>
+#include <sys/resource.h>
 #endif // __linux__
 
 #ifdef __linux__
@@ -27,6 +28,16 @@ class KillThread : public QThread
 public:
 	virtual void run()
 	{
+		// The kill sometimes results in a core dump.  Make sure that doesn't
+		// happen by setting the core dump limit to 0.
+		struct rlimit limit;
+		getrlimit(RLIMIT_CORE, &limit);
+		limit.rlim_cur = 0;
+		setrlimit(RLIMIT_CORE, &limit);
+		// There's no point forcing the user to wait 2 seconds if it is known
+		// for a fact that the shutdown is going to fail, so if they manually
+		// set the AlwaysForceKill key, then just kill without the 2-second
+		// wait.
 		if (!TCUserDefaults::boolForKey("AlwaysForceKill", false, false))
 		{
 			sleep(2);
@@ -36,16 +47,6 @@ public:
 			// unlikely that atexit() shutdown processing will take 2 full
 			// seconds, so if we do get here, it's a pretty safe bet that the
 			// program is locked up.
-			debugPrintf("LDView hasn't exited 2 seconds after the end of "
-				"main().\nForce-killing instead.\n");
-		}
-		else
-		{
-			// There's no point forcing the user to wait 2 seconds if it is
-			// known for a fact that the shutdown is going to fail, so if they
-			// manually set the AlwaysForceKill key, then just kill without
-			// the 2-second wait.
-			debugPrintf("AlwaysForceKill set. Force-killing.\n");
 		}
 		kill(getpid(), SIGQUIT);
 	}
