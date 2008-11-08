@@ -149,7 +149,8 @@ void ModelLoader::startup(void)
 		if (!screenSaver && commandLineFilename &&
 			(snapshotFilename || saveSnapshots))
 		{
-			if (modelWindow->setupOffscreen(1600, 1200))
+			if (modelWindow->setupOffscreen(1600, 1200,
+				TCUserDefaults::longForKey(FSAA_MODE_KEY) > 0))
 			{
 				// Note: even if the snapshot save fails, we don't want to continue.
 				// The user will get an error in the event of a snapshot save
