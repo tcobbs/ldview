@@ -20,6 +20,37 @@
 #include <signal.h>
 #endif // __linux__
 
+#ifdef __linux__
+#include <qthread.h>
+class KillThread : public QThread
+{
+public:
+	virtual void run()
+	{
+		if (!TCUserDefaults::boolForKey("AlwaysForceKill", false, false))
+		{
+			sleep(2);
+			// LDView fails to exit when running with the ATI video driver on
+			// Linux. If we get here before the program has already killed off
+			// this thread due to exiting, then force a kill.  It's very
+			// unlikely that atexit() shutdown processing will take 2 full
+			// seconds, so if we do get here, it's a pretty safe bet that the
+			// program is locked up.
+			debugPrintf("LDView hasn't exited 2 seconds after the end of "
+				"main().\nForce-killing instead.\n");
+		}
+		else
+		{
+			// There's no point forcing the user to wait 2 seconds if it is
+			// known for a fact that the shutdown is going to fail, so if they
+			// manually set the AlwaysForceKill key, then just kill without
+			// the 2-second wait.
+			debugPrintf("AlwaysForceKill set. Force-killing.\n");
+		}
+		kill(getpid(), SIGQUIT);
+	}
+};
+#endif // __linux__
 
 static QGLFormat defaultFormat;
 
@@ -85,8 +116,8 @@ int main(int argc, char *argv[])
 	w->modelViewer->setApplication(&a);
     int retValue = a.exec();
 #ifdef __linux__
-	// LDView fails to exit when running with the ATI video driver on Linux.
-	kill(getpid(), 9);
+	KillThread *killThread = new KillThread;
+	killThread->start();
 #endif // __linux__
 	return retValue;
 }

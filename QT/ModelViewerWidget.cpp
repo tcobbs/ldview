@@ -75,9 +75,6 @@
 #include "LDLib/LDUserDefaultsKeys.h"
 #include <LDLib/LDPartsList.h>
 #include <assert.h>
-#ifdef __linux__
-#include <signal.h>
-#endif // __linux__
 
 #include "ModelViewerWidget.h"
 #include "AlertHandler.h"
@@ -200,10 +197,6 @@ ModelViewerWidget::~ModelViewerWidget(void)
 	delete errors;
 	TCObject::release(alertHandler);
 	alertHandler = NULL;
-#ifdef __linux__
-	// LDView fails to exit when running with the ATI video driver on Linux.
-	//kill(getpid(), 9);
-#endif // __linux__
 }
 
 void ModelViewerWidget::setupUserAgent(void)
