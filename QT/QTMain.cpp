@@ -16,6 +16,10 @@
 #include <qtranslator.h>
 #include <qlocale.h>
 #include <locale.h>
+#ifdef __linux__
+#include <signal.h>
+#endif // __linux__
+
 
 static QGLFormat defaultFormat;
 
@@ -79,7 +83,12 @@ int main(int argc, char *argv[])
     	w->show();
     a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
 	w->modelViewer->setApplication(&a);
-    return a.exec();
+    int retValue = a.exec();
+#ifdef __linux__
+	// LDView fails to exit when running with the ATI video driver on Linux.
+	kill(getpid(), 9);
+#endif // __linux__
+	return retValue;
 }
 
 // Just a comment to verify I have commit permissions in cvs.
