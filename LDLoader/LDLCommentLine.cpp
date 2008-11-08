@@ -443,7 +443,8 @@ bool LDLCommentLine::isMovedToMeta(void) const
 
 bool LDLCommentLine::isStepMeta(void) const
 {
-	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 step"))
+	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 step") ||
+		stringHasCaseInsensitivePrefix(m_processedLine, "0 rotstep"))
 	{
 		return true;
 	}
