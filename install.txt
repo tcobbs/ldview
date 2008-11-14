@@ -74,9 +74,7 @@ APPENDIX - Recompilation of bundled libraries on Windows
 zlib 1.2.3
 ----------
 
-copy /y contrib\masmx86\*.* .
-call mkasm
-nmake -f win32\makefile.msc CFLAGS="-MT -O2 -nologo -DASMV -DASMINF" AR="link -lib" OBJA="gvmat32c.obj gvmat32.obj inffas32.obj" clean zlib.lib
+nmake -f win32\makefile.msc CFLAGS="-MT -O2 -nologo" AR="link -lib" clean zlib.lib
 
 libpng 1.2.18
 -------------
