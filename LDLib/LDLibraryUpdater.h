@@ -9,6 +9,7 @@
 #pragma warning(disable:4244 4512)
 #endif // WIN32
 #include <boost/thread.hpp>
+#include <boost/thread/condition.hpp>
 #ifdef WIN32
 #pragma warning(pop)
 #endif // WIN32
