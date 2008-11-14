@@ -41,7 +41,7 @@ Bundled binary libraries
 - libpng 1.2.12
 - unzip32
 
-Compilation of boost 1.34.0
+Compilation of boost 1.37.0
 ---------------------------
 
 0) If you use Visual C++ Toolkit 2003, make sure MSVCDir is set to 
@@ -55,9 +55,9 @@ Compilation of boost 1.34.0
    cd tools\jam\src
    call build
    cd bin.*
-   copy /y bjam.exe ..\..\..\..
+   copy bjam.exe ..\..\..\..
    cd ..\..\..\..
-   bjam --with-thread stage
+   bjam --with-date_time --with-thread link=static runtime-link=static variant=release stage
 
 3) Add boost directory to environment variable INCLUDE
 4) Add boost\stage\lib directory to environment variable LIB
