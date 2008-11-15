@@ -222,6 +222,7 @@ class LDViewWindow: public CUIWindow
 //		virtual void showTransformationMatrix(void);
 		virtual void showLDrawCommandLine(void);
 		virtual bool modelWindowIsShown(void);
+		LRESULT switchPovCameraAspect(bool saveSetting = true);
 		virtual LRESULT switchToExamineMode(bool saveSetting = true);
 		virtual LRESULT switchExamineLatLong(void);
 		virtual LRESULT switchToFlythroughMode(bool saveSetting = true);
@@ -245,6 +246,7 @@ class LDViewWindow: public CUIWindow
 		virtual void stopLoading(void);
 		virtual void showStatusIcon(bool examineMode, bool redraw = true);
 		virtual void reflectViewMode(bool saveSetting = true);
+		virtual void reflectPovCameraAspect(bool saveSetting = true);
 		virtual void reflectTopmost(void);
 		virtual void reflectVisualStyle(void);
 		virtual void reflectStatusBar(void);

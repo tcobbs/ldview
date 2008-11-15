@@ -182,6 +182,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.boundingBoxesOnly = false;
 	flags.obi = false;
 	flags.gl2ps = false;
+	flags.povCameraAspect = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -600,6 +601,18 @@ void LDrawModelViewer::setModelCenter(const TCFloat *value)
 		flags.overrideModelCenter = true;
 		center = TCVector(value[0],value[1],value[2]);
 		flags.needsSetup = true;
+	}
+}
+
+void LDrawModelViewer::setPovCameraAspect(bool value, bool saveSetting)
+{
+	if (value != flags.povCameraAspect)
+	{
+		flags.povCameraAspect = value;
+		if (saveSetting)
+		{
+			TCUserDefaults::setBoolForKey(value, POV_CAMERA_ASPECT_KEY, false);
+		}
 	}
 }
 
@@ -3839,6 +3852,66 @@ void LDrawModelViewer::cleanupFloats(TCFloat *array, int count)
 	}
 }
 
+ucstring LDrawModelViewer::getAspectString(
+	int width,
+	int height,
+	UCSTR separator,
+	bool standardOnly /*= false*/)
+{
+	ucstring aspect;
+	ucstring denom;
+
+	if (width * 100 / 235 == height)
+	{
+		aspect = _UC("2.35");
+		denom = _UC("1");
+	}
+	else if (width * 9 / 16 == height)
+	{
+		aspect = _UC("16");
+		denom = _UC("9");
+	}
+	else if (width * 3 / 5 == height)
+	{
+		aspect = _UC("5");
+		denom = _UC("3");
+	}
+	else if (width * 10 / 16 == height)
+	{
+		aspect = _UC("16");
+		denom = _UC("10");
+	}
+	else if (width * 2 / 3 == height)
+	{
+		aspect = _UC("3");
+		denom = _UC("2");
+	}
+	else if (width * 3 / 4 == height)
+	{
+		aspect = _UC("4");
+		denom = _UC("3");
+	}
+	else if (width * 4 / 5 == height)
+	{
+		aspect = _UC("5");
+		denom = _UC("4");
+	}
+	else if (standardOnly)
+	{
+		return _UC("");
+	}
+	else
+	{
+		aspect = ftoucstr((double)width / (double)height);
+	}
+	if (denom.length() > 0)
+	{
+		aspect += separator;
+		aspect += denom;
+	}
+	return aspect;
+}
+
 void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 {
 	TCFloat tmpMatrix[16];
@@ -3863,6 +3936,7 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	UCCHAR cameraString[4096];
 	double lookAt[3];
 	double tempV[3];
+	ucstring povAspect;
 
 	if (!mainTREModel)
 	{
@@ -3941,17 +4015,25 @@ void LDrawModelViewer::getPovCameraInfo(UCCHAR *&userMessage, char *&povCamera)
 	sucprintf(lookAtString, COUNT_OF(lookAtString), _UC("%s,%s,%s"),
 		ftoucstr(lookAt[0], 20).c_str(), ftoucstr(lookAt[1], 20).c_str(),
 		ftoucstr(lookAt[2], 20).c_str());
+	if (flags.povCameraAspect)
+	{
+		povAspect = getAspectString(width, height, _UC("/"));
+	}
+	else
+	{
+		povAspect = _UC("4/3");
+	}
 	sucprintf(cameraString, COUNT_OF(cameraString),
 		_UC("camera\n")
 		_UC("{\n")
-		_UC("\t#declare ASPECT = 4/3;\n")
+		_UC("\t#declare ASPECT = %s;\n")
 		_UC("\tlocation < %s >\n")
 		_UC("\tsky < %s >\n")
 		_UC("\tright ASPECT * < -1,0,0 >\n")
 		_UC("\tlook_at < %s >\n")
 		_UC("\tangle %g\n")
 		_UC("}\n"),
-		locationString, upString, lookAtString, getHFov());
+		povAspect.c_str(), locationString, upString, lookAtString, getHFov());
 	userMessage = copyString(message);
 	povCamera = ucstringtombs(cameraString);
 }
@@ -4494,40 +4576,48 @@ std::string LDrawModelViewer::getCurFilename(void) const
 void LDrawModelViewer::addStandardSize(int width, int height)
 {
 	StandardSize size;
-	UCCHAR buf[1024];
+	ucstring buf = ltoucstr(width);
+	ucstring aspectString = getAspectString(width, height, _UC(":"), true);
 
 	size.width = width;
 	size.height = height;
 	standardSizes.push_back(size);
-	sucprintf(buf, COUNT_OF(buf), _UC("%d x %d"), width, height);
-	if (width * 100 / 235 == height)
+	buf += _UC(" x ");
+	buf += ltoucstr(height);
+	if (aspectString.length() > 0)
 	{
-		ucstrcat(buf, _UC(" (2.35:1)"));
+		buf += _UC(" (");
+		buf += aspectString.c_str();
+		buf += _UC(")");
 	}
-	else if (width * 9 / 16 == height)
-	{
-		ucstrcat(buf, _UC(" (16:9)"));
-	}
-	else if (width * 3 / 5 == height)
-	{
-		ucstrcat(buf, _UC(" (5:3)"));
-	}
-	else if (width * 10 / 16 == height)
-	{
-		ucstrcat(buf, _UC(" (16:10)"));
-	}
-	else if (width * 2 / 3 == height)
-	{
-		ucstrcat(buf, _UC(" (3:2)"));
-	}
-	else if (width * 3 / 4 == height)
-	{
-		ucstrcat(buf, _UC(" (4:3)"));
-	}
-	else if (width * 4 / 5 == height)
-	{
-		ucstrcat(buf, _UC(" (5:4)"));
-	}
+	//if (width * 100 / 235 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (2.35:1)"));
+	//}
+	//else if (width * 9 / 16 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (16:9)"));
+	//}
+	//else if (width * 3 / 5 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (5:3)"));
+	//}
+	//else if (width * 10 / 16 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (16:10)"));
+	//}
+	//else if (width * 2 / 3 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (3:2)"));
+	//}
+	//else if (width * 3 / 4 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (4:3)"));
+	//}
+	//else if (width * 4 / 5 == height)
+	//{
+	//	ucstrcat(buf, _UC(" (5:4)"));
+	//}
 	standardSizes.back().name = buf;
 }
 
