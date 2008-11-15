@@ -1355,6 +1355,7 @@ BEGIN
         MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
+        MENUITEM SEPARATOR
     END
     POPUP "&Tools"
     BEGIN
@@ -1365,7 +1366,10 @@ BEGIN
         MENUITEM "MPD Model Selection...\tCtrl+M", ID_TOOLS_MPD
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
+        MENUITEM SEPARATOR
         MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
+        MENUITEM "Use current aspect ratio for POV-Ray camera", 
+                                                ID_TOOLS_POV_CAMERA_ASPECT
     END
     POPUP "&Help"
     BEGIN

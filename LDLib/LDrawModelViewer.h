@@ -432,6 +432,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setFontData(TCByte *fontData, long length);
 		virtual void setModelCenter(const TCFloat *value);
 		virtual void setModelSize(const TCFloat value);
+		virtual void setPovCameraAspect(bool value, bool saveSetting);
 		virtual void setDefaultRotationMatrix(const TCFloat *value);
 		virtual void setDefaultLatLong(TCFloat latitude, TCFloat longitude);
 		const TCFloat *getDefaultRotationMatrix(void)
@@ -566,6 +567,8 @@ class LDrawModelViewer: public TCAlertSender
 			bool primitive);
 		static void initStandardSizes(void);
 		static void addStandardSize(int width, int height);
+		static ucstring getAspectString(int width, int height, UCSTR separator,
+			bool standardOnly = false);
 
 		//int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
 		//	const TCFloat b[L3ORDERM]);
@@ -736,6 +739,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool boundingBoxesOnly:1;
 			bool obi:1;
 			bool gl2ps:1;
+			bool povCameraAspect:1;
 		} flags;
 		struct CameraData
 		{

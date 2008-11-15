@@ -428,6 +428,7 @@
 #define ID_TOOLS_MPD                    40100
 #define ID_FILE_EXPORT                  40101
 #define ID_VIEW_STANDARDSIZES_DUMMYITEM 40103
+#define ID_TOOLS_POV_CAMERA_ASPECT      40104
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -440,7 +441,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        190
-#define _APS_NEXT_COMMAND_VALUE         40104
+#define _APS_NEXT_COMMAND_VALUE         40105
 #define _APS_NEXT_CONTROL_VALUE         1281
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

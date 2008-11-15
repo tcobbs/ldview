@@ -859,6 +859,14 @@ void LDViewWindow::redrawStatusBar(void)
 		RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW);
 }
 
+void LDViewWindow::reflectPovCameraAspect(bool saveSetting)
+{
+	if (TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY, false, false))
+	{
+		switchPovCameraAspect(saveSetting);
+	}
+}
+
 void LDViewWindow::reflectViewMode(bool saveSetting)
 {
 	switch (TCUserDefaults::longForKey(VIEW_MODE_KEY, 0, false))
@@ -940,6 +948,7 @@ BOOL LDViewWindow::initWindow(void)
 		//hLightingToolbarMenu = GetSubMenu(hToolbarMenu, 3);
 		//hBFCToolbarMenu = GetSubMenu(hToolbarMenu, 4);
 		reflectViewMode(false);
+		reflectPovCameraAspect(false);
 		populateRecentFileMenuItems();
 		updateModelMenuItems();
 		if (!fullScreen && !screenSaver)
@@ -2544,6 +2553,19 @@ LRESULT LDViewWindow::showOpenGLDriverInfo(void)
 //	SetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
 //}
 
+LRESULT LDViewWindow::switchPovCameraAspect(bool saveSetting /*= true*/)
+{
+	bool checked = getMenuCheck(hToolsMenu, ID_TOOLS_POV_CAMERA_ASPECT);
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	setMenuCheck(hToolsMenu, ID_TOOLS_POV_CAMERA_ASPECT, !checked);
+	if (modelViewer != NULL)
+	{
+		modelViewer->setPovCameraAspect(!checked, saveSetting);
+	}
+	return 0;
+}
+
 LRESULT LDViewWindow::switchToExamineMode(bool saveSetting)
 {
 	setMenuRadioCheck(hViewMenu, ID_VIEW_EXAMINE, true);
@@ -3469,6 +3491,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_TOOLS_POV_CAMERA:
 			showPovCamera();
 			return 0;
+		case ID_TOOLS_POV_CAMERA_ASPECT:
+			return switchPovCameraAspect();
 		case ID_TOOLS_PARTSLIST:
 			return generatePartsList();
 		case ID_TOOLS_MODELTREE:
