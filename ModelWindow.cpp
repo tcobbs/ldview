@@ -2111,6 +2111,15 @@ LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
 
+void ModelWindow::processModalMessage(MSG msg)
+{
+	if (msg.message == WM_KEYDOWN)
+	{
+		msg.hwnd = hParentWindow;
+	}
+	CUIWindow::processModalMessage(msg);
+}
+
 int ModelWindow::progressCallback(CUCSTR message, float progress,
 								  bool showErrors)
 {

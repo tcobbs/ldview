@@ -403,7 +403,34 @@ int LDLCommentLine::getOBIColorNumber(void) const
 	// 0 !OBI NEXT <color> [IF...]
 	if (m_words->getCount() > 2)
 	{
-		result = atoi((*m_words)[2]);
+		char *word = (*m_words)[2];
+
+		if (isdigit(word[0]))
+		{
+			result = atoi(word);
+		}
+		else
+		{
+			if (m_parentModel != NULL)
+			{
+				LDLMainModel *mainModel = m_parentModel->getMainModel();
+
+				if (mainModel != NULL)
+				{
+					LDLPalette *palette = mainModel->getPalette();
+
+					if (palette != NULL)
+					{
+						int colorNumber = palette->getColorNumberForName(word);
+
+						if (colorNumber != -1)
+						{
+							result = colorNumber;
+						}
+					}
+				}
+			}
+		}
 	}
 	return result;
 }

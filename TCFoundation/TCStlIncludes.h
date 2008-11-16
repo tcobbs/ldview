@@ -27,6 +27,18 @@
 
 #ifdef WIN32
 
+#if _MSC_VER < 1400	// VC < VC 2005
+#define strcasecmp stricmp
+#define strncasecmp strnicmp
+#define wcscasecmp wcsicmp
+#define wcsncasecmp wcsnicmp
+#else //  VC < VC 2005
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#define wcscasecmp _wcsicmp
+#define wcsncasecmp _wcsnicmp
+#endif // VC < VC 2005
+
 #if defined(_MSC_VER) && _MSC_VER <= 1200
 
 #ifdef _NO_BOOST
@@ -63,5 +75,13 @@ namespace std {
 // NOTE: on system without wstring, the std namespace isn't used.
 typedef basic_string<wchar_t> wstring;
 #endif
+
+struct less_no_case
+{
+	bool operator()(const std::string& _Left, const std::string& _Right) const
+	{
+		return strcasecmp(_Left.c_str(), _Right.c_str()) < 0;
+	}
+};
 
 #endif //__TCSTLINCLUDES_H__

@@ -308,6 +308,7 @@ protected:
 	virtual bool frontBufferFPS(void);
 	//virtual bool canSaveAlpha(void);
 	virtual void makeCurrent(void);
+	virtual void processModalMessage(MSG msg);
 #ifndef TC_NO_UNICODE
 	virtual void setStatusText(HWND hStatus, int part, const char *text);
 #endif // TC_NO_UNICODE

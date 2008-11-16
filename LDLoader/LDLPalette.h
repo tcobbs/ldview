@@ -3,6 +3,9 @@
 
 #include <TCFoundation/TCObject.h>
 #include <TCFoundation/TCTypedObjectArray.h>
+#include <TCFoundation/TCStlIncludes.h>
+
+typedef std::map<std::string, int, less_no_case> StringIntMap;
 
 typedef struct
 {
@@ -40,6 +43,7 @@ public:
 	LDLColorInfo &getColorInfo(int index) { return m_colors[index]; }
 	virtual int getColorNumberForRGB(TCByte r, TCByte g, TCByte b,
 		bool transparent);
+	int getColorNumberForName(const char *name) const;
 
 	static void getDefaultRGBA(int colorNumber, int &r, int &g, int &b, int &a);
 	static LDLPalette *getDefaultPalette(void);
@@ -83,6 +87,7 @@ protected:
 
 	LDLColorInfo m_colors[512];
 	TCTypedObjectArray<CustomColor> *m_customColors;
+	StringIntMap m_namesMap;
 
 	static LDLPalette *sm_defaultPalette;
 	static class LDLPaletteCleanup

@@ -574,7 +574,14 @@ bool LDModelParser::substituteStud(int numSegments)
 	if (m_flags.obi &&
 		!m_topLDLModel->colorNumberIsTransparent(m_currentColorNumber))
 	{
-		blackColor = m_topLDLModel->getPackedRGBA(0);
+		LDLPalette *palette = m_topLDLModel->getMainModel()->getPalette();
+		int colorNumber = 0;
+
+		if (palette)
+		{
+			colorNumber = palette->getColorNumberForName("OBI_BLACK");
+		}
+		blackColor = m_topLDLModel->getPackedRGBA(colorNumber);
 	}
 	m_currentTREModel->addCylinder(TCVector(0.0f, -4.0f, 0.0f), 6.0f, 4.0f,
 		numSegments, numSegments, getBFCFlag(), blackColor, blackColor);
