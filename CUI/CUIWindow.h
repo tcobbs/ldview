@@ -264,6 +264,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void setupDialogSlider(HWND hDlg, int controlId, short min,
 			short max, WORD frequency, int value);
 		virtual bool copyToClipboard(const char *value);
+		virtual void processModalMessage(MSG msg);
 #ifndef TC_NO_UNICODE
 		virtual bool copyToClipboard(const wchar_t *value);
 #endif // TC_NO_UNICODE

@@ -1764,6 +1764,12 @@ bool CUIWindow::flushDialogModal(HWND hDlg)
 	return flushModal(hDlg, true);
 }
 
+void CUIWindow::processModalMessage(MSG msg)
+{
+	TranslateMessage(&msg);
+	DispatchMessage(&msg);
+}
+
 bool CUIWindow::flushModal(HWND hWnd, bool isDialog, int maxFlush)
 {
 	int i = maxFlush;
@@ -1800,8 +1806,7 @@ bool CUIWindow::flushModal(HWND hWnd, bool isDialog, int maxFlush)
 				if (firstMessage || lastMsg.hwnd != msg.hwnd ||
 					lastMsg.message != msg.message)
 				{
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
+					processModalMessage(msg);
 				}
 				else
 				{

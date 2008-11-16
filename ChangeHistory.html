@@ -3,47 +3,80 @@
 <HEAD>
 <META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
 <TITLE>LDView change history</TITLE>
-</HEAD>
-<BODY BGCOLOR="#000000" TEXT="#FFFF00" VLINK="#909090" LINK="#D0D0D0"
-ALINK="#FFFF80">
-<H3>Change history</H3>
+<STYLE TYPE="text/css"><!--
+BODY
+{
+	margin: 20px;
+	font-family: helvetica, arial, sans-serif
+}
+TABLE
+{
+	border-collapse: collapse;
+	border: 2px solid #000000;
+	margin-bottom: 8px;
+	width: 100%;
+}
+TABLE TH
+{
+	background-color: #0080D0;
+	font-size: 130%;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-align: left;
+	padding-left: 10px;
+}
+TABLE TD
+{
+	padding: 4px;
+	vertical-align: top;
+}
+--></STYLE></HEAD>
+<BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
+ALINK="#0080D0">
+<H2>Change history</H2>
 <P></P>
 
 
 <TABLE BORDER="1">
 
 <TR>
-<TH BGCOLOR="#FFFF00">
-<FONT COLOR="#000000" SIZE="+1">Version</FONT>
+<TH>
+Version
 </TH>
-<TH BGCOLOR="#FFFF00" COLSPAN="2">
-<FONT COLOR="#000000" SIZE="+1">Changes</FONT>
+<TH COLSPAN="2">
+Changes
 </TH>
 </TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>3.3</B></FONT><BR>
+<TR><TD ALIGN="RIGHT" NOWRAP="1">
+<FONT SIZE="+2"><B>4.0</B></FONT><BR>
 (?? ???, ????)
 </TD>
-<TD VALIGN="TOP" COLSPAN="2">
+<TD COLSPAN="2">
 <B>&nbsp;&nbsp;Additions</B><BR>
 <UL>
 <LI>New Cocoa-based LDView for the Mac.</LI>
 <LI>Added basic support for steps.</LI>
+<LI>Added export feature to convert LDraw files into other file formats.
+Currently POV-Ray and Stereo Lithography file formats are supported.</LI>
 <LI>Added Model Tree dialog (drawer in Cocoa version) to show a tree with all
 the data from the model.</LI>
+<LI>Added MPD model selection to show sub-models inside MPD models.</LI>
 <LI>Added new latitude/longitude rotation mode.</LI>
 <LI>Added dialog to set the latitude/longitude.  (This does not require you to
-be in the new latitude/longitude rotation mode.</LI>
+be in the new latitude/longitude rotation mode.)</LI>
 <LI>Added support for multiple processors, and multi-core processors.
 Transparency sorting and conditional line calculations now happen in background
 threads when LDView is run on a computer with more than one processor core.</LI>
 <LI>Added option to show the coordinate axes for the model, originating at the
 model's origin.</LI>
-<LI>Added support for JPEG snapshots (with default JPEG settings that result in
-fairly good quality).</LI>
+<LI>Added support for JPEG snapshots.  The default JPEG settings are set using
+rarely-used JPEG compression options that result in much better quality for
+computer-generated imagery than is typically achieved with image tools.
+(Specifically, LDView uses the 4:4:4 JPEG color sub-sampling by default.)</LI>
 <LI>Added Bounding Box dialog that shows the minimum and maximum coordinates of
 the bounding box for the model, and draws that bounding box.</LI>
+<LI>Added view mode that only shows part bounding boxes.</LI>
 <LI>Added support for rotation in examine mode with the arrow keys on the
 keyboard.</LI>
 <LI>Added steps to m6459.ldr sample model.</LI>
@@ -51,26 +84,34 @@ keyboard.</LI>
 saved at once from the command line.</LI>
 <LI>Added "Transparent background" and "Auto-crop" to the snapshot saving UI.
 (Previously, these options were only available via manual registry entries or
-command line parameters.</LI>
+command line parameters.)</LI>
+<LI>Added ability to set the 3D portion of the LDView window to various sizes
+with standard aspect ratios.</LI>
+<LI>Added ability to use the current LDView aspect ratio in the POV-Ray camera
+info command.</LI>
+<LI>Added ability to control the default directory where snapshots and part
+lists get saved.  Choices are in the model directory, the most recently used
+directory for the given file type, or a specified directory.</LI>
 </UL>
 <BR>
 <B>Updates</B><BR>
 <UL>
-<LI>Decreased the amount of time need to make certain preference changes (for
+<LI>Decreased the amount of time needed to make certain preference changes (for
 example, toggling edge lines).</LI>
 <LI>Greatly improved the output quality of "Transparent background" snapshots
 when antialiased lines are enabled.</LI>
 <LI>Changed snapshot rendering in Windows to do software rendering directly to
-an in-memory bitmap when the Pixel Buffer OpenGL extension is unavailable.
-Previously, it rendered into the window, which caused a window to appear for
-command line snapshot renders.</LI>
+an in-memory bitmap when the Pixel Buffer OpenGL extension is unavailable or
+disabled.  Previously, it rendered into the window, which caused a window to
+appear for command line snapshot renders.</LI>
 <LI>Changed the default setting for conditional lines from off to on.  Note that
 since edge lines default to off, this won't be seen until the first time edge
 lines are enabled.</LI>
 <LI>Changed the default setting for seams to on.</LI>
 <LI>Rotated 8464.mpd sample model 180 degrees so that it faces forward in the
 default viewing angle.</LI>
-<LI>Updated the toolbar to have smaller buttons in XP (and maybe Vista).</LI>
+<LI>Updated the toolbar to have smaller buttons in Windows XP and Windows
+Vista.</LI>
 </UL>
 <B>Bug Fixes</B>
 <UL>
@@ -96,11 +137,11 @@ was spinning.</LI>
 </UL>
 </TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>3.2</B></FONT><BR>
 (20 Aug, 2007)
 </TD>
-<TD VALIGN="TOP" COLSPAN="2">
+<TD COLSPAN="2">
 <B>&nbsp;&nbsp;Additions</B><BR>
 <UL>
 <LI>Added ability to generate an HTML parts list of your model.</LI>
@@ -168,11 +209,11 @@ ancestor model.</LI>
 </UL>
 </TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>3.1</B></FONT><BR>
 (09 Oct, 2006)
 </TD>
-<TD VALIGN="TOP" COLSPAN="2">
+<TD COLSPAN="2">
 <B>&nbsp;&nbsp;Additions</B><BR>
 <UL>
 <LI>Added automatic download of the LDraw parts library.</LI>
@@ -214,11 +255,11 @@ recent files list, and the file no longer exists.</LI>
 </UL>
 </TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>3.0</B></FONT><BR>
 (13 Dec, 2005)
 </TD>
-<TD VALIGN="TOP" COLSPAN="2">
+<TD COLSPAN="2">
 <B>&nbsp;&nbsp;Additions</B><BR>
 <UL>
 <LI>Completely new rendering engine, written from scratch.  This allows for
@@ -313,14 +354,14 @@ preference set was selected in the screensaver.</LI>
 started up maximized.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>2.1.01</B></FONT><BR>
 (10 Jul, 2004)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Re-introduced co-linear point detection in quads.  I discovered that my
 previous belief that there was a legitimate use for them was flawed.</LI>
 <LI>Added ability to the screen saver to have it randomly choose a preference
@@ -331,20 +372,20 @@ individual models display with particular settings if you want.</LI>
 tiling to construct images bigger than would otherwise be supported.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated line drawing when antialiased lines are enabled to get rid of
 artifacts around some edge lines of transparent colors.  This has the
 (somewhat undesirable) side-effect of making edge lines around transparent
 shapes less distinct.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed Zoom to Fit to work properly after panning the view.</LI>
 <LI>Fixed hidden line removal when sorting of transparent shapes isn't
 enabled.</LI>
@@ -354,14 +395,14 @@ default color was chosen without a model loaded.</LI>
 <LI>Fixed zoom to fit so that it works when stereo viewing is enabled.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>2.1</B></FONT><BR>
 (03 Jan, 2004)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added Zoom to Fit command, as well as Zoom to Fit option during snapshot
 saving.  This uses the auto camera positioning algorithm from L3P (which was
 graciously provided to me by Lars Hassing).</LI>
@@ -388,10 +429,10 @@ screen saver.</LI>
 from that directory picked each time the screen saver runs.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated fly controls to deal with FOV changes.  They won't work quite as
 well at extreme FOV settings, but they should still be usable.</LI>
 <LI>Removed Default from Viewing Angles menu.  It was redundant, since it did
@@ -400,10 +441,10 @@ useful.</LI>
 <LI>Improved transparent shape sorting performance.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed precision in error window to prevent excessive rounding of the
 displayed values (note that the actual values were never rounded).</LI>
 <LI>Added missing documentation for HiResPrimitives registry/command line
@@ -439,34 +480,34 @@ installed directory.</LI>
 Saver settings tab, the Apply button is enabled.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="1" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="1" ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>2.0.3</B></FONT><BR>
 (07 Oct, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed Open File dialog on pre-Windows 2000 machines.  (This was broken by
 my Windows XP changes in 2.0.2.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>2.0.2</B></FONT><BR>
 (03 Oct, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for Windows XP visual styles.  LDView now uses the currently
 selected visual style when running in Windows XP.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated status bar progress bar to look OK in both Windows XP style and
 classic style.</LI>
 <LI>Changed OpenGL initialization failure message to be more user-friendly, and
@@ -478,10 +519,10 @@ library.</LI>
 colors.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed <I>Show all</I> and <I>Show control points</I> under <I>Conditional
 lines</I> in the <I>Edge Lines</I> box of the <I>Geometry</I> preferences tab
 to have proper default values and reset properly.</LI>
@@ -491,30 +532,30 @@ the PBuffer extension require the window to be opened in order to render the
 image.)  This worked in the past, and was broken by another bug fix.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>2.0.1</B></FONT><BR>
 (23 Aug, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for arbitrary FSAA modes.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated direction of mirroring of stud logos based on empirical evidence
 that the original direction was less often appealing.</LI>
 <LI>Changed general preferences tab to handle arbitrary FSAA modes.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed problem that caused certain keyboard shortcuts (including F5-reload)
 to crash LDView on some systems.</LI>
 <LI>Fixed bug in part detection that resulted in not recognizing certain files
@@ -530,28 +571,28 @@ properly.  I added code to work around this.</LI>
 <LI>Fixed con0 primitive substitution to stop producing a dark result.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>2.0</B></FONT><BR>
 (01 Jun, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed edge line thickness to be correct in wireframe mode.  Before, edge
 lines were drawn using the thickness setting for wireframe lines when drawing
 in wireframe mode.</LI>
 <LI>Fixed smoothing and seam width to work properly on mirrored parts.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.11<BR>
 (06 Apr, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added ability to have LDView draw just edge lines, with hidden line removal
 by default, or no hidden line removal when in wireframe mode.</LI>
 <LI>Added ShowAllType5 and ShowType5ControlPoints settings to the Preferences
@@ -562,10 +603,10 @@ an effect when primitive substitution is disabled, since all of the current
 hi-res primitives are supported by primitive substitution.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated "new" torus primitive substitution to treat size fractions of nnnn
 to be n / 9, instead of nnnn / 10000.  This means that 3333 correctly gets
 interpreted as 1/3.</LI>
@@ -577,10 +618,10 @@ extension, it's a temporary file, and shouldn't go in the recent files
 list.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed Antialiased Lines settings to also antialias conditional edge
 lines.</LI>
 <LI>Fixed bug in MPD-handling code that caused incorrect rendering of MPD files
@@ -599,24 +640,24 @@ smoothed that shouldn't have been.  This can actually make some parts look
 worse, but every one I can find that got worse isn't modeled correctly.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.10<BR>
 (16 Mar, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added ability to assign hot keys to preference sets.</LI>
 <LI>Added six preset viewing angles (front, back, left, right, top, and
 bottom) in addition to the pre-existing default viewing angle.</LI>
 <LI>Added optional installation of screen saver to install program.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated screen saver to not allow task switching in 95/98/Me when waiting
 for a password.  I can't really test this, as I no longer have a 95/98/Me
 machine.  If it doesn't work properly, it could potentially require a hard
@@ -625,10 +666,10 @@ reset.</LI>
 produce acceptable results across a wider range of hardware.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed primitive substitution to correctly support the new con0 cone
 primitives.  They aren't the same shape as the other cone primitives that all
 have a hole in the middle, and ended up rendering incorrectly.</LI>
@@ -647,33 +688,33 @@ it was run, and when switching to and from fullscreen mode.</LI>
 that don't have a low-res version when LDView is set to use low-res studs.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.9<BR>
 (12 Jan, 2003)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added primitive substitution support for n-16 versions of some
 primitives.  Due to their current absence from the released parts library,
 this has perforce received limited testing.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated many of the settings to be global.  The preference set feature
 added in 1.9.8 now mostly only effects the settings in the Preferences
 panel.</LI>
 <LI>Changed from ZIP-based distribution to executable installer.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed the help documentation to contain recently added but undocumented
 registry/command line options.</LI>
 <LI>Fixed bug which caused a crash when loading a model that doesn't reference
@@ -681,14 +722,14 @@ any other models (such as a primitive).</LI>
 <LI>Fixed smoothing of curves.  (It was broken completely in 1.9.8.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.8<BR>
 (29 Nov, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for multiple named sets of preferences.</LI>
 <LI>Added examine/fly-through mode indicator icon to taskbar.</LI>
 <LI>Added support for gray rubber (color 375).  I made it <B>significantly</B>
@@ -696,19 +737,19 @@ less shiny when specular lighting is enabled.  (There is no visual difference
 when specular lighting is disabled.)</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Enhanced the performance of the Windows version slightly by disabling
 compiler support for structured exception handling (which I don't use).</LI>
 <LI>Decreased memory usage in certain situations.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed finding the help files when run from the command line.  As far as I
 know, this always worked in Windows 98, but sometimes failed in other
 Windows OSes.</LI>
@@ -721,14 +762,14 @@ and not work.</LI>
 <LI>Fixed black rubber support broken in version 1.9.7.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.7<BR>
 (09 Sep, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Created a version using QT.  This was developed in Linux, but should work in
 any Unix-like operating system with OpenGL and QT support and a 32-bit compiler.
 (I can almost guarantee it won't work if compiled with a 64-bit compiler.)
@@ -748,10 +789,10 @@ automatically prompts you if it goes away.</LI>
 window.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Increased the maximum curve quality to 12, twice the previous maximum of
 6.</LI>
 <LI>Got rid of progress panel, and instead show progress in the new status bar.
@@ -770,10 +811,10 @@ listing the number of extensions and WGL extensions.</LI>
 those two files from the distribution.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed bug in MPD parsing that caused LDView to crash when one of the MPD
 pieces was marked as a part, and that piece was scaled non-uniformly.</LI>
 <LI>Fixed bug that caused unix-format MPD files not to parse properly.</LI>
@@ -795,14 +836,14 @@ big).</LI>
 <LI>Fixed a (minor, one-time) memory leak in the OpenGL Driver Info panel.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.6<BR>
 (04 Aug, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for antialiased lines.</LI>
 <LI>Added support for file type meta-command to force recognition of a file as a
 part, even if it isn't in the parts directory.  This mainly effects seams and
@@ -811,10 +852,10 @@ smooth curves.</LI>
 error window to the Windows clipboard.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated OpenGL Driver info to all be consolidated into one panel (in a format
 that can be copied to the clipboard).</LI>
 <LI>Updated Font texture to a better looking font.  (Well, I think it looks
@@ -822,10 +863,10 @@ better, but since I constructed it myself about 10 years ago, I guess I'm
 biased.)</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed color bug that caused some submodels to be drawn in the default color,
 instead of their correct color.</LI>
 <LI>Fixed problem with texture-based font rendering.</LI>
@@ -846,14 +887,14 @@ LDView into a state where you could still rotate the model, but not access any
 of the menus, or even exit.
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
 1.9.5<BR>
 (26 May, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for smooth shaded curves, using the presense of Type 5 lines
 as an indicator of a curved surface.  Thanks to Martijn Zwaal for the basis
 of the algorithm used to implement this feature.</LI>
@@ -862,40 +903,40 @@ to produce a transparent background.  Currently only accessible via the command
 line or registry with the SaveAlpha setting.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug Fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed bug introduced in 1.9.4 which prevented you from viewing any models
 when LDView was started with a maximized window.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.4<BR>
 (10 May, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for Type 5 lines (conditional edge lines).  Implemented
 primarily by Don Heyse using experience/code from LdGLite.</LI>
 <LI>Added conditional lines to substituted primitives.</LI>
 <LI>Added ability to set preferences on the command line.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Sped up drawing of non-compiled elements (sorted transparent shapes and the
 new Type 5 lines).</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed possible bug where some sorted transparent shapes might have drawn in
 the wrong color.</LI>
 <LI>Fixed font corruption after some snapshot saves.</LI>
@@ -903,14 +944,14 @@ the wrong color.</LI>
 menu.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.3<BR>
 (13 Apr, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added ability to select the default color.  I expect this is most useful for
 part authors, but at least some models use color 16.</LI>
 <LI>Added ability to reset each of the preferences pages back to their default
@@ -919,10 +960,10 @@ values.</LI>
 quads.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated error window to be displayed after an automatic reload.  Note that
 certain preference changes can change the errors that are generated, since some
 of the error checking is the result of certain preference settings.</LI>
@@ -930,10 +971,10 @@ of the error checking is the result of certain preference settings.</LI>
 makes the new default color feature easier to use.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed edge line color for default-colored parts.  Before, the default color
 was always 7 (light gray), but 7 was also being used for the edge lines.  Color
 8 is now used by default.  If the default color is changed, an appropriate
@@ -949,14 +990,14 @@ vsync is enabled).</LI>
 hide.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.2<BR>
 (19 Feb, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added ability to texture map a logo onto studs.</LI>
 <LI>Added ability to have the cutaway portion display as wireframe.</LI>
 <LI>Added experimental screen saver support.</LI>
@@ -966,10 +1007,10 @@ hide.</LI>
 when specular is disabled.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated preferences to make room for extra primitive substitution settings
 by adding a new tab and moving primitive-based preferences to the new tab.</LI>
 <LI>Updated all lines to be opaque to make edge lines show up on transparent
@@ -980,10 +1021,10 @@ and put ellipses into paths that are too long to fit.</LI>
 from www.opengl.org.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed line widths to apply when the program is started, instead of only
 after they are changed.</LI>
 <LI>Fixed "Always black" preference on Geometry tab to be in the correct spot
@@ -998,14 +1039,14 @@ so that you can see the entire model without having to first move your
 mouse.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9.1<BR>
 (27 Jan, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added support for panning the camera.</LI>
 <LI>Added setting to always use black for edge lines.  This is most useful for
 part authors to be able to see the edge lines better.</LI>
@@ -1020,10 +1061,10 @@ for high-resolution files.  Hitting cancel cancels the save and deletes the
 incomplete PNG file.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Renamed m6459.dat to m6459.ldr like it was supposed to be named in
 v1.9.</LI>
 <LI>Updated default zoom level to slightly higher.  In all but the most extreme
@@ -1034,10 +1075,10 @@ zoom level.</LI>
 fashion.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed error window to update when the model is reloaded (either manually
 or automatically via polling).</LI>
 <LI>Fixed background color chooser dialog to be a child of the preferences
@@ -1060,14 +1101,14 @@ from "Printing..." to "Printing Model.".</LI>
 <LI>Fixed serious memory leaks introduced in version 1.9.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 1.9<BR>
 (10 Jan, 2002)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>&nbsp;&nbsp;Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added this HTML file to distribution as a replacement for History.txt.</LI>
 <LI>Added support for full-scene antialiasing (FSAA).</LI>
 <LI>Added printing support.</LI>
@@ -1096,10 +1137,10 @@ Carsten Schmitz.)  Currently requires Registry editing.</LI>
 <LI>Added releases prior to 0.5.1 to this document</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated preferences to be in a tabbed format.</LI>
 <LI>Updated check which prevents seam creation to have more loose check to
 better allow for round-off.</LI>
@@ -1121,10 +1162,10 @@ than its height.  This is particularly useful when Stereo is enabled, as the
 two views are often taller than they are wide.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed panels so that escape triggers the cancel button.</LI>
 <LI>Fixed typo (missing space) in message when selecting the LDRAW
 directory.</LI>
@@ -1132,32 +1173,32 @@ directory.</LI>
 color. (Found and fixed by Carsten Schmitz.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 <FONT SIZE="+2"><B>1.0</B></FONT><BR>
 (17 Oct, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added check box to enable/disable seams, so you don't have to drop them all
 the way down to 0.00 to disable them.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Changed "High quality studs" option to "Low quality studs (faster)", and
 inverted the logic behind the check-box accordingly.</LI>
 <LI>Made capitilization of preferences options consistent.</LI>
 <LI>Made minor modifications to Help.html.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed command line parsing to work when the filename has quotes around
 it.</LI>
 <LI>Fixed command line parsing to not blow up when the file and/or directory
@@ -1176,14 +1217,14 @@ the command line.</LI>
 opened.  (This has extremely marginal value, but is more cosistent.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 0.9.1<BR>
 (06 Oct, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added File->Reload menu item (F5) to reload the current model.</LI>
 <LI>Added Polling menu with options to automatically reload the current model
 when the file is changed by some other program.</LI>
@@ -1195,10 +1236,10 @@ browser.</LI>
 <LI>Added documentation for all the menu items.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Moved the Help menu back over with the other menu items to be consistent
 with other Windows apps.</LI>
 <LI>Changed it so that it displays a directory tree if it cannot determine your
@@ -1208,10 +1249,10 @@ addition to the conversion to HTML and enhancements in formatting, I also
 improved the content somewhat.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed the frame rate calculation to be more accurate.</LI>
 <LI>Fixed zoom speed to be consistent across models of different sizes.</LI>
 <LI>Fixed startup code to correctly maximize the window if it was maximized when
@@ -1223,14 +1264,14 @@ mode gracefully after presenting the error panel (instead of waiting for you to
 switch back manually, then crashing without restoring the video mode).</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 0.9<BR>
 (25 Sep, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added sphere primitive substitution.  This was--<B>by far</B>--the hardest
 primitive substitution.  Unlike the other primitive substitutions, the sphere
 primitive substitution results in a different set of polygons being drawn.  The
@@ -1242,18 +1283,18 @@ when specular lighting is disabled.)</LI>
 <LI>Added support for stipple transparency.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Changed it so only the OpenGL window has a private device context.  This is
 much more in keeping with standard Win32 programming guidelines.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed NT bug where the video mode list would have a bunch of repeats for
 each resolution (one for each refresh rate at that resolution, I think).</LI>
 <LI>Fixed bug where background color button would not show the currently
@@ -1266,14 +1307,14 @@ actually draw correctly as well.</LI>
 problem exhibit itself, but the code seemed wrong.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 0.7.5<BR>
 (08-Sep, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added primitive substitution option.  This produces higher quality output,
 as well as slightly enhanced performance.  I have created substitutions for the
 following primitives:
@@ -1291,20 +1332,20 @@ following primitives:
 triangles).</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Optimized model-loading to decrease load time somewhat (only really
 noticeable on really large models).</LI>
 <LI>Updated Open Panel to be owned by main window.  This was required to allow
 it to work in fullscreen mode.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed command line file opening to switch to the directory containing the
 model so that if it references other sub-models it will still work.</LI>
 <LI>Fixed drag and drop to change to the dropped file's directory so that models
@@ -1318,14 +1359,14 @@ so you can now change options and open a new file without having to switch back
 to windowed mode (assuming you remember Ctrl+O and Ctrl+Shift+P).</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 0.7<BR>
 (29 Aug, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added fullscreen support.</LI>
 <LI>Added mouse scroll-wheel support for zooming.</LI>
 <LI>Added ability to specify a file on the command line so you can use LDView as
@@ -1335,96 +1376,96 @@ with that file.</LI>
 opened.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Enhanced zooming to slow down when up close and speed up when far away.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed bug with color choice where if you canceled the preferences panel
 while choosing a color, it would crash.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
 0.6.4<BR>
 (16 Aug, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Performed significant code rearrangement and cleanup in the model code.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed MPD parsing bug which would cause a crash with some MPD files.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN=1 VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN=1 ALIGN="RIGHT" NOWRAP="1">
 0.6.3<BR>
 (13 Aug, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added OK/Cancel/Apply to Preferences, and made it so that preference changes
 don't go into effect until either OK or Apply is hit.  All options now go into
 effect immediately thereafter.  (You no longer have to reload the model after
 changing certain options.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
 0.6.2<BR>
 (29 Jun, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Updated bounding box code to use my own matrix multiply routine (instead of
 the OpenGL matrix multiply).  The rest of the code was already using my
 routine. These matrix multiplications are all pre-processing, not
 real-time.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed problems with device context and OpenGL context handling.  This will
 hopefully make it run again on non-nVidia hardware.  It definitely works again
 with the Microsoft software renderer.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN=1 VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN=1 ALIGN="RIGHT" NOWRAP="1">
 0.6.1<BR>
 (27 Jun, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed registry bug introduced in v0.6 which prevented settings from being
 saved in NT.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 0.6<BR>
 (25 Jun, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added ability to put seams between pieces (ala L3P).</LI>
 <LI>Added edge line support (with toggle).</LI>
 <LI>Added high-quality mode for lines (with toggle)--uses glPolygonOffset to
@@ -1451,10 +1492,10 @@ reloaded.  Put note at the bottom of the panel explaining.</LI>
 loading.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Renamed from L3DView to LDView (to avoid confusion with L3P/L3Lab).
 <UL>
 <LI>Updated Icon to reflect new name.</LI>
@@ -1481,74 +1522,74 @@ reorganized my registry settings.
 <LI>Changed initial viewpoint to be at a better angle.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed initial window title to be LDView (it used to say 'Model
 Viewer').</LI>
 <LI>Fixed Z-buffer noise fix.  (My original fix offset the polygons in the
 wrong direction.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
 0.5.2<BR>
 (21 Jun, 2000)<BR>
 (late PM)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Initial source release</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Updates</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Project/Source cleanup for source release.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed FPS to display in black when background color is light.
 <LI>Fixed a few DC-related issues (? not positive they were actually
 broken).</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
 0.5.1<BR>
 (21 Jun, 2000)<BR>
 (early AM)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added background color setting.</LI>
 <LI>Added option to turn off specular lighting (shininess).</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed Z-buffer noise with transparent pieces.</LI>
 <LI>Fixed color when drawing parts all by themselves.  Now draw the part using
 color 7.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
 0.5<BR>
 (18 Jun, 2000)
 </TD>
-<TD VALIGN="TOP" ALIGN="RIGHT">
+<TD ALIGN="RIGHT">
 <B>Additions</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Added Menu Bar:
 <UL>
 <LI>File
@@ -1582,10 +1623,10 @@ maximized).</LI>
 <LI>Set a minimum window size to 320x240 internal dimensions.</LI>
 </UL></TD></TR>
 
-<TR><TD VALIGN="TOP" ALIGN="RIGHT">
+<TR><TD ALIGN="RIGHT">
 <B>Bug fixes</B>
 </TD>
-<TD VALIGN="TOP"><UL>
+<TD><UL>
 <LI>Fixed RGB values of existing colors to match FAQ.</LI>
 <LI>Fixed lots of memory leaks (which did not really have any effect due to the
 fact that you could only view a single model).</LI>
@@ -1596,18 +1637,17 @@ why the main executable is actually smaller than the previous version.</LI>
 </UL></TD></TR>
 
 
-<TR><TD ROWSPAN=1 VALIGN="TOP" ALIGN="RIGHT" NOWRAP="1">
+<TR><TD ROWSPAN=1 ALIGN="RIGHT" NOWRAP="1">
 0.1<BR>
 (03 Jun, 2000)
 </TD>
-<TD VALIGN="TOP" COLSPAN="2">
+<TD COLSPAN="2">
 &nbsp;&nbsp;Initial release.
 </TD>
 
 </TABLE>
-<HR>
 <P>
-<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=120592&amp;type=3" width="125" height="37" border="0" alt="SourceForge.net Logo" align="right" /></a>
+<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=120592&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" align="right" /></a>
 </P>
 <A HREF="http://ldview.sourceforge.net/"><B>LDView</B> home</A>
 <P>

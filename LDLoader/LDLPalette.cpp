@@ -212,6 +212,7 @@ void LDLPalette::initStandardColors(void)
 		int ofs = i * standardColorSize;
 
 		strcpy(m_colors[i].name, standardColorNames[i]);
+		m_namesMap[m_colors[i].name] = i;
 		m_colors[i].color.r = (TCByte)standardColors[ofs];
 		m_colors[i].color.g = (TCByte)standardColors[ofs + 1];
 		m_colors[i].color.b = (TCByte)standardColors[ofs + 2];
@@ -713,6 +714,7 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 	{
 		strncpy(colorInfo->name, name, sizeof(colorInfo->name));
 		colorInfo->name[sizeof(colorInfo->name) - 1] = 0;
+		m_namesMap[name] = colorNumber;
 		if (rubber)
 		{
 			initSpecular(*colorInfo, 0.075f, 0.075f, 0.075f, -100.0f, 15.0f);
@@ -789,6 +791,22 @@ LDLColorInfo *LDLPalette::updateColor(int colorNumber, const LDLColor &color,
 	colorInfo->luminance = luminance;
 	initSpecularAndShininess(*colorInfo);
 	return colorInfo;
+}
+
+int LDLPalette::getColorNumberForName(const char *name) const
+{
+	std::string mangledName = name;
+	replaceStringCharacter(&mangledName[0], '_', ' ');
+	StringIntMap::const_iterator it = m_namesMap.find(mangledName);
+
+	if (it == m_namesMap.end())
+	{
+		return -1;
+	}
+	else
+	{
+		return it->second;
+	}
 }
 
 int LDLPalette::getColorNumberForRGB(TCByte r, TCByte g, TCByte b,

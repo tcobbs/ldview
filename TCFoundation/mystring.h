@@ -140,18 +140,6 @@ UCSTR utf8toucstring(const char *src, int length = -1);
 
 void runningWithConsole(bool bRealConsole = false);
 
-#if _MSC_VER < 1400	// VC < VC 2005
-#define strcasecmp stricmp
-#define strncasecmp strnicmp
-#define wcscasecmp wcsicmp
-#define wcsncasecmp wcsnicmp
-#else //  VC < VC 2005
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
-#define wcscasecmp _wcsicmp
-#define wcsncasecmp _wcsnicmp
-#endif // VC < VC 2005
-
 #else // WIN32
 
 char *prettyLongLongString(long long);

@@ -2205,6 +2205,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	HMENU hViewingAngleMenu = getParentOfMenuItem(hViewMenu, ID_VIEW_FRONT);
 
 	setMenuEnabled(hFileMenu, ID_FILE_SAVE, haveModel);
+	setMenuEnabled(hFileMenu, ID_FILE_OPEN, !loading);
 	setMenuEnabled(hFileMenu, ID_FILE_EXPORT, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_RELOAD, haveModel);
 	setMenuEnabled(hFileMenu, ID_FILE_PRINT, haveModel);
@@ -4773,7 +4774,8 @@ BOOL LDViewWindow::verifyLDrawDir(bool forceChoose)
 		delete lDrawDir;
 
 		stopAnimation();
-		if (MessageBox(NULL, TCLocalStrings::get("LDrawDirExistsPrompt"),
+		if (forceChoose ||
+			MessageBox(NULL, TCLocalStrings::get("LDrawDirExistsPrompt"),
 			"LDView", MB_YESNO | MB_ICONQUESTION) == IDYES)
 		{
 			while (!found)
@@ -4996,14 +4998,18 @@ void LDViewWindow::stopLoading(void)
 
 void LDViewWindow::setLoading(bool value)
 {
-	loading = value;
-	if (loading)
+	if (value != loading)
 	{
-		startLoading();
-	}
-	else
-	{
-		stopLoading();
+		loading = value;
+		if (loading)
+		{
+			startLoading();
+		}
+		else
+		{
+			stopLoading();
+		}
+		updateModelMenuItems();
 	}
 }
 
