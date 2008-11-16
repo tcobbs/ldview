@@ -1491,6 +1491,12 @@ enum
 	[[controller preferences] lightVectorChanged:alert];
 }
 
+- (IBAction)povCameraAspect:(id)sender
+{
+	LDrawModelViewer *modelViewer = [[self modelView] modelViewer];
+	modelViewer->setPovCameraAspect(!modelViewer->getPovCameraAspect(), true);
+}
+
 - (IBAction)latLongRotation:(id)sender
 {
 	examineLatLong = !examineLatLong;

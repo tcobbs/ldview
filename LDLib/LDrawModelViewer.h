@@ -432,6 +432,10 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setFontData(TCByte *fontData, long length);
 		virtual void setModelCenter(const TCFloat *value);
 		virtual void setModelSize(const TCFloat value);
+		bool getPovCameraAspect(void) const
+		{
+			return flags.povCameraAspect ? true : false;
+		}
 		virtual void setPovCameraAspect(bool value, bool saveSetting);
 		virtual void setDefaultRotationMatrix(const TCFloat *value);
 		virtual void setDefaultLatLong(TCFloat latitude, TCFloat longitude);
