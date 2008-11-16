@@ -182,7 +182,8 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.boundingBoxesOnly = false;
 	flags.obi = false;
 	flags.gl2ps = false;
-	flags.povCameraAspect = false;
+	flags.povCameraAspect = TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY,
+		false, false);
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.

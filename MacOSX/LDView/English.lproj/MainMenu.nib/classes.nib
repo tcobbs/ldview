@@ -17,6 +17,7 @@
                 mpd = id; 
                 openGLDriverInfo = id; 
                 partsList = id; 
+                povCameraAspect = id; 
                 reload = id; 
                 saveSnapshot = id; 
                 saveViewingAngle = id; 
@@ -61,6 +62,7 @@
                 pollingAutoNowMenuItem = NSMenuItem; 
                 pollingDisabledMenuItem = NSMenuItem; 
                 pollingPromptMenuItem = NSMenuItem; 
+                povCameraAspectMenuItem = NSMenuItem; 
                 prefsMenuItem = NSMenuItem; 
                 standardSizesMenu = NSMenu; 
                 statusBarMenuItem = NSMenuItem; 

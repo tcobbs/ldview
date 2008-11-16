@@ -23,6 +23,7 @@
 	IBOutlet NSMenuItem *pollingAutoNowMenuItem;
 	IBOutlet NSMenuItem *copyMenuItem;
 	IBOutlet NSMenuItem *prefsMenuItem;
+	IBOutlet NSMenuItem *povCameraAspectMenuItem;
 
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;

@@ -861,7 +861,10 @@ void LDViewWindow::redrawStatusBar(void)
 
 void LDViewWindow::reflectPovCameraAspect(bool saveSetting)
 {
-	if (TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY, false, false))
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer->getPovCameraAspect() !=
+		getMenuCheck(hToolsMenu, ID_TOOLS_POV_CAMERA_ASPECT))
 	{
 		switchPovCameraAspect(saveSetting);
 	}
