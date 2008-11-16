@@ -455,13 +455,13 @@
             <cstring>fileSaveSettingsAction</cstring>
         </property>
         <property name="text">
-            <string>Snapshot Settings</string>
+            <string>Snapshot Options</string>
         </property>
         <property name="menuText">
-            <string>&amp;Snapshot Settings...</string>
+            <string>&amp;Snapshot Options...</string>
         </property>
         <property name="toolTip">
-            <string>Snapshot Settings</string>
+            <string>Snapshot Options</string>
         </property>
     </action>
     <action>
@@ -469,7 +469,7 @@
             <cstring>fileExportAction</cstring>
         </property>
         <property name="text">
-            <string>Export...</string>
+            <string>Export</string>
         </property>
         <property name="menuText">
             <string>Export...</string>
@@ -480,10 +480,10 @@
             <cstring>fileExportOptionAction</cstring>
         </property>
         <property name="text">
-            <string>Export Option...</string>
+            <string>Export Options</string>
         </property>
         <property name="menuText">
-            <string>Export Option...</string>
+            <string>Export Options...</string>
         </property>
     </action>
     <action>
@@ -726,7 +726,7 @@
             <string>Extra Dirs...</string>
         </property>
         <property name="text">
-            <string>Extra Dirs...</string>
+            <string>Extra Dirs</string>
         </property>
     </action>
     <action>
