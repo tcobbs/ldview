@@ -249,6 +249,11 @@ void LDView::showPovCamera()
 	modelViewer->doShowPovCamera();
 }
 
+void LDView::showPovAspectRatio(bool flag)
+{
+	modelViewer->doShowPovAspectRatio(flag);
+}
+
 void LDView::toolsPartList()
 {
 	modelViewer->doPartList();

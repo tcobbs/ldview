@@ -1437,6 +1437,8 @@ void ModelViewerWidget::setMainWindow(LDView *value)
 		progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 	}
 	mainWindow->viewLatitudeRotationAction->setOn(Preferences::getLatLongMode());
+	mainWindow->showPovAspectRatioAction->setOn(
+			Preferences::getPovAspectRatio());
 	menuBar = mainWindow->menuBar();
 	item = menuBar->findItem(menuBar->idAt(0));
 	if (item)
@@ -3336,6 +3338,10 @@ void ModelViewerWidget::doShowPovCamera(void)
 		delete userMessage;
 		delete povCamera;
 	}
+}
+void ModelViewerWidget::doShowPovAspectRatio(bool flag)
+{
+	modelViewer->setPovCameraAspect(flag, true);
 }
 
 void ModelViewerWidget::doPartList(
