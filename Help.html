@@ -50,6 +50,10 @@ TABLE.SettingsList TH
 	border-right: 1px solid #00558A;
 	padding: 4px 8px;
 }
+TABLE TD
+{
+	padding: 2px;
+}
 TABLE.SettingsList TD
 {
 	border-bottom: 1px solid #BFBFA5;
@@ -108,8 +112,11 @@ ALINK="#0080D0">
 <LI><A HREF="#Toolbar">Toolbar</A></LI>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
+<LI><A HREF="#Export">Exporting</A></LI>
 <LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
 <LI><A HREF="#PartsListDialog">Parts List Dialog</A></LI>
+<LI><A HREF="#ModelTreeDialog">Model Tree Dialog</A></LI>
+<LI><A HREF="#MPDDialog">MPD Model Selection Dialog</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -472,6 +479,11 @@ where there is no visible menu.
 		information about the extra settings in the save dialog.</TD>
 	</TR>
 	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT">Export:</TD>
+		<TD COLSPAN=2>Export the loaded LDraw model to various different file
+		formats.  See <A HREF="#Export">here</A> for details.</TD>
+	</TR>
+	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Reload:</TD>
 		<TD COLSPAN=2>Reload the current model file.  (Use this if you are
 		viewing a model you are in the process of making changes to in some
@@ -671,6 +683,12 @@ where there is no visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
+		<TD ALIGN="RIGHT" NOWRAP>Specify latitude/longitude:</TD>
+		<TD>Allows you to enter a specific latitude and longitude, and changes
+		the viewing angle to the specified angle.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD></TD>
 		<TD ALIGN="RIGHT">Two-thirds:</TD>
 		<TD>Sets the view to a two-thirds view of the model.  This is the
 		default view until you change it to something else.</TD>
@@ -685,10 +703,39 @@ where there is no visible menu.
 		to the default view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT"><a name="StandardSizes">Standard Sizes</a>:</TD>
+		<TD COLSPAN=2>Submenu containing preset window sizes.  Select any item
+		in the list to change the main 3D view in LDView to that size.  Each
+		size also contains two numbers in parentheses after the dimensions.
+		These represent the aspect ratio.  So <b>(4:3)</b> represents a 4/3rds
+		aspect ratio (just like a standard definition TV set), and <b>(16:9)</b>
+		represents a 16 to 9 aspect ratio (just like a high definition TV
+		set).  These are particularly useful when you intend to either
+		<a href="#PovExport">export to POV</a> or use the
+		<a href="#PovCamera"><i>Show POV-Ray Camera Info</i></a> command.
+		<br><br>Note that only sizes that will fit on the screen are shown in the
+		list.  Also, sizes that are close to the maximum size may only show up
+		on the list if the toolbar and status bar are disabled, since these
+		change the overall height of the LDView window.  Additionally, if you
+		have multiple monitors, you might get a different list on each monitor,
+		if the monitors have different resolutions, or one monitor has the task
+		bar visible and the other doesn't.</p></TD>
+	</TR>
+	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Examine Mode:</TD>
 		<TD COLSPAN=2>Puts LDView in Examine Mode.  In examine mode, clicking
 		and dragging the left mouse button spins the model that is loaded.
 		This is the default mode.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Latitude/Longitude Rotation:</TD>
+		<TD COLSPAN=2>Toggle to enable or disable latitude/longitude rotation
+		mode.  In latitude/longitude rotation mode, moving the mouse side to
+		side changes the view's longitude, and moving the mouse up and down
+		changes the view's latitude.  Also, the current latitude and longitude
+		are shown in the bottom right of the status bar when in
+		latitude/longitude rotation mode.
+		<br><br>This is only available in Examine Mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP>Fly-through Mode:</TD>
@@ -724,6 +771,24 @@ where there is no visible menu.
 		Dialog</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Model Tree:</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#ModelTreeDialog">Model Tree
+		Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Model Bounding Box:</TD>
+		<TD COLSPAN=2>Displays a dialog box showing the minimum and maximum
+		corners of an axis-aligned bounding box around the model, and draws
+		that bounding box.  Close the dialog to turn off the bounding box
+		display.  Note that you can still interact with the model while this
+		dialog is visible.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>MPD Model Selection:</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#MPDDialog">MPD Model
+		Selection Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT" NOWRAP><A NAME="ShowViewInfo">Show View Info:</A></TD>
 		<TD COLSPAN=2>This shows a dialog that contains the model's current
 		rotation matrix and zoom level (camera distance).  Hitting OK copies
@@ -733,11 +798,24 @@ where there is no visible menu.
 		not try to use this in Fly-through Mode or after having panned.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
+		<TD ALIGN="RIGHT" NOWRAP><a name="PovCamera">Show POV-Ray Camera
+		Info:</a></TD>
 		<TD COLSPAN=2>This shows a dialog that contains information about the
 		current camera position as is needed in POV-Ray.  Hitting OK copies a
 		POV-Ray-compatible camera declaration into the clipboard.  This can be
 		directly pasted into a POV-Ray file to replace the existing camera.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP>Use current aspect ratio for POV-Ray
+		camera:</TD>
+		<TD COLSPAN=2>Toggle that controls whether the 3D view's current aspect
+		ratio is used in the POV-Ray camera that is copied to the clipboard when
+		using the <a href="#PovCamera"><i>Show POV-Ray Camera Info</i></a>
+		command.  If this is checked, the current aspect ratio will be used.
+		Otherwise, 4/3 is used.  Since POV images tend to be done at specific
+		aspect ratios, this is most useful immediately after selecting a
+		<a href="#StandardSizes">standard size</a> with the desired aspect
+		ratio.</TD>
 	</TR>
 	<TR>
 		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
@@ -894,6 +972,62 @@ can effect the cropping of the model.  When creating a snapshot the same size
 as the LDView window, you can position the model exactly like you want manually,
 and are free to use <I>Zoom to Fit</I> on the View menu prior to taking your
 snapshot to produce the same result.
+</P>
+<A NAME="Export"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Exporting
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Export command allows you to export your LDraw model to various different
+3D file formats.  Currently, the following formats are supported:
+<p>
+<table class="SettingsList">
+	<tr>
+		<th>Extension</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><a href="#PovExport">.pov</a></td>
+		<td>POV-Ray scene file</td>
+	</tr>
+	<tr>
+		<td><a href="#StlExport">.stl</a></td>
+		<td>Stereo Lithography file</td>
+	</tr>
+</table>
+</p>
+<p>
+When you select <i>Export</i> from the <i>File</i> menu, you are presented with
+a Save dialog box.  This includes a type selection, where you select the desired
+format for the export.  In Windows and on the Mac, there is an <i>Options</i>
+button next to the type selection. Some file types have export options, and some
+don't.  For those that do, the <i>Options</i> button is enabled.  For those that
+don't, it is disable.  Click on it to set the export options for the currently
+selected file type. The QT version of LDView has an <i>Export Options</i> menu
+item in the <i>File</i> menu that performs the same task as the <i>Options</i>
+button.  This dialog will only contain entries for those types that have
+options.
+</p>
+<P>
+<h3><a name="PovExport">POV-Ray scene file:</a></h3>
+</P>
+<p>
+LDView's POV-Ray export has numerous options.  The ones that aren't
+self-explanatory are all documented via tooltips in the Options dialog.  When
+you perform a POV-Ray export, LDView creates a POV-Ray scene file using the
+current camera angle from the LDView window, so camera placement before the
+export is important.
+</p>
+<P>
+<h3><a name="StlExport">Stereo Lithography file:</a></h3>
+LDView's STL export doesn't have an options.  The STL file that it creates is
+monochrome.  This option is mainly intended to allow parts to be exported for
+editing in 3rd-party 3D modeling software such as Blender.
 </P>
 <BR>
 <P>
@@ -1072,6 +1206,34 @@ At the bottom, it contains a list of columns to include in
 the parts list.  Check all the columns you want to include, uncheck all the
 columns you don't want to include, and use the <I>Up</I> and <I>Down</I> buttons
 to change the order of the columns.
+</P>
+<A NAME="ModelTreeDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Model Tree Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Model Tree Dialog blah blah blah.
+<P>
+Blah blah blah.
+</P>
+<A NAME="MPDDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			MPD Model Selection Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The MPD Model Selection Dialog blah blah blah.
+<P>
+Blah blah blah.
 </P>
 <P>
 <FONT SIZE="+2"><B>Settings</B></FONT><BR>
