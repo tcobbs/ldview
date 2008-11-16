@@ -206,7 +206,9 @@
         <action name="toolsMpdModelSelectionAction"/>
         <separator/>
         <action name="showViewInfoAction"/>
+        <separator/>
         <action name="showPovCameraAction"/>
+        <action name="showPovAspectRatioAction"/>
     </item>
     <item text="&amp;Help" name="helpMenu">
         <action name="helpOpenGLDriverInfoAction"/>
@@ -1100,6 +1102,17 @@
     </action>
     <action>
         <property name="name">
+            <cstring>showPovAspectRatioAction</cstring>
+        </property>
+        <property name="text">
+            <string>Use current aspect ratio for POV-Ray camera</string>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+    </action>
+    <action>
+        <property name="name">
             <cstring>toolsPartListAction</cstring>
         </property>
         <property name="text">
@@ -1417,6 +1430,12 @@
         <slot>showPovCamera()</slot>
     </connection>
     <connection>
+        <sender>showPovAspectRatioAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>LDView</receiver>
+        <slot>showPovAspectRatio(bool)</slot>
+    </connection>
+    <connection>
         <sender>toolsPartListAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1515,6 +1534,7 @@
     <slot>fileCancelLoad()</slot>
     <slot>showViewInfo()</slot>
     <slot>showPovCamera()</slot>
+    <slot>showPovAspectRatio( bool flag )</slot>
     <slot>toolsPartList()</slot>
     <slot>toolsModelTree()</slot>
     <slot>toolsBoundingBox()</slot>

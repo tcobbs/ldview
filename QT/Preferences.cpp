@@ -971,6 +971,11 @@ void Preferences::setLatLongMode(bool value)
 	TCUserDefaults::setLongForKey(value, EXAMINE_MODE_KEY, false);
 }
 
+bool Preferences::getPovAspectRatio(void)
+{
+	return TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY, false, false);
+}
+
 void Preferences::setWindowSize(int width, int height)
 {
 	if (width != windowWidth)

@@ -138,6 +138,7 @@ public:
 	void doShowViewInfo(void);
 	void cleanupFloats(TCFloat *array, int count = 16);
 	void doShowPovCamera(void);
+	void doShowPovAspectRatio(bool);
 	QSize minimumSize(void);
 	void doWireframe(bool);
 	void doEdge(bool);
