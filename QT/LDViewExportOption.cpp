@@ -13,6 +13,7 @@
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
+#include <qtooltip.h>
 
 LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 	:ExportOptionPanel(),
@@ -150,6 +151,11 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
             default:
                 throw "not implemented";
             }
+			if (it->getTooltip().size() > 0)
+			{
+				ucstringtoqstring(qstmp, it->getTooltip());
+				QToolTip::add(hbox, qstmp);
+			}
 			if (vbl) vbl->addWidget(hbox);
         }
 	}
