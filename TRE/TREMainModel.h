@@ -131,6 +131,11 @@ public:
 	bool getSaveAlphaFlag(void) { return m_mainFlags.saveAlpha != false; }
 	void setGl2psFlag(bool value) { m_mainFlags.gl2ps = value; }
 	bool getGl2psFlag(void) const { return m_mainFlags.gl2ps != false; }
+	void setSendProgressFlag(bool value) { m_mainFlags.sendProgress = value; }
+	bool getSendProgressFlag(void) const
+	{
+		return m_mainFlags.sendProgress != false;
+	}
 	void setLineJoinsFlag(bool value) { m_mainFlags.lineJoins = value; }
 	bool getLineJoinsFlag(void) { return m_mainFlags.lineJoins != false; }
 	bool getActiveLineJoinsFlag(void)
@@ -457,6 +462,7 @@ protected:
 		bool multiThreaded:1;
 		bool saveAlpha:1;
 		bool gl2ps:1;
+		bool sendProgress:1;
 	} m_mainFlags;
 
 	static TCImageArray *sm_studTextures;

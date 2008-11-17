@@ -3175,6 +3175,7 @@ void LDrawModelViewer::initLightDirModel(
 {
 	TREModel *subModel = new TREModel;
 	lightDirModel = new TREMainModel;
+	lightDirModel->setSendProgressFlag(false);
 	TCFloat identityMatrix[16];
 	float length = size / 1.5f;
 	float radius = size / 100.0f;
