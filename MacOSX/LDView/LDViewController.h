@@ -17,6 +17,7 @@
 	IBOutlet NSMenuItem *flyThroughMenuItem;
 	IBOutlet NSMenuItem *cancelMenuItem;
 	IBOutlet NSMenuItem *modelTreeMenuItem;
+	IBOutlet NSMenuItem *mpdMenuItem;
 	IBOutlet NSMenuItem *pollingDisabledMenuItem;
 	IBOutlet NSMenuItem *pollingPromptMenuItem;
 	IBOutlet NSMenuItem *pollingAutoLaterMenuItem;

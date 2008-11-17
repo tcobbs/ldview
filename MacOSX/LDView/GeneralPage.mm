@@ -99,9 +99,9 @@
 		value:ldPreferences->getTransDefaultColor()];
 	[fovField setFloatValue:ldPreferences->getFov()];
 	[memoryUsagePopUp selectItemWithTag:ldPreferences->getMemoryUsage()];
-	saveDirPopUps = [[NSArray alloc] initWithObjects:snapshotsDirPopUp, partsListsDirPopUp, nil];
-	saveDirFields = [[NSArray alloc] initWithObjects:snapshotsDirField, partsListsDirField, nil];
-	saveDirButtons = [[NSArray alloc] initWithObjects:snapshotsBrowseButton, partsListsBrowseButton, nil];
+	saveDirPopUps = [[NSArray alloc] initWithObjects:snapshotsDirPopUp, partsListsDirPopUp, exportsDirPopUp, nil];
+	saveDirFields = [[NSArray alloc] initWithObjects:snapshotsDirField, partsListsDirField, exportsDirField, nil];
+	saveDirButtons = [[NSArray alloc] initWithObjects:snapshotsBrowseButton, partsListsBrowseButton, exportsBrowseButton, nil];
 	saveDirs = [[NSMutableArray alloc] init];
 	for (i = LDPreferences::SOFirst; i <= LDPreferences::SOLast && i < [saveDirPopUps count]; i++)
 	{
