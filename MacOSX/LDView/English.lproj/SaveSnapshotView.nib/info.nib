@@ -7,7 +7,7 @@
 	<key>IBEditorPositions</key>
 	<dict>
 		<key>60</key>
-		<string>306 371 439 269 0 0 1280 778 </string>
+		<string>165 318 439 269 0 0 1280 778 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>446.1</string>
@@ -17,17 +17,5 @@
 	</array>
 	<key>IBSystem Version</key>
 	<string>8S2167</string>
-	<key>IBUserGuides</key>
-	<dict>
-		<key>60</key>
-		<dict>
-			<key>guideLocations</key>
-			<array>
-				<string>Horizontal:178.000000</string>
-			</array>
-			<key>guidesLocked</key>
-			<false/>
-		</dict>
-	</dict>
 </dict>
 </plist>

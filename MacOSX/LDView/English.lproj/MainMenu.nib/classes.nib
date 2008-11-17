@@ -58,6 +58,7 @@
                 goMenu = NSMenu; 
                 latLongRotationMenuItem = NSMenuItem; 
                 modelTreeMenuItem = NSMenuItem; 
+                mpdMenuItem = NSMenuItem; 
                 pollingAutoLaterMenuItem = NSMenuItem; 
                 pollingAutoNowMenuItem = NSMenuItem; 
                 pollingDisabledMenuItem = NSMenuItem; 

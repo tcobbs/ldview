@@ -50,6 +50,9 @@
                 antialiasedLinesCheck = NSButton; 
                 backgroundColorWell = NSColorWell; 
                 defaultColorWell = NSColorWell; 
+                exportsBrowseButton = NSButton; 
+                exportsDirField = NSTextField; 
+                exportsDirPopUp = NSPopUpButton; 
                 fovField = NSTextField; 
                 memoryUsagePopUp = NSPopUpButton; 
                 newModelWindowsCheck = NSButton; 

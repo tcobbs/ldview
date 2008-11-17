@@ -22,10 +22,13 @@
 	
 	IBOutlet NSPopUpButton *snapshotsDirPopUp;
 	IBOutlet NSPopUpButton *partsListsDirPopUp;
+	IBOutlet NSPopUpButton *exportsDirPopUp;
 	IBOutlet NSTextField *snapshotsDirField;
 	IBOutlet NSTextField *partsListsDirField;
+	IBOutlet NSTextField *exportsDirField;
 	IBOutlet NSButton *snapshotsBrowseButton;
 	IBOutlet NSButton *partsListsBrowseButton;
+	IBOutlet NSButton *exportsBrowseButton;
 
 	//NSString *snapshotsDir;
 	//NSString *partsListsDir;

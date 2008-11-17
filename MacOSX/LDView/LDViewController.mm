@@ -253,6 +253,10 @@
 		{
 			[item setState:[modelWindow isModelTreeOpen] ? NSOnState : NSOffState];
 		}
+		else if (item == mpdMenuItem)
+		{
+			[item setState:[modelWindow isMPDOpen] ? NSOnState : NSOffState];
+		}
 		else if (item == povCameraAspectMenuItem)
 		{
 			[item setState:[[modelWindow modelView] modelViewer]->getPovCameraAspect() ? NSOnState : NSOffState];
