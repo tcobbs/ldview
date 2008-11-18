@@ -27,6 +27,7 @@
 #include <qtimer.h>
 #include <qtoolbutton.h>
 #include <qdesktopwidget.h>
+#include <qinputdialog.h>
 #if (QT_VERSION >> 16) >= 4
 #define HAVE_QT4
 #include <q3paintdevicemetrics.h>
@@ -3550,7 +3551,7 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 		int i = event->key()-Qt::Key_0;
 		preferences->performHotKey(i);
 	}
-	if(event->key() == Qt::Key_PageDown)
+/*	if(event->key() == Qt::Key_PageDown)
 	{
 		nextStep();
 	}
@@ -3566,6 +3567,7 @@ void ModelViewerWidget::keyPressEvent(QKeyEvent *event)
 	{
         firstStep();
 	}
+*/
 	unlock();
 	QGLWidget::keyPressEvent(event);
 /*
@@ -4134,6 +4136,19 @@ void ModelViewerWidget::updateStep()
 	mainWindow->toolbarLastStep->setEnabled(modelViewer->getNumSteps()>step);
     mainWindow->toolbarMaxStep->setText(" / "+max);
     mainWindow->toolbarCurrentStep->setText(QString::number(step));
+}
+
+void ModelViewerWidget::gotoStep()
+{
+	bool ok;
+	int step = QInputDialog::getInteger("Step","Go to Step:",
+			modelViewer->getStep(), 1, modelViewer->getNumSteps(), 1, &ok, this);
+	if (ok)
+	{
+		modelViewer->setStep(step);
+		updateStep();
+		doApply();
+	}
 }
 
 void ModelViewerWidget::setupStandardSizes()

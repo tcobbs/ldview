@@ -170,6 +170,7 @@ public:
 	void firstStep();
 	void lastStep();
 	void updateStep();
+	void gotoStep();
 	LDViewModelTree *modeltree;
 	LDViewExportOption *exportoption;
     BoundingBox *boundingbox;
