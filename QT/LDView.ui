@@ -198,6 +198,13 @@
         <action name="viewLatitudeRotationAction"/>
         <action name="flythroughModeAction"/>
     </item>
+    <item text="Step" name="stepMenu">
+        <action name="toolbarFirstStep"/>
+        <action name="toolbarPrevStep"/>
+        <action name="toolbarNextStep"/>
+        <action name="toolbarLastStep"/>
+        <separator/>
+    </item>
     <item text="&amp;Tools" name="toolsMenu">
         <action name="viewShowErrorsAction"/>
         <action name="toolsPartListAction"/>
@@ -416,6 +423,9 @@
         <property name="toolTip">
             <string>Previous Step</string>
         </property>
+        <property name="menuText">
+            <string>Previous</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -426,6 +436,9 @@
         </property>
         <property name="toolTip">
             <string>Next Step</string>
+        </property>
+        <property name="menuText">
+            <string>Next</string>
         </property>
     </action>
     <action>
@@ -438,6 +451,9 @@
         <property name="toolTip">
             <string>Last Step</string>
         </property>
+        <property name="menuText">
+            <string>Last</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -448,6 +464,9 @@
         </property>
         <property name="toolTip">
             <string>First Step</string>
+        </property>
+        <property name="menuText">
+            <string>First</string>
         </property>
     </action>
     <action>
