@@ -1046,6 +1046,17 @@ FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
 END
 
+IDD_STEP DIALOG DISCARDABLE  0, 0, 155, 46
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Step"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Got to Step:",IDC_STATIC,7,18,39,8
+    EDITTEXT        IDC_STEP_FIELD,48,16,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    DEFPUSHBUTTON   "OK",IDOK,98,7,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,98,24,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1282,6 +1293,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 211
     END
+
+    IDD_STEP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 148
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 39
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1355,6 +1374,15 @@ BEGIN
         MENUITEM "Latitude/L&ongitude Rotation", ID_VIEW_EXAMINE_LAT_LONG
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
+    END
+    POPUP "Step"
+    BEGIN
+        MENUITEM "Next\tPgDn",                  ID_NEXT_STEP
+        MENUITEM "Previous\tPgUp",              ID_PREV_STEP
+        MENUITEM "First\tHome",                 ID_FIRST_STEP
+        MENUITEM "Last\tEnd",                   ID_LAST_STEP
+        MENUITEM SEPARATOR
+        MENUITEM "Go to Step\tCtrl+G",          ID_GOTO_STEP
     END
     POPUP "&Tools"
     BEGIN
@@ -1458,6 +1486,7 @@ BEGIN
     "F",            ID_VIEW_ZOOMTOFIT,      VIRTKEY, CONTROL, NOINVERT
     "F",            ID_VIEW_FLYTHROUGH,     VIRTKEY, SHIFT, CONTROL, 
                                                     NOINVERT
+    "G",            ID_GOTO_STEP,           VIRTKEY, CONTROL, NOINVERT
     "L",            ID_TOOLS_PARTSLIST,     VIRTKEY, CONTROL, NOINVERT
     "M",            ID_TOOLS_MPD,           VIRTKEY, CONTROL, NOINVERT
     "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT

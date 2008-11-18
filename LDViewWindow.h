@@ -102,6 +102,8 @@ class LDViewWindow: public CUIWindow
 		bool getLoading(void) const { return loading; }
 		HMENU getViewAngleMenu(void) { return hViewAngleMenu; }
 		void changeStep(int action);
+		LRESULT doGotoStep(void);
+		int setStep(int newStep);
 #ifndef TC_NO_UNICODE
 		virtual void setStatusText(HWND hStatus, int part, const char *text,
 			bool redraw = true);
@@ -210,6 +212,7 @@ class LDViewWindow: public CUIWindow
 			bool enabled, BOOL byPosition = FALSE);
 		virtual bool modelIsLoaded(void);
 		virtual void updateModelMenuItems(void);
+		virtual void updateStepMenuItems(void);
 		virtual void printModel(void);
 		virtual void saveSnapshot(void);
 		virtual void exportModel(void);
@@ -373,6 +376,7 @@ class LDViewWindow: public CUIWindow
 		HMENU hViewMenu;
 		HMENU hViewAngleMenu;
 		HMENU hStandardSizesMenu;
+		HMENU hStepMenu;
 		HMENU hToolsMenu;
 		//HMENU hToolbarMenu;
 		//HMENU hWireframeToolbarMenu;

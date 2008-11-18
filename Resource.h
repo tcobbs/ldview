@@ -92,6 +92,7 @@
 #define IDD_BOUNDING_BOX                187
 #define IDD_LAT_LON                     188
 #define IDD_MPD                         189
+#define IDD_STEP                        190
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_HIGHLIGHTS                  1003
@@ -346,6 +347,7 @@
 #define IDC_PART_BOUNDING_BOXES         1273
 #define IDC_OPTIONS_CANVAS              1278
 #define IDC_RESIZEGRIP                  1279
+#define IDC_STEP_FIELD                  1281
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -429,6 +431,7 @@
 #define ID_FILE_EXPORT                  40101
 #define ID_VIEW_STANDARDSIZES_DUMMYITEM 40103
 #define ID_TOOLS_POV_CAMERA_ASPECT      40104
+#define ID_GOTO_STEP                    40109
 #define ID_FILE_OPEN                    0xE101
 #define ID_FILE_SAVE                    0xE103
 #define ID_FILE_PRINT                   0xE107
@@ -440,9 +443,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        190
-#define _APS_NEXT_COMMAND_VALUE         40105
-#define _APS_NEXT_CONTROL_VALUE         1281
+#define _APS_NEXT_RESOURCE_VALUE        191
+#define _APS_NEXT_COMMAND_VALUE         40110
+#define _APS_NEXT_CONTROL_VALUE         1282
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
