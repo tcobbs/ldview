@@ -299,4 +299,7 @@ void LDView::lastStep()
     modelViewer->lastStep();
 }
 
-
+void LDView::gotoStep()
+{
+    modelViewer->gotoStep();
+}

@@ -204,6 +204,7 @@
         <action name="toolbarNextStep"/>
         <action name="toolbarLastStep"/>
         <separator/>
+        <action name="stepGoto"/>
     </item>
     <item text="&amp;Tools" name="toolsMenu">
         <action name="viewShowErrorsAction"/>
@@ -426,6 +427,9 @@
         <property name="menuText">
             <string>Previous</string>
         </property>
+        <property name="accel">
+            <string>PgUp</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -439,6 +443,9 @@
         </property>
         <property name="menuText">
             <string>Next</string>
+        </property>
+        <property name="accel">
+            <string>PgDown</string>
         </property>
     </action>
     <action>
@@ -454,6 +461,9 @@
         <property name="menuText">
             <string>Last</string>
         </property>
+        <property name="accel">
+            <string>End</string>
+        </property>
     </action>
     <action>
         <property name="name">
@@ -467,6 +477,23 @@
         </property>
         <property name="menuText">
             <string>First</string>
+        </property>
+        <property name="accel">
+            <string>Home</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>stepGoto</cstring>
+        </property>
+        <property name="toolTip">
+            <string>Go to Step</string>
+        </property>
+        <property name="menuText">
+            <string>Go to Step</string>
+        </property>
+        <property name="accel">
+            <string>Ctrl+g</string>
         </property>
     </action>
     <action>
@@ -1485,6 +1512,12 @@
         <slot>lastStep()</slot>
     </connection>
     <connection>
+        <sender>stepGoto</sender>
+        <signal>activated()</signal>
+        <receiver>LDView</receiver>
+        <slot>gotoStep()</slot>
+    </connection>
+    <connection>
         <sender>toolsModelTreeAction</sender>
         <signal>activated()</signal>
         <receiver>LDView</receiver>
@@ -1563,6 +1596,7 @@
     <slot>nextStep()</slot>
     <slot>firstStep()</slot>
     <slot>lastStep()</slot>
+    <slot>gotoStep()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
