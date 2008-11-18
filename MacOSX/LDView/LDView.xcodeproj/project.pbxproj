@@ -212,6 +212,13 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = TRE;
 		};
+		1FFF0F9A0ED2864100F0B628 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D /* LDExporter */;
+			remoteInfo = LDExporter;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -428,12 +435,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */,
 				1F240BE30A58D11D00691116 /* libLDLib.a in Frameworks */,
 				1F240BE50A58D12C00691116 /* libLDLoader.a in Frameworks */,
 				1F240BE60A58D12E00691116 /* libTCFoundation.a in Frameworks */,
 				1F240BE70A58D13100691116 /* libTRE.a in Frameworks */,
 				1F240C030A58D1E400691116 /* OpenGL.framework in Frameworks */,
-				1F2DD2740DE15F1600C675D7 /* libLDExporter.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -838,6 +845,7 @@
 				1F6A74810C4DEF0800DAF5C8 /* PBXTargetDependency */,
 				1F6A74830C4DEF0C00DAF5C8 /* PBXTargetDependency */,
 				1F6A74850C4DEF1000DAF5C8 /* PBXTargetDependency */,
+				1FFF0F9B0ED2864100F0B628 /* PBXTargetDependency */,
 			);
 			name = LDView;
 			productInstallPath = "$(HOME)/Applications";
@@ -1092,6 +1100,11 @@
 			isa = PBXTargetDependency;
 			name = TRE;
 			targetProxy = 1F6A74840C4DEF1000DAF5C8 /* PBXContainerItemProxy */;
+		};
+		1FFF0F9B0ED2864100F0B628 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LDExporter;
+			targetProxy = 1FFF0F9A0ED2864100F0B628 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
