@@ -4134,6 +4134,7 @@ void ModelViewerWidget::updateStep()
     mainWindow->toolbarPrevStep->setEnabled(step>1);
     mainWindow->toolbarNextStep->setEnabled(modelViewer->getNumSteps()>step);
 	mainWindow->toolbarLastStep->setEnabled(modelViewer->getNumSteps()>step);
+	mainWindow->stepGoto->setEnabled(modelViewer->getNumSteps()>0);
     mainWindow->toolbarMaxStep->setText(" / "+max);
     mainWindow->toolbarCurrentStep->setText(QString::number(step));
 }
