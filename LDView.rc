@@ -1377,9 +1377,9 @@ BEGIN
     END
     POPUP "Step"
     BEGIN
-        MENUITEM "Next\tPgDn",                  ID_NEXT_STEP
-        MENUITEM "Previous\tPgUp",              ID_PREV_STEP
         MENUITEM "First\tHome",                 ID_FIRST_STEP
+        MENUITEM "Previous\tPgUp",              ID_PREV_STEP
+        MENUITEM "Next\tPgDn",                  ID_NEXT_STEP
         MENUITEM "Last\tEnd",                   ID_LAST_STEP
         MENUITEM SEPARATOR
         MENUITEM "Go to Step\tCtrl+G",          ID_GOTO_STEP
