@@ -24,6 +24,7 @@ CCOBJS = $(OBJDIR)\BoolOptionUI.obj \
 	 $(OBJDIR)\PathOptionUI.obj \
 	 $(OBJDIR)\SSConfigure.obj \
 	 $(OBJDIR)\StringOptionUI.obj \
+	 $(OBJDIR)\StepDialog.obj \
 	 $(OBJDIR)\SSModelWindow.obj \
 	 $(OBJDIR)\SSPassword.obj \
 	 $(OBJDIR)\SSPreview.obj \
