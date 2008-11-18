@@ -34,6 +34,7 @@
 #include <LDLib/LDHtmlInventory.h>
 #include "PartsListDialog.h"
 #include "LatLonDialog.h"
+#include "StepDialog.h"
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -931,7 +932,8 @@ BOOL LDViewWindow::initWindow(void)
 	{
 		hFileMenu = GetSubMenu(GetMenu(hWindow), 0);
 		hViewMenu = GetSubMenu(GetMenu(hWindow), 2);
-		hToolsMenu = GetSubMenu(GetMenu(hWindow), 3);
+		hStepMenu = GetSubMenu(GetMenu(hWindow), 3);
+		hToolsMenu = GetSubMenu(GetMenu(hWindow), 4);
 		hViewAngleMenu = findSubMenu(hViewMenu, 0);
 		hStandardSizesMenu = findSubMenu(hViewMenu, 1);
 		if (!CUIThemes::isThemeLibLoaded())
@@ -2202,6 +2204,36 @@ void LDViewWindow::setMenuEnabled(HMENU hParentMenu, int itemID, bool enabled,
 	}
 }
 
+void LDViewWindow::updateStepMenuItems(void)
+{
+	bool nextEnabled = false;
+	bool prevEnabled = false;
+	bool goToEnabled = false;
+
+	if (modelIsLoaded())
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer->getNumSteps() > 1)
+		{
+			goToEnabled = true;
+			if (modelViewer->getStep() < modelViewer->getNumSteps())
+			{
+				nextEnabled = true;
+			}
+			if (modelViewer->getStep() > 1)
+			{
+				prevEnabled = true;
+			}
+		}
+	}
+	setMenuEnabled(hStepMenu, ID_NEXT_STEP, nextEnabled);
+	setMenuEnabled(hStepMenu, ID_LAST_STEP, nextEnabled);
+	setMenuEnabled(hStepMenu, ID_PREV_STEP, prevEnabled);
+	setMenuEnabled(hStepMenu, ID_FIRST_STEP, prevEnabled);
+	setMenuEnabled(hStepMenu, ID_GOTO_STEP, goToEnabled);
+}
+
 void LDViewWindow::updateModelMenuItems(void)
 {
 	bool haveModel = modelIsLoaded();
@@ -2228,6 +2260,7 @@ void LDViewWindow::updateModelMenuItems(void)
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_SPECIFYLATLON, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_ISO, haveModel);
 	setMenuEnabled(hViewingAngleMenu, ID_VIEW_SAVE_DEFAULT, haveModel);
+	updateStepMenuItems();
 }
 
 bool LDViewWindow::modelIsLoaded(void)
@@ -3640,6 +3673,8 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_LAST_STEP:
 			changeStep(2);
 			break;
+		case ID_GOTO_STEP:
+			return doGotoStep();
 	}
 	if (itemId >= ID_HOT_KEY_0 && itemId <= ID_HOT_KEY_9)
 	{
@@ -3669,6 +3704,23 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 	return CUIWindow::doCommand(itemId, notifyCode, controlHWnd);
 }
 
+LRESULT LDViewWindow::doGotoStep(void)
+{
+	LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+	if (modelViewer)
+	{
+		StepDialog *dlg = new StepDialog(this, modelViewer);
+
+		if (dlg->doModal() == IDOK)
+		{
+			setStep(dlg->getStep());
+		}
+		dlg->release();
+	}
+	return 0;
+}
+
 void LDViewWindow::changeStep(int action)
 {
 	if (modelWindow)
@@ -3691,6 +3743,19 @@ void LDViewWindow::changeStep(int action)
 			{
 				newStep = modelViewer->getStep() + action;
 			}
+			setStep(newStep);
+		}
+	}
+}
+
+int LDViewWindow::setStep(int newStep)
+{
+	if (modelWindow)
+	{
+		LDrawModelViewer *modelViewer = modelWindow->getModelViewer();
+
+		if (modelViewer)
+		{
 			if (newStep < 1)
 			{
 				newStep = 1;
@@ -3707,6 +3772,7 @@ void LDViewWindow::changeStep(int action)
 			}
 		}
 	}
+	return newStep;
 }
 
 //void LDViewWindow::doWireframe(void)

@@ -1350,6 +1350,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\StepDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\StringOptionUI.cpp"
 				>
 			</File>
@@ -1472,6 +1476,10 @@
 			</File>
 			<File
 				RelativePath="SSPreview.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StepDialog.h"
 				>
 			</File>
 			<File

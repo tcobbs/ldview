@@ -251,17 +251,7 @@ void ToolbarStrip::stepChanged(void)
 		windowGetText(IDC_STEP, text);
 		if (sscanf(text.c_str(), "%d", &step) == 1)
 		{
-			if (step < 1)
-			{
-				step = 1;
-			}
-			if (step > modelViewer->getNumSteps())
-			{
-				step = modelViewer->getNumSteps();
-			}
-			m_step = step;
-			modelViewer->setStep(step);
-			forceRedraw();
+			m_step = m_ldviewWindow->setStep(step);
 			updateStep();
 		}
 	}
