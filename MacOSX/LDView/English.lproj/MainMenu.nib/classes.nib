@@ -55,7 +55,6 @@
                 examineMenuItem = NSMenuItem; 
                 fileMenu = NSMenu; 
                 flyThroughMenuItem = NSMenuItem; 
-                goMenu = NSMenu; 
                 latLongRotationMenuItem = NSMenuItem; 
                 modelTreeMenuItem = NSMenuItem; 
                 mpdMenuItem = NSMenuItem; 
@@ -67,6 +66,12 @@
                 prefsMenuItem = NSMenuItem; 
                 standardSizesMenu = NSMenu; 
                 statusBarMenuItem = NSMenuItem; 
+                stepFirstMenuItem = NSMenuItem; 
+                stepGoToMenuItem = NSMenuItem; 
+                stepLastMenuItem = NSMenuItem; 
+                stepMenu = NSMenu; 
+                stepNextMenuItem = NSMenuItem; 
+                stepPrevMenuItem = NSMenuItem; 
                 toolbarMenuItem = NSMenuItem; 
                 viewingAngleMenu = NSMenu; 
             }; 

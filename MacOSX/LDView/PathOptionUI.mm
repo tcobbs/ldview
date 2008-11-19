@@ -25,6 +25,8 @@
 		[browseButton setBezelStyle:NSRoundedBezelStyle];
 		[textField setNextKeyView:browseButton];
 		[[browseButton cell] setRepresentedObject:self];
+		[browseButton setTarget:self];
+		[browseButton setAction:@selector(browse:)];
 	}
 	return self;
 }
@@ -90,6 +92,29 @@
 - (NSView *)lastKeyView
 {
 	return browseButton;
+}
+
+- (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void  *)contextInfo
+{
+	if (returnCode == NSOKButton)
+	{
+		NSString *filename = [openPanel filename];
+		
+		if (filename)
+		{
+			[textField setStringValue:filename];
+		}
+	}
+}
+
+- (void)browse:(id)sender
+{
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+	
+	[openPanel setAllowsMultipleSelection:NO];
+	[openPanel setCanChooseFiles:YES];
+	[openPanel setCanChooseDirectories:NO];
+	[openPanel beginSheetForDirectory:[[textField stringValue] stringByDeletingLastPathComponent] file:nil modalForWindow:[docView window] modalDelegate:self didEndSelector:@selector(openPanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
 }
 
 @end

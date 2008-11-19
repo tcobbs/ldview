@@ -288,6 +288,7 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	ModelWindow *modelWindow = [self currentModelWindow];
+
 	if ([modelWindow loading])
 	{
 		if (menuItem == cancelMenuItem)
@@ -318,6 +319,25 @@
 			else
 			{
 				return NO;
+			}
+		}
+		else if ([menuItem menu] == stepMenu)
+		{
+			LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
+			int numSteps = modelViewer->getNumSteps();
+			int step = modelViewer->getStep();
+			
+			if (menuItem == stepFirstMenuItem || menuItem == stepPrevMenuItem)
+			{
+				return numSteps > 1 && step > 1;
+			}
+			else if (menuItem == stepNextMenuItem || menuItem == stepLastMenuItem)
+			{
+				return numSteps > 1 && step < numSteps;
+			}
+			else if (menuItem == stepGoToMenuItem)
+			{
+				return numSteps > 1;
 			}
 		}
 	}

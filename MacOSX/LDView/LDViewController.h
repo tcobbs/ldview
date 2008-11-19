@@ -25,10 +25,16 @@
 	IBOutlet NSMenuItem *copyMenuItem;
 	IBOutlet NSMenuItem *prefsMenuItem;
 	IBOutlet NSMenuItem *povCameraAspectMenuItem;
+	IBOutlet NSMenuItem *stepFirstMenuItem;
+	IBOutlet NSMenuItem *stepPrevMenuItem;
+	IBOutlet NSMenuItem *stepNextMenuItem;
+	IBOutlet NSMenuItem *stepLastMenuItem;
+	IBOutlet NSMenuItem *stepGoToMenuItem;
 
 	IBOutlet NSMenu *fileMenu;
 	IBOutlet NSMenu *viewingAngleMenu;
 	IBOutlet NSMenu *standardSizesMenu;
+	IBOutlet NSMenu *stepMenu;
 
 	NSArray *ldrawFileTypes;
 	NSMutableArray *modelWindows;
