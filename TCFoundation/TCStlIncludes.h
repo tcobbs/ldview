@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <stack>
 #include <set>
+#include <string.h>
 
 #ifdef WIN32
 
