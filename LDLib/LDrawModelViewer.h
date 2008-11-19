@@ -571,7 +571,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool primitive);
 		static void initStandardSizes(void);
 		static void addStandardSize(int width, int height);
-		static ucstring getAspectString(int width, int height, UCSTR separator,
+		static ucstring getAspectString(int width, int height, CUCSTR separator,
 			bool standardOnly = false);
 
 		//int L3Solve6(TCFloat x[L3ORDERN], const TCFloat A[L3ORDERM][L3ORDERN],
