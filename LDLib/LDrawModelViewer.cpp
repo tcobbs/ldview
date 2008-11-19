@@ -3857,7 +3857,7 @@ void LDrawModelViewer::cleanupFloats(TCFloat *array, int count)
 ucstring LDrawModelViewer::getAspectString(
 	int width,
 	int height,
-	UCSTR separator,
+	CUCSTR separator,
 	bool standardOnly /*= false*/)
 {
 	ucstring aspect;
