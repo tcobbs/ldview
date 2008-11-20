@@ -123,6 +123,14 @@
                         <property name="name">
                             <cstring>unnamed</cstring>
                         </property>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>resetButton</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Reset</string>
+                            </property>
+                        </widget>
                         <spacer>
                             <property name="name">
                                 <cstring>spacer1</cstring>
@@ -165,11 +173,39 @@
 <toolbars>
 </toolbars>
 <connections>
+    <connection>
+        <sender>okButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ExportOptionPanel</receiver>
+        <slot>doOk()</slot>
+    </connection>
+    <connection>
+        <sender>cancelButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ExportOptionPanel</receiver>
+        <slot>doCancel()</slot>
+    </connection>
+    <connection>
+        <sender>resetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ExportOptionPanel</receiver>
+        <slot>doReset()</slot>
+    </connection>
+    <connection>
+        <sender>typeBox</sender>
+        <signal>activated(int)</signal>
+        <receiver>ExportOptionPanel</receiver>
+        <slot>doTypeBoxActivated()</slot>
+    </connection>
 </connections>
 <includes>
-    <include location="local" implDecl="in declaration">ExportOptionPanel.ui.h</include>
+    <include location="local" implDecl="in implementation">ExportOptionPanel.ui.h</include>
 </includes>
 <slots>
+    <slot>doCancel()</slot>
+    <slot>doOk()</slot>
+    <slot>doReset()</slot>
+    <slot>doTypeBoxActivated()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
