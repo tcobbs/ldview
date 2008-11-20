@@ -1594,7 +1594,6 @@ IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_loop_mask
 IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 #endif
 #endif
-IDB_STEP_TOOLBAR        BITMAP  DISCARDABLE     "Icons\\step_toolbar.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
