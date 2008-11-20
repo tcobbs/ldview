@@ -102,8 +102,8 @@ protected:
 	virtual int getNumGeometrySettings(void) const { return 3; }
 	virtual void initSettings(void) const;
 
-	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
-	void loadDefaults(void);
+	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
+	void loadSettings(void);
 
 	std::string udKey(const char *key) const;
 	void setStringForKey(const char* value, const char* key,

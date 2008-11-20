@@ -2,7 +2,7 @@
 #define __TCUSERDEFAULTS_H__
 
 #include <TCFoundation/TCObject.h>
-#include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/mystring.h>
 
 #if !defined(_MSC_VER) || (defined(_MSC_VER) && _MSC_VER > 1200)
 // VC++ 6 can't handle using a forward referenced type as one of the types in a
@@ -30,6 +30,12 @@
 
 typedef std::vector<long> LongVector;
 typedef std::vector<std::string> StringVector;
+typedef std::map<std::string, std::string> StringStringMap;
+typedef std::map<std::string, ucstring> StringUCStringMap;
+typedef std::map<std::string, long> StringLongMap;
+typedef std::map<std::string, float> StringFloatMap;
+typedef std::map<std::string, LongVector> StringLongVectorMap;
+typedef std::map<std::string, StringVector> StringStringVectorMap;
 
 class TCStringArray;
 
@@ -45,25 +51,30 @@ class TCExport TCUserDefaults: public TCObject
 		static std::string commandLineStringForKey(const char* key);
 		static char* stringForKey(const char* key,
 			const char* defaultValue = NULL, bool sessionSpecific = true);
+		static const char* defaultStringForKey(const char* key);
 		static void setPathForKey(const char* value,
 			const char* key, bool sessionSpecific = true);
 		static char* pathForKey(const char* key,
 			const char* defaultValue = NULL, bool sessionSpecific = true);
 		static UCSTR stringForKeyUC(const char* key, CUCSTR defaultValue = NULL,
 			bool sessionSpecific = true);
+		static CUCSTR defaultStringForKeyUC(const char* key);
 		static void setLongForKey(long value, const char* key,
 			bool sessionSpecific = true);
 		static long longForKey(const char* key, long defaultValue = 0,
 			bool sessionSpecific = true);
+		static long defaultLongForKey(const char* key);
 		static void setBoolForKey(bool value, const char *key,
 			bool sessionSpecific = true);
-		static bool boolForKey(const char *key, bool defaultValue = false,
+		static bool boolForKey(const char* key, bool defaultValue = false,
 			bool sessionSpecific = true);
+		static bool defaultBoolForKey(const char* key);
 		static void setLongVectorForKey(const LongVector &value,
 			const char* key, bool sessionSpecific = true, int keyDigits = 2);
 		static LongVector longVectorForKey(const char* key,
 			const LongVector &defaultValue = LongVector(),
 			bool sessionSpecific = true, int keyDigits = 2);
+		static const LongVector& defaultLongVectorForKey(const char* key);
 		static void setStringVectorForKey(const StringVector &value,
 			const char* key, bool sessionSpecific = true, bool isPath = false,
 			int keyDigits = 2);
@@ -71,10 +82,12 @@ class TCExport TCUserDefaults: public TCObject
 			const StringVector &defaultValue = StringVector(),
 			bool sessionSpecific = true, bool isPath = false,
 			int keyDigits = 2);
+		static const StringVector& defaultStringVectorForKey(const char* key);
 		static void setFloatForKey(float value, const char* key,
 			bool sessionSpecific = true);
 		static float floatForKey(const char* key, float defaultValue = 0.0f,
 			bool sessionSpecific = true);
+		static float defaultFloatForKey(const char* key);
 		static void removeValue(const char* key, bool sessionSpecific = true);
 		static void setAppName(const char* value);
 		static bool setIniFile(const char* value);
@@ -113,26 +126,34 @@ class TCExport TCUserDefaults: public TCObject
 #endif //TC_NO_UNICODE
 		char* defStringForKey(const char* key, bool sessionSpecific,
 			const char* defaultValue = NULL);
+		const char* defDefaultStringForKey(const char* key);
 		void defSetPathForKey(const char* value, const char* key,
 			bool sessionSpecific);
 		char* defPathForKey(const char* key, bool sessionSpecific,
 			const char* defaultValue = NULL);
 		UCSTR defStringForKeyUC(const char* key, bool sessionSpecific,
 			CUCSTR defaultValue = NULL);
+		CUCSTR defDefaultStringForKeyUC(const char* key);
 		void defSetLongForKey(long value, const char* key,
 			bool sessionSpecific);
 		long defLongForKey(const char* key, bool sessionSpecific,
 			long defaultValue = 0, bool *found = NULL);
+		float defFloatForKey(const char* key, bool sessionSpecific,
+			float defaultValue = 0, bool *found = NULL);
+		long defDefaultLongForKey(const char* key);
+		float defDefaultFloatForKey(const char* key);
 		void defSetLongVectorForKey(const LongVector &value,
 			const char* key, bool sessionSpecific, int keyDigits);
 		LongVector defLongVectorForKey(const char* key,
 			bool sessionSpecific, const LongVector &defaultValue,
 			int keyDigits);
+		const LongVector& defDefaultLongVectorForKey(const char* key);
 		void defSetStringVectorForKey(const StringVector &value,
 			const char* key, bool sessionSpecific, bool isPath, int keyDigits);
 		StringVector defStringVectorForKey(const char* key,
 			bool sessionSpecific, const StringVector &defaultValue, bool isPath,
 			int keyDigits);
+		const StringVector& defDefaultStringVectorForKey(const char* key);
 		void defRemoveValue(const char* key, bool sessionSpecific);
 		bool defSetIniFile(const char* value);
 		void defSetAppName(const char* value);
@@ -242,6 +263,14 @@ class TCExport TCUserDefaults: public TCObject
 		protected:
 			virtual void dealloc(void);
 		};
+
+		StringStringMap defaultStrings;
+		StringUCStringMap defaultUCStrings;
+		StringLongMap defaultLongs;
+		StringFloatMap defaultFloats;
+		StringLongVectorMap defaultLongVectors;
+		StringStringVectorMap defaultStringVectors;
+
 		static char *argv0;
 		static std::string appPath;
 		friend class TCUserDefaultsFlusher;

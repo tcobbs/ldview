@@ -49,7 +49,7 @@ m_settingsInitialized(false)
 	tempMatrix[14] = 0.0f;
 	tempMatrix[15] = 1.0f;
 	TCVector::multMatrix(flipMatrix, tempMatrix, m_rotationMatrix);
-	loadDefaults();
+	loadSettings();
 }
 
 LDExporter::~LDExporter(void)
@@ -68,7 +68,7 @@ void LDExporter::setBackgroundColor(
 	m_backgroundA = a;
 }
 
-void LDExporter::loadDefaults(void)
+void LDExporter::loadSettings(void)
 {
 	m_primSub = boolForKey("PrimitiveSubstitution", true);
 	m_seamWidth = floatForKey("SeamWidth", 0.5);

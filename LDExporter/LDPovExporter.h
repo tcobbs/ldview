@@ -178,8 +178,8 @@ protected:
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
 	virtual bool substituteStud(void);
 
-	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
-	void loadDefaults(void);
+	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
+	void loadSettings(void);
 
 	static double alphaMod(int color);
 	static void cleanupFloats(TCFloat *array, int count = 16);

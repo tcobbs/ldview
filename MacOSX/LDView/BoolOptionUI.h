@@ -23,5 +23,6 @@
 - (NSRect)frame;
 - (NSView *)firstKeyView;
 - (BOOL)groupEnabled;
+- (void)valueChanged;
 
 @end

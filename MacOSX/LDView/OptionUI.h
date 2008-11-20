@@ -43,5 +43,7 @@ class LDExporterSetting;
 - (NSView *)firstKeyView;
 - (NSView *)lastKeyView;
 - (void)addTooltip:(NSView *)view;
+- (void)valueChanged;
+- (void)reset;
 
 @end

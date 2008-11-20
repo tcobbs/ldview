@@ -17,8 +17,8 @@ protected:
 	void dealloc(void);
 	virtual void initSettings(void) const;
 
-	// NOTE: loadDefaults is NOT virtual: it's called from the constructor.
-	void loadDefaults(void);
+	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
+	void loadSettings(void);
 
 	bool m_binary;
 	long m_colorFormat;

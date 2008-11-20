@@ -42,7 +42,7 @@ LDExporter("PovExporter/")
 			m_searchPath.push_back(m_ldrawDir + *it);
 		}
 	}
-	loadDefaults();
+	loadSettings();
 	if (sm_replacementChars.size() == 0)
 	{
 		sm_replacementChars['.'] = "_dot_";
@@ -70,11 +70,11 @@ ucstring LDPovExporter::getTypeDescription(void) const
 	return ls(_UC("PovTypeDescription"));
 }
 
-void LDPovExporter::loadDefaults(void)
+void LDPovExporter::loadSettings(void)
 {
 	char *temp;
 
-	LDExporter::loadDefaults();
+	LDExporter::loadSettings();
 	m_quality = longForKey("Quality", 2);
 	m_refls = boolForKey("Reflections", true);
 	m_shads = boolForKey("Shadows", true);
@@ -471,7 +471,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 {
 	std::string filename = m_filename;
 
-	loadDefaults();
+	loadSettings();
 	m_pTopModel = pTopModel;
 	if (filename.size() == 0)
 	{

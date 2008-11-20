@@ -102,4 +102,9 @@
 	}
 }
 
+- (void)valueChanged
+{
+	[check setCheck:setting->getBoolValue()];
+}
+
 @end

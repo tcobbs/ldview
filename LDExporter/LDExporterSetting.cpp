@@ -84,6 +84,38 @@ void LDExporterSetting::setValue(TCFloat value, bool commit /*= false*/)
 	}
 }
 
+void LDExporterSetting::reset(bool commit /*= false*/)
+{
+	switch (m_type)
+	{
+	case TLong:
+		setValue(TCUserDefaults::defaultLongForKey(m_key.c_str()), commit);
+		break;
+	case TEnum:
+		try
+		{
+			selectOption(
+				(size_t)TCUserDefaults::defaultLongForKey(m_key.c_str()),
+				commit);
+		}
+		catch (...)
+		{
+		}
+		break;
+	case TBool:
+		setValue(TCUserDefaults::defaultBoolForKey(m_key.c_str()), commit);
+		break;
+	case TFloat:
+		setValue(TCUserDefaults::defaultFloatForKey(m_key.c_str()), commit);
+		break;
+	case TString:
+		setValue(TCUserDefaults::defaultStringForKeyUC(m_key.c_str()), commit);
+		break;
+	default:
+		throw "Invalid type";
+	}
+}
+
 void LDExporterSetting::setValue(CUCSTR value, bool commit /*= false*/)
 {
 	switch (m_type)

@@ -373,6 +373,41 @@ char* TCUserDefaults::stringForKey(const char* key, const char* defaultValue,
 		defaultValue);
 }
 
+const char* TCUserDefaults::defaultStringForKey(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultStringForKey(key);
+}
+
+CUCSTR TCUserDefaults::defaultStringForKeyUC(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultStringForKeyUC(key);
+}
+
+long TCUserDefaults::defaultLongForKey(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultLongForKey(key);
+}
+
+bool TCUserDefaults::defaultBoolForKey(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultLongForKey(key) ? true : false;
+}
+
+float TCUserDefaults::defaultFloatForKey(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultFloatForKey(key);
+}
+
+const LongVector& TCUserDefaults::defaultLongVectorForKey(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultLongVectorForKey(key);
+}
+
+const StringVector& TCUserDefaults::defaultStringVectorForKey(const char* key)
+{
+	return getCurrentUserDefaults()->defDefaultStringVectorForKey(key);
+}
+
 void TCUserDefaults::setPathForKey(const char* value, const char* key,
 								   bool sessionSpecific)
 {
@@ -476,18 +511,8 @@ void TCUserDefaults::setFloatForKey(float value, const char* key,
 float TCUserDefaults::floatForKey(const char* key, float defaultValue,
 								  bool sessionSpecific)
 {
-	char *stringValue = stringForKey(key, NULL, sessionSpecific);
-	float returnValue = defaultValue;
-
-	if (stringValue)
-	{
-		if (sscanf(stringValue, "%g", &returnValue) != 1)
-		{
-			returnValue = defaultValue;
-		}
-		delete stringValue;
-	}
-	return returnValue;
+	return getCurrentUserDefaults()->defFloatForKey(key, defaultValue,
+		sessionSpecific);
 }
 
 void TCUserDefaults::removeValue(const char* key, bool sessionSpecific)
@@ -808,11 +833,46 @@ char* TCUserDefaults::defCommandLineStringForKey(const char* key)
 	return NULL;
 }
 
+const char* TCUserDefaults::defDefaultStringForKey(const char* key)
+{
+	return &defaultStrings[key][0];
+}
+
+CUCSTR TCUserDefaults::defDefaultStringForKeyUC(const char* key)
+{
+	return &defaultUCStrings[key][0];
+}
+
+long TCUserDefaults::defDefaultLongForKey(const char* key)
+{
+	return defaultLongs[key];
+}
+
+float TCUserDefaults::defDefaultFloatForKey(const char* key)
+{
+	return defaultFloats[key];
+}
+
+const LongVector& TCUserDefaults::defDefaultLongVectorForKey(const char* key)
+{
+	return defaultLongVectors[key];
+}
+
+const StringVector& TCUserDefaults::defDefaultStringVectorForKey(
+	const char* key)
+{
+	return defaultStringVectors[key];
+}
+
 UCSTR TCUserDefaults::defStringForKeyUC(const char* key, bool sessionSpecific,
 	CUCSTR defaultValue)
 {
 	char *commandLineValue = defCommandLineStringForKey(key);
 
+	if (defaultValue != NULL)
+	{
+		defaultUCStrings[key] = defaultValue;
+	}
 	if (commandLineValue)
 	{
 		UCSTR retValue = mbstoucstring(commandLineValue);
@@ -909,6 +969,10 @@ char* TCUserDefaults::defStringForKey(const char* key, bool sessionSpecific,
 {
 	char *commandLineValue = defCommandLineStringForKey(key);
 
+	if (defaultValue != NULL)
+	{
+		defaultStrings[key] = defaultValue;
+	}
 	if (commandLineValue)
 	{
 		return commandLineValue;
@@ -1087,11 +1151,33 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 	sendValueChangedAlert(key);
 }
 
+float TCUserDefaults::defFloatForKey(
+	const char* key,
+	bool sessionSpecific,
+	float defaultValue,
+	bool *found)
+{
+	char *stringValue = defStringForKey(key, sessionSpecific, NULL);
+	float returnValue = defaultValue;
+
+	defaultFloats[key] = defaultValue;
+	if (stringValue)
+	{
+		if (sscanf(stringValue, "%g", &returnValue) != 1)
+		{
+			returnValue = defaultValue;
+		}
+		delete stringValue;
+	}
+	return returnValue;
+}
+
 long TCUserDefaults::defLongForKey(const char* key, bool sessionSpecific,
 								   long defaultValue, bool *found)
 {
 	char *commandLineValue = defCommandLineStringForKey(key);
 
+	defaultLongs[key] = defaultValue;
 	if (found)
 	{
 		*found = false;
@@ -1233,6 +1319,7 @@ LongVector TCUserDefaults::defLongVectorForKey(
 {
 	bool found;
 
+	defaultLongVectors[key] = defaultValue;
 	defLongForKey(arrayKey(key, 0, keyDigits).c_str(), sessionSpecific, 0,
 		&found);
 	if (found)
@@ -1296,6 +1383,7 @@ StringVector TCUserDefaults::defStringVectorForKey(
 	char *value = defStringForKey(arrayKey(key, 0, keyDigits).c_str(),
 		sessionSpecific, NULL);
 
+	defaultStringVectors[key] = defaultValue;
 	if (value)
 	{
 		size_t i;

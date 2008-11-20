@@ -52,4 +52,9 @@
 	setting->setValue(value, true);
 }
 
+- (void)valueChanged
+{
+	[textField setFloatValue:setting->getFloatValue()];
+}
+
 @end

@@ -52,4 +52,9 @@
 	setting->setValue(value, true);
 }
 
+- (void)valueChanged
+{
+	[textField setIntValue:setting->getLongValue()];
+}
+
 @end
