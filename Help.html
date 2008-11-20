@@ -1406,7 +1406,8 @@ Enabling this option causes default-colored items to be transparent.
 
 <P>
 <FONT SIZE="+1"><B><A NAME="GeneralMiscBox">Misc Box</A></B></FONT><BR>
-<I>Process ldconfig.ldr</I> (Default: <I>On</I>):<BR>
+<I><A NAME="ProcessLDConfig">Process ldconfig.ldr</A></I>
+(Default: <I>On</I>):<BR>
 This controls whether or not LDView processes the ldconfig.ldr file that is now
 distributed as part of the LDraw parts library.  This file contains settings
 that can effect how LDraw models are displayed.  Currently the only settings it
@@ -1602,9 +1603,13 @@ resulting in much better looking lines.
 <P>
 <I>Always black</I> (Default: <I>Off</I>):<BR>
 This option is only available if edge lines are enabled.  Enabling it causes
-all edge lines to be drawn in black.  This can be useful to part authors, as it
-causes the edge lines in the default color (light gray) to be much more
-visible.
+all edge lines to be drawn in black.  This can be particularly useful to part
+authors, as it causes the edge lines for the default color (light gray) to be
+much more visible.<BR>
+If <A HREF="#ProcessLDConfig"><I>Process ldconfig.ldr</I></A> is checked in the
+General Preferences, LDView will look for an entry in ldconfig.ldr with a color
+name of Black_Edge.  If it finds that entry, it will use that color when
+<I>Always black</I> is checked instead of black.
 </P>
 <P>
 <I>Thickness</I> (Default: <I>0%</I>):<BR>
