@@ -4468,20 +4468,25 @@ LDExporter *LDrawModelViewer::initExporter(void)
 	return exporter;
 }
 
-void LDrawModelViewer::setExportType(ExportType type)
+void LDrawModelViewer::setExportType(ExportType type, bool forceNew /*= false*/)
 {
-	if (type != exportType && type != (ExportType)0)
+	if (forceNew || (type != exportType && type != (ExportType)0))
 	{
-		exportType = type;
+		if (type != (ExportType)0)
+		{
+			exportType = type;
+		}
 		TCObject::release(exporter);
 		exporter = NULL;
 	}
 	initExporter();
 }
 
-LDExporter *LDrawModelViewer::getExporter(ExportType type /*= (ExportType)0*/)
+LDExporter *LDrawModelViewer::getExporter(
+	ExportType type /*= (ExportType)0*/,
+	bool forceNew /*= false*/)
 {
-	setExportType(type);
+	setExportType(type, forceNew);
 	return initExporter();
 }
 

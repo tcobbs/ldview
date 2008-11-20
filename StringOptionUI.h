@@ -24,6 +24,7 @@ public:
 
 protected:
 	virtual int getEditWidth(int width) { return width; }
+	virtual void valueChanged(void);
 
 	HWND m_hLabel;
 	HWND m_hEdit;

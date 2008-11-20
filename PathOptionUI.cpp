@@ -13,10 +13,10 @@ PathOptionUI::PathOptionUI(
 	LDExporterSetting &setting):
 StringOptionUI(parent, setting)
 {
-	RECT browseRect = { 0, 0, 40, 14 };
-	SIZE englishSize;
-	SIZE localSize;
-	HDC hdc;
+	//RECT browseRect = { 0, 0, 40, 14 };
+	//SIZE englishSize;
+	//SIZE localSize;
+	//HDC hdc;
 	CUCSTR localText = TCObject::ls(_UC("LDXBrowse..."));
 
 	// Note that the window location in this constructor is just a placeholder.
@@ -31,23 +31,23 @@ StringOptionUI(parent, setting)
 	// "backwards compatibility".
 	SendMessage(m_hBrowseButton, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
 		WM_GETFONT, 0, 0), 0);
-	// Convert the default size of a browse button in English to dialog units.
-	MapDialogRect(m_hParentWnd, &browseRect);
-	hdc = GetDC(m_hParentWnd);
-	// Figure out the width of the English text, which we know the button size
-	// for.
-	GetTextExtentPoint32A(hdc, "Browse...", strlen("Browse..."), &englishSize);
-	// Figure out the width of the localized button text, which we don't know
-	// the button size for.
-	CUIWindow::getTextExtentPoint32UC(hdc, localText, ucstrlen(localText),
-		&localSize);
-	// The button width is the known good width for "Browse...", minus the width
-	// of the string "Browse..." plus the width of the localized verison of
-	// "Browse...".
-	m_browseWidth = browseRect.right - englishSize.cx + localSize.cx;
-	ReleaseDC(m_hParentWnd, hdc);
+	m_browseSize = fitButtonText(localText);
+	//// Convert the default size of a browse button in English to dialog units.
+	//MapDialogRect(m_hParentWnd, &browseRect);
+	//hdc = GetDC(m_hParentWnd);
+	//// Figure out the width of the English text, which we know the button size
+	//// for.
+	//GetTextExtentPoint32A(hdc, "Browse...", strlen("Browse..."), &englishSize);
+	//// Figure out the width of the localized button text, which we don't know
+	//// the button size for.
+	//CUIWindow::getTextExtentPoint32UC(hdc, localText, ucstrlen(localText),
+	//	&localSize);
+	//// The button width is the known good width for "Browse...", minus the width
+	//// of the string "Browse..." plus the width of the localized verison of
+	//// "Browse...".
+	//m_browseWidth = browseRect.right - englishSize.cx + localSize.cx;
+	//ReleaseDC(m_hParentWnd, hdc);
 	// The height is purely dependent of the dialog box units mapping.
-	m_browseHeight = browseRect.bottom;
 }
 
 // This does all the work of calculating the location and size of the check box
@@ -73,8 +73,8 @@ int PathOptionUI::updateLayout(
 	{
 		// Note that the window gets sized and placed before is is shown for the
 		// first time.
-		MoveWindow(m_hBrowseButton, x + width - m_browseWidth,
-			y + height - m_browseHeight, m_browseWidth, m_browseHeight, FALSE);
+		MoveWindow(m_hBrowseButton, x + width - m_browseSize.cx,
+			y + height - m_browseSize.cy, m_browseSize.cx, m_browseSize.cy, FALSE);
 		// Notice that origShown was grabbed before calling
 		// StringOptionUI::updateLayout.
 		if (!origShown)

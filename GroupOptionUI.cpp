@@ -11,7 +11,8 @@
 GroupOptionUI::GroupOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
 OptionUI(parent, setting),
 m_hCheck(NULL),
-m_hLabel(NULL)
+m_hLabel(NULL),
+m_spacing(0)
 {
 	bool hasCheck = setting.getType() == LDExporterSetting::TBool;
 	RECT marginRect = { 5, 0, 5, 5 };
@@ -74,6 +75,18 @@ m_hLabel(NULL)
 	m_leftGroupMargin = marginRect.left;
 	m_rightGroupMargin = marginRect.right;
 	m_bottomGroupMargin = marginRect.bottom;
+	m_hResetButton = CUIWindow::createWindowExUC(0, WC_BUTTONUC,
+		TCObject::ls(_UC("LDXResetGroup")),
+		BS_NOTIFY | BS_PUSHBUTTON  | WS_CHILD | WS_TABSTOP, 0, 0,
+		100, 100, m_hParentWnd, NULL, GetWindowInstance(m_hParentWnd), NULL);
+	// When the reset button's command goes to the canvas, or it receives the
+	// keyboard focus, we need a way to get back to here.
+	SetWindowLongPtr(m_hResetButton, GWLP_USERDATA, (LONG_PTR)this);
+	// The default font is the Windows 3.1 bold system font.  Gotta love
+	// "backwards compatibility".
+	SendMessage(m_hResetButton, WM_SETFONT, (WPARAM)SendMessage(m_hParentWnd,
+		WM_GETFONT, 0, 0), 0);
+	m_resetSize = fitButtonText(TCObject::ls(_UC("LDXResetGroup")));
 }
 
 // This does all the work of calculating the location and size of the controls
@@ -154,7 +167,13 @@ int GroupOptionUI::updateLayout(
 			// it's safe to show them.
 			ShowWindow(m_hBox, SW_SHOW);
 			ShowWindow(hLabel, SW_SHOW);
+			ShowWindow(m_hResetButton, SW_SHOW);
 			m_shown = true;
+		}
+		else
+		{
+			RedrawWindow(m_hResetButton, NULL, NULL,
+				RDW_ERASE | RDW_INVALIDATE);
 		}
 	}
 	// Return the overall height of this option UI (not including the group box
@@ -172,15 +191,18 @@ void GroupOptionUI::commit(void)
 }
 
 // Resize the box vertically so that y represents the bottom of its contents.
-void GroupOptionUI::close(int y)
+void GroupOptionUI::close(int y, int spacing)
 {
 	RECT rect;
 
+	m_spacing = spacing;
 	GetWindowRect(m_hBox, &rect);
 	CUIWindow::screenToClient(GetParent(m_hBox), &rect);
+	MoveWindow(m_hResetButton, rect.right - m_resetSize.cx - m_rightGroupMargin,
+		y + spacing, m_resetSize.cx, m_resetSize.cy, FALSE);
 	// m_bottomGroupMargin gives space for the actual bottom line.  When we
 	// enter this function, y is the bottom of the last control in the box.
-	rect.bottom = y + m_bottomGroupMargin;
+	rect.bottom = y + m_bottomGroupMargin + m_resetSize.cy + spacing;
 	MoveWindow(m_hBox, rect.left, rect.top, rect.right - rect.left,
 		rect.bottom - rect.top, FALSE);
 }
@@ -232,6 +254,25 @@ void GroupOptionUI::getRect(RECT *rect)
 	CUIWindow::screenToClient(m_hParentWnd, rect);
 }
 
+BOOL CALLBACK GroupOptionUI::staticEnumReset(HWND hChild, LPARAM lParam)
+{
+	OptionUI *optionUI = (OptionUI *)GetWindowLongPtr(hChild, GWL_USERDATA);
+
+	if (optionUI != NULL)
+	{
+		const RECT &rect = *(RECT *)lParam;
+		RECT childRect;
+
+		GetWindowRect(hChild, &childRect);
+		CUIWindow::screenToClient(GetParent(hChild), &childRect);
+		if (childRect.top > rect.top && childRect.bottom < rect.bottom)
+		{
+			optionUI->reset();
+		}
+	}
+	return TRUE;
+}
+
 void GroupOptionUI::doClick(HWND control)
 {
 	if (control == m_hCheck)
@@ -239,5 +280,21 @@ void GroupOptionUI::doClick(HWND control)
 		// The following will cause the contents of the group to be enabled or
 		// disabled, depending on the new check state.
 		m_canvas->updateEnabled();
+	}
+	else if (control == m_hResetButton)
+	{
+		RECT rect;
+
+		GetWindowRect(m_hBox, &rect);
+		CUIWindow::screenToClient(m_hParentWnd, &rect);
+		EnumChildWindows(m_hParentWnd, staticEnumReset, (LPARAM)&rect);
+	}
+}
+
+void GroupOptionUI::valueChanged(void)
+{
+	if (m_hCheck != NULL)
+	{
+		CUIWindow::checkSet(m_hCheck, m_setting->getBoolValue());
 	}
 }

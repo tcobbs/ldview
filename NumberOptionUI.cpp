@@ -132,3 +132,8 @@ void NumberOptionUI::getRect(RECT *rect)
 	CUIWindow::screenToClient(m_hParentWnd, &editRect);
 	UnionRect(rect, &labelRect, &editRect);
 }
+
+void NumberOptionUI::valueChanged(void)
+{
+	CUIWindow::setWindowTextUC(m_hEdit, m_setting->getStringValue().c_str());
+}

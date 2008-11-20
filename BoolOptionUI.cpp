@@ -130,3 +130,8 @@ void BoolOptionUI::doClick(HWND control)
 		m_canvas->updateEnabled();
 	}
 }
+
+void BoolOptionUI::valueChanged(void)
+{
+	CUIWindow::checkSet(m_hCheck, m_setting->getBoolValue());
+}

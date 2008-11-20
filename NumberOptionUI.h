@@ -17,6 +17,8 @@ public:
 	virtual void getRect(RECT *rect);
 
 protected:
+	virtual void valueChanged(void);
+
 	HWND m_hLabel;
 	HWND m_hEdit;
 	int m_editWidth;

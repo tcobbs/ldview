@@ -192,7 +192,7 @@ void OptionsCanvas::calcOptionHeight(
 			if (update)
 			{
 				// This sizes the group box to enclose all its options.
-				((GroupOptionUI *)optionUI)->close(y - m_spacing);
+				((GroupOptionUI *)optionUI)->close(y - m_spacing, m_spacing);
 			}
 			// This inserts the space for the bottom of the group box.
 			y += optionUI->getBottomGroupMargin();
@@ -326,4 +326,13 @@ LRESULT OptionsCanvas::doCommand(
 		break;
 	}
 	return CUIDialog::doCommand(notifyCode, commandId, control);
+}
+
+void OptionsCanvas::resetSettings(void)
+{
+	for (OptionUIList::iterator it = m_optionUIs.begin();
+		it != m_optionUIs.end(); it++)
+	{
+		(*it)->reset();
+	}
 }

@@ -511,8 +511,8 @@ void TCUserDefaults::setFloatForKey(float value, const char* key,
 float TCUserDefaults::floatForKey(const char* key, float defaultValue,
 								  bool sessionSpecific)
 {
-	return getCurrentUserDefaults()->defFloatForKey(key, defaultValue,
-		sessionSpecific);
+	return getCurrentUserDefaults()->defFloatForKey(key, sessionSpecific,
+		defaultValue);
 }
 
 void TCUserDefaults::removeValue(const char* key, bool sessionSpecific)
@@ -1154,8 +1154,7 @@ void TCUserDefaults::defSetLongForKey(long value, const char* key,
 float TCUserDefaults::defFloatForKey(
 	const char* key,
 	bool sessionSpecific,
-	float defaultValue,
-	bool *found)
+	float defaultValue)
 {
 	char *stringValue = defStringForKey(key, sessionSpecific, NULL);
 	float returnValue = defaultValue;

@@ -630,7 +630,7 @@ bool LDLPalette::parseLDrawOrgColorComment(const char *comment)
 			comment);
 		return false;
 	}
-	itemSpot = strcasestr(comment, "EDGE ");
+	itemSpot = strcasestr(&comment[10 + strlen(name)], "EDGE ");
 	if (!itemSpot)
 	{
 		debugPrintf("Couldn't find color EDGE in color meta-comment:\n%s\n",

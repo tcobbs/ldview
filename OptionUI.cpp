@@ -219,3 +219,39 @@ void OptionUI::updateTooltip(void)
 		::SendMessage(m_hTooltip, TTM_SETDELAYTIME, TTDT_AUTOPOP, 32767);
 	}
 }
+
+void OptionUI::reset(void)
+{
+	m_setting->reset();
+	valueChanged();
+}
+
+SIZE OptionUI::fitButtonText(
+	CUCSTR localText)
+{
+	// "Browse..." needs 40 dialog units
+	RECT buttonRect = { 0, 0, 40, 14 };
+	SIZE englishSize;
+	SIZE localSize;
+	HDC hdc;
+	SIZE retValue;
+
+	// Convert the default size of a browse button in English to dialog units.
+	MapDialogRect(m_hParentWnd, &buttonRect);
+	hdc = GetDC(m_hParentWnd);
+	// Figure out the width of the English text, which we know the button size
+	// for.
+	GetTextExtentPoint32A(hdc, "Browse...", strlen("Browse..."), &englishSize);
+	// Figure out the width of the localized button text, which we don't know
+	// the button size for.
+	CUIWindow::getTextExtentPoint32UC(hdc, localText, ucstrlen(localText),
+		&localSize);
+	// The button width is the known good width for "Browse...", minus the width
+	// of the string "Browse..." plus the width of the localized verison of
+	// "Browse...".
+	retValue.cx = buttonRect.right - englishSize.cx + localSize.cx;;
+	// The height is purely dependent of the dialog box units mapping.
+	retValue.cy = buttonRect.bottom;
+	ReleaseDC(m_hParentWnd, hdc);
+	return retValue;
+}

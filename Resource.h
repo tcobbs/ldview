@@ -348,6 +348,7 @@
 #define IDC_OPTIONS_CANVAS              1278
 #define IDC_RESIZEGRIP                  1279
 #define IDC_STEP_FIELD                  1281
+#define IDC_RESET                       1282
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -445,7 +446,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40110
-#define _APS_NEXT_CONTROL_VALUE         1282
+#define _APS_NEXT_CONTROL_VALUE         1283
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

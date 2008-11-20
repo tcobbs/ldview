@@ -24,6 +24,8 @@ public:
 	virtual void doClick(HWND control);
 
 protected:
+	virtual void valueChanged(void);
+
 	HWND m_hCheck;
 };
 

@@ -34,6 +34,7 @@ public:
 	void addEnumSetting(LDExporterSetting &setting);
 	bool commitSettings(void);
 	void updateEnabled(void);
+	void resetSettings(void);
 protected:
 	virtual ~OptionsCanvas(void);
 	virtual void dealloc(void);

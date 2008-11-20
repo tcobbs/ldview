@@ -118,3 +118,8 @@ void StringOptionUI::commit(void)
 	CUIWindow::windowGetText(m_hEdit, value);
 	m_setting->setValue(value.c_str(), true);
 }
+
+void StringOptionUI::valueChanged(void)
+{
+	CUIWindow::setWindowTextUC(m_hEdit, m_setting->getStringValue().c_str());
+}

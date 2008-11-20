@@ -4091,8 +4091,13 @@ void ModelWindow::doSaveOptionsClick(void)
 				ExportOptionsDialog *dialog = new ExportOptionsDialog(
 					getLanguageModule(), exporter);
 
-				if (dialog->doModal(hSaveDialog) == IDOK)
+				if (dialog->doModal(hSaveDialog) != IDOK)
 				{
+					// Force a new exporter to be created in order to forget
+					// about any settings changes that might have happened as
+					// a result of a reset.
+					modelViewer->getExporter((LDrawModelViewer::ExportType)0,
+						true);
 				}
 				dialog->release();
 			}

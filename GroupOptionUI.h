@@ -22,17 +22,27 @@ public:
 		int &optimalWidth);
 	virtual bool validate(ucstring &/*error*/) { return true; }
 	virtual void commit(void);
-	virtual void close(int y);
+	virtual void close(int y, int spacing);
 	virtual bool getEnabled(void);
 	virtual void setEnabled(bool value);
 	virtual void getRect(RECT *rect);
 	virtual void doClick(HWND control);
+	virtual int getBottomGroupMargin(void) const
+	{
+		return m_bottomGroupMargin + m_resetSize.cy + m_spacing;
+	}
 
 protected:
+	virtual void valueChanged(void);
+	static BOOL CALLBACK staticEnumReset(HWND hChild, LPARAM lParam);
+
 	HWND m_hBox;
 	HWND m_hCheck;
 	HWND m_hLabel;
+	HWND m_hResetButton;
+	SIZE m_resetSize;
 	ucstring m_label;
+	int m_spacing;
 };
 
 #endif // __GroupOptionUI_H__
