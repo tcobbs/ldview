@@ -201,19 +201,27 @@ int LDLMainModel::getEdgeColorNumber(int colorNumber)
 {
 	if (getBlackEdgeLines())
 	{
-		if (colorNumberIsTransparent(colorNumber))
+		int colorNumber =
+			m_mainPalette->getColorNumberForName("Black Edge");
+
+		if (colorNumber < 0)
 		{
-			return 0x3333333;	// Color 32 is transparent dark gray, and has a
-								// different RGB value than black, so return
-								// the extended color number for the same RGB
-								// value as black, but transparent.  (Yes, this
-								// is supposed to be 7 threes; not 6, and not
-								// 8.
+			colorNumber = 0x2000000;
 		}
-		else
-		{
-			return 0;
-		}
+		return colorNumber;
+		//if (colorNumberIsTransparent(colorNumber))
+		//{
+		//	return 0x3333333;	// Color 32 is transparent dark gray, and has a
+		//						// different RGB value than black, so return
+		//						// the extended color number for the same RGB
+		//						// value as black, but transparent.  (Yes, this
+		//						// is supposed to be 7 threes; not 6, and not
+		//						// 8.
+		//}
+		//else
+		//{
+		//	return 0;
+		//}
 	}
 	return m_mainPalette->getEdgeColorNumber(colorNumber);
 }

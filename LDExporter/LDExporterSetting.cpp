@@ -112,7 +112,7 @@ void LDExporterSetting::reset(bool commit /*= false*/)
 		setValue(TCUserDefaults::defaultStringForKeyUC(m_key.c_str()), commit);
 		break;
 	default:
-		throw "Invalid type";
+		break;
 	}
 }
 

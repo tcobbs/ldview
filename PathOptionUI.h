@@ -27,12 +27,11 @@ protected:
 	virtual int getEditWidth(int width)
 	{
 		// Leave space for the browse button to the right of the edit control.
-		return width - m_spacing - m_browseWidth;
+		return width - m_spacing - m_browseSize.cx;
 	}
 
 	HWND m_hBrowseButton;
-	int m_browseWidth;
-	int m_browseHeight;
+	SIZE m_browseSize;
 };
 
 #endif // __PathOptionUI_H__

@@ -24,6 +24,7 @@ protected:
 		int yPos);
 	virtual LRESULT doCommand(int notifyCode, int commandId,
 		HWND control);
+	virtual LRESULT doReset(void);
 
 	virtual void doOK(void);
 

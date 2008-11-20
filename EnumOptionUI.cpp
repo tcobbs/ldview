@@ -126,3 +126,8 @@ void EnumOptionUI::commit(void)
 {
 	m_setting->selectOption(CUIWindow::comboGetSelectedItem(m_hCombo), true);
 }
+
+void EnumOptionUI::valueChanged(void)
+{
+	CUIWindow::comboSelectItem(m_hCombo, (int)m_setting->getSelectedOption());
+}

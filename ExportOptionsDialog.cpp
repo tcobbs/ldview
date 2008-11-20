@@ -142,8 +142,8 @@ BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 	HWND hScroller;
 
 	GetClientRect(hWindow, &rect);
-	minWidth = rect.right / 2;
-	minHeight = rect.bottom / 2;
+	minWidth = rect.right;
+	minHeight = rect.bottom;
 	setIcon(IDI_APP_ICON);
 	CUIWindow::windowGetText(hWindow, titleBase);
 	convertStringToUpper(&extension[0]);
@@ -154,6 +154,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
 	m_resizer->addSubWindow(hScroller, CUISizeHorizontal | CUISizeVertical);
+	m_resizer->addSubWindow(IDC_RESET, CUIFloatRight | CUIFloatTop);
 	m_resizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
 	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
 	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
@@ -224,5 +225,18 @@ LRESULT ExportOptionsDialog::doCommand(
 				RDW_INVALIDATE | RDW_ALLCHILDREN);
 		}
 	}
+	else if (notifyCode == BN_CLICKED)
+	{
+		if (commandId == IDC_RESET)
+		{
+			return doReset();
+		}
+	}
 	return CUIDialog::doCommand(notifyCode, commandId, control);
+}
+
+LRESULT ExportOptionsDialog::doReset(void)
+{
+	m_canvas->resetSettings();
+	return 0;
 }

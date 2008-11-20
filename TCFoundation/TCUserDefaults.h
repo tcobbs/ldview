@@ -139,7 +139,7 @@ class TCExport TCUserDefaults: public TCObject
 		long defLongForKey(const char* key, bool sessionSpecific,
 			long defaultValue = 0, bool *found = NULL);
 		float defFloatForKey(const char* key, bool sessionSpecific,
-			float defaultValue = 0, bool *found = NULL);
+			float defaultValue = 0);
 		long defDefaultLongForKey(const char* key);
 		float defDefaultFloatForKey(const char* key);
 		void defSetLongVectorForKey(const LongVector &value,

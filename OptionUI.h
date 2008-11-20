@@ -32,10 +32,13 @@ public:
 	virtual int getBottomGroupMargin(void) const { return m_bottomGroupMargin; }
 	virtual bool getEnabled(void) { return true; }
 	virtual void addTooltip(HWND hControl);
+	virtual void reset(void);
 
 protected:
 	virtual int calcTextHeight(HDC hdc, int width, int &optimalWidth);
 	virtual void updateTooltip(void);
+	virtual void valueChanged(void) = 0;
+	SIZE fitButtonText(CUCSTR localText);
 
 	static int calcTextHeight(HDC hdc, const ucstring &text, int width,
 		int &optimalWidth);
