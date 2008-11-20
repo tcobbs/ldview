@@ -168,4 +168,18 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 
 LDViewExportOption::~LDViewExportOption() { }
 
+void LDViewExportOption::doOk(void)
+{
+}
 
+void LDViewExportOption::doCancel(void)
+{
+}
+
+void LDViewExportOption::doReset(void)
+{
+}
+
+void LDViewExportOption::doTypeBoxActivated(void)
+{
+}

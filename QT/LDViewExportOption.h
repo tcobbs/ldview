@@ -21,6 +21,10 @@ public slots:
 
 
 protected:
+	void doOk(void);
+	void doCancel(void);
+	void doReset(void);
+	void doTypeBoxActivated(void);
     LDExporter *m_exporter;
 	QScrollView *sv;
 	QVBox *box;
