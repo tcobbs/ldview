@@ -22,5 +22,6 @@
 - (void)setEnabled:(BOOL)enabled;
 - (NSRect)frame;
 - (NSView *)firstKeyView;
+- (void)valueChanged;
 
 @end

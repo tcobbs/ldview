@@ -101,4 +101,9 @@
 	return popUpButton;
 }
 
+- (void)valueChanged
+{
+	[popUpButton selectItemAtIndex:setting->getSelectedOption()];
+}
+
 @end

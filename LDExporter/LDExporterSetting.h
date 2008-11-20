@@ -109,6 +109,8 @@ public:
 	void setMinValue(TCFloat value);
 	void setMaxValue(TCFloat value);
 	const ucstring &getStringValue(void);
+	
+	void reset(bool commit = false);
 
 	void setTooltip(const char *localStringKey);
 	const ucstring &getTooltip(void) const { return m_tooltip; }

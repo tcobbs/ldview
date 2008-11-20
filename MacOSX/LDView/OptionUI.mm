@@ -251,4 +251,14 @@
 	}
 }
 
+- (void)valueChanged
+{
+}
+
+- (void)reset
+{
+	setting->reset();
+	[self valueChanged];
+}
+
 @end

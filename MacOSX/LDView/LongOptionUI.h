@@ -17,5 +17,6 @@
 
 - (bool)validate:(NSString *&)error;
 - (void)commit;
+- (void)valueChanged;
 
 @end

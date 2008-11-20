@@ -8,6 +8,7 @@
 LDStlExporter::LDStlExporter(void):
 LDExporter("StlExporter/")
 {
+	loadSettings();
 }
 
 LDStlExporter::~LDStlExporter(void)
@@ -38,7 +39,6 @@ void LDStlExporter::initSettings(void) const
 			}
 		}
 	}
-	// No settings
 }
 
 void LDStlExporter::dealloc(void)
@@ -51,9 +51,9 @@ ucstring LDStlExporter::getTypeDescription(void) const
 	return ls(_UC("StlTypeDescription"));
 }
 
-void LDStlExporter::loadDefaults(void)
+void LDStlExporter::loadSettings(void)
 {
-	LDExporter::loadDefaults();
+	LDExporter::loadSettings();
 	m_binary = boolForKey("Binary", false);
 	m_colorFormat = longForKey("ColorFormat", 0);
 }
@@ -62,7 +62,7 @@ int LDStlExporter::doExport(TREModel *pTopModel)
 {
 	FILE *file = fopen(m_filename.c_str(), "wb");
 
-	loadDefaults();
+	loadSettings();
 	if (file)
 	{
 		pTopModel->saveSTL(file);
