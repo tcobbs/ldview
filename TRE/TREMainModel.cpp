@@ -146,6 +146,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.vertexArrayEdgeFlags = false;
 	m_mainFlags.multiThreaded = true;
 	m_mainFlags.gl2ps = false;
+	m_mainFlags.sendProgress = true;
 
 	m_conditionalsDone = 0;
 	m_conditionalsStep = 0;
