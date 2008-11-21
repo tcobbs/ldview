@@ -721,6 +721,8 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXShads", m_shads, "PovShadsDesc");
 	writeDeclare("LDXFloor", m_floor, "PovFloorDesc");
 	fprintf(m_pPovFile, "\n");
+
+	fprintf(m_pPovFile, "%s\n", ls("PovBoundsSection"));
 	writeDeclare("LDXMinX", m_boundingMin[0]);
 	writeDeclare("LDXMinY", m_boundingMin[1]);
 	writeDeclare("LDXMinZ", m_boundingMin[2]);
@@ -732,10 +734,15 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXCenterZ", m_center[2]);
 	writeDeclare("LDXCenter", "<LDXCenterX,LDXCenterY,LDXCenterZ>");
 	writeDeclare("LDXRadius", m_radius);
+	fprintf(m_pPovFile, "\n");
+
+	fprintf(m_pPovFile, "%s\n", ls("PovCameraSection"));
 	getCameraStrings(cameraLocString, cameraLookAtString, cameraSkyString);
-	writeDeclare("LDXCameraLoc", cameraLocString, "CameraLocDesc");
-	writeDeclare("LDXCameraLookAt", cameraLookAtString, "CameraLookAtDesc");
-	writeDeclare("LDXCameraSky", cameraSkyString, "CameraSkyDesc");
+	writeDeclare("LDXCameraLoc", cameraLocString, "PovCameraLocDesc");
+	writeDeclare("LDXCameraLookAt", cameraLookAtString, "PovCameraLookAtDesc");
+	writeDeclare("LDXCameraSky", cameraSkyString, "PovCameraSkyDesc");
+	fprintf(m_pPovFile, "\n");
+
 	switch (m_floorAxis)
 	{
 	case 0:
@@ -1197,10 +1204,10 @@ bool LDPovExporter::writeCamera(void)
 	fprintf(m_pPovFile,
 		"#ifndef (LDXSkipCamera)\n"
 		"camera {\n"
-		"\t#declare ASPECT = %s;\n"
+		"\t#declare LDXCamAspect = %s;\n"
 		"\tlocation LDXCameraLoc\n"
 		"\tsky LDXCameraSky\n"
-		"\tright ASPECT * < -1,0,0 >\n"
+		"\tright LDXCamAspect * < -1,0,0 >\n"
 		"\tlook_at LDXCameraLookAt\n"
 		"\tangle %s\n"
 		"}\n"
@@ -2850,8 +2857,8 @@ bool LDPovExporter::substituteTorusQ(
 void LDPovExporter::writeLogo(void)
 {
 	fprintf(m_pPovFile,
-		"#declare LEGOSPACE = 49.5;\n"
-		"#declare ldx_stud_logo =\n"
+		"#declare LDXLegoSpace = 49.5;\n"
+		"#declare LDXStudLogo =\n"
 		"union {\n"
 		"	merge {\n"
 		"		// L\n"
@@ -2875,7 +2882,7 @@ void LDPovExporter::writeLogo(void)
 		"		sphere {<-44,0,17>,4}\n"
 		"		cylinder {<-44,0,0>,<-44,0,17>,4 open}\n"
 		"		clipped_by {plane{y,0}}\n"
-		"		translate <0,0,LEGOSPACE>\n"
+		"		translate <0,0,LDXLegoSpace>\n"
 		"	}\n"
 		"\n"
 		"	merge {\n"
@@ -2889,7 +2896,7 @@ void LDPovExporter::writeLogo(void)
 		"		cylinder {<-44,0,25>,<-44,0,17>,4 open}\n"
 		"		sphere {<-44,0,17>,4}\n"
 		"		clipped_by {plane{y,0}}\n"
-		"		translate <0,0,LEGOSPACE*2>\n"
+		"		translate <0,0,LDXLegoSpace*2>\n"
 		"	}\n"
 		"\n"
 		"	merge {\n"
@@ -2899,7 +2906,7 @@ void LDPovExporter::writeLogo(void)
 		"		torus {12.5,4 clipped_by{plane{-x,0}} translate<-14,0,12.5>}\n"
 		"		cylinder {<-14,0,25>,<-74,0,25>,4 open}\n"
 		"		clipped_by {plane{y,0}}\n"
-		"		translate <0,0,LEGOSPACE*3>\n"
+		"		translate <0,0,LDXLegoSpace*3>\n"
 		"	}\n"
 		"\n"
 		"	matrix <1,0,-0.22,0,1,0,0,0,1,0,0,0>\n"
@@ -2918,7 +2925,7 @@ bool LDPovExporter::substituteStud(void)
 			"#else\n"
 			"union {\n"
 			"	cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
-			"	object { ldx_stud_logo }\n"
+			"	object { LDXStudLogo }\n"
 			"}\n"
 			"#end\n"
 			"\n");
