@@ -24,6 +24,7 @@
 
 - (IBAction)ok:(id)sender;
 - (IBAction)cancel:(id)sender;
+- (IBAction)resetAll:(id)sender;
 - (id)docView;
 - (void)updateEnabled;
 - (void)makeOptionUIVisible:(OptionUI *)optionUI;

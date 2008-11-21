@@ -77,7 +77,12 @@
 		
 		convertStringToUpper(&extension[0]);
 		titlePrefix = [NSString stringWithFormat:prefixFormat, [NSString stringWithASCIICString:extension.c_str()]];
-		[options runModalWithSettings:exporter->getSettings() titlePrefix:titlePrefix];
+		if ([options runModalWithSettings:exporter->getSettings() titlePrefix:titlePrefix] == NSCancelButton)
+		{
+			// Force the exporter to be recreated so if they reset the options
+			// before canceling, the reset will be lost.
+			modelViewer->getExporter((LDrawModelViewer::ExportType)0, true);
+		}
 		[options release];
 	}
 }
