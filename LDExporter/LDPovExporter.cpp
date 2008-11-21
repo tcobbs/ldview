@@ -506,7 +506,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		fprintf(m_pPovFile, "\nbackground { color rgb <BG_R,BG_G,BG_B> }\n\n");
+		fprintf(m_pPovFile, "\nbackground { color rgb <LDXBgR,LDXBgG,LDXBgB> }\n\n");
 		if (m_edges)
 		{
 			TCFloat matrix[16];
@@ -572,14 +572,14 @@ void LDPovExporter::writeMainModel(void)
 void LDPovExporter::writeFloor(void)
 {
 	fprintf(m_pPovFile, "// Floor\n");
-	fprintf(m_pPovFile, "#if (FLOOR != 0)\n");
+	fprintf(m_pPovFile, "#if (LDXFloor != 0)\n");
 	fprintf(m_pPovFile, "object {\n");
-	fprintf(m_pPovFile, "\tplane { FLOOR_AXIS, FLOOR_LOC hollow }\n");
+	fprintf(m_pPovFile, "\tplane { LDXFloorAxis, LDXFloorLoc hollow }\n");
 	fprintf(m_pPovFile, "\ttexture {\n");
 	fprintf(m_pPovFile,
-		"\t\tpigment { color rgb <FLOOR_R,FLOOR_G,FLOOR_B> }\n");
+		"\t\tpigment { color rgb <LDXFloorR,LDXFloorG,LDXFloorB> }\n");
 	fprintf(m_pPovFile,
-		"\t\tfinish { ambient FLOOR_AMB diffuse FLOOR_DIFF }\n");
+		"\t\tfinish { ambient LDXFloorAmb diffuse LDXFloorDif }\n");
 	fprintf(m_pPovFile, "\t}\n");
 	fprintf(m_pPovFile, "}\n");
 	fprintf(m_pPovFile, "#end\n\n");
@@ -714,75 +714,76 @@ bool LDPovExporter::writeHeader(void)
 			author);
 	}
 	fprintf(m_pPovFile, ls("PovNote"), m_appName.c_str());
-	writeDeclare("MIN_X", m_boundingMin[0]);
-	writeDeclare("MIN_Y", m_boundingMin[1]);
-	writeDeclare("MIN_Z", m_boundingMin[2]);
-	writeDeclare("MAX_X", m_boundingMax[0]);
-	writeDeclare("MAX_Y", m_boundingMax[1]);
-	writeDeclare("MAX_Z", m_boundingMax[2]);
-	writeDeclare("CENTER_X", m_center[0]);
-	writeDeclare("CENTER_Y", m_center[1]);
-	writeDeclare("CENTER_Z", m_center[2]);
-	writeDeclare("CENTER", "<CENTER_X,CENTER_Y,CENTER_Z>");
+	writeDeclare("LDXQual", m_quality, "PovQualDesc");
+	writeDeclare("LDXSW", m_seamWidth, "PovSeamWidthDesc");
+	writeDeclare("LDXStuds", !m_hideStuds, "PovStudsDesc");
+	writeDeclare("LDXRefls", m_refls, "PovReflsDesc");
+	writeDeclare("LDXShads", m_shads, "PovShadsDesc");
+	writeDeclare("LDXFloor", m_floor, "PovFloorDesc");
+	fprintf(m_pPovFile, "\n");
+	writeDeclare("LDXMinX", m_boundingMin[0]);
+	writeDeclare("LDXMinY", m_boundingMin[1]);
+	writeDeclare("LDXMinZ", m_boundingMin[2]);
+	writeDeclare("LDXMaxX", m_boundingMax[0]);
+	writeDeclare("LDXMaxY", m_boundingMax[1]);
+	writeDeclare("LDXMaxZ", m_boundingMax[2]);
+	writeDeclare("LDXCenterX", m_center[0]);
+	writeDeclare("LDXCenterY", m_center[1]);
+	writeDeclare("LDXCenterZ", m_center[2]);
+	writeDeclare("LDXCenter", "<LDXCenterX,LDXCenterY,LDXCenterZ>");
+	writeDeclare("LDXRadius", m_radius);
 	getCameraStrings(cameraLocString, cameraLookAtString, cameraSkyString);
-	writeDeclare("CAMERA_LOC", cameraLocString, "CameraLocDesc");
-	writeDeclare("CAMERA_LOOK_AT", cameraLookAtString, "CameraLookAtDesc");
-	writeDeclare("CAMERA_SKY", cameraSkyString, "CameraSkyDesc");
-	writeDeclare("RADIUS", m_radius);
-	writeDeclare("QUAL", m_quality, "PovQualDesc");
-	writeDeclare("FLOOR", m_floor, "PovFloorDesc");
+	writeDeclare("LDXCameraLoc", cameraLocString, "CameraLocDesc");
+	writeDeclare("LDXCameraLookAt", cameraLookAtString, "CameraLookAtDesc");
+	writeDeclare("LDXCameraSky", cameraSkyString, "CameraSkyDesc");
 	switch (m_floorAxis)
 	{
 	case 0:
 		floorAxis = "x";
-		floorLoc = "MIN_X";
+		floorLoc = "LDXMinX";
 		break;
 	case 2:
 		floorAxis = "z";
-		floorLoc = "MAX_Z";
+		floorLoc = "LDXMaxZ";
 		break;
 	default:
 		floorAxis = "y";
-		floorLoc = "MAX_Y";
+		floorLoc = "LDXMaxY";
 		break;
 	}
-	writeDeclare("FLOOR_LOC", floorLoc, "PovFloorLocDesc");
-	writeDeclare("FLOOR_AXIS", floorAxis, "PovFloorAxisDesc");
-	writeDeclare("FLOOR_R", 0.8, "PovFLOOR_RDesc");
-	writeDeclare("FLOOR_G", 0.8, "PovFLOOR_GDesc");
-	writeDeclare("FLOOR_B", 0.8, "PovFLOOR_BDesc");
-	writeDeclare("FLOOR_AMB", 0.4, "PovFLOOR_AMBDesc");
-	writeDeclare("FLOOR_DIFF", 0.4, "PovFLOOR_DIFFDesc");
-	writeDeclare("REFLS", m_refls, "PovReflsDesc");
-	writeDeclare("SHADS", m_shads, "PovShadsDesc");
-	writeDeclare("AMB", m_ambient);
-	writeDeclare("DIF", m_diffuse);
-	writeDeclare("REFL", m_refl);
-	writeDeclare("PHONG", m_phong);
-	writeDeclare("PHONGS", m_phongSize);
-	writeDeclare("TREFL", m_transRefl);
-	writeDeclare("TFILT", m_transFilter);
-	writeDeclare("IOR", m_transIoR);
-	writeDeclare("RUBBER_REFL", m_rubberRefl);
-	writeDeclare("RUBBER_PHONG", m_rubberPhong);
-	writeDeclare("RUBBER_PHONGS", m_rubberPhongSize);
-	writeDeclare("CHROME_REFL", m_chromeRefl);
-	writeDeclare("CHROME_BRIL", m_chromeBril);
-	writeDeclare("CHROME_SPEC", m_chromeSpec);
-	writeDeclare("CHROME_ROUGH", m_chromeRough);
-	writeDeclare("SW", m_seamWidth, "PovSeamWidthDesc");
-	writeDeclare("STUDS", !m_hideStuds, "PovStudsDesc");
-	writeDeclare("IPOV", m_inlinePov, "PovInlinePovDesc");
+	writeDeclare("LDXFloorLoc", floorLoc, "PovFloorLocDesc");
+	writeDeclare("LDXFloorAxis", floorAxis, "PovFloorAxisDesc");
+	writeDeclare("LDXFloorR", 0.8, "PovFloorRDesc");
+	writeDeclare("LDXFloorG", 0.8, "PovFloorGDesc");
+	writeDeclare("LDXFloorB", 0.8, "PovFloorBDesc");
+	writeDeclare("LDXFloorAmb", 0.4, "PovFloorAmbDesc");
+	writeDeclare("LDXFloorDif", 0.4, "PovFloorDifDesc");
+	writeDeclare("LDXAmb", m_ambient);
+	writeDeclare("LDXDif", m_diffuse);
+	writeDeclare("LDXRefl", m_refl);
+	writeDeclare("LDXPhong", m_phong);
+	writeDeclare("LDXPhongS", m_phongSize);
+	writeDeclare("LDXTRefl", m_transRefl);
+	writeDeclare("LDXTFilt", m_transFilter);
+	writeDeclare("LDXIoR", m_transIoR);
+	writeDeclare("LDXRubberRefl", m_rubberRefl);
+	writeDeclare("LDXRubberPhong", m_rubberPhong);
+	writeDeclare("LDXRubberPhongS", m_rubberPhongSize);
+	writeDeclare("LDXChromeRefl", m_chromeRefl);
+	writeDeclare("LDXChromeBril", m_chromeBril);
+	writeDeclare("LDXChromeSpec", m_chromeSpec);
+	writeDeclare("LDXChromeRough", m_chromeRough);
+	writeDeclare("LDXIPov", m_inlinePov, "PovInlinePovDesc");
 	if (m_edges)
 	{
-		writeDeclare("EDGERAD", m_edgeRadius);
+		writeDeclare("LDXEdgeRad", m_edgeRadius);
 	}
-	writeDeclare("BG_R", m_backgroundR, "PovBG_RDesc");
-	writeDeclare("BG_G", m_backgroundG, "PovBG_GDesc");
-	writeDeclare("BG_B", m_backgroundB, "PovBG_BDesc");
+	writeDeclare("LDXBgR", m_backgroundR, "PovBgRDesc");
+	writeDeclare("LDXBgG", m_backgroundG, "PovBgGDesc");
+	writeDeclare("LDXBgB", m_backgroundB, "PovBgBDesc");
 	if (m_xmlMap)
 	{
-		writeDeclare("ORIGVER", "version", "OrigVerDesc");
+		writeDeclare("LDXOrigVer", "version", "OrigVerDesc");
 	}
 	fprintf(m_pPovFile, "\n");
 	return true;
@@ -1168,8 +1169,8 @@ void LDPovExporter::writeLight(TCFloat lat, TCFloat lon, int num)
 	lightVector.transformPoint(lightMatrix, lightLoc);
 	fprintf(m_pPovFile,
 		"#ifndef (LDXSkipLight%d)\n"
-		"light_source {\t// %s: %s,%s,RADIUS*2\n"
-		"	<%s*RADIUS,%s*RADIUS,%s*RADIUS> + CENTER\n"
+		"light_source {\t// %s: %s,%s,LDXRadius*2\n"
+		"	<%s*LDXRadius,%s*LDXRadius,%s*LDXRadius> + LDXCenter\n"
 		"	color rgb <1,1,1>\n"
 		"}\n"
 		"#end\n", num, (const char *)ls("PovLatLon"), ftostr(lat).c_str(),
@@ -1197,10 +1198,10 @@ bool LDPovExporter::writeCamera(void)
 		"#ifndef (LDXSkipCamera)\n"
 		"camera {\n"
 		"\t#declare ASPECT = %s;\n"
-		"\tlocation CAMERA_LOC\n"
-		"\tsky CAMERA_SKY\n"
+		"\tlocation LDXCameraLoc\n"
+		"\tsky LDXCameraSky\n"
 		"\tright ASPECT * < -1,0,0 >\n"
-		"\tlook_at CAMERA_LOOK_AT\n"
+		"\tlook_at LDXCameraLookAt\n"
 		"\tangle %s\n"
 		"}\n"
 		"#end\n\n",
@@ -1257,7 +1258,7 @@ bool LDPovExporter::writeInclude(
 		}
 		if (version.size() > 0)
 		{
-			fprintf(m_pPovFile, "#if (version < ORIGVER) #version ORIGVER; #end");
+			fprintf(m_pPovFile, "#if (version < LDXOrigVer) #version LDXOrigVer; #end");
 		}
 		if (lineFeed)
 		{
@@ -1509,7 +1510,7 @@ bool LDPovExporter::writeModelObject(
 				pModel->getBoundingBox(min, max);
 				fprintf(m_pPovFile, "#declare %s =\n", declareName.c_str());
 				fprintf(m_pPovFile,
-					"#if (QUAL = 0)\n"
+					"#if (LDXQual = 0)\n"
 					"box {\n\t");
 				writePoint(min);
 				fprintf(m_pPovFile, ",");
@@ -1556,11 +1557,11 @@ bool LDPovExporter::writeModelObject(
 						"	object { Edges }\n");
 				}
 				fprintf(m_pPovFile,
-					"#if (REFLS = 0)\n"
+					"#if (LDXRefls = 0)\n"
 					"	no_reflection\n"
 					"#end\n");
 				fprintf(m_pPovFile,
-					"#if (SHADS = 0)\n"
+					"#if (LDXShads = 0)\n"
 					"	no_shadow\n"
 					"#end\n");
 			}
@@ -1623,7 +1624,7 @@ std::string LDPovExporter::getSizeSeamString(TCFloat size)
 	{
 		char buf[1024];
 
-		sprintf(buf, "1-SW/%s", ftostr(size).c_str());
+		sprintf(buf, "1-LDXSW/%s", ftostr(size).c_str());
 		return buf;
 	}
 }
@@ -1638,7 +1639,7 @@ std::string LDPovExporter::getOfsSeamString(TCFloat ofs, TCFloat size)
 	{
 		char buf[1024];
 
-		sprintf(buf, "SW/%s", ftostr(size / ofs).c_str());
+		sprintf(buf, "LDXSW/%s", ftostr(size / ofs).c_str());
 		return buf;
 	}
 }
@@ -1807,7 +1808,7 @@ void LDPovExporter::writeInnerColorDeclaration(
 				it->second.names.front().name.c_str());
 			if (slope)
 			{
-				fprintf(m_pPovFile, "\t\t#if (QUAL > 1) normal { bumps 0.3 scale 25*0.02 } #end\n");
+				fprintf(m_pPovFile, "\t\t#if (LDXQual > 1) normal { bumps 0.3 scale 25*0.02 } #end\n");
 			}
 			fprintf(m_pPovFile, "\t}\n");
 		}
@@ -1816,7 +1817,7 @@ void LDPovExporter::writeInnerColorDeclaration(
 			fprintf(m_pPovFile, "\t\tpigment { ");
 			if (a != 255)
 			{
-				fprintf(m_pPovFile, "#if (QUAL > 1) ");
+				fprintf(m_pPovFile, "#if (LDXQual > 1) ");
 			}
 			writeRGBA(r, g, b, a);
 			if (a != 255)
@@ -1826,42 +1827,42 @@ void LDPovExporter::writeInnerColorDeclaration(
 				fprintf(m_pPovFile, " #end");
 			}
 			fprintf(m_pPovFile, " }\n");
-			fprintf(m_pPovFile, "#if (QUAL > 1)\n");
-			fprintf(m_pPovFile, "\t\tfinish { ambient AMB diffuse DIF }\n");
+			fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
+			fprintf(m_pPovFile, "\t\tfinish { ambient LDXAmb diffuse LDXDif }\n");
 			if (a == 255)
 			{
 				if (colorInfo.rubber)
 				{
-					fprintf(m_pPovFile, "\t\tfinish { phong RUBBER_PHONG phong_size RUBBER_PHONGS reflection RUBBER_REFL ");
+					fprintf(m_pPovFile, "\t\tfinish { phong LDXRubberPhong phong_size LDXRubberPhongS reflection LDXRubberRefl ");
 				}
 				else
 				{
-					fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection ");
+					fprintf(m_pPovFile, "\t\tfinish { phong LDXPhong phong_size LDXPhongS reflection ");
 					if (colorInfo.chrome)
 					{
-						fprintf(m_pPovFile, "CHROME_REFL brilliance CHROME_BRIL metallic specular CHROME_SPEC roughness CHROME_ROUGH");
+						fprintf(m_pPovFile, "LDXChromeRefl brilliance LDXChromeBril metallic specular LDXChromeSpec roughness LDXChromeRough");
 					}
 					else
 					{
-						fprintf(m_pPovFile, "REFL ");
+						fprintf(m_pPovFile, "LDXRefl ");
 					}
 				}
 				fprintf(m_pPovFile, "}\n");
 			}
 			else
 			{
-				fprintf(m_pPovFile, "\t\tfinish { phong PHONG phong_size PHONGS reflection TREFL }\n");
+				fprintf(m_pPovFile, "\t\tfinish { phong LDXPhong phong_size LDXPhongS reflection LDXTRefl }\n");
 			}
 			if (a != 255)
 			{
-				fprintf(m_pPovFile, "\t\t#if (version >= 3.1) #else finish { refraction 1 ior IOR } #end\n");
+				fprintf(m_pPovFile, "\t\t#if (version >= 3.1) #else finish { refraction 1 ior LDXIoR } #end\n");
 			}
 			fprintf(m_pPovFile, "#end\n");
 			fprintf(m_pPovFile, "\t}\n");
 			if (a != 255)
 			{
-				fprintf(m_pPovFile, "#if (version >= 3.1) #if (QUAL > 1)\n");
-				fprintf(m_pPovFile, "\tinterior { ior IOR }\n");
+				fprintf(m_pPovFile, "#if (version >= 3.1) #if (LDXQual > 1)\n");
+				fprintf(m_pPovFile, "\tinterior { ior LDXIoR }\n");
 				fprintf(m_pPovFile, "#end #end\n");
 			}
 		}
@@ -1878,10 +1879,10 @@ void LDPovExporter::writeLDXOpaqueColor(void)
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
 		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
-		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
-		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
-		fprintf(m_pPovFile, "		finish { phong PHONG phong_size PHONGS "
-			"reflection REFL }\n");
+		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
+		fprintf(m_pPovFile, "		finish { phong LDXPhong phong_size LDXPhongS "
+			"reflection LDXRefl }\n");
 		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "	}\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
@@ -1899,18 +1900,18 @@ void LDPovExporter::writeLDXTransColor(void)
 		fprintf(m_pPovFile, "#macro LDXTransColor(r, g, b)\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
-		fprintf(m_pPovFile, "		pigment { #if (QUAL > 1) rgbf <r,g,b,TFILT>"
+		fprintf(m_pPovFile, "		pigment { #if (LDXQual > 1) rgbf <r,g,b,LDXTFilt>"
 			" #else rgbf <0.6,0.6,0.6,0> #end }\n");
-		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
-		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
-		fprintf(m_pPovFile, "		finish { phong PHONG phong_size PHONGS "
-			"reflection TREFL }\n");
+		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
+		fprintf(m_pPovFile, "		finish { phong LDXPhong phong_size LDXPhongS "
+			"reflection LDXTRefl }\n");
 		fprintf(m_pPovFile, "		#if (version >= 3.1) #else finish { "
-			"refraction 1 ior IOR } #end\n");
+			"refraction 1 ior LDXIoR } #end\n");
 		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "	}\n");
-		fprintf(m_pPovFile, "#if (version >= 3.1) #if (QUAL > 1)\n");
-		fprintf(m_pPovFile, "	interior { ior IOR }\n");
+		fprintf(m_pPovFile, "#if (version >= 3.1) #if (LDXQual > 1)\n");
+		fprintf(m_pPovFile, "	interior { ior LDXIoR }\n");
 		fprintf(m_pPovFile, "#end #end\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
 		fprintf(m_pPovFile, "#end\n");
@@ -1928,11 +1929,11 @@ void LDPovExporter::writeLDXChromeColor(void)
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
 		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
-		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
-		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
-		fprintf(m_pPovFile, "		finish { phong PHONG phong_size PHONGS "
-			"reflection CHROME_REFL brilliance CHROME_BRIL metallic specular "
-			"CHROME_SPEC roughness CHROME_ROUGH}\n");
+		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
+		fprintf(m_pPovFile, "		finish { phong LDXPhong phong_size LDXPhongS "
+			"reflection LDXChromeRefl brilliance LDXChromeBril metallic specular "
+			"LDXChromeSpec roughness LDXChromeRough}\n");
 		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "	}\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
@@ -1951,10 +1952,10 @@ void LDPovExporter::writeLDXRubberColor(void)
 		fprintf(m_pPovFile, "#if (version >= 3.1) material { #end\n");
 		fprintf(m_pPovFile, "	texture {\n");
 		fprintf(m_pPovFile, "		pigment { rgbf <r,g,b,0> }\n");
-		fprintf(m_pPovFile, "#if (QUAL > 1)\n");
-		fprintf(m_pPovFile, "		finish { ambient AMB diffuse DIF }\n");
-		fprintf(m_pPovFile, "		finish { phong RUBBER_PHONG phong_size "
-			"RUBBER_PHONGS reflection RUBBER_REFL }\n");
+		fprintf(m_pPovFile, "#if (LDXQual > 1)\n");
+		fprintf(m_pPovFile, "		finish { ambient LDXAmb diffuse LDXDif }\n");
+		fprintf(m_pPovFile, "		finish { phong LDXRubberPhong phong_size "
+			"LDXRubberPhongS reflection LDXRubberRefl }\n");
 		fprintf(m_pPovFile, "#end\n");
 		fprintf(m_pPovFile, "	}\n");
 		fprintf(m_pPovFile, "#if (version >= 3.1) } #end\n");
@@ -2043,7 +2044,7 @@ void LDPovExporter::writeRGBA(int r, int g, int b, int a)
 
 	if (a != 255)
 	{
-		filter = "TFILT";
+		filter = "LDXTFilt";
 		dr = alphaMod(r);
 		dg = alphaMod(g);
 		db = alphaMod(b);
@@ -2078,7 +2079,7 @@ void LDPovExporter::writeCommentLine(
 			ifStarted = true;
 			elseStarted = false;
 			povMode = true;
-			fprintf(m_pPovFile, "#if (IPOV)\n");
+			fprintf(m_pPovFile, "#if (LDXIPov)\n");
 		}
 	}
 	else if (stringHasCaseInsensitivePrefix(comment, "0 L3P IFNOTPOV"))
@@ -2093,7 +2094,7 @@ void LDPovExporter::writeCommentLine(
 			ifStarted = true;
 			elseStarted = false;
 			povMode = false;
-			fprintf(m_pPovFile, "#if (!IPOV)\n");
+			fprintf(m_pPovFile, "#if (!LDXIPov)\n");
 		}
 	}
 	else if (stringHasCaseInsensitivePrefix(comment, "0 L3P ELSEPOV"))
@@ -2316,7 +2317,7 @@ void LDPovExporter::startStuds(bool &started)
 {
 	if (!started)
 	{
-		fprintf(m_pPovFile, "\t#if (STUDS)\n");
+		fprintf(m_pPovFile, "\t#if (LDXStuds)\n");
 		started = true;
 	}
 }
@@ -2325,7 +2326,7 @@ void LDPovExporter::endStuds(bool &started)
 {
 	if (started)
 	{
-		fprintf(m_pPovFile, "\t#end // STUDS\n");
+		fprintf(m_pPovFile, "\t#end // LDXStuds\n");
 		started = false;
 	}
 }
@@ -2366,13 +2367,13 @@ void LDPovExporter::writeEdgeLineMacro(void)
 		"object {\n"
 		"	merge {\n"
 		"		cylinder {\n"
-		"			Point1,Point2,EDGERAD\n"
+		"			Point1,Point2,LDXEdgeRad\n"
 		"		}\n"
 		"		sphere {\n"
-		"			Point1,EDGERAD\n"
+		"			Point1,LDXEdgeRad\n"
 		"		}\n"
 		"		sphere {\n"
-		"			Point2,EDGERAD\n"
+		"			Point2,LDXEdgeRad\n"
 		"		}\n"
 		"	}\n"
 		"	material { Color }\n"
@@ -2912,7 +2913,7 @@ bool LDPovExporter::substituteStud(void)
 	writeLogo();
 	fprintf(m_pPovFile,
 			"#declare stud_dot_dat =\n"
-			"#if (QUAL <= 2)\n"
+			"#if (LDXQual <= 2)\n"
 			"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
 			"#else\n"
 			"union {\n"
