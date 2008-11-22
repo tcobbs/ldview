@@ -376,6 +376,7 @@
 	{
 		[[optionUIs objectAtIndex:i] reset];
 	}
+	[self updateEnabled];
 }
 
 @end
