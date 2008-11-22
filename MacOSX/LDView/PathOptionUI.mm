@@ -20,12 +20,8 @@
 	self = [super initWithOptions:theOptions setting:theSetting];
 	if (self != nil)
 	{
-		browseButton = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
-		[browseButton setTitle:[OCLocalStrings get:@"LDXBrowse..."]];
-		[browseButton setBezelStyle:NSRoundedBezelStyle];
+		browseButton = [self createButton:[OCLocalStrings get:@"LDXBrowse..."]];
 		[textField setNextKeyView:browseButton];
-		[[browseButton cell] setRepresentedObject:self];
-		[browseButton setTarget:self];
 		[browseButton setAction:@selector(browse:)];
 	}
 	return self;

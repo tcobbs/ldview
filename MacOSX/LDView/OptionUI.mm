@@ -207,6 +207,17 @@
 	return bounds;
 }
 
+- (NSButton *)createButton:(NSString *)title
+{
+	NSButton *button = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
+
+	[button setTitle:title];
+	[button setBezelStyle:NSRoundedBezelStyle];
+	[[button cell] setRepresentedObject:self];
+	[button setTarget:self];
+	return button;
+}
+
 - (NSButton *)createCheck
 {
 	NSButton *check = [[NSButton alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
