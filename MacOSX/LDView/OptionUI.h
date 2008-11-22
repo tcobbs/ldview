@@ -39,6 +39,7 @@ class LDExporterSetting;
 - (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth;
 - (NSRect)calcLabelLayout:(NSTextField *)textField inRect:(NSRect)bounds optimalWidth:(float &)optimalWidth delta:(float)delta;
 - (NSButton *)createCheck;
+- (NSButton *)createButton:(NSString *)title;
 - (NSTextField *)createLabel;
 - (NSView *)firstKeyView;
 - (NSView *)lastKeyView;

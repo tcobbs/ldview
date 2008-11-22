@@ -9,14 +9,16 @@
 #import "GroupOptionUI.h"
 #import "LDViewCategories.h"
 #import "Options.h"
+#import "OCLocalStrings.h"
 
 #include <LDExporter/LDExporterSetting.h>
 
 
 @implementation GroupOptionUI
 
-- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting
+- (id)initWithOptions:(Options *)theOptions setting:(LDExporterSetting &)theSetting spacing:(float)theSpacing;
 {
+	spacing = theSpacing;
 	self = [super initWithOptions:theOptions setting:theSetting];
 	if (self != nil)
 	{
@@ -38,6 +40,8 @@
 		contentMargins = [box contentViewMargins];
 		leftGroupMargin = rightGroupMargin = contentMargins.width + 6.0f;
 		bottomGroupMargin = contentMargins.height + 6.0f;
+		resetButton = [self createButton:[OCLocalStrings get:@"LDXResetGroup"]];
+		[resetButton setAction:@selector(reset:)];
 	}
 	return self;
 }
@@ -54,6 +58,7 @@
 		[check release];
 		[label release];
 		[box release];
+		[resetButton release];
 	}
 	[super dealloc];
 }
@@ -100,6 +105,8 @@
 			}
 			[docView addSubview:box];
 			[box release];
+			[docView addSubview:resetButton];
+			[resetButton release];
 		}
 	}
 	return labelHeight + boxBounds.size.height;
@@ -146,8 +153,14 @@
 - (void)closeGroupAtY:(float)y
 {
 	NSRect boxRect = [box frame];
-	
-	boxRect.size.height = y + bottomGroupMargin - boxRect.origin.y;
+	NSRect resetRect;
+
+	[resetButton sizeToFit];
+	resetRect = [resetButton frame];
+	resetRect.origin.x = boxRect.origin.x + boxRect.size.width - resetRect.size.width - rightGroupMargin;
+	resetRect.origin.y = y;
+	[resetButton setFrame:resetRect];
+	boxRect.size.height = y + bottomGroupMargin + [[resetButton cell] cellSizeForBounds:resetRect].height + spacing - boxRect.origin.y;
 	[box setFrame:boxRect];
 }
 
@@ -160,6 +173,33 @@
 	else
 	{
 		return label;
+	}
+}
+
+- (int)bottomGroupMargin
+{
+	return bottomGroupMargin + spacing + [[resetButton cell] cellSizeForBounds:[resetButton frame]].height;
+}
+
+- (void)reset:(id)sender
+{
+	NSArray *views = [docView subviews];
+	NSRect boxRect = [box frame];
+
+	for (int i = 0; i < [views count]; i++)
+	{
+		id view = [views objectAtIndex:i];
+
+		if ([view respondsToSelector:@selector(cell)])
+		{
+			NSCell *cell = [view cell];
+			NSRect viewRect = [view frame];
+			
+			if (viewRect.origin.y >= boxRect.origin.y && viewRect.origin.y <= boxRect.origin.y + boxRect.size.height && [cell representedObject])
+			{
+				[[cell representedObject] reset];
+			}
+		}
 	}
 }
 

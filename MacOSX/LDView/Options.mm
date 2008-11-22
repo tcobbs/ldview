@@ -171,7 +171,7 @@
 
 - (void)addGroup:(LDExporterSetting &)setting
 {
-	[optionUIs addObject:[[[GroupOptionUI alloc] initWithOptions:self setting:setting] autorelease]];
+	[optionUIs addObject:[[[GroupOptionUI alloc] initWithOptions:self setting:setting spacing:spacing] autorelease]];
 }
 
 - (void)addBoolSetting:(LDExporterSetting &)setting
