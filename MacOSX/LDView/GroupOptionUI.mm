@@ -48,7 +48,11 @@
 
 - (void)checked:(id)sender
 {
-	[options updateEnabled];
+	if (check != nil)
+	{
+		[check setCheck:setting->getBoolValue()];
+		[options updateEnabled];
+	}
 }
 
 - (void)dealloc
@@ -179,6 +183,11 @@
 - (int)bottomGroupMargin
 {
 	return bottomGroupMargin + spacing + [[resetButton cell] cellSizeForBounds:[resetButton frame]].height;
+}
+
+- (void)reset
+{
+	[options updateEnabled];
 }
 
 - (void)reset:(id)sender
