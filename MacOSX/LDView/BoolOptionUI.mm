@@ -105,7 +105,6 @@
 - (void)valueChanged
 {
 	[check setCheck:setting->getBoolValue()];
-	[options updateEnabled];
 }
 
 @end

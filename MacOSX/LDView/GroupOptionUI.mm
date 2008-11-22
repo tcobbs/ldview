@@ -51,7 +51,6 @@
 	if (check != nil)
 	{
 		[check setCheck:setting->getBoolValue()];
-		[options updateEnabled];
 	}
 }
 
@@ -210,6 +209,7 @@
 			}
 		}
 	}
+	[options updateEnabled];
 }
 
 @end
