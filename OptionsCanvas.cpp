@@ -48,7 +48,7 @@ void OptionsCanvas::addGroup(LDExporterSetting &setting)
 {
 	// Note: groups are only used for top-level groupings.  Nested groupings
 	// just use a check box (BoolOptionUI).
-	m_optionUIs.push_back(new GroupOptionUI(this, setting));
+	m_optionUIs.push_back(new GroupOptionUI(this, setting, m_spacing));
 }
 
 void OptionsCanvas::addBoolSetting(LDExporterSetting &setting)
@@ -192,7 +192,7 @@ void OptionsCanvas::calcOptionHeight(
 			if (update)
 			{
 				// This sizes the group box to enclose all its options.
-				((GroupOptionUI *)optionUI)->close(y - m_spacing, m_spacing);
+				((GroupOptionUI *)optionUI)->close(y - m_spacing);
 			}
 			// This inserts the space for the bottom of the group box.
 			y += optionUI->getBottomGroupMargin();
@@ -335,4 +335,5 @@ void OptionsCanvas::resetSettings(void)
 	{
 		(*it)->reset();
 	}
+	updateEnabled();
 }

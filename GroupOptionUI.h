@@ -15,14 +15,15 @@ disables all the contents of the group.
 class GroupOptionUI: public OptionUI
 {
 public:
-	GroupOptionUI(OptionsCanvas *parent, LDExporterSetting &setting);
+	GroupOptionUI(OptionsCanvas *parent, LDExporterSetting &setting,
+		int spacing);
 	virtual ~GroupOptionUI(void) {}
 
 	virtual int updateLayout(HDC hdc, int x, int y, int width, bool update,
 		int &optimalWidth);
 	virtual bool validate(ucstring &/*error*/) { return true; }
 	virtual void commit(void);
-	virtual void close(int y, int spacing);
+	virtual void close(int y);
 	virtual bool getEnabled(void);
 	virtual void setEnabled(bool value);
 	virtual void getRect(RECT *rect);
