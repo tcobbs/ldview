@@ -8,11 +8,14 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
-GroupOptionUI::GroupOptionUI(OptionsCanvas *parent, LDExporterSetting &setting):
+GroupOptionUI::GroupOptionUI(
+	OptionsCanvas *parent,
+	LDExporterSetting &setting,
+	int spacing):
 OptionUI(parent, setting),
 m_hCheck(NULL),
 m_hLabel(NULL),
-m_spacing(0)
+m_spacing(spacing)
 {
 	bool hasCheck = setting.getType() == LDExporterSetting::TBool;
 	RECT marginRect = { 5, 0, 5, 5 };
@@ -191,18 +194,17 @@ void GroupOptionUI::commit(void)
 }
 
 // Resize the box vertically so that y represents the bottom of its contents.
-void GroupOptionUI::close(int y, int spacing)
+void GroupOptionUI::close(int y)
 {
 	RECT rect;
 
-	m_spacing = spacing;
 	GetWindowRect(m_hBox, &rect);
 	CUIWindow::screenToClient(GetParent(m_hBox), &rect);
 	MoveWindow(m_hResetButton, rect.right - m_resetSize.cx - m_rightGroupMargin,
-		y + spacing, m_resetSize.cx, m_resetSize.cy, FALSE);
+		y + m_spacing, m_resetSize.cx, m_resetSize.cy, FALSE);
 	// m_bottomGroupMargin gives space for the actual bottom line.  When we
 	// enter this function, y is the bottom of the last control in the box.
-	rect.bottom = y + m_bottomGroupMargin + m_resetSize.cy + spacing;
+	rect.bottom = y + m_bottomGroupMargin + m_resetSize.cy + m_spacing;
 	MoveWindow(m_hBox, rect.left, rect.top, rect.right - rect.left,
 		rect.bottom - rect.top, FALSE);
 }
@@ -288,6 +290,7 @@ void GroupOptionUI::doClick(HWND control)
 		GetWindowRect(m_hBox, &rect);
 		CUIWindow::screenToClient(m_hParentWnd, &rect);
 		EnumChildWindows(m_hParentWnd, staticEnumReset, (LPARAM)&rect);
+		m_canvas->updateEnabled();
 	}
 }
 
