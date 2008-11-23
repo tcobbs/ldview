@@ -58,3 +58,18 @@ void ucstringtoqstring(QString &dst, const ucstring &src)
 #endif // TC_NO_UNICODE
 }
 
+void qstringtoucstring(ucstring &dst, const QString &src)
+{
+	size_t len = src.length();
+#ifdef TC_NO_UNICODE
+	const char *characters = src.ascii();
+#else // TC_NO_UNICODE
+	const QChar *characters = src.unicode();
+#endif // TC_NO_UNICODE
+	dst.resize(len);
+	for (size_t i = 0; i < len; i++)
+	{
+		dst[i] = (UCCHAR)characters[i];
+	}
+}
+

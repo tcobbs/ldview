@@ -18,7 +18,6 @@
 #include "LDViewMpdModel.h"
 #include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
-#include "LDViewExportOption.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -172,7 +171,6 @@ public:
 	void updateStep();
 	void gotoStep();
 	LDViewModelTree *modeltree;
-	LDViewExportOption *exportoption;
     BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
 

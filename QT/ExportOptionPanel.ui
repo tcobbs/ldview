@@ -1,6 +1,6 @@
 <!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>ExportOptionPanel</class>
-<widget class="QMainWindow">
+<widget class="QDialog">
     <property name="name">
         <cstring>ExportOptionPanel</cstring>
     </property>
@@ -17,9 +17,6 @@
     </property>
     <property name="icon">
         <pixmap>LDViewIcon16.png</pixmap>
-    </property>
-    <property name="usesTextLabel">
-        <bool>false</bool>
     </property>
     <hbox>
         <property name="name">
@@ -76,16 +73,6 @@
                         <property name="name">
                             <cstring>typeBox</cstring>
                         </property>
-                        <item>
-                            <property name="text">
-                               <string>POV</string>
-                            </property>
-                        </item>
-                        <item>
-                            <property name="text">
-                               <string>STL</string>
-                            </property>
-                        </item>
                     </widget>
                     <spacer>
                         <property name="name">
