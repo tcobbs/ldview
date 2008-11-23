@@ -160,6 +160,7 @@ prefs(NULL),
 drawWireframe(false),
 examineLatLong(TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
 			   LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong),
+initialShown(false),
 modelTreeDialog(NULL),
 boundingBoxDialog(NULL),
 mpdDialog(NULL)
@@ -469,136 +470,15 @@ void LDViewWindow::showStatusIcon(bool examineMode, bool redraw /*= true*/)
 	}
 }
 
-//void LDViewWindow::addTbButtonInfo(CUCSTR tooltipText, int commandId,
-//								   int stdBmpId, int tbBmpId, BYTE style,
-//								   BYTE state)
-//{
-//	tbButtonInfos.resize(tbButtonInfos.size() + 1);
-//	TbButtonInfo &buttonInfo = tbButtonInfos.back();
-//
-//	buttonInfo.setTooltipText(tooltipText);
-//	buttonInfo.setCommandId(commandId);
-//	buttonInfo.setStdBmpId(stdBmpId);
-//	buttonInfo.setTbBmpId(tbBmpId);
-//	buttonInfo.setStyle(style);
-//	buttonInfo.setState(state);
-//}
-//
-//void LDViewWindow::addTbCheckButtonInfo(CUCSTR tooltipText, int commandId,
-//										int stdBmpId, int tbBmpId, bool checked,
-//										BYTE style, BYTE state)
-//{
-//	state &= ~TBSTATE_CHECKED;
-//	if (checked)
-//	{
-//		state |= TBSTATE_CHECKED;
-//	}
-//	addTbButtonInfo(tooltipText, commandId, stdBmpId, tbBmpId, style, state);
-//}
-//
-//void LDViewWindow::addTbSeparatorInfo(void)
-//{
-//	tbButtonInfos.resize(tbButtonInfos.size() + 1);
-//	TbButtonInfo &buttonInfo = tbButtonInfos.back();
-//
-//	buttonInfo.setStyle(TBSTYLE_SEP);
-//}
-//
-//void LDViewWindow::populateTbButtonInfos(void)
-//{
-//	if (tbButtonInfos.size() == 0)
-//	{
-//		if (newToolbar())
-//		{
-//			addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
-//				-1, 10);
-//		}
-//		else
-//		{
-//			addTbButtonInfo(TCLocalStrings::get(_UC("OpenFile")), ID_FILE_OPEN,
-//				STD_FILEOPEN, -1);
-//		}
-//		addTbButtonInfo(TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE,
-//			-1, 5);
-//		addTbButtonInfo(TCLocalStrings::get(_UC("Reload")), ID_FILE_RELOAD, -1,
-//			0);
-//		addTbSeparatorInfo();
-//		drawWireframe = prefs->getDrawWireframe();
-//		seams = prefs->getUseSeams() != 0;
-//		edges = prefs->getShowsHighlightLines();
-//		primitiveSubstitution = prefs->getAllowPrimitiveSubstitution();
-//		lighting = prefs->getUseLighting();
-//		bfc = prefs->getBfc();
-//		addTbCheckButtonInfo(TCLocalStrings::get(_UC("Wireframe")),
-//			IDC_WIREFRAME, -1, 1, drawWireframe,
-//			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-//		addTbCheckButtonInfo(TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, -1,
-//			2, seams);
-//		addTbCheckButtonInfo(TCLocalStrings::get(_UC("EdgeLines")),
-//			IDC_HIGHLIGHTS, -1, 3, edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-//		addTbCheckButtonInfo(TCLocalStrings::get(_UC("PrimitiveSubstitution")),
-//			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, primitiveSubstitution,
-//			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-//		addTbCheckButtonInfo(TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING,
-//			-1, 7, lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-//		addTbCheckButtonInfo(TCLocalStrings::get(_UC("BFC")), IDC_BFC, -1, 9,
-//			bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-//		addTbButtonInfo(TCLocalStrings::get(_UC("SelectView")),
-//			ID_VIEWANGLE, -1, 6, TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
-//		addTbButtonInfo(TCLocalStrings::get(_UC("Preferences")), 
-//			ID_EDIT_PREFERENCES, -1, 8);
-//	}
-//}
-
 void LDViewWindow::setHParentWindow(HWND hWnd)
 {
 	hParentWindow = hWnd;
 }
 
-// Note: static function
-HBITMAP LDViewWindow::createMask(HBITMAP hBitmap, COLORREF maskColor)
-{
-	BITMAP bitmap;
-	TCByte *data;
-	int bytesPerLine;
-	int maskSize;
-	int x, y;
-	HDC hBmDc = CreateCompatibleDC(NULL);
-
-	::GetObject((HANDLE)hBitmap, sizeof(BITMAP), &bitmap);
-	bytesPerLine = ModelWindow::roundUp((bitmap.bmWidth + 7) / 8, 2);
-	maskSize = bytesPerLine * bitmap.bmHeight;
-	data = new TCByte[maskSize];
-	memset(data, 0, maskSize);
-	SelectObject(hBmDc, hBitmap);
-	for (y = 0; y < bitmap.bmHeight; y++)
-	{
-		int yOffset = bytesPerLine * y;
-
-		for (x = 0; x < bitmap.bmWidth; x++)
-		{
-			COLORREF pixelColor = GetPixel(hBmDc, x, y);
-
-			if (pixelColor == maskColor)
-			{
-				int byteOffset = yOffset + x / 8;
-				int bitOffset = 7 - (x % 8);
-
-				data[byteOffset] |= (1 << bitOffset);
-			}
-		}
-	}
-	DeleteDC(hBmDc);
-	return CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
-}
-
-//bool LDViewWindow::newToolbar(void)
-//{
-//	return true;
-//}
-
 void LDViewWindow::createToolbar(void)
 {
+	toolbarStrip = new ToolbarStrip(getLanguageModule());
+	toolbarStrip->create(this);
 	if (showToolbar)
 	{
 		//TBADDBITMAP addBitmap;
@@ -672,8 +552,6 @@ void LDViewWindow::createToolbar(void)
 		//ShowWindow(hToolbar, SW_SHOW);
 		//SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
 		//ShowWindow(hToolbar, SW_HIDE);
-		toolbarStrip = new ToolbarStrip(getLanguageModule());
-		toolbarStrip->create(this);
 		toolbarStrip->show();
 	}
 }
@@ -1282,6 +1160,7 @@ void LDViewWindow::setFullScreenDisplayMode(void)
 
 void LDViewWindow::restoreDisplayMode(void)
 {
+	initialShown = false;
 	if (fullScreenActive)
 	{
 		long result = ChangeDisplaySettings(NULL, 0);
@@ -4989,8 +4868,17 @@ LRESULT LDViewWindow::doShowWindow(BOOL showFlag, LPARAM status)
 		// shown results in a status bar that doesn't update properly in XP, so
 		// show it here instead of in initWindow.
 		reflectStatusBar();
+		if (!showToolbar && !initialShown)
+		{
+			// Icons from the toolbar get applied to the main menu.  So we need to
+			// create it here if it's not visible, then immediately delete it.
+			createToolbar();
+			toolbarStrip->release();
+			toolbarStrip = NULL;
+		}
 		reflectToolbar();
 	}
+	initialShown = true;
 	return CUIWindow::doShowWindow(showFlag, status);
 }
 

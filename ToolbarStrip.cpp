@@ -7,6 +7,12 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
+#if _MSC_VER >= 1400	// VC >= VC 2005
+#define min(x, y) ((x) < (y) ? (x) : (y))
+#define max(x, y) ((x) > (y) ? (x) : (y))
+#include <gdiplus.h>
+#define USE_GDIPLUS
+#endif // VC >= VC 2005
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -75,7 +81,7 @@ void ToolbarStrip::hide(void)
 	::ShowWindow(hWindow, SW_HIDE);
 }
 
-void ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
+HIMAGELIST ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
 {
 	HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
 		10, 10);
@@ -93,6 +99,7 @@ void ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
 	DeleteObject(hMask);
 	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
 	m_imageLists.push_back(imageList);
+	return imageList;
 }
 
 void ToolbarStrip::initToolbar(
@@ -108,7 +115,13 @@ void ToolbarStrip::initToolbar(
 	RECT buttonRect;
 	int width;
 	int height;
+	HIMAGELIST hImageList;
+	HMENU hMenu = NULL;
 
+	if ((GetVersion() & 0xFF) >= 6)
+	{
+		hMenu = GetMenu(GetParent(hWindow));
+	}
 #ifndef TC_NO_UNICODE
 	SendMessage(hToolbar, TB_SETUNICODEFORMAT, (WPARAM)TRUE, 0);
 #endif // !TC_NO_UNICODE
@@ -117,7 +130,7 @@ void ToolbarStrip::initToolbar(
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(22, 22));
-	initImageList(hToolbar, bitmapId);
+	hImageList = initImageList(hToolbar, bitmapId);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
 	// Note: buttonTitle is an empty string.  No need for Unicode.
 	SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
@@ -134,6 +147,11 @@ void ToolbarStrip::initToolbar(
 		buttons[i].fsStyle = buttonInfo.getStyle();
 		buttons[i].dwData = (DWORD)this;
 		buttons[i].iString = -1;
+		if (hMenu != NULL)
+		{
+			updateMenu(hMenu, buttons[i].idCommand, buttons[i].iBitmap,
+				hImageList);
+		}
 	}
 	SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
 	if (!CUIThemes::isThemeActive() ||
@@ -348,6 +366,47 @@ void ToolbarStrip::updateNumSteps(void)
 	}
 }
 
+#ifdef USE_GDIPLUS
+void ToolbarStrip::updateMenu(
+	HMENU hMenu,
+	int command,
+	int index,
+	HIMAGELIST hImageList)
+{
+	int count = GetMenuItemCount(hMenu);
+
+	for (int i = 0; i < count; i++)
+	{
+		MENUITEMINFO mii;
+
+		memset(&mii, 0, sizeof(mii));
+		mii.cbSize = sizeof(mii);
+		mii.fMask = MIIM_ID | MIIM_SUBMENU | MIIM_BITMAP;
+		GetMenuItemInfo(hMenu, i, TRUE, &mii);
+		if (mii.hSubMenu)
+		{
+			updateMenu(mii.hSubMenu, command, index, hImageList);
+		}
+		else if (mii.wID == (UINT)command && mii.hbmpItem == NULL)
+		{
+			HICON hIcon = ImageList_GetIcon(hImageList, index, ILD_TRANSPARENT);
+			Gdiplus::Bitmap gdipBm(hIcon);
+			HBITMAP hMenuBitmap;
+			if (gdipBm.GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hMenuBitmap) == Gdiplus::Ok)
+			{
+				mii.fMask = MIIM_BITMAP;
+				mii.hbmpItem = hMenuBitmap;
+				SetMenuItemInfo(hMenu, i, TRUE, &mii);
+			}
+		}
+	}
+}
+#else // USE_GDIPLUS
+void ToolbarStrip::updateMenu(HMENU, int, int, HIMAGELIST)
+{
+}
+#endif // USE_GDIPLUS
+
 BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 {
 	m_hToolbar = GetDlgItem(hWindow, IDC_TOOLBAR);
@@ -361,12 +420,23 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	m_controls.push_back(m_hNumStepsLabel);
 	m_controls.push_back(m_hStepToolbar);
 
+#ifdef USE_GDIPLUS
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+	ULONG_PTR                    gdiplusToken;
+
+	// Initialize GDI+.
+	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+#endif // USE_GDIPLUS
+
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
 	initMainToolbar();
 	initStepToolbar();
 	initLayout();
 	updateStep();
 	updateNumSteps();
+#ifdef USE_GDIPLUS
+	Gdiplus::GdiplusShutdown(gdiplusToken);
+#endif // USE_GDIPLUS
 	return TRUE;
 }
 

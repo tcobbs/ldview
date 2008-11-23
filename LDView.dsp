@@ -352,6 +352,10 @@ SOURCE=.\SSPreview.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\StepDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StringOptionUI.cpp
 # End Source File
 # Begin Source File
@@ -473,6 +477,10 @@ SOURCE=.\SSPassword.h
 # Begin Source File
 
 SOURCE=.\SSPreview.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\StepDialog.h
 # End Source File
 # Begin Source File
 

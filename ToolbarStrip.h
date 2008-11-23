@@ -57,7 +57,7 @@ protected:
 	void initMainToolbar(void);
 	void initStepToolbar(void);
 	void initLayout(void);
-	void initImageList(HWND hToolbar, UINT bitmapId);
+	HIMAGELIST initImageList(HWND hToolbar, UINT bitmapId);
 	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos, UINT bitmapId);
 	void modelAlertCallback(TCAlert *alert);
 	void stepChanged(void);
@@ -68,6 +68,7 @@ protected:
 	void updatePrimitivesMenu(void);
 	void updateLightingMenu(void);
 	void updateBFCMenu(void);
+	void updateMenu(HMENU hMenu, int command, int index, HIMAGELIST hImageList);
 
 	void forceRedraw(void);
 
