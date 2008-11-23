@@ -278,14 +278,6 @@ class LDViewWindow: public CUIWindow
 //		virtual LRESULT doTimer(UINT timerID);
 		virtual void readVersionInfo(void);
 		virtual void createModelWindow(void);
-		//virtual void populateTbButtonInfos(void);
-		//virtual void addTbButtonInfo(CUCSTR tooltipText, int commandId,
-		//	int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
-		//	BYTE state = TBSTATE_ENABLED);
-		//virtual void addTbCheckButtonInfo(CUCSTR tooltipText,
-		//	int commandId, int stdBmpId, int tbBmpId, bool checked,
-		//	BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
-		//virtual void addTbSeparatorInfo(void);
 		//virtual void doWireframe(void);
 		//virtual void doSeams(void);
 		//virtual void doEdges(void);
@@ -331,7 +323,6 @@ class LDViewWindow: public CUIWindow
 		static void recordRecentFiles(void);
 		static int CALLBACK pathBrowserCallback(HWND hwnd, UINT uMsg,
 			LPARAM lParam, LPARAM /*lpData*/);
-		static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
 
 		ModelWindow* modelWindow;
 		ToolbarStrip *toolbarStrip;
@@ -342,8 +333,6 @@ class LDViewWindow: public CUIWindow
 		HWND hExtraDirsToolbar;
 		HWND hExtraDirsList;
 		HWND hStatusBar;
-		//HWND hToolbar;
-		//HWND hDeactivatedTooltip;
 		HWND hFrameWindow;
 		HWND hUpdateProgressBar;
 		HWND hUpdateStatus;
@@ -410,6 +399,7 @@ class LDViewWindow: public CUIWindow
 		bool lighting;
 		bool bfc;
 		bool examineLatLong;
+		bool initialShown;
 		ModelTreeDialog *modelTreeDialog;
 		BoundingBoxDialog *boundingBoxDialog;
 		MpdDialog *mpdDialog;
