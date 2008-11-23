@@ -39,6 +39,7 @@ typedef std::list<PovName> PovNameList;
 struct PovMapping
 {
 	PovNameList names;
+	StringList povCodes;
 	StringList povFilenames;
 };
 
@@ -80,7 +81,8 @@ protected:
 	bool scanModelColors(LDLModel *pModel);
 	bool writeModelColors(void);
 	bool writeEdges(void);
-	void writeMatrix(TCFloat *matrix, const char *filename = NULL);
+	void writeXmlMatrix(const char *filename);
+	void writeMatrix(const TCFloat *matrix, const char *filename = NULL);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
 	bool writeColor(int colorNumber, bool slope = false);
 	void writeColorDeclaration(int colorNumber);
@@ -125,8 +127,14 @@ protected:
 	void loadXmlColors(TiXmlElement *matrices);
 	std::string loadPovMapping(TiXmlElement *element,
 		const char *ldrawElementName, PovMapping &mapping);
+	void loadPovDependency(TiXmlElement *element, PovMapping &mapping);
+	void loadPovFilenames(TiXmlElement *element, PovMapping &mapping,
+		const std::string &povVersion = std::string());
+	void loadPovCodes(TiXmlElement *element, PovMapping &mapping);
+	void loadPovDependencies(TiXmlElement *element, PovMapping &mapping);
 	void loadXmlMatrices(TiXmlElement *matrices);
 	void loadXmlElements(TiXmlElement *elements);
+	bool writeCode(const std::string &code, bool lineFeed = true);
 	bool writeInclude(const std::string &filename, bool lineFeed = true,
 		const LDLModel *pModel = NULL);
 	void writeLogo(void);
@@ -231,9 +239,11 @@ protected:
 	PovElementMap m_xmlElements;
 	StringStringMap m_includeVersions;
 	StringStringMap m_xmlMatrices;
+	TiXmlElement *m_dependenciesElement;
 	MatrixMap m_matrices;
 	std::string m_ldrawDir;
 	StringSet m_includes;
+	StringSet m_codes;
 	StringSet m_macros;
 
 	static CharStringMap sm_replacementChars;

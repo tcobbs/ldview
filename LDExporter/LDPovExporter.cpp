@@ -311,6 +311,85 @@ void LDPovExporter::loadXmlMatrices(TiXmlElement *matrices)
 	}
 }
 
+void LDPovExporter::loadPovCodes(
+	TiXmlElement *element,
+	PovMapping &mapping)
+{
+	TiXmlElement *child;
+
+	for (child = element->FirstChildElement("POVCode"); child != NULL;
+		child = child->NextSiblingElement("POVCode"))
+	{
+		std::string code = child->GetText();
+
+		mapping.povCodes.push_back(code);
+	}
+}
+
+void LDPovExporter::loadPovFilenames(
+	TiXmlElement *element,
+	PovMapping &mapping,
+	const std::string &povVersion /*= std::string()*/)
+{
+	TiXmlElement *child;
+
+	for (child = element->FirstChildElement("POVFilename"); child != NULL;
+		child = child->NextSiblingElement("POVFilename"))
+	{
+		std::string filename = child->GetText();
+
+		mapping.povFilenames.push_back(filename);
+		if (povVersion.size() > 0)
+		{
+			m_includeVersions[filename] = povVersion;
+		}
+	}
+}
+
+void LDPovExporter::loadPovDependency(
+	TiXmlElement *element,
+	PovMapping &mapping)
+{
+	std::string name = element->GetText();
+
+	if (name.size() > 0)
+	{
+		TiXmlElement *dependencyElement =
+			m_dependenciesElement->FirstChildElement(name);
+
+		if (dependencyElement != NULL)
+		{
+			std::string povVersion;
+			TiXmlElement *child = element->FirstChildElement("POVVersion");
+
+			loadPovDependencies(dependencyElement, mapping);
+			child = element->FirstChildElement("POVVersion");
+			if (child != NULL)
+			{
+				povVersion = child->GetText();
+			}
+			loadPovFilenames(dependencyElement, mapping, povVersion);
+			loadPovCodes(dependencyElement, mapping);
+		}
+	}
+}
+
+void LDPovExporter::loadPovDependencies(
+	TiXmlElement *element,
+	PovMapping &mapping)
+{
+	if (m_dependenciesElement != NULL)
+	{
+		TiXmlElement *child;
+
+		for (child = element->FirstChildElement("Dependency"); child != NULL;
+			child = child->NextSiblingElement("Dependency"))
+		{
+			loadPovDependency(child, mapping);
+		}
+	}
+}
+
 std::string LDPovExporter::loadPovMapping(
 	TiXmlElement *element,
 	const char *ldrawElementName,
@@ -318,7 +397,6 @@ std::string LDPovExporter::loadPovMapping(
 {
 	TiXmlElement *child = element->FirstChildElement("POVName");
 	std::string ldrawValue;
-	std::string povVersion;
 
 	if (child == NULL)
 	{
@@ -342,22 +420,8 @@ std::string LDPovExporter::loadPovMapping(
 		return "";
 	}
 	ldrawValue = child->GetText();
-	child = element->FirstChildElement("POVVersion");
-	if (child)
-	{
-		povVersion = child->GetText();
-	}
-	for (child = element->FirstChildElement("POVFilename"); child != NULL;
-		child = child->NextSiblingElement("POVFilename"))
-	{
-		std::string filename = child->GetText();
-
-		mapping.povFilenames.push_back(filename);
-		if (povVersion.size() > 0)
-		{
-			m_includeVersions[filename] = povVersion;
-		}
-	}
+	loadPovDependencies(element, mapping);
+	loadPovFilenames(element, mapping);
 	return ldrawValue;
 }
 
@@ -449,6 +513,7 @@ void LDPovExporter::loadLDrawPovXml(void)
 		{
 			return;
 		}
+		m_dependenciesElement = root->FirstChildElement("Dependencies");
 		element = root->FirstChildElement("Colors");
 		if (element != NULL)
 		{
@@ -1235,6 +1300,21 @@ std::string LDPovExporter::findInclude(const std::string &filename)
 	return "";
 }
 
+bool LDPovExporter::writeCode(const std::string &code, bool lineFeed /*= true*/)
+{
+	if (m_codes.find(code) == m_codes.end())
+	{
+		fprintf(m_pPovFile, "%s\n", code.c_str());
+		if (lineFeed)
+		{
+			fprintf(m_pPovFile, "\n");
+		}
+		m_codes.insert(code);
+		return true;
+	}
+	return false;
+}
+
 bool LDPovExporter::writeInclude(
 	const std::string &filename,
 	bool lineFeed /*= true*/,
@@ -1321,10 +1401,16 @@ bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 	{
 		const PovElement &element = it->second;
 		StringList::const_iterator itFilename;
-		bool wrote = false;
+		StringList::const_iterator itCode;
+		//bool wrote = false;
 		size_t i = 0;
 		std::string declareFilename;
 
+		for (itCode = element.povCodes.begin();
+			itCode != element.povCodes.end(); itCode++)
+		{
+			writeCode(*itCode);
+		}
 		for (itFilename = element.povFilenames.begin();
 			itFilename != element.povFilenames.end(); itFilename++)
 		{
@@ -1334,10 +1420,11 @@ bool LDPovExporter::findXmlModelInclude(const LDLModel *pModel)
 			{
 				pDescModel = pModel;
 			}
-			if (writeInclude(*itFilename, true, pDescModel))
-			{
-				wrote = true;
-			}
+			writeInclude(*itFilename, true, pDescModel);
+			//if (writeInclude(*itFilename, true, pDescModel))
+			//{
+			//	wrote = true;
+			//}
 			i++;
 		}
 		declareFilename = modelFilename;
@@ -1672,9 +1759,7 @@ void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 	}
 }
 
-void LDPovExporter::writeMatrix(
-	TCFloat *matrix,
-	const char *filename /*= NULL*/)
+void LDPovExporter::writeXmlMatrix(const char *filename)
 {
 	if (filename != NULL)
 	{
@@ -1683,14 +1768,32 @@ void LDPovExporter::writeMatrix(
 
 		if (it != m_matrices.end())
 		{
-			const TCFloat *mapMatrix = it->second;
-			TCFloat newMatrix[16];
+			const TCFloat *matrix = it->second;
 
-			TCVector::multMatrix(matrix, mapMatrix, newMatrix);
-			writeMatrix(newMatrix);
-			return;
+			writeMatrix(matrix);
 		}
 	}
+}
+
+void LDPovExporter::writeMatrix(
+	const TCFloat *matrix,
+	const char *filename /*= NULL*/)
+{
+	//if (filename != NULL)
+	//{
+	//	std::string key = lowerCaseString(filename);
+	//	MatrixMap::const_iterator it = m_matrices.find(key);
+
+	//	if (it != m_matrices.end())
+	//	{
+	//		const TCFloat *mapMatrix = it->second;
+	//		TCFloat newMatrix[16];
+
+	//		TCVector::multMatrix(matrix, mapMatrix, newMatrix);
+	//		writeMatrix(newMatrix);
+	//		return;
+	//	}
+	//}
 	fprintf(m_pPovFile, "matrix <");
 	for (int col = 0; col < 4; col++)
 	{
@@ -1988,8 +2091,16 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 			it = m_xmlColors.find(colorNumber);
 			if (it != m_xmlColors.end())
 			{
+				StringList::const_iterator it2;
+
 				PovMapping color = it->second;
-				for (StringList::const_iterator it2 = color.povFilenames.begin();
+				for (it2 = color.povCodes.begin(); it2 != color.povCodes.end();
+					it2++)
+				{
+					writeCode(*it2);
+					wroteXml = true;
+				}
+				for (it2 = color.povFilenames.begin();
 					it2 != color.povFilenames.end(); it2++)
 				{
 					writeInclude(*it2);
@@ -2283,6 +2394,7 @@ void LDPovExporter::writeInnerModelLine(
 	fprintf(m_pPovFile, "\t\t%s\n", declareName.c_str());
 	indentStud(studsStarted);
 	fprintf(m_pPovFile, "\t\t");
+	writeXmlMatrix(getModelFilename(pModel).c_str());
 	writeSeamMatrix(pModelLine);
 	if (origMirrored &&
 		stringHasCaseInsensitiveSuffix(pModel->getFilename(), "stud.dat"))
