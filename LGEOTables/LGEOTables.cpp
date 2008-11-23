@@ -5,6 +5,7 @@
 #include <tinyxml.h>
 #include <map>
 #include <string>
+#include <vector>
 
 struct Element
 {
@@ -22,6 +23,7 @@ typedef std::map<std::string, Element> ElementMap;
 typedef std::map<int, Color> ColorMap;
 typedef std::map<std::string, std::string> StringStringMap;
 typedef std::map<std::string, StringStringMap> PatternMap;
+typedef std::vector<std::string> StringVector;
 
 bool readString(FILE *tableFile, std::string &string)
 {
@@ -44,7 +46,118 @@ bool readString(FILE *tableFile, std::string &string)
 	}
 }
 
+bool readLine(FILE *file, std::string &line)
+{
+	for (;;)
+	{
+		int ch =  fgetc(file);
+
+		if (ch == EOF)
+		{
+			return line.size() > 0;
+		}
+		else if (ch == '\n')
+		{
+			size_t spot = line.find(';');
+
+			if (spot < line.size())
+			{
+				line.resize(spot);
+			}
+			if (line.size() > 0 && line[line.size() - 1] == '\r')
+			{
+				line.resize(line.size() - 1);
+			}
+			if (line.find_first_not_of(" \t") >= line.size())
+			{
+				line.clear();
+			}
+			return true;
+		}
+		else
+		{
+			line += (char)ch;
+		}
+	}
+}
+
+void scanFields(const std::string &line, StringVector &fields)
+{
+	std::string temp = line;
+
+	while (temp.size() > 0)
+	{
+		size_t spot = temp.find_first_of(" \t");
+
+		fields.push_back(temp.substr(0, spot));
+		if (spot < temp.size())
+		{
+			temp = temp.substr(temp.find_first_not_of(" \t", spot));
+		}
+		else
+		{
+			temp.clear();
+		}
+	}
+}
+
 bool readColorsFile(const char *filename, ColorMap &colors)
+{
+	FILE *colorsFile = fopen(filename, "rb");
+
+	try
+	{
+		if (colorsFile != NULL)
+		{
+			for (;;)
+			{
+				std::string line;
+
+				line.reserve(64);
+				if (!readLine(colorsFile, line))
+				{
+					// done
+					break;
+				}
+				if (line.size() > 0)
+				{
+					StringVector fields;
+					Color color;
+					unsigned int ldrawNum;
+
+					scanFields(line, fields);
+					if (fields.size() < 2)
+					{
+						throw "Error parsing %s.\n";
+					}
+					if (sscanf(&fields[0][0], "%d", &ldrawNum) != 1)
+					{
+						throw "Error parsing %s.\n";
+					}
+					color.lgeoName = fields[1];
+					colors[ldrawNum] = color;
+				}
+			}
+			fclose(colorsFile);
+			return true;
+		}
+		else
+		{
+			throw "Error reading %s.\n";
+		}
+	}
+	catch (const char *error)
+	{
+		printf(error, filename);
+		if (colorsFile != NULL)
+		{
+			fclose(colorsFile);
+		}
+		return false;
+	}
+}
+
+bool readOldColorsFile(const char *filename, ColorMap &colors)
 {
 	FILE *colorsFile = fopen(filename, "rb");
 
@@ -97,6 +210,75 @@ bool readColorsFile(const char *filename, ColorMap &colors)
 }
 
 bool readElementsFile(
+	const char *filename,
+	ElementMap &table)
+{
+	FILE *elementsFile = fopen(filename, "rb");
+
+	try
+	{
+		if (elementsFile != NULL)
+		{
+			for (;;)
+			{
+				std::string line;
+
+				line.reserve(64);
+				if (!readLine(elementsFile, line))
+				{
+					// done
+					break;
+				}
+				if (line.size() > 0)
+				{
+					StringVector fields;
+					scanFields(line, fields);
+
+					if (fields.size() < 3)
+					{
+						throw "Error parsing %s.\n";
+					}
+					// Only parse the LGEO files for right now.
+					if (fields[2].find_first_of("lL") < fields[2].size())
+					{
+						std::string ldrawFilename;
+						Element element;
+
+						element.lgeoName = "lg_";
+						element.lgeoName += fields[1];
+						element.lgeoFilename = element.lgeoName;
+						element.lgeoFilename += ".inc";
+						element.flags = 0;
+						if (fields[2].find_first_of("sS") < fields[2].size())
+						{
+							element.flags |= 0x01;	// Slope
+						}
+						ldrawFilename = fields[0];
+						ldrawFilename += ".dat";
+						table[ldrawFilename] = element;
+					}
+				}
+			}
+			fclose(elementsFile);
+			return true;
+		}
+		else
+		{
+			throw "Error reading %s.\n";
+		}
+	}
+	catch (const char *error)
+	{
+		printf(error, filename);
+		if (elementsFile != NULL)
+		{
+			fclose(elementsFile);
+		}
+		return false;
+	}
+}
+
+bool readOldElementsFile(
 	const char *filename,
 	ElementMap &table,
 	const PatternMap &patterns)
@@ -188,7 +370,7 @@ bool readElementsFile(
 	}
 }
 
-bool readPatternsFile(const char *filename, PatternMap &patterns)
+bool readOldPatternsFile(const char *filename, PatternMap &patterns)
 {
 	FILE *tableFile = fopen(filename, "rb");
 
@@ -260,40 +442,6 @@ TiXmlElement *createXmlRootElement(TiXmlDocument &doc)
 	return rootElement;
 }
 
-void addXmlColors(TiXmlElement *rootElement, const ColorMap &colors)
-{
-	TiXmlElement *colorsElement = new TiXmlElement("Colors");
-
-	for (ColorMap::const_iterator it = colors.begin(); it != colors.end(); it++)
-	{
-		unsigned int ldrawNum = it->first;
-		const Color &color = it->second;
-		TiXmlElement *colorElement = new TiXmlElement("Color");
-		TiXmlElement *ldrawNumberElement = new TiXmlElement("LDrawNumber");
-		TiXmlText *ldrawNumberText;
-		TiXmlElement *povNameElement = new TiXmlElement("POVName");
-		TiXmlText *povNameText = new TiXmlText(color.lgeoName);
-		TiXmlElement *povVersionElement = new TiXmlElement("POVVersion");
-		TiXmlText *povVersionText = new TiXmlText("3.0");
-		TiXmlElement *povFilenameElement = new TiXmlElement("POVFilename");
-		TiXmlText *povFilenameText = new TiXmlText("lg_color.inc");
-		char numberBuf[128];
-
-		sprintf(numberBuf, "%d", ldrawNum);
-		ldrawNumberText = new TiXmlText(numberBuf);
-		ldrawNumberElement->LinkEndChild(ldrawNumberText);
-		povNameElement->LinkEndChild(povNameText);
-		povVersionElement->LinkEndChild(povVersionText);
-		povFilenameElement->LinkEndChild(povFilenameText);
-		colorElement->LinkEndChild(ldrawNumberElement);
-		colorElement->LinkEndChild(povNameElement);
-		colorElement->LinkEndChild(povVersionElement);
-		colorElement->LinkEndChild(povFilenameElement);
-		colorsElement->LinkEndChild(colorElement);
-	}
-	rootElement->LinkEndChild(colorsElement);
-}
-
 TiXmlElement *addElement(
 	TiXmlElement *parent,
 	const char *name,
@@ -318,15 +466,71 @@ TiXmlElement *addElement(
 	return addElement(parent, name, value.c_str());
 }
 
-void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
+void addXmlDependencies(TiXmlElement *rootElement, bool old)
+{
+	TiXmlElement *dependenciesElement = new TiXmlElement("Dependencies");
+	TiXmlElement *lgQualityElement = new TiXmlElement("LGQuality");
+	TiXmlElement *lgDefsElement = new TiXmlElement("LGDefs");
+	TiXmlElement *lgColorsElement = new TiXmlElement("LGColors");
+
+	dependenciesElement->LinkEndChild(lgQualityElement);
+	dependenciesElement->LinkEndChild(lgDefsElement);
+	dependenciesElement->LinkEndChild(lgColorsElement);
+	addElement(lgQualityElement, "POVCode", "#declare lg_quality = LDXQual;\n"
+		"#if (lg_quality = 3)\n"
+		"#declare lg_quality = 4;\n"
+		"#end");
+	if (old)
+	{
+		addElement(lgDefsElement, "POVVersion", "3.0");
+	}
+	addElement(lgDefsElement, "Dependency", "LGQuality");
+	addElement(lgDefsElement, "POVFilename", "lg_defs.inc");
+	if (old)
+	{
+		addElement(lgColorsElement, "POVVersion", "3.0");
+	}
+	addElement(lgColorsElement, "Dependency", "LGDefs");
+	addElement(lgColorsElement, "POVFilename", "lg_color.inc");
+	rootElement->LinkEndChild(dependenciesElement);
+}
+
+void addXmlColors(
+	TiXmlElement *rootElement,
+	const ColorMap &colors,
+	bool /*old*/)
+{
+	TiXmlElement *colorsElement = new TiXmlElement("Colors");
+
+	for (ColorMap::const_iterator it = colors.begin(); it != colors.end(); it++)
+	{
+		unsigned int ldrawNum = it->first;
+		const Color &color = it->second;
+		TiXmlElement *colorElement = new TiXmlElement("Color");
+		char numberBuf[128];
+
+		sprintf(numberBuf, "%d", ldrawNum);
+		addElement(colorElement, "LDrawNumber", numberBuf);
+		addElement(colorElement, "POVName", color.lgeoName);
+		//if (old)
+		//{
+		//	addElement(colorElement, "POVVersion", "3.0");
+		//}
+		addElement(colorElement, "Dependency", "LGColors");
+		colorsElement->LinkEndChild(colorElement);
+	}
+	rootElement->LinkEndChild(colorsElement);
+}
+
+void addXmlElements(
+	TiXmlElement *rootElement,
+	const ElementMap &elementMap,
+	bool /*old*/)
 {
 	TiXmlElement *matricesElement = new TiXmlElement("Matrices");
-	TiXmlElement *matrixElement = new TiXmlElement("LGEOTransform");
-	TiXmlText *matrixText = new TiXmlText("0,0,-25,0,-25,0,0,0,0,-25,0,0,0,0,0,1");
 	TiXmlElement *elementsElement = new TiXmlElement("Elements");
 
-	matrixElement->LinkEndChild(matrixText);
-	matricesElement->LinkEndChild(matrixElement);
+	addElement(matricesElement, "LGEOTransform", "0,0,-25,0,-25,0,0,0,0,-25,0,0,0,0,0,1");
 	rootElement->LinkEndChild(matricesElement);
 	for (ElementMap::const_iterator it = elementMap.begin();
 		it != elementMap.end(); it++)
@@ -345,8 +549,7 @@ void addXmlElements(TiXmlElement *rootElement, const ElementMap &elementMap)
 				element.lgeoName + "_slope");
 			nameElement->SetAttribute("Texture", "Slope");
 		}
-		addElement(elementElement, "POVVersion", "3.0");
-		addElement(elementElement, "POVFilename", "lg_defs.inc");
+		addElement(elementElement, "Dependency", "LGDefs");
 		addElement(elementElement, "POVFilename", element.lgeoFilename);
 		addElement(elementElement, "MatrixRef", "LGEOTransform");
 	}
@@ -360,8 +563,9 @@ void processFiles(const char *path)
 	ColorMap colors;
 	std::string prefix = path;
 	std::string colorsFilename;
-	std::string elementsFilename;
-	std::string patternsFilename;
+	FILE *colorsFile;
+	bool ready = false;
+	bool old = false;
 
 	if (prefix.size() > 0)
 	{
@@ -372,19 +576,47 @@ void processFiles(const char *path)
 			prefix += '/';
 		}
 	}
-	colorsFilename = prefix + "l2p_colr.tab";
-	elementsFilename = prefix + "l2p_elmt.tab";
-	patternsFilename = prefix + "l2p_ptrn.tab";
-	if (readColorsFile(colorsFilename.c_str(), colors) &&
-		readPatternsFile(patternsFilename.c_str(), patterns) &&
-		readElementsFile(elementsFilename.c_str(), elements, patterns))
+	colorsFilename = prefix + "lg_colors.lst";
+	colorsFile = fopen(colorsFilename.c_str(), "rb");
+	if (colorsFile != NULL)
 	{
-		std::string xmlFilename(prefix + "LDrawPOV.xml");
+		std::string elementsFilename = prefix + "lg_elements.lst";
+
+		fclose(colorsFile);
+		if (readColorsFile(colorsFilename.c_str(), colors) &&
+			readElementsFile(elementsFilename.c_str(), elements))
+		{
+			ready = true;
+		}
+	}
+	else
+	{
+		old = true;
+		colorsFilename = prefix + "l2p_colr.tab";
+		colorsFile = fopen(colorsFilename.c_str(), "rb");
+		if (colorsFile != NULL)
+		{
+			std::string elementsFilename = prefix + "l2p_elmt.tab";
+			std::string patternsFilename = prefix + "l2p_ptrn.tab";
+
+			fclose(colorsFile);
+			if (readOldColorsFile(colorsFilename.c_str(), colors) &&
+				readOldPatternsFile(patternsFilename.c_str(), patterns) &&
+				readOldElementsFile(elementsFilename.c_str(), elements, patterns))
+			{
+				ready = true;
+			}
+		}
+	}
+	if (ready)
+	{
+		std::string xmlFilename(prefix + "LGEO.xml");
 
 		TiXmlDocument doc;
 		TiXmlElement *rootElement = createXmlRootElement(doc);
-		addXmlColors(rootElement, colors);
-		addXmlElements(rootElement, elements);
+		addXmlDependencies(rootElement, old);
+		addXmlColors(rootElement, colors, old);
+		addXmlElements(rootElement, elements, old);
 		doc.SaveFile(xmlFilename);
 	}
 }
