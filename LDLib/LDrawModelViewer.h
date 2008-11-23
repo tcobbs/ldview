@@ -475,6 +475,7 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setExportType(ExportType type, bool forceNew = false);
 		virtual LDExporter *getExporter(ExportType type = (ExportType)0,
 			bool forceNew = false);
+		virtual ExportType getExportType(void) const { return exportType; }
 
 		virtual bool mouseDown(LDVMouseMode mode, int x, int y);
 		virtual bool mouseUp(int x, int y);

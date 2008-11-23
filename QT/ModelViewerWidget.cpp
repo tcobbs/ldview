@@ -68,6 +68,7 @@
 #include "LDViewErrors.h"
 #include "LDViewModelTree.h"
 #include "LDViewExtraDir.h"
+#include "LDViewExportOption.h"
 #include "SnapshotSettingsPanel.h"
 #include "PartList.h"
 #include "LDViewSnapshotSettings.h"
@@ -3091,8 +3092,12 @@ void ModelViewerWidget::fileExport()
 
 void ModelViewerWidget::fileExportOption()
 {
-	exportoption = new LDViewExportOption(modelViewer->getExporter(LDrawModelViewer::ETPov));
-	exportoption->show();
+	LDViewExportOption exportOption(modelViewer);
+
+	if (exportOption.exec() == QDialog::Rejected)
+	{
+		modelViewer->getExporter((LDrawModelViewer::ExportType)0, true);
+	}
 }
 
 bool ModelViewerWidget::doFileSave(void)

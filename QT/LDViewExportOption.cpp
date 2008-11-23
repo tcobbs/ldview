@@ -7,33 +7,45 @@
 #include <qgroupbox.h>
 #include <qpushbutton.h>
 #include "misc.h"
-#include "ModelViewerWidget.h"
+#include "LDViewExportOption.h"
 #include <LDLib/LDUserDefaultsKeys.h>
+#include <LDExporter/LDExporter.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qtooltip.h>
 
-LDViewExportOption::LDViewExportOption(LDExporter *exporter)
+LDViewExportOption::LDViewExportOption(LDrawModelViewer *modelViewer)
 	:ExportOptionPanel(),
-	m_exporter(exporter)
+	m_modelViewer(modelViewer),
+	m_exporter(NULL),
+	m_sv(NULL),
+	m_box(NULL)
+{
+	m_sv = new QScrollView(this, "scrollview");
+	m_sv->setVScrollBarMode(QScrollView::AlwaysOn);
+#if (QT_VERSION >>16)==3
+	layouttop->addWidget(m_sv);
+#endif
+}
+
+void LDViewExportOption::populate(void)
 {
 	QWidget *parent;
-	sv = new QScrollView(centralWidget(),"scrollview");
-	//sv->setHScrollBarMode(QScrollView::AlwaysOff);
-	sv->setVScrollBarMode(QScrollView::AlwaysOn);
-#if (QT_VERSION >>16)==3
-	layouttop->addWidget(sv);
-#endif
-	box = new QVBox(sv->viewport());
-	box->setMargin(11);
-	box->setSpacing(4);
-	sv->addChild(box);
-	parent = box;
+	parent = m_box;
     LDExporterSettingList &settings = m_exporter->getSettings();
     LDExporterSettingList::iterator it;
 
+	if (m_box != NULL)
+	{
+		m_sv->removeChild(m_box);
+		m_sv->adjustSize();
+		delete m_box;
+	}
+	m_box = new QVBox(m_sv->viewport());
+	m_box->setMargin(11);
+	m_box->setSpacing(4);
 	QVBoxLayout *vbl= NULL;
     std::stack<int> groupSizes;
 	std::stack<QWidget *> parents;
@@ -70,6 +82,7 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 				QCheckBox *check;
 				check = new QCheckBox(qstmp,parent,qstmp);
 				check->setChecked(it->getBoolValue());
+				m_settings[&*it] = check;
 				if (vbl) vbl->addWidget(check);
             }
             else
@@ -78,7 +91,7 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 				QString qstmp;
 				ucstringtoqstring(qstmp,it->getName());
 				QGroupBox *gb;
-				gb = new QGroupBox (qstmp, box,qstmp);
+				gb = new QGroupBox (qstmp, m_box, qstmp);
 				gb->setColumnLayout(0, Qt::Vertical );
 				gb->layout()->setSpacing( 4 );
 				gb->layout()->setMargin( 11 );
@@ -111,14 +124,16 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
             case LDExporterSetting::TBool:
 				check = new QCheckBox(qstmp,hbox,qstmp);
 				check->setChecked(it->getBoolValue());
+				m_settings[&*it] = check;
                 break;
             case LDExporterSetting::TFloat:
+            case LDExporterSetting::TLong:
+				// Long and float are intentionally handeled the same.
 				label = new QLabel(qstmp,hbox);
 				li = new QLineEdit(qstmp,hbox);
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
-                break;
-            case LDExporterSetting::TLong:
+				m_settings[&*it] = li;
                 break;
             case LDExporterSetting::TString:
 				vbox = new QVBox(hbox);
@@ -129,6 +144,7 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 				li = new QLineEdit(qstmp,hbox2);
 				ucstringtoqstring(qstmp,it->getStringValue());
 				li->setText(qstmp);
+				m_settings[&*it] = li;
 				if (it->isPath())
 				{
 					QPushButton *but = new QPushButton(hbox2);
@@ -147,6 +163,7 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 					combo->insertItem(qstmp,-1);
 				}
 				combo->setCurrentItem(it->getSelectedOption());
+				m_settings[&*it] = combo;
                 break;
             default:
                 throw "not implemented";
@@ -159,10 +176,11 @@ LDViewExportOption::LDViewExportOption(LDExporter *exporter)
 			if (vbl) vbl->addWidget(hbox);
         }
 	}
+	m_sv->addChild(m_box);
 	adjustSize();
-	sv->adjustSize();
-	sv->viewport()->adjustSize();
-	resize(width() + box->width() - sv->visibleWidth(), height());
+	m_sv->adjustSize();
+	m_sv->viewport()->adjustSize();
+	resize(width() + m_box->width() - m_sv->visibleWidth(), height());
 	setFixedWidth(width());
 }
 
@@ -170,16 +188,109 @@ LDViewExportOption::~LDViewExportOption() { }
 
 void LDViewExportOption::doOk(void)
 {
+	SettingsMap::const_iterator it;
+	ucstring value;
+
+	for (it = m_settings.begin(); it != m_settings.end(); it++)
+	{
+		LDExporterSetting *setting = it->first;
+
+		switch (setting->getType())
+		{
+		case LDExporterSetting::TBool:
+			setting->setValue(((QCheckBox *)it->second)->isChecked(), true);
+			break;
+		case LDExporterSetting::TLong:
+		case LDExporterSetting::TFloat:
+		case LDExporterSetting::TString:
+			qstringtoucstring(value, ((QLineEdit *)it->second)->text());
+			setting->setValue(value.c_str(), true);
+			break;
+		case LDExporterSetting::TEnum:
+			setting->selectOption(((QComboBox *)it->second)->currentItem(),
+				true);
+			break;
+		default:
+			// No default, but gets rid of warnings.
+			break;
+		}
+	}
+	accept();
 }
 
 void LDViewExportOption::doCancel(void)
 {
+	reject();
 }
 
 void LDViewExportOption::doReset(void)
 {
+	SettingsMap::const_iterator it;
+	QString value;
+
+	for (it = m_settings.begin(); it != m_settings.end(); it++)
+	{
+		LDExporterSetting *setting = it->first;
+
+		setting->reset();
+		switch (setting->getType())
+		{
+		case LDExporterSetting::TBool:
+			((QCheckBox *)it->second)->setChecked(setting->getBoolValue());
+			break;
+		case LDExporterSetting::TLong:
+		case LDExporterSetting::TFloat:
+		case LDExporterSetting::TString:
+			ucstringtoqstring(value, setting->getStringValue());
+			((QLineEdit *)it->second)->setText(value);
+			break;
+		case LDExporterSetting::TEnum:
+			((QComboBox *)it->second)->setCurrentItem(
+				setting->getSelectedOption());
+			break;
+		default:
+			// No default, but gets rid of warnings.
+			break;
+		}
+	}
 }
 
 void LDViewExportOption::doTypeBoxActivated(void)
 {
+	m_exporter = m_modelViewer->getExporter(
+		(LDrawModelViewer::ExportType)(typeBox->currentItem() +
+		LDrawModelViewer::ETFirst));
+	populate();
 }
+
+void LDViewExportOption::populateTypeBox(void)
+{
+	LDrawModelViewer::ExportType saveExportType =
+		m_modelViewer->getExportType();
+
+	for (int i = LDrawModelViewer::ETFirst; i <= LDrawModelViewer::ETLast; i++)
+	{
+		const LDExporter *exporter = m_modelViewer->getExporter(
+			(LDrawModelViewer::ExportType)i);
+
+		if (exporter != NULL)
+		{
+			ucstring fileType = exporter->getTypeDescription();
+			QString qsFileType;
+
+			ucstringtoqstring(qsFileType, fileType);
+			typeBox->insertItem(qsFileType);
+		}
+	}
+	typeBox->setCurrentItem(saveExportType - LDrawModelViewer::ETFirst);
+	m_exporter = m_modelViewer->getExporter(saveExportType);
+}
+
+int LDViewExportOption::exec(void)
+{
+	m_exporter = m_modelViewer->getExporter();
+	populateTypeBox();
+	populate();
+	return ExportOptionPanel::exec();
+}
+
