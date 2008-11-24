@@ -1695,25 +1695,27 @@ void LDLModel::scanBoundingBoxPoint(
 	const TCVector &point,
 	LDLFileLine *pFileLine)
 {
-	if (m_flags.haveBoundingBox &&
-		pFileLine->getLineType() != LDLLineTypeConditionalLine)
+	if (pFileLine->getLineType() != LDLLineTypeConditionalLine)
 	{
-		for (int i = 0; i < 3; i++)
+		if (m_flags.haveBoundingBox)
 		{
-			if (point[i] < m_boundingMin[i])
+			for (int i = 0; i < 3; i++)
 			{
-				m_boundingMin[i] = point[i];
-			}
-			else if (point[i] > m_boundingMax[i])
-			{
-				m_boundingMax[i] = point[i];
+				if (point[i] < m_boundingMin[i])
+				{
+					m_boundingMin[i] = point[i];
+				}
+				else if (point[i] > m_boundingMax[i])
+				{
+					m_boundingMax[i] = point[i];
+				}
 			}
 		}
-	}
-	else
-	{
-		m_boundingMin = m_boundingMax = point;
-		m_flags.haveBoundingBox = true;
+		else
+		{
+			m_boundingMin = m_boundingMax = point;
+			m_flags.haveBoundingBox = true;
+		}
 	}
 }
 
