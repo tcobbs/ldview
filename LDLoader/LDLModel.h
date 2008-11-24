@@ -147,7 +147,7 @@ protected:
 	virtual void calcBoundingBox(void);
 	virtual void calcMaxRadius(const TCVector &center);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
-	void scanRadiusPoint(const TCVector &point, LDLFileLine *pFileLine);
+	void scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine);
 
 	static bool verifyLDrawDir(const char *value);
 	static void initCheckDirs();

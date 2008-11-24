@@ -11,6 +11,7 @@
 #include <TCFoundation/TCProgressAlert.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCUserDefaults.h>
+#include <math.h>
 
 #ifdef WIN32
 #include <direct.h>
@@ -1692,9 +1693,10 @@ TCFloat LDLModel::getMaxRadius(const TCVector &center)
 
 void LDLModel::scanBoundingBoxPoint(
 	const TCVector &point,
-	LDLFileLine * /*pFileLine*/)
+	LDLFileLine *pFileLine)
 {
-	if (m_flags.haveBoundingBox)
+	if (m_flags.haveBoundingBox &&
+		pFileLine->getLineType() != LDLLineTypeConditionalLine)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -1751,14 +1753,17 @@ void LDLModel::calcBoundingBox(void)
 	}
 }
 
-void LDLModel::scanRadiusPoint(const TCVector &point, LDLFileLine * /*pFileLine*/)
+void LDLModel::scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine)
 {
-	TCFloat radius = (m_center - point).length();
-
-	if (!m_flags.haveMaxRadius || radius > m_maxRadius)
+	if (pFileLine->getLineType() != LDLLineTypeConditionalLine)
 	{
-		m_flags.haveMaxRadius = true;
-		m_maxRadius = radius;
+		TCFloat radius = (m_center - point).lengthSquared();
+
+		if (!m_flags.haveMaxRadius || radius > m_maxRadius)
+		{
+			m_flags.haveMaxRadius = true;
+			m_maxRadius = radius;
+		}
 	}
 }
 
@@ -1770,8 +1775,9 @@ void LDLModel::calcMaxRadius(const TCVector &center)
 
 		TCVector::initIdentityMatrix(matrix);
 		m_center = center;
-		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanRadiusPoint,
+		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanRadiusSquaredPoint,
 			matrix);
+		m_maxRadius = sqrt(m_maxRadius);
 	}
 }
 

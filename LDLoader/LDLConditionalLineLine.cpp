@@ -85,11 +85,20 @@ TCObject *LDLConditionalLineLine::copy(void) const
 }
 
 void LDLConditionalLineLine::scanPoints(
-	TCObject * /*scanner*/,
-	LDLScanPointCallback /*scanPointCallback*/,
-	const TCFloat * /*matrix*/) const
+	TCObject *scanner,
+	LDLScanPointCallback scanPointCallback,
+	const TCFloat *matrix) const
 {
-	// Don't do anything.  If you have a conditional line hanging out in space,
-	// then it's wrong, and we're just going to ignore it anyway for the purpose
-	// of scanning all the points in the model.
+	if (m_valid)
+	{
+		int i;
+		TCVector point;
+
+		LDLShapeLine::scanPoints(scanner, scanPointCallback, matrix);
+		for (i = 0; i < 2; i++)
+		{
+			m_controlPoints[i].transformPoint(matrix, point);
+			((*scanner).*scanPointCallback)(point, this);
+		}
+	}
 }

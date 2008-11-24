@@ -92,6 +92,10 @@ public:
 	static bool isTransparent(TCULong color, bool hostFormat);
 	static void transformVertex(TREVertex &vertex, const TCFloat *matrix);
 	static void transformNormal(TREVertex &normal, const TCFloat *matrix);
+
+	static void transformPoint(const TCVector &point, const TCFloat *matrix,
+		TCFloat *tx, TCFloat *ty);
+	static int turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2, TCFloat vy2);
 protected:
 	virtual ~TREShapeGroup(void);
 	virtual void dealloc(void);
@@ -184,10 +188,6 @@ protected:
 		TCULongArray *stripCounts, const TCFloat *matrix,
 		const TCFloat *unshrinkMatrix);
 	virtual void nextStep(TREShapeType shapeType);
-
-	static void transformPoint(const TCVector &point, const TCFloat *matrix,
-		TCFloat *tx, TCFloat *ty);
-	static int turnVector(TCFloat vx1, TCFloat vy1, TCFloat vx2, TCFloat vy2);
 
 	TREVertexStore *m_vertexStore;
 	TCULongArrayArray *m_indices;

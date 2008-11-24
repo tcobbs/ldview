@@ -163,6 +163,8 @@ protected:
 		const char *commentName = NULL);
 	void writeDeclare(const char *name, bool value,
 		const char *commentName = NULL);
+	bool shouldDrawConditional(const TCVector &p1, const TCVector &p2,
+		const TCVector &p3, const TCVector &p4, const TCFloat *matrix);
 
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
@@ -186,7 +188,7 @@ protected:
 		bool bfc, bool is48 = false);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
 	virtual bool substituteStud(void);
-
+	
 	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
 	void loadSettings(void);
 
@@ -236,6 +238,7 @@ protected:
 	TCFloat m_chromeSpec;
 	TCFloat m_chromeRough;
 	VectorList m_edgePoints;
+	VectorList m_condEdgePoints;
 	PovColorMap m_xmlColors;
 	PovElementMap m_xmlElements;
 	StringStringMap m_includeVersions;

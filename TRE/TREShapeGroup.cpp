@@ -805,8 +805,7 @@ TCULongArray *TREShapeGroup::getActiveConditionalIndices(
 	{
 		treGlGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
 	}
-	TCVector::multMatrix(projectionMatrix, modelViewMatrix,
-		matrix);
+	TCVector::multMatrix(projectionMatrix, modelViewMatrix, matrix);
 	for (i = start; i < start + count; i += 2)
 	{
 		TCULong index1 = (*indices)[i];

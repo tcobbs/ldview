@@ -14,6 +14,8 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <tinyxml.h>
+#include <TRE/TREGL.h>
+#include <TRE/TREShapeGroup.h>
 
 #if defined WIN32 && defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -854,6 +856,9 @@ bool LDPovExporter::writeHeader(void)
 	if (m_edges)
 	{
 		writeDeclare("LDXEdgeRad", m_edgeRadius);
+		writeDeclare("LDXEdgeR", "0.0");
+		writeDeclare("LDXEdgeG", "0.0");
+		writeDeclare("LDXEdgeB", "0.0");
 	}
 	writeDeclare("LDXBgR", m_backgroundR, "PovBgRDesc");
 	writeDeclare("LDXBgG", m_backgroundG, "PovBgGDesc");
@@ -1030,12 +1035,50 @@ bool LDPovExporter::writeModelColors(void)
 	return 1;
 }
 
+bool LDPovExporter::shouldDrawConditional(
+	const TCVector &p1,
+	const TCVector &p2,
+	const TCVector &p3,
+	const TCVector &p4,
+	const TCFloat *matrix)
+{
+	// Use matrix--which contains a combination of the projection and the
+	// model-view matrix--to calculate coords in the plane of the screen, so
+	// we can test optional lines.
+	TCFloat s1x, s1y;
+	TCFloat s2x, s2y;
+	TCFloat s3x, s3y;
+	TCFloat s4x, s4y;
+
+	// Only draw optional line p1-p2 if p3 and p4 are on the same side of p1-p2.
+	// Note that we don't actually adjust for the window size, because it
+	// doesn't effect the calculation.  Also, we don't care what the z value is,
+	// so we don't bother to compute it.
+	TREShapeGroup::transformPoint(p1, matrix, &s1x, &s1y);
+	TREShapeGroup::transformPoint(p2, matrix, &s2x, &s2y);
+	TREShapeGroup::transformPoint(p3, matrix, &s3x, &s3y);
+	TREShapeGroup::transformPoint(p4, matrix, &s4x, &s4y);
+
+	// If we do not turn the same direction \_/ for both test points
+	// then they're on opposite sides of segment p1-p2 and we should
+	// skip drawing this conditional line.
+	if (TREShapeGroup::turnVector(s2x-s1x, s2y-s1y, s3x-s2x, s3y-s2y) == 
+		TREShapeGroup::turnVector(s2x-s1x, s2y-s1y, s4x-s2x, s4y-s2y))
+	{
+		return true;	// Draw it
+	}
+	else
+	{
+		return false;	// Skip it.
+	}
+}
+
 bool LDPovExporter::writeEdges(void)
 {
 	if (m_edgePoints.size() > 0)
 	{
 		fprintf(m_pPovFile,
-			"#declare Edges = union\n"
+			"#declare LDXEdges = union\n"
 			"{\n");
 		for (VectorList::const_iterator it = m_edgePoints.begin();
 			it != m_edgePoints.end(); it++)
@@ -1047,12 +1090,58 @@ bool LDPovExporter::writeEdges(void)
 			{
 				const TCVector &point2 = *it;
 
-				fprintf(m_pPovFile,
-					"	EdgeLine(");
+				fprintf(m_pPovFile, "	EdgeLine(");
 				writePoint(point1);
 				fprintf(m_pPovFile, ",");
 				writePoint(point2);
 				fprintf(m_pPovFile, ",EdgeColor)\n");
+			}
+		}
+		fprintf(m_pPovFile, "}\n\n");
+	}
+	if (m_condEdgePoints.size() > 0)
+	{
+		TCFloat projectionMatrix[16];
+		TCFloat modelViewMatrix[16];
+		TCFloat matrix[16];
+
+		treGlGetFloatv(GL_PROJECTION_MATRIX, projectionMatrix);
+		treGlGetFloatv(GL_MODELVIEW_MATRIX, modelViewMatrix);
+		TCVector::multMatrix(projectionMatrix, modelViewMatrix, matrix);
+		fprintf(m_pPovFile,
+			"#declare LDXConditionalEdges = union\n"
+			"{\n");
+		for (VectorList::const_iterator it = m_condEdgePoints.begin();
+			it != m_condEdgePoints.end(); it++)
+		{
+			const TCVector &point1 = *it;
+
+			it++;
+			if (it != m_condEdgePoints.end())
+			{
+				const TCVector &point2 = *it;
+
+				it++;
+				if (it != m_condEdgePoints.end())
+				{
+					const TCVector &controlPoint1 = *it;
+
+					it++;
+					if (it != m_condEdgePoints.end())
+					{
+						const TCVector &controlPoint2 = *it;
+
+						if (shouldDrawConditional(point1, point2, controlPoint1,
+							controlPoint2, matrix))
+						{
+							fprintf(m_pPovFile, "	EdgeLine(");
+							writePoint(point1);
+							fprintf(m_pPovFile, ",");
+							writePoint(point2);
+							fprintf(m_pPovFile, ",EdgeColor)\n");
+						}
+					}
+				}
 			}
 		}
 		fprintf(m_pPovFile, "}\n\n");
@@ -1652,8 +1741,11 @@ bool LDPovExporter::writeModelObject(
 			{
 				if (m_edges)
 				{
-					fprintf(m_pPovFile,
-						"	object { Edges }\n");
+					fprintf(m_pPovFile, "	object { LDXEdges }\n");
+				}
+				if (m_conditionalEdges)
+				{
+					fprintf(m_pPovFile, "	object { LDXConditionalEdges }\n");
 				}
 				fprintf(m_pPovFile,
 					"#if (LDXRefls = 0)\n"
@@ -2463,7 +2555,7 @@ void LDPovExporter::writeEdgeColor(void)
 		"#ifndef (EdgeColor)\n"
 		"#declare EdgeColor = material {\n"
 		"	texture {\n"
-		"		pigment { rgbf <.1,.1,.1,0> }\n"
+		"		pigment { rgbf <LDXEdgeR,LDXEdgeG,LDXEdgeB,0> }\n"
 		"		finish { ambient 1 diffuse 0 }\n"
 		"	}\n"
 		"}\n"
@@ -2475,16 +2567,22 @@ void LDPovExporter::writeEdgeLineMacro(void)
 	fprintf(m_pPovFile,
 		"#macro EdgeLine(Point1, Point2, Color)\n"
 		"object {\n"
-		"	merge {\n"
-		"		cylinder {\n"
-		"			Point1,Point2,LDXEdgeRad\n"
+		"	#if (Point1.x != Point2.x | Point1.y != Point2.y | Point1.z != Point2.z)\n"
+		"		merge {\n"
+		"			cylinder {\n"
+		"				Point1,Point2,LDXEdgeRad\n"
+		"			}\n"
+		"			sphere {\n"
+		"				Point1,LDXEdgeRad\n"
+		"			}\n"
+		"			sphere {\n"
+		"				Point2,LDXEdgeRad\n"
 		"		}\n"
+		"	#else\n"
 		"		sphere {\n"
 		"			Point1,LDXEdgeRad\n"
 		"		}\n"
-		"		sphere {\n"
-		"			Point2,LDXEdgeRad\n"
-		"		}\n"
+		"	#end\n"
 		"	}\n"
 		"	material { Color }\n"
 		"	no_shadow\n"
@@ -2538,6 +2636,10 @@ void LDPovExporter::scanEdgePoint(
 	}
 	else if (pFileLine->getLineType() == LDLLineTypeConditionalLine)
 	{
+		if (m_conditionalEdges)
+		{
+			m_condEdgePoints.push_back(point);
+		}
 	}
 }
 
