@@ -17,6 +17,7 @@ struct Element
 struct Color
 {
 	std::string lgeoName;
+	bool transparent;
 };
 
 typedef std::map<std::string, Element> ElementMap;
@@ -126,7 +127,7 @@ bool readColorsFile(const char *filename, ColorMap &colors)
 					unsigned int ldrawNum;
 
 					scanFields(line, fields);
-					if (fields.size() < 2)
+					if (fields.size() < 3)
 					{
 						throw "Error parsing %s.\n";
 					}
@@ -135,6 +136,14 @@ bool readColorsFile(const char *filename, ColorMap &colors)
 						throw "Error parsing %s.\n";
 					}
 					color.lgeoName = fields[1];
+					if (toupper(fields[2][0]) == 'T')
+					{
+						color.transparent = true;
+					}
+					else
+					{
+						color.transparent = false;
+					}
 					colors[ldrawNum] = color;
 				}
 			}
@@ -470,21 +479,25 @@ void addXmlDependencies(TiXmlElement *rootElement, bool old)
 {
 	TiXmlElement *dependenciesElement = new TiXmlElement("Dependencies");
 	TiXmlElement *lgQualityElement = new TiXmlElement("LGQuality");
+	TiXmlElement *lgStudsElement = new TiXmlElement("LGStuds");
 	TiXmlElement *lgDefsElement = new TiXmlElement("LGDefs");
 	TiXmlElement *lgColorsElement = new TiXmlElement("LGColors");
 
 	dependenciesElement->LinkEndChild(lgQualityElement);
+	dependenciesElement->LinkEndChild(lgStudsElement);
 	dependenciesElement->LinkEndChild(lgDefsElement);
 	dependenciesElement->LinkEndChild(lgColorsElement);
 	addElement(lgQualityElement, "POVCode", "#declare lg_quality = LDXQual;\n"
 		"#if (lg_quality = 3)\n"
 		"#declare lg_quality = 4;\n"
 		"#end");
+	addElement(lgStudsElement, "POVCode", "#declare lg_studs = LDXStuds;\n");
 	if (old)
 	{
 		addElement(lgDefsElement, "POVVersion", "3.0");
 	}
 	addElement(lgDefsElement, "Dependency", "LGQuality");
+	addElement(lgDefsElement, "Dependency", "LGStuds");
 	addElement(lgDefsElement, "POVFilename", "lg_defs.inc");
 	if (old)
 	{
@@ -517,6 +530,10 @@ void addXmlColors(
 		//	addElement(colorElement, "POVVersion", "3.0");
 		//}
 		addElement(colorElement, "Dependency", "LGColors");
+		if (color.transparent)
+		{
+			addElement(colorElement, "IoR", "lg_ior");
+		}
 		colorsElement->LinkEndChild(colorElement);
 	}
 	rootElement->LinkEndChild(colorsElement);

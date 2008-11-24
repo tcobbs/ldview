@@ -41,6 +41,7 @@ struct PovMapping
 	PovNameList names;
 	StringList povCodes;
 	StringList povFilenames;
+	std::string ior;
 };
 
 struct PovElement : public PovMapping
@@ -82,7 +83,7 @@ protected:
 	bool writeModelColors(void);
 	bool writeEdges(void);
 	void writeXmlMatrix(const char *filename);
-	void writeMatrix(const TCFloat *matrix, const char *filename = NULL);
+	void writeMatrix(const TCFloat *matrix);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
 	bool writeColor(int colorNumber, bool slope = false);
 	void writeColorDeclaration(int colorNumber);

@@ -414,6 +414,11 @@ std::string LDPovExporter::loadPovMapping(
 		}
 		mapping.names.push_back(name);
 	}
+	child = element->FirstChildElement("IoR");
+	if (child != NULL)
+	{
+		mapping.ior = child->GetText();
+	}
 	child = element->FirstChildElement(ldrawElementName);
 	if (child == NULL)
 	{
@@ -1775,25 +1780,8 @@ void LDPovExporter::writeXmlMatrix(const char *filename)
 	}
 }
 
-void LDPovExporter::writeMatrix(
-	const TCFloat *matrix,
-	const char *filename /*= NULL*/)
+void LDPovExporter::writeMatrix(const TCFloat *matrix)
 {
-	//if (filename != NULL)
-	//{
-	//	std::string key = lowerCaseString(filename);
-	//	MatrixMap::const_iterator it = m_matrices.find(key);
-
-	//	if (it != m_matrices.end())
-	//	{
-	//		const TCFloat *mapMatrix = it->second;
-	//		TCFloat newMatrix[16];
-
-	//		TCVector::multMatrix(matrix, mapMatrix, newMatrix);
-	//		writeMatrix(newMatrix);
-	//		return;
-	//	}
-	//}
 	fprintf(m_pPovFile, "matrix <");
 	for (int col = 0; col < 4; col++)
 	{
@@ -1819,7 +1807,7 @@ bool LDPovExporter::writeColor(int colorNumber, bool slope)
 	if (colorNumber != 16)
 	{
 		fprintf(m_pPovFile,
-			"\t#if (version >= 3.1) material #else texture #end { Color%d%s }",
+			"\t#if (version >= 3.1) material #else texture #end { LDXColor%d%s }",
 			colorNumber, slope ? "_slope" : "");
 		return true;
 	}
@@ -1903,14 +1891,14 @@ void LDPovExporter::writeInnerColorDeclaration(
 			}
 			if (macroName != NULL)
 			{
-				fprintf(m_pPovFile, "#declare Color%d = %s(%s,%s,%s)\n",
+				fprintf(m_pPovFile, "#declare LDXColor%d = %s(%s,%s,%s)\n",
 					colorNumber, macroName, ftostr(dr).c_str(),
 					ftostr(dg).c_str(), ftostr(db).c_str());
 				return;
 			}
 		}
 		fprintf(m_pPovFile,
-			"#declare Color%d%s = #if (version >= 3.1) material { #end\n\ttexture {\n",
+			"#declare LDXColor%d%s = #if (version >= 3.1) material { #end\n\ttexture {\n",
 			colorNumber, slope ? "_slope" : "");
 		if (it != m_xmlColors.end())
 		{
@@ -1921,6 +1909,10 @@ void LDPovExporter::writeInnerColorDeclaration(
 				fprintf(m_pPovFile, "\t\t#if (LDXQual > 1) normal { bumps 0.3 scale 25*0.02 } #end\n");
 			}
 			fprintf(m_pPovFile, "\t}\n");
+			if (it->second.ior.size() > 0)
+			{
+				fprintf(m_pPovFile, "\t#if (LDXQual > 1) interior { %s } #end\n", it->second.ior.c_str());
+			}
 		}
 		else
 		{
@@ -2126,7 +2118,7 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 				break;
 			}
 		}
-		fprintf(m_pPovFile, "#ifndef (Color%d)", colorNumber);
+		fprintf(m_pPovFile, "#ifndef (LDXColor%d)", colorNumber);
 		colorInfo = pPalette->getAnyColorInfo(colorNumber);
 		if (colorInfo.name[0])
 		{
@@ -2409,12 +2401,11 @@ void LDPovExporter::writeInnerModelLine(
 
 		TCVector::multMatrix(pModelLine->getMatrix(), mirrorMatrix,
 			newStudMatrix);
-		writeMatrix(newStudMatrix, getModelFilename(pModel).c_str());
+		writeMatrix(newStudMatrix);
 	}
 	else
 	{
-		writeMatrix(pModelLine->getMatrix(),
-			getModelFilename(pModel).c_str());
+		writeMatrix(pModelLine->getMatrix());
 	}
 	fprintf(m_pPovFile, "\n\t");
 	indentStud(studsStarted);
