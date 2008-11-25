@@ -718,6 +718,7 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release ANSI|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCustomBuildTool"

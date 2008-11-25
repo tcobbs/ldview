@@ -7,7 +7,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
-#if _MSC_VER >= 1400	// VC >= VC 2005
+#if _MSC_VER >= 1400 && !defined(TC_NO_UNICODE)	// VC >= VC 2005
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
 #include <gdiplus.h>
