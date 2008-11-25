@@ -4336,7 +4336,10 @@ int LDrawModelViewer::getNumSteps(void) const
 	}
 }
 
-void LDrawModelViewer::setLatLon(float lat, float lon)
+void LDrawModelViewer::setLatLon(
+	float lat,
+	float lon,
+	float distance /*= -1.0f*/)
 {
 	fixLongitude(lon);
 	if (viewMode == VMExamine && examineMode == EMLatLong)
@@ -4348,6 +4351,15 @@ void LDrawModelViewer::setLatLon(float lat, float lon)
 	{
 		TCVector::calcRotationMatrix(lat, lon, rotationMatrix);
 		flags.needsRotationMatrixSetup = true;
+	}
+	if (distance >= 0.0f)
+	{
+		camera.setPosition(TCVector(0.0, 0.0, distance));
+		flags.constrainZoom = false;
+	}
+	else
+	{
+		flags.constrainZoom = viewMode == VMExamine;
 	}
 	requestRedraw();
 }
@@ -4683,3 +4695,7 @@ void LDrawModelViewer::getStandardSizes(
 	}
 }
 
+TCFloat LDrawModelViewer::getDistance(void) const
+{
+	return camera.getPosition().length();
+}

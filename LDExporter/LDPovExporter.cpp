@@ -1877,10 +1877,16 @@ void LDPovExporter::writeMatrix(const TCFloat *matrix)
 	fprintf(m_pPovFile, "matrix <");
 	for (int col = 0; col < 4; col++)
 	{
+		bool allZero = true;
+
 		for (int row = 0; row < 3; row++)
 		{
 			float value = matrix[col * 4 + row];
 
+			if (value != 0)
+			{
+				allZero = false;
+			}
 			if (row == 0 && col == 0)
 			{
 				fprintf(m_pPovFile, "%s", ftostr(value).c_str());
@@ -1889,6 +1895,10 @@ void LDPovExporter::writeMatrix(const TCFloat *matrix)
 			{
 				fprintf(m_pPovFile, ",%s", ftostr(value).c_str());
 			}
+		}
+		if (allZero)
+		{
+			debugPrintf("zero matrix.\n");
 		}
 	}
 	fprintf(m_pPovFile, ">");

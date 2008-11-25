@@ -344,7 +344,7 @@ class LDrawModelViewer: public TCAlertSender
 //			void* userData);
 		virtual void clear(void);
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
-		virtual void setLatLon(float lat, float lon);
+		virtual void setLatLon(float lat, float lon, float distance = -1.0);
 		virtual void pause(void);
 		virtual void unpause(void);
 		bool getPaused(void) const { return flags.paused != false; }
@@ -449,7 +449,8 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setFov(TCFloat value);
 		TCFloat getFov(void) { return fov; }
 		TCFloat getHFov(void);
-		TCFloat getDefaultDistance(void) { return defaultDistance; }
+		TCFloat getDistance(void) const;
+		TCFloat getDefaultDistance(void) const { return defaultDistance; }
 		void setDefaultDistance(TCFloat value);
 		void setExtraSearchDirs(TCStringArray *value);
 		TCStringArray *getExtraSearchDirs(void) { return extraSearchDirs; }

@@ -163,6 +163,8 @@
 #define SHOW_AXES_KEY "ShowAxes"
 #define LAST_LAT_KEY "LastLat"
 #define LAST_LON_KEY "LastLon"
+#define LAST_HAVE_DIST_KEY "LastHaveDist"
+#define LAST_DIST_KEY "LastDist"
 #define BOUNDING_BOXES_ONLY_KEY "BoundingBoxesOnly"
 #define OBI_KEY "OBI"
 #define EXPORTS_DIR_MODE_KEY "ExportsDirMode"
