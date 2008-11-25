@@ -69,7 +69,7 @@ void qstringtoucstring(ucstring &dst, const QString &src)
 	dst.resize(len);
 	for (size_t i = 0; i < len; i++)
 	{
-		dst[i] = (UCCHAR)characters[i];
+		dst[i] = characters[i].unicode();
 	}
 }
 
