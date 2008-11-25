@@ -10,13 +10,18 @@ for %%i IN ( hcw.exe ) do set HCW="%%~$PATH:i"
 if not %HCW%=="" goto INNOCHECK
 
 set HCW="%ProgramFiles%\Help Workshop\hcw.exe"
-if exist "%ProgramFiles%\Help Workshop\hcw.exe" goto INNOCHECK
+if exist %HCW% goto INNOCHECK
+set HCW="%LEGO%\Help Workshop\hcw.exe"
+if exist %HCW% goto INNOCHECK
 echo Please download Help Workshop from: ftp://ftp.microsoft.com/Softlib/MSLFILES/hcwsetup.EXE
 goto END
 
 :INNOCHECK
 
-if exist "%ProgramFiles%\Inno Setup 5\iscc.exe" goto SDKCHECK
+set ISCC="%ProgramFiles%\Inno Setup 5\iscc.exe"
+if exist %ISCC% goto SDKCHECK
+set ISCC="%LEGO%\Inno Setup 5\iscc.exe"
+if exist %ISCC% goto SDKCHECK
 echo Please Download Inno Setup from http://www.jrsoftware.org/isdl.php#qsp
 goto END
 
@@ -257,7 +262,7 @@ rc /l 0x409 /d NDEBUG /foRelease\LDViewThumbs.res LDViewThumbs.rc
 link gdi32.lib libpng.lib zlib.lib TCFoundation.lib libjpeg.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:Release\LDViewThumbs.dll /implib:Release\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release Release\LDViewThumbExtractor.obj  Release\LDViewThumbs.obj Release\StdAfx.obj  Release\LDViewThumbs.res
 cd ..
 
-"%ProgramFiles%\Inno Setup 5\iscc.exe" LDView.iss
+%ISCC% LDView.iss
 
 if not exist "%QTDIR%\bin\qmake.exe" goto End
 cd QT
