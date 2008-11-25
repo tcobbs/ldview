@@ -344,11 +344,15 @@
 #define IDC_BROWSE_EXPORT_DIR           1270
 #define IDC_LONGITUDE                   1271
 #define IDC_MPD_LIST                    1272
+#define IDC_DISTANCE                    1272
 #define IDC_PART_BOUNDING_BOXES         1273
 #define IDC_OPTIONS_CANVAS              1278
 #define IDC_RESIZEGRIP                  1279
 #define IDC_STEP_FIELD                  1281
 #define IDC_RESET                       1282
+#define IDC_DISTANCE_CHECK              1283
+#define IDC_DEFAULT                     1284
+#define IDC_CURRENT                     1285
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -446,7 +450,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40110
-#define _APS_NEXT_CONTROL_VALUE         1283
+#define _APS_NEXT_CONTROL_VALUE         1286
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
