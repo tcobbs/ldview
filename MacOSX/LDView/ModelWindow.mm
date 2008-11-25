@@ -1387,10 +1387,11 @@ enum
 	if (modelViewer != NULL)
 	{
 		LatLon *sheet = [[LatLon alloc] init];
-		
+
+		[sheet setDefaultDist:modelViewer->getDefaultDistance()];
 		if ([sheet runSheetInWindow:window] == NSOKButton)
 		{
-			modelViewer->setLatLon([sheet lat], [sheet lon]);
+			modelViewer->setLatLon([sheet lat], [sheet lon], [sheet dist]);
 		}
 		[sheet release];
 	}

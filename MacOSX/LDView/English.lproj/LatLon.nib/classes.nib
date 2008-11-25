@@ -9,9 +9,16 @@
             SUPERCLASS = NSObject; 
         }, 
         {
+            ACTIONS = {defaultDist = id; distance = id; }; 
             CLASS = LatLon; 
             LANGUAGE = ObjC; 
-            OUTLETS = {latField = NSTextField; lonField = NSTextField; }; 
+            OUTLETS = {
+                defaultDistButton = NSButton; 
+                distCheck = NSButton; 
+                distField = NSTextField; 
+                latField = NSTextField; 
+                lonField = NSTextField; 
+            }; 
             SUPERCLASS = GenericSheet; 
         }
     ); 

@@ -1,4 +1,5 @@
 #import "LatLon.h"
+#import "LDViewCategories.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/TCUserDefaults.h>
 
@@ -9,12 +10,30 @@
 	return [super initWithNibName:@"LatLon"];
 }
 
+- (void)updateEnabled
+{
+	[distField setEnabled:[distCheck getCheck]];
+	[defaultDistButton setEnabled:[distCheck getCheck]];
+	if ([distCheck getCheck])
+	{
+		[distField setFloatValue:dist];
+	}
+	else
+	{
+		[distField setStringValue:@""];
+	}
+}
+
 - (void)awakeFromNib
 {
 	lat = TCUserDefaults::floatForKey(LAST_LAT_KEY, 30.0f, false);
 	lon = TCUserDefaults::floatForKey(LAST_LON_KEY, 45.0f, false);
+	haveDist = TCUserDefaults::boolForKey(LAST_HAVE_DIST_KEY, false, false);
+	dist = TCUserDefaults::floatForKey(LAST_DIST_KEY, defaultDist, false);
 	[latField setFloatValue:lat];
 	[lonField setFloatValue:lon];
+	[distCheck setCheck:haveDist];
+	[self updateEnabled];
 }
 
 - (void)updateValue:(float &)value fromField:(NSTextField *)textField min:(float)min max:(float)max
@@ -48,9 +67,13 @@
 	{
 		[self updateValue:lat fromField:textField min:-90.0f max:90.0f];
 	}
-	else
+	else if (textField == lonField)
 	{
 		[self updateValue:lon fromField:textField min:-180.0f max:180.0f];
+	}
+	else
+	{
+		[self updateValue:dist fromField:textField min:0.0f max:1e500f];
 	}
 }
 
@@ -64,11 +87,54 @@
 	return lon;
 }
 
+- (float)dist
+{
+	if (haveDist)
+	{
+		return dist;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+- (bool)haveDist
+{
+	return haveDist;
+}
+
 - (IBAction)ok:(id)sender
 {
 	TCUserDefaults::setFloatForKey(lat, LAST_LAT_KEY, false);
 	TCUserDefaults::setFloatForKey(lon, LAST_LON_KEY, false);
+	TCUserDefaults::setBoolForKey(haveDist, LAST_HAVE_DIST_KEY, false);
+	if (haveDist)
+	{
+		TCUserDefaults::setFloatForKey(dist, LAST_DIST_KEY, false);
+	}
 	[super ok:sender];
+}
+
+- (IBAction)distance:(id)sender
+{
+	haveDist = [distCheck getCheck];
+	if (haveDist)
+	{
+		dist = defaultDist;
+	}
+	[self updateEnabled];
+}
+
+- (IBAction)defaultDist:(id)sender
+{
+	dist = defaultDist;
+	[self updateEnabled];
+}
+
+- (void)setDefaultDist:(float)value
+{
+	defaultDist = value;
 }
 
 @end
