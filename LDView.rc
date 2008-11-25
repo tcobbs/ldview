@@ -988,17 +988,22 @@ BEGIN
     EDITTEXT        IDC_MAX_POINT,64,24,115,14,ES_AUTOHSCROLL | ES_READONLY
 END
 
-IDD_LAT_LON DIALOG DISCARDABLE  0, 0, 164, 46
+IDD_LAT_LON DIALOG DISCARDABLE  0, 0, 221, 89
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Latitude/Longitude"
 FONT 8, "MS Sans Serif"
 BEGIN
-    RTEXT           "Latitude:",IDC_STATIC,7,10,34,8
-    EDITTEXT        IDC_LATITUDE,45,7,50,14,ES_AUTOHSCROLL
-    RTEXT           "Longitude:",IDC_STATIC,7,27,34,8
-    EDITTEXT        IDC_LONGITUDE,45,24,50,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,107,7,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,107,24,50,14
+    RTEXT           "Latitude:",IDC_STATIC,7,10,42,8
+    EDITTEXT        IDC_LATITUDE,53,7,50,14,ES_AUTOHSCROLL
+    RTEXT           "Longitude:",IDC_STATIC,7,27,42,8
+    EDITTEXT        IDC_LONGITUDE,53,24,50,14,ES_AUTOHSCROLL
+    CONTROL         "Distance:",IDC_DISTANCE_CHECK,"Button",BS_AUTOCHECKBOX | 
+                    BS_RIGHT | WS_TABSTOP,7,43,42,10
+    EDITTEXT        IDC_DISTANCE,53,41,50,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Default",IDC_DEFAULT,108,41,50,14
+    PUSHBUTTON      "Current",IDC_CURRENT,164,41,50,14
+    DEFPUSHBUTTON   "OK",IDOK,108,68,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,164,68,50,14
 END
 
 IDD_MPD DIALOG DISCARDABLE  0, 0, 186, 123
@@ -1024,7 +1029,7 @@ IDD_EXPORT_OPTIONS DIALOGEX 0, 0, 296, 210
 STYLE WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "Export Options"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,182,189,50,14,BS_NOTIFY
     PUSHBUTTON      "Cancel",IDCANCEL,239,189,50,14,BS_NOTIFY
@@ -1258,9 +1263,9 @@ BEGIN
     IDD_LAT_LON, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 157
+        RIGHTMARGIN, 214
         TOPMARGIN, 7
-        BOTTOMMARGIN, 39
+        BOTTOMMARGIN, 82
     END
 
     IDD_MPD, DIALOG
@@ -1683,8 +1688,8 @@ IDB_STEP_TOOLBAR        BITMAP  DISCARDABLE     "Icons\\step_toolbar.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,2,1,37
- PRODUCTVERSION 3,2,1,37
+ FILEVERSION 3,2,1,38
+ PRODUCTVERSION 3,2,1,38
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1702,14 +1707,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "3.2.2.37 Unofficial\0"
+            VALUE "FileVersion", "3.2.2.38 Unofficial\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2008 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "3.2.2.37 Unofficial\0"
+            VALUE "ProductVersion", "3.2.2.38 Unofficial\0"
             VALUE "SpecialBuild", "\0"
         END
     END

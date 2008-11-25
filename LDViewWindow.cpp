@@ -4372,9 +4372,12 @@ LRESULT LDViewWindow::specifyLatLon(void)
 	{
 		LatLonDialog *dlg = new LatLonDialog(getLanguageModule());
 
+		dlg->setDefaultDistance(modelViewer->getDefaultDistance());
+		dlg->setCurrentDistance(modelViewer->getDistance());
 		if (dlg->doModal(modelWindow) == IDOK)
 		{
-			modelViewer->setLatLon(dlg->getLat(), dlg->getLon());
+			modelViewer->setLatLon(dlg->getLat(), dlg->getLon(),
+				dlg->getDistance());
 		}
 		dlg->release();
 	}
