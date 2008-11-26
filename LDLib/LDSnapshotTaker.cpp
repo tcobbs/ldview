@@ -24,24 +24,62 @@ using namespace TREGLExtensionsNS;
 
 #define FBO_SIZE 1024
 
+#ifndef GL_EXT_packed_depth_stencil
+#define GL_DEPTH_STENCIL_EXT              0x84F9
+#define GL_UNSIGNED_INT_24_8_EXT          0x84FA
+#define GL_DEPTH24_STENCIL8_EXT           0x88F0
+#define GL_TEXTURE_STENCIL_SIZE_EXT       0x88F1
+#endif
 
 class FBOHelper
 {
 public:
-	FBOHelper(bool useFBO) : m_useFBO(useFBO)
+	FBOHelper(bool useFBO) : m_useFBO(useFBO), m_stencilBuffer(0)
 	{
 		if (m_useFBO)
 		{
 			glGenFramebuffersEXT(1, &m_fbo);
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo);
+			GLint depthBits, stencilBits;
 
-			// Depth buffer
-			glGenRenderbuffersEXT(1, &m_depthBuffer);
-			glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
-			glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24,
-				FBO_SIZE, FBO_SIZE);
-			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
-				GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_depthBuffer);
+			glGetIntegerv(GL_DEPTH_BITS, &depthBits);
+			glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+			if (depthBits == 24 && stencilBits == 8 &&
+				TREGLExtensions::checkForExtension(
+				"GL_EXT_packed_depth_stencil"))
+			{
+				// Packed Depth/Stencil buffer
+				glGenRenderbuffersEXT(1, &m_depthBuffer);
+				glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
+				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
+					GL_DEPTH_STENCIL_EXT, FBO_SIZE, FBO_SIZE);
+				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+					GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
+					m_depthBuffer);
+				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+					GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
+					m_depthBuffer);
+			}
+			else
+			{
+				// Depth buffer
+				glGenRenderbuffersEXT(1, &m_depthBuffer);
+				glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_depthBuffer);
+				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
+					GL_DEPTH_COMPONENT24, FBO_SIZE, FBO_SIZE);
+				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+					GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
+					m_depthBuffer);
+
+				// Stencil buffer
+				glGenRenderbuffersEXT(1, &m_stencilBuffer);
+				glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_stencilBuffer);
+				glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,
+					GL_STENCIL_INDEX, FBO_SIZE, FBO_SIZE);
+				glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
+					GL_STENCIL_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT,
+					m_stencilBuffer);
+			}
 
 			// Color buffer
 			glGenRenderbuffersEXT(1, &m_colorBuffer);
@@ -50,6 +88,7 @@ public:
 				FBO_SIZE);
 			glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,
 				GL_COLOR_ATTACHMENT0_EXT, GL_RENDERBUFFER_EXT, m_colorBuffer);
+
 			glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 			if (glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) !=
 				GL_FRAMEBUFFER_COMPLETE_EXT)
@@ -64,6 +103,10 @@ public:
 		{
 			glDeleteFramebuffersEXT(1, &m_fbo);
 			glDeleteRenderbuffersEXT(1, &m_depthBuffer);
+			if (m_stencilBuffer != 0)
+			{
+				glDeleteRenderbuffersEXT(1, &m_stencilBuffer);
+			}
 			glDeleteRenderbuffersEXT(1, &m_colorBuffer);
 			glReadBuffer(GL_BACK);
 		}
@@ -71,6 +114,7 @@ public:
 	bool m_useFBO;
 	GLuint m_fbo;
 	GLuint m_depthBuffer;
+	GLuint m_stencilBuffer;
 	GLuint m_colorBuffer;
 };
 
