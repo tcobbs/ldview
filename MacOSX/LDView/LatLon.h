@@ -16,9 +16,11 @@
 	bool haveDist;
 	float dist;
 	float defaultDist;
+	float currentDist;
 }
 
 - (void)setDefaultDist:(float)value;
+- (void)setCurrentDist:(float)value;
 - (id)init;
 - (float)lat;
 - (float)lon;
