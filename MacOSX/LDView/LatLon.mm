@@ -126,15 +126,39 @@
 	[self updateEnabled];
 }
 
+- (IBAction)defaultLat:(id)sender
+{
+	lat = 30.0f;
+	[latField setFloatValue:lat];
+	[self updateEnabled];
+}
+
+- (IBAction)defaultLon:(id)sender
+{
+	lon = 45.0f;
+	[lonField setFloatValue:lon];
+}
+
 - (IBAction)defaultDist:(id)sender
 {
 	dist = defaultDist;
 	[self updateEnabled];
 }
 
+- (IBAction)currentDist:(id)sender
+{
+	dist = currentDist;
+	[self updateEnabled];
+}
+
 - (void)setDefaultDist:(float)value
 {
 	defaultDist = value;
+}
+
+- (void)setCurrentDist:(float)value
+{
+	currentDist = value;
 }
 
 @end

@@ -9,7 +9,13 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {defaultDist = id; distance = id; }; 
+            ACTIONS = {
+                currentDist = id; 
+                defaultDist = id; 
+                defaultLat = id; 
+                defaultLon = id; 
+                distance = id; 
+            }; 
             CLASS = LatLon; 
             LANGUAGE = ObjC; 
             OUTLETS = {
