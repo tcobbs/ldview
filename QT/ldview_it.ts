@@ -640,11 +640,11 @@ Copyright © 2007 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished">Mostra informazioni &amp;fotocamera POV-Ray...</translation>
     </message>
     <message>
-        <source>Snapshot Settings</source>
+        <source>Snapshot Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&amp;Snapshot Settings...</source>
+        <source>&amp;Snapshot Options...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1097,7 +1097,7 @@ into effect until the next time a model is loaded.</source>
 <context>
     <name>SnapshotSettingsPanel</name>
     <message>
-        <source>LDView Snapshot Settings</source>
+        <source>LDView Snapshot Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
