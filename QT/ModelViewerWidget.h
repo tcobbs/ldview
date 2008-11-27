@@ -116,7 +116,8 @@ public:
 		float progress, void* userData);
 	bool writeImage(char *filename, int width, int height, TCByte *buffer,
 		const char *formatName, bool saveAlpha = false);
-	bool saveImage(char *filename, int imageWidth, int imageHeight);
+	bool saveImage(char *filename, int imageWidth, int imageHeight,
+		bool fromCommandLine = false);
 	bool writePng(char *filename, int width, int height, TCByte *buffer,
 		bool saveAlpha);
     bool writeBmp(char *filename, int width, int height, TCByte *buffer);
@@ -254,7 +255,8 @@ protected:
 	void setLibraryUpdateProgress(float progress);
 	void setupUserAgent(void);
 	virtual bool calcSaveFilename(char* saveFilename, int len);
-	bool grabImage(int &imageWidth, int &imageHeight);
+	bool grabImage(int &imageWidth, int &imageHeight,
+		bool fromCommandLine = false);
 	LDSnapshotTaker::ImageType getSaveImageType(void);
 
 	static void populateRecentFiles(void);

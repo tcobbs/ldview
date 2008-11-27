@@ -89,6 +89,18 @@ int main(int argc, char *argv[])
 		exit(0);
 	}
 	TCUserDefaults::setAppName("LDView");
+#ifdef DEBUG
+	FILE *logFile = fopen("/tmp/LDView.log", "w");
+	if (logFile != NULL)
+	{
+		fprintf(logFile, "Args:\n");
+		for (int i = 0; i < argc; i++)
+		{
+			fprintf(logFile, "<%s>\n", argv[i]);
+		}
+		fclose(logFile);
+	}
+#endif // DEBUG
 	char *sessionName =
         TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
     if (sessionName && sessionName[0])
