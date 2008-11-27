@@ -17,6 +17,9 @@ public slots:
 	void show(void);
 	void doOk();
 	void doCancel();
+	void doCurrent();
+	void doDefault();
+	void distanceChanged();
 protected:
 	ModelViewerWidget *modelWidget;
 	QIntValidator *v1,*v2;
