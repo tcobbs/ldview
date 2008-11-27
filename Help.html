@@ -101,6 +101,7 @@ ALINK="#0080D0">
 <LI><A HREF="#ExamineMode">Examine Mode</A></LI>
 <LI><A HREF="#FlyMode">Fly-through Mode</A></LI>
 </UL></LI>
+<LI><A HREF="#StepSupport">Step Support</A></LI>
 <LI><A HREF="#Menus">Menus</A>
 <UL>
 <LI><A HREF="#FileMenu">File Menu</A></LI>
@@ -114,6 +115,7 @@ ALINK="#0080D0">
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
 <LI><A HREF="#Export">Exporting</A></LI>
+<LI><A HREF="#LatLonDialog">Latitude/Longitude Dialog</A></LI>
 <LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
 <LI><A HREF="#PartsListDialog">Parts List Dialog</A></LI>
 <LI><A HREF="#ModelTreeDialog">Model Tree Dialog</A></LI>
@@ -451,6 +453,39 @@ shift to double the speed at which you move.  The movement keys are as follows:
 <BR>
 <P>
 </P>
+<A NAME="StepSupport"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Step Support
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+LDraw files may contain steps.  If so, you can view the steps in order to see
+how to build the model.  However, by default, LDView displays the last step,
+which shows the complete model.  Use one of the <i>Step</i> menu items or one of
+the step toolbar controls to look at the steps.
+<p>
+Some programs support some advanced options for steps such as temporary buffers
+(so that a sub-section of the model can be initally shown in one location and
+then moved to another) and custom rotation angles.  LDView doesn't support this
+advanced functionality.  It recognizes the <tt>ROTSTEP</tt> LDraw command, which
+is used for steps with a custom rotation angle, but treats it just like a
+standard step command.  It ignores all other advanced step commands.
+</p>
+<p>
+LDView only shows the steps in the top-level model that it is displaying.  If
+you want to see the steps in a sub-model of that model, you must load the
+sub-model directly.  If you want to see the steps in the sub-models of an MPD
+file, you must first select the sub-model using the <a href="#MPDDialog">MPD
+Model Selection Dialog</a> (available from the <a href="#ToolsMenu">Tools
+Menu</a> .  Once you have selected the sub-model as the main model, its steps
+can be navigated just as if it were in its own file which you loaded directly.
+</p>
+<p>
+</p>
 <A NAME="Menus"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -624,7 +659,7 @@ where there is no visible menu.
 		Note that the toolbar is never visible in full-screen mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Status Bar:</TD>
+		<TD ALIGN="RIGHT" NOWRAP><A NAME="StatusBar">Status Bar:</A></TD>
 		<TD COLSPAN=2>Toggles the permanent display of the status bar on and
 		off.  Note that the status bar will always display when there is load
 		progress to be indicated.  Also, except while displaying load progress,
@@ -685,9 +720,8 @@ where there is no visible menu.
 	<TR VALIGN="TOP">
 		<TD></TD>
 		<TD ALIGN="RIGHT" NOWRAP>Specify latitude/longitude:</TD>
-		<TD>Allows you to enter a specific latitude, longitude, and optionally
-		distance, and changes the viewing angle to the specified angle (at the
-		specified distance if that is specified).</TD>
+		<TD COLSPAN=2>Displays the <A HREF="#LatLonDialog">Latitude/Longitude
+		Dialog</A>.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
@@ -730,7 +764,8 @@ where there is no visible menu.
 		This is the default mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Latitude/Longitude Rotation:</TD>
+		<TD ALIGN="RIGHT" NOWRAP><A NAME="LatLonMode">Latitude/Longitude
+		Rotation:</A></TD>
 		<TD COLSPAN=2>Toggle to enable or disable latitude/longitude rotation
 		mode.  In latitude/longitude rotation mode, moving the mouse side to
 		side changes the view's longitude, and moving the mouse up and down
@@ -1057,6 +1092,52 @@ export is important.
 LDView's STL export doesn't have an options.  The STL file that it creates is
 monochrome.  This option is mainly intended to allow parts to be exported for
 editing in 3rd-party 3D modeling software such as Blender.
+</P>
+<BR>
+<P>
+</P>
+<A NAME="LatLonDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Latitude/Longitude Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Latitude/Longitude dialog allows you to change the fiew to a specific
+latitude, longitude, and optionally distance.
+<P>
+Enter the desired latitude and longitude to rotate the model around so that you
+are looking at it from the given direction.  Consider an imaginary globe
+surrounding the model, centered at the model's center, with the front of the
+model lining up with the globe at a the 0 longitude location.  The numbers you
+enter rotate the model around such that you're looking down on the globe at the
+specified latitude and longitude, with the top of your head facing towards the
+north.
+</P>
+<P>
+If you check the <I>Distance</I> check box, the camera will be placed at the
+specified distance from the center of the model.
+</P>
+<P>
+The <I>Default</I> buttons reset their associated fields to their default
+values.  The default latitude is 30, the default longitude is 45, and the
+default distance depends on the model.
+</P>
+<P>The <I>Current</I> button next to the <I>Distance</I> field sets the distance
+field based on the current camera location.  This is useful if you want to take
+snapshots of multiple different sized models at the same scale, as you can set
+things up for the biggest model, then use the <I>Current</I> button to determine
+the appropriate distance, then use that for all the snapshots.
+</P>
+<P>
+The <I>Latitude</I> and <I>Longitude</I> fields don't have a <I>Current</I>
+button, because LDView's arbitrary rotations don't usual correspond to a view
+that can be produced by this dialog.  However, if you switch to
+<a href="#LatLonMode">Latitude/Longitude Rotation</a> mode, the
+<a href="#StatusBar">Status Bar</a> shows the current latitude/longitude.
 </P>
 <BR>
 <P>
@@ -1423,6 +1504,14 @@ constant motion.  The easiest way to do this is to spin it (see
 <A HREF="#MouseControl">mouse control</A>).
 </P>
 <P>
+<I>Show Axes</I> (Default: <I>Off</I>):<BR>
+Enabling this option causes LDView to drawn the XYZ coordinate axes for the
+model, with their origin at the model's origin.  The X axis is drawn in red,
+the Y axis is drawn in green, and the Z axis is drawn in blue.  The positive
+axes are all drawn in bright colors, and the negative axes are all drawn in
+dark colors.
+</P>
+<P>
 <A NAME="ShowErrors"><I>Show errors after loading</I></A> (Default:
 <I>On</I>):<BR>
 Enabling this option causes the <A HREF="#ErrorWindow">Errors &amp; Warnings
@@ -1469,6 +1558,31 @@ actually result in faster performance.
 </P>
 
 <P>
+<FONT SIZE="+1"><B><A>Default Save Directories Box</A></B></FONT><BR>
+The default save directories box allows you to decide what directory to use by
+default when saving files.  Each save operation has three possible options:
+<table class="SettingsList">
+<tr>
+<td valign="top">Model</td>
+<td>The default directory is the same directory as the currently loaded
+model.</td>
+</tr>
+<tr>
+<td nowrap valign="top">Last Saved</td>
+<td>The default directory is whatever directory was used last for this file
+type.  (The first time you save a file of a given type, the default directory
+is the model's directory.)</td>
+</tr>
+<tr>
+<td valign="top">Specified</td>
+<td>The default directory is specified in the field to the right of the
+drop-down box.  Use the <i>Browse...</i> button to browse for a directory,
+or enter it in the field directly.</td>
+</tr>
+</table>
+</P>
+
+<P>
 <FONT SIZE="+2"><B><A NAME="GeometryTab">Geometry Tab</A></B></FONT><BR>
 </P>
 <P>
@@ -1488,6 +1602,13 @@ as the Seam Width option of
 displays the current seam width.  Use the arrows to set the seam width to a range
 of numbers between 0.00 and 5.00. Note that setting this to large values can
 produce extremely odd results.
+</P>
+<P>
+<I>Part bounding boxes only</I> (Default: <I>Off</I>):<BR>
+Enabling this option makes it so that all parts in the model are drawn as just
+bounding boxes.  A bounding box is the minimum axis-aligned box that can
+completely contain the part.  Geometry that isn't detected as being inside a
+part is drawn normally.
 </P>
 
 <P>
@@ -1765,7 +1886,7 @@ narrow.  Many people find it difficult or even impossible to look at an image in
 this way and then focus.
 </P>
 <P>
-<I>Amt</I> (Default: <I>50%</I>):<BR>
+<I>Amount</I> (Default: <I>50%</I>):<BR>
 This option is only available if stereo is enabled.  The slider controls the
 stereo spacing.  A small value will result in a very subtle stereoscopic effect,
 as if you were looking at a very large object from a very long distance.  (The
