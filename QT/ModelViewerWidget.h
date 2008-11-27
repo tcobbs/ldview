@@ -332,6 +332,7 @@ protected:
     bool saveSeries;
     int saveDigits;
 	int saveImageType;
+	int exportType;
 	int fullscreen;
 #ifdef __APPLE__
 	QPopupMenu *openRecentMenu;
