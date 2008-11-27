@@ -952,16 +952,17 @@ std::string LDPovExporter::getDeclareName(
 	{
 		return it->second;
 	}
-	std::string replaced = replaceSpecialChacters(modelFilename.c_str());
-	if (replaced.size() == modelFilename.size())
-	{
-		// No replacements, so it could be a POV reserved word.  Append _ldx to
-		// the end to guarantee that isn't the case.
-		replaced += "_ldx";
-	}
+	std::string replaced = std::string("LDX_") +
+		replaceSpecialChacters(modelFilename.c_str());
+	//if (replaced.size() == modelFilename.size())
+	//{
+	//	// No replacements, so it could be a POV reserved word.  Append _ldx to
+	//	// the end to guarantee that isn't the case.
+	//	replaced += "_ldx";
+	//}
 	std::string retValue;
 
-	convertStringToLower(&replaced[0]);
+	//convertStringToLower(&replaced[0]);
 	if (isdigit(replaced[0]))
 	{
 		retValue = "_";
@@ -1742,10 +1743,10 @@ bool LDPovExporter::writeModelObject(
 				if (m_edges)
 				{
 					fprintf(m_pPovFile, "	object { LDXEdges }\n");
-				}
-				if (m_conditionalEdges)
-				{
-					fprintf(m_pPovFile, "	object { LDXConditionalEdges }\n");
+					if (m_conditionalEdges)
+					{
+						fprintf(m_pPovFile, "	object { LDXConditionalEdges }\n");
+					}
 				}
 				fprintf(m_pPovFile,
 					"#if (LDXRefls = 0)\n"
@@ -2770,7 +2771,7 @@ bool LDPovExporter::substituteEighthSphere(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_1_dash_8sphe_dot_dat = sphere // Sphere .125\n"
+		"#declare LDX_%s1_dash_8sphe_dot_dat = sphere // Sphere .125\n"
 		"{\n"
 		"	<0,0,0>,1\n"
 		"	clipped_by\n"
@@ -2791,7 +2792,7 @@ bool LDPovExporter::substituteEighthSphereCorner(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_1_dash_8sphc_dot_dat = sphere // Sphere Corner .125\n"
+		"#declare LDX_%s1_dash_8sphc_dot_dat = sphere // Sphere Corner .125\n"
 		"{\n"
 		"	<0,0,0>,sqrt(2)\n"
 		"	clipped_by\n"
@@ -2813,7 +2814,7 @@ bool LDPovExporter::substituteCylinder(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcyli_dot_dat = cylinder // Cylinder %s\n"
+		"#declare LDX_%s%d_dash_%dcyli_dot_dat = cylinder // Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n", prefix48, m_filenameNumerator,
 		m_filenameDenom, ftostr(fraction).c_str());
@@ -2830,7 +2831,7 @@ bool LDPovExporter::substituteSlopedCylinder(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcyls_dot_dat = cylinder // Sloped Cylinder %s\n"
+		"#declare LDX_%s%d_dash_%dcyls_dot_dat = cylinder // Sloped Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,2,0>,1 open\n", prefix48, m_filenameNumerator,
 		m_filenameDenom, ftostr(fraction).c_str());
@@ -2862,7 +2863,7 @@ bool LDPovExporter::substituteSlopedCylinder2(
 		return false;
 	}
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcyls2_dot_dat = cylinder // Sloped Cylinder2 %s\n"
+		"#declare LDX_%s%d_dash_%dcyls2_dot_dat = cylinder // Sloped Cylinder2 %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n", prefix48, m_filenameNumerator,
 		m_filenameDenom, ftostr(fraction).c_str());
@@ -2894,7 +2895,7 @@ bool LDPovExporter::substituteDisc(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%ddisc_dot_dat = disc // Disc %s\n"
+		"#declare LDX_%s%d_dash_%ddisc_dot_dat = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n", prefix48, m_filenameNumerator,
 		m_filenameDenom, ftostr(fraction).c_str());
@@ -2920,7 +2921,7 @@ bool LDPovExporter::substituteChrd(
 	double ofs = -p0.distToLine(p1, p2);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dchrd_dot_dat = disc // Disc %s\n"
+		"#declare LDX_%s%d_dash_%dchrd_dot_dat = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n"
 		"	clipped_by\n"
@@ -2944,7 +2945,7 @@ bool LDPovExporter::substituteNotDisc(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dndis_dot_dat = disc // Not-Disc %s\n"
+		"#declare LDX_%s%d_dash_%dndis_dot_dat = disc // Not-Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,2,1\n", prefix48, m_filenameNumerator,
 		m_filenameDenom, ftostr(fraction).c_str());
@@ -2968,7 +2969,7 @@ bool LDPovExporter::substituteCone(
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
-		"#declare %s_%d_dash_%dcon%d_dot_dat = cone // Cone %s\n"
+		"#declare LDX_%s%d_dash_%dcon%d_dot_dat = cone // Cone %s\n"
 		"{\n"
 		"	<0,0,0>,%d,<0,1,0>,%d open\n", prefix48, m_filenameNumerator,
 		m_filenameDenom, size, ftostr(fraction).c_str(), size + 1, size);
@@ -2989,13 +2990,13 @@ bool LDPovExporter::substituteRing(
 	if (isOld)
 	{
 		fprintf(m_pPovFile,
-			"#declare %sring%d_dot_dat = disc // Ring %s\n",
+			"#declare LDX_%sring%d_dot_dat = disc // Ring %s\n",
 			prefix48, size, ftostr(fraction).c_str());
 	}
 	else
 	{
 		fprintf(m_pPovFile,
-			"#declare %s_%d_dash_%drin%s%d_dot_dat = disc // Ring %s\n",
+			"#declare LDX_%s%d_dash_%drin%s%d_dot_dat = disc // Ring %s\n",
 			prefix48, m_filenameNumerator, m_filenameDenom,
 			size >= 10 ? "" : "g", size, ftostr(fraction).c_str());
 	}
@@ -3134,7 +3135,7 @@ bool LDPovExporter::substituteStud(void)
 {
 	writeLogo();
 	fprintf(m_pPovFile,
-			"#declare stud_dot_dat =\n"
+			"#declare LDX_stud_dot_dat =\n"
 			"#if (LDXQual <= 2)\n"
 			"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
 			"#else\n"
