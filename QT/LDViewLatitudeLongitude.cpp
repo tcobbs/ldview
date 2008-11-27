@@ -16,10 +16,12 @@ LatitudeLongitude::LatitudeLongitude(ModelViewerWidget *modelWidget)
 	:LatitudeLongitudePanel(),
 	modelWidget(modelWidget),
 	v1(new QIntValidator(-90,90,this)),
-	v2(new QIntValidator(-180,180,this))
+	v2(new QIntValidator(-180,180,this)),
+	v3(new QDoubleValidator(0.0,999999.9,4,this))
 {
 	latitudeLine->setValidator(v1);
 	longitudeLine->setValidator(v2);
+	distanceLine->setValidator(v3);
 }
 
 
@@ -38,7 +40,7 @@ void LatitudeLongitude::show()
 	longitudeLine->setText(qs);
 	distanceCheckBox->setChecked(
 				TCUserDefaults::boolForKey(LAST_HAVE_DIST_KEY, false, false));
-	qs.setNum(TCUserDefaults::floatForKey(LAST_DIST_KEY, true,
+	qs.setNum(distance = TCUserDefaults::floatForKey(LAST_DIST_KEY, true,
 										  false));
 	distanceLine->setText(qs);
 	distanceChanged();
@@ -58,9 +60,9 @@ void LatitudeLongitude::doOk()
 								  LAST_HAVE_DIST_KEY, false);
 	if (checked && (sscanf(distanceLine->text().ascii(),"%f",&f) == 1))
 	{
-		TCUserDefaults::setFloatForKey(f, LAST_DIST_KEY, false);
+		TCUserDefaults::setFloatForKey(distance = f, LAST_DIST_KEY, false);
 	}
-	modelWidget->getModelViewer()->setLatLon(lat,lon);
+	modelWidget->getModelViewer()->setLatLon(lat,lon, distance);
 	LatitudeLongitudePanel::close();
 }
 
@@ -71,17 +73,24 @@ void LatitudeLongitude::doCancel()
 
 void LatitudeLongitude::doCurrent()
 {
+	distance = modelWidget->getModelViewer()->getDistance();
+	distanceChanged();
 }
 
 void LatitudeLongitude::doDefault()
 {
+	distance = modelWidget->getModelViewer()->getDefaultDistance();
+	distanceChanged();
 }
 
 void LatitudeLongitude::distanceChanged()
 {
+	QString qs;
 	bool checked = distanceCheckBox->isChecked();
 	currentButton->setEnabled(checked);
 	defaultButton->setEnabled(checked);
 	distanceLine->setEnabled(checked);
+	qs.setNum(distance);
+	distanceLine->setText(checked ? qs : "");
 }
 
