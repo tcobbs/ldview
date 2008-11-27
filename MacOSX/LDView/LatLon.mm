@@ -5,9 +5,16 @@
 
 @implementation LatLon
 
-- (id) init
+- (id)init
 {
 	return [super initWithNibName:@"LatLon"];
+}
+
+- (void)setField:(NSTextField *)textField toFloat:(double)value
+{
+	ucstring valueString = ftoucstr(value, 2);
+	
+	[textField setStringValue:[NSString stringWithUCString:valueString]];
 }
 
 - (void)updateEnabled
@@ -16,7 +23,7 @@
 	[defaultDistButton setEnabled:[distCheck getCheck]];
 	if ([distCheck getCheck])
 	{
-		[distField setFloatValue:dist];
+		[self setField:distField toFloat:dist];
 	}
 	else
 	{
@@ -30,8 +37,8 @@
 	lon = TCUserDefaults::floatForKey(LAST_LON_KEY, 45.0f, false);
 	haveDist = TCUserDefaults::boolForKey(LAST_HAVE_DIST_KEY, false, false);
 	dist = TCUserDefaults::floatForKey(LAST_DIST_KEY, defaultDist, false);
-	[latField setFloatValue:lat];
-	[lonField setFloatValue:lon];
+	[self setField:latField toFloat:lat];
+	[self setField:lonField toFloat:lon];
 	[distCheck setCheck:haveDist];
 	[self updateEnabled];
 }
@@ -53,7 +60,7 @@
 	}
 	if (changed)
 	{
-		[textField setFloatValue:value];
+		[self setField:textField toFloat:value];
 		[textField selectText:self];
 		NSBeep();
 	}
@@ -129,14 +136,14 @@
 - (IBAction)defaultLat:(id)sender
 {
 	lat = 30.0f;
-	[latField setFloatValue:lat];
+	[self setField:latField toFloat:lat];
 	[self updateEnabled];
 }
 
 - (IBAction)defaultLon:(id)sender
 {
 	lon = 45.0f;
-	[lonField setFloatValue:lon];
+	[self setField:lonField toFloat:lon];
 }
 
 - (IBAction)defaultDist:(id)sender
