@@ -794,7 +794,7 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXFloor", m_floor, "PovFloorDesc");
 	fprintf(m_pPovFile, "\n");
 
-	fprintf(m_pPovFile, "%s\n", ls("PovBoundsSection"));
+	fprintf(m_pPovFile, "%s\n", (const char *)ls("PovBoundsSection"));
 	writeDeclare("LDXMinX", m_boundingMin[0]);
 	writeDeclare("LDXMinY", m_boundingMin[1]);
 	writeDeclare("LDXMinZ", m_boundingMin[2]);
@@ -808,7 +808,7 @@ bool LDPovExporter::writeHeader(void)
 	writeDeclare("LDXRadius", m_radius);
 	fprintf(m_pPovFile, "\n");
 
-	fprintf(m_pPovFile, "%s\n", ls("PovCameraSection"));
+	fprintf(m_pPovFile, "%s\n", (const char *)ls("PovCameraSection"));
 	getCameraStrings(cameraLocString, cameraLookAtString, cameraSkyString);
 	writeDeclare("LDXCameraLoc", cameraLocString, "PovCameraLocDesc");
 	writeDeclare("LDXCameraLookAt", cameraLookAtString, "PovCameraLookAtDesc");
@@ -1875,18 +1875,34 @@ void LDPovExporter::writeXmlMatrix(const char *filename)
 
 void LDPovExporter::writeMatrix(const TCFloat *matrix)
 {
+	bool allZero = true;
+
 	fprintf(m_pPovFile, "matrix <");
+	for (int col = 0; col < 4 && allZero; col++)
+	{
+		for (int row = 0; row < 3 && allZero; row++)
+		{
+			float value = matrix[col * 4 + row];
+
+			if (value != 0.0f)
+			{
+				allZero = false;
+			}
+		}
+	}
+	if (allZero)
+	{
+		debugPrintf("zero matrix.\n");
+	}
 	for (int col = 0; col < 4; col++)
 	{
-		bool allZero = true;
-
 		for (int row = 0; row < 3; row++)
 		{
 			float value = matrix[col * 4 + row];
 
-			if (value != 0)
+			if (allZero && row == col)
 			{
-				allZero = false;
+				value = 1.0f;
 			}
 			if (row == 0 && col == 0)
 			{
@@ -1896,10 +1912,6 @@ void LDPovExporter::writeMatrix(const TCFloat *matrix)
 			{
 				fprintf(m_pPovFile, ",%s", ftostr(value).c_str());
 			}
-		}
-		if (allZero)
-		{
-			debugPrintf("zero matrix.\n");
 		}
 	}
 	fprintf(m_pPovFile, ">");
