@@ -102,9 +102,6 @@
                     <property name="readOnly">
                         <bool>false</bool>
                     </property>
-                    <property name="inputMask">
-                        <string>#900; </string>
-                    </property>
                 </widget>
                 <widget class="QLineEdit" row="1" column="1">
                     <property name="name">
@@ -113,9 +110,6 @@
                     <property name="readOnly">
                         <bool>false</bool>
                     </property>
-                    <property name="inputMask">
-                        <string>#900; </string>
-                    </property>
                 </widget>
                 <widget class="QLineEdit" row="2" column="1">
                     <property name="name">
@@ -123,9 +117,6 @@
                     </property>
                     <property name="readOnly">
                         <bool>false</bool>
-                    </property>
-                    <property name="inputMask">
-                        <string>#900; </string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="3" column="2">

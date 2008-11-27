@@ -6,6 +6,7 @@
 class QButton;
 class ModelViewerWidget;
 class QIntValidator;
+class QDoubleValidator;
 
 class LatitudeLongitude : public LatitudeLongitudePanel
 {
@@ -23,6 +24,8 @@ public slots:
 protected:
 	ModelViewerWidget *modelWidget;
 	QIntValidator *v1,*v2;
+	QDoubleValidator *v3;
+	float distance;
 };
 
 #endif
