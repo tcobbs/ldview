@@ -2853,7 +2853,10 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 		}
 		if (curSaveOp == LDPreferences::SOExport)
 		{
-			sprintf(saveFilename, "%s.pov", baseFilename);
+			sprintf(saveFilename, "%s.%s", baseFilename,
+				modelViewer->getExporter(
+				(LDrawModelViewer::ExportType)exportType)->
+				getExtension().c_str());
 			return true;
 		}
 		else
