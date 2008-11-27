@@ -2912,10 +2912,16 @@ bool ModelViewerWidget::calcSaveFilename(char* saveFilename, int /*len*/)
 
 bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 {
-	QString initialDir = preferences->getSaveDir(curSaveOp, modelViewer->getFilename());
+	QString initialDir = preferences->getSaveDir(curSaveOp,
+		modelViewer->getFilename());
+	LDrawModelViewer::ExportType origExportType = modelViewer->getExportType();
+	QStringList exportFilters;
+	QStringList::const_iterator exportFilterIt;
 
 	QDir::setCurrent(initialDir);
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
+	exportType = TCUserDefaults::longForKey(SAVE_EXPORT_TYPE_KEY,
+		LDrawModelViewer::ETPov, false);
 	if (!calcSaveFilename(saveFilename, len))
 	{
 		saveFilename[0] = 0;
@@ -2923,8 +2929,35 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 	switch (curSaveOp)
 	{
 	case LDPreferences::SOExport:
-		saveDialog = new QFileDialog(".","POV: POV-Ray Scene File (*.pov)",this,"",true);
+		origExportType = modelViewer->getExportType();
+		for (int i = LDrawModelViewer::ETFirst; i <= LDrawModelViewer::ETLast;
+			i++)
+		{
+			const LDExporter *exporter = modelViewer->getExporter(
+				(LDrawModelViewer::ExportType)i);
+
+			if (exporter != NULL)
+			{
+				ucstring ucFileType = exporter->getTypeDescription();
+				QString qFileType;
+
+				ucstringtoqstring(qFileType, ucFileType);
+				qFileType += " (*.";
+				qFileType += exporter->getExtension();
+				qFileType += ")";
+				exportFilters << qFileType;
+			}
+		}
+		modelViewer->getExporter(origExportType);
+		exportFilterIt = exportFilters.begin();
+		saveDialog = new QFileDialog(".", *exportFilterIt, this, "", true);
+		for (exportFilterIt++; exportFilterIt != exportFilters.end();
+			exportFilterIt++)
+		{
+			saveDialog->addFilter(*exportFilterIt);
+		}
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
+		saveDialog->setSelectedFilter(exportType - LDrawModelViewer::ETFirst);
 		saveDialog->setMode(QFileDialog::AnyFile);
 		saveDialog->setCaption(TCLocalStrings::get("ExportModel"));
 		break;
@@ -2972,9 +3005,18 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
         {
             saveImageType = BMP_IMAGE_TYPE_INDEX;
         }
+		if (filter.find(".pov") != -1)
+		{
+			exportType = LDrawModelViewer::ETPov;
+		}
+		if (filter.find(".stl") != -1)
+		{
+			exportType = LDrawModelViewer::ETStl;
+		}
 		
-		TCUserDefaults::setLongForKey(saveImageType,
-				SAVE_IMAGE_TYPE_KEY, false);
+		TCUserDefaults::setLongForKey(saveImageType, SAVE_IMAGE_TYPE_KEY,
+			false);
+		TCUserDefaults::setLongForKey(exportType, SAVE_EXPORT_TYPE_KEY, false);
 		if(strlen(saveFilename)>5 && saveFilename[strlen(saveFilename)-4]!='.')
 		{
 			if (saveImageType == PNG_IMAGE_TYPE_INDEX)
@@ -3101,7 +3143,7 @@ void ModelViewerWidget::fileExport()
 	if (getSaveFilename(saveFilename, 1024)&&
 		(!fileExists(saveFilename)||shouldOverwriteFile(saveFilename)))
 	{
-		modelViewer->setExportType(LDrawModelViewer::ETPov);
+		modelViewer->setExportType((LDrawModelViewer::ExportType)exportType);
 		modelViewer->exportCurModel(saveFilename);
 	}
 }
