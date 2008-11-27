@@ -385,9 +385,9 @@ void ModelViewerWidget::setApplication(QApplication *value)
 			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
 			TCUserDefaults::longForKey(WINDOW_WIDTH_KEY, WIN_WIDTH, false) :
 			TCUserDefaults::longForKey(SAVE_WIDTH_KEY, 1024, false),
-            TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
+			TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false) ? 
 			TCUserDefaults::longForKey(WINDOW_HEIGHT_KEY, WIN_HEIGHT, false) :
-			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false));
+			TCUserDefaults::longForKey(SAVE_HEIGHT_KEY, 768, false), true);
 //		QApplication::exit();
 		exit(0);
     }
@@ -2642,7 +2642,8 @@ void ModelViewerWidget::setupSnapshotBackBuffer(int imageWidth, int imageHeight)
 
 bool ModelViewerWidget::grabImage(
 	int &imageWidth,
-	int &imageHeight)
+	int &imageHeight,
+	bool fromCommandLine /*= false*/)
 {
     int newWidth = 800;
     int newHeight = 600;
@@ -2672,8 +2673,15 @@ bool ModelViewerWidget::grabImage(
 	if (snapshotTaker->getUseFBO())
 	{
 		makeCurrent();
-		saveImageResult = snapshotTaker->saveImage(saveImageFilename,
-			saveImageWidth, saveImageHeight, saveImageZoomToFit);
+		if (fromCommandLine)
+		{
+			saveImageResult = snapshotTaker->saveImage();
+		}
+		else
+		{
+			saveImageResult = snapshotTaker->saveImage(saveImageFilename,
+				saveImageWidth, saveImageHeight, saveImageZoomToFit);
+		}
 	}
 	else
 	{
@@ -3019,13 +3027,21 @@ LDSnapshotTaker::ImageType ModelViewerWidget::getSaveImageType(void)
 bool ModelViewerWidget::saveImage(
 	char *filename,
 	int imageWidth, 
-	int imageHeight)
+	int imageHeight,
+	bool fromCommandLine /*= false*/)
 {
 	bool retValue = false;
 
 	if (!snapshotTaker)
 	{
-		snapshotTaker =  new LDSnapshotTaker(modelViewer);
+		if (fromCommandLine)
+		{
+			snapshotTaker =  new LDSnapshotTaker;
+		}
+		else
+		{
+			snapshotTaker =  new LDSnapshotTaker(modelViewer);
+		}
 	}
 	if (TREGLExtensions::haveFramebufferObjectExtension())
 	{
@@ -3041,7 +3057,7 @@ bool ModelViewerWidget::saveImage(
 	//	((LDViewWindow *)parentWindow)->getProductVersion());
 	saveImageZoomToFit = TCUserDefaults::longForKey(SAVE_ZOOM_TO_FIT_KEY, 1,
 		false);
-	retValue = grabImage(imageWidth, imageHeight);
+	retValue = grabImage(imageWidth, imageHeight, fromCommandLine);
 	return retValue;
 
 }

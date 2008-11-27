@@ -33,7 +33,7 @@ int Headerize(const char *srcFilename)
 			fprintf(dstFile, "{");
 			for (int i = 0; i < fileSize; i++)
 			{
-				char *comma = ",";
+				const char *comma = ",";
 
 				if (i == fileSize - 1)
 				{
