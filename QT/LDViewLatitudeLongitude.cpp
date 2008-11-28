@@ -40,7 +40,8 @@ void LatitudeLongitude::show()
 	longitudeLine->setText(qs);
 	distanceCheckBox->setChecked(
 				TCUserDefaults::boolForKey(LAST_HAVE_DIST_KEY, false, false));
-	qs.setNum(distance = TCUserDefaults::floatForKey(LAST_DIST_KEY, true,
+	qs.setNum(distance = TCUserDefaults::floatForKey(LAST_DIST_KEY, 
+				distance = modelWidget->getModelViewer()->getDefaultDistance(),
 										  false));
 	distanceLine->setText(qs);
 	distanceChanged();
