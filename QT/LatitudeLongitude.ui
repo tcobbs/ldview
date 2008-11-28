@@ -87,14 +87,6 @@
                         <set>AlignVCenter|AlignRight</set>
                     </property>
                 </widget>
-                <widget class="QCheckBox" row="2" column="0">
-                    <property name="name">
-                        <cstring>distanceCheckBox</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Distance:</string>
-                    </property>
-                </widget>
                 <widget class="QLineEdit" row="0" column="1">
                     <property name="name">
                         <cstring>latitudeLine</cstring>
@@ -117,6 +109,14 @@
                     </property>
                     <property name="readOnly">
                         <bool>false</bool>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="0">
+                    <property name="name">
+                        <cstring>distanceCheckBox</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Distance:</string>
                     </property>
                 </widget>
                 <widget class="QPushButton" row="3" column="2">
@@ -200,6 +200,16 @@
     <include location="local" impldecl="in implementation">LatitudeLongitude.h</include>
 </includes>
 <pixmapinproject/>
+<tabstops>
+    <tabstop>latitudeLine</tabstop>
+    <tabstop>longitudeLine</tabstop>
+    <tabstop>distanceCheckBox</tabstop>
+    <tabstop>distanceLine</tabstop>
+    <tabstop>defaultButton</tabstop>
+    <tabstop>currentButton</tabstop>
+    <tabstop>okButton</tabstop>
+    <tabstop>cancelButton</tabstop>
+</tabstops>
 <slots>
     <slot>doOk()</slot>
     <slot>doCancel()</slot>
