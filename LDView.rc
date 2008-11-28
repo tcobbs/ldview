@@ -301,7 +301,7 @@ END
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 310, 252
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,296,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -315,7 +315,8 @@ BEGIN
                     UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_GROUP,101,19,11,14,0,
                     HIDC_SEAM_SPIN
     CONTROL         "Part bounding boxes only",IDC_PART_BOUNDING_BOXES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,169,21,95,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,169,21,95,10,0,
+                    HIDC_PART_BOUNDING_BOXES
     GROUPBOX        "    ",IDC_WIREFRAME_BOX,7,42,146,59,WS_GROUP,0,
                     HIDC_WIREFRAME_BOX
     CONTROL         "&Wireframe",IDC_WIREFRAME,"Button",BS_AUTOCHECKBOX | 
