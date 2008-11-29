@@ -3843,12 +3843,30 @@ set-specific, while others aren't.
 			String
 		</TD>
 		<TD VALIGN="TOP">
-			NO
+			YES
 		</TD>
 		<TD VALIGN="TOP">
 			Designed for use on the command line.  The value given is used as a
 			filename, and LDView automatically takes a snapshot of the specified
 			model and outputs to this file.  See
+			<A HREF="#SnapshotFilename">here</A> for more information.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveSnapshotsSetting">SaveSnapshots</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Only valid from the command line.  Instructs LDView to create
+			multiple snapshots, one for each LDraw file on the command line.
+			The snapshots get the filename of the LDraw file with the extension
+			replaced with the appropriate one  See
 			<A HREF="#SnapshotFilename">here</A> for more information.
 		</TD>
 	</TR>
