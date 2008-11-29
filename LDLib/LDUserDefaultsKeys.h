@@ -62,6 +62,7 @@
 #define LINE_SMOOTHING_KEY "LineSmoothing"
 #define MAX_RECENT_FILES_KEY "MaxRecentFiles"
 #define MEMORY_USAGE_KEY "MemoryUsage"
+#define MULTI_THREADED_KEY "MultiThreaded"
 #define NO_LIGHT_GEOM_KEY "NoLightGeom"
 #define ONE_LIGHT_KEY "OneLight"
 #define OPTIONAL_STANDARD_LIGHT_KEY "OptionalStandardLight"
@@ -147,8 +148,6 @@
 #define INV_SHOW_TOTAL_KEY "InventoryShowTotal"
 
 // The following are undocumented, but need to be documented.
-#define MULTI_THREADED_KEY "MultiThreaded"
-#define MODEL_TREE_OPTIONS_SHOWN_KEY "ModelTreeOptionsShown"
 #define SNAPSHOTS_DIR_MODE_KEY "SnapshotsDirMode"
 #define SNAPSHOTS_DIR_KEY "SnapshotsDir"
 #define PARTS_LISTS_DIR_MODE_KEY "PartsListsDirMode"
@@ -189,5 +188,6 @@
 #define SS_RANDOM_PREF_SET_KEY "SSRandomPrefSet"
 #define HFOV_KEY "HFOV"
 #define GL2PS_ALLOWED_KEY "GL2PSAllowed"
+#define MODEL_TREE_OPTIONS_SHOWN_KEY "ModelTreeOptionsShown"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__
