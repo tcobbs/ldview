@@ -63,6 +63,10 @@ void LatitudeLongitude::doOk()
 	{
 		TCUserDefaults::setFloatForKey(distance = f, LAST_DIST_KEY, false);
 	}
+	else
+	{
+		distance = -1.0f;
+	}
 	modelWidget->getModelViewer()->setLatLon(lat,lon, distance);
 	LatitudeLongitudePanel::close();
 }
