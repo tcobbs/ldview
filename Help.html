@@ -2764,6 +2764,20 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<A NAME="DefaultLatitudeSetting">DefaultLatitude</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Float
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Latitude to use when view is reset when in
+			<A HREF="#LatLonMode">Latitude/Longitude Rotation Mode.</A></TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			<A NAME="DefaultLatLongSetting">DefaultLatLong</A>
 		</TD>
 		<TD VALIGN="TOP">
@@ -2779,6 +2793,20 @@ set-specific, while others aren't.
 			the command line (or in the registry) overrides the
 			<A HREF="#DefaultMatrixSetting">DefaultMatrix</A> setting.
 		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="DefaultLongitudeSetting">DefaultLongitude</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Float
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Longitude to use when view is reset when in
+			<A HREF="#LatLonMode">Latitude/Longitude Rotation Mode.</A></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
@@ -2878,6 +2906,22 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Thickness</I> slider in the <I>Geometry-&gt;Edge
 			Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ExamineMode
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Selects the examine rotation mode:<BR>
+			0: Normal rotation<BR>
+			1: Latitude/Longitude rotation<BR>
 		</TD>
 	</TR>
 	<TR>
@@ -3434,6 +3478,22 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			MultiThreaded
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Set this to NO to disable multi-threading on muli-processor systems.
+			In theory, this should only be useful for debugging purposes, and
+			consequently cannot be set from the UI.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			NoLightGeom
 		</TD>
 		<TD VALIGN="TOP">
@@ -3783,6 +3843,22 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<A NAME="SaveDirSetting">SaveDir</A>
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Only valid from the command line.  Used in conjunction with the
+			<A HREF="#SaveSnapshotsSetting">-SaveSnapshots</A> setting to
+			specify the directory in which to store the snapshots.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			SaveHeight
 		</TD>
 		<TD VALIGN="TOP">
@@ -3866,8 +3942,12 @@ set-specific, while others aren't.
 			Only valid from the command line.  Instructs LDView to create
 			multiple snapshots, one for each LDraw file on the command line.
 			The snapshots get the filename of the LDraw file with the extension
-			replaced with the appropriate one  See
-			<A HREF="#SnapshotFilename">here</A> for more information.
+			replaced with an appropriate one based on the output image file
+			type.  By default, images are stored in the same directory as the
+			model files.  However, this can be overridden with the
+			<A HREF="#SaveDirSetting">-SaveDir</A> setting.  Use the
+			<A HREF="#SnapshotSuffixSetting">-SnapshotSuffix</A> setting to
+			specify the image type.
 		</TD>
 	</TR>
 	<TR>
@@ -4304,7 +4384,27 @@ set-specific, while others aren't.
 			only values that are recognized are:<BR>
 			.bmp<BR>
 			.png<BR>
+			.jpg<BR>
 			(Note that the dot preceding the extension is required.)
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			SnapshotsDirMode
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Snapshots</I> popup in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the mode
+			for default save directory selection:<BR>
+			0: Model directory<BR>
+			1: Last Used<BR>
+			2: Selected<BR>
 		</TD>
 	</TR>
 	<TR>
