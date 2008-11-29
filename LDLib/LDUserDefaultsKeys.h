@@ -20,7 +20,9 @@
 #define CUTAWAY_MODE_KEY "CutawayMode"
 #define CUTAWAY_THICKNESS_KEY "CutawayThickness"
 #define DEFAULT_COLOR_KEY "DefaultColor3"
+#define DEFAULT_LATITUDE_KEY "DefaultLatitude"
 #define DEFAULT_LAT_LONG_KEY "DefaultLatLong"
+#define DEFAULT_LONGITUDE_KEY "DefaultLongitude"
 #define MODEL_CENTER_KEY "ModelCenter"							// NO UI
 #define MODEL_SIZE_KEY "ModelSize"								// NO UI
 #define DEFAULT_MATRIX_KEY "DefaultMatrix"
@@ -29,6 +31,7 @@
 #define EDITOR_KEY "Editor"
 #define EDGES_ONLY_KEY "EdgesOnly"
 #define EDGE_THICKNESS_KEY "EdgeThickness"
+#define EXAMINE_MODE_KEY "ExamineMode"
 #define EXTRA_SEARCH_DIRS_KEY "ExtraSearchDirs"
 #define FOV_KEY "FOV"
 #define FULLSCREEN_DEPTH_KEY "FullscreenDepth"
@@ -79,10 +82,12 @@
 #define SAVE_ACTUAL_SIZE_KEY "SaveActualSize"
 #define SAVE_ALPHA_KEY "SaveAlpha"
 #define SAVE_DIGITS_KEY "SaveDigits"
+#define SAVE_DIR_KEY "SaveDir"
 #define SAVE_HEIGHT_KEY "SaveHeight"
 #define SAVE_IMAGE_TYPE_KEY "SaveImageType"
 #define SAVE_SERIES_KEY "SaveSeries"
 #define SAVE_SNAPSHOT_KEY "SaveSnapshot"						// NO UI
+#define SAVE_SNAPSHOTS_KEY "SaveSnapshots"
 #define SAVE_WIDTH_KEY "SaveWidth"
 #define SAVE_ZOOM_TO_FIT_KEY "SaveZoomToFit"
 #define SEAMS_KEY "Seams"
@@ -142,11 +147,6 @@
 #define INV_SHOW_TOTAL_KEY "InventoryShowTotal"
 
 // The following are undocumented, but need to be documented.
-#define SAVE_SNAPSHOTS_KEY "SaveSnapshots"
-#define SAVE_DIR_KEY "SaveDir"
-#define EXAMINE_MODE_KEY "ExamineMode"
-#define DEFAULT_LONGITUDE_KEY "DefaultLongitude"
-#define DEFAULT_LATITUDE_KEY "DefaultLatitude"
 #define MULTI_THREADED_KEY "MultiThreaded"
 #define MODEL_TREE_OPTIONS_SHOWN_KEY "ModelTreeOptionsShown"
 #define SNAPSHOTS_DIR_MODE_KEY "SnapshotsDirMode"
