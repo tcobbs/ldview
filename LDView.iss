@@ -3,7 +3,7 @@
 ; To download and install ISPP, get the Inno Setup QuickStart Pack from:
 ; http://www.jrsoftware.org/isdl.php#qsp
 
-#define AppFilename 'Release\LDView.exe'
+#define AppFilename 'Build\Release\LDView.exe'
 #define SetupFilename(str Filename) ParseVersion(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2])
 
 #define AppVerName GetFileDescription(AppFilename) + ' ' + GetFileVersionString(AppFilename)
@@ -40,7 +40,7 @@ Name: registerfiles; Description: Use LDView to open LDraw models; GroupDescript
 Name: thumbnails; Description: Use LDView to generate thumbnails in Windows Explorer; GroupDescription: Explorer Thumbnails:; Flags: unchecked
 
 [Files]
-Source: Release\LDView.exe; DestDir: {app}; Flags: ignoreversion
+Source: Build\Release\LDView.exe; DestDir: {app}; Flags: ignoreversion
 Source: license.txt; DestDir: {app}; Flags: ignoreversion
 ; NOTE: The first Readme.txt is for everything prior to Windows Vista, and can
 ;       be shown at the end of the installation.  However, since in Vista that
@@ -54,8 +54,8 @@ Source: m6459.ldr; DestDir: {app}; Flags: ignoreversion
 Source: 8464.mpd; DestDir: {app}; Flags: ignoreversion
 Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
-Source: Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion; Tasks: screensaver
-Source: LDViewThumbs\Release\LDViewThumbs.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
+Source: Build\Release\LDView.exe; DestDir: {sys}; DestName: LDView.scr; Flags: ignoreversion; Tasks: screensaver
+Source: Build\Release\LDViewThumbs.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

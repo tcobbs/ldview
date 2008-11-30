@@ -75,7 +75,11 @@ BEGIN
             VALUE "FileVersion", "1, 0, 0, 1\0"
             VALUE "InternalName", "LDViewThumbs\0"
             VALUE "LegalCopyright", "Copyright 2007\0"
-            VALUE "OriginalFilename", "LDViewThumbs.DLL\0"
+#ifdef TC_NO_UNICODE
+            VALUE "OriginalFilename", "LDViewThumbsA.dll\0"
+#else // TC_NO_UNICODE
+            VALUE "OriginalFilename", "LDViewThumbs.dll\0"
+#endif // TC_NO_UNICODE
             VALUE "ProductName", "LDViewThumbs Module\0"
             VALUE "ProductVersion", "1, 0, 0, 1\0"
             VALUE "OLESelfRegister", "\0"

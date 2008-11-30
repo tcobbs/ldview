@@ -375,7 +375,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
-				AdditionalDependencies="gdi32.lib libpng.lib zlib.lib"
+				AdditionalDependencies="gdi32.lib libpng.lib zlib.lib libjpeg.lib"
 				OutputFile="$(OutDir)\$(ProjectName)A.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
