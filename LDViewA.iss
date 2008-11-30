@@ -3,7 +3,7 @@
 ; To download and install ISPP, get the Inno Setup QuickStart Pack from:
 ; http://www.jrsoftware.org/isdl.php#qsp
 
-#define AppFilename 'Release ANSI\LDViewA.exe'
+#define AppFilename 'Build\Release ANSI\LDViewA.exe'
 #define SetupFilename(str Filename) ParseVersion(Filename, Local[0], Local[1], Local[2], Local[3]), "LDView-" + Str(Local[0]) + Str(Local[1]) + (Local[2] < 10 ? '0' : '') + Str(Local[2]) + "-Legacy"
 
 #define AppVerName GetFileDescription(AppFilename) + ' ' + GetFileVersionString(AppFilename)
@@ -41,7 +41,7 @@ Name: registerfiles; Description: Use LDView to open LDraw models; GroupDescript
 Name: thumbnails; Description: Use LDView to generate thumbnails in Windows Explorer; GroupDescription: Explorer Thumbnails:; Flags: unchecked
 
 [Files]
-Source: Release ANSI\LDViewA.exe; DestDir: {app}; Flags: ignoreversion
+Source: Build\Release ANSI\LDViewA.exe; DestDir: {app}; Flags: ignoreversion
 Source: license.txt; DestDir: {app}; Flags: ignoreversion
 ; NOTE: The first Readme.txt is for everything prior to Windows Vista, and can
 ;       be shown at the end of the installation.  However, since in Vista that
@@ -55,8 +55,8 @@ Source: m6459.ldr; DestDir: {app}; Flags: ignoreversion
 Source: 8464.mpd; DestDir: {app}; Flags: ignoreversion
 Source: Help\LDView.hlp; DestDir: {app}; Flags: ignoreversion
 Source: LDView Home Page.url; DestDir: {app}; Flags: ignoreversion
-Source: Release ANSI\LDViewA.exe; DestDir: {sys}; DestName: LDViewA.scr; Flags: ignoreversion; Tasks: screensaver
-Source: LDViewThumbs\Release ANSI\LDViewThumbsA.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
+Source: Build\Release ANSI\LDViewA.exe; DestDir: {sys}; DestName: LDViewA.scr; Flags: ignoreversion; Tasks: screensaver
+Source: Build\Release ANSI\LDViewThumbsA.dll; DestDir: {app}; Flags: ignoreversion regserver; Tasks: thumbnails
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
@@ -85,3 +85,34 @@ Root: HKCR; Subkey: .mpd; ValueType: string; ValueName: ; ValueData: LDView.mpd;
 Root: HKCR; Subkey: LDView.mpd; ValueType: string; ValueName: ; ValueData: LDraw Multi-Part Dat; Flags: uninsdeletekey; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.mpd\DefaultIcon; ValueType: string; ValueName: ; ValueData: {app}\LDViewA.exe,4; Tasks: registerfiles
 Root: HKCR; Subkey: LDView.mpd\shell\open\command; ValueType: string; ValueName: ; ValueData: """{app}\LDViewA.exe"" ""%1"""; Tasks: registerfiles
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast; ValueType: string; ValueName: _SessionPlaceholder; ValueData: DO NOT DELETE.; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast; ValueType: dword; ValueName: SortTransparent; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast; ValueType: dword; ValueName: DrawLightDats; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast; ValueType: dword; ValueName: PerformSmoothing; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast; ValueType: dword; ValueName: TextureStuds; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: string; ValueName: _SessionPlaceholder; ValueData: DO NOT DELETE.; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: SortTransparent; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: DrawLightDats; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: PerformSmoothing; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: TextureStuds; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: string; ValueName: FOV; ValueData: 20; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: Seams; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: ShowHighlightLines; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: ConditionalHighlights; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: SubduedLighting; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: UseSpecular; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Fast with Edges; ValueType: dword; ValueName: Lighting; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality; ValueType: string; ValueName: _SessionPlaceholder; ValueData: DO NOT DELETE.; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality; ValueType: dword; ValueName: LineSmoothing; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality; ValueType: dword; ValueName: UseQualityLighting; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality; ValueType: dword; ValueName: UseQualityStuds; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: string; ValueName: _SessionPlaceholder; ValueData: DO NOT DELETE.; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: LineSmoothing; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: UseQualityLighting; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: UseQualityStuds; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: string; ValueName: FOV; ValueData: 20; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: Seams; ValueData: $00000000; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: ShowHighlightLines; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: ConditionalHighlights; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: SubduedLighting; ValueData: $00000001; Flags: createvalueifdoesntexist
+Root: HKCU; SubKey: Software\Travis Cobbs\LDView\Sessions\Quality with Edges; ValueType: dword; ValueName: UseSpecular; ValueData: $00000000; Flags: createvalueifdoesntexist
