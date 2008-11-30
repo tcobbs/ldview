@@ -973,13 +973,14 @@ someone else on your network is modifying, it's not likely to be very useful.
 When you save a snapshot, the following LDView-specific options show up at the
 bottom of the standard save dialog box.
 <P>
-<I>Save snapshot series</I> (Default: <I>Off</I>):<BR>
+<I><B><A NAME="SaveSeriesCheck">Save snapshot series</A></B></I> (Default:
+<I>Off</I>):<BR>
 Enabling this option causes a unique number to automatically be appended to the
 filename.  This allows you to save a number of shots of the same model without
 having to enter a new filename each time.
 </P>
 <P>
-<I>Number of Digits</I> (Default: <I>1</I>):<BR>
+<I><A NAME="SaveDigitsField">Number of Digits</A></I> (Default: <I>1</I>):<BR>
 This option is only available when save snapshot series is enabled.  It controls
 the number of digits in the number that is appended to the filename.  Zeroes are
 added before the number to make up the number of digits you select here.  For
@@ -987,20 +988,14 @@ example, if you select 3 here, and the number is 5, then 005 will be used in the
 filename instead of just 5.
 </P>
 <P>
-<I>Don't use Pixel Buffer</I> (Default: <I>Off</I>):<BR>
-Enabling this option disables the use of a pixel buffer for snapshot rendering.
-Use of a pixel buffer can result in a corrupt image on certain video cards with
-certain video drivers.  If your snapshots are corrupted, enable this.
-Otherwise, leave it disabled.
-</P>
-<P>
-<I>Save image with specific size</I> (Default: <I>Off</I>):<BR>
+<I><B><A NAME="SaveSpecificSizeCheck">Save image with specific size</A></B></I>
+(Default: <I>Off</I>):<BR>
 Enabling this option allows you to specify a width and height for the snapshot
 image.  Otherwise, the snapshot created will have the same dimensions as the
 LDView window.
 </P>
 <P>
-<I>Width</I> (Default: <I>1024</I>):<BR>
+<I><A NAME="SaveWidthField">Width</A></I> (Default: <I>1024</I>):<BR>
 This option is only available when save image with specific size is enabled.  It
 sets the width (in pixels) of the resulting snapshot image.
 </P>
@@ -1011,7 +1006,7 @@ automatically to form the full image.  This may cause the actual image width to
 be slightly less than the requested width due to rounding.
 </P>
 <P>
-<I>Height</I> (Default: <I>768</I>):<BR>
+<I><A NAME="SaveHeightField">Height</A></I> (Default: <I>768</I>):<BR>
 This option is only available when save image with specific size is enabled.  It
 sets the height (in pixels) of the resulting snapshot image.
 </P>
@@ -1022,7 +1017,7 @@ automatically to form the full image.  This may cause the actual image width to
 be slightly less than the requested width due to rounding.
 </P>
 <P>
-<I>Zoom to Fit</I> (Default: <I>Off</I>):<BR>
+<I><A NAME="SaveZoomToFitCheck">Zoom to Fit</A></I> (Default: <I>Off</I>):<BR>
 This option is only available when save image with specific size is enabled.
 Enabling it causes the model to be zoomed to fill up the snapshot, as much as
 possible.  (Most models will only fill the image in either the vertical
@@ -1036,6 +1031,52 @@ can effect the cropping of the model.  When creating a snapshot the same size
 as the LDView window, you can position the model exactly like you want manually,
 and are free to use <I>Zoom to Fit</I> on the View menu prior to taking your
 snapshot to produce the same result.
+</P>
+<P>
+<I><B>Misc</B></I>
+</P>
+<P>
+<I><A NAME="NoPBufferCheck">Don't use Pixel Buffer</A></I> (Default:
+<I>Off</I>):<BR>
+Enabling this option disables the use of a pixel buffer for snapshot rendering.
+Use of a pixel buffer can result in a corrupt image on certain video cards with
+certain video drivers.  If your snapshots are corrupted, enable this.
+Otherwise, leave it disabled.
+</P>
+<P>
+<I><A NAME="TransBGCheck">Transparent Background</A></I> (Default: 
+<I>Off</I>):<BR>
+Enabling this option causes the backround area of the snapshot to be
+transparent, instead of using whatever background color is selected in LDView.
+This allows the image to be placed over other images in an editor, or over an
+arbitrary background in a web page.  This only works with PNG snapshots, as the
+other file formats don't support transparency.
+</P>
+<P>
+<I><A NAME="AutoCropCheck">Auto-crop</I> (Default: <I>Off</I>):<BR>
+Enabling this option causes the image to be automatically cropped to be as small
+as possible without cutting off any of the actual model.  Note that this can be
+useful even when <i>Zoom to Fit</i> is checked, because <i>Zoom to Fit</i>
+usually only uses the entire image size in one dimension.
+</P>
+<P>
+<I><B><A NAME="AllStepsCheck">All Steps</A></B></I> (Default: <I>Off</I>):<BR>
+Enabling this option causes LDView to create a separate snapshot image for each
+step, with an optional suffix, plus the step number, appended to each image.
+</P>
+<P>
+<I><A NAME="StepSuffixField">Suffix</A></I> (Default: <I>&lt;Empty&gt;</I>):<BR>
+This option is only available when all steps is enabled.  Enabling it causes the
+specified suffix to be appended to the filename you enter right before the step
+number is appended.  This allows you to accept the default filename (the model's
+filename) when creating step images, even if you want something like -Step
+appended to the end.
+</P>
+<P>
+<I><A NAME="StepsSameScaleCheck">Same Scale</A></I> (Default: <I>On</I>):<BR>
+This option is only available when all steps and zoom to fit are enabled.
+Enabling it causes all step images to be generated with the same scale.  That
+scale is calculated by applying the zoom to fit operation to the last step.
 </P>
 <A NAME="Export"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
@@ -2516,9 +2557,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Sets whether or not LDView will auto-crop snapshots so that the
-			image is only as big as it needs to be to display the model.  Note
-			that there is no way to set this value in the LDView interface.
+			Equivlent to the <A HREF="#AutoCropCheck"><i>Auto-crop</i></A> check
+			box in the <A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A>
+			dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -2583,6 +2624,21 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to 1000 times the value of the <I>Bottom</I> field in the
 			<I>Margins</I> box on the Page Setup dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			BoundingBoxesOnly
+		</TD>
+		<TD VALIGN="TOP" NOWRAP>
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to <I>Part bounding boxes only</I> check box in
+			the <I>Geometry-&gt;Model</I> box.
 		</TD>
 	</TR>
 	<TR>
@@ -2926,6 +2982,43 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			ExportsDir
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Exports</I> field in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the
+			default directory for export saves when
+			<A HREF="#ExportsDirModeSetting">-ExportsDirMode</A> is set to
+			2.<BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="ExportsDirModeSetting">ExportsDirMode</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Exports</I> popup in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the mode
+			for default save directory selection:<BR>
+			0: Model directory<BR>
+			1: Last Used<BR>
+			2: Selected<BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			ExtraSearchDirs/Dir001 -<BR>
 			ExtraSearchDirs/Dir999
 		</TD>
@@ -3103,6 +3196,22 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			IgnoreFramebufferObject
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_EXT_framebuffer_object OpenGL
+			extension, even if it is supported by your video card.  Note that
+			this extension is only used in the QT version of LDView.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			IgnoreMultiDrawArrays
 		</TD>
 		<TD VALIGN="TOP">
@@ -3157,8 +3266,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Causes LDView to ignore the WGL_ARB_pbuffer OpenGL extension, even
-			if it is supported by your video card.
+			Equivalent to the <A HREF="#NoPBufferCheck"><I>Don't use Pixel
+			Buffer</I></A> check box in the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3578,6 +3688,43 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			PartsListsDir
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Parts Lists</I> field in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the
+			default directory for parts list saves when
+			<A HREF="#PartsListsDirModeSetting">-PartsListsDirMode</A> is set to
+			2.<BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="PartsListsDirModeSetting">PartsListsDirMode</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Parts Lists</I> popup in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the mode
+			for default save directory selection:<BR>
+			0: Model directory<BR>
+			1: Last Used<BR>
+			2: Selected<BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			PerformSmoothing
 		</TD>
 		<TD VALIGN="TOP">
@@ -3622,6 +3769,21 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>High quality</I> check box in the
 			<I>Geometry-&gt;Edge Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			PovCameraAspect
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Tools-&gt;Use current aspect ratio for POV-Ray
+			camera</I> menu item.
 		</TD>
 	</TR>
 	<TR>
@@ -3804,8 +3966,10 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the inverse of the <I>Save image with specific
-			size</I> check box on the Save File dialog box.
+			Equivalent to the inverse of the
+			<A HREF="#SaveSpecificSizeCheck"><I>Save image with specific
+			size</I></A> check box on the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3819,10 +3983,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Causes PNG format snapshots to be saved using an alpha channel to
-			acheive a transparent background.  This option is currently still
-			experimental, and may not work on all video cards.  Note that there
-			is no way to set this value in the LDView interface.
+			Equivalent to the <A HREF="#TransBGCheck"><i>Transparent
+			Background</i></A> check box in the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3837,8 +4000,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Number of Digits</I> field in the <I>Save
-			snapshot series</I> box on the Save File dialog box.
+			Equivalent to the <A HREF="#SaveDigitsField"><I>Number of
+			Digits</I></A> field in the <A HREF="#SaveSnapshotOptions"><I>Save
+			Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3863,16 +4027,15 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Integer<BR>
-			(1-4096)
+			(1-9999)
 		</TD>
 		<TD VALIGN="TOP">
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Height</I> field in the <I>Save image with
-			specific size</I> box on the Save File dialog box.  While 4096 is
-			the max for this value, your video card may not support images this
-			tall.
+			Equivalent to the <A HREF="#SaveHeightField"><I>Height</I></A> field
+			in the <A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A>
+			dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3907,8 +4070,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Save snapshot series</I> check box on the Save
-			File dialog box.
+			Equivalent to the <A HREF="#SaveSeriesCheck"><I>Save snapshot
+			series</I></A> check box in the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3952,20 +4116,67 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			SaveWidth
+			<A NAME="SaveStepsSetting">SaveSteps</A>
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
-			(1-4096)
+		<TD VALIGN="TOP">
+			Boolean
 		</TD>
 		<TD VALIGN="TOP">
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Width</I> field in the <I>Save image with
-			specific size</I> box on the Save File dialog box.  While 4096 is
-			the max for this value, your video card may not support images this
-			wide.
+			Equivalent to the <a href="#AllStepsCheck"><i>All Steps</i></a>
+			check box in the <a href="#SaveSnapshotOptions"><i>Save
+			Snapshot</i></a> dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveStepsSameScaleSetting">SaveStepsSameScale</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <a href="#StepsSameScaleCheck"><i>Same
+			Scale</i></a> check box in the
+			<a href="#SaveSnapshotOptions"><i>Save Snapshot</i></a> dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveStepsSuffixSetting">SaveStepsSuffix</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <a href="#StepSuffixField"><i>Suffix</i></a> field
+			in the <a href="#SaveSnapshotOptions"><i>Save Snapshot</i></a>
+			dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			SaveWidth
+		</TD>
+		<TD VALIGN="TOP" NOWRAP>
+			Integer<BR>
+			(1-9999)
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <A HREF="#SaveWidthField"><I>Width</I></A> field
+			in the <A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A>
+			dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3979,8 +4190,10 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Mostly equivalent to the <I>Zoom to Fit</I> check box in the <I>Save
-			Snapshot</I> dialog box.  In addition, if you use the
+			Mostly equivalent to the <A HREF="#SaveZoomToFitCheck"><I>Zoom to
+			Fit</I></A> check box in the <I>Save Snapshot</I> dialog box.<BR>
+			<BR>
+			In addition, if you use the
 			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting and set
 			this setting to 1 on the command line, the resulting image will be
 			zoomed to fit.  Note that you can use this in combination with the
@@ -4033,6 +4246,21 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Show all</I> check box under the <I>Conditional
 			lines</I> check box in the <I>Geometry-&gt;Edge Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowAxes
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show Axes</I> check box in the
+			<I>General-&gt;Misc</I> box.
 		</TD>
 	</TR>
 	<TR>
@@ -4390,7 +4618,25 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			SnapshotsDirMode
+			SnapshotsDir
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Snapshots</I> field in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the
+			default directory for snapshot saves when
+			<A HREF="#SnapshotsDirModeSetting">-SnapshotsDirMode</A> is set to
+			2.<BR>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SnapshotsDirModeSetting">SnapshotsDirMode</A>
 		</TD>
 		<TD VALIGN="TOP">
 			Enumerant
@@ -4435,6 +4681,22 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Status Bar</I> menu item in the <I>View</I>
 			menu.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			Step
+		</TD>
+		<TD VALIGN="TOP">
+			Integer
+		</TD>
+		<TD VALIGN="TOP">
+			N/A
+		</TD>
+		<TD VALIGN="TOP">
+			Only available from the command line.  When used in conjunction with
+			a command line snapshot save, causes the specified step to be saved
+			in a model that has multiple steps.
 		</TD>
 	</TR>
 	<TR>
