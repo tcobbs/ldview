@@ -138,7 +138,7 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 	 images/toolbar_step_first.png images/toolbar_step_last.png images/toolbar_axes.png
 
 TEMPLATE	=app
-CONFIG	+= qt opengl thread warn_on debug
+CONFIG	+= qt opengl thread warn_on release
 DEFINES	+= QT_THREAD_SUPPORT _QT
 INCLUDEPATH	+= . .. ../include
 exists($(QTDIR)/include/Qt3Support/q3button.h){
