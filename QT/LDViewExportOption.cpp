@@ -21,7 +21,8 @@ LDViewExportOption::LDViewExportOption(LDrawModelViewer *modelViewer)
 	m_modelViewer(modelViewer),
 	m_exporter(NULL),
 	m_sv(NULL),
-	m_box(NULL)
+	m_box(NULL),
+	m_origType(LDrawModelViewer::ETPov)
 {
 	m_sv = new QScrollView(this, "scrollview");
 	m_sv->setVScrollBarMode(QScrollView::AlwaysOn);
@@ -215,11 +216,15 @@ void LDViewExportOption::doOk(void)
 			break;
 		}
 	}
+	// Reset the export type back to its original setting.
+	m_modelViewer->getExporter((LDrawModelViewer::ExportType)m_origType);
 	accept();
 }
 
 void LDViewExportOption::doCancel(void)
 {
+	// Reset the export type back to its original setting.
+	m_modelViewer->getExporter((LDrawModelViewer::ExportType)m_origType);
 	reject();
 }
 
@@ -288,7 +293,8 @@ void LDViewExportOption::populateTypeBox(void)
 */
 int LDViewExportOption::exec(void)
 {
-	m_exporter = m_modelViewer->getExporter();
+	m_origType = m_modelViewer->getExportType();
+	m_exporter = m_modelViewer->getExporter(LDrawModelViewer::ETPov);
 //	populateTypeBox();
 	populate();
 	return ExportOptionPanel::exec();
