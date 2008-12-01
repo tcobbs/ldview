@@ -526,10 +526,10 @@
             <cstring>fileExportOptionAction</cstring>
         </property>
         <property name="text">
-            <string>Export Options</string>
+            <string>POV Export Options</string>
         </property>
         <property name="menuText">
-            <string>Export Options...</string>
+            <string>POV Export Options...</string>
         </property>
     </action>
     <action>

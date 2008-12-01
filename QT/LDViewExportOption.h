@@ -25,7 +25,7 @@ public slots:
 
 
 protected:
-	void populateTypeBox(void);
+//	void populateTypeBox(void);
 	void populate(void);
 	void doOk(void);
 	void doCancel(void);

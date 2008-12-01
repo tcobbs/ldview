@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Export Options</string>
+        <string>POV Export Options</string>
     </property>
     <property name="icon">
         <pixmap>LDViewIcon16.png</pixmap>
@@ -42,56 +42,6 @@
                 <property name="spacing">
                     <number>6</number>
                 </property>
-                <hbox>
-                    <property name="name">
-                        <cstring>unnamed</cstring>
-                    </property>
-                    <property name="margin">
-                        <number>11</number>
-                    </property>
-                    <property name="spacing">
-                        <number>6</number>
-                    </property>
-                    <spacer>
-                        <property name="name">
-                            <cstring>spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                    <widget class="QComboBox">
-                        <property name="name">
-                            <cstring>typeBox</cstring>
-                        </property>
-                    </widget>
-                    <spacer>
-                        <property name="name">
-                            <cstring>spacer1</cstring>
-                        </property>
-                        <property name="orientation">
-                            <enum>Horizontal</enum>
-                        </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>40</width>
-                                <height>20</height>
-                            </size>
-                        </property>
-                    </spacer>
-                </hbox>
                 <widget class="QLayoutWidget">
                     <property name="name">
                         <cstring>layouttop</cstring>
@@ -178,12 +128,6 @@
         <receiver>ExportOptionPanel</receiver>
         <slot>doReset()</slot>
     </connection>
-    <connection>
-        <sender>typeBox</sender>
-        <signal>activated(int)</signal>
-        <receiver>ExportOptionPanel</receiver>
-        <slot>doTypeBoxActivated()</slot>
-    </connection>
 </connections>
 <includes>
     <include location="local" implDecl="in implementation">ExportOptionPanel.ui.h</include>
@@ -192,7 +136,6 @@
     <slot>doCancel()</slot>
     <slot>doOk()</slot>
     <slot>doReset()</slot>
-    <slot>doTypeBoxActivated()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
