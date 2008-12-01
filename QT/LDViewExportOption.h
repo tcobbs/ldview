@@ -37,6 +37,7 @@ protected:
 	QScrollView *m_sv;
 	QVBox *m_box;
 	SettingsMap m_settings;
+	int m_origType;
 };
 
 #endif // __LDVIEWExportOption_H__
