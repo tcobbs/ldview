@@ -18,8 +18,6 @@ cp ../Translations/Italian/LDViewMessages.ini \
 cat ../LDExporter/LDExportMessages.ini >>\
 .obj/ldview/usr/local/share/ldview/LDViewMessages.ini
 cd .obj/ldview/usr/local/share/ldview
-cat ../LDExporter/LDExportMessages.ini >>\
-.obj/ldview/usr/local/share/ldview/LDViewMessages.ini
 mv LDViewMessages.ini LDViewMessages_en.ini
 ln -sf LDViewMessages_en.ini LDViewMessages.ini
 cd ../../../../..
