@@ -342,14 +342,6 @@
                                 </property>
                                 <widget class="QCheckBox">
                                     <property name="name">
-                                        <cstring>pbufferEnabledButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Don't use Pixel Buffer</string>
-                                    </property>
-                                </widget>
-                                <widget class="QCheckBox">
-                                    <property name="name">
                                         <cstring>transparentBackgroundButton</cstring>
                                     </property>
                                     <property name="text">
@@ -547,7 +539,6 @@
 <tabstops>
     <tabstop>seriesEnabledButton</tabstop>
     <tabstop>digitBox</tabstop>
-    <tabstop>pbufferEnabledButton</tabstop>
     <tabstop>sizeEnabledButton</tabstop>
     <tabstop>widthBox</tabstop>
     <tabstop>heightBox</tabstop>

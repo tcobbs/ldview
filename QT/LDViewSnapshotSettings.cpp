@@ -44,8 +44,6 @@ void SnapshotSettings::reflectSettings(void)
 		TCUserDefaults::longForKey(SAVE_SERIES_KEY, 1, false) != 0);
 	sizeEnabledButton->setChecked(
 		TCUserDefaults::longForKey(SAVE_ACTUAL_SIZE_KEY, 1, false));
-	setButtonState(pbufferEnabledButton,
-		TCUserDefaults::longForKey(IGNORE_PBUFFER_KEY, 1, false));
 	autoCropButton->setChecked(
 		TCUserDefaults::boolForKey(AUTO_CROP_KEY, false, false));
 	transparentBackgroundButton->setChecked(
@@ -88,8 +86,6 @@ void SnapshotSettings::doOk()
 		SAVE_SERIES_KEY, false);
 	TCUserDefaults::setLongForKey(sizeEnabledButton->isChecked(),
 		SAVE_ACTUAL_SIZE_KEY, false);
-	TCUserDefaults::setLongForKey(pbufferEnabledButton->isChecked(),
-		IGNORE_PBUFFER_KEY, false);
 	bool saveAllSteps = allStepsBox->isChecked();
 	TCUserDefaults::setBoolForKey(saveAllSteps, SAVE_STEPS_KEY, false);
 	TCUserDefaults::setBoolForKey(autoCropButton->isChecked(), 
