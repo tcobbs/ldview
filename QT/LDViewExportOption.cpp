@@ -254,7 +254,7 @@ void LDViewExportOption::doReset(void)
 		}
 	}
 }
-
+/*
 void LDViewExportOption::doTypeBoxActivated(void)
 {
 	m_exporter = m_modelViewer->getExporter(
@@ -285,11 +285,11 @@ void LDViewExportOption::populateTypeBox(void)
 	typeBox->setCurrentItem(saveExportType - LDrawModelViewer::ETFirst);
 	m_exporter = m_modelViewer->getExporter(saveExportType);
 }
-
+*/
 int LDViewExportOption::exec(void)
 {
 	m_exporter = m_modelViewer->getExporter();
-	populateTypeBox();
+//	populateTypeBox();
 	populate();
 	return ExportOptionPanel::exec();
 }

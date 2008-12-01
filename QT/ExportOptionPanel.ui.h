@@ -9,6 +9,6 @@ void ExportOptionPanel::doReset()
 {
 }
 
-void ExportOptionPanel::doTypeBoxActivated()
-{
-}
+//void ExportOptionPanel::doTypeBoxActivated()
+//{
+//}
