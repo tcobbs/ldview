@@ -216,7 +216,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F2DD2660DE15E6900C675D7 /* LDExporter.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D /* LDExporter */;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = LDExporter;
 		};
 /* End PBXContainerItemProxy section */

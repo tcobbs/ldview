@@ -17,28 +17,28 @@ LDStlExporter::~LDStlExporter(void)
 
 void LDStlExporter::initSettings(void) const
 {
-	if (addSetting(LDExporterSetting(ls(_UC("StlBinary")), m_binary,
-		udKey("Binary").c_str())))
-	{
-		m_settings.back().setGroupSize(1);
-		if (addSetting(LDExporterSetting(ls(_UC("StlColorFormat")),
-			udKey("ColorFormat").c_str())))
-		{
-			LDExporterSetting &setting = m_settings.back();
-
-			setting.addOption(0, ls(_UC("StlColorFormatNone")));
-			setting.addOption(1, ls(_UC("StlColorFormatVisCam")));
-			setting.addOption(2, ls(_UC("StlColorFormatMagics")));
-			try
-			{
-				setting.selectOption(m_colorFormat);
-			}
-			catch (...)
-			{
-				setting.selectOption(0);
-			}
-		}
-	}
+//	if (addSetting(LDExporterSetting(ls(_UC("StlBinary")), m_binary,
+//		udKey("Binary").c_str())))
+//	{
+//		m_settings.back().setGroupSize(1);
+//		if (addSetting(LDExporterSetting(ls(_UC("StlColorFormat")),
+//			udKey("ColorFormat").c_str())))
+//		{
+//			LDExporterSetting &setting = m_settings.back();
+//
+//			setting.addOption(0, ls(_UC("StlColorFormatNone")));
+//			setting.addOption(1, ls(_UC("StlColorFormatVisCam")));
+//			setting.addOption(2, ls(_UC("StlColorFormatMagics")));
+//			try
+//			{
+//				setting.selectOption(m_colorFormat);
+//			}
+//			catch (...)
+//			{
+//				setting.selectOption(0);
+//			}
+//		}
+//	}
 }
 
 void LDStlExporter::dealloc(void)
