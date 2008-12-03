@@ -82,8 +82,9 @@ protected:
 	bool scanModelColors(LDLModel *pModel);
 	bool writeModelColors(void);
 	bool writeEdges(void);
-	void writeXmlMatrix(const char *filename);
+	bool writeXmlMatrix(const char *filename);
 	void writeMatrix(const TCFloat *matrix);
+	void writeSeamMacro(void);
 	void writeSeamMatrix(LDLModelLine *pModelLine);
 	bool writeColor(int colorNumber, bool slope = false);
 	void writeColorDeclaration(int colorNumber);
@@ -196,8 +197,6 @@ protected:
 	static void cleanupFloats(TCFloat *array, int count = 16);
 	static void cleanupDoubles(double *array, int count = 16);
 	static const char *get48Prefix(bool is48);
-	static std::string getSizeSeamString(TCFloat size);
-	static std::string getOfsSeamString(TCFloat ofs, TCFloat size);
 
 	StringBoolMap m_processedModels;
 	StringBoolMap m_emptyModels;

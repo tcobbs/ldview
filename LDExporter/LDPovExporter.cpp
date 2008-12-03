@@ -578,6 +578,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
+		writeSeamMacro();
 		fprintf(m_pPovFile, "\nbackground { color rgb <LDXBgR,LDXBgG,LDXBgB> }\n\n");
 		if (m_edges)
 		{
@@ -1806,34 +1807,36 @@ void LDPovExporter::writeGeometry(const IntShapeLineListMap &colorGeometryMap)
 	}
 }
 
-std::string LDPovExporter::getSizeSeamString(TCFloat size)
+void LDPovExporter::writeSeamMacro(void)
 {
-	if (fEq(size, 0.0f))
-	{
-		return "0";
-	}
-	else
-	{
-		char buf[1024];
-
-		sprintf(buf, "1-LDXSW/%s", ftostr(size).c_str());
-		return buf;
-	}
-}
-
-std::string LDPovExporter::getOfsSeamString(TCFloat ofs, TCFloat size)
-{
-	if (fEq(ofs, 0.0f) || fEq(size, 0.0f))
-	{
-		return "0";
-	}
-	else
-	{
-		char buf[1024];
-
-		sprintf(buf, "LDXSW/%s", ftostr(size / ofs).c_str());
-		return buf;
-	}
+	fprintf(m_pPovFile,
+		"\n#macro LDXSeamMatrix(Width, Height, Depth, CenterX, CenterY, CenterZ)\n"
+		"#local aw = 0;\n"
+		"#local ah = 0;\n"
+		"#local ad = 0;\n"
+		"#local ax = 0;\n"
+		"#local ay = 0;\n"
+		"#local az = 0;\n"
+		"#if (Width != 0)\n"
+		"#local aw = 1-LDXSW/Width;\n"
+		"#end\n"
+		"#if (Height != 0)\n"
+		"#local ah = 1-LDXSW/Height;\n"
+		"#end\n"
+		"#if (Depth != 0)\n"
+		"#local ad = 1-LDXSW/Depth;\n"
+		"#end\n"
+		"#if (Width != 0 & CenterX != 0)\n"
+		"#local ax = LDXSW/(Width / CenterX);\n"
+		"#end\n"
+		"#if (Height != 0 & CenterY != 0)\n"
+		"#local ay = LDXSW/(Height / CenterY);\n"
+		"#end\n"
+		"#if (Depth != 0 & CenterZ != 0)\n"
+		"#local az = LDXSW/(Depth / CenterZ);\n"
+		"#end\n"
+		"matrix <aw,0,0,0,ah,0,0,0,ad,ax,ay,az>\n"
+		"#end\n\n");
 }
 
 void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
@@ -1847,17 +1850,21 @@ void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 		pModel->getBoundingBox(min, max);
 		size = max - min;
 		center = (min + max) / 2.0f;
-		fprintf(m_pPovFile, "matrix <%s,0,0,0,%s,0,0,0,%s,%s,%s,%s>\n\t\t",
-			getSizeSeamString(size[0]).c_str(),
-			getSizeSeamString(size[1]).c_str(),
-			getSizeSeamString(size[2]).c_str(),
-			getOfsSeamString(center[0], size[0]).c_str(),
-			getOfsSeamString(center[1], size[1]).c_str(),
-			getOfsSeamString(center[2], size[2]).c_str());
+		fprintf(m_pPovFile, "LDXSeamMatrix(%s, %s, %s, %s, %s, %s)\n\t\t",
+			ftostr(size[0]).c_str(), ftostr(size[1]).c_str(), ftostr(size[2]).c_str(),
+			ftostr(center[0]).c_str(), ftostr(center[1]).c_str(),
+			ftostr(center[2]).c_str());
+		//fprintf(m_pPovFile, "matrix <%s,0,0,0,%s,0,0,0,%s,%s,%s,%s>\n\t\t",
+		//	getSizeSeamString(size[0]).c_str(),
+		//	getSizeSeamString(size[1]).c_str(),
+		//	getSizeSeamString(size[2]).c_str(),
+		//	getOfsSeamString(center[0], size[0]).c_str(),
+		//	getOfsSeamString(center[1], size[1]).c_str(),
+		//	getOfsSeamString(center[2], size[2]).c_str());
 	}
 }
 
-void LDPovExporter::writeXmlMatrix(const char *filename)
+bool LDPovExporter::writeXmlMatrix(const char *filename)
 {
 	if (filename != NULL)
 	{
@@ -1869,8 +1876,10 @@ void LDPovExporter::writeXmlMatrix(const char *filename)
 			const TCFloat *matrix = it->second;
 
 			writeMatrix(matrix);
+			return true;
 		}
 	}
+	return false;
 }
 
 void LDPovExporter::writeMatrix(const TCFloat *matrix)
@@ -2501,7 +2510,10 @@ void LDPovExporter::writeInnerModelLine(
 	fprintf(m_pPovFile, "\t\t%s\n", declareName.c_str());
 	indentStud(studsStarted);
 	fprintf(m_pPovFile, "\t\t");
-	writeXmlMatrix(getModelFilename(pModel).c_str());
+	if (writeXmlMatrix(getModelFilename(pModel).c_str()))
+	{
+		fprintf(m_pPovFile, "\n\t\t");
+	}
 	writeSeamMatrix(pModelLine);
 	if (origMirrored &&
 		stringHasCaseInsensitiveSuffix(pModel->getFilename(), "stud.dat"))
