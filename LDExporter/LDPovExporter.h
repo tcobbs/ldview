@@ -189,14 +189,17 @@ protected:
 		bool bfc, bool is48 = false);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
 	virtual bool substituteStud(void);
-	
+
+	std::string getPrimName(const std::string &base, bool is48,
+		int num = -1, int den = -1);
+
 	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
 	void loadSettings(void);
 
 	static double alphaMod(int color);
 	static void cleanupFloats(TCFloat *array, int count = 16);
 	static void cleanupDoubles(double *array, int count = 16);
-	static const char *get48Prefix(bool is48);
+	static const char *get48Prefix(bool is48);		
 
 	StringBoolMap m_processedModels;
 	StringBoolMap m_emptyModels;

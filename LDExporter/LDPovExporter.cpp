@@ -1631,13 +1631,6 @@ bool LDPovExporter::findModelGeometry(
 	IntShapeLineListMap &colorGeometryMap,
 	bool mirrored)
 {
-	if (pModel == m_pTopModel)
-	{
-		// Even if there isn't any output, you'll get a parse error if we
-		// don't spit out the object for the main model, so set haveOutput
-		// to true.
-		return true;
-	}
 	LDLFileLineArray *fileLines = pModel->getFileLines();
 	int count = pModel->getActiveLineCount();
 	bool retValue = false;
@@ -1669,6 +1662,15 @@ bool LDPovExporter::findModelGeometry(
 			retValue = true;
 		}
 	}
+	if (pModel == m_pTopModel)
+	{
+		// Even if there isn't any output, you'll get a parse error if we
+		// don't spit out the object for the main model, so set haveOutput
+		// to true.
+		// Note that we still have to run the rest of this function to fill in
+		// the various data structures.
+		return true;
+	}
 	return retValue;
 }
 
@@ -1693,7 +1695,7 @@ bool LDPovExporter::writeModelObject(
 			bool povMode = false;
 			bool studsStarted = false;
 
-			if (pModel->isPart())
+			if (pModel->isPart() && pModel != m_pTopModel)
 			{
 				TCVector min, max;
 
@@ -1758,7 +1760,7 @@ bool LDPovExporter::writeModelObject(
 					"	no_shadow\n"
 					"#end\n");
 			}
-			if (pModel->isPart())
+			if (pModel->isPart() && pModel != m_pTopModel)
 			{
 				fprintf(m_pPovFile, "}\n#end\n\n");
 			}
@@ -1843,7 +1845,7 @@ void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 {
 	LDLModel *pModel = pModelLine->getModel(true);
 
-	if (pModel && pModel->isPart())
+	if (pModel && pModel->isPart() && pModel != m_pTopModel)
 	{
 		TCVector min, max, size, center;
 
@@ -2683,7 +2685,7 @@ const char *LDPovExporter::get48Prefix(bool is48)
 {
 	if (is48)
 	{
-		return "_48_slash";
+		return "48/";
 	}
 	else
 	{
@@ -2788,14 +2790,36 @@ bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 	return true;
 }
 
+std::string LDPovExporter::getPrimName(
+	const std::string &base,
+	bool is48,
+	int num /*= -1*/,
+	int den /*= -1*/)
+{
+	const char *prefix48 = get48Prefix(is48);
+	char buf[1024];
+
+	if (num > 0 && den > 0)
+	{
+		sprintf(buf, "%s%d-%d%s.dat", prefix48, num, den, base.c_str());
+	}
+	else if (num > 0)
+	{
+		sprintf(buf, "%s%s%d.dat", prefix48, base.c_str(), num);
+	}
+	else
+	{
+		sprintf(buf, "%s%s.dat", prefix48, base.c_str());
+	}
+	return getDeclareName(buf, false);
+}
+
 bool LDPovExporter::substituteEighthSphere(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	fprintf(m_pPovFile,
-		"#declare LDX_%s1_dash_8sphe_dot_dat = sphere // Sphere .125\n"
+		"#declare %s = sphere // Sphere .125\n"
 		"{\n"
 		"	<0,0,0>,1\n"
 		"	clipped_by\n"
@@ -2805,7 +2829,7 @@ bool LDPovExporter::substituteEighthSphere(
 		"			<0,0,0>,<2,2,2>\n"
 		"		}\n"
 		"	}\n"
-		"}\n\n", prefix48);
+		"}\n\n", getPrimName("1-8sphe", is48).c_str());
 	return true;
 }
 
@@ -2813,10 +2837,8 @@ bool LDPovExporter::substituteEighthSphereCorner(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	fprintf(m_pPovFile,
-		"#declare LDX_%s1_dash_8sphc_dot_dat = sphere // Sphere Corner .125\n"
+		"#declare %s = sphere // Sphere Corner .125\n"
 		"{\n"
 		"	<0,0,0>,sqrt(2)\n"
 		"	clipped_by\n"
@@ -2826,7 +2848,7 @@ bool LDPovExporter::substituteEighthSphereCorner(
 		"			<0,0,0>,<1,1,1>\n"
 		"		}\n"
 		"	}\n"
-		"}\n\n", prefix48);
+		"}\n\n", getPrimName("1-8sphc", is48).c_str());
 	return true;
 }
 
@@ -2835,13 +2857,12 @@ bool LDPovExporter::substituteCylinder(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%dcyli_dot_dat = cylinder // Cylinder %s\n"
+		"#declare %s = cylinder // Cylinder %s\n"
 		"{\n"
-		"	<0,0,0>,<0,1,0>,1 open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, ftostr(fraction).c_str());
+		"	<0,0,0>,<0,1,0>,1 open\n",
+		getPrimName("cyli", is48, m_filenameNumerator, m_filenameDenom).c_str(),
+		ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -2852,13 +2873,12 @@ bool LDPovExporter::substituteSlopedCylinder(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%dcyls_dot_dat = cylinder // Sloped Cylinder %s\n"
+		"#declare %s = cylinder // Sloped Cylinder %s\n"
 		"{\n"
-		"	<0,0,0>,<0,2,0>,1 open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, ftostr(fraction).c_str());
+		"	<0,0,0>,<0,2,0>,1 open\n",
+		getPrimName("cyls", is48, m_filenameNumerator, m_filenameDenom).c_str(),
+		ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction, false);
 	fprintf(m_pPovFile,
 		"		plane\n"
@@ -2875,7 +2895,6 @@ bool LDPovExporter::substituteSlopedCylinder2(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
 	double angle = 2.0 * M_PI * fraction + M_PI;
 	double x = cos(angle);
 	double z = sin(angle);
@@ -2887,10 +2906,11 @@ bool LDPovExporter::substituteSlopedCylinder2(
 		return false;
 	}
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%dcyls2_dot_dat = cylinder // Sloped Cylinder2 %s\n"
+		"#declare %s = cylinder // Sloped Cylinder2 %s\n"
 		"{\n"
-		"	<0,0,0>,<0,1,0>,1 open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, ftostr(fraction).c_str());
+		"	<0,0,0>,<0,1,0>,1 open\n",
+		getPrimName("cyls2", is48, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	fprintf(m_pPovFile,
 		"	clipped_by\n"
 		"	{\n"
@@ -2916,13 +2936,12 @@ bool LDPovExporter::substituteDisc(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%ddisc_dot_dat = disc // Disc %s\n"
+		"#declare %s = disc // Disc %s\n"
 		"{\n"
-		"	<0,0,0>,<0,1,0>,1\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, ftostr(fraction).c_str());
+		"	<0,0,0>,<0,1,0>,1\n",
+		getPrimName("disc", is48, m_filenameNumerator, m_filenameDenom).c_str(),
+		ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -2933,7 +2952,6 @@ bool LDPovExporter::substituteChrd(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
 	double angle = 2.0 * M_PI * fraction;
 	double cosAngle = cos(angle);
 	double sinAngle = sin(angle);
@@ -2945,7 +2963,7 @@ bool LDPovExporter::substituteChrd(
 	double ofs = -p0.distToLine(p1, p2);
 
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%dchrd_dot_dat = disc // Disc %s\n"
+		"#declare %s = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n"
 		"	clipped_by\n"
@@ -2955,7 +2973,8 @@ bool LDPovExporter::substituteChrd(
 		"			<%s,0,%s>,%s\n"
 		"		}\n"
 		"	}\n"
-		"}\n\n", prefix48, m_filenameNumerator, m_filenameDenom,
+		"}\n\n",
+		getPrimName("chrd", is48, m_filenameNumerator, m_filenameDenom).c_str(),
 		ftostr(fraction).c_str(), ftostr(x, 20).c_str(), ftostr(z, 20).c_str(),
 		ftostr(ofs, 20).c_str());
 	return true;
@@ -2966,13 +2985,12 @@ bool LDPovExporter::substituteNotDisc(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%dndis_dot_dat = disc // Not-Disc %s\n"
+		"#declare %s = disc // Not-Disc %s\n"
 		"{\n"
-		"	<0,0,0>,<0,1,0>,2,1\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, ftostr(fraction).c_str());
+		"	<0,0,0>,<0,1,0>,2,1\n",
+		getPrimName("ndis", is48, m_filenameNumerator, m_filenameDenom).c_str(),
+		ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction, false);
 	fprintf(m_pPovFile,
 		"		box\n"
@@ -2990,13 +3008,15 @@ bool LDPovExporter::substituteCone(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
+	std::string base = "con";
 
+	base += ltostr(size);
 	fprintf(m_pPovFile,
-		"#declare LDX_%s%d_dash_%dcon%d_dot_dat = cone // Cone %s\n"
+		"#declare %s = cone // Cone %s\n"
 		"{\n"
-		"	<0,0,0>,%d,<0,1,0>,%d open\n", prefix48, m_filenameNumerator,
-		m_filenameDenom, size, ftostr(fraction).c_str(), size + 1, size);
+		"	<0,0,0>,%d,<0,1,0>,%d open\n",
+		getPrimName(base, is48, m_filenameNumerator, m_filenameDenom).c_str(),
+		ftostr(fraction).c_str(), size + 1, size);
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -3009,20 +3029,25 @@ bool LDPovExporter::substituteRing(
 	bool is48 /*= false*/,
 	bool isOld /*= false*/)
 {
-	const char *prefix48 = get48Prefix(is48);
-
 	if (isOld)
 	{
 		fprintf(m_pPovFile,
-			"#declare LDX_%sring%d_dot_dat = disc // Ring %s\n",
-			prefix48, size, ftostr(fraction).c_str());
+			"#declare %s = disc // Ring %s\n",
+			getPrimName("ring", is48, size).c_str(), ftostr(fraction).c_str());
 	}
 	else
 	{
+		std::string base = "rin";
+
+		if (size < 10)
+		{
+			base += "g";
+		}
+		base += ltostr(size);
 		fprintf(m_pPovFile,
-			"#declare LDX_%s%d_dash_%drin%s%d_dot_dat = disc // Ring %s\n",
-			prefix48, m_filenameNumerator, m_filenameDenom,
-			size >= 10 ? "" : "g", size, ftostr(fraction).c_str());
+			"#declare %s = disc // Ring %s\n",
+			getPrimName(base, is48, m_filenameNumerator,
+			m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	}
 	fprintf(m_pPovFile,
 		"{\n"
@@ -3159,7 +3184,7 @@ bool LDPovExporter::substituteStud(void)
 {
 	writeLogo();
 	fprintf(m_pPovFile,
-			"#declare LDX_stud_dot_dat =\n"
+			"#declare %s =\n"
 			"#if (LDXQual <= 2)\n"
 			"cylinder { <0,0,0>, <0,-4,0>, 6 }\n"
 			"#else\n"
@@ -3168,6 +3193,6 @@ bool LDPovExporter::substituteStud(void)
 			"	object { LDXStudLogo }\n"
 			"}\n"
 			"#end\n"
-			"\n");
+			"\n", getPrimName("stud", false).c_str());
 	return true;
 }
