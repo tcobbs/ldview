@@ -1850,8 +1850,7 @@ void TREModel::addNotDisc(
 			TCFloat x, z;
 			TCFloat angle;
 
-			angle = 2.0f * (TCFloat)M_PI / numSegments *
-				(j + i * quarterSegments);
+			angle = 2.0f * (TCFloat)M_PI / numSegments * (j + i * quarter);
 			x = radius * (TCFloat)cos(angle);
 			z = radius * (TCFloat)sin(angle);
 			p1[0] = center.get(0) + x;
