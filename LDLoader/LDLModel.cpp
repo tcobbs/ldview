@@ -239,7 +239,6 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		}
 	}
 	delete adjustedName;
-	delete dictName;
 	if (!subModel && !secondAttempt)
 	{
 		LDLFindFileAlert *alert = new LDLFindFileAlert(subModelName);
@@ -251,6 +250,9 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 				fileLine, alert->getPartFlag());
 			if (subModel)
 			{
+				// The following is necessary in order for primitive
+				// substitution to work.
+				subModel->setName(dictName);
 				if (!isPart() && subModel->isPart())
 				{
 					UCCHAR szWarning[1024];
@@ -266,6 +268,7 @@ LDLModel *LDLModel::subModelNamed(const char *subModelName, bool lowRes,
 		}
 		alert->release();
 	}
+	delete dictName;
 	ancestorCheck = false;
 	return subModel;
 }
