@@ -34,7 +34,9 @@ typedef boost::mutex::scoped_lock ScopedLock;
 //const GLfloat POLYGON_OFFSET_FACTOR = 0.85f;
 //const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
 const GLfloat POLYGON_OFFSET_FACTOR = 1.0f;
-const GLfloat POLYGON_OFFSET_UNITS = 1.0f;
+// NOTE: setting the following to a non-zero value results in "implementation-
+// specific" behavior.  In other words, "undefined".  Yech.
+const GLfloat POLYGON_OFFSET_UNITS = 0.0f;
 
 TCImageArray *TREMainModel::sm_studTextures = NULL;
 GLuint TREMainModel::sm_studTextureID = 0;
