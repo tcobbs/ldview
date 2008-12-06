@@ -173,13 +173,13 @@ class LDrawModelViewer: public TCAlertSender
 		void setXYPan(TCFloat xValue, TCFloat yValue);
 		void setRotationSpeed(TCFloat value);
 		TCFloat getRotationSpeed(void) const { return rotationSpeed; }
-		void setCameraXRotate(TCFloat value) { cameraXRotate = value; }
-		void setCameraYRotate(TCFloat value) { cameraYRotate = value; }
-		void setCameraZRotate(TCFloat value) { cameraZRotate = value; }
+		void setCameraXRotate(TCFloat value);
+		void setCameraYRotate(TCFloat value);
+		void setCameraZRotate(TCFloat value);
 		TCFloat getCameraXRotate(void) { return cameraXRotate; }
 		TCFloat getCameraYRotate(void) { return cameraYRotate; }
 		TCFloat getCameraZRotate(void) { return cameraZRotate; }
-		void setCameraMotion(const TCVector &value) { cameraMotion = value; }
+		void setCameraMotion(const TCVector &value);
 		TCVector getCameraMotion(void) { return cameraMotion; }
 		virtual void setZoomSpeed(TCFloat value);
 		TCFloat getZoomSpeed(void) { return zoomSpeed; }
@@ -569,6 +569,8 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void releaseTREModels(void);
 		virtual LDExporter *initExporter(void);
 
+		void updateFrameTime(bool force = false);
+
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
 			bool primitive);
@@ -677,6 +679,14 @@ class LDrawModelViewer: public TCAlertSender
 		int mpdChildIndex;
 		LDExporter *exporter;
 		ExportType exportType;
+#ifdef WIN32
+		DWORD frameTicks;
+		LARGE_INTEGER hrpcFrequency;
+		LARGE_INTEGER hrpcFrameCount;
+#endif // WIN32
+#ifdef COCOA
+		void *frameTime;
+#endif // COCOA
 		struct
 		{
 			bool qualityLighting:1;
@@ -747,6 +757,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool obi:1;
 			bool gl2ps:1;
 			bool povCameraAspect:1;
+			bool animating:1;
 		} flags;
 		struct CameraData
 		{
