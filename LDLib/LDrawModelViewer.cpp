@@ -27,6 +27,11 @@
 #include <time.h>
 #include <gl2ps/gl2ps.h>
 
+#ifdef COCOA
+#include <Foundation/Foundation.h>
+#define FRAME_TIME ((NSDate *&)frameTime)
+#endif // COCOA
+
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -184,10 +189,18 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.gl2ps = false;
 	flags.povCameraAspect = TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY,
 		false, false);
+	flags.animating = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
 	TCJpegOptions::setDefaultSubSampling(TCJpegOptions::SS444);
+#ifdef WIN32
+	if (!QueryPerformanceFrequency(&hrpcFrequency))
+	{
+		hrpcFrequency.QuadPart = 0;
+	}
+#endif // WIN32
+	updateFrameTime(true);
 }
 
 LDrawModelViewer::~LDrawModelViewer(void)
@@ -196,6 +209,9 @@ LDrawModelViewer::~LDrawModelViewer(void)
 
 void LDrawModelViewer::dealloc(void)
 {
+#ifdef COCOA
+	[FRAME_TIME release];
+#endif // COCOA
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(inputHandler);
 	TCObject::release(mainTREModel);
@@ -2234,8 +2250,32 @@ void LDrawModelViewer::setAllowPrimitiveSubstitution(bool value)
 
 void LDrawModelViewer::updateCameraPosition(void)
 {
-	camera.move(cameraMotion * size / 100.0f);
-	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate));
+	float multiplier = 100.0f;
+	float factor = 1.0f / multiplier;
+
+#ifdef WIN32
+	if (hrpcFrequency.QuadPart != 0)
+	{
+		LARGE_INTEGER newCount;
+
+		QueryPerformanceCounter(&newCount);
+		factor = (float)((newCount.QuadPart - hrpcFrameCount.QuadPart) /
+			(double)hrpcFrequency.QuadPart);
+	}
+	else
+	{
+		factor = (GetTickCount() - frameTicks) / 1000.0f;
+	}
+#endif // WIN32
+#ifdef COCOA
+	if (FRAME_TIME != nil)
+	{
+		factor = (float)-[FRAME_TIME timeIntervalSinceNow];
+	}
+#endif // COCOA
+	camera.move(cameraMotion * size / 100.0f * factor * multiplier);
+	camera.rotate(TCVector(cameraXRotate, cameraYRotate, cameraZRotate) *
+		factor * multiplier * 1.5f);
 }
 
 void LDrawModelViewer::zoom(TCFloat amount, bool apply)
@@ -3116,8 +3156,35 @@ void LDrawModelViewer::update(void)
 		&& !getPaused())
 	{
 		requestRedraw();
+		flags.animating = true;
+	}
+	else
+	{
+		flags.animating = false;
 	}
 	TCAlertManager::sendAlert(frameDoneAlertClass(), this);
+	updateFrameTime(true);
+}
+
+void LDrawModelViewer::updateFrameTime(bool force /*=false*/)
+{
+	if (!flags.animating || force)
+	{
+#ifdef WIN32
+		if (hrpcFrequency.QuadPart != 0)
+		{
+			QueryPerformanceCounter(&hrpcFrameCount);
+		}
+		else
+		{
+			frameTicks = GetTickCount();
+		}
+#endif // WIN32
+#ifdef COCOA
+		[FRAME_TIME release];
+		FRAME_TIME = [[NSDate alloc] init];
+#endif // COCOA
+	}
 }
 
 void LDrawModelViewer::removeHiddenLines(TCFloat eyeXOffset)
@@ -4698,4 +4765,28 @@ void LDrawModelViewer::getStandardSizes(
 TCFloat LDrawModelViewer::getDistance(void) const
 {
 	return camera.getPosition().length();
+}
+
+void LDrawModelViewer::setCameraMotion(const TCVector &value)
+{
+	cameraMotion = value;
+	updateFrameTime();
+}
+
+void LDrawModelViewer::setCameraXRotate(TCFloat value)
+{
+	cameraXRotate = value;
+	updateFrameTime();
+}
+
+void LDrawModelViewer::setCameraYRotate(TCFloat value)
+{
+	cameraYRotate = value;
+	updateFrameTime();
+}
+
+void LDrawModelViewer::setCameraZRotate(TCFloat value)
+{
+	cameraZRotate = value;
+	updateFrameTime();
 }
