@@ -11,6 +11,7 @@
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
 #include <gdiplus.h>
+#include <gdiplusflat.h>
 #define USE_GDIPLUS
 #endif // VC >= VC 2005
 
@@ -18,12 +19,28 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
+typedef Gdiplus::Status (WINAPI *PFNGDIPLUSSTARTUP)(
+    OUT ULONG_PTR *token,
+    const Gdiplus::GdiplusStartupInput *input,
+    OUT Gdiplus::GdiplusStartupOutput *output);
+typedef VOID (WINAPI *PFNGDIPLUSSHUTDOWN)(ULONG_PTR token);
+typedef Gdiplus::GpStatus (WINGDIPAPI *PFNGDIPCREATEBITMAPFROMHICON)(
+	HICON hicon, Gdiplus::GpBitmap** bitmap);
+typedef Gdiplus::GpStatus (WINGDIPAPI *PFNGDIPCREATEHBITMAPFROMBITMAP)(
+	Gdiplus::GpBitmap* bitmap, HBITMAP* hbmReturn, Gdiplus::ARGB background);
+
+static PFNGDIPLUSSTARTUP GdiplusStartup = NULL;
+static PFNGDIPLUSSHUTDOWN GdiplusShutdown = NULL;
+static PFNGDIPCREATEBITMAPFROMHICON GdipCreateBitmapFromHICON = NULL;
+static PFNGDIPCREATEHBITMAPFROMBITMAP GdipCreateHBITMAPFromBitmap = NULL;
+
 ToolbarStrip::ToolbarStrip(HINSTANCE hInstance):
 CUIDialog(hInstance),
 m_stdBitmapStartId(-1),
 m_tbBitmapStartId(-1),
 m_numSteps(0),
-m_hDeactivatedTooltip(NULL)
+m_hDeactivatedTooltip(NULL),
+m_hGdiPlus(NULL)
 {
 	ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
@@ -38,6 +55,11 @@ void ToolbarStrip::dealloc(void)
 {
 	HImageListList::iterator it;
 
+	if (m_hGdiPlus != NULL)
+	{
+		FreeLibrary(m_hGdiPlus);
+		m_hGdiPlus = NULL;
+	}
 	for (it = m_imageLists.begin(); it != m_imageLists.end(); it++)
 	{
 		ImageList_Destroy(*it);
@@ -373,6 +395,10 @@ void ToolbarStrip::updateMenu(
 	int index,
 	HIMAGELIST hImageList)
 {
+	if (m_hGdiPlus == NULL)
+	{
+		return;
+	}
 	int count = GetMenuItemCount(hMenu);
 
 	for (int i = 0; i < count; i++)
@@ -390,14 +416,28 @@ void ToolbarStrip::updateMenu(
 		else if (mii.wID == (UINT)command && mii.hbmpItem == NULL)
 		{
 			HICON hIcon = ImageList_GetIcon(hImageList, index, ILD_TRANSPARENT);
-			Gdiplus::Bitmap gdipBm(hIcon);
-			HBITMAP hMenuBitmap;
-			if (gdipBm.GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hMenuBitmap) == Gdiplus::Ok)
+			Gdiplus::GpBitmap *pBitmap;
+
+			if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) == Gdiplus::Ok)
 			{
-				mii.fMask = MIIM_BITMAP;
-				mii.hbmpItem = hMenuBitmap;
-				SetMenuItemInfo(hMenu, i, TRUE, &mii);
+				HBITMAP hMenuBitmap;
+
+				if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0) ==
+					Gdiplus::Ok)
+				{
+					mii.fMask = MIIM_BITMAP;
+					mii.hbmpItem = hMenuBitmap;
+					SetMenuItemInfo(hMenu, i, TRUE, &mii);
+				}
 			}
+			//Gdiplus::Bitmap gdipBm(hIcon);
+			//HBITMAP hMenuBitmap;
+			//if (gdipBm.GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hMenuBitmap) == Gdiplus::Ok)
+			//{
+			//	mii.fMask = MIIM_BITMAP;
+			//	mii.hbmpItem = hMenuBitmap;
+			//	SetMenuItemInfo(hMenu, i, TRUE, &mii);
+			//}
 		}
 	}
 }
@@ -421,11 +461,44 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	m_controls.push_back(m_hStepToolbar);
 
 #ifdef USE_GDIPLUS
-	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	ULONG_PTR                    gdiplusToken;
+	m_hGdiPlus = LoadLibrary("gdiplus.dll");
+	ULONG_PTR gdiplusToken = 0;
 
-	// Initialize GDI+.
-	Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+	if (m_hGdiPlus != NULL)
+	{
+		bool started = false;
+
+		GdiplusStartup = (PFNGDIPLUSSTARTUP)GetProcAddress(m_hGdiPlus,
+			"GdiplusStartup");
+		GdiplusShutdown = (PFNGDIPLUSSHUTDOWN)GetProcAddress(m_hGdiPlus,
+			"GdiplusShutdown");
+		GdipCreateBitmapFromHICON =
+			(PFNGDIPCREATEBITMAPFROMHICON)GetProcAddress(m_hGdiPlus,
+			"GdipCreateBitmapFromHICON");
+		GdipCreateHBITMAPFromBitmap =
+			(PFNGDIPCREATEHBITMAPFROMBITMAP)GetProcAddress(m_hGdiPlus,
+			"GdipCreateHBITMAPFromBitmap");
+
+		if (GdiplusStartup != NULL &&
+			GdiplusShutdown != NULL &&
+			GdipCreateBitmapFromHICON != NULL &&
+			GdipCreateHBITMAPFromBitmap != NULL)
+		{
+			Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+
+			// Initialize GDI+.
+			if (GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL) ==
+				Gdiplus::Ok)
+			{
+				started = true;
+			}
+		}
+		if (!started)
+		{
+			FreeLibrary(m_hGdiPlus);
+			m_hGdiPlus = NULL;
+		}
+	}
 #endif // USE_GDIPLUS
 
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
@@ -435,7 +508,10 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	updateStep();
 	updateNumSteps();
 #ifdef USE_GDIPLUS
-	Gdiplus::GdiplusShutdown(gdiplusToken);
+	if (m_hGdiPlus != NULL)
+	{
+		GdiplusShutdown(gdiplusToken);
+	}
 #endif // USE_GDIPLUS
 	return TRUE;
 }

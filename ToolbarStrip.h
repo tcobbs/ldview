@@ -117,6 +117,8 @@ protected:
 	HMENU m_hLightingMenu;
 	HMENU m_hBFCMenu;
 
+	HMODULE m_hGdiPlus;
+
 	int m_numSteps;
 	int m_step;
 	ucstring m_numStepsFormat;

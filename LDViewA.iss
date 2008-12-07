@@ -39,6 +39,7 @@ Name: quicklaunchicon; Description: Create a &Quick Launch icon; GroupDescriptio
 Name: screensaver; Description: Install LDView as a screen saver; GroupDescription: Screen Saver:
 Name: registerfiles; Description: Use LDView to open LDraw models; GroupDescription: File Associations:; Flags: unchecked
 Name: thumbnails; Description: Use LDView to generate thumbnails in Windows Explorer; GroupDescription: Explorer Thumbnails:; Flags: unchecked
+Name: prefsets; Description: Install preset Preference Sets; GroupDescription: Preference Sets:
 
 [Files]
 Source: Build\Release ANSI\LDViewA.exe; DestDir: {app}; Flags: ignoreversion
