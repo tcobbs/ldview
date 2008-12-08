@@ -7,7 +7,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
-#if _MSC_VER >= 1400 && !defined(TC_NO_UNICODE)	// VC >= VC 2005
+#if _MSC_VER >= 1300 && !defined(TC_NO_UNICODE)	// VC >= VC 2003
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
 #include <gdiplus.h>
@@ -19,6 +19,7 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
+#ifdef USE_GDIPLUS
 typedef Gdiplus::Status (WINAPI *PFNGDIPLUSSTARTUP)(
     OUT ULONG_PTR *token,
     const Gdiplus::GdiplusStartupInput *input,
@@ -33,6 +34,7 @@ static PFNGDIPLUSSTARTUP GdiplusStartup = NULL;
 static PFNGDIPLUSSHUTDOWN GdiplusShutdown = NULL;
 static PFNGDIPCREATEBITMAPFROMHICON GdipCreateBitmapFromHICON = NULL;
 static PFNGDIPCREATEHBITMAPFROMBITMAP GdipCreateHBITMAPFromBitmap = NULL;
+#endif // USE_GDIPLUS
 
 ToolbarStrip::ToolbarStrip(HINSTANCE hInstance):
 CUIDialog(hInstance),
