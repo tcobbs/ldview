@@ -200,6 +200,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 		hrpcFrequency.QuadPart = 0;
 	}
 #endif // WIN32
+#ifdef _QT
+	qtime.start();
+#endif
 	updateFrameTime(true);
 }
 
@@ -2267,6 +2270,9 @@ void LDrawModelViewer::updateCameraPosition(void)
 		factor = (GetTickCount() - frameTicks) / 1000.0f;
 	}
 #endif // WIN32
+#ifdef _QT
+	factor = qtime.elapsed() /1000.0f;
+#endif
 #ifdef COCOA
 	if (FRAME_TIME != nil)
 	{
@@ -3180,6 +3186,9 @@ void LDrawModelViewer::updateFrameTime(bool force /*=false*/)
 			frameTicks = GetTickCount();
 		}
 #endif // WIN32
+#ifdef _QT
+		qtime.restart();
+#endif
 #ifdef COCOA
 		[FRAME_TIME release];
 		FRAME_TIME = [[NSDate alloc] init];

@@ -8,6 +8,9 @@
 #include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
 #include <LDExporter/LDExporter.h>
+#ifdef _QT
+#include <qdatetime.h>
+#endif
 
 typedef enum
 {
@@ -687,6 +690,9 @@ class LDrawModelViewer: public TCAlertSender
 #ifdef COCOA
 		void *frameTime;
 #endif // COCOA
+#ifdef _QT
+		QTime qtime;
+#endif
 		struct
 		{
 			bool qualityLighting:1;
