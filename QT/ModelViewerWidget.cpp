@@ -3746,7 +3746,7 @@ void ModelViewerWidget::doViewMenuAboutToShow(void)
 		else
 		{
 			setMenuItemsEnabled(viewMenu, true);
-			viewMenu->setItemEnabled(viewMenu->idAt(8), viewMode == LDInputHandler::VMExamine);
+			viewMenu->setItemEnabled(viewMenu->idAt(9), viewMode == LDInputHandler::VMExamine);
 		}
 	}
 }
