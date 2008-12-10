@@ -134,7 +134,6 @@ void LDPreferences::applySettings(void)
 	{
 		m_modelViewer->setZoomMax(m_zoomMax);
 		m_modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
-		m_modelViewer->setMultiThreaded(m_multiThreaded);
 	}
 	setupDefaultRotationMatrix();
 	setupModelCenter();
@@ -155,6 +154,7 @@ void LDPreferences::applyGeneralSettings(void)
 		m_modelViewer->setSkipValidation(m_skipValidation);
 		// showFrameRate taken care of automatically.
 		m_modelViewer->setShowAxes(m_showAxes);
+		m_modelViewer->setMultiThreaded(m_multiThreaded);
 		// showErrors taken care of automatically.
 		// fullScreenRefresh taken care of automatically.
 		m_modelViewer->setFov(m_fov);
@@ -353,7 +353,6 @@ void LDPreferences::loadSettings(void)
 	m_skipValidation = false;
 	m_zoomMax = getLongSetting(ZOOM_MAX_KEY, 199) / 100.0f;
 	m_defaultZoom = getFloatSetting(DEFAULT_ZOOM_KEY, 1.0f);
-	m_multiThreaded = getBoolSetting(MULTI_THREADED_KEY, true);
 }
 
 void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
@@ -373,6 +372,7 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 	setShowFps(false);
 	setShowAxes(false);
 	setShowErrors(true);
+	setDisableSmp(false);
 	setFullScreenRefresh(0);
 	setFov(45.0f);
 	setMemoryUsage(2);
@@ -526,6 +526,7 @@ void LDPreferences::loadGeneralSettings(void)
 	m_showFps = getBoolSetting(SHOW_FPS_KEY, m_showFps);
 	m_showAxes = getBoolSetting(SHOW_AXES_KEY, m_showAxes);
 	m_showErrors = getBoolSetting(SHOW_ERRORS_KEY, m_showErrors);
+	m_multiThreaded = getBoolSetting(MULTI_THREADED_KEY, m_multiThreaded);
 	m_fullScreenRefresh = getIntSetting(FULLSCREEN_REFRESH_KEY,
 		m_fullScreenRefresh);
 	m_fov = getFloatSetting(FOV_KEY, (TCFloat32)m_fov);
@@ -718,6 +719,7 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 	setShowFps(m_showFps, true);
 	setShowAxes(m_showAxes, true);
 	setShowErrors(m_showErrors, true);
+	setDisableSmp(!m_multiThreaded, true);
 	setFullScreenRefresh(m_fullScreenRefresh, true);
 	setFov(m_fov, true);
 	setMemoryUsage(m_memoryUsage, true);
@@ -1287,6 +1289,11 @@ void LDPreferences::setShowAxes(bool value, bool commit, bool apply)
 void LDPreferences::setShowErrors(bool value, bool commit)
 {
 	setSetting(m_showErrors, value, SHOW_ERRORS_KEY, commit);
+}
+
+void LDPreferences::setDisableSmp(bool value, bool commit)
+{
+	setSetting(m_multiThreaded, !value, MULTI_THREADED_KEY, commit);
 }
 
 void LDPreferences::setFullScreenRefresh(int value, bool commit)

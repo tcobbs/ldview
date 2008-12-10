@@ -99,6 +99,8 @@ public:
 	bool getShowFps(void) { return m_showFps; }
 	bool getShowAxes(void) { return m_showAxes; }
 	bool getShowErrors(void) { return m_showErrors; }
+	bool getDisableSmp(void) { return !m_multiThreaded; }
+	bool getMultiThreaded(void) { return m_multiThreaded; }
 	int getFullScreenRefresh(void) { return m_fullScreenRefresh; }
 	TCFloat getFov(void) { return m_fov; }
 	int getMemoryUsage(void) { return m_memoryUsage; }
@@ -209,9 +211,6 @@ public:
 		return getLastSaveDir(SOPartsList).c_str();
 	}
 
-	// No UI
-	bool getMultiThreaded(void) { return m_multiThreaded; }
-
 	// General settings
 	void setFsaaMode(int value, bool commit = false);
 	void setLineSmoothing(bool value, bool commit = false);
@@ -223,6 +222,7 @@ public:
 	void setShowFps(bool value, bool commit = false);
 	void setShowAxes(bool value, bool commit = false, bool apply = false);
 	void setShowErrors(bool value, bool commit = false);
+	void setDisableSmp(bool value, bool commit = false);
 	void setFullScreenRefresh(int value, bool commit = false);
 	void setFov(TCFloat value, bool commit = false);
 	void setMemoryUsage(int value, bool commit = false);
@@ -406,6 +406,7 @@ protected:
 	bool m_showFps;
 	bool m_showAxes;
 	bool m_showErrors;
+	bool m_multiThreaded;
 	int m_fullScreenRefresh;
 	TCFloat m_fov;
 	int m_memoryUsage;
@@ -491,7 +492,6 @@ protected:
 	bool m_drawLightDats;
 	bool m_optionalStandardLight;
 	bool m_noLightGeom;
-	bool m_multiThreaded;
 
 	StringBoolMap m_changedSettings;
 	StringBoolMap m_globalSettings;

@@ -2016,6 +2016,16 @@ void LDrawModelViewer::setUsePolygonOffset(bool value)
 	}
 }
 
+void LDrawModelViewer::setMultiThreaded(bool value)
+{
+	if (value != flags.multiThreaded)
+	{
+		flags.multiThreaded = value;
+		flags.needsReparse = true;
+	}
+	
+}
+
 void LDrawModelViewer::setBlackHighlights(bool value)
 {
 	if (value != flags.blackHighlights)

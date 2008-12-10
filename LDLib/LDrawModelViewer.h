@@ -316,7 +316,7 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		virtual void setSaveAlpha(bool value);
 		bool getSaveAlpha(void) const { return flags.saveAlpha != false; }
-		virtual void setMultiThreaded(bool value) { flags.multiThreaded = value; }
+		virtual void setMultiThreaded(bool value);
 		bool getMultiThreaded(void) const
 		{
 			return flags.multiThreaded != false;

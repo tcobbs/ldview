@@ -89,6 +89,7 @@
 	[self setCheck:showFrameRateCheck value:ldPreferences->getShowFps()];
 	[self setCheck:showAxesCheck value:ldPreferences->getShowAxes()];
 	[self setCheck:showErrorsCheck value:ldPreferences->getShowErrors()];
+	[self setCheck:disableSmpCheck value:ldPreferences->getDisableSmp()];
 	[self setCheck:processLDConfigCheck
 		value:ldPreferences->getProcessLdConfig()];
 	ldPreferences->getBackgroundColor(r, g, b);
@@ -137,6 +138,7 @@
 	ldPreferences->setLineSmoothing([self getCheck:antialiasedLinesCheck]);
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
+	ldPreferences->setDisableSmp([disableSmpCheck getCheck]);
 	ldPreferences->setShowFps([self getCheck:showFrameRateCheck]);
 	ldPreferences->setShowAxes([self getCheck:showAxesCheck]);
 	[self getColorWell:backgroundColorWell r:&r g:&g b:&b];
