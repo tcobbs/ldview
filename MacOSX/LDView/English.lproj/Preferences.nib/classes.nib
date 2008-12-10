@@ -50,6 +50,7 @@
                 antialiasedLinesCheck = NSButton; 
                 backgroundColorWell = NSColorWell; 
                 defaultColorWell = NSColorWell; 
+                disableSmpCheck = NSButton; 
                 exportsBrowseButton = NSButton; 
                 exportsDirField = NSTextField; 
                 exportsDirPopUp = NSPopUpButton; 
