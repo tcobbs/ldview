@@ -785,7 +785,7 @@ void TREModel::addTriangleStrip(
 void TREModel::addQuadStrip(TREShapeGroup *shapeGroup, const TCVector *vertices,
 							const TCVector *normals, int count, bool flat)
 {
-	if (m_mainModel->getUseStripsFlag() && (!flat ||
+	if (m_mainModel->getUseQuadStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addQuadStrip(vertices, normals, count);
@@ -829,7 +829,7 @@ void TREModel::addTriangleStrip(
 	int count,
 	bool flat)
 {
-	if (m_mainModel->getUseStripsFlag() && (!flat ||
+	if (m_mainModel->getUseTriStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addTriangleStrip(vertices, normals, count);
@@ -857,7 +857,7 @@ void TREModel::addQuadStrip(
 	int count,
 	bool flat)
 {
-	if (m_mainModel->getUseStripsFlag() && (!flat ||
+	if (m_mainModel->getUseQuadStripsFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
 	{
 		shapeGroup->addQuadStrip(color, vertices, normals, count);
@@ -947,7 +947,7 @@ void TREModel::addTriangleFan(
 	int count,
 	bool flat)
 {
-	if (m_mainModel->getUseStripsFlag() && (!flat ||
+	if (m_mainModel->getUseTriFansFlag() && (!flat ||
 		m_mainModel->getUseFlatStripsFlag()))
 	{
 		if (textureCoords)
