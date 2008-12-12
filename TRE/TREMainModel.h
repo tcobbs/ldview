@@ -90,6 +90,18 @@ public:
 	bool getLightingFlag(void) { return m_mainFlags.lighting != false; }
 	void setUseStripsFlag(bool value) { m_mainFlags.useStrips = value; }
 	bool getUseStripsFlag(void) { return m_mainFlags.useStrips != false; }
+	bool getUseTriFansFlag(void)
+	{
+		return m_mainFlags.useStrips && m_mainFlags.useTriFans;
+	}
+	bool getUseTriStripsFlag(void)
+	{
+		return m_mainFlags.useStrips && m_mainFlags.useTriStrips;
+	}
+	bool getUseQuadStripsFlag(void)
+	{
+		return m_mainFlags.useStrips && m_mainFlags.useQuadStrips;
+	}
 	void setUseFlatStripsFlag(bool value) { m_mainFlags.useFlatStrips = value; }
 	bool getUseFlatStripsFlag(void)
 	{
@@ -441,6 +453,9 @@ protected:
 		bool twoSidedLighting:1;
 		bool lighting:1;
 		bool useStrips:1;
+		bool useTriStrips:1;
+		bool useTriFans:1;
+		bool useQuadStrips:1;
 		bool useFlatStrips:1;
 		bool bfc:1;
 		bool aaLines:1;
