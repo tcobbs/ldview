@@ -2101,6 +2101,10 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 			stripNormals[spot] = (stripPoints[spot] - p1).normalize();
 			spot++;
 		}
+		if (m_mainModel->getSmoothCurvesFlag())
+		{
+			m_mainModel->setDisableStrips(true);
+		}
 		if (bfc)
 		{
 			addBFCQuadStrip(stripPoints, stripNormals, stripSize);
@@ -2109,6 +2113,7 @@ void TREModel::addTorusIO(bool inner, const TCVector& center, TCFloat yRadius,
 		{
 			addQuadStrip(stripPoints, stripNormals, stripSize);
 		}
+		m_mainModel->setDisableStrips(false);
 	}
 	if (shouldLoadConditionalLines())
 	{
@@ -2279,6 +2284,10 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 				spherePoints[mainSpot++] = p3;
 			}
 		}
+		if (m_mainModel->getSmoothCurvesFlag())
+		{
+			m_mainModel->setDisableStrips(true);
+		}
 		if (bfc)
 		{
 			addBFCTriangleStrip(points, normals, stripSpot);
@@ -2287,6 +2296,7 @@ void TREModel::addEighthSphere(const TCVector& center, TCFloat radius,
 		{
 			addTriangleStrip(points, normals, stripSpot);
 		}
+		m_mainModel->setDisableStrips(false);
 		delete[] points;
 		delete[] normals;
 	}
@@ -2462,6 +2472,10 @@ void TREModel::addOpenCone(
 					normalAdjust;
 			}
 		}
+		if (m_mainModel->getSmoothCurvesFlag())
+		{
+			m_mainModel->setDisableStrips(true);
+		}
 		if (bfc)
 		{
 			if (color == 0)
@@ -2486,6 +2500,7 @@ void TREModel::addOpenCone(
 					height == 0.0f);
 			}
 		}
+		m_mainModel->setDisableStrips(false);
 		if (shouldLoadConditionalLines() && !fEq(height, 0.0f))
 		{
 			addOpenConeConditionals(points, numSegments, usedSegments,

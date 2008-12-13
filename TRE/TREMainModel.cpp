@@ -129,6 +129,7 @@ TREMainModel::TREMainModel(void)
 	m_mainFlags.twoSidedLighting = false;
 	m_mainFlags.lighting = false;
 	m_mainFlags.useStrips = true;
+	m_mainFlags.disableStrips = false;
 	m_mainFlags.useTriStrips = true;
 	m_mainFlags.useTriFans = true;
 	m_mainFlags.useQuadStrips = true;
