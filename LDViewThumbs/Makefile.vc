@@ -12,7 +12,7 @@ LDViewThumbs.tlb:
 
 
 $(OBJDIR)\LDViewThumbs.dll:	$(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\LDViewThumbs.res $(OBJDIR)\StdAfx.obj $(OBJDIR)\LDViewThumbExtractor.obj
-	link gdi32.lib libpng.lib zlib.lib libjpeg.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll /implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release $(OBJDIR)\LDViewThumbExtractor.obj  $(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\StdAfx.obj  $(OBJDIR)\LDViewThumbs.res
+	link gdi32.lib libpng-vc6.lib zlib.lib libjpeg.lib TCFoundation.lib /nologo /subsystem:windows /dll /pdb:none /machine:I386 /def:LDViewThumbs.def /out:$(OBJDIR)\LDViewThumbs.dll /implib:$(OBJDIR)\LDViewThumbs.lib /libpath:..\lib /libpath:..\TCFoundation\Release $(OBJDIR)\LDViewThumbExtractor.obj  $(OBJDIR)\LDViewThumbs.obj $(OBJDIR)\StdAfx.obj  $(OBJDIR)\LDViewThumbs.res
 
 lclean:
 	del LDViewThumbs.h
