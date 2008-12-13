@@ -1887,9 +1887,10 @@ bool LDPovExporter::writeXmlMatrix(const char *filename)
 void LDPovExporter::writeMatrix(const TCFloat *matrix)
 {
 	bool allZero = true;
+	int col;
 
 	fprintf(m_pPovFile, "matrix <");
-	for (int col = 0; col < 4 && allZero; col++)
+	for (col = 0; col < 4 && allZero; col++)
 	{
 		for (int row = 0; row < 3 && allZero; row++)
 		{
@@ -1905,7 +1906,7 @@ void LDPovExporter::writeMatrix(const TCFloat *matrix)
 	{
 		debugPrintf("zero matrix.\n");
 	}
-	for (int col = 0; col < 4; col++)
+	for (col = 0; col < 4; col++)
 	{
 		for (int row = 0; row < 3; row++)
 		{
