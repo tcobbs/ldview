@@ -178,3 +178,8 @@ const TREVertex &TREVertexArray::operator[](unsigned int index) const
 {
 	return m_vertices[index];
 }
+
+TREVertex &TREVertexArray::operator[](unsigned int index)
+{
+	return m_vertices[index];
+}

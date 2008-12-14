@@ -1449,6 +1449,49 @@ void TREModel::addConditionalPoint(TREConditionalMap &conditionalMap,
 	(*it).second.addVertex(vertices->constVertexAtIndex(index1));
 }
 
+void TREModel::scaleConditionalControlPoint(
+	int index,
+	int cpIndex,
+	TREVertexArray *vertices)
+{
+	const TREVertex &vertex = (*vertices)[index];
+	TREVertex &cpVertex = (*vertices)[cpIndex];
+	TCVector p1(vertex.v[0], vertex.v[1], vertex.v[2]);
+	TCVector p2(cpVertex.v[0], cpVertex.v[1], cpVertex.v[2]);
+	TCVector delta = p2 - p1;
+
+	p2 = p1 + delta / delta.length();
+	cpVertex.v[0] = p2[0];
+	cpVertex.v[1] = p2[1];
+	cpVertex.v[2] = p2[2];
+}
+
+void TREModel::scaleConditionalControlPoints(TREShapeGroup *shapeGroup)
+{
+	// If a conditional line's control points are outside the view frustum
+	// while the conditional line itself is inside, it sometimes gets drawn
+	// when it's not supposed to be.  This doesn't really fix that problem, but
+	// by pulling the control points closer to the line, it makes it much less
+	// likely to occur.
+	if (shapeGroup != NULL)
+	{
+		TCULongArray *indices = shapeGroup->getIndices(TRESConditionalLine);
+		TCULongArray *cpIndices = shapeGroup->getControlPointIndices();
+		TREVertexArray *vertices = shapeGroup->getVertexStore()->getVertices();
+
+		if (indices != NULL && cpIndices != NULL)
+		{
+			for (int i = 0; i < indices->getCount(); i += 2)
+			{
+				scaleConditionalControlPoint((*indices)[i], (*cpIndices)[i],
+					vertices);
+				scaleConditionalControlPoint((*indices)[i], (*cpIndices)[i + 1],
+					vertices);
+			}
+		}
+	}
+}
+
 void TREModel::flatten(void)
 {
 	if (m_subModels && m_subModels->getCount())
@@ -1458,6 +1501,8 @@ void TREModel::flatten(void)
 		{
 			m_subModels->removeAll();
 		}
+		scaleConditionalControlPoints(m_shapes[TREMConditionalLines]);
+		scaleConditionalControlPoints(m_coloredShapes[TREMConditionalLines]);
 		m_flags.flattened = true;
 	}
 }
