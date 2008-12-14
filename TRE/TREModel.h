@@ -287,6 +287,9 @@ protected:
 	void calcTangentControlPoint(TCVector &controlPoint, int index,
 		int numSegments);
 	void saveSTL(FILE *file, const TCFloat *matrix);
+	void scaleConditionalControlPoints(TREShapeGroup *shapeGroup);
+	void scaleConditionalControlPoint(int index, int cpIndex,
+		TREVertexArray *vertices);
 
 	static void setGlNormalize(bool value);
 	static void printStlTriangle(FILE *file, TREVertexArray *vertices,
