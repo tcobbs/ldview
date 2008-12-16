@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <HTML>
 <HEAD>
-<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1">
+<META HTTP-EQUIV="content-type" CONTENT="text/html;charset=iso-8859-1"/>
 <TITLE>LDView change history</TITLE>
 <STYLE TYPE="text/css"><!--
 BODY
@@ -24,11 +24,13 @@ TABLE TH
 	color: #FFFFFF;
 	text-align: left;
 	padding-left: 10px;
+	border-color: #000000;
 }
 TABLE TD
 {
 	padding: 4px;
 	vertical-align: top;
+	border-color: #000000;
 }
 --></STYLE></HEAD>
 <BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
@@ -48,12 +50,12 @@ Changes
 </TH>
 </TR>
 
-<TR><TD ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>4.0</B></FONT><BR>
+<TR><TD ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>4.0</B></FONT><BR/>
 (?? ???, ????)
 </TD>
 <TD COLSPAN="2">
-<B>&nbsp;&nbsp;Additions</B><BR>
+<B>&nbsp;&nbsp;Additions</B><BR/>
 <UL>
 <LI>New Cocoa-based LDView for the Mac.</LI>
 <LI>Added basic support for steps.</LI>
@@ -99,8 +101,8 @@ LDView will use the given color for its black edge lines (assuming that
 <LI>Added icons from toolbar to corresponding menu items when running in Windows
 Vista.</LI>
 </UL>
-<BR>
-<B>Updates</B><BR>
+<BR/>
+<B>Updates</B><BR/>
 <UL>
 <LI>Decreased the amount of time needed to make certain preference changes (for
 example, toggling edge lines).</LI>
@@ -118,8 +120,10 @@ lines are enabled.</LI>
 default viewing angle.</LI>
 <LI>Updated the toolbar to have smaller buttons in Windows XP and Windows
 Vista.</LI>
-<LI>Changed "black edges" to be truly black, instead of whatever color was
-assigned to color code 0.</LI>
+<LI>Changed "Always black" edges to be truly black, instead of whatever color
+was assigned to color code 0.</LI>
+<LI>Updated "Always black" edges to use gray when used on dark colors, isntead
+of black.</LI>
 </UL>
 <B>Bug Fixes</B>
 <UL>
@@ -160,12 +164,12 @@ when their control points went outside of the view frustum.</LI>
 </UL>
 </TD></TR>
 
-<TR><TD ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>3.2</B></FONT><BR>
+<TR><TD ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>3.2</B></FONT><BR/>
 (20 Aug, 2007)
 </TD>
 <TD COLSPAN="2">
-<B>&nbsp;&nbsp;Additions</B><BR>
+<B>&nbsp;&nbsp;Additions</B><BR/>
 <UL>
 <LI>Added ability to generate an HTML parts list of your model.</LI>
 <LI>Added ability to set the direction that the light source points, both with
@@ -184,8 +188,8 @@ Control).</LI>
 <LI>Added support for the new !ldraw_org meta-statement to be used in the next
 official parts release.</LI>
 </UL>
-<BR>
-<B>Updates</B><BR>
+<BR/>
+<B>Updates</B><BR/>
 <UL>
 <LI>Made it so that settings specified on the command line don't get saved as if
 they had been specified in the UI.  (For example, -WindowWidth=320 on the
@@ -232,12 +236,12 @@ ancestor model.</LI>
 </UL>
 </TD></TR>
 
-<TR><TD ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>3.1</B></FONT><BR>
+<TR><TD ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>3.1</B></FONT><BR/>
 (09 Oct, 2006)
 </TD>
 <TD COLSPAN="2">
-<B>&nbsp;&nbsp;Additions</B><BR>
+<B>&nbsp;&nbsp;Additions</B><BR/>
 <UL>
 <LI>Added automatic download of the LDraw parts library.</LI>
 <LI>Added automatic updating of the LDraw parts library.</LI>
@@ -252,8 +256,8 @@ in LDView.</LI>
 <LI>Added option to the Windows installer to open .ldr and .mpd files with
 LDView.</LI>
 </UL>
-<BR>
-<B>Updates</B><BR>
+<BR/>
+<B>Updates</B><BR/>
 <UL>
 <LI>Updated <I>m6459.ldr</I> sample model to no longer contain renamed
 parts.</LI>
@@ -278,15 +282,15 @@ recent files list, and the file no longer exists.</LI>
 </UL>
 </TD></TR>
 
-<TR><TD ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>3.0</B></FONT><BR>
+<TR><TD ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>3.0</B></FONT><BR/>
 (13 Dec, 2005)
 </TD>
 <TD COLSPAN="2">
-<B>&nbsp;&nbsp;Additions</B><BR>
+<B>&nbsp;&nbsp;Additions</B><BR/>
 <UL>
 <LI>Completely new rendering engine, written from scratch.  This allows for
-the following enhancements that would have been very difficult before:</LI>
+the following enhancements that would have been very difficult before:
 <UL>
 <LI>Significantly reduced memory usage on large models.  Measured reduction on
 Orion Pobursky's Imperial Star Destroyer model with all settings set to default:
@@ -300,7 +304,7 @@ default settings.)</LI>
 <LI>Potentially faster rendering.  (Actual speed differences vary significantly
 based on video hardware and what settings are set.)</LI>
 <!--<LI>Support for steps (not implemented yet, but coming).</LI>-->
-</UL>
+</UL></LI>
 <LI>Added a toolbar (which can of course be disabled if desired).</LI>
 <LI>Added support for translation DLLs.</LI>
 <LI>Added a distinction between errors and warnings.</LI>
@@ -330,8 +334,8 @@ primitives outside the ldraw\p directory.</LI>
 no UI at this time.</LI>
 <LI>Added new sample model created by Peter Bartfai: 8464.mpd.</LI>
 </UL>
-<BR>
-<B>Updates</B><BR>
+<BR/>
+<B>Updates</B><BR/>
 <UL>
 <LI>Rearranged items in the File menu.</LI>
 <LI>Revamped error dialog box.</LI>
@@ -344,7 +348,7 @@ enabled.</LI>
 <LI>Improved sorting of transparent substituted primitives.</LI>
 <LI>Updated color handling to match LDraw's behavior for unknown colors.</LI>
 </UL>
-<BR>
+<BR/>
 <B>Bug Fixes</B>
 <UL>
 <LI>Fixed transparent extended colors so they work.</LI>
@@ -377,8 +381,8 @@ preference set was selected in the screensaver.</LI>
 started up maximized.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>2.1.01</B></FONT><BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>2.1.01</B></FONT><BR/>
 (10 Jul, 2004)
 </TD>
 <TD ALIGN="RIGHT">
@@ -418,8 +422,8 @@ default color was chosen without a model loaded.</LI>
 <LI>Fixed zoom to fit so that it works when stereo viewing is enabled.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>2.1</B></FONT><BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>2.1</B></FONT><BR/>
 (03 Jan, 2004)
 </TD>
 <TD ALIGN="RIGHT">
@@ -503,8 +507,8 @@ installed directory.</LI>
 Saver settings tab, the Apply button is enabled.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="1" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>2.0.3</B></FONT><BR>
+<TR><TD ROWSPAN="1" ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>2.0.3</B></FONT><BR/>
 (07 Oct, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -515,8 +519,8 @@ Saver settings tab, the Apply button is enabled.</LI>
 my Windows XP changes in 2.0.2.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>2.0.2</B></FONT><BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>2.0.2</B></FONT><BR/>
 (03 Oct, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -555,8 +559,8 @@ the PBuffer extension require the window to be opened in order to render the
 image.)  This worked in the past, and was broken by another bug fix.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>2.0.1</B></FONT><BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>2.0.1</B></FONT><BR/>
 (23 Aug, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -594,8 +598,8 @@ properly.  I added code to work around this.</LI>
 <LI>Fixed con0 primitive substitution to stop producing a dark result.</LI>
 </UL></TD></TR>
 
-<TR><TD ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>2.0</B></FONT><BR>
+<TR><TD ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>2.0</B></FONT><BR/>
 (01 Jun, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -608,8 +612,8 @@ in wireframe mode.</LI>
 <LI>Fixed smoothing and seam width to work properly on mirrored parts.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.11<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.11<BR/>
 (06 Apr, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -663,8 +667,8 @@ smoothed that shouldn't have been.  This can actually make some parts look
 worse, but every one I can find that got worse isn't modeled correctly.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.10<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.10<BR/>
 (16 Mar, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -711,8 +715,8 @@ it was run, and when switching to and from fullscreen mode.</LI>
 that don't have a low-res version when LDView is set to use low-res studs.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.9<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.9<BR/>
 (12 Jan, 2003)
 </TD>
 <TD ALIGN="RIGHT">
@@ -745,8 +749,8 @@ any other models (such as a primitive).</LI>
 <LI>Fixed smoothing of curves.  (It was broken completely in 1.9.8.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.8<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.8<BR/>
 (29 Nov, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -785,8 +789,8 @@ and not work.</LI>
 <LI>Fixed black rubber support broken in version 1.9.7.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.7<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.7<BR/>
 (09 Sep, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -848,7 +852,7 @@ when stereo viewing was enabled.</LI>
 <LI>Fixed bug that caused the field of view to be greater than 180 degrees with
 a really tall skinny window (thus inverting the model).  If your screen
 resolution was 1600x1200 or lower, you had to be in stereo mode in order to
-witness this bug.
+witness this bug.</LI>
 <LI>Fixed field of view calculation for tall skinny windows to come closer to
 preserving the model's scale (instead of shrinking the model down to
 nothing).  This fix probably removes the need for the field of view cap fix
@@ -859,8 +863,8 @@ big).</LI>
 <LI>Fixed a (minor, one-time) memory leak in the OpenGL Driver Info panel.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.6<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.6<BR/>
 (04 Aug, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -907,11 +911,11 @@ than it should have been.  This also sometimes slowed down lighting when
 specular was enabled.</LI>
 <LI>Fixed bug that caused cancelation during model compilation to fail and put
 LDView into a state where you could still rotate the model, but not access any
-of the menus, or even exit.
+of the menus, or even exit.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
-1.9.5<BR>
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.5<BR/>
 (26 May, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -934,8 +938,8 @@ line or registry with the SaveAlpha setting.</LI>
 when LDView was started with a maximized window.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.4<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.4<BR/>
 (10 May, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -967,8 +971,8 @@ the wrong color.</LI>
 menu.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.3<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.3<BR/>
 (13 Apr, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1013,8 +1017,8 @@ vsync is enabled).</LI>
 hide.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.2<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.2<BR/>
 (19 Feb, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1062,8 +1066,8 @@ so that you can see the entire model without having to first move your
 mouse.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9.1<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9.1<BR/>
 (27 Jan, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1124,8 +1128,8 @@ from "Printing..." to "Printing Model.".</LI>
 <LI>Fixed serious memory leaks introduced in version 1.9.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-1.9<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+1.9<BR/>
 (10 Jan, 2002)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1155,7 +1159,7 @@ that is displayed when a model is first loaded.</LI>
 <LI>Added ability to set maximum zoom level.  (Suggested and demoed by
 Carsten Schmitz.)  Currently requires Registry editing.</LI>
 <LI>Added version resource to executable.</LI>
-<LI>Added WGL Extensions menu item to Help->OpenGL Info submenu.
+<LI>Added WGL Extensions menu item to Help->OpenGL Info submenu.</LI>
 <LI>Added release dates to this document.</LI>
 <LI>Added releases prior to 0.5.1 to this document</LI>
 </UL></TD></TR>
@@ -1196,8 +1200,8 @@ directory.</LI>
 color. (Found and fixed by Carsten Schmitz.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-<FONT SIZE="+2"><B>1.0</B></FONT><BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+<FONT SIZE="+2"><B>1.0</B></FONT><BR/>
 (17 Oct, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1240,8 +1244,8 @@ the command line.</LI>
 opened.  (This has extremely marginal value, but is more cosistent.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-0.9.1<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+0.9.1<BR/>
 (06 Oct, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1287,8 +1291,8 @@ mode gracefully after presenting the error panel (instead of waiting for you to
 switch back manually, then crashing without restoring the video mode).</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-0.9<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+0.9<BR/>
 (25 Sep, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1330,8 +1334,8 @@ actually draw correctly as well.</LI>
 problem exhibit itself, but the code seemed wrong.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-0.7.5<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+0.7.5<BR/>
 (08-Sep, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1382,8 +1386,8 @@ so you can now change options and open a new file without having to switch back
 to windowed mode (assuming you remember Ctrl+O and Ctrl+Shift+P).</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-0.7<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+0.7<BR/>
 (29 Aug, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1414,8 +1418,8 @@ opened.</LI>
 while choosing a color, it would crash.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
-0.6.4<BR>
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="nowrap">
+0.6.4<BR/>
 (16 Aug, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1432,8 +1436,8 @@ while choosing a color, it would crash.</LI>
 <LI>Fixed MPD parsing bug which would cause a crash with some MPD files.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN=1 ALIGN="RIGHT" NOWRAP="1">
-0.6.3<BR>
+<TR><TD ROWSPAN="1" ALIGN="RIGHT" NOWRAP="nowrap">
+0.6.3<BR/>
 (13 Aug, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1446,8 +1450,8 @@ effect immediately thereafter.  (You no longer have to reload the model after
 changing certain options.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
-0.6.2<BR>
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="nowrap">
+0.6.2<BR/>
 (29 Jun, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1469,8 +1473,8 @@ hopefully make it run again on non-nVidia hardware.  It definitely works again
 with the Microsoft software renderer.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN=1 ALIGN="RIGHT" NOWRAP="1">
-0.6.1<BR>
+<TR><TD ROWSPAN="1" ALIGN="RIGHT" NOWRAP="nowrap">
+0.6.1<BR/>
 (27 Jun, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1481,8 +1485,8 @@ with the Microsoft software renderer.</LI>
 saved in NT.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-0.6<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+0.6<BR/>
 (25 Jun, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1509,7 +1513,7 @@ reloaded.  Put note at the bottom of the panel explaining.</LI>
 <LI>Renderer</LI>
 <LI>Version</LI>
 <LI>Extensions</LI>
-</UL>
+</UL></LI>
 <LI>Added release date to About box.</LI>
 <LI>Added code to changed the mouse cursor to a wait cursor while the model is
 loading.</LI>
@@ -1541,7 +1545,7 @@ reorganized my registry settings.
 <LI>Changed my main registry path to
 <TT>HKEY_CURRENT_USER\Software\Travis Cobbs\LDView</TT>.</LI>
 <LI>Moved all my custom color registry entries to CustomColors sub-folder.</LI>
-</UL>
+</UL></LI>
 <LI>Changed initial viewpoint to be at a better angle.</LI>
 </UL></TD></TR>
 
@@ -1555,9 +1559,9 @@ Viewer').</LI>
 wrong direction.)</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="1">
-0.5.2<BR>
-(21 Jun, 2000)<BR>
+<TR><TD ROWSPAN="3" ALIGN="RIGHT" NOWRAP="nowrap">
+0.5.2<BR/>
+(21 Jun, 2000)<BR/>
 (late PM)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1578,14 +1582,14 @@ wrong direction.)</LI>
 <B>Bug fixes</B>
 </TD>
 <TD><UL>
-<LI>Fixed FPS to display in black when background color is light.
+<LI>Fixed FPS to display in black when background color is light.</LI>
 <LI>Fixed a few DC-related issues (? not positive they were actually
 broken).</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
-0.5.1<BR>
-(21 Jun, 2000)<BR>
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="nowrap">
+0.5.1<BR/>
+(21 Jun, 2000)<BR/>
 (early AM)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1605,8 +1609,8 @@ broken).</LI>
 color 7.</LI>
 </UL></TD></TR>
 
-<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="1">
-0.5<BR>
+<TR><TD ROWSPAN="2" ALIGN="RIGHT" NOWRAP="nowrap">
+0.5<BR/>
 (18 Jun, 2000)
 </TD>
 <TD ALIGN="RIGHT">
@@ -1660,14 +1664,14 @@ why the main executable is actually smaller than the previous version.</LI>
 </UL></TD></TR>
 
 
-<TR><TD ROWSPAN=1 ALIGN="RIGHT" NOWRAP="1">
-0.1<BR>
+<TR><TD ROWSPAN="1" ALIGN="RIGHT" NOWRAP="nowrap">
+0.1<BR/>
 (03 Jun, 2000)
 </TD>
 <TD COLSPAN="2">
 &nbsp;&nbsp;Initial release.
 </TD>
-
+</TR>
 </TABLE>
 <P>
 <a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=120592&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" align="right" /></a>
@@ -1681,7 +1685,7 @@ If you have any comments, questions, or suggestions, please e-mail me at
 LDView and this web page are both Copyright &copy; 2000-2004 Travis Cobbs.
 </P>
 <P>
-<FONT SIZE=-1>
+<FONT SIZE="-1">
 LEGO&reg; and the LEGO logo are registered trademarks of The Lego Group, which
 does not sponsor, endorse, or authorize this site.  You can find the official
 LEGO website at <A HREF="http://www.lego.com/">http://www.lego.com</A>.
