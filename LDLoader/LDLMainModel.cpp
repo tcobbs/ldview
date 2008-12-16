@@ -201,27 +201,30 @@ int LDLMainModel::getEdgeColorNumber(int colorNumber)
 {
 	if (getBlackEdgeLines())
 	{
-		int colorNumber =
-			m_mainPalette->getColorNumberForName("Black Edge");
+		int r, g, b, a;
+		m_mainPalette->getRGBA(colorNumber, r, g, b, a);
+		int edgeColorNumber;
 
-		if (colorNumber < 0)
+		if (30 * r + 59 * g + 11 * b <= 3600)
 		{
-			colorNumber = 0x2000000;
+			edgeColorNumber =
+				m_mainPalette->getColorNumberForName("Dark Gray Edge");
+			if (edgeColorNumber < 0)
+			{
+				edgeColorNumber = 0x2555555;
+				//edgeColorNumber = 8;
+			}
 		}
-		return colorNumber;
-		//if (colorNumberIsTransparent(colorNumber))
-		//{
-		//	return 0x3333333;	// Color 32 is transparent dark gray, and has a
-		//						// different RGB value than black, so return
-		//						// the extended color number for the same RGB
-		//						// value as black, but transparent.  (Yes, this
-		//						// is supposed to be 7 threes; not 6, and not
-		//						// 8.
-		//}
-		//else
-		//{
-		//	return 0;
-		//}
+		else
+		{
+			edgeColorNumber =
+				m_mainPalette->getColorNumberForName("Black Edge");
+			if (edgeColorNumber < 0)
+			{
+				edgeColorNumber = 0x2000000;
+			}
+		}
+		return edgeColorNumber;
 	}
 	return m_mainPalette->getEdgeColorNumber(colorNumber);
 }
