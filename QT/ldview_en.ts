@@ -34,7 +34,7 @@ Group, which does not sponsor, endorse, or authorize this program.</source>
     </message>
     <message encoding="UTF-8">
         <source>LDView Version 3.2 (__DATE__)
-Copyright © 2007 Travis Cobbs &amp; Peter Bartfai</source>
+Copyright © 2009 Travis Cobbs &amp; Peter Bartfai</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
