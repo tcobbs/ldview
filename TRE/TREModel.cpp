@@ -1494,7 +1494,8 @@ void TREModel::scaleConditionalControlPoints(TREShapeGroup *shapeGroup)
 
 void TREModel::flatten(void)
 {
-	if (m_subModels && m_subModels->getCount())
+	if (m_subModels && m_subModels->getCount() &&
+		!m_mainModel->getShowAllConditionalFlag())
 	{
 		flatten(this, TCVector::getIdentityMatrix(), 0, false, 0, false, false);
 		if (m_subModels)
