@@ -505,6 +505,9 @@ void LDPovExporter::loadLDrawPovXml(void)
 	else
 	{
 		filename = TCUserDefaults::getAppPath();
+#ifdef COCOA
+		filename += "../Resources/";
+#endif // COCOA
 		filename += "LGEO.xml";
 	}
 	TiXmlDocument doc(filename);
