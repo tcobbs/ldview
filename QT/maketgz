@@ -6,7 +6,7 @@ mkdir -p .obj/LDView4
 strip LDView
 cp LDView ../8464.mpd ../ChangeHistory.html ../Help.html \
 ../LDViewMessages.ini ../license.txt ../m6459.ldr ../Readme.txt todo.txt \
-ldview_*.qm ../Textures/SansSerif.fnt \
+ldview_*.qm ../Textures/SansSerif.fnt ../LDExporter/LGEO.xml \
 .obj/LDView4/
 cp ../Translations/German/LDViewMessages.ini .obj/LDView4/LDViewMessages_de.ini
 cp ../Translations/Italian/LDViewMessages.ini .obj/LDView4/LDViewMessages_it.ini

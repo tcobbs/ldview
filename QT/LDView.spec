@@ -59,6 +59,8 @@ install -m 644 ldview_en.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_en.qm
 install -m 644 ldview_de.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_de.qm
 install -m 644 ldview_it.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_it.qm
 install -m 644 ldview_cz.qm $RPM_BUILD_ROOT/usr/local/share/ldview/ldview_cz.qm
+install -m 644 ../LDExporter/LGEO.xml \
+			   $RPM_BUILD_ROOT/usr/local/share/ldview/LGEO.xml
 mkdir -p $RPM_BUILD_ROOT/usr/share/mime-info/
 mkdir -p $RPM_BUILD_ROOT/usr/share/mime/packages/
 mkdir -p $RPM_BUILD_ROOT/usr/share/application-registry/
@@ -97,6 +99,7 @@ install -m 644 desktop/ldraw.schemas $RPM_BUILD_ROOT/etc/gconf/schemas/ldraw.sch
 /usr/local/share/ldview/ldview_de.qm
 /usr/local/share/ldview/ldview_it.qm
 /usr/local/share/ldview/ldview_cz.qm
+/usr/local/share/ldview/LGEO.xml
 
 %clean
 rm -rf $RPM_BUILD_ROOT
