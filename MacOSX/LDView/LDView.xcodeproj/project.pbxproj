@@ -97,6 +97,7 @@
 		1F70FAD40C5734D5009E51B6 /* MyResizeCorner.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F70FAD30C5734D5009E51B6 /* MyResizeCorner.png */; };
 		1F7472170CC32ABA00D6DB68 /* SnapshotTaker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */; };
 		1F7B4AE50DA898FA004EFA08 /* AutoDeleter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */; };
+		1F7C0A0F0F1327CE00E9C6A2 /* LGEO.xml in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */; };
 		1F8418E60D358B9900FAF665 /* JpegOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8418E40D358B9900FAF665 /* JpegOptions.nib */; };
 		1F8418EA0D35902600FAF665 /* JpegOptions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F8418E90D35902600FAF665 /* JpegOptions.mm */; };
 		1F92F61E0A5A267C00AE8086 /* LDView.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1F92F61D0A5A267C00AE8086 /* LDView.icns */; };
@@ -358,6 +359,7 @@
 		1F7472160CC32ABA00D6DB68 /* SnapshotTaker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapshotTaker.mm; sourceTree = "<group>"; };
 		1F7B4AE30DA898FA004EFA08 /* AutoDeleter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoDeleter.h; sourceTree = "<group>"; };
 		1F7B4AE40DA898FA004EFA08 /* AutoDeleter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AutoDeleter.mm; sourceTree = "<group>"; };
+		1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = LGEO.xml; path = ../../LDExporter/LGEO.xml; sourceTree = SOURCE_ROOT; };
 		1F8418E50D358B9900FAF665 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/JpegOptions.nib; sourceTree = "<group>"; };
 		1F8418E80D35902600FAF665 /* JpegOptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JpegOptions.h; sourceTree = "<group>"; };
 		1F8418E90D35902600FAF665 /* JpegOptions.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = JpegOptions.mm; sourceTree = "<group>"; };
@@ -809,6 +811,7 @@
 				1F6191610DA48458002A6192 /* Help.html */,
 				1F2DD3630DE9230300C675D7 /* LDExportMessages.ini */,
 				1F39B71E0C619E35004CE068 /* LDViewMessages.ini */,
+				1F7C0A0E0F1327CE00E9C6A2 /* LGEO.xml */,
 				1F20D6F30A5F759C00F677AC /* SansSerif.fnt */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
@@ -1004,6 +1007,7 @@
 				1F2DD3640DE9230300C675D7 /* LDExportMessages.ini in Resources */,
 				1F10E62B0E04D70700E227DD /* SaveExportView.nib in Resources */,
 				1F10E7360E05BCBF00E227DD /* Options.nib in Resources */,
+				1F7C0A0F0F1327CE00E9C6A2 /* LGEO.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
