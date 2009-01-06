@@ -9,7 +9,7 @@ strip LDView
 cp LDView .obj/ldview/usr/local/bin 
 cp ../8464.mpd ../ChangeHistory.html ../Help.html \
 ../LDViewMessages.ini ../license.txt ../m6459.ldr \
-../Readme.txt todo.txt ldview_*.qm \
+../Readme.txt todo.txt ldview_*.qm ../LDExporter/LGEO.xml \
 .obj/ldview/usr/local/share/ldview
 cp ../Translations/German/LDViewMessages.ini \
 .obj/ldview/usr/local/share/ldview/LDViewMessages_de.ini
@@ -24,7 +24,7 @@ cd ../../../../..
 
 cat >ldview/DEBIAN/control <<EOF
 Package: ldview
-Version: 4.0Beta1
+Version: 4.0
 Priority: optional
 Architecture: i386
 Section: graphics
@@ -37,5 +37,5 @@ EOF
 
 find ./ldview -type d | xargs chmod 755
 dpkg-deb --build ldview
-mv ldview.deb ../ldview-4.0Beta1.i386.deb
+mv ldview.deb ../ldview-4.0.i386.deb
 rm -rf ldview
