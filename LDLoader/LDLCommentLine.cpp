@@ -226,7 +226,7 @@ bool LDLCommentLine::isPartMeta(void) const
 	int word = 0;
 	int numWords = m_words->getCount();
 
-	if (numWords == 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
+	if (numWords >= 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 		(strcasecmp((*m_words)[1], "part") ||
 		strcasecmp((*m_words)[1], "unofficial_part")))
 	{
