@@ -2946,7 +2946,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 
 				ucstringtoqstring(qFileType, ucFileType);
 				qFileType += " (*.";
-				qFileType += exporter->getExtension();
+				qFileType += exporter->getExtension().c_str();
 				qFileType += ")";
 				exportFilters << qFileType;
 			}
