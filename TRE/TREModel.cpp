@@ -2210,7 +2210,7 @@ void TREModel::addTorusIOConditionals(bool inner, TCVector *points,
 			{
 				p3 = points[(i - 1) * (ySegments + 1) + j];
 			}
-			if (i == usedSegments && numSegments != usedSegments)
+			if (i == usedSegments)
 			{
 				p4 = p1;
 				calcTangentControlPoint(p4, i, numSegments);
@@ -2569,8 +2569,8 @@ void TREModel::calcTangentControlPoint(TCVector &controlPoint, int index,
 	angle = 2.0f * (TCFloat)M_PI / numSegments * index;
 	// Next, add 90 degrees to that to get the tangent angle
 	angle += (TCFloat)deg2rad(90);
-	controlPoint[0] += (TCFloat)cos(angle);
-	controlPoint[2] += (TCFloat)sin(angle);
+	controlPoint[0] += (TCFloat)cos(angle) * 0.1f;
+	controlPoint[2] += (TCFloat)sin(angle) * 0.1f;
 }
 
 void TREModel::addOpenConeConditionals(
