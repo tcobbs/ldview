@@ -36,28 +36,6 @@
 		(s)[_i] = toupper((s)[_i]);	\
 }
 
-#if DEBUG_SIMSTAR > 0
-#define printMatrix(m, dl)                                         \
-{                                                                  \
-	if (DEBUG_SIMSTAR >= (dl))                                      \
-	{                                                               \
-		printf("%f %f %f %f\n", (m)[0], (m)[1], (m)[2], (m)[3]);     \
-		printf("%f %f %f %f\n", (m)[4], (m)[5], (m)[6], (m)[7]);     \
-		printf("%f %f %f %f\n", (m)[8], (m)[9], (m)[10], (m)[11]);   \
-		printf("%f %f %f %f\n", (m)[12], (m)[13], (m)[14], (m)[15]); \
-	}                                                               \
-}
-
-#define debugPut(msg, dl)                  \
-{                                          \
-	if (DEBUG_SIMSTAR >= (dl))              \
-		printf("debug(%d): %s\n", dl, msg);  \
-}
-#else
-#define printMatrix(m, dl) {}
-#define debugPut(msg, dl) {}
-#endif
-
 #define flipBitsB(n) ((((n) & 0x01) << 7) | \
 							 (((n) & 0x02) << 5) | \
 							 (((n) & 0x04) << 3) | \
