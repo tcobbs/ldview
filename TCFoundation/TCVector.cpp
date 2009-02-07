@@ -444,7 +444,7 @@ TCFloat TCVector::invertMatrix(const TCFloat *matrix, TCFloat *inverseMatrix)
 {
 	TCFloat det = determinant(matrix);
 
-	if (fEq(det, 0.0f))
+	if (fEq2(det, 0.0f, 1e-8))
 	{
 		debugPrintf("Error: Matrix inversion failed.\n");
 	}
