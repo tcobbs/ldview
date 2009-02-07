@@ -1,5 +1,5 @@
 // Microsoft Developer Studio generated Help ID include file.
-// Used by AppResources.rc
+// Used by LDView.rc
 //
 #define HIDC_AA_BOX                     0x808b045a    // IDD_GENERAL_PREFS
 #define HIDC_ALL_CONDITIONAL            0x8089040f    // IDD_GEOMETRY_PREFS
@@ -11,6 +11,9 @@
 #define HIDC_BACKGROUND_COLOR_LABEL     0x808b0439    // IDD_GENERAL_PREFS
 #define HIDC_BFC                        0x80890412    // IDD_GEOMETRY_PREFS
 #define HIDC_BFC_BOX                    0x808904a0    // IDD_GEOMETRY_PREFS
+#define HIDC_BROWSE_EXPORT_DIR          0x808b04f6    // IDD_GENERAL_PREFS
+#define HIDC_BROWSE_PARTS_LIST_DIR      0x808b04f2    // IDD_GENERAL_PREFS
+#define HIDC_BROWSE_SNAPSHOTS_DIR       0x808b04f0    // IDD_GENERAL_PREFS
 #define HIDC_CHECK_PART_TRACKER         0x80a704b4    // IDD_UPDATES_PREFS
 #define HIDC_COLORS_BOX                 0x808b0484    // IDD_GENERAL_PREFS
 #define HIDC_CONDITIONAL_CONTROLS       0x80890410    // IDD_GEOMETRY_PREFS
@@ -36,6 +39,8 @@
 #define HIDC_EDGE_THICKNESS_LABEL       0x80890436    // IDD_GEOMETRY_PREFS
 #define HIDC_EFFECTS_MISC_BOX           0x808a043d    // IDD_EFFECTS_PREFS
 #define HIDC_EFFECTS_RESET              0x808a046a    // IDD_EFFECTS_PREFS
+#define HIDC_EXPORT_DIR                 0x808b04f5    // IDD_GENERAL_PREFS
+#define HIDC_EXPORT_DIR_COMBO           0x808b04f4    // IDD_GENERAL_PREFS
 #define HIDC_FLAT_SHADING               0x808a03ed    // IDD_EFFECTS_PREFS
 #define HIDC_FOV                        0x808b0418    // IDD_GENERAL_PREFS
 #define HIDC_FOV_LABEL                  0x808b0482    // IDD_GENERAL_PREFS
@@ -69,6 +74,9 @@
 #define HIDC_NEW_PREF_SET               0x860c0476    // IDD_PREFSETS_PREFS
 #define HIDC_OPTIONAL_STANDARD_LIGHT    0x808a03f2    // IDD_EFFECTS_PREFS
 #define HIDC_PARALLEL_STEREO            0x808a042f    // IDD_EFFECTS_PREFS
+#define HIDC_PARTS_LIST_DIR             0x808b04f1    // IDD_GENERAL_PREFS
+#define HIDC_PARTS_LIST_DIR_COMBO       0x808b04ee    // IDD_GENERAL_PREFS
+#define HIDC_PART_BOUNDING_BOXES        0x808904f9    // IDD_GEOMETRY_PREFS
 #define HIDC_PREFSETS_LABEL             0x860c047d    // IDD_PREFSETS_PREFS
 #define HIDC_PREFSETS_LIST              0x860c0478    // IDD_PREFSETS_PREFS
 #define HIDC_PREF_SET_HOT_KEY           0x860c0479    // IDD_PREFSETS_PREFS
@@ -93,6 +101,7 @@
 #define HIDC_SAVE_DIGITS                0x808d0443    // IDD_SAVE_OPTIONS
 #define HIDC_SAVE_DIGITS_LABEL          0x808d0446    // IDD_SAVE_OPTIONS
 #define HIDC_SAVE_DIGITS_SPIN           0x808d0445    // IDD_SAVE_OPTIONS
+#define HIDC_SAVE_DIRS_BOX              0x808b04f3    // IDD_GENERAL_PREFS
 #define HIDC_SAVE_HEIGHT                0x808d0441    // IDD_SAVE_OPTIONS
 #define HIDC_SAVE_HEIGHT_LABEL          0x808d0442    // IDD_SAVE_OPTIONS
 #define HIDC_SAVE_SERIES                0x808d0444    // IDD_SAVE_OPTIONS
@@ -103,8 +112,11 @@
 #define HIDC_SEAMS                      0x808903f1    // IDD_GEOMETRY_PREFS
 #define HIDC_SEAM_SPIN                  0x8089041d    // IDD_GEOMETRY_PREFS
 #define HIDC_SEAM_WIDTH_FIELD           0x80890407    // IDD_GEOMETRY_PREFS
+#define HIDC_SHOW_AXES                  0x808b04ec    // IDD_GENERAL_PREFS
 #define HIDC_SHOW_ERRORS                0x808b041e    // IDD_GENERAL_PREFS
 #define HIDC_SMOOTH_CURVES              0x808a046e    // IDD_EFFECTS_PREFS
+#define HIDC_SNAPSHOTS_DIR              0x808b04ef    // IDD_GENERAL_PREFS
+#define HIDC_SNAPSHOTS_DIR_COMBO        0x808b04ed    // IDD_GENERAL_PREFS
 #define HIDC_SORT                       0x808a041a    // IDD_EFFECTS_PREFS
 #define HIDC_SPECULAR                   0x808a03ee    // IDD_EFFECTS_PREFS
 #define HIDC_SS_BROWSE_DIR_BUTTON       0x8086042c    // IDD_SS_SETTINGS
