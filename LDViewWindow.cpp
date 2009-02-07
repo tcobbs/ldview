@@ -1,6 +1,3 @@
-#ifdef _DEBUG
-#define DEBUG_SIMSTAR 1
-#endif
 #include "LDViewWindow.h"
 #include <shlwapi.h>
 #include "LDVExtensionsSetup.h"
