@@ -1534,6 +1534,7 @@ void LDViewPreferences::applyGeneralChanges(void)
 			IDC_TRANS_DEFAULT_COLOR));
 		ldPrefs->setProcessLdConfig(getCheck(hGeneralPage,
 			IDC_PROCESS_LDCONFIG));
+		ldPrefs->setRandomColors(getCheck(hGeneralPage, IDC_RANDOM_COLORS));
 		ldPrefs->setShowFps(getCheck(hGeneralPage, IDC_FRAME_RATE));
 		ldPrefs->setShowAxes(getCheck(hGeneralPage, IDC_SHOW_AXES));
 		ldPrefs->setShowErrors(getCheck(hGeneralPage, IDC_SHOW_ERRORS));
@@ -2924,6 +2925,7 @@ void LDViewPreferences::setupGeneralPage(void)
 		ldPrefs->getTransDefaultColor());
 	setCheck(hGeneralPage, IDC_PROCESS_LDCONFIG,
 		ldPrefs->getProcessLdConfig());
+	setCheck(hGeneralPage, IDC_RANDOM_COLORS, ldPrefs->getRandomColors());
 	setCheck(hGeneralPage, IDC_FRAME_RATE, ldPrefs->getShowFps());
 	setCheck(hGeneralPage, IDC_SHOW_AXES, ldPrefs->getShowAxes());
 	setCheck(hGeneralPage, IDC_SHOW_ERRORS, ldPrefs->getShowErrors());

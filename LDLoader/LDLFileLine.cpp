@@ -190,6 +190,11 @@ LDLMainModel *LDLFileLine::getMainModel(void)
 	return m_parentModel->getMainModel();
 }
 
+const LDLMainModel *LDLFileLine::getMainModel(void) const
+{
+	return m_parentModel->getMainModel();
+}
+
 const char *LDLFileLine::findWord(int index) const
 {
 	int n;

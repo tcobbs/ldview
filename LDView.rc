@@ -37,6 +37,13 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// 24
+//
+
+1                       24      MOVEABLE PURE   "LDView.exe.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // Icon
 //
 
@@ -301,7 +308,7 @@ END
 IDD_GEOMETRY_PREFS DIALOGEX 0, 0, 310, 252
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Geometry"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Model",IDC_MODEL_BOX,7,7,296,33,WS_GROUP,
                     WS_EX_TRANSPARENT,HIDC_MODEL_BOX
@@ -480,16 +487,16 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 310, 252
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
-    GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,146,49,WS_GROUP,0,
+    GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,146,74,WS_GROUP,0,
                     HIDC_AA_BOX
     LTEXT           "FSAA:",IDC_FSAA_LABEL,15,20,21,8,0,0,HIDC_FSAA_LABEL
     COMBOBOX        IDC_FSAA_COMBO,41,18,80,148,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_FSAA_COMBO
     CONTROL         "Antialiased lines",IDC_LINE_AA,"Button",BS_AUTOCHECKBOX | 
                     WS_GROUP | WS_TABSTOP,15,33,66,10,0,HIDC_LINE_AA
-    GROUPBOX        "&Colors",IDC_COLORS_BOX,157,7,146,49,WS_GROUP,0,
+    GROUPBOX        "&Colors",IDC_COLORS_BOX,157,7,146,74,WS_GROUP,0,
                     HIDC_COLORS_BOX
     CONTROL         "",IDC_BACKGROUND_COLOR,"Button",BS_OWNERDRAW | 
                     BS_BITMAP | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,18,24,
@@ -504,59 +511,62 @@ BEGIN
     CONTROL         "Transparent",IDC_TRANS_DEFAULT_COLOR,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,221,
                     39,52,10,0,HIDC_TRANS_DEFAULT_COLOR
-    GROUPBOX        "&Misc",IDC_GENERAL_MISC_BOX,7,57,296,73,WS_GROUP,
-                    WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
     CONTROL         "Process ldconfig.ldr",IDC_PROCESS_LDCONFIG,"Button",
-                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    69,90,10,0,HIDC_PROCESS_LDCONFIG
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,
+                    55,90,10,0,HIDC_PROCESS_LDCONFIG
+    CONTROL         "Random colors",IDC_RANDOM_COLORS,"Button",
+                    BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,165,
+                    66,90,10,0,HIDC_RANDOM_COLORS
+    GROUPBOX        "&Misc",IDC_GENERAL_MISC_BOX,7,83,296,62,WS_GROUP,
+                    WS_EX_TRANSPARENT,HIDC_GENERAL_MISC_BOX
     CONTROL         "Show frame rate",IDC_FRAME_RATE,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    80,90,10,0,HIDC_FRAME_RATE
+                    95,90,10,0,HIDC_FRAME_RATE
     CONTROL         "Show Axes",IDC_SHOW_AXES,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,15,91,51,10,0,HIDC_SHOW_AXES
+                    WS_TABSTOP,15,106,51,10,0,HIDC_SHOW_AXES
     CONTROL         "Show errors after loading",IDC_SHOW_ERRORS,"Button",
                     BS_AUTOCHECKBOX | BS_NOTIFY | WS_GROUP | WS_TABSTOP,15,
-                    102,90,10,0,HIDC_SHOW_ERRORS
+                    117,90,10,0,HIDC_SHOW_ERRORS
     CONTROL         "Fullscreen refresh override:",IDC_FS_REFRESH,"Button",
-                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,113,101,10,0,
+                    BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,15,128,101,10,0,
                     HIDC_FS_REFRESH
-    EDITTEXT        IDC_FS_RATE,117,110,24,14,ES_AUTOHSCROLL | ES_NUMBER | 
+    EDITTEXT        IDC_FS_RATE,117,125,24,14,ES_AUTOHSCROLL | ES_NUMBER | 
                     WS_GROUP,0,HIDC_FS_RATE
-    CTEXT           "Field of view:",IDC_FOV_LABEL,170,72,43,8,0,0,
+    CTEXT           "Field of view:",IDC_FOV_LABEL,170,98,43,8,0,0,
                     HIDC_FOV_LABEL
-    EDITTEXT        IDC_FOV,218,69,24,14,ES_AUTOHSCROLL | WS_GROUP,0,
+    EDITTEXT        IDC_FOV,218,95,24,14,ES_AUTOHSCROLL | WS_GROUP,0,
                     HIDC_FOV
-    LTEXT           "(0.1 - 90.0)",IDC_FOV_RANGE_LABEL,246,72,35,8,0,0,
+    LTEXT           "(0.1 - 90.0)",IDC_FOV_RANGE_LABEL,246,98,35,8,0,0,
                     HIDC_FOV_RANGE_LABEL
-    RTEXT           "Memory usage:",IDC_MEMORY_LABEL,162,89,50,8,0,0,
+    RTEXT           "Memory usage:",IDC_MEMORY_LABEL,162,115,50,8,0,0,
                     HIDC_MEMORY_LABEL
-    COMBOBOX        IDC_MEMORY_COMBO,218,87,48,73,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_MEMORY_COMBO,218,113,48,73,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_MEMORY_COMBO
-    GROUPBOX        "Default Save Directories",IDC_SAVE_DIRS_BOX,7,135,296,
+    GROUPBOX        "Default Save Directories",IDC_SAVE_DIRS_BOX,7,147,296,
                     66,0,0,HIDC_SAVE_DIRS_BOX
-    COMBOBOX        IDC_SNAPSHOTS_DIR_COMBO,57,148,88,63,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_SNAPSHOTS_DIR_COMBO,57,160,88,63,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_SNAPSHOTS_DIR_COMBO
-    EDITTEXT        IDC_SNAPSHOTS_DIR,148,147,107,14,ES_AUTOHSCROLL,0,
+    EDITTEXT        IDC_SNAPSHOTS_DIR,148,159,107,14,ES_AUTOHSCROLL,0,
                     HIDC_SNAPSHOTS_DIR
-    PUSHBUTTON      "Browse...",IDC_BROWSE_SNAPSHOTS_DIR,258,147,40,14,0,0,
+    PUSHBUTTON      "Browse...",IDC_BROWSE_SNAPSHOTS_DIR,258,159,40,14,0,0,
                     HIDC_BROWSE_SNAPSHOTS_DIR
-    COMBOBOX        IDC_PARTS_LIST_DIR_COMBO,57,165,88,58,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_PARTS_LIST_DIR_COMBO,57,177,88,58,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_PARTS_LIST_DIR_COMBO
-    EDITTEXT        IDC_PARTS_LIST_DIR,148,164,107,14,ES_AUTOHSCROLL,0,
+    EDITTEXT        IDC_PARTS_LIST_DIR,148,176,107,14,ES_AUTOHSCROLL,0,
                     HIDC_PARTS_LIST_DIR
-    PUSHBUTTON      "Browse...",IDC_BROWSE_PARTS_LIST_DIR,258,164,40,14,0,0,
+    PUSHBUTTON      "Browse...",IDC_BROWSE_PARTS_LIST_DIR,258,176,40,14,0,0,
                     HIDC_BROWSE_PARTS_LIST_DIR
-    COMBOBOX        IDC_EXPORT_DIR_COMBO,58,182,88,58,CBS_DROPDOWNLIST | 
+    COMBOBOX        IDC_EXPORT_DIR_COMBO,58,199,88,58,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP,0,HIDC_EXPORT_DIR_COMBO
-    EDITTEXT        IDC_EXPORT_DIR,148,181,107,14,ES_AUTOHSCROLL,0,
+    EDITTEXT        IDC_EXPORT_DIR,148,198,107,14,ES_AUTOHSCROLL,0,
                     HIDC_EXPORT_DIR
-    PUSHBUTTON      "Browse...",IDC_BROWSE_EXPORT_DIR,258,181,40,14,0,0,
+    PUSHBUTTON      "Browse...",IDC_BROWSE_EXPORT_DIR,258,198,40,14,0,0,
                     HIDC_BROWSE_EXPORT_DIR
     PUSHBUTTON      "&Reset",IDC_GENERAL_RESET,253,231,50,14,WS_GROUP,0,
                     HIDC_GENERAL_RESET
-    RTEXT           "Snapshots:",IDC_STATIC,15,149,36,8
-    RTEXT           "Parts Lists:",IDC_STATIC,15,167,36,8
-    RTEXT           "Exports:",IDC_STATIC,16,184,36,8
+    RTEXT           "Snapshots:",IDC_STATIC,15,161,36,8
+    RTEXT           "Parts Lists:",IDC_STATIC,15,179,36,8
+    RTEXT           "Exports:",IDC_STATIC,16,196,36,8
 END
 
 PAGESETUPDLGORD DIALOG DISCARDABLE  32, 32, 240, 240
@@ -1131,9 +1141,9 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 303
         VERTGUIDE, 15
+        VERTGUIDE, 165
         TOPMARGIN, 7
         BOTTOMMARGIN, 245
-        HORZGUIDE, 147
     END
 
     IDD_SAVE_OPTIONS, DIALOG

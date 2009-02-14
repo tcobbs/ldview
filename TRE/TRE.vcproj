@@ -328,7 +328,6 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="..,../include,../boost/include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_TC_STATIC;TC_NO_UNICODE"
 				StringPooling="true"

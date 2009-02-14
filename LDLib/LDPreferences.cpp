@@ -151,6 +151,7 @@ void LDPreferences::applyGeneralSettings(void)
 		m_modelViewer->setBackgroundRGBA(r, g, b, 0);
 		getRGB(m_defaultColor, r, g, b);
 		m_modelViewer->setProcessLDConfig(m_processLdConfig);
+		m_modelViewer->setRandomColors(m_randomColors);
 		m_modelViewer->setSkipValidation(m_skipValidation);
 		// showFrameRate taken care of automatically.
 		m_modelViewer->setShowAxes(m_showAxes);
@@ -369,6 +370,7 @@ void LDPreferences::loadDefaultGeneralSettings(bool initializing /*= true*/)
 	setDefaultColor(0x99, 0x99, 0x99);
 	setTransDefaultColor(false);
 	setProcessLdConfig(true);
+	setRandomColors(false);
 	setShowFps(false);
 	setShowAxes(false);
 	setShowErrors(true);
@@ -522,6 +524,7 @@ void LDPreferences::loadGeneralSettings(void)
 	m_defaultColorNumber = getIntSetting(DEFAULT_COLOR_NUMBER_KEY,
 		m_defaultColorNumber);
 	m_processLdConfig = getBoolSetting(PROCESS_LDCONFIG_KEY, m_processLdConfig);
+	m_randomColors = getBoolSetting(RANDOM_COLORS_KEY, m_randomColors);
 	m_skipValidation = getBoolSetting(SKIP_VALIDATION_KEY, m_skipValidation);
 	m_showFps = getBoolSetting(SHOW_FPS_KEY, m_showFps);
 	m_showAxes = getBoolSetting(SHOW_AXES_KEY, m_showAxes);
@@ -716,6 +719,7 @@ void LDPreferences::commitGeneralSettings(bool flush /*= true*/)
 		setCustomColor(i, r, g, b, true);
 	}
 	setProcessLdConfig(m_processLdConfig, true);
+	setRandomColors(m_randomColors, true);
 	setShowFps(m_showFps, true);
 	setShowAxes(m_showAxes, true);
 	setShowErrors(m_showErrors, true);
@@ -1267,6 +1271,11 @@ void LDPreferences::setTransDefaultColor(bool value, bool commit)
 void LDPreferences::setProcessLdConfig(bool value, bool commit)
 {
 	setSetting(m_processLdConfig, value, PROCESS_LDCONFIG_KEY, commit);
+}
+
+void LDPreferences::setRandomColors(bool value, bool commit)
+{
+	setSetting(m_randomColors, value, RANDOM_COLORS_KEY, commit);
 }
 
 void LDPreferences::setShowFps(bool value, bool commit)

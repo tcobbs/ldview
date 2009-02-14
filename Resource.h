@@ -101,6 +101,7 @@
 #define IDC_TRANS_DEFAULT_COLOR         1004
 #define IDC_FLAT_SHADING                1005
 #define IDC_HI_RES                      1005
+#define IDC_RANDOM_COLORS               1005
 #define IDC_SPECULAR                    1006
 #define IDC_PRIMITIVE_SUBSTITUTION      1007
 #define IDC_ALTERNATE_LIGHTING          1007

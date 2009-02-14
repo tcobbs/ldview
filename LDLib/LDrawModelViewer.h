@@ -435,6 +435,11 @@ class LDrawModelViewer: public TCAlertSender
 		virtual void setFontData(TCByte *fontData, long length);
 		virtual void setModelCenter(const TCFloat *value);
 		virtual void setModelSize(const TCFloat value);
+		bool getRandomColors(void) const
+		{
+			return flags.randomColors ? true : false;
+		}
+		virtual void setRandomColors(bool value);
 		bool getPovCameraAspect(void) const
 		{
 			return flags.povCameraAspect ? true : false;
@@ -764,6 +769,7 @@ class LDrawModelViewer: public TCAlertSender
 			bool gl2ps:1;
 			bool povCameraAspect:1;
 			bool animating:1;
+			bool randomColors:1;
 		} flags;
 		struct CameraData
 		{
