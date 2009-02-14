@@ -190,6 +190,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	flags.povCameraAspect = TCUserDefaults::boolForKey(POV_CAMERA_ASPECT_KEY,
 		false, false);
 	flags.animating = false;
+	flags.randomColors = false;
 	TCAlertManager::registerHandler(LDLFindFileAlert::alertClass(), this,
 		(TCAlertCallback)&LDrawModelViewer::findFileAlertCallback);
 	// Set 4:4:4 as the default sub-sample pattern for JPEG images.
@@ -1027,6 +1028,13 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setBlackEdgeLines(flags.blackHighlights);
 	mainModel->setExtraSearchDirs(extraSearchDirs);
 	mainModel->setProcessLDConfig(flags.processLDConfig);
+	if (flags.randomColors)
+	{
+		// Even though they're "random", make them the same each time the model
+		// is loaded.
+		srand(0);
+	}
+	mainModel->setRandomColors(flags.randomColors);
 	mainModel->setSkipValidation(flags.skipValidation);
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
 	mainModel->setSeamWidth(seamWidth);
@@ -2065,6 +2073,15 @@ void LDrawModelViewer::setCurveQuality(int value)
 		{
 			flags.needsReparse = true;
 		}
+	}
+}
+
+void LDrawModelViewer::setRandomColors(bool value)
+{
+	if (value != flags.randomColors)
+	{
+		flags.randomColors = value;
+		flags.needsReload = true;
 	}
 }
 

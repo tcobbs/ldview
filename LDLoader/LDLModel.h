@@ -104,6 +104,7 @@ public:
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
 	LDLMainModel *getMainModel(void) { return m_mainModel; }
+	const LDLMainModel *getMainModel(void) const { return m_mainModel; }
 	virtual TCObject *getAlertSender(void);
 
 	static const char *lDrawDir(bool defaultValue = false);

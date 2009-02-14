@@ -42,6 +42,7 @@ public:
 	virtual bool isShapeLine(void) const { return false; }
 	virtual LDLModel *getParentModel(void) { return m_parentModel; }
 	virtual LDLMainModel *getMainModel(void);
+	virtual const LDLMainModel *getMainModel(void) const;
 	virtual bool isValid(void) const { return m_valid; }
 	virtual void forgetLine(void) { delete m_line; m_line = NULL; }
 	virtual LDLFileLineArray *getReplacementLines(void);

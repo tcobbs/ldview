@@ -26,6 +26,7 @@ LDLMainModel::LDLMainModel(void)
 	m_mainFlags.skipValidation = false;
 	m_mainFlags.loadCanceled = false;
 	m_mainFlags.processLDConfig = true;
+	m_mainFlags.randomColors = false;
 }
 
 TCObject *LDLMainModel::copy(void) const

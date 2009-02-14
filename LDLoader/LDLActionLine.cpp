@@ -1,5 +1,6 @@
 #include "LDLActionLine.h"
 #include "LDLPalette.h"
+#include "LDLMainModel.h"
 
 #ifdef WIN32
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -35,5 +36,15 @@ void LDLActionLine::setBFCSettings(BFCState bfcCertify, bool bfcClip,
 
 int LDLActionLine::getColorNumber(void) const
 {
-	return m_colorNumber;
+	if (m_colorNumber != 24 && getMainModel()->getRandomColors())
+	{
+		int r = rand() % 256;
+		int g = rand() % 256;
+		int b = rand() % 256;
+		return LDLPalette::colorNumberForRGBA(r, g, b, 255);
+	}
+	else
+	{
+		return m_colorNumber;
+	}
 }

@@ -164,6 +164,7 @@
 // The following are undocumented, but need to be documented.
 #define PRINT_CUSTOM_DPI_KEY "PrintCustomDPI"
 #define PRINT_ADJUST_EDGES_KEY "PrintAdjustEdges"
+#define RANDOM_COLORS_KEY "RandomColors"
 
 #define OBI_KEY "OBI"
 #define IGNORE_OCCLUSION_QUERY_KEY "IgnoreOcclusionQuery"

@@ -52,6 +52,10 @@ public:
 	{
 		return m_mainFlags.boundingBoxesOnly != false;
 	}
+	void setRandomColors(bool value) { m_mainFlags.randomColors = value; }
+	bool getRandomColors(void) const {
+		return m_mainFlags.randomColors != false;
+	}
 	void setSeamWidth(float value);
 	float getSeamWidth(void) const { return m_seamWidth; }
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
@@ -88,6 +92,7 @@ protected:
 		bool processLDConfig:1;
 		bool skipValidation:1;
 		bool boundingBoxesOnly:1;
+		bool randomColors:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;
