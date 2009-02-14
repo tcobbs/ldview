@@ -419,7 +419,6 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories=".;./include;./boost/include"
 				PreprocessorDefinitions="NDEBUG;WIN32;_WINDOWS;_WIN32_WINDOWS=0x0501;_WIN32_WINNT=0x0501;_TC_STATIC;LDVIEW_APP;TC_NO_UNICODE"
 				StringPooling="true"
@@ -450,7 +449,6 @@
 				GenerateManifest="false"
 				IgnoreDefaultLibraryNames="libc.lib"
 				SubSystem="2"
-				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
