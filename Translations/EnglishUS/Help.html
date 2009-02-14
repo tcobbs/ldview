@@ -2,8 +2,8 @@
 <HTML>
 <HEAD>
 <TITLE>LDView Help</TITLE>
-<META http-equiv = "content-language" content = "en">
-<META http-equiv = "content-type" content = "text/html; charset=iso-8859-1">
+<META http-equiv = "content-language" content = "en"/>
+<META http-equiv = "content-type" content = "text/html; charset=iso-8859-1"/>
 <STYLE TYPE="text/css"><!--
 BODY
 {
@@ -50,11 +50,19 @@ TABLE.SettingsList TH
 	border-right: 1px solid #00558A;
 	padding: 4px 8px;
 }
+TABLE TD
+{
+	padding: 2px;
+}
 TABLE.SettingsList TD
 {
 	border-bottom: 1px solid #BFBFA5;
 	border-right: 1px solid #BFBFA5;
 	padding: 2px 8px;
+}
+TABLE.SampleData TD
+{
+	border-style: none;
 }
 .NoWrap
 {
@@ -62,9 +70,8 @@ TABLE.SettingsList TD
 }
 --></STYLE>
 </HEAD>
-<BODY BGCOLOR="#F8F8F8" TEXT="#000000" VLINK="#505050" LINK="#808080"
-ALINK="#0080D0">
-<A NAME="TopOfFile"><BR>
+<BODY BGCOLOR="#F8F8F8" VLINK="#505050" LINK="#808080" ALINK="#0080D0">
+<A NAME="TopOfFile"><BR/></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH CLASS="MainTitle">
@@ -93,17 +100,25 @@ ALINK="#0080D0">
 <LI><A HREF="#ExamineMode">Examine Mode</A></LI>
 <LI><A HREF="#FlyMode">Fly-through Mode</A></LI>
 </UL></LI>
+<LI><A HREF="#StepSupport">Step Support</A></LI>
 <LI><A HREF="#Menus">Menus</A>
 <UL>
 <LI><A HREF="#FileMenu">File Menu</A></LI>
 <LI><A HREF="#EditMenu">Edit Menu</A></LI>
 <LI><A HREF="#ViewMenu">View Menu</A></LI>
+<LI><A HREF="#StepMenu">Step Menu</A></LI>
+<LI><A HREF="#ToolsMenu">Tools Menu</A></LI>
 <LI><A HREF="#HelpMenu">Help Menu</A></LI>
 </UL></LI>
 <LI><A HREF="#Toolbar">Toolbar</A></LI>
 <LI><A HREF="#Fullscreen">Fullscreen Mode</A></LI>
 <LI><A HREF="#SaveSnapshotOptions">Save Snapshot Options</A></LI>
+<LI><A HREF="#Export">Exporting</A></LI>
+<LI><A HREF="#LatLonDialog">Latitude/Longitude Dialog</A></LI>
 <LI><A HREF="#ErrorWindow">Errors &amp; Warnings Window</A></LI>
+<LI><A HREF="#PartsListDialog">Parts List Dialog</A></LI>
+<LI><A HREF="#ModelTreeDialog">Model Tree Dialog</A></LI>
+<LI><A HREF="#MPDDialog">MPD Model Selection Dialog</A></LI>
 <LI><A HREF="#Prefs">Preferences</A>
 <UL>
 <LI><A HREF="#GeneralTab">General Tab</A>
@@ -152,8 +167,8 @@ ALINK="#0080D0">
 <LI><A HREF="#ScreenSaver">Using LDView as a Screen Saver</A></LI>
 <LI><A HREF="#Website">Website</A></LI>
 </UL>
-<BR>
-<P>
+<BR/>
+<P/>
 <A NAME="Intro"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -164,6 +179,7 @@ ALINK="#0080D0">
 		</TH>
 	</TR>
 </TABLE>
+<DIV>
 <I>Please note</I>: this help file mostly documents the Windows version of
 LDView, with a few notes about the QT (Linux and Mac) version, and some
 specific notes on different conventions in the Mac version.  For the most part,
@@ -178,6 +194,7 @@ referring to the version made using the QT user interface library.  The QT-based
 version of LDView is currently only available in binary form as a Linux binary
 and a (Universal) Mac binary.  This version should work fine if compiled in
 other Unix-like operating systems, though (as long QT will compile on them).
+</DIV>
 <P>
 LDView displays LDraw models, and consequently requires that LDraw be
 installed.  LDraw can be downloaded from
@@ -201,8 +218,8 @@ amount of time to load.  During this time, the status bar will indicate the
 progress of the load.  Hitting Escape, or choosing <A HREF="#CancelLoad">Cancel
 Load</A> from the File menu, will cancel the load.
 </P>
-<P>
-<A NAME="MacNotes"></A><BR>
+<P/>
+<A NAME="MacNotes"></A><BR/>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
 		<TH ALIGN="LEFT">
@@ -217,7 +234,6 @@ Firefox.  Using Help.html in its place (the correct thing) doesn't work in
 Safari until you click on the link a second time if you came into the page with
 a # link already (like #MacNotes).  I'd say that's a bug in Safari. -->
 <A HREF="#">Back to Top</A>
-</P>
 <P>
 LDView on Mac OS X uses the standard Mac convention of using the Command key
 instead of the Control key for common activities.  Anywhere in this document
@@ -311,7 +327,7 @@ LDView has two different modes of user interaction:
 Mode</A>.  By default LDView is in Examine Mode.  You can switch modes by
 selecting the mode you want from the <A HREF="#ViewMenu">View Menu</A>.
 <P>
-<FONT SIZE="+2"><B><A NAME="ExamineMode">Examine Mode</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="ExamineMode">Examine Mode</A></B></FONT><BR/>
 Click the left mouse button and drag around to rotate the model.  If you let
 go of the button while the mouse is in motion, the model will continue to
 rotate on its own.
@@ -327,7 +343,7 @@ to reset the view.
 <P>
 If you <A NAME="MouseLightDirection">hold down the shift key</A> prior to
 clicking and dragging with the left mouse button, you will change the light
-direction.  An arrow will be drawn to indicate the currentl light direction, and
+direction.  An arrow will be drawn to indicate the current light direction, and
 moving the mouse will rotate the direction that the arrow points, as well as
 updating the light direction.  If you have problems getting it back to its
 default setting, you can choose one of the <A HREF="#LightDirection">preset
@@ -356,7 +372,7 @@ option.  Note that this will slow things down considerably, since the entire
 model has to be rendered twice.
 </P>
 <P>
-<FONT SIZE="+2"><B><A NAME="FlyMode">Fly-through Mode</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="FlyMode">Fly-through Mode</A></B></FONT><BR/>
 Click the left mouse button and move it around to turn the camera left, right,
 up, and down.  The further you move the mouse from the point you clicked, the
 faster the camera will turn.
@@ -411,8 +427,8 @@ shift to double the speed at which you move.  The movement keys are as follows:
 		<TD>&nbsp;</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=4>In addition to the above movement keys, the following keys
-		effect the camera rotation:</TD>
+		<TD COLSPAN="4">In addition to the above movement keys, the following
+		keys effect the camera rotation:</TD>
 	</TR>
 	<TR>
 		<TD>&nbsp;</TD>
@@ -433,10 +449,43 @@ shift to double the speed at which you move.  The movement keys are as follows:
 		<TD ALIGN="CENTER">Q</TD>
 	</TR>
 </TABLE>
-<BR>
-<BR>
+<BR/>
+<BR/>
 <P>
 </P>
+<A NAME="StepSupport"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Step Support
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+LDraw files may contain steps.  If so, you can view the steps in order to see
+how to build the model.  However, by default, LDView displays the last step,
+which shows the complete model.  Use one of the <i>Step</i> menu items or one of
+the step toolbar controls to look at the steps.
+<p>
+Some programs support some advanced options for steps such as temporary buffers
+(so that a sub-section of the model can be initally shown in one location and
+then moved to another) and custom rotation angles.  LDView doesn't support this
+advanced functionality.  It recognizes the <tt>ROTSTEP</tt> LDraw command, which
+is used for steps with a custom rotation angle, but treats it just like a
+standard step command.  It ignores all other advanced step commands.
+</p>
+<p>
+LDView only shows the steps in the top-level model that it is displaying.  If
+you want to see the steps in a sub-model of that model, you must load the
+sub-model directly.  If you want to see the steps in the sub-models of an MPD
+file, you must first select the sub-model using the <a href="#MPDDialog">MPD
+Model Selection Dialog</a> (available from the <a href="#ToolsMenu">Tools
+Menu</a> .  Once you have selected the sub-model as the main model, its steps
+can be navigated just as if it were in its own file which you loaded directly.
+</p>
+<p>
+</p>
 <A NAME="Menus"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -450,36 +499,41 @@ shift to double the speed at which you move.  The movement keys are as follows:
 The shortcut key for each menu item is shown in the menu when running LDView.
 Note that these keys will continue to function even while in fullscreen mode
 where there is no visible menu.
-<TABLE CELLSPACING=6>
+<TABLE CELLSPACING="6">
 	<TR>
-		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="FileMenu">File
+		<TD COLSPAN="3"><FONT SIZE="+1"><B><A NAME="FileMenu">File
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Open:</TD>
-		<TD COLSPAN=2>Open a new model file.</TD>
+		<TD COLSPAN="2">Open a new model file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Save Snapshot:</TD>
-		<TD COLSPAN=2>Save a PNG or BMP snapshot of the current model with the
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Save Snapshot:</TD>
+		<TD COLSPAN="2">Save a PNG or BMP snapshot of the current model with the
 		current view.  See <A HREF="#SaveSnapshotOptions">here</A> for
 		information about the extra settings in the save dialog.</TD>
 	</TR>
 	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT">Export:</TD>
+		<TD COLSPAN="2">Export the loaded LDraw model to various different file
+		formats.  See <A HREF="#Export">here</A> for details.</TD>
+	</TR>
+	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Reload:</TD>
-		<TD COLSPAN=2>Reload the current model file.  (Use this if you are
+		<TD COLSPAN="2">Reload the current model file.  (Use this if you are
 		viewing a model you are in the process of making changes to in some
 		other program, but don't want to use the polling feature below.)</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Cancel Load:</TD>
-		<TD COLSPAN=2>During a load, you can select this menu item to cancel
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Cancel Load:</TD>
+		<TD COLSPAN="2">During a load, you can select this menu item to cancel
 		the load.  It is likely that you will generally just use the keyboard
 		accelerator, though, and hit the Escape key.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Polling:</TD>
-		<TD COLSPAN=2>Submenu containing polling options which allow you to have
+		<TD COLSPAN="2">Submenu containing polling options which allow you to have
 		the model automatically reload when its file changes.</TD>
 	</TR>
 	<TR VALIGN="TOP">
@@ -491,16 +545,16 @@ where there is no visible menu.
 	<TR VALIGN="TOP">
 		<TD></TD>
 		<TD ALIGN="RIGHT">Prompt:</TD>
-		<TD>Enables polling.  When a change is detected, a panel is displayed
+		<TD>Enables polling.  When a change is detected, a dialog is displayed
 		asking you if you want to reload the model file.  This option only
 		polls for changes when LDView is the foreground application.  The
-		panel will thus normally be presented to you when you switch to the
+		dialog will thus normally be presented to you when you switch to the
 		running LDView application after making changes to your model in some
 		other application.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
-		<TD ALIGN="RIGHT" NOWRAP>Auto-update<BR>when active:</TD>
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Auto-update<BR/>when active:</TD>
 		<TD>Enables polling.  When a change is detected, the current model file
 		is reloaded automatically.  This option only polls for changes when
 		LDView is the foreground application.  The model will thus normally be
@@ -509,7 +563,7 @@ where there is no visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
-		<TD ALIGN="RIGHT" NOWRAP>Auto-update<BR>immediately:</TD>
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Auto-update<BR/>immediately:</TD>
 		<TD>Enables polling.  When a change is detected, the current model file
 		is reloaded automatically.  This option polls for changes whether or not
 		LDView is the foreground application.  The model will thus be
@@ -518,8 +572,8 @@ where there is no visible menu.
 		can have a significant impact on your computer's CPU availability.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>LDraw Dir:</TD>
-		<TD COLSPAN=2>Allows you to specify a new location for the LDraw
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">LDraw Dir:</TD>
+		<TD COLSPAN="2">Allows you to specify a new location for the LDraw
 		directory.  This shouldn't normally be needed, since LDView detects if
 		the LDraw directory is deleted or moved and automatically prompts you
 		to tell it the new location.  However, if for some reason you want to
@@ -527,8 +581,8 @@ where there is no visible menu.
 		this menu item.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP><A NAME="ExtraDirs">Extra Dirs</A>:</TD>
-		<TD COLSPAN=2>Allows you to specify and organize any number of extra
+		<TD ALIGN="RIGHT" NOWRAP="nowrap"><A NAME="ExtraDirs">Extra Dirs</A>:</TD>
+		<TD COLSPAN="2">Allows you to specify and organize any number of extra
 		search directories.  When LDView loads a model, and the model references
 		a part or sub-model, it searches for that part or sub-model in a number
 		of locations.  No matter what you enter here, it will search the
@@ -541,102 +595,97 @@ where there is no visible menu.
 		you want them to be in.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Check for Library Updates:</TD>
-		<TD COLSPAN=2>Checks to see if there are any library updates on
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Check for Library Updates:</TD>
+		<TD COLSPAN="2">Checks to see if there are any library updates on
 		LDraw.org that aren't yet installed, and downloads and installs them if
 		any are found.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Page Setup:</TD>
-		<TD COLSPAN=2>Setup the page for printing.  This shows the standard
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Page Setup:</TD>
+		<TD COLSPAN="2">Setup the page for printing.  This shows the standard
 		Windows Page Setup Dialog with the addition of a check box which
 		allows you to choose whether or not the background color should be
 		printed (it isn't by default).</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Print:</TD>
-		<TD COLSPAN=2>Print the current model with the current view.</TD>
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Print:</TD>
+		<TD COLSPAN="2">Print the current model with the current view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">&lt;Recent Files&gt;:</TD>
-		<TD COLSPAN=2>Shows the filenames of the 10 most recently loaded files.
+		<TD COLSPAN="2">Shows the filenames of the 10 most recently loaded files.
 		Select any one to load that file.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Exit:</TD>
-		<TD COLSPAN=2>Exit LDView.</TD>
+		<TD COLSPAN="2">Exit LDView.</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
+		<TD COLSPAN="3"><HR SIZE="1" WIDTH="90%" NOSHADE="noshade"/></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
+		<TD COLSPAN="3"><FONT SIZE="+1"><B><A NAME="EditMenu">Edit
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Preferences:</TD>
-		<TD COLSPAN=2>Display the <A HREF="#Prefs">Preferences</A> panel.</TD>
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Preferences:</TD>
+		<TD COLSPAN="2">Display the <A HREF="#Prefs">Preferences</A> dialog.</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
+		<TD COLSPAN="3"><HR SIZE="1" WIDTH="90%" NOSHADE="noshade"/></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="ViewMenu">View
+		<TD COLSPAN="3"><FONT SIZE="+1"><B><A NAME="ViewMenu">View
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Use Visual Style (requires restart):</TD>
-		<TD COLSPAN=2>This menu is not visible when running LDView in operating
+		<TD COLSPAN="2">This menu is not visible when running LDView in operating
 		systems other than Windows, or in Windows versions prior to Windows XP.
 		When present, it enables or disables the use of Windows XP Visual
 		Styles.  You must restart LDView for changes in this option to become
 		visible.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Switch to Fullscreen:</TD>
-		<TD COLSPAN=2>Switches to the currently selected
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Switch to Fullscreen:</TD>
+		<TD COLSPAN="2">Switches to the currently selected
 		<A HREF="#Fullscreen">fullscreen</A> video mode.
 		If you are already in fullscreen mode, Ctrl+Enter switches back to
 		windowed mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Errors &amp; Warnings:</TD>
-		<TD COLSPAN=2>Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
-		Window</A>.</TD>
-	</TR>
-	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Toolbar:</TD>
-		<TD COLSPAN=2>Toggles the <A HREF="#Toolbar">toolbar</A> on and off.
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Toolbar:</TD>
+		<TD COLSPAN="2">Toggles the <A HREF="#Toolbar">toolbar</A> on and off.
 		Note that the toolbar is never visible in full-screen mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Status Bar:</TD>
-		<TD COLSPAN=2>Toggles the permanent display of the status bar on and
+		<TD ALIGN="RIGHT" NOWRAP="nowrap"><A NAME="StatusBar">Status Bar:</A></TD>
+		<TD COLSPAN="2">Toggles the permanent display of the status bar on and
 		off.  Note that the status bar will always display when there is load
 		progress to be indicated.  Also, except while displaying load progress,
 		it is never visible in full-screen mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Always on Top:</TD>
-		<TD COLSPAN=2>Toggles Always on Top mode.  When this is enabled, the
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Always on Top:</TD>
+		<TD COLSPAN="2">Toggles Always on Top mode.  When this is enabled, the
 		LDView window is kept above all other windows (with the exception of
 		some other topmost windows).  When it is disabled (the default), LDView
 		acts just like a normal Windows program.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP><A NAME="ResetView">Reset View</A>:</TD>
-		<TD COLSPAN=2>Resets the model to the default view that is shown
+		<TD ALIGN="RIGHT" NOWRAP="nowrap"><A NAME="ResetView">Reset View</A>:</TD>
+		<TD COLSPAN="2">Resets the model to the default view that is shown
 		immediately after the initial load.  Any viewing angle can be saved as
 		the default viewing angle using <A HREF="#SaveDefaultView">this</A>
 		menu item.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Zoom to Fit:</TD>
-		<TD COLSPAN=2>Zooms the model in to fill the current window.</TD>
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Zoom to Fit:</TD>
+		<TD COLSPAN="2">Zooms the model in to fill the current window.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Viewing Angles:</TD>
-		<TD COLSPAN=2>Submenu containing preset viewing angles.</TD>
+		<TD COLSPAN="2">Submenu containing preset viewing angles.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
@@ -670,6 +719,12 @@ where there is no visible menu.
 	</TR>
 	<TR VALIGN="TOP">
 		<TD></TD>
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Specify latitude/longitude:</TD>
+		<TD COLSPAN="2">Displays the <A HREF="#LatLonDialog">Latitude/Longitude
+		Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD></TD>
 		<TD ALIGN="RIGHT">Two-thirds:</TD>
 		<TD>Sets the view to a two-thirds view of the model.  This is the
 		default view until you change it to something else.</TD>
@@ -684,36 +739,50 @@ where there is no visible menu.
 		to the default view.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Examine Mode:</TD>
-		<TD COLSPAN=2>Puts LDView in Examine Mode.  In examine mode, clicking
+		<TD ALIGN="RIGHT"><a name="StandardSizes">Standard Sizes</a>:</TD>
+		<TD COLSPAN="2">Submenu containing preset window sizes.  Select any item
+		in the list to change the main 3D view in LDView to that size.  Each
+		size also contains two numbers in parentheses after the dimensions.
+		These represent the aspect ratio.  So <b>(4:3)</b> represents a 4/3rds
+		aspect ratio (just like a standard definition TV set), and <b>(16:9)</b>
+		represents a 16 to 9 aspect ratio (just like a high definition TV
+		set).  These are particularly useful when you intend to either
+		<a href="#PovExport">export to POV</a> or use the
+		<a href="#PovCamera"><i>Show POV-Ray Camera Info</i></a> command.
+		<BR/><BR/>Note that only sizes that will fit on the screen are shown in the
+		list.  Also, sizes that are close to the maximum size may only show up
+		on the list if the toolbar and status bar are disabled, since these
+		change the overall height of the LDView window.  Additionally, if you
+		have multiple monitors, you might get a different list on each monitor,
+		if the monitors have different resolutions, or one monitor has the task
+		bar visible and the other doesn't.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Examine Mode:</TD>
+		<TD COLSPAN="2">Puts LDView in Examine Mode.  In examine mode, clicking
 		and dragging the left mouse button spins the model that is loaded.
 		This is the default mode.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Fly-through Mode:</TD>
-		<TD COLSPAN=2>Puts LDView in Fly-through Mode.  In fly-through mode,
+		<TD ALIGN="RIGHT" NOWRAP="nowrap"><A NAME="LatLonMode">Latitude/Longitude
+		Rotation:</A></TD>
+		<TD COLSPAN="2">Toggle to enable or disable latitude/longitude rotation
+		mode.  In latitude/longitude rotation mode, moving the mouse side to
+		side changes the view's longitude, and moving the mouse up and down
+		changes the view's latitude.  Also, the current latitude and longitude
+		are shown in the bottom right of the status bar when in
+		latitude/longitude rotation mode.
+		<BR/><BR/>This is only available in Examine Mode.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Fly-through Mode:</TD>
+		<TD COLSPAN="2">Puts LDView in Fly-through Mode.  In fly-through mode,
 		clicking and dragging the left mouse button rotates the camera, and you
 		can use the W, A, S, D, Q, E, R, and F keys to move the camera.</TD>
 	</TR>
 	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP><A NAME="ShowViewInfo">Show View Info:</A></TD>
-		<TD COLSPAN=2>This shows a panel that contains the model's current
-		rotation matrix and zoom level (camera distance).  Hitting OK copies
-		this information to the clipboard in a format suitable for use with
-		LDView on the command line.  Note that the camera's position and viewing
-		angle aren't recorded at this time, so it's recommended that you
-		not try to use this in Fly-through Mode or after having panned.</TD>
-	</TR>
-	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>Show POV-Ray Camera Info:</TD>
-		<TD COLSPAN=2>This shows a panel that contains information about the
-		current camera position as is needed in POV-Ray.  Hitting OK copies a
-		POV-Ray-compatible camera declaration into the clipboard.  This can be
-		directly pasted into a POV-Ray file to replace the existing camera.</TD>
-	</TR>
-	<TR VALIGN="TOP">
-		<TD ALIGN="RIGHT" NOWRAP>XX-Bit Modes:</TD>
-		<TD COLSPAN=2>Submenu containing all of the available fullscreen video
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">XX-Bit Modes:</TD>
+		<TD COLSPAN="2">Submenu containing all of the available fullscreen video
 		modes with a bit-depth of XX (where XX will usually be 15, 16, 24, or
 		32).  There is a separate submenu for each bit-depth of 15 or greater
 		bits supported by your video card.  There will be a dot beside the
@@ -722,33 +791,124 @@ where there is no visible menu.
 		selected video mode.</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><HR SIZE=1 WIDTH="90%" NOSHADE></TD>
+		<TD COLSPAN="3"><HR SIZE="1" WIDTH="90%" NOSHADE="noshade"/></TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=3><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
+		<TD COLSPAN="3"><FONT SIZE="+1"><B><A NAME="StepMenu">Step
+		Menu</A></B></FONT></TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">First:</TD>
+		<TD COLSPAN="2">Displays the loaded model's first step.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Previous:</TD>
+		<TD COLSPAN="2">Displays the loaded model's previous step.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Next:</TD>
+		<TD COLSPAN="2">Displays the loaded model's next step.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Last:</TD>
+		<TD COLSPAN="2">Displays the loaded model's last step.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Go to Step:</TD>
+		<TD COLSPAN="2">Displays a dialog to go to a specific step.</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN="3"><HR SIZE="1" WIDTH="90%" NOSHADE="noshade"/></TD>
+	</TR>
+	<TR>
+		<TD COLSPAN="3"><FONT SIZE="+1"><B><A NAME="ToolsMenu">Tools
+		Menu</A></B></FONT></TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Errors &amp; Warnings:</TD>
+		<TD COLSPAN="2">Displays the <A HREF="#ErrorWindow">Errors &amp; Warnings
+		Window</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Parts List:</TD>
+		<TD COLSPAN="2">Displays the <A HREF="#PartsListDialog">Parts List
+		Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Model Tree:</TD>
+		<TD COLSPAN="2">Displays the <A HREF="#ModelTreeDialog">Model Tree
+		Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Model Bounding Box:</TD>
+		<TD COLSPAN="2">Displays a dialog box showing the minimum and maximum
+		corners of an axis-aligned bounding box around the model, and draws
+		that bounding box.  Close the dialog to turn off the bounding box
+		display.  Note that you can still interact with the model while this
+		dialog is visible.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">MPD Model Selection:</TD>
+		<TD COLSPAN="2">Displays the <A HREF="#MPDDialog">MPD Model
+		Selection Dialog</A>.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap"><A NAME="ShowViewInfo">Show View Info:</A></TD>
+		<TD COLSPAN="2">This shows a dialog that contains the model's current
+		rotation matrix and zoom level (camera distance).  Hitting OK copies
+		this information to the clipboard in a format suitable for use with
+		LDView on the command line.  Note that the camera's position and viewing
+		angle aren't recorded at this time, so it's recommended that you
+		not try to use this in Fly-through Mode or after having panned.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap"><a name="PovCamera">Show POV-Ray Camera
+		Info:</a></TD>
+		<TD COLSPAN="2">This shows a dialog that contains information about the
+		current camera position as is needed in POV-Ray.  Hitting OK copies a
+		POV-Ray-compatible camera declaration into the clipboard.  This can be
+		directly pasted into a POV-Ray file to replace the existing camera.</TD>
+	</TR>
+	<TR VALIGN="TOP">
+		<TD ALIGN="RIGHT" NOWRAP="nowrap">Use current aspect ratio for POV-Ray
+		camera:</TD>
+		<TD COLSPAN="2">Toggle that controls whether the 3D view's current aspect
+		ratio is used in the POV-Ray camera that is copied to the clipboard when
+		using the <a href="#PovCamera"><i>Show POV-Ray Camera Info</i></a>
+		command.  If this is checked, the current aspect ratio will be used.
+		Otherwise, 4/3 is used.  Since POV images tend to be done at specific
+		aspect ratios, this is most useful immediately after selecting a
+		<a href="#StandardSizes">standard size</a> with the desired aspect
+		ratio.</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN="3"><HR SIZE="1" WIDTH="90%" NOSHADE="noshade"/></TD>
+	</TR>
+	<TR>
+		<TD COLSPAN="3"><FONT SIZE="+1"><B><A NAME="HelpMenu">Help
 		Menu</A></B></FONT></TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">OpenGL Driver Info:</TD>
-		<TD COLSPAN=2>This shows a panel containing information about your
+		<TD COLSPAN="2">This shows a dialog containing information about your
 		OpenGL driver.  I may request this information from you if you are
 		experiencing problems.  The text in the box can be selected, and then
 		copied to the clipboard by hitting Ctrl+C.</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">Contents:</TD>
-		<TD COLSPAN=2>Displays this file in your web browser.  (Only works in
+		<TD COLSPAN="2">Displays this file in your web browser.  (Only works in
 		Windowed mode; hitting F1 from Fullscreen mode will not have any
 		effect.)</TD>
 	</TR>
 	<TR VALIGN="TOP">
 		<TD ALIGN="RIGHT">About LDView:</TD>
-		<TD COLSPAN=2>Displays the About box, which contains version and
+		<TD COLSPAN="2">Displays the About box, which contains version and
 		copyright information about LDView.</TD>
 	</TR>
 </TABLE>
-<BR>
-<P>
+<BR/>
+<P/>
 <A NAME="Toolbar"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -765,7 +925,7 @@ toggles a particular setting on and off, and clicking the arrow next to the
 button shows a menu that allows you to set other settings related to the
 main one.  The items in the menu are only enabled if the main setting is
 toggled on.
-<BR>
+<BR/>
 <P>
 </P>
 <A NAME="Fullscreen"></A>
@@ -783,21 +943,21 @@ depth and resolution combination, and then select the <SPAN CLASS="NoWrap">View-
 Fullscreen menu option, or hit Ctrl+Enter.  To exit full screen mode, either
 hit Ctrl+Enter again or hit Escape.  Note that this feature does not work
 properly on all video cards.  If it doesn't work on your video card, you should
-get an error panel after the screen resolution is changed.  After you dismiss
-the error panel, it should automatically switch back to windowed mode.  While
+get an error dialog after the screen resolution is changed.  After you dismiss
+the error dialog, it should automatically switch back to windowed mode.  While
 in fullscreen mode you can spin the model around with the mouse, and zoom in
 and out the same way you did in windowed mode.
 <P>
 As long as your video card supports 2D Windows functionality while in fullscreen
-mode, the Open Panel and Preferences panel can be accessed from fullscreen mode
+mode, the Open dialog and Preferences dialog can be accessed from fullscreen mode
 via their keyboard shortcuts  (Ctrl+O for Open File; Ctrl+Shift+P for
 Preferences).  If you are unsure, try Ctrl+O first, and if you don't see an
-Open Panel, hit escape to dismiss the Open Panel that you can't see.  F5 for
+Open dialog, hit escape to dismiss the Open dialog that you can't see.  F5 for
 reload also works--whether or not your video card supports 2D Windows
 funtionality from fullscreen mode--but unless you are displaying a file that
 someone else on your network is modifying, it's not likely to be very useful.
 </P>
-<BR>
+<BR/>
 <P>
 </P>
 <A NAME="SaveSnapshotOptions"></A>
@@ -813,13 +973,14 @@ someone else on your network is modifying, it's not likely to be very useful.
 When you save a snapshot, the following LDView-specific options show up at the
 bottom of the standard save dialog box.
 <P>
-<I>Save snapshot series</I> (Default: <I>Off</I>):<BR>
+<I><B><A NAME="SaveSeriesCheck">Save snapshot series</A></B></I> (Default:
+<I>Off</I>):<BR/>
 Enabling this option causes a unique number to automatically be appended to the
 filename.  This allows you to save a number of shots of the same model without
 having to enter a new filename each time.
 </P>
 <P>
-<I>Number of Digits</I> (Default: <I>1</I>):<BR>
+<I><A NAME="SaveDigitsField">Number of Digits</A></I> (Default: <I>1</I>):<BR/>
 This option is only available when save snapshot series is enabled.  It controls
 the number of digits in the number that is appended to the filename.  Zeroes are
 added before the number to make up the number of digits you select here.  For
@@ -827,20 +988,14 @@ example, if you select 3 here, and the number is 5, then 005 will be used in the
 filename instead of just 5.
 </P>
 <P>
-<I>Don't use Pixel Buffer</I> (Default: <I>Off</I>):<BR>
-Enabling this option disables the use of a pixel buffer for snapshot rendering.
-Use of a pixel buffer can result in a corrupt image on certain video cards with
-certain video drivers.  If your snapshots are corrupted, enable this.
-Otherwise, leave it disabled.
-</P>
-<P>
-<I>Save image with specific size</I> (Default: <I>Off</I>):<BR>
+<I><B><A NAME="SaveSpecificSizeCheck">Save image with specific size</A></B></I>
+(Default: <I>Off</I>):<BR/>
 Enabling this option allows you to specify a width and height for the snapshot
 image.  Otherwise, the snapshot created will have the same dimensions as the
 LDView window.
 </P>
 <P>
-<I>Width</I> (Default: <I>1024</I>):<BR>
+<I><A NAME="SaveWidthField">Width</A></I> (Default: <I>1024</I>):<BR/>
 This option is only available when save image with specific size is enabled.  It
 sets the width (in pixels) of the resulting snapshot image.
 </P>
@@ -851,7 +1006,7 @@ automatically to form the full image.  This may cause the actual image width to
 be slightly less than the requested width due to rounding.
 </P>
 <P>
-<I>Height</I> (Default: <I>768</I>):<BR>
+<I><A NAME="SaveHeightField">Height</A></I> (Default: <I>768</I>):<BR/>
 This option is only available when save image with specific size is enabled.  It
 sets the height (in pixels) of the resulting snapshot image.
 </P>
@@ -862,7 +1017,7 @@ automatically to form the full image.  This may cause the actual image width to
 be slightly less than the requested width due to rounding.
 </P>
 <P>
-<I>Zoom to Fit</I> (Default: <I>Off</I>):<BR>
+<I><A NAME="SaveZoomToFitCheck">Zoom to Fit</A></I> (Default: <I>Off</I>):<BR/>
 This option is only available when save image with specific size is enabled.
 Enabling it causes the model to be zoomed to fill up the snapshot, as much as
 possible.  (Most models will only fill the image in either the vertical
@@ -877,7 +1032,152 @@ as the LDView window, you can position the model exactly like you want manually,
 and are free to use <I>Zoom to Fit</I> on the View menu prior to taking your
 snapshot to produce the same result.
 </P>
-<BR>
+<P>
+<I><B>Misc</B></I>
+</P>
+<P>
+<I><A NAME="NoPBufferCheck">Don't use Pixel Buffer</A></I> (Default:
+<I>Off</I>):<BR/>
+Enabling this option disables the use of a pixel buffer for snapshot rendering.
+Use of a pixel buffer can result in a corrupt image on certain video cards with
+certain video drivers.  If your snapshots are corrupted, enable this.
+Otherwise, leave it disabled.
+</P>
+<P>
+<I><A NAME="TransBGCheck">Transparent Background</A></I> (Default: 
+<I>Off</I>):<BR/>
+Enabling this option causes the backround area of the snapshot to be
+transparent, instead of using whatever background color is selected in LDView.
+This allows the image to be placed over other images in an editor, or over an
+arbitrary background in a web page.  This only works with PNG snapshots, as the
+other file formats don't support transparency.
+</P>
+<P>
+<I><A NAME="AutoCropCheck">Auto-crop</A></I> (Default: <I>Off</I>):<BR/>
+Enabling this option causes the image to be automatically cropped to be as small
+as possible without cutting off any of the actual model.  Note that this can be
+useful even when <i>Zoom to Fit</i> is checked, because <i>Zoom to Fit</i>
+usually only uses the entire image size in one dimension.
+</P>
+<P>
+<I><B><A NAME="AllStepsCheck">All Steps</A></B></I> (Default: <I>Off</I>):<BR/>
+Enabling this option causes LDView to create a separate snapshot image for each
+step, with an optional suffix, plus the step number, appended to each image.
+</P>
+<P>
+<I><A NAME="StepSuffixField">Suffix</A></I> (Default: <I>&lt;Empty&gt;</I>):<BR/>
+This option is only available when all steps is enabled.  Enabling it causes the
+specified suffix to be appended to the filename you enter right before the step
+number is appended.  This allows you to accept the default filename (the model's
+filename) when creating step images, even if you want something like -Step
+appended to the end.
+</P>
+<P>
+<I><A NAME="StepsSameScaleCheck">Same Scale</A></I> (Default: <I>On</I>):<BR/>
+This option is only available when all steps and zoom to fit are enabled.
+Enabling it causes all step images to be generated with the same scale.  That
+scale is calculated by applying the zoom to fit operation to the last step.
+</P>
+<A NAME="Export"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Exporting
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Export command allows you to export your LDraw model to various different
+3D file formats.  Currently, the following formats are supported:
+<p/>
+<table class="SettingsList">
+	<tr>
+		<th>Extension</th>
+		<th>Description</th>
+	</tr>
+	<tr>
+		<td><a href="#PovExport">.pov</a></td>
+		<td>POV-Ray scene file</td>
+	</tr>
+	<tr>
+		<td><a href="#StlExport">.stl</a></td>
+		<td>Stereo Lithography file</td>
+	</tr>
+</table>
+<p>
+When you select <i>Export</i> from the <i>File</i> menu, you are presented with
+a Save dialog box.  This includes a type selection, where you select the desired
+format for the export.  In Windows and on the Mac, there is an <i>Options</i>
+button next to the type selection. Some file types have export options, and some
+don't.  For those that do, the <i>Options</i> button is enabled.  For those that
+don't, it is disable.  Click on it to set the export options for the currently
+selected file type. The QT version of LDView has an <i>Export Options</i> menu
+item in the <i>File</i> menu that performs the same task as the <i>Options</i>
+button.  This dialog will only contain entries for those types that have
+options.
+</p>
+<P/>
+<h3><a name="PovExport">POV-Ray scene file:</a></h3>
+<p>
+LDView's POV-Ray export has numerous options.  The ones that aren't
+self-explanatory are all documented via tooltips in the Options dialog.  When
+you perform a POV-Ray export, LDView creates a POV-Ray scene file using the
+current camera angle from the LDView window, so camera placement before the
+export is important.
+</p>
+<P/>
+<h3><a name="StlExport">Stereo Lithography file:</a></h3>
+LDView's STL export doesn't have an options.  The STL file that it creates is
+monochrome.  This option is mainly intended to allow parts to be exported for
+editing in 3rd-party 3D modeling software such as Blender.
+<BR/>
+<P>
+</P>
+<A NAME="LatLonDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Latitude/Longitude Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Latitude/Longitude dialog allows you to change the fiew to a specific
+latitude, longitude, and optionally distance.
+<P>
+Enter the desired latitude and longitude to rotate the model around so that you
+are looking at it from the given direction.  Consider an imaginary globe
+surrounding the model, centered at the model's center, with the front of the
+model lining up with the globe at a the 0 longitude location.  The numbers you
+enter rotate the model around such that you're looking down on the globe at the
+specified latitude and longitude, with the top of your head facing towards the
+north.
+</P>
+<P>
+If you check the <I>Distance</I> check box, the camera will be placed at the
+specified distance from the center of the model.
+</P>
+<P>
+The <I>Default</I> buttons reset their associated fields to their default
+values.  The default latitude is 30, the default longitude is 45, and the
+default distance depends on the model.
+</P>
+<P>The <I>Current</I> button next to the <I>Distance</I> field sets the distance
+field based on the current camera location.  This is useful if you want to take
+snapshots of multiple different sized models at the same scale, as you can set
+things up for the biggest model, then use the <I>Current</I> button to determine
+the appropriate distance, then use that for all the snapshots.
+</P>
+<P>
+The <I>Latitude</I> and <I>Longitude</I> fields don't have a <I>Current</I>
+button, because LDView's arbitrary rotations don't usual correspond to a view
+that can be produced by this dialog.  However, if you switch to
+<a href="#LatLonMode">Latitude/Longitude Rotation</a> mode, the
+<a href="#StatusBar">Status Bar</a> shows the current latitude/longitude.
+</P>
+<BR/>
 <P>
 </P>
 <A NAME="ErrorWindow"></A>
@@ -921,37 +1221,37 @@ types of errors are shown.  You can disable any errors you don't care about.
 Following are the error types:
 </P>
 <P>
-<I>General error</I><BR>
+<I>General error</I><BR/>
 You probably won't ever see an error of this type.  It is used for rare
 situations that shouldn't ever happen.  (For example, if you delete the LDraw
 directory while a model is loading, you might get one of these.)
 </P>
 <P>
-<I>Parse error</I><BR>
+<I>Parse error</I><BR/>
 A line in the model file was invalid.
 </P>
 <P>
-<I>File not found</I><BR>
+<I>File not found</I><BR/>
 The model referenced another model which could not be found in any of the
 standard search locations (the current directory; the LDraw model, parts, and
 p directories; entries in the <A HREF="#ExtraDirs">extra search directories</A>
 list).
 </P>
 <P>
-<I>Singular matrix</I><BR>
+<I>Singular matrix</I><BR/>
 The model contains a reference to another model with one of the three dimensions
 scaled to zero.  This is generally considered bad form, but is often done when
 referencing another file that happens to be two-dimensional.
 </P>
 <P>
-<I>Part transformed non-uniformly</I><BR>
+<I>Part transformed non-uniformly</I><BR/>
 The model contains a part which has been distorted in some way.  While parts are
 rotated and moved around to make up a model, they should seldom if ever be
 stretched or skewed.  This usually indicates that the model referencing the part
 has a problem.
 </P>
 <P>
-<I>Non-flat quad</I><BR>
+<I>Non-flat quad</I><BR/>
 The model contains a quadrilateral (quad) that isn't flat.  There are two
 perfectly valid ways to split a quad into two triangles, and they result in
 different geometry when the quad isn't flat.  Consequently, non-flat quads are
@@ -960,14 +1260,14 @@ LDView's definition of "flat", so rounding in the file shouldn't trigger this
 error.
 </P>
 <P>
-<I>Concave quad</I><BR>
+<I>Concave quad</I><BR/>
 The model contains a concave quadrilateral.  Concave means that one of the four
 points is inside the triangle formed by the other three points.  While not
 technically an error, this is considered bad form, and may produce incorrect
 results in other LDraw-compatible renderering programs.
 </P>
 <P>
-<I>Bad vertex sequence</I><BR>
+<I>Bad vertex sequence</I><BR/>
 The model contains a quadrilateral whose points are specified in "bow-tie"
 order.  In other words, if you visit the points in the order given, you'll end
 up with two triangles that meet at a point.  Two of the vertices must be
@@ -977,7 +1277,7 @@ considered bad form, and may produce incorrect results in other
 LDraw-compatible rendering programs.
 </P>
 <P>
-<I>Co-linear points</I><BR>
+<I>Co-linear points</I><BR/>
 The model contains a quad or a triangle that has three or four co-linear points.
 When this is detected in a quad, the quad is turned into a triangle (or a line
 if all four points are co-linear).  When it is detected in a triangle (all three
@@ -989,46 +1289,175 @@ triangles, and one of those ways results in a triangle and a line (instead of
 two triangles), this is <B>not</B> a legitimate way to avoid T-junctions.
 </P>
 <P>
-<I>BFC warning</I><BR>
+<I>BFC warning</I><BR/>
 The model contains back-face culling (BFC) information that seems unusual (but
 is still valid).
 </P>
 <P>
-<I>BFC error</I><BR>
+<I>BFC error</I><BR/>
 The model contains back-face culling (BFC) information that is invalid.
 </P>
 <P>
-<I>MPD error</I><BR>
+<I>MPD error</I><BR/>
 The model contains multi-part DAT (MPD) information that is invalid.
 </P>
 <P>
-<I>Whitespace</I><BR>
+<I>Whitespace</I><BR/>
 The model references a sub-model whose filename contains whitespace (spaces
 and/or tabs).  While this will work in some programs (including LDView), it
 won't work in others, and is discouraged.
 </P>
 <P>
-<I>Part renamed</I><BR>
+<I>Part renamed</I><BR/>
 The model references a part that has been renamed to a new number (otherwise
 known as "moved to").
 </P>
 <P>
-<I>Unofficial part used</I><BR>
+<I>Unofficial part used</I><BR/>
 The model references a part that isn't present in the main LDraw directory, but
 was found by LDView on the LDraw.org Parts Tracker and automatically downloaded.
 </P>
 <P>
+<I>Model loop</I><BR/>
+One of the model's sub-models (or parts) contains a reference to one of its
+ancestors.  For example, if you load Test1.ldr, and it has Test2.ldr as a
+sub-model, and Test2.ldr has Test1.ldr as one of <B>its</B> sub-models, you will
+get this error.  Similarly, if Test2.ldr has Test3.ldr as a sub-model, and
+Test3.ldr has Test1.ldr as a sub-model, you will also get this error.
+</P>
+<P>
 If <A HREF="#ShowErrors">Show errors after loading</A> is checked in the
 preferences dialog, the Errors &amp; Warnings window will automatically be
-displayed when a model is loaded that contains errors or warnings that are set
-to be shown.  It will not be shown if the only errors or warnings in the model
-have been unchecked in the Errors &amp; Warnings window, the model only contains
-warnings and warnings are disabled, the model contains no errors or warnings, or
-the Errors &amp; Warnings window isn't set to show automatically.
+displayed when a model is loaded that contains errors that are set to be shown.
+It will not be shown if the only errors in the model have been unchecked in the
+Errors &amp; Warnings window, the model only contains warnings, or the Errors
+&amp; Warnings window isn't set to show automatically.
 </P>
-<BR>
+<BR/>
 <P>
 </P>
+<A NAME="PartsListDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Parts List Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Parts List Dialog is used to generate an HTML file containing a parts list
+for the currently loaded LDraw model.
+<P>
+At the top, it contains a list of settings to use during parts list generation.
+At the bottom, it contains a list of columns to include in
+the parts list.  Check all the columns you want to include, uncheck all the
+columns you don't want to include, and use the <I>Up</I> and <I>Down</I> buttons
+to change the order of the columns.
+</P>
+<P>
+<FONT SIZE="+2"><B>Settings</B></FONT><BR/>
+</P>
+<P/>
+<I>Show model</I><BR/>
+Check this to include a screenshot of the model at the top of the parts list.
+The screenshot will be saved in a file with the same name as the parts list HTML
+file, except that the .html extension will be replaced with .png.<BR/>
+<TABLE>
+	<TR VALIGN="TOP">
+		<TD><I>Note:</I></TD>
+		<TD>If an image file already exists with the given name, that image will
+		be used in the parts list; a new image will not be generated.</TD>
+	</TR>
+</TABLE>
+<P/>
+<I>Generate external style sheet</I><BR/>
+Check this to have LDView generate and use an external CSS style sheet, instead
+of including the style information inside the generated HTML file.  LDView will
+then generate a file named LDViewPartsList.css and use that as the style sheet
+for the file.
+<TABLE>
+	<TR VALIGN="TOP">
+		<TD><I>Note:</I></TD>
+		<TD>If a file named LDViewPartsList.css exists in the directory where
+		the parts list HTML is written, LDView will examine its contents.  If
+		the contents match the default LDViewPartsList.css, then the file will
+		be used.  Otherwise, LDView will fall back to putting the style
+		information inside the HTML file.  <B>If you modify LDViewPartsList.css
+		and then generate a new parts list, the new parts list will not use
+		LDViewPartsList.css, no matter what this setting is set to.</B></TD>
+	</TR>
+</TABLE>
+<P>
+<I>Show part images</I><BR/>
+Check this to include inline links to <A HREF="http://peeron.com">Peeron.com</A>
+part images in your generated HTML file.  If you check this, you must have an
+active Internet connection in order to see the images when you view the Parts
+List in your web browser.  If you don't have an active Internet connection,
+you should see the alternate text for the images, which says "View on
+Peeron.com".  You can still generate a Parts List with image links using LDView
+even when you don't have an active Internet connection; you only need the
+active connection in order to see the images when you view the page.
+</P>
+<P>
+<FONT SIZE="+2"><B>Columns</B></FONT><BR/>
+</P>
+<P>
+<I>Part</I><BR/>
+This column has the part name and part image.  The image is only present if
+<I>Show part images</I> is checked in the <I>Settings</I> box.  If Peeron.com
+has a part image in the correct color, that will be used.  Otherwise, a generic
+gray part image will be used, and the background color of the image will be set
+to the part color.
+</P>
+<P>
+<I>Color</I><BR/>
+This column shows the color of the part.  This includes the LDraw color number,
+the color name (if known), and a color sample.  Note that even if you don't
+include this column, parts are still separated by color in the list.  (If you're
+including the part images, this looks fine; otherwise, it's recommended that you
+don't disable this column.)
+</P>
+<P>
+<I>Quantity</I><BR/>
+This column contains the quantity for each part in each color.  Note that the
+total part count for the model is in the header at the top of the file, and is
+not optional.
+</P>
+<P>
+<I>Description</I><BR/>
+This column contains the part description (as found in the LDraw file for the
+part).  This is the only column that is disabled by default.
+</P>
+<A NAME="ModelTreeDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			Model Tree Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The Model Tree Dialog shows a tree view of the contents of the loaded LDraw
+model.  The lines in the tree are color-coded based on the LDraw line type that
+they show.  It also lets you control which LDraw line types are shown.  By
+default, all line types except for empty and unknown ones are shown.
+<BR/><BR/>
+<A NAME="MPDDialog"></A>
+<TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
+	<TR>
+		<TH ALIGN="LEFT">
+			<FONT SIZE="+2" COLOR="#FFFFFF">
+			MPD Model Selection Dialog
+			</FONT>
+		</TH>
+	</TR>
+</TABLE>
+The MPD Model Selection Dialog allows you to select the individual model files
+inside a Multi-Part Dat (MPD) file.  When you select a model, it is shown as if
+that model had been loaded directly into LDView.
+<BR/><BR/>
 <A NAME="Prefs"></A>
 <TABLE BGCOLOR="#0080D0" WIDTH="100%" CLASS="SectionHeader">
 	<TR>
@@ -1039,33 +1468,33 @@ the Errors &amp; Warnings window isn't set to show automatically.
 		</TH>
 	</TR>
 </TABLE>
-Here is a brief description of the items in the Preferences panel (accessed
+Here is a brief description of the items in the Preferences dialog (accessed
 through the Edit-&gt;Preferences menu item).
 
 <P>
-<FONT SIZE="+2"><B><A NAME="GeneralTab">General Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="GeneralTab">General Tab</A></B></FONT><BR/>
 </P>
 <P>
-<I>Reset</I>:<BR>
+<I>Reset</I>:<BR/>
 This resets all the General preferences to their default values.  As with all
 other preference changes, you must hit OK or Apply for the reset values to go
 into effect.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeneralAABox">Antialiasing Box</A></B></FONT><BR>
-<I><A NAME="FSAA">FSAA</A></I> (Default: <I>None</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeneralAABox">Antialiasing Box</A></B></FONT><BR/>
+<I><A NAME="FSAA">FSAA</A></I> (Default: <I>None</I>):<BR/>
 This allows you to select what level of full-scene antialiasing to use.  Note
 that if your video card does not support full-scene antialiasing, then
 <I>None</I> will be the only available item.  If your video card does support
 full-scene antialiasing, then all available FSAA modes should be available to
 choose from.
-<BR>
+<BR/>
 If you have an nVIDIA&#174; video card with Quincunx support, then 2x Enhanced
 and 4x Enhanced should show up as options.  These use nVIDIA's advanced FSAA
 filter.</P>
 <P>
-<I>Antialiased lines</I> (Default: <I>Off</I>):<BR>
+<I>Antialiased lines</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes lines to be drawn using antialiasing.  This does not
 effect wireframe mode.  Line antialiasing can significantly improve the visual
 quality of lines, but it can also significantly impact the frame rate.  This
@@ -1075,27 +1504,28 @@ Antialiasing</A> is enabled.
 
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeneralColorsBox">Colors Box</A></B></FONT><BR>
-<I>Background</I> (Default: <I>Black</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeneralColorsBox">Colors Box</A></B></FONT><BR/>
+<I>Background</I> (Default: <I>Black</I>):<BR/>
 This allows you to set the color used to draw the background behind the model.
 </P>
 <P>
-<I>Default</I> (Default: <I>Black</I>):<BR>
+<I>Default</I> (Default: <I>Black</I>):<BR/>
 This allows you to set the default color.  Normally this is only visible when
-you load a part directly.  Most models don't ever use this color.<BR>
+you load a part directly.  Most models don't ever use this color.<BR/>
 Note that edge lines on default-colored objects will be black unless you choose
 the exact RGB value used by one of the standard LDraw colors.  The default
-custom colors in the color panel correspond to the first 16 standard LDraw
+custom colors in the color dialog correspond to the first 16 standard LDraw
 colors.  Resetting the General preferences also resets these colors.
 </P>
 <P>
-<I>Transparent</I> (Default: <I>Off</I>):<BR>
+<I>Transparent</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes default-colored items to be transparent.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeneralMiscBox">Misc Box</A></B></FONT><BR>
-<I>Process ldconfig.ldr</I> (Default: <I>On</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeneralMiscBox">Misc Box</A></B></FONT><BR/>
+<I><A NAME="ProcessLDConfig">Process ldconfig.ldr</A></I>
+(Default: <I>On</I>):<BR/>
 This controls whether or not LDView processes the ldconfig.ldr file that is now
 distributed as part of the LDraw parts library.  This file contains settings
 that can effect how LDraw models are displayed.  Currently the only settings it
@@ -1103,29 +1533,37 @@ contains are color definitions.  Enabling this option will use the LDraw.org
 standard color definitions; disabling it will use LDView's default color
 definitions.</P>
 <P>
-<I>Show frame rate</I> (Default: <I>Off</I>):<BR>
+<I>Show frame rate</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes the frame rate to show up in the lower left-hand
 corner of the window.  A number is only displayed while the model is in
 constant motion.  The easiest way to do this is to spin it (see
 <A HREF="#MouseControl">mouse control</A>).
 </P>
 <P>
+<I>Show Axes</I> (Default: <I>Off</I>):<BR/>
+Enabling this option causes LDView to drawn the XYZ coordinate axes for the
+model, with their origin at the model's origin.  The X axis is drawn in red,
+the Y axis is drawn in green, and the Z axis is drawn in blue.  The positive
+axes are all drawn in bright colors, and the negative axes are all drawn in
+dark colors.
+</P>
+<P>
 <A NAME="ShowErrors"><I>Show errors after loading</I></A> (Default:
-<I>On</I>):<BR>
+<I>On</I>):<BR/>
 Enabling this option causes the <A HREF="#ErrorWindow">Errors &amp; Warnings
 window</A> to automatically be displayed after loading a model that contains any
 errors that have been selected for display in the Errors &amp; Warnings window.
 </P>
 <P>
 </P>
-<I>Fullscreen refresh override</I> (Default: <I>Off</I>):<BR>
+<I>Fullscreen refresh override</I> (Default: <I>Off</I>):<BR/>
 When checked, this setting allows you to override the default refresh rate used
 in fullscreen mode.  Enter a number in the field for the desired refresh rate.
 Please note that if the refresh rate you enter is not supported another refresh
-rate will be used.<BR><BR>
+rate will be used.<BR/><BR/>
 <TABLE>
 	<TR>
-		<TD VALIGN="TOP"><TABLE CELLSPACING=0 CELLPADDING=0
+		<TD VALIGN="TOP"><TABLE CELLSPACING="0" CELLPADDING="0"
 		BGCOLOR="RED"><TR><TD><B> WARNING: </B></TD></TR></TABLE></TD>
 		<TD VALIGN="TOP">If you enter a value that is too high, and have told
 		Windows that you have a monitor which is capable of higher refresh than
@@ -1133,19 +1571,19 @@ rate will be used.<BR><BR>
 	</TR>
 </TABLE>
 <P>
-<I>Field of view</I> (Default: <I>45</I>):<BR>
+<I>Field of view</I> (Default: <I>45</I>):<BR/>
 Enter a number in this field to control the field of view (in degrees).  Setting
 this to the minimum value of 0.1 will produce an image that is essentially
 orthographic.  Setting it to the maximum value of 90 will produce a wide-angle
 view.
 </P>
 <P>
-<I>Memory Usage</I> (Default: <I>High</I>):<BR>
+<I>Memory Usage</I> (Default: <I>High</I>):<BR/>
 This allows you to have some control over how much memory LDView uses.
 Normally, setting this to High will result in the best performance.  However, if
 you load a large model that uses more memory than you have available, setting
 this to Medium or Low may improve performance.
-<BR>
+<BR/>
 Please note that while the High setting usually results in noticeably faster
 performance than the Medium setting, it usually consumes only marginally more
 memory.  The Low setting should produce a much more considerable memory savings.
@@ -1155,19 +1593,43 @@ will likely be at least as fast as the other settings, and will very likely
 actually result in faster performance.
 </P>
 
+<P/>
+<FONT SIZE="+1"><B><A>Default Save Directories Box</A></B></FONT><BR/>
+The default save directories box allows you to decide what directory to use by
+default when saving files.  Each save operation has three possible options:
+<table class="SettingsList">
+<tr>
+<td valign="top">Model</td>
+<td>The default directory is the same directory as the currently loaded
+model.</td>
+</tr>
+<tr>
+<td nowrap="nowrap" valign="top">Last Saved</td>
+<td>The default directory is whatever directory was used last for this file
+type.  (The first time you save a file of a given type, the default directory
+is the model's directory.)</td>
+</tr>
+<tr>
+<td valign="top">Specified</td>
+<td>The default directory is specified in the field to the right of the
+drop-down box.  Use the <i>Browse...</i> button to browse for a directory,
+or enter it in the field directly.</td>
+</tr>
+</table>
+
 <P>
-<FONT SIZE="+2"><B><A NAME="GeometryTab">Geometry Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="GeometryTab">Geometry Tab</A></B></FONT><BR/>
 </P>
 <P>
-<I>Reset</I>:<BR>
+<I>Reset</I>:<BR/>
 This resets all the Geometry preferences to their default values.  As with all
 other preference changes, you must hit OK or Apply for the reset values to go
 into effect.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeometryModelBox">Model Box</A></B></FONT><BR>
-<A NAME="SeamWidth"><I>Seam width</I></A> (Default: <I>On/0.50</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeometryModelBox">Model Box</A></B></FONT><BR/>
+<A NAME="SeamWidth"><I>Seam width</I></A> (Default: <I>On/0.50</I>):<BR/>
 Enabling this option allows you to set the width of the seams between pieces
 using the up and down arrows to the right.  This setting produces the same effect
 as the Seam Width option of
@@ -1176,51 +1638,58 @@ displays the current seam width.  Use the arrows to set the seam width to a rang
 of numbers between 0.00 and 5.00. Note that setting this to large values can
 produce extremely odd results.
 </P>
+<P>
+<I>Part bounding boxes only</I> (Default: <I>Off</I>):<BR/>
+Enabling this option makes it so that all parts in the model are drawn as just
+bounding boxes.  A bounding box is the minimum axis-aligned box that can
+completely contain the part.  Geometry that isn't detected as being inside a
+part is drawn normally.
+</P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeometryWireframeBox">Wireframe Box</A></B></FONT><BR>
-<I>Wireframe</I> (Default: <I>Off</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeometryWireframeBox">Wireframe Box</A></B></FONT><BR/>
+<I>Wireframe</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes the model to be drawn in wireframe.  Note that with
 many 3D accelerators, this actually runs slower than when drawing as a solid.
 </P>
 <P>
-<I>Fog</I> (Default: <I>Off</I>):<BR>
+<I>Fog</I> (Default: <I>Off</I>):<BR/>
 This option is only enabled if wireframe drawing is enabled.  Enabling it
 causes fog to be used to make it so that the lines that are farther away are
 drawn more dimly.
 </P>
 <P>
-<I>Remove hidden lines</I> (Default: <I>Off</I>):<BR>
+<I>Remove hidden lines</I> (Default: <I>Off</I>):<BR/>
 This option is only available if wireframe drawing is enabled.  Enabling it
 causes the solid (non-transparent) portions of the model to hide lines that are
 behind them, even though these portions themselves aren't actually drawn.
 </P>
 <P>
-<I>Thickness</I> (Default: <I>0%</I>):<BR>
+<I>Thickness</I> (Default: <I>0%</I>):<BR/>
 This option is only available if wireframe drawing is enabled.  It adjusts the
 thickness of the lines used to draw the model in wireframe mode.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeometryBFCBox">BFC Box</A></B></FONT><BR>
-<I>BFC</I> (Default: <I>On</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeometryBFCBox">BFC Box</A></B></FONT><BR/>
+<I>BFC</I> (Default: <I>On</I>):<BR/>
 Enabling this option turns on back-face culling (BFC).  BFC is a technique that
 can improve rendering performance by not drawing the back faces of polygons.
 (Only BFC-certified parts have their back faces removed.)
-<BR>
+<BR/>
 Note that while this can improve rendering performance, it can also slow things
 down, so don't assume that enabling this will always result in the best
 performance.
 </P>
 <P>
-<I>Red back faces</I> (Default: <I>Off</I>):<BR>
+<I>Red back faces</I> (Default: <I>Off</I>):<BR/>
 This option is only available while BFC is enabled.  Enabling it causes the back
 faces of polygons to be drawn in red.  This is mainly useful for part authors to
 allow them to correctly specify which direction faces should face in order to
 BFC certify their part files.
 </P>
 <P>
-<I>Green front faces</I> (Default: <I>Off</I>):<BR>
+<I>Green front faces</I> (Default: <I>Off</I>):<BR/>
 This option is only available while BFC is enabled.  Enabling it causes the
 front faces of polygons to be drawn in green.  This is mainly useful for part
 authors to allow them to correctly specify which direction faces should face in
@@ -1228,20 +1697,20 @@ order to BFC certify their part files.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="GeometryEdgeLinesBox">Edge Lines Box</A></B></FONT><BR>
-<A NAME="DrawEdges"><I>Edge Lines</I></A> (Default: <I>Off</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="GeometryEdgeLinesBox">Edge Lines Box</A></B></FONT><BR/>
+<A NAME="DrawEdges"><I>Edge Lines</I></A> (Default: <I>Off</I>):<BR/>
 Enabling this option causes the edge lines that outline all the pieces to be
 drawn.
 </P>
 <P>
-<I>Show edges only</I> (Default: <I>Off</I>):<BR>
+<I>Show edges only</I> (Default: <I>Off</I>):<BR/>
 This option is only available if edge lines are enabled.  Enabling it causes
 LDView to only show edge lines.  Unless you also select the Wireframe option,
 the portions of the edge lines that are hidden by the model will still be
 hidden, even thought the model isn't being shown.
 </P>
 <P>
-<I>Conditional lines</I> (Default: <I>Off</I>):<BR>
+<I>Conditional lines</I> (Default: <I>Off</I>):<BR/>
 This option is only available if edge lines are enabled.  Enabling it causes
 conditional edge lines to be computed and drawn.  Conditional edge lines show up
 as a silhouette of curved surfaces; they are only drawn when they are visually
@@ -1249,9 +1718,9 @@ at the edge of the surface from the current viewing angle.
 </P>
 <P>
 </P>
-<TABLE CELLSPACING=0 CELLPADDING=0>
+<TABLE CELLSPACING="0" CELLPADDING="0">
 <TR>
-<TD NOWRAP>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+<TD NOWRAP="nowrap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 <TD><I>Show all</I> (Default: <I>Off</I>):</TD>
 </TR>
 <TR>
@@ -1283,43 +1752,48 @@ location.
 </TR>
 </TABLE>
 <P>
-<I>High quality</I> (Default: <I>On</I>):<BR>
+<I>High quality</I> (Default: <I>On</I>):<BR/>
 This option is only available if edge lines are enabled.  Enabling it causes
 edge lines to be drawn slightly closer to the eye than everything else,
 resulting in much better looking lines.
 </P>
 <P>
-<I>Always black</I> (Default: <I>Off</I>):<BR>
+<I>Always black</I> (Default: <I>Off</I>):<BR/>
 This option is only available if edge lines are enabled.  Enabling it causes
-all edge lines to be drawn in black.  This can be useful to part authors, as it
-causes the edge lines in the default color (light gray) to be much more
-visible.
+all edge lines to be drawn in black or dark gray.  This can be particularly
+useful to part authors, as it causes the edge lines for the default color (light
+gray) to be much more visible.  Dark gray edges are used on dark colors, and
+black edges are used on all other colors.<BR/>
+If <A HREF="#ProcessLDConfig"><I>Process ldconfig.ldr</I></A> is checked in the
+General Preferences, LDView will look for a entries in ldconfig.ldr with color
+names of Black_Edge and Dark_Gray_Edge.  If it finds either entry, it will use
+that color instead of black or dark gray.
 </P>
 <P>
-<I>Thickness</I> (Default: <I>0%</I>):<BR>
+<I>Thickness</I> (Default: <I>0%</I>):<BR/>
 This option is only available if edge lines are enabled.  It adjusts the
 thickness of the lines used to draw the edges around the pieces.
 </P>
 
 <P>
-<FONT SIZE="+2"><B><A NAME="EffectsTab">Effects Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="EffectsTab">Effects Tab</A></B></FONT><BR/>
 </P>
 <P>
-<I>Reset</I>:<BR>
+<I>Reset</I>:<BR/>
 This resets all the Effects preferences to their default values.  As with all
 other preference changes, you must hit OK or Apply for the reset values to go
 into effect.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="EffectsLightingBox">Lighting Box</A></B></FONT><BR>
-<I>Lighting</I> (Default: <I>On</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="EffectsLightingBox">Lighting Box</A></B></FONT><BR/>
+<I>Lighting</I> (Default: <I>On</I>):<BR/>
 Enabling this option enables lighting.  If you disable lighting, it is strongly
 recommended that you enable <A HREF="#DrawEdges">edge lines</A>, unless you are
 in <A HREF="#GeometryWireframeBox">wireframe</A> mode.
 </P>
 <P>
-<A NAME="QualityLighting"><I>High quality</I></A> (Default: <I>Off</I>):<BR>
+<A NAME="QualityLighting"><I>High quality</I></A> (Default: <I>Off</I>):<BR/>
 This option is only available if lighting is enabled.  Selecting this enables
 high quality lighting.  The easiest way to see the difference between having
 this option on and off is with a baseplate.  If you angle a baseplate until the
@@ -1330,20 +1804,20 @@ surface when it is disabled.  Enabling this can significantly decrease
 performance, especially with large models.
 </P>
 <P>
-<I>Subdued</I> (Default: <I>Off</I>):<BR>
+<I>Subdued</I> (Default: <I>Off</I>):<BR/>
 This option is only available if lighting is enabled.  Selecting this sets the
 lighting to a subdued level.  Subdued lighting is about halfway in between
 standard lighting and no lighting at all.  This can produce nice results when
 <A HREF="#DrawEdges">edge lines</A> are enabled.
 </P>
 <P>
-<A NAME="Specular"><I>Specular highlight</I></A> (Default: <I>On</I>):<BR>
+<A NAME="Specular"><I>Specular highlight</I></A> (Default: <I>On</I>):<BR/>
 This option is only available if lighting is enabled.  Selecting this turns on
 the specular highlight.  This causes the model to appear shiny.
 </P>
 <P>
 <A NAME="AlternateLighting"><I>Alternate setup</I></A> (Default:
-<I>Off</I>):<BR>
+<I>Off</I>):<BR/>
 This option is only available if lighting is enabled.  Selecting this causes
 LDView to use an alternate lighting setup, which may improve performance on some
 video cards, but will more likely decrease performance.  The alternate setup is
@@ -1352,51 +1826,51 @@ whether or not this option is enabled, since specular highlight only works
 properly with the alternate setup.
 </P>
 <P>
-<A NAME="LightDirection"><I>Light direction</I></A><BR>
-Set the direction the light comes from to a pre-set angle.<BR>
+<A NAME="LightDirection"><I>Light direction</I></A><BR/>
+Set the direction the light comes from to a pre-set angle.<BR/>
 Please note: If you <A HREF="#MouseLightDirection">change the light direction
 with the mouse</A>, it is almost certain that none of the pre-set light
 direction buttons will be highlighted.
 </P>
 <P>
-<I>Upper left</I></A> (Default?: <I>No</I>):<BR>
+<I>Upper left</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from the upper left.
 </P>
 <P>
-<I>Above</I></A> (Default?: <I>No</I>):<BR>
+<I>Above</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from above.
 </P>
 <P>
-<I>Upper right</I></A> (Default?: <I>No</I>):<BR>
+<I>Upper right</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from the upper right.
 </P>
 <P>
-<I>Left</I></A> (Default?: <I>No</I>):<BR>
+<I>Left</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from the left.
 </P>
 <P>
-<I>Middle</I></A> (Default?: <I>Yes</I>):<BR>
+<I>Middle</I>(Default?: <I>Yes</I>):<BR/>
 Set the light direction to come from the middle (always pointing in exactly the
 same direction the camera is pointing).
 </P>
 <P>
-<I>Right</I></A> (Default?: <I>No</I>):<BR>
+<I>Right</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from the right.
 </P>
 <P>
-<I>Lower left</I></A> (Default?: <I>No</I>):<BR>
+<I>Lower left</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from the lower left.
 </P>
 <P>
-<I>Below</I></A> (Default?: <I>No</I>):<BR>
+<I>Below</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from below.
 </P>
 <P>
-<I>Lower right</I></A> (Default?: <I>No</I>):<BR>
+<I>Lower right</I>(Default?: <I>No</I>):<BR/>
 Set the light direction to come from the lower right.
 </P>
 <P>
-<A><I>Use LIGHT.DAT lights</I></A> (Default: <I>On</I>):<BR>
+<I>Use LIGHT.DAT lights</I>(Default: <I>On</I>):<BR/>
 This option is only available if lighting is enabled.  Selecting this causes
 LDView to put point light sources in the scene in the locations where LIGHT.DAT
 is used as a part.  LDView uses the color assigned to the light part as the
@@ -1405,7 +1879,7 @@ color for the light source.  Note that at most 8 lights will be shown by LDView
 will be shown. 
 </P>
 <P>
-<A><I>Replace standard light</I></A> (Default: <I>On</I>):<BR>
+<I>Replace standard light</I>(Default: <I>On</I>):<BR/>
 This option is only available if lighting is enabled and Use LIGHT.DAT lights is
 checked.  Selecting this causes LDView to not use its standard light source any
 time a model is loaded that contains one or more LIGHT.DAT parts.  Models that
@@ -1415,20 +1889,20 @@ light source will often result in too much light, leading to a kind of
 overexposure effect. 
 </P>
 <P>
-<A><I>Hide LIGHT.DAT geometry</I></A> (Default: <I>Off</I>):<BR>
+<I>Hide LIGHT.DAT geometry</I>(Default: <I>Off</I>):<BR/>
 Selecting this causes LDView to not display the geometry from LIGHT.DAT parts.
 Since the geometry is a small set of 3D coordinate axes, you often don't want to
 see it.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR>
-<I>Stereo</I> (Default: <I>Off</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="EffectsStereoBox">Stereo Box</A></B></FONT><BR/>
+<I>Stereo</I> (Default: <I>Off</I>):<BR/>
 Enabling this option turns on stereo mode.  Stereo mode draws two images: a
 slightly different one for each eye.
 </P>
 <P>
-<I>Cross-eyed</I> (Default?: <I>No</I>):<BR>
+<I>Cross-eyed</I> (Default?: <I>No</I>):<BR/>
 This option is only available if stereo is enabled.  Selecting this sets the
 stereo mode to cross-eyed stereo.  The two images are drawn side by side, with
 the image for the right eye on the left and the image for the left eye on the
@@ -1437,7 +1911,7 @@ image.  Many people find it difficult or even impossible to focus with their
 eyes crossed.
 </P>
 <P>
-<I>Parallel</I> (Default?: <I>No</I>):<BR>
+<I>Parallel</I> (Default?: <I>No</I>):<BR/>
 This option is only available if stereo is enabled.  Selecting this sets the
 stereo mode to parallel stereo.  The two images are drawn side by side, with the
 image for the right eye on the right and the image for the left eye on the left.
@@ -1448,7 +1922,7 @@ narrow.  Many people find it difficult or even impossible to look at an image in
 this way and then focus.
 </P>
 <P>
-<I>Amt</I> (Default: <I>50%</I>):<BR>
+<I>Amount</I> (Default: <I>50%</I>):<BR/>
 This option is only available if stereo is enabled.  The slider controls the
 stereo spacing.  A small value will result in a very subtle stereoscopic effect,
 as if you were looking at a very large object from a very long distance.  (The
@@ -1459,27 +1933,27 @@ object from a very short distance.
 
 <P>
 <FONT SIZE="+1"><B><A NAME="EffectsCutawayBox">Wireframe Cutaway
-Box</A></B></FONT><BR>
+Box</A></B></FONT><BR/>
 <A NAME="WireframeCutaway"><I>Wireframe cutaway</I></A> (Default:
-<I>Off</I>):<BR>
+<I>Off</I>):<BR/>
 Enabling this option causes the cutaway portion of the model to be drawn in
 wireframe.  Hold down the Control key and click and drag up with the right mouse
 button to increase the amount of the model that is cut away.  Control right drag
 down to decrease the cutaway amount.
 </P>
 <P>
-<I>Color</I> (Default?: <I>No</I>):<BR>
+<I>Color</I> (Default?: <I>No</I>):<BR/>
 This option is only available if wireframe cutaway is enabled.  Selecting it
 causes the wireframe cutaway to be drawn in color.
 </P>
 <P>
-<I>Monochrome</I> (Default?: <I>No</I>):<BR>
+<I>Monochrome</I> (Default?: <I>No</I>):<BR/>
 This option is only available if wireframe cutaway is enabled.  Selecting it
 causes the wireframe cutaway to be drawn in monochrome.  This isn't available on
 all graphics cards.
 </P>
 <P>
-<I>Opacity</I> (Default: <I>100%</I>):<BR>
+<I>Opacity</I> (Default: <I>100%</I>):<BR/>
 This option is only available if wireframe cutaway is enabled.  The slider
 controls the opacity of the wireframe cutaway.  When Color is selected as the
 type of wireframe cutaway to draw this may be fixed at 100% on some graphics
@@ -1488,15 +1962,15 @@ transparency box, transparent pieces will ignore the opacity setting and be
 drawn with the standard opacity for transparent pieces.
 </P>
 <P>
-<I>Thickness</I> (Default: <I>0%</I>):<BR>
+<I>Thickness</I> (Default: <I>0%</I>):<BR/>
 This option is only available if wireframe cutaway is enabled.  The slider
 controls the thickness of the lines in the wireframe cutaway.
 </P>
 
 <P>
 <FONT SIZE="+1"><B><A NAME="EffectsTransparencyBox">Transparency
-Box</A></B></FONT><BR>
-<I>Sort transparent polygons</I> (Default: <I>On</I>):<BR>
+Box</A></B></FONT><BR/>
+<I>Sort transparent polygons</I> (Default: <I>On</I>):<BR/>
 Enabling this option causes transparent shapes to be drawn in back-to-front
 order in order to produce a correct result.  If they aren't sorted, distant
 transparent shapes can end up being drawn as if they were in front of less
@@ -1505,7 +1979,7 @@ slowdown in some models.  This option is mutually exclusive with the use stipple
 pattern option.
 </P>
 <P>
-<I>Use stipple pattern</I> (Default: <I>Off</I>):<BR>
+<I>Use stipple pattern</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes transparent shapes to be drawn using a stipple
 (checkerboard) pattern.  This may be significantly faster on some video hardware,
 but with potentially reduced quality.  Using the stipple pattern totally
@@ -1515,8 +1989,8 @@ transparent polygons option.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="EffectsMiscBox">Misc Box</A></B></FONT><BR>
-<I>Flat shading</I> (Default: <I>Off</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="EffectsMiscBox">Misc Box</A></B></FONT><BR/>
+<I>Flat shading</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes flat shading to be used.  Note that while flat
 shading is less complicated to draw, with a modern 3D accelerator this will not
 likely improve the performance at all. Flat shading will only likely provide a
@@ -1526,7 +2000,7 @@ enabled, in which case turning on flat shading can produce odd results.  This
 option is mutually exclusive with the smooth curves option.
 </P>
 <P>
-<I>Smooth curves</I> (Default: <I>On</I>):<BR>
+<I>Smooth curves</I> (Default: <I>On</I>):<BR/>
 Enabling this option causes curved surfaces to be shaded as curved surfaces
 instead of as facets.  Since this relies on information in the LDraw model file
 that was originally designed for a different purpose, not all curved surfaces
@@ -1535,10 +2009,10 @@ option.
 </P>
 
 <P>
-<FONT SIZE="+2"><B><A NAME="PrimitivesTab">Primitives Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="PrimitivesTab">Primitives Tab</A></B></FONT><BR/>
 </P>
 <P>
-<I>Reset</I>:<BR>
+<I>Reset</I>:<BR/>
 This resets all the Primitives preferences to their default values.  As with all
 other preference changes, you must hit OK or Apply for the reset values to go
 into effect.
@@ -1546,39 +2020,39 @@ into effect.
 
 <P>
 <FONT SIZE="+1"><B><A NAME="PrimitivesSubstitutionBox">Primitive Substitution
-Box</A></B></FONT><BR>
+Box</A></B></FONT><BR/>
 <A NAME="PrimitiveSubstitution"><I>Primitive substitution</I></A> (Default:
-<I>On</I>):<BR>
+<I>On</I>):<BR/>
 Enabling this option causes LDView to use its own optimized version of many of
 the primitives (such as cylinders, cones, etc).  As well as providing enhanced
 performance, this also provides improved visual quality, since smooth shaded
 primitives are generated where appropriate.
 </P>
 <P>
-<I>Texture studs</I> (Default: <I>On</I>):<BR>
+<I>Texture studs</I> (Default: <I>On</I>):<BR/>
 This option is only available if primitive substitution is enabled.  Enabling
 it causes a LEGO&reg; logo to be textured onto all the standard studs.
 </P>
 <P>
-<I>Nearest filtering</I> (Default?: <I>No</I>):<BR>
+<I>Nearest filtering</I> (Default?: <I>No</I>):<BR/>
 This option is only available if primitive substitution and texture studs are
 both enabled.  Selecting it causes nearest texel texture filtering to be used.
 This is the lowest quality texture filtering.
 </P>
 <P>
-<I>Bilinear filtering</I> (Default?: <I>No</I>):<BR>
+<I>Bilinear filtering</I> (Default?: <I>No</I>):<BR/>
 This option is only available if primitive substitution and texture studs are
 both enabled.  Selecting it causes bilinear texture filtering to be used.
 This is the middle quality texture filtering.
 </P>
 <P>
-<I>Trilinear filtering</I> (Default?: <I>Yes</I>):<BR>
+<I>Trilinear filtering</I> (Default?: <I>Yes</I>):<BR/>
 This option is only available if primitive substitution and texture studs are
 both enabled.  Selecting it causes trilinear texture filtering to be used.
 This is the highest quality texture filtering.
 </P>
 <P>
-<I>Anisotropic filtering</I> (Default?: <I>No</I>):<BR>
+<I>Anisotropic filtering</I> (Default?: <I>No</I>):<BR/>
 This option is only available if primitive substitution and texture studs are
 both enabled, and your video card supports it.  Selecting it causes anisotropic
 texture filtering to be used.  When anisotropic filtering is selected, you can
@@ -1586,14 +2060,14 @@ pick the filtering level on the slider to the right of the radio button.  This
 is the highest quality texture filtering.
 </P>
 <P>
-<I>Anisotropic filtering level</I> (Default: <I>Off</I>):<BR>
+<I>Anisotropic filtering level</I> (Default: <I>Off</I>):<BR/>
 This option is only available if primitive substitution and texture studs are
 both enabled, and anisotropic filtering is selected as the filtering type.  It
 adjusts the anisotropic filtering level.  Higher numbers produce higher quality
 filtering.
 </P>
 <P>
-<I>Curve quality</I> (Default: <I>9%</I>):<BR>
+<I>Curve quality</I> (Default: <I>9%</I>):<BR/>
 This option is only available if primitive substitution is enabled.  It adjusts
 the quality of substituted primitives by changing the number of facets used to
 draw curved primitives.  Changing this from its default value can lead to holes
@@ -1603,14 +2077,14 @@ The default setting of 2 (9%) is fine for most models.
 </P>
 
 <P>
-<FONT SIZE="+1"><B><A NAME="PrimitivesMiscBox">Misc Box</A></B></FONT><BR>
-<I>Low quality studs (faster)</I> (Default: <I>On</I>):<BR>
+<FONT SIZE="+1"><B><A NAME="PrimitivesMiscBox">Misc Box</A></B></FONT><BR/>
+<I>Low quality studs (faster)</I> (Default: <I>On</I>):<BR/>
 Enabling this option switches to using the low-resolution stud files instead of
 the normal-resolution stud files.  This can produce significantly faster
 rendering.
 </P>
 <P>
-<I>Use hi-res primitives when available</I> (Default: <I>Off</I>):<BR>
+<I>Use hi-res primitives when available</I> (Default: <I>Off</I>):<BR/>
 Enabling this option causes LDView to attempt to load hi-res versions of
 primitives before loading the standard ones.  The hi-res primitives are
 otherwise known as 48-sided primitives, because they approximate circular
@@ -1620,10 +2094,10 @@ the hi-res ones.
 </P>
 
 <P>
-<FONT SIZE="+2"><B><A NAME="UpdatesTab">Updates Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="UpdatesTab">Updates Tab</A></B></FONT><BR/>
 </P>
 <P>
-<I>Reset</I>:<BR>
+<I>Reset</I>:<BR/>
 This resets all the Updates preferences to their default values.  As with all
 other preference changes, you must hit OK or Apply for the reset values to go
 into effect.
@@ -1631,16 +2105,16 @@ into effect.
 
 <P>
 <FONT SIZE="+1"><B><A NAME="InternetProxyBox">Internet Proxy
-Box</A></B></FONT><BR>
-<I>Direct connection to the Internet</I> (Default?: <I>Yes</I>):<BR>
+Box</A></B></FONT><BR/>
+<I>Direct connection to the Internet</I> (Default?: <I>Yes</I>):<BR/>
 Select this if you have a direct connection to the Internet and don't want to
 use a proxy server.</P>
 <P>
-<I>Use simple Windows proxy configuration</I> (Default?: <I>No</I>):<BR>
+<I>Use simple Windows proxy configuration</I> (Default?: <I>No</I>):<BR/>
 Select this if you want to use the HTTP proxy setting that you configured in
 Internet Explorer.
 </P>
-<P>
+<P/>
 <I>Notes:</I>
 <UL>
 <LI>This only works if you have a proxy server manually configured in Internet
@@ -1648,32 +2122,31 @@ Explorer.  Automatic proxy configurations are not supported.</LI>
 <LI>As might be expected, this option is only available in the Windows version
 of LDView.</LI>
 </UL>
-</P>
 <P>
-<I>Manual proxy configuration</I> (Default?: <I>No</I>):<BR>
+<I>Manual proxy configuration</I> (Default?: <I>No</I>):<BR/>
 Select this to manually configure your HTTP proxy server in the space provided
 below.
 </P>
 <P>
-<I>Proxy</I> (Default: <I>None</I>):<BR>
+<I>Proxy</I> (Default: <I>None</I>):<BR/>
 Set this to the name or IP address of your HTTP proxy server.  This can only be
 entered if Manual proxy configuration is selected above.
 </P>
 <P>
-<I>Port</I> (Default: <I>None</I>):<BR>
+<I>Port</I> (Default: <I>None</I>):<BR/>
 Set this to the port of your HTTP proxy server.  This can only be entered if
 Manual proxy configuration is selected above.
 </P>
 
 <P>
 <FONT SIZE="+1"><B><A NAME="MissingPartsBox">Missing Parts
-Box</A></B></FONT><BR>
-<I>Automatically check LDraw.org for missing parts</I> (Default: <I>On</I>):<BR>
+Box</A></B></FONT><BR/>
+<I>Automatically check LDraw.org for missing parts</I> (Default: <I>On</I>):<BR/>
 Enabling this causes LDView to automatically check the LDraw.org Parts Tracker
 when it can't find a file.  If the part exists on the Parts Tracker, it will
 automatically be downloaded and used.
 </P>
-<P>
+<P/>
 <TABLE>
 	<TR VALIGN="TOP">
 		<TD><I>Note:</I></TD>
@@ -1683,16 +2156,15 @@ automatically be downloaded and used.
 		connection again.</TD>
 	</TR>
 </TABLE>
-</P>
 <P>
-<I>Days between missing part checks</I> (Default: <I>7</I>):<BR>
+<I>Days between missing part checks</I> (Default: <I>7</I>):<BR/>
 Set this to the number of days you want LDView to wait between checks to the
 LDraw.org Parts Tracker when a part cannot be found.  This delay is used when
 the part cannot be found on the Parts Tracker.  This number must be greater than
 zero.
 </P>
 <P>
-<I>Days between updated part checks</I> (Default: <I>7</I>):<BR>
+<I>Days between updated part checks</I> (Default: <I>7</I>):<BR/>
 Set this to the number of days you want LDView to wait between checks for
 updates to an unofficial part that it has successfully downloaded from the
 LDraw.org Parts Tracker.  Since unofficial parts can update on the Parts
@@ -1702,10 +2174,10 @@ encounters unofficial parts in a model.  This number must be greater than zero.
 
 <P>
 <FONT SIZE="+2"><B><A NAME="PreferenceSetsTab">Preference Sets
-Tab</A></B></FONT><BR>
+Tab</A></B></FONT><BR/>
 </P>
 <P>
-<I>Use the following preference set</I>:<BR>
+<I>Use the following preference set</I>:<BR/>
 This list shows all of the available preference sets.  Until you create new ones,
 there is only one item in this list, named &lt;Default&gt;.  Selecting an item
 from this list will cause LDView to use the preferences stored in that set after
@@ -1714,23 +2186,23 @@ select a new preference set, it will prompt you whether you want to apply those
 changes, abandon them, or cancel your selection.
 </P>
 <P>
-<I>Hot Key</I>:<BR>
+<I>Hot Key</I>:<BR/>
 This allows you to assign a hot key to the currently selected preference set.
 There are 10 possible hot keys: Ctrl + Shift + 1 through Ctrl + Shift + 0.  Once
 a hot key has been assigned to a preference set, you can use it when viewing a
 model to immediately switch to that preference set.
 </P>
 <P>
-<I>Delete</I>:<BR>
+<I>Delete</I>:<BR/>
 This deletes the currently selected preference set.
 </P>
 <P>
-<I>New</I>:<BR>
+<I>New</I>:<BR/>
 This creates a new preference set that will initially contain all the current
 settings.
 </P>
 <P>
-<FONT SIZE="+1"><B>OK/Apply</B></FONT><BR>
+<FONT SIZE="+1"><B>OK/Apply</B></FONT><BR/>
 Changing certain of the options above will require the model to either be
 reprocessed, or reloaded entirely.  If you change any of these options, there
 will be a pause after you hit OK or Apply while it either reprocesses or
@@ -1739,71 +2211,71 @@ the status bar is not set to be visible, it will be made visible temporarily.
 </P>
 
 <P>
-<FONT SIZE="+2"><B><A NAME="ScreenSaverTab">Screen Saver Tab</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="ScreenSaverTab">Screen Saver Tab</A></B></FONT><BR/>
 </P>
 <P>
 <B>Note:</B> This tab is only available when configuring the
 <A HREF="#ScreenSaver">LDView screen saver.</A>
 </P>
 <P>
-<I>File</I>:<BR>
+<I>File</I>:<BR/>
 Select this to have the LDView Screen Saver always display a specific file.  Use
 the Browse button to the right to select the file.
 </P>
 <P>
-<I>Browse</I> (next to File):<BR>
+<I>Browse</I> (next to File):<BR/>
 Use this to select the file that the LDView Screen Saver will display.
 </P>
 <P>
-<I>Directory</I>:<BR>
+<I>Directory</I>:<BR/>
 Select this to have the LDView Screen Saver randomly select a model file from
 the specified directory each time it runs.  The file will be randomly selected
 from all the DAT, MPD, and LDR files in the directory.  Use the Browse button to
 the right to select the directory.
 </P>
 <P>
-<I>Browse</I> (next to Directory):<BR>
+<I>Browse</I> (next to Directory):<BR/>
 Use this to select the directory that the LDView Screen Saver looks in for
 models.
 </P>
 <P>
-<I>Size</I>:<BR>
+<I>Size</I>:<BR/>
 Use this to control how large the model that is displayed by the LDView Screen
 Saver will be.
 </P>
 <P>
-<I>Speed</I>:<BR>
+<I>Speed</I>:<BR/>
 Use this to control how fast the model that is displayed by the LDView Screen
 Saver moves.
 </P>
 <P>
-<I>Rotation Speed</I>:<BR>
+<I>Rotation Speed</I>:<BR/>
 Use this to control how fast the model that is displayed by the LDView Screen
 Saver rotates.
 </P>
 <P>
-<I>Random Preference Set</I>:<BR>
+<I>Random Preference Set</I>:<BR/>
 Causes the screen saver to randomly choose a preference set each time it runs.
 Since the file/directory choice is part of the preference set, this also allows
 you to have different models displayed with different settings.
 </P>
 <P>
-<I>Sleep Mode work-around</I>:<BR>
+<I>Sleep Mode work-around</I>:<BR/>
 This will only be enabled if it is supported by your operating system.  Check
 this if your system won't go into sleep mode when using the LDView Screen Saver,
-even though it is set to go into sleep mode.  It may solve the problem.<BR>
+even though it is set to go into sleep mode.  It may solve the problem.<BR/>
 Note that if you have a screen saver password set and use this, you will have a
 blank screen if you wake the computer up from sleep mode and then cancel the
 password prompt.
 </P>
 <P>
-<I>Reset</I>:<BR>
+<I>Reset</I>:<BR/>
 This resets all the Screen Saver preferences to their default values.  As with
 all other preference changes, you must hit OK or Apply for the reset values to
 go into effect.
 </P>
 
-<BR>
+<BR/>
 <P>
 </P>
 <A NAME="CommandLine"></A>
@@ -1827,11 +2299,11 @@ behave as though LDView has exited immediately after it launches.  It won't
 necessarily wait for LDView to exit before giving you another prompt.
 <P>
 <FONT SIZE="+2"><B><A NAME="CommandLineFilename">Specifying a
-Filename</A></B></FONT><BR>
+Filename</A></B></FONT><BR/>
 </P>
 <P>
 You can specify a filename on the command line, and LDView will open that file
-(if it exists) instead of presenting you with the initial Open Panel.  You must
+(if it exists) instead of presenting you with the initial Open dialog.  You must
 either specify the complete pathname of the file, including the extension
 (e.g. .ldr, .dat, .mpd), or be in the directory that contains the file when you
 run LDView.  Note that if your filename contains spaces, the entire filename
@@ -1840,7 +2312,7 @@ line with long filenames.)
 </P>
 <P>
 <FONT SIZE="+2"><B><A NAME="SnapshotFilename">Specifying a Snapshot
-Filename</A></B></FONT><BR>
+Filename</A></B></FONT><BR/>
 </P>
 <P>
 You can use the -SaveSnapshot command line option to have LDView take a
@@ -1863,7 +2335,7 @@ good way of knowing when LDView has finished executing.
 </P>
 <P>
 <FONT SIZE="+2"><B><A NAME="L3PCompatibility">L3P-compatible
-Options</A></B></FONT><BR>
+Options</A></B></FONT><BR/>
 </P>
 <P>
 To make things easier for L3P users, LDView supports the -cg and -ca options
@@ -1877,7 +2349,7 @@ after the option name.
 <TR>
 <TD VALIGN="TOP"><TT>-ca&lt;a&gt;</TT></TD>
 <TD>
-Camera Angle:<BR>
+Camera Angle:<BR/>
 This sets the horizontal camera angle to the value specified by &lt;a&gt;.  Note
 that this is different from the FOV setting (-FOV=&lt;a&gt;).  The FOV setting
 sets either the vertical or horizontal camera angle depending on the shape of
@@ -1889,7 +2361,7 @@ matter what shape the image is.
 </TR>
 <TR>
 <TD VALIGN="TOP"><TT>-cg&lt;la&gt;,&lt;lo&gt;[,&lt;r&gt;]</TT></TD>
-<TD><A NAME="CameraGlobe">Camera Globe position:</A><BR>
+<TD><A NAME="CameraGlobe">Camera Globe position:</A><BR/>
 This places the camera on an imaginary globe at latitude &lt;la&gt; and
 longitude &lt;lo&gt;, pointing at the model.  If the radius &lt;r&gt; is zero or
 not specified, LDView will use its standard camera distance calculation as the
@@ -1905,14 +2377,14 @@ Example:
 </PRE>
 <P>
 <FONT SIZE="+2"><B><A NAME="CommandLinePrefs">Specifying
-Preferences</A></B></FONT><BR>
+Preferences</A></B></FONT><BR/>
 </P>
 <P>
-All of the options available in the Preferences Panel can be set from the
+All of the options available in the Preferences dialog can be set from the
 command line, if so desired.  These are all preceded with a - in order to
 indicate that an option is being specified.  Command line settings override
-settings in the Preferences Panel.  They may be saved as a persistent preference
-if you modify them or other preferences via the Preferences Panel.  Otherwise,
+settings in the Preferences dialog.  They may be saved as a persistent preference
+if you modify them or other preferences via the Preferences dialog.  Otherwise,
 the old values will be used the next time you run the program without specifying
 a value for those options on the command line.  Preferences are set on the
 command line in the following manner:
@@ -1926,8 +2398,8 @@ following:
 	LDView -WindowWidth=640 -WindowHeight=480
 </PRE>
 Below is a list of all the possible settings.  Note that while most of these
-settings correspond directly to the Preferences Panel interface, some may have
-inverted logic from the panel (as noted).  The Type column can be any one of the
+settings correspond directly to the Preferences dialog interface, some may have
+inverted logic from the dialog (as noted).  The Type column can be any one of the
 following:
 <P>
 </P>
@@ -1990,15 +2462,15 @@ following:
 The <I>Global?</I> column indicates whether the setting is a global setting, or
 one that is preference set-specific.  Global settings apply to all preference
 sets, while preference set-specific settings are saved with each preference set.
-In general, settings that show up in the Preferences panel are preference
+In general, settings that show up in the Preferences dialog are preference
 set-specific, while others aren't.
 </P>
 <P>
-<FONT SIZE="+2"><B><A NAME="PrefList">List of All Preferences</A></B></FONT><BR>
+<FONT SIZE="+2"><B><A NAME="PrefList">List of All Preferences</A></B></FONT><BR/>
 </P>
 <P>
 </P>
-<TABLE BGCOLOR="#FFFFDD" CELLPADDING=5 CELLSPACING=0 CLASS="SettingsList">
+<TABLE BGCOLOR="#FFFFDD" CELLPADDING="5" CELLSPACING="0" CLASS="SettingsList">
 	<TR>
 		<TH BGCOLOR="#0080D0"><FONT COLOR="#FFFFFF">Setting</FONT></TH>
 		<TH BGCOLOR="#0080D0"><FONT COLOR="#FFFFFF">Type</FONT></TH>
@@ -2022,6 +2494,24 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<A NAME="AnisoLevelSetting">AnisoLevel</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Integer
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Anisotropic filtering</I> slider in the
+			<I>Primitives-&gt;Primitive substitution</I> box.  Note that this
+			value is ignored if the
+			<A HREF="#TextureFilterTypeSetting">TextureFilterType</A> setting
+			isn't set to trilinear/anisotropic.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			Antialias
 		</TD>
 		<TD VALIGN="TOP">
@@ -2032,17 +2522,17 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>General-&gt;Antialiasing-&gt;FSAA</I> combo
-			box.  Selects which FSAA option to request:<BR>
-			0: none (<I>Full-scene Antialiasing</I> check box not checked).<BR>
-			2: 2x<BR>
-			3: 2x Enhanced<BR>
-			4: 4x<BR>
-			5: 4x Enhanced<BR>
-			16+: FSAA level * 8 (see below)<BR>
+			box.  Selects which FSAA option to request:<BR/>
+			0: none (<I>Full-scene Antialiasing</I> check box not checked).<BR/>
+			2: 2x<BR/>
+			3: 2x Enhanced<BR/>
+			4: 4x<BR/>
+			5: 4x Enhanced<BR/>
+			16+: FSAA level * 8 (see below)<BR/>
 			Note that while all but the first option request FSAA to be used, it
 			will only be used on graphics hardware that supports FSAA in
 			addition to supporting the OpenGL extension that allows it to be set
-			from a program other than the driver control panel.<BR>
+			from a program other than the driver control panel.<BR/>
 			Any standard FSAA mode can be requested by taking the desired FSAA
 			level and multiplying by 8.  For example, 6x FSAA on ATI cards can
 			be requested by setting Antialias to 48.  If you request a mode that
@@ -2060,9 +2550,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Sets whether or not LDView will auto-crop snapshots so that the
-			image is only as big as it needs to be to display the model.  Note
-			that there is no way to set this value in the LDView interface.
+			Equivlent to the <A HREF="#AutoCropCheck"><i>Auto-crop</i></A> check
+			box in the <A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A>
+			dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -2117,8 +2607,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			BottomMargin
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Integer<BR/>
 			(0-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2131,10 +2621,25 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			BoundingBoxesOnly
+		</TD>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to <I>Part bounding boxes only</I> check box in
+			the <I>Geometry-&gt;Model</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			CameraGlobe
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			String<BR>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			String<BR/>
 		</TD>
 		<TD VALIGN="TOP">
 			YES
@@ -2207,8 +2712,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			CurveQuality
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Integer<BR/>
 			(1-12)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2221,10 +2726,10 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			CustomColors/Color00 -<BR>
+			CustomColors/Color00 -<BR/>
 			CustomColors/Color15
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
 			Color
 		</TD>
 		<TD VALIGN="TOP">
@@ -2239,8 +2744,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			CutawayAlpha
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Integer<BR/>
 			(1-100)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2265,9 +2770,9 @@ set-specific, while others aren't.
 			Equivalent to the <I>Color</I> and <I>Monochrome</I> radio buttons
 			and the <I>Wireframe cutaway</I> check box in the
 			<I>Effects-&gt;Wireframe cutaway</I> box.  Selects the cutaway
-			mode:<BR>
-			0: None (<I>Wireframe cutaway</I> check box not checked)<BR>
-			1: Color<BR>
+			mode:<BR/>
+			0: None (<I>Wireframe cutaway</I> check box not checked)<BR/>
+			1: Color<BR/>
 			2: Monochrome
 		</TD>
 	</TR>
@@ -2276,7 +2781,7 @@ set-specific, while others aren't.
 			CutawayThickness
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(1-5)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2308,6 +2813,20 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			<A NAME="DefaultLatitudeSetting">DefaultLatitude</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Float
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Latitude to use when view is reset when in
+			<A HREF="#LatLonMode">Latitude/Longitude Rotation Mode.</A></TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			<A NAME="DefaultLatLongSetting">DefaultLatLong</A>
 		</TD>
 		<TD VALIGN="TOP">
@@ -2323,6 +2842,20 @@ set-specific, while others aren't.
 			the command line (or in the registry) overrides the
 			<A HREF="#DefaultMatrixSetting">DefaultMatrix</A> setting.
 		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="DefaultLongitudeSetting">DefaultLongitude</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Float
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Longitude to use when view is reset when in
+			<A HREF="#LatLonMode">Latitude/Longitude Rotation Mode.</A></TD>
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
@@ -2345,7 +2878,7 @@ set-specific, while others aren't.
 			<A NAME="DefaultZoomSetting">DefaultZoom</A>
 		</TD>
 		<TD VALIGN="TOP">
-			Decimal<BR>(0.1-???)
+			Decimal<BR/>(0.1-???)
 		</TD>
 		<TD VALIGN="TOP">
 			NO
@@ -2358,6 +2891,21 @@ set-specific, while others aren't.
 			interface.  Note that if you set it too high, the
 			<A HREF="#ZoomMaxSetting">ZoomMax</A> setting will take over, and
 			prevent the view from being zoomed in so far.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			DrawLightDats
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Use LIGHT.DAT lights</I> check box in the
+			<I>Effects-&gt;Lighting</I> box.
 		</TD>
 	</TR>
 	<TR>
@@ -2398,7 +2946,7 @@ set-specific, while others aren't.
 			EdgeThickness
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(1-5)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2411,10 +2959,63 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			ExtraSearchDirs/Dir001 -<BR>
+			ExamineMode
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Selects the examine rotation mode:<BR/>
+			0: Normal rotation<BR/>
+			1: Latitude/Longitude rotation<BR/>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ExportsDir
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Exports</I> field in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the
+			default directory for export saves when
+			<A HREF="#ExportsDirModeSetting">-ExportsDirMode</A> is set to
+			2.<BR/>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="ExportsDirModeSetting">ExportsDirMode</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Exports</I> popup in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the mode
+			for default save directory selection:<BR/>
+			0: Model directory<BR/>
+			1: Last Used<BR/>
+			2: Selected<BR/>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ExtraSearchDirs/Dir001 -<BR/>
 			ExtraSearchDirs/Dir999
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
 			String
 		</TD>
 		<TD VALIGN="TOP">
@@ -2433,8 +3034,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			FOV
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Decimal<BR>(0.1-90.0)
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Decimal<BR/>(0.1-90.0)
 		</TD>
 		<TD VALIGN="TOP">
 			NO
@@ -2573,6 +3174,37 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			IgnoreAniso
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_EXT_texture_filter_anisotropic OpenGL
+			extension, even if it is supported by your video card.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			IgnoreFramebufferObject
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Causes LDView to ignore the GL_EXT_framebuffer_object OpenGL
+			extension, even if it is supported by your video card.  Note that
+			this extension is only used in the QT version of LDView.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			IgnoreMultiDrawArrays
 		</TD>
 		<TD VALIGN="TOP">
@@ -2627,8 +3259,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Causes LDView to ignore the WGL_ARB_pbuffer OpenGL extension, even
-			if it is supported by your video card.
+			Equivalent to the <A HREF="#NoPBufferCheck"><I>Don't use Pixel
+			Buffer</I></A> check box in the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -2695,6 +3328,74 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			InventoryExternalCss
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Generate external style sheet</I> check box in
+			the <I>Parts List</I> dialog.  Since you can't currently generate a
+			Parts List HTML page from the command line, setting this setting
+			from the command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			InventoryPartImages
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show part images</I> check box in the <I>Parts
+			List</I> dialog.  Since you can't currently generate a Parts List
+			HTML page from the command line, setting this setting from the
+			command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			InventoryShowFile
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show generated web page</I> check box in the
+			<I>Parts List</I> dialog.  Since you can't currently generate a
+			Parts List HTML page from the command line, setting this setting
+			from the command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			InventoryShowModel
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show model</I> check box in the <I>Parts
+			List</I> dialog.  Since you can't currently generate a Parts List
+			HTML page from the command line, setting this setting from the
+			command line has extremely limited value.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			LastOpenPath
 		</TD>
 		<TD VALIGN="TOP">
@@ -2713,7 +3414,7 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			LDrawDir
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
 			String
 		</TD>
 		<TD VALIGN="TOP">
@@ -2728,7 +3429,7 @@ set-specific, while others aren't.
 			LeftMargin
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(0-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2755,6 +3456,43 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			LightVector
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Sets the direction for the main light source.  This must be three
+			decimal numbers, separated by commas.  Sample values:<BR/>
+			<TABLE CLASS="SampleData">
+				<TR>
+					<TD ALIGN="RIGHT">0,0,1:</TD>
+					<TD>Straight ahead (default)</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">-1,1,1:</TD>
+					<TD>Upper left</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">1,1,1:</TD>
+					<TD>Upper right</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">-1,-1,1:</TD>
+					<TD>Lower left</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">1,-1,1:</TD>
+					<TD>Lower right</TD>
+				</TR>
+			</TABLE>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			LineSmoothing
 		</TD>
 		<TD VALIGN="TOP">
@@ -2772,7 +3510,7 @@ set-specific, while others aren't.
 			<A NAME="MaxRecentFilesSetting">MaxRecentFiles</A>
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(0-99)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2795,10 +3533,10 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>General-&gt;Misc-&gt;Memory Usage</I> combo
-			box.  Selects the memory usage mode:<BR>
-			0: Low<BR>
-			1: Medium<BR>
-			2: High<BR>
+			box.  Selects the memory usage mode:<BR/>
+			0: Low<BR/>
+			1: Medium<BR/>
+			2: High<BR/>
 		</TD>
 	</TR>
 	<TR>
@@ -2816,7 +3554,7 @@ set-specific, while others aren't.
 			set this, the given value is used as the center of the model.  The
 			default camera placement algorithm uses this location to center the
 			model on the screen.  The value is specified as three
-			comma-separated decimal numbers.  Example:<BR>
+			comma-separated decimal numbers.  Example:<BR/>
 			-ModelCenter=0.0,0.0,0.0
 		</TD>
 	</TR>
@@ -2825,7 +3563,7 @@ set-specific, while others aren't.
 			ModelSize
 		</TD>
 		<TD VALIGN="TOP">
-			Decimal<BR>
+			Decimal<BR/>
 			(Greater than 0.0)
 		</TD>
 		<TD VALIGN="TOP">
@@ -2839,6 +3577,37 @@ set-specific, while others aren't.
 			is visible in the default view.  Note that if you provide a value
 			that is smaller than the actual calculated size, cropping of your
 			model may occur.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			MultiThreaded
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Set this to NO to disable multi-threading on muli-processor systems.
+			In theory, this should only be useful for debugging purposes, and
+			consequently cannot be set from the UI.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			NoLightGeom
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Hide LIGHT.DAT geometry</I> check box in the
+			<I>Effects-&gt;Lighting</I> box.
 		</TD>
 	</TR>
 	<TR>
@@ -2858,6 +3627,21 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			OptionalStandardLight
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Replace standard light</I> check box in the
+			<I>Effects-&gt;Lighting</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			Orientation
 		</TD>
 		<TD VALIGN="TOP">
@@ -2867,8 +3651,8 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Sets the paper orientation during printing:<BR>
-			1: Portrait<BR>
+			Sets the paper orientation during printing:<BR/>
+			1: Portrait<BR/>
 			2: Landscape
 		</TD>
 	</TR>
@@ -2884,15 +3668,52 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Sets the paper size during printing.  There are too many sizes to
-			list all of them here, but here are some of the standard sizes:<BR>
-			1: Letter (8.5 x 11 in)<BR>
-			3: Tabloid (11 x 17 in)<BR>
-			5: Legal (8.5 x 14 in)<BR>
-			8: A3 (297 x 420 mm)<BR>
-			9: A4 (210 x 297 mm)<BR>
+			list all of them here, but here are some of the standard sizes:<BR/>
+			1: Letter (8.5 x 11 in)<BR/>
+			3: Tabloid (11 x 17 in)<BR/>
+			5: Legal (8.5 x 14 in)<BR/>
+			8: A3 (297 x 420 mm)<BR/>
+			9: A4 (210 x 297 mm)<BR/>
 			If you want to use another size, you can print using that size in
-			LDView, and then look at the following key in the registry:<BR>
+			LDView, and then look at the following key in the registry:<BR/>
 			HKEY_CURRENT_USER/Software/Travis Cobbs/LDView/PaperSize
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			PartsListsDir
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Parts Lists</I> field in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the
+			default directory for parts list saves when
+			<A HREF="#PartsListsDirModeSetting">-PartsListsDirMode</A> is set to
+			2.<BR/>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="PartsListsDirModeSetting">PartsListsDirMode</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Parts Lists</I> popup in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the mode
+			for default save directory selection:<BR/>
+			0: Model directory<BR/>
+			1: Last Used<BR/>
+			2: Selected<BR/>
 		</TD>
 	</TR>
 	<TR>
@@ -2921,10 +3742,10 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Selects the polling mode:<BR>
-			0: Disabled<BR>
-			1: Prompt<BR>
-			2: Auto-update when active<BR>
+			Selects the polling mode:<BR/>
+			0: Disabled<BR/>
+			1: Prompt<BR/>
+			2: Auto-update when active<BR/>
 			3: Auto-update immediately
 		</TD>
 	</TR>
@@ -2941,6 +3762,21 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>High quality</I> check box in the
 			<I>Geometry-&gt;Edge Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			PovCameraAspect
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Tools-&gt;Use current aspect ratio for POV-Ray
+			camera</I> menu item.
 		</TD>
 	</TR>
 	<TR>
@@ -2992,7 +3828,7 @@ set-specific, while others aren't.
 			<A NAME="ProxyPortSetting">ProxyPort</A>
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(0-65535)
 		</TD>
 		<TD VALIGN="TOP">
@@ -3032,10 +3868,10 @@ set-specific, while others aren't.
 			Equivalent to the <I>Direct connection to the Internet</I>, <I>Use
 			simple Windows proxy configuration</I>, and <I>Manual proxy
 			configuration</I> radio buttons in the <I>Updates-&gt;Internet
-			Proxy</I> box.  Selects the proxy type:<BR>
-			0: No proxy<BR>
-			1: Simple Windows proxy<BR>
-			2: Manual proxy<BR>
+			Proxy</I> box.  Selects the proxy type:<BR/>
+			0: No proxy<BR/>
+			1: Simple Windows proxy<BR/>
+			2: Manual proxy<BR/>
 			The Windows setting is only available in the Windows verion of
 			LDView.  If you set this to 2 (manual), you must also make sure that
 			the <A HREF="#ProxyServerSetting">ProxyServer</A> and
@@ -3045,10 +3881,10 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			RecentFiles/File01 -<BR>
+			RecentFiles/File01 -<BR/>
 			RecentFiles/File99
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
 			String
 		</TD>
 		<TD VALIGN="TOP">
@@ -3101,7 +3937,7 @@ set-specific, while others aren't.
 			RightMargin
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(0-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -3123,8 +3959,10 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the inverse of the <I>Save image with specific
-			size</I> check box on the Save File dialog box.
+			Equivalent to the inverse of the
+			<A HREF="#SaveSpecificSizeCheck"><I>Save image with specific
+			size</I></A> check box on the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3138,10 +3976,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Causes PNG format snapshots to be saved using an alpha channel to
-			acheive a transparent background.  This option is currently still
-			experimental, and may not work on all video cards.  Note that there
-			is no way to set this value in the LDView interface.
+			Equivalent to the <A HREF="#TransBGCheck"><i>Transparent
+			Background</i></A> check box in the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3149,15 +3986,32 @@ set-specific, while others aren't.
 			SaveDigits
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(1-5)
 		</TD>
 		<TD VALIGN="TOP">
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Number of Digits</I> field in the <I>Save
-			snapshot series</I> box on the Save File dialog box.
+			Equivalent to the <A HREF="#SaveDigitsField"><I>Number of
+			Digits</I></A> field in the <A HREF="#SaveSnapshotOptions"><I>Save
+			Snapshot</I></A> dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveDirSetting">SaveDir</A>
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Only valid from the command line.  Used in conjunction with the
+			<A HREF="#SaveSnapshotsSetting">-SaveSnapshots</A> setting to
+			specify the directory in which to store the snapshots.
 		</TD>
 	</TR>
 	<TR>
@@ -3165,17 +4019,16 @@ set-specific, while others aren't.
 			SaveHeight
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
-			(1-4096)
+			Integer<BR/>
+			(1-9999)
 		</TD>
 		<TD VALIGN="TOP">
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Height</I> field in the <I>Save image with
-			specific size</I> box on the Save File dialog box.  While 4096 is
-			the max for this value, your video card may not support images this
-			tall.
+			Equivalent to the <A HREF="#SaveHeightField"><I>Height</I></A> field
+			in the <A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A>
+			dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3189,9 +4042,14 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Spefies the default image type for snapshot saves:<BR>
-			1: PNG<BR>
-			2: BMP
+			Spefies the default image type for snapshot saves:<BR/>
+			1: PNG<BR/>
+			2: BMP<BR/>
+			Note that this only affects the default image type selected in the
+			save dialog.  Command line snapshots use the file extension.  If
+			the <A HREF="#SnapshotSuffixSetting">SnapshotSuffix</A> setting is
+			specified, that overrides the extension in the actual snapshot
+			filename.
 		</TD>
 	</TR>
 	<TR>
@@ -3205,8 +4063,9 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Save snapshot series</I> check box on the Save
-			File dialog box.
+			Equivalent to the <A HREF="#SaveSeriesCheck"><I>Save snapshot
+			series</I></A> check box in the
+			<A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A> dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3217,7 +4076,7 @@ set-specific, while others aren't.
 			String
 		</TD>
 		<TD VALIGN="TOP">
-			NO
+			YES
 		</TD>
 		<TD VALIGN="TOP">
 			Designed for use on the command line.  The value given is used as a
@@ -3228,20 +4087,89 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			SaveWidth
+			<A NAME="SaveSnapshotsSetting">SaveSnapshots</A>
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
-			(1-4096)
+		<TD VALIGN="TOP">
+			Boolean
 		</TD>
 		<TD VALIGN="TOP">
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Equivalent to the <I>Width</I> field in the <I>Save image with
-			specific size</I> box on the Save File dialog box.  While 4096 is
-			the max for this value, your video card may not support images this
-			wide.
+			Only valid from the command line.  Instructs LDView to create
+			multiple snapshots, one for each LDraw file on the command line.
+			The snapshots get the filename of the LDraw file with the extension
+			replaced with an appropriate one based on the output image file
+			type.  By default, images are stored in the same directory as the
+			model files.  However, this can be overridden with the
+			<A HREF="#SaveDirSetting">-SaveDir</A> setting.  Use the
+			<A HREF="#SnapshotSuffixSetting">-SnapshotSuffix</A> setting to
+			specify the image type.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveStepsSetting">SaveSteps</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <a href="#AllStepsCheck"><i>All Steps</i></a>
+			check box in the <a href="#SaveSnapshotOptions"><i>Save
+			Snapshot</i></a> dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveStepsSameScaleSetting">SaveStepsSameScale</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <a href="#StepsSameScaleCheck"><i>Same
+			Scale</i></a> check box in the
+			<a href="#SaveSnapshotOptions"><i>Save Snapshot</i></a> dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SaveStepsSuffixSetting">SaveStepsSuffix</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <a href="#StepSuffixField"><i>Suffix</i></a> field
+			in the <a href="#SaveSnapshotOptions"><i>Save Snapshot</i></a>
+			dialog box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			SaveWidth
+		</TD>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Integer<BR/>
+			(1-9999)
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <A HREF="#SaveWidthField"><I>Width</I></A> field
+			in the <A HREF="#SaveSnapshotOptions"><I>Save Snapshot</I></A>
+			dialog box.
 		</TD>
 	</TR>
 	<TR>
@@ -3255,8 +4183,10 @@ set-specific, while others aren't.
 			YES
 		</TD>
 		<TD VALIGN="TOP">
-			Mostly equivalent to the <I>Zoom to Fit</I> check box in the <I>Save
-			Snapshot</I> dialog box.  In addition, if you use the
+			Mostly equivalent to the <A HREF="#SaveZoomToFitCheck"><I>Zoom to
+			Fit</I></A> check box in the <I>Save Snapshot</I> dialog box.<BR/>
+			<BR/>
+			In addition, if you use the
 			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting and set
 			this setting to 1 on the command line, the resulting image will be
 			zoomed to fit.  Note that you can use this in combination with the
@@ -3273,7 +4203,7 @@ set-specific, while others aren't.
 			Boolean
 		</TD>
 		<TD VALIGN="TOP">
-			NO
+			YES
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Seam Width</I> check box in the
@@ -3284,8 +4214,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			SeamWidth
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Integer<BR/>
 			(0-500)
 		</TD>
 		<TD VALIGN="TOP">
@@ -3309,6 +4239,21 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Show all</I> check box under the <I>Conditional
 			lines</I> check box in the <I>Geometry-&gt;Edge Lines</I> box.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			ShowAxes
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			NO
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Show Axes</I> check box in the
+			<I>General-&gt;Misc</I> box.
 		</TD>
 	</TR>
 	<TR>
@@ -3568,6 +4513,21 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			ShowErrors/LDLError16
+		</TD>
+		<TD VALIGN="TOP">
+			Boolean
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Model loop</I> check box in the Errors &amp;
+			Warnings window.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			ShowFPS
 		</TD>
 		<TD VALIGN="TOP">
@@ -3628,7 +4588,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			SnapshotSuffix
+			<A NAME="SnapshotSuffixSetting">SnapshotSuffix</A>
 		</TD>
 		<TD VALIGN="TOP">
 			String
@@ -3642,10 +4602,48 @@ set-specific, while others aren't.
 			<A HREF="#SaveSnapshotSetting">SaveSnapshot</A> setting so that you
 			can specify a temporary file on the command line without being
 			forced to give the temporary file a known suffix.  Currently, the
-			only values that are recognized are:<BR>
-			.bmp<BR>
-			.png<BR>
+			only values that are recognized are:<BR/>
+			.bmp<BR/>
+			.png<BR/>
+			.jpg<BR/>
 			(Note that the dot preceding the extension is required.)
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			SnapshotsDir
+		</TD>
+		<TD VALIGN="TOP">
+			String
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Snapshots</I> field in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the
+			default directory for snapshot saves when
+			<A HREF="#SnapshotsDirModeSetting">-SnapshotsDirMode</A> is set to
+			2.<BR/>
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
+			<A NAME="SnapshotsDirModeSetting">SnapshotsDirMode</A>
+		</TD>
+		<TD VALIGN="TOP">
+			Enumerant
+		</TD>
+		<TD VALIGN="TOP">
+			YES
+		</TD>
+		<TD VALIGN="TOP">
+			Equivalent to the <I>Snapshots</I> popup in the
+			<I>General-&gt;Default Save Directories</I> box.  Selects the mode
+			for default save directory selection:<BR/>
+			0: Model directory<BR/>
+			1: Last Used<BR/>
+			2: Selected<BR/>
 		</TD>
 	</TR>
 	<TR>
@@ -3680,6 +4678,22 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
+			Step
+		</TD>
+		<TD VALIGN="TOP">
+			Integer
+		</TD>
+		<TD VALIGN="TOP">
+			N/A
+		</TD>
+		<TD VALIGN="TOP">
+			Only available from the command line.  When used in conjunction with
+			a command line snapshot save, causes the specified step to be saved
+			in a model that has multiple steps.
+		</TD>
+	</TR>
+	<TR>
+		<TD VALIGN="TOP">
 			StereoMode
 		</TD>
 		<TD VALIGN="TOP">
@@ -3691,9 +4705,9 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Cross-eyed</I> and <I>Parallel</I> radio
 			buttons and the <I>Stereo</I> check box in the
-			<I>Effects-&gt;Stereo</I> box.  Selects the stereo mode:<BR>
-			0: None (<I>Stereo</I> check box not checked)<BR>
-			2: Cross-eyed<BR>
+			<I>Effects-&gt;Stereo</I> box.  Selects the stereo mode:<BR/>
+			0: None (<I>Stereo</I> check box not checked)<BR/>
+			2: Cross-eyed<BR/>
 			3: Parallel
 		</TD>
 	</TR>
@@ -3702,7 +4716,7 @@ set-specific, while others aren't.
 			StereoSpacing
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(0-100)
 		</TD>
 		<TD VALIGN="TOP">
@@ -3730,7 +4744,7 @@ set-specific, while others aren't.
 	</TR>
 	<TR>
 		<TD VALIGN="TOP">
-			TextureFilterType
+			<A NAME="TextureFilterTypeSetting">TextureFilterType</A>
 		</TD>
 		<TD VALIGN="TOP">
 			Enumerant
@@ -3740,12 +4754,27 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Nearest filtering</I>, <I>Bilinear
-			filtering</I>, and <I>Trilinear filtering</I> radio buttons in the
-			<I>Primitives-&gt;Primitive substitution</I> box.  Selects the texture
-			mode:<BR>
-			9984: Nearest filtering<BR>
-			9985: Bilinear filtering<BR>
-			9987: Trilinear filtering
+			filtering</I>, <I>Trilinear filtering</I>, and <I>Anisotropic
+			filtering</I> radio buttons in the <I>Primitives-&gt;Primitive
+			 substitution</I> box.  Selects the texture mode:<BR/>
+			<TABLE CLASS="SampleData">
+				<TR>
+					<TD ALIGN="RIGHT">9984:</TD>
+					<TD>Nearest filtering</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT">9985:</TD>
+					<TD>Bilinear filtering</TD>
+				</TR>
+				<TR>
+					<TD ALIGN="RIGHT" VALIGN="TOP">9987:</TD>
+					<TD>Trilinear filtering or Anisotropic filtering<BR/>
+					If <A HREF="#AnisoLevelSetting">AnisoLevel</A> is set to 1,
+					this gives you trilinear filtering.  If it is set to a value
+					greater than 1, and your video card supports anisotropic
+					filtering, this gives you anisotropic filtering.</TD>
+				</TR>
+			</TABLE>
 		</TD>
 	</TR>
 	<TR>
@@ -3781,8 +4810,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			TopMargin
 		</TD>
-		<TD VALIGN="TOP" NOWRAP>
-			Integer<BR>
+		<TD VALIGN="TOP" NOWRAP="nowrap">
+			Integer<BR/>
 			(0-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -3928,8 +4957,8 @@ set-specific, while others aren't.
 		</TD>
 		<TD VALIGN="TOP">
 			Equivalent to the <I>Examine Mode</I> and <I>Fly-through Mode</I>
-			menu items in the <I>View</I> menu.  Selects the viewing mode:<BR>
-			0: Examine Mode<BR>
+			menu items in the <I>View</I> menu.  Selects the viewing mode:<BR/>
+			0: Examine Mode<BR/>
 			1: Fly-through Mode
 		</TD>
 	</TR>
@@ -3957,7 +4986,7 @@ set-specific, while others aren't.
 			WindowHeight
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(240-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -3991,8 +5020,8 @@ set-specific, while others aren't.
 		<TD VALIGN="TOP">
 			WindowWidth
 		</TD>
-		<TD VALIGN="TOP"NOWRAP>
-			Integer<BR>
+		<TD VALIGN="TOP"NOWRAP="nowrap">
+			Integer<BR/>
 			(320-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -4040,7 +5069,7 @@ set-specific, while others aren't.
 			WireframeThickness
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(1-5)
 		</TD>
 		<TD VALIGN="TOP">
@@ -4056,7 +5085,7 @@ set-specific, while others aren't.
 			<A NAME="#ZoomMaxSetting">ZoomMax</A>
 		</TD>
 		<TD VALIGN="TOP">
-			Integer<BR>
+			Integer<BR/>
 			(1-???)
 		</TD>
 		<TD VALIGN="TOP">
@@ -4253,10 +5282,10 @@ Note that the optional radius parameter of the -cg option isn't supported by
 <A HREF="#DefaultZoomSetting">-DefaultZoom</A> setting to move the camera closer
 to or farther from the model.  If you want to put the camera at a fixed
 difference, use the <A HREF="#CameraGlobe">-cg</A> option.
-</P>
+</P></TD>
 </TR>
 </TABLE>
-<BR>
+<BR/>
 <P>
 </P>
 <A NAME="ScreenSaver"></A>
@@ -4290,7 +5319,7 @@ run the LDView install program, and make sure to check the option to have the
 screen saver module installed.  You can re-install LDView over itself without
 any problems, so you don't have to uninstall first.
 </P>
-<BR>
+<BR/>
 <P>
 </P>
 <A NAME="Website"></A>
@@ -4305,17 +5334,17 @@ any problems, so you don't have to uninstall first.
 </TABLE>
 You can download an up-to-date copy of LDView at the LDView website at
 <A HREF="http://ldview.sourceforge.net/">http://ldview.sourceforge.net/</A>.
-<BR>
-<BR>
-<HR>
+<BR/>
+<BR/>
+<HR/>
 If you have any comments, questions, or suggestions, please e-mail me at
 <A NAME="EMail" HREF=
 "mailto:ldview@gmail.com">ldview@gmail.com</A>.
 <P>
-LDView is Copyright &copy; 2000-2006 Travis Cobbs and Peter Bartfai.
+LDView is Copyright &copy; 2007 Travis Cobbs and Peter Bartfai.
 </P>
 <P>
-<FONT SIZE=-1>
+<FONT SIZE="-1">
 LEGO&reg; and the LEGO logo are registered trademarks of the LEGO Group, which
 does not sponser, endorse, or authorize this program.  You can find the official
 Lego website at <A HREF="http://www.lego.com/">http://www.lego.com</A>.

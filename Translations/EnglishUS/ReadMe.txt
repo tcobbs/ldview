@@ -87,9 +87,10 @@ You can use the program LangCheck.exe to tell you both the full and short names
 of the current language that you have set in Windows.
 
 Once you have translated all the resource, you need to create a translation of
-LDViewMessages.ini.  This file contains messages that get shown to the user, but
-aren't in the application resources.  Please read the instructions at the top of
-that file for instructions on translating it.
+LDViewMessages.ini and LDExporter\LDExportMessages.ini.  These files contain
+messages that get shown to the user, but aren't in the application resources.
+Please read the instructions at the top of LDViewMessages.ini for instructions
+on translating these.
 
 Finally, translate install.txt, which contains installation instructions for the
 language DLL.  Note that this file references LDView-EnglishUS.  Make sure to
