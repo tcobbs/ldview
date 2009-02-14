@@ -1028,13 +1028,6 @@ bool LDrawModelViewer::loadLDLModel(void)
 	mainModel->setBlackEdgeLines(flags.blackHighlights);
 	mainModel->setExtraSearchDirs(extraSearchDirs);
 	mainModel->setProcessLDConfig(flags.processLDConfig);
-	if (flags.randomColors)
-	{
-		// Even though they're "random", make them the same each time the model
-		// is loaded.
-		srand(0);
-	}
-	mainModel->setRandomColors(flags.randomColors);
 	mainModel->setSkipValidation(flags.skipValidation);
 	mainModel->setBoundingBoxesOnly(flags.boundingBoxesOnly);
 	mainModel->setSeamWidth(seamWidth);
@@ -1063,6 +1056,17 @@ bool LDrawModelViewer::parseModel(void)
 	{
 		return false;
 	}
+	if (flags.randomColors)
+	{
+		// Even though they're "random", make them the same each time the model
+		// is loaded.
+		srand(0);
+	}
+	// Note: this is the only mainModel setting that's applied here in
+	// parseModel, but it needs to be here to make it so that a reload isn't
+	// required when you change the setting.  The setting doesn't affect the
+	// loading of the model at all, just how it reports colors while parsing.
+	mainModel->setRandomColors(flags.randomColors);
 	TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelParsing"));
 	releaseTREModels();
 	if (flags.needsCalcSize && !calcSize())
@@ -2081,7 +2085,7 @@ void LDrawModelViewer::setRandomColors(bool value)
 	if (value != flags.randomColors)
 	{
 		flags.randomColors = value;
-		flags.needsReload = true;
+		flags.needsReparse = true;
 	}
 }
 
