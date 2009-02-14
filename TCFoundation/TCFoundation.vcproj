@@ -326,7 +326,6 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"
-				WholeProgramOptimization="true"
 				AdditionalIncludeDirectories="../;../include/;../boost/include;../include/libjpegWindows"
 				PreprocessorDefinitions="NDEBUG;WIN32;_LIB;_BUILDING_TCFOUNDATION_LIB;TC_NO_UNICODE"
 				StringPooling="true"
