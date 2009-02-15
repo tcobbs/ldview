@@ -1822,3 +1822,14 @@ void LDLModel::copyPublicFlags(const LDLModel *src)
 	m_flags.hasStuds = src->m_flags.hasStuds;
 	m_flags.bfcCertify = src->m_flags.bfcCertify;
 }
+
+void LDLModel::copyBoundingBox(const LDLModel *src)
+{
+	if (!src->m_flags.haveBoundingBox)
+	{
+		src->calcBoundingBox();
+	}
+	m_boundingMin = src->m_boundingMin;
+	m_boundingMax = src->m_boundingMax;
+	m_flags.haveBoundingBox = true;
+}
