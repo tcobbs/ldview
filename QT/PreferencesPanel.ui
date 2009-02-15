@@ -88,7 +88,7 @@
                     </property>
                     <widget class="QGroupBox">
                         <property name="name">
-                            <cstring>generalMiscBox</cstring>
+                            <cstring>generalColorBox</cstring>
                         </property>
                         <property name="sizePolicy">
                             <sizepolicy>
@@ -99,7 +99,7 @@
                             </sizepolicy>
                         </property>
                         <property name="title">
-                            <string>&amp;Miscellaneous</string>
+                            <string>Colors</string>
                         </property>
                         <vbox>
                             <property name="name">
@@ -111,46 +111,6 @@
                             <property name="spacing">
                                 <number>4</number>
                             </property>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>aaLinesButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Antialiased lines</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>frameRateButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show frame rate</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>showAxesButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show Axes</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>showErrorsButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Show errors after loading</string>
-                                </property>
-                            </widget>
-                            <widget class="QCheckBox">
-                                <property name="name">
-                                    <cstring>processLdconfigLdrButton</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Process ldconfig.ldr</string>
-                                </property>
-                            </widget>
                             <widget class="QLayoutWidget">
                                 <property name="name">
                                     <cstring>Layout34</cstring>
@@ -209,23 +169,6 @@
                                             </sizepolicy>
                                         </property>
                                     </widget>
-                                    <spacer row="0" column="2">
-                                        <property name="name">
-                                            <cstring>Spacer5_2</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Expanding</enum>
-                                        </property>
-                                        <property name="sizeHint">
-                                            <size>
-                                                <width>20</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
                                     <widget class="QLabel" row="1" column="0">
                                         <property name="name">
                                             <cstring>defaultColorLabel</cstring>
@@ -248,6 +191,122 @@
                                             <set>AlignVCenter|AlignRight</set>
                                         </property>
                                     </widget>
+                                    <widget class="QCheckBox" row="1" column="2">
+                                        <property name="name">
+                                            <cstring>transparentButton</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Transparent</string>
+                                        </property>
+                                    </widget>
+                                    <spacer row="0" column="2">
+                                        <property name="name">
+                                            <cstring>Spacer5_2</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>20</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                </grid>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>processLdconfigLdrButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Process ldconfig.ldr</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>randomColorsButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Random colors</string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>generalMiscBox</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>7</hsizetype>
+                                <vsizetype>0</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
+                        </property>
+                        <property name="title">
+                            <string>&amp;Miscellaneous</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>11</number>
+                            </property>
+                            <property name="spacing">
+                                <number>4</number>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>aaLinesButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Antialiased lines</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>frameRateButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show frame rate</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>showAxesButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show Axes</string>
+                                </property>
+                            </widget>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>showErrorsButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Show errors after loading</string>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>Layout34</cstring>
+                                </property>
+                                <grid>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>0</number>
+                                    </property>
+                                    <property name="spacing">
+                                        <number>4</number>
+                                    </property>
                                     <spacer row="2" column="2">
                                         <property name="name">
                                             <cstring>Spacer5</cstring>
@@ -296,14 +355,6 @@
                                                 <horstretch>0</horstretch>
                                                 <verstretch>0</verstretch>
                                             </sizepolicy>
-                                        </property>
-                                    </widget>
-                                    <widget class="QCheckBox" row="1" column="2">
-                                        <property name="name">
-                                            <cstring>transparentButton</cstring>
-                                        </property>
-                                        <property name="text">
-                                            <string>Transparent</string>
                                         </property>
                                     </widget>
                                     <widget class="QLabel" row="3" column="0">
@@ -3688,6 +3739,12 @@ into effect until the next time a model is loaded.</string>
         <slot>enableApply()</slot>
     </connection>
     <connection>
+        <sender>randomColorsButton</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PreferencesPanel</receiver>
+        <slot>enableApply()</slot>
+    </connection>
+    <connection>
         <sender>frameRateButton</sender>
         <signal>stateChanged(int)</signal>
         <receiver>PreferencesPanel</receiver>
@@ -4134,14 +4191,15 @@ into effect until the next time a model is loaded.</string>
 </connections>
 <tabstops>
     <tabstop>tabs</tabstop>
+    <tabstop>backgroundColorButton</tabstop>
+    <tabstop>defaultColorButton</tabstop>
+    <tabstop>transparentButton</tabstop>
+    <tabstop>processLdconfigLdrButton</tabstop>
+    <tabstop>randomColorsButton</tabstop>
     <tabstop>aaLinesButton</tabstop>
     <tabstop>frameRateButton</tabstop>
     <tabstop>showAxesButton</tabstop>
     <tabstop>showErrorsButton</tabstop>
-    <tabstop>processLdconfigLdrButton</tabstop>
-    <tabstop>backgroundColorButton</tabstop>
-    <tabstop>defaultColorButton</tabstop>
-    <tabstop>transparentButton</tabstop>
     <tabstop>fieldOfViewSpin</tabstop>
     <tabstop>memoryUsageBox</tabstop>
     <tabstop>generalResetButton</tabstop>

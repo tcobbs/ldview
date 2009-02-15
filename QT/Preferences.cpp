@@ -153,6 +153,7 @@ void Preferences::doGeneralApply(void)
 		modelWidget->setShowFPS(ldPrefs->getShowFps());
 	ldPrefs->setShowErrors(panel->showErrorsButton->state());
 	ldPrefs->setProcessLdConfig(panel->processLdconfigLdrButton->state());
+	ldPrefs->setRandomColors(panel->randomColorsButton->state());
 	cTemp = panel->backgroundColorButton->backgroundColor();
 	cTemp.rgb(&r, &g, &b);
 	ldPrefs->setBackgroundColor(r, g, b);
@@ -668,6 +669,7 @@ void Preferences::reflectGeneralSettings(void)
 	setButtonState(panel->showErrorsButton, ldPrefs->getShowErrors());
 	setButtonState(panel->processLdconfigLdrButton,
 		ldPrefs->getProcessLdConfig());
+	setButtonState(panel->randomColorsButton,ldPrefs->getRandomColors());
 	ldPrefs->getBackgroundColor(r, g, b);
 	panel->backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
 	ldPrefs->getDefaultColor(r, g, b);
