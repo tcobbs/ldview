@@ -85,11 +85,17 @@ LDLModel::LDLModel(void)
 LDLModel::LDLModel(const LDLModel &other)
 	:m_filename(copyString(other.m_filename)),
 	m_name(copyString(other.m_name)),
+	m_author(copyString(other.m_author)),
 	m_description(copyString(other.m_description)),
 	m_fileLines(NULL),
 	m_mainModel(other.m_mainModel),
+	m_stepIndices(other.m_stepIndices),
 	m_activeLineCount(other.m_activeLineCount),
 	m_activeMPDModel(NULL),
+	m_boundingMin(other.m_boundingMin),
+	m_boundingMax(other.m_boundingMax),
+	m_center(other.m_center),
+	m_maxRadius(other.m_maxRadius),
 	m_flags(other.m_flags)
 {
 	if (other.m_fileLines)
@@ -1450,7 +1456,7 @@ TCDictionary *LDLModel::getLoadedModels(void)
 	return (m_mainModel->getLoadedModels());
 }
 
-void LDLModel::print(int indent)
+void LDLModel::print(int indent) const
 {
 	indentPrintf(indent, "LDLModel");
 	if (m_flags.part)
@@ -1681,7 +1687,7 @@ void LDLModel::scanPoints(
 	}
 }
 
-void LDLModel::getBoundingBox(TCVector &min, TCVector &max)
+void LDLModel::getBoundingBox(TCVector &min, TCVector &max) const
 {
 	calcBoundingBox();
 	min = m_boundingMin;
@@ -1722,7 +1728,7 @@ void LDLModel::scanBoundingBoxPoint(
 	}
 }
 
-void LDLModel::calcBoundingBox(void)
+void LDLModel::calcBoundingBox(void) const
 {
 	if (!m_flags.haveBoundingBox)
 	{
@@ -1753,7 +1759,7 @@ void LDLModel::calcBoundingBox(void)
 		// rotation of child models.  With their rotation, their bounding
 		// boxes can easily stick out of the really minimum bounding box of
 		// their parent.
-		scanPoints(this,
+		scanPoints(const_cast<LDLModel *>(this),
 			(LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint, matrix);
 	}
 }
@@ -1794,4 +1800,25 @@ TCObject *LDLModel::getAlertSender(void)
 bool LDLModel::hasBoundingBox(void) const
 {
 	return m_flags.haveBoundingBox != false;
+}
+
+LDLFileLineArray *LDLModel::getFileLines(bool initialize /*= false*/)
+{
+	if (initialize && m_fileLines == NULL)
+	{
+		m_fileLines = new LDLFileLineArray;
+	}
+	return m_fileLines;
+}
+
+void LDLModel::copyPublicFlags(const LDLModel *src)
+{
+	m_flags.part = src->m_flags.part;
+	m_flags.subPart = src->m_flags.subPart;
+	m_flags.primitive = src->m_flags.primitive;
+	m_flags.mpd = src->m_flags.mpd;
+	m_flags.noShrink = src->m_flags.noShrink;
+	m_flags.official = src->m_flags.official;
+	m_flags.hasStuds = src->m_flags.hasStuds;
+	m_flags.bfcCertify = src->m_flags.bfcCertify;
 }

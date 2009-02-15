@@ -49,8 +49,11 @@ protected:
 	LRESULT doTreeKeyDown(LPNMTVKEYDOWN notification);
 	LRESULT doTreeCustomDraw(LPNMTVCUSTOMDRAW notification);
 	LRESULT doToggleOptions(void);
-	virtual LRESULT doItemExpanding(LPNMTREEVIEW notification);
+	LRESULT doHighlightCheck(void);
+	LRESULT doTreeItemExpanding(LPNMTREEVIEW notification);
 	LRESULT doLineCheck(UINT checkId, LDLLineType lineType);
+	LRESULT doTreeSelChanged(LPNMTREEVIEW notification);
+	void highlightItem(HTREEITEM hItem);
 
 	ModelWindow *m_modelWindow;
 	LDLMainModel *m_model;
@@ -61,6 +64,7 @@ protected:
 	UIntLineTypeMap m_checkLineTypes;
 	LineTypeUIntMap m_checkIds;
 	bool m_optionsShown;
+	bool m_highlight;
 	int m_optionsDelta;
 	HWND m_hResizeGrip;
 };

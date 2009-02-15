@@ -141,7 +141,14 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 
 	m_topLDLModel = (LDLModel *)mainLDLModel->retain();
 	m_mainTREModel = new TREMainModel;
-	m_mainTREModel->setAlertSender(m_alertSender);
+	if (m_alertSender != NULL)
+	{
+		m_mainTREModel->setAlertSender(m_alertSender);
+	}
+	else
+	{
+		m_mainTREModel->setSendProgressFlag(false);
+	}
 	m_mainTREModel->setMultiThreadedFlag(getMultiThreadedFlag());
 	m_mainTREModel->setPartFlag(mainLDLModel->isPart());
 	m_mainTREModel->setEdgeLinesFlag(getEdgeLinesFlag());
@@ -217,8 +224,12 @@ bool LDModelParser::parseMainModel(LDLModel *mainLDLModel)
 			m_mainTREModel->setName(name);
 			delete name;
 		}
-		TCProgressAlert::send("LDModelParser",
-			TCLocalStrings::get(_UC("ParsingStatus")), 1.0f, &m_abort, this);
+		if (m_alertSender != NULL)
+		{
+			TCProgressAlert::send("LDModelParser",
+				TCLocalStrings::get(_UC("ParsingStatus")), 1.0f, &m_abort,
+				this);
+		}
 		if (m_abort)
 		{
 			return false;
@@ -920,7 +931,7 @@ bool LDModelParser::parseModel(
 							obiLocalTokens);
 					}
 				}
-				if (ldlModel == m_topLDLModel)
+				if (ldlModel == m_topLDLModel && m_alertSender != NULL)
 				{
 					TCProgressAlert::send("LDLModelParser",
 						TCLocalStrings::get(_UC("ParsingStatus")),

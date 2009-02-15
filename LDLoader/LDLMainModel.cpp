@@ -19,7 +19,8 @@ LDLMainModel::LDLMainModel(void)
 	m_loadedModels(NULL),
 	m_mainPalette(new LDLPalette),
 	m_extraSearchDirs(NULL),
-	m_seamWidth(0.0f)
+	m_seamWidth(0.0f),
+	m_highlightColorNumber(0x2FFFFFF)
 {
 	m_mainFlags.lowResStuds = false;
 	m_mainFlags.blackEdgeLines = false;
@@ -27,6 +28,7 @@ LDLMainModel::LDLMainModel(void)
 	m_mainFlags.loadCanceled = false;
 	m_mainFlags.processLDConfig = true;
 	m_mainFlags.randomColors = false;
+	m_mainFlags.forceHighlightColor = false;
 }
 
 TCObject *LDLMainModel::copy(void) const
@@ -247,4 +249,9 @@ void LDLMainModel::setSeamWidth(float value)
 		m_seamWidth = value;
 		m_flags.haveBoundingBox = false;
 	}
+}
+
+void LDLMainModel::release()
+{
+	LDLModel::release();
 }

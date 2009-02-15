@@ -34,14 +34,26 @@ void LDLActionLine::setBFCSettings(BFCState bfcCertify, bool bfcClip,
 	m_actionFlags.bfcInvert = bfcInvert;
 }
 
+int LDLActionLine::getRandomColorNumber(void) const
+{
+	int r = rand() % 256;
+	int g = rand() % 256;
+	int b = rand() % 256;
+	return LDLPalette::colorNumberForRGBA(r, g, b, 255);
+}
+
 int LDLActionLine::getColorNumber(void) const
 {
-	if (m_colorNumber != 24 && getMainModel()->getRandomColors())
+	const LDLMainModel *mainModel = getMainModel();
+
+	if (m_colorNumber != 24 && mainModel->getRandomColors() &&
+		(mainModel == m_parentModel || m_colorNumber != 16))
 	{
-		int r = rand() % 256;
-		int g = rand() % 256;
-		int b = rand() % 256;
-		return LDLPalette::colorNumberForRGBA(r, g, b, 255);
+		return getRandomColorNumber();
+	}
+	else if (mainModel->getForceHighlightColor())
+	{
+		return mainModel->getHighlightColorNumber();
 	}
 	else
 	{

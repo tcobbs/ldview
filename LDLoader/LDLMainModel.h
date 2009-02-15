@@ -29,6 +29,8 @@ public:
 	TCStringArray *getExtraSearchDirs(void) { return m_extraSearchDirs; }
 	virtual bool isMainModel(void) const { return true; }
 
+	virtual void setMainModel(LDLMainModel *value) { m_mainModel = value; }
+
 	// Flags
 	void setLowResStuds(bool value) { m_mainFlags.lowResStuds = value; }
 	bool getLowResStuds(void) const { return m_mainFlags.lowResStuds; }
@@ -56,6 +58,18 @@ public:
 	bool getRandomColors(void) const {
 		return m_mainFlags.randomColors != false;
 	}
+	void setForceHighlightColor(bool value)
+	{
+		m_mainFlags.forceHighlightColor = value;
+	}
+	bool getForceHighlightColor(void) const {
+		return m_mainFlags.forceHighlightColor != false;
+	}
+	void setHighlightColorNumber(int value)
+	{
+		m_highlightColorNumber = value;
+	}
+	int getHighlightColorNumber(void) const { return m_highlightColorNumber; }
 	void setSeamWidth(float value);
 	float getSeamWidth(void) const { return m_seamWidth; }
 	virtual void cancelLoad(void) { m_mainFlags.loadCanceled = true; }
@@ -69,6 +83,7 @@ public:
 	virtual void setAlertSender(TCObject *value) { m_alertSender = value; }
 	virtual void addMpdModel(LDLModel *model) { m_mpdModels.push_back(model); }
 	virtual LDLModelVector &getMpdModels(void) { return m_mpdModels; }
+	virtual void release(void);
 private:
 	//LDLMainModel(const LDLMainModel &other);
 	virtual TCObject *copy(void) const;
@@ -84,6 +99,7 @@ protected:
 	// TCTypedObjectArray.
 	LDLModelVector m_mpdModels;
 	float m_seamWidth;
+	int m_highlightColorNumber;
 	struct
 	{
 		// Public flags
@@ -93,6 +109,7 @@ protected:
 		bool skipValidation:1;
 		bool boundingBoxesOnly:1;
 		bool randomColors:1;
+		bool forceHighlightColor:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

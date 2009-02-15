@@ -296,7 +296,14 @@ void LDLModelLine::print(int indent) const
 	}
 }
 
-LDLModel *LDLModelLine::getModel(bool forceHighRes /*= false*/) const
+LDLModel *LDLModelLine::getModel(bool forceHighRes /*= false*/)
+{
+	const LDLModel *model =
+		((const LDLModelLine *)this)->getModel(forceHighRes);
+	return const_cast<LDLModel *>(model);
+}
+
+const LDLModel *LDLModelLine::getModel(bool forceHighRes /*= false*/) const
 {
 	if (m_parentModel)
 	{
@@ -421,7 +428,7 @@ void LDLModelLine::scanPoints(
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix) const
 {
-	LDLModel *model = getModel();
+	const LDLModel *model = getModel();
 	if (model)
 	{
 		TCFloat newMatrix[16];
@@ -445,5 +452,40 @@ void LDLModelLine::scanPoints(
 			TCVector::multMatrix(matrix, m_matrix, newMatrix);
 		}
 		model->scanPoints(scanner, scanPointCallback, newMatrix);
+	}
+}
+
+void LDLModelLine::setMatrix(const TCFloat *value)
+{
+	memcpy(m_matrix, value, sizeof(m_matrix));
+}
+
+void LDLModelLine::createLowResModel(LDLMainModel *mainModel)
+{
+	m_lowResModel = new LDLModel;
+	m_lowResModel->setMainModel(mainModel);
+	m_lowResModel->setName(m_line);
+}
+
+void LDLModelLine::createHighResModel(LDLMainModel *mainModel)
+{
+	m_highResModel = new LDLModel;
+	m_highResModel->setMainModel(mainModel);
+	m_highResModel->setName(m_line);
+}
+
+
+int LDLModelLine::getColorNumber(void) const
+{
+	const LDLMainModel *mainModel = getMainModel();
+
+	if (mainModel->getRandomColors() && m_highResModel != NULL &&
+		m_highResModel->isPart() && !m_parentModel->isPart())
+	{
+		return getRandomColorNumber();
+	}
+	else
+	{
+		return LDLActionLine::getColorNumber();
 	}
 }

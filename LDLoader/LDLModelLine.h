@@ -8,8 +8,17 @@ class LDLModelLine : public LDLActionLine
 public:
 	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
-	virtual LDLModel *getModel(bool forceHighRes = false) const;
+	virtual const LDLModel *getModel(bool forceHighRes = false) const;
+	virtual LDLModel *getModel(bool forceHighRes = false);
+	const LDLModel *getLowResModel(void) const { return m_lowResModel; }
+	LDLModel *getLowResModel(void) { return m_lowResModel; }
+	const LDLModel *getHighResModel(void) const { return m_highResModel; }
+	LDLModel *getHighResModel(void) { return m_highResModel; }
+	void createLowResModel(LDLMainModel *mainModel);
+	void createHighResModel(LDLMainModel *mainModel);
 	TCFloat *getMatrix(void) { return m_matrix; }
+	const TCFloat *getMatrix(void) const { return m_matrix; }
+	void setMatrix(const TCFloat *value);
 	bool getNonUniformFlag(void) { return m_flags.nonUniform != false; }
 	virtual void print(int indent) const;
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeModel; }
@@ -17,9 +26,10 @@ public:
 	virtual bool isXZPlanar(const TCFloat *matrix) const;
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix) const;
-protected:
 	LDLModelLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
+	virtual int getColorNumber(void) const;
+protected:
 	LDLModelLine(const LDLModelLine &other);
 	virtual ~LDLModelLine(void);
 	virtual void dealloc(void);

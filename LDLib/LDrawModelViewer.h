@@ -61,6 +61,8 @@ class LDPartsList;
 class LDViewPoint;
 class LDInputHandler;
 
+typedef std::list<std::string> StringList;
+
 class LDrawModelViewer: public TCAlertSender
 {
 	public:
@@ -198,6 +200,12 @@ class LDrawModelViewer: public TCAlertSender
 		char* getFilename(void) { return filename; }
 		const char *getFilename(void) const { return filename; }
 		std::string getCurFilename(void) const;
+		const StringList &getHighlightPaths(void) const
+		{
+			return highlightPaths;
+		}
+		void setHighlightPaths(std::string value);
+		void setHighlightPaths(const StringList &value);
 		virtual int loadModel(bool = true);
 		virtual void drawFPS(TCFloat);
 		virtual void drawBoundingBox(void);
@@ -578,6 +586,9 @@ class LDrawModelViewer: public TCAlertSender
 		virtual LDExporter *initExporter(void);
 
 		void updateFrameTime(bool force = false);
+		void highlightPathsChanged(void);
+		void parseHighlightPath(const std::string &path,
+			const LDLModel *srcModel, LDLModel *dstModel);
 
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
@@ -600,6 +611,7 @@ class LDrawModelViewer: public TCAlertSender
 		LDLMainModel *mainModel;
 		TREMainModel *whiteLightDirModel;
 		TREMainModel *blueLightDirModel;
+		TREMainModel *highlightModel;
 		char* filename;
 		char* programPath;
 		int width;
@@ -687,6 +699,7 @@ class LDrawModelViewer: public TCAlertSender
 		int mpdChildIndex;
 		LDExporter *exporter;
 		ExportType exportType;
+		StringList highlightPaths;
 #ifdef WIN32
 		DWORD frameTicks;
 		LARGE_INTEGER hrpcFrequency;

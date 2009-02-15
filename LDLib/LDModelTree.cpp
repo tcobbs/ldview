@@ -177,6 +177,8 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 				m_children->addObject(child);
 				child->release();
 				child->scanLine((*fileLines)[i], defaultColor);
+				child->m_treePath = m_treePath + "/";
+				child->m_treePath += ltostr(i + 1);
 			}
 		}
 	}

@@ -22,6 +22,7 @@ public:
 	bool hasChildren(bool filter = true) const;
 	int getNumChildren(bool filter = true) const;
 	const std::string &getText(void) const { return m_text; }
+	const std::string &getTreePath(void) const { return m_treePath; }
 	LDLLineType getLineType(void) const { return m_lineType; }
 	void setShowLineType(LDLLineType lineType, bool value);
 	bool getShowLineType(LDLLineType lineType) const
@@ -52,6 +53,7 @@ protected:
 	mutable LDModelTreeArray *m_children;
 	mutable LDModelTreeArray *m_filteredChildren;
 	std::string m_text;
+	std::string m_treePath;
 	LDLLineType m_lineType;
 	int m_defaultColor;
 	TCULong m_activeLineTypes;
