@@ -97,6 +97,7 @@ public:
 	bool hasStuds(void) const { return m_flags.hasStuds != false; }
 	bool hasBoundingBox(void) const;
 	void copyPublicFlags(const LDLModel *src);
+	void copyBoundingBox(const LDLModel *src);
 	//bool hasBoundingBox(void) const { return m_flags.haveBoundingBox != false; }
 
 

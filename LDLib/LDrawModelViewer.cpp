@@ -4921,7 +4921,27 @@ void LDrawModelViewer::parseHighlightPath(
 				{
 					dstModelLine->createHighResModel(dstModel->getMainModel());
 				}
-				dstModel->copyPublicFlags(srcModel);
+				const LDLModel *srcHighResModel =
+					srcModelLine->getHighResModel();
+				if (srcHighResModel->isPart() && !srcModel->isPart() &&
+					seamWidth > 0.0)
+				{
+					// We have to apply seams manually here, because TRE, which
+					// normally handles the seams, does so based on the actual
+					// geometry, not the LDLModel's bounding box.  Since only a
+					// subset of the geometry makes it to TRE, we have to do the
+					// seams adjustment here instead.
+					TCFloat scaleMatrix[16];
+					TCFloat newMatrix[16];
+
+					TCVector boundingMin, boundingMax;
+					srcHighResModel->getBoundingBox(boundingMin, boundingMax);
+					TCVector::calcScaleMatrix(seamWidth, scaleMatrix,
+						boundingMin, boundingMax);
+					TCVector::multMatrix(dstModelLine->getMatrix(), scaleMatrix,
+						newMatrix);
+					dstModelLine->setMatrix(newMatrix);
+				}
 			}
 			else
 			{
