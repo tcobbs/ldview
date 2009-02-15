@@ -8,6 +8,7 @@ URL: http://ldview.sourceforge.net
 Vendor: Travis Cobbs <ldview@gmail.com>
 Packager: Peter Bartfai <pbartfai@stardust.hu>
 BuildRoot: %{_builddir}/%{name}
+Requires: unzip
 BuildPreReq: qt-devel, boost-devel, cvs
 
 %description
