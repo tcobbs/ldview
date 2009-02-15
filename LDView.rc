@@ -480,7 +480,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 310, 252
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,146,74,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -940,11 +940,14 @@ IDD_MODELTREE DIALOGEX 0, 0, 292, 133
 STYLE DS_3DLOOK | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "LDView Model Tree"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     CONTROL         "Tree1",IDC_MODEL_TREE,"SysTreeView32",TVS_HASBUTTONS | 
                     TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
-                    WS_BORDER | WS_TABSTOP,2,2,206,112,WS_EX_CLIENTEDGE
+                    TVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,2,2,206,112,
+                    WS_EX_CLIENTEDGE
+    CONTROL         "Highlight selected line",IDC_HIGHLIGHT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,2,116,85,10
     PUSHBUTTON      "Options <<",IDC_OPTIONS,154,116,50,14
     GROUPBOX        "Show Lines",IDC_SHOW_BOX,212,2,78,112
     CONTROL         "Comment",IDC_COMMENT,"Button",BS_AUTOCHECKBOX | 
@@ -1692,8 +1695,8 @@ IDB_STEP_TOOLBAR        BITMAP  DISCARDABLE     "Icons\\step_toolbar.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,0,1,2
- PRODUCTVERSION 4,0,1,2
+ FILEVERSION 4,0,1,3
+ PRODUCTVERSION 4,0,1,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1711,14 +1714,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.0.1a test build\0"
+            VALUE "FileVersion", "4.0.1c test build\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2009 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.0.1a test build\0"
+            VALUE "ProductVersion", "4.0.1c test build\0"
             VALUE "SpecialBuild", "\0"
         END
     END

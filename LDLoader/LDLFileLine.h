@@ -52,6 +52,9 @@ public:
 	virtual int getStepIndex(void) const { return m_stepIndex; }
 	virtual TCObject *getAlertSender(void);
 
+	void setLineNumber(int value) { m_lineNumber = value; }
+	void setParentModel(LDLModel *value);
+
 	static LDLFileLine *initFileLine(LDLModel *parentModel, const char *line,
 		int lineNumber);
 protected:

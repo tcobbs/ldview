@@ -222,3 +222,9 @@ TCObject *LDLFileLine::getAlertSender(void)
 {
 	return m_parentModel->getMainModel()->getAlertSender();
 }
+
+void LDLFileLine::setParentModel(LDLModel *value)
+{
+	// m_parentModel isn't retained.
+	m_parentModel = value;
+}

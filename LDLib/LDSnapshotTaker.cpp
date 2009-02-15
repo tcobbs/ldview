@@ -787,6 +787,7 @@ TCByte *LDSnapshotTaker::grabImage(
 
 	GLenum bufferFormat = GL_RGB;
 	bool origForceZoomToFit = m_modelViewer->getForceZoomToFit();
+	StringList origHighlightPaths = m_modelViewer->getHighlightPaths();
 	TCVector origCameraPosition = m_modelViewer->getCamera().getPosition();
 	TCFloat origXPan = m_modelViewer->getXPan();
 	TCFloat origYPan = m_modelViewer->getYPan();
@@ -834,6 +835,7 @@ TCByte *LDSnapshotTaker::grabImage(
 		m_modelViewer->perspectiveView();
 	}
 	m_modelViewer->setup();
+	m_modelViewer->setHighlightPaths("");
 	if (canSaveAlpha())
 	{
 		bytesPerPixel = 4;
@@ -921,6 +923,7 @@ TCByte *LDSnapshotTaker::grabImage(
 	m_modelViewer->setWidth(origWidth);
 	m_modelViewer->setHeight(origHeight);
 	m_modelViewer->setSaveAlpha(false);
+	m_modelViewer->setHighlightPaths(origHighlightPaths);
 	if (canceled && bufferAllocated)
 	{
 		delete buffer;

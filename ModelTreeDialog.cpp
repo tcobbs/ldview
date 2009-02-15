@@ -20,7 +20,8 @@ m_modelWindow(NULL),
 m_model(NULL),
 m_modelTree(NULL),
 m_resizer(NULL),
-m_optionsShown(true)
+m_optionsShown(true),
+m_highlight(TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false))
 {
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
 		(TCAlertCallback)&ModelTreeDialog::modelAlertCallback);
@@ -48,6 +49,7 @@ void ModelTreeDialog::setModel(LDLMainModel *model)
 {
 	if (model != m_model)
 	{
+		TreeView_DeleteAllItems(m_hTreeView);
 		TCObject::release(m_model);
 		TCObject::release(m_modelTree);
 		m_modelTree = NULL;
@@ -98,7 +100,7 @@ void ModelTreeDialog::show(ModelWindow *modelWindow, HWND hParentWnd /*= NULL*/)
 	fillTreeView();
 }
 
-LRESULT ModelTreeDialog::doItemExpanding(LPNMTREEVIEW notification)
+LRESULT ModelTreeDialog::doTreeItemExpanding(LPNMTREEVIEW notification)
 {
 	if (notification->action == TVE_EXPAND)
 	{
@@ -114,6 +116,41 @@ LRESULT ModelTreeDialog::doItemExpanding(LPNMTREEVIEW notification)
 	return 1;
 }
 
+void ModelTreeDialog::highlightItem(HTREEITEM hItem)
+{
+	if (hItem != NULL)
+	{
+		TVITEMEX item;
+
+		memset(&item, 0, sizeof(item));
+		item.mask = TVIF_PARAM;
+		item.hItem = hItem;
+		if (TreeView_GetItem(m_hTreeView, &item))
+		{
+			LDModelTree *tree = (LDModelTree *)item.lParam;
+
+			if (tree != NULL)
+			{
+				m_modelWindow->getModelViewer()->setHighlightPaths(
+					tree->getTreePath());
+			}
+		}
+	}
+	else
+	{
+		m_modelWindow->getModelViewer()->setHighlightPaths("");
+	}
+}
+
+LRESULT ModelTreeDialog::doTreeSelChanged(LPNMTREEVIEW notification)
+{
+	if (m_highlight)
+	{
+		highlightItem(notification->itemNew.hItem);
+	}
+	return 1;	// Ignored
+}
+
 LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 {
 	if (controlId == IDC_MODEL_TREE)
@@ -121,9 +158,11 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 		switch (notification->code)
 		{
 		case TVN_ITEMEXPANDING:
-			return doItemExpanding((LPNMTREEVIEW)notification);
+			return doTreeItemExpanding((LPNMTREEVIEW)notification);
 		case TVN_KEYDOWN:
 			return doTreeKeyDown((LPNMTVKEYDOWN)notification);
+		case TVN_SELCHANGED:
+			return doTreeSelChanged((LPNMTREEVIEW)notification);
 		case NM_CUSTOMDRAW:
 			return doTreeCustomDraw((LPNMTVCUSTOMDRAW)notification);
 		}
@@ -192,23 +231,42 @@ LRESULT ModelTreeDialog::doLineCheck(UINT checkId, LDLLineType lineType)
 	return 0;
 }
 
+LRESULT ModelTreeDialog::doHighlightCheck(void)
+{
+	m_highlight = checkGet(IDC_HIGHLIGHT);
+	if (m_highlight)
+	{
+		highlightItem(TreeView_GetSelection(m_hTreeView));
+	}
+	else
+	{
+		m_modelWindow->getModelViewer()->setHighlightPaths("");
+	}
+	TCUserDefaults::setBoolForKey(m_highlight, MODEL_TREE_HIGHLIGHT_KEY, false);
+	return 0;
+}
+
 LRESULT ModelTreeDialog::doCommand(
 	int notifyCode,
 	int commandId,
 	HWND control)
 {
-	if (commandId == IDC_OPTIONS)
+	switch (commandId)
 	{
+	case IDC_OPTIONS:
 		return doToggleOptions();
-	}
-	else
-	{
-		UIntLineTypeMap::const_iterator it = m_checkLineTypes.find(commandId);
-
-		if (it != m_checkLineTypes.end())
+	case IDC_HIGHLIGHT:
+		return doHighlightCheck();
+	default:
 		{
-			return doLineCheck(it->first, it->second);
+			UIntLineTypeMap::const_iterator it = m_checkLineTypes.find(commandId);
+
+			if (it != m_checkLineTypes.end())
+			{
+				return doLineCheck(it->first, it->second);
+			}
 		}
+		break;
 	}
 	return CUIDialog::doCommand(notifyCode, commandId, control);
 }
@@ -321,6 +379,7 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 		CUISizeHorizontal | CUISizeVertical);
 	m_resizer->addSubWindow(IDC_SHOW_BOX, CUIFloatLeft | CUIFloatBottom);
 	m_resizer->addSubWindow(IDC_OPTIONS, CUIFloatLeft | CUIFloatTop);
+	m_resizer->addSubWindow(IDC_HIGHLIGHT, CUIFloatRight | CUIFloatTop);
 	m_lineChecks.resize(LDLLineTypeUnknown + 1);
 	setupLineCheck(IDC_COMMENT, LDLLineTypeComment);
 	setupLineCheck(IDC_MODEL, LDLLineTypeModel);
@@ -342,12 +401,17 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	{
 		hideOptions();
 	}
+	checkSet(IDC_HIGHLIGHT, m_highlight);
 	setAutosaveName("ModelTreeDialog");
 	return CUIDialog::doInitDialog(hKbControl);
 }
 
 LRESULT ModelTreeDialog::doClose(void)
 {
+	if (m_highlight)
+	{
+		m_modelWindow->getModelViewer()->setHighlightPaths("");
+	}
 	showWindow(SW_HIDE);
 	return 0;
 }

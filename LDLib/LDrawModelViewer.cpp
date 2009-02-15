@@ -14,6 +14,7 @@
 #include <LDLoader/LDLFindFileAlert.h>
 #include <LDLoader/LDLPalette.h>
 #include <LDLoader/LDLAutoCamera.h>
+#include <LDLoader/LDLModelLine.h>
 #include <LDExporter/LDPovExporter.h>
 #include <LDExporter/LDStlExporter.h>
 #include "LDInputHandler.h"
@@ -52,6 +53,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	mainModel(NULL),
 	whiteLightDirModel(NULL),
 	blueLightDirModel(NULL),
+	highlightModel(NULL),
 	filename(NULL),
 	programPath(NULL),
 	width(width),
@@ -222,6 +224,7 @@ void LDrawModelViewer::dealloc(void)
 	TCObject::release(mainModel);
 	TCObject::release(whiteLightDirModel);
 	TCObject::release(blueLightDirModel);
+	TCObject::release(highlightModel);
 	TCObject::release(exporter);
 	mainTREModel = NULL;
 	delete filename;
@@ -256,6 +259,7 @@ void LDrawModelViewer::setFilename(const char* value)
 	filename = copyString(value);
 	flags.needsResetStep = true;
 	flags.needsResetMpd = true;
+	highlightPaths.clear();
 }
 
 void LDrawModelViewer::setProgramPath(const char *value)
@@ -984,6 +988,8 @@ void LDrawModelViewer::releaseTREModels(void)
 	whiteLightDirModel = NULL;
 	TCObject::release(blueLightDirModel);
 	blueLightDirModel = NULL;
+	TCObject::release(highlightModel);
+	highlightModel = NULL;
 }
 
 bool LDrawModelViewer::calcSize(void)
@@ -1096,6 +1102,7 @@ bool LDrawModelViewer::parseModel(void)
 		}
 	}
 	modelParser->release();
+	highlightPathsChanged();
 	if (retValue)
 	{
 		TCAlertManager::sendAlert(loadAlertClass(), this, _UC("ModelParsed"));
@@ -1213,7 +1220,7 @@ bool LDrawModelViewer::recompile(void)
 {
 	if (mainTREModel)
 	{
-		if (whiteLightDirModel)
+		if (whiteLightDirModel != NULL)
 		{
 			// It crashes after an FSAA change if we simply recompile here.
 			// I suspect it's related to the VBO/VAR extensions.  Deleting the
@@ -1224,6 +1231,13 @@ bool LDrawModelViewer::recompile(void)
 			blueLightDirModel->release();
 			blueLightDirModel = NULL;
 			initLightDirModels();
+		}
+		if (highlightModel != NULL)
+		{
+			// See comment above about crash.
+			highlightModel->release();
+			highlightModel = NULL;
+			highlightPathsChanged();
 		}
 		mainTREModel->recompile();
 		flags.needsRecompile = false;
@@ -1250,6 +1264,10 @@ void LDrawModelViewer::uncompile(void)
 	if (blueLightDirModel)
 	{
 		blueLightDirModel->uncompile();
+	}
+	if (highlightModel)
+	{
+		highlightModel->uncompile();
 	}
 }
 
@@ -2576,6 +2594,10 @@ void LDrawModelViewer::setViewMode(ViewMode value)
 void LDrawModelViewer::innerDrawModel(void)
 {
 	mainTREModel->draw();
+	if (highlightModel != NULL)
+	{
+		highlightModel->draw();
+	}
 	drawAxes(true);
 	if (flags.showBoundingBox)
 	{
@@ -4829,4 +4851,157 @@ void LDrawModelViewer::setCameraZRotate(TCFloat value)
 {
 	cameraZRotate = value;
 	updateFrameTime();
+}
+
+void LDrawModelViewer::setHighlightPaths(std::string value)
+{
+	highlightPaths.clear();
+	while (value.size() > 0)
+	{
+		size_t index = value.find('\n');
+		std::string line;
+
+		if (index < value.size())
+		{
+			line = value.substr(0, index);
+			value = value.substr(index + 1);
+		}
+		else
+		{
+			line = value;
+			value = "";
+		}
+		if (line.size() > 0)
+		{
+			highlightPaths.push_back(line);
+		}
+	}
+	highlightPathsChanged();
+}
+
+void LDrawModelViewer::setHighlightPaths(const StringList &value)
+{
+	highlightPaths = value;
+	highlightPathsChanged();
+}
+
+void LDrawModelViewer::parseHighlightPath(
+	const std::string &path,
+	const LDLModel *srcModel,
+	LDLModel *dstModel)
+{
+	int lineNum = atoi(&path[1]) - 1;
+	const LDLFileLineArray *srcFileLines = srcModel->getFileLines();
+
+	if (lineNum < srcFileLines->getCount())
+	{
+		const LDLFileLine *srcFileLine = (*srcFileLines)[lineNum];
+		LDLFileLineArray *dstFileLines = dstModel->getFileLines(true);
+		LDLFileLine *dstFileLine = NULL;
+		bool isModel = false;
+		size_t nextSlash = path.find('/', 1);
+
+		switch (srcFileLine->getLineType())
+		{
+		case LDLLineTypeModel:
+			isModel = true;
+			if (nextSlash < path.size())
+			{
+				const LDLModelLine *srcModelLine =
+					(const LDLModelLine *)srcFileLine;
+				dstFileLine = new LDLModelLine(dstModel, srcFileLine->getLine(),
+					dstFileLines->getCount(), srcFileLine->getOriginalLine());
+				LDLModelLine *dstModelLine = (LDLModelLine *)dstFileLine;
+				dstModelLine->setMatrix(srcModelLine->getMatrix());
+				if (srcModelLine->getLowResModel() != NULL)
+				{
+					dstModelLine->createLowResModel(dstModel->getMainModel());
+				}
+				if (srcModelLine->getHighResModel() != NULL)
+				{
+					dstModelLine->createHighResModel(dstModel->getMainModel());
+				}
+				dstModel->copyPublicFlags(srcModel);
+			}
+			else
+			{
+				dstFileLine = (LDLFileLine *)srcFileLine->copy();
+			}
+			break;
+		case LDLLineTypeLine:
+		case LDLLineTypeTriangle:
+		case LDLLineTypeQuad:
+		case LDLLineTypeConditionalLine:
+			dstFileLine = (LDLFileLine *)srcFileLine->copy();
+			break;
+		default:
+			// Don't do anything for other line types.
+			break;
+		}
+		if (!isModel)
+		{
+			if (nextSlash < path.size())
+			{
+				throw "Invalid Tree Path";
+			}
+		}
+		if (dstFileLine)
+		{
+			dstFileLine->setLineNumber(dstFileLines->getCount());
+			dstFileLine->setParentModel(dstModel);
+			dstFileLines->addObject(dstFileLine);
+			dstModel->setActiveLineCount(dstModel->getActiveLineCount() + 1);
+			dstFileLine->release();
+		}
+		if (isModel)
+		{
+			if (nextSlash < path.size())
+			{
+				LDLModelLine *dstModelLine = (LDLModelLine *)dstFileLine;
+
+				if (dstModelLine->getLowResModel())
+				{
+					parseHighlightPath(path.substr(nextSlash),
+						((LDLModelLine *)srcFileLine)->getModel(),
+						dstModelLine->getLowResModel());
+				}
+				if (dstModelLine->getHighResModel())
+				{
+					parseHighlightPath(path.substr(nextSlash),
+						((LDLModelLine *)srcFileLine)->getModel(),
+						dstModelLine->getHighResModel());
+				}
+			}
+		}
+	}
+}
+
+void LDrawModelViewer::highlightPathsChanged(void)
+{
+	TCObject::release(highlightModel);
+	highlightModel = NULL;
+	if (highlightPaths.size() > 0)
+	{
+		LDModelParser *modelParser = NULL;
+		LDLMainModel *ldlModel = new LDLMainModel;
+
+		ldlModel->setMainModel(ldlModel);
+		ldlModel->setForceHighlightColor(true);
+		ldlModel->setHighlightColorNumber(0x3A0E0FF);
+		for (StringList::const_iterator it = highlightPaths.begin();
+			it != highlightPaths.end(); it++)
+		{
+			parseHighlightPath(*it, mainModel, ldlModel);
+		}
+		modelParser = new LDModelParser(this);
+		if (modelParser->parseMainModel(ldlModel))
+		{
+			highlightModel = modelParser->getMainTREModel();
+			highlightModel->retain();
+			highlightModel->setSaveAlphaFlag(false);
+		}
+		ldlModel->release();
+		modelParser->release();
+	}
+	requestRedraw();
 }

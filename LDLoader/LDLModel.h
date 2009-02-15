@@ -58,7 +58,7 @@ public:
 	virtual const char *getAuthor(void) const { return m_author; }
 	virtual void setName(const char *name);
 	virtual bool load(FILE *file, bool trackProgress = true);
-	virtual void print(int indent);
+	virtual void print(int indent) const;
 	virtual bool parse(void);
 	virtual TCDictionary* getLoadedModels(void);
 	virtual bool getLowResStuds(void) const;
@@ -69,15 +69,20 @@ public:
 	virtual LDLError *newError(LDLErrorType type, CUCSTR format,
 		va_list argPtr);
 	virtual LDLError *newError(LDLErrorType type, CUCSTR format, ...);
-	virtual LDLFileLineArray *getFileLines(void) { return m_fileLines; }
+	virtual LDLFileLineArray *getFileLines(bool initialize = false);
+	virtual const LDLFileLineArray *getFileLines(void) const
+	{
+		return m_fileLines;
+	}
 	virtual const IntList &getStepIndices(void) const { return m_stepIndices; }
 	virtual int getActiveLineCount(void) const { return m_activeLineCount; }
+	virtual void setActiveLineCount(int value) { m_activeLineCount = value; }
 	virtual bool colorNumberIsTransparent(int colorNumber);
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
 		int step = -1) const;
-	virtual void getBoundingBox(TCVector &min, TCVector &max);
+	virtual void getBoundingBox(TCVector &min, TCVector &max) const;
 	virtual TCFloat getMaxRadius(const TCVector &center);
 
 	// Flags
@@ -91,7 +96,9 @@ public:
 	bool isOfficial(void) const { return m_flags.official != false; }
 	bool hasStuds(void) const { return m_flags.hasStuds != false; }
 	bool hasBoundingBox(void) const;
+	void copyPublicFlags(const LDLModel *src);
 	//bool hasBoundingBox(void) const { return m_flags.haveBoundingBox != false; }
+
 
 	BFCState getBFCState(void) { return m_flags.bfcCertify; }
 
@@ -104,6 +111,7 @@ public:
 	virtual void cancelLoad(void);
 	virtual bool getLoadCanceled(void);
 	LDLMainModel *getMainModel(void) { return m_mainModel; }
+	void setMainModel(LDLMainModel *value) { m_mainModel = value; }
 	const LDLMainModel *getMainModel(void) const { return m_mainModel; }
 	virtual TCObject *getAlertSender(void);
 
@@ -145,7 +153,7 @@ protected:
 	virtual bool isAbsolutePath(const char *path);
 //	virtual void processModelLine(LDLModelLine *modelLine);
 	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
-	virtual void calcBoundingBox(void);
+	virtual void calcBoundingBox(void) const;
 	virtual void calcMaxRadius(const TCVector &center);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
 	void scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine);

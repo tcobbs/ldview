@@ -354,6 +354,7 @@
 #define IDC_DISTANCE_CHECK              1283
 #define IDC_DEFAULT                     1284
 #define IDC_CURRENT                     1285
+#define IDC_HIGHLIGHT                   1286
 #define IDC_PRINT_BACKGROUND            1300
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
@@ -451,7 +452,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40110
-#define _APS_NEXT_CONTROL_VALUE         1286
+#define _APS_NEXT_CONTROL_VALUE         1287
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

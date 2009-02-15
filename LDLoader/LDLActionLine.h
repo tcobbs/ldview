@@ -15,6 +15,7 @@ public:
 	bool getBFCInvert(void) const { return m_actionFlags.bfcInvert != false; }
 	BFCState getBFCState(void) const { return m_actionFlags.bfcCertify; }
 	virtual int getColorNumber(void) const;
+	virtual void setColorNumber(int value) { m_colorNumber = value; }
 	bool getBFCOn(void) const
 	{
 		return (m_actionFlags.bfcCertify == BFCOnState ||
@@ -28,6 +29,7 @@ protected:
 	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
 		const char *originalLine = NULL);
 	LDLActionLine(const LDLActionLine &other);
+	int getRandomColorNumber(void) const;
 
 	struct
 	{

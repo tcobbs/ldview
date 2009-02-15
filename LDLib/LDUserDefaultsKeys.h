@@ -191,5 +191,6 @@
 #define LAST_HAVE_DIST_KEY "LastHaveDist"
 #define LAST_DIST_KEY "LastDist"
 #define SAVE_EXPORT_TYPE_KEY "SaveExportType"
+#define MODEL_TREE_HIGHLIGHT_KEY "ModelTreeHighlight"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__
