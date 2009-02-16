@@ -192,5 +192,8 @@
 #define LAST_DIST_KEY "LastDist"
 #define SAVE_EXPORT_TYPE_KEY "SaveExportType"
 #define MODEL_TREE_HIGHLIGHT_KEY "ModelTreeHighlight"
+#define MAIN_TOOLBAR_IDS_KEY "MainToolbarIDs"
+#define SHOW_MAIN_TOOLBAR_KEY "ShowMainToolbar"
+#define SHOW_STEPS_TOOLBAR_KEY "ShowStepsToolbar"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__

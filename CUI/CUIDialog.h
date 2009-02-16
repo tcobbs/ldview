@@ -75,6 +75,7 @@ protected:
 		HWND control);
 	virtual LRESULT doHScroll(int scrollCode, int position, HWND hScrollBar);
 	virtual LRESULT doVScroll(int scrollCode, int position, HWND hScrollBar);
+	virtual LRESULT doContextMenu(HWND hWnd, int xPos, int yPos);
 	virtual LRESULT doTextFieldChange(int controlId, HWND control);
 	virtual void doOK(void);
 	virtual void doCancel(void);

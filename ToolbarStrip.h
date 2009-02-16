@@ -9,6 +9,8 @@ class LDViewPreferences;
 class TCAlert;
 
 typedef std::vector<HWND> HwndVector;
+typedef std::vector<long> LongVector;
+typedef std::map<long, size_t> LongSizeTMap;
 typedef std::list<HIMAGELIST> HImageListList;
 
 class ToolbarStrip: public CUIDialog
@@ -38,12 +40,15 @@ protected:
 		BOOL fSystemMenu);
 	virtual LRESULT doEnterMenuLoop(bool isTrackPopupMenu);
 	virtual LRESULT doExitMenuLoop(bool isTrackPopupMenu);
+	virtual LRESULT doContextMenu(HWND hWnd, int xPos, int yPos);
 
 	LRESULT doToolbarGetInfotip(TbButtonInfoVector &infos,
 		LPNMTBGETINFOTIPUC dispInfo);
 	//LRESULT doMainToolbarGetInfotip(LPNMTBGETINFOTIPUC dispInfo);
 	LRESULT doMainToolbarNotify(int controlId, LPNMHDR notification);
 	LRESULT doStepToolbarNotify(int controlId, LPNMHDR notification);
+	LRESULT doMainTbGetButtonInfo(NMTOOLBARUC *notification);
+	LRESULT doMainToolbarChange(void);
 	void addTbButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
 		int commandId, int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
 		BYTE state = TBSTATE_ENABLED);
@@ -63,12 +68,14 @@ protected:
 	void stepChanged(void);
 	void enableToolbarButton(HWND hToolbar, UINT buttonId, bool enable);
 	bool doCheck(bool &value, LPARAM commandId);
+	void updateContextMenu(void);
 	void updateWireframeMenu(void);
 	void updateEdgesMenu(void);
 	void updatePrimitivesMenu(void);
 	void updateLightingMenu(void);
 	void updateBFCMenu(void);
 	void updateMenu(HMENU hMenu, int command, int index, HIMAGELIST hImageList);
+	void sizeToolbar(HWND hToolbar, int lastCommandID);
 
 	void forceRedraw(void);
 
@@ -79,6 +86,7 @@ protected:
 	void doLighting(void);
 	void doBfc(void);
 	void doShowAxes(void);
+	void doRandomColors(void);
 	void doFog(void);
 	void doRemoveHiddenLines(void);
 	void doShowEdgesOnly(void);
@@ -94,9 +102,14 @@ protected:
 	void doOptionalStandardLight(void);
 	void doRedBackFaces(void);
 	void doGreenFrontFaces(void);
+	void doCustomizeMainToolbar(void);
+	void doMainToolbar(void);
+	void doStepsToolbar(void);
 
 	void checkReflect(bool &value, bool prefsValue, LPARAM commandID);
 	void doDropDown(LPNMTOOLBAR toolbarNot);
+
+	void fillTbButton(TBBUTTON &button, const TbButtonInfo &buttonInfo);
 
 	static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
 
@@ -111,6 +124,7 @@ protected:
 	HWND m_hDeactivatedTooltip;;
 
 	HMENU m_hMainToolbarMenu;
+	HMENU m_hContextMenu;
 	HMENU m_hWireframeMenu;
 	HMENU m_hEdgesMenu;
 	HMENU m_hPrimitivesMenu;
@@ -123,6 +137,8 @@ protected:
 	int m_step;
 	ucstring m_numStepsFormat;
 	TbButtonInfoVector m_mainButtonInfos;
+	LongSizeTMap m_mainButtonsMap;
+	LongVector m_mainButtonIDs;
 	TbButtonInfoVector m_stepButtonInfos;
 	HwndVector m_controls;
 	int m_stripHeight;
@@ -137,6 +153,10 @@ protected:
 	bool m_lighting;
 	bool m_bfc;
 	bool m_showAxes;
+	bool m_randomColors;
+
+	bool m_showMain;
+	bool m_showSteps;
 };
 
 #endif // __TOOLBARSTRIP_H__

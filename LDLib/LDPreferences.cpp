@@ -1273,9 +1273,16 @@ void LDPreferences::setProcessLdConfig(bool value, bool commit)
 	setSetting(m_processLdConfig, value, PROCESS_LDCONFIG_KEY, commit);
 }
 
-void LDPreferences::setRandomColors(bool value, bool commit)
+void LDPreferences::setRandomColors(bool value, bool commit, bool apply)
 {
 	setSetting(m_randomColors, value, RANDOM_COLORS_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setRandomColors(value);
+		}
+	}
 }
 
 void LDPreferences::setShowFps(bool value, bool commit)

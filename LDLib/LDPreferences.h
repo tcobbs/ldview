@@ -220,7 +220,7 @@ public:
 	void setTransDefaultColor(bool value, bool commit = false);
 	void setDefaultColorNumber(int value, bool commit = false);
 	void setProcessLdConfig(bool value, bool commit = false);
-	void setRandomColors(bool value, bool commit = false);
+	void setRandomColors(bool value, bool commit = false, bool apply = false);
 	void setShowFps(bool value, bool commit = false);
 	void setShowAxes(bool value, bool commit = false, bool apply = false);
 	void setShowErrors(bool value, bool commit = false);
