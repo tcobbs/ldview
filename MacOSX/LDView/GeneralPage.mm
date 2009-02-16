@@ -92,6 +92,7 @@
 	[self setCheck:disableSmpCheck value:ldPreferences->getDisableSmp()];
 	[self setCheck:processLDConfigCheck
 		value:ldPreferences->getProcessLdConfig()];
+	[self setCheck:randomColorsCheck value:ldPreferences->getRandomColors()];
 	ldPreferences->getBackgroundColor(r, g, b);
 	[self setColorWell:backgroundColorWell r:r g:g b:b];
 	ldPreferences->getDefaultColor(r, g, b);
@@ -137,6 +138,7 @@
 	TCUserDefaults::setBoolForKey([self getCheck:newModelWindowsCheck], "OpenModelsInNewWindows", false);	
 	ldPreferences->setLineSmoothing([self getCheck:antialiasedLinesCheck]);
 	ldPreferences->setProcessLdConfig([self getCheck:processLDConfigCheck]);
+	ldPreferences->setRandomColors([self getCheck:randomColorsCheck]);
 	ldPreferences->setShowErrors([self getCheck:showErrorsCheck]);
 	ldPreferences->setDisableSmp([disableSmpCheck getCheck]);
 	ldPreferences->setShowFps([self getCheck:showFrameRateCheck]);
