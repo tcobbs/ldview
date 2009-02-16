@@ -62,6 +62,7 @@
                 partsListsDirPopUp = NSPopUpButton; 
                 processLDConfigCheck = NSButton; 
                 promptAtStartupCheck = NSButton; 
+                randomColorsCheck = NSButton; 
                 showAxesCheck = NSButton; 
                 showErrorsCheck = NSButton; 
                 showFrameRateCheck = NSButton; 

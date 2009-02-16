@@ -16,6 +16,7 @@
 	IBOutlet NSButton *newModelWindowsCheck;
 	IBOutlet NSButton *promptAtStartupCheck;
     IBOutlet NSButton *processLDConfigCheck;
+	IBOutlet NSButton *randomColorsCheck;
     IBOutlet NSButton *showErrorsCheck;
     IBOutlet NSButton *showFrameRateCheck;
 	IBOutlet NSButton *showAxesCheck;
