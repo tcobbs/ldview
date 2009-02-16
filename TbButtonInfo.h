@@ -12,16 +12,16 @@ public:
 	~TbButtonInfo(void) {}
 	TbButtonInfo &operator=(const TbButtonInfo &other);
 
-	CUCSTR getTooltipText(void) { return m_tooltipText.c_str(); }
+	CUCSTR getTooltipText(void) const { return m_tooltipText.c_str(); }
 	void setTooltipText(const ucstring value) { m_tooltipText = value; }
-	int getCommandId(void) { return m_commandId; }
+	int getCommandId(void) const { return m_commandId; }
 	void setCommandId(int value) { m_commandId = value; }
-	int getBmpId(int stdBitmapStartId, int tbBitmapStartId);
+	int getBmpId(int stdBitmapStartId, int tbBitmapStartId) const;
 	void setStdBmpId(int value) { m_stdBmpId = value; }
 	void setTbBmpId(int value) { m_tbBmpId = value; }
-	BYTE getState(void) { return m_state; }
+	BYTE getState(void) const { return m_state; }
 	void setState(BYTE value) { m_state = value; }
-	BYTE getStyle(void) { return m_style; }
+	BYTE getStyle(void) const { return m_style; }
 	void setStyle(BYTE value) { m_style = value; }
 protected:
 

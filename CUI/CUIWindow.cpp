@@ -2899,3 +2899,112 @@ int CUIWindow::comboGetSelectedItem(HWND hWnd)
 {
 	return (int)SendMessage(hWnd, CB_GETCURSEL, 0, 0);
 }
+
+// Note: static method
+const std::string CUIWindow::notificationName(UINT code)
+{
+	static char buf[128];
+
+	switch (code)
+	{
+	case TBN_GETBUTTONINFOA:
+		return "TBN_GETBUTTONINFOA";
+	case TBN_BEGINDRAG:
+		return "TBN_BEGINDRAG";
+	case TBN_ENDDRAG:
+		return "TBN_ENDDRAG";
+	case TBN_BEGINADJUST:
+		return "TBN_BEGINADJUST";
+	case TBN_ENDADJUST:
+		return "TBN_ENDADJUST";
+	case TBN_RESET:
+		return "TBN_RESET";
+	case TBN_QUERYINSERT:
+		return "TBN_QUERYINSERT";
+	case TBN_QUERYDELETE:
+		return "TBN_QUERYDELETE";
+	case TBN_TOOLBARCHANGE:
+		return "TBN_TOOLBARCHANGE";
+	case TBN_CUSTHELP:
+		return "TBN_CUSTHELP";
+	case TBN_DROPDOWN:
+		return "TBN_DROPDOWN";
+	case TBN_GETOBJECT:
+		return "TBN_GETOBJECT";
+	case TBN_HOTITEMCHANGE:
+		return "TBN_HOTITEMCHANGE";
+	case TBN_DRAGOUT:
+		return "TBN_DRAGOUT";
+	case TBN_DELETINGBUTTON:
+		return "TBN_DELETINGBUTTON";
+	case TBN_GETDISPINFOA:
+		return "TBN_GETDISPINFOA";
+	case TBN_GETDISPINFOW:
+		return "TBN_GETDISPINFOW";
+	case TBN_GETINFOTIPA:
+		return "TBN_GETINFOTIPA";
+	case TBN_GETINFOTIPW:
+		return "TBN_GETINFOTIPW";
+	case TBN_GETBUTTONINFOW:
+		return "TBN_GETBUTTONINFOW";
+	case TBN_RESTORE:
+		return "TBN_RESTORE";
+	case TBN_SAVE:
+		return "TBN_SAVE";
+	case TBN_INITCUSTOMIZE:
+		return "TBN_INITCUSTOMIZE";
+
+	case TTN_GETDISPINFOA:
+		return "TTN_GETDISPINFOA";
+	case TTN_GETDISPINFOW:
+		return "TTN_GETDISPINFOW";
+	case TTN_SHOW:
+		return "TTN_SHOW";
+	case TTN_POP:
+		return "TTN_POP";
+	case TTN_LINKCLICK:
+		return "TTN_LINKCLICK";
+
+	case NM_OUTOFMEMORY:
+		return "NM_OUTOFMEMORY";
+	case NM_CLICK:
+		return "NM_CLICK";
+	case NM_DBLCLK:
+		return "NM_DBLCLK";
+	case NM_RETURN:
+		return "NM_RETURN";
+	case NM_RCLICK:
+		return "NM_RCLICK";
+	case NM_RDBLCLK:
+		return "NM_RDBLCLK";
+	case NM_SETFOCUS:
+		return "NM_SETFOCUS";
+	case NM_KILLFOCUS:
+		return "NM_KILLFOCUS";
+	case NM_CUSTOMDRAW:
+		return "NM_CUSTOMDRAW";
+	case NM_HOVER:
+		return "NM_HOVER";
+	case NM_NCHITTEST:
+		return "NM_NCHITTEST";
+	case NM_KEYDOWN:
+		return "NM_KEYDOWN";
+	case NM_RELEASEDCAPTURE:
+		return "NM_RELEASEDCAPTURE";
+	case NM_SETCURSOR:
+		return "NM_SETCURSOR";
+	case NM_CHAR:
+		return "NM_CHAR";
+	case NM_TOOLTIPSCREATED:
+		return "NM_TOOLTIPSCREATED";
+	case NM_LDOWN:
+		return "NM_LDOWN";
+	case NM_RDOWN:
+		return "NM_RDOWN";
+	case NM_THEMECHANGED:
+		return "NM_THEMECHANGED";
+	default:
+		sprintf(buf, "0x%08X", code);
+		return buf;
+	}
+}

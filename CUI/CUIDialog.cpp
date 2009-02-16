@@ -89,11 +89,7 @@ INT_PTR CUIDialog::dialogProc(
 		}
 		break;
 	case WM_NOTIFY:
-		if (doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam) == 0)
-		{
-			return (INT_PTR)TRUE;
-		}
-		break;
+		return (INT_PTR)doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam);
 	case WM_MOVE:
 		if (doMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam)) == 0)
 		{
@@ -163,8 +159,20 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_CONTEXTMENU:
+		if (doContextMenu((HWND)wParam, (int)(short)LOWORD(lParam),
+			(int)(short)HIWORD(lParam)) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+LRESULT CUIDialog::doContextMenu(HWND /*hWnd*/, int /*xPos*/, int /*yPos*/)
+{
+	return 1;
 }
 
 LRESULT CUIDialog::doVScroll(

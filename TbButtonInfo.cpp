@@ -31,7 +31,7 @@ TbButtonInfo &TbButtonInfo::operator=(const TbButtonInfo &other)
 	return *this;
 }
 
-int TbButtonInfo::getBmpId(int stdBitmapStartId, int tbBitmapStartId)
+int TbButtonInfo::getBmpId(int stdBitmapStartId, int tbBitmapStartId) const
 {
 	if (m_stdBmpId == -1)
 	{

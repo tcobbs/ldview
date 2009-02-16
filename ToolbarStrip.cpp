@@ -7,6 +7,7 @@
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <TCFoundation/TCAlertManager.h>
+#include <LDLib/LDUserDefaultsKeys.h>
 #if _MSC_VER >= 1300 && !defined(TC_NO_UNICODE)	// VC >= VC 2003
 #define min(x, y) ((x) < (y) ? (x) : (y))
 #define max(x, y) ((x) > (y) ? (x) : (y))
@@ -42,7 +43,9 @@ m_stdBitmapStartId(-1),
 m_tbBitmapStartId(-1),
 m_numSteps(0),
 m_hDeactivatedTooltip(NULL),
-m_hGdiPlus(NULL)
+m_hGdiPlus(NULL),
+m_showMain(TCUserDefaults::boolForKey(SHOW_MAIN_TOOLBAR_KEY, true, false)),
+m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 {
 	ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
@@ -135,10 +138,6 @@ void ToolbarStrip::initToolbar(
 	char buttonTitle[128];
 	int i;
 	int count;
-	RECT rect;
-	RECT buttonRect;
-	int width;
-	int height;
 	HIMAGELIST hImageList;
 	HMENU hMenu = NULL;
 
@@ -162,15 +161,7 @@ void ToolbarStrip::initToolbar(
 	buttons = new TBBUTTON[count];
 	for (i = 0; i < count; i++)
 	{
-		TbButtonInfo &buttonInfo = infos[i];
-
-		buttons[i].iBitmap = buttonInfo.getBmpId(m_stdBitmapStartId,
-			m_tbBitmapStartId);
-		buttons[i].idCommand = buttonInfo.getCommandId();
-		buttons[i].fsState = buttonInfo.getState();
-		buttons[i].fsStyle = buttonInfo.getStyle();
-		buttons[i].dwData = (DWORD)this;
-		buttons[i].iString = -1;
+		fillTbButton(buttons[i], infos[i]);
 		if (hMenu != NULL)
 		{
 			updateMenu(hMenu, buttons[i].idCommand, buttons[i].iBitmap,
@@ -183,39 +174,97 @@ void ToolbarStrip::initToolbar(
 	{
 		SendMessage(hToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(22, 24));
 	}
+	sizeToolbar(hToolbar, buttons[count - 1].idCommand);
+	delete[] buttons;
+	SendMessage(hToolbar, TB_SETHOTITEM, (WPARAM)-1, 0);
+	ShowWindow(hToolbar, SW_SHOW);
+}
+
+void ToolbarStrip::sizeToolbar(HWND hToolbar, int lastCommandID)
+{
+	RECT buttonRect;
+	RECT rect;
+	int width;
+	int height;
+
 	GetWindowRect(hToolbar, &rect);
 	screenToClient(hWindow, &rect);
-	if (!SendMessage(hToolbar, TB_GETRECT, buttons[count - 1].idCommand,
-		(LPARAM)&buttonRect))
+	if (!SendMessage(hToolbar, TB_GETRECT, lastCommandID, (LPARAM)&buttonRect))
 	{
 		buttonRect = rect;
 		buttonRect.left -= rect.left;
 		buttonRect.right -= rect.right;
 	}
-	delete[] buttons;
 	width = buttonRect.right;
 	height = buttonRect.bottom - buttonRect.top;
 	MoveWindow(hToolbar, rect.left, rect.top, width, height, FALSE);
-	SendMessage(hToolbar, TB_SETHOTITEM, (WPARAM)-1, 0);
-	ShowWindow(hToolbar, SW_SHOW);
+}
+
+void ToolbarStrip::fillTbButton(
+	TBBUTTON &button,
+	const TbButtonInfo &buttonInfo)
+{
+	button.iBitmap = buttonInfo.getBmpId(m_stdBitmapStartId, m_tbBitmapStartId);
+	button.idCommand = buttonInfo.getCommandId();
+	button.fsState = buttonInfo.getState();
+	button.fsStyle = buttonInfo.getStyle();
+	button.dwData = (DWORD)this;
+	button.iString = -1;
 }
 
 void ToolbarStrip::loadMainToolbarMenus(void)
 {
 	m_hMainToolbarMenu = LoadMenu(getLanguageModule(),
 		MAKEINTRESOURCE(IDR_TOOLBAR_MENU));
-	m_hWireframeMenu = GetSubMenu(m_hMainToolbarMenu, 0);
-	m_hEdgesMenu = GetSubMenu(m_hMainToolbarMenu, 1);
-	m_hPrimitivesMenu = GetSubMenu(m_hMainToolbarMenu, 2);
-	m_hLightingMenu = GetSubMenu(m_hMainToolbarMenu, 3);
-	m_hBFCMenu = GetSubMenu(m_hMainToolbarMenu, 4);
+	m_hContextMenu = GetSubMenu(m_hMainToolbarMenu, 0);
+	m_hWireframeMenu = GetSubMenu(m_hMainToolbarMenu, 1);
+	m_hEdgesMenu = GetSubMenu(m_hMainToolbarMenu, 2);
+	m_hPrimitivesMenu = GetSubMenu(m_hMainToolbarMenu, 3);
+	m_hLightingMenu = GetSubMenu(m_hMainToolbarMenu, 4);
+	m_hBFCMenu = GetSubMenu(m_hMainToolbarMenu, 5);
 }
 
 void ToolbarStrip::initMainToolbar(void)
 {
+	DWORD style = GetWindowLong(m_hToolbar, GWL_STYLE);
+	TbButtonInfoVector buttonInfos;
+	size_t i;
+
 	loadMainToolbarMenus();
 	populateMainTbButtonInfos();
-	initToolbar(m_hToolbar, m_mainButtonInfos, IDB_TOOLBAR);
+	m_mainButtonIDs.clear();
+	for (i = 0; i < m_mainButtonInfos.size(); i++)
+	{
+		long commandID = m_mainButtonInfos[i].getCommandId();
+
+		if (i < 12)
+		{
+			m_mainButtonIDs.push_back(commandID);
+		}
+		m_mainButtonsMap[commandID] = i;
+	}
+	m_mainButtonIDs = TCUserDefaults::longVectorForKey(MAIN_TOOLBAR_IDS_KEY,
+		m_mainButtonIDs, false);
+	for (i = 0; i < m_mainButtonIDs.size(); i++)
+	{
+		int commandId = m_mainButtonIDs[i];
+
+		if (commandId > 0)
+		{
+			LongSizeTMap::const_iterator it = m_mainButtonsMap.find(commandId);
+
+			if (it != m_mainButtonsMap.end())
+			{
+				buttonInfos.push_back(m_mainButtonInfos[it->second]);
+			}
+		}
+		else
+		{
+			addTbSeparatorInfo(buttonInfos);
+		}
+	}
+	SendMessage(m_hToolbar, TB_SETSTYLE, 0, style | CCS_ADJUSTABLE);
+	initToolbar(m_hToolbar, buttonInfos, IDB_TOOLBAR);
 }
 
 void ToolbarStrip::initStepToolbar(void)
@@ -244,17 +293,29 @@ void ToolbarStrip::initLayout(void)
 	//int right;
 	int maxHeight;
 	size_t i;
+	int show = m_showSteps ? SW_SHOW : SW_HIDE;
 
+	ShowWindow(m_hToolbar, m_showMain ? SW_SHOW : SW_HIDE);
+	ShowWindow(m_hStepLabel, show);
+	ShowWindow(m_hStepLabel, show);
 	GetWindowRect(m_hToolbar, &tbRect);
 	screenToClient(hWindow, &tbRect);
 	GetWindowRect(m_hStepLabel, &rect);
 	screenToClient(hWindow, &rect);
-	delta = tbRect.right + 16 - rect.left;
+	if (m_showMain)
+	{
+		delta = tbRect.right + 16 - rect.left;
+	}
+	else
+	{
+		delta = 4 - rect.left;
+	}
 	maxHeight = tbRect.bottom - tbRect.top;
 	for (i = 1; i < m_controls.size(); i++)
 	{
 		int height;
 
+		ShowWindow(m_controls[i], show);
 		GetWindowRect(m_controls[i], &rect);
 		screenToClient(hWindow, &rect);
 		height = rect.bottom - rect.top;
@@ -278,6 +339,7 @@ void ToolbarStrip::initLayout(void)
 			rect.right - rect.left, height, TRUE);
 	}
 	autoSize();
+	RedrawWindow(hWindow, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
 }
 
 void ToolbarStrip::stepChanged(void)
@@ -577,6 +639,9 @@ LRESULT ToolbarStrip::doCommand(
 	case IDC_SHOW_AXES:
 		doShowAxes();
 		break;
+	case IDC_RANDOM_COLORS:
+		doRandomColors();
+		break;
 	case ID_WIREFRAME_FOG:
 		doFog();
 		break;
@@ -621,6 +686,15 @@ LRESULT ToolbarStrip::doCommand(
 		break;
 	case ID_BFC_GREENFRONTFACES:
 		doGreenFrontFaces();
+		break;
+	case ID_TBCONTEXT_CUSTOMIZE:
+		doCustomizeMainToolbar();
+		break;
+	case ID_TBCONTEXT_MAIN:
+		doMainToolbar();
+		break;
+	case ID_TBCONTEXT_STEPS:
+		doStepsToolbar();
 		break;
 	default:
 		return CUIDialog::doCommand(notifyCode, commandId, control);
@@ -711,6 +785,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_lighting = m_prefs->getUseLighting();
 		m_bfc = m_prefs->getBfc();
 		m_showAxes = m_prefs->getShowAxes();
+		m_randomColors = m_prefs->getRandomColors();
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME, -1, 1,
 			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
@@ -728,15 +803,18 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			m_lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
 			IDC_BFC, -1, 9, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, -1, 11,
-			m_showAxes);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE, -1, 6,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES, -1,
 			8);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, -1, 11,
+			m_showAxes);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS, -1, 12,
+			m_randomColors);
 	}
 }
 
@@ -781,78 +859,6 @@ HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
 	delete data;
 	return hNewBitmap;
 }
-
-//static const std::string notificationName(UINT code)
-//{
-//	static char buf[128];
-//
-//	switch (code)
-//	{
-//	case TBN_GETBUTTONINFOA:
-//		return "TBN_GETBUTTONINFOA";
-//	case TBN_BEGINDRAG:
-//		return "TBN_BEGINDRAG";
-//	case TBN_ENDDRAG:
-//		return "TBN_ENDDRAG";
-//	case TBN_BEGINADJUST:
-//		return "TBN_BEGINADJUST";
-//	case TBN_ENDADJUST:
-//		return "TBN_ENDADJUST";
-//	case TBN_RESET:
-//		return "TBN_RESET";
-//	case TBN_QUERYINSERT:
-//		return "TBN_QUERYINSERT";
-//	case TBN_QUERYDELETE:
-//		return "TBN_QUERYDELETE";
-//	case TBN_TOOLBARCHANGE:
-//		return "TBN_TOOLBARCHANGE";
-//	case TBN_CUSTHELP:
-//		return "TBN_CUSTHELP";
-//	case TBN_DROPDOWN:
-//		return "TBN_DROPDOWN";
-//	case TBN_GETOBJECT:
-//		return "TBN_GETOBJECT";
-//	case TBN_HOTITEMCHANGE:
-//		return "TBN_HOTITEMCHANGE";
-//	case TBN_DRAGOUT:
-//		return "TBN_DRAGOUT";
-//	case TBN_DELETINGBUTTON:
-//		return "TBN_DELETINGBUTTON";
-//	case TBN_GETDISPINFOA:
-//		return "TBN_GETDISPINFOA";
-//	case TBN_GETDISPINFOW:
-//		return "TBN_GETDISPINFOW";
-//	case TBN_GETINFOTIPA:
-//		return "TBN_GETINFOTIPA";
-//	case TBN_GETINFOTIPW:
-//		return "TBN_GETINFOTIPW";
-//	case TBN_GETBUTTONINFOW:
-//		return "TBN_GETBUTTONINFOW";
-//	case TBN_RESTORE:
-//		return "TBN_RESTORE";
-//	case TBN_SAVE:
-//		return "TBN_SAVE";
-//	case TBN_INITCUSTOMIZE:
-//		return "TBN_INITCUSTOMIZE";
-//
-//	case TTN_GETDISPINFOA:
-//		return "TTN_GETDISPINFOA";
-//	case TTN_GETDISPINFOW:
-//		return "TTN_GETDISPINFOW";
-//	case TTN_SHOW:
-//		return "TTN_SHOW";
-//	case TTN_POP:
-//		return "TTN_POP";
-//	case TTN_LINKCLICK:
-//		return "TTN_LINKCLICK";
-//
-//	case NM_TOOLTIPSCREATED:
-//		return "NM_TOOLTIPSCREATED";
-//	default:
-//		sprintf(buf, "0x%08X", code);
-//		return buf;
-//	}
-//}
 
 LRESULT ToolbarStrip::doToolbarGetInfotip(
 	TbButtonInfoVector &infos,
@@ -899,10 +905,62 @@ LRESULT ToolbarStrip::doToolbarGetInfotip(
 	return 0;
 }
 
+LRESULT ToolbarStrip::doMainTbGetButtonInfo(NMTOOLBARUC *notification)
+{
+	int index = notification->iItem;
+	int skipCount = 0;
+
+	for (int i = 0; i <= index && i + skipCount < (int)m_mainButtonInfos.size();
+		i++)
+	{
+		if (m_mainButtonInfos[i].getStyle() == TBSTYLE_SEP)
+		{
+			skipCount++;
+		}
+	}
+	if (index + skipCount < (int)m_mainButtonInfos.size())
+	{
+		TbButtonInfo &buttonInfo = m_mainButtonInfos[index + skipCount];
+
+		ucstrncpy(notification->pszText, buttonInfo.getTooltipText(),
+			notification->cchText);
+		notification->pszText[notification->cchText - 1] = 0;
+		notification->cchText = ucstrlen(notification->pszText);
+		fillTbButton(notification->tbButton, buttonInfo);
+		SetWindowLong(hWindow, DWL_MSGRESULT, TRUE);
+		return TRUE;
+	}
+	SetWindowLong(hWindow, DWL_MSGRESULT, FALSE);
+	return FALSE;
+}
+
+LRESULT ToolbarStrip::doMainToolbarChange(void)
+{
+	m_mainButtonIDs.clear();
+	for (int i = 0; true; i++)
+	{
+		TBBUTTON button;
+
+		if (SendMessage(m_hToolbar, TB_GETBUTTON, i, (LPARAM)&button))
+		{
+			m_mainButtonIDs.push_back(button.idCommand);
+		}
+		else
+		{
+			break;
+		}
+	}
+	TCUserDefaults::setLongVectorForKey(m_mainButtonIDs, MAIN_TOOLBAR_IDS_KEY,
+		false);
+	sizeToolbar(m_hToolbar, m_mainButtonIDs.back());
+	initLayout();
+	return 0;	// ignored
+}
+
 LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 {
-	//debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
-	//	notificationName(notification->code).c_str());
+	debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
+		notificationName(notification->code).c_str());
 	switch (notification->code)
 	{
 	case TBN_GETINFOTIPUC:
@@ -915,6 +973,14 @@ LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 			doDropDown((LPNMTOOLBAR)notification);
 		}
 		break;
+	case TBN_QUERYDELETE:
+	case TBN_QUERYINSERT:
+		SetWindowLong(hWindow, DWL_MSGRESULT, TRUE);
+		return TRUE;
+	case TBN_GETBUTTONINFOUC:
+		return doMainTbGetButtonInfo((NMTOOLBARUC *)notification);
+	case TBN_TOOLBARCHANGE:
+		return doMainToolbarChange();
 	default:
 		return CUIWindow::doNotify(controlId, notification);
 	}
@@ -955,6 +1021,12 @@ LRESULT ToolbarStrip::doNotify(int controlId, LPNMHDR notification)
 void ToolbarStrip::enableMainToolbarButton(UINT buttonId, bool enable)
 {
 	enableToolbarButton(m_hToolbar, buttonId, enable);
+}
+
+void ToolbarStrip::updateContextMenu(void)
+{
+	setMenuCheck(m_hContextMenu, ID_TBCONTEXT_MAIN, m_showMain);
+	setMenuCheck(m_hContextMenu, ID_TBCONTEXT_STEPS, m_showSteps);
 }
 
 void ToolbarStrip::updateWireframeMenu(void)
@@ -1237,6 +1309,25 @@ void ToolbarStrip::doGreenFrontFaces(void)
 		m_prefs->getGreenFrontFaces());
 }
 
+void ToolbarStrip::doCustomizeMainToolbar(void)
+{
+	SendMessage(m_hToolbar, TB_CUSTOMIZE, 0, 0);
+}
+
+void ToolbarStrip::doMainToolbar(void)
+{
+	m_showMain = !m_showMain;
+	TCUserDefaults::setBoolForKey(m_showMain, SHOW_MAIN_TOOLBAR_KEY, false);
+	initLayout();
+}
+
+void ToolbarStrip::doStepsToolbar(void)
+{
+	m_showSteps = !m_showSteps;
+	TCUserDefaults::setBoolForKey(m_showSteps, SHOW_STEPS_TOOLBAR_KEY, false);
+	initLayout();
+}
+
 void ToolbarStrip::doBfc(void)
 {
 	if (doCheck(m_bfc, IDC_BFC))
@@ -1251,6 +1342,15 @@ void ToolbarStrip::doShowAxes(void)
 	if (doCheck(m_showAxes, IDC_SHOW_AXES))
 	{
 		m_prefs->setShowAxes(m_showAxes);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doRandomColors(void)
+{
+	if (doCheck(m_randomColors, IDC_RANDOM_COLORS))
+	{
+		m_prefs->setRandomColors(m_randomColors);
 		forceRedraw();
 	}
 }
@@ -1296,7 +1396,11 @@ LRESULT ToolbarStrip::doInitMenuPopup(
 	UINT /*uPos*/,
 	BOOL /*fSystemMenu*/)
 {
-	if (hPopupMenu == m_hWireframeMenu)
+	if (hPopupMenu == m_hContextMenu)
+	{
+		updateContextMenu();
+	}
+	else if (hPopupMenu == m_hWireframeMenu)
 	{
 		updateWireframeMenu();
 	}
@@ -1345,6 +1449,7 @@ void ToolbarStrip::checksReflect(void)
 	checkReflect(m_lighting, m_prefs->getUseLighting(), IDC_LIGHTING);
 	checkReflect(m_bfc, m_prefs->getBfc(), IDC_BFC);
 	checkReflect(m_showAxes, m_prefs->getShowAxes(), IDC_SHOW_AXES);
+	checkReflect(m_randomColors, m_prefs->getRandomColors(), IDC_RANDOM_COLORS);
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)
@@ -1382,4 +1487,35 @@ LRESULT ToolbarStrip::doExitMenuLoop(bool /*isTrackPopupMenu*/)
 		modelWindow->forceRedraw();
 	}
 	return 1;
+}
+
+LRESULT ToolbarStrip::doContextMenu(HWND hWnd, int xPos, int yPos)
+{
+	if (m_hContextMenu != NULL)
+	{
+		BOOL fade;
+
+		setMenuEnabled(m_hContextMenu, ID_TBCONTEXT_CUSTOMIZE,
+			hWnd == m_hToolbar);
+		// Note: selection fade causes a display glitch.  This is an obscenely
+		// ugly hack to get rid of that, but it does work.  The problem still
+		// exists when the menu item is selected from the main menu, though.
+		// Did I mention yet today that Microsoft sucks?
+		SystemParametersInfo(SPI_GETSELECTIONFADE, 0, &fade, 0);
+		if (fade)
+		{
+			// We better pray it doesn't crash between here and where we put
+			// things back below.
+			SystemParametersInfo(SPI_SETSELECTIONFADE, FALSE, NULL, 0);
+		}
+		TrackPopupMenuEx(m_hContextMenu,
+			TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+			xPos, yPos, hWindow, NULL);
+		if (fade)
+		{
+			SystemParametersInfo(SPI_SETSELECTIONFADE, 0, &fade, 0);
+		}
+		return 0;
+	}
+	return CUIDialog::doContextMenu(hWnd, xPos, yPos);
 }

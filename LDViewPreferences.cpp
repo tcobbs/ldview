@@ -357,6 +357,11 @@ bool LDViewPreferences::getShowAxes(void)
 	return ldPrefs->getShowAxes();
 }
 
+bool LDViewPreferences::getRandomColors(void)
+{
+	return ldPrefs->getRandomColors();
+}
+
 bool LDViewPreferences::getRedBackFaces(void)
 {
 	return ldPrefs->getRedBackFaces();
@@ -576,6 +581,19 @@ void LDViewPreferences::setShowAxes(bool value)
 		{
 			SendDlgItemMessage(hGeneralPage, IDC_SHOW_AXES, BM_SETCHECK, value,
 				0);
+		}
+	}
+}
+
+void LDViewPreferences::setRandomColors(bool value)
+{
+	if (value != ldPrefs->getRandomColors())
+	{
+		ldPrefs->setRandomColors(value, true, true);
+		if (hGeneralPage)
+		{
+			SendDlgItemMessage(hGeneralPage, IDC_RANDOM_COLORS, BM_SETCHECK,
+				value, 0);
 		}
 	}
 }
