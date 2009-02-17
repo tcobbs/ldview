@@ -31,6 +31,10 @@ void ModelTreePanel::comment()
 {
 }
 
+void ModelTreePanel::highlightSelectedLine()
+{
+}
+
 void ModelTreePanel::itemexpanded(QListViewItem * /*item*/)
 {
 }

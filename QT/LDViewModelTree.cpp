@@ -237,3 +237,8 @@ void LDViewModelTree::toggleOptions()
 	TCUserDefaults::setBoolForKey(optionsShown, MODEL_TREE_OPTIONS_SHOWN_KEY,
 								  false);
 }
+
+void LDViewModelTree::highlightSelectedLine()
+{
+}
+
