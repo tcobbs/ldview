@@ -32,6 +32,7 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *snapshotButton;
 	IBOutlet NSSegmentedControl *reloadButton;
 	IBOutlet NSSegmentedControl *featuresSegments;
+	IBOutlet NSSegmentedControl *partsAuthorSegments;
 	IBOutlet NSSegmentedControl *prefsSegments;
 	IBOutlet NSSegmentedControl *viewModeSegments;
 	IBOutlet NSSegmentedControl *viewingAngleSegments;

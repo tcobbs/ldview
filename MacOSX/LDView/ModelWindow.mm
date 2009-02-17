@@ -233,6 +233,17 @@ enum
 	}
 }
 
+- (void)updatePartsAuthorStates
+{
+	LDPreferences *ldPreferences = [[controller preferences] ldPreferences];
+	NSArray *states = [NSArray arrayWithObjects:
+		[NSNumber numberWithBool:ldPreferences->getShowAxes()],
+		[NSNumber numberWithBool:ldPreferences->getRandomColors()],
+		nil];
+	
+	[self updateSegments:partsAuthorSegments states:states];
+}
+
 - (void)updateFeatureStates
 {
 	LDPreferences *ldPreferences = [[controller preferences] ldPreferences];
@@ -243,7 +254,6 @@ enum
 		[NSNumber numberWithBool:ldPreferences->getAllowPrimitiveSubstitution()],
 		[NSNumber numberWithBool:ldPreferences->getUseLighting()],
 		[NSNumber numberWithBool:ldPreferences->getBfc()],
-		[NSNumber numberWithBool:ldPreferences->getShowAxes()],
 		nil];
 
 	[self updateSegments:featuresSegments states:states];
@@ -252,6 +262,18 @@ enum
 - (void)preferencesDidUpdate:(NSNotification *)notification
 {
 	[self updateFeatureStates];
+	[self updatePartsAuthorStates];
+}
+
+- (void)setupPartsAuthor
+{
+	NSArray *toolTips = [NSArray arrayWithObjects:
+		@"Show/Hide Axes",
+		@"Enable/Disable Random Colors",
+		nil];
+
+	[self setupSegments:partsAuthorSegments toolTips:toolTips];
+	[self updatePartsAuthorStates];
 }
 
 - (void)setupFeatures
@@ -263,12 +285,8 @@ enum
 		@"Enable/Disable Primitive Substitution",
 		@"Enable/Disable Lighting",
 		@"Enable/Disable BFC",
-		@"Show/Hide Axes",
 		nil];
-//	if (replaceSegments)
-//	{
-//		featuresSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:featuresSegments];
-//	}
+
 	[self setupSegments:featuresSegments toolTips:toolTips];
 	[self updateFeatureStates];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
@@ -346,11 +364,7 @@ enum
 		@"Examine Mode",
 		@"Fly-through Mode",
 		nil];
-	
-//	if (replaceSegments)
-//	{
-//		viewModeSegments = [[ToolbarSegmentedControl alloc] initWithTemplate:viewModeSegments];
-//	}
+
 	[self setupSegments:viewModeSegments toolTips:toolTips];
 	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
 	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
@@ -371,6 +385,7 @@ enum
 	// segmented control only has one item.
 	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:@"Parts Author" control:&partsAuthorSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
@@ -401,6 +416,7 @@ enum
 		nil]];
 	[viewingAngleSegments setMenu:[[[controller viewingAngleMenu] copy] autorelease] forSegment:0];
 	[self setupFeatures];
+	[self setupPartsAuthor];
 	[self setupViewMode];
 	//[defaultIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
 }
@@ -1339,6 +1355,22 @@ enum
 	[[controller preferences] performSelector:selector withObject:sender];
 }
 
+- (IBAction)partsAuthor:(id)sender
+{
+	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
+	{
+		case 0:
+			[self toggleFeature:@selector(takeShowAxesFrom:) sender:sender];
+			break;
+		case 1:
+			[self toggleFeature:@selector(takeRandomColorsFrom:) sender:sender];
+			break;
+		default:
+			NSLog(@"Unknown author feature.\n");
+			break;
+	}
+}
+
 - (IBAction)features:(id)sender
 {
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
@@ -1360,9 +1392,6 @@ enum
 			break;
 		case 5:
 			[self toggleFeature:@selector(takeBfcFrom:) sender:sender];
-			break;
-		case 6:
-			[self toggleFeature:@selector(takeShowAxesFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown feature.\n");

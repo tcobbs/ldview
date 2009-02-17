@@ -249,6 +249,13 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self apply:sender];
 }
 
+- (void)takeRandomColorsFrom:(id)sender
+{
+	ldPreferences->setRandomColors([self getBoolFrom:sender]);
+	[[pages objectAtIndex:generalIndex] setup];
+	[self apply:sender];
+}
+
 - (void)saveViewingAngle:(ModelWindow*)modelWindow
 {
 	ldPreferences->setModelViewer([[modelWindow modelView] modelViewer]);
