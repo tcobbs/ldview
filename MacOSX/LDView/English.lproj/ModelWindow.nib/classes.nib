@@ -13,6 +13,7 @@
                 customizeToolbar = id; 
                 features = id; 
                 open = id; 
+                partsAuthor = id; 
                 preferences = id; 
                 print = id; 
                 reload = id; 
@@ -33,6 +34,7 @@
                 lonField = NSTextField; 
                 modelView = LDrawModelView; 
                 openButton = NSSegmentedControl; 
+                partsAuthorSegments = NSSegmentedControl; 
                 prefsSegments = NSSegmentedControl; 
                 printSegments = NSSegmentedControl; 
                 progress = NSProgressIndicator; 
