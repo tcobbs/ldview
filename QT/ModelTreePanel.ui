@@ -95,6 +95,14 @@
                         <property name="name">
                             <cstring>unnamed</cstring>
                         </property>
+                        <widget class="QCheckBox">
+                            <property name="name">
+                                <cstring>highlightSelectedLineBox</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Highlight selected line</string>
+                            </property>
+                        </widget>
                         <spacer>
                             <property name="name">
                                 <cstring>spacer1</cstring>
@@ -213,6 +221,12 @@
 </toolbars>
 <connections>
     <connection>
+        <sender>highlightSelectedLineBox</sender>
+        <signal>clicked()</signal>
+        <receiver>ModelTreePanel</receiver>
+        <slot>highlightSelectedLine()</slot>
+    </connection>
+    <connection>
         <sender>commentButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
@@ -279,6 +293,7 @@
 <slots>
     <slot>model()</slot>
     <slot>comment()</slot>
+    <slot>highlightSelectedLine()</slot>
     <slot>unknown()</slot>
     <slot>empty()</slot>
     <slot>quad()</slot>
