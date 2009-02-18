@@ -76,6 +76,7 @@ protected:
 	void updateLightingMenu(void);
 	void updateBFCMenu(void);
 	void updateMenu(HMENU hMenu, int command, int index, HIMAGELIST hImageList);
+	void updateMenus(const TbButtonInfoVector &infos);
 	void sizeToolbar(HWND hToolbar, int lastCommandID);
 
 	void forceRedraw(void);

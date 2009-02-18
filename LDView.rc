@@ -1752,6 +1752,7 @@ IDR_EXPORTER_STRINGS    RCDATA  DISCARDABLE     "LDExporter\\LDExportMessages.in
 IDC_SHOW_AXES           RCDATA  DISCARDABLE     "Icons\\toolbar_axes.png"
 IDC_BFC                 RCDATA  DISCARDABLE     "Icons\\toolbar_bfc.png"
 IDC_HIGHLIGHTS          RCDATA  DISCARDABLE     "Icons\\toolbar_edge.png"
+ID_TOOLS_ERRORS         RCDATA  DISCARDABLE     "Icons\\toolbar_errors.png"
 IDC_LIGHTING            RCDATA  DISCARDABLE     "Icons\\toolbar_light.png"
 ID_FILE_OPEN            RCDATA  DISCARDABLE     "Icons\\toolbar_open.png"
 ID_EDIT_PREFERENCES     RCDATA  DISCARDABLE     "Icons\\toolbar_preferences.png"

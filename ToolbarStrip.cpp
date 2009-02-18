@@ -127,6 +127,29 @@ void ToolbarStrip::hide(void)
 //	return imageList;
 //}
 
+void ToolbarStrip::updateMenus(const TbButtonInfoVector &infos)
+{
+	HMENU hMenu = NULL;
+
+	if ((GetVersion() & 0xFF) >= 6)
+	{
+		hMenu = GetMenu(GetParent(hWindow));
+	}
+	if (hMenu != NULL)
+	{
+		HIMAGELIST hImageList = m_imageLists.back();
+
+		for (size_t i = 0; i < infos.size(); i++)
+		{
+			const TbButtonInfo &buttonInfo = infos[i];
+
+			updateMenu(hMenu, buttonInfo.getCommandId(),
+				buttonInfo.getBmpIndex(),
+				hImageList);
+		}
+	}
+}
+
 void ToolbarStrip::initToolbar(HWND hToolbar, TbButtonInfoVector &infos)
 {
 	TBBUTTON *buttons;
@@ -134,12 +157,7 @@ void ToolbarStrip::initToolbar(HWND hToolbar, TbButtonInfoVector &infos)
 	int i;
 	int count;
 	HIMAGELIST hImageList;
-	HMENU hMenu = NULL;
 
-	if ((GetVersion() & 0xFF) >= 6)
-	{
-		hMenu = GetMenu(GetParent(hWindow));
-	}
 #ifndef TC_NO_UNICODE
 	SendMessage(hToolbar, TB_SETUNICODEFORMAT, (WPARAM)TRUE, 0);
 #endif // !TC_NO_UNICODE
@@ -159,11 +177,6 @@ void ToolbarStrip::initToolbar(HWND hToolbar, TbButtonInfoVector &infos)
 	for (i = 0; i < count; i++)
 	{
 		fillTbButton(buttons[i], infos[i]);
-		if (hMenu != NULL)
-		{
-			updateMenu(hMenu, buttons[i].idCommand, buttons[i].iBitmap,
-				hImageList);
-		}
 	}
 	SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
 	if (!CUIThemes::isThemeActive() ||
@@ -261,12 +274,14 @@ void ToolbarStrip::initMainToolbar(void)
 		}
 	}
 	SendMessage(m_hToolbar, TB_SETSTYLE, 0, style | CCS_ADJUSTABLE);
+	updateMenus(m_mainButtonInfos);
 	initToolbar(m_hToolbar, buttonInfos);
 }
 
 void ToolbarStrip::initStepToolbar(void)
 {
 	populateStepTbButtonInfos();
+	updateMenus(m_stepButtonInfos);
 	initToolbar(m_hStepToolbar, m_stepButtonInfos);
 }
 
@@ -693,6 +708,9 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_TBCONTEXT_STEPS:
 		doStepsToolbar();
 		break;
+	case ID_TOOLS_ERRORS:
+		m_ldviewWindow->getModelWindow()->showErrors();
+		break;
 	default:
 		return CUIDialog::doCommand(notifyCode, commandId, control);
 	}
@@ -840,6 +858,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS, 12,
 			m_randomColors);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Errors&Warnings")), ID_TOOLS_ERRORS, 3);
 	}
 }
 
