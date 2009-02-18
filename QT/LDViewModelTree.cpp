@@ -32,7 +32,8 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
     {
         hideOptions();
     }
-
+	highlightSelectedLineBox->setChecked(TCUserDefaults::boolForKey(
+			MODEL_TREE_HIGHLIGHT_KEY, false, false));
 }
 
 LDViewModelTree::~LDViewModelTree() { }
@@ -140,7 +141,7 @@ void LDViewModelTree::itemexpanded(QListViewItem *item)
 
 void LDViewModelTree::selectionChanged(QListViewItem *item)
 {
-	if (highlightSelectedLineBox->isChecked())
+	if (highlightSelectedLineBox->isChecked() && item)
 	{
 		LDModelTree *tree = findTree(item);
 		m_modelWindow->getModelViewer()->setHighlightPaths(
@@ -250,9 +251,11 @@ void LDViewModelTree::toggleOptions()
 
 void LDViewModelTree::highlightSelectedLine()
 {
-	if (!highlightSelectedLineBox->isChecked())
+	bool checked = highlightSelectedLineBox->isChecked();
+	if (!checked)
 		m_modelWindow->getModelViewer()->setHighlightPaths("");
 	else
 		selectionChanged(modelTreeView->selectedItem());
+	TCUserDefaults::setBoolForKey(checked, MODEL_TREE_HIGHLIGHT_KEY, false);
 }
 
