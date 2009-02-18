@@ -488,3 +488,47 @@ TCImageOptions *TCImage::getCompressionOptions(void)
 	}
 	return compressionOptions;
 }
+
+#ifdef WIN32
+// Note: static method
+TCImage *TCImage::createFromResource(
+	HMODULE hModule,
+	int resourceId,
+	int lineAlignment /*= 1*/,
+	bool flipped /*= false*/)
+{
+	HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId),
+		RT_RCDATA);
+	TCImage *retVal = NULL;
+
+	if (hResource != NULL)
+	{
+		HGLOBAL hGlobal = LoadResource(NULL, hResource);
+
+		if (hGlobal != NULL)
+		{
+			// Note: data below does not need to be unlocked/freed/etc.
+			TCByte *data = (TCByte *)LockResource(hGlobal);
+
+			if (data)
+			{
+				DWORD length = SizeofResource(NULL, hResource);
+
+				if (length)
+				{
+					retVal = new TCImage;
+
+					retVal->setFlipped(flipped);
+					retVal->setLineAlignment(lineAlignment);
+					if (!retVal->loadData(data, length))
+					{
+						retVal->release();
+						retVal = NULL;
+					}
+				}
+			}
+		}
+	}
+	return retVal;
+}
+#endif // WIN32

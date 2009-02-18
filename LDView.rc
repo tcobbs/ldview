@@ -1664,7 +1664,6 @@ IDB_COLINEAR_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_colinear_ma
 IDB_COLINEAR_MASK       BITMAP  DISCARDABLE     "icons\\error_colinear_mask.bmp"
 #endif
 #endif
-IDB_TOOLBAR             BITMAP  DISCARDABLE     "icons\\toolbar.bmp"
 #if defined(APSTUDIO_INVOKED) || defined(LDVIEW_APP)
 #if defined(APSTUDIO_INVOKED)
 IDB_VERTEX_ORDER$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_vertex_order.bmp"
@@ -1693,7 +1692,6 @@ IDB_ERROR_LOOP_MASK$(LDVIEW_APP) BITMAP  DISCARDABLE     "icons\\error_loop_mask
 IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 #endif
 #endif
-IDB_STEP_TOOLBAR        BITMAP  DISCARDABLE     "Icons\\step_toolbar.bmp"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1751,6 +1749,23 @@ IDR_SS_PREVIEW          RCDATA  DISCARDABLE     "Icons\\screen_saver_preview.png
 IDR_SANS_FONT           RCDATA  DISCARDABLE     "Textures\\SansSerif.fnt"
 IDR_LOCAL_STRINGS       RCDATA  DISCARDABLE     "LDViewMessages.ini"
 IDR_EXPORTER_STRINGS    RCDATA  DISCARDABLE     "LDExporter\\LDExportMessages.ini"
+IDC_SHOW_AXES           RCDATA  DISCARDABLE     "Icons\\toolbar_axes.png"
+IDC_BFC                 RCDATA  DISCARDABLE     "Icons\\toolbar_bfc.png"
+IDC_HIGHLIGHTS          RCDATA  DISCARDABLE     "Icons\\toolbar_edge.png"
+IDC_LIGHTING            RCDATA  DISCARDABLE     "Icons\\toolbar_light.png"
+ID_FILE_OPEN            RCDATA  DISCARDABLE     "Icons\\toolbar_open.png"
+ID_EDIT_PREFERENCES     RCDATA  DISCARDABLE     "Icons\\toolbar_preferences.png"
+IDC_PRIMITIVE_SUBSTITUTION RCDATA  DISCARDABLE     "Icons\\toolbar_primsubs.png"
+IDC_RANDOM_COLORS       RCDATA  DISCARDABLE     "Icons\\toolbar_random.png"
+ID_FILE_RELOAD          RCDATA  DISCARDABLE     "Icons\\toolbar_reload.png"
+IDC_SEAMS               RCDATA  DISCARDABLE     "Icons\\toolbar_seams.png"
+ID_FILE_SAVE            RCDATA  DISCARDABLE     "Icons\\toolbar_snapshot.png"
+ID_VIEWANGLE            RCDATA  DISCARDABLE     "Icons\\toolbar_view.png"
+IDC_WIREFRAME           RCDATA  DISCARDABLE     "Icons\\toolbar_wireframe.png"
+ID_FIRST_STEP           RCDATA  DISCARDABLE     "Icons\\toolbar_step_first.png"
+ID_LAST_STEP            RCDATA  DISCARDABLE     "Icons\\toolbar_step_last.png"
+ID_NEXT_STEP            RCDATA  DISCARDABLE     "Icons\\toolbar_step_next.png"
+ID_PREV_STEP            RCDATA  DISCARDABLE     "Icons\\toolbar_step_prev.png"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -253,8 +253,6 @@ protected:
 	virtual void cleanupSnapshotBackBuffer(RECT &rect);
 	virtual bool selectPrinter(PRINTDLG &pd);
 	virtual bool printPage(const PRINTDLG &pd);
-	virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
-		int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer);
 	virtual void calcTiling(HDC hPrinterDC, int &bitmapWidth,
 		int &bitmapHeight, int &numXTiles, int &numYTiles);
 	virtual void calcTiling(int desiredWidth, int desiredHeight,

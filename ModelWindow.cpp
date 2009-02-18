@@ -3227,31 +3227,6 @@ bool ModelWindow::selectPrinter(PRINTDLG &pd)
 	return retValue;
 }
 
-HBITMAP ModelWindow::createDIBSection(HDC hBitmapDC, int bitmapWidth,
-									  int bitmapHeight, int hDPI, int vDPI,
-									  BYTE **bmBuffer)
-{
-	BITMAPINFO bmi;
-
-	bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
-	bmi.bmiHeader.biWidth = bitmapWidth;
-	bmi.bmiHeader.biHeight = bitmapHeight;
-	bmi.bmiHeader.biPlanes = 1;
-	bmi.bmiHeader.biBitCount = 24;
-	bmi.bmiHeader.biCompression = BI_RGB;
-	bmi.bmiHeader.biSizeImage = 0;//roundUp(bitmapWidth * 3, 4) * bitmapHeight;
-	bmi.bmiHeader.biXPelsPerMeter = (long)(hDPI * 39.37);
-	bmi.bmiHeader.biYPelsPerMeter = (long)(vDPI * 39.37);
-	bmi.bmiHeader.biClrUsed = 0;
-	bmi.bmiHeader.biClrImportant = 0;
-	bmi.bmiColors[0].rgbRed = 0;
-	bmi.bmiColors[0].rgbGreen = 0;
-	bmi.bmiColors[0].rgbBlue = 0;
-	bmi.bmiColors[0].rgbReserved = 0;
-	return CreateDIBSection(hBitmapDC, &bmi, DIB_RGB_COLORS,
-		(void**)bmBuffer, NULL, 0);
-}
-
 void ModelWindow::swap(int &left, int &right)
 {
 	int temp = left;

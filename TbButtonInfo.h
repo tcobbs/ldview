@@ -16,9 +16,8 @@ public:
 	void setTooltipText(const ucstring value) { m_tooltipText = value; }
 	int getCommandId(void) const { return m_commandId; }
 	void setCommandId(int value) { m_commandId = value; }
-	int getBmpId(int stdBitmapStartId, int tbBitmapStartId) const;
-	void setStdBmpId(int value) { m_stdBmpId = value; }
-	void setTbBmpId(int value) { m_tbBmpId = value; }
+	int getBmpIndex(void) const { return m_bmpIndex; }
+	void setBmpIndex(int value) { m_bmpIndex = value; }
 	BYTE getState(void) const { return m_state; }
 	void setState(BYTE value) { m_state = value; }
 	BYTE getStyle(void) const { return m_style; }
@@ -27,8 +26,7 @@ protected:
 
 	ucstring m_tooltipText;
 	int m_commandId;
-	int m_stdBmpId;
-	int m_tbBmpId;
+	int m_bmpIndex;
 	BYTE m_state;
 	BYTE m_style;
 };
