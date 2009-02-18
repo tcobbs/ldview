@@ -150,13 +150,15 @@ void ToolbarStrip::updateMenus(const TbButtonInfoVector &infos)
 	}
 }
 
-void ToolbarStrip::initToolbar(HWND hToolbar, TbButtonInfoVector &infos)
+void ToolbarStrip::initToolbar(
+	HWND hToolbar,
+	TbButtonInfoVector &infos,
+	HIMAGELIST hImageList)
 {
 	TBBUTTON *buttons;
 	char buttonTitle[128];
 	int i;
 	int count;
-	HIMAGELIST hImageList;
 
 #ifndef TC_NO_UNICODE
 	SendMessage(hToolbar, TB_SETUNICODEFORMAT, (WPARAM)TRUE, 0);
@@ -166,7 +168,6 @@ void ToolbarStrip::initToolbar(HWND hToolbar, TbButtonInfoVector &infos)
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(22, 22));
-	hImageList = m_imageLists.back();
 	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)hImageList);
 	//hImageList = initImageList(hToolbar, bitmapId);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
@@ -237,33 +238,42 @@ void ToolbarStrip::loadMainToolbarMenus(void)
 void ToolbarStrip::initMainToolbar(void)
 {
 	DWORD style = GetWindowLong(m_hToolbar, GWL_STYLE);
-	TbButtonInfoVector buttonInfos;
-	size_t i;
 
 	loadMainToolbarMenus();
 	populateMainTbButtonInfos();
-	m_mainButtonIDs.clear();
+	SendMessage(m_hToolbar, TB_SETSTYLE, 0, style | CCS_ADJUSTABLE);
+	updateMenus(m_mainButtonInfos);
+	fillMainToolbar();
+}
+
+void ToolbarStrip::fillMainToolbar(void)
+{
+	size_t i;
+	LongVector mainButtonIDs;
+	LongSizeTMap mainButtonsMap;
+	TbButtonInfoVector buttonInfos;
+
 	for (i = 0; i < m_mainButtonInfos.size(); i++)
 	{
 		long commandID = m_mainButtonInfos[i].getCommandId();
 
 		if (i < 11)
 		{
-			m_mainButtonIDs.push_back(commandID);
+			mainButtonIDs.push_back(commandID);
 		}
-		m_mainButtonsMap[commandID] = i;
+		mainButtonsMap[commandID] = i;
 	}
-	m_mainButtonIDs = TCUserDefaults::longVectorForKey(MAIN_TOOLBAR_IDS_KEY,
-		m_mainButtonIDs, false);
-	for (i = 0; i < m_mainButtonIDs.size(); i++)
+	mainButtonIDs = TCUserDefaults::longVectorForKey(MAIN_TOOLBAR_IDS_KEY,
+		mainButtonIDs, false);
+	for (i = 0; i < mainButtonIDs.size(); i++)
 	{
-		int commandId = m_mainButtonIDs[i];
+		int commandId = mainButtonIDs[i];
 
 		if (commandId > 0)
 		{
-			LongSizeTMap::const_iterator it = m_mainButtonsMap.find(commandId);
+			LongSizeTMap::const_iterator it = mainButtonsMap.find(commandId);
 
-			if (it != m_mainButtonsMap.end())
+			if (it != mainButtonsMap.end())
 			{
 				buttonInfos.push_back(m_mainButtonInfos[it->second]);
 			}
@@ -273,16 +283,14 @@ void ToolbarStrip::initMainToolbar(void)
 			addTbSeparatorInfo(buttonInfos);
 		}
 	}
-	SendMessage(m_hToolbar, TB_SETSTYLE, 0, style | CCS_ADJUSTABLE);
-	updateMenus(m_mainButtonInfos);
-	initToolbar(m_hToolbar, buttonInfos);
+	initToolbar(m_hToolbar, buttonInfos, m_imageLists.front());
 }
 
 void ToolbarStrip::initStepToolbar(void)
 {
 	populateStepTbButtonInfos();
 	updateMenus(m_stepButtonInfos);
-	initToolbar(m_hStepToolbar, m_stepButtonInfos);
+	initToolbar(m_hStepToolbar, m_stepButtonInfos, m_imageLists.back());
 }
 
 void ToolbarStrip::autoSize(void)
@@ -1020,25 +1028,48 @@ LRESULT ToolbarStrip::doMainTbGetButtonInfo(NMTOOLBARUC *notification)
 	return FALSE;
 }
 
+LRESULT ToolbarStrip::doMainToolbarReset(void)
+{
+	for (size_t i = 0; true; i++)
+	{
+		if (SendMessage(m_hToolbar, TB_DELETEBUTTON, 0, 0))
+		{
+			char key[128];
+
+			sprintf(key, "%s%02d", MAIN_TOOLBAR_IDS_KEY, i);
+			TCUserDefaults::removeValue(key, false);
+		}
+		else
+		{
+			break;
+		}
+
+	}
+	fillMainToolbar();
+	initLayout();
+	return 0;
+}
+
 LRESULT ToolbarStrip::doMainToolbarChange(void)
 {
-	m_mainButtonIDs.clear();
+	LongVector mainButtonIDs;
+
 	for (int i = 0; true; i++)
 	{
 		TBBUTTON button;
 
 		if (SendMessage(m_hToolbar, TB_GETBUTTON, i, (LPARAM)&button))
 		{
-			m_mainButtonIDs.push_back(button.idCommand);
+			mainButtonIDs.push_back(button.idCommand);
 		}
 		else
 		{
 			break;
 		}
 	}
-	TCUserDefaults::setLongVectorForKey(m_mainButtonIDs, MAIN_TOOLBAR_IDS_KEY,
+	TCUserDefaults::setLongVectorForKey(mainButtonIDs, MAIN_TOOLBAR_IDS_KEY,
 		false);
-	sizeToolbar(m_hToolbar, m_mainButtonIDs.back());
+	sizeToolbar(m_hToolbar, mainButtonIDs.back());
 	initLayout();
 	return 0;	// ignored
 }
@@ -1067,6 +1098,8 @@ LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 		return doMainTbGetButtonInfo((NMTOOLBARUC *)notification);
 	case TBN_TOOLBARCHANGE:
 		return doMainToolbarChange();
+	case TBN_RESET:
+		return doMainToolbarReset();
 	default:
 		return CUIWindow::doNotify(controlId, notification);
 	}
