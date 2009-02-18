@@ -50,6 +50,7 @@ protected:
 	LRESULT doStepToolbarNotify(int controlId, LPNMHDR notification);
 	LRESULT doMainTbGetButtonInfo(NMTOOLBARUC *notification);
 	LRESULT doMainToolbarChange(void);
+	LRESULT doMainToolbarReset(void);
 	void addTbButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
 		int commandId, int bmpIndex, BYTE style = TBSTYLE_BUTTON,
 		BYTE state = TBSTATE_ENABLED);
@@ -61,10 +62,12 @@ protected:
 	void populateStepTbButtonInfos(void);
 	void loadMainToolbarMenus(void);
 	void initMainToolbar(void);
+	void fillMainToolbar(void);
 	void initStepToolbar(void);
 	void initLayout(void);
 	//HIMAGELIST initImageList(HWND hToolbar, UINT bitmapId);
-	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos);
+	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos,
+		HIMAGELIST hImageList);
 	void modelAlertCallback(TCAlert *alert);
 	void stepChanged(void);
 	void enableToolbarButton(HWND hToolbar, UINT buttonId, bool enable);
@@ -140,8 +143,6 @@ protected:
 	int m_step;
 	ucstring m_numStepsFormat;
 	TbButtonInfoVector m_mainButtonInfos;
-	LongSizeTMap m_mainButtonsMap;
-	LongVector m_mainButtonIDs;
 	TbButtonInfoVector m_stepButtonInfos;
 	HwndVector m_controls;
 	int m_stripHeight;
