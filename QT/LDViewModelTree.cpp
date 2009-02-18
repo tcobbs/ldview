@@ -138,6 +138,16 @@ void LDViewModelTree::itemexpanded(QListViewItem *item)
 	}
 }
 
+void LDViewModelTree::selectionChanged(QListViewItem *item)
+{
+	if (highlightSelectedLineBox->isChecked())
+	{
+		LDModelTree *tree = findTree(item);
+		m_modelWindow->getModelViewer()->setHighlightPaths(
+						tree->getTreePath());
+	}
+}
+
 LDModelTree *LDViewModelTree::findTree(QListViewItem *item)
 {
 	LDModelTree *tparent = NULL;
@@ -240,5 +250,9 @@ void LDViewModelTree::toggleOptions()
 
 void LDViewModelTree::highlightSelectedLine()
 {
+	if (!highlightSelectedLineBox->isChecked())
+		m_modelWindow->getModelViewer()->setHighlightPaths("");
+	else
+		selectionChanged(modelTreeView->selectedItem());
 }
 

@@ -281,6 +281,12 @@
         <slot>itemexpanded(QListViewItem*)</slot>
     </connection>
     <connection>
+        <sender>modelTreeView</sender>
+        <signal>selectionChanged(QListViewItem*)</signal>
+        <receiver>ModelTreePanel</receiver>
+        <slot>selectionChanged(QListViewItem*)</slot>
+    </connection>
+    <connection>
         <sender>optionsButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
@@ -301,6 +307,7 @@
     <slot>triangle()</slot>
     <slot>conditionalLine()</slot>
 	<slot>itemexpanded(QListViewItem*)</slot>
+	<slot>selectionChanged(QListViewItem*)</slot>
     <slot>toggleOptions()</slot>
 </slots>
 <pixmapinproject/>

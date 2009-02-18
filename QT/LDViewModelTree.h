@@ -25,6 +25,7 @@ public:
 
 public slots:
 	void itemexpanded(QListViewItem *item);
+	void selectionChanged(QListViewItem *item);
 	void quad(void) {doLineCheck(quadButton,LDLLineTypeQuad);}
 	void unknown(void) {doLineCheck(unknownButton,LDLLineTypeUnknown);}
 	void line(void) {doLineCheck(lineButton,LDLLineTypeLine);}
