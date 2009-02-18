@@ -113,6 +113,8 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual void setMenuItemsEnabled(HMENU hMenu, bool enabled);
 		virtual void setMenuEnabled(HMENU hParentMenu, int itemID,
 			bool enabled, BOOL byPosition = FALSE);
+		virtual HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
+			int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer);
 
 		static void setMenuCheck(HMENU hParentMenu, UINT uItem, bool checked,
 			bool radio = false);

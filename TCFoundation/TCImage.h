@@ -61,6 +61,11 @@ public:
 	static int roundUp(int value, int nearest);
 	static void addImageFormat(TCImageFormat *imageFormat,
 		bool release = false);
+
+#ifdef WIN32
+	static TCImage *createFromResource(HMODULE hModule, int resourceId,
+		int lineAlignment = 1, bool flipped = false);
+#endif // WIN32
 protected:
 	virtual ~TCImage(void);
 	virtual void dealloc(void);

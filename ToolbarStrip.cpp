@@ -108,31 +108,26 @@ void ToolbarStrip::hide(void)
 	::ShowWindow(hWindow, SW_HIDE);
 }
 
-HIMAGELIST ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
-{
-	HIMAGELIST imageList = ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-		10, 10);
-	// Should the toolbar bitmap be language-specific?
-	HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
-		MAKEINTRESOURCE(bitmapId), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-	HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
+//HIMAGELIST ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
+//{
+//	HIMAGELIST &imageList = m_imageLists.back();
+//	// Should the toolbar bitmap be language-specific?
+//	HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
+//		MAKEINTRESOURCE(bitmapId), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+//	HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
+//
+//	// ImageList_AddMask works fine in XP, and avoids the necessity of
+//	// creating the mask via the createMask function above, but according
+//	// to the documentation, it isn't supposed to work on bitmaps whose
+//	// color depth is greater than 8bpp.  Ours is 24bpp.
+//	ImageList_Add(imageList, hBitmap, hMask);
+//	DeleteObject(hBitmap);
+//	DeleteObject(hMask);
+//	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
+//	return imageList;
+//}
 
-	// ImageList_AddMask works fine in XP, and avoids the necessity of
-	// creating the mask via the createMask function above, but according
-	// to the documentation, it isn't supposed to work on bitmaps whose
-	// color depth is greater than 8bpp.  Ours is 24bpp.
-	ImageList_Add(imageList, hBitmap, hMask);
-	DeleteObject(hBitmap);
-	DeleteObject(hMask);
-	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
-	m_imageLists.push_back(imageList);
-	return imageList;
-}
-
-void ToolbarStrip::initToolbar(
-	HWND hToolbar,
-	TbButtonInfoVector &infos,
-	UINT bitmapId)
+void ToolbarStrip::initToolbar(HWND hToolbar, TbButtonInfoVector &infos)
 {
 	TBBUTTON *buttons;
 	char buttonTitle[128];
@@ -153,7 +148,9 @@ void ToolbarStrip::initToolbar(
 	memset(buttonTitle, 0, sizeof(buttonTitle));
 	SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(22, 22));
-	hImageList = initImageList(hToolbar, bitmapId);
+	hImageList = m_imageLists.back();
+	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)hImageList);
+	//hImageList = initImageList(hToolbar, bitmapId);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
 	// Note: buttonTitle is an empty string.  No need for Unicode.
 	SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
@@ -204,7 +201,7 @@ void ToolbarStrip::fillTbButton(
 	TBBUTTON &button,
 	const TbButtonInfo &buttonInfo)
 {
-	button.iBitmap = buttonInfo.getBmpId(m_stdBitmapStartId, m_tbBitmapStartId);
+	button.iBitmap = buttonInfo.getBmpIndex();
 	button.idCommand = buttonInfo.getCommandId();
 	button.fsState = buttonInfo.getState();
 	button.fsStyle = buttonInfo.getStyle();
@@ -237,7 +234,7 @@ void ToolbarStrip::initMainToolbar(void)
 	{
 		long commandID = m_mainButtonInfos[i].getCommandId();
 
-		if (i < 12)
+		if (i < 11)
 		{
 			m_mainButtonIDs.push_back(commandID);
 		}
@@ -264,13 +261,13 @@ void ToolbarStrip::initMainToolbar(void)
 		}
 	}
 	SendMessage(m_hToolbar, TB_SETSTYLE, 0, style | CCS_ADJUSTABLE);
-	initToolbar(m_hToolbar, buttonInfos, IDB_TOOLBAR);
+	initToolbar(m_hToolbar, buttonInfos);
 }
 
 void ToolbarStrip::initStepToolbar(void)
 {
 	populateStepTbButtonInfos();
-	initToolbar(m_hStepToolbar, m_stepButtonInfos, IDB_STEP_TOOLBAR);
+	initToolbar(m_hStepToolbar, m_stepButtonInfos);
 }
 
 void ToolbarStrip::autoSize(void)
@@ -706,18 +703,48 @@ void ToolbarStrip::addTbButtonInfo(
 	TbButtonInfoVector &infos,
 	CUCSTR tooltipText,
 	int commandId,
-	int stdBmpId,
-	int tbBmpId,
+	int bmpIndex,
 	BYTE style,
 	BYTE state)
 {
 	infos.resize(infos.size() + 1);
 	TbButtonInfo &buttonInfo = infos.back();
+	TCImage *image = TCImage::createFromResource(NULL, commandId, 4, true);
 
+	if (image != NULL)
+	{
+		HDC hdc = CreateCompatibleDC(NULL);
+		BYTE *bmBuffer = NULL;
+		int width = image->getWidth();
+		int height = image->getHeight();
+		HBITMAP hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer);
+		HBITMAP hMask = createMask(image);
+		int srcBytesPerLine = image->getRowSize();
+		int dstBytesPerLine = TCImage::roundUp(width * 3, 4);
+		TCByte *srcData = image->getImageData();
+
+		for (int y = 0; y < height; y++)
+		{
+			int srcYOffset = srcBytesPerLine * y;
+			int dstYOffset = dstBytesPerLine * y;
+
+			for (int x = 0; x < width; x++)
+			{
+				bmBuffer[dstYOffset + x * 3 + 0] = srcData[srcYOffset + x * 4 + 2];
+				bmBuffer[dstYOffset + x * 3 + 1] = srcData[srcYOffset + x * 4 + 1];
+				bmBuffer[dstYOffset + x * 3 + 2] = srcData[srcYOffset + x * 4 + 0];
+			}
+		}
+		bmpIndex = ImageList_GetImageCount(m_imageLists.back());
+		ImageList_Add(m_imageLists.back(), hBitmap, hMask);
+		DeleteObject(hBitmap);
+		DeleteObject(hMask);
+		DeleteDC(hdc);
+		image->release();
+	}
 	buttonInfo.setTooltipText(tooltipText);
 	buttonInfo.setCommandId(commandId);
-	buttonInfo.setStdBmpId(stdBmpId);
-	buttonInfo.setTbBmpId(tbBmpId);
+	buttonInfo.setBmpIndex(bmpIndex);
 	buttonInfo.setStyle(style);
 	buttonInfo.setState(state);
 }
@@ -726,8 +753,7 @@ void ToolbarStrip::addTbCheckButtonInfo(
 	TbButtonInfoVector &infos,
 	CUCSTR tooltipText,
 	int commandId,
-	int stdBmpId,
-	int tbBmpId,
+	int bmpIndex,
 	bool checked,
 	BYTE style,
 	BYTE state)
@@ -737,8 +763,7 @@ void ToolbarStrip::addTbCheckButtonInfo(
 	{
 		state |= TBSTATE_CHECKED;
 	}
-	addTbButtonInfo(infos, tooltipText, commandId, stdBmpId, tbBmpId, style,
-		state);
+	addTbButtonInfo(infos, tooltipText, commandId, bmpIndex, style, state);
 }
 
 void ToolbarStrip::addTbSeparatorInfo(TbButtonInfoVector &infos)
@@ -753,17 +778,16 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 {
 	if (m_stepButtonInfos.size() == 0)
 	{
+		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
+			10, 10));
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP, -1, 2);
+			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP, 2);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP,
-			-1, 0);
+			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP, 0);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP, -1,
-			1);
+			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP, 1);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP, -1,
-			3);
+			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP, 3);
 	}
 }
 
@@ -771,12 +795,14 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 {
 	if (m_mainButtonInfos.size() == 0)
 	{
+		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
+			10, 10));
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
-			ID_FILE_OPEN, -1, 10);
+			ID_FILE_OPEN, 10);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE, -1, 5);
+			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE, 5);
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Reload")),
-			ID_FILE_RELOAD, -1, 0);
+			ID_FILE_RELOAD, 0);
 		addTbSeparatorInfo(m_mainButtonInfos);
 		m_drawWireframe = m_prefs->getDrawWireframe();
 		m_seams = m_prefs->getUseSeams() != 0;
@@ -787,33 +813,32 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_showAxes = m_prefs->getShowAxes();
 		m_randomColors = m_prefs->getRandomColors();
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME, -1, 1,
+			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME, 1,
 			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, -1, 2, m_seams);
+			TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, 2, m_seams);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("EdgeLines")), IDC_HIGHLIGHTS, -1, 3,
-			m_edges, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("PrimitiveSubstitution")),
-			IDC_PRIMITIVE_SUBSTITUTION, -1, 4, m_primitiveSubstitution,
+			TCLocalStrings::get(_UC("EdgeLines")), IDC_HIGHLIGHTS, 3, m_edges,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, -1, 7,
-			m_lighting, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
-			IDC_BFC, -1, 9, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+			TCLocalStrings::get(_UC("PrimitiveSubstitution")),
+			IDC_PRIMITIVE_SUBSTITUTION, 4, m_primitiveSubstitution,
+			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, 7, m_lighting,
+			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE, -1, 6,
+			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE, 6,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES, -1,
-			8);
+			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES, 8);
+		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
+			IDC_BFC, 9, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, -1, 11,
+			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, 11,
 			m_showAxes);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS, -1, 12,
+			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS, 12,
 			m_randomColors);
 	}
 }
@@ -857,6 +882,47 @@ HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
 	DeleteDC(hBmDc);
 	hNewBitmap = CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
 	delete data;
+	return hNewBitmap;
+}
+
+// Note: static function
+HBITMAP ToolbarStrip::createMask(TCImage *image)
+{
+	TCByte *dstData;
+	int dstBytesPerLine;
+	int maskSize;
+	int srcBytesPerLine = image->getRowSize();
+	TCByte *srcData = image->getImageData();
+	int width = image->getWidth();
+	int height = image->getHeight();
+	HBITMAP hNewBitmap;
+	bool srcFlipped = image->getFlipped();
+
+	dstBytesPerLine = ModelWindow::roundUp((width + 7) / 8, 2);
+	maskSize = dstBytesPerLine * height;
+	dstData = new TCByte[maskSize];
+	memset(dstData, 0, maskSize);
+	for (int y = 0; y < height; y++)
+	{
+		int srcYOffset = srcFlipped ? srcBytesPerLine * (height - y - 1) :
+			srcBytesPerLine * y;
+		int dstYOffset = dstBytesPerLine * y;
+
+		for (int x = 0; x < width; x++)
+		{
+			TCByte alpha = srcData[srcYOffset + x * 4 + 3];
+
+			if (alpha < 128)
+			{
+				int byteOffset = dstYOffset + x / 8;
+				int bitOffset = 7 - (x % 8);
+
+				dstData[byteOffset] |= (1 << bitOffset);
+			}
+		}
+	}
+	hNewBitmap = CreateBitmap(width, height, 1, 1, dstData);
+	delete dstData;
 	return hNewBitmap;
 }
 
@@ -959,8 +1025,8 @@ LRESULT ToolbarStrip::doMainToolbarChange(void)
 
 LRESULT ToolbarStrip::doMainToolbarNotify(int controlId, LPNMHDR notification)
 {
-	debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
-		notificationName(notification->code).c_str());
+	//debugPrintf("LDViewWindow::doMainToolbarNotify: 0x%04X, %s\n", controlId,
+	//	notificationName(notification->code).c_str());
 	switch (notification->code)
 	{
 	case TBN_GETINFOTIPUC:

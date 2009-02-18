@@ -62,7 +62,6 @@
 #define IDR_SS_PREVIEW                  164
 #define IDB_COLINEAR_MASK               165
 #define IDD_LIBRARY_UPDATES             165
-#define IDB_TOOLBAR                     166
 #define IDB_VERTEX_ORDER                167
 #define IDD_UPDATES_PREFS               167
 #define IDB_VERTEX_ORDER_MASK           168
@@ -88,7 +87,6 @@
 #define IDD_JPEG_OPTIONS                183
 #define IDD_MODELTREE                   184
 #define IDD_TOOLBAR                     185
-#define IDB_STEP_TOOLBAR                186
 #define IDD_BOUNDING_BOX                187
 #define IDD_LAT_LON                     188
 #define IDD_MPD                         189

@@ -7,6 +7,7 @@
 class LDViewWindow;
 class LDViewPreferences;
 class TCAlert;
+class TCImage;
 
 typedef std::vector<HWND> HwndVector;
 typedef std::vector<long> LongVector;
@@ -50,10 +51,10 @@ protected:
 	LRESULT doMainTbGetButtonInfo(NMTOOLBARUC *notification);
 	LRESULT doMainToolbarChange(void);
 	void addTbButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
-		int commandId, int stdBmpId, int tbBmpId, BYTE style = TBSTYLE_BUTTON,
+		int commandId, int bmpIndex, BYTE style = TBSTYLE_BUTTON,
 		BYTE state = TBSTATE_ENABLED);
 	void addTbCheckButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
-		int commandId, int stdBmpId, int tbBmpId, bool checked,
+		int commandId, int bmpIndex, bool checked,
 		BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
 	void addTbSeparatorInfo(TbButtonInfoVector &infos);
 	void populateMainTbButtonInfos(void);
@@ -62,8 +63,8 @@ protected:
 	void initMainToolbar(void);
 	void initStepToolbar(void);
 	void initLayout(void);
-	HIMAGELIST initImageList(HWND hToolbar, UINT bitmapId);
-	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos, UINT bitmapId);
+	//HIMAGELIST initImageList(HWND hToolbar, UINT bitmapId);
+	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos);
 	void modelAlertCallback(TCAlert *alert);
 	void stepChanged(void);
 	void enableToolbarButton(HWND hToolbar, UINT buttonId, bool enable);
@@ -112,6 +113,7 @@ protected:
 	void fillTbButton(TBBUTTON &button, const TbButtonInfo &buttonInfo);
 
 	static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
+	static HBITMAP createMask(TCImage *image);
 
 	LDViewWindow *m_ldviewWindow;
 	LDViewPreferences *m_prefs;
