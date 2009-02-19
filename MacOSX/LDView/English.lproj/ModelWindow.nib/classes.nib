@@ -27,19 +27,26 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 actionsSegments = NSSegmentedControl; 
+                axesSegments = NSSegmentedControl; 
+                bfcSegments = NSSegmentedControl; 
                 customizeSegments = NSSegmentedControl; 
+                edgesSegments = NSSegmentedControl; 
                 featuresSegments = NSSegmentedControl; 
                 latField = NSTextField; 
                 latLonBox = NSBox; 
+                lightingSegments = NSSegmentedControl; 
                 lonField = NSTextField; 
                 modelView = LDrawModelView; 
                 openButton = NSSegmentedControl; 
                 partsAuthorSegments = NSSegmentedControl; 
                 prefsSegments = NSSegmentedControl; 
+                primitivesSegments = NSSegmentedControl; 
                 printSegments = NSSegmentedControl; 
                 progress = NSProgressIndicator; 
                 progressMessage = NSTextField; 
+                randomColorsSegments = NSSegmentedControl; 
                 reloadButton = NSSegmentedControl; 
+                seamsSegments = NSSegmentedControl; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
                 stepField = NSTextField; 
@@ -54,6 +61,7 @@
                 viewModeSegments = NSSegmentedControl; 
                 viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 
+                wireframeSegments = NSSegmentedControl; 
             }; 
             SUPERCLASS = NSObject; 
         }, 

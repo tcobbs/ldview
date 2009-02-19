@@ -209,7 +209,7 @@ enum
 	return [self addToolbarItemWithIdentifier:identifier label:label control:pControl menuItem:nil highPriority:highPriority isDefault:isDefault];
 }
 
-- (void)updateSegments:(NSSegmentedControl *)segments states:(NSArray *)states
+- (void)updateSegments:(NSSegmentedControl *)segments states:(NSArray *)states alternates:(NSArray *)alternates
 {
 	int i;
 	int count = [states count];
@@ -218,10 +218,19 @@ enum
 	for (i = 0; i < count; i++)
 	{
 		[cell setSelected:[[states objectAtIndex:i] boolValue] forSegment:i];
+		if (alternates)
+		{
+			[self updateSegments:[alternates objectAtIndex:i] states:[NSArray arrayWithObject:[states objectAtIndex:i]] alternates:nil];
+		}
 	}
 }
 
-- (void)setupSegments:(NSSegmentedControl *)segments toolTips:(NSArray *)toolTips
+- (void)updateSegments:(NSSegmentedControl *)segments states:(NSArray *)states
+{
+	[self updateSegments:segments states:states alternates:nil];
+}
+
+- (void)setupSegments:(NSSegmentedControl *)segments toolTips:(NSArray *)toolTips alternates:(NSArray *)alternates
 {
 	int i;
 	int count = [toolTips count];
@@ -230,7 +239,16 @@ enum
 	for (i = 0; i < count; i++)
 	{
 		[cell setToolTip:[toolTips objectAtIndex:i] forSegment:i];
+		if (alternates)
+		{
+			[self setupSegments:[alternates objectAtIndex:i] toolTips:[NSArray arrayWithObject:[toolTips objectAtIndex:i]] alternates:nil];
+		}
 	}
+}
+
+- (void)setupSegments:(NSSegmentedControl *)segments toolTips:(NSArray *)toolTips
+{
+	[self setupSegments:segments toolTips:toolTips alternates:nil];
 }
 
 - (void)updatePartsAuthorStates
@@ -239,9 +257,15 @@ enum
 	NSArray *states = [NSArray arrayWithObjects:
 		[NSNumber numberWithBool:ldPreferences->getShowAxes()],
 		[NSNumber numberWithBool:ldPreferences->getRandomColors()],
+		[NSNumber numberWithBool:ldPreferences->getBfc()],
+		nil];
+	NSArray *alternates = [NSArray arrayWithObjects:
+		axesSegments,
+		randomColorsSegments,
+		bfcSegments,
 		nil];
 	
-	[self updateSegments:partsAuthorSegments states:states];
+	[self updateSegments:partsAuthorSegments states:states alternates:alternates];
 }
 
 - (void)updateFeatureStates
@@ -253,10 +277,16 @@ enum
 		[NSNumber numberWithBool:ldPreferences->getShowHighlightLines()],
 		[NSNumber numberWithBool:ldPreferences->getAllowPrimitiveSubstitution()],
 		[NSNumber numberWithBool:ldPreferences->getUseLighting()],
-		[NSNumber numberWithBool:ldPreferences->getBfc()],
 		nil];
-
-	[self updateSegments:featuresSegments states:states];
+	NSArray *alternates = [NSArray arrayWithObjects:
+		wireframeSegments,
+		seamsSegments,
+		edgesSegments,
+		primitivesSegments,
+		lightingSegments,
+		nil];
+	
+	[self updateSegments:featuresSegments states:states alternates:alternates];
 }
 
 - (void)preferencesDidUpdate:(NSNotification *)notification
@@ -270,9 +300,15 @@ enum
 	NSArray *toolTips = [NSArray arrayWithObjects:
 		@"Show/Hide Axes",
 		@"Enable/Disable Random Colors",
+		@"Enable/Disable BFC",
+		nil];
+	NSArray *alternates = [NSArray arrayWithObjects:
+		axesSegments,
+		randomColorsSegments,
+		bfcSegments,
 		nil];
 
-	[self setupSegments:partsAuthorSegments toolTips:toolTips];
+	[self setupSegments:partsAuthorSegments toolTips:toolTips alternates:alternates];
 	[self updatePartsAuthorStates];
 }
 
@@ -284,10 +320,16 @@ enum
 		@"Enable/Disable Edges",
 		@"Enable/Disable Primitive Substitution",
 		@"Enable/Disable Lighting",
-		@"Enable/Disable BFC",
+		nil];
+	NSArray *alternates = [NSArray arrayWithObjects:
+		wireframeSegments,
+		seamsSegments,
+		edgesSegments,
+		primitivesSegments,
+		lightingSegments,
 		nil];
 
-	[self setupSegments:featuresSegments toolTips:toolTips];
+	[self setupSegments:featuresSegments toolTips:toolTips alternates:alternates];
 	[self updateFeatureStates];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
 }
@@ -385,7 +427,15 @@ enum
 	// segmented control only has one item.
 	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Wireframe" label:@"Wireframe" control:&wireframeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Seams" label:@"Seams" control:&seamsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"EdgeLines" label:@"Edges Lines" control:&edgesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Primitives" label:@"Primitives" control:&primitivesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Lighting" label:@"Lighting" control:&lightingSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:@"Parts Author" control:&partsAuthorSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Axes" label:@"Axes" control:&axesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"RandomColors" label:@"Random Colors" control:&randomColorsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BFC" label:@"BFC" control:&bfcSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:YES isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:YES isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
@@ -1359,11 +1409,14 @@ enum
 {
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
-		case 0:
+		case 5:
 			[self toggleFeature:@selector(takeShowAxesFrom:) sender:sender];
 			break;
-		case 1:
+		case 6:
 			[self toggleFeature:@selector(takeRandomColorsFrom:) sender:sender];
+			break;
+		case 7:
+			[self toggleFeature:@selector(takeBfcFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown author feature.\n");
@@ -1389,9 +1442,6 @@ enum
 			break;
 		case 4:
 			[self toggleFeature:@selector(takeLightingFrom:) sender:sender];
-			break;
-		case 5:
-			[self toggleFeature:@selector(takeBfcFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown feature.\n");
