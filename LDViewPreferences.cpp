@@ -337,6 +337,31 @@ bool LDViewPreferences::getDrawConditionalHighlights(void)
 	return ldPrefs->getDrawConditionalHighlights();
 }
 
+bool LDViewPreferences::getShowAllConditionalLines(void)
+{
+	return ldPrefs->getShowAllConditionalLines();
+}
+
+bool LDViewPreferences::getShowConditionalControlPoints(void)
+{
+	return ldPrefs->getShowConditionalControlPoints();
+}
+
+bool LDViewPreferences::getUseFlatShading(void)
+{
+	return ldPrefs->getUseFlatShading();
+}
+
+bool LDViewPreferences::getBoundingBoxesOnly(void)
+{
+	return ldPrefs->getBoundingBoxesOnly();
+}
+
+bool LDViewPreferences::getTransDefaultColor(void)
+{
+	return ldPrefs->getTransDefaultColor();
+}
+
 bool LDViewPreferences::getUseSeams(void)
 {
 	return ldPrefs->getUseSeams();
@@ -442,6 +467,84 @@ void LDViewPreferences::setDrawConditionalHighlights(bool value)
 		{
 			SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_HIGHLIGHTS,
 				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setShowAllConditionalLines(bool value)
+{
+	if (value != ldPrefs->getShowAllConditionalLines())
+	{
+		ldPrefs->setShowAllConditionalLines(value, true, true);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_ALL_CONDITIONAL,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setShowConditionalControlPoints(bool value)
+{
+	if (value != ldPrefs->getShowConditionalControlPoints())
+	{
+		ldPrefs->setShowConditionalControlPoints(value, true, true);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_CONDITIONAL_CONTROLS,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setUseFlatShading(bool value)
+{
+	if (value != ldPrefs->getUseFlatShading())
+	{
+		ldPrefs->setUseFlatShading(value, true, true);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setBoundingBoxesOnly(bool value)
+{
+	if (value != ldPrefs->getBoundingBoxesOnly())
+	{
+		ldPrefs->setBoundingBoxesOnly(value, true, true);
+		if (hGeometryPage)
+		{
+			SendDlgItemMessage(hGeometryPage, IDC_PART_BOUNDING_BOXES,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setTransDefaultColor(bool value)
+{
+	if (value != ldPrefs->getTransDefaultColor())
+	{
+		ldPrefs->setTransDefaultColor(value, true, true);
+		if (hGeneralPage)
+		{
+			SendDlgItemMessage(hGeneralPage, IDC_TRANS_DEFAULT_COLOR,
+				BM_SETCHECK, value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setPerformSmoothing(bool value)
+{
+	if (value != ldPrefs->getPerformSmoothing())
+	{
+		ldPrefs->setPerformSmoothing(value, true, true);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_SETCHECK,
+				value, 0);
 		}
 	}
 }
@@ -620,6 +723,32 @@ void LDViewPreferences::setSubduedLighting(bool value)
 		if (hEffectsPage)
 		{
 			SendDlgItemMessage(hEffectsPage, IDC_LIGHTING_SUBDUED, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setQualityStuds(bool value)
+{
+	if (value != ldPrefs->getQualityStuds())
+	{
+		ldPrefs->setQualityStuds(value, true, true);
+		if (hPrimitivesPage)
+		{
+			SendDlgItemMessage(hPrimitivesPage, IDC_STUD_QUALITY, BM_SETCHECK,
+				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setUsesFlatShading(bool value)
+{
+	if (value != ldPrefs->getUseFlatShading())
+	{
+		ldPrefs->setUseFlatShading(value, true, true);
+		if (hEffectsPage)
+		{
+			SendDlgItemMessage(hEffectsPage, IDC_FLAT_SHADING, BM_SETCHECK,
 				value, 0);
 		}
 	}

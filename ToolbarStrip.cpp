@@ -662,6 +662,27 @@ LRESULT ToolbarStrip::doCommand(
 	case IDC_RANDOM_COLORS:
 		doRandomColors();
 		break;
+	case IDC_ALL_CONDITIONAL:
+		doAllConditionals();
+		break;
+	case IDC_CONDITIONAL_CONTROLS:
+		doConditionalControls();
+		break;
+	case IDC_FLAT_SHADING:
+		doFlatShading();
+		break;
+	case IDC_STUD_QUALITY:
+		doStudQuality();
+		break;
+	case IDC_PART_BOUNDING_BOXES:
+		doPartBoundingBoxes();
+		break;
+	case IDC_SMOOTH_CURVES:
+		doSmoothCurves();
+		break;
+	case IDC_TRANS_DEFAULT_COLOR:
+		doTransDefaultColor();
+		break;
 	case ID_WIREFRAME_FOG:
 		doFog();
 		break;
@@ -729,7 +750,6 @@ void ToolbarStrip::addTbButtonInfo(
 	TbButtonInfoVector &infos,
 	CUCSTR tooltipText,
 	int commandId,
-	int bmpIndex,
 	BYTE style,
 	BYTE state)
 {
@@ -761,7 +781,7 @@ void ToolbarStrip::addTbButtonInfo(
 				bmBuffer[dstYOffset + x * 3 + 2] = srcData[srcYOffset + x * 4 + 0];
 			}
 		}
-		bmpIndex = ImageList_GetImageCount(m_imageLists.back());
+		buttonInfo.setBmpIndex(ImageList_GetImageCount(m_imageLists.back()));
 		ImageList_Add(m_imageLists.back(), hBitmap, hMask);
 		DeleteObject(hBitmap);
 		DeleteObject(hMask);
@@ -770,7 +790,6 @@ void ToolbarStrip::addTbButtonInfo(
 	}
 	buttonInfo.setTooltipText(tooltipText);
 	buttonInfo.setCommandId(commandId);
-	buttonInfo.setBmpIndex(bmpIndex);
 	buttonInfo.setStyle(style);
 	buttonInfo.setState(state);
 }
@@ -779,7 +798,6 @@ void ToolbarStrip::addTbCheckButtonInfo(
 	TbButtonInfoVector &infos,
 	CUCSTR tooltipText,
 	int commandId,
-	int bmpIndex,
 	bool checked,
 	BYTE style,
 	BYTE state)
@@ -789,7 +807,7 @@ void ToolbarStrip::addTbCheckButtonInfo(
 	{
 		state |= TBSTATE_CHECKED;
 	}
-	addTbButtonInfo(infos, tooltipText, commandId, bmpIndex, style, state);
+	addTbButtonInfo(infos, tooltipText, commandId, style, state);
 }
 
 void ToolbarStrip::addTbSeparatorInfo(TbButtonInfoVector &infos)
@@ -807,13 +825,13 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
 			10, 10));
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP, 2);
+			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP, 0);
+			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP, 1);
+			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP, 3);
+			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP);
 	}
 }
 
@@ -824,11 +842,11 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
 			10, 10));
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
-			ID_FILE_OPEN, 10);
+			ID_FILE_OPEN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE, 5);
+			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE);
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Reload")),
-			ID_FILE_RELOAD, 0);
+			ID_FILE_RELOAD);
 		addTbSeparatorInfo(m_mainButtonInfos);
 		m_drawWireframe = m_prefs->getDrawWireframe();
 		m_seams = m_prefs->getUseSeams() != 0;
@@ -838,36 +856,62 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_bfc = m_prefs->getBfc();
 		m_showAxes = m_prefs->getShowAxes();
 		m_randomColors = m_prefs->getRandomColors();
+		m_allConditionals = m_prefs->getShowAllConditionalLines();
+		m_conditionalControls = m_prefs->getShowConditionalControlPoints();
+		m_flat = m_prefs->getUseFlatShading();
+		m_lowStuds = !m_prefs->getQualityStuds();
+		m_partBBoxes = m_prefs->getBoundingBoxesOnly();
+		m_smoothCurves = m_prefs->getPerformSmoothing();
+		m_transDefaultColor = m_prefs->getTransDefaultColor();
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME, 1,
+			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME,
 			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, 2, m_seams);
+			TCLocalStrings::get(_UC("Seams")), IDC_SEAMS, m_seams);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("EdgeLines")), IDC_HIGHLIGHTS, 3, m_edges,
+			TCLocalStrings::get(_UC("EdgeLines")), IDC_HIGHLIGHTS, m_edges,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("PrimitiveSubstitution")),
-			IDC_PRIMITIVE_SUBSTITUTION, 4, m_primitiveSubstitution,
+			IDC_PRIMITIVE_SUBSTITUTION, m_primitiveSubstitution,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, 7, m_lighting,
+			TCLocalStrings::get(_UC("Lighting")), IDC_LIGHTING, m_lighting,
 			TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE, 6,
+			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES, 8);
-		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
-			IDC_BFC, 9, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, 11,
-			m_showAxes);
+			TCLocalStrings::get(_UC("TransDefaultColor")),
+			IDC_TRANS_DEFAULT_COLOR, m_transDefaultColor);
 		addTbCheckButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS, 12,
+			TCLocalStrings::get(_UC("RandomColors")), IDC_RANDOM_COLORS,
 			m_randomColors);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ShowAxes")), IDC_SHOW_AXES, m_showAxes);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("PartBoundingBoxesOnly")),
+			IDC_PART_BOUNDING_BOXES, m_partBBoxes);
+		addTbCheckButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("BFC")),
+			IDC_BFC, m_bfc, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ShowAllConditionals")), IDC_ALL_CONDITIONAL,
+			m_allConditionals);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ShowConditionalControls")),
+			IDC_CONDITIONAL_CONTROLS, m_conditionalControls);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("FlatShading")), IDC_FLAT_SHADING, m_flat);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("SmoothCurves")), IDC_SMOOTH_CURVES,
+			m_smoothCurves);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
+			m_lowStuds);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Errors&Warnings")), ID_TOOLS_ERRORS, 3);
+			TCLocalStrings::get(_UC("Errors&Warnings")), ID_TOOLS_ERRORS);
 	}
 }
 
@@ -1470,6 +1514,69 @@ void ToolbarStrip::doRandomColors(void)
 	if (doCheck(m_randomColors, IDC_RANDOM_COLORS))
 	{
 		m_prefs->setRandomColors(m_randomColors);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doAllConditionals(void)
+{
+	if (doCheck(m_allConditionals, IDC_ALL_CONDITIONAL))
+	{
+		m_prefs->setShowAllConditionalLines(m_allConditionals);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doConditionalControls(void)
+{
+	if (doCheck(m_conditionalControls, IDC_CONDITIONAL_CONTROLS))
+	{
+		m_prefs->setShowConditionalControlPoints(m_conditionalControls);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doFlatShading(void)
+{
+	if (doCheck(m_flat, IDC_FLAT_SHADING))
+	{
+		m_prefs->setUsesFlatShading(m_flat);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doStudQuality(void)
+{
+	if (doCheck(m_lowStuds, IDC_STUD_QUALITY))
+	{
+		m_prefs->setQualityStuds(!m_lowStuds);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doPartBoundingBoxes(void)
+{
+	if (doCheck(m_partBBoxes, IDC_PART_BOUNDING_BOXES))
+	{
+		m_prefs->setBoundingBoxesOnly(m_partBBoxes);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doSmoothCurves(void)
+{
+	if (doCheck(m_smoothCurves, IDC_SMOOTH_CURVES))
+	{
+		m_prefs->setPerformSmoothing(m_smoothCurves);
+		forceRedraw();
+	}
+}
+
+void ToolbarStrip::doTransDefaultColor(void)
+{
+	if (doCheck(m_transDefaultColor, IDC_TRANS_DEFAULT_COLOR))
+	{
+		m_prefs->setTransDefaultColor(m_transDefaultColor);
 		forceRedraw();
 	}
 }

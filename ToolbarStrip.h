@@ -52,11 +52,11 @@ protected:
 	LRESULT doMainToolbarChange(void);
 	LRESULT doMainToolbarReset(void);
 	void addTbButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
-		int commandId, int bmpIndex, BYTE style = TBSTYLE_BUTTON,
+		int commandId, BYTE style = TBSTYLE_BUTTON,
 		BYTE state = TBSTATE_ENABLED);
 	void addTbCheckButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
-		int commandId, int bmpIndex, bool checked,
-		BYTE style = TBSTYLE_CHECK, BYTE state = TBSTATE_ENABLED);
+		int commandId, bool checked, BYTE style = TBSTYLE_CHECK,
+		BYTE state = TBSTATE_ENABLED);
 	void addTbSeparatorInfo(TbButtonInfoVector &infos);
 	void populateMainTbButtonInfos(void);
 	void populateStepTbButtonInfos(void);
@@ -92,6 +92,13 @@ protected:
 	void doBfc(void);
 	void doShowAxes(void);
 	void doRandomColors(void);
+	void doAllConditionals(void);
+	void doConditionalControls(void);
+	void doFlatShading(void);
+	void doStudQuality(void);
+	void doPartBoundingBoxes(void);
+	void doSmoothCurves(void);
+	void doTransDefaultColor(void);
 	void doFog(void);
 	void doRemoveHiddenLines(void);
 	void doShowEdgesOnly(void);
@@ -158,6 +165,13 @@ protected:
 	bool m_bfc;
 	bool m_showAxes;
 	bool m_randomColors;
+	bool m_allConditionals;
+	bool m_conditionalControls;
+	bool m_flat;
+	bool m_lowStuds;
+	bool m_partBBoxes;
+	bool m_smoothCurves;
+	bool m_transDefaultColor;
 
 	bool m_showMain;
 	bool m_showSteps;

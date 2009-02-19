@@ -5008,6 +5008,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		ldlModel->setMainModel(ldlModel);
 		ldlModel->setForceHighlightColor(true);
 		ldlModel->setHighlightColorNumber(0x3A0E0FF);
+		ldlModel->setLowResStuds(!flags.qualityStuds);
 		for (StringList::const_iterator it = highlightPaths.begin();
 			it != highlightPaths.end(); it++)
 		{

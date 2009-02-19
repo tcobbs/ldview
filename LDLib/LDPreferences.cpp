@@ -1263,9 +1263,20 @@ void LDPreferences::setDefaultColor(int r, int g, int b, bool commit)
 	setColorSetting(m_defaultColor, r, g, b, DEFAULT_COLOR_KEY, commit);
 }
 
-void LDPreferences::setTransDefaultColor(bool value, bool commit)
+void LDPreferences::setTransDefaultColor(bool value, bool commit, bool apply)
 {
 	setSetting(m_transDefaultColor, value, TRANS_DEFAULT_COLOR_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			int r, g, b;
+
+			getRGB(m_defaultColor, r, g, b);
+			m_modelViewer->setDefaultRGB((TCByte)r, (TCByte)g, (TCByte)b,
+				m_transDefaultColor);
+		}
+	}
 }
 
 void LDPreferences::setProcessLdConfig(bool value, bool commit)
@@ -1435,9 +1446,16 @@ void LDPreferences::setSeamWidth(int value, bool commit)
 	setSetting(m_seamWidth, value, SEAM_WIDTH_KEY, commit);
 }
 
-void LDPreferences::setBoundingBoxesOnly(bool value, bool commit)
+void LDPreferences::setBoundingBoxesOnly(bool value, bool commit, bool apply)
 {
 	setSetting(m_boundingBoxesOnly, value, BOUNDING_BOXES_ONLY_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setBoundingBoxesOnly(m_boundingBoxesOnly);
+		}
+	}
 }
 
 void LDPreferences::setDrawWireframe(bool value, bool commit, bool apply)
@@ -1544,15 +1562,37 @@ void LDPreferences::setDrawConditionalHighlights(bool value, bool commit,
 	}
 }
 
-void LDPreferences::setShowAllConditionalLines(bool value, bool commit)
+void LDPreferences::setShowAllConditionalLines(
+	bool value,
+	bool commit,
+	bool apply)
 {
 	setSetting(m_showAllConditionalLines, value, SHOW_ALL_TYPE5_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setShowAllConditionalLines(
+				m_showAllConditionalLines);
+		}
+	}
 }
 
-void LDPreferences::setShowConditionalControlPoints(bool value, bool commit)
+void LDPreferences::setShowConditionalControlPoints(
+	bool value,
+	bool commit,
+	bool apply)
 {
 	setSetting(m_showConditionalControlPoints, value,
 		SHOW_TYPE5_CONTROL_POINTS_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setShowConditionalControlPoints(
+				m_showConditionalControlPoints);
+		}
+	}
 }
 
 void LDPreferences::setEdgesOnly(bool value, bool commit, bool apply)
@@ -1786,9 +1826,16 @@ void LDPreferences::setSortTransparent(bool value, bool commit)
 	setSetting(m_sortTransparent, value, SORT_KEY, commit);
 }
 
-void LDPreferences::setPerformSmoothing(bool value, bool commit)
+void LDPreferences::setPerformSmoothing(bool value, bool commit, bool apply)
 {
 	setSetting(m_performSmoothing, value, PERFORM_SMOOTHING_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setPerformSmoothing(m_performSmoothing);
+		}
+	}
 }
 
 void LDPreferences::setUseStipple(bool value, bool commit)
@@ -1796,9 +1843,16 @@ void LDPreferences::setUseStipple(bool value, bool commit)
 	setSetting(m_useStipple, value, STIPPLE_KEY, commit);
 }
 
-void LDPreferences::setUseFlatShading(bool value, bool commit)
+void LDPreferences::setUseFlatShading(bool value, bool commit, bool apply)
 {
 	setSetting(m_useFlatShading, value, FLAT_SHADING_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setUsesFlatShading(m_useFlatShading);
+		}
+	}
 }
 
 void LDPreferences::setObi(bool value, bool commit)
@@ -1850,9 +1904,16 @@ void LDPreferences::setCurveQuality(int value, bool commit)
 	setSetting(m_curveQuality, value, CURVE_QUALITY_KEY, commit);
 }
 
-void LDPreferences::setQualityStuds(bool value, bool commit)
+void LDPreferences::setQualityStuds(bool value, bool commit, bool apply)
 {
 	setSetting(m_qualityStuds, value, QUALITY_STUDS_KEY, commit);
+	if (apply)
+	{
+		if (m_modelViewer)
+		{
+			m_modelViewer->setQualityStuds(m_qualityStuds);
+		}
+	}
 }
 
 void LDPreferences::setHiResPrimitives(bool value, bool commit)
