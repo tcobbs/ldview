@@ -93,13 +93,13 @@
 #define IDD_STEP                        190
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
+#define IDC_STUD_QUALITY                1002
 #define IDC_HIGHLIGHTS                  1003
 #define IDC_PROCESS_LDCONFIG            1003
-#define IDC_STUD_QUALITY                1004
 #define IDC_TRANS_DEFAULT_COLOR         1004
 #define IDC_FLAT_SHADING                1005
 #define IDC_HI_RES                      1005
-#define IDC_RANDOM_COLORS               1005
+#define IDC_RANDOM_COLORS               1006
 #define IDC_SPECULAR                    1006
 #define IDC_PRIMITIVE_SUBSTITUTION      1007
 #define IDC_ALTERNATE_LIGHTING          1007

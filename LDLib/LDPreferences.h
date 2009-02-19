@@ -217,7 +217,8 @@ public:
 	void setLineSmoothing(bool value, bool commit = false);
 	void setBackgroundColor(int r, int g, int b, bool commit = false);
 	void setDefaultColor(int r, int g, int b, bool commit = false);
-	void setTransDefaultColor(bool value, bool commit = false);
+	void setTransDefaultColor(bool value, bool commit = false,
+		bool apply = false);
 	void setDefaultColorNumber(int value, bool commit = false);
 	void setProcessLdConfig(bool value, bool commit = false);
 	void setRandomColors(bool value, bool commit = false, bool apply = false);
@@ -257,7 +258,8 @@ public:
 	// Geometry settings
 	void setUseSeams(bool value, bool commit = false, bool apply = false);
 	void setSeamWidth(int value, bool commit = false);
-	void setBoundingBoxesOnly(bool value, bool commit = false);
+	void setBoundingBoxesOnly(bool value, bool commit = false,
+		bool apply = false);
 	void setDrawWireframe(bool value, bool commit = false, bool apply = false);
 	void setUseWireframeFog(bool value, bool commit = false,
 		bool apply = false);
@@ -272,8 +274,10 @@ public:
 		bool apply = false);
 	void setDrawConditionalHighlights(bool value, bool commit = false,
 		bool apply = false);
-	void setShowAllConditionalLines(bool value, bool commit = false);
-	void setShowConditionalControlPoints(bool value, bool commit = false);
+	void setShowAllConditionalLines(bool value, bool commit = false,
+		bool apply = false);
+	void setShowConditionalControlPoints(bool value, bool commit = false,
+		bool apply = false);
 	void setEdgesOnly(bool value, bool commit = false, bool apply = false);
 	void setUsePolygonOffset(bool value, bool commit = false,
 		bool apply = false);
@@ -301,9 +305,10 @@ public:
 	void setCutawayAlpha(int value, bool commit = false);
 	void setCutawayThickness(int value, bool commit = false);
 	void setSortTransparent(bool value, bool commit = false);
-	void setPerformSmoothing(bool value, bool commit = false);
+	void setPerformSmoothing(bool value, bool commit = false,
+		bool apply = false);
 	void setUseStipple(bool value, bool commit = false);
-	void setUseFlatShading(bool value, bool commit = false);
+	void setUseFlatShading(bool value, bool commit = false, bool apply = false);
 	void setObi(bool value, bool commit = false);
 
 	// Primitives settings
@@ -313,7 +318,7 @@ public:
 	void setTextureFilterType(int value, bool commit = false);
 	void setAnisoLevel(TCFloat value, bool commit = false);
 	void setCurveQuality(int value, bool commit = false);
-	void setQualityStuds(bool value, bool commit = false);
+	void setQualityStuds(bool value, bool commit = false, bool apply = false);
 	void setHiResPrimitives(bool value, bool commit = false);
 
 	// Update settings
