@@ -111,6 +111,7 @@ class LDViewWindow: public CUIWindow
 		virtual void setStatusText(HWND hStatus, int part, CUCSTR text,
 			bool redraw = true);
 		virtual void stopAnimation(void);
+		virtual void switchModes(void);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
@@ -176,7 +177,6 @@ class LDViewWindow: public CUIWindow
 		virtual bool tryVideoMode(VideoModeT*, int);
 		virtual void setFullScreenDisplayMode(void);
 		virtual void restoreDisplayMode(void);
-		virtual void switchModes(void);
 		virtual void checkVideoMode(int, int, int);
 		virtual void checkLowResModes(void);
 		virtual void getAllDisplayModes(void);
