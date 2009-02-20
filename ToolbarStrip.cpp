@@ -740,6 +740,9 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_TOOLS_ERRORS:
 		m_ldviewWindow->getModelWindow()->showErrors();
 		break;
+	case ID_VIEW_FULLSCREEN:
+		m_ldviewWindow->switchModes();
+		break;
 	default:
 		return CUIDialog::doCommand(notifyCode, commandId, control);
 	}
@@ -910,6 +913,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
 			m_lowStuds);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("FullScreen")), ID_VIEW_FULLSCREEN);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Errors&Warnings")), ID_TOOLS_ERRORS);
 	}
