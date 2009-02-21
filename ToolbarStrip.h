@@ -2,6 +2,7 @@
 #define __TOOLBARSTRIP_H__
 
 #include <CUI/CUIDialog.h>
+#include <LDLib/LDInputHandler.h>
 #include "TbButtonInfo.h"
 
 class LDViewWindow;
@@ -13,6 +14,8 @@ typedef std::vector<HWND> HwndVector;
 typedef std::vector<long> LongVector;
 typedef std::map<long, size_t> LongSizeTMap;
 typedef std::list<HIMAGELIST> HImageListList;
+typedef std::vector<int> IntVector;
+typedef std::map<int, int> IntIntMap;
 
 class ToolbarStrip: public CUIDialog
 {
@@ -27,6 +30,7 @@ public:
 	void updateStep(void);
 	void enableMainToolbarButton(UINT buttonId, bool enable);
 	void checksReflect(void);
+	void viewModeReflect(void);
 	void activateDeactivatedTooltip(void);
 protected:
 	virtual ~ToolbarStrip(void);
@@ -57,7 +61,11 @@ protected:
 	void addTbCheckButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
 		int commandId, bool checked, BYTE style = TBSTYLE_CHECK,
 		BYTE state = TBSTATE_ENABLED);
+	void addTbStateButtonInfo(TbButtonInfoVector &infos, CUCSTR tooltipText,
+		IntVector commandIds, int selection, BYTE style = TBSTYLE_BUTTON,
+		BYTE state = TBSTATE_ENABLED);
 	void addTbSeparatorInfo(TbButtonInfoVector &infos);
+	int addToImageList(int commandId);
 	void populateMainTbButtonInfos(void);
 	void populateStepTbButtonInfos(void);
 	void loadMainToolbarMenus(void);
@@ -117,7 +125,9 @@ protected:
 	void doCustomizeMainToolbar(void);
 	void doMainToolbar(void);
 	void doStepsToolbar(void);
+	void doViewMode(void);
 
+	void syncViewMode(void);
 	void checkReflect(bool &value, bool prefsValue, LPARAM commandID);
 	void doDropDown(LPNMTOOLBAR toolbarNot);
 
@@ -154,6 +164,7 @@ protected:
 	HwndVector m_controls;
 	int m_stripHeight;
 	HImageListList m_imageLists;
+	IntIntMap m_commandMap;
 
 	int m_stdBitmapStartId;
 	int m_tbBitmapStartId;
@@ -172,6 +183,7 @@ protected:
 	bool m_partBBoxes;
 	bool m_smoothCurves;
 	bool m_transDefaultColor;
+	LDInputHandler::ViewMode m_viewMode;
 
 	bool m_showMain;
 	bool m_showSteps;

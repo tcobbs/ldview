@@ -50,6 +50,19 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	ModelWindow::initCommonControls(ICC_BAR_CLASSES | ICC_WIN95_CLASSES);
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
 		(TCAlertCallback)&ToolbarStrip::modelAlertCallback);
+	m_commandMap[IDR_TB_ERRORS] = ID_TOOLS_ERRORS;
+	m_commandMap[IDR_TB_EXAMINE] = ID_VIEW_EXAMINE;
+	m_commandMap[IDR_TB_FLYTHROUGH] = ID_VIEW_FLYTHROUGH;
+	m_commandMap[IDR_TB_FULLSCREEN] = ID_VIEW_FULLSCREEN;
+	m_commandMap[IDR_TB_OPEN] = ID_FILE_OPEN;
+	m_commandMap[IDR_TB_PREFERENCES] = ID_EDIT_PREFERENCES;
+	m_commandMap[IDR_TB_RELOAD] = ID_FILE_RELOAD;
+	m_commandMap[IDR_TB_SAVE] = ID_FILE_SAVE;
+	m_commandMap[IDR_TB_ZOOMTOFIT] = ID_VIEW_ZOOMTOFIT;
+	m_commandMap[IDR_TB_FIRST_STEP] = ID_FIRST_STEP;
+	m_commandMap[IDR_TB_LAST_STEP] = ID_LAST_STEP;
+	m_commandMap[IDR_TB_NEXT_STEP] = ID_NEXT_STEP;
+	m_commandMap[IDR_TB_PREV_STEP] = ID_PREV_STEP;
 }
 
 ToolbarStrip::~ToolbarStrip(void)
@@ -146,6 +159,12 @@ void ToolbarStrip::updateMenus(const TbButtonInfoVector &infos)
 			updateMenu(hMenu, buttonInfo.getCommandId(),
 				buttonInfo.getBmpIndex(),
 				hImageList);
+			for (size_t j = 0; j < buttonInfo.getOtherCommandIds().size(); j++)
+			{
+				updateMenu(hMenu, buttonInfo.getOtherCommandIds()[j],
+					buttonInfo.getBmpIndex() + j + 1,
+					hImageList);
+			}
 		}
 	}
 }
@@ -178,6 +197,7 @@ void ToolbarStrip::initToolbar(
 	for (i = 0; i < count; i++)
 	{
 		fillTbButton(buttons[i], infos[i]);
+		buttons[i].iBitmap += infos[i].getSelection();
 	}
 	SendMessage(hToolbar, TB_ADDBUTTONS, count, (LPARAM)buttons);
 	if (!CUIThemes::isThemeActive() ||
@@ -439,10 +459,10 @@ void ToolbarStrip::updateStep(void)
 	{
 		windowSetText(IDC_STEP, "--");
 	}
-	enableToolbarButton(m_hStepToolbar, ID_FIRST_STEP, prevEnabled);
-	enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, prevEnabled);
-	enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP, nextEnabled);
-	enableToolbarButton(m_hStepToolbar, ID_LAST_STEP, nextEnabled);
+	enableToolbarButton(m_hStepToolbar, IDR_TB_FIRST_STEP, prevEnabled);
+	enableToolbarButton(m_hStepToolbar, IDR_TB_PREV_STEP, prevEnabled);
+	enableToolbarButton(m_hStepToolbar, IDR_TB_NEXT_STEP, nextEnabled);
+	enableToolbarButton(m_hStepToolbar, IDR_TB_LAST_STEP, nextEnabled);
 }
 
 void ToolbarStrip::updateNumSteps(void)
@@ -479,6 +499,11 @@ void ToolbarStrip::updateMenu(
 	int index,
 	HIMAGELIST hImageList)
 {
+	IntIntMap::const_iterator it = m_commandMap.find(command);
+	if (it != m_commandMap.end())
+	{
+		command = it->second;
+	}
 	if (m_hGdiPlus == NULL)
 	{
 		return;
@@ -610,6 +635,12 @@ LRESULT ToolbarStrip::doCommand(
 	int commandId,
 	HWND control)
 {
+	IntIntMap::const_iterator it = m_commandMap.find(commandId);
+
+	if (it != m_commandMap.end())
+	{
+		commandId = it->second;
+	}
 	switch (commandId)
 	{
 	case IDOK:
@@ -635,6 +666,9 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_PREV_STEP:
 	case ID_FIRST_STEP:
 	case ID_LAST_STEP:
+	case ID_TOOLS_ERRORS:
+	case ID_VIEW_FULLSCREEN:
+	case ID_VIEW_ZOOMTOFIT:
 		// Forward all these messages to LDViewWindow.
 		return SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
 			MAKEWPARAM(commandId, notifyCode), (LPARAM)control);
@@ -737,16 +771,73 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_TBCONTEXT_STEPS:
 		doStepsToolbar();
 		break;
-	case ID_TOOLS_ERRORS:
-		m_ldviewWindow->getModelWindow()->showErrors();
+	case ID_VIEW_EXAMINE:
+		doViewMode();
 		break;
-	case ID_VIEW_FULLSCREEN:
-		m_ldviewWindow->switchModes();
-		break;
+	//case ID_TOOLS_ERRORS:
+	//	m_ldviewWindow->getModelWindow()->showErrors();
+	//	break;
+	//case ID_VIEW_FULLSCREEN:
+	//	m_ldviewWindow->switchModes();
+	//	break;
+	//case ID_VIEW_ZOOMTOFIT:
+	//	m_ldviewWindow->zoomToFit();
+	//	break;
 	default:
 		return CUIDialog::doCommand(notifyCode, commandId, control);
 	}
 	return 0;
+}
+
+int ToolbarStrip::addToImageList(int commandId)
+{
+	TCImage *image = TCImage::createFromResource(NULL, commandId, 4, true);
+
+	if (image != NULL)
+	{
+		HBITMAP hBitmap;
+		HBITMAP hMask;
+
+		image->getBmpAndMask(hBitmap, hMask);
+		ImageList_Add(m_imageLists.back(), hBitmap, hMask);
+		DeleteObject(hBitmap);
+		DeleteObject(hMask);
+		image->release();
+		return ImageList_GetImageCount(m_imageLists.back()) - 1;
+		//HDC hdc = CreateCompatibleDC(NULL);
+		//BYTE *bmBuffer = NULL;
+		//int width = image->getWidth();
+		//int height = image->getHeight();
+		//HBITMAP hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer);
+		//HBITMAP hMask = createMask(image);
+		//int srcBytesPerLine = image->getRowSize();
+		//int dstBytesPerLine = TCImage::roundUp(width * 3, 4);
+		//TCByte *srcData = image->getImageData();
+
+		//for (int y = 0; y < height; y++)
+		//{
+		//	int srcYOffset = srcBytesPerLine * y;
+		//	int dstYOffset = dstBytesPerLine * y;
+
+		//	for (int x = 0; x < width; x++)
+		//	{
+		//		bmBuffer[dstYOffset + x * 3 + 0] =
+		//			srcData[srcYOffset + x * 4 + 2];
+		//		bmBuffer[dstYOffset + x * 3 + 1] =
+		//			srcData[srcYOffset + x * 4 + 1];
+		//		bmBuffer[dstYOffset + x * 3 + 2] =
+		//			srcData[srcYOffset + x * 4 + 0];
+		//	}
+		//}
+		//
+		//ImageList_Add(m_imageLists.back(), hBitmap, hMask);
+		//DeleteObject(hBitmap);
+		//DeleteObject(hMask);
+		//DeleteDC(hdc);
+		//image->release();
+		//return ImageList_GetImageCount(m_imageLists.back()) - 1;
+	}
+	return -1;
 }
 
 void ToolbarStrip::addTbButtonInfo(
@@ -758,41 +849,9 @@ void ToolbarStrip::addTbButtonInfo(
 {
 	infos.resize(infos.size() + 1);
 	TbButtonInfo &buttonInfo = infos.back();
-	TCImage *image = TCImage::createFromResource(NULL, commandId, 4, true);
-
-	if (image != NULL)
-	{
-		HDC hdc = CreateCompatibleDC(NULL);
-		BYTE *bmBuffer = NULL;
-		int width = image->getWidth();
-		int height = image->getHeight();
-		HBITMAP hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer);
-		HBITMAP hMask = createMask(image);
-		int srcBytesPerLine = image->getRowSize();
-		int dstBytesPerLine = TCImage::roundUp(width * 3, 4);
-		TCByte *srcData = image->getImageData();
-
-		for (int y = 0; y < height; y++)
-		{
-			int srcYOffset = srcBytesPerLine * y;
-			int dstYOffset = dstBytesPerLine * y;
-
-			for (int x = 0; x < width; x++)
-			{
-				bmBuffer[dstYOffset + x * 3 + 0] = srcData[srcYOffset + x * 4 + 2];
-				bmBuffer[dstYOffset + x * 3 + 1] = srcData[srcYOffset + x * 4 + 1];
-				bmBuffer[dstYOffset + x * 3 + 2] = srcData[srcYOffset + x * 4 + 0];
-			}
-		}
-		buttonInfo.setBmpIndex(ImageList_GetImageCount(m_imageLists.back()));
-		ImageList_Add(m_imageLists.back(), hBitmap, hMask);
-		DeleteObject(hBitmap);
-		DeleteObject(hMask);
-		DeleteDC(hdc);
-		image->release();
-	}
 	buttonInfo.setTooltipText(tooltipText);
 	buttonInfo.setCommandId(commandId);
+	buttonInfo.setBmpIndex(addToImageList(commandId));
 	buttonInfo.setStyle(style);
 	buttonInfo.setState(state);
 }
@@ -813,6 +872,24 @@ void ToolbarStrip::addTbCheckButtonInfo(
 	addTbButtonInfo(infos, tooltipText, commandId, style, state);
 }
 
+void ToolbarStrip::addTbStateButtonInfo(
+	TbButtonInfoVector &infos,
+	CUCSTR tooltipText,
+	IntVector commandIds,
+	int selection,
+	BYTE style /*= TBSTYLE_BUTTON*/,
+	BYTE state /*= TBSTATE_ENABLED*/)
+{
+	addTbButtonInfo(infos, tooltipText, commandIds.front(), style, state);
+	TbButtonInfo &buttonInfo = infos.back();
+	buttonInfo.setSelection(selection);
+	for (size_t i = 1; i < commandIds.size(); i++)
+	{
+		buttonInfo.addCommandId(commandIds[i]);
+		addToImageList(commandIds[i]);
+	}
+}
+
 void ToolbarStrip::addTbSeparatorInfo(TbButtonInfoVector &infos)
 {
 	infos.resize(infos.size() + 1);
@@ -828,14 +905,21 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
 			10, 10));
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP);
+			TCLocalStrings::get(_UC("FirstStep")), IDR_TB_FIRST_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("PrevStep")), ID_PREV_STEP);
+			TCLocalStrings::get(_UC("PrevStep")), IDR_TB_PREV_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("NextStep")), ID_NEXT_STEP);
+			TCLocalStrings::get(_UC("NextStep")), IDR_TB_NEXT_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
-			TCLocalStrings::get(_UC("LastStep")), ID_LAST_STEP);
+			TCLocalStrings::get(_UC("LastStep")), IDR_TB_LAST_STEP);
 	}
+}
+
+void ToolbarStrip::syncViewMode(void)
+{
+	m_viewMode =
+		(LDInputHandler::ViewMode)TCUserDefaults::longForKey(VIEW_MODE_KEY, 0,
+		false);
 }
 
 void ToolbarStrip::populateMainTbButtonInfos(void)
@@ -845,11 +929,11 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
 			10, 10));
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
-			ID_FILE_OPEN);
+			IDR_TB_OPEN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("SaveSnapshot")), ID_FILE_SAVE);
+			TCLocalStrings::get(_UC("SaveSnapshot")), IDR_TB_SAVE);
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Reload")),
-			ID_FILE_RELOAD);
+			IDR_TB_RELOAD);
 		addTbSeparatorInfo(m_mainButtonInfos);
 		m_drawWireframe = m_prefs->getDrawWireframe();
 		m_seams = m_prefs->getUseSeams() != 0;
@@ -866,6 +950,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_partBBoxes = m_prefs->getBoundingBoxesOnly();
 		m_smoothCurves = m_prefs->getPerformSmoothing();
 		m_transDefaultColor = m_prefs->getTransDefaultColor();
+		syncViewMode();
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME,
 			m_drawWireframe, TBSTYLE_CHECK | TBSTYLE_DROPDOWN);
@@ -885,7 +970,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES);
+			TCLocalStrings::get(_UC("Preferences")), IDR_TB_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("TransDefaultColor")),
 			IDC_TRANS_DEFAULT_COLOR, m_transDefaultColor);
@@ -914,9 +999,16 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			TCLocalStrings::get(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
 			m_lowStuds);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("FullScreen")), ID_VIEW_FULLSCREEN);
+			TCLocalStrings::get(_UC("FullScreen")), IDR_TB_FULLSCREEN);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Errors&Warnings")), ID_TOOLS_ERRORS);
+			TCLocalStrings::get(_UC("ZoomToFit")), IDR_TB_ZOOMTOFIT);
+		IntVector viewCommandIds;
+		viewCommandIds.push_back(IDR_TB_EXAMINE);
+		viewCommandIds.push_back(IDR_TB_FLYTHROUGH);
+		addTbStateButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Errors&Warnings")), IDR_TB_ERRORS);
 	}
 }
 
@@ -1489,6 +1581,18 @@ void ToolbarStrip::doMainToolbar(void)
 	initLayout();
 }
 
+void ToolbarStrip::doViewMode(void)
+{
+	int commandId = ID_VIEW_EXAMINE;
+
+	if (m_viewMode == LDInputHandler::VMExamine)
+	{
+		commandId = ID_VIEW_FLYTHROUGH;
+	}
+	SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
+		MAKEWPARAM(commandId, BN_CLICKED), (LPARAM)m_hToolbar);
+}
+
 void ToolbarStrip::doStepsToolbar(void)
 {
 	m_showSteps = !m_showSteps;
@@ -1668,6 +1772,20 @@ void ToolbarStrip::checkReflect(bool &value, bool prefsValue, LPARAM commandID)
 		}
 		SendMessage(m_hToolbar, TB_SETSTATE, commandID, MAKELONG(state, 0));
 	}
+}
+
+void ToolbarStrip::viewModeReflect(void)
+{
+	int oldViewMode = m_viewMode;
+	syncViewMode();
+	int bmpIndex = SendMessage(m_hToolbar, TB_GETBITMAP, IDR_TB_EXAMINE, 0);
+	TBBUTTONINFO bi;
+	bmpIndex += m_viewMode - oldViewMode;
+	memset(&bi, 0, sizeof(bi));
+	bi.cbSize = sizeof(bi);
+	bi.dwMask = TBIF_IMAGE;
+	bi.iImage = bmpIndex;
+	SendMessage(m_hToolbar, TB_SETBUTTONINFO, IDR_TB_EXAMINE, (LPARAM)&bi);
 }
 
 void ToolbarStrip::checksReflect(void)

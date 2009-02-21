@@ -112,6 +112,7 @@ class LDViewWindow: public CUIWindow
 			bool redraw = true);
 		virtual void stopAnimation(void);
 		virtual void switchModes(void);
+		virtual void zoomToFit(void);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
@@ -200,7 +201,6 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT windowProc(HWND, UINT, WPARAM, LPARAM);
 		virtual void resetView(LDVAngle viewAngle = LDVAngleDefault);
 		virtual void saveDefaultView(void);
-		virtual void zoomToFit(void);
 		virtual void resetDefaultView(void);
 		virtual int getMenuItemIndex(HMENU hMenu, UINT itemID);
 		virtual int clearRecentFileMenuItems(void);

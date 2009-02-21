@@ -187,10 +187,13 @@ mpdDialog(NULL)
 		extraSearchDirs = new TCStringArray;
 		populateExtraSearchDirs();
 	}
-	hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
-		IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
-	hFlythroughIcon = (HICON)LoadImage(hInstance,
-		MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
+	hExamineIcon = TCImage::loadIconFromPngResource(hInstance, IDR_TB_EXAMINE);
+	hFlythroughIcon = TCImage::loadIconFromPngResource(hInstance,
+		IDR_TB_FLYTHROUGH);
+	//hExamineIcon = (HICON)LoadImage(hInstance, MAKEINTRESOURCE(IDI_EXAMINE),
+	//	IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
+	//hFlythroughIcon = (HICON)LoadImage(hInstance,
+	//	MAKEINTRESOURCE(IDI_FLYTHROUGH), IMAGE_ICON, 32, 16, LR_DEFAULTCOLOR);
 	TCAlertManager::registerHandler(TCProgressAlert::alertClass(), this,
 		(TCAlertCallback)&LDViewWindow::progressAlertCallback);
 	char userAgent[256];
@@ -210,6 +213,8 @@ LDViewWindow::~LDViewWindow(void)
 
 void LDViewWindow::dealloc(void)
 {
+	DestroyIcon(hExamineIcon);
+	DestroyIcon(hFlythroughIcon);
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(modelTreeDialog);
 	TCObject::release(boundingBoxDialog);
@@ -662,7 +667,7 @@ void LDViewWindow::updateStatusParts(void)
 		RECT rect;
 		int numParts = 3;
 		bool latLon = inLatLonMode();
-		int rightMargin = 32;
+		int rightMargin = 20;
 		int latLonWidth = 100;
 
 		if (latLon)
@@ -2485,8 +2490,12 @@ LRESULT LDViewWindow::switchToExamineMode(bool saveSetting)
 	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, false);
 	modelWindow->setViewMode(LDInputHandler::VMExamine, examineLatLong,
 		saveSetting);
-	showStatusIcon(true);
+	updateStatusParts();
 	setMenuCheck(hViewMenu, ID_VIEW_EXAMINE_LAT_LONG, examineLatLong);
+	if (toolbarStrip)
+	{
+		toolbarStrip->viewModeReflect();
+	}
 	return 0;
 }
 
@@ -2496,7 +2505,11 @@ LRESULT LDViewWindow::switchToFlythroughMode(bool saveSetting)
 	setMenuRadioCheck(hViewMenu, ID_VIEW_FLYTHROUGH, true);
 	modelWindow->setViewMode(LDInputHandler::VMFlyThrough, examineLatLong,
 		saveSetting);
-	showStatusIcon(false);
+	updateStatusParts();
+	if (toolbarStrip)
+	{
+		toolbarStrip->viewModeReflect();
+	}
 	return 0;
 }
 

@@ -490,6 +490,7 @@ TCImageOptions *TCImage::getCompressionOptions(void)
 }
 
 #ifdef WIN32
+
 // Note: static method
 TCImage *TCImage::createFromResource(
 	HMODULE hModule,
@@ -531,4 +532,132 @@ TCImage *TCImage::createFromResource(
 	}
 	return retVal;
 }
+
+// Note: static method.
+HBITMAP TCImage::createDIBSection(
+	HDC hBitmapDC,
+	int bitmapWidth,
+	int bitmapHeight,
+	int hDPI,
+	int vDPI,
+	BYTE **bmBuffer)
+{
+	BITMAPINFO bmi;
+
+	bmi.bmiHeader.biSize = sizeof(bmi.bmiHeader);
+	bmi.bmiHeader.biWidth = bitmapWidth;
+	bmi.bmiHeader.biHeight = bitmapHeight;
+	bmi.bmiHeader.biPlanes = 1;
+	bmi.bmiHeader.biBitCount = 24;
+	bmi.bmiHeader.biCompression = BI_RGB;
+	bmi.bmiHeader.biSizeImage = 0;//roundUp(bitmapWidth * 3, 4) * bitmapHeight;
+	bmi.bmiHeader.biXPelsPerMeter = (long)(hDPI * 39.37);
+	bmi.bmiHeader.biYPelsPerMeter = (long)(vDPI * 39.37);
+	bmi.bmiHeader.biClrUsed = 0;
+	bmi.bmiHeader.biClrImportant = 0;
+	bmi.bmiColors[0].rgbRed = 0;
+	bmi.bmiColors[0].rgbGreen = 0;
+	bmi.bmiColors[0].rgbBlue = 0;
+	bmi.bmiColors[0].rgbReserved = 0;
+	return CreateDIBSection(hBitmapDC, &bmi, DIB_RGB_COLORS,
+		(void**)bmBuffer, NULL, 0);
+}
+
+HBITMAP TCImage::createMask(bool updateSource /*= false*/)
+{
+	TCByte *dstData;
+	int dstBytesPerLine;
+	int srcBytesPerLine = getRowSize();
+	HBITMAP hNewBitmap = NULL;
+	int maskSize;
+
+	dstBytesPerLine = roundUp((width + 7) / 8, 2);
+	maskSize = dstBytesPerLine * height;
+	dstData = new TCByte[maskSize];
+	memset(dstData, 0, maskSize);
+	for (int y = 0; y < height; y++)
+	{
+		int srcYOffset = flipped ? srcBytesPerLine * (height - y - 1) :
+			srcBytesPerLine * y;
+		int dstYOffset = dstBytesPerLine * y;
+
+		for (int x = 0; x < width; x++)
+		{
+			TCByte alpha = imageData[srcYOffset + x * 4 + 3];
+
+			if (alpha < 128)
+			{
+				int byteOffset = dstYOffset + x / 8;
+				int bitOffset = 7 - (x % 8);
+
+				dstData[byteOffset] |= (1 << bitOffset);
+				if (updateSource)
+				{
+					imageData[srcYOffset + x * 4 + 0] = 0;
+					imageData[srcYOffset + x * 4 + 1] = 0;
+					imageData[srcYOffset + x * 4 + 2] = 0;
+				}
+			}
+		}
+	}
+	hNewBitmap = CreateBitmap(width, height, 1, 1, dstData);
+	delete dstData;
+	return hNewBitmap;
+}
+
+void TCImage::getBmpAndMask(
+	HBITMAP &hBitmap,
+	HBITMAP &hMask,
+	bool updateSource /*= false*/)
+{
+	HDC hdc = CreateCompatibleDC(NULL);
+	BYTE *bmBuffer = NULL;
+	int srcBytesPerLine = getRowSize();
+	int dstBytesPerLine = roundUp(width * 3, 4);
+
+	hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer);
+	hMask = createMask(updateSource);
+	for (int y = 0; y < height; y++)
+	{
+		int srcYOffset = srcBytesPerLine * y;
+		int dstYOffset = dstBytesPerLine * y;
+
+		for (int x = 0; x < width; x++)
+		{
+			bmBuffer[dstYOffset + x * 3 + 0] =
+				imageData[srcYOffset + x * 4 + 2];
+			bmBuffer[dstYOffset + x * 3 + 1] =
+				imageData[srcYOffset + x * 4 + 1];
+			bmBuffer[dstYOffset + x * 3 + 2] =
+				imageData[srcYOffset + x * 4 + 0];
+		}
+	}
+	DeleteDC(hdc);
+}
+
+HICON TCImage::loadIconFromPngResource(HMODULE hModule, int resourceId)
+{
+	TCImage *image = TCImage::createFromResource(hModule, resourceId, 4, true);
+
+	if (image != NULL)
+	{
+		HBITMAP hBitmap;
+		HBITMAP hMask;
+		ICONINFO ii;
+		HICON hIcon;
+
+		image->getBmpAndMask(hBitmap, hMask, true);
+		image->release();
+		memset(&ii, 0, sizeof(ii));
+		ii.fIcon = FALSE;
+		ii.hbmMask = hMask;
+		ii.hbmColor = hBitmap;
+		hIcon = CreateIconIndirect(&ii);
+		DeleteObject(hBitmap);
+		DeleteObject(hMask);
+		return hIcon;
+	}
+	return NULL;
+}
+
 #endif // WIN32

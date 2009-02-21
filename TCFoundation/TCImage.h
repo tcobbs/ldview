@@ -65,6 +65,13 @@ public:
 #ifdef WIN32
 	static TCImage *createFromResource(HMODULE hModule, int resourceId,
 		int lineAlignment = 1, bool flipped = false);
+	static HBITMAP createDIBSection(HDC hBitmapDC, int bitmapWidth,
+		int bitmapHeight, int hDPI, int vDPI, BYTE **bmBuffer);
+	static HICON loadIconFromPngResource(HMODULE hModule, int resourceId);
+
+	void getBmpAndMask(HBITMAP &hBitmap, HBITMAP &hMask,
+		bool updateSource = false);
+	HBITMAP createMask(bool updateSource = false);
 #endif // WIN32
 protected:
 	virtual ~TCImage(void);

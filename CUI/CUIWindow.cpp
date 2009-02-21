@@ -2611,13 +2611,14 @@ void CUIWindow::setMenuCheck(
 	bool radio)
 {
 	MENUITEMINFO itemInfo;
-	char title[256];
+	//char title[256];
 
 	memset(&itemInfo, 0, sizeof(MENUITEMINFO));
 	itemInfo.cbSize = sizeof(MENUITEMINFO);
-	itemInfo.fMask = MIIM_STATE | MIIM_TYPE;
-	itemInfo.dwTypeData = title;
-	itemInfo.cch = 256;
+	itemInfo.fMask = MIIM_STATE;// | MIIM_TYPE;
+	//itemInfo.fType = MFT_STRING;
+	//itemInfo.dwTypeData = title;
+	//itemInfo.cch = 256;
 	GetMenuItemInfo(hParentMenu, uItem, FALSE, &itemInfo);
 	if (checked)
 	{
