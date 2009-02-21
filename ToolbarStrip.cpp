@@ -1654,6 +1654,11 @@ void ToolbarStrip::doFlatShading(void)
 	if (doCheck(m_flat, IDC_FLAT_SHADING))
 	{
 		m_prefs->setUsesFlatShading(m_flat);
+		if (m_flat && m_smoothCurves)
+		{
+			m_prefs->setPerformSmoothing(false);
+			checksReflect();
+		}
 		forceRedraw();
 	}
 }
@@ -1681,6 +1686,11 @@ void ToolbarStrip::doSmoothCurves(void)
 	if (doCheck(m_smoothCurves, IDC_SMOOTH_CURVES))
 	{
 		m_prefs->setPerformSmoothing(m_smoothCurves);
+		if (m_flat && m_smoothCurves)
+		{
+			m_prefs->setUseFlatShading(false);
+			checksReflect();
+		}
 		forceRedraw();
 	}
 }
@@ -1803,6 +1813,18 @@ void ToolbarStrip::checksReflect(void)
 	checkReflect(m_bfc, m_prefs->getBfc(), IDC_BFC);
 	checkReflect(m_showAxes, m_prefs->getShowAxes(), IDC_SHOW_AXES);
 	checkReflect(m_randomColors, m_prefs->getRandomColors(), IDC_RANDOM_COLORS);
+	checkReflect(m_allConditionals, m_prefs->getShowAllConditionalLines(),
+		IDC_ALL_CONDITIONAL);
+	checkReflect(m_conditionalControls,
+		m_prefs->getShowConditionalControlPoints(), IDC_CONDITIONAL_CONTROLS);
+	checkReflect(m_flat, m_prefs->getUseFlatShading(), IDC_FLAT_SHADING);
+	checkReflect(m_lowStuds, !m_prefs->getQualityStuds(), IDC_STUD_QUALITY);
+	checkReflect(m_partBBoxes, m_prefs->getBoundingBoxesOnly(),
+		IDC_PART_BOUNDING_BOXES);
+	checkReflect(m_smoothCurves, m_prefs->getPerformSmoothing(),
+		IDC_SMOOTH_CURVES);
+	checkReflect(m_transDefaultColor, m_prefs->getTransDefaultColor(),
+		IDC_TRANS_DEFAULT_COLOR);
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)
