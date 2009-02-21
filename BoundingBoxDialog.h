@@ -12,7 +12,8 @@ class BoundingBoxDialog: public CUIDialog
 {
 public:
 	BoundingBoxDialog(HINSTANCE hInstance);
-	void show(ModelWindow *modelWindow);
+	void toggle(ModelWindow *modelWindow);
+	bool isVisible(void);
 protected:
 	virtual LRESULT doClose(void);
 

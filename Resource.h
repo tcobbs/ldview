@@ -104,6 +104,9 @@
 #define IDR_TB_LAST_STEP				510
 #define IDR_TB_NEXT_STEP				511
 #define IDR_TB_PREV_STEP				512
+#define IDR_TB_HELP						513
+#define IDR_TB_MODELTREE				514
+#define IDR_TB_MODELBBOX				515
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_STUD_QUALITY                1002

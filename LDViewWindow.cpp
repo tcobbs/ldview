@@ -3424,7 +3424,7 @@ LRESULT LDViewWindow::doCommand(int itemId, int notifyCode, HWND controlHWnd)
 		case ID_TOOLS_MODELTREE:
 			return showModelTree();
 		case ID_TOOLS_BOUNDINGBOX:
-			return showBoundingBox();
+			return toggleBoundingBox();
 		case ID_TOOLS_MPD:
 			return showMpd();
 /*
@@ -5242,7 +5242,16 @@ LRESULT LDViewWindow::showModelTree(void)
 	return 0;
 }
 
-LRESULT LDViewWindow::showBoundingBox(void)
+bool LDViewWindow::isBoundingBoxVisible(void)
+{
+	if (boundingBoxDialog != NULL)
+	{
+		return boundingBoxDialog->isVisible();
+	}
+	return false;
+}
+
+LRESULT LDViewWindow::toggleBoundingBox(void)
 {
 	if (modelWindow)
 	{
@@ -5250,9 +5259,18 @@ LRESULT LDViewWindow::showBoundingBox(void)
 		{
 			boundingBoxDialog = new BoundingBoxDialog(getLanguageModule());
 		}
-		boundingBoxDialog->show(modelWindow);
+		boundingBoxDialog->toggle(modelWindow);
 	}
 	return 0;
+}
+
+void LDViewWindow::boundingBoxToggled(void)
+{
+	if (toolbarStrip != NULL)
+	{
+		toolbarStrip->checksReflect();
+	}
+	setMenuCheck(hToolsMenu, ID_TOOLS_BOUNDINGBOX, isBoundingBoxVisible());
 }
 
 LRESULT LDViewWindow::showMpd(void)

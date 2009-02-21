@@ -131,6 +131,7 @@ public:
 	virtual void stopAnimation(void);
 
 	void orthoView(void);
+	void boundingBoxToggled(void);
 
 	static void initCommonControls(DWORD mask);
 	static bool chDirFromFilename(const char* filename, char* outFilename);

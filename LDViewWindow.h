@@ -113,6 +113,9 @@ class LDViewWindow: public CUIWindow
 		virtual void stopAnimation(void);
 		virtual void switchModes(void);
 		virtual void zoomToFit(void);
+		virtual LRESULT toggleBoundingBox(void);
+		bool isBoundingBoxVisible(void);
+		void boundingBoxToggled(void);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
@@ -309,7 +312,6 @@ class LDViewWindow: public CUIWindow
 		//virtual void updateBFCMenu(void);
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
-		virtual LRESULT showBoundingBox(void);
 		virtual LRESULT showMpd(void);
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
 			LDPartsList *partsList, const char *filename);

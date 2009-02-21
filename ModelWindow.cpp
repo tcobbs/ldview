@@ -5096,3 +5096,8 @@ void ModelWindow::setSaveZoomToFit(bool value, bool commit /*= false*/)
 		TCUserDefaults::setLongForKey(value, SAVE_ZOOM_TO_FIT_KEY, false);
 	}
 }
+
+void ModelWindow::boundingBoxToggled(void)
+{
+	((LDViewWindow*)parentWindow)->boundingBoxToggled();
+}

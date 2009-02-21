@@ -83,9 +83,15 @@ void BoundingBoxDialog::showBoundingBox(bool value)
 	{
 		modelViewer->setShowBoundingBox(value);
 	}
+	m_modelWindow->boundingBoxToggled();
 }
 
-void BoundingBoxDialog::show(ModelWindow *modelWindow)
+bool BoundingBoxDialog::isVisible(void)
+{
+	return IsWindowVisible(hWindow) ? true : false;
+}
+
+void BoundingBoxDialog::toggle(ModelWindow *modelWindow)
 {
 	setModelWindow(modelWindow);
 	if (hWindow == NULL)
@@ -94,8 +100,16 @@ void BoundingBoxDialog::show(ModelWindow *modelWindow)
 
 		createDialog(IDD_BOUNDING_BOX, hParentWnd);
 	}
-	ShowWindow(hWindow, SW_SHOW);
-	showBoundingBox(true);
+	if (IsWindowVisible(hWindow))
+	{
+		ShowWindow(hWindow, SW_HIDE);
+		showBoundingBox(false);
+	}
+	else
+	{
+		ShowWindow(hWindow, SW_SHOW);
+		showBoundingBox(true);
+	}
 }
 
 LDrawModelViewer *BoundingBoxDialog::getModelViewer(void)
