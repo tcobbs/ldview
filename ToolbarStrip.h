@@ -183,6 +183,7 @@ protected:
 	bool m_partBBoxes;
 	bool m_smoothCurves;
 	bool m_transDefaultColor;
+	bool m_modelBoundingBox;
 	LDInputHandler::ViewMode m_viewMode;
 
 	bool m_showMain;
