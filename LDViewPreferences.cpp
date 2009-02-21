@@ -736,7 +736,7 @@ void LDViewPreferences::setQualityStuds(bool value)
 		if (hPrimitivesPage)
 		{
 			SendDlgItemMessage(hPrimitivesPage, IDC_STUD_QUALITY, BM_SETCHECK,
-				value, 0);
+				!value, 0);
 		}
 	}
 }
