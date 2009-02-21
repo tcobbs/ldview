@@ -206,6 +206,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 #ifdef _QT
 	qtime.start();
 #endif
+#ifdef COCOA
+	FRAME_TIME = nil;
+#endif // COCOA
 	updateFrameTime(true);
 }
 

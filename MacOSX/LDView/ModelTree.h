@@ -20,6 +20,7 @@ class LDModelTree;
 	IBOutlet NSBox *optionsBox;
 	IBOutlet NSButton *showHideOptionsButton;
 	IBOutlet NSMatrix *optionsMatrix;
+	IBOutlet NSButton *highlightCheck;
 	LDModelTree *modelTree;
 	ModelTreeItem *rootModelTreeItem;
 	float showHideStartY;
@@ -34,5 +35,6 @@ class LDModelTree;
 - (NSOutlineView *)outlineView;
 - (BOOL)canCopy;
 - (IBAction)copy:(id)sender;
+- (void)updateHighlight;
 
 @end
