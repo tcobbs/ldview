@@ -116,6 +116,8 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT toggleBoundingBox(void);
 		bool isBoundingBoxVisible(void);
 		void boundingBoxToggled(void);
+		bool isTopmost(void);
+		virtual LRESULT switchTopmost(void);
 
 		static char* getLDrawDir(void);
 		char* lastOpenPath(char* pathKey = NULL);
@@ -241,7 +243,6 @@ class LDViewWindow: public CUIWindow
 		virtual void chooseNewLDrawDir(void);
 		virtual void createStatusBar(void);
 		virtual void createToolbar(void);
-		virtual LRESULT switchTopmost(void);
 		virtual LRESULT switchVisualStyle(void);
 		virtual void removeToolbar(void);
 		virtual void addToolbar(void);
@@ -261,7 +262,7 @@ class LDViewWindow: public CUIWindow
 		virtual void reflectVideoMode(void);
 		//virtual void toolbarCheckReflect(bool &value, bool prefsValue,
 		//	LPARAM commandID);
-		//virtual void toolbarChecksReflect(void);
+		virtual void toolbarChecksReflect(void);
 		virtual int getStatusBarHeight(void);
 		virtual int getDockedHeight(void);
 		virtual int getToolbarHeight(void);

@@ -3053,6 +3053,7 @@ LRESULT LDViewWindow::switchTopmost(void)
 	topmost = !topmost;
 	TCUserDefaults::setLongForKey(topmost ? 1 : 0, TOPMOST_KEY, false);
 	reflectTopmost();
+	toolbarChecksReflect();
 	return 0;
 }
 
@@ -3062,6 +3063,11 @@ void LDViewWindow::reflectVisualStyle(void)
 	{
 		setMenuCheck(hViewMenu, ID_VIEW_VISUALSTYLE, visualStyleEnabled);
 	}
+}
+
+bool LDViewWindow::isTopmost(void)
+{
+	return topmost;
 }
 
 LRESULT LDViewWindow::switchVisualStyle(void)
@@ -5146,6 +5152,14 @@ void LDViewWindow::reflectVideoMode(void)
 //	toolbarCheckReflect(bfc, prefs->getBfc(), IDC_BFC);
 //}
 
+void LDViewWindow::toolbarChecksReflect(void)
+{
+	if (toolbarStrip != NULL)
+	{
+		toolbarStrip->checksReflect();
+	}
+}
+
 void LDViewWindow::applyPrefs(void)
 {
 	loadSettings();
@@ -5156,11 +5170,7 @@ void LDViewWindow::applyPrefs(void)
 	reflectTopmost();
 	reflectPolling();
 	reflectVideoMode();
-	if (toolbarStrip)
-	{
-		toolbarStrip->checksReflect();
-	}
-	//toolbarChecksReflect();
+	toolbarChecksReflect();
 	if (TCUserDefaults::longForKey(WINDOW_MAXIMIZED_KEY, 0, false))
 	{
 		ShowWindow(hWindow, SW_MAXIMIZE);
@@ -5266,10 +5276,7 @@ LRESULT LDViewWindow::toggleBoundingBox(void)
 
 void LDViewWindow::boundingBoxToggled(void)
 {
-	if (toolbarStrip != NULL)
-	{
-		toolbarStrip->checksReflect();
-	}
+	toolbarChecksReflect();
 	setMenuCheck(hToolsMenu, ID_TOOLS_BOUNDINGBOX, isBoundingBoxVisible());
 }
 

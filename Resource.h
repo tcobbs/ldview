@@ -107,6 +107,7 @@
 #define IDR_TB_HELP						513
 #define IDR_TB_MODELTREE				514
 #define IDR_TB_MODELBBOX				515
+#define IDR_TB_TOPMOST					516
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_STUD_QUALITY                1002
