@@ -181,27 +181,27 @@ END
 // Dialog
 //
 
-IDD_ABOUT_BOX DIALOGEX 0, 0, 245, 190
+IDD_ABOUT_BOX DIALOGEX 0, 0, 245, 194
 STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_3DLOOK | WS_POPUP | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_CONTROLPARENT
 CAPTION "About LDView"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,188,7,50,15,BS_NOTIFY
-    ICON            IDI_APP_ICON,IDC_STATIC,15,10,20,20
+    ICON            IDI_APP_ICON,IDC_STATIC,15,10,21,20
     LTEXT           "LDView %s (%s)\n%s",IDC_VERSION_LABEL,50,10,135,28,
                     SS_NOPREFIX
     LTEXT           "Special thanks for contributions to LDView go to the following (mostly in alphabetic order):",
                     IDC_STATIC,15,40,215,20
     LTEXT           "LEGO® and the LEGO logo are registered trademarks of the LEGO Group, which does not sponsor, endorse, or authorize this program.",
-                    IDC_STATIC,15,162,215,20
-    GROUPBOX        "",IDC_STATIC,0,155,245,30
-    LTEXT           "",IDC_STATIC,0,152,8,36,0,WS_EX_TRANSPARENT
-    LTEXT           "",IDC_STATIC,237,150,8,36,0,WS_EX_TRANSPARENT
-    LTEXT           "",IDC_STATIC,0,180,245,8,0,WS_EX_TRANSPARENT
-    LTEXT           "Chris Conley\nLars C. Hassing\nDon Heyse\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nWilly Tschager\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",
-                    IDC_STATIC,25,61,203,93
+                    IDC_STATIC,15,168,215,17
+    GROUPBOX        "",IDC_STATIC,0,161,245,30
+    LTEXT           "",IDC_STATIC,0,160,8,36,0,WS_EX_TRANSPARENT
+    LTEXT           "",IDC_STATIC,237,160,8,36,0,WS_EX_TRANSPARENT
+    LTEXT           "",IDC_STATIC,0,186,245,8,0,WS_EX_TRANSPARENT
+    LTEXT           "Chris Conley\nLars C. Hassing\nDon Heyse\nPhilippe Hurbain\nRusty Larner\nAlex Raftis\nCarsten Schmitz\nWilly Tschager\nMartijn Zwaal\n\nJean-loup Gailly, Mark Adler, and the rest of the zlib team\nGlenn Randers-Pehrson and the rest of the libpng team",
+                    IDC_STATIC,25,61,203,97
 END
 
 IDD_LDRAWDIR DIALOG DISCARDABLE  0, 0, 221, 63
@@ -1084,7 +1084,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 238
         TOPMARGIN, 7
-        BOTTOMMARGIN, 183
+        BOTTOMMARGIN, 187
     END
 
     IDD_LDRAWDIR, DIALOG
