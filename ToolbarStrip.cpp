@@ -20,6 +20,10 @@
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
 
+
+#define NUM_DEFAULT_TB_BUTTONS 12
+
+
 #ifdef USE_GDIPLUS
 typedef Gdiplus::Status (WINAPI *PFNGDIPLUSSTARTUP)(
     OUT ULONG_PTR *token,
@@ -277,7 +281,7 @@ void ToolbarStrip::fillMainToolbar(void)
 	{
 		long commandID = m_mainButtonInfos[i].getCommandId();
 
-		if (i < 11)
+		if (i < NUM_DEFAULT_TB_BUTTONS)
 		{
 			mainButtonIDs.push_back(commandID);
 		}
@@ -969,6 +973,11 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("SelectView")), ID_VIEWANGLE,
 			TBSTYLE_DROPDOWN | BTNS_WHOLEDROPDOWN);
+		IntVector viewCommandIds;
+		viewCommandIds.push_back(IDR_TB_EXAMINE);
+		viewCommandIds.push_back(IDR_TB_FLYTHROUGH);
+		addTbStateButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Preferences")), IDR_TB_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
@@ -1002,11 +1011,6 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			TCLocalStrings::get(_UC("FullScreen")), IDR_TB_FULLSCREEN);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ZoomToFit")), IDR_TB_ZOOMTOFIT);
-		IntVector viewCommandIds;
-		viewCommandIds.push_back(IDR_TB_EXAMINE);
-		viewCommandIds.push_back(IDR_TB_FLYTHROUGH);
-		addTbStateButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Errors&Warnings")), IDR_TB_ERRORS);
 	}
