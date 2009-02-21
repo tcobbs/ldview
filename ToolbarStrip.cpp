@@ -70,6 +70,7 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	m_commandMap[ID_HELP_CONTENTS] = IDR_TB_HELP;
 	m_commandMap[ID_TOOLS_MODELTREE] = IDR_TB_MODELTREE;
 	m_commandMap[ID_TOOLS_BOUNDINGBOX] = IDR_TB_MODELBBOX;
+	m_commandMap[ID_VIEW_ALWAYSONTOP] = IDR_TB_TOPMOST;
 }
 
 ToolbarStrip::~ToolbarStrip(void)
@@ -668,6 +669,7 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_HELP_CONTENTS:
 	case ID_TOOLS_MODELTREE:
 	case ID_TOOLS_BOUNDINGBOX:
+	case ID_VIEW_ALWAYSONTOP:
 		// Forward all these messages to LDViewWindow.
 		return SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
 			MAKEWPARAM(commandId, notifyCode), (LPARAM)control);
@@ -956,7 +958,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_partBBoxes = m_prefs->getBoundingBoxesOnly();
 		m_smoothCurves = m_prefs->getPerformSmoothing();
 		m_transDefaultColor = m_prefs->getTransDefaultColor();
-		m_modelBoundingBox = false;
+		m_modelBoundingBox = m_ldviewWindow->isBoundingBoxVisible();
+		m_topmost = m_ldviewWindow->isTopmost();
 		syncViewMode();
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Wireframe")), IDC_WIREFRAME,
@@ -1012,6 +1015,9 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			m_lowStuds);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("FullScreen")), ID_VIEW_FULLSCREEN);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("AlwaysOnTop")), ID_VIEW_ALWAYSONTOP,
+			m_topmost);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ZoomToFit")), ID_VIEW_ZOOMTOFIT);
 		addTbButtonInfo(m_mainButtonInfos,
@@ -1837,6 +1843,7 @@ void ToolbarStrip::checksReflect(void)
 		IDC_TRANS_DEFAULT_COLOR);
 	checkReflect(m_modelBoundingBox, m_ldviewWindow->isBoundingBoxVisible(),
 		ID_TOOLS_BOUNDINGBOX);
+	checkReflect(m_topmost, m_ldviewWindow->isTopmost(), ID_VIEW_ALWAYSONTOP);
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)
