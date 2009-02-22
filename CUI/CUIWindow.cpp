@@ -781,561 +781,398 @@ LRESULT CUIWindow::doGetMinMaxInfo(HWND hWnd, LPMINMAXINFO minMaxInfo)
 
 void CUIWindow::printMessageName(UINT message)
 {
-	char *string = NULL;
+	printf("message: %s\n", getMessageName(message));
+}
 
+std::string CUIWindow::getMessageName(UINT message)
+{
 	switch (message)
 	{
 	case WM_NULL:
-		string = "WM_NULL";
-		break;
+		return "WM_NULL";
 	case WM_CREATE:
-		string = "WM_CREATE";
-		break;
+		return "WM_CREATE";
 	case WM_DESTROY:
-		string = "WM_DESTROY";
-		break;
+		return "WM_DESTROY";
 	case WM_MOVE:
-		string = "WM_MOVE";
-		break;
+		return "WM_MOVE";
 	case WM_SIZE:
-		string = "WM_SIZE";
-		break;
+		return "WM_SIZE";
 	case WM_ACTIVATE:
-		string = "WM_ACTIVATE";
-		break;
+		return "WM_ACTIVATE";
 	case WM_SETFOCUS:
-		string = "WM_SETFOCUS";
-		break;
+		return "WM_SETFOCUS";
 	case WM_KILLFOCUS:
-		string = "WM_KILLFOCUS";
-		break;
+		return "WM_KILLFOCUS";
 	case WM_ENABLE:
-		string = "WM_ENABLE";
-		break;
+		return "WM_ENABLE";
 	case WM_SETREDRAW:
-		string = "WM_SETREDRAW";
-		break;
+		return "WM_SETREDRAW";
 	case WM_SETTEXT:
-		string = "WM_SETTEXT";
-		break;
+		return "WM_SETTEXT";
 	case WM_GETTEXT:
-		string = "WM_GETTEXT";
-		break;
+		return "WM_GETTEXT";
 	case WM_GETTEXTLENGTH:
-		string = "WM_GETTEXTLENGTH";
-		break;
+		return "WM_GETTEXTLENGTH";
 	case WM_PAINT:
-		string = "WM_PAINT";
-		break;
+		return "WM_PAINT";
 	case WM_CLOSE:
-		string = "WM_CLOSE";
-		break;
+		return "WM_CLOSE";
 	case WM_QUERYENDSESSION:
-		string = "WM_QUERYENDSESSION";
-		break;
+		return "WM_QUERYENDSESSION";
 	case WM_QUIT:
-		string = "WM_QUIT";
-		break;
+		return "WM_QUIT";
 	case WM_QUERYOPEN:
-		string = "WM_QUERYOPEN";
-		break;
+		return "WM_QUERYOPEN";
 	case WM_ERASEBKGND:
-		string = "WM_ERASEBKGND";
-		break;
+		return "WM_ERASEBKGND";
 	case WM_SYSCOLORCHANGE:
-		string = "WM_SYSCOLORCHANGE";
-		break;
+		return "WM_SYSCOLORCHANGE";
 	case WM_ENDSESSION:
-		string = "WM_ENDSESSION";
-		break;
+		return "WM_ENDSESSION";
 	case WM_SHOWWINDOW:
-		string = "WM_SHOWWINDOW";
-		break;
+		return "WM_SHOWWINDOW";
 	case WM_SETTINGCHANGE:
-		string = "WM_SETTINGCHANGE";
-		break;
+		return "WM_SETTINGCHANGE";
 	case WM_DEVMODECHANGE:
-		string = "WM_DEVMODECHANGE";
-		break;
+		return "WM_DEVMODECHANGE";
 	case WM_ACTIVATEAPP:
-		string = "WM_ACTIVATEAPP";
-		break;
+		return "WM_ACTIVATEAPP";
 	case WM_FONTCHANGE:
-		string = "WM_FONTCHANGE";
-		break;
+		return "WM_FONTCHANGE";
 	case WM_TIMECHANGE:
-		string = "WM_TIMECHANGE";
-		break;
+		return "WM_TIMECHANGE";
 	case WM_CANCELMODE:
-		string = "WM_CANCELMODE";
-		break;
+		return "WM_CANCELMODE";
 	case WM_SETCURSOR:
-		string = "WM_SETCURSOR";
-		break;
+		return "WM_SETCURSOR";
 	case WM_MOUSEACTIVATE:
-		string = "WM_MOUSEACTIVATE";
-		break;
+		return "WM_MOUSEACTIVATE";
 	case WM_CHILDACTIVATE:
-		string = "WM_CHILDACTIVATE";
-		break;
+		return "WM_CHILDACTIVATE";
 	case WM_QUEUESYNC:
-		string = "WM_QUEUESYNC";
-		break;
+		return "WM_QUEUESYNC";
 	case WM_GETMINMAXINFO:
-		string = "WM_GETMINMAXINFO";
-		break;
+		return "WM_GETMINMAXINFO";
 	case WM_PAINTICON:
-		string = "WM_PAINTICON";
-		break;
+		return "WM_PAINTICON";
 	case WM_ICONERASEBKGND:
-		string = "WM_ICONERASEBKGND";
-		break;
+		return "WM_ICONERASEBKGND";
 	case WM_NEXTDLGCTL:
-		string = "WM_NEXTDLGCTL";
-		break;
+		return "WM_NEXTDLGCTL";
 	case WM_SPOOLERSTATUS:
-		string = "WM_SPOOLERSTATUS";
-		break;
+		return "WM_SPOOLERSTATUS";
 	case WM_DRAWITEM:
-		string = "WM_DRAWITEM";
-		break;
+		return "WM_DRAWITEM";
 	case WM_MEASUREITEM:
-		string = "WM_MEASUREITEM";
-		break;
+		return "WM_MEASUREITEM";
 	case WM_DELETEITEM:
-		string = "WM_DELETEITEM";
-		break;
+		return "WM_DELETEITEM";
 	case WM_VKEYTOITEM:
-		string = "WM_VKEYTOITEM";
-		break;
+		return "WM_VKEYTOITEM";
 	case WM_CHARTOITEM:
-		string = "WM_CHARTOITEM";
-		break;
+		return "WM_CHARTOITEM";
 	case WM_SETFONT:
-		string = "WM_SETFONT";
-		break;
+		return "WM_SETFONT";
 	case WM_GETFONT:
-		string = "WM_GETFONT";
-		break;
+		return "WM_GETFONT";
 	case WM_SETHOTKEY:
-		string = "WM_SETHOTKEY";
-		break;
+		return "WM_SETHOTKEY";
 	case WM_GETHOTKEY:
-		string = "WM_GETHOTKEY";
-		break;
+		return "WM_GETHOTKEY";
 	case WM_QUERYDRAGICON:
-		string = "WM_QUERYDRAGICON";
-		break;
+		return "WM_QUERYDRAGICON";
 	case WM_COMPAREITEM:
-		string = "WM_COMPAREITEM";
-		break;
+		return "WM_COMPAREITEM";
 	case WM_COMPACTING:
-		string = "WM_COMPACTING";
-		break;
+		return "WM_COMPACTING";
 	case WM_COMMNOTIFY:
-		string = "WM_COMMNOTIFY";
-		break;
+		return "WM_COMMNOTIFY";
 	case WM_WINDOWPOSCHANGING:
-		string = "WM_WINDOWPOSCHANGING";
-		break;
+		return "WM_WINDOWPOSCHANGING";
 	case WM_WINDOWPOSCHANGED:
-		string = "WM_WINDOWPOSCHANGED";
-		break;
+		return "WM_WINDOWPOSCHANGED";
 	case WM_POWER:
-		string = "WM_POWER";
-		break;
+		return "WM_POWER";
 	case WM_COPYDATA:
-		string = "WM_COPYDATA";
-		break;
+		return "WM_COPYDATA";
 	case WM_CANCELJOURNAL:
-		string = "WM_CANCELJOURNAL";
-		break;
+		return "WM_CANCELJOURNAL";
 	case WM_NOTIFY:
-		string = "WM_NOTIFY";
-		break;
+		return "WM_NOTIFY";
 	case WM_INPUTLANGCHANGEREQUEST:
-		string = "WM_INPUTLANGCHANGEREQUEST";
-		break;
+		return "WM_INPUTLANGCHANGEREQUEST";
 	case WM_INPUTLANGCHANGE:
-		string = "WM_INPUTLANGCHANGE";
-		break;
+		return "WM_INPUTLANGCHANGE";
 	case WM_TCARD:
-		string = "WM_TCARD";
-		break;
+		return "WM_TCARD";
 	case WM_HELP:
-		string = "WM_HELP";
-		break;
+		return "WM_HELP";
 	case WM_USERCHANGED:
-		string = "WM_USERCHANGED";
-		break;
+		return "WM_USERCHANGED";
 	case WM_NOTIFYFORMAT:
-		string = "WM_NOTIFYFORMAT";
-		break;
+		return "WM_NOTIFYFORMAT";
 	case WM_CONTEXTMENU:
-		string = "WM_CONTEXTMENU";
-		break;
+		return "WM_CONTEXTMENU";
 	case WM_STYLECHANGING:
-		string = "WM_STYLECHANGING";
-		break;
+		return "WM_STYLECHANGING";
 	case WM_STYLECHANGED:
-		string = "WM_STYLECHANGED";
-		break;
+		return "WM_STYLECHANGED";
 	case WM_DISPLAYCHANGE:
-		string = "WM_DISPLAYCHANGE";
-		break;
+		return "WM_DISPLAYCHANGE";
 	case WM_GETICON:
-		string = "WM_GETICON";
-		break;
+		return "WM_GETICON";
 	case WM_SETICON:
-		string = "WM_SETICON";
-		break;
+		return "WM_SETICON";
 	case WM_NCCREATE:
-		string = "WM_NCCREATE";
-		break;
+		return "WM_NCCREATE";
 	case WM_NCDESTROY:
-		string = "WM_NCDESTROY";
-		break;
+		return "WM_NCDESTROY";
 	case WM_NCCALCSIZE:
-		string = "WM_NCCALCSIZE";
-		break;
+		return "WM_NCCALCSIZE";
 	case WM_NCHITTEST:
-		string = "WM_NCHITTEST";
-		break;
+		return "WM_NCHITTEST";
 	case WM_NCPAINT:
-		string = "WM_NCPAINT";
-		break;
+		return "WM_NCPAINT";
 	case WM_NCACTIVATE:
-		string = "WM_NCACTIVATE";
-		break;
+		return "WM_NCACTIVATE";
 	case WM_GETDLGCODE:
-		string = "WM_GETDLGCODE";
-		break;
+		return "WM_GETDLGCODE";
 	case WM_SYNCPAINT:
-		string = "WM_SYNCPAINT";
-		break;
+		return "WM_SYNCPAINT";
 	case WM_NCMOUSEMOVE:
-		string = "WM_NCMOUSEMOVE";
-		break;
+		return "WM_NCMOUSEMOVE";
 	case WM_NCLBUTTONDOWN:
-		string = "WM_NCLBUTTONDOWN";
-		break;
+		return "WM_NCLBUTTONDOWN";
 	case WM_NCLBUTTONUP:
-		string = "WM_NCLBUTTONUP";
-		break;
+		return "WM_NCLBUTTONUP";
 	case WM_NCLBUTTONDBLCLK:
-		string = "WM_NCLBUTTONDBLCLK";
-		break;
+		return "WM_NCLBUTTONDBLCLK";
 	case WM_NCRBUTTONDOWN:
-		string = "WM_NCRBUTTONDOWN";
-		break;
+		return "WM_NCRBUTTONDOWN";
 	case WM_NCRBUTTONUP:
-		string = "WM_NCRBUTTONUP";
-		break;
+		return "WM_NCRBUTTONUP";
 	case WM_NCRBUTTONDBLCLK:
-		string = "WM_NCRBUTTONDBLCLK";
-		break;
+		return "WM_NCRBUTTONDBLCLK";
 	case WM_NCMBUTTONDOWN:
-		string = "WM_NCMBUTTONDOWN";
-		break;
+		return "WM_NCMBUTTONDOWN";
 	case WM_NCMBUTTONUP:
-		string = "WM_NCMBUTTONUP";
-		break;
+		return "WM_NCMBUTTONUP";
 	case WM_NCMBUTTONDBLCLK:
-		string = "WM_NCMBUTTONDBLCLK";
-		break;
+		return "WM_NCMBUTTONDBLCLK";
 	case WM_KEYDOWN:
-		string = "WM_KEYDOWN";
-		break;
+		return "WM_KEYDOWN";
 	case WM_KEYUP:
-		string = "WM_KEYUP";
-		break;
+		return "WM_KEYUP";
 	case WM_CHAR:
-		string = "WM_CHAR";
-		break;
+		return "WM_CHAR";
 	case WM_DEADCHAR:
-		string = "WM_DEADCHAR";
-		break;
+		return "WM_DEADCHAR";
 	case WM_SYSKEYDOWN:
-		string = "WM_SYSKEYDOWN";
-		break;
+		return "WM_SYSKEYDOWN";
 	case WM_SYSKEYUP:
-		string = "WM_SYSKEYUP";
-		break;
+		return "WM_SYSKEYUP";
 	case WM_SYSCHAR:
-		string = "WM_SYSCHAR";
-		break;
+		return "WM_SYSCHAR";
 	case WM_SYSDEADCHAR:
-		string = "WM_SYSDEADCHAR";
-		break;
+		return "WM_SYSDEADCHAR";
 	case WM_KEYLAST:
-		string = "WM_KEYLAST";
-		break;
+		return "WM_KEYLAST";
 	case WM_IME_STARTCOMPOSITION:
-		string = "WM_IME_STARTCOMPOSITION";
-		break;
+		return "WM_IME_STARTCOMPOSITION";
 	case WM_IME_ENDCOMPOSITION:
-		string = "WM_IME_ENDCOMPOSITION";
-		break;
+		return "WM_IME_ENDCOMPOSITION";
 	case WM_IME_COMPOSITION:
-		string = "WM_IME_COMPOSITION";
-		break;
+		return "WM_IME_COMPOSITION";
 	case WM_INITDIALOG:
-		string = "WM_INITDIALOG";
-		break;
+		return "WM_INITDIALOG";
 	case WM_COMMAND:
-		string = "WM_COMMAND";
-		break;
+		return "WM_COMMAND";
 	case WM_SYSCOMMAND:
-		string = "WM_SYSCOMMAND";
-		break;
+		return "WM_SYSCOMMAND";
 	case WM_TIMER:
-		string = "WM_TIMER";
-		break;
+		return "WM_TIMER";
 	case WM_HSCROLL:
-		string = "WM_HSCROLL";
-		break;
+		return "WM_HSCROLL";
 	case WM_VSCROLL:
-		string = "WM_VSCROLL";
-		break;
+		return "WM_VSCROLL";
 	case WM_INITMENU:
-		string = "WM_INITMENU";
-		break;
+		return "WM_INITMENU";
 	case WM_INITMENUPOPUP:
-		string = "WM_INITMENUPOPUP";
-		break;
+		return "WM_INITMENUPOPUP";
 	case WM_MENUSELECT:
-		string = "WM_MENUSELECT";
-		break;
+		return "WM_MENUSELECT";
 	case WM_MENUCHAR:
-		string = "WM_MENUCHAR";
-		break;
+		return "WM_MENUCHAR";
 	case WM_ENTERIDLE:
-		string = "WM_ENTERIDLE";
-		break;
+		return "WM_ENTERIDLE";
 	case WM_CTLCOLORMSGBOX:
-		string = "WM_CTLCOLORMSGBOX";
-		break;
+		return "WM_CTLCOLORMSGBOX";
 	case WM_CTLCOLOREDIT:
-		string = "WM_CTLCOLOREDIT";
-		break;
+		return "WM_CTLCOLOREDIT";
 	case WM_CTLCOLORLISTBOX:
-		string = "WM_CTLCOLORLISTBOX";
-		break;
+		return "WM_CTLCOLORLISTBOX";
 	case WM_CTLCOLORBTN:
-		string = "WM_CTLCOLORBTN";
-		break;
+		return "WM_CTLCOLORBTN";
 	case WM_CTLCOLORDLG:
-		string = "WM_CTLCOLORDLG";
-		break;
+		return "WM_CTLCOLORDLG";
 	case WM_CTLCOLORSCROLLBAR:
-		string = "WM_CTLCOLORSCROLLBAR";
-		break;
+		return "WM_CTLCOLORSCROLLBAR";
 	case WM_CTLCOLORSTATIC:
-		string = "WM_CTLCOLORSTATIC";
-		break;
+		return "WM_CTLCOLORSTATIC";
 	case WM_MOUSEMOVE:
-		string = "WM_MOUSEMOVE";
-		break;
+		return "WM_MOUSEMOVE";
 	case WM_LBUTTONDOWN:
-		string = "WM_LBUTTONDOWN";
-		break;
+		return "WM_LBUTTONDOWN";
 	case WM_LBUTTONUP:
-		string = "WM_LBUTTONUP";
-		break;
+		return "WM_LBUTTONUP";
 	case WM_LBUTTONDBLCLK:
-		string = "WM_LBUTTONDBLCLK";
-		break;
+		return "WM_LBUTTONDBLCLK";
 	case WM_RBUTTONDOWN:
-		string = "WM_RBUTTONDOWN";
-		break;
+		return "WM_RBUTTONDOWN";
 	case WM_RBUTTONUP:
-		string = "WM_RBUTTONUP";
-		break;
+		return "WM_RBUTTONUP";
 	case WM_RBUTTONDBLCLK:
-		string = "WM_RBUTTONDBLCLK";
-		break;
+		return "WM_RBUTTONDBLCLK";
 	case WM_MBUTTONDOWN:
-		string = "WM_MBUTTONDOWN";
-		break;
+		return "WM_MBUTTONDOWN";
 	case WM_MBUTTONUP:
-		string = "WM_MBUTTONUP";
-		break;
+		return "WM_MBUTTONUP";
 	case WM_MBUTTONDBLCLK:
-		string = "WM_MBUTTONDBLCLK";
-		break;
+		return "WM_MBUTTONDBLCLK";
 	case WM_MOUSEWHEEL:
-		string = "WM_MOUSEWHEEL";
-		break;
+		return "WM_MOUSEWHEEL";
 	case WM_PARENTNOTIFY:
-		string = "WM_PARENTNOTIFY";
-		break;
+		return "WM_PARENTNOTIFY";
 	case WM_ENTERMENULOOP:
-		string = "WM_ENTERMENULOOP";
-		break;
+		return "WM_ENTERMENULOOP";
 	case WM_EXITMENULOOP:
-		string = "WM_EXITMENULOOP";
-		break;
+		return "WM_EXITMENULOOP";
 	case WM_SIZING:
-		string = "WM_SIZING";
-		break;
+		return "WM_SIZING";
 	case WM_CAPTURECHANGED:
-		string = "WM_CAPTURECHANGED";
-		break;
+		return "WM_CAPTURECHANGED";
 	case WM_MOVING:
-		string = "WM_MOVING";
-		break;
+		return "WM_MOVING";
 	case WM_POWERBROADCAST:
-		string = "WM_POWERBROADCAST";
-		break;
+		return "WM_POWERBROADCAST";
 	case WM_DEVICECHANGE:
-		string = "WM_DEVICECHANGE";
-		break;
+		return "WM_DEVICECHANGE";
 	case WM_MDICREATE:
-		string = "WM_MDICREATE";
-		break;
+		return "WM_MDICREATE";
 	case WM_MDIDESTROY:
-		string = "WM_MDIDESTROY";
-		break;
+		return "WM_MDIDESTROY";
 	case WM_MDIACTIVATE:
-		string = "WM_MDIACTIVATE";
-		break;
+		return "WM_MDIACTIVATE";
 	case WM_MDIRESTORE:
-		string = "WM_MDIRESTORE";
-		break;
+		return "WM_MDIRESTORE";
 	case WM_MDINEXT:
-		string = "WM_MDINEXT";
-		break;
+		return "WM_MDINEXT";
 	case WM_MDIMAXIMIZE:
-		string = "WM_MDIMAXIMIZE";
-		break;
+		return "WM_MDIMAXIMIZE";
 	case WM_MDITILE:
-		string = "WM_MDITILE";
-		break;
+		return "WM_MDITILE";
 	case WM_MDICASCADE:
-		string = "WM_MDICASCADE";
-		break;
+		return "WM_MDICASCADE";
 	case WM_MDIICONARRANGE:
-		string = "WM_MDIICONARRANGE";
-		break;
+		return "WM_MDIICONARRANGE";
 	case WM_MDIGETACTIVE:
-		string = "WM_MDIGETACTIVE";
-		break;
+		return "WM_MDIGETACTIVE";
 	case WM_MDISETMENU:
-		string = "WM_MDISETMENU";
-		break;
+		return "WM_MDISETMENU";
 	case WM_ENTERSIZEMOVE:
-		string = "WM_ENTERSIZEMOVE";
-		break;
+		return "WM_ENTERSIZEMOVE";
 	case WM_EXITSIZEMOVE:
-		string = "WM_EXITSIZEMOVE";
-		break;
+		return "WM_EXITSIZEMOVE";
 	case WM_DROPFILES:
-		string = "WM_DROPFILES";
-		break;
+		return "WM_DROPFILES";
 	case WM_MDIREFRESHMENU:
-		string = "WM_MDIREFRESHMENU";
-		break;
+		return "WM_MDIREFRESHMENU";
 	case WM_IME_SETCONTEXT:
-		string = "WM_IME_SETCONTEXT";
-		break;
+		return "WM_IME_SETCONTEXT";
 	case WM_IME_NOTIFY:
-		string = "WM_IME_NOTIFY";
-		break;
+		return "WM_IME_NOTIFY";
 	case WM_IME_CONTROL:
-		string = "WM_IME_CONTROL";
-		break;
+		return "WM_IME_CONTROL";
 	case WM_IME_COMPOSITIONFULL:
-		string = "WM_IME_COMPOSITIONFULL";
-		break;
+		return "WM_IME_COMPOSITIONFULL";
 	case WM_IME_SELECT:
-		string = "WM_IME_SELECT";
-		break;
+		return "WM_IME_SELECT";
 	case WM_IME_CHAR:
-		string = "WM_IME_CHAR";
-		break;
+		return "WM_IME_CHAR";
 	case WM_IME_KEYDOWN:
-		string = "WM_IME_KEYDOWN";
-		break;
+		return "WM_IME_KEYDOWN";
 	case WM_IME_KEYUP:
-		string = "WM_IME_KEYUP";
-		break;
+		return "WM_IME_KEYUP";
 	case WM_MOUSEHOVER:
-		string = "WM_MOUSEHOVER";
-		break;
+		return "WM_MOUSEHOVER";
 	case WM_MOUSELEAVE:
-		string = "WM_MOUSELEAVE";
-		break;
+		return "WM_MOUSELEAVE";
 	case WM_CUT:
-		string = "WM_CUT";
-		break;
+		return "WM_CUT";
 	case WM_COPY:
-		string = "WM_COPY";
-		break;
+		return "WM_COPY";
 	case WM_PASTE:
-		string = "WM_PASTE";
-		break;
+		return "WM_PASTE";
 	case WM_CLEAR:
-		string = "WM_CLEAR";
-		break;
+		return "WM_CLEAR";
 	case WM_UNDO:
-		string = "WM_UNDO";
-		break;
+		return "WM_UNDO";
 	case WM_RENDERFORMAT:
-		string = "WM_RENDERFORMAT";
-		break;
+		return "WM_RENDERFORMAT";
 	case WM_RENDERALLFORMATS:
-		string = "WM_RENDERALLFORMATS";
-		break;
+		return "WM_RENDERALLFORMATS";
 	case WM_DESTROYCLIPBOARD:
-		string = "WM_DESTROYCLIPBOARD";
-		break;
+		return "WM_DESTROYCLIPBOARD";
 	case WM_DRAWCLIPBOARD:
-		string = "WM_DRAWCLIPBOARD";
-		break;
+		return "WM_DRAWCLIPBOARD";
 	case WM_PAINTCLIPBOARD:
-		string = "WM_PAINTCLIPBOARD";
-		break;
+		return "WM_PAINTCLIPBOARD";
 	case WM_VSCROLLCLIPBOARD:
-		string = "WM_VSCROLLCLIPBOARD";
-		break;
+		return "WM_VSCROLLCLIPBOARD";
 	case WM_SIZECLIPBOARD:
-		string = "WM_SIZECLIPBOARD";
-		break;
+		return "WM_SIZECLIPBOARD";
 	case WM_ASKCBFORMATNAME:
-		string = "WM_ASKCBFORMATNAME";
-		break;
+		return "WM_ASKCBFORMATNAME";
 	case WM_CHANGECBCHAIN:
-		string = "WM_CHANGECBCHAIN";
-		break;
+		return "WM_CHANGECBCHAIN";
 	case WM_HSCROLLCLIPBOARD:
-		string = "WM_HSCROLLCLIPBOARD";
-		break;
+		return "WM_HSCROLLCLIPBOARD";
 	case WM_QUERYNEWPALETTE:
-		string = "WM_QUERYNEWPALETTE";
-		break;
+		return "WM_QUERYNEWPALETTE";
 	case WM_PALETTEISCHANGING:
-		string = "WM_PALETTEISCHANGING";
-		break;
+		return "WM_PALETTEISCHANGING";
 	case WM_PALETTECHANGED:
-		string = "WM_PALETTECHANGED";
-		break;
+		return "WM_PALETTECHANGED";
 	case WM_HOTKEY:
-		string = "WM_HOTKEY";
-		break;
+		return "WM_HOTKEY";
 	case WM_PRINT:
-		string = "WM_PRINT";
-		break;
+		return "WM_PRINT";
 	case WM_PRINTCLIENT:
-		string = "WM_PRINTCLIENT";
-		break;
-	}
-	if (string)
-	{
-		printf("message: %s\n", string);
-	}
-	else
-	{
-		printf("message: 0x%04X\n", message);
+		return "WM_PRINTCLIENT";
+	case BM_GETCHECK:
+		return "BM_GETCHECK";
+	case BM_SETCHECK:
+		return "BM_SETCHECK";
+	case BM_GETSTATE:
+		return "BM_GETSTATE";
+	case BM_SETSTATE:
+		return "BM_SETSTATE";
+	case BM_SETSTYLE:
+		return "BM_SETSTYLE";
+	case BM_CLICK:
+		return "BM_CLICK";
+	case BM_GETIMAGE:
+		return "BM_GETIMAGE";
+	case BM_SETIMAGE:
+		return "BM_SETIMAGE";
+	default:
+		{
+			char string[128];
+
+			sprintf(string, "0x%04X", message);
+			return string;
+		}
 	}
 }
 

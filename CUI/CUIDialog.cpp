@@ -4,6 +4,9 @@
 #define new DEBUG_CLIENTBLOCK
 #endif
 
+bool CUIDialog::sm_haveMessageForwardId = false;
+UINT CUIDialog::sm_messageForwardId = 0;
+
 CUIDialog::CUIDialog(void)
 {
 }
@@ -63,11 +66,7 @@ INT_PTR CUIDialog::dialogProc(
 		break;
 
 	case WM_COMMAND:
-		if (doCommand(HIWORD(wParam), LOWORD(wParam), (HWND)lParam) == 0)
-		{
-			return (INT_PTR)TRUE;
-		}
-		break;
+		return (INT_PTR)doPrivateCommand(message, wParam, lParam);
 	case WM_DESTROY:
 		if (doDestroy() == 0)
 		{
@@ -89,7 +88,7 @@ INT_PTR CUIDialog::dialogProc(
 		}
 		break;
 	case WM_NOTIFY:
-		return (INT_PTR)doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam);
+		return (INT_PTR)doPrivateNotify(message, wParam, lParam);
 	case WM_MOVE:
 		if (doMove((int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam)) == 0)
 		{
@@ -166,6 +165,8 @@ INT_PTR CUIDialog::dialogProc(
 			return (INT_PTR)TRUE;
 		}
 		break;
+	case WM_DRAWITEM:
+		return doPrivateDrawItem(message, wParam, lParam);
 	}
 	return (INT_PTR)FALSE;
 }
@@ -516,4 +517,117 @@ void CUIDialog::setIcon(char* templateName)
 
 	SendMessage(hWindow, WM_SETICON, ICON_BIG, (LPARAM)hBigIcon);
 	SendMessage(hWindow, WM_SETICON, ICON_SMALL, (LPARAM)hSmallIcon);
+}
+
+CUIDialog *CUIDialog::fromHandle(HWND hWnd)
+{
+	if ((DLGPROC)GetWindowLongPtr(hWnd, DWLP_DLGPROC) == staticDialogProc)
+	{
+		return (CUIDialog *)GetWindowLongPtr(hWnd, GWL_USERDATA);
+	}
+	return NULL;
+}
+
+void CUIDialog::addControl(HWND hWnd)
+{
+	// Make sure the message id variable is pre-populated.
+	registerMessageForwardId();
+	m_controls.insert(hWnd);
+}
+
+// Note: static method
+void CUIDialog::registerMessageForwardId(void)
+{
+	if (!sm_haveMessageForwardId)
+	{
+		sm_messageForwardId = RegisterWindowMessage("CUIDialog::MessageForward");
+		sm_haveMessageForwardId = true;
+	}
+}
+
+bool CUIDialog::doPrivateForward(
+	HWND hWnd,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam,
+	LRESULT &lResult)
+{
+	if (m_controls.find(hWnd) != m_controls.end())
+	{
+		ControlMessage cm;
+
+		cm.msg = message;
+		cm.lParam = lParam;
+		cm.wParam = wParam;
+		cm.processed = false;
+		SendMessage(hWnd, sm_messageForwardId, 0, (LPARAM)&cm);
+		if (cm.processed)
+		{
+			lResult = cm.lResult;
+			return true;
+		}
+	}
+	return false;
+}
+
+LRESULT CUIDialog::doPrivateNotify(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	LPNMHDR notification = (LPNMHDR)lParam;
+
+	return doPrivateMessage1(notification->hwndFrom, message, wParam, lParam);
+}
+
+LRESULT CUIDialog::doPrivateCommand(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	return doPrivateMessage2((HWND)lParam, message, wParam, lParam);
+}
+
+LRESULT CUIDialog::doPrivateDrawItem(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	LPDRAWITEMSTRUCT dis = (LPDRAWITEMSTRUCT)lParam;
+
+	return doPrivateMessage2(dis->hwndItem, message, wParam, lParam);
+}
+
+LRESULT CUIDialog::doPrivateMessage1(
+	HWND hWnd,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	LRESULT lResult;
+
+	if (doPrivateForward(hWnd, message, wParam, lParam, lResult))
+	{
+		return lResult;
+	}
+	else
+	{
+		return doNotify((int)(short)LOWORD(wParam), (LPNMHDR)lParam);
+	}
+}
+
+LRESULT CUIDialog::doPrivateMessage2(
+	HWND hWnd,
+	UINT message,
+	WPARAM wParam,
+	LPARAM lParam)
+{
+	LRESULT lResult;
+
+	if (doPrivateForward(hWnd, message, wParam, lParam, lResult))
+	{
+		return lResult;
+	}
+	else
+	{
+		if (doCommand(HIWORD(wParam), LOWORD(wParam), (HWND)lParam) == 0)
+		{
+			return (INT_PTR)TRUE;
+		}
+		else
+		{
+			return (INT_PTR)FALSE;
+		}
+	}
 }

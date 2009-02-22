@@ -382,6 +382,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\CUIColorButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CUIDialog.cpp"
 				>
 			</File>
@@ -684,6 +688,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\CUIColorButton.h"
+				>
+			</File>
 			<File
 				RelativePath="CUIDefines.h"
 				>
