@@ -14,8 +14,8 @@ public:
 	LDLModel *getLowResModel(void) { return m_lowResModel; }
 	const LDLModel *getHighResModel(void) const { return m_highResModel; }
 	LDLModel *getHighResModel(void) { return m_highResModel; }
-	void createLowResModel(LDLMainModel *mainModel);
-	void createHighResModel(LDLMainModel *mainModel);
+	void createLowResModel(LDLMainModel *mainModel, const char *name);
+	void createHighResModel(LDLMainModel *mainModel, const char *name);
 	TCFloat *getMatrix(void) { return m_matrix; }
 	const TCFloat *getMatrix(void) const { return m_matrix; }
 	void setMatrix(const TCFloat *value);
