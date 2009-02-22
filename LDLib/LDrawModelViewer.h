@@ -206,6 +206,7 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		void setHighlightPaths(std::string value);
 		void setHighlightPaths(const StringList &value);
+		void setHighlightColor(int r, int g, int b, bool redraw = true);
 		virtual int loadModel(bool = true);
 		virtual void drawFPS(TCFloat);
 		virtual void drawBoundingBox(void);
@@ -701,6 +702,9 @@ class LDrawModelViewer: public TCAlertSender
 		LDExporter *exporter;
 		ExportType exportType;
 		StringList highlightPaths;
+		int highlightR;
+		int highlightG;
+		int highlightB;
 #ifdef WIN32
 		DWORD frameTicks;
 		LARGE_INTEGER hrpcFrequency;

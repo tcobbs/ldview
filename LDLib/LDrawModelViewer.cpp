@@ -120,6 +120,9 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	mpdChildIndex(0),
 	exporter(NULL),
 	exportType(ETPov),
+	highlightR(160),
+	highlightG(224),
+	highlightB(255),
 	cameraData(NULL)
 {
 #ifdef _LEAK_DEBUG
@@ -5014,6 +5017,21 @@ void LDrawModelViewer::parseHighlightPath(
 	}
 }
 
+void LDrawModelViewer::setHighlightColor(
+	int r,
+	int g,
+	int b,
+	bool redraw /*= true*/)
+{
+	highlightR = r & 0xFF;
+	highlightG = g & 0xFF;
+	highlightB = b & 0xFF;
+	if (redraw)
+	{
+		highlightPathsChanged();
+	}
+}
+
 void LDrawModelViewer::highlightPathsChanged(void)
 {
 	TCObject::release(highlightModel);
@@ -5026,7 +5044,8 @@ void LDrawModelViewer::highlightPathsChanged(void)
 
 		ldlModel->setMainModel(ldlModel);
 		ldlModel->setForceHighlightColor(true);
-		ldlModel->setHighlightColorNumber(0x3A0E0FF);
+		ldlModel->setHighlightColorNumber(0x3000000 |
+			(highlightR << 16) | (highlightG << 8) | highlightB);
 		ldlModel->setLowResStuds(!flags.qualityStuds);
 		for (StringList::const_iterator it = highlightPaths.begin();
 			it != highlightPaths.end(); it++)
