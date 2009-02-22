@@ -344,7 +344,16 @@ void ModelTreeDialog::setupLineCheck(UINT checkId, LDLLineType lineType)
 void ModelTreeDialog::adjustWindow(int widthDelta)
 {
 	WINDOWPLACEMENT wp;
+	int showCommand;
 
+	if (widthDelta > 0)
+	{
+		showCommand = SW_SHOW;
+	}
+	else
+	{
+		showCommand = SW_HIDE;
+	}
 	minWidth += widthDelta;
 	GetWindowPlacement(hWindow, &wp);
 	m_resizer->setOriginalWidth(m_resizer->getOriginalWidth() + widthDelta);
@@ -365,6 +374,10 @@ void ModelTreeDialog::adjustWindow(int widthDelta)
 		MoveWindow(hWindow, windowRect.left, windowRect.top,
 			windowRect.right - windowRect.left,
 			windowRect.bottom - windowRect.top, TRUE);
+	}
+	for (size_t i = 0; i < m_lineChecks.size(); i++)
+	{
+		ShowWindow(m_lineChecks[i], showCommand);
 	}
 }
 
@@ -542,4 +555,9 @@ BOOL ModelTreeDialog::doTreeCopy(void)
 		}
 	}
 	return FALSE;
+}
+
+void ModelTreeDialog::doOK(void)
+{
+	// Don't do anything.
 }

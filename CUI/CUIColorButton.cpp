@@ -86,7 +86,7 @@ void CUIColorButton::dealloc(void)
 	CUIWindow::dealloc();
 }
 
-bool CUIColorButton::doDrawItem(
+bool CUIColorButton::doMyDrawItem(
 	int /*controlId*/,
 	LPDRAWITEMSTRUCT drawItem,
 	LRESULT &lResult)
@@ -200,30 +200,14 @@ LRESULT CUIColorButton::windowProc(
 	{
 		CUIDialog::ControlMessage *cm = (CUIDialog::ControlMessage *)lParam;
 
-		debugPrintf("CUIColorButton::windowProc(CUIDialog::MessageForward)\n");
 		switch (cm->msg)
 		{
 		case WM_DRAWITEM:
-			cm->processed = doDrawItem(cm->wParam, (LPDRAWITEMSTRUCT)cm->lParam,
-				cm->lResult);
-			break;
-		case WM_NOTIFY:
-			{
-				LPNMHDR notification = (LPNMHDR)cm->lParam;
-
-				debugPrintf("CUIColorButton::windowProc(WM_NOTIFY, %s)\n",
-					notificationName(notification->code).c_str());
-				switch (notification->code)
-				{
-				case BN_CLICKED:
-					cm->processed = true;
-					cm->lResult = 0;
-					break;
-				}
-			}
+			cm->processed = doMyDrawItem(cm->wParam,
+				(LPDRAWITEMSTRUCT)cm->lParam, cm->lResult);
 			break;
 		case WM_COMMAND:
-			doMyCommand(HIWORD(cm->wParam), cm->processed, cm->lResult);
+			cm->processed = doMyCommand(HIWORD(cm->wParam), cm->lResult);
 			break;
 		}
 		return 0;
@@ -243,12 +227,10 @@ LRESULT CUIColorButton::windowProc(
 			break;
 		}
 	}
-	debugPrintf("CUIColorButton::windowProc(%s)\n",
-		getMessageName(message).c_str());
 	return CallWindowProc(m_oldWindowProc, hWnd, message, wParam, lParam);
 }
 
-void CUIColorButton::doMyCommand(int code, bool &processed, LRESULT &lResult)
+bool CUIColorButton::doMyCommand(int code, LRESULT &lResult)
 {
 	if (code == BN_CLICKED)
 	{
@@ -300,16 +282,10 @@ void CUIColorButton::doMyCommand(int code, bool &processed, LRESULT &lResult)
 					(WPARAM)notification.idFrom, (LPARAM)&notification);
 			}
 		}
-		processed = true;
 		lResult = 0;
-		//for (i = 0; i < 16; i++)
-		//{
-		//	r = GetRValue(customColors[i]);
-		//	g = GetGValue(customColors[i]);
-		//	b = GetBValue(customColors[i]);
-		//	ldPrefs->setCustomColor(i, r, g, b);
-		//}
+		return true;
 	}
+	return false;
 }
 
 void CUIColorButton::doMyDestroy(void)
