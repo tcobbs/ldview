@@ -3,6 +3,7 @@ CPPFLAGS=$(CPPGLOBAL) /I .. /D _MBCS /D _LIB /D _WIN32_WINDOWS=0x0410 /D _BUILDI
 COBJS = 
 CCOBJS = \
 	$(OBJDIR)\CUIButton.obj \
+	$(OBJDIR)\CUIColorButton.obj \
 	$(OBJDIR)\CUIDialog.obj \
 	$(OBJDIR)\CUIOGLWindow.obj \
 	$(OBJDIR)\CUIPropertySheet.obj \
