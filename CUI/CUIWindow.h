@@ -287,6 +287,7 @@ class CUIExport CUIWindow : public TCAlertSender
 			int saveHeight, int saveMaximized);
 
 		static void printMessageName(UINT message);
+		static std::string getMessageName(UINT message);
 		static BOOL CALLBACK disableNonModalWindow(HWND hWnd,
 			LPARAM hModalDialog);
 		static BOOL CALLBACK enableNonModalWindow(HWND hWnd,

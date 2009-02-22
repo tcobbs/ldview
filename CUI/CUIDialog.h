@@ -4,6 +4,9 @@
 #include <CUI/CUIWindow.h>
 #include <commctrl.h>
 #include <TCFoundation/mystring.h>
+#include <TCFoundation/TCStlIncludes.h>
+
+typedef std::set<HWND> HWndSet;
 
 class CUIExport CUIDialog: public CUIWindow
 {
@@ -65,6 +68,20 @@ public:
 	virtual void textFieldSetLimitText(int controlId, int value);
 	virtual void textFieldGetSelection(int controlId, int &start, int &end);
 	virtual void textFieldSetSelection(int controlId, int start, int end);
+
+	void addControl(HWND hWnd);
+
+	static CUIDialog *fromHandle(HWND hWnd);
+	static UINT getMessageForwardId(void) { return sm_messageForwardId; }
+
+	struct ControlMessage
+	{
+		UINT msg;
+		WPARAM wParam;
+		LPARAM lParam;
+		LRESULT lResult;
+		bool processed;
+	};
 protected:
 	virtual ~CUIDialog(void);
 	virtual void dealloc(void);
@@ -79,6 +96,7 @@ protected:
 	virtual LRESULT doTextFieldChange(int controlId, HWND control);
 	virtual void doOK(void);
 	virtual void doCancel(void);
+
 	static INT_PTR CALLBACK staticDialogProc(HWND hDlg, UINT message,
 		WPARAM wParam, LPARAM lParam);
 
@@ -86,9 +104,23 @@ protected:
 	UINT m_curMessage;
 	WPARAM m_curWParam;
 	LPARAM m_curLParam;
+	HWndSet m_controls;
+
+	static bool sm_haveMessageForwardId;
+	static UINT sm_messageForwardId;
 private:
 	INT_PTR privateDialogProc(HWND hWnd, UINT message, WPARAM wParam,
 		LPARAM lParam);
+	LRESULT doPrivateMessage1(HWND hWnd, UINT message, WPARAM wParam,
+		LPARAM lParam);
+	LRESULT doPrivateMessage2(HWND hWnd, UINT message, WPARAM wParam,
+		LPARAM lParam);
+	LRESULT doPrivateNotify(UINT message, WPARAM wParam, LPARAM lParam);
+	LRESULT doPrivateCommand(UINT message, WPARAM wParam, LPARAM lParam);
+	LRESULT doPrivateDrawItem(UINT message, WPARAM wParam, LPARAM lParam);
+	bool doPrivateForward(HWND hWnd, UINT message, WPARAM wParam,
+		LPARAM lParam, LRESULT &lResult);
+	static void registerMessageForwardId(void);
 };
 
 #endif // __CUIDIALOG_H__
