@@ -45,6 +45,7 @@ protected:
 	virtual LRESULT doSize(WPARAM sizeType, int newWidth, int newHeight);
 	virtual LRESULT doCommand(int notifyCode, int commandId,
 		HWND control);
+	virtual void doOK(void);
 
 	BOOL doTreeCopy(void);
 	LRESULT doTreeKeyDown(LPNMTVKEYDOWN notification);

@@ -25,13 +25,13 @@ protected:
 		LPARAM lParam);
 	void updateBrush(void);
 
-	virtual bool doDrawItem(int controlId, LPDRAWITEMSTRUCT drawItem,
-		LRESULT &lResult);
 	virtual LRESULT doMouseMove(WPARAM, int x, int y);
 	void trackMouseEvent(DWORD dwFlags, DWORD dwHoverTime = 0);
 	void doMyDestroy(void);
 	void doMyMouseLeave(void);
-	void doMyCommand(int code, bool &processed, LRESULT &lResult);
+	bool doMyDrawItem(int controlId, LPDRAWITEMSTRUCT drawItem,
+		LRESULT &lResult);
+	bool doMyCommand(int code, LRESULT &lResult);
 
 	static void registerColorChangedId(void);
 

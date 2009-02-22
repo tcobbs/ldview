@@ -948,6 +948,7 @@ BEGIN
                     WS_EX_CLIENTEDGE
     CONTROL         "Highlight selected line",IDC_HIGHLIGHT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,2,118,85,10
+    PUSHBUTTON      "O",IDC_HIGHLIGHT_COLOR,87,116,24,14
     PUSHBUTTON      "Options <<",IDC_OPTIONS,154,116,50,14
     GROUPBOX        "Show Lines",IDC_SHOW_BOX,212,2,78,112
     CONTROL         "Comment",IDC_COMMENT,"Button",BS_AUTOCHECKBOX | 
@@ -968,7 +969,6 @@ BEGIN
                     WS_TABSTOP,218,98,47,10
     SCROLLBAR       IDC_RESIZEGRIP,280,121,11,11,SBS_SIZEGRIP | 
                     WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_GROUP
-    PUSHBUTTON      "O",IDC_HIGHLIGHT_COLOR,87,116,24,14
 END
 
 IDD_TOOLBAR DIALOGEX 0, 0, 340, 18
@@ -1701,8 +1701,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,0,1,7
- PRODUCTVERSION 4,0,1,7
+ FILEVERSION 4,0,1,8
+ PRODUCTVERSION 4,0,1,8
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1720,14 +1720,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.0.1g test build\0"
+            VALUE "FileVersion", "4.0.1h test build\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2009 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.0.1g test build\0"
+            VALUE "ProductVersion", "4.0.1h test build\0"
             VALUE "SpecialBuild", "\0"
         END
     END
