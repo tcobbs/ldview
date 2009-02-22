@@ -347,28 +347,20 @@
 
 - (void)enumSelectedItemsWithSelector:(SEL)selector withObject:(id)object
 {
-	if ([[modelWindow window] firstResponder] == outlineView)
+	int count = [outlineView numberOfSelectedRows];
+	NSIndexSet *selectedRowIndices = [outlineView selectedRowIndexes];
+	unsigned int currentIndex = [selectedRowIndices firstIndex];
+	
+	for (int i = 0; i < count; i++)
 	{
-		int count = [outlineView numberOfSelectedRows];
-		NSIndexSet *selectedRowIndices = [outlineView selectedRowIndexes];
-		NSMutableString *copyText = [[NSMutableString alloc] init];
-		//NSTableColumn *column = [[outlineView tableColumns] objectAtIndex:0];
-		unsigned int currentIndex = [selectedRowIndices firstIndex];
-		
-		for (int i = 0; i < count; i++)
-		{
-			ModelTreeItem *item = [outlineView itemAtRow:currentIndex];
-			//NSString *rowValue = [self outlineView:outlineView objectValueForTableColumn:column byItem:item];
-			const LDModelTree *itemModelTree = [item modelTree];
+		ModelTreeItem *item = [outlineView itemAtRow:currentIndex];
+		const LDModelTree *itemModelTree = [item modelTree];
 
-			if (itemModelTree)
-			{
-				[self performSelector:selector withObject:(id)itemModelTree withObject:object];
-			}
-			currentIndex = [selectedRowIndices indexGreaterThanIndex:currentIndex];
+		if (itemModelTree)
+		{
+			[self performSelector:selector withObject:(id)itemModelTree withObject:object];
 		}
-		[modelWindow copyStringToPasteboard:copyText];
-		[copyText release];
+		currentIndex = [selectedRowIndices indexGreaterThanIndex:currentIndex];
 	}
 }
 
@@ -383,37 +375,16 @@
 
 - (IBAction)copy:(id)sender
 {
-	NSMutableString *copyText = [[NSMutableString alloc] init];
-	[self enumSelectedItemsWithSelector:@selector(copyItem:toString:) withObject:copyText];
-	if ([copyText length] > 0)
+	if ([[modelWindow window] firstResponder] == outlineView)
 	{
-		[modelWindow copyStringToPasteboard:copyText];
+		NSMutableString *copyText = [[NSMutableString alloc] init];
+		[self enumSelectedItemsWithSelector:@selector(copyItem:toString:) withObject:copyText];
+		if ([copyText length] > 0)
+		{
+			[modelWindow copyStringToPasteboard:copyText];
+		}
+		[copyText release];
 	}
-	[copyText release];
-//	if ([[modelWindow window] firstResponder] == outlineView)
-//	{
-//		int count = [outlineView numberOfSelectedRows];
-//		NSIndexSet *selectedRowIndices = [outlineView selectedRowIndexes];
-//		NSMutableString *copyText = [[NSMutableString alloc] init];
-//		NSTableColumn *column = [[outlineView tableColumns] objectAtIndex:0];
-//		unsigned int currentIndex = [selectedRowIndices firstIndex];
-//
-//		for (int i = 0; i < count; i++)
-//		{
-//			ModelTreeItem *item = [outlineView itemAtRow:currentIndex];
-//			NSString *rowValue = [self outlineView:outlineView objectValueForTableColumn:column byItem:item];
-//			const LDModelTree *itemModelTree = [item modelTree];
-//
-//			if (itemModelTree && itemModelTree->getLineType() != LDLLineTypeEmpty)
-//			{
-//				[copyText appendString:rowValue];
-//			}
-//			[copyText appendString:@"\n"];
-//			currentIndex = [selectedRowIndices indexGreaterThanIndex:currentIndex];
-//		}
-//		[modelWindow copyStringToPasteboard:copyText];
-//		[copyText release];
-//	}
 }
 
 - (void)updateHighlight
@@ -425,7 +396,9 @@
 		NSMutableString *paths = [NSMutableString string];
 		
 		[self enumSelectedItemsWithSelector:@selector(addItem:toPaths:) withObject:paths];
-		modelViewer->setHighlightPaths([paths cStringUsingEncoding:NSASCIIStringEncoding]);
+		const char *cString = [[paths retain] cStringUsingEncoding:NSASCIIStringEncoding];
+		modelViewer->setHighlightPaths(cString);
+		[paths release];
 	}
 	else
 	{

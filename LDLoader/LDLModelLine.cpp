@@ -460,18 +460,18 @@ void LDLModelLine::setMatrix(const TCFloat *value)
 	memcpy(m_matrix, value, sizeof(m_matrix));
 }
 
-void LDLModelLine::createLowResModel(LDLMainModel *mainModel)
+void LDLModelLine::createLowResModel(LDLMainModel *mainModel, const char *name)
 {
 	m_lowResModel = new LDLModel;
 	m_lowResModel->setMainModel(mainModel);
-	m_lowResModel->setName(m_line);
+	m_lowResModel->setName(name);
 }
 
-void LDLModelLine::createHighResModel(LDLMainModel *mainModel)
+void LDLModelLine::createHighResModel(LDLMainModel *mainModel, const char *name)
 {
 	m_highResModel = new LDLModel;
 	m_highResModel->setMainModel(mainModel);
-	m_highResModel->setName(m_line);
+	m_highResModel->setName(name);
 }
 
 

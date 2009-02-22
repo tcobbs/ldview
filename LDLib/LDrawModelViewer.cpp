@@ -4891,7 +4891,9 @@ void LDrawModelViewer::setHighlightPaths(const StringList &value)
 void LDrawModelViewer::parseHighlightPath(
 	const std::string &path,
 	const LDLModel *srcModel,
-	LDLModel *dstModel)
+	LDLModel *dstModel,
+	const std::string &prePath,
+	int pathNum)
 {
 	int lineNum = atoi(&path[1]) - 1;
 	const LDLFileLineArray *srcFileLines = srcModel->getFileLines();
@@ -4912,17 +4914,26 @@ void LDrawModelViewer::parseHighlightPath(
 			{
 				const LDLModelLine *srcModelLine =
 					(const LDLModelLine *)srcFileLine;
+				// The names need to be unique to prevent them from being
+				// combined.  Since we're not showing the actual model, we
+				// use a combination of our pathNum and the path to now as
+				// the model name.
+				std::string name = ltostr(pathNum) + prePath + '/';
+
+				name += ltostr(lineNum + 1);
 				dstFileLine = new LDLModelLine(dstModel, srcFileLine->getLine(),
 					dstFileLines->getCount(), srcFileLine->getOriginalLine());
 				LDLModelLine *dstModelLine = (LDLModelLine *)dstFileLine;
 				dstModelLine->setMatrix(srcModelLine->getMatrix());
 				if (srcModelLine->getLowResModel() != NULL)
 				{
-					dstModelLine->createLowResModel(dstModel->getMainModel());
+					dstModelLine->createLowResModel(dstModel->getMainModel(),
+						name.c_str());
 				}
 				if (srcModelLine->getHighResModel() != NULL)
 				{
-					dstModelLine->createHighResModel(dstModel->getMainModel());
+					dstModelLine->createHighResModel(dstModel->getMainModel(),
+						name.c_str());
 				}
 				const LDLModel *srcHighResModel =
 					srcModelLine->getHighResModel();
@@ -4986,13 +4997,17 @@ void LDrawModelViewer::parseHighlightPath(
 				{
 					parseHighlightPath(path.substr(nextSlash),
 						((LDLModelLine *)srcFileLine)->getModel(),
-						dstModelLine->getLowResModel());
+						dstModelLine->getLowResModel(),
+						prePath + path.substr(0, nextSlash),
+						pathNum);
 				}
 				if (dstModelLine->getHighResModel())
 				{
 					parseHighlightPath(path.substr(nextSlash),
 						((LDLModelLine *)srcFileLine)->getModel(),
-						dstModelLine->getHighResModel());
+						dstModelLine->getHighResModel(),
+						prePath + path.substr(0, nextSlash),
+						pathNum);
 				}
 			}
 		}
@@ -5007,6 +5022,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 	{
 		LDModelParser *modelParser = NULL;
 		LDLMainModel *ldlModel = new LDLMainModel;
+		int i = 0;
 
 		ldlModel->setMainModel(ldlModel);
 		ldlModel->setForceHighlightColor(true);
@@ -5015,7 +5031,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		for (StringList::const_iterator it = highlightPaths.begin();
 			it != highlightPaths.end(); it++)
 		{
-			parseHighlightPath(*it, mainModel, ldlModel);
+			parseHighlightPath(*it, mainModel, ldlModel, "", i++);
 		}
 		modelParser = new LDModelParser(this);
 		if (modelParser->parseMainModel(ldlModel))

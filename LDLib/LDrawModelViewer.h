@@ -588,7 +588,8 @@ class LDrawModelViewer: public TCAlertSender
 		void updateFrameTime(bool force = false);
 		void highlightPathsChanged(void);
 		void parseHighlightPath(const std::string &path,
-			const LDLModel *srcModel, LDLModel *dstModel);
+			const LDLModel *srcModel, LDLModel *dstModel,
+			const std::string &prePath, int pathNum);
 
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
