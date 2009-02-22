@@ -91,23 +91,23 @@
 #define IDD_LAT_LON                     188
 #define IDD_MPD                         189
 #define IDD_STEP                        190
-#define IDR_TB_ERRORS					500
-#define IDR_TB_EXAMINE					501
-#define IDR_TB_FLYTHROUGH				502
-#define IDR_TB_FULLSCREEN				503
-#define IDR_TB_OPEN						504
-#define IDR_TB_PREFERENCES				505
-#define IDR_TB_RELOAD					506
-#define IDR_TB_SAVE						507
-#define IDR_TB_ZOOMTOFIT				508
-#define IDR_TB_FIRST_STEP				509
-#define IDR_TB_LAST_STEP				510
-#define IDR_TB_NEXT_STEP				511
-#define IDR_TB_PREV_STEP				512
-#define IDR_TB_HELP						513
-#define IDR_TB_MODELTREE				514
-#define IDR_TB_MODELBBOX				515
-#define IDR_TB_TOPMOST					516
+#define IDR_TB_ERRORS                   500
+#define IDR_TB_EXAMINE                  501
+#define IDR_TB_FLYTHROUGH               502
+#define IDR_TB_FULLSCREEN               503
+#define IDR_TB_OPEN                     504
+#define IDR_TB_PREFERENCES              505
+#define IDR_TB_RELOAD                   506
+#define IDR_TB_SAVE                     507
+#define IDR_TB_ZOOMTOFIT                508
+#define IDR_TB_FIRST_STEP               509
+#define IDR_TB_LAST_STEP                510
+#define IDR_TB_NEXT_STEP                511
+#define IDR_TB_PREV_STEP                512
+#define IDR_TB_HELP                     513
+#define IDR_TB_MODELTREE                514
+#define IDR_TB_MODELBBOX                515
+#define IDR_TB_TOPMOST                  516
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_STUD_QUALITY                1002
@@ -371,6 +371,7 @@
 #define IDC_CURRENT                     1285
 #define IDC_HIGHLIGHT                   1286
 #define IDC_PRINT_BACKGROUND            1287
+#define IDC_HIGHLIGHT_COLOR             1287
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -470,7 +471,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40114
-#define _APS_NEXT_CONTROL_VALUE         1287
+#define _APS_NEXT_CONTROL_VALUE         1288
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

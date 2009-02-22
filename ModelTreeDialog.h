@@ -4,6 +4,7 @@
 class LDLMainModel;
 class LDModelTree;
 class CUIWindowResizer;
+class CUIColorButton;
 class ModelWindow;
 class TCAlert;
 
@@ -53,6 +54,7 @@ protected:
 	LRESULT doTreeItemExpanding(LPNMTREEVIEW notification);
 	LRESULT doLineCheck(UINT checkId, LDLLineType lineType);
 	LRESULT doTreeSelChanged(LPNMTREEVIEW notification);
+	LRESULT doHighlightColorChanged(void);
 	void highlightItem(HTREEITEM hItem);
 
 	ModelWindow *m_modelWindow;
@@ -67,6 +69,10 @@ protected:
 	bool m_highlight;
 	int m_optionsDelta;
 	HWND m_hResizeGrip;
+	CUIColorButton *m_colorButton;
+	int m_highlightR;
+	int m_highlightG;
+	int m_highlightB;
 };
 
 #endif // __MODELTREEDIALOG_H__

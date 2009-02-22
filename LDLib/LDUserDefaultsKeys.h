@@ -195,5 +195,7 @@
 #define MAIN_TOOLBAR_IDS_KEY "MainToolbarIDs"
 #define SHOW_MAIN_TOOLBAR_KEY "ShowMainToolbar"
 #define SHOW_STEPS_TOOLBAR_KEY "ShowStepsToolbar"
+#define MODEL_TREE_HIGHLIGHT_COLOR_KEY "ModelTreeHighlightColor"
+#define MODEL_TREE_CUST_COLORS_KEY "ModelTreeDlg/CustomColor"
 
 #endif // __LDLUSERDEFAULTSKEYS_H__

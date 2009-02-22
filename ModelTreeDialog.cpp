@@ -8,6 +8,7 @@
 #include <LDLib/LDModelTree.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <CUI/CUIWindowResizer.h>
+#include <CUI/CUIColorButton.h>
 #include <CommCtrl.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
@@ -23,6 +24,25 @@ m_resizer(NULL),
 m_optionsShown(true),
 m_highlight(TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false))
 {
+	COLORREF defHighlightColor = RGB(160, 224, 255);
+	long highlightColor =
+		TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,
+		defHighlightColor, false);
+	LongVector customColors;
+	
+	customColors = TCUserDefaults::longVectorForKey(MODEL_TREE_CUST_COLORS_KEY,
+		customColors, false);
+	if (customColors.size() == 0)
+	{
+		// Put the default highlight color into the list of custom colors.
+		customColors.resize(16);
+		customColors[0] = defHighlightColor;
+		TCUserDefaults::setLongVectorForKey(customColors,
+			MODEL_TREE_CUST_COLORS_KEY, false);
+	}
+	m_highlightR = GetRValue(highlightColor);
+	m_highlightG = GetGValue(highlightColor);
+	m_highlightB = GetBValue(highlightColor);
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
 		(TCAlertCallback)&ModelTreeDialog::modelAlertCallback);
 }
@@ -38,6 +58,7 @@ void ModelTreeDialog::dealloc(void)
 	{
 		DestroyWindow(hWindow);
 	}
+	TCObject::release(m_colorButton);
 	TCObject::release(m_modelWindow);
 	TCObject::release(m_modelTree);
 	TCObject::release(m_model);
@@ -131,6 +152,8 @@ void ModelTreeDialog::highlightItem(HTREEITEM hItem)
 
 			if (tree != NULL)
 			{
+				m_modelWindow->getModelViewer()->setHighlightColor(m_highlightR,
+					m_highlightG, m_highlightB, false);
 				m_modelWindow->getModelViewer()->setHighlightPaths(
 					tree->getTreePath());
 			}
@@ -151,6 +174,16 @@ LRESULT ModelTreeDialog::doTreeSelChanged(LPNMTREEVIEW notification)
 	return 1;	// Ignored
 }
 
+LRESULT ModelTreeDialog::doHighlightColorChanged(void)
+{
+	LDrawModelViewer *modelViewer = m_modelWindow->getModelViewer();
+	m_colorButton->getColor(m_highlightR, m_highlightG, m_highlightB);
+	modelViewer->setHighlightColor(m_highlightR, m_highlightG, m_highlightB);
+	TCUserDefaults::setLongForKey(RGB(m_highlightR, m_highlightG, m_highlightB),
+		MODEL_TREE_HIGHLIGHT_COLOR_KEY, false);
+	return 0;
+}
+
 LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 {
 	if (controlId == IDC_MODEL_TREE)
@@ -165,6 +198,13 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 			return doTreeSelChanged((LPNMTREEVIEW)notification);
 		case NM_CUSTOMDRAW:
 			return doTreeCustomDraw((LPNMTVCUSTOMDRAW)notification);
+		}
+	}
+	else if (controlId == IDC_HIGHLIGHT_COLOR)
+	{
+		if (notification->code == CCBN_COLOR_CHANGED)
+		{
+			return doHighlightColorChanged();
 		}
 	}
 	return 1;
@@ -371,6 +411,9 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	RECT optionsRect;
 	RECT clientRect;
 
+	m_colorButton = new CUIColorButton(GetDlgItem(hWindow,
+		IDC_HIGHLIGHT_COLOR), MODEL_TREE_CUST_COLORS_KEY, m_highlightR,
+		m_highlightG, m_highlightB);
 	setIcon(IDI_APP_ICON);
 	m_hTreeView = GetDlgItem(hWindow, IDC_MODEL_TREE);
 	m_resizer = new CUIWindowResizer;
@@ -380,6 +423,7 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	m_resizer->addSubWindow(IDC_SHOW_BOX, CUIFloatLeft | CUIFloatBottom);
 	m_resizer->addSubWindow(IDC_OPTIONS, CUIFloatLeft | CUIFloatTop);
 	m_resizer->addSubWindow(IDC_HIGHLIGHT, CUIFloatRight | CUIFloatTop);
+	m_resizer->addSubWindow(IDC_HIGHLIGHT_COLOR, CUIFloatRight | CUIFloatTop);
 	m_lineChecks.resize(LDLLineTypeUnknown + 1);
 	setupLineCheck(IDC_COMMENT, LDLLineTypeComment);
 	setupLineCheck(IDC_MODEL, LDLLineTypeModel);
