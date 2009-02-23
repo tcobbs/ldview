@@ -1082,6 +1082,7 @@ void Preferences::doStippleTransparency(bool value)
 	{
 		setButtonState(panel->sortTransparencyButton,false);
 	}
+	panel->applyButton->setEnabled(true);
 }
 
 void Preferences::doWireframe(bool value)
