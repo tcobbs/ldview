@@ -12,6 +12,7 @@
 #include <qpushbutton.h>
 #include <qcolor.h>
 #include <qcolordialog.h>
+#include <qtextedit.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
@@ -26,6 +27,9 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 	preferences(preferences),
 	optionsShown(true)
 {
+	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,
+			(0xa0e0ff), false);
+	highlightColorEdit->setPaletteBackgroundColor(QColor(color >>16, (color >>8) & 0xff, color & 0xff));
 	preferences = pref;
 	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
 	modelTreeView->header()->hide();
@@ -263,10 +267,16 @@ void LDViewModelTree::highlightSelectedLine()
 
 void LDViewModelTree::highlightColor()
 {
-	int r,g,b;
-	QColor color = QColorDialog::getColor(QColor(r,g,b));
+	long r,g,b;
+	QColor color = QColorDialog::getColor(highlightColorEdit->paletteBackgroundColor());
 	if(color.isValid())
 	{
+		highlightColorEdit->setPaletteBackgroundColor(color);
+		m_modelWindow->getModelViewer()->setHighlightColor(
+				r = color.red(), g = color.green(), b = color.blue());
+		TCUserDefaults::setLongForKey(
+			(r<<16 || g<<8 || b),
+			MODEL_TREE_HIGHLIGHT_COLOR_KEY, false);
 	}
 }
 
