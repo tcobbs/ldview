@@ -35,6 +35,10 @@ void ModelTreePanel::highlightSelectedLine()
 {
 }
 
+void ModelTreePanel::highlightColor()
+{
+}
+
 void ModelTreePanel::itemexpanded(QListViewItem * /*item*/)
 {
 }

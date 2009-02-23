@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>ModelTreePanel</class>
 <widget class="QMainWindow">
     <property name="name">
@@ -101,6 +101,40 @@
                             </property>
                             <property name="text">
                                 <string>Highlight selected line</string>
+                            </property>
+                        </widget>
+                        <widget class="QTextEdit">
+                            <property name="name">
+                                <cstring>highlightColorEdit</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>5</horstretch>
+                                    <verstretch>2</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="maximumSize">
+                                <size>
+                                    <width>100</width>
+                                    <height>28</height>
+                                </size>
+                            </property>
+                            <property name="vScrollBarMode">
+                                <enum>AlwaysOff</enum>
+                            </property>
+                            <property name="hScrollBarMode">
+                                <enum>AlwaysOff</enum>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                            <property name="wordWrap">
+                                <enum>WidgetWidth</enum>
+                            </property>
+                            <property name="readOnly">
+                                <bool>true</bool>
                             </property>
                         </widget>
                         <spacer>
@@ -227,6 +261,12 @@
         <slot>highlightSelectedLine()</slot>
     </connection>
     <connection>
+        <sender>highlightColorEdit</sender>
+        <signal>clicked(int,int)</signal>
+        <receiver>ModelTreePanel</receiver>
+        <slot>highlightColor()</slot>
+    </connection>
+    <connection>
         <sender>commentButton</sender>
         <signal>clicked()</signal>
         <receiver>ModelTreePanel</receiver>
@@ -294,20 +334,21 @@
     </connection>
 </connections>
 <includes>
-    <include location="local" implDecl="in declaration">ModelTreePanel.ui.h</include>
+    <include location="local" impldecl="in implementation">ModelTreePanel.ui.h</include>
 </includes>
 <slots>
-    <slot>model()</slot>
-    <slot>comment()</slot>
-    <slot>highlightSelectedLine()</slot>
-    <slot>unknown()</slot>
     <slot>empty()</slot>
-    <slot>quad()</slot>
+    <slot>unknown()</slot>
+    <slot>model()</slot>
     <slot>line()</slot>
     <slot>triangle()</slot>
     <slot>conditionalLine()</slot>
-	<slot>itemexpanded(QListViewItem*)</slot>
-	<slot>selectionChanged(QListViewItem*)</slot>
+    <slot>quad()</slot>
+    <slot>comment()</slot>
+    <slot>highlightSelectedLine()</slot>
+    <slot>highlightColor()</slot>
+    <slot>itemexpanded(QListViewItem*)</slot>
+    <slot>selectionChanged(QListViewItem*)</slot>
     <slot>toggleOptions()</slot>
 </slots>
 <pixmapinproject/>

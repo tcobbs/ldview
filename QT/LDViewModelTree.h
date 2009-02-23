@@ -34,6 +34,7 @@ public slots:
 	void model(void) {doLineCheck(modelButton,LDLLineTypeModel);}
 	void empty(void) {doLineCheck(emptyButton,LDLLineTypeEmpty);}
 	void highlightSelectedLine();
+	void highlightColor();
 	void comment(void) {doLineCheck(commentButton,LDLLineTypeComment);}
     void modelAlertCallback(TCAlert *alert);
 
