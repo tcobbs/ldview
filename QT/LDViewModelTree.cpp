@@ -275,7 +275,7 @@ void LDViewModelTree::highlightColor()
 		m_modelWindow->getModelViewer()->setHighlightColor(
 				r = color.red(), g = color.green(), b = color.blue());
 		TCUserDefaults::setLongForKey(
-			(r<<16 || g<<8 || b),
+			(r<<16 | g<<8 | b),
 			MODEL_TREE_HIGHLIGHT_COLOR_KEY, false);
 	}
 }
