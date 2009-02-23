@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
+﻿<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
 <class>AboutPanel</class>
 <widget class="QDialog">
     <property name="name">
@@ -156,6 +156,7 @@ Special thanks for contributions to LDView go to the following
 Chris Conley
 Lars C. Hassing
 Don Heyse
+Philippe Hurbain
 Rusty Larner
 Alex Raftis
 Carsten Schmitz
