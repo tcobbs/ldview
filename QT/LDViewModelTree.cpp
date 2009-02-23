@@ -10,6 +10,8 @@
 #include <qlabel.h>
 #include <qgroupbox.h>
 #include <qpushbutton.h>
+#include <qcolor.h>
+#include <qcolordialog.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
@@ -257,5 +259,14 @@ void LDViewModelTree::highlightSelectedLine()
 	else
 		selectionChanged(modelTreeView->selectedItem());
 	TCUserDefaults::setBoolForKey(checked, MODEL_TREE_HIGHLIGHT_KEY, false);
+}
+
+void LDViewModelTree::highlightColor()
+{
+	int r,g,b;
+	QColor color = QColorDialog::getColor(QColor(r,g,b));
+	if(color.isValid())
+	{
+	}
 }
 
