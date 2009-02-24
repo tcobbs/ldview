@@ -13,7 +13,8 @@ MpdDialog::MpdDialog(HINSTANCE hInstance):
 CUIDialog(hInstance, NULL),
 m_modelWindow(NULL),
 m_model(NULL),
-m_resizer(NULL)
+m_resizer(NULL),
+m_okPressed(false)
 {
 	TCAlertManager::registerHandler(ModelWindow::alertClass(), this,
 		(TCAlertCallback)&MpdDialog::modelAlertCallback);
@@ -144,6 +145,8 @@ BOOL MpdDialog::doInitDialog(HWND hKbControl)
 	m_resizer = new CUIWindowResizer;
 	m_resizer->setHWindow(hWindow);
 	m_resizer->addSubWindow(IDC_MPD_LIST, CUISizeHorizontal | CUISizeVertical);
+	m_resizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
+	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
 	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
 	updateData();
 	setAutosaveName("MpdDialog");
@@ -153,7 +156,11 @@ BOOL MpdDialog::doInitDialog(HWND hKbControl)
 LRESULT MpdDialog::doClose(void)
 {
 	showWindow(SW_HIDE);
-	showMpdModel(0);
+	if (!m_okPressed)
+	{
+		showMpdModel(0);
+	}
+	m_okPressed = false;
 	return 0;
 }
 
@@ -176,4 +183,15 @@ LRESULT MpdDialog::doCommand(
 		showMpdModel(listBoxGetSelectedItem(IDC_MPD_LIST));
 	}
 	return CUIDialog::doCommand(notifyCode, commandId, control);
+}
+
+void MpdDialog::doCancel(void)
+{
+	doClose();
+}
+
+void MpdDialog::doOK(void)
+{
+	m_okPressed = true;
+	doClose();
 }

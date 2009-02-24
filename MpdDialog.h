@@ -24,6 +24,8 @@ protected:
 	virtual LRESULT doSize(WPARAM sizeType, int newWidth, int newHeight);
 	virtual LRESULT doCommand(int notifyCode, int commandId,
 		HWND control);
+	virtual void doOK(void);
+	virtual void doCancel(void);
 
 	void modelAlertCallback(TCAlert *alert);
 	void setModel(LDLMainModel *model);
@@ -35,6 +37,7 @@ protected:
 	ModelWindow *m_modelWindow;
 	LDLMainModel *m_model;
 	CUIWindowResizer *m_resizer;
+	bool m_okPressed;
 };
 
 #endif // __MPDDIALOG_H__
