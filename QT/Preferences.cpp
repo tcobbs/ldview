@@ -1074,6 +1074,7 @@ void Preferences::doSortTransparency(bool value)
 	{
 		setButtonState(panel->stippleTransparencyButton,false);
 	}
+	panel->applyButton->setEnabled(true);
 }
 
 void Preferences::doStippleTransparency(bool value)
