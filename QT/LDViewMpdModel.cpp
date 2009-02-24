@@ -16,7 +16,8 @@
 MpdModel::MpdModel(ModelViewerWidget *modelViewer)
 	:MpdModelSelectionPanel(),
 	m_modelWindow(modelViewer),
-    mainmodel(NULL)
+    mainmodel(NULL),
+	m_okPressed(false)
 {
 }
 
@@ -32,7 +33,8 @@ void MpdModel::show(void)
 
 void MpdModel::hide()
 {
-	showMpdModel(0);
+	if (!m_okPressed) 
+		showMpdModel(0);
 	MpdModelSelectionPanel::hide();
 }
 
@@ -114,5 +116,17 @@ LDrawModelViewer * MpdModel::getModelViewer(void)
     {
         return NULL;
     }
+}
+
+void MpdModel::ok()
+{
+	m_okPressed = true;
+	hide();
+}
+
+void MpdModel::cancel()
+{
+	m_okPressed = false;
+	hide();
 }
 

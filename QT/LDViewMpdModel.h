@@ -18,6 +18,8 @@ class MpdModel : public MpdModelSelectionPanel
 public:
 	MpdModel(ModelViewerWidget *modelViewer);
 	~MpdModel();
+	void ok(void);
+	void cancel(void);
 	void show(void);
 	void hide(void);
 	void showOptions(),hideOptions();
@@ -38,6 +40,7 @@ protected:
 	LDModelTree *modeltree;
 	ModelViewerWidget *m_modelWindow;
 	LDLMainModel *mainmodel;
+	bool m_okPressed;
 };
 
 #endif // __LDViewMpdModel_H__
