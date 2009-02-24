@@ -277,6 +277,11 @@ bool LDViewPreferences::getUsesFlatShading(void)
 	return ldPrefs->getUseFlatShading();
 }
 
+LDVCutawayMode LDViewPreferences::getCutawayMode(void)
+{
+	return ldPrefs->getCutawayMode();
+}
+
 bool LDViewPreferences::getUsesSpecular(void)
 {
 	return ldPrefs->getUseSpecular();
@@ -545,6 +550,18 @@ void LDViewPreferences::setPerformSmoothing(bool value)
 		{
 			SendDlgItemMessage(hEffectsPage, IDC_SMOOTH_CURVES, BM_SETCHECK,
 				value, 0);
+		}
+	}
+}
+
+void LDViewPreferences::setCutawayMode(LDVCutawayMode value)
+{
+	if (value != ldPrefs->getCutawayMode())
+	{
+		ldPrefs->setCutawayMode(value, true, true);
+		if (hEffectsPage)
+		{
+			setupCutaway();
 		}
 	}
 }

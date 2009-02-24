@@ -301,7 +301,8 @@ public:
 	void setNoLightGeom(bool value, bool commit = false, bool apply = false);
 	void setStereoMode(LDVStereoMode value, bool commit = false);
 	void setStereoEyeSpacing(int value, bool commit = false);
-	void setCutawayMode(LDVCutawayMode value, bool commit = false);
+	void setCutawayMode(LDVCutawayMode value, bool commit = false,
+		bool apply = false);
 	void setCutawayAlpha(int value, bool commit = false);
 	void setCutawayThickness(int value, bool commit = false);
 	void setSortTransparent(bool value, bool commit = false);

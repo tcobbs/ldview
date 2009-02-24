@@ -706,6 +706,9 @@ LRESULT ToolbarStrip::doCommand(
 	case IDC_FLAT_SHADING:
 		doFlatShading();
 		break;
+	case IDC_CUTAWAY:
+		doCutaway();
+		break;
 	case IDC_STUD_QUALITY:
 		doStudQuality();
 		break;
@@ -954,6 +957,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_allConditionals = m_prefs->getShowAllConditionalLines();
 		m_conditionalControls = m_prefs->getShowConditionalControlPoints();
 		m_flat = m_prefs->getUseFlatShading();
+		m_wireframeCutaway = m_prefs->getCutawayMode() == LDVCutawayWireframe;
 		m_lowStuds = !m_prefs->getQualityStuds();
 		m_partBBoxes = m_prefs->getBoundingBoxesOnly();
 		m_smoothCurves = m_prefs->getPerformSmoothing();
@@ -1005,6 +1009,9 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ShowConditionalControls")),
 			IDC_CONDITIONAL_CONTROLS, m_conditionalControls);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("WireframeCutaway")), IDC_CUTAWAY,
+			m_wireframeCutaway);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("FlatShading")), IDC_FLAT_SHADING, m_flat);
 		addTbCheckButtonInfo(m_mainButtonInfos,
@@ -1679,6 +1686,16 @@ void ToolbarStrip::doFlatShading(void)
 	}
 }
 
+void ToolbarStrip::doCutaway(void)
+{
+	if (doCheck(m_wireframeCutaway, IDC_CUTAWAY))
+	{
+		m_prefs->setCutawayMode(m_wireframeCutaway ? LDVCutawayWireframe :
+			LDVCutawayNormal);
+		forceRedraw();
+	}
+}
+
 void ToolbarStrip::doStudQuality(void)
 {
 	if (doCheck(m_lowStuds, IDC_STUD_QUALITY))
@@ -1844,6 +1861,9 @@ void ToolbarStrip::checksReflect(void)
 	checkReflect(m_modelBoundingBox, m_ldviewWindow->isBoundingBoxVisible(),
 		ID_TOOLS_BOUNDINGBOX);
 	checkReflect(m_topmost, m_ldviewWindow->isTopmost(), ID_VIEW_ALWAYSONTOP);
+	checkReflect(m_wireframeCutaway,
+		m_prefs->getCutawayMode() == LDVCutawayWireframe ||
+		m_prefs->getCutawayMode() == LDVCutawayStencil, IDC_CUTAWAY);
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)

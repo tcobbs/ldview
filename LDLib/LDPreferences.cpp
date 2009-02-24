@@ -1266,16 +1266,13 @@ void LDPreferences::setDefaultColor(int r, int g, int b, bool commit)
 void LDPreferences::setTransDefaultColor(bool value, bool commit, bool apply)
 {
 	setSetting(m_transDefaultColor, value, TRANS_DEFAULT_COLOR_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			int r, g, b;
+		int r, g, b;
 
-			getRGB(m_defaultColor, r, g, b);
-			m_modelViewer->setDefaultRGB((TCByte)r, (TCByte)g, (TCByte)b,
-				m_transDefaultColor);
-		}
+		getRGB(m_defaultColor, r, g, b);
+		m_modelViewer->setDefaultRGB((TCByte)r, (TCByte)g, (TCByte)b,
+			m_transDefaultColor);
 	}
 }
 
@@ -1287,12 +1284,9 @@ void LDPreferences::setProcessLdConfig(bool value, bool commit)
 void LDPreferences::setRandomColors(bool value, bool commit, bool apply)
 {
 	setSetting(m_randomColors, value, RANDOM_COLORS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setRandomColors(value);
-		}
+		m_modelViewer->setRandomColors(value);
 	}
 }
 
@@ -1304,12 +1298,9 @@ void LDPreferences::setShowFps(bool value, bool commit)
 void LDPreferences::setShowAxes(bool value, bool commit, bool apply)
 {
 	setSetting(m_showAxes, value, SHOW_AXES_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setShowAxes(value);
-		}
+		m_modelViewer->setShowAxes(value);
 	}
 }
 
@@ -1422,21 +1413,15 @@ void LDPreferences::setExtraDirs(
 void LDPreferences::setUseSeams(bool value, bool commit, bool apply)
 {
 	setSetting(m_useSeams, value, SEAMS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
 		if (m_useSeams)
 		{
-			if (m_modelViewer)
-			{
-				m_modelViewer->setSeamWidth(m_seamWidth / 100.0f);
-			}
+			m_modelViewer->setSeamWidth(m_seamWidth / 100.0f);
 		}
 		else
 		{
-			if (m_modelViewer)
-			{
-				m_modelViewer->setSeamWidth(0.0f);
-			}
+			m_modelViewer->setSeamWidth(0.0f);
 		}
 	}
 }
@@ -1449,48 +1434,36 @@ void LDPreferences::setSeamWidth(int value, bool commit)
 void LDPreferences::setBoundingBoxesOnly(bool value, bool commit, bool apply)
 {
 	setSetting(m_boundingBoxesOnly, value, BOUNDING_BOXES_ONLY_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setBoundingBoxesOnly(m_boundingBoxesOnly);
-		}
+		m_modelViewer->setBoundingBoxesOnly(m_boundingBoxesOnly);
 	}
 }
 
 void LDPreferences::setDrawWireframe(bool value, bool commit, bool apply)
 {
 	setSetting(m_drawWireframe, value, WIREFRAME_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setDrawWireframe(m_drawWireframe);
-		}
+		m_modelViewer->setDrawWireframe(m_drawWireframe);
 	}
 }
 
 void LDPreferences::setUseWireframeFog(bool value, bool commit, bool apply)
 {
 	setSetting(m_useWireframeFog, value, WIREFRAME_FOG_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setUseWireframeFog(m_useWireframeFog);
-		}
+		m_modelViewer->setUseWireframeFog(m_useWireframeFog);
 	}
 }
 
 void LDPreferences::setRemoveHiddenLines(bool value, bool commit, bool apply)
 {
 	setSetting(m_removeHiddenLines, value, REMOVE_HIDDEN_LINES_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
-		}
+		m_modelViewer->setRemoveHiddenLines(m_removeHiddenLines);
 	}
 }
 
@@ -1502,48 +1475,36 @@ void LDPreferences::setWireframeThickness(int value, bool commit)
 void LDPreferences::setBfc(bool value, bool commit, bool apply)
 {
 	setSetting(m_bfc, value, BFC_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setBfc(m_bfc);
-		}
+		m_modelViewer->setBfc(m_bfc);
 	}
 }
 
 void LDPreferences::setRedBackFaces(bool value, bool commit, bool apply)
 {
 	setSetting(m_redBackFaces, value, RED_BACK_FACES_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setRedBackFaces(m_redBackFaces);
-		}
+		m_modelViewer->setRedBackFaces(m_redBackFaces);
 	}
 }
 
 void LDPreferences::setGreenFrontFaces(bool value, bool commit, bool apply)
 {
 	setSetting(m_greenFrontFaces, value, GREEN_FRONT_FACES_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setGreenFrontFaces(m_greenFrontFaces);
-		}
+		m_modelViewer->setGreenFrontFaces(m_greenFrontFaces);
 	}
 }
 
 void LDPreferences::setShowHighlightLines(bool value, bool commit, bool apply)
 {
 	setSetting(m_showHighlightLines, value, SHOW_HIGHLIGHT_LINES_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setShowsHighlightLines(m_showHighlightLines);
-		}
+		m_modelViewer->setShowsHighlightLines(m_showHighlightLines);
 	}
 }
 
@@ -1552,13 +1513,10 @@ void LDPreferences::setDrawConditionalHighlights(bool value, bool commit,
 {
 	setSetting(m_drawConditionalHighlights, value, CONDITIONAL_HIGHLIGHTS_KEY,
 		commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setDrawConditionalHighlights(
-				m_drawConditionalHighlights);
-		}
+		m_modelViewer->setDrawConditionalHighlights(
+			m_drawConditionalHighlights);
 	}
 }
 
@@ -1568,13 +1526,9 @@ void LDPreferences::setShowAllConditionalLines(
 	bool apply)
 {
 	setSetting(m_showAllConditionalLines, value, SHOW_ALL_TYPE5_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setShowAllConditionalLines(
-				m_showAllConditionalLines);
-		}
+		m_modelViewer->setShowAllConditionalLines(m_showAllConditionalLines);
 	}
 }
 
@@ -1585,49 +1539,37 @@ void LDPreferences::setShowConditionalControlPoints(
 {
 	setSetting(m_showConditionalControlPoints, value,
 		SHOW_TYPE5_CONTROL_POINTS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setShowConditionalControlPoints(
-				m_showConditionalControlPoints);
-		}
+		m_modelViewer->setShowConditionalControlPoints(
+			m_showConditionalControlPoints);
 	}
 }
 
 void LDPreferences::setEdgesOnly(bool value, bool commit, bool apply)
 {
 	setSetting(m_edgesOnly, value, EDGES_ONLY_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setEdgesOnly(m_edgesOnly);
-		}
+		m_modelViewer->setEdgesOnly(m_edgesOnly);
 	}
 }
 
 void LDPreferences::setUsePolygonOffset(bool value, bool commit, bool apply)
 {
 	setSetting(m_usePolygonOffset, value, POLYGON_OFFSET_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setUsePolygonOffset(m_usePolygonOffset);
-		}
+		m_modelViewer->setUsePolygonOffset(m_usePolygonOffset);
 	}
 }
 
 void LDPreferences::setBlackHighlights(bool value, bool commit, bool apply)
 {
 	setSetting(m_blackHighlights, value, BLACK_HIGHLIGHTS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setBlackHighlights(m_blackHighlights);
-		}
+		m_modelViewer->setBlackHighlights(m_blackHighlights);
 	}
 }
 
@@ -1641,72 +1583,54 @@ void LDPreferences::setEdgeThickness(int value, bool commit)
 void LDPreferences::setUseLighting(bool value, bool commit, bool apply)
 {
 	setSetting(m_useLighting, value, LIGHTING_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setUseLighting(m_useLighting);
-		}
+		m_modelViewer->setUseLighting(m_useLighting);
 	}
 }
 
 void LDPreferences::setQualityLighting(bool value, bool commit, bool apply)
 {
 	setSetting(m_qualityLighting, value, QUALITY_LIGHTING_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setQualityLighting(m_qualityLighting);
-		}
+		m_modelViewer->setQualityLighting(m_qualityLighting);
 	}
 }
 
 void LDPreferences::setSubduedLighting(bool value, bool commit, bool apply)
 {
 	setSetting(m_subduedLighting, value, SUBDUED_LIGHTING_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setSubduedLighting(m_subduedLighting);
-		}
+		m_modelViewer->setSubduedLighting(m_subduedLighting);
 	}
 }
 
 void LDPreferences::setUseSpecular(bool value, bool commit, bool apply)
 {
 	setSetting(m_useSpecular, value, SPECULAR_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setUsesSpecular(m_useSpecular);
-		}
+		m_modelViewer->setUsesSpecular(m_useSpecular);
 	}
 }
 
 void LDPreferences::setOneLight(bool value, bool commit, bool apply)
 {
 	setSetting(m_oneLight, value, ONE_LIGHT_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setOneLight(m_oneLight);
-		}
+		m_modelViewer->setOneLight(m_oneLight);
 	}
 }
 
 void LDPreferences::setDrawLightDats(bool value, bool commit, bool apply)
 {
 	setSetting(m_drawLightDats, value, DRAW_LIGHT_DATS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setDrawLightDats(m_drawLightDats);
-		}
+		m_modelViewer->setDrawLightDats(m_drawLightDats);
 	}
 }
 
@@ -1715,24 +1639,18 @@ void LDPreferences::setOptionalStandardLight(bool value, bool commit,
 {
 	setSetting(m_optionalStandardLight, value, OPTIONAL_STANDARD_LIGHT_KEY,
 		commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setOptionalStandardLight(m_optionalStandardLight);
-		}
+		m_modelViewer->setOptionalStandardLight(m_optionalStandardLight);
 	}
 }
 
 void LDPreferences::setNoLightGeom(bool value, bool commit, bool apply)
 {
 	setSetting(m_noLightGeom, value, NO_LIGHT_GEOM_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setNoLightGeom(m_noLightGeom);
-		}
+		m_modelViewer->setNoLightGeom(m_noLightGeom);
 	}
 }
 
@@ -1781,12 +1699,9 @@ void LDPreferences::setLightVector(const TCVector &value, bool commit,
 	{
 		TCAlertManager::sendAlert(lightVectorChangedAlertClass(), this);
 	}
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setLightVector(m_lightVector);
-		}
+		m_modelViewer->setLightVector(m_lightVector);
 	}
 }
 
@@ -1803,12 +1718,19 @@ void LDPreferences::setStereoEyeSpacing(int value, bool commit)
 	setSetting(m_stereoEyeSpacing, value, STEREO_SPACING_KEY, commit);
 }
 
-void LDPreferences::setCutawayMode(LDVCutawayMode value, bool commit)
+void LDPreferences::setCutawayMode(
+	LDVCutawayMode value,
+	bool commit,
+	bool apply)
 {
 	int temp = (int)m_cutawayMode;
 
 	setSetting(temp, value, CUTAWAY_MODE_KEY, commit);
 	m_cutawayMode = (LDVCutawayMode)temp;
+	if (apply && m_modelViewer != NULL)
+	{
+		m_modelViewer->setCutawayMode(m_cutawayMode);
+	}
 }
 
 void LDPreferences::setCutawayAlpha(int value, bool commit)
@@ -1829,12 +1751,9 @@ void LDPreferences::setSortTransparent(bool value, bool commit)
 void LDPreferences::setPerformSmoothing(bool value, bool commit, bool apply)
 {
 	setSetting(m_performSmoothing, value, PERFORM_SMOOTHING_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setPerformSmoothing(m_performSmoothing);
-		}
+		m_modelViewer->setPerformSmoothing(m_performSmoothing);
 	}
 }
 
@@ -1846,12 +1765,9 @@ void LDPreferences::setUseStipple(bool value, bool commit)
 void LDPreferences::setUseFlatShading(bool value, bool commit, bool apply)
 {
 	setSetting(m_useFlatShading, value, FLAT_SHADING_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setUsesFlatShading(m_useFlatShading);
-		}
+		m_modelViewer->setUsesFlatShading(m_useFlatShading);
 	}
 }
 
@@ -1867,25 +1783,19 @@ void LDPreferences::setAllowPrimitiveSubstitution(bool value, bool commit,
 {
 	setSetting(m_allowPrimitiveSubstitution, value, PRIMITIVE_SUBSTITUTION_KEY,
 		commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setAllowPrimitiveSubstitution(
-				m_allowPrimitiveSubstitution);
-		}
+		m_modelViewer->setAllowPrimitiveSubstitution(
+			m_allowPrimitiveSubstitution);
 	}
 }
 
 void LDPreferences::setTextureStuds(bool value, bool commit, bool apply)
 {
 	setSetting(m_textureStuds, value, TEXTURE_STUDS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setTextureStuds(m_textureStuds);
-		}
+		m_modelViewer->setTextureStuds(m_textureStuds);
 	}
 }
 
@@ -1907,12 +1817,9 @@ void LDPreferences::setCurveQuality(int value, bool commit)
 void LDPreferences::setQualityStuds(bool value, bool commit, bool apply)
 {
 	setSetting(m_qualityStuds, value, QUALITY_STUDS_KEY, commit);
-	if (apply)
+	if (apply && m_modelViewer != NULL)
 	{
-		if (m_modelViewer)
-		{
-			m_modelViewer->setQualityStuds(m_qualityStuds);
-		}
+		m_modelViewer->setQualityStuds(m_qualityStuds);
 	}
 }
 
