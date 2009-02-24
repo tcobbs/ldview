@@ -35,6 +35,9 @@
     <property name="caption">
         <string>LDView Model Bounding Box</string>
     </property>
+    <property name="icon">
+        <pixmap>LDViewIcon16.png</pixmap>
+    </property>
     <property name="sizeGripEnabled">
         <bool>false</bool>
     </property>

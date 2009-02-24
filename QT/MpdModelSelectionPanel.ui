@@ -26,6 +26,9 @@
             <height>200</height>
         </size>
     </property>
+    <property name="icon">
+        <pixmap>LDViewIcon16.png</pixmap>
+    </property>
     <property name="baseSize">
         <size>
             <width>300</width>
