@@ -2636,13 +2636,21 @@ void CUIWindow::setAutosaveName(const char *value)
 	if (readAutosaveInfo(saveX, saveY, saveWidth, saveHeight,
 		saveMaximized))
 	{
-		if (saveWidth < minWidth)
+		RECT testRect = { 0, 0, 10, 10 };
+		int adjustWidth;
+		int adjustHeight;
+
+		AdjustWindowRectEx(&testRect, GetWindowLong(hWindow, GWL_STYLE), FALSE,
+			GetWindowLong(hWindow, GWL_EXSTYLE));
+		adjustWidth = testRect.right - testRect.left - 10;
+		adjustHeight = testRect.bottom - testRect.top - 10;
+		if (saveWidth < minWidth + adjustWidth)
 		{
-			saveWidth = minWidth;
+			saveWidth = minWidth + adjustWidth;
 		}
-		if (saveHeight < minHeight)
+		if (saveHeight < minHeight + adjustHeight)
 		{
-			saveHeight = minHeight;
+			saveHeight = minHeight + adjustHeight;
 		}
 		MoveWindow(hWindow, saveX, saveY, saveWidth, saveHeight,
 			saveMaximized == 0);
