@@ -98,6 +98,8 @@ public:
 	bool getSortTransparent(void);
 	bool getTextureStuds(void);
 	void setTextureStuds(bool value);
+	LDVCutawayMode getCutawayMode(void);
+	void setCutawayMode(LDVCutawayMode value);
 	virtual void applyChanges(void);
 	virtual int run(void);
 	LDPreferences *getLDPrefs(void) { return ldPrefs; }

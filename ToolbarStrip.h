@@ -102,6 +102,7 @@ protected:
 	void doRandomColors(void);
 	void doAllConditionals(void);
 	void doConditionalControls(void);
+	void doCutaway(void);
 	void doFlatShading(void);
 	void doStudQuality(void);
 	void doPartBoundingBoxes(void);
@@ -185,6 +186,7 @@ protected:
 	bool m_transDefaultColor;
 	bool m_modelBoundingBox;
 	bool m_topmost;
+	bool m_wireframeCutaway;
 	LDInputHandler::ViewMode m_viewMode;
 
 	bool m_showMain;
