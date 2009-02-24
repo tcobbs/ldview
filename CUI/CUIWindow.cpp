@@ -2636,6 +2636,14 @@ void CUIWindow::setAutosaveName(const char *value)
 	if (readAutosaveInfo(saveX, saveY, saveWidth, saveHeight,
 		saveMaximized))
 	{
+		if (saveWidth < minWidth)
+		{
+			saveWidth = minWidth;
+		}
+		if (saveHeight < minHeight)
+		{
+			saveHeight = minHeight;
+		}
 		MoveWindow(hWindow, saveX, saveY, saveWidth, saveHeight,
 			saveMaximized == 0);
 		if (saveMaximized)
