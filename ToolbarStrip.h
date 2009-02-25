@@ -17,7 +17,8 @@ typedef std::vector<HIMAGELIST> HImageListVector;
 typedef std::vector<int> IntVector;
 typedef std::map<int, int> IntIntMap;
 typedef std::list<HMENU> HMenuList;
-typedef std::map<UINT, std::pair<size_t, int>> ImageIndexMap;
+typedef std::pair<size_t, int> ImageIndexPair;
+typedef std::map<UINT, ImageIndexPair> ImageIndexMap;
 
 class ToolbarStrip: public CUIDialog
 {
