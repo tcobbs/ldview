@@ -108,6 +108,14 @@
 #define IDR_TB_MODELTREE                514
 #define IDR_TB_MODELBBOX                515
 #define IDR_TB_TOPMOST                  516
+#define IDR_TB_VIEW_FRONT               517
+#define IDR_TB_VIEW_BACK                518
+#define IDR_TB_VIEW_LEFT                519
+#define IDR_TB_VIEW_RIGHT               520
+#define IDR_TB_VIEW_TOP                 521
+#define IDR_TB_VIEW_BOTTOM              522
+#define IDR_TB_VIEW_2_3RDS              523
+#define IDR_TB_STUD                     524
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_STUD_QUALITY                1002

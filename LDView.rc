@@ -1703,8 +1703,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,0,1,8
- PRODUCTVERSION 4,0,1,8
+ FILEVERSION 4,0,1,9
+ PRODUCTVERSION 4,0,1,9
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1722,14 +1722,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.0.1h test build\0"
+            VALUE "FileVersion", "4.0.1i test build\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2009 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.0.1h test build\0"
+            VALUE "ProductVersion", "4.0.1i test build\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -1776,6 +1776,7 @@ IDR_TB_RELOAD           RCDATA  DISCARDABLE     "Icons\\toolbar_reload.png"
 IDC_SEAMS               RCDATA  DISCARDABLE     "Icons\\toolbar_seams.png"
 IDC_SMOOTH_CURVES       RCDATA  DISCARDABLE     "Icons\\toolbar_smooth.png"
 IDR_TB_SAVE             RCDATA  DISCARDABLE     "Icons\\toolbar_snapshot.png"
+IDR_TB_STUD             RCDATA  DISCARDABLE     "Icons\\toolbar_stud.png"
 IDR_TB_TOPMOST          RCDATA  DISCARDABLE     "Icons\\toolbar_topmost.png"
 IDC_TRANS_DEFAULT_COLOR RCDATA  DISCARDABLE     "Icons\\toolbar_trans_default.png"
 ID_VIEWANGLE            RCDATA  DISCARDABLE     "Icons\\toolbar_view.png"
@@ -1786,6 +1787,13 @@ IDR_TB_FIRST_STEP       RCDATA  DISCARDABLE     "Icons\\toolbar_step_first.png"
 IDR_TB_LAST_STEP        RCDATA  DISCARDABLE     "Icons\\toolbar_step_last.png"
 IDR_TB_NEXT_STEP        RCDATA  DISCARDABLE     "Icons\\toolbar_step_next.png"
 IDR_TB_PREV_STEP        RCDATA  DISCARDABLE     "Icons\\toolbar_step_prev.png"
+IDR_TB_VIEW_FRONT       RCDATA  DISCARDABLE     "Icons\\toolbar_view_front.png"
+IDR_TB_VIEW_BACK        RCDATA  DISCARDABLE     "Icons\\toolbar_view_back.png"
+IDR_TB_VIEW_LEFT        RCDATA  DISCARDABLE     "Icons\\toolbar_view_left.png"
+IDR_TB_VIEW_RIGHT       RCDATA  DISCARDABLE     "Icons\\toolbar_view_right.png"
+IDR_TB_VIEW_TOP         RCDATA  DISCARDABLE     "Icons\\toolbar_view_top.png"
+IDR_TB_VIEW_BOTTOM      RCDATA  DISCARDABLE     "Icons\\toolbar_view_bottom.png"
+IDR_TB_VIEW_2_3RDS      RCDATA  DISCARDABLE     "Icons\\toolbar_view_2_3rds.png"
 
 /////////////////////////////////////////////////////////////////////////////
 //
