@@ -71,6 +71,14 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	m_commandMap[ID_TOOLS_MODELTREE] = IDR_TB_MODELTREE;
 	m_commandMap[ID_TOOLS_BOUNDINGBOX] = IDR_TB_MODELBBOX;
 	m_commandMap[ID_VIEW_ALWAYSONTOP] = IDR_TB_TOPMOST;
+	m_commandMap[ID_VIEW_FRONT] = IDR_TB_VIEW_FRONT;
+	m_commandMap[ID_VIEW_BACK] = IDR_TB_VIEW_BACK;
+	m_commandMap[ID_VIEW_LEFT] = IDR_TB_VIEW_LEFT;
+	m_commandMap[ID_VIEW_RIGHT] = IDR_TB_VIEW_RIGHT;
+	m_commandMap[ID_VIEW_TOP] = IDR_TB_VIEW_TOP;
+	m_commandMap[ID_VIEW_BOTTOM] = IDR_TB_VIEW_BOTTOM;
+	m_commandMap[ID_VIEW_ISO] = IDR_TB_VIEW_2_3RDS;
+	m_commandMap[ID_PRIMITIVES_TEXTURESTUDS] = IDR_TB_STUD;
 }
 
 ToolbarStrip::~ToolbarStrip(void)
@@ -79,16 +87,14 @@ ToolbarStrip::~ToolbarStrip(void)
 
 void ToolbarStrip::dealloc(void)
 {
-	HImageListList::iterator it;
-
 	if (m_hGdiPlus != NULL)
 	{
 		FreeLibrary(m_hGdiPlus);
 		m_hGdiPlus = NULL;
 	}
-	for (it = m_imageLists.begin(); it != m_imageLists.end(); it++)
+	for (size_t i = 0; i < m_imageLists.size(); i++)
 	{
-		ImageList_Destroy(*it);
+		ImageList_Destroy(m_imageLists[i]);
 	}
 	TCAlertManager::unregisterHandler(this);
 	m_prefs->release();
@@ -129,26 +135,7 @@ void ToolbarStrip::hide(void)
 	::ShowWindow(hWindow, SW_HIDE);
 }
 
-//HIMAGELIST ToolbarStrip::initImageList(HWND hToolbar, UINT bitmapId)
-//{
-//	HIMAGELIST &imageList = m_imageLists.back();
-//	// Should the toolbar bitmap be language-specific?
-//	HBITMAP hBitmap = (HBITMAP)LoadImage(getLanguageModule(),
-//		MAKEINTRESOURCE(bitmapId), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-//	HBITMAP hMask = createMask(hBitmap, RGB(255, 0, 254));
-//
-//	// ImageList_AddMask works fine in XP, and avoids the necessity of
-//	// creating the mask via the createMask function above, but according
-//	// to the documentation, it isn't supposed to work on bitmaps whose
-//	// color depth is greater than 8bpp.  Ours is 24bpp.
-//	ImageList_Add(imageList, hBitmap, hMask);
-//	DeleteObject(hBitmap);
-//	DeleteObject(hMask);
-//	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)imageList);
-//	return imageList;
-//}
-
-void ToolbarStrip::updateMenus(const TbButtonInfoVector &infos)
+void ToolbarStrip::updateMenus(void)
 {
 	HMENU hMenu = NULL;
 
@@ -158,22 +145,14 @@ void ToolbarStrip::updateMenus(const TbButtonInfoVector &infos)
 	}
 	if (hMenu != NULL)
 	{
-		HIMAGELIST hImageList = m_imageLists.back();
-
-		for (size_t i = 0; i < infos.size(); i++)
-		{
-			const TbButtonInfo &buttonInfo = infos[i];
-
-			updateMenu(hMenu, buttonInfo.getCommandId(),
-				buttonInfo.getBmpIndex(),
-				hImageList);
-			for (size_t j = 0; j < buttonInfo.getOtherCommandIds().size(); j++)
-			{
-				updateMenu(hMenu, buttonInfo.getOtherCommandIds()[j],
-					buttonInfo.getBmpIndex() + j + 1,
-					hImageList);
-			}
-		}
+		updateMenuImages(hMenu);
+		updateMenuImages(m_hMainToolbarMenu);
+		updateMenuImages(m_hContextMenu);
+		//updateMenuImages(m_hWireframeMenu);
+		//updateMenuImages(m_hEdgesMenu);
+		updateMenuImages(m_hPrimitivesMenu);
+		//updateMenuImages(m_hLightingMenu);
+		//updateMenuImages(m_hBFCMenu);
 	}
 }
 
@@ -270,7 +249,6 @@ void ToolbarStrip::initMainToolbar(void)
 	loadMainToolbarMenus();
 	populateMainTbButtonInfos();
 	SendMessage(m_hToolbar, TB_SETSTYLE, 0, style | CCS_ADJUSTABLE);
-	updateMenus(m_mainButtonInfos);
 	fillMainToolbar();
 }
 
@@ -317,7 +295,6 @@ void ToolbarStrip::fillMainToolbar(void)
 void ToolbarStrip::initStepToolbar(void)
 {
 	populateStepTbButtonInfos();
-	updateMenus(m_stepButtonInfos);
 	initToolbar(m_hStepToolbar, m_stepButtonInfos, m_imageLists.back());
 }
 
@@ -501,11 +478,7 @@ void ToolbarStrip::updateNumSteps(void)
 }
 
 #ifdef USE_GDIPLUS
-void ToolbarStrip::updateMenu(
-	HMENU hMenu,
-	int command,
-	int index,
-	HIMAGELIST hImageList)
+void ToolbarStrip::updateMenuImages(HMENU hMenu)
 {
 	if (m_hGdiPlus == NULL)
 	{
@@ -523,38 +496,63 @@ void ToolbarStrip::updateMenu(
 		GetMenuItemInfo(hMenu, i, TRUE, &mii);
 		if (mii.hSubMenu)
 		{
-			updateMenu(mii.hSubMenu, command, index, hImageList);
+			updateMenuImages(mii.hSubMenu);
 		}
-		else if (mii.wID == (UINT)command && mii.hbmpItem == NULL)
+		else
 		{
-			HICON hIcon = ImageList_GetIcon(hImageList, index, ILD_TRANSPARENT);
-			Gdiplus::GpBitmap *pBitmap;
+			ImageIndexMap::const_iterator it = m_imagesMap.find(mii.wID);
 
-			if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) == Gdiplus::Ok)
+			if (it != m_imagesMap.end())
 			{
-				HBITMAP hMenuBitmap;
+				HIMAGELIST hImageList = m_imageLists[it->second.first];
+				HICON hIcon = ImageList_GetIcon(hImageList, it->second.second,
+					ILD_TRANSPARENT);
+				Gdiplus::GpBitmap *pBitmap;
 
-				if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0) ==
-					Gdiplus::Ok)
+				if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) == Gdiplus::Ok)
 				{
-					mii.fMask = MIIM_BITMAP;
-					mii.hbmpItem = hMenuBitmap;
-					SetMenuItemInfo(hMenu, i, TRUE, &mii);
+					HBITMAP hMenuBitmap;
+
+					if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0) ==
+						Gdiplus::Ok)
+					{
+						mii.fMask = MIIM_BITMAP;
+						mii.hbmpItem = hMenuBitmap;
+						SetMenuItemInfo(hMenu, i, TRUE, &mii);
+					}
 				}
 			}
-			//Gdiplus::Bitmap gdipBm(hIcon);
-			//HBITMAP hMenuBitmap;
-			//if (gdipBm.GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hMenuBitmap) == Gdiplus::Ok)
-			//{
-			//	mii.fMask = MIIM_BITMAP;
-			//	mii.hbmpItem = hMenuBitmap;
-			//	SetMenuItemInfo(hMenu, i, TRUE, &mii);
-			//}
 		}
+		//else if (mii.wID == (UINT)command && mii.hbmpItem == NULL)
+		//{
+		//	HICON hIcon = ImageList_GetIcon(hImageList, index, ILD_TRANSPARENT);
+		//	Gdiplus::GpBitmap *pBitmap;
+
+		//	if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) == Gdiplus::Ok)
+		//	{
+		//		HBITMAP hMenuBitmap;
+
+		//		if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0) ==
+		//			Gdiplus::Ok)
+		//		{
+		//			mii.fMask = MIIM_BITMAP;
+		//			mii.hbmpItem = hMenuBitmap;
+		//			SetMenuItemInfo(hMenu, i, TRUE, &mii);
+		//		}
+		//	}
+		//	//Gdiplus::Bitmap gdipBm(hIcon);
+		//	//HBITMAP hMenuBitmap;
+		//	//if (gdipBm.GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hMenuBitmap) == Gdiplus::Ok)
+		//	//{
+		//	//	mii.fMask = MIIM_BITMAP;
+		//	//	mii.hbmpItem = hMenuBitmap;
+		//	//	SetMenuItemInfo(hMenu, i, TRUE, &mii);
+		//	//}
+		//}
 	}
 }
 #else // USE_GDIPLUS
-void ToolbarStrip::updateMenu(HMENU, int, int, HIMAGELIST)
+void ToolbarStrip::updateMenuImages(HMENU)
 {
 }
 #endif // USE_GDIPLUS
@@ -616,6 +614,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
 	initMainToolbar();
 	initStepToolbar();
+	updateMenus();
 	initLayout();
 	updateStep();
 	updateNumSteps();
@@ -796,24 +795,28 @@ LRESULT ToolbarStrip::doCommand(
 int ToolbarStrip::addToImageList(int commandId)
 {
 	IntIntMap::const_iterator it = m_commandMap.find(commandId);
+	int newCommandId = commandId;
+	TCImage *image;
 
 	if (it != m_commandMap.end())
 	{
-		commandId = it->second;
+		newCommandId = it->second;
 	}
-	TCImage *image = TCImage::createFromResource(NULL, commandId, 4, true);
-
+	image = TCImage::createFromResource(NULL, newCommandId, 4, true);
 	if (image != NULL)
 	{
 		HBITMAP hBitmap;
 		HBITMAP hMask;
+		int preCount = ImageList_GetImageCount(m_imageLists.back());
 
 		image->getBmpAndMask(hBitmap, hMask);
 		ImageList_Add(m_imageLists.back(), hBitmap, hMask);
 		DeleteObject(hBitmap);
 		DeleteObject(hMask);
 		image->release();
-		return ImageList_GetImageCount(m_imageLists.back()) - 1;
+		m_imagesMap[commandId].first = m_imageLists.size() - 1;
+		m_imagesMap[commandId].second = preCount;
+		return preCount;
 		//HDC hdc = CreateCompatibleDC(NULL);
 		//BYTE *bmBuffer = NULL;
 		//int width = image->getWidth();
@@ -914,7 +917,7 @@ void ToolbarStrip::populateStepTbButtonInfos(void)
 	if (m_stepButtonInfos.size() == 0)
 	{
 		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-			10, 10));
+			0, 10));
 		addTbButtonInfo(m_stepButtonInfos,
 			TCLocalStrings::get(_UC("FirstStep")), ID_FIRST_STEP);
 		addTbButtonInfo(m_stepButtonInfos,
@@ -938,7 +941,7 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 	if (m_mainButtonInfos.size() == 0)
 	{
 		m_imageLists.push_back(ImageList_Create(16, 16, ILC_COLOR24 | ILC_MASK,
-			10, 10));
+			0, 100));
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("OpenFile")),
 			ID_FILE_OPEN);
 		addTbButtonInfo(m_mainButtonInfos,
@@ -1018,6 +1021,9 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			TCLocalStrings::get(_UC("SmoothCurves")), IDC_SMOOTH_CURVES,
 			m_smoothCurves);
 		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("TextureStuds")),
+			ID_PRIMITIVES_TEXTURESTUDS, m_prefs->getTextureStuds());
+		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
 			m_lowStuds);
 		addTbButtonInfo(m_mainButtonInfos,
@@ -1027,6 +1033,20 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 			m_topmost);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ZoomToFit")), ID_VIEW_ZOOMTOFIT);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("FrontView")), ID_VIEW_FRONT);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("BackView")), ID_VIEW_BACK);
+		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("LeftView")),
+			ID_VIEW_LEFT);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("RightView")), ID_VIEW_RIGHT);
+		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("TopView")),
+			ID_VIEW_TOP);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("BottomView")), ID_VIEW_BOTTOM);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("TwoThirdsView")), ID_VIEW_ISO);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ModelTree")), ID_TOOLS_MODELTREE);
 		addTbCheckButtonInfo(m_mainButtonInfos,
@@ -1538,6 +1558,8 @@ void ToolbarStrip::doTextureStuds(void)
 	m_prefs->setTextureStuds(!m_prefs->getTextureStuds());
 	setMenuCheck(m_hPrimitivesMenu, ID_PRIMITIVES_TEXTURESTUDS,
 		m_prefs->getTextureStuds());
+	forceRedraw();
+	checksReflect();
 }
 
 void ToolbarStrip::doQualityLighting(void)
@@ -1864,6 +1886,8 @@ void ToolbarStrip::checksReflect(void)
 	checkReflect(m_wireframeCutaway,
 		m_prefs->getCutawayMode() == LDVCutawayWireframe ||
 		m_prefs->getCutawayMode() == LDVCutawayStencil, IDC_CUTAWAY);
+	bool dummy = !m_prefs->getTextureStuds();
+	checkReflect(dummy, !dummy, ID_PRIMITIVES_TEXTURESTUDS);
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)

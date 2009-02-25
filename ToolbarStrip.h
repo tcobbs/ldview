@@ -13,9 +13,11 @@ class TCImage;
 typedef std::vector<HWND> HwndVector;
 typedef std::vector<long> LongVector;
 typedef std::map<long, size_t> LongSizeTMap;
-typedef std::list<HIMAGELIST> HImageListList;
+typedef std::vector<HIMAGELIST> HImageListVector;
 typedef std::vector<int> IntVector;
 typedef std::map<int, int> IntIntMap;
+typedef std::list<HMENU> HMenuList;
+typedef std::map<UINT, std::pair<size_t, int>> ImageIndexMap;
 
 class ToolbarStrip: public CUIDialog
 {
@@ -86,8 +88,8 @@ protected:
 	void updatePrimitivesMenu(void);
 	void updateLightingMenu(void);
 	void updateBFCMenu(void);
-	void updateMenu(HMENU hMenu, int command, int index, HIMAGELIST hImageList);
-	void updateMenus(const TbButtonInfoVector &infos);
+	void updateMenuImages(HMENU hMenu);
+	void updateMenus(void);
 	void sizeToolbar(HWND hToolbar, int lastCommandID);
 
 	void forceRedraw(void);
@@ -164,8 +166,9 @@ protected:
 	TbButtonInfoVector m_stepButtonInfos;
 	HwndVector m_controls;
 	int m_stripHeight;
-	HImageListList m_imageLists;
+	HImageListVector m_imageLists;
 	IntIntMap m_commandMap;
+	ImageIndexMap m_imagesMap;
 
 	int m_stdBitmapStartId;
 	int m_tbBitmapStartId;
