@@ -147,7 +147,7 @@ BOOL MpdDialog::doInitDialog(HWND hKbControl)
 	m_resizer->addSubWindow(IDC_MPD_LIST, CUISizeHorizontal | CUISizeVertical);
 	m_resizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
 	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
-	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
+	m_resizer->addResizeGrip();
 	updateData();
 	setAutosaveName("MpdDialog");
 	return CUIDialog::doInitDialog(hKbControl);

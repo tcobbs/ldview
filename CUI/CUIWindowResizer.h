@@ -33,6 +33,7 @@ public:
 	virtual int getOriginalWidth(void) const { return originalWidth; }
 	virtual void setOriginalHeight(int value) { originalHeight = value; }
 	virtual int getOriginalHeight(void) const { return originalHeight; }
+	virtual void addResizeGrip(void);
 protected:
 	virtual ~CUIWindowResizer(void);
 	virtual void dealloc(void);

@@ -2559,6 +2559,14 @@ void CUIWindow::checkSet(HWND hWnd, bool value)
 	SendMessage(hWnd, BM_SETCHECK, value, 0);
 }
 
+void CUIWindow::positionResizeGrip(HWND hSizeGrip)
+{
+	RECT clientRect;
+	GetClientRect(hWindow, &clientRect);
+	positionResizeGrip(hSizeGrip, clientRect.right, clientRect.bottom);
+	RedrawWindow(hWindow, NULL, NULL, RDW_ERASE | RDW_INVALIDATE);
+}
+
 void CUIWindow::positionResizeGrip(
 	HWND hSizeGrip,
 	int parentWidth,
@@ -2568,20 +2576,6 @@ void CUIWindow::positionResizeGrip(
 
 	MoveWindow(hSizeGrip, parentWidth - sbSize, parentHeight - sbSize, sbSize,
 		sbSize, FALSE);
-}
-
-HWND CUIWindow::attachResizeGrip(UINT gripID, CUIWindowResizer *resizer)
-{
-	HWND hSizeGrip = GetDlgItem(hWindow, gripID);
-	RECT rect;
-
-	GetClientRect(hWindow, &rect);
-	positionResizeGrip(hSizeGrip, rect.right, rect.bottom);
-	if (resizer != NULL)
-	{
-		resizer->addSubWindow(hSizeGrip, CUIFloatLeft | CUIFloatTop);
-	}
-	return hSizeGrip;
 }
 
 void CUIWindow::writeAutosaveInfo(
