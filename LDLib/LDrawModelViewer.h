@@ -5,6 +5,7 @@
 #include <TCFoundation/TCStringArray.h>
 #include <TCFoundation/mystring.h>
 #include <TCFoundation/TCStlIncludes.h>
+#include <TCFoundation/TCTypedObjectArray.h>
 #include <LDLoader/LDLCamera.h>
 #include <TRE/TREGL.h>
 #include <LDExporter/LDExporter.h>
@@ -60,6 +61,8 @@ class LDPreferences;
 class LDPartsList;
 class LDViewPoint;
 class LDInputHandler;
+class LDLFileLine;
+typedef TCTypedObjectArray<LDLFileLine> LDLFileLineArray;
 
 typedef std::list<std::string> StringList;
 
@@ -591,6 +594,10 @@ class LDrawModelViewer: public TCAlertSender
 		void parseHighlightPath(const std::string &path,
 			const LDLModel *srcModel, LDLModel *dstModel,
 			const std::string &prePath, int pathNum);
+		void attachFileLine(LDLFileLine *dstFileLine,
+			LDLFileLineArray *dstFileLines, LDLModel *dstModel);
+		void attachLineLine(LDLFileLineArray *dstFileLines, LDLModel *dstModel,
+			const TCVector &pt0, const TCVector &pt1);
 
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,

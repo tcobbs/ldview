@@ -8,13 +8,13 @@ class LDLTriangleLine;
 class LDLLineLine : public LDLShapeLine
 {
 public:
+	LDLLineLine(LDLModel *parentModel, const char *line, int lineNumber,
+		const char *originalLine = NULL);
 	virtual TCObject *copy(void) const;
 	virtual bool parse(void);
 	virtual int getNumPoints(void) const { return 2; }
 	virtual LDLLineType getLineType(void) const { return LDLLineTypeLine; }
 protected:
-	LDLLineLine(LDLModel *parentModel, const char *line, int lineNumber,
-		const char *originalLine = NULL);
 	LDLLineLine(const LDLLineLine &other);
 
 	friend class LDLFileLine;		// Needed because constructors are protected.
