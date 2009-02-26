@@ -1704,7 +1704,8 @@ void LDLModel::scanBoundingBoxPoint(
 	const TCVector &point,
 	LDLFileLine *pFileLine)
 {
-	if (pFileLine->getLineType() != LDLLineTypeConditionalLine)
+	if (pFileLine == NULL ||
+		pFileLine->getLineType() != LDLLineTypeConditionalLine)
 	{
 		if (m_flags.haveBoundingBox)
 		{
@@ -1766,7 +1767,8 @@ void LDLModel::calcBoundingBox(void) const
 
 void LDLModel::scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine)
 {
-	if (pFileLine->getLineType() != LDLLineTypeConditionalLine)
+	if (pFileLine == NULL ||
+		pFileLine->getLineType() != LDLLineTypeConditionalLine)
 	{
 		TCFloat radius = (m_center - point).lengthSquared();
 
