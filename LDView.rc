@@ -1332,7 +1332,7 @@ BEGIN
     BEGIN
         MENUITEM "&Open...\tCtrl+O",            ID_FILE_OPEN
         MENUITEM "&Save Snapshot...\tCtrl+S",   ID_FILE_SAVE
-        MENUITEM "Export...\tCtrl+E",           ID_FILE_EXPORT
+        MENUITEM "Expor&t...\tCtrl+E",          ID_FILE_EXPORT
         MENUITEM "&Reload\tF5",                 ID_FILE_RELOAD
         MENUITEM "&Cancel Load\tEsc",           ID_FILE_CANCELLOAD
         MENUITEM SEPARATOR
@@ -1346,7 +1346,7 @@ BEGIN
         END
         MENUITEM "L&Draw Dir...",               ID_FILE_LDRAWDIR
         MENUITEM "&Extra Dirs...",              ID_FILE_EXTRADIRS
-        MENUITEM "Check for Library Updates...", ID_FILE_CHECKFORLIBUPDATES
+        MENUITEM "Check for Library &Updates...", ID_FILE_CHECKFORLIBUPDATES
         MENUITEM SEPARATOR
         MENUITEM "P&age Setup...",              ID_FILE_PAGESETUP
         MENUITEM "&Print...\tCtrl+P",           ID_FILE_PRINT
@@ -1374,13 +1374,13 @@ BEGIN
             MENUITEM "&Right\tCtrl+4",              ID_VIEW_RIGHT
             MENUITEM "&Top\tCtrl+5",                ID_VIEW_TOP
             MENUITEM "B&ottom\tCtrl+6",             ID_VIEW_BOTTOM
-            MENUITEM "Specify latitude/longitude\tCtrl+9", 
+            MENUITEM "S&pecify latitude/longitude\tCtrl+9", 
                                                     ID_VIEW_SPECIFYLATLON
             MENUITEM "T&wo-thirds\tCtrl+0",         ID_VIEW_ISO
             MENUITEM SEPARATOR
             MENUITEM "&Save Current as Default",    ID_VIEW_SAVE_DEFAULT
         END
-        POPUP "Standard Sizes"
+        POPUP "Sta&ndard Sizes"
         BEGIN
             MENUITEM "Dummy item",                  ID_VIEW_STANDARDSIZES_DUMMYITEM
 
@@ -1391,27 +1391,27 @@ BEGIN
         MENUITEM "F&ly-through Mode\tCtrl+Shift+F", ID_VIEW_FLYTHROUGH
         MENUITEM SEPARATOR
     END
-    POPUP "Step"
+    POPUP "&Step"
     BEGIN
-        MENUITEM "First\tHome",                 ID_FIRST_STEP
-        MENUITEM "Previous\tPgUp",              ID_PREV_STEP
-        MENUITEM "Next\tPgDn",                  ID_NEXT_STEP
-        MENUITEM "Last\tEnd",                   ID_LAST_STEP
+        MENUITEM "&First\tHome",                ID_FIRST_STEP
+        MENUITEM "&Previous\tPgUp",             ID_PREV_STEP
+        MENUITEM "&Next\tPgDn",                 ID_NEXT_STEP
+        MENUITEM "&Last\tEnd",                  ID_LAST_STEP
         MENUITEM SEPARATOR
-        MENUITEM "Go to Step\tCtrl+G",          ID_GOTO_STEP
+        MENUITEM "&Go to Step\tCtrl+G",         ID_GOTO_STEP
     END
     POPUP "&Tools"
     BEGIN
         MENUITEM "&Errors && Warnings...\tCtrl+Shift+E", ID_TOOLS_ERRORS
         MENUITEM "Parts &List...\tCtrl+L",      ID_TOOLS_PARTSLIST
-        MENUITEM "&Model Tree...\tCtrl+T",      ID_TOOLS_MODELTREE
-        MENUITEM "Model Bounding Box...\tCtrl+B", ID_TOOLS_BOUNDINGBOX
-        MENUITEM "MPD Model Selection...\tCtrl+M", ID_TOOLS_MPD
+        MENUITEM "Model &Tree...\tCtrl+T",      ID_TOOLS_MODELTREE
+        MENUITEM "Model &Bounding Box...\tCtrl+B", ID_TOOLS_BOUNDINGBOX
+        MENUITEM "&MPD Model Selection...\tCtrl+M", ID_TOOLS_MPD
         MENUITEM SEPARATOR
         MENUITEM "&Show View Info...",          ID_TOOLS_VIEW_INFO
         MENUITEM SEPARATOR
         MENUITEM "Show &POV-Ray Camera Info...", ID_TOOLS_POV_CAMERA
-        MENUITEM "Use current aspect ratio for POV-Ray camera", 
+        MENUITEM "&Use current aspect ratio for POV-Ray camera", 
                                                 ID_TOOLS_POV_CAMERA_ASPECT
     END
     POPUP "&Help"
