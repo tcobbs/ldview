@@ -6,6 +6,7 @@
 #include <TCFoundation/TCStringArray.h>
 
 #include <qstring.h>
+#include <qstatusbar.h>
 #include <qcheckbox.h>
 #include <qlabel.h>
 #include <qgroupbox.h>
@@ -40,6 +41,10 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
     }
 	highlightSelectedLineBox->setChecked(TCUserDefaults::boolForKey(
 			MODEL_TREE_HIGHLIGHT_KEY, false, false));
+	statusbar = statusBar();
+	statusText = new QLabel(statusbar);
+	statusbar->addWidget(statusText);
+	statusbar->show();
 }
 
 LDViewModelTree::~LDViewModelTree() { }
@@ -150,8 +155,11 @@ void LDViewModelTree::selectionChanged(QListViewItem *item)
 	if (highlightSelectedLineBox->isChecked() && item)
 	{
 		LDModelTree *tree = findTree(item);
+		QString qs;
 		m_modelWindow->getModelViewer()->setHighlightPaths(
 						tree->getTreePath());
+		ucstringtoqstring(qs,tree->getStatusText());
+		statusText->setText(qs);
 	}
 }
 
