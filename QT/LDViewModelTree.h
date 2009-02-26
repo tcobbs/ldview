@@ -8,7 +8,8 @@
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
 
-
+class QLabel;
+class QStatusBar;
 class LDLMainModel;
 class LDModelTree;
 class Preferences;
@@ -55,6 +56,8 @@ protected:
 	Preferences *preferences;
 	QLabel *messageText;
 	bool optionsShown;
+	QStatusBar *statusbar;
+	QLabel *statusText;
 };
 
 #endif // __LDVIEWMODELTREE_H__
