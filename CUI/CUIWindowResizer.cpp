@@ -179,9 +179,20 @@ void CUIWindowResizer::addResizeGrip(void)
 	GetClientRect(hWindow, &clientRect);
 	x = clientRect.right - width;
 	y = clientRect.bottom - height;
-	hGrip = ::CreateWindow(WC_SCROLLBAR, "",
-		SBS_SIZEGRIP | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, x, y, width,
-		height, hWindow, NULL,
-		(HINSTANCE)GetWindowLongPtr(hWindow, GWLP_HINSTANCE), 0);
+	hGrip = createResizeGrip(hWindow, x, y, width, height);
 	addSubWindow(hGrip, CUIFloatLeft | CUIFloatTop);
+}
+
+// Note: static method.
+HWND CUIWindowResizer::createResizeGrip(
+	HWND hParent,
+	int x,
+	int y,
+	int width,
+	int height)
+{
+	return CreateWindow(WC_SCROLLBAR, "",
+		SBS_SIZEGRIP | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, x, y, width,
+		height, hParent, NULL,
+		(HINSTANCE)GetWindowLongPtr(hParent, GWLP_HINSTANCE), 0);
 }

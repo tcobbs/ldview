@@ -1563,6 +1563,26 @@ void mbstowstring(std::wstring &dst, const char *src, int length /*= -1*/)
 	}
 }
 
+void stringtoucstring(ucstring &dst, const std::string &src)
+{
+#ifdef TC_NO_UNICODE
+	dst = src;
+#else // TC_NO_UNICODE
+	stringtowstring(dst, src);
+#endif // TC_NO_UNICODE
+}
+
+ucstring stringtoucstring(const std::string &src)
+{
+#ifdef TC_NO_UNICODE
+	return src;
+#else // TC_NO_UNICODE
+	ucstring dst;
+	stringtowstring(dst, src);
+	return dst;
+#endif // TC_NO_UNICODE
+}
+
 #ifdef TC_NO_UNICODE
 UCSTR mbstoucstring(const char *src, int /*length*/ /*= -1*/)
 #else // TC_NO_UNICODE

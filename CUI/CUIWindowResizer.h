@@ -34,6 +34,8 @@ public:
 	virtual void setOriginalHeight(int value) { originalHeight = value; }
 	virtual int getOriginalHeight(void) const { return originalHeight; }
 	virtual void addResizeGrip(void);
+	static HWND createResizeGrip(HWND hParent, int x = 0, int y = 0,
+		int width = 10, int height = 10);
 protected:
 	virtual ~CUIWindowResizer(void);
 	virtual void dealloc(void);
