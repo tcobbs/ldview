@@ -22,7 +22,8 @@ m_model(NULL),
 m_modelTree(NULL),
 m_resizer(NULL),
 m_optionsShown(true),
-m_highlight(TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false))
+m_highlight(TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false)),
+m_clearing(false)
 {
 	COLORREF defHighlightColor = RGB(160, 224, 255);
 	long highlightColor =
@@ -70,7 +71,7 @@ void ModelTreeDialog::setModel(LDLMainModel *model)
 {
 	if (model != m_model)
 	{
-		TreeView_DeleteAllItems(m_hTreeView);
+		clearTreeView();
 		TCObject::release(m_model);
 		TCObject::release(m_modelTree);
 		m_modelTree = NULL;
@@ -167,9 +168,13 @@ void ModelTreeDialog::highlightItem(HTREEITEM hItem)
 
 LRESULT ModelTreeDialog::doTreeSelChanged(LPNMTREEVIEW notification)
 {
-	if (m_highlight)
+	if (!m_clearing)
 	{
-		highlightItem(notification->itemNew.hItem);
+		if (m_highlight)
+		{
+			highlightItem(notification->itemNew.hItem);
+		}
+		updateStatusText();
 	}
 	return 1;	// Ignored
 }
@@ -311,10 +316,21 @@ LRESULT ModelTreeDialog::doCommand(
 	return CUIDialog::doCommand(notifyCode, commandId, control);
 }
 
-void ModelTreeDialog::refreshTreeView(void)
+void ModelTreeDialog::clearTreeView(void)
 {
+	m_clearing = true;
 	SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
 	TreeView_DeleteAllItems(m_hTreeView);
+	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
+	TreeView_SelectItem(m_hTreeView, NULL);
+	m_clearing = false;
+	updateStatusText();
+}
+
+void ModelTreeDialog::refreshTreeView(void)
+{
+	clearTreeView();
+	SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
 	addChildren(NULL, m_modelTree);
 	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
 	RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
@@ -379,7 +395,7 @@ void ModelTreeDialog::adjustWindow(int widthDelta)
 	{
 		ShowWindow(m_lineChecks[i], showCommand);
 	}
-	positionResizeGrip(m_hResizeGrip);
+	//positionResizeGrip(m_hResizeGrip);
 }
 
 void ModelTreeDialog::swapWindowText(char oldChar, char newChar)
@@ -447,8 +463,8 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	setupLineCheck(IDC_CONDITIONAL, LDLLineTypeConditionalLine);
 	setupLineCheck(IDC_EMPTY, LDLLineTypeEmpty);
 	setupLineCheck(IDC_UNKNOWN, LDLLineTypeUnknown);
-	m_hResizeGrip = GetDlgItem(hWindow, IDC_RESIZEGRIP);
-	positionResizeGrip(m_hResizeGrip);
+	//m_hResizeGrip = CUIWindowResizer::createResizeGrip(hWindow);
+	//positionResizeGrip(m_hResizeGrip);
 	GetWindowRect(GetDlgItem(hWindow, IDC_SHOW_BOX), &optionsRect);
 	screenToClient(hWindow, &optionsRect);
 	GetClientRect(hWindow, &clientRect);
@@ -460,8 +476,46 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 		hideOptions();
 	}
 	checkSet(IDC_HIGHLIGHT, m_highlight);
+	initStatusBar();
 	setAutosaveName("ModelTreeDialog");
 	return CUIDialog::doInitDialog(hKbControl);
+}
+
+void ModelTreeDialog::updateStatusText(void)
+{
+	HTREEITEM hItem = TreeView_GetSelection(m_hTreeView);
+
+	if (hItem)
+	{
+		TVITEMEX item;
+
+		memset(&item, 0, sizeof(item));
+		item.mask = TVIF_PARAM;
+		item.hItem = hItem;
+		if (TreeView_GetItem(m_hTreeView, &item))
+		{
+			LDModelTree *tree = (LDModelTree *)item.lParam;
+
+			if (tree)
+			{
+				sendMessageUC(m_hStatus, SB_SETTEXT, 0,
+					(LPARAM)tree->getStatusText().c_str());
+				return;
+			}
+		}
+	}
+	sendMessageUC(m_hStatus, SB_SETTEXT, 0, (LPARAM)ls(_UC("NoSelection")));
+}
+
+void ModelTreeDialog::initStatusBar(void)
+{
+	int parts[] = {-1};
+
+	m_hStatus = ::CreateWindow(STATUSCLASSNAME, "",
+		WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP, 0, 0, 10, 10, hWindow, NULL,
+		hInstance, 0);
+	SendMessage(m_hStatus, SB_SETPARTS, 1, (LPARAM)parts);
+	updateStatusText();
 }
 
 LRESULT ModelTreeDialog::doClose(void)
@@ -479,7 +533,9 @@ LRESULT ModelTreeDialog::doSize(WPARAM sizeType, int newWidth, int newHeight)
 	if (sizeType != SIZE_MINIMIZED)
 	{
 		m_resizer->resize(newWidth, newHeight);
-		positionResizeGrip(m_hResizeGrip, newWidth, newHeight);
+		//positionResizeGrip(m_hResizeGrip, newWidth, newHeight);
+		SendMessage(m_hStatus, WM_SIZE, sizeType,
+			MAKELPARAM(newWidth, newHeight));
 	}
 	return CUIDialog::doSize(sizeType, newWidth, newHeight);
 }

@@ -23,7 +23,8 @@ m_children(NULL),
 m_filteredChildren(NULL),
 m_activeLineTypes(0),
 m_allLineTypes(0),
-m_viewPopulated(false)
+m_viewPopulated(false),
+m_lineNumber(-1)
 {
 	TCObject::retain(m_model);
 	for (int i = LDLLineTypeComment; i <= LDLLineTypeUnknown; i++)
@@ -43,13 +44,17 @@ m_viewPopulated(false)
 	}
 }
 
-LDModelTree::LDModelTree(TCULong activeLineTypes, TCULong allLineTypes):
+LDModelTree::LDModelTree(
+	TCULong activeLineTypes,
+	TCULong allLineTypes,
+	int lineNumber):
 m_model(NULL),
 m_children(NULL),
 m_filteredChildren(NULL),
 m_activeLineTypes(activeLineTypes),
 m_allLineTypes(allLineTypes),
-m_viewPopulated(false)
+m_viewPopulated(false),
+m_lineNumber(lineNumber)
 {
 }
 
@@ -172,7 +177,7 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 			for (int i = 0; i < count; i++)
 			{
 				LDModelTree *child = new LDModelTree(m_activeLineTypes,
-					m_allLineTypes);
+					m_allLineTypes, i + 1);
 
 				m_children->addObject(child);
 				child->release();
@@ -196,6 +201,7 @@ void LDModelTree::setModel(LDLModel *model)
 
 void LDModelTree::scanLine(LDLFileLine *fileLine, int defaultColor)
 {
+	m_fileLine = fileLine;
 	m_text = fileLine->getLine();
 	if (m_text.size() == 0)
 	{
@@ -390,4 +396,24 @@ bool LDModelTree::getTextRGB(int &r, int &g, int &b) const
 	{
 		return false;
 	}
+}
+
+const ucstring &LDModelTree::getStatusText(void) const
+{
+	if (m_statusText.size() == 0)
+	{
+		if (m_fileLine != NULL)
+		{
+			m_statusText = stringtoucstring(filenameFromPath(
+				m_fileLine->getParentModel()->getFilename()));
+
+			m_statusText += ls(_UC("SpaceLineSpace"));
+			m_statusText += ltoucstr(m_lineNumber);
+		}
+		else
+		{
+			m_statusText = ls(_UC("Error"));
+		}
+	}
+	return m_statusText;
 }

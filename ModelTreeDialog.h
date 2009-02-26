@@ -30,6 +30,7 @@ protected:
 	void addChildren(HTREEITEM parent, const LDModelTree *tree);
 	void fillTreeView(void);
 	void refreshTreeView(void);
+	void clearTreeView(void);
 	void setModel(LDLMainModel *model);
 	void setModelWindow(ModelWindow *modelWindow);
 	void modelAlertCallback(TCAlert *alert);
@@ -57,19 +58,23 @@ protected:
 	LRESULT doTreeSelChanged(LPNMTREEVIEW notification);
 	LRESULT doHighlightColorChanged(void);
 	void highlightItem(HTREEITEM hItem);
+	void initStatusBar(void);
+	void updateStatusText(void);
 
 	ModelWindow *m_modelWindow;
 	LDLMainModel *m_model;
 	LDModelTree *m_modelTree;
 	HWND m_hTreeView;
+	HWND m_hStatus;
 	CUIWindowResizer *m_resizer;
 	HWndVector m_lineChecks;
 	UIntLineTypeMap m_checkLineTypes;
 	LineTypeUIntMap m_checkIds;
 	bool m_optionsShown;
 	bool m_highlight;
+	bool m_clearing;
 	int m_optionsDelta;
-	HWND m_hResizeGrip;
+	//HWND m_hResizeGrip;
 	CUIColorButton *m_colorButton;
 	int m_highlightR;
 	int m_highlightG;

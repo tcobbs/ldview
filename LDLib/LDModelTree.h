@@ -23,6 +23,7 @@ public:
 	int getNumChildren(bool filter = true) const;
 	const std::string &getText(void) const { return m_text; }
 	const std::string &getTreePath(void) const { return m_treePath; }
+	const ucstring &getStatusText(void) const;
 	LDLLineType getLineType(void) const { return m_lineType; }
 	void setShowLineType(LDLLineType lineType, bool value);
 	bool getShowLineType(LDLLineType lineType) const
@@ -37,9 +38,10 @@ public:
 	bool getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
 	bool getTextRGB(TCByte &r, TCByte &g, TCByte &b) const;
 	bool getTextRGB(int &r, int &g, int &b) const;
+	int getLineNumber(void) const { return m_lineNumber; }
 protected:
 	bool getRGB(TCFloat l, TCFloat h, TCFloat &r, TCFloat &g, TCFloat &b) const;
-	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
+	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes, int lineNumber);
 	virtual ~LDModelTree(void);
 	virtual void dealloc(void);
 	void scanLine(LDLFileLine *fileLine, int defaultColor);
@@ -50,15 +52,18 @@ protected:
 	//virtual void scanModelLine(LDLModelLine *modelLine, int defaultColor);
 
 	LDLModel *m_model;
+	const LDLFileLine *m_fileLine;
 	mutable LDModelTreeArray *m_children;
 	mutable LDModelTreeArray *m_filteredChildren;
 	std::string m_text;
 	std::string m_treePath;
+	mutable ucstring m_statusText;
 	LDLLineType m_lineType;
 	int m_defaultColor;
 	TCULong m_activeLineTypes;
 	TCULong m_allLineTypes;
 	bool m_viewPopulated;
+	int m_lineNumber;
 };
 
 #endif // __LDMODELTREE_H__
