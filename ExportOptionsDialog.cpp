@@ -157,7 +157,7 @@ BOOL ExportOptionsDialog::doInitDialog(HWND hKbControl)
 	m_resizer->addSubWindow(IDC_RESET, CUIFloatRight | CUIFloatTop);
 	m_resizer->addSubWindow(IDOK, CUIFloatLeft | CUIFloatTop);
 	m_resizer->addSubWindow(IDCANCEL, CUIFloatLeft | CUIFloatTop);
-	attachResizeGrip(IDC_RESIZEGRIP, m_resizer);
+	m_resizer->addResizeGrip();
 	initialized = TRUE;
 	// Keep a different autosave setting for each export file type.
 	setAutosaveName((extension + "ExportOptions").c_str());

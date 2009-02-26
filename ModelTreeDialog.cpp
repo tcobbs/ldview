@@ -379,6 +379,7 @@ void ModelTreeDialog::adjustWindow(int widthDelta)
 	{
 		ShowWindow(m_lineChecks[i], showCommand);
 	}
+	positionResizeGrip(m_hResizeGrip);
 }
 
 void ModelTreeDialog::swapWindowText(char oldChar, char newChar)
@@ -446,11 +447,11 @@ BOOL ModelTreeDialog::doInitDialog(HWND hKbControl)
 	setupLineCheck(IDC_CONDITIONAL, LDLLineTypeConditionalLine);
 	setupLineCheck(IDC_EMPTY, LDLLineTypeEmpty);
 	setupLineCheck(IDC_UNKNOWN, LDLLineTypeUnknown);
-	GetClientRect(hWindow, &clientRect);
 	m_hResizeGrip = GetDlgItem(hWindow, IDC_RESIZEGRIP);
-	positionResizeGrip(m_hResizeGrip, clientRect.right, clientRect.bottom);
+	positionResizeGrip(m_hResizeGrip);
 	GetWindowRect(GetDlgItem(hWindow, IDC_SHOW_BOX), &optionsRect);
 	screenToClient(hWindow, &optionsRect);
+	GetClientRect(hWindow, &clientRect);
 	m_optionsDelta = clientRect.right - optionsRect.left;
 	minWidth = clientRect.right;
 	minHeight = clientRect.bottom;

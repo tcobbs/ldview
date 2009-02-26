@@ -1,5 +1,6 @@
 #include "CUIWindowResizer.h"
 #include "CUISubWindowInfo.h"
+#include <commctrl.h>
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -164,4 +165,23 @@ void CUIWindowResizer::removeSubWindow(HWND hSubWindow)
 void CUIWindowResizer::removeSubWindow(int controlID)
 {
 	removeSubWindow(GetDlgItem(hWindow, controlID));
+}
+
+void CUIWindowResizer::addResizeGrip(void)
+{
+	RECT clientRect;
+	int x;
+	int y;
+	int width = ::GetSystemMetrics(SM_CXVSCROLL);
+	int height = ::GetSystemMetrics(SM_CYHSCROLL);
+	HWND hGrip;
+
+	GetClientRect(hWindow, &clientRect);
+	x = clientRect.right - width;
+	y = clientRect.bottom - height;
+	hGrip = ::CreateWindow(WC_SCROLLBAR, "",
+		SBS_SIZEGRIP | WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS, x, y, width,
+		height, hWindow, NULL,
+		(HINSTANCE)GetWindowLongPtr(hWindow, GWLP_HINSTANCE), 0);
+	addSubWindow(hGrip, CUIFloatLeft | CUIFloatTop);
 }

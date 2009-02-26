@@ -276,9 +276,9 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual bool copyToClipboard(const wchar_t *value);
 #endif // TC_NO_UNICODE
 
-		virtual HWND attachResizeGrip(UINT gripID, CUIWindowResizer *resizer);
 		virtual void positionResizeGrip(HWND hSizeGrip, int parentWidth,
 			int parentHeight);
+		virtual void positionResizeGrip(HWND hSizeGrip);
 
 		virtual void setAutosaveName(const char *value);
 		virtual bool readAutosaveInfo(int &saveX, int &saveY, int &saveWidth,
