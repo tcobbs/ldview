@@ -15,6 +15,7 @@
 #include <LDLoader/LDLPalette.h>
 #include <LDLoader/LDLAutoCamera.h>
 #include <LDLoader/LDLModelLine.h>
+#include <LDLoader/LDLConditionalLineLine.h>
 #include <LDExporter/LDPovExporter.h>
 #include <LDExporter/LDStlExporter.h>
 #include "LDInputHandler.h"
@@ -4891,6 +4892,36 @@ void LDrawModelViewer::setHighlightPaths(const StringList &value)
 	highlightPathsChanged();
 }
 
+void LDrawModelViewer::attachFileLine(
+	LDLFileLine *dstFileLine,
+	LDLFileLineArray *dstFileLines,
+	LDLModel *dstModel)
+{
+	if (dstFileLine)
+	{
+		dstFileLine->setLineNumber(dstFileLines->getCount());
+		dstFileLine->setParentModel(dstModel);
+		dstFileLines->addObject(dstFileLine);
+		dstModel->setActiveLineCount(dstModel->getActiveLineCount() + 1);
+		dstFileLine->release();
+	}
+}
+
+void LDrawModelViewer::attachLineLine(
+	LDLFileLineArray *dstFileLines,
+	LDLModel *dstModel,
+	const TCVector &pt0,
+	const TCVector &pt1)
+{
+	char line[1024];
+	LDLLineLine *dstFileLine;
+
+	sprintf(line, "2 16 %s %s", pt0.string().c_str(), pt1.string().c_str());
+	dstFileLine = new LDLLineLine(dstModel, line, dstFileLines->getCount());
+	dstFileLine->parse();
+	attachFileLine(dstFileLine, dstFileLines, dstModel);
+}
+
 void LDrawModelViewer::parseHighlightPath(
 	const std::string &path,
 	const LDLModel *srcModel,
@@ -4968,8 +4999,20 @@ void LDrawModelViewer::parseHighlightPath(
 		case LDLLineTypeLine:
 		case LDLLineTypeTriangle:
 		case LDLLineTypeQuad:
-		case LDLLineTypeConditionalLine:
 			dstFileLine = (LDLFileLine *)srcFileLine->copy();
+			break;
+		case LDLLineTypeConditionalLine:
+			{
+				LDLConditionalLineLine *condLine =
+					(LDLConditionalLineLine *)srcFileLine;
+
+				attachLineLine(dstFileLines, dstModel, condLine->getPoints()[0],
+					condLine->getPoints()[1]);
+				attachLineLine(dstFileLines, dstModel, condLine->getPoints()[0],
+					condLine->getControlPoints()[0]);
+				attachLineLine(dstFileLines, dstModel, condLine->getPoints()[0],
+					condLine->getControlPoints()[1]);
+			}
 			break;
 		default:
 			// Don't do anything for other line types.
@@ -4982,14 +5025,7 @@ void LDrawModelViewer::parseHighlightPath(
 				throw "Invalid Tree Path";
 			}
 		}
-		if (dstFileLine)
-		{
-			dstFileLine->setLineNumber(dstFileLines->getCount());
-			dstFileLine->setParentModel(dstModel);
-			dstFileLines->addObject(dstFileLine);
-			dstModel->setActiveLineCount(dstModel->getActiveLineCount() + 1);
-			dstFileLine->release();
-		}
+		attachFileLine(dstFileLine, dstFileLines, dstModel);
 		if (isModel)
 		{
 			if (nextSlash < path.size())
