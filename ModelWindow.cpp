@@ -86,53 +86,61 @@ void ErrorInfo::setTypeName(const char *typeName)
 	}
 }
 
-ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
-						 int width, int height)
-			:CUIOGLWindow(parentWindow, x, y, width, height),
-			 modelViewer(new LDrawModelViewer(width, height)),
-			 snapshotTaker(NULL),
-			 numFramesSinceReference(0),
-			 firstFPSPass(true),
-			 //rotationSpeed(0.0f),
-			 //lButtonDown(false),
-			 //rButtonDown(false),
-			 //mButtonDown(false),
-			 hPrefsWindow(NULL),
-			 captureCount(0),
-			 redrawCount(0),
-			 hProgressWindow(NULL),
-			 lastProgressUpdate(0),
-			 loading(false),
-			 //needsRecompile(false),
-			 hErrorWindow(NULL),
-			 errors(new LDLErrorArray),
-			 errorTreePopulated(false),
-			 errorInfos(NULL),
-			 prefs(new LDViewPreferences(parentWindow->getHInstance(),
-				modelViewer)),
-			 applyingPrefs(false),
-			 offscreenActive(false),
-			 hPBuffer(NULL),
-			 hPBufferDC(NULL),
-			 hPBufferGLRC(NULL),
-			 hBitmapRenderDC(NULL),
-			 hBitmapRenderGLRC(NULL),
-			 hRenderBitmap(NULL),
-			 hPrintDialog(NULL),
-			 hStatusBar(NULL),
-			 hProgressBar(NULL),
-			 windowShown(false),
-			 hCurrentDC(NULL),
-			 hCurrentGLRC(NULL),
-			 errorWindowResizer(NULL),
-			 saveWindowResizer(NULL),
-			 savingFromCommandLine(false),
-			 skipErrorUpdates(false),
-			 releasingMouse(false),
-			 saveStepSuffix(NULL),
-			 userLoad(false),
-			 errorCount(0),
-			 warningCount(0)
+ModelWindow::ModelWindow(
+	CUIWindow* parentWindow,
+	int x,
+	int y,
+	int width,
+	int height):
+CUIOGLWindow(parentWindow, x, y, width, height),
+modelViewer(new LDrawModelViewer(width, height)),
+snapshotTaker(NULL),
+numFramesSinceReference(0),
+firstFPSPass(true),
+//rotationSpeed(0.0f),
+//lButtonDown(false),
+//rButtonDown(false),
+//mButtonDown(false),
+hPrefsWindow(NULL),
+captureCount(0),
+redrawCount(0),
+hProgressWindow(NULL),
+lastProgressUpdate(0),
+loading(false),
+//needsRecompile(false),
+hErrorWindow(NULL),
+errors(new LDLErrorArray),
+errorTreePopulated(false),
+errorInfos(NULL),
+prefs(new LDViewPreferences(parentWindow->getHInstance(),
+modelViewer)),
+applyingPrefs(false),
+offscreenActive(false),
+hPBuffer(NULL),
+hPBufferDC(NULL),
+hPBufferGLRC(NULL),
+hBitmapRenderDC(NULL),
+hBitmapRenderGLRC(NULL),
+hRenderBitmap(NULL),
+hPrintDialog(NULL),
+hStatusBar(NULL),
+hProgressBar(NULL),
+windowShown(false),
+hCurrentDC(NULL),
+hCurrentGLRC(NULL),
+errorWindowResizer(NULL),
+saveWindowResizer(NULL),
+savingFromCommandLine(false),
+skipErrorUpdates(false),
+releasingMouse(false),
+saveStepSuffix(NULL),
+userLoad(false),
+errorCount(0),
+warningCount(0)
+#ifndef _NO_BOOST
+,remoteListener(true)
+,remoteMessageID(0)
+#endif // !_NO_BOOST
 {
 	char *programPath = LDViewPreferences::getLDViewPath();
 	HRSRC hStudLogoResource = FindResource(NULL,
@@ -203,6 +211,12 @@ ModelWindow::ModelWindow(CUIWindow* parentWindow, int x, int y,
 		TCUserDefaults::setStringForKey(programPath, INSTALL_PATH_KEY, false);
 		delete programPath;
 	}
+#ifndef _NO_BOOST
+	if (remoteListener)
+	{
+		launchRemoteListener();
+	}
+#endif // !_NO_BOOST
 }
 
 ModelWindow::~ModelWindow(void)
@@ -211,6 +225,12 @@ ModelWindow::~ModelWindow(void)
 
 void ModelWindow::dealloc(void)
 {
+#ifndef _NO_BOOST
+	if (remoteListener)
+	{
+		shutDownRemoteListener();
+	}
+#endif // !_NO_BOOST
 	TCAlertManager::unregisterHandler(this);
 	TCObject::release(errorInfos);
 	TCObject::release(snapshotTaker);
@@ -238,6 +258,214 @@ void ModelWindow::dealloc(void)
 	stopPolling();
 	CUIOGLWindow::dealloc();
 }
+
+#ifndef _NO_BOOST
+
+#define PIPE_BUFSIZE 4096
+#define PIPE_FILENAME "\\\\.\\pipe\\LDViewRemoteControl"
+
+void ModelWindow::shutDownRemoteListener(void)
+{
+	boost::mutex::scoped_lock lock(mutex);
+	exiting = true;
+	lock.unlock();
+	// Connect to the pipe to pull the ConnectNamedPipe
+	HANDLE hPipe = CreateFile(
+		PIPE_FILENAME,
+		GENERIC_WRITE,
+		0,
+		NULL,
+		OPEN_EXISTING,
+		0,
+		NULL);
+	if (hPipe != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(hPipe);
+	}
+	if (!listenerThread->timed_join(boost::posix_time::seconds(1)))
+	{
+		// If it hasn't shut down after 1 second, abandon it.
+		listenerThread->detach();
+	}
+	delete listenerThread;
+}
+
+void ModelWindow::launchRemoteListener(void)
+{
+	remoteCommandMap["highlight_line"] = RCHighlightLine;
+	remoteCommandMap["highlight_lines"] = RCHighlightLine;
+	remoteCommandMap["get_version"] = RCGetVersion;
+	ldviewVersion = ((LDViewWindow *)parentWindow)->getProductVersion();
+	exiting = false;
+	remoteMessageID = RegisterWindowMessage("LDViewRemoteControl");
+	try
+	{
+		listenerThread = new boost::thread(
+			boost::bind(&ModelWindow::listenerProc, this));
+	}
+	catch (...)
+	{
+		debugPrintf("error spawning listener thread");
+	}
+}
+
+void ModelWindow::listenerProc(void)
+{
+	while (true)
+	{
+		boost::mutex::scoped_lock lock(mutex);
+		if (exiting)
+		{
+			return;
+		}
+		lock.unlock();
+		HANDLE hPipe = CreateNamedPipe(
+			PIPE_FILENAME,
+			PIPE_ACCESS_DUPLEX,
+			PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+			PIPE_UNLIMITED_INSTANCES,
+			PIPE_BUFSIZE,
+			PIPE_BUFSIZE,
+			NMPWAIT_USE_DEFAULT_WAIT,
+			NULL);
+		if (hPipe == INVALID_HANDLE_VALUE)
+		{
+			debugPrintf("Error creating listener pipe.\n");
+			return;
+		}
+		if (!ConnectNamedPipe(hPipe, NULL))
+		{
+			if (GetLastError() != ERROR_PIPE_CONNECTED)
+			{
+				debugPrintf("Error connecting listener pipe to client.\n");
+				CloseHandle(hPipe);
+				return;
+			}
+		}
+		lock.lock();
+		if (exiting)
+		{
+			CloseHandle(hPipe);
+			return;
+		}
+		boost::thread remoteThread(boost::bind(&ModelWindow::remoteProc, this,
+			hPipe));
+		remoteThread.detach();
+	}
+}
+
+void ModelWindow::sendResponseMessage(HANDLE hPipe, const char *message)
+{
+	DWORD numWritten;
+	DWORD messageLength = strlen(message);
+
+	// Note null terminator on message is optional.
+	if (WriteFile(hPipe, &messageLength, sizeof(messageLength), &numWritten,
+		NULL) && numWritten == sizeof(messageLength))
+	{
+		WriteFile(hPipe, message, messageLength, &numWritten, NULL);
+	}
+}
+
+void ModelWindow::sendVersionResponse(HANDLE hPipe)
+{
+	sendResponseMessage(hPipe, ldviewVersion.c_str());
+}
+
+void ModelWindow::remoteProc(HANDLE hPipe)
+{
+	while (true)
+	{
+		DWORD messageSize;
+		DWORD readSize;
+		char *message;
+
+		if (ReadFile(hPipe, &messageSize, sizeof(messageSize), &readSize, NULL))
+		{
+			if (readSize != sizeof(messageSize))
+			{
+				debugPrintf("Remote message size failure.\n");
+				break;
+			}
+		}
+		else
+		{
+			break;
+		}
+		if (messageSize > 1000000)
+		{
+			// Don't even try to handle unreasonable messages.
+			break;
+		}
+		message = new char[messageSize + 1];
+		if (ReadFile(hPipe, message, messageSize, &readSize, NULL))
+		{
+			std::string command;
+			std::string data;
+
+			message[messageSize] = 0;
+			switch (parseRemoteMessage(message, command, data))
+			{
+			case RCGetVersion:
+				sendVersionResponse(hPipe);
+				delete message;
+				break;
+			default:
+				// Note: message is deleted by UI thread.
+				PostMessage(hWindow, remoteMessageID, 0, (LPARAM)message);
+				break;
+			}
+		}
+		else
+		{
+			delete message;
+			break;
+		}
+	}
+	CloseHandle(hPipe);
+}
+
+void ModelWindow::highlightLines(const std::string &paths)
+{
+	modelViewer->setHighlightPaths(paths);
+}
+
+ModelWindow::RemoteCommands ModelWindow::parseRemoteMessage(
+	const char *message,
+	std::string &command,
+	std::string &data)
+{
+	const char *colonSpot = strchr(message, ':');
+	if (colonSpot != NULL)
+	{
+		command = message;
+		command.resize(colonSpot - message);
+		convertStringToLower(&command[0]);
+		data = &colonSpot[1];
+		return remoteCommandMap[command];
+	}
+	return RCUnknown;
+}
+
+void ModelWindow::processRemoteMessage(char *message)
+{
+	std::string command;
+	std::string data;
+
+	switch (parseRemoteMessage(message, command, data))
+	{
+	case RCHighlightLine:
+		highlightLines(data);
+		break;
+	default:
+		printf("Unrecognized remote command: %s(%s)\n", command.c_str(),
+			data.c_str());
+		break;
+	}
+	delete message;
+}
+
+#endif // !_NO_BOOST
 
 void ModelWindow::ldlErrorCallback(LDLError *error)
 {
@@ -2107,6 +2335,12 @@ LRESULT ModelWindow::errorDlgProc(HWND hDlg, UINT message, WPARAM wParam,
 LRESULT ModelWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 							  LPARAM lParam)
 {
+#ifndef _NO_BOOST
+	if (remoteListener && remoteMessageID != 0 && message == remoteMessageID)
+	{
+		processRemoteMessage((char *)lParam);
+	}
+#endif // !_NO_BOOST
 //	debugPrintf("ModelWindow::windowProc: 0x%04x\n", message);
 	return CUIOGLWindow::windowProc(hWnd, message, wParam, lParam);
 }
