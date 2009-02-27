@@ -83,6 +83,12 @@ cp -f ../Translations/Italian/LDViewMessages.ini \
 cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
 >/usr/local/share/ldview/LDViewMessages.ini
   INSTALLS += initrans
+  ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
+  ini.target = LDViewMessages.ini
+  ini.commands = cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
+                 > LDViewMessages.ini
+  QMAKE_EXTRA_UNIX_TARGETS += ini
+  PRE_TARGETDEPS += LDViewMessages.ini
 }
 
 win32 {
