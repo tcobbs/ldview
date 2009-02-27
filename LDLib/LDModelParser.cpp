@@ -500,7 +500,8 @@ std::string LDModelParser::modelNameKey(LDLModel *model, int activeColorNumber)
 		nameKey += name;
 		return nameKey;
 	}
-	else if (m_obiTokens.size() > 0)
+	else if (m_obiTokens.size() > 0 ||
+		(m_obiInfo != NULL && m_obiInfo->isActive()))
 	{
 		std::string nameKey;
 		char num[32];
@@ -881,7 +882,6 @@ bool LDModelParser::parseModel(
 			int i;
 			int count = ldlModel->getActiveLineCount();
 			StringSet obiOrigTokens = m_obiTokens;
-			StringSet obiLocalTokens;
 
 			for (i = 0; i < count && !m_abort; i++)
 			{
@@ -927,8 +927,7 @@ bool LDModelParser::parseModel(
 					}
 					else if (fileLine->getLineType() == LDLLineTypeComment)
 					{
-						parseCommentLine((LDLCommentLine *)fileLine, treModel,
-							obiLocalTokens);
+						parseCommentLine((LDLCommentLine *)fileLine, treModel);
 					}
 				}
 				if (ldlModel == m_topLDLModel && m_alertSender != NULL)
@@ -960,8 +959,7 @@ bool LDModelParser::unsetToken(StringSet &tokens, const char *token)
 
 void LDModelParser::parseCommentLine(
 	LDLCommentLine *commentLine,
-	TREModel *treModel,
-	StringSet &obiLocalTokens)
+	TREModel *treModel)
 {
 	if (commentLine->isStepMeta())
 	{
@@ -983,7 +981,6 @@ void LDModelParser::parseCommentLine(
 
 				convertStringToLower(&token[0]);
 				m_obiTokens.insert(token);
-				obiLocalTokens.insert(token);
 			}
 			break;
 		case LDLCommentLine::OBICUnset:
@@ -992,7 +989,6 @@ void LDModelParser::parseCommentLine(
 				std::string token = commentLine->getOBIToken();
 
 				convertStringToLower(&token[0]);
-				unsetToken(obiLocalTokens, token.c_str());
 				unsetToken(m_obiTokens, token.c_str());
 			}
 			break;
