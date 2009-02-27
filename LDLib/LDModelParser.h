@@ -49,7 +49,7 @@ protected:
 		return m_flags.defaultColorNumberSet != false;
 	}
 	virtual void parseCommentLine(LDLCommentLine *commentLine,
-		TREModel *treModel, StringSet &biLocalTokens);
+		TREModel *treModel);
 	virtual bool parseModel(LDLModel *ldlModel, TREModel *treModel, bool bfc,
 		int activeColorNumber);
 	virtual bool parseModel(LDLModelLine *modelLine, TREModel *treModel,
