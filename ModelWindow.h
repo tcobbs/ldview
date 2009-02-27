@@ -12,6 +12,18 @@
 #include <GL/glext.h>
 #include <GL/wglext.h>
 
+#ifndef _NO_BOOST
+#ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable:4244 4512)
+#endif // WIN32
+#include <boost/thread.hpp>
+#ifdef WIN32
+#pragma warning(pop)
+#endif // WIN32
+#endif // !_NO_BOOST
+
+
 class LDrawModelViewer;
 class TCStringArray;
 class CUIWindowResizer;
@@ -335,6 +347,25 @@ protected:
 	void positionSaveAddOn(void);
 	void positionSaveOptionsButton(void);
 
+#ifndef _NO_BOOST
+	enum RemoteCommands
+	{
+		RCUnknown,
+		RCHighlightLine,
+		RCGetVersion,
+	};
+	RemoteCommands parseRemoteMessage(const char *message, std::string &command,
+		std::string &data);
+	void launchRemoteListener(void);
+	void shutDownRemoteListener(void);
+	void listenerProc(void);
+	void remoteProc(HANDLE hPipe);
+	void processRemoteMessage(char *message);
+	void highlightLines(const std::string &paths);
+	void sendVersionResponse(HANDLE hPipe);
+	void sendResponseMessage(HANDLE hPipe, const char *message);
+#endif // _NO_BOOST
+
 	static UINT CALLBACK staticPrintHook(HWND hDlg, UINT uiMsg,
 		WPARAM wParam, LPARAM lParam);
 	static UINT CALLBACK staticPageSetupHook(HWND hDlg, UINT uiMsg,
@@ -469,6 +500,15 @@ protected:
 	int errorCount;
 	int warningCount;
 	LDPreferences::SaveOp curSaveOp;
+#ifndef _NO_BOOST
+	bool remoteListener;
+	boost::thread *listenerThread;
+	UINT remoteMessageID;
+	boost::mutex mutex;
+	bool exiting;
+	std::map<std::string, RemoteCommands> remoteCommandMap;
+	std::string ldviewVersion;
+#endif // _NO_BOOST
 };
 
 #endif
