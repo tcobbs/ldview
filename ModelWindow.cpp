@@ -25,6 +25,10 @@
 #include <TRE/TREGLExtensions.h>
 #include <windowsx.h>
 
+#ifndef _NO_BOOST
+#include <boost/bind.hpp>
+#endif // !_NO_BOOST
+
 #if defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
 #endif // _DEBUG
