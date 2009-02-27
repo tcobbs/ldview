@@ -43,7 +43,7 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 			MODEL_TREE_HIGHLIGHT_KEY, false, false));
 	statusbar = statusBar();
 	statusText = new QLabel(statusbar);
-	statusbar->addWidget(statusText);
+	statusbar->addWidget(statusText, 1);
 	statusbar->show();
 }
 
@@ -152,12 +152,15 @@ void LDViewModelTree::itemexpanded(QListViewItem *item)
 
 void LDViewModelTree::selectionChanged(QListViewItem *item)
 {
-	if (highlightSelectedLineBox->isChecked() && item)
+	if (item)
 	{
 		LDModelTree *tree = findTree(item);
 		QString qs;
-		m_modelWindow->getModelViewer()->setHighlightPaths(
+		if (highlightSelectedLineBox->isChecked())
+		{
+			m_modelWindow->getModelViewer()->setHighlightPaths(
 						tree->getTreePath());
+		}
 		ucstringtoqstring(qs,tree->getStatusText());
 		statusText->setText(qs);
 	}
