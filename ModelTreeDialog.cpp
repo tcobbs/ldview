@@ -545,7 +545,7 @@ LRESULT ModelTreeDialog::doTreeCustomDraw(LPNMTVCUSTOMDRAW notification)
 	if (notification->nmcd.dwDrawStage == CDDS_PREPAINT)
 	{
 		SetWindowLong(hWindow, DWL_MSGRESULT, CDRF_NOTIFYITEMDRAW);
-		return 0;
+		return TRUE;
 	}
 	else if (notification->nmcd.dwDrawStage == CDDS_ITEMPREPAINT)
 	{
@@ -561,10 +561,10 @@ LRESULT ModelTreeDialog::doTreeCustomDraw(LPNMTVCUSTOMDRAW notification)
 				notification->clrText = RGB(r, g, b);
 			}
 			SetWindowLong(hWindow, DWL_MSGRESULT, CDRF_DODEFAULT);
-			return 0;
+			return TRUE;
 		}
 	}
-	return 1;
+	return FALSE;
 }
 
 LRESULT ModelTreeDialog::doTreeKeyDown(LPNMTVKEYDOWN notification)
