@@ -21,6 +21,8 @@ class LDModelTree;
 	IBOutlet NSButton *showHideOptionsButton;
 	IBOutlet NSMatrix *optionsMatrix;
 	IBOutlet NSButton *highlightCheck;
+	IBOutlet NSTextField *statusTextField;
+	IBOutlet NSColorWell *highlightColorWell;
 	LDModelTree *modelTree;
 	ModelTreeItem *rootModelTreeItem;
 	float showHideStartY;

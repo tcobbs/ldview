@@ -21,7 +21,35 @@
 	return [self state] == NSOnState;
 }
 
-@end
+@end // NSButton(LDView)
+
+@implementation NSColorWell(LDView)
+
+- (void)setR:(int)r g:(int)g b:(int)b
+{
+	[self setColor:[NSColor colorWithCalibratedRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:1.0f]];
+}
+
+- (void)getR:(int *)r g:(int *)g b:(int *)b
+{
+	[self getR:r g:g b:b a:nil];
+}
+
+- (void)getR:(int *)r g:(int *)g b:(int *)b a:(int *)a
+{
+	float rf, gf, bf, af;
+	
+	[[[self color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&rf green:&gf blue:&bf alpha:&af];
+	*r = (int)(rf * 255.0 + 0.5);
+	*g = (int)(gf * 255.0 + 0.5);
+	*b = (int)(bf * 255.0 + 0.5);
+	if (a)
+	{
+		*a = (int)(af * 255.0 + 0.5);
+	}
+}
+
+@end // NSColorWell(LDView)
 
 @implementation NSString(LDView)
 
@@ -89,4 +117,4 @@
 	return [self initWithCString:cString encoding:NSASCIIStringEncoding];
 }
 
-@end
+@end // NSString(LDView)

@@ -30,6 +30,27 @@
 	[super dealloc];
 }
 
+- (void)updateStatusText
+{
+	int row = [outlineView selectedRow];
+	const LDModelTree *itemModelTree = NULL;
+	
+	if (row != -1)
+	{
+		ModelTreeItem *item = [outlineView itemAtRow:row];
+		
+		itemModelTree = [item modelTree];
+	}
+	if (itemModelTree != NULL)
+	{
+		[statusTextField setStringValue:[NSString stringWithUCString:itemModelTree->getStatusText().c_str()]];
+	}
+	else
+	{
+		[statusTextField setStringValue:[OCLocalStrings get:@"NoSelection"]];
+	}
+}
+
 - (void)setModel:(LDLMainModel *)value
 {
 	if (model != value)
@@ -104,9 +125,25 @@
 	[self reloadOutlineView];
 }
 
+- (long)colorFromR:(int)r g:(int)g b:(int)b
+{
+	return ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | (b & 0xFF);
+}
+
+- (void)convertColor:(int)color toR:(int &)r g:(int &)g b:(int &)b
+{
+	r = (color >> 16) & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = color & 0xFF;
+}
+
 - (void)awakeFromNib
 {
 	float width = [OCUserDefaults floatForKey:[self widthKey] defaultValue:-1.0f sessionSpecific:NO];
+	int r, g, b;
+	long defHighlightColor = [self colorFromR:160 g:224 b:255];
+	long highlightColor = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY, defHighlightColor, false);
+	LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
 
 	[outlineView setIntercellSpacing:NSMakeSize(0.0f, 0.0f)];
 	showHideStartY = [showHideOptionsButton frame].origin.y;
@@ -128,6 +165,13 @@
 		//[showHideOptionsButton setToolTip:[OCLocalStrings get:@"HideOptions"]];
 	}
 	[highlightCheck setCheck:TCUserDefaults::boolForKey(MODEL_TREE_HIGHLIGHT_KEY, false, false)];
+	[self convertColor:highlightColor toR:r g:g b:b];
+	[highlightColorWell setR:r g:g b:b];
+	if (modelViewer != NULL)
+	{
+		modelViewer->setHighlightColor(r, g, b);
+	}
+	[self updateStatusText];
 }
 
 - (ModelTreeItem *)modelTreeItem:(id)item
@@ -213,6 +257,21 @@
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	[self updateHighlight];
+	[self updateStatusText];
+}
+
+- (IBAction)highlightColor:(id)sender
+{
+	LDrawModelViewer *modelViewer = [[modelWindow modelView] modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		int r, g, b;
+		
+		[highlightColorWell getR:&r g:&g b:&b];
+		modelViewer->setHighlightColor(r, g, b);
+		TCUserDefaults::setLongForKey([self colorFromR:r g:g b:b], MODEL_TREE_HIGHLIGHT_COLOR_KEY, false);
+	}
 }
 
 - (IBAction)highlight:(id)sender
@@ -248,17 +307,26 @@
 	NSRect buttonEndFrame = [showHideOptionsButton frame];
 	NSRect boxLabelEndFrame = [optionsBoxLabel frame];
 	NSRect boxEndFrame = [optionsBox frame];
-	NSArray *viewDicts = [NSArray arrayWithObjects:[NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:3], [NSMutableDictionary dictionaryWithCapacity:3], nil];
+	NSRect highlightEndFrame = [highlightCheck frame];
+	NSRect statusTextEndFrame = [statusTextField frame];
+	NSRect highlightColorEndFrame = [highlightColorWell frame];
+	NSArray *viewDicts = [NSArray arrayWithObjects:[NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:3], [NSMutableDictionary dictionaryWithCapacity:3], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], [NSMutableDictionary dictionaryWithCapacity:2], nil];
 
 	outlineEndFrame.size.height -= showHideStartY * dir;
 	outlineEndFrame.origin.y += showHideStartY * dir;
 	buttonEndFrame.origin.y += showHideStartY * dir;
+	highlightEndFrame.origin.y += showHideStartY * dir;
+	statusTextEndFrame.origin.y += showHideStartY * dir;
+	highlightColorEndFrame.origin.y += showHideStartY * dir;
 	boxLabelEndFrame.origin.y += showHideStartY * dir;
 	boxEndFrame.origin.y += showHideStartY * dir;
 	[self setupAnimationDict:[viewDicts objectAtIndex:0] view:scrollView endRect:outlineEndFrame showHide:0];
 	[self setupAnimationDict:[viewDicts objectAtIndex:1] view:showHideOptionsButton endRect:buttonEndFrame showHide:0];
 	[self setupAnimationDict:[viewDicts objectAtIndex:2] view:optionsBoxLabel endRect:boxLabelEndFrame showHide:0];
 	[self setupAnimationDict:[viewDicts objectAtIndex:3] view:optionsBox endRect:boxEndFrame showHide:dir];
+	[self setupAnimationDict:[viewDicts objectAtIndex:4] view:highlightCheck endRect:highlightEndFrame showHide:0];
+	[self setupAnimationDict:[viewDicts objectAtIndex:5] view:statusTextField endRect:statusTextEndFrame showHide:0];
+	[self setupAnimationDict:[viewDicts objectAtIndex:6] view:highlightColorWell endRect:highlightColorEndFrame showHide:0];
 	optionsAnimation = [[NSViewAnimation alloc] initWithViewAnimations:viewDicts];
 	if (instantly)
 	{
