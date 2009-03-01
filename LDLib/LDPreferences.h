@@ -202,6 +202,7 @@ public:
 
 	// Inventory settings
 	bool getInvShowModel(void) { return m_invShowModel; }
+	bool getInvOverwriteSnapshot(void) { return m_invOverwriteSnapshot; }
 	bool getInvExternalCss(void) { return m_invExternalCss; }
 	bool getInvPartImages(void) { return m_invPartImages; }
 	bool getInvShowFile(void) { return m_invShowFile; }
@@ -332,6 +333,7 @@ public:
 
 	// Inventory settings
 	void setInvShowModel(bool value, bool commit = false);
+	void setInvOverwriteSnapshot(bool value, bool commit = false);
 	void setInvExternalCss(bool value, bool commit = false);
 	void setInvPartImages(bool value, bool commit = false);
 	void setInvShowFile(bool value, bool commit = false);
@@ -487,6 +489,7 @@ protected:
 
 	// Inventory settings
 	bool m_invShowModel;
+	bool m_invOverwriteSnapshot;
 	bool m_invExternalCss;
 	bool m_invPartImages;
 	bool m_invShowFile;

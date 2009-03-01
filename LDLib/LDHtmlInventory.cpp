@@ -198,6 +198,7 @@ LDHtmlInventory::LDHtmlInventory(void) :
 
 	m_prefs->loadInventorySettings();
 	m_showModel = m_prefs->getInvShowModel();
+	m_overwriteSnapshot = m_prefs->getInvOverwriteSnapshot();
 	m_externalCss = m_prefs->getInvExternalCss();
 	m_partImages = m_prefs->getInvPartImages();
 	m_showFile = m_prefs->getInvShowFile();
@@ -729,6 +730,12 @@ void LDHtmlInventory::setShowModelFlag(bool value)
 	m_prefs->setInvShowModel(value);
 }
 
+void LDHtmlInventory::setOverwriteSnapshotFlag(bool value)
+{
+	m_overwriteSnapshot = value;
+	m_prefs->setInvOverwriteSnapshot(value);
+}
+
 void LDHtmlInventory::setExternalCssFlag(bool value)
 {
 	m_externalCss = value;
@@ -838,16 +845,23 @@ bool LDHtmlInventory::isSnapshotNeeded(void) const
 {
 	if (m_showModel)
 	{
-		const char *snapshotPath = getSnapshotPath();
-		FILE *pFile = fopen(snapshotPath, "rb");
-
-		if (pFile)
+		if (m_overwriteSnapshot)
 		{
-			fclose(pFile);
+			return true;
 		}
 		else
 		{
-			return true;
+			const char *snapshotPath = getSnapshotPath();
+			FILE *pFile = fopen(snapshotPath, "rb");
+
+			if (pFile)
+			{
+				fclose(pFile);
+			}
+			else
+			{
+				return true;
+			}
 		}
 	}
 	return false;

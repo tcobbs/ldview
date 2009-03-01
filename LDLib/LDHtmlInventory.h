@@ -34,6 +34,8 @@ public:
 	void setShowModelFlag(bool value);
 	bool getShowModelFlag(void) { return m_showModel; }
 	void setExternalCssFlag(bool value);
+	bool getOverwriteSnapshotFlag(void) const { return m_overwriteSnapshot; }
+	void setOverwriteSnapshotFlag(bool value);
 	bool getExternalCssFlag(void) { return m_externalCss; }
 	void setPartImagesFlag(bool value);
 	bool getPartImagesFlag(void) { return m_partImages; }
@@ -91,6 +93,7 @@ protected:
 	LDPreferences *m_prefs;
 
 	bool m_showModel;
+	bool m_overwriteSnapshot;
 	bool m_externalCss;
 	bool m_partImages;
 	bool m_showFile;

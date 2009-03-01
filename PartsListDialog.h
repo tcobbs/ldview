@@ -28,6 +28,7 @@ protected:
 	void registerWindowClass(void);
 	void populateColumnList(void);
 	void setupToolbar(void);
+	void updateOverwriteCheck(void);
 	INT_PTR doMoveColumn(int distance);
 
 	static INT_PTR CALLBACK staticDialogProc(HWND hDlg,
@@ -38,8 +39,10 @@ protected:
 	HWND m_hDlg;
 	HWND m_hColumnList;
 	HWND m_hToolbar;
+	HWND m_hOverwrite;
 	int m_modalReturn;
 	bool m_showFile;
+	bool m_overwriteSnapshot;
 };
 
 #endif // __PARTLISTDIALOG_H__

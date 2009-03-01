@@ -235,12 +235,29 @@ void PartsListDialog::setupToolbar(void)
 	SendMessage(m_hToolbar, TB_ADDBUTTONS, 2, (LPARAM)buttons);
 }
 
+void PartsListDialog::updateOverwriteCheck(void)
+{
+	if (getCheck(IDC_SHOW_MODEL))
+	{
+		EnableWindow(m_hOverwrite, TRUE);
+		setCheck(IDC_OVERWRITE, m_overwriteSnapshot);
+	}
+	else
+	{
+		EnableWindow(m_hOverwrite, FALSE);
+		setCheck(IDC_OVERWRITE, false);
+	}
+}
+
 INT_PTR PartsListDialog::doInitDialog(HWND hDlg, HWND /*hFocus*/,
 									  LPARAM /*lParam*/)
 {
 	m_hDlg = hDlg;
 
+	m_hOverwrite = GetDlgItem(m_hDlg, IDC_OVERWRITE);
 	setCheck(IDC_SHOW_MODEL, m_htmlInventory->getShowModelFlag());
+	m_overwriteSnapshot = m_htmlInventory->getOverwriteSnapshotFlag();
+	updateOverwriteCheck();
 	setCheck(IDC_EXTERNAL_CSS, m_htmlInventory->getExternalCssFlag());
 	setCheck(IDC_SHOW_PART_IMAGES, m_htmlInventory->getPartImagesFlag());
 	setCheck(IDC_SHOW_FILE, m_htmlInventory->getShowFileFlag());
@@ -267,7 +284,16 @@ void PartsListDialog::saveSettings(void)
 	int count = ListView_GetItemCount(m_hColumnList);
 	LDPartListColumnVector columnOrder;
 
-	m_htmlInventory->setShowModelFlag(getCheck(IDC_SHOW_MODEL));
+	if (getCheck(IDC_SHOW_MODEL))
+	{
+		m_htmlInventory->setShowModelFlag(true);
+		m_overwriteSnapshot = getCheck(IDC_OVERWRITE);
+		m_htmlInventory->setOverwriteSnapshotFlag(m_overwriteSnapshot);
+	}
+	else
+	{
+		m_htmlInventory->setShowModelFlag(false);
+	}
 	m_htmlInventory->setExternalCssFlag(getCheck(IDC_EXTERNAL_CSS));
 	m_htmlInventory->setPartImagesFlag(getCheck(IDC_SHOW_PART_IMAGES));
 	m_htmlInventory->setShowFileFlag(getCheck(IDC_SHOW_FILE));
@@ -355,6 +381,9 @@ INT_PTR PartsListDialog::doClick(int controlId, HWND /*hControl*/)
 		break;
 	case IDCANCEL:
 		m_parentWindow->doDialogClose(m_hDlg);
+		break;
+	case IDC_SHOW_MODEL:
+		updateOverwriteCheck();
 		break;
 	case 42:	// Column order toolbar up button
 		return doMoveColumn(-1);

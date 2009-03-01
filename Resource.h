@@ -380,6 +380,7 @@
 #define IDC_HIGHLIGHT                   1286
 #define IDC_PRINT_BACKGROUND            1287
 #define IDC_HIGHLIGHT_COLOR             1287
+#define IDC_OVERWRITE                   1288
 #define PRINTDLGORD                     1538
 #define PAGESETUPDLGORD                 1546
 #define IDD_PRIMITIVES_PREFS            1547
@@ -479,7 +480,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        191
 #define _APS_NEXT_COMMAND_VALUE         40114
-#define _APS_NEXT_CONTROL_VALUE         1288
+#define _APS_NEXT_CONTROL_VALUE         1289
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

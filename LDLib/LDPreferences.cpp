@@ -496,6 +496,7 @@ void LDPreferences::loadDefaultInventorySettings(bool initializing /*= true*/)
 		m_initializing = true;
 	}
 	setInvShowModel(false);
+	setInvOverwriteSnapshot(false);
 	setInvExternalCss(false);
 	setInvPartImages(true);
 	setInvShowFile(true);
@@ -677,6 +678,8 @@ void LDPreferences::loadInventorySettings(void)
 {
 	loadDefaultInventorySettings();
 	m_invShowModel = getBoolSetting(INV_SHOW_MODEL_KEY, m_invShowModel);
+	m_invOverwriteSnapshot = getBoolSetting(INV_OVERWRITE_SNAPSHOT_KEY,
+		m_invOverwriteSnapshot);
 	m_invExternalCss = getBoolSetting(INV_EXTERNAL_CSS_KEY, m_invExternalCss);
 	m_invPartImages = getBoolSetting(INV_PART_IMAGES_KEY, m_invPartImages);
 	m_invShowFile = getBoolSetting(INV_SHOW_FILE_KEY, m_invShowFile);
@@ -855,6 +858,7 @@ void LDPreferences::commitUpdatesSettings(bool flush /*= true*/)
 void LDPreferences::commitInventorySettings(bool flush /*= true*/)
 {
 	setInvShowModel(m_invShowModel, true);
+	setInvOverwriteSnapshot(m_invOverwriteSnapshot, true);
 	setInvExternalCss(m_invExternalCss, true);
 	setInvPartImages(m_invPartImages, true);
 	setInvShowFile(m_invShowFile, true);
@@ -1863,6 +1867,12 @@ void LDPreferences::setUpdatedPartWait(int value, bool commit)
 void LDPreferences::setInvShowModel(bool value, bool commit)
 {
 	setSetting(m_invShowModel, value, INV_SHOW_MODEL_KEY, commit);
+}
+
+void LDPreferences::setInvOverwriteSnapshot(bool value, bool commit)
+{
+	setSetting(m_invOverwriteSnapshot, value, INV_OVERWRITE_SNAPSHOT_KEY,
+		commit);
 }
 
 void LDPreferences::setInvExternalCss(bool value, bool commit)
