@@ -18,6 +18,14 @@
 
 @end
 
+@interface NSColorWell(LDView)
+
+- (void)setR:(int)r g:(int)g b:(int)b;
+- (void)getR:(int *)r g:(int *)g b:(int *)b;
+- (void)getR:(int *)r g:(int *)g b:(int *)b a:(int *)a;
+
+@end
+
 @interface NSString(LDView)
 
 + (id)stringWithUCString:(const ucstring &)ucstring;
