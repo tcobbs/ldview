@@ -75,7 +75,8 @@ void PartList::doOk()
 					  showModelButton->isChecked());
 	if (showmodel)
 	{
-		 m_htmlInventory->setOverwriteSnapshotFlag(true);
+		 m_htmlInventory->setOverwriteSnapshotFlag(
+					overwriteExistingButton->isChecked());
 	}
 	for (item = fieldOrderView->firstChild() ; item ;
 		 item = item->itemBelow())
