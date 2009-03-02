@@ -67,11 +67,16 @@ void PartList::doOk()
 {
 	int i;
 	QListViewItem *item;
+	bool showmodel;
 	LDPartListColumnVector columnOrder;
 	m_htmlInventory->setExternalCssFlag(generateExternalSSButton->isChecked());
 	m_htmlInventory->setPartImagesFlag(showPartImageButton->isChecked());
-	m_htmlInventory->setShowModelFlag(showModelButton->isChecked());
-
+	m_htmlInventory->setShowModelFlag(showmodel = 
+					  showModelButton->isChecked());
+	if (showmodel)
+	{
+		 m_htmlInventory->setOverwriteSnapshotFlag(true);
+	}
 	for (item = fieldOrderView->firstChild() ; item ;
 		 item = item->itemBelow())
 	{
@@ -126,13 +131,16 @@ void PartList::doHighlighted()
 
 int PartList::exec()
 {
+	bool showmodel;
 	populateColumnList();
   	generateExternalSSButton->setChecked(
 		m_htmlInventory->getExternalCssFlag());
    	showPartImageButton->setChecked(
 		m_htmlInventory->getPartImagesFlag());
-   	showModelButton->setChecked(
+   	showModelButton->setChecked(showmodel =
 		m_htmlInventory->getShowModelFlag());
+	overwriteExistingButton->setChecked(showmodel ?
+		m_htmlInventory->getOverwriteSnapshotFlag() : false);
 	doShowModel();
 	return PartListPanel::exec();
 }
