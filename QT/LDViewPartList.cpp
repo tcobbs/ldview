@@ -133,6 +133,7 @@ int PartList::exec()
 		m_htmlInventory->getPartImagesFlag());
    	showModelButton->setChecked(
 		m_htmlInventory->getShowModelFlag());
+	doShowModel();
 	return PartListPanel::exec();
 }
 
@@ -140,3 +141,9 @@ int PartList::result()
 {
 	return result();
 }
+
+void PartList::doShowModel()
+{
+	overwriteExistingButton->setEnabled(showModelButton->isChecked());
+}
+

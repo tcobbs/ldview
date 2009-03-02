@@ -25,6 +25,7 @@ public slots:
 	void doUp();
 	void doDown();
 	void doHighlighted();
+	void doShowModel();
 protected:
 	void doMoveColumn(int distance);
 	LDrawModelViewer *modelViewer;

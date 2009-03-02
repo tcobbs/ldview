@@ -67,6 +67,47 @@
                                 <string>Show model</string>
                             </property>
                         </widget>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                           <hbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <property name="spacing">
+                                    <number>0</number>
+                                </property>
+                                <spacer>
+                                    <property name="name">
+                                        <cstring>Spacer16_2</cstring>
+                                    </property>
+                                    <property name="orientation">
+                                        <enum>Horizontal</enum>
+                                    </property>
+                                    <property name="sizeType">
+                                        <enum>Fixed</enum>
+                                    </property>
+                                    <property name="sizeHint">
+                                        <size>
+                                            <width>16</width>
+                                            <height>20</height>
+                                        </size>
+                                    </property>
+                                </spacer>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>overwriteExistingButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Overwrite existing snapshot</string>
+                                    </property>
+                                </widget>
+                            </hbox>
+                        </widget>
                         <widget class="QCheckBox">
                             <property name="name">
                                 <cstring>generateExternalSSButton</cstring>
@@ -318,6 +359,12 @@
         <slot>doCancel()</slot>
     </connection>
     <connection>
+        <sender>showModelButton</sender>
+        <signal>clicked()</signal>
+        <receiver>PartListPanel</receiver>
+        <slot>doShowModel()</slot>
+    </connection>
+    <connection>
         <sender>fieldOrderView</sender>
         <signal>currentChanged(QListViewItem *)</signal>
         <receiver>PartListPanel</receiver>
@@ -333,6 +380,7 @@
     <slot>doUp()</slot>
     <slot>doDown()</slot>
 	<slot>doHighlighted()</slot>
+    <slot>doShowModel()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
