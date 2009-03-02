@@ -18,3 +18,7 @@ void PartListPanel::doHighlighted()
 {
 }
 
+void PartListPanel::doShowModel()
+{
+}
+
