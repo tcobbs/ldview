@@ -47,7 +47,7 @@ LDPreferences::LDPreferences(LDrawModelViewer* modelViewer)
 		sprintf(key, "%s/Color%02d", CUSTOM_COLORS_KEY, i);
 		m_globalSettings[key] = true;
 	}
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setPreferences(this);
 	}
@@ -87,14 +87,14 @@ void LDPreferences::setModelViewer(LDrawModelViewer *value)
 {
 	if (value != m_modelViewer)
 	{
-		//if (m_modelViewer)
+		//if (m_modelViewer != NULL)
 		//{
 		//	m_modelViewer->setPreferences(NULL);
 		//}
 		TCObject::release(m_modelViewer);
 		m_modelViewer = value;
 		m_modelViewer->retain();
-		if (m_modelViewer)
+		if (m_modelViewer != NULL)
 		{
 			m_modelViewer->setPreferences(this);
 		}
@@ -130,7 +130,7 @@ void LDPreferences::applySettings(void)
 	applyEffectsSettings();
 	applyPrimitivesSettings();
 	applyUpdatesSettings();
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setZoomMax(m_zoomMax);
 		m_modelViewer->setDistanceMultiplier(1.0f / m_defaultZoom);
@@ -142,7 +142,7 @@ void LDPreferences::applySettings(void)
 
 void LDPreferences::applyGeneralSettings(void)
 {
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		int r, g, b;
 
@@ -174,13 +174,13 @@ void LDPreferences::applyLDrawSettings(void)
 		if (strcmp(m_ldrawDir.c_str(), LDLModel::lDrawDir()) != 0)
 		{
 			LDLModel::setLDrawDir(m_ldrawDir.c_str());
-			if (m_modelViewer)
+			if (m_modelViewer != NULL)
 			{
 				m_modelViewer->setNeedsReload();
 			}
 		}
 	}
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		TCStringArray *oldExtraDirs = m_modelViewer->getExtraSearchDirs();
 		TCStringArray *extraDirs = new TCStringArray;
@@ -212,7 +212,7 @@ void LDPreferences::applyLDrawSettings(void)
 
 void LDPreferences::applyGeometrySettings(void)
 {
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		if (m_useSeams)
 		{
@@ -244,7 +244,7 @@ void LDPreferences::applyGeometrySettings(void)
 
 void LDPreferences::applyEffectsSettings(void)
 {
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setUseLighting(m_useLighting);
 		m_modelViewer->setQualityLighting(m_qualityLighting);
@@ -270,7 +270,7 @@ void LDPreferences::applyEffectsSettings(void)
 
 void LDPreferences::applyPrimitivesSettings(void)
 {
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setAllowPrimitiveSubstitution(m_allowPrimitiveSubstitution);
 		m_modelViewer->setTextureStuds(m_textureStuds);
@@ -285,7 +285,7 @@ void LDPreferences::applyPrimitivesSettings(void)
 
 void LDPreferences::applyUpdatesSettings(void)
 {
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setCheckPartTracker(m_checkPartTracker);
 		m_modelViewer->setMissingPartWait(m_missingPartWait);
@@ -897,7 +897,7 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 			{
 				radius = -1;
 			}
-			if (m_modelViewer)
+			if (m_modelViewer != NULL)
 			{
 				m_modelViewer->setDefaultRotationMatrix(resultMatrix);
 				if (radius > 0)
@@ -922,14 +922,17 @@ void LDPreferences::setupDefaultRotationMatrix(void)
 				&matrix[1], &matrix[5], &matrix[9],
 				&matrix[2], &matrix[6], &matrix[10]) == 9)
 			{
-				if (m_modelViewer)
+				if (m_modelViewer != NULL)
 				{
 					m_modelViewer->setDefaultRotationMatrix(matrix);
 				}
 			}
 		}
 	}
-	m_modelViewer->setDefaultLatLong(latitude, longitude);
+	if (m_modelViewer != NULL)
+	{
+		m_modelViewer->setDefaultLatLong(latitude, longitude);
+	}
 }
 
 void LDPreferences::setupModelCenter(void)
@@ -943,7 +946,7 @@ void LDPreferences::setupModelCenter(void)
 		if (sscanf(value.c_str(), "%f,%f,%f", &center[0], &center[1],&center[2])
 			== 3)
 		{
-			if (m_modelViewer)
+			if (m_modelViewer != NULL)
 			{
 				m_modelViewer->setModelCenter(center);
 			}
@@ -961,7 +964,7 @@ void LDPreferences::setupModelSize(void)
 		// ToDo: how to deal with 64-bit float scanf?
 		if (sscanf(value.c_str(), "%f", &size) == 1)
 		{
-			if (m_modelViewer)
+			if (m_modelViewer != NULL)
 			{
 				m_modelViewer->setModelSize(size);
 			}
@@ -1912,7 +1915,7 @@ void LDPreferences::setDefaultZoom(TCFloat value, bool commit)
 
 void LDPreferences::saveDefaultView(void)
 {
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		TCFloat matrix[16];
 		TCFloat rotationMatrix[16];
@@ -1944,7 +1947,7 @@ void LDPreferences::resetDefaultView(void)
 	TCUserDefaults::removeValue(DEFAULT_MATRIX_KEY);
 	TCUserDefaults::removeValue(DEFAULT_LATITUDE_KEY);
 	TCUserDefaults::removeValue(DEFAULT_LONGITUDE_KEY);
-	if (m_modelViewer)
+	if (m_modelViewer != NULL)
 	{
 		m_modelViewer->setDefaultRotationMatrix(NULL);
 		m_modelViewer->setDefaultLatLong(30.0f, 45.0f);
