@@ -16,6 +16,7 @@ OBJECTS_DIR = .obj
 #DEFINES += _NO_BOOST
 
 unix {
+  QMAKE_CXXFLAGS_RELEASE += $$(TESTING)
   UNAME = $$system(uname -m)
   LDVDEV64 = $$(LDVDEV64)
   contains(UNAME, x86_64) {
