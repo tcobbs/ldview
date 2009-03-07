@@ -145,6 +145,7 @@ openGLInfoWindoResizer(NULL),
 hOpenGLStatusBar(NULL),
 hExamineIcon(NULL),
 hFlythroughIcon(NULL),
+hMonitor(NULL),
 #ifndef _NO_BOOST
 hLibraryUpdateWindow(NULL),
 libraryUpdater(NULL),
@@ -1089,13 +1090,78 @@ UINT CALLBACK lDrawDirBrowseHook(HWND /*hDlg*/, UINT message, WPARAM /*wParam*/,
 	return 0;
 }
 
+std::string LDViewWindow::getDisplayName(void)
+{
+	MONITORINFOEX mi;
+
+	if (hMonitor != NULL)
+	{
+		memset(&mi, 0, sizeof(mi));
+		mi.cbSize = sizeof(mi);
+
+		if (GetMonitorInfo(hMonitor, &mi))
+		{
+			return mi.szDevice;
+		}
+	}
+	return "";
+}
+
+LONG LDViewWindow::changeDisplaySettings(DEVMODE *deviceMode, DWORD flags)
+{
+	std::string deviceName = getDisplayName();
+
+	debugPrintf("displayName: %s\n", deviceName.c_str());
+	if (flags == CDS_FULLSCREEN)
+	{
+		DEVMODE curDevMode;
+
+		memset(&curDevMode, 0, sizeof(curDevMode));
+		curDevMode.dmSize = sizeof(curDevMode);
+		if (deviceName.size() > 0)
+		{
+			EnumDisplaySettings(deviceName.c_str(), ENUM_CURRENT_SETTINGS,
+				&curDevMode);
+		}
+		else
+		{
+			EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &curDevMode);
+		}
+		if (curDevMode.dmPelsWidth == deviceMode->dmPelsWidth &&
+			curDevMode.dmPelsHeight == deviceMode->dmPelsHeight &&
+			curDevMode.dmBitsPerPel == deviceMode->dmBitsPerPel)
+		{
+			if (deviceMode->dmFields & DM_DISPLAYFREQUENCY)
+			{
+				if (curDevMode.dmDisplayFrequency ==
+					deviceMode->dmDisplayFrequency)
+				{
+					return DISP_CHANGE_SUCCESSFUL;
+				}
+			}
+			else
+			{
+				return DISP_CHANGE_SUCCESSFUL;
+			}
+		}
+	}
+	if (deviceName.size() > 0)
+	{
+		return ChangeDisplaySettingsEx(deviceName.c_str(), deviceMode, NULL,
+			flags, NULL);
+	}
+	else
+	{
+		return ChangeDisplaySettingsEx(NULL, deviceMode, NULL, flags, NULL);
+	}
+}
+
 bool LDViewWindow::tryVideoMode(VideoModeT* videoMode, int refreshRate)
 {
 	if (videoMode)
 	{
 		DEVMODE deviceMode;
 		long result;
-
 		fullScreenActive = true;
 
 		memset(&deviceMode, 0, sizeof DEVMODE);
@@ -1109,36 +1175,21 @@ bool LDViewWindow::tryVideoMode(VideoModeT* videoMode, int refreshRate)
 			deviceMode.dmFields |= DM_DISPLAYFREQUENCY;
 			deviceMode.dmDisplayFrequency = refreshRate;
 		}
-		result = ChangeDisplaySettings(&deviceMode, CDS_FULLSCREEN);
+		result = changeDisplaySettings(&deviceMode, CDS_FULLSCREEN);
+		//result = ChangeDisplaySettings(&deviceMode, CDS_FULLSCREEN);
 		switch (result)
 		{
 			case DISP_CHANGE_SUCCESSFUL:
 				return true;
 				break;
 			case DISP_CHANGE_RESTART:
-				fullScreenActive = false;
-				return false;
-				break;
 			case DISP_CHANGE_BADFLAGS:
-				fullScreenActive = false;
-				return false;
-				break;
 			case DISP_CHANGE_BADPARAM:
-				fullScreenActive = false;
-				return false;
-				break;
 			case DISP_CHANGE_FAILED:
-				fullScreenActive = false;
-				return false;
-				break;
 			case DISP_CHANGE_BADMODE:
-				fullScreenActive = false;
-				return false;
-				break;
 			case DISP_CHANGE_NOTUPDATED:
 				fullScreenActive = false;
 				return false;
-				break;
 		}
 		fullScreenActive = false;
 	}
@@ -1212,7 +1263,7 @@ void LDViewWindow::activateFullScreenMode(void)
 		}
 //		modelWindow->uncompile();
 		switchingModes = true;
-		if (modelWindow)
+		if (modelWindow != NULL && modelWindow->getHWindow() != NULL)
 		{
 			modelWindow->closeWindow();
 //			modelWindowShown = false;
@@ -1241,8 +1292,16 @@ void LDViewWindow::deactivateFullScreenMode(void)
 	}
 	else
 	{
+		// Minimize sets our x and y to -32000.  Save the current values, so
+		// that when we create the window again later during activate, it will
+		// go on the correct monitor.
+		int savedX = x;
+		int savedY = y;
+
 		ShowWindow(hWindow, SW_MINIMIZE);
 		modelWindow->closeWindow();
+		x = savedX;
+		y = savedY;
 //		modelWindowShown = false;
 	}
 }
@@ -1428,6 +1487,7 @@ LRESULT LDViewWindow::doMove(int newX, int newY)
 {
 	LRESULT retVal = CUIWindow::doMove(newX, newY);
 
+	hMonitor = MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
 	return retVal;
 }
 
@@ -3906,7 +3966,9 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		//	SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
 		//}
 	}
-	return CUIWindow::doSize(sizeType, newWidth, newHeight);
+	LRESULT result = CUIWindow::doSize(sizeType, newWidth, newHeight);
+	hMonitor = MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
+	return result;
 }
 
 /*
@@ -4235,7 +4297,8 @@ void LDViewWindow::checkVideoMode(int width, int height, int depth)
 	deviceMode.dmPelsWidth = width;
 	deviceMode.dmPelsHeight = height;
 	deviceMode.dmBitsPerPel = depth;
-	result = ChangeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
+	//result = ChangeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
+	result = changeDisplaySettings(&deviceMode, CDS_TEST | CDS_FULLSCREEN);
 	if (result == DISP_CHANGE_SUCCESSFUL)
 	{
 		if (videoModes)
@@ -5382,7 +5445,6 @@ void LDViewWindow::stopAnimation(void)
 
 RECT LDViewWindow::getWorkArea(void)
 {
-	HMONITOR hMonitor = ::MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
 	RECT workAreaRect = { 0, 0, 0, 0};
 	bool fromMonitor = false;
 
