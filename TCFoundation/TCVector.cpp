@@ -14,13 +14,14 @@
 
 //static int vectorCount = 0;
 
-TCFloat TCVector::identityMatrix[16] =
+TCFloat TCVector::sm_identityMatrix[16] =
 {
 	1.0, 0.0, 0.0, 0.0,
 	0.0, 1.0, 0.0, 0.0,
 	0.0, 0.0, 1.0, 0.0,
 	0.0, 0.0, 0.0, 1.0
 };
+TCFloat TCVector::sm_epsilon = 0.0;
 
 // TCVector::TCVector(void) -- Default Constructor
 TCVector::TCVector(void)
@@ -310,43 +311,112 @@ int TCVector::operator!=(const TCVector& right) const
 // Returns:
 //		If the contents of "*this" < the contents of "right", then 1.
 //		Otherwise, 0.
-int TCVector::operator<(const TCVector& right) const
+bool TCVector::operator<(const TCVector& right) const
 {
-	return length() < right.length();
+	if (sm_epsilon == 0.0)
+	{
+		if (vector[0] < right.vector[0])
+		{
+			return true;
+		}
+		else if (vector[0] > right.vector[0])
+		{
+			return false;
+		}
+		else if (vector[1] < right.vector[1])
+		{
+			return true;
+		}
+		else if (vector[1] > right.vector[1])
+		{
+			return false;
+		}
+		else if (vector[2] < right.vector[2])
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (vector[0] < right.vector[0] - sm_epsilon)
+		{
+			return true;
+		}
+		else if (vector[0] > right.vector[0] + sm_epsilon)
+		{
+			return false;
+		}
+		else if (vector[1] < right.vector[1] - sm_epsilon)
+		{
+			return true;
+		}
+		else if (vector[1] > right.vector[1] + sm_epsilon)
+		{
+			return false;
+		}
+		else if (vector[2] < right.vector[2] - sm_epsilon)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 
-// TCVector::operator>(const TCVector&) -- Overloaded Operator
-// Expects:
-//		right	: The right hand side of the > test.
-// Returns:
-//		If the contents of "*this" > the contents of "right", then 1.
-//		Otherwise, 0.
-int TCVector::operator>(const TCVector& right) const
+bool TCVector::operator>(const TCVector& right) const
 {
-	return length() > right.length();
+	return right < *this;
 }
 
-// TCVector::operator<=(const TCVector&) -- Overloaded Operator
-// Expects:
-//		right	: The right hand side of the <= test.
-// Returns:
-//		If the contents of "*this" <= the contents of "right", then 1.
-//		Otherwise, 0.
-int TCVector::operator<=(const TCVector& right) const
-{
-	return length() <= right.length();
-}
-
-// TCVector::operator>=(const TCVector&) -- Overloaded Operator
-// Expects:
-//		right	: The right hand side of the >= test.
-// Returns:
-//		If the contents of "*this" >= the contents of "right", then 1.
-//		Otherwise, 0.
-int TCVector::operator>=(const TCVector& right) const
-{
-	return length() >= right.length();
-}
+//// TCVector::operator<(const TCVector&) -- Overloaded Operator
+//// Expects:
+////		right	: The right hand side of the < test.
+//// Returns:
+////		If the contents of "*this" < the contents of "right", then 1.
+////		Otherwise, 0.
+//int TCVector::operator<(const TCVector& right) const
+//{
+//	return length() < right.length();
+//}
+//
+//// TCVector::operator>(const TCVector&) -- Overloaded Operator
+//// Expects:
+////		right	: The right hand side of the > test.
+//// Returns:
+////		If the contents of "*this" > the contents of "right", then 1.
+////		Otherwise, 0.
+//int TCVector::operator>(const TCVector& right) const
+//{
+//	return length() > right.length();
+//}
+//
+//// TCVector::operator<=(const TCVector&) -- Overloaded Operator
+//// Expects:
+////		right	: The right hand side of the <= test.
+//// Returns:
+////		If the contents of "*this" <= the contents of "right", then 1.
+////		Otherwise, 0.
+//int TCVector::operator<=(const TCVector& right) const
+//{
+//	return length() <= right.length();
+//}
+//
+//// TCVector::operator>=(const TCVector&) -- Overloaded Operator
+//// Expects:
+////		right	: The right hand side of the >= test.
+//// Returns:
+////		If the contents of "*this" >= the contents of "right", then 1.
+////		Otherwise, 0.
+//int TCVector::operator>=(const TCVector& right) const
+//{
+//	return length() >= right.length();
+//}
 
 // TCVector::print(FILE*) -- Member Function
 // Expects:
@@ -572,7 +642,7 @@ bool TCVector::approxEquals(const TCVector &right, TCFloat epsilon) const
 
 void TCVector::initIdentityMatrix(TCFloat *matrix)
 {
-	memcpy(matrix, identityMatrix, sizeof(identityMatrix));
+	memcpy(matrix, sm_identityMatrix, sizeof(sm_identityMatrix));
 /*
 	memset(matrix, 0, 16 * sizeof(TCFloat));
 	matrix[0] = 1.0f;
@@ -646,7 +716,7 @@ TCVector TCVector::rearrange(int x, int y, int z) const
 
 const TCFloat *TCVector::getIdentityMatrix(void)
 {
-	return identityMatrix;
+	return sm_identityMatrix;
 }
 
 // Convert ourselves into a double array.

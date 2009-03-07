@@ -63,10 +63,11 @@ public:
 	TCVector& operator=(const TCVector&);
 	int operator==(const TCVector&) const;
 	int operator!=(const TCVector&) const;
-	int operator<(const TCVector& right) const;
-	int operator>(const TCVector& right) const;
-	int operator<=(const TCVector& right) const;
-	int operator>=(const TCVector& right) const;
+	bool operator<(const TCVector& right) const;
+	bool operator>(const TCVector& right) const;
+	//int operator>(const TCVector& right) const;
+	//int operator<=(const TCVector& right) const;
+	//int operator>=(const TCVector& right) const;
 	TCFloat& operator[](int i) {return vector[i]; }
 	const TCFloat& operator[](int i) const { return vector[i]; }
 	operator GlPt(void) {return vector;}
@@ -102,12 +103,15 @@ public:
 		const TCVector &boundingMin, const TCVector &boundingMax);
 	static void calcRotationMatrix(TCFloat latitude, TCFloat longitude,
 		TCFloat *rotationMatrix);
+	static TCFloat getEpsilon(void) { return sm_epsilon; }
+	static void setEpsilon(TCFloat value) { sm_epsilon = value; }
 protected:
 #ifdef _LEAK_DEBUG
 	char className[4];
 #endif
 	TCFloat vector[3];
-	static TCFloat identityMatrix[16];
+	static TCFloat sm_identityMatrix[16];
+	static TCFloat sm_epsilon;
 };
 
 // Overloaded Operator with non-TCVector as first argument
