@@ -697,7 +697,7 @@ void ModelViewerWidget::doFilePrint(void)
 
 bool ModelViewerWidget::chDirFromFilename(const char *filename)
 {
-	char *fileSpot = strrchr(filename, '/');
+	const char *fileSpot = strrchr(filename, '/');
 	bool retValue = false;
 
 	if (fileSpot)
