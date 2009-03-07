@@ -145,7 +145,9 @@ openGLInfoWindoResizer(NULL),
 hOpenGLStatusBar(NULL),
 hExamineIcon(NULL),
 hFlythroughIcon(NULL),
+#ifndef TC_NO_UNICODE
 hMonitor(NULL),
+#endif // TC_NO_UNICODE
 #ifndef _NO_BOOST
 hLibraryUpdateWindow(NULL),
 libraryUpdater(NULL),
@@ -1092,6 +1094,7 @@ UINT CALLBACK lDrawDirBrowseHook(HWND /*hDlg*/, UINT message, WPARAM /*wParam*/,
 
 std::string LDViewWindow::getDisplayName(void)
 {
+#ifndef TC_NO_UNICODE
 	MONITORINFOEX mi;
 
 	if (hMonitor != NULL)
@@ -1104,6 +1107,7 @@ std::string LDViewWindow::getDisplayName(void)
 			return mi.szDevice;
 		}
 	}
+#endif // TC_NO_UNICODE
 	return "";
 }
 
@@ -1111,7 +1115,7 @@ LONG LDViewWindow::changeDisplaySettings(DEVMODE *deviceMode, DWORD flags)
 {
 	std::string deviceName = getDisplayName();
 
-	debugPrintf("displayName: %s\n", deviceName.c_str());
+	//debugPrintf("displayName: %s\n", deviceName.c_str());
 	if (flags == CDS_FULLSCREEN)
 	{
 		DEVMODE curDevMode;
@@ -1145,14 +1149,16 @@ LONG LDViewWindow::changeDisplaySettings(DEVMODE *deviceMode, DWORD flags)
 			}
 		}
 	}
+#ifndef TC_NO_UNICODE
 	if (deviceName.size() > 0)
 	{
 		return ChangeDisplaySettingsEx(deviceName.c_str(), deviceMode, NULL,
 			flags, NULL);
 	}
 	else
+#endif // TC_NO_UNICODE
 	{
-		return ChangeDisplaySettingsEx(NULL, deviceMode, NULL, flags, NULL);
+		return ChangeDisplaySettings(deviceMode, flags);
 	}
 }
 
@@ -1359,39 +1365,6 @@ LRESULT LDViewWindow::doActivateApp(BOOL activateFlag, DWORD /*threadId*/)
 	}
 }
 
-/*
-BOOL LDViewWindow::doLDrawDirBrowse(HWND hDlg)
-{
-	OPENFILENAME openStruct;
-	char fileTypes[1024];
-	char filename[1024] = "";
-	char initialDir[1024];
-
-	SendDlgItemMessage(hDlg, IDC_LDRAWDIR, WM_GETTEXT, (WPARAM)(1024),
-		(LPARAM)initialDir);
-	memset(fileTypes, 0, 2);
-	addFileType(fileTypes, TCLocalStrings::get("AllFileTypes"), "*.*");
-	memset(&openStruct, 0, sizeof(OPENFILENAME));
-	openStruct.lStructSize = sizeof(OPENFILENAME);
-	openStruct.lpstrFilter = fileTypes;
-	openStruct.nFilterIndex = 1;
-	openStruct.lpstrFile = filename;
-	openStruct.nMaxFile = 1024;
-	openStruct.lpstrInitialDir = initialDir;
-	openStruct.lpstrTitle = "Select the LDraw directory";
-	openStruct.lpfnHook = lDrawDirBrowseHook;
-	openStruct.Flags = OFN_EXPLORER | OFN_NOTESTFILECREATE | OFN_HIDEREADONLY |
-		OFN_ALLOWMULTISELECT | OFN_ENABLEHOOK |
-		OFN_ENABLESIZING;
-	if (GetSaveFileName(&openStruct))
-	{
-		SendDlgItemMessage(hDlg, IDC_LDRAWDIR, WM_SETTEXT, 0,
-			(LPARAM)filename);
-	}
-	return TRUE;
-}
-*/
-
 BOOL LDViewWindow::doRemoveExtraDir(void)
 {
 	int index = SendMessage(hExtraDirsList, LB_GETCURSEL, 0, 0);
@@ -1483,11 +1456,18 @@ BOOL LDViewWindow::doMoveExtraDirUp(void)
 	return TRUE;
 }
 
+void LDViewWindow::updateWindowMonitor(void)
+{
+#ifndef TC_NO_UNICODE
+	hMonitor = MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
+#endif // TC_NO_UNICODE
+}
+
 LRESULT LDViewWindow::doMove(int newX, int newY)
 {
 	LRESULT retVal = CUIWindow::doMove(newX, newY);
 
-	hMonitor = MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
+	updateWindowMonitor();
 	return retVal;
 }
 
@@ -3967,7 +3947,7 @@ LRESULT LDViewWindow::doSize(WPARAM sizeType, int newWidth, int newHeight)
 		//}
 	}
 	LRESULT result = CUIWindow::doSize(sizeType, newWidth, newHeight);
-	hMonitor = MonitorFromWindow(hWindow, MONITOR_DEFAULTTOPRIMARY);
+	updateWindowMonitor();
 	return result;
 }
 
@@ -4574,15 +4554,6 @@ void LDViewWindow::openModel(const char* filename, bool skipLoad)
 			addFileType(fileTypes, ls(_UC("AllFilesTypes")), _UC("*.*"));
 			memset(&openStruct, 0, sizeof(openStruct));
 			openStruct.lStructSize = getOpenFilenameSize(true);
-//#ifdef TC_NO_UNICODE
-//			// ToDo: Unicode: test/fix the following.
-//			if (openStruct.lStructSize > 76)
-//			{
-//				// Win98 doesn't like the new struct size.  Not sure why; it
-//				// should just ignore the extra data.
-//				openStruct.lStructSize = 76;
-//			}
-//#endif // TC_NO_UNICODE
 			openStruct.hwndOwner = hWindow;
 			openStruct.lpstrFilter = fileTypes;
 			openStruct.nFilterIndex = 1;
@@ -5398,16 +5369,6 @@ LRESULT LDViewWindow::generatePartsList(void)
 						"*.html");
 					memset(&openStruct, 0, sizeof(OPENFILENAME));
 					openStruct.lStructSize = getOpenFilenameSize(false);
-//					openStruct.lStructSize = sizeof(OPENFILENAME);
-//#ifdef TC_NO_UNICODE
-//					// ToDo: Unicode: test/fix the following.
-//					if (openStruct.lStructSize > 76)
-//					{
-//						// Win98 doesn't like the new struct size.  Not sure why; it
-//						// should just ignore the extra data.
-//						openStruct.lStructSize = 76;
-//					}
-//#endif // TC_NO_UNICODE
 					openStruct.hwndOwner = hWindow;
 					openStruct.lpstrFilter = fileTypes;
 					openStruct.nFilterIndex = 0;
@@ -5448,6 +5409,7 @@ RECT LDViewWindow::getWorkArea(void)
 	RECT workAreaRect = { 0, 0, 0, 0};
 	bool fromMonitor = false;
 
+#ifndef TC_NO_UNICODE
 	if (hMonitor)
 	{
 		MONITORINFO mi;
@@ -5459,6 +5421,7 @@ RECT LDViewWindow::getWorkArea(void)
 			fromMonitor = true;
 		}
 	}
+#endif // TC_NO_UNICODE
 	if (!fromMonitor)
 	{
 		if (!::SystemParametersInfo(SPI_GETWORKAREA, 0, &workAreaRect, 0))
