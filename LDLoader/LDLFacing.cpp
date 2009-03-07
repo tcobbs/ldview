@@ -317,7 +317,7 @@ TCFloat* LDLFacing::invertMatrix(TCFloat* inM)
 //	inv = new TCFloat[16];
 	memcpy(m, inM, sizeof(m));
 	inv = glMatrix;
-	memcpy(inv, identityMatrix, sizeof(identityMatrix));
+	memcpy(inv, sm_identityMatrix, sizeof(sm_identityMatrix));
 	if (fEq(m[0], 0.0))
 	{
 		for (i = 1; i < 4 && fEq(m[i*4], 0); i++)
