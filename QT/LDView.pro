@@ -104,7 +104,13 @@ win32 {
   INCLUDE += -I../../boost_1_33_1
   LIBS += -L../TCFoundation/Release -L../LDLib/Release -L../LDLoader/Release \
           -L../TRE/Release -lLDLib -L../LDExporter/Release -L../lib -lunzip32 \
-		-llibboost_thread-vc71-mt-s -L../gl2ps/Release
+		 -L../gl2ps/Release
+  exists ($(VCINSTALLDIR)/bin/cl.exe) {
+    LIBS    += -ltinyxml_STL -llibboost_thread-vc80-mt-s
+  }
+  exists ($(VCTOOLKITINSTALLDIR)/bin/cl.exe) {
+    LIBS    += -ltinyxml_STL-vc2003 -llibboost_thread-vc71-mt-s
+  }
 }
 
 translations.commands = lrelease LDView.pro
@@ -162,9 +168,7 @@ unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
 }
-win32 {
-	LIBS    += -ltinyxml_STL-vc2003
-}
+
 DBFILE	= LDView.db
 LANGUAGE	= C++
 TRANSLATIONS   =  	ldview_en.ts \
@@ -172,7 +176,7 @@ TRANSLATIONS   =  	ldview_en.ts \
 					ldview_it.ts \
 					ldview_cz.ts \
 					ldview_hu.ts
-VERSION = 3.1
+VERSION = 4.0.1
 macx {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
