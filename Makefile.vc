@@ -40,6 +40,12 @@ OBJDIR = Debug
 OBJDIR = Release
 !ENDIF
 
+!IFDEF VCTOOLKITINSTALLDIR
+SPECLIBS = tinyxml_STL-vc2003.lib libpng-vc6.lib
+!ELSE
+SPECLIBS = tinyxml_STL.lib libpng.lib
+!ENDIF
+
 all: $(OBJDIR) $(OBJDIR)\LDView.exe launcher thumbs
 
 distclean:
@@ -129,13 +135,12 @@ $(OBJDIR)\LDView.exe:	TCFoundation\$(OBJDIR)\TCFoundation.lib $(CCOBJS)
 $(OBJDIR)\LDView.exe:	gl2ps\$(OBJDIR)\gl2ps.lib
 $(OBJDIR)\LDView.exe:	LDExporter\$(OBJDIR)\LDExporter.lib
 $(OBJDIR)\LDView.exe:	$(OBJDIR)\LDView.res lib\zlib.lib lib\unzip32.lib
-$(OBJDIR)\LDView.exe:	lib\libpng-vc6.lib
 	link -nologo -out:$(OBJDIR)\LDView.exe $** \
 	user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib \
 	opengl32.lib glu32.lib ws2_32.lib \
 	winmm.lib shlwapi.lib comctl32.lib version.lib libjpeg.lib \
 	/subsystem:windows /incremental:no /machine:I386 /nodefaultlib:"libc.lib" \
-	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib tinyxml_STL-vc2003.lib $(EXTRALFLAGS) 
+	/pdb:$(OBJDIR)\LDView.pdb /libpath:lib $(SPECLIBS)  $(EXTRALFLAGS) 
 
 all:			translations
 translations:	hungarian german czech italian
