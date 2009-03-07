@@ -93,6 +93,7 @@ cat ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini \
 }
 
 win32 {
+  QMAKE_CXXFLAGS_RELEASE += /FI winsock2.h /FI winsock.h
   ini.commands = copy /y /a ..\LDViewMessages.ini+..\LDExporter\LDExportMessages.ini LDViewMessages.ini
   ini.target = LDViewMessages.ini 
   ini.depends = ../LDViewMessages.ini ../LDExporter/LDExportMessages.ini
