@@ -181,6 +181,8 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT doInitMenuPopup(HMENU hPopupMenu, UINT uPos,
 			BOOL fSystemMenu);
 		virtual bool tryVideoMode(VideoModeT*, int);
+		std::string getDisplayName(void);
+		LONG changeDisplaySettings(DEVMODE *deviceMode, DWORD flags);
 		virtual void setFullScreenDisplayMode(void);
 		virtual void restoreDisplayMode(void);
 		virtual void checkVideoMode(int, int, int);
@@ -382,6 +384,7 @@ class LDViewWindow: public CUIWindow
 		HWND hOpenGLStatusBar;
 		HICON hExamineIcon;
 		HICON hFlythroughIcon;
+		HMONITOR hMonitor;
 #ifndef _NO_BOOST
 		HWND hLibraryUpdateWindow;
 		LDLibraryUpdater *libraryUpdater;
