@@ -319,6 +319,7 @@ class LDViewWindow: public CUIWindow
 		virtual void generatePartsList(LDHtmlInventory *htmlInventory,
 			LDPartsList *partsList, const char *filename);
 		void progressAlertCallback(TCProgressAlert *alert);
+		void updateWindowMonitor(void);
 
 		void loadSettings(void);
 		RECT getWorkArea(void);
@@ -384,7 +385,9 @@ class LDViewWindow: public CUIWindow
 		HWND hOpenGLStatusBar;
 		HICON hExamineIcon;
 		HICON hFlythroughIcon;
+#ifndef TC_NO_UNICODE
 		HMONITOR hMonitor;
+#endif // TC_NO_UNICODE
 #ifndef _NO_BOOST
 		HWND hLibraryUpdateWindow;
 		LDLibraryUpdater *libraryUpdater;
