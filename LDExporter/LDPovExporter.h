@@ -97,7 +97,8 @@ protected:
 	typedef std::vector<SmoothTriangle> SmoothTriangleVector;
 	typedef std::list<SmoothTriangle> SmoothTriangleList;
 	typedef std::list<SmoothTriangle*> SmoothTrianglePList;
-	typedef std::map<LineKey, SmoothTrianglePList> TriangleEdgesMap;
+	typedef std::set<SmoothTriangle*> SmoothTrianglePSet;
+	typedef std::map<LineKey, SmoothTrianglePSet> TriangleEdgesMap;
 	typedef std::map<TCVector, SmoothTrianglePList> TrianglePPointsMap;
 	typedef std::pair<TCVector, TCVector> LinePair;
 	typedef std::list<LinePair> LineList;
