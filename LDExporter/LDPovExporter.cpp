@@ -16,6 +16,7 @@
 #include <tinyxml.h>
 #include <TRE/TREGL.h>
 #include <TRE/TREShapeGroup.h>
+#include <assert.h>
 
 #if defined WIN32 && defined(_MSC_VER) && _MSC_VER >= 1400 && defined(_DEBUG)
 #define new DEBUG_CLIENTBLOCK
@@ -2168,14 +2169,14 @@ void LDPovExporter::smoothGeometry(
 
 		for (size_t j = 0; j < 3; j++)
 		{
-			triangleEdges[triangle.lineKeys[j]].push_back(&triangle);
+			triangleEdges[triangle.lineKeys[j]].insert(&triangle);
 		}
 	}
 	for (TriangleEdgesMap::iterator itmte = triangleEdges.begin();
 		itmte != triangleEdges.end(); itmte++)
 	{
 		const LineKey &lineKey = itmte->first;
-		SmoothTrianglePList &triangles = itmte->second;
+		SmoothTrianglePSet &triangles = itmte->second;
 
 		if (triangles.size() > 1)
 		{
@@ -2184,16 +2185,19 @@ void LDPovExporter::smoothGeometry(
 			int pass = 1;
 			TCVectorVector normals;
 
-			for (SmoothTrianglePList::iterator itlst = triangles.begin();
-				itlst != triangles.end(); itlst++)
+#ifdef _DEBUG
+			for (SmoothTrianglePSet::iterator itsst = triangles.begin();
+				itsst != triangles.end(); itsst++)
 			{
-				SmoothTriangle &triangle = **itlst;
+				SmoothTriangle &triangle = **itsst;
 
 				if (triangle.smoothPass != 0)
 				{
+					assert(false);
 					triangle.smoothPass = 0;
 				}
 			}
+#endif // _DEBUG
 			for (; processed < triangles.size(); pass++)
 			{
 				bool started = false;
@@ -2201,10 +2205,10 @@ void LDPovExporter::smoothGeometry(
 				TCVector maxPoint;
 				TCVector normal;
 
-				for (SmoothTrianglePList::iterator itlst = triangles.begin();
-					itlst != triangles.end(); itlst++)
+				for (SmoothTrianglePSet::iterator itsst = triangles.begin();
+					itsst != triangles.end(); itsst++)
 				{
-					SmoothTriangle &triangle = **itlst;
+					SmoothTriangle &triangle = **itsst;
 
 					if (triangle.smoothPass == 0)
 					{
@@ -2251,14 +2255,20 @@ void LDPovExporter::smoothGeometry(
 								processed++;
 							}
 						}
+						else
+						{
+							assert(false);
+							triangle.smoothPass = -1;
+							processed++;
+						}
 					}
 				}
 			}
 			normals.resize(pass - 1);
-			for (SmoothTrianglePList::iterator itlst = triangles.begin();
-					itlst != triangles.end(); itlst++)
+			for (SmoothTrianglePSet::iterator itsst = triangles.begin();
+					itsst != triangles.end(); itsst++)
 			{
-				SmoothTriangle &triangle = **itlst;
+				SmoothTriangle &triangle = **itsst;
 
 				if (triangle.smoothPass > 0)
 				{
@@ -2287,10 +2297,10 @@ void LDPovExporter::smoothGeometry(
 					}
 				}
 			}
-			for (SmoothTrianglePList::iterator itlst = triangles.begin();
-					itlst != triangles.end(); itlst++)
+			for (SmoothTrianglePSet::iterator itsst = triangles.begin();
+					itsst != triangles.end(); itsst++)
 			{
-				SmoothTriangle &triangle = **itlst;
+				SmoothTriangle &triangle = **itsst;
 
 				if (triangle.smoothPass > 0)
 				{
