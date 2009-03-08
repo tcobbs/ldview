@@ -23,8 +23,120 @@
 
 CharStringMap LDPovExporter::sm_replacementChars;
 
+LDPovExporter::LineKey::LineKey(void)
+{
+}
+
+//The parametric equations for a line passing through (x1 y1 z1), (x2 y2
+//z2) are
+//        x = x1 + (x2 - x1)*t
+//        y = y1 + (y2 - y1)*t
+//        z = z1 + (z2 - z1)*t 
+LDPovExporter::LineKey::LineKey(const TCVector &point1, const TCVector &point2)
+{
+	if (point1 < point2)
+	{
+		direction = point2 - point1;
+	}
+	else
+	{
+		direction = point1 - point2;
+	}
+	direction.normalize();
+	if (fabs(direction[2]) > TCVector::getEpsilon())
+	{
+		// 0 = z1 + (z2 - z1) * t;
+		// -z1 = (z2 - z1) * t;
+		// -z1 / (z2 - z1) = t;
+		TCFloat t = -point1[2] / (point2[2] - point1[2]);
+		intercept[0] = point1[0] + (point2[0] - point1[0]) * t;
+		intercept[1] = point1[1] + (point2[1] - point1[1]) * t;
+	}
+	else if (fabs(direction[1]) > TCVector::getEpsilon())
+	{
+		TCFloat t = -point1[1] / (point2[1] - point1[1]);
+		intercept[0] = point1[0] + (point2[0] - point1[0]) * t;
+		intercept[2] = point1[2] + (point2[2] - point1[2]) * t;
+	}
+	else if (fabs(direction[0]) > TCVector::getEpsilon())
+	{
+		TCFloat t = -point1[0] / (point2[0] - point1[0]);
+		intercept[1] = point1[1] + (point2[1] - point1[1]) * t;
+		intercept[2] = point1[2] + (point2[2] - point1[2]) * t;
+	}
+	else
+	{
+		throw "Line points cannot be equal.";
+	}
+}
+
+LDPovExporter::LineKey::LineKey(const LineKey &other)
+{
+	*this = other;
+}
+
+LDPovExporter::LineKey &LDPovExporter::LineKey::operator=(const LineKey &other)
+{
+	direction = other.direction;
+	intercept = other.intercept;
+	return *this;
+}
+
+bool LDPovExporter::LineKey::operator==(const LineKey &other) const
+{
+	return direction == other.direction && intercept == other.intercept;
+}
+
+bool LDPovExporter::LineKey::operator<(const LineKey &other) const
+{
+	if (direction < other.direction)
+	{
+		return true;
+	}
+	else if (other.direction < direction)
+	{
+		return false;
+	}
+	else if (intercept < other.intercept)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void LDPovExporter::SmoothTriangle::setNormal(
+	const TCVector &point,
+	const TCVector &normal)
+{
+	TCVector &oldNormal = normals[point];
+	if (LDPovExporter::shouldFlipNormal(normal, oldNormal))
+	{
+		oldNormal = normal * -1.0;
+	}
+	else
+	{
+		oldNormal = normal;
+	}
+}
+
+void LDPovExporter::SmoothTriangle::initLineKeys(
+	const SizeTVectorMap &indexToVert)
+{
+	for (size_t i = 0; i < 3; i++)
+	{
+		size_t next = (i + 1) % 3;
+
+		lineKeys[i] = LineKey(indexToVert.find(vertexIndices[i])->second,
+			indexToVert.find(vertexIndices[next])->second);
+	}
+}
+
 LDPovExporter::LDPovExporter(void):
-LDExporter("PovExporter/")
+LDExporter("PovExporter/"),
+m_mesh2(true)
 {
 	char *ldrawDir = copyString(LDLModel::lDrawDir());
 
@@ -60,6 +172,8 @@ LDExporter("PovExporter/")
 		sm_replacementChars[']'] = "_closebracket_";
 		sm_replacementChars['{'] = "_openbrace_";
 		sm_replacementChars['}'] = "_closebrace_";
+		sm_replacementChars[' '] = "_space_";
+		sm_replacementChars['\t'] = "_tab_";
 	}
 }
 
@@ -84,6 +198,7 @@ void LDPovExporter::loadSettings(void)
 	m_xmlMap = boolForKey("XmlMap", true);
 	m_xmlMapPath = pathForKey("XmlMapPath");
 	m_inlinePov = boolForKey("InlinePov", true);
+	m_smoothCurves = boolForKey("SmoothCurves", false);
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
 	m_floor = boolForKey("Floor", true);
@@ -138,6 +253,8 @@ void LDPovExporter::addEdgesSettings(void) const
 void LDPovExporter::addGeometrySettings(void) const
 {
 	LDExporter::addGeometrySettings();
+	addSetting(LDExporterSetting(ls(_UC("PovSmoothCurves")), m_smoothCurves,
+		udKey("SmoothCurves").c_str()));
 	addSetting(LDExporterSetting(ls(_UC("PovHideStuds")), m_hideStuds,
 		udKey("HideStuds").c_str()));
 }
@@ -1480,9 +1597,9 @@ const PovName *LDPovExporter::findPovName(
 		it != mapping.names.end(); it++)
 	{
 		const PovName &name = *it;
-		StringStringMap::const_iterator it2 = name.attributes.find(attrName);
+		StringStringMap::const_iterator itss = name.attributes.find(attrName);
 
-		if (it2 != name.attributes.end() && it2->second == attrValue)
+		if (itss != name.attributes.end() && itss->second == attrValue)
 		{
 			return &name;
 		}
@@ -1656,7 +1773,8 @@ bool LDPovExporter::findModelGeometry(
 			}
 		}
 		else if (pFileLine->getLineType() == LDLLineTypeTriangle ||
-			pFileLine->getLineType() == LDLLineTypeQuad)
+			pFileLine->getLineType() == LDLLineTypeQuad ||
+			(m_smoothCurves && pFileLine->getLineType() == LDLLineTypeLine))
 		{
 			LDLShapeLine *pShapeLine = (LDLShapeLine *)pFileLine;
 
@@ -1780,35 +1898,719 @@ bool LDPovExporter::writeModelObject(
 	return true;
 }
 
+void LDPovExporter::writeMesh(int colorNumber, const ShapeLineList &list)
+{
+	startMesh();
+	for (ShapeLineList::const_iterator it = list.begin(); it != list.end();
+		it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		{
+			writeTriangleLine((LDLTriangleLine *)shapeLine);
+		}
+		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		{
+			writeQuadLine((LDLQuadLine *)shapeLine);
+		}
+	}
+	if (colorNumber != 16)
+	{
+		fprintf(m_pPovFile, "\t");
+		writeColor(colorNumber);
+		fprintf(m_pPovFile, "\n");
+	}
+	endMesh();
+}
+
+void LDPovExporter::writeMesh2(
+	int colorNumber,
+	const VectorSizeTMap &vertices,
+	const VectorSizeTMap &normals,
+	const SmoothTriangleVector &triangles)
+{
+	int total = 0;
+	VectorSizeTMap::const_iterator it;
+
+	startMesh2();
+	startMesh2Section("vertex_vectors");
+	fprintf(m_pPovFile, "%d,\n\t\t\t", vertices.size());
+	for (it = vertices.begin(); it != vertices.end(); it++)
+	{
+		writeMesh2Vertices(&it->first, 1, total);
+	}
+	endMesh2Section();
+	startMesh2Section("normal_vectors");
+	fprintf(m_pPovFile, "%d,\n\t\t\t", normals.size());
+	total = 0;
+	for (it = normals.begin(); it != normals.end(); it++)
+	{
+		writeMesh2Vertices(&it->first, 1, total);
+	}
+	endMesh2Section();
+	startMesh2Section("face_indices");
+	fprintf(m_pPovFile, "%d,\n\t\t\t", triangles.size());
+	total = 0;
+	for (size_t i = 0; i < triangles.size(); i++)
+	{
+		const SmoothTriangle &triangle = triangles[i];
+
+		writeMesh2Indices(triangle.vertexIndices[0], triangle.vertexIndices[1],
+			triangle.vertexIndices[2], total);
+	}
+	endMesh2Section();
+	startMesh2Section("normal_indices");
+	fprintf(m_pPovFile, "%d,\n\t\t\t", triangles.size());
+	total = 0;
+	for (size_t i = 0; i < triangles.size(); i++)
+	{
+		const SmoothTriangle &triangle = triangles[i];
+
+		writeMesh2Indices(triangle.normalIndices[0], triangle.normalIndices[1],
+			triangle.normalIndices[2], total);
+	}
+	endMesh2Section();
+	if (colorNumber != 16)
+	{
+		fprintf(m_pPovFile, "\t");
+		writeColor(colorNumber);
+		fprintf(m_pPovFile, "\n");
+	}
+	endMesh();
+}
+
+void LDPovExporter::writeMesh2(int colorNumber, const ShapeLineList &list)
+{
+	int total = 0;
+	int current = 0;
+	int vertexCount = 0;
+	int faceCount = 0;
+	ShapeLineList::const_iterator it;
+
+	startMesh2();
+	startMesh2Section("vertex_vectors");
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		{
+			vertexCount += 3;
+		}
+		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		{
+			vertexCount += 4;
+		}
+	}
+	fprintf(m_pPovFile, "%d,\n\t\t\t", vertexCount);
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		{
+			writeTriangleLineVertices((LDLTriangleLine *)shapeLine,
+				total);
+		}
+		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		{
+			writeQuadLineVertices((LDLQuadLine *)shapeLine, total);
+		}
+	}
+	endMesh2Section();
+	total = 0;
+	startMesh2Section("face_indices");
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		{
+			faceCount += 1;
+		}
+		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		{
+			faceCount += 2;
+		}
+	}
+	fprintf(m_pPovFile, "%d,\n\t\t\t", faceCount);
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		{
+			writeTriangleLineIndices((LDLTriangleLine *)shapeLine,
+				current, total);
+		}
+		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		{
+			writeQuadLineIndices((LDLQuadLine *)shapeLine, current,
+				total);
+		}
+	}
+	endMesh2Section();
+	if (colorNumber != 16)
+	{
+		fprintf(m_pPovFile, "\t");
+		writeColor(colorNumber);
+		fprintf(m_pPovFile, "\n");
+	}
+	endMesh();
+}
+
+//The parametric equations for a line passing through (x1 y1 z1), (x2 y2
+//z2) are
+//        x = x1 + (x2 - x1)*t
+//        y = y1 + (y2 - y1)*t
+//        z = z1 + (z2 - z1)*t 
+void LDPovExporter::smoothGeometry(
+	const ShapeLineList &list,
+	VectorSizeTMap &vertices,
+	VectorSizeTMap &normals,
+	SmoothTriangleVector &triangles)
+{
+	int triangleCount = 0;
+	int current = 0;
+	size_t index;
+	VectorSizeTMap::iterator itmvs;
+
+	ShapeLineList::const_iterator it;
+	// One entry per infinite line.  Each entry is a list of all the triangles
+	// that share that infinite line.
+	TriangleEdgesMap triangleEdges;
+
+	// One entry per triangle vertex.  Each entry is a list of all the triangles
+	// that share that vertex.
+	TrianglePPointsMap trianglePoints;
+
+	// Map from vertex index to vertex.
+	SizeTVectorMap indexToVert;
+	// One entry per infinite line.  The entry contains a map of all the edge
+	// end points along that infinite line.
+	EdgeMap edgesMap;
+
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+		const TCVector *points = shapeLine->getPoints();
+
+		if (shapeLine->getLineType() == LDLLineTypeLine)
+		{
+			if (points[0] < points[1])
+			{
+				edgesMap[LineKey(points[0], points[1])].
+					push_back(LinePair(points[0], points[1]));
+			}
+			else
+			{
+				edgesMap[LineKey(points[0], points[1])].
+					push_back(LinePair(points[1], points[0]));
+			}
+		}
+		else
+		{
+			int count = shapeLine->getNumPoints();
+
+			for (int i = 0; i < count; i++)
+			{
+				// Make sure points[i] is in the map
+				vertices[points[i]];
+			}
+		}
+	}
+	index = 0;
+	for (itmvs = vertices.begin(); itmvs != vertices.end(); itmvs++)
+	{
+		itmvs->second = index++;
+		indexToVert[itmvs->second] = itmvs->first;
+	}
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		{
+			triangleCount += 1;
+		}
+		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		{
+			triangleCount += 2;
+		}
+	}
+	triangles.resize(triangleCount);
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		LDLShapeLine *shapeLine = *it;
+
+		if (shapeLine->getLineType() != LDLLineTypeLine)
+		{
+			const TCVector *points = shapeLine->getPoints();
+			SmoothTriangle &triangle = triangles[current++];
+
+			triangle.colorNumber = shapeLine->getColorNumber();
+			initSmoothTriangle(triangle, vertices, trianglePoints, indexToVert,
+				points[0], points[1], points[2]);
+			if (shapeLine->getLineType() == LDLLineTypeQuad)
+			{
+				SmoothTriangle &triangle2 = triangles[current++];
+
+				triangle2.colorNumber = triangle.colorNumber;
+				initSmoothTriangle(triangle2, vertices, trianglePoints,
+					indexToVert, points[0], points[2], points[3]);
+			}
+		}
+	}
+	for (size_t i = 0; i < triangles.size(); i++)
+	{
+		SmoothTriangle &triangle = triangles[i];
+
+		for (size_t j = 0; j < 3; j++)
+		{
+			triangleEdges[triangle.lineKeys[j]].push_back(&triangle);
+		}
+	}
+	for (TriangleEdgesMap::iterator itmte = triangleEdges.begin();
+		itmte != triangleEdges.end(); itmte++)
+	{
+		const LineKey &lineKey = itmte->first;
+		SmoothTrianglePList &triangles = itmte->second;
+
+		if (triangles.size() > 1)
+		{
+			EdgeMap::const_iterator itme = edgesMap.find(itmte->first);
+			size_t processed = 0;
+			int pass = 1;
+			TCVectorVector normals;
+
+			for (SmoothTrianglePList::iterator itlst = triangles.begin();
+				itlst != triangles.end(); itlst++)
+			{
+				SmoothTriangle &triangle = **itlst;
+
+				if (triangle.smoothPass != 0)
+				{
+					triangle.smoothPass = 0;
+				}
+			}
+			for (; processed < triangles.size(); pass++)
+			{
+				bool started = false;
+				TCVector minPoint;
+				TCVector maxPoint;
+				TCVector normal;
+
+				for (SmoothTrianglePList::iterator itlst = triangles.begin();
+					itlst != triangles.end(); itlst++)
+				{
+					SmoothTriangle &triangle = **itlst;
+
+					if (triangle.smoothPass == 0)
+					{
+						int index1 = findEdge(triangle, lineKey);
+
+						if (index1 >= 0)
+						{
+							int index2 = (index1 + 1) % 3;
+							TCVector point1 =
+								indexToVert[triangle.vertexIndices[index1]];
+							TCVector point2 =
+								indexToVert[triangle.vertexIndices[index2]];
+
+							if (point1 > point2)
+							{
+								std::swap(point1, point2);
+							}
+							if (itme != edgesMap.end() &&
+								onEdge(LinePair(point1, point2), itme->second))
+							{
+								triangle.smoothPass = -1;
+								processed++;
+							}
+							else if (started)
+							{
+								if (normalsCheck(triangle.edgeNormals[index1],
+									normal) &&
+									edgesOverlap(LinePair(point1, point2),
+									LinePair(minPoint, maxPoint)))
+								{
+									minPoint = std::min(minPoint, point1);
+									maxPoint = std::max(maxPoint, point2);
+									triangle.smoothPass = pass;
+									processed++;
+								}
+							}
+							else
+							{
+								minPoint = point1;
+								maxPoint = point2;
+								normal = triangle.edgeNormals[index1];
+								started = true;
+								triangle.smoothPass = pass;
+								processed++;
+							}
+						}
+					}
+				}
+			}
+			normals.resize(pass - 1);
+			for (SmoothTrianglePList::iterator itlst = triangles.begin();
+					itlst != triangles.end(); itlst++)
+			{
+				SmoothTriangle &triangle = **itlst;
+
+				if (triangle.smoothPass > 0)
+				{
+					int index = findEdge(triangle, lineKey);
+
+					if (index >= 0)
+					{
+						TCVector &normal = normals[triangle.smoothPass - 1];
+						TCVector &triNormal = triangle.edgeNormals[index];
+
+						if (normal.lengthSquared() > 0)
+						{
+							if (shouldFlipNormal(triNormal, normal))
+							{
+								normal = (normal - triNormal).normalize();
+							}
+							else
+							{
+								normal = (normal + triNormal).normalize();
+							}
+						}
+						else
+						{
+							normal = triNormal;
+						}
+					}
+				}
+			}
+			for (SmoothTrianglePList::iterator itlst = triangles.begin();
+					itlst != triangles.end(); itlst++)
+			{
+				SmoothTriangle &triangle = **itlst;
+
+				if (triangle.smoothPass > 0)
+				{
+					int index = findEdge(triangle, lineKey);
+
+					if (index >= 0)
+					{
+						TCVector &normal = normals[triangle.smoothPass - 1];
+						TCVector &triNormal = triangle.edgeNormals[index];
+
+						if (shouldFlipNormal(triNormal, normal))
+						{
+							triNormal = -normal;
+						}
+						else
+						{
+							triNormal = normal;
+						}
+					}
+				}
+				triangle.smoothPass = 0;
+			}
+		}
+	}
+	for (TrianglePPointsMap::iterator itmtp = trianglePoints.begin();
+		itmtp != trianglePoints.end(); itmtp++)
+	{
+		SmoothTrianglePList &triangles = itmtp->second;
+		bool done = false;
+		TCVector lastNormal;
+		const TCVector &point = itmtp->first;
+
+		if (triangles.size() > 1)
+		{
+			while (!done)
+			{
+				bool started = false;
+				TCVector normal;
+				SmoothTrianglePList::iterator itlst;
+				done = true;
+
+				for (itlst = triangles.begin(); itlst != triangles.end();
+					itlst++)
+				{
+					SmoothTriangle &triangle = **itlst;
+					int index1 = findPoint(triangle, point, indexToVert);
+					int index2 = (index1 + 2) % 3;
+
+					if (triangle.smoothPass > 0)
+					{
+						if (triangle.smoothPass == 1)
+						{
+							triangle.setNormal(point, lastNormal);
+						}
+						triangle.smoothPass++;
+					}
+					else
+					{
+						TCVector triNormal = (triangle.edgeNormals[index1] +
+							triangle.edgeNormals[index2]).normalize();
+
+						if (!started)
+						{
+							normal = triNormal;
+							triangle.smoothPass = 1;
+							started = true;
+						}
+						else
+						{
+							if (trySmooth(triNormal, normal))
+							{
+								triangle.smoothPass = 1;
+							}
+							else
+							{
+								done = false;
+							}
+						}
+					}
+				}
+				if (done)
+				{
+					for (itlst = triangles.begin(); itlst != triangles.end();
+						itlst++)
+					{
+						SmoothTriangle &triangle = **itlst;
+
+						if (triangle.smoothPass == 1)
+						{
+							triangle.setNormal(point, normal);
+						}
+						triangle.smoothPass = 0;
+					}
+				}
+				else
+				{
+					lastNormal = normal;
+				}
+			}
+		}
+	}
+	for (size_t i = 0; i < triangles.size(); i++)
+	{
+		const SmoothTriangle &triangle = triangles[i];
+
+		for (VectorVectorMap::const_iterator it5 = triangle.normals.begin();
+			it5 != triangle.normals.end(); it5++)
+		{
+			normals[it5->second];
+		}
+	}
+	index = 0;
+	for (itmvs = normals.begin(); itmvs != normals.end(); itmvs++)
+	{
+		itmvs->second = index++;
+	}
+	for (size_t i = 0; i < triangles.size(); i++)
+	{
+		SmoothTriangle &triangle = triangles[i];
+
+		for (int j = 0; j < 3; j++)
+		{
+			const TCVector &point = indexToVert[triangle.vertexIndices[j]];
+			const TCVector &normal = triangle.normals[point];
+
+			triangle.normalIndices[j] = normals[normal];
+		}
+	}
+}
+
+int LDPovExporter::findEdge(
+	const SmoothTriangle &triangle,
+	const LineKey &lineKey)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (triangle.lineKeys[i] == lineKey)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+int LDPovExporter::findPoint(
+	const SmoothTriangle &triangle,
+	const TCVector &point,
+	const SizeTVectorMap &points)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (points.find(triangle.vertexIndices[i])->second == point)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+bool LDPovExporter::edgesOverlap(const LinePair &edge1, const LinePair &edge2)
+{
+	if ((edge1.first <= edge2.first && edge1.second >= edge2.first) ||
+		edge1.first <= edge2.second && edge1.second >= edge2.second)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool LDPovExporter::onEdge(
+	const LinePair &edge,
+	const LineList &edges)
+{
+	for (LineList::const_iterator it = edges.begin(); it != edges.end(); it++)
+	{
+		if (edgesOverlap(edge, *it))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+// Note: static method
+bool LDPovExporter::shouldFlipNormal(
+	const TCVector &normal1,
+	const TCVector &normal2)
+{
+	if (normal1[0] == 0.0f && normal1[1] == 0.0f &&
+		normal1[2] == 0.0f)
+	{
+		return false;
+	}
+	else
+	{
+		TCFloat dotProduct = normal1.dot(normal2);
+
+		if (!fEq(dotProduct, 0.0f) && dotProduct < 0.0f)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}
+
+bool LDPovExporter::normalsCheck(const TCVector &normal1, TCVector normal2)
+{
+	if (shouldFlipNormal(normal1, normal2))
+	{
+		normal2 *= -1.0;
+	}
+	if (normal1.dot(normal2) > 0.906307787f)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
+{
+	TCFloat dotProduct;
+	bool flip;
+
+	if (shouldFlipNormal(normal1, normal2))
+	{
+		dotProduct = normal2.dot(-normal1);
+		flip = true;
+	}
+	else
+	{
+		dotProduct = normal2.dot(normal1);
+		flip = false;
+	}
+	// The following number is the cos of 25 degrees.  I don't want to
+	// calculate it on the fly.  We only want to apply this normal if the
+	// difference between it an the original normal is less than 25 degrees.
+	// If the normal only applies to two faces, then the faces have to be
+	// more than 50 degrees apart for this to happen.  Note that low-res
+	// studs have 45-degree angles between the faces, so 50 gives a little
+	// leeway.
+	if (dotProduct > 0.906307787f)
+	{
+		if (flip)
+		{
+			normal2 = (normal2 - normal1).normalize();
+		}
+		else
+		{
+			normal2 = (normal2 + normal1).normalize();
+		}
+		return true;
+	}
+	return false;
+}
+
+void LDPovExporter::initSmoothTriangle(
+	SmoothTriangle &triangle,
+	VectorSizeTMap &vertices,
+	TrianglePPointsMap &trianglePoints,
+	SizeTVectorMap &indexToVert,
+	const TCVector &point1,
+	const TCVector &point2,
+	const TCVector &point3)
+{
+	memset(triangle.normalIndices, 0, sizeof(triangle.normalIndices));
+	triangle.smoothPass = 0;
+	triangle.vertexIndices[0] = vertices[point1];
+	triangle.vertexIndices[1] = vertices[point2];
+	triangle.vertexIndices[2] = vertices[point3];
+	triangle.initLineKeys(indexToVert);
+	TCVector normal = ((point3 - point1) * (point2 - point1)).normalize();
+	triangle.normals.insert(VectorVectorMap::value_type(point1, normal));
+	triangle.normals.insert(VectorVectorMap::value_type(point2, normal));
+	triangle.normals.insert(VectorVectorMap::value_type(point3, normal));
+	triangle.normals[point1] = normal;
+	triangle.normals[point1] = normal;
+	triangle.normals[point1] = normal;
+	triangle.edgeNormals[0] = normal;
+	triangle.edgeNormals[1] = normal;
+	triangle.edgeNormals[2] = normal;
+	trianglePoints[point1].push_back(&triangle);
+	trianglePoints[point2].push_back(&triangle);
+	trianglePoints[point3].push_back(&triangle);
+}
+
 void LDPovExporter::writeGeometry(const IntShapeLineListMap &colorGeometryMap)
 {
-	for (IntShapeLineListMap::const_iterator itMap = colorGeometryMap.begin();
-		itMap != colorGeometryMap.end(); itMap++)
+	for (IntShapeLineListMap::const_iterator it = colorGeometryMap.begin();
+		it != colorGeometryMap.end(); it++)
 	{
-		const ShapeLineList &list = itMap->second;
-
-		startMesh();
-		for (ShapeLineList::const_iterator itList = list.begin();
-			itList != list.end(); itList++)
+		if (m_smoothCurves)
 		{
-			LDLShapeLine *shapeLine = *itList;
+			VectorSizeTMap vertices;
+			VectorSizeTMap normals;
+			SmoothTriangleVector triangles;
+			TCFloat origEpsilon = TCVector::getEpsilon();
 
-			if (shapeLine->getLineType() == LDLLineTypeTriangle)
+			TCVector::setEpsilon(0.001f);
+			smoothGeometry(it->second, vertices, normals, triangles);
+			if (vertices.size() > 0 && normals.size() > 0)
 			{
-				writeTriangleLine((LDLTriangleLine *)shapeLine);
+				writeMesh2(it->first, vertices, normals, triangles);
 			}
-			else if (shapeLine->getLineType() == LDLLineTypeQuad)
+			else
 			{
-				writeQuadLine((LDLQuadLine *)shapeLine);
+				assert(triangles.size() == 0);
 			}
+			TCVector::setEpsilon(origEpsilon);
 		}
-		if (itMap->first != 16)
+		else if (m_mesh2)
 		{
-			fprintf(m_pPovFile, "\t\t");
-			writeColor(itMap->first);
-			fprintf(m_pPovFile, "\n");
+			writeMesh2(it->first, it->second);
 		}
-		endMesh();
+		else
+		{
+			writeMesh(it->first, it->second);
+		}
 	}
 }
 
@@ -2213,19 +3015,19 @@ void LDPovExporter::writeColorDeclaration(int colorNumber)
 			it = m_xmlColors.find(colorNumber);
 			if (it != m_xmlColors.end())
 			{
-				StringList::const_iterator it2;
+				StringList::const_iterator itls;
 
 				PovMapping color = it->second;
-				for (it2 = color.povCodes.begin(); it2 != color.povCodes.end();
-					it2++)
+				for (itls = color.povCodes.begin();
+					itls != color.povCodes.end(); itls++)
 				{
-					writeCode(*it2);
+					writeCode(*itls);
 					wroteXml = true;
 				}
-				for (it2 = color.povFilenames.begin();
-					it2 != color.povFilenames.end(); it2++)
+				for (itls = color.povFilenames.begin();
+					itls != color.povFilenames.end(); itls++)
 				{
-					writeInclude(*it2);
+					writeInclude(*itls);
 					wroteXml = true;
 				}
 			}
@@ -2579,6 +3381,21 @@ void LDPovExporter::startMesh(void)
 	fprintf(m_pPovFile, "\tmesh {\n");
 }
 
+void LDPovExporter::startMesh2(void)
+{
+	fprintf(m_pPovFile, "\tmesh2 {\n");
+}
+
+void LDPovExporter::startMesh2Section(const char *sectionName)
+{
+	fprintf(m_pPovFile, "\t\t%s {\n\t\t\t", sectionName);
+}
+
+void LDPovExporter::endMesh2Section()
+{
+	fprintf(m_pPovFile, "\n\t\t}\n");
+}
+
 void LDPovExporter::writeTriangleLine(LDLTriangleLine *pTriangleLine)
 {
 	writeTriangle(pTriangleLine->getPoints());
@@ -2588,6 +3405,37 @@ void LDPovExporter::writeQuadLine(LDLQuadLine *pQuadLine)
 {
 	writeTriangle(pQuadLine->getPoints());
 	writeTriangle(pQuadLine->getPoints(), 4, 2);
+}
+
+void LDPovExporter::writeTriangleLineVertices(
+	LDLTriangleLine *pTriangleLine,
+	int &total)
+{
+	writeMesh2Vertices(pTriangleLine->getPoints(), 3, total);
+}
+
+void LDPovExporter::writeQuadLineIndices(
+	LDLQuadLine * /*pQuadLine*/,
+	int &current,
+	int &total)
+{
+	writeMesh2Indices(current, current + 1, current + 2, total);
+	writeMesh2Indices(current, current + 2, current + 3, total);
+	current += 4;
+}
+
+void LDPovExporter::writeTriangleLineIndices(
+	LDLTriangleLine * /*pTriangleLine*/,
+	int &current,
+	int &total)
+{
+	writeMesh2Indices(current, current + 1, current + 2, total);
+	current += 3;
+}
+
+void LDPovExporter::writeQuadLineVertices(LDLQuadLine *pQuadLine, int &total)
+{
+	writeMesh2Vertices(pQuadLine->getPoints(), 4, total);
 }
 
 void LDPovExporter::writeEdgeColor(void)
@@ -2639,6 +3487,48 @@ void LDPovExporter::writeTriangle(
 	fprintf(m_pPovFile, "\t\ttriangle { ");
 	writePoints(points, 3, size, start);
 	fprintf(m_pPovFile, " }\n");
+}
+
+void LDPovExporter::writeMesh2Indices(int i0, int i1, int i2, int &total)
+{
+	if (total > 0)
+	{
+		fprintf(m_pPovFile, ",");
+		if (total % 4 == 0)
+		{
+			fprintf(m_pPovFile, "\n\t\t\t");
+		}
+		else
+		{
+			fprintf(m_pPovFile, " ");
+		}
+	}
+	total++;
+	fprintf(m_pPovFile, "<%d, %d, %d>", i0, i1, i2);
+}
+
+void LDPovExporter::writeMesh2Vertices(
+	const TCVector *pVertices,
+	int count,
+	int &total)
+{
+	for (int i = 0; i < count; i++)
+	{
+		if (total > 0)
+		{
+			fprintf(m_pPovFile, ",");
+			if (total % 4 == 0)
+			{
+				fprintf(m_pPovFile, "\n\t\t\t");
+			}
+			else
+			{
+				fprintf(m_pPovFile, " ");
+			}
+		}
+		total++;
+		writePoint(pVertices[i]);
+	}
 }
 
 void LDPovExporter::writePoints(

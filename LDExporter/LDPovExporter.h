@@ -67,6 +67,42 @@ public:
 	virtual std::string getExtension(void) const { return "pov"; }
 	virtual ucstring getTypeDescription(void) const;
 protected:
+	typedef std::map<TCVector, size_t> VectorSizeTMap;
+	typedef std::map<size_t, TCVector> SizeTVectorMap;
+	typedef std::map<TCVector, TCVector> VectorVectorMap;
+	typedef struct LineKey
+	{
+		LineKey(void);
+		LineKey(const TCVector &point0, const TCVector &point1);
+		LineKey(const LineKey &other);
+		LineKey &operator=(const LineKey &other);
+		bool operator<(const LineKey &other) const;
+		bool operator==(const LineKey &other) const;
+		TCVector direction;
+		TCVector intercept;
+	};
+	typedef struct SmoothTriangle
+	{
+		void initLineKeys(const SizeTVectorMap &indexToVert);
+		void setNormal(const TCVector &point, const TCVector &normal);
+		int colorNumber;
+		int vertexIndices[3];
+		int normalIndices[3];
+		LineKey lineKeys[3];
+		TCVector edgeNormals[3];
+		VectorVectorMap normals;
+		int smoothPass;
+	};
+	typedef std::vector<TCVector> TCVectorVector;
+	typedef std::vector<SmoothTriangle> SmoothTriangleVector;
+	typedef std::list<SmoothTriangle> SmoothTriangleList;
+	typedef std::list<SmoothTriangle*> SmoothTrianglePList;
+	typedef std::map<LineKey, SmoothTrianglePList> TriangleEdgesMap;
+	typedef std::map<TCVector, SmoothTrianglePList> TrianglePPointsMap;
+	typedef std::pair<TCVector, TCVector> LinePair;
+	typedef std::list<LinePair> LineList;
+	typedef std::map<LineKey, LineList> EdgeMap;
+
 	~LDPovExporter(void);
 	void dealloc(void);
 	bool writeHeader(void);
@@ -99,10 +135,38 @@ protected:
 		bool &elseStarted, bool &povMode);
 	void writeTriangleLine(LDLTriangleLine *pTriangleLine);
 	void writeQuadLine(LDLQuadLine *pQuadLine);
+	void writeTriangleLineVertices(LDLTriangleLine *pTriangleLine, int &total);
+	void writeQuadLineVertices(LDLQuadLine *pQuadLine, int &total);
+	void writeMesh2Vertices(const TCVector *pVertices, int count, int &total);
+	void writeTriangleLineIndices(LDLTriangleLine *pTriangleLine, int &current,
+		int &total);
+	void writeQuadLineIndices(LDLQuadLine *pQuadLine, int &current, int &total);
+	void writeMesh2Indices(int i0, int i1, int i2, int &total);
 	void writeEdgeLineMacro(void);
 	void writeEdgeColor(void);
 	void endMesh(void);
+	bool onEdge(const LinePair &edge, const LineList &edges);
+	bool normalsCheck(const TCVector &normal1, TCVector normal2);
+	bool edgesOverlap(const LinePair &edge1, const LinePair &edge2);
+	int findEdge(const SmoothTriangle &triangle, const LineKey &lineKey);
+	int findPoint(const SmoothTriangle &triangle, const TCVector &point,
+		const SizeTVectorMap &points);
 	void startMesh(void);
+	void startMesh2(void);
+	void startMesh2Section(const char *sectionName);
+	void writeMesh(int colorNumber, const ShapeLineList &list);
+	void writeMesh2(int colorNumber, const ShapeLineList &list);
+	void writeMesh2(int colorNumber, const VectorSizeTMap &vertices,
+		const VectorSizeTMap &normals, const SmoothTriangleVector &triangles);
+	void smoothGeometry(const ShapeLineList &list, VectorSizeTMap &vertices,
+		VectorSizeTMap &normals, SmoothTriangleVector &triangles);
+	void initSmoothTriangle(SmoothTriangle &triangle, VectorSizeTMap &vertices,
+		TrianglePPointsMap &trianglePoints, SizeTVectorMap &indexToVert,
+		const TCVector &point1, const TCVector &point2, const TCVector &point3);
+	bool trySmooth(const TCVector &normal1, TCVector &normal2);
+	static bool shouldFlipNormal(const TCVector &normal1,
+		const TCVector &normal2);
+	void endMesh2Section(void);
 	void startStuds(bool &started);
 	void endStuds(bool &started);
 	void writePoints(const TCVector *points, int count, int size = -1,
@@ -144,7 +208,7 @@ protected:
 	virtual void addEdgesSettings(void) const;
 	virtual void addGeometrySettings(void) const;
 	virtual int getNumEdgesSettings(void) const { return 2; }
-	virtual int getNumGeometrySettings(void) const { return 4; }
+	virtual int getNumGeometrySettings(void) const { return 5; }
 	std::string getAspectRatio(void);
 	std::string replaceSpecialChacters(const char *string);
 	void writeLDXOpaqueColor(void);
@@ -215,12 +279,14 @@ protected:
 	std::string m_bottomInclude;
 	bool m_inlinePov;
 	bool m_hideStuds;
+	bool m_smoothCurves;
 	bool m_unmirrorStuds;
 	long m_quality;
 	bool m_floor;
 	long m_floorAxis;
 	bool m_refls;
 	bool m_shads;
+	bool m_mesh2;
 	long m_selectedAspectRatio;
 	float m_customAspectRatio;
 	TCFloat m_edgeRadius;

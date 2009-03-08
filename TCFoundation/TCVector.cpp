@@ -288,9 +288,18 @@ TCVector& TCVector::operator=(const TCVector& right)
 //		small distance from each other (based on the default epsilon).
 int TCVector::operator==(const TCVector& right) const
 {
-	return fEq(vector[0], right.vector[0]) &&
-			 fEq(vector[1], right.vector[1]) &&
-			 fEq(vector[2], right.vector[2]);
+	if (sm_epsilon == 0.0)
+	{
+		return fEq(vector[0], right.vector[0]) &&
+			fEq(vector[1], right.vector[1]) &&
+			fEq(vector[2], right.vector[2]);
+	}
+	else
+	{
+		return fEq2(vector[0], right.vector[0], sm_epsilon) &&
+			fEq2(vector[1], right.vector[1], sm_epsilon) &&
+			fEq2(vector[2], right.vector[2], sm_epsilon);
+	}
 }
 
 // TCVector::operator!=(const TCVector&) -- Overloaded Operator
@@ -372,6 +381,16 @@ bool TCVector::operator<(const TCVector& right) const
 bool TCVector::operator>(const TCVector& right) const
 {
 	return right < *this;
+}
+
+bool TCVector::operator<=(const TCVector& right) const
+{
+	return !(*this > right);
+}
+
+bool TCVector::operator>=(const TCVector& right) const
+{
+	return !(*this < right);
 }
 
 //// TCVector::operator<(const TCVector&) -- Overloaded Operator
