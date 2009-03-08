@@ -1394,7 +1394,7 @@ BEGIN
         MENUITEM "&Next\tPgDn",                 ID_NEXT_STEP
         MENUITEM "&Last\tEnd",                  ID_LAST_STEP
         MENUITEM SEPARATOR
-        MENUITEM "&Go to Step\tCtrl+G",         ID_GOTO_STEP
+        MENUITEM "&Go to Step...\tCtrl+G",         ID_GOTO_STEP
     END
     POPUP "&Tools"
     BEGIN
