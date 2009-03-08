@@ -63,6 +63,8 @@ public:
 	TCVector& operator=(const TCVector&);
 	int operator==(const TCVector&) const;
 	int operator!=(const TCVector&) const;
+	bool operator<=(const TCVector& right) const;
+	bool operator>=(const TCVector& right) const;
 	bool operator<(const TCVector& right) const;
 	bool operator>(const TCVector& right) const;
 	//int operator>(const TCVector& right) const;
