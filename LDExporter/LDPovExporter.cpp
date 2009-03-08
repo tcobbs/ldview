@@ -24,6 +24,59 @@
 
 CharStringMap LDPovExporter::sm_replacementChars;
 
+LDPovExporter::Shape::Shape(
+	const TCVector *pts,
+	size_t count,
+	const TCFloat *matrix)
+{
+	points.reserve(count);
+	if (matrix == NULL)
+	{
+		for (size_t i = 0; i < count; i++)
+		{
+			points.push_back(pts[i]);
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i < count; i++)
+		{
+			points.push_back(pts[i].transformPoint(matrix));
+		}
+	}
+}
+
+LDPovExporter::Shape::Shape(const TCVector &p1, const TCVector &p2)
+{
+	points.reserve(2);
+	points.push_back(p1);
+	points.push_back(p2);
+}
+
+LDPovExporter::Shape::Shape(
+	const TCVector &p1,
+	const TCVector &p2,
+	const TCVector &p3)
+{
+	points.reserve(3);
+	points.push_back(p1);
+	points.push_back(p2);
+	points.push_back(p3);
+}
+
+LDPovExporter::Shape::Shape(
+	const TCVector &p1,
+	const TCVector &p2,
+	const TCVector &p3,
+	const TCVector &p4)
+{
+	points.reserve(4);
+	points.push_back(p1);
+	points.push_back(p2);
+	points.push_back(p3);
+	points.push_back(p4);
+}
+
 LDPovExporter::LineKey::LineKey(void)
 {
 }
@@ -137,7 +190,8 @@ void LDPovExporter::SmoothTriangle::initLineKeys(
 
 LDPovExporter::LDPovExporter(void):
 LDExporter("PovExporter/"),
-m_mesh2(true)
+m_mesh2(true),
+m_primSubCheck(false)
 {
 	char *ldrawDir = copyString(LDLModel::lDrawDir());
 
@@ -724,7 +778,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 		{
 			return 1;
 		}
-		if (!writeModel(m_pTopModel, TCVector::getIdentityMatrix()))
+		if (!writeModel(m_pTopModel, TCVector::getIdentityMatrix(), false))
 		{
 			return 1;
 		}
@@ -1272,7 +1326,10 @@ bool LDPovExporter::writeEdges(void)
 	return true;
 }
 
-bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
+bool LDPovExporter::writeModel(
+	LDLModel *pModel,
+	const TCFloat *matrix,
+	bool inPart)
 {
 	LDLFileLineArray *fileLines = pModel->getFileLines();
 	bool mirrored = m_unmirrorStuds &&
@@ -1297,19 +1354,20 @@ bool LDPovExporter::writeModel(LDLModel *pModel, const TCFloat *matrix)
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
 					LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
-					LDLModel *pModel = pModelLine->getModel(true);
+					LDLModel *pOtherModel = pModelLine->getModel(true);
 
-					if (pModel != NULL)
+					if (pOtherModel != NULL)
 					{
 						TCFloat newMatrix[16];
 
 						TCVector::multMatrix(matrix, pModelLine->getMatrix(),
 							newMatrix);
-						writeModel(pModel, newMatrix);
+						writeModel(pOtherModel, newMatrix,
+							inPart || pModel->isPart());
 					}
 				}
 			}
-			return writeModelObject(pModel, mirrored, matrix);
+			return writeModelObject(pModel, mirrored, matrix, inPart);
 		}
 	}
 	return true;
@@ -1749,13 +1807,28 @@ void LDPovExporter::writeDescriptionComment(const LDLModel *pModel)
 
 bool LDPovExporter::findModelGeometry(
 	LDLModel *pModel,
-	IntShapeLineListMap &colorGeometryMap,
-	bool mirrored)
+	IntShapeListMap &colorGeometryMap,
+	bool mirrored,
+	const TCFloat *matrix,
+	bool inPart)
 {
 	LDLFileLineArray *fileLines = pModel->getFileLines();
 	int count = pModel->getActiveLineCount();
 	bool retValue = false;
+	bool skipping = false;
 
+	if (m_smoothCurves)
+	{
+		if (strcasecmp(pModel->getName(), "50746.dat") == 0)
+		{
+			debugPrintf("Problem part.\n");
+		}
+		if (inPart && matrix == NULL)
+		{
+			skipping = true;
+		}
+		m_primSubCheck = true;
+	}
 	for (int i = 0; i < count; i++)
 	{
 		LDLFileLine *pFileLine = (*fileLines)[i];
@@ -1763,11 +1836,33 @@ bool LDPovExporter::findModelGeometry(
 		if (pFileLine->getLineType() == LDLLineTypeModel)
 		{
 			LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
-			LDLModel *pModel = pModelLine->getModel(true);
+			LDLModel *pOtherModel = pModelLine->getModel(true);
 
-			if (pModel != NULL)
+			if (pOtherModel != NULL)
 			{
-				if (!m_emptyModels[getDeclareName(pModel, mirrored)])
+				if (m_smoothCurves && (pModel->isPart() || matrix != NULL) &&
+					(!m_primSub ||
+					!performPrimitiveSubstitution(pOtherModel, false)))
+				{
+					TCFloat newMatrix[16];
+
+					if (matrix)
+					{
+						TCVector::multMatrix(matrix, pModelLine->getMatrix(),
+							newMatrix);
+					}
+					else
+					{
+						memcpy(newMatrix, pModelLine->getMatrix(),
+							sizeof(newMatrix));
+					}
+					if (findModelGeometry(pOtherModel, colorGeometryMap,
+						mirrored, newMatrix, false))
+					{
+						retValue = true;
+					}
+				}
+				if (!m_emptyModels[getDeclareName(pOtherModel, mirrored)])
 				{
 					retValue = true;
 				}
@@ -1777,13 +1872,18 @@ bool LDPovExporter::findModelGeometry(
 			pFileLine->getLineType() == LDLLineTypeQuad ||
 			(m_smoothCurves && pFileLine->getLineType() == LDLLineTypeLine))
 		{
-			LDLShapeLine *pShapeLine = (LDLShapeLine *)pFileLine;
+			if (!skipping)
+			{
+				LDLShapeLine *pShapeLine = (LDLShapeLine *)pFileLine;
 
-			colorGeometryMap[pShapeLine->getColorNumber()].push_back(
-				pShapeLine);
-			retValue = true;
+				colorGeometryMap[pShapeLine->getColorNumber()].push_back(
+					Shape(pShapeLine->getPoints(), pShapeLine->getNumPoints(),
+					matrix));
+				retValue = true;
+			}
 		}
 	}
+	m_primSubCheck = false;
 	if (pModel == m_pTopModel)
 	{
 		// Even if there isn't any output, you'll get a parse error if we
@@ -1799,7 +1899,8 @@ bool LDPovExporter::findModelGeometry(
 bool LDPovExporter::writeModelObject(
 	LDLModel *pModel,
 	bool mirrored,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool inPart)
 {
 	if (!m_primSub || !performPrimitiveSubstitution(pModel, false))
 	{
@@ -1808,9 +1909,10 @@ bool LDPovExporter::writeModelObject(
 		int i;
 		int count = pModel->getActiveLineCount();
 		std::string declareName = getDeclareName(pModel, mirrored);
-		IntShapeLineListMap colorGeometryMap;
+		IntShapeListMap colorGeometryMap;
 
-		if (findModelGeometry(pModel, colorGeometryMap, mirrored))
+		if (findModelGeometry(pModel, colorGeometryMap, mirrored,
+			NULL, inPart))
 		{
 			bool ifStarted = false;
 			bool elseStarted = false;
@@ -1899,21 +2001,22 @@ bool LDPovExporter::writeModelObject(
 	return true;
 }
 
-void LDPovExporter::writeMesh(int colorNumber, const ShapeLineList &list)
+void LDPovExporter::writeMesh(int colorNumber, const ShapeList &list)
 {
 	startMesh();
-	for (ShapeLineList::const_iterator it = list.begin(); it != list.end();
-		it++)
+	for (ShapeList::const_iterator it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		if (points.size() == 3)
 		{
-			writeTriangleLine((LDLTriangleLine *)shapeLine);
+			writeTriangle(&points[0]);
 		}
-		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		else if (points.size() == 4)
 		{
-			writeQuadLine((LDLQuadLine *)shapeLine);
+			writeTriangle(&points[0]);
+			writeTriangle(&points[0], 4, 2);
+			//writeQuadLine((LDLQuadLine *)shapeLine);
 		}
 	}
 	if (colorNumber != 16)
@@ -1981,42 +2084,33 @@ void LDPovExporter::writeMesh2(
 	endMesh();
 }
 
-void LDPovExporter::writeMesh2(int colorNumber, const ShapeLineList &list)
+void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 {
 	int total = 0;
 	int current = 0;
 	int vertexCount = 0;
 	int faceCount = 0;
-	ShapeLineList::const_iterator it;
+	ShapeList::const_iterator it;
 
 	startMesh2();
 	startMesh2Section("vertex_vectors");
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		if (points.size() == 3 || points.size() == 4)
 		{
-			vertexCount += 3;
-		}
-		else if (shapeLine->getLineType() == LDLLineTypeQuad)
-		{
-			vertexCount += 4;
+			vertexCount += points.size();
 		}
 	}
 	fprintf(m_pPovFile, "%d,\n\t\t\t", vertexCount);
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		if (points.size() == 3 || points.size() == 4)
 		{
-			writeTriangleLineVertices((LDLTriangleLine *)shapeLine,
-				total);
-		}
-		else if (shapeLine->getLineType() == LDLLineTypeQuad)
-		{
-			writeQuadLineVertices((LDLQuadLine *)shapeLine, total);
+			writeMesh2Vertices(&points[0], points.size(), total);
 		}
 	}
 	endMesh2Section();
@@ -2024,13 +2118,13 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeLineList &list)
 	startMesh2Section("face_indices");
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		if (points.size() == 3)
 		{
 			faceCount += 1;
 		}
-		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		else if (points.size() == 4)
 		{
 			faceCount += 2;
 		}
@@ -2038,17 +2132,18 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeLineList &list)
 	fprintf(m_pPovFile, "%d,\n\t\t\t", faceCount);
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		if (points.size() == 3)
 		{
-			writeTriangleLineIndices((LDLTriangleLine *)shapeLine,
-				current, total);
+			writeMesh2Indices(current, current + 1, current + 2, total);
+			current += 3;
 		}
-		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		else if (points.size() == 4)
 		{
-			writeQuadLineIndices((LDLQuadLine *)shapeLine, current,
-				total);
+			writeMesh2Indices(current, current + 1, current + 2, total);
+			writeMesh2Indices(current, current + 2, current + 3, total);
+			current += 4;
 		}
 	}
 	endMesh2Section();
@@ -2067,7 +2162,8 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeLineList &list)
 //        y = y1 + (y2 - y1)*t
 //        z = z1 + (z2 - z1)*t 
 void LDPovExporter::smoothGeometry(
-	const ShapeLineList &list,
+	int colorNumber,
+	const ShapeList &list,
 	VectorSizeTMap &vertices,
 	VectorSizeTMap &normals,
 	SmoothTriangleVector &triangles)
@@ -2077,7 +2173,7 @@ void LDPovExporter::smoothGeometry(
 	size_t index;
 	VectorSizeTMap::iterator itmvs;
 
-	ShapeLineList::const_iterator it;
+	ShapeList::const_iterator it;
 	// One entry per infinite line.  Each entry is a list of all the triangles
 	// that share that infinite line.
 	TriangleEdgesMap triangleEdges;
@@ -2094,10 +2190,9 @@ void LDPovExporter::smoothGeometry(
 
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
-		const TCVector *points = shapeLine->getPoints();
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeLine)
+		if (points.size() == 2)
 		{
 			if (points[0] < points[1])
 			{
@@ -2112,9 +2207,9 @@ void LDPovExporter::smoothGeometry(
 		}
 		else
 		{
-			int count = shapeLine->getNumPoints();
+			size_t count = points.size();
 
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; i++)
 			{
 				// Make sure points[i] is in the map
 				vertices[points[i]];
@@ -2129,13 +2224,13 @@ void LDPovExporter::smoothGeometry(
 	}
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() == LDLLineTypeTriangle)
+		if (points.size() == 3)
 		{
 			triangleCount += 1;
 		}
-		else if (shapeLine->getLineType() == LDLLineTypeQuad)
+		else if (points.size() == 4)
 		{
 			triangleCount += 2;
 		}
@@ -2143,17 +2238,16 @@ void LDPovExporter::smoothGeometry(
 	triangles.resize(triangleCount);
 	for (it = list.begin(); it != list.end(); it++)
 	{
-		LDLShapeLine *shapeLine = *it;
+		const TCVectorVector &points = it->points;
 
-		if (shapeLine->getLineType() != LDLLineTypeLine)
+		if (points.size() != 2)
 		{
-			const TCVector *points = shapeLine->getPoints();
 			SmoothTriangle &triangle = triangles[current++];
 
-			triangle.colorNumber = shapeLine->getColorNumber();
+			triangle.colorNumber = colorNumber;
 			initSmoothTriangle(triangle, vertices, trianglePoints, indexToVert,
 				points[0], points[1], points[2]);
-			if (shapeLine->getLineType() == LDLLineTypeQuad)
+			if (points.size() == 4)
 			{
 				SmoothTriangle &triangle2 = triangles[current++];
 
@@ -2589,9 +2683,9 @@ void LDPovExporter::initSmoothTriangle(
 	trianglePoints[point3].push_back(&triangle);
 }
 
-void LDPovExporter::writeGeometry(const IntShapeLineListMap &colorGeometryMap)
+void LDPovExporter::writeGeometry(const IntShapeListMap &colorGeometryMap)
 {
-	for (IntShapeLineListMap::const_iterator it = colorGeometryMap.begin();
+	for (IntShapeListMap::const_iterator it = colorGeometryMap.begin();
 		it != colorGeometryMap.end(); it++)
 	{
 		if (m_smoothCurves)
@@ -2602,7 +2696,7 @@ void LDPovExporter::writeGeometry(const IntShapeLineListMap &colorGeometryMap)
 			TCFloat origEpsilon = TCVector::getEpsilon();
 
 			TCVector::setEpsilon(0.001f);
-			smoothGeometry(it->second, vertices, normals, triangles);
+			smoothGeometry(it->first, it->second, vertices, normals, triangles);
 			if (vertices.size() > 0 && normals.size() > 0)
 			{
 				writeMesh2(it->first, vertices, normals, triangles);
@@ -3722,6 +3816,10 @@ bool LDPovExporter::substituteEighthSphere(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = sphere // Sphere .125\n"
 		"{\n"
@@ -3741,6 +3839,10 @@ bool LDPovExporter::substituteEighthSphereCorner(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = sphere // Sphere Corner .125\n"
 		"{\n"
@@ -3761,6 +3863,10 @@ bool LDPovExporter::substituteCylinder(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = cylinder // Cylinder %s\n"
 		"{\n"
@@ -3777,6 +3883,10 @@ bool LDPovExporter::substituteSlopedCylinder(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = cylinder // Sloped Cylinder %s\n"
 		"{\n"
@@ -3809,6 +3919,10 @@ bool LDPovExporter::substituteSlopedCylinder2(
 	{
 		return false;
 	}
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = cylinder // Sloped Cylinder2 %s\n"
 		"{\n"
@@ -3840,6 +3954,10 @@ bool LDPovExporter::substituteDisc(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = disc // Disc %s\n"
 		"{\n"
@@ -3856,6 +3974,10 @@ bool LDPovExporter::substituteChrd(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	double angle = 2.0 * M_PI * fraction;
 	double cosAngle = cos(angle);
 	double sinAngle = sin(angle);
@@ -3889,6 +4011,10 @@ bool LDPovExporter::substituteNotDisc(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	fprintf(m_pPovFile,
 		"#declare %s = disc // Not-Disc %s\n"
 		"{\n"
@@ -3912,6 +4038,10 @@ bool LDPovExporter::substituteCone(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	std::string base = "con";
 
 	base += ltostr(size);
@@ -3933,6 +4063,10 @@ bool LDPovExporter::substituteRing(
 	bool is48 /*= false*/,
 	bool isOld /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	if (isOld)
 	{
 		fprintf(m_pPovFile,
@@ -3968,6 +4102,10 @@ bool LDPovExporter::substituteTorusIO(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
@@ -4011,6 +4149,10 @@ bool LDPovExporter::substituteTorusQ(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	const char *prefix48 = get48Prefix(is48);
 
 	fprintf(m_pPovFile,
@@ -4086,6 +4228,10 @@ void LDPovExporter::writeLogo(void)
 
 bool LDPovExporter::substituteStud(void)
 {
+	if (m_primSubCheck)
+	{
+		return true;
+	}
 	writeLogo();
 	fprintf(m_pPovFile,
 			"#declare %s =\n"
