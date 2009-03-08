@@ -20,8 +20,6 @@ class TiXmlElement;
 typedef std::map<std::string, bool> StringBoolMap;
 typedef std::map<std::string, std::string> StringStringMap;
 typedef std::map<char, std::string> CharStringMap;
-typedef std::list<LDLShapeLine *> ShapeLineList;
-typedef std::map<int, ShapeLineList> IntShapeLineListMap;
 typedef std::map<int, bool> IntBoolMap;
 typedef std::list<std::string> StringList;
 typedef std::list<TCVector> VectorList;
@@ -70,6 +68,17 @@ protected:
 	typedef std::map<TCVector, size_t> VectorSizeTMap;
 	typedef std::map<size_t, TCVector> SizeTVectorMap;
 	typedef std::map<TCVector, TCVector> VectorVectorMap;
+	typedef std::vector<TCVector> TCVectorVector;
+	typedef struct Shape
+	{
+		Shape() {}
+		Shape(const TCVector *pts, size_t count, const TCFloat *matrix);
+		Shape(const TCVector &p1, const TCVector &p2);
+		Shape(const TCVector &p1, const TCVector &p2, const TCVector &p3);
+		Shape(const TCVector &p1, const TCVector &p2, const TCVector &p3,
+			const TCVector &p4);
+		TCVectorVector points;
+	};
 	typedef struct LineKey
 	{
 		LineKey(void);
@@ -93,7 +102,8 @@ protected:
 		VectorVectorMap normals;
 		int smoothPass;
 	};
-	typedef std::vector<TCVector> TCVectorVector;
+	typedef std::list<Shape> ShapeList;
+	typedef std::map<int, ShapeList> IntShapeListMap;
 	typedef std::vector<SmoothTriangle> SmoothTriangleVector;
 	typedef std::list<SmoothTriangle> SmoothTriangleList;
 	typedef std::list<SmoothTriangle*> SmoothTrianglePList;
@@ -109,13 +119,13 @@ protected:
 	bool writeHeader(void);
 	void writeMainModel(void);
 	void writeFloor(void);
-	bool writeModel(LDLModel *pModel, const TCFloat *matrix);
+	bool writeModel(LDLModel *pModel, const TCFloat *matrix, bool inPart);
 	bool writeCamera(void);
 	bool writeLights(void);
 	void writeLight(TCFloat lat, TCFloat lon, int num);
 	bool writeModelObject(LDLModel *pModel, bool mirrored,
-		const TCFloat *matrix);
-	void writeGeometry(const IntShapeLineListMap &colorGeometryMap);
+		const TCFloat *matrix, bool inPart);
+	void writeGeometry(const IntShapeListMap &colorGeometryMap);
 	bool scanModelColors(LDLModel *pModel);
 	bool writeModelColors(void);
 	bool writeEdges(void);
@@ -155,12 +165,13 @@ protected:
 	void startMesh(void);
 	void startMesh2(void);
 	void startMesh2Section(const char *sectionName);
-	void writeMesh(int colorNumber, const ShapeLineList &list);
-	void writeMesh2(int colorNumber, const ShapeLineList &list);
+	void writeMesh(int colorNumber, const ShapeList &list);
+	void writeMesh2(int colorNumber, const ShapeList &list);
 	void writeMesh2(int colorNumber, const VectorSizeTMap &vertices,
 		const VectorSizeTMap &normals, const SmoothTriangleVector &triangles);
-	void smoothGeometry(const ShapeLineList &list, VectorSizeTMap &vertices,
-		VectorSizeTMap &normals, SmoothTriangleVector &triangles);
+	void smoothGeometry(int colorNumber, const ShapeList &list,
+		VectorSizeTMap &vertices, VectorSizeTMap &normals,
+		SmoothTriangleVector &triangles);
 	void initSmoothTriangle(SmoothTriangle &triangle, VectorSizeTMap &vertices,
 		TrianglePPointsMap &trianglePoints, SizeTVectorMap &indexToVert,
 		const TCVector &point1, const TCVector &point2, const TCVector &point3);
@@ -184,8 +195,8 @@ protected:
 		const char *attrValue);
 	bool findXmlModelInclude(const LDLModel *pModel);
 	void writeDescriptionComment(const LDLModel *pModel);
-	bool findModelGeometry(LDLModel *pModel,
-		IntShapeLineListMap &colorGeometryMap, bool mirrored);
+	bool findModelGeometry(LDLModel *pModel, IntShapeListMap &colorGeometryMap,
+		bool mirrored, const TCFloat *matrix, bool inPart);
 	bool isStud(LDLModel *pModel);
 	void getCameraStrings(std::string &locationString,
 		std::string &lookAtString, std::string &skyString);
@@ -318,6 +329,7 @@ protected:
 	StringSet m_includes;
 	StringSet m_codes;
 	StringSet m_macros;
+	bool m_primSubCheck;
 
 	static CharStringMap sm_replacementChars;
 };
