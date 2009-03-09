@@ -99,6 +99,7 @@ protected:
 		int normalIndices[3];
 		LineKey lineKeys[3];
 		TCVector edgeNormals[3];
+		bool hardEdges[3];
 		VectorVectorMap normals;
 		int smoothPass;
 	};
@@ -125,8 +126,8 @@ protected:
 	void writeLight(TCFloat lat, TCFloat lon, int num);
 	bool writeModelObject(LDLModel *pModel, bool mirrored,
 		const TCFloat *matrix, bool inPart);
-	void writeGeometry(const IntShapeListMap &colorGeometryMap);
-	bool scanModelColors(LDLModel *pModel);
+	void writeGeometry(IntShapeListMap &colorGeometryMap);
+	bool scanModelColors(LDLModel *pModel, bool inPart);
 	bool writeModelColors(void);
 	bool writeEdges(void);
 	bool writeXmlMatrix(const char *filename);
@@ -171,8 +172,8 @@ protected:
 	void writeMesh2(int colorNumber, const VectorSizeTMap &vertices,
 		const VectorSizeTMap &normals, const SmoothTriangleVector &triangles);
 	void smoothGeometry(int colorNumber, const ShapeList &list,
-		VectorSizeTMap &vertices, VectorSizeTMap &normals,
-		SmoothTriangleVector &triangles);
+		const ShapeList &edges, VectorSizeTMap &vertices,
+		VectorSizeTMap &normals, SmoothTriangleVector &triangles);
 	void initSmoothTriangle(SmoothTriangle &triangle, VectorSizeTMap &vertices,
 		TrianglePPointsMap &trianglePoints, SizeTVectorMap &indexToVert,
 		const TCVector &point1, const TCVector &point2, const TCVector &point3);
@@ -186,8 +187,10 @@ protected:
 		int start = 0);
 	void writeTriangle(const TCVector *points, int size = -1, int start = 0);
 	void writePoint(const TCVector &point);
-	std::string getDeclareName(LDLModel *pModel, bool mirrored);
-	std::string getDeclareName(const std::string &modelFilename, bool mirrored);
+	std::string getDeclareName(LDLModel *pModel, bool mirrored,
+		bool inPart = false);
+	std::string getDeclareName(const std::string &modelFilename, bool mirrored,
+		bool inPart = false);
 	std::string getModelFilename(const LDLModel *pModel);
 	std::string findInclude(const std::string &filename);
 	bool findModelInclude(const LDLModel *pModel);
