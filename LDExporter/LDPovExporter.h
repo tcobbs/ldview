@@ -138,10 +138,11 @@ protected:
 	void writeInnerColorDeclaration(int colorNumber, bool slope);
 	void writeRGBA(int r, int g, int b, int a);
 	bool writeModelLine(LDLModelLine *pModelLine, bool &studsStarted,
-		bool mirrored, const TCFloat *matrix);
+		bool mirrored, const TCFloat *matrix, bool inPart);
 	void indentStud(bool studsStarted);
 	void writeInnerModelLine(const std::string &declareName,
-		LDLModelLine *pModelLine, bool mirrored, bool slope, bool studsStarted);
+		LDLModelLine *pModelLine, bool mirrored, bool slope, bool studsStarted,
+		bool inPart);
 	void writeCommentLine(LDLCommentLine *pCommentLine, bool &ifStarted,
 		bool &elseStarted, bool &povMode);
 	void writeTriangleLine(LDLTriangleLine *pTriangleLine);
