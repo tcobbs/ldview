@@ -219,7 +219,10 @@ void TRESmoother::finish(void)
 			}
 			else
 			{
-				m_normals[i].normalize();
+				if (m_normals[i].lengthSquared() > 0)
+				{
+					m_normals[i].normalize();
+				}
 			}
 		}
 	}
@@ -228,7 +231,10 @@ void TRESmoother::finish(void)
 		count = m_vertices->getCount();
 		for (; i < count; i++)
 		{
-			m_normals[i].normalize();
+			if (m_normals[i].lengthSquared() > 0)
+			{
+				m_normals[i].normalize();
+			}
 		}
 	}
 }

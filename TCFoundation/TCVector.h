@@ -43,7 +43,7 @@ public:
 	TCFloat length(void) const;
 	TCFloat lengthSquared(void) const;
 	TCFloat dot(const TCVector&) const;
-	TCVector& normalize(void) {return *this *= 1.0f/length();}
+	TCVector& normalize(void);
 	TCFloat get(int i) const { return vector[i];}
 	bool approxEquals(const TCVector &right, TCFloat epsilon) const;
 	bool exactlyEquals(const TCVector &right) const;

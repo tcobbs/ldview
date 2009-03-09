@@ -197,7 +197,8 @@ protected:
 	bool findXmlModelInclude(const LDLModel *pModel);
 	void writeDescriptionComment(const LDLModel *pModel);
 	bool findModelGeometry(LDLModel *pModel, IntShapeListMap &colorGeometryMap,
-		bool mirrored, const TCFloat *matrix, bool inPart);
+		bool mirrored, const TCFloat *matrix, bool inPart,
+		int colorNumber = 16);
 	bool isStud(LDLModel *pModel);
 	void getCameraStrings(std::string &locationString,
 		std::string &lookAtString, std::string &skyString);

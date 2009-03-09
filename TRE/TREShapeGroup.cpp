@@ -1946,7 +1946,10 @@ void TREShapeGroup::transformNormal(TREVertex &normal, const TCFloat *matrix)
 	newNormal[1] = inverseMatrix[4]*x + inverseMatrix[5]*y + inverseMatrix[6]*z;
 	newNormal[2] = inverseMatrix[8]*x + inverseMatrix[9]*y +
 		inverseMatrix[10]*z;
-	newNormal.normalize();
+	if (newNormal.lengthSquared() > 0)
+	{
+		newNormal.normalize();
+	}
 	TREVertexStore::initVertex(normal, newNormal);
 }
 

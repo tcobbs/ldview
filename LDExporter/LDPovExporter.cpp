@@ -1175,6 +1175,10 @@ bool LDPovExporter::scanModelColors(LDLModel *pModel)
 		{
 			LDLFileLine *pFileLine = (*fileLines)[i];
 
+			if (!pFileLine->isValid())
+			{
+				continue;
+			}
 			if (pFileLine->getLineType() == LDLLineTypeModel)
 			{
 				LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
@@ -1351,6 +1355,10 @@ bool LDPovExporter::writeModel(
 			{
 				LDLFileLine *pFileLine = (*fileLines)[i];
 
+				if (!pFileLine->isValid())
+				{
+					continue;
+				}
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
 					LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
@@ -1810,7 +1818,8 @@ bool LDPovExporter::findModelGeometry(
 	IntShapeListMap &colorGeometryMap,
 	bool mirrored,
 	const TCFloat *matrix,
-	bool inPart)
+	bool inPart,
+	int colorNumber /*= 16*/)
 {
 	LDLFileLineArray *fileLines = pModel->getFileLines();
 	int count = pModel->getActiveLineCount();
@@ -1829,6 +1838,10 @@ bool LDPovExporter::findModelGeometry(
 	{
 		LDLFileLine *pFileLine = (*fileLines)[i];
 
+		if (!pFileLine->isValid())
+		{
+			continue;
+		}
 		if (pFileLine->getLineType() == LDLLineTypeModel)
 		{
 			LDLModelLine *pModelLine = (LDLModelLine *)pFileLine;
@@ -1842,6 +1855,7 @@ bool LDPovExporter::findModelGeometry(
 					!performPrimitiveSubstitution(pOtherModel, false)))
 				{
 					TCFloat newMatrix[16];
+					int newColorNumber = pModelLine->getColorNumber();
 
 					if (matrix)
 					{
@@ -1853,8 +1867,12 @@ bool LDPovExporter::findModelGeometry(
 						memcpy(newMatrix, pModelLine->getMatrix(),
 							sizeof(newMatrix));
 					}
+					if (newColorNumber == 16)
+					{
+						newColorNumber = colorNumber;
+					}
 					if (findModelGeometry(pOtherModel, colorGeometryMap,
-						mirrored, newMatrix, false))
+						mirrored, newMatrix, false, newColorNumber))
 					{
 						retValue = true;
 					}
@@ -1872,8 +1890,13 @@ bool LDPovExporter::findModelGeometry(
 			if (!skipping)
 			{
 				LDLShapeLine *pShapeLine = (LDLShapeLine *)pFileLine;
+				int newColorNumber = pShapeLine->getColorNumber();
 
-				colorGeometryMap[pShapeLine->getColorNumber()].push_back(
+				if (newColorNumber == 16)
+				{
+					newColorNumber = colorNumber;
+				}
+				colorGeometryMap[newColorNumber].push_back(
 					Shape(pShapeLine->getPoints(), pShapeLine->getNumPoints(),
 					matrix));
 				retValue = true;
@@ -1941,6 +1964,10 @@ bool LDPovExporter::writeModelObject(
 			{
 				LDLFileLine *pFileLine = (*fileLines)[i];
 
+				if (!pFileLine->isValid())
+				{
+					continue;
+				}
 				if (pFileLine->getLineType() == LDLLineTypeModel)
 				{
 					if (((LDLModelLine *)pFileLine)->getModel(true) != NULL)

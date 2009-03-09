@@ -973,3 +973,14 @@ void TCVector::calcRotationMatrix(
 	rightMatrix[10] = cosTheta;
 	TCVector::multMatrix(leftMatrix, rightMatrix, rotationMatrix);
 }
+
+TCVector& TCVector::normalize(void)
+{
+#ifdef _DEBUG
+	if (lengthSquared() == 0.0f)
+	{
+		assert(lengthSquared() > 0.0f);
+	}
+#endif // _DEBUG
+	return *this *= 1.0f / length();
+}
