@@ -106,14 +106,23 @@ public:
 	static void calcRotationMatrix(TCFloat latitude, TCFloat longitude,
 		TCFloat *rotationMatrix);
 	static TCFloat getEpsilon(void) { return sm_epsilon; }
-	static void setEpsilon(TCFloat value) { sm_epsilon = value; }
+	static void setEpsilon(TCFloat value)
+	{
+		sm_epsilon = value;
+		if (sm_epsilon != 0.0)
+		{
+			sm_invEpsilon = 1.0f / sm_epsilon;
+		}
+	}
 protected:
+	static TCFloat epRound(TCFloat value);
 #ifdef _LEAK_DEBUG
 	char className[4];
 #endif
 	TCFloat vector[3];
 	static TCFloat sm_identityMatrix[16];
 	static TCFloat sm_epsilon;
+	static TCFloat sm_invEpsilon;
 };
 
 // Overloaded Operator with non-TCVector as first argument
