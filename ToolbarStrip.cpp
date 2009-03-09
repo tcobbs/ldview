@@ -448,6 +448,8 @@ void ToolbarStrip::updateStep(void)
 	enableToolbarButton(m_hStepToolbar, ID_PREV_STEP, prevEnabled);
 	enableToolbarButton(m_hStepToolbar, ID_NEXT_STEP, nextEnabled);
 	enableToolbarButton(m_hStepToolbar, ID_LAST_STEP, nextEnabled);
+	RedrawWindow(m_hStepField, NULL, NULL, RDW_ERASE | RDW_INVALIDATE |
+		RDW_ERASENOW | RDW_UPDATENOW);
 }
 
 void ToolbarStrip::updateNumSteps(void)
