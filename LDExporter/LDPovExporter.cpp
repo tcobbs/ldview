@@ -1946,7 +1946,7 @@ bool LDPovExporter::writeModelObject(
 					if (((LDLModelLine *)pFileLine)->getModel(true) != NULL)
 					{
 						writeModelLine((LDLModelLine *)pFileLine, studsStarted,
-							mirrored, matrix);
+							mirrored, matrix, inPart || pModel->isPart());
 					}
 				}
 				else if (pFileLine->getLineType() == LDLLineTypeComment)
@@ -2013,7 +2013,6 @@ void LDPovExporter::writeMesh(int colorNumber, const ShapeList &list)
 		{
 			writeTriangle(&points[0]);
 			writeTriangle(&points[0], 4, 2);
-			//writeQuadLine((LDLQuadLine *)shapeLine);
 		}
 	}
 	if (colorNumber != 16)
@@ -2277,19 +2276,6 @@ void LDPovExporter::smoothGeometry(
 			int pass = 1;
 			TCVectorVector normals;
 
-#ifdef _DEBUG
-			for (SmoothTrianglePSet::iterator itsst = triangles.begin();
-				itsst != triangles.end(); itsst++)
-			{
-				SmoothTriangle &triangle = **itsst;
-
-				if (triangle.smoothPass != 0)
-				{
-					assert(false);
-					triangle.smoothPass = 0;
-				}
-			}
-#endif // _DEBUG
 			for (; processed < triangles.size(); pass++)
 			{
 				bool started = false;
@@ -2498,68 +2484,14 @@ void LDPovExporter::smoothGeometry(
 			}
 		}
 	}
-	//for (size_t i = 0; i < triangles.size(); i++)
-	//{
-	//	SmoothTriangle &triangle1 = triangles[i];
-	//	const SmoothTriangle &triangle2 = origTriangles[i];
-	//	VectorVectorMap::iterator itmvv1 = triangle1.normals.begin();
-	//	VectorVectorMap::const_iterator itmvv2 = triangle2.normals.begin();
-
-	//	while (itmvv1 != triangle1.normals.end())
-	//	{
-	//		TCVector newNormal = itmvv1->second;
-	//		if (shouldFlipNormal(itmvv1->second, itmvv2->second))
-	//		{
-	//			debugPrintf("Normal error.\n");
-	//			itmvv1->second = -itmvv2->second;
-	//		}
-	//		if (!trySmooth(itmvv2->second, newNormal))
-	//		{
-	//			debugPrintf("Normal error.\n");
-	//			itmvv1->second = -itmvv2->second;
-	//		}
-	//		itmvv1++;
-	//		itmvv2++;
-	//	}
-	//}
 	for (size_t i = 0; i < triangles.size(); i++)
 	{
 		SmoothTriangle &triangle = triangles[i];
 
-		//for (int j = 0; j < 3; j++)
-		//{
-		//	const TCVector &point = indexToVert[triangle.vertexIndices[j]];
-		//	const TCVector &normal = triangle.normals[point];
-
-		//	if (fEq2(normal[0], 0.63207030, .0001) &&
-		//		fEq2(normal[1], 0.00000000, .0001) &&
-		//		fEq2(normal[2], -0.77491105, .0001))
-		//	{
-		//		debugPrintf("Problem child.\n");
-		//	}
-		//	if (normals.find(normal) == normals.end())
-		//	{
-		//		normals.insert(VectorSizeTMap::value_type(normal, 0));
-		//	}
-		//	//normals[normal];
-		//}
 		for (VectorVectorMap::const_iterator itmvv = triangle.normals.begin();
 			itmvv != triangle.normals.end(); itmvv++)
 		{
-			//const TCVector &normal = itmvv->second;
-
-			//if (fEq2(normal[0], -0.96919239, .0001) &&
-			//	fEq2(normal[1], 0.0026236172, .0001) &&
-			//	fEq2(normal[2], 0.24629103, .0001))
-			//{
-			//	debugPrintf("Problem child.\n");
-			//}
 			normals[itmvv->second];
-			//VectorSizeTMap::const_iterator itTest = normals.find(itmvv->second);
-			//if (itTest == normals.end())
-			//{
-			//	debugPrintf("What?\n");
-			//}
 		}
 	}
 	index = 0;
@@ -2733,9 +2665,6 @@ void LDPovExporter::initSmoothTriangle(
 	triangle.normals.insert(VectorVectorMap::value_type(point1, normal));
 	triangle.normals.insert(VectorVectorMap::value_type(point2, normal));
 	triangle.normals.insert(VectorVectorMap::value_type(point3, normal));
-	//triangle.normals[point1] = normal;
-	//triangle.normals[point1] = normal;
-	//triangle.normals[point1] = normal;
 	triangle.edgeNormals[0] = normal;
 	triangle.edgeNormals[1] = normal;
 	triangle.edgeNormals[2] = normal;
@@ -3387,7 +3316,8 @@ bool LDPovExporter::writeModelLine(
 	LDLModelLine *pModelLine,
 	bool &studsStarted,
 	bool mirrored,
-	const TCFloat *matrix)
+	const TCFloat *matrix,
+	bool inPart)
 {
 	LDLModel *pModel = pModelLine->getModel(true);
 	TCFloat newModelMatrix[16] = { 0.0f };
@@ -3444,7 +3374,7 @@ bool LDPovExporter::writeModelLine(
 			}
 		}
 		writeInnerModelLine(declareName, pModelLine, mirrored, false,
-			studsStarted);
+			studsStarted, inPart);
 		if (it != m_xmlElements.end())
 		{
 			const PovName *name = findPovName(it->second, "Texture", "Slope");
@@ -3452,7 +3382,7 @@ bool LDPovExporter::writeModelLine(
 			if (name != NULL)
 			{
 				writeInnerModelLine(name->name, pModelLine, mirrored, true,
-					studsStarted);
+					studsStarted, inPart);
 			}
 		}
 	}
@@ -3472,7 +3402,8 @@ void LDPovExporter::writeInnerModelLine(
 	LDLModelLine *pModelLine,
 	bool mirrored,
 	bool slope,
-	bool studsStarted)
+	bool studsStarted,
+	bool inPart)
 {
 	LDLModel *pModel = pModelLine->getModel(true);
 	bool origMirrored = mirrored;
@@ -3487,7 +3418,10 @@ void LDPovExporter::writeInnerModelLine(
 	{
 		fprintf(m_pPovFile, "\n\t\t");
 	}
-	writeSeamMatrix(pModelLine);
+	if (!inPart)
+	{
+		writeSeamMatrix(pModelLine);
+	}
 	if (origMirrored &&
 		stringHasCaseInsensitiveSuffix(pModel->getFilename(), "stud.dat"))
 	{
