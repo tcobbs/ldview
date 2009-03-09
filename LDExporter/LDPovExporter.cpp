@@ -766,7 +766,7 @@ int LDPovExporter::doExport(LDLModel *pTopModel)
 			writeEdgeColor();
 		}
 		m_colorsUsed[7] = true;
-		if (!scanModelColors(m_pTopModel))
+		if (!scanModelColors(m_pTopModel, false))
 		{
 			return 1;
 		}
@@ -1067,9 +1067,11 @@ std::string LDPovExporter::getModelFilename(const LDLModel *pModel)
 
 std::string LDPovExporter::getDeclareName(
 	LDLModel *pModel,
-	bool mirrored)
+	bool mirrored,
+	bool inPart /*= false*/)
 {
-	return getDeclareName(getModelFilename(pModel), mirrored);
+	return getDeclareName(getModelFilename(pModel), mirrored,
+		inPart && pModel->isPart());
 }
 
 std::string LDPovExporter::replaceSpecialChacters(const char *string)
@@ -1110,7 +1112,8 @@ std::string LDPovExporter::replaceSpecialChacters(const char *string)
 
 std::string LDPovExporter::getDeclareName(
 	const std::string &modelFilename,
-	bool mirrored)
+	bool mirrored,
+	bool inPart /*= false*/)
 {
 	StringStringMap::const_iterator it;
 	std::string key;
@@ -1122,6 +1125,10 @@ std::string LDPovExporter::getDeclareName(
 	else
 	{
 		key = modelFilename;
+	}
+	if (inPart & m_smoothCurves)
+	{
+		key += ":sub_part";
 	}
 	it = m_declareNames.find(lowerCaseString(key));
 	if (it != m_declareNames.end())
@@ -1152,14 +1159,18 @@ std::string LDPovExporter::getDeclareName(
 	{
 		retValue += "_mirror";
 	}
+	if (inPart && m_smoothCurves)
+	{
+		retValue += "_sub_part";
+	}
 	m_declareNames[lowerCaseString(key)] = retValue;
 	return retValue;
 }
 
-bool LDPovExporter::scanModelColors(LDLModel *pModel)
+bool LDPovExporter::scanModelColors(LDLModel *pModel, bool inPart)
 {
 	LDLFileLineArray *fileLines = pModel->getFileLines();
-	std::string declareName = getDeclareName(pModel, false);
+	std::string declareName = getDeclareName(pModel, false, inPart);
 
 	if (m_processedModels[declareName])
 	{
@@ -1187,7 +1198,7 @@ bool LDPovExporter::scanModelColors(LDLModel *pModel)
 				if (pModel)
 				{
 					m_colorsUsed[pModelLine->getColorNumber()] = true;
-					scanModelColors(pModel);
+					scanModelColors(pModel, pModel->isPart() || inPart);
 				}
 			}
 			else if (pFileLine->isShapeLine())
@@ -1338,7 +1349,7 @@ bool LDPovExporter::writeModel(
 	LDLFileLineArray *fileLines = pModel->getFileLines();
 	bool mirrored = m_unmirrorStuds &&
 		TCVector::determinant(matrix) < 0.0f && pModel->hasStuds();
-	std::string declareName = getDeclareName(pModel, mirrored);
+	std::string declareName = getDeclareName(pModel, mirrored, inPart);
 
 	if (m_processedModels[declareName] || m_emptyModels[declareName])
 	{
@@ -1877,7 +1888,8 @@ bool LDPovExporter::findModelGeometry(
 						retValue = true;
 					}
 				}
-				if (!m_emptyModels[getDeclareName(pOtherModel, mirrored)])
+				if (!m_emptyModels[getDeclareName(pOtherModel, mirrored,
+					inPart)])
 				{
 					retValue = true;
 				}
@@ -1928,7 +1940,7 @@ bool LDPovExporter::writeModelObject(
 		LDLFileLineArray *fileLines = pModel->getFileLines();
 		int i;
 		int count = pModel->getActiveLineCount();
-		std::string declareName = getDeclareName(pModel, mirrored);
+		std::string declareName = getDeclareName(pModel, mirrored, inPart);
 		IntShapeListMap colorGeometryMap;
 
 		if (findModelGeometry(pModel, colorGeometryMap, mirrored,
@@ -2187,6 +2199,7 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 void LDPovExporter::smoothGeometry(
 	int colorNumber,
 	const ShapeList &list,
+	const ShapeList &edges,
 	VectorSizeTMap &vertices,
 	VectorSizeTMap &normals,
 	SmoothTriangleVector &triangles)
@@ -2211,7 +2224,7 @@ void LDPovExporter::smoothGeometry(
 	// end points along that infinite line.
 	EdgeMap edgesMap;
 
-	for (it = list.begin(); it != list.end(); it++)
+	for (it = edges.begin(); it != edges.end(); it++)
 	{
 		const TCVectorVector &points = it->points;
 
@@ -2228,7 +2241,12 @@ void LDPovExporter::smoothGeometry(
 					push_back(LinePair(points[1], points[0]));
 			}
 		}
-		else
+	}
+	for (it = list.begin(); it != list.end(); it++)
+	{
+		const TCVectorVector &points = it->points;
+
+		if (points.size() != 2)
 		{
 			size_t count = points.size();
 
@@ -2335,6 +2353,7 @@ void LDPovExporter::smoothGeometry(
 								onEdge(LinePair(point1, point2), itme->second))
 							{
 								triangle.smoothPass = -1;
+								triangle.hardEdges[index1] = true;
 								processed++;
 							}
 							else if (started)
@@ -2450,6 +2469,8 @@ void LDPovExporter::smoothGeometry(
 				TCVector normal;
 				SmoothTrianglePList::iterator itlst;
 				done = true;
+				LineKey *hardEdge1 = NULL;
+				LineKey *hardEdge2 = NULL;
 
 				for (itlst = triangles.begin(); itlst != triangles.end();
 					itlst++)
@@ -2473,13 +2494,39 @@ void LDPovExporter::smoothGeometry(
 
 						if (!started)
 						{
+							if (triangle.hardEdges[index1])
+							{
+								hardEdge1 = &triangle.lineKeys[index2];
+							}
+							if (triangle.hardEdges[index2])
+							{
+								hardEdge2 = &triangle.lineKeys[index2];
+							}
 							normal = triNormal;
 							triangle.smoothPass = 1;
 							started = true;
 						}
 						else
 						{
-							if (trySmooth(triNormal, normal))
+							bool hardEdge = false;
+
+							if (hardEdge1 != NULL)
+							{
+								if (*hardEdge1 == triangle.lineKeys[index1] ||
+									*hardEdge1 == triangle.lineKeys[index2])
+								{
+									hardEdge = true;
+								}
+							}
+							if (hardEdge2 != NULL)
+							{
+								if (*hardEdge2 == triangle.lineKeys[index1] ||
+									*hardEdge2 == triangle.lineKeys[index2])
+								{
+									hardEdge = true;
+								}
+							}
+							if (!hardEdge && trySmooth(triNormal, normal))
 							{
 								triangle.smoothPass = 1;
 							}
@@ -2695,13 +2742,18 @@ void LDPovExporter::initSmoothTriangle(
 	triangle.edgeNormals[0] = normal;
 	triangle.edgeNormals[1] = normal;
 	triangle.edgeNormals[2] = normal;
+	triangle.hardEdges[0] = false;
+	triangle.hardEdges[1] = false;
+	triangle.hardEdges[2] = false;
 	trianglePoints[point1].push_back(&triangle);
 	trianglePoints[point2].push_back(&triangle);
 	trianglePoints[point3].push_back(&triangle);
 }
 
-void LDPovExporter::writeGeometry(const IntShapeListMap &colorGeometryMap)
+void LDPovExporter::writeGeometry(IntShapeListMap &colorGeometryMap)
 {
+	ShapeList &edges = colorGeometryMap[24];
+
 	for (IntShapeListMap::const_iterator it = colorGeometryMap.begin();
 		it != colorGeometryMap.end(); it++)
 	{
@@ -2713,7 +2765,8 @@ void LDPovExporter::writeGeometry(const IntShapeListMap &colorGeometryMap)
 			TCFloat origEpsilon = TCVector::getEpsilon();
 
 			TCVector::setEpsilon(0.001f);
-			smoothGeometry(it->first, it->second, vertices, normals, triangles);
+			smoothGeometry(it->first, it->second, edges, vertices, normals,
+				triangles);
 			if (vertices.size() > 0 && normals.size() > 0)
 			{
 				writeMesh2(it->first, vertices, normals, triangles);
@@ -3367,7 +3420,7 @@ bool LDPovExporter::writeModelLine(
 	}
 	if (pModel)
 	{
-		std::string declareName = getDeclareName(pModel, mirrored);
+		std::string declareName = getDeclareName(pModel, mirrored, inPart);
 		PovElementMap::const_iterator it = m_xmlElements.end();
 
 		if (m_emptyModels[declareName])
