@@ -22,6 +22,7 @@ TCFloat TCVector::sm_identityMatrix[16] =
 	0.0, 0.0, 0.0, 1.0
 };
 TCFloat TCVector::sm_epsilon = 0.0;
+TCFloat TCVector::sm_invEpsilon = 1.0;
 
 // TCVector::TCVector(void) -- Default Constructor
 TCVector::TCVector(void)
@@ -279,6 +280,23 @@ TCVector& TCVector::operator=(const TCVector& right)
 	return *this;
 }
 
+TCFloat TCVector::epRound(TCFloat value)
+{
+	if (sm_epsilon == 0.0)
+	{
+		return value;
+	}
+	else
+	{
+		int whole = (int)value;
+		int frac = (int)((value - whole + sm_epsilon / 2.0f) * sm_invEpsilon);
+
+		return whole + frac / sm_invEpsilon;
+		//return (int)((value + sm_epsilon / 2.0f) * sm_invEpsilon) /
+		//	sm_invEpsilon;
+	}
+}
+
 // TCVector::operator==(const TCVector&) -- Overloaded Operator
 // Expects:
 //		right	: The right hand side of the equality test.
@@ -288,18 +306,21 @@ TCVector& TCVector::operator=(const TCVector& right)
 //		small distance from each other (based on the default epsilon).
 int TCVector::operator==(const TCVector& right) const
 {
-	if (sm_epsilon == 0.0)
-	{
-		return fEq(vector[0], right.vector[0]) &&
-			fEq(vector[1], right.vector[1]) &&
-			fEq(vector[2], right.vector[2]);
-	}
-	else
-	{
-		return fEq2(vector[0], right.vector[0], sm_epsilon) &&
-			fEq2(vector[1], right.vector[1], sm_epsilon) &&
-			fEq2(vector[2], right.vector[2], sm_epsilon);
-	}
+	return fEq(epRound(vector[0]), epRound(right.vector[0])) &&
+		fEq(epRound(vector[1]), epRound(right.vector[1])) &&
+		fEq(epRound(vector[2]), epRound(right.vector[2]));
+	//if (sm_epsilon == 0.0)
+	//{
+	//	return fEq(vector[0], right.vector[0]) &&
+	//		fEq(vector[1], right.vector[1]) &&
+	//		fEq(vector[2], right.vector[2]);
+	//}
+	//else
+	//{
+	//	return fEq2(vector[0], right.vector[0], sm_epsilon) &&
+	//		fEq2(vector[1], right.vector[1], sm_epsilon) &&
+	//		fEq2(vector[2], right.vector[2], sm_epsilon);
+	//}
 }
 
 // TCVector::operator!=(const TCVector&) -- Overloaded Operator
@@ -351,23 +372,23 @@ bool TCVector::operator<(const TCVector& right) const
 	}
 	else
 	{
-		if (vector[0] < right.vector[0] - sm_epsilon)
+		if (epRound(vector[0]) < epRound(right.vector[0]))
 		{
 			return true;
 		}
-		else if (vector[0] > right.vector[0] + sm_epsilon)
+		else if (epRound(vector[0]) > epRound(right.vector[0]))
 		{
 			return false;
 		}
-		else if (vector[1] < right.vector[1] - sm_epsilon)
+		else if (epRound(vector[1]) < epRound(right.vector[1]))
 		{
 			return true;
 		}
-		else if (vector[1] > right.vector[1] + sm_epsilon)
+		else if (epRound(vector[1]) > epRound(right.vector[1]))
 		{
 			return false;
 		}
-		else if (vector[2] < right.vector[2] - sm_epsilon)
+		else if (epRound(vector[2]) < epRound(right.vector[2]))
 		{
 			return true;
 		}
@@ -375,6 +396,30 @@ bool TCVector::operator<(const TCVector& right) const
 		{
 			return false;
 		}
+		//if (vector[0] < right.vector[0] - sm_epsilon)
+		//{
+		//	return true;
+		//}
+		//else if (vector[0] > right.vector[0] + sm_epsilon)
+		//{
+		//	return false;
+		//}
+		//else if (vector[1] < right.vector[1] - sm_epsilon)
+		//{
+		//	return true;
+		//}
+		//else if (vector[1] > right.vector[1] + sm_epsilon)
+		//{
+		//	return false;
+		//}
+		//else if (vector[2] < right.vector[2] - sm_epsilon)
+		//{
+		//	return true;
+		//}
+		//else
+		//{
+		//	return false;
+		//}
 	}
 }
 

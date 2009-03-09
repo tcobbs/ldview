@@ -168,7 +168,7 @@ void LDPovExporter::SmoothTriangle::setNormal(
 	TCVector &oldNormal = normals[point];
 	if (LDPovExporter::shouldFlipNormal(normal, oldNormal))
 	{
-		oldNormal = normal * -1.0;
+		oldNormal = -normal;
 	}
 	else
 	{
@@ -1819,10 +1819,6 @@ bool LDPovExporter::findModelGeometry(
 
 	if (m_smoothCurves)
 	{
-		if (strcasecmp(pModel->getName(), "50746.dat") == 0)
-		{
-			debugPrintf("Problem part.\n");
-		}
 		if (inPart && matrix == NULL)
 		{
 			skipping = true;
@@ -1840,7 +1836,8 @@ bool LDPovExporter::findModelGeometry(
 
 			if (pOtherModel != NULL)
 			{
-				if (m_smoothCurves && (pModel->isPart() || matrix != NULL) &&
+				if (!skipping && m_smoothCurves &&
+					(pModel->isPart() || matrix != NULL) &&
 					(!m_primSub ||
 					!performPrimitiveSubstitution(pOtherModel, false)))
 				{
@@ -2199,7 +2196,7 @@ void LDPovExporter::smoothGeometry(
 				edgesMap[LineKey(points[0], points[1])].
 					push_back(LinePair(points[0], points[1]));
 			}
-			else
+			else if (points[0] > points[1])
 			{
 				edgesMap[LineKey(points[0], points[1])].
 					push_back(LinePair(points[1], points[0]));
@@ -2266,6 +2263,7 @@ void LDPovExporter::smoothGeometry(
 			triangleEdges[triangle.lineKeys[j]].insert(&triangle);
 		}
 	}
+	SmoothTriangleVector origTriangles(triangles);
 	for (TriangleEdgesMap::iterator itmte = triangleEdges.begin();
 		itmte != triangleEdges.end(); itmte++)
 	{
@@ -2371,17 +2369,19 @@ void LDPovExporter::smoothGeometry(
 					if (index >= 0)
 					{
 						TCVector &normal = normals[triangle.smoothPass - 1];
-						TCVector &triNormal = triangle.edgeNormals[index];
+						TCVector &edgeNormal = triangle.edgeNormals[index];
+						const TCVector &triNormal =
+							triangle.normals.begin()->second;
 
 						if (normal.lengthSquared() > 0)
 						{
 							if (shouldFlipNormal(triNormal, normal))
 							{
-								normal = (normal - triNormal).normalize();
+								normal = (normal - edgeNormal).normalize();
 							}
 							else
 							{
-								normal = (normal + triNormal).normalize();
+								normal = (normal + edgeNormal).normalize();
 							}
 						}
 						else
@@ -2403,15 +2403,17 @@ void LDPovExporter::smoothGeometry(
 					if (index >= 0)
 					{
 						TCVector &normal = normals[triangle.smoothPass - 1];
-						TCVector &triNormal = triangle.edgeNormals[index];
+						TCVector &edgeNormal = triangle.edgeNormals[index];
+						const TCVector &triNormal =
+							triangle.normals.begin()->second;
 
 						if (shouldFlipNormal(triNormal, normal))
 						{
-							triNormal = -normal;
+							edgeNormal = -normal;
 						}
 						else
 						{
-							triNormal = normal;
+							edgeNormal = normal;
 						}
 					}
 				}
@@ -2496,14 +2498,68 @@ void LDPovExporter::smoothGeometry(
 			}
 		}
 	}
+	//for (size_t i = 0; i < triangles.size(); i++)
+	//{
+	//	SmoothTriangle &triangle1 = triangles[i];
+	//	const SmoothTriangle &triangle2 = origTriangles[i];
+	//	VectorVectorMap::iterator itmvv1 = triangle1.normals.begin();
+	//	VectorVectorMap::const_iterator itmvv2 = triangle2.normals.begin();
+
+	//	while (itmvv1 != triangle1.normals.end())
+	//	{
+	//		TCVector newNormal = itmvv1->second;
+	//		if (shouldFlipNormal(itmvv1->second, itmvv2->second))
+	//		{
+	//			debugPrintf("Normal error.\n");
+	//			itmvv1->second = -itmvv2->second;
+	//		}
+	//		if (!trySmooth(itmvv2->second, newNormal))
+	//		{
+	//			debugPrintf("Normal error.\n");
+	//			itmvv1->second = -itmvv2->second;
+	//		}
+	//		itmvv1++;
+	//		itmvv2++;
+	//	}
+	//}
 	for (size_t i = 0; i < triangles.size(); i++)
 	{
-		const SmoothTriangle &triangle = triangles[i];
+		SmoothTriangle &triangle = triangles[i];
 
-		for (VectorVectorMap::const_iterator it5 = triangle.normals.begin();
-			it5 != triangle.normals.end(); it5++)
+		//for (int j = 0; j < 3; j++)
+		//{
+		//	const TCVector &point = indexToVert[triangle.vertexIndices[j]];
+		//	const TCVector &normal = triangle.normals[point];
+
+		//	if (fEq2(normal[0], 0.63207030, .0001) &&
+		//		fEq2(normal[1], 0.00000000, .0001) &&
+		//		fEq2(normal[2], -0.77491105, .0001))
+		//	{
+		//		debugPrintf("Problem child.\n");
+		//	}
+		//	if (normals.find(normal) == normals.end())
+		//	{
+		//		normals.insert(VectorSizeTMap::value_type(normal, 0));
+		//	}
+		//	//normals[normal];
+		//}
+		for (VectorVectorMap::const_iterator itmvv = triangle.normals.begin();
+			itmvv != triangle.normals.end(); itmvv++)
 		{
-			normals[it5->second];
+			//const TCVector &normal = itmvv->second;
+
+			//if (fEq2(normal[0], -0.96919239, .0001) &&
+			//	fEq2(normal[1], 0.0026236172, .0001) &&
+			//	fEq2(normal[2], 0.24629103, .0001))
+			//{
+			//	debugPrintf("Problem child.\n");
+			//}
+			normals[itmvv->second];
+			//VectorSizeTMap::const_iterator itTest = normals.find(itmvv->second);
+			//if (itTest == normals.end())
+			//{
+			//	debugPrintf("What?\n");
+			//}
 		}
 	}
 	index = 0;
@@ -2520,6 +2576,11 @@ void LDPovExporter::smoothGeometry(
 			const TCVector &point = indexToVert[triangle.vertexIndices[j]];
 			const TCVector &normal = triangle.normals[point];
 
+			if (normals.find(normal) == normals.end())
+			{
+				assert(false);
+				debugPrintf("Normal mapping error.\n");
+			}
 			triangle.normalIndices[j] = normals[normal];
 		}
 	}
@@ -2672,9 +2733,9 @@ void LDPovExporter::initSmoothTriangle(
 	triangle.normals.insert(VectorVectorMap::value_type(point1, normal));
 	triangle.normals.insert(VectorVectorMap::value_type(point2, normal));
 	triangle.normals.insert(VectorVectorMap::value_type(point3, normal));
-	triangle.normals[point1] = normal;
-	triangle.normals[point1] = normal;
-	triangle.normals[point1] = normal;
+	//triangle.normals[point1] = normal;
+	//triangle.normals[point1] = normal;
+	//triangle.normals[point1] = normal;
 	triangle.edgeNormals[0] = normal;
 	triangle.edgeNormals[1] = normal;
 	triangle.edgeNormals[2] = normal;
