@@ -300,12 +300,12 @@ static void loadLocalStrings(const char *filename, UINT resourceId, bool replace
 
 				if (length)
 				{
-					char *localStrings = new char[length + 1];
+					//char *localStrings = new char[length + 1];
 
-					memcpy(localStrings, data, length);
-					localStrings[length] = 0;
-					TCLocalStrings::setStringTable(localStrings, replace);
-					delete localStrings;
+					//memcpy(localStrings, data, length);
+					//localStrings[length] = 0;
+					TCLocalStrings::setStringTable(data, length, replace);
+					//delete localStrings;
 					done = true;
 				}
 				UnlockResource(hLocalStrings);
