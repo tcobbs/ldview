@@ -433,6 +433,7 @@ static wchar_t g_cp1251[256] =
 	/*95 = U+*/0x2022, //BULLET
 	/*96 = U+*/0x2013, //EN DASH
 	/*97 = U+*/0x2014, //EM DASH
+	/*98 = U+*/0x0000, //NULL
 	/*99 = U+*/0x2122, //TRADE MARK SIGN
 	/*9A = U+*/0x0459, //CYRILLIC SMALL LETTER LJE
 	/*9B = U+*/0x203A, //SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
@@ -905,6 +906,72 @@ const wchar_t *TCLocalStrings::get(const wchar_t *key)
 	return getCurrentLocalStrings()->instGetLocalString(key);
 }
 
+bool TCLocalStrings::setStringTable(
+	const TCByte *data,
+	int tableSize,
+	bool replace /*= true*/)
+{
+	bool retValue = false;
+	bool bUnicode16 = false;
+	bool bBigEndian = true;
+
+	if (data[0] == 0xFF && data[1] == 0xFE)
+	{
+		// Little Endian Unicode
+		bUnicode16 = true;
+		bBigEndian = false;
+	}
+	else if (data[0] == 0xFE && data[1] == 0xFF)
+	{
+		// Big Endian Unicode
+		bUnicode16 = true;
+	}
+	if (bUnicode16)
+	{
+		std::wstring wstringTable;
+		int i;
+		int count = tableSize / 2;
+
+		wstringTable.reserve(count + 1);
+		// Note: skip first 2 bytes, which are the Byte Order Mark.
+		for (i = 2; i < tableSize; i += 2)
+		{
+			int uByte;
+			int lByte;
+
+			if (bBigEndian)
+			{
+				uByte = data[i];
+				lByte = data[i + 1];
+			}
+			else
+			{
+				uByte = data[i + 1];
+				lByte = data[i];
+			}
+			wchar_t wc = (wchar_t)((uByte << 8) | lByte);
+			wstringTable.append(&wc, 1);
+		}
+		// wstringTable now contains the string table.
+#ifdef NO_WSTRING
+        retValue = setStringTable(L"", replace);
+#else // NO_WSTRING
+		retValue = setStringTable(wstringTable.c_str(), replace);
+#endif // NO_WSTRING
+	}
+	else
+	{
+		char *stringTable = new char[tableSize + 1];
+		memcpy(stringTable, data, tableSize);
+
+		// Null terminate the string table
+		stringTable[tableSize] = 0;
+		retValue = setStringTable(stringTable, replace);
+		delete stringTable;
+	}
+	return retValue;
+}
+
 bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 {
 	FILE *tableFile = fopen(filename, "rb");
@@ -918,64 +985,10 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 		fseek(tableFile, 0, SEEK_END);
 		fileSize = ftell(tableFile);
 		fseek(tableFile, 0, SEEK_SET);
-		fileData = new TCByte[fileSize + 1];
+		fileData = new TCByte[fileSize];
 		if (fread(fileData, 1, fileSize, tableFile) == (unsigned)fileSize)
 		{
-			bool bUnicode16 = false;
-			bool bBigEndian = true;
-
-			if (fileData[0] == 0xFF && fileData[1] == 0xFE)
-			{
-				// Little Endian Unicode
-				bUnicode16 = true;
-				bBigEndian = false;
-			}
-			else if (fileData[0] == 0xFE && fileData[1] == 0xFF)
-			{
-				// Big Endian Unicode
-				bUnicode16 = true;
-			}
-			if (bUnicode16)
-			{
-				std::wstring wstringTable;
-				int i;
-				int count = fileSize / 2;
-
-				wstringTable.reserve(count + 1);
-				// Note: skip first 2 bytes, which are the Byte Order Mark.
-				for (i = 2; i < fileSize; i += 2)
-				{
-					int uByte;
-					int lByte;
-
-					if (bBigEndian)
-					{
-						uByte = fileData[i];
-						lByte = fileData[i + 1];
-					}
-					else
-					{
-						uByte = fileData[i + 1];
-						lByte = fileData[i];
-					}
-					wchar_t wc = (wchar_t)((uByte << 8) | lByte);
-					wstringTable.append(&wc, 1);
-				}
-				// wstringTable now contains the string table.
-#ifdef NO_WSTRING
-                retValue = setStringTable(L"", replace);
-#else // NO_WSTRING
-				retValue = setStringTable(wstringTable.c_str(), replace);
-#endif // NO_WSTRING
-			}
-			else
-			{
-				char *stringTable = (char *)fileData;
-
-				// Null terminate the string table
-				stringTable[fileSize] = 0;
-				retValue = setStringTable(stringTable, replace);
-			}
+			setStringTable(fileData, fileSize, replace);
 		}
 		delete fileData;
 		fclose(tableFile);

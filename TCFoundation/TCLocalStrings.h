@@ -18,6 +18,8 @@ typedef std::map<int, wchar_t *> IntWCharMap;
 class TCExport TCLocalStrings: public TCObject
 {
 public:
+	static bool setStringTable(const TCByte *stringTable, int tableSize,
+		bool replace = true);
 	static bool setStringTable(const char *stringTable, bool replace = true);
 	static bool setStringTable(const wchar_t *stringTable, bool replace = true);
 	static bool loadStringTable(const char *filaname, bool replace = true);
