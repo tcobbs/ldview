@@ -2456,106 +2456,196 @@ void LDPovExporter::smoothGeometry(
 	for (TrianglePPointsMap::iterator itmtp = trianglePoints.begin();
 		itmtp != trianglePoints.end(); itmtp++)
 	{
-		SmoothTrianglePList &triangles = itmtp->second;
-		bool done = false;
-		TCVector lastNormal;
+		SmoothTrianglePList &triangleList = itmtp->second;
+		//bool done = false;
+		//TCVector lastNormal;
 		const TCVector &point = itmtp->first;
 
-		if (triangles.size() > 1)
+		if (triangleList.size() > 1)
 		{
-			while (!done)
+			SmoothTrianglePVector triangles(triangleList.begin(),
+				triangleList.end());
+			size_t processed = 0;
+			size_t i, j, k;
+			TCVectorVector normals;
+
+			normals.resize(triangles.size());
+			for (i = 0; i < triangles.size() && processed < triangles.size();
+				i++)
 			{
-				bool started = false;
-				TCVector normal;
-				SmoothTrianglePList::iterator itlst;
-				done = true;
-				LineKey *hardEdge1 = NULL;
-				LineKey *hardEdge2 = NULL;
+				SmoothTriangle &passTriangle = *triangles[i];
 
-				for (itlst = triangles.begin(); itlst != triangles.end();
-					itlst++)
+				if (passTriangle.smoothPass == 0)
 				{
-					SmoothTriangle &triangle = **itlst;
-					int index1 = findPoint(triangle, point, indexToVert);
+					LineKeySet hardEdges;
+					LineKeySet softEdges;
+					int index1 = findPoint(passTriangle, point, indexToVert);
 					int index2 = (index1 + 2) % 3;
+					TCVector normal = (passTriangle.edgeNormals[index1] +
+						passTriangle.edgeNormals[index2]).normalize();
 
-					if (triangle.smoothPass > 0)
+					if (passTriangle.hardEdges[index1])
 					{
-						if (triangle.smoothPass == 1)
-						{
-							triangle.setNormal(point, lastNormal);
-						}
-						triangle.smoothPass++;
+						hardEdges.insert(passTriangle.lineKeys[index1]);
 					}
 					else
 					{
-						TCVector triNormal = (triangle.edgeNormals[index1] +
-							triangle.edgeNormals[index2]).normalize();
-
-						if (!started)
-						{
-							if (triangle.hardEdges[index1])
-							{
-								hardEdge1 = &triangle.lineKeys[index2];
-							}
-							if (triangle.hardEdges[index2])
-							{
-								hardEdge2 = &triangle.lineKeys[index2];
-							}
-							normal = triNormal;
-							triangle.smoothPass = 1;
-							started = true;
-						}
-						else
-						{
-							bool hardEdge = false;
-
-							if (hardEdge1 != NULL)
-							{
-								if (*hardEdge1 == triangle.lineKeys[index1] ||
-									*hardEdge1 == triangle.lineKeys[index2])
-								{
-									hardEdge = true;
-								}
-							}
-							if (hardEdge2 != NULL)
-							{
-								if (*hardEdge2 == triangle.lineKeys[index1] ||
-									*hardEdge2 == triangle.lineKeys[index2])
-								{
-									hardEdge = true;
-								}
-							}
-							if (!hardEdge && trySmooth(triNormal, normal))
-							{
-								triangle.smoothPass = 1;
-							}
-							else
-							{
-								done = false;
-							}
-						}
+						softEdges.insert(passTriangle.lineKeys[index1]);
 					}
-				}
-				if (done)
-				{
-					for (itlst = triangles.begin(); itlst != triangles.end();
-						itlst++)
+					if (passTriangle.hardEdges[index2])
 					{
-						SmoothTriangle &triangle = **itlst;
-
-						if (triangle.smoothPass == 1)
-						{
-							triangle.setNormal(point, normal);
-						}
-						triangle.smoothPass = 0;
+						hardEdges.insert(passTriangle.lineKeys[index2]);
 					}
-				}
-				else
-				{
-					lastNormal = normal;
+					else
+					{
+						softEdges.insert(passTriangle.lineKeys[index2]);
+					}
+					passTriangle.smoothPass = i + 1;
+					processed++;
+					for (j = i + 1; j < triangles.size() &&
+						processed < triangles.size(); j++)
+					{
+						// Unfortunately, we have to process all the rest n^2
+						// times, because we don't have any control over what
+						// order they'll be in.
+						for (k = j; k < triangles.size() &&
+							processed < triangles.size(); k++)
+						{
+							SmoothTriangle &triangle = *triangles[k];
+
+							if (triangle.smoothPass == 0)
+							{
+								int index3 = findPoint(triangle, point, indexToVert);
+								int index4 = (index3 + 2) % 3;
+
+								if (softEdges.find(triangle.lineKeys[index3]) !=
+									softEdges.end() ||
+									softEdges.find(triangle.lineKeys[index4]) !=
+									softEdges.end())
+								{
+									TCVector triNormal = (triangle.edgeNormals[index3] +
+										triangle.edgeNormals[index4]).normalize();
+
+									if (!triangle.hardEdges[index3])
+									{
+										softEdges.insert(triangle.lineKeys[index3]);
+									}
+									if (!triangle.hardEdges[index4])
+									{
+										softEdges.insert(triangle.lineKeys[index4]);
+									}
+									if (trySmooth(triNormal, normal))
+									{
+										triangle.smoothPass = i + 1;
+										processed++;
+									}
+								}
+							}
+						}
+					}
+					normals[i] = normal;
 				}
 			}
+			for (i = 0; i < triangles.size(); i++)
+			{
+				SmoothTriangle &triangle = *triangles[i];
+
+				if (triangle.smoothPass > 0)
+				{
+					triangle.setNormal(point, normals[triangle.smoothPass - 1]);
+				}
+				triangle.smoothPass = 0;
+			}
+			//while (!done)
+			//{
+			//	bool started = false;
+			//	TCVector normal;
+			//	//SmoothTrianglePList::iterator itlst;
+			//	done = true;
+			//	LineKeySet hardEdges;
+			//	LineKeySet softEdges;
+
+			//	for (i = 0; i < triangles.size(); i++)
+			//	{
+			//		SmoothTriangle &triangle = *triangles[i];
+			//		int index1 = findPoint(triangle, point, indexToVert);
+			//		int index2 = (index1 + 2) % 3;
+
+			//		if (triangle.smoothPass > 0)
+			//		{
+			//			if (triangle.smoothPass == 1)
+			//			{
+			//				triangle.setNormal(point, lastNormal);
+			//			}
+			//			triangle.smoothPass++;
+			//		}
+			//		else
+			//		{
+			//			TCVector triNormal = (triangle.edgeNormals[index1] +
+			//				triangle.edgeNormals[index2]).normalize();
+
+			//			if (started)
+			//			{
+			//				bool hardEdge = false;
+
+			//				if (hardEdges.find(triangle.lineKeys[index1]) !=
+			//					hardEdges.end() ||
+			//					hardEdges.find(triangle.lineKeys[index2]) !=
+			//					hardEdges.end())
+			//				{
+			//					hardEdge = true;
+			//				}
+			//				if (!hardEdge && trySmooth(triNormal, normal))
+			//				{
+			//					triangle.smoothPass = 1;
+			//				}
+			//				else
+			//				{
+			//					done = false;
+			//				}
+			//			}
+			//			else
+			//			{
+			//				if (triangle.hardEdges[index1])
+			//				{
+			//					hardEdges.insert(triangle.lineKeys[index1]);
+			//				}
+			//				else
+			//				{
+			//					softEdges.insert(triangle.lineKeys[index1]);
+			//				}
+			//				if (triangle.hardEdges[index2])
+			//				{
+			//					hardEdges.insert(triangle.lineKeys[index2]);
+			//				}
+			//				else
+			//				{
+			//					softEdges.insert(triangle.lineKeys[index2]);
+			//				}
+			//				normal = triNormal;
+			//				triangle.smoothPass = 1;
+			//				started = true;
+			//			}
+			//		}
+			//	}
+			//	if (done)
+			//	{
+			//		for (i = 0; i < triangles.size(); i++)
+			//		{
+			//			SmoothTriangle &triangle = *triangles[i];
+
+			//			if (triangle.smoothPass == 1)
+			//			{
+			//				triangle.setNormal(point, normal);
+			//			}
+			//			triangle.smoothPass = 0;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		lastNormal = normal;
+			//	}
+			//}
 		}
 	}
 	for (size_t i = 0; i < triangles.size(); i++)
