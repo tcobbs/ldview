@@ -253,7 +253,7 @@ void LDPovExporter::loadSettings(void)
 	m_xmlMap = boolForKey("XmlMap", true);
 	m_xmlMapPath = pathForKey("XmlMapPath");
 	m_inlinePov = boolForKey("InlinePov", true);
-	m_smoothCurves = boolForKey("SmoothCurves", false);
+	m_smoothCurves = boolForKey("SmoothCurves", true);
 	m_hideStuds = boolForKey("HideStuds", false);
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
 	m_floor = boolForKey("Floor", true);
