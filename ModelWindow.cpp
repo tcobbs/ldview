@@ -4879,8 +4879,10 @@ void ModelWindow::exportModel(void)
 		}
 		modelViewer->setExportType(
 			(LDrawModelViewer::ExportType)saveExportType);
+		setWaitCursor();
 		modelViewer->exportCurModel(filename,
 			ldviewWindow->getProductVersion());
+		setArrowCursor();
 	}
 }
 
