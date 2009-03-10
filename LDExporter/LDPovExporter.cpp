@@ -2304,7 +2304,6 @@ void LDPovExporter::smoothGeometry(
 			triangleEdges[triangle.lineKeys[j]].insert(&triangle);
 		}
 	}
-	SmoothTriangleVector origTriangles(triangles);
 	for (TriangleEdgesMap::iterator itmte = triangleEdges.begin();
 		itmte != triangleEdges.end(); itmte++)
 	{
@@ -2313,140 +2312,21 @@ void LDPovExporter::smoothGeometry(
 
 		if (triangles.size() > 1)
 		{
-			EdgeMap::const_iterator itme = edgesMap.find(itmte->first);
-			size_t processed = 0;
-			int pass = 1;
-			TCVectorVector normals;
+			EdgeMap::const_iterator itme = edgesMap.find(lineKey);
 
-			for (; processed < triangles.size(); pass++)
+			if (itme != edgesMap.end())
 			{
-				bool started = false;
-				TCVector minPoint;
-				TCVector maxPoint;
-				TCVector normal;
-
 				for (SmoothTrianglePSet::iterator itsst = triangles.begin();
 					itsst != triangles.end(); itsst++)
 				{
 					SmoothTriangle &triangle = **itsst;
-
-					if (triangle.smoothPass == 0)
-					{
-						int index1 = findEdge(triangle, lineKey);
-
-						if (index1 >= 0)
-						{
-							int index2 = (index1 + 1) % 3;
-							TCVector point1 =
-								indexToVert[triangle.vertexIndices[index1]];
-							TCVector point2 =
-								indexToVert[triangle.vertexIndices[index2]];
-
-							if (point1 > point2)
-							{
-								std::swap(point1, point2);
-							}
-							if (itme != edgesMap.end() &&
-								onEdge(LinePair(point1, point2), itme->second))
-							{
-								triangle.smoothPass = -1;
-								triangle.hardEdges[index1] = true;
-								processed++;
-							}
-							else if (started)
-							{
-								if (normalsCheck(triangle.edgeNormals[index1],
-									normal) &&
-									edgesOverlap(LinePair(point1, point2),
-									LinePair(minPoint, maxPoint)))
-								{
-									minPoint = std::min(minPoint, point1);
-									maxPoint = std::max(maxPoint, point2);
-									triangle.smoothPass = pass;
-									processed++;
-								}
-							}
-							else
-							{
-								minPoint = point1;
-								maxPoint = point2;
-								normal = triangle.edgeNormals[index1];
-								started = true;
-								triangle.smoothPass = pass;
-								processed++;
-							}
-						}
-						else
-						{
-							assert(false);
-							triangle.smoothPass = -1;
-							processed++;
-						}
-					}
-				}
-			}
-			normals.resize(pass - 1);
-			for (SmoothTrianglePSet::iterator itsst = triangles.begin();
-					itsst != triangles.end(); itsst++)
-			{
-				SmoothTriangle &triangle = **itsst;
-
-				if (triangle.smoothPass > 0)
-				{
 					int index = findEdge(triangle, lineKey);
 
 					if (index >= 0)
 					{
-						TCVector &normal = normals[triangle.smoothPass - 1];
-						TCVector &edgeNormal = triangle.edgeNormals[index];
-						const TCVector &triNormal =
-							triangle.normals.begin()->second;
-
-						if (normal.lengthSquared() > 0)
-						{
-							if (shouldFlipNormal(triNormal, normal))
-							{
-								normal = (normal - edgeNormal).normalize();
-							}
-							else
-							{
-								normal = (normal + edgeNormal).normalize();
-							}
-						}
-						else
-						{
-							normal = triNormal;
-						}
+						triangle.hardEdges[index] = true;
 					}
 				}
-			}
-			for (SmoothTrianglePSet::iterator itsst = triangles.begin();
-					itsst != triangles.end(); itsst++)
-			{
-				SmoothTriangle &triangle = **itsst;
-
-				if (triangle.smoothPass > 0)
-				{
-					int index = findEdge(triangle, lineKey);
-
-					if (index >= 0)
-					{
-						TCVector &normal = normals[triangle.smoothPass - 1];
-						TCVector &edgeNormal = triangle.edgeNormals[index];
-						const TCVector &triNormal =
-							triangle.normals.begin()->second;
-
-						if (shouldFlipNormal(triNormal, normal))
-						{
-							edgeNormal = -normal;
-						}
-						else
-						{
-							edgeNormal = normal;
-						}
-					}
-				}
-				triangle.smoothPass = 0;
 			}
 		}
 	}
@@ -2454,8 +2334,6 @@ void LDPovExporter::smoothGeometry(
 		itmtp != trianglePoints.end(); itmtp++)
 	{
 		SmoothTrianglePList &triangleList = itmtp->second;
-		//bool done = false;
-		//TCVector lastNormal;
 		const TCVector &point = itmtp->first;
 
 		if (triangleList.size() > 1)
@@ -2478,8 +2356,9 @@ void LDPovExporter::smoothGeometry(
 					LineKeySet softEdges;
 					int index1 = findPoint(passTriangle, point, indexToVert);
 					int index2 = (index1 + 2) % 3;
-					TCVector normal = (passTriangle.edgeNormals[index1] +
-						passTriangle.edgeNormals[index2]).normalize();
+					TCVector normal = passTriangle.normals[point];
+					TCVector lastNormal(normal);
+					TCVector firstNormal(normal);
 
 					if (passTriangle.hardEdges[index1])
 					{
@@ -2504,8 +2383,11 @@ void LDPovExporter::smoothGeometry(
 					{
 						// Unfortunately, we have to process all the rest n^2
 						// times, because we don't have any control over what
-						// order they'll be in.
-						for (k = j; k < triangles.size() &&
+						// order they'll be in.  That means this is a O(n^3)
+						// operation, which is horrible.  Fortunately, n is
+						// almost always less than 10, since it's the number
+						// of triangles that have this point in common.
+						for (k = i + 1; k < triangles.size() &&
 							processed < triangles.size(); k++)
 						{
 							SmoothTriangle &triangle = *triangles[k];
@@ -2520,8 +2402,8 @@ void LDPovExporter::smoothGeometry(
 									softEdges.find(triangle.lineKeys[index4]) !=
 									softEdges.end())
 								{
-									TCVector triNormal = (triangle.edgeNormals[index3] +
-										triangle.edgeNormals[index4]).normalize();
+									TCVector triNormal = triangle.normals[point];
+									bool smoothed = false;
 
 									if (!triangle.hardEdges[index3])
 									{
@@ -2531,16 +2413,34 @@ void LDPovExporter::smoothGeometry(
 									{
 										softEdges.insert(triangle.lineKeys[index4]);
 									}
-									if (trySmooth(triNormal, normal))
+									if (triNormal == firstNormal ||
+										triNormal == lastNormal)
+									{
+										smoothed = true;
+									}
+									else if (shouldSmooth(triNormal, lastNormal))
+									{
+										if (shouldFlipNormal(triNormal, normal))
+										{
+											normal -= triNormal;
+										}
+										else
+										{
+											normal += triNormal;
+										}
+										smoothed = true;
+									}
+									if (smoothed)
 									{
 										triangle.smoothPass = i + 1;
 										processed++;
+										lastNormal = triNormal;
 									}
 								}
 							}
 						}
 					}
-					normals[i] = normal;
+					normals[i] = normal.normalize();
 				}
 			}
 			for (i = 0; i < triangles.size(); i++)
@@ -2553,96 +2453,6 @@ void LDPovExporter::smoothGeometry(
 				}
 				triangle.smoothPass = 0;
 			}
-			//while (!done)
-			//{
-			//	bool started = false;
-			//	TCVector normal;
-			//	//SmoothTrianglePList::iterator itlst;
-			//	done = true;
-			//	LineKeySet hardEdges;
-			//	LineKeySet softEdges;
-
-			//	for (i = 0; i < triangles.size(); i++)
-			//	{
-			//		SmoothTriangle &triangle = *triangles[i];
-			//		int index1 = findPoint(triangle, point, indexToVert);
-			//		int index2 = (index1 + 2) % 3;
-
-			//		if (triangle.smoothPass > 0)
-			//		{
-			//			if (triangle.smoothPass == 1)
-			//			{
-			//				triangle.setNormal(point, lastNormal);
-			//			}
-			//			triangle.smoothPass++;
-			//		}
-			//		else
-			//		{
-			//			TCVector triNormal = (triangle.edgeNormals[index1] +
-			//				triangle.edgeNormals[index2]).normalize();
-
-			//			if (started)
-			//			{
-			//				bool hardEdge = false;
-
-			//				if (hardEdges.find(triangle.lineKeys[index1]) !=
-			//					hardEdges.end() ||
-			//					hardEdges.find(triangle.lineKeys[index2]) !=
-			//					hardEdges.end())
-			//				{
-			//					hardEdge = true;
-			//				}
-			//				if (!hardEdge && trySmooth(triNormal, normal))
-			//				{
-			//					triangle.smoothPass = 1;
-			//				}
-			//				else
-			//				{
-			//					done = false;
-			//				}
-			//			}
-			//			else
-			//			{
-			//				if (triangle.hardEdges[index1])
-			//				{
-			//					hardEdges.insert(triangle.lineKeys[index1]);
-			//				}
-			//				else
-			//				{
-			//					softEdges.insert(triangle.lineKeys[index1]);
-			//				}
-			//				if (triangle.hardEdges[index2])
-			//				{
-			//					hardEdges.insert(triangle.lineKeys[index2]);
-			//				}
-			//				else
-			//				{
-			//					softEdges.insert(triangle.lineKeys[index2]);
-			//				}
-			//				normal = triNormal;
-			//				triangle.smoothPass = 1;
-			//				started = true;
-			//			}
-			//		}
-			//	}
-			//	if (done)
-			//	{
-			//		for (i = 0; i < triangles.size(); i++)
-			//		{
-			//			SmoothTriangle &triangle = *triangles[i];
-
-			//			if (triangle.smoothPass == 1)
-			//			{
-			//				triangle.setNormal(point, normal);
-			//			}
-			//			triangle.smoothPass = 0;
-			//		}
-			//	}
-			//	else
-			//	{
-			//		lastNormal = normal;
-			//	}
-			//}
 		}
 	}
 	for (size_t i = 0; i < triangles.size(); i++)
@@ -2669,11 +2479,13 @@ void LDPovExporter::smoothGeometry(
 			const TCVector &point = indexToVert[triangle.vertexIndices[j]];
 			const TCVector &normal = triangle.normals[point];
 
+#ifdef _DEBUG
 			if (normals.find(normal) == normals.end())
 			{
 				assert(false);
 				debugPrintf("Normal mapping error.\n");
 			}
+#endif // _DEBUG
 			triangle.normalIndices[j] = normals[normal];
 		}
 	}
@@ -2770,19 +2582,50 @@ bool LDPovExporter::normalsCheck(const TCVector &normal1, TCVector normal2)
 	return false;
 }
 
-bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
+bool LDPovExporter::shouldSmooth(
+	const TCVector &normal1,
+	const TCVector &normal2)
 {
 	TCFloat dotProduct;
 	bool flip;
+	TCVector normal2Norm(normal2);
 
-	if (shouldFlipNormal(normal1, normal2))
+	normal2Norm.normalize();
+	if (shouldFlipNormal(normal1, normal2Norm))
 	{
-		dotProduct = normal2.dot(-normal1);
+		dotProduct = normal2Norm.dot(-normal1);
 		flip = true;
 	}
 	else
 	{
-		dotProduct = normal2.dot(normal1);
+		dotProduct = normal2Norm.dot(normal1);
+		flip = false;
+	}
+	// The following number is the cos of 25 degrees.  I don't want to
+	// calculate it on the fly.  We only want to apply this normal if the
+	// difference between it an the original normal is less than 25 degrees.
+	// If the normal only applies to two faces, then the faces have to be
+	// more than 50 degrees apart for this to happen.  Note that low-res
+	// studs have 45-degree angles between the faces, so 50 gives a little
+	// leeway.
+	return dotProduct > 0.906307787f;
+}
+
+bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
+{
+	TCFloat dotProduct;
+	bool flip;
+	TCVector normal2Norm(normal2);
+
+	normal2Norm.normalize();
+	if (shouldFlipNormal(normal1, normal2Norm))
+	{
+		dotProduct = normal2Norm.dot(-normal1);
+		flip = true;
+	}
+	else
+	{
+		dotProduct = normal2Norm.dot(normal1);
 		flip = false;
 	}
 	// The following number is the cos of 25 degrees.  I don't want to
@@ -2796,11 +2639,11 @@ bool LDPovExporter::trySmooth(const TCVector &normal1, TCVector &normal2)
 	{
 		if (flip)
 		{
-			normal2 = (normal2 - normal1).normalize();
+			normal2 -= normal1;
 		}
 		else
 		{
-			normal2 = (normal2 + normal1).normalize();
+			normal2 += normal1;
 		}
 		return true;
 	}

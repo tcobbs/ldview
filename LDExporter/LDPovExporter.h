@@ -180,6 +180,7 @@ protected:
 		TrianglePPointsMap &trianglePoints, SizeTVectorMap &indexToVert,
 		const TCVector &point1, const TCVector &point2, const TCVector &point3);
 	bool trySmooth(const TCVector &normal1, TCVector &normal2);
+	bool shouldSmooth(const TCVector &normal1, const TCVector &normal2);
 	static bool shouldFlipNormal(const TCVector &normal1,
 		const TCVector &normal2);
 	void endMesh2Section(void);
