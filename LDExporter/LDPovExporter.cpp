@@ -2127,17 +2127,27 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 	int faceCount = 0;
 	ShapeList::const_iterator it;
 
-	startMesh2();
-	startMesh2Section("vertex_vectors");
 	for (it = list.begin(); it != list.end(); it++)
 	{
 		const TCVectorVector &points = it->points;
 
-		if (points.size() == 3 || points.size() == 4)
+		if (points.size() == 3)
 		{
-			vertexCount += points.size();
+			faceCount += 1;
+			vertexCount += 3;
+		}
+		else if (points.size() == 4)
+		{
+			faceCount += 2;
+			vertexCount += 4;
 		}
 	}
+	if (faceCount == 0 || vertexCount == 0)
+	{
+		return;
+	}
+	startMesh2();
+	startMesh2Section("vertex_vectors");
 	fprintf(m_pPovFile, "%d,\n\t\t\t", vertexCount);
 	for (it = list.begin(); it != list.end(); it++)
 	{
@@ -2151,19 +2161,6 @@ void LDPovExporter::writeMesh2(int colorNumber, const ShapeList &list)
 	endMesh2Section();
 	total = 0;
 	startMesh2Section("face_indices");
-	for (it = list.begin(); it != list.end(); it++)
-	{
-		const TCVectorVector &points = it->points;
-
-		if (points.size() == 3)
-		{
-			faceCount += 1;
-		}
-		else if (points.size() == 4)
-		{
-			faceCount += 2;
-		}
-	}
 	fprintf(m_pPovFile, "%d,\n\t\t\t", faceCount);
 	for (it = list.begin(); it != list.end(); it++)
 	{
