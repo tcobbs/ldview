@@ -266,11 +266,11 @@ INT_PTR CALLBACK CUIDialog::staticDialogProc(
 	{
 		dialog = (CUIDialog *)lParam;
 		dialog->hWindow = hDlg;
-		::SetWindowLongPtr(hDlg, GWLP_USERDATA, (LONG_PTR)dialog);
+		SetWindowLongPtrUC(hDlg, GWLP_USERDATA, (LONG_PTR)dialog);
 	}
 	else
 	{
-		dialog = (CUIDialog *)::GetWindowLongPtr(hDlg, GWLP_USERDATA);
+		dialog = (CUIDialog *)GetWindowLongPtrUC(hDlg, GWLP_USERDATA);
 	}
 	if (dialog)
 	{
@@ -521,9 +521,9 @@ void CUIDialog::setIcon(char* templateName)
 
 CUIDialog *CUIDialog::fromHandle(HWND hWnd)
 {
-	if ((DLGPROC)GetWindowLongPtr(hWnd, DWLP_DLGPROC) == staticDialogProc)
+	if ((DLGPROC)GetWindowLongPtrUC(hWnd, DWLP_DLGPROC) == staticDialogProc)
 	{
-		return (CUIDialog *)GetWindowLongPtr(hWnd, GWL_USERDATA);
+		return (CUIDialog *)GetWindowLongPtrUC(hWnd, GWL_USERDATA);
 	}
 	return NULL;
 }

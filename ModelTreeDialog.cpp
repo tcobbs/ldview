@@ -195,11 +195,11 @@ LRESULT ModelTreeDialog::doNotify(int controlId, LPNMHDR notification)
 	{
 		switch (notification->code)
 		{
-		case TVN_ITEMEXPANDING:
+		case TVN_ITEMEXPANDINGUC:
 			return doTreeItemExpanding((LPNMTREEVIEW)notification);
 		case TVN_KEYDOWN:
 			return doTreeKeyDown((LPNMTVKEYDOWN)notification);
-		case TVN_SELCHANGED:
+		case TVN_SELCHANGEDUC:
 			return doTreeSelChanged((LPNMTREEVIEW)notification);
 		case NM_CUSTOMDRAW:
 			return doTreeCustomDraw((LPNMTVCUSTOMDRAW)notification);
