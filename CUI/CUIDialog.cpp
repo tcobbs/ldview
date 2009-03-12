@@ -234,23 +234,23 @@ LRESULT CUIDialog::doCommand(
 
 void CUIDialog::createDialog(int templateNumber, HWND hParentWnd /*= NULL*/)
 {
-	createDialog(MAKEINTRESOURCE(templateNumber), hParentWnd);
+	createDialog(MAKEINTRESOURCEUC(templateNumber), hParentWnd);
 }
 
-void CUIDialog::createDialog(char* templateName, HWND hParentWnd /*= NULL*/)
+void CUIDialog::createDialog(CUCSTR templateName, HWND hParentWnd /*= NULL*/)
 {
-	CreateDialogParam(hInstance, templateName, hParentWnd,
+	CreateDialogParamUC(hInstance, templateName, hParentWnd,
 		staticDialogProc, (LPARAM)this);
 }
 
 INT_PTR CUIDialog::doModal(UINT dialogId, HWND hWndParent /*= NULL*/)
 {
-	return doModal(MAKEINTRESOURCEA(dialogId), hWndParent);
+	return doModal(MAKEINTRESOURCEUC(dialogId), hWndParent);
 }
 
-INT_PTR CUIDialog::doModal(LPCTSTR dialogName, HWND hWndParent /*= NULL*/)
+INT_PTR CUIDialog::doModal(CUCSTR dialogName, HWND hWndParent /*= NULL*/)
 {
-	return ::DialogBoxParam(hInstance, dialogName, hWndParent, staticDialogProc,
+	return DialogBoxParamUC(hInstance, dialogName, hWndParent, staticDialogProc,
 		(LPARAM)this);
 }
 

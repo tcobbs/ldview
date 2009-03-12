@@ -1288,8 +1288,6 @@ bool TCLocalStrings::instSetStringTable(const wchar_t *stringTable,
 					stringHasSuffix(line, L"]"))
 				{
 					sectionFound = true;
-					debugPrintf("Code Page setting found in Unicode string "
-						"file.  Ignoring.\n");
 				}
 				// Note that we are ignoring all lines until we find the section
 			}

@@ -56,6 +56,7 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 		(TCAlertCallback)&ToolbarStrip::modelAlertCallback);
 	m_commandMap[ID_TOOLS_ERRORS] = IDR_TB_ERRORS;
 	m_commandMap[ID_VIEW_EXAMINE] = IDR_TB_EXAMINE;
+	m_commandMap[ID_VIEW_EXAMINE_LAT_LONG] = IDR_TB_LATLONROT;
 	m_commandMap[ID_VIEW_FLYTHROUGH] = IDR_TB_FLYTHROUGH;
 	m_commandMap[ID_VIEW_FULLSCREEN] = IDR_TB_FULLSCREEN;
 	m_commandMap[ID_FILE_OPEN] = IDR_TB_OPEN;
@@ -78,7 +79,13 @@ m_showSteps(TCUserDefaults::boolForKey(SHOW_STEPS_TOOLBAR_KEY, true, false))
 	m_commandMap[ID_VIEW_TOP] = IDR_TB_VIEW_TOP;
 	m_commandMap[ID_VIEW_BOTTOM] = IDR_TB_VIEW_BOTTOM;
 	m_commandMap[ID_VIEW_ISO] = IDR_TB_VIEW_2_3RDS;
+	m_commandMap[ID_VIEW_SPECIFYLATLON] = IDR_TB_LATLON;
 	m_commandMap[ID_PRIMITIVES_TEXTURESTUDS] = IDR_TB_STUD;
+	m_commandMap[ID_FILE_EXPORT] = IDR_TB_EXPORT;
+	m_commandMap[ID_FILE_PRINT] = IDR_TB_PRINT;
+	m_commandMap[ID_TOOLS_PARTSLIST] = IDR_TB_PARTSLIST;
+	m_commandMap[ID_TOOLS_MPD] = IDR_TB_MPD;
+	m_commandMap[ID_TOOLS_POV_CAMERA] = IDR_TB_POVCAMERA;
 }
 
 ToolbarStrip::~ToolbarStrip(void)
@@ -618,6 +625,7 @@ BOOL ToolbarStrip::doInitDialog(HWND /*hKbControl*/)
 	windowGetText(IDC_NUM_STEPS, m_numStepsFormat);
 	initMainToolbar();
 	initStepToolbar();
+	checksReflect();
 	updateMenus();
 	initLayout();
 	updateStep();
@@ -673,6 +681,12 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_TOOLS_MODELTREE:
 	case ID_TOOLS_BOUNDINGBOX:
 	case ID_VIEW_ALWAYSONTOP:
+	case ID_FILE_EXPORT:
+	case ID_FILE_PRINT:
+	case ID_VIEW_EXAMINE_LAT_LONG:
+	case ID_TOOLS_PARTSLIST:
+	case ID_TOOLS_MPD:
+	case ID_TOOLS_POV_CAMERA:
 		// Forward all these messages to LDViewWindow.
 		return SendMessage(m_ldviewWindow->getHWindow(), WM_COMMAND,
 			MAKEWPARAM(commandId, notifyCode), (LPARAM)control);
@@ -781,15 +795,6 @@ LRESULT ToolbarStrip::doCommand(
 	case ID_VIEW_EXAMINE:
 		doViewMode();
 		break;
-	//case ID_TOOLS_ERRORS:
-	//	m_ldviewWindow->getModelWindow()->showErrors();
-	//	break;
-	//case ID_VIEW_FULLSCREEN:
-	//	m_ldviewWindow->switchModes();
-	//	break;
-	//case ID_VIEW_ZOOMTOFIT:
-	//	m_ldviewWindow->zoomToFit();
-	//	break;
 	default:
 		return CUIDialog::doCommand(notifyCode, commandId, control);
 	}
@@ -969,6 +974,8 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		m_partBBoxes = m_prefs->getBoundingBoxesOnly();
 		m_smoothCurves = m_prefs->getPerformSmoothing();
 		m_transDefaultColor = m_prefs->getTransDefaultColor();
+		m_examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
+			LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
 		m_modelBoundingBox = m_ldviewWindow->isBoundingBoxVisible();
 		m_topmost = m_ldviewWindow->isTopmost();
 		syncViewMode();
@@ -995,6 +1002,9 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		viewCommandIds.push_back(ID_VIEW_FLYTHROUGH);
 		addTbStateButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
+		addTbCheckButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ViewLatLonRot")),
+			ID_VIEW_EXAMINE_LAT_LONG, m_examineLatLong);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
@@ -1030,6 +1040,10 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("LowQualityStuds")), IDC_STUD_QUALITY,
 			m_lowStuds);
+		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Export")),
+			ID_FILE_EXPORT);
+		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Print")),
+			ID_FILE_PRINT);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("FullScreen")), ID_VIEW_FULLSCREEN);
 		addTbCheckButtonInfo(m_mainButtonInfos,
@@ -1050,14 +1064,22 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("BottomView")), ID_VIEW_BOTTOM);
 		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("LatLonView")), ID_VIEW_SPECIFYLATLON);
+		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("TwoThirdsView")), ID_VIEW_ISO);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("ErrorsAndWarnings")), ID_TOOLS_ERRORS);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("PartsList")), ID_TOOLS_PARTSLIST);
 		addTbButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ModelTree")), ID_TOOLS_MODELTREE);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ModelBBox")), ID_TOOLS_BOUNDINGBOX,
 			m_modelBoundingBox);
 		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("ErrorsAndWarnings")), ID_TOOLS_ERRORS);
+			TCLocalStrings::get(_UC("MPDModelSelection")), ID_TOOLS_MPD);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("POVCameraInfo")), ID_TOOLS_POV_CAMERA);
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Help")),
 			ID_HELP_CONTENTS);
 	}
@@ -1859,6 +1881,7 @@ void ToolbarStrip::viewModeReflect(void)
 	bi.dwMask = TBIF_IMAGE;
 	bi.iImage = bmpIndex;
 	SendMessage(m_hToolbar, TB_SETBUTTONINFO, ID_VIEW_EXAMINE, (LPARAM)&bi);
+	checksReflect();
 }
 
 void ToolbarStrip::checksReflect(void)
@@ -1892,6 +1915,19 @@ void ToolbarStrip::checksReflect(void)
 		m_prefs->getCutawayMode() == LDVCutawayStencil, IDC_CUTAWAY);
 	bool dummy = !m_prefs->getTextureStuds();
 	checkReflect(dummy, !dummy, ID_PRIMITIVES_TEXTURESTUDS);
+	if (m_viewMode == LDInputHandler::VMExamine)
+	{
+		checkReflect(m_examineLatLong,
+			TCUserDefaults::longForKey(EXAMINE_MODE_KEY,
+			LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong,
+			ID_VIEW_EXAMINE_LAT_LONG);
+		enableMainToolbarButton(ID_VIEW_EXAMINE_LAT_LONG, true);
+	}
+	else
+	{
+		checkReflect(m_examineLatLong, false, ID_VIEW_EXAMINE_LAT_LONG);
+		enableMainToolbarButton(ID_VIEW_EXAMINE_LAT_LONG, false);
+	}
 }
 
 LRESULT ToolbarStrip::doEnterMenuLoop(bool /*isTrackPopupMenu*/)

@@ -3130,6 +3130,11 @@ LRESULT LDViewWindow::switchExamineLatLong(void)
 	//TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
 	reflectViewMode();
 	updateStatusParts();
+	if (toolbarStrip != NULL)
+	{
+		toolbarStrip->checksReflect();
+	}
+	modelWindow->forceRedraw();
 	return 0;
 }
 

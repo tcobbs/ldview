@@ -191,6 +191,7 @@ protected:
 	bool m_modelBoundingBox;
 	bool m_topmost;
 	bool m_wireframeCutaway;
+	bool m_examineLatLong;
 	LDInputHandler::ViewMode m_viewMode;
 
 	bool m_showMain;
