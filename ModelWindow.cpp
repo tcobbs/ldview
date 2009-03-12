@@ -1216,10 +1216,6 @@ BOOL ModelWindow::doErrorTreeNotify(LPNMHDR notification)
 //			debugPrintf("No selection.\n");
 		}
 	}
-	else if (notification->code == TVN_SELCHANGED)
-	{
-//		LPNMTREEVIEW lpnmtv = (LPNMTREEVIEW)notification;
-	}
 	else if (notification->code == TVN_KEYDOWN)
 	{
 		return doErrorTreeKeyDown((LPNMTVKEYDOWN)notification);

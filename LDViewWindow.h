@@ -21,31 +21,6 @@ typedef struct
 	int depth;
 } VideoModeT;
 
-//class TbButtonInfo: public TCObject
-//{
-//public:
-//	TbButtonInfo(void);
-//	CUCSTR getTooltipText(void) { return tooltipText; }
-//	void setTooltipText(CUCSTR value);
-//	int getCommandId(void) { return commandId; }
-//	void setCommandId(int value) { commandId = value; }
-//	int getBmpId(int stdBitmapStartId, int tbBitmapStartId);
-//	void setStdBmpId(int value) { stdBmpId = value; }
-//	void setTbBmpId(int value) { tbBmpId = value; }
-//	BYTE getState(void) { return state; }
-//	void setState(BYTE value) { state = value; }
-//	BYTE getStyle(void) { return style; }
-//	void setStyle(BYTE value) { style = value; }
-//protected:
-//	virtual void dealloc(void);
-//
-//	UCSTR tooltipText;
-//	int commandId;
-//	int stdBmpId;
-//	int tbBmpId;
-//	BYTE state;
-//	BYTE style;
-//};
 
 class ModelWindow;
 class TCStringArray;
@@ -58,8 +33,6 @@ class LDLibraryUpdater;
 #endif // !_NO_BOOST
 
 template <class Type> class TCTypedObjectArray;
-
-//typedef TCTypedObjectArray<TbButtonInfo> TbButtonInfoArray;
 
 #define LIBRARY_UPDATE_FINISHED 1
 #define LIBRARY_UPDATE_CANCELED 2
@@ -125,11 +98,9 @@ class LDViewWindow: public CUIWindow
 		static void setLastOpenFile(const char* filename, char* pathKey = NULL);
 		static std::string browseForDir(const char *prompt,
 			const char *initialDir);
-		//static bool newToolbar(void);
 	protected:
 		virtual ~LDViewWindow(void);
 		static BOOL verifyLDrawDir(char*);
-//		static void stripTrailingSlash(char*);
 		static BOOL promptForLDrawDir(const char *prompt = NULL);
 
 		virtual BOOL verifyLDrawDir(bool forceChoose = false);
@@ -155,7 +126,6 @@ class LDViewWindow: public CUIWindow
 		virtual LRESULT doDrawItem(HWND hControlWnd,
 			LPDRAWITEMSTRUCT drawItemStruct);
 		virtual LRESULT doMove(int newX, int newY);
-		virtual LRESULT doNotify(int controlId, LPNMHDR notification);
 		virtual BOOL doDialogSize(HWND hDlg, WPARAM sizeType, int newWidth,
 			int newHeight);
 		virtual BOOL doDialogGetMinMaxInfo(HWND hDlg, LPMINMAXINFO minMaxInfo);
@@ -262,8 +232,6 @@ class LDViewWindow: public CUIWindow
 		virtual void reflectToolbar(void);
 		virtual void reflectPolling(void);
 		virtual void reflectVideoMode(void);
-		//virtual void toolbarCheckReflect(bool &value, bool prefsValue,
-		//	LPARAM commandID);
 		virtual void toolbarChecksReflect(void);
 		virtual int getStatusBarHeight(void);
 		virtual int getDockedHeight(void);
@@ -281,38 +249,8 @@ class LDViewWindow: public CUIWindow
 		virtual BOOL doMoveExtraDirDown(void);
 		virtual void updateExtraDirsEnabled(void);
 		virtual BOOL doExtraDirSelected(void);
-//		virtual LRESULT doTimer(UINT timerID);
 		virtual void readVersionInfo(void);
 		virtual void createModelWindow(void);
-		//virtual void doWireframe(void);
-		//virtual void doSeams(void);
-		//virtual void doEdges(void);
-		//virtual void doPrimitiveSubstitution(void);
-		//virtual void doLighting(void);
-		//virtual void doBfc(void);
-		//virtual void doToolbarDropDown(LPNMTOOLBAR toolbarNot);
-		//virtual void doViewAngle(void);
-		//virtual void doFog(void);
-		//virtual void doRemoveHiddenLines(void);
-		//virtual void doShowEdgesOnly(void);
-		//virtual void doConditionalLines(void);
-		//virtual void doHighQualityEdges(void);
-		//virtual void doAlwaysBlack(void);
-		//virtual void doTextureStuds(void);
-		//virtual void doQualityLighting(void);
-		//virtual void doSubduedLighting(void);
-		//virtual void doSpecularHighlight(void);
-		//virtual void doAlternateLighting(void);
-		//virtual void doDrawLightDats(void);
-		//virtual void doOptionalStandardLight(void);
-		//virtual void doRedBackFaces(void);
-		//virtual void doGreenFrontFaces(void);
-		//virtual bool doToolbarCheck(bool &value, LPARAM commandId);
-		//virtual void updateWireframeMenu(void);
-		//virtual void updateEdgesMenu(void);
-		//virtual void updatePrimitivesMenu(void);
-		//virtual void updateLightingMenu(void);
-		//virtual void updateBFCMenu(void);
 		virtual LRESULT generatePartsList(void);
 		virtual LRESULT showModelTree(void);
 		virtual LRESULT showMpd(void);
@@ -373,14 +311,7 @@ class LDViewWindow: public CUIWindow
 		HMENU hStandardSizesMenu;
 		HMENU hStepMenu;
 		HMENU hToolsMenu;
-		//HMENU hToolbarMenu;
-		//HMENU hWireframeToolbarMenu;
-		//HMENU hEdgesToolbarMenu;
-		//HMENU hPrimitivesToolbarMenu;
-		//HMENU hLightingToolbarMenu;
-		//HMENU hBFCToolbarMenu;
 		bool loading;
-//		bool modelWindowShown;
 		CUIWindowResizer *openGLInfoWindoResizer;
 		HWND hOpenGLStatusBar;
 		HICON hExamineIcon;
@@ -396,10 +327,6 @@ class LDViewWindow: public CUIWindow
 #endif // !_NO_BOOST
 		char *productVersion;
 		char *legalCopyright;
-		//TbButtonInfoVector tbButtonInfos;
-		//TbButtonInfoArray *tbButtonInfos;
-		//int stdBitmapStartId;
-		//int tbBitmapStartId;
 		LDViewPreferences *prefs;
 		bool drawWireframe;
 		bool seams;

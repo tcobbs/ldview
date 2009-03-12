@@ -87,7 +87,7 @@ CUIWindow::CUIWindow(CUCSTR windowTitle, HINSTANCE hInstance, int x, int y,
 CUIWindow::CUIWindow(CUIWindow* parentWindow, int x, int y, int width,
 					 int height)
 		  :windowTitle(copyString(_UC(""))),
-		   hInstance(parentWindow->getHInstance()/*(void*)GetWindowLong(parentWindow, GWL_HINSTANCE)*/),
+		   hInstance(parentWindow->getHInstance()),
 		   x(x),
 		   y(y),
 		   width(width),
@@ -537,7 +537,7 @@ LRESULT CUIWindow::doDestroy(void)
 LRESULT CUIWindow::doNCDestroy(void)
 {
 	// Clean up.
-	SetWindowLong(hWindow, GWL_USERDATA, (long)NULL);
+	SetWindowLongPtrUC(hWindow, GWL_USERDATA, (long)NULL);
 	hWindow = NULL;
 	hdc = NULL;
 	hParentWindow = NULL;
@@ -1494,7 +1494,7 @@ LRESULT CUIWindow::windowProc(HWND hWnd, UINT message, WPARAM wParam,
 LRESULT CALLBACK CUIWindow::staticWindowProc(HWND hWnd, UINT message,
 											WPARAM wParam, LPARAM lParam)
 {
-	CUIWindow* cuiWindow = (CUIWindow*)GetWindowLong(hWnd, GWL_USERDATA);
+	CUIWindow* cuiWindow = (CUIWindow*)GetWindowLongPtrUC(hWnd, GWL_USERDATA);
 
 	if (!cuiWindow)
 	{
@@ -1505,7 +1505,7 @@ LRESULT CALLBACK CUIWindow::staticWindowProc(HWND hWnd, UINT message,
 			cuiWindow = (CUIWindow*)(createStruct->lpCreateParams);
 			if (cuiWindow)
 			{
-				SetWindowLong(hWnd, GWL_USERDATA, (long)cuiWindow);
+				SetWindowLongPtrUC(hWnd, GWL_USERDATA, (long)cuiWindow);
 			}
 		}
 		else
@@ -1831,11 +1831,11 @@ BOOL CALLBACK CUIWindow::staticDialogProc(HWND hDlg, UINT message,
 	if (message == WM_INITDIALOG)
 	{
 		cuiWindow = (CUIWindow*)lParam;
-		SetWindowLong(hDlg, DWL_USER, lParam);
+		SetWindowLongPtrUC(hDlg, DWL_USER, lParam);
 	}
 	else
 	{
-		cuiWindow = (CUIWindow*)GetWindowLong(hDlg, DWL_USER);
+		cuiWindow = (CUIWindow*)GetWindowLongPtrUC(hDlg, DWL_USER);
 	}
 	if (cuiWindow)
 	{
@@ -2083,7 +2083,7 @@ BOOL CUIWindow::createMainWindow(void)
 			return FALSE;
 		}
 	}
-	SetWindowLong(hWindow, GWL_USERDATA, (long)this);
+	SetWindowLongPtrUC(hWindow, GWL_USERDATA, (long)this);
 	return TRUE;
 }
 
@@ -2113,7 +2113,7 @@ BOOL CUIWindow::createSubWindow(void)
 			return FALSE;
 		}
 	}
-	SetWindowLong(hWindow, GWL_USERDATA, (long)this);
+	SetWindowLongPtrUC(hWindow, GWL_USERDATA, (long)this);
 	return TRUE;
 }
 
