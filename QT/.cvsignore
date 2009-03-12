@@ -1,7 +1,7 @@
 .qmake.internal.cache
 LDView
 .xvpics
-Makefile
+Makefile*
 LDView3.tgz
 *.deb
 *.qm
@@ -14,3 +14,6 @@ LDView.app
 distrib
 LDView.exe
 LDViewMessages.ini
+qmake_image_collection.cpp
+*.rc
+
