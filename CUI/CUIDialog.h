@@ -15,12 +15,12 @@ public:
 	CUIDialog(CUIWindow* parentWindow);
 	CUIDialog(HINSTANCE hInstance, HWND hParentWindow = NULL);
 	virtual INT_PTR doModal(UINT dialogId, HWND hWndParent = NULL);
-	virtual INT_PTR doModal(LPCSTR dialogName, HWND hWndParent = NULL);
+	virtual INT_PTR doModal(CUCSTR dialogName, HWND hWndParent = NULL);
 	virtual void setIcon(int templateNumber);
 	virtual void setIcon(char* templateName);
 
 	virtual void createDialog(int templateNumber, HWND hParentWnd = NULL);
-	virtual void createDialog(char* templateName, HWND hParentWnd = NULL);
+	virtual void createDialog(CUCSTR templateName, HWND hParentWnd = NULL);
 
 	virtual bool checkGet(int buttonId);
 	virtual void checkSet(int buttonId, bool value);

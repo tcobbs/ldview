@@ -116,6 +116,13 @@
 #define IDR_TB_VIEW_BOTTOM              522
 #define IDR_TB_VIEW_2_3RDS              523
 #define IDR_TB_STUD                     524
+#define IDR_TB_EXPORT                   525
+#define IDR_TB_PRINT                    526
+#define IDR_TB_LATLON                   527
+#define IDR_TB_LATLONROT                528
+#define IDR_TB_MPD                      529
+#define IDR_TB_PARTSLIST                530
+#define IDR_TB_POVCAMERA                531
 #define IDC_LIGHTING_QUALITY            1001
 #define IDC_FRAME_RATE                  1002
 #define IDC_STUD_QUALITY                1002

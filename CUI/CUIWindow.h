@@ -40,6 +40,9 @@ class CUIWindowResizer;
 #define TOOLTIPS_CLASSUC TOOLTIPS_CLASSA
 #define TOOLINFOUC TOOLINFOA
 #define NMTOOLBARUC NMTOOLBARA
+#define MAKEINTRESOURCEUC MAKEINTRESOURCEA
+#define CreateDialogParamUC CreateDialogParamA
+#define DialogBoxParamUC DialogBoxParamA
 #else // TC_NO_UNICODE
 #define LPNMTTDISPINFOUC LPNMTTDISPINFOW
 #define LPNMTBGETINFOTIPUC LPNMTBGETINFOTIPW
@@ -57,6 +60,9 @@ class CUIWindowResizer;
 #define TOOLTIPS_CLASSUC TOOLTIPS_CLASSW
 #define TOOLINFOUC TOOLINFOW
 #define NMTOOLBARUC NMTOOLBARW
+#define MAKEINTRESOURCEUC MAKEINTRESOURCEW
+#define CreateDialogParamUC CreateDialogParamW
+#define DialogBoxParamUC DialogBoxParamW
 #endif // TC_NO_UNICODE
 
 class CUIExport CUIWindow : public TCAlertSender
@@ -99,7 +105,7 @@ class CUIExport CUIWindow : public TCAlertSender
 		virtual UINT setTimer(UINT timerID, UINT elapse);
 		virtual BOOL killTimer(UINT timerID);
 		HWND getHParentWindow(void) { return hParentWindow; }
-		virtual HWND createDialog(char* templateName,
+		virtual HWND createDialog(UCSTR templateName,
 			BOOL asChildWindow = TRUE, DLGPROC dialogProc = staticDialogProc,
 			LPARAM lParam = 0);
 		virtual HWND createDialog(int templateNumber,

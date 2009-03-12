@@ -1699,8 +1699,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,0,1,15
- PRODUCTVERSION 4,0,1,15
+ FILEVERSION 4,0,1,16
+ PRODUCTVERSION 4,0,1,16
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1718,14 +1718,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.0.1o test build\0"
+            VALUE "FileVersion", "4.0.1p test build\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2009 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.0.1o test build\0"
+            VALUE "ProductVersion", "4.0.1p test build\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -1751,22 +1751,29 @@ IDR_EXPORTER_STRINGS    RCDATA  DISCARDABLE     "LDExporter\\LDExportMessages.in
 IDC_ALL_CONDITIONAL     RCDATA  DISCARDABLE     "Icons\\toolbar_all_cond.png"
 IDC_SHOW_AXES           RCDATA  DISCARDABLE     "Icons\\toolbar_axes.png"
 IDC_BFC                 RCDATA  DISCARDABLE     "Icons\\toolbar_bfc.png"
-IDC_CONDITIONAL_CONTROLS RCDATA  DISCARDABLE     "Icons\\toolbar_cond_ctrl.png"
+IDC_CONDITIONAL_CONTROLS RCDATA DISCARDABLE     "Icons\\toolbar_cond_ctrl.png"
 IDC_HIGHLIGHTS          RCDATA  DISCARDABLE     "Icons\\toolbar_edge.png"
 IDR_TB_ERRORS           RCDATA  DISCARDABLE     "Icons\\toolbar_errors.png"
 IDR_TB_EXAMINE          RCDATA  DISCARDABLE     "Icons\\toolbar_examine.png"
+IDR_TB_EXPORT           RCDATA  DISCARDABLE     "Icons\\toolbar_export.png"
 IDC_FLAT_SHADING        RCDATA  DISCARDABLE     "Icons\\toolbar_flat.png"
 IDR_TB_FLYTHROUGH       RCDATA  DISCARDABLE     "Icons\\toolbar_fly.png"
 IDR_TB_FULLSCREEN       RCDATA  DISCARDABLE     "Icons\\toolbar_fullscreen.png"
 IDR_TB_HELP             RCDATA  DISCARDABLE     "Icons\\toolbar_help.png"
 IDC_LIGHTING            RCDATA  DISCARDABLE     "Icons\\toolbar_light.png"
+IDR_TB_LATLON           RCDATA  DISCARDABLE     "Icons\\toolbar_latlon.png"
+IDR_TB_LATLONROT        RCDATA  DISCARDABLE     "Icons\\toolbar_latlonrot.png"
 IDC_STUD_QUALITY        RCDATA  DISCARDABLE     "Icons\\toolbar_low_studs.png"
 IDR_TB_MODELBBOX        RCDATA  DISCARDABLE     "Icons\\toolbar_model_bbox.png"
 IDR_TB_MODELTREE        RCDATA  DISCARDABLE     "Icons\\toolbar_model_tree.png"
+IDR_TB_MPD              RCDATA  DISCARDABLE     "Icons\\toolbar_mpd.png"
 IDR_TB_OPEN             RCDATA  DISCARDABLE     "Icons\\toolbar_open.png"
 IDC_PART_BOUNDING_BOXES RCDATA  DISCARDABLE     "Icons\\toolbar_part_bbox.png"
+IDR_TB_PARTSLIST        RCDATA  DISCARDABLE     "Icons\\toolbar_partslist.png"
+IDR_TB_POVCAMERA        RCDATA  DISCARDABLE     "Icons\\toolbar_povcamera.png"
 IDR_TB_PREFERENCES      RCDATA  DISCARDABLE     "Icons\\toolbar_preferences.png"
-IDC_PRIMITIVE_SUBSTITUTION RCDATA  DISCARDABLE     "Icons\\toolbar_primsubs.png"
+IDC_PRIMITIVE_SUBSTITUTION RCDATA DISCARDABLE   "Icons\\toolbar_primsubs.png"
+IDR_TB_PRINT            RCDATA  DISCARDABLE     "Icons\\toolbar_print.png"
 IDC_RANDOM_COLORS       RCDATA  DISCARDABLE     "Icons\\toolbar_random.png"
 IDR_TB_RELOAD           RCDATA  DISCARDABLE     "Icons\\toolbar_reload.png"
 IDC_SEAMS               RCDATA  DISCARDABLE     "Icons\\toolbar_seams.png"

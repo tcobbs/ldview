@@ -2179,7 +2179,10 @@ void ModelWindow::showErrorsIfNeeded(BOOL onlyIfNeeded)
 		}
 		if (hErrorWindow)
 		{
+			wchar_t text[1024];
+
 			populateErrorTree();
+			GetWindowTextW(hErrorWindow, text, 1024);
 			if (!onlyIfNeeded || (errorCount &&
 				TCUserDefaults::longForKey(SHOW_ERRORS_KEY, 1, false)))
 			{
