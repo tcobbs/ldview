@@ -9,10 +9,11 @@
         {CLASS = LDrawModelView; LANGUAGE = ObjC; SUPERCLASS = NSOpenGLView; }, 
         {
             ACTIONS = {
-                actions = id; 
                 customizeToolbar = id; 
                 features = id; 
+                fileActions = id; 
                 open = id; 
+                otherActions = id; 
                 partsAuthor = id; 
                 preferences = id; 
                 print = id; 
@@ -26,19 +27,30 @@
             CLASS = ModelWindow; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                actionsSegments = NSSegmentedControl; 
+                allConditionalsSegments = NSSegmentedControl; 
                 axesSegments = NSSegmentedControl; 
                 bfcSegments = NSSegmentedControl; 
+                conditionalControlsSegments = NSSegmentedControl; 
                 customizeSegments = NSSegmentedControl; 
                 edgesSegments = NSSegmentedControl; 
+                errorsSegments = NSSegmentedControl; 
+                exportButton = NSSegmentedControl; 
                 featuresSegments = NSSegmentedControl; 
+                fileActionsSegments = NSSegmentedControl; 
+                fullScreenSegments = NSSegmentedControl; 
+                helpSegments = NSSegmentedControl; 
                 latField = NSTextField; 
                 latLonBox = NSBox; 
                 lightingSegments = NSSegmentedControl; 
                 lonField = NSTextField; 
+                modelTreeSegments = NSSegmentedControl; 
                 modelView = LDrawModelView; 
+                mpdSegments = NSSegmentedControl; 
                 openButton = NSSegmentedControl; 
+                otherActionsSegments = NSSegmentedControl; 
                 partsAuthorSegments = NSSegmentedControl; 
+                partsListSegments = NSSegmentedControl; 
+                povCameraSegments = NSSegmentedControl; 
                 prefsSegments = NSSegmentedControl; 
                 primitivesSegments = NSSegmentedControl; 
                 printSegments = NSSegmentedControl; 
@@ -58,10 +70,21 @@
                 stepPrevSegments2 = NSSegmentedControl; 
                 stepSegments = NSSegmentedControl; 
                 stepSegments2 = NSSegmentedControl; 
+                viewBackSegments = NSSegmentedControl; 
+                viewBottomSegments = NSSegmentedControl; 
+                viewFrontSegments = NSSegmentedControl; 
+                viewLatLonSegments = NSSegmentedControl; 
+                viewLeftSegments = NSSegmentedControl; 
                 viewModeSegments = NSSegmentedControl; 
+                viewRightSegments = NSSegmentedControl; 
+                viewSegments1 = NSSegmentedControl; 
+                viewSegments2 = NSSegmentedControl; 
+                viewTopSegments = NSSegmentedControl; 
+                viewTwoThirdsSegments = NSSegmentedControl; 
                 viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 
                 wireframeSegments = NSSegmentedControl; 
+                zoomToFitSegments = NSSegmentedControl; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
