@@ -170,13 +170,6 @@ bool LDLCommentLine::isPrimitiveMeta(void) const
 	int word = 0;
 	int numWords = m_words->getCount();
 
-	if (m_parentModel != NULL && m_parentModel->getName() != NULL)
-	{
-		if (strcasestr(m_parentModel->getFilename(), "t04q") != NULL)
-		{
-			debugPrintf("break.\n");
-		}
-	}
 	if (numWords == 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 		(strcasecmp((*m_words)[1], "primitive") == 0 ||
 		strcasecmp((*m_words)[1], "48_primitive") == 0 ||
@@ -233,13 +226,6 @@ bool LDLCommentLine::isPartMeta(void) const
 	int word = 0;
 	int numWords = m_words->getCount();
 
-	if (m_parentModel != NULL && m_parentModel->getName() != NULL)
-	{
-		if (strcasestr(m_parentModel->getFilename(), "t04q") != NULL)
-		{
-			debugPrintf("break.\n");
-		}
-	}
 	if (numWords >= 2 && strcasecmp((*m_words)[0], "!ldraw_org") == 0 &&
 		(strcasecmp((*m_words)[1], "part") == 0 ||
 		strcasecmp((*m_words)[1], "unofficial_part") == 0))
