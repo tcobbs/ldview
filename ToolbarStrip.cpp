@@ -1002,11 +1002,11 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		viewCommandIds.push_back(ID_VIEW_FLYTHROUGH);
 		addTbStateButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ViewMode")), viewCommandIds, m_viewMode);
+		addTbButtonInfo(m_mainButtonInfos,
+			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("ViewLatLonRot")),
 			ID_VIEW_EXAMINE_LAT_LONG, m_examineLatLong);
-		addTbButtonInfo(m_mainButtonInfos,
-			TCLocalStrings::get(_UC("Preferences")), ID_EDIT_PREFERENCES);
 		addTbCheckButtonInfo(m_mainButtonInfos,
 			TCLocalStrings::get(_UC("TransDefaultColor")),
 			IDC_TRANS_DEFAULT_COLOR, m_transDefaultColor);
