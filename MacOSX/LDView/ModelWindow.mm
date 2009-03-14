@@ -162,6 +162,10 @@ enum
 	}
 	size = [control frame].size;
 	size.height += 1.0f;
+	if (label == nil)
+	{
+		label = [OCLocalStrings get:identifier];
+	}
 	[item setLabel:label];
 	[item setPaletteLabel:label];
 	[item setToolTip:label];
@@ -230,42 +234,56 @@ enum
 	[self updateSegments:segments states:states alternates:nil];
 }
 
-- (void)setupSegments:(NSSegmentedControl *)segments toolTips:(NSArray *)toolTips alternates:(NSArray *)alternates
+- (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates
 {
 	int i;
-	int count = [toolTips count];
+	int count = [segments segmentCount];
 	NSSegmentedCell *cell = [segments cell];
 
 	for (i = 0; i < count; i++)
 	{
-		[cell setToolTip:[toolTips objectAtIndex:i] forSegment:i];
+		NSString *toolTip;
+
+		toolTip = [segments labelForSegment:i];
+		[cell setToolTip:toolTip forSegment:i];
 		if (alternates)
 		{
-			[self setupSegments:[alternates objectAtIndex:i] toolTips:[NSArray arrayWithObject:[toolTips objectAtIndex:i]] alternates:nil];
+			[[alternates objectAtIndex:i] setLabel:toolTip forSegment:0];
+			[self setupSegments:[alternates objectAtIndex:i] alternates:nil];
 		}
 	}
 }
 
-- (void)setupSegments:(NSSegmentedControl *)segments toolTips:(NSArray *)toolTips
+- (void)setupSegments:(NSSegmentedControl *)segments
 {
-	[self setupSegments:segments toolTips:toolTips alternates:nil];
+	[self setupSegments:segments alternates:nil];
 }
 
 - (void)updatePartsAuthorStates
 {
 	LDPreferences *ldPreferences = [[controller preferences] ldPreferences];
+	bool conditionals = ldPreferences->getDrawConditionalHighlights() && ldPreferences->getShowHighlightLines();
 	NSArray *states = [NSArray arrayWithObjects:
 		[NSNumber numberWithBool:ldPreferences->getShowAxes()],
 		[NSNumber numberWithBool:ldPreferences->getRandomColors()],
 		[NSNumber numberWithBool:ldPreferences->getBfc()],
+		[NSNumber numberWithBool:conditionals && ldPreferences->getShowAllConditionalLines()],
+		[NSNumber numberWithBool:conditionals && ldPreferences->getShowConditionalControlPoints()],
 		nil];
 	NSArray *alternates = [NSArray arrayWithObjects:
 		axesSegments,
 		randomColorsSegments,
 		bfcSegments,
+		allConditionalsSegments,
+		conditionalControlsSegments,
 		nil];
-	
+	BOOL enabled = conditionals ? YES : NO;
+
 	[self updateSegments:partsAuthorSegments states:states alternates:alternates];
+	[partsAuthorSegments setEnabled:enabled forSegment:3];
+	[partsAuthorSegments setEnabled:enabled forSegment:4];
+	[allConditionalsSegments setEnabled:enabled forSegment:0];
+	[conditionalControlsSegments setEnabled:enabled forSegment:0];
 }
 
 - (void)updateFeatureStates
@@ -295,32 +313,67 @@ enum
 	[self updatePartsAuthorStates];
 }
 
+- (void)setupOtherActions
+{
+	NSArray *alternates = [NSArray arrayWithObjects:
+		fullScreenSegments,
+		zoomToFitSegments,
+		errorsSegments,
+		partsListSegments,
+		modelTreeSegments,
+		mpdSegments,
+		povCameraSegments,
+		helpSegments,
+		nil];
+	
+	[self setupSegments:otherActionsSegments alternates:alternates];
+}
+
+- (void)setupFileActions
+{
+	NSArray *alternates = [NSArray arrayWithObjects:
+		openButton,
+		snapshotButton,
+		exportButton,
+		reloadButton,
+		nil];
+
+	[self setupSegments:fileActionsSegments alternates:alternates];
+}
+
+- (void)setupViewingAngles
+{
+	NSArray *alternates = [NSArray arrayWithObjects:
+		viewFrontSegments,
+		viewBackSegments,
+		viewLeftSegments,
+		viewRightSegments,
+		viewTopSegments,
+		viewBottomSegments,
+		viewLatLonSegments,
+		viewTwoThirdsSegments,
+		nil];
+	
+	[self setupSegments:viewSegments1 alternates:alternates];
+	[self setupSegments:viewSegments2];
+}
+
 - (void)setupPartsAuthor
 {
-	NSArray *toolTips = [NSArray arrayWithObjects:
-		@"Show/Hide Axes",
-		@"Enable/Disable Random Colors",
-		@"Enable/Disable BFC",
-		nil];
 	NSArray *alternates = [NSArray arrayWithObjects:
 		axesSegments,
 		randomColorsSegments,
 		bfcSegments,
+		allConditionalsSegments,
+		conditionalControlsSegments,
 		nil];
 
-	[self setupSegments:partsAuthorSegments toolTips:toolTips alternates:alternates];
+	[self setupSegments:partsAuthorSegments alternates:alternates];
 	[self updatePartsAuthorStates];
 }
 
 - (void)setupFeatures
 {
-	NSArray *toolTips = [NSArray arrayWithObjects:
-		@"Enable/Disable Wireframe",
-		@"Enable/Disable Seams",
-		@"Enable/Disable Edges",
-		@"Enable/Disable Primitive Substitution",
-		@"Enable/Disable Lighting",
-		nil];
 	NSArray *alternates = [NSArray arrayWithObjects:
 		wireframeSegments,
 		seamsSegments,
@@ -329,7 +382,7 @@ enum
 		lightingSegments,
 		nil];
 
-	[self setupSegments:featuresSegments toolTips:toolTips alternates:alternates];
+	[self setupSegments:featuresSegments alternates:alternates];
 	[self updateFeatureStates];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
 }
@@ -402,12 +455,7 @@ enum
 
 - (void)setupViewMode
 {
-	NSArray *toolTips = [NSArray arrayWithObjects:
-		@"Examine Mode",
-		@"Fly-through Mode",
-		nil];
-
-	[self setupSegments:viewModeSegments toolTips:toolTips];
+	[self setupSegments:viewModeSegments];
 	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
 	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
 	[self setExamineLatLong:examineLatLong];
@@ -420,44 +468,65 @@ enum
 	otherIdentifiers = [[NSMutableArray alloc] init];
 	allIdentifiers = [[NSMutableArray alloc] init];
 
-	// ToDo: Localize
-	// Most of these are set to high priority.  That's because they become
-	// useless when stuck in the menu.  Note that NONE of them work in the menu
-	// in Tiger.  I'm hoping that they work in the menu in Leopard when the
-	// segmented control only has one item.
-	[self addToolbarItemWithIdentifier:@"Actions" label:@"Actions" control:&actionsSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Features" label:@"Features" control:&featuresSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Wireframe" label:@"Wireframe" control:&wireframeSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Seams" label:@"Seams" control:&seamsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"EdgeLines" label:@"Edges Lines" control:&edgesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Primitives" label:@"Primitives" control:&primitivesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Lighting" label:@"Lighting" control:&lightingSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:@"Parts Author" control:&partsAuthorSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Axes" label:@"Axes" control:&axesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"RandomColors" label:@"Random Colors" control:&randomColorsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"BFC" label:@"BFC" control:&bfcSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Actions" label:nil control:&fileActionsSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"OpenFile" label:nil control:&openButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:nil control:&snapshotButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Export" label:nil control:&exportButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Reload" label:nil control:&reloadButton highPriority:NO isDefault:NO];
+
+	[self addToolbarItemWithIdentifier:@"OtherActions" label:nil control:&otherActionsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"FullScreen" label:nil control:&fullScreenSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ZoomToFit" label:nil control:&zoomToFitSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Errors&Warnings" label:nil control:&errorsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"PartsList" label:nil control:&partsListSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ModelTree" label:nil control:&modelTreeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"MPDModelSelection" label:nil control:&mpdSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"POVCameraInfo" label:nil control:&povCameraSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Help" label:nil control:&helpSegments highPriority:NO isDefault:NO];
+
+	[self addToolbarItemWithIdentifier:@"Features" label:nil control:&featuresSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Wireframe" label:nil control:&wireframeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Seams" label:nil control:&seamsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"EdgeLines" label:nil control:&edgesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Primitives" label:nil control:&primitivesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Lighting" label:nil control:&lightingSegments highPriority:NO isDefault:NO];
+
+	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:nil control:&partsAuthorSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Axes" label:nil control:&axesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"RandomColors" label:nil control:&randomColorsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BFC" label:nil control:&bfcSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"AllConditionals" label:nil control:&allConditionalsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ConditionalControls" label:nil control:&conditionalControlsSegments highPriority:NO isDefault:NO];
+	
+	[self addToolbarItemWithIdentifier:@"ViewingAngles" label:nil control:&viewSegments1 highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ViewingAnglesAlt" label:nil control:&viewSegments2 highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"FrontView" label:nil control:&viewFrontSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BackView" label:nil control:&viewBackSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"LeftView" label:nil control:&viewLeftSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"RightView" label:nil control:&viewRightSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"TopView" label:nil control:&viewTopSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BottomView" label:nil control:&viewBottomSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SpecifyLatLon" label:nil control:&viewLatLonSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"TwoThirdsView" label:nil control:&viewTwoThirdsSegments highPriority:NO isDefault:NO];
+
 	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"ViewMode" label:@"View Mode" control:&viewModeSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"OpenFile" label:[OCLocalStrings get:@"OpenFile"] control:&openButton highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:[OCLocalStrings get:@"SaveSnapshot"] control:&snapshotButton highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Reload" label:[OCLocalStrings get:@"Reload"] control:&reloadButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ViewMode" label:nil control:&viewModeSegments highPriority:YES isDefault:YES];
 	[printSegments setTarget:controller];
-	[self addToolbarItemWithIdentifier:@"StepFirst" label:[OCLocalStrings get:@"First"] control:&stepFirstSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepPrev" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"Previous"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepField" label:[OCLocalStrings get:@"Step"] control:&stepField highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepNext" label:[OCLocalStrings get:@"Next"] control:&stepNextSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepLast" label:[OCLocalStrings get:@"Last"] control:&stepLastSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Step" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"PrevNext"] control:&stepSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepFirst" label:nil control:&stepFirstSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev" label:nil control:&stepPrevSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"StepPrev"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepField" label:nil control:&stepField highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"StepNext"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepNext" label:nil control:&stepNextSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepLast" label:nil control:&stepLastSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Step" label:nil control:&stepSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"Step"] control:&stepSegments2 highPriority:YES isDefault:NO];
 	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
-	[self addToolbarItemWithIdentifier:@"Prefs" label:[OCLocalStrings get:@"Preferences"] control:&prefsSegments menuItem:[[[controller prefsMenuItem] copy] autorelease] highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Print" label:[OCLocalStrings get:@"Print"] control:&printSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Customize" label:[OCLocalStrings get:@"Customize"] control:&customizeSegments highPriority:NO isDefault:NO];
-	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"OpenFile"] forSegment:0];
-	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"SaveSnapshot"] forSegment:1];
-	[[actionsSegments cell] setToolTip: [OCLocalStrings get:@"Reload"] forSegment:2];
+	[self addToolbarItemWithIdentifier:@"Prefs" label:nil control:&prefsSegments menuItem:[[[controller prefsMenuItem] copy] autorelease] highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Print" label:nil control:&printSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Customize" label:nil control:&customizeSegments highPriority:NO isDefault:NO];
+	[self setupFileActions];
+	[self setupOtherActions];
 	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];
 	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
@@ -468,6 +537,7 @@ enum
 	[self setupFeatures];
 	[self setupPartsAuthor];
 	[self setupViewMode];
+	[self setupViewingAngles];
 	//[defaultIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
 }
 
@@ -674,16 +744,22 @@ enum
 		NSToolbarItem *item = [toolbarItems objectForKey:identifier];
 		NSControl *control = (NSControl *)[item view];
 
-		if (control == actionsSegments)
+		if (control == fileActionsSegments)
 		{
-			[actionsSegments setEnabled:enabled forSegment:1];
-			[actionsSegments setEnabled:enabled forSegment:2];
+			[fileActionsSegments setEnabled:enabled forSegment:1];
+			[fileActionsSegments setEnabled:enabled forSegment:2];
+			[fileActionsSegments setEnabled:enabled forSegment:3];
+		}
+		else if (control == openButton)
+		{
+			[openButton setEnabled:YES forSegment:0];
 		}
 		else if ([control isKindOfClass:[NSControl class]])
 		{
 			[control setEnabled:enabled];
 		}
 	}
+	[self updatePartsAuthorStates];
 }
 
 - (ErrorItem *)filteredRootErrorItem
@@ -1378,7 +1454,30 @@ enum
 	[modelView reload];
 }
 
-- (IBAction)actions:(id)sender
+- (IBAction)exportModel:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		NSSavePanel *savePanel = [NSSavePanel savePanel];
+		NSString *defaultFilename;
+		std::string curFilename;
+		
+		if (!saveExportViewOwner)
+		{
+			saveExportViewOwner = [[SaveExportViewOwner alloc] initWithModelViewer:modelViewer];
+		}
+		[saveExportViewOwner setSavePanel:savePanel];
+		curFilename = modelViewer->getCurFilename();
+		defaultFilename = [[[[NSString stringWithASCIICString:curFilename.c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
+		[savePanel setCanSelectHiddenExtension:YES];
+		sheetBusy = true;
+		[savePanel beginSheetForDirectory:[self defaultSaveDirForOp:LDPreferences::SOExport] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(exportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+	}
+}
+
+- (IBAction)fileActions:(id)sender
 {
 	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
 	{
@@ -1389,7 +1488,100 @@ enum
 			[self saveSnapshot:sender];
 			break;
 		case 2:
+			[self exportModel:sender];
+			break;
+		case 3:
 			[self reload:sender];
+			break;
+		default:
+			NSLog(@"Unknown action.\n");
+			break;
+	}
+}
+
+- (IBAction)toggleFullScreen:(id)sender
+{
+	[modelView toggleFullScreen:sender];
+}
+
+- (IBAction)zoomToFit:(id)sender
+{
+	[modelView zoomToFit:sender];
+}
+
+- (IBAction)errorsAndWarnings:(id)sender
+{
+	[[ErrorsAndWarnings sharedInstance] update:self];
+	[[ErrorsAndWarnings sharedInstance] show:self];
+}
+
+- (IBAction)modelTree:(id)sender
+{
+	if (!modelTree)
+	{
+		modelTree = [[ModelTree alloc] initWithParent:self];
+	}
+	[modelTree toggle];
+}
+
+- (IBAction)mpd:(id)sender
+{
+	if (!mpd)
+	{
+		mpd = [[MPD alloc] initWithParent:self];
+	}
+	[mpd toggle];
+}
+
+- (IBAction)showPovCameraInfo:(id)sender
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer != NULL)
+	{
+		UCSTR message;
+		char *povCamera;
+		
+		modelViewer->getPovCameraInfo(message, povCamera);
+		if (message && povCamera)
+		{
+			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSOKButton)
+			{
+				[self copyStringToPasteboard:[NSString stringWithASCIICString:povCamera]];
+			}
+		}
+		delete message;
+		delete povCamera;
+	}
+}
+
+- (IBAction)otherActions:(id)sender
+{
+	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
+	{
+		case 0:
+			[self toggleFullScreen:sender];
+			break;
+		case 1:
+			[self zoomToFit:sender];
+			break;
+		case 2:
+			[self errorsAndWarnings:sender];
+			break;
+		case 3:
+			[self partsList:sender];
+			break;
+		case 4:
+			[self modelTree:sender];
+			break;
+		case 5:
+			[self mpd:sender];
+			break;
+		case 6:
+			[self showPovCameraInfo:sender];
+			break;
+		case 7:
+			[controller showHelp:sender];
 			break;
 		default:
 			NSLog(@"Unknown action.\n");
@@ -1417,6 +1609,12 @@ enum
 			break;
 		case 7:
 			[self toggleFeature:@selector(takeBfcFrom:) sender:sender];
+			break;
+		case 8:
+			[self toggleFeature:@selector(takeAllConditionalsFrom:) sender:sender];
+			break;
+		case 9:
+			[self toggleFeature:@selector(takeConditionalControlsFrom:) sender:sender];
 			break;
 		default:
 			NSLog(@"Unknown author feature.\n");
@@ -1454,11 +1652,6 @@ enum
 	[modelView resetView:sender];
 }
 
-- (IBAction)viewingAngle:(id)sender
-{
-	[modelView setViewingAngle:[sender tag]];
-}
-
 - (IBAction)specifyLatLon:(id)sender
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
@@ -1466,7 +1659,7 @@ enum
 	if (modelViewer != NULL)
 	{
 		LatLon *sheet = [[LatLon alloc] init];
-
+		
 		[sheet setDefaultDist:modelViewer->getDefaultDistance()];
 		[sheet setCurrentDist:modelViewer->getDistance()];
 		if ([sheet runSheetInWindow:window] == NSOKButton)
@@ -1474,6 +1667,28 @@ enum
 			modelViewer->setLatLon([sheet lat], [sheet lon], [sheet dist]);
 		}
 		[sheet release];
+	}
+}
+
+- (IBAction)viewingAngle:(id)sender
+{
+	int tag = -1;
+
+	if ([sender isKindOfClass:[NSSegmentedControl class]])
+	{
+		tag = [[sender cell] tagForSegment:[sender selectedSegment]];
+	}
+	else
+	{
+		tag = [sender tag];
+	}
+	if (tag == 7)
+	{
+		[self specifyLatLon:sender];
+	}
+	else if (tag >= 0)
+	{
+		[modelView setViewingAngle:tag];
 	}
 }
 
@@ -1513,17 +1728,6 @@ enum
 - (IBAction)viewMode:(id)sender
 {
 	[modelView viewMode:sender];
-}
-
-- (IBAction)zoomToFit:(id)sender
-{
-	[modelView zoomToFit:sender];
-}
-
-- (IBAction)errorsAndWarnings:(id)sender
-{
-	[[ErrorsAndWarnings sharedInstance] update:self];
-	[[ErrorsAndWarnings sharedInstance] show:self];
 }
 
 - (IBAction)boundingBox:(id)sender
@@ -1618,24 +1822,6 @@ enum
 	}
 }
 
-- (IBAction)modelTree:(id)sender
-{
-	if (!modelTree)
-	{
-		modelTree = [[ModelTree alloc] initWithParent:self];
-	}
-	[modelTree toggle];
-}
-
-- (IBAction)mpd:(id)sender
-{
-	if (!mpd)
-	{
-		mpd = [[MPD alloc] initWithParent:self];
-	}
-	[mpd toggle];
-}
-
 - (IBAction)partsList:(id)sender
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
@@ -1703,28 +1889,6 @@ enum
 	}
 }
 
-- (IBAction)showPovCameraInfo:(id)sender
-{
-	LDrawModelViewer *modelViewer = [modelView modelViewer];
-	
-	if (modelViewer != NULL)
-	{
-		UCSTR message;
-		char *povCamera;
-
-		modelViewer->getPovCameraInfo(message, povCamera);
-		if (message && povCamera)
-		{
-			if (NSRunAlertPanel([OCLocalStrings get:@"PovCameraTitle"], [NSString stringWithUCString:message], [OCLocalStrings get:@"OK"], [OCLocalStrings get:@"Cancel"], nil) == NSOKButton)
-			{
-				[self copyStringToPasteboard:[NSString stringWithASCIICString:povCamera]];
-			}
-		}
-		delete message;
-		delete povCamera;
-	}
-}
-
 - (IBAction)openGLDriverInfo:(id)sender
 {
 	LDrawModelViewer *modelViewer = [modelView modelViewer];
@@ -1775,37 +1939,9 @@ enum
 	}
 }
 
-- (IBAction)toggleFullScreen:(id)sender
-{
-	[modelView toggleFullScreen:sender];
-}
-
 - (bool)fullScreen
 {
 	return [modelView fullScreen];;
-}
-
-- (IBAction)exportModel:(id)sender
-{
-	LDrawModelViewer *modelViewer = [modelView modelViewer];
-
-	if (modelViewer)
-	{
-		NSSavePanel *savePanel = [NSSavePanel savePanel];
-		NSString *defaultFilename;
-		std::string curFilename;
-
-		if (!saveExportViewOwner)
-		{
-			saveExportViewOwner = [[SaveExportViewOwner alloc] initWithModelViewer:modelViewer];
-		}
-		[saveExportViewOwner setSavePanel:savePanel];
-		curFilename = modelViewer->getCurFilename();
-		defaultFilename = [[[[NSString stringWithASCIICString:curFilename.c_str()] lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:[saveExportViewOwner requiredFileType]];
-		[savePanel setCanSelectHiddenExtension:YES];
-		sheetBusy = true;
-		[savePanel beginSheetForDirectory:[self defaultSaveDirForOp:LDPreferences::SOExport] file:defaultFilename modalForWindow:window modalDelegate:self didEndSelector:@selector(exportSavePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
-	}
 }
 
 - (NSSize)mainMarginSize

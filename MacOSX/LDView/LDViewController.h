@@ -68,5 +68,6 @@
 - (long)pollingMode;
 - (void)recordRecentFile:(NSString *)filename;
 - (NSMenuItem *)prefsMenuItem;
+- (IBAction)showHelp:(id)sender;
 
 @end

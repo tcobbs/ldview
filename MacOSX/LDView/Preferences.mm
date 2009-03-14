@@ -242,6 +242,20 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self apply:sender];
 }
 
+- (void)takeAllConditionalsFrom:(id)sender
+{
+	ldPreferences->setShowAllConditionalLines([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeConditionalControlsFrom:(id)sender
+{
+	ldPreferences->setShowConditionalControlPoints([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
+}
+
 - (void)takeShowAxesFrom:(id)sender
 {
 	ldPreferences->setShowAxes([self getBoolFrom:sender]);
