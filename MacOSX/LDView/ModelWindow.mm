@@ -259,6 +259,35 @@ enum
 	[self setupSegments:segments alternates:nil];
 }
 
+- (void)updateOtherFeatureStates
+{
+	LDPreferences *ldPreferences = [[controller preferences] ldPreferences];
+	bool primSub = ldPreferences->getAllowPrimitiveSubstitution();
+	NSArray *states = [NSArray arrayWithObjects:
+		[NSNumber numberWithBool:ldPreferences->getTransDefaultColor()],
+		[NSNumber numberWithBool:ldPreferences->getBoundingBoxesOnly()],
+		[NSNumber numberWithBool:ldPreferences->getCutawayMode() != LDVCutawayNormal],
+		[NSNumber numberWithBool:ldPreferences->getUseFlatShading()],
+		[NSNumber numberWithBool:ldPreferences->getPerformSmoothing()],
+		[NSNumber numberWithBool:primSub && ldPreferences->getTextureStuds()],
+		[NSNumber numberWithBool:!ldPreferences->getQualityStuds()],
+		nil];
+	NSArray *alternates = [NSArray arrayWithObjects:
+		transDefaultSegments,
+		partBBoxesSegments,
+		wireframeCutawaySegments,
+		flatShadingSegments,
+		smoothCurvesSegments,
+		studLogosSegments,
+		lowResStudsSegments,
+		nil];
+	BOOL enabled = primSub ? YES : NO;
+	
+	[self updateSegments:otherFeaturesSegments states:states alternates:alternates];
+	[otherFeaturesSegments setEnabled:enabled forSegment:5];
+	[studLogosSegments setEnabled:enabled forSegment:0];
+}
+
 - (void)updatePartsAuthorStates
 {
 	LDPreferences *ldPreferences = [[controller preferences] ldPreferences];
@@ -311,7 +340,23 @@ enum
 {
 	[self updateFeatureStates];
 	[self updatePartsAuthorStates];
+	[self updateOtherFeatureStates];
 }
+
+//- (void)setupOtherFeatures
+//{
+//	NSArray *alternates = [NSArray arrayWithObjects:
+//		transDefaultSegments,
+//		partBBoxesSegments,
+//		wireframeCutawaySegments,
+//		flatShadingSegments,
+//		smoothCurvesSegments,
+//		studLogosSegments,
+//		lowResStudsSegments,
+//		nil];
+//	
+//	[self setupSegments:otherFeaturesSegments alternates:alternates];
+//}
 
 - (void)setupOtherActions
 {
@@ -356,6 +401,22 @@ enum
 	
 	[self setupSegments:viewSegments1 alternates:alternates];
 	[self setupSegments:viewSegments2];
+}
+
+- (void)setupOtherFeatures
+{
+	NSArray *alternates = [NSArray arrayWithObjects:
+		transDefaultSegments,
+		partBBoxesSegments,
+		wireframeCutawaySegments,
+		flatShadingSegments,
+		smoothCurvesSegments,
+		studLogosSegments,
+		lowResStudsSegments,
+		nil];
+	
+	[self setupSegments:otherFeaturesSegments alternates:alternates];
+	[self updateOtherFeatureStates];
 }
 
 - (void)setupPartsAuthor
@@ -497,7 +558,16 @@ enum
 	[self addToolbarItemWithIdentifier:@"BFC" label:nil control:&bfcSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"AllConditionals" label:nil control:&allConditionalsSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"ConditionalControls" label:nil control:&conditionalControlsSegments highPriority:NO isDefault:NO];
-	
+
+	[self addToolbarItemWithIdentifier:@"OtherFeatures" label:nil control:&otherFeaturesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"TransDefaultColor" label:nil control:&transDefaultSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"PartBBoxes" label:nil control:&partBBoxesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"WireframeCutaway" label:nil control:&wireframeCutawaySegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"FlatShading" label:nil control:&flatShadingSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SmoothCurves" label:nil control:&smoothCurvesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StudLogos" label:nil control:&studLogosSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"LowResStuds" label:nil control:&lowResStudsSegments highPriority:NO isDefault:NO];
+
 	[self addToolbarItemWithIdentifier:@"ViewingAngles" label:nil control:&viewSegments1 highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"ViewingAnglesAlt" label:nil control:&viewSegments2 highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"FrontView" label:nil control:&viewFrontSegments highPriority:NO isDefault:NO];
@@ -525,8 +595,6 @@ enum
 	[self addToolbarItemWithIdentifier:@"Prefs" label:nil control:&prefsSegments menuItem:[[[controller prefsMenuItem] copy] autorelease] highPriority:NO isDefault:YES];
 	[self addToolbarItemWithIdentifier:@"Print" label:nil control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:nil control:&customizeSegments highPriority:NO isDefault:NO];
-	[self setupFileActions];
-	[self setupOtherActions];
 	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];
 	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
@@ -534,7 +602,10 @@ enum
 		NSToolbarSeparatorItemIdentifier,
 		nil]];
 	[viewingAngleSegments setMenu:[[[controller viewingAngleMenu] copy] autorelease] forSegment:0];
+	[self setupFileActions];
+	[self setupOtherActions];
 	[self setupFeatures];
+	[self setupOtherFeatures];
 	[self setupPartsAuthor];
 	[self setupViewMode];
 	[self setupViewingAngles];
@@ -760,6 +831,7 @@ enum
 		}
 	}
 	[self updatePartsAuthorStates];
+	[self updateOtherFeatureStates];
 }
 
 - (ErrorItem *)filteredRootErrorItem
@@ -1595,6 +1667,37 @@ enum
 	// is selected.  However, selectedSegment just returns the segment
 	// the user just clicked on.  It's not necessarily actually selected.
 	[[controller preferences] performSelector:selector withObject:sender];
+}
+
+- (IBAction)otherFeatures:(id)sender
+{
+	switch ([[sender cell] tagForSegment:[sender selectedSegment]])
+	{
+		case 10:
+			[self toggleFeature:@selector(takeTransDefaultFrom:) sender:sender];
+			break;
+		case 11:
+			[self toggleFeature:@selector(takePartBBoxesFrom:) sender:sender];
+			break;
+		case 12:
+			[self toggleFeature:@selector(takeWireframeCutawayFrom:) sender:sender];
+			break;
+		case 13:
+			[self toggleFeature:@selector(takeFlatShadingFrom:) sender:sender];
+			break;
+		case 14:
+			[self toggleFeature:@selector(takeSmoothCurvesFrom:) sender:sender];
+			break;
+		case 15:
+			[self toggleFeature:@selector(takeStudLogosFrom:) sender:sender];
+			break;
+		case 16:
+			[self toggleFeature:@selector(takeLowResStudsFrom:) sender:sender];
+			break;
+		default:
+			NSLog(@"Unknown author feature.\n");
+			break;
+	}
 }
 
 - (IBAction)partsAuthor:(id)sender

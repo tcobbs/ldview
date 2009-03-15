@@ -256,6 +256,55 @@ NSString *LDPreferencesDidUpdateNotification = @"LDPreferencesDidUpdate";
 	[self apply:sender];
 }
 
+- (void)takeTransDefaultFrom:(id)sender
+{
+	ldPreferences->setTransDefaultColor([self getBoolFrom:sender]);
+	[[pages objectAtIndex:generalIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takePartBBoxesFrom:(id)sender
+{
+	ldPreferences->setBoundingBoxesOnly([self getBoolFrom:sender]);
+	[[pages objectAtIndex:geometryIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeWireframeCutawayFrom:(id)sender
+{
+	ldPreferences->setCutawayMode([self getBoolFrom:sender] ? LDVCutawayWireframe : LDVCutawayNormal);
+	[[pages objectAtIndex:effectsIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeFlatShadingFrom:(id)sender
+{
+	ldPreferences->setUseFlatShading([self getBoolFrom:sender]);
+	[[pages objectAtIndex:effectsIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeSmoothCurvesFrom:(id)sender
+{
+	ldPreferences->setPerformSmoothing([self getBoolFrom:sender]);
+	[[pages objectAtIndex:effectsIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeStudLogosFrom:(id)sender
+{
+	ldPreferences->setTextureStuds([self getBoolFrom:sender]);
+	[[pages objectAtIndex:primitivesIndex] setup];
+	[self apply:sender];
+}
+
+- (void)takeLowResStudsFrom:(id)sender
+{
+	ldPreferences->setQualityStuds(![self getBoolFrom:sender]);
+	[[pages objectAtIndex:primitivesIndex] setup];
+	[self apply:sender];
+}
+
 - (void)takeShowAxesFrom:(id)sender
 {
 	ldPreferences->setShowAxes([self getBoolFrom:sender]);
