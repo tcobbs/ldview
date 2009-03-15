@@ -14,6 +14,7 @@
                 fileActions = id; 
                 open = id; 
                 otherActions = id; 
+                otherFeatures = id; 
                 partsAuthor = id; 
                 preferences = id; 
                 print = id; 
@@ -37,17 +38,21 @@
                 exportButton = NSSegmentedControl; 
                 featuresSegments = NSSegmentedControl; 
                 fileActionsSegments = NSSegmentedControl; 
+                flatShadingSegments = NSSegmentedControl; 
                 fullScreenSegments = NSSegmentedControl; 
                 helpSegments = NSSegmentedControl; 
                 latField = NSTextField; 
                 latLonBox = NSBox; 
                 lightingSegments = NSSegmentedControl; 
                 lonField = NSTextField; 
+                lowResStudsSegments = NSSegmentedControl; 
                 modelTreeSegments = NSSegmentedControl; 
                 modelView = LDrawModelView; 
                 mpdSegments = NSSegmentedControl; 
                 openButton = NSSegmentedControl; 
                 otherActionsSegments = NSSegmentedControl; 
+                otherFeaturesSegments = NSSegmentedControl; 
+                partBBoxesSegments = NSSegmentedControl; 
                 partsAuthorSegments = NSSegmentedControl; 
                 partsListSegments = NSSegmentedControl; 
                 povCameraSegments = NSSegmentedControl; 
@@ -59,6 +64,7 @@
                 randomColorsSegments = NSSegmentedControl; 
                 reloadButton = NSSegmentedControl; 
                 seamsSegments = NSSegmentedControl; 
+                smoothCurvesSegments = NSSegmentedControl; 
                 snapshotButton = NSSegmentedControl; 
                 statusBar = NSView; 
                 stepField = NSTextField; 
@@ -70,6 +76,8 @@
                 stepPrevSegments2 = NSSegmentedControl; 
                 stepSegments = NSSegmentedControl; 
                 stepSegments2 = NSSegmentedControl; 
+                studLogosSegments = NSSegmentedControl; 
+                transDefaultSegments = NSSegmentedControl; 
                 viewBackSegments = NSSegmentedControl; 
                 viewBottomSegments = NSSegmentedControl; 
                 viewFrontSegments = NSSegmentedControl; 
@@ -83,6 +91,7 @@
                 viewTwoThirdsSegments = NSSegmentedControl; 
                 viewingAngleSegments = NSSegmentedControl; 
                 window = NSWindow; 
+                wireframeCutawaySegments = NSSegmentedControl; 
                 wireframeSegments = NSSegmentedControl; 
                 zoomToFitSegments = NSSegmentedControl; 
             }; 

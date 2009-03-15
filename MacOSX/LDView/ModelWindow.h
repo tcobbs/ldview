@@ -76,6 +76,14 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *mpdSegments;
 	IBOutlet NSSegmentedControl *povCameraSegments;
 	IBOutlet NSSegmentedControl *helpSegments;
+	IBOutlet NSSegmentedControl *otherFeaturesSegments;
+	IBOutlet NSSegmentedControl *transDefaultSegments;
+	IBOutlet NSSegmentedControl *partBBoxesSegments;
+	IBOutlet NSSegmentedControl *wireframeCutawaySegments;
+	IBOutlet NSSegmentedControl *flatShadingSegments;
+	IBOutlet NSSegmentedControl *smoothCurvesSegments;
+	IBOutlet NSSegmentedControl *studLogosSegments;
+	IBOutlet NSSegmentedControl *lowResStudsSegments;
 	IBOutlet NSTextField *stepField;
 	
 	IBOutlet NSBox *latLonBox;
