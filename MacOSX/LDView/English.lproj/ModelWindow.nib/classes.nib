@@ -1,7 +1,7 @@
 {
     IBClasses = (
         {
-            ACTIONS = {"" = id; }; 
+            ACTIONS = {"" = id; boundingBox = id; latLongRotation = id; }; 
             CLASS = FirstResponder; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
@@ -31,6 +31,7 @@
                 allConditionalsSegments = NSSegmentedControl; 
                 axesSegments = NSSegmentedControl; 
                 bfcSegments = NSSegmentedControl; 
+                boundingBoxSegments = NSSegmentedControl; 
                 conditionalControlsSegments = NSSegmentedControl; 
                 customizeSegments = NSSegmentedControl; 
                 edgesSegments = NSSegmentedControl; 
@@ -43,6 +44,7 @@
                 helpSegments = NSSegmentedControl; 
                 latField = NSTextField; 
                 latLonBox = NSBox; 
+                latLonRotationSegments = NSSegmentedControl; 
                 lightingSegments = NSSegmentedControl; 
                 lonField = NSTextField; 
                 lowResStudsSegments = NSSegmentedControl; 

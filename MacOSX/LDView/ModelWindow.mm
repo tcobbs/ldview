@@ -234,7 +234,7 @@ enum
 	[self updateSegments:segments states:states alternates:nil];
 }
 
-- (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates
+- (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates toolTips:(NSArray *)toolTips
 {
 	int i;
 	int count = [segments segmentCount];
@@ -244,14 +244,25 @@ enum
 	{
 		NSString *toolTip;
 
-		toolTip = [segments labelForSegment:i];
+		if (toolTips != nil)
+		{
+			toolTip = [toolTips objectAtIndex:i];
+		}
+		else
+		{
+			toolTip = [segments labelForSegment:i];
+		}
 		[cell setToolTip:toolTip forSegment:i];
 		if (alternates)
 		{
-			[[alternates objectAtIndex:i] setLabel:toolTip forSegment:0];
-			[self setupSegments:[alternates objectAtIndex:i] alternates:nil];
+			[self setupSegments:[alternates objectAtIndex:i] alternates:nil toolTips:[NSArray arrayWithObject:toolTip]];
 		}
 	}
+}
+
+- (void)setupSegments:(NSSegmentedControl *)segments alternates:(NSArray *)alternates
+{
+	[self setupSegments:segments alternates:alternates toolTips:nil];
 }
 
 - (void)setupSegments:(NSSegmentedControl *)segments
@@ -336,27 +347,65 @@ enum
 	[self updateSegments:featuresSegments states:states alternates:alternates];
 }
 
-- (void)preferencesDidUpdate:(NSNotification *)notification
+- (BOOL)haveLatLon
+{
+	LDrawModelViewer *modelViewer = [modelView modelViewer];
+	
+	if (modelViewer)
+	{
+		if (modelViewer->getViewMode() == LDrawModelViewer::VMExamine && modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
+		{
+			return YES;
+		}
+	}
+	return NO;
+}
+
+- (void)updateOtherStates
+{
+	bool flyThroughMode = [modelView flyThroughMode];
+
+	[[boundingBoxSegments cell] setSelected:[[BoundingBox sharedInstance] isVisible] forSegment:0];
+	[[latLonRotationSegments cell] setSelected:!flyThroughMode && examineLatLong forSegment:0];
+	[latLonRotationSegments setEnabled:!flyThroughMode forSegment:0];
+}
+
+- (void)updateStates
 {
 	[self updateFeatureStates];
 	[self updatePartsAuthorStates];
 	[self updateOtherFeatureStates];
+	[self updateOtherStates];
 }
 
-//- (void)setupOtherFeatures
-//{
-//	NSArray *alternates = [NSArray arrayWithObjects:
-//		transDefaultSegments,
-//		partBBoxesSegments,
-//		wireframeCutawaySegments,
-//		flatShadingSegments,
-//		smoothCurvesSegments,
-//		studLogosSegments,
-//		lowResStudsSegments,
-//		nil];
-//	
-//	[self setupSegments:otherFeaturesSegments alternates:alternates];
-//}
+- (void)preferencesDidUpdate:(NSNotification *)notification
+{
+	[self updateStates];
+}
+
+- (void)setupSteps
+{
+	NSArray *alternates = [NSArray arrayWithObjects:
+		stepFirstSegments,
+		stepPrevSegments,
+		stepNextSegments,
+		stepLastSegments,
+		nil];
+
+	[self addToolbarItemWithIdentifier:@"StepFirst" label:nil control:&stepFirstSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev" label:nil control:&stepPrevSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"StepPrev"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepField" label:nil control:&stepField highPriority:NO isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"StepNext"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepNext" label:nil control:&stepNextSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StepLast" label:nil control:&stepLastSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Step" label:nil control:&stepSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"Step"] control:&stepSegments2 highPriority:YES isDefault:NO];
+	[self setupSegments:stepSegments2 alternates:alternates];
+	[self setupSegments:stepSegments];
+	[self setupSegments:stepPrevSegments2];
+	[self setupSegments:stepNextSegments2];
+}
 
 - (void)setupOtherActions
 {
@@ -370,7 +419,16 @@ enum
 		povCameraSegments,
 		helpSegments,
 		nil];
-	
+
+	[self addToolbarItemWithIdentifier:@"OtherActions" label:nil control:&otherActionsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"FullScreen" label:nil control:&fullScreenSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ZoomToFit" label:nil control:&zoomToFitSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Errors&Warnings" label:nil control:&errorsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"PartsList" label:nil control:&partsListSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ModelTree" label:nil control:&modelTreeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"MPDModelSelection" label:nil control:&mpdSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"POVCameraInfo" label:nil control:&povCameraSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Help" label:nil control:&helpSegments highPriority:NO isDefault:NO];
 	[self setupSegments:otherActionsSegments alternates:alternates];
 }
 
@@ -383,6 +441,11 @@ enum
 		reloadButton,
 		nil];
 
+	[self addToolbarItemWithIdentifier:@"Actions" label:nil control:&fileActionsSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"OpenFile" label:nil control:&openButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:nil control:&snapshotButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Export" label:nil control:&exportButton highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Reload" label:nil control:&reloadButton highPriority:NO isDefault:NO];
 	[self setupSegments:fileActionsSegments alternates:alternates];
 }
 
@@ -398,9 +461,43 @@ enum
 		viewLatLonSegments,
 		viewTwoThirdsSegments,
 		nil];
-	
+
+	[self addToolbarItemWithIdentifier:@"ViewingAngles" label:nil control:&viewSegments1 highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ViewingAnglesAlt" label:nil control:&viewSegments2 highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"FrontView" label:nil control:&viewFrontSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BackView" label:nil control:&viewBackSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"LeftView" label:nil control:&viewLeftSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"RightView" label:nil control:&viewRightSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"TopView" label:nil control:&viewTopSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BottomView" label:nil control:&viewBottomSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SpecifyLatLon" label:nil control:&viewLatLonSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"TwoThirdsView" label:nil control:&viewTwoThirdsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:YES isDefault:NO];
 	[self setupSegments:viewSegments1 alternates:alternates];
 	[self setupSegments:viewSegments2];
+	[self setupSegments:viewingAngleSegments alternates:nil toolTips:[NSArray arrayWithObject:[OCLocalStrings get:@"SelectView"]]];
+}
+
+- (void)setExamineLatLong:(bool)value
+{
+	LDrawModelViewer::ExamineMode examineMode = LDrawModelViewer::EMFree;
+	
+	if (value)
+	{
+		examineMode = LDrawModelViewer::EMLatLong;
+	}
+	[modelView modelViewer]->setExamineMode(examineMode);
+	TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
+	[self showStatusLatLon:[self haveLatLon]];
+}
+
+- (void)setupViewMode
+{
+	[self addToolbarItemWithIdentifier:@"ViewMode" label:nil control:&viewModeSegments highPriority:YES isDefault:YES];
+	[self setupSegments:viewModeSegments];
+	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
+	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
+	[self setExamineLatLong:examineLatLong];
 }
 
 - (void)setupOtherFeatures
@@ -414,9 +511,16 @@ enum
 		studLogosSegments,
 		lowResStudsSegments,
 		nil];
-	
+
+	[self addToolbarItemWithIdentifier:@"OtherFeatures" label:nil control:&otherFeaturesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"TransDefaultColor" label:nil control:&transDefaultSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"PartBBoxes" label:nil control:&partBBoxesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"WireframeCutaway" label:nil control:&wireframeCutawaySegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"FlatShading" label:nil control:&flatShadingSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"SmoothCurves" label:nil control:&smoothCurvesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"StudLogos" label:nil control:&studLogosSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"LowResStuds" label:nil control:&lowResStudsSegments highPriority:NO isDefault:NO];
 	[self setupSegments:otherFeaturesSegments alternates:alternates];
-	[self updateOtherFeatureStates];
 }
 
 - (void)setupPartsAuthor
@@ -429,8 +533,13 @@ enum
 		conditionalControlsSegments,
 		nil];
 
+	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:nil control:&partsAuthorSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Axes" label:nil control:&axesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"RandomColors" label:nil control:&randomColorsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BFC" label:nil control:&bfcSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"AllConditionals" label:nil control:&allConditionalsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"ConditionalControls" label:nil control:&conditionalControlsSegments highPriority:NO isDefault:NO];
 	[self setupSegments:partsAuthorSegments alternates:alternates];
-	[self updatePartsAuthorStates];
 }
 
 - (void)setupFeatures
@@ -443,23 +552,14 @@ enum
 		lightingSegments,
 		nil];
 
+	[self addToolbarItemWithIdentifier:@"Features" label:nil control:&featuresSegments highPriority:YES isDefault:YES];
+	[self addToolbarItemWithIdentifier:@"Wireframe" label:nil control:&wireframeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Seams" label:nil control:&seamsSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"EdgeLines" label:nil control:&edgesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Primitives" label:nil control:&primitivesSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"Lighting" label:nil control:&lightingSegments highPriority:NO isDefault:NO];
 	[self setupSegments:featuresSegments alternates:alternates];
-	[self updateFeatureStates];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(preferencesDidUpdate:) name:LDPreferencesDidUpdateNotification object:nil];
-}
-
-- (BOOL)haveLatLon
-{
-	LDrawModelViewer *modelViewer = [modelView modelViewer];
-	
-	if (modelViewer)
-	{
-		if (modelViewer->getViewMode() == LDrawModelViewer::VMExamine && modelViewer->getExamineMode() == LDrawModelViewer::EMLatLong)
-		{
-			return YES;
-		}
-	}
-	return NO;
 }
 
 - (void)updateStatusLatLon
@@ -487,19 +587,6 @@ enum
 	}
 }
 
-- (void)setExamineLatLong:(bool)value
-{
-	LDrawModelViewer::ExamineMode examineMode = LDrawModelViewer::EMFree;
-	
-	if (value)
-	{
-		examineMode = LDrawModelViewer::EMLatLong;
-	}
-	[modelView modelViewer]->setExamineMode(examineMode);
-	TCUserDefaults::setLongForKey(examineMode, EXAMINE_MODE_KEY, false);
-	[self showStatusLatLon:[self haveLatLon]];
-}
-
 - (void)setFlyThroughMode:(bool)value
 {
 	[modelView setFlyThroughMode:value];
@@ -514,14 +601,6 @@ enum
 	[self showStatusLatLon:[self haveLatLon]];
 }
 
-- (void)setupViewMode
-{
-	[self setupSegments:viewModeSegments];
-	[self setFlyThroughMode:TCUserDefaults::longForKey(VIEW_MODE_KEY, LDInputHandler::VMExamine, false) == LDInputHandler::VMFlyThrough];
-	examineLatLong = TCUserDefaults::longForKey(EXAMINE_MODE_KEY, LDrawModelViewer::EMFree, false) == LDrawModelViewer::EMLatLong;
-	[self setExamineLatLong:examineLatLong];
-}
-
 - (void)setupToolbarItems
 {
 	toolbarItems = [[NSMutableDictionary alloc] init];
@@ -529,72 +608,21 @@ enum
 	otherIdentifiers = [[NSMutableArray alloc] init];
 	allIdentifiers = [[NSMutableArray alloc] init];
 
-	[self addToolbarItemWithIdentifier:@"Actions" label:nil control:&fileActionsSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"OpenFile" label:nil control:&openButton highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"SaveSnapshot" label:nil control:&snapshotButton highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Export" label:nil control:&exportButton highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Reload" label:nil control:&reloadButton highPriority:NO isDefault:NO];
-
-	[self addToolbarItemWithIdentifier:@"OtherActions" label:nil control:&otherActionsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"FullScreen" label:nil control:&fullScreenSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"ZoomToFit" label:nil control:&zoomToFitSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Errors&Warnings" label:nil control:&errorsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"PartsList" label:nil control:&partsListSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"ModelTree" label:nil control:&modelTreeSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"MPDModelSelection" label:nil control:&mpdSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"POVCameraInfo" label:nil control:&povCameraSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Help" label:nil control:&helpSegments highPriority:NO isDefault:NO];
-
-	[self addToolbarItemWithIdentifier:@"Features" label:nil control:&featuresSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Wireframe" label:nil control:&wireframeSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Seams" label:nil control:&seamsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"EdgeLines" label:nil control:&edgesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Primitives" label:nil control:&primitivesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Lighting" label:nil control:&lightingSegments highPriority:NO isDefault:NO];
-
-	[self addToolbarItemWithIdentifier:@"PartsAuthor" label:nil control:&partsAuthorSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Axes" label:nil control:&axesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"RandomColors" label:nil control:&randomColorsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"BFC" label:nil control:&bfcSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"AllConditionals" label:nil control:&allConditionalsSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"ConditionalControls" label:nil control:&conditionalControlsSegments highPriority:NO isDefault:NO];
-
-	[self addToolbarItemWithIdentifier:@"OtherFeatures" label:nil control:&otherFeaturesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"TransDefaultColor" label:nil control:&transDefaultSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"PartBBoxes" label:nil control:&partBBoxesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"WireframeCutaway" label:nil control:&wireframeCutawaySegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"FlatShading" label:nil control:&flatShadingSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"SmoothCurves" label:nil control:&smoothCurvesSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StudLogos" label:nil control:&studLogosSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"LowResStuds" label:nil control:&lowResStudsSegments highPriority:NO isDefault:NO];
-
-	[self addToolbarItemWithIdentifier:@"ViewingAngles" label:nil control:&viewSegments1 highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"ViewingAnglesAlt" label:nil control:&viewSegments2 highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"FrontView" label:nil control:&viewFrontSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"BackView" label:nil control:&viewBackSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"LeftView" label:nil control:&viewLeftSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"RightView" label:nil control:&viewRightSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"TopView" label:nil control:&viewTopSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"BottomView" label:nil control:&viewBottomSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"SpecifyLatLon" label:nil control:&viewLatLonSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"TwoThirdsView" label:nil control:&viewTwoThirdsSegments highPriority:NO isDefault:NO];
-
-	[self addToolbarItemWithIdentifier:@"View" label:[OCLocalStrings get:@"SelectView"] control:&viewingAngleSegments highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"ViewMode" label:nil control:&viewModeSegments highPriority:YES isDefault:YES];
-	[printSegments setTarget:controller];
-	[self addToolbarItemWithIdentifier:@"StepFirst" label:nil control:&stepFirstSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepPrev" label:nil control:&stepPrevSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepPrev2" label:[OCLocalStrings get:@"StepPrev"] control:&stepPrevSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepField" label:nil control:&stepField highPriority:NO isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"StepNext2" label:[OCLocalStrings get:@"StepNext"] control:&stepNextSegments2 highPriority:YES isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepNext" label:nil control:&stepNextSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"StepLast" label:nil control:&stepLastSegments highPriority:NO isDefault:NO];
-	[self addToolbarItemWithIdentifier:@"Step" label:nil control:&stepSegments highPriority:YES isDefault:YES];
-	[self addToolbarItemWithIdentifier:@"Step2" label:[OCLocalStrings get:@"Step"] control:&stepSegments2 highPriority:YES isDefault:NO];
+	[self setupFileActions];
+	[self setupOtherActions];
+	[self setupFeatures];
+	[self setupPartsAuthor];
+	[self setupOtherFeatures];
+	[self setupViewingAngles];
+	[self setupViewMode];
+	[self setupSteps];
 	[defaultIdentifiers addObject:NSToolbarFlexibleSpaceItemIdentifier];	
 	[self addToolbarItemWithIdentifier:@"Prefs" label:nil control:&prefsSegments menuItem:[[[controller prefsMenuItem] copy] autorelease] highPriority:NO isDefault:YES];
+	[printSegments setTarget:controller];
 	[self addToolbarItemWithIdentifier:@"Print" label:nil control:&printSegments highPriority:NO isDefault:NO];
 	[self addToolbarItemWithIdentifier:@"Customize" label:nil control:&customizeSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"LatLonRotation" label:nil control:&latLonRotationSegments highPriority:NO isDefault:NO];
+	[self addToolbarItemWithIdentifier:@"BoundingBox" label:nil control:&boundingBoxSegments highPriority:NO isDefault:NO];
 	stepToolbarControls = [[NSArray alloc] initWithObjects:stepSegments, stepSegments2, stepPrevSegments, stepPrevSegments2, stepNextSegments, stepNextSegments2, stepFirstSegments, stepLastSegments, nil];
 	[allIdentifiers addObjectsFromArray:[NSArray arrayWithObjects:
 		NSToolbarFlexibleSpaceItemIdentifier,
@@ -602,14 +630,7 @@ enum
 		NSToolbarSeparatorItemIdentifier,
 		nil]];
 	[viewingAngleSegments setMenu:[[[controller viewingAngleMenu] copy] autorelease] forSegment:0];
-	[self setupFileActions];
-	[self setupOtherActions];
-	[self setupFeatures];
-	[self setupOtherFeatures];
-	[self setupPartsAuthor];
-	[self setupViewMode];
-	[self setupViewingAngles];
-	//[defaultIdentifiers addObject:NSToolbarCustomizeToolbarItemIdentifier];
+	[self updateStates];
 }
 
 - (void)setupToolbar
@@ -830,8 +851,7 @@ enum
 			[control setEnabled:enabled];
 		}
 	}
-	[self updatePartsAuthorStates];
-	[self updateOtherFeatureStates];
+	[self updateStates];
 }
 
 - (ErrorItem *)filteredRootErrorItem
@@ -1785,7 +1805,7 @@ enum
 	{
 		tag = [sender tag];
 	}
-	if (tag == 7)
+	if (tag == 8)
 	{
 		[self specifyLatLon:sender];
 	}
@@ -1831,12 +1851,14 @@ enum
 - (IBAction)viewMode:(id)sender
 {
 	[modelView viewMode:sender];
+	[self updateOtherStates];
 }
 
 - (IBAction)boundingBox:(id)sender
 {
 	[[BoundingBox sharedInstance] update:self];
 	[[BoundingBox sharedInstance] show:self];
+	[self updateOtherStates];
 }
 
 - (void)windowDidBecomeMain:(NSNotification *)aNotification
@@ -1889,16 +1911,20 @@ enum
 {
 	examineLatLong = !examineLatLong;
 	[self setExamineLatLong:examineLatLong];
+	[self updateOtherStates];
+	[modelView setNeedsDisplay:YES];
 }
 
 - (IBAction)examineMode:(id)sender
 {
 	[self setFlyThroughMode:false];
+	[self updateOtherStates];
 }
 
 - (IBAction)flyThroughMode:(id)sender
 {
 	[self setFlyThroughMode:true];
+	[self updateOtherStates];
 }
 
 - (bool)examineLatLong
