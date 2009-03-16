@@ -84,6 +84,8 @@ class LDPartsList;
 	IBOutlet NSSegmentedControl *smoothCurvesSegments;
 	IBOutlet NSSegmentedControl *studLogosSegments;
 	IBOutlet NSSegmentedControl *lowResStudsSegments;
+	IBOutlet NSSegmentedControl *latLonRotationSegments;
+	IBOutlet NSSegmentedControl *boundingBoxSegments;
 	IBOutlet NSTextField *stepField;
 	
 	IBOutlet NSBox *latLonBox;

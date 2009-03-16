@@ -39,6 +39,15 @@ static BoundingBox *sharedInstance = nil;
 	}
 }
 
+- (void)awakeFromNib
+{
+	NSSize size = [panel contentMaxSize];
+	size.height = [panel contentMinSize].height;
+	// IB doesn't allow the min/max height to be the same, even when the min/max
+	// width AREN'T the same.
+	[panel setContentMaxSize:size];
+}
+
 - (void)dealloc
 {
 	[panel release];
