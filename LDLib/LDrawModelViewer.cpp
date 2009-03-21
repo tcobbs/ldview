@@ -5068,6 +5068,41 @@ void LDrawModelViewer::setHighlightColor(
 	}
 }
 
+std::string LDrawModelViewer::adjustHighlightPath(
+	std::string path,
+	LDLModel *mpdChild)
+{
+	LDLModel *curModel = mainModel;
+
+	while (curModel != mpdChild && path.size() > 0)
+	{
+		int lineNum = atoi(&path[1]) - 1;
+		const LDLFileLineArray *fileLines = curModel->getFileLines();
+
+		if (lineNum < fileLines->getCount())
+		{
+			const LDLFileLine *fileLine = (*fileLines)[lineNum];
+			size_t index;
+
+			if (fileLine->getLineType() != LDLLineTypeModel)
+			{
+				return "";
+			}
+			curModel = ((LDLModelLine *)fileLine)->getModel();
+			index = path.find('/', 1);
+			if (index < path.size())
+			{
+				path = path.substr(index);
+			}
+		}
+		else
+		{
+			return "";
+		}
+	}
+	return path;
+}
+
 void LDrawModelViewer::highlightPathsChanged(void)
 {
 	TCObject::release(highlightModel);
@@ -5077,6 +5112,7 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		LDModelParser *modelParser = NULL;
 		LDLMainModel *ldlModel = new LDLMainModel;
 		int i = 0;
+		LDLModel *mpdChild = getMpdChild();
 
 		ldlModel->setMainModel(ldlModel);
 		ldlModel->setForceHighlightColor(true);
@@ -5086,7 +5122,20 @@ void LDrawModelViewer::highlightPathsChanged(void)
 		for (StringList::const_iterator it = highlightPaths.begin();
 			it != highlightPaths.end(); it++)
 		{
-			parseHighlightPath(*it, mainModel, ldlModel, "", i++);
+			std::string path;
+
+			if (mpdChild != NULL)
+			{
+				std::string path = adjustHighlightPath(*it, mpdChild);
+				if (path.size() > 0)
+				{
+					parseHighlightPath(path, mpdChild, ldlModel, "", i++);
+				}
+			}
+			else
+			{
+				parseHighlightPath(*it, mainModel, ldlModel, "", i++);
+			}
 		}
 		modelParser = new LDModelParser(this);
 		if (modelParser->parseMainModel(ldlModel))

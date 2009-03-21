@@ -598,6 +598,7 @@ class LDrawModelViewer: public TCAlertSender
 			LDLFileLineArray *dstFileLines, LDLModel *dstModel);
 		void attachLineLine(LDLFileLineArray *dstFileLines, LDLModel *dstModel,
 			const TCVector &pt0, const TCVector &pt1);
+		std::string adjustHighlightPath(std::string path, LDLModel *mpdChild);
 
 		static void fixLongitude(TCFloat &lon);
 		static void setUnofficialPartPrimitive(const char *filename,
