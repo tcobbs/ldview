@@ -127,6 +127,10 @@ settings.</li>
 <li>Fixed POV export to not apply seams to sub-parts of parts.</li>
 <li>Fixed bug that caused the step in the toolbar to not update if you changed
 steps while the model was rotating on its own.</li>
+<li>Stop applying seams to parts that have been transformed non-uniformly.  This
+was causing significant problems with flex tubes, which are stretched to
+arbitrary lengths.  The excessive stretching messed up the seam calculation,
+causing them to be way too short.</li>
 </ul>
 </td></tr>
 

@@ -93,6 +93,7 @@ public:
 	bool isSubPart(void) const { return m_flags.subPart != false; }
 	bool isMPD(void) const { return m_flags.mpd != false; }
 	bool getNoShrinkFlag(void) const { return m_flags.noShrink != false; }
+	void setNoShrinkFlag(bool value) { m_flags.noShrink = value; }
 	bool isOfficial(void) const { return m_flags.official != false; }
 	bool hasStuds(void) const { return m_flags.hasStuds != false; }
 	bool hasBoundingBox(void) const;
