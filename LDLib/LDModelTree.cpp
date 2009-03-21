@@ -23,8 +23,7 @@ m_children(NULL),
 m_filteredChildren(NULL),
 m_activeLineTypes(0),
 m_allLineTypes(0),
-m_viewPopulated(false),
-m_lineNumber(-1)
+m_viewPopulated(false)
 {
 	TCObject::retain(m_model);
 	for (int i = LDLLineTypeComment; i <= LDLLineTypeUnknown; i++)
@@ -46,15 +45,13 @@ m_lineNumber(-1)
 
 LDModelTree::LDModelTree(
 	TCULong activeLineTypes,
-	TCULong allLineTypes,
-	int lineNumber):
+	TCULong allLineTypes):
 m_model(NULL),
 m_children(NULL),
 m_filteredChildren(NULL),
 m_activeLineTypes(activeLineTypes),
 m_allLineTypes(allLineTypes),
-m_viewPopulated(false),
-m_lineNumber(lineNumber)
+m_viewPopulated(false)
 {
 }
 
@@ -177,7 +174,7 @@ void LDModelTree::scanModel(LDLModel *model, int defaultColor) const
 			for (int i = 0; i < count; i++)
 			{
 				LDModelTree *child = new LDModelTree(m_activeLineTypes,
-					m_allLineTypes, i + 1);
+					m_allLineTypes);
 
 				m_children->addObject(child);
 				child->release();
@@ -410,7 +407,7 @@ const ucstring &LDModelTree::getStatusText(void) const
 
 			delete filename;
 			m_statusText += ls(_UC("SpaceLineSpace"));
-			m_statusText += ltoucstr(m_lineNumber);
+			m_statusText += ltoucstr(m_fileLine->getLineNumber());
 		}
 		else
 		{
