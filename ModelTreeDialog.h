@@ -40,6 +40,8 @@ protected:
 	void showOptions(void);
 	void adjustWindow(int widthDelta);
 	void swapWindowText(char oldChar, char newChar);
+	void selectFromHighlightPath(std::string path);
+	HTREEITEM getChild(HTREEITEM hParent, int index);
 
 	virtual BOOL doInitDialog(HWND /*hKbControl*/);
 	virtual LRESULT doNotify(int controlId, LPNMHDR notification);
