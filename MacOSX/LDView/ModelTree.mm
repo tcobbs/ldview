@@ -98,11 +98,46 @@
 	}
 }
 
+- (void)selectAndExpandPath:(std::string)path
+{
+	ModelTreeItem *item = rootModelTreeItem;
+
+	while (path.size() > 0)
+	{
+		int lineNumber = atoi(&path[1]) - 1;
+
+		item = [item childAtIndex:lineNumber];
+		//item = [outlineView itemAtRow:[outlineView rowForItem:item] + lineNumber + 1];
+		if (item != nil)
+		{
+			size_t index = path.find('/', 1);
+			if (index < path.size())
+			{
+				path = path.substr(index);
+				[outlineView expandItem:item];
+			}
+			else
+			{
+				[outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:item]] byExtendingSelection:TRUE];
+				path = "";
+			}
+		}
+	}
+}
+
 - (void)reloadOutlineView
 {
+	// The following is intentionally a copy.
+	StringList paths = [[modelWindow modelView] modelViewer]->getHighlightPaths();
+	
 	[outlineView reloadData];
 	[[outlineView outlineTableColumn] setWidth:100];
 	[self resizeIfNeeded:rootModelTreeItem];
+	[outlineView deselectAll:self];
+	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
+	{
+		[self selectAndExpandPath:*it];
+	}
 }
 
 - (void)modelChanged
