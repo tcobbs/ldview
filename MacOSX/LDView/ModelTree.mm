@@ -107,7 +107,6 @@
 		int lineNumber = atoi(&path[1]) - 1;
 
 		item = [item childAtIndex:lineNumber];
-		//item = [outlineView itemAtRow:[outlineView rowForItem:item] + lineNumber + 1];
 		if (item != nil)
 		{
 			size_t index = path.find('/', 1);
