@@ -251,6 +251,11 @@ bool LDLModelLine::parse(void)
 					setWarning(LDLEPartDeterminant,
 						TCLocalStrings::get(_UC("LDLModelLineNonUniformPart")));
 					m_flags.nonUniform = true;
+					m_highResModel->setNoShrinkFlag(true);
+					if (m_lowResModel != NULL)
+					{
+						m_lowResModel->setNoShrinkFlag(true);
+					}
 				}
 			}
 		}

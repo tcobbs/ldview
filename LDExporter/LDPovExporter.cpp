@@ -2754,7 +2754,8 @@ void LDPovExporter::writeSeamMatrix(LDLModelLine *pModelLine)
 {
 	LDLModel *pModel = pModelLine->getModel(true);
 
-	if (pModel && pModel->isPart() && pModel != m_pTopModel)
+	if (pModel && pModel->isPart() && pModel != m_pTopModel &&
+		!pModel->getNoShrinkFlag())
 	{
 		TCVector min, max, size, center;
 
