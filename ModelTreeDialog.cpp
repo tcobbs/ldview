@@ -327,13 +327,63 @@ void ModelTreeDialog::clearTreeView(void)
 	updateStatusText();
 }
 
+HTREEITEM ModelTreeDialog::getChild(HTREEITEM hParent, int index)
+{
+	HTREEITEM hItem;
+
+	hItem = TreeView_GetChild(m_hTreeView, hParent);
+	for (int i = 1; i <= index; i++)
+	{
+		hItem = TreeView_GetNextSibling(m_hTreeView, hItem);
+	}
+	return hItem;
+}
+
+void ModelTreeDialog::selectFromHighlightPath(std::string path)
+{
+	HTREEITEM hItem = NULL;
+
+	while (path.size() > 0)
+	{
+		int lineNumber = atoi(&path[1]) - 1;
+
+		hItem = getChild(hItem, lineNumber);
+		if (hItem != NULL)
+		{
+			size_t index = path.find('/', 1);
+			if (index < path.size())
+			{
+				TreeView_Expand(m_hTreeView, hItem, TVE_EXPAND);
+				path = path.substr(index);
+			}
+			else
+			{
+				TreeView_SelectItem(m_hTreeView, hItem);
+				path = "";
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+}
+
 void ModelTreeDialog::refreshTreeView(void)
 {
+	// The following has to be a copy, because the selection triggers the
+	// list to disappear out from under us.
+	StringList paths = m_modelWindow->getModelViewer()->getHighlightPaths();
+
 	clearTreeView();
 	SendMessage(m_hTreeView, WM_SETREDRAW, FALSE, 0);
 	addChildren(NULL, m_modelTree);
 	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
 	RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
+	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
+	{
+		selectFromHighlightPath(*it);
+	}
 }
 
 void ModelTreeDialog::fillTreeView(void)
