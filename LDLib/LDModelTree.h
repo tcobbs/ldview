@@ -38,10 +38,9 @@ public:
 	bool getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
 	bool getTextRGB(TCByte &r, TCByte &g, TCByte &b) const;
 	bool getTextRGB(int &r, int &g, int &b) const;
-	int getLineNumber(void) const { return m_lineNumber; }
 protected:
 	bool getRGB(TCFloat l, TCFloat h, TCFloat &r, TCFloat &g, TCFloat &b) const;
-	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes, int lineNumber);
+	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
 	virtual ~LDModelTree(void);
 	virtual void dealloc(void);
 	void scanLine(LDLFileLine *fileLine, int defaultColor);
@@ -49,7 +48,6 @@ protected:
 	bool childFilterCheck(const LDModelTree *child) const;
 	void clearFilteredChildren(void);
 	std::string lineTypeKey(LDLLineType lineType) const;
-	//virtual void scanModelLine(LDLModelLine *modelLine, int defaultColor);
 
 	LDLModel *m_model;
 	const LDLFileLine *m_fileLine;
@@ -63,7 +61,6 @@ protected:
 	TCULong m_activeLineTypes;
 	TCULong m_allLineTypes;
 	bool m_viewPopulated;
-	int m_lineNumber;
 };
 
 #endif // __LDMODELTREE_H__
