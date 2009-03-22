@@ -10,10 +10,6 @@ struct Lib3dsNode;
 
 class LDLShapeLine;
 
-class TREVertexArray;
-class TREShapeGroup;
-enum TREShapeType;
-
 class LD3dsExporter : public LDExporter
 {
 public:

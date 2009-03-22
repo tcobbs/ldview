@@ -1,7 +1,4 @@
 #include "LD3dsExporter.h"
-#include <TRE/TREModel.h>
-#include <TRE/TREVertexStore.h>
-#include <TRE/TRESubModel.h>
 #include <LDLoader/LDLMainModel.h>
 #include <LDLoader/LDLModelLine.h>
 #include <LDLoader/LDLTriangleLine.h>
