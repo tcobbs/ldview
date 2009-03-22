@@ -84,7 +84,12 @@ class LDrawModelViewer: public TCAlertSender
 			ETFirst = 1,
 			ETPov = ETFirst,
 			ETStl,
+#ifdef EXPORT_3DS
+			ET3ds,
+			ETLast = ET3ds
+#else // EXPORT_3DS
 			ETLast = ETStl
+#endif // EXPORT_3DS
 		};
 		struct StandardSize
 		{

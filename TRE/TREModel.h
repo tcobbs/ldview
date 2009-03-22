@@ -208,6 +208,13 @@ public:
 	virtual void cleanupTransparent(TREMSection section);
 	virtual TCObject *getAlertSender(void);
 	virtual void saveSTL(FILE *file);
+
+	TREShapeGroup *getShape(int index) { return m_shapes[index]; }
+	TREColoredShapeGroup *getColoredShape(int index)
+	{
+		return m_coloredShapes[index];
+	}
+	TRESubModelArray *getSubModels(void) { return m_subModels; }
 protected:
 	virtual ~TREModel(void);
 	virtual void dealloc(void);
