@@ -121,8 +121,47 @@ void LD3dsExporter::writeShapeLine(
 	}
 }
 
+std::string LD3dsExporter::getMeshName(LDLModel *model)
+{
+	std::string name;
+	StringIntMap::iterator it;
+	int count;
+
+	if (model != NULL)
+	{
+		char *filename = filenameFromPath(model->getFilename());
+		size_t dotSpot;
+
+		name = filename;
+		dotSpot = name.rfind('.');
+		delete filename;
+		if (dotSpot < name.size())
+		{
+			name = name.substr(0, dotSpot);
+		}
+	}
+	else
+	{
+		name = "no_name";
+	}
+	it = m_names.find(name);
+	if (it == m_names.end())
+	{
+		m_names[name] = 1;
+		count = 1;
+	}
+	else
+	{
+		count = ++it->second;
+	}
+	name += " ";
+	name += ltostr(count);
+	return name;
+}
+
 void LD3dsExporter::doExport(
 	LDLModel *pModel,
+	Lib3dsMesh *parentMesh,
 	const TCFloat *matrix,
 	int colorNumber)
 {
@@ -131,11 +170,24 @@ void LD3dsExporter::doExport(
 	if (pFileLines != NULL)
 	{
 		int count = pModel->getActiveLineCount();
-		std::string meshNumString = ltostr(m_numMeshes++);
-		Lib3dsMesh *mesh = lib3ds_mesh_new((meshNumString + "m").c_str());
-		Lib3dsMeshInstanceNode *pInst;
+		std::string meshName;
+		Lib3dsMesh *mesh;
+		Lib3dsMesh *childMesh = parentMesh;
 
-		lib3ds_file_insert_mesh(m_file, mesh, -1);
+		if (parentMesh != NULL)
+		{
+			mesh = parentMesh;
+		}
+		else
+		{
+			meshName = getMeshName(pModel);
+			mesh = lib3ds_mesh_new(meshName.c_str());
+			lib3ds_file_insert_mesh(m_file, mesh, -1);
+			if (pModel->isPart())
+			{
+				childMesh = mesh;
+			}
+		}
 		for (int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
@@ -167,15 +219,20 @@ void LD3dsExporter::doExport(
 						}
 						TCVector::multMatrix(matrix, pModelLine->getMatrix(),
 							newMatrix);
-						doExport(pOtherModel, newMatrix, otherColorNumber);
+						doExport(pOtherModel, childMesh, newMatrix,
+							otherColorNumber);
 					}
 				}
 				break;
 			}
 		}
-		pInst = lib3ds_node_new_mesh_instance(mesh,
-			(meshNumString + "n").c_str(), NULL, NULL, NULL);
-		lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, NULL);
+		if (parentMesh == NULL)
+		{
+			Lib3dsMeshInstanceNode *pInst = lib3ds_node_new_mesh_instance(mesh,
+				(meshName + "n").c_str(), NULL, NULL, NULL);
+
+			lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, NULL);
+		}
 	}
 }
 
@@ -185,8 +242,8 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 
 	m_topModel = pTopModel;
     m_file = lib3ds_file_new();
-	m_numMeshes = 0;
-	doExport(pTopModel, TCVector::getIdentityMatrix(), 7);
+	m_names.clear();
+	doExport(pTopModel, NULL, TCVector::getIdentityMatrix(), 7);
 	if (!lib3ds_file_save(m_file, m_filename.c_str()))
 	{
 		retVal = 0;

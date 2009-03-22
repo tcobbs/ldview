@@ -1426,7 +1426,11 @@
 				);
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					GL2PS_HAVE_ZLIB,
+					EXPORT_3DS,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1442,6 +1446,7 @@
 					"../TRE/build/$(CONFIGURATION)",
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
+					../../../lib3ds/src/.libs,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1452,6 +1457,7 @@
 					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
 					"-ltinyxml",
+					"-l3ds",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
@@ -1495,6 +1501,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					COCOA,
 					GL2PS_HAVE_ZLIB,
+					EXPORT_3DS,
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1511,6 +1518,7 @@
 					"../TRE/build/$(CONFIGURATION)",
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
+					../../../lib3ds/src/.libs,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1521,6 +1529,7 @@
 					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
 					"-ltinyxml",
+					"-l3ds",
 				);
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
@@ -1532,7 +1541,11 @@
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = COCOA;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					COCOA,
+					GL2PS_HAVE_ZLIB,
+					EXPORT_3DS,
+				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -1548,6 +1561,7 @@
 					"../TRE/build/$(CONFIGURATION)",
 					"../LDExporter/build/$(CONFIGURATION)",
 					"../LDLib/build/$(CONFIGURATION)",
+					../../../lib3ds/src/.libs,
 					"$(LIBRARY_SEARCH_PATHS)",
 				);
 				OTHER_LDFLAGS = (
@@ -1558,6 +1572,7 @@
 					"-lboost_date_time-mt",
 					"$(OTHER_LDFLAGS)",
 					"-ltinyxml",
+					"-l3ds",
 				);
 				PREBINDING = NO;
 				PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES;
