@@ -26,7 +26,7 @@ protected:
 	void dealloc(void);
 	virtual void initSettings(void) const;
 	void doExport(LDLModel *pModel, Lib3dsNode *pParentNode,
-		const TCFloat *matrix, int colorNumber);
+		const TCFloat *matrix, int colorNumber, bool inPart);
 	int getMaterial(int colorNumber);
 	void writeShapeLine(Lib3dsMesh *pMesh, LDLShapeLine *pShapeLine,
 		const TCFloat *matrix, int colorNumber);
@@ -41,6 +41,8 @@ protected:
 	IntIntMap m_colorNumbers;
 	Lib3dsFile *m_file;
 	LDLModel *m_topModel;
+	bool m_seams;
+	float m_seamWidth;
 };
 
 #endif // __LD3DSEXPORTER_H__

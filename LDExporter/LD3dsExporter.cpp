@@ -22,6 +22,11 @@ LD3dsExporter::~LD3dsExporter(void)
 
 void LD3dsExporter::initSettings(void) const
 {
+	addSetting(LDExporterSetting(ls(_UC("3dsSeams")), m_seams,
+		udKey("Seams").c_str()));
+	m_settings.back().setGroupSize(1);
+	addSetting(LDExporterSetting(ls(_UC("3dsSeamWidth")), m_seamWidth,
+		udKey("SeamWidth").c_str()));
 }
 
 void LD3dsExporter::dealloc(void)
@@ -37,6 +42,8 @@ ucstring LD3dsExporter::getTypeDescription(void) const
 void LD3dsExporter::loadSettings(void)
 {
 	LDExporter::loadSettings();
+	m_seams = boolForKey("Seams", true);
+	m_seamWidth = floatForKey("SeamWidth", 0.5);
 }
 
 int LD3dsExporter::getMaterial(int colorNumber)
@@ -164,7 +171,8 @@ void LD3dsExporter::doExport(
 	LDLModel *pModel,
 	Lib3dsNode *pParentNode,
 	const TCFloat *matrix,
-	int colorNumber)
+	int colorNumber,
+	bool inPart)
 {
 	LDLFileLineArray *pFileLines = pModel->getFileLines();
 
@@ -207,6 +215,7 @@ void LD3dsExporter::doExport(
 					{
 						TCFloat newMatrix[16];
 						int otherColorNumber = pModelLine->getColorNumber();
+						bool otherInPart = inPart;
 
 						if (otherColorNumber == 16)
 						{
@@ -214,8 +223,22 @@ void LD3dsExporter::doExport(
 						}
 						TCVector::multMatrix(matrix, pModelLine->getMatrix(),
 							newMatrix);
+						if (!inPart && pOtherModel->isPart() && m_seams)
+						{
+							TCVector min, max;
+							TCFloat seamMatrix[16];
+							TCFloat tempMatrix[16];
+
+							pOtherModel->getBoundingBox(min, max);
+							TCVector::calcScaleMatrix(m_seamWidth, seamMatrix,
+								min, max);
+							TCVector::multMatrix(newMatrix, seamMatrix,
+								tempMatrix);
+							memcpy(newMatrix, tempMatrix, sizeof(newMatrix));
+							otherInPart = true;
+						}
 						doExport(pOtherModel, pChildNode, newMatrix,
-							otherColorNumber);
+							otherColorNumber, otherInPart);
 					}
 				}
 				break;
@@ -237,7 +260,7 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
 	m_topModel = pTopModel;
     m_file = lib3ds_file_new();
 	m_names.clear();
-	doExport(pTopModel, NULL, matrix, 7);
+	doExport(pTopModel, NULL, matrix, 7, false);
 	if (!lib3ds_file_save(m_file, m_filename.c_str()))
 	{
 		retVal = 0;
