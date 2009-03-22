@@ -239,11 +239,17 @@ void LD3dsExporter::doExport(
 int LD3dsExporter::doExport(LDLModel *pTopModel)
 {
 	int retVal = 1;
+	TCFloat matrix[16];
 
+	TCVector::initIdentityMatrix(matrix);
+	matrix[5] = 0.0;
+	matrix[6] = -1.0;
+	matrix[9] = 1.0;
+	matrix[10] = 0.0;
 	m_topModel = pTopModel;
     m_file = lib3ds_file_new();
 	m_names.clear();
-	doExport(pTopModel, NULL, TCVector::getIdentityMatrix(), 7);
+	doExport(pTopModel, NULL, matrix, 7);
 	if (!lib3ds_file_save(m_file, m_filename.c_str()))
 	{
 		retVal = 0;
