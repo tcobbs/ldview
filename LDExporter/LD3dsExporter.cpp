@@ -162,7 +162,7 @@ std::string LD3dsExporter::getMeshName(LDLModel *model)
 
 void LD3dsExporter::doExport(
 	LDLModel *pModel,
-	Lib3dsNode *parentNode,
+	Lib3dsNode *pParentNode,
 	const TCFloat *matrix,
 	int colorNumber)
 {
@@ -181,7 +181,7 @@ void LD3dsExporter::doExport(
 		lib3ds_file_insert_mesh(m_file, pMesh, -1);
 		pInst = lib3ds_node_new_mesh_instance(pMesh,
 			(meshName + "n").c_str(), NULL, NULL, NULL);
-		lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, parentNode);
+		lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, pParentNode);
 		pChildNode = (Lib3dsNode *)pInst;
 		for (int i = 0; i < count; i++)
 		{

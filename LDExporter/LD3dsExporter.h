@@ -25,7 +25,7 @@ protected:
 	~LD3dsExporter(void);
 	void dealloc(void);
 	virtual void initSettings(void) const;
-	void doExport(LDLModel *pModel, Lib3dsNode *parentNode,
+	void doExport(LDLModel *pModel, Lib3dsNode *pParentNode,
 		const TCFloat *matrix, int colorNumber);
 	int getMaterial(int colorNumber);
 	void writeShapeLine(Lib3dsMesh *pMesh, LDLShapeLine *pShapeLine,
