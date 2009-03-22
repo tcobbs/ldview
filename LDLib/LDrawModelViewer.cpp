@@ -18,6 +18,9 @@
 #include <LDLoader/LDLConditionalLineLine.h>
 #include <LDExporter/LDPovExporter.h>
 #include <LDExporter/LDStlExporter.h>
+#ifdef EXPORT_3DS
+#include <LDExporter/LD3dsExporter.h>
+#endif // EXPORT_3DS
 #include "LDInputHandler.h"
 #include "LDModelParser.h"
 #include "LDPreferences.h"
@@ -4608,6 +4611,11 @@ LDExporter *LDrawModelViewer::initExporter(void)
 		case ETStl:
 			exporter = new LDStlExporter;
 			break;
+#ifdef EXPORT_3DS
+		case ET3ds:
+			exporter = new LD3dsExporter;
+			break;
+#endif // EXPORT_3DS
 		default:
 			exporter = NULL;
 			break;

@@ -20,7 +20,7 @@ class TREMainModel;
 class TREVertexArray;
 class TCVector;
 
-typedef enum
+typedef enum TREShapeType
 {
 	TRESLine			= 0x0001,
 	TRESFirst			= TRESLine,
