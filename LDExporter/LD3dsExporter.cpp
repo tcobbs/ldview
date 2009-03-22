@@ -58,6 +58,7 @@ int LD3dsExporter::getMaterial(int colorNumber)
         mat->diffuse[1] = g / 255.0f;
         mat->diffuse[2] = b / 255.0f;
 		mat->transparency = 1.0f - a / 255.0f;
+		mat->two_sided = TRUE;
 		if (colorInfo.rubber)
 		{
 			mat->specular[0] = mat->specular[1] = mat->specular[2] = 0.05f;
@@ -73,7 +74,7 @@ int LD3dsExporter::getMaterial(int colorNumber)
 }
 
 void LD3dsExporter::writeTriangle(
-	Lib3dsMesh *mesh,
+	Lib3dsMesh *pMesh,
 	const TCVector *points,
 	int i0,
 	int i1,
@@ -82,29 +83,29 @@ void LD3dsExporter::writeTriangle(
 	const TCFloat *matrix)
 {
 	int ix[3];
-	int voffset = mesh->nvertices;
-	int foffset = mesh->nfaces;
+	int voffset = pMesh->nvertices;
+	int foffset = pMesh->nfaces;
 
 	ix[0] = i0;
 	ix[1] = i1;
 	ix[2] = i2;
-	lib3ds_mesh_resize_vertices(mesh, voffset + 3, 0, 0);
-	lib3ds_mesh_resize_faces(mesh, foffset + 1);
+	lib3ds_mesh_resize_vertices(pMesh, voffset + 3, 0, 0);
+	lib3ds_mesh_resize_faces(pMesh, foffset + 1);
 	for (int i = 0; i < 3; i++)
 	{
 		TCVector vector = points[ix[i]];
 
 		vector = vector.transformPoint(matrix);
-		mesh->vertices[voffset + i][0] = vector[0];
-		mesh->vertices[voffset + i][1] = vector[1];
-		mesh->vertices[voffset + i][2] = vector[2];
-		mesh->faces[foffset].index[i] = (unsigned short)(voffset + i);
-		mesh->faces[foffset].material = getMaterial(colorNumber);
+		pMesh->vertices[voffset + i][0] = vector[0];
+		pMesh->vertices[voffset + i][1] = vector[1];
+		pMesh->vertices[voffset + i][2] = vector[2];
+		pMesh->faces[foffset].index[i] = (unsigned short)(voffset + i);
+		pMesh->faces[foffset].material = getMaterial(colorNumber);
 	}
 }
 
 void LD3dsExporter::writeShapeLine(
-	Lib3dsMesh *mesh,
+	Lib3dsMesh *pMesh,
 	LDLShapeLine *pShapeLine,
 	const TCFloat *matrix,
 	int colorNumber)
@@ -113,10 +114,10 @@ void LD3dsExporter::writeShapeLine(
 	{
 		colorNumber = pShapeLine->getColorNumber();
 	}
-	writeTriangle(mesh, pShapeLine->getPoints(), 0, 1, 2, colorNumber, matrix);
+	writeTriangle(pMesh, pShapeLine->getPoints(), 0, 1, 2, colorNumber, matrix);
 	if (pShapeLine->getNumPoints() > 3)
 	{
-		writeTriangle(mesh, pShapeLine->getPoints(), 0, 2, 3, colorNumber,
+		writeTriangle(pMesh, pShapeLine->getPoints(), 0, 2, 3, colorNumber,
 			matrix);
 	}
 }
@@ -161,7 +162,7 @@ std::string LD3dsExporter::getMeshName(LDLModel *model)
 
 void LD3dsExporter::doExport(
 	LDLModel *pModel,
-	Lib3dsMesh *parentMesh,
+	Lib3dsNode *parentNode,
 	const TCFloat *matrix,
 	int colorNumber)
 {
@@ -171,23 +172,17 @@ void LD3dsExporter::doExport(
 	{
 		int count = pModel->getActiveLineCount();
 		std::string meshName;
-		Lib3dsMesh *mesh;
-		Lib3dsMesh *childMesh = parentMesh;
+		Lib3dsMesh *pMesh;
+		Lib3dsNode *pChildNode = NULL;
+		Lib3dsMeshInstanceNode *pInst;
 
-		if (parentMesh != NULL)
-		{
-			mesh = parentMesh;
-		}
-		else
-		{
-			meshName = getMeshName(pModel);
-			mesh = lib3ds_mesh_new(meshName.c_str());
-			lib3ds_file_insert_mesh(m_file, mesh, -1);
-			if (pModel->isPart())
-			{
-				childMesh = mesh;
-			}
-		}
+		meshName = getMeshName(pModel);
+		pMesh = lib3ds_mesh_new(meshName.c_str());
+		lib3ds_file_insert_mesh(m_file, pMesh, -1);
+		pInst = lib3ds_node_new_mesh_instance(pMesh,
+			(meshName + "n").c_str(), NULL, NULL, NULL);
+		lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, parentNode);
+		pChildNode = (Lib3dsNode *)pInst;
 		for (int i = 0; i < count; i++)
 		{
 			LDLFileLine *pFileLine = (*pFileLines)[i];
@@ -200,7 +195,7 @@ void LD3dsExporter::doExport(
 			{
 			case LDLLineTypeTriangle:
 			case LDLLineTypeQuad:
-				writeShapeLine(mesh, (LDLShapeLine *)pFileLine, matrix,
+				writeShapeLine(pMesh, (LDLShapeLine *)pFileLine, matrix,
 					colorNumber);
 				break;
 			case LDLLineTypeModel:
@@ -219,19 +214,12 @@ void LD3dsExporter::doExport(
 						}
 						TCVector::multMatrix(matrix, pModelLine->getMatrix(),
 							newMatrix);
-						doExport(pOtherModel, childMesh, newMatrix,
+						doExport(pOtherModel, pChildNode, newMatrix,
 							otherColorNumber);
 					}
 				}
 				break;
 			}
-		}
-		if (parentMesh == NULL)
-		{
-			Lib3dsMeshInstanceNode *pInst = lib3ds_node_new_mesh_instance(mesh,
-				(meshName + "n").c_str(), NULL, NULL, NULL);
-
-			lib3ds_file_append_node(m_file, (Lib3dsNode *)pInst, NULL);
 		}
 	}
 }

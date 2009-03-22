@@ -25,12 +25,12 @@ protected:
 	~LD3dsExporter(void);
 	void dealloc(void);
 	virtual void initSettings(void) const;
-	void doExport(LDLModel *pModel, Lib3dsMesh *parentMesh,
+	void doExport(LDLModel *pModel, Lib3dsNode *parentNode,
 		const TCFloat *matrix, int colorNumber);
 	int getMaterial(int colorNumber);
-	void writeShapeLine(Lib3dsMesh *mesh, LDLShapeLine *pShapeLine,
+	void writeShapeLine(Lib3dsMesh *pMesh, LDLShapeLine *pShapeLine,
 		const TCFloat *matrix, int colorNumber);
-	void writeTriangle(Lib3dsMesh *mesh, const TCVector *points, int i0,
+	void writeTriangle(Lib3dsMesh *pMesh, const TCVector *points, int i0,
 		int i1, int i2, int colorNumber, const TCFloat *matrix);
 	std::string getMeshName(LDLModel *model);
 
