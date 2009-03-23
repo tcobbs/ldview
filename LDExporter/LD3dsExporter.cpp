@@ -65,7 +65,7 @@ int LD3dsExporter::getMaterial(int colorNumber)
         mat->diffuse[1] = g / 255.0f;
         mat->diffuse[2] = b / 255.0f;
 		mat->transparency = 1.0f - a / 255.0f;
-		mat->two_sided = TRUE;
+		mat->two_sided = 1;
 		if (colorInfo.rubber)
 		{
 			mat->specular[0] = mat->specular[1] = mat->specular[2] = 0.05f;
