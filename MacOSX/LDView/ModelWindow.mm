@@ -297,6 +297,7 @@ enum
 	[self updateSegments:otherFeaturesSegments states:states alternates:alternates];
 	[otherFeaturesSegments setEnabled:enabled forSegment:5];
 	[studLogosSegments setEnabled:enabled forSegment:0];
+	[otherFeaturesSegments setNeedsDisplay:YES];
 }
 
 - (void)updatePartsAuthorStates
@@ -345,6 +346,7 @@ enum
 		nil];
 	
 	[self updateSegments:featuresSegments states:states alternates:alternates];
+	[featuresSegments setNeedsDisplay:YES];
 }
 
 - (BOOL)haveLatLon
@@ -1683,10 +1685,8 @@ enum
 
 - (void)toggleFeature:(SEL)selector sender:(id)sender
 {
-	// I know it looks wrong that were asking if the selectedSegment
-	// is selected.  However, selectedSegment just returns the segment
-	// the user just clicked on.  It's not necessarily actually selected.
 	[[controller preferences] performSelector:selector withObject:sender];
+	[self updateStates];
 }
 
 - (IBAction)otherFeatures:(id)sender

@@ -48,10 +48,11 @@
 
 - (void)checked:(id)sender
 {
-	if (check != nil)
-	{
-		[check setCheck:setting->getBoolValue()];
-	}
+	[options updateEnabled];
+//	if (check != nil)
+//	{
+//		[check setCheck:setting->getBoolValue()];
+//	}
 }
 
 - (void)dealloc
