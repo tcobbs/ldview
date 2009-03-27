@@ -988,7 +988,7 @@ bool TCLocalStrings::loadStringTable(const char *filename, bool replace)
 		fileData = new TCByte[fileSize];
 		if (fread(fileData, 1, fileSize, tableFile) == (unsigned)fileSize)
 		{
-			setStringTable(fileData, fileSize, replace);
+			retValue = setStringTable(fileData, fileSize, replace);
 		}
 		delete fileData;
 		fclose(tableFile);
