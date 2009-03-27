@@ -544,9 +544,13 @@ bool LDLPrimitiveCheck::performPrimitiveSubstitution(
 			if (is48)
 			{
 				offset = 3;
+				m_filenameDenom = 48;
+			}
+			else
+			{
+				m_filenameDenom = 16;
 			}
 			sscanf(m_modelName + 1 + offset, "%d", &m_filenameNumerator);
-			m_filenameDenom = 16;
 			sscanf(m_modelName + 4 + offset, "%d", &size);
 			fraction = (TCFloat)m_filenameNumerator / (TCFloat)m_filenameDenom;
 			if (isTorusO(m_modelName, &is48))
