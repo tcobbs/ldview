@@ -43,6 +43,7 @@ protected:
 	LDLModel *m_topModel;
 	bool m_seams;
 	float m_seamWidth;
+	//bool m_includeCamera;
 };
 
 #endif // __LD3DSEXPORTER_H__

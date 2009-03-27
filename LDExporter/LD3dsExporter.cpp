@@ -44,6 +44,7 @@ void LD3dsExporter::loadSettings(void)
 	LDExporter::loadSettings();
 	m_seams = boolForKey("Seams", true);
 	m_seamWidth = floatForKey("SeamWidth", 0.5);
+	//m_includeCamera = boolForKey("IncludeCamera", true);
 }
 
 int LD3dsExporter::getMaterial(int colorNumber)
@@ -261,6 +262,19 @@ int LD3dsExporter::doExport(LDLModel *pTopModel)
     m_file = lib3ds_file_new();
 	m_names.clear();
 	doExport(pTopModel, NULL, matrix, 7, false);
+	//if (m_includeCamera)
+	//{
+	//	Lib3dsCamera *pCamera = lib3ds_camera_new("Default");
+	//	Lib3dsCameraNode *pCameraNode;
+	//	TCVector cameraLoc(m_camera.getPosition().transformPoint(matrix));
+
+	//	pCamera->position[0] = cameraLoc[0];
+	//	pCamera->position[1] = cameraLoc[1];
+	//	pCamera->position[2] = cameraLoc[2];
+	//	pCamera->fov = m_fov;
+	//	pCameraNode = lib3ds_node_new_camera(pCamera);
+	//	lib3ds_file_append_node(m_file, (Lib3dsNode *)pCameraNode, NULL);
+	//}
 	if (!lib3ds_file_save(m_file, m_filename.c_str()))
 	{
 		retVal = 0;
