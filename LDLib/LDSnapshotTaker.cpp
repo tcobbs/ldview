@@ -278,47 +278,81 @@ bool LDSnapshotTaker::saveImage(void)
 			
 			if (arg[0] != '-' && arg[0] != 0)
 			{
-				char *imageFilename = NULL;
+				std::string imageFilename;
 
 				if (saveSnapshots)
 				{
-					char *dotSpot = NULL;
 					char *baseFilename = filenameFromPath(arg);
+					std::string mpdName;
+					size_t mpdSpot;
 
 					if (saveDir)
 					{
-						imageFilename = new char[strlen(baseFilename) +
-							strlen(imageExt) + strlen(saveDir) + 2];
-						sprintf(imageFilename, "%s/%s", saveDir, baseFilename);
+						imageFilename = saveDir + '/';
+						imageFilename += baseFilename;
 					}
 					else
 					{
-						imageFilename = copyString(arg, strlen(imageExt));
+						imageFilename = arg;
+					}
+#ifdef WIN32
+					mpdSpot = imageFilename.find(':', 2);
+#else // WIN32
+					mpdSpot = imageFilename.find(':');
+#endif // WIN32
+					if (mpdSpot < imageFilename.size())
+					{
+						char *baseMpdSpot = strrchr(baseFilename, ':');
+						std::string mpdExt;
+
+						mpdName = '-';
+						mpdName += imageFilename.substr(mpdSpot + 1);
+						imageFilename = imageFilename.substr(0, mpdSpot);
+						if (baseMpdSpot != NULL &&
+							strlen(baseMpdSpot) == mpdName.size())
+						{
+							baseMpdSpot[0] = 0;
+						}
+						mpdSpot = mpdName.rfind('.');
+						if (mpdSpot < mpdName.length())
+						{
+							mpdExt = mpdName.substr(mpdSpot);
+							convertStringToLower(&mpdExt[0]);
+							if (mpdExt == ".dat" || mpdExt == ".ldr" ||
+								mpdExt == ".mpd")
+							{
+								mpdName = mpdName.substr(0, mpdSpot);
+							}
+						}
 					}
 					// Note: we need there to be a dot in the base filename,
 					// not the path before that.
 					if (strchr(baseFilename, '.'))
 					{
-						dotSpot = strrchr(imageFilename, '.');
+						imageFilename = imageFilename.substr(0,
+							imageFilename.rfind('.'));
 					}
 					delete baseFilename;
-					if (dotSpot)
-					{
-						*dotSpot = 0;
-					}
-					strcat(imageFilename, imageExt);
+					imageFilename += mpdName;
+					imageFilename += imageExt;
 				}
 				else
 				{
-					imageFilename = TCUserDefaults::stringForKey(
+					char *tempFilename = TCUserDefaults::stringForKey(
 						SAVE_SNAPSHOT_KEY, NULL, false);
-					if (imageFilename && !commandLineType)
+
+					if (tempFilename != NULL)
 					{
-						m_imageType = typeForFilename(imageFilename,
+						imageFilename = tempFilename;
+						delete tempFilename;
+					}
+					if (imageFilename.size() > 0 && !commandLineType)
+					{
+						m_imageType = typeForFilename(imageFilename.c_str(),
 							m_gl2psAllowed);
 					}
 				}
-				if (imageFilename)
+				if (imageFilename.size() > 0)
 				{
 					if (m_modelViewer && m_modelViewer->getFilename())
 					{
@@ -333,9 +367,8 @@ bool LDSnapshotTaker::saveImage(void)
 					{
 						m_modelFilename = arg;
 					}
-					retValue = saveImage(imageFilename, width, height,
+					retValue = saveImage(imageFilename.c_str(), width, height,
 						zoomToFit) || retValue;
-					delete imageFilename;
 				}
 			}
 		}

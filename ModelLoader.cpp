@@ -110,18 +110,6 @@ void ModelLoader::startup(void)
 	{
 		parentWindow->setHParentWindow(hParentWindow);
 	}
-/*
-	if (screenSaver)
-	{
-		modelWindow = new SSModelWindow(parentWindow, 0, 0, width, height);
-	}
-	else
-	{
-		modelWindow = new ModelWindow(parentWindow, xOffset, yOffset, width,
-			height);
-	}
-	parentWindow->setModelWindow(modelWindow);
-*/
 	if (parentWindow->initWindow())
 	{
 		char *commandLineFilename = getCommandLineFilename();
@@ -160,25 +148,12 @@ void ModelLoader::startup(void)
 				savedSnapshot = true;
 				modelWindow->cleanupOffscreen();
 			}
-			//if (!savedSnapshot && snapshotFilename)
-			//{
-			//	parentWindow->openModel(commandLineFilename, true);
-			//	// Note: even if the snapshot save fails, we don't want to continue.
-			//	// The user will get an error in the event of a snapshot save
-			//	// failure.
-			//	modelWindow->saveSnapshot(snapshotFilename, true);
-			//	parentWindow->shutdown();
-			//	savedSnapshot = true;
-			//}
 		}
 		if (!savedSnapshot)
 		{
-//			debugPrintf("About to show main window...\n");
 			parentWindow->showWindow(nCmdShow);
-//			debugPrintf("Main window shown.\n");
 			if (maximized)
 			{
-//				MessageBox(NULL, "bars?", "debug", MB_OK);
 				parentWindow->maximize();
 			}
 			if (!screenSaver)
@@ -187,14 +162,25 @@ void ModelLoader::startup(void)
 				{
 					parentWindow->openModel(commandLineFilename);
 					if (modelWindow->saveSnapshot(snapshotFilename, true))
-//					if (parentWindow->saveSnapshot(snapshotFilename))
 					{
 						parentWindow->shutdown();
 					}
 				}
 				else
 				{
+					std::string stepString =
+						TCUserDefaults::commandLineStringForKey(STEP_KEY);
+
 					parentWindow->openModel(commandLineFilename);
+					if (commandLineFilename != NULL && stepString.size() > 0)
+					{
+						long step;
+
+						if (sscanf(stepString.c_str(), "%li", &step) == 1)
+						{
+							parentWindow->setStep(step);
+						}
+					}
 				}
 			}
 		}

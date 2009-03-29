@@ -267,6 +267,25 @@ void LDrawModelViewer::setFilename(const char* value)
 {
 	delete filename;
 	filename = copyString(value);
+	mpdName = "";
+	if (filename != NULL)
+	{
+		char *mpdSpot = NULL;
+
+#ifdef WIN32
+		if (strlen(filename) > 2)
+		{
+			mpdSpot = strchr(&filename[2], ':');
+		}
+#else // WIN32
+		mpdSpot = strchr(filename, ':');
+#endif // WIN32
+		if (mpdSpot != NULL)
+		{
+			mpdName = &mpdSpot[1];
+			mpdSpot[0] = 0;
+		}
+	}
 	flags.needsResetStep = true;
 	flags.needsResetMpd = true;
 	highlightPaths.clear();
@@ -4568,6 +4587,18 @@ LDLModel *LDrawModelViewer::getMpdChild(void)
 {
 	LDLModelVector &mpdModels = mainModel->getMpdModels();
 
+	if (mpdModels.size() > 0 && mpdName.size() > 0)
+	{
+		for (size_t i = 0; i < mpdModels.size(); i++)
+		{
+			if (strcasecmp(mpdModels[i]->getName(), mpdName.c_str()) == 0)
+			{
+				mpdChildIndex = (int)i;
+				mpdName = "";
+				break;
+			}
+		}
+	}
 	if ((int)mpdModels.size() > mpdChildIndex && mpdChildIndex >= 0)
 	{
 		return mpdModels[mpdChildIndex];

@@ -4583,17 +4583,36 @@ bool ModelWindow::calcSaveFilename(
 {
 	char* filename = filenameFromPath(modelViewer->getFilename());
 
-	if (filename)
+	if (filename != NULL)
 	{
 		bool found = false;
 		std::string baseFilename = filename;
 		size_t dotSpot;
+		LDLModel *mpdChild = modelViewer->getMpdChild();
 
 		delete filename;
 		dotSpot = baseFilename.rfind('.');
 		if (dotSpot < baseFilename.size())
 		{
 			baseFilename.erase(dotSpot);
+		}
+		if (mpdChild != NULL && mpdChild->getName() != NULL)
+		{
+			std::string mpdName = mpdChild->getName();
+			size_t dotSpot = mpdName.rfind('.');
+
+			if (dotSpot < mpdName.size())
+			{
+				std::string mpdExt = mpdName.substr(dotSpot);
+
+				convertStringToLower(&mpdExt[0]);
+				if (mpdExt == ".dat" || mpdExt == ".ldr" || mpdExt == ".mpd")
+				{
+					mpdName = mpdName.substr(0, dotSpot);
+				}
+			}
+			baseFilename += '-';
+			baseFilename += mpdName;
 		}
 		if (curSaveOp == LDPreferences::SOExport)
 		{

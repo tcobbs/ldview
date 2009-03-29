@@ -480,7 +480,7 @@ END
 IDD_GENERAL_PREFS DIALOGEX 0, 0, 310, 252
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     GROUPBOX        "&Antialiasing",IDC_AA_BOX,7,7,146,74,WS_GROUP,0,
                     HIDC_AA_BOX
@@ -1394,7 +1394,7 @@ BEGIN
         MENUITEM "&Next\tPgDn",                 ID_NEXT_STEP
         MENUITEM "&Last\tEnd",                  ID_LAST_STEP
         MENUITEM SEPARATOR
-        MENUITEM "&Go to Step...\tCtrl+G",         ID_GOTO_STEP
+        MENUITEM "&Go to Step...\tCtrl+G",      ID_GOTO_STEP
     END
     POPUP "&Tools"
     BEGIN
@@ -1699,8 +1699,8 @@ IDB_ERROR_LOOP_MASK     BITMAP  DISCARDABLE     "icons\\error_loop_mask.bmp"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 4,0,1,18
- PRODUCTVERSION 4,0,1,18
+ FILEVERSION 4,0,1,19
+ PRODUCTVERSION 4,0,1,19
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x9L
@@ -1718,14 +1718,14 @@ BEGIN
             VALUE "Comments", "3D Lego Model Viewer for models in LDraw format.\0"
             VALUE "CompanyName", "\0"
             VALUE "FileDescription", "LDView\0"
-            VALUE "FileVersion", "4.0.1r test build\0"
+            VALUE "FileVersion", "4.0.1s test build\0"
             VALUE "InternalName", "LDView\0"
             VALUE "LegalCopyright", "Copyright © 2009 Travis Cobbs & Peter Bartfai\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "LDView.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "LDView\0"
-            VALUE "ProductVersion", "4.0.1r test build\0"
+            VALUE "ProductVersion", "4.0.1s test build\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -1751,7 +1751,7 @@ IDR_EXPORTER_STRINGS    RCDATA  DISCARDABLE     "LDExporter\\LDExportMessages.in
 IDC_ALL_CONDITIONAL     RCDATA  DISCARDABLE     "Icons\\toolbar_all_cond.png"
 IDC_SHOW_AXES           RCDATA  DISCARDABLE     "Icons\\toolbar_axes.png"
 IDC_BFC                 RCDATA  DISCARDABLE     "Icons\\toolbar_bfc.png"
-IDC_CONDITIONAL_CONTROLS RCDATA DISCARDABLE     "Icons\\toolbar_cond_ctrl.png"
+IDC_CONDITIONAL_CONTROLS RCDATA  DISCARDABLE     "Icons\\toolbar_cond_ctrl.png"
 IDC_HIGHLIGHTS          RCDATA  DISCARDABLE     "Icons\\toolbar_edge.png"
 IDR_TB_ERRORS           RCDATA  DISCARDABLE     "Icons\\toolbar_errors.png"
 IDR_TB_EXAMINE          RCDATA  DISCARDABLE     "Icons\\toolbar_examine.png"
@@ -1772,7 +1772,7 @@ IDC_PART_BOUNDING_BOXES RCDATA  DISCARDABLE     "Icons\\toolbar_part_bbox.png"
 IDR_TB_PARTSLIST        RCDATA  DISCARDABLE     "Icons\\toolbar_partslist.png"
 IDR_TB_POVCAMERA        RCDATA  DISCARDABLE     "Icons\\toolbar_povcamera.png"
 IDR_TB_PREFERENCES      RCDATA  DISCARDABLE     "Icons\\toolbar_preferences.png"
-IDC_PRIMITIVE_SUBSTITUTION RCDATA DISCARDABLE   "Icons\\toolbar_primsubs.png"
+IDC_PRIMITIVE_SUBSTITUTION RCDATA  DISCARDABLE     "Icons\\toolbar_primsubs.png"
 IDR_TB_PRINT            RCDATA  DISCARDABLE     "Icons\\toolbar_print.png"
 IDC_RANDOM_COLORS       RCDATA  DISCARDABLE     "Icons\\toolbar_random.png"
 IDR_TB_RELOAD           RCDATA  DISCARDABLE     "Icons\\toolbar_reload.png"
