@@ -759,5 +759,201 @@ SOURCE=.\Icons\screen_saver_preview.png
 
 SOURCE=.\Textures\StudLogo.png
 # End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_all_cond.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_axes.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_bfc.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_cond_ctrl.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_edge.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_errors.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_examine.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_export.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_flat.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_fly.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_fullscreen.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_help.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_latlon.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_latlonrot.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_light.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_low_studs.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_model_bbox.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_model_tree.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_mpd.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_open.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_part_bbox.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_partslist.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_povcamera.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_preferences.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_primsubs.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_print.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_random.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_reload.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_seams.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_smooth.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_snapshot.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_step_first.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_step_last.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_step_next.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_step_prev.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_stud.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_topmost.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_trans_default.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_2_3rds.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_back.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_bottom.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_front.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_left.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_right.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_view_top.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_wire_cutaway.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_wireframe.png
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar_zoom2fit.png
+# End Source File
 # End Target
 # End Project

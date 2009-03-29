@@ -628,6 +628,7 @@ class LDrawModelViewer: public TCAlertSender
 		TREMainModel *blueLightDirModel;
 		TREMainModel *highlightModel;
 		char* filename;
+		std::string mpdName;
 		char* programPath;
 		int width;
 		int height;
