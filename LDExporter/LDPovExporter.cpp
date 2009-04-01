@@ -258,7 +258,7 @@ void LDPovExporter::loadSettings(void)
 	m_unmirrorStuds = boolForKey("UnmirrorStuds", true);
 	m_floor = boolForKey("Floor", true);
 	m_floorAxis = longForKey("FloorAxis", 1);
-	m_selectedAspectRatio = longForKey("SelectedAspectRatio", 1);
+	m_selectedAspectRatio = longForKey("SelectedAspectRatio", -1);
 	m_customAspectRatio = floatForKey("CustomAspectRatio", 1.5f);
 	m_edgeRadius = floatForKey("EdgeRadius", 0.15f);
 	m_ambient = floatForKey("Ambient", 0.4f);
@@ -350,6 +350,7 @@ void LDPovExporter::initSettings(void) const
 	{
 		LDExporterSetting &setting = m_settings.back();
 
+		setting.addOption(-1, _UC("Automatic"));
 		setting.addOption(0, _UC("5:4"));
 		setting.addOption(1, _UC("4:3"));
 		setting.addOption(2, _UC("3:2"));
@@ -837,6 +838,8 @@ std::string LDPovExporter::getAspectRatio(void)
 {
 	switch (m_selectedAspectRatio)
 	{
+	case -1:
+		return "image_width/image_height";
 	case 0:
 		m_width = 5;
 		m_height = 4;

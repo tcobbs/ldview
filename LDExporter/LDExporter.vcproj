@@ -332,10 +332,6 @@
 				>
 			</File>
 			<File
-				RelativePath="LDPovExportUDKeys.h"
-				>
-			</File>
-			<File
 				RelativePath=".\LDStlExporter.h"
 				>
 			</File>
