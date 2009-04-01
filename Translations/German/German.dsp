@@ -254,7 +254,19 @@ SOURCE=.\Icons\LightAngleUR.ico
 
 SOURCE=.\Icons\MPDIcon.ico
 # End Source File
+# Begin Source File
+
+SOURCE=.\Icons\step_toolbar.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Icons\toolbar.bmp
+# End Source File
 # End Group
+# Begin Source File
+
+SOURCE=.\LDExporter\LDExportMessages.ini
+# End Source File
 # Begin Source File
 
 SOURCE=.\LDView.exe.manifest
