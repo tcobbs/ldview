@@ -495,7 +495,6 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 #endif // _DEBUG
 			configure->run();
 			// configure mode
-//			MessageBox(NULL, "This screen saver has no options that you can set.", "LDView screen saver", MB_OK | MB_ICONWARNING);
 			return 1;
 		}
 		// This shouldn't be necessary, but I've received a report of a whole
@@ -515,40 +514,10 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/,
 		debugPrintf("Frequency: %I64d\n", frequency.QuadPart);
 	}
 #endif // _LOG_PERFORMANCE
-//	_CrtDbgReport(_CRT_WARN, NULL, 0, NULL, "Debug test: %d\n", 10);
-//	testDict->release();
 	OleInitialize(NULL);
 
-	//TCImage *testImage = new TCImage;
-	//if (testImage->loadFile("G:/Pics/CAR.bmp"))
-	//{
-	//	TCJpegOptions::setDefaultSubSampling(TCJpegOptions::SS444);
-	//	testImage->setFormatName("JPG");
-	//	//TCJpegOptions *options =
-	//	//	(TCJpegOptions *)testImage->getCompressionOptions();
-	//	testImage->saveFile("G:/Pics/CAR-test.jpg");
-	//}
-	//testImage->release();
-	//TCImage *jpegTest = new TCImage;
-	//jpegTest->loadFile("G:/Pics/3300_COMBO.jpg");
-	//jpegTest->setFlipped(true);
-	//if (jpegTest->loadFile("G:/Pics/Brothers1-Medium.jpg"))
-	//{
-	//	jpegTest->setFlipped(false);
-	//	jpegTest->setFormatName("PNG");
-	//	jpegTest->saveFile("G:/Pics/Brothers1-Medium.png");
-	//}
-	//jpegTest->release();
-
-	modelLoader = new ModelLoader(hInstance, nCmdShow, screenSaver);
-/*
-	if (screenSaver)
-	{
-		debugPrintf("Screen Saver.\n");
-		debugPrintf("Command Line: <<%s>>\n", lpCmdLine);
-		debugPrintf("hPrevInstance: 0x%08x\n", hPrevInstance);
-	}
-*/
+	modelLoader = new ModelLoader(CUIWindow::getLanguageModule(), nCmdShow,
+		screenSaver);
 	retValue = mainLoop();
 	modelLoader->release();
 	return retValue;
