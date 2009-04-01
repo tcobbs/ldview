@@ -170,16 +170,13 @@ void ModelLoader::startup(void)
 				{
 					std::string stepString =
 						TCUserDefaults::commandLineStringForKey(STEP_KEY);
+					long step;
 
 					parentWindow->openModel(commandLineFilename);
-					if (commandLineFilename != NULL && stepString.size() > 0)
+					if (commandLineFilename != NULL && stepString.size() > 0 &&
+						sscanf(stepString.c_str(), "%li", &step) == 1)
 					{
-						long step;
-
-						if (sscanf(stepString.c_str(), "%li", &step) == 1)
-						{
-							parentWindow->setStep(step);
-						}
+						parentWindow->setStep(step);
 					}
 				}
 			}
