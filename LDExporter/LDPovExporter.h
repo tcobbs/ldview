@@ -193,7 +193,7 @@ protected:
 	std::string getDeclareName(LDLModel *pModel, bool mirrored,
 		bool inPart = false);
 	std::string getDeclareName(const std::string &modelFilename, bool mirrored,
-		bool inPart = false);
+		bool inPart = false, bool isPart = false);
 	std::string getModelFilename(const LDLModel *pModel);
 	std::string findInclude(const std::string &filename);
 	bool findModelInclude(const LDLModel *pModel);
@@ -254,27 +254,48 @@ protected:
 	bool writeRoundClipRegion(TCFloat fraction, bool closeOff = true);
 	virtual bool substituteEighthSphere(bool bfc, bool is48 = false);
 	virtual bool substituteEighthSphereCorner(bool bfc, bool is48 = false);
+	virtual bool substituteCylinder(TCFloat fraction, bool bfc, bool inPart,
+		bool is48);
 	virtual bool substituteCylinder(TCFloat fraction, bool bfc,
 		bool is48 = false);
 	virtual bool substituteSlopedCylinder(TCFloat fraction, bool bfc,
+		bool inPart, bool is48);
+	virtual bool substituteSlopedCylinder(TCFloat fraction, bool bfc,
 		bool is48 = false);
 	virtual bool substituteSlopedCylinder2(TCFloat fraction, bool bfc,
+		bool inPart, bool is48);
+	virtual bool substituteSlopedCylinder2(TCFloat fraction, bool bfc,
 		bool is48 = false);
+	virtual bool substituteDisc(TCFloat fraction, bool bfc, bool inPart,
+		bool is48);
 	virtual bool substituteDisc(TCFloat fraction, bool bfc, bool is48 = false);
+	virtual bool substituteNotDisc(TCFloat fraction, bool bfc, bool inPart,
+		bool is48);
 	virtual bool substituteNotDisc(TCFloat fraction, bool bfc,
 		bool is48 = false);
 	virtual bool substituteCone(TCFloat fraction, int size, bool bfc,
+		bool inPart, bool is48);
+	virtual bool substituteCone(TCFloat fraction, int size, bool bfc,
 		bool is48 = false);
+	virtual bool substituteRing(TCFloat fraction, int size, bool bfc,
+		bool inPart, bool is48, bool isOld);
 	virtual bool substituteRing(TCFloat fraction, int size, bool bfc,
 		bool is48 = false, bool isOld = false);
 	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
+		bool inPart, bool is48);
+	virtual bool substituteTorusQ(TCFloat fraction, int size, bool bfc,
 		bool is48 = false);
 	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
+		bool bfc, bool inPart, bool is48);
+	virtual bool substituteTorusIO(bool inner, TCFloat fraction, int size,
 		bool bfc, bool is48 = false);
+	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool inPart,
+		bool is48);
 	virtual bool substituteChrd(TCFloat fraction, bool bfc, bool is48 = false);
+	virtual bool substituteStud(bool inPart);
 	virtual bool substituteStud(void);
 
-	std::string getPrimName(const std::string &base, bool is48,
+	std::string getPrimName(const std::string &base, bool is48, bool inPart,
 		int num = -1, int den = -1);
 
 	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
