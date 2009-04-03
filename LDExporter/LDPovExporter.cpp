@@ -361,11 +361,11 @@ void LDPovExporter::initSettings(void) const
 		setting.addOption(7, ls(_UC("PovCustom")));
 		try
 		{
-			setting.selectOption(m_selectedAspectRatio);
+			setting.selectOption(m_selectedAspectRatio + 1);
 		}
 		catch (...)
 		{
-			setting.selectOption(1);
+			setting.selectOption(2);
 		}
 	}
 	addSetting(LDExporterSetting(ls(_UC("PovCustomAspectRatio")),
@@ -1074,7 +1074,7 @@ std::string LDPovExporter::getDeclareName(
 	bool inPart /*= false*/)
 {
 	return getDeclareName(getModelFilename(pModel), mirrored,
-		inPart && pModel->isPart());
+		inPart, pModel->isPart());
 }
 
 std::string LDPovExporter::replaceSpecialChacters(const char *string)
@@ -1116,12 +1116,15 @@ std::string LDPovExporter::replaceSpecialChacters(const char *string)
 std::string LDPovExporter::getDeclareName(
 	const std::string &modelFilename,
 	bool mirrored,
-	bool inPart /*= false*/)
+	bool inPart /*= false*/,
+	bool isPart)
 {
 	StringStringMap::const_iterator it;
 	std::string key;
+	bool isXml = m_xmlElements.find(lowerCaseString(modelFilename)) !=
+		m_xmlElements.end();
 
-	if (mirrored)
+	if (mirrored && !isXml)
 	{
 		key = modelFilename + ":mirror";
 	}
@@ -1129,9 +1132,19 @@ std::string LDPovExporter::getDeclareName(
 	{
 		key = modelFilename;
 	}
-	if (inPart & m_smoothCurves)
+	if (m_smoothCurves && !isXml)
 	{
-		key += ":sub_part";
+		if (inPart)
+		{
+			if (isPart)
+			{
+				key += ":sub_part";
+			}
+			else
+			{
+				key += ":in_part";
+			}
+		}
 	}
 	it = m_declareNames.find(lowerCaseString(key));
 	if (it != m_declareNames.end())
@@ -1158,13 +1171,23 @@ std::string LDPovExporter::getDeclareName(
 	{
 		retValue = replaced;
 	}
-	if (mirrored)
+	if (mirrored && !isXml)
 	{
 		retValue += "_mirror";
 	}
-	if (inPart && m_smoothCurves)
+	if (m_smoothCurves && !isXml)
 	{
-		retValue += "_sub_part";
+		if (inPart)
+		{
+			if (isPart)
+			{
+				retValue += "_sub_part";
+			}
+			else
+			{
+				retValue += "_in_part";
+			}
+		}
 	}
 	m_declareNames[lowerCaseString(key)] = retValue;
 	return retValue;
@@ -1946,6 +1969,10 @@ bool LDPovExporter::writeModelObject(
 		std::string declareName = getDeclareName(pModel, mirrored, inPart);
 		IntShapeListMap colorGeometryMap;
 
+		if (declareName == "LDX_axlehol8_dot_dat")
+		{
+			debugPrintf("Stop\n");
+		}
 		if (findModelGeometry(pModel, colorGeometryMap, mirrored,
 			NULL, inPart))
 		{
@@ -3217,6 +3244,10 @@ void LDPovExporter::writeCommentLine(
 {
 	const char *comment = pCommentLine->getProcessedLine();
 
+	if (stringHasCaseInsensitivePrefix(comment, "0 MLCAD SKIP_BEGIN"))
+	{
+		debugPrintf("Stop here.\n");
+	}
 	if (stringHasCaseInsensitivePrefix(comment, "0 L3P IFPOV"))
 	{
 		if (ifStarted)
@@ -3800,6 +3831,7 @@ bool LDPovExporter::writeRoundClipRegion(TCFloat fraction, bool closeOff)
 std::string LDPovExporter::getPrimName(
 	const std::string &base,
 	bool is48,
+	bool inPart,
 	int num /*= -1*/,
 	int den /*= -1*/)
 {
@@ -3818,18 +3850,14 @@ std::string LDPovExporter::getPrimName(
 	{
 		sprintf(buf, "%s%s.dat", prefix48, base.c_str());
 	}
-	return getDeclareName(buf, false);
+	return getDeclareName(buf, false, inPart);
 }
 
 bool LDPovExporter::substituteEighthSphere(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	if (m_primSubCheck)
-	{
-		return true;
-	}
-	fprintf(m_pPovFile,
+	const char *format =
 		"#declare %s = sphere // Sphere .125\n"
 		"{\n"
 		"	<0,0,0>,1\n"
@@ -3840,7 +3868,13 @@ bool LDPovExporter::substituteEighthSphere(
 		"			<0,0,0>,<2,2,2>\n"
 		"		}\n"
 		"	}\n"
-		"}\n\n", getPrimName("1-8sphe", is48).c_str());
+		"}\n\n";
+	if (m_primSubCheck)
+	{
+		return true;
+	}
+	fprintf(m_pPovFile, format, getPrimName("1-8sphe", is48, true).c_str());
+	fprintf(m_pPovFile, format, getPrimName("1-8sphe", is48, false).c_str());
 	return true;
 }
 
@@ -3848,11 +3882,7 @@ bool LDPovExporter::substituteEighthSphereCorner(
 	bool /*bfc*/,
 	bool is48 /*= false*/)
 {
-	if (m_primSubCheck)
-	{
-		return true;
-	}
-	fprintf(m_pPovFile,
+	const char *format =
 		"#declare %s = sphere // Sphere Corner .125\n"
 		"{\n"
 		"	<0,0,0>,sqrt(2)\n"
@@ -3863,14 +3893,21 @@ bool LDPovExporter::substituteEighthSphereCorner(
 		"			<0,0,0>,<1,1,1>\n"
 		"		}\n"
 		"	}\n"
-		"}\n\n", getPrimName("1-8sphc", is48).c_str());
+		"}\n\n";
+	if (m_primSubCheck)
+	{
+		return true;
+	}
+	fprintf(m_pPovFile, format, getPrimName("1-8sphc", is48, true).c_str());
+	fprintf(m_pPovFile, format, getPrimName("1-8sphc", is48, false).c_str());
 	return true;
 }
 
 bool LDPovExporter::substituteCylinder(
 	TCFloat fraction,
 	bool /*bfc*/,
-	bool is48 /*= false*/)
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -3880,17 +3917,36 @@ bool LDPovExporter::substituteCylinder(
 		"#declare %s = cylinder // Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n",
-		getPrimName("cyli", is48, m_filenameNumerator, m_filenameDenom).c_str(),
-		ftostr(fraction).c_str());
+		getPrimName("cyli", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
 }
 
+bool LDPovExporter::substituteCylinder(
+	TCFloat fraction,
+	bool bfc,
+	bool is48 /*= false*/)
+{
+	substituteCylinder(fraction, bfc, true, is48);
+	return substituteCylinder(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteSlopedCylinder(
+	TCFloat fraction,
+	bool bfc,
+	bool is48 /*= false*/)
+{
+	substituteSlopedCylinder(fraction, bfc, true, is48);
+	return substituteSlopedCylinder(fraction, bfc, false, is48);
+}
+
 bool LDPovExporter::substituteSlopedCylinder(
 	TCFloat fraction,
 	bool /*bfc*/,
-	bool is48 /*= false*/)
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -3900,8 +3956,8 @@ bool LDPovExporter::substituteSlopedCylinder(
 		"#declare %s = cylinder // Sloped Cylinder %s\n"
 		"{\n"
 		"	<0,0,0>,<0,2,0>,1 open\n",
-		getPrimName("cyls", is48, m_filenameNumerator, m_filenameDenom).c_str(),
-		ftostr(fraction).c_str());
+		getPrimName("cyls", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction, false);
 	fprintf(m_pPovFile,
 		"		plane\n"
@@ -3915,8 +3971,18 @@ bool LDPovExporter::substituteSlopedCylinder(
 
 bool LDPovExporter::substituteSlopedCylinder2(
 	TCFloat fraction,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteSlopedCylinder2(fraction, bfc, true, is48);
+	return substituteSlopedCylinder2(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteSlopedCylinder2(
+	TCFloat fraction,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	double angle = 2.0 * M_PI * fraction + M_PI;
 	double x = cos(angle);
@@ -3936,7 +4002,7 @@ bool LDPovExporter::substituteSlopedCylinder2(
 		"#declare %s = cylinder // Sloped Cylinder2 %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1 open\n",
-		getPrimName("cyls2", is48, m_filenameNumerator,
+		getPrimName("cyls2", is48, inPart, m_filenameNumerator,
 		m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	fprintf(m_pPovFile,
 		"	clipped_by\n"
@@ -3960,8 +4026,18 @@ bool LDPovExporter::substituteSlopedCylinder2(
 
 bool LDPovExporter::substituteDisc(
 	TCFloat fraction,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteDisc(fraction, bfc, true, is48);
+	return substituteDisc(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteDisc(
+	TCFloat fraction,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -3971,8 +4047,8 @@ bool LDPovExporter::substituteDisc(
 		"#declare %s = disc // Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,1\n",
-		getPrimName("disc", is48, m_filenameNumerator, m_filenameDenom).c_str(),
-		ftostr(fraction).c_str());
+		getPrimName("disc", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -3980,8 +4056,18 @@ bool LDPovExporter::substituteDisc(
 
 bool LDPovExporter::substituteChrd(
 	TCFloat fraction,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteChrd(fraction, bfc, true, is48);
+	return substituteChrd(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteChrd(
+	TCFloat fraction,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -4009,16 +4095,26 @@ bool LDPovExporter::substituteChrd(
 		"		}\n"
 		"	}\n"
 		"}\n\n",
-		getPrimName("chrd", is48, m_filenameNumerator, m_filenameDenom).c_str(),
-		ftostr(fraction).c_str(), ftostr(x, 20).c_str(), ftostr(z, 20).c_str(),
-		ftostr(ofs, 20).c_str());
+		getPrimName("chrd", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str(),
+		ftostr(x, 20).c_str(), ftostr(z, 20).c_str(), ftostr(ofs, 20).c_str());
 	return true;
 }
 
 bool LDPovExporter::substituteNotDisc(
 	TCFloat fraction,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteNotDisc(fraction, bfc, true, is48);
+	return substituteNotDisc(fraction, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteNotDisc(
+	TCFloat fraction,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -4028,8 +4124,8 @@ bool LDPovExporter::substituteNotDisc(
 		"#declare %s = disc // Not-Disc %s\n"
 		"{\n"
 		"	<0,0,0>,<0,1,0>,2,1\n",
-		getPrimName("ndis", is48, m_filenameNumerator, m_filenameDenom).c_str(),
-		ftostr(fraction).c_str());
+		getPrimName("ndis", is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	writeRoundClipRegion(fraction, false);
 	fprintf(m_pPovFile,
 		"		box\n"
@@ -4044,8 +4140,19 @@ bool LDPovExporter::substituteNotDisc(
 bool LDPovExporter::substituteCone(
 	TCFloat fraction,
 	int size,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteCone(fraction, size, bfc, true, is48);
+	return substituteCone(fraction, size, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteCone(
+	TCFloat fraction,
+	int size,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -4058,8 +4165,8 @@ bool LDPovExporter::substituteCone(
 		"#declare %s = cone // Cone %s\n"
 		"{\n"
 		"	<0,0,0>,%d,<0,1,0>,%d open\n",
-		getPrimName(base, is48, m_filenameNumerator, m_filenameDenom).c_str(),
-		ftostr(fraction).c_str(), size + 1, size);
+		getPrimName(base, is48, inPart, m_filenameNumerator,
+		m_filenameDenom).c_str(), ftostr(fraction).c_str(), size + 1, size);
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
 	return true;
@@ -4068,9 +4175,21 @@ bool LDPovExporter::substituteCone(
 bool LDPovExporter::substituteRing(
 	TCFloat fraction,
 	int size,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/,
 	bool isOld /*= false*/)
+{
+	substituteRing(fraction, size, bfc, true, is48, isOld);
+	return substituteRing(fraction, size, bfc, false, is48, isOld);
+}
+
+bool LDPovExporter::substituteRing(
+	TCFloat fraction,
+	int size,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48,
+	bool isOld)
 {
 	if (m_primSubCheck)
 	{
@@ -4080,7 +4199,8 @@ bool LDPovExporter::substituteRing(
 	{
 		fprintf(m_pPovFile,
 			"#declare %s = disc // Ring %s\n",
-			getPrimName("ring", is48, size).c_str(), ftostr(fraction).c_str());
+			getPrimName("ring", is48, inPart, size).c_str(),
+			ftostr(fraction).c_str());
 	}
 	else
 	{
@@ -4093,7 +4213,7 @@ bool LDPovExporter::substituteRing(
 		base += ltostr(size);
 		fprintf(m_pPovFile,
 			"#declare %s = disc // Ring %s\n",
-			getPrimName(base, is48, m_filenameNumerator,
+			getPrimName(base, is48, inPart, m_filenameNumerator,
 			m_filenameDenom).c_str(), ftostr(fraction).c_str());
 	}
 	fprintf(m_pPovFile,
@@ -4108,8 +4228,20 @@ bool LDPovExporter::substituteTorusIO(
 	bool inner,
 	TCFloat fraction,
 	int size,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteTorusIO(inner, fraction, size, bfc, true, is48);
+	return substituteTorusIO(inner, fraction, size, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteTorusIO(
+	bool inner,
+	TCFloat fraction,
+	int size,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -4120,7 +4252,8 @@ bool LDPovExporter::substituteTorusIO(
 	fprintf(m_pPovFile,
 		"#declare %s%s = torus // Torus %s\n"
 		"{\n"
-		"	1,%s\n", prefix48, getDeclareName(m_modelName, false).c_str(),
+		"	1,%s\n", prefix48,
+		getDeclareName(m_modelName, false, inPart).c_str(),
 		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction, false);
 	if (inner)
@@ -4155,8 +4288,19 @@ bool LDPovExporter::substituteTorusIO(
 bool LDPovExporter::substituteTorusQ(
 	TCFloat fraction,
 	int size,
-	bool /*bfc*/,
+	bool bfc,
 	bool is48 /*= false*/)
+{
+	substituteTorusQ(fraction, size, bfc, true, is48);
+	return substituteTorusQ(fraction, size, bfc, false, is48);
+}
+
+bool LDPovExporter::substituteTorusQ(
+	TCFloat fraction,
+	int size,
+	bool /*bfc*/,
+	bool inPart,
+	bool is48)
 {
 	if (m_primSubCheck)
 	{
@@ -4167,7 +4311,8 @@ bool LDPovExporter::substituteTorusQ(
 	fprintf(m_pPovFile,
 		"#declare %s%s = torus // Torus %s\n"
 		"{\n"
-		"	1,%s\n", prefix48, getDeclareName(m_modelName, false).c_str(),
+		"	1,%s\n", prefix48,
+		getDeclareName(m_modelName, false, inPart).c_str(),
 		ftostr(fraction).c_str(), ftostr(getTorusFraction(size), 20).c_str());
 	writeRoundClipRegion(fraction);
 	fprintf(m_pPovFile, "}\n\n");
@@ -4237,6 +4382,19 @@ void LDPovExporter::writeLogo(void)
 
 bool LDPovExporter::substituteStud(void)
 {
+	if (m_xmlElements.find("stud.dat") == m_xmlElements.end())
+	{
+		substituteStud(true);
+		return substituteStud(false);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool LDPovExporter::substituteStud(bool inPart)
+{
 	if (m_primSubCheck)
 	{
 		return true;
@@ -4252,6 +4410,6 @@ bool LDPovExporter::substituteStud(void)
 			"	object { LDXStudLogo }\n"
 			"}\n"
 			"#end\n"
-			"\n", getPrimName("stud", false).c_str());
+			"\n", getPrimName("stud", false, inPart).c_str());
 	return true;
 }

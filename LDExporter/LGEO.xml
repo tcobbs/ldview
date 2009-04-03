@@ -385,6 +385,13 @@
     </Matrices>
     <Elements>
         <Element>
+            <LDrawFilename>stud.dat</LDrawFilename>
+            <POVName>lg_knob</POVName>
+            <POVName Alternate="Clear">lg_knob_clear</POVName>
+            <Dependency>LGDefs</Dependency>
+            <MatrixRef>LGEOTransform</MatrixRef>
+        </Element>
+        <Element>
             <LDrawFilename>1.dat</LDrawFilename>
             <POVName>lg_0001</POVName>
             <POVName Alternate="Clear">lg_0001_clear</POVName>
