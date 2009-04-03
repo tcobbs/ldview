@@ -65,6 +65,17 @@ void TCNetworkClient::setLinger(void)
 	}
 }
 
+void TCNetworkClient::setTcpNoDelay(void)
+{
+	int flag = 1;
+
+	if (setsockopt(dataSocket, IPPROTO_TCP, TCP_NODELAY, (const char*)&flag,
+		 sizeof(flag)) < 0)
+	{
+		setErrorNumber(TCNCE_SET_NODELAY);
+	}
+}
+
 int TCNetworkClient::setupSocket(void)
 {
 	struct hostent* hostAddr;
@@ -156,6 +167,9 @@ void TCNetworkClient::setErrorNumber(int value)
 			break;
 		case TCNCE_CONNECTION_REFUSED:
 			setErrorString("Error connecting:  Connection refused.");
+			break;
+		case TCNCE_SET_NODELAY:
+			setErrorString("Error setting TCP no-delay.", WSAGetLastError());
 			break;
 		default:
 			TCNetwork::setErrorNumber(value);

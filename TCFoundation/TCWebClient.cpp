@@ -269,6 +269,7 @@ int TCWebClient::openConnection(void)
 	{
 		if (setNonBlock())
 		{
+			setTcpNoDelay();
 			return 1;
 		}
 	}
