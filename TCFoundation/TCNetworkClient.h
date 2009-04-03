@@ -18,7 +18,8 @@
 #define TCNCE_NO_PORT TCN_MAX_ERROR + 3
 #define TCNCE_CONNECT TCN_MAX_ERROR + 4
 #define TCNCE_CONNECTION_REFUSED TCN_MAX_ERROR + 5
-#define TCNC_MAX_ERROR TCNCE_CONNECTION_REFUSED
+#define TCNCE_SET_NODELAY TCN_MAX_ERROR + 6
+#define TCNC_MAX_ERROR TCNCE_SET_NODELAY
 
 class TCNetworkClient : public TCNetwork
 {
@@ -46,6 +47,7 @@ class TCNetworkClient : public TCNetwork
 		virtual void dealloc(void);
 		virtual int setupSocket(void);
 		virtual void setLinger(void);
+		virtual void setTcpNoDelay(void);
 		virtual void setErrorNumber(int);
 
 		int port;
