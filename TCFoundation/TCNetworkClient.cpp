@@ -67,6 +67,7 @@ void TCNetworkClient::setLinger(void)
 
 void TCNetworkClient::setTcpNoDelay(void)
 {
+#ifdef TCP_NODELAY
 	int flag = 1;
 
 	if (setsockopt(dataSocket, IPPROTO_TCP, TCP_NODELAY, (const char*)&flag,
@@ -74,6 +75,7 @@ void TCNetworkClient::setTcpNoDelay(void)
 	{
 		setErrorNumber(TCNCE_SET_NODELAY);
 	}
+#endif // TCP_NODELAY
 }
 
 int TCNetworkClient::setupSocket(void)
