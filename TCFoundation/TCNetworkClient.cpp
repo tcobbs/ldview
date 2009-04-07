@@ -12,8 +12,11 @@
 #if defined (_QT) || defined (__APPLE__)
 #include <unistd.h>
 #include <arpa/inet.h>
-
 #endif // _QT || __APPLE__
+#if !defined(__APPLE__) || !defined(TCP_NODELAY)
+#include <netinet/tcp.h>
+#endif // !__APPLE__ || !TCP_NODELAY
+
 #endif // WIN32
 
 #include <stdarg.h>
