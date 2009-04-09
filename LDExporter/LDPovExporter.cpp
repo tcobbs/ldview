@@ -1862,7 +1862,13 @@ bool LDPovExporter::findModelGeometry(
 	int count = pModel->getActiveLineCount();
 	bool retValue = false;
 	bool skipping = false;
+	const char *modelName = pModel->getName();
 
+	if (modelName != NULL && m_xmlElements.find(lowerCaseString(modelName)) !=
+		m_xmlElements.end())
+	{
+		return false;
+	}
 	if (m_smoothCurves)
 	{
 		if (inPart && matrix == NULL)
