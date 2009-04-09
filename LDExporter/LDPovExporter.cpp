@@ -1975,10 +1975,6 @@ bool LDPovExporter::writeModelObject(
 		std::string declareName = getDeclareName(pModel, mirrored, inPart);
 		IntShapeListMap colorGeometryMap;
 
-		if (declareName == "LDX_axlehol8_dot_dat")
-		{
-			debugPrintf("Stop\n");
-		}
 		if (findModelGeometry(pModel, colorGeometryMap, mirrored,
 			NULL, inPart))
 		{
@@ -3250,10 +3246,6 @@ void LDPovExporter::writeCommentLine(
 {
 	const char *comment = pCommentLine->getProcessedLine();
 
-	if (stringHasCaseInsensitivePrefix(comment, "0 MLCAD SKIP_BEGIN"))
-	{
-		debugPrintf("Stop here.\n");
-	}
 	if (stringHasCaseInsensitivePrefix(comment, "0 L3P IFPOV"))
 	{
 		if (ifStarted)
