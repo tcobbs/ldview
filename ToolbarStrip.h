@@ -52,7 +52,6 @@ protected:
 
 	LRESULT doToolbarGetInfotip(TbButtonInfoVector &infos,
 		LPNMTBGETINFOTIPUC dispInfo);
-	//LRESULT doMainToolbarGetInfotip(LPNMTBGETINFOTIPUC dispInfo);
 	LRESULT doMainToolbarNotify(int controlId, LPNMHDR notification);
 	LRESULT doStepToolbarNotify(int controlId, LPNMHDR notification);
 	LRESULT doMainTbGetButtonInfo(NMTOOLBARUC *notification);
@@ -76,7 +75,6 @@ protected:
 	void fillMainToolbar(void);
 	void initStepToolbar(void);
 	void initLayout(void);
-	//HIMAGELIST initImageList(HWND hToolbar, UINT bitmapId);
 	void initToolbar(HWND hToolbar, TbButtonInfoVector &infos,
 		HIMAGELIST hImageList);
 	void modelAlertCallback(TCAlert *alert);
@@ -136,9 +134,6 @@ protected:
 	void doDropDown(LPNMTOOLBAR toolbarNot);
 
 	void fillTbButton(TBBUTTON &button, const TbButtonInfo &buttonInfo);
-
-	static HBITMAP createMask(HBITMAP hBitmap, COLORREF maskColor);
-	static HBITMAP createMask(TCImage *image);
 
 	LDViewWindow *m_ldviewWindow;
 	LDViewPreferences *m_prefs;

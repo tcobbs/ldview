@@ -155,11 +155,7 @@ void ToolbarStrip::updateMenus(void)
 		updateMenuImages(hMenu);
 		updateMenuImages(m_hMainToolbarMenu);
 		updateMenuImages(m_hContextMenu);
-		//updateMenuImages(m_hWireframeMenu);
-		//updateMenuImages(m_hEdgesMenu);
 		updateMenuImages(m_hPrimitivesMenu);
-		//updateMenuImages(m_hLightingMenu);
-		//updateMenuImages(m_hBFCMenu);
 	}
 }
 
@@ -182,7 +178,6 @@ void ToolbarStrip::initToolbar(
 	SendMessage(hToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	SendMessage(hToolbar, TB_SETBUTTONWIDTH, 0, MAKELONG(22, 22));
 	SendMessage(hToolbar, TB_SETIMAGELIST, 0, (LPARAM)hImageList);
-	//hImageList = initImageList(hToolbar, bitmapId);
 	m_stdBitmapStartId = m_tbBitmapStartId = 0;
 	// Note: buttonTitle is an empty string.  No need for Unicode.
 	SendMessage(hToolbar, TB_ADDSTRING, 0, (LPARAM)buttonTitle);
@@ -484,7 +479,6 @@ void ToolbarStrip::updateNumSteps(void)
 	else
 	{
 		windowSetText(IDC_NUM_STEPS, "");
-		//updateStep();
 	}
 }
 
@@ -534,32 +528,6 @@ void ToolbarStrip::updateMenuImages(HMENU hMenu)
 				}
 			}
 		}
-		//else if (mii.wID == (UINT)command && mii.hbmpItem == NULL)
-		//{
-		//	HICON hIcon = ImageList_GetIcon(hImageList, index, ILD_TRANSPARENT);
-		//	Gdiplus::GpBitmap *pBitmap;
-
-		//	if (GdipCreateBitmapFromHICON(hIcon, &pBitmap) == Gdiplus::Ok)
-		//	{
-		//		HBITMAP hMenuBitmap;
-
-		//		if (GdipCreateHBITMAPFromBitmap(pBitmap, &hMenuBitmap, 0) ==
-		//			Gdiplus::Ok)
-		//		{
-		//			mii.fMask = MIIM_BITMAP;
-		//			mii.hbmpItem = hMenuBitmap;
-		//			SetMenuItemInfo(hMenu, i, TRUE, &mii);
-		//		}
-		//	}
-		//	//Gdiplus::Bitmap gdipBm(hIcon);
-		//	//HBITMAP hMenuBitmap;
-		//	//if (gdipBm.GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hMenuBitmap) == Gdiplus::Ok)
-		//	//{
-		//	//	mii.fMask = MIIM_BITMAP;
-		//	//	mii.hbmpItem = hMenuBitmap;
-		//	//	SetMenuItemInfo(hMenu, i, TRUE, &mii);
-		//	//}
-		//}
 	}
 }
 #else // USE_GDIPLUS
@@ -826,38 +794,6 @@ int ToolbarStrip::addToImageList(int commandId)
 		m_imagesMap[commandId].first = m_imageLists.size() - 1;
 		m_imagesMap[commandId].second = preCount;
 		return preCount;
-		//HDC hdc = CreateCompatibleDC(NULL);
-		//BYTE *bmBuffer = NULL;
-		//int width = image->getWidth();
-		//int height = image->getHeight();
-		//HBITMAP hBitmap = createDIBSection(hdc, width, height, 0, 0, &bmBuffer);
-		//HBITMAP hMask = createMask(image);
-		//int srcBytesPerLine = image->getRowSize();
-		//int dstBytesPerLine = TCImage::roundUp(width * 3, 4);
-		//TCByte *srcData = image->getImageData();
-
-		//for (int y = 0; y < height; y++)
-		//{
-		//	int srcYOffset = srcBytesPerLine * y;
-		//	int dstYOffset = dstBytesPerLine * y;
-
-		//	for (int x = 0; x < width; x++)
-		//	{
-		//		bmBuffer[dstYOffset + x * 3 + 0] =
-		//			srcData[srcYOffset + x * 4 + 2];
-		//		bmBuffer[dstYOffset + x * 3 + 1] =
-		//			srcData[srcYOffset + x * 4 + 1];
-		//		bmBuffer[dstYOffset + x * 3 + 2] =
-		//			srcData[srcYOffset + x * 4 + 0];
-		//	}
-		//}
-		//
-		//ImageList_Add(m_imageLists.back(), hBitmap, hMask);
-		//DeleteObject(hBitmap);
-		//DeleteObject(hMask);
-		//DeleteDC(hdc);
-		//image->release();
-		//return ImageList_GetImageCount(m_imageLists.back()) - 1;
 	}
 	return -1;
 }
@@ -1083,89 +1019,6 @@ void ToolbarStrip::populateMainTbButtonInfos(void)
 		addTbButtonInfo(m_mainButtonInfos, TCLocalStrings::get(_UC("Help")),
 			ID_HELP_CONTENTS);
 	}
-}
-
-// Note: static function
-HBITMAP ToolbarStrip::createMask(HBITMAP hBitmap, COLORREF maskColor)
-{
-	BITMAP bitmap;
-	TCByte *data;
-	int bytesPerLine;
-	int maskSize;
-	int x, y;
-	HDC hBmDc = CreateCompatibleDC(NULL);
-	HBITMAP hOldBitmap;
-	HBITMAP hNewBitmap;
-
-	::GetObject((HANDLE)hBitmap, sizeof(BITMAP), &bitmap);
-	bytesPerLine = ModelWindow::roundUp((bitmap.bmWidth + 7) / 8, 2);
-	maskSize = bytesPerLine * bitmap.bmHeight;
-	data = new TCByte[maskSize];
-	memset(data, 0, maskSize);
-	hOldBitmap = (HBITMAP)SelectObject(hBmDc, hBitmap);
-	for (y = 0; y < bitmap.bmHeight; y++)
-	{
-		int yOffset = bytesPerLine * y;
-
-		for (x = 0; x < bitmap.bmWidth; x++)
-		{
-			COLORREF pixelColor = GetPixel(hBmDc, x, y);
-
-			if (pixelColor == maskColor)
-			{
-				int byteOffset = yOffset + x / 8;
-				int bitOffset = 7 - (x % 8);
-
-				data[byteOffset] |= (1 << bitOffset);
-			}
-		}
-	}
-	SelectObject(hBmDc, hOldBitmap);
-	DeleteDC(hBmDc);
-	hNewBitmap = CreateBitmap(bitmap.bmWidth, bitmap.bmHeight, 1, 1, data);
-	delete data;
-	return hNewBitmap;
-}
-
-// Note: static function
-HBITMAP ToolbarStrip::createMask(TCImage *image)
-{
-	TCByte *dstData;
-	int dstBytesPerLine;
-	int maskSize;
-	int srcBytesPerLine = image->getRowSize();
-	TCByte *srcData = image->getImageData();
-	int width = image->getWidth();
-	int height = image->getHeight();
-	HBITMAP hNewBitmap;
-	bool srcFlipped = image->getFlipped();
-
-	dstBytesPerLine = ModelWindow::roundUp((width + 7) / 8, 2);
-	maskSize = dstBytesPerLine * height;
-	dstData = new TCByte[maskSize];
-	memset(dstData, 0, maskSize);
-	for (int y = 0; y < height; y++)
-	{
-		int srcYOffset = srcFlipped ? srcBytesPerLine * (height - y - 1) :
-			srcBytesPerLine * y;
-		int dstYOffset = dstBytesPerLine * y;
-
-		for (int x = 0; x < width; x++)
-		{
-			TCByte alpha = srcData[srcYOffset + x * 4 + 3];
-
-			if (alpha < 128)
-			{
-				int byteOffset = dstYOffset + x / 8;
-				int bitOffset = 7 - (x % 8);
-
-				dstData[byteOffset] |= (1 << bitOffset);
-			}
-		}
-	}
-	hNewBitmap = CreateBitmap(width, height, 1, 1, dstData);
-	delete dstData;
-	return hNewBitmap;
 }
 
 LRESULT ToolbarStrip::doToolbarGetInfotip(
