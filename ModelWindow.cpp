@@ -4596,7 +4596,8 @@ bool ModelWindow::calcSaveFilename(
 		{
 			baseFilename.erase(dotSpot);
 		}
-		if (mpdChild != NULL && mpdChild->getName() != NULL)
+		if (mpdChild != NULL && mpdChild->getName() != NULL &&
+			modelViewer->getMpdChildIndex() > 0)
 		{
 			std::string mpdName = mpdChild->getName();
 			size_t dotSpot = mpdName.rfind('.');
