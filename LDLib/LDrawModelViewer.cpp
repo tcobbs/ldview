@@ -121,6 +121,7 @@ LDrawModelViewer::LDrawModelViewer(int width, int height)
 	mouseMode(LDVMouseNone),
 	inputHandler(NULL),
 	step(-1),
+	commandLineStep(-1),
 	mpdChildIndex(0),
 	exporter(NULL),
 	exportType(ETPov),
@@ -1133,6 +1134,12 @@ bool LDrawModelViewer::parseModel(void)
 		retValue = true;
 		initLightDirModels();
 		TCProgressAlert::send("LDrawModelViewer", ls(_UC("Done")), 2.0f, this);
+		if (commandLineStep > 0)
+		{
+			setStep(commandLineStep);
+			flags.needsResetStep = false;
+			commandLineStep = -1;
+		}
 		if (flags.needsResetStep)
 		{
 			setStep(getNumSteps());
@@ -1558,10 +1565,6 @@ void LDrawModelViewer::setFontData(TCByte *fontData, long length)
 					if (offset < 131072)
 					{
 						imageData[offset] = 0xFF;
-					}
-					else
-					{
-						printf("Huh?\n");
 					}
 				}
 			}

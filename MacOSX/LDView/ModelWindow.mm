@@ -868,11 +868,19 @@ enum
 
 - (BOOL)openModel:(NSString *)filename
 {
+	NSRange colonRange = [filename rangeOfString:@":" options:NSBackwardsSearch];
 	[unfilteredRootErrorItem release];
 	unfilteredRootErrorItem = nil;
 	[filteredRootErrorItem release];
 	filteredRootErrorItem = nil;
-	[window setTitleWithRepresentedFilename:filename];
+	if (colonRange.location != NSNotFound)
+	{
+		[window setTitleWithRepresentedFilename:[filename substringToIndex:colonRange.location]];
+	}
+	else
+	{
+		[window setTitleWithRepresentedFilename:filename];
+	}
 	[window makeKeyAndOrderFront:self];
 	if ([modelView openModel:filename])
 	{
@@ -1004,6 +1012,9 @@ enum
 			[lastProgressUpdate timeIntervalSinceNow] < -0.2)
 		{
 			NSEvent *event;
+			unsigned int mouseEventsMask = NSMouseMovedMask | NSLeftMouseDraggedMask | NSRightMouseDraggedMask | NSMouseEnteredMask | NSMouseExitedMask | NSOtherMouseDraggedMask;
+			//unsigned int mouseEventsMask = NSLeftMouseDown | NSLeftMouseUp | NSRightMouseDown | NSRightMouseUp | NSMouseMoved | NSLeftMouseDragged | NSRightMouseDragged | NSMouseEntered | NSMouseExited | NSOtherMouseDown | NSOtherMouseUp | NSOtherMouseDragged;
+			//unsigned int mask = NSAnyEventMask & ~mouseEventsMask;
 
 			if ([progress isHidden])
 			{
@@ -1031,7 +1042,10 @@ enum
 				}
 				else if ([event window] == window)
 				{
-					skip = true;
+					if (((1 << [event type]) & mouseEventsMask) == 0)
+					{
+						skip = true;
+					}
 				}
 				if (!skip)
 				{

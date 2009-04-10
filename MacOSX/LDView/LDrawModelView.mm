@@ -298,9 +298,15 @@ static TCImage *resizeCornerImage = NULL;
 
 	if (modelViewer)
 	{
+		int commandLineStep = [[[self modelWindow] controller] commandLineStep];
+	
 		loading = YES;
 		modelViewer->setFilename([filename cStringUsingEncoding:
 			NSASCIIStringEncoding]);
+		if (commandLineStep > 0)
+		{
+			modelViewer->setCommandLineStep(commandLineStep);
+		}
 		if (modelViewer->loadModel(true))
 		{
 			retValue = YES;
