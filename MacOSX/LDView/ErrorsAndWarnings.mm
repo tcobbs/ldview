@@ -6,6 +6,7 @@
 #import "LDViewCategories.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <LDLoader/LDLError.h>
+#include <TCFoundation/TCUserDefaults.h>
 
 @implementation ErrorsAndWarnings
 
@@ -173,6 +174,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	[self initEnabledErrors];
 	titleFormat = [[panel title] retain];
+	[includeWarningsButton setCheck:TCUserDefaults::boolForKey(SHOW_WARNINGS_KEY, false, false)];
 }
 
 - (IBAction)showIfNeeded
@@ -199,6 +201,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 - (IBAction)includeWarnings:(id)sender
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:LDErrorFilterChange object:self];
+	TCUserDefaults::setBoolForKey([includeWarningsButton getCheck], SHOW_WARNINGS_KEY, false);
 }
 
 - (void)setShowAll:(BOOL)show
