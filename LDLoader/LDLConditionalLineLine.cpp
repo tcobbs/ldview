@@ -87,14 +87,16 @@ TCObject *LDLConditionalLineLine::copy(void) const
 void LDLConditionalLineLine::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix) const
+	const TCFloat *matrix,
+	bool watchBBoxIgnore) const
 {
 	if (m_valid)
 	{
 		int i;
 		TCVector point;
 
-		LDLShapeLine::scanPoints(scanner, scanPointCallback, matrix);
+		LDLShapeLine::scanPoints(scanner, scanPointCallback, matrix,
+			watchBBoxIgnore);
 		for (i = 0; i < 2; i++)
 		{
 			m_controlPoints[i].transformPoint(matrix, point);

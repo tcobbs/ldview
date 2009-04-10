@@ -178,7 +178,8 @@ void LDLShapeLine::printPoint(int index, UCSTR buf)
 void LDLShapeLine::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
-	const TCFloat *matrix) const
+	const TCFloat *matrix,
+	bool /*watchBBoxIgnore*/) const
 {
 	if (m_valid)
 	{

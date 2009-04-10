@@ -284,7 +284,8 @@ int LDExporter::runInternal(LDExporter *pExporter)
 					pExporter->m_boundingMax);
 				pExporter->m_center = (pExporter->m_boundingMin +
 					pExporter->m_boundingMax) / 2.0f;
-				pExporter->m_radius = pMainModel->getMaxRadius(pExporter->m_center);
+				pExporter->m_radius =
+					pMainModel->getMaxRadius(pExporter->m_center, true);
 				pAutoCamera->setModel(pMainModel);
 				pAutoCamera->setModelCenter(pExporter->m_center);
 				pAutoCamera->setRotationMatrix(m_rotationMatrix);

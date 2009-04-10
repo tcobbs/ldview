@@ -10,8 +10,16 @@ public:
 	virtual bool isActionLine(void) const { return true; }
 	virtual void setBFCSettings(BFCState bfcCertify, bool bfcClip,
 		bool bfcWindingCCW, bool bfcInvert);
+	virtual void setBBoxIgnore(bool bValue)
+	{
+		m_actionFlags.bboxIgnore = bValue;
+	}
+	bool getBBoxIgnore(void) const { return m_actionFlags.bboxIgnore != false; }
 	bool getBFCClip(void) const { return m_actionFlags.bfcClip != false; }
-	bool getBFCWindingCCW(void) const { return m_actionFlags.bfcWindingCCW != false; }
+	bool getBFCWindingCCW(void) const
+	{
+		return m_actionFlags.bfcWindingCCW != false;
+	}
 	bool getBFCInvert(void) const { return m_actionFlags.bfcInvert != false; }
 	BFCState getBFCState(void) const { return m_actionFlags.bfcCertify; }
 	virtual int getColorNumber(void) const;
@@ -23,7 +31,8 @@ public:
 			m_actionFlags.bfcClip;
 	}
 	virtual void scanPoints(TCObject *scanner,
-		LDLScanPointCallback scanPointCallback, const TCFloat *matrix)
+		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
+		bool watchBBoxIgnore)
 		const = 0;
 protected:
 	LDLActionLine(LDLModel *parentModel, const char *line, int lineNumber,
@@ -38,6 +47,7 @@ protected:
 		bool bfcClip:1;
 		bool bfcWindingCCW:1;
 		bool bfcInvert:1;
+		bool bboxIgnore:1;
 	} m_actionFlags;
 	int m_colorNumber;
 };

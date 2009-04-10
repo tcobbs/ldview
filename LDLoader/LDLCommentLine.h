@@ -27,6 +27,9 @@ public:
 	virtual bool isPrimitiveMeta(void) const;
 	virtual bool isNoShrinkMeta(void) const;
 	virtual bool isBFCMeta(void) const;
+	virtual bool isLDViewMeta(void) const;
+	virtual bool isBBoxIgnoreMeta(void) const;
+	virtual bool containsBBoxIgnoreCommand(const char *command) const;
 
 	// OBI
 	bool isOBIMeta(void) const;
@@ -53,6 +56,8 @@ protected:
 	~LDLCommentLine(void);
 	virtual void dealloc(void);
 	void setupProcessedLine(void);
+	bool containsCommand(const char *command, int startWord,
+		bool caseSensitive = false) const;
 
 	char *m_processedLine;
 	TCStringArray *m_words;

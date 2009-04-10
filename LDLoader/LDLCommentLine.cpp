@@ -269,6 +269,46 @@ bool LDLCommentLine::isPartMeta(void) const
 	return false;
 }
 
+bool LDLCommentLine::isLDViewMeta(void) const
+{
+	return stringHasCaseInsensitivePrefix(m_processedLine, "0 !LDVIEW ");
+}
+
+bool LDLCommentLine::isBBoxIgnoreMeta(void) const
+{
+	// Note: second part is to verify that BBOX_IGNORE has a space after it.
+	return stringHasPrefix(m_processedLine, "0 !LDVIEW BBOX_IGNORE") &&
+		strcasecmp((*m_words)[1], "BBOX_IGNORE") == 0;
+}
+
+bool LDLCommentLine::containsCommand(
+	const char *command,
+	int startWord,
+	bool caseSensitive /*= false*/) const
+{
+	int i;
+	int numWords = m_words->getCount();
+
+	for (i = startWord; i < numWords; i++)
+	{
+		if ((caseSensitive && strcmp((*m_words)[i], command) == 0) ||
+			(!caseSensitive && strcasecmp((*m_words)[i], command) == 0))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool LDLCommentLine::containsBBoxIgnoreCommand(const char *command) const
+{
+	if (isBBoxIgnoreMeta())
+	{
+		return containsCommand(command, 2, true);
+	}
+	return false;
+}
+
 bool LDLCommentLine::isBFCMeta(void) const
 {
 //	if (stringHasCaseInsensitivePrefix(m_processedLine, "0 BFC "))
@@ -502,19 +542,7 @@ bool LDLCommentLine::containsBFCCommand(const char *command) const
 {
 	if (isBFCMeta())
 	{
-		int i;
-		int numWords = m_words->getCount();
-
-		for (i = 1; i < numWords; i++)
-		{
-//			if (strcasecmp((*m_words)[i], command) == 0)
-			if (strcmp((*m_words)[i], command) == 0)
-			{
-				return true;
-			}
-		}
+		return containsCommand(command, 1, true);
 	}
 	return false;
 }
-
-
