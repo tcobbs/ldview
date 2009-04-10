@@ -50,6 +50,8 @@
 	NSTimer *tcAutoreleaseTimer;
 	NSString *noWindowText;
 	NSSize maxSize;
+	BOOL forceNewWindow;
+	int commandLineStep;
 }
 
 - (void)modelWindowWillClose:(ModelWindow *)modelWindow;
@@ -69,5 +71,6 @@
 - (void)recordRecentFile:(NSString *)filename;
 - (NSMenuItem *)prefsMenuItem;
 - (IBAction)showHelp:(id)sender;
+- (int)commandLineStep;
 
 @end

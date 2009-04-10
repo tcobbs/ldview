@@ -157,7 +157,7 @@ static ErrorsAndWarnings *sharedInstance = nil;
 {
 	errorNames = [[NSMutableArray alloc] init];
 	enabledErrors = [[NSMutableArray alloc] init];
-	for (int i = LDLEFirstError; i < LDLELastError; i++)
+	for (int i = LDLEFirstError; i <= LDLELastError; i++)
 	{
 #ifdef TC_NO_UNICODE
 		[errorNames addObject:[NSString stringWithASCIICString:LDLError::getTypeName((LDLErrorType)i)]];

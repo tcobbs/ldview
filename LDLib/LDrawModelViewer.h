@@ -293,6 +293,7 @@ class LDrawModelViewer: public TCAlertSender
 		}
 		virtual void setUseLighting(bool);
 		bool getUseLighting(void) const { return flags.useLighting != false; }
+		void setCommandLineStep(int value) { commandLineStep = value; }
 		bool getShowLightDir(void) const { return flags.showLight != false; }
 		void setShowLightDir(bool value);
 		virtual void setUseStipple(bool);
@@ -713,6 +714,7 @@ class LDrawModelViewer: public TCAlertSender
 		int lastMouseY;
 		LDInputHandler *inputHandler;
 		int step;
+		int commandLineStep;
 		int mpdChildIndex;
 		LDExporter *exporter;
 		ExportType exportType;

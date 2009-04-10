@@ -519,7 +519,7 @@
 
 - (BOOL)newWindowNeeded
 {
-	return [[[self preferences] generalPage] newModelWindows] || [[self currentModelWindow] sheetBusy];
+	return forceNewWindow || [[[self preferences] generalPage] newModelWindows] || [[self currentModelWindow] sheetBusy];
 }
 
 - (BOOL)openFile:(NSString *)filename
@@ -604,11 +604,49 @@
 	}
 }
 
+- (int)commandLineStep
+{
+	return commandLineStep;
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	if (!launchFileOpened && [[[self preferences] generalPage] promptAtStartup])
 	{
-		[self openModel];
+		TCStringArray *unhandledArgs = TCUserDefaults::getUnhandledCommandLineArgs();
+		BOOL opened = NO;
+		std::string stepString = TCUserDefaults::commandLineStringForKey(STEP_KEY);
+		long step;
+
+		if (sscanf(stepString.c_str(), "%li", &step) == 1)
+		{
+			commandLineStep = step;
+		}
+		if (unhandledArgs != NULL)
+		{
+			int count = unhandledArgs->getCount();
+			int i;
+
+			forceNewWindow = YES;
+			for (i = 0; i < count; i++)
+			{
+				char *arg = unhandledArgs->stringAtIndex(i);
+				
+				if (arg[0] != '-' && arg[0] != 0)
+				{
+					if ([self openFile:[NSString stringWithCString:arg encoding:NSASCIIStringEncoding]])
+					{
+						opened = YES;
+					}
+				}
+			}
+			forceNewWindow = NO;
+		}
+		commandLineStep = 0;
+		if (!opened)
+		{
+			[self openModel];
+		}
 	}
 }
 
