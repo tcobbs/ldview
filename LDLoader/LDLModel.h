@@ -81,9 +81,9 @@ public:
 	virtual bool isMainModel(void) const { return false; }
 	virtual void scanPoints(TCObject *scanner,
 		LDLScanPointCallback scanPointCallback, const TCFloat *matrix,
-		int step = -1) const;
+		int step = -1, bool watchBBoxIgnore = false) const;
 	virtual void getBoundingBox(TCVector &min, TCVector &max) const;
-	virtual TCFloat getMaxRadius(const TCVector &center);
+	virtual TCFloat getMaxRadius(const TCVector &center, bool watchBBoxIgnore);
 
 	// Flags
 	// Note that bit flags can cause odd results; thus returning the != false,
@@ -135,6 +135,7 @@ protected:
 	virtual int parseComment(int index, LDLCommentLine *commentLine);
 	virtual int parseMPDMeta(int index, const char *filename);
 	virtual int parseBFCMeta(LDLCommentLine *commentLine);
+	virtual int parseBBoxIgnoreMeta(LDLCommentLine *commentLine);
 	virtual void readComment(LDLCommentLine *commentLine);
 	virtual void sendAlert(LDLError *alert);
 	virtual void sendAlert(LDLErrorType type, LDLAlertLevel level,
@@ -156,7 +157,7 @@ protected:
 //	virtual void processModelLine(LDLModelLine *modelLine);
 	virtual FILE *openModelFile(const char *filename, bool knownPart = false);
 	virtual void calcBoundingBox(void) const;
-	virtual void calcMaxRadius(const TCVector &center);
+	virtual void calcMaxRadius(const TCVector &center, bool watchBBoxIgnore);
 	void scanBoundingBoxPoint(const TCVector &point, LDLFileLine *pFileLine);
 	void scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine);
 
@@ -177,6 +178,7 @@ protected:
 	TCVector m_boundingMax;
 	TCVector m_center;
 	TCFloat m_maxRadius;
+	TCFloat m_maxFullRadius;
 	struct
 	{
 		// Private flags
@@ -191,6 +193,8 @@ protected:
 		bool bfcInvertNext:1;		// Temporal
 		bool haveBoundingBox:1;		// Temporal
 		bool haveMaxRadius:1;		// Temporal
+		bool haveMaxFullRadius:1;	// Temporal
+		bool fullRadius:1;			// Temporal
 		// Public flags
 		bool part:1;
 		bool subPart:1;
@@ -200,6 +204,8 @@ protected:
 		bool official:1;
 		bool hasStuds:1;
 		BFCState bfcCertify:3;
+		bool bboxIgnoreOn:1;
+		bool bboxIgnoreBegun:1;
 	} m_flags;
 
 	static StringList sm_checkDirs;

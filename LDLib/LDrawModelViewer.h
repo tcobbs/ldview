@@ -634,6 +634,7 @@ class LDrawModelViewer: public TCAlertSender
 		int height;
 		TCFloat pixelAspectRatio;
 		TCFloat size;
+		TCFloat clipSize;
 		TCVector center;
 		TCVector boundingMin;
 		TCVector boundingMax;

@@ -1853,6 +1853,7 @@ void ModelWindow::setupErrorWindow(void)
 	errorImageIndices[LDLEGeneral] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEBFCError] = errorImageIndices[LDLEParse];
 	errorImageIndices[LDLEMPDError] = errorImageIndices[LDLEParse];
+	errorImageIndices[LDLEMetaCommand] = errorImageIndices[LDLEParse];
 	DeleteObject(hbmp);
 	DeleteObject(hMask);
 

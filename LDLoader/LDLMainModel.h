@@ -77,6 +77,14 @@ public:
 	{
 		return m_mainFlags.loadCanceled != false;
 	}
+	virtual void setBBoxIgnoreUsed(bool value)
+	{
+		m_mainFlags.bboxIgnoreUsed = value;
+	}
+	virtual bool getBBoxIgnoreUsed(void) const
+	{
+		return m_mainFlags.bboxIgnoreUsed != false;
+	}
 	bool &ancestorCheck(const std::string &name) { return m_ancestorMap[name]; }
 	void ancestorClear(const std::string &name) { m_ancestorMap[name] = false; }
 	virtual TCObject *getAlertSender(void) { return m_alertSender; }
@@ -110,6 +118,7 @@ protected:
 		bool boundingBoxesOnly:1;
 		bool randomColors:1;
 		bool forceHighlightColor:1;
+		bool bboxIgnoreUsed:1;
 		// Semi-public flags
 		bool loadCanceled:1;
 	} m_mainFlags;

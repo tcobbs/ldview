@@ -12,10 +12,9 @@ LDLActionLine::LDLActionLine(LDLModel *parentModel, const char *line,
 							 int lineNumber, const char *originalLine)
 	:LDLFileLine(parentModel, line, lineNumber, originalLine)
 {
+	memset(&m_actionFlags, 0, sizeof(m_actionFlags));
 	m_actionFlags.bfcCertify = BFCUnknownState;
-	m_actionFlags.bfcClip = false;
 	m_actionFlags.bfcWindingCCW = true;
-	m_actionFlags.bfcInvert = false;
 }
 
 LDLActionLine::LDLActionLine(const LDLActionLine &other)

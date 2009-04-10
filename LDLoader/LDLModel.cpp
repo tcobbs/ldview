@@ -70,6 +70,8 @@ LDLModel::LDLModel(void)
 	m_flags.bfcInvertNext = false;
 	m_flags.haveBoundingBox = false;
 	m_flags.haveMaxRadius = false;
+	m_flags.haveMaxFullRadius = false;
+	m_flags.fullRadius = false;
 	// Initialize Public flags
 	m_flags.part = false;
 	m_flags.subPart = false;
@@ -79,6 +81,8 @@ LDLModel::LDLModel(void)
 	m_flags.official = false;
 	m_flags.hasStuds = false;
 	m_flags.bfcCertify = BFCUnknownState;
+	m_flags.bboxIgnoreOn = false;
+	m_flags.bboxIgnoreBegun = false;
 	sm_modelCount++;
 }
 
@@ -984,6 +988,35 @@ int LDLModel::parseMPDMeta(int index, const char *filename)
 	return i - index - 1;
 }
 
+int LDLModel::parseBBoxIgnoreMeta(LDLCommentLine *commentLine)
+{
+	if (commentLine->containsBBoxIgnoreCommand("BEGIN"))
+	{
+		m_flags.bboxIgnoreOn = true;
+		m_flags.bboxIgnoreBegun = true;
+	}
+	else if (commentLine->containsBBoxIgnoreCommand("NEXT"))
+	{
+		m_flags.bboxIgnoreOn = true;
+	}
+	else if (commentLine->containsBBoxIgnoreCommand("END"))
+	{
+		if (!m_flags.bboxIgnoreBegun)
+		{
+			reportWarning(LDLEMetaCommand, *commentLine,
+				TCLocalStrings::get(_UC("LDLModelBBoxEndUnexpected")));
+		}
+		m_flags.bboxIgnoreOn = false;
+		m_flags.bboxIgnoreBegun = false;
+	}
+	else
+	{
+		reportWarning(LDLEMetaCommand, *commentLine,
+			TCLocalStrings::get(_UC("LDLModelBBoxCommand")));
+	}
+	return 0;
+}
+
 int LDLModel::parseBFCMeta(LDLCommentLine *commentLine)
 {
 	if (m_flags.bfcInvertNext)
@@ -1132,6 +1165,18 @@ int LDLModel::parseComment(int index, LDLCommentLine *commentLine)
 		m_stepIndices.push_back(index);
 		return 0;
 	}
+	else if (commentLine->isLDViewMeta())
+	{
+		if (commentLine->isBBoxIgnoreMeta())
+		{
+			return parseBBoxIgnoreMeta(commentLine);
+		}
+		else
+		{
+			reportWarning(LDLEMetaCommand, *commentLine,
+				TCLocalStrings::get(_UC("LDLModelUnknownLDViewMeta")));
+		}
+	}
 	else if (index == 0)
 	{
 		delete m_description;
@@ -1171,10 +1216,20 @@ bool LDLModel::parse(void)
 
 			if (fileLine->isActionLine())
 			{
+				LDLActionLine *actionLine = (LDLActionLine *)fileLine;
+
 				m_flags.started = true;
-				((LDLActionLine *)fileLine)->setBFCSettings(m_flags.bfcCertify,
-					m_flags.bfcClip, m_flags.bfcWindingCCW,
-					m_flags.bfcInvertNext);
+				actionLine->setBFCSettings(m_flags.bfcCertify, m_flags.bfcClip,
+					m_flags.bfcWindingCCW, m_flags.bfcInvertNext);
+				if (m_flags.bboxIgnoreOn)
+				{
+					actionLine->setBBoxIgnore(true);
+					m_mainModel->setBBoxIgnoreUsed(true);
+				}
+				if (!m_flags.bboxIgnoreBegun)
+				{
+					m_flags.bboxIgnoreOn = false;
+				}
 			}
 			else
 			{
@@ -1625,7 +1680,8 @@ void LDLModel::scanPoints(
 	TCObject *scanner,
 	LDLScanPointCallback scanPointCallback,
 	const TCFloat *matrix,
-	int step) const
+	int step /*= -1*/,
+	bool watchBBoxIgnore /*= false*/) const
 {
 	if (this != m_mainModel && isPart() && m_mainModel->getBoundingBoxesOnly()
 		&& m_flags.haveBoundingBox)
@@ -1679,9 +1735,14 @@ void LDLModel::scanPoints(
 			}
 			if (fileLine->isActionLine())
 			{
+				LDLActionLine *actionLine = (LDLActionLine *)fileLine;
+
 				emptyStep = false;
-				((LDLActionLine *)fileLine)->scanPoints(scanner, scanPointCallback,
-					matrix);
+				if (!watchBBoxIgnore || !actionLine->getBBoxIgnore())
+				{
+					actionLine->scanPoints(scanner, scanPointCallback,
+						matrix, watchBBoxIgnore);
+				}
 			}
 		}
 	}
@@ -1694,10 +1755,17 @@ void LDLModel::getBoundingBox(TCVector &min, TCVector &max) const
 	max = m_boundingMax;
 }
 
-TCFloat LDLModel::getMaxRadius(const TCVector &center)
+TCFloat LDLModel::getMaxRadius(const TCVector &center, bool watchBBoxIgnore)
 {
-	calcMaxRadius(center);
-	return m_maxRadius;
+	calcMaxRadius(center, watchBBoxIgnore);
+	if (watchBBoxIgnore)
+	{
+		return m_maxRadius;
+	}
+	else
+	{
+		return m_maxFullRadius;
+	}
 }
 
 void LDLModel::scanBoundingBoxPoint(
@@ -1761,36 +1829,67 @@ void LDLModel::calcBoundingBox(void) const
 		// boxes can easily stick out of the really minimum bounding box of
 		// their parent.
 		scanPoints(const_cast<LDLModel *>(this),
-			(LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint, matrix);
+			(LDLScanPointCallback)&LDLModel::scanBoundingBoxPoint, matrix, -1, true);
 	}
 }
 
-void LDLModel::scanRadiusSquaredPoint(const TCVector &point, LDLFileLine *pFileLine)
+void LDLModel::scanRadiusSquaredPoint(
+	const TCVector &point,
+	LDLFileLine *pFileLine)
 {
 	if (pFileLine == NULL ||
 		pFileLine->getLineType() != LDLLineTypeConditionalLine)
 	{
 		TCFloat radius = (m_center - point).lengthSquared();
 
-		if (!m_flags.haveMaxRadius || radius > m_maxRadius)
+		if (m_flags.fullRadius)
 		{
-			m_flags.haveMaxRadius = true;
-			m_maxRadius = radius;
+			if (!m_flags.haveMaxFullRadius || radius > m_maxFullRadius)
+			{
+				m_flags.haveMaxFullRadius = true;
+				m_maxFullRadius = radius;
+			}
+		}
+		else
+		{
+			if (!m_flags.haveMaxRadius || radius > m_maxRadius)
+			{
+				m_flags.haveMaxRadius = true;
+				m_maxRadius = radius;
+			}
 		}
 	}
 }
 
-void LDLModel::calcMaxRadius(const TCVector &center)
+void LDLModel::calcMaxRadius(const TCVector &center, bool watchBBoxIgnore)
 {
-	if (!m_flags.haveMaxRadius)
+	if ((watchBBoxIgnore && !m_flags.haveMaxRadius) ||
+		(!watchBBoxIgnore && !m_flags.haveMaxFullRadius))
 	{
 		TCFloat matrix[16];
 
 		TCVector::initIdentityMatrix(matrix);
 		m_center = center;
-		scanPoints(this, (LDLScanPointCallback)&LDLModel::scanRadiusSquaredPoint,
-			matrix);
-		m_maxRadius = sqrt(m_maxRadius);
+		m_flags.fullRadius = !watchBBoxIgnore;
+		if (watchBBoxIgnore)
+		{
+			m_maxRadius = 0;
+		}
+		else
+		{
+			m_maxFullRadius = 0;
+		}
+		scanPoints(this,
+			(LDLScanPointCallback)&LDLModel::scanRadiusSquaredPoint, matrix, -1,
+			watchBBoxIgnore);
+		if (watchBBoxIgnore)
+		{
+			m_maxRadius = sqrt(m_maxRadius);
+		}
+		else
+		{
+			m_maxFullRadius = sqrt(m_maxFullRadius);
+		}
 	}
 }
 

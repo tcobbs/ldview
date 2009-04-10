@@ -434,7 +434,7 @@ TCFloat LDrawModelViewer::getClipRadius(void)
 
 	if (flags.autoCenter)
 	{
-		clipRadius = size / 1.45f;
+		clipRadius = clipSize / 1.45f;
 	}
 	else
 	{
@@ -442,7 +442,7 @@ TCFloat LDrawModelViewer::getClipRadius(void)
 		// guarantees everything will fit.  Remember that the near clip plane
 		// has a minimum distance, so even if it ends up initially behind the
 		// camera, we clamp it to be in front.
-		clipRadius = size;
+		clipRadius = clipSize;
 	}
 	return clipRadius;
 }
@@ -490,9 +490,9 @@ void LDrawModelViewer::perspectiveView(bool resetViewport)
 //	printf("aspectRatio2: %f\n", aspectRatio);
 	nClip = zDistance - clipRadius * aspectRatio + clipAmount * aspectRatio *
 		clipRadius;
-	if (nClip < size / 1000.0f)
+	if (nClip < clipSize / 1000.0f)
 	{
-		nClip = size / 1000.0f;
+		nClip = clipSize / 1000.0f;
 	}
 	fClip = zDistance + clipRadius * aspectRatio;
 	setFieldOfView(currentFov, nClip, fClip);
@@ -511,18 +511,18 @@ void LDrawModelViewer::perspectiveViewToClipPlane(void)
 	TCFloat clipRadius = getClipRadius();
 //	TCFloat distance = (camera.getPosition() - center).length();
 
-	nClip = zDistance - size / 2.0f;
+	nClip = zDistance - clipSize / 2.0f;
 //	fClip = distance - size * aspectRatio / 2.0f + clipAmount * aspectRatio *
 //		size;
 	fClip = zDistance - clipRadius * aspectRatio + clipAmount * aspectRatio *
 		clipRadius;
-	if (fClip < size / 1000.0f)
+	if (fClip < clipSize / 1000.0f)
 	{
-		fClip = size / 1000.0f;
+		fClip = clipSize / 1000.0f;
 	}
-	if (nClip < size / 1000.0f)
+	if (nClip < clipSize / 1000.0f)
 	{
-		nClip = size / 1000.0f;
+		nClip = clipSize / 1000.0f;
 	}
 	setFieldOfView(currentFov, nClip, fClip);
 	glLoadIdentity();
@@ -676,6 +676,7 @@ void LDrawModelViewer::setModelSize(const TCFloat value)
 	{
 		flags.overrideModelSize = true;
 		size = value;
+		clipSize = value;
 		flags.needsSetup = true;
 	}
 }
@@ -1042,7 +1043,19 @@ bool LDrawModelViewer::calcSize(void)
 		}
 		if (!flags.overrideModelSize)
 		{
-			size = curModel->getMaxRadius(center) * 2.0f;
+			size = curModel->getMaxRadius(center, true) * 2.0f;
+			if (mainModel->getBBoxIgnoreUsed())
+			{
+				clipSize = curModel->getMaxRadius(center, false) * 2.0f;
+				if (size == 0.0)
+				{
+					size = clipSize;
+				}
+			}
+			else
+			{
+				clipSize = size;
+			}
 		}
 		TCProgressAlert::send("LDrawModelViewer",
 			ls(_UC("CalculatingSizeStatus")), 1.0f, &abort, this);
@@ -4769,13 +4782,13 @@ std::string LDrawModelViewer::getCurFilename(void) const
 // Note: static method
 void LDrawModelViewer::addStandardSize(int width, int height)
 {
-	StandardSize size;
+	StandardSize standardSize;
 	ucstring buf = ltoucstr(width);
 	ucstring aspectString = getAspectString(width, height, _UC(":"), true);
 
-	size.width = width;
-	size.height = height;
-	standardSizes.push_back(size);
+	standardSize.width = width;
+	standardSize.height = height;
+	standardSizes.push_back(standardSize);
 	buf += _UC(" x ");
 	buf += ltoucstr(height);
 	if (aspectString.length() > 0)
@@ -4861,11 +4874,11 @@ void LDrawModelViewer::getStandardSizes(
 	for (StandardSizeList::const_iterator it = standardSizes.begin();
 		it != standardSizes.end(); it++)
 	{
-		const StandardSize &size = *it;
+		const StandardSize &standardSize = *it;
 
-		if (size.width <= maxWidth && size.height <= maxHeight)
+		if (standardSize.width <= maxWidth && standardSize.height <= maxHeight)
 		{
-			sizes.push_back(size);
+			sizes.push_back(standardSize);
 		}
 	}
 }
