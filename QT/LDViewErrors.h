@@ -39,6 +39,7 @@ public slots:
 	void colinearPoints(){doErrorClick(colinearPointsButton, LDLEColinear);}
 	void identicalVertices(){doErrorClick(identicalVerticesButton,LDLEMatchingPoints);}
 	void modelLoop()    {doErrorClick(modelLoopButton, LDLEModelLoop);}
+	void metaCommand()  {doErrorClick(metaCommandProblemButton, LDLEMetaCommand);}
 	void BFCWarning()   {doErrorClick(BFCWarningButton, LDLEBFCWarning);}
 	void BFCError()     {doErrorClick(BFCErrorButton, LDLEBFCError);}
 	void nonFlatQuad()  {doErrorClick(nonFlatQuadButton, LDLENonFlatQuad);}
