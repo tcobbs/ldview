@@ -62,6 +62,7 @@ QListViewItem *LDViewModelTree::getChild(QListViewItem *parent, int index)
 void LDViewModelTree::selectFromHighlightPath(std::string path)
 {
 	QListViewItem *item = NULL;
+	//printf("%s\n",path.c_str());
 	while (path.size() > 0)
 	{
 		int lineNumber = atoi(&path[1]) - 1;
@@ -94,11 +95,6 @@ void LDViewModelTree::show(void)
 	setActiveWindow();
 	fillTreeView();
 	ModelTreePanel::show();
-	StringList paths = m_modelWindow->getModelViewer()->getHighlightPaths();
-	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
-	{
-		selectFromHighlightPath(*it);
-	}
 }
 
 void LDViewModelTree::fillTreeView(void)
@@ -111,6 +107,11 @@ void LDViewModelTree::fillTreeView(void)
 		}
 		updateLineChecks();
 		refreshTreeView();
+		StringList paths = m_modelWindow->getModelViewer()->getHighlightPaths();
+		for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
+		{
+			selectFromHighlightPath(*it);
+		}
 	}
 }
 
