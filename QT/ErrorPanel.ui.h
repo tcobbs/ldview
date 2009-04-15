@@ -65,6 +65,10 @@ void ErrorPanel::modelLoop()
 {
 }
 
+void ErrorPanel::metaCommand()
+{
+}
+
 void ErrorPanel::identicalVertices()
 {
 }

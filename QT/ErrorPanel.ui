@@ -333,6 +333,14 @@
                                         <string>Model loop</string>
                                     </property>
                                 </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>metaCommandProblemButton</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Meta Command problem</string>
+                                    </property>
+                                </widget>
                             </vbox>
                         </widget>
                     </hbox>
@@ -516,6 +524,12 @@
         <slot>modelLoop()</slot>
     </connection>
     <connection>
+        <sender>metaCommandProblemButton</sender>
+        <signal>clicked()</signal>
+        <receiver>ErrorPanel</receiver>
+        <slot>metaCommand()</slot>
+    </connection>
+    <connection>
         <sender>showWarningsButton</sender>
         <signal>clicked()</signal>
         <receiver>ErrorPanel</receiver>
@@ -579,6 +593,7 @@
     <slot>partrenamed()</slot>
     <slot>unofficialpart()</slot>
     <slot>modelLoop()</slot>
+    <slot>metaCommand()</slot>
     <slot>identicalVertices()</slot>
     <slot>showAllError()</slot>
     <slot>showNoneError()</slot>

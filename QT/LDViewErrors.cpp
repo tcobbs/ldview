@@ -70,6 +70,8 @@ void LDViewErrors::reflectSettings(void)
 		preferences->getShowError(LDLEUnofficialPart));
 	preferences->setButtonState(modelLoopButton,
 		preferences->getShowError(LDLEModelLoop));
+	preferences->setButtonState(metaCommandProblemButton,
+		preferences->getShowError(LDLEMetaCommand));
 	preferences->setButtonState(showWarningsButton,
 		TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) ? 1 : 0);
 	preferences->setButtonState(identicalVerticesButton,
