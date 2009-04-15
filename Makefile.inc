@@ -3,7 +3,9 @@ RM = rm -f
 RMDIR = rm -rf
 MAKEDEPEND = gcc -MM
 
-CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE
+#EXPORT_3DS=-DEXPORT_3DS
+
+CFLAGS = -o $(OBJDIR)/$*.o $(TESTING) -Wall -D_GNU_SOURCE $(EXPORT_3DS)
 
 CSRCS = $(wildcard *.c)
 CCSRCS =  $(wildcard *.cpp)

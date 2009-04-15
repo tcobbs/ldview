@@ -48,7 +48,7 @@ unix {
   target.path = /usr/local/bin
   INSTALLS += documentation target
   LIBS += -L../TCFoundation -L../LDLib -L../LDLoader -L../TRE -L../boost/lib \
-          -lLDraw -l$$BOOSTLIB -L../gl2ps -L../LDExporter
+          -lLDraw -l$$BOOSTLIB -L../gl2ps -L../LDExporter 
   ldlib.target = ../LDLib/libLDraw.a
   ldlib.commands = cd ../LDLib ; make all
   ldlib.depends = ../LDLib/*.cpp ../LDLib/*.h
@@ -172,6 +172,7 @@ LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.
 	LIBS	+= -ltinyxml
+#	LIBS += -L../lib -l3ds
 }
 
 DBFILE	= LDView.db
