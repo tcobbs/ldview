@@ -49,12 +49,56 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 
 LDViewModelTree::~LDViewModelTree() { }
 
+QListViewItem *LDViewModelTree::getChild(QListViewItem *parent, int index)
+{
+	QListViewItem *child = (parent ? parent->firstChild() : modelTreeView->firstChild());
+	for (int i = 1; (i <= index) && child; i++)
+	{
+		child = child->nextSibling();
+	}
+	return child;
+}
+
+void LDViewModelTree::selectFromHighlightPath(std::string path)
+{
+	QListViewItem *item = NULL;
+	while (path.size() > 0)
+	{
+		int lineNumber = atoi(&path[1]) - 1;
+		item = getChild(item, lineNumber);
+		if (item)
+		{
+			size_t index = path.find('/', 1);
+			if (index < path.size())
+			{
+				itemexpanded(item);
+				modelTreeView->setOpen(item, true);
+				path = path.substr(index);
+			}
+			else
+			{
+				modelTreeView->setSelected(item, true);
+				path = "";
+			}
+		}
+		else
+		{
+			return;
+		}
+	}
+}
+
 void LDViewModelTree::show(void)
 {
 	raise();
 	setActiveWindow();
 	fillTreeView();
 	ModelTreePanel::show();
+	StringList paths = m_modelWindow->getModelViewer()->getHighlightPaths();
+	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
+	{
+		selectFromHighlightPath(*it);
+	}
 }
 
 void LDViewModelTree::fillTreeView(void)
