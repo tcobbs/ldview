@@ -48,6 +48,8 @@ protected:
 	void updateLineChecks(void);
     void setModel(LDLMainModel *model);
     void setModelWindow(ModelViewerWidget *modelWindow);
+	QListViewItem *getChild(QListViewItem *parent, int index);
+	void selectFromHighlightPath(std::string path);
 
 	LDModelTree *findTree(QListViewItem *item);
 	LDModelTree *modeltree;
