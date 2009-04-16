@@ -343,6 +343,7 @@ void ModelTreeDialog::selectFromHighlightPath(std::string path)
 {
 	HTREEITEM hItem = NULL;
 
+	path = m_modelTree->adjustHighlightPath(path);
 	while (path.size() > 0)
 	{
 		int lineNumber = atoi(&path[1]) - 1;
@@ -380,9 +381,13 @@ void ModelTreeDialog::refreshTreeView(void)
 	addChildren(NULL, m_modelTree);
 	SendMessage(m_hTreeView, WM_SETREDRAW, TRUE, 0);
 	RedrawWindow(m_hTreeView, NULL, NULL, RDW_INVALIDATE);
-	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
+	if (m_modelTree != NULL)
 	{
-		selectFromHighlightPath(*it);
+		for (StringList::const_iterator it = paths.begin(); it != paths.end();
+			it++)
+		{
+			selectFromHighlightPath(*it);
+		}
 	}
 }
 

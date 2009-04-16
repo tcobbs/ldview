@@ -416,3 +416,33 @@ const ucstring &LDModelTree::getStatusText(void) const
 	}
 	return m_statusText;
 }
+
+std::string LDModelTree::adjustHighlightPath(std::string path)
+{
+	if (m_activeLineTypes != m_allLineTypes)
+	{
+		int lineNumber = atoi(&path[1]) - 1;
+		int newLineNumber = 0;
+		std::string prefix("/");
+		size_t index = path.find('/', 1);
+
+		for (int i = 0; i < lineNumber; i++)
+		{
+			if (childFilterCheck((*m_children)[i]))
+			{
+				newLineNumber++;
+			}
+		}
+		prefix += ltostr(newLineNumber + 1);
+		if (index < path.size())
+		{
+			path = prefix + (*m_children)[lineNumber]->adjustHighlightPath(
+				path.substr(index));
+		}
+		else
+		{
+			path = prefix;
+		}
+	}
+	return path;
+}

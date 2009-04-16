@@ -38,6 +38,7 @@ public:
 	bool getTextRGB(TCFloat &r, TCFloat &g, TCFloat &b) const;
 	bool getTextRGB(TCByte &r, TCByte &g, TCByte &b) const;
 	bool getTextRGB(int &r, int &g, int &b) const;
+	std::string adjustHighlightPath(std::string path);
 protected:
 	bool getRGB(TCFloat l, TCFloat h, TCFloat &r, TCFloat &g, TCFloat &b) const;
 	LDModelTree(TCULong activeLineTypes, TCULong allLineTypes);
