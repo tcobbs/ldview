@@ -167,11 +167,21 @@ void LDLMainModel::print(void)
 
 bool LDLMainModel::colorNumberIsTransparent(int colorNumber)
 {
-	return (colorNumber >= 32 && colorNumber < 48) ||
-		(colorNumber >= 0x3000000 && colorNumber < 0x4000000) ||
-		(colorNumber >= 0x5000000 && colorNumber < 0x7000000) ||
-		(colorNumber >= 0x7000000 && colorNumber < 0x8000000) ||
-		colorNumber == 57;
+	if (m_mainPalette != NULL)
+	{
+		int r, g, b, a;
+
+		m_mainPalette->getRGBA(colorNumber, r, g, b, a);
+		return a < 255;
+	}
+	else
+	{
+		return (colorNumber >= 32 && colorNumber < 48) ||
+			(colorNumber >= 0x3000000 && colorNumber < 0x4000000) ||
+			(colorNumber >= 0x5000000 && colorNumber < 0x7000000) ||
+			(colorNumber >= 0x7000000 && colorNumber < 0x8000000) ||
+			colorNumber == 57;
+	}
 }
 
 void LDLMainModel::getRGBA(int colorNumber, int& r, int& g, int& b, int& a)
