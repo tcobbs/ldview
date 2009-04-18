@@ -419,13 +419,24 @@ const ucstring &LDModelTree::getStatusText(void) const
 
 std::string LDModelTree::adjustHighlightPath(std::string path)
 {
+//	if (m_children == NULL)
+//	{
+//		return "";
+//	}
 	if (m_activeLineTypes != m_allLineTypes)
 	{
 		int lineNumber = atoi(&path[1]) - 1;
 		int newLineNumber = 0;
 		std::string prefix("/");
 		size_t index = path.find('/', 1);
+		int numChildren = getNumChildren(false);
 
+		// Make sure children are loaded.
+		getChildren(false);
+		if (newLineNumber >= numChildren)
+		{
+			newLineNumber = numChildren - 1;
+		}
 		for (int i = 0; i < lineNumber; i++)
 		{
 			if (childFilterCheck((*m_children)[i]))
