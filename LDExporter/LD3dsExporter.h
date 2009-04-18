@@ -26,13 +26,14 @@ protected:
 	void dealloc(void);
 	virtual void initSettings(void) const;
 	void doExport(LDLModel *pModel, Lib3dsNode *pParentNode,
-		const TCFloat *matrix, int colorNumber, bool inPart);
+		const TCFloat *matrix, int colorNumber, bool inPart, bool bfc);
 	int getMaterial(int colorNumber);
 	void writeShapeLine(Lib3dsMesh *pMesh, LDLShapeLine *pShapeLine,
-		const TCFloat *matrix, int colorNumber);
+		const TCFloat *matrix, int colorNumber, bool bfc, bool invert);
 	void writeTriangle(Lib3dsMesh *pMesh, const TCVector *points, int i0,
 		int i1, int i2, int colorNumber, const TCFloat *matrix);
 	std::string getMeshName(LDLModel *model);
+	bool shouldFlipWinding(bool bfc, bool invert, LDLShapeLine *pShapeLine);
 
 	// NOTE: loadSettings is NOT virtual: it's called from the constructor.
 	void loadSettings(void);
