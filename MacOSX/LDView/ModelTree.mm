@@ -135,7 +135,7 @@
 	[outlineView deselectAll:self];
 	for (StringList::const_iterator it = paths.begin(); it != paths.end(); it++)
 	{
-		[self selectAndExpandPath:*it];
+		[self selectAndExpandPath:modelTree->adjustHighlightPath(*it)];
 	}
 }
 
