@@ -62,6 +62,7 @@ QListViewItem *LDViewModelTree::getChild(QListViewItem *parent, int index)
 void LDViewModelTree::selectFromHighlightPath(std::string path)
 {
 	QListViewItem *item = NULL;
+	path = modeltree->adjustHighlightPath(path);
 	//printf("%s\n",path.c_str());
 	while (path.size() > 0)
 	{
