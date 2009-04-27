@@ -9,314 +9,158 @@
 
 void PreferencesPanel::doApply()
 {
-    if (preferences)
-    {
-	 preferences->doApply();
-    }
-}
-
-void PreferencesPanel::setPreferences(Preferences *value )
-{
-    preferences = value;
 }
 
 void PreferencesPanel::init()
 {
-    preferences = NULL;
 }
 
-void PreferencesPanel::doOK()
+void PreferencesPanel::doOk()
 {
-    doApply();
-    close();
 }
 
 void PreferencesPanel::doCancel()
 {
-    if (preferences)
-    {
-	 preferences->doCancel();
-    }
-    close();
 }
 
 
 void PreferencesPanel::doResetGeneral()
 {
-    if (preferences)
-    {
-        preferences->doResetGeneral();
-    }
 }
 
 void PreferencesPanel::doResetGeometry()
 {
-    if (preferences)
-    {
-        preferences->doResetGeometry();
-    }
 }
 
 void PreferencesPanel::doResetEffects()
 {
-    if (preferences)
-    {
-        preferences->doResetEffects();
-    }
 }
 
 void PreferencesPanel::doResetPrimitives()
 {
-    if (preferences)
-    {
-        preferences->doResetPrimitives();
-    }
 }
 
 void PreferencesPanel::doResetUpdates()
 {
-    if (preferences)
-    {
-        preferences->doResetUpdates();
-	}
 }
 
 void PreferencesPanel::enableApply()
 {
-    applyButton->setEnabled(true);
 }
 
-void PreferencesPanel::doWireframeCutaway(bool value)
+void PreferencesPanel::doWireframeCutaway(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doWireframeCutaway(value);
-    }
 }
 
-void PreferencesPanel::doLighting(bool value)
+void PreferencesPanel::doLighting(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doLighting(value);
-    }
 }
 
-void PreferencesPanel::doStereo(bool value)
+void PreferencesPanel::doStereo(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doStereo(value);
-    }
 }
 
-void PreferencesPanel::doWireframe(bool value)
+void PreferencesPanel::doWireframe(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doWireframe(value);
-    }
 }
 
-void PreferencesPanel::doBFC(bool value)
+void PreferencesPanel::doBFC(bool /* value */)
 {
-	if (preferences)
-	{
-		preferences->doBFC(value);
-	}
 }
 
-void PreferencesPanel::doEdgeLines(bool value)
+void PreferencesPanel::doEdgeLines(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doEdgeLines(value);
-    }
 }
 
-void PreferencesPanel::doConditionalShow(bool value)
+void PreferencesPanel::doConditionalShow(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doConditionalShow(value);
-	}
 }
 
-void PreferencesPanel::doPrimitiveSubstitution(bool value)
+void PreferencesPanel::doPrimitiveSubstitution(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doPrimitiveSubstitution(value);
-    }
 }
 
-void PreferencesPanel::doTextureStuds(bool value)
+void PreferencesPanel::doTextureStuds(bool /* value */)
 {
-    if (preferences)
-    {
-        preferences->doTextureStuds(value);
-    }
 }
 
 void PreferencesPanel::doNewPreferenceSet()
 {
-    if (preferences)
-    {
-        preferences->doNewPreferenceSet();
-    }
 }
 
 void PreferencesPanel::doDelPreferenceSet()
 {
-    if (preferences)
-    {
-        preferences->doDelPreferenceSet();
-    }
 }
 
 void PreferencesPanel::doHotkeyPreferenceSet()
 {
-    if (preferences)
-    {
-        preferences->doHotkeyPreferenceSet();
-    }
 }
 
 void PreferencesPanel::doPrefSetSelected()
 {
-	if(preferences)
-	{
-		preferences->doPrefSetSelected(true);
-	}
 }
 
-void PreferencesPanel::doSortTransparency( bool value )
+void PreferencesPanel::doSortTransparency( bool /* value */ )
 {
-	if(preferences)
-	{
-		preferences->doSortTransparency(value);
-	}
 }
 
-void PreferencesPanel::doStippleTransparency( bool value )
+void PreferencesPanel::doStippleTransparency( bool /* value */ )
 {
-	if(preferences)
-	{
-		preferences->doStippleTransparency(value);
-	}
 }
 
 void PreferencesPanel::doDefaultColor()
 {
-	if(preferences)
-	{
-		preferences->doDefaultColor();
-	}
 }
 
 void PreferencesPanel::doBackgroundColor()
 {
-	if(preferences)
-	{
-		preferences->doBackgroundColor();
-	}
 }
 
 void PreferencesPanel::enableProxy()
 {
-    if(preferences)
-    {
-        preferences->doProxyServer(true);
-	}
-	enableApply();
 }
 
 void PreferencesPanel::disableProxy()
 {
-    if(preferences)
-    {
-        preferences->doProxyServer(false);
-    }
-	enableApply();
 }
 
-void PreferencesPanel::doUpdateMissingparts(bool b)
+void PreferencesPanel::doUpdateMissingparts(bool /* b */)
 {
-    if(preferences)
-    {
-        preferences->doUpdateMissingparts(b);
-	}
 }
 
 void PreferencesPanel::doAnisotropic(bool /*b*/)
 {
-	if(preferences)
-	{
-		preferences->doAnisotropic();
-	}
 }
 
-void PreferencesPanel::doAnisotropicSlider(int i)
+void PreferencesPanel::doAnisotropicSlider(int /* i */)
 {
-	if(preferences)
-	{
-		preferences->doAnisotropicSlider(i);
-	}
 }
 
 void PreferencesPanel::doDrawLightDats()
 {
-	if(preferences)
-	{
-		preferences->doDrawLightDats();
-	}
 }
 
 void PreferencesPanel::snapshotSaveDirBoxChanged()
 {
-	if(preferences)
-    {
-        preferences->snapshotSaveDirBoxChanged();
-	}
 }
 
 void PreferencesPanel::partsListsSaveDirBoxChanged()
 {
-    if(preferences)
-    {
-		preferences->partsListsSaveDirBoxChanged();
-	}
 }
 
 void PreferencesPanel::exportsListsSaveDirBoxChanged()
 {
-    if(preferences)
-    {
-		preferences->exportsListsSaveDirBoxChanged();
-    }
 }
 
 void PreferencesPanel::snapshotSaveDirBrowse()
 {
-    if(preferences)
-    {
-		preferences->snapshotSaveDirBrowse();
-	}
 }
 
 void PreferencesPanel::partsListsSaveDirBrowse()
 {
-    if(preferences)
-    {
-		preferences->partsListsSaveDirBrowse();
-	}
 }
 
 void PreferencesPanel::exportsSaveDirBrowse()
 {
-    if(preferences)
-    {
-		preferences->exportsSaveDirBrowse();
-	}
 }
 

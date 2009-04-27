@@ -5,6 +5,7 @@
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDInputHandler.h>
+#include "PreferencesPanel.h"
 
 class PreferencesPanel;
 class ModelViewerWidget;
@@ -30,50 +31,19 @@ typedef enum
 	LDVPollBackground
 } LDVPollMode;
 
-class Preferences
+class Preferences : public PreferencesPanel
 {
+	Q_OBJECT
 public:
 	Preferences(ModelViewerWidget *modelWidget = NULL);
 	~Preferences(void);
 
-	void doApply(void);
-	void doCancel(void);
-	void doResetGeneral(void);
-	void doResetGeometry(void);
-	void doResetEffects(void);
-	void doResetPrimitives(void);
-	void doResetUpdates(void);
-	void doWireframeCutaway(bool value);
-	void doLighting(bool value);
-	void doProxyServer(bool value);
-	void doUpdateMissingparts(bool value);
-	void doStereo(bool value);
-	void doWireframe(bool value);
-	void doSortTransparency(bool value);
-	void doStippleTransparency(bool value);
-	void doBFC(bool value);
-	void doEdgeLines(bool value);
-	void doConditionalShow(bool value);
-	void doPrimitiveSubstitution(bool value);
-	void doTextureStuds(bool value);
-    void doNewPreferenceSet(void);
-    void doDelPreferenceSet(void);
-    void doHotkeyPreferenceSet(void);
-	bool doPrefSetSelected(bool);
-	void doPrefSetsApply(void);
 	void abandonChanges(void);
-	void show(void);
-	void doBackgroundColor();
-	void doDefaultColor();
 	bool getAllowPrimitiveSubstitution(void);
 	void getRGB(int color, int &r, int &g, int &b);
 	void getBackgroundColor(int &r, int &g, int &b);
 	bool getShowErrors(void);
-	void doAnisotropic();
-	void doAnisotropicSlider(int);
 	void setAniso(int);
-	void doDrawLightDats();
-	void doSaveDefaultViewAngle();
 
 	void setShowError(int errorNumber, bool value);
 	bool getShowError(int errorNumber);
@@ -119,14 +89,53 @@ public:
     void setupPrefSetsList(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
 	void checkLightVector(void);
+	void browseForDir(QString prompt, QLineEdit *textField, QString &dir);
+	QString getSaveDir(LDPreferences::SaveOp saveOp,const std::string &filename) { return QString(ldPrefs->getDefaultSaveDir(saveOp, filename).c_str()); }
+
+public slots:
+	void doApply(void);
+	void doOk(void);
+	void enableApply(void);
+	void enableProxy(void);
+	void disableProxy(void);
+	void doCancel(void);
+	void doResetGeneral(void);
+	void doResetGeometry(void);
+	void doResetEffects(void);
+	void doResetPrimitives(void);
+	void doResetUpdates(void);
+	void doWireframeCutaway(bool value);
+	void doLighting(bool value);
+	void doProxyServer(bool value);
+	void doUpdateMissingparts(bool value);
+	void doStereo(bool value);
+	void doWireframe(bool value);
+	void doSortTransparency(bool value);
+	void doStippleTransparency(bool value);
+	void doBFC(bool value);
+	void doEdgeLines(bool value);
+	void doConditionalShow(bool value);
+	void doPrimitiveSubstitution(bool value);
+	void doTextureStuds(bool value);
+    void doNewPreferenceSet(void);
+    void doDelPreferenceSet(void);
+    void doHotkeyPreferenceSet(void);
+	bool doPrefSetSelected(bool);
+	void doPrefSetsApply(void);
+	void show(void);
+	void doBackgroundColor();
+	void doDefaultColor();
+	void doAnisotropic();
+	void doAnisotropicSlider(int);
+	void doDrawLightDats();
+	void doSaveDefaultViewAngle();
     void snapshotSaveDirBoxChanged();
     void partsListsSaveDirBoxChanged();
 	void exportsListsSaveDirBoxChanged();
 	void snapshotSaveDirBrowse();
 	void partsListsSaveDirBrowse();
 	void exportsSaveDirBrowse();
-	void browseForDir(QString prompt, QLineEdit *textField, QString &dir);
-	QString getSaveDir(LDPreferences::SaveOp saveOp,const std::string &filename) { return QString(ldPrefs->getDefaultSaveDir(saveOp, filename).c_str()); }
+
 protected:
 	void doGeneralApply(void);
 	void doGeometryApply(void);
@@ -197,7 +206,6 @@ protected:
 	ModelViewerWidget *modelWidget;
 	LDrawModelViewer *modelViewer;
 	LDPreferences *ldPrefs;
-	PreferencesPanel *panel;
 
 	bool checkAbandon;
 	int hotKeyIndex;
