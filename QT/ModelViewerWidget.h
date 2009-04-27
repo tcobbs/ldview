@@ -18,6 +18,7 @@
 #include "LDViewMpdModel.h"
 #include "LDViewLatitudeLongitude.h"
 #include "LDViewModelTree.h"
+#include "About.h"
 
 class LDrawModelViewer;
 class LDView;
@@ -27,7 +28,7 @@ class QProgressBar;
 class QLabel;
 class QApplication;
 class OpenGLExtensionsPanel;
-class AboutPanel;
+class About;
 class HelpPanel;
 class SnapshotSettingsPanel;
 class QFileDialog;
@@ -292,7 +293,7 @@ protected:
 	OpenGLExtensionsPanel *extensionsPanel;
 	QString openGLDriverInfo;
 	LatitudeLongitude *latitudelongitude;
-	AboutPanel *aboutPanel;
+	About *aboutPanel;
 	HelpPanel *helpContents;
 	LDView *mainWindow;
 	QMenuBar *menuBar;
