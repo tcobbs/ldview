@@ -17,7 +17,6 @@ public:
     void populateColumnList();
     QCheckListItem *description;
     int exec();
-    int result();
 
 public slots:
 	void doOk();
