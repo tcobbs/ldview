@@ -3580,7 +3580,7 @@ into effect until the next time a model is loaded.</string>
         <sender>okButton</sender>
         <signal>clicked()</signal>
         <receiver>PreferencesPanel</receiver>
-        <slot>doOK()</slot>
+        <slot>doOk()</slot>
     </connection>
     <connection>
         <sender>cancelButton</sender>
@@ -4256,20 +4256,12 @@ into effect until the next time a model is loaded.</string>
     <tabstop>applyButton</tabstop>
 </tabstops>
 <includes>
-    <include location="local" impldecl="in implementation">Preferences.h</include>
     <include location="local" impldecl="in implementation">PreferencesPanel.ui.h</include>
 </includes>
-<forwards>
-    <forward>class Preferences;</forward>
-</forwards>
-<variables>
-    <variable>Preferences *preferences;</variable>
-</variables>
 <slots>
     <slot>doApply()</slot>
-    <slot>setPreferences( Preferences * value )</slot>
     <slot access="protected">init()</slot>
-    <slot>doOK()</slot>
+    <slot>doOk()</slot>
     <slot>doCancel()</slot>
     <slot>doResetGeneral()</slot>
     <slot>doResetGeometry()</slot>

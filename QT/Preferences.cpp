@@ -34,15 +34,14 @@
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
 Preferences::Preferences(ModelViewerWidget *modelWidget)
-	:modelWidget(modelWidget),
+	:PreferencesPanel(),
+	modelWidget(modelWidget),
 	modelViewer(modelWidget->getModelViewer()),
 	ldPrefs(new LDPreferences(modelViewer)),
-	panel(new PreferencesPanel),
 	checkAbandon(true)
 {
 	modelViewer = modelWidget->getModelViewer();
-	panel->setPreferences(this);
-	panel->resize(10, 10);
+	resize(10, 10);
 	loadSettings();
 	ldPrefs->applySettings();
 	reflectSettings();
@@ -59,10 +58,10 @@ Preferences::~Preferences(void)
 
 void Preferences::show(void)
 {
-	panel->applyButton->setEnabled(false);
-	panel->show();
-	panel->raise();
-	panel->setActiveWindow();
+	applyButton->setEnabled(false);
+	PreferencesPanel::show();
+	raise();
+	setActiveWindow();
 }
 
 void Preferences::doPrefSetsApply(void)
@@ -79,10 +78,10 @@ void Preferences::doPrefSetsApply(void)
 	{
 		char *oldPrefSetName = oldPrefSetNames->stringAtIndex(i);
 		int index=-1;
-		for(b = 0; b < panel->preferenceSetList->count(); b++)
+		for(b = 0; b < preferenceSetList->count(); b++)
 		{
 			if (strcmp(oldPrefSetNames->stringAtIndex(i),
-						panel->preferenceSetList->text(b).ascii()) == 0) 
+						preferenceSetList->text(b).ascii()) == 0) 
 			{
 				index = b;
 			}	
@@ -92,7 +91,7 @@ void Preferences::doPrefSetsApply(void)
 			TCUserDefaults::removeSession(oldPrefSetName);
 		}
 	}
-	count=panel->preferenceSetList->count();
+	count=preferenceSetList->count();
 	for(i = 1; i < count; i++)
 	{
 		if (oldPrefSetNames->indexOfString(getPrefSet(i)) < 0)
@@ -129,7 +128,7 @@ void Preferences::doPrefSetsApply(void)
     	doGeometryApply();
     	doEffectsApply();
     	doPrimitivesApply();
-    	panel->applyButton->setEnabled(false);
+    	applyButton->setEnabled(false);
     	if (modelWidget)
     	{
         	modelWidget->reflectSettings();
@@ -146,29 +145,29 @@ void Preferences::doGeneralApply(void)
 	QColor cTemp;
 	int r, g, b;
 
-	ldPrefs->setLineSmoothing(panel->aaLinesButton->state());
-	ldPrefs->setShowFps(panel->frameRateButton->state());
-	ldPrefs->setShowAxes(panel->showAxesButton->state());
+	ldPrefs->setLineSmoothing(aaLinesButton->state());
+	ldPrefs->setShowFps(frameRateButton->state());
+	ldPrefs->setShowAxes(showAxesButton->state());
 	if (modelWidget)
 		modelWidget->setShowFPS(ldPrefs->getShowFps());
-	ldPrefs->setShowErrors(panel->showErrorsButton->state());
-	ldPrefs->setProcessLdConfig(panel->processLdconfigLdrButton->state());
-	ldPrefs->setRandomColors(panel->randomColorsButton->state());
-	cTemp = panel->backgroundColorButton->backgroundColor();
+	ldPrefs->setShowErrors(showErrorsButton->state());
+	ldPrefs->setProcessLdConfig(processLdconfigLdrButton->state());
+	ldPrefs->setRandomColors(randomColorsButton->state());
+	cTemp = backgroundColorButton->backgroundColor();
 	cTemp.rgb(&r, &g, &b);
 	ldPrefs->setBackgroundColor(r, g, b);
-	cTemp = panel->defaultColorButton->backgroundColor();
+	cTemp = defaultColorButton->backgroundColor();
 	cTemp.rgb(&r, &g, &b);
 	ldPrefs->setDefaultColor(r, g, b);
-	ldPrefs->setFov(panel->fieldOfViewSpin->value());
-	ldPrefs->setMemoryUsage(panel->memoryUsageBox->currentItem());
-	ldPrefs->setTransDefaultColor(panel->transparentButton->state());
+	ldPrefs->setFov(fieldOfViewSpin->value());
+	ldPrefs->setMemoryUsage(memoryUsageBox->currentItem());
+	ldPrefs->setTransDefaultColor(transparentButton->state());
 	LDPreferences::DefaultDirMode snapshotDirMode, partsListDirMode, exportDirMode;
 	ldPrefs->setSnapshotsDirMode(snapshotDirMode = 
-				(LDPreferences::DefaultDirMode)panel->snapshotSaveDirBox->currentItem()); 
+				(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentItem()); 
 	if (snapshotDirMode == LDPreferences::DDMSpecificDir)
 	{
-		snapshotDir = panel->snapshotSaveDirEdit->text();
+		snapshotDir = snapshotSaveDirEdit->text();
 		if(snapshotDir.length()>0)
 		{
 			ldPrefs->setSnapshotsDir(snapshotDir.ascii());
@@ -179,10 +178,10 @@ void Preferences::doGeneralApply(void)
 		}
 	}
 	ldPrefs->setPartsListsDirMode(partsListDirMode =
-			(LDPreferences::DefaultDirMode)panel->partsListsSaveDirBox->currentItem());
+			(LDPreferences::DefaultDirMode)partsListsSaveDirBox->currentItem());
 	if (partsListDirMode == LDPreferences::DDMSpecificDir)
 	{
-		partsListDir = panel->partsListsSaveDirEdit->text();
+		partsListDir = partsListsSaveDirEdit->text();
 		if (partsListDir.length() > 0)
 		{
 			ldPrefs->setPartsListsDir(partsListDir.ascii());
@@ -193,10 +192,10 @@ void Preferences::doGeneralApply(void)
 		}
 	}
 	ldPrefs->setSaveDirMode(LDPreferences::SOExport, exportDirMode =
-			(LDPreferences::DefaultDirMode)panel->exportsListsSaveDirBox->currentItem());
+			(LDPreferences::DefaultDirMode)exportsListsSaveDirBox->currentItem());
 	if (exportDirMode == LDPreferences::DDMSpecificDir)
 	{
-		exportDir = panel->exportsSaveDirEdit->text();
+		exportDir = exportsSaveDirEdit->text();
 		if (exportDir.length() > 0)
 		{
 			ldPrefs->setSaveDir(LDPreferences::SOExport, exportDir.ascii());
@@ -213,39 +212,39 @@ void Preferences::doGeneralApply(void)
 
 void Preferences::doGeometryApply(void)
 {
-	ldPrefs->setUseSeams(panel->seamWidthButton->state());
-	ldPrefs->setBoundingBoxesOnly(panel->partBoundingBoxOnlyBox->state());
-	ldPrefs->setSeamWidth(panel->seamWidthSpin->value());
-	ldPrefs->setDrawWireframe(panel->wireframeButton->isChecked());
+	ldPrefs->setUseSeams(seamWidthButton->state());
+	ldPrefs->setBoundingBoxesOnly(partBoundingBoxOnlyBox->state());
+	ldPrefs->setSeamWidth(seamWidthSpin->value());
+	ldPrefs->setDrawWireframe(wireframeButton->isChecked());
 	if (ldPrefs->getDrawWireframe())
 	{
-		ldPrefs->setUseWireframeFog(panel->wireframeFogButton->state());
+		ldPrefs->setUseWireframeFog(wireframeFogButton->state());
 		ldPrefs->setRemoveHiddenLines(
-			panel->wireframeRemoveHiddenLineButton->state());
+			wireframeRemoveHiddenLineButton->state());
 	}
-	ldPrefs->setBfc(panel->enableBFCButton->isChecked());
+	ldPrefs->setBfc(enableBFCButton->isChecked());
 	if (ldPrefs->getBfc())
 	{
-		ldPrefs->setRedBackFaces(panel->bfcRedBackFaceButton->state());
-		ldPrefs->setGreenFrontFaces(panel->bfcGreenFrontFaceButton->state());
+		ldPrefs->setRedBackFaces(bfcRedBackFaceButton->state());
+		ldPrefs->setGreenFrontFaces(bfcGreenFrontFaceButton->state());
 	}
-	ldPrefs->setWireframeThickness(panel->wireframeThicknessSlider->value());
-	ldPrefs->setShowHighlightLines(panel->edgeLinesButton->isChecked());
+	ldPrefs->setWireframeThickness(wireframeThicknessSlider->value());
+	ldPrefs->setShowHighlightLines(edgeLinesButton->isChecked());
 	if (ldPrefs->getShowHighlightLines())
 	{
-		ldPrefs->setEdgesOnly(panel->edgesOnlyButton->state());
+		ldPrefs->setEdgesOnly(edgesOnlyButton->state());
 		ldPrefs->setDrawConditionalHighlights(
-			panel->conditionalLinesButton->state());
+			conditionalLinesButton->state());
 		if (ldPrefs->getDrawConditionalHighlights())
 		{
 			ldPrefs->setShowAllConditionalLines(
-				panel->conditionalShowAllButton->state());
+				conditionalShowAllButton->state());
 			ldPrefs->setShowConditionalControlPoints(
-				panel->conditionalShowControlPtsButton->state());
+				conditionalShowControlPtsButton->state());
 		}
-		ldPrefs->setUsePolygonOffset(panel->highQualityLinesButton->state());
-		ldPrefs->setBlackHighlights(panel->alwaysBlackLinesButton->state());
-		ldPrefs->setEdgeThickness(panel->edgeThicknessSlider->value());
+		ldPrefs->setUsePolygonOffset(highQualityLinesButton->state());
+		ldPrefs->setBlackHighlights(alwaysBlackLinesButton->state());
+		ldPrefs->setEdgeThickness(edgeThicknessSlider->value());
 	}
 	ldPrefs->applyGeometrySettings();
 	ldPrefs->commitGeometrySettings();
@@ -255,39 +254,39 @@ LDPreferences::LightDirection Preferences::getSelectedLightDirection(void)
 {
 	LDPreferences::LightDirection lightDirection =
 		LDPreferences::CustomDirection;
-    if(panel->lightingDir11->isOn())
+    if(lightingDir11->isOn())
     {
         lightDirection = LDPreferences::UpperLeft;
     }
-    else if (panel->lightingDir12->isOn())
+    else if (lightingDir12->isOn())
     {
     lightDirection = LDPreferences::UpperMiddle;
     }
-    else if (panel->lightingDir13->isOn())
+    else if (lightingDir13->isOn())
     {
         lightDirection = LDPreferences::UpperRight;
     }
-    else if (panel->lightingDir21->isOn())
+    else if (lightingDir21->isOn())
     {
         lightDirection = LDPreferences::MiddleLeft;
     }
-    else if (panel->lightingDir22->isOn())
+    else if (lightingDir22->isOn())
     {
         lightDirection = LDPreferences::MiddleMiddle;
     }
-    else if (panel->lightingDir23->isOn())
+    else if (lightingDir23->isOn())
     {
         lightDirection = LDPreferences::MiddleRight;
     }
-    else if (panel->lightingDir31->isOn())
+    else if (lightingDir31->isOn())
     {
         lightDirection = LDPreferences::LowerLeft;
     }
-    else if (panel->lightingDir32->isOn())
+    else if (lightingDir32->isOn())
     {
         lightDirection = LDPreferences::LowerMiddle;
     }
-    else if (panel->lightingDir33->isOn())
+    else if (lightingDir33->isOn())
     {
         lightDirection = LDPreferences::LowerRight;
     }
@@ -299,64 +298,64 @@ void Preferences::doEffectsApply(void)
 	LDVStereoMode smTemp = LDVStereoNone;
 	LDVCutawayMode cmTemp = LDVCutawayNormal;
 
-	ldPrefs->setUseLighting(panel->lightingButton->isChecked());
+	ldPrefs->setUseLighting(lightingButton->isChecked());
 	if (ldPrefs->getUseLighting())
 	{
 		LDPreferences::LightDirection lightDirection =
 			getSelectedLightDirection();
-		ldPrefs->setQualityLighting(panel->qualityLightingButton->state());
-		ldPrefs->setSubduedLighting(panel->subduedLightingButton->state());
-		ldPrefs->setUseSpecular(panel->specularLightingButton->state());
-		ldPrefs->setOneLight(panel->alternateLightingButton->state());
+		ldPrefs->setQualityLighting(qualityLightingButton->state());
+		ldPrefs->setSubduedLighting(subduedLightingButton->state());
+		ldPrefs->setUseSpecular(specularLightingButton->state());
+		ldPrefs->setOneLight(alternateLightingButton->state());
 		if (lightDirection != LDPreferences::CustomDirection)
 		{
 			ldPrefs->setLightDirection(lightDirection);
 		}
-		if (panel->effectsUseLIGHTDATButton->state())
+		if (effectsUseLIGHTDATButton->state())
 		{
 			ldPrefs->setDrawLightDats(true);
 			ldPrefs->setOptionalStandardLight(
-				panel->effectsReplaceStandarLightButton->state());
+				effectsReplaceStandarLightButton->state());
 		}
 		else
 		{
 			ldPrefs->setDrawLightDats(false);
 		}
 	}
-	ldPrefs->setNoLightGeom(panel->effectsHideLIGHTButton->state());
-	if (!panel->stereoButton->isChecked())
+	ldPrefs->setNoLightGeom(effectsHideLIGHTButton->state());
+	if (!stereoButton->isChecked())
 	{
 		smTemp = LDVStereoNone;
 	}
-	else if (panel->crossEyedStereoButton->isChecked())
+	else if (crossEyedStereoButton->isChecked())
 	{
 		smTemp = LDVStereoCrossEyed;
 	}
-	else if (panel->parallelStereoButton->isChecked())
+	else if (parallelStereoButton->isChecked())
 	{
 		smTemp = LDVStereoParallel;
 	}
 	ldPrefs->setStereoMode(smTemp);
-	ldPrefs->setStereoEyeSpacing(panel->stereoAmountSlider->value());
-	if (!panel->wireframeCutawayButton->isChecked())
+	ldPrefs->setStereoEyeSpacing(stereoAmountSlider->value());
+	if (!wireframeCutawayButton->isChecked())
 	{
 		cmTemp = LDVCutawayNormal;
 	}
-	else if (panel->colorCutawayButton->isChecked())
+	else if (colorCutawayButton->isChecked())
 	{
 		cmTemp = LDVCutawayWireframe;
 	}
-	else if (panel->monochromeCutawayButton->isChecked())
+	else if (monochromeCutawayButton->isChecked())
 	{
 		cmTemp = LDVCutawayStencil;
 	}
 	ldPrefs->setCutawayMode(cmTemp);
-	ldPrefs->setCutawayAlpha(panel->cutawayOpacitySlider->value());
-	ldPrefs->setCutawayThickness(panel->cutawayThicknessSlider->value());
-	ldPrefs->setSortTransparent(panel->sortTransparencyButton->state());
-	ldPrefs->setUseStipple(panel->stippleTransparencyButton->state());
-	ldPrefs->setUseFlatShading(panel->flatShadingButton->state());
-	ldPrefs->setPerformSmoothing(panel->smoothCurvesButton->state());
+	ldPrefs->setCutawayAlpha(cutawayOpacitySlider->value());
+	ldPrefs->setCutawayThickness(cutawayThicknessSlider->value());
+	ldPrefs->setSortTransparent(sortTransparencyButton->state());
+	ldPrefs->setUseStipple(stippleTransparencyButton->state());
+	ldPrefs->setUseFlatShading(flatShadingButton->state());
+	ldPrefs->setPerformSmoothing(smoothCurvesButton->state());
 	ldPrefs->applyEffectsSettings();
 	ldPrefs->commitEffectsSettings();
 }
@@ -368,8 +367,8 @@ void Preferences::setAniso(int value)
     s = s.setNum(intLevel);
     s+="x";
 	if (value < 1 ) s = "";
-    panel->anisotropicLabel->setText(s);
-	panel->anisotropicFilteringSlider->setValue(value);
+    anisotropicLabel->setText(s);
+	anisotropicFilteringSlider->setValue(value);
 	ldPrefs->setAnisoLevel(intLevel);
 }
 
@@ -377,38 +376,38 @@ void Preferences::doPrimitivesApply(void)
 {
 	int aniso = 0;
 	ldPrefs->setAllowPrimitiveSubstitution(
-		panel->primitiveSubstitutionButton->isChecked());
+		primitiveSubstitutionButton->isChecked());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
-		ldPrefs->setTextureStuds(panel->textureStudsButton->state());
+		ldPrefs->setTextureStuds(textureStudsButton->state());
 		if (ldPrefs->getTextureStuds())
 		{
 			int iTemp = GL_NEAREST_MIPMAP_NEAREST;
 
-			if (panel->nearestFilteringButton->isChecked())
+			if (nearestFilteringButton->isChecked())
 			{
 				iTemp = GL_NEAREST_MIPMAP_NEAREST;
 			}
-			else if (panel->bilinearFilteringButton->isChecked())
+			else if (bilinearFilteringButton->isChecked())
 			{
 				iTemp = GL_LINEAR_MIPMAP_NEAREST;
 			}
-			else if (panel->trilinearFilteringButton->isChecked())
+			else if (trilinearFilteringButton->isChecked())
 			{
 				iTemp = GL_LINEAR_MIPMAP_LINEAR;
 			}
-			else if (panel->anisotropicFilteringButton->isChecked())
+			else if (anisotropicFilteringButton->isChecked())
 			{
 				iTemp = GL_LINEAR_MIPMAP_LINEAR;
-				aniso = panel->anisotropicFilteringSlider->value();
+				aniso = anisotropicFilteringSlider->value();
 			}
 			ldPrefs->setTextureFilterType(iTemp);
 			setAniso(aniso);
 		}
-		ldPrefs->setCurveQuality(panel->curveQualitySlider->value());
+		ldPrefs->setCurveQuality(curveQualitySlider->value());
 	}
-	ldPrefs->setQualityStuds(!panel->lowQualityStudsButton->state());
-	ldPrefs->setHiResPrimitives(panel->hiresPrimitivesButton->state());
+	ldPrefs->setQualityStuds(!lowQualityStudsButton->state());
+	ldPrefs->setHiResPrimitives(hiresPrimitivesButton->state());
 	ldPrefs->applyPrimitivesSettings();
 	ldPrefs->commitPrimitivesSettings();
 }
@@ -417,8 +416,8 @@ void Preferences::doUpdatesApply()
 {
 	int  iTemp;
 
-	ldPrefs->setCheckPartTracker(panel->updatesMissingpartsButton->state());
-	if (panel->updatesProxyButton->isChecked())
+	ldPrefs->setCheckPartTracker(updatesMissingpartsButton->state());
+	if (updatesProxyButton->isChecked())
 	{
 		ldPrefs->setProxyType(2);
 	}
@@ -426,19 +425,19 @@ void Preferences::doUpdatesApply()
 	{
 		ldPrefs->setProxyType(0);
 	}
-	if (sscanf(panel->portEdit->text().ascii(),"%i",&iTemp) == 1)
+	if (sscanf(portEdit->text().ascii(),"%i",&iTemp) == 1)
 	{
 		ldPrefs->setProxyPort(iTemp);
 	}
-	if (sscanf(panel->daymissingpartcheckText->text().ascii(),"%i",&iTemp) == 1)
+	if (sscanf(daymissingpartcheckText->text().ascii(),"%i",&iTemp) == 1)
     {
 		ldPrefs->setMissingPartWait(iTemp);
 	}
-	if (sscanf(panel->dayupdatedpartcheckText->text().ascii(),"%i",&iTemp) == 1)
+	if (sscanf(dayupdatedpartcheckText->text().ascii(),"%i",&iTemp) == 1)
 	{
 		ldPrefs->setUpdatedPartWait(iTemp);
 	}
-	ldPrefs->setProxyServer(panel->proxyEdit->text().ascii());
+	ldPrefs->setProxyServer(proxyEdit->text().ascii());
 	ldPrefs->applyUpdatesSettings();
 	ldPrefs->commitUpdatesSettings();
 }
@@ -451,8 +450,8 @@ void Preferences::doBackgroundColor()
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
-		panel->backgroundColorButton->setPaletteBackgroundColor(color);
-		panel->applyButton->setEnabled(true);
+		backgroundColorButton->setPaletteBackgroundColor(color);
+		applyButton->setEnabled(true);
 	}
 }
 
@@ -471,8 +470,8 @@ void Preferences::doDefaultColor()
 	QColor color = QColorDialog::getColor(QColor(r,g,b));
 	if(color.isValid())
 	{
-		panel->defaultColorButton->setPaletteBackgroundColor(color);
-		panel->applyButton->setEnabled(true);
+		defaultColorButton->setPaletteBackgroundColor(color);
+		applyButton->setEnabled(true);
 	}
 	for (i = 0 ; i <16 ; i++)
 		QColorDialog::setCustomColor(i, old[i]);
@@ -486,7 +485,7 @@ void Preferences::doApply(void)
 	doPrimitivesApply();
 	doUpdatesApply();
 	doPrefSetsApply();
-	panel->applyButton->setEnabled(false);
+	applyButton->setEnabled(false);
 	if (modelWidget)
 	{
 		modelWidget->reflectSettings();
@@ -496,18 +495,25 @@ void Preferences::doApply(void)
 	checkAbandon = true;
 }
 
+void Preferences::doOk(void)
+{
+	doApply();
+	QDialog::close();
+}
+
 void Preferences::doCancel(void)
 {
 	loadSettings();
 	reflectSettings();
+	QDialog::close();
 }
 
 void Preferences::doAnisotropic(void)
 {
-	bool x = panel->anisotropicFilteringButton->isChecked();
-	panel->anisotropicFilteringSlider->setEnabled(x);
-	panel->anisotropicLabel->setEnabled(x);
-	doAnisotropicSlider(panel->anisotropicFilteringSlider->value());
+	bool x = anisotropicFilteringButton->isChecked();
+	anisotropicFilteringSlider->setEnabled(x);
+	anisotropicLabel->setEnabled(x);
+	doAnisotropicSlider(anisotropicFilteringSlider->value());
 }
 
 void Preferences::doAnisotropicSlider(int i)
@@ -515,7 +521,7 @@ void Preferences::doAnisotropicSlider(int i)
 	QString s;
 	s = s.setNum(1 << i);
 	s+="x";
-	panel->anisotropicLabel->setText(s);
+	anisotropicLabel->setText(s);
 }
 
 bool Preferences::getAllowPrimitiveSubstitution(void)
@@ -663,33 +669,33 @@ void Preferences::reflectGeneralSettings(void)
 {
 	int r, g, b;
 
-	setButtonState(panel->aaLinesButton, ldPrefs->getLineSmoothing());
-	setButtonState(panel->frameRateButton, ldPrefs->getShowFps());
-	setButtonState(panel->showAxesButton, ldPrefs->getShowAxes());
-	setButtonState(panel->showErrorsButton, ldPrefs->getShowErrors());
-	setButtonState(panel->processLdconfigLdrButton,
+	setButtonState(aaLinesButton, ldPrefs->getLineSmoothing());
+	setButtonState(frameRateButton, ldPrefs->getShowFps());
+	setButtonState(showAxesButton, ldPrefs->getShowAxes());
+	setButtonState(showErrorsButton, ldPrefs->getShowErrors());
+	setButtonState(processLdconfigLdrButton,
 		ldPrefs->getProcessLdConfig());
-	setButtonState(panel->randomColorsButton,ldPrefs->getRandomColors());
+	setButtonState(randomColorsButton,ldPrefs->getRandomColors());
 	ldPrefs->getBackgroundColor(r, g, b);
-	panel->backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
+	backgroundColorButton->setPaletteBackgroundColor(QColor( r, g, b));
 	ldPrefs->getDefaultColor(r, g, b);
-	panel->defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
-	setRangeValue(panel->fieldOfViewSpin, (int)ldPrefs->getFov());
-	setButtonState(panel->transparentButton, ldPrefs->getTransDefaultColor());
-	panel->memoryUsageBox->setCurrentItem(ldPrefs->getMemoryUsage());
+	defaultColorButton->setPaletteBackgroundColor(QColor( r, g, b ));
+	setRangeValue(fieldOfViewSpin, (int)ldPrefs->getFov());
+	setButtonState(transparentButton, ldPrefs->getTransDefaultColor());
+	memoryUsageBox->setCurrentItem(ldPrefs->getMemoryUsage());
 	setupSaveDirs();
 }
 
 void Preferences::reflectGeometrySettings(void)
 {
-	setButtonState(panel->seamWidthButton, ldPrefs->getUseSeams());
-	setRangeValue(panel->seamWidthSpin, ldPrefs->getSeamWidth());
-	panel->partBoundingBoxOnlyBox->setChecked(ldPrefs->getBoundingBoxesOnly());
-//	panel->seamWidthSpin->setValue(seamWidth);
+	setButtonState(seamWidthButton, ldPrefs->getUseSeams());
+	setRangeValue(seamWidthSpin, ldPrefs->getSeamWidth());
+	partBoundingBoxOnlyBox->setChecked(ldPrefs->getBoundingBoxesOnly());
+//	seamWidthSpin->setValue(seamWidth);
 	reflectWireframeSettings();
 	reflectBFCSettings();
-//	panel->wireframeThicknessSlider->setValue(wireframeThickness);
-	panel->edgeLinesButton->setChecked(ldPrefs->getShowHighlightLines());
+//	wireframeThicknessSlider->setValue(wireframeThickness);
+	edgeLinesButton->setChecked(ldPrefs->getShowHighlightLines());
 	if (ldPrefs->getShowHighlightLines())
 	{
 		enableEdgeLines();
@@ -698,14 +704,14 @@ void Preferences::reflectGeometrySettings(void)
 	{
 		disableEdgeLines();
 	}
-	setRangeValue(panel->edgeThicknessSlider, ldPrefs->getEdgeThickness());
-//	panel->edgeThicknessSlider->setValue(edgeThickness);
+	setRangeValue(edgeThicknessSlider, ldPrefs->getEdgeThickness());
+//	edgeThicknessSlider->setValue(edgeThickness);
 }
 
 void Preferences::reflectWireframeSettings(void)
 {
-	panel->wireframeButton->setChecked(ldPrefs->getDrawWireframe());
-	setRangeValue(panel->wireframeThicknessSlider,
+	wireframeButton->setChecked(ldPrefs->getDrawWireframe());
+	setRangeValue(wireframeThicknessSlider,
 		ldPrefs->getWireframeThickness());
 	if (ldPrefs->getDrawWireframe())
 	{
@@ -719,7 +725,7 @@ void Preferences::reflectWireframeSettings(void)
 
 void Preferences::reflectBFCSettings()
 {
-	panel->enableBFCButton->setChecked(ldPrefs->getBfc());
+	enableBFCButton->setChecked(ldPrefs->getBfc());
 	if (ldPrefs->getBfc())
 	{
 		enableBFC();
@@ -732,7 +738,7 @@ void Preferences::reflectBFCSettings()
 
 void Preferences::reflectEffectsSettings(void)
 {
-	panel->lightingButton->setChecked(ldPrefs->getUseLighting());
+	lightingButton->setChecked(ldPrefs->getUseLighting());
 	if (ldPrefs->getUseLighting())
 	{
 		enableLighting();
@@ -741,40 +747,40 @@ void Preferences::reflectEffectsSettings(void)
 	{
 		disableLighting();
 	}
-	setButtonState(panel->effectsHideLIGHTButton, ldPrefs->getNoLightGeom());
+	setButtonState(effectsHideLIGHTButton, ldPrefs->getNoLightGeom());
 	if (ldPrefs->getStereoMode() != LDVStereoNone)
 	{
-		panel->stereoButton->setChecked(true);
+		stereoButton->setChecked(true);
 		enableStereo();
 	}
 	else
 	{
-		panel->stereoButton->setChecked(false);
+		stereoButton->setChecked(false);
 		disableStereo();
 	}
-	panel->stereoAmountSlider->setValue(ldPrefs->getStereoEyeSpacing());
+	stereoAmountSlider->setValue(ldPrefs->getStereoEyeSpacing());
 	if (ldPrefs->getCutawayMode() != LDVCutawayNormal)
 	{
-		panel->wireframeCutawayButton->setChecked(true);
+		wireframeCutawayButton->setChecked(true);
 		enableWireframeCutaway();
 	}
 	else
 	{
-		panel->wireframeCutawayButton->setChecked(false);
+		wireframeCutawayButton->setChecked(false);
 		disableWireframeCutaway();
 	}
-	panel->cutawayOpacitySlider->setValue(ldPrefs->getCutawayAlpha());
-	panel->cutawayThicknessSlider->setValue(ldPrefs->getCutawayThickness());
-	setButtonState(panel->sortTransparencyButton,
+	cutawayOpacitySlider->setValue(ldPrefs->getCutawayAlpha());
+	cutawayThicknessSlider->setValue(ldPrefs->getCutawayThickness());
+	setButtonState(sortTransparencyButton,
 		ldPrefs->getSortTransparent());
-	setButtonState(panel->stippleTransparencyButton, ldPrefs->getUseStipple());
-	setButtonState(panel->flatShadingButton, ldPrefs->getUseFlatShading());
-	setButtonState(panel->smoothCurvesButton, ldPrefs->getPerformSmoothing());
+	setButtonState(stippleTransparencyButton, ldPrefs->getUseStipple());
+	setButtonState(flatShadingButton, ldPrefs->getUseFlatShading());
+	setButtonState(smoothCurvesButton, ldPrefs->getPerformSmoothing());
 }
 
 void Preferences::reflectPrimitivesSettings(void)
 {
-	panel->primitiveSubstitutionButton->setChecked(
+	primitiveSubstitutionButton->setChecked(
 		ldPrefs->getAllowPrimitiveSubstitution());
 	if (ldPrefs->getAllowPrimitiveSubstitution())
 	{
@@ -784,9 +790,9 @@ void Preferences::reflectPrimitivesSettings(void)
 	{
 		disablePrimitiveSubstitution();
 	}
-	panel->curveQualitySlider->setValue(ldPrefs->getCurveQuality());
-	setButtonState(panel->lowQualityStudsButton, !ldPrefs->getQualityStuds());
-	setButtonState(panel->hiresPrimitivesButton, ldPrefs->getHiResPrimitives());
+	curveQualitySlider->setValue(ldPrefs->getCurveQuality());
+	setButtonState(lowQualityStudsButton, !ldPrefs->getQualityStuds());
+	setButtonState(hiresPrimitivesButton, ldPrefs->getHiResPrimitives());
 }
 
 void Preferences::reflectUpdatesSettings(void)
@@ -795,20 +801,20 @@ void Preferences::reflectUpdatesSettings(void)
 	if (ldPrefs->getProxyType())
 	{
 		enableProxyServer();
-		panel->updatesProxyButton->setChecked(true);
+		updatesProxyButton->setChecked(true);
 	}
 	else
 	{
 		disableProxyServer();
-		panel->updatesNoproxyButton->setChecked(true);
+		updatesNoproxyButton->setChecked(true);
 	}
-	setButtonState(panel->updatesMissingpartsButton,
+	setButtonState(updatesMissingpartsButton,
 		ldPrefs->getCheckPartTracker());
-	panel->proxyEdit->setText(ldPrefs->getProxyServer());
+	proxyEdit->setText(ldPrefs->getProxyServer());
 	sprintf(s,"%u",ldPrefs->getProxyPort());
-	panel->portEdit->setText(s);
-	panel->daymissingpartcheckText->setValue(ldPrefs->getMissingPartWait());
-	panel->dayupdatedpartcheckText->setValue(ldPrefs->getUpdatedPartWait());
+	portEdit->setText(s);
+	daymissingpartcheckText->setValue(ldPrefs->getMissingPartWait());
+	dayupdatedpartcheckText->setValue(ldPrefs->getUpdatedPartWait());
 	doUpdateMissingparts(ldPrefs->getCheckPartTracker());
 }
 
@@ -1024,10 +1030,10 @@ void Preferences::doProxyServer(bool value)
 
 void Preferences::doUpdateMissingparts(bool value)
 {
-    panel->daymissingpartcheckText->setEnabled(value);
-	panel->daymissingpartcheckLabel->setEnabled(value);
-	panel->dayupdatedpartcheckLabel->setEnabled(value);
-	panel->dayupdatedpartcheckText->setEnabled(value);
+    daymissingpartcheckText->setEnabled(value);
+	daymissingpartcheckLabel->setEnabled(value);
+	dayupdatedpartcheckLabel->setEnabled(value);
+	dayupdatedpartcheckText->setEnabled(value);
 }
 
 void Preferences::doLighting(bool value)
@@ -1044,11 +1050,11 @@ void Preferences::doLighting(bool value)
 
 void Preferences::doDrawLightDats()
 {
-	bool checked = panel->effectsUseLIGHTDATButton->state();
-	panel->effectsReplaceStandarLightButton->setEnabled(checked);
+	bool checked = effectsUseLIGHTDATButton->state();
+	effectsReplaceStandarLightButton->setEnabled(checked);
 	bool enabled = ldPrefs->getOptionalStandardLight() ? TRUE : FALSE;
 	if (!checked) enabled = false;
-	setButtonState(panel->effectsReplaceStandarLightButton , enabled);
+	setButtonState(effectsReplaceStandarLightButton , enabled);
 }
 
 void Preferences::doSaveDefaultViewAngle()
@@ -1072,18 +1078,18 @@ void Preferences::doSortTransparency(bool value)
 {
 	if(value)
 	{
-		setButtonState(panel->stippleTransparencyButton,false);
+		setButtonState(stippleTransparencyButton,false);
 	}
-	panel->applyButton->setEnabled(true);
+	applyButton->setEnabled(true);
 }
 
 void Preferences::doStippleTransparency(bool value)
 {
 	if(value)
 	{
-		setButtonState(panel->sortTransparencyButton,false);
+		setButtonState(sortTransparencyButton,false);
 	}
-	panel->applyButton->setEnabled(true);
+	applyButton->setEnabled(true);
 }
 
 void Preferences::doWireframe(bool value)
@@ -1163,14 +1169,14 @@ void Preferences::doNewPreferenceSet()
     bool ok;
     QString name = QInputDialog::getText("LDView New Preference Set", 
                    "Enter name of the new PreferenceSet", QLineEdit::Normal,
-                   QString::null, &ok, panel);
+                   QString::null, &ok, this);
     if (ok && !name.isEmpty())
 	{
-		for(uint i = 0; i < panel->preferenceSetList->count(); i++)
+		for(uint i = 0; i < preferenceSetList->count(); i++)
 		{
 			if (getPrefSet(i) && strcmp(getPrefSet(i), name.ascii())==0)
 			{
-				QMessageBox::warning(panel,
+				QMessageBox::warning(this,
 					TCLocalStrings::get("PrefSetAlreadyExists"),
 					TCLocalStrings::get("DuplicateName"),
 					QMessageBox::Ok,0);
@@ -1179,19 +1185,19 @@ void Preferences::doNewPreferenceSet()
 		}
 		if (name.find('/')!=-1)
 		{
-			QMessageBox::warning(panel,
+			QMessageBox::warning(this,
 				TCLocalStrings::get("PrefSetNameBadChars"),
 				TCLocalStrings::get("InvalidName"),
 				QMessageBox::Ok,0);
 				return;
 		}
-		panel->preferenceSetList->insertItem(name);
+		preferenceSetList->insertItem(name);
 		selectPrefSet(name.ascii());
 		return;
 	}
 	if (name.isEmpty() && ok)
 	{
-		QMessageBox::warning(panel,
+		QMessageBox::warning(this,
 			TCLocalStrings::get("PrefSetNameRequired"),
 			TCLocalStrings::get("EmptyName"),
 			QMessageBox::Ok,0);
@@ -1204,10 +1210,10 @@ void Preferences::doDelPreferenceSet()
 	const char *selectedPrefSet = getSelectedPrefSet();
 	if (selectedPrefSet)
 	{
-		int selectedIndex = panel->preferenceSetList->currentItem();
-		if (checkAbandon && panel->applyButton->isEnabled())
+		int selectedIndex = preferenceSetList->currentItem();
+		if (checkAbandon && applyButton->isEnabled())
 		{
-			if(QMessageBox::warning(panel,
+			if(QMessageBox::warning(this,
 				TCLocalStrings::get("PrefSetAbandonConfirm"),
 				TCLocalStrings::get("AbandonChanges"),
 				 QMessageBox::Yes, QMessageBox::No)== QMessageBox::Yes)
@@ -1220,8 +1226,8 @@ void Preferences::doDelPreferenceSet()
 			}
 		}
 		checkAbandon = false;
-		panel->preferenceSetList->removeItem(selectedIndex);
-		selectedIndex = panel->preferenceSetList->currentItem();
+		preferenceSetList->removeItem(selectedIndex);
+		selectedIndex = preferenceSetList->currentItem();
 		selectedPrefSet = getPrefSet(selectedIndex);
 		selectPrefSet(selectedPrefSet, true);
 	}
@@ -1245,7 +1251,7 @@ void Preferences::doHotkeyPreferenceSet()
 	bool ok;
 	QString res = QInputDialog::getItem(getSelectedPrefSet(), 
 			"Select a hot key to automatically select this Preference Set:\nAlt + ",
-			lst, hotKeyIndex, FALSE, &ok, panel);
+			lst, hotKeyIndex, FALSE, &ok, this);
 	if (ok)
 	{
 		hotKeyIndex = lst.findIndex(res.ascii());
@@ -1376,22 +1382,22 @@ void Preferences::saveCurrentHotKey(void)
 
 void Preferences::abandonChanges(void)
 {
-	panel->applyButton->setEnabled(false);
+	applyButton->setEnabled(false);
 	loadSettings();
 	reflectSettings();
 }
 
 const char *Preferences::getPrefSet(int index)
 {
-	return panel->preferenceSetList->text(index).ascii();
+	return preferenceSetList->text(index).ascii();
 }
 
 const char *Preferences::getSelectedPrefSet(void)
 {
-    int selectedIndex = panel->preferenceSetList->currentItem();
+    int selectedIndex = preferenceSetList->currentItem();
 	if (selectedIndex!=-1)
 	{
-		return panel->preferenceSetList->currentText().ascii();
+		return preferenceSetList->currentText().ascii();
 	}
 	return NULL;
 }
@@ -1400,7 +1406,7 @@ bool Preferences::doPrefSetSelected(bool force)
     const char *selectedPrefSet = getSelectedPrefSet();
     bool needToReselect = false;
 
-	if (checkAbandon && panel->applyButton->isEnabled() && !force)
+	if (checkAbandon && applyButton->isEnabled() && !force)
     {
         char *savedSession =
             TCUserDefaults::getSavedSessionNameFromKey(PREFERENCE_SET_KEY);
@@ -1429,9 +1435,9 @@ bool Preferences::doPrefSetSelected(bool force)
         {
             enabled = false;
         }
-		panel->delPreferenceSetButton->setEnabled(enabled);
+		delPreferenceSetButton->setEnabled(enabled);
     }
-	panel->applyButton->setEnabled(true);
+	applyButton->setEnabled(true);
 	checkAbandon = false;
     return FALSE;
 }
@@ -1440,11 +1446,11 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
 {
     if (prefSet)
     {
-		for (uint i=0;i<panel->preferenceSetList->count();i++)
+		for (uint i=0;i<preferenceSetList->count();i++)
 		{
-			if (strcmp(prefSet,panel->preferenceSetList->text(i).ascii())==0)
+			if (strcmp(prefSet,preferenceSetList->text(i).ascii())==0)
 			{
-				panel->preferenceSetList->setCurrentItem(i);
+				preferenceSetList->setCurrentItem(i);
 			}
 		}
 		doPrefSetSelected(force);
@@ -1470,11 +1476,11 @@ void Preferences::setupPrefSetsList(void)
     TCStringArray *sessionNames = TCUserDefaults::getAllSessionNames();
     int i;
     int count = sessionNames->getCount();
-	panel->preferenceSetList->clear();
-    panel->preferenceSetList->insertItem(DEFAULT_PREF_SET);
+	preferenceSetList->clear();
+    preferenceSetList->insertItem(DEFAULT_PREF_SET);
     for (i = 0; i < count; i++)
     {
-        panel->preferenceSetList->insertItem(sessionNames->stringAtIndex(i));
+        preferenceSetList->insertItem(sessionNames->stringAtIndex(i));
     }
     selectPrefSet();
 	sessionNames->release();
@@ -1482,22 +1488,22 @@ void Preferences::setupPrefSetsList(void)
 
 void Preferences::enableWireframeCutaway(void)
 {
-	panel->colorCutawayButton->setEnabled(true);
-	panel->monochromeCutawayButton->setEnabled(true);
-	panel->cutawayOpacitySlider->setEnabled(true);
-	panel->cutawayThicknessSlider->setEnabled(true);
-	panel->cutawayOpacityLabel->setEnabled(true);
-	panel->cutawayThicknessLabel->setEnabled(true);
-	setButtonState(panel->colorCutawayButton, false);
-	setButtonState(panel->monochromeCutawayButton, false);
+	colorCutawayButton->setEnabled(true);
+	monochromeCutawayButton->setEnabled(true);
+	cutawayOpacitySlider->setEnabled(true);
+	cutawayThicknessSlider->setEnabled(true);
+	cutawayOpacityLabel->setEnabled(true);
+	cutawayThicknessLabel->setEnabled(true);
+	setButtonState(colorCutawayButton, false);
+	setButtonState(monochromeCutawayButton, false);
 	switch (ldPrefs->getCutawayMode())
 	{
 	case LDVCutawayNormal:
 	case LDVCutawayWireframe:
-		panel->colorCutawayButton->toggle();
+		colorCutawayButton->toggle();
 		break;
 	case LDVCutawayStencil:
-		panel->monochromeCutawayButton->toggle();
+		monochromeCutawayButton->toggle();
 		break;
 	}
 }
@@ -1507,31 +1513,31 @@ void Preferences::selectLightDirection(LDPreferences::LightDirection ld)
     switch (ld)
     {
     case LDPreferences::UpperLeft:
-        panel->lightingDir11->setOn(true);
+        lightingDir11->setOn(true);
         break;
     case LDPreferences::UpperMiddle:
-        panel->lightingDir12->setOn(true);
+        lightingDir12->setOn(true);
         break;
     case LDPreferences::UpperRight:
-        panel->lightingDir13->setOn(true);
+        lightingDir13->setOn(true);
         break;
     case LDPreferences::MiddleLeft:
-        panel->lightingDir21->setOn(true);
+        lightingDir21->setOn(true);
         break;
     case LDPreferences::MiddleMiddle:
-        panel->lightingDir22->setOn(true);
+        lightingDir22->setOn(true);
         break;
     case LDPreferences::MiddleRight:
-        panel->lightingDir23->setOn(true);
+        lightingDir23->setOn(true);
         break;
     case LDPreferences::LowerLeft:
-        panel->lightingDir31->setOn(true);
+        lightingDir31->setOn(true);
         break;
     case LDPreferences::LowerMiddle:
-        panel->lightingDir32->setOn(true);
+        lightingDir32->setOn(true);
         break;
     case LDPreferences::LowerRight:
-        panel->lightingDir33->setOn(true);
+        lightingDir33->setOn(true);
         break;
     case LDPreferences::CustomDirection:
         break;
@@ -1540,45 +1546,45 @@ void Preferences::selectLightDirection(LDPreferences::LightDirection ld)
 
 void Preferences::enableLighting(void)
 {
-	panel->qualityLightingButton->setEnabled(true);
-	panel->subduedLightingButton->setEnabled(true);
-	panel->specularLightingButton->setEnabled(true);
-	panel->alternateLightingButton->setEnabled(true);
-	panel->effectsUseLIGHTDATButton->setEnabled(true);
-	panel->lightingDir11->setEnabled(true);
-	panel->lightingDir12->setEnabled(true);
-	panel->lightingDir13->setEnabled(true);
-	panel->lightingDir21->setEnabled(true);
-	panel->lightingDir22->setEnabled(true);
-	panel->lightingDir23->setEnabled(true);
-	panel->lightingDir31->setEnabled(true);
-	panel->lightingDir32->setEnabled(true);
-	panel->lightingDir33->setEnabled(true);
-	setButtonState(panel->qualityLightingButton, ldPrefs->getQualityLighting());
-	setButtonState(panel->subduedLightingButton, ldPrefs->getSubduedLighting());
-	setButtonState(panel->specularLightingButton, ldPrefs->getUseSpecular());
-	setButtonState(panel->alternateLightingButton, ldPrefs->getOneLight());
-	setButtonState(panel->effectsUseLIGHTDATButton, ldPrefs->getDrawLightDats());
+	qualityLightingButton->setEnabled(true);
+	subduedLightingButton->setEnabled(true);
+	specularLightingButton->setEnabled(true);
+	alternateLightingButton->setEnabled(true);
+	effectsUseLIGHTDATButton->setEnabled(true);
+	lightingDir11->setEnabled(true);
+	lightingDir12->setEnabled(true);
+	lightingDir13->setEnabled(true);
+	lightingDir21->setEnabled(true);
+	lightingDir22->setEnabled(true);
+	lightingDir23->setEnabled(true);
+	lightingDir31->setEnabled(true);
+	lightingDir32->setEnabled(true);
+	lightingDir33->setEnabled(true);
+	setButtonState(qualityLightingButton, ldPrefs->getQualityLighting());
+	setButtonState(subduedLightingButton, ldPrefs->getSubduedLighting());
+	setButtonState(specularLightingButton, ldPrefs->getUseSpecular());
+	setButtonState(alternateLightingButton, ldPrefs->getOneLight());
+	setButtonState(effectsUseLIGHTDATButton, ldPrefs->getDrawLightDats());
 	selectLightDirection(ldPrefs->getLightDirection());
 	doDrawLightDats();
 }
 
 void Preferences::enableStereo(void)
 {
-	panel->crossEyedStereoButton->setEnabled(true);
-	panel->parallelStereoButton->setEnabled(true);
-	panel->stereoAmountSlider->setEnabled(true);
-	panel->stereoAmountLabel->setEnabled(true);
-	setButtonState(panel->crossEyedStereoButton, false);
-	setButtonState(panel->parallelStereoButton, false);
+	crossEyedStereoButton->setEnabled(true);
+	parallelStereoButton->setEnabled(true);
+	stereoAmountSlider->setEnabled(true);
+	stereoAmountLabel->setEnabled(true);
+	setButtonState(crossEyedStereoButton, false);
+	setButtonState(parallelStereoButton, false);
 	switch (ldPrefs->getStereoMode())
 	{
 	case LDVStereoNone:
 	case LDVStereoCrossEyed:
-		panel->crossEyedStereoButton->toggle();
+		crossEyedStereoButton->toggle();
 		break;
 	case LDVStereoParallel:
-		panel->parallelStereoButton->toggle();
+		parallelStereoButton->toggle();
 		break;
 	default:
 		break;
@@ -1587,38 +1593,38 @@ void Preferences::enableStereo(void)
 
 void Preferences::enableWireframe(void)
 {
-	panel->wireframeFogButton->setEnabled(true);
-	panel->wireframeRemoveHiddenLineButton->setEnabled(true);
-	panel->wireframeThicknessSlider->setEnabled(true);
-	panel->wireframeThicknessLabel->setEnabled(true);
-	setButtonState(panel->wireframeFogButton, ldPrefs->getUseWireframeFog());
-    setButtonState(panel->wireframeRemoveHiddenLineButton,
+	wireframeFogButton->setEnabled(true);
+	wireframeRemoveHiddenLineButton->setEnabled(true);
+	wireframeThicknessSlider->setEnabled(true);
+	wireframeThicknessLabel->setEnabled(true);
+	setButtonState(wireframeFogButton, ldPrefs->getUseWireframeFog());
+    setButtonState(wireframeRemoveHiddenLineButton,
 		ldPrefs->getRemoveHiddenLines());
 }
 
 void Preferences::enableBFC(void)
 {
-	panel->bfcRedBackFaceButton->setEnabled(true);
-        panel->bfcGreenFrontFaceButton->setEnabled(true);
-	setButtonState(panel->bfcRedBackFaceButton, ldPrefs->getRedBackFaces());
-	setButtonState(panel->bfcGreenFrontFaceButton,
+	bfcRedBackFaceButton->setEnabled(true);
+        bfcGreenFrontFaceButton->setEnabled(true);
+	setButtonState(bfcRedBackFaceButton, ldPrefs->getRedBackFaces());
+	setButtonState(bfcGreenFrontFaceButton,
 		ldPrefs->getGreenFrontFaces());
 }
 
 void Preferences::enableEdgeLines(void)
 {
-	panel->conditionalLinesButton->setEnabled(true);
-	panel->edgesOnlyButton->setEnabled(true);
-	panel->highQualityLinesButton->setEnabled(true);
-	panel->alwaysBlackLinesButton->setEnabled(true);
-	panel->edgeThicknessLabel->setEnabled(true);
-	panel->edgeThicknessSlider->setEnabled(true);
-	setButtonState(panel->conditionalLinesButton,
+	conditionalLinesButton->setEnabled(true);
+	edgesOnlyButton->setEnabled(true);
+	highQualityLinesButton->setEnabled(true);
+	alwaysBlackLinesButton->setEnabled(true);
+	edgeThicknessLabel->setEnabled(true);
+	edgeThicknessSlider->setEnabled(true);
+	setButtonState(conditionalLinesButton,
 		ldPrefs->getDrawConditionalHighlights());
-	setButtonState(panel->edgesOnlyButton, ldPrefs->getEdgesOnly());
-	setButtonState(panel->highQualityLinesButton,
+	setButtonState(edgesOnlyButton, ldPrefs->getEdgesOnly());
+	setButtonState(highQualityLinesButton,
 		ldPrefs->getUsePolygonOffset());
-	setButtonState(panel->alwaysBlackLinesButton,
+	setButtonState(alwaysBlackLinesButton,
 		ldPrefs->getBlackHighlights());
 	if (ldPrefs->getDrawConditionalHighlights())
 	{
@@ -1632,21 +1638,21 @@ void Preferences::enableEdgeLines(void)
 
 void Preferences::enableConditionalShow(void)
 {
-	panel->conditionalShowAllButton->setEnabled(true);
-	panel->conditionalShowControlPtsButton->setEnabled(true);
-	setButtonState(panel->conditionalShowAllButton,
+	conditionalShowAllButton->setEnabled(true);
+	conditionalShowControlPtsButton->setEnabled(true);
+	setButtonState(conditionalShowAllButton,
 		ldPrefs->getShowAllConditionalLines());
-	setButtonState(panel->conditionalShowControlPtsButton,
+	setButtonState(conditionalShowControlPtsButton,
 		ldPrefs->getShowConditionalControlPoints());
 }
 
 
 void Preferences::enablePrimitiveSubstitution(void)
 {
-	panel->textureStudsButton->setEnabled(true);
-	panel->curveQualityLabel->setEnabled(true);
-	panel->curveQualitySlider->setEnabled(true);
-	setButtonState(panel->textureStudsButton, ldPrefs->getTextureStuds());
+	textureStudsButton->setEnabled(true);
+	curveQualityLabel->setEnabled(true);
+	curveQualitySlider->setEnabled(true);
+	setButtonState(textureStudsButton, ldPrefs->getTextureStuds());
 	if (ldPrefs->getTextureStuds())
 	{
 		enableTextureStuds();
@@ -1663,31 +1669,31 @@ void Preferences::enableTextureStuds(void)
 	TCFloat32 anisoLevel = ldPrefs->getAnisoLevel();
 	short numAnisoLevels = (short)(log(maxAniso)/log(2.0) + 0.5f);
 	if (numAnisoLevels) 
-		panel->anisotropicFilteringSlider->setMaxValue(numAnisoLevels);
-	panel->nearestFilteringButton->setEnabled(true);
-	panel->bilinearFilteringButton->setEnabled(true);
-	panel->trilinearFilteringButton->setEnabled(true);
-	panel->anisotropicFilteringButton->setEnabled(
+		anisotropicFilteringSlider->setMaxValue(numAnisoLevels);
+	nearestFilteringButton->setEnabled(true);
+	bilinearFilteringButton->setEnabled(true);
+	trilinearFilteringButton->setEnabled(true);
+	anisotropicFilteringButton->setEnabled(
 		TREGLExtensions::haveAnisoExtension());
-	setButtonState(panel->nearestFilteringButton, false);
-	setButtonState(panel->bilinearFilteringButton, false);
-	setButtonState(panel->trilinearFilteringButton, false);
-	setButtonState(panel->anisotropicFilteringButton, false);
+	setButtonState(nearestFilteringButton, false);
+	setButtonState(bilinearFilteringButton, false);
+	setButtonState(trilinearFilteringButton, false);
+	setButtonState(anisotropicFilteringButton, false);
 	switch (ldPrefs->getTextureFilterType())
 	{
 	case GL_NEAREST_MIPMAP_NEAREST:
-		panel->nearestFilteringButton->toggle();
+		nearestFilteringButton->toggle();
 		break;
 	case GL_LINEAR_MIPMAP_NEAREST:
-		panel->bilinearFilteringButton->toggle();
+		bilinearFilteringButton->toggle();
 		break;
 	case GL_LINEAR_MIPMAP_LINEAR:
-		panel->trilinearFilteringButton->toggle();
+		trilinearFilteringButton->toggle();
 		break;
 	}
 	if (anisoLevel > 1.0)
 	{
-	 	panel->anisotropicFilteringButton->toggle();
+	 	anisotropicFilteringButton->toggle();
 	 	setAniso((int)(log(anisoLevel)/log(2.0)+0.5f));
 	}
 	if (anisoLevel > maxAniso)
@@ -1703,147 +1709,147 @@ void Preferences::enableTextureStuds(void)
 
 void Preferences::enableProxyServer(void)
 {
-	panel->proxyLabel->setEnabled(true);
-	panel->proxyEdit->setEnabled(true);
-	panel->portLabel->setEnabled(true);
-	panel->portEdit->setEnabled(true);
-	panel->proxyEdit->setText(ldPrefs->getProxyServer());
+	proxyLabel->setEnabled(true);
+	proxyEdit->setEnabled(true);
+	portLabel->setEnabled(true);
+	portEdit->setEnabled(true);
+	proxyEdit->setText(ldPrefs->getProxyServer());
 }
 
 void Preferences::disableWireframeCutaway(void)
 {
-	panel->colorCutawayButton->setEnabled(false);
-	panel->monochromeCutawayButton->setEnabled(false);
-	panel->cutawayOpacitySlider->setEnabled(false);
-	panel->cutawayThicknessSlider->setEnabled(false);
-	panel->cutawayOpacityLabel->setEnabled(false);
-	panel->cutawayThicknessLabel->setEnabled(false);
-	setButtonState(panel->colorCutawayButton, false);
-	setButtonState(panel->monochromeCutawayButton, false);
+	colorCutawayButton->setEnabled(false);
+	monochromeCutawayButton->setEnabled(false);
+	cutawayOpacitySlider->setEnabled(false);
+	cutawayThicknessSlider->setEnabled(false);
+	cutawayOpacityLabel->setEnabled(false);
+	cutawayThicknessLabel->setEnabled(false);
+	setButtonState(colorCutawayButton, false);
+	setButtonState(monochromeCutawayButton, false);
 }
 
 void Preferences::uncheckLightDirections(void)
 {
-    panel->lightingDir11->setOn(false);
-    panel->lightingDir12->setOn(false);
-    panel->lightingDir13->setOn(false);
-    panel->lightingDir21->setOn(false);
-    panel->lightingDir22->setOn(false);
-    panel->lightingDir23->setOn(false);
-    panel->lightingDir31->setOn(false);
-    panel->lightingDir32->setOn(false);
-    panel->lightingDir33->setOn(false);
+    lightingDir11->setOn(false);
+    lightingDir12->setOn(false);
+    lightingDir13->setOn(false);
+    lightingDir21->setOn(false);
+    lightingDir22->setOn(false);
+    lightingDir23->setOn(false);
+    lightingDir31->setOn(false);
+    lightingDir32->setOn(false);
+    lightingDir33->setOn(false);
 }
 
 void Preferences::disableLighting(void)
 {
-	panel->qualityLightingButton->setEnabled(false);
-	panel->subduedLightingButton->setEnabled(false);
-	panel->specularLightingButton->setEnabled(false);
-	panel->alternateLightingButton->setEnabled(false);
-    panel->effectsUseLIGHTDATButton->setEnabled(false);
-    panel->effectsHideLIGHTButton->setEnabled(true);
-	panel->lightingDir11->setEnabled(false);
-	panel->lightingDir12->setEnabled(false);
-	panel->lightingDir13->setEnabled(false);
-	panel->lightingDir21->setEnabled(false);
-	panel->lightingDir22->setEnabled(false);
-	panel->lightingDir23->setEnabled(false);
-	panel->lightingDir31->setEnabled(false);
-	panel->lightingDir32->setEnabled(false);
-	panel->lightingDir33->setEnabled(false);
-	setButtonState(panel->qualityLightingButton, false);
-	setButtonState(panel->subduedLightingButton, false);
-	setButtonState(panel->specularLightingButton, false);
-	setButtonState(panel->alternateLightingButton, false);
-    setButtonState(panel->effectsUseLIGHTDATButton, false);
+	qualityLightingButton->setEnabled(false);
+	subduedLightingButton->setEnabled(false);
+	specularLightingButton->setEnabled(false);
+	alternateLightingButton->setEnabled(false);
+    effectsUseLIGHTDATButton->setEnabled(false);
+    effectsHideLIGHTButton->setEnabled(true);
+	lightingDir11->setEnabled(false);
+	lightingDir12->setEnabled(false);
+	lightingDir13->setEnabled(false);
+	lightingDir21->setEnabled(false);
+	lightingDir22->setEnabled(false);
+	lightingDir23->setEnabled(false);
+	lightingDir31->setEnabled(false);
+	lightingDir32->setEnabled(false);
+	lightingDir33->setEnabled(false);
+	setButtonState(qualityLightingButton, false);
+	setButtonState(subduedLightingButton, false);
+	setButtonState(specularLightingButton, false);
+	setButtonState(alternateLightingButton, false);
+    setButtonState(effectsUseLIGHTDATButton, false);
 
 	uncheckLightDirections();
 }
 
 void Preferences::disableStereo(void)
 {
-	panel->crossEyedStereoButton->setEnabled(false);
-	panel->parallelStereoButton->setEnabled(false);
-	panel->stereoAmountSlider->setEnabled(false);
-	panel->stereoAmountLabel->setEnabled(false);
-	setButtonState(panel->crossEyedStereoButton, false);
-	setButtonState(panel->parallelStereoButton, false);
+	crossEyedStereoButton->setEnabled(false);
+	parallelStereoButton->setEnabled(false);
+	stereoAmountSlider->setEnabled(false);
+	stereoAmountLabel->setEnabled(false);
+	setButtonState(crossEyedStereoButton, false);
+	setButtonState(parallelStereoButton, false);
 }
 
 void Preferences::disableWireframe(void)
 {
-	panel->wireframeFogButton->setEnabled(false);
-	panel->wireframeRemoveHiddenLineButton->setEnabled(false);
-	panel->wireframeThicknessSlider->setEnabled(false);
-	panel->wireframeThicknessLabel->setEnabled(false);
-	setButtonState(panel->wireframeFogButton, false);
-	setButtonState(panel->wireframeRemoveHiddenLineButton, false);
+	wireframeFogButton->setEnabled(false);
+	wireframeRemoveHiddenLineButton->setEnabled(false);
+	wireframeThicknessSlider->setEnabled(false);
+	wireframeThicknessLabel->setEnabled(false);
+	setButtonState(wireframeFogButton, false);
+	setButtonState(wireframeRemoveHiddenLineButton, false);
 }
 
 void Preferences::disableBFC(void)
 {
-	panel->bfcRedBackFaceButton->setEnabled(false);
-        panel->bfcGreenFrontFaceButton->setEnabled(false);
-	setButtonState(panel->bfcRedBackFaceButton, false);
-        setButtonState(panel->bfcGreenFrontFaceButton, false);
+	bfcRedBackFaceButton->setEnabled(false);
+        bfcGreenFrontFaceButton->setEnabled(false);
+	setButtonState(bfcRedBackFaceButton, false);
+        setButtonState(bfcGreenFrontFaceButton, false);
 }
 
 void Preferences::disableEdgeLines(void)
 {
-	panel->conditionalLinesButton->setEnabled(false);
-	panel->conditionalShowAllButton->setEnabled(false);
-	panel->conditionalShowControlPtsButton->setEnabled(false);
-	panel->edgesOnlyButton->setEnabled(false);
-	panel->highQualityLinesButton->setEnabled(false);
-	panel->alwaysBlackLinesButton->setEnabled(false);
-	panel->edgeThicknessLabel->setEnabled(false);
-	panel->edgeThicknessSlider->setEnabled(false);
-	setButtonState(panel->conditionalLinesButton, false);
-	setButtonState(panel->conditionalShowAllButton, false);
-	setButtonState(panel->conditionalShowControlPtsButton, false);
-	setButtonState(panel->edgesOnlyButton, false);
-	setButtonState(panel->highQualityLinesButton, false);
-	setButtonState(panel->alwaysBlackLinesButton, false);
+	conditionalLinesButton->setEnabled(false);
+	conditionalShowAllButton->setEnabled(false);
+	conditionalShowControlPtsButton->setEnabled(false);
+	edgesOnlyButton->setEnabled(false);
+	highQualityLinesButton->setEnabled(false);
+	alwaysBlackLinesButton->setEnabled(false);
+	edgeThicknessLabel->setEnabled(false);
+	edgeThicknessSlider->setEnabled(false);
+	setButtonState(conditionalLinesButton, false);
+	setButtonState(conditionalShowAllButton, false);
+	setButtonState(conditionalShowControlPtsButton, false);
+	setButtonState(edgesOnlyButton, false);
+	setButtonState(highQualityLinesButton, false);
+	setButtonState(alwaysBlackLinesButton, false);
 }
 
 void Preferences::disableConditionalShow(void)
 {
-	panel->conditionalShowAllButton->setEnabled(false);
-    panel->conditionalShowControlPtsButton->setEnabled(false);
-    setButtonState(panel->conditionalShowAllButton, false);
-    setButtonState(panel->conditionalShowControlPtsButton, false);
+	conditionalShowAllButton->setEnabled(false);
+    conditionalShowControlPtsButton->setEnabled(false);
+    setButtonState(conditionalShowAllButton, false);
+    setButtonState(conditionalShowControlPtsButton, false);
 }
 
 void Preferences::disablePrimitiveSubstitution(void)
 {
-	panel->textureStudsButton->setEnabled(false);
-	panel->curveQualityLabel->setEnabled(false);
-	panel->curveQualitySlider->setEnabled(false);
-	setButtonState(panel->textureStudsButton, false);
+	textureStudsButton->setEnabled(false);
+	curveQualityLabel->setEnabled(false);
+	curveQualitySlider->setEnabled(false);
+	setButtonState(textureStudsButton, false);
 	disableTextureStuds();
 }
 
 void Preferences::disableTextureStuds(void)
 {
-	panel->nearestFilteringButton->setEnabled(false);
-	panel->bilinearFilteringButton->setEnabled(false);
-	panel->trilinearFilteringButton->setEnabled(false);
-	panel->anisotropicFilteringButton->setEnabled(false);
-	panel->anisotropicFilteringSlider->setEnabled(false);
-	panel->anisotropicLabel->setEnabled(false);
-	setButtonState(panel->nearestFilteringButton, false);
-	setButtonState(panel->bilinearFilteringButton, false);
-	setButtonState(panel->trilinearFilteringButton, false);
-	setButtonState(panel->anisotropicFilteringButton, false);
+	nearestFilteringButton->setEnabled(false);
+	bilinearFilteringButton->setEnabled(false);
+	trilinearFilteringButton->setEnabled(false);
+	anisotropicFilteringButton->setEnabled(false);
+	anisotropicFilteringSlider->setEnabled(false);
+	anisotropicLabel->setEnabled(false);
+	setButtonState(nearestFilteringButton, false);
+	setButtonState(bilinearFilteringButton, false);
+	setButtonState(trilinearFilteringButton, false);
+	setButtonState(anisotropicFilteringButton, false);
 }
 
 void Preferences::disableProxyServer(void)
 {
-	panel->proxyLabel->setEnabled(false);
-	panel->proxyEdit->setEnabled(false);
-	panel->portLabel->setEnabled(false);
-	panel->portEdit->setEnabled(false);
+	proxyLabel->setEnabled(false);
+	proxyEdit->setEnabled(false);
+	portLabel->setEnabled(false);
+	portEdit->setEnabled(false);
 }
 
 char *Preferences::getErrorKey(int errorNumber)
@@ -1994,7 +2000,7 @@ void Preferences::userDefaultChangedAlertCallback(TCAlert *alert)
 	{
 		if (strcmp(key, CHECK_PART_TRACKER_KEY) == 0)
 		{
-			if (panel)
+			if (this)
 			{
 				reflectUpdatesSettings();
 			}
@@ -2046,62 +2052,62 @@ void Preferences::setupSaveDir(QComboBox *comboBox, QLineEdit *textField,
 void Preferences::setupSaveDirs()
 {
 	snapshotDir = ldPrefs->getSaveDir(LDPreferences::SOSnapshot).c_str();
-	setupSaveDir(panel->snapshotSaveDirBox, panel->snapshotSaveDirEdit, 
-				 panel->snapshotSaveDirButton, 
+	setupSaveDir(snapshotSaveDirBox, snapshotSaveDirEdit, 
+				 snapshotSaveDirButton, 
 				 ldPrefs->getSaveDirMode(LDPreferences::SOSnapshot), 
 				 snapshotDir);
 	partsListDir =ldPrefs->getSaveDir(LDPreferences::SOPartsList).c_str();
-	setupSaveDir(panel->partsListsSaveDirBox, panel->partsListsSaveDirEdit,
-				 panel->partsListsSaveDirButton, 
+	setupSaveDir(partsListsSaveDirBox, partsListsSaveDirEdit,
+				 partsListsSaveDirButton, 
 				 ldPrefs->getSaveDirMode(LDPreferences::SOPartsList),
 				 partsListDir);
 	exportDir = ldPrefs->getSaveDir(LDPreferences::SOExport).c_str();
-	setupSaveDir(panel->exportsListsSaveDirBox, panel->exportsSaveDirEdit,
-				 panel->exportsSaveDirButton,
+	setupSaveDir(exportsListsSaveDirBox, exportsSaveDirEdit,
+				 exportsSaveDirButton,
 				 ldPrefs->getSaveDirMode(LDPreferences::SOExport),
 				 exportDir);
 }
 
 void Preferences::snapshotSaveDirBoxChanged()
 {
-	panel->applyButton->setEnabled(true);
-	updateSaveDir(panel->snapshotSaveDirEdit,panel->snapshotSaveDirButton,
-		(LDPreferences::DefaultDirMode)panel->snapshotSaveDirBox->currentItem(),
+	applyButton->setEnabled(true);
+	updateSaveDir(snapshotSaveDirEdit,snapshotSaveDirButton,
+		(LDPreferences::DefaultDirMode)snapshotSaveDirBox->currentItem(),
 		snapshotDir);
 }
 
 void Preferences::partsListsSaveDirBoxChanged()
 {
-	updateSaveDir(panel->partsListsSaveDirEdit,panel->partsListsSaveDirButton,
-		(LDPreferences::DefaultDirMode)panel->partsListsSaveDirBox->currentItem(),
+	updateSaveDir(partsListsSaveDirEdit,partsListsSaveDirButton,
+		(LDPreferences::DefaultDirMode)partsListsSaveDirBox->currentItem(),
 		partsListDir);
-	panel->applyButton->setEnabled(true);
+	applyButton->setEnabled(true);
 }
 
 void Preferences::exportsListsSaveDirBoxChanged()
 {
-	updateSaveDir(panel->exportsSaveDirEdit,panel->exportsSaveDirButton,
-			(LDPreferences::DefaultDirMode)panel->exportsListsSaveDirBox->currentItem(),
+	updateSaveDir(exportsSaveDirEdit,exportsSaveDirButton,
+			(LDPreferences::DefaultDirMode)exportsListsSaveDirBox->currentItem(),
 			exportDir);
-	panel->applyButton->setEnabled(true);
+	applyButton->setEnabled(true);
 }
 
 void Preferences::snapshotSaveDirBrowse()
 {
 	browseForDir(TCLocalStrings::get("BrowseForSnapshotDir"),
-		panel->snapshotSaveDirEdit, snapshotDir);
+		snapshotSaveDirEdit, snapshotDir);
 }
 
 void Preferences::partsListsSaveDirBrowse()
 {
 	browseForDir(TCLocalStrings::get("BrowseForPartsListDir"),
-		panel->partsListsSaveDirEdit, partsListDir);
+		partsListsSaveDirEdit, partsListDir);
 }
 
 void Preferences::exportsSaveDirBrowse()
 {
 	browseForDir(TCLocalStrings::get("BrowseForExportListDir"),
-		panel->exportsSaveDirEdit, exportDir);
+		exportsSaveDirEdit, exportDir);
 }
 
 void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &dir)
@@ -2115,8 +2121,25 @@ void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &di
     {
         QString choosenDir = dirDialog->selectedFile();
 		textField->setText(dir = choosenDir);
-		panel->applyButton->setEnabled(true);
+		applyButton->setEnabled(true);
     }
     delete dirDialog;
+}
+
+void Preferences::enableApply(void)
+{
+	applyButton->setEnabled(true);
+}
+
+void Preferences::enableProxy(void) 
+{
+	doProxyServer(true); 
+	enableApply();
+}
+
+void Preferences::disableProxy(void) 
+{
+	doProxyServer(false); 
+	enableApply();
 }
 
