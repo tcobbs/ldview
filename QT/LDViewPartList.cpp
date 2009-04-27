@@ -146,11 +146,6 @@ int PartList::exec()
 	return PartListPanel::exec();
 }
 
-int PartList::result()
-{
-	return result();
-}
-
 void PartList::doShowModel()
 {
 	overwriteExistingButton->setEnabled(showModelButton->isChecked());
