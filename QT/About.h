@@ -1,6 +1,6 @@
 #include "AboutPanel.h"
-#include <QLabel.h>
-#include <QString.h>
+#include <qlabel.h>
+#include <qstring.h>
 
 class About : public AboutPanel
 {
