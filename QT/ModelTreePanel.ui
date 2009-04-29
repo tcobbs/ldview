@@ -254,102 +254,10 @@
 <toolbars>
 </toolbars>
 <connections>
-    <connection>
-        <sender>highlightSelectedLineBox</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>highlightSelectedLine()</slot>
-    </connection>
-    <connection>
-        <sender>highlightColorEdit</sender>
-        <signal>clicked(int,int)</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>highlightColor()</slot>
-    </connection>
-    <connection>
-        <sender>commentButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>comment()</slot>
-    </connection>
-    <connection>
-        <sender>modelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>model()</slot>
-    </connection>
-    <connection>
-        <sender>lineButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>line()</slot>
-    </connection>
-    <connection>
-        <sender>triangleButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>triangle()</slot>
-    </connection>
-    <connection>
-        <sender>quadButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>quad()</slot>
-    </connection>
-    <connection>
-        <sender>conditionalLineButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>conditionalLine()</slot>
-    </connection>
-    <connection>
-        <sender>emptyButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>empty()</slot>
-    </connection>
-    <connection>
-        <sender>unknownButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>unknown()</slot>
-    </connection>
-    <connection>
-        <sender>modelTreeView</sender>
-        <signal>expanded(QListViewItem*)</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>itemexpanded(QListViewItem*)</slot>
-    </connection>
-    <connection>
-        <sender>modelTreeView</sender>
-        <signal>selectionChanged(QListViewItem*)</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>selectionChanged(QListViewItem*)</slot>
-    </connection>
-    <connection>
-        <sender>optionsButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ModelTreePanel</receiver>
-        <slot>toggleOptions()</slot>
-    </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">ModelTreePanel.ui.h</include>
 </includes>
 <slots>
-    <slot>empty()</slot>
-    <slot>unknown()</slot>
-    <slot>model()</slot>
-    <slot>line()</slot>
-    <slot>triangle()</slot>
-    <slot>conditionalLine()</slot>
-    <slot>quad()</slot>
-    <slot>comment()</slot>
-    <slot>highlightSelectedLine()</slot>
-    <slot>highlightColor()</slot>
-    <slot>itemexpanded(QListViewItem*)</slot>
-    <slot>selectionChanged(QListViewItem*)</slot>
-    <slot>toggleOptions()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>

@@ -197,7 +197,6 @@
     </vbox>
 </widget>
 <includes>
-    <include location="local" impldecl="in implementation">LatitudeLongitude.h</include>
 </includes>
 <pixmapinproject/>
 <tabstops>
@@ -211,43 +210,8 @@
     <tabstop>cancelButton</tabstop>
 </tabstops>
 <slots>
-    <slot>doOk()</slot>
-    <slot>doCancel()</slot>
-    <slot>doCurrent()</slot>
-    <slot>doDefault()</slot>
-    <slot>distanceChanged()</slot>
 </slots>
 <connections>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>LatitudeLongitudePanel</receiver>
-        <slot>doOk()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>LatitudeLongitudePanel</receiver>
-        <slot>doCancel()</slot>
-    </connection>
-    <connection>
-        <sender>defaultButton</sender>
-        <signal>clicked()</signal>
-        <receiver>LatitudeLongitudePanel</receiver>
-        <slot>doDefault()</slot>
-    </connection>
-    <connection>
-        <sender>currentButton</sender>
-        <signal>clicked()</signal>
-        <receiver>LatitudeLongitudePanel</receiver>
-        <slot>doCurrent()</slot>
-    </connection>
-    <connection>
-        <sender>distanceCheckBox</sender>
-        <signal>stateChanged(int)</signal>
-        <receiver>LatitudeLongitudePanel</receiver>
-        <slot>distanceChanged()</slot>
-    </connection>
 </connections>
 <layoutdefaults spacing="4" margin="11"/>
 </UI>

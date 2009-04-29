@@ -10,296 +10,229 @@
 
 void LDView::init()
 {
-    if (modelViewer)
-    {
-	modelViewer->setMainWindow(this);
-    }
 }
 
 void LDView::fileOpen()
 {
-    modelViewer->doFileOpen();
 }
 
 void LDView::fileSave()
-
 {
-	modelViewer->doFileSave();
 }
 
 void LDView::fileSaveSettings()
 {
-	modelViewer->doFileSaveSettings();
 }
 
 void LDView::fileExport()
 {
-    modelViewer->fileExport();
 }
 
 void LDView::fileExportOption()
 {
-    modelViewer->fileExportOption();
 }
 
 void LDView::fileJPEGOptions()
 {
-    modelViewer->doFileJPEGOptions();
 }
 
 void LDView::filePrint()
 {
-	modelViewer->doFilePrint();
 }
 
 void LDView::fileExit()
 {
-    QApplication::exit();
 }
 
 void LDView::helpContents()
 {
-    modelViewer->doHelpContents();
 }
 
 void LDView::helpAbout()
 {
-    modelViewer->doHelpAbout();
 }
 
 void LDView::helpAboutQt()
 {
-	modelViewer->doHelpAboutQt();
 }
 
 void LDView::editPreferences()
 {
-    modelViewer->showPreferences();
 }
 
-void LDView::closeEvent(QCloseEvent *event)
+void LDView::closeEvent(QCloseEvent *  /* event */)
 {
-#if (QT_VERSION >>16)==3
-    QMainWindow::closeEvent(event);
-    if (event->isAccepted())
-#endif
-    {
-	fileExit();
-    }
 }
 
-void LDView::viewStatusBar(bool flag)
+void LDView::viewStatusBar(bool /* flag */)
 {
-    modelViewer->doViewStatusBar(flag);
 }
 
-void LDView::viewToolBar(bool flag)
+void LDView::viewToolBar(bool /* flag */)
 {
-    modelViewer->doViewToolBar(flag);
 }
 
-void LDView::toolbarWireframe(bool flag)
+void LDView::toolbarWireframe(bool /* flag */)
 {
-    modelViewer->doWireframe(flag);
 }
 
-void LDView::toolbarEdge(bool flag)
+void LDView::toolbarEdge(bool /* flag */)
 {
-    modelViewer->doEdge(flag);
 }
 
-void LDView::toolbarLighting(bool flag)
+void LDView::toolbarLighting(bool /* flag */)
 {
-    modelViewer->doLighting(flag);
 }
 
-void LDView::toolbarBFC(bool flag)
+void LDView::toolbarBFC(bool /* flag */)
 {
-    modelViewer->doBFC(flag);
 }
 
-void LDView::toolbarAxes(bool flag)
+void LDView::toolbarAxes(bool /* flag */)
 {
-    modelViewer->doAxes(flag);
 }
 
-void LDView::toolbarPrimitiveSubstitution(bool flag)
+void LDView::toolbarPrimitiveSubstitution(bool /* flag */)
 {
-    modelViewer->doPrimitiveSubstitution(flag);
 }
 
-void LDView::toolbarSeams(bool flag)
+void LDView::toolbarSeams(bool /* flag */)
 {
-    modelViewer->doSeams(flag);
 }
 
 void LDView::viewFullScreen()
 {
-	modelViewer->doViewFullScreen();
 }
 
 void LDView::viewResetView()
 {
-    modelViewer->doViewReset();
 }
 
 
 void LDView::helpOpenGLDriverInfo()
 {
-    modelViewer->doHelpOpenGLDriverInfo();
 }
 
 void LDView::fileLDrawDir()
 {
-    modelViewer->doFileLDrawDir();
 }
 
 void LDView::fileExtraDir()
 {
-	modelViewer->showFileExtraDir();
 }
 
 void LDView::fileCheckForUpdates()
 {
-	 modelViewer->checkForLibraryUpdates();
 }
 
 void LDView::fileReload()
 {
-    modelViewer->doFileReload();
 }
 
 void LDView::viewShowErrors()
 {
-    modelViewer->doViewErrors();
 }
 
-void LDView::pollChanged(QAction *action)
+void LDView::pollChanged(QAction * /* action */)
 {
-    modelViewer->doPollChanged(action);
 }
 
-void LDView::viewModeChanged(QAction *action)
+void LDView::viewModeChanged(QAction *  /* action */)
 {
-    modelViewer->doViewModeChanged(action);
 }
 
 void LDView::viewZoomToFit()
 {
-	modelViewer->doZoomToFit();
 }
 
 void LDView::frontViewAngle()
 {
-	modelViewer->doFrontViewAngle();
 }
 
 void LDView::backViewAngle()
 {
-    modelViewer->doBackViewAngle();
 }
                                                                                                                                                              
 void LDView::leftViewAngle()
 {
-    modelViewer->doLeftViewAngle();
 }
                                                                                                                                                              
 void LDView::rightViewAngle()
 {
-    modelViewer->doRightViewAngle();
 }
 
 void LDView::topViewAngle()
 {
-    modelViewer->doTopViewAngle();
 }
 
 void LDView::bottomViewAngle()
 {
-    modelViewer->doBottomViewAngle();
 }
 
 void LDView::latLongViewAngle()
 {
-    modelViewer->doLatLongViewAngle();
 }
 
 void LDView::isoViewAngle()
 {
-    modelViewer->doIsoViewAngle();
 }
 
 void LDView::saveDefaultViewAngle()
 {
-    modelViewer->doSaveDefaultViewAngle();
 }
 
 void LDView::fileCancelLoad()
 {
-    modelViewer->doFileCancelLoad();
 }
 
 void LDView::showViewInfo()
 {
-	modelViewer->doShowViewInfo();
 }
 
 void LDView::showPovCamera()
 {
-	modelViewer->doShowPovCamera();
 }
 
-void LDView::showPovAspectRatio(bool flag)
+void LDView::showPovAspectRatio(bool /* flag */)
 {
-	modelViewer->doShowPovAspectRatio(flag);
 }
 
 void LDView::toolsPartList()
 {
-	modelViewer->doPartList();
 }
 
 void LDView::toolsModelTree()
 {
-	modelViewer->doModelTree();
 }
 
 void LDView::toolsBoundingBox()
 {
-	modelViewer->doBoundingBox();
 }
 
 void LDView::toolsMpdModelSelection()
 {
-	modelViewer->doMpdModel();
 }
 
-void LDView::latitudeRotation(bool b)
+void LDView::latitudeRotation(bool /* b */)
 {
-	modelViewer->switchExamineLatLong(b);
 }
 
 void LDView::prevStep()
 {
-	modelViewer->prevStep();
 }
 
 void LDView::nextStep()
 {
-	modelViewer->nextStep();
 }
 
 void LDView::firstStep()
 {
-    modelViewer->firstStep();
 }
 
 void LDView::lastStep()
 {
-    modelViewer->lastStep();
 }
 
 void LDView::gotoStep()
 {
-    modelViewer->gotoStep();
 }

@@ -28,6 +28,20 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
 	preferences(preferences),
 	optionsShown(true)
 {
+    connect( highlightSelectedLineBox, SIGNAL( clicked() ), this, SLOT( highlightSelectedLine() ) );
+    connect( highlightColorEdit, SIGNAL( clicked(int,int) ), this, SLOT( highlightColor() ) );
+    connect( commentButton, SIGNAL( clicked() ), this, SLOT( comment() ) );
+    connect( modelButton, SIGNAL( clicked() ), this, SLOT( model() ) );
+    connect( lineButton, SIGNAL( clicked() ), this, SLOT( line() ) );
+    connect( triangleButton, SIGNAL( clicked() ), this, SLOT( triangle() ) );
+    connect( quadButton, SIGNAL( clicked() ), this, SLOT( quad() ) );
+    connect( conditionalLineButton, SIGNAL( clicked() ), this, SLOT( conditionalLine() ) );
+    connect( emptyButton, SIGNAL( clicked() ), this, SLOT( empty() ) );
+    connect( unknownButton, SIGNAL( clicked() ), this, SLOT( unknown() ) );
+    connect( modelTreeView, SIGNAL( expanded(QListViewItem*) ), this, SLOT( itemexpanded(QListViewItem*) ) );
+    connect( modelTreeView, SIGNAL( selectionChanged(QListViewItem*) ), this, SLOT( selectionChanged(QListViewItem*) ) );
+    connect( optionsButton, SIGNAL( clicked() ), this, SLOT( toggleOptions() ) );
+
 	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,
 			(0xa0e0ff), false);
 	highlightColorEdit->setPaletteBackgroundColor(QColor(color >>16, (color >>8) & 0xff, color & 0xff));

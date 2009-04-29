@@ -334,53 +334,10 @@
     </hbox>
 </widget>
 <connections>
-    <connection>
-        <sender>upButton</sender>
-        <signal>clicked()</signal>
-        <receiver>PartListPanel</receiver>
-        <slot>doUp()</slot>
-    </connection>
-    <connection>
-        <sender>downButton</sender>
-        <signal>clicked()</signal>
-        <receiver>PartListPanel</receiver>
-        <slot>doDown()</slot>
-    </connection>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>PartListPanel</receiver>
-        <slot>doOk()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>PartListPanel</receiver>
-        <slot>doCancel()</slot>
-    </connection>
-    <connection>
-        <sender>showModelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>PartListPanel</receiver>
-        <slot>doShowModel()</slot>
-    </connection>
-    <connection>
-        <sender>fieldOrderView</sender>
-        <signal>currentChanged(QListViewItem *)</signal>
-        <receiver>PartListPanel</receiver>
-        <slot>doHighlighted()</slot>
-    </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">PartList.ui.h</include>
 </includes>
 <slots>
-    <slot>doOk()</slot>
-    <slot>doCancel()</slot>
-    <slot>doUp()</slot>
-    <slot>doDown()</slot>
-	<slot>doHighlighted()</slot>
-    <slot>doShowModel()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>

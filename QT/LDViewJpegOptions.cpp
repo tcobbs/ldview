@@ -15,6 +15,11 @@ JpegOptions::JpegOptions(ModelViewerWidget *modelWidget)
 	modelWidget(modelWidget),
 	options(new TCJpegOptions)
 {
+    connect( qualitySlider, SIGNAL( sliderMoved(int) ), this, SLOT( doSliderMoved(int) ) );
+    connect( qualitySlider, SIGNAL( valueChanged(int) ), this, SLOT( doSliderMoved(int) ) );
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+
     modelViewer = modelWidget->getModelViewer();
 	reflectSettings();
 }

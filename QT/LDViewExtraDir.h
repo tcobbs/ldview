@@ -7,9 +7,14 @@ class ExtraDirPanel;
 class QListViewItem;
 class QButton;
 class QFileDialog;
+class ModelViewerWidget;
+class LDrawModelViewer ;
+class TCStringArray;
+class QFileDialog;
 
 class ExtraDir : public ExtraDirPanel
 {
+	Q_OBJECT
 public:
 	ExtraDir(ModelViewerWidget *modelWidget);
 	~ExtraDir(void);

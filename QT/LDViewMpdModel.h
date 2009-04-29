@@ -12,14 +12,13 @@ class LDLMainModel;
 class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
+class ModelViewerWidget;
 class MpdModel : public MpdModelSelectionPanel
 {
-//	Q_OBJECT
+	Q_OBJECT
 public:
 	MpdModel(ModelViewerWidget *modelViewer);
 	~MpdModel();
-	void ok(void);
-	void cancel(void);
 	void show(void);
 	void hide(void);
 	void showOptions(),hideOptions();
@@ -32,6 +31,9 @@ public:
 
 public slots:
 	void doMpdSelected(int i) { showMpdModel(i);}
+	void ok(void);
+	void cancel(void);
+
 
 protected:
     void setModel(LDLMainModel *model);

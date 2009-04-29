@@ -21,7 +21,7 @@
 #include "About.h"
 
 class LDrawModelViewer;
-class LDView;
+class LDViewMainWindow;
 class QStatusBar;
 class QToolBar;
 class QProgressBar;
@@ -46,6 +46,7 @@ class AlertHandler;
 class LDLibraryUpdater;
 class QProgressDialog;
 class LDHtmlInventory;
+class JpegOptions;
 
 #define MAX_MOUSE_BUTTONS 10
 
@@ -64,7 +65,7 @@ public:
 	void finishLoadModel(void);
 	void showPreferences(void);
 	LDrawModelViewer *getModelViewer(void) { return modelViewer; }
-	void setMainWindow(LDView *value);
+	void setMainWindow(LDViewMainWindow *value);
 
 	void ldlErrorCallback(LDLError *error);
 	void progressAlertCallback(TCProgressAlert *alert);
@@ -295,7 +296,7 @@ protected:
 	LatitudeLongitude *latitudelongitude;
 	About *aboutPanel;
 	HelpPanel *helpContents;
-	LDView *mainWindow;
+	LDViewMainWindow *mainWindow;
 	QMenuBar *menuBar;
 	QPopupMenu *fileMenu;
 	QPopupMenu *editMenu;

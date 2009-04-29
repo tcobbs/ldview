@@ -16,7 +16,7 @@ typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
 class LDViewErrors : public ErrorPanel
 {
-//	Q_OBJECT
+	Q_OBJECT
 public:
 	LDViewErrors(Preferences *preferences);
 	~LDViewErrors(void);

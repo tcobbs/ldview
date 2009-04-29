@@ -225,48 +225,6 @@
     </vbox>
 </widget>
 <connections>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doOk()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doCancel()</slot>
-    </connection>
-    <connection>
-        <sender>addExtraDirButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doAddExtraDir()</slot>
-    </connection>
-    <connection>
-        <sender>delExtraDirButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doDelExtraDir()</slot>
-    </connection>
-    <connection>
-        <sender>upExtraDirButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doUpExtraDir()</slot>
-    </connection>
-    <connection>
-        <sender>downExtraDirButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doDownExtraDir()</slot>
-    </connection>
-    <connection>
-        <sender>ExtraDirListView</sender>
-        <signal>highlighted(int)</signal>
-        <receiver>ExtraDirPanel</receiver>
-        <slot>doExtraDirSelected()</slot>
-    </connection>
 </connections>
 <tabstops>
     <tabstop>addExtraDirButton</tabstop>
@@ -277,16 +235,8 @@
     <tabstop>cancelButton</tabstop>
 </tabstops>
 <includes>
-    <include location="local" impldecl="in implementation">ExtraDirPanel.ui.h</include>
 </includes>
 <slots>
-    <slot>doCancel()</slot>
-    <slot>doOk()</slot>
-    <slot>doAddExtraDir()</slot>
-    <slot>doDelExtraDir()</slot>
-    <slot>doUpExtraDir()</slot>
-    <slot>doDownExtraDir()</slot>
-    <slot>doExtraDirSelected()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
