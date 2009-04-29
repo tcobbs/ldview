@@ -150,32 +150,10 @@
     </vbox>
 </widget>
 <includes>
-    <include location="local" impldecl="in implementation">MpdModelSelectionPanel.ui.h</include>
 </includes>
 <connections>
-    <connection>
-        <sender>modelList</sender>
-        <signal>highlighted(int)</signal>
-        <receiver>MpdModelSelectionPanel</receiver>
-        <slot>doMpdSelected(int)</slot>
-    </connection>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>MpdModelSelectionPanel</receiver>
-        <slot>ok()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>MpdModelSelectionPanel</receiver>
-        <slot>cancel()</slot>
-    </connection>
 </connections>
 <slots>
-    <slot>doMpdSelected(int)</slot>
-    <slot>ok()</slot>
-    <slot>cancel()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

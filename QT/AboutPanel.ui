@@ -244,7 +244,6 @@ Group, which does not sponsor, endorse, or authorize this program.</string>
 <connections>
 </connections>
 <slots>
-    <slot>onOK()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>

@@ -342,38 +342,10 @@
     </vbox>
 </widget>
 <connections>
-    <connection>
-        <sender>qualitySlider</sender>
-        <signal>sliderMoved(int)</signal>
-        <receiver>JpegOptionsPanel</receiver>
-        <slot>doSliderMoved(int)</slot>
-    </connection>
-    <connection>
-        <sender>qualitySlider</sender>
-        <signal>valueChanged(int)</signal>
-        <receiver>JpegOptionsPanel</receiver>
-        <slot>doSliderMoved(int)</slot>
-    </connection>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>JpegOptionsPanel</receiver>
-        <slot>doOk()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>JpegOptionsPanel</receiver>
-        <slot>doCancel()</slot>
-    </connection>
 </connections>
 <includes>
-    <include location="local" impldecl="in implementation">JpegOptionsPanel.h</include>
 </includes>
 <slots>
-    <slot>doSliderMoved(int i)</slot>
-    <slot>doOk()</slot>
-    <slot>doCancel()</slot>
 </slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>

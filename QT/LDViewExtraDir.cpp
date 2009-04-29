@@ -19,6 +19,14 @@ ExtraDir::ExtraDir(ModelViewerWidget *modelWidget)
 	modelWidget(modelWidget),
 	fileDialog(NULL)
 {
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+    connect( addExtraDirButton, SIGNAL( clicked() ), this, SLOT( doAddExtraDir() ) );
+    connect( delExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDelExtraDir() ) );
+    connect( upExtraDirButton, SIGNAL( clicked() ), this, SLOT( doUpExtraDir() ) );
+    connect( downExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDownExtraDir() ) );
+    connect( ExtraDirListView, SIGNAL( highlighted(int) ), this, SLOT( doExtraDirSelected() ) );
+
     modelViewer = modelWidget->getModelViewer();
     if (!extraSearchDirs)
     {

@@ -10,6 +10,7 @@ class QButton;
 
 class JpegOptions : public JpegOptionsPanel
 {
+	Q_OBJECT
 public:
 	JpegOptions(ModelViewerWidget *modelWidget);
 	~JpegOptions(void);

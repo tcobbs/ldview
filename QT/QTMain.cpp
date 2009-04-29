@@ -6,7 +6,7 @@
 #include <qtextcodec.h>
 //#include <qmotifplusstyle.h>
 #include <qgl.h>
-#include "LDView.h"
+#include "LDViewMainWindow.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCUserDefaults.h>
 #include <TCFoundation/TCLocalStrings.h>
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
 						 "/usr/local/share/ldview"))
 		printf ("Failed to load translation %s\n",QTextCodec::locale());
 	a.installTranslator(&translator);
-    LDView *w = new LDView;
+    LDViewMainWindow *w = new LDViewMainWindow;
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
     	w->show();
     a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );

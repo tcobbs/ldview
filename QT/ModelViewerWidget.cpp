@@ -64,7 +64,7 @@
 #include "OpenGLExtensionsPanel.h"
 #include "AboutPanel.h"
 #include "HelpPanel.h"
-#include "LDView.h"
+#include "LDViewMainWindow.h"
 #include "LDViewErrors.h"
 #include "LDViewModelTree.h"
 #include "LDViewExtraDir.h"
@@ -1368,7 +1368,7 @@ void ModelViewerWidget::connectMenuShows(void)
 	connect(helpMenu, SIGNAL(aboutToShow()), this, SLOT(doHelpMenuAboutToShow()));
 }
 
-void ModelViewerWidget::setMainWindow(LDView *value)
+void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 {
 	QMenuItem *item;
 	QAction *pollAction;
@@ -1743,11 +1743,11 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 	lock();
 	if (flag)
 	{
-		statusBar->show();
+		if (statusBar) statusBar->show();
 	}
 	else
 	{
-		statusBar->hide();
+		if (statusBar) statusBar->hide();
 	}
 	preferences->setStatusBar(flag);
 	unlock();

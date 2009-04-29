@@ -19,6 +19,12 @@ LatitudeLongitude::LatitudeLongitude(ModelViewerWidget *modelWidget)
 	v2(new QIntValidator(-180,180,this)),
 	v3(new QDoubleValidator(0.0,999999.9,4,this))
 {
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+    connect( defaultButton, SIGNAL( clicked() ), this, SLOT( doDefault() ) );
+    connect( currentButton, SIGNAL( clicked() ), this, SLOT( doCurrent() ) );
+    connect( distanceCheckBox, SIGNAL( stateChanged(int) ), this, SLOT( distanceChanged() ) );
+
 	latitudeLine->setValidator(v1);
 	longitudeLine->setValidator(v2);
 	distanceLine->setValidator(v3);

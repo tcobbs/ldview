@@ -10,6 +10,7 @@ class QDoubleValidator;
 
 class LatitudeLongitude : public LatitudeLongitudePanel
 {
+	Q_OBJECT
 public:
 	LatitudeLongitude(ModelViewerWidget *modelWidget);
 	~LatitudeLongitude(void);

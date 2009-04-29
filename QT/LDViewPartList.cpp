@@ -13,6 +13,13 @@ PartList::PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventor
 		modelWidget(modelWidget),
 		m_htmlInventory(htmlInventory)
 {
+    connect( upButton, SIGNAL( clicked() ), this, SLOT( doUp() ) );
+    connect( downButton, SIGNAL( clicked() ), this, SLOT( doDown() ) );
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+    connect( showModelButton, SIGNAL( clicked() ), this, SLOT( doShowModel() ) );
+    connect( fieldOrderView, SIGNAL( currentChanged(QListViewItem *) ), this, SLOT( doHighlighted() ) );
+
     modelViewer = modelWidget->getModelViewer();
 	fieldOrderView->header()->hide();
 	fieldOrderView->setSorting(-1);

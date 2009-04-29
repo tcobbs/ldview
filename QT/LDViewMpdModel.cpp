@@ -6,6 +6,7 @@
 #include <TCFoundation/TCStringArray.h>
 
 #include <qstring.h>
+#include <qpushbutton.h>
 #include <qlabel.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
@@ -19,6 +20,9 @@ MpdModel::MpdModel(ModelViewerWidget *modelViewer)
     mainmodel(NULL),
 	m_okPressed(false)
 {
+    connect( modelList, SIGNAL( highlighted(int) ), this, SLOT( doMpdSelected(int) ) );
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( ok() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( cancel() ) );
 }
 
 MpdModel::~MpdModel() { }
@@ -35,7 +39,7 @@ void MpdModel::hide()
 {
 	if (!m_okPressed) 
 		showMpdModel(0);
-	MpdModelSelectionPanel::hide();
+	QDialog::hide();
 }
 
 void MpdModel::setModel(LDLMainModel *model)

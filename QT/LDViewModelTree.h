@@ -14,15 +14,15 @@ class LDLMainModel;
 class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
+class ModelViewerWidget;
 class LDViewModelTree : public ModelTreePanel
 {
-//	Q_OBJECT
+	Q_OBJECT
 public:
 	LDViewModelTree(Preferences *preferences, ModelViewerWidget *modelViewer);
 	~LDViewModelTree();
 	void show(void);
 	void showOptions(),hideOptions();
-	void toggleOptions();
 
 public slots:
 	void itemexpanded(QListViewItem *item);
@@ -38,6 +38,7 @@ public slots:
 	void highlightColor();
 	void comment(void) {doLineCheck(commentButton,LDLLineTypeComment);}
     void modelAlertCallback(TCAlert *alert);
+	void toggleOptions();
 
 protected:
     void doLineCheck(QCheckBox *button, LDLLineType lineType);

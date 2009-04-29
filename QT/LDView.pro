@@ -7,7 +7,7 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h qt4wrapper.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
-		   LDViewExportOption.h About.h
+		   LDViewExportOption.h About.h LDViewMainWindow.h
 
 UI_DIR = .ui
 MOC_DIR = .moc

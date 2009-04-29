@@ -11,6 +11,7 @@ class QCheckListItem;
 
 class PartList : public PartListPanel
 {
+	Q_OBJECT
 public:
 	PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
 	~PartList(void);
