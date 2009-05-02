@@ -19,6 +19,13 @@ SnapshotSettings::SnapshotSettings(ModelViewerWidget *modelWidget)
 	:SnapshotSettingsPanel(),
 	modelWidget(modelWidget)
 {
+    connect( sizeEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSize() ) );
+    connect( seriesEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSeries() ) );
+    connect( zoomtofitEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
+    connect( allStepsBox, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+
     modelViewer = modelWidget->getModelViewer();
 	reflectSettings();
 }

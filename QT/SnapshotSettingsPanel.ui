@@ -501,44 +501,6 @@
         </widget>
     </vbox>
 </widget>
-<connections>
-    <connection>
-        <sender>sizeEnabledButton</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>SnapshotSettingsPanel</receiver>
-        <slot>doEnabledSize()</slot>
-    </connection>
-    <connection>
-        <sender>seriesEnabledButton</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>SnapshotSettingsPanel</receiver>
-        <slot>doEnabledSeries()</slot>
-    </connection>
-    <connection>
-        <sender>zoomtofitEnabledButton</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>SnapshotSettingsPanel</receiver>
-        <slot>zoomToggled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>allStepsBox</sender>
-        <signal>toggled(bool)</signal>
-        <receiver>SnapshotSettingsPanel</receiver>
-        <slot>zoomToggled(bool)</slot>
-    </connection>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>SnapshotSettingsPanel</receiver>
-        <slot>doOk()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>SnapshotSettingsPanel</receiver>
-        <slot>doCancel()</slot>
-    </connection>
-</connections>
 <tabstops>
     <tabstop>seriesEnabledButton</tabstop>
     <tabstop>digitBox</tabstop>
@@ -549,16 +511,6 @@
     <tabstop>okButton</tabstop>
     <tabstop>cancelButton</tabstop>
 </tabstops>
-<includes>
-    <include location="local" impldecl="in implementation">SnapshotSettingsPanel.ui.h</include>
-</includes>
-<slots>
-    <slot>doOk()</slot>
-    <slot>doCancel()</slot>
-    <slot>doEnabledSeries()</slot>
-    <slot>doEnabledSize()</slot>
-    <slot>zoomToggled(bool)</slot>
-</slots>
 <pixmapinproject/>
 <layoutdefaults spacing="4" margin="11"/>
 </UI>
