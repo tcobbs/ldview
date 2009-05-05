@@ -24,6 +24,10 @@ LDViewExportOption::LDViewExportOption(LDrawModelViewer *modelViewer)
 	m_box(NULL),
 	m_origType(LDrawModelViewer::ETPov)
 {
+    connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
+    connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
+    connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
+
 	m_sv = new QScrollView(this, "scrollview");
 	m_sv->setVScrollBarMode(QScrollView::AlwaysOn);
 #if (QT_VERSION >>16)==3
