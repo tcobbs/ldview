@@ -4,13 +4,71 @@
 #include "LDView.h"
 #include "ModelViewerWidget.h"
 #include <qapplication.h>
+#include <qaction.h>
 
 class LDViewMainWindow : public LDView
 {
 	Q_OBJECT
 public:
 	LDViewMainWindow():LDView()
-	{if (modelViewer) modelViewer->setMainWindow(this);}
+	{if (modelViewer) modelViewer->setMainWindow(this);
+    connect( fileOpenAction, SIGNAL( activated() ), this, SLOT( fileOpen() ) );
+    connect( fileSaveSettingsAction, SIGNAL( activated() ), this, SLOT( fileSaveSettings() ) );
+    connect( fileExportAction, SIGNAL( activated() ), this, SLOT( fileExport() ) );
+    connect( fileExportOptionAction, SIGNAL( activated() ), this, SLOT( fileExportOption() ) );
+    connect( fileJPEGOptionsAction, SIGNAL( activated() ), this, SLOT( fileJPEGOptions() ) );
+    connect( fileSaveAction, SIGNAL( activated() ), this, SLOT( fileSave() ) );
+    connect( filePrintAction, SIGNAL( activated() ), this, SLOT( filePrint() ) );
+    connect( fileExitAction, SIGNAL( activated() ), this, SLOT( fileExit() ) );
+    connect( helpContentsAction, SIGNAL( activated() ), this, SLOT( helpContents() ) );
+    connect( helpAboutAction, SIGNAL( activated() ), this, SLOT( helpAbout() ) );
+    connect( helpAboutQtAction, SIGNAL( activated() ), this, SLOT( helpAboutQt() ) );
+    connect( editPreferencesAction, SIGNAL( activated() ), this, SLOT( editPreferences() ) );
+    connect( viewToolBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewToolBar(bool) ) );
+    connect( toolbarWireframeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframe(bool) ) );
+    connect( toolbarEdgeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarEdge(bool) ) );
+    connect( toolbarPrimitiveSubstitutionAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarPrimitiveSubstitution(bool) ) );
+    connect( toolbarLightingAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarLighting(bool) ) );
+    connect( toolbarBFCAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarBFC(bool) ) );
+    connect( toolbarAxesAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarAxes(bool) ) );
+    connect( toolbarSeamsAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarSeams(bool) ) );
+    connect( viewStatusBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewStatusBar(bool) ) );
+    connect( viewLatitudeRotationAction, SIGNAL( toggled(bool) ), this, SLOT( latitudeRotation(bool) ) );
+    connect( viewFullScreenAction, SIGNAL( activated() ), this, SLOT( viewFullScreen() ) );
+    connect( viewResetViewAction, SIGNAL( activated() ), this, SLOT( viewResetView() ) );
+    connect( helpOpenGLDriverInfoAction, SIGNAL( activated() ), this, SLOT( helpOpenGLDriverInfo() ) );
+    connect( fileLDrawDirAction, SIGNAL( activated() ), this, SLOT( fileLDrawDir() ) );
+    connect( fileExtraDirAction, SIGNAL( activated() ), this, SLOT( fileExtraDir() ) );
+    connect( fileCheckForUpdatesAction, SIGNAL( activated() ), this, SLOT( fileCheckForUpdates() ) );
+    connect( fileReloadAction, SIGNAL( activated() ), this, SLOT( fileReload() ) );
+    connect( viewShowErrorsAction, SIGNAL( activated() ), this, SLOT( viewShowErrors() ) );
+    connect( pollActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
+    connect( viewZoomToFitAction, SIGNAL( activated() ), this, SLOT( viewZoomToFit() ) );
+    connect( viewModeActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
+    connect( frontViewAngleAction, SIGNAL( activated() ), this, SLOT( frontViewAngle() ) );
+    connect( backViewAngleAction, SIGNAL( activated() ), this, SLOT( backViewAngle() ) );
+    connect( leftViewAngleAction, SIGNAL( activated() ), this, SLOT( leftViewAngle() ) );
+    connect( rightViewAngleAction, SIGNAL( activated() ), this, SLOT( rightViewAngle() ) );
+    connect( topViewAngleAction, SIGNAL( activated() ), this, SLOT( topViewAngle() ) );
+    connect( bottomViewAngleAction, SIGNAL( activated() ), this, SLOT( bottomViewAngle() ) );
+    connect( latLongViewAngleAction, SIGNAL( activated() ), this, SLOT( latLongViewAngle() ) );
+    connect( isoViewAngleAction, SIGNAL( activated() ), this, SLOT( isoViewAngle() ) );
+    connect( saveDefaultViewAngleAction, SIGNAL( activated() ), this, SLOT( saveDefaultViewAngle() ) );
+    connect( fileCancelLoadAction, SIGNAL( activated() ), this, SLOT( fileCancelLoad() ) );
+    connect( showViewInfoAction, SIGNAL( activated() ), this, SLOT( showViewInfo() ) );
+    connect( showPovCameraAction, SIGNAL( activated() ), this, SLOT( showPovCamera() ) );
+    connect( showPovAspectRatioAction, SIGNAL( toggled(bool) ), this, SLOT( showPovAspectRatio(bool) ) );
+    connect( toolsPartListAction, SIGNAL( activated() ), this, SLOT( toolsPartList() ) );
+    connect( toolbarPrevStep, SIGNAL( activated() ), this, SLOT( prevStep() ) );
+    connect( toolbarNextStep, SIGNAL( activated() ), this, SLOT( nextStep() ) );
+    connect( toolbarFirstStep, SIGNAL( activated() ), this, SLOT( firstStep() ) );
+    connect( toolbarLastStep, SIGNAL( activated() ), this, SLOT( lastStep() ) );
+    connect( stepGoto, SIGNAL( activated() ), this, SLOT( gotoStep() ) );
+    connect( toolsModelTreeAction, SIGNAL( activated() ), this, SLOT( toolsModelTree() ) );
+    connect( toolsBoundingBoxAction, SIGNAL( activated() ), this, SLOT( toolsBoundingBox() ) );
+    connect( toolsMpdModelSelectionAction, SIGNAL( activated() ), this, SLOT( toolsMpdModelSelection() ) );
+}
+public slots:
 	void fileOpen() { 	modelViewer->doFileOpen();}
 	void fileSave(){ 	modelViewer->doFileSave();}
 	void fileSaveSettings(){ modelViewer->doFileSaveSettings();}
