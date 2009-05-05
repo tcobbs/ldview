@@ -109,34 +109,6 @@
 </widget>
 <toolbars>
 </toolbars>
-<connections>
-    <connection>
-        <sender>okButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExportOptionPanel</receiver>
-        <slot>doOk()</slot>
-    </connection>
-    <connection>
-        <sender>cancelButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExportOptionPanel</receiver>
-        <slot>doCancel()</slot>
-    </connection>
-    <connection>
-        <sender>resetButton</sender>
-        <signal>clicked()</signal>
-        <receiver>ExportOptionPanel</receiver>
-        <slot>doReset()</slot>
-    </connection>
-</connections>
-<includes>
-    <include location="local" implDecl="in implementation">ExportOptionPanel.ui.h</include>
-</includes>
-<slots>
-    <slot>doCancel()</slot>
-    <slot>doOk()</slot>
-    <slot>doReset()</slot>
-</slots>
 <pixmapinproject/>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

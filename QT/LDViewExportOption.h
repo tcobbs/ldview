@@ -15,21 +15,21 @@ typedef std::map<LDExporterSetting *, QWidget *> SettingsMap;
 
 class LDViewExportOption : public ExportOptionPanel
 {
-//	Q_OBJECT
+	Q_OBJECT
 public:
 	LDViewExportOption(LDrawModelViewer *modelViewer);
 	~LDViewExportOption();
 
 public slots:
 	int exec(void);
-
+	void doOk(void);
+	void doCancel(void);
+	void doReset(void);
 
 protected:
 //	void populateTypeBox(void);
 	void populate(void);
-	void doOk(void);
-	void doCancel(void);
-	void doReset(void);
+
 	void doTypeBoxActivated(void);
 
 	LDrawModelViewer *m_modelViewer;
