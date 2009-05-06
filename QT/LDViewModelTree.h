@@ -7,6 +7,7 @@
 #include <LDLoader/LDLFileLine.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
+#include "qt4wrapper.h"
 
 class QLabel;
 class QStatusBar;
@@ -15,6 +16,7 @@ class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;
+class QListViewItem;
 class LDViewModelTree : public ModelTreePanel
 {
 	Q_OBJECT
