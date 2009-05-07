@@ -9,7 +9,6 @@
 #include <qstring.h>
 #include "ModelViewerWidget.h"
 #include "LDViewExtraDir.h"
-#include "ExtraDirPanel.h"
 #define	MAX_EXTRA_DIR	10
 
 TCStringArray* ExtraDir::extraSearchDirs = NULL;
