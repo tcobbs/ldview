@@ -178,7 +178,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	preferences = new Preferences(this);
 	extradir = new ExtraDir(parent,this);
 	snapshotsettings = new SnapshotSettings(this);
-	jpegoptions = new JpegOptions(this);
+	jpegoptions = new JpegOptions(parent,this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),
 				examineLatLong = Preferences::getLatLongMode());

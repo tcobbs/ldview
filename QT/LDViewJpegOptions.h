@@ -4,15 +4,15 @@
 #include <TCFoundation/TCJpegOptions.h>
 #include <TCFoundation/TCTypedObjectArray.h>
 #include "ModelViewerWidget.h"
-#include "JpegOptionsPanel.h"
-
+#include "ui_JpegOptionsPanel.h"
+#include <QtGui/QDialog>
 class QButton;
 
-class JpegOptions : public JpegOptionsPanel
+class JpegOptions : public QDialog , Ui::JpegOptionsPanel
 {
 	Q_OBJECT
 public:
-	JpegOptions(ModelViewerWidget *modelWidget);
+	JpegOptions(QWidget *parent, ModelViewerWidget *modelWidget);
 	~JpegOptions(void);
 
 	void reflectSettings();

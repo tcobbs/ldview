@@ -7,14 +7,14 @@
 #include <qlabel.h>
 #include <qcombobox.h>
 #include "ModelViewerWidget.h"
-#include "JpegOptionsPanel.h"
 #include "LDViewJpegOptions.h"
 
-JpegOptions::JpegOptions(ModelViewerWidget *modelWidget)
-	:JpegOptionsPanel(),
+JpegOptions::JpegOptions(QWidget *parent,ModelViewerWidget *modelWidget)
+	:QDialog(parent),JpegOptionsPanel(),
 	modelWidget(modelWidget),
 	options(new TCJpegOptions)
 {
+	setupUi(this);
     connect( qualitySlider, SIGNAL( sliderMoved(int) ), this, SLOT( doSliderMoved(int) ) );
     connect( qualitySlider, SIGNAL( valueChanged(int) ), this, SLOT( doSliderMoved(int) ) );
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
