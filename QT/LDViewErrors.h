@@ -3,7 +3,8 @@
 
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <LDLoader/LDLError.h>
-#include "ErrorPanel.h"
+#include "ui_ErrorPanel.h"
+#include <Q3MainWindow>
 
 class Preferences;
 class QListViewItem;
@@ -14,11 +15,11 @@ class QCheckBox;
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
-class LDViewErrors : public ErrorPanel
+class LDViewErrors : public Q3MainWindow , Ui::ErrorPanel
 {
 	Q_OBJECT
 public:
-	LDViewErrors(Preferences *preferences);
+	LDViewErrors(QWidget *parent,Preferences *preferences);
 	~LDViewErrors(void);
 
 	void clear(void);

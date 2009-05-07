@@ -1,15 +1,17 @@
 #ifndef __LDVIEWBoundingBox_H__
 #define __LDVIEWBoundingBox_H__
 
-#include "BoundingBoxPanel.h"
+#include "ui_BoundingBoxPanel.h"
+#include <QDialog>
+#include <QCloseEvent>
 
 class QButton;
 class ModelViewerWidget;
 
-class BoundingBox : public BoundingBoxPanel
+class BoundingBox : public QDialog , Ui::BoundingBoxPanel
 {
 public:
-	BoundingBox(ModelViewerWidget *modelWidget);
+	BoundingBox(QWidget *parent, ModelViewerWidget *modelWidget);
 	~BoundingBox(void);
     void modelAlertCallback(TCAlert *alert);
     void setModel(LDLMainModel *model);
@@ -25,8 +27,7 @@ public slots:
 	void show(void);
 	void hide();
 protected:
-//	LDrawModelViewer *modelViewer;
-//	ModelViewerWidget *modelWidget;
+	void closeEvent(QCloseEvent * /* event */) {hide();}
 };
 
 #endif

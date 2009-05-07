@@ -7,11 +7,12 @@
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>
 
-BoundingBox::BoundingBox(ModelViewerWidget *modelWidget)
-	:BoundingBoxPanel(),
+BoundingBox::BoundingBox(QWidget *parent,ModelViewerWidget *modelWidget)
+	:QDialog(parent),BoundingBoxPanel(),
 	m_modelWindow(modelWidget),
 	m_model(NULL)
 {
+	setupUi(this);
 }
 
 
@@ -22,7 +23,7 @@ BoundingBox::~BoundingBox(void)
 void BoundingBox::show()
 {
 	showBoundingBox(true);
-	BoundingBoxPanel::show();
+	QDialog::show();
 }
 
 void BoundingBox::setModel(LDLMainModel *model)
@@ -107,5 +108,5 @@ void BoundingBox::updateData(void)
 void BoundingBox::hide()
 {
 	showBoundingBox(false);
-	BoundingBoxPanel::hide();
+	QDialog::hide();
 }

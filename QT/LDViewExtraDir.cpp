@@ -14,11 +14,12 @@
 
 TCStringArray* ExtraDir::extraSearchDirs = NULL;
 
-ExtraDir::ExtraDir(ModelViewerWidget *modelWidget)
-	:ExtraDirPanel(),
+ExtraDir::ExtraDir(QWidget *parent, ModelViewerWidget *modelWidget)
+	:QDialog(parent),ExtraDirPanel(),
 	modelWidget(modelWidget),
 	fileDialog(NULL)
 {
+	setupUi(this);
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( addExtraDirButton, SIGNAL( clicked() ), this, SLOT( doAddExtraDir() ) );
@@ -43,7 +44,7 @@ void ExtraDir::show(void)
 {
 	populateExtraSearchDirs();
 	populateExtraDirsListBox();
-	ExtraDirPanel::show();
+	QDialog::show();
 	raise();
 	setActiveWindow();
 }

@@ -38,8 +38,8 @@ LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelView
     connect( conditionalLineButton, SIGNAL( clicked() ), this, SLOT( conditionalLine() ) );
     connect( emptyButton, SIGNAL( clicked() ), this, SLOT( empty() ) );
     connect( unknownButton, SIGNAL( clicked() ), this, SLOT( unknown() ) );
-    connect( modelTreeView, SIGNAL( expanded(QListViewItem*) ), this, SLOT( itemexpanded(QListViewItem*) ) );
-    connect( modelTreeView, SIGNAL( selectionChanged(QListViewItem*) ), this, SLOT( selectionChanged(QListViewItem*) ) );
+    connect( modelTreeView, SIGNAL( expanded(Q3ListViewItem*) ), this, SLOT( itemexpanded(Q3ListViewItem*) ) );
+    connect( modelTreeView, SIGNAL( selectionChanged(Q3ListViewItem*) ), this, SLOT( selectionChanged(Q3ListViewItem*) ) );
     connect( optionsButton, SIGNAL( clicked() ), this, SLOT( toggleOptions() ) );
 
 	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,

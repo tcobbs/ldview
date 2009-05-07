@@ -27,8 +27,8 @@ public:
 	void showOptions(),hideOptions();
 
 public slots:
-	void itemexpanded(QListViewItem *item);
-	void selectionChanged(QListViewItem *item);
+	void itemexpanded(Q3ListViewItem *item);
+	void selectionChanged(Q3ListViewItem *item);
 	void quad(void) {doLineCheck(quadButton,LDLLineTypeQuad);}
 	void unknown(void) {doLineCheck(unknownButton,LDLLineTypeUnknown);}
 	void line(void) {doLineCheck(lineButton,LDLLineTypeLine);}
