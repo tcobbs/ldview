@@ -2,21 +2,19 @@
 #define __LDVIEWEXTRADIR_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-#include "ExtraDirPanel.h"
-class ExtraDirPanel;
-class QListViewItem;
-class QButton;
+#include "ui_ExtraDirPanel.h"
+#include <QtGui/QDialog>
 class QFileDialog;
 class ModelViewerWidget;
 class LDrawModelViewer ;
 class TCStringArray;
 class QFileDialog;
 
-class ExtraDir : public ExtraDirPanel
+class ExtraDir : public QDialog , Ui::ExtraDirPanel
 {
 	Q_OBJECT
 public:
-	ExtraDir(ModelViewerWidget *modelWidget);
+	ExtraDir(QWidget *parent,ModelViewerWidget *modelWidget);
 	~ExtraDir(void);
 
 	void show(void);

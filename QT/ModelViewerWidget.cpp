@@ -62,8 +62,8 @@
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGLExtensions.h>
 #include "OpenGLExtensionsPanel.h"
-#include "AboutPanel.h"
-#include "HelpPanel.h"
+#include "About.h"
+#include "Help.h"
 #include "LDViewMainWindow.h"
 #include "LDViewErrors.h"
 #include "LDViewModelTree.h"
@@ -94,7 +94,7 @@ TCStringArray *ModelViewerWidget::recentFiles = NULL;
 ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	:QGLWidget(parent, name),
     modeltree(new LDViewModelTree(preferences,this)),
-    boundingbox(new BoundingBox(this)),
+    boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
 	snapshotTaker(NULL),
@@ -110,7 +110,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
     snapshotsettings(NULL),
     jpegoptions(NULL),
     extensionsPanel(NULL),
-	latitudelongitude(new LatitudeLongitude(this)),
+	latitudelongitude(new LatitudeLongitude(parent, this)),
 	aboutPanel(NULL),
 	helpContents(NULL),
 	mainWindow(NULL),
@@ -144,7 +144,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	libraryUpdateTimer(0),
 	fileDialog(NULL),
 	saveDialog(NULL),
-	errors(NULL),
+	errors(new LDViewErrors(this, preferences)),
 	fileInfo(NULL),
 	lockCount(0),
 	fullscreen(0),
@@ -176,7 +176,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 		mouseButtonsDown[i] = false;
 	}
 	preferences = new Preferences(this);
-	extradir = new ExtraDir(this);
+	extradir = new ExtraDir(parent,this);
 	snapshotsettings = new SnapshotSettings(this);
 	jpegoptions = new JpegOptions(this);
 	preferences->doApply();
@@ -263,7 +263,7 @@ void ModelViewerWidget::setupUserAgent(void)
 	// We're going to grab the version label from the about panel, so make sure
 	// it's created first.
 	createAboutPanel();
-	fullVersion = aboutPanel->VersionLabel->text();
+	fullVersion = aboutPanel->getText();
 	// The version will always begin with a number.
 	if ((spot = fullVersion.find(QRegExp("[0-9]"))) != -1)
 	{
@@ -1929,13 +1929,12 @@ void ModelViewerWidget::doHelpContents(void)
 		{
 			return;
 		}
-		helpContents = new HelpPanel;
+		helpContents = new Help(mainWindow);
         if ( file.open( IO_ReadOnly ) ) {
             QTextStream stream( &file );
-            helpContents->HelpTextBrowser->setText(
+            helpContents->setText(
 				stream.read().replace(QRegExp("(BGCOLOR|COLOR|TEXT|LINK)="),
 												"i=") );
-		    helpContents->HelpTextBrowser->setReadOnly(TRUE);
         }
 	}
 #ifndef HAVE_QT4
@@ -1968,8 +1967,6 @@ void ModelViewerWidget::createAboutPanel(void)
 	if (!aboutPanel)
 	{
 		aboutPanel = new About;
-		connect(aboutPanel->okButton, SIGNAL(clicked()), this,
-			SLOT(doAboutOK()));
 		aboutPanel->resize(10, 10);
 		QString text = aboutPanel->getText();
 		text.replace( QRegExp("__DATE__"),__DATE__);
@@ -2371,7 +2368,7 @@ int ModelViewerWidget::errorCallback(LDLError* error)
 {
 	if (!errors)
 	{
-		errors = new LDViewErrors(preferences);
+		errors = new LDViewErrors(mainWindow, preferences);
 	}
 	errors->addError(error);
 	return 1;
@@ -2418,7 +2415,7 @@ void ModelViewerWidget::doViewErrors(void)
 	}
 	if (!errors)
 	{
-		errors = new LDViewErrors(preferences);
+		errors = new LDViewErrors(mainWindow, preferences);
 	}
 	showErrorsIfNeeded(false);
 	unlock();

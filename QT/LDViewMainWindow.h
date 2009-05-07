@@ -81,7 +81,7 @@ public slots:
 	void helpAbout(){	modelViewer->doHelpAbout();}
 	void helpAboutQt(){	modelViewer->doHelpAboutQt();}
 	void editPreferences(){	modelViewer->showPreferences();}
-	void closeEvent(QCloseEvent *event){
+	void closeEvent(QCloseEvent * /* event */){
 #if (QT_VERSION >>16)==3
     QMainWindow::closeEvent(event);
     if (event->isAccepted())

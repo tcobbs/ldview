@@ -19,12 +19,13 @@
 #include <qregexp.h>
 #include "misc.h"
 
-LDViewErrors::LDViewErrors(Preferences *preferences)
-	:ErrorPanel(),
+LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
+	:Q3MainWindow(parent),ErrorPanel(),
 	preferences(preferences),
 	errors(new LDLErrorArray),
 	listViewPopulated(false)
 {
+	setupUi(this);
     connect( generalErrorButton, SIGNAL( clicked() ), this, SLOT( generalError() ) );
     connect( parseErrorButton, SIGNAL( clicked() ), this, SLOT( parseError() ) );
     connect( fileNotFoundButton, SIGNAL( clicked() ), this, SLOT( fileNotFound() ) );

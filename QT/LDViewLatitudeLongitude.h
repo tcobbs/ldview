@@ -1,18 +1,20 @@
 #ifndef __LDVIEWLATITUDELONGITUDE_H__
 #define __LDVIEWLATITUDELONGITUDE_H__
 
-#include "LatitudeLongitude.h"
+#include "ui_LatitudeLongitude.h"
+#include <QDialog>
+#include <QShowEvent>
 
 class QButton;
 class ModelViewerWidget;
 class QIntValidator;
 class QDoubleValidator;
 
-class LatitudeLongitude : public LatitudeLongitudePanel
+class LatitudeLongitude : public QDialog , Ui::LatitudeLongitudePanel
 {
 	Q_OBJECT
 public:
-	LatitudeLongitude(ModelViewerWidget *modelWidget);
+	LatitudeLongitude(QWidget *parent, ModelViewerWidget *modelWidget);
 	~LatitudeLongitude(void);
 
 public slots:
@@ -27,6 +29,7 @@ protected:
 	QIntValidator *v1,*v2;
 	QDoubleValidator *v3;
 	float distance;
+	void showEvent(QShowEvent * /* event */) {show();}
 };
 
 #endif

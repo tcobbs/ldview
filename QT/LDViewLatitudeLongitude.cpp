@@ -12,19 +12,19 @@
 #include "LDViewLatitudeLongitude.h"
 #include <LDLib/LDUserDefaultsKeys.h>
 
-LatitudeLongitude::LatitudeLongitude(ModelViewerWidget *modelWidget)
-	:LatitudeLongitudePanel(),
+LatitudeLongitude::LatitudeLongitude(QWidget *parent , ModelViewerWidget *modelWidget)
+	:QDialog(parent),LatitudeLongitudePanel(),
 	modelWidget(modelWidget),
 	v1(new QIntValidator(-90,90,this)),
 	v2(new QIntValidator(-180,180,this)),
 	v3(new QDoubleValidator(0.0,999999.9,4,this))
 {
+	setupUi(this);
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( defaultButton, SIGNAL( clicked() ), this, SLOT( doDefault() ) );
     connect( currentButton, SIGNAL( clicked() ), this, SLOT( doCurrent() ) );
     connect( distanceCheckBox, SIGNAL( stateChanged(int) ), this, SLOT( distanceChanged() ) );
-
 	latitudeLine->setValidator(v1);
 	longitudeLine->setValidator(v2);
 	distanceLine->setValidator(v3);
@@ -51,7 +51,7 @@ void LatitudeLongitude::show()
 										  false));
 	distanceLine->setText(qs);
 	distanceChanged();
-	LatitudeLongitudePanel::show();
+	QDialog::show();
 }
 
 void LatitudeLongitude::doOk()
@@ -74,12 +74,12 @@ void LatitudeLongitude::doOk()
 		distance = -1.0f;
 	}
 	modelWidget->getModelViewer()->setLatLon(lat,lon, distance);
-	LatitudeLongitudePanel::close();
+	QDialog::close();
 }
 
 void LatitudeLongitude::doCancel()
 {
-	LatitudeLongitudePanel::close();
+	QDialog::close();
 }
 
 void LatitudeLongitude::doCurrent()
