@@ -311,6 +311,7 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 			case LDLEBFCWarning:
             case LDLEMPDError:
 		    case LDLEWhitespace:
+			case LDLEMetaCommand:
             case LDLEParse:
                     item->setPixmap(0,
                         getimage( "error_parse.png"));
