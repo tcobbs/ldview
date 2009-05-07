@@ -120,6 +120,7 @@ public slots:
     void doNewPreferenceSet(void);
     void doDelPreferenceSet(void);
     void doHotkeyPreferenceSet(void);
+	bool doPrefSetSelected() {return doPrefSetSelected(true);}
 	bool doPrefSetSelected(bool);
 	void doPrefSetsApply(void);
 	void show(void);
