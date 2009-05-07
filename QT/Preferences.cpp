@@ -92,7 +92,7 @@ Preferences::Preferences(ModelViewerWidget *modelWidget)
     connect( bilinearFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( trilinearFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
     connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( enableApply() ) );
-    connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( doAnisotropic(bool) ) );
+    connect( anisotropicFilteringButton, SIGNAL( toggled(bool) ), this, SLOT( doAnisotropic() ) );
     connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( doAnisotropicSlider(int) ) );
     connect( anisotropicFilteringSlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
     connect( curveQualitySlider, SIGNAL( valueChanged(int) ), this, SLOT( enableApply() ) );
