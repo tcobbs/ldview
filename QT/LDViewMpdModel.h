@@ -2,22 +2,22 @@
 #define __LDVIEWMPDMODEL_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-#include "MpdModelSelectionPanel.h"
+#include "ui_MpdModelSelectionPanel.h"
 #include <TCFoundation/TCStlIncludes.h>
 #include <LDLib/LDModelTree.h>
 #include <LDLoader/LDLMainModel.h>
-
+#include <QtGui/QDialog>
 
 class LDLMainModel;
 class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;
-class MpdModel : public MpdModelSelectionPanel
+class MpdModel : public QDialog , Ui::MpdModelSelectionPanel
 {
 	Q_OBJECT
 public:
-	MpdModel(ModelViewerWidget *modelViewer);
+	MpdModel(QWidget *parent, ModelViewerWidget *modelViewer);
 	~MpdModel();
 	void show(void);
 	void hide(void);

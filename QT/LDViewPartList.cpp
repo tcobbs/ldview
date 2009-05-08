@@ -4,7 +4,6 @@
 #include <qpushbutton.h>
 #include <qstring.h>
 #include "ModelViewerWidget.h"
-#include "PartList.h"
 #include "LDViewPartList.h"
 #include <TCFoundation/mystring.h>
 
