@@ -5,14 +5,13 @@
 #include <LDLib/LDrawModelViewer.h>
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDInputHandler.h>
-#include "PreferencesPanel.h"
+#include "ui_PreferencesPanel.h"
 
 class PreferencesPanel;
 class ModelViewerWidget;
 class QButton;
 class QRangeControl;
 class QString;
-//class TCColorButton;
 class QCheckBox;
 class QRadioButton;
 class QSlider;
@@ -31,11 +30,11 @@ typedef enum
 	LDVPollBackground
 } LDVPollMode;
 
-class Preferences : public PreferencesPanel
+class Preferences : public QDialog, Ui::PreferencesPanel
 {
 	Q_OBJECT
 public:
-	Preferences(ModelViewerWidget *modelWidget = NULL);
+	Preferences(QWidget *parent, ModelViewerWidget *modelWidget = NULL);
 	~Preferences(void);
 
 	void abandonChanges(void);

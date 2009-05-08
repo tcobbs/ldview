@@ -33,13 +33,14 @@
 
 #define DEFAULT_PREF_SET TCLocalStrings::get("DefaultPrefSet")
 
-Preferences::Preferences(ModelViewerWidget *modelWidget)
-	:PreferencesPanel(),
+Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
+	:QDialog(parent),PreferencesPanel(),
 	modelWidget(modelWidget),
 	modelViewer(modelWidget->getModelViewer()),
 	ldPrefs(new LDPreferences(modelViewer)),
 	checkAbandon(true)
 {
+	setupUi(this);
     connect( applyButton, SIGNAL( pressed() ), this, SLOT( doApply() ) );
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
@@ -163,7 +164,7 @@ Preferences::~Preferences(void)
 void Preferences::show(void)
 {
 	applyButton->setEnabled(false);
-	PreferencesPanel::show();
+	QDialog::show();
 	raise();
 	setActiveWindow();
 }

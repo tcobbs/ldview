@@ -172,7 +172,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	{
 		mouseButtonsDown[i] = false;
 	}
-	preferences = new Preferences(this);
+	preferences = new Preferences(parent,this);
 	extradir = new ExtraDir(parent,this);
 	snapshotsettings = new SnapshotSettings(parent,this);
 	jpegoptions = new JpegOptions(parent,this);
