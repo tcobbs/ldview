@@ -27,7 +27,6 @@
 #include <qtextedit.h>
 #include "ModelViewerWidget.h"
 #include "Preferences.h"
-#include "PreferencesPanel.h"
 #include <LDLib/LDPreferences.h>
 #include <LDLib/LDrawModelViewer.h>
 
