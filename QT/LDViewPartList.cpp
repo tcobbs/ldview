@@ -8,17 +8,18 @@
 #include "LDViewPartList.h"
 #include <TCFoundation/mystring.h>
 
-PartList::PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory)
-        :PartListPanel(),
+PartList::PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory)
+        :QDialog(parent),PartListPanel(),
 		modelWidget(modelWidget),
 		m_htmlInventory(htmlInventory)
 {
+	setupUi(this);
     connect( upButton, SIGNAL( clicked() ), this, SLOT( doUp() ) );
     connect( downButton, SIGNAL( clicked() ), this, SLOT( doDown() ) );
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( showModelButton, SIGNAL( clicked() ), this, SLOT( doShowModel() ) );
-    connect( fieldOrderView, SIGNAL( currentChanged(QListViewItem *) ), this, SLOT( doHighlighted() ) );
+    connect( fieldOrderView, SIGNAL( currentChanged(Q3ListViewItem *) ), this, SLOT( doHighlighted() ) );
 
     modelViewer = modelWidget->getModelViewer();
 	fieldOrderView->header()->hide();
@@ -150,7 +151,7 @@ int PartList::exec()
 	overwriteExistingButton->setChecked(showmodel ?
 		m_htmlInventory->getOverwriteSnapshotFlag() : false);
 	doShowModel();
-	return PartListPanel::exec();
+	return QDialog::exec();
 }
 
 void PartList::doShowModel()

@@ -1,57 +1,54 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>OpenGLExtensionsPanel</class>
-<widget class="QMainWindow">
-    <property name="name">
-        <cstring>OpenGLExtensionsPanel</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>OpenGLExtensionsPanel</class>
+  <widget class="Q3MainWindow" name="OpenGLExtensionsPanel">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>372</width>
-            <height>333</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>372</width>
+        <height>333</height>
+      </rect>
     </property>
-    <property name="caption">
-        <string>OpenGL Extensions</string>
+    <property name="windowTitle">
+      <string>OpenGL Extensions</string>
     </property>
-    <property name="icon">
-        <pixmap>LDViewIcon16.png</pixmap>
+    <property name="windowIcon">
+      <pixmap>LDViewIcon16.png</pixmap>
     </property>
-    <vbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
+    <widget class="QWidget">
+      <layout class="QVBoxLayout">
         <property name="margin">
-            <number>2</number>
+          <number>2</number>
         </property>
         <property name="spacing">
-            <number>0</number>
+          <number>0</number>
         </property>
-        <widget class="QTextEdit">
-            <property name="name">
-                <cstring>extensionsBox</cstring>
-            </property>
+        <item>
+          <widget class="Q3TextEdit" name="extensionsBox">
             <property name="enabled">
-                <bool>true</bool>
+              <bool>true</bool>
             </property>
             <property name="minimumSize">
-                <size>
-                    <width>320</width>
-                    <height>200</height>
-                </size>
+              <size>
+                <width>320</width>
+                <height>200</height>
+              </size>
             </property>
             <property name="textFormat">
-                <enum>PlainText</enum>
+              <enum>Qt::PlainText</enum>
             </property>
             <property name="readOnly">
-                <bool>true</bool>
+              <bool>true</bool>
             </property>
-        </widget>
-    </vbox>
-</widget>
-<toolbars>
-</toolbars>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+          </widget>
+        </item>
+      </layout>
+    </widget>
+  </widget>
+  <layoutdefault spacing="6" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+</ui>

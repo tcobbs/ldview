@@ -61,7 +61,6 @@
 //#include <LDLib/ModelMacros.h>
 #include <TRE/TREMainModel.h>
 #include <TRE/TREGLExtensions.h>
-#include "OpenGLExtensionsPanel.h"
 #include "About.h"
 #include "Help.h"
 #include "LDViewMainWindow.h"
@@ -70,7 +69,6 @@
 #include "LDViewExtraDir.h"
 #include "LDViewExportOption.h"
 #include "SnapshotSettingsPanel.h"
-#include "PartList.h"
 #include "LDViewSnapshotSettings.h"
 #include "LDViewPartList.h"
 #include <TCFoundation/TCUserDefaults.h>
@@ -1855,9 +1853,9 @@ void ModelViewerWidget::doHelpOpenGLDriverInfo(void)
 		int extensionCount;
 		UCSTR temp = LDrawModelViewer::getOpenGLDriverInfo(extensionCount);
 
-		extensionsPanel = new OpenGLExtensionsPanel;
+		extensionsPanel = new OpenGLExtensions(mainWindow);
 		ucstringtoqstring(openGLDriverInfo, temp);
-		extensionsPanel->extensionsBox->setText(openGLDriverInfo);
+		extensionsPanel->setText(openGLDriverInfo);
 		extensionsCountLabel = new QLabel(extensionsPanel->statusBar());
 		countString.sprintf("%d", extensionCount);
 		countString += TCLocalStrings::get("OpenGlnExtensionsSuffix");
@@ -3466,7 +3464,7 @@ void ModelViewerWidget::doPartList(void)
 		if (partsList)
 		{
 			LDHtmlInventory *htmlInventory = new LDHtmlInventory;
-			PartList *partlist = new PartList(this, htmlInventory);
+			PartList *partlist = new PartList(mainWindow, this, htmlInventory);
 			if (partlist->exec() == QDialog::Accepted)
 			{
 			    QString initialDir = preferences->getSaveDir(LDPreferences::SOPartsList, 
