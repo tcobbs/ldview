@@ -68,7 +68,6 @@
 #include "LDViewModelTree.h"
 #include "LDViewExtraDir.h"
 #include "LDViewExportOption.h"
-#include "SnapshotSettingsPanel.h"
 #include "LDViewSnapshotSettings.h"
 #include "LDViewPartList.h"
 #include <TCFoundation/TCUserDefaults.h>
@@ -175,7 +174,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	}
 	preferences = new Preferences(this);
 	extradir = new ExtraDir(parent,this);
-	snapshotsettings = new SnapshotSettings(this);
+	snapshotsettings = new SnapshotSettings(parent,this);
 	jpegoptions = new JpegOptions(parent,this);
 	preferences->doApply();
 	setViewMode(Preferences::getViewMode(),

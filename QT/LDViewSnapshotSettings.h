@@ -2,26 +2,23 @@
 #define __LDVIEWSNAPSHOTSETTINGS_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-//#include "ModelViewerWidget.h"
-#include "SnapshotSettingsPanel.h"
+#include "ui_SnapshotSettingsPanel.h"
 
 class QButton;
 class ModelViewerWidget;
 class QCheckBox;
 class LDrawModelViewer;
 
-class SnapshotSettings : public SnapshotSettingsPanel
+class SnapshotSettings : public QDialog , Ui::SnapshotSettingsPanel
 {
 	Q_OBJECT
 public:
-	SnapshotSettings(ModelViewerWidget *modelWidget);
+	SnapshotSettings(QWidget *parent,ModelViewerWidget *modelWidget);
 	~SnapshotSettings(void);
 
 	void reflectSettings();
     void setButtonState(QCheckBox *button, bool state);
-//	void show(void);
 public slots:
-//	void clear(void);
 	void doEnabledSeries();
 	void doEnabledSize();
 	void doOk(void);

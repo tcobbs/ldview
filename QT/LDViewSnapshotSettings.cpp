@@ -15,10 +15,11 @@
 #include "LDViewSnapshotSettings.h"
 #include <TCFoundation/TCLocalStrings.h>
 
-SnapshotSettings::SnapshotSettings(ModelViewerWidget *modelWidget)
-	:SnapshotSettingsPanel(),
+SnapshotSettings::SnapshotSettings(QWidget *parent, ModelViewerWidget *modelWidget)
+	:QDialog(parent),SnapshotSettingsPanel(),
 	modelWidget(modelWidget)
 {
+	setupUi(this);
     connect( sizeEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSize() ) );
     connect( seriesEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( doEnabledSeries() ) );
     connect( zoomtofitEnabledButton, SIGNAL( toggled(bool) ), this, SLOT( zoomToggled(bool) ) );
@@ -71,14 +72,7 @@ void SnapshotSettings::reflectSettings(void)
 SnapshotSettings::~SnapshotSettings(void)
 {
 }
-/*
-void SnapshotSettings::show(void)
-{
-	panel->show();
-	panel->raise();
-	panel->setActiveWindow();
-}
-*/
+
 void SnapshotSettings::doOk()
 {
 	TCUserDefaults::setLongForKey(digitBox->value(),
