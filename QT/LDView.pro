@@ -7,7 +7,8 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
 		   LDViewSnapshotSettings.h LDViewModelTree.h qt4wrapper.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
-		   LDViewExportOption.h About.h LDViewMainWindow.h Help.h About.h OpenGLExtensions.h
+		   LDViewExportOption.h About.h LDViewMainWindow.h Help.h About.h \
+		   OpenGLExtensions.h
 
 UI_DIR = .ui
 MOC_DIR = .moc
@@ -122,10 +123,10 @@ QMAKE_CLEAN += *.qm
 
 FORMS3	= LDView.ui PreferencesPanel.ui \
 		  ImageHolder.ui \
-		  HelpPanel.ui SnapshotSettingsPanel.ui \
 		  ExportOptionPanel.ui
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
-		  HelpPanel.ui JpegOptionsPanel.ui LatitudeLongitude.ui OpenGLExtensionsPanel.ui \
+		  HelpPanel.ui JpegOptionsPanel.ui LatitudeLongitude.ui \
+		  OpenGLExtensionsPanel.ui SnapshotSettingsPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png \
