@@ -1,344 +1,274 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>PartListPanel</class>
-<widget class="QDialog">
-    <property name="name">
-        <cstring>PartListPanel</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>PartListPanel</class>
+  <widget class="QDialog" name="PartListPanel">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>446</width>
-            <height>362</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>446</width>
+        <height>362</height>
+      </rect>
     </property>
-    <property name="caption">
-        <string>LDView Part List</string>
+    <property name="windowTitle">
+      <string>LDView Part List</string>
     </property>
-    <property name="icon">
-        <pixmap>LDViewIcon16.png</pixmap>
+    <property name="windowIcon">
+      <pixmap>LDViewIcon16.png</pixmap>
     </property>
-    <hbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QLayoutWidget">
-            <property name="name">
-                <cstring>Layout1</cstring>
-            </property>
-            <property name="margin" stdset="0">
-                <number>0</number>
-            </property>
-            <property name="spacing" stdset="0">
-                <number>6</number>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
+    <layout class="QHBoxLayout">
+      <item>
+        <layout class="QVBoxLayout">
+          <property name="margin">
+            <number>0</number>
+          </property>
+          <property name="spacing">
+            <number>6</number>
+          </property>
+          <item>
+            <widget class="Q3GroupBox" name="settingsBox">
+              <property name="title">
+                <string>Settings</string>
+              </property>
+              <layout class="QVBoxLayout">
                 <property name="margin">
-                    <number>0</number>
+                  <number>11</number>
                 </property>
                 <property name="spacing">
-                    <number>6</number>
+                  <number>4</number>
                 </property>
-                <widget class="QGroupBox">
-                    <property name="name">
-                        <cstring>settingsBox</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Settings</string>
-                    </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <property name="margin">
-                            <number>11</number>
-                        </property>
-                        <property name="spacing">
-                            <number>4</number>
-                        </property>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>showModelButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Show model</string>
-                            </property>
-                        </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                           <hbox>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>0</number>
-                                </property>
-                                <spacer>
-                                    <property name="name">
-                                        <cstring>Spacer16_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Fixed</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>16</width>
-                                            <height>20</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QCheckBox">
-                                    <property name="name">
-                                        <cstring>overwriteExistingButton</cstring>
-                                    </property>
-                                    <property name="text">
-                                        <string>Overwrite existing snapshot</string>
-                                    </property>
-                                </widget>
-                            </hbox>
-                        </widget>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>generateExternalSSButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Generate external style sheet</string>
-                            </property>
-                        </widget>
-                        <widget class="QCheckBox">
-                            <property name="name">
-                                <cstring>showPartImageButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Show part images</string>
-                            </property>
-                        </widget>
-                    </vbox>
-                </widget>
-                <widget class="QGroupBox">
-                    <property name="name">
-                        <cstring>columnOrderBox</cstring>
-                    </property>
-                    <property name="title">
-                        <string>Column Order</string>
-                    </property>
-                    <vbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QListView">
-                            <column>
-                                <property name="text">
-                                    <string>Field</string>
-                                </property>
-                                <property name="clickable">
-                                    <bool>true</bool>
-                                </property>
-                                <property name="resizable">
-                                    <bool>false</bool>
-                                </property>
-                            </column>
-                            <property name="name">
-                                <cstring>fieldOrderView</cstring>
-                            </property>
-                            <property name="sizePolicy">
-                                <sizepolicy>
-                                    <hsizetype>5</hsizetype>
-                                    <vsizetype>7</vsizetype>
-                                    <horstretch>0</horstretch>
-                                    <verstretch>0</verstretch>
-                                </sizepolicy>
-                            </property>
-                            <property name="frameShape">
-                                <enum>StyledPanel</enum>
-                            </property>
-                            <property name="resizePolicy">
-                                <enum>AutoOneFit</enum>
-                            </property>
-                            <property name="allColumnsShowFocus">
-                                <bool>true</bool>
-                            </property>
-                            <property name="rootIsDecorated">
-                                <bool>false</bool>
-                            </property>
-                            <property name="resizeMode">
-                                <enum>NoColumn</enum>
-                            </property>
-                        </widget>
-                        <widget class="QLayoutWidget">
-                            <property name="name">
-                                <cstring>Layout1</cstring>
-                            </property>
-                            <property name="margin" stdset="0">
-                                <number>0</number>
-                            </property>
-                            <property name="spacing" stdset="0">
-                                <number>6</number>
-                            </property>
-                            <hbox>
-                                <property name="name">
-                                    <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
-                                </property>
-                                <property name="spacing">
-                                    <number>6</number>
-                                </property>
-                                <spacer>
-                                    <property name="name">
-                                        <cstring>Spacer5_2</cstring>
-                                    </property>
-                                    <property name="orientation">
-                                        <enum>Horizontal</enum>
-                                    </property>
-                                    <property name="sizeType">
-                                        <enum>Expanding</enum>
-                                    </property>
-                                    <property name="sizeHint">
-                                        <size>
-                                            <width>20</width>
-                                            <height>20</height>
-                                        </size>
-                                    </property>
-                                </spacer>
-                                <widget class="QPushButton">
-                                    <property name="name">
-                                        <cstring>upButton</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="text">
-                                        <string>Up</string>
-                                    </property>
-                                </widget>
-                                <widget class="QPushButton">
-                                    <property name="name">
-                                        <cstring>downButton</cstring>
-                                    </property>
-                                    <property name="sizePolicy">
-                                        <sizepolicy>
-                                            <hsizetype>0</hsizetype>
-                                            <vsizetype>0</vsizetype>
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                        </sizepolicy>
-                                    </property>
-                                    <property name="text">
-                                        <string>Down</string>
-                                    </property>
-                                </widget>
-                            </hbox>
-                        </widget>
-                    </vbox>
-                </widget>
-            </vbox>
-        </widget>
-        <widget class="QLayoutWidget">
-            <property name="name">
-                <cstring>Layout1</cstring>
-            </property>
-            <property name="margin" stdset="0">
-                <number>0</number>
-            </property>
-            <property name="spacing" stdset="0">
-                <number>6</number>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>11</number>
-                </property>
-                <property name="spacing">
-                    <number>4</number>
-                </property>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>okButton</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>5</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
+                <item>
+                  <widget class="QCheckBox" name="showModelButton">
                     <property name="text">
-                        <string>OK</string>
+                      <string>Show model</string>
                     </property>
-                    <property name="accel">
-                        <string></string>
+                  </widget>
+                </item>
+                <item>
+                  <layout class="QHBoxLayout">
+                    <property name="margin">
+                      <number>0</number>
                     </property>
-                    <property name="default">
-                        <bool>true</bool>
+                    <property name="spacing">
+                      <number>0</number>
                     </property>
-                </widget>
-                <widget class="QPushButton">
-                    <property name="name">
-                        <cstring>cancelButton</cstring>
+                    <item>
+                      <spacer name="Spacer16_2">
+                        <property name="sizeHint">
+                          <size>
+                            <width>16</width>
+                            <height>20</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Fixed</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item>
+                      <widget class="QCheckBox" name="overwriteExistingButton">
+                        <property name="text">
+                          <string>Overwrite existing snapshot</string>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
+                </item>
+                <item>
+                  <widget class="QCheckBox" name="generateExternalSSButton">
+                    <property name="text">
+                      <string>Generate external style sheet</string>
                     </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QCheckBox" name="showPartImageButton">
+                    <property name="text">
+                      <string>Show part images</string>
+                    </property>
+                  </widget>
+                </item>
+              </layout>
+            </widget>
+          </item>
+          <item>
+            <widget class="Q3GroupBox" name="columnOrderBox">
+              <property name="title">
+                <string>Column Order</string>
+              </property>
+              <layout class="QVBoxLayout">
+                <item>
+                  <widget class="Q3ListView" name="fieldOrderView">
                     <property name="sizePolicy">
-                        <sizepolicy>
+                      <sizepolicy>
+                        <hsizetype>5</hsizetype>
+                        <vsizetype>7</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                      </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="resizePolicy">
+                      <enum>Q3ScrollView::AutoOneFit</enum>
+                    </property>
+                    <property name="allColumnsShowFocus">
+                      <bool>true</bool>
+                    </property>
+                    <property name="rootIsDecorated">
+                      <bool>false</bool>
+                    </property>
+                    <property name="resizeMode">
+                      <enum>Q3ListView::NoColumn</enum>
+                    </property>
+                    <column>
+                      <property name="text">
+                        <string>Field</string>
+                      </property>
+                      <property name="clickable">
+                        <bool>true</bool>
+                      </property>
+                      <property name="resizable">
+                        <bool>false</bool>
+                      </property>
+                    </column>
+                  </widget>
+                </item>
+                <item>
+                  <layout class="QHBoxLayout">
+                    <property name="margin">
+                      <number>0</number>
+                    </property>
+                    <property name="spacing">
+                      <number>6</number>
+                    </property>
+                    <item>
+                      <spacer name="Spacer5_2">
+                        <property name="sizeHint">
+                          <size>
+                            <width>20</width>
+                            <height>20</height>
+                          </size>
+                        </property>
+                        <property name="sizeType">
+                          <enum>QSizePolicy::Expanding</enum>
+                        </property>
+                        <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                        </property>
+                      </spacer>
+                    </item>
+                    <item>
+                      <widget class="QPushButton" name="upButton">
+                        <property name="sizePolicy">
+                          <sizepolicy>
                             <hsizetype>0</hsizetype>
                             <vsizetype>0</vsizetype>
                             <horstretch>0</horstretch>
                             <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string>Cancel</string>
-                    </property>
-                    <property name="accel">
-                        <string>Esc</string>
-                    </property>
-                </widget>
-                <spacer>
-                    <property name="name">
-                        <cstring>Spacer3</cstring>
-                    </property>
-                    <property name="orientation">
-                        <enum>Vertical</enum>
-                    </property>
-                    <property name="sizeType">
-                        <enum>Expanding</enum>
-                    </property>
-                    <property name="sizeHint">
-                        <size>
-                            <width>20</width>
-                            <height>20</height>
-                        </size>
-                    </property>
-                </spacer>
-            </vbox>
-        </widget>
-    </hbox>
-</widget>
-<connections>
-</connections>
-<includes>
-</includes>
-<slots>
-</slots>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+                          </sizepolicy>
+                        </property>
+                        <property name="text">
+                          <string>Up</string>
+                        </property>
+                      </widget>
+                    </item>
+                    <item>
+                      <widget class="QPushButton" name="downButton">
+                        <property name="sizePolicy">
+                          <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                          </sizepolicy>
+                        </property>
+                        <property name="text">
+                          <string>Down</string>
+                        </property>
+                      </widget>
+                    </item>
+                  </layout>
+                </item>
+              </layout>
+            </widget>
+          </item>
+        </layout>
+      </item>
+      <item>
+        <layout class="QVBoxLayout">
+          <property name="margin">
+            <number>11</number>
+          </property>
+          <property name="spacing">
+            <number>4</number>
+          </property>
+          <item>
+            <widget class="QPushButton" name="okButton">
+              <property name="sizePolicy">
+                <sizepolicy>
+                  <hsizetype>5</hsizetype>
+                  <vsizetype>0</vsizetype>
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                </sizepolicy>
+              </property>
+              <property name="text">
+                <string>OK</string>
+              </property>
+              <property name="shortcut">
+                <string/>
+              </property>
+              <property name="default">
+                <bool>true</bool>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QPushButton" name="cancelButton">
+              <property name="sizePolicy">
+                <sizepolicy>
+                  <hsizetype>0</hsizetype>
+                  <vsizetype>0</vsizetype>
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                </sizepolicy>
+              </property>
+              <property name="text">
+                <string>Cancel</string>
+              </property>
+              <property name="shortcut">
+                <string>Esc</string>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <spacer name="Spacer3">
+              <property name="sizeHint">
+                <size>
+                  <width>20</width>
+                  <height>20</height>
+                </size>
+              </property>
+              <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="orientation">
+                <enum>Qt::Vertical</enum>
+              </property>
+            </spacer>
+          </item>
+        </layout>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+</ui>

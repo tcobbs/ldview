@@ -20,6 +20,7 @@
 #include "LDViewModelTree.h"
 #include "About.h"
 #include "Help.h"
+#include "OpenGLExtensions.h"
 
 class LDrawModelViewer;
 class LDViewMainWindow;
@@ -28,7 +29,6 @@ class QToolBar;
 class QProgressBar;
 class QLabel;
 class QApplication;
-class OpenGLExtensionsPanel;
 class About;
 class SnapshotSettingsPanel;
 class QFileDialog;
@@ -291,7 +291,7 @@ protected:
 	ExtraDir *extradir;
 	SnapshotSettings *snapshotsettings;
 	JpegOptions *jpegoptions;
-	OpenGLExtensionsPanel *extensionsPanel;
+	OpenGLExtensions *extensionsPanel;
 	QString openGLDriverInfo;
 	LatitudeLongitude *latitudelongitude;
 	About *aboutPanel;

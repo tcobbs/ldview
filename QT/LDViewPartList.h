@@ -3,17 +3,17 @@
 
 #include "ModelViewerWidget.h"
 #include "LDLib/LDHtmlInventory.h"
-#include "PartList.h"
+#include "ui_PartList.h"
 
 //class QButton;
 class LDHtmlInventory;
 class QCheckListItem;
 
-class PartList : public PartListPanel
+class PartList : public QDialog , Ui::PartListPanel
 {
 	Q_OBJECT
 public:
-	PartList(ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
+	PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
 	~PartList(void);
     void populateColumnList();
     QCheckListItem *description;
