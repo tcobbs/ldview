@@ -3147,7 +3147,7 @@ void ModelViewerWidget::fileExport()
 
 void ModelViewerWidget::fileExportOption()
 {
-	LDViewExportOption exportOption(modelViewer);
+	LDViewExportOption exportOption(mainWindow,modelViewer);
 
 	if (exportOption.exec() == QDialog::Rejected)
 	{

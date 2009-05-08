@@ -1,114 +1,87 @@
-<!DOCTYPE UI><UI version="3.0" stdsetdef="1">
-<class>ExportOptionPanel</class>
-<widget class="QDialog">
-    <property name="name">
-        <cstring>ExportOptionPanel</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>ExportOptionPanel</class>
+  <widget class="QDialog" name="ExportOptionPanel">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>446</width>
-            <height>362</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>446</width>
+        <height>362</height>
+      </rect>
     </property>
-    <property name="caption">
-        <string>POV Export Options</string>
+    <property name="windowTitle">
+      <string>POV Export Options</string>
     </property>
-    <property name="icon">
-        <pixmap>LDViewIcon16.png</pixmap>
+    <property name="windowIcon">
+      <pixmap>LDViewIcon16.png</pixmap>
     </property>
-    <hbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <property name="margin">
-            <number>11</number>
-        </property>
-        <property name="spacing">
+    <layout class="QHBoxLayout">
+      <property name="margin">
+        <number>11</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item>
+        <layout class="QVBoxLayout">
+          <property name="margin">
+            <number>0</number>
+          </property>
+          <property name="spacing">
             <number>6</number>
-        </property>
-        <widget class="QLayoutWidget">
-            <property name="name">
-                <cstring>mainlayout</cstring>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>vbox</cstring>
-                </property>
-                <property name="margin">
-                    <number>0</number>
-                </property>
-                <property name="spacing">
-                    <number>6</number>
-                </property>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>layouttop</cstring>
-                    </property>
-                    <hbox>
-                        <property name="name">
-                            <cstring>hbox1</cstring>
-                        </property>
-                    </hbox>
+          </property>
+          <item>
+            <layout class="QHBoxLayout"/>
+          </item>
+          <item>
+            <layout class="QHBoxLayout">
+              <item>
+                <widget class="QPushButton" name="resetButton">
+                  <property name="text">
+                    <string>Reset</string>
+                  </property>
                 </widget>
-                <widget class="QLayoutWidget">
-                    <property name="name">
-                        <cstring>layoutokcancel</cstring>
-                    </property>
-                    <hbox>
-                        <property name="name">
-                            <cstring>unnamed</cstring>
-                        </property>
-                        <widget class="QPushButton">
-                            <property name="name">
-                                <cstring>resetButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Reset</string>
-                            </property>
-                        </widget>
-                        <spacer>
-                            <property name="name">
-                                <cstring>spacer1</cstring>
-                            </property>
-                            <property name="orientation">
-                                <enum>Horizontal</enum>
-                            </property>
-                            <property name="sizeType">
-                                <enum>Expanding</enum>
-                            </property>
-                            <property name="sizeHint">
-                                <size>
-                                    <width>40</width>
-                                    <height>20</height>
-                                </size>
-                            </property>
-                        </spacer>
-                        <widget class="QPushButton">
-                            <property name="name">
-                                <cstring>okButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Ok</string>
-                            </property>
-                        </widget>
-                        <widget class="QPushButton">
-                            <property name="name">
-                                <cstring>cancelButton</cstring>
-                            </property>
-                            <property name="text">
-                                <string>Cancel</string>
-                            </property>
-                        </widget>
-                    </hbox>
+              </item>
+              <item>
+                <spacer name="spacer1">
+                  <property name="sizeHint">
+                    <size>
+                      <width>40</width>
+                      <height>20</height>
+                    </size>
+                  </property>
+                  <property name="sizeType">
+                    <enum>QSizePolicy::Expanding</enum>
+                  </property>
+                  <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                  </property>
+                </spacer>
+              </item>
+              <item>
+                <widget class="QPushButton" name="okButton">
+                  <property name="text">
+                    <string>Ok</string>
+                  </property>
                 </widget>
-            </vbox>
-        </widget>
-    </hbox>
-</widget>
-<toolbars>
-</toolbars>
-<pixmapinproject/>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+              </item>
+              <item>
+                <widget class="QPushButton" name="cancelButton">
+                  <property name="text">
+                    <string>Cancel</string>
+                  </property>
+                </widget>
+              </item>
+            </layout>
+          </item>
+        </layout>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+</ui>

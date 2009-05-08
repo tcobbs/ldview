@@ -1,8 +1,9 @@
 #ifndef __LDVIEWExportOption_H__
 #define __LDVIEWExportOption_H__
 
-#include "ExportOptionPanel.h"
+#include "ui_ExportOptionPanel.h"
 #include <TCFoundation/TCStlIncludes.h>
+#include <QtGui/QDialog>
 
 class QScrollView;
 class QVBox;
@@ -13,11 +14,11 @@ class LDExporterSetting;
 
 typedef std::map<LDExporterSetting *, QWidget *> SettingsMap;
 
-class LDViewExportOption : public ExportOptionPanel
+class LDViewExportOption : public QDialog , Ui::ExportOptionPanel
 {
 	Q_OBJECT
 public:
-	LDViewExportOption(LDrawModelViewer *modelViewer);
+	LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer);
 	~LDViewExportOption();
 
 public slots:
