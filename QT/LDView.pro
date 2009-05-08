@@ -122,7 +122,6 @@ PRE_TARGETDEPS += ldview_de.qm
 QMAKE_CLEAN += *.qm
 
 FORMS3	= LDView.ui PreferencesPanel.ui \
-		  ImageHolder.ui \
 		  ExportOptionPanel.ui
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LatitudeLongitude.ui \
