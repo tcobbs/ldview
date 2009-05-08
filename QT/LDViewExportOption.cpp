@@ -16,14 +16,15 @@
 #include <qcombobox.h>
 #include <qtooltip.h>
 
-LDViewExportOption::LDViewExportOption(LDrawModelViewer *modelViewer)
-	:ExportOptionPanel(),
+LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelViewer)
+	:QDialog(parent),ExportOptionPanel(),
 	m_modelViewer(modelViewer),
 	m_exporter(NULL),
 	m_sv(NULL),
 	m_box(NULL),
 	m_origType(LDrawModelViewer::ETPov)
 {
+	setupUi(this);
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
@@ -301,6 +302,6 @@ int LDViewExportOption::exec(void)
 	m_exporter = m_modelViewer->getExporter(LDrawModelViewer::ETPov);
 //	populateTypeBox();
 	populate();
-	return ExportOptionPanel::exec();
+	return QDialog::exec();
 }
 

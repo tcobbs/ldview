@@ -121,11 +121,11 @@ QMAKE_EXTRA_WIN_TARGETS += translations
 PRE_TARGETDEPS += ldview_de.qm
 QMAKE_CLEAN += *.qm
 
-FORMS3	= LDView.ui ExportOptionPanel.ui
+FORMS3	= LDView.ui
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  HelpPanel.ui JpegOptionsPanel.ui LatitudeLongitude.ui \
 		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
-		  SnapshotSettingsPanel.ui \
+		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 		  images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png \
