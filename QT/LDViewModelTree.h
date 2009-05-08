@@ -2,7 +2,7 @@
 #define __LDVIEWMODELTREE_H__
 
 #include <TCFoundation/TCTypedObjectArray.h>
-#include "ModelTreePanel.h"
+#include "ui_ModelTreePanel.h"
 #include <TCFoundation/TCStlIncludes.h>
 #include <LDLoader/LDLFileLine.h>
 #include <LDLib/LDModelTree.h>
@@ -17,11 +17,11 @@ class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;
 class QListViewItem;
-class LDViewModelTree : public ModelTreePanel
+class LDViewModelTree : public Q3MainWindow , Ui::ModelTreePanel
 {
 	Q_OBJECT
 public:
-	LDViewModelTree(Preferences *preferences, ModelViewerWidget *modelViewer);
+	LDViewModelTree(QWidget *parent,Preferences *preferences, ModelViewerWidget *modelViewer);
 	~LDViewModelTree();
 	void show(void);
 	void showOptions(),hideOptions();

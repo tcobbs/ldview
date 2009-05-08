@@ -91,7 +91,7 @@ TCStringArray *ModelViewerWidget::recentFiles = NULL;
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	:QGLWidget(parent, name),
-    modeltree(new LDViewModelTree(preferences,this)),
+    modeltree(new LDViewModelTree(parent,preferences,this)),
     boundingbox(new BoundingBox(parent, this)),
     mpdmodel(new MpdModel(parent,this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
