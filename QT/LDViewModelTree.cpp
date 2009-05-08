@@ -20,14 +20,15 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
-LDViewModelTree::LDViewModelTree(Preferences *pref, ModelViewerWidget *modelViewer)
-	:ModelTreePanel(),
+LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerWidget *modelViewer)
+	:Q3MainWindow(parent),ModelTreePanel(),
 	modeltree(NULL),
 	m_modelWindow(modelViewer),
     mainmodel(NULL),
 	preferences(preferences),
 	optionsShown(true)
 {
+	setupUi(this);
     connect( highlightSelectedLineBox, SIGNAL( clicked() ), this, SLOT( highlightSelectedLine() ) );
     connect( highlightColorEdit, SIGNAL( clicked(int,int) ), this, SLOT( highlightColor() ) );
     connect( commentButton, SIGNAL( clicked() ), this, SLOT( comment() ) );
@@ -109,7 +110,7 @@ void LDViewModelTree::show(void)
 	raise();
 	setActiveWindow();
 	fillTreeView();
-	ModelTreePanel::show();
+	Q3MainWindow::show();
 }
 
 void LDViewModelTree::fillTreeView(void)
