@@ -93,7 +93,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	:QGLWidget(parent, name),
     modeltree(new LDViewModelTree(preferences,this)),
     boundingbox(new BoundingBox(parent, this)),
-    mpdmodel(new MpdModel(this)),
+    mpdmodel(new MpdModel(parent,this)),
 	modelViewer(new LDrawModelViewer(100, 100)),
 	snapshotTaker(NULL),
 	lastX(-1),

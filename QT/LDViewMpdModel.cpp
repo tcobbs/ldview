@@ -14,12 +14,13 @@
 #include <TCFoundation/TCAlertManager.h>
 #include <LDLib/LDUserDefaultsKeys.h>
 
-MpdModel::MpdModel(ModelViewerWidget *modelViewer)
-	:MpdModelSelectionPanel(),
+MpdModel::MpdModel(QWidget *parent,ModelViewerWidget *modelViewer)
+	:QDialog(parent),MpdModelSelectionPanel(),
 	m_modelWindow(modelViewer),
     mainmodel(NULL),
 	m_okPressed(false)
 {
+	setupUi(this);
     connect( modelList, SIGNAL( highlighted(int) ), this, SLOT( doMpdSelected(int) ) );
     connect( okButton, SIGNAL( clicked() ), this, SLOT( ok() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( cancel() ) );
@@ -32,7 +33,7 @@ void MpdModel::show(void)
 	raise();
 	setActiveWindow();
 	updateData();
-	MpdModelSelectionPanel::show();
+	QDialog::show();
 }
 
 void MpdModel::hide()
