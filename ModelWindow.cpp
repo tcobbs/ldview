@@ -2211,12 +2211,26 @@ int ModelWindow::loadModel(void)
 	makeCurrent();
 	if (strlen(filename) < 900)
 	{
-		UCCHAR title[1024];
-		UCSTR ucFilename = mbstoucstring(filename);
+#ifdef TC_NO_UNICODE
+		char title[1024];
 
-		sucprintf(title, COUNT_OF(title), _UC("LDView: %s"), ucFilename);
-		delete ucFilename;
+		sprintf(title, "LDView: %s", filename);
+		SetWindowText(parentWindow->getHWindow(), title);
+#else // TC_NO_UNICODE
+		LPWSTR wFilename;
+		LPWSTR title;
+		int bufferSize = MultiByteToWideChar(GetACP(), 0, filename, -1, NULL,
+			0);
+		int titleSize = bufferSize + 32;
+
+		wFilename = new WCHAR[bufferSize];
+		MultiByteToWideChar(GetACP(), 0, filename, -1, wFilename, bufferSize);
+		title = new WCHAR[titleSize];
+		sucprintf(title, titleSize, _UC("LDView: %s"), wFilename);
 		parentWindow->setTitle(title);
+		delete wFilename;
+		delete title;
+#endif // TC_NO_UNICODE
 	}
 	else
 	{
