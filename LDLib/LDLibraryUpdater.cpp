@@ -139,7 +139,21 @@ int LDLibraryUpdater::compareUpdates(LDLibraryUpdateInfoArray *updateArray,
 	}
 	if (leftIndex == -1 || rightIndex == -1)
 	{
-		return strcasecmp(left, right);
+		int leftUpdateNumber = getUpdateNumber(left);
+		int rightUpdateNumber = getUpdateNumber(right);
+
+		if (leftUpdateNumber < rightUpdateNumber)
+		{
+			return -1;
+		}
+		else if (leftUpdateNumber > rightUpdateNumber)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	else if (leftIndex < rightIndex)
 	{
@@ -152,6 +166,28 @@ int LDLibraryUpdater::compareUpdates(LDLibraryUpdateInfoArray *updateArray,
 	else
 	{
 		return 0;
+	}
+}
+
+int LDLibraryUpdater::getUpdateNumber(const char *updateName)
+{
+	if (strlen(updateName) < 8)
+	{
+		return 0;
+	}
+	else
+	{
+		int updateNumber = atoi(&updateName[4]);
+
+		if (updateNumber > 9700 && updateNumber <= 9999)
+		{
+			return updateNumber + 190000;
+		}
+		else
+		{
+			return updateNumber + 200000;
+		}
+		return updateNumber;
 	}
 }
 
@@ -272,6 +308,7 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList)
 	char **updateListLines = componentsSeparatedByString(updateList, "\n",
 		lineCount);
 	char lastUpdateName[1024];
+	char lastExeUpdateName[1024];
 	int i;
 	bool fullUpdateNeeded = true;
 	LDLibraryUpdateInfoArray *updateArray = new LDLibraryUpdateInfoArray;
@@ -362,7 +399,19 @@ bool LDLibraryUpdater::parseUpdateList(const char *updateList)
 			TCObject::release(baseUpdateInfo);
 			return false;
 		}
-		if (determineLastUpdate(exeUpdateArray, lastUpdateName))
+		bool haveExeUpdates = determineLastUpdate(exeUpdateArray,
+			lastExeUpdateName);
+		bool haveZipUpdates = false;
+		
+		if (zipSupported)
+		{
+			haveZipUpdates = determineLastUpdate(updateArray, lastUpdateName);
+		}
+		if (haveExeUpdates && !haveZipUpdates)
+		{
+			strcpy(lastUpdateName, lastExeUpdateName);
+		}
+		if (haveZipUpdates || haveExeUpdates)
 		{
 			int updatesNeededCount = updateArray->getCount();
 

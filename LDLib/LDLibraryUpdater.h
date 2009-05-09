@@ -58,6 +58,7 @@ protected:
 	void extractUpdates(bool *aborted);
 	void launchThread();
 	bool caseSensitiveFileSystem(UCSTR &error);
+	int getUpdateNumber(const char *updateName);
 
 	TCWebClientArray *m_webClients;
 	TCWebClientArray *m_finishedWebClients;
