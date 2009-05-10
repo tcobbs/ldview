@@ -3007,7 +3007,14 @@ void LDViewWindow::createLibraryUpdateWindow(void)
 	sendMessageUC(hUpdateStatus, WM_SETTEXT, 0,
 		(LPARAM)TCLocalStrings::get(_UC("CheckingForLibraryUpdates")));
 	SendMessage(hUpdateProgressBar, PBM_SETPOS, 0, 0);
-	EnableWindow(hUpdateOkButton, FALSE);
+	RECT luRect;
+	RECT rect;
+	int spacing = GetSystemMetrics(SM_CYCAPTION) +
+		GetSystemMetrics(SM_CXSIZEFRAME);
+	GetWindowRect(hLibraryUpdateWindow, &luRect);
+	GetWindowRect(hWindow, &rect);
+	MoveWindow(hLibraryUpdateWindow, rect.left + spacing, rect.top + spacing,
+		luRect.right - luRect.left, luRect.bottom - luRect.top, TRUE);
 }
 
 void LDViewWindow::showLibraryUpdateWindow(bool initialInstall)
@@ -3016,6 +3023,8 @@ void LDViewWindow::showLibraryUpdateWindow(bool initialInstall)
 	{
 		createLibraryUpdateWindow();
 	}
+	EnableWindow(hUpdateOkButton, FALSE);
+	EnableWindow(hUpdateCancelButton, TRUE);
 	if (initialInstall)
 	{
 		runDialogModal(hLibraryUpdateWindow, true);
