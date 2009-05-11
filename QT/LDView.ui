@@ -1,1209 +1,1192 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>LDView</class>
-<widget class="QMainWindow">
-    <property name="name">
-        <cstring>LDView</cstring>
-    </property>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>LDView</class>
+  <widget class="Q3MainWindow" name="LDView">
     <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>598</width>
-            <height>480</height>
-        </rect>
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>598</width>
+        <height>480</height>
+      </rect>
     </property>
     <property name="minimumSize">
-        <size>
-            <width>326</width>
-            <height>296</height>
-        </size>
+      <size>
+        <width>326</width>
+        <height>296</height>
+      </size>
     </property>
-    <property name="caption">
-        <string>LDView</string>
+    <property name="windowTitle">
+      <string>LDView</string>
     </property>
-    <property name="icon">
-        <pixmap>LDViewIcon16.png</pixmap>
+    <property name="windowIcon">
+      <pixmap>LDViewIcon16.png</pixmap>
     </property>
-    <vbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
+    <widget class="QWidget">
+      <layout class="QVBoxLayout">
         <property name="margin">
-            <number>0</number>
+          <number>0</number>
         </property>
         <property name="spacing">
-            <number>0</number>
+          <number>0</number>
         </property>
-        <widget class="QGroupBox">
-            <property name="name">
-                <cstring>GroupBox12</cstring>
-            </property>
+        <item>
+          <widget class="Q3GroupBox" name="MainGroupBox">
             <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>7</hsizetype>
-                    <vsizetype>7</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
+              <sizepolicy>
+                <hsizetype>7</hsizetype>
+                <vsizetype>7</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+              </sizepolicy>
             </property>
             <property name="frameShape">
-                <enum>WinPanel</enum>
+              <enum>Q3GroupBox::WinPanel</enum>
             </property>
             <property name="frameShadow">
-                <enum>Sunken</enum>
+              <enum>Q3GroupBox::Sunken</enum>
             </property>
             <property name="title">
-                <string></string>
+              <string/>
             </property>
-            <hbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <property name="margin">
-                    <number>2</number>
-                </property>
-                <property name="spacing">
-                    <number>0</number>
-                </property>
-                <widget class="ModelViewerWidget">
-                    <property name="name">
-                        <cstring>modelViewer</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>3</hsizetype>
-                            <vsizetype>3</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                        <size>
-                            <width>320</width>
-                            <height>240</height>
-                        </size>
-                    </property>
+            <layout class="QHBoxLayout">
+              <property name="margin">
+                <number>2</number>
+              </property>
+              <property name="spacing">
+                <number>0</number>
+              </property>
+              <item>
+                <widget class="ModelViewerWidget" name="modelViewer">
+                  <property name="sizePolicy">
+                    <sizepolicy>
+                      <hsizetype>3</hsizetype>
+                      <vsizetype>3</vsizetype>
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                    </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                    <size>
+                      <width>320</width>
+                      <height>240</height>
+                    </size>
+                  </property>
                 </widget>
-            </hbox>
-        </widget>
-    </vbox>
-</widget>
-<toolbars>
-	<toolbar dock="2">
-		<property name="name">
-            <cstring>toolbar</cstring>
-        </property>
-        <property name="label">
-            <string>Tools</string>
-        </property>
-		<action name="fileOpenAction"/>
-		<action name="fileSaveAction"/>
-		<action name="fileReloadAction"/>
-		<separator/>
-		<action name="toolbarWireframeAction"/>
-		<action name="toolbarSeamsAction"/>
-		<action name="toolbarEdgeAction"/>
-		<action name="toolbarPrimitiveSubstitutionAction"/>
-		<action name="toolbarLightingAction"/>
-		<action name="toolbarBFCAction"/>
-        <action name="toolbarAxesAction"/>
-		<action name="toolbarViewAction"/>
-		<action name="editPreferencesAction"/>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>toolbarStepLabel</cstring>
-            </property>
-            <property name="text">
-                <string>Step:</string>
-            </property>
-        </widget>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>toolbarCurrentStep</cstring>
-            </property>
-            <property name="text">
-                <string>0</string>
-            </property>
-        </widget>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>toolbarMaxStep</cstring>
-            </property>
-            <property name="text">
-                <string> / 0</string>
-            </property>
-        </widget>
-        <action name="toolbarFirstStep"/>
-		<action name="toolbarPrevStep"/>
-		<action name="toolbarNextStep"/>
-        <action name="toolbarLastStep"/>
-	</toolbar>
-</toolbars>
-<menubar>
-    <property name="name">
-        <cstring>menubar</cstring>
-    </property>
-    <item text="&amp;File" name="fileMenu">
-        <action name="fileOpenAction"/>
-        <action name="fileReloadAction"/>
-        <actiongroup name="pollActionGroup"/>
-        <item text="Po&amp;lling" name="popupMenu_3" accel="">
-            <action name="noPollingAction"/>
-            <action name="promptPollingAction"/>
-            <action name="autoPollingAction"/>
-            <action name="backgroundPollingAction"/>
+              </item>
+            </layout>
+          </widget>
         </item>
-        <action name="fileSaveAction"/>
-		<action name="fileSaveSettingsAction"/>
-        <action name="fileJPEGOptionsAction"/>
-        <action name="fileExportAction"/>
-        <action name="fileExportOptionAction"/>
-        <action name="fileLDrawDirAction"/>
-        <action name="fileExtraDirAction"/>
-        <action name="fileCheckForUpdatesAction"/>
-        <action name="fileCancelLoadAction"/>
-        <separator/>
-        <action name="filePrintAction"/>
-        <separator/>
-        <action name="fileExitAction"/>
-    </item>
-    <item text="&amp;Edit" name="editMenu">
-        <action name="editPreferencesAction"/>
-    </item>
-    <item text="&amp;View" name="viewMenu">
-        <action name="viewFullScreenAction"/>
-        <action name="viewResetViewAction"/>
-        <action name="viewToolBarAction"/>
-        <action name="viewStatusBarAction"/>
-        <action name="viewZoomToFitAction"/>
-        <actiongroup name="viewAngleGroup"/>
-        <item text="Viewing Angle" name="viewingAnglePopupMenu" accel="">
-            <action name="frontViewAngleAction"/>
-            <action name="backViewAngleAction"/>
-            <action name="leftViewAngleAction"/>
-            <action name="rightViewAngleAction"/>
-            <action name="topViewAngleAction"/>
-            <action name="bottomViewAngleAction"/>
-            <action name="latLongViewAngleAction"/>
-            <action name="isoViewAngleAction"/>
-            <separator/>
-            <action name="saveDefaultViewAngleAction"/>
-        </item>
-        <actiongroup name="viewStandardSizeGroup"/>
-        <item text="Standard Sizes" name="standardSizesPopupMenu" accel="">
-            <action name="dumyStandardSizeAction"/>
-        </item>
-        <separator/>
-        <action name="examineModeAction"/>
-        <action name="viewLatitudeRotationAction"/>
-        <action name="flythroughModeAction"/>
-    </item>
-    <item text="Step" name="stepMenu">
-        <action name="toolbarFirstStep"/>
-        <action name="toolbarPrevStep"/>
-        <action name="toolbarNextStep"/>
-        <action name="toolbarLastStep"/>
-        <separator/>
-        <action name="stepGoto"/>
-    </item>
-    <item text="&amp;Tools" name="toolsMenu">
-        <action name="viewShowErrorsAction"/>
-        <action name="toolsPartListAction"/>
-        <action name="toolsModelTreeAction"/>
-        <action name="toolsBoundingBoxAction"/>
-        <action name="toolsMpdModelSelectionAction"/>
-        <separator/>
-        <action name="showViewInfoAction"/>
-        <separator/>
-        <action name="showPovCameraAction"/>
-        <action name="showPovAspectRatioAction"/>
-    </item>
-    <item text="&amp;Help" name="helpMenu">
-        <action name="helpOpenGLDriverInfoAction"/>
-        <separator/>
-        <action name="helpContentsAction"/>
-        <action name="helpAboutAction"/>
-        <action name="helpAboutQtAction"/>
-    </item>
-</menubar>
-<toolbars>
-</toolbars>
-<customwidgets>
-    <customwidget>
-        <class>ModelViewerWidget</class>
-        <header location="local">ModelViewerWidget.h</header>
-        <sizehint>
-            <width>-1</width>
-            <height>-1</height>
-        </sizehint>
-        <container>0</container>
-        <sizepolicy>
-            <hordata>7</hordata>
-            <verdata>7</verdata>
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-        </sizepolicy>
-    </customwidget>
-</customwidgets>
-<actions>
-    <action>
-        <property name="name">
-            <cstring>fileOpenAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>fileopen.png</iconset>
-        </property>
+      </layout>
+    </widget>
+    <widget class="Q3ToolBar" name="toolbar">
+      <property name="label">
+        <string>Tools</string>
+      </property>
+      <widget class="QLabel" name="toolbarStepLabel">
         <property name="text">
-            <string>Open</string>
+          <string>Step:</string>
         </property>
-        <property name="menuText">
-            <string>&amp;Open...</string>
+        <property name="wordWrap">
+          <bool>false</bool>
         </property>
-        <property name="accel">
-            <string>Ctrl+O</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarWireframeAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_wireframe.png</iconset>
-        </property>
+      </widget>
+      <widget class="QLabel" name="toolbarCurrentStep">
         <property name="text">
-            <string>Wireframe</string>
+          <string>0</string>
         </property>
-        <property name="menuText">
-            <string>Wireframe</string>
+        <property name="wordWrap">
+          <bool>false</bool>
         </property>
-        <property name="toolTip">
-            <string>Wireframe</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarSeamsAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_seams.png</iconset>
-        </property>
+      </widget>
+      <widget class="QLabel" name="toolbarMaxStep">
         <property name="text">
-            <string>Seams</string>
-        </property>
-        <property name="menuText">
-            <string>Seams</string>
-        </property>
-        <property name="toolTip">
-            <string>Seams</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarEdgeAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_edge.png</iconset>
-        </property>
-        <property name="text">
-            <string>Edge</string>
-        </property>
-        <property name="menuText">
-            <string>Edge</string>
-        </property>
-        <property name="toolTip">
-            <string>Edge</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarPrimitiveSubstitutionAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_privsubs.png</iconset>
-        </property>
-        <property name="text">
-            <string>Primitive substitution</string>
-        </property>
-        <property name="menuText">
-            <string>Primitive substitution</string>
-        </property>
-        <property name="toolTip">
-            <string>Primitive Substitution</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarLightingAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_light.png</iconset>
-        </property>
-        <property name="text">
-            <string>Lighting</string>
-        </property>
-        <property name="menuText">
-            <string>Lighting</string>
-        </property>
-        <property name="toolTip">
-            <string>Lighting</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarBFCAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_bfc.png</iconset>
-        </property>
-        <property name="text">
-            <string>BFC</string>
-        </property>
-        <property name="menuText">
-            <string>BFC</string>
-        </property>
-        <property name="toolTip">
-            <string>BFC</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarAxesAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_axes.png</iconset>
-        </property>
-        <property name="toolTip">
-            <string>Show Axes</string>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-    </action>
-	<action>
-		<property name="name">
-			<cstring>toolbarViewAction</cstring>
-		</property>
-		<property name="iconSet">
-			<iconset>toolbar_view.png</iconset>
-		</property>
-		<property name="text">
-			<string>Viewing Angle</string>
-		</property>
-		<property name="menuText">
-			<string>Viewing Angle</string>
-		</property>
-		<property name="toolTip">
-			<string>Viewing Angle</string>
-		</property>
-	</action>
-    <action>
-        <property name="name">
-            <cstring>toolbarPrevStep</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_prev.png</iconset>
-        </property>
-        <property name="toolTip">
-            <string>Previous Step</string>
-        </property>
-        <property name="menuText">
-            <string>Previous</string>
-        </property>
-        <property name="accel">
-            <string>PgUp</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarNextStep</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_next.png</iconset>
-        </property>
-        <property name="toolTip">
-            <string>Next Step</string>
-        </property>
-        <property name="menuText">
-            <string>Next</string>
-        </property>
-        <property name="accel">
-            <string>PgDown</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarLastStep</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_step_last.png</iconset>
-        </property>
-        <property name="toolTip">
-            <string>Last Step</string>
-        </property>
-        <property name="menuText">
-            <string>Last</string>
-        </property>
-        <property name="accel">
-            <string>End</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolbarFirstStep</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_step_first.png</iconset>
-        </property>
-        <property name="toolTip">
-            <string>First Step</string>
-        </property>
-        <property name="menuText">
-            <string>First</string>
-        </property>
-        <property name="accel">
-            <string>Home</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>stepGoto</cstring>
-        </property>
-        <property name="toolTip">
-            <string>Go to Step</string>
-        </property>
-        <property name="menuText">
-            <string>Go to Step</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+g</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileSaveSettingsAction</cstring>
-        </property>
-        <property name="text">
-            <string>Snapshot Options</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Snapshot Options...</string>
-        </property>
-        <property name="toolTip">
-            <string>Snapshot Options</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileExportAction</cstring>
-        </property>
-        <property name="text">
-            <string>Export</string>
-        </property>
-        <property name="menuText">
-            <string>Export...</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileExportOptionAction</cstring>
-        </property>
-        <property name="text">
-            <string>POV Export Options</string>
-        </property>
-        <property name="menuText">
-            <string>POV Export Options...</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileJPEGOptionsAction</cstring>
-        </property>
-        <property name="text">
-            <string>JPEG Options</string>
-        </property>
-        <property name="menuText">
-            <string>JPEG Options...</string>
-        </property>
-        <property name="toolTip">
-            <string>JPEG Options</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileSaveAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_snapshot.png</iconset>
-        </property>
-        <property name="text">
-            <string>Save Snapshot</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Save Snapshot...</string>
-        </property>
-        <property name="toolTip">
-            <string>Save Snapshot</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+S</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>filePrintAction</cstring>
-        </property>
-        <property name="iconSet">
-            <iconset>print.png</iconset>
-        </property>
-        <property name="text">
-            <string>Print</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Print...</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+P</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileExitAction</cstring>
-        </property>
-        <property name="text">
-            <string>Exit</string>
-        </property>
-        <property name="menuText">
-            <string>E&amp;xit</string>
-        </property>
-        <property name="accel">
-            <string>Alt+X</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>helpContentsAction</cstring>
-        </property>
-        <property name="text">
-            <string>Contents</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Contents...</string>
-        </property>
-        <property name="accel">
-            <string>F1</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>helpAboutAction</cstring>
-        </property>
-        <property name="text">
-            <string>About</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;About LDView...</string>
-        </property>
-        <property name="statusTip">
-            <string>About LDView</string>
-        </property>
-        <property name="accel">
-            <number>0</number>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>helpAboutQtAction</cstring>
-        </property>
-        <property name="text">
-            <string>About Qt</string>
-        </property>
-        <property name="menuText">
-            <string>About Qt</string>
-        </property>
-        <property name="statusTip">
-            <string>About Qt</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>editPreferencesAction</cstring>
-        </property>
-        <property name="text">
-            <string>Preferences</string>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_preferences.png</iconset>
-        </property>
-        <property name="menuText">
-            <string>&amp;Preferences...</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+Shift+P</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>viewToolBarAction</cstring>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-        <property name="text">
-            <string>Toolbar</string>
-        </property>
-        <property name="menuText">
-            <string>Toolbar</string>
-        </property>
-        <property name="toolTip">
-            <string>Toolbar</string>
-        </property>
-        <property name="statusTip">
-            <string>Show or hide toolbar</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+Shift+T</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>viewStatusBarAction</cstring>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
-        </property>
-        <property name="text">
-            <string>Status Bar</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Status Bar</string>
-        </property>
-        <property name="toolTip">
-            <string>Status Bar</string>
-        </property>
-        <property name="statusTip">
-            <string>Show or hide this status bar</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+Shift+S</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>viewFullScreenAction</cstring>
-        </property>
-        <property name="text">
-            <string>Full Screen</string>
-        </property>
-        <property name="menuText">
-            <string>Full Screen</string>
-        </property>
-        <property name="accel">
-            <string>F10</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>viewResetViewAction</cstring>
-        </property>
-        <property name="text">
-            <string>Reset View</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Reset View</string>
-        </property>
-        <property name="statusTip">
-            <string>Resets model back to the default view</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+R</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>helpOpenGLDriverInfoAction</cstring>
-        </property>
-        <property name="text">
-            <string>OpenGL Driver Info</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;OpenGL Driver Info...</string>
-        </property>
-        <property name="statusTip">
-            <string>Show OpenGL Driver Info</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileLDrawDirAction</cstring>
-        </property>
-        <property name="text">
-            <string>LDraw Dir</string>
-        </property>
-        <property name="menuText">
-            <string>LDraw &amp;Dir...</string>
-        </property>
-        <property name="statusTip">
-            <string>Tell LDView where to find the LDraw parts library</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileExtraDirAction</cstring>
-        </property>
-        <property name="menuText">
-            <string>Extra Dirs...</string>
-        </property>
-        <property name="text">
-            <string>Extra Dirs</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileCheckForUpdatesAction</cstring>
-        </property>
-        <property name="menuText">
-            <string>Check for Library Updates</string>
-        </property>
-        <property name="text">
-            <string>Check for Library Updates</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>fileReloadAction</cstring>
-        </property>
-        <property name="text">
-            <string>Reload</string>
-        </property>
-        <property name="iconSet">
-            <iconset>toolbar_reload.png</iconset>
-        </property>
-        <property name="menuText">
-            <string>&amp;Reload</string>
-        </property>
-        <property name="accel">
-            <string>F5</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>viewShowErrorsAction</cstring>
-        </property>
-        <property name="text">
-            <string>Errors</string>
-        </property>
-        <property name="menuText">
-            <string>&amp;Errors &amp;&amp; Warnings...</string>
-        </property>
-        <property name="toolTip">
-            <string>Show Errors</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+Shift+E</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>viewZoomToFitAction</cstring>
-        </property>
-        <property name="menuText">
-            <string>Zoom to fit</string>
-		</property>
-        <property name="text">
-            <string>Zoom to fit</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+F</string>
-        </property>
-    </action>
-    <actiongroup>
-        <property name="name">
-            <cstring>viewAngleGroup</cstring>
-        </property>
-        <property name="text">
-            <string>Viewing Angle</string>
-        </property>
-        <property name="menuText">
-            <string>Viewing Angle</string>
-        </property>
-        <property name="usesDropDown">
-            <bool>true</bool>
-        </property>
-        <action>
-            <property name="name">
-                <cstring>frontViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Front</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+1</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>backViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Back</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+2</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>leftViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Left</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+3</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>rightViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Right</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+4</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>topViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Top</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+5</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>bottomViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Bottom</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+6</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>latLongViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Specify latitude/longitude</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+9</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>isoViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Two-third</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+0</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>saveDefaultViewAngleAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>Save Current as Default</string>
-            </property>
-        </action>
-    </actiongroup>
-    <actiongroup>
-        <property name="name">
-            <cstring>viewStandardSizeGroup</cstring>
-        </property>
-        <property name="text">
-            <string>Standard Sizes</string>
-        </property>
-        <property name="menuText">
-            <string>Standard Sizes</string>
-        </property>
-        <property name="usesDropDown">
-            <bool>true</bool>
-        </property>
-        <action>
-            <property name="name">
-                <cstring>dumyStandardSizeAction</cstring>
-            </property>
-            <property name="menuText">
-                <string>dumy</string>
-            </property>
-        </action>
-    </actiongroup>
-    <actiongroup>
-        <property name="name">
-            <cstring>pollActionGroup</cstring>
-        </property>
-        <property name="text">
-            <string>Polling</string>
-        </property>
-        <property name="menuText">
+          <string> / 0</string>
+        </property>
+        <property name="wordWrap">
+          <bool>false</bool>
+        </property>
+      </widget>
+      <addaction name="fileOpenAction"/>
+      <addaction name="fileSaveAction"/>
+      <addaction name="fileReloadAction"/>
+      <addaction name="separator"/>
+      <addaction name="toolbarWireframeAction"/>
+      <addaction name="toolbarSeamsAction"/>
+      <addaction name="toolbarEdgeAction"/>
+      <addaction name="toolbarPrimitiveSubstitutionAction"/>
+      <addaction name="toolbarLightingAction"/>
+      <addaction name="toolbarBFCAction"/>
+      <addaction name="toolbarAxesAction"/>
+      <addaction name="toolbarViewAction"/>
+      <addaction name="editPreferencesAction"/>
+      <addaction name="toolbarStepLabel"/>
+      <addaction name="toolbarCurrentStep"/>
+      <addaction name="toolbarMaxStep"/>
+      <addaction name="toolbarFirstStep"/>
+      <addaction name="toolbarPrevStep"/>
+      <addaction name="toolbarNextStep"/>
+      <addaction name="toolbarLastStep"/>
+    </widget>
+    <widget class="QMenuBar" name="menubar">
+      <widget class="QMenu" name="fileMenu">
+        <property name="title">
+          <string>&amp;File</string>
+        </property>
+        <widget class="QMenu" name="popupMenu_3">
+          <property name="title">
             <string>Po&amp;lling</string>
+          </property>
+          <addaction name="noPollingAction"/>
+          <addaction name="promptPollingAction"/>
+          <addaction name="autoPollingAction"/>
+          <addaction name="backgroundPollingAction"/>
+        </widget>
+        <addaction name="fileOpenAction"/>
+        <addaction name="fileReloadAction"/>
+        <addaction name="popupMenu_3"/>
+        <addaction name="fileSaveAction"/>
+        <addaction name="fileSaveSettingsAction"/>
+        <addaction name="fileJPEGOptionsAction"/>
+        <addaction name="fileExportAction"/>
+        <addaction name="fileExportOptionAction"/>
+        <addaction name="fileLDrawDirAction"/>
+        <addaction name="fileExtraDirAction"/>
+        <addaction name="fileCheckForUpdatesAction"/>
+        <addaction name="fileCancelLoadAction"/>
+        <addaction name="separator"/>
+        <addaction name="filePrintAction"/>
+        <addaction name="separator"/>
+        <addaction name="fileExitAction"/>
+      </widget>
+      <widget class="QMenu" name="editMenu">
+        <property name="title">
+          <string>&amp;Edit</string>
         </property>
-        <property name="usesDropDown">
-            <bool>true</bool>
+        <addaction name="editPreferencesAction"/>
+      </widget>
+      <widget class="QMenu" name="viewMenu">
+        <property name="title">
+          <string>&amp;View</string>
         </property>
-        <action>
-            <property name="name">
-                <cstring>noPollingAction</cstring>
-            </property>
-            <property name="toggleAction">
-                <bool>true</bool>
-            </property>
-            <property name="on">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>Disabled</string>
-            </property>
-            <property name="menuText">
-                <string>&amp;Disabled</string>
-            </property>
-            <property name="toolTip">
-                <string>Disable polling</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>promptPollingAction</cstring>
-            </property>
-            <property name="toggleAction">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>Prompt</string>
-            </property>
-            <property name="menuText">
-                <string>&amp;Prompt</string>
-            </property>
-            <property name="toolTip">
-                <string>Prompt when file changes</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>autoPollingAction</cstring>
-            </property>
-            <property name="toggleAction">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>Auto-update when active</string>
-            </property>
-            <property name="menuText">
-                <string>&amp;Auto-update when active</string>
-            </property>
-            <property name="toolTip">
-                <string>Auto-update once this window is activated</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>backgroundPollingAction</cstring>
-            </property>
-            <property name="toggleAction">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>Auto-&amp;update immediately</string>
-            </property>
-            <property name="toolTip">
-                <string>Auto-update immediately</string>
-            </property>
-        </action>
-    </actiongroup>
-    <actiongroup>
+        <widget class="QMenu" name="viewingAnglePopupMenu">
+          <property name="title">
+            <string>Viewing Angle</string>
+          </property>
+          <addaction name="frontViewAngleAction"/>
+          <addaction name="backViewAngleAction"/>
+          <addaction name="leftViewAngleAction"/>
+          <addaction name="rightViewAngleAction"/>
+          <addaction name="topViewAngleAction"/>
+          <addaction name="bottomViewAngleAction"/>
+          <addaction name="latLongViewAngleAction"/>
+          <addaction name="isoViewAngleAction"/>
+          <addaction name="separator"/>
+          <addaction name="saveDefaultViewAngleAction"/>
+        </widget>
+        <widget class="QMenu" name="standardSizesPopupMenu">
+          <property name="title">
+            <string>Standard Sizes</string>
+          </property>
+          <addaction name="dumyStandardSizeAction"/>
+        </widget>
+        <addaction name="viewFullScreenAction"/>
+        <addaction name="viewResetViewAction"/>
+        <addaction name="viewToolBarAction"/>
+        <addaction name="viewStatusBarAction"/>
+        <addaction name="viewZoomToFitAction"/>
+        <addaction name="viewingAnglePopupMenu"/>
+        <addaction name="standardSizesPopupMenu"/>
+        <addaction name="separator"/>
+        <addaction name="examineModeAction"/>
+        <addaction name="viewLatitudeRotationAction"/>
+        <addaction name="flythroughModeAction"/>
+      </widget>
+      <widget class="QMenu" name="stepMenu">
+        <property name="title">
+          <string>Step</string>
+        </property>
+        <addaction name="toolbarFirstStep"/>
+        <addaction name="toolbarPrevStep"/>
+        <addaction name="toolbarNextStep"/>
+        <addaction name="toolbarLastStep"/>
+        <addaction name="separator"/>
+        <addaction name="stepGoto"/>
+      </widget>
+      <widget class="QMenu" name="toolsMenu">
+        <property name="title">
+          <string>&amp;Tools</string>
+        </property>
+        <addaction name="viewShowErrorsAction"/>
+        <addaction name="toolsPartListAction"/>
+        <addaction name="toolsModelTreeAction"/>
+        <addaction name="toolsBoundingBoxAction"/>
+        <addaction name="toolsMpdModelSelectionAction"/>
+        <addaction name="separator"/>
+        <addaction name="showViewInfoAction"/>
+        <addaction name="separator"/>
+        <addaction name="showPovCameraAction"/>
+        <addaction name="showPovAspectRatioAction"/>
+      </widget>
+      <widget class="QMenu" name="helpMenu">
+        <property name="title">
+          <string>&amp;Help</string>
+        </property>
+        <addaction name="helpOpenGLDriverInfoAction"/>
+        <addaction name="separator"/>
+        <addaction name="helpContentsAction"/>
+        <addaction name="helpAboutAction"/>
+        <addaction name="helpAboutQtAction"/>
+      </widget>
+      <addaction name="fileMenu"/>
+      <addaction name="editMenu"/>
+      <addaction name="viewMenu"/>
+      <addaction name="stepMenu"/>
+      <addaction name="toolsMenu"/>
+      <addaction name="helpMenu"/>
+    </widget>
+    <action name="fileOpenAction">
+      <property name="name">
+        <cstring>fileOpenAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>fileopen.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Open</string>
+      </property>
+      <property name="text">
+        <string>&amp;Open...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+O</string>
+      </property>
+    </action>
+    <action name="toolbarWireframeAction">
+      <property name="name">
+        <cstring>toolbarWireframeAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_wireframe.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Wireframe</string>
+      </property>
+      <property name="text">
+        <string>Wireframe</string>
+      </property>
+      <property name="toolTip">
+        <string>Wireframe</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarSeamsAction">
+      <property name="name">
+        <cstring>toolbarSeamsAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_seams.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Seams</string>
+      </property>
+      <property name="text">
+        <string>Seams</string>
+      </property>
+      <property name="toolTip">
+        <string>Seams</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarEdgeAction">
+      <property name="name">
+        <cstring>toolbarEdgeAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_edge.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Edge</string>
+      </property>
+      <property name="text">
+        <string>Edge</string>
+      </property>
+      <property name="toolTip">
+        <string>Edge</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarPrimitiveSubstitutionAction">
+      <property name="name">
+        <cstring>toolbarPrimitiveSubstitutionAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_privsubs.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Primitive substitution</string>
+      </property>
+      <property name="text">
+        <string>Primitive substitution</string>
+      </property>
+      <property name="toolTip">
+        <string>Primitive Substitution</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarLightingAction">
+      <property name="name">
+        <cstring>toolbarLightingAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_light.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Lighting</string>
+      </property>
+      <property name="text">
+        <string>Lighting</string>
+      </property>
+      <property name="toolTip">
+        <string>Lighting</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarBFCAction">
+      <property name="name">
+        <cstring>toolbarBFCAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_bfc.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>BFC</string>
+      </property>
+      <property name="text">
+        <string>BFC</string>
+      </property>
+      <property name="toolTip">
+        <string>BFC</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarAxesAction">
+      <property name="name">
+        <cstring>toolbarAxesAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_axes.png</iconset>
+      </property>
+      <property name="toolTip">
+        <string>Show Axes</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolbarViewAction">
+      <property name="name">
+        <cstring>toolbarViewAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_view.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Viewing Angle</string>
+      </property>
+      <property name="text">
+        <string>Viewing Angle</string>
+      </property>
+      <property name="toolTip">
+        <string>Viewing Angle</string>
+      </property>
+    </action>
+    <action name="toolbarPrevStep">
+      <property name="name">
+        <cstring>toolbarPrevStep</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_prev.png</iconset>
+      </property>
+      <property name="toolTip">
+        <string>Previous Step</string>
+      </property>
+      <property name="text">
+        <string>Previous</string>
+      </property>
+      <property name="shortcut">
+        <string>PgUp</string>
+      </property>
+    </action>
+    <action name="toolbarNextStep">
+      <property name="name">
+        <cstring>toolbarNextStep</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_next.png</iconset>
+      </property>
+      <property name="toolTip">
+        <string>Next Step</string>
+      </property>
+      <property name="text">
+        <string>Next</string>
+      </property>
+      <property name="shortcut">
+        <string>PgDown</string>
+      </property>
+    </action>
+    <action name="toolbarLastStep">
+      <property name="name">
+        <cstring>toolbarLastStep</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_step_last.png</iconset>
+      </property>
+      <property name="toolTip">
+        <string>Last Step</string>
+      </property>
+      <property name="text">
+        <string>Last</string>
+      </property>
+      <property name="shortcut">
+        <string>End</string>
+      </property>
+    </action>
+    <action name="toolbarFirstStep">
+      <property name="name">
+        <cstring>toolbarFirstStep</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_step_first.png</iconset>
+      </property>
+      <property name="toolTip">
+        <string>First Step</string>
+      </property>
+      <property name="text">
+        <string>First</string>
+      </property>
+      <property name="shortcut">
+        <string>Home</string>
+      </property>
+    </action>
+    <action name="stepGoto">
+      <property name="name">
+        <cstring>stepGoto</cstring>
+      </property>
+      <property name="toolTip">
+        <string>Go to Step</string>
+      </property>
+      <property name="text">
+        <string>Go to Step</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+g</string>
+      </property>
+    </action>
+    <action name="fileSaveSettingsAction">
+      <property name="name">
+        <cstring>fileSaveSettingsAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Snapshot Options</string>
+      </property>
+      <property name="text">
+        <string>&amp;Snapshot Options...</string>
+      </property>
+      <property name="toolTip">
+        <string>Snapshot Options</string>
+      </property>
+    </action>
+    <action name="fileExportAction">
+      <property name="name">
+        <cstring>fileExportAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Export</string>
+      </property>
+      <property name="text">
+        <string>Export...</string>
+      </property>
+    </action>
+    <action name="fileExportOptionAction">
+      <property name="name">
+        <cstring>fileExportOptionAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>POV Export Options</string>
+      </property>
+      <property name="text">
+        <string>POV Export Options...</string>
+      </property>
+    </action>
+    <action name="fileJPEGOptionsAction">
+      <property name="name">
+        <cstring>fileJPEGOptionsAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>JPEG Options</string>
+      </property>
+      <property name="text">
+        <string>JPEG Options...</string>
+      </property>
+      <property name="toolTip">
+        <string>JPEG Options</string>
+      </property>
+    </action>
+    <action name="fileSaveAction">
+      <property name="name">
+        <cstring>fileSaveAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_snapshot.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Save Snapshot</string>
+      </property>
+      <property name="text">
+        <string>&amp;Save Snapshot...</string>
+      </property>
+      <property name="toolTip">
+        <string>Save Snapshot</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+S</string>
+      </property>
+    </action>
+    <action name="filePrintAction">
+      <property name="name">
+        <cstring>filePrintAction</cstring>
+      </property>
+      <property name="icon">
+        <iconset>print.png</iconset>
+      </property>
+      <property name="iconText">
+        <string>Print</string>
+      </property>
+      <property name="text">
+        <string>&amp;Print...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+P</string>
+      </property>
+    </action>
+    <action name="fileExitAction">
+      <property name="name">
+        <cstring>fileExitAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Exit</string>
+      </property>
+      <property name="text">
+        <string>E&amp;xit</string>
+      </property>
+      <property name="shortcut">
+        <string>Alt+X</string>
+      </property>
+    </action>
+    <action name="helpContentsAction">
+      <property name="name">
+        <cstring>helpContentsAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Contents</string>
+      </property>
+      <property name="text">
+        <string>&amp;Contents...</string>
+      </property>
+      <property name="shortcut">
+        <string>F1</string>
+      </property>
+    </action>
+    <action name="helpAboutAction">
+      <property name="name">
+        <cstring>helpAboutAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>About</string>
+      </property>
+      <property name="text">
+        <string>&amp;About LDView...</string>
+      </property>
+      <property name="statusTip">
+        <string>About LDView</string>
+      </property>
+      <property name="shortcut">
+        <number>0</number>
+      </property>
+    </action>
+    <action name="helpAboutQtAction">
+      <property name="name">
+        <cstring>helpAboutQtAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>About Qt</string>
+      </property>
+      <property name="text">
+        <string>About Qt</string>
+      </property>
+      <property name="statusTip">
+        <string>About Qt</string>
+      </property>
+    </action>
+    <action name="editPreferencesAction">
+      <property name="name">
+        <cstring>editPreferencesAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Preferences</string>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_preferences.png</iconset>
+      </property>
+      <property name="text">
+        <string>&amp;Preferences...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+Shift+P</string>
+      </property>
+    </action>
+    <action name="viewToolBarAction">
+      <property name="name">
+        <cstring>viewToolBarAction</cstring>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="iconText">
+        <string>Toolbar</string>
+      </property>
+      <property name="text">
+        <string>Toolbar</string>
+      </property>
+      <property name="toolTip">
+        <string>Toolbar</string>
+      </property>
+      <property name="statusTip">
+        <string>Show or hide toolbar</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+Shift+T</string>
+      </property>
+    </action>
+    <action name="viewStatusBarAction">
+      <property name="name">
+        <cstring>viewStatusBarAction</cstring>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="iconText">
+        <string>Status Bar</string>
+      </property>
+      <property name="text">
+        <string>&amp;Status Bar</string>
+      </property>
+      <property name="toolTip">
+        <string>Status Bar</string>
+      </property>
+      <property name="statusTip">
+        <string>Show or hide this status bar</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+Shift+S</string>
+      </property>
+    </action>
+    <action name="viewFullScreenAction">
+      <property name="name">
+        <cstring>viewFullScreenAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Full Screen</string>
+      </property>
+      <property name="text">
+        <string>Full Screen</string>
+      </property>
+      <property name="shortcut">
+        <string>F10</string>
+      </property>
+    </action>
+    <action name="viewResetViewAction">
+      <property name="name">
+        <cstring>viewResetViewAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Reset View</string>
+      </property>
+      <property name="text">
+        <string>&amp;Reset View</string>
+      </property>
+      <property name="statusTip">
+        <string>Resets model back to the default view</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+R</string>
+      </property>
+    </action>
+    <action name="helpOpenGLDriverInfoAction">
+      <property name="name">
+        <cstring>helpOpenGLDriverInfoAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>OpenGL Driver Info</string>
+      </property>
+      <property name="text">
+        <string>&amp;OpenGL Driver Info...</string>
+      </property>
+      <property name="statusTip">
+        <string>Show OpenGL Driver Info</string>
+      </property>
+    </action>
+    <action name="fileLDrawDirAction">
+      <property name="name">
+        <cstring>fileLDrawDirAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>LDraw Dir</string>
+      </property>
+      <property name="text">
+        <string>LDraw &amp;Dir...</string>
+      </property>
+      <property name="statusTip">
+        <string>Tell LDView where to find the LDraw parts library</string>
+      </property>
+    </action>
+    <action name="fileExtraDirAction">
+      <property name="name">
+        <cstring>fileExtraDirAction</cstring>
+      </property>
+      <property name="text">
+        <string>Extra Dirs...</string>
+      </property>
+      <property name="iconText">
+        <string>Extra Dirs</string>
+      </property>
+    </action>
+    <action name="fileCheckForUpdatesAction">
+      <property name="name">
+        <cstring>fileCheckForUpdatesAction</cstring>
+      </property>
+      <property name="text">
+        <string>Check for Library Updates</string>
+      </property>
+      <property name="iconText">
+        <string>Check for Library Updates</string>
+      </property>
+    </action>
+    <action name="fileReloadAction">
+      <property name="name">
+        <cstring>fileReloadAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Reload</string>
+      </property>
+      <property name="icon">
+        <iconset>toolbar_reload.png</iconset>
+      </property>
+      <property name="text">
+        <string>&amp;Reload</string>
+      </property>
+      <property name="shortcut">
+        <string>F5</string>
+      </property>
+    </action>
+    <action name="viewShowErrorsAction">
+      <property name="name">
+        <cstring>viewShowErrorsAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Errors</string>
+      </property>
+      <property name="text">
+        <string>&amp;Errors &amp;&amp; Warnings...</string>
+      </property>
+      <property name="toolTip">
+        <string>Show Errors</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+Shift+E</string>
+      </property>
+    </action>
+    <action name="viewZoomToFitAction">
+      <property name="name">
+        <cstring>viewZoomToFitAction</cstring>
+      </property>
+      <property name="text">
+        <string>Zoom to fit</string>
+      </property>
+      <property name="iconText">
+        <string>Zoom to fit</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+F</string>
+      </property>
+    </action>
+    <action name="viewLatitudeRotationAction">
+      <property name="name">
+        <cstring>viewLatitudeRotationAction</cstring>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+      <property name="iconText">
+        <string>Latitude/Longitude Rotation</string>
+      </property>
+      <property name="text">
+        <string>Latitude/Longitude Rotation</string>
+      </property>
+      <property name="toolTip">
+        <string>Latitude/Longitude Rotation</string>
+      </property>
+    </action>
+    <action name="fileCancelLoadAction">
+      <property name="name">
+        <cstring>fileCancelLoadAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Cancel Load</string>
+      </property>
+      <property name="shortcut">
+        <string>Esc</string>
+      </property>
+    </action>
+    <action name="showViewInfoAction">
+      <property name="name">
+        <cstring>showViewInfoAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Show View Info</string>
+      </property>
+    </action>
+    <action name="showPovCameraAction">
+      <property name="name">
+        <cstring>showPovCameraAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Show Pov-Ray Camera Info...</string>
+      </property>
+    </action>
+    <action name="showPovAspectRatioAction">
+      <property name="name">
+        <cstring>showPovAspectRatioAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Use current aspect ratio for POV-Ray camera</string>
+      </property>
+      <property name="checkable">
+        <bool>true</bool>
+      </property>
+    </action>
+    <action name="toolsPartListAction">
+      <property name="name">
+        <cstring>toolsPartListAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Part List...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+L</string>
+      </property>
+    </action>
+    <action name="toolsModelTreeAction">
+      <property name="name">
+        <cstring>toolsModelTreeAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Model Tree...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+T</string>
+      </property>
+    </action>
+    <action name="toolsBoundingBoxAction">
+      <property name="name">
+        <cstring>toolsBoundingBoxAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>Model Bounding Box...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+B</string>
+      </property>
+    </action>
+    <action name="toolsMpdModelSelectionAction">
+      <property name="name">
+        <cstring>toolsMpdModelSelectionAction</cstring>
+      </property>
+      <property name="iconText">
+        <string>MPD Model Selection...</string>
+      </property>
+      <property name="shortcut">
+        <string>Ctrl+M</string>
+      </property>
+    </action>
+    <actiongroup name="viewAngleGroup">
+      <action name="frontViewAngleAction">
         <property name="name">
-            <cstring>viewModeActionGroup</cstring>
+          <cstring>frontViewAngleAction</cstring>
         </property>
         <property name="text">
-            <string>ActionGroup</string>
+          <string>Front</string>
         </property>
-        <property name="usesDropDown">
-            <bool>false</bool>
+        <property name="shortcut">
+          <string>Ctrl+1</string>
         </property>
-        <action>
-            <property name="name">
-                <cstring>examineModeAction</cstring>
-            </property>
-            <property name="toggleAction">
-                <bool>true</bool>
-            </property>
-            <property name="on">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>Examine Mode</string>
-            </property>
-            <property name="menuText">
-                <string>E&amp;xamine Mode</string>
-            </property>
-            <property name="toolTip">
-                <string>Examine Mode</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+Shift+X</string>
-            </property>
-        </action>
-        <action>
-            <property name="name">
-                <cstring>flythroughModeAction</cstring>
-            </property>
-            <property name="toggleAction">
-                <bool>true</bool>
-            </property>
-            <property name="text">
-                <string>Fly-through Mode</string>
-            </property>
-            <property name="menuText">
-                <string>&amp;Fly-through Mode</string>
-            </property>
-            <property name="toolTip">
-                <string>Fly-through Mode</string>
-            </property>
-            <property name="accel">
-                <string>Ctrl+Shift+F</string>
-            </property>
-        </action>
-    </actiongroup>
-        <action>
+      </action>
+      <action name="backViewAngleAction">
         <property name="name">
-            <cstring>viewLatitudeRotationAction</cstring>
-        </property>
-        <property name="toggleAction">
-            <bool>true</bool>
+          <cstring>backViewAngleAction</cstring>
         </property>
         <property name="text">
-            <string>Latitude/Longitude Rotation</string>
+          <string>Back</string>
         </property>
-        <property name="menuText">
-            <string>Latitude/Longitude Rotation</string>
+        <property name="shortcut">
+          <string>Ctrl+2</string>
+        </property>
+      </action>
+      <action name="leftViewAngleAction">
+        <property name="name">
+          <cstring>leftViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Left</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+3</string>
+        </property>
+      </action>
+      <action name="rightViewAngleAction">
+        <property name="name">
+          <cstring>rightViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Right</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+4</string>
+        </property>
+      </action>
+      <action name="topViewAngleAction">
+        <property name="name">
+          <cstring>topViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Top</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+5</string>
+        </property>
+      </action>
+      <action name="bottomViewAngleAction">
+        <property name="name">
+          <cstring>bottomViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Bottom</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+6</string>
+        </property>
+      </action>
+      <action name="latLongViewAngleAction">
+        <property name="name">
+          <cstring>latLongViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Specify latitude/longitude</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+9</string>
+        </property>
+      </action>
+      <action name="isoViewAngleAction">
+        <property name="name">
+          <cstring>isoViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Two-third</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+0</string>
+        </property>
+      </action>
+      <action name="saveDefaultViewAngleAction">
+        <property name="name">
+          <cstring>saveDefaultViewAngleAction</cstring>
+        </property>
+        <property name="text">
+          <string>Save Current as Default</string>
+        </property>
+      </action>
+      <property name="name">
+        <cstring>viewAngleGroup</cstring>
+      </property>
+    </actiongroup>
+    <actiongroup name="viewStandardSizeGroup">
+      <action name="dumyStandardSizeAction">
+        <property name="name">
+          <cstring>dumyStandardSizeAction</cstring>
+        </property>
+        <property name="text">
+          <string>dumy</string>
+        </property>
+      </action>
+      <property name="name">
+        <cstring>viewStandardSizeGroup</cstring>
+      </property>
+    </actiongroup>
+    <actiongroup name="pollActionGroup">
+      <action name="noPollingAction">
+        <property name="name">
+          <cstring>noPollingAction</cstring>
+        </property>
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="checked">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Disabled</string>
+        </property>
+        <property name="text">
+          <string>&amp;Disabled</string>
         </property>
         <property name="toolTip">
-            <string>Latitude/Longitude Rotation</string>
+          <string>Disable polling</string>
         </property>
-    </action>
-    <action>
+      </action>
+      <action name="promptPollingAction">
         <property name="name">
-            <cstring>fileCancelLoadAction</cstring>
+          <cstring>promptPollingAction</cstring>
+        </property>
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Prompt</string>
         </property>
         <property name="text">
-            <string>Cancel Load</string>
+          <string>&amp;Prompt</string>
         </property>
-        <property name="accel">
-            <string>Esc</string>
+        <property name="toolTip">
+          <string>Prompt when file changes</string>
         </property>
-    </action>
-    <action>
+      </action>
+      <action name="autoPollingAction">
         <property name="name">
-            <cstring>showViewInfoAction</cstring>
+          <cstring>autoPollingAction</cstring>
+        </property>
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Auto-update when active</string>
         </property>
         <property name="text">
-            <string>Show View Info</string>
+          <string>&amp;Auto-update when active</string>
         </property>
-    </action>
-    <action>
+        <property name="toolTip">
+          <string>Auto-update once this window is activated</string>
+        </property>
+      </action>
+      <action name="backgroundPollingAction">
         <property name="name">
-            <cstring>showPovCameraAction</cstring>
+          <cstring>backgroundPollingAction</cstring>
+        </property>
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Auto-&amp;update immediately</string>
+        </property>
+        <property name="toolTip">
+          <string>Auto-update immediately</string>
+        </property>
+      </action>
+      <property name="name">
+        <cstring>pollActionGroup</cstring>
+      </property>
+    </actiongroup>
+    <actiongroup name="viewModeActionGroup">
+      <action name="examineModeAction">
+        <property name="name">
+          <cstring>examineModeAction</cstring>
+        </property>
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="checked">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Examine Mode</string>
         </property>
         <property name="text">
-            <string>Show Pov-Ray Camera Info...</string>
+          <string>E&amp;xamine Mode</string>
         </property>
-    </action>
-    <action>
+        <property name="toolTip">
+          <string>Examine Mode</string>
+        </property>
+        <property name="shortcut">
+          <string>Ctrl+Shift+X</string>
+        </property>
+      </action>
+      <action name="flythroughModeAction">
         <property name="name">
-            <cstring>showPovAspectRatioAction</cstring>
+          <cstring>flythroughModeAction</cstring>
+        </property>
+        <property name="checkable">
+          <bool>true</bool>
+        </property>
+        <property name="iconText">
+          <string>Fly-through Mode</string>
         </property>
         <property name="text">
-            <string>Use current aspect ratio for POV-Ray camera</string>
+          <string>&amp;Fly-through Mode</string>
         </property>
-        <property name="toggleAction">
-            <bool>true</bool>
+        <property name="toolTip">
+          <string>Fly-through Mode</string>
         </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolsPartListAction</cstring>
+        <property name="shortcut">
+          <string>Ctrl+Shift+F</string>
         </property>
-        <property name="text">
-            <string>Part List...</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+L</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolsModelTreeAction</cstring>
-        </property>
-        <property name="text">
-            <string>Model Tree...</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+T</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolsBoundingBoxAction</cstring>
-        </property>
-        <property name="text">
-            <string>Model Bounding Box...</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+B</string>
-        </property>
-    </action>
-    <action>
-        <property name="name">
-            <cstring>toolsMpdModelSelectionAction</cstring>
-        </property>
-        <property name="text">
-            <string>MPD Model Selection...</string>
-        </property>
-        <property name="accel">
-            <string>Ctrl+M</string>
-        </property>
-    </action>
-</actions>
-<images>
-</images>
-<pixmapinproject/>
-<layoutdefaults spacing="4" margin="11"/>
-</UI>
+      </action>
+      <property name="name">
+        <cstring>viewModeActionGroup</cstring>
+      </property>
+    </actiongroup>
+  </widget>
+  <layoutdefault spacing="4" margin="11"/>
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <customwidgets>
+    <customwidget>
+      <class>ModelViewerWidget</class>
+      <extends>QWidget</extends>
+      <header location="local">ModelViewerWidget.h</header>
+      <sizehint>
+        <width>-1</width>
+        <height>-1</height>
+      </sizehint>
+      <container>0</container>
+      <sizepolicy>
+        <hordata>7</hordata>
+        <verdata>7</verdata>
+      </sizepolicy>
+    </customwidget>
+  </customwidgets>
+</ui>

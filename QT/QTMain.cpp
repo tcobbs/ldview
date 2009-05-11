@@ -122,11 +122,10 @@ int main(int argc, char *argv[])
 						 "/usr/local/share/ldview"))
 		printf ("Failed to load translation %s\n",QTextCodec::locale());
 	a.installTranslator(&translator);
-    LDViewMainWindow *w = new LDViewMainWindow;
+    LDViewMainWindow *w = new LDViewMainWindow(&a);
 	if (!TCUserDefaults::stringForKey(SAVE_SNAPSHOT_KEY))
     	w->show();
     a.connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
-	w->modelViewer->setApplication(&a);
     int retValue = a.exec();
 #ifdef __linux__
 	KillThread *killThread = new KillThread;
