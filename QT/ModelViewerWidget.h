@@ -101,8 +101,8 @@ public:
 	void doHelpAbout(void);
 	void doHelpAboutQt(void);
 	void doApply(void);
-	void doPollChanged(QAction *action);
-	void doViewModeChanged(QAction *action);
+	void doPollChanged(LDVPollMode);
+	void doViewModeChanged(LDInputHandler::ViewMode newMode);
 	void doZoomToFit(void);
 	void doFilePrint(void);
 	bool doFileSave(void);
@@ -165,8 +165,7 @@ public:
 	void checkForLibraryUpdates(void);
 	void userDefaultChangedAlertCallback(TCAlert *alert);
 	static QString findPackageFile(const QString &filename);
-	void setupStandardSizes();
-
+	void doRecentFile(int index);
 	void nextStep();
 	void prevStep();
 	void firstStep();
@@ -176,18 +175,13 @@ public:
 	LDViewModelTree *modeltree;
     BoundingBox *boundingbox;
 	MpdModel *mpdmodel;
+	bool isLoading() { return loading;}
+	LDInputHandler::ViewMode getViewMode() { return viewMode;}
 
 protected slots:
 	virtual void doAboutOK(void);
-	virtual void doRecentFile(int index);
-	virtual void doFileMenuAboutToShow(void);
-	virtual void doEditMenuAboutToShow(void);
-	virtual void doViewMenuAboutToShow(void);
-	virtual void doToolsMenuAboutToShow(void);
-	virtual void doHelpMenuAboutToShow(void);
 	virtual void doLibraryUpdateCanceled(void);
 	virtual void doPreferences(void);
-	virtual void standardSizeSelected(int index);
 
 protected:
 	// GL Widget overrides
@@ -238,10 +232,7 @@ protected:
 	void preLoad(void);
 	void postLoad(void);
 	void showErrorsIfNeeded(bool onlyIfNeeded);
-	void clearRecentFileMenuItems(void);
-	void populateRecentFileMenuItems(void);
 	void setLastOpenFile(const char *filename);
-	char *truncateFilename(const char *filename);
 	bool chDirFromFilename(const char *filename);
 	void checkFileForUpdates(void);
 	void getFileTime(const char *filename, QDateTime &value);
@@ -251,7 +242,6 @@ protected:
 	//void processKey(QKeyEvent *event, bool press);
 	void setViewMode(LDInputHandler::ViewMode value, bool examineLatLong, 
                      bool saveSettings=true);
-	void connectMenuShows(void);
 	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
 	void libraryUpdateProgress(TCProgressAlert *alert);
 	void setLibraryUpdateProgress(float progress);
@@ -261,8 +251,6 @@ protected:
 		bool fromCommandLine = false);
 	LDSnapshotTaker::ImageType getSaveImageType(void);
 
-	static void populateRecentFiles(void);
-	static void recordRecentFiles(void);
 //	static int staticProgressCallback(char *message, float progress,
 //		void *userData);
 //	static int staticErrorCallback(LDLError *error, void *userData);
@@ -298,15 +286,6 @@ protected:
 	Help *helpContents;
 	LDViewMainWindow *mainWindow;
 	QMenuBar *menuBar;
-	QPopupMenu *fileMenu;
-	QPopupMenu *editMenu;
-	QPopupMenu *viewMenu;
-	QPopupMenu *toolsMenu;
-	QPopupMenu *helpMenu;
-	int fileSeparatorIndex;
-	int fileCancelLoadId;
-	int fileReloadId;
-	int fileSaveSnapshotId,fileExportId;
 	QStatusBar *statusBar;
 	QToolBar *toolBar;
 	QProgressBar *progressBar;
@@ -336,9 +315,6 @@ protected:
 	int saveImageType;
 	int exportType;
 	int fullscreen;
-#ifdef __APPLE__
-	QPopupMenu *openRecentMenu;
-#endif // __APPLE__
 	AlertHandler *alertHandler;
 	LDLibraryUpdater *libraryUpdater;
 	bool libraryUpdateFinished;
@@ -357,9 +333,7 @@ protected:
 	bool saveImageResult;
 
 	int lightingSelection;
-	static TCStringArray* recentFiles;
 	LDPreferences::SaveOp curSaveOp;
-	LDrawModelViewer::StandardSizeVector standardSizes;
 };
 
 #endif // __MODELVIEWERWIDGET_H__

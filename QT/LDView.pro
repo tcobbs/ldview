@@ -1,7 +1,7 @@
 SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewExtraDir.cpp AlertHandler.cpp LDViewSnapshotSettings.cpp \
            LDViewPartList.cpp misc.cpp LDViewJpegOptions.cpp \
-		   LDViewModelTree.cpp LDViewBoundingBox.cpp \
+		   LDViewModelTree.cpp LDViewBoundingBox.cpp LDViewMainWindow.cpp \
 		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp LDViewExportOption.cpp
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
@@ -121,9 +121,8 @@ QMAKE_EXTRA_WIN_TARGETS += translations
 PRE_TARGETDEPS += ldview_de.qm
 QMAKE_CLEAN += *.qm
 
-FORMS3	= LDView.ui
 FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
-		  HelpPanel.ui JpegOptionsPanel.ui LatitudeLongitude.ui \
+		  HelpPanel.ui JpegOptionsPanel.ui LDView.ui LatitudeLongitude.ui \
 		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
@@ -154,11 +153,9 @@ IMAGES	= images/fileopen.png images/filesave.png images/print.png \
 	 images/toolbar_step_first.png images/toolbar_step_last.png images/toolbar_axes.png
 
 TEMPLATE	=app
-CONFIG	+= qt opengl thread warn_on release
+CONFIG	+= qt opengl thread warn_on release qt3support
 DEFINES	+= QT_THREAD_SUPPORT _QT
-INCLUDEPATH	+= . .. ../include
-exists($(QTDIR)/include/Qt3Support/q3button.h){
-	CONFIG 	+= uic3
+INCLUDEPATH	+= . .. ../include /usr/include/Qt3Support
 	unix {
 		LIBS += -ljpeg
 	}
@@ -168,8 +165,6 @@ exists($(QTDIR)/include/Qt3Support/q3button.h){
 	DEFINES += QT3_SUPPORT
 	QT 	+= qt3support opengl
 	INCLUDEPATH	+= $(QTDIR)/include/Qt $(QTDIR)/include/QtCore
-message(QT4)
-}
 LIBS	+= -lLDLoader -lTRE -lTCFoundation -lgl2ps -lLDExporter
 unix {
 # This has to be down here, because -ltinyxml has to come after -lLDExporter.

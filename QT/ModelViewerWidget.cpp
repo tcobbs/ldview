@@ -86,7 +86,6 @@
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
-TCStringArray *ModelViewerWidget::recentFiles = NULL;
 
 ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	:QGLWidget(parent, name),
@@ -112,16 +111,6 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	helpContents(NULL),
 	mainWindow(NULL),
 	menuBar(NULL),
-	fileMenu(NULL),
-	editMenu(NULL),
-	viewMenu(NULL),
-	toolsMenu(NULL),
-	helpMenu(NULL),
-	fileSeparatorIndex(-1),
-	fileCancelLoadId(-1),
-	fileReloadId(-1),
-	fileSaveSnapshotId(-1),
-	fileExportId(-1),
 	statusBar(NULL),
 	toolBar(NULL),
 	progressBar(NULL),
@@ -347,10 +336,10 @@ void ModelViewerWidget::setApplication(QApplication *value)
             		startPollTimer();
         		}
         		setLastOpenFile(commandLineFilename);
-        		populateRecentFileMenuItems();
-				setupStandardSizes();
-			    mainWindow->fileSaveAction->setEnabled(true);
-    			mainWindow->fileReloadAction->setEnabled(true);
+        		mainWindow->populateRecentFileMenuItems();
+				mainWindow->setupStandardSizes();
+			    mainWindow->fileSaveSetEnabled(true);
+    			mainWindow->fileReloadSetEnabled(true);
 				startPaintTimer();
 				updateStep();
     		}
@@ -620,8 +609,8 @@ void ModelViewerWidget::postLoad(void)
 	makeCurrent();
 	resizeGL(width(), height());
 	startPaintTimer();
-    mainWindow->fileSaveAction->setEnabled(true);
-    mainWindow->fileReloadAction->setEnabled(true);
+    mainWindow->fileSaveSetEnabled(true);
+    mainWindow->fileReloadSetEnabled(true);
 	updateStep();
 }
 
@@ -727,8 +716,8 @@ void ModelViewerWidget::finishLoadModel(void)
 			startPollTimer();
 		}
 		setLastOpenFile(filename);
-		populateRecentFileMenuItems();
-		setupStandardSizes();
+		mainWindow->populateRecentFileMenuItems();
+		mainWindow->setupStandardSizes();
 	}
 	postLoad();
 }
@@ -797,19 +786,19 @@ void ModelViewerWidget::doFileOpen(void)
 
 void ModelViewerWidget::setLastOpenFile(const char *filename)
 {
-	if (recentFiles)
+	if (mainWindow->recentFiles)
 	{
-		int index = recentFiles->indexOfString(filename);
+		int index = mainWindow->recentFiles->indexOfString(filename);
 
-		recentFiles->insertString(filename);
+		mainWindow->recentFiles->insertString(filename);
 		if (index >= 0)
 		{
 			// Insert before removal.  Since the one being removed could have the same
 			// pointer value as the string in the array, we could otherwise access a
 			// pointer after it had been deleted.
-			recentFiles->removeStringAtIndex(index + 1);
+			mainWindow->recentFiles->removeStringAtIndex(index + 1);
 		}
-		recordRecentFiles();
+		mainWindow->recordRecentFiles();
 	}
 }
 
@@ -1356,23 +1345,9 @@ void ModelViewerWidget::checkForLibraryUpdates(void)
 #endif // _NO_BOOST
 }
 
-void ModelViewerWidget::connectMenuShows(void)
-{
-	connect(fileMenu, SIGNAL(aboutToShow()), this, SLOT(doFileMenuAboutToShow()));
-	connect(editMenu, SIGNAL(aboutToShow()), this, SLOT(doEditMenuAboutToShow()));
-	connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(doViewMenuAboutToShow()));
-	connect(toolsMenu,SIGNAL(aboutToShow()), this, SLOT(doToolsMenuAboutToShow()));
-	connect(helpMenu, SIGNAL(aboutToShow()), this, SLOT(doHelpMenuAboutToShow()));
-}
-
 void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 {
-	QMenuItem *item;
-	QAction *pollAction;
 	int width, height;
-//	QSize windowSize;
-	int i;
-	int cnt;
 
 	lock();
 	mainWindow = value;
@@ -1384,12 +1359,11 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 	mainWindow->resize(width - 320 + windowSize.width(),
 		height - 240 + windowSize.height());
 */
-	pollAction = mainWindow->noPollingAction;
 	statusBar = mainWindow->statusBar();
 	toolBar = new QToolBar;
 	reflectSettings();
-    mainWindow->fileSaveAction->setEnabled(false);
-    mainWindow->fileReloadAction->setEnabled(false);
+    mainWindow->fileSaveSetEnabled(false);
+    mainWindow->fileReloadSetEnabled(false);
 	progressBar = new QProgressBar(statusBar);
 	progressLabel = new QLabel(statusBar);
 	progressLatlong = new QLabel(statusBar);
@@ -1399,23 +1373,9 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 	statusBar->addWidget(progressLabel, 1);
 	statusBar->addWidget(progressLatlong);
 	statusBar->addWidget(progressMode);
-	mainWindow->viewStatusBarAction->setOn(preferences->getStatusBar());
-	mainWindow->viewToolBarAction->setOn(preferences->getToolBar());
-	switch (Preferences::getPollMode())
-	{
-	case LDVPollPrompt:
-		pollAction = mainWindow->promptPollingAction;
-		break;
-	case LDVPollAuto:
-		pollAction = mainWindow->autoPollingAction;
-		break;
-	case LDVPollBackground:
-		pollAction = mainWindow->backgroundPollingAction;
-		break;
-	default:
-		break;
-	}
-	pollAction->setOn(true);
+	mainWindow->setStatusbarOn(preferences->getStatusBar());
+	mainWindow->setToolbarOn(preferences->getToolBar());
+	mainWindow->setPollAction(Preferences::getPollMode());
 	if (viewMode == LDInputHandler::VMExamine)
 	{
 		const wchar_t *message = TCLocalStrings::get(L"ExamineMode");
@@ -1425,228 +1385,22 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 		{
 			qcString[i] = (QChar)message[i];
 		}
-		mainWindow->examineModeAction->setOn(true);
+		mainWindow->setExamineModeOn(true);
 		progressMode->setText(QString(qcString, len));
 		delete qcString;
 		progressMode->setText(TCLocalStrings::get("ExamineMode"));
 	}
 	else
 	{
-		mainWindow->flythroughModeAction->setOn(true);
+		mainWindow->setFlythroughModeOn(true);
 		progressMode->setText(TCLocalStrings::get("FlyThroughMode"));
 	}
-	mainWindow->viewLatitudeRotationAction->setOn(Preferences::getLatLongMode());
-	mainWindow->showPovAspectRatioAction->setOn(
+	mainWindow->setViewLatitudeRotationOn(Preferences::getLatLongMode());
+	mainWindow->setShowPovAspectRatioOn(
 			Preferences::getPovAspectRatio());
-	menuBar = mainWindow->menuBar();
-	item = menuBar->findItem(menuBar->idAt(0));
-	if (item)
-	{
-		fileMenu = mainWindow->fileMenu;
-		fileCancelLoadId = fileMenu->idAt(10);
-		fileReloadId = fileMenu->idAt(1);
-	}
-	for ( cnt = i = 0; ; i++)
-	{
-		item = fileMenu->findItem(fileMenu->idAt(i));
-		if (item->isSeparator())
-		{
-			if (++cnt == 2)
-				break;
-		}
-	}
-	fileSeparatorIndex = i;
-#ifdef __APPLE__
-	fileMenu->removeItemAt(fileSeparatorIndex);
-	fileSeparatorIndex = -1;
-#ifdef HAVE_QT4
-	openRecentMenu = new Q3PopupMenu(this, "openRecentMenu");
-#else // QT3
-	openRecentMenu = new QPopupMenu(this, "openRecentMenu");
-#endif // QT3
-	fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
-#endif // __APPLE__
-	if (!recentFiles)
-	{
-		recentFiles = new TCStringArray(10);
-		populateRecentFiles();
-	}
-	populateRecentFileMenuItems();
-	setupStandardSizes();
-	item = menuBar->findItem(menuBar->idAt(1));
-	if (item)
-	{
-		editMenu = mainWindow->editMenu;
-#ifdef __APPLE__
-		// Since Preferences is the only item in the edit menu, we need to
-		// delete the edit menu on the Mac, since the item is going to get
-		// magically moved to the LDView menu.  The problem is, if we delete
-		// the edit menu, the magic stops working, since it's apparently all
-		// done on the fly.  So, we're going to create a new fully-functional
-		// Preferences menu item at the top of the File menu, and THEN delete
-		// the edit menu.  This newly created menu item won't be visible to the
-		// user, but it will make the other one continue to function after the
-		// deletion of the edit menu.
-		fileMenu->insertItem("Preferences", this, SLOT(doPreferences()),
-			0, -1, 0);
-		// Remove the (empty without Preferences) edit menu.
-		menuBar->removeItem(menuBar->idAt(1));
-#endif //__APPLE__
-	}
-	item = menuBar->findItem(menuBar->idAt(2));
-	if (item)
-	{
-		viewMenu = mainWindow->viewMenu;
-	}
-	item = menuBar->findItem(menuBar->idAt(3));
-	if (item)
-	{
-		toolsMenu = mainWindow->toolsMenu;
-	}
-	item = menuBar->findItem(menuBar->idAt(4));
-	if (item)
-	{
-		helpMenu = mainWindow->helpMenu;
-	}
-	connectMenuShows();
     saveAlpha = TCUserDefaults::longForKey(SAVE_ALPHA_KEY, 0, false) != 0;
-#ifndef HAVE_QT4
-	QObjectList *toolButtons = mainWindow->toolbar->queryList("QToolButton");
-	QObjectListIt it(*toolButtons);
-	QObject *object;
-	for (; (object = it.current()) != NULL; ++it)
-	{
-		QToolButton *button = (QToolButton*)object;
-		if (button->textLabel() == TCLocalStrings::get("ViewingAngle"))
-		{
-			button->setPopup(mainWindow->viewingAnglePopupMenu);
-			button->setPopupDelay(1);
-		}
-	}
-#endif
 	updateStep();
 	unlock();
-}
-
-void ModelViewerWidget::populateRecentFiles(void)
-{
-	int i;
-	long maxRecentFiles = Preferences::getMaxRecentFiles();
-
-	recentFiles->removeAll();
-	for (i = 1; i <= maxRecentFiles; i++)
-	{
-		char *filename = Preferences::getRecentFile(i);
-
-		if (filename)
-		{
-			recentFiles->addString(filename);
-			delete filename;
-		}
-		else
-		{
-			recentFiles->addString(NULL);
-		}
-	}
-}
-
-void ModelViewerWidget::recordRecentFiles(void)
-{
-	int i;
-	long maxRecentFiles = Preferences::getMaxRecentFiles();
-
-	for (i = 1; i <= maxRecentFiles; i++)
-	{
-		char *filename = recentFiles->stringAtIndex(i - 1);
-
-		Preferences::setRecentFile(i, filename);
-	}
-}
-
-void ModelViewerWidget::clearRecentFileMenuItems(void)
-{
-#ifdef __APPLE__
-	if (openRecentMenu)
-	{
-		openRecentMenu->clear();
-	}
-#else // __APPLE__
-	QMenuItem *item;
-	int index = fileSeparatorIndex + 1;
-	int i;
-	int count = fileMenu->count();
-
-	for (i = index; i < count - 1; i++)
-	{
-		item = fileMenu->findItem(fileMenu->idAt(index));
-		fileMenu->removeItemAt(index);
-	}
-#endif // __APPLE__
-}
-
-char *ModelViewerWidget::truncateFilename(const char *filename)
-{
-	if (filename)
-	{
-		int len = strlen(filename);
-
-		if (len > 40)
-		{
-			char *retValue = new char[44];
-
-			strncpy(retValue, filename, 10);
-			strcpy(retValue + 10, "...");
-			strcat(retValue, filename + len - 30);
-			return retValue;
-		}
-		else
-		{
-			return copyString(filename);
-		}
-	}
-	else
-	{
-		return NULL;
-	}
-}
-
-void ModelViewerWidget::populateRecentFileMenuItems(void)
-{
-#ifdef __APPLE__
-	if (!openRecentMenu)
-	{
-		return;
-	}
-#endif // __APPLE__
-	clearRecentFileMenuItems();
-
-	if (recentFiles->stringAtIndex(0))
-	{
-		int i;
-		long maxRecentFiles = Preferences::getMaxRecentFiles();
-
-		for (i = 0; i < maxRecentFiles; i++)
-		{
-			char *filename = truncateFilename(recentFiles->stringAtIndex(i));
-
-			if (filename)
-			{
-#ifdef __APPLE__
-				QPopupMenu *menu = openRecentMenu;
-#else // __APPLE__
-				QPopupMenu *menu = fileMenu;
-#endif // __APPLE__
-				int id = menu->insertItem(filename, this,
-					SLOT(doRecentFile(int)), 0, -1, fileSeparatorIndex + i + 1);
-
-				menu->setItemParameter(id, i);
-				delete filename;
-			}
-		}
-#ifndef __APPLE__
-		fileMenu->insertSeparator(fileMenu->count() - 1);
-#endif // __APPLE__
-	}
 }
 
 void ModelViewerWidget::doRecentFile(int index)
@@ -1662,7 +1416,7 @@ void ModelViewerWidget::doRecentFile(int index)
 	}
 	if (verifyLDrawDir())
 	{
-		char *filename = recentFiles->stringAtIndex(index);
+		char *filename = mainWindow->recentFiles->stringAtIndex(index);
 
 		if (filename)
 		{
@@ -1748,7 +1502,7 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 	}
 	preferences->setStatusBar(flag);
 	unlock();
-	setupStandardSizes();
+	mainWindow->setupStandardSizes();
 }
 
 void ModelViewerWidget::doViewToolBar(bool flag)
@@ -1764,7 +1518,7 @@ void ModelViewerWidget::doViewToolBar(bool flag)
 	}
 	preferences->setToolBar(flag);
 	unlock();
-	setupStandardSizes();
+	mainWindow->setupStandardSizes();
 }
 
 void ModelViewerWidget::doViewFullScreen(void)
@@ -1778,18 +1532,18 @@ void ModelViewerWidget::doViewFullScreen(void)
 		menuBar->hide();
 		statusBar->hide();
 #ifndef HAVE_QT4
-		mainWindow->GroupBox12->setFrameShape( QFrame::NoFrame );
+		mainWindow->MainGroupBox->setFrameShape( QFrame::NoFrame );
 #endif
-		mainWindow->GroupBox12->layout()->setMargin( 0 );
+		mainWindow->setMainGroupBoxMargin( 0 );
 		mainWindow->dockWindows().at(0)->hide();
 		mainWindow->showFullScreen();
 		fullscreen=1;
 	} else
 	{
 #ifndef HAVE_QT4
-		mainWindow->GroupBox12->setFrameShape( QGroupBox::WinPanel );
+		mainWindow->MainGroupBox->setFrameShape( QGroupBox::WinPanel );
 #endif
-        mainWindow->GroupBox12->layout()->setMargin( 2 );
+        mainWindow->setMainGroupBoxMargin( 2 );
         mainWindow->showNormal();
 		mainWindow->resize(size);
 		mainWindow->move(pos);
@@ -2034,15 +1788,15 @@ void ModelViewerWidget::doSeams(bool value)
 
 void ModelViewerWidget::reflectSettings(void)
 {
-    if (mainWindow && mainWindow->toolbarWireframeAction && preferences)
+    if (mainWindow && preferences)
     {
-        mainWindow->toolbarWireframeAction->setOn(preferences->getDrawWireframe());
-		mainWindow->toolbarEdgeAction->setOn(preferences->getShowsHighlightLines());
-		mainWindow->toolbarLightingAction->setOn(preferences->getUseLighting());
-		mainWindow->toolbarBFCAction->setOn(preferences->getUseBFC());
-		mainWindow->toolbarAxesAction->setOn(preferences->getShowAxes());
-		mainWindow->toolbarSeamsAction->setOn(preferences->getUseSeams());
-		mainWindow->toolbarPrimitiveSubstitutionAction->setOn(preferences->getAllowPrimitiveSubstitution());
+        mainWindow->setToolbarWireframeOn(preferences->getDrawWireframe());
+		mainWindow->setToolbarEdgeOn(preferences->getShowsHighlightLines());
+		mainWindow->setToolbarLightingOn(preferences->getUseLighting());
+		mainWindow->setToolbarBFCOn(preferences->getUseBFC());
+		mainWindow->setToolbarAxesOn(preferences->getShowAxes());
+		mainWindow->setToolbarSeamsOn(preferences->getUseSeams());
+		mainWindow->setToolbarPrimitiveSubstitutionOn(preferences->getAllowPrimitiveSubstitution());
     }
 }
 
@@ -2490,23 +2244,9 @@ void ModelViewerWidget::windowActivationChange(bool oldActive)
 	QGLWidget::windowActivationChange(oldActive);
 }
 
-void ModelViewerWidget::doPollChanged(QAction *action)
+void ModelViewerWidget::doPollChanged(LDVPollMode newMode)
 {
-	LDVPollMode newMode = LDVPollNone;
-
 	lock();
-	if (action == mainWindow->promptPollingAction)
-	{
-		newMode = LDVPollPrompt;
-	}
-	else if (action == mainWindow->autoPollingAction)
-	{
-		newMode = LDVPollAuto;
-	}
-	else if (action == mainWindow->backgroundPollingAction)
-	{
-		newMode = LDVPollBackground;
-	}
 	Preferences::setPollMode(newMode);
 	killPollTimer();
 	startPollTimer(true);
@@ -2546,15 +2286,9 @@ void ModelViewerWidget::setViewMode(LDInputHandler::ViewMode value,
 	Preferences::setViewMode(viewMode);
 }
 
-void ModelViewerWidget::doViewModeChanged(QAction *action)
+void ModelViewerWidget::doViewModeChanged(LDInputHandler::ViewMode newMode)
 {
-	LDInputHandler::ViewMode newMode = LDInputHandler::VMExamine;
-
 	lock();
-	if (action == mainWindow->flythroughModeAction)
-	{
-		newMode = LDInputHandler::VMFlyThrough;
-	}
 	setViewMode(newMode,examineLatLong);
 	unlock();
 }
@@ -3678,102 +3412,6 @@ void ModelViewerWidget::keyReleaseEvent(QKeyEvent *event)
 */
 }
 
-void ModelViewerWidget::setMenuItemsEnabled(QPopupMenu *menu, bool enabled)
-{
-	int count = menu->count();
-	int i;
-
-	for (i = 0; i < count; i++)
-	{
-		menu->setItemEnabled(menu->idAt(i), enabled);
-	}
-}
-
-void ModelViewerWidget::doFileMenuAboutToShow(void)
-{
-	if (loading)
-	{
-		setMenuItemsEnabled(fileMenu, false);
-		fileMenu->setItemEnabled(fileCancelLoadId, true);
-	}
-	else
-	{
-		setMenuItemsEnabled(fileMenu, true);
-		fileMenu->setItemEnabled(fileCancelLoadId, false);
-		if (!modelViewer || !modelViewer->getMainTREModel())
-		{
-			fileMenu->setItemEnabled(fileReloadId, false);
-			fileMenu->setItemEnabled(fileSaveSnapshotId, false);
-			fileMenu->setItemEnabled(fileMenu->idAt(3), false);
-			fileMenu->setItemEnabled(fileMenu->idAt(6), false);
-			fileMenu->setItemEnabled(fileMenu->idAt(11), false);
-		}
-	}
-}
-
-void ModelViewerWidget::doEditMenuAboutToShow(void)
-{
-	if (loading)
-	{
-		setMenuItemsEnabled(editMenu, false);
-	}
-	else
-	{
-		setMenuItemsEnabled(editMenu, true);
-	}
-}
-
-void ModelViewerWidget::doViewMenuAboutToShow(void)
-{
-	if (loading)
-	{
-		setMenuItemsEnabled(viewMenu, false);
-	}
-	else
-	{
-		if (!modelViewer || !modelViewer->getMainTREModel())
-		{
-			setMenuItemsEnabled(viewMenu, false);
-			viewMenu->setItemEnabled(viewMenu->idAt(3), true);
-			viewMenu->setItemEnabled(viewMenu->idAt(2), true);
-		}
-		else
-		{
-			setMenuItemsEnabled(viewMenu, true);
-			viewMenu->setItemEnabled(viewMenu->idAt(9), viewMode == LDInputHandler::VMExamine);
-		}
-	}
-}
-
-void ModelViewerWidget::doToolsMenuAboutToShow(void)
-{
-    if (loading)
-    {
-        setMenuItemsEnabled(toolsMenu, false);
-    }
-    else
-    {
-        if (!modelViewer || !modelViewer->getMainTREModel())
-        {
-            setMenuItemsEnabled(toolsMenu, false);
-        }
-        else
-            setMenuItemsEnabled(toolsMenu, true);
-    }
-}
-
-void ModelViewerWidget::doHelpMenuAboutToShow(void)
-{
-	if (loading)
-	{
-		setMenuItemsEnabled(helpMenu, false);
-	}
-	else
-	{
-		setMenuItemsEnabled(helpMenu, true);
-	}
-}
-
 void ModelViewerWidget::ldlErrorCallback(LDLError *error)
 {
 	if (error)
@@ -4190,13 +3828,13 @@ void ModelViewerWidget::updateStep()
 {
     int step = modelViewer->getStep();
     QString max = QString::number(modelViewer->getNumSteps());
-	mainWindow->toolbarFirstStep->setEnabled(step>1);
-    mainWindow->toolbarPrevStep->setEnabled(step>1);
-    mainWindow->toolbarNextStep->setEnabled(modelViewer->getNumSteps()>step);
-	mainWindow->toolbarLastStep->setEnabled(modelViewer->getNumSteps()>step);
-	mainWindow->stepGoto->setEnabled(modelViewer->getNumSteps()>0);
-    mainWindow->toolbarMaxStep->setText(" / "+max);
-    mainWindow->toolbarCurrentStep->setText(QString::number(step));
+	mainWindow->toolbarFirstStepSetEnabled(step>1);
+    mainWindow->toolbarPrevStepSetEnabled(step>1);
+    mainWindow->toolbarNextStepSetEnabled(modelViewer->getNumSteps()>step);
+	mainWindow->toolbarLastStepSetEnabled(modelViewer->getNumSteps()>step);
+	mainWindow->setStepGotoEnabled(modelViewer->getNumSteps()>0);
+    mainWindow->toolbarMaxStepSetText(" / "+max);
+    mainWindow->toolbarCurrentStepSetText(QString::number(step));
 }
 
 void ModelViewerWidget::gotoStep()
@@ -4209,43 +3847,6 @@ void ModelViewerWidget::gotoStep()
 		modelViewer->setStep(step);
 		updateStep();
 		doApply();
-	}
-}
-
-void ModelViewerWidget::setupStandardSizes()
-{
-	QSize workArea = QApplication::desktop()->availableGeometry(mainWindow).size();
-	QSize windowSize = mainWindow->frameSize();
-	LDrawModelViewer::getStandardSizes(workArea.width() - windowSize.width() +
-									   modelViewer->getWidth(),
-									   workArea.height() - windowSize.height() +
-									   modelViewer->getHeight(),
-									   standardSizes);
-	mainWindow->standardSizesPopupMenu->clear();
-	for (size_t i = 0; i < standardSizes.size(); i++)
-	{
-		QString qs;
-		ucstringtoqstring(qs, standardSizes[i].name);
-		mainWindow->standardSizesPopupMenu->insertItem(qs, this, 
-								SLOT(standardSizeSelected(int)), 0, i );
-	}
-}
-
-void ModelViewerWidget::standardSizeSelected(int i)
-{
-	QString text;
-	QRegExp sep( "\\s+" );
-	text = mainWindow->standardSizesPopupMenu->text(i);
-	if (text != QString::null)
-	{
-		int w,h;
-		bool ok;
-		w = text.section(sep,0,0).toInt(&ok);
-		h = text.section(sep,2,2).toInt(&ok);
-		mainWindow->resize(w + mainWindow->size().width() - 
-							   modelViewer->getWidth(),
-						   h + mainWindow->size().height() - 
-							   modelViewer->getHeight());
 	}
 }
 

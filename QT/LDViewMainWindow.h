@@ -1,73 +1,50 @@
 #ifndef __LDVIEWMAINWINDOW_H__
 #define __LDVIEWMAINWINDOW_H__
 
-#include "LDView.h"
+#include "ui_LDView.h"
 #include "ModelViewerWidget.h"
 #include <qapplication.h>
 #include <qaction.h>
 
-class LDViewMainWindow : public LDView
+class LDViewMainWindow : public Q3MainWindow , Ui::LDView
 {
 	Q_OBJECT
 public:
-	LDViewMainWindow():LDView()
-	{if (modelViewer) modelViewer->setMainWindow(this);
-    connect( fileOpenAction, SIGNAL( activated() ), this, SLOT( fileOpen() ) );
-    connect( fileSaveSettingsAction, SIGNAL( activated() ), this, SLOT( fileSaveSettings() ) );
-    connect( fileExportAction, SIGNAL( activated() ), this, SLOT( fileExport() ) );
-    connect( fileExportOptionAction, SIGNAL( activated() ), this, SLOT( fileExportOption() ) );
-    connect( fileJPEGOptionsAction, SIGNAL( activated() ), this, SLOT( fileJPEGOptions() ) );
-    connect( fileSaveAction, SIGNAL( activated() ), this, SLOT( fileSave() ) );
-    connect( filePrintAction, SIGNAL( activated() ), this, SLOT( filePrint() ) );
-    connect( fileExitAction, SIGNAL( activated() ), this, SLOT( fileExit() ) );
-    connect( helpContentsAction, SIGNAL( activated() ), this, SLOT( helpContents() ) );
-    connect( helpAboutAction, SIGNAL( activated() ), this, SLOT( helpAbout() ) );
-    connect( helpAboutQtAction, SIGNAL( activated() ), this, SLOT( helpAboutQt() ) );
-    connect( editPreferencesAction, SIGNAL( activated() ), this, SLOT( editPreferences() ) );
-    connect( viewToolBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewToolBar(bool) ) );
-    connect( toolbarWireframeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarWireframe(bool) ) );
-    connect( toolbarEdgeAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarEdge(bool) ) );
-    connect( toolbarPrimitiveSubstitutionAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarPrimitiveSubstitution(bool) ) );
-    connect( toolbarLightingAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarLighting(bool) ) );
-    connect( toolbarBFCAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarBFC(bool) ) );
-    connect( toolbarAxesAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarAxes(bool) ) );
-    connect( toolbarSeamsAction, SIGNAL( toggled(bool) ), this, SLOT( toolbarSeams(bool) ) );
-    connect( viewStatusBarAction, SIGNAL( toggled(bool) ), this, SLOT( viewStatusBar(bool) ) );
-    connect( viewLatitudeRotationAction, SIGNAL( toggled(bool) ), this, SLOT( latitudeRotation(bool) ) );
-    connect( viewFullScreenAction, SIGNAL( activated() ), this, SLOT( viewFullScreen() ) );
-    connect( viewResetViewAction, SIGNAL( activated() ), this, SLOT( viewResetView() ) );
-    connect( helpOpenGLDriverInfoAction, SIGNAL( activated() ), this, SLOT( helpOpenGLDriverInfo() ) );
-    connect( fileLDrawDirAction, SIGNAL( activated() ), this, SLOT( fileLDrawDir() ) );
-    connect( fileExtraDirAction, SIGNAL( activated() ), this, SLOT( fileExtraDir() ) );
-    connect( fileCheckForUpdatesAction, SIGNAL( activated() ), this, SLOT( fileCheckForUpdates() ) );
-    connect( fileReloadAction, SIGNAL( activated() ), this, SLOT( fileReload() ) );
-    connect( viewShowErrorsAction, SIGNAL( activated() ), this, SLOT( viewShowErrors() ) );
-    connect( pollActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( pollChanged(QAction*) ) );
-    connect( viewZoomToFitAction, SIGNAL( activated() ), this, SLOT( viewZoomToFit() ) );
-    connect( viewModeActionGroup, SIGNAL( selected(QAction*) ), this, SLOT( viewModeChanged(QAction*) ) );
-    connect( frontViewAngleAction, SIGNAL( activated() ), this, SLOT( frontViewAngle() ) );
-    connect( backViewAngleAction, SIGNAL( activated() ), this, SLOT( backViewAngle() ) );
-    connect( leftViewAngleAction, SIGNAL( activated() ), this, SLOT( leftViewAngle() ) );
-    connect( rightViewAngleAction, SIGNAL( activated() ), this, SLOT( rightViewAngle() ) );
-    connect( topViewAngleAction, SIGNAL( activated() ), this, SLOT( topViewAngle() ) );
-    connect( bottomViewAngleAction, SIGNAL( activated() ), this, SLOT( bottomViewAngle() ) );
-    connect( latLongViewAngleAction, SIGNAL( activated() ), this, SLOT( latLongViewAngle() ) );
-    connect( isoViewAngleAction, SIGNAL( activated() ), this, SLOT( isoViewAngle() ) );
-    connect( saveDefaultViewAngleAction, SIGNAL( activated() ), this, SLOT( saveDefaultViewAngle() ) );
-    connect( fileCancelLoadAction, SIGNAL( activated() ), this, SLOT( fileCancelLoad() ) );
-    connect( showViewInfoAction, SIGNAL( activated() ), this, SLOT( showViewInfo() ) );
-    connect( showPovCameraAction, SIGNAL( activated() ), this, SLOT( showPovCamera() ) );
-    connect( showPovAspectRatioAction, SIGNAL( toggled(bool) ), this, SLOT( showPovAspectRatio(bool) ) );
-    connect( toolsPartListAction, SIGNAL( activated() ), this, SLOT( toolsPartList() ) );
-    connect( toolbarPrevStep, SIGNAL( activated() ), this, SLOT( prevStep() ) );
-    connect( toolbarNextStep, SIGNAL( activated() ), this, SLOT( nextStep() ) );
-    connect( toolbarFirstStep, SIGNAL( activated() ), this, SLOT( firstStep() ) );
-    connect( toolbarLastStep, SIGNAL( activated() ), this, SLOT( lastStep() ) );
-    connect( stepGoto, SIGNAL( activated() ), this, SLOT( gotoStep() ) );
-    connect( toolsModelTreeAction, SIGNAL( activated() ), this, SLOT( toolsModelTree() ) );
-    connect( toolsBoundingBoxAction, SIGNAL( activated() ), this, SLOT( toolsBoundingBox() ) );
-    connect( toolsMpdModelSelectionAction, SIGNAL( activated() ), this, SLOT( toolsMpdModelSelection() ) );
-}
+	LDViewMainWindow(QApplication * /* a */);
+
+	void fileSaveSetEnabled(bool b)        {fileSaveAction->setEnabled(b);}
+	void fileReloadSetEnabled(bool b)      {fileReloadAction->setEnabled(b);}
+	void toolbarFirstStepSetEnabled(bool b){toolbarFirstStep->setEnabled(b);}
+	void toolbarNextStepSetEnabled(bool b) {toolbarNextStep->setEnabled(b);}
+	void toolbarPrevStepSetEnabled(bool b) {toolbarPrevStep->setEnabled(b);}
+	void toolbarLastStepSetEnabled(bool b) {toolbarLastStep->setEnabled(b);}
+	void setupStandardSizes();
+	void toolbarMaxStepSetText(QString s)  {toolbarMaxStep->setText(s);}
+	void toolbarCurrentStepSetText(QString s) {toolbarCurrentStep->setText(s);}
+	void setToolbarOn(bool b) {viewToolBarAction->setOn(b);}
+	void setStatusbarOn(bool b){viewStatusBarAction->setOn(b);}
+	void setStepGotoEnabled(bool b) {stepGoto->setEnabled(b);}
+	void setToolbarWireframeOn(bool b){toolbarWireframeAction->setOn(b);}
+	void setToolbarEdgeOn(bool b) {toolbarEdgeAction->setOn(b);}
+	void setToolbarLightingOn(bool b) {toolbarLightingAction->setOn(b);}
+	void setToolbarBFCOn(bool b){toolbarBFCAction->setOn(b);}
+	void setToolbarAxesOn(bool b){toolbarAxesAction->setOn(b);}
+	void setToolbarSeamsOn(bool b){toolbarSeamsAction->setOn(b);}
+	void setToolbarPrimitiveSubstitutionOn(bool b){toolbarPrimitiveSubstitutionAction->setOn(b);}
+	void setPollAction(LDVPollMode mode);
+	void setExamineModeOn(bool b){examineModeAction->setOn(b);}
+	void setFlythroughModeOn(bool b){flythroughModeAction->setOn(b);}
+	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setOn(b);}
+	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setOn(b);}
+	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
+	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
+	void clearRecentFileMenuItems(void);
+	char *truncateFilename(const char *i /* filename */);
+	void populateRecentFileMenuItems(void);
+	void populateRecentFiles(void);
+	void recordRecentFiles(void);
+	static TCStringArray* recentFiles;
+
 public slots:
 	void fileOpen() { 	modelViewer->doFileOpen();}
 	void fileSave(){ 	modelViewer->doFileSave();}
@@ -105,8 +82,9 @@ public slots:
 	void fileCheckForUpdates(){	 modelViewer->checkForLibraryUpdates();}
 	void fileReload(){    modelViewer->doFileReload();}
 	void viewShowErrors(){    modelViewer->doViewErrors();}
-	void pollChanged(QAction *action){    modelViewer->doPollChanged(action);}
-	void viewModeChanged(QAction *action){    modelViewer->doViewModeChanged(action);}
+	void pollChanged(QAction *action);
+	void viewModeChanged(QAction *action){
+    modelViewer->doViewModeChanged((action == flythroughModeAction) ? LDInputHandler::VMFlyThrough : LDInputHandler::VMExamine);}
 	void viewZoomToFit(){	modelViewer->doZoomToFit();}
 	void frontViewAngle(){	modelViewer->doFrontViewAngle();}
 	void backViewAngle(){	modelViewer->doBackViewAngle();}
@@ -131,6 +109,20 @@ public slots:
 	void firstStep(){	modelViewer->firstStep();}
 	void lastStep(){	modelViewer->lastStep();}
 	void gotoStep(){	modelViewer->gotoStep();}
+    void doFileMenuAboutToShow(void);
+    void doEditMenuAboutToShow(void);
+    void doViewMenuAboutToShow(void);
+    void doToolsMenuAboutToShow(void);
+    void doHelpMenuAboutToShow(void);
+	void doRecentFile(int);
+	void standardSizeSelected(int);
+
+private:
+	LDrawModelViewer::StandardSizeVector standardSizes;
+#ifdef __APPLE__
+    QPopupMenu *openRecentMenu;
+#endif // __APPLE__
+	int fileSeparatorIndex;
 };
 
 #endif
