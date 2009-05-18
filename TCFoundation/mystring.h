@@ -10,7 +10,7 @@
 #endif
 
 #ifdef _QT
-#include <qstring.h>
+#include <Qt/qstring.h>
 #endif // _QT
 
 #ifdef _OSMESA
