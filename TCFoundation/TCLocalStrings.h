@@ -5,7 +5,7 @@
 #include <TCFoundation/TCStlIncludes.h>
 
 #ifdef _QT
-#include <qtextcodec.h>
+#include <Qt/qtextcodec.h>
 
 typedef std::map<QString, QString> QStringQStringMap;
 #endif // _QT

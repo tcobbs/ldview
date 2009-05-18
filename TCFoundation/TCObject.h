@@ -4,7 +4,7 @@
 #include <TCFoundation/TCDefines.h>
 
 #ifdef _QT
-#include <qstring.h>
+#include <Qt/qstring.h>
 #endif // _QT
 
 class TCAutoreleasePool;
