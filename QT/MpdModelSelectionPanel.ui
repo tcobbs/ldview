@@ -37,7 +37,7 @@
       </size>
     </property>
     <property name="windowTitle">
-      <string>LDView Mpd Model Selection</string>
+      <string>LDView MPD Model Selection</string>
     </property>
     <property name="sizeGripEnabled">
       <bool>false</bool>

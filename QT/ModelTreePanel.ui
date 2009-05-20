@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0" stdsetdef="1">
-  <author></author>
+  <author>Peter Bartfai</author>
   <comment></comment>
   <exportmacro></exportmacro>
   <class>ModelTreePanel</class>
@@ -149,7 +149,7 @@
           </layout>
         </item>
         <item>
-          <widget class="Q3GroupBox" name="showLinesBox">
+          <widget class="QGroupBox" name="showLinesBox">
             <property name="title">
               <string>Show lines</string>
             </property>
@@ -215,6 +215,22 @@
                     <string>Unknown</string>
                   </property>
                 </widget>
+              </item>
+              <item>
+                <spacer name="Spacer3">
+                  <property name="sizeHint">
+                    <size>
+                      <width>20</width>
+                      <height>20</height>
+                    </size>
+                  </property>
+                  <property name="sizeType">
+                    <enum>QSizePolicy::Expanding</enum>
+                  </property>
+                  <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                  </property>
+                </spacer>
               </item>
             </layout>
           </widget>

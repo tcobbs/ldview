@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0" stdsetdef="1">
   <author></author>
   <comment></comment>
@@ -163,42 +163,7 @@ Glen  Randers-Pehrson and the rest of the libpng team</string>
               </property>
             </widget>
           </item>
-        </layout>
-      </item>
-      <item>
-        <widget class="Q3Frame" name="Frame7">
-          <property name="frameShape">
-            <enum>QFrame::HLine</enum>
-          </property>
-          <property name="frameShadow">
-            <enum>QFrame::Sunken</enum>
-          </property>
-        </widget>
-      </item>
-      <item>
-        <widget class="Q3GroupBox" name="GroupBox3">
-          <property name="sizePolicy">
-            <sizepolicy>
-              <hsizetype>5</hsizetype>
-              <vsizetype>5</vsizetype>
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-            </sizepolicy>
-          </property>
-          <property name="frameShape">
-            <enum>Q3GroupBox::NoFrame</enum>
-          </property>
-          <property name="title">
-            <string/>
-          </property>
-          <layout class="QVBoxLayout">
-            <property name="margin">
-              <number>11</number>
-            </property>
-            <property name="spacing">
-              <number>0</number>
-            </property>
-            <item>
+          <item>
               <widget class="QLabel" name="TextLabel3">
                 <property name="sizePolicy">
                   <sizepolicy>
@@ -222,9 +187,24 @@ Group, which does not sponsor, endorse, or authorize this program.</string>
                   <bool>false</bool>
                 </property>
               </widget>
-            </item>
-          </layout>
-        </widget>
+          </item>
+          <item>
+            <spacer name="Spacer1">
+              <property name="sizeHint">
+                <size>
+                  <width>20</width>
+                  <height>20</height>
+                </size>
+              </property>
+              <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="orientation">
+                <enum>Qt::Vertical</enum>
+              </property>
+            </spacer>
+          </item>
+        </layout>
       </item>
     </layout>
   </widget>

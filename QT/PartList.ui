@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0" stdsetdef="1">
-  <author></author>
+  <author>Peter Bartfai</author>
   <comment></comment>
   <exportmacro></exportmacro>
   <class>PartListPanel</class>
@@ -29,7 +29,7 @@
             <number>6</number>
           </property>
           <item>
-            <widget class="Q3GroupBox" name="settingsBox">
+            <widget class="QGroupBox" name="settingsBox">
               <property name="title">
                 <string>Settings</string>
               </property>
@@ -98,7 +98,7 @@
             </widget>
           </item>
           <item>
-            <widget class="Q3GroupBox" name="columnOrderBox">
+            <widget class="QGroupBox" name="columnOrderBox">
               <property name="title">
                 <string>Column Order</string>
               </property>
