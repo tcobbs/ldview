@@ -202,7 +202,7 @@ int LDViewErrors::populateListView(void)
     	}
 		messageText->setText(buf);
 	}
-	return errorCount+warningCount;
+	return errorCount;
 }
 
 bool LDViewErrors::addErrorToListView(LDLError *error)
