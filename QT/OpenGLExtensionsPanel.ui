@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>OpenGLExtensionsPanel</class>
-  <widget class="Q3MainWindow" name="OpenGLExtensionsPanel">
+  <widget class="QMainWindow" name="OpenGLExtensionsPanel">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -28,7 +28,7 @@
           <number>0</number>
         </property>
         <item>
-          <widget class="Q3TextEdit" name="extensionsBox">
+          <widget class="QTextEdit" name="extensionsBox">
             <property name="enabled">
               <bool>true</bool>
             </property>

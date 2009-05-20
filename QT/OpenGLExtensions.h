@@ -5,11 +5,11 @@
 #include <qlabel.h>
 #include <qstring.h>
 
-class OpenGLExtensions : public Q3MainWindow , Ui::OpenGLExtensionsPanel
+class OpenGLExtensions : public QMainWindow , Ui::OpenGLExtensionsPanel
 {
 public:
 	OpenGLExtensions(QWidget *parent = 0)
-         : Q3MainWindow(parent) { setupUi(this);}
+         : QMainWindow(parent) { setupUi(this);}
 	void setText(QString text) {extensionsBox->setText(text);}
 };
 

@@ -16,4 +16,5 @@ LDView.exe
 LDViewMessages.ini
 qmake_image_collection.cpp
 *.rc
-
+Help.html
+images.tmp

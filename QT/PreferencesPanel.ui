@@ -59,7 +59,7 @@
                 <number>4</number>
               </property>
               <item>
-                <widget class="Q3GroupBox" name="generalColorBox">
+                <widget class="QGroupBox" name="generalColorBox">
                   <property name="sizePolicy">
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -197,7 +197,7 @@
                 </widget>
               </item>
               <item>
-                <widget class="Q3GroupBox" name="generalMiscBox">
+                <widget class="QGroupBox" name="generalMiscBox">
                   <property name="sizePolicy">
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -348,7 +348,7 @@
                 </widget>
               </item>
               <item>
-                <widget class="Q3GroupBox" name="generalSnapshotSaveBox">
+                <widget class="QGroupBox" name="generalSnapshotSaveBox">
                   <property name="sizePolicy">
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -625,7 +625,7 @@
                 <number>4</number>
               </property>
               <item>
-                <widget class="Q3GroupBox" name="geometryModelBox">
+                <widget class="QGroupBox" name="geometryModelBox">
                   <property name="title">
                     <string>&amp;Model</string>
                   </property>
@@ -719,7 +719,7 @@
                         <number>4</number>
                       </property>
                       <item>
-                        <widget class="Q3GroupBox" name="wireframeButton">
+                        <widget class="QGroupBox" name="wireframeButton">
                           <property name="title">
                             <string>&amp;Wireframe</string>
                           </property>
@@ -871,7 +871,7 @@
                         </widget>
                       </item>
                       <item>
-                        <widget class="Q3GroupBox" name="enableBFCButton">
+                        <widget class="QGroupBox" name="enableBFCButton">
                           <property name="title">
                             <string>BFC</string>
                           </property>
@@ -957,7 +957,7 @@
                     </layout>
                   </item>
                   <item>
-                    <widget class="Q3GroupBox" name="edgeLinesButton">
+                    <widget class="QGroupBox" name="edgeLinesButton">
                       <property name="title">
                         <string>&amp;Edge Lines</string>
                       </property>
@@ -1247,7 +1247,7 @@
                     <number>4</number>
                   </property>
                   <item>
-                    <widget class="Q3GroupBox" name="lightingButton">
+                    <widget class="QGroupBox" name="lightingButton">
                       <property name="title">
                         <string>&amp;Lighting</string>
                       </property>
@@ -1342,7 +1342,7 @@
                           </layout>
                         </item>
                         <item>
-                          <widget class="Q3GroupBox" name="lightingDirectionBox">
+                          <widget class="QGroupBox" name="lightingDirectionBox">
                             <property name="title">
                               <string>Light Direction</string>
                             </property>
@@ -1599,7 +1599,7 @@
                         <number>4</number>
                       </property>
                       <item>
-                        <widget class="Q3GroupBox" name="stereoButton">
+                        <widget class="QGroupBox" name="stereoButton">
                           <property name="title">
                             <string>&amp;Stereo</string>
                           </property>
@@ -1775,7 +1775,7 @@
                         </widget>
                       </item>
                       <item>
-                        <widget class="Q3GroupBox" name="wireframeCutawayButton">
+                        <widget class="QGroupBox" name="wireframeCutawayButton">
                           <property name="title">
                             <string>&amp;Wireframe cutaway</string>
                           </property>
@@ -1832,32 +1832,28 @@
                                         <property name="exclusive">
                                           <bool>true</bool>
                                         </property>
-                                        <widget class="QRadioButton" name="monochromeCutawayButton">
-                                          <property name="geometry">
-                                            <rect>
-                                              <x>1</x>
-                                              <y>26</y>
-                                              <width>128</width>
-                                              <height>21</height>
-                                            </rect>
+                                        <layout class="QVBoxLayout">
+                                          <property name="margin">
+                                            <number>0</number>
                                           </property>
-                                          <property name="text">
-                                            <string>Monochrome</string>
+                                          <property name="spacing">
+                                            <number>4</number>
                                           </property>
-                                        </widget>
-                                        <widget class="QRadioButton" name="colorCutawayButton">
-                                          <property name="geometry">
-                                            <rect>
-                                              <x>1</x>
-                                              <y>1</y>
-                                              <width>128</width>
-                                              <height>21</height>
-                                            </rect>
-                                          </property>
-                                          <property name="text">
-                                            <string>Color</string>
-                                          </property>
-                                        </widget>
+                                          <item>
+                                            <widget class="QRadioButton" name="monochromeCutawayButton">
+                                              <property name="text">
+                                                <string>Monochrome</string>
+                                              </property>
+                                            </widget>
+                                          </item>
+                                          <item>
+                                            <widget class="QRadioButton" name="colorCutawayButton">
+                                              <property name="text">
+                                                <string>Color</string>
+                                              </property>
+                                            </widget>
+                                          </item>
+                                        </layout>
                                       </widget>
                                     </item>
                                     <item>
@@ -2032,7 +2028,7 @@
                         </widget>
                       </item>
                       <item>
-                        <widget class="Q3GroupBox" name="effectsTransparencyBox">
+                        <widget class="QGroupBox" name="effectsTransparencyBox">
                           <property name="title">
                             <string>&amp;Transparency</string>
                           </property>
@@ -2097,7 +2093,7 @@
                         </widget>
                       </item>
                       <item>
-                        <widget class="Q3GroupBox" name="effectsMiscBox">
+                        <widget class="QGroupBox" name="effectsMiscBox">
                           <property name="title">
                             <string>&amp;Misc</string>
                           </property>
@@ -2236,7 +2232,7 @@
                 <number>4</number>
               </property>
               <item>
-                <widget class="Q3GroupBox" name="primitiveSubstitutionButton">
+                <widget class="QGroupBox" name="primitiveSubstitutionButton">
                   <property name="title">
                     <string>&amp;Primitive Substitution</string>
                   </property>
@@ -2518,7 +2514,7 @@
                 </widget>
               </item>
               <item>
-                <widget class="Q3GroupBox" name="primitivesMiscBox">
+                <widget class="QGroupBox" name="primitivesMiscBox">
                   <property name="title">
                     <string>&amp;Miscellaneous</string>
                   </property>
@@ -2705,7 +2701,7 @@
                 </widget>
               </item>
               <item>
-                <widget class="Q3GroupBox" name="updatesMissingpartBox">
+                <widget class="QGroupBox" name="updatesMissingpartBox">
                   <property name="sizePolicy">
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -2813,7 +2809,7 @@
               <item>
                 <widget class="QLabel" name="labelnote">
                   <property name="text">
-                    <string>Note: changes to setting on this tab will not go 
+                    <string>Note: changes to settings on this tab will not go 
 into effect until the next time a model is loaded.</string>
                   </property>
                   <property name="wordWrap">
