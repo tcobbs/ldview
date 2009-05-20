@@ -207,7 +207,7 @@
       </widget>
       <widget class="QMenu" name="stepMenu">
         <property name="title">
-          <string>Step</string>
+          <string>&amp;Step</string>
         </property>
         <addaction name="toolbarFirstStep"/>
         <addaction name="toolbarPrevStep"/>
