@@ -21,7 +21,7 @@
 #include "misc.h"
 
 LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
-	:Q3MainWindow(parent),ErrorPanel(),
+	:QMainWindow(parent),ErrorPanel(),
 	preferences(preferences),
 	errors(new LDLErrorArray),
 	listViewPopulated(false)
