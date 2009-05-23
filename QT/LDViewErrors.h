@@ -7,7 +7,7 @@
 #include <Q3MainWindow>
 
 class Preferences;
-class QListViewItem;
+class QTreeWidgetItem;
 class QButton;
 class QStatusBar;
 class QLabel;
@@ -57,7 +57,7 @@ protected:
 	void clearListView(void);
 	bool addErrorToListView(LDLError *error);
 	bool showsErrorType(LDLErrorType errorType);
-	QListViewItem *addErrorLine(QListViewItem *parent, QString line,
+	QTreeWidgetItem *addErrorLine(QTreeWidgetItem *parent, QString line,
 	LDLError *error, int imageIndex = -1);
 
 	Preferences *preferences;

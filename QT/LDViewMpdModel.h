@@ -31,6 +31,8 @@ public:
 
 public slots:
 	void doMpdSelected(int i) { showMpdModel(i);}
+	void doMpdSelected(QListWidgetItem *a) {showMpdModel(modelList->row(a));}
+	void doMpdSelected(QListWidgetItem *a,QListWidgetItem * /* b */) {if (a) showMpdModel(modelList->row(a));}
 	void ok(void);
 	void cancel(void);
 

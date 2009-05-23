@@ -7,7 +7,7 @@
 
 //class QButton;
 class LDHtmlInventory;
-class QCheckListItem;
+class QListWidgetItem;
 
 class PartList : public QDialog , Ui::PartListPanel
 {
@@ -16,7 +16,7 @@ public:
 	PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInventory *htmlInventory);
 	~PartList(void);
     void populateColumnList();
-    QCheckListItem *description;
+//    QCheckListItem *description;
     int exec();
 
 public slots:
@@ -24,7 +24,7 @@ public slots:
 	void doCancel();
 	void doUp();
 	void doDown();
-	void doHighlighted();
+	void doHighlighted(QListWidgetItem * current, QListWidgetItem * previous );
 	void doShowModel();
 protected:
 	void doMoveColumn(int distance);

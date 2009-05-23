@@ -17,6 +17,7 @@
 #include <qlabel.h>
 #include <qstatusbar.h>
 #include <qregexp.h>
+#include <QTreeWidgetItem>
 #include "misc.h"
 
 LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
@@ -48,9 +49,9 @@ LDViewErrors::LDViewErrors(QWidget *parent, Preferences *preferences)
     connect( showNoneButton, SIGNAL( clicked() ), this, SLOT( showNoneError() ) );
     connect( nonFlatQuadButton, SIGNAL( clicked() ), this, SLOT( nonFlatQuad() ) );
 
-	errorListView->setColumnWidthMode(0, QListView::Maximum);
-	errorListView->header()->hide();
-	errorListView->setSorting(-1);
+//	errorListView->setColumnWidthMode(0, QListView::Maximum);
+//	errorListView->header()->hide();
+//	errorListView->setSorting(-1);
 	reflectSettings();
 	messageText = new QLabel(statusBar());
 	statusBar()->addWidget(messageText,1);
@@ -208,7 +209,7 @@ int LDViewErrors::populateListView(void)
 bool LDViewErrors::addErrorToListView(LDLError *error)
 {
 	const char *string;
-	QListViewItem *parent;
+	QTreeWidgetItem *parent;
 	QString buf, qstring;
 	if (!TCUserDefaults::longForKey(SHOW_WARNINGS_KEY, 0) && 
 		(error->getLevel() == LDLAWarning))
@@ -279,32 +280,29 @@ bool LDViewErrors::showsErrorType(LDLErrorType errorType)
 	return preferences->getShowError(errorType);
 }
 
-QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
+QTreeWidgetItem *LDViewErrors::addErrorLine(QTreeWidgetItem *parent,
 	QString line, LDLError * error, int /*imageIndex*/)
 {
-	QListViewItem *item;
+	QTreeWidgetItem *item;
 
 	if (parent)
 	{
 		if (parent->childCount() > 0)
 		{
-			QListViewItem *lastChild = parent->firstChild();
-
-			while (lastChild->nextSibling() != NULL)
-			{
-				lastChild = lastChild->nextSibling();
-			}
-			item = new QListViewItem(parent, lastChild, line);
+			QTreeWidgetItem *lastChild = parent->child(parent->childCount()-1);
+			item = new QTreeWidgetItem(parent, lastChild);
 		}
 		else
 		{
-			item = new QListViewItem(parent, line);
+			item = new QTreeWidgetItem(parent);
 		}
-		item->setPixmap(0,getimage( "error_info.png" ));
+		item->setText(0, line);
+		item->setIcon(0,getimage( "error_info.png" ));
 	}
 	else
 	{
-		item = new QListViewItem(errorListView, line);
+		item = new QTreeWidgetItem(errorListView);
+		item->setText(0, line);
         switch (error->getType())
         {
             case LDLEGeneral:
@@ -314,48 +312,48 @@ QListViewItem *LDViewErrors::addErrorLine(QListViewItem *parent,
 		    case LDLEWhitespace:
 			case LDLEMetaCommand:
             case LDLEParse:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_parse.png"));
                     break;
             case LDLEMatrix:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_matrix.png"));
                     break;
             case LDLEFileNotFound:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_fnf.png"));
                     break;
             case LDLEMatchingPoints:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_matching_points.png"));
                     break;
             case LDLEConcaveQuad:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_concave_quad.png"));
                     break;
             case LDLEColinear:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_colinear.png"));
                     break;
             case LDLEVertexOrder:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_vertex_order.png"));
                     break;
             case LDLENonFlatQuad:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_non_flat_quad.png"));
                     break;
             case LDLEPartDeterminant:
-                    item->setPixmap(0,
+                    item->setIcon(0,
                         getimage( "error_determinant.png"));
                     break;
 			case LDLEMovedTo:
 			case LDLEUnofficialPart:
-					item->setPixmap(0,
+					item->setIcon(0,
                         getimage( "error_info.png"));
 					break;
 			case LDLEModelLoop:
-					item->setPixmap(0,
+					item->setIcon(0,
 						getimage( "error_loop.png"));
 					break;
         }

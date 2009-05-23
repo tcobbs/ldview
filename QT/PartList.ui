@@ -104,7 +104,7 @@
               </property>
               <layout class="QVBoxLayout">
                 <item>
-                  <widget class="Q3ListView" name="fieldOrderView">
+                  <widget class="QListWidget" name="fieldOrderView">
                     <property name="sizePolicy">
                       <sizepolicy>
                         <hsizetype>5</hsizetype>
@@ -115,18 +115,6 @@
                     </property>
                     <property name="frameShape">
                       <enum>QFrame::StyledPanel</enum>
-                    </property>
-                    <property name="resizePolicy">
-                      <enum>Q3ScrollView::AutoOneFit</enum>
-                    </property>
-                    <property name="allColumnsShowFocus">
-                      <bool>true</bool>
-                    </property>
-                    <property name="rootIsDecorated">
-                      <bool>false</bool>
-                    </property>
-                    <property name="resizeMode">
-                      <enum>Q3ListView::NoColumn</enum>
                     </property>
                     <column>
                       <property name="text">
