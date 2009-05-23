@@ -12,7 +12,7 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 
 LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerWidget *modelViewer)
-	:Q3MainWindow(parent),ModelTreePanel(),
+	:QMainWindow(parent),ModelTreePanel(),
 	modeltree(NULL),
 	m_modelWindow(modelViewer),
     mainmodel(NULL),
@@ -96,7 +96,7 @@ void LDViewModelTree::show(void)
 	raise();
 	setActiveWindow();
 	fillTreeView();
-	Q3MainWindow::show();
+	QMainWindow::show();
 }
 
 void LDViewModelTree::fillTreeView(void)

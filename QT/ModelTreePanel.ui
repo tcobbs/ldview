@@ -4,7 +4,7 @@
   <comment></comment>
   <exportmacro></exportmacro>
   <class>ModelTreePanel</class>
-  <widget class="Q3MainWindow" name="ModelTreePanel">
+  <widget class="QMainWindow" name="ModelTreePanel">
     <property name="geometry">
       <rect>
         <x>0</x>
@@ -18,9 +18,6 @@
     </property>
     <property name="windowIcon">
       <pixmap>LDViewIcon16.png</pixmap>
-    </property>
-    <property name="usesTextLabel">
-      <bool>false</bool>
     </property>
     <widget class="QWidget">
       <layout class="QHBoxLayout">
