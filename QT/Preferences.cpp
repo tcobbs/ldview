@@ -172,7 +172,7 @@ void Preferences::doPrefSetsApply(void)
 {
 	TCStringArray *oldPrefSetNames = TCUserDefaults::getAllSessionNames();
 	int i;
-	uint b;
+	int b;
 	int count = oldPrefSetNames->getCount();
 //	char *prefSetName = NULL;
 	const char *sessionName = TCUserDefaults::getSessionName();
@@ -185,7 +185,7 @@ void Preferences::doPrefSetsApply(void)
 		for(b = 0; b < preferenceSetList->count(); b++)
 		{
 			if (strcmp(oldPrefSetNames->stringAtIndex(i),
-						preferenceSetList->text(b).ascii()) == 0) 
+						preferenceSetList->item(b)->text().ascii()) == 0) 
 			{
 				index = b;
 			}	
@@ -1276,7 +1276,7 @@ void Preferences::doNewPreferenceSet()
                    QString::null, &ok, this);
     if (ok && !name.isEmpty())
 	{
-		for(uint i = 0; i < preferenceSetList->count(); i++)
+		for(int i = 0; i < preferenceSetList->count(); i++)
 		{
 			if (getPrefSet(i) && strcmp(getPrefSet(i), name.ascii())==0)
 			{
@@ -1295,7 +1295,7 @@ void Preferences::doNewPreferenceSet()
 				QMessageBox::Ok,0);
 				return;
 		}
-		preferenceSetList->insertItem(name);
+		new QListWidgetItem(name,preferenceSetList);
 		selectPrefSet(name.ascii());
 		return;
 	}
@@ -1314,7 +1314,7 @@ void Preferences::doDelPreferenceSet()
 	const char *selectedPrefSet = getSelectedPrefSet();
 	if (selectedPrefSet)
 	{
-		int selectedIndex = preferenceSetList->currentItem();
+		int selectedIndex = preferenceSetList->currentRow();
 		if (checkAbandon && applyButton->isEnabled())
 		{
 			if(QMessageBox::warning(this,
@@ -1330,8 +1330,8 @@ void Preferences::doDelPreferenceSet()
 			}
 		}
 		checkAbandon = false;
-		preferenceSetList->removeItem(selectedIndex);
-		selectedIndex = preferenceSetList->currentItem();
+		delete preferenceSetList->currentItem();
+		selectedIndex = preferenceSetList->currentRow();
 		selectedPrefSet = getPrefSet(selectedIndex);
 		selectPrefSet(selectedPrefSet, true);
 	}
@@ -1493,15 +1493,15 @@ void Preferences::abandonChanges(void)
 
 const char *Preferences::getPrefSet(int index)
 {
-	return preferenceSetList->text(index).ascii();
+	return preferenceSetList->item(index)->text().ascii();
 }
 
 const char *Preferences::getSelectedPrefSet(void)
 {
-    int selectedIndex = preferenceSetList->currentItem();
+    int selectedIndex = preferenceSetList->currentRow();
 	if (selectedIndex!=-1)
 	{
-		return preferenceSetList->currentText().ascii();
+		return preferenceSetList->currentItem()->text().ascii();
 	}
 	return NULL;
 }
@@ -1550,11 +1550,11 @@ void Preferences::selectPrefSet(const char *prefSet, bool force)
 {
     if (prefSet)
     {
-		for (uint i=0;i<preferenceSetList->count();i++)
+		for (int i=0;i<preferenceSetList->count();i++)
 		{
-			if (strcmp(prefSet,preferenceSetList->text(i).ascii())==0)
+			if (strcmp(prefSet,preferenceSetList->item(i)->text().ascii())==0)
 			{
-				preferenceSetList->setCurrentItem(i);
+				preferenceSetList->setCurrentRow(i);
 			}
 		}
 		doPrefSetSelected(force);
@@ -1581,10 +1581,10 @@ void Preferences::setupPrefSetsList(void)
     int i;
     int count = sessionNames->getCount();
 	preferenceSetList->clear();
-    preferenceSetList->insertItem(DEFAULT_PREF_SET);
+    new QListWidgetItem(QString(DEFAULT_PREF_SET),preferenceSetList);
     for (i = 0; i < count; i++)
     {
-        preferenceSetList->insertItem(sessionNames->stringAtIndex(i));
+        new QListWidgetItem(sessionNames->stringAtIndex(i),preferenceSetList);
     }
     selectPrefSet();
 	sessionNames->release();
