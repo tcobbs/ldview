@@ -1,8 +1,3 @@
-#include "qt4wrapper.h"
-
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qstring.h>
 #include "ModelViewerWidget.h"
 #include "LDViewPartList.h"
 #include <TCFoundation/mystring.h>
@@ -18,11 +13,11 @@ PartList::PartList(QWidget *parent, ModelViewerWidget *modelWidget, LDHtmlInvent
     connect( okButton, SIGNAL( clicked() ), this, SLOT( doOk() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( showModelButton, SIGNAL( clicked() ), this, SLOT( doShowModel() ) );
-    connect( fieldOrderView, SIGNAL( currentChanged(Q3ListViewItem *) ), this, SLOT( doHighlighted() ) );
+    connect( fieldOrderView, SIGNAL( currentItemChanged(QListWidgetItem *, QListWidgetItem *) ), this, SLOT( doHighlighted(QListWidgetItem *, QListWidgetItem *) ) );
 
     modelViewer = modelWidget->getModelViewer();
-	fieldOrderView->header()->hide();
-	fieldOrderView->setSorting(-1);
+//	fieldOrderView->header()->hide();
+//	fieldOrderView->setSorting(-1);
 }
 
 PartList::~PartList(void)
@@ -33,31 +28,28 @@ void PartList::populateColumnList(void)
 {
 	const LDPartListColumnVector &columnOrder =
         m_htmlInventory->getColumnOrder();
-	int count = 0, i;
+	int i;
 	fieldOrderView->clear();
-    for (i = LDPLCLast; i >= LDPLCFirst; i--)
+	for (i = 0; i < (int)columnOrder.size(); i++)
+	{
+		LDPartListColumn column = columnOrder[i];
+		const char *name = LDHtmlInventory::getColumnName(column);
+		QListWidgetItem *item = new QListWidgetItem(name, fieldOrderView);
+		item->setCheckState(m_htmlInventory->isColumnEnabled(column) ? Qt::Checked : Qt::Unchecked);
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+	}
+    for (i = LDPLCFirst; i <= LDPLCLast; i++)
     {
         LDPartListColumn column = (LDPartListColumn)i;
         if (!m_htmlInventory->isColumnEnabled(column))
         {
             const char *name = LDHtmlInventory::getColumnName(column);
-            QCheckListItem *item = new QCheckListItem(fieldOrderView,
-                name, QCheckListItem::CheckBoxController );
-            item->setOn(m_htmlInventory->isColumnEnabled(column));
-			item->setTristate(false);
-            count++;
+            QListWidgetItem *item = new QListWidgetItem(name, fieldOrderView);
+		item->setCheckState(m_htmlInventory->isColumnEnabled(column) ? Qt::Checked : Qt::Unchecked);
+		item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
         }
     }
-	for (i = (int)columnOrder.size()-1; i >= 0 ; i--)
-	{
-		LDPartListColumn column = columnOrder[i];
-		const char *name = LDHtmlInventory::getColumnName(column);
-		QCheckListItem *item = new QCheckListItem(fieldOrderView,
-								name, QCheckListItem::CheckBoxController );
-		item->setOn(m_htmlInventory->isColumnEnabled(column));
-		item->setTristate(false);
-		count++;
-	}
+
 }
 
 void PartList::doUp()
@@ -72,8 +64,8 @@ void PartList::doDown()
 
 void PartList::doOk()
 {
-	int i;
-	QListViewItem *item;
+	int i,j;
+	QListWidgetItem *item;
 	bool showmodel;
 	LDPartListColumnVector columnOrder;
 	m_htmlInventory->setExternalCssFlag(generateExternalSSButton->isChecked());
@@ -85,18 +77,18 @@ void PartList::doOk()
 		 m_htmlInventory->setOverwriteSnapshotFlag(
 					overwriteExistingButton->isChecked());
 	}
-	for (item = fieldOrderView->firstChild() ; item ;
-		 item = item->itemBelow())
+	for (item = fieldOrderView->item(j = 0) ; item && (j < (fieldOrderView->count())) ;
+		 item = fieldOrderView->item(++j))
 	{
-		const char * itemname = item->text(0).ascii();
-		QCheckListItem *item2 = (QCheckListItem*) item;
+		const char * itemname = item->text().ascii();
+		QListWidgetItem *item2 = (QListWidgetItem*) item;
 		for (i = LDPLCFirst; i <= LDPLCLast; i++)
 		{
 			LDPartListColumn column = (LDPartListColumn)i;
 			const char *name = LDHtmlInventory::getColumnName(column);
 			if (strcmp(name,itemname)==0)
 			{
-				if (item2->isOn())
+				if (item2->checkState() == Qt::Checked)
 				{
 					columnOrder.push_back(column);
 				}
@@ -114,27 +106,24 @@ void PartList::doCancel()
 
 void PartList::doMoveColumn(int distance)
 {
-	QListViewItem *item = fieldOrderView->currentItem();
-	QListViewItem *newitem = ( distance == 1 ? item->itemBelow() : item->itemAbove());
+	QListWidgetItem *item = fieldOrderView->currentItem();
+	QListWidgetItem *newitem = ( fieldOrderView->item(fieldOrderView->currentRow() + (distance == 1 ? 1 : -1)));
 	if (!newitem) return;
-	QString ttt=newitem->text(0);
-	bool s = ((QCheckListItem*)newitem)->isOn();
-	newitem->setText(0,item->text(0));
-	((QCheckListItem*)newitem)->setOn(((QCheckListItem*)item)->isOn());
-	item->setText(0,ttt);
-	((QCheckListItem*)item)->setOn(s);
+	QString ttt=newitem->text();
+	Qt::CheckState s = ((QListWidgetItem*)newitem)->checkState();
+	newitem->setText(item->text());
+	((QListWidgetItem*)newitem)->setCheckState(((QListWidgetItem*)item)->checkState());
+	item->setText(ttt);
+	((QListWidgetItem*)item)->setCheckState(s);
 	fieldOrderView->setCurrentItem(newitem);
-	doHighlighted();
+	doHighlighted(newitem,newitem);
 }
 
-void PartList::doHighlighted()
+void PartList::doHighlighted(QListWidgetItem * current, QListWidgetItem * /* previous */)
 {
-	QListViewItem *item = fieldOrderView->currentItem();
-	if (item)
-	{
-		upButton->setEnabled(item->itemAbove() ? true : false);
-		downButton->setEnabled(item->itemBelow() ? true : false);
-	}
+	int item = fieldOrderView->row(current);
+	upButton->setEnabled(item > 0);
+	downButton->setEnabled(item < fieldOrderView->count()-1);
 }
 
 int PartList::exec()

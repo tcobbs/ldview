@@ -1,8 +1,3 @@
-#include "qt4wrapper.h"
-
-#include <qstring.h>
-#include <qlabel.h>
-#include <qlineedit.h>
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>

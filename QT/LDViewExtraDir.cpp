@@ -5,8 +5,6 @@
 #include <LDLib/LDUserDefaultsKeys.h>
 #include <TCFoundation/mystring.h>
 
-#include <qpushbutton.h>
-#include <qstring.h>
 #include "ModelViewerWidget.h"
 #include "LDViewExtraDir.h"
 #define	MAX_EXTRA_DIR	10
@@ -25,7 +23,7 @@ ExtraDir::ExtraDir(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( delExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDelExtraDir() ) );
     connect( upExtraDirButton, SIGNAL( clicked() ), this, SLOT( doUpExtraDir() ) );
     connect( downExtraDirButton, SIGNAL( clicked() ), this, SLOT( doDownExtraDir() ) );
-    connect( ExtraDirListView, SIGNAL( highlighted(int) ), this, SLOT( doExtraDirSelected() ) );
+    connect( ExtraDirListView, SIGNAL( currentItemChanged ( QListWidgetItem * , QListWidgetItem * ) ), this, SLOT( doExtraDirSelected(QListWidgetItem *,QListWidgetItem *) ) );
 
     modelViewer = modelWidget->getModelViewer();
     if (!extraSearchDirs)
@@ -65,7 +63,7 @@ void ExtraDir::doAddExtraDir(void)
 	}
 	if (fileDialog->exec() == QDialog::Accepted)
     {
-		ExtraDirListView->insertItem(fileDialog->selectedFile());
+		new QListWidgetItem(fileDialog->selectedFile(),ExtraDirListView);
 		extraSearchDirs->addString(fileDialog->selectedFile().ascii());
 		delExtraDirButton->setEnabled(true);
 		if (count==MAX_EXTRA_DIR-1)
@@ -78,12 +76,12 @@ void ExtraDir::doAddExtraDir(void)
 
 void ExtraDir::doDelExtraDir(void)
 {
-	int index=ExtraDirListView->currentItem(),
+	int index=ExtraDirListView->currentRow(),
 		count=ExtraDirListView->count();
 	if (index!=-1)
 	{
 		extraSearchDirs->removeStringAtIndex(index);
-		ExtraDirListView->removeItem(index);
+		delete ExtraDirListView->currentItem();
 		if (count==1)
 		{
 			delExtraDirButton->setEnabled(false);
@@ -96,24 +94,25 @@ void ExtraDir::doDelExtraDir(void)
 }
 void ExtraDir::doExtraDirSelected(void)
 {
-	int index=ExtraDirListView->currentItem(),
+	int index=ExtraDirListView->currentRow(),
 		count=ExtraDirListView->count();
 	upExtraDirButton->setEnabled(index>0 ? true : false);
-	downExtraDirButton->setEnabled(index == count-1 ? false : true);
+	downExtraDirButton->setEnabled(((index == count-1) && (count > 0)) ? false : true);
 }
 
 void ExtraDir::doUpExtraDir(void)
 {
-	int index=ExtraDirListView->currentItem(),
+	int index=ExtraDirListView->currentRow(),
 		count=ExtraDirListView->count();
 	char *extraDir;
 
     if (index>0 && count >1)
     {
-		QString tmp=ExtraDirListView->currentText();
-		ExtraDirListView->removeItem(index);
-		ExtraDirListView->insertItem(tmp,index-1);
-		ExtraDirListView->setCurrentItem(index-1);
+		QString tmp=ExtraDirListView->currentItem()->text();
+		delete ExtraDirListView->currentItem();
+		QListWidgetItem *newitem = new QListWidgetItem(tmp);
+		ExtraDirListView->insertItem(index-1,newitem);
+		ExtraDirListView->setCurrentItem(ExtraDirListView->item(index-1));
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
 		extraSearchDirs->removeStringAtIndex(index);
 		extraSearchDirs->insertString(extraDir,index-1);
@@ -123,15 +122,15 @@ void ExtraDir::doUpExtraDir(void)
 
 void ExtraDir::doDownExtraDir(void)
 {
-    int index=ExtraDirListView->currentItem(),
+    int index=ExtraDirListView->currentRow(),
         count=ExtraDirListView->count();
 	char *extraDir;
     if (index<count-1 && count>0 && index!=-1)
 	{
-		QString tmp=ExtraDirListView->currentText();
-        ExtraDirListView->removeItem(index);
-		ExtraDirListView->insertItem(tmp,index+1);
-		ExtraDirListView->setCurrentItem(index+1);
+		QString tmp=ExtraDirListView->currentItem()->text();
+		delete ExtraDirListView->currentItem();
+		ExtraDirListView->insertItem(index+1,new QListWidgetItem(tmp));
+		ExtraDirListView->setCurrentItem(ExtraDirListView->item(index+1));
 		extraDir=copyString(extraSearchDirs->stringAtIndex(index));
 		extraSearchDirs->removeStringAtIndex(index);
         extraSearchDirs->insertString(extraDir,index+1);
@@ -150,14 +149,14 @@ void ExtraDir::populateExtraDirsListBox(void)
     int i;
     int count=ExtraDirListView->count();
 	char *dir;
-	for (i=0;i<count;i++) { ExtraDirListView->removeItem(0); }
+	for (i=0;i<count;i++) { ExtraDirListView->removeItemWidget(ExtraDirListView->item(0)); }
 	count = extraSearchDirs->getCount();
 	for (i=0;i<count;i++) 
 	{
 		dir=extraSearchDirs->stringAtIndex(i);
 		if (dir && dir[0]) 
 		{
-			ExtraDirListView->insertItem(extraSearchDirs->stringAtIndex(i));
+			new QListWidgetItem(extraSearchDirs->stringAtIndex(i),ExtraDirListView);
 		}
 	}
 	if (count==MAX_EXTRA_DIR)

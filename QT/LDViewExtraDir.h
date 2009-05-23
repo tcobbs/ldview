@@ -31,6 +31,7 @@ public slots:
 	void doUpExtraDir(void);
 	void doDownExtraDir(void);
 	void doExtraDirSelected(void);
+	void doExtraDirSelected(QListWidgetItem *,QListWidgetItem *) {doExtraDirSelected();}
 	void doOk(void);
 	void doCancel(void) {close();}
 

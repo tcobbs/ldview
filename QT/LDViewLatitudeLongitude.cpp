@@ -1,11 +1,5 @@
-#include "qt4wrapper.h"
-
 #include <qstring.h>
-#include <qlabel.h>
-#include <qlineedit.h>
 #include <qvalidator.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
 #include <TCFoundation/TCAlertManager.h>

@@ -1,19 +1,10 @@
-#include "qt4wrapper.h"
 #include "Preferences.h"
-
 #include "LDViewModelTree.h"
-
 #include <TCFoundation/TCStringArray.h>
-
 #include <qstring.h>
 #include <qstatusbar.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qgroupbox.h>
-#include <qpushbutton.h>
 #include <qcolor.h>
 #include <qcolordialog.h>
-#include <qtextedit.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
@@ -39,17 +30,17 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
     connect( conditionalLineButton, SIGNAL( clicked() ), this, SLOT( conditionalLine() ) );
     connect( emptyButton, SIGNAL( clicked() ), this, SLOT( empty() ) );
     connect( unknownButton, SIGNAL( clicked() ), this, SLOT( unknown() ) );
-    connect( modelTreeView, SIGNAL( expanded(Q3ListViewItem*) ), this, SLOT( itemexpanded(Q3ListViewItem*) ) );
-    connect( modelTreeView, SIGNAL( selectionChanged(Q3ListViewItem*) ), this, SLOT( selectionChanged(Q3ListViewItem*) ) );
+    connect( modelTreeView, SIGNAL( itemExpanded(QTreeWidgetItem*) ), this, SLOT( itemexpand(QTreeWidgetItem*) ) );
+    connect( modelTreeView, SIGNAL( currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*) ), this, SLOT( selectionChanged(QTreeWidgetItem*,QTreeWidgetItem*) ) );
     connect( optionsButton, SIGNAL( clicked() ), this, SLOT( toggleOptions() ) );
 
 	long color = TCUserDefaults::longForKey(MODEL_TREE_HIGHLIGHT_COLOR_KEY,
 			(0xa0e0ff), false);
 	highlightColorEdit->setPaletteBackgroundColor(QColor(color >>16, (color >>8) & 0xff, color & 0xff));
 	preferences = pref;
-	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
-	modelTreeView->header()->hide();
-	modelTreeView->setSorting(-1);
+//	modelTreeView->setColumnWidthMode(0, QListView::Maximum);
+//	modelTreeView->header()->hide();
+//	modelTreeView->setSorting(-1);
 	if (!TCUserDefaults::boolForKey(MODEL_TREE_OPTIONS_SHOWN_KEY, true, false))
     {
         hideOptions();
@@ -64,19 +55,14 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 
 LDViewModelTree::~LDViewModelTree() { }
 
-QListViewItem *LDViewModelTree::getChild(QListViewItem *parent, int index)
+QTreeWidgetItem *LDViewModelTree::getChild(QTreeWidgetItem *parent, int index)
 {
-	QListViewItem *child = (parent ? parent->firstChild() : modelTreeView->firstChild());
-	for (int i = 1; (i <= index) && child; i++)
-	{
-		child = child->nextSibling();
-	}
-	return child;
+	return (parent ? parent->child(index -1) : modelTreeView->topLevelItem(index - 1));
 }
 
 void LDViewModelTree::selectFromHighlightPath(std::string path)
 {
-	QListViewItem *item = NULL;
+	QTreeWidgetItem *item = NULL;
 	path = modeltree->adjustHighlightPath(path);
 	//printf("%s\n",path.c_str());
 	while (path.size() > 0)
@@ -88,13 +74,13 @@ void LDViewModelTree::selectFromHighlightPath(std::string path)
 			size_t index = path.find('/', 1);
 			if (index < path.size())
 			{
-				itemexpanded(item);
-				modelTreeView->setOpen(item, true);
+				itemexpand(item);
+				modelTreeView->expandItem(item);
 				path = path.substr(index);
 			}
 			else
 			{
-				modelTreeView->setSelected(item, true);
+				modelTreeView->setCurrentItem(item);
 				path = "";
 			}
 		}
@@ -137,7 +123,7 @@ void LDViewModelTree::refreshTreeView()
 	addChildren(NULL, modeltree);
 }
 
-void LDViewModelTree::addChildren(QListViewItem *parent, const LDModelTree *tree)
+void LDViewModelTree::addChildren(QTreeWidgetItem *parent, const LDModelTree *tree)
 {
 	if (tree != NULL && tree->hasChildren(true))
 	{
@@ -152,34 +138,31 @@ void LDViewModelTree::addChildren(QListViewItem *parent, const LDModelTree *tree
 	}
 }
 
-void LDViewModelTree::addLine(QListViewItem *parent, const LDModelTree *tree)
+void LDViewModelTree::addLine(QTreeWidgetItem *parent, const LDModelTree *tree)
 {
 	QString line = QString(tree->getText().c_str());
-    QListViewItem *item;
+    QTreeWidgetItem *item;
 
     if (parent)
     {
         if (parent->childCount() > 0)
         {
-            QListViewItem *lastChild = parent->firstChild();
+            QTreeWidgetItem *lastChild = parent->child(parent->childCount()-1);
 
-            while (lastChild->nextSibling() != NULL)
-            {
-                lastChild = lastChild->nextSibling();
-            }
-            item = new QListViewItem(parent, lastChild, line);
+            item = new QTreeWidgetItem(parent, lastChild);
         }
         else
         {
-            item = new QListViewItem(parent, line);
+            item = new QTreeWidgetItem(parent);
 		}
 	}
 	else
 	{
-		item = new QListViewItem(modelTreeView, 
-								 modelTreeView->lastItem(), line);
+		item = new QTreeWidgetItem(modelTreeView, 
+								 modelTreeView->topLevelItem(modelTreeView->topLevelItemCount()-1));
 	}
-	item->setExpandable(tree->getNumChildren(true)>0);
+	item->setText(0, line);
+	item->setChildIndicatorPolicy(tree->getNumChildren(true)>0 ? QTreeWidgetItem::ShowIndicator : QTreeWidgetItem::DontShowIndicator);
 }
 
 void LDViewModelTree::updateLineChecks(void)
@@ -201,7 +184,7 @@ void LDViewModelTree::updateLineChecks(void)
 								modeltree->getShowLineType(LDLLineTypeConditionalLine));
 }
 
-void LDViewModelTree::itemexpanded(QListViewItem *item)
+void LDViewModelTree::itemexpand(QTreeWidgetItem *item)
 {
 	LDModelTree *tree = findTree(item);
 	if (tree && !tree->getViewPopulated())
@@ -211,7 +194,7 @@ void LDViewModelTree::itemexpanded(QListViewItem *item)
 	}
 }
 
-void LDViewModelTree::selectionChanged(QListViewItem *item)
+void LDViewModelTree::selectionChanged(QTreeWidgetItem *item,QTreeWidgetItem* /* old */)
 {
 	if (item)
 	{
@@ -227,31 +210,34 @@ void LDViewModelTree::selectionChanged(QListViewItem *item)
 	}
 }
 
-LDModelTree *LDViewModelTree::findTree(QListViewItem *item)
+LDModelTree *LDViewModelTree::findTree(QTreeWidgetItem *item)
 {
 	LDModelTree *tparent = NULL;
-	QListViewItem *list;
+	QTreeWidgetItem *parent;
+	int i;
 	if (item->parent())
 	{
-		list = item->parent()->firstChild();
+		parent = item->parent();
 		tparent = findTree(item->parent());
+		const LDModelTreeArray *children = tparent->getChildren(true);
+		for(i=0; (i < parent->childCount()) && (parent->child(i) != item); i++)
+		{}
+		if (parent->child(i) == item)
+			return (LDModelTree *)(*children)[i];
+		else
+			return NULL;
 	}
 	else
 	{
 		tparent = modeltree;
-		list = modelTreeView->firstChild();
+		const LDModelTreeArray *children = tparent->getChildren(true);
+		for(i=0; (i < modelTreeView->topLevelItemCount()) && (modelTreeView->topLevelItem(i) != item); i++)
+		{}
+		if ( modelTreeView->topLevelItem(i) == item)
+			return (LDModelTree *)(*children)[i];
+		else
+			return NULL;			
 	}
-	const LDModelTreeArray *children = tparent->getChildren(true);
-	int i=0;
-    while (list->nextSibling() != NULL && list != item)
-    {
-        list = list->nextSibling();
-		i++;
-    }
-	if (list == item)
-		return (LDModelTree *)(*children)[i];
-	else
-		return NULL;
 }
 
 void LDViewModelTree::doLineCheck(QCheckBox *button, LDLLineType lineType)
@@ -333,7 +319,7 @@ void LDViewModelTree::highlightSelectedLine()
 	if (!checked)
 		m_modelWindow->getModelViewer()->setHighlightPaths("");
 	else
-		selectionChanged(modelTreeView->selectedItem());
+		//selectionChanged(modelTreeView->selectedItem());
 	TCUserDefaults::setBoolForKey(checked, MODEL_TREE_HIGHLIGHT_KEY, false);
 }
 

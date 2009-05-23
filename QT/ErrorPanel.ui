@@ -39,7 +39,7 @@
               <number>6</number>
             </property>
             <item>
-              <widget class="Q3ListView" name="errorListView">
+              <widget class="QTreeWidget" name="errorListView">
                 <property name="sizePolicy">
                   <sizepolicy>
                     <hsizetype>3</hsizetype>
@@ -51,20 +51,8 @@
                 <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                 </property>
-                <property name="resizePolicy">
-                  <enum>Q3ScrollView::AutoOneFit</enum>
-                </property>
-                <property name="vScrollBarMode">
-                  <enum>Q3ScrollView::Auto</enum>
-                </property>
-                <property name="hScrollBarMode">
-                  <enum>Q3ScrollView::Auto</enum>
-                </property>
-                <property name="rootIsDecorated">
+                <property name="headerHidden" >
                   <bool>true</bool>
-                </property>
-                <property name="resizeMode">
-                  <enum>Q3ListView::NoColumn</enum>
                 </property>
                 <column>
                   <property name="text">

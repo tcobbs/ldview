@@ -1,11 +1,5 @@
 #include "qt4wrapper.h"
 
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qstring.h>
-#include <qslider.h>
-#include <qlabel.h>
-#include <qcombobox.h>
 #include "ModelViewerWidget.h"
 #include "LDViewJpegOptions.h"
 

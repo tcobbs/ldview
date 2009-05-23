@@ -16,7 +16,7 @@ class LDModelTree;
 class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;
-class QListViewItem;
+class QTreeWidgetItem;
 class LDViewModelTree : public Q3MainWindow , Ui::ModelTreePanel
 {
 	Q_OBJECT
@@ -27,8 +27,8 @@ public:
 	void showOptions(),hideOptions();
 
 public slots:
-	void itemexpanded(Q3ListViewItem *item);
-	void selectionChanged(Q3ListViewItem *item);
+	void itemexpand(QTreeWidgetItem *item);
+	void selectionChanged(QTreeWidgetItem *item,QTreeWidgetItem *old);
 	void quad(void) {doLineCheck(quadButton,LDLLineTypeQuad);}
 	void unknown(void) {doLineCheck(unknownButton,LDLLineTypeUnknown);}
 	void line(void) {doLineCheck(lineButton,LDLLineTypeLine);}
@@ -46,15 +46,15 @@ protected:
     void doLineCheck(QCheckBox *button, LDLLineType lineType);
 	void fillTreeView(void);
 	void refreshTreeView(void);
-	void addChildren(QListViewItem *parent, const LDModelTree *tree);
-	void addLine(QListViewItem *parent, const LDModelTree *tree);
+	void addChildren(QTreeWidgetItem *parent, const LDModelTree *tree);
+	void addLine(QTreeWidgetItem *parent, const LDModelTree *tree);
 	void updateLineChecks(void);
     void setModel(LDLMainModel *model);
     void setModelWindow(ModelViewerWidget *modelWindow);
-	QListViewItem *getChild(QListViewItem *parent, int index);
+	QTreeWidgetItem *getChild(QTreeWidgetItem *parent, int index);
 	void selectFromHighlightPath(std::string path);
 
-	LDModelTree *findTree(QListViewItem *item);
+	LDModelTree *findTree(QTreeWidgetItem *item);
 	LDModelTree *modeltree;
 	ModelViewerWidget *m_modelWindow;
 	LDLMainModel *mainmodel;

@@ -1,13 +1,9 @@
-#include "qt4wrapper.h"
 #include "Preferences.h"
 
 #include "LDViewMpdModel.h"
 
 #include <TCFoundation/TCStringArray.h>
 
-#include <qstring.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
 #include "misc.h"
 #include "ModelViewerWidget.h"
 #include <TCFoundation/TCAlert.h>
@@ -21,7 +17,7 @@ MpdModel::MpdModel(QWidget *parent,ModelViewerWidget *modelViewer)
 	m_okPressed(false)
 {
 	setupUi(this);
-    connect( modelList, SIGNAL( highlighted(int) ), this, SLOT( doMpdSelected(int) ) );
+    connect( modelList, SIGNAL( currentItemChanged(QListWidgetItem *,QListWidgetItem *) ), this, SLOT( doMpdSelected(QListWidgetItem *,QListWidgetItem *) ) );
     connect( okButton, SIGNAL( clicked() ), this, SLOT( ok() ) );
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( cancel() ) );
 }
@@ -81,7 +77,7 @@ void MpdModel::setModelWindow(ModelViewerWidget *modelWindow)
 void MpdModel::updateData()
 {
 	LDrawModelViewer *modelViewer = getModelViewer();
-	QListBoxItem *current = NULL, *item;
+	QListWidgetItem *current = NULL, *item;
 	modelList->clear();
 	if (mainmodel != NULL && m_modelWindow != NULL)
 	{
@@ -91,8 +87,7 @@ void MpdModel::updateData()
 			for (size_t i = 0; i < mpdModels.size(); i++)
 			{
 				LDLModel *mpdModel = mpdModels[i];
-				item = new QListBoxText(modelList,
-										 mpdModel->getName());
+				item = new QListWidgetItem(mpdModel->getName(),modelList);
 				if ( i == (unsigned int) modelViewer->getMpdChildIndex())
 					current = item;
 			}

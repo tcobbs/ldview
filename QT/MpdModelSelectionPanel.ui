@@ -63,7 +63,7 @@
         </widget>
       </item>
       <item>
-        <widget class="Q3ListBox" name="modelList"/>
+        <widget class="QListWidget" name="modelList"/>
       </item>
       <item>
         <layout class="QHBoxLayout">
