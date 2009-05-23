@@ -17,7 +17,7 @@ class Preferences;
 class LDrawModelViewer;
 class ModelViewerWidget;
 class QTreeWidgetItem;
-class LDViewModelTree : public Q3MainWindow , Ui::ModelTreePanel
+class LDViewModelTree : public QMainWindow , Ui::ModelTreePanel
 {
 	Q_OBJECT
 public:
