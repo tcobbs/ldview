@@ -15,7 +15,7 @@ class QCheckBox;
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 
-class LDViewErrors : public Q3MainWindow , Ui::ErrorPanel
+class LDViewErrors : public QMainWindow , Ui::ErrorPanel
 {
 	Q_OBJECT
 public:
