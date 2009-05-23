@@ -2872,7 +2872,7 @@ into effect until the next time a model is loaded.</string>
                 <number>4</number>
               </property>
               <item>
-                <widget class="Q3ListBox" name="preferenceSetList"/>
+                <widget class="QListWidget" name="preferenceSetList"/>
               </item>
               <item>
                 <layout class="QHBoxLayout">
