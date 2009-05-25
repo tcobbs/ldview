@@ -4,7 +4,6 @@
 #include <TCFoundation/TCTypedObjectArray.h>
 #include <LDLoader/LDLError.h>
 #include "ui_ErrorPanel.h"
-#include <Q3MainWindow>
 
 class Preferences;
 class QTreeWidgetItem;
