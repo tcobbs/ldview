@@ -1,4 +1,5 @@
 #include "qt4wrapper.h"
+#include <Q3ImageDrag>
 #include <qtextbrowser.h>
 #include <qapplication.h>
 #include <qstatusbar.h>
@@ -153,7 +154,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	{
 		QImage studImage;
 
-		QImageDrag::decode(mimeSource, studImage);
+		Q3ImageDrag::decode(mimeSource, studImage);
 		TREMainModel::setRawStudTextureData(studImage.bits(),
 			studImage.numBytes());
 	}

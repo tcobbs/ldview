@@ -37,7 +37,7 @@ public:
 	void setViewLatitudeRotationOn(bool b){viewLatitudeRotationAction->setOn(b);}
 	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setOn(b);}
 	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
-	void setMenuItemsEnabled(QPopupMenu *menu, bool enabled);
+	void setMenuItemsEnabled(QMenu *menu, bool enabled);
 	void clearRecentFileMenuItems(void);
 	char *truncateFilename(const char *i /* filename */);
 	void populateRecentFileMenuItems(void);
@@ -120,7 +120,7 @@ public slots:
 private:
 	LDrawModelViewer::StandardSizeVector standardSizes;
 #ifdef __APPLE__
-    QPopupMenu *openRecentMenu;
+    QMenu *openRecentMenu;
 #endif // __APPLE__
 	int fileSeparatorIndex;
 };

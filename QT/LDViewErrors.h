@@ -8,10 +8,9 @@
 
 class Preferences;
 class QTreeWidgetItem;
-class QButton;
 class QStatusBar;
 class QLabel;
-class QCheckBox;
+//class QCheckBox;
 
 typedef TCTypedObjectArray<LDLError> LDLErrorArray;
 

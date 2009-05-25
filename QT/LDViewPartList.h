@@ -5,7 +5,6 @@
 #include "LDLib/LDHtmlInventory.h"
 #include "ui_PartList.h"
 
-//class QButton;
 class LDHtmlInventory;
 class QListWidgetItem;
 

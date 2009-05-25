@@ -5,7 +5,6 @@
 #include <QDialog>
 #include <QCloseEvent>
 
-class QButton;
 class ModelViewerWidget;
 
 class BoundingBox : public QDialog , Ui::BoundingBoxPanel
