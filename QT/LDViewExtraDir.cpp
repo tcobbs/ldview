@@ -52,13 +52,7 @@ void ExtraDir::doAddExtraDir(void)
 	if (count>=MAX_EXTRA_DIR) { return;}
 	if (!fileDialog)
 	{
-		fileDialog = new QFileDialog(".",
-                "All Files (*)",
-                this,
-                "open model dialog",
-                true);
-        fileDialog->setCaption("Choose a Directory");
-        fileDialog->setSelectedFilter(0);
+		fileDialog = new QFileDialog(this,"Choose a Directory",".","All Files (*)");
 		fileDialog->setMode(QFileDialog::DirectoryOnly);
 	}
 	if (fileDialog->exec() == QDialog::Accepted)
@@ -149,7 +143,7 @@ void ExtraDir::populateExtraDirsListBox(void)
     int i;
     int count=ExtraDirListView->count();
 	char *dir;
-	for (i=0;i<count;i++) { ExtraDirListView->removeItemWidget(ExtraDirListView->item(0)); }
+	for (i=0;i<count;i++) { delete ExtraDirListView->item(0); }
 	count = extraSearchDirs->getCount();
 	for (i=0;i<count;i++) 
 	{

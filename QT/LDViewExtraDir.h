@@ -4,7 +4,8 @@
 #include <TCFoundation/TCTypedObjectArray.h>
 #include "ui_ExtraDirPanel.h"
 #include <QtGui/QDialog>
-class QFileDialog;
+#include <QtGui/QFileDialog>
+
 class ModelViewerWidget;
 class LDrawModelViewer ;
 class TCStringArray;

@@ -1,4 +1,5 @@
 #include "qt4wrapper.h"
+#include <QtGui/QFileDialog>
 #include <Q3ImageDrag>
 #include <qtextbrowser.h>
 #include <qapplication.h>
@@ -762,23 +763,15 @@ void ModelViewerWidget::doFileOpen(void)
 		delete initialDir;
 		if (!fileDialog)
 		{
-			fileDialog = new QFileDialog(".",
-				"All LDraw Files (*.ldr *.dat *.mpd)",
-				this,
-				"open model dialog",
-				true);
-			fileDialog->setCaption("Choose a Model");
-			fileDialog->addFilter("LDraw Models (*.ldr *.dat)");
-			fileDialog->addFilter("Multi-part Models (*.mpd)");
-			fileDialog->addFilter("All Files (*)");
-			fileDialog->setSelectedFilter(0);
+			fileDialog = new QFileDialog(this,"Choose a Model",".",
+				"All LDraw Files (*.ldr *.dat *.mpd);;LDraw Models (*.ldr *.dat);;Multi-part Models (*.mpd);;All Files (*)");
 			fileDialog->setIcon(getimage("LDViewIcon16.png"));
 		}
 		if (fileDialog->exec() == QDialog::Accepted)
 		{
-			QString filename = fileDialog->selectedFile();
-			QDir::setCurrent(fileDialog->dirPath());
-			Preferences::setLastOpenPath(fileDialog->dirPath());
+			QString filename = fileDialog->selectedFile().replace("\\","/");
+			QDir::setCurrent(fileDialog->directory().path().replace("\\","/"));
+			Preferences::setLastOpenPath(fileDialog->directory().path().replace("\\","/"));
 			loadModel(filename);
 		}
 	}
@@ -2051,12 +2044,7 @@ bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 		prompt = TCLocalStrings::get("LDrawDirPrompt");
 	}
 	QDir::setCurrent(initialDir);
-	dirDialog = new QFileDialog(".",
-		"Directories",
-		this,
-		"open LDraw dir dialog",
-		true);
-	dirDialog->setCaption(prompt);
+	dirDialog = new QFileDialog(this,prompt,".");
 	dirDialog->setIcon(getimage("LDViewIcon16.png"));
 	dirDialog->setMode(QFileDialog::DirectoryOnly);
 	if (dirDialog->exec() == QDialog::Accepted)
@@ -2648,7 +2636,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		modelViewer->getFilename());
 	LDrawModelViewer::ExportType origExportType = modelViewer->getExportType();
 	QStringList exportFilters;
-	QStringList::const_iterator exportFilterIt;
+//	QStringList::const_iterator exportFilterIt;
 
 	QDir::setCurrent(initialDir);
 	saveImageType = TCUserDefaults::longForKey(SAVE_IMAGE_TYPE_KEY, 1, false);
@@ -2681,37 +2669,26 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 			}
 		}
 		modelViewer->getExporter(origExportType);
-		exportFilterIt = exportFilters.begin();
-		saveDialog = new QFileDialog(".", *exportFilterIt, this, "", true);
-		for (exportFilterIt++; exportFilterIt != exportFilters.end();
-			exportFilterIt++)
-		{
-			saveDialog->addFilter(*exportFilterIt);
-		}
+		saveDialog = new QFileDialog(this,TCLocalStrings::get("ExportModel"),".");
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
-		saveDialog->setSelectedFilter(exportType - LDrawModelViewer::ETFirst);
+		saveDialog->setNameFilters(exportFilters);
+		saveDialog->selectFilter(saveDialog->filters().at(exportType - LDrawModelViewer::ETFirst));
 		saveDialog->setMode(QFileDialog::AnyFile);
-		saveDialog->setCaption(TCLocalStrings::get("ExportModel"));
+
 		break;
 	case LDPreferences::SOSnapshot:
 	default:
-		saveDialog = new QFileDialog(".",
-			"Portable Network Graphics (*.png)",
-			this,
-			"open model dialog",
-			true);
-		saveDialog->setCaption(TCLocalStrings::get("SaveSnapshot"));
-		saveDialog->addFilter("Windows Bitmap (*.bmp)");
-		saveDialog->addFilter("Jpeg (*.jpg)");
-		saveDialog->setSelectedFilter(saveImageType-1);
+		saveDialog = new QFileDialog(this,TCLocalStrings::get("SaveSnapshot"),".",
+			"Portable Network Graphics (*.png);;Windows Bitmap (*.bmp);;Jpeg (*.jpg)");
+		saveDialog->selectFilter(saveDialog->filters().at(saveImageType-1));
 		saveDialog->setIcon(getimage("LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
 		break;
 	}
-	saveDialog->setSelection(saveFilename);
+	saveDialog->selectFile(saveFilename);
 	if (saveDialog->exec() == QDialog::Accepted)
 	{
-		QString filename = saveDialog->selectedFile(), dir = saveDialog->dirPath();
+		QString filename = saveDialog->selectedFile(), dir = saveDialog->directory().path();
         switch (curSaveOp)
         {
         case LDPreferences::SOExport:
