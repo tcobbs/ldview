@@ -21,7 +21,7 @@ LDViewModelTree::LDViewModelTree(QWidget *parent,Preferences *pref, ModelViewerW
 {
 	setupUi(this);
     connect( highlightSelectedLineBox, SIGNAL( clicked() ), this, SLOT( highlightSelectedLine() ) );
-    connect( highlightColorEdit, SIGNAL( clicked(int,int) ), this, SLOT( highlightColor() ) );
+    connect( highlightColorEdit, SIGNAL( clicked() ), this, SLOT( highlightColor() ) );
     connect( commentButton, SIGNAL( clicked() ), this, SLOT( comment() ) );
     connect( modelButton, SIGNAL( clicked() ), this, SLOT( model() ) );
     connect( lineButton, SIGNAL( clicked() ), this, SLOT( line() ) );
