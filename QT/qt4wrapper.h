@@ -3,9 +3,7 @@
 #include <q3dragobject.h>
 #define QMimeSourceFactory	Q3MimeSourceFactory
 #include <Q3MimeSourceFactory>
-#include <q3rangecontrol.h>
 #include <q3header.h>
-#include <QMenuItem>
 #define  getimage(x)    QPixmap(qPixmapFromMimeSource(x))
 #include <Q3ScrollView>
 #define QScrollView Q3ScrollView

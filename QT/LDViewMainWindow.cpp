@@ -4,6 +4,7 @@
 #include <qtoolbutton.h>
 #include <TCFoundation/TCLocalStrings.h>
 #include <QObject>
+#include <QMenuItem>
 
 TCStringArray *LDViewMainWindow::recentFiles = NULL;
 
