@@ -2270,16 +2270,6 @@
                                   </spacer>
                                 </item>
                                 <item>
-                                  <widget class="Q3ButtonGroup" name="textureFilterButtons">
-                                    <property name="frameShape">
-                                      <enum>Q3GroupBox::NoFrame</enum>
-                                    </property>
-                                    <property name="title">
-                                      <string/>
-                                    </property>
-                                    <property name="exclusive">
-                                      <bool>true</bool>
-                                    </property>
                                     <layout class="QVBoxLayout">
                                       <property name="margin">
                                         <number>0</number>
@@ -2372,7 +2362,7 @@
                                         </layout>
                                       </item>
                                     </layout>
-                                  </widget>
+
                                 </item>
                               </layout>
                             </item>
@@ -2573,7 +2563,7 @@
                 <number>4</number>
               </property>
               <item>
-                <widget class="Q3ButtonGroup" name="updatesProxyBox">
+                <widget class="QGroupBox" name="updatesProxyBox">
                   <property name="sizePolicy">
                     <sizepolicy>
                       <hsizetype>7</hsizetype>
@@ -2584,9 +2574,6 @@
                   </property>
                   <property name="title">
                     <string>Internet Proxy</string>
-                  </property>
-                  <property name="exclusive">
-                    <bool>true</bool>
                   </property>
                   <layout class="QVBoxLayout">
                     <property name="margin">
