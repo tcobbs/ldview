@@ -137,8 +137,8 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( delPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doDelPreferenceSet() ) );
     connect( hotkeyPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doHotkeyPreferenceSet() ) );
     connect( preferenceSetList, SIGNAL( highlighted(int) ), this, SLOT( doPrefSetSelected() ) );
-    connect( backgroundColorButton, SIGNAL( clicked(int,int) ), this, SLOT( doBackgroundColor() ) );
-    connect( defaultColorButton, SIGNAL( clicked(int,int) ), this, SLOT( doDefaultColor() ) );
+    connect( backgroundColorButton, SIGNAL( clicked() ), this, SLOT( doBackgroundColor() ) );
+    connect( defaultColorButton, SIGNAL( clicked() ), this, SLOT( doDefaultColor() ) );
     connect( updatesNoproxyButton, SIGNAL( toggled(bool) ), this, SLOT( disableProxy() ) );
     connect( updatesProxyButton, SIGNAL( toggled(bool) ), this, SLOT( enableProxy() ) );
     connect( updatesMissingpartsButton, SIGNAL( toggled(bool) ), this, SLOT( doUpdateMissingparts(bool) ) );
