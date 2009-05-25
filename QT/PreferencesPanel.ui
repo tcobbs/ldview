@@ -648,7 +648,7 @@
                           </widget>
                         </item>
                         <item>
-                          <spacer name="Spacer10">
+                          <spacer name="Spacer10_1">
                             <property name="sizeHint">
                               <size>
                                 <width>20</width>
@@ -1236,7 +1236,7 @@
                               <number>0</number>
                             </property>
                             <item>
-                              <spacer name="Spacer16_4">
+                              <spacer name="Spacer16_4_5">
                                 <property name="sizeHint">
                                   <size>
                                     <width>16</width>
@@ -1320,142 +1320,158 @@
                                 <number>4</number>
                               </property>
                               <item>
-                                <widget class="Q3ButtonGroup" name="lightingDirButtonGroup">
-                                  <property name="frameShape">
-                                    <enum>Q3GroupBox::NoFrame</enum>
+                                <layout class="QGridLayout">
+                                  <property name="margin">
+                                    <number>0</number>
                                   </property>
-                                  <property name="title">
-                                    <string/>
+                                  <property name="spacing">
+                                    <number>4</number>
                                   </property>
-                                  <property name="exclusive">
-                                    <bool>true</bool>
-                                  </property>
-                                  <layout class="QGridLayout">
-                                    <property name="margin">
-                                      <number>0</number>
-                                    </property>
-                                    <property name="spacing">
-                                      <number>4</number>
-                                    </property>
-                                    <item row="1" column="1">
-                                      <widget class="QPushButton" name="lightingDir11">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleUL.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="1" column="2">
-                                      <widget class="QPushButton" name="lightingDir12">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleUM.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="1" column="3">
-                                      <widget class="QPushButton" name="lightingDir13">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleUR.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="2" column="1">
-                                      <widget class="QPushButton" name="lightingDir21">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleML.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="2" column="2">
-                                      <widget class="QPushButton" name="lightingDir22">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleMM.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="2" column="3">
-                                      <widget class="QPushButton" name="lightingDir23">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleMR.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="3" column="1">
-                                      <widget class="QPushButton" name="lightingDir31">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleLL.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="3" column="2">
-                                      <widget class="QPushButton" name="lightingDir32">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleLM.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                    <item row="3" column="3">
-                                      <widget class="QPushButton" name="lightingDir33">
-                                        <property name="text">
-                                          <string/>
-                                        </property>
-                                        <property name="icon">
-                                          <pixmap>LightAngleLR.png</pixmap>
-                                        </property>
-                                        <property name="checkable">
-                                          <bool>true</bool>
-                                        </property>
-                                      </widget>
-                                    </item>
-                                  </layout>
-                                </widget>
+                                  <item row="1" column="1">
+                                    <widget class="QPushButton" name="lightingDir11">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleUL.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="1" column="2">
+                                    <widget class="QPushButton" name="lightingDir12">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleUM.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="1" column="3">
+                                    <widget class="QPushButton" name="lightingDir13">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleUR.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="2" column="1">
+                                    <widget class="QPushButton" name="lightingDir21">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleML.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="2" column="2">
+                                    <widget class="QPushButton" name="lightingDir22">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleMM.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="2" column="3">
+                                    <widget class="QPushButton" name="lightingDir23">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleMR.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="3" column="1">
+                                    <widget class="QPushButton" name="lightingDir31">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleLL.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="3" column="2">
+                                    <widget class="QPushButton" name="lightingDir32">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleLM.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                  <item row="3" column="3">
+                                    <widget class="QPushButton" name="lightingDir33">
+                                      <property name="text">
+                                        <string/>
+                                      </property>
+                                      <property name="icon">
+                                        <pixmap>LightAngleLR.png</pixmap>
+                                      </property>
+                                      <property name="checkable">
+                                        <bool>true</bool>
+                                      </property>
+                                      <property name="autoExclusive" >
+                                        <bool>true</bool>
+                                      </property>
+                                    </widget>
+                                  </item>
+                                </layout>
                               </item>
                             </layout>
                           </widget>
@@ -1469,7 +1485,7 @@
                               <number>0</number>
                             </property>
                             <item>
-                              <spacer name="Spacer16_4">
+                              <spacer name="Spacer16_4_6">
                                 <property name="sizeHint">
                                   <size>
                                     <width>16</width>
@@ -1612,39 +1628,28 @@
                                       <number>4</number>
                                     </property>
                                     <item>
-                                      <widget class="Q3ButtonGroup" name="stereoModeButtons">
-                                        <property name="frameShape">
-                                          <enum>Q3GroupBox::NoFrame</enum>
+                                      <layout class="QVBoxLayout">
+                                        <property name="margin">
+                                          <number>0</number>
                                         </property>
-                                        <property name="title">
-                                          <string/>
+                                        <property name="spacing">
+                                          <number>4</number>
                                         </property>
-                                        <property name="exclusive">
-                                          <bool>true</bool>
-                                        </property>
-                                        <layout class="QVBoxLayout">
-                                          <property name="margin">
-                                            <number>0</number>
-                                          </property>
-                                          <property name="spacing">
-                                            <number>4</number>
-                                          </property>
-                                          <item>
-                                            <widget class="QRadioButton" name="crossEyedStereoButton">
-                                              <property name="text">
-                                                <string>Cross-eyed</string>
-                                              </property>
-                                            </widget>
-                                          </item>
-                                          <item>
-                                            <widget class="QRadioButton" name="parallelStereoButton">
-                                              <property name="text">
-                                                <string>Parallel</string>
-                                              </property>
-                                            </widget>
-                                          </item>
-                                        </layout>
-                                      </widget>
+                                        <item>
+                                          <widget class="QRadioButton" name="crossEyedStereoButton">
+                                            <property name="text">
+                                              <string>Cross-eyed</string>
+                                            </property>
+                                          </widget>
+                                        </item>
+                                        <item>
+                                          <widget class="QRadioButton" name="parallelStereoButton">
+                                            <property name="text">
+                                              <string>Parallel</string>
+                                            </property>
+                                          </widget>
+                                        </item>
+                                      </layout>
                                     </item>
                                     <item>
                                       <layout class="QHBoxLayout">
@@ -1788,39 +1793,28 @@
                                       <number>4</number>
                                     </property>
                                     <item>
-                                      <widget class="Q3ButtonGroup" name="cutawayModeButtons">
-                                        <property name="frameShape">
-                                          <enum>Q3GroupBox::NoFrame</enum>
+                                      <layout class="QVBoxLayout">
+                                        <property name="margin">
+                                          <number>0</number>
                                         </property>
-                                        <property name="title">
-                                          <string/>
+                                        <property name="spacing">
+                                          <number>4</number>
                                         </property>
-                                        <property name="exclusive">
-                                          <bool>true</bool>
-                                        </property>
-                                        <layout class="QVBoxLayout">
-                                          <property name="margin">
-                                            <number>0</number>
-                                          </property>
-                                          <property name="spacing">
-                                            <number>4</number>
-                                          </property>
-                                          <item>
-                                            <widget class="QRadioButton" name="monochromeCutawayButton">
-                                              <property name="text">
-                                                <string>Monochrome</string>
-                                              </property>
-                                            </widget>
-                                          </item>
-                                          <item>
-                                            <widget class="QRadioButton" name="colorCutawayButton">
-                                              <property name="text">
-                                                <string>Color</string>
-                                              </property>
-                                            </widget>
-                                          </item>
-                                        </layout>
-                                      </widget>
+                                        <item>
+                                          <widget class="QRadioButton" name="monochromeCutawayButton">
+                                            <property name="text">
+                                              <string>Monochrome</string>
+                                            </property>
+                                          </widget>
+                                        </item>
+                                        <item>
+                                          <widget class="QRadioButton" name="colorCutawayButton">
+                                            <property name="text">
+                                              <string>Color</string>
+                                            </property>
+                                          </widget>
+                                        </item>
+                                      </layout>
                                     </item>
                                     <item>
                                       <layout class="QGridLayout">
@@ -2792,7 +2786,7 @@ into effect until the next time a model is loaded.</string>
                     <number>6</number>
                   </property>
                   <item>
-                    <spacer name="SpacerU4">
+                    <spacer name="SpacerU41">
                       <property name="sizeHint">
                         <size>
                           <width>20</width>
@@ -2849,7 +2843,7 @@ into effect until the next time a model is loaded.</string>
                     <number>4</number>
                   </property>
                   <item>
-                    <spacer name="Spacer3">
+                    <spacer name="Spacer31">
                       <property name="sizeHint">
                         <size>
                           <width>20</width>
