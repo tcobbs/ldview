@@ -74,36 +74,7 @@
                   </widget>
                 </item>
                 <item>
-                  <widget class="Q3TextEdit" name="highlightColorEdit">
-                    <property name="sizePolicy">
-                      <sizepolicy>
-                        <hsizetype>0</hsizetype>
-                        <vsizetype>0</vsizetype>
-                        <horstretch>5</horstretch>
-                        <verstretch>2</verstretch>
-                      </sizepolicy>
-                    </property>
-                    <property name="maximumSize">
-                      <size>
-                        <width>100</width>
-                        <height>28</height>
-                      </size>
-                    </property>
-                    <property name="vScrollBarMode">
-                      <enum>Q3ScrollView::AlwaysOff</enum>
-                    </property>
-                    <property name="hScrollBarMode">
-                      <enum>Q3ScrollView::AlwaysOff</enum>
-                    </property>
-                    <property name="text">
-                      <string/>
-                    </property>
-                    <property name="wordWrap">
-                      <enum>Q3TextEdit::WidgetWidth</enum>
-                    </property>
-                    <property name="readOnly">
-                      <bool>true</bool>
-                    </property>
+                  <widget class="QPushButton" name="highlightColorEdit">
                   </widget>
                 </item>
                 <item>
