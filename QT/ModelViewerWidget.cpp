@@ -1,5 +1,6 @@
 #include "qt4wrapper.h"
 #include <QtGui/QFileDialog>
+#include <QtGui/QProgressBar>
 #include <Q3ImageDrag>
 #include <qtextbrowser.h>
 #include <qapplication.h>
@@ -1362,7 +1363,7 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 	progressLabel = new QLabel(statusBar);
 	progressLatlong = new QLabel(statusBar);
 	progressMode = new QLabel(statusBar);
-	progressBar->setPercentageVisible(false);
+	progressBar->setTextVisible(false);
 	statusBar->addWidget(progressBar);
 	statusBar->addWidget(progressLabel, 1);
 	statusBar->addWidget(progressLatlong);
@@ -1441,7 +1442,7 @@ void ModelViewerWidget::setupProgress(void)
 
 void ModelViewerWidget::endLoad(void)
 {
-	progressBar->setProgress(0);
+	progressBar->setValue(0);
 	progressLabel->setText("");
 	loading = false;
 }
@@ -1466,7 +1467,7 @@ int ModelViewerWidget::progressCallback(const QString &message, float progress,
 	}
 	if (progress >= 0.0f)
 	{
-		progressBar->setProgress((int)(progress * 100));
+		progressBar->setValue((int)(progress * 100));
 	}
 	if (lastProgressTime.elapsed() >= 100 || progress == 1.0f)
 	{

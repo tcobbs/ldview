@@ -1,7 +1,5 @@
 #include <qglobal.h>
 #if (QT_VERSION >>16)==4
-#define QProgressBar	Q3ProgressBar
-#include <q3progressbar.h>
 #include <q3dragobject.h>
 #define QMimeSourceFactory	Q3MimeSourceFactory
 #include <Q3MimeSourceFactory>
