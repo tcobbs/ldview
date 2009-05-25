@@ -93,7 +93,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
 #ifdef HAVE_QT4
     openRecentMenu = new Q3PopupMenu(this, "openRecentMenu");
 #else // QT3
-    openRecentMenu = new QPopupMenu(this, "openRecentMenu");
+    openRecentMenu = new QMenu(this, "openRecentMenu");
 #endif // QT3
     fileMenu->insertItem("Open Recent", openRecentMenu, -1, 1);
 #endif // __APPLE__
@@ -213,7 +213,7 @@ void LDViewMainWindow::setPollAction(LDVPollMode mode)
 
 }
 
-void LDViewMainWindow::setMenuItemsEnabled(QPopupMenu *menu, bool enabled)
+void LDViewMainWindow::setMenuItemsEnabled(QMenu *menu, bool enabled)
 {
     int count = menu->count();
     int i;
@@ -394,9 +394,9 @@ void LDViewMainWindow::populateRecentFileMenuItems(void)
             if (filename)
             {
 #ifdef __APPLE__
-                QPopupMenu *menu = openRecentMenu;
+                QMenu *menu = openRecentMenu;
 #else // __APPLE__
-                QPopupMenu *menu = fileMenu;
+                QMenu *menu = fileMenu;
 #endif // __APPLE__
                 int id = menu->insertItem(filename, this,
                     SLOT(doRecentFile(int)), 0, -1, fileSeparatorIndex + i + 1);

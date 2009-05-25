@@ -4,9 +4,7 @@
 #include <TCFoundation/TCTypedObjectArray.h>
 #include "ui_SnapshotSettingsPanel.h"
 
-class QButton;
 class ModelViewerWidget;
-class QCheckBox;
 class LDrawModelViewer;
 
 class SnapshotSettings : public QDialog , Ui::SnapshotSettingsPanel

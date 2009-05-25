@@ -9,18 +9,10 @@
 
 class PreferencesPanel;
 class ModelViewerWidget;
-class QButton;
 class QRangeControl;
 class QString;
-class QCheckBox;
-class QRadioButton;
-class QSlider;
-class QSpinBox;
 class LDPreferences;
 class TCAlert;
-class QLineEdit;
-class QPushButton;
-class QComboBox;
 
 typedef enum
 {

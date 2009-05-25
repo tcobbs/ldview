@@ -6,7 +6,6 @@
 #include "ModelViewerWidget.h"
 #include "ui_JpegOptionsPanel.h"
 #include <QtGui/QDialog>
-class QButton;
 
 class JpegOptions : public QDialog , Ui::JpegOptionsPanel
 {

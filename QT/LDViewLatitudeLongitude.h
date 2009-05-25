@@ -5,7 +5,6 @@
 #include <QDialog>
 #include <QShowEvent>
 
-class QButton;
 class ModelViewerWidget;
 class QIntValidator;
 class QDoubleValidator;
