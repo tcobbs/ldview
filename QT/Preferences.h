@@ -112,6 +112,7 @@ public slots:
     void doDelPreferenceSet(void);
     void doHotkeyPreferenceSet(void);
 	bool doPrefSetSelected() {return doPrefSetSelected(true);}
+	void doPrefSetSelected(QListWidgetItem *, QListWidgetItem *) {doPrefSetSelected(true);}
 	bool doPrefSetSelected(bool);
 	void doPrefSetsApply(void);
 	void show(void);

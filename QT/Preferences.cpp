@@ -136,7 +136,7 @@ Preferences::Preferences(QWidget *parent, ModelViewerWidget *modelWidget)
     connect( newPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doNewPreferenceSet() ) );
     connect( delPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doDelPreferenceSet() ) );
     connect( hotkeyPreferenceSetButton, SIGNAL( clicked() ), this, SLOT( doHotkeyPreferenceSet() ) );
-    connect( preferenceSetList, SIGNAL( highlighted(int) ), this, SLOT( doPrefSetSelected() ) );
+    connect( preferenceSetList, SIGNAL( currentItemChanged(QListWidgetItem *,QListWidgetItem *) ), this, SLOT( doPrefSetSelected(QListWidgetItem *,QListWidgetItem *) ) );
     connect( backgroundColorButton, SIGNAL( clicked() ), this, SLOT( doBackgroundColor() ) );
     connect( defaultColorButton, SIGNAL( clicked() ), this, SLOT( doDefaultColor() ) );
     connect( updatesNoproxyButton, SIGNAL( toggled(bool) ), this, SLOT( disableProxy() ) );
@@ -2217,8 +2217,7 @@ void Preferences::exportsSaveDirBrowse()
 void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &dir)
 {
 	QFileDialog *dirDialog;
-    dirDialog = new QFileDialog(dir);
-    dirDialog->setCaption(prompt);
+    dirDialog = new QFileDialog(this,prompt,dir);
     dirDialog->setIcon(getimage("LDViewIcon16.png"));
     dirDialog->setMode(QFileDialog::DirectoryOnly);
     if (dirDialog->exec() == QDialog::Accepted)
