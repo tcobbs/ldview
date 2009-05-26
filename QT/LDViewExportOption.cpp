@@ -29,11 +29,9 @@ LDViewExportOption::LDViewExportOption(QWidget *parent,LDrawModelViewer *modelVi
     connect( cancelButton, SIGNAL( clicked() ), this, SLOT( doCancel() ) );
     connect( resetButton, SIGNAL( clicked() ), this, SLOT( doReset() ) );
 
-	m_sv = new QScrollView(this, "scrollview");
-	m_sv->setVScrollBarMode(QScrollView::AlwaysOn);
-#if (QT_VERSION >>16)==3
-	layouttop->addWidget(m_sv);
-#endif
+	m_sv = scrollArea;
+//	m_sv->setVScrollBarMode(QScrollView::AlwaysOn);
+//	scrolllayout->addWidget(m_sv);
 }
 
 void LDViewExportOption::populate(void)
@@ -49,7 +47,7 @@ void LDViewExportOption::populate(void)
 		m_sv->adjustSize();
 		delete m_box;
 	}
-	m_box = new QVBox(m_sv->viewport());
+	m_box = new Q3VBox(m_sv->widget());
 	m_box->setMargin(11);
 	m_box->setSpacing(4);
 	QVBoxLayout *vbl= NULL;
@@ -117,13 +115,13 @@ void LDViewExportOption::populate(void)
             // of option UI to the canvas.
 			QString qstmp;
 			ucstringtoqstring(qstmp,it->getName());
-			QHBox *hbox;
-			QVBox *vbox;
+			Q3HBox *hbox;
+			Q3VBox *vbox;
 			QLineEdit *li;
 			QLabel *label;
-			QHBox *hbox2;
+			Q3HBox *hbox2;
 			QCheckBox *check;
-			hbox = new QHBox(parent);
+			hbox = new Q3HBox(parent);
 			hbox->setSpacing(4);
             switch (it->getType())
             {
@@ -142,10 +140,10 @@ void LDViewExportOption::populate(void)
 				m_settings[&*it] = li;
                 break;
             case LDExporterSetting::TString:
-				vbox = new QVBox(hbox);
+				vbox = new Q3VBox(hbox);
 				vbox->setSpacing(4);
 				label = new QLabel(qstmp,vbox);
-				hbox2 = new QHBox(vbox);
+				hbox2 = new Q3HBox(vbox);
 				hbox2->setSpacing(4);
 				li = new QLineEdit(qstmp,hbox2);
 				ucstringtoqstring(qstmp,it->getStringValue());
@@ -158,7 +156,7 @@ void LDViewExportOption::populate(void)
 				}
                 break;
             case LDExporterSetting::TEnum:
-				vbox = new QVBox(hbox);
+				vbox = new Q3VBox(hbox);
 				vbox->setSpacing(4);
                 label = new QLabel(qstmp, vbox);
 				QComboBox *combo;
@@ -182,11 +180,11 @@ void LDViewExportOption::populate(void)
 			if (vbl) vbl->addWidget(hbox);
         }
 	}
-	m_sv->addChild(m_box);
+	sclayout->addWidget(m_box);
 	adjustSize();
 	m_sv->adjustSize();
 	m_sv->viewport()->adjustSize();
-	resize(width() + m_box->width() - m_sv->visibleWidth(), height());
+//	resize(width() + m_box->width() - m_sv->visibleWidth(), height());
 	setFixedWidth(width());
 }
 
