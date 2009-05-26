@@ -35,7 +35,33 @@
             <number>6</number>
           </property>
           <item>
-            <layout class="QHBoxLayout"/>
+            <layout class="QHBoxLayout" name="scrolllayout">
+            <item>
+      <widget class="QScrollArea" name="scrollArea" >
+       <property name="verticalScrollBarPolicy" >
+        <enum>Qt::ScrollBarAlwaysOn</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy" >
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="widgetResizable" >
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="verticalLayoutWidget" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>400</width>
+          <height>300</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="sclayout" />
+       </widget>
+      </widget>
+
+	    </item>
+	    </layout>
           </item>
           <item>
             <layout class="QHBoxLayout">

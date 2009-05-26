@@ -5,8 +5,14 @@
 #include <TCFoundation/TCStlIncludes.h>
 #include <QtGui/QDialog>
 
-class QScrollView;
-class QVBox;
+#include <QScrollArea>
+#include <Q3HBox>
+#include <Q3VBox>
+#include <Q3GroupBox>
+#define QGroupBox Q3GroupBox
+
+//class QScrollView;
+//class QVBox;
 class Preferences;
 class LDrawModelViewer;
 class LDExporter;
@@ -35,8 +41,8 @@ protected:
 
 	LDrawModelViewer *m_modelViewer;
     LDExporter *m_exporter;
-	QScrollView *m_sv;
-	QVBox *m_box;
+	QScrollArea *m_sv;
+	Q3VBox *m_box;
 	SettingsMap m_settings;
 	int m_origType;
 };
