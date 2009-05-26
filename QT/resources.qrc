@@ -1,0 +1,42 @@
+<RCC>
+  <qresource prefix="images" >
+    <file>images/toolbar_wireframe.png</file>
+    <file>images/error_colinear.png</file>
+    <file>images/error_color.png</file>
+    <file>images/error_concave_quad.png</file>
+    <file>images/error_determinant.png</file>
+    <file>images/error_fnf.png</file>
+    <file>images/error_info.png</file>
+    <file>images/error_loop.png</file>
+    <file>images/error_matching_points.png</file>
+    <file>images/error_matrix.png</file>
+    <file>images/error_non_flat_quad.png</file>
+    <file>images/error_opengl.png</file>
+    <file>images/error_parse.png</file>
+    <file>images/error_vertex_order.png</file>
+    <file>images/fileopen.png</file>
+    <file>images/filesave.png</file>
+    <file>images/LDView.icns</file>
+    <file>images/LDViewIcon16.png</file>
+    <file>images/LDViewIcon.png</file>
+    <file>images/print.png</file>
+    <file>images/StudLogo.png</file>
+    <file>images/toolbar_axes.png</file>
+    <file>images/toolbar_bfc.png</file>
+    <file>images/toolbar_edge.png</file>
+    <file>images/toolbar_first.png</file>
+    <file>images/toolbar_last.png</file>
+    <file>images/toolbar_light.png</file>
+    <file>images/toolbar_next.png</file>
+    <file>images/toolbar_popup_arrow.ppm</file>
+    <file>images/toolbar_preferences.png</file>
+    <file>images/toolbar_prev.png</file>
+    <file>images/toolbar_privsubs.png</file>
+    <file>images/toolbar_reload.png</file>
+    <file>images/toolbar_seams.png</file>
+    <file>images/toolbar_snapshot.png</file>
+    <file>images/toolbar_step_first.png</file>
+    <file>images/toolbar_step_last.png</file>
+    <file>images/toolbar_view.png</file>
+  </qresource>
+</RCC>
