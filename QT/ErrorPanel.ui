@@ -17,7 +17,8 @@
       <string>LDView Errors &amp; Warnings</string>
     </property>
     <property name="windowIcon">
-      <pixmap>LDViewIcon16.png</pixmap>
+      <iconset resource="resources.qrc" >
+      <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <widget class="QWidget">
       <layout class="QHBoxLayout">
@@ -367,5 +368,8 @@
     </widget>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <pixmapfunction></pixmapfunction>
+  <resources>
+   <include location="resources.qrc" />
+  </resources>
 </ui>

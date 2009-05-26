@@ -25,7 +25,8 @@
       <string>About LDView</string>
     </property>
     <property name="windowIcon">
-      <pixmap>LDViewIcon16.png</pixmap>
+      <iconset resource="resources.qrc" >
+      <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <layout class="QVBoxLayout">
       <property name="margin">
@@ -61,7 +62,7 @@
                     </sizepolicy>
                   </property>
                   <property name="pixmap">
-                    <pixmap>LDViewIcon.png</pixmap>
+                    <pixmap resource="resources.qrc" >:/images/images/LDViewIcon.png</pixmap>
                   </property>
                   <property name="scaledContents">
                     <bool>false</bool>
@@ -209,5 +210,8 @@ Group, which does not sponsor, endorse, or authorize this program.</string>
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <pixmapfunction></pixmapfunction>
+  <resources>
+   <include location="resources.qrc" />
+  </resources>
 </ui>

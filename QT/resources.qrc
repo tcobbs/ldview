@@ -1,5 +1,14 @@
 <RCC>
   <qresource prefix="images" >
+    <file>../Icons/LightAngleUR.png</file>
+    <file>../Icons/LightAngleLL.png</file>
+    <file>../Icons/LightAngleLM.png</file>
+    <file>../Icons/LightAngleLR.png</file>
+    <file>../Icons/LightAngleML.png</file>
+    <file>../Icons/LightAngleMM.png</file>
+    <file>../Icons/LightAngleMR.png</file>
+    <file>../Icons/LightAngleUL.png</file>
+    <file>../Icons/LightAngleUM.png</file>
     <file>images/toolbar_wireframe.png</file>
     <file>images/error_colinear.png</file>
     <file>images/error_color.png</file>

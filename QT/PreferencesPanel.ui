@@ -25,7 +25,8 @@
       <string>LDView Preferences</string>
     </property>
     <property name="windowIcon">
-      <pixmap>LDViewIcon16.png</pixmap>
+      <iconset resource="resources.qrc" >
+      <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <property name="sizeGripEnabled">
       <bool>false</bool>
@@ -1333,7 +1334,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleUL.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleUL.png</normaloff>:/images/Icons/LightAngleUL.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1349,7 +1351,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleUM.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleUM.png</normaloff>:/images/Icons/LightAngleUM.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1365,7 +1368,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleUR.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleUR.png</normaloff>:/images/Icons/LightAngleUR.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1381,7 +1385,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleML.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleML.png</normaloff>:/images/Icons/LightAngleML.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1397,7 +1402,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleMM.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleMM.png</normaloff>:/images/Icons/LightAngleMM.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1413,7 +1419,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleMR.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleMR.png</normaloff>:/images/Icons/LightAngleMR.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1429,7 +1436,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleLL.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleLL.png</normaloff>:/images/Icons/LightAngleLL.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1445,7 +1453,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleLM.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleLM.png</normaloff>:/images/Icons/LightAngleLM.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -1461,7 +1470,8 @@
                                         <string/>
                                       </property>
                                       <property name="icon">
-                                        <pixmap>LightAngleLR.png</pixmap>
+                                        <iconset resource="resources.qrc" >
+                                         <normaloff>:/images/Icons/LightAngleLR.png</normaloff>:/images/Icons/LightAngleLR.png</iconset>
                                       </property>
                                       <property name="checkable">
                                         <bool>true</bool>
@@ -3045,5 +3055,8 @@ into effect until the next time a model is loaded.</string>
     <tabstop>cancelButton</tabstop>
     <tabstop>applyButton</tabstop>
   </tabstops>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <pixmapfunction></pixmapfunction>
+  <resources>
+   <include location="resources.qrc" />
+  </resources>
 </ui>

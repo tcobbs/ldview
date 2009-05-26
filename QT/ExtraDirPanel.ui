@@ -17,7 +17,8 @@
       <string>Extra Dir</string>
     </property>
     <property name="windowIcon">
-      <pixmap>LDViewIcon16.png</pixmap>
+      <iconset resource="resources.qrc" >
+      <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <layout class="QVBoxLayout">
       <item>
@@ -190,7 +191,6 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>addExtraDirButton</tabstop>
     <tabstop>delExtraDirButton</tabstop>
@@ -199,4 +199,8 @@
     <tabstop>okButton</tabstop>
     <tabstop>cancelButton</tabstop>
   </tabstops>
+  <pixmapfunction></pixmapfunction>
+  <resources>
+   <include location="resources.qrc" />
+  </resources>
 </ui>

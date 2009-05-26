@@ -147,19 +147,15 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	lightingSelection(0)
 {
 	int i;
-	const QMimeSource *mimeSource =
-		QMimeSourceFactory::defaultFactory()->data("StudLogo.png");
+//	const QMimeSource *mimeSource =
+//		QMimeSourceFactory::defaultFactory()->data("StudLogo.png");
 
 	inputHandler = modelViewer->getInputHandler();
 	LDLModel::setFileCaseCallback(staticFileCaseCallback);
-	if (mimeSource)
-	{
-		QImage studImage;
+	QImage studImage(":/images/images/StudLogo.png");
 
-		Q3ImageDrag::decode(mimeSource, studImage);
-		TREMainModel::setRawStudTextureData(studImage.bits(),
+	TREMainModel::setRawStudTextureData(studImage.bits(),
 			studImage.numBytes());
-	}
 	for (i = 0; i < MAX_MOUSE_BUTTONS; i++)
 	{
 		mouseButtonsDown[i] = false;

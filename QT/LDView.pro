@@ -10,6 +10,8 @@ HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
 		   OpenGLExtensions.h
 
+RESOURCES = resources.qrc
+
 UI_DIR = .ui
 MOC_DIR = .moc
 OBJECTS_DIR = .obj
@@ -128,28 +130,11 @@ FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
 IMAGES	= images/fileopen.png images/filesave.png images/print.png \
-		  images/LDViewIcon.png images/LDViewIcon16.png images/StudLogo.png \
 		  images/toolbar_reload.png images/toolbar_wireframe.png \
 		  images/toolbar_seams.png images/toolbar_edge.png \
 		  images/toolbar_privsubs.png images/toolbar_snapshot.png \
 		  images/toolbar_view.png images/toolbar_preferences.png \
 		  images/toolbar_bfc.png images/toolbar_light.png \
-		  images/error_colinear.png images/error_color.png \
-		  images/error_concave_quad.png images/error_determinant.png \
-		  images/error_fnf.png images/error_info.png \
-		  images/error_matching_points.png images/error_matrix.png \
-		  images/error_non_flat_quad.png images/error_opengl.png \
-		  images/error_parse.png images/error_vertex_order.png \
-		  images/error_loop.png \
-		  ../Icons/LightAngleLL.png \
-          ../Icons/LightAngleLM.png \
-          ../Icons/LightAngleLR.png \
-          ../Icons/LightAngleML.png \
-          ../Icons/LightAngleMM.png \
-          ../Icons/LightAngleMR.png \
-          ../Icons/LightAngleUL.png \
-          ../Icons/LightAngleUM.png \
-          ../Icons/LightAngleUR.png \
 	 images/toolbar_prev.png images/toolbar_next.png \
 	 images/toolbar_step_first.png images/toolbar_step_last.png images/toolbar_axes.png
 
