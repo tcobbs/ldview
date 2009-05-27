@@ -5,7 +5,7 @@ SOURCES	+= QTMain.cpp ModelViewerWidget.cpp Preferences.cpp LDViewErrors.cpp \
 		   LDViewLatitudeLongitude.cpp LDViewMpdModel.cpp LDViewExportOption.cpp
 HEADERS	+= ModelViewerWidget.h Preferences.h LDViewErrors.h LDViewExtraDir.h \
 		   AlertHandler.h LDViewPartList.h misc.h LDViewJpegOptions.h \
-		   LDViewSnapshotSettings.h LDViewModelTree.h qt4wrapper.h \
+		   LDViewSnapshotSettings.h LDViewModelTree.h \
 		   LDViewBoundingBox.h LDViewLatitudeLongitude.h LDViewMpdModel.h \
 		   LDViewExportOption.h LDViewMainWindow.h Help.h About.h \
 		   OpenGLExtensions.h
