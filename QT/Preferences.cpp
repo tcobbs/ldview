@@ -2,7 +2,6 @@
 // include GL/gl.h, or the wrong version of glext.h gets used, and things don't
 // compile.  This is annoying, but it doesn't appear to hurt anything.
 #include <TRE/TREGLExtensions.h>
-#include "qt4wrapper.h"
 #include <LDLoader/LDLModel.h>
 #include <LDLoader/LDLPalette.h>
 #include <TCFoundation/TCUserDefaults.h>
@@ -2218,7 +2217,7 @@ void Preferences::browseForDir(QString prompt, QLineEdit *textField, QString &di
 {
 	QFileDialog *dirDialog;
     dirDialog = new QFileDialog(this,prompt,dir);
-    dirDialog->setIcon(getimage("LDViewIcon16.png"));
+    dirDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
     dirDialog->setMode(QFileDialog::DirectoryOnly);
     if (dirDialog->exec() == QDialog::Accepted)
     {

@@ -18,3 +18,5 @@ qmake_image_collection.cpp
 *.rc
 Help.html
 images.tmp
+qrc_resources.cpp
+

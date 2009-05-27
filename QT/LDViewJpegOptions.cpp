@@ -1,5 +1,3 @@
-#include "qt4wrapper.h"
-
 #include "ModelViewerWidget.h"
 #include "LDViewJpegOptions.h"
 

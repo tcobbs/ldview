@@ -1,4 +1,3 @@
-#include "qt4wrapper.h"
 #include <QtGui/QFileDialog>
 #include <QtGui/QProgressBar>
 #include <Q3ImageDrag>
@@ -762,7 +761,7 @@ void ModelViewerWidget::doFileOpen(void)
 		{
 			fileDialog = new QFileDialog(this,"Choose a Model",".",
 				"All LDraw Files (*.ldr *.dat *.mpd);;LDraw Models (*.ldr *.dat);;Multi-part Models (*.mpd);;All Files (*)");
-			fileDialog->setIcon(getimage("LDViewIcon16.png"));
+			fileDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		}
 		if (fileDialog->exec() == QDialog::Accepted)
 		{
@@ -2042,7 +2041,7 @@ bool ModelViewerWidget::promptForLDrawDir(const char *prompt)
 	}
 	QDir::setCurrent(initialDir);
 	dirDialog = new QFileDialog(this,prompt,".");
-	dirDialog->setIcon(getimage("LDViewIcon16.png"));
+	dirDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 	dirDialog->setMode(QFileDialog::DirectoryOnly);
 	if (dirDialog->exec() == QDialog::Accepted)
 	{
@@ -2667,7 +2666,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		}
 		modelViewer->getExporter(origExportType);
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("ExportModel"),".");
-		saveDialog->setIcon(getimage("LDViewIcon16.png"));
+		saveDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		saveDialog->setNameFilters(exportFilters);
 		saveDialog->selectFilter(saveDialog->filters().at(exportType - LDrawModelViewer::ETFirst));
 		saveDialog->setMode(QFileDialog::AnyFile);
@@ -2678,7 +2677,7 @@ bool ModelViewerWidget::getSaveFilename(char* saveFilename, int len)
 		saveDialog = new QFileDialog(this,TCLocalStrings::get("SaveSnapshot"),".",
 			"Portable Network Graphics (*.png);;Windows Bitmap (*.bmp);;Jpeg (*.jpg)");
 		saveDialog->selectFilter(saveDialog->filters().at(saveImageType-1));
-		saveDialog->setIcon(getimage("LDViewIcon16.png"));
+		saveDialog->setIcon(QPixmap( ":/images/images/LDViewIcon16.png"));
 		saveDialog->setMode(QFileDialog::AnyFile);
 		break;
 	}
