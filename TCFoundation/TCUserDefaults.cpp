@@ -1495,8 +1495,9 @@ void TCUserDefaults::defFlush(void)
 #ifdef _QT
 	// QSettings only writes to disk when the object is destroyed.  If LDView
 	// crashes, all settings that were set are lost.
-	delete qSettings;
-	qSettings = new QSettings("LDView","LDView");
+//	delete qSettings;
+//	qSettings = new QSettings("LDView","LDView");
+	qSettings->sync();
 #endif // _QT
 }
 
