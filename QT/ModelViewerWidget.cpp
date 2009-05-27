@@ -106,9 +106,7 @@ ModelViewerWidget::ModelViewerWidget(QWidget *parent, const char *name)
 	aboutPanel(NULL),
 	helpContents(NULL),
 	mainWindow(NULL),
-	menuBar(NULL),
 	statusBar(NULL),
-	toolBar(NULL),
 	progressBar(NULL),
 	progressLabel(NULL),
 	progressLatlong(NULL),
@@ -1344,7 +1342,7 @@ void ModelViewerWidget::setMainWindow(LDViewMainWindow *value)
 		height - 240 + windowSize.height());
 */
 	statusBar = mainWindow->statusBar();
-	toolBar = new QToolBar;
+//	toolBar = new QToolBar;
 	reflectSettings();
     mainWindow->fileSaveSetEnabled(false);
     mainWindow->fileReloadSetEnabled(false);
@@ -1506,13 +1504,13 @@ void ModelViewerWidget::doViewFullScreen(void)
 	{
 		pos=mainWindow->pos();
 		size=mainWindow->size();
-		menuBar->hide();
 		statusBar->hide();
 #ifndef HAVE_QT4
 		mainWindow->MainGroupBox->setFrameShape( QFrame::NoFrame );
 #endif
 		mainWindow->setMainGroupBoxMargin( 0 );
 		mainWindow->showToolbar(false);
+		mainWindow->showMenubar(false);
 		mainWindow->showFullScreen();
 		fullscreen=1;
 	} else
@@ -1524,7 +1522,7 @@ void ModelViewerWidget::doViewFullScreen(void)
         mainWindow->showNormal();
 		mainWindow->resize(size);
 		mainWindow->move(pos);
-        menuBar->show();
+        mainWindow->showMenubar(true);
         if(preferences->getStatusBar()) {statusBar->show();}
 		if(preferences->getToolBar()) {mainWindow->showToolbar(true);}
 		fullscreen=0;
