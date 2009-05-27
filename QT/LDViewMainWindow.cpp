@@ -9,10 +9,16 @@
 TCStringArray *LDViewMainWindow::recentFiles = NULL;
 
 LDViewMainWindow::LDViewMainWindow(QApplication *a)
-	:Q3MainWindow(),Ui::LDView(),
-	fileSeparatorIndex(-1)
+	:QMainWindow(),Ui::LDView(),
+	fileSeparatorIndex(-1),
+	toolbarMaxStep(new QLabel),
+	toolbarCurrentStep(new QLabel),
+	toolbarStepLabel(new QLabel("Step :"))
 {
     setupUi(this);
+	toolbar->insertWidget(toolbarFirstStep,toolbarStepLabel);
+	toolbar->insertWidget(toolbarFirstStep,toolbarCurrentStep);
+	toolbar->insertWidget(toolbarFirstStep,toolbarMaxStep);
     if (modelViewer) modelViewer->setMainWindow(this);
     connect( fileOpenAction, SIGNAL( activated() ), this, SLOT( fileOpen() ) );
     connect( fileSaveSettingsAction, SIGNAL( activated() ), this, SLOT( fileSaveSettings() ) );
@@ -92,7 +98,7 @@ LDViewMainWindow::LDViewMainWindow(QApplication *a)
     fileMenu->removeItemAt(fileSeparatorIndex);
     fileSeparatorIndex = -1;
 #ifdef HAVE_QT4
-    openRecentMenu = new Q3PopupMenu(this, "openRecentMenu");
+    openRecentMenu = new QMenu(this, "openRecentMenu");
 #else // QT3
     openRecentMenu = new QMenu(this, "openRecentMenu");
 #endif // QT3

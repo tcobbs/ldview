@@ -6,7 +6,7 @@
 #include <qapplication.h>
 #include <qaction.h>
 
-class LDViewMainWindow : public Q3MainWindow , Ui::LDView
+class LDViewMainWindow : public QMainWindow , Ui::LDView
 {
 	Q_OBJECT
 public:
@@ -38,6 +38,7 @@ public:
 	void setShowPovAspectRatioOn(bool b){showPovAspectRatioAction->setOn(b);}
 	void setMainGroupBoxMargin(int i){MainGroupBox->layout()->setMargin(i);}
 	void setMenuItemsEnabled(QMenu *menu, bool enabled);
+	void showToolbar(bool b) { if (b) {toolbar->show();} else {toolbar->hide();}}
 	void clearRecentFileMenuItems(void);
 	char *truncateFilename(const char *i /* filename */);
 	void populateRecentFileMenuItems(void);
@@ -123,6 +124,7 @@ private:
     QMenu *openRecentMenu;
 #endif // __APPLE__
 	int fileSeparatorIndex;
+	QLabel *toolbarMaxStep, *toolbarCurrentStep, *toolbarStepLabel;
 };
 
 #endif

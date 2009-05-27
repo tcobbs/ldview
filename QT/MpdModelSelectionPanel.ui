@@ -28,7 +28,8 @@
       </size>
     </property>
     <property name="windowIcon">
-      <pixmap>LDViewIcon16.png</pixmap>
+      <iconset resource="resources.qrc" >
+      <normaloff>:/images/images/LDViewIcon16.png</normaloff>:/images/images/LDViewIcon16.png</iconset>
     </property>
     <property name="baseSize">
       <size>
@@ -133,5 +134,8 @@
     </layout>
   </widget>
   <layoutdefault spacing="4" margin="11"/>
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+  <pixmapfunction></pixmapfunction>
+  <resources>
+   <include location="resources.qrc" />
+  </resources>
 </ui>

@@ -129,14 +129,6 @@ FORMS	= AboutPanel.ui BoundingBoxPanel.ui ErrorPanel.ui ExtraDirPanel.ui \
 		  OpenGLExtensionsPanel.ui PreferencesPanel.ui \
 		  SnapshotSettingsPanel.ui ExportOptionPanel.ui \
 		  ModelTreePanel.ui MpdModelSelectionPanel.ui PartList.ui
-IMAGES	= images/fileopen.png images/filesave.png images/print.png \
-		  images/toolbar_reload.png images/toolbar_wireframe.png \
-		  images/toolbar_seams.png images/toolbar_edge.png \
-		  images/toolbar_privsubs.png images/toolbar_snapshot.png \
-		  images/toolbar_view.png images/toolbar_preferences.png \
-		  images/toolbar_bfc.png images/toolbar_light.png \
-	 images/toolbar_prev.png images/toolbar_next.png \
-	 images/toolbar_step_first.png images/toolbar_step_last.png images/toolbar_axes.png
 
 TEMPLATE	=app
 CONFIG	+= qt opengl thread warn_on release qt3support

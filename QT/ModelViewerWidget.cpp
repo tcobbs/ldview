@@ -1,7 +1,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QProgressBar>
-#include <Q3ImageDrag>
 #include <qtextbrowser.h>
+#include <qtextstream.h>
 #include <qapplication.h>
 #include <qstatusbar.h>
 #include <qtoolbar.h>
@@ -1498,14 +1498,7 @@ void ModelViewerWidget::doViewStatusBar(bool flag)
 void ModelViewerWidget::doViewToolBar(bool flag)
 {
     lock();
-    if (flag)
-    {
-		mainWindow->dockWindows().at(0)->show();
-    }
-    else
-    {
-        mainWindow->dockWindows().at(0)->hide();
-	}
+	mainWindow->showToolbar(flag);
 	preferences->setToolBar(flag);
 	unlock();
 	mainWindow->setupStandardSizes();
@@ -1525,7 +1518,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		mainWindow->MainGroupBox->setFrameShape( QFrame::NoFrame );
 #endif
 		mainWindow->setMainGroupBoxMargin( 0 );
-		mainWindow->dockWindows().at(0)->hide();
+		mainWindow->showToolbar(false);
 		mainWindow->showFullScreen();
 		fullscreen=1;
 	} else
@@ -1539,7 +1532,7 @@ void ModelViewerWidget::doViewFullScreen(void)
 		mainWindow->move(pos);
         menuBar->show();
         if(preferences->getStatusBar()) {statusBar->show();}
-		if(preferences->getToolBar()) {mainWindow->dockWindows().at(0)->show();}
+		if(preferences->getToolBar()) {mainWindow->showToolbar(true);}
 		fullscreen=0;
 	}
 }
