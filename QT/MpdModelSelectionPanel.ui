@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0" stdsetdef="1">
-  <author></author>
+  <author>Peter Bartfai</author>
   <comment></comment>
   <exportmacro></exportmacro>
   <class>MpdModelSelectionPanel</class>
@@ -41,7 +41,7 @@
       <string>LDView MPD Model Selection</string>
     </property>
     <property name="sizeGripEnabled">
-      <bool>false</bool>
+      <bool>true</bool>
     </property>
     <layout class="QVBoxLayout">
       <property name="margin">
